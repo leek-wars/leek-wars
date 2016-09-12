@@ -1,0 +1,162 @@
+/*
+ * Menu
+ */
+#tuto-menu {
+	text-align: center;
+}
+
+#tutorial-page .menu-item {
+	display: inline-block;
+	vertical-align: bottom;
+	margin: 10px;
+	padding: 10px;
+	text-align: center;
+	width: 130px;
+	height: 110px;
+	border: 2px solid #ddd;
+	background: white;
+	font-weight: 300;
+	color: #555;
+	font-size: 18px;
+	cursor: pointer;
+}
+
+#tutorial-page .menu-item img {
+	height: 70px;
+	-webkit-filter: grayscale(100%);
+}
+
+#tutorial-page .menu-item:hover {
+	border: 2px solid #5FAD1B;
+	color: #5FAD1B;
+}
+
+#tutorial-page .menu-item:hover img {
+	-webkit-filter: grayscale(0%);
+}
+
+/*
+ * Tutorial
+ */
+#tutorial-page .panel .content { 
+	background: rgba(100,100,100,0.1);
+	padding: 0;
+}
+
+#tutorial-page .panel .wrapper { 
+	max-width: 800px;
+	margin: 0 auto;
+	background: #f2f2f2;
+	padding: 15px;
+}
+
+#tutorial-page p {
+	margin-bottom: 10px;
+	margin-left: 20px; 
+	margin-right: 20px;
+	text-align: justify;
+	font-size: 16px;
+}
+
+#tutorial-page li {
+	margin-left: 20px; 
+}
+
+#tutorial-page screen {
+	margin-bottom: 20px;
+}
+
+#tutorial-page screen:hover .legend {
+	color: black; 
+}
+
+#tutorial-page screen img {
+	cursor: -webkit-zoom-in; 
+	cursor: -moz-zoom-in;
+	display: block;
+	width: 65%; 
+	margin: 0 auto;
+	border-radius: 2px;
+}
+
+#tutorial-page screen img.big {
+	cursor: -webkit-zoom-out; 
+	cursor: -moz-zoom-out;
+	width: 100%;
+}
+
+#tutorial-page screen .legend {
+	text-align: center;
+	font-size: 18px;
+	font-weight: 300;
+	color: #555; 
+	font-style: italic;
+}
+
+#tutorial-page code .CodeMirror {
+	width: 90%;
+	margin: 10px auto;
+}
+
+#tutorial-page table {
+	margin: 10px auto;
+	background: white;
+}
+
+#tutorial-page table td, #tutorial table th {
+	border: 1px solid #aaa;
+	padding: 3px 10px;
+	text-align: center;
+}
+
+#tutorial-page a {
+	color: #5FAD1B;
+}
+
+#tutorial-page .sign-table {
+	table-layout: fixed;
+}
+
+#tutorial-page .sign-table td {
+	width: 30px;
+	height: 30px;
+	max-width: 30px;
+	min-width: 30px;
+	padding: 0;
+}
+#tutorial-page .sign-table tr td:first-child {
+	width: 70px;
+	max-width: 70px;
+	background: #eee;
+	font-weight: bold;
+}
+
+#tutorial-page .sign-table tr:first-child {
+	background: #eee;
+}
+#tutorial-page .sign-table tr:first-child td:nth-child(n+2) {
+	height: 70px;
+	font-weight: bold;
+
+	-webkit-transform: rotate(-90deg);
+	-moz-transform: rotate(-90deg);
+	-ms-transform: rotate(-90deg);
+	-o-transform: rotate(-90deg);
+	filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
+}
+#tutorial-page .sign-table tr:first-child td:first-child {
+	font-size: 20px;
+}
+
+#tutorial-page .sign-table td {
+
+}
+
+#tutorial-page .sign-table td .X {
+	border-radius: 4px;
+	content: " ";
+	width: 82%;
+	height: 82%;
+	margin: 10%;
+	background: #5FAD1B;
+}

@@ -1,0 +1,60 @@
+#bank-page {
+	padding-bottom: 20px;
+}
+
+#bank-description {
+	padding: 20px;
+	font-size: 17px;
+}
+
+#bank-page #habs-info {
+	display: inline-block;
+	background: white;
+	border-bottom: 3px solid #ddd;
+	border-radius: 2px;
+	padding: 20px;
+	padding-bottom: 15px;
+	margin: 10px;
+	font-size: 16px;
+}
+
+#bank-page .pack {
+	background: white;
+	border-radius: 2px;
+	border-bottom: 3px solid #ddd;
+	padding: 10px;
+	margin: 20px;
+	min-height: 90px;
+}
+
+#bank-page .pack > img {
+	float: left;
+	margin-right: 20px;
+	margin-left: 10px;
+}
+
+#bank-page .pack .buy {
+	margin-bottom: 10px;
+}
+
+#bank-page .pack .buy div {
+	border-radius: 2px;
+	padding: 5px 15px;
+	margin-right: 15px;
+	display: inline-block;
+}
+#bank-page .pack .buy div:hover {
+	background: #eee;
+}
+
+#bank-page .pack .price {
+	font-weight: 400;
+	font-size: 27px;
+	color: #777;
+}
+
+#bank-page .pack .buy img {
+	margin-left: 5px;
+	vertical-align: middle;
+	margin-top: -10px;
+}

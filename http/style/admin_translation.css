@@ -1,0 +1,46 @@
+#translation-files {
+	/*padding: 10px 20px;*/
+}
+
+#translation-files .file {
+	width: 147px;
+	display: inline-block;
+	margin: 10px;
+	padding: 8px;
+	word-break: break-all;
+	text-align: center;
+	vertical-align: top; 
+}
+
+#translation-files .file h4 {
+	font-weight: normal;
+	font-size: 14px;
+}
+
+#translation-files h3 {
+	margin: 4px;
+	font-size: 16px;
+}
+
+#translation-files .flag {
+	height: 20px;
+}
+
+#translation-files .langs img {
+	vertical-align: bottom;
+}
+
+#translation-files .file span.completed {
+	font-weight: bold;
+	color: green;
+}
+
+#translation-files .file span:not(.completed) {
+	font-weight: bold;
+	color: red;
+}
+
+#translation-files .file:not(.finished) {
+	background: #f9f9f9;
+	border-bottom-color: #f9f9f9;
+}

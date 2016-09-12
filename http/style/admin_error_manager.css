@@ -1,0 +1,42 @@
+#page .infos {
+	padding: 10px 15px;
+}
+
+#errors .error {
+	padding: 10px;
+	margin: 10px 0;
+}
+
+#errors .error code {
+	margin: 5px 0;
+}
+ 
+#errors td a {
+	color: #0a0;
+}
+
+#codes {
+	font-size: 12px;
+	background: white;
+}
+
+#codes th {
+	border: 2px solid #ddd;
+	padding: 5px;
+	background: white;
+	font-weight: normal;
+	color: #777;
+	font-size: 18px;
+}
+
+#codes td {
+	width: 50%;
+	border: 2px solid #ddd;
+	padding: 0;
+	font-size: 12px;
+	vertical-align: top;
+}
+
+#codes td pre {
+	margin: 0;
+}

@@ -1,0 +1,198 @@
+<div class='page-header page-bar'>
+	<h1>{#title}</h1>
+
+	<div class='tabs'>
+		<div class='tab' id='logout'>
+			{#logout}
+		</div>
+	</div>
+</div>
+
+<div class='flex-container'>
+
+	<div class='column6'>
+
+		<div class='panel'>
+
+			<div class='header'>			
+				<h2>{#language}</h2>
+			</div>
+
+			<div class='content'>
+
+				<div id='languages'>
+					@foreach (language in languages)
+						<div class='language card {language.code == _.lang.current ? "selected" : ''}' lang='{language.code}'>
+							<img src='{{static}}/{language.flag}' />
+							<br>
+							{language.name} ({language.code})
+						</div>
+					@end
+				</div>
+			</div>
+		</div>
+
+	</div><div class='column6'>
+
+		<div class='panel'>
+
+			<div class='header'>			
+				<h2>{#discrete_mode}</h2>
+			</div>
+
+			<div class='content'>
+
+				<div id='sfw-button'>
+					<h4>{#activate_discrete_mode}</h4>
+					@include('main.switch', sfw_switch)
+				</div>
+			</div>
+		</div>
+
+	</div><div class='column6'>
+		
+		<div class='panel'>
+
+			<div class='header'>			
+				<h2>{#change_password}</h2>
+			</div>
+
+			<div class='content'>
+				<form id='change-password' method='post'>
+
+					<h4>{#old_password}</h4>
+					<input name="password" type="password" required></input> <br>
+
+					<h4>{#new_password}</h4>
+					<input name="new_password1" type="password" required></input> <br>
+
+					<h4>{#confirm_password}</h4>
+					<input name="new_password2" type="password" required></input> <br>
+					
+					<center><input type='submit' class='button green' value='{#change}'></input></center>
+				</form>
+			</div>
+		</div>
+
+	</div><div class='column6'>
+
+		<div class='panel'>
+
+			<div class='header'>		
+				<h2>E-mails</h2>
+			</div>
+			
+			<div class='content' id='mails'>
+
+				@foreach (category : notifications in mails)
+
+					<input type='checkbox' id='mails_{category}' class='category-checkbox' category='{category}'> 
+					<label for='mails_{category}' class='category-title'>{_.lang.get('mail', 'notif_' + category)}</label>
+
+					<div class='category' category='{category}'>
+
+						@foreach (mail in notifications)
+							<input type='checkbox' id='mails_{category}{mail}' class='checkbox' {settings['mail_' + category + '_' + mail] ? 'checked=true' : ''} category='{category}' setting='mail_{category}_{mail}'>
+							<label for='mails_{category}{mail}'>{_.lang.get('mail', 'notif_' + category + '_' + mail)}</label>
+							<br>
+						@end
+					</div>
+				@end
+			</div>
+		</div>
+	</div>
+
+	<div class='column6'>
+
+		<div class='panel'>
+
+			<div class='header'>		
+				<h2>{#delete_account}</h2>
+			</div>
+			
+			<div class='content'>
+				<div id='delete-button' class='button'>{#delete_account}</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<center>
+	<div class='advanced-button'>
+		Avancé
+		<img src='{{static}}image/expand.png'>
+	</div>
+</center>
+
+<div class='flex-container advanced'>
+
+	<div class='column6'>
+
+		<div class='panel'>
+
+			<div class='header'>			
+				<h2>Vider le localStorage</h2>
+			</div>
+
+			<div class='content'>
+
+				<div class='clear-localstorage button'>Vider</div>
+			</div>
+		</div>
+
+	</div><div class='column6'>
+
+		
+	</div>
+</div>
+
+@view (delete_popup)
+	<div class='title'>{#delete_account}</div>
+	
+	<div class='content'>
+		{#delete_message}
+		<br>
+		<br>
+		<input type='checkbox' id='delete-forum-messages'><label for='delete-forum-messages'>{#delete_forum_messages}</label>
+	</div>
+	
+	<div class='actions'>
+		<div class='action dismiss'>{#delete_cancel}</div>
+		<div id='delete' class='action red'>{#delete_confirm}</div>
+	</div>
+@endview
+
+@view (delete_confirm_popup)
+
+	<div class='title'>{#delete_confirmation}</div>
+	
+	<div class='content'>{#delete_confirmation_password} : <br><br>
+
+	{#delete_password} : <input type='password' id='delete-confirm-password'></input>
+	</div>
+
+	<div class='actions'>
+		<div class='action dismiss'>{#delete_cancel}</div>
+		<div id='delete-final' class='action red'>{#delete_finalize}</div>
+	</div>
+@endview
+
+@view (delete_success_popup)
+
+	<div class='title'>{#delete_success}</div>
+	
+	<div class='content'>{#delete_success_message}</div>
+@endview
+
+@view (delete_failed_popup)
+
+	<div class='title'>{#delete_failed}</div>
+	
+	<div class='content'>
+		<div id='delete-error'></div>
+	</div>
+
+	<div class='actions'>
+		<div class='action dismiss'>{#delete_ok}</div></center>
+	</div>
+@endview

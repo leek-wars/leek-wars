@@ -1,0 +1,117 @@
+<div class='page-header page-bar'>
+
+	<h1>{#title}</h1>
+
+	<div id='tabs' class='tabs' id='search-box'>
+		<div class='tab disabled'>
+			<img src='{{static}}/image/search.png'></img>
+			<input type='text' id='query'></input>
+		</div>
+	</div>
+</div>
+
+<div class='column3'>
+
+	<div class='panel'>
+
+		<div class='content'>
+
+			<div id='items-list' autostopscroll='bottom'>
+
+				@foreach (category in categories)
+					<h2>{_.lang.get('documentation', 'function_category_' + category.name)}</h2>
+					@foreach (item in items[category.id])
+						@if (item.name == item.real_name)
+							<div class='item' name='{item.name}' item='{item.name.toLowerCase()}'>
+								{item.name}
+							</div>
+						@end
+					@end
+				@end
+			</div>
+		</div>
+	</div>
+
+</div><div class='column9'>
+
+	<div class='panel'>
+
+		<div class='content'>
+
+			<div id='items' autostopscroll='bottom'>
+
+				@foreach (category in categories)
+
+					@foreach (item in items[category.id])
+						<div class="item {item.deprecated ? 'deprecated' : ''}" item='{item.name.toLowerCase()}'>
+							@if (item.type == 'function')
+								@include('function', item)
+							@elseif (item.type == 'constant')
+								@include('constant', item)
+							@end
+						</div>
+					@end
+				@end
+			</div>
+		</div>
+	</div>
+</div>
+
+@view (function)
+
+	<h2 class='searchable'>{name}(@foreach (i : arg in arguments_names)@if (arguments_types[i] != -1)<span class='argument'>{_.lang.get('documentation', 'arg_type_' + arguments_types[i])}</span>&nbsp;{arg}@else<span class='argument'>?</span>&nbsp;{arg}@end@if (i < arguments_names.length - 1) , @end@end)
+
+	@if (return_type != 0)
+		:
+		@if (return_type != -1)
+			<span class='argument'> {_.lang.get('documentation', 'arg_type_' + return_type)}</span>&nbsp;{return_name}
+		@else
+			<span class='argument'>?</span>&nbsp;{return_name}
+		@end
+	@end
+	</h2>
+	@if (deprecated)
+		<div class='deprecated-message'>Cette fonction est dépréciée.</div>
+	@end
+	<div class='content searchable'>{{_.lang.get('documentation', 'func_' + real_name)}}</div>
+
+	@if (arguments_names.length > 0)
+		<h4>{#parameters}</h4>
+		<ul>
+		@foreach (i : arg in arguments_names)
+			<li>{arg} : <span class='searchable'>{{_.lang.get('documentation', 'func_' + real_name + '_arg_' + (parseInt(i) + 1))}}</span>
+			</li>
+		@end
+		</ul>
+	@end
+
+	@if (return_type != 0)
+		<h4>{#return}</h4>
+		<ul>
+			<li>{return_name} : <span class='searchable'>{{_.lang.get('documentation', 'func_' + real_name + '_return')}}</span>
+			</li>
+		</ul>
+	@end
+
+	<div class='min-stats'>
+	@if (operations == -1)
+		<b>{#variable_operations}</b>
+	@else
+		<b>{operations}</b> opérations
+	@end
+	</div>
+
+@endview
+
+@view (constant)
+
+	<h2 class='searchable'>{name}</h2>
+	@if (deprecated)
+		<div class='deprecated-message'>Cette constante est dépréciée.</div>
+	@end
+	<div class='content searchable'>{{_.lang.get('documentation', 'const_' + name)}}</div>
+	<h4>{#value}</h4>
+	<ul>
+		<li>{name} = {value}</li>
+	</ul>
+@endview

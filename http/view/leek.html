@@ -1,0 +1,1021 @@
+<div class='page-header page-bar'>
+
+	<h1>{leek.name}</h1>
+
+	<div id='tabs' class='tabs'>
+
+		@if (my_leek)
+
+			<a href='/garden'>
+				<div class='tab'>
+					<div id='remaining-fights'>
+						<img src='{{static}}/image/icon/garden.png'>
+						<span class='on'>
+							<span>{leek.remaining_fights}</span>
+							<div id='tt_remaining-fights' class='tooltip'>{{#n_remaining_fights, leek.remaining_fights}}</div>
+						</span>
+						<span class='off'>
+							<span class='remaining-time'></span>
+							<div id='tt_remaining-time' class='tooltip'>{{#next_fight_in, "<span class='remaining-time'></span>"}}</div>
+						</span>
+					</div>
+				</div>
+			</a>
+
+			@if (leek.tournament.current)
+				<a id='view-tournament' href='/tournament/{leek.tournament.current}'>
+					<div class='tab green'>{#see_tournament}</div>
+				</a>
+			@end
+
+			<div class='tab'>
+				<img src='{{static}}image/icon/trophy.png' />
+
+				<span id='register-tournament'>{#register_to_tournament}</span>
+				<span id='unregister-tournament'>{#unregister}</span>
+
+				<div class='tooltip' id='tt_register-tournament'>{#tournament_time}</div>
+			</div>
+
+			<div class='tab' id='in-garden-button'>
+				<span>{#garden}</span>
+				@include('main.switch', garden_switch)
+			</div>
+
+			<div id='tt_in-garden-button' class='tooltip'>{#authorize_agressions}</div>
+
+		@else
+
+			@if (LW.connected)
+				<a id='challenge' href='/garden/challenge/{leek.id}'>
+					<div class='tab'>
+						<img src='{{static}}image/icon/garden.png'></img><span>{#challenge}</span>
+					</div>
+				</a>
+			@end
+		@end
+	</div>
+</div>
+
+<div class='flex-container'>
+
+	<div class='column4'>
+		<div class='panel'>
+			<div class='header'>
+				<h2 class='leek-farmer-div'>{#farmed_by, leek.farmer.id, leek.farmer.name}</h2>
+			</div>
+			<div class='content'>
+
+				<div id='leek-image' class='@if (my_leek) my-leek @end'></div>
+
+				@if (my_leek)
+					<div id='tt_leek-image' class='tooltip'>
+						{#click_to_change_hat}
+					</div>
+				@end
+			</div>
+		</div>
+
+	</div><div class='column4'>
+
+		<div class='panel'>
+
+			<div class='header'>
+				<h2>Statistiques</h2>
+			</div>
+
+			<div class='content'>
+
+				<h4 class='level'>{#level_n, leek.level}</h4>
+
+				<div id='bar'>
+					<span id='xp-bar' class='striked {xp_bar_class}' style='width:{xp_bar_width}%'></span>
+				</div>
+				<div class='tooltip fluid' id='tt_bar'>
+					@if (max_level)
+						<b>{#max_level}</b> <br>
+						{#xp, leek.xp}
+					@else
+						<b>{{#remaining_xp, _.format.number(leek.remaining_xp)}}</b> <br>
+						{{#xp, _.format.number(leek.xp) + " / " + _.format.number(leek.up_xp)}}
+					@end
+				</div>
+
+				<center><div id='talent' class='talent'>{leek.talent}</div><div id='talent-more'>({leek.talent_more >= 0 ? '+' + leek.talent_more : leek.talent_more})</div></center>
+				<div class='tooltip' id='tt_talent'>{#talent}</div>
+
+				<div class='tooltip' id='tt_talent-more'>
+				@if (leek.talent_more > 0)
+					{#report.talent_difference, leek.name, leek.talent_more, leek.talent_gains + '%'}
+				@else
+					{#report.talent_difference_no_gains, leek.name}
+				@end
+				</div>
+
+				<table id='fights'>
+					<tr>
+						<td class='big'>{%leek.victories}</td>
+						<td class='big'>{%leek.draws}</td>
+						<td class='big'>{%leek.defeats}</td>
+					</tr>
+					<tr>
+						<td class='grey'>{#victories}</td>
+						<td class='grey'>{#draws}</td>
+						<td class='grey'>{#defeats}</td>
+					</tr>
+				</table>
+				<div id='tt_fights' class='tooltip'>{#ratio, leek.ratio}</div>
+
+				@if (leek.level >= 100)
+					<div id='talent-history'>
+						<div class="ct-chart"></div>
+					</div>
+				@end
+			</div>
+		</div>
+	</div><div class='column4'>
+
+		<div class='panel'>
+
+			<div class='header'>
+				<h2>Caractéristiques</h2>
+			</div>
+
+			<div class='content' id='stats'>
+
+				<table class='group'>
+
+					<tr>
+						<td>
+							<div class='stat'>
+								<div id='lifespan'>
+									<img src='{{static}}image/charac/life.png'></img>
+									<span class='color-life' stat='life'>{leek.life}</span>
+								</div>
+
+								<div class='tooltip' id='tt_lifespan'>
+									<b>{#life}</b><br />
+									{#life_description}
+								</div>
+							</div>
+						</td>
+						<td>
+							<div class='stat'>
+								<div id='sciencespan'>
+									<img src='{{static}}image/charac/science.png'></img>
+									<span class='color-science' stat='science'>{leek.science}</span>
+								</div>
+
+								<div class='tooltip' id='tt_sciencespan'>
+									<b>{#science}</b><br />
+									{#science_description}
+									@if (leek.science > 0)
+										<br>
+										<b class='effect'>Boosts : × <span class='damage'>{_.format.numberPrecision(1 + leek.science / 100, 3)}</span></b>
+									@end
+								</div>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<div class='stat'>
+								<div id='strengthspan'>
+									<img src='{{static}}image/charac/strength.png'></img>
+									<span class='color-strength' stat='strength'>{leek.strength}</span>
+								</div>
+
+								<div class='tooltip' id='tt_strengthspan'>
+									<b>{#strength}</b><br>
+									{#strength_description}
+									@if (leek.strength > 0)
+										<br>
+										<b class='effect'>Dégâts : × <span class='damage'>{_.format.numberPrecision(1 + leek.strength / 100, 3)}</span></b>
+									@end
+								</div>
+							</div>
+						</td>
+						<td>
+							<div class='stat'>
+								<div id='magicspan'>
+									<img src='{{static}}image/charac/magic.png'></img>
+									<span class='color-magic' stat='magic'>{leek.magic}</span>
+								</div>
+
+								<div class='tooltip' id='tt_magicspan'>
+									<b>{#magic}</b><br />
+									{#magic_description}
+									@if (leek.magic > 0)
+										<br>
+										<b class='effect'>Entraves & poisons : × <span class='damage'>{_.format.numberPrecision(1 + leek.magic / 100, 3)}</span></b>
+									@end
+								</div>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<div class='stat'>
+								<div id='wisdomspan'>
+									<img src='{{static}}image/charac/wisdom.png'></img>
+									<span class='color-wisdom' stat='wisdom'>{leek.wisdom}</span>
+								</div>
+
+								<div class='tooltip' id='tt_wisdomspan'>
+									<b>{#wisdom}</b><br />
+									{#wisdom_description}<br>
+									@if (leek.wisdom > 0)
+										<b class='effect'>Soins : × <span class='heal'>{_.format.numberPrecision(1 + leek.wisdom / 100, 3)}</span></b>
+										<br>
+										<b class='effect'>Vol de vie : <span class='life-steal'>{Math.round(leek.wisdom / 10)}%</span></b>
+									@end
+								</div>
+							</div>
+						</td>
+						<td>
+							<div class='stat'>
+								<div id='frequencyspan'>
+									<img src='{{static}}image/charac/frequency.png'></img>
+									<span class='color-frequency' stat='frequency'>{leek.frequency}</span>
+								</div>
+
+								<div class='tooltip' id='tt_frequencyspan'>
+									<b>{#frequency}</b><br />
+									{#frequency_description}
+								</div>
+							</div>
+						</td>
+					</tr>
+
+					<tr>
+						<td>
+							<div class='stat'>
+								<div id='agilityspan'>
+									<img src='{{static}}image/charac/agility.png'></img>
+									<span class='color-agility' stat='agility'>{leek.agility}</span>
+								</div>
+
+								<div class='tooltip' id='tt_agilityspan'>
+									<b>{#agility}</b>
+									<br />
+									{#agility_description}
+									@if (leek.agility > 0)
+										<br>
+										<b class='effect'>Renvoi de dégats : × <span class='damage-return'>{_.format.numberPrecision(1 + leek.agility / 100, 3)}</span></b>
+										<br>
+										<b class='effect'>Coups critiques : <span class='critical'>{Math.round(leek.agility / 10)}%</span></b>
+									@end
+								</div>
+							</div>
+						</td>
+
+						<td>
+							<div class='stat'>
+								<div id='tpspan'>
+									<img src='{{static}}image/charac/tp.png'></img>
+									<span class='color-tp' stat='tp'>{leek.tp}</span>
+								</div>
+
+								<div class='tooltip' id='tt_tpspan'>
+									<b>{#tp}</b><br />
+									{#tp_description}
+								</div>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<div class='stat'>
+								<div id='resistancespan'>
+									<img src='{{static}}image/charac/resistance.png'></img>
+									<span class='color-resistance' stat='resistance'>{leek.resistance}</span>
+								</div>
+
+								<div class='tooltip' id='tt_resistancespan'>
+									<b>{#resistance}</b>
+									<br />
+									{#resistance_description}
+									@if (leek.resistance > 0)
+										<br>
+										<b class='effect'>Boucliers : × <span class='damage'>{_.format.numberPrecision(1 + leek.resistance / 100, 3)}</span></b>
+									@end
+								</div>
+							</div>
+						</td>
+						<td>
+							<div class='stat'>
+								<div id='mpspan'>
+									<img src='{{static}}image/charac/mp.png'></img>
+									<span class='color-mp' stat='mp'>{leek.mp}</span>
+								</div>
+
+								<div class='tooltip' id='tt_mpspan'>
+									<b>{#mp}</b><br />
+									{#mp_description}
+								</div>
+							</div>
+						</td>
+					</tr>
+				</table>
+
+				@if (my_leek)
+					<div id='capital' class='button'>{#n_capital, leek.capital}</div>
+
+					<div id='use-potion' class='button'>{#potion}</div>
+				@end
+			</div>
+		</div>
+
+	</div><div class='column4'>
+
+		<div class='panel'>
+
+			<div class='header'>
+				<h2>{#weapons} <span class='weapon-count'>[{leek.weapons.length}/{leek.max_weapons}]</span></h2>
+				@if (my_leek)
+					<div class='right'>
+						<div id='edit-weapons' class='button flat'>{#edit}</div>
+					</div>
+				@end
+			</div>
+
+			<div id='leek-weapons' class='content'>
+				@foreach (i : weapon in leek.weapons)
+					<div id="leek-weapon-{i}" weapon="{i}" item="{weapon.id}" template="{weapon.template}" class="weapon available">
+						<img src="{{static}}/image/weapon/{LW.weapons[weapon.template].name}.png">
+					</div>
+					<br>
+					<div class='tooltip' id='tt_leek-weapon-{i}'>
+						<b>{_.lang.get('weapon', LW.weapons[weapon.template].name)}</b>
+						<br>
+						{#weapon_level_n, LW.weapons[weapon.template].level}
+						<br>
+						<small>{'WEAPON_' + LW.weapons[weapon.template].name.toUpperCase()}</small>
+					</div>
+				@end
+			</div>
+		</div>
+
+	</div><div class='column4'>
+
+		<div class='panel'>
+
+			<div class='header'>
+				<h2>{#chips} <span class='chip-count'>[{leek.chips.length}/{leek.max_chips}]</span></h2>
+				@if (my_leek)
+					<div class='right'>
+						<div id='edit-chips' class='button flat'>{#edit}</div>
+					</div>
+				@end
+			</div>
+
+			<div class='content center'>
+				<div id='leek-chips'>
+					@foreach (chip in leek.chips)
+						<div id="leek-chip-{chip.id}" item="{chip.id}" template="{chip.template}" class="chip available">
+							<img src="{{static}}/image/chip/small/{LW.chips[chip.template].name}.png">
+						</div>
+						<div class='tooltip' id='tt_leek-chip-{chip.id}'>
+							<b>{_.lang.get('chip', LW.chips[chip.template].name)}</b>
+							<br>
+							{#chip_level_n, LW.chips[chip.template].level}
+							<br>
+							<small>{'CHIP_' + LW.chips[chip.template].name.toUpperCase()}</small>
+						</div>
+					@end
+				</div>
+			</div>
+		</div>
+
+	</div><div class='column4'>
+
+		<div class='panel'>
+
+			<div class='header'>
+				<h2>{#ai}</h2>
+				@if (my_leek)
+					<div class='right'>
+						<div id='edit-ai' class='button flat'>{#edit}</div>
+					</div>
+				@end
+			</div>
+
+			<div id='leek-ai' class='content'>
+
+				@if (leek.ai)
+					<a href='/editor/{leek.ai.id}'>
+						@include('ai', leek.ai)
+					</a>
+				@else
+					{#no_ai}
+				@end
+			</div>
+
+		</div>
+	</div>
+</div>
+
+<div class='flex-container'>
+
+	<div class='column6'>
+
+		@if (leek.fights.length > 0)
+			<div id='history' class='panel'>
+
+				<div class='header'>
+					<h2>{#fights}</h2>
+				</div>
+
+				<div class='content fight-history'>
+					@foreach (fight in leek.fights)
+						<div class='fight-wrapper'>
+							@include('main.fight', fight)
+						</div>
+					@end
+				</div>
+			</div>
+		@end
+
+	</div><div class='column6'>
+
+		@if (leek.tournaments.length > 0)
+			<div id='tournament-history' class='panel'>
+
+				<div class='header'>
+					<h2>{#tournaments}</h2>
+				</div>
+
+				<div class='content tournament-history'>
+
+					@foreach (tournament in leek.tournaments)
+						<div class='tournament-wrapper'>
+							@include('main.tournament', tournament)
+						</div>
+				    @end
+			    </div>
+			</div>
+		@end
+	</div>
+</div>
+
+@if (my_leek && leek.registers.length > 0)
+	<div class='panel' id='registers-wrapper'>
+		<div class='header'>
+			<h2>{#registers} <span class='register-count'>[{leek.registers.length}/100]</span></h2>
+
+			<div class='right'>
+				<div class='button flat' id='hide-registers'>{#hide_registers}</div>
+				<div class='button flat' id='show-registers'>{#show_registers}</div>
+			</div>
+		</div>
+
+		<div class='content'>
+			<table id='registers'>
+				<tr>
+					<th>{#register_key}</th>
+					<th>{#register_value}</th>
+					<th></th>
+				</tr>
+				@foreach (register in leek.registers)
+					<tr class='register'>
+						<td class='key'>{register.key}</td>
+						<td class='value' contenteditable><div >{register.value}</div></td>
+						<td class='delete'></td>
+					</tr>
+				@end
+			</table>
+		</div>
+	</div>
+@end
+
+<div class='page-footer page-bar'>
+	<div class='tabs'>
+		@if (LW.connected && !my_leek)
+			<div class='tab'>
+				<img src='{{static}}image/icon/flag.png'/>
+				<span id='report-button' class='report-button'>{#report}</span>
+			</div>
+		@end
+
+		@if (my_leek)
+			<div class='tab' id='rename-button'>{#rename_leek}</div>
+		@end
+	</div>
+</div>
+
+@view (weapon_popup)
+
+	<div class='title'>
+		{#weapons_of, leek.name}
+		<span class='weapon-count'>[{leek.weapons.length}/{leek.max_weapons}]</span>
+	</div>
+
+	<div class='content' autostopscroll>
+		<div class='leek-weapons'>
+
+			@foreach (i : weapon in leek.weapons)
+				<div id='weapon-{weapon.id}-{i}' class='weapon available' location='leek' weapon="{weapon.id}-{i}" item='{weapon.id}' template='{weapon.template}'>
+					<img src='{{static}}image/weapon/{LW.weapons[weapon.template].name}.png'>
+				</div>
+				<div class='tooltip' id='tt_weapon-{weapon.id}-{i}'>
+					<b>{_.lang.get('weapon', LW.weapons[weapon.template].name)}</b>
+				</div>
+			@end
+		</div>
+
+		<br>
+		<br>
+
+		<h2>{#all_my_weapons}</h2> <br>
+
+		<div class='farmer-weapons'>
+			@foreach (i : weapon in farmer_weapons)
+				<div id='weapon-{weapon.id}-{i}' class='weapon available' location='farmer' weapon="{weapon.id}-{i}" item='{weapon.id}' template='{weapon.template}'>
+					<img src='{{static}}image/weapon/{LW.weapons[weapon.template].name}.png'>
+				</div>
+				<div class='tooltip' id='tt_weapon-{weapon.id}-{i}'>
+					<b>{_.lang.get('weapon', LW.weapons[weapon.template].name)}</b>
+				</div>
+			@end
+		</div>
+	</div>
+
+	<div class='actions'>
+		<div class='action dismiss'>{#ok}</div>
+	</div>
+@endview
+
+@view (chip_popup)
+
+	<div class='title'>{#chips_of, leek.name} <span class='chip-count'>[{leek.chips.length}/{leek.max_chips}]</span></div>
+
+	<div class='content' autostopscroll>
+
+		<div class='leek-chips'>
+			@foreach (i : chip in leek.chips)
+				<div id='chip-{chip.id}-{i}' class='chip available' location='leek' chip='{chip.id}-{i}' item='{chip.id}' template='{chip.template}'>
+					<img src='{{static}}image/chip/small/{LW.chips[chip.template].name}.png'>
+				</div>
+				<div class='tooltip' id='tt_chip-{chip.id}-{i}'>
+					<b>{_.lang.get('chip', LW.chips[chip.template].name)}</b>
+				</div>
+			@end
+		</div>
+
+		<br>
+		<br>
+
+		<h2>{#all_my_chips}</h2> <br>
+
+		<div class='farmer-chips'>
+			@foreach (i : chip in farmer_chips)
+				<div id='chip-{chip.id}-{i}' class='chip available' location='farmer' chip='{chip.id}-{i}' item='{chip.id}' template='{chip.template}'>
+					<img src='{{static}}image/chip/small/{LW.chips[chip.template].name}.png'>
+				</div>
+				<div class='tooltip' id='tt_chip-{chip.id}-{i}'>
+					<b>{_.lang.get('chip', LW.chips[chip.template].name)}</b>
+				</div>
+			@end
+		</div>
+	</div>
+
+	<div class='actions'>
+		<div class='action dismiss'>{#ok}</div>
+	</div>
+@endview
+
+@view (ai_popup)
+
+	<div class='title'>{#ai_of, leek.name}</div>
+
+	<div class='content'>
+
+		<div class='leek-ai'>
+			@if (leek.ai)
+				<div id='ai-{ai.id}' class='ai ai-sheet' ai='{leek.ai.id}' location='leek' draggable='true'>
+					{leek.ai.name}
+				</div>
+				<div class='tooltip' id='tt_ai-{ai.id}'>
+					<b>{leek.ai.name}</b>
+				</div>
+			@end
+		</div>
+
+		<br>
+		<br>
+
+		<h2>{#all_my_ais}</h2> <br />
+		<div class='farmer-ais'>
+			@foreach (ai in farmer_ais)
+				@if (!leek.ai || ai.id != leek.ai.id)
+					<div id='ai-{ai.id}' class='ai ai-sheet' ai='{ai.id}' location='farmer' draggable='true'>
+						{ai.name}
+					</div>
+					<div class='tooltip' id='tt_ai-{ai.id}'>
+						<b>{ai.name}</b>
+					</div>
+				@end
+			@end
+		</div>
+	</div>
+
+	<div class='actions'>
+		<div class='action dismiss'>{#ok}</div>
+	</div>
+@endview
+
+@view (potion_popup)
+
+	<div class='title'>{#use_a_potion, leek.name}</div>
+
+	<div class='content'>
+		<div id='farmer-potions'>
+
+			@foreach (id : potion in potions)
+				<div class='potion' id='potion-{potion.id}' potion='{potion.id}' quantity='{potion.quantity}'>
+					<img src='{{static}}/image/potion/{LW.potions[potion.template].name}.png'>
+				</div>
+				<div id='tt_potion-{potion.id}' class='tooltip'>
+					<b>{_.lang.get('potion', LW.potions[potion.template].name)}</b>
+					<br>
+					{#level_n, LW.potions[potion.template].level}
+				</div>
+			@end
+			<br>
+			<br>
+			<center>({#click_to_use})</center>
+		</div>
+	</div>
+
+	<div class='actions'>
+		<div class='action dismiss'>{#cancel}</div>
+	</div>
+@endview
+
+@view (hat_popup)
+
+	<div class='title'>{#select_a_hat}</div>
+
+	<div class='content'>
+		<div id='farmer-hats'>
+
+			<div class='hat' id='hat--1' hat='-1'>
+				<img src='{{static}}/image/hat/no_hat.png' />
+			</div>
+			<div class='tooltip' id='tt_hat--1'>
+				<b>{#no_hat}</b>
+			</div>
+
+			@foreach (i : hat in farmer_hats)
+				<div class='hat' id='hat-{i}' hat='{hat.template}' item_id='{hat.id}' template='{hat.hat_template}'>
+					<img src='{{static}}image/hat/{hat.name}.png'>
+				</div>
+				<div class='tooltip' id='tt_hat-{i}'>
+					<b>{_.lang.get('hat', hat.name)}</b>
+					<br>
+					{#level_n, hat.level}
+				</div>
+			@endforeach
+			<br>
+			<br>
+			<center>({#click_to_put_hat})</center>
+		</div>
+	</div>
+
+	<div class='actions'>
+		<div class='action dismiss'>{#cancel}</div>
+	</div>
+@endview
+
+@view (rename_popup)
+
+	<div class='title'>{#rename_leek}</div>
+
+	<div class='content'>
+
+		{#rename_description}
+		<br>
+		<br>
+		{#rename_new_name} : <input id='rename-new-name' type='text' value="{leek.name}"></input>
+		<br>
+		<br>
+		<center>
+			<div id='rename-habs' class='button'>{#rename_pay_habs} : <b>{%rename_price_habs}</b> <span class='hab' /></div>
+			<div id='rename-crystals' class='button'>{#rename_pay_crystals} : <b>{%rename_price_crystals}</b> <span class='crystal' /></div>
+		</center>
+	</div>
+
+	<div class='actions'>
+		<div class='action dismiss'>{#cancel}</div>
+	</div>
+@endview
+
+@view (ai)
+
+	<div id='ai-{id}' draggable='true' class='ai ai-sheet' ai='{id}'>{name}</div>
+	<div class='tooltip' id='tt_ai-{id}'>
+		<b>{name}</b>
+	</div>
+@endview
+
+@view (capital_popup)
+
+	<div class='title'>Ajouter des points de capital</div>
+
+	<div class='content'>
+
+		<center><div class='capital rounded4'></div></center>
+
+		<div class='charac'>
+			<img src='{{static}}/image/charac/life.png'></img>
+			<span class='stat color-life' stat='life'>{leek.life}</span>
+			<span class='sup'></span>
+
+			<div class='tooltip' id='tt_lifespan'>
+				<b>{#life}</b><br />
+				{#life_description}
+			</div>
+
+			<div class='add-wrapper'>
+				<span id='add-life' class='add' q='1' stat='life'></span>
+				<span id='add-10-life' class='add' q='10' stat='life'></span>
+				<span id='add-100-life' class='add' q='100' stat='life'></span>
+			</div>
+
+			<div class='tooltip fluid' id='tt_add-life'>{#life_cost}</div>
+			<div class='tooltip fluid' id='tt_add-10-life'>{#life_cost_10}</div>
+			<div class='tooltip fluid' id='tt_add-100-life'>{#life_cost_100}</div>
+		</div>
+
+		<div class='charac'>
+			<img src='{{static}}/image/charac/strength.png'></img>
+			<span class='stat color-strength' stat='strength'>{leek.strength}</span>
+			<span class='sup'></span>
+
+			<div class='tooltip' id='tt_strengthspan'>
+				<b>{#strength}</b><br />
+				{#strength_description}
+			</div>
+
+			<div class='add-wrapper'>
+				<span id='add-strength' class='add' q='1' stat='strength'></span>
+				<span id='add-10-strength' class='add' q='10' stat='strength'></span>
+				<span id='add-100-strength' class='add' q='100' stat='strength'></span>
+			</div>
+
+			<div class='tooltip fluid' id='tt_add-strength'>{#strength_cost}</div>
+			<div class='tooltip fluid' id='tt_add-10-strength'>{#strength_cost_10}</div>
+			<div class='tooltip fluid' id='tt_add-100-strength'>{#strength_cost_100}</div>
+		</div>
+
+		<div class='charac'>
+			<img src='{{static}}/image/charac/wisdom.png'></img>
+			<span class='stat color-wisdom' stat='wisdom'>{leek.wisdom}</span>
+			<span class='sup'></span>
+
+			<div class='tooltip' id='tt_wisdomspan'>
+				<b>{#wisdom}</b><br />
+				{#wisdom_description}
+			</div>
+
+			<div class='add-wrapper'>
+				<span id='add-wisdom' class='add' q='1' stat='wisdom'></span>
+				<span id='add-10-wisdom' class='add' q='10' stat='wisdom'></span>
+				<span id='add-100-wisdom' class='add' q='100' stat='wisdom'></span>
+			</div>
+
+			<div class='tooltip fluid' id='tt_add-wisdom'>{#wisdom_cost}</div>
+			<div class='tooltip fluid' id='tt_add-10-wisdom'>{#wisdom_cost_10}</div>
+			<div class='tooltip fluid' id='tt_add-100-wisdom'>{#wisdom_cost_100}</div>
+		</div>
+
+		<div class='charac'>
+			<img src='{{static}}/image/charac/agility.png'></img>
+			<span class='stat color-agility' stat='agility'>{leek.agility}</span>
+			<span class='sup'></span>
+
+			<div class='tooltip' id='tt_agilityspan'>
+				<b>{#agility}</b>
+				<br />
+				{#agility_description}
+			</div>
+
+			<div class='add-wrapper'>
+				<span id='add-agility' class='add' q='1' stat='agility'></span>
+				<span id='add-10-agility' class='add' q='10' stat='agility'></span>
+				<span id='add-100-agility' class='add' q='100' stat='agility'></span>
+			</div>
+
+			<div class='tooltip fluid' id='tt_add-agility'>{#agility_cost}</div>
+			<div class='tooltip fluid' id='tt_add-10-agility'>{#agility_cost_10}</div>
+			<div class='tooltip fluid' id='tt_add-100-agility'>{#agility_cost_100}</div>
+		</div>
+
+		<div class='charac'>
+			<img src='{{static}}/image/charac/resistance.png'></img>
+			<span class='stat color-resistance' stat='resistance'>{leek.resistance}</span>
+			<span class='sup'></span>
+
+			<div class='tooltip' id='tt_resistancespan'>
+				<b>{#resistance}</b>
+				<br />
+				{#resistance_description}
+			</div>
+
+			<div class='add-wrapper'>
+				<span id='add-resistance' class='add' q='1' stat='resistance'></span>
+				<span id='add-10-resistance' class='add' q='10' stat='resistance'></span>
+				<span id='add-100-resistance' class='add' q='100' stat='resistance'></span>
+			</div>
+
+			<div class='tooltip fluid' id='tt_add-resistance'>{#resistance_cost}</div>
+			<div class='tooltip fluid' id='tt_add-10-resistance'>{#resistance_cost_10}</div>
+			<div class='tooltip fluid' id='tt_add-100-resistance'>{#resistance_cost_100}</div>
+		</div>
+
+		<div class='charac'>
+			<img src='{{static}}/image/charac/science.png'></img>
+			<span class='stat color-science' stat='science'>{leek.science}</span>
+			<span class='sup'></span>
+
+			<div class='tooltip' id='tt_sciencespan'>
+				<b>{#science}</b><br />
+				{#science_description}
+			</div>
+
+			<div class='add-wrapper'>
+				<span id='add-science' class='add' q='1' stat='science'></span>
+				<span id='add-10-science' class='add' q='10' stat='science'></span>
+				<span id='add-100-science' class='add' q='100' stat='science'></span>
+			</div>
+
+			<div class='tooltip fluid' id='tt_add-science'>{#science_cost}</div>
+			<div class='tooltip fluid' id='tt_add-10-science'>{#science_cost_10}</div>
+			<div class='tooltip fluid' id='tt_add-100-science'>{#science_cost_100}</div>
+		</div>
+
+		<div class='charac'>
+			<img src='{{static}}/image/charac/magic.png'></img>
+			<span class='stat color-magic' stat='magic'>{leek.magic}</span>
+			<span class='sup'></span>
+
+			<div class='tooltip' id='tt_magicspan'>
+				<b>{#magic}</b><br />
+				{#magic_description}
+			</div>
+
+			<div class='add-wrapper'>
+				<span id='add-magic' class='add' q='1' stat='magic'></span>
+				<span id='add-10-magic' class='add' q='10' stat='magic'></span>
+				<span id='add-100-magic' class='add' q='100' stat='magic'></span>
+			</div>
+
+			<div class='tooltip fluid' id='tt_add-magic'>{#magic_cost}</div>
+			<div class='tooltip fluid' id='tt_add-10-magic'>{#magic_cost_10}</div>
+			<div class='tooltip fluid' id='tt_add-100-magic'>{#magic_cost_100}</div>
+		</div>
+
+		<div class='charac'>
+			<img src='{{static}}/image/charac/frequency.png'></img>
+			<span class='stat color-frequency' stat='frequency'>{leek.frequency}</span>
+			<span class='sup'></span>
+
+			<div class='tooltip' id='tt_frequencyspan'>
+				<b>{#frequency}</b><br />
+				{#frequency_description}
+			</div>
+
+			<div class='add-wrapper'>
+				<span id='add-frequency' class='add' q='1' stat='frequency'></span>
+				<span id='add-10-frequency' class='add' q='10' stat='frequency'></span>
+				<span id='add-100-frequency' class='add' q='100' stat='frequency'></span>
+			</div>
+
+			<div class='tooltip fluid' id='tt_add-frequency'>{#frequency_cost}</div>
+			<div class='tooltip fluid' id='tt_add-10-frequency'>{#frequency_cost_10}</div>
+			<div class='tooltip fluid' id='tt_add-100-frequency'>{#frequency_cost_100}</div>
+		</div>
+
+		<div class='charac'>
+			<img src='{{static}}/image/charac/tp.png'></img>
+			<span class='stat color-tp' stat='tp'>{leek.tp}</span>
+			<span class='sup'></span>
+
+			<div class='tooltip' id='tt_tpspan'>
+				<b>{#tp}</b><br />
+				{#tp_description}
+			</div>
+
+			<div class='add-wrapper'>
+				<span id='add-tp' class='add' q='1' stat='tp'></span>
+				<span id='add-10-tp' class='add' q='10' stat='tp'></span>
+				<span id='add-100-tp' class='add' q='100' stat='tp'></span>
+			</div>
+
+			<div class='tooltip fluid' id='tt_add-tp'>{#tp_cost}</div>
+			<div class='tooltip fluid' id='tt_add-10-tp'>{#tp_cost_10}</div>
+			<div class='tooltip fluid' id='tt_add-100-tp'>{#tp_cost_100}</div>
+		</div>
+
+		<div class='charac'>
+			<img src='{{static}}/image/charac/mp.png'></img>
+			<span class='stat color-mp' stat='mp'>{leek.mp}</span>
+			<span class='sup'></span>
+
+			<div class='tooltip' id='tt_mpspan'>
+				<b>{#mp}</b><br />
+				{#mp_description}
+			</div>
+
+			<div class='add-wrapper'>
+				<span id='add-mp' class='add' q='1' stat='mp'></span>
+				<span id='add-10-mp' class='add' q='10' stat='mp'></span>
+				<span id='add-100-mp' class='add' q='100' stat='mp'></span>
+			</div>
+
+			<div class='tooltip fluid' id='tt_add-mp'>{#mp_cost}</div>
+			<div class='tooltip fluid' id='tt_add-10-mp'>{#mp_cost_10}</div>
+			<div class='tooltip fluid' id='tt_add-100-mp'>{#mp_cost_100}</div>
+		</div>
+	</div>
+
+	<div class='actions'>
+		<div class='action dismiss'>{#cancel}</div>
+		<div class='action reset'>{#reset}</div>
+		<div class='action validate green'>{#validate}</div>
+	</div>
+@endview
+
+
+@view (level_popup)
+
+	<div class='title'>{#level_popup_title, leek.name, popup.level}</div>
+
+	<div class='content level-popup'>
+
+		{{popup.header}}
+
+		<table class='gains-table'><tr>
+			<td>{{leek_small_image}}</td>
+
+			<td>
+				<div class='gains'>
+					<div class='life'>
+						<img src='{{static}}/image/icon_life.png'></img><span class='name'>{#life}</span> <b>+ {popup.gains.life}</b>
+					</div>
+					<div class='capital'>
+						<img src='{{static}}/image/add.png'></img><span class='name'>{#capital}</span> <b>+ {popup.gains.capital}</b>
+					</div>
+				</div>
+			</td>
+		</tr></table>
+		<br>
+		<br>
+
+		@if (popup.weapons.length + popup.chips.length + popup.functions.length == 0)
+
+			<center>{#level_popup_no_news}</center>
+
+		@else
+
+			@if (popup.weapons.length > 0)
+				<h2>{#new_weapons}</h2>
+				<div class='available-market'>{#available_on_market}</div>
+
+				@foreach (weapon in popup.weapons)
+					<div class='weapon'>
+						<img src='{{static}}image/weapon/{weapon}.png'><br>
+						<div class='name'>{_.lang.get('weapon', weapon)}</div>
+					</div>
+				@end
+			@end
+
+			@if (popup.chips.length > 0)
+				<h2>{#new_chips}</h2>
+				<div class='available-market'>{#available_on_market}</div>
+
+				@foreach (chip in popup.chips)
+					<div class='weapon'>
+						<img src='{{static}}image/chip/{chip}.png'><br>
+						<div class='name'>{_.lang.get('chip', chip)}</div>
+					</div>
+				@end
+			@end
+
+			@if (popup.functions.length > 0)
+				<h2>{#new_functions}</h2>
+				<br>
+
+				@foreach (function in popup.functions)
+					<div class='function'>
+						{function}
+					</div>
+				@end
+			@end
+		@end
+	</div>
+
+	<div class='actions'>
+		<div class='action dismiss'>{#ok}</div>
+	</div>
+@endview

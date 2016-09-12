@@ -1,0 +1,73 @@
+#conversations-list {
+	overflow-y: auto;
+	overflow-x: hidden;
+	padding: 0;
+}
+
+.message-bar-wrapper {
+	display: flex;
+}
+
+#chat-input {
+	width: 100%;
+}
+
+#chat-send {
+	vertical-align: bottom;
+	margin-top: 0;
+	height: 23px;
+}
+
+#messages-page .chat-input {
+	margin-top: 0;
+}
+
+.conversation-preview {
+	cursor: pointer;
+	height: 52px;
+	margin-bottom: 6px;
+	white-space: nowrap;
+}
+.conversation-preview.selected {
+	background: #aaa;
+	color: white;
+}
+.conversation-preview:hover {
+	background: white;
+}
+.conversation-preview.selected:hover {
+	background: #999;
+}
+
+.conversation-preview .content {
+	display: inline-block;
+	vertical-align: top;
+	padding: 5px;
+}
+
+.conversation-preview img {
+	width: 52px;
+	height: 52px;
+}
+
+.conversation-preview .last-message {
+	font-size: 14px;
+	color: #aaa;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	overflow: hidden;
+	max-width: 100%;
+}
+.conversation-preview.selected .last-message {
+	color: #eee;
+}
+
+#conversations {
+	margin-bottom: 10px;
+	overflow-y: auto;
+}
+
+#conversations .loader {
+	padding: 40px;
+}
+

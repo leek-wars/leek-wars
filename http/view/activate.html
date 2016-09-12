@@ -1,0 +1,18 @@
+<h1>@if (success) {#signup.signup_done} @else Error @end</h1>
+
+<div class='panel'>
+
+	<div class='content'>
+		<center>
+			@if (success)
+				<img src='{{static}}image/leek/leek1_front_green.png'></img>
+				<h2 class='signup-message'>{#signup.signup_done_message}</h2>
+				<a href='login'><div class='button'>{#signup.login}</div></a>
+			@else
+				<img src='{{static}}image/notgood.png'>
+				<br><br>
+				<h2>{error}</h2>
+			@end
+		</center>
+	</div>
+</div>

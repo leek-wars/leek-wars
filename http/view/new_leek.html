@@ -1,0 +1,28 @@
+<h1>{#title}</h1>
+
+<div class='panel'>
+
+	<div class='content'>
+		<center>
+
+			<img src='{{static}}image/leek/leek1_front_green.png'></img>
+			<br>
+			<br>
+
+			@if (leek_count < 4)
+
+				{#name} <input id='leek-name' type='text'></input>
+				<br>
+				<br>
+				{#price} : {{_.format.number(price)}} <span class='hab'></span>
+
+				<div id='error'></div>
+				<div class='button green' id='create-leek'>{#create}</div>  
+
+			@else
+				<h2>{#leek.error_already_have_4_leeks}</h2>
+			@end
+
+		</center>
+	</div>
+</div>

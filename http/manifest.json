@@ -1,0 +1,11 @@
+{
+  "name": "Leek Wars",
+  "short_name": "Leek Wars",
+  "icons": [{
+        "src": "/static/image/favicon.png",
+        "sizes": "64x64"
+      }],
+  "start_url": "/",
+  "display": "fullscreen",
+  "orientation": "portrait"
+}

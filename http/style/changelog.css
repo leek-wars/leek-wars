@@ -1,0 +1,19 @@
+#changelog-page {
+	font-size: 16px;
+}
+
+.change {
+	padding: 0 10px;
+}
+
+#changelog-page .panel .content {
+	background: rgba(100,100,100,0.1);
+	padding: 0;
+}
+
+#changelog-page .wrapper {
+	max-width: 800px;
+	margin: 0 auto;
+	background: #f2f2f2;
+	padding: 15px;
+}

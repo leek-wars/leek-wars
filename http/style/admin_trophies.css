@@ -1,0 +1,27 @@
+#admin_trophies-page #trophies {
+	background: white;
+	width: 100%;
+}
+
+#admin_trophies-page #trophies td, #admin_trophies-page #trophies th {
+	padding: 0 10px;
+	text-align: center;
+	border: 1px solid #ddd;
+	height: 25px;
+}
+
+#admin_trophies-page #trophies th {
+	padding: 5px 10px;
+}
+
+#admin_trophies-page #trophies img {
+	width: 25px;
+}
+
+#admin_trophies-page #trophies .desc {
+	text-align: left;
+}
+
+#admin_trophies-page #trophies .description {
+	text-align: left;
+}

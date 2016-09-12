@@ -1,0 +1,154 @@
+#home {
+	padding-left: 10px;
+	padding-right: 10px;
+	padding-bottom: 20px;
+}
+
+#home .card {
+	margin: 10px;
+	padding: 10px;
+	display: inline-block;
+	vertical-align: top;
+}
+
+#home h2 {
+	margin: 0;
+	margin-top: -5px;
+}
+
+#connected-farmers {
+	position: absolute;
+	top: 10px;
+	right: 20px;
+}
+
+/*
+ * Message
+ */
+#message .content {
+	margin-top: 5px;
+}
+
+/*
+ * Éleveur
+ */
+#home #farmer {
+	display: inline-block;
+	margin: 10px;
+	padding: 10px;
+	vertical-align: top;
+}
+#home #farmer:hover {
+	background: white;
+}
+#home #farmer .avatar {
+	margin: 8px -10px;
+	width: 170px;
+	margin-bottom: 0;
+}
+
+#home #farmer .trophies {
+	color: #777;
+	margin-top: 4px;
+}
+
+
+/*
+ * Poireaux
+ */
+#home #leeks {
+	display: inline-block;
+	margin: 10px;
+	padding: 10px;
+	vertical-align: top;
+}
+
+#home #leeks .leek {
+	display: inline-block;
+	text-align: center;
+	margin: 5px 0;
+	padding: 5px 15px;
+}
+#home #leeks .leek:hover {
+	background: white;
+}
+
+#home #leeks .leek .name {
+	font-size: 20px;
+	font-weight: 300;
+	margin: 3px;
+}
+
+#home #leeks .leek .level {
+	color: #777;
+	font-size: 14px;
+}
+
+#home .talent {
+	font-size: 21px;
+	color: #555;
+	display: inline-block;
+	font-weight: 300;
+	margin-top: 4px;
+}
+
+#home .talent:before {
+	background-image: url('../image/talent.png');
+	width: 28px;
+	height: 28px;
+	margin-right: 6px;
+	content: " ";
+	display: inline-block;
+	vertical-align: middle;
+	margin-bottom: 4px;
+}
+
+#home .fights {
+	font-size: 20px;
+}
+#home .fights img {
+	margin-right: 6px;
+	vertical-align: middle;
+	height: 22px;
+	margin-bottom: 4px;
+}
+
+
+/*
+ * MAJ
+ */
+#maj {
+	width: 45%;
+}
+#maj .new {
+	display: inline-block;
+	font-weight: bold;
+	color: white;
+	padding: 2px 5px;
+	border-radius: 4px;
+	background: #0a0;
+	margin-left: 8px;
+	font-size: 14px;
+	vertical-align: top;
+	margin-top: 4px;
+}
+
+/*
+ * Tournaments
+ */
+#tournaments {
+	width: 20%;
+}
+#tournaments .tournament {
+	margin: 8px 0;
+}
+
+/*
+ * Statistiques
+ */
+#stats {
+	width: 20%;
+}
+#stats.card h2 {
+	margin-bottom: 10px;
+}

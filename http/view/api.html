@@ -1,0 +1,20 @@
+<h1>API</h1>
+	
+@foreach (service in services)
+	<div class='panel service'>
+		<div class='content'>
+			<div class='title'>
+				<span class='module'>{service.module}</span>/<span class='function'>{service.function}</span>@foreach (p : parameter in service.parameters)/<span class='parameter'>{parameter}</span>@end@if (service.returns.length > 0)&nbsp;→ <span class='returns'>{service.returns.join(", ")}</span>@end
+			</div>
+			<div class='label'>{service.method}</div>
+
+			<div class='description'>{{_.lang.get('api', service.module + '_' + service.function)}}</div>
+
+			<div class='parameters'>
+				@foreach (p : parameter in service.parameters)
+					<div class='parameter'>{parameter} : {service.parameters_types[p]}</div>
+				@end
+			</div>
+		</div>
+	</div>
+@end

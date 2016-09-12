@@ -1,0 +1,63 @@
+<div class='page-header page-bar'>
+
+	<h1>{#title}</h1>
+
+	<div class='tabs'>
+		<div id='quit-conversation' class='tab'>
+			{#quit}
+		</div>
+	</div>
+</div>
+
+<div class='column3'>
+
+	<div class='panel'>
+
+		<div class='content' id='conversations-list' autostopscroll='bottom'>
+
+			@foreach (conversation in conversations)
+				<div class='conversation-preview' conv='{conversation.id}'>
+
+					{{conversation.avatars}}
+
+					<div class='content'>
+						{{conversation.name}}
+						<div class='last-message'>{{conversation.last_message}}</div>
+					</div>
+				</div>
+			@end
+		</div>
+	</div>
+
+</div><div class='column9'>
+
+	<div class='panel'>
+
+		<div classs='content'>
+
+			<div id='conversations' autostopscroll='bottom'>
+				@foreach (conversation in conversations)
+					<div class='conversation' id='conversation-{conversation.id}' conv='{conversation.id}' >
+						<div class='chat-messages'></div>
+					</div>
+				@end
+			</div>
+			
+			<div class='message-bar-wrapper'>
+				<textarea class='chat-input' type='text' class='autogrow'></textarea>
+				<div id='chat-send' class='button green'>{#send}</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+@view (quit_popup)
+
+	<div class='title'>{#quit_conversation}</div>
+	<div class='content'>{#quit_confirm}</div>
+
+	<div class='actions'>
+		<div class='dismiss'>{#cancel}</div>
+		<div id='quit-conversation-validate' class='red'>{#quit}</div>
+	</div>
+@endview

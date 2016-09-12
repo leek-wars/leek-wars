@@ -1,0 +1,211 @@
+/*
+ * Preview
+ */
+#preview-td {
+	vertical-align: top;
+}
+
+#preview {
+	text-align: center;
+}
+
+#preview.content {
+	padding: 0;
+}
+
+#preview > div {
+	display: none;
+}
+
+#market-page .content.items {
+	padding: 0px;
+}
+
+/*
+ * Items
+ */
+.items {
+	padding-bottom: 50px;
+}
+.items .item {
+	border: 2px solid #ddd; 
+}
+.items .item.selected {
+	background: white;
+	border: 2px solid #999; 
+}
+
+.buy-label {
+	display: inline-block;
+}
+
+.items .item:hover {
+	background: white;
+}
+
+.items .item {
+	position: relative;
+}
+
+.items .item:not([leek-count='0']):before {
+	position: absolute;
+	bottom: -5px;
+	right: -5px;
+	width: 20px;
+	height: 20px;
+	content: attr(leek-count);
+	text-align: center;
+	color: #eee;
+	border-radius: 20px;
+	background-color: #0a0;
+	font-weight: bold;
+}
+
+.items .item:not([farmer-count='0']):after {
+	position: absolute;
+	bottom: -5px;
+	right: -5px;
+	width: 20px;
+	height: 20px;
+	content: attr(farmer-count);
+	text-align: center;
+	color: #eee;
+	border-radius: 20px;
+	font-weight: bold;
+	background-color: #777;
+}
+.items .item:not([farmer-count='0']):not([leek-count='0']):before {
+	border-radius: 20px 0 0 20px;
+	right: 16px;
+}
+.items .item:not([farmer-count='0']):not([leek-count='0']):after {
+	border-radius: 0 20px 20px 0;
+}
+
+.items .item.too-expensive img {
+	opacity: 0.4;
+}
+
+
+/* 
+ * Armes
+ */
+#weapons {
+	text-align: center;
+}
+
+#weapons .weapon {
+	padding: 10px;
+	width: 178px;
+	height: 50px;
+	display: inline-block;
+	position: relative;
+	cursor: pointer;
+	text-align: center;
+	vertical-align: bottom;
+	margin: 8px;
+}
+
+#weapons .weapon img {
+	max-height: 52px;
+	max-width: 160px;
+	position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+} 
+
+
+/*
+ * Chips 
+ */ 
+#chips {
+	text-align: center;
+}
+
+#chips .chip {
+	width: 73px; 
+	padding: 6px;
+	display: inline-block;
+	position: relative;
+	cursor: pointer; 
+	text-align: center;
+	margin: 6px;
+}
+
+#chips .chip img {
+	height: 68px;
+	vertical-align: bottom;
+}
+
+
+/*
+ * Potions
+ */
+#potions {
+	text-align: center;
+}
+
+#potions .potion {
+	width: 90px; 
+	padding: 5px 3px;
+	display: inline-block;
+	position: relative;
+	cursor: pointer; 
+	text-align: center;
+	margin: 8px;
+}
+
+#potions .potion img {
+	width: 90px; 
+}
+
+/*
+ * Hats
+ */
+#hats {
+	text-align: center;
+}
+
+#hats .hat {
+	width: 110px; 
+	height: 80px;
+	padding: 5px 3px;
+	display: inline-block;
+	position: relative;
+	cursor: pointer; 
+	text-align: center;
+	vertical-align: bottom;
+	margin: 8px;
+}
+
+#hats .hat img {
+	max-width: 100px; 
+	max-height: 70px;
+	position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+}
+
+.buy-buttons {
+	padding-top: 10px;
+	padding-bottom: 10px;
+}
+
+.buy-button img {
+	vertical-align: top;
+	margin-top: 1px;
+	margin-left: 5px;
+}
+
+.buy-crystals-button img {
+	vertical-align: middle;
+	margin-top: -15px;
+	margin-bottom: -15px;
+	margin-left: 5px;
+}

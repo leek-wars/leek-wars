@@ -1,0 +1,123 @@
+#forum-page .panel:nth-of-type(n + 3) {
+	margin-top: 20px;
+}
+
+#forum-language {
+	display: inline-block;
+	padding: 0 4px;
+	border-radius: 2px;
+	cursor: pointer;
+	vertical-align: bottom;
+}
+
+#forum-language img.flag {
+	vertical-align: top;
+}
+#forum-language img:not(.flag) {
+	vertical-align: middle;
+	margin-bottom: 3px;
+	margin-left: 2px;
+}
+
+#tt_forum-language .lang img {
+	width: 22px;
+	margin-right: 4px;
+	vertical-align: middle;
+	margin-bottom: 2px;
+}
+
+#tt_forum-language .lang {
+	padding: 4px;
+	cursor: pointer;
+}
+
+#tt_forum-language .lang:hover {
+	background: black;
+}
+
+#team-forum {
+	float: right;
+	margin-right: 55px;
+	margin-top: -30px
+}
+
+#forum-header {
+	font-size: 20px;
+	font-weight: 300;
+	background: none;
+	margin: 0;
+}
+
+#forum-page .category {
+	margin-bottom: 20px;
+	background-color: #FAFAFA;
+	width: 100%; 
+}
+
+#forum-page .category td {
+	padding: 10px; 
+}
+
+#forum-page .category:hover {
+	background-color: white;
+}
+
+#forum-page .category .seen {
+	width: 40px;
+	padding-right: 5px;
+}
+ 	 
+#forum-page .category .title {
+	font-weight: 300;
+	font-size: 23px;
+	margin-bottom: 5px; 
+	color: #333;
+}
+
+#forum-page .category .description {
+	color: #999;
+	font-size: 14px;
+} 
+
+#forum-page .category .num-topics {
+	width: 80px;
+	color: #777;
+	text-align: center;
+}
+#forum-page .category .num-messages {
+	width: 80px;
+	color: #777;
+	text-align: center;
+}
+#forum-page .category .last-message {
+	width: 80px;
+	color: #777;
+	text-align: center;
+}
+
+#connected-farmers {
+	height: 92px;
+	overflow-y: hidden;
+	text-align: justify;
+}
+
+#expand-connected-farmers {
+	padding: 10px;
+	cursor: pointer;
+}
+
+#connected-farmers.expanded {
+	height: auto;
+}
+
+#grades-legend {
+	font-size: 12px;
+	text-align: right;
+	padding-right: 10px;
+	margin-top: 10px;
+}
+
+#forum-page .chat-messages {
+	max-height: 400px;
+	min-height: 400px;
+}

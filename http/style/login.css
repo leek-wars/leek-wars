@@ -1,0 +1,24 @@
+#login-form {
+	text-align: left;
+	width: 200px;
+	margin: 0 auto;
+}
+
+#login-form input[type='text'], #login-form input[type='password'] {
+	width: 100%;
+	margin-top: 5px;
+}
+
+#error {
+	color: red;
+	text-align: center;
+}
+
+#forgot-password {
+	color: #0a0;
+	text-align: center;
+	display: block;
+}
+#forgot-password:hover {
+	text-decoration: underline;
+}

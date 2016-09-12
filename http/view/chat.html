@@ -1,0 +1,37 @@
+<div class='page-header page-bar'>
+
+	<div>
+		<h1>{#title}</h1>
+	</div>
+</div>
+
+<div id='chat' class='panel'>
+
+	<div class='content'>
+
+		<div class='chat-messages' autostopscroll>
+			<div class='websocket-loader'><img src='{{static}}/image/loader.gif' /><br>{#loading_chat}</div>
+		</div>
+		
+		<div class='flex'>
+			<div id='chat-language'><img /></div>
+			<textarea class='chat-input' type='text' class='autogrow'></textarea>
+		</div>
+
+		<div id='chat-languages'> 
+			@foreach (lang in _.lang.languages)
+				<img id='chat-lang-{lang.code}' code='{lang.code}' src='{{static}}/{lang.flag}' />
+				<div class='tooltip' id='tt_chat-lang-{lang.code}'>{lang.name}</div>
+			@end
+		</div>
+
+		<div id='chat-language-selection' class='tooltip'>
+			
+			@foreach (lang in _.lang.languages)
+				<input type='radio' id='chat-sel-lang-{lang.code}' value="{lang.code}" name='language'></input>
+				<label for='chat-sel-lang-{lang.code}'>{lang.name}</label><br> 
+			@end
+
+		</div>
+	</div>
+</div>

@@ -1,0 +1,957 @@
+<h1>{#title}</h1>
+
+<div class='panel'>
+
+	<div class='content'>
+
+		<div class='wrapper'>
+			<center>
+				<img src='{{static}}/image/map/nexus_block.png'></img>
+			</center>
+			
+			<center><h2>{#welcome}</h2></center>
+			<br>
+
+			<span class='justify'>
+				{#intro}
+			</span>	
+		</div>
+	</div>
+</div>
+
+<div class='panel'>
+
+	<div class='header'>
+		<h2>{#menu}</h2>
+	</div>
+
+	<div class='content'>
+		
+		<div class='wrapper'>
+			<div id='tuto-menu'>
+				<a goto='#presentation'>
+					<div class='menu-item'>
+						<img src='{{static}}/image/presentation.png'></img><br />
+						{#presentation}
+					</div>
+				</a>
+				<a goto='#interface'>
+					<div class='menu-item'>
+						<img src='{{static}}/image/interface.png'></img><br />
+						{#interface}
+					</div>
+				</a>
+				<a goto='#variables'>
+					<div class='menu-item'>
+						<img src='{{static}}/image/variables.png'></img><br />
+						{#variables}
+					</div>
+				</a>
+				<a goto='#conditions'>
+					<div class='menu-item'>
+						<img src='{{static}}/image/conditions.png'></img><br />
+						{#conditions}
+					</div>
+				</a>
+				<a goto='#loops'>
+					<div class='menu-item'>
+						<img src='{{static}}/image/loops.png'></img><br />
+						{#loops}
+					</div>
+				</a>
+				<a goto='#functions'>
+					<div class='menu-item'>
+						<img src='{{static}}/image/functions.png'></img><br />
+						{#functions}
+					</div>
+				</a>
+				<a goto='#fight'>
+					<div class='menu-item'>
+						<img src='{{static}}/image/fight_tuto.png'></img><br />
+						{#fight}
+					</div>
+				</a>
+				<a goto='#advanced'>
+					<div class='menu-item'>
+						<img src='{{static}}/image/advanced.png'></img><br />
+						{#advanced}
+					</div>
+				</a>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<div class='panel'>
+
+	<div class='header'>
+		<h2 id='presentation'>{#presentation}</h2>
+	</div>
+
+	<div class='content'>
+		
+		<div class='wrapper'>
+
+			<p>{#presentation_1}</p>
+			<p>{#presentation_2}</p>
+			
+			<h3>{#equip_a_weapon}</h3>
+			
+			<p>{#buy_a_weapon}</p>
+			<p>{#buy_a_weapon_2}</p>
+			<p>{#buy_a_weapon_3}</p>
+
+			<h3>{#what_is_leekscript}</h3>
+			
+			<p>{#what_is_leekscript_1}</p>
+			<p>{#what_is_leekscript_2}</p>
+			
+			<h3>{#what_is_ai}</h3>
+			
+			<p>{#what_is_ai_1}</p>
+			<p>{#what_is_ai_2}</p>
+			<p>{#what_is_ai_3}</p>
+		</div>
+	</div>
+</div>
+
+<div class='panel'>
+
+	<div class='header'>
+		<h2 id='interface'>{#interface}</h2>
+	</div>
+
+	<div class='content'>
+	
+		<div class='wrapper'>
+
+			<h3>{#editor}</h3>
+			
+			<p>{#editor_1}</p>
+			
+			<screen src='{{static}}/image/tuto/editor.png'>{#editor_image_1}</screen>
+			
+			<p>{#editor_2}</p>
+			<p>{#editor_3}</p>
+			<p>{#editor_4}</p>
+
+			<screen src='{{static}}/image/tuto/editor_ia.png'>{#editor_image_2}</screen>
+			
+			<p>{#editor_5}</p>
+			
+			<p>{#editor_6}<br>
+			<ul>
+				<li>{#editor_token_comments}</li>
+				<li>{#editor_token_keywords}</li>
+				<li>{#editor_token_numbers}</li>
+				<li>{#editor_token_bool}</li>
+				<li>{#editor_token_strings}</li>
+			</ul>
+			</p>
+			
+			<p>{#editor_7}</p>
+			
+			<p>{#editor_8}
+			<ul>
+				<li>{#editor.shortcut_1}</li>
+				<li>{#editor.shortcut_2}</li>
+				<li>{#editor.shortcut_3}</li>
+				<li>{#editor.shortcut_4}</li>
+				<li>{#editor.shortcut_5}</li>
+				<li>{#editor.shortcut_6}</li>
+				<li>{#editor.shortcut_7}</li>
+			</ul>
+			</p>
+			
+			<p>{#editor_9}
+			<br>
+			<br>
+			{#editor_10}
+			</p>
+			
+			<screen src='{{static}}/image/tuto/editor_autocomplete.png'>{#automatic_completion}</screen>
+			
+			<br>
+			<h3>{#do_a_test_fight}</h3>
+
+		    <p>{#editor_11}</p>
+		    
+		    <p>{#editor_12}</p>
+		    
+		    <screen src='{{static}}/image/tuto/editor_test.png'>{#test_config}</screen>
+		    
+		    <p>{#editor_13}
+			<ul>
+				<li>{#difficulty_child}</li>
+				<li>{#difficulty_easy}</li>
+				<li>{#difficulty_medium}</li>
+				<li>{#difficulty_hard}</li>
+				<li>{#difficulty_evil}</li>
+			</ul>
+			</p>
+			
+			{#editor_15}
+
+			<h3>{#documentation}</h3>
+
+		    <p>{#doc1}</p>
+			
+			<screen src='{{static}}/image/tuto/documentation.png'>{#the_documentation}</screen>
+
+			<p>{#doc_2}
+			<ul>
+				<li>{#doc_3}</li>
+				<li>{#doc_4}</li>
+				<li>{#doc_5}</li>
+			</ul> 
+			</p>
+
+			<p>{#doc_6}
+			<ul>
+				<li>{#doc_math}</li>
+				<li>{#doc_strings}</li>
+				<li>{#doc_arrays}</li>
+				<li>{#doc_leeks}</li>
+				<li>{#doc_weapons}</li>
+				<li>{#doc_chips}</li>
+				<li>{#doc_map}</li>
+				<li>{#doc_fight}</li>
+				<li>{#doc_util}</li>
+			</ul>
+			</p>
+			 
+			<p>{#doc_7}
+			<ul> 
+				<li>{#doc_8}</li>
+				<li>{#doc_9}</li>
+				<li>{#doc_10}</li>
+			</ul>
+			</p>
+			
+			<p>{#doc_12}</p>
+			
+			<p>{#doc_13}</p>
+		</div>
+	</div>
+</div>
+
+<div class='panel'>
+
+	<div class='header'>
+		<h2 id='variables'>{#variables}</h2>
+	</div>
+
+	<div class='content'>	
+	
+		<div class='wrapper'>
+
+			<h3>{#var_1}</h3>
+
+		    <p>{#var_2}
+		    	<br>
+		    	{#var_3}
+		    <ul>
+				<li>{#var_4}</li>
+				<li>{#var_5}</li>
+				<li>{#var_6}</li>
+				<li>{#var_7}</li>
+				<li>{#var_8}</li>
+			</ul>
+			</p>
+			
+			<p>{#var_9}
+			<br />
+			<br />
+			{#var_10}</p>
+			
+			<code>{#var_11}</code>
+			
+			<p>{#var_12}</p>
+			<code>{#var_13}</code>
+
+			<p>{#var_14}</p>
+			<code>{#var_15}</code>
+
+			<p>{#var_16}</p>
+			
+			<p>{#var_17}</p>
+
+			<code>{#var_18}</code>
+
+			<p>{#var_19}</p>
+			
+			<code>{#var_20}</code>
+
+			<p>{#var_21}</p>
+
+			<h3>{#var_22}</h3>
+			
+			<p>{#var_23}</p>
+
+			<p>{#var_24}</p>
+
+			<code>{#var_25}</code>
+
+			<p>{#var_26}
+			<ul>
+				<li>{#var_27}</li>
+				<li>{#var_28}</li>
+				<li>{#var_29}</li>
+				<li>{#var_30}</li>
+				<li>{#var_31}</li>
+			</ul>
+			</p>
+
+			<p>{#var_32}</p>
+			
+			<code>{#var_33}</code>
+
+			<p>{#var_34}</p>
+			
+			<code>{#var_35}</code>
+
+
+			<p>{#var_36}</p>
+
+			<code>{#var_37}</code>
+
+			<p>{#var_38}</p>
+
+			<code>{#var_39}</code>
+
+			<p>{#var_40}</p>
+
+			<code>{#var_41}</code>
+
+			<br>
+			<h3>{#var_42}</h3>
+
+			<p>{#var_43}</p>
+			
+			<p>{#var_44}</p>
+			
+			<p>{#var_45}</p>
+			
+			<p>{#var_46}</p>
+
+			<code>{#var_47}</code>
+			
+			<p>{#var_48}</p>
+			
+			<screen src='{{static}}/image/tuto/debug.png'>{#var_49}</screen>
+			
+			<p>{#var_50}</p>
+			
+			<p>{#var_51}</p>
+			
+			<code>{#var_52}</code>
+
+			<p>{#var_53}</p>
+
+			<h3>{#arrays}</h3>
+
+			<p>{#arr_1}</p>
+			
+			<p>{#arr_2}</p>
+			
+			<p>{#arr_3}</p>
+			
+			<p>{#arr_4}</p>
+			
+			<code>{#arr_5}</code>
+
+			<p>{#arr_6}</p>
+			
+			<code>{#arr_7}</code>
+
+			<p>{#arr_8}</p>
+			
+			<code>{#arr_9}</code>
+
+			<p>{#arr_10}</p>
+			<table>
+				{#arr_11}
+			</table>
+			
+			<p>{#arr_12}</p>
+			
+			<code>{#arr_13}</code>
+
+			<p>{#arr_14}
+			
+			<code>{#arr_15}</code>
+
+			<p>{#arr_16}</p>
+		</div>
+	</div>
+</div>
+	
+<div class='panel'>
+
+	<div class='header'>
+		<h2 id='conditions'>{#conditions}</h2>
+	</div>
+
+	<div class='content'>	
+		
+		<div class='wrapper'>
+
+			<p>{#cond_1}</p>
+
+			<h3>{#cond_2}</h3>
+
+			<p>{#cond_3}</p>
+			
+			<p>{#cond_4}</p>
+			
+			<code>{#cond_5}</code>
+			
+			<p>{#cond_6}</p>
+			
+			<p>{#cond_7}</p>
+			
+			<p>{#cond_8}</p>
+			
+			<code>{#cond_9}</code>
+
+			<p>{#cond_10}</p>
+
+			<p>{#cond_11}</p>
+			
+			<code>{#cond_12}</code>
+
+			<p>{#cond_13}</p>
+			
+			<table>
+				{#cond_14}
+			</table>
+			
+			<p>{#cond_15}</p>
+			<table>
+				{#cond_16}
+			</table>
+			
+			<p>{#cond_17}</p>
+			
+			<code>{#cond_18}</code>
+
+			<p>{#cond_19}</p>
+
+			<h3>{#cond_20}</h3>
+
+			<p>{#cond_21}</p>
+			
+			<p>{#cond_22}</p>
+			
+			<p>{#cond_23}</p>
+			
+			<code>{#cond_24}</code>
+
+			<p>{#cond_25}</p>
+			
+			<code>{#cond_26}</code>
+
+			<p>{#cond_27}</p>
+			
+			<p>{#cond_28}</p>
+			
+			<code>{#cond_29}</code>
+
+			<p>{#cond_30}</p>
+			
+			<p>{#cond_31}
+			<ul>
+				<li>{#cond_32}</li>
+				<li>{#cond_33}</li>
+				<li>{#cond_34}</li>
+				<li>{#cond_35}</li>
+			</ul>
+			</p>
+		</div>
+	</div>
+</div>
+
+
+<div class='panel'>
+
+	<div class='header'>
+		<h2 id='loops'>{#loops}</h2>
+	</div>
+
+	<div class='content'>	
+	
+		<div class='wrapper'>
+
+			<p>{#loops_1}</p>
+
+			<p>{#loops_2}</p>
+
+			<h3>{#loops_3}</h3>
+			
+			<p>{#loops_4}</p>
+			
+			<p>{#loops_5}</p>
+			
+			<p>{#loops_6}</p>
+
+			<code>{#loops_7}</code>
+
+			<p>{#loops_8}</p>
+			
+
+			<h3>{#loops_9}</h3>
+
+			<p>{#loops_10}</p>
+
+			<code>{#loops_11}</code>
+			
+			<h3>{#loops_12}</h3>
+			
+			<p>{#loops_13}</p>
+			
+			<p>{#loops_14}
+			<ul>
+				<li>{#loops_15}</li>
+				<li>{#loops_16}</li>
+				<li>{#loops_17}</li>
+			</ul>
+			</p>
+
+			<p>{#loops_18}</p>
+
+			<code>{#loops_19}</code>
+
+
+			<p>{#loops_20}</p>
+			
+			<p>{#loops_21}</p>
+
+			<code>{#loops_22}</code>
+
+			<p>{#loops_23}</p>
+
+			<code>{#loops_24}</code>
+			<p>{#loops_25}</p>
+
+			<p>{#loops_26}</p>
+
+			<code>{#loops_27}</code>
+		</div>
+	</div>
+</div>
+		
+<div class='panel'>
+
+	<div class='header'>
+		<h2 id='functions'>{#functions}</h2>
+	</div>
+
+	<div class='content'>	
+	
+		<div class='wrapper'>
+
+			<p>{#fun_1}</p>
+			
+			<h3>{#fun_2}</h3>
+			
+			<p>{#fun_3}</p>
+			
+			<code>{#fun_4}</code>
+			
+			<p>{#fun_5}</p>
+			
+			<code>{#fun_6}</code>
+
+			<p>{#fun_7}</p>
+			
+			<code>{#fun_8}</code>
+
+			<p>{#fun_9}</p>
+			
+			<p>{#fun_10}</p>
+			
+			<p>{#fun_11}</p>
+			
+			<code>{#fun_12}</code>
+
+			<p>{#fun_13}</p>
+			
+			<code>{#fun_14}</code>
+
+			<p>{#fun_15}</p>
+			
+			<p>{#fun_16}</p>
+			
+			<h3>{#fun_17}</h3>
+
+			<p>{#fun_18}</p>
+			
+			<p>{#fun_19}</p>
+			
+			<code>{#fun_20}</code>
+			
+			<p>{#fun_21}</p>
+			
+			<code>{#fun_22}</code>
+			
+			<h3>{#fun_23}</h3>
+			
+			<p>{#fun_24}</p>
+			
+			<code>{#fun_25}</code>
+
+			<p>{#fun_26}</p>
+			
+			<code>{#fun_27}</code>
+
+			<p>{#fun_28}</p>
+			
+			<p>{#fun_29}</p>
+			
+			<p>{#fun_30}</p>
+			
+			<code>{#fun_31}</code>
+
+			<code>{#fun_32}</code>
+			
+			<h3>{#fun_36}</h3>
+			
+			<p>{#fun_37}</p>
+
+			<code>{#fun_38}</code>
+
+			<p>{#fun_39}</p>
+			
+			<code>{#fun_40}</code>
+
+			<p>{#fun_41}</p>
+
+			<code>{#fun_42}</code>
+
+			<p>{#fun_43}</p>
+			
+			<p>{#fun_44}</p>
+			
+			<code>{#fun_45}</code>
+
+			<p>{#fun_46}</p>
+
+			<code>{#fun_47}</code>
+
+			<p>{#fun_48}</p>
+
+			<code>{#fun_49}</code>
+
+			<p>{#fun_50}</p>
+		</div>
+	</div>
+</div>
+
+<div class='panel'>
+
+	<div class='header'>
+		<h2 id='fight'>{#fight}</h2>
+	</div>
+
+	<div class='content'>
+		
+		<div class='wrapper'>
+
+			<p>{#fight_intro}</p>
+			
+			<h2>{#fight_sys}</h2>
+
+			<p>{#fight_sys_1}</p>
+			
+			<h3>{#fight_sys_2}</h3>
+			
+			<p>{#fight_sys_3}</p>
+			
+			<p>{#fight_sys_4}</p>
+			
+			<code>{#fight_sys_5}</code>
+			
+			<h3>{#fight_sys_6}</h3>
+			<p>{#fight_sys_7}</p>
+			
+			<p>{#fight_sys_8}</p>
+			
+			<code>{#fight_sys_9}</code>
+			
+			<p>{#fight_sys_10}</p>
+			
+			<code>{#fight_sys_11}</code>
+			
+			<p>{#fight_sys_12}</p>
+			
+			<code>{#fight_sys_13}</code>
+			
+			<h3>{#fight_ground}</h3>
+
+			<p>{#fight_ground_1}</p>
+			
+			<screen src='{{static}}/image/tuto/grid_cells.png'>{#fight_ground_2}</screen>
+			
+			<p>{#fight_ground_3}</p>
+			
+			<code>{#fight_ground_4}</code>
+			
+			<h3>{#fight_ground_5}</h3>
+			
+			<p>{#fight_ground_6}</p>
+			
+			<code>{#fight_ground_7}</code>
+
+			<p>{#fight_ground_8}</p>
+			
+			<code>{#fight_ground_9}</code>
+
+			<p>{#fight_ground_10}</p>
+			
+			<h3>{#fight_ground_11}</h3>
+			
+			<p>{#fight_ground_12}</p>
+			
+			<code>{#fight_ground_13}</code>
+
+			<p><ul>
+				<li>{#fight_ground_14}</li>
+				<li>{#fight_ground_15}</li>
+				<li>{#fight_ground_16}</li>
+				<li>{#fight_ground_17}</li>
+				<li>{#fight_ground_18}</li>
+			</ul></p>
+			
+			<p>{#fight_ground_19}</p>
+			
+			<code>{#fight_ground_20}</code>
+
+			<h3>{#fight_weapons}</h3>
+			
+			<p>{#fight_weapons_2}</p>
+			
+			<code>{#fight_weapons_3}</code>
+
+			<p>{#fight_weapons_4}</p>
+
+			<h3>{#fight_weapons_5}</h3>
+			
+			<p>{#fight_weapons_6}</p>
+			
+			<code>{#fight_weapons_7}</code>
+
+			<h3>{#fight_chips}</h3>
+			
+			<p>{#fight_chips_1}</p>
+			
+			<code>{#fight_chips_2}</code>
+
+			<h3>{#fight_chips_3}</h3>
+
+			<p>{#fight_chips_4}</p>
+			
+			<p>{#fight_chips_5}</p>
+			
+			<p>{#fight_chips_6}</p>
+			
+			<p>{#fight_chips_7}</p>
+			
+			<code>{#fight_chips_8}</code>
+
+			<p>{#fight_chips_9}</p>
+
+			<code>{#fight_chips_10}</code>
+
+
+			<h3>{#fight_move}</h3>
+			
+			<p>{#fight_move_1}</p>
+			
+			<h3>{#fight_move_2}</h3>
+			
+			<p>{#fight_move_3}</p>
+			
+			<code>{#fight_move_4}</code>
+
+			<p>{#fight_move_5}</p>
+			
+			<p>{#fight_move_6}</p>
+			
+			<code>{#fight_move_7}</code>
+
+			<p>{#fight_move_8}</p>
+
+			<h3>{#fight_move_9}</h3>
+			
+			<p>{#fight_move_10}</p>
+			
+			<h3>{#fight_move_11}</h3>
+			
+			<p>{#fight_move_12}</p>
+			
+			<code>{#fight_move_13}</code>
+				
+				
+			<h3>{#fight_speak}</h3>
+			
+			<p>{#fight_speak_1}</p>
+			
+			<code>{#fight_speak_2}</code>
+		</div>
+	</div>
+</div>
+		
+		
+<div class='panel'>
+
+	<div class='header'>
+		<h2>{#advanced}</h2>
+	</div>
+
+	<div class='content'>		
+	
+		<div class='wrapper'>
+		
+			<p>{#advanced_intro}</p>
+			
+			<h3>{#advanced_order}</h3>
+			
+			<p>{#advanced_order_1}</p>
+			
+			<code>{#advanced_order_2}</code>
+			
+			<br>
+			<h3>{#advanced_order_3}</h3>
+			
+			<p>{#advanced_order_4}</p>
+			
+			<code>{#advanced_order_5}</code>
+
+			<h3>{#advanced_ref}</h3>
+
+			<p>{#advanced_ref_1}</p>
+
+			<code>{#advanced_ref_2}</code>
+
+			<p>{#advanced_ref_3}</p>
+
+			<code>{#advanced_ref_4}</code>
+
+			<p>{#advanced_ref_5}</p>
+
+			<p>{#advanced_ref_6}</p> 
+
+			<code>{#advanced_ref_7}</code>
+
+
+			<h3>{#advanced_tern}</h3>
+
+			<p>{#advanced_tern_1}</p>
+
+			<code>{#advanced_tern_2}</code>
+
+			<p>{#advanced_tern_3}</p>
+
+			<code>{#advanced_tern_4}</code>
+
+			<p>{#advanced_tern_5}</p>
+
+			<code>{#advanced_tern_6}</code>
+
+			<p>{#advanced_tern_7}</p>
+
+
+			<h3 id='includes'>{#advanced_include}</h3>
+
+			<p>{#advanced_include_1}</p>
+
+			<code>{#advanced_include_2}</code>
+
+			<p>{#advanced_include_3}</p>
+
+			<p>{#advanced_include_4}</p>
+			
+			<h3>{#advanced_include_5}</h3>
+
+			<p>{#advanced_include_6}</p>
+
+			<code>{#advanced_include_7}</code>
+
+			<code>{#advanced_include_8}</code>
+
+			<code>{#advanced_include_9}</code>
+
+			<code>{#advanced_include_10}</code>
+
+			<br>
+			<h3>{#advanced_include_11}</h3>
+
+			<p>{#advanced_include_12}</p>
+
+			<code>{#advanced_include_13}</code>
+
+			<br>
+			<h3 id='triple_equals'>{#advanced_triple_equal}</h3>
+		 
+			<p>{#advanced_triple_equal_1}</p>
+			
+			<table>
+				{#advanced_triple_equal_2}
+			</table>
+
+			<p>{#advanced_triple_equal_3}</p>
+
+			<table class='sign-table'>
+				<tr>
+					<td>===</td>
+					@foreach (value in values)
+						<td>{value}</td>
+					@end
+				</tr>
+
+				@foreach (value1 in values)
+				<tr>
+					<td>{value1}</td>
+					@foreach (value2 in values)
+						@if (value1 === value2)
+							<td><div class='X'></div></td>
+						@else
+							<td></td>
+						@end
+					@end
+				</tr>
+				@end
+			</table>
+
+			<p>{#advanced_triple_equal_4}</p>
+
+				<table class='sign-table'>
+				<tr>
+					<td>==</td>
+					@foreach (value in values)
+						<td>{value}</td>
+					@end
+				</tr>
+				@foreach (i : value1 in values)
+				<tr>
+					<td>{value1}</td>
+					@foreach (j : value2 in values)
+						@if (equalEqual[i][j] === "X")
+							<td><div class='X'></div></td>
+						@else
+							<td></td>
+						@end
+					@end
+				</tr>
+				@end
+			</table>
+
+			<p>{#advanced_triple_equal_5}</p>
+
+			<p>{#advanced_triple_equal_6}</p>
+
+			<p>{#advanced_triple_equal_7}</p>
+		</div>
+	</div>
+</div>

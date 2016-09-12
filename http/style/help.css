@@ -1,0 +1,31 @@
+#help-page .content {
+	text-align: center;
+	padding: 25px;
+}
+
+#help-page .description {
+	font-size: 15px;
+	color: #555;
+}
+
+#help-page img {
+	width: 90px;
+}
+
+#help-page .advanced-button {
+	color: white;
+	background: rgba(150, 150, 150, 0.2);
+	padding: 5px 12px;
+	display: inline-block;
+	margin-bottom: 15px;
+	cursor: pointer;
+}
+
+#help-page .advanced-button img {
+	width: 16px;
+	margin-left: 6px;
+}
+
+#help-page .advanced {
+	display: none;
+}

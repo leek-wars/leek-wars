@@ -1,0 +1,56 @@
+<div class='page-bar page-header'>
+	<h1>{{title}}</h1>
+</div>
+
+<div class='panel'>
+
+	<div class='content'>
+		<span id='global-percent'>{Math.floor(100 * count / total)}%</span>
+		<span id='global-count'>{count} / {total}</span>  
+		<br>
+		<div id='global-bar'>
+			<div class='bar striked' style='width: {Math.floor(100 * count / total)}%'></div>
+		</div>
+	</div>
+</div>
+
+@foreach (category in categories)
+	@if (category.id != 6 || progressions[6] != 0)
+		<div class='panel'>
+
+			<div class='header'>
+				<h2>{_.lang.get('trophies', 'category_' + category.name)}</h2> 
+				<div class='right category-bar-wrapper'>
+					@if (category.id != 6)
+						<div class='stats'>{progressions[category.id]} / {totals[category.id]}</div>
+						<div class='category-bar'>
+							<div class='bar striked' style='width: {Math.floor(100 * progressions[category.id] / totals[category.id])}%'></div>
+						</div>
+						<div class='stats'>{Math.floor(100 * progressions[category.id] / totals[category.id])}%</div>
+					@end
+				</div>
+			</div>
+
+			<div class='content'>
+		
+				@foreach (trophy in trophies[category.id])
+					@if (category.id != 6 || trophy.unlocked)
+						<div class="trophy {trophy.unlocked ? 'unlocked' : 'locked'}">
+							<img class='image' src='{{static}}image/trophy/big/{trophy.code}.png'>
+							<div class='name'>{trophy.name}</div>
+							<div class='description'>{trophy.description}</div>
+							@if (!trophy.unlocked && trophy.progression != null)
+								<div class='trophy-bar' id='trophy-bar-{trophy.id}'>
+									<div class='bar striked' style='width: {Math.floor(100 * trophy.progression / trophy.threshold)}%'></div>
+								</div>
+								<div class='tooltip' id='tt_trophy-bar-{trophy.id}'>
+									{%trophy.progression} / {%trophy.threshold}
+								</div>
+							@end
+						</div>
+					@end
+				@end
+			</div>
+		</div>
+	@end
+@end

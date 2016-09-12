@@ -1,0 +1,20 @@
+#ais {
+	text-align: center;
+}
+
+#ais .ai {
+	width: 130px;
+	text-align: center;
+	margin: 6px;
+	padding: 6px;
+	display: inline-block;
+	cursor: pointer;
+}
+
+#ais .ai.selected {
+	background: #0a0;
+}
+
+#code pre {
+	max-width: none;
+}

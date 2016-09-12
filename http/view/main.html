@@ -1,0 +1,640 @@
+<div id='background'></div>
+
+<div id='dark'></div>
+
+<!-- Squares -->
+<div id='squares'></div>
+
+<!-- Popups -->
+<div id='popups'></div>
+
+<!-- Notifs popup -->
+<div id='notifications-popup'>
+	<div id='notifs-menu' autostopscroll>
+
+		<div class='notifications'></div>
+
+		<div id='all-notifs'><a href='/notifications'>
+			{#all_notifications}
+		</a></div>
+	</div>
+	<div id='notifs-arrow'></div>
+</div>
+
+<!-- Messages -->
+<div id='messages-popup'>
+	<div id='messages-menu' autostopscroll>
+
+		<div class='messages'></div>
+
+		<div id='all-messages'><a href='/messages'>
+			{#all_private_messages}
+		</a></div>
+	</div>
+	<div id='messages-arrow'></div>
+</div>
+
+<!-- Menu desktop -->
+<div id='menu' class='menu'>
+
+	<div id='menu-button'>
+		<div class='icon'></div>
+	</div>
+
+	<div class='menu-wrapper'>
+
+		<span class='leeks'></span>
+
+		<div class='separator'></div>
+
+		<a href='/editor'>
+			<div class="section" tab='editor'>
+				<img src='{{static}}/image/gearing_small_white.png'></img>
+				<div class='text'>{#editor}</div>
+			</div>
+		</a>
+
+		<a href='/garden'>
+			<div class="section" tab='garden'>
+				<img src='{{static}}/image/icon/garden.png'></img>
+				<div class='text'>{#garden}</div>
+			</div>
+		</a>
+
+		<a href='/market'>
+			<div class="section" tab='market'>
+				<img src='{{static}}/image/icon/market.png'></img>
+				<div class='text'>{#market}</div>
+			</div>
+		</a>
+
+		<a href="/team" >
+			<div id='team-tab' class="section" tab='team'>
+				<img src='{{static}}/image/icon/team.png'></img>
+				<div class='text'>{#team}</div>
+			</div>
+		</a>
+
+		<a href="/trophies" >
+			<div class="section" tab='trophies'>
+				<img src='{{static}}/image/icon/trophy.png'></img>
+				<div class='text'>{#trophies}</div>
+			</div>
+		</a>
+
+		<a href="/ranking">
+			<div class="section" tab='ranking'>
+				<img src='{{static}}/image/icon/ranking.png'></img>
+				<div class='text'>{#ranking}</div>
+			</div>
+		</a>
+
+		<a href="/help" >
+			<div class="section" tab='help'>
+				<img src='{{static}}/image/icon/help.png'></img>
+				<div class='text'>{#help}</div>
+			</div>
+		</a>
+
+		@if (!LW.beta)
+			<a href='/forum'>
+				<div class="section" tab='forum'>
+					<img src='{{static}}/image/icon/forum.png'></img>
+					<div class='text'>{#forum}</div>
+				</div>
+			</a>
+		@end
+
+
+		<a href="/moderation" id='moderation-tab' style='display: none' tab='moderation'>
+			<div class="section">
+				<img src='{{static}}/image/icon/moderation.png'></img>
+				<div class='text'>{#main.moderation}</div>
+			</div>
+		</a>
+
+		<a href="/admin" id='admin-tab' style='display: none' tab='admin'>
+			<div class="section">
+				<img src='{{static}}/image/icon/admin.png'></img>
+				<div class='text'>{#main.admin}</div>
+			</div>
+		</a>
+	</div>
+</div>
+
+<div id='big-leeks'>
+	<div class='wrapper'>
+		<img id='big-leek-1' src="{{static}}/image/big_leek_1_white.png"></img>
+		<img id='big-leek-2' src="{{static}}/image/big_leek_2_white.png"></img>
+	</div>
+</div>
+
+<div id='center'>
+
+	<div id='wrapper'>
+
+		<div id='header'>
+
+			<div id='header-left'>
+				<a href="/" >
+					<div id='logo-wrapper'>
+						<img id='logo' src="{{static}}/image/logo.png"></img>
+
+						@if (test_site)
+							<span class="test-label">test</span>
+						@end
+						@if (dev_site)
+							<span class="dev-label">dev</span>
+						@end
+						@if (beta_site)
+							<span class="beta-label">Bêta</span>
+						@end
+					</div>
+				</a>
+			</div>
+
+			<div id='header-right'>
+
+				<div id='header-signin' class='buttons'>
+
+					<div class='button-wrapper'>
+						<a href='/login'>
+							<div id='login-button' class='header-button'>{#connection}</div>
+						</a>
+
+					</div><div class='button-wrapper'>
+
+						<a href='/'>
+							<div id='signup-button' class='header-button'>{#signup}</div>
+						</a>
+					</div>
+				</div>
+
+				<div id='header-farmer' class='buttons'>
+
+					@if (!LW.beta)
+					<div class='button-wrapper'>
+
+						<a href="/bank">
+							<div class='header-button'>
+								<span id='farmer-crystals' class='text'></span>
+								<span class='crystal text'></span>
+							</div>
+						</a>
+
+					</div>@end<div class='button-wrapper'>
+
+						<a href="/market">
+							<div class='header-button'>
+								<span id='farmer-habs' class='text'></span>
+								<span class='hab text'></span>
+							</div>
+						</a>
+
+					</div>@if (!LW.beta)<div class='button-wrapper'>
+
+						<div class='header-button messages-button' >
+							<img src='{{static}}/image/icon/message.png'>
+							<span class='counter messages-counter'></span>
+						</div>
+
+					</div>@end<div class='button-wrapper'>
+
+						<div class='header-button notifications-button' >
+							<img src='{{static}}/image/icon/notification.png'>
+							<span class='counter notifications-counter'></span>
+						</div>
+
+					</div><div class='button-wrapper'>
+
+						<a href="/settings">
+							<div class='header-button' id='settings-button' >
+								<img src='{{static}}/image/gearing_small_white.png'>
+							</div>
+						</a>
+
+					</div><div class='button-wrapper'>
+
+						<a href="/farmer">
+							<div class='header-button'>
+								<span class='farmer-name text'></span>
+								<img class='farmer-avatar' src='{{static}}image/no_avatar.png'>
+							</div>
+						</a>
+
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div id='header-mobile'>
+			<a href="/" >
+				<img id='logo' src="{{static}}image/logo_short.png"></img>
+
+				@if (test_site)
+					<span class="test-label">test</span>
+				@end
+				@if (dev_site)
+					<span class="dev-label">dev</span>
+				@end
+				@if (beta_site)
+					<span class="beta-label">Bêta</span>
+				@end
+			</a>
+
+			<div id='header-right'>
+				@if (!LW.beta)
+					<div class='header-button mobile messages-button' >
+						<img src='{{static}}image/icon/message.png'>
+						<span class='counter messages-counter'></span>
+					</div>
+				@end
+
+				<div class='header-button mobile notifications-button' >
+					<img src='{{static}}image/icon/notification.png'>
+					<span class='counter notifications-counter'></span>
+				</div>
+
+				<a href="/farmer">
+					<div class='header-button'>
+						<span class='farmer-name text'></span>
+						<img class='farmer-avatar' src='{{static}}image/no_avatar.png'>
+					</div>
+				</a>
+			</div>
+		</div>
+
+		<!-- Menu mobile -->
+		<div id='menu-mobile' class='menu'>
+
+			<span class='leeks'></span>
+
+			<a href='/editor'>
+				<div class="section">
+					<img src='{{static}}/image/gearing_small_white.png'></img>
+				</div>
+			</a>
+
+			<a href='/garden'>
+				<div class="section">
+					<img src='{{static}}/image/icon/garden.png'></img>
+				</div>
+			</a>
+
+			<a href='/market'>
+				<div class="section">
+					<img src='{{static}}/image/icon/market.png'></img>
+				</div>
+			</a>
+
+			<a href="/team" >
+				<div id='team-tab' class="section" >
+					<img src='{{static}}/image/icon/team.png'></img>
+				</div>
+			</a>
+
+			<a href="/trophies" >
+				<div class="section">
+					<img src='{{static}}/image/icon/trophy.png'></img>
+				</div>
+			</a>
+
+			<a href="/ranking" >
+				<div class="section">
+					<img src='{{static}}/image/icon/ranking.png'></img>
+				</div>
+			</a>
+
+			<a href="/help" >
+				<div class="section">
+					<img src='{{static}}/image/icon/help.png'></img>
+				</div>
+			</a>
+
+			@if (!LW.beta)
+				<a href='/forum'>
+					<div class="section">
+						<img src='{{static}}/image/icon/forum.png'></img>
+					</div>
+				</a>
+			@end
+
+			<a href='/settings'>
+				<div class="section">
+					<img src='{{static}}/image/icon/gearing.png'></img>
+				</div>
+			</a>
+
+			<a href="/moderation" style='display: none'>
+				<div class="section">
+					<img src='{{static}}/image/icon/moderation.png'></img>
+				</div>
+			</a>
+
+			<a href="/admin" id='admin-tab' style='display: none'>
+				<div class="section">
+					<img src='{{static}}/image/icon/admin.png'></img>
+				</div>
+			</a>
+		</div>
+
+		<div id='page-wrapper'>
+			<div id='page'></div>
+			<div id='loader'>
+				<div class='gearing'>
+					<img class='gear1' src='{{static}}/image/gearing_white.png'>
+					<img class='gear2' src='{{static}}/image/gearing_small_white.png'>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div id='social-button'>
+	<div class='icon'></div>
+</div>
+
+<div id='social-panel'>
+
+	<div class='content'>
+
+		<div class='resizer'></div>
+
+		<div id='notifications'>
+
+			<div class='panel expanded' panel='notifications'>
+				<div class='header'>
+
+					<h2><a href='/notifications'>Notifications</a><span class='label'>12</span></h2>
+
+					<div class='right'>
+						<div class='button flat expand'>
+							<img src='{{static}}image/icon/expand.png'>
+						</div>
+					</div>
+				</div>
+				<div class='content'>
+					<div class='list' autostopscroll></div>
+				</div>
+			</div>
+		</div>
+
+		@if (!LW.beta)
+			<div id='messages'>
+				<div class='panel expanded' panel='messages'>
+					<div class='header'>
+
+						<h2><a href='/messages'>{#messages}</a><span class='label'>5</span></h2>
+
+						<div class='right'>
+							<div class='button flat expand'>
+								<img src='{{static}}image/icon/expand.png'>
+							</div>
+						</div>
+					</div>
+					<div class='content'>
+						<div class='list' autostopscroll></div>
+					</div>
+				</div>
+			</div>
+
+			<div class='chat'>
+				<div class='panel expanded' panel='chat'>
+					<div class='header'>
+						<h2>Chat</h2>
+						<div class='right'>
+							<div class='button flat expand'>
+								<img src='{{static}}image/icon/expand.png'>
+							</div>
+						</div>
+					</div>
+					<div class='content' id='mini-chat'>
+						<div class='chat-messages' autostopscroll>
+
+						</div>
+						<textarea class='chat-input' class='autogrow'></textarea>
+					</div>
+				</div>
+			</div>
+		@end
+	</div>
+</div>
+
+<!-- Footer -->
+<div id='footer-wrapper'>
+
+	<div id='footer'>
+		<table><tr>
+
+			<td width=50%>
+				<a href='/'><h4>Leek Wars</h4></a>
+				<a href='/about'>{#main.about}</a> - <a href='/changelog'>{#main.changelog}</a>
+				<div class='social'>
+					
+					<a target='_blank' href='https://www.facebook.com/LeekWars' title='Facebook'>
+						<img src='{{static}}/image/footer/facebook.png'>
+					</a>
+					<a target='_blank' href='https://twitter.com/LeekWars'>
+						<img src='{{static}}/image/footer/twitter.png' title='Twitter'>
+					</a>
+					<a target='_blank' href="https://plus.google.com/100933820796987863661" rel="publisher" title='Google+'>
+						<img src='{{static}}/image/footer/googleplus.png'>
+					</a>
+					<a target='_blank' href='https://github.com/leek-wars' title='GitHub'>
+						<img src='{{static}}/image/footer/github.png'>
+					</a>
+				</div>
+
+			</td>
+			<td><img src="{{static}}/image/footer_leek.png"></img></td>
+			<td width=50% align=right>
+				<a href='/legal'>{#main.legal}</a> -
+				<a href='/conditions'>{#main.conditions}</a><br />
+				<span class='copy'>Copyright © 2013 - 3012</span>
+			</td>
+		</tr></table>
+	</div>
+</div>
+
+<div id='toasts'></div>
+
+<div id='tooltips'></div>
+
+@view (leek_tab)
+	<a href="/leek/{id}" >
+		<div class="section" id='leek-tab-{id}' leek='{id}' tab='leek-{id}'>
+			<img src='{{static}}/image/icon/house.png'></img>
+			<div class='text'>{name}</div>
+		</div>
+	</a>
+@endview
+
+@view (notification)
+	<a href='{link}'><div class='notification' notif='{id}' type='{type}'>
+		<img src='{{static}}/image/notif/{image}.png'></img>
+		<div class='title'>{{_.lang.get('notifications', 'title_' + type, title)}}</div>
+			<div class='message'>{_.lang.get('notifications', 'message_' + type, message)}</div>
+			<span class='date'>{formatted_date}</span>
+		</div>
+	</a>
+@endview
+
+@view (message)
+	<a href='{link}'><div class='message' conversation='{id}'>
+		{{avatars}}
+		<div class='title'><b>{{farmer_list}}</b></div>
+			<div class='message'>{{last_message}}</div>
+			<span class='date'>{last_date}</span>
+		</div>
+	</a>
+@endview
+
+@view (fight)
+	<div class='fight @if (status == 0) generating @else {result} @end'>
+
+		<div class='fighters'>
+
+			@if (type == LW.FIGHT_TYPE.SOLO)
+				<a href='/leek/{leeks1[0].id}'>
+					<div class='fighter'>{leeks1[0].name}</div>
+				</a>
+			@elseif (type == LW.FIGHT_TYPE.FARMER)
+				<a href='/farmer/{farmer1}'>
+					<div class='fighter'>({farmer1_name})</div>
+				</a>
+			@elseif (type == LW.FIGHT_TYPE.TEAM)
+				<a href='/team/{team1}'>
+					<div class='fighter'>[{team1_name}]</div>
+				</a>
+			@end
+			<div class='center'>
+				<a href='/fight/{id}'>
+					@if (status == 0)
+						<img src='{{static}}image/icon/gearing.png'></img>
+					@else
+						@if (context == LW.FIGHT_CONTEXT.CHALLENGE)
+							<img src='{{static}}image/icon/flag.png'></img>
+						@else
+							<img src='{{static}}image/icon/garden.png'></img>
+						@end
+					@end
+				</a>
+			</div>
+
+			@if (type == LW.FIGHT_TYPE.SOLO)
+				<a href='/leek/{leeks2[0].id}'>
+					<div class='fighter'>{leeks2[0].name}</div>
+				</a>
+			@elseif (type == LW.FIGHT_TYPE.FARMER)
+				<a href='/farmer/{farmer2}'>
+					<div class='fighter'>({farmer2_name})</div>
+				</a>
+			@elseif (type == LW.FIGHT_TYPE.TEAM)
+				<a href='/team/{team2}'>
+					<div class='fighter'>[{team2_name}]</div>
+				</a>
+			@end
+		</div>
+
+		<div class='fight-time'>{LW.util.formatDuration(date)}</div>
+	</div>
+@endview
+
+@view (tournament)
+	<a href='/tournament/{id}'>
+		<div class='tournament'>{name}
+			<div class='date'>{LW.util.formatDuration(date)}</div>
+	    </div>
+	</a>
+@endview
+
+@view (avatar)
+	@if (avatar_changed > 0){{avatar}}avatar/{id}.png?{avatar_changed}@else {{static}}image/no_avatar.png@end
+@endview
+
+@view (emblem)
+	@if (emblem_changed > 0){{avatar}}emblem/{id}.png?{emblem_changed}@else {{static}}image/no_emblem.png@end
+@endview
+
+@view (switch)
+	<div class="switch {theme}">
+		<input type="checkbox" name="switch" class="switch-checkbox" id="{id}" disabled @if (checked)checked@end>
+		<div class="switch-label">
+			<label for="in-garden-switch">
+				<div class="switch-slider">
+					<div class='before'></div><div class='center'><div class='on'><span>{#main.yes}</span></div><div class='off'><span>{#main.no}</span></div></div><div class='after'></div>
+				</div>
+			</label>
+		</div>
+	</div>
+@endview
+
+@view (changelog_popup)
+
+	<div class='title'>{#changelog.version_online, version_name}</div>
+	<div class='content'>
+		@foreach (change in changes)
+			<div class='change'>➤ {{change}}</div>
+		@end
+		<br>
+		{#changelog.see_all_changes}
+	</div>
+	<div class='actions'>
+		<div class='dismiss'>{#changelog.popup_ok}</div>
+	</div>
+@endview
+
+@view (comment)
+	<div class='comment'>
+		<a href='/farmer/{farmer.id}'>
+		<img class='avatar' src="@include('main.avatar', farmer)"></img>
+		</a>
+		<div class='content'>
+		<div class='author'><a href='/farmer/{farmer.id}'><b>{farmer.name}</b></div></a>
+		<div class='text'>{comment}</div>
+		<div class='date'>{_.format.date(date)}</div>
+		</div>
+	</div>
+@endview
+
+@view (quit_confirm_popup)
+
+	<div class='title'>{#quit_confirm}</div>
+
+	<div class='content'>
+		{message}
+	</div>
+
+	<div class='actions'>
+		<div class='stay'>{#stay}</div>
+		<div class='leave red'>{#leave}</div>
+	</div>
+
+@endview
+
+@view (report_popup)
+
+	<div class='title'>{title}</div>
+
+	<div class='content report-popup'>
+
+		<h3>{message}</h3>
+		<br>
+
+		@foreach (reason in reasons)
+			<input type='radio' name='reason' id='reason-{reason}'/>
+			<label for='reason-{reason}'>{_.lang.get('moderation', 'reason_' + reason)}</label>
+			<br>
+		@end
+
+		<br>
+		<h3>{#moderation.report_informations}</h3>
+		<br>
+		<textarea class='report-message'></textarea>
+	</div>
+
+	<div class='actions'>
+		<div class='dismiss'>{#moderation.cancel}</div>
+		<div class='report-validate red'>{#moderation.report}</div>
+	</div>
+@endview

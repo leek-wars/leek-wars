@@ -1,0 +1,96 @@
+#servers {
+	padding: 10px 0px;
+	text-align: center;
+}
+
+.column {
+	display: inline-block;
+	width: 33.33%;
+	margin: 0;
+	vertical-align: top;
+	margin-right: -4px;
+}
+
+#servers .server {
+	position: relative;
+	width: 89%;
+	background: white;
+	border-radius: 2px;
+	margin: 4px;
+	padding: 10px;
+	display: inline-block;
+	text-align: center;
+	border-bottom: 3px solid #ddd;
+	vertical-align: top;
+}
+
+#servers .server .load {
+	position: absolute;
+	top: 5px;
+	left: 5px;
+	width: 11px;
+	height: 136px;
+	background: #eee;
+	overflow: hidden;
+	border: 2px solid #eee;
+}
+
+#servers .server .load div {
+	height: 100%;
+	width: 11px;
+	background: #5FAD1B;
+	-webkit-transition: margin-top 0.4s ease;
+}
+
+#servers .name {
+
+	font-size: 22px;
+	font-weight: 300;
+	margin: 5px;
+}
+
+#servers .name img {
+	vertical-align: middle;
+	margin-left: 8px;
+	width: 16px;
+}
+
+#servers .server .total-wrapper {
+	color: #777;
+}
+
+#servers .threads {
+	text-align: left;
+	color: #555;
+	border-top: 3px solid #f2f2f2;
+	padding-top: 8px;
+	margin-top: 8px;
+}
+
+.server .thread {
+	color: #aaa;
+	font-size: 14px;
+	padding-bottom: 10px;
+	padding-left: 5px;
+	padding-right: 5px;
+	display: inline-block;
+	width: 46.5%;
+}
+
+.server .thread .th-name {
+	color: #666;
+	font-size: 14px;
+	margin-bottom: 4px;
+}
+
+.server .thread img {
+	width: 16px;
+	vertical-align: bottom;
+}
+
+.server red {
+	color: red;
+}
+.server green { 
+	color: green;
+}

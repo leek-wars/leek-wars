@@ -1,0 +1,10 @@
+<h1>{#title}</h1>
+
+<div class='panel'>
+	<div class='content' id='notifications'>
+
+		@foreach (notification in notifications)
+			{{notification.view}}
+		@end
+	</div>
+</div>

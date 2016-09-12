@@ -1,0 +1,263 @@
+<div class='page-header page-bar'>
+
+	<h1>{#title}</h1>
+
+	<div id='tabs' class='tabs'>
+		<a href='/ranking'><div class='tab {$leek_tab_class}'>{#leeks}</div></a>
+		<a href='/ranking/farmer'><div class='tab {$farmer_tab_class}'>{#farmers}</div></a>
+		<a href='/ranking/team'><div class='tab {$team_tab_class}'>{#teams}</div></a>
+		<a href='/ranking/fun'><div class='tab {$fun_tab_class}'>{#fun}</div></a>
+		<div class='tab' id='ranking-search' >
+			<img src='{{static}}/image/search.png' />
+		</div>
+	</div>
+</div>
+
+<div class='panel'>
+
+	<div class='content'>
+
+		@if (fun)
+
+			<div id='fun-rankings'>
+
+				@foreach (funRanking in rankings)
+
+					<div class='fun-ranking'>
+						<h4>{_.lang.get('ranking', funRanking.title + '_title')}</h4>
+
+						<table class='ranking'>
+							<tr class='header'>
+								<th>{#place}</th>
+								<th>{#farmer}</th>
+								<th>{_.lang.get('ranking', funRanking.value)}</th>
+							</tr>
+
+							@foreach (i : farmer in funRanking.ranking.ranking)
+
+								<tr class='{farmer.me}'>
+									<td>{parseInt(i) + 1}</td>
+									<td class='{farmer.style}'><a href='/farmer/{farmer.id}'>{farmer.name}</a></td>
+
+									@if (funRanking.value_type == 'number')
+										<td>{%farmer.value}</td>
+									@elseif (funRanking.value_type == 'money')
+										<td>{%farmer.value} <span class='hab'></span></td>
+									@elseif (funRanking.value_type == 'distance')
+										<td>{%farmer.value}m</td>
+									@end
+								</tr>
+							@end
+						</table>
+
+						<table class='ranking me'>
+							@if (LW.connected && funRanking.ranking.farmer_rank > 10)
+								<tr>
+									<td>{funRanking.ranking.farmer_rank}</td>
+									<td>{LW.farmer.name}</td>
+
+									@if (funRanking.value_type == 'number')
+										<td>{%funRanking.ranking.farmer_value}</td>
+									@elseif (funRanking.value_type == 'money')
+										<td>{%funRanking.ranking.farmer_value} <span class='hab'></span></td>
+									@elseif (funRanking.value_type == 'distance')
+										<td>{%funRanking.ranking.farmer_value}m</td>
+									@end
+								</tr>
+							@end
+						</table>
+					</div>
+				@end
+			</div>
+
+		@else
+
+			@if (me_active)
+				<a href='{me_link}'>
+					<span class='button' id='me'>{me_button}</span>
+				</a>
+			@end
+
+			<div class='center'>
+				<div class='pagination'>
+					{{pagination}}
+				</div>
+
+				<div class='me-buttons center'>
+					@if (category == 'leek')
+						@foreach (leek in LW.farmer.leeks)
+							<div class='button me-button' leek='{leek.id}'>{leek.name}</div>
+						@end
+					@elseif (category == 'farmer')
+						<div class='button me-button'>{#my_farmer}</div>
+					@elseif (category == 'team' && LW.farmer.team != null)
+						<div class='button me-button'>{#my_team}</div>
+					@end
+				</div>
+			</div>
+
+			<div class='scroll-x'>
+				<table class='ranking large'>
+
+					<tr class='header'>
+						@include('header_' + category, data)
+					</tr>
+
+					@foreach (row in ranking)
+						@include('row_' + category, row)
+					@end
+				</table>
+			</div>
+
+			<div class='center'>
+				<div class='pagination'>
+					{{pagination}}
+				</div>
+			</div>
+		@end
+	</div>
+</div>
+
+@view (header_leek)
+
+	<th id='ranking-column'>{#place}</th>
+	<th><a href='/ranking/leek/name/page-{page}'>{#leek}<span class='order {nameClass}'></span></a></th>
+	<th>
+		<a href='/ranking/leek/page-{page}'>
+			{#talent}<span class='order {talentClass}'></span>
+		</a>
+	</th>
+
+	<th><a href='/ranking/leek/level/page-{page}'>{#level}<span class='order {levelClass}'></span></a></th>
+	<th class='column-farmer'>{#farmer}</th>
+	<th>{#country}</th>
+	<th class='column-team'>{#team}</th>
+
+@endview
+
+@view (header_farmer)
+
+	<th id='ranking-column'>{#place}</th>
+	<th><a href='/ranking/farmer/name/page-{page}'>{#farmer}<span class='order {nameClass}'></span></a></th>
+	<th><a href='/ranking/farmer/talent/page-{page}'>{#talent} <span class='order {talentClass}'></span></a></th>
+	<th><a href='/ranking/farmer/total-level/page-{page}'>{#total_level}<span class='order {totalLevelClass}'></span></a></th>
+	<th>{#leeks}</th>
+	<th>{#country}</th>
+	<th>{#team}</th>
+
+@endview
+
+@view (header_team)
+
+	<th id='ranking-column'>{#place}</th>
+	<th><a href='/ranking/team/name/page-{page}'>{#leek}<span class='order {nameClass}'></span></a></th>
+	<th>
+		<a href='/ranking/team/page-{page}'>
+			{#talent}
+			<span class='order {talentClass}'></span>
+		</a>
+	</th>
+
+	<th><a href='/ranking/team/level/page-{page}'>{#level}<span class='order {levelClass}'></span></a></th>
+	<th>
+		<a href='/ranking/team/total-level/page-{page}'>
+			{#total_level}
+			<span class='order {talentClass}'></span>
+		</a>
+	</th>
+	<th>
+		<a href='/ranking/team/farmers/page-{page}'>
+			{#farmers}
+			<span class='order {talentClass}'></span>
+		</a>
+	</th>
+	<th>
+		<a href='/ranking/team/leeks/page-{page}'>
+			{#leeks}
+			<span class='order {talentClass}'></span>
+		</a>
+	</th>
+@endview
+
+@view (row_leek)
+
+	<tr class='{me}'>
+		<td>{rank}</td>
+		<td class='{style}'><a href='/leek/{id}'>{name}</a></td>
+		<td>{talent}</td>
+		<td>{level}</td>
+		<td><a href='/farmer/{farmer_id}'>{farmer}</td>
+		<td>
+			<div class='country-wrapper'>
+				@if (country)
+					<img src='{{static}}/image/flag/32/{country}.png'>
+				@end
+			</div>
+		</td>
+		<td>
+			@if (team)
+				<a href='/team/{team_id}'>{team}</a>
+			@end
+		</td>
+	</tr>
+
+@endview
+
+@view (row_farmer)
+
+	<tr class='{me}'>
+		<td>{rank}</td>
+		<td class='{style}'><a href='/farmer/{id}'>{name}</td>
+		<td>{talent}</td>
+		<td>{total_level}</td>
+		<td>{leek_count}</td>
+		<td>
+			<div class='country-wrapper'>
+				@if (country)
+					<img src='{{static}}/image/flag/32/{country}.png'>
+				@end
+			</div>
+		</td>
+		<td>
+			@if (team)
+				<a href='/team/{team_id}'>{team}
+			@end
+		</td>
+	</tr>
+
+@endview
+
+@view (row_team)
+
+	<tr class='{me}'>
+		<td>{rank}</td>
+		<td class='{style}'><a href='/team/{id}'>{name}</td>
+		<td>{talent}</td>
+		<td>{level}</td>
+		<td>{total_level}</td>
+		<td>{farmer_count}</td>
+		<td>{leek_count}</td>
+	</tr>
+
+@endview
+
+@view (search_popup)
+
+	<div class='title'>{#search_in_ranking}</div>
+
+	<div class='content'>
+
+		{#search_name} <input type='text' id='query' /><br><br>
+		<input type='checkbox' id='search-leeks-checkbox' checked/><label for='search-leeks-checkbox'>{#leeks}</label> &nbsp;&nbsp;
+		<input type='checkbox' id='search-farmers-checkbox' checked/><label for='search-farmers-checkbox'>{#farmers}</label>&nbsp;&nbsp;
+		<input type='checkbox' id='search-teams-checkbox' checked/><label for='search-teams-checkbox'>{#teams}</label>&nbsp;
+
+		<br>
+		<br>
+
+		<h2 id='search-results-title'>{#results}</h2>
+		<br>
+		<div id='search-results'></div>
+
+	</div>
+@endview

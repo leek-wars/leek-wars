@@ -1,0 +1,117 @@
+<div class='page-header page-bar'>
+	<h1>{#title}</h1>
+</div>
+
+<div class='column7'>
+	<div class='panel'>
+
+		<div class='header'>
+			<h2>Derniers signalements</h2>
+		</div>
+
+		<div class='content' id='faults'>
+
+			@if (faults.length == 0)
+				Aucun signalement !
+			@end
+
+			@foreach (fault in faults)
+				<div id='{fault.id}' class='fault' target='{fault.target.id}' reason='{fault.reason}' 
+					parameter='{fault.parameter}' data='{fault.data}'>
+					
+					<img src='@include('main.avatar', fault.target)'></img>
+
+					<div class='target-name'>{fault.target.name}</div>
+					<div>Motif : <span class='reason'>{_.lang.get('moderation', 'reason_' + fault.reason_text)}</span></div>
+
+					<div class='reporting-count'><b>{fault.reportings.length}</b> rapports</div>
+
+					@foreach (reporting in fault.reportings)
+						<div class='reporting'>
+							<div class='reporter'>● Signalé par <a href='/farmer/{reporting.farmer_id}'>{reporting.farmer_name}</a> 
+								{LW.util.formatDuration(reporting.date)}</div>
+							@if (reporting.message.length > 0)
+								<div class='message'>&nbsp; « {reporting.message} »</div>
+							@end
+						</div>
+					@end
+				</div>
+			@end
+		</div>
+	</div>
+
+</div><div class='column5' >
+
+	<div id='warning-wrapper'>
+
+		<div class='panel'>
+
+			<div class='header'>
+				<h2>Donner un avertissement</h2>
+			</div>
+
+			<div class='content'>
+				<div id='warning'>
+
+					<a id='warning-target-link'>
+						<img id='warning-avatar' />
+						<h2 id='warning-target'></h2>
+					</a>
+					<h4 class='reason'></h4>
+					<div class='details'></div>
+					<div id='report-message'></div>
+				</div>
+				
+				<h4>Gravité</h4>
+				<input type='number' min='1' max='10' id='warning-severity' value='1'></input> (entre 1 et 10)<br>
+
+				<h4>Message (facultatif)</h4>
+				<textarea id='warning-message'></textarea>
+
+				<br> 
+				<center>
+					<div class='button green' id='archive-reporting'>Supprimer le signalement</div>
+					<div class='button red' id='give-warning'>Donner avertissement</div>
+				</center>
+			</div>
+		</div>
+
+		<div class='panel'>
+
+			<div class='header'>
+				<h2>Top Voyous</h2>
+			</div>
+
+			<div class='content' id='thugs'>
+				@foreach (thug in thugs)
+					<div class='thug'>
+						<img src='@include('main.avatar', thug)'></img>
+						<a href='/farmer/{thug.id}'>{thug.name}</a> ({thug.warnings})
+						<div class='button ban' target='{thug.id}'>Bannir</div>
+					</div>
+				@end
+			</div>
+		</div>
+	</div>
+</div>
+
+@view (warning_confirm_popup)
+
+	<div class='title'>Envoyer un avertissement</div>
+
+	<div class='content'>
+		<h2>Confirmez l'envoi de l'avertissement :</h2>
+		<br>
+
+		Éleveur : <b><span class='target'></span></b> <br>
+		Motif : <b><span class='reason'></span></b> <br>
+		Gravité : <b><span class='severity'></span></b> <br>
+		Message : " <span class='message'></span> " <br>
+
+	</div>
+
+	<div class='actions'>
+		<div class='dismiss'>Annuler</div>
+		<div id='send-warning' class='red'>Envoyer</div>
+	</div>
+@endview

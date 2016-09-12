@@ -1,0 +1,196 @@
+#ranking-page .panel .content {
+	padding: 0
+}
+
+#ranking-page .pagination { 
+	text-align: center;
+	display: inline-block;
+}
+
+#ranking-page .me-buttons {
+	padding-top: 8px;
+	display: inline-block;
+}
+
+#page .ranking.large {
+	width: 100%;
+}
+
+#ranking-page h4 {
+	text-align: left;
+	margin: 8px 5px;
+}
+
+#page .ranking td {
+	border-bottom: 1px solid #ddd;
+	border-right: 1px solid #ddd;
+	text-align: center;
+	padding: 4px 4px;
+}
+
+#page .ranking td {
+	background: white;
+}
+
+#page .ranking td:last-child {
+	border-right: none;
+}
+
+#ranking-page .ranking tr.header {
+	background: #e5e5e5;
+	height: 38px;
+	text-align: center;
+}
+
+#ranking-page .ranking tr:first-child th:last-child {
+	-webkit-border-top-right-radius: 3px;
+	-moz-border-radius-topright: 3px;
+	border-top-right-radius: 3px;
+}
+
+#page .ranking th {
+	padding: 0 5px;
+	font-weight: normal;
+	color: #222;
+	font-size: 18px;
+	border-bottom: 1px solid #fff;
+	border-right: 1px solid #fff;
+}
+
+#page .ranking th:last-child {
+	border-right: none;
+}
+
+#page .ranking th a {
+	color: #222;
+}
+
+#page .ranking .talent-icon {
+	width: 22px;
+	vertical-align: bottom;
+	margin-bottom: 2px;
+}
+
+#page .ranking-column {
+	width: 80px;
+}
+
+.ranking .first a {
+	color: #FFA900;
+	font-weight: bold;
+}
+.ranking .second a {
+	color: #9C9C9C;
+	font-weight: bold;
+}
+.ranking .third a {
+	color: #AE4E00;
+	font-weight: bold;
+}
+
+.column-team, .column-farmer {
+	width: 140px;
+}
+.column-team div, .column-farmer div {
+	width: 140px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+#page .ranking tr.me {
+	font-weight: bold;
+}
+
+#page .ranking tr.me td {
+	background-color: #eee;
+}
+
+#ranking-search {
+	vertical-align: middle;
+	cursor: pointer;
+}
+
+#page .ranking .order:after {
+	display: inline-block;
+	width: 20px;
+	height: 13px;
+	vertical-align: top;
+	content: "▵";
+}
+#page .ranking .order.active:after {
+	content: "▲";
+}
+
+#page .ranking .country-wrapper {
+	height: 20px;
+}
+#page .ranking .country-wrapper img {
+	margin-top: -2px;
+	width: 24px;
+}
+
+#fun-rankings {
+	margin: 0 0px;
+	text-align: center;
+}
+
+#fun-rankings h2 {
+	text-align: left;
+}
+
+#fun-rankings .fun-ranking {
+	display: inline-block;
+	margin: 8px 3px;
+}
+
+#fun-rankings .fun-ranking table {
+	margin: 4px;
+	width: 320px;
+}
+
+#fun-rankings .ranking tr td:first-child {
+	width: 45px;
+}
+
+#fun-rankings .ranking tr td:last-child {
+	width: 120px;
+}
+
+#fun-rankings .ranking.me {
+	background: #f2f2f2;
+	color: #555;
+}
+
+
+/*
+ * Search
+ */
+#search-results-title {
+	display: none;
+}
+
+#search-results .result {
+	height: 40px;
+}
+#search-results .result:hover {
+	background: white;
+}
+
+#search-results .result img {
+	max-width: 40px;
+	max-height: 40px;
+}
+
+#search-results .result .image {
+	width: 40px;
+	height: 40px;
+	float: left;
+	margin-right: 8px;
+	text-align: center;
+}
+
+#search-results .result .level {
+	color: #aaa;
+	font-size: 13px;
+}

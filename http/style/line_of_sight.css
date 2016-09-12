@@ -1,0 +1,20 @@
+#map {
+}
+.cell {
+	width: 24px;
+	height: 24px;
+	display: inline-block;
+	background: #ddd;
+	margin: 0.5px;
+	vertical-align: top;
+	cursor: pointer;
+}
+.cell.obstacle {
+	background: black;
+}
+.cell.los {
+	background: #5FAD1B;
+}
+.cell.red {
+	background: red;
+}

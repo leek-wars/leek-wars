@@ -1,0 +1,110 @@
+<div class='page-header page-bar'>
+
+	<h1><a href='/forum'>{#forum.title}</a> > {category.name}</h1>
+
+	<div class='tabs'>
+		<div id='search-box' class='tab disabled'>
+			<img src='{{static}}image/search.png'></img>
+			<input type='text' id='query'></input>
+		</div>
+	</div>
+</div>
+
+<div class='panel'>
+
+	<div class='content'>
+
+		<center>
+			<div id='create' class='button'>{#create_new_topic}</div>
+		</center>
+		
+		<center class='pagination'>{{pagination}}</center>
+
+		<table id='forum-header' class='topic'><tr>
+			<td class='seen'></td>
+			<td>{#topic}</td>
+			<td class='num-messages'>{#messages}</td>
+			<td class='last-message'>{#last}</td>
+		</tr></table>
+		
+		@foreach (topic in topics)
+
+			<table class='topic @if (topic.pinned) pinned @end'><tr>
+		
+				<td class='seen'>
+					@if (topic.seen)
+						<img src='{{static}}/image/forum_seen.png'></img>
+					@else
+						<img src='{{static}}/image/forum_unseen.png'></img>
+					@end
+				</td>
+			
+				<td>
+					@if (topic.resolved)
+						<img title="{#topic_resolved}" class="attr" src="{{static}}image/check.png">
+					@end
+
+					@if (topic.closed)
+						<img title="{#topic_locked}" class="attr" src="{{static}}image/locked.png">
+					@end
+
+					@if (topic.pinned)
+						<img title="{#topic_pinned}" class="attr" src="{{static}}image/pin.png">
+					@end
+			
+					<span class='title'>
+						<a href='/forum/category-{category.id}/topic-{topic.id}'>{topic.title}</a>
+					</span>
+
+					<div class='description'>{#by_x_the_d, '/farmer/' + topic.author.id, topic.author.name, _.format.date(topic.date)}</div>
+				</td>
+			
+				<td class='num-messages'>{topic.messages}</td>
+
+				<td class='last-message'>
+					<div>
+						<span>{LW.util.formatDuration(topic.last_message_date)}</span><br> {#last_by} 
+						<a href='/forum/category-{category.id}/topic-{topic.id}/page-{topic.last_message_page}#{topic.last_message_id}'>
+							<div class='last-message-wrapper'>{topic.last_message_writer}</div> 
+							<span>►</span>
+						</a>
+					</div>
+				</td>
+			</tr></table>
+
+		@end
+		
+		<br>
+		<center class='pagination'>{{pagination}}</center>
+	</div>
+</div>
+
+<h2>{{$category_name}}</h2>
+<br>
+
+@view (create_popup)
+	
+	<div class='title'>
+		{#create_topic}
+	</div>
+
+	<div class='content'>
+
+		<h3>{#new_topic_title}</h3>
+		<br>
+		<input id='topic-name' type='text'></input>
+		<br>
+
+		<h3>{#new_topic_message}</h3>
+		<br>
+		<div class='textarea-wrapper'>
+			<textarea id='topic-message'></textarea>
+		</div>
+	</div>
+
+	<div class='actions'>
+		<div class='action dismiss'>{#cancel}</div>
+		<div class='action green' id='send'>{#create_topic}</div>
+	</div>
+
+@endview

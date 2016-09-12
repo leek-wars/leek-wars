@@ -1,0 +1,198 @@
+<div class='page-header page-bar'>
+	<div>
+		<h1>
+			<a href='/forum'>{#forum.title}</a>
+			>
+			<a href='/forum/category-{category.id}'>{_.lang.get('forum', 'category_' + category.name)}</a> 
+			> 
+			<span id='topic-title'>{topic.name}</span> 
+		</h1>
+		<div class='info attrs'>
+			@if (topic.resolved)
+				<img title="{#topic_resolved}" class="attr" src="{{static}}image/check.png">
+			@end
+
+			@if (topic.locked)
+				<img title="{#topic_locked}" class="attr" src="{{static}}image/locked_white.png">
+			@end
+
+			@if (topic.pinned)
+				<img title="{#topic_pinned}" class="attr" src="{{static}}image/pin_white.png">
+			@end
+		</div>
+	</div>
+
+	<div class='tabs'>
+		<div class='tab' id='subscribe'>{#subscribe}</div>
+		<div class='tab' id='unsubscribe'>{#unsubscribe}</div>
+	</div>
+</div>
+
+<div class='panel'>
+
+	<div class='content'>
+
+		<center class='pagination'>
+			{{pagination}}
+		</center>
+		<br>
+
+		@foreach (message in messages)
+
+			<div class='message-wrapper' id='message-{message.id}'>
+				
+				<div class='profile-td'>
+					
+					<div class='profile'>
+						
+						<a class='' href='/farmer/{message.writer.id}'>
+							<img src='@include('main.avatar', message.writer)'></img>
+
+							<div class='pseudo'>
+								{message.writer.name}
+								@if (message.writer.connected)
+									<img class='status' src="{{static}}image/connected.png">
+								@else
+									<img class='status' src="{{static}}image/disconnected.png">
+								@end
+							</div>
+						</a>
+
+						<div class='messages-count'><b>{message.writer.messages}</b> messages</div>
+						<div class='trophy-count'><b>{message.writer.trophies}</b> trophées</div>
+					</div>
+				</div>
+
+				<div class='message' id='{message.id}'>
+					<div class='wrapper'>
+						<div class='text'>{{message.html}}</div>
+
+						<textarea class='original'>{message.message}</textarea>
+
+						<div class='date'>
+							{_.format.dateTime(message.date)}
+							<br>
+							@if (message.edition_date != null)
+								{#forum.edited_the, _.format.dateTime(message.edition_date)}
+							@end
+						</div>
+
+						<div class='edit-wrapper'>
+							<div class='votes {message.votes_up > 0 || message.votes_down > 0 ? "active" : ""}'>
+								<div class='vote up {message.my_vote == 1 ? "active" : ""}' id='votes_up_names_{message.id}'>
+									<span class='image'></span>
+									<span class='counter'>{message.votes_up}</span>
+								</div>
+								<div class='vote down {message.my_vote == -1 ? "active" : ""}' id='votes_down_names_{message.id}'>
+									<span class='image'></span>
+									<span class='counter'>{message.votes_down}</span>
+								</div>
+							</div>
+
+							@if (message.votes_up > 0)
+								<div class='tooltip votes-tooltip' id='tt_votes_up_names_{message.id}'>
+									<span class='content'>
+										<img src='{{static}}image/loader_black.gif'>
+									</span>
+								</div>
+							@end
+							@if (message.votes_down > 0)
+								<div class='tooltip votes-tooltip' id='tt_votes_down_names_{message.id}'>
+									<span class='content'>
+										<img src='{{static}}image/loader_black.gif'>
+									</span>
+								</div>
+							@end
+
+							@if (LW.connected)
+								@if (message.writer.id == LW.farmer.id || category.moderator)
+									<span class='edit'>{#forum.edit}</span>
+									&nbsp;&nbsp;-&nbsp;&nbsp;
+									<span class='delete'>{#delete}</span>
+								@end
+							@end
+
+							@if (message.id == -1 && LW.connected && category.moderator)
+								&nbsp;&nbsp;-&nbsp;&nbsp;
+								<span class='lock'>{#forum.lock}</span>
+								&nbsp;&nbsp;-&nbsp;&nbsp;
+								<span class='pin'>{#forum.pin}</span>
+								&nbsp;&nbsp;-&nbsp;&nbsp;
+								<span class='resolve'>{#forum.solved}</span>
+							@end
+						</div>
+
+						<div class='edit-buttons'>
+							<span class='button green confirm-edit'>{#send}</span>
+							<span class='button cancel-edit'>{#cancel}</span>
+						</div>
+					</div>
+				</div>
+			</div>
+		@end
+
+		@if (!topic.locked)
+			<div id='editor'>
+			
+				<h2>{#answer}</h2>
+
+				<textarea id='response'></textarea> 
+				<br>
+			
+				<center>
+					<div id='send' class='button'>{#send}</div>
+				</center>
+
+				<div id='formating'>
+					<h4>Formatage</h4>
+					<span class='rule'>Code source ➤ </span> <b>[code]</b>mon code source<b>[/code]</b> <br>
+					<span class='rule'>Grand titre ➤ </span> <b>#</b> Titre, ou souligné par des <b>=</b> <br>
+					<span class='rule'>Sous-titre ➤ </span> <b>##</b> Sous-titre, ou souligné par des <b>-</b> <br>
+					<span class='rule'>Sous-sous-titre ➤ </span> <b>###</b> Sous-sous-titre <br>
+					<span class='rule'>Gras ➤ </span> <b>*</b>gras<b>*</b> <br>
+					<span class='rule'>Italique ➤ </span> <b>/</b>italique<b>/</b> <br>
+					<span class='rule'>Souligné ➤ </span> <b>_</b>souligné<b>_</b> <br>
+					<span class='rule'>Barré ➤ </span> <b>~</b>barré<b>~</b> <br>
+					<span class='rule'>lien ➤ </span> <b>&lt;</b>https://leekwars.com/<b>&gt;</b>
+				</div>
+			</div>
+		@endif
+		
+		<br>
+		<center class='pagination'>
+			{{pagination}}
+		</center>
+
+		<h2>
+			<a href='/forum'>{#forum.title}</a>
+			>
+			<a href='/forum/category-{category.id}'>{_.lang.get('forum', 'category_' + category.name)}</a> 
+			> 
+			{topic.name}
+		</h2>
+	</div>
+</div>
+
+@view (delete_popup)
+
+	<div class='title'>{#do_you_want_to_delete_message}</div>
+	
+	<div class='content'>{#undoable_action}</div>
+	
+	<div class='actions'>
+		<div class='dismiss'>{#cancel}</div>
+		<div id='delete-button' class='red'>{#delete}</div>
+	</div>
+@endview
+
+@view (delete_topic_popup)
+
+	<div class='title'>{#do_you_want_to_delete_topic}</div>
+	
+	<div class='content'>{#undoable_action}</div>
+	
+	<div class='actions'>
+		<div class='dismiss'>{#cancel}</div>
+		<div id='delete-button' class='red'>{#delete}</div>
+	</div>
+@endview

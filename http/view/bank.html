@@ -1,0 +1,30 @@
+<h1>{#title}</h1>
+
+<div class='panel'>
+
+	<div class='content'>
+
+		<center><div id='bank-description'>
+			{#description}
+		</div></center>
+
+		@foreach (p : pack in packs)
+
+			<div class='pack'>
+
+				<img src='{{static}}/image/crystal_big.png' />
+
+				<h2>{#pack_of_n_crystals, pack.crystals}</h2>
+				<br>
+
+				<div class='buy'>
+					@foreach (o : offer in pack.offers)
+						<a href='/bank/buy/{p}/{o}'>
+							<div><span class='price'>{offer.price}€</span> <img src='{{static}}/image/{offer.type}.png' /> </div>
+						</a>
+					@end
+				</div>
+			</div>
+		@end
+	</div>
+</div>

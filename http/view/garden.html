@@ -1,0 +1,333 @@
+<h1>{#title}</h1>
+<br>
+
+<div class='column3'>
+
+	<div class='panel' id='garden-left'>
+
+		<div class='content'>
+
+			@if (challenge)
+
+				<div id='tab-solo' class='tab active enabled'>
+					<h2>{#challenge}</h2>
+					<span class='fights'><img src='{{static}}image/icon/grey/garden.png' /> {challenge_fights}</span>
+				</div>
+
+			@else
+
+				<div id='tab-solo' class='card tab active enabled' tab='solo'>
+					<h2>{#category_solo_fight}</h2>
+					<span class='fights'><img src='{{static}}image/icon/grey/garden.png' /> {garden.total_solo_fights}</span>
+					<span class='grey'>/ {garden.max_solo_fights}</span>
+				</div>
+
+				<div id='tab-farmer' class='card tab {garden.farmer_enabled ? 'enabled' : ''}' tab='farmer'>
+					<h2>{#category_farmer_fight}</h2>
+					<span class='fights'><img src='{{static}}image/icon/grey/garden.png' /> {garden.farmer_fights}</span>
+					<span class='grey'>/ {garden.max_farmer_fights}</span>
+				</div>
+
+				@if (!garden.farmer_enabled)
+					<div id='tt_tab-farmer' class='tooltip {garden.farmer_enabled ? 'enabled' : ''}' >
+						{#you_must_have_2_leeks}
+					</div>
+				@end
+
+				<div id='tab-team' class='card tab {garden.team_enabled ? 'enabled' : ''}' tab='team'>
+					<h2>{#category_team_fight}</h2>
+					<span class='fights'><img src='{{static}}image/icon/grey/garden.png' /> {garden.team_fights}</span>
+					<span class='grey'>/ {garden.max_team_fights}</span>
+				</div>
+
+				@if (!garden.team_enabled)
+					<div id='tt_tab-team' class='tooltip {garden.team_enabled ? 'enabled' : ''}'>
+						{#you_must_have_a_team}
+					</div>
+				@end
+
+				<div id='tab-battle-royale' class='card tab {garden.battle_royale_enabled ? 'enabled' : ''}' tab='battle-royale'>
+					<h2>{#category_battle_royale}</h2>
+					<span class='fights'><img src='{{static}}image/icon/grey/garden.png' /> {garden.battle_royale_fights}</span>
+					<span class='grey'>/ {garden.max_battle_royale_fights}</span>
+				</div>
+
+				@if (!garden.battle_royale_enabled)
+					<div id='tt_tab-team' class='tooltip {garden.battle_royale_enabled ? 'enabled' : ''}'>
+						{#you_must_be_level_50}
+					</div>
+				@end
+
+			@end
+		</div>
+	</div>
+
+</div><div class='column9'>
+
+	<div class='panel' id='garden-right'>
+
+		<div class='content'>
+
+			@if (challenge)
+
+				<div id='garden-challenge'>
+
+					@if (challenge_type == 'leek')
+						<div id='enemies'>
+							@foreach (leek in LW.farmer.leeks)
+								<div class='leek myleek' leek='{leek.id}' name='{leek.name}'>
+									<div class='image'></div>
+									{leek.name}<br>
+									<div class='talent'><span class='talent-icon'></span> {leek.talent}</div><br>
+									<div class='level'>{#level_n, leek.level}</div>
+								</div>
+							@end
+						</div>
+
+						<h2 class='versus'>
+							<span id='solo-leek'></span> {#against} :
+						</h2>
+
+						<div id='enemies'>
+							<div leek='{target.id}' class='leek enemy'>
+							<div class='image'></div>
+							{target.name}<br>
+							<div class='talent'><span class='talent-icon'></span> {target.talent}</div><br>
+							<span class='level'>{#level_n, target.level}</span>
+							</div>
+						</div>
+
+						@if (challenge_fights == 0)
+							<br>
+							<img src='{{static}}/image/notgood.png'><br>
+							<h3>{#no_more_fights}</h3>
+						@end
+					@else
+						<div class='farmer'>
+							<img class='avatar' src='@include('main.avatar', LW.farmer)'>
+							<br>
+							{LW.farmer.name}
+							<br>
+							<div class='talent'>
+								<span class='talent-icon'></span> {LW.farmer.talent}
+							</div>
+							<br>
+							<span class='level'>
+								{#n_leeks, LW.farmer.leek_count}
+							</span>
+							<br>
+							<span class='level'>
+								{#total_level_n, LW.farmer.total_level}
+							</span>
+						</div>
+						<br>
+						<h2>{LW.farmer.name} {#against} :</h2>
+						<br>
+
+						<div id='enemies'>
+
+							<div class='enemy farmer' farmer='{target.id}'>
+								<img class='avatar' src='@include('main.avatar', target)'>
+								<br>
+								{target.name}
+								<br>
+								<div class='talent'>
+									<span class='talent-icon'></span>
+									{target.talent}
+								</div>
+								<br>
+								<span class='level'>
+									{#n_leeks, target.leek_count}
+								</span>
+								<br>
+								<span class='level'>{#total_level_n, target.total_level}</span>
+							</div>
+						</div>
+
+						@if (challenge_fights == 0)
+							<br>
+							<img src='{{static}}/image/notgood.png'><br>
+							<h3>{#no_more_fights}</h3>
+						@end
+					@end
+				</div>
+
+			@else
+
+				<div id='garden-solo'>
+
+					<h2 class='title'>{#solo_fight}</h2>
+
+					<div>
+						@foreach (leek in LW.farmer.leeks)
+							<div class='leek myleek' leek='{leek.id}' name='{leek.name}'>
+								<div class='image'></div>
+								{leek.name}<br>
+
+								<div class='talent'><span class='talent-icon'></span> {leek.talent}</div>
+
+								<div class='level'>{#level_n, leek.level}</div>
+								<span class='fights'><img src='{{static}}/image/fight.png' />{garden.solo_fights[leek.id]}</span>
+							</div>
+						@end
+					</div>
+
+					<h2 class='versus'>
+						<span id='solo-leek'></span> {#against} :
+					</h2>
+
+					<div>
+						@foreach (leek in LW.farmer.leeks)
+							<div class='enemies' of='{leek.id}'>
+								<div class='opponents'></div>
+								<div class='no-opponents'>@include('no_opponents')</div>
+								<div class='no-more-fights'>@include('no_more_fights')</div>
+							</div>
+						@end
+					</div>
+				</div>
+
+				<div id='garden-farmer'>
+
+					<h2 class='title'>{#farmer_fight}</h2>
+
+					@include('garden.farmer', garden.farmer)
+
+					<h2 class='versus'>{garden.my_farmer.name} {#against} :</h2>
+
+					<div class='enemies'>
+						<div class='opponents'></div>
+						<div class='no-opponents'>@include('no_opponents')</div>
+						<div class='no-more-fights'>@include('no_more_fights')</div>
+					</div>
+				</div>
+
+				<div id='garden-team'>
+
+					<h2 class='title'>{#team_fight, garden.my_team.name}</h2>
+
+					<div id='my-compos'>
+						@foreach (compo in garden.my_compositions)
+							<div class='compo-wrapper'>
+								@includeobj('garden.compo', compo)
+								<br>
+								<span class='fights'>
+									<img src='{{static}}/image/fight.png'>{compo.fights}
+								</span>
+							</div>
+						@end
+					</div>
+
+					<h2 class='versus'>
+						<span id='my-compo'></span> {#against} :
+					</h2>
+
+					<div>
+						@foreach (compo in garden.my_compositions)
+							<div class='enemies' of='{compo.id}'>
+								<div class='opponents'></div>
+								<div class='no-opponents'>@include('no_opponents')</div>
+								<div class='no-more-fights'>@include('no_more_fights')</div>
+							</div>
+						@end
+					</div>
+				</div>
+
+				<div id='garden-battle-royale'>
+
+					<div id='br-return' class='button'>Retour</div>
+
+					<h2 class='title'>Battle Royale</h2>
+
+					<div id='br-select'>
+
+						@foreach (leek in LW.farmer.leeks)
+							
+							<div class='leek myleek @if (leek.level < 50) disabled @end' id='br-leek-{leek.id}' leek='{leek.id}' name='{leek.name}'>
+								<div class='image'></div>
+								{leek.name}<br>
+								<div class='talent'><span class='talent-icon'></span> {leek.talent}</div><br>
+								<div class='level'>{#level_n, leek.level}</div>
+							</div>
+							@if (leek.level < 50)
+								<div id='tt_br-leek-{leek.id}' class='tooltip'>Level < 50</div>
+							@end
+						@end
+
+						<br><br>
+						<div id='br-select-button' class='button green'>Sélectionner</div>
+					</div>
+
+					<div id='br-room'>
+
+						<div class='leeks'></div>
+
+						<br>
+						<div class='leek-count'><span class='count'></span> / 12</div>
+					</div>
+
+				</div>
+			@end
+		</div>
+
+	</div>
+</div>
+
+@view(leek)
+	<div leek='{leek.id}' class='leek'>
+		<div class='image'></div>
+		{leek.name}<br>
+		<div class='talent'><span class='talent-icon'></span> {leek.talent}</div><br>
+		<span class='level'>{#level_n, leek.level}</span>
+	</div>
+@endview
+
+@view(farmer)
+	<div class='farmer' id='{data.id}'>
+		<img class='avatar' src='@include('main.avatar', data)'>
+		<br>
+		{data.name}
+		<br>
+		<div class='talent'>
+			<span class='talent-icon'></span>
+			{data.talent}
+		</div>
+		<br>
+		<span class='level'>
+			{#n_leeks, data.leek_count}
+		</span>
+		<br>
+		<span class='level'>{#total_level_n, data.total_level}</span>
+	</div>
+@endview
+
+@view(compo)
+	<div class='compo' compo='{compo.id}' name='{compo.name}'>
+		<img class='emblem' src="@include('main.emblem', compo)"></img>
+		<br>
+		{compo.name}
+		<br>
+		<div class='talent'>
+			<span class='talent-icon'></span>
+			{compo.talent}
+		</div>
+		<br>
+		<span class='level'>
+			{#level_n, compo.level}
+		</span>
+		<br>
+		<div class='level'>
+			{#total_level_n, compo.total_level}
+		</div>
+	</div>
+@endview
+
+@view(no_opponents)
+	<img src='{{static}}/image/notgood.png'><br>
+	<h4>{#no_opponent_of_your_size}</h4>
+@endview
+
+@view(no_more_fights)
+	<img src='{{static}}/image/notgood.png'><br>
+	<h4>{#no_more_fights}</h4>
+@endview

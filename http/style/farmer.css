@@ -1,0 +1,303 @@
+#state img {
+	margin-right: 6px;
+	width: 20px;
+	margin-bottom: -3.5px;
+}	
+
+#unregister-tournament {
+	display: none;
+}
+
+#farmer-table { 
+	width: 100%;
+	margin-top: 20px; 
+}
+
+#farmer-table tr > td:nth-child(n+2) {
+	border-left: 2px solid #ddd;
+}
+
+#avatar-td {
+	text-align: center;
+	vertical-align: top;
+}
+
+#avatar {
+	width: 200px;
+	height: 200px;
+	border-radius: 2px;
+}
+#avatar-input {
+	cursor: pointer;
+	text-align: center;
+}
+
+#avatar-input input {
+	display: none;
+}
+
+#country {
+	margin-top: 10px;
+}
+#country.my-farmer {
+	cursor: pointer;
+}
+
+#country img {
+	vertical-align: middle;
+	width: 28px;
+	margin-bottom: 2px;
+}
+
+.country_popup .country {
+	display: inline-block;
+	text-align: center;
+	width: 145px;
+	margin: 1px;
+	padding: 4px;
+	cursor: pointer;
+	vertical-align: top;
+}
+.country_popup .country img {
+	width: 32px;
+}
+
+.country_popup .country:hover {
+	background: white;
+}
+
+.country_popup .country h4 {
+	font-size: 14px;
+	font-weight: normal;
+}
+
+#team img {
+	width: 150px;
+	height: 150px;
+	border-radius: 2px;
+}
+
+#trophies {}
+
+#talent {
+	font-size: 25px;
+	color: #555; 
+	display: inline-block;
+	font-weight: 300;
+}
+
+#talent:before {
+	background-image: url('../image/talent.png');
+	width: 28px;
+	height: 28px;
+	margin-right: 6px;
+	content: " ";
+	display: inline-block;
+	vertical-align: middle;
+	margin-bottom: 4px;
+}
+
+#farmer-page #talent-more {
+	display: inline-block;
+	font-weight: 300;
+	font-size: 20px;
+	margin-left: 5px;
+	margin-top: 6px;
+	vertical-align: top;
+	color: #888; 
+}
+
+#farmer-page #stats {
+	vertical-align: top;
+}
+
+#farmer-page #stats .tournaments td {
+	padding: 0 10px;
+}
+
+#farmer-page #stats .small {
+	font-size: 13px;
+	vertical-align: top;
+}
+
+#farmer-page #stats table {
+	margin: 10px auto;
+}
+
+#farmer-page #stats tr > td:nth-child(n+2) {
+	border-left: 2px solid #ddd;
+}
+ 
+#farmer-page #stats td {
+	padding: 0 20px;
+	text-align: center;
+}
+
+#farmer-page #stats .big {
+	font-size: 22px;
+	font-weight: 300;
+	color: #555;
+} 
+#farmer-page .grey {
+	color: #999;
+}
+
+#stats .log-time, #stats .godfather {
+	margin-top: 20px;
+	padding: 0 20px;
+	font-size: 13px;
+}
+
+
+/*
+ * Partie milieu
+ */
+ 
+#leeks-ais {
+	width: 100%;
+	margin-top: 30px;
+}
+#leeks-ais td {
+	width: 50%; 
+	vertical-align: top;
+}
+
+#farmer-page #leeks {
+	padding: 15px;
+}
+
+#farmer-page .leek {
+	text-align: center;
+	display: inline-block;
+	padding: 5px;
+}
+
+#farmer-page .leek:hover {
+	background: white;
+}
+
+#farmer-page .leek .level {
+	color: #aaa;
+}
+
+#farmer-page .leek img {
+	margin-bottom: 5px;
+}
+
+#farmer-page .talent {
+	font-size: 22px;
+	color: #555; 
+	display: inline-block;
+	font-weight: 300;
+	margin: 3px;
+}
+
+#farmer-page .talent img {
+	width: 22px;
+	vertical-align: bottom;
+	margin-right: 4px;
+	margin-bottom: 2px;
+}
+
+/*
+ * Trophées
+ */
+#trophies {
+	text-align: left;
+}
+
+#trophies-mode-button {
+	padding: 8px 10px;
+	cursor: pointer;
+}
+
+#farmer-page .trophies-container {
+	display: inline-block;
+}
+
+#farmer-page .trophy {
+	display: inline-block; 
+	margin: 4px 2.45px;
+	padding: 4px;
+	border: 1px solid transparent;
+	vertical-align: bottom;
+}
+#farmer-page .trophy img {
+	width: 38px;
+	height: 38px;
+	vertical-align: bottom;
+}
+#farmer-page .trophy-tt .date {
+	padding-top: 4px;
+	font-size: 13px;
+	font-style: italic;
+	color: #ddd;
+}
+
+#trophies.list .grid {
+	display: none;
+}
+#trophies.grid .list {
+	display: none;
+}
+
+#trophies.grid .trophy {
+	background: white;
+	border: 1px solid #ddd;
+}
+
+#farmer-page .trophies-bonus {
+	margin: 5px 0;
+}
+
+#history .content {
+	padding: 10px;
+}
+
+#tournament-history .content {
+	padding: 10px;
+}
+
+/*
+ * Warnings
+ */
+#warnings {
+	text-align: center;
+	padding-bottom: 20px;
+}
+
+#warning-title {
+	color: red;
+	margin-bottom: 15px;
+}
+
+#warnings .warning {
+	padding: 5px;
+	background: white;
+	border-radius: 2px;
+	width: 250px;
+	display: inline-block;
+	margin: 6px;
+	vertical-align: top;
+}
+#warnings .warning .reason {
+	font-size: 15px;
+}
+#warnings .warning .date {
+	font-size: 12px;
+	color: #666;
+}
+#warnings .warning .author {
+	font-size: 12px;
+	color: #666;
+}
+
+#godfather-link {
+	cursor: pointer;
+}
+
+#godfather-url {
+	font-size: 20px;
+	font-family: monospace;
+	text-align: center;
+}

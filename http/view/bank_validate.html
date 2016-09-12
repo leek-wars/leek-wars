@@ -1,0 +1,29 @@
+@if (success)
+
+	<h1>{#payment_success, vendor}</h1>
+
+	<div class='panel'>
+		<div class='content center'>
+
+			<br>
+			<h4>{#you_earn_n_crystals, crystals}</h4>
+			<br>
+		</div>
+	</div>
+
+@else
+
+	<h1>{#payment_fail, vendor}</h1>
+	
+	<div class='panel'>
+		<div class='content center'>
+
+			<br>
+			<img src='{{static}}/image/notgood.png' /><br><br>
+			<h4>{#payment_fail_reason, reason}</h4> 
+			<br>
+			<a href='/bank'><div class='button'>{#back_to_bank}</div></a>
+
+		</div>
+	</div>
+@end

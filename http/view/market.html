@@ -1,0 +1,189 @@
+<div class='page-header page-bar'>
+	<h1>{#title}</h1>
+
+	<div class='tabs'>
+		<a href='/bank'>
+			<div class='tab'>{#main.bank}</div>
+		</a>
+	</div>
+</div>
+
+<div class='container'>
+
+	<div class='column8'>
+
+		<div class='panel'>
+
+			<div class='header'>
+				<h2>{#weapons}</h2>
+			</div>
+
+			<div class='content items'>
+
+				<div id='weapons'>
+					
+					@foreach (weapon in weapons)
+						<div id='item-{weapon.id}' type='weapon' name='{weapon.name}' class='item weapon' farmer-count='{items[weapon.id].farmer_count}' leek-count='{items[weapon.id].leek_count}'>
+							<img src='{{static}}/image/weapon/{weapon.name}.png'></img>
+						</div>
+					@end
+
+				</div>
+			</div>
+		</div>
+
+		<div class='panel'>
+
+			<div class='header'>
+				<h2>{#chips}</h2>
+			</div>
+ 
+			<div class='content items' id='chips'>
+					
+				@foreach (chip in chips)
+					<div id='item-{chip.id}' type='chip' name='{chip.name}' class='item chip' farmer-count='{items[chip.id].farmer_count}' leek-count='{items[chip.id].leek_count}'>
+						<img src='{{static}}/image/chip/small/{chip.name}.png'></img>
+					</div>
+				@end
+
+			</div>
+		</div>
+
+		<div class='panel'>
+
+			<div class='header'>
+				<h2>{#potions}</h2>
+			</div>
+
+			<div class='content items' id='potions'>
+
+				@foreach (potion in potions)
+					<div id='item-{potion.id}' type='potion' name='{potion.name}' class='item potion' farmer-count='{items[potion.id].farmer_count}' leek-count='{items[potion.id].leek_count}'>
+						<img src='{{static}}/image/potion/{potion.name}.png' />
+					</div>
+				@end
+			</div>
+		</div>
+
+		<div class='panel'>
+
+			<div class='header'>
+				<h2>{#hats}</h2>
+			</div>
+
+			<div class='content items' id='hats'>
+
+				@foreach (hat in hats)
+					<div id='item-{hat.id}' type='hat' name='{hat.name}' class='item hat' farmer-count='{items[hat.id].farmer_count}' leek-count='{items[hat.id].leek_count}'>
+						<img src='{{static}}/image/hat/{hat.name}.png' />
+					</div>
+				@end
+			</div>
+		</div>
+
+	</div><div class='column4'>
+
+		<div class='panel' id='preview-panel'>
+
+			<div class='header'>
+				<h2>Caractéristiques</h2>
+			</div>
+
+			<div class='content' id='preview'>
+					
+				@foreach (id : preview in previews)
+
+					<div id='item-{id}'>
+
+						{{preview}}
+
+						<div class='buy-buttons'>
+
+							<h4 class='buy-label'>{#buy}</h4>
+							<div id='{id}' class="button buy-button" price='{items[id].price_habs}'type='{items[id].type}'>{%items[id].price_habs}<img src='{{static}}image/hab.png'></div>
+							
+							@if (items[id].price_crystals > 0)
+								<br>
+								<h4 class='buy-label'>{#buy}</h4>
+								<div id='{id}' class="button buy-crystals-button" price='{items[id].price_crystals}' type='{items[id].type}'>{%items[id].price_crystals}<img src='{{static}}image/crystal.png'></div>
+							@endif
+
+							@if (items[id].sellable)
+								<div class='sell'>
+									<h4 class='buy-label'>{#resell}</h4>
+									<div id='{id}' class='button sell-button' price='{items[id].sell_price}' type='{items[id].type}'>{%items[id].sell_price} <span class='hab'></span></div>
+								</div>
+							@endif
+						</div>
+					</div>
+				@end
+			</div>
+		</div>
+	</div>
+</div>
+
+@view (buy_popup)
+
+	<div class='title'>{#confirm_purchase}</div>
+
+	<div class='content'>
+
+		{#are_you_sure_you_want_to_buy, item_name}
+		<br><br>
+		<b>{#price}</b> : {%price} <span class='hab'></span>
+		<br>
+		<b>{#habs_before_purchase}</b> : {%habs_before} <span class='hab'></span>	
+		<br>
+		<b>{#habs_after_purchase}</b> : {%habs_after} <span class='hab'></span>
+
+	</div>
+
+	<div class='actions'>
+		<div class='dismiss'>{#cancel}</div>
+		<div class='buy green'>{#buy}</div>
+	</div>
+@endview
+
+@view (buy_crystals_popup)
+
+	<div class='title'>{#confirm_purchase}</div>
+
+	<div class='content'>
+
+		{#are_you_sure_you_want_to_buy, item_name}
+		<br><br>
+		<b>{#price}</b> : {%price} <span class='crystal'></span>
+		<br>
+		<b>{#crystals_before_purchase}</b> : {%crystals_before} <span class='crystal'></span>	
+		<br>
+		<b>{#crystals_after_purchase}</b> : {%crystals_after} <span class='crystal'></span>	
+
+	</div>
+
+	<div class='actions'>
+		<div class='dismiss'>{#cancel}</div>
+		<div class='buy green'>{#buy}</div>
+	</div>
+@endview
+
+@view (sell_popup)
+
+	<div class='title'>{#confirm_sell}</div>
+
+	<div class='content'>
+
+		{#are_you_sure_you_want_to_sell, item_name}
+		<br><br>
+		<b>{#price}</b> : {%price} <span class='hab'></span>
+		<br>
+		<b>{#habs_before_sell}</b> : {%habs_before} <span class='hab'></span>	
+		<br>
+		<b>{#habs_after_sell}</b> : {%habs_after} <span class='hab'></span>	
+
+	</div>
+
+	<div class='actions'>
+		<div class='dismiss'>{#cancel}</div>
+		<div class='sell green'>{#sell}</div>
+	</div>
+@endview

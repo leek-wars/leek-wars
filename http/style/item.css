@@ -1,0 +1,106 @@
+/*
+ * View d'informations sur un item
+ */
+.item-preview {
+	width: 290px;
+	text-align: center;
+	background-color: #F2F2F2;
+
+	margin: auto;
+	border: 2px solid #ddd;
+}
+
+.item-preview .header {
+	background-color: #ddd;
+	padding: 2px 5px;
+	height: 25px;
+	
+} 
+.item-preview .name { 
+	float: left;
+	font-size: 20px;
+	color: black;
+}
+.item-preview .price {
+	
+}
+.item-preview .level {
+	float: right;
+	font-size: 17px; 
+	color: #777;
+}
+
+.item-preview .image {
+	height: 80px;
+	position: relative;
+}
+.item-preview .image img {
+	position: absolute;
+	top:0;
+	bottom:0;
+	left: 0; right: 0; 
+	margin: auto; 
+}
+
+.item-preview .desc {
+	text-align: justify;
+	font-size: 14px;
+	color: #777;
+	padding: 5px;
+}
+
+.item-preview .stats div { 
+	padding: 4px;
+}
+.item-preview .stats div img {
+	vertical-align: bottom;
+}
+
+.item-preview .stats div:nth-child(2n+1) {
+	background-color: white;
+}
+
+.item-preview .ennemies, .item-preview .allies, .item-preview .player, .item-preview .not-player  {
+	width: 14px;
+	height: 14px;
+	display: inline-block;
+	vertical-align: middle;
+	margin-left: 10px;
+}
+.item-preview .ennemies {
+	background-color: red;
+}	
+.item-preview .allies {
+	background-color: blue;
+}
+.item-preview .player {
+	background-color: black;
+}
+.item-preview .not-player {
+	background-color: white;
+	border: 2px solid #555;
+	width: 10px;
+	height: 10px;
+}
+
+.item-preview .constant {
+	text-align: left;
+	color: #555;
+	font-size: 13px;
+	padding: 4px;
+}
+
+.item-preview .area {
+	border-collapse: separate;
+	border-spacing: 1px;
+	margin: 3px auto;
+}
+
+.item-preview .area td {
+	width: 6px;
+	height: 6px;
+	background: #eee;
+}
+.item-preview .area td.full {
+	background: #999;
+}

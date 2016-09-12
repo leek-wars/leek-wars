@@ -1,0 +1,26 @@
+#admin_mails-page table {
+	width: 100%;
+}
+
+#admin_mails-page table .header {
+	background: #e5e5e5;
+	height: 38px;
+	text-align: center;
+}
+
+#admin_mails-page table td {
+	border-bottom: 1px solid #ddd;
+	border-right: 1px solid #ddd;
+	text-align: center;
+	padding: 0px 8px;
+	background: white;
+}
+
+#admin_mails-page table th {
+	padding: 0 5px; 
+	font-weight: normal;
+	color: #222;
+	font-size: 18px;
+	border-bottom: 1px solid #fff;
+	border-right: 1px solid #fff;
+} 

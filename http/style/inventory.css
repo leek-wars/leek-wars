@@ -1,0 +1,79 @@
+#market {
+	position: absolute;
+	right: 40px;
+	top: 8px;
+}
+
+
+#inventory-table {
+	margin: 20px 0;
+	width: 970px;
+}
+#inventory-table td {
+	vertical-align: top;
+}
+
+#inventory {
+	width: 680px;
+}
+
+#inventory #items {
+	padding: 0 14px;
+}
+
+#inventory .item {
+	width: 75px;
+	height: 75px;
+	display: inline-block;
+	margin: 5px;
+	text-align: center;
+	border: 2px solid #ddd;
+	vertical-align: top;
+	position: relative;
+	cursor: pointer;
+}
+
+#inventory .item.selected {
+	background: white;
+	border: 2px solid #777;
+}
+
+#inventory .item img {
+	max-width: 60px;
+	max-height: 60px;
+	line-height: 70px;
+	vertical-align: middle;
+	
+	position: absolute;
+	top: 0; left: 0; right: 0; bottom: 0;
+	margin: auto;
+}
+
+#inventory .item .quantity {
+	position: absolute;
+	bottom: -2px;
+	right: -2px;
+	padding: 0 3px;
+	background: #555;
+	font-weight: bold;
+	color: white;
+	font-size: 12px;
+	
+	border-top-left-radius: 3px;
+}
+
+#preview .location {
+	margin-top: 20px;
+	padding: 8px;
+	border: 2px solid #ddd;
+	background: white;
+}
+
+
+#preview .item-preview {
+	width: 286px;
+}
+
+#preview .preview {
+	display: none;
+}

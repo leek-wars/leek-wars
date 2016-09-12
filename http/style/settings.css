@@ -1,0 +1,75 @@
+#change-password {
+	display: inline-block;
+}
+
+#languages .language {
+	display: inline-block;
+	padding: 8px;
+	text-align: center;
+	font-weight: 300;
+	margin: 10px;
+	cursor: pointer;
+}
+
+#languages .language.selected {
+	border: 2px solid #5FAD1B;
+}
+
+#settings-page .panel .content {
+	text-align: center;
+}
+
+#settings-page #sfw-button > .switch {
+	vertical-align: top;
+	margin-left: 20px;
+}
+
+#settings-page #sfw-button h4 {
+	display: inline-block;
+}
+
+#settings-page #change-password {
+	text-align: left;
+}
+
+#settings-page #change-password .title {
+	font-size: 18px;
+	font-weight: bold;
+	color: #777;
+}
+
+#settings-page #change-password input {
+	margin-top: 3px;
+	margin-bottom: 8px;
+}
+
+#settings-page .advanced-button {
+	color: white;
+	background: rgba(150, 150, 150, 0.2);
+	padding: 5px 12px;
+	display: inline-block;
+	margin-bottom: 15px;
+	cursor: pointer;
+}
+
+#settings-page .advanced-button img {
+	width: 16px;
+	margin-left: 6px;
+}
+
+#settings-page .advanced {
+	display: none;
+}
+
+#settings-page #mails {
+	text-align: left;
+}
+
+#settings-page #mails .category {
+	padding-left: 18px;
+	margin-bottom: 10px;
+}
+
+#settings-page #mails .category.off {
+	opacity: 0.6;
+} 

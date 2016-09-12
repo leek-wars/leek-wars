@@ -1,0 +1,157 @@
+<div class='title'>{#title}</div>
+
+<div class='content'>
+
+	<div class='page'>
+
+		<h2>{#welcome}</h2>
+
+		<table><tr>
+			<td>
+				<img src='{{static}}/image/leek/leek2_front_green.png' />
+			</td>
+			<td>
+				<div class='text'>{#hi, $farmer_name}</div>
+
+				<div class='text'>{#goal}</div>
+
+				<div class='text'>{#goal_2}</div>
+			</td>
+		</tr></table>
+	</div>
+
+	<div class='page'>
+
+		<h2>{#leeks}</h2>
+
+		<div class='text'>{#first_leek, farmer_first_leek}</div>
+
+		<table class='stats'>
+			<tr>
+				<td><img src='{{static}}/image/charac/life.png'></img></td>
+				<td><h4>{#leek.life}</h4>{#leek.life_description}</td>
+
+				<td><img src='{{static}}/image/charac/science.png'></img></td>
+				<td><h4>{#leek.science}</h4>{#leek.science_description}</td>
+			</tr>
+			<tr>
+				<td><img src='{{static}}/image/charac/strength.png'></img></td>
+				<td><h4>{#leek.strength}</h4>{#leek.strength_description}</td>
+
+				<td><img src='{{static}}/image/charac/magic.png'></img></td>
+				<td><h4>{#leek.magic}</h4>{#leek.magic_description}</td>
+			</tr>
+			<tr>
+				<td><img src='{{static}}/image/charac/wisdom.png'></img></td>
+				<td><h4>{#leek.wisdom}</h4>{#leek.wisdom_description}</td>
+
+				<td><img src='{{static}}/image/charac/frequency.png'></img></td>
+				<td><h4>{#leek.frequency}</h4>{#leek.frequency_description}</td>
+			</tr>
+			<tr>
+				<td><img src='{{static}}/image/charac/agility.png'></img></td>
+				<td><h4>{#leek.agility}</h4>{#leek.agility_description}</td>
+
+				<td><img src='{{static}}/image/charac/tp.png'></img></td>
+				<td><h4>{#leek.tp}</h4>{#leek.tp_description}</td>
+			</tr>
+			<tr>
+				<td><img src='{{static}}/image/charac/resistance.png'></img></td>
+				<td><h4>{#leek.resistance}</h4>{#leek.resistance_description}</td>
+
+				<td><img src='{{static}}/image/charac/mp.png'></img></td>
+				<td><h4>{#leek.mp}</h4>{#leek.mp_description}</td>
+			</tr>
+		</table>
+	</div>
+
+	<div class='page'>
+
+		<h2>{#ai}</h2>
+
+		<img class='bigimage' src='{{static}}/image/exemple_code.png' />
+
+		<div class='text'>{#ai_1}</div>
+
+		<div class='text'>{#ai_2}</div>
+
+		<div class='text'>{#ai_3}</div>
+
+		<div class='text'>{#ai_4}</div>
+
+	</div>
+
+	<div class='page'>
+
+		<h2>{#fights}</h2>
+
+		<img class='bigimage' src='{{static}}/image/fight_exemple.png' />
+
+		<div class='text'>{#fights_1}</div>
+
+		<div class='text'>{#fights_2}</div>
+
+		<div class='text'>{#fights_3}</div>
+
+	</div>
+
+	<div class='page'>
+
+		<h2>{#teams}</h2>
+
+		<img class='bigimage' src='{{static}}/image/team_exemple.png' />
+
+		<div class='text'>{#teams_1}</div>
+
+		<div class='text'>{#teams_2}</div>
+
+	</div>
+
+	<div class='page'>
+
+		<h2>{#weapons_chips}</h2>
+
+		<img class='bigimage' src='{{static}}/image/weapon_chips.png' />
+
+		<div class='text'>{#weapons_chips_1}</div>
+
+		<div class='text'>{#weapons_chips_2}</div>
+
+	</div>
+
+	<div class='page'>
+
+		<h2>{#market}</h2>
+
+		<img class='bigimage' src='{{static}}/image/potions_exemple.png' />
+
+		<div class='text'>{#market_1}</div>
+
+		<div class='text'>{#market_2}</div>
+
+	</div>
+
+	<div class='page'>
+
+		<h2>{#end}</h2>
+
+		<div class='text'>{#end_1}</div>
+
+		<div class='text'>{#end_2}</div>
+
+		<div class='text'>{#end_3}</div>
+	</div>
+
+	<div class='pagination'></div>
+</div>
+
+<div class='actions'>
+	<div class='skip-previous'>
+		<span id='dida-skip'>❌&nbsp; {#dismiss}</span>
+		<span id='dida-previous'>◄  {#previous}</span>
+	</div>
+	<div class='next'>
+		<span id='dida-next'>{#next} &nbsp;▶</span>
+		<span id='dida-play'>{#play}</span>
+	</div>
+</div>

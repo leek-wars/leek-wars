@@ -1,0 +1,56 @@
+#chat .content {
+	padding: 0;
+}
+
+#chat .chat-messages {
+	background: white;
+	padding: 5px;
+	overflow-y: scroll;
+}
+
+#chat .chat-messages .websocket-loader {
+	text-align: center;
+	margin-top: 150px;
+}
+
+.chat-input {
+	margin-top: 10px;
+	width: 100%;
+	margin-right: 10px;
+}
+
+#chat-send {
+	vertical-align: top;
+}
+
+#chat-languages img {
+	width: 28px;
+	opacity: 0.3;
+	margin-right: 5px;
+	cursor: pointer; 
+}
+
+#chat-language {
+	display: inline-block;
+	cursor: pointer;
+	vertical-align: top;
+	margin-top: 10px;
+}
+
+#chat-languages {
+	text-align: center;
+	padding: 3px;
+}
+
+#chat-languages img.activated {
+	opacity: 1;
+}
+
+#chat-language img {
+	width: 30px;
+	margin: 0 10px;
+}
+
+#chat-language-selection input, #chat-language-selection label {
+	cursor: pointer;
+}

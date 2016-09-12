@@ -1,0 +1,196 @@
+/*
+ * Thème Leek Wars (par défaut)
+ */
+.cm-number {
+	color: #007F00; 
+}
+.cm-string {
+	color: #FF901E; 
+}
+.cm-keyword, .cm-variable-declaration, .cm-function-declaration {
+	color: #00007f; 
+	font-weight: bold;
+}
+.cm-atom {
+	color: #0086BC; 
+	font-weight: bold;
+}
+.cm-comment {
+	color: #CE1400; 
+}
+.cm-def {
+	color: black; 
+}
+.cm-variable-2 {
+	color: black; 
+}
+.CodeMirror-lines .activeline {
+	background: #f2f2f2;
+}
+.cm-lsconst {
+	color: black;
+}
+.cm-lsfunc {
+	color: black; 
+}
+.cm-lsfunc-deprec {
+	color: black; 
+	font-style: italic;
+	text-decoration: line-through;
+	opacity: 0.6;
+}
+.cm-lsconst {
+	color: black; 
+	font-weight: bold;
+}
+.cm-lsfunc {
+	color: black; 
+	font-style: italic;
+}
+.cm-matchhighlight {
+	border: 1px solid #444;
+	border-radius: 2px;
+	margin: -1px;
+}
+.CodeMirror-matchingbracket {
+    color: #00F; 
+	font-weight: bold;
+}
+.CodeMirror-nonmatchingbracket {
+	color: #F00; 
+	font-weight: bold;
+}
+
+/*
+ * Thème Monokai
+ */
+.theme-monokai .CodeMirror {
+	background: #272822;
+	color: #F8F8F2; 
+}
+.theme-monokai .CodeMirror-gutters {
+	background: #303029;
+	border-right: 1px solid #444;
+}
+.theme-monokai .cm-number {
+	color: #AE81FF; 
+}
+.theme-monokai .cm-string {
+	color: #E6DB74; 
+}
+.theme-monokai .cm-variable-declaration,
+.theme-monokai .cm-function-declaration
+{
+	color: #66D9EF; 
+	font-weight: normal;
+	font-style: italic;
+}
+.theme-monokai .cm-keyword {
+	color: #F92672; 
+	font-weight: normal;
+}
+.theme-monokai .cm-atom {
+	color: #AE81FF; 
+	font-weight: normal;
+}
+.theme-monokai .cm-comment {
+	color: #75715E; 
+}
+.theme-monokai .cm-def {
+	color: #F8F8F2; 
+}
+.theme-monokai .cm-variable {
+	color: #F8F8F2; 
+}
+.theme-monokai .cm-variable-2 {
+	color: #F8F8F2; 
+}
+.theme-monokai .CodeMirror-lines .activeline {
+	background: #222;
+}
+.theme-monokai .cm-operator {
+	color: #F92672;
+}
+.theme-monokai .cm-function {
+	color: #A6E22E;
+}
+.theme-monokai .cm-def {
+	color: #FD971F;
+}
+.theme-monokai .cm-lsconst {
+	color: white; 
+	font-weight: bold;
+}
+.theme-monokai .cm-lsfunc {
+	color: white; 
+	font-style: italic;
+}
+.theme-monokai .cm-lsfunc-deprec {
+	color: white;
+}
+.theme-monokai .cm-matchhighlight {
+	border: 1px solid #aaa;
+	border-radius: 2px;
+	margin: -1px;
+}
+.theme-monokai .cm-matchhighlight-green {
+	background: #5FAD1B;
+}
+.theme-monokai .CodeMirror-selected, 
+.theme-monokai .CodeMirror-focused .CodeMirror-selected { 
+	background: #555;
+}
+.theme-monokai .CodeMirror-matchingbracket {
+	color: #F8F8F2; 
+	border-bottom: 1px solid #F8F8F2;
+}
+.theme-monokai .CodeMirror-nonmatchingbracket {
+	color: #F00; 
+	font-weight: bold;
+}
+.theme-monokai .CodeMirror div.CodeMirror-cursor {
+	border-left: 1px solid #eee;
+}
+
+/*
+ * Code preview
+ */
+code pre {
+	padding: 6px;
+	margin: 6px 0;
+	border: 6px solid #F7F7F7;
+	overflow-x: auto;
+	background: white;
+}
+ 
+code pre .line-number {
+	color: #666;
+	display: block;
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
+code pre .line-number {
+	float: left;
+	background: #F7F7F7;
+	text-align: right;
+	padding: 6px 0;
+	margin-top: -6px;
+	margin-bottom: -6px;
+	margin-left: -6px;
+	margin-right: 6px;
+}
+
+code pre .line-number span {
+	display: block;
+	padding: 0px 6px;
+}
+
+code pre .cl {
+	display: block;
+	clear: both;
+}

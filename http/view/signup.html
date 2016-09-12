@@ -1,0 +1,270 @@
+<div class='page-header'>
+	<h1>{#title}</h1>
+</div>
+
+<div class='top'>
+	<div class='column6'>
+		<div class='panel'>
+			<div class='content'>
+
+				<div id='introduction' class='desc'>{#intro}</div>
+				
+				<div id='leek-rect'>
+
+					<img id='illustration' src='{{static}}/image/signup_illustration.png'></img>
+					 
+					<div id='leek-count' class='desc'>
+						{leek_count}
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</div><div class='column6'>
+
+		<div class='panel'>
+
+			<div class='header'>
+				<h2>Inscription</h2>
+			</div>
+
+			<div class='content'>
+			
+				<form id='signup-form' method='post'>
+					<table>
+						<tr>
+							<td class='align-right'>{#your_farmer_name}</td>
+							<td class='align-left'>
+								<input name="login" type="text" required></input>
+								<div class='errors'></div>
+							</td>
+						</tr>
+						<tr>
+							<td class='align-right'>{#your_leek_name}</td>
+							<td class='align-left'>
+								<input name="leek_name" type="text" required></input>
+								<div class='errors'></div>
+							</td>
+						</tr>
+						<tr>
+						<td><br /></td>
+						</tr>
+						<tr>
+							<td class='align-right'>{#your_email}</td>
+							<td class='align-left'>
+								<input name="email" type="text" required></input>
+								<div class='errors'></div>
+							</td>
+						</tr>
+						<tr>
+							<td class='align-right'>{#password}</td>
+							<td class='align-left'>
+								<input name="password" type="password" required></input>
+								<div class='errors'></div>
+							</td>
+						</tr>
+						<tr>
+							<td class='align-right'>{#confirm_password}</td>
+							<td class='align-left'>
+								<input name="password2" type="password" required></input>
+								<div class='errors'></div>
+							</td>
+						</tr>
+						<tr>
+							<td><br></td>
+						</tr>
+						<tr>
+							<td class='align-right'><i>{#godfather}</i></td>
+							<td class='align-left'>
+								<input name="godfather" type="text" value='{godfather}'></input>
+								<div class='errors'></div>
+							</td>
+						</tr>
+					</table>
+					
+					<br />
+					
+					<div id="signup-errors"></div>
+					
+					<div id='cgu'>{#conditions}</div>
+					<br>
+					<center><input id='subscribe-button' class='button green large' type="submit" value="{#signup}"></center>
+					
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+
+<h1>Classements</h1>
+
+<div class='panel first'>
+
+	<div class='content'>
+
+		<div class='container'>
+			<div class='column6'>
+				<div id='leek-ranking'></div>
+			</div><div class='column6'>
+				<div id='farmer-ranking'></div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<h1>{#screenshots}</h1>
+
+<div class='panel first' id='screenshots'>
+
+	<div class='content'>
+
+		<div class='container'>
+	
+			<div class='column6'>
+
+				<div class='screenshot'>
+					<img src='{{static}}/image/signup/factory_small.png'></img>
+					<div class='legend'>{#fight_factory}</div>
+				</div>
+
+			</div><div class='column6'>
+
+				<div class='screenshot'>	
+					<img src='{{static}}/image/signup/leek_small.png'></img>
+					<div class='legend'>{#leek_page}</div>
+				</div>
+
+			</div><div class='column6'>
+
+				<div class='screenshot'>
+					<img src='{{static}}/image/signup/editor_small.png'></img>
+					<div class='legend'>{#editor}</div>
+				</div>
+
+			</div><div class='column6'>
+
+				<div class='screenshot'>
+					<img src='{{static}}/image/signup/desert_small.png'></img>
+					<div class='legend'>{#fight_desert}</div>
+				</div>
+			
+			</div><div class='column6'>
+
+				<div class='screenshot'>
+					<img src='{{static}}/image/signup/ice_small.png'></img>
+					<div class='legend'>{#fight_ice}</div>
+				</div>
+			
+			</div><div class='column6'>
+
+				<div class='screenshot'>
+					<img src='{{static}}/image/signup/market_small.png'></img>
+					<div class='legend'>{#market}</div>
+				</div>
+				
+			</div><div class='column6'>
+
+				<div class='screenshot'>
+					<img src='{{static}}/image/signup/ranking_small.png'></img>
+					<div class='legend'>{#ranking}</div>
+				</div>
+				
+			</div><div class='column6'>
+
+				<div class='screenshot'>
+					<img src='{{static}}/image/signup/forest_small.png'></img>
+					<div class='legend'>{#fight_forest}</div>
+				</div>
+			
+			</div><div class='column6'>
+
+				<div class='screenshot'>
+					<img src='{{static}}/image/signup/beach_small.png'></img>
+					<div class='legend'>{#fight_beach}</div>
+				</div>
+			
+			</div><div class='column6'>
+
+				<div class='screenshot'>
+					<img src='{{static}}/image/signup/nexus_small.png'></img>
+					<div class='legend'>{#fight_test}</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div id='bigscreen'>
+	<img src=''></img>
+	<div id='biglegend'></div>
+</div>
+
+@view (leek_ranking)
+	
+	<div class='ranking'>
+		<h4>{title}</h4>
+
+		<table class='ranking'>
+			<tr class='header'>
+				<th>{#place}</th>
+				<th>{#leek}</th>
+				<th>{#talent}</th>
+				<th>{#level}</th>
+			</tr>
+
+			@foreach (i : leek in leeks)
+
+				<tr class='{leek.style}'>
+					<td>{parseInt(i) + 1}</td>
+					<td class='{class}'><a href='/leek/{leek.id}'>{leek.name}</a></td>
+					<td>{{_.format.number(leek.talent)}}</td>
+					<td>{{_.format.number(leek.level)}}</td>
+				</tr>
+			@end
+		</table>
+	</div>
+@endview
+
+@view (farmer_ranking)
+	
+	<div class='ranking'>
+		<h4>{title}</h4>
+
+		<table class='ranking'>
+			<tr class='header'>
+				<th>{#place}</th>
+				<th>{#farmer}</th>
+				<th>{#talent}</th>
+				<th>{#total_level}</th>
+			</tr>
+
+			@foreach (i : farmer in farmers)
+
+				<tr class='{farmer.style}'>
+					<td>{parseInt(i) + 1}</td>
+					<td class='{class}'><a href='/farmer/{farmer.id}'>{farmer.name}</a></td>
+					<td>{{_.format.number(farmer.talent)}}</td>
+					<td>{{_.format.number(farmer.total_level)}}</td>
+				</tr>
+			@end
+		</table>
+	</div>
+@endview
+
+@view (success_popup)
+	
+	<div class='title'>
+		{#signup_validated}
+	</div>
+
+	<div class='content'>
+		<center><img src='{{static}}image/map/nexus_block.png'></img></center>
+
+		<h2 class='signup-message'>{#signup_validated_message, login}</h2>
+	</div>
+
+	<div class='actions'>
+		<div class='action ok'>OK</div>
+	</div>
+
+@endview

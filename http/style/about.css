@@ -1,0 +1,99 @@
+#about-page .title {
+	font-size: 40px;
+}
+
+#about-page .illustration {
+	width: 100%;
+	max-width: 452px;
+}
+
+#langages {
+	display: flex;
+	justify-content: center;
+	flex-wrap: wrap;
+}
+
+#langages .item {
+	display: inline-block;
+	margin: 7px;
+	text-align: center;
+}
+
+#langages .item img {
+	width: 85px;
+}
+
+#about-page p {
+	text-align: justify;
+	font-size: 17px;
+	margin: 5px;
+}
+
+#about-page .devs {
+	display: flex;
+	justify-content: center;
+}
+
+#page .dev {
+	display: inline-block;
+	margin: 10px;
+	text-align: center;
+}
+
+#page .dev .avatar {
+	max-width: 140px;
+	width: 100%;
+	border-radius: 2px;
+}
+
+#page .dev .role {
+	font-style: italic;
+	color: #666;
+}
+
+#page .modo {
+	display: inline-block;
+	margin: 10px;
+	text-align: center;
+}
+
+#page .modo .avatar {
+	width: 120px;
+	border-radius: 2px;
+}
+
+#page .links {
+	padding: 10px;
+	word-break: break-all;
+}
+
+#page .links h3 {
+	display: inline-block;
+}
+
+#page .links a {
+	color: #5FAD1B;
+}
+
+
+#about-page .green {
+	color: #5FAD1B;
+}
+#about-page a.green:visited {
+	color: #5FAD1B;
+}
+
+#about-page .social {
+	display: flex;
+	justify-content: center;
+}
+
+#about-page .social .item {
+	text-align: center;
+	margin: 10px;
+}
+
+#about-page .social img {
+	width: 100%;
+	max-width: 90px;
+}
