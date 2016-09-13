@@ -525,7 +525,7 @@ $(document).ready(function() {
 		if (LW.dev) {
 			_.favicon(LW.staticURL + '/image/favicon_dev.png')
 			$('body').addClass('dev')
-		} else if (LW.test) {
+		} else if (LW.test || LW.mixed_local || LW.local) {
 			_.favicon(LW.staticURL + '/image/favicon_test.png')
 			$('body').addClass('test')
 		} else if (LW.beta) {
@@ -544,7 +544,7 @@ $(document).ready(function() {
 
 			$('body').html(_.view.render('main', {
 				dev_site: LW.dev,
-				test_site: LW.test,
+				test_site: LW.test || LW.mixed_local || LW.local,
 				beta_site: LW.beta
 			}))
 
