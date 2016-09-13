@@ -622,7 +622,7 @@ _.script.load = function(path, file, callback) {
 		_.script.loading[url] = true
 
 		var script = document.createElement('script')
-		script.src = url + '?' + _.version
+		script.src = url // + '?' + _.version
 		script.async = false
 
 		script.onload = function() {
@@ -826,7 +826,7 @@ _.view.load = function(view, admin, callback) {
 				save_view(data)
 			}, false)
 		} else {
-			$.get('/view/' + view, save_view)
+			$.get('/view/' + view + '.html', save_view)
 		}
 	}
 }
