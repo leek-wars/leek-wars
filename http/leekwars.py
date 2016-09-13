@@ -5,8 +5,8 @@ PORT = 8012
 
 class LWHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
 	def do_GET(self):
-	
-		if os.access('.' + self.path, os.R_OK):
+		
+		if self.path != '/' and os.access('.' + self.path, os.R_OK):
 			SimpleHTTPServer.SimpleHTTPRequestHandler.do_GET(self);
 		else:
 		

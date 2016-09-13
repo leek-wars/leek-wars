@@ -577,9 +577,9 @@ _.post = function(url, data, callback, log) {
 	}
 
     if (data instanceof FormData) {
-    	data.append('token', '$')
+    	data.append('token', LW.token())
     } else {
-    	data['token'] = '$'
+    	data['token'] = LW.token()
 	}
 
     _.request(url, data, callback, 'POST', log)
@@ -735,7 +735,7 @@ _.lang.load = function(file, admin, callback) {
 		return
 	}
 
-	var url = admin ? 'lang/get-private/' + file + '/' + _.lang.current + '/$' : 'lang/get/' + file + '/' + _.lang.current
+	var url = admin ? 'lang/get-private/' + file + '/' + _.lang.current + '/' + LW.token() : 'lang/get/' + file + '/' + _.lang.current
 
 	_.get(url, function(data) {
 
@@ -817,7 +817,7 @@ _.view.load = function(view, admin, callback) {
 			callback()
 		}
 		if (admin) {
-			_.get('view/get-private/' + view + '/$', function(data) {
+			_.get('view/get-private/' + view + '/' + LW.token(), function(data) {
 				if (typeof(data) === 'object' && data.success == false) {
 					_.log('Failed to load view "' + view + '"...')
 					callback()

@@ -1,6 +1,6 @@
 LW.pages.market.init = function(params, $scope, $page) {
 
-	_.get('market/get-item-templates/$', function(data) {
+	_.get('market/get-item-templates/' + LW.token(), function(data) {
 
 		if (!data.success) {
 			LW.error()
@@ -42,7 +42,7 @@ LW.pages.market.init = function(params, $scope, $page) {
 
 		LW.setTitle(_.lang.get('market', 'title'))
 		LW.setMenuTab('market')
-		
+
 		// Click item
 		$('.item').click(function() {
 			LW.page('/market/' + $(this).attr('name'))
@@ -50,34 +50,34 @@ LW.pages.market.init = function(params, $scope, $page) {
 
 		LW.pages.market.updateItems()
 		LW.pages.market.buy()
-		
-		// Sell buttons 
+
+		// Sell buttons
 		$("#market-page .item").each(function() {
-			
+
 			var id = $(this).attr('id')
 			var count = parseInt($(this).attr('farmer-count'))
-			
+
 			if (count == 0) {
 				$("#preview " + "#" + id).find('.sell').hide()
 			}
 		})
-		
-		
+
+
 		// Flèches droites et gauche
 		$(document).keydown(function(e) {
 			if (e.keyCode == 37) { // Gauche
-			  
+
 				//~ var currentItem = $('#' + currentPage).find('.selected')
-			  //~ 
+			  //~
 				//~ var prev = currentItem.prev()
 				//~ if (prev.length == 0) prev = currentItem.parent().children().last()
 				//~ selectItem(prev)
 				return false
 			}
 			if (e.keyCode == 39) { // Droite
-			
+
 				//~ var currentItem = $('#' + currentPage).find('.selected')
-			//~ 
+			//~
 				//~ var next = currentItem.next()
 				//~ if (next.length == 0) next = currentItem.parent().children().first()
 				//~ selectItem(next)
@@ -98,7 +98,7 @@ LW.pages.market.resize = function() {
 }
 
 LW.pages.market.scroll = function(scroll) {
-				
+
 	if (scroll < 137) {
 		$('#preview-panel').css('position', 'static')
 	} else {
@@ -115,7 +115,7 @@ LW.pages.market.update = function(params) {
 LW.pages.market.buy = function() {
 
 	$('#preview .buy-button').click(function(e) {
-		
+
 		if ($(this).hasClass('disabled')) return null
 
 		var buyPopup = new _.popup.new('market.buy_popup', {
@@ -124,7 +124,7 @@ LW.pages.market.buy = function() {
 			habs_before: LW.farmer.habs,
 			habs_after: LW.farmer.habs - parseInt($(this).attr('price'))
 		})
-		
+
 		var id = $(this).attr('id')
 		var type = $(this).attr('type')
 
@@ -133,26 +133,26 @@ LW.pages.market.buy = function() {
 		buyPopup.find('.buy').click(function() {
 
 			_.toast(_.lang.get('market', 'buying'))
- 
+
 			_.log('buy ' + id + "...")
 
 			_.post('market/buy-habs', {item_id: id}, function(data) {
-				
+
 				if (data.success) {
 
 					buyPopup.dismiss()
 
 					_.toast([
-						_.lang.get('market', 'weapon_bought'), 
-						_.lang.get('market', 'chip_bought'), 
-						_.lang.get('market', 'potion_bought'), 
+						_.lang.get('market', 'weapon_bought'),
+						_.lang.get('market', 'chip_bought'),
+						_.lang.get('market', 'potion_bought'),
 						_.lang.get('market', 'hat_bought')
 					][type - 1])
 
 					$("#item-" + id).attr('farmer-count', parseInt($("#item-" + id).attr('farmer-count')) + 1)
 
 					$('#preview #item-' + id).find('.sell').show()
-					
+
 					LW.setHabs(data.money)
 					LW.pages.market.updateItems()
 
@@ -164,7 +164,7 @@ LW.pages.market.buy = function() {
 
 	// Buy item by crystals
 	$('#preview .buy-crystals-button').click(function(e) {
-		
+
 		if ($(this).hasClass('disabled')) return null
 
 		var buyPopup = new _.popup.new('market.buy_crystals_popup', {
@@ -173,7 +173,7 @@ LW.pages.market.buy = function() {
 			crystals_before: LW.farmer.crystals,
 			crystals_after: LW.farmer.crystals - parseInt($(this).attr('price'))
 		})
-		
+
 		var id = $(this).attr('id')
 		var type = $(this).attr('type')
 
@@ -186,32 +186,32 @@ LW.pages.market.buy = function() {
 			_.toast(_.lang.get('market', 'buying'))
 
 			_.post('market/buy-crystals', {item_id: id}, function(data) {
-			
+
 				if (data.success) {
 
 					buyPopup.dismiss()
 
 					_.toast([
-						_.lang.get('market', 'weapon_bought'), 
-						_.lang.get('market', 'chip_bought'), 
-						_.lang.get('market', 'potion_bought'), 
+						_.lang.get('market', 'weapon_bought'),
+						_.lang.get('market', 'chip_bought'),
+						_.lang.get('market', 'potion_bought'),
 						_.lang.get('market', 'hat_bought')
 					][type - 1])
-				
+
 					$("#item-" + id).attr('farmer-count', parseInt($("#item-" + id).attr('farmer-count')) + 1)
 
 					$('#preview #item-' + id).find('.sell').show()
-					
+
 					LW.setCrystals(data.crystals)
 					LW.pages.market.updateItems()
 				}
 			})
 		})
 	})
-	
+
 	// Sell item
 	$('#preview .sell-button').click(function(e) {
-		
+
 		if ($(this).hasClass('disabled')) return null
 
 		var sellPopup = new _.popup.new('market.sell_popup', {
@@ -220,14 +220,14 @@ LW.pages.market.buy = function() {
 			habs_before: LW.farmer.habs,
 			habs_after: LW.farmer.habs + parseInt($(this).attr('price'))
 		})
-		
+
 		var id = $(this).attr('id')
 		var type = $(this).attr('type')
 
 		sellPopup.show(e)
 
 		sellPopup.find('.sell').click(function() {
-			
+
 			sellPopup.find('.buy').off()
 
 			_.post('market/sell-habs', {item_id: id}, function(data) {
@@ -237,21 +237,21 @@ LW.pages.market.buy = function() {
 					sellPopup.dismiss()
 
 					_.toast([
-						_.lang.get('market', 'weapon_selled'), 
-						_.lang.get('market', 'chip_selled'), 
-						_.lang.get('market', 'potion_selled'), 
+						_.lang.get('market', 'weapon_selled'),
+						_.lang.get('market', 'chip_selled'),
+						_.lang.get('market', 'potion_selled'),
 						_.lang.get('market', 'hat_selled')
 					][type - 1])
-					
+
 					// On actualise
 					var div = $("#item-" + id)
-					
+
 					$("#item-" + id).attr('farmer-count', parseInt($("#item-" + id).attr('farmer-count')) - 1)
-					
+
 					if ($("#item-" + id).attr('farmer-count') == 0) {
 						$('#preview #item-' + id).find('.sell').hide()
 					}
-					
+
 					LW.setHabs(data.money)
 					LW.pages.market.updateItems()
 
@@ -299,7 +299,7 @@ LW.pages.market.selectItem = function(item) {
 
 	$('#preview > div').hide()
 	$('#preview').find('#' + item.attr('id')).show()
-	
+
 	$('.items div').removeClass('selected')
 	item.addClass('selected')
 }

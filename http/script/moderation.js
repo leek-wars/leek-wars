@@ -8,7 +8,7 @@ var _data
 
 LW.pages.moderation.init = function(params, $scope, $page) {
 
-	_.get('moderation/get-reportings/$', function(data) {
+	_.get('moderation/get-reportings/' + LW.token(), function(data) {
 
 		$scope.faults = data.faults
 		$scope.thugs = data.thugs
@@ -18,7 +18,7 @@ LW.pages.moderation.init = function(params, $scope, $page) {
 		LW.setMenuTab('moderation')
 
 		$('.fault').click(function() {
-			
+
 			_fault = $(this).attr('id')
 			_target = $(this).attr('target')
 			_reason = $(this).attr('reason')
@@ -61,7 +61,7 @@ LW.pages.moderation.init = function(params, $scope, $page) {
 		})
 
 		$('#archive-reporting').click(function(e) {
-			
+
 			_.post('moderation/archive', {target: _target, reason: _reason, parameter: _parameter}, function(data) {
 
 				if (data.success) {
@@ -112,7 +112,7 @@ LW.pages.moderation.init = function(params, $scope, $page) {
 			$(window).scroll(function() {
 
 				var scroll = $(window).scrollTop()
-				
+
 				if (scroll < 80) {
 					$('#warning-wrapper').css('position', 'absolute')
 					$('#warning-wrapper').css('top', 55)
@@ -123,7 +123,7 @@ LW.pages.moderation.init = function(params, $scope, $page) {
 					$('#warning-wrapper').css('margin-top', 0)
 				}
 			})
-		} 
+		}
 	})
 }
 
