@@ -13,7 +13,7 @@ LW.pages.messages.init = function(params, $scope, $page) {
 	var id = 'id' in params ? params.id : null
 	_new_farmer = new_farmer
 
-	_.get('message/get-latest-conversations/100/$', function(data) {
+	_.get('message/get-latest-conversations/100/' + LW.token(), function(data) {
 
 		for (var c in data.conversations) {
 			data.conversations[c].avatars = LW.messages.getAvatars(data.conversations[c])
@@ -61,11 +61,11 @@ LW.pages.messages.init = function(params, $scope, $page) {
 		}
 
 		$('.conversation-preview').click(function() {
-			
+
 			var id = $(this).attr('conv')
 			LW.page('/messages/conversation/' + id)
 		})
-		
+
 		// Send message
 		$('#chat-send').click(function() {
 			sendMessage()
@@ -75,12 +75,12 @@ LW.pages.messages.init = function(params, $scope, $page) {
 				sendMessage()
 			}
 		})
-		
+
 		// Smileys
 		$('.chat-message-messages div, .conversation-preview .content').each(function() {
 			// $(this).html(smiley($(this).html()));
 		});
-		
+
 		// Focus
 		$(window).focus(function() {
 			_focus = true;
@@ -125,7 +125,7 @@ LW.pages.messages.wsreceive = function(data) {
 
 		data = data.data
 		var conversationID = data[0]
-		
+
 		var message = {
 			lang: '_',
 			farmer_id: data[1],
@@ -140,36 +140,36 @@ LW.pages.messages.wsreceive = function(data) {
 		if (conversationID == _conversation) {
 			updateScroll(conversationID)
 		}
-		
+
 		// if (_focus)
 			// conversationRead();
 	}
 }
 
 LW.pages.messages.selectConversation = function(id) {
-	
+
 	_conversation = id
-	
+
 	$('.conversation').hide()
 	$('.conversation[conv=' + id + ']').show()
 	$('.conversation-preview').removeClass('selected')
 	$('.conversation-preview[conv=' + id + ']').addClass('selected')
-	
+
 	LW.pages.messages.loadConversation(id)
 }
 
 LW.pages.messages.loadConversation = function(conv) {
 
 	_.log("load conv " + conv)
-	
+
 	if (typeof(_conversations[conv]) === 'undefined') {
-		
+
 		_conversations[conv] = []
 		_chat_controllers[conv] = new ChatController($('.conversation[conv=' + conv + ']'), true)
-		
+
 		// Ajout d'un loader
 		$('#conversation-' + conv).append("<center class='loader'><img src='" + LW.staticURL + "image/loader.gif' class='loader'></img></center>");
-		
+
 		_.get('message/get-messages/' + conv + '/' + 50 + '/' + 1 + '/$', function(data) {
 
 			if (!data.success) return null
@@ -179,7 +179,7 @@ LW.pages.messages.loadConversation = function(conv) {
 				_messageCount--
 				updateCounters()
 			}
-			
+
 			for (var m in data.messages.reverse()) {
 				var message = data.messages[m]
 				_chat_controllers[conv].receive_message(message)
@@ -187,10 +187,10 @@ LW.pages.messages.loadConversation = function(conv) {
 			}
 			updateScroll(conv)
 			conversationRead()
-			
+
 			$('#conversation-' + conv).find('.loader').remove();
 		})
-		
+
 	} else {
 		updateScroll(conv)
 	}
@@ -204,31 +204,31 @@ function sendMessage() {
 
 	var message = $.trim($('#messages-page .chat-input').val())
 	if (message.length == 0) return null
-	
+
 	if (_conversation == 0) { // Nouvelle conversation
-	
+
 		_.post('message/create-conversation', {farmer_id: _new_farmer, message: message}, function(data) {
 			if (data.success) {
 				// LW.page('/messages/conversation/' + data.conversation_id)
 				_.reload()
 			}
 		})
-	
+
 	} else {
-		
+
 		var m = {
-			farmer_id: LW.farmer.id, 
-			farmer_name: LW.farmer.name, 
-			content: message, 
-			date: LW.time.get(), 
-			farmer_color: LW.farmer.color, 
-			avatar_changed: LW.farmer.avatar_changed, 
+			farmer_id: LW.farmer.id,
+			farmer_name: LW.farmer.name,
+			content: message,
+			date: LW.time.get(),
+			farmer_color: LW.farmer.color,
+			avatar_changed: LW.farmer.avatar_changed,
 			lang: '_'
 		}
 		_chat_controllers[_conversation].receive_message(m)
-		
+
 		updateScroll(_conversation)
-		
+
 		_.post('message/send-message', {conversation_id: _conversation, message: message})
 	}
 	$('#messages-page .chat-input').val("").height(0)

@@ -959,18 +959,14 @@ _.view.render = function(__name, __data) {
 						}
 					}
 				}
-				// Double brace
-				var __t = __value.text.replace(/(\{\{)(.*?)(\}\})/g, function(__match, __open, $__tag) {
+				// Braces (single or double)
+				var __t = __value.text.replace(/(\{+)(.*?)(\}+)/g, function(__match, __open, $__tag) {
+					var __protect = __open.length == 1
 					if ($__tag == 'static') {
 						return __STATIC_URL
 					}
-					return ''
+					return __renderText($__tag, __protect)
 				})
-				// Single brace
-				__t = __t.replace(/(\{+)(.*?)(\}+)/g, function(__match, __open, $__tag) {
-					return __renderText($__tag, __open.length == 1)
-				})
-
 				__text += __t
 
 			} else {
