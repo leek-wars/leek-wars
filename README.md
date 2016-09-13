@@ -2,6 +2,8 @@
 
 The Leek Wars website frontend, in HTML, CSS, JavaScript.
 
+![Banner](https://github.com/leek-wars/leek-wars-client/blob/master/banner.jpg)
+
 ## Deployment
 
 The project is very easy to install and deploy in 10s:
@@ -11,7 +13,7 @@ cd leek-wars-client
 cd http
 python leekwars.py
 ```
-Be careful, this project is only the front end of Leek Wars, so it's connected to the
+*Be careful*, this project is only the front end of Leek Wars, so it's connected to the
 production server. When you log into this local version, you will use your real account!
 
 ## Hacking
