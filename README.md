@@ -18,8 +18,7 @@ Then go to `localhost:8012/` in your browser (you can change the port in the pyt
 production server. When you log into this local version, you will use your real account!
 
 ## Hacking
-
-See the [contribution guidelines](https://github.com/leek-wars/leek-wars-client/blob/master/HACKING.md) before sending pull requests.
+I gladly accept pull requests to Leek Wars. Before starting work on a feature, see the [contribution guidelines](https://github.com/leek-wars/leek-wars-client/blob/master/HACKING.md).
 
 ## Libraries used
 
