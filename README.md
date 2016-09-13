@@ -9,7 +9,7 @@ The Leek Wars website frontend, in HTML, CSS, JavaScript.
 The project is very easy to install and deploy in 10s:
 ```shell
 git clone https://github.com/leek-wars/leek-wars-client.git
-cd leek-wars-client/http
+cd leek-wars-client/http/
 python leekwars.py
 ```
 Then go to `localhost:8012/` in your browser (port by default).
