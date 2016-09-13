@@ -121,7 +121,7 @@ LW.pages.farmer.trophies = function() {
 		updateTrophies()
 	})
 
-	_.get('trophy/get-farmer-trophies/' + _farmer.id + '/' + _.lang.current + '/$', function(data) {
+	_.get('trophy/get-farmer-trophies/' + _farmer.id + '/' + _.lang.current + '/' + LW.token(), function(data) {
 
 		var list = []
 		var bonus = []
