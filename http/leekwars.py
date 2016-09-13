@@ -1,9 +1,9 @@
 import SimpleHTTPServer, SocketServer
 import urlparse, os, re, time
 
-PORT = 8000
+PORT = 8012
 
-class Handler(SimpleHTTPServer.SimpleHTTPRequestHandler):
+class LWHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
 	def do_GET(self):
 	
 		if os.access('.' + self.path, os.R_OK):
@@ -25,6 +25,8 @@ class Handler(SimpleHTTPServer.SimpleHTTPRequestHandler):
 			self.wfile.write(body.encode("utf-8"))
         	self.wfile.flush()
 
-httpd = SocketServer.TCPServer(("", PORT), LWHandler)
+class LWTCPServer(SocketServer.TCPServer):
+    allow_reuse_address = True
+server = LWTCPServer(("", PORT), LWHandler)
 print "Serving Leek Wars at port", PORT
-httpd.serve_forever()
+server.serve_forever()
