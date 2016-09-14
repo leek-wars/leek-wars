@@ -1,6 +1,6 @@
 var _fight
 
-LW.pages.report.init = function(params, $scope, $page) { 
+LW.pages.report.init = function(params, $scope, $page) {
 
 	var id = params.id
 
@@ -67,7 +67,7 @@ LW.pages.report.init = function(params, $scope, $page) {
 
 					var totalXP = leek.next_xp - leek.prev_xp
 					var newLevel = leek.cur_xp - leek.xp < leek.prev_xp
-					
+
 					var oldXP = newLevel ? 0 : leek.cur_xp - leek.xp - leek.prev_xp
 					var newXPInCurrentLevel = newLevel ? leek.cur_xp - leek.prev_xp : leek.xp
 
@@ -99,7 +99,7 @@ LW.pages.report.init = function(params, $scope, $page) {
 				$scope.flags2 = flags2
 				$scope.total1 = total1
 				$scope.total2 = total2
-				
+
 				// Challenge
 				if (LW.connected) {
 
@@ -138,9 +138,9 @@ LW.pages.report.init = function(params, $scope, $page) {
 			var warningsErrors = LW.pages.report.warningsErrors($scope.statistics.leeks, logs)
 			$scope.errors = warningsErrors.errors
 			$scope.warnings = warningsErrors.warnings
-			
+
 			$page.render()
-			
+
 			LW.pages.report.graph($scope.statistics, fight)
 			LW.pages.report.highlightStatisticsTable($scope.statistics)
 			LW.pages.report.expandTabs()
@@ -163,7 +163,7 @@ LW.pages.report.generateActions = function(data, callback) {
 	var createEffectAction = function(leeks, action) {
 
 		var data = ""
-		
+
 		var objectID = action[1]
 		var id = action[2]
 		var caster = action[3]
@@ -171,22 +171,20 @@ LW.pages.report.generateActions = function(data, callback) {
 		var effect = action[5]
 		var value = action[6]
 
-		console.log("effect: " + effect, action)
-
 		switch (effect) {
-			
+
 			case LW.EFFECT.ABSOLUTE_SHIELD:
 				data = _.lang.get('fight', 'leek_win_x', getLeekName(leek), colorText(_.lang.get('fight', 'n_absolute_shield', value), SHIELD_COLOR));
 				break;
-			
+
 			case LW.EFFECT.RELATIVE_SHIELD:
 				data = _.lang.get('fight', 'leek_win_x', getLeekName(leek), colorText(_.lang.get('fight', 'n_relative_shield', value + '%'), SHIELD_COLOR));
 				break;
-				
+
 			case LW.EFFECT.BUFF_AGILITY:
 				data = _.lang.get('fight', 'leek_win_x', getLeekName(leek), colorText(_.lang.get('fight', 'n_agility', value), AGILITY_COLOR));
 				break;
-				
+
 			case LW.EFFECT.BUFF_STRENGTH:
 				data = _.lang.get('fight', 'leek_win_x', getLeekName(leek), colorText(_.lang.get('fight', 'n_strength', value), STRENGTH_COLOR));
 				break;
@@ -194,15 +192,15 @@ LW.pages.report.generateActions = function(data, callback) {
 			case LW.EFFECT.BUFF_RESISTANCE:
 				data = _.lang.get('fight', 'leek_win_x', getLeekName(leek), colorText(_.lang.get('fight', 'n_resistance', value), RESISTANCE_COLOR));
 				break;
-				
+
 			case LW.EFFECT.BUFF_WISDOM:
 				data = _.lang.get('fight', 'leek_win_x', getLeekName(leek), colorText(_.lang.get('fight', 'n_wisdom', value), WISDOM_COLOR));
 				break;
-				
+
 			case LW.EFFECT.BUFF_MP:
 				data = _.lang.get('fight', 'leek_win_x', getLeekName(leek), colorText(_.lang.get('fight', 'n_mp', value), MP_COLOR));
 				break;
-			
+
 			case LW.EFFECT.BUFF_TP:
 				data = _.lang.get('fight', 'leek_win_x', getLeekName(leek), colorText(_.lang.get('fight', 'n_tp', value), TP_COLOR));
 				break;
@@ -245,104 +243,104 @@ LW.pages.report.generateActions = function(data, callback) {
 
 		var turn = 0
 		var html = ""
-		
+
 		for (var a in data.actions) {
 
 			var action = data.actions[a]
 			var type = action[0]
 
 			html += "<div class='action'>"
-		
+
 			if (type == ACTION_START_FIGHT) {
-				
+
 				turn++
 				html += "<span class='turn'>" + _.lang.get('fight', 'turn_n', 1) + "</span>"
-				
+
 			} else if (type == ACTION_USE_WEAPON) {
-				 
+
 				leek = leeks[action[1]]
 				html += _.lang.get('fight', 'leek_hit', getLeekName(leek))
 				if (action[4] == 2) html += "... " + _.lang.get('effect', 'critical')
-			
+
 			} else if (type == ACTION_USE_CHIP) {
-				
+
 				var chip = LW.chips[LW.chipTemplates[action[3]].item]
 
 				leek = leeks[action[1]]
 				html += _.lang.get('fight', 'leek_cast', getLeekName(leek), _.lang.get('chip', chip.name))
 				if (action[4] == 2) html += "... " + _.lang.get('effect', 'critical')
-				
+
 			} else if (type == ACTION_SET_WEAPON) {
 
 				var weapon = LW.weapons[LW.weaponTemplates[action[2]].item]
-				
+
 				leek = leeks[action[1]]
 				html += _.lang.get('fight', 'leek_take_weapon', getLeekName(leek), _.lang.get('weapon', weapon.name))
-				
+
 			} else if (type == ACTION_END_FIGHT) {
-			
+
 				html += _.lang.get('fight', 'end_of_fight')
-				
+
 			} else if (type == ACTION_PLAYER_DEAD) {
-			
+
 				leek = leeks[action[1]]
 				html += _.lang.get('fight', 'leek_is_dead', getLeekName(leek))
-				
+
 			} else if (type == ACTION_NEW_TURN) {
-				
+
 				turn++
 				html += "<span class='turn'>" + _.lang.get('fight', 'turn_n', turn) + "</span>"
-				
+
 			} else if (type == ACTION_END_TURN) {
 				// rien
-					
+
 			} else if (type == ACTION_LEEK_TURN) {
-				
+
 				leek = leeks[action[1]]
 				html += _.lang.get('fight', 'turn_of_leek', getLeekName(leek))
-				
+
 			} else if (type == ACTION_MOVE_TO) {
-				
+
 				leek = leeks[action[1]]
 				html += _.lang.get('fight', 'leek_move', getLeekName(leek))
-				
+
 			} else if (type == ACTION_TP_LOST) {
-				
+
 				leek = leeks[action[1]]
 				html += _.lang.get('fight', 'leek_loose_x', getLeekName(leek), colorText(_.lang.get('fight', 'n_tp', action[2]), TP_COLOR))
-				
+
 			} else if (type == ACTION_LIFE_LOST) {
-			
+
 				leek = leeks[action[1]]
 				html += _.lang.get('fight', 'leek_loose_x', getLeekName(leek), colorText(_.lang.get('fight', 'n_life', action[2]), LIFE_COLOR))
-				
+
 			} else if (type == ACTION_MP_LOST) {
-				
+
 				leek = leeks[action[1]]
 				html += _.lang.get('fight', 'leek_loose_x', getLeekName(leek), colorText(_.lang.get('fight', 'n_mp', action[2]), MP_COLOR))
-				
+
 			} else if (type == ACTION_CARE) {
-				
+
 				leek = leeks[action[1]]
 				html += _.lang.get('fight', 'leek_win_x', getLeekName(leek), colorText(_.lang.get('fight', 'n_life', action[2]), LIFE_COLOR))
 
 			} else if (type == ACTION_BOOST_VITA) {
-				
+
 				leek = leeks[action[1]]
 				html += _.lang.get('fight', 'leek_win_x', getLeekName(leek), colorText(_.lang.get('fight', 'n_vita', action[2]), LIFE_COLOR))
-				
+
 			} else if (type == ACTION_ADD_CHIP_EFFECT) {
-				
+
 				html += createEffectAction(leeks, action)
-				
+
 			} else if (type == ACTION_ADD_WEAPON_EFFECT) {
-				
+
 				html += createEffectAction(leeks, action)
-				
+
 			} else if (type == ACTION_REMOVE_EFFECT) {
-				
+
 			} else if (type == ACTION_SAY) {
-				
+
 				leek = leeks[action[1]]
 				html += _.lang.get('fight', 'leek_speak', getLeekName(leek), _.protect(action[2]))
 
@@ -352,30 +350,30 @@ LW.pages.report.generateActions = function(data, callback) {
 				summon = leeks[action[2]]
 
 				html += _.lang.get('fight', 'summon', getLeekName(leek), getLeekName(summon))
-				
+
 			} else if (type == ACTION_LAMA) {
 
 			} else if (type == ACTION_SHOW) {
 
 				leek = leeks[action[1]]
 				html += _.lang.get('fight', 'leek_show_cell', getLeekName(leek), action[2])
-				
+
 			} else if (type == ACTION_BUG) {
-				
+
 				leek = leeks[action[1]]
 				html += _.lang.get('fight', 'leek_bug', getLeekName(leek))
-				
+
 			} else {
 				html += "Unknown action : number " + type
 			}
-			
+
 			html += "</div>"
-			
+
 			// Logs personnels ?
 			if (logs != null && a in logs) {
-				
+
 				actionLogs = logs[a]
-				
+
 				for (var l in actionLogs) {
 
 					var log = actionLogs[l]
@@ -384,16 +382,16 @@ LW.pages.report.generateActions = function(data, callback) {
 					type = log[1]
 
 					if (type == 1 || type == 2 || type == 3) {
-						
+
 						var clazz = ""
 						if (log[1] == 2) clazz = "warning"
 						else if (log[1] == 3) clazz = "error"
-						
+
 						if (l == 0) clazz += " first"
 						if (l == logs.length - 1) clazz += " last"
 
 						var color = log.length > 3 ? _.colorToHex(log[3]) : '';
-						
+
 						// TODO à tester
 						html += "<pre class='log " + clazz + "'> [" + leeks[leek].name + "] <span style='color: " + color + "'>" + log[2] + "</span></pre>"
 
@@ -609,7 +607,7 @@ LW.pages.report.graph = function(statistics, fight) {
 
 		for (var i in statistics.leeks) {
 			var leek = statistics.leeks[i]
-			if (!leek.leek.summon) { 
+			if (!leek.leek.summon) {
 				data = []
 				var thisTurn = 0
 				for (var j = 0; j <= fight.report.duration; j++) {
@@ -629,8 +627,8 @@ LW.pages.report.graph = function(statistics, fight) {
 		var chart = new Chartist.Line('#chart .ct-chart', data, {
 			showPoint: false,
 			lineSmooth: smooth,
-			height: 350, 
-			fullWidth: true, 
+			height: 350,
+			fullWidth: true,
 			fullHeight: true
 		})
 
@@ -654,13 +652,13 @@ LW.pages.report.graph = function(statistics, fight) {
 			tooltipLeek = $(this).parent().index() - 2
 			toolTip.show()
 			selected = $(this).parent().index()
-		}) 
+		})
 
-		$('#chart-panel').off('mouseleave').on('mouseleave', function() { 
+		$('#chart-panel').off('mouseleave').on('mouseleave', function() {
 			$('#chart .ct-line').css('stroke-opacity', '1').css('stroke-width', '3px')
 			toolTip.hide()
 		})
-	 
+
 		$('#chart-panel').off('mousemove').on('mousemove', function(event) {
 
 			if (tooltipLeek == -1) return ;
@@ -732,12 +730,12 @@ LW.pages.report.warningsErrors = function(leeks, logs) {
 
 	var errors = []
 	var warnings = []
-		
+
 	for (var a in logs) {
 		for (var b in logs[a]) {
 
 			var log = logs[a][b]
-			var leek = log[0] 
+			var leek = log[0]
 			var type = log[1]
 
 			if (type == 2) {
@@ -768,10 +766,10 @@ LW.pages.report.expandTabs = function() {
 	}
 
 	$('#report-page .panel[name]').each(function() {
-		
+
 		var name = $(this).attr('name')
 		var panel = this
-		
+
 		$(this).find('.button.expand').click(function() {
 			localStorage['report/' + name + '-collapsed'] = !(localStorage['report/' + name + '-collapsed'] === 'true')
 			update(panel)

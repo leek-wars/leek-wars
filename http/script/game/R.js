@@ -7,12 +7,12 @@ var _iOS = navigator.userAgent.match(/(iPad|iPhone|iPod)/g) ? true : false;
 var Textures = function() {
 
 	this.leek_hand = newTexture(LW.staticURL + "/image/leek_hand.png", true, shadowQuality);
-	
+
 	this.machine_gun = newTexture(LW.staticURL + "/image/weapon/machine_gun.png", true, shadowQuality);
-	
+
 	this.laser = newTexture(LW.staticURL + "/image/weapon/laser.png", true, shadowQuality);
 	this.laser_bullet = newTexture(LW.staticURL + "/image/weapon/laser_bullet.png");
-	
+
 	this.bullet = newTexture(LW.staticURL + '/image/weapon/bullet.png');
 	this.shots = newTexture(LW.staticURL + '/image/weapon/shots.png');
 	this.cart_machine_gun = newTexture(LW.staticURL + '/image/weapon/cart_machine_gun.png');
@@ -56,9 +56,9 @@ var Textures = function() {
 	this.desert_rock2_small = newTexture(LW.staticURL + '/image/map/rock2_small.png', true, 1);
 	this.desert_grass = newTexture(LW.staticURL + '/image/map/desert_grass.png', true, 1);
 	this.cactus = newTexture(LW.staticURL + '/image/map/cactus.png', true, 1);
-	this.desert_rock1_big = newTexture(LW.staticURL + '/image/map/rock1_big.png', true, 1), 
-	this.desert_rock2_big = newTexture(LW.staticURL + '/image/map/rock2_big.png', true, 1), 
-	this.desert_rock3_big = newTexture(LW.staticURL + '/image/map/rock3_big.png', true, 1), 
+	this.desert_rock1_big = newTexture(LW.staticURL + '/image/map/rock1_big.png', true, 1),
+	this.desert_rock2_big = newTexture(LW.staticURL + '/image/map/rock2_big.png', true, 1),
+	this.desert_rock3_big = newTexture(LW.staticURL + '/image/map/rock3_big.png', true, 1),
 	this.skull = newTexture(LW.staticURL + '/image/map/skull.png');
 	this.cactus = newTexture(LW.staticURL + '/image/map/cactus.png', true, 1);
 	this.forest = newTexture(LW.staticURL + '/image/map/forest.png');
@@ -103,7 +103,7 @@ var Textures = function() {
 	this.pumpkin = newTexture(LW.staticURL + '/image/map/pumpkin.png', true, 1, true);
 	this.red_circle = newTexture(LW.staticURL + '/image/red_circle.png')
 	this.daemon_shadow = newTexture(LW.staticURL + '/image/daemon_shadow.png')
-	
+
 	// Chips
 	this.cure_aureol = newTexture(LW.staticURL + '/image/cure_aureol.png');
 	this.shield_aureol = newTexture(LW.staticURL + '/image/shield_aureol.png');
@@ -114,7 +114,7 @@ var Textures = function() {
 	this.poison_aureol = newTexture(LW.staticURL + '/image/poison_aureol.png');
 	this.shackle_aureol = newTexture(LW.staticURL + '/image/shackle_aureol.png');
 	this.damage_return_aureol = newTexture(LW.staticURL + '/image/damage_return_aureol.png');
-	
+
 	// Buff
 	this.chip_steroid = newTexture(LW.staticURL + '/image/chip/glyph/steroid.png');
 	this.chip_protein = newTexture(LW.staticURL + '/image/chip/glyph/protein.png');
@@ -134,7 +134,7 @@ var Textures = function() {
 	this.chip_ferocity = newTexture(LW.staticURL + '/image/chip/glyph/ferocity.png');
 	this.chip_collar = newTexture(LW.staticURL + '/image/chip/glyph/collar.png');
 	this.chip_bark = newTexture(LW.staticURL + '/image/chip/glyph/bark.png');
-	
+
 	// Shield
 	this.chip_helmet = newTexture(LW.staticURL + '/image/chip/glyph/helmet.png');
 	this.chip_wall = newTexture(LW.staticURL + '/image/chip/glyph/wall.png');
@@ -143,7 +143,7 @@ var Textures = function() {
 	this.chip_fortress = newTexture(LW.staticURL + '/image/chip/glyph/fortress.png');
 	this.chip_rampart = newTexture(LW.staticURL + '/image/chip/glyph/rampart.png');
 	this.chip_carapace = newTexture(LW.staticURL + '/image/chip/glyph/carapace.png');
-	
+
 	// Heal
 	this.chip_bandage = newTexture(LW.staticURL + '/image/chip/glyph/bandage.png');
 	this.chip_cure = newTexture(LW.staticURL + '/image/chip/glyph/cure.png');
@@ -170,10 +170,10 @@ var Textures = function() {
 	this.chip_tranquilizer = newTexture(LW.staticURL + '/image/chip/glyph/tranquilizer.png');
 	this.chip_soporific = newTexture(LW.staticURL + '/image/chip/glyph/soporific.png');
 	this.chip_fracture = newTexture(LW.staticURL + '/image/chip/glyph/fracture.png');
-	
+
 	// Lama
 	this.lama = newTexture(LW.staticURL + '/image/lama_big.png');
-	
+
 	// Bug
 	this.bug = newTexture(LW.staticURL + '/image/leek_bug.png');
 
@@ -196,11 +196,11 @@ var Textures = function() {
 
 var newTexture = function(path, buildShadow, quality, inverse) {
 	R.numData++;
-	
+
 	var texture = new Image();
 
 	texture.crossOrigin = "anonymous";
-	
+
 	texture.onload = function() {
 		if (buildShadow) {
 			buildTextureShadow(this, quality);
@@ -217,7 +217,7 @@ var newTexture = function(path, buildShadow, quality, inverse) {
 	}
 	texture.inverse = inverse;
 
-	
+
 	// Start loading
 	texture.src = path;
 
@@ -225,12 +225,12 @@ var newTexture = function(path, buildShadow, quality, inverse) {
 }
 
 var _createScaledTexture = function(texture, width, height, inverse) {
-	
+
 	try {
 		var canvas = document.createElement('canvas');
 		canvas.width = width;
 		canvas.height = height;
-		
+
 		var ctx = canvas.getContext('2d');
 		if (inverse) {
 			ctx.translate(width, 0);
@@ -239,7 +239,7 @@ var _createScaledTexture = function(texture, width, height, inverse) {
 		ctx.drawImage(texture, 0, 0, width, height);
 		if (isFinite(width) && isFinite(height))
 			ctx.putImageData(ctx.getImageData(0, 0, width, height), 0, 0);
-		
+
 		return canvas;
 	} catch (e) {
 		return texture;
@@ -247,27 +247,27 @@ var _createScaledTexture = function(texture, width, height, inverse) {
 }
 
 var buildTextureShadow = function(texture, quality) {
-	
+
 	try {
 
 		if (quality == null) quality = 1;
-		
+
 		var canvas = document.createElement('canvas');
 		canvas.width = texture.width * quality;
 		canvas.height = texture.height * quality;
 		var context = canvas.getContext('2d');
 		context.drawImage(texture, 0, 0, canvas.width, canvas.height);
-		
+
 		var newTexture = new Image();
 		newTexture = context.getImageData(0, 0, canvas.width, canvas.height);
-		
+
 		var textureSize = canvas.width * canvas.height;
 		for (var i = 0; i < textureSize * 4; i += 4) {
 		  newTexture.data[i] = 0;
 		  newTexture.data[i + 1] = 0;
 		  newTexture.data[i + 2] = 0;
 		}
-		
+
 		context.putImageData(newTexture, 0, 0);
 		texture.shadow = canvas;
 
@@ -277,7 +277,7 @@ var buildTextureShadow = function(texture, quality) {
 }
 
 var Sounds = function() {
-	
+
 	this.machine_gun = new Sound(LW.staticURL + "/sound/machine_gun.wav");
 	this.laser = new Sound(LW.staticURL + "/sound/laser.wav");
 	this.m_laser = new Sound(LW.staticURL + "/sound/m_laser.wav");
@@ -289,48 +289,48 @@ var Sounds = function() {
 }
 
 function Sound(src) {
-	
+
 	if (_iOS) return;
-	
+
 	R.numData++;
-	
+
 	this.sound = document.createElement('audio');
 	this.sound.controls = true;
 	this.sound.addEventListener("loadeddata", function() {
 		resourceLoaded(src);
 	}, true);
 	this.sound.addEventListener("error", function() {
-		//~ console.log("Error loading (error) : " + src);
+		//~ _.log("Error loading (error) : " + src);
 		resourceLoaded(src);
 	}, true);
 	this.sound.addEventListener("abort", function() {
-		//~ console.log("Error loading (abort) : " + src);
+		//~ _.log("Error loading (abort) : " + src);
 		resourceLoaded(src);
 	}, true);
 	this.sound.addEventListener("stalled", function() {
-		//~ console.log("Error loading (stalled) : " + src);
+		//~ _.log("Error loading (stalled) : " + src);
 		resourceLoaded(src);
 	}, true);
 	this.sound.addEventListener("suspend", function() {
-		//~ console.log("Suspend : " + src);
+		//~ _.log("Suspend : " + src);
 	}, true);
 	this.sound.addEventListener("emptied", function() {
-		//~ console.log("Emptied : " + src);
+		//~ _.log("Emptied : " + src);
 	}, true);
-	
+
 	this.play = function() {
 		if (game.sound) {
 			this.sound.currentTime = 0;
 			this.sound.play();
 		}
 	}
-	
+
 	this.sound.src = src;
 	this.sound.load();
 }
 
 var Maps = function() {
-	
+
 	return [
 		new Nexus(),
 		new Factory(),

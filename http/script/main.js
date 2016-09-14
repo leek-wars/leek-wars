@@ -3612,13 +3612,13 @@ var ChatController = function(chat_element, private_chat, team_chat) {
 			}
 
 			elem.find('.mute').click(function() {
-				console.log('mute')
+				_.log('mute')
 				LW.socket.send([CHAT_REQUEST_MUTE, _chatLanguage, author]);
 				$(this).hide()
 				elem.find('.unmute').show()
 			})
 			elem.find('.unmute').click(function() {
-				console.log('unmute')
+				_.log('unmute')
 				LW.socket.send([CHAT_REQUEST_UNMUTE, _chatLanguage, author]);
 				$(this).hide()
 				elem.find('.mute').show()

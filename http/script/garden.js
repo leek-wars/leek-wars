@@ -320,7 +320,6 @@ LW.pages.garden.images = function(leeks) {
 LW.pages.garden.leek_image = function(leek) {
 
 	//if ($('#garden-page .leek[leek=' + leek.id + '] .image:visible').html() == '') {
-		console.log("leek image " + leek)
 		LW.createLeekImage(0.6, leek.level, leek.skin, leek.hat, function(data) {
 			$('#garden-page .leek[leek=' + leek.id + '] .image').html(data)
 		})
@@ -333,8 +332,6 @@ LW.pages.garden.battle_royale = function() {
 	$('#br-room').hide()
 	$('#br-return').hide()
 
-	console.log("br")
-
 	$('#br-select .myleek').first().addClass('selected')
 }
 
@@ -345,8 +342,6 @@ LW.pages.garden.battle_royale_select = function() {
 	$('#br-return').show()
 
 	var leek = $('#garden-battle-royale .myleek.selected').attr('leek')
-
-	console.log("br select ", leek)
 
 	var ranges = [50, 100, 200, 300]
 
@@ -364,11 +359,7 @@ LW.pages.garden.leave = function() {
 
 LW.pages.garden.wsreceive = function(data) {
 
-	console.log(data)
-
 	if (data.type == BATTLE_ROYALE_UPDATE) {
-
-		console.log("Update BR ", data)
 		var count = data.data[0]
 		var leeks = data.data[1]
 
@@ -391,8 +382,6 @@ LW.pages.garden.wsreceive = function(data) {
 	}
 
 	if (data.type == BATTLE_ROYALE_START) {
-
-		console.log("Start BR ", data)
 
 		LW.page('/fight/' + data.data[0])
 	}

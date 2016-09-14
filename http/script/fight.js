@@ -35,28 +35,28 @@ LW.pages.fight.init = function(params, $scope, $page) {
 		for (var l in fight.leeks2) leeks[fight.leeks2[l].id] = fight.leeks2[l]
 
 		LW.pages.fight.leekImages(leeks)
-	
+
 		canvas = $('#game-canvas').get(0)
-		
+
 		// Check the element is in the DOM and the browser supports canvas
 		if (!canvas.getContext || typeof(__NO_HTML5) !== 'undefined') {
-			
+
 			$('#browser-list .browser').shuffle()
 			$('#loading').hide()
 			$('#browser').show()
 			return
 		}
-			
+
 		// Initaliase a 2-dimensional drawing context
 		ctx = canvas.getContext('2d')
-		
+
 		T = new Textures()
 		S = new Sounds()
 		M = new Maps()
-		
+
 		// Create game
 		game = new Game()
-		
+
 		if (fight.status == 1) {
 
 			game.init(fight)
@@ -75,7 +75,7 @@ LW.pages.fight.init = function(params, $scope, $page) {
 		$('#comment-send').click(function() {
 
 			var comment = $('#comment-input').val()
-			
+
 			_.post('fight/comment', {fight_id: id, comment: comment}, function(data) {
 
 				if (data.success) {
@@ -89,9 +89,9 @@ LW.pages.fight.init = function(params, $scope, $page) {
 				}
 			})
 		})
-		
+
 		$('#comments .comment .text').each(function() {
-			
+
 			$(this).html(LW.smiley($(this).text()))
 		})
 
@@ -114,12 +114,12 @@ LW.pages.fight.pause = function() {
 LW.pages.fight.keydown = function(event) {
 
 	if ($("#comment-input").is(":focus")) return null
-	
+
 	if (event.keyCode == 81) { // Q
 		game.showReport()
 		event.preventDefault()
 	}
-	
+
 	if (event.keyCode == 80) { // P
 		if (game.paused) {
 			game.resume()
@@ -128,14 +128,14 @@ LW.pages.fight.keydown = function(event) {
 		}
 		event.preventDefault();
 	}
-	
+
 	if (event.keyCode == 83) { // S
 		game.speedUp()
 		event.preventDefault()
 	}
-	
+
 	if (event.keyCode == 70) { // F
-		
+
 		LW.pages.fight.fullscreen()
 		event.preventDefault()
 	}
@@ -147,9 +147,9 @@ LW.pages.fight.resize = function() {
 
 		var windowWidth = $(window).width()
 		var windowHeight = $(window).height()
-		
+
 		if (_fullscreen) {
-			
+
 			game.width = windowWidth
 			game.height = windowHeight - 50
 
@@ -157,23 +157,23 @@ LW.pages.fight.resize = function() {
 
 			$("#game").css("width", "100%")
 			$("#game").css("height", "100%")
-			
+
 		} else {
 
 			$('#controls').removeClass('large')
 
 			game.width = $('#fight-page').width() - 15
 			game.height = Math.ceil(game.width / RATIO)
-			
+
 			$("#fight").css("height", game.height)
 			$("#game").css("width", 'auto')
 			$("#game").css("height", 'auto')
 		}
-		
+
 		$(canvas).attr("width", game.width)
 		$(canvas).attr("height", game.height)
 		$("#layers").css("height", game.height)
-		
+
 		game.ground.resize(game.width, game.height, _fullscreen, game.quality)
 		game.setupMouseMove()
 
@@ -183,17 +183,17 @@ LW.pages.fight.resize = function() {
 }
 
 LW.pages.fight.fullscreen = function() {
-		
+
 	if (_fullscreen) {
 
 		_fullscreen = false
 		_.fullscreen.exit()
-		setTimeout(LW.pages.fight.resize, 100); 
+		setTimeout(LW.pages.fight.resize, 100);
 
 	} else {
 		_fullscreen = true
 		_.fullscreen.enter($('#game')[0], function() {
-			setTimeout(LW.pages.fight.resize, 100); 
+			setTimeout(LW.pages.fight.resize, 100);
 		})
 	}
 }
@@ -222,7 +222,7 @@ function getFight() {
 			return
 		}
 
-		if (data.fight.status >= 1) { 
+		if (data.fight.status >= 1) {
 
 			game.init(data.fight)
 
@@ -236,12 +236,12 @@ function getFight() {
 
 			} else {
 				var message = _.lang.get('fight', 'position_in_queue', queue.position + 1, queue.total)
-				
+
 				$('.queue-position').show().text(message)
 			}
 
 			if (!_load) return false
-				
+
 			setTimeout(function() {
 				if (!game.inited && !_error) {
 					getFight();
@@ -266,13 +266,13 @@ function showQueueMessage(position, queue) {
 
 	} else {
 		var message = LW.lang.get('fight', 'position_in_queue', parseInt(position) + 1, queue);
-		
+
 		$('.queue-position').show().text(message);
 	}
 }
 
 LW.pages.fight.file_input = function() {
-	console.log("file_input")
+	_.log("file_input")
 	$('#fight-page #file-input').on('change', function() {
 		var file = this.files[0]
 		if (file) {
@@ -280,11 +280,11 @@ LW.pages.fight.file_input = function() {
 		    reader.readAsText(file, "UTF-8");
 		    reader.onload = function (evt) {
 		    	var json = evt.target.result
-		    	console.log(json)
+		    	_.log(json)
 		    	game.init({data: JSON.parse(json)})
 		    }
 		    reader.onerror = function (evt) {
-		    	console.log("error reading file")
+		    	_.log("error reading file")
 		    }
 		}
 	})
