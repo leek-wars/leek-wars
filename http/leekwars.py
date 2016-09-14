@@ -1,15 +1,15 @@
 # Python 3 script
 
-from http.server import BaseHTTPRequestHandler, HTTPServer
+from http.server import SimpleHTTPRequestHandler, HTTPServer
 import socketserver
 import os, re, time, webbrowser
 
 PORT = 8012
 
-class LWHandler(BaseHTTPRequestHandler):
+class LWHandler(SimpleHTTPRequestHandler):
 	def do_GET(self):
 		if self.path != '/' and os.access('.' + self.path, os.R_OK):
-			SimpleHTTPServer.SimpleHTTPRequestHandler.do_GET(self);
+			super().do_GET();
 		else:
 			bindings = {
 				'static': 'http://localhost:' + str(PORT) + '/',
