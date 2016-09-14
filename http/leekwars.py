@@ -5,16 +5,13 @@ PORT = 8012
 
 class LWHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
 	def do_GET(self):
-
 		if self.path != '/' and os.access('.' + self.path, os.R_OK):
 			SimpleHTTPServer.SimpleHTTPRequestHandler.do_GET(self);
 		else:
-
 			bindings = {
 				'static': 'http://localhost:' + str(PORT) + '/',
 				'time': str(int(time.time()))
 			}
-
 			body = open("view/head.html").read()
 			body = re.sub(r"\{\{(.*)\}\}", lambda m: bindings[m.group(1)], body)
 
