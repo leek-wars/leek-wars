@@ -1,9 +1,12 @@
-import SimpleHTTPServer, SocketServer
-import urlparse, os, re, time, webbrowser
+# Python 3 script
+
+from http.server import BaseHTTPRequestHandler, HTTPServer
+import socketserver
+import os, re, time, webbrowser
 
 PORT = 8012
 
-class LWHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
+class LWHandler(BaseHTTPRequestHandler):
 	def do_GET(self):
 		if self.path != '/' and os.access('.' + self.path, os.R_OK):
 			SimpleHTTPServer.SimpleHTTPRequestHandler.do_GET(self);
@@ -20,11 +23,11 @@ class LWHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
 			self.send_header("Content-Length", str(len(body)))
 			self.end_headers()
 			self.wfile.write(body.encode("utf-8"))
-        	self.wfile.flush()
+			self.wfile.flush()
 
-class LWTCPServer(SocketServer.TCPServer):
+class LWTCPServer(socketserver.TCPServer):
     allow_reuse_address = True
 server = LWTCPServer(("", PORT), LWHandler)
-print "Serving Leek Wars at port", PORT
+print("Serving Leek Wars at port", PORT)
 webbrowser.open('http://localhost:' + str(PORT))
 server.serve_forever()
