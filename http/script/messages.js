@@ -170,7 +170,7 @@ LW.pages.messages.loadConversation = function(conv) {
 		// Ajout d'un loader
 		$('#conversation-' + conv).append("<center class='loader'><img src='" + LW.staticURL + "image/loader.gif' class='loader'></img></center>");
 
-		_.get('message/get-messages/' + conv + '/' + 50 + '/' + 1 + '/$', function(data) {
+		_.get('message/get-messages/' + conv + '/' + 50 + '/' + 1 + '/' + LW.token(), function(data) {
 
 			if (!data.success) return null
 
