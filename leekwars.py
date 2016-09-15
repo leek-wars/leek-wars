@@ -17,7 +17,7 @@ class LWHandler(SimpleHTTPRequestHandler):
 				'static': 'http://localhost:' + str(PORT) + '/',
 				'time': str(int(time.time()))
 			}
-			body = open("http/view/head.html").read()
+			body = open("http" + os.sep + "view" + os.sep + "head.html").read()
 			body = re.sub(r"\{\{(.*)\}\}", lambda m: bindings[m.group(1)], body)
 
 			self.send_response(200)
