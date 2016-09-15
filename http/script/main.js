@@ -317,8 +317,8 @@ LW.pages = {
 		langs: ['farmer']
 	},
 	leek: {
-		scripts: [['lib/', 'chartist.min.js']],
-		styles: ['item_preview.css', ['lib/', 'chartist.min.css']],
+		scripts: [['third_party/', 'chartist.min.js']],
+		styles: ['item_preview.css', ['third_party/', 'chartist.min.css']],
 		langs: ['chip', 'weapon', 'hat', 'report', 'moderation']
 	},
 	new_leek: {
@@ -333,16 +333,16 @@ LW.pages = {
 	editor: {
 		cache: true,
 		scripts: [
-			['lib/codemirror/', 'codemirror.js'],
-			['lib/codemirror/', 'leekscript.js'],
-			['lib/codemirror/', 'matchbrackets.js'],
-			['lib/codemirror/', 'match-highlighter.js'],
+			['third_party/codemirror/', 'codemirror.js'],
+			['third_party/codemirror/', 'leekscript.js'],
+			['third_party/codemirror/', 'matchbrackets.js'],
+			['third_party/codemirror/', 'match-highlighter.js'],
 			'editor_class.js',
-			['lib/jsbeautifier/', 'beautify.js']
+			['third_party/jsbeautifier/', 'beautify.js']
 		],
 		styles: [
-			['lib/codemirror/', 'codemirror.css'],
-			['lib/codemirror/', 'dialog.css'],
+			['third_party/codemirror/', 'codemirror.css'],
+			['third_party/codemirror/', 'dialog.css'],
 			'code.css',
 			'item_preview.css'
 		],
@@ -380,10 +380,10 @@ LW.pages = {
 	},
 	report: {
 		scripts: [
-			['lib/', 'chartist.min.js']
+			['third_party/', 'chartist.min.js']
 		],
 		styles: [
-			['lib/', 'chartist.min.css']
+			['third_party/', 'chartist.min.css']
 		],
 		langs: ['fight', 'entity']
 	},
@@ -410,12 +410,12 @@ LW.pages = {
 		connected: true,
 		langs: ['forum'],
 		scripts: [
-			['lib/codemirror/', 'codemirror.js'],
-			['lib/codemirror/', 'leekscript.js'],
-			['lib/codemirror/', 'runmode.js']
+			['third_party/codemirror/', 'codemirror.js'],
+			['third_party/codemirror/', 'leekscript.js'],
+			['third_party/codemirror/', 'runmode.js']
 		],
 		styles: [
-			['lib/codemirror/', 'codemirror.css'],
+			['third_party/codemirror/', 'codemirror.css'],
 			'code.css',
 		]
 	},
@@ -433,12 +433,12 @@ LW.pages = {
 	bank_validate: {},
 	tutorial: {
 		scripts: [
-			['lib/codemirror/', 'codemirror.js'],
-			['lib/codemirror/', 'leekscript.js'],
-			['lib/codemirror/', 'runmode.js']
+			['third_party/codemirror/', 'codemirror.js'],
+			['third_party/codemirror/', 'leekscript.js'],
+			['third_party/codemirror/', 'runmode.js']
 		],
 		styles: [
-			['lib/codemirror/', 'codemirror.css'],
+			['third_party/codemirror/', 'codemirror.css'],
 			'code.css',
 		],
 		langs: ['editor']
@@ -446,12 +446,12 @@ LW.pages = {
 	general_help: {},
 	documentation: {
 		scripts: [
-			['lib/codemirror/', 'codemirror.js'],
-			['lib/codemirror/', 'leekscript.js'],
-			['lib/codemirror/', 'runmode.js']
+			['third_party/codemirror/', 'codemirror.js'],
+			['third_party/codemirror/', 'leekscript.js'],
+			['third_party/codemirror/', 'runmode.js']
 		],
 		styles: [
-			['lib/codemirror/', 'codemirror.css'],
+			['third_party/codemirror/', 'codemirror.css'],
 			'code.css',
 		],
 	},
@@ -471,7 +471,7 @@ LW.pages = {
 	api: {},
 	translation: {
 		scripts: [
-			['lib/', 'jquery.tablednd.0.7.min.js']
+			['third_party/', 'jquery.tablednd.0.7.min.js']
 		]
 	},
 
@@ -485,12 +485,12 @@ LW.pages = {
 		connected: true,
 		admin: true,
 		scripts: [
-			['lib/codemirror/', 'codemirror.js'],
-			['lib/codemirror/', 'leekscript.js'],
-			['lib/codemirror/', 'runmode.js']
+			['third_party/codemirror/', 'codemirror.js'],
+			['third_party/codemirror/', 'leekscript.js'],
+			['third_party/codemirror/', 'runmode.js']
 		],
 		styles: [
-			['lib/codemirror/', 'codemirror.css'],
+			['third_party/codemirror/', 'codemirror.css'],
 			'code.css',
 		]
 	},
