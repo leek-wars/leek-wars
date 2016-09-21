@@ -1,22 +1,22 @@
-against			contre
-category_battle_royale			Battle Royale
-category_farmer_fight			Éleveur
+against						contre
+category_battle_royale		Battle Royale
+category_farmer_fight		Éleveur
 category_solo_fight			Solo
 category_team_fight			Équipe
-challenge			Défi
-farmer_fight			Combat d'éleveur
-leek_ai_invalid			L'IA du poireau n'est pas valide !
-leek_have_no_ai			Le poireau n'a pas d'IA équipée !
-level_n			Niveau %s
-n_leeks			%s poireaux
-no_more_fights			Plus de combats
-no_opponent_of_your_size			Pas d'adversaire à ta taille !
-no_team_of_your_size			Pas d'équipe à votre taille !
-solo_fight			Combat solo
-team_fight			Combat en équipe (avec %s)
-title			Potager
-total_level_n			Niveau total %s
+challenge					Défi
+farmer_fight				Combat d'éleveur
+leek_ai_invalid				L'IA du poireau n'est pas valide !
+leek_have_no_ai				Le poireau n'a pas d'IA équipée !
+level_n						Niveau %s
+n_leeks						%s poireaux
+no_more_fights				Plus de combats
+no_opponent_of_your_size	Pas d'adversaire à ta taille !
+no_team_of_your_size		Pas d'équipe à votre taille !
+solo_fight					Combat solo
+team_fight					Combat en équipe (avec %s)
+title						Potager
+total_level_n				Niveau total %s
 you_have_no_team			Vous n'avez pas d'équipe
-you_must_be_level_50			Vous devez être niveau 50
-you_must_have_2_leeks			Vous devez avoir au moins 2 poireaux
-you_must_have_a_team			Vous devez faire partie d'une équipe
+you_must_be_level_50		Vous devez être niveau 50
+you_must_have_2_leeks		Vous devez avoir au moins 2 poireaux
+you_must_have_a_team		Vous devez faire partie d'une équipe

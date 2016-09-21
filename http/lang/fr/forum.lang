@@ -1,54 +1,54 @@
-cancel			Annuler
-category			Catégorie
-category_admin			Admin
+cancel						Annuler
+category					Catégorie
+category_admin				Admin
 category_admin_desc			Catégorie réservée aux admins
-category_bug_reports			Rapports de bugs
-category_bug_reports_desc			Si vous pensez avoir trouvé un bug dans le jeu
+category_bug_reports		Rapports de bugs
+category_bug_reports_desc	Si vous pensez avoir trouvé un bug dans le jeu
 category_composter			Composteur
-category_composter_desc			Pour parler de tout... et de rien.
+category_composter_desc		Pour parler de tout... et de rien.
 category_exploits			Vos exploits
-category_exploits_desc			Venez rapporter vos exploits ou partager vos captures d'écran insolites
+category_exploits_desc		Venez rapporter vos exploits ou partager vos captures d'écran insolites
 category_general_discussion			Discussion générale
-category_general_discussion_desc			Discussion générale sur Leek Wars
-category_help			Aide et astuces
+category_general_discussion_desc	Discussion générale sur Leek Wars
+category_help				Aide et astuces
 category_help_desc			Si vous avez une question sur le jeu ou vous souhaitez partager des astuces
 category_moderation			Modération
-category_moderation_desc			Catégorie réservée aux modérateurs
+category_moderation_desc	Catégorie réservée aux modérateurs
 category_not_found			Categorie d'id <b>%s</b> introuvable :(
-category_suggestions_ideas			Suggestions et idées
-category_suggestions_ideas_desc			Si vous avez des idées d'amélioration pour le jeu
-chat			Chat
-chat_send			Envoyer
+category_suggestions_ideas	Suggestions et idées
+category_suggestions_ideas_desc	Si vous avez des idées d'amélioration pour le jeu
+chat						Chat
+chat_send					Envoyer
 connected_farmers			Éleveurs connectés (%s)
-delete			Supprimer
-deleted_message			Message supprimé
-edit			Éditer
-edited_the			Édité le %s
+delete						Supprimer
+deleted_message				Message supprimé
+edit						Éditer
+edited_the					Édité le %s
 error_cant_access			Impossible d'accéder à cette catégorie.
-error_cant_do			Vous ne pouvez pas effectuer cette action.
+error_cant_do				Vous ne pouvez pas effectuer cette action.
 error_cant_title			Le titre doit contenir entre 6 et 30 caractères.
 error_empty_message			Le message ne doit pas être vide.
-error_message_not_exists			Ce message n'existe pas.
-error_response_min_time			Vous devez attendre %d secondes entre deux nouvelles réponses.
+error_message_not_exists	Ce message n'existe pas.
+error_response_min_time		Vous devez attendre %d secondes entre deux nouvelles réponses.
 error_topic_closed			Ce sujet est fermé.
-error_topic_min_time			Vous devez attendre %d secondes entre deux nouveaux sujets.
-error_topic_not_exists			Ce sujet n'existe pas.
+error_topic_min_time		Vous devez attendre %d secondes entre deux nouveaux sujets.
+error_topic_not_exists		Ce sujet n'existe pas.
 farmer_n_messages			<b>%s</b> messages
 farmer_n_trophies			<b>%s</b> trophées
-legend			Légende
-loading_chat			Chargement du chat...
-lock			Verrouiller
-messages			Messages
-pin			Accrocher
-send			Envoyer
-solved			Résolu
-team_forum_description			Forum privé de votre équipe
-title			Forum
-topic_locked			Sujet verrouillé
-topic_not_found			Sujet d'id <b>%s</b> introuvable :(
-topic_pinned			Sujet accroché
-topic_resolved			Sujet résolu
-topics			Sujets
-unlock			Déverrouiller
-unpin			Décrocher
-unsolved			Non résolu
+legend						Légende
+loading_chat				Chargement du chat...
+lock						Verrouiller
+messages					Messages
+pin							Accrocher
+send						Envoyer
+solved						Résolu
+team_forum_description		Forum privé de votre équipe
+title						Forum
+topic_locked				Sujet verrouillé
+topic_not_found				Sujet d'id <b>%s</b> introuvable :(
+topic_pinned				Sujet accroché
+topic_resolved				Sujet résolu
+topics						Sujets
+unlock						Déverrouiller
+unpin						Décrocher
+unsolved					Non résolu
