@@ -1,0 +1,15 @@
+code_too_large			Votre IA n'a pas pu être compilée correctement car votre code est trop gros
+chip_not_exists			Puce %s inexistante
+division_by_zero			Division par zéro
+ai_timeout			Interruption IA : L'IA a mis plus de 10 secondes a s'exécuter, elle a été desactivée pour le reste du combat
+unknown_function			Fonction inconnue : %s
+deprecated_function			La fonction %s va être supprimée, utilisez maintenant %s
+can_not_execute_value			Impossible d'exécuter "%s"
+no_weapon_equipped			Pas d'arme equipée
+can_not_execute_with_arguments			Impossible d'utiliser cette fonction avec les arguments (%s), %s arguments attendus
+chip_not_equipped			Puce %s (%s) non équipée
+no_ai_equipped			Vous n'avez pas d'IA
+can_not_compile_ai			Votre IA n'a pas pu être compilée correctement
+ai_disabled			L'IA est désactivee, elle ne s'exécute donc pas
+ai_interrupted			Interruption IA : %s
+number_of_operations			Votre IA a effectué %s opérations pour ce tour.

@@ -1,0 +1,34 @@
+hats			Chapeaux
+weapon_bought			Arme achetée !
+chip_bought			Puce achetée !
+potion_bought			Potion achetée !
+weapon_selled			Arme revendue !
+chip_selled			Puce revendue !
+potion_selled			Potion revendue !
+hat_selled			Chapeau revendu !
+habs_before_sell			Habs avant la vente
+summon_characteristics			Caractéristiques
+summon_available_chips			Puces équipées
+weapons			Armes
+are_you_sure_you_want_to_sell			Êtes-vous sûr de vouloir vendre l'objet <b>%s</b> ?
+habs_before_purchase			Habs avant achat
+potions			Potions
+are_you_sure_you_want_to_buy			Êtes-vous sûr de vouloir acheter l'objet <b>%s</b> ?
+habs_after_sell			Habs après la vente
+title			Marché
+habs_after_purchase			Habs après achat
+crystals_before_purchase			Cristaux avant achat
+buy			Acheter
+confirm_sell			Confirmer la vente
+resell			Revendre
+sell			Vendre
+cancel			Annuler
+weapon			Arme
+buying			Achat...
+chip			Puce
+potion			Potion
+price			Prix
+confirm_purchase			Confirmer l'achat
+chips			Puces
+hat_bought			Chapeau acheté!
+crystals_after_purchase			Cristaux après achat

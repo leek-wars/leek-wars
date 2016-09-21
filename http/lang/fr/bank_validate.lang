@@ -1,0 +1,5 @@
+payment_fail_reason			Le paiement a échoué : %s
+you_earn_n_crystals			Vous avez obtenu <b>%s</b> cristaux.
+back_to_bank			Retour à la banque
+payment_success			Paiement <b>%s</b> validé
+payment_fail			Paiement <b>%s</b> échoué.

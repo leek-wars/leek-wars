@@ -1,0 +1,24 @@
+connect_message			<a href='%s'><b>Login</b></a> or <a href='%s'><b>Signup</b></a> to Leek Wars
+fight			Fight
+tournament			Tournament
+editor			Editor
+messages			Private messages
+documentation			Documentation
+moderation			Moderation
+bank			Bank
+garden			Garden
+leek			Leek
+leeks			Leeks
+market			Market
+ranking			Ranking
+report			Fight report
+help			Help
+general_help			Help
+tutorial			Tutorial
+forum			Forum
+admin			Admin
+stats			Statistics
+new_leek			New leek
+logout			Logout
+no_messages			No messages
+settings			Settings

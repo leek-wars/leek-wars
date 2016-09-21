@@ -1,0 +1,51 @@
+skin_15			gold
+skin_multi_desc			Rainbow!
+skin_rasta			Rasta potion
+skin_rasta_desc			Yeah man
+skin_white			White potion
+skin_black			Black potion
+skin_apple			Apple green potion
+skin_alpha			Transparent potion
+skin_1			green (original color)
+skin_gold			Golden Potion
+skin_green_desc			Green Green! Who's this?
+skin_blue_desc			I'm blue, da ba dee da ba dye...
+skin_orange_desc			Against the lemons!
+skin_red_desc			I... I'm not blushing or anything!
+skin_pink			Pink potion
+skin_pink_desc			Ponk
+skin_purple			Purple potion
+skin_purple_desc			When I grow up, I'll become an eggplant
+skin_multi			Multicolored potion
+skin_white_desc			White did you say?
+skin_black_desc			Leeks in Black IV
+skin_apple_desc			I have no connection with Leek Jobs
+skin_orange			Orange potion
+skin_blue			Blue potion
+skin_5			orange
+skin_6			pink
+skin_7			cyan
+skin_14			apple green
+effect_1			Resets the leek's capital points
+effect_2			Makes your leek <b>%s</b>
+reusable			Potion <b>reusable</b>
+restat			Reset potion
+restat_admin_desc			A new life! Offered by your favorite admins!
+skin_green			Green potion
+skin_yellow			Yellow potion
+skin_yellow_desc			I am not a banana
+skin_red			Red potion
+skin_cyan			Cyan potion
+skin_8			purple
+skin_2			blue
+skin_3			yellow
+skin_4			red
+skin_9			multicolored
+skin_10			a rasta
+skin_11			white
+skin_12			black
+skin_13			transparent
+skin_alpha_desc			Where am I?
+restat_desc			A new life!
+restat_admin			Reset potion
+skin_cyan_desc			I am a cyantist

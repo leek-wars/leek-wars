@@ -1,0 +1,9 @@
+send			Send
+do_you_want_to_delete_message			Do you really want to delete this message?
+undoable_action			This action is irreversible.
+cancel			Cancel
+delete			Delete
+do_you_want_to_delete_topic			Do you really want to delete this topic?
+answer			Reply
+subscribe			Subscribe to topic
+unsubscribe			Unsubscribe to topic

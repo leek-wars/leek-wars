@@ -1,0 +1,8 @@
+pack_of_n_crystals			Pack de <b>%s</b> cristaux
+payment_cancelled			Vous avez annulé le paiement
+payment_no_code			Pas de code
+payment_wrong_code			Code non valide
+paypal_description			Achat de %s cristaux pour %s €
+title			Banque des cristaux
+description			La banque vous propose d'obtenir des <b>cristaux</b> <span class='crystal'></span>, la deuxième monnaie de Leek Wars, vous permettant d'acheter ensuite des potions et d'autres objets purement décoratifs et <b>n'influençant pas</b> sur votre puissance en combat. <br>
+		Offrez-vous une potion de couleur pour votre poireau et soutenez Leek Wars !

@@ -1,0 +1,11 @@
+keep_connected			Rester connecté
+password			Mot de passe
+connection			Connexion
+error_farmer_banned			Votre compte a été banni
+error_invalid			Les identifiants sont incorrects.
+success			Vous êtes connecté
+login			Login
+title			Connexion
+forgot_password			Mot de passe oublié ?
+error_farmer_inactive			Votre compte n'a pas été activé, veuillez vous rendre sur le lien envoyé par mail.
+incorrect_login			Login ou mot de passe incorrect.

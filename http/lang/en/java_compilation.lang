@@ -1,0 +1,42 @@
+invalid_parameter_count			Invalid parameters number
+opening_curly_bracket_expected			Opening curly bracket expected
+opening_parenthesis_expected			Opening parenthesis expected
+closing_parenthesis_expected			Closing parenthesis expected
+var_name_expected_after_global			A string is expected after the global keyword
+closing_square_bracket_expected			Closing square bracket expected
+global_only_in_main_block			Global variable can only be declared in the main scope
+invalid_number			Invalid number
+cant_assign_value			Impossible to assign a value to this expression
+invalid_char			Invalid character
+keyword_unexpected			Unexpected keyword
+keywork_in_expected			in keyword expected here
+end_of_script_unexpected			Unexpected end of file
+uncomplete_expression			Incomplete expression
+parameter_name_expected			Name parameter expected
+parameter_name_unavailable			Invalid parameter name
+function_not_exists			Function does not exist
+function_name_expected			A function name was required
+operator_unexpected			This operator is unexpected here
+end_of_instruction_expected			End of instruction expected here
+associative_array			This array is an associative one, it's impossible to add a value without key
+cant_add_instruction_after_break			It's not possible to add an instruction if there is already a break, return or continue in the actual block.
+unknown_variable_or_function			Undefined function or value
+value_expected			A value was expected
+simple_array			This is a simple array, it's impossible to declare a value with a key
+var_name_expected			A string was expected as variable name
+no_if_block			Missing condition with else statement 
+while_expected_after_do			while is expected after do block
+function_only_in_main_block			Function can't be declared elsewhere than the main scope
+variable_not_exists			Variable doesn't exist
+variable_name_unavailable			Unavailable variable name
+variable_name_expected			Variable name expected
+open_bloc_remaining			Some blocks remains open
+no_bloc_to_close			No block to close
+parenthesis_expected_after_function			Opening parenthesis is expected after function keyword
+break_out_of_loop			Keyword break can only be used into a loop
+function_name_unavailable			Invalid function name
+continue_out_of_loop			Keyword continue can only be used into a loop
+include_only_in_main_block			It's not possible to include an AI elsewhere than the main scope
+parenthesis_expected_after_parameters			Closing parenthesis is expected after function parameters
+ai_name_expected			An AI name is expected here
+ai_not_existing			AI %s doesn't exist

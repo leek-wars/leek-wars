@@ -1,0 +1,53 @@
+message_19			Voir le tournoi
+title_20			Vous avez recu un avertissement
+message_20			Voir l'avertissement
+title_21			<b>%s</b> a commenté votre tournoi
+message_21			Voir le tournoi
+message_22			Voir le tournoi
+title_22			Votre compo <b>%s</b> a gagné un tournoi d'équipe !
+title_23			Votre compo <b>%s</b> a terminé son combat de <b>%s</b> !
+message_23			Voir le tournoi
+title_1			<b>%s</b> passe niveau %s
+message_1			Voir la page de %s
+title_2			<b>%s</b> a été agressé par <b>%s</b>
+title_19			Votre match de <b>%s</b> est terminé !
+title_3			<b>%s</b> a répondu au sujet <b>%s</b>
+title_3_old			<b>%s</b> a répondu sur le forum
+message_3_old			Voir le message
+message_4			Voir le combat
+message_15			Voir le combat
+title_5			Vous avez été banni de l'équipe <b>%s</b>.
+message_5			Voir la page de votre éleveur
+title_6			<b>%s</b> demande à rejoindre <b>%s</b>.
+message_6			Voir la demande d'adhésion
+title_7			Vous avez été accepté dans l'équipe <b>%s</b>.
+message_7			Voir la page de l'équipe
+title_8			Votre candidature pour l'équipe <b>%s</b> a été refusée
+message_8			Voir la page de l'équipe
+title_9			<b>%s</b> a gagné un tournoi !
+message_9			Voir le tournoi
+title_11			Trophée <b>%s</b> déverrouillé !
+title_10			Le tournoi n'a pas démarré
+message_10			Trop peu de joueurs inscrits
+message_11			Voir la page de votre éleveur
+title_12			<b>%s</b> a commenté votre combat
+message_12			Voir le combat
+message_13			Voir le tournoi
+message_14			Voir le combat
+title_14			<b>%s</b> a été défié par <b>%s</b> !
+title_15			<b>%s</b> vous a agressé !
+title_17			Vous avez gagné un tournoi !
+message_17			Voir le tournoi
+title_16			<b>%s</b> a rejoint votre équipe !
+message_16			Voir l'équipe
+title_18			<b>%s</b> est devenu votre filleul !
+message_18			Voir sa page
+title_13			<b>%s</b> a terminé son combat de <b>%s</b> !
+title_24			Le signalement contre <b>%s</b> a été traité par un modérateur
+message_2			Voir le combat
+message_3			Voir le message
+message_24			Merci pour le signalement
+title			Notifications
+title_25			<b>%s</b> vous a défié!
+message_25			Voir le combat
+title_4			<b>%s</b> a participé à un combat contre <b>%s</b>

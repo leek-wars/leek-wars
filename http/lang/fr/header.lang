@@ -1,0 +1,24 @@
+connect_message		<a href='%s'><b>Connexion</b></a> ou <a href='%s'><b>Inscription</b></a> à Leek Wars
+fight				Combat
+tournament			Tournoi
+editor				Éditeur
+messages			Messages privés
+documentation		Documentation
+moderation			Modération
+bank				Banque
+garden				Potager
+leek				Poireau
+leeks				Poireaux
+market				Marché
+ranking				Classement
+report				Rapport de combat
+help				Aide
+general_help		Aide
+tutorial			Tutoriel
+forum				Forum
+admin				Admin
+stats				Statistiques
+new_leek			Nouveau poireau
+logout				Déconnexion
+no_messages			Pas de messages
+settings			Paramètres

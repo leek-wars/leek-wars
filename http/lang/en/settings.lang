@@ -1,0 +1,24 @@
+activate_discrete_mode			Activate discreet mode
+language			Language
+new_password			New password
+change			Change
+confirm_password			Confirmation
+old_password			Old password
+delete_account			Delete account
+delete_success			Supression successful
+title			Settings
+delete_forum_messages			Delete my forum messages
+delete_password			Password
+delete_finalize			Finalize suppression
+delete_success_message			Your account has been deleted, you will be redirected in few seconds, see you soon on Leek Wars!
+delete_failed			Delete the account is impossible
+delete_ok			OK
+password_changed			Password changed!
+delete_confirmation_password			For security reasons, enter your password to finalize your account suppression
+delete_message			By deleting your account, you're deleting all your personal informations on Leek Wars, your AI, your private messages, etc.<br>Your leeks will be thrown to the composter :(
+delete_confirmation			Confirmation
+discrete_mode			Discreet mode
+change_password			Change password
+delete_cancel			Cancel
+delete_confirm			Delete account
+logout			Log out

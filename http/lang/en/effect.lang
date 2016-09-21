@@ -1,0 +1,60 @@
+on_n_turns			for %s turns
+type_2			Restores <b>%d</b> to <b>%d</b> HP
+summon_1			Puny bulb
+type_6_fixed			Reduces damage taken by <b>%d</b>
+type_8			Increases TP by <b>%d</b> to <b>%d</b>
+type_8_fixed			Increases TP by <b>%d</b>
+summon_3			Healer bulb
+type_6			Reduces damage taken by <b>%d</b> to <b>%d</b>
+type_2_fixed			Restores <b>%d</b> HP
+type_7_fixed			Increases MP by <b>%d</b>
+target_summons			Affects only summons
+initial_cooldown			Initial cooldown of <b>%s</b> turns
+type_21			Increases the resistance by <b>%1$s</b> to <b>%2$s</b>	
+type_16_fixed			Kills the targets	
+critical			Critical hit!	
+type_17			Removes <b>%1$s</b> to <b>%2$s</b> MP
+type_18			Removes <b>%1$s</b> to <b>%2$s</b> TP	
+type_22			Increases the wisdom by <b>%1$s</b> to <b>%2$s</b>	
+type_20			Returns back <b>%1$s%</b> to <b>%2$s%</b> damages
+target_not_summons			Doesn't affect summons
+type_19_fixed			Removes <b>%s</b> strength
+type_24			Removes <b>%1$s</b> to <b>%2$s</b> magic
+type_19			Removes <b>%1$s</b> to <b>%2$s</b> strength
+team_cooldown			for the whole team
+type_23_fixed			Removes all poisons
+failure_rate			Failure rate : %s%
+target_allies			Only affects allies
+target_not_player			Never affects the caster
+through_obstacles			through obstacles
+in_lign			in line
+summon_7			Metallic bulb
+type_14_fixed			Summon a <b>%s</b>
+summon_5			Iced bulb
+lign_until_obstacle			Affects all the line up to an osbtacle
+type_13_fixed			Poison of <b>%s</b>
+summon_6			Lightning bulb
+type_1			Deals <b>%d</b> to <b>%d</b> damage
+summon_2			Fire bulb
+type_12			Increases max health by <b>%s</b> to <b>%s</b>
+type_11_fixed			Exchanges the position of two leeks
+type_12_fixed			Increases max health by <b>%s</b>
+target_enemies			Only affects enemies
+type_13			Poison of <b>%1$s</b> to <b>%2$s</b>
+type_1_fixed			Deals <b>%d</b> damage
+target_player			Only affects the caster
+range			Range : %1$s to %2$s
+level_n			Level %s
+cooldown			Cooldown : <b>%s</b> turns
+type_5			Reduces damage taken by <b>%d%%</b> to <b>%d%%</b>
+type_5_fixed			Reduces damage taken by <b>%d%%</b> 
+type_7			Increases MP by <b>%d</b> to <b>%d</b>
+type_9_fixed			Removes all spells
+type_10_fixed			Teleports the leek
+type_3			Increases strength by <b>%d</b> to <b>%d</b>
+type_3_fixed			Increases strength by <b>%d</b>
+type_4			Increases agility by <b>%d</b> to <b>%d</b>
+fail_rate			Failure rate : %s%%
+type_4_fixed			Increases agility by <b>%d</b>
+summon_4			Rocky bulb
+type_15_fixed			Revives an entity

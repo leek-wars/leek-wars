@@ -1,0 +1,28 @@
+activate_discrete_mode			Activer le mode discret
+language			Langue
+new_password			Nouveau mot de passe
+change			Changer
+confirm_password			Confirmation
+old_password			Ancien mot de passe
+delete_account			Supprimer son compte
+delete_success			Suppression réussie
+title			Paramètres
+delete_forum_messages			Supprimer mes messages sur le forum
+delete_password			Mot de passe
+delete_finalize			Finaliser la suppression
+delete_success_message			Votre compte a bien été supprimé, vous allez êtes redirigé dans quelques secondes,
+	à bientôt sur Leek Wars !
+delete_failed			Impossible de supprimer le compte
+delete_ok			OK
+password_changed			Mot de passe changé !
+delete_confirmation_password			Pour des raisons de sécurité, entrez votre mot de passe pour finaliser votre suppression
+	de compte
+delete_message			En supprimant votre compte, vous supprimez toutes vos informations personnelles
+	sur Leek Wars, vos IA, vos messages privés, etc. <br>
+	Vos poireaux seront jetés au composteur :(
+delete_confirmation			Confirmation
+discrete_mode			Mode discret
+change_password			Changer de mot de passe
+delete_cancel			Annuler
+delete_confirm			Supprimer le compte
+logout			Déconnexion

@@ -1,0 +1,16 @@
+default_name			Untitled
+example_code			//--------------------------------
+//---------- Base code -----------
+//--------------------------------
+
+// We take the pistol
+setWeapon(WEAPON_PISTOL); // Warning: costs 1 TP
+
+// We get the nearest enemy
+var enemy = getNearestEnemy();
+
+// We move towards him
+moveToward(enemy);
+
+// We try to shoot him!
+useWeapon(enemy);

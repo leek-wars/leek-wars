@@ -1,0 +1,10 @@
+lstype_boolean			boolean
+leekscript			Leekscript
+ls_function_information			Informations sur la fonction "%s".
+ls_function_definitions			La fonction "%s" propose %d définitions.
+ls_return_nothing			ne retourne rien
+ls_return			retourne %s
+lstype_int			entier
+lstype_float			flotant
+lstype_string			chaine
+lstype_number			nombre

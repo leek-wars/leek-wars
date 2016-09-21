@@ -1,0 +1,34 @@
+end_1			Tu connais maintenant les bases de <b>Leek Wars</b>, et tu peux maintenant commencer à développer une puissante IA et affronter les autres poireaux dans le potager ! Bon jeu !
+fights_2			Le premier jour, <b>50</b> combats sont disponibles. Ensuite, vous aurez <b>20</b> combats par jour jusqu'au niveau 50. À partir du niveau 50, vous pourrez créer un second poireau, chaque poireau aura alors <b>10</b> combats par jour.
+hi			Salutations à toi <b>%s</b>, jeune éleveur de poireau ! Ce court didactiel va t'expliquer les bases du jeu.
+weapons_chips_2			Mais il peut aussi utiliser des <b>puces</b> (jusqu'a 9 en même temps), qui permettent d'effectuer de nombreuses actions en combat comme attaquer, soigner, se mettre un bouclier, ou encore se téléporter...
+ai_3			Si tu débutes en programmation, nous te conseillons de commencer par lire le <a href='/tutoriel'>Tutoriel</a>.
+end			Et voilà !
+goal			Le but de <b>Leek Wars</b> est de faire combattre son poireau contre les poireaux des autres joueurs.
+goal_2			Pour cela, tu vas devoir définir son comportement en le programmant !
+market			Le marché
+market_1			Pour acheter des armes, des puces ou des potions, rends-toi sur la page <a href='/market'>Marché</a>. Tu pourras y dépenser tes <b>Habs</b>, la monnaie du jeu, pour acquerir ces objets. Il vous faudra ensuite les équiper sur votre poireau pour les utiliser.
+next			Suivant
+play			Jouer !
+ai_4			Ensuite tu pourras consulter la <a href='/documentation'>Documentation</a> des fonctions pour perfectionner ton IA.
+fights_1			Pour faire évoluer ton poireau (en gagnant de l'expérience), tu vas devoir le faire combattre. Pour cela, rendez-vous sur la page <a href='/garden'>Potager</a>.
+fights_3			Lorsque tu auras 2 poireaux, tu pourras les faire combattre ensemble dans des combats d'éleveur, <b>10</b> par jour également.
+first_leek			Tu peux commencer à élever <b>%s</b>, ton premier poireau. Il faut savoir qu'un poireau possède plusieurs caractéristiques, qui sont les suivantes :
+ai_1			L'Intelligence Artificielle (ou IA) est le programme qui définit le comportement de ton poireau durant un combat.
+			Tu vas pouvoir développer l'IA de ton poireau depuis la page <a href='/editor'>Éditeur</a>.
+market_2			Comment gagner des Habs ? En faisant des combats, tu gagnes des Habs en fonction de la difficulté de l'adversaire.
+previous			Précédent
+teams			Les équipes
+teams_1			Tu vas également pouvoir créer ou rejoindre une équipe, pour combattre en coopération avec d'autres éleveurs et leurs poireaux.
+teams_2			<b>10</b> combats en équipe sont disponibles par jour par poireau.
+dismiss			Passer
+title			Didactitiel
+welcome			Bienvenue sur Leek Wars !
+ai			L'IA
+ai_2			Dans Leek Wars, le langage utilisé pour coder son IA est le <b>Leek Script</b>.
+fights			Les combats
+leeks			Les poireaux
+weapons_chips			Les armes et les puces
+weapons_chips_1			Un poireau peut utiliser des <b>armes</b>, pour tirer sur les autres poireaux. Il peut en équiper jusqu'a 3 en même temps.
+end_2			Si tu rencontres un problème ou si tu as besoin d'aide, n'hésite pas à consulter le <a href='/forum'>Forum</a> où la communauté sera là pour te répondre.
+end_3			Tu peux revoir ce didactitiel à tout moment depuis la page <a href='/help'>Aide</a>.

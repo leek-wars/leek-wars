@@ -1,0 +1,29 @@
+talent_difference			The leek <b>%1$s</b> has <b>%2$s</b> talent points more than the average of his level. His gains are increased by <b>%3$s</b>.
+not_found			Fight not found :(
+not_generated_yet			The fight is not yet generated...
+duration			Duration: %s turns
+loosers			Losers
+rewatch_fight			See the match again
+title			Fight report
+winners			Winners
+team1			Team 1
+team2			Team 2
+total			Total
+team			Team
+xp			XP
+talent_difference_farmer_no_gains			The farmer <b>%s</b> has no talent points more than the average of his level, his gains are not incresed.
+back_to_tournament			Back to the tournament
+generation_too_long			The fight generation has taken <b>too long</b>. The team using the <b>more time</b> has been declared loser.
+talent_difference_no_gains			The Leek <b>%s</b> has no talent points more than the average of his level, his gains are not incresed.
+error_reading_actions			A problem arose during the fight actions reading :(
+talent_difference_farmer			The farmer <b>%1$s</b> has <b>%2$s</b> talent points more than the average of his level. His leek's gains are increased by <b>%3$s</b>.
+back_to_garden			Back to the garden
+back_to_editor			Back to the editor
+replay_fight			See match again
+take_revenge			Get your <b>revenge</b>!
+refight			Another fight
+level			Level
+talent			Talent
+money			Habs
+farmer			Farmer
+leek			Leek

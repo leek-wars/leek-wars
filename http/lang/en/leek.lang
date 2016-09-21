@@ -1,0 +1,118 @@
+cores			Cores
+strength			Strength
+error_name_character_count			Your leek name must contain between %d and %d characters
+weapons_of			Weapons of %s
+no_hat			No hat
+click_to_change_hat			Click to change hat
+select_a_hat			Select a hat
+mp_description			How many cells you can move across during a turn
+ai			AI
+using_potion			Using the potion...
+garden_yes			YES
+tp			Turn points
+garden_no			NO
+authorize_agressions			Allow attacks by other leeks
+error_name_already_used			This leek name is already taken
+capital			Capital
+n_remaining_fights			%s remaining fights
+see_tournament			See the tournament
+unregister			Unregister
+max_level			Maximum level
+xp			XP: %s
+remaining_xp			Remaining XP: %s
+cancel			Cancel
+cores_description			More cores enable access to more functions and reduce the chance of failure
+level_n			Level %s
+tp_cost			80 capital ⇔ 1 TP
+mp			Movement points
+fights			Fights
+available_on_market			(Available to buy on market)
+level_popup_title			<b>%1$s</b> reaches level <b>%2$s</b>!
+wisdom			Wisdom
+wisdom_cost			1 capital ⇔ 1 wisdom
+wisdom_description			Wisdom increases healing and life steal.
+register_key			Key
+rename_leek			Rename leek
+frequency			Frequency
+challenge			Challenge
+tp_description			How many actions you can take during a turn
+new_weapons			New weapons
+new_functions			New functions
+magic			Magic
+resistance_description			Resistance increase shields
+science_description			Science increase boosts and prevent shackles
+science			Science
+magic_description			Magic increase shackles and poison damages
+resistance			Resistance
+registers			Registers
+rename_error_delay			You must wait one day between two renamings of your leek
+register_value			Value
+mp_cost			50 capital ⇔ 1 MP
+ok			OK
+all_my_chips			All my chips
+not_found_id			Leek with id  <b>%s</b>not found
+ai_level_n			Level %s
+weapon_level_n			Level %s
+chip_level_n			Level %s
+ai_1_core			1 core
+potion			Potion
+tournament_of			Tournament on %s
+cores_cost			10 capital ⇔ 1 core
+n_capital			<span id='capital-count'>%s</span> capital
+not_found			Leek not found
+rename_not_enough_crystals			You don't have enough crystals.
+ai_n_cores			%s cores
+life_cost_10			10 capital ⇔ 30 life points
+rename_pay_crystals			Pay with crystals
+tournament			Tournament
+reset			Reset
+life			Life points
+ai_of			AI equiped on %s
+agility			Agility
+chips_of			Chips equiped on %s
+life_cost			1 capital ⇔ 3 life points
+strength_description			Strength increases the damage you deal with your weapons and chips
+all_my_ais			All my AIs
+edit			Edit
+strength_cost			1 capital ⇔ 1 strength
+life_description			How many damage your leek can take before it dies
+tournaments			Tournaments
+farmed_by			Raised by <a class="leek-farmer" href="/farmer/%1$s">%2$s</a>
+error_under_required_level_2			Your second leek must be level %s.
+register_to_tournament			Register for the tournament
+error_forbidden_name			This leek name is forbidden.
+registered			Registered
+garden			Garden
+talent			Leek solo Talent
+victories			wins
+draws			draws
+defeats			losses
+all_my_weapons			All my weapons
+hide_registers			Hide registers
+next_fight_in			Next fight in %s
+ratio			Ratio: %s
+weapons			Weapons
+chips			Chips
+rename_new_name			New name
+rename_done			Leek renamed!
+validate			Validate
+error_already_have_4_leeks			You already have 4 leeks!
+error_under_required_level_3			Your third leek must be level %s.
+rename_not_enough_habs			You don't have enough Habs.
+report			Report
+click_to_use			Click to use
+frequency_cost			1 capital ⇔ 10 frequency
+error_name_format			Your leek name must contain only alphanumeric characters
+agility_cost			1 capital ⇔ 1 agility
+use_a_potion			Use a potion on %s
+frequency_description			Leeks with high frequency start the fight first
+agility_description			Agility increases critical hit rate and damage return.
+click_to_put_hat			Click to put hat
+tournament_time			Solo tournament every day between 12:00 PM and 2:00 PM (French timezone)
+level_popup_no_news			No new item of function for this level.
+new_chips			New chips
+rename_description			This operation allows you to rename your leek, you can pay with Habs or with crytals.
+show_registers			Show registers
+rename_pay_habs			Pay with Habs
+error_under_required_level_1			Your first leek must be level %s.
+life_cost_100			100 capital ⇔ 300 life points
