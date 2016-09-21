@@ -3688,3 +3688,25 @@ LW.lucky = function() {
 		})
 	}, 5000)
 }
+
+LW.test_notif = function() {
+
+	navigator.serviceWorker.register('/static/script/sw.js');
+
+	Notification.requestPermission(function(result) {
+		console.log(result)
+	    if (result === 'granted') {
+	      navigator.serviceWorker.ready.then(function(registration) {
+			 console.log(registration)
+	        registration.showNotification('Vibration Sample', {
+	          body: 'Buzz! Buzz!',
+	          icon: '/static/images/favicon.png',
+	         //vibrate: [200, 100, 200, 100, 200, 100, 200],
+	          tag: 'vibration-sample'
+	        });
+		}).catch(function(e) {
+			console.log(e)
+		})
+	    }
+  });
+}

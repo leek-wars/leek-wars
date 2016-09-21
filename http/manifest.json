@@ -7,5 +7,8 @@
       }],
   "start_url": "/",
   "display": "fullscreen",
-  "orientation": "portrait"
+  "orientation": "portrait",
+  "permissions": [
+	  "notifications"
+  ]
 }
