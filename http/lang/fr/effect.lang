@@ -2,13 +2,13 @@ cooldown			Récupération : <b>%s</b> tours
 critical			Coup critique !
 
 fail_rate			Échec : %s%%
-failure_rate			Échec : %s%
-initial_cooldown			Délai initial de <b>%s</b> tours
-in_lign			en ligne
-level_n			Niveau %s
-lign_until_obstacle			Agit sur toute la ligne jusqu'a un obstacle
+failure_rate		Échec : %s%
+initial_cooldown	Délai initial de <b>%s</b> tours
+in_lign				en ligne
+level_n				Niveau %s
+lign_until_obstacle	Agit sur toute la ligne jusqu'a un obstacle
 on_n_turns			sur %s tours
-range			Portée : %1$s à %2$s
+range				Portée : %1$s à %2$s
 summon_1			Bulbe chétif
 summon_2			Bulbe enflammé
 summon_3			Bulbe guérisseur
@@ -16,49 +16,46 @@ summon_4			Bulbe rocheux
 summon_5			Bulbe glacé
 summon_6			Bulbe foudroyant
 summon_7			Bulbe métallique
-target_allies			Affecte uniquement les alliés
-target_enemies			Affecte uniquement les ennemis
-target_not_player			N'affecte jamais le lanceur
-target_not_summons			N'affecte pas les invocations
-target_player			Affecte uniquement le lanceur
-target_summons			Affecte seulement les invocations
-team_cooldown			pour l'équipe entière
-through_obstacles			à travers les obstacles
-type_1			Dégats de <b>%d</b> à <b>%d</b>
-type_10_fixed			Téléporte le poireau
-type_11_fixed			Échange deux joueurs de place
-type_12			Augmente la vie maximum de <b>%s</b> à <b>%s</b>
-type_12_fixed			Augmente la vie maximum de <b>%s</b>
-type_13			Empoisonne de <b>%1$s</b> à <b>%2$s</b>
-type_13_fixed			Empoisonne de <b>%s</b>
-type_14_fixed			Invoque un <b>%s</b>
-type_15_fixed			Fait revivre une entité
-type_16_fixed			Tue les cibles
-
-type_17			Retire <b>%1$s</b> à <b>%2$s</b> PM
-type_18			Retire <b>%1$s</b> à <b>%2$s</b> PT
-type_19			Retire <b>%1$s</b> à <b>%2$s</b> force
-type_19_fixed			Retire <b>%s</b> force
-type_1_fixed			Dégats de <b>%d</b>
-type_2			Soigne de <b>%d</b> à <b>%d</b>
-type_20			Renvoie <b>%1$s%</b> à <b>%2$s%</b> dommages
-type_21			Augmente la résistance de <b>%1$s</b> à <b>%2$s</b>
-
-type_22			Augmente la sagesse de <b>%1$s</b> à <b>%2$s</b>
-
-type_23_fixed			Retire tous les poisons
-type_24			Retire <b>%1$s</b> à <b>%2$s</b> magie
-type_2_fixed			Soigne de <b>%d</b>
-type_3			Booste la force de <b>%d</b> à <b>%d</b>
-type_3_fixed			Booste la force de <b>%d</b>
-type_4			Booste l'agilité de <b>%d</b> à <b>%d</b>
-type_4_fixed			Booste l'agilité de <b>%d</b>
-type_5			Protège de <b>%d%</b> à <b>%d%</b> des dégats
-type_5_fixed			Protège de <b>%d%</b> des dégats
-type_6			Protège de <b>%d</b> à <b>%d</b> de dégats
-type_6_fixed			Protège de <b>%d</b> de dégats
-type_7			Booste les PM de <b>%d</b> à <b>%d</b>
-type_7_fixed			Booste les PM de <b>%d</b>
-type_8			Booste les PT de <b>%d</b> à <b>%d</b>
-type_8_fixed			Booste les PT de <b>%d</b>
-type_9_fixed			Enlève tous les envoûtements
+target_allies		Affecte uniquement les alliés
+target_enemies		Affecte uniquement les ennemis
+target_not_player	N'affecte jamais le lanceur
+target_not_summons	N'affecte pas les invocations
+target_player		Affecte uniquement le lanceur
+target_summons		Affecte seulement les invocations
+team_cooldown		pour l'équipe entière
+through_obstacles	à travers les obstacles
+type_1				Dégats de <b>%d</b> à <b>%d</b>
+type_10_fixed		Téléporte le poireau
+type_11_fixed		Échange deux joueurs de place
+type_12				Augmente la vie maximum de <b>%s</b> à <b>%s</b>
+type_12_fixed		Augmente la vie maximum de <b>%s</b>
+type_13				Empoisonne de <b>%1$s</b> à <b>%2$s</b>
+type_13_fixed		Empoisonne de <b>%s</b>
+type_14_fixed		Invoque un <b>%s</b>
+type_15_fixed		Fait revivre une entité
+type_16_fixed		Tue les cibles
+type_17				Retire <b>%1$s</b> à <b>%2$s</b> PM
+type_18				Retire <b>%1$s</b> à <b>%2$s</b> PT
+type_19				Retire <b>%1$s</b> à <b>%2$s</b> force
+type_19_fixed		Retire <b>%s</b> force
+type_1_fixed		Dégats de <b>%d</b>
+type_2				Soigne de <b>%d</b> à <b>%d</b>
+type_20				Renvoie <b>%1$s%</b> à <b>%2$s%</b> dommages
+type_21				Augmente la résistance de <b>%1$s</b> à <b>%2$s</b>
+type_22				Augmente la sagesse de <b>%1$s</b> à <b>%2$s</b>
+type_23_fixed		Retire tous les poisons
+type_24				Retire <b>%1$s</b> à <b>%2$s</b> magie
+type_2_fixed		Soigne de <b>%d</b>
+type_3				Booste la force de <b>%d</b> à <b>%d</b>
+type_3_fixed		Booste la force de <b>%d</b>
+type_4				Booste l'agilité de <b>%d</b> à <b>%d</b>
+type_4_fixed		Booste l'agilité de <b>%d</b>
+type_5				Protège de <b>%d%</b> à <b>%d%</b> des dégats
+type_5_fixed		Protège de <b>%d%</b> des dégats
+type_6				Protège de <b>%d</b> à <b>%d</b> de dégats
+type_6_fixed		Protège de <b>%d</b> de dégats
+type_7				Booste les PM de <b>%d</b> à <b>%d</b>
+type_7_fixed		Booste les PM de <b>%d</b>
+type_8				Booste les PT de <b>%d</b> à <b>%d</b>
+type_8_fixed		Booste les PT de <b>%d</b>
+type_9_fixed		Enlève tous les envoûtements

@@ -1,55 +1,55 @@
 1_core			1 coeur
-ai_error			<b>%1$s</b> ligne <b>%2$s</b>
-ai_to_test			IA à tester
-auto_closing			Fermeture automatique des parenthèses, crochets, accolades et guillemets
-autocompletion			Autocomplétion (proposition des variables courantes et fonctions de la doc)
+ai_error		<b>%1$s</b> ligne <b>%2$s</b>
+ai_to_test		IA à tester
+auto_closing	Fermeture automatique des parenthèses, crochets, accolades et guillemets
+autocompletion	Autocomplétion (proposition des variables courantes et fonctions de la doc)
 child			Enfant
-constant			Constante %s
-defined_in			Définie dans <b>%1$s</b> à la ligne <b>%2$s</b>
+constant		Constante %s
+defined_in		Définie dans <b>%1$s</b> à la ligne <b>%2$s</b>
 delete			Supprimer
-delete_ai			Supprimer l'IA "%s" ?
-delete_cancel			Annuler
-delete_desc			Supprimer l'IA courante
-delete_validate			Supprimer
-delete_warning			Cette action est irreversible.
+delete_ai		Supprimer l'IA "%s" ?
+delete_cancel	Annuler
+delete_desc		Supprimer l'IA courante
+delete_validate	Supprimer
+delete_warning	Cette action est irreversible.
 display			Affichage
 easy			Facile
-enlarge_window			Agrandir la fenêtre
+enlarge_window	Agrandir la fenêtre
 evil			Diabolique
 export			Exporter
-export_desc			Télécharger l'IA courante dans un fichier.
-font_size			Taille de la police
-function_f			Fonction %s
+export_desc		Télécharger l'IA courante dans un fichier.
+font_size		Taille de la police
+function_f		Fonction %s
 hard			Difficile
 import			Importer
-import_desc			Importer une IA depuis votre ordinateur.
+import_desc		Importer une IA depuis votre ordinateur.
 keyword			Mot-clé %s
 level_n			Niveau %s
 medium			Moyen
-n_ais_unsaved			Vous avez %s IA(s) non sauvegardée(s).
-n_characters			%s caractères
+n_ais_unsaved	Vous avez %s IA(s) non sauvegardée(s).
+n_characters	%s caractères
 n_cores			%s coeurs
-new			Nouveau
-new_desc			Créer une nouvelle IA
+new				Nouveau
+new_desc		Créer une nouvelle IA
 n_lines			%s lignes
 opponent_agility			Agilité
-opponent_agility_life			Agilité / Vie
-opponent_life			Vie
+opponent_agility_life		Agilité / Vie
+opponent_life				Vie
 opponent_strength			Force
-opponent_strength_agility			Force / Agilité
-opponent_strength_life			Force / Vie
-parameters			Paramètres
+opponent_strength_agility	Force / Agilité
+opponent_strength_life		Force / Vie
+parameters		Paramètres
 popups			Affichage des informations au survol des constantes et fonctions
 return			Retour
-run_test			Lancer un test
+run_test		Lancer un test
 save			Sauvegarder
-save_desc			Sauvegarder l'IA courante
+save_desc		Sauvegarder l'IA courante
 saving			Sauvegarde...
-select_opponents			Sélectionnez vos adversaires
-select_your_leek			Sélectionnez votre poireau
-server_error			Erreur du serveur
+select_opponents	Sélectionnez vos adversaires
+select_your_leek	Sélectionnez votre poireau
+server_error		Erreur du serveur
 settings			Paramètres de l'éditeur
-settings_editor			Éditeur
+settings_editor		Éditeur
 settings_ok			OK
 shortcut_1			<b>Ctrl + S</b> : sauvegarder l'IA courante
 shortcut_2			<b>Ctrl + Q</b> : lancer un test
@@ -59,15 +59,15 @@ shortcut_5			<b>Ctrl + E</b> : commenter/décommenter la ligne courante
 shortcut_6			<b>Ctrl + Espace</b> : complétion automatique
 shortcut_7			<b>Ctrl + Shift + F</b> : formatage et indentation automatique du code
 shortcuts			Raccourcis clavier
-shortcuts_ok			D'accord !
-test			Tester
+shortcuts_ok		D'accord !
+test				Tester
 test_cancel			Annuler
 test_desc			Tester une IA
-test_type_farmer			Éleveur
-test_type_solo			Solo
-test_type_team			Équipe
-test_validate			Tester
-title			Éditeur
+test_type_farmer	Éleveur
+test_type_solo		Solo
+test_type_team		Équipe
+test_validate		Tester
+title				Éditeur
 valid_ai			<b>%s</b> valide
 variable			Variable <b>%s</b>
-variable_defined_in_ai			Variable définie dans l'IA <b>%s</b>
+variable_defined_in_ai	Variable définie dans l'IA <b>%s</b>
