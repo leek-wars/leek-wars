@@ -1,118 +1,118 @@
-agility			Agilité
+agility					Agilité
 agility_cost			1 capital ⇔ 1 agilité
-agility_description			L'agilité augmente les chances de coup critique et les renvois de dégâts.
-ai			IA
-ai_1_core			1 coeur
-ai_level_n			Niveau %s
-ai_n_cores			%s coeurs
-ai_of			IA équipée sur %s
-all_my_ais			Toutes mes IA
+agility_description		L'agilité augmente les chances de coup critique et les renvois de dégâts.
+ai						IA
+ai_1_core				1 coeur
+ai_level_n				Niveau %s
+ai_n_cores				%s coeurs
+ai_of					IA équipée sur %s
+all_my_ais				Toutes mes IA
 all_my_chips			Toutes mes puces
 all_my_weapons			Toutes mes armes
-authorize_agressions			Autoriser les agressions par les autres poireaux
-available_on_market			(Disponible à l'achat dans le marché)
-cancel			Annuler
-capital			Capital
-challenge			Défier
+authorize_agressions	Autoriser les agressions par les autres poireaux
+available_on_market		(Disponible à l'achat dans le marché)
+cancel					Annuler
+capital					Capital
+challenge				Défier
 chip_level_n			Niveau %s
-chips			Puces
-chips_of			Puces équipées sur %s
-click_to_change_hat			Cliquer pour changer de chapeau
-click_to_put_hat			Cliquer pour mettre le chapeau
+chips					Puces
+chips_of				Puces équipées sur %s
+click_to_change_hat		Cliquer pour changer de chapeau
+click_to_put_hat		Cliquer pour mettre le chapeau
 click_to_use			Cliquer pour utiliser
-cores			Cœurs
-cores_cost			10 capital ⇔ 1 cœur
-cores_description			Les coeurs permettent d'exécuter des fonctions plus évoluées et réduisent les échecs
-defeats			défaites
-draws			nuls
-edit			Modifier
-error_already_have_4_leeks			Vous avez déjà 4 poireaux !
+cores					Cœurs
+cores_cost				10 capital ⇔ 1 cœur
+cores_description		Les coeurs permettent d'exécuter des fonctions plus évoluées et réduisent les échecs
+defeats					défaites
+draws					nuls
+edit					Modifier
+error_already_have_4_leeks		Vous avez déjà 4 poireaux !
 error_forbidden_name			Ce nom de poireau est interdit.
 error_name_already_used			Le nom de votre poireau est déjà utilisé
-error_name_character_count			Le nom de votre poireau doit contenir entre %d et %d caractères
-error_name_format			Le nom de votre poireau doit contenir uniquement des caractères alphanumériques
-error_under_required_level_1			Votre premier poireau doit être de niveau %s.
-error_under_required_level_2			Votre second poireau doit être de niveau %s.
-error_under_required_level_3			Votre troisième poireau doit être de niveau %s.
-farmed_by			Élevé par <a class="leek-farmer" href="/farmer/%1$s">%2$s</a> 
-fights			Combats
-frequency			Fréquence
+error_name_character_count		Le nom de votre poireau doit contenir entre %d et %d caractères
+error_name_format				Le nom de votre poireau doit contenir uniquement des caractères alphanumériques
+error_under_required_level_1	Votre premier poireau doit être de niveau %s.
+error_under_required_level_2	Votre second poireau doit être de niveau %s.
+error_under_required_level_3	Votre troisième poireau doit être de niveau %s.
+farmed_by				Élevé par <a class="leek-farmer" href="/farmer/%1$s">%2$s</a> 
+fights					Combats
+frequency				Fréquence
 frequency_cost			1 capital ⇔ 10 Fréquence
-frequency_description			Les fréquences élevées commencent le combat en premier
-garden			Agressions
-garden_no			NON
-garden_yes			OUI
+frequency_description	Les fréquences élevées commencent le combat en premier
+garden					Agressions
+garden_no				NON
+garden_yes				OUI
 hide_registers			Masquer les registres
-level_n			Niveau %s
-level_popup_no_news			Pas de nouvel item ou fonction pour ce niveau.
-level_popup_title			<b>%1$s</b> passe niveau <b>%2$s</b> !
-life			Points de vie
-life_cost			1 capital ⇔ 3 vies
+level_n					Niveau %s
+level_popup_no_news		Pas de nouvel item ou fonction pour ce niveau.
+level_popup_title		<b>%1$s</b> passe niveau <b>%2$s</b> !
+life					Points de vie
+life_cost				1 capital ⇔ 3 vies
 life_cost_10			10 capital ⇔ 30 vies
 life_cost_100			100 capital ⇔ 300 vies
-life_description			Dégâts que peut encaisser le poireau avant de mourir
-magic			Magie
-magic_description			La magie augmente les entraves et les dégâts des poisons
-max_level			Niveau maximum
-mp			Points de mouvement
-mp_cost			50 capital ⇔ 1 PM
+life_description		Dégâts que peut encaisser le poireau avant de mourir
+magic					Magie
+magic_description		La magie augmente les entraves et les dégâts des poisons
+max_level				Niveau maximum
+mp						Points de mouvement
+mp_cost					50 capital ⇔ 1 PM
 mp_description			Cases pouvant être parcourues pendant un tour
-n_capital			<span id='capital-count'>%s</span> capital
-new_chips			Nouvelles puces
+n_capital				<span id='capital-count'>%s</span> capital
+new_chips				Nouvelles puces
 new_functions			Nouvelles fonctions
-new_weapons			Nouvelles armes
+new_weapons				Nouvelles armes
 next_fight_in			Prochain combat dans %s
-no_hat			Pas de chapeau
-not_found			Poireau introuvable
+no_hat					Pas de chapeau
+not_found				Poireau introuvable
 not_found_id			Poireau d'id <b>%s</b> introuvable
-n_remaining_fights			%s combats restants
-ok			OK
-potion			Potion
-ratio			Ratio : %s
-registered			Inscrit
+n_remaining_fights		%s combats restants
+ok						OK
+potion					Potion
+ratio					Ratio : %s
+registered				Inscrit
 register_key			Clé
-registers			Registres
-register_to_tournament			S'inscrire à un tournoi
+registers				Registres
+register_to_tournament	S'inscrire à un tournoi
 register_value			Valeur
 remaining_xp			XP restante : %s
-rename_description			Cette opération va vous permettre de renommer votre poireau, vous pouvez payer avec des Habs ou bien avec des cristaux.
-rename_done			Poireau renommé !
-rename_error_delay			Vous devez attendre un jour entre deux renommage de votre poireau.
-rename_leek			Renommer le poireau
+rename_description		Cette opération va vous permettre de renommer votre poireau, vous pouvez payer avec des Habs ou bien avec des cristaux.
+rename_done				Poireau renommé !
+rename_error_delay		Vous devez attendre un jour entre deux renommage de votre poireau.
+rename_leek				Renommer le poireau
 rename_new_name			Nouveau nom
-rename_not_enough_crystals			Vous n'avez pas assez de crystaux.
-rename_not_enough_habs			Vous n'avez pas assez d'Habs.
-rename_pay_crystals			Payer en cristaux
+rename_not_enough_crystals	Vous n'avez pas assez de crystaux.
+rename_not_enough_habs	Vous n'avez pas assez d'Habs.
+rename_pay_crystals		Payer en cristaux
 rename_pay_habs			Payer en habs
-report			Signaler
-reset			Réinitialiser
-resistance			Résistance
-resistance_description			La résistance augmente les boucliers
-science			Science
-science_description			La science augmente les boosts et contre les entraves
+report					Signaler
+reset					Réinitialiser
+resistance				Résistance
+resistance_description	La résistance augmente les boucliers
+science					Science
+science_description		La science augmente les boosts et contre les entraves
 see_tournament			Voir le tournoi
 select_a_hat			Sélectionner un chapeau
 show_registers			Afficher les registres
-strength			Force
+strength				Force
 strength_cost			1 capital ⇔ 1 force
-strength_description			La force augmente les dégâts causés par les armes et les puces
-talent			Talent solo du poireau
-tournament			Tournoi
+strength_description	La force augmente les dégâts causés par les armes et les puces
+talent					Talent solo du poireau
+tournament				Tournoi
 tournament_of			Tournoi du %s
-tournaments			Tournois
+tournaments				Tournois
 tournament_time			Tournoi solo tous jours de 12h à 14h
-tp			Points de tour
-tp_cost			80 capital ⇔ 1 PT
+tp						Points de tour
+tp_cost					80 capital ⇔ 1 PT
 tp_description			Actions maximum pendant un tour
-unregister			Se désinscrire
+unregister				Se désinscrire
 use_a_potion			Utiliser une potion sur %s
 using_potion			Utilisation de la potion...
-validate			Valider
-victories			victoires
+validate				Valider
+victories				victoires
 weapon_level_n			Niveau %s
-weapons			Armes
-weapons_of			Armes de %s
-wisdom			Sagesse
-wisdom_cost			1 capital ⇔ 1 sagesse
-wisdom_description			La sagesse accroît les soins et le vol de vie
-xp			XP : %s
+weapons					Armes
+weapons_of				Armes de %s
+wisdom					Sagesse
+wisdom_cost				1 capital ⇔ 1 sagesse
+wisdom_description		La sagesse accroît les soins et le vol de vie
+xp						XP : %s
