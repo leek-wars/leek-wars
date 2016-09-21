@@ -1,6 +1,5 @@
 cooldown			Récupération : <b>%s</b> tours
 critical			Coup critique !
-
 fail_rate			Échec : %s%%
 failure_rate		Échec : %s%
 initial_cooldown	Délai initial de <b>%s</b> tours

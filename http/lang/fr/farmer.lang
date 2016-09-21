@@ -1,82 +1,82 @@
-banned			Éleveur banni
+banned					Éleveur banni
 banned_message			Cet éleveur a été banni
 bonus_trophies			Trophées bonus
-cancel			Annuler
-cancel_candidacy			Annuler la demande
-candidacy_canceled			Candidature annulée
-candidacy_for_team			Demande pour l'équipe <a href='/team/%1$s'>%2$s</a>
-challenge			Défier
-click_to_change_avatar			Cliquer pour changer
-click_to_change_country			Cliquer pour changer
-connected			Connecté
-country_ok			Retour
-country_selection			Sélection du pays
-create			Créer
-create_team			Créer une équipe
-defeats			défaites
-deleted			Éleveur supprimé
+cancel					Annuler
+cancel_candidacy		Annuler la demande
+candidacy_canceled		Candidature annulée
+candidacy_for_team		Demande pour l'équipe <a href='/team/%1$s'>%2$s</a>
+challenge				Défier
+click_to_change_avatar	Cliquer pour changer
+click_to_change_country	Cliquer pour changer
+connected				Connecté
+country_ok				Retour
+country_selection		Sélection du pays
+create					Créer
+create_team				Créer une équipe
+defeats					défaites
+deleted					Éleveur supprimé
 deleted_message			Cet éleveur a supprimé son compte :(
 deleted_name			Éleveur supprimé
 disconnected			Déconnecté
-draws			égalités
-error_forbidden_name			Ce nom est interdit
-error_invalid_godfather			Ce joueur n'existe pas
-error_invalid_length			Le mot de passe doit contenir entre %d et %d caractères
-error_invalid_mail			L'adresse e-mail doit être valide
-error_leek_name_already_used			Ce nom de poireau est déjà utilisé
-error_login_already_used			Le nom d'utilisateur est déjà utilisé
-error_login_character_count			Le nom d'utilisateur doit contenir entre %d et %d caractères
+draws					égalités
+error_forbidden_name	Ce nom est interdit
+error_invalid_godfather	Ce joueur n'existe pas
+error_invalid_length	Le mot de passe doit contenir entre %d et %d caractères
+error_invalid_mail		L'adresse e-mail doit être valide
+error_leek_name_already_used	Ce nom de poireau est déjà utilisé
+error_login_already_used		Le nom d'utilisateur est déjà utilisé
+error_login_character_count		Le nom d'utilisateur doit contenir entre %d et %d caractères
 error_login_format			Le nom d'utilisateur ne doit contenir que des caractères alphanumériques
 error_login_length			Le nom d'utilisateur doit contenir entre %d et %d caractères
-error_mail_already_used			L'adresse e-mail est déjà utilisée
-error_not_same_password			Les deux mots de passe entrés doivent être identiques
-error_password_character_count			Le mot de passe doit contenir entre %d et %d caractères
-error_password_length			Le mot de passe doit contenir entre %d et %d caractères
-farmer_have_1_warning			Cet éleveur a 1 avertissement
-farmer_have_n_warnings			Cet éleveur a %s avertissements
+error_mail_already_used		L'adresse e-mail est déjà utilisée
+error_not_same_password		Les deux mots de passe entrés doivent être identiques
+error_password_character_count		Le mot de passe doit contenir entre %d et %d caractères
+error_password_length		Le mot de passe doit contenir entre %d et %d caractères
+farmer_have_1_warning		Cet éleveur a 1 avertissement
+farmer_have_n_warnings		Cet éleveur a %s avertissements
 farmer_not_found			Éleveur introuvable
-farmer_not_found_message			Éleveur d'id <b>%s</b> introuvable :(
-fights			Combats
+farmer_not_found_message	Éleveur d'id <b>%s</b> introuvable :(
+fights						Combats
 given_by_x_the_d			Donné par <a href='/farmer/%1$s'>%2$s</a> le %3$s
-godfather_link			Lien de parrainage
-godfather_link_description			Envoyer ce lien aux personnes que vous voulez avoir comme fileules
+godfather_link				Lien de parrainage
+godfather_link_description	Envoyer ce lien aux personnes que vous voulez avoir comme fileules
 godfather_link_ok			D'accord
-godfather_of			Parrain de %s
-godson_of			Filleul de %s
-last_connection			Dernière connexion %s
-leek_level_n			Niveau %s
-leeks			Poireaux
-logout			Déconnexion
-never_connected			Jamais connecté
-no_country			pas de pays
-no_team			Pas d'équipe
-no_trophies_yet			Pas encore de trophées
-ratio			Ratio
-registered			Inscrit
-registered_the			Inscrit le %s
-register_to_tournament			S'inscrire à un tournoi
-report			Signaler
+godfather_of				Parrain de %s
+godson_of					Filleul de %s
+last_connection				Dernière connexion %s
+leek_level_n				Niveau %s
+leeks						Poireaux
+logout						Déconnexion
+never_connected				Jamais connecté
+no_country					pas de pays
+no_team						Pas d'équipe
+no_trophies_yet				Pas encore de trophées
+ratio						Ratio
+registered					Inscrit
+registered_the				Inscrit le %s
+register_to_tournament		S'inscrire à un tournoi
+report						Signaler
 see_all_trophies			Voir tous les trophées
-see_tournament			Voir le tournoi
-send_private_message			Message
-talent			Talent d'éleveur
-team_created			Équipe créée
-team_name			Nom
-tournament_of			Tournoi du %s
-tournaments			Tournois
-tournament_time			Tournoi d'éleveur tous jours de 18h à 20h
-trophies			Trophées
-trophy_obtained			Obtenu %s
-unregister			Se désinscrire
-unregister_impossible_moderator			Impossible de supprimer un modérateur.
+see_tournament				Voir le tournoi
+send_private_message		Message
+talent						Talent d'éleveur
+team_created				Équipe créée
+team_name					Nom
+tournament_of				Tournoi du %s
+tournaments					Tournois
+tournament_time				Tournoi d'éleveur tous jours de 18h à 20h
+trophies					Trophées
+trophy_obtained				Obtenu %s
+unregister					Se désinscrire
+unregister_impossible_moderator		Impossible de supprimer un modérateur.
 unregister_impossible_team			Vous êtes le propriétaire d'une équipe, vous devez d'abord la dissoudre avant de supprimer votre compte.
 unregister_wrong_password			Le mot de passe est incorrect
-upload_failed			Une erreur s'est produite : %s
+upload_failed				Une erreur s'est produite : %s
 uploading_avatar			Envoi de l'avatar...
-upload_success			Envoi réussi !
-victories			victoires
-warnings			Avertissements
+upload_success				Envoi réussi !
+victories					victoires
+warnings					Avertissements
 warning_severity_s			gravité %s
-wins			victoires
+wins						victoires
 you_have_1_warning			Vous avez 1 avertissement
 you_have_n_warnings			Vous avez %s avertissements
