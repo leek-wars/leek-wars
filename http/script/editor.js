@@ -656,7 +656,6 @@ function generateDocumentation() {
 			details += "<div class='deprecated-message'>Cette fonction est dépréciée.</div>"
 		}
 
-		details += _.lang.get('editor', 'level_n', fun.level) + "<br>"
 		if (fun.operations == -1)
 			details += _.lang.get('documentation', 'variable_operations')
 		else if (fun.operations == 1)
