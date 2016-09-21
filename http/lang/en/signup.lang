@@ -1,34 +1,34 @@
-screenshots			Screenshots
-level			Level
-signup			Register!
-fight_ice			Solo fight on the ice
-ranking			Ranking
-leek_page			Your leek's page
-fight_factory			Team fight in the factory
-editor			The editor of AI
-fight_desert			Team fight in the desert
-market			Market
-fight_forest			Team fight in the forest
-signup_validated_message			Congratulations <b>%s</b>, check your email and look for the verification email to finalize your registration!
-login			Sign in
-signup_validated			Registration validated!
-password			Password
-fight_beach			Solo fight on the beach
-title			Create your leek
-your_farmer_name			Your farmer's name
-n_leeks_already			Already <b>%s</b> leeks ready to fight!
-signup_done_message			Your account is now activated! Log in and starts fighting
-signup_done			Registration done successfully!
-your_leek_name			Your leek's name
-your_email			Your email
-fight_test			Fight on the test map
-confirm_password			Confirmation
-godfather			Godfather (Optional)
 conditions			By clicking on the register button, you accept the <a href='/conditions'>terms of use</a>.
-talent			Talent
-total_level			Total level
-leek			Leek
-place			Rank
+confirm_password			Confirmation
+editor			The editor of AI
 farmer			Farmer
+fight_beach			Solo fight on the beach
+fight_desert			Team fight in the desert
+fight_factory			Team fight in the factory
+fight_forest			Team fight in the forest
+fight_ice			Solo fight on the ice
+fight_test			Fight on the test map
+godfather			Godfather (Optional)
 intro			In <b>Leek Wars</b>, create the most powerful leek in the world and destroy your enemies!<br><br>
 Develop your own artificial intelligence with <b>LeekScript</b>, a language easy to learn, and become the best farmer!
+leek			Leek
+leek_page			Your leek's page
+level			Level
+login			Sign in
+market			Market
+n_leeks_already			Already <b>%s</b> leeks ready to fight!
+password			Password
+place			Rank
+ranking			Ranking
+screenshots			Screenshots
+signup			Register!
+signup_done			Registration done successfully!
+signup_done_message			Your account is now activated! Log in and starts fighting
+signup_validated			Registration validated!
+signup_validated_message			Congratulations <b>%s</b>, check your email and look for the verification email to finalize your registration!
+talent			Talent
+title			Create your leek
+total_level			Total level
+your_email			Your email
+your_farmer_name			Your farmer's name
+your_leek_name			Your leek's name

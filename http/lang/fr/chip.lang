@@ -1,72 +1,72 @@
-teleportation		Téléportation
+acceleration		Accélération
+adrenaline			Adrénaline
+antidote			Antidote
+armor				Armure
 armoring			Blindage
-inversion			Inversion
-regeneration		Régénération
-puny_bulb			Bulbe Chétif
-wall				Mur
-flash				Éclair
-steroid				Stéroides
-rock				Rocher
-helmet				Casque
-stretching			Étirement
-rampart				Rempart
-flame				Flamme
-leather_boots		Bottes de cuir
+ball_and_chain		Boulet
 bandage				Bandage
-rocky_bulb			Bulbe Rocheux
-motivation			Motivation
-lightning_bulb		Bulbe Foudroyant
-fire_bulb			Bulbe Enflammé
-shield				Bouclier
+bark				Écorce
+burning				Brûlis
 carapace			Carapace
-remission			Rémission
-protein				Protéines
+carapace_desc		La carapace permet d'appliquer une armure très résistante sur vos invocations.
+collar				Collier
 cure				Guérison
-metallic_bulb		Bulbe Métallique
-iced_bulb			Bulbe Glacé
-liberation			Libération
-seven_league_boots	Bottes de 7 lieues
-rage				Rage
-spark				Étincelle
-shock				Décharge
+devil_strike		Frappe du démon
+doping				Dopage
+drip				Perfusion
+ferocity			Férocité
+fertilizer			Fertilisant
+fire_bulb			Bulbe Enflammé
+flame				Flamme
+flash				Éclair
+fortress			Forteresse
+fracture			Fracture
+healer_bulb			Bulbe Guérisseur
+helmet				Casque
 ice					Glaçon
 iceberg				Iceberg
-reflexes			Réflexes
-pebble				Caillou
-drip				Perfusion
-armor				Armure
-stalactite			Stalactite
-vaccine				Vaccin
+iced_bulb			Bulbe Glacé
+inversion			Inversion
+leather_boots		Bottes de cuir
+liberation			Libération
 lightning			Foudre
-fortress			Forteresse
-adrenaline			Adrénaline
-warm_up				Échauffement
-winged_boots		Bottes ailées
-healer_bulb			Bulbe Guérisseur
-rockfall			Éboulement
-doping				Dopage
-remission_desc		La rémission permet de guérir très efficacement vos invocations.
-meteorite			Météorite
-antidote			Antidote
-fracture			Fracture
-whip				Fouet
-burning				Brûlis
+lightning_bulb		Bulbe Foudroyant
 loam				Terreau
-bark				Écorce
-fertilizer			Fertilisant
-collar				Collier
-acceleration		Accélération
-ferocity			Férocité
+metallic_bulb		Bulbe Métallique
+meteorite			Météorite
 mirror				Miroir
-thorn				Épine
+motivation			Motivation
+pebble				Caillou
 plague				Peste
-toxin				Toxine
-venom				Venin
+protein				Protéines
+puny_bulb			Bulbe Chétif
+rage				Rage
+rampart				Rempart
+reflexes			Réflexes
+regeneration		Régénération
+remission			Rémission
+remission_desc		La rémission permet de guérir très efficacement vos invocations.
+resurrection		Résurrection
+rock				Rocher
+rockfall			Éboulement
+rocky_bulb			Bulbe Rocheux
+seven_league_boots	Bottes de 7 lieues
+shield				Bouclier
+shock				Décharge
+slow_down			Ralentissement
 solidification		Solidification
 soporific			Somnifère
+spark				Étincelle
+stalactite			Stalactite
+steroid				Stéroides
+stretching			Étirement
+teleportation		Téléportation
+thorn				Épine
+toxin				Toxine
 tranquilizer		Tranquillisant
-ball_and_chain		Boulet
-slow_down			Ralentissement
-carapace_desc		La carapace permet d'appliquer une armure très résistante sur vos invocations.
-devil_strike		Frappe du démon
-resurrection		Résurrection
+vaccine				Vaccin
+venom				Venin
+wall				Mur
+warm_up				Échauffement
+whip				Fouet
+winged_boots		Bottes ailées

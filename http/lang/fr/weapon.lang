@@ -1,16 +1,16 @@
-laser			Laser
-flame_thrower			Lance-flammes
-destroyer			Destroyer
-gazor			Gazeur
-m_laser			M-Laser
-electrisor			Électriseur
-b_laser			B-Laser
-grenade_launcher			Lance-grenades
-magnum			Magnum
-pistol			Pistolet
-machine_gun			Machine gun
-double_gun			Double gun
-shotgun			Fusil à pompe
-katana			Katana
-broadsword			Glaive
 axe			Hache
+b_laser			B-Laser
+broadsword			Glaive
+destroyer			Destroyer
+double_gun			Double gun
+electrisor			Électriseur
+flame_thrower			Lance-flammes
+gazor			Gazeur
+grenade_launcher			Lance-grenades
+katana			Katana
+laser			Laser
+machine_gun			Machine gun
+magnum			Magnum
+m_laser			M-Laser
+pistol			Pistolet
+shotgun			Fusil à pompe

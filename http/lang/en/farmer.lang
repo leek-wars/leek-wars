@@ -1,82 +1,82 @@
-send_private_message			Message
-given_by_x_the_d			Given by par <a href='/farmer/%1$s'>%2$s</a> the %3$s
-trophies			Trophies
-report			Report
-unregister_wrong_password			The password is incorrect
-uploading_avatar			Uploading avatar...
-see_all_trophies			See all trophies
-challenge			Challenge
-defeats			losses
-connected			Connected
-cancel			Cancel
-create			Create
-deleted			Farmer deleted
-trophy_obtained			Obtained %s
-last_connection			Last connection %s
-godson_of			%s's recommendee
-no_trophies_yet			No trophies yet
-tournament_of			Tournament of %s
-register_to_tournament			Register for the tournament
-tournament_time			Farmer tournament every day from 6PM to 8PM (French timezone)
-ratio			Ratio
-you_have_1_warning			You have 1 advertisement
-you_have_n_warnings			You have %s advertisements
-warning_severity_s			Severity %s
-upload_success			Upload succeed!
-error_login_format			The username shall contain only alphanumeric characters
-error_invalid_godfather			This player doesn't exist
-no_team			No team
-wins			wins
-error_invalid_length			The password shall contain %d to %d characters
 banned			Farmer banned
 banned_message			This farmer have been banned
-unregister_impossible_team			You are the owner of a team, you shall first dissolve before deleting your account.
-see_tournament			See the tournament
-error_leek_name_already_used			The leekname is already used
-leek_level_n			Level %s
-fights			Fights
-tournaments			Tournaments
-farmer_have_1_warning			This farmer has 1 advertisement
-farmer_have_n_warnings			This farmer has %s advertisement
-farmer_not_found_message			Farmer with id <b>%s</b> not found :(
-never_connected			Never connected
-error_password_character_count			The password shall contain %d to %d characters
-talent			Farmer Talent
-godfather_of			%s's referrer
-error_not_same_password			The two entered passwords shall be identical
-warnings			advertisements
-unregister_impossible_moderator			Impossible to delete a moderator.
+bonus_trophies			Bonus trophies
+cancel			Cancel
+cancel_candidacy			Cancel request
+candidacy_canceled			Candidature canceled
+candidacy_for_team			Request for team <a href='/team/%1$s'>%2$s</a>
+challenge			Challenge
+click_to_change_avatar			Click to change
+click_to_change_country			Click to change
+connected			Connected
 country_ok			Back
-logout			Logout
-error_invalid_mail			The e-mail address shall be valid
-error_mail_already_used			The e-mail address is already in use
-farmer_not_found			Farmer not found
+country_selection			Country selection
+create			Create
+create_team			Create a team
+defeats			losses
+deleted			Farmer deleted
 deleted_message			This farmer deleted his account :(
 deleted_name			Farmer deleted
-error_login_already_used			The username is already in use
-draws			draws
-registered_the			Registered on %s
-godfather_link			Referral link
-victories			victories
 disconnected			Disconnected
+draws			draws
+error_forbidden_name			This name is forbidden
+error_invalid_godfather			This player doesn't exist
+error_invalid_length			The password shall contain %d to %d characters
+error_invalid_mail			The e-mail address shall be valid
+error_leek_name_already_used			The leekname is already used
+error_login_already_used			The username is already in use
+error_login_character_count			The username shall contain %d to %d characters
+error_login_format			The username shall contain only alphanumeric characters
+error_login_length			The username shall contain %d to %d characters
+error_mail_already_used			The e-mail address is already in use
+error_not_same_password			The two entered passwords shall be identical
+error_password_character_count			The password shall contain %d to %d characters
+error_password_length			The password shall contain %d to %d characters
+farmer_have_1_warning			This farmer has 1 advertisement
+farmer_have_n_warnings			This farmer has %s advertisement
+farmer_not_found			Farmer not found
+farmer_not_found_message			Farmer with id <b>%s</b> not found :(
+fights			Fights
+given_by_x_the_d			Given by par <a href='/farmer/%1$s'>%2$s</a> the %3$s
+godfather_link			Referral link
 godfather_link_description			Send this link to people you want to refer
 godfather_link_ok			Agree
-country_selection			Country selection
-no_country			No country
-create_team			Create a team
-unregister			Unregister
-candidacy_for_team			Request for team <a href='/team/%1$s'>%2$s</a>
-click_to_change_avatar			Click to change
-cancel_candidacy			Cancel request
-bonus_trophies			Bonus trophies
-registered			Registered 
+godfather_of			%s's referrer
+godson_of			%s's recommendee
+last_connection			Last connection %s
+leek_level_n			Level %s
 leeks			Leeks
-team_name			Name
-candidacy_canceled			Candidature canceled
+logout			Logout
+never_connected			Never connected
+no_country			No country
+no_team			No team
+no_trophies_yet			No trophies yet
+ratio			Ratio
+registered			Registered 
+registered_the			Registered on %s
+register_to_tournament			Register for the tournament
+report			Report
+see_all_trophies			See all trophies
+see_tournament			See the tournament
+send_private_message			Message
+talent			Farmer Talent
 team_created			Team created
+team_name			Name
+tournament_of			Tournament of %s
+tournaments			Tournaments
+tournament_time			Farmer tournament every day from 6PM to 8PM (French timezone)
+trophies			Trophies
+trophy_obtained			Obtained %s
+unregister			Unregister
+unregister_impossible_moderator			Impossible to delete a moderator.
+unregister_impossible_team			You are the owner of a team, you shall first dissolve before deleting your account.
+unregister_wrong_password			The password is incorrect
 upload_failed			An error occurred: %s
-click_to_change_country			Click to change
-error_forbidden_name			This name is forbidden
-error_password_length			The password shall contain %d to %d characters
-error_login_character_count			The username shall contain %d to %d characters
-error_login_length			The username shall contain %d to %d characters
+uploading_avatar			Uploading avatar...
+upload_success			Upload succeed!
+victories			victories
+warnings			advertisements
+warning_severity_s			Severity %s
+wins			wins
+you_have_1_warning			You have 1 advertisement
+you_have_n_warnings			You have %s advertisements

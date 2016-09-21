@@ -1,35 +1,35 @@
-report_farmer_for_reason			Report %s for which reason ?
 cancel			Cancel
-report			Report
-report_farmer			Report %s
-warning_sent			Warning sended!
-title			Moderation
+given_by_x_the_d			Given by <a href='/farmer/%1$s'>%2$s</a> the %3$s
+reason_1			Incorrect farmer name
+reason_10			Misconduct against an administrator
+reason_100			Reporting abuse
+reason_101			Attack on Leek Wars
+reason_102			Bug exploitation
+reason_103			Using a script or bot
 reason_11			Cheat
 reason_12			Spam on the forum
-reporting_deleted			Reporting deleted
-you_must_choose_reason			You must choose a reason!
-thank_you_for_reporting			Thanks for your reporting
-reason_1			Incorrect farmer name
-you_are_muted			You are muted.
-reason_16			Incorrect avatar
-you_have_been_muted_by_x			You have been muted by %s.
-you_have_been_unmuted_by_x			%s allows you to speak again on the chat.
 reason_13			Spam on the chat box
-reason_103			Using a script or bot
+reason_14			Advertising on the chat
+reason_15			Advertising on the forum
+reason_16			Incorrect avatar
+reason_17			Incorrect team emblem
 reason_2			Incorrect leek name
 reason_3			Incorrect AI name
 reason_4			Incorrect team name
 reason_5			Incorrect team description 
-reason_102			Bug exploitation
-reason_9			Misconduct against a moderator
-reason_15			Advertising on the forum
-reason_14			Advertising on the chat
 reason_6			Incorrect words on fight
-reason_17			Incorrect team emblem
 reason_7			Incorrect words on the forum
-reason_100			Reporting abuse
-reason_10			Misconduct against an administrator
-reason_101			Attack on Leek Wars
 reason_8			Incorrect words on the chat
-given_by_x_the_d			Given by <a href='/farmer/%1$s'>%2$s</a> the %3$s
+reason_9			Misconduct against a moderator
+report			Report
+report_farmer			Report %s
+report_farmer_for_reason			Report %s for which reason ?
 report_informations			Additional information (optional)
+reporting_deleted			Reporting deleted
+thank_you_for_reporting			Thanks for your reporting
+title			Moderation
+warning_sent			Warning sended!
+you_are_muted			You are muted.
+you_have_been_muted_by_x			You have been muted by %s.
+you_have_been_unmuted_by_x			%s allows you to speak again on the chat.
+you_must_choose_reason			You must choose a reason!

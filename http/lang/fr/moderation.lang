@@ -1,35 +1,35 @@
-report_farmer_for_reason			Signaler %s pour quelle raison ?
 cancel			Annuler
-report			Signaler
-report_farmer			Signaler %s
-warning_sent			Avertissement envoyé !
-title			Modération
+given_by_x_the_d			Donné par <a href='/farmer/%1$s'>%2$s</a> le %3$s
+reason_1			Nom d'éleveur incorrect
+reason_10			Comportement incorrect envers un administrateur
+reason_100			Signalements abusifs
+reason_101			Attaque sur Leek Wars
+reason_102			Exploitation d'un bug
+reason_103			Utilisationt d'un script ou d'un bot
 reason_11			Triche
 reason_12			Flood sur le forum
-reporting_deleted			Signalement supprimé
-you_must_choose_reason			Vous devez choisir un motif !
-thank_you_for_reporting			Merci pour le signalement
-reason_1			Nom d'éleveur incorrect
-you_are_muted			Vous avez été reduit au silence.
-reason_16			Avatar incorrect
-you_have_been_muted_by_x			Vous avez été réduit au silence par %s.
-you_have_been_unmuted_by_x			%s vous autorise à nouveau à parler sur le chat.
 reason_13			Flood sur le chat
-reason_103			Utilisationt d'un script ou d'un bot
+reason_14			Promotion sur le chat
+reason_15			Promotion sur le forum
+reason_16			Avatar incorrect
+reason_17			Emblème d'équipe incorrect
 reason_2			Nom de poireau incorrect
 reason_3			Nom d'IA incorrect
 reason_4			Nom d'équipe incorrect
 reason_5			Description d'équipe incorrecte
-reason_102			Exploitation d'un bug
-reason_9			Comportement incorrect envers un modérateur
-reason_15			Promotion sur le forum
-reason_14			Promotion sur le chat
 reason_6			Paroles incorrectes en combat
-reason_17			Emblème d'équipe incorrect
 reason_7			Paroles incorrectes sur le forum
-reason_100			Signalements abusifs
-reason_10			Comportement incorrect envers un administrateur
-reason_101			Attaque sur Leek Wars
 reason_8			Paroles incorrectes sur le chat
-given_by_x_the_d			Donné par <a href='/farmer/%1$s'>%2$s</a> le %3$s
+reason_9			Comportement incorrect envers un modérateur
+report			Signaler
+report_farmer			Signaler %s
+report_farmer_for_reason			Signaler %s pour quelle raison ?
 report_informations			Informations complémentaires (facultatif)
+reporting_deleted			Signalement supprimé
+thank_you_for_reporting			Merci pour le signalement
+title			Modération
+warning_sent			Avertissement envoyé !
+you_are_muted			Vous avez été reduit au silence.
+you_have_been_muted_by_x			Vous avez été réduit au silence par %s.
+you_have_been_unmuted_by_x			%s vous autorise à nouveau à parler sur le chat.
+you_must_choose_reason			Vous devez choisir un motif !

@@ -1,29 +1,29 @@
-talent_difference			Le poireau <b>%1$s</b> a <b>%2$s</b> points de talent de plus que la moyenne de son niveau. Ses gains sont augmentés de <b>%3$s</b>.
+back_to_editor			Retour à l'éditeur
+back_to_garden			Retour au potager
+back_to_tournament			Retour au tournoi
+duration			Durée : %s tours
+error_reading_actions			Un problème est survenu dans la lecture des actions du combat :(
+farmer			Éleveur
+generation_too_long			La génération du combat a duré <b>trop longtemps</b>, l'équipe qui a pris <b>le plus de temps</b> est déclarée perdante.
+leek			Poireau
+level			Niveau
+loosers			Perdants
+money			Habs
 not_found			Combat introuvable :(
 not_generated_yet			Le combat n'est pas encore généré...
-duration			Durée : %s tours
-loosers			Perdants
+refight			Refaire un combat
+replay_fight			Revoir le combat
 rewatch_fight			Revoir le combat
-title			Rapport de combat
-winners			Gagnants
+take_revenge			Prendre sa <b>revanche</b> !
+talent			Talent
+talent_difference			Le poireau <b>%1$s</b> a <b>%2$s</b> points de talent de plus que la moyenne de son niveau. Ses gains sont augmentés de <b>%3$s</b>.
+talent_difference_farmer			L'éleveur <b>%1$s</b> a <b>%2$s</b> points de talent de plus que la moyenne de son niveau. Les gains de ses poireaux sont augmentés de <b>%3$s</b>.
+talent_difference_farmer_no_gains			L'éleveur <b>%s</b> n'a pas de talent de plus que la moyenne de son niveau, ses gains ne sont pas augmentés.
+talent_difference_no_gains			Le poireau <b>%s</b> n'a pas de talent de plus que la moyenne de son niveau, ses gains ne sont pas augmentés.
+team			Équipe
 team1			Équipe 1
 team2			Équipe 2
+title			Rapport de combat
 total			Total
-team			Équipe
+winners			Gagnants
 xp			XP
-talent_difference_farmer_no_gains			L'éleveur <b>%s</b> n'a pas de talent de plus que la moyenne de son niveau, ses gains ne sont pas augmentés.
-back_to_tournament			Retour au tournoi
-generation_too_long			La génération du combat a duré <b>trop longtemps</b>, l'équipe qui a pris <b>le plus de temps</b> est déclarée perdante.
-talent_difference_no_gains			Le poireau <b>%s</b> n'a pas de talent de plus que la moyenne de son niveau, ses gains ne sont pas augmentés.
-error_reading_actions			Un problème est survenu dans la lecture des actions du combat :(
-talent_difference_farmer			L'éleveur <b>%1$s</b> a <b>%2$s</b> points de talent de plus que la moyenne de son niveau. Les gains de ses poireaux sont augmentés de <b>%3$s</b>.
-back_to_garden			Retour au potager
-back_to_editor			Retour à l'éditeur
-replay_fight			Revoir le combat
-take_revenge			Prendre sa <b>revanche</b> !
-refight			Refaire un combat
-level			Niveau
-talent			Talent
-money			Habs
-farmer			Éleveur
-leek			Poireau

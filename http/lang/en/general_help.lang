@@ -1,126 +1,126 @@
-tournaments_13			Team tournament: a team composition perform team fights at each tournament round (as long as they are not eliminated).
-intro			This page will provide you with the detailed mechanisms regarding : leek evolution, fights, weapons, chips, tournaments...
-If you are looking for the AI programming howto, you will find it on the LeekScript <a href='/help/tutorial'>Tutorial page</a>.
-leeks_17			There are two kinds of shields: absolute shield and relative shield:
-leeks_36			Resistance increases shields.
-leeks_28			Science
-leeks_30			Magic
-leeks_2			The look and feel of your leek will change over time when the level of your leek reaches some specific thresholds (getting older...)
-market_2			As an example, the sheet of a chip looks like the following:
-leeks_4			A leek has several Attributes:
-leeks_5			Life / Health Points
-leeks_11			Strength
-leeks_8			Wisdom increases healing and life steal:
-leeks_6			When the level of your leek increases, the life of this leek is increased by 5.
-leeks_7			Wisdom
-chips			Chips
-leeks			Leeks
-editor			The Editor
-habs			Habs
-teams			Teams
-market			Market
-trophies			Achievements
-tournaments			Tournaments
-teams_3			Captains
-fights			Fights
 challenges			Challenges
-weapons			Weapons
-fights_11			Team Fights
-farmer			Being a Farmer
-fights_4			Team fight: one composition of your team is fighting another composition of another team.
-trophies_2			It's up to you now!
-teams_5			Logo and Motto
-leeks_24			Turn Points
-leeks_25			Turn Points is the maximum of action points your leek is allowed to spent for the use of weapons and chips, for talking, ... at each turn.
-leeks_26			Frequency
-fights_1			All information related to fights are available on the Garden page. There are 3 different kinds of fights:
-fights_2			Solo fight (1 vs 1): one of your leeks is fighting another leek.
-leeks_15			Agility increases damage return and critical hits rate:
-leeks_22			Movement Points
-fights_5			Solo Fights
-fights_9			Farmer Fights
-farmer_7			4th leek: 1,000,000 Habs / 1st leek at level 150 / 2nd leek at level 100 / 3rd leek at level 50.
-title			Help
-tournaments_1			There are 3 kinds of tournaments:
-leeks_12			Strength increases attack damage (may it come from a weapon or a chip):
-leeks_10			Life steal = Wisdom / 10 (in %)
-leeks_39			Shackles are reduced by science following the formula:
-leeks_40			Finale shackle = Shackle × (1 + (Caster magic - Target science) / 100)
-leeks_9			Final Healing = (Initial healing) × (1 + Wisdom / 100)
-tournaments_12			To register one of your composition to a team tournament, click on the "tournament register" button on your team page.
-The Experience points and Habs rewards are multiplied by a factor depending on the round your leek has reached. The further your composition goes, the better the multiplier (x2, x3, x4, x6 and x10).
-leeks_16			Final healing = (initial healing) × (1 + Agility / 100)
-leeks_18			Absolute shield = (initial absolute shield) × (1 + Resistance / 100)
-leeks_32			Critical hit rate = Agility / 10 (in %)
-leeks_23			Movements Points determine the maximum of cells your leek is allowed to walk to at each Turn.
-farmer_4			1st leek: available as soon as registered.
-farmer_5			2nd leek: 10,000 Habs / 1st leek at level 50.
-leeks_19			Relative shield = (initial relative shield) * (1 + Resistance / 100)
-leeks_21			Final damage = (initial damage) * (1 - Relative shield / 100) - Absolute shield
-leeks_33			Resistance
-fights_8			The allowed number of fights is reset every day at midnight. (New fights for the new day, plus potentially the postponed fights from yesterday).
+challenges_1			You can Challenge any other leek.
+To do so, go on the page of the leek you want to fight against and click on the "Challenge" button located in the upper right. You are allowed up to 200 Challenges per day.
 challenges_2			Challenges reward no Experience point nor Habs. Challenges do not add up to the total of your wins, draws and losses (ratio).
-farmer_6			3rd leek: 100,000 Habs / 1st leek at level 100 / 2nd leek at level 50.
-tournaments_4			Solo Tournaments (1 vs 1)
-fights_10			All your leeks fight all the leeks of another farmer. You get 10 farmer fights every day. You can postpone these fights to the day after (and only).
+chips			Chips
+chips_1			Chips have different purposes: damage, healing, boost, shields, shackles, moving...
+chips_2			Each chip requests a minimum level to be used. The use of a chip costs a specific amount of Turn Points. Each type of chip has a specific failure percentage, a specific range and a specific cooldown preventing the chip to be used again during next Turn(s).
 chips_3			If a chip effect is "Will remove 15 damage for 3 turns", the protection is active for the current turn (when the chip is activated) and the next 2 turns.
 chips_4			Some chips have an area of effect. See CHIP_LIGHTNING for example. Damage will decrease linearly from the center cell (100% damage) to the border cells (50% damage).
-market_1			You can spend your Habs in the market to buy new weapons and chips.
-teams_4			A team has the ability to promote some of its farmers to the rank of Captain. Captains are allowed to managed compositions (create composition, add a leek, remove a leek, delete composition).
-On the team page, you can see a little white star displayed in front of every Captain's name. The star is black for the team Creator.
-tournaments_6			To register one of your leeks to a solo tournament, click on the "tournament register" button on the leek page.
-The Experience points and Habs rewards are multiplied by a factor depending on the round your leek has reached. The further your leek goes, the better the multiplier (x2, x3, x4, x6 and x10).
-tournaments_7			Farmer Tournaments
-tournaments_9			To register your leeks to a farmer tournament, click on the "tournament register" button on your farmer page.
-The Experience points and Habs rewards are multiplied by a factor depending on the round your leeks have reached. The further your leeks go, the better the multiplier (x2, x3, x4, x6 and x10).
-weapons_1			Weapons are efficent to attack other leeks. Only one weapon can be taken in hands but a leek can carry up to 3 weapons (including the one in hands).
-leeks_3			You may decide to remove your leek from the Garden to avoid any attack from other leeks for when you are on leave for example.
-To do so, turn the Garden status switch from Yes to No on the leek page. Consequently your leek will never be presented to other leeks willing to fight "in the Garden".
-weapons_2			Each weapon requests a minimum level to be used. The use of a weapon costs a specific amount of Turn Points. Every weapon has also a failure percentage and a specific range. You can buy several occurences of each weapon in order to equip your different leeks with the same weapon. Your leeks are not allowed to fire more than one weapon at the same time. But one leek can of course fire one weapon, then replace it with another weapon, and then fire the new one (as long as it has enough Turn Points).
-teams_6			A team logo and a team motto can be defined/modified by the team Creator and by the Captains. To modify a logo, click on it (there is a default logo). To modify the team motto, double-click in-between the quotes you can see just right after the logo.
-weapons_3			Some weapons have an area of effect. See "Grenade Launcher" for example. Damage decrease linearly from the center cell (100% damage) to the border cells (50% damage).
-chips_2			Each chip requests a minimum level to be used. The use of a chip costs a specific amount of Turn Points. Each type of chip has a specific failure percentage, a specific range and a specific cooldown preventing the chip to be used again during next Turn(s).
-chips_1			Chips have different purposes: damage, healing, boost, shields, shackles, moving...
-leeks_14			Agility
-leeks_13			Attack damage = (initial damage) × (1 + Strength / 100)
-leeks_35			Shields reduces directs attacks following the formula :
-leeks_27			The higher the Frequency, the luckier you are to play first during the fight.
+credits			This help page was written thanks to the help of <a href='/farmer/284'>PadiSson</a>, <a href='/farmer/273'>McNalYoo</a> and <a href='/farmer/14762'>Mmonsanto</a>
+editor			The Editor
+editor_1			You can change the name of your Artificial Intelligences. Click on the name (upper left), modify, then click on the "Save" button.
+editor_2			A limit of 2 millions operations maximum per turn is defined for the execution of your Artificial Intelligence.
+editor_3			For more information about the Editor or the LeekScript language, go and visit the <a href='/help/tutorial'>Tutorial page</a>.
+farmer			Being a Farmer
 farmer_1			In Leek Wars you play a Farmer.
 As soon as you register you get a level 1 leek. Your goal is to defeat other leeks thanks to the coding and improvement of your AI using LeekScript.
-editor_1			You can change the name of your Artificial Intelligences. Click on the name (upper left), modify, then click on the "Save" button.
-fights_3			Farmer fight: all your leeks fight all the leeks of another farmer.
-editor_2			A limit of 2 millions operations maximum per turn is defined for the execution of your Artificial Intelligence.
-credits			This help page was written thanks to the help of <a href='/farmer/284'>PadiSson</a>, <a href='/farmer/273'>McNalYoo</a> and <a href='/farmer/14762'>Mmonsanto</a>
-editor_3			For more information about the Editor or the LeekScript language, go and visit the <a href='/help/tutorial'>Tutorial page</a>.
-fights_6			In a solo fight your leek is against another leek which has mainly the same power (automatically calculated by the game). As long as the level of your first leek is below 50, you are allowed up to 30 fights per day. When your first leek reaches level 50, the limitation drops down to 10 fights per day.
+farmer_2			Your leeks will earn Experience points after each fight. These Experience points will determine the level of your leeks. The higher your level, the better the chips and weapons you can use. When your level increases you can spend new capital points to upgrade your leek.
 farmer_3			Later on in the game, you will have the opportunity to raise up to 4 leeks if you comply with the following:
-fights_7			The fights of your leek which have not been done on day can be postponed to the day after. If you cannot perform the fights (due to any other IRL constraint) you will have the opportunity to trigger them the day after. The postponing is done only the day after. If you do not perform your late fights the day after, they are definitively lost. For example, if your first leek is below level 50 and you have no time today to do the 30 fights of this leek, you will then have the possibility to perform 60 fights tomorrow. If the level of your first leek is above 50 and you have no time today to do the 10 fights of this first leek, you will then have 20 fights available tomorrow for this leek.
-As soon as you recruit your second leek, you get now 10 additional farmer fights available per day.
+farmer_4			1st leek: available as soon as registered.
+farmer_5			2nd leek: 10,000 Habs / 1st leek at level 50.
+farmer_6			3rd leek: 100,000 Habs / 1st leek at level 100 / 2nd leek at level 50.
+farmer_7			4th leek: 1,000,000 Habs / 1st leek at level 150 / 2nd leek at level 100 / 3rd leek at level 50.
+farmer_8			Reaching higher levels for your leek will allow you to use more LeekScript functions.
+Each function is rated with a level which is displayed on the right of the function name in the <a href='/help/documentation'>documentation</a>. These level is the mimimum requested to be allowed to use this specific LeekScript function.
+fights			Fights
+fights_1			All information related to fights are available on the Garden page. There are 3 different kinds of fights:
+fights_10			All your leeks fight all the leeks of another farmer. You get 10 farmer fights every day. You can postpone these fights to the day after (and only).
+fights_11			Team Fights
 fights_12			All the leeks inside a composition of your team fight together all the leeks of a composition of another team.
 Each of your leek is allowed to do 10 team fights with its composition. A composition is allowed to fight only if all its leeks have at least 1 team fight left.
 fights_13			Team fights do not add up to the total of your wins, draws and losses (ratio).
-leeks_1			Each leek can equip <b>weapons</b>, chips and an AI to fight.
-welcome			Welcome to Leek Wars!
+fights_2			Solo fight (1 vs 1): one of your leeks is fighting another leek.
+fights_3			Farmer fight: all your leeks fight all the leeks of another farmer.
+fights_4			Team fight: one composition of your team is fighting another composition of another team.
+fights_5			Solo Fights
+fights_6			In a solo fight your leek is against another leek which has mainly the same power (automatically calculated by the game). As long as the level of your first leek is below 50, you are allowed up to 30 fights per day. When your first leek reaches level 50, the limitation drops down to 10 fights per day.
+fights_7			The fights of your leek which have not been done on day can be postponed to the day after. If you cannot perform the fights (due to any other IRL constraint) you will have the opportunity to trigger them the day after. The postponing is done only the day after. If you do not perform your late fights the day after, they are definitively lost. For example, if your first leek is below level 50 and you have no time today to do the 30 fights of this leek, you will then have the possibility to perform 60 fights tomorrow. If the level of your first leek is above 50 and you have no time today to do the 10 fights of this first leek, you will then have 20 fights available tomorrow for this leek.
+As soon as you recruit your second leek, you get now 10 additional farmer fights available per day.
+fights_8			The allowed number of fights is reset every day at midnight. (New fights for the new day, plus potentially the postponed fights from yesterday).
+fights_9			Farmer Fights
+habs			Habs
 habs_1			Hab(s) is the name of the Leek Wars currency. You earn Habs thanks to fights. You spend Habs to buy weapons and chips in the market, or to recruit an additional leek.
-challenges_1			You can Challenge any other leek.
-To do so, go on the page of the leek you want to fight against and click on the "Challenge" button located in the upper right. You are allowed up to 200 Challenges per day.
+intro			This page will provide you with the detailed mechanisms regarding : leek evolution, fights, weapons, chips, tournaments...
+If you are looking for the AI programming howto, you will find it on the LeekScript <a href='/help/tutorial'>Tutorial page</a>.
+leeks			Leeks
+leeks_1			Each leek can equip <b>weapons</b>, chips and an AI to fight.
+leeks_10			Life steal = Wisdom / 10 (in %)
+leeks_11			Strength
+leeks_12			Strength increases attack damage (may it come from a weapon or a chip):
+leeks_13			Attack damage = (initial damage) × (1 + Strength / 100)
+leeks_14			Agility
+leeks_15			Agility increases damage return and critical hits rate:
+leeks_16			Final healing = (initial healing) × (1 + Agility / 100)
+leeks_17			There are two kinds of shields: absolute shield and relative shield:
+leeks_18			Absolute shield = (initial absolute shield) × (1 + Resistance / 100)
+leeks_19			Relative shield = (initial relative shield) * (1 + Resistance / 100)
+leeks_2			The look and feel of your leek will change over time when the level of your leek reaches some specific thresholds (getting older...)
+leeks_21			Final damage = (initial damage) * (1 - Relative shield / 100) - Absolute shield
+leeks_22			Movement Points
+leeks_23			Movements Points determine the maximum of cells your leek is allowed to walk to at each Turn.
+leeks_24			Turn Points
+leeks_25			Turn Points is the maximum of action points your leek is allowed to spent for the use of weapons and chips, for talking, ... at each turn.
+leeks_26			Frequency
+leeks_27			The higher the Frequency, the luckier you are to play first during the fight.
+leeks_28			Science
+leeks_29			Science increases boosts and reduces shackles:
+leeks_3			You may decide to remove your leek from the Garden to avoid any attack from other leeks for when you are on leave for example.
+To do so, turn the Garden status switch from Yes to No on the leek page. Consequently your leek will never be presented to other leeks willing to fight "in the Garden".
+leeks_30			Magic
+leeks_31			Magic increases shackles and poisons:
+leeks_32			Critical hit rate = Agility / 10 (in %)
+leeks_33			Resistance
+leeks_34			A critical hit increases effects by 40%.
+leeks_35			Shields reduces directs attacks following the formula :
+leeks_36			Resistance increases shields.
+leeks_37			Boost = (Initial boost) × (1 + Science / 100)
+leeks_38			Shackle = (Initial shackle) × (1 + Magic / 100)
+leeks_39			Shackles are reduced by science following the formula:
+leeks_4			A leek has several Attributes:
+leeks_40			Finale shackle = Shackle × (1 + (Caster magic - Target science) / 100)
+leeks_41			Poison damage = (Initial damage) × (1 + Magic / 100)
+leeks_5			Life / Health Points
+leeks_6			When the level of your leek increases, the life of this leek is increased by 5.
+leeks_7			Wisdom
+leeks_8			Wisdom increases healing and life steal:
+leeks_9			Final Healing = (Initial healing) × (1 + Wisdom / 100)
+market			Market
+market_1			You can spend your Habs in the market to buy new weapons and chips.
+market_2			As an example, the sheet of a chip looks like the following:
+teams			Teams
 teams_1			You may consider joining a team. A team is made of several farmers and allows you to perform team fights.
 Joining a team is easy: display the team page and click on the "join the team" button displayed in the upper right. You may join a team that way only if this team has not forbidden open applications.
 To quit your current team use the "Quit" button located on the lower right side of the team page.
 teams_2			In a team leeks may be assigned to different compositions. Each composition is made of 6 leeks maximum. A team is limited to 40 farmers maximum.
-tournaments_2			Solo tournament (1 vs 1): your leek performs solo fights at each tournament round (as long as it is not eliminated).
-tournaments_3			Farmer tournament: all your leeks perform farmer fights at each tournament round (as long as they are not eliminated).
-farmer_2			Your leeks will earn Experience points after each fight. These Experience points will determine the level of your leeks. The higher your level, the better the chips and weapons you can use. When your level increases you can spend new capital points to upgrade your leek.
-leeks_29			Science increases boosts and reduces shackles:
-leeks_31			Magic increases shackles and poisons:
-leeks_38			Shackle = (Initial shackle) × (1 + Magic / 100)
-leeks_37			Boost = (Initial boost) × (1 + Science / 100)
-tournaments_5			Each of your leeks can register to a daily solo tournament. Solo tournaments start at noon (French time) with 32 leeks. A new round is generated every 30 minutes.
-leeks_41			Poison damage = (Initial damage) × (1 + Magic / 100)
+teams_3			Captains
+teams_4			A team has the ability to promote some of its farmers to the rank of Captain. Captains are allowed to managed compositions (create composition, add a leek, remove a leek, delete composition).
+On the team page, you can see a little white star displayed in front of every Captain's name. The star is black for the team Creator.
+teams_5			Logo and Motto
+teams_6			A team logo and a team motto can be defined/modified by the team Creator and by the Captains. To modify a logo, click on it (there is a default logo). To modify the team motto, double-click in-between the quotes you can see just right after the logo.
+title			Help
+tournaments			Tournaments
+tournaments_1			There are 3 kinds of tournaments:
 tournaments_10			Team tournaments
 tournaments_11			Your team can compete in team tournaments, in which the different compositions face each other. These tournaments start at 9 pm (French time) with 32 compositions each. A new round is generated every 30 minutes.
-farmer_8			Reaching higher levels for your leek will allow you to use more LeekScript functions.
-Each function is rated with a level which is displayed on the right of the function name in the <a href='/help/documentation'>documentation</a>. These level is the mimimum requested to be allowed to use this specific LeekScript function.
-leeks_34			A critical hit increases effects by 40%.
+tournaments_12			To register one of your composition to a team tournament, click on the "tournament register" button on your team page.
+The Experience points and Habs rewards are multiplied by a factor depending on the round your leek has reached. The further your composition goes, the better the multiplier (x2, x3, x4, x6 and x10).
+tournaments_13			Team tournament: a team composition perform team fights at each tournament round (as long as they are not eliminated).
+tournaments_2			Solo tournament (1 vs 1): your leek performs solo fights at each tournament round (as long as it is not eliminated).
+tournaments_3			Farmer tournament: all your leeks perform farmer fights at each tournament round (as long as they are not eliminated).
+tournaments_4			Solo Tournaments (1 vs 1)
+tournaments_5			Each of your leeks can register to a daily solo tournament. Solo tournaments start at noon (French time) with 32 leeks. A new round is generated every 30 minutes.
+tournaments_6			To register one of your leeks to a solo tournament, click on the "tournament register" button on the leek page.
+The Experience points and Habs rewards are multiplied by a factor depending on the round your leek has reached. The further your leek goes, the better the multiplier (x2, x3, x4, x6 and x10).
+tournaments_7			Farmer Tournaments
 tournaments_8			As soon as you have 2 leeks, you can register to farmer tournaments. These are daily tournaments starting at 6 pm (French time) with 32 farmers each. A new round is generated every 30 minutes.
+tournaments_9			To register your leeks to a farmer tournament, click on the "tournament register" button on your farmer page.
+The Experience points and Habs rewards are multiplied by a factor depending on the round your leeks have reached. The further your leeks go, the better the multiplier (x2, x3, x4, x6 and x10).
+trophies			Achievements
 trophies_1			Achievements are rewarded to farmers upon completion of specific actions/results in the game. On your farmer page, you can sort your Achievements thanks to a button on the upper right side of the page. The two different criteria are: date of reward or Achievement number.
+trophies_2			It's up to you now!
+weapons			Weapons
+weapons_1			Weapons are efficent to attack other leeks. Only one weapon can be taken in hands but a leek can carry up to 3 weapons (including the one in hands).
+weapons_2			Each weapon requests a minimum level to be used. The use of a weapon costs a specific amount of Turn Points. Every weapon has also a failure percentage and a specific range. You can buy several occurences of each weapon in order to equip your different leeks with the same weapon. Your leeks are not allowed to fire more than one weapon at the same time. But one leek can of course fire one weapon, then replace it with another weapon, and then fire the new one (as long as it has enough Turn Points).
+weapons_3			Some weapons have an area of effect. See "Grenade Launcher" for example. Damage decrease linearly from the center cell (100% damage) to the border cells (50% damage).
+welcome			Welcome to Leek Wars!

@@ -1,34 +1,34 @@
-hats			Hats
-weapon_bought			Weapon bought!
-chip_bought			Chip bought!
-potion_bought			Potion bought!
-weapon_selled			Weapon selled!
-chip_selled			Chip selled!
-potion_selled			Potion selled!
-hat_selled			Hat selled!
-habs_before_sell			Habs before sale
-summon_characteristics			Characteristics
-summon_available_chips			Equiped chips
-weapons			Weapons
-are_you_sure_you_want_to_sell			Are you sure you want to sell <b>%s</b>?
-habs_before_purchase			Habs before purchase
-potions			Potions
 are_you_sure_you_want_to_buy			Are you sure you want to purchase <b>%s</b>?
-habs_after_sell			Habs after sale
-title			Market
-habs_after_purchase			Habs after purchase
-crystals_before_purchase			Crystals before purchase
+are_you_sure_you_want_to_sell			Are you sure you want to sell <b>%s</b>?
 buy			Purchase
+buying			Buying...
+cancel			Cancel
+chip			Chip
+chip_bought			Chip bought!
+chips			Chips
+chip_selled			Chip selled!
+confirm_purchase			Confirm the purchase
 confirm_sell			Confirm the sale
+crystals_after_purchase			Crystals after purchase
+crystals_before_purchase			Crystals before purchase
+habs_after_purchase			Habs after purchase
+habs_after_sell			Habs after sale
+habs_before_purchase			Habs before purchase
+habs_before_sell			Habs before sale
+hat_bought			Hat bought!
+hats			Hats
+hat_selled			Hat selled!
+potion			Potion
+potion_bought			Potion bought!
+potions			Potions
+potion_selled			Potion selled!
+price			Price
 resell			Sell back
 sell			Sell
-cancel			Cancel
+summon_available_chips			Equiped chips
+summon_characteristics			Characteristics
+title			Market
 weapon			Weapon
-buying			Buying...
-chip			Chip
-potion			Potion
-price			Price
-confirm_purchase			Confirm the purchase
-chips			Chips
-hat_bought			Hat bought!
-crystals_after_purchase			Crystals after purchase
+weapon_bought			Weapon bought!
+weapons			Weapons
+weapon_selled			Weapon selled!

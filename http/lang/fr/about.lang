@@ -1,25 +1,25 @@
-thanks			Remerciements
-contact			Contact
-tools_list			Une liste non-exhaustive des divers langages et outils utilisés pour le projet :
-follow_on_social_networks			Vous souhaitez soutenir Leek Wars, ou obtenir des actualités ou diverses informations sur le jeu ? N'hésitez pas à suivre le
-	projet sur Twitter, Facebook ou Google+ !
-title			À propos
-leekwars			Leek Wars ?
+about						À propos
+contact						Contact
+contact_text				Vous pouvez nous contacter par mail à l'adresse %s, ou par message privé sur le jeu, Facebook ou Twitter.
+follow_on_social_networks	Vous souhaitez soutenir Leek Wars, ou obtenir des actualités ou diverses informations sur le jeu ? N'hésitez pas à suivre le
+							projet sur Twitter, Facebook ou Google+ !
+languages_libraries_tools	Langages, bibliothèques et outils
+leekwars					Leek Wars ?
 leekwars_content			Leek Wars est un jeu de <b>combat de poireaux</b>, par navigateur, dans lequel vous programmez votre <b>intelligence artificielle</b> pour réussir à vaincre vos ennemis !
-team_moderators			Une équipe de <b>modération</b> agréable et efficace :
-about			À propos
-version_n			Version %s
-why			Pouquoi ?
-why_1			Le projet est né de l'idée simple entre deux étudiants, lors d'un cours d'algèbre à la fac, qui souhaitaient créer un jeu entièrement basé sur la <b>programmation</b>, concept alors très peu répandu.
-team			L'équipe
+social_networks				Réseaux sociaux
+team						L'équipe
+team_admin_server			Admin serveurs
+team_leekscript_fights		LeekScript & Combats
+team_moderators				Une équipe de <b>modération</b> agréable et efficace :
 team_presentation			Depuis 2012, le jeu est développé avec amour par <b>3 étudiants</b> nantais en informatique, répondant aux noms de :
 team_web_graphism			Web & Graphismes
-team_leekscript_fights			LeekScript & Combats
-team_admin_server			Admin serveurs
+thanks						Remerciements
+thanks_about_articles		Nous remercions tous les sites et blogs qui on écrit un petit article sur Leek Wars :)
+thanks_text					De nombreuses personnes ont participé a la création de <b>Leek Wars</b>, nous tenons à les remercier :
+title						À propos
+tools_list					Une liste non-exhaustive des divers langages et outils utilisés pour le projet :
+version_n					Version %s
 we_talk_about_leeks			On a parlé de poireau ?
-why_2			<b>Leek Wars</b> a pour ambition de placer <b>la programmation</b> au coeur d'un jeu vidéo ludique et amusant, entièrement par navigateur, facile d'accès, gratuit et sans publicité, voulant proposer <b>une plateforme agréable</b> pour faire découvrir les concepts de la programmation aux <b>débutants</b>, et proposer un bon défi aux <b>codeurs expérimentés</b> !
-thanks_about_articles			Nous remercions tous les sites et blogs qui on écrit un petit article sur Leek Wars :)
-social_networks			Réseaux sociaux
-languages_libraries_tools			Langages, bibliothèques et outils
-thanks_text			De nombreuses personnes ont participé a la création de <b>Leek Wars</b>, nous tenons à les remercier :
-contact_text			Vous pouvez nous contacter par mail à l'adresse %s, ou par message privé sur le jeu, Facebook ou Twitter.
+why							Pouquoi ?
+why_1						Le projet est né de l'idée simple entre deux étudiants, lors d'un cours d'algèbre à la fac, qui souhaitaient créer un jeu entièrement basé sur la <b>programmation</b>, concept alors très peu répandu.
+why_2						<b>Leek Wars</b> a pour ambition de placer <b>la programmation</b> au coeur d'un jeu vidéo ludique et amusant, entièrement par navigateur, facile d'accès, gratuit et sans publicité, voulant proposer <b>une plateforme agréable</b> pour faire découvrir les concepts de la programmation aux <b>débutants</b>, et proposer un bon défi aux <b>codeurs expérimentés</b> !

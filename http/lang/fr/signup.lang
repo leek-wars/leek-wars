@@ -1,35 +1,35 @@
-screenshots			Captures d'écran
-level			Niveau
-signup			S'inscrire !
-fight_ice			Combat solo sur la banquise
-ranking			Classement
-leek_page			Page de votre poireau
-fight_factory			Combat en équipe dans l'usine
-editor			L'éditeur d'IA
-fight_desert			Combat en équipe dans le désert
-market			Marché
-fight_forest			Combat en équipe dans la forêt
-signup_validated_message			Félicitations <b>%s</b>, tu n'as plus qu'a consulter ta boîte mail et cliquer sur le lien d'activation à l'intérieur pour finaliser ton inscription !
-login			Se connecter
-signup_validated			Inscription validée !
-password			Mot de passe
-fight_beach			Combat solo sur la plage
-title			Créer votre poireau
-your_farmer_name			Votre nom d'éleveur
-n_leeks_already			Déjà <b>%s</b> poireaux à combattre !
-signup_done_message			Ton compte est maintenant activé ! Connecte-toi et commence à combattre
-signup_done			Inscription terminée !
-your_leek_name			Nom de votre poireau
-your_email			Votre email
-fight_test			Combat sur terrain de test
-confirm_password			Confirmation
-godfather			Parrain (Facultatif)
 conditions			En cliquant sur le bouton s'inscrire, vous acceptez les <a href='/conditions'>conditions générales d'utilisation</a>.
-talent			Talent
-total_level			Niveau total
-leek			Poireau
-place			Place
+confirm_password			Confirmation
+editor			L'éditeur d'IA
 farmer			Éleveur
+fight_beach			Combat solo sur la plage
+fight_desert			Combat en équipe dans le désert
+fight_factory			Combat en équipe dans l'usine
+fight_forest			Combat en équipe dans la forêt
+fight_ice			Combat solo sur la banquise
+fight_test			Combat sur terrain de test
+godfather			Parrain (Facultatif)
 intro			Dans <b>Leek Wars</b>, créez le plus puissant poireau au monde et détruisez vos ennemis !<br><br>
 			Développez votre propre intelligence artificielle grâce au <b>LeekScript</b>, un langage facile à apprendre, 
 			et devenez le meilleur éleveur !
+leek			Poireau
+leek_page			Page de votre poireau
+level			Niveau
+login			Se connecter
+market			Marché
+n_leeks_already			Déjà <b>%s</b> poireaux à combattre !
+password			Mot de passe
+place			Place
+ranking			Classement
+screenshots			Captures d'écran
+signup			S'inscrire !
+signup_done			Inscription terminée !
+signup_done_message			Ton compte est maintenant activé ! Connecte-toi et commence à combattre
+signup_validated			Inscription validée !
+signup_validated_message			Félicitations <b>%s</b>, tu n'as plus qu'a consulter ta boîte mail et cliquer sur le lien d'activation à l'intérieur pour finaliser ton inscription !
+talent			Talent
+title			Créer votre poireau
+total_level			Niveau total
+your_email			Votre email
+your_farmer_name			Votre nom d'éleveur
+your_leek_name			Nom de votre poireau

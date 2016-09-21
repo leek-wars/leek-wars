@@ -1,51 +1,51 @@
-skin_15			or
-skin_multi_desc			Comme un arc-en-ciel
-skin_rasta			Potion rasta
-skin_rasta_desc			Yeah man
-skin_white			Potion blanche
-skin_black			Potion noire
-skin_apple			Potion verte pomme
-skin_alpha			Potion transparente
-skin_1			vert (couleur originale)
-skin_gold			Potion dorée
-skin_green_desc			Verte tige haineuse
-skin_blue_desc			Sacrebleu !
-skin_orange_desc			Contre les citrons !
-skin_red_desc			Le rouge c'est cool
-skin_pink			Potion rose
-skin_pink_desc			C'est beau
-skin_purple			Potion violette
-skin_purple_desc			Coool
-skin_multi			Potion multicolore
-skin_white_desc			Blanc comme neige
-skin_black_desc			
-skin_apple_desc			
-skin_orange			Potion orange
-skin_blue			Potion bleue
-skin_5			orange
-skin_6			rose
-skin_7			turquoise
-skin_14			vert pomme
 effect_1			Réinitialise les points de capital du poireau
 effect_2			Colorise le poireau en <b>%s</b>
-reusable			Potion <b>réutilisable</b>
 restat			Potion de réinitialisation
+restat_admin			Potion de réinitialisation
 restat_admin_desc			Une nouvelle vie ! Offerte par vos admin préférés !
-skin_green			Potion verte
-skin_yellow			Potion jaune
-skin_yellow_desc			Jaune power
-skin_red			Potion rouge
-skin_cyan			Potion turquoise
-skin_8			violet
-skin_2			bleu
-skin_3			jaune
-skin_4			rouge
-skin_9			multicolore
+restat_desc			Une nouvelle vie !
+reusable			Potion <b>réutilisable</b>
+skin_1			vert (couleur originale)
 skin_10			rasta
 skin_11			blanc
 skin_12			noir
 skin_13			transparent
+skin_14			vert pomme
+skin_15			or
+skin_2			bleu
+skin_3			jaune
+skin_4			rouge
+skin_5			orange
+skin_6			rose
+skin_7			turquoise
+skin_8			violet
+skin_9			multicolore
+skin_alpha			Potion transparente
 skin_alpha_desc			Où suis-je ?
-restat_desc			Une nouvelle vie !
-restat_admin			Potion de réinitialisation
+skin_apple			Potion verte pomme
+skin_apple_desc			
+skin_black			Potion noire
+skin_black_desc			
+skin_blue			Potion bleue
+skin_blue_desc			Sacrebleu !
+skin_cyan			Potion turquoise
 skin_cyan_desc			C'est cyan
+skin_gold			Potion dorée
+skin_green			Potion verte
+skin_green_desc			Verte tige haineuse
+skin_multi			Potion multicolore
+skin_multi_desc			Comme un arc-en-ciel
+skin_orange			Potion orange
+skin_orange_desc			Contre les citrons !
+skin_pink			Potion rose
+skin_pink_desc			C'est beau
+skin_purple			Potion violette
+skin_purple_desc			Coool
+skin_rasta			Potion rasta
+skin_rasta_desc			Yeah man
+skin_red			Potion rouge
+skin_red_desc			Le rouge c'est cool
+skin_white			Potion blanche
+skin_white_desc			Blanc comme neige
+skin_yellow			Potion jaune
+skin_yellow_desc			Jaune power

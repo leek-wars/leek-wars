@@ -1,89 +1,89 @@
-cant_quit_owner			Le propriétaire de l'équipe ne peut pas la quitter
-name_already_exists			Ce nom d'équipe existe déjà
-not_found_id			Équipe d'id <b>%s</b> introuvable :(
+already_have_candidacy			Vous avez déjà une candidature en cours pour une autre équipe
+already_in_team			Vous êtes déjà dans une équipe
+ban			Bannir
 ban_ban			Bannir
-you_left_team			Vous avez quitté l'équipe
-team_have_been_disolved			L'équipe a été dissoute
-farmer_banned			Éleveur banni
-uploading_emblem			Envoi de l'emblème...
-composition_default_name			Composition sans nom
-change_owner_confirm_title			Changer le propriétaire de l'équipe
-too_much_farmers			L'équipe a déjà atteind le nombre maximal d'éleveurs
-composition_invalid_name			Le nom de la composition ne doit pas être vide
-change_owner_confirm			Voulez-vous vraiment désigner <b>%s</b> comme propriétaire de l'équipe ?
+ban_cancel			Annuler
+ban_confirm			Voulez-vous vraiment bannir %s ?
+ban_confirm_title			Bannir %s ?
+cancel_candidacy			Annuler la demande
+candidacies			Candidatures
+candidacies_closed			NON
+candidacies_opened			OUI
+candidacy_accept			OUI
+candidacy_cancelled			Candidature annulée
+candidacy_refuse			NON
+candidacy_sent			Candidature envoyée !
+cant_disolve			Vous devez avoir banni tous les autres membres avant de dissoudre l'équipe
+cant_quit_owner			Le propriétaire de l'équipe ne peut pas la quitter
+captain			Capitaine
+change_emblem			Changer l'emblème
+change_owner			Changer propriétaire
 change_owner_cancel			Annuler
 change_owner_change			Changer le propriétaire
-disolve_cancel			Annuler
-remaining_xp			XP restante : %s
-member			Membre
-victories			victoires
-captain			Capitaine
-defeats			défaites
-ban			Bannir
-draws			nuls
-no_compositions			Pas de compositions
+change_owner_confirm			Voulez-vous vraiment désigner <b>%s</b> comme propriétaire de l'équipe ?
+change_owner_confirm_title			Changer le propriétaire de l'équipe
 chat			Chat
-max_level			Niveau maximum
-disolve_disolve			Dissoudre l'équipe
-ban_confirm_title			Bannir %s ?
-ban_confirm			Voulez-vous vraiment bannir %s ?
-ban_cancel			Annuler
-no_description			pas de description
-candidacy_sent			Candidature envoyée !
-candidacy_cancelled			Candidature annulée
-farmer_accepted			Éleveur accepté
-upload_success			Emblème envoyé !
-upload_error			Une erreur est survenue : 
-compo_deleted			Composition %s supprimée
-already_have_candidacy			Vous avez déjà une candidature en cours pour une autre équipe
-xp			XP : %s
-cant_disolve			Vous devez avoir banni tous les autres membres avant de dissoudre l'équipe
-delete_compo			Supprimer
-register_tournament			Inscription tournoi
 chat_send			Envoyer
-farmers			Éleveurs (%s)
-forum			Forum
-quit_team_confirm_title			Quitter l'équipe %s ?
-disolve_confirm			Avant de dissoudre l'équipe, tous les autres membres doivent avoir été bannis.
-farmer_refused			Éleveur refusé
-compo_must_contain_4_leeks			La composition doit contenir au moins 4 poireaux
-already_in_team			Vous êtes déjà dans une équipe
-compo_name			Nom
-owner			Propriétaire
-change_emblem			Changer l'emblème
-join_team			Rejoindre cette équipe
-cancel_candidacy			Annuler la demande
 closed_team			Équipe fermée
-talent			Talent de l'équipe : moyenne des Talents des compositions
-invalid_name			Le nom de l'équipe doit contenir entre %1$s et %2$s caractères
 compo_cancel			Annuler
 compo_create			Créer
-level_n			Niveau %s
-history			Historique
-ratio			Ratio : %s
-tournament_time			Tournoi d'équipe tous jours de 21h à 23h
+compo_deleted			Composition %s supprimée
+compo_must_contain_4_leeks			La composition doit contenir au moins 4 poireaux
+compo_name			Nom
+composition_default_name			Composition sans nom
+composition_invalid_name			Le nom de la composition ne doit pas être vide
 compositions			Compositions
-see_tournament			Voir le tournoi
-unregister			Se désinscrire
-leeks			Poireaux (%s)
 create_composition			Créer une compostion
-empty_compo			Vide
-unsorted_leeks			Poireaux non engagés
-tournaments			Tournois
+defeats			défaites
+delete_compo			Supprimer
+disolve_cancel			Annuler
+disolve_confirm			Avant de dissoudre l'équipe, tous les autres membres doivent avoir été bannis.
+disolve_confirm_title			Dissoudre %s ?
+disolve_disolve			Dissoudre l'équipe
 disolve_team			Dissoudre l'équipe
-candidacies			Candidatures
-candidacy_accept			OUI
-candidacy_refuse			NON
-tournament_of			Tournoi du %s
-quit_team			Quitter l'équipe
+draws			nuls
+empty_compo			Vide
+enter_password_to_confirm			Entrez votre mot de passe pour confirmer
+farmer_accepted			Éleveur accepté
+farmer_banned			Éleveur banni
+farmer_refused			Éleveur refusé
+farmers			Éleveurs (%s)
+forum			Forum
+history			Historique
+invalid_name			Le nom de l'équipe doit contenir entre %1$s et %2$s caractères
+join_team			Rejoindre cette équipe
+leeks			Poireaux (%s)
+level_n			Niveau %s
+max_level			Niveau maximum
+member			Membre
+name_already_exists			Ce nom d'équipe existe déjà
+no_compositions			Pas de compositions
+no_description			pas de description
+not_found_id			Équipe d'id <b>%s</b> introuvable :(
 opened			Ouverte
-candidacies_opened			OUI
-candidacies_closed			NON
-recrutment_mode			Mode de recrutement
-quit_team_confirm			Voulez vous vraiment quitter l'équipe ?
+owner			Propriétaire
+owner_has_been_changed			Le propriétaire a bien été changé.
 quit_cancel			Annuler
 quit_confirm			Quitter l'équipe
-disolve_confirm_title			Dissoudre %s ?
-owner_has_been_changed			Le propriétaire a bien été changé.
-change_owner			Changer propriétaire
-enter_password_to_confirm			Entrez votre mot de passe pour confirmer
+quit_team			Quitter l'équipe
+quit_team_confirm			Voulez vous vraiment quitter l'équipe ?
+quit_team_confirm_title			Quitter l'équipe %s ?
+ratio			Ratio : %s
+recrutment_mode			Mode de recrutement
+register_tournament			Inscription tournoi
+remaining_xp			XP restante : %s
+see_tournament			Voir le tournoi
+talent			Talent de l'équipe : moyenne des Talents des compositions
+team_have_been_disolved			L'équipe a été dissoute
+too_much_farmers			L'équipe a déjà atteind le nombre maximal d'éleveurs
+tournament_of			Tournoi du %s
+tournaments			Tournois
+tournament_time			Tournoi d'équipe tous jours de 21h à 23h
+unregister			Se désinscrire
+unsorted_leeks			Poireaux non engagés
+upload_error			Une erreur est survenue : 
+uploading_emblem			Envoi de l'emblème...
+upload_success			Emblème envoyé !
+victories			victoires
+xp			XP : %s
+you_left_team			Vous avez quitté l'équipe

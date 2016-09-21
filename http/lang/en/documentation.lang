@@ -1,131 +1,707 @@
-func_getNearestEnemy			Returns the enemy leek closest to your leek.
-func_inArray_arg_2			Element to look for.
-func_debugW_arg_1			A message to log.
-func_debugE_arg_1			A message to log.
-func_sum_arg_1			Source array.
-func_getChipMaxRange_arg_1			Desired chip.
-func_isWeapon			Checks whether given <b>value</b> can represent a weapon.<br><br>isWeapon(WEAPON_LASER) = true;<br>isWeapon(CHIP_TELEPORTATION) = false.
-func_canUseChip_return			<i>true</i> if your leek can use given chip, <i>false</i> otherwise.
-func_getLeekID_2_return			Given <b>leek</b>'s absolute id.
-func_isEmpty			Checks whether given <b>array</b> is empty. Equivalent to <i>count(<b>array</b>) == 0</i>.
-func_moveAwayFrom_return			The amount of MP spent doing so.
-func_getCellsToUseWeapon_arg_1			Targetted leek.
-func_max_arg_1			A number.
-func_split_arg_2			String that separates desired substrings.
-func_getChipMaxRange_return			Given <b>chip</b>'s maximum range.
-func_insert_arg_1			Array in which element is added.
-func_fill_2_arg_3			Size of final array.
-func_getCellsToUseWeapon_3_return			List of all cells that allow your leek to shoot.
-func_getCellsToUseChip			Lists all cells that allow your leek to use a given <b>chip</b>, targetting given <b>leek</b>.
-func_getChipMinRange_arg_1			Desired chip.
-func_getCellToUseChipOnCell_return			A cell that allows using given chip.
+1_operation			<b>1</b> operation
+arg_type_1			Number
+arg_type_2			String
+arg_type_3			Boolean
 arg_type_4			Array
-func_join			Creates a single string containing all elements of given <b>array</b>, separated by <b>glue</b> delimiters.
-func_randFloat_return			A random number within [a;b).
-func_getTeamID_return			Your team's id.
-func_getChipMinRange_return			Returns a <b>chip</b>'s min range.
-func_getScience_2			Returns given <b>leek</b>'s science.
-func_resurrect			Uses CHIP_RESURRECTION to resurrect an entity of id <b>entity</b> on the cell <b>cell</b>.
-arg_type_42			ArrayOfStrings
 arg_type_41			ArrayOfNumbers
-func_average_return			Average of given array's elements.
-func_isSummon			Returns wether the caller is a summoned entity or not.
-func_getName_2_arg_1			Desired leek.
-func_rand			Returns a random real number, between 0 (included) and 1 (excluded).
-func_arrayFlatten_2_arg_1			Source array.
+arg_type_42			ArrayOfStrings
+arg_type_43			ArrayOfBooleans
+arg_type_44			ArrayOfArrays
+arg_type_5			Function
+const_AREA_CIRCLE_1			Circular area with 3 cells diameter (cross).
+const_AREA_CIRCLE_2			Circular area with 5 cells diameter.
+const_AREA_CIRCLE_3			Circular area with 7 cells diameter.
+const_AREA_LASER_LINE			Laser-type effective area: line going from the chip/weapon's min range to its max range (or the first obstacle)
+const_AREA_POINT			Single cell area.
+const_CHIP_ANTIDOTE			
+const_COLOR_BLUE			Integer corresponding to Blue color.
+const_COLOR_GREEN			Integer corresponding to Green color.
 const_COLOR_RED			Integer corresponding to Red color.
-func_endsWith_arg_1			String to be checked
-func_arrayPartition_arg_1			Source array.
-func_getCellX_return			Its x-coordinate/
-func_arrayFilter_arg_1			Source array.
-func_arrayConcat_arg_1			First array.
-func_arrayConcat_return			Resulting array.
-func_indexOf_2_arg_2			String to be looked for.
-func_arrayFoldLeft_arg_3			Starting value.
-const_SORT_ASC			Indicates a sorting function to use ascending order.
-func_getEntityTurnOrder_return			Caller's position within the acting order.
-func_getWeaponMinRange			Returns a <b>weapon</b>'s min scope.
-func_split_2			Splits given <b>string</b> into substrings separated by given <b>delimiter</b>.
-func_split_2_arg_1			String that needs splitting.
-func_split_2_arg_2			String that separates desired substrings.
-func_setRegister_arg_1			Register key to index given value.
-func_isSummon_return			<i>true</i> if the caller is a summoned entity, <i>false</i> otherwise.
-func_getCellsToUseWeaponOnCell_2			Lists all cells that allow your leek to shoot given <b>weapon</b>, targetting given <b>cell</b>.
-func_arrayFlatten_2_return			Resulting array.
-func_getFarmerID			Returns your farmer's id.
-func_moveAwayFromCells_arg_1			Array containig the cells from which you want to flee.
-func_getWeaponMinRange_arg_1			Desired weapon.
-func_moveAwayFromLine_arg_1			The first cell of the line.
-func_getChipCost_arg_1			Desired chip.
-func_getEntityTurnOrder			Indicates the position of the caller in the acting order, between 1 and the amount of entities in the game.
-func_getEnemiesLife			Returns the sum of all of your enemies' HP
-func_getWeaponMinRange_return			Given <b>weapon</b>'s minimum scope.
-func_moveAwayFromLine_return			The amount of MP spent.
-func_cbrt_arg_1			A number.
+const_E			e number.
+const_EFFECT_ANTIDOTE			
+const_EFFECT_SHACKLE_MAGIC			
+const_ENTITY_BULB			Represents the entity type of a bulb.
+const_ENTITY_LEEK			Represents the entity type of a leek.
+const_FIGHT_CONTEXT_CHALLENGE			Fight context for challenges.
+const_FIGHT_CONTEXT_GARDEN			Fight context for garden fights.
+const_FIGHT_CONTEXT_TEST			Fight context for test fights.
+const_FIGHT_CONTEXT_TOURNAMENT			Fight context for tournament fights.
+const_FIGHT_TYPE_FARMER			Fight type of farmer fights.
 const_FIGHT_TYPE_SOLO			Fight type of of solo fights.
-func_getWeaponMaxRange			Returns a <b>weapon</b>'s max scope.
-func_getWeaponMaxRange_arg_1			Desired weapon.
-func_sort_arg_1			Array that needs sorting.
-func_getWeaponMaxRange_return			Given <b>weapon</b>'s maximum scope.
-func_getNextPlayer_return			Leek id of the next player.
-func_moveAwayFromCell			Moves your leek away from given <b>cell</b>.
-func_moveAwayFrom_2_return			The actual amount of MP spent.
-func_sin			Computes an <b>angle</b>'s sine.
-func_getFarmerID_2_arg_1			Desired leek.
-func_getTP			Returns your leek's TP count.
-func_getCellToUseChip_arg_1			The chip your leek wants to use.
-func_acos			Computes the arccos of <b>argument</b>, within [0, #PI].
-func_getTP_2_return			Given <b>leek</b>'s TP count.
-func_sqrt_return			Given <b>number</b>'s square root.
-func_getTotalTP_return			Caller's total TP count.
-func_getCellToUseChip_2_return			A cell that allows using given chip.
-func_startsWith_arg_1			String to look into.
-func_moveTowardCells_2_arg_2			The maximum amount of MP to spend.
-n_cores			Cores: %s
-func_indexOf_arg_2			String to be looked for.
-func_getWeaponTargets_2_arg_1			Weapon to be used.
-func_getFarthestEnemy			Returns the farthest enemy, using as a crow flies distance.
-func_insert			Inserts an <b>element</b> in an <b>array</b>, at given <b>position</b>.
-func_getChipMinRange			Returns a <b>chip</b>'s min range.
-func_getCellToUseWeapon_return			A cell that allows your leek to shoot.
-func_isDead_return			<i>true</i> if <b>leek</b> is dead, <i>false</i> otherwise.
-function_category_leek			Leeks
-func_moveToward_2_return			The actual amount of MP spent.
-func_getEffects			Lists the effects affecting your leek.
-func_isEnemy_arg_1			Desired leek.
-func_getLife_2_return			Given <b>leek</b>'s HP count.
-func_getAIID_2_arg_1			Leek whose AI ID you want.
-func_subArray_arg_2			Starting position.
-func_isEmpty_return			<i>true</i> if <b>array</b> is empty, <i>false</i> otherwise.
-func_getEffects_return			Array of effects affecting your leek. More details in #getEffects(leek).
-func_moveAwayFromLine_2_arg_1			First cell of the line.
-func_isEmptyCell_arg_1			Cell to check.
-func_getFarmerName_2_arg_1			Desired leek.
-func_moveTowardLeeks_2_return			The actual amount of MP spent.
-func_isEmptyCell			Checks whether given <b>cell</b> is empty.
-func_getAIID_2_return			The id of <b>leek</b>'s AI.
-func_getWeaponTargets_return			Array containing the affected leeks.
-func_moveAwayFromLeeks_2_return			The actual amount of MP spent.
-func_getCellsToUseChipOnCell_2_arg_2			Targetted cell.
-function_category_weapon			Weapons
-func_moveAwayFromLine_2_arg_3			The maximum amount of MP to spend.
-func_getPreviousPlayer_return			Leek id of the leek who just played.
-func_toRadians_arg_1			Angle's measure in degrees.
-func_log_return			Given number's natural logarithm.
+const_FIGHT_TYPE_TEAM			Fight type of team fights.
 const_MAX_TURNS			Maximum duration of a fight.
-func_chipNeedLos_return			Returns whether given <b>chip</b> requires a line of sight in order to be shot.
-func_mark_2_return			<i>true</i> if all went well, <i>false</i> otherwise.
-func_getCellToUseChip_arg_2			Targetted leek.
+const_OPERATIONS_LIMIT			Maximum operations allowed for a leek during its turn.
+const_PI			Relation between a circle's circonference and its diameter.
+const_SORT_ASC			Indicates a sorting function to use ascending order.
+const_SORT_DESC			Indicates a sorting function to use descending order.
+const_TYPE_ARRAY			<b>array</b> type.
+const_TYPE_BOOLEAN			<b>boolean</b> type.
+const_TYPE_FUNCTION			<b>function</b> type.
+const_TYPE_NULL			<b>null</b> type.
+const_TYPE_NUMBER			<b>number</b> type.
+const_TYPE_STRING			<b>string</b> type.
+const_USE_RESURRECT_INVALID_ENTITY			Return value of the function #resurrect when the specified entity does not exist or is not dead yet.
+const_USE_TOO_MANY_SUMMONS			Error thrown by #summon when you already have <b>4</b> alive summons.
+const_WEAPON_AXE			
+const_WEAPON_BROADSWORD			
+const_WEAPON_KATANA			
+func_abs			Returns the absolute value of given <b>number</b>.
+func_abs_arg_1			A number.
+func_abs_return			Given number's absolute value.
+func_acos			Computes the arccos of <b>argument</b>, within [0, #PI].
+func_acos_arg_1			A number.
+func_acos_return			Given number's arccos.
+func_arrayConcat			Chains given arrays together. String keys are kept while numerical keys are reindexed.
+func_arrayConcat_arg_1			First array.
+func_arrayConcat_arg_2			Second array.
+func_arrayConcat_return			Resulting array.
+func_arrayFilter			Returns an array containing all (key: value) pairs from given <b>array</b> for which <b>callback</b> function returned true. If the <b>callback</b> function is single-input, it is 
+applied on the array's values, if the <b>callback</b> 
+function requires two inputs, it is applied on the array's (key: value) pairs.
+func_arrayFilter_arg_1			Source array.
+func_arrayFilter_arg_2			Filtering function.
+func_arrayFilter_return			Resulting array.
+func_arrayFlatten			Returns an array containing all elements contained in given <b>array</b>. All elements within a sub-array are recursively exported to the new array.
+<code>var tableau = [1, 2, [3, 4], 5, [6]];
+debug(arrayFlatten(tableau)); // [1,2,3,4,5,6]</code>
+func_arrayFlatten_2			Returns an array containing all elements contained in given <b>array</b>. All elements within a sub-array are recursively exported to the new array, stopping given recursion <b>depth</b>.
+<code>var tableau = [1, 2, [3, [4]], 5, [6]];
+debug(arrayFlatten(tableau,1)); // [1,2,3,[4],5,6]</code>
+func_arrayFlatten_2_arg_1			Source array.
+func_arrayFlatten_2_arg_2			Maximun recursion depth.
+func_arrayFlatten_2_return			Resulting array.
+func_arrayFlatten_arg_1			Source array.
+func_arrayFlatten_return			Resulting (flat) array.
+func_arrayFoldLeft			Reduces given <b>array</b> [v1, v2, ..., vn] from the left and starting with <b>v0</b>, through successive application of <b>f</b> function. Is equivalent to:
+<code>f(f(f(v0, v1), v2), ...).</code>
+func_arrayFoldLeft_arg_1			Source array.
+func_arrayFoldLeft_arg_2			Reducing function.
+func_arrayFoldLeft_arg_3			Starting value.
+func_arrayFoldLeft_return			Array reduced to final result.
+func_arrayFoldRight			Reduces given <b>array</b> [v1, v2, ..., vn] 
+from the right and starting with <b>v0</b>, through 
+successive application of <b>f</b> function. Is equivalent 
+to:
+<code>f(v0, f(v1, f(v2), ...))).</code>
+func_arrayFoldRight_arg_1			Source array.
+func_arrayFoldRight_arg_2			Reducing function.
+func_arrayFoldRight_arg_3			Starting value.
+func_arrayFoldRight_return			Array reduced to final result.
+func_arrayIter			Calls a <b>callback</b> function for each element 
+within given <b>array</b>. If the <b>callback</b> function
+ is single-input, it is applied on the array's values, if the 
+<b>callback</b> function requires two inputs, it is applied 
+on the array's (key: value) pairs.
+func_arrayIter_arg_1			Source array.
+func_arrayIter_arg_2			Callback function.
+func_arrayMap			Returns an array which contains the results of <b>callback</b> function when called on each element within given <b>array</b> (and indexed with the same keys as the original array). If the <b>callback</b> function is single-input, it is applied on the array's values, if the <b>callback</b> function requires two inputs, it is applied on the array's (key: value) pairs.
+func_arrayMap_arg_1			Source array.
+func_arrayMap_arg_2			Function to be applied on each element from given array.
+func_arrayMap_return			Resulting array.
+func_arrayMax			Finds the greatest value within given <b>array</b>.<br/>See also: #sort.
 func_arrayMax_arg_1			An array of numbers.
-func_subArray_arg_3			Ending position.
-func_getChipArea			Returns given <b>chip</b>'s effective area type.
-func_getMessages_2_arg_1			Leek whose messages are returned.
-func_canUseWeaponOnCell			Checks whether your leek can shoot its current weapon targetting given <b>cell</b>.
-func_shift			Removes the first cell of given <b>array</b>, and returns the corresponding element.
+func_arrayMax_return			The greatest value contained in given array.
+func_arrayMin			Finds the least value within given <b>array</b>.<br/>See also: #sort.
+func_arrayMin_arg_1			An array of numbers.
+func_arrayMin_return			The least value contained in given array.
+func_arrayPartition			Returns a two elements array, each being a list of (key: value) pairs from given <b>array</b>. The first element contains pairs for which <b>callback</b> function returned true, and the second one contains all other pairs. If the <b>callback</b> function is single-input, it is 
+applied on the array's values, if the <b>callback</b> 
+function requires two inputs, it is applied on the array's (key: value) pairs.
+func_arrayPartition_arg_1			Source array.
+func_arrayPartition_arg_2			Callback function.
+func_arrayPartition_return			Resulting two element array.
+func_arraySort			Sorts the elements from given <b>array</b> according to <b>callback</b> function. Elements are compared by pairs, each one being an input of the callback function. The callback functions needs to return -1, 0 or 1, respectively if the first input element is before, at the same place or after the second input element. 
+
+If the <b>callback</b> function requires two inputs, it is 
+applied on the array's values, if the <b>callback</b> 
+function requires four inputs, it is applied on the array's (key: value) pairs.
+
+<code>var tableau = [1, 8, 4, 5, 3, 2, 7, 6];
+debug(arraySort(tableau, function(a, b) { 
+    return (a == b) ? 0 : (a < b ? (-1) : 1);
+})); // returns [1, 2, 3, 4, 5, 6, 7, 8]</code>
+func_arraySort_arg_1			Source array.
+func_arraySort_arg_2			Sorting function.
+func_arraySort_return			Sorted array
 func_asin			Computes the arcsin of <b>argument</b>, within [0, #PI].
+func_asin_arg_1			A number.
+func_asin_return			Given number's arcsin.
+func_assocSort			Sorts an <b>array</b>, while keeping the key: value coupling.
+func_assocSort_2			Sorts an <b>array</b>, while keeping the key: value coupling, using given <b>order</b>.
+func_assocSort_2_arg_1			Array that needs sorting.
+func_assocSort_2_arg_2			Sorting order: #SORT_ASC or #SORT_DESC.
+func_assocSort_arg_1			Array that needs sorting.
+func_atan			Computes the arctan of <b>argument</b>, within [0, #PI].
+func_atan2			Computes the azimuth of given point (<b>x</b>, <b>y</b>) in polar coordinates. Return value is between - #PI and #PI, depending on parameters' signs.
+func_atan2_arg_1			x coordinate.
+func_atan2_arg_2			y coordinate.
+func_atan2_return			Azimuth of given point, in polar coordinates.
+func_atan_arg_1			A number.
+func_atan_return			Given number's arctan.
+func_average			Computes the average of an array's elements.
+func_average_arg_1			An array.
+func_average_return			Average of given array's elements.
+func_canUseChip			Checks whether your leek can use given <b>chip</b>, targetting given <b>leek</b>.
+func_canUseChip_arg_1			The chip your leek wants to use.
+func_canUseChip_arg_2			Targetted leek.
+func_canUseChipOnCell			Checks whether your leek can use given <b>chip</b>, targetting given <b>cell</b>.
+func_canUseChipOnCell_arg_1			The chip your leek wants to use.
+func_canUseChipOnCell_arg_2			Targetted cell.
+func_canUseChipOnCell_return			<i>true</i> if your leek can use given chip, <i>false</i> otherwise.
+func_canUseChip_return			<i>true</i> if your leek can use given chip, <i>false</i> otherwise.
+func_canUseWeapon			Checks whether your leek can shoot its current weapon targetting given <b>leek</b>.
+func_canUseWeapon_2			Checks whether your leek can shoot given <b>weapon</b>, targetting given <b>leek</b>.
+func_canUseWeapon_2_arg_1			The weapon your leek wants to use.
+func_canUseWeapon_2_arg_2			Targetted leek.
+func_canUseWeapon_2_return			<i>true</i> if your leek can shoot given weapon, <i>false</i> otherwise.
+func_canUseWeapon_arg_1			Targetted leek.
+func_canUseWeaponOnCell			Checks whether your leek can shoot its current weapon targetting given <b>cell</b>.
+func_canUseWeaponOnCell_2			Checks whether your leek can shoot given <b>weapon</b>, targetting given <b>cell</b>.
+func_canUseWeaponOnCell_2_arg_1			The weapon your leek wants to use.
+func_canUseWeaponOnCell_2_arg_2			Targetted cell.
+func_canUseWeaponOnCell_2_return			<i>true</i> if your leek can shoot given weapon, <i>false</i> otherwise.
+func_canUseWeaponOnCell_arg_1			Targetted cell.
+func_canUseWeaponOnCell_return			<i>true</i> if your leek can shoot, <i>false</i> otherwise.
+func_canUseWeapon_return			<i>true</i> if your leek can shoot, <i>false</i> otherwise.
+func_cbrt			Computes the cubic root of given <b>number</b>.
+func_cbrt_arg_1			A number.
+func_cbrt_return			Given number's cubic root.
+func_ceil			Computes the rounded up value of given <b>number</b>.<br/>The rounded down value can be computed using #floor and the closest integer using #round.
+func_ceil_arg_1			A number.
+func_ceil_return			Number's value as an integer, rounded up.
+func_charAt			Returns the character at given <b>position</b> within given <b>string</b>.<br/>First character is at position 0.
+func_charAt_arg_1			A string.
+func_charAt_arg_2			Position of the character to return.
+func_charAt_return			Character from given position. Empty string if position is invald.
+func_chipNeedLos			Returns whether given <b>chip</b> requires a line of sight in order to be shot.
+func_chipNeedLos_arg_1			Desired chip's id.
+func_chipNeedLos_return			Returns whether given <b>chip</b> requires a line of sight in order to be shot.
+func_contains			Checks whether <b>search</b> string is contained within <b>string</b>.
+func_contains_arg_1			String in which the search is performed.
+func_contains_arg_2			String to be loooked for.
+func_contains_return			<i>true</i> if <b>search</b> string is contained in <b>string</b>, <i>false</i> otherwise.
+func_cos			Computes an <b>angle</b>'s cosine.
+func_cos_arg_1			A number.
+func_cos_return			Given number's cosine, within [-1, 1].
+func_count			Counts the elements contained within an <b>array</b>.
+func_count_arg_1			An array.
+func_count_return			Given array's number of elements.
+func_debug			Logs an <b>object</b> message into your personnal log, available at the end of a fight.
+func_debug_arg_1			A message to log.
+func_debugC			Logs an <b>object</b> message into your personnal log, available at the end of a fight, of the color <b>color</b>.
+func_debugC_arg_1			A message to log.
+func_debugC_arg_2			The message color. You can use the function #getColor.
+func_debugE			Logs an <b>object</b> error message into your personnal log, available at the end of a fight.<br />Error messages appear in red.
+func_debugE_arg_1			A message to log.
+func_debugW			Logs an <b>object</b> warning message into your personnal log, available at the end of a fight.<br />Warning messages appear in orange.
+func_debugW_arg_1			A message to log.
+func_deleteRegister			Removes given <b>key</b> (and associated value) from your leek's register.
+func_deleteRegister_arg_1			Key of the (key: value) pair to be deleted.
+func_endsWith			Checks whether given <b>string</b> ends with given <b>suffix</b>
+func_endsWith_arg_1			String to be checked
+func_endsWith_arg_2			Suffix to be found
+func_endsWith_return			<i>true</i> if <b>string</b> ends with <b>suffix</b>, <i>false</i> otherwise
+func_exp			Computes the exponential of <b>number</b>, by exponentiation of #E.
+func_exp_arg_1			A number.
+func_exp_return			#E ** <b>number</b>.
+func_fill			Fills an <b>array</b> with <b>value</b>, i.e replaces all existing elements with <b>value</b>.
+func_fill_2			Resizes <b>array</b> to given <b>size</b> and fills it with <b>value</b>.
+func_fill_2_arg_1			Array to be filled.
+func_fill_2_arg_2			Value to fill array with.
+func_fill_2_arg_3			Size of final array.
+func_fill_arg_1			Array to be filled.
+func_fill_arg_2			Value to fill array with.
+func_floor			Computes the rounded down value of given <b>number</b>.<br/>The rounded up value can be computed using #ceil and the closest integer using #round.
+func_floor_arg_1			A number.
+func_floor_return			Number's value as an integer, rounded down.
+func_getAbsoluteShield			Returns your leek's absolute shield value.
+func_getAbsoluteShield_2			Return a <b>leek</b>'s absolute shield value.<br />For your leek, prefer #getAbsoluteShield() with no input.
+func_getAbsoluteShield_2_arg_1			Leek whose absolute shield you want.
+func_getAbsoluteShield_2_return			Leek's absolute shield value.
+func_getAbsoluteShield_return			Your leek's absolute shield value.
+func_getAgility			Returns your leek's agility.
+func_getAgility_2			Returns given <b>leek</b>'s agility.<br />For your leek's agility, prefer #getAgility() with no input.
+func_getAgility_2_arg_1			Leek whose agility you want.
+func_getAgility_2_return			<b>leek</b>'s agility.
+func_getAgility_return			Your leek's agility.
+func_getAIID			Returns the id of your AI.
+func_getAIID_2			Returns the id of given <b>leek</b>'s AI.
+func_getAIID_2_arg_1			Leek whose AI ID you want.
+func_getAIID_2_return			The id of <b>leek</b>'s AI.
+func_getAIID_return			The id of your leek's AI.
+func_getAIName			Returns the name of you AI.
+func_getAIName_2			Returns the name of given <b>leek</b>'s AI.
+func_getAIName_2_arg_1			Leek whose AI name you want.
+func_getAIName_2_return			The name of <b>leek</b>'s AI.
+func_getAIName_return			The name of you AI.
+func_getAliveAllies			Returns an array containing all of your alive allies in a fight.
+func_getAliveAllies_return			An array containing all of your alive allies in a fight.
+func_getAliveEnemies			Returns an array containing all of your alive enemies in a fight.
+func_getAliveEnemiesCount			Counts the alive enemies in the fight.
+func_getAliveEnemiesCount_return			The number of alive enemies.
+func_getAliveEnemies_return			An array containing all all of your alive enemies in a fight.
+func_getAllies			Returns an array containing all of your allies in a fight.
+func_getAlliesCount			Returns the number of allies in the fight.
+func_getAlliesCount_return			Number of allies.
+func_getAlliesLife			Returns the sum of all of your allies' HP
+func_getAlliesLife_return			Sum of all of your allies' HP.
+func_getAllies_return			An array containing all of your allies in a fight.
+func_getBirthTurn			Returns the turn during which caller has appeared. For instance, returns 1 for a leek or 5 for a bulb summonned during turn 5.
+func_getBirthTurn_2			Returns the turn during which given <b>entity</b> has appeared. For instance, returns 1 for a leek or 5 for a bulb summonned during turn 5.
+func_getBirthTurn_2_arg_1			Desired entity.
+func_getBirthTurn_2_return			Combat turn during which given entity has appeared.
+func_getBirthTurn_return			Combat turn during which caller has appeared.
+func_getBlue			Returns the blue component of given <b>color</b>. For instance getBlue(#COLOR_BLUE) = 255 and getBlue(#COLOR_RED) = 0.
+func_getBlue_arg_1			Color whose blue component is to be returned.
+func_getBlue_return			Blue component of given <b>color</b>
+func_getCell			Returns your leek's position, as a cell id.
+func_getCell_2			Returns given <b>leek</b>'s position, as a cell id.
+func_getCell_2_arg_1			Leek whose position is determined.
+func_getCell_2_return			Cell id of given <b>leek</b>'s position.
+func_getCellContent			Determines the content of given <b>cell</b>.
+func_getCellContent_arg_1			id of the cell to be tested.
+func_getCellContent_return			Content of <b>cell</b>.
+func_getCellDistance			Computes the distance between cells <b>cell1</b> and <b>cell2</b>.<br />Distance is in amount of cells and does not take obstacles into account.<br />For as a crow's flies distance, see #getDistance and for an actual path (taking obstacles into account), see #getPathLength.
+func_getCellDistance_arg_1			Cell id of starting point.
+func_getCellDistance_arg_2			Cell id of destination.
+func_getCellDistance_return			Distance between <b>cell1</b> and <b>cell2</b>.
+func_getCellFromXY			Returns the id of the cell at coordinates (<b>x</b>, <b>y</b>).
+func_getCellFromXY_arg_1			x-coordinate of the desired cell.
+func_getCellFromXY_arg_2			y-coordinate of the desired cell.
+func_getCellFromXY_return			id of the cell at coordinates (<b>x</b>, <b>y</b>). <b>null</b> if it does not exist.
+func_getCell_return			Cell id of your leek's position.
+func_getCellsToUseChip			Lists all cells that allow your leek to use a given <b>chip</b>, targetting given <b>leek</b>.
+func_getCellsToUseChip_2			Lists all cells that allow your leek to use a given <b>chip</b>, targetting given <b>leek</b>.
+func_getCellsToUseChip_2_arg_1			The chip your leek wants to use.
+func_getCellsToUseChip_2_arg_2			Targetted leek.
+func_getCellsToUseChip_2_arg_3			Array of cells to ignore.
+func_getCellsToUseChip_2_return			List of all cells that allow using given chip.
+func_getCellsToUseChip_arg_1			The chip your leek wants to use.
+func_getCellsToUseChip_arg_2			Targetted leek.
+func_getCellsToUseChipOnCell			Lists all cells that allow your leek to use a given <b>chip</b>, targetting given <b>cell</b>.
+func_getCellsToUseChipOnCell_2			Lists all cells that allow your leek to use a given <b>chip</b>, targetting given <b>cell</b>.
+func_getCellsToUseChipOnCell_2_arg_1			The chip your leek wants to use.
+func_getCellsToUseChipOnCell_2_arg_2			Targetted cell.
+func_getCellsToUseChipOnCell_2_arg_3			Array of cells to ignore.
+func_getCellsToUseChipOnCell_2_return			List of all cells that allow using given chip.
+func_getCellsToUseChipOnCell_arg_1			The chip your leek wants to use.
+func_getCellsToUseChipOnCell_arg_2			Targetted cell.
+func_getCellsToUseChipOnCell_return			List of all cells that allow using given chip.
+func_getCellsToUseChip_return			List of all cells that allow using given chip.
+func_getCellsToUseWeapon			Lists all cells that allow your leek to shoot its current weapon, targetting given <b>leek</b>.
+func_getCellsToUseWeapon_2			Lists all cells that allow your leek to shoot given <b>weapon</b>, targetting given <b>leek</b>.
+func_getCellsToUseWeapon_2_arg_1			The weapon your leek wants to use.
+func_getCellsToUseWeapon_2_arg_2			Targetted leek.
+func_getCellsToUseWeapon_2_return			List of all cells that allow your leek to shoot given weapon.
+func_getCellsToUseWeapon_3			Lists all cells that allow your leek to shoot a given <b>weapon</b>, targetting given <b>leek</b>.
+func_getCellsToUseWeapon_3_arg_1			The weapon your leek wants to use.
+func_getCellsToUseWeapon_3_arg_2			Targetted leek.
+func_getCellsToUseWeapon_3_arg_3			Array of cells to ignore.
+func_getCellsToUseWeapon_3_return			List of all cells that allow your leek to shoot.
+func_getCellsToUseWeapon_arg_1			Targetted leek.
+func_getCellsToUseWeaponOnCell			Lists all cells that allow your leek to shoot its current weapon, targetting given <b>cell</b>.
+func_getCellsToUseWeaponOnCell_2			Lists all cells that allow your leek to shoot given <b>weapon</b>, targetting given <b>cell</b>.
+func_getCellsToUseWeaponOnCell_2_arg_1			The weapon your leek wants to use.
+func_getCellsToUseWeaponOnCell_2_arg_2			Targetted cell.
+func_getCellsToUseWeaponOnCell_2_return			List of all cells that allow your leek to shoot.
+func_getCellsToUseWeaponOnCell_3			Lists all cells that allow your leek to shoot a given <b>weapon</b>, targetting given <b>cell</b>.
+func_getCellsToUseWeaponOnCell_3_arg_1			The weapon your leek wants to use.
+func_getCellsToUseWeaponOnCell_3_arg_2			Targetted cell.
+func_getCellsToUseWeaponOnCell_3_arg_3			Array of cells to ignore.
+func_getCellsToUseWeaponOnCell_3_return			List of all cells that allow your leek to shoot.
+func_getCellsToUseWeaponOnCell_arg_1			Targetted cell.
+func_getCellsToUseWeaponOnCell_return			List of all cells that allow your leek to shoot.
+func_getCellsToUseWeapon_return			List of all cells that allow your leek to shoot.
+func_getCellToUseChip			Finds a cell that allows your leek to use a given <b>chip</b>, targetting given <b>leek</b>.
+func_getCellToUseChip_2			Finds a cell that allows your leek to use a given <b>chip</b>, targetting given <b>leek</b>.
+func_getCellToUseChip_2_arg_1			The chip your leek wants to use.
+func_getCellToUseChip_2_arg_2			Targetted leek.
+func_getCellToUseChip_2_arg_3			Array of cells to ignore.
+func_getCellToUseChip_2_return			A cell that allows using given chip.
+func_getCellToUseChip_arg_1			The chip your leek wants to use.
+func_getCellToUseChip_arg_2			Targetted leek.
+func_getCellToUseChipOnCell			Finds a cell that allows your leek to use a given <b>chip</b>, targetting given <b>cell</b>.
+func_getCellToUseChipOnCell_2			Finds a cell that allows your leek to use a given <b>chip</b>, targetting given <b>cell</b>.
+func_getCellToUseChipOnCell_2_arg_1			The chip your leek wants to use.
+func_getCellToUseChipOnCell_2_arg_2			Targetted cell.
+func_getCellToUseChipOnCell_2_return			A cell that allows using the given chip on targetted cell.
 func_getCellToUseChipOnCell_arg_1			The chip your leek wants to use.
-function_category_network			Networking
-func_getWisdom_return			Caller's wisdom.
+func_getCellToUseChipOnCell_arg_2			Targetted cell.
+func_getCellToUseChipOnCell_arg_3			Array of cells to ignore.
+func_getCellToUseChipOnCell_return			A cell that allows using given chip.
+func_getCellToUseChip_return			A cell that allows using given chip.
+func_getCellToUseWeapon			Finds a cell that allows your leek to shoot its current weapon, targetting given <b>leek</b>.
+func_getCellToUseWeapon_2			Finds a cell that allows your leek to shoot given <b>weapon</b>, targetting given <b>leek</b>.
+func_getCellToUseWeapon_2_arg_1			The weapon your leek wants to use.
+func_getCellToUseWeapon_2_arg_2			Targetted leek.
+func_getCellToUseWeapon_2_return			A cell that allows your leek to shoot.
+func_getCellToUseWeapon_3			Finds a cell that allows your leek to shoot given <b>weapon</b>, targetting given <b>leek</b>.
+func_getCellToUseWeapon_3_arg_1			The weapon your leek wants to use.
+func_getCellToUseWeapon_3_arg_2			Targetted leek.
+func_getCellToUseWeapon_3_arg_3			Array of cells to ignore.
+func_getCellToUseWeapon_3_return			A cell that allows using given weapon.
+func_getCellToUseWeapon_arg_1			Targetted leek.
+func_getCellToUseWeaponOnCell			Finds a cell that allows your leek to shoot its current weapon, targetting given <b>cell</b>.
+func_getCellToUseWeaponOnCell_2			Finds a cell that allows your leek to shoot given <b>weapon</b>, targetting given <b>leek</b>.
+func_getCellToUseWeaponOnCell_2_arg_1			The weapon your leek wants to use.
+func_getCellToUseWeaponOnCell_2_arg_2			Targetted cell.
+func_getCellToUseWeaponOnCell_2_return			A cell that allows your leek to shoot.
+func_getCellToUseWeaponOnCell_3			Finds a cell that allows your leek to shoot given <b>weapon</b>, targetting given <b>cell</b>.
+func_getCellToUseWeaponOnCell_3_arg_1			The weapon your leek wants to use.
+func_getCellToUseWeaponOnCell_3_arg_2			Targetted cell.
+func_getCellToUseWeaponOnCell_3_arg_3			Array of cells to ignore.
+func_getCellToUseWeaponOnCell_3_return			A cell that allows using given weapon on targetted cell.
+func_getCellToUseWeaponOnCell_arg_1			Targetted cell.
+func_getCellToUseWeaponOnCell_return			A cell that allows your leek to shoot.
+func_getCellToUseWeapon_return			A cell that allows your leek to shoot.
+func_getCellX			Computes the x-coordinate of given <b>cell</b>.
+func_getCellX_arg_1			id of the cell.
+func_getCellX_return			Its x-coordinate/
+func_getCellY			Computes the y-coordinate of given <b>cell</b>.
+func_getCellY_arg_1			id of the cell.
+func_getCellY_return			Its y-coordinate/
+func_getChipArea			Returns given <b>chip</b>'s effective area type.
+func_getChipArea_arg_1			Desired chip.
+func_getChipArea_return			Given <b>chip</b>'s effective area type among AREA_* constants:
+<ul>
+<li>#AREA_POINT: single-cell effective area</li>
+<li>#AREA_LASER_LINE: laser-type effective area (line)</li>
+<li>#AREA_CIRCLE_1: circular effective area with 3 cells diameter (cross)</li>
+<li>#AREA_CIRCLE_2: circular effective area with 5 cells diameter </li>
+<li>#AREA_CIRCLE_3: circular effective area with 7 cells diameter.</li>
+</ul>
+func_getChipCooldown			Returns a <b>chip</b>'s cooldown as shown in the market.
+func_getChipCooldown_arg_1			Desired chip.
+func_getChipCooldown_return			Given <b>chip</b>'s coolodwn
+func_getChipCost			Returns a <b>chip</b>'s cost, in TP.
+func_getChipCost_arg_1			Desired chip.
+func_getChipCost_return			Given <b>chip</b>'s cost, in TP.
+func_getChipEffectiveArea			Lists the cells affected if given <b>chip</b> were used on given <b>cell</b>.
+func_getChipEffectiveArea_2			Lists the cells affected if given <b>chip</b> were used on given <b>cell</b> from <b>from</b> cell.
+func_getChipEffectiveArea_2_arg_1			Chip to be used.
+func_getChipEffectiveArea_2_arg_2			Targetted cell.
+func_getChipEffectiveArea_2_arg_3			Cell from which the chip is used.
+func_getChipEffectiveArea_2_return			Array that contains the id of all affected cells.
+func_getChipEffectiveArea_arg_1			Chip to be used.
+func_getChipEffectiveArea_arg_2			Targetted cell.
+func_getChipEffectiveArea_return			Array that contains the id of all affected cells.
+func_getChipEffects			Lists a <b>chip</b>'s effects.
+func_getChipEffects_arg_1			Desired chip.
+func_getChipEffects_return			Given <b>chip</b>'s effects. Format is the same as #getWeaponEffects
+func_getChipFailure			Returns a <b>chip</b>'s failure rate.
+func_getChipFailure_arg_1			Desired chip.
+func_getChipFailure_return			Given <b>chip</b>'s failure rate, in percents, integer between <b>0</b> and <b>100</b>.
+func_getChipMaxRange			Returns a <b>chip</b>'s max range.
+func_getChipMaxRange_arg_1			Desired chip.
+func_getChipMaxRange_return			Given <b>chip</b>'s maximum range.
+func_getChipMaxScope			Returns a <b>chip</b>'s max scope.
+func_getChipMaxScope_arg_1			Desired chip.
+func_getChipMaxScope_return			Given <b>chip</b>'s maximum scope.
+func_getChipMinRange			Returns a <b>chip</b>'s min range.
+func_getChipMinRange_arg_1			Desired chip.
+func_getChipMinRange_return			Returns a <b>chip</b>'s min range.
+func_getChipMinScope			Returns a <b>chip</b>'s min scope.
+func_getChipMinScope_arg_1			Desired chip.
+func_getChipMinScope_return			Given <b>chip</b>'s minimum scope.
+func_getChipName			Returns a <b>chip</b>'s name.
+func_getChipName_arg_1			Desired chip.
+func_getChipName_return			Given <b>chip</b>'s name
+func_getChips			Lists your leek's chips.
+func_getChips_2			Lists given <b>leek</b>'s chips.
+func_getChips_2_arg_1			Desired leek.
+func_getChips_2_return			Array containing all of given <b>leek</b>'s chips.
+func_getChips_return			Array containing all of your leek's chips.
+func_getChipTargets			Lists leeks that will be affected if given <b>chip</b> were used on given <b>cell</b>.
+func_getChipTargets_arg_1			Chip to be used.
+func_getChipTargets_arg_2			Targetted cell.
+func_getChipTargets_return			Array containing the affected leeks.
+func_getColor			Gives an integer that corresponds to given color on a (<b>red</b>, <b>green</b>, <b>blue</b>) scale. See #mark on how to use given integer.
+func_getColor_arg_1			Red value, between 0 and 255.
+func_getColor_arg_2			Green value, between 0 and 255.
+func_getColor_arg_3			Blue value, between 0 and 255.
+func_getColor_return			Integer that corresponds to given color.
+func_getCooldown			Returns the current cooldown of given <b>chip</b> for your leek.
+func_getCooldown_2			Returns the current cooldown of given <b>chip</b> for given <b>leek</b>.
+func_getCooldown_2_arg_1			Desired chip.
+func_getCooldown_2_arg_2			Desired leek.
+func_getCooldown_2_return			Given <b>chip</b>'s current cooldown, i.e. the amount of turns owner must wait to cast it again.
+func_getCooldown_arg_1			Desired chip.
+func_getCooldown_return			Given <b>chip</b>'s current cooldown.
+func_getCores			Returns your leek's number of cores.
+func_getCores_2			Returns given <b>leek</b>'s number of cores.
+func_getCores_2_arg_1			Desired leek.
+func_getCores_2_return			Given <b>leek</b>'s number of cores.
+func_getCores_return			Your leek's number of cores.
+func_getDamageReturn			Returns caller's damage return ratio.
+func_getDamageReturn_2			Returns given <b>leek</b>'s damage return ratio.
+func_getDamageReturn_2_arg_1			Desired entity's id.
+func_getDamageReturn_2_return			Entity's damage return ratio (in %).
+func_getDamageReturn_return			Caller's damage return ratio (in %).
+func_getDeadAllies			Lists dead allies.
+func_getDeadAllies_return			Array of dead allies.
+func_getDeadEnemies			Lists dead enemies.
+func_getDeadEnemiesCount			Counts the dead enemies in the fight.
+func_getDeadEnemiesCount_return			The number of dead enemies.
+func_getDeadEnemies_return			Array of dead enemies.
+func_getDistance			Computes as a crow flies distance between <b>cell1</b> and <b>cell2</b>.<br>For distance in number of cells, see #getCellDistance, and for an actual path (taking obstacles into account), see #getPathLength.
+func_getDistance_arg_1			Cell id of starting point.
+func_getDistance_arg_2			Cell id of arrival.
+func_getDistance_return			Crow's fly distance between given cells.
+func_getEffects			Lists the effects affecting your leek.
+func_getEffects_2			Lists the effects affecting given leek. For your leek, prefer #getEffects() with no input.
+func_getEffects_2_arg_1			Leek whose effects are listed.
+func_getEffects_2_return			Array of effects affecting given <b>leek</b>.
+An effect itself is a 7-cell array of the following form: [<b>type</b>, b>value</b>, <b>caster_id</b>, <b>turns</b>, <b>critical</b>, <b>item_id</b>, <b>target_id</b>], with <b>type</b> describing the type of effect, among:
+<ul>
+		<li>#EFFECT_DAMAGE, <b>value</b> is the amount of damage</li>
+		<li>#EFFECT_HEAL, <b>value</b> is the number of HP healed</li>
+		<li>#EFFECT_BUFF_FORCE, <b>value</b> is the added strength</li>
+		<li>#EFFECT_BUFF_AGILITY, <b>value</b> is the added agility</li>
+		<li>#EFFECT_BUFF_TP, <b>value</b> is the number of added TP</li>
+		<li>#EFFECT_BUFF_MP, <b>value</b>is the number of added MP</li>
+		<li>#EFFECT_ABSOLUTE_SHIELD, <b>value</b> is the absolute shield gained</li>
+		<li>#EFFECT_RELATIVE_SHIELD, <b>value</b> is the relative shield gained</li>
+		<li>#EFFECT_DEBUFF, indicates a debuff, <b>value</b> is not significant.</li>
+<li>etc.</li>
+	</ul>
+func_getEffects_return			Array of effects affecting your leek. More details in #getEffects(leek).
+func_getEnemies			Lists all enemies (dead and alive) within a fight.
+func_getEnemiesCount			Counts the enemies in the fight.
+func_getEnemiesCount_return			The number of enemies.
+func_getEnemiesLife			Returns the sum of all of your enemies' HP
+func_getEnemiesLife_return			Sum of all of your enemies' HP
+func_getEnemies_return			Array containing leek ids of all enemies.
+func_getEntityTurnOrder			Indicates the position of the caller in the acting order, between 1 and the amount of entities in the game.
+func_getEntityTurnOrder_2			Indicates the position of given <b>entity</b> in the acting order, between 1 and the amount of entities in the game.
+func_getEntityTurnOrder_2_arg_1			Desired entity.
+func_getEntityTurnOrder_2_return			Given entity's position within the acting order.
+func_getEntityTurnOrder_return			Caller's position within the acting order.
+func_getFarmerID			Returns your farmer's id.
+func_getFarmerID_2			Returns the id of given <b>leek</b>'s farmer.
+func_getFarmerID_2_arg_1			Desired leek.
+func_getFarmerID_2_return			The id of given <b>leek</b>'s farmer.
+func_getFarmerID_return			Your farmer's id.
+func_getFarmerName			Returns your farmer's name.
+func_getFarmerName_2			Returns the name of given <b>leek</b>'s farmer.
+func_getFarmerName_2_arg_1			Desired leek.
+func_getFarmerName_2_return			The name of given <b>leek</b>'s farmer.
+func_getFarmerName_return			Your farmer's name.
+func_getFarthestAlly			Returns the farthest ally, using as a crow flies distance.
+func_getFarthestAlly_return			Farthest ally's leek id.
+func_getFarthestEnemy			Returns the farthest enemy, using as a crow flies distance.
+func_getFarthestEnemy_return			Farthest enemy's leek id.
+func_getFightContext			Returns current fight's context
+func_getFightContext_return			Depending on fight's context: Test fight (#FIGHT_CONTEXT_TEST), Garden fight (#FIGHT_CONTEXT_GARDEN), Tournament fight (#FIGHT_CONTEXT_TOURNAMENT), Challenge fight (#FIGHT_CONTECT_CHALLENGE).
+func_getFightType			Returns current fight's type
+func_getFightType_return			Depending on fight's type: Solo fight (#FIGHT_TYPE_SOLO), Farmer fight (#FIGHT_TYPE_FARMER), Team fight (#FIGHT_TYPE_TEAM).
+func_getForce			Returns your leek's strength.
+func_getForce_2			Return's given <b>leek</b>'s strength.
+func_getForce_2_arg_1			Desired leek.
+func_getForce_2_return			Given <b>leek</b>'s strength.
+func_getForce_return			Your leek's strength.
+func_getFrequency			Returns your leek's frequency.
+func_getFrequency_2			Return's given <b>leek</b>'s frequency.
+func_getFrequency_2_arg_1			Desired leek.
+func_getFrequency_2_return			Given <b>leek</b>'s frequency.
+func_getFrequency_return			Your leek's frequency.
+func_getGreen			Returns the green component of given <b>color</b>. For 
+instance getGreen(#COLOR_GREEN) = 255 and getGreen(#COLOR_BLUE) = 0.
+func_getGreen_arg_1			Color whose green component is to be returned.
+func_getGreen_return			Green component of given <b>color</b>.
+func_getInstructionsCount			Returns the number of instructions used by your leek this turn.
+func_getInstructionsCount_return			The number of instructions used by your leek this turn.
+func_getLaunchedEffects			Returns the list of effects provoked by the caller.
+func_getLaunchedEffects_2			Returns the list of effects provoked by given <b>leek</b>.
+func_getLaunchedEffects_2_arg_1			Desired entity's id.
+func_getLaunchedEffects_2_return			Array containing all effects provoked by the caller, similar to #getEffets' results.
+func_getLaunchedEffects_return			Array containing all effects provoked by the caller, similar to #getEffets' results.
+func_getLeek			Returns your leek's id.
+func_getLeekID			Returns your leek's absolute id (does not depend on fight).
+func_getLeekID_2			Returns given <b>leek</b>'s absolute id.
+func_getLeekID_2_arg_1			Desired leek.
+func_getLeekID_2_return			Given <b>leek</b>'s absolute id.
+func_getLeekID_return			Your leek's absolute id.
+func_getLeekOnCell			Returns the leek present on given <b>cell</b>, if any.
+func_getLeekOnCell_arg_1			Desired <b>cell</b>.
+func_getLeekOnCell_return			The leek id of a leek that is currently occupying given <b>cell</b>, -1 if cell is not occupied by a leek.
+func_getLeek_return			Your leek's id.
+func_getLevel			Returns your leek's level.
+func_getLevel_2			Returns given <b>leek</b>'s level.
+func_getLevel_2_arg_1			Desired leek.
+func_getLevel_2_return			Given <b>leek</b>'s level.
+func_getLevel_return			Your leek's level.
+func_getLife			Returns your leek's HP count.
+func_getLife_2			Returns given <b>leek</b>'s HP count.
+func_getLife_2_arg_1			Desired leek.
+func_getLife_2_return			Given <b>leek</b>'s HP count.
+func_getLife_return			Your leek's HP count.
+func_getMagic			Returns caller's magic.
+func_getMagic_2			Returns given <b>leek</b>'s magic.
+func_getMagic_2_arg_1			Desired entity's id.
+func_getMagic_2_return			Given entity's magic.
+func_getMagic_return			Caller's magic.
+func_getMapType			Returns the map type on which the fight takes place (factory, desert, forest, etc.), among the constants #MAP_NEXUS, #MAP_FACTORY, #MAP_DESERT, #MAP_FOREST, #MAP_GLACIER and #MAP_BEACH.
+func_getMapType_return			The map type.
+func_getMessageAuthor			Returns given <b>message</b>'s author (leek).
+func_getMessageAuthor_arg_1			Message whose author is desired.
+func_getMessageAuthor_return			Given <b>message</b>'s author.
+func_getMessageParams			Returns given <b>message</b>'s parameters.
+func_getMessageParams_arg_1			Message whose parameters are desired.
+func_getMessageParams_return			Given <b>message</b>'s parameters.
+func_getMessages			Lists all messages addressed to you.
+func_getMessages_2			Lists all messages addressed to given <b>leek</b>.
+func_getMessages_2_arg_1			Leek whose messages are returned.
+func_getMessages_2_return			Array of messages addressed to given <b>leek</b>.
+func_getMessages_return			Array of messages.<br />A message itself is a 3-cell array of the following form: [<b>author</b>, <b>type</b>, <b>parameters</b>]<br />Message types are:
+<ul>
+		<li>#MESSAGE_HEAL: request for heal</li>
+		<li>#MESSAGE_ATTACK: request for attack</li>
+		<li>#MESSAGE_BUFF_FORCE: request for strength buff</li>
+		<li>...</li>
+	</ul>
+func_getMessageType			Returns given <b>message</b>'s message type.
+func_getMessageType_arg_1			Message whose type is desired.
+func_getMessageType_return			Given <b>message</b>'s type.
+func_getMP			Returns your leek's MP count.
+func_getMP_2			Returns given <b>leek</b>'s MP count.
+func_getMP_2_arg_1			Desired leek.
+func_getMP_2_return			Given <b>leek</b>'s name.
+func_getMP_return			Your leek's MP count.
+func_getName			Returns your leek's name.
+func_getName_2			Returns given <b>leek</b>'s name.
+func_getName_2_arg_1			Desired leek.
+func_getName_2_return			Given <b>leek</b>'s name.
+func_getName_return			Your leek's name.
+func_getNearestAlly			Returns the allied leek closest to your leek.
+func_getNearestAlly_return			id of the nearest ally
+func_getNearestAllyTo			Returns, among your allies, the closest one to given <b>leek</b>.
+func_getNearestAllyTo_arg_1			Targetted leek.
+func_getNearestAllyToCell			Returns, among your allies, the closest one to given <b>cell</b>.
+func_getNearestAllyToCell_arg_1			Targetted cell.
+func_getNearestAllyToCell_return			Leek id of your ally that is closest to given <b>cell</b>.
+func_getNearestAllyTo_return			Leek id of your ally that is closest to given <b>leek</b>.
+func_getNearestEnemy			Returns the enemy leek closest to your leek.
+func_getNearestEnemy_return			id of the nearest enemy.
+func_getNearestEnemyTo			Returns, among your enemies, the closest one to given <b>leek</b>.
+func_getNearestEnemyTo_arg_1			Targetted leek.
+func_getNearestEnemyToCell			Returns, among your enemies, the closest one to given <b>cell</b>.
+func_getNearestEnemyToCell_arg_1			Targetted cell.
+func_getNearestEnemyToCell_return			Leek id of your enemy that is closest to given <b>cell</b>.
+func_getNearestEnemyTo_return			Leek id of your enemy that is closest to given <b>leek</b>.
+func_getNextPlayer			Returns the leek id of the next leek to play.
+func_getNextPlayer_return			Leek id of the next player.
+func_getObstacles			Lists all cells that are occupied by obstacles.
+func_getObstacles_return			Array of cells occupied by obstacles.
+func_getOperations			Returns the operations' counter, as started at the beginning of turn. This counter needs to stay below #OPERATIONS_LIMIT in order for the leek not to stop processing.
+func_getOperations_return			Count of operations since the beginning of the turn.
+func_getPath			Finds a path between <b>cell1</b> and <b>cell2</b>, avoiding occupied cells.
+func_getPath_2			Finds a path between <b>cell1</b> and <b>cell2</b>, avoiding occupied cells, except <b>ignoredCells</b>, which are considered empty even when a leek occupies them.
+func_getPath_2_arg_1			Cell id of starting point.
+func_getPath_2_arg_2			Cell id of destination.
+func_getPath_2_arg_3			Array of cells considered inoccupied even when a leek is present.
+func_getPath_2_return			Array of cells that build a path between given cells. Considering <b>ignoredCells</b> as empty.  Empty array if no path is found.
+func_getPath_arg_1			Cell id of starting point.
+func_getPath_arg_2			Cell id of destination.
+func_getPathLength			Returns the length of a path between <b>cell1</b> and <b>cell2</b> that avoids occupied cells. This function is equivalent to <i>count(getPath(<b>cell1</b>, <b>cell2</b>))</i>.<br /><br />For as a crow's flies distance, see #getDistance and for distance in number of cells, see #getCellDistance
+func_getPathLength_2			Returns the length of a path between <b>cell1</b> and <b>cell2</b> that avoids occupied cells, except <b>ignoredCells</b> which are considered empty even when a leek is present.
+func_getPathLength_2_arg_1			Cell id of starting point.
+func_getPathLength_2_arg_2			Cell id of destination.
+func_getPathLength_2_arg_3			Array of cells considered inoccupied even when a leek is present.
+func_getPathLength_2_return			Length of the path between <b>cell1</b> and <b>cell2</b>. -1 if no path is found.
+func_getPathLength_arg_1			Cell id of starting point.
+func_getPathLength_arg_2			Cell id of destination.
+func_getPathLength_return			Length of the path between <b>cell1</b> and <b>cell2</b>. -1 if no path is found.
+func_getPath_return			Array of empty cells that build a path between given cells. Empty array if no path is found.
+func_getPreviousPlayer			Returns the leek id of the leek who just played.
+func_getPreviousPlayer_return			Leek id of the leek who just played.
+func_getRed			Returns the red component of given <b>color</b>. For 
+instance getRed(#COLOR_RED) = 255 and getRed(#COLOR_BLUE) = 0.
+func_getRed_arg_1			Color whose red component is to be returned.
+func_getRed_return			Red component of given <b>color</b>.
+func_getRegister			Returns the value associated to given <b>key</b> in your leek's register, <i>null</i> if it is not found.
+func_getRegister_arg_1			Desired key.
+func_getRegister_return			The value associated to given <b>key</b> in your leek's register.
+func_getRegisters			Returns your leek's whole register, as a [<i>key</i>: <i>value</i>] associative array. For example:
+<code>debug(getRegisters());
+// would, for example, debug : 
+// ['reg1' : '314323', 'reg2' : 'test_string']</code>
+func_getRegisters_return			Your leek's register, as an associative array.
+func_getRelativeShield			Returns your leek's relative shield.
+func_getRelativeShield_2			Returns given <b>leek</b>'s relative shield. For your leek's relative shield, prefer #getRelativeShield() with no input.
+func_getRelativeShield_2_arg_1			Desired leek.
+func_getRelativeShield_2_return			Given <b>leek</b>'s relative shield, in percents: integer between 0 and 100.
+func_getRelativeShield_return			Your leek's relative shield, in percents: integer between 0 and 100.
+func_getResistance			Returns caller's resistance.
+func_getResistance_2			Returns given <b>leek</b>'s resistance.
+func_getResistance_2_arg_1			Desired entity's id.
+func_getResistance_2_return			Given entity's resistance.
+func_getResistance_return			Caller's resistance.
+func_getScience			Returns caller's science.
+func_getScience_2			Returns given <b>leek</b>'s science.
+func_getScience_2_arg_1			Desired entity's id.
+func_getScience_2_return			Given entity's science.
+func_getScience_return			Caller's science.
+func_getStrength			Returns your leek's strength.
+func_getStrength_2			Return's given <b>leek</b>'s strength.
+func_getStrength_2_arg_1			Desired leek.
+func_getStrength_2_return			Given <b>leek</b>'s strength.
+func_getStrength_return			Your leek's strength.
+func_getSummoner			Returns caller's summoner, if caller is a summon.
+func_getSummoner_2			Returns given <b>entity</b>'s summoner, if it is a summon.
+func_getSummoner_2_arg_1			Desired entity.
+func_getSummoner_2_return			ID of the entity's sumonner, if given entity is a summon, <i>null</i> otherwise.
+func_getSummoner_return			ID of the summoning entity, if caller is a summon, <i>null</i> otherwise.
+func_getTeamID			Returns your team's id.
+func_getTeamID_2			Returns the id of given <b>leek</b>'s team.
+func_getTeamID_2_arg_1			Desired leek.
+func_getTeamID_2_return			The id of given <b>leek</b>'s team.
+func_getTeamID_return			Your team's id.
+func_getTeamName			Returns your team's name.
+func_getTeamName_2			Returns the name of given <b>leek</b>'s team.
+func_getTeamName_2_arg_1			Desired leek.
+func_getTeamName_2_return			The name of given <b>leek</b>'s team.
+func_getTeamName_return			Your team's name.
+func_getTotalLife			Returns your leek's maximum life.
+func_getTotalLife_2			Returns given <b>leek</b>'s maximum life.
+func_getTotalLife_2_arg_1			Desired leek.
+func_getTotalLife_2_return			Given <b>leek</b>'s maximum life.
+func_getTotalLife_return			Your leek's maximum life.
+func_getTotalMP			Returns caller's total MP count (not counting this turn's movements).
+func_getTotalMP_2			Returns given <b>leek</b>'s total MP count (not counting this turn's movements).
+func_getTotalMP_2_arg_1			Desired entity's id.
+func_getTotalMP_2_return			Given entity's total MP count.
+func_getTotalMP_return			Caller's total MP count.
+func_getTotalTP			Returns caller's total TP count (not counting this turn's actions).
+func_getTotalTP_2			Returns given <b>leek</b>'s total TP count (not counting this turn's actions).
+func_getTotalTP_2_arg_1			Desired entity's id.
+func_getTotalTP_2_return			Given entity's total TP count.
+func_getTotalTP_return			Caller's total TP count.
+func_getTP			Returns your leek's TP count.
+func_getTP_2			Returns given <b>leek</b>'s TP count.
+func_getTP_2_arg_1			Desired leek.
+func_getTP_2_return			Given <b>leek</b>'s TP count.
+func_getTP_return			Your leek's TP count.
+func_getTurn			Returns current turn's count. Maximum duration of a fight is #MAX_TURNS.
+func_getTurn_return			Current turn's count.
+func_getType			Returns caller's entity type.
+func_getType_2			Returns given <b>entity</b>'s type.
+func_getType_2_arg_1			Entity's ID
+func_getType_2_return			Given entity's type:
+<ul>
+<li>#ENTITY_LEEK if given entity is a leek.</li>
+<li>#ENTITY_BULB if given entity is a bulb.</li>
+</ul>
+func_getType_return			Caller's entity type:
+<ul>
+<li>#ENTITY_LEEK if called by a leek.</li>
+<li>#ENTITY_BULB if called by a bulb.</li>
+</ul>
+func_getWeapon			Returns the weapon currently equipped by your leek.
+func_getWeapon_2			Returns the weapon currently equipped by given <b>leek</b>.
+func_getWeapon_2_arg_1			Desired leek.
+func_getWeapon_2_return			The weapon's id, null if given <b>leek</b> has no equipped weapon.
+func_getWeaponArea			Returns given <b>weapon</b>'s effective area type.
+func_getWeaponArea_arg_1			Desired weapon.
 func_getWeaponArea_return			Given <b>weapon</b>'s effective area type among AREA_* constants:
 <ul>
 <li>#AREA_POINT: single-cell effective area</li>
@@ -134,347 +710,23 @@ func_getWeaponArea_return			Given <b>weapon</b>'s effective area type among AREA
 <li>#AREA_CIRCLE_2: circular effective area with 5 cells diameter </li>
 <li>#AREA_CIRCLE_3: circular effective area with 7 cells diameter.</li>
 </ul>
-func_getOperations			Returns the operations' counter, as started at the beginning of turn. This counter needs to stay below #OPERATIONS_LIMIT in order for the leek not to stop processing.
-func_count_arg_1			An array.
-func_getWeapons			Lists your leek's weapons.
-func_getCores_2_arg_1			Desired leek.
-func_getWeaponName_arg_1			Desired weapon.
-func_sendAll_arg_1			The type of message to send (see MESSAGE_* constants).
-func_getDeadAllies			Lists dead allies.
-func_getWisdom_2			Returns given <b>leek</b>'s wisdom.
-func_setWeapon_arg_1			Weapon's id.
-func_max			Finds the greatest value among two numbers <b>a</b> and <b>b</b>.
-func_getDeadAllies_return			Array of dead allies.
-func_getMP_2			Returns given <b>leek</b>'s MP count.
-func_canUseWeaponOnCell_2_arg_2			Targetted cell.
-func_canUseWeaponOnCell_2_return			<i>true</i> if your leek can shoot given weapon, <i>false</i> otherwise.
-func_jsonEncode			Encode the object <b>object</b> into a JSON string.
-func_getCores_2			Returns given <b>leek</b>'s number of cores.
-func_sum_return			Computed sum.
-func_pause			Pauses the fight, only for the pausing leek's farmer.
-func_getEffects_2_arg_1			Leek whose effects are listed.
-func_moveAwayFromCells_2_arg_1			Array containig the cells from which you want to flee.
-func_getWisdom_2_arg_1			Desired entity's id.
-func_jsonEncode_arg_1			The object to encode in JSON.
-func_getCellsToUseWeapon_3_arg_3			Array of cells to ignore.
-func_tan_arg_1			A number.
-func_toDegrees			Converts given <b>angle</b> from radians to degrees.
-function_category_color			Color
-func_getWisdom_2_return			Given entity's wisdom.
-func_moveAwayFrom_2			Moves your leek away from another <b>leek</b>, using at most <b>mp</b> Movement Points.
-func_getRelativeShield_return			Your leek's relative shield, in percents: integer between 0 and 100.
-func_resurrect_arg_1			The id of the entity to revive.
-getCellsToUseChipOnCell_2			Lists all cells that allow your leek to use a given <b>chip</b>, targetting given <b>cell</b>.
-func_jsonEncode_return			The JSON encoded string
-func_moveAwayFromCells_2_arg_2			The maximum amount of MP to spend.
-func_getFarthestAlly_return			Farthest ally's leek id.
-func_average			Computes the average of an array's elements.
-func_charAt_return			Character from given position. Empty string if position is invald.
-func_getColor			Gives an integer that corresponds to given color on a (<b>red</b>, <b>green</b>, <b>blue</b>) scale. See #mark on how to use given integer.
-func_getCellToUseWeapon_3_arg_2			Targetted leek.
-func_getRegister			Returns the value associated to given <b>key</b> in your leek's register, <i>null</i> if it is not found.
-func_keySort			Sorts an <b>array</b> using key values.
-func_pushAll_arg_2			Array containing elements to add.
-func_join_return			The resulting string.
-func_join_arg_2			A string that is inserted between consecutive elements of the array.
-func_getCellToUseChipOnCell_2			Finds a cell that allows your leek to use a given <b>chip</b>, targetting given <b>cell</b>.
-func_rand_return			A random number within [0;1).
-func_getCellsToUseChip_2_return			List of all cells that allow using given chip.
-func_unshift_arg_1			Array.
-max_level			max
-func_jsonDecode			Decode the string <b>json</b> into a LeekScript object (number, string, array...).
-func_round			Computes the integer closest to a given <b>number</b>.<br />The rounded down value can be computed using #floor and the rounded up value using #ceil.
-func_getCellToUseWeapon_3_return			A cell that allows using given weapon.
-func_getCellsToUseWeapon			Lists all cells that allow your leek to shoot its current weapon, targetting given <b>leek</b>.
-func_getCellToUseWeapon_2_return			A cell that allows your leek to shoot.
-func_isInlineWeapon_arg_1			Desired weapon.
-func_useChip_arg_2			Targetted leek.
-func_getCellsToUseWeaponOnCell_3_arg_3			Array of cells to ignore.
-func_getWeaponEffectiveArea_arg_1			Targetted cell.
-func_jsonDecode_return			The decoded LeekScript Object.
-func_toUpper_arg_1			Input string.
-func_getCellToUseWeapon_3_arg_3			Array of cells to ignore.
-func_getTeamName_2			Returns the name of given <b>leek</b>'s team.
-func_getColor_arg_1			Red value, between 0 and 255.
-func_chipNeedLos			Returns whether given <b>chip</b> requires a line of sight in order to be shot.
-func_say			Allows your leek to talk. Costs one TP.
-func_round_return			Rounded value of <b>number</b>, to the closest integer.
-func_length_return			Given <b>string</b>'s length
-func_getColor_arg_2			Green value, between 0 and 255.
-func_getCellsToUseChipOnCell_arg_1			The chip your leek wants to use.
-func_chipNeedLos_arg_1			Desired chip's id.
-func_getWeaponArea_arg_1			Desired weapon.
-func_moveTowardCells_arg_1			Array containig the cells to which you want to get closer.
-func_moveAwayFromCell_arg_1			The cell from which you want to flee.
-func_getForce_2_arg_1			Desired leek.
-func_useChipOnCell			Use given <b>chip</b>, targetting given <b>cell</b>.
-func_getCellToUseChip_2_arg_2			Targetted leek.
-func_getEnemies_return			Array containing leek ids of all enemies.
-func_getAIName_return			The name of you AI.
-func_remove_arg_2			The position of the element to remove.
-func_getWeaponTargets_arg_1			Targetted cell.
-func_getCellsToUseWeaponOnCell			Lists all cells that allow your leek to shoot its current weapon, targetting given <b>cell</b>.
-func_moveTowardCells			Moves your leek closer to a given group of <b>cells</b>.
-func_lineOfSight_arg_1			Cell id of starting point.
-const_AREA_POINT			Single cell area.
-1_operation			<b>1</b> operation
-func_getWeaponEffectiveArea_3_return			Array that contains the id of all affected cells.
-func_summon_arg_3			The sumonned entity's AI, as a function.
-func_getLeek_return			Your leek's id.
-func_getLeekID_return			Your leek's absolute id.
-func_getLeekID_2			Returns given <b>leek</b>'s absolute id.
-func_getFightType			Returns current fight's type
-func_getLeekID			Returns your leek's absolute id (does not depend on fight).
-func_getScience_2_arg_1			Desired entity's id.
-func_getScience_2_return			Given entity's science.
-func_join_arg_1			An array of elements to be joined into a string.
-arg_type_43			ArrayOfBooleans
-func_arraySort_arg_1			Source array.
-func_arrayFoldLeft_arg_2			Reducing function.
-func_search			Searches for given <b>element</b> inside given <b>array</b>.
-func_mark_arg_1			A cell or array of cells.
-const_SORT_DESC			Indicates a sorting function to use descending order.
-func_getType			Returns caller's entity type.
-const_TYPE_NUMBER			<b>number</b> type.
-func_getColor_arg_3			Blue value, between 0 and 255.
-func_mark_return			<i>true</i> if all went well, <i>false</i> otherwise.
-func_getCellToUseWeaponOnCell_2_return			A cell that allows your leek to shoot.
-func_getChips			Lists your leek's chips.
-func_getName_2			Returns given <b>leek</b>'s name.
-func_moveAwayFromCells_2_return			The actual amount of MP spent.
-func_getChipFailure_arg_1			Desired chip.
+func_getWeaponCost			Returns a <b>weapon</b>'s cost, in TP.
+func_getWeaponCost_arg_1			Desired weapon.
+func_getWeaponCost_return			Given <b>weapon</b>'s cost, in TP.
+func_getWeaponEffectiveArea			Lists the cells affected if your leek's current weapon were shot on given <b>cell</b>.
+func_getWeaponEffectiveArea_2			Lists the cells affected if given <b>weapon</b> were shot on given <b>cell</b>.
+func_getWeaponEffectiveArea_2_arg_1			Weapon to be used.
 func_getWeaponEffectiveArea_2_arg_2			Targetted cell.
-func_lineOfSight_2_arg_2			Cell id of target.
-func_useWeapon_arg_1			Targetted leek.
-func_getType_2_return			Given entity's type:
-<ul>
-<li>#ENTITY_LEEK if given entity is a leek.</li>
-<li>#ENTITY_BULB if given entity is a bulb.</li>
-</ul>
-func_getPathLength_2_arg_1			Cell id of starting point.
-func_isChip_return			<i>true</i> if <b>value</b> is a chip, <i>false</i> otherwise.
-func_floor_return			Number's value as an integer, rounded down.
-func_moveAwayFromCell_2			Moves your leek away from given <b>cell</b>, using at most <b>mp</b> Movement Points.
-func_getCellsToUseWeaponOnCell_arg_1			Targetted cell.
-func_getFrequency_return			Your leek's frequency.
-func_getNearestEnemyTo_arg_1			Targetted leek.
-func_moveAwayFromCells			Moves your leek away from a given group of <b>cells</b>.
-func_lineOfSight_2_arg_3			Ignored leek (this leek will not block a line of sight).<br>Note: this input can also be an array containing several leeks.
-func_ceil_arg_1			A number.
-func_replace			Replaces all occurrence of <b>search</b> string with <b>replace</b> string, within given <b>string</b>.
-func_getNearestEnemyToCell			Returns, among your enemies, the closest one to given <b>cell</b>.
-func_getNearestEnemyToCell_return			Leek id of your enemy that is closest to given <b>cell</b>.
-func_getFarmerName			Returns your farmer's name.
-func_getNextPlayer			Returns the leek id of the next leek to play.
-func_moveTowardLeeks_2			Moves your leek closer to a given group of <b>leeks</b>, using at most <b>mp</b> 
-Movement Points.
-func_sin_return			Given number's sine, within [-1, 1].
-func_getPath_2_arg_3			Array of cells considered inoccupied even when a leek is present.
-func_getTP_2_arg_1			Desired leek.
-func_getNearestEnemyTo_return			Leek id of your enemy that is closest to given <b>leek</b>.
-func_getAliveEnemiesCount_return			The number of alive enemies.
-func_getAliveEnemiesCount			Counts the alive enemies in the fight.
-func_getCellsToUseChip_2_arg_2			Targetted leek.
-func_getScience			Returns caller's science.
-func_moveAwayFromCell_2_arg_2			The maximum amount of MP to spend.
-func_indexOf_2_arg_1			String to be looked into.
-func_indexOf_2_return			First matching substring's position , -1 if no match was found.
-func_getFarmerName_2			Returns the name of given <b>leek</b>'s farmer.
-func_sort_2_arg_1			Array that needs sorting.
-title			Documentation
-func_moveToward_arg_1			The leek you want to get closer to.
-const_COLOR_BLUE			Integer corresponding to Blue color.
-func_getAgility_2_arg_1			Leek whose agility you want.
-func_getAgility_2_return			<b>leek</b>'s agility.
-func_getSummoner			Returns caller's summoner, if caller is a summon.
-func_log			Computes the natural logarithm of given <b>number</b>.
-func_sort_2_arg_2			#SORT_ASC to sort from least to greatest, or #SORT_DESC to sort from greatest to least. More details in #sort (especially for multiple types arrays).
-arg_type_1			Number
-func_getNearestEnemyTo			Returns, among your enemies, the closest one to given <b>leek</b>.
-func_getPath_2_return			Array of cells that build a path between given cells. Considering <b>ignoredCells</b> as empty.  Empty array if no path is found.
-func_getRed_arg_1			Color whose red component is to be returned.
-func_charAt_arg_2			Position of the character to return.
-func_getCellToUseWeaponOnCell_2_arg_2			Targetted cell.
-func_max_arg_2			Another number.
-func_getForce_2_return			Given <b>leek</b>'s strength.
-func_getDeadEnemiesCount			Counts the dead enemies in the fight.
-func_getColor_return			Integer that corresponds to given color.
-const_TYPE_ARRAY			<b>array</b> type.
-func_say_arg_1			Message your leek says, visible by all viewers of the fight.
-func_search_arg_1			The array to look into.
-const_TYPE_FUNCTION			<b>function</b> type.
-func_search_arg_2			The element to look for.
-func_log10_arg_1			A positive number (within ]0 ; +∞[ ).
-func_search_return			The position of the first occurrence of given <b>element</b> inside given <b>array</b>, null if no match was found.
-const_TYPE_BOOLEAN			<b>boolean</b> type.
-const_TYPE_NULL			<b>null</b> type.
-const_TYPE_STRING			<b>string</b> type.
-func_getMessages_2_return			Array of messages addressed to given <b>leek</b>.
-func_mark_2_arg_2			Marking's color (see #getColor()).
-func_getCellsToUseChipOnCell_return			List of all cells that allow using given chip.
-func_search_2			Searches for given <b>element</b> inside given <b>array</b>, starting at <b>start</b> position.
-func_contains_arg_1			String in which the search is performed.
-func_contains_arg_2			String to be loooked for.
-func_cos_return			Given number's cosine, within [-1, 1].
-func_getTotalLife_2_arg_1			Desired leek.
-func_getMP_return			Your leek's MP count.
-func_split			Splits given <b>string</b> into substrings separated by given <b>delimiter</b>.
-func_moveToward_return			The amount of MP spent.
-func_min_arg_1			A number.
-func_moveAwayFrom_2_arg_2			The maximum amount of MP to spend.
-func_getCellY			Computes the y-coordinate of given <b>cell</b>.
-func_moveAwayFrom_2_arg_1			The leek from which you want to flee.
-func_moveAwayFromLeeks_2			Moves your leek away from a given group of <b>leeks</b>, using at most <b>mp</b> Movement Points.
-func_getCellsToUseWeaponOnCell_3_arg_2			Targetted cell.
-func_getCellX			Computes the x-coordinate of given <b>cell</b>.
-func_fill_arg_2			Value to fill array with.
-func_getGreen			Returns the green component of given <b>color</b>. For 
-instance getGreen(#COLOR_GREEN) = 255 and getGreen(#COLOR_BLUE) = 0.
-func_arraySort_return			Sorted array
-func_getForce_2			Return's given <b>leek</b>'s strength.
-func_getCellToUseWeapon_3			Finds a cell that allows your leek to shoot given <b>weapon</b>, targetting given <b>leek</b>.
-func_getForce			Returns your leek's strength.
-func_getForce_return			Your leek's strength.
-func_show_arg_1			Cell to be showned.
-func_signum_arg_1			Input number.
-func_hypot			Returns the hypothenuse of a right-angled triangle with sides <b>x</b> and <b>y</b>. Equivalent to <i>sqrt(x**2&nbsp;+&nbsp;y**2)</i>.
-func_include_arg_1			AI's name (hard-coded string only)
-const_FIGHT_CONTEXT_TOURNAMENT			Fight context for tournament fights.
-func_getCellToUseChipOnCell_2_arg_1			The chip your leek wants to use.
-const_FIGHT_TYPE_FARMER			Fight type of farmer fights.
-func_insert_arg_2			Element to add.
-func_isLeek_arg_1			Cell to check.
-func_moveAwayFromLine_arg_2			The final cell of the line.
-func_indexOf_arg_1			String to be looked into.
-func_getCellToUseChipOnCell_2_arg_2			Targetted cell.
-func_getFarmerID_2_return			The id of given <b>leek</b>'s farmer.
-func_indexOf_2			Finds the first occurrence of <b>search</b> string within given <b>string</b>, starting at given <b>position</b>.
-func_moveAwayFromCell_2_return			The actual amount of MP spent.
-func_getCellY_arg_1			id of the cell.
-func_sort_2			Sorts given <b>array</b>, using the given order.
-func_getCellsToUseChipOnCell_2_arg_1			The chip your leek wants to use.
-func_getGreen_arg_1			Color whose green component is to be returned.
-func_exp_return			#E ** <b>number</b>.
-func_getTurn			Returns current turn's count. Maximum duration of a fight is #MAX_TURNS.
-func_moveTowardCell_arg_1			The cell you want to get closer to.
-func_isAlive_return			<i>true</i> if <b>leek</b> is alive, <i>false</i> otherwise.
-func_fill_2_arg_2			Value to fill array with.
-func_sum			Computes the sum of all elements within given <b>array</b>.
-func_getCellToUseChipOnCell_arg_2			Targetted cell.
-func_getCellsToUseWeapon_3_arg_2			Targetted leek.
-func_number_arg_1			The value to convert.
-func_tan			Computes given <b>angle</b>'s tangent.
-func_pop			Removes the last element of an array, and returns this element.
-func_getName			Returns your leek's name.
-func_getFarthestAlly			Returns the farthest ally, using as a crow flies distance.
-func_show_2_arg_1			Cell to be showned.
-func_getFightContext			Returns current fight's context
-func_inArray_return			<i>true</i> if given <b>element</b> is contained in <b>array</b>, <i>false</i> otherwise.
-func_getCellsToUseWeapon_return			List of all cells that allow your leek to shoot.
-func_moveTowardLine_2			Moves your leek towards the line between <b>cell1</b> 
-and <b>cell2</b>, using at most <b>mp</b> 
-Movement Points.
-func_arrayMap_arg_2			Function to be applied on each element from given array.
-func_isSummon_2_arg_1			Desired entity.
-func_getLeekOnCell			Returns the leek present on given <b>cell</b>, if any.
-func_getChipEffectiveArea			Lists the cells affected if given <b>chip</b> were used on given <b>cell</b>.
-func_moveAwayFromCells_return			The amount of MP spent.
-func_getLife			Returns your leek's HP count.
-func_min_return			The least of the two numbers.
-func_moveAwayFromLeeks_return			The amount of MP spent.
-func_min_arg_2			Another number.
-func_getPath_2_arg_2			Cell id of destination.
-func_getPathLength_arg_2			Cell id of destination.
-func_getPath_2_arg_1			Cell id of starting point.
-func_show_2_return			<i>true</i> if all went well, <i>false</i> otherwise.
-func_getCellsToUseWeaponOnCell_2_arg_2			Targetted cell.
-func_split_2_return			Array containing all substrings.
-func_getLeekID_2_arg_1			Desired leek.
-func_abs_return			Given number's absolute value.
-func_getWeaponTargets_2_arg_2			Targetted cell.
-func_getLeekOnCell_arg_1			Desired <b>cell</b>.
-func_moveTowardCells_return			The amount of MP spent.
-func_getMapType_return			The map type.
-func_sort			Sorts given <b>array</b>, using the following order:
-<ul>
-<li>Booleans (false then true)</li>
-<li>Numbers (least to greatest)</li>
-<li>Strings (sorted alphabetically)</li>
-<li>null elements</li>
-</ul>
-func_getFrequency_2_return			Given <b>leek</b>'s frequency.
-func_getWeaponTargets_2_return			Array containing the affected leeks.
-func_hypot_return			<i>sqrt(x**2 + y**2)</i>.
-func_getCellDistance_arg_2			Cell id of destination.
-func_indexOf_return			First matching substring's position , -1 if no match was found.
-func_getCellToUseWeaponOnCell_2_arg_1			The weapon your leek wants to use.
-func_canUseWeaponOnCell_2			Checks whether your leek can shoot given <b>weapon</b>, targetting given <b>cell</b>.
-func_getFarmerName_2_return			The name of given <b>leek</b>'s farmer.
-func_getCores_2_return			Given <b>leek</b>'s number of cores.
-func_getFrequency_2_arg_1			Desired leek.
-func_getCellToUseWeapon_2			Finds a cell that allows your leek to shoot given <b>weapon</b>, targetting given <b>leek</b>.
-func_mark_3_return			<i>true</i> if all went well, <i>false</i> otherwise.
-func_getCellToUseWeapon_2_arg_1			The weapon your leek wants to use.
-func_count			Counts the elements contained within an <b>array</b>.
-func_getWeaponName_return			Given <b>weapon</b>'s name
-func_moveTowardCell_2_return			The actual amount of MP spent.
-func_cbrt			Computes the cubic root of given <b>number</b>.
-func_floor_arg_1			A number.
-func_getChipEffectiveArea_2			Lists the cells affected if given <b>chip</b> were used on given <b>cell</b> from <b>from</b> cell.
-func_canUseWeaponOnCell_return			<i>true</i> if your leek can shoot, <i>false</i> otherwise.
-func_sendTo			Sends a message to given <b>leek</b>.
-func_isDead			Checks whether a <b>leek</b> is dead. Equivalent to <i>getLife(<b>leek</b>) == 0</i>.
-func_moveTowardCells_2			Moves your leek closer to a given group of <b>cells</b>, using at most <b>mp</b> 
-Movement Points.
-func_sendAll_arg_2			The parameters of the message, which can take any form.
-func_exp_arg_1			A number.
-func_getTP_return			Your leek's TP count.
-func_getTP_2			Returns given <b>leek</b>'s TP count.
-func_getCellToUseChip			Finds a cell that allows your leek to use a given <b>chip</b>, targetting given <b>leek</b>.
-func_moveTowardCell_return			The amount of MP spent.
-func_endsWith			Checks whether given <b>string</b> ends with given <b>suffix</b>
-func_endsWith_arg_2			Suffix to be found
-func_getChipEffectiveArea_2_arg_2			Targetted cell.
-func_startsWith_arg_2			Prefix to look for.
-level_n			Level <b>%s</b>
-func_isDead_arg_1			Desired leek.
-func_getChipEffectiveArea_2_return			Array that contains the id of all affected cells.
-func_moveTowardCells_2_arg_1			Array containig the cells to which you want to get closer.
-func_getWeaponMinScope			Returns a <b>weapon</b>'s min scope.
-func_arraySort_arg_2			Sorting function.
-func_arrayPartition_arg_2			Callback function.
-func_arrayFilter_arg_2			Filtering function.
-getCellsToUseChipOnCell_2_arg_1			The chip your leek wants to use.
-func_cos			Computes an <b>angle</b>'s cosine.
-func_arrayFilter_return			Resulting array.
-func_contains_return			<i>true</i> if <b>search</b> string is contained in <b>string</b>, <i>false</i> otherwise.
-func_string_arg_1			Value that needs conversion.
-func_string_return			Resulting string.
-func_debugC_arg_2			The message color. You can use the function #getColor.
-func_arrayFoldRight_arg_2			Reducing function.
-func_arrayFoldRight_arg_3			Starting value.
-func_getBirthTurn_2_return			Combat turn during which given entity has appeared.
-func_getTotalLife			Returns your leek's maximum life.
-func_canUseWeaponOnCell_arg_1			Targetted cell.
-func_getCores_return			Your leek's number of cores.
-func_search_2_return			The position of the first occurrence of given <b>element</b> inside given <b>array</b> starting at given <b>start</b> position, null if no match was found.
-func_getWeaponName			Returns a <b>weapon</b>'s name.
-func_mark_3_arg_2			Marking's color (see #getColor()).
-func_getWeaponMinScope_return			Given <b>weapon</b>'s minimum scope.
-function_category_math			Math
-func_moveTowardCells_2_return			The actual amount of MP spent.
-func_getAbsoluteShield_2			Return a <b>leek</b>'s absolute shield value.<br />For your leek, prefer #getAbsoluteShield() with no input.
-func_getChipCooldown			Returns a <b>chip</b>'s cooldown as shown in the market.
-func_getTotalMP_2_arg_1			Desired entity's id.
-func_isAlly_return			<i>true</i> if <b>leek</b> is an ally (or you), <i>false</i> otherwise.
-func_getCellsToUseWeapon_2_arg_2			Targetted leek.
-func_getLife_return			Your leek's HP count.
-func_getCellsToUseWeapon_2_return			List of all cells that allow your leek to shoot given weapon.
-func_getAIID_return			The id of your leek's AI.
-func_getOperations_return			Count of operations since the beginning of the turn.
-func_getAIID			Returns the id of your AI.
-func_getCellToUseChip_return			A cell that allows using given chip.
-func_getDamageReturn_2_return			Entity's damage return ratio (in %).
+func_getWeaponEffectiveArea_2_return			Array that contains the id of all affected cells.
+func_getWeaponEffectiveArea_3			Lists the cells affected if given <b>weapon</b> were shot on given <b>cell</b>, from <b>from</b> cell.
+func_getWeaponEffectiveArea_3_arg_1			Weapon to be used.
+func_getWeaponEffectiveArea_3_arg_2			Targetted cell.
+func_getWeaponEffectiveArea_3_arg_3			Cell from which the chip is used.
+func_getWeaponEffectiveArea_3_return			Array that contains the id of all affected cells.
+func_getWeaponEffectiveArea_arg_1			Targetted cell.
+func_getWeaponEffectiveArea_return			Array that contains the id of all affected cells.
+func_getWeaponEffects			Lists a <b>weapon</b>'s effects.
+func_getWeaponEffects_arg_1			Desired weapon.
 func_getWeaponEffects_return			Array containing given's weapon effects. An effect itself if an array, in the following format: [type, min, max, turns, targets].
 <ul>
 	<li><b>type</b> is an effect type, among: #EFFECT_DAMAGE, #EFFECT_HEAL, 
@@ -499,49 +751,370 @@ if (targets & EFFECT_TARGET_NOT_CASTER) debug('Cannot affect caster');
 if (targets & EFFECT_TARGET_SUMMONS) debug("Affects summons");</code>
 	</li>
 	</ul>
-func_getDamageReturn_return			Caller's damage return ratio (in %).
-func_getEffects_2_return			Array of effects affecting given <b>leek</b>.
-An effect itself is a 7-cell array of the following form: [<b>type</b>, b>value</b>, <b>caster_id</b>, <b>turns</b>, <b>critical</b>, <b>item_id</b>, <b>target_id</b>], with <b>type</b> describing the type of effect, among:
-<ul>
-		<li>#EFFECT_DAMAGE, <b>value</b> is the amount of damage</li>
-		<li>#EFFECT_HEAL, <b>value</b> is the number of HP healed</li>
-		<li>#EFFECT_BUFF_FORCE, <b>value</b> is the added strength</li>
-		<li>#EFFECT_BUFF_AGILITY, <b>value</b> is the added agility</li>
-		<li>#EFFECT_BUFF_TP, <b>value</b> is the number of added TP</li>
-		<li>#EFFECT_BUFF_MP, <b>value</b>is the number of added MP</li>
-		<li>#EFFECT_ABSOLUTE_SHIELD, <b>value</b> is the absolute shield gained</li>
-		<li>#EFFECT_RELATIVE_SHIELD, <b>value</b> is the relative shield gained</li>
-		<li>#EFFECT_DEBUFF, indicates a debuff, <b>value</b> is not significant.</li>
-<li>etc.</li>
-	</ul>
-func_getLaunchedEffects_2			Returns the list of effects provoked by given <b>leek</b>.
-func_getMagic_2			Returns given <b>leek</b>'s magic.
-func_getCellsToUseChipOnCell_2_return			List of all cells that allow using given chip.
-func_arrayMax_return			The greatest value contained in given array.
-func_atan2			Computes the azimuth of given point (<b>x</b>, <b>y</b>) in polar coordinates. Return value is between - #PI and #PI, depending on parameters' signs.
-func_sin_arg_1			A number.
-func_charAt_arg_1			A string.
+func_getWeaponFailure			Returns a <b>weapon</b>'s failure rate.
+func_getWeaponFailure_arg_1			Desired weapon.
+func_getWeaponFailure_return			Given <b>chip</b>'s failure rate, in percents, integer between <b>0</b> and <b>100</b>.
+func_getWeaponMaxRange			Returns a <b>weapon</b>'s max scope.
+func_getWeaponMaxRange_arg_1			Desired weapon.
+func_getWeaponMaxRange_return			Given <b>weapon</b>'s maximum scope.
+func_getWeaponMaxScope			Returns a <b>weapon</b>'s max scope.
+func_getWeaponMaxScope_arg_1			Desired weapon.
+func_getWeaponMaxScope_return			Given <b>weapon</b>'s maximum scope.
+func_getWeaponMinRange			Returns a <b>weapon</b>'s min scope.
+func_getWeaponMinRange_arg_1			Desired weapon.
+func_getWeaponMinRange_return			Given <b>weapon</b>'s minimum scope.
+func_getWeaponMinScope			Returns a <b>weapon</b>'s min scope.
+func_getWeaponMinScope_arg_1			Desired weapon.
+func_getWeaponMinScope_return			Given <b>weapon</b>'s minimum scope.
+func_getWeaponName			Returns a <b>weapon</b>'s name.
+func_getWeaponName_arg_1			Desired weapon.
+func_getWeaponName_return			Given <b>weapon</b>'s name
+func_getWeapon_return			The weapon's id, null if your leek has no equipped weapon.
+func_getWeapons			Lists your leek's weapons.
+func_getWeapons_2			Lists given <b>leek</b>'s weapons.
+func_getWeapons_2_arg_1			Desired leek.
+func_getWeapons_2_return			Array containing all of given <b>leek</b>'s weapons.
+func_getWeapons_return			Array containing all of your leek's weapons.
+func_getWeaponTargets			Lists leeks that will be affected if your leek's current weapon were used on given <b>cell</b>.
+func_getWeaponTargets_2			Lists leeks that will be affected if given <b>weapon</b> were used on given <b>cell</b>.
+func_getWeaponTargets_2_arg_1			Weapon to be used.
+func_getWeaponTargets_2_arg_2			Targetted cell.
+func_getWeaponTargets_2_return			Array containing the affected leeks.
+func_getWeaponTargets_arg_1			Targetted cell.
+func_getWeaponTargets_return			Array containing the affected leeks.
+func_getWisdom			Returns caller's wisdom.
+func_getWisdom_2			Returns given <b>leek</b>'s wisdom.
+func_getWisdom_2_arg_1			Desired entity's id.
+func_getWisdom_2_return			Given entity's wisdom.
+func_getWisdom_return			Caller's wisdom.
+func_hypot			Returns the hypothenuse of a right-angled triangle with sides <b>x</b> and <b>y</b>. Equivalent to <i>sqrt(x**2&nbsp;+&nbsp;y**2)</i>.
+func_hypot_arg_1			x value.
+func_hypot_arg_2			y value.
+func_hypot_return			<i>sqrt(x**2 + y**2)</i>.
+func_inArray			Checks whether given <b>element</b> is inside given <b>array</b>.
+func_inArray_arg_1			Array in which search is performed.
+func_inArray_arg_2			Element to look for.
+func_inArray_return			<i>true</i> if given <b>element</b> is contained in <b>array</b>, <i>false</i> otherwise.
 func_include			Icludes the AI whose name is <b>ai</b> inside current AI.<br/><br/>Warning: <b>include</b> function shall only be called inside the main AI block, and its parameter shall NOT be a variable. More information in the tutorial: <a href='http://leekwars.com/tutorial#includes'>http://leekwars.com/tutorial#includes</a>.
-func_getWeapon			Returns the weapon currently equipped by your leek.
-func_moveTowardLeeks_2_arg_2			The maximum amount of MP to spend.
-func_arrayMax			Finds the greatest value within given <b>array</b>.<br/>See also: #sort.
-func_getChipEffects			Lists a <b>chip</b>'s effects.
-func_moveTowardLeeks_2_arg_1			Array containig the leeks to which you want to get closer.
-func_log_arg_1			A positive number (within ]0 ; +∞[ ).
-func_getCellToUseWeaponOnCell_3_arg_2			Targetted cell.
-func_reverse_arg_1			Array that is reversed.
-func_getMessageAuthor			Returns given <b>message</b>'s author (leek).
-func_subArray_return			The desired sub-array.
-func_getDamageReturn_2			Returns given <b>leek</b>'s damage return ratio.
-const_EFFECT_SHACKLE_MAGIC			
+func_include_arg_1			AI's name (hard-coded string only)
+func_indexOf			Finds the first occurrence of <b>search</b> string within given <b>string</b>.
+func_indexOf_2			Finds the first occurrence of <b>search</b> string within given <b>string</b>, starting at given <b>position</b>.
+func_indexOf_2_arg_1			String to be looked into.
+func_indexOf_2_arg_2			String to be looked for.
+func_indexOf_2_arg_3			Position within <b>string</b> where the search starts.
+func_indexOf_2_return			First matching substring's position , -1 if no match was found.
+func_indexOf_arg_1			String to be looked into.
+func_indexOf_arg_2			String to be looked for.
+func_indexOf_return			First matching substring's position , -1 if no match was found.
+func_insert			Inserts an <b>element</b> in an <b>array</b>, at given <b>position</b>.
+func_insert_arg_1			Array in which element is added.
+func_insert_arg_2			Element to add.
+func_insert_arg_3			Insertion position.
+func_isAlive			Checks whether a <b>leek</b> is alive. Equivalent to <i>getLife(<b>leek</b>) > 0</i>.
+func_isAlive_arg_1			Desired leek.
+func_isAlive_return			<i>true</i> if <b>leek</b> is alive, <i>false</i> otherwise.
+func_isAlly			Checks whether a <b>leek</b> is your ally.
+func_isAlly_arg_1			Desired leek.
+func_isAlly_return			<i>true</i> if <b>leek</b> is an ally (or you), <i>false</i> otherwise.
+func_isChip			Checks whether given <b>value</b> can represent a chip.<br><br>isChip(CHIP_RAGE) = true;<br>isChip(WEAPON_PISTOL) = false.
+func_isChip_arg_1			Value to check.
+func_isChip_return			<i>true</i> if <b>value</b> is a chip, <i>false</i> otherwise.
+func_isDead			Checks whether a <b>leek</b> is dead. Equivalent to <i>getLife(<b>leek</b>) == 0</i>.
+func_isDead_arg_1			Desired leek.
+func_isDead_return			<i>true</i> if <b>leek</b> is dead, <i>false</i> otherwise.
+func_isEmpty			Checks whether given <b>array</b> is empty. Equivalent to <i>count(<b>array</b>) == 0</i>.
+func_isEmpty_arg_1			Array to check.
+func_isEmptyCell			Checks whether given <b>cell</b> is empty.
+func_isEmptyCell_arg_1			Cell to check.
 func_isEmptyCell_return			<i>true</i> if <b>cell</b> is empty, <i>false</i> otherwise.
-func_getTotalMP			Returns caller's total MP count (not counting this turn's movements).
-func_getPathLength			Returns the length of a path between <b>cell1</b> and <b>cell2</b> that avoids occupied cells. This function is equivalent to <i>count(getPath(<b>cell1</b>, <b>cell2</b>))</i>.<br /><br />For as a crow's flies distance, see #getDistance and for distance in number of cells, see #getCellDistance
-func_getStrength_2			Return's given <b>leek</b>'s strength.
-func_getTotalMP_2			Returns given <b>leek</b>'s total MP count (not counting this turn's movements).
-func_substring_arg_2			Starting position.
-func_getCellsToUseWeapon_3_arg_1			The weapon your leek wants to use.
-func_getTotalMP_return			Caller's total MP count.
+func_isEmpty_return			<i>true</i> if <b>array</b> is empty, <i>false</i> otherwise.
+func_isEnemy			Checks whether a <b>leek</b> is your enemy.
+func_isEnemy_arg_1			Desired leek.
+func_isEnemy_return			<i>true</i> if <b>leek</b> is an enemy, <i>false</i> otherwise.
+func_isInlineChip			Checks whether given <b>chip</b> is inline, i.e. only usable if the target is in the same line as the caster.
+func_isInlineChip_arg_1			Desired chip.
+func_isInlineChip_return			<i>true</i> if <b>chip</b> is inline, <i>false</i> otherwise.
+func_isInlineWeapon			Checks whether given <b>weapon</b> is inline, i.e. only usable if the target is in the same line as the caster.
+func_isInlineWeapon_arg_1			Desired weapon.
+func_isInlineWeapon_return			<i>true</i> if <b>weapon</b> is inline, <i>false</i> otherwise.
+func_isLeek			Checks whether given <b>cell</b> is occupied by a leek.
+func_isLeek_arg_1			Cell to check.
+func_isLeek_return			<i>true</i> if <b>cell</b> is occupied by a leek, <i>false</i> otherwise.
+func_isObstacle			Checks whether given <b>cell</b> is occupied by an obstacle.
+func_isObstacle_arg_1			Cell to check.
+func_isObstacle_return			<i>true</i> if <b>cell</b> is occupied by an obstacle, <i>false</i> otherwise.
+func_isOnSameLine			Checks whether <b>cell1</b> and <b>cell2</b> are on the same line.
+func_isOnSameLine_arg_1			First cell.
+func_isOnSameLine_arg_2			Second cell.
+func_isOnSameLine_return			<i>true</i> if cells are on the same line, <i>false</i> otherwise.
+func_isSummon			Returns wether the caller is a summoned entity or not.
+func_isSummon_2			Returns wether given <b>entity</b> is a summoned entity or not.
+func_isSummon_2_arg_1			Desired entity.
+func_isSummon_2_return			<i>true</i> if given entity is a summoned entity, <i>false</i> otherwise.
+func_isSummon_return			<i>true</i> if the caller is a summoned entity, <i>false</i> otherwise.
+func_isWeapon			Checks whether given <b>value</b> can represent a weapon.<br><br>isWeapon(WEAPON_LASER) = true;<br>isWeapon(CHIP_TELEPORTATION) = false.
+func_isWeapon_arg_1			Value to check.
+func_isWeapon_return			<i>true</i> if <b>value</b> is a weapon, <i>false</i> otherwise.
+func_join			Creates a single string containing all elements of given <b>array</b>, separated by <b>glue</b> delimiters.
+func_join_arg_1			An array of elements to be joined into a string.
+func_join_arg_2			A string that is inserted between consecutive elements of the array.
+func_join_return			The resulting string.
+func_jsonDecode			Decode the string <b>json</b> into a LeekScript object (number, string, array...).
+func_jsonDecode_arg_1			The string to decode.
+func_jsonDecode_return			The decoded LeekScript Object.
+func_jsonEncode			Encode the object <b>object</b> into a JSON string.
+func_jsonEncode_arg_1			The object to encode in JSON.
+func_jsonEncode_return			The JSON encoded string
+func_keySort			Sorts an <b>array</b> using key values.
+func_keySort_2			Sorts an <b>array</b> using key values, using given sorting <b>order</b>.
+func_keySort_2_arg_1			Array that is sorted.
+func_keySort_2_arg_2			Sorting order: #SORT_ASC or #SORT_DESC.
+func_keySort_arg_1			Array that is sorted.
+func_length			Returns given <b>string</b>'s length.
+func_length_arg_1			Desired string.
+func_length_return			Given <b>string</b>'s length
+func_lineOfSight			Checks whether a leek on <b>start</b> cell can see <b>end</b> cell.
+func_lineOfSight_2			Checks whether a leek on <b>start</b> cell can see <b>end</b> cell, ignoring given <b>leek</b>.
+func_lineOfSight_2_arg_1			Cell id of starting point.
+func_lineOfSight_2_arg_2			Cell id of target.
+func_lineOfSight_2_arg_3			Ignored leek (this leek will not block a line of sight).<br>Note: this input can also be an array containing several leeks.
+func_lineOfSight_2_return			<i>true</i> if the line of sight is clear, <i>false</i> otherwise.
+func_lineOfSight_arg_1			Cell id of starting point.
+func_lineOfSight_arg_2			Cell id of target.
+func_lineOfSight_return			<i>true</i> if the line of sight is clear, <i>false</i> otherwise.
+func_listen			Lists say() performed by previous leeks, as [leek_id, message].
+func_listen_return			Array containing previous say().
+func_log			Computes the natural logarithm of given <b>number</b>.
+func_log10			Computes the decimal logarithm of given <b>number</b>.
+func_log10_arg_1			A positive number (within ]0 ; +∞[ ).
+func_log10_return			Given number's decimal logarithm.
+func_log_arg_1			A positive number (within ]0 ; +∞[ ).
+func_log_return			Given number's natural logarithm.
+func_mark			Marks one or several cells on terrain in black, for one turn. The mark is only visible by the marking leek's farmer.
+func_mark_2			Marks one or several cells on terrain in given <b>color</b> for one turn. The mark is only visible by the marking leek's farmer.
+func_mark_2_arg_1			A cell or array of cells.
+func_mark_2_arg_2			Marking's color (see #getColor()).
+func_mark_2_return			<i>true</i> if all went well, <i>false</i> otherwise.
+func_mark_3			Marks one or several cells on terrain in given <b>color</b> 
+for the given <b>duration</b>. The mark is only visible by the marking leek's farmer.
+func_mark_3_arg_1			A cell or array of cells.
+func_mark_3_arg_2			Marking's color (see #getColor()).
+func_mark_3_arg_3			Duration of the marking.
+func_mark_3_return			<i>true</i> if all went well, <i>false</i> otherwise.
+func_mark_arg_1			A cell or array of cells.
+func_mark_return			<i>true</i> if all went well, <i>false</i> otherwise.
+func_max			Finds the greatest value among two numbers <b>a</b> and <b>b</b>.
+func_max_arg_1			A number.
+func_max_arg_2			Another number.
+func_max_return			The greatest of the two numbers.
+func_min			Finds the least value among two numbers <b>a</b> and <b>b</b>.
+func_min_arg_1			A number.
+func_min_arg_2			Another number.
+func_min_return			The least of the two numbers.
+func_moveAwayFrom			Moves your leek away from another <b>leek</b>.
+func_moveAwayFrom_2			Moves your leek away from another <b>leek</b>, using at most <b>mp</b> Movement Points.
+func_moveAwayFrom_2_arg_1			The leek from which you want to flee.
+func_moveAwayFrom_2_arg_2			The maximum amount of MP to spend.
+func_moveAwayFrom_2_return			The actual amount of MP spent.
+func_moveAwayFrom_arg_1			The leek from which you want to flee.
+func_moveAwayFromCell			Moves your leek away from given <b>cell</b>.
+func_moveAwayFromCell_2			Moves your leek away from given <b>cell</b>, using at most <b>mp</b> Movement Points.
+func_moveAwayFromCell_2_arg_1			The cell from which you want to flee.
+func_moveAwayFromCell_2_arg_2			The maximum amount of MP to spend.
+func_moveAwayFromCell_2_return			The actual amount of MP spent.
+func_moveAwayFromCell_arg_1			The cell from which you want to flee.
+func_moveAwayFromCell_return			The amount of MP spent.
+func_moveAwayFromCells			Moves your leek away from a given group of <b>cells</b>.
+func_moveAwayFromCells_2			Moves your leek away from a given group of <b>cells</b>, using at most <b>mp</b> Movement Points.
+func_moveAwayFromCells_2_arg_1			Array containig the cells from which you want to flee.
+func_moveAwayFromCells_2_arg_2			The maximum amount of MP to spend.
+func_moveAwayFromCells_2_return			The actual amount of MP spent.
+func_moveAwayFromCells_arg_1			Array containig the cells from which you want to flee.
+func_moveAwayFromCells_return			The amount of MP spent.
+func_moveAwayFromLeeks			Moves your leek away from a given group of <b>leeks</b>.
+func_moveAwayFromLeeks_2			Moves your leek away from a given group of <b>leeks</b>, using at most <b>mp</b> Movement Points.
+func_moveAwayFromLeeks_2_arg_1			Array containig the leeks from which you want to flee.
+func_moveAwayFromLeeks_2_arg_2			The maximum amount of MP to spend.
+func_moveAwayFromLeeks_2_return			The actual amount of MP spent.
+func_moveAwayFromLeeks_arg_1			Array containig the leeks from which you want to flee.
+func_moveAwayFromLeeks_return			The amount of MP spent.
+func_moveAwayFromLine			Moves your leek away from the line between <b>cell1</b> and <b>cell2</b>.
+func_moveAwayFromLine_2			Moves your leek away from the line between <b>cell1</b> 
+and <b>cell2</b>, using at most <b>mp</b> 
+Movement Points.
+func_moveAwayFromLine_2_arg_1			First cell of the line.
+func_moveAwayFromLine_2_arg_2			Final cell of the line.
+func_moveAwayFromLine_2_arg_3			The maximum amount of MP to spend.
+func_moveAwayFromLine_2_return			The actual amount of MP spent.
+func_moveAwayFromLine_arg_1			The first cell of the line.
+func_moveAwayFromLine_arg_2			The final cell of the line.
+func_moveAwayFromLine_return			The amount of MP spent.
+func_moveAwayFrom_return			The amount of MP spent doing so.
+func_moveToward			Moves your leek closer to another <b>leek</b>.
+func_moveToward_2			Moves your leek closer to another <b>leek</b>, using at most <b>mp</b> 
+Movement Points.
+func_moveToward_2_arg_1			The leek you want to get closer to.
+func_moveToward_2_arg_2			The maximum amount of MP to spend.
+func_moveToward_2_return			The actual amount of MP spent.
+func_moveToward_arg_1			The leek you want to get closer to.
+func_moveTowardCell			Moves your leek closer to given <b>cell</b>.
+func_moveTowardCell_2			Moves your leek closer to given <b>cell</b>, using at most <b>mp</b> 
+Movement Points.
+func_moveTowardCell_2_arg_1			The cell you want to get closer to.
+func_moveTowardCell_2_arg_2			The maximum amount of MP to spend.
+func_moveTowardCell_2_return			The actual amount of MP spent.
+func_moveTowardCell_arg_1			The cell you want to get closer to.
+func_moveTowardCell_return			The amount of MP spent.
+func_moveTowardCells			Moves your leek closer to a given group of <b>cells</b>.
+func_moveTowardCells_2			Moves your leek closer to a given group of <b>cells</b>, using at most <b>mp</b> 
+Movement Points.
+func_moveTowardCells_2_arg_1			Array containig the cells to which you want to get closer.
+func_moveTowardCells_2_arg_2			The maximum amount of MP to spend.
+func_moveTowardCells_2_return			The actual amount of MP spent.
+func_moveTowardCells_arg_1			Array containig the cells to which you want to get closer.
+func_moveTowardCells_return			The amount of MP spent.
+func_moveTowardLeeks			Moves your leek closer to a given group of <b>leeks</b>.
+func_moveTowardLeeks_2			Moves your leek closer to a given group of <b>leeks</b>, using at most <b>mp</b> 
+Movement Points.
+func_moveTowardLeeks_2_arg_1			Array containig the leeks to which you want to get closer.
+func_moveTowardLeeks_2_arg_2			The maximum amount of MP to spend.
+func_moveTowardLeeks_2_return			The actual amount of MP spent.
+func_moveTowardLeeks_arg_1			Array containig the leeks to which you want to get closer.
+func_moveTowardLeeks_return			The amount of MP spent.
+func_moveTowardLine			Moves your leek towards the line between <b>cell1</b> 
+and <b>cell2</b>.
+func_moveTowardLine_2			Moves your leek towards the line between <b>cell1</b> 
+and <b>cell2</b>, using at most <b>mp</b> 
+Movement Points.
+func_moveTowardLine_2_arg_1			The first cell of the line.
+func_moveTowardLine_2_arg_2			The final cell of the line.
+func_moveTowardLine_2_arg_3			The maximum amount of MP to spend.
+func_moveTowardLine_2_return			The actual amount of MP spent.
+func_moveTowardLine_arg_1			The first cell of the line.
+func_moveTowardLine_arg_2			The final cell of the line.
+func_moveTowardLine_return			The amount of MP spent.
+func_moveToward_return			The amount of MP spent.
+func_number			Casts a value into a number. If the value is a string, this function attempts to convert it into a number. If the value is a number, this function returns the number. For any other type, this function returns <i>null</i>
+func_number_arg_1			The value to convert.
+func_number_return			The resulting number.
+func_pause			Pauses the fight, only for the pausing leek's farmer.
+func_pop			Removes the last element of an array, and returns this element.
+func_pop_arg_1			The array to truncate.
+func_pop_return			The truncated element.
+func_pow			Exponentiates a <b>base</b> number to the <b>exp</b> power.
+func_pow_arg_1			Number to exponentiate.
+func_pow_arg_2			Exponant.
+func_pow_return			<b>base</b>**<b>exp</b>.
+func_push			Adds given <b>element</b> at the end of given <b>array</b>.
+func_pushAll			Adds all elements from <b>elements</b> array at the end of given <b>array</b>.
+func_pushAll_arg_1			Array which will be prolonged.
+func_pushAll_arg_2			Array containing elements to add.
+func_push_arg_1			Array which will be prolonged.
+func_push_arg_2			Additionnal element.
+func_rand			Returns a random real number, between 0 (included) and 1 (excluded).
+func_randFloat			Returns a random real number, between <b>a</b> (included) and <b>b</b> (excluded).
+func_randFloat_arg_1			The lower bound of the interval.
+func_randFloat_arg_2			The upper bound of the interval.
+func_randFloat_return			A random number within [a;b).
+func_randInt			Returns a random integer, between <b>a</b> (included) and <b>b</b> (excluded).
+func_randInt_arg_1			The lower bound of the interval.
+func_randInt_arg_2			The upper bound of the interval.
+func_randInt_return			A random integer within [a;b).
+func_rand_return			A random number within [0;1).
+func_remove			Removes the element at given <b>position</b> from given <b>array</b>, and returns this element.
+func_remove_arg_1			The array from which an element is removed.
+func_remove_arg_2			The position of the element to remove.
+func_removeElement			Removes the first occurrence of given <b>element</b> from given <b>array</b>. <b>array</b> is unchanged if <b>element</b> cannot be found.
+func_removeElement_arg_1			The array from which an element is removed.
+func_removeElement_arg_2			The element to look for and remove.
+func_removeKey			Removes the element of given <b>array</b> associated with given <b>key</b>.
+func_removeKey_arg_1			The array from which an element is removed.
+func_removeKey_arg_2			The key of the element to remove.
+func_remove_return			The removed element.
+func_replace			Replaces all occurrence of <b>search</b> string with <b>replace</b> string, within given <b>string</b>.
+func_replace_arg_1			String inside which substitutions are performed.
+func_replace_arg_2			Substring to be replaced.
+func_replace_arg_3			Replacing substring.
+func_replace_return			Resulting string.
+func_resurrect			Uses CHIP_RESURRECTION to resurrect an entity of id <b>entity</b> on the cell <b>cell</b>.
+func_resurrect_arg_1			The id of the entity to revive.
+func_resurrect_arg_2			The cell on which the entity reappear
+func_resurrect_return			The result of the launch of the chip, among USE_* constants.
+func_reverse			Reverses the given <b>array</b>.
+func_reverse_arg_1			Array that is reversed.
+func_round			Computes the integer closest to a given <b>number</b>.<br />The rounded down value can be computed using #floor and the rounded up value using #ceil.
+func_round_arg_1			Number
+func_round_return			Rounded value of <b>number</b>, to the closest integer.
+func_say			Allows your leek to talk. Costs one TP.
+func_say_arg_1			Message your leek says, visible by all viewers of the fight.
+func_search			Searches for given <b>element</b> inside given <b>array</b>.
+func_search_2			Searches for given <b>element</b> inside given <b>array</b>, starting at <b>start</b> position.
+func_search_2_arg_1			The array to look into.
+func_search_2_arg_2			The element to look for.
+func_search_2_arg_3			The starting position.
+func_search_2_return			The position of the first occurrence of given <b>element</b> inside given <b>array</b> starting at given <b>start</b> position, null if no match was found.
+func_search_arg_1			The array to look into.
+func_search_arg_2			The element to look for.
+func_search_return			The position of the first occurrence of given <b>element</b> inside given <b>array</b>, null if no match was found.
+func_sendAll			Sends a message to all of your allies.
+func_sendAll_arg_1			The type of message to send (see MESSAGE_* constants).
+func_sendAll_arg_2			The parameters of the message, which can take any form.
+func_sendTo			Sends a message to given <b>leek</b>.
+func_sendTo_arg_1			Message's addressee
+func_sendTo_arg_2			The type of message to send (see MESSAGE_* constants).
+func_sendTo_arg_3			The parameters of the message, which can take any form.
+func_setRegister			Stores given <b>value</b> in your leek's register, associated with given <b>key</b>. Given <b>key</b> and <b>value</b> are strings, respectively  with maximum length of <i>100</i> and <i>5000</i> characters.
+A leek can have at most 100 distinct keys in its register, any additionnal (key:value) pair will not be stored if your leek's register is full.
+func_setRegister_arg_1			Register key to index given value.
+func_setRegister_arg_2			Value to be stored.
+func_setRegister_return			<i>true</i> if operation succeeded, <i>false</i> otherwise.
+func_setWeapon			Equips given <b>weapon</b> on your leek.
+func_setWeapon_arg_1			Weapon's id.
+func_shift			Removes the first cell of given <b>array</b>, and returns the corresponding element.
+func_shift_arg_1			The array to be truncated.
+func_shift_return			The removed element.
+func_show			Shows all players given <b>cell</b> in black, for one turn. Costs one TP.
+func_show_2			Shows all players given <b>cell</b> in given <b>color</b>, for one turn. Costs one TP.
+func_show_2_arg_1			Cell to be showned.
+func_show_2_arg_2			Marking's color (see #getColor()).
+func_show_2_return			<i>true</i> if all went well, <i>false</i> otherwise.
+func_show_arg_1			Cell to be showned.
+func_show_return			<i>true</i> if all went well, <i>false</i> otherwise.
+func_shuffle			Shuffles the contents of given <b>array</b>.
+func_shuffle_arg_1			Array to be shuffled.
+func_signum			Checks the sign of given <b>number</b>.
+func_signum_arg_1			Input number.
+func_signum_return			1 if <b>number</b> is positive, 0 if it is 0 and -1 if it is negative.
+func_sin			Computes an <b>angle</b>'s sine.
+func_sin_arg_1			A number.
+func_sin_return			Given number's sine, within [-1, 1].
+func_sort			Sorts given <b>array</b>, using the following order:
+<ul>
+<li>Booleans (false then true)</li>
+<li>Numbers (least to greatest)</li>
+<li>Strings (sorted alphabetically)</li>
+<li>null elements</li>
+</ul>
+func_sort_2			Sorts given <b>array</b>, using the given order.
+func_sort_2_arg_1			Array that needs sorting.
+func_sort_2_arg_2			#SORT_ASC to sort from least to greatest, or #SORT_DESC to sort from greatest to least. More details in #sort (especially for multiple types arrays).
+func_sort_arg_1			Array that needs sorting.
+func_split			Splits given <b>string</b> into substrings separated by given <b>delimiter</b>.
+func_split_2			Splits given <b>string</b> into substrings separated by given <b>delimiter</b>.
+func_split_2_arg_1			String that needs splitting.
+func_split_2_arg_2			String that separates desired substrings.
+func_split_2_arg_3			Maximum size of output array.
+func_split_2_return			Array containing all substrings.
+func_split_arg_1			String that needs splitting.
+func_split_arg_2			String that separates desired substrings.
+func_split_return			Array containing all substrings.
+func_sqrt			Computes given <b>number</b>'s square root.
+func_sqrt_arg_1			A number.
+func_sqrt_return			Given <b>number</b>'s square root.
+func_startsWith			Checks whether given <b>string</b> starts with given <b>prefix</b>.
+func_startsWith_arg_1			String to look into.
+func_startsWith_arg_2			Prefix to look for.
+func_startsWith_return			<i>true</i> if given <b>string</b> starts with given <b>prefix</b>, <i>false</i> otherwise.
 func_string			Casts a value to a string container.<br />Returns:
 <ul><li>value if it is a string</li>
 <li>"value" if it is a number</li>
@@ -549,7 +1122,70 @@ func_string			Casts a value to a string container.<br />Returns:
 <li>"true" or "false" if value is a boolean</li>
 <li>"null" if value is null</li>
 </ul>.
-func_getDistance			Computes as a crow flies distance between <b>cell1</b> and <b>cell2</b>.<br>For distance in number of cells, see #getCellDistance, and for an actual path (taking obstacles into account), see #getPathLength.
+func_string_arg_1			Value that needs conversion.
+func_string_return			Resulting string.
+func_subArray			Extracts a sub-array, starting at <b>start</b> position and ending at <b>end</b> position, from given <b>array</b>.
+func_subArray_arg_1			Source array.
+func_subArray_arg_2			Starting position.
+func_subArray_arg_3			Ending position.
+func_subArray_return			The desired sub-array.
+func_substring			Extracts a substring, starting at <b>start</b> position, from given <b>string</b>.
+func_substring_2			Extracts a substring, starting at <b>start</b> position and 
+of given <b>length</b>, from given <b>string</b>
+func_substring_2_arg_1			Source string.
+func_substring_2_arg_2			Starting position.
+func_substring_2_arg_3			Length of the output.
+func_substring_2_return			The desired substring.
+func_substring_arg_1			Source string.
+func_substring_arg_2			Starting position.
+func_substring_return			The desired substring.
+func_sum			Computes the sum of all elements within given <b>array</b>.
+func_sum_arg_1			Source array.
+func_summon			Uses given <b>chip</b> to summon the corresponding entity on given <b>cell</b>. The entity uses the AI contained in given <b>ai</b> function.
+func_summon_arg_1			Desired chip. It has to be a summoning chip, equipped on the sumonning leek.
+func_summon_arg_2			Cell where the summon should appears.
+func_summon_arg_3			The sumonned entity's AI, as a function.
+func_summon_return			Summoning result, see #useChip for details.
+func_sum_return			Computed sum.
+func_tan			Computes given <b>angle</b>'s tangent.
+func_tan_arg_1			A number.
+func_tan_return			Given <b>angle</b>'s tangent.
+function_category_array			Arrays
+function_category_chip			Chips
+function_category_color			Color
+function_category_fight			Fight
+function_category_leek			Leeks
+function_category_map			Map
+function_category_math			Math
+function_category_network			Networking
+function_category_string			Strings
+function_category_utils			Utility
+function_category_weapon			Weapons
+func_toDegrees			Converts given <b>angle</b> from radians to degrees.
+func_toDegrees_arg_1			Angle's measure in radians.
+func_toDegrees_return			Angle's measure in degrees.
+func_toLower			Converts all capital letters from given <b>string</b> to lower characters.
+func_toLower_arg_1			Input string.
+func_toLower_return			String in lower characters.
+func_toRadians			Converts given <b>angle</b> from degrees to radians.
+func_toRadians_arg_1			Angle's measure in degrees.
+func_toRadians_return			Angle's measure in radians.
+func_toUpper			Converts all lower characters from given <b>string</b> to capital letters.
+func_toUpper_arg_1			Input string.
+func_toUpper_return			String in upper characters.
+func_typeOf			Determines the type of give <b>value</b>, among: #TYPE_NULL, #TYPE_NUMBER, #TYPE_BOOLEAN, #TYPE_STRING, #TYPE_ARRAY, #TYPE_FUNCTION.
+func_typeOf_arg_1			Value that needs testing.
+func_typeOf_return			<b>values</b>'s type.
+func_unshift			Adds given <b>element</b> at the beginning of given <b>array</b>.
+func_unshift_arg_1			Array.
+func_unshift_arg_2			Additionnal element.
+func_useChip			Use given <b>chip</b>, targetting given <b>leek</b>.
+func_useChip_arg_1			Chip to use.
+func_useChip_arg_2			Targetted leek.
+func_useChipOnCell			Use given <b>chip</b>, targetting given <b>cell</b>.
+func_useChipOnCell_arg_1			Chip to use.
+func_useChipOnCell_arg_2			Targetted cell.
+func_useChipOnCell_return			See #useChip.
 func_useChip_return			<ul>
 <li>#USE_CRITICAL, in case of critical hit</li>
 		<li>#USE_SUCCESS, in case of success</li>
@@ -559,40 +1195,11 @@ func_useChip_return			<ul>
 		<li>#USE_INVALID_COOLDOWN, if given <b>chip</b>'s cooldown is not expired</li>
 		<li>#USE_INVALID_POSITION, if the chip's scope does not allow its use, or line of sight is not clear.</li>
 	</ul>
-func_asin_return			Given number's arcsin.
-func_number_return			The resulting number.
-func_getCellsToUseWeapon_3			Lists all cells that allow your leek to shoot a given <b>weapon</b>, targetting given <b>leek</b>.
-func_isInlineChip			Checks whether given <b>chip</b> is inline, i.e. only usable if the target is in the same line as the caster.
-func_arrayMin_arg_1			An array of numbers.
-func_getCellToUseChipOnCell			Finds a cell that allows your leek to use a given <b>chip</b>, targetting given <b>cell</b>.
-func_arrayMin_return			The least value contained in given array.
-func_substring_return			The desired substring.
-const_EFFECT_ANTIDOTE			
-func_getCellFromXY			Returns the id of the cell at coordinates (<b>x</b>, <b>y</b>).
-func_getNearestEnemyToCell_arg_1			Targetted cell.
-func_fill			Fills an <b>array</b> with <b>value</b>, i.e replaces all existing elements with <b>value</b>.
-func_moveAwayFromLine_2_arg_2			Final cell of the line.
-func_getCellsToUseWeaponOnCell_2_return			List of all cells that allow your leek to shoot.
-func_getTotalTP			Returns caller's total TP count (not counting this turn's actions).
-func_getFrequency_2			Return's given <b>leek</b>'s frequency.
-const_CHIP_ANTIDOTE			
-func_getScience_return			Caller's science.
-func_getRelativeShield			Returns your leek's relative shield.
-func_assocSort_arg_1			Array that needs sorting.
-func_getCellToUseChip_2_arg_1			The chip your leek wants to use.
-const_WEAPON_KATANA			
-func_moveAwayFromLine_2_return			The actual amount of MP spent.
-func_getInstructionsCount			Returns the number of instructions used by your leek this turn.
-func_getFarmerName_return			Your farmer's name.
-func_fill_arg_1			Array to be filled.
-func_getName_2_return			Given <b>leek</b>'s name.
-func_getChipMaxRange			Returns a <b>chip</b>'s max range.
-func_getPathLength_2			Returns the length of a path between <b>cell1</b> and <b>cell2</b> that avoids occupied cells, except <b>ignoredCells</b> which are considered empty even when a leek is present.
-func_getCellsToUseChip_arg_2			Targetted leek.
-func_getCellToUseWeapon_arg_1			Targetted leek.
-func_moveAwayFromLeeks			Moves your leek away from a given group of <b>leeks</b>.
-const_WEAPON_BROADSWORD			
-func_toRadians_return			Angle's measure in radians.
+func_useWeapon			Fires your leek's weapon, targetting given <b>leek</b>.
+func_useWeapon_arg_1			Targetted leek.
+func_useWeaponOnCell			Fires your leek's weapon, targetting given <b>cell</b>.
+func_useWeaponOnCell_arg_1			Targetted cell.
+func_useWeaponOnCell_return			See #useWeapon.
 func_useWeapon_return			<ul>
 <li>#USE_CRITICAL, in case of critical hit</li>
 		<li>#USE_SUCCESS, in case of success</li>
@@ -601,628 +1208,21 @@ func_useWeapon_return			<ul>
 		<li>#USE_NOT_ENOUGH_TP, if your leek does not have enough TP</li>
 <li>#USE_INVALID_POSITION, if the weapon's scope does not allow its use, or line of sight is not clear.</li>
 	</ul>
-func_moveTowardLine_2_arg_2			The final cell of the line.
-const_WEAPON_AXE			
-func_substring_2_arg_1			Source string.
-func_isInlineChip_arg_1			Desired chip.
-func_moveTowardLine_return			The amount of MP spent.
-func_moveTowardLine_2_arg_3			The maximum amount of MP to spend.
-func_getCellFromXY_arg_1			x-coordinate of the desired cell.
-func_getMessageAuthor_arg_1			Message whose author is desired.
-func_getCooldown_2_arg_2			Desired leek.
-func_setRegister			Stores given <b>value</b> in your leek's register, associated with given <b>key</b>. Given <b>key</b> and <b>value</b> are strings, respectively  with maximum length of <i>100</i> and <i>5000</i> characters.
-A leek can have at most 100 distinct keys in its register, any additionnal (key:value) pair will not be stored if your leek's register is full.
-func_getCellsToUseWeaponOnCell_2_arg_1			The weapon your leek wants to use.
-func_getFarthestEnemy_return			Farthest enemy's leek id.
-func_show_2_arg_2			Marking's color (see #getColor()).
-func_getNearestAllyTo			Returns, among your allies, the closest one to given <b>leek</b>.
-func_getAIName_2_arg_1			Leek whose AI name you want.
-func_getChipCooldown_arg_1			Desired chip.
-func_moveTowardLine_arg_2			The final cell of the line.
-func_substring_2_arg_2			Starting position.
-func_isInlineChip_return			<i>true</i> if <b>chip</b> is inline, <i>false</i> otherwise.
-func_getAIName_2_return			The name of <b>leek</b>'s AI.
-func_substring_2			Extracts a substring, starting at <b>start</b> position and 
-of given <b>length</b>, from given <b>string</b>
-func_getLaunchedEffects			Returns the list of effects provoked by the caller.
-const_FIGHT_CONTEXT_GARDEN			Fight context for garden fights.
-func_inArray			Checks whether given <b>element</b> is inside given <b>array</b>.
-func_getChipArea_return			Given <b>chip</b>'s effective area type among AREA_* constants:
-<ul>
-<li>#AREA_POINT: single-cell effective area</li>
-<li>#AREA_LASER_LINE: laser-type effective area (line)</li>
-<li>#AREA_CIRCLE_1: circular effective area with 3 cells diameter (cross)</li>
-<li>#AREA_CIRCLE_2: circular effective area with 5 cells diameter </li>
-<li>#AREA_CIRCLE_3: circular effective area with 7 cells diameter.</li>
-</ul>
-func_moveAwayFromLine_2			Moves your leek away from the line between <b>cell1</b> 
-and <b>cell2</b>, using at most <b>mp</b> 
-Movement Points.
-func_getPathLength_arg_1			Cell id of starting point.
-func_split_2_arg_3			Maximum size of output array.
-func_getWeapon_return			The weapon's id, null if your leek has no equipped weapon.
 func_weaponNeedLos			Returns whether given <b>weapon</b> requires a line of sight in order to be shot.
-func_getChipMinScope_return			Given <b>chip</b>'s minimum scope.
-func_moveTowardCell_2			Moves your leek closer to given <b>cell</b>, using at most <b>mp</b> 
-Movement Points.
-func_getCellDistance_return			Distance between <b>cell1</b> and <b>cell2</b>.
-func_getCellsToUseWeaponOnCell_return			List of all cells that allow your leek to shoot.
-func_moveAwayFromCell_2_arg_1			The cell from which you want to flee.
-func_getNearestAllyToCell_return			Leek id of your ally that is closest to given <b>cell</b>.
-func_signum			Checks the sign of given <b>number</b>.
-func_getStrength			Returns your leek's strength.
-func_shuffle_arg_1			Array to be shuffled.
-const_FIGHT_CONTEXT_TEST			Fight context for test fights.
-func_getPath_arg_2			Cell id of destination.
-func_getFarmerID_return			Your farmer's id.
-func_moveAwayFromCell_return			The amount of MP spent.
-func_getCellsToUseWeaponOnCell_3_arg_1			The weapon your leek wants to use.
-func_getCellToUseChip_2_arg_3			Array of cells to ignore.
-func_moveTowardCell			Moves your leek closer to given <b>cell</b>.
-func_fill_2			Resizes <b>array</b> to given <b>size</b> and fills it with <b>value</b>.
-func_getGreen_return			Green component of given <b>color</b>.
-func_fill_2_arg_1			Array to be filled.
-func_getCellY_return			Its y-coordinate/
-func_getRed			Returns the red component of given <b>color</b>. For 
-instance getRed(#COLOR_RED) = 255 and getRed(#COLOR_BLUE) = 0.
-func_getPathLength_2_arg_3			Array of cells considered inoccupied even when a leek is present.
-func_isChip			Checks whether given <b>value</b> can represent a chip.<br><br>isChip(CHIP_RAGE) = true;<br>isChip(WEAPON_PISTOL) = false.
-func_getCellsToUseWeapon_2			Lists all cells that allow your leek to shoot given <b>weapon</b>, targetting given <b>leek</b>.
-func_getFightType_return			Depending on fight's type: Solo fight (#FIGHT_TYPE_SOLO), Farmer fight (#FIGHT_TYPE_FARMER), Team fight (#FIGHT_TYPE_TEAM).
-func_arrayFoldRight_arg_1			Source array.
-func_moveAwayFromCells_2			Moves your leek away from a given group of <b>cells</b>, using at most <b>mp</b> Movement Points.
-func_endsWith_return			<i>true</i> if <b>string</b> ends with <b>suffix</b>, <i>false</i> otherwise
-func_sqrt_arg_1			A number.
-func_getEffects_2			Lists the effects affecting given leek. For your leek, prefer #getEffects() with no input.
-func_getName_return			Your leek's name.
-func_getCellsToUseChipOnCell_2			Lists all cells that allow your leek to use a given <b>chip</b>, targetting given <b>cell</b>.
-func_getEnemies			Lists all enemies (dead and alive) within a fight.
-func_isAlly			Checks whether a <b>leek</b> is your ally.
-func_getPathLength_2_arg_2			Cell id of destination.
-return			Return
-func_isAlly_arg_1			Desired leek.
-func_getCellToUseWeapon_3_arg_1			The weapon your leek wants to use.
-func_getRed_return			Red component of given <b>color</b>.
-func_startsWith			Checks whether given <b>string</b> starts with given <b>prefix</b>.
-parameters			Parameters
-func_sqrt			Computes given <b>number</b>'s square root.
-func_startsWith_return			<i>true</i> if given <b>string</b> starts with given <b>prefix</b>, <i>false</i> otherwise.
-func_getCellsToUseChip_2_arg_1			The chip your leek wants to use.
-func_getChipEffectiveArea_2_arg_1			Chip to be used.
-func_isEnemy			Checks whether a <b>leek</b> is your enemy.
-func_getAbsoluteShield_return			Your leek's absolute shield value.
-func_moveTowardLine_arg_1			The first cell of the line.
-func_substring_2_return			The desired substring.
-func_getTurn_return			Current turn's count.
-function_category_string			Strings
-func_subArray_arg_1			Source array.
-func_substring_arg_1			Source string.
-func_isEnemy_return			<i>true</i> if <b>leek</b> is an enemy, <i>false</i> otherwise.
-func_getPathLength_2_return			Length of the path between <b>cell1</b> and <b>cell2</b>. -1 if no path is found.
-func_getAbsoluteShield			Returns your leek's absolute shield value.
-function_category_utils			Utility
-func_getCellsToUseWeapon_2_arg_1			The weapon your leek wants to use.
-func_getChipEffectiveArea_2_arg_3			Cell from which the chip is used.
-func_moveTowardLine			Moves your leek towards the line between <b>cell1</b> 
-and <b>cell2</b>.
-func_arrayMin			Finds the least value within given <b>array</b>.<br/>See also: #sort.
-func_subArray			Extracts a sub-array, starting at <b>start</b> position and ending at <b>end</b> position, from given <b>array</b>.
-func_getCellsToUseChipOnCell_2_arg_3			Array of cells to ignore.
-func_substring			Extracts a substring, starting at <b>start</b> position, from given <b>string</b>.
-func_getAIName_2			Returns the name of given <b>leek</b>'s AI.
-func_getCellsToUseChip_arg_1			The chip your leek wants to use.
-func_exp			Computes the exponential of <b>number</b>, by exponentiation of #E.
-func_getCellDistance_arg_1			Cell id of starting point.
-const_USE_RESURRECT_INVALID_ENTITY			Return value of the function #resurrect when the specified entity does not exist or is not dead yet.
-func_mark			Marks one or several cells on terrain in black, for one turn. The mark is only visible by the marking leek's farmer.
-func_pushAll			Adds all elements from <b>elements</b> array at the end of given <b>array</b>.
-func_moveAwayFromLeeks_arg_1			Array containig the leeks from which you want to flee.
-func_getCellsToUseWeaponOnCell_3			Lists all cells that allow your leek to shoot a given <b>weapon</b>, targetting given <b>cell</b>.
-func_getNearestEnemy_return			id of the nearest enemy.
-func_moveAwayFromLeeks_2_arg_2			The maximum amount of MP to spend.
-func_moveAwayFromLine			Moves your leek away from the line between <b>cell1</b> and <b>cell2</b>.
-func_getFrequency			Returns your leek's frequency.
-func_getFightContext_return			Depending on fight's context: Test fight (#FIGHT_CONTEXT_TEST), Garden fight (#FIGHT_CONTEXT_GARDEN), Tournament fight (#FIGHT_CONTEXT_TOURNAMENT), Challenge fight (#FIGHT_CONTECT_CHALLENGE).
-func_moveAwayFromLeeks_2_arg_1			Array containig the leeks from which you want to flee.
-func_getEnemiesLife_return			Sum of all of your enemies' HP
-func_getFarmerID_2			Returns the id of given <b>leek</b>'s farmer.
-func_getEnemiesCount_return			The number of enemies.
-func_getCellToUseWeaponOnCell_return			A cell that allows your leek to shoot.
-func_getInstructionsCount_return			The number of instructions used by your leek this turn.
-func_getCellsToUseChip_2			Lists all cells that allow your leek to use a given <b>chip</b>, targetting given <b>leek</b>.
-func_getCellToUseWeaponOnCell_2			Finds a cell that allows your leek to shoot given <b>weapon</b>, targetting given <b>leek</b>.
-func_getPathLength_return			Length of the path between <b>cell1</b> and <b>cell2</b>. -1 if no path is found.
-func_getLeek			Returns your leek's id.
-func_getEnemiesCount			Counts the enemies in the fight.
-func_moveToward_2			Moves your leek closer to another <b>leek</b>, using at most <b>mp</b> 
-Movement Points.
-func_getCellX_arg_1			id of the cell.
-func_moveToward_2_arg_2			The maximum amount of MP to spend.
-func_getDeadEnemiesCount_return			The number of dead enemies.
-func_moveToward_2_arg_1			The leek you want to get closer to.
-func_moveTowardCell_2_arg_1			The cell you want to get closer to.
-func_getChipEffectiveArea_arg_1			Chip to be used.
-func_getLeekOnCell_return			The leek id of a leek that is currently occupying given <b>cell</b>, -1 if cell is not occupied by a leek.
-func_getChipEffectiveArea_arg_2			Targetted cell.
-func_moveTowardCell_2_arg_2			The maximum amount of MP to spend.
-func_isOnSameLine_return			<i>true</i> if cells are on the same line, <i>false</i> otherwise.
-func_floor			Computes the rounded down value of given <b>number</b>.<br/>The rounded up value can be computed using #ceil and the closest integer using #round.
-func_getLevel			Returns your leek's level.
-func_getChipEffectiveArea_return			Array that contains the id of all affected cells.
-func_getLevel_return			Your leek's level.
-func_isChip_arg_1			Value to check.
-func_getLevel_2			Returns given <b>leek</b>'s level.
-func_getCellToUseChip_2			Finds a cell that allows your leek to use a given <b>chip</b>, targetting given <b>leek</b>.
-func_moveTowardLeeks_arg_1			Array containig the leeks to which you want to get closer.
-func_getChipCost_return			Given <b>chip</b>'s cost, in TP.
-func_moveTowardLeeks_return			The amount of MP spent.
-min_level			Min level
-func_getAbsoluteShield_2_arg_1			Leek whose absolute shield you want.
-func_getLife_2			Returns given <b>leek</b>'s HP count.
-func_getChipCooldown_return			Given <b>chip</b>'s coolodwn
-func_getLevel_2_arg_1			Desired leek.
-func_moveTowardLeeks			Moves your leek closer to a given group of <b>leeks</b>.
-func_getChipCost			Returns a <b>chip</b>'s cost, in TP.
-func_getLevel_2_return			Given <b>leek</b>'s level.
-func_getAIID_2			Returns the id of given <b>leek</b>'s AI.
-func_getLife_2_arg_1			Desired leek.
-func_replace_arg_2			Substring to be replaced.
-func_getAbsoluteShield_2_return			Leek's absolute shield value.
-func_getPreviousPlayer			Returns the leek id of the leek who just played.
-func_getAlliesCount			Returns the number of allies in the fight.
-func_getWeapon_2_return			The weapon's id, null if given <b>leek</b> has no equipped weapon.
-func_canUseChipOnCell_arg_2			Targetted cell.
-func_getNearestAllyTo_arg_1			Targetted leek.
-func_split_return			Array containing all substrings.
-func_isAlive			Checks whether a <b>leek</b> is alive. Equivalent to <i>getLife(<b>leek</b>) > 0</i>.
-func_moveTowardLine_2_arg_1			The first cell of the line.
-func_getAIName			Returns the name of you AI.
-function_category_chip			Chips
-arg_type_5			Function
-func_acos_arg_1			A number.
-func_isObstacle_return			<i>true</i> if <b>cell</b> is occupied by an obstacle, <i>false</i> otherwise.
-func_isObstacle_arg_1			Cell to check.
-func_assocSort_2_arg_1			Array that needs sorting.
-func_getAliveAllies			Returns an array containing all of your alive allies in a fight.
-func_getAliveAllies_return			An array containing all of your alive allies in a fight.
-func_getAliveEnemies			Returns an array containing all of your alive enemies in a fight.
-func_randInt_arg_2			The upper bound of the interval.
-func_getAllies_return			An array containing all of your allies in a fight.
-func_getCellFromXY_arg_2			y-coordinate of the desired cell.
-func_getPath_return			Array of empty cells that build a path between given cells. Empty array if no path is found.
-func_getCellFromXY_return			id of the cell at coordinates (<b>x</b>, <b>y</b>). <b>null</b> if it does not exist.
-func_getPath_2			Finds a path between <b>cell1</b> and <b>cell2</b>, avoiding occupied cells, except <b>ignoredCells</b>, which are considered empty even when a leek occupies them.
-func_getBlue_arg_1			Color whose blue component is to be returned.
-func_getWeaponEffectiveArea_return			Array that contains the id of all affected cells.
-func_isEmpty_arg_1			Array to check.
-func_getWeaponEffectiveArea_2_return			Array that contains the id of all affected cells.
-func_getWeapon_2			Returns the weapon currently equipped by given <b>leek</b>.
-func_canUseChipOnCell			Checks whether your leek can use given <b>chip</b>, targetting given <b>cell</b>.
-func_getChipEffects_return			Given <b>chip</b>'s effects. Format is the same as #getWeaponEffects
-func_getCellsToUseChipOnCell_arg_2			Targetted cell.
-func_randInt_arg_1			The lower bound of the interval.
-func_getWeapon_2_arg_1			Desired leek.
-func_getMessages			Lists all messages addressed to you.
-func_canUseChipOnCell_arg_1			The chip your leek wants to use.
-func_getBlue			Returns the blue component of given <b>color</b>. For instance getBlue(#COLOR_BLUE) = 255 and getBlue(#COLOR_RED) = 0.
-func_canUseChipOnCell_return			<i>true</i> if your leek can use given chip, <i>false</i> otherwise.
-func_canUseWeapon			Checks whether your leek can shoot its current weapon targetting given <b>leek</b>.
-func_getCell_2_return			Cell id of given <b>leek</b>'s position.
-func_removeKey_arg_1			The array from which an element is removed.
-func_removeKey_arg_2			The key of the element to remove.
-func_getWeaponEffectiveArea_3_arg_1			Weapon to be used.
-func_getCell			Returns your leek's position, as a cell id.
-func_canUseWeapon_return			<i>true</i> if your leek can shoot, <i>false</i> otherwise.
-func_getCell_return			Cell id of your leek's position.
-func_getWeaponEffectiveArea_3_arg_2			Targetted cell.
-func_useWeaponOnCell			Fires your leek's weapon, targetting given <b>cell</b>.
-func_canUseWeapon_2			Checks whether your leek can shoot given <b>weapon</b>, targetting given <b>leek</b>.
-func_getCell_2			Returns given <b>leek</b>'s position, as a cell id.
-func_getChipMaxScope_arg_1			Desired chip.
-func_getChipMaxScope_return			Given <b>chip</b>'s maximum scope.
-func_getWeaponEffectiveArea_3_arg_3			Cell from which the chip is used.
-func_removeElement_arg_1			The array from which an element is removed.
-func_getBlue_return			Blue component of given <b>color</b>
-func_getChipMaxScope			Returns a <b>chip</b>'s max scope.
-func_useWeaponOnCell_arg_1			Targetted cell.
-func_getCell_2_arg_1			Leek whose position is determined.
-func_getChipMinScope_arg_1			Desired chip.
-func_charAt			Returns the character at given <b>position</b> within given <b>string</b>.<br/>First character is at position 0.
-func_getChipName_return			Given <b>chip</b>'s name
-func_getCellToUseWeaponOnCell_3_return			A cell that allows using given weapon on targetted cell.
-func_getWeaponEffects			Lists a <b>weapon</b>'s effects.
-func_canUseWeapon_2_arg_1			The weapon your leek wants to use.
-func_log10			Computes the decimal logarithm of given <b>number</b>.
-func_getCellToUseWeaponOnCell_3_arg_3			Array of cells to ignore.
-func_getTeamName			Returns your team's name.
-func_getChips_return			Array containing all of your leek's chips.
-func_getWeaponEffects_arg_1			Desired weapon.
-func_log10_return			Given number's decimal logarithm.
-func_getCellDistance			Computes the distance between cells <b>cell1</b> and <b>cell2</b>.<br />Distance is in amount of cells and does not take obstacles into account.<br />For as a crow's flies distance, see #getDistance and for an actual path (taking obstacles into account), see #getPathLength.
-func_getCellContent			Determines the content of given <b>cell</b>.
-func_reverse			Reverses the given <b>array</b>.
-func_getTeamName_2_arg_1			Desired leek.
-func_getTeamName_return			Your team's name.
-func_getCellContent_arg_1			id of the cell to be tested.
-func_getChipName_arg_1			Desired chip.
-func_getWeaponCost_return			Given <b>weapon</b>'s cost, in TP.
-func_getCellContent_return			Content of <b>cell</b>.
-func_getWeaponMaxScope			Returns a <b>weapon</b>'s max scope.
-func_getChips_2			Lists given <b>leek</b>'s chips.
-func_getWeaponFailure			Returns a <b>weapon</b>'s failure rate.
-func_getWeaponMaxScope_arg_1			Desired weapon.
-func_getChipTargets_arg_1			Chip to be used.
-func_canUseWeapon_2_arg_2			Targetted leek.
-func_getWeaponFailure_arg_1			Desired weapon.
-func_getChipTargets_return			Array containing the affected leeks.
-func_search_2_arg_2			The element to look for.
-func_getChips_2_arg_1			Desired leek.
-func_debugW			Logs an <b>object</b> warning message into your personnal log, available at the end of a fight.<br />Warning messages appear in orange.
-func_isInlineWeapon			Checks whether given <b>weapon</b> is inline, i.e. only usable if the target is in the same line as the caster.
-func_getAgility_2			Returns given <b>leek</b>'s agility.<br />For your leek's agility, prefer #getAgility() with no input.
-func_asin_arg_1			A number.
-func_getAgility			Returns your leek's agility.
-func_isObstacle			Checks whether given <b>cell</b> is occupied by an obstacle.
-func_moveTowardLine_2_return			The actual amount of MP spent.
-func_getTeamName_2_return			The name of given <b>leek</b>'s team.
-func_canUseWeapon_2_return			<i>true</i> if your leek can shoot given weapon, <i>false</i> otherwise.
-func_getMessages_2			Lists all messages addressed to given <b>leek</b>.
-func_getChips_2_return			Array containing all of given <b>leek</b>'s chips.
-func_getWeaponFailure_return			Given <b>chip</b>'s failure rate, in percents, integer between <b>0</b> and <b>100</b>.
-func_mark_2			Marks one or several cells on terrain in given <b>color</b> for one turn. The mark is only visible by the marking leek's farmer.
-func_contains			Checks whether <b>search</b> string is contained within <b>string</b>.
-func_getChipTargets			Lists leeks that will be affected if given <b>chip</b> were used on given <b>cell</b>.
-func_mark_2_arg_1			A cell or array of cells.
-func_search_2_arg_1			The array to look into.
-func_getChipTargets_arg_2			Targetted cell.
-func_getWeaponMaxScope_return			Given <b>weapon</b>'s maximum scope.
-func_getWeaponMinScope_arg_1			Desired weapon.
-func_isLeek			Checks whether given <b>cell</b> is occupied by a leek.
-func_assocSort			Sorts an <b>array</b>, while keeping the key: value coupling.
-func_getTotalTP_2_arg_1			Desired entity's id.
-func_isLeek_return			<i>true</i> if <b>cell</b> is occupied by a leek, <i>false</i> otherwise.
-func_substring_2_arg_3			Length of the output.
-func_mark_3			Marks one or several cells on terrain in given <b>color</b> 
-for the given <b>duration</b>. The mark is only visible by the marking leek's farmer.
-func_search_2_arg_3			The starting position.
-function_category_fight			Fight
-func_getAgility_return			Your leek's agility.
-func_number			Casts a value into a number. If the value is a string, this function attempts to convert it into a number. If the value is a number, this function returns the number. For any other type, this function returns <i>null</i>
-func_isInlineWeapon_return			<i>true</i> if <b>weapon</b> is inline, <i>false</i> otherwise.
-func_assocSort_2			Sorts an <b>array</b>, while keeping the key: value coupling, using given <b>order</b>.
-func_getCores			Returns your leek's number of cores.
-func_mark_3_arg_1			A cell or array of cells.
-func_getTotalTP_2			Returns given <b>leek</b>'s total TP count (not counting this turn's actions).
-func_getMP_2_return			Given <b>leek</b>'s name.
-func_getDistance_arg_1			Cell id of starting point.
-func_shift_arg_1			The array to be truncated.
-func_getDistance_arg_2			Cell id of arrival.
-func_getObstacles_return			Array of cells occupied by obstacles.
-func_getWeapons_return			Array containing all of your leek's weapons.
-func_getPath			Finds a path between <b>cell1</b> and <b>cell2</b>, avoiding occupied cells.
-func_moveAwayFrom			Moves your leek away from another <b>leek</b>.
-func_getChipArea_arg_1			Desired chip.
-func_sendTo_arg_1			Message's addressee
-func_getCellToUseChipOnCell_arg_3			Array of cells to ignore.
-func_canUseWeaponOnCell_2_arg_1			The weapon your leek wants to use.
-func_count_return			Given array's number of elements.
-func_shift_return			The removed element.
-func_getCooldown_arg_1			Desired chip.
-func_moveAwayFrom_arg_1			The leek from which you want to flee.
-func_getCooldown_2_arg_1			Desired chip.
-func_getStrength_2_return			Given <b>leek</b>'s strength.
-func_getDeadEnemies			Lists dead enemies.
-func_getObstacles			Lists all cells that are occupied by obstacles.
-func_getDistance_return			Crow's fly distance between given cells.
-func_show			Shows all players given <b>cell</b> in black, for one turn. Costs one TP.
-func_sendTo_arg_2			The type of message to send (see MESSAGE_* constants).
-func_getWeapons_2			Lists given <b>leek</b>'s weapons.
-func_getWeapons_2_return			Array containing all of given <b>leek</b>'s weapons.
-func_min			Finds the least value among two numbers <b>a</b> and <b>b</b>.
-func_getWeaponTargets			Lists leeks that will be affected if your leek's current weapon were used on given <b>cell</b>.
-func_getAliveEnemies_return			An array containing all all of your alive enemies in a fight.
-func_show_return			<i>true</i> if all went well, <i>false</i> otherwise.
-func_getNearestAlly_return			id of the nearest ally
-func_show_2			Shows all players given <b>cell</b> in given <b>color</b>, for one turn. Costs one TP.
-func_push			Adds given <b>element</b> at the end of given <b>array</b>.
-func_push_arg_1			Array which will be prolonged.
-func_getAlliesCount_return			Number of allies.
-func_toRadians			Converts given <b>angle</b> from degrees to radians.
-func_atan2_arg_1			x coordinate.
-func_isWeapon_return			<i>true</i> if <b>value</b> is a weapon, <i>false</i> otherwise.
-func_hypot_arg_2			y value.
-func_getCooldown_return			Given <b>chip</b>'s current cooldown.
-func_pow_arg_2			Exponant.
-func_getCooldown_2_return			Given <b>chip</b>'s current cooldown, i.e. the amount of turns owner must wait to cast it again.
-func_hypot_arg_1			x value.
-func_split_arg_1			String that needs splitting.
-func_getTotalTP_2_return			Given entity's total TP count.
-func_getTotalMP_2_return			Given entity's total MP count.
-func_isWeapon_arg_1			Value to check.
-func_debugE			Logs an <b>object</b> error message into your personnal log, available at the end of a fight.<br />Error messages appear in red.
-func_getWisdom			Returns caller's wisdom.
-func_ceil			Computes the rounded up value of given <b>number</b>.<br/>The rounded down value can be computed using #floor and the closest integer using #round.
-func_toDegrees_return			Angle's measure in degrees.
-func_toLower_return			String in lower characters.
-func_getRelativeShield_2_arg_1			Desired leek.
-func_assocSort_2_arg_2			Sorting order: #SORT_ASC or #SORT_DESC.
-func_getCooldown			Returns the current cooldown of given <b>chip</b> for your leek.
-func_keySort_2_arg_2			Sorting order: #SORT_ASC or #SORT_DESC.
-func_getCellToUseWeaponOnCell_3			Finds a cell that allows your leek to shoot given <b>weapon</b>, targetting given <b>cell</b>.
-func_indexOf			Finds the first occurrence of <b>search</b> string within given <b>string</b>.
-func_getStrength_2_arg_1			Desired leek.
-func_getNearestAlly			Returns the allied leek closest to your leek.
-func_moveToward			Moves your leek closer to another <b>leek</b>.
-func_indexOf_2_arg_3			Position within <b>string</b> where the search starts.
-func_getStrength_return			Your leek's strength.
-func_getNearestAllyTo_return			Leek id of your ally that is closest to given <b>leek</b>.
-func_insert_arg_3			Insertion position.
-func_abs_arg_1			A number.
-func_getCellsToUseChip_2_arg_3			Array of cells to ignore.
-min_cores			Min cores
-func_isAlive_arg_1			Desired leek.
-n_operations			<b>%s</b> operations
-max_cores			max
-func_getPath_arg_1			Cell id of starting point.
-func_getNearestAllyToCell			Returns, among your allies, the closest one to given <b>cell</b>.
-func_inArray_arg_1			Array in which search is performed.
-func_shuffle			Shuffles the contents of given <b>array</b>.
-const_FIGHT_CONTEXT_CHALLENGE			Fight context for challenges.
-func_getNearestAllyToCell_arg_1			Targetted cell.
-func_signum_return			1 if <b>number</b> is positive, 0 if it is 0 and -1 if it is negative.
-const_FIGHT_TYPE_TEAM			Fight type of team fights.
-function_category_array			Arrays
-func_acos_return			Given number's arccos.
-function_category_map			Map
-func_resurrect_arg_2			The cell on which the entity reappear
-func_atan2_arg_2			y coordinate.
-func_push_arg_2			Additionnal element.
-func_pushAll_arg_1			Array which will be prolonged.
-func_toUpper			Converts all lower characters from given <b>string</b> to capital letters.
-func_randFloat_arg_2			The upper bound of the interval.
-func_getTeamID_2			Returns the id of given <b>leek</b>'s team.
-func_pow_return			<b>base</b>**<b>exp</b>.
-arg_type_3			Boolean
-func_toDegrees_arg_1			Angle's measure in radians.
-func_pow_arg_1			Number to exponentiate.
-func_cbrt_return			Given number's cubic root.
-func_isOnSameLine_arg_1			First cell.
-func_atan			Computes the arctan of <b>argument</b>, within [0, #PI].
-func_pop_arg_1			The array to truncate.
-arg_type_2			String
-func_isOnSameLine_arg_2			Second cell.
-func_getCellToUseWeapon			Finds a cell that allows your leek to shoot its current weapon, targetting given <b>leek</b>.
-func_toLower			Converts all capital letters from given <b>string</b> to lower characters.
-func_tan_return			Given <b>angle</b>'s tangent.
-func_pop_return			The truncated element.
-func_pow			Exponentiates a <b>base</b> number to the <b>exp</b> power.
-func_getRelativeShield_2			Returns given <b>leek</b>'s relative shield. For your leek's relative shield, prefer #getRelativeShield() with no input.
-func_isOnSameLine			Checks whether <b>cell1</b> and <b>cell2</b> are on the same line.
-func_atan_arg_1			A number.
-func_toLower_arg_1			Input string.
-func_atan_return			Given number's arctan.
-func_getAlliesLife			Returns the sum of all of your allies' HP
-func_getMessageAuthor_return			Given <b>message</b>'s author.
-func_average_arg_1			An array.
-func_randFloat			Returns a random real number, between <b>a</b> (included) and <b>b</b> (excluded).
-func_randInt			Returns a random integer, between <b>a</b> (included) and <b>b</b> (excluded).
-func_removeElement_arg_2			The element to look for and remove.
-func_useChipOnCell_arg_2			Targetted cell.
-func_getMessageParams			Returns given <b>message</b>'s parameters.
-func_getMessageType			Returns given <b>message</b>'s message type.
-func_canUseChip			Checks whether your leek can use given <b>chip</b>, targetting given <b>leek</b>.
-func_getMessageParams_return			Given <b>message</b>'s parameters.
-func_getTeamID			Returns your team's id.
-func_typeOf_arg_1			Value that needs testing.
-func_toUpper_return			String in upper characters.
-func_atan2_return			Azimuth of given point, in polar coordinates.
-func_getAlliesLife_return			Sum of all of your allies' HP.
-func_typeOf_return			<b>values</b>'s type.
-func_randFloat_arg_1			The lower bound of the interval.
-func_useChip			Use given <b>chip</b>, targetting given <b>leek</b>.
-func_getCellsToUseChip_return			List of all cells that allow using given chip.
-func_canUseChip_arg_2			Targetted leek.
-func_keySort_2_arg_1			Array that is sorted.
-func_length			Returns given <b>string</b>'s length.
-func_useChip_arg_1			Chip to use.
-func_unshift_arg_2			Additionnal element.
-func_abs			Returns the absolute value of given <b>number</b>.
-func_randInt_return			A random integer within [a;b).
-func_getResistance_return			Caller's resistance.
-func_getCellToUseWeapon_2_arg_2			Targetted leek.
-func_getMessageParams_arg_1			Message whose parameters are desired.
-func_keySort_arg_1			Array that is sorted.
-func_getMessageType_arg_1			Message whose type is desired.
-func_canUseChip_arg_1			The chip your leek wants to use.
-func_keySort_2			Sorts an <b>array</b> using key values, using given sorting <b>order</b>.
-func_getWeaponEffectiveArea			Lists the cells affected if your leek's current weapon were shot on given <b>cell</b>.
-func_length_arg_1			Desired string.
-func_remove			Removes the element at given <b>position</b> from given <b>array</b>, and returns this element.
-arg_type_44			ArrayOfArrays
-func_unshift			Adds given <b>element</b> at the beginning of given <b>array</b>.
-func_getMessageType_return			Given <b>message</b>'s type.
-func_lineOfSight			Checks whether a leek on <b>start</b> cell can see <b>end</b> cell.
-func_remove_arg_1			The array from which an element is removed.
-const_E			e number.
-func_round_arg_1			Number
-const_PI			Relation between a circle's circonference and its diameter.
-func_getRelativeShield_2_return			Given <b>leek</b>'s relative shield, in percents: integer between 0 and 100.
-func_getAllies			Returns an array containing all of your allies in a fight.
-func_getChipEffects_arg_1			Desired chip.
-const_ENTITY_BULB			Represents the entity type of a bulb.
-const_AREA_LASER_LINE			Laser-type effective area: line going from the chip/weapon's min range to its max range (or the first obstacle)
-func_getRegister_arg_1			Desired key.
-func_getType_2_arg_1			Entity's ID
-func_getSummoner_return			ID of the summoning entity, if caller is a summon, <i>null</i> otherwise.
-getCellsToUseChipOnCell_2_arg_2			Targetted cell.
-func_cos_arg_1			A number.
-func_sendAll			Sends a message to all of your allies.
-const_ENTITY_LEEK			Represents the entity type of a leek.
-func_getResistance_2_arg_1			Desired entity's id.
-func_getSummoner_2			Returns given <b>entity</b>'s summoner, if it is a summon.
-func_mark_3_arg_3			Duration of the marking.
-func_getType_2			Returns given <b>entity</b>'s type.
-func_getWeapons_2_arg_1			Desired leek.
-func_getResistance_2_return			Given entity's resistance.
-func_getMP			Returns your leek's MP count.
-func_getTotalLife_return			Your leek's maximum life.
-func_debug_arg_1			A message to log.
-func_max_return			The greatest of the two numbers.
-func_getDeadEnemies_return			Array of dead enemies.
-func_arrayIter_arg_2			Callback function.
-func_arrayFlatten_2_arg_2			Maximun recursion depth.
-func_arrayConcat_arg_2			Second array.
-func_arrayFlatten_2			Returns an array containing all elements contained in given <b>array</b>. All elements within a sub-array are recursively exported to the new array, stopping given recursion <b>depth</b>.
-<code>var tableau = [1, 2, [3, [4]], 5, [6]];
-debug(arrayFlatten(tableau,1)); // [1,2,3,[4],5,6]</code>
-func_sendTo_arg_3			The parameters of the message, which can take any form.
-value			Value
-func_getTotalLife_2_return			Given <b>leek</b>'s maximum life.
-func_setWeapon			Equips given <b>weapon</b> on your leek.
-func_getTotalLife_2			Returns given <b>leek</b>'s maximum life.
-func_getWeaponTargets_2			Lists leeks that will be affected if given <b>weapon</b> were used on given <b>cell</b>.
-func_debug			Logs an <b>object</b> message into your personnal log, available at the end of a fight.
-func_typeOf			Determines the type of give <b>value</b>, among: #TYPE_NULL, #TYPE_NUMBER, #TYPE_BOOLEAN, #TYPE_STRING, #TYPE_ARRAY, #TYPE_FUNCTION.
-func_lineOfSight_2_return			<i>true</i> if the line of sight is clear, <i>false</i> otherwise.
-const_AREA_CIRCLE_3			Circular area with 7 cells diameter.
-func_getCellsToUseWeaponOnCell_3_return			List of all cells that allow your leek to shoot.
-func_getCellToUseWeaponOnCell_arg_1			Targetted cell.
-func_getChipMinScope			Returns a <b>chip</b>'s min scope.
-func_canUseWeapon_arg_1			Targetted leek.
-func_getChipFailure_return			Given <b>chip</b>'s failure rate, in percents, integer between <b>0</b> and <b>100</b>.
-func_getChipFailure			Returns a <b>chip</b>'s failure rate.
-func_removeElement			Removes the first occurrence of given <b>element</b> from given <b>array</b>. <b>array</b> is unchanged if <b>element</b> cannot be found.
-func_useChipOnCell_arg_1			Chip to use.
-func_lineOfSight_arg_2			Cell id of target.
-func_lineOfSight_return			<i>true</i> if the line of sight is clear, <i>false</i> otherwise.
-func_getMessages_return			Array of messages.<br />A message itself is a 3-cell array of the following form: [<b>author</b>, <b>type</b>, <b>parameters</b>]<br />Message types are:
-<ul>
-		<li>#MESSAGE_HEAL: request for heal</li>
-		<li>#MESSAGE_ATTACK: request for attack</li>
-		<li>#MESSAGE_BUFF_FORCE: request for strength buff</li>
-		<li>...</li>
-	</ul>
-func_weaponNeedLos_return			<i>true</i> if given <b>chip</b> requires a line of sight, <i>false</i> otherwise.
-func_removeKey			Removes the element of given <b>array</b> associated with given <b>key</b>.
-func_getWeaponEffectiveArea_2_arg_1			Weapon to be used.
-func_lineOfSight_2_arg_1			Cell id of starting point.
-const_AREA_CIRCLE_1			Circular area with 3 cells diameter (cross).
-func_useWeapon			Fires your leek's weapon, targetting given <b>leek</b>.
-const_AREA_CIRCLE_2			Circular area with 5 cells diameter.
 func_weaponNeedLos_arg_1			Desired weapon's id.
-func_getCellToUseWeaponOnCell			Finds a cell that allows your leek to shoot its current weapon, targetting given <b>cell</b>.
-func_replace_arg_1			String inside which substitutions are performed.
-func_getWeaponEffectiveArea_3			Lists the cells affected if given <b>weapon</b> were shot on given <b>cell</b>, from <b>from</b> cell.
-func_ceil_return			Number's value as an integer, rounded up.
-func_listen			Lists say() performed by previous leeks, as [leek_id, message].
-func_getTeamID_2_arg_1			Desired leek.
-func_replace_arg_3			Replacing substring.
-func_getWeaponArea			Returns given <b>weapon</b>'s effective area type.
-func_getCellsToUseChipOnCell			Lists all cells that allow your leek to use a given <b>chip</b>, targetting given <b>cell</b>.
-func_listen_return			Array containing previous say().
-func_replace_return			Resulting string.
-func_getTeamID_2_return			The id of given <b>leek</b>'s team.
-func_getWeaponCost			Returns a <b>weapon</b>'s cost, in TP.
-func_useWeaponOnCell_return			See #useWeapon.
-func_getWeaponEffectiveArea_2			Lists the cells affected if given <b>weapon</b> were shot on given <b>cell</b>.
-func_lineOfSight_2			Checks whether a leek on <b>start</b> cell can see <b>end</b> cell, ignoring given <b>leek</b>.
-func_useChipOnCell_return			See #useChip.
-func_jsonDecode_arg_1			The string to decode.
-func_getCellToUseChipOnCell_2_return			A cell that allows using the given chip on targetted cell.
-func_getChipName			Returns a <b>chip</b>'s name.
-func_getCellToUseWeaponOnCell_3_arg_1			The weapon your leek wants to use.
-const_COLOR_GREEN			Integer corresponding to Green color.
-func_getWeaponCost_arg_1			Desired weapon.
-func_remove_return			The removed element.
-func_isSummon_2			Returns wether given <b>entity</b> is a summoned entity or not.
-func_arrayIter_arg_1			Source array.
-func_arrayConcat			Chains given arrays together. String keys are kept while numerical keys are reindexed.
-func_arrayFoldLeft_arg_1			Source array.
-func_arrayMap_return			Resulting array.
-func_isSummon_2_return			<i>true</i> if given entity is a summoned entity, <i>false</i> otherwise.
-func_arrayPartition_return			Resulting two element array.
-func_arrayFoldLeft			Reduces given <b>array</b> [v1, v2, ..., vn] from the left and starting with <b>v0</b>, through successive application of <b>f</b> function. Is equivalent to:
-<code>f(f(f(v0, v1), v2), ...).</code>
-func_arrayFlatten_arg_1			Source array.
-func_arrayFlatten_return			Resulting (flat) array.
-func_summon			Uses given <b>chip</b> to summon the corresponding entity on given <b>cell</b>. The entity uses the AI contained in given <b>ai</b> function.
-func_getMapType			Returns the map type on which the fight takes place (factory, desert, forest, etc.), among the constants #MAP_NEXUS, #MAP_FACTORY, #MAP_DESERT, #MAP_FOREST, #MAP_GLACIER and #MAP_BEACH.
-func_summon_arg_2			Cell where the summon should appears.
-func_summon_return			Summoning result, see #useChip for details.
-func_getMP_2_arg_1			Desired leek.
-func_getCooldown_2			Returns the current cooldown of given <b>chip</b> for given <b>leek</b>.
+func_weaponNeedLos_return			<i>true</i> if given <b>chip</b> requires a line of sight, <i>false</i> otherwise.
+getCellsToUseChipOnCell_2			Lists all cells that allow your leek to use a given <b>chip</b>, targetting given <b>cell</b>.
+getCellsToUseChipOnCell_2_arg_1			The chip your leek wants to use.
+getCellsToUseChipOnCell_2_arg_2			Targetted cell.
+level_n			Level <b>%s</b>
+max_cores			max
+max_level			max
+min_cores			Min cores
+min_level			Min level
+n_cores			Cores: %s
+n_operations			<b>%s</b> operations
+parameters			Parameters
+return			Return
+title			Documentation
+value			Value
 variable_operations			<b>Variable</b><br> operations
-func_getSummoner_2_return			ID of the entity's sumonner, if given entity is a summon, <i>null</i> otherwise.
-func_arrayFoldRight_return			Array reduced to final result.
-func_getSummoner_2_arg_1			Desired entity.
-func_getRegisters			Returns your leek's whole register, as a [<i>key</i>: <i>value</i>] associative array. For example:
-<code>debug(getRegisters());
-// would, for example, debug : 
-// ['reg1' : '314323', 'reg2' : 'test_string']</code>
-func_getRegisters_return			Your leek's register, as an associative array.
-func_setRegister_arg_2			Value to be stored.
-func_setRegister_return			<i>true</i> if operation succeeded, <i>false</i> otherwise.
-func_getRegister_return			The value associated to given <b>key</b> in your leek's register.
-func_deleteRegister			Removes given <b>key</b> (and associated value) from your leek's register.
-func_deleteRegister_arg_1			Key of the (key: value) pair to be deleted.
-func_arrayMap_arg_1			Source array.
-func_arrayPartition			Returns a two elements array, each being a list of (key: value) pairs from given <b>array</b>. The first element contains pairs for which <b>callback</b> function returned true, and the second one contains all other pairs. If the <b>callback</b> function is single-input, it is 
-applied on the array's values, if the <b>callback</b> 
-function requires two inputs, it is applied on the array's (key: value) pairs.
-func_arrayFoldLeft_return			Array reduced to final result.
-const_USE_TOO_MANY_SUMMONS			Error thrown by #summon when you already have <b>4</b> alive summons.
-func_getDamageReturn_2_arg_1			Desired entity's id.
-func_getEntityTurnOrder_2_arg_1			Desired entity.
-func_summon_arg_1			Desired chip. It has to be a summoning chip, equipped on the sumonning leek.
-func_arrayFlatten			Returns an array containing all elements contained in given <b>array</b>. All elements within a sub-array are recursively exported to the new array.
-<code>var tableau = [1, 2, [3, 4], 5, [6]];
-debug(arrayFlatten(tableau)); // [1,2,3,4,5,6]</code>
-func_arrayFilter			Returns an array containing all (key: value) pairs from given <b>array</b> for which <b>callback</b> function returned true. If the <b>callback</b> function is single-input, it is 
-applied on the array's values, if the <b>callback</b> 
-function requires two inputs, it is applied on the array's (key: value) pairs.
-func_getEntityTurnOrder_2_return			Given entity's position within the acting order.
-func_getBirthTurn			Returns the turn during which caller has appeared. For instance, returns 1 for a leek or 5 for a bulb summonned during turn 5.
-func_arrayMap			Returns an array which contains the results of <b>callback</b> function when called on each element within given <b>array</b> (and indexed with the same keys as the original array). If the <b>callback</b> function is single-input, it is applied on the array's values, if the <b>callback</b> function requires two inputs, it is applied on the array's (key: value) pairs.
-func_getBirthTurn_2			Returns the turn during which given <b>entity</b> has appeared. For instance, returns 1 for a leek or 5 for a bulb summonned during turn 5.
-const_OPERATIONS_LIMIT			Maximum operations allowed for a leek during its turn.
-func_getBirthTurn_return			Combat turn during which caller has appeared.
-func_getBirthTurn_2_arg_1			Desired entity.
-func_getDamageReturn			Returns caller's damage return ratio.
-func_getType_return			Caller's entity type:
-<ul>
-<li>#ENTITY_LEEK if called by a leek.</li>
-<li>#ENTITY_BULB if called by a bulb.</li>
-</ul>
-func_debugC			Logs an <b>object</b> message into your personnal log, available at the end of a fight, of the color <b>color</b>.
-func_resurrect_return			The result of the launch of the chip, among USE_* constants.
-func_arrayIter			Calls a <b>callback</b> function for each element 
-within given <b>array</b>. If the <b>callback</b> function
- is single-input, it is applied on the array's values, if the 
-<b>callback</b> function requires two inputs, it is applied 
-on the array's (key: value) pairs.
-func_getEntityTurnOrder_2			Indicates the position of given <b>entity</b> in the acting order, between 1 and the amount of entities in the game.
-func_debugC_arg_1			A message to log.
-func_getLaunchedEffects_return			Array containing all effects provoked by the caller, similar to #getEffets' results.
-func_getMagic_2_arg_1			Desired entity's id.
-func_getMagic_2_return			Given entity's magic.
-func_arraySort			Sorts the elements from given <b>array</b> according to <b>callback</b> function. Elements are compared by pairs, each one being an input of the callback function. The callback functions needs to return -1, 0 or 1, respectively if the first input element is before, at the same place or after the second input element. 
-
-If the <b>callback</b> function requires two inputs, it is 
-applied on the array's values, if the <b>callback</b> 
-function requires four inputs, it is applied on the array's (key: value) pairs.
-
-<code>var tableau = [1, 8, 4, 5, 3, 2, 7, 6];
-debug(arraySort(tableau, function(a, b) { 
-    return (a == b) ? 0 : (a < b ? (-1) : 1);
-})); // returns [1, 2, 3, 4, 5, 6, 7, 8]</code>
-func_getResistance			Returns caller's resistance.
-func_getResistance_2			Returns given <b>leek</b>'s resistance.
-func_getLaunchedEffects_2_arg_1			Desired entity's id.
-func_getLaunchedEffects_2_return			Array containing all effects provoked by the caller, similar to #getEffets' results.
-func_getMagic			Returns caller's magic.
-func_getMagic_return			Caller's magic.
-func_arrayFoldRight			Reduces given <b>array</b> [v1, v2, ..., vn] 
-from the right and starting with <b>v0</b>, through 
-successive application of <b>f</b> function. Is equivalent 
-to:
-<code>f(v0, f(v1, f(v2), ...))).</code>

@@ -1,39 +1,39 @@
-fun			Fun
-farmer			Éleveur
-kills			Kills
-total_level			Niveau total
-team_level			Équipe niveau %s
-leek_level			Poireau niveau %s
-country			Pays
-leek			Poireau
-talent			Talent
-kills_title			Nombre de kills
-trophies_title			Le plus de trophées
-trophies			Trophées
-team			Équipe
-richest_title			Argent gagné
-days			Jours
+allies_killed			Alliés tués
 allies_killed_title			Nombre d'alliés tués
-shots_title			Nombre total de tirs
-shots			Tirs
-distance			Distance
-search_name			Nom
-leeks			Poireaux
-title			Classement
-farmers			Éleveurs
-teams			Équipes
-search_in_ranking			Recherche dans le classement
-results			Résultats
-my_leek			Mon poireau
-my_farmer			Mon éleveur
-my_team			Mon équipe
-place			Place
-summons			Invocations
 chips			Puces
 chips_title			Nombre de puces utilisées
-money			Argent
-allies_killed			Alliés tués
-distance_title			Distance totale parcourue
-summons_title			Nombre d'invocations
 connection_title			Jours connecté
+country			Pays
+days			Jours
+distance			Distance
+distance_title			Distance totale parcourue
+farmer			Éleveur
+farmers			Éleveurs
+fun			Fun
+kills			Kills
+kills_title			Nombre de kills
+leek			Poireau
+leek_level			Poireau niveau %s
+leeks			Poireaux
 level			Niveau
+money			Argent
+my_farmer			Mon éleveur
+my_leek			Mon poireau
+my_team			Mon équipe
+place			Place
+results			Résultats
+richest_title			Argent gagné
+search_in_ranking			Recherche dans le classement
+search_name			Nom
+shots			Tirs
+shots_title			Nombre total de tirs
+summons			Invocations
+summons_title			Nombre d'invocations
+talent			Talent
+team			Équipe
+team_level			Équipe niveau %s
+teams			Équipes
+title			Classement
+total_level			Niveau total
+trophies			Trophées
+trophies_title			Le plus de trophées

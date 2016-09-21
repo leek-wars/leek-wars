@@ -1,15 +1,15 @@
-code_too_large			Your AI could not be compiled properly because your code is too large
-chip_not_exists			The chip %s does not exist
-division_by_zero			Division by zero
-ai_timeout			AI interruption : the AI has taken more than 10 seconds to run, so it has been deactivated for the rest of the fight.
-unknown_function			Unknown function : %s
-deprecated_function			The function %s is deprecated and will be removed. Please use %s from now on.
-can_not_execute_value			Can not execute "%s"
-no_weapon_equipped			No weapon is currently equipped
-can_not_execute_with_arguments			Can not use this function with argument (%s). There should be %s arguments
-chip_not_equipped			The chip %s (%s) is not equipped
-no_ai_equipped			No AI equipped
-can_not_compile_ai			Your AI was not compiled sucessfully
 ai_disabled			The AI has been deactivated. It does not run
 ai_interrupted			AI interruption : %s
+ai_timeout			AI interruption : the AI has taken more than 10 seconds to run, so it has been deactivated for the rest of the fight.
+can_not_compile_ai			Your AI was not compiled sucessfully
+can_not_execute_value			Can not execute "%s"
+can_not_execute_with_arguments			Can not use this function with argument (%s). There should be %s arguments
+chip_not_equipped			The chip %s (%s) is not equipped
+chip_not_exists			The chip %s does not exist
+code_too_large			Your AI could not be compiled properly because your code is too large
+deprecated_function			The function %s is deprecated and will be removed. Please use %s from now on.
+division_by_zero			Division by zero
+no_ai_equipped			No AI equipped
+no_weapon_equipped			No weapon is currently equipped
 number_of_operations			Your IA has performed %s operations for that round.
+unknown_function			Unknown function : %s

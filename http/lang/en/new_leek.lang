@@ -1,9 +1,9 @@
-title			New leek
+4_leeks_only			You already have 4 leeks!
+create			Create
 error_under_required_level_1			Your first leek must at least be level %s
 error_under_required_level_2			Your second leek must at least be level %s
 error_under_required_level_3			Your third leek must at least be level %s
 name			Name
-price			Price
-4_leeks_only			You already have 4 leeks!
-create			Create
 not_enough_money			You don't have enough money
+price			Price
+title			New leek

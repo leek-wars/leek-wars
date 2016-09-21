@@ -1,10 +1,10 @@
-lstype_boolean			boolean
 leekscript			Leekscript
-ls_function_information			Informations about function "%s".
 ls_function_definitions			The function "%s" have %d definitions.
-ls_return_nothing			return nothing
+ls_function_information			Informations about function "%s".
 ls_return			return %s
-lstype_int			int
+ls_return_nothing			return nothing
+lstype_boolean			boolean
 lstype_float			float
-lstype_string			string
+lstype_int			int
 lstype_number			number
+lstype_string			string

@@ -1,75 +1,75 @@
-changelog			Changelog
-conditions			Terms of use
 about			About
-all_private_messages			All privates messages
-error			Error
-trophies			Trophies
-grade_admin			Admin
-grade_moderator			Moderator
-leeks			Leeks
-market			Market
-leek			Leek
-locale_xx_XX			en_US
-time_format			m/d/Y at H:i:s
-time_format_hhmm			H:i
-time_just_now			Just now
-time_1_minute_ago			One minute ago
-time_x_minutes_ago			%s minutes ago
-time_1_hour_ago			One hour ago
-time_x_hours_ago			%s hours ago
-time_1_day_ago			One day ago
-time_x_days_ago			%s days ago
-time_1_month_ago			One month ago
-time_x_months_ago			%s months ago
-time_soon			Soon
-time_in_1_minute			In one minute
-time_in_x_minutes			In %s minutes
-date_format			%B %d, %Y
-time_in_1_hour			In one hour
-time_in_x_hours			In %s hours
-time_in_1_month			In one month
-time_in_x_months			In %s months
-x_habs			%s Habs
-x_crystals			%s Crystals
-settings			Settings
-logout			Logout
-garden			Garden
-ranking			Ranking
-fight			Fight
-editor			Editor
-documentation			Documentation
-report			Fight report
-help			Help
-general_help			Help
-tutorial			Tutorial
-forum			Forum
-admin			Admin
-stats			Statistics
-tournament			Tournament
-messages			Private messages
-new_leek			New leek
-moderation			Moderation
-bank			Bank
-legal			Legal
-inventory			Inventory
-team			Team
-error_x			Error: %s
 add_leek			New leek
-stay			Stay
-leave			Leave the page
-quit_confirm			Do you really want to leave this page?
+admin			Admin
+all_notifications			All notifications
+all_private_messages			All privates messages
+bank			Bank
+changelog			Changelog
+chat_the_mdy_at_hm			The %2$s/%1$s/%3$s at %4$s:%5$s
+conditions			Terms of use
+connection			Log in
 connect_message			<a href='%s'><b>Log in</b></a> or <a href='%s'><b>Sign up</b></a> to Leek Wars
-grade_vip			V.I.P.
-grade_member			Member
 console_alert_1			Warning! If someone asks you to enter a program here,
 console_alert_2			it is a hacking attempt of your account on Leek Wars.
-signup			Sign up
-date_time_format			%B %d, %Y at %R
 console_alert_3			Enter code here only if you know exactly what you are doing.
-no_comments			No comments
-all_notifications			All notifications
-chat_the_mdy_at_hm			The %2$s/%1$s/%3$s at %4$s:%5$s
-connection			Log in
+date_format			%B %d, %Y
+date_time_format			%B %d, %Y at %R
+documentation			Documentation
+editor			Editor
+error			Error
+error_x			Error: %s
+fight			Fight
+forum			Forum
+garden			Garden
+general_help			Help
+grade_admin			Admin
+grade_member			Member
+grade_moderator			Moderator
+grade_vip			V.I.P.
+help			Help
+inventory			Inventory
+leave			Leave the page
+leek			Leek
+leeks			Leeks
+legal			Legal
 loading			Loading...
-yes			Yes
+locale_xx_XX			en_US
+logout			Logout
+market			Market
+messages			Private messages
+moderation			Moderation
+new_leek			New leek
 no			No
+no_comments			No comments
+quit_confirm			Do you really want to leave this page?
+ranking			Ranking
+report			Fight report
+settings			Settings
+signup			Sign up
+stats			Statistics
+stay			Stay
+team			Team
+time_1_day_ago			One day ago
+time_1_hour_ago			One hour ago
+time_1_minute_ago			One minute ago
+time_1_month_ago			One month ago
+time_format			m/d/Y at H:i:s
+time_format_hhmm			H:i
+time_in_1_hour			In one hour
+time_in_1_minute			In one minute
+time_in_1_month			In one month
+time_in_x_hours			In %s hours
+time_in_x_minutes			In %s minutes
+time_in_x_months			In %s months
+time_just_now			Just now
+time_soon			Soon
+time_x_days_ago			%s days ago
+time_x_hours_ago			%s hours ago
+time_x_minutes_ago			%s minutes ago
+time_x_months_ago			%s months ago
+tournament			Tournament
+trophies			Trophies
+tutorial			Tutorial
+x_crystals			%s Crystals
+x_habs			%s Habs
+yes			Yes

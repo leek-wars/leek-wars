@@ -1,9 +1,9 @@
-send			Send
-do_you_want_to_delete_message			Do you really want to delete this message?
-undoable_action			This action is irreversible.
+answer			Reply
 cancel			Cancel
 delete			Delete
+do_you_want_to_delete_message			Do you really want to delete this message?
 do_you_want_to_delete_topic			Do you really want to delete this topic?
-answer			Reply
+send			Send
 subscribe			Subscribe to topic
+undoable_action			This action is irreversible.
 unsubscribe			Unsubscribe to topic

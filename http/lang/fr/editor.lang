@@ -1,73 +1,73 @@
-n_ais_unsaved			Vous avez %s IA(s) non sauvegardée(s).
-keyword			Mot-clé %s
-test_validate			Tester
-delete_desc			Supprimer l'IA courante
-test			Tester
-test_desc			Tester une IA
-saving			Sauvegarde...
-delete			Supprimer
-opponent_agility			Agilité
-opponent_strength_life			Force / Vie
+1_core			1 coeur
+ai_error			<b>%1$s</b> ligne <b>%2$s</b>
+ai_to_test			IA à tester
+auto_closing			Fermeture automatique des parenthèses, crochets, accolades et guillemets
+autocompletion			Autocomplétion (proposition des variables courantes et fonctions de la doc)
 child			Enfant
-easy			Facile
-medium			Moyen
-hard			Difficile
-evil			Diabolique
+constant			Constante %s
+defined_in			Définie dans <b>%1$s</b> à la ligne <b>%2$s</b>
+delete			Supprimer
+delete_ai			Supprimer l'IA "%s" ?
+delete_cancel			Annuler
+delete_desc			Supprimer l'IA courante
 delete_validate			Supprimer
-shortcuts			Raccourcis clavier
-n_cores			%s coeurs
-shortcut_1			<b>Ctrl + S</b> : sauvegarder l'IA courante
-n_lines			%s lignes
-n_characters			%s caractères
-settings			Paramètres de l'éditeur
-new			Nouveau
-title			Éditeur
-new_desc			Créer une nouvelle IA
-shortcut_2			<b>Ctrl + Q</b> : lancer un test
+delete_warning			Cette action est irreversible.
 display			Affichage
+easy			Facile
+enlarge_window			Agrandir la fenêtre
+evil			Diabolique
 export			Exporter
+export_desc			Télécharger l'IA courante dans un fichier.
+font_size			Taille de la police
+function_f			Fonction %s
+hard			Difficile
 import			Importer
 import_desc			Importer une IA depuis votre ordinateur.
-opponent_strength_agility			Force / Agilité
-opponent_agility_life			Agilité / Vie
-test_cancel			Annuler
-function_f			Fonction %s
-settings_ok			OK
-1_core			1 coeur
-parameters			Paramètres
-return			Retour
-constant			Constante %s
-server_error			Erreur du serveur
-valid_ai			<b>%s</b> valide
-ai_error			<b>%1$s</b> ligne <b>%2$s</b>
-variable			Variable <b>%s</b>
-delete_warning			Cette action est irreversible.
-variable_defined_in_ai			Variable définie dans l'IA <b>%s</b>
-delete_cancel			Annuler
+keyword			Mot-clé %s
 level_n			Niveau %s
-shortcut_3			<b>Ctrl + D</b> : dupliquer la ligne ou la sélection courante
-delete_ai			Supprimer l'IA "%s" ?
-font_size			Taille de la police
-shortcut_4			<b>Ctrl + K</b> : supprimer la ligne courante
-enlarge_window			Agrandir la fenêtre
-settings_editor			Éditeur
-shortcut_5			<b>Ctrl + E</b> : commenter/décommenter la ligne courante
-auto_closing			Fermeture automatique des parenthèses, crochets, accolades et guillemets
+medium			Moyen
+n_ais_unsaved			Vous avez %s IA(s) non sauvegardée(s).
+n_characters			%s caractères
+n_cores			%s coeurs
+new			Nouveau
+new_desc			Créer une nouvelle IA
+n_lines			%s lignes
+opponent_agility			Agilité
+opponent_agility_life			Agilité / Vie
+opponent_life			Vie
+opponent_strength			Force
+opponent_strength_agility			Force / Agilité
+opponent_strength_life			Force / Vie
+parameters			Paramètres
 popups			Affichage des informations au survol des constantes et fonctions
-shortcut_7			<b>Ctrl + Shift + F</b> : formatage et indentation automatique du code
-shortcut_6			<b>Ctrl + Espace</b> : complétion automatique
-shortcuts_ok			D'accord !
+return			Retour
 run_test			Lancer un test
-ai_to_test			IA à tester
-test_type_solo			Solo
-autocompletion			Autocomplétion (proposition des variables courantes et fonctions de la doc)
-test_type_farmer			Éleveur
-test_type_team			Équipe
+save			Sauvegarder
+save_desc			Sauvegarder l'IA courante
+saving			Sauvegarde...
 select_opponents			Sélectionnez vos adversaires
 select_your_leek			Sélectionnez votre poireau
-opponent_strength			Force
-export_desc			Télécharger l'IA courante dans un fichier.
-defined_in			Définie dans <b>%1$s</b> à la ligne <b>%2$s</b>
-opponent_life			Vie
-save_desc			Sauvegarder l'IA courante
-save			Sauvegarder
+server_error			Erreur du serveur
+settings			Paramètres de l'éditeur
+settings_editor			Éditeur
+settings_ok			OK
+shortcut_1			<b>Ctrl + S</b> : sauvegarder l'IA courante
+shortcut_2			<b>Ctrl + Q</b> : lancer un test
+shortcut_3			<b>Ctrl + D</b> : dupliquer la ligne ou la sélection courante
+shortcut_4			<b>Ctrl + K</b> : supprimer la ligne courante
+shortcut_5			<b>Ctrl + E</b> : commenter/décommenter la ligne courante
+shortcut_6			<b>Ctrl + Espace</b> : complétion automatique
+shortcut_7			<b>Ctrl + Shift + F</b> : formatage et indentation automatique du code
+shortcuts			Raccourcis clavier
+shortcuts_ok			D'accord !
+test			Tester
+test_cancel			Annuler
+test_desc			Tester une IA
+test_type_farmer			Éleveur
+test_type_solo			Solo
+test_type_team			Équipe
+test_validate			Tester
+title			Éditeur
+valid_ai			<b>%s</b> valide
+variable			Variable <b>%s</b>
+variable_defined_in_ai			Variable définie dans l'IA <b>%s</b>

@@ -1,169 +1,68 @@
-doc_fight			<b>Fight</b>: functions about the current fight (get your/enemy team composition, positioning in relation to the enemy...)
-fight_speak_1			Your leek can talk during the fight, to encourage its allies, or taunt his enemies.The function to make your leek speak is <a href='documentation#say'> <b> say </b> </a> and costs <b> 1 TP</b>
-fight_ground_9			var cell = ...; // A cell
-if (getCellContent (cell) == CELL_LEEK) {
-var = getLeekOnCell(cell); 
-// We obtain the id of the leek
-if (isEnemy (leek)) {say ("It is an enemy!");
-}
-}
-welcome			Welcome to the LeekScript tutorial!
-title			Tutorial
-interface			Interface
-variables			Variables
-conditions			Conditions
-loops			Loops
-fight			Battle
 advanced			Advanced
-menu			Menu
-presentation			Introduction
-functions			Functions
-what_is_ai			What's an AI ?
-editor_image_2			An AI in the editor
-editor			Discovery of the editor
-editor_3			During the creation of your account, one AI "AI_Example" has been created and automatically equipped so you can have an example of code.
-editor_4			Click on this AI. A text editor will appear with the code :
-editor_6			Below those buttons is the text editor, this is where you will type your code, a syntax highlight is applied with the following color code :
-editor_token_comments			In red : the comments
-editor_token_numbers			In green : numeric values
-editor_token_bool			In turquoise : booleans
-editor_token_strings			In orange : the strings of characters
-presentation_2			To get a proper start, we will see how to equip a weapon or a chip on your leek so that it can fight without trouble.
-buy_a_weapon_2			Choose in the list the weapon you like (and one with minimum level is <b>below</b> your leek's current level), and click the "Buy" button.
-buy_a_weapon			Before you throw your leek in the arena, it's important that you give it something to fight with. Go to the "Market" tab to buy it a weapon. The "Market" page consists in two sub-tabs : "Weapons" and "Chips". In this tutorial, we will describe the procedure to equip a weapon but the process for equipping a chip is very similar.
-equip_a_weapon			Equip a weapon
-editor_token_keywords			In blue : keywords of the language (if, else, for, var, while...)
-var_2			The variables are a fundamental point in all programming languages. They allow to keep in memory values you're going to use in calculations.
-var_3			The variables available for LeekScript can contain multiple types of value
-var_4			String
-var_5			Number
-var_6			Boolean (true or false)
-var_7			Array (we will get back to it later)
-var_1			What's a variable
-do_a_test_fight			Do a test fight
-automatic_completion			The automatic completion
-editor_shortcut_2			<b>Ctrl + Q</b>: Launch a test
-test_config			Test's configuration
-documentation			The documentation
-editor_shortcut_1			<b>Ctrl + S</b>: Save/Compile
-editor_shortcut_3			<b>Ctrl + D</b>: Duplicate the current line or selection
-editor_10			The image below shows what the autocomplete dialog box looks like :
-editor_11			Once you've finished your AI, you have the possibility to test it in a fight situation with the test arena.
-loops_3			The while loop
-loops_9			The do while loop
-doc_13			Now that we've seen all of the programming environment, we are going to start with LeekScript!
-var_8			null
-var_16			Be careful not to forget the semi-colon <b>;</b> at the end of the instruction.
-var_18			// Declaring a global variable nameOfGlobal
-global nameOfGlobal;
-var_20			// Declaring a global variable nameOfGlobal with value 42
-global nameOfGlobal = 42;
-var_19			You can also assign a value to your global variable in the following way:
-var_35			// Declaring variable a and b
-var a, b;
-
-// We give a the value 10
-a = 10; // a is set to 10
-
-// We give the value a + 5 to b
-b = a + 5; // b is set to 15
-var_36			We can also use string in the following way:
-var_37			var myVariable;
-myVariable = "I'am a string";
-var_38			For a string, only the <b>+</b> operator is usable, it allows to concatenate pieces of string, which will laid them end to end. Thus, the code:
-var_12			You can also assign a value to your variable in the following way:
-var_13			// We declare a variable 'nameOfVariable' and give it the value 12
-var nameOfVariable = 12;
-var_15			// Declare a firstVariable and a secondVariable variable
-var firstVariable, secondVariable;
-var_26			It's possible to perform operations by writing expressions, you can use the followings operator:
-var_30			/ : division
-var_31			% : modulo (reminder of an euclidian division)
-var_32			We proceed like this:
-var_34			We can also use a variable in an expression, its value will then be used to make the calculation. For example:
-loops_25			The code will successively display all the values of the array : 1,1,2,3,5,8,13,21.
-loops_5			The syntax of the while loop is similar to the syntax of the condition "if" of the preceding chapter. It allows the execution of a block of instruction as long as a condition is filled.
-loops_1			We will now describe another kind of structures as important as conditions:
-Loops!
-loops_24			var array = [1,1,2,3,5,8,13,21];
-for (var value in array) {
-debug(value);
+advanced_include			Inclusions
+advanced_include_1			The function <b> include </b> allows you to include an AI in another. Specifically, if in an AI "AI Main", you write:
+advanced_include_10			// does not work :
+var ias = ['IA_1', 'IA_2', 'IA_3'];
+for (var ia in ias) {
+include(ia);
 }
-fun_6			var a = 3;
-var b = 4;
-var c = sqrt(a * a + b * b);
-a = sqrt(b * b + c * c) + sqrt(c * c + 4 * 4);
-b = sqrt(a * a + c * c);
-fun_8			function hypot(x, y) {
-return sqrt(x * x + y * y);
-}
-arr_3			The first index of an array will always be zero, and it is impossible to use negative index.
-cond_8			Example :
-cond_34			If a is an <b>array</b>, a is true if non-empty.
-fun_2			A basic function
-fun_4			var c = sqrt(a * a + b * b);
-cond_35			If a is <b>null</b>, a is false.
-loops_22			for (var i = 1; i <= 5; i++) {
-// Block of instructions...
-}
-loops_12			The for loop
-fun_35			Level of a function
-fun_41			We can for example give a function as a parameter :
-fun_22			var a = logarithm(-5); // a will be equal to null
-fun_42			function my_function(parameter) {
-debug(parameter());
-}
-
-my_function(getLeek);
-fun_23			Recursivity
-fun_48			If, for example, we have a function which requires another function as a parameter, we can directly use an anonymous function as a parameter, as shown in the following example:
-fun_30			Examples of codes leading to a stack overflow :
-fun_33			Level of the functions
-fun_36			Going further in the functions
-fun_18			The keyword <b>return</b> can be used without any expression to its right, the function will then return the value <b>null</b>.
-fun_38			var variable = getLeek;
-loops_23			A variation of the for loop exists, the structure : <b>for</b> ... <b>in</b>, which allows the iteration on the values of an array directly.
-An example:
-loops_26			If you wish to obtain the key associated to each value, you can use the
-<b>for</b> ...
-<b>in</b> by adding : 
-fun_14			// Definition of the function hypot
-function hypot(x, y) {
-return sqrt(x * x + y * y);
-}
-
-var a = 3;
-var b = 4;
-var c = hypot(a, b);
-a = hypot(b, c) + hypot(c, 4);
-b = hypot(a, c);
-fun_19			Example of <b>return</b> without value :
-fight_sys_5			var turn = getTurn();
-if (turn> 60) {
-// The fight will end soon, you have to hurry...
-}
-fight_sys_6			A numbering of the players
-fight_ground			The field
-fight_chips			The chips
-advanced_intro			In this section we will present more complex but useful features and techniques to win a fightin <b> Leek Wars </b>.
-fight_move_9			One or several cell(s) as a target
-advanced_order			Order of playing
-fight_speak_2			say("I am gonna make soup of you all !"); // taunt the enemy team
-fight_chips_6			So you need to think about what actions to perform during your turn, and organize your code accordingly. The function <b> getTP()</b> (get Turn Points) gives you the number of remaining TP.
-fight_weapons_4			Beware ! The function <b>setWeapon</b> costs 1 TP.
-fight_move_4			var enemy = getNearestEnemy();
-if (getLife() > 100) {
-moveToward(enemy); // we move toward
-// attack...
-} else {
-moveAwayFrom(enemy); // we move away
-// heal...
-}
-fight_weapons_5			Use a weapon
-advanced_triple_equal_7			The operator <b> == </b> is therefore to be used with caution, if you want to be sure of the test of equality between the two values, use <b> === </b>.
-fight_chips_5			By default, the number of TP is set to 10. You can get more points with your capital points. The number of TP is reset at the end of your turn.
+advanced_include_11			Why?
+advanced_include_12			The reason is that the compiler performs LeekScript inclusions at compilation time only. The inclusion of an AI at runtime (example: if the enemy is close to me, include "IA_Escape") is not supported. The AIs included in others have to be determined at compilation time, so the only way to include an AI is:
 advanced_include_13			// DOES WORK
 include("string");
+advanced_include_2			include("Fonctions");
+advanced_include_3			The contents of the AI named "Functions" is copied into the AI "AI Main", which allows you to separate different parts of your code in different AI. An example: having a main AI, called "IA Main", an AI "Moving" with multiple complex functions to move,  an AI "attack" with useful functions to attack, an AI "Words" with functions for talk etc.
+advanced_include_4			To separate different parts of your into different AIs, modules, allows you to reuse them easily afterwards. If you have two leeks, all you need to do  is two IA including the two individual modules, without having to copy the code in both AI.
+advanced_include_5			Limitations of the function include
+advanced_include_6			Using the function include is limited in LeekScript, indeed it is impossible to dynamically include another AI. The codes below are not working:
+advanced_include_7			// does not work :
+include("IA_" + 5);
+advanced_include_8			// does not work :
+var ia = 'IA_1';
+include('IA_1');
+advanced_include_9			// does not work :
+if (foo > 12) {
+include('IA_1');
+} else {
+include('IA_2');
+}
+advanced_intro			In this section we will present more complex but useful features and techniques to win a fightin <b> Leek Wars </b>.
+advanced_order			Order of playing
+advanced_order_1			The functions <a href='documentation#getNextPlayer'> <b> getNextPlayer </b></a> and <a href='documentation#getPreviousPlayer'> <b> getPreviousPlayer </b> </a> can recover the ids of the leeks which will respectively play after you and played before you.One possible application: check if the player who plays after you (an enemy) is close to you.
+advanced_order_2			var next = getNextPlayer();
+if (isEnemy(next) and getLife() < 100
+and getCellDistance(getCell(), getCell(next)) < 10) {
+// We are in danger, the next player is a close enemy
+}
+advanced_order_3			Target of a weapon or a chip
+advanced_order_4			The functions <a href='documentation#getWeaponTargets'><b>getWeaponTargets</b></a> and <a href='documentation#getChipTargets'> <b> getChipTargets </b> </a> can be used to retrieve an array of ids of the affected leeks if you use a weapon or a chip on a certain cell. Particularly useful for weapons or chip area (a grenade launcher or a heal chip with area effect):
+advanced_order_5			var cell = ...; // une cellule
+var targets = getChipTargets(CHIP_ICEBERG, cell);
+if (count(targets) > 1) { // we will touch more than 1 player by launching here
+for (var target in targets) {
+if (isAlly(target)) {
+// An ally will be touched, not good :/
+}
+}
+}
+advanced_ref			Passage by reference
+advanced_ref_1			When you write a function in LeekScript, you can specify its arguments, for example:
+advanced_ref_2			function sum(a, b, result) {
+result = a + b;
+}
+advanced_ref_3			When you call this function, the variables you pass to it will be <b> copied </b>, ie if you do:
+advanced_ref_4			function sum(a, b, resultat) {
+result = a + b;
+}
+
+var a = 2;
+var b = 10;
+var result = 0;
+
+somme(a, b, result);
+debug(result);
+advanced_ref_5			Here, the program will display 0, because the result variable is 0. When you place these three variables (a, b and result) in the "sum" function, their values are copied to be used inside. Thus, the values 2, 10 and 0 are sent. The operation "result = a + b" is working with copies of values, and will not affect your variable "result".
+advanced_ref_6			It is possible to solve the problem by passing "result" by reference. To do this, simply add an "@" in front of its name in the list of function arguments:
 advanced_ref_7			function sum(a, b, @resultat) {
 result = a + b;
 }
@@ -174,134 +73,92 @@ var result = 0;
 
 somme(a, b, result);
 debug(result); // "result" is equal to 12, as expected.
-fight_speak			Talk
+advanced_tern			Ternaries
+advanced_tern_1			The ternaries are a way to quickly write a condition. The structure of a ternary condition is :
+advanced_tern_2			condition ? value_if_true : value_if_false
+advanced_tern_3			In this way, we can replace :
 advanced_tern_4			if (getCell() == 42) {
 useWeapon(getNearestEnemy());
 } else {
 moveTowardCell(42);
 }
-advanced_tern_3			In this way, we can replace :
-advanced_triple_equal			The operator ===
 advanced_tern_5			by the following code :
-what_is_ai_3			We will now see the environment offered by <b>Leek Wars</b> to develop your AI.
-editor_8			The editor is also using keyboard shortcuts which can make you save time while developping your AI :
-fight_sys_2			A turn based game
-fun_39			This is the case for the basic functions of the LeekScript as well as for the functions defined by the user in the code. In order to use a function as a variable, call it as a standard function :
-fight_sys			The fighting system
-var_21			The common variables and global variables are used the same way in the code, as this tutorial goes we will mostly use common variables.
-difficulty_hard			Hard: 130 to 160% of your attributes and 130% of your TP, MP
-editor_tisma			Tisma: Defensive AI, attack then run away then heal itself
-var_11			// We declare a variable 'nameOfVariable'
-var nameOfVariable;
-what_is_ai_2			When a fight is launched, you won't be able to change the actions of your <i>protégé</i>, only the AI will come into play, which is why it's highly recommended to program it with care.
-var_24			You can assign them a value (which means make them "remember" this value in memory) by using the assignement operator <b>=</b>
-editor_2			Here we find a "New AI" button, it allows you to create a new AI, and below this button is the list of your AI.
+advanced_tern_6			(getCell() == 42) ? useWeapon(getNearestEnemy()) : moveTowardCell(42);
+advanced_tern_7			The two codes above are equivalent. The ternaries allow to condense the code for simple conditions but be careful however not to abuse it, this may make your code hard to read.
+advanced_triple_equal			The operator ===
+advanced_triple_equal_1			The operator <b>===</b> allows you to compare two values, as well as their type. It is more restrictive than the operator <b>==</b>.
+advanced_triple_equal_2			<tr> <th> Operator </th> <th> Description </th> </tr><tr> <td> === </td> <td> Checks if both operands are of the same value and type </td> </tr><tr> <td>! == </td> <td> Checks if the two operands are not of the same value or are not of the same type </td> </tr>
+advanced_triple_equal_3			The functioning of the operator <b> === </b> is very simple:
+advanced_triple_equal_4			That of <b> == </b>, however, is more complex, because it attempts to perform some conversions:
+advanced_triple_equal_5			The global functioning of <b> == </b> is to convert the values when these two are not of the same type, for example, "true" == 1, "lama" == true, 12 == true but, 1! = 12 and "true"! = "lama". When the two values are of the same type, the <b> == </b> has the same behavior as <b> === </b>.
+advanced_triple_equal_6			When the <b> == </b> compares an array with a single element, this array is assimilated to that element. For example, 1 == [1], "1" == ["1"], and therefore "1" == [1] == 1 ["1"]. By recursivity, we also have 1 == [[1]], 1 == [[[1]]] etc.
+advanced_triple_equal_7			The operator <b> == </b> is therefore to be used with caution, if you want to be sure of the test of equality between the two values, use <b> === </b>.
+arr_1			There is another kind of variable which has been quickly introduced here above: the arrays.
+Up to now, the described variables have all a name and a value, the arrays also have a name, but it is also possible to associate several values which then ordered in compartments.
+arr_10			In both cases, the obtained array can be represented as shown:
+arr_11			<tr><th>Index</th><th>Value</th></tr>
+<tr><td>0</td><td>Leek</td></tr>
+<tr><td>1</td><td>Lama</td></tr>
+<tr><td>2</td><td>Ostrich</td></tr>
+<tr><td>3</td><td>Artichoke</td></tr>
+arr_12			A compartment of an array can be accessed by indicating the index of the required compartment in brackets :
+arr_13			// Declaring the array
+var myArray = ["Leek", "Lama", "Ostrich", "Artichoke"];
+debug(myArray[1]); // Will display Lama
+arr_14			A compartment of an array can be used exactly like a standard variable :
+arr_15			var myArray = [2, 4, 6, 8];
+debug(myArray[0]); // Displays 2
+myArray[0] = myArray[1] + 5; // Allocate the value 9 to the compartment 0
+debug(myArray[0]); // Displays 9
+arr_16			When concatening an array with a string, or when trying to display it with the debug function, a list of every elements of the array is displayed, which is very convenient for debugging.
+arr_2			The array proposed by the LeekScript are all arrays with numerical index (or keys), you can use them to store any kind of variables (even another array) or also store a different kind of variables from one compartment to the other.
+arr_3			The first index of an array will always be zero, and it is impossible to use negative index.
+arr_4			In order to create an array, you have to use the following syntax:
+arr_5			// Declaring an array
+var myArray = [];
+arr_6			Our array can be filled by two methods :<br />
+When declaring :
+arr_7			// Declaring the array
+var myArray = ["Leek", "Lama", "Ostrich", "Artichoke"];
+arr_8			Or after the declaration, by using allocations :
+arr_9			//Declaring the array
+var myArray = [];
+myArray[0]="Leek";
+myArray[1]="Lama";
+myArray[2]="Ostrich";
+myArray[3]="Artichoke";
 arrays			The arrays
-editor_guj			Guj: Random AI, attack, heal itself, run away, move towards you... nobody really knows what this leek wants.
-doc_1			The last important point to talk about before starting this class is the documentation. All the functions and constants availables in LeekScript are regrouped on one page: the documentation.
-To go to the documentation for <b>Leek Wars</b>, use the Help tab, then click on documentation.
+automatic_completion			The automatic completion
+buy_a_weapon			Before you throw your leek in the arena, it's important that you give it something to fight with. Go to the "Market" tab to buy it a weapon. The "Market" page consists in two sub-tabs : "Weapons" and "Chips". In this tutorial, we will describe the procedure to equip a weapon but the process for equipping a chip is very similar.
+buy_a_weapon_2			Choose in the list the weapon you like (and one with minimum level is <b>below</b> your leek's current level), and click the "Buy" button.
+buy_a_weapon_3			Next, visit the "Leek" tab, at the bottom of this page, you can see three columns : Weapons, Chips and AI.
+Click on the "Modify" of the "Weapons" column, a small popup appears. Drag and drop your brand new weapon from the "All weapons" category to the "Weapons of [current leek's name]" category. Here you go, your weapon is equiped.
+cond_1			We are now going to broach an important point in LeekScript (and more generally every langage) : the conditions !<br />
+They will allow you to make your leek execute different actions depending on the cases.
+cond_10			It is also possible to determine several cases, let's imagine we wish to execute a different action if this value is between 0 and 4, between 5 and 7 or between 8 and 10.
+
+We can then use the structure "else if". It allows us to define a new condition and a new block of instructions.
+cond_11			Example :
+cond_12			var value = 5;
+if (value < 5) { // If value is inferior to 5 (therefore between 0 and 4)
+debug("value is between 0 and 4");
+} else if (value < 8) { // Otherwise, if value is inferior to 8 (between 5 and 7)
+debug("value is between 5 and 7");
+} else { // Otherwise (therefore between 8 and 10)
+debug("value is between 8 and 10");
+}
+cond_13			We will now describe the different available condition operators :
+cond_14			<tr><th>Operator</th><th>Description</th></tr>
+<tr><td>==</td><td>Is equal to</td></tr>
+<tr><td>!=</td><td>Is different from</td></tr>
+<tr><td>&lt;</td><td>Is inferior to</td></tr>
+<tr><td>&lt;=</td><td>Is inferior or equal to</td></tr>
+<tr><td>&gt;</td><td>Is superior to</td></tr>
+<tr><td>&gt;=</td><td>Is superior or equal to</td></tr>
+cond_15			It is also possible to combine several conditions together by using the logical operators :
 cond_16			<tr><th>Operator</th><th>Description</th></tr>
 <tr><td>and</td><td>and</td></tr>
 <tr><td>or</td><td>or</td></tr>
-loops_4			The syntax of the while loop is similar to the syntax of the condition "if" of the preceding chapter. It allows the execution of a block of instruction as long as a condition is satisfied.
-loops_18			Example of <b>for</b> loop :
-fun_13			We can entirely rewrite the code given in example with the use of our function:
-fun_17			Return without value
-doc_strings			<b>String</b>: classic functions to handle characters string
-doc_arrays			<b>Arrays</b>: classic functions to handle arrays
-doc_util			<b>Utils</b>: utils functions to help you develop your AI
-doc_7			The description of a given function gives you the following details:
-doc_6			The categories are as follow:
-doc_11			The minimum level needed to use this function
-advanced_ref_2			function sum(a, b, result) {
-result = a + b;
-}
-fun_32			function a() {
-b();
-}
-function b() {
-a();
-}
-a(); // a and b call eachother endlessly
-fight_move_6			To better control the number of MP that a function uses, you can specify the maximum number of PM in the second parameter:
-fun_21			The execution of the function being stopped at the first return, if n is inferior or equal to 0, this function will return <b>null</b>, and will not execute the remaining instructions :
-fun_40			var variable = getLeek;
-
-variable(); // Gives identical results than getLeek
-fun_20			function logarithm(n) {
-if (n <= 0) {
-return;
-}
-// rest of the calculation...
-}
-fun_25			function square(x) {
-return x * x;
-}
-function hypot(x, y) {
-return sqrt(square(x) + square(y));
-}
-var a = hypot(3, 4); // a is equal to sqrt(3 * 3 + 4 * 4)
-fight_weapons			The weapons
-advanced_order_1			The functions <a href='documentation#getNextPlayer'> <b> getNextPlayer </b></a> and <a href='documentation#getPreviousPlayer'> <b> getPreviousPlayer </b> </a> can recover the ids of the leeks which will respectively play after you and played before you.One possible application: check if the player who plays after you (an enemy) is close to you.
-fight_weapons_1			Equip a weapon
-fun_1			The LeekScript allows the creation of user-defined functions which will allow you to organize and simplify your AI. If you have written a complex operation and wish to re-use it a certain number of times in your code, the use of a function will be the most efficient solution.
-arr_2			The array proposed by the LeekScript are all arrays with numerical index (or keys), you can use them to store any kind of variables (even another array) or also store a different kind of variables from one compartment to the other.
-var_53			This function allows you to efficiently find bugs in your code, so do not hesitate to use it.<br>
-It should be noted that you can only see the debug message of your leeks (and inversely, your opponents will not have access to your debug messages)
-fight_intro			We will now explain how to really fight in <b>Leek Wars</b>, the fighting system will be detailed and we will give some pieces of advice to program a good behavior.
-loops_17			The incrementation : to increase (or decrease) the value of the "counter" variable
-fun_7			We can notice that it is tiresome to copy incessantly the formula, and it makes your code much more complicated.<br />
-We will then create a function <i>hypot</i> which will calculate directly the hypotenuse. This function is defined by the following code:
-advanced_triple_equal_1			The operator <b>===</b> allows you to compare two values, as well as their type. It is more restrictive than the operator <b>==</b>.
-loops_8			This code will display in the fight report:
-: <br />
-Counter is equal to 1<br />
-Counter is equal to 2<br />
-Counter is equal to 3<br />
-Counter is equal to 4<br />
-Counter is equal to 5
-loops_2			A loop allows the repetition of instructions a certain number of times. There are several kind of loops that will be broached in this section. 
-loops_11			var x;
-do {
-x = rand(); // x is a random number between 0 and 1
-} while (x < 0.8); // we repeat as long as x is not superior to 0.8
-
-debug("x : " + x); // displays a number between 0.8 and 1
-advanced_include_12			The reason is that the compiler performs LeekScript inclusions at compilation time only. The inclusion of an AI at runtime (example: if the enemy is close to me, include "IA_Escape") is not supported. The AIs included in others have to be determined at compilation time, so the only way to include an AI is:
-cond_4			Here is an example:
-cond_2			Structure if… else…
-fun_50			The function arrayMap requires an array and a function in parameters. it returns a new array constituted by the results of the treatment of each element of the input array by the input function.
-advanced_include_4			To separate different parts of your into different AIs, modules, allows you to reuse them easily afterwards. If you have two leeks, all you need to do  is two IA including the two individual modules, without having to copy the code in both AI.
-fight_ground_20			var myCell = getCell();
-var hisCell = getCell(getNearestEnemy());
-var distance = getCellDistance (myCell, hisCell);
-if (distance> 10) {
-// The nearest enemy is at a distance of more than 10 cells
-}
-fight_move_13			var enemy = ...; // the enemy with a laser
-var saCellule = getCell(enemy);
-var maCellule = getCell();
-moveAwayFromLine(saCellule, maCellule);
-loops_13			A little bit more complex kind of loop exists, it looks like a while loop but in a more condensed version.
-With experience, you will learn which loop, the while or the for, is more adapted to which case. 
-fight_move_8			These functions also exist when our target is not one but many leeks: <a functions href='documentation#moveTowardLeeks'> <b> moveTowardLeeks </b></a> and  <a href='documentation#moveAwayFromLeeks'> <b> moveAwayFromLeeks </b> </a> to move toward or move away from a group of leeks.
-advanced_order_2			var next = getNextPlayer();
-if (isEnemy(next) and getLife() < 100
-and getCellDistance(getCell(), getCell(next)) < 10) {
-// We are in danger, the next player is a close enemy
-}
-var_46			Go to the editor page, create a new AI and write the following piece of code:
-advanced_order_3			Target of a weapon or a chip
-advanced_ref			Passage by reference
-var_51			Each time the function <i>debug</i> is called, the value indicated in parameter is added in the chronology of the fight, you can then be informed of which instructions is executed at which moment of the fight.
-You can display the value of a variable, the result of a calculation...
-arr_12			A compartment of an array can be accessed by indicating the index of the required compartment in brackets :
-arr_7			// Declaring the array
-var myArray = ["Leek", "Lama", "Ostrich", "Artichoke"];
-arr_5			// Declaring an array
-var myArray = [];
-cond_3			In order to use a condition, it is necessary to write the keyword "if", a condition in between parenthesis, then open a curly bracket, write the instructions to be executed when the condition is satisfied, then close the curly bracket.
-cond_15			It is also possible to combine several conditions together by using the logical operators :
 cond_17			Which gives :
 cond_18			var a = 1;
 var b = 5;
@@ -311,32 +168,215 @@ if (a < 5 and b > 6) { // If a is inferior to 5 and b is superior to 6
 if (a == 1 or a == 3) { // If a is equal to 1 or if a is equal to 3
 // ...
 }
+cond_19			The operator <b>===</b> exists as well, it allows to compare both the value and the kind of two variables, see <a href='#triple_equals'>in the advanced section</a>.
+cond_2			Structure if… else…
+cond_20			Some useful simplifications 
+cond_21			We will now describe some simplifications concerning conditions which will allow you to code more efficiently.
+cond_22			If you wish to execute only 1 instruction in your block, you can directly write the following instruction without curly bracket :
+cond_23			In the case of a "if", for example :
+cond_24			var a = 1;
+if (a == 1) debug("A is equal to 1");
+cond_25			Or in the case of a "if else" :
+cond_26			if (valeur > 5) debug("value superior to 5")
+else debug("value inferior or equal to 5");
+cond_27			This will allow you to gain some readability.
+cond_28			It is also possible to write :
+cond_29			var a = 1;
+if (a) debug("A is true");
+cond_3			In order to use a condition, it is necessary to write the keyword "if", a condition in between parenthesis, then open a curly bracket, write the instructions to be executed when the condition is satisfied, then close the curly bracket.
 cond_30			This operation will verify if the value a is true.
+cond_31			If a is not a <b>boolean</b> 
 cond_32			If a is a <b>number</b>, every value different from zero will be considered true
 cond_33			If a is a <b>string</b>, a is true if non-empty.
-advanced_include_11			Why?
-advanced_include_10			// does not work :
-var ias = ['IA_1', 'IA_2', 'IA_3'];
-for (var ia in ias) {
-include(ia);
+cond_34			If a is an <b>array</b>, a is true if non-empty.
+cond_35			If a is <b>null</b>, a is false.
+cond_4			Here is an example:
+cond_5			var a = 1;
+if (a < 10) { // We check if a is inferior to 10
+// If that is the case, the instructions indicated in between curly bracket will be executed.
+debug("a is inferior to 10");
 }
-cond_27			This will allow you to gain some readability.
-fight_ground_15			The top left cell (number <b> 0 </b>) has the coordinates <b> (- 17, 0) </b>;
-advanced_include			Inclusions
-fun_29			<b>Beware !</b> If a function calls itself without any ending condition, or that two or several functions call themselves in a cyclic way, your code will loop infinitely, and in the case of the LeekScript, will reach the limit of the stack, which is fixed to <b>200</b>. In this way, with such a limit, your code will only be able to calculate the factorial of <i>200</i>.
-fight_ground_16			The top right cell (number <b> 17 </b>) has the coordinates <b> (0, -17) </b>;
-fight_sys_11			var enemy = getNearestEnemy(); // We obtain the ID of the nearest enemy
-useWeapon (enemy); // We shoot on him
-advanced_include_2			include("Fonctions");
-fight_ground_17			The bottom left cell (number <b> 595 </b>) has the coordinates <b> (0, 17) </b>;
-fight_sys_12			The function <b> <a href='documentation#getEnemies'> getEnemies() </a> </b> returns the enemies leeks (alive or dead) in the fight.
+cond_6			In this example, a equal 1 so the condition is satisfied, therefore the debug will be executed and "a is inferior to 10" will be displayed in the fight report.
+cond_7			If we wish to execute instructions in case the condition is satisfied, and other instructions when it is not the case, it is possible to use a second keyword <b>else</b> (otherwise) in order to define a second block
+cond_8			Example :
+cond_9			var a = 1;
+if (a < 10) { // We check if a is inferior to 10
+// If that is the case, the instructions indicated in between curly bracket will be executed.
+debug("a is inferior to 10");
+} else { // Otherwise
+// Instructions to be executed if a is not inferior to 10
+debug("a is not inferior to 10");
+}
+conditions			Conditions
+difficulty_child			Child: 30 to 40% of your attributes (strength, agility, health...) and 50% of your TP and MP
+difficulty_easy			Easy: 50 to 75% of your attributes and 80% of your TP, MP
+difficulty_evil			Evil: 200 to 250% of your attributes and 160% of your TP, MP
+difficulty_hard			Hard: 130 to 160% of your attributes and 130% of your TP, MP
+difficulty_medium			Medium: 95 to 110% of your attributes and 100% of your TP, MP
+do_a_test_fight			Do a test fight
+doc_1			The last important point to talk about before starting this class is the documentation. All the functions and constants availables in LeekScript are regrouped on one page: the documentation.
+To go to the documentation for <b>Leek Wars</b>, use the Help tab, then click on documentation.
+doc_10			Type of return of the function and a description of this return
+doc_11			The minimum level needed to use this function
+doc_12			If you have doubts about the use of a function or if you met a new function in this tutorial or elsewhere, I would invite you to read its description in the documentation until you understand its behaviour properly.
+doc_13			Now that we've seen all of the programming environment, we are going to start with LeekScript!
+doc_2			The page is made up of three parts:
+doc_3			Upper part: a search field to find a constant or a function quickly.
+doc_4			Left part: a list of all the functions and constants sorted by category
+doc_5			Right part: all the functions in alphabetical order and their description
+doc_6			The categories are as follow:
+doc_7			The description of a given function gives you the following details:
+doc_8			A description about the function's role
+doc_9			The list of its parameters, their types and description
+doc_arrays			<b>Arrays</b>: classic functions to handle arrays
+doc_chips			<b>Chips</b>: functions to handle chips (get chip(s) scope, damage...)
+doc_fight			<b>Fight</b>: functions about the current fight (get your/enemy team composition, positioning in relation to the enemy...)
+doc_leeks			<b>Leeks</b>: functions to handle leeks (get attribute, position, change weapon...)
+doc_map			<b>Map</b>: functions to handle map (get distance between cells, cell's content...)
+doc_math			<b>Math</b>: all the math functions that you can find in most of programming languages
+doc_strings			<b>String</b>: classic functions to handle characters string
+documentation			The documentation
+doc_util			<b>Utils</b>: utils functions to help you develop your AI
+doc_weapons			<b>Weapons</b>: functions to handle weapons (get weapon(s) scope, damage...)
+editor			Discovery of the editor
+editor_1			To access the programming environment, go to the <b>Editor</b> tab. <br />
+Here is the page you're going to find :
+editor_10			The image below shows what the autocomplete dialog box looks like :
+editor_11			Once you've finished your AI, you have the possibility to test it in a fight situation with the test arena.
+editor_12			By clicking the "Test" button, the following box dialog opens:
+editor_13			You are then able to choose the opponents you wish to face as well as their difficulty levels, the stats of your opponent are based on your leek's own stats:
+editor_14			Each of the 6 provided leeks have their own behavior:
+editor_15			You must choose at least a leek and move up to 6, allowing you to refine your test.
+editor_2			Here we find a "New AI" button, it allows you to create a new AI, and below this button is the list of your AI.
+editor_3			During the creation of your account, one AI "AI_Example" has been created and automatically equipped so you can have an example of code.
+editor_4			Click on this AI. A text editor will appear with the code :
+editor_5			By clicking the name of the AI, the field becomes editable and you can also rename it. <br />
+The "Delete" button deletes the current AI. <br />
+The "Save" button saves the AI's code and compile it, notifying you whether or not the code is valid and error free. <br />
+The "Test" button allows you to launch a fight in a mock arena to check if your code runs properly (we will come back to this feature later).
+editor_6			Below those buttons is the text editor, this is where you will type your code, a syntax highlight is applied with the following color code :
+editor_7			It's also interesting to note that by moving the cursor near a parenthesis, a curly bracket or an opening bracket, its closing equivalent is highlighted, (in return, same behaviour when you place your cursor near a closing one).
+editor_8			The editor is also using keyboard shortcuts which can make you save time while developping your AI :
+editor_9			The automatic completion open a dialog box to complete the function, variable or constant you're are currently writing with one already known by the editor. <br />
+The editor knows all the Leekscript's functions as well as their parameters, game's constants and variables you have already defined.
+editor_domingo			Domingo: Aggressive AI, attack only
+editor_guj			Guj: Random AI, attack, heal itself, run away, move towards you... nobody really knows what this leek wants.
+editor_image_1			The <b>Leek Wars'</b> code editor
+editor_image_2			An AI in the editor
+editor_rioupi			Rioupi: Coward AI, mostly run away
+editor_shortcut_1			<b>Ctrl + S</b>: Save/Compile
+editor_shortcut_2			<b>Ctrl + Q</b>: Launch a test
+editor_shortcut_3			<b>Ctrl + D</b>: Duplicate the current line or selection
+editor_tisma			Tisma: Defensive AI, attack then run away then heal itself
+editor_token_bool			In turquoise : booleans
+editor_token_comments			In red : the comments
+editor_token_keywords			In blue : keywords of the language (if, else, for, var, while...)
+editor_token_numbers			In green : numeric values
+editor_token_strings			In orange : the strings of characters
+equip_a_weapon			Equip a weapon
+fight			Battle
+fight_chips			The chips
+fight_chips_1			Before using a chip, make sure to equip it on your leek. To use it, simply use the function<a href='documentation#useChip'> <b> useChip </b> </a>. The first parameter is the code of the chip, for example "<b> CHIP_SHOCK </b>"for the chip "<b> Shock </b>". The second parameter is the target leek:
+fight_chips_10			var enemy = getNearestEnemy();
+while (getTP() >= 2) {
+useChip(CHIP_SHOCK, enemy);
+}
+fight_chips_2			var enemy = getNearestEnemy();
+useChip (CHIP_SHOCK, enemy); // We launch the chip Shock on the enemy
+var ally = getNearestAlly();
+useChip (CHIP_CURE, ally); // Healing chip is launched on an ally
+fight_chips_3			The management of turn points (TP)
+fight_chips_4			Your leek has a limited number of turn points, used to perform action such as equiping a weapon, shooting, using a chip, talking...
+fight_chips_5			By default, the number of TP is set to 10. You can get more points with your capital points. The number of TP is reset at the end of your turn.
+fight_chips_6			So you need to think about what actions to perform during your turn, and organize your code accordingly. The function <b> getTP()</b> (get Turn Points) gives you the number of remaining TP.
+fight_chips_7			An example:  we wish to cast the spell "Stalactite" if we still have 6 TP or more, otherwise we launch the spell "Shock":
 fight_chips_8			var enemy = getNearestEnemy();
 if (getTP() >= 6) {
 useChip(CHIP_STALACTITE, enemy);
 } else {
 useChip(CHIP_SHOCK, enemy);
 }
+fight_chips_9			Another example : we wish to cast the spell "Shock" (which costs 2 TP) until exhaustion of our TP:
+fight_ground			The field
+fight_ground_1			The field on which the players move is a grid composed of <b> 613 </b> cells, numbered in the order as shown in the screenshot below:
+fight_ground_10			Note: We can directly use <a href='documentation#isLeek'><b> isLeek() </b> </a> to know whether a cell contains a leek or not
+fight_ground_11			Coordinates (x, y)
+fight_ground_12			The coordinates of a cell can also be recovered<b> x </b> and <b> y </b> with the help of the function <a href='documentation#getCellX'> <b> getCellX </b> </a> and<a href='documentation#getCellY'> <b> getCellY </b> </a>:
+fight_ground_13			var cell = getCell(); // We obtain our cell
+var x = getCellX(cell); // Position in x of the cell
+var y = getCellY(cell); // Position in y of the cell
+fight_ground_14			The cell at the center of the field (number <b> 306 </b>) has the coordinates <b> (0, 0) </b>;
+fight_ground_15			The top left cell (number <b> 0 </b>) has the coordinates <b> (- 17, 0) </b>;
+fight_ground_16			The top right cell (number <b> 17 </b>) has the coordinates <b> (0, -17) </b>;
+fight_ground_17			The bottom left cell (number <b> 595 </b>) has the coordinates <b> (0, 17) </b>;
 fight_ground_18			The bottom right cell (number <b> 612 </b>) has the coordinates <b> (17, 0) </b>.
+fight_ground_19			Finally, to conclude with the management of cells, we can also calculate the distance between two cells (and therefore also between two leeks) with the help of the functions <a href='documentation#getDistance'> <b> GetDistance </b> </a> (distance as the crow flies), <a href='documentation#getCellDistance'> <b> getCellDistance </b> </a> (distance in number of cells) and <a href='documentation#getPathLength'> <b> getPathLength </b> </a> (distance avoiding obstacles).As an example, we will calculate the distance between our leek and its nearest enemy :
+fight_ground_2			The numbering of cells
+fight_ground_20			var myCell = getCell();
+var hisCell = getCell(getNearestEnemy());
+var distance = getCellDistance (myCell, hisCell);
+if (distance> 10) {
+// The nearest enemy is at a distance of more than 10 cells
+}
+fight_ground_3			Because of this numbering, each cell can be identified by using a single number. The number of the cell on which is our leek can be recovered by using the function <a href='documentation#getCell'> <b> getCell </b> </a>:
+fight_ground_4			var myCase = getCell(); // We obtain the number of the cell on which our leek is positionned
+fight_ground_5			Content of a cell
+fight_ground_6			With the help of the function <a href='documentation#getCellContent'> <b> getCellContent </b> </a>, one can determine the contents of a cell: Is there a leek above it, an obstacle, or is it empty?
+fight_ground_7			var cell = ...; // Any cell
+var content = getCellContent(cell);
+if (content == CELL_EMPTY) {
+// The cell is empty
+} else if (content == CELL_OBSTACLE) {
+// The cell is an obstacle
+} else if (content == CELL_LEEK) {
+// The cell contains a leek
+}
+fight_ground_8			If the cell contains a leek, one can retrieve the id of the leek through the function 
+<a href='documentation#getLeekOnCell'> <b> getLeekOnCell </b> </a>:
+fight_ground_9			var cell = ...; // A cell
+if (getCellContent (cell) == CELL_LEEK) {
+var = getLeekOnCell(cell); 
+// We obtain the id of the leek
+if (isEnemy (leek)) {say ("It is an enemy!");
+}
+}
+fight_intro			We will now explain how to really fight in <b>Leek Wars</b>, the fighting system will be detailed and we will give some pieces of advice to program a good behavior.
+fight_move			Displacements and movement points (MP)
+fight_move_1			Moving can be useful in combat. Your leek has a fixed number of movement points (3 at level 1). A MP is equivalent to a cell, the more you have MPs, the more you can move away on the field.To do this, many features are available to us. They are primarily of two types: to move toward or away from various targets.
+fight_move_10			If our target is not a specific leek but a cell or group of cells, the functions to be used will be:<a href='documentation#moveTowardCell'> <b> moveTowardCell </b></a> and <a href='documentation#moveAwayFromCell'> <b> moveAwayFromCell </b> </a> for a single cell,and <a href='documentation#moveTowardCells'> <b> moveTowardCells </b></a> and <a href='documentation#moveAwayFromCells'> <b> moveAwayFromCells </b> </a>, for a group of cells.
+fight_move_11			A cell line as a target
+fight_move_12			One can also move forward or backward to a cell line. A cell line is defined by two cells belonging to this line. For example, if an enemy in front of us has a laser-type weapon that shoots in line, we can try to flee this probably dangerous line:
+fight_move_13			var enemy = ...; // the enemy with a laser
+var saCellule = getCell(enemy);
+var maCellule = getCell();
+moveAwayFromLine(saCellule, maCellule);
+fight_move_2			One or several leeks (x) as target
+fight_move_3			One can approach or move away from a leek (ally or enemy) with the help of the functions <a href='documentation#moveToward'> <b> moveToward </b> <a href='documentation#moveAwayFrom'> </a> and <b> moveAwayFrom </b> </a> respectively:
+fight_move_4			var enemy = getNearestEnemy();
+if (getLife() > 100) {
+moveToward(enemy); // we move toward
+// attack...
+} else {
+moveAwayFrom(enemy); // we move away
+// heal...
+}
+fight_move_5			These functions used as shown above will use a certain number of MP, so as to accomplish better their goal. So if you are at a great distance from an enemy, <b> moveToward </b> probably use all your MP whereas if you are glued to the enemy, it will use none.
+fight_move_6			To better control the number of MP that a function uses, you can specify the maximum number of PM in the second parameter:
+fight_move_7			var enemy = getNearestEnemy();
+moveToward(enemy, 3); // we move toward the enemy, of three cells maximum.
+useWeapon(enemy); // we try to shoot on him
+moveAwayFrom(enemy); // we move away from the enemy, with an undefined number of cells.
+fight_move_8			These functions also exist when our target is not one but many leeks: <a functions href='documentation#moveTowardLeeks'> <b> moveTowardLeeks </b></a> and  <a href='documentation#moveAwayFromLeeks'> <b> moveAwayFromLeeks </b> </a> to move toward or move away from a group of leeks.
+fight_move_9			One or several cell(s) as a target
+fight_speak			Talk
+fight_speak_1			Your leek can talk during the fight, to encourage its allies, or taunt his enemies.The function to make your leek speak is <a href='documentation#say'> <b> say </b> </a> and costs <b> 1 TP</b>
+fight_speak_2			say("I am gonna make soup of you all !"); // taunt the enemy team
+fight_sys			The fighting system
+fight_sys_1			First of all, we will describe the fighting system of <b>Leek Wars</b>. In order to win, each leek of the opposite team have to be killed (no more health points).
+fight_sys_10			The function <b> <a href='documentation#getNearestEnemy'> getNearestEnemy() </a> </b> returns the id of the nearest leek from you. Retrieve the id of an enemy leek will be primarily useful for attacking.
+fight_sys_11			var enemy = getNearestEnemy(); // We obtain the ID of the nearest enemy
+useWeapon (enemy); // We shoot on him
+fight_sys_12			The function <b> <a href='documentation#getEnemies'> getEnemies() </a> </b> returns the enemies leeks (alive or dead) in the fight.
 fight_sys_13			var enemies = getEnemies(); // Get an array of the ids of the enemies
 var n = 0;
 for (var enemy in enemies) {// We look through all enemies
@@ -344,44 +384,168 @@ if (getLife(enemy)> 1000) {// getLife(enemy) returns the life of the correspondi
 n ++;
 }
 }debug (n + "enemies having over 1000 PV");
+fight_sys_2			A turn based game
+fight_sys_3			The leeks play at their own turn. The order is determined by the frequency of the leeks, but we always alternate between the two teams: the leek with the highest frequency has more chance to start and make his team starts, and the second leek to play is the one with the highest frequency in the other team, and so on and so forth.
+fight_sys_4			Combat is divided into turns: when the last leek played, it returns to the first and the lap counter is incremented.To avoid endless fighting, the number of rounds is limited to <b> 64 </b> (<a constant href='documentation#MAX_TURNS'> MAX_TURNS </a>).When the counter reaches this limit, the fight ended in a draw. During a long fight, it will therefore be necessary to ensure monitoring of the lap counter. The function <b> <a href='documentation#getTurn'> getTurn () </a> </b> gives the current round of combat:
+fight_sys_5			var turn = getTurn();
+if (turn> 60) {
+// The fight will end soon, you have to hurry...
+}
+fight_sys_6			A numbering of the players
+fight_sys_7			Each leek has a unique code number (also called <b> id </b> for ID), which allows the appointment.
+fight_sys_8			The function <b> <a href='documentation#getLeek'> getLeek() </a> </b> returns the id of your leeks. Obtaining your id is useful, for example to use a chip to heal yourself.
+fight_sys_9			var me = getLeek(); // We obtain the id of our leek
+useChip(CHIP_CURE, me); // We launch the chip "CURE" upon us
+fight_weapons			The weapons
+fight_weapons_1			Equip a weapon
+fight_weapons_2			To draw a weapon is usually the first thing to do in a fight. To do this, the weapon has to be already present in the equipment of your leek ("Edit" button on the page leek), then use the function<a href='documentation#setWeapon'> <b> setWeapon </b> </a>, for example:
+fight_weapons_3			// We equip the pistol
+setWeapon(WEAPON_PISTOL);
+fight_weapons_4			Beware ! The function <b>setWeapon</b> costs 1 TP.
+fight_weapons_5			Use a weapon
+fight_weapons_6			Now that your leek has a gun, he just has to attack with it. To do this, use <a function href='documentation#setWeapon'> <b> useWeapon </b> </a>:
+fight_weapons_7			var enemy = getNearestEnemy();
+useWeapon(enemy); // attack
+fun_1			The LeekScript allows the creation of user-defined functions which will allow you to organize and simplify your AI. If you have written a complex operation and wish to re-use it a certain number of times in your code, the use of a function will be the most efficient solution.
+fun_10			In the block of instructions of the function, we observe the keyword <b>return</b> followed by the formula of the hypotenuse. This keyword will return the value of the expression placed to its right, here the hypotenuse of the right-angled triangle of side length <i>x</i> and <i>y</i>.
+fun_11			The function <i>hypot</i> can be used in our code in the following way :
+fun_12			var a = 4;
+var b = 3;
+var c = hypot(a, b); // c becomes equal to sqrt(4 * 4 + 3 * 3), that is to say 5
+fun_13			We can entirely rewrite the code given in example with the use of our function:
+fun_14			// Definition of the function hypot
+function hypot(x, y) {
+return sqrt(x * x + y * y);
+}
+
+var a = 3;
+var b = 4;
+var c = hypot(a, b);
+a = hypot(b, c) + hypot(c, 4);
+b = hypot(a, c);
+fun_15			The readability of the code has been improved, and the size of the code has been reduced.
+fun_16			It should be noted that the function <i>hypot</i> already exists in the predefined functions of the LeekScript. (see the function <a href='documentation#hypot'>hypot</a> in the documentation).
+fun_17			Return without value
+fun_18			The keyword <b>return</b> can be used without any expression to its right, the function will then return the value <b>null</b>.
+fun_19			Example of <b>return</b> without value :
+fun_2			A basic function
+fun_20			function logarithm(n) {
+if (n <= 0) {
+return;
+}
+// rest of the calculation...
+}
+fun_21			The execution of the function being stopped at the first return, if n is inferior or equal to 0, this function will return <b>null</b>, and will not execute the remaining instructions :
+fun_22			var a = logarithm(-5); // a will be equal to null
+fun_23			Recursivity
+fun_24			A function can call another function, for instance:
+fun_25			function square(x) {
+return x * x;
+}
+function hypot(x, y) {
+return sqrt(square(x) + square(y));
+}
+var a = hypot(3, 4); // a is equal to sqrt(3 * 3 + 4 * 4)
+fun_26			In this way, a function can call itself :
+fun_27			function factorial(n) {
+if (n <= 1) return 1;
+return n * factorial(n - 1);	
+}
+fun_28			This function returns the factorial of the number n (n!) given as a parameter (n! = n × (n - 1) × ... × 3 × 2 × 1).
+We notice the function only returns n × (n - 1)!, which is equal to n!
+fun_29			<b>Beware !</b> If a function calls itself without any ending condition, or that two or several functions call themselves in a cyclic way, your code will loop infinitely, and in the case of the LeekScript, will reach the limit of the stack, which is fixed to <b>200</b>. In this way, with such a limit, your code will only be able to calculate the factorial of <i>200</i>.
+fun_3			We will look at the example of a code calculating the hypotenuse of a right-angle triangle, with sides of length <i>a</i>, <i>b</i> et <i>c</i>. If the side of length <i>c</i> is the hypotenuse, and if <i>a</i> and <i>b</i> are known,
+<i>c</i> can be obtained with the following code :
+fun_30			Examples of codes leading to a stack overflow :
 fun_31			function badFactorial(n) {
 return n * badFactorial(n);
 }
 var a = badFactorial(5); 
 // the code loops endlessly and stops at 200 calls
-fight_chips_9			Another example : we wish to cast the spell "Shock" (which costs 2 TP) until exhaustion of our TP:
-fight_chips_10			var enemy = getNearestEnemy();
-while (getTP() >= 2) {
-useChip(CHIP_SHOCK, enemy);
+fun_32			function a() {
+b();
 }
-advanced_include_5			Limitations of the function include
-fight_ground_1			The field on which the players move is a grid composed of <b> 613 </b> cells, numbered in the order as shown in the screenshot below:
-fight_move			Displacements and movement points (MP)
-fight_ground_2			The numbering of cells
-fight_ground_3			Because of this numbering, each cell can be identified by using a single number. The number of the cell on which is our leek can be recovered by using the function <a href='documentation#getCell'> <b> getCell </b> </a>:
-advanced_include_7			// does not work :
-include("IA_" + 5);
-fight_move_2			One or several leeks (x) as target
-advanced_include_8			// does not work :
-var ia = 'IA_1';
-include('IA_1');
-fight_ground_4			var myCase = getCell(); // We obtain the number of the cell on which our leek is positionned
-fight_ground_5			Content of a cell
-fight_weapons_3			// We equip the pistol
-setWeapon(WEAPON_PISTOL);
-advanced_include_9			// does not work :
-if (foo > 12) {
-include('IA_1');
-} else {
-include('IA_2');
+function b() {
+a();
 }
-fight_move_3			One can approach or move away from a leek (ally or enemy) with the help of the functions <a href='documentation#moveToward'> <b> moveToward </b> <a href='documentation#moveAwayFrom'> </a> and <b> moveAwayFrom </b> </a> respectively:
+a(); // a and b call eachother endlessly
+fun_33			Level of the functions
+fun_34			In the LeekScript, some functions have a required level. The Leek on which the AI will be equiped will have to fullfill the required conditions. Example: the function <b><a href='documentation#getPathLength'>getPathLength</a></b> 
+requires the level <b>37</b> :
+fun_35			Level of a function
+fun_36			Going further in the functions
 fun_37			In LeekScript, each function can be used as a variable :
-fun_12			var a = 4;
-var b = 3;
-var c = hypot(a, b); // c becomes equal to sqrt(4 * 4 + 3 * 3), that is to say 5
-fun_15			The readability of the code has been improved, and the size of the code has been reduced.
-fun_16			It should be noted that the function <i>hypot</i> already exists in the predefined functions of the LeekScript. (see the function <a href='documentation#hypot'>hypot</a> in the documentation).
+fun_38			var variable = getLeek;
+fun_39			This is the case for the basic functions of the LeekScript as well as for the functions defined by the user in the code. In order to use a function as a variable, call it as a standard function :
+fun_4			var c = sqrt(a * a + b * b);
+fun_40			var variable = getLeek;
+
+variable(); // Gives identical results than getLeek
+fun_41			We can for example give a function as a parameter :
+fun_42			function my_function(parameter) {
+debug(parameter());
+}
+
+my_function(getLeek);
+fun_43			The LeekScript also proposes a particular kind of function called "anonymous function", these are unnamed functions, declared directly inside an expression.
+fun_44			They allow a simpler writing, and avoid the declaration of a function when it is not useful. In order to declare an anonymous function, use the keyword function and open directly the parenthesis to define the parameters, without precising a name.
+fun_45			var my_function = function() { return "Test"; };
+fun_46			The use of an anonymous function is exactly the same as the use of a function placed in a variable :
+fun_47			var my_function = function() { return "Test"; };
+
+my_function();
+fun_48			If, for example, we have a function which requires another function as a parameter, we can directly use an anonymous function as a parameter, as shown in the following example:
+fun_49			function arrayMap(array, function) {
+var r = [];
+for (var v in array) push(r, function(v));
+return r;
+}
+
+var t = arrayMap([1, 2, 3, 4, 5], function(x) { return x ** 2; });
+
+debug(t); // [1, 4, 9, 16, 25]
+fun_5			Now let's imagine that this formula is used many times in your code :
+fun_50			The function arrayMap requires an array and a function in parameters. it returns a new array constituted by the results of the treatment of each element of the input array by the input function.
+fun_6			var a = 3;
+var b = 4;
+var c = sqrt(a * a + b * b);
+a = sqrt(b * b + c * c) + sqrt(c * c + 4 * 4);
+b = sqrt(a * a + c * c);
+fun_7			We can notice that it is tiresome to copy incessantly the formula, and it makes your code much more complicated.<br />
+We will then create a function <i>hypot</i> which will calculate directly the hypotenuse. This function is defined by the following code:
+fun_8			function hypot(x, y) {
+return sqrt(x * x + y * y);
+}
+fun_9			Let's analyse this code. In order to declare a function, we use the key-word <b>function</b>, we then note the function name, here <i>hypot</i>. We then write between parenthesis the list of the required parameters, split by comas, here "x" and "y".
+The block of instructions is then between curly brackets.
+functions			Functions
+interface			Interface
+intro			<b>LeekScript</b> is the programming language dedicated to the creation of your leek's artificial intelligence. The syntax is really close to Javascript and should not disturbed C, Java or even PHP enthusiast. If you're a total beginner or just want to know some subtleties of <b>LeekScript</b>, this tutorial is just right for you :)
+loops			Loops
+loops_1			We will now describe another kind of structures as important as conditions:
+Loops!
+loops_10			The loop <b>do while</b> is similar to the loop <b>while</b>, except that the condition is at the end, the block of instructions of the loop is therefore executed at least once :
+loops_11			var x;
+do {
+x = rand(); // x is a random number between 0 and 1
+} while (x < 0.8); // we repeat as long as x is not superior to 0.8
+
+debug("x : " + x); // displays a number between 0.8 and 1
+loops_12			The for loop
+loops_13			A little bit more complex kind of loop exists, it looks like a while loop but in a more condensed version.
+With experience, you will learn which loop, the while or the for, is more adapted to which case. 
+loops_14			The <b>for</b> loop can be decomposed into three parts :
+loops_15			The initialisation: the allocation of an initial value to a "counter" variable
+loops_16			The condition : as long as it is valid, the loop continues its execution
+loops_17			The incrementation : to increase (or decrease) the value of the "counter" variable
+loops_18			Example of <b>for</b> loop :
+loops_19			var i;
+// We make a loop from i = 1 and as long as i is inferior or equal to 5 
+// and we increment i at each cycle of the loop
+for (i = 1; i <= 5; i++) { 
+debug("Counter i is equal to : " + i);
+}
+loops_2			A loop allows the repetition of instructions a certain number of times. There are several kind of loops that will be broached in this section. 
 loops_20			This code will display in the fight report:
 : <br />
 Counter i is equal to 1<br />
@@ -389,21 +553,84 @@ Counter i is equal to 2<br />
 Counter i is equal to 3<br />
 Counter i is equal to 4<br />
 Counter i is equal to 5
-fight_move_1			Moving can be useful in combat. Your leek has a fixed number of movement points (3 at level 1). A MP is equivalent to a cell, the more you have MPs, the more you can move away on the field.To do this, many features are available to us. They are primarily of two types: to move toward or away from various targets.
-doc_9			The list of its parameters, their types and description
-doc_5			Right part: all the functions in alphabetical order and their description
-doc_math			<b>Math</b>: all the math functions that you can find in most of programming languages
-doc_leeks			<b>Leeks</b>: functions to handle leeks (get attribute, position, change weapon...)
-doc_chips			<b>Chips</b>: functions to handle chips (get chip(s) scope, damage...)
-doc_map			<b>Map</b>: functions to handle map (get distance between cells, cell's content...)
+loops_21			It is possible to declare the counter in the initialisation of the for loop by placing the keyword var in front of the name of the variable:
+loops_22			for (var i = 1; i <= 5; i++) {
+// Block of instructions...
+}
+loops_23			A variation of the for loop exists, the structure : <b>for</b> ... <b>in</b>, which allows the iteration on the values of an array directly.
+An example:
+loops_24			var array = [1,1,2,3,5,8,13,21];
+for (var value in array) {
+debug(value);
+}
+loops_25			The code will successively display all the values of the array : 1,1,2,3,5,8,13,21.
+loops_26			If you wish to obtain the key associated to each value, you can use the
+<b>for</b> ...
+<b>in</b> by adding : 
+loops_27			for (var key : var value in array) {
+debug("key " + key + " => " + value);
+}
+loops_3			The while loop
+loops_4			The syntax of the while loop is similar to the syntax of the condition "if" of the preceding chapter. It allows the execution of a block of instruction as long as a condition is satisfied.
+loops_5			The syntax of the while loop is similar to the syntax of the condition "if" of the preceding chapter. It allows the execution of a block of instruction as long as a condition is filled.
+loops_6			Here is an example:
+loops_7			// We declare a counter of initial value 0
+var counter = 0;
+while (counter < 5) { // As long as counter is inferior to 5
+counter = counter + 1;
+debug("Counter is equal to " + counter);
+}
+loops_8			This code will display in the fight report:
+: <br />
+Counter is equal to 1<br />
+Counter is equal to 2<br />
+Counter is equal to 3<br />
+Counter is equal to 4<br />
+Counter is equal to 5
+loops_9			The do while loop
+menu			Menu
+presentation			Introduction
 presentation_1			<b>Leek Wars</b> allows you to raise leeks, to equip them with weapons, chips (some kind of spells), and to program their own artificial intelligence to make them fight against the others farmers' leeks!
-var_9			However, the type of the variable is not fixed (like in C or Java) but adapts to the data we wish to put in it (like in Javascript or PHP).
+presentation_2			To get a proper start, we will see how to equip a weapon or a chip on your leek so that it can fight without trouble.
+test_config			Test's configuration
+the_documentation			The documentation
+title			Tutorial
+var_1			What's a variable
 var_10			To use a variable, it's necessary to declare it beforehand.
 This declaration is done by using the keyword "var" in the following way:
+var_11			// We declare a variable 'nameOfVariable'
+var nameOfVariable;
+var_12			You can also assign a value to your variable in the following way:
+var_13			// We declare a variable 'nameOfVariable' and give it the value 12
+var nameOfVariable = 12;
 var_14			Note that you can also declare multiple variables by separating them by a comma:
+var_15			// Declare a firstVariable and a secondVariable variable
+var firstVariable, secondVariable;
+var_16			Be careful not to forget the semi-colon <b>;</b> at the end of the instruction.
 var_17			Declared variables with the keyword var have a lifetime of your leek's turn, there is a second type of variable which keep their value for the whole fight: the global variables.
 To declare a global variable, you just need to add the keyword "global" instead of "var":
-editor_7			It's also interesting to note that by moving the cursor near a parenthesis, a curly bracket or an opening bracket, its closing equivalent is highlighted, (in return, same behaviour when you place your cursor near a closing one).
+var_18			// Declaring a global variable nameOfGlobal
+global nameOfGlobal;
+var_19			You can also assign a value to your global variable in the following way:
+var_2			The variables are a fundamental point in all programming languages. They allow to keep in memory values you're going to use in calculations.
+var_20			// Declaring a global variable nameOfGlobal with value 42
+global nameOfGlobal = 42;
+var_21			The common variables and global variables are used the same way in the code, as this tutorial goes we will mostly use common variables.
+var_22			Uses of the variables
+var_23			It is possible to use the variables in your code in many different ways.
+var_24			You can assign them a value (which means make them "remember" this value in memory) by using the assignement operator <b>=</b>
+var_25			// We declare myVariable
+var myVariable;
+// We assign 1 to myVariable
+myVariable = 1;
+var_26			It's possible to perform operations by writing expressions, you can use the followings operator:
+var_27			+ : addition
+var_28			- : substraction
+var_29			* : multiplication
+var_3			The variables available for LeekScript can contain multiple types of value
+var_30			/ : division
+var_31			% : modulo (reminder of an euclidian division)
+var_32			We proceed like this:
 var_33			// Declaring the 'a' variable
 var a;
 // We make some operations 
@@ -419,227 +646,26 @@ a = 4 / 2 + 1; // a takes the value  3
 
 // And even use parenthesis
 a = (2 + 3) * 2; // a takes the value 10
-editor_9			The automatic completion open a dialog box to complete the function, variable or constant you're are currently writing with one already known by the editor. <br />
-The editor knows all the Leekscript's functions as well as their parameters, game's constants and variables you have already defined.
-what_is_leekscript_2			The language is easy to use and to learn. It gives you powerful functions which in turn will allow you to create an efficient AI even if you're a beginner. On the contrary, if you're already an expert in programming, more advanced funtions will allow you to create even more sophisticated AI.
+var_34			We can also use a variable in an expression, its value will then be used to make the calculation. For example:
+var_35			// Declaring variable a and b
+var a, b;
+
+// We give a the value 10
+a = 10; // a is set to 10
+
+// We give the value a + 5 to b
+b = a + 5; // b is set to 15
+var_36			We can also use string in the following way:
+var_37			var myVariable;
+myVariable = "I'am a string";
+var_38			For a string, only the <b>+</b> operator is usable, it allows to concatenate pieces of string, which will laid them end to end. Thus, the code:
 var_39			// Declaring string1 and string2
 var string1, string2;
 
 string1 = "Hello"; // string1 is set to "Hello"
 string2 = chaine1 + " world"; // string2 is set to "Hello world"
-fun_28			This function returns the factorial of the number n (n!) given as a parameter (n! = n × (n - 1) × ... × 3 × 2 × 1).
-We notice the function only returns n × (n - 1)!, which is equal to n!
-fun_49			function arrayMap(array, function) {
-var r = [];
-for (var v in array) push(r, function(v));
-return r;
-}
-
-var t = arrayMap([1, 2, 3, 4, 5], function(x) { return x ** 2; });
-
-debug(t); // [1, 4, 9, 16, 25]
-advanced_include_1			The function <b> include </b> allows you to include an AI in another. Specifically, if in an AI "AI Main", you write:
-advanced_include_3			The contents of the AI named "Functions" is copied into the AI "AI Main", which allows you to separate different parts of your code in different AI. An example: having a main AI, called "IA Main", an AI "Moving" with multiple complex functions to move,  an AI "attack" with useful functions to attack, an AI "Words" with functions for talk etc.
-advanced_include_6			Using the function include is limited in LeekScript, indeed it is impossible to dynamically include another AI. The codes below are not working:
-fun_34			In the LeekScript, some functions have a required level. The Leek on which the AI will be equiped will have to fullfill the required conditions. Example: the function <b><a href='documentation#getPathLength'>getPathLength</a></b> 
-requires the level <b>37</b> :
-fight_weapons_2			To draw a weapon is usually the first thing to do in a fight. To do this, the weapon has to be already present in the equipment of your leek ("Edit" button on the page leek), then use the function<a href='documentation#setWeapon'> <b> setWeapon </b> </a>, for example:
-fun_3			We will look at the example of a code calculating the hypotenuse of a right-angle triangle, with sides of length <i>a</i>, <i>b</i> et <i>c</i>. If the side of length <i>c</i> is the hypotenuse, and if <i>a</i> and <i>b</i> are known,
-<i>c</i> can be obtained with the following code :
-advanced_order_4			The functions <a href='documentation#getWeaponTargets'><b>getWeaponTargets</b></a> and <a href='documentation#getChipTargets'> <b> getChipTargets </b> </a> can be used to retrieve an array of ids of the affected leeks if you use a weapon or a chip on a certain cell. Particularly useful for weapons or chip area (a grenade launcher or a heal chip with area effect):
-fight_move_5			These functions used as shown above will use a certain number of MP, so as to accomplish better their goal. So if you are at a great distance from an enemy, <b> moveToward </b> probably use all your MP whereas if you are glued to the enemy, it will use none.
-loops_6			Here is an example:
-doc_12			If you have doubts about the use of a function or if you met a new function in this tutorial or elsewhere, I would invite you to read its description in the documentation until you understand its behaviour properly.
-intro			<b>LeekScript</b> is the programming language dedicated to the creation of your leek's artificial intelligence. The syntax is really close to Javascript and should not disturbed C, Java or even PHP enthusiast. If you're a total beginner or just want to know some subtleties of <b>LeekScript</b>, this tutorial is just right for you :)
-what_is_ai_1			An <b>Artificial Intelligence</b> (<b>AI</b>) is a <i>LeekScript</i> code which will control your leek during its turn of play.
-The code that you are going to create will be executed at the beginning of each of your leek's turn, controlling all the actions that your leek is going to perform (attack, move, use a chip...).
-var_22			Uses of the variables
-var_23			It is possible to use the variables in your code in many different ways.
-editor_1			To access the programming environment, go to the <b>Editor</b> tab. <br />
-Here is the page you're going to find :
-var_25			// We declare myVariable
-var myVariable;
-// We assign 1 to myVariable
-myVariable = 1;
-var_27			+ : addition
-var_28			- : substraction
-var_29			* : multiplication
-buy_a_weapon_3			Next, visit the "Leek" tab, at the bottom of this page, you can see three columns : Weapons, Chips and AI.
-Click on the "Modify" of the "Weapons" column, a small popup appears. Drag and drop your brand new weapon from the "All weapons" category to the "Weapons of [current leek's name]" category. Here you go, your weapon is equiped.
-what_is_leekscript			What is LeekScript ?
-editor_image_1			The <b>Leek Wars'</b> code editor
-editor_12			By clicking the "Test" button, the following box dialog opens:
-difficulty_medium			Medium: 95 to 110% of your attributes and 100% of your TP, MP
-editor_13			You are then able to choose the opponents you wish to face as well as their difficulty levels, the stats of your opponent are based on your leek's own stats:
-difficulty_child			Child: 30 to 40% of your attributes (strength, agility, health...) and 50% of your TP and MP
-difficulty_easy			Easy: 50 to 75% of your attributes and 80% of your TP, MP
-difficulty_evil			Evil: 200 to 250% of your attributes and 160% of your TP, MP
-editor_14			Each of the 6 provided leeks have their own behavior:
-editor_domingo			Domingo: Aggressive AI, attack only
-editor_rioupi			Rioupi: Coward AI, mostly run away
-editor_15			You must choose at least a leek and move up to 6, allowing you to refine your test.
-the_documentation			The documentation
-doc_2			The page is made up of three parts:
-fight_weapons_6			Now that your leek has a gun, he just has to attack with it. To do this, use <a function href='documentation#setWeapon'> <b> useWeapon </b> </a>:
-fight_ground_8			If the cell contains a leek, one can retrieve the id of the leek through the function 
-<a href='documentation#getLeekOnCell'> <b> getLeekOnCell </b> </a>:
-fight_weapons_7			var enemy = getNearestEnemy();
-useWeapon(enemy); // attack
-fight_move_7			var enemy = getNearestEnemy();
-moveToward(enemy, 3); // we move toward the enemy, of three cells maximum.
-useWeapon(enemy); // we try to shoot on him
-moveAwayFrom(enemy); // we move away from the enemy, with an undefined number of cells.
-advanced_ref_3			When you call this function, the variables you pass to it will be <b> copied </b>, ie if you do:
-advanced_ref_4			function sum(a, b, resultat) {
-result = a + b;
-}
-
-var a = 2;
-var b = 10;
-var result = 0;
-
-somme(a, b, result);
-debug(result);
-fun_43			The LeekScript also proposes a particular kind of function called "anonymous function", these are unnamed functions, declared directly inside an expression.
-advanced_tern_6			(getCell() == 42) ? useWeapon(getNearestEnemy()) : moveTowardCell(42);
-fight_ground_10			Note: We can directly use <a href='documentation#isLeek'><b> isLeek() </b> </a> to know whether a cell contains a leek or not
-fun_24			A function can call another function, for instance:
-fun_44			They allow a simpler writing, and avoid the declaration of a function when it is not useful. In order to declare an anonymous function, use the keyword function and open directly the parenthesis to define the parameters, without precising a name.
-fight_ground_11			Coordinates (x, y)
-advanced_tern_2			condition ? value_if_true : value_if_false
-fight_chips_3			The management of turn points (TP)
-fight_ground_13			var cell = getCell(); // We obtain our cell
-var x = getCellX(cell); // Position in x of the cell
-var y = getCellY(cell); // Position in y of the cell
-var_52			// Display of a simple text
-debug("Simple text"); // Displays : [YourLeek] Simple text
-debug(5+6); // Displays :[YourLeek] 11
-
-var a=5;
-debug(a); // Displays : [YourLeek] 5
-debug("Value of a : " + a); // Displays : [YourLeek] Value of a : 5
-arr_4			In order to create an array, you have to use the following syntax:
-cond_13			We will now describe the different available condition operators :
-arr_6			Our array can be filled by two methods :<br />
-When declaring :
-arr_8			Or after the declaration, by using allocations :
-arr_15			var myArray = [2, 4, 6, 8];
-debug(myArray[0]); // Displays 2
-myArray[0] = myArray[1] + 5; // Allocate the value 9 to the compartment 0
-debug(myArray[0]); // Displays 9
-arr_16			When concatening an array with a string, or when trying to display it with the debug function, a list of every elements of the array is displayed, which is very convenient for debugging.
-arr_10			In both cases, the obtained array can be represented as shown:
-cond_6			In this example, a equal 1 so the condition is satisfied, therefore the debug will be executed and "a is inferior to 10" will be displayed in the fight report.
-arr_9			//Declaring the array
-var myArray = [];
-myArray[0]="Leek";
-myArray[1]="Lama";
-myArray[2]="Ostrich";
-myArray[3]="Artichoke";
-arr_11			<tr><th>Index</th><th>Value</th></tr>
-<tr><td>0</td><td>Leek</td></tr>
-<tr><td>1</td><td>Lama</td></tr>
-<tr><td>2</td><td>Ostrich</td></tr>
-<tr><td>3</td><td>Artichoke</td></tr>
-cond_7			If we wish to execute instructions in case the condition is satisfied, and other instructions when it is not the case, it is possible to use a second keyword <b>else</b> (otherwise) in order to define a second block
-cond_19			The operator <b>===</b> exists as well, it allows to compare both the value and the kind of two variables, see <a href='#triple_equals'>in the advanced section</a>.
-cond_20			Some useful simplifications 
-cond_21			We will now describe some simplifications concerning conditions which will allow you to code more efficiently.
-cond_22			If you wish to execute only 1 instruction in your block, you can directly write the following instruction without curly bracket :
-cond_23			In the case of a "if", for example :
-cond_24			var a = 1;
-if (a == 1) debug("A is equal to 1");
-cond_25			Or in the case of a "if else" :
-cond_26			if (valeur > 5) debug("value superior to 5")
-else debug("value inferior or equal to 5");
-cond_28			It is also possible to write :
-cond_29			var a = 1;
-if (a) debug("A is true");
-cond_31			If a is not a <b>boolean</b> 
-fight_ground_6			With the help of the function <a href='documentation#getCellContent'> <b> getCellContent </b> </a>, one can determine the contents of a cell: Is there a leek above it, an obstacle, or is it empty?
-fight_sys_1			First of all, we will describe the fighting system of <b>Leek Wars</b>. In order to win, each leek of the opposite team have to be killed (no more health points).
-advanced_triple_equal_6			When the <b> == </b> compares an array with a single element, this array is assimilated to that element. For example, 1 == [1], "1" == ["1"], and therefore "1" == [1] == 1 ["1"]. By recursivity, we also have 1 == [[1]], 1 == [[[1]]] etc.
-advanced_order_5			var cell = ...; // une cellule
-var targets = getChipTargets(CHIP_ICEBERG, cell);
-if (count(targets) > 1) { // we will touch more than 1 player by launching here
-for (var target in targets) {
-if (isAlly(target)) {
-// An ally will be touched, not good :/
-}
-}
-}
-fight_ground_7			var cell = ...; // Any cell
-var content = getCellContent(cell);
-if (content == CELL_EMPTY) {
-// The cell is empty
-} else if (content == CELL_OBSTACLE) {
-// The cell is an obstacle
-} else if (content == CELL_LEEK) {
-// The cell contains a leek
-}
-loops_15			The initialisation: the allocation of an initial value to a "counter" variable
-loops_10			The loop <b>do while</b> is similar to the loop <b>while</b>, except that the condition is at the end, the block of instructions of the loop is therefore executed at least once :
-loops_7			// We declare a counter of initial value 0
-var counter = 0;
-while (counter < 5) { // As long as counter is inferior to 5
-counter = counter + 1;
-debug("Counter is equal to " + counter);
-}
-loops_16			The condition : as long as it is valid, the loop continues its execution
-loops_14			The <b>for</b> loop can be decomposed into three parts :
-loops_19			var i;
-// We make a loop from i = 1 and as long as i is inferior or equal to 5 
-// and we increment i at each cycle of the loop
-for (i = 1; i <= 5; i++) { 
-debug("Counter i is equal to : " + i);
-}
-loops_21			It is possible to declare the counter in the initialisation of the for loop by placing the keyword var in front of the name of the variable:
-loops_27			for (var key : var value in array) {
-debug("key " + key + " => " + value);
-}
-fun_11			The function <i>hypot</i> can be used in our code in the following way :
-fight_sys_10			The function <b> <a href='documentation#getNearestEnemy'> getNearestEnemy() </a> </b> returns the id of the nearest leek from you. Retrieve the id of an enemy leek will be primarily useful for attacking.
+var_4			String
 var_40			It should be noted that a string can be concatenated with a number, which can be useful to include the result of a calculation in a string:
-fight_sys_3			The leeks play at their own turn. The order is determined by the frequency of the leeks, but we always alternate between the two teams: the leek with the highest frequency has more chance to start and make his team starts, and the second leek to play is the one with the highest frequency in the other team, and so on and so forth.
-advanced_triple_equal_2			<tr> <th> Operator </th> <th> Description </th> </tr><tr> <td> === </td> <td> Checks if both operands are of the same value and type </td> </tr><tr> <td>! == </td> <td> Checks if the two operands are not of the same value or are not of the same type </td> </tr>
-advanced_ref_5			Here, the program will display 0, because the result variable is 0. When you place these three variables (a, b and result) in the "sum" function, their values are copied to be used inside. Thus, the values 2, 10 and 0 are sent. The operation "result = a + b" is working with copies of values, and will not affect your variable "result".
-fight_chips_2			var enemy = getNearestEnemy();
-useChip (CHIP_SHOCK, enemy); // We launch the chip Shock on the enemy
-var ally = getNearestAlly();
-useChip (CHIP_CURE, ally); // Healing chip is launched on an ally
-var_50			This page summarizes all the actions of the fight, you can notice that at the beginning of each turn, a line: "[YourLeek] This sentence is a test " is displayed. 
-cond_9			var a = 1;
-if (a < 10) { // We check if a is inferior to 10
-// If that is the case, the instructions indicated in between curly bracket will be executed.
-debug("a is inferior to 10");
-} else { // Otherwise
-// Instructions to be executed if a is not inferior to 10
-debug("a is not inferior to 10");
-}
-cond_14			<tr><th>Operator</th><th>Description</th></tr>
-<tr><td>==</td><td>Is equal to</td></tr>
-<tr><td>!=</td><td>Is different from</td></tr>
-<tr><td>&lt;</td><td>Is inferior to</td></tr>
-<tr><td>&lt;=</td><td>Is inferior or equal to</td></tr>
-<tr><td>&gt;</td><td>Is superior to</td></tr>
-<tr><td>&gt;=</td><td>Is superior or equal to</td></tr>
-fun_9			Let's analyse this code. In order to declare a function, we use the key-word <b>function</b>, we then note the function name, here <i>hypot</i>. We then write between parenthesis the list of the required parameters, split by comas, here "x" and "y".
-The block of instructions is then between curly brackets.
-fight_chips_1			Before using a chip, make sure to equip it on your leek. To use it, simply use the function<a href='documentation#useChip'> <b> useChip </b> </a>. The first parameter is the code of the chip, for example "<b> CHIP_SHOCK </b>"for the chip "<b> Shock </b>". The second parameter is the target leek:
-advanced_triple_equal_3			The functioning of the operator <b> === </b> is very simple:
-advanced_tern_7			The two codes above are equivalent. The ternaries allow to condense the code for simple conditions but be careful however not to abuse it, this may make your code hard to read.
-fun_10			In the block of instructions of the function, we observe the keyword <b>return</b> followed by the formula of the hypotenuse. This keyword will return the value of the expression placed to its right, here the hypotenuse of the right-angled triangle of side length <i>x</i> and <i>y</i>.
-fight_sys_7			Each leek has a unique code number (also called <b> id </b> for ID), which allows the appointment.
-advanced_triple_equal_4			That of <b> == </b>, however, is more complex, because it attempts to perform some conversions:
-fun_45			var my_function = function() { return "Test"; };
-fight_move_11			A cell line as a target
-fun_26			In this way, a function can call itself :
-fun_46			The use of an anonymous function is exactly the same as the use of a function placed in a variable :
-advanced_ref_1			When you write a function in LeekScript, you can specify its arguments, for example:
-fun_27			function factorial(n) {
-if (n <= 1) return 1;
-return n * factorial(n - 1);	
-}
 var_41			// Declaring a and string
 var a, string;
 
@@ -647,65 +673,39 @@ a = 51 * 17; // a is set to 867
 string = "Multiply 51 by 17 is equal to : " +a;
 // string contains " "Multiply 51 by 17 is equal to : 867"
 var_42			A good habit in Leekscript
-var_44			We have not yet described how functions can be used, their mechanism will be explained in details further in this tutorial. For the moment, we will only explain how to use the function "debug".
-var_48			Launch a fight and access directly the fight report (the little cross below the fight screen). Now click on the "Actions" tab, you will arrive on this page:
 var_43			What will be described herebelow is a very useful tool for the development of an efficient AI, it is a function which allows you to display the value of variables or expressions.
-var_47			debug("This sentence is a test ");
-fight_ground_14			The cell at the center of the field (number <b> 306 </b>) has the coordinates <b> (0, 0) </b>;
-fun_47			var my_function = function() { return "Test"; };
-
-my_function();
-advanced_triple_equal_5			The global functioning of <b> == </b> is to convert the values when these two are not of the same type, for example, "true" == 1, "lama" == true, 12 == true but, 1! = 12 and "true"! = "lama". When the two values are of the same type, the <b> == </b> has the same behavior as <b> === </b>.
-fight_sys_9			var me = getLeek(); // We obtain the id of our leek
-useChip(CHIP_CURE, me); // We launch the chip "CURE" upon us
-fight_chips_4			Your leek has a limited number of turn points, used to perform action such as equiping a weapon, shooting, using a chip, talking...
-fight_move_12			One can also move forward or backward to a cell line. A cell line is defined by two cells belonging to this line. For example, if an enemy in front of us has a laser-type weapon that shoots in line, we can try to flee this probably dangerous line:
-advanced_tern_1			The ternaries are a way to quickly write a condition. The structure of a ternary condition is :
+var_44			We have not yet described how functions can be used, their mechanism will be explained in details further in this tutorial. For the moment, we will only explain how to use the function "debug".
 var_45			<i>debug</i> is a Leekscript function which allows to display content in the fight report (it is a standard output).
 You will then be able to inform yourself about the execution of your script.
 We will learn how to use it.
+var_46			Go to the editor page, create a new AI and write the following piece of code:
+var_47			debug("This sentence is a test ");
+var_48			Launch a fight and access directly the fight report (the little cross below the fight screen). Now click on the "Actions" tab, you will arrive on this page:
 var_49			the function debug() in action
-advanced_ref_6			It is possible to solve the problem by passing "result" by reference. To do this, simply add an "@" in front of its name in the list of function arguments:
-arr_13			// Declaring the array
-var myArray = ["Leek", "Lama", "Ostrich", "Artichoke"];
-debug(myArray[1]); // Will display Lama
-arr_14			A compartment of an array can be used exactly like a standard variable :
-cond_5			var a = 1;
-if (a < 10) { // We check if a is inferior to 10
-// If that is the case, the instructions indicated in between curly bracket will be executed.
-debug("a is inferior to 10");
-}
-cond_10			It is also possible to determine several cases, let's imagine we wish to execute a different action if this value is between 0 and 4, between 5 and 7 or between 8 and 10.
+var_5			Number
+var_50			This page summarizes all the actions of the fight, you can notice that at the beginning of each turn, a line: "[YourLeek] This sentence is a test " is displayed. 
+var_51			Each time the function <i>debug</i> is called, the value indicated in parameter is added in the chronology of the fight, you can then be informed of which instructions is executed at which moment of the fight.
+You can display the value of a variable, the result of a calculation...
+var_52			// Display of a simple text
+debug("Simple text"); // Displays : [YourLeek] Simple text
+debug(5+6); // Displays :[YourLeek] 11
 
-We can then use the structure "else if". It allows us to define a new condition and a new block of instructions.
-cond_11			Example :
-cond_1			We are now going to broach an important point in LeekScript (and more generally every langage) : the conditions !<br />
-They will allow you to make your leek execute different actions depending on the cases.
-cond_12			var value = 5;
-if (value < 5) { // If value is inferior to 5 (therefore between 0 and 4)
-debug("value is between 0 and 4");
-} else if (value < 8) { // Otherwise, if value is inferior to 8 (between 5 and 7)
-debug("value is between 5 and 7");
-} else { // Otherwise (therefore between 8 and 10)
-debug("value is between 8 and 10");
-}
-fight_chips_7			An example:  we wish to cast the spell "Stalactite" if we still have 6 TP or more, otherwise we launch the spell "Shock":
-fight_sys_4			Combat is divided into turns: when the last leek played, it returns to the first and the lap counter is incremented.To avoid endless fighting, the number of rounds is limited to <b> 64 </b> (<a constant href='documentation#MAX_TURNS'> MAX_TURNS </a>).When the counter reaches this limit, the fight ended in a draw. During a long fight, it will therefore be necessary to ensure monitoring of the lap counter. The function <b> <a href='documentation#getTurn'> getTurn () </a> </b> gives the current round of combat:
-advanced_tern			Ternaries
-fight_ground_12			The coordinates of a cell can also be recovered<b> x </b> and <b> y </b> with the help of the function <a href='documentation#getCellX'> <b> getCellX </b> </a> and<a href='documentation#getCellY'> <b> getCellY </b> </a>:
-fight_move_10			If our target is not a specific leek but a cell or group of cells, the functions to be used will be:<a href='documentation#moveTowardCell'> <b> moveTowardCell </b></a> and <a href='documentation#moveAwayFromCell'> <b> moveAwayFromCell </b> </a> for a single cell,and <a href='documentation#moveTowardCells'> <b> moveTowardCells </b></a> and <a href='documentation#moveAwayFromCells'> <b> moveAwayFromCells </b> </a>, for a group of cells.
-fight_sys_8			The function <b> <a href='documentation#getLeek'> getLeek() </a> </b> returns the id of your leeks. Obtaining your id is useful, for example to use a chip to heal yourself.
-arr_1			There is another kind of variable which has been quickly introduced here above: the arrays.
-Up to now, the described variables have all a name and a value, the arrays also have a name, but it is also possible to associate several values which then ordered in compartments.
-doc_weapons			<b>Weapons</b>: functions to handle weapons (get weapon(s) scope, damage...)
-doc_8			A description about the function's role
-doc_10			Type of return of the function and a description of this return
-editor_5			By clicking the name of the AI, the field becomes editable and you can also rename it. <br />
-The "Delete" button deletes the current AI. <br />
-The "Save" button saves the AI's code and compile it, notifying you whether or not the code is valid and error free. <br />
-The "Test" button allows you to launch a fight in a mock arena to check if your code runs properly (we will come back to this feature later).
+var a=5;
+debug(a); // Displays : [YourLeek] 5
+debug("Value of a : " + a); // Displays : [YourLeek] Value of a : 5
+var_53			This function allows you to efficiently find bugs in your code, so do not hesitate to use it.<br>
+It should be noted that you can only see the debug message of your leeks (and inversely, your opponents will not have access to your debug messages)
+var_6			Boolean (true or false)
+var_7			Array (we will get back to it later)
+var_8			null
+var_9			However, the type of the variable is not fixed (like in C or Java) but adapts to the data we wish to put in it (like in Javascript or PHP).
+variables			Variables
+welcome			Welcome to the LeekScript tutorial!
+what_is_ai			What's an AI ?
+what_is_ai_1			An <b>Artificial Intelligence</b> (<b>AI</b>) is a <i>LeekScript</i> code which will control your leek during its turn of play.
+The code that you are going to create will be executed at the beginning of each of your leek's turn, controlling all the actions that your leek is going to perform (attack, move, use a chip...).
+what_is_ai_2			When a fight is launched, you won't be able to change the actions of your <i>protégé</i>, only the AI will come into play, which is why it's highly recommended to program it with care.
+what_is_ai_3			We will now see the environment offered by <b>Leek Wars</b> to develop your AI.
+what_is_leekscript			What is LeekScript ?
 what_is_leekscript_1			Now that you got a weapon, we will start to learn about creating Artificial Intelligence (AI), which is the main goal of this tutorial. <b>Leek Wars</b> offers you to program your AI in a language called LeekScript, it's a programming language close to Javascript and PHP, non typed and not object oriented.
-doc_3			Upper part: a search field to find a constant or a function quickly.
-fun_5			Now let's imagine that this formula is used many times in your code :
-doc_4			Left part: a list of all the functions and constants sorted by category
-fight_ground_19			Finally, to conclude with the management of cells, we can also calculate the distance between two cells (and therefore also between two leeks) with the help of the functions <a href='documentation#getDistance'> <b> GetDistance </b> </a> (distance as the crow flies), <a href='documentation#getCellDistance'> <b> getCellDistance </b> </a> (distance in number of cells) and <a href='documentation#getPathLength'> <b> getPathLength </b> </a> (distance avoiding obstacles).As an example, we will calculate the distance between our leek and its nearest enemy :
+what_is_leekscript_2			The language is easy to use and to learn. It gives you powerful functions which in turn will allow you to create an efficient AI even if you're a beginner. On the contrary, if you're already an expert in programming, more advanced funtions will allow you to create even more sophisticated AI.

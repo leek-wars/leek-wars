@@ -1,73 +1,73 @@
-fullscreen			Plein écran (F)
-n_relative_shield			%s bouclier relatif
-start_of_fight			Début du combat !
-n_life			%s PV
-n_tp			%s PT
-n_mp			%s PM
+accelerate			Accélérer
+accelerate_again			Accélérer encore
+browser_cannot_display			Votre navigateur ne peut pas afficher le combat
+comments			Commentaires
+date_format			Le %s
+decelerate			Décélérer
+deleted_farmer			éleveur supprimé
+deleted_leek			poireau supprimé
+deleted_team			équipe supprimée
+discrete_pause			Pause discrète
+display_cell_numbers			Afficher numéros cases
+display_debug			Afficher infos debug
+display_life_bars			Afficher barres de vie
+end_of_fight			Fin du combat !
+enlarge_fight			Agrandir le combat
+error_generating_fight			Une erreur s'est produite à la génération du combat
+fail			Échec
 flag_perfect			Perfect
 flag_static			Statique
-quit			Quitter (Q)
-end_of_fight			Fin du combat !
-comments			Commentaires
-send_comment			Envoyer
-leek_is_dead			%s est mort !
-n_vita			%s vitalité
-n_strength			%s force
-n_agility			%s agilité
-leek_speak			%1$s dit : ''<i>%2$s</i>''
-decelerate			Décélérer
-n_absolute_shield			%s bouclier absolu
-resume			Reprendre
-leek_take_weapon			%1$s prend l'arme <b>%2$s</b>
-enlarge_fight			Agrandir le combat
-leek_win_x			%1$s gagne <b>%2$s</b>
-quality			Qualité
-display_debug			Afficher infos debug
-accelerate			Accélérer
-date_format			Le %s
-turn_of_leek			Tour de %s
-display_life_bars			Afficher barres de vie
-sound_activated			Son activé
-sound_disactivated			Son coupé
-leek_level			Niveau %s
-pause			Pause
-title			Combat
-display_cell_numbers			Afficher numéros cases
-summon			%s invoque %s
-n_damage_return			<b>%s renvoi dommages</b>
-deleted_farmer			éleveur supprimé
-n_wisdom			%s sagesse
-n_resistance			%s résistance
-leek_hit			%s frappe
-error_generating_fight			Une erreur s'est produite à la génération du combat
-no_data_received			Aucune donnée reçue
-see_report			Voir le rapport
+fullscreen			Plein écran (F)
+generating			Génération en cours...
 js_error			Une erreur JavaScript s'est produite
 js_error_message			Essayez d'actualiser la page (F5 voire Ctrl + F5). <br> Si le problème persiste, vous pouvez le signaler
 		dans le forum, en précisant le numéro du combat : %s.
-leek_cast			%1$s lance <b>%2$s</b>
-not_found_id			Combat d'id <b>%s</b> introuvable :(
-loading_fight			Chargement du combat...
-settings			Options
-leek_move			%s se déplace
-not_found			Combat introuvable :(
-leek_loose_x			%1$s perd <b>%2$s</b>
-tactic_mode			Mode tactique
-leek_show_cell			%1$s montre la cellule <b>%2$s</b>
 leek_bug			%s <b>a planté !</b>
-discrete_pause			Pause discrète
-n_magic			%s magie
-position_in_queue			Position dans la file : %1$s / %2$s
-turn_n			Tour %s
-accelerate_again			Accélérer encore
-pause_message			Cliquer ou appuyez sur 'P' pour reprendre
-quality_low			Faible
-deleted_team			équipe supprimée
-quality_medium			Moyenne
-deleted_leek			poireau supprimé
-quality_high			Haute
-generating			Génération en cours...
+leek_cast			%1$s lance <b>%2$s</b>
+leek_hit			%s frappe
+leek_is_dead			%s est mort !
+leek_level			Niveau %s
+leek_loose_x			%1$s perd <b>%2$s</b>
+leek_move			%s se déplace
 leek_shoot			%s tire
-fail			Échec
-browser_cannot_display			Votre navigateur ne peut pas afficher le combat
+leek_show_cell			%1$s montre la cellule <b>%2$s</b>
+leek_speak			%1$s dit : ''<i>%2$s</i>''
+leek_take_weapon			%1$s prend l'arme <b>%2$s</b>
+leek_win_x			%1$s gagne <b>%2$s</b>
+loading_fight			Chargement du combat...
+n_absolute_shield			%s bouclier absolu
+n_agility			%s agilité
+n_damage_return			<b>%s renvoi dommages</b>
+n_life			%s PV
+n_magic			%s magie
+n_mp			%s PM
+no_data_received			Aucune donnée reçue
+not_found			Combat introuvable :(
+not_found_id			Combat d'id <b>%s</b> introuvable :(
+n_relative_shield			%s bouclier relatif
+n_resistance			%s résistance
+n_strength			%s force
+n_tp			%s PT
+n_vita			%s vitalité
+n_wisdom			%s sagesse
+pause			Pause
+pause_message			Cliquer ou appuyez sur 'P' pour reprendre
+position_in_queue			Position dans la file : %1$s / %2$s
+quality			Qualité
+quality_high			Haute
+quality_low			Faible
+quality_medium			Moyenne
+quit			Quitter (Q)
+resume			Reprendre
+see_report			Voir le rapport
+send_comment			Envoyer
+settings			Options
+sound_activated			Son activé
+sound_disactivated			Son coupé
+start_of_fight			Début du combat !
+summon			%s invoque %s
+tactic_mode			Mode tactique
+title			Combat
+turn_n			Tour %s
+turn_of_leek			Tour de %s
 update_browser			Mettez à jour votre navigateur dès maintenant !

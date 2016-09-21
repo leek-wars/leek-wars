@@ -1,89 +1,89 @@
-cant_quit_owner			The team owner can't quit the team
-name_already_exists			This team name already exists
-not_found_id			Team of ID <b>%s</b> can not be found :(
+already_have_candidacy			You already have a pending request for another team
+already_in_team			You are already in a team
+ban			Ban
 ban_ban			Ban
-you_left_team			You left the team
-team_have_been_disolved			The team has been disbanded
-farmer_banned			Farmer banned
-uploading_emblem			Uploading emblem...
-composition_default_name			Nameless composition
-change_owner_confirm_title			Change team owner
-too_much_farmers			The team has already reached the maximum number of farmers
-composition_invalid_name			The composition name cannot be empty
-change_owner_confirm			Do you really want to nominate <b>%s</b> as the team owner?
+ban_cancel			Cancel
+ban_confirm			Do you really want to ban %s?
+ban_confirm_title			Ban %s?
+cancel_candidacy			Cancel application
+candidacies			Applicants
+candidacies_closed			NO
+candidacies_opened			YES
+candidacy_accept			YES
+candidacy_cancelled			Application canceled
+candidacy_refuse			NO
+candidacy_sent			Application sent!
+cant_disolve			You have to ban the other members before disbanding the team
+cant_quit_owner			The team owner can't quit the team
+captain			Captain
+change_emblem			Change emblem
+change_owner			Change owner
 change_owner_cancel			Cancel
 change_owner_change			Change owner
-disolve_cancel			Cancel
-remaining_xp			Remaining XP: %s
-member			Member
-victories			wins
-captain			Captain
-defeats			losses
-ban			Ban
-draws			draws
-no_compositions			No compositions
+change_owner_confirm			Do you really want to nominate <b>%s</b> as the team owner?
+change_owner_confirm_title			Change team owner
 chat			Chat
-max_level			Maximum level
-disolve_disolve			Disband the team
-ban_confirm_title			Ban %s?
-ban_confirm			Do you really want to ban %s?
-ban_cancel			Cancel
-no_description			no description
-candidacy_sent			Application sent!
-candidacy_cancelled			Application canceled
-farmer_accepted			Farmer accepted
-upload_success			Emblem sent!
-upload_error			A error occured :
-compo_deleted			Composition %s deleted
-already_have_candidacy			You already have a pending request for another team
-xp			XP: %s
-cant_disolve			You have to ban the other members before disbanding the team
-delete_compo			Delete
-register_tournament			Register for the tournament
 chat_send			Send
-farmers			Farmers (%s)
-forum			Forum
-quit_team_confirm_title			Leave the team %s?
-disolve_confirm			Before disbanding the team, all the other members must be banned.
-farmer_refused			Farmer rejected
-compo_must_contain_4_leeks			The composition must contain at least 4 leeks
-already_in_team			You are already in a team
-compo_name			Name
-owner			Owner
-change_emblem			Change emblem
-join_team			Join this team
-cancel_candidacy			Cancel application
 closed_team			Team closed
-talent			Team Talent : average composition Talents
-invalid_name			The team name should be between %1$s and %1$s character long
 compo_cancel			Cancel
 compo_create			Create
-level_n			Level %s
-history			History
-ratio			Ratio : %s
-tournament_time			Team tournament every day from 9PM to 11PM (French timezone)
+compo_deleted			Composition %s deleted
+compo_must_contain_4_leeks			The composition must contain at least 4 leeks
+compo_name			Name
+composition_default_name			Nameless composition
+composition_invalid_name			The composition name cannot be empty
 compositions			Compositions
-see_tournament			See the tournament
-unregister			Unregister
-leeks			Leeks (%s)
 create_composition			Create a new composition
-empty_compo			Empty
-unsorted_leeks			Unengaged leeks
-tournaments			Tournaments
+defeats			losses
+delete_compo			Delete
+disolve_cancel			Cancel
+disolve_confirm			Before disbanding the team, all the other members must be banned.
+disolve_confirm_title			Disband %s?
+disolve_disolve			Disband the team
 disolve_team			Disband the team
-candidacies			Applicants
-candidacy_accept			YES
-candidacy_refuse			NO
-tournament_of			%s tournament
-quit_team			Leave the team
+draws			draws
+empty_compo			Empty
+enter_password_to_confirm			Enter password to confirm
+farmer_accepted			Farmer accepted
+farmer_banned			Farmer banned
+farmer_refused			Farmer rejected
+farmers			Farmers (%s)
+forum			Forum
+history			History
+invalid_name			The team name should be between %1$s and %1$s character long
+join_team			Join this team
+leeks			Leeks (%s)
+level_n			Level %s
+max_level			Maximum level
+member			Member
+name_already_exists			This team name already exists
+no_compositions			No compositions
+no_description			no description
+not_found_id			Team of ID <b>%s</b> can not be found :(
 opened			Open
-candidacies_opened			YES
-candidacies_closed			NO
-recrutment_mode			Recruitment mode
-quit_team_confirm			Do you really want to leave the team?
+owner			Owner
+owner_has_been_changed			The owner has been changed.
 quit_cancel			Cancel
 quit_confirm			Leave the team
-disolve_confirm_title			Disband %s?
-owner_has_been_changed			The owner has been changed.
-change_owner			Change owner
-enter_password_to_confirm			Enter password to confirm
+quit_team			Leave the team
+quit_team_confirm			Do you really want to leave the team?
+quit_team_confirm_title			Leave the team %s?
+ratio			Ratio : %s
+recrutment_mode			Recruitment mode
+register_tournament			Register for the tournament
+remaining_xp			Remaining XP: %s
+see_tournament			See the tournament
+talent			Team Talent : average composition Talents
+team_have_been_disolved			The team has been disbanded
+too_much_farmers			The team has already reached the maximum number of farmers
+tournament_of			%s tournament
+tournaments			Tournaments
+tournament_time			Team tournament every day from 9PM to 11PM (French timezone)
+unregister			Unregister
+unsorted_leeks			Unengaged leeks
+upload_error			A error occured :
+uploading_emblem			Uploading emblem...
+upload_success			Emblem sent!
+victories			wins
+xp			XP: %s
+you_left_team			You left the team

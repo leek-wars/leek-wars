@@ -1,72 +1,72 @@
-fullscreen			Fullscreen (F)
-n_relative_shield			%s relative shield
-start_of_fight			Starting fight!
-n_life			%s HP
-n_tp			%s TP
-n_mp			%s MP
+accelerate			Speed up
+accelerate_again			Speed up (x2)
+browser_cannot_display			Your browser is unable to display the fight
+comments			Comments
+date_format			%s
+decelerate			Slow down
+deleted_farmer			Farmer deleted
+deleted_leek			Leek deleted
+deleted_team			Team deleted
+discrete_pause			Suspend quiet mode
+display_cell_numbers			Show cell numbers
+display_debug			Show debug informations
+display_life_bars			Show health meters
+end_of_fight			End of fight!
+enlarge_fight			Enlarge fight screen
+error_generating_fight			An error occured during fight generation
+fail			Failure
 flag_perfect			Perfect
 flag_static			Static
-quit			Quit (Q)
-end_of_fight			End of fight!
-comments			Comments
-send_comment			Send
-leek_is_dead			%s is dead!
-n_vita			%s total health
-n_strength			%s strength
-n_agility			%s agility
-leek_speak			%1$s says : ''<i>%2$s</i>''
-decelerate			Slow down
-n_absolute_shield			%s absolute shield
-resume			Resume
-leek_take_weapon			%1$s takes weapon <b>%2$s</b>
-enlarge_fight			Enlarge fight screen
-leek_win_x			%1$s gains <b>%2$s</b>
-quality			Display quality
-display_debug			Show debug informations
-accelerate			Speed up
-date_format			%s
-turn_of_leek			%s's turn
-display_life_bars			Show health meters
-sound_activated			Sound is on
-sound_disactivated			Sound is off
-leek_level			Level %s
-pause			Pause
-title			Fight
-display_cell_numbers			Show cell numbers
-summon			%s summon %s
-n_damage_return			<b>%s damage return</b>
-deleted_farmer			Farmer deleted
-n_wisdom			%s wisdom
-n_resistance			%s resistance
-leek_hit			%s hits
-error_generating_fight			An error occured during fight generation
-no_data_received			No data received
-see_report			See report
+fullscreen			Fullscreen (F)
+generating			In progress...
 js_error			A JavaScript error occured
 js_error_message			Try to reload page (F5 or Ctrl + F5). <br>If the problem persists you can notify it in the forum with the following fight number : %s</br>.
-leek_cast			%1$s uses <b>%2$s</b>
-not_found_id			Fight with id <b>%s</b> not found :(
-loading_fight			Loading fight...
-settings			Settings
-leek_move			%s moves
-not_found			Fight not found :(
-leek_loose_x			%1$s loses <b>%2$s</b>
-tactic_mode			Tactical mode
-leek_show_cell			%1$s indicates cell <b>%2$s</b>
 leek_bug			%s <b>has crashed</b>
-discrete_pause			Suspend quiet mode
-n_magic			%s magic
-position_in_queue			Position in queue : %1$s / %2$s
-turn_n			Turn %s
-accelerate_again			Speed up (x2)
-pause_message			Clic or press 'P' to resume
-quality_low			Low
-deleted_team			Team deleted
-quality_medium			Medium
-deleted_leek			Leek deleted
-quality_high			High
-generating			In progress...
+leek_cast			%1$s uses <b>%2$s</b>
+leek_hit			%s hits
+leek_is_dead			%s is dead!
+leek_level			Level %s
+leek_loose_x			%1$s loses <b>%2$s</b>
+leek_move			%s moves
 leek_shoot			%s shoots
-fail			Failure
-browser_cannot_display			Your browser is unable to display the fight
+leek_show_cell			%1$s indicates cell <b>%2$s</b>
+leek_speak			%1$s says : ''<i>%2$s</i>''
+leek_take_weapon			%1$s takes weapon <b>%2$s</b>
+leek_win_x			%1$s gains <b>%2$s</b>
+loading_fight			Loading fight...
+n_absolute_shield			%s absolute shield
+n_agility			%s agility
+n_damage_return			<b>%s damage return</b>
+n_life			%s HP
+n_magic			%s magic
+n_mp			%s MP
+no_data_received			No data received
+not_found			Fight not found :(
+not_found_id			Fight with id <b>%s</b> not found :(
+n_relative_shield			%s relative shield
+n_resistance			%s resistance
+n_strength			%s strength
+n_tp			%s TP
+n_vita			%s total health
+n_wisdom			%s wisdom
+pause			Pause
+pause_message			Clic or press 'P' to resume
+position_in_queue			Position in queue : %1$s / %2$s
+quality			Display quality
+quality_high			High
+quality_low			Low
+quality_medium			Medium
+quit			Quit (Q)
+resume			Resume
+see_report			See report
+send_comment			Send
+settings			Settings
+sound_activated			Sound is on
+sound_disactivated			Sound is off
+start_of_fight			Starting fight!
+summon			%s summon %s
+tactic_mode			Tactical mode
+title			Fight
+turn_n			Turn %s
+turn_of_leek			%s's turn
 update_browser			Please update your browser as soon as possible!

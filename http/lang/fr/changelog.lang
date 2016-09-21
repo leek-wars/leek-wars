@@ -1,579 +1,579 @@
-changelog_101			# Ajout de la vente d'arme => redonne 80% du prix initial de l'arme.
-# Possibilité de changer le grade des membres d'une équipe.
-# Introduction du système de parrains
-# Ajout de la page changelog
-# Ajout de trophées
-changelog_129			# Modification de l'opérateur == : voir le fonctionnement détaillé dans la partie "Avancée" du tutoriel.
-# Option couper le son dans un combat.
-changelog_161			# Modification du système de Talent
-# Trophée traducteur pour tous les participants à la traduction du site.
-changelog_128			# Ajout du tutoriel sur le passage par référence.
-# Match highlight dans l'éditeur (surligne les occurences de la sélection courante).
-# Ajout des include(), syntaxe : include("nom_ia");
-changelog_174			# Correction du coût en opérations de certaines fonctions et opérateurs.
-# Ajout de la puce Frappe du Démon.
-# Fréquence active selon la nouvelle formule.
-changelog_158			# Ajout des registres.
-# Modifications dans l'architecture des serveurs.
-# getPathLength() renvoie null si le chemin entre les deux cases n'existe pas.
-changelog_180			# Nouveau design
-# Design responsive
-# Amélioration des performances du site
-# Ajout d'un panneau avec les notifications/message/chat sur la droite (grands écrans)
-# Graphique d'évolution du talent solo sur une semaine
-# Suppression du compte : possibilité ou non d'effacer les messages sur le forum
-# Popup de répartition du capital avec bouton réinitialiser
-# Classement en page d'accueil
-# Barre de progression en combat (merci à jojo123)
-# Ajout de la constante EFFECT_SUMMON (= 14)
-# Ajout des carrés de couleur verte pour les tournois d'équipes
-# Amélioration des performances de l'éditeur
-# Possibilité d'éditer et supprimer les registres depuis la page du poireau
-# Boutons pour le classement de chaque poireau dans le classement
-# Possibilité de s'inscrire au tournoi pendant que celui du jour est en cours
-changelog_182			# Amélioration de la fonction lineOfSight.
-# Ajout du chapeau Haut-de-forme
-# La puce frappe du démon a désormais une répartition linéaire, et frappe 5 x 25.
-# Corrections de bugs
-changelog_184			# Ajout de la fonction getMapType() pour récupérer le type de carte.
-# La fonction getNearestAlly() est maintenant niveau 1.
-# Correction du bug quand une IA était vide.
-# Ajout de la documentation de l'API.
-# Ajout d'un cooldown initial de 1 sur Inversion et Téléportation.
-# Coûts réduits pour les puces de bulbes.
-# Correction des bugs de tournoi.
-# La portée maximale du M-Laser passe à 12.
-changelog_181			# Changement de la limite des armes et des puces.
-# Affichage du nombre de tournois gagnés (solo, éleveur et équipe).
-# Correction de bugs.
-changelog_183			# La limite d'invocation passe à 4 par équipe.
-# Les caractéristiques des bulbes sont diminuées.
-# Les cooldowns des bulbes sont communs au sein d'une équipe.
-# Les puces réservées aux invocations fonctionnent sur toutes les invocations.
-# Ajout de 4 nouvelles puces pour les invocations : Fouet, Accélération, Engrais et Fertilisant.
-changelog_185			# Ajout des caractéristiques Résistance, Magie et Science.
-# Suppression des cœurs et des échecs.
-# Ajout des coups critiques (augmentés par l'agilité).
-# Changement des formules de calcul des soins : augmentés par la sagesse
-# Changement des formules de calcul des boucliers : augmentés par la résistance.
-# Changement des formules de calcul des boosts : augmentés par la science
-# Ajout d'une nouvelle catégorie de puces : les entraves, augmentées par la magie.
-# Ajout de puces de renvoi de dégâts, augmentés par l'agilité.
-# Ajout de puces de poisons, augmentés par la magie (comme le gazeur et le lance-flammes également).
-# Ajout des fonctions getWisdom([leek]), getResistance([leek]), getMagic([leek]) et getScience([leek]).
-# Ajout des fonctions getTotalMP([leek]) et getTotalTP([leek]).
-# Ajout de la fonction getLaunchedEffects([leek]).
-# Ajout des fonctions chipNeedLos(chip) et weaponNeedLos([weapon]).
-# Ajout de statistiques et d'un graphique dans le rapport du combat (merci à jojo123).
-# Correction des contantes MAP_*.
-# Correction du bug de date d'édition des topics.
-# Correction getCellToUseOnCell qui renvoyait des cases alors qu'on ne pouvait pas tirer sur la case.
-
-changelog_186			# Trophées Chic et Élégant déblocables.
-# 3 trophées impossibles à obtenir le sont désormais, et passent en bonus.
-# Correction inversion.
-# Correction des tournois d'éleveur (qui ne se lançaient pas).
-# Correction du parrainage.
-# Correction de certaines notifications qui n'arrivaient pas en direct.
-# Correction de visualisation de certains combats, à cause de say().
-# Rajout du dernier trophée de tournoi d'équipe.
-# Correction de l'actualisation des objets achetés (armes, puces,chapeaux et potions).
-# Correction de la barre de progression
-# Les boucliers et les boosts ne peuvent être lancées que sur les alliés.
-# Adrénaline et Bottes ailées ont été augmentés.
-changelog_187			# Refonte de l'interface de combat.
-# Correction des trophées légende et mythique.
-# Correction du bug de Libération.
-# Trophées relatifs aux cristaux (bonus) sont implantés.
-# 20 potions de réinitialisation offertes à la création du compte (20 potions ont été données pour tout le monde aussi).
-# Ajout de la fonction trim(string).
-# (Ré)affichage des multiplicateurs de gains en tournoi.
-# Amélioration de la recherche dans l'éditeur (boutons suivant et précédent, et total).
-changelog_144			# Prise en compte du nombre de paramètre lors du survol d'une fonction dans l'éditeur.
-# Fonction recherche dans le classement.
-# Corrections des problèmes des teams.
-# Correction de la recherche forum.
-# Correction des bugs des tournois.
-changelog_172			# Corrections des nombres d'opérations des fonctions
-# Mise en place de la limite à 20M opérations
-# Ajout du chapeau Arlequin
-# Ajout de la puce Frappe du démon
-changelog_171			# Ajout du nouveau comptage des opérations, accessible avec la fonction getOperations().
-# Modification de certaines puces, comme annoncé lors de la maj 1.70. (Voir forum)
-# Séparation du compteur de combats farmer et général.
-# Correction nombre de capital au niveaux 100, 200, 300.
-changelog_131			# Éditeur : affichage de la ligne courante
-# Éditeur : auto-fermeture des (), [], {}, '' et "".
-# Affichage des puces non équipés dans les avertissements (dans le rapport de combat).
-# Ajout de la fonction getAliveEnemiesCount.
-# Ajout de l'opérateur "not", équivalent à !.
-# Ajout des fonctions <i>removeKey</i>, <i>assocSort</i> et <i>keySort</i>.
-# Ajout d'un bouton aide pour les raccourcis clavier dans l'éditeur.
-popup_ok			OK :)
-see_all_changes			Retrouvez la liste complète des changements sur la page <a href='/changelog'>leekwars.com/changelog</a>.
+forum_topic		Sujet forum
+popup_ok		OK :)
+see_all_changes	Retrouvez la liste complète des changements sur la page <a href='/changelog'>leekwars.com/changelog</a>.
 title			Historique des modifications
-version_n			Version %s
-changelog_100			# Version 1.0 en ligne, fin de la version bêta !
-# Tous les joueurs inscrits avant le 6 juin reçoivent le trophée Bêta Testeur.
-changelog_126			# Ajout des fonctions getCores() et getFrequency().
-# Ajout de la documentation de for ... in dans le tutoriel.
-# Ajout des fonctions getFightContext() et getFightType().
-# Possibilité d'appeler des fonctions déclarées n'importe ou dans le code.
-# Les coeurs font baisser le taux d'échec des puces et des armes : échec = (échec de base) - (coeurs - 1).
-# Le coût d'un coeur descend à 10 capital.
-changelog_156			# Ajout des chapeaux
-# Correction des armes des bots
-changelog_125			# Affichage des logs personnels (debugs) directement dans le combat.
-# Bouton retour à l'éditeur pour un test en équipe.
-# Affichage des totaux dans le rapport de combat.
-# Les retours à la ligne sont préservés dans les logs personnels.
-# Ajout du passage par référence dans les fonctions utilisateurs via l'opérateur @.
-# Ajout de la structure for (var key : var value in array) { ... }.
-# Correction de la copie des tableaux.
-changelog_107			# Améliorations des performances des combats (hud, décor).
-changelog_130			# Ajout des fonctions <i>number</i> et <i>string</i>, pour convertir en nombre et en chaîne.
-changelog_133			# Affichage de la ligne de plantage ou d'avertissement lors de l'éxécution d'une IA.
-# Le talent est désormais accessible uniquement à partir du niveau 100.
-# Modifications des classements.
-# Tris par colonne dans le classement.
-changelog_134			# Mise à jour du matchmaking pour les niveaux < 100.
-changelog_150			# Affichage du talent sur la page de l'équipe.
-# Affichage des horaires des tournois sur les boutons.
-# Implémentation des fermetures (voir le sujet sur le forum).# Affichage des dates des tournois et des combats sur leur page.
-changelog_163			# Ajout du gain d'xp et d'argent en fonction de notre talent par rapport à la moyenne de notre niveau.
-# Correction du trophée niveau 300.
-# Correction des lignes des erreurs dans le LeekScript.
-changelog_104			# Limitation à 5 000 debug() maximum par combat
-# Ajout de la possibilité de faire uneFonction()[0] sur les fonctions retournant un tableau
-# Accéder à une case inexistante d'un tableau n'a plus pour effet de créer cette case dans le tableau
-changelog_127			# Ajout du tutoriel sur les opérateurs == et ===.
-# Amélioration de la page "À Propos".
-# Affichage des carrés de notification en direct.
-# Colorisation des constantes et fonctions du LeekScript.
-# L'éditeur devient une simple zone de texte sur mobile, pour faciliter une édition rapide (l'éditeur normal est accessible avec l'option "Voir version ordinateur" sur votre téléphone).
-# Améliorations sur mobile (superpositions de texte, taille de texte).
-changelog_142			# Ajout des tournois de team.
-# Ajout des cristaux, deuxième monnaie du jeu, achetables depuis la banque (avec PayPal ou StarPass).
-# Ajout des skins Transparent, Multicolore, Rasta, Noir, Blanc, Vert pomme.
-# Affichage du nombre de lignes et caractères d'une IA.
-# Les compteurs de temps s'adaptent au fuseau horaire du joueur.
-changelog_145			# Changement de serveur.
-# Recherche des messages pour un joueur précis dans le forum.
-# Bouton signaler sur un poireau.
-changelog_147			# Amélioration du matchmaking (solo, farmer et team).
-# Le talent est bloqué dans le matchmaking au delà d'un certain seuil.
-# Ajout des fonctions getWeaponEffectiveArea() et getChipEffectiveArea() avec un 3ème paramètre pour définir la cellule de lancer.
-# Le nombre d'obstacles sur la map est plus aléatoire.
-# Indicateur pour les potions réutilisables dans le marché.
-# Correction de la difficulté des bots de test.
-changelog_120			# Ajout de l'animation de la puce Libération.
-# Affichage de la file d'attente des combats.
-# Ajout de l'avatar Gravatar si pas d'avatar.
-changelog_159			# Ajout d'un trophée.
-# Lien du wiki dans l'aide.
-# Correction des avatars.
-# Ajout de l'opérateur + pour les tableaux.
-# Ajout des fonctions arrayMap, arrayFilter, arrayFlatten, arrayFoldLeft, arrayFoldRight, arrayPartition, arrayIter, arrayConcat et arraySort
-# Ajout de la possibilité de redéfinir les fonctions du LeekScript.
-changelog_165			# Ajout de 25 trophées.
-# Ajustement de la puissance des invocations.
-# Ajout du bonus de gains en combats d'éleveur.
-changelog_108			# Ajout de l'opérateur === et !== qui comparent le type et la valeur de deux expressions.
-changelog_167			# Ajout du formatage dans le forum.
-# Ajout de l'affichage des noms des votants dans le forum.
-# Correction des constantes FIGHT_CONTEXT_*
-# Correction des fonctions isAlive et isDead pour les invocations
-# Correction de arraySort() qui renvoie désormais le tableau trié.
-# Correction de la barre d'XP de team niveau 100.
-changelog_168			# Ajout de la fonction getEntityTurnOrder(entity), qui renvoie l'ordre de jeu pour une entité donnée (et getEntityTurnOrder() qui renvoie le notre).
-# La limite d'invocations a été corrigée, elle est bien de 4 bulbes par poireau en simultané sur le terrain.
-# La réduction due à la zone de dégâts est appliquée AVANT les boucliers lors du calcul des dommages (auparavant ils étaient appliqués après).
-# Une fonction déclarée sous la forme var f = function() {} a accès a elle-même dans son corps.
-# Correction du compteur de combats affiché sur la page de l'éleveur : le compteur prend en compte tous les combats effectuées par l'éleveur (solo, farmer et team).
-# Les bulbes vont être modifiés (surtout le Healer Bulb et un peu le Fire Bulb), voir le sujet dans le forum (Mise à jour 1.68).
-# L'opérateur "is" va être introduit, veillez à enlever les éventuelles variables du même nom dans votre ia pour la prochaine maj ;)
-# La puce résurrection va être remplacée par "régénération", son ID ne change pas, mais si vous utilisez la constante (CHIP_RESURRECTION) dans votre IA, mieux vaut la remplacer par sa valeur (35), le temps que la nouvelle, CHIP_REGENERATION soit disponible.
-# Popup présentant les nouveautés lorsqu'un poireau passe un niveau.
-changelog_109			# Ajout de la possibilité de supprimer un message sur le forum, ainsi qu'un sujet (pour les modérateurs).
-# Page de team : affichage des éleveurs connectés.
-# Ajout des boutons "Mon poireau", "Mon éleveur" et "Mon équipe" dans le classement.
-# Améliorations des notifications des messages privés.
-# Ajout de grandes notifications dans le coin bas-droit de la page pour les messages privés.
-# Amélioration de la visibilité du joueur courant dans les combats.
-changelog_141			# Ajout des défis d'éleveur.
-# Explicitation de plusieurs fonctions dans la documentation.
-# Amélioration des bots (au niveau des caractéristiques et leur équipement).
-# Ajout de 2 bots supplémentaires.
-# Notification quand quelqu'un commente votre tournoi.
-# Ajout de la fonction getWeaponTargets(weapon, cell).
-# Ajout de la fonction getWeaponEffectiveArea(weapon, cell).
-# Ajout de la fonction canUseWeapon(weapon, leek).
-# Ajout de la fonction canUseWeaponOnCell(weapon, cell).
-# Ajout de la fonction getCellToUseWeapon(weapon, leek) et getCellToUseWeaponOnCell(weapon, cell).
-# Ajout de la fonction getCellsToUseWeapon(weapon, leek) et getCellsToUseWeaponOnCell(weapon, cell).
-# Sauvegarde des paramètres de test dans l'éditeur.
-# Ajout du test d'éleveur.
-changelog_143			# Unification forum de team au forum général.
-# Amélioration du pathfinding.
-# Correction de petits bugs du LeekScript.
-# Ajout de popups de confirmation pour les achats du marché.
-# Ajout d'un didactitiel.
-# Ajout de l'aperçu des potions de couleur dans le marché.
-changelog_173			# La fréquence a été modifée : l'équipe qui a la plus haute fréquence a la plus grande probabilité de commencer le combat.
-# Ajout de la constante CHIP_RESURRECTION.
-# Ajout de la constante OPERATIONS_LIMIT.
-# Ajout de la constante EFFECT_TELEPORT, EFFECT_INVERT et EFFECT_RESURRECT.
-# Ajout des fonctions getStrength() et getStrength(leek), ainsi que EFFECT_BUFF_STRENGTH qui remplaceront les versions avec "force".
-# Supression de la puce Frappe du Démon, ajoutée par erreur.
-changelog_152			# Affichage des bulles par dessus les noms des poireaux.
-# Les fonctions getPath et getPathLength acceptent désormais un tableau en 3ème paramètre, le tableau des cellules à ignorer.
-# Corrections des notifications de défi d'éleveur.
-# Le trophée beta testeur passe en trophée bonus (ne compte pas dans le total de trophées).
-# Correction des trophées relatifs aux tournois d'équipes.
-# Correction du nombre de combats pour un nouveau poireau (50 combats qui repassent à 20).
-changelog_153			# Modification du trophée Boosté.
-# Correction de replace() et split().
-# Ajout de la fonction getObstacles().
-# Trophées pour le level 300 et 400 passés à 250 et 300.
-# Bug du choix de l'IA en combat de test éleveur corrigé.
-# Répartition des dégâts de zone pour Éclair et Électriseur corrigée.
-# Inversion des constantes RELATIVE_SHIELD et ABSOLUTE_SHIELD corrigée.
-# Modifications sur get[Chip,Weapon]EffectiveArea() : portée min et max prise en compte, pas les lignes de vue.
-# Documentation de la fonction pause() ajoutée.
-# Correction trophée Statique.
-# Défilement vertical à l'intérieur des popups.
-# Choix du pays disponible et affichage du pays dans le classement.
-# Ajout de la fonction getCooldown(chip, leek).
-# Ajout des fonctions getCell(s)ToUse[Chip,Weapon](OnCell) avec un paramètre supplémentaire qui correspond aux cellules à ignorer.
-changelog_105			# Correction du bug de génération des combats
-# Correction de getCellToUseWeapon pour les portées linéaires (laser)
-# Amélioration de l'éditeur pour gérer un grand nombre d'IA
-changelog_115			# Amélioration de l'aide générale, avec l'aide de PadiSson et McNalYoo.
-# Ajout de la recherche sur le forum (version basique).
-# Fonction de modération forum : verrouiller un sujet.
-changelog_110			# Ajout d'un compteur de capital sur les onglets des poireaux.
-# Ajout de la date d'obtention de chaque trophée sur le profil de l'éleveur.
-# Ajout d'une option pour afficher les barres de vie de tous les joueurs en combat.
-# Amélioration de la gestion des erreurs de l'affichage des combats.
-changelog_116			# Fonction "accrocher" pour un sujet du forum.
-# Possibilité de mettre son topic en résolu sur le forum.
-# Amélioration de l'affichage des balises codes dans le forum.
-# Ajout de la fonction getAllies() dans la documentation.
-# Amélioration de la fonction recherche sur le forum.
-changelog_155			# Changement de la formule du power = (level * (1 + (talent - 1000) / 5000)) ^ 3
-# Changement du matchmaking solo : les adversaires proposés sont de niveau et talent plus proche
-# Correction de moveAwayFromLine
-# Modification de l'électriseur : 6PT => 7PT et 70 à 90 => 70 à 80 dommages
-# Modification d'éboulement : 6PT => 5PT
-# Les dégâts de durée de Lance-flammes et Gazeur sont désormais de type poison et ne sont pas réduis par les boucliers.
-# Modification de Vaccin : soigne de 30 à 32 => 34 à 38 sur 3 tours
-# Corrections des chats et des forums de team
-changelog_154			# Ajout du choix de la langue pour le forum.
-# Ajout du choix de la langue pour le chat.
-# Le moveToward est désormais capable d'avancer vers une cellule qui est un obstacle : elle s'approche au maximum de cette case.
-# Correction des combats bloqués en file.
-# Correction trophée Résistant à Invincible
-# Amélioration du fil d'ariane du forum
-changelog_112			# Ajout du cache pathFinding, permet de meilleures performances en combat.
-# Fix des trophées sur le nombre de victoires.
-# Amélioration de l'édition de la description de la team.
-changelog_114			# Affichage des trophées en liste (triée par ordre d'obtention) ou en grille (triée par numéro de trophée).
-changelog_113			# Ajout des tournois de farmer, tous les jours de 12h à 14h.
-# Ajout de 5 trophées pour les tournois de farmer.
-changelog_189			# Possibilité de recevoir des mails pour certaines notifications.
-# Affichage des fonctions dépréciées dans la documentation et l'éditeur
-# Correction des trophées Instruit et Konami
-# Ajout des traductions manquantes dans la documentation (getScience, getResistance, chipNeedLos, etc.)
-# Correction du trophée Schizophrène
-# Actualisation des habs lors du gain d'un combat
-# Correction de la popup de confirmation de la fermeture de l'éditeur
-# Ajout des notifications de défi éleveur
-# Correction du menu latéral (onglet sélectionné sur mauvaise page)
-# Amélioration du graphique dans le rapport de combat
-# Possibilité de choisir le lissage des courbes sur le graphique
-# Possibilité de cacher ou d'afficher les panneaux de statistiques dans le rapport.
-# Amélioration du tableau des statistiques dans le rapport de combat
-# (Ré)ajout du récapitulatif des avertissements et des erreurs dans le rapport de combat
-# Préservation des espaces et des tabulations dans les logs personnels
-# Traduction complètes en anglais et français de la documentation (merci à asmodai !)
-version_online			Version <b>%s</b> en ligne !
-changelog_118			# Ajout de l'animation de la météorite.
-# Correction de "getFarest*" en getFarthest*, l'ancienne version existe toujours mais n'est plus référencée dans la doc.
-changelog_121			# Option mode discret (SFW).
-changelog_164			# Ajout de 3 puces d'invocation de bulbes.
-# Ajout de la fonction summon(chip, cell, ai) pour invoquer.
-# Ajout de la fonction isSummon() et isSummon(entity) pour savoir si une entité est une invocation.
-# Ajout de la fonction getSummoner() et getSummoner(entity) pour connaitre l'invocateur d'une entité.
-# Ajout de la fonction getType() et getType(entity) pour connaître le type d'une entité (poireau ou bulbe).
-# Ajout de la fonction getBirthTurn() et getBirthTurn(entity) pour connaitre le tour où est apparu une entité.
-changelog_160			# Possibilité de renommer ses poireaux.
-# Correction du trophée concis.
-# Correction des fonction arrayFold.
-# Lancement de la version anglaise !
-forum_topic			Sujet forum
-changelog_146			# Correction des bugs avec les forums de team.
-# Constantes EFFECT_FORCE/AGILITY/TP/MP renommées en EFFECT_BUFF_FORCE/AGILITY/TP/MP.
-# Ajout des fonctions getFarmerID([leek]), getFarmerName([leek]), getTeamID([leek]), getTeamName([leek]), getAIID([leek]), getAIName([leek]).
-# Correction des caractéristiques des bots de test.
-changelog_122			# Affichage des grades des éleveurs d'une team pour les éleveurs non membres.
-# Le coût d'un PT ou d'un PM passe à 100 capital.
-# Le coût d'un coeur passe à 50 capital.
-changelog_124			# Affichage des debugs personnels avec une police monospace (merci HS).
-# Les touches Maj, Shift, Alt et Alt Gr ne marquent plus l'IA comme modifiée.
-# Favicon enlevé en mode discret.
-# Amélioration du matchmaking solo, équipe et farmer du potager.
-# Ajout d'une protection contre les attaques en boucle.
-changelog_162			# Modification des matchmaking solo et farmer, réinitialisation du talent en fonction du niveau.
-# Ajout de boutons +10 et +100 pour répartir plus facilement ses caractéristiques sur son poireau.
-# Ajout de classements "funs".
-# Correction de l'xp des teams.
-changelog_132			# Affichage des bulles par dessus les décors.
-# Vitesse supplémentaire en combat.
-# Ajout de la possibilité de déclarer un tableau associatif : [key1: value1, key2: value2].
-# Ajout des fonctions getNearestEnemyTo(leek), getNearestEnemyToCell(cell), getNearestAllyTo(leek), getNearestAllyToCell(cell).
-# Ajout des fonctions getWeaponEffectiveArea(cell), getChipEffectiveArea(chip, cell).
-# Ajout des fonctions getCellsToUseWeapon(leek), getCellsToUseWeaponOnCell(cell), getCellsToUseChip(leek), getCellsToUseChipOnCell(cell).
-# Ajout des fonction getWeaponFailure(weapon_id), getChipFailure(chip_id).
-# Correction des priorités dans les ternaires.
-# Les tableaux simples sont désormais affichés sans leur clés.
-# Ajout du système de Talent.
-changelog_135			# Ajout des potions (réinitialisation du capital et colorisation du poireau).
-# Les chips sont désormais revendables.
-# Une chip ne peut être équipée que sur un seul poireau à la fois.
-# Ajout de la sagesse, qui augmente l'xp et les habs : xp = xp * (1 + sagesse / 100).
-# Ajout de la page inventaire.
-changelog_136			# Éditeur : Option pour désactiver la fermeture automatique des parenthèses
-# Éditeur : Option fermeture automatique des parenthèses améliorée.
-# Éditeur : Amélioration de l'autocomplétion : rajout de la documentation, et des informations sur les puces et les armes.
-# Éditeur : Informations sur la fonction, arme ou puce au survol de son nom dans le code.
-# Éditeur : Ajout de raccourcis (for, if, while, ...).
-# Éditeur : Option pour choisir la taille du texte.
-# Éditeur : Thème sombre (Monokai) disponible.
-# Modification des formules de gain d'XP, de talent et d'Habs (l'XP et les Habs sont calculées en fonction du talent) : voir le topic http://leekwars.com/forum/category-6/topic-1836.
-changelog_137			# Ajout d'un lien de parrainage (sur la page de l'éleveur).
-# Éditeur : Ctrl-Q et Ctrl-S fonctionnement même si l'éditeur n'est pas focused.
-# Ajout de l'aide sur la sagesse.
-# Ajout d'un bouton signaler sur la page de l'éleveur.
-# Ajout de la puce téléportation.
-# Ajout des fonctions anonymes.
-changelog_138			# Ajout du B-Laser.
-# Modification de l'éditeur, variables et fonctions utilisateurs dans l'autocomplétion (y compris dans les includes).
-# Changement des id de puces et armes (ils ne se chevauchent plus).
-# Suppression du slot d'ia de team.
-# L'opérateur de puissance est désormais l'opérateur **.
-# Ajout des opérateurs binaires &, |, ^, <<, >> et >>>.
-# Modification du fonctionnement des fonction getWeaponEffects et getChipEffects.
-# Ajout du lien vers le Wiki dans l'aide.
-changelog_102			# Amélioration de l'éditeur, concernant la création, le changement de nom, et la suppression des IA.  Pour les créateurs d'extensions => ça risque de causer des soucis.
-# Ajout de trophées
-changelog_139			# Ajout des fonctions mark(cell), mark(cell, color), mark(cell, color, duration) pour colorier des cases.
-# Ajout des opérateurs |= , &= et ^=.
-# Option dans l'éditeur pour activer l'autocomplétion ou pas.
-# getCurrentCooldown() devient getCooldown().
-# Tutoriel sur les fonctions anonymes.
-# Ajout de la fonction lineOfSight(cell1, cell2).
-changelog_140			# Autocomplétion des include() d'include() dans l'éditeur.
-# Fonctions isChip() et isWeapon() pour déterminer si une constantes est une puce ou une arme.
-# Amélioration du système de comptage, et passage à 300 000 instructions maximum par tour.
-# Fonction listen() pour récuperer un tableau des say() des joueurs précedents.
-# Fonction typeOf() pour déterminer le type d'une valeur.
-# Fonction pause() pour mettre en pause le combat à un instant donné.
-# Fonctions show(cell) et show(cell, color) pour montrer une cellule (coûte 1PT).
-# Fonction lineOfSight(cell1, cell2, leekToIgnore) pour ignorer un poireau.
-# Fonction getPath(cell1, cell2, leekToIgnore) pour ignorer un poireau.
-# Fonction getLeekID() pour récupérer l'id réel du poireau.
-# Fonctions getRed(color), getGreen(color), getBlue(color) pour récupérer le rouge, vert, bleu d'une couleur.
-# Option pause discrète.
-# color() devient getColor().
-changelog_151			# La limite de debug est calculée sur la longueur totale de texte affiché, cette limite est de 1 000 000 de caractères.
-# La sagesse applique désormais le multiplicateur sur l'XP et les Habs uniquement en cas de victoire.
-# Corrections diverses.
-changelog_188			# Nouvelle page des trophées
-# Corrections de bugs de trophées
-# Correction des caractéristiques impossibles
-# Remise en marche de la page Modération (pour les modérateurs)
-# Remise en place de l'interface de traduction (pour les traducteurs)
-changelog_103			# Ajout de la fonction getInstructionsCount(), pour récupérer le nombre d'instructions que le poireau a effectué durant le tour actuel. 
-# La limite d'instructions maximum monte à 10 000. Cette valeur est disponible avec la constante INSTRUCTIONS_LIMIT. 
-# Le nombre maximum de défis par jour monte à 200. 
-# Ajout de trophées
-changelog_106			# Améliorations de l'éditeur.
-# Ajout du bouton agrandir/rétrécir.
-# Combats : options pour choisir la taille du combat et afficher les informations de debug.
-# Amélioration du plein écran sur Firefox.
-# Ajout du mode tactique (option en combat).
-# Ajout d'une option pour régler la qualité de l'affichage.
-# Ajout de getWeaponTargets(cell).
-# L'erreur "Fonction inconnue" devient plus explicite et ne fait plus planter l'IA, la valeur null est retournée.
-changelog_157			# Possibilité de changer le propriétaire d'une équipe
-# Zones de saisie sur plusieurs lignes pour le chat et les messages privés.
-# Le matchmaking des tournois ne se fait plus en fonction du talent.
-# Possibilité d'utiliser les fonctions getCell(s)ToUse(Weapon/Chip)OnCell avec un obstacle en cellule cible.
-# Amélioration de la fonction pause() qui pause bien au bon moment avec les mark() et les debug().
-# Popup avec les modifications lors d'une maj.
-# Corrections des traductions manquantes dans le combat.
-# Ajout des dates des messages du chat et des messages privés au survol.
-# Ajout d'icônes dans les rapports de combats lors d'un perfect (l'équipe gagne avec toute sa vie à la fin du combat) ou d'un "statique" (quand toute l'équipe n'a pas bougé).
-# Ajout des fonctions getChipArea() et getWeaponArea() qui renvoient le type de zone de la puce ou de l'arme, parmis les constantes AREA_* (voir dans la documentation).
-# Petites corrections du mode discret.
-# Diverses corrections de traduction.
-# Correction de l'historique des combats d'éleveur.
-# Correction du niveau total éleveur dans le classement.
-# Les fonctions n'ont plus de restriction au niveau des coeurs.
-# Chaque fonction possède désormais un nombre d'opérations (indiqué dans la documentation), les fonctions évoluées coûtent plus en opérations (tous les coûts ne sont pas encore définitivement estimés).
-# Possibilité d'enlever son chapeau.
-# Amélioration de l'IA des bots.
-# Changements importants dans l'architecture des serveurs (en vue de la sortie de la version anglaise).
-changelog_111			# Réimplémentation de la méthode subArray, push et pushAll.
-# Fix du bug de getFarestAlly et getFarestEnemy.
-# Fix du bug des double convertis en int lorsque l'on utilise l'opérateur "-".
-changelog_117			# Amélioration de l'édition des noms des IAs.
-# Dates plus propres sur le forum.
-# Un poireau peut équiper une IA trop haut level pour lui, mais il plantera uniquement à l'éxécution de celle-ci, avec une erreur explicite, et non directement au début de son tour. Cela permet de créer des IA pour plusieurs levels, en rajoutant des conditions if (getLevel() > X) fonction().
-# Rééquilibrage des armes et des puces : voir <a href='http://leekwars.com/forum/category-6/topic-800'>http://leekwars.com/forum/category-6/topic-800</a>
-changelog_119			# Correction des dégâts de la météorite (système ancien : dégâts inversement proportionnels à la distance avec le lanceur).
-changelog_170			# Ajout de la puce Résurrection.
-# Annonce de quelques changements au niveau des puces et des armes (voir le forum, maj 1.70).
-# Les caractéristiques des bulbes sont maintenant indexées sur le niveau de l'invocateur, entre le niveau 1 et 300 (301 avant).
-# Ajout de sa position dans les classements funs.
-# Ajout de 3 trophées.
-# Meilleur affichage des informations sur l'XP (pour les poireaux et les équipes), avec l'affichage de l'XP restante.
-# Ajout du nombre de points de vie et points de capital gagnés dans les popup de niveau.
-# getBirthTurn() renvoie 1 et pas 0 quand on est un poireau.
-# Correction de l'attribut statique dans certains combats.
-# Correction du talent d'éleveur au delà de 1200 de niveau total.
-changelog_166			# Ajout d'une option pour s'abonner et se désabonner d'un sujet sur le forum.
-# Ajout des boutons de vote sur les messages du forum.
-# Correction de la fonction isAlive().
-# Correction du trophée Pacifiste.
-# Amélioration du matchmaking Solo, pour privilégier les adversaires que l'on a pas affronté dans la journée.
-# Correction des constantes ENTITY_*, qui sont maintenant correctes.
-# Correction de la limite d'invocations, qui est bien de 4.
-changelog_169			# La puce "Résurrection" devient "Régénération".
-# Ajout des Bubles : Métallique, Glacé, Foudroyant et Rocheux.
-# Ajout des puces Rémission et Carapace, spécialisées pour les invocations.
-# Ajout de l'opérateur "is" et "is not", équivalents à == et !=.
-# Ajout de la potion dorée.
-# Ajout du chapeau "couronne".
-# Ajout des constantes EFFECT_TARGET_* dans la documentation.
-# Affichage des caractéristiques et des puces des bulbes dans le marché.
-# Ajout de la constante USE_TOO_MANY_SUMMONS, renvoyée par la fonction summon() si vous avez déjà 4 invocations vivantes sur le terrain.
-changelog_123			# Amélioration du mode discret
-# Affichage des combats en cours de génération en blanc dans l'historique.
-# Passage à 30 combats par jour pour les niveaux < 50.
-# Ajout d'un rappel sur la candidature en cours pour une team sur la page du farmer.
-# Bouton revanche ajouté à la fin d'un défi.
-# Rajout d'infos dans les résultats de recherche (catégorie).
-# Affichage des combats en team restant pour chaque poireau sur la page de l'équipe.
-# Ctrl+C ne marque plus l'IA comme modifiée
-# Ajout du raccourci Ctrl+Q pour tester l'IA.
-# Modification des fonctions : getForce, getLife, getPM, getTP, getAgility, getAbsoluteShield, getRelativeShield, getTotalLife, getLevel, getName qui retournent désormais null quand le poireau n'existe pas
-# Modification de la fonction getWeapon : retourne null quand aucune arme n'est équipée
-# Il n'est maintenant plus possible déclarer des globales ailleurs que dans le bloc principal
-# Les variables ne sont plus plus passées par référence dans les fonctions utilisateurs
-# Les mot clés du LeekScript ne sont plus utilisables comme nom de variables
-# Fix du do/while
-changelog_192			# Corrections des votes forum.
-# Corrections des noms "undefined" dans la recherche forum (signalé par Rominou).
-# Ajout de scroll sur les pages rapport de combat et classement pour les gros tableaux.
-# Correction de la taille des messages lors de l'édition.
-# Ré-ajout du trophée Lucky.
-# Correction des trophées relatifs aux combats de test.
-# Accélération du chargement des pages poireau, farmer, équipe et potager.
-# HTTPS
-# Amélioration de l'affichage du combat sur mobile.
-# Ajout d'un web manifest.
-# Correction du compteur de défis en défi farmer.
-# Le classement des jours connectés d'affilée devient les jours connectés au total.
-# Davantage de messages sauvegardés sur le chat de team.
-# Correction des buffs de bulbes qui restaient actifs après la mort du bulbe.
-# La distance parcourue n'est plus comptée en défi.
-# Correction de traductions anglaises dans le tutoriel.
-# Affichage des avertissements sur la page de l'éleveur.
-# Accélération du chargement du classement fun.
-# Nouveaux icônes réseaux sociaux en bas de la page.
-# Ajout du chapeau de paille.
-# Les puces Épine et Miroir possèdent désormais une zone d'effet de 5 cases.
-# Battle Royales !
-changelog_149			# Ajout des 6 constantes TYPE_* dans le documentation.
-# Ajout des citrouilles pour Halloween.
-# L'utilisation d'un nom de fonction pour un nom de variable est interdite (correction de bug).
-# Les fonctions getCell(s)ToUse* fonctionnent avec les puces non équipées.
-# Implémentation du ++i.
-# Ajout du do while dans le tutoriel.
-# Modification des horaires de tournois : 12-14h : solo, 18-20h : éleveur, 21-23h : équipe.
-# Correction du trophée Collectionneur.
-changelog_148			# Le niveau maximum passe à 300. Les deux armes (Électriseur et M-Laser passent niveau 257 et 300).
-# Les poireaux gagnent 5 points de capital par niveau, et 50 au niveau 100, 200 et 300. Un nouveau poireau commence avec 50 points de capital également.
-# Le poireau commence le jeu avec 100 points de vie, 10 points de tour et 3 points de mouvement.
-# Un point de tour coûte 80 points de capital, et un point de mouvement 50.
-# Les poireaux n'obtiennent plus de PT/PM/Coeur tous les 100 niveaux.
-# La formule de la sagesse passe à [XP, Habs] * 1 + sagesse / 300.
-# La puce Éboulement passe à 6PT au lieu de 7.
-# La puce Foudre voit sa portée maximale réduite à 5, au lieu de 6 auparavent.
-# Ajout de la puce Inversion, qui permet d'échanger la position de deux joueurs.
-# Ajout de la puce Blindage qui permet de rajouter de la vie totale à un joueur (effet boosté par l'agilité comme pour les soins).
-# Correction du bug de la météorite lancée dans le vide.
-# Ajout d'une animation pour téléportation.
-# Amélioration des notifications de réponse forum.
-changelog_190			# Ajout de 3 armes de corps à corps : le glaive, la hache et le katana, qui infligent de lourds dégâts et entravent la cible.
-# Amélioration du comptage des opérations sur les tableaux.
-# Corrections de l'aide générale
-# Corrections de bugs de CSS (signalé par Rominou)
-# Affichage des effets présents sur les entités en combat (signalé par Ebatsin)
-# Correction des victoires en tournoi non comptabilisés (pas sûr à 100%)
-# Trophée Légende et Mythique corrigés (à confirmer aussi).
-# Ajout de la fonction debugC, pour faire un debug de n'importe quelle couleur.
-# Ajout de 3 trophées (bonus).
-# Correction des raccourcis if, while, for etc. dans l'éditeur.
-# Ré-ajout de la fermeture automatique des (), [], {} etc.
-# Réduction de la taille des bulbes.
-# Le propriétaire de l'équipe est modérateur sur le forum de l'équipe.
-# Ajout de la fonction jsonEncode(object) et jsonDecode(json) pour encoder et décoder en JSON.
-# Un kill par poison était assigné à la cible dans le rapport de combat (signalé par Koneg).
-# Les fonction get(Weapon|Chip)(Max|Min)Scope sont remplacées par get(Weapon|Chip)(Max|Min)Range, les anciennes sont maintenant dépréciées.
-# Corrections mineures sur le tutoriel
-# debugE("\"") affichait "quote" dans les erreurs du rapport.
-# Affichage de la popup d'information sur les fonctions personnelles dans l'éditeur.
-# Ctrl + Clic sur une fonction personnelle amène à sa définition.
-# Le vol de vie lorsque l'attaque tue la cible n'était pas bloqué à la vie restante de la cible.
-# Ajout d'une puce Antidote pour enlever tous les poisons d'une cible (sur soi ou un allié)
-# La fréquence augmente davantage la probabilité de commencer le combat.
-# Les coups critiques augmentent de 50% les effets au lieu de 25%.
-# Modifications des caractéristiques des bulbes : leurs caractéristiques sont diminuées, et ils possèdent seulement celles qui leur sont utiles.
-# La limite d'invocations par équipe passe à 6 au lieu de 4.
-# La puce Fracture enlève aussi de la magie.
-# Le gazeur n'inflige plus de dommages normaux, et ses dégâts de poisons sont légèrement diminués.
-# Le lance-flammes a une meilleure portée et plus de dégâts.
-# Les boosts sur poireaux sont sensiblement augmentés.
-# Les deux grandes entraves PT et PM (Somnifère et Boulet), ont maintenant une zone de 5 cases de diamètre.
-# Ajout des chapeaux chinois et de sorcier
-changelog_191			# Possibilité de report quelqu'un sur le chat (paroles incorrectes ou flood).
-# Possibilité pour les modérateurs de mute les personnes sur le chat.
-# Ajout de la fonction getFarmerCountry().
-# Possibilité de changer le propriétaire de l'équipe.
-# Ajout de l'option pour recevoir les mises à jour par mail.
-# Accélération du chargement du potager.
-# Il n'y a plus de renvoi de dégâts sur une cible qui a été tuée lors d'une attaque.
-# Correction freeze dans l'éditeur
-# for (var i = 0; i < 10; i) {} (sans le '++' après le i) n'indiquait pas d'erreur mais échouait à la compilation.
-# Correction de l'accès au rapport sur un combat de test d'équipe.
-# Ajout d'un message d'erreur sur le niveau requis lors de la création d'un nouveau poireau.
-# Correction constantes de puces en double dans la doc (signalé par Onys).
-# Correction de la formule des boucliers relatifs dans l'aide.
-# Correction de la documentation de getCellToUseChip() à 3 paramètres.
-# Correction de la mise à jours des talents moyens (solo et farmer).
-# Bug de scroll lors de la réception d'un MP sur une autre conversation.
-# Des noms censurés pouvaient apparaître sur le forum.
-# Corrections de fautes d'orthographe.
-# Ajout d'un bouton déconnexion sur la page du farmer.
-# Amélioration affichage du forum sur mobile.
-# Taille des messages sur le chat limités à 1000 caractères.
-# Correction de lineOfSight pour les rares cas de non-symétrie.
-# Correction de la doc de debugC, et affichage des couleurs dans le rapport.
-# Correction de l'affichage des entraves dans le combat et le rapport.
-# Les entraves force et magie sont maintenant cumulables.
-# Correction du bouton annuler dans la popup de création de topic.
-# Correction du trophée déserteur.
-# Correction revanche défi éleveur.
-# Certaines images d'effets étaient cassées dans le combat.
+version_n		Version %s
+version_online	Version <b>%s</b> en ligne !
+
+changelog_100	# Version 1.0 en ligne, fin de la version bêta !
+				# Tous les joueurs inscrits avant le 6 juin reçoivent le trophée Bêta Testeur.
+changelog_101	# Ajout de la vente d'arme => redonne 80% du prix initial de l'arme.
+				# Possibilité de changer le grade des membres d'une équipe.
+				# Introduction du système de parrains
+				# Ajout de la page changelog
+				# Ajout de trophées
+changelog_102	# Amélioration de l'éditeur, concernant la création, le changement de nom, et la suppression des IA.  Pour les créateurs d'extensions => ça risque de causer des soucis.
+				# Ajout de trophées
+changelog_103	# Ajout de la fonction getInstructionsCount(), pour récupérer le nombre d'instructions que le poireau a effectué durant le tour actuel.
+				# La limite d'instructions maximum monte à 10 000. Cette valeur est disponible avec la constante INSTRUCTIONS_LIMIT.
+				# Le nombre maximum de défis par jour monte à 200.
+				# Ajout de trophées
+changelog_104	# Limitation à 5 000 debug() maximum par combat
+				# Ajout de la possibilité de faire uneFonction()[0] sur les fonctions retournant un tableau
+				# Accéder à une case inexistante d'un tableau n'a plus pour effet de créer cette case dans le tableau
+changelog_105	# Correction du bug de génération des combats
+				# Correction de getCellToUseWeapon pour les portées linéaires (laser)
+				# Amélioration de l'éditeur pour gérer un grand nombre d'IA
+changelog_106	# Améliorations de l'éditeur.
+				# Ajout du bouton agrandir/rétrécir.
+				# Combats : options pour choisir la taille du combat et afficher les informations de debug.
+				# Amélioration du plein écran sur Firefox.
+				# Ajout du mode tactique (option en combat).
+				# Ajout d'une option pour régler la qualité de l'affichage.
+				# Ajout de getWeaponTargets(cell).
+				# L'erreur "Fonction inconnue" devient plus explicite et ne fait plus planter l'IA, la valeur null est retournée.
+changelog_107	# Améliorations des performances des combats (hud, décor).
+changelog_108	# Ajout de l'opérateur === et !== qui comparent le type et la valeur de deux expressions.
+changelog_109	# Ajout de la possibilité de supprimer un message sur le forum, ainsi qu'un sujet (pour les modérateurs).
+				# Page de team : affichage des éleveurs connectés.
+				# Ajout des boutons "Mon poireau", "Mon éleveur" et "Mon équipe" dans le classement.
+				# Améliorations des notifications des messages privés.
+				# Ajout de grandes notifications dans le coin bas-droit de la page pour les messages privés.
+				# Amélioration de la visibilité du joueur courant dans les combats.
+changelog_110	# Ajout d'un compteur de capital sur les onglets des poireaux.
+				# Ajout de la date d'obtention de chaque trophée sur le profil de l'éleveur.
+				# Ajout d'une option pour afficher les barres de vie de tous les joueurs en combat.
+				# Amélioration de la gestion des erreurs de l'affichage des combats.
+changelog_111	# Réimplémentation de la méthode subArray, push et pushAll.
+				# Fix du bug de getFarestAlly et getFarestEnemy.
+				# Fix du bug des double convertis en int lorsque l'on utilise l'opérateur "-".
+changelog_112	# Ajout du cache pathFinding, permet de meilleures performances en combat.
+				# Fix des trophées sur le nombre de victoires.
+				# Amélioration de l'édition de la description de la team.
+changelog_113	# Ajout des tournois de farmer, tous les jours de 12h à 14h.
+				# Ajout de 5 trophées pour les tournois de farmer.
+changelog_114	# Affichage des trophées en liste (triée par ordre d'obtention) ou en grille (triée par numéro de trophée).
+changelog_115	# Amélioration de l'aide générale, avec l'aide de PadiSson et McNalYoo.
+				# Ajout de la recherche sur le forum (version basique).
+				# Fonction de modération forum : verrouiller un sujet.
+changelog_116	# Fonction "accrocher" pour un sujet du forum.
+				# Possibilité de mettre son topic en résolu sur le forum.
+				# Amélioration de l'affichage des balises codes dans le forum.
+				# Ajout de la fonction getAllies() dans la documentation.
+				# Amélioration de la fonction recherche sur le forum.
+changelog_117	# Amélioration de l'édition des noms des IAs.
+				# Dates plus propres sur le forum.
+				# Un poireau peut équiper une IA trop haut level pour lui, mais il plantera uniquement à l'éxécution de celle-ci, avec une erreur explicite, et non directement au début de son tour. Cela permet de créer des IA pour plusieurs levels, en rajoutant des conditions if (getLevel() > X) fonction().
+				# Rééquilibrage des armes et des puces : voir <a href='http://leekwars.com/forum/category-6/topic-800'>http://leekwars.com/forum/category-6/topic-800</a>
+changelog_118	# Ajout de l'animation de la météorite.
+				# Correction de "getFarest*" en getFarthest*, l'ancienne version existe toujours mais n'est plus référencée dans la doc.
+changelog_119	# Correction des dégâts de la météorite (système ancien : dégâts inversement proportionnels à la distance avec le lanceur).
+changelog_120	# Ajout de l'animation de la puce Libération.
+				# Affichage de la file d'attente des combats.
+				# Ajout de l'avatar Gravatar si pas d'avatar.
+changelog_121	# Option mode discret (SFW).
+changelog_122	# Affichage des grades des éleveurs d'une team pour les éleveurs non membres.
+				# Le coût d'un PT ou d'un PM passe à 100 capital.
+				# Le coût d'un coeur passe à 50 capital.
+changelog_123	# Amélioration du mode discret
+				# Affichage des combats en cours de génération en blanc dans l'historique.
+				# Passage à 30 combats par jour pour les niveaux < 50.
+				# Ajout d'un rappel sur la candidature en cours pour une team sur la page du farmer.
+				# Bouton revanche ajouté à la fin d'un défi.
+				# Rajout d'infos dans les résultats de recherche (catégorie).
+				# Affichage des combats en team restant pour chaque poireau sur la page de l'équipe.
+				# Ctrl+C ne marque plus l'IA comme modifiée
+				# Ajout du raccourci Ctrl+Q pour tester l'IA.
+				# Modification des fonctions : getForce, getLife, getPM, getTP, getAgility, getAbsoluteShield, getRelativeShield, getTotalLife, getLevel, getName qui retournent désormais null quand le poireau n'existe pas
+				# Modification de la fonction getWeapon : retourne null quand aucune arme n'est équipée
+				# Il n'est maintenant plus possible déclarer des globales ailleurs que dans le bloc principal
+				# Les variables ne sont plus plus passées par référence dans les fonctions utilisateurs
+				# Les mot clés du LeekScript ne sont plus utilisables comme nom de variables
+				# Fix du do/while
+changelog_124	# Affichage des debugs personnels avec une police monospace (merci HS).
+				# Les touches Maj, Shift, Alt et Alt Gr ne marquent plus l'IA comme modifiée.
+				# Favicon enlevé en mode discret.
+				# Amélioration du matchmaking solo, équipe et farmer du potager.
+				# Ajout d'une protection contre les attaques en boucle.
+changelog_125	# Affichage des logs personnels (debugs) directement dans le combat.
+				# Bouton retour à l'éditeur pour un test en équipe.
+				# Affichage des totaux dans le rapport de combat.
+				# Les retours à la ligne sont préservés dans les logs personnels.
+				# Ajout du passage par référence dans les fonctions utilisateurs via l'opérateur @.
+				# Ajout de la structure for (var key : var value in array) { ... }.
+				# Correction de la copie des tableaux.
+changelog_126	# Ajout des fonctions getCores() et getFrequency().
+				# Ajout de la documentation de for ... in dans le tutoriel.
+				# Ajout des fonctions getFightContext() et getFightType().
+				# Possibilité d'appeler des fonctions déclarées n'importe ou dans le code.
+				# Les coeurs font baisser le taux d'échec des puces et des armes : échec = (échec de base) - (coeurs - 1).
+				# Le coût d'un coeur descend à 10 capital.
+changelog_127	# Ajout du tutoriel sur les opérateurs == et ===.
+				# Amélioration de la page "À Propos".
+				# Affichage des carrés de notification en direct.
+				# Colorisation des constantes et fonctions du LeekScript.
+				# L'éditeur devient une simple zone de texte sur mobile, pour faciliter une édition rapide (l'éditeur normal est accessible avec l'option "Voir version ordinateur" sur votre téléphone).
+				# Améliorations sur mobile (superpositions de texte, taille de texte).
+changelog_128	# Ajout du tutoriel sur le passage par référence.
+				# Match highlight dans l'éditeur (surligne les occurences de la sélection courante).
+				# Ajout des include(), syntaxe : include("nom_ia");
+changelog_129	# Modification de l'opérateur == : voir le fonctionnement détaillé dans la partie "Avancée" du tutoriel.
+				# Option couper le son dans un combat.
+changelog_130	# Ajout des fonctions <i>number</i> et <i>string</i>, pour convertir en nombre et en chaîne.
+changelog_131	# Éditeur : affichage de la ligne courante
+				# Éditeur : auto-fermeture des (), [], {}, '' et "".
+				# Affichage des puces non équipés dans les avertissements (dans le rapport de combat).
+				# Ajout de la fonction getAliveEnemiesCount.
+				# Ajout de l'opérateur "not", équivalent à !.
+				# Ajout des fonctions <i>removeKey</i>, <i>assocSort</i> et <i>keySort</i>.
+				# Ajout d'un bouton aide pour les raccourcis clavier dans l'éditeur.
+changelog_132	# Affichage des bulles par dessus les décors.
+				# Vitesse supplémentaire en combat.
+				# Ajout de la possibilité de déclarer un tableau associatif : [key1: value1, key2: value2].
+				# Ajout des fonctions getNearestEnemyTo(leek), getNearestEnemyToCell(cell), getNearestAllyTo(leek), getNearestAllyToCell(cell).
+				# Ajout des fonctions getWeaponEffectiveArea(cell), getChipEffectiveArea(chip, cell).
+				# Ajout des fonctions getCellsToUseWeapon(leek), getCellsToUseWeaponOnCell(cell), getCellsToUseChip(leek), getCellsToUseChipOnCell(cell).
+				# Ajout des fonction getWeaponFailure(weapon_id), getChipFailure(chip_id).
+				# Correction des priorités dans les ternaires.
+				# Les tableaux simples sont désormais affichés sans leur clés.
+				# Ajout du système de Talent.
+changelog_133	# Affichage de la ligne de plantage ou d'avertissement lors de l'éxécution d'une IA.
+				# Le talent est désormais accessible uniquement à partir du niveau 100.
+				# Modifications des classements.
+				# Tris par colonne dans le classement.
+changelog_134	# Mise à jour du matchmaking pour les niveaux < 100.
+changelog_135	# Ajout des potions (réinitialisation du capital et colorisation du poireau).
+				# Les chips sont désormais revendables.
+				# Une chip ne peut être équipée que sur un seul poireau à la fois.
+				# Ajout de la sagesse, qui augmente l'xp et les habs : xp = xp * (1 + sagesse / 100).
+				# Ajout de la page inventaire.
+changelog_136	# Éditeur : Option pour désactiver la fermeture automatique des parenthèses
+				# Éditeur : Option fermeture automatique des parenthèses améliorée.
+				# Éditeur : Amélioration de l'autocomplétion : rajout de la documentation, et des informations sur les puces et les armes.
+				# Éditeur : Informations sur la fonction, arme ou puce au survol de son nom dans le code.
+				# Éditeur : Ajout de raccourcis (for, if, while, ...).
+				# Éditeur : Option pour choisir la taille du texte.
+				# Éditeur : Thème sombre (Monokai) disponible.
+				# Modification des formules de gain d'XP, de talent et d'Habs (l'XP et les Habs sont calculées en fonction du talent) : voir le topic http://leekwars.com/forum/category-6/topic-1836.
+changelog_137	# Ajout d'un lien de parrainage (sur la page de l'éleveur).
+				# Éditeur : Ctrl-Q et Ctrl-S fonctionnement même si l'éditeur n'est pas focused.
+				# Ajout de l'aide sur la sagesse.
+				# Ajout d'un bouton signaler sur la page de l'éleveur.
+				# Ajout de la puce téléportation.
+				# Ajout des fonctions anonymes.
+changelog_138	# Ajout du B-Laser.
+				# Modification de l'éditeur, variables et fonctions utilisateurs dans l'autocomplétion (y compris dans les includes).
+				# Changement des id de puces et armes (ils ne se chevauchent plus).
+				# Suppression du slot d'ia de team.
+				# L'opérateur de puissance est désormais l'opérateur **.
+				# Ajout des opérateurs binaires &, |, ^, <<, >> et >>>.
+				# Modification du fonctionnement des fonction getWeaponEffects et getChipEffects.
+				# Ajout du lien vers le Wiki dans l'aide.
+changelog_139	# Ajout des fonctions mark(cell), mark(cell, color), mark(cell, color, duration) pour colorier des cases.
+				# Ajout des opérateurs |= , &= et ^=.
+				# Option dans l'éditeur pour activer l'autocomplétion ou pas.
+				# getCurrentCooldown() devient getCooldown().
+				# Tutoriel sur les fonctions anonymes.
+				# Ajout de la fonction lineOfSight(cell1, cell2).
+changelog_140	# Autocomplétion des include() d'include() dans l'éditeur.
+				# Fonctions isChip() et isWeapon() pour déterminer si une constantes est une puce ou une arme.
+				# Amélioration du système de comptage, et passage à 300 000 instructions maximum par tour.
+				# Fonction listen() pour récuperer un tableau des say() des joueurs précedents.
+				# Fonction typeOf() pour déterminer le type d'une valeur.
+				# Fonction pause() pour mettre en pause le combat à un instant donné.
+				# Fonctions show(cell) et show(cell, color) pour montrer une cellule (coûte 1PT).
+				# Fonction lineOfSight(cell1, cell2, leekToIgnore) pour ignorer un poireau.
+				# Fonction getPath(cell1, cell2, leekToIgnore) pour ignorer un poireau.
+				# Fonction getLeekID() pour récupérer l'id réel du poireau.
+				# Fonctions getRed(color), getGreen(color), getBlue(color) pour récupérer le rouge, vert, bleu d'une couleur.
+				# Option pause discrète.
+				# color() devient getColor().
+changelog_141	# Ajout des défis d'éleveur.
+				# Explicitation de plusieurs fonctions dans la documentation.
+				# Amélioration des bots (au niveau des caractéristiques et leur équipement).
+				# Ajout de 2 bots supplémentaires.
+				# Notification quand quelqu'un commente votre tournoi.
+				# Ajout de la fonction getWeaponTargets(weapon, cell).
+				# Ajout de la fonction getWeaponEffectiveArea(weapon, cell).
+				# Ajout de la fonction canUseWeapon(weapon, leek).
+				# Ajout de la fonction canUseWeaponOnCell(weapon, cell).
+				# Ajout de la fonction getCellToUseWeapon(weapon, leek) et getCellToUseWeaponOnCell(weapon, cell).
+				# Ajout de la fonction getCellsToUseWeapon(weapon, leek) et getCellsToUseWeaponOnCell(weapon, cell).
+				# Sauvegarde des paramètres de test dans l'éditeur.
+				# Ajout du test d'éleveur.
+changelog_142	# Ajout des tournois de team.
+				# Ajout des cristaux, deuxième monnaie du jeu, achetables depuis la banque (avec PayPal ou StarPass).
+				# Ajout des skins Transparent, Multicolore, Rasta, Noir, Blanc, Vert pomme.
+				# Affichage du nombre de lignes et caractères d'une IA.
+				# Les compteurs de temps s'adaptent au fuseau horaire du joueur.
+changelog_143	# Unification forum de team au forum général.
+				# Amélioration du pathfinding.
+				# Correction de petits bugs du LeekScript.
+				# Ajout de popups de confirmation pour les achats du marché.
+				# Ajout d'un didactitiel.
+				# Ajout de l'aperçu des potions de couleur dans le marché.
+changelog_144	# Prise en compte du nombre de paramètre lors du survol d'une fonction dans l'éditeur.
+				# Fonction recherche dans le classement.
+				# Corrections des problèmes des teams.
+				# Correction de la recherche forum.
+				# Correction des bugs des tournois.
+changelog_145	# Changement de serveur.
+				# Recherche des messages pour un joueur précis dans le forum.
+				# Bouton signaler sur un poireau.
+changelog_146	# Correction des bugs avec les forums de team.
+				# Constantes EFFECT_FORCE/AGILITY/TP/MP renommées en EFFECT_BUFF_FORCE/AGILITY/TP/MP.
+				# Ajout des fonctions getFarmerID([leek]), getFarmerName([leek]), getTeamID([leek]), getTeamName([leek]), getAIID([leek]), getAIName([leek]).
+				# Correction des caractéristiques des bots de test.
+changelog_147	# Amélioration du matchmaking (solo, farmer et team).
+				# Le talent est bloqué dans le matchmaking au delà d'un certain seuil.
+				# Ajout des fonctions getWeaponEffectiveArea() et getChipEffectiveArea() avec un 3ème paramètre pour définir la cellule de lancer.
+				# Le nombre d'obstacles sur la map est plus aléatoire.
+				# Indicateur pour les potions réutilisables dans le marché.
+				# Correction de la difficulté des bots de test.
+changelog_148	# Le niveau maximum passe à 300. Les deux armes (Électriseur et M-Laser passent niveau 257 et 300).
+				# Les poireaux gagnent 5 points de capital par niveau, et 50 au niveau 100, 200 et 300. Un nouveau poireau commence avec 50 points de capital également.
+				# Le poireau commence le jeu avec 100 points de vie, 10 points de tour et 3 points de mouvement.
+				# Un point de tour coûte 80 points de capital, et un point de mouvement 50.
+				# Les poireaux n'obtiennent plus de PT/PM/Coeur tous les 100 niveaux.
+				# La formule de la sagesse passe à [XP, Habs] * 1 + sagesse / 300.
+				# La puce Éboulement passe à 6PT au lieu de 7.
+				# La puce Foudre voit sa portée maximale réduite à 5, au lieu de 6 auparavent.
+				# Ajout de la puce Inversion, qui permet d'échanger la position de deux joueurs.
+				# Ajout de la puce Blindage qui permet de rajouter de la vie totale à un joueur (effet boosté par l'agilité comme pour les soins).
+				# Correction du bug de la météorite lancée dans le vide.
+				# Ajout d'une animation pour téléportation.
+				# Amélioration des notifications de réponse forum.
+changelog_149	# Ajout des 6 constantes TYPE_* dans le documentation.
+				# Ajout des citrouilles pour Halloween.
+				# L'utilisation d'un nom de fonction pour un nom de variable est interdite (correction de bug).
+				# Les fonctions getCell(s)ToUse* fonctionnent avec les puces non équipées.
+				# Implémentation du ++i.
+				# Ajout du do while dans le tutoriel.
+				# Modification des horaires de tournois : 12-14h : solo, 18-20h : éleveur, 21-23h : équipe.
+				# Correction du trophée Collectionneur.
+changelog_150	# Affichage du talent sur la page de l'équipe.
+				# Affichage des horaires des tournois sur les boutons.
+				# Implémentation des fermetures (voir le sujet sur le forum).# Affichage des dates des tournois et des combats sur leur page.
+changelog_151	# La limite de debug est calculée sur la longueur totale de texte affiché, cette limite est de 1 000 000 de caractères.
+				# La sagesse applique désormais le multiplicateur sur l'XP et les Habs uniquement en cas de victoire.
+				# Corrections diverses.
+changelog_152	# Affichage des bulles par dessus les noms des poireaux.
+				# Les fonctions getPath et getPathLength acceptent désormais un tableau en 3ème paramètre, le tableau des cellules à ignorer.
+				# Corrections des notifications de défi d'éleveur.
+				# Le trophée beta testeur passe en trophée bonus (ne compte pas dans le total de trophées).
+				# Correction des trophées relatifs aux tournois d'équipes.
+				# Correction du nombre de combats pour un nouveau poireau (50 combats qui repassent à 20).
+changelog_153	# Modification du trophée Boosté.
+				# Correction de replace() et split().
+				# Ajout de la fonction getObstacles().
+				# Trophées pour le level 300 et 400 passés à 250 et 300.
+				# Bug du choix de l'IA en combat de test éleveur corrigé.
+				# Répartition des dégâts de zone pour Éclair et Électriseur corrigée.
+				# Inversion des constantes RELATIVE_SHIELD et ABSOLUTE_SHIELD corrigée.
+				# Modifications sur get[Chip,Weapon]EffectiveArea() : portée min et max prise en compte, pas les lignes de vue.
+				# Documentation de la fonction pause() ajoutée.
+				# Correction trophée Statique.
+				# Défilement vertical à l'intérieur des popups.
+				# Choix du pays disponible et affichage du pays dans le classement.
+				# Ajout de la fonction getCooldown(chip, leek).
+				# Ajout des fonctions getCell(s)ToUse[Chip,Weapon](OnCell) avec un paramètre supplémentaire qui correspond aux cellules à ignorer.
+changelog_154	# Ajout du choix de la langue pour le forum.
+				# Ajout du choix de la langue pour le chat.
+				# Le moveToward est désormais capable d'avancer vers une cellule qui est un obstacle : elle s'approche au maximum de cette case.
+				# Correction des combats bloqués en file.
+				# Correction trophée Résistant à Invincible
+				# Amélioration du fil d'ariane du forum
+changelog_155	# Changement de la formule du power = (level * (1 + (talent - 1000) / 5000)) ^ 3
+				# Changement du matchmaking solo : les adversaires proposés sont de niveau et talent plus proche
+				# Correction de moveAwayFromLine
+				# Modification de l'électriseur : 6PT => 7PT et 70 à 90 => 70 à 80 dommages
+				# Modification d'éboulement : 6PT => 5PT
+				# Les dégâts de durée de Lance-flammes et Gazeur sont désormais de type poison et ne sont pas réduis par les boucliers.
+				# Modification de Vaccin : soigne de 30 à 32 => 34 à 38 sur 3 tours
+				# Corrections des chats et des forums de team
+changelog_156	# Ajout des chapeaux
+				# Correction des armes des bots
+changelog_157	# Possibilité de changer le propriétaire d'une équipe
+				# Zones de saisie sur plusieurs lignes pour le chat et les messages privés.
+				# Le matchmaking des tournois ne se fait plus en fonction du talent.
+				# Possibilité d'utiliser les fonctions getCell(s)ToUse(Weapon/Chip)OnCell avec un obstacle en cellule cible.
+				# Amélioration de la fonction pause() qui pause bien au bon moment avec les mark() et les debug().
+				# Popup avec les modifications lors d'une maj.
+				# Corrections des traductions manquantes dans le combat.
+				# Ajout des dates des messages du chat et des messages privés au survol.
+				# Ajout d'icônes dans les rapports de combats lors d'un perfect (l'équipe gagne avec toute sa vie à la fin du combat) ou d'un "statique" (quand toute l'équipe n'a pas bougé).
+				# Ajout des fonctions getChipArea() et getWeaponArea() qui renvoient le type de zone de la puce ou de l'arme, parmis les constantes AREA_* (voir dans la documentation).
+				# Petites corrections du mode discret.
+				# Diverses corrections de traduction.
+				# Correction de l'historique des combats d'éleveur.
+				# Correction du niveau total éleveur dans le classement.
+				# Les fonctions n'ont plus de restriction au niveau des coeurs.
+				# Chaque fonction possède désormais un nombre d'opérations (indiqué dans la documentation), les fonctions évoluées coûtent plus en opérations (tous les coûts ne sont pas encore définitivement estimés).
+				# Possibilité d'enlever son chapeau.
+				# Amélioration de l'IA des bots.
+				# Changements importants dans l'architecture des serveurs (en vue de la sortie de la version anglaise).
+changelog_158	# Ajout des registres.
+				# Modifications dans l'architecture des serveurs.
+				# getPathLength() renvoie null si le chemin entre les deux cases n'existe pas.
+changelog_159	# Ajout d'un trophée.
+				# Lien du wiki dans l'aide.
+				# Correction des avatars.
+				# Ajout de l'opérateur + pour les tableaux.
+				# Ajout des fonctions arrayMap, arrayFilter, arrayFlatten, arrayFoldLeft, arrayFoldRight, arrayPartition, arrayIter, arrayConcat et arraySort
+				# Ajout de la possibilité de redéfinir les fonctions du LeekScript.
+changelog_160	# Possibilité de renommer ses poireaux.
+				# Correction du trophée concis.
+				# Correction des fonction arrayFold.
+				# Lancement de la version anglaise !
+changelog_161	# Modification du système de Talent
+				# Trophée traducteur pour tous les participants à la traduction du site.
+changelog_162	# Modification des matchmaking solo et farmer, réinitialisation du talent en fonction du niveau.
+				# Ajout de boutons +10 et +100 pour répartir plus facilement ses caractéristiques sur son poireau.
+				# Ajout de classements "funs".
+				# Correction de l'xp des teams.
+changelog_163	# Ajout du gain d'xp et d'argent en fonction de notre talent par rapport à la moyenne de notre niveau.
+				# Correction du trophée niveau 300.
+				# Correction des lignes des erreurs dans le LeekScript.
+changelog_164	# Ajout de 3 puces d'invocation de bulbes.
+				# Ajout de la fonction summon(chip, cell, ai) pour invoquer.
+				# Ajout de la fonction isSummon() et isSummon(entity) pour savoir si une entité est une invocation.
+				# Ajout de la fonction getSummoner() et getSummoner(entity) pour connaitre l'invocateur d'une entité.
+				# Ajout de la fonction getType() et getType(entity) pour connaître le type d'une entité (poireau ou bulbe).
+				# Ajout de la fonction getBirthTurn() et getBirthTurn(entity) pour connaitre le tour où est apparu une entité.
+changelog_165	# Ajout de 25 trophées.
+				# Ajustement de la puissance des invocations.
+				# Ajout du bonus de gains en combats d'éleveur.
+changelog_166	# Ajout d'une option pour s'abonner et se désabonner d'un sujet sur le forum.
+				# Ajout des boutons de vote sur les messages du forum.
+				# Correction de la fonction isAlive().
+				# Correction du trophée Pacifiste.
+				# Amélioration du matchmaking Solo, pour privilégier les adversaires que l'on a pas affronté dans la journée.
+				# Correction des constantes ENTITY_*, qui sont maintenant correctes.
+				# Correction de la limite d'invocations, qui est bien de 4.
+changelog_167	# Ajout du formatage dans le forum.
+				# Ajout de l'affichage des noms des votants dans le forum.
+				# Correction des constantes FIGHT_CONTEXT_*
+				# Correction des fonctions isAlive et isDead pour les invocations
+				# Correction de arraySort() qui renvoie désormais le tableau trié.
+				# Correction de la barre d'XP de team niveau 100.
+changelog_168	# Ajout de la fonction getEntityTurnOrder(entity), qui renvoie l'ordre de jeu pour une entité donnée (et getEntityTurnOrder() qui renvoie le notre).
+				# La limite d'invocations a été corrigée, elle est bien de 4 bulbes par poireau en simultané sur le terrain.
+				# La réduction due à la zone de dégâts est appliquée AVANT les boucliers lors du calcul des dommages (auparavant ils étaient appliqués après).
+				# Une fonction déclarée sous la forme var f = function() {} a accès a elle-même dans son corps.
+				# Correction du compteur de combats affiché sur la page de l'éleveur : le compteur prend en compte tous les combats effectuées par l'éleveur (solo, farmer et team).
+				# Les bulbes vont être modifiés (surtout le Healer Bulb et un peu le Fire Bulb), voir le sujet dans le forum (Mise à jour 1.68).
+				# L'opérateur "is" va être introduit, veillez à enlever les éventuelles variables du même nom dans votre ia pour la prochaine maj ;)
+				# La puce résurrection va être remplacée par "régénération", son ID ne change pas, mais si vous utilisez la constante (CHIP_RESURRECTION) dans votre IA, mieux vaut la remplacer par sa valeur (35), le temps que la nouvelle, CHIP_REGENERATION soit disponible.
+				# Popup présentant les nouveautés lorsqu'un poireau passe un niveau.
+changelog_169	# La puce "Résurrection" devient "Régénération".
+				# Ajout des Bubles : Métallique, Glacé, Foudroyant et Rocheux.
+				# Ajout des puces Rémission et Carapace, spécialisées pour les invocations.
+				# Ajout de l'opérateur "is" et "is not", équivalents à == et !=.
+				# Ajout de la potion dorée.
+				# Ajout du chapeau "couronne".
+				# Ajout des constantes EFFECT_TARGET_* dans la documentation.
+				# Affichage des caractéristiques et des puces des bulbes dans le marché.
+				# Ajout de la constante USE_TOO_MANY_SUMMONS, renvoyée par la fonction summon() si vous avez déjà 4 invocations vivantes sur le terrain.
+changelog_170	# Ajout de la puce Résurrection.
+				# Annonce de quelques changements au niveau des puces et des armes (voir le forum, maj 1.70).
+				# Les caractéristiques des bulbes sont maintenant indexées sur le niveau de l'invocateur, entre le niveau 1 et 300 (301 avant).
+				# Ajout de sa position dans les classements funs.
+				# Ajout de 3 trophées.
+				# Meilleur affichage des informations sur l'XP (pour les poireaux et les équipes), avec l'affichage de l'XP restante.
+				# Ajout du nombre de points de vie et points de capital gagnés dans les popup de niveau.
+				# getBirthTurn() renvoie 1 et pas 0 quand on est un poireau.
+				# Correction de l'attribut statique dans certains combats.
+				# Correction du talent d'éleveur au delà de 1200 de niveau total.
+changelog_171	# Ajout du nouveau comptage des opérations, accessible avec la fonction getOperations().
+				# Modification de certaines puces, comme annoncé lors de la maj 1.70. (Voir forum)
+				# Séparation du compteur de combats farmer et général.
+				# Correction nombre de capital au niveaux 100, 200, 300.
+changelog_172	# Corrections des nombres d'opérations des fonctions
+				# Mise en place de la limite à 20M opérations
+				# Ajout du chapeau Arlequin
+				# Ajout de la puce Frappe du démon
+changelog_173	# La fréquence a été modifée : l'équipe qui a la plus haute fréquence a la plus grande probabilité de commencer le combat.
+				# Ajout de la constante CHIP_RESURRECTION.
+				# Ajout de la constante OPERATIONS_LIMIT.
+				# Ajout de la constante EFFECT_TELEPORT, EFFECT_INVERT et EFFECT_RESURRECT.
+				# Ajout des fonctions getStrength() et getStrength(leek), ainsi que EFFECT_BUFF_STRENGTH qui remplaceront les versions avec "force".
+				# Supression de la puce Frappe du Démon, ajoutée par erreur.
+changelog_174	# Correction du coût en opérations de certaines fonctions et opérateurs.
+				# Ajout de la puce Frappe du Démon.
+				# Fréquence active selon la nouvelle formule.
+changelog_180	# Nouveau design
+				# Design responsive
+				# Amélioration des performances du site
+				# Ajout d'un panneau avec les notifications/message/chat sur la droite (grands écrans)
+				# Graphique d'évolution du talent solo sur une semaine
+				# Suppression du compte : possibilité ou non d'effacer les messages sur le forum
+				# Popup de répartition du capital avec bouton réinitialiser
+				# Classement en page d'accueil
+				# Barre de progression en combat (merci à jojo123)
+				# Ajout de la constante EFFECT_SUMMON (= 14)
+				# Ajout des carrés de couleur verte pour les tournois d'équipes
+				# Amélioration des performances de l'éditeur
+				# Possibilité d'éditer et supprimer les registres depuis la page du poireau
+				# Boutons pour le classement de chaque poireau dans le classement
+				# Possibilité de s'inscrire au tournoi pendant que celui du jour est en cours
+changelog_181	# Changement de la limite des armes et des puces.
+				# Affichage du nombre de tournois gagnés (solo, éleveur et équipe).
+				# Correction de bugs.
+changelog_182	# Amélioration de la fonction lineOfSight.
+				# Ajout du chapeau Haut-de-forme
+				# La puce frappe du démon a désormais une répartition linéaire, et frappe 5 x 25.
+				# Corrections de bugs
+changelog_183	# La limite d'invocation passe à 4 par équipe.
+				# Les caractéristiques des bulbes sont diminuées.
+				# Les cooldowns des bulbes sont communs au sein d'une équipe.
+				# Les puces réservées aux invocations fonctionnent sur toutes les invocations.
+				# Ajout de 4 nouvelles puces pour les invocations : Fouet, Accélération, Engrais et Fertilisant.
+changelog_184	# Ajout de la fonction getMapType() pour récupérer le type de carte.
+				# La fonction getNearestAlly() est maintenant niveau 1.
+				# Correction du bug quand une IA était vide.
+				# Ajout de la documentation de l'API.
+				# Ajout d'un cooldown initial de 1 sur Inversion et Téléportation.
+				# Coûts réduits pour les puces de bulbes.
+				# Correction des bugs de tournoi.
+				# La portée maximale du M-Laser passe à 12.
+changelog_185	# Ajout des caractéristiques Résistance, Magie et Science.
+				# Suppression des cœurs et des échecs.
+				# Ajout des coups critiques (augmentés par l'agilité).
+				# Changement des formules de calcul des soins : augmentés par la sagesse
+				# Changement des formules de calcul des boucliers : augmentés par la résistance.
+				# Changement des formules de calcul des boosts : augmentés par la science
+				# Ajout d'une nouvelle catégorie de puces : les entraves, augmentées par la magie.
+				# Ajout de puces de renvoi de dégâts, augmentés par l'agilité.
+				# Ajout de puces de poisons, augmentés par la magie (comme le gazeur et le lance-flammes également).
+				# Ajout des fonctions getWisdom([leek]), getResistance([leek]), getMagic([leek]) et getScience([leek]).
+				# Ajout des fonctions getTotalMP([leek]) et getTotalTP([leek]).
+				# Ajout de la fonction getLaunchedEffects([leek]).
+				# Ajout des fonctions chipNeedLos(chip) et weaponNeedLos([weapon]).
+				# Ajout de statistiques et d'un graphique dans le rapport du combat (merci à jojo123).
+				# Correction des contantes MAP_*.
+				# Correction du bug de date d'édition des topics.
+				# Correction getCellToUseOnCell qui renvoyait des cases alors qu'on ne pouvait pas tirer sur la case.
+changelog_186	# Trophées Chic et Élégant déblocables.
+				# 3 trophées impossibles à obtenir le sont désormais, et passent en bonus.
+				# Correction inversion.
+				# Correction des tournois d'éleveur (qui ne se lançaient pas).
+				# Correction du parrainage.
+				# Correction de certaines notifications qui n'arrivaient pas en direct.
+				# Correction de visualisation de certains combats, à cause de say().
+				# Rajout du dernier trophée de tournoi d'équipe.
+				# Correction de l'actualisation des objets achetés (armes, puces,chapeaux et potions).
+				# Correction de la barre de progression
+				# Les boucliers et les boosts ne peuvent être lancées que sur les alliés.
+				# Adrénaline et Bottes ailées ont été augmentés.
+changelog_187	# Refonte de l'interface de combat.
+				# Correction des trophées légende et mythique.
+				# Correction du bug de Libération.
+				# Trophées relatifs aux cristaux (bonus) sont implantés.
+				# 20 potions de réinitialisation offertes à la création du compte (20 potions ont été données pour tout le monde aussi).
+				# Ajout de la fonction trim(string).
+				# (Ré)affichage des multiplicateurs de gains en tournoi.
+				# Amélioration de la recherche dans l'éditeur (boutons suivant et précédent, et total).
+changelog_188	# Nouvelle page des trophées
+				# Corrections de bugs de trophées
+				# Correction des caractéristiques impossibles
+				# Remise en marche de la page Modération (pour les modérateurs)
+				# Remise en place de l'interface de traduction (pour les traducteurs)
+changelog_189	# Possibilité de recevoir des mails pour certaines notifications.
+				# Affichage des fonctions dépréciées dans la documentation et l'éditeur
+				# Correction des trophées Instruit et Konami
+				# Ajout des traductions manquantes dans la documentation (getScience, getResistance, chipNeedLos, etc.)
+				# Correction du trophée Schizophrène
+				# Actualisation des habs lors du gain d'un combat
+				# Correction de la popup de confirmation de la fermeture de l'éditeur
+				# Ajout des notifications de défi éleveur
+				# Correction du menu latéral (onglet sélectionné sur mauvaise page)
+				# Amélioration du graphique dans le rapport de combat
+				# Possibilité de choisir le lissage des courbes sur le graphique
+				# Possibilité de cacher ou d'afficher les panneaux de statistiques dans le rapport.
+				# Amélioration du tableau des statistiques dans le rapport de combat
+				# (Ré)ajout du récapitulatif des avertissements et des erreurs dans le rapport de combat
+				# Préservation des espaces et des tabulations dans les logs personnels
+				# Traduction complètes en anglais et français de la documentation (merci à asmodai !)
+changelog_190	# Ajout de 3 armes de corps à corps : le glaive, la hache et le katana, qui infligent de lourds dégâts et entravent la cible.
+				# Amélioration du comptage des opérations sur les tableaux.
+				# Corrections de l'aide générale
+				# Corrections de bugs de CSS (signalé par Rominou)
+				# Affichage des effets présents sur les entités en combat (signalé par Ebatsin)
+				# Correction des victoires en tournoi non comptabilisés (pas sûr à 100%)
+				# Trophée Légende et Mythique corrigés (à confirmer aussi).
+				# Ajout de la fonction debugC, pour faire un debug de n'importe quelle couleur.
+				# Ajout de 3 trophées (bonus).
+				# Correction des raccourcis if, while, for etc. dans l'éditeur.
+				# Ré-ajout de la fermeture automatique des (), [], {} etc.
+				# Réduction de la taille des bulbes.
+				# Le propriétaire de l'équipe est modérateur sur le forum de l'équipe.
+				# Ajout de la fonction jsonEncode(object) et jsonDecode(json) pour encoder et décoder en JSON.
+				# Un kill par poison était assigné à la cible dans le rapport de combat (signalé par Koneg).
+				# Les fonction get(Weapon|Chip)(Max|Min)Scope sont remplacées par get(Weapon|Chip)(Max|Min)Range, les anciennes sont maintenant dépréciées.
+				# Corrections mineures sur le tutoriel
+				# debugE("\"") affichait "quote" dans les erreurs du rapport.
+				# Affichage de la popup d'information sur les fonctions personnelles dans l'éditeur.
+				# Ctrl + Clic sur une fonction personnelle amène à sa définition.
+				# Le vol de vie lorsque l'attaque tue la cible n'était pas bloqué à la vie restante de la cible.
+				# Ajout d'une puce Antidote pour enlever tous les poisons d'une cible (sur soi ou un allié)
+				# La fréquence augmente davantage la probabilité de commencer le combat.
+				# Les coups critiques augmentent de 50% les effets au lieu de 25%.
+				# Modifications des caractéristiques des bulbes : leurs caractéristiques sont diminuées, et ils possèdent seulement celles qui leur sont utiles.
+				# La limite d'invocations par équipe passe à 6 au lieu de 4.
+				# La puce Fracture enlève aussi de la magie.
+				# Le gazeur n'inflige plus de dommages normaux, et ses dégâts de poisons sont légèrement diminués.
+				# Le lance-flammes a une meilleure portée et plus de dégâts.
+				# Les boosts sur poireaux sont sensiblement augmentés.
+				# Les deux grandes entraves PT et PM (Somnifère et Boulet), ont maintenant une zone de 5 cases de diamètre.
+				# Ajout des chapeaux chinois et de sorcier
+changelog_191	# Possibilité de report quelqu'un sur le chat (paroles incorrectes ou flood).
+				# Possibilité pour les modérateurs de mute les personnes sur le chat.
+				# Ajout de la fonction getFarmerCountry().
+				# Possibilité de changer le propriétaire de l'équipe.
+				# Ajout de l'option pour recevoir les mises à jour par mail.
+				# Accélération du chargement du potager.
+				# Il n'y a plus de renvoi de dégâts sur une cible qui a été tuée lors d'une attaque.
+				# Correction freeze dans l'éditeur
+				# for (var i = 0; i < 10; i) {} (sans le '++' après le i) n'indiquait pas d'erreur mais échouait à la compilation.
+				# Correction de l'accès au rapport sur un combat de test d'équipe.
+				# Ajout d'un message d'erreur sur le niveau requis lors de la création d'un nouveau poireau.
+				# Correction constantes de puces en double dans la doc (signalé par Onys).
+				# Correction de la formule des boucliers relatifs dans l'aide.
+				# Correction de la documentation de getCellToUseChip() à 3 paramètres.
+				# Correction de la mise à jours des talents moyens (solo et farmer).
+				# Bug de scroll lors de la réception d'un MP sur une autre conversation.
+				# Des noms censurés pouvaient apparaître sur le forum.
+				# Corrections de fautes d'orthographe.
+				# Ajout d'un bouton déconnexion sur la page du farmer.
+				# Amélioration affichage du forum sur mobile.
+				# Taille des messages sur le chat limités à 1000 caractères.
+				# Correction de lineOfSight pour les rares cas de non-symétrie.
+				# Correction de la doc de debugC, et affichage des couleurs dans le rapport.
+				# Correction de l'affichage des entraves dans le combat et le rapport.
+				# Les entraves force et magie sont maintenant cumulables.
+				# Correction du bouton annuler dans la popup de création de topic.
+				# Correction du trophée déserteur.
+				# Correction revanche défi éleveur.
+				# Certaines images d'effets étaient cassées dans le combat.
+changelog_192	# Corrections des votes forum.
+				# Corrections des noms "undefined" dans la recherche forum (signalé par Rominou).
+				# Ajout de scroll sur les pages rapport de combat et classement pour les gros tableaux.
+				# Correction de la taille des messages lors de l'édition.
+				# Ré-ajout du trophée Lucky.
+				# Correction des trophées relatifs aux combats de test.
+				# Accélération du chargement des pages poireau, farmer, équipe et potager.
+				# HTTPS
+				# Amélioration de l'affichage du combat sur mobile.
+				# Ajout d'un web manifest.
+				# Correction du compteur de défis en défi farmer.
+				# Le classement des jours connectés d'affilée devient les jours connectés au total.
+				# Davantage de messages sauvegardés sur le chat de team.
+				# Correction des buffs de bulbes qui restaient actifs après la mort du bulbe.
+				# La distance parcourue n'est plus comptée en défi.
+				# Correction de traductions anglaises dans le tutoriel.
+				# Affichage des avertissements sur la page de l'éleveur.
+				# Accélération du chargement du classement fun.
+				# Nouveaux icônes réseaux sociaux en bas de la page.
+				# Ajout du chapeau de paille.
+				# Les puces Épine et Miroir possèdent désormais une zone d'effet de 5 cases.
+				# Battle Royales !

@@ -1,73 +1,73 @@
-n_ais_unsaved			You have %s unsaved AI(s).
-keyword			Keyword %s
-test_validate			Test
-delete_desc			Delete the current AI
-test			Test
-test_desc			Test an AI
-saving			Saving...
-delete			Delete
-opponent_agility			Agility
-opponent_strength_life			Force / Life
+1_core			1 core
+ai_error			<b>%1$s</b> line <b>%2$s</b>
+ai_to_test			AI to test
+auto_closing			Automatic closing of parentheses, brackets and quotation marks.
+autocompletion			Code completion (propose current variables and leekscript functions)
 child			Child
-easy			Easy
-medium			Medium
-hard			Hard
-evil			Evil
+constant			Constant %s
+defined_in			Defined in <b>%1$s</b> at line <b>%2$s</b>
+delete			Delete
+delete_ai			Delete the AI "%s"?
+delete_cancel			Cancel
+delete_desc			Delete the current AI
 delete_validate			Delete
-shortcuts			Shortcuts
-n_cores			%s cores
-shortcut_1			<b>Ctrl + S</b> : save the current AI
-n_lines			%s lines
-n_characters			%s characters
-settings			Editor settings
-new			New
-title			Editor
-new_desc			Create a new AI
-shortcut_2			<b>Ctrl + Q</b> : run a test
+delete_warning			This action is irreversible.
 display			Display
+easy			Easy
+enlarge_window			Enlarge the window
+evil			Evil
 export			Export
+export_desc			Download the current AI in a file.
+font_size			Font size
+function_f			Function %s
+hard			Hard
 import			Import
 import_desc			Import a file from your computer.
-opponent_strength_agility			Force / Agility
-opponent_agility_life			Agility / Life
-test_cancel			Cancel
-function_f			Function %s
-settings_ok			OK
-1_core			1 core
-parameters			Parameters
-return			Return
-constant			Constant %s
-server_error			Server error
-valid_ai			<b>%s</b> is valid.
-ai_error			<b>%1$s</b> line <b>%2$s</b>
-variable			Variable <b>%s<b>
-delete_warning			This action is irreversible.
-variable_defined_in_ai			Variable defined in AI <b>%s</b>
-delete_cancel			Cancel
+keyword			Keyword %s
 level_n			Level %s
-shortcut_3			<b>Ctrl + D</b> : duplicate the line or the selected text
-delete_ai			Delete the AI "%s"?
-font_size			Font size
-shortcut_4			<b>Ctrl + K</b> : delete the current line
-enlarge_window			Enlarge the window
-settings_editor			Editor
-shortcut_5			<b>Ctrl + E</b> : comment/uncomment the current line
-auto_closing			Automatic closing of parentheses, brackets and quotation marks.
+medium			Medium
+n_ais_unsaved			You have %s unsaved AI(s).
+n_characters			%s characters
+n_cores			%s cores
+new			New
+new_desc			Create a new AI
+n_lines			%s lines
+opponent_agility			Agility
+opponent_agility_life			Agility / Life
+opponent_life			Life
+opponent_strength			Strength
+opponent_strength_agility			Force / Agility
+opponent_strength_life			Force / Life
+parameters			Parameters
 popups			Display information when the cursor is over a variable or a function.
-shortcut_7			<b>Ctrl + Shift + F</b> : automatic code indenting/formatting
-shortcut_6			<b>Ctrl + Space</b> : code completion
-shortcuts_ok			OK
+return			Return
 run_test			Run a test
-ai_to_test			AI to test
-test_type_solo			Solo
-autocompletion			Code completion (propose current variables and leekscript functions)
-test_type_farmer			Farmer
-test_type_team			Team
+save			Save
+save_desc			Save the current AI
+saving			Saving...
 select_opponents			Select your opponents
 select_your_leek			Select your leek
-opponent_strength			Strength
-export_desc			Download the current AI in a file.
-defined_in			Defined in <b>%1$s</b> at line <b>%2$s</b>
-opponent_life			Life
-save_desc			Save the current AI
-save			Save
+server_error			Server error
+settings			Editor settings
+settings_editor			Editor
+settings_ok			OK
+shortcut_1			<b>Ctrl + S</b> : save the current AI
+shortcut_2			<b>Ctrl + Q</b> : run a test
+shortcut_3			<b>Ctrl + D</b> : duplicate the line or the selected text
+shortcut_4			<b>Ctrl + K</b> : delete the current line
+shortcut_5			<b>Ctrl + E</b> : comment/uncomment the current line
+shortcut_6			<b>Ctrl + Space</b> : code completion
+shortcut_7			<b>Ctrl + Shift + F</b> : automatic code indenting/formatting
+shortcuts			Shortcuts
+shortcuts_ok			OK
+test			Test
+test_cancel			Cancel
+test_desc			Test an AI
+test_type_farmer			Farmer
+test_type_solo			Solo
+test_type_team			Team
+test_validate			Test
+title			Editor
+valid_ai			<b>%s</b> is valid.
+variable			Variable <b>%s<b>
+variable_defined_in_ai			Variable defined in AI <b>%s</b>

@@ -1,39 +1,39 @@
-fun			Fun
-farmer			Farmer
-kills			Kills
-total_level			Total level
-team_level			Team level %s
-leek_level			Leek level %s
-country			Country
-leek			Leek
-talent			Talent
-kills_title			Number of kills
-trophies_title			Most trophies
-trophies			Trophies
-team			Team
-richest_title			Earned money
-days			Days
+allies_killed			Allies killed
 allies_killed_title			Allies killed count
-shots_title			Total shots count
-shots			Shots
-distance			Distance
-search_name			Name
-leeks			Leeks
-title			Ranking
-farmers			Farmers
-teams			Teams
-search_in_ranking			Search in the ranking
-results			Results
-my_leek			My leek
-my_farmer			My farmer
-my_team			My team
-place			Rank
-summons			Summons
 chips			Chips
 chips_title			Number of chips used
-money			Money
-allies_killed			Allies killed
-distance_title			Total traveled distance
-summons_title			Summons summoned
 connection_title			Days connected
+country			Country
+days			Days
+distance			Distance
+distance_title			Total traveled distance
+farmer			Farmer
+farmers			Farmers
+fun			Fun
+kills			Kills
+kills_title			Number of kills
+leek			Leek
+leek_level			Leek level %s
+leeks			Leeks
 level			Level
+money			Money
+my_farmer			My farmer
+my_leek			My leek
+my_team			My team
+place			Rank
+results			Results
+richest_title			Earned money
+search_in_ranking			Search in the ranking
+search_name			Name
+shots			Shots
+shots_title			Total shots count
+summons			Summons
+summons_title			Summons summoned
+talent			Talent
+team			Team
+team_level			Team level %s
+teams			Teams
+title			Ranking
+total_level			Total level
+trophies			Trophies
+trophies_title			Most trophies

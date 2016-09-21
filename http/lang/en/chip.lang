@@ -1,72 +1,72 @@
-teleportation			Teleportation
+acceleration			Acceleration
+adrenaline			Adrenaline
+antidote			Antidote
+armor			Armor
 armoring			Armoring
-inversion			Inversion
-regeneration			Regeneration
-puny_bulb			Puny Bulb
-wall			Wall
-flash			Flash
-steroid			Steroid
-rock			Rock
-helmet			Helmet
-stretching			Stretching
-rampart			Rampart
-flame			Flame
-leather_boots			Leather boots
+ball_and_chain			Ball and chain
 bandage			Bandage
-rocky_bulb			Rocky Bulb
-motivation			Motivation
-lightning_bulb			Lightning Bulb
-fire_bulb			Fire Bulb
-shield			Shield
+bark			Bark
+burning			Burning
 carapace			Carapace
-remission			Remission
-protein			Protein
+carapace_desc			
+collar			Collar
 cure			Cure
-metallic_bulb			Metallic Bulb
-iced_bulb			Iced Bulb
-liberation			Liberation
-seven_league_boots			Seven league boots
-rage			Rage
-spark			Spark
-shock			Shock
+devil_strike			Devil strike
+doping			Doping
+drip			Drip
+ferocity			Ferocity
+fertilizer			Fertilizer
+fire_bulb			Fire Bulb
+flame			Flame
+flash			Flash
+fortress			Fortress
+fracture			Fracture
+healer_bulb			Healer Bulb
+helmet			Helmet
 ice			Ice
 iceberg			Iceberg
-reflexes			Reflexes
-pebble			Pebble
-drip			Drip
-armor			Armor
-stalactite			Stalactite
-vaccine			Vaccine
+iced_bulb			Iced Bulb
+inversion			Inversion
+leather_boots			Leather boots
+liberation			Liberation
 lightning			Lightning
-fortress			Fortress
-adrenaline			Adrenaline
-warm_up			Warm up
-winged_boots			Winged boots
-healer_bulb			Healer Bulb
-rockfall			Rockfall
-doping			Doping
-remission_desc			
-meteorite			Meteorite
-antidote			Antidote
-fracture			Fracture
-whip			Whip
-burning			Burning
+lightning_bulb			Lightning Bulb
 loam			Loam
-bark			Bark
-fertilizer			Fertilizer
-collar			Collar
-acceleration			Acceleration
-ferocity			Ferocity
+metallic_bulb			Metallic Bulb
+meteorite			Meteorite
 mirror			Mirror
-thorn			Thorn
+motivation			Motivation
+pebble			Pebble
 plague			Plague
-toxin			Toxin
-venom			Venom
+protein			Protein
+puny_bulb			Puny Bulb
+rage			Rage
+rampart			Rampart
+reflexes			Reflexes
+regeneration			Regeneration
+remission			Remission
+remission_desc			
+resurrection			Resurrection
+rock			Rock
+rockfall			Rockfall
+rocky_bulb			Rocky Bulb
+seven_league_boots			Seven league boots
+shield			Shield
+shock			Shock
+slow_down			Slow down
 solidification			Solidification
 soporific			Soporific
+spark			Spark
+stalactite			Stalactite
+steroid			Steroid
+stretching			Stretching
+teleportation			Teleportation
+thorn			Thorn
+toxin			Toxin
 tranquilizer			Tranquilizer
-ball_and_chain			Ball and chain
-slow_down			Slow down
-carapace_desc			
-devil_strike			Devil strike
-resurrection			Resurrection
+vaccine			Vaccine
+venom			Venom
+wall			Wall
+warm_up			Warm up
+whip			Whip
+winged_boots			Winged boots

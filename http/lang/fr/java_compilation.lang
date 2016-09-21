@@ -1,42 +1,42 @@
-invalid_parameter_count			Nombre de paramètres incorrect
-opening_curly_bracket_expected			Accolade ouvrante attendue
-opening_parenthesis_expected			Parenthèse ouvrante attendue
-closing_parenthesis_expected			Parenthèse fermante attendue
-var_name_expected_after_global			Une chaine de caractères est attendue après un mot clé global
-closing_square_bracket_expected			Crochet fermant attendu
-global_only_in_main_block			Vous ne pouvez déclarer une variable globale que dans le bloc principal
-invalid_number			Nombre invalide
-cant_assign_value			Impossible d'assigner une valeur à cette expression
-invalid_char			Caractère invalide
-keyword_unexpected			Mot-clé inattendu
-keywork_in_expected			Mot-clé in attendu ici
-end_of_script_unexpected			Fin du fichier inattendue
-uncomplete_expression			L'expression n'est pas complete
-parameter_name_expected			Un nom de paramètre était attendu
-parameter_name_unavailable			Impossible d'utiliser ce nom de paramètre
-function_not_exists			Fonction inexistante
-function_name_expected			Un nom de fonction était attendu
-operator_unexpected			Cet opérateur est inattendu ici
-end_of_instruction_expected			Une fin d'instruction était attendue ici
-associative_array			Il s'agit d'un tableau clé:valeur, impossible de déclarer une valeur sans sa clé
-cant_add_instruction_after_break			Impossible d'ajouter une instruction alors qu'il y a déjà un break, return ou continue dans le bloc actuel.
-unknown_variable_or_function			Variable ou fonction inconnue
-value_expected			Une valeur était attendue
-simple_array			Il s'agit d'un tableau à valeur simple, impossible de déclarer une valeur avec sa clé
-var_name_expected			Une chaine de caractères est attendue en nom de variable
-no_if_block			Aucune condition pour ce else
-while_expected_after_do			Un while est attendu apres un bloc do
-function_only_in_main_block			Impossible de déclarer une fonction ailleurs que dans le bloc principal
-variable_not_exists			Variable inexistante
-variable_name_unavailable			Ce nom de variable est indisponible
-variable_name_expected			Un nom de variable était attendu
-open_bloc_remaining			Tous les blocs n'ont pas été refermés
-no_bloc_to_close			Aucun bloc à fermer
-parenthesis_expected_after_function			Une parenthèse ouvrante est attendue après le mot clé function
-break_out_of_loop			Le mot clé break ne peut être utilisé que dans une boucle
-function_name_unavailable			Impossible d'utiliser ce nom de fonction
-continue_out_of_loop			Le mot clé continue ne peut être utilisé que dans une boucle
-include_only_in_main_block			Impossible d'include une IA ailleurs que dans le bloc principal
-parenthesis_expected_after_parameters			Une parenthèse fermante est attendue après les paramètres d'une fonction
 ai_name_expected			Le nom d'une IA est attendu ici
 ai_not_existing			L'IA %s n'existe pas
+associative_array			Il s'agit d'un tableau clé:valeur, impossible de déclarer une valeur sans sa clé
+break_out_of_loop			Le mot clé break ne peut être utilisé que dans une boucle
+cant_add_instruction_after_break			Impossible d'ajouter une instruction alors qu'il y a déjà un break, return ou continue dans le bloc actuel.
+cant_assign_value			Impossible d'assigner une valeur à cette expression
+closing_parenthesis_expected			Parenthèse fermante attendue
+closing_square_bracket_expected			Crochet fermant attendu
+continue_out_of_loop			Le mot clé continue ne peut être utilisé que dans une boucle
+end_of_instruction_expected			Une fin d'instruction était attendue ici
+end_of_script_unexpected			Fin du fichier inattendue
+function_name_expected			Un nom de fonction était attendu
+function_name_unavailable			Impossible d'utiliser ce nom de fonction
+function_not_exists			Fonction inexistante
+function_only_in_main_block			Impossible de déclarer une fonction ailleurs que dans le bloc principal
+global_only_in_main_block			Vous ne pouvez déclarer une variable globale que dans le bloc principal
+include_only_in_main_block			Impossible d'include une IA ailleurs que dans le bloc principal
+invalid_char			Caractère invalide
+invalid_number			Nombre invalide
+invalid_parameter_count			Nombre de paramètres incorrect
+keyword_unexpected			Mot-clé inattendu
+keywork_in_expected			Mot-clé in attendu ici
+no_bloc_to_close			Aucun bloc à fermer
+no_if_block			Aucune condition pour ce else
+open_bloc_remaining			Tous les blocs n'ont pas été refermés
+opening_curly_bracket_expected			Accolade ouvrante attendue
+opening_parenthesis_expected			Parenthèse ouvrante attendue
+operator_unexpected			Cet opérateur est inattendu ici
+parameter_name_expected			Un nom de paramètre était attendu
+parameter_name_unavailable			Impossible d'utiliser ce nom de paramètre
+parenthesis_expected_after_function			Une parenthèse ouvrante est attendue après le mot clé function
+parenthesis_expected_after_parameters			Une parenthèse fermante est attendue après les paramètres d'une fonction
+simple_array			Il s'agit d'un tableau à valeur simple, impossible de déclarer une valeur avec sa clé
+uncomplete_expression			L'expression n'est pas complete
+unknown_variable_or_function			Variable ou fonction inconnue
+value_expected			Une valeur était attendue
+variable_name_expected			Un nom de variable était attendu
+variable_name_unavailable			Ce nom de variable est indisponible
+variable_not_exists			Variable inexistante
+var_name_expected			Une chaine de caractères est attendue en nom de variable
+var_name_expected_after_global			Une chaine de caractères est attendue après un mot clé global
+while_expected_after_do			Un while est attendu apres un bloc do

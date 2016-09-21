@@ -1,24 +1,41 @@
-thanks						Thanks
-contact						Contact us
-tools_list					A non-exhaustive list of the various languages and tools used for the project:
-follow_on_social_networks	You'd like to support Leek Wars, or get news or various information about the game? Please follow us on Twitter, Facebook and/or Google+!
-title						About
-leekwars					Leek Wars?
+about			About
+
+contact			Contact us
+
+contact_text			You can contact us by email at %s, by private message on the game, by Facebook or Twitter.
+
+follow_on_social_networks			You'd like to support Leek Wars, or get news or various information about the game? Please follow us on Twitter, Facebook and/or Google+!
+
+languages_libraries_tools			Languages, libraries and tools
+
+leekwars			Leek Wars?
 leekwars_content			Leek Wars is a browser only <b>leek fight</b> game in which you program your own <b>Artificial Intelligence</b> in order to defeat your opponents!
-team_moderators				A nice and efficient <b>moderation</b> team:
-about						About
-version_n					Version %s
-why							Why?
-why_1						The project was born from the simple idea of two students, during an algebra course in college, who wanted to create a game based entirely on <b>programming</b>, concept not widespread at this time.
-team						The team
-team_presentation			Since 2012, the game has been developed with love by <b>3 computer students</b> from Nantes:
-team_web_graphism			Web & Graphics
-team_leekscript_fights		LeekScript & Fights
+
+social_networks			Social Networks
+
+team			The team
+
 team_admin_server			Server Admin
+
+team_leekscript_fights			LeekScript & Fights
+
+team_moderators			A nice and efficient <b>moderation</b> team:
+
+team_presentation			Since 2012, the game has been developed with love by <b>3 computer students</b> from Nantes:
+
+team_web_graphism			Web & Graphics
+thanks			Thanks
+
+thanks_about_articles			Special thanks to each and every website or blog that ever wrote something nice about Leek Wars :)
+
+thanks_text			A lot of people helped in the making of <b>Leek Wars</b> and we would like to thank them:
+
+title			About
+tools_list			A non-exhaustive list of the various languages and tools used for the project:
+version_n			Version %s
 we_talk_about_leeks			Has anybody talked about leeks?
-why_2						<b> Leek Wars </b> aims to place <b> programming </b> in the middle of a fun and entertaining browser only video game, easy to access, free and without advertising, wanting to offer to <b> beginners a nice platform </b> to discover the programming concepts, and a good challenge to <b> experienced coders</b>!
-thanks_about_articles		Special thanks to each and every website or blog that ever wrote something nice about Leek Wars :)
-social_networks				Social Networks
-languages_libraries_tools	Languages, libraries and tools
-thanks_text					A lot of people helped in the making of <b>Leek Wars</b> and we would like to thank them:
-contact_text				You can contact us by email at %s, by private message on the game, by Facebook or Twitter.
+
+why			Why?
+
+why_1			The project was born from the simple idea of two students, during an algebra course in college, who wanted to create a game based entirely on <b>programming</b>, concept not widespread at this time.
+why_2			<b> Leek Wars </b> aims to place <b> programming </b> in the middle of a fun and entertaining browser only video game, easy to access, free and without advertising, wanting to offer to <b> beginners a nice platform </b> to discover the programming concepts, and a good challenge to <b> experienced coders</b>!

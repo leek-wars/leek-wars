@@ -1,75 +1,75 @@
-changelog			Historique des modifications
-conditions			Conditions d'utilisation
 about			À propos
-all_private_messages			Tous les messages privés
-error			Erreur
-trophies			Trophées
-grade_admin			Admin
-grade_moderator			Modérateur
-leeks			Poireaux
-market			Marché
-leek			Poireau
-locale_xx_XX			fr_FR
-time_format			d/m/Y à H:i:s
-time_format_hhmm			H:i
-time_just_now			à l'instant
-time_1_minute_ago			il y a 1 minute
-time_x_minutes_ago			il y a %s minutes
-time_1_hour_ago			il y a une heure
-time_x_hours_ago			il y a %s heures
-time_1_day_ago			il y a un jour
-time_x_days_ago			il y a %s jours
-time_1_month_ago			il y a un mois
-time_x_months_ago			il y a %s mois
-time_soon			Dans quelques instants
-time_in_1_minute			Dans une minute
-time_in_x_minutes			Dans %s minutes
-date_format			%d %B %Y
-time_in_1_hour			Dans une heure
-time_in_x_hours			Dans %s heures
-time_in_1_month			Dans un mois
-time_in_x_months			Dans %s mois
-x_habs			%s Habs
-x_crystals			%s Cristaux
-settings			Paramètres
-logout			Déconnexion
-garden			Potager
-ranking			Classement
-fight			Combat
-editor			Éditeur
-documentation			Documentation
-report			Rapport de combat
-help			Aide
-general_help			Aide
-tutorial			Tutoriel
-forum			Forum
-admin			Admin
-stats			Statistiques
-tournament			Tournoi
-messages			Messages privés
-new_leek			Nouveau poireau
-moderation			Modération
-bank			Banque
-legal			Mentions légales
-inventory			Inventaire
-team			Équipe
-error_x			Erreur : %s
 add_leek			Nouveau poireau
-stay			Rester
-leave			Quitter la page
-quit_confirm			Voulez-vous vraiment quitter cette page ?
+admin			Admin
+all_notifications			Toutes les notifications
+all_private_messages			Tous les messages privés
+bank			Banque
+changelog			Historique des modifications
+chat_the_mdy_at_hm			Le %1$s/%2$s/%3$s à %4$s:%5$s
+conditions			Conditions d'utilisation
+connection			Connexion
 connect_message			<a href='%s'><b>Connexion</b></a> ou <a href='%s'><b>Inscription</b></a> à Leek Wars
-grade_vip			V.I.P.
-grade_member			Membre
 console_alert_1			Attention ! Si quelqu'un vous demande d'entrez un programme ici,
 console_alert_2			il s'agit d'une tentative de piratage de votre compte sur Leek Wars.
-signup			Inscription
-date_time_format			%d %B %Y à %R
 console_alert_3			Entrez du code ici seulement si vous savez exactement ce que vous faites.
-no_comments			Pas de commentaires
-all_notifications			Toutes les notifications
-chat_the_mdy_at_hm			Le %1$s/%2$s/%3$s à %4$s:%5$s
-connection			Connexion
+date_format			%d %B %Y
+date_time_format			%d %B %Y à %R
+documentation			Documentation
+editor			Éditeur
+error			Erreur
+error_x			Erreur : %s
+fight			Combat
+forum			Forum
+garden			Potager
+general_help			Aide
+grade_admin			Admin
+grade_member			Membre
+grade_moderator			Modérateur
+grade_vip			V.I.P.
+help			Aide
+inventory			Inventaire
+leave			Quitter la page
+leek			Poireau
+leeks			Poireaux
+legal			Mentions légales
 loading			Chargement...
-yes			Oui
+locale_xx_XX			fr_FR
+logout			Déconnexion
+market			Marché
+messages			Messages privés
+moderation			Modération
+new_leek			Nouveau poireau
 no			Non
+no_comments			Pas de commentaires
+quit_confirm			Voulez-vous vraiment quitter cette page ?
+ranking			Classement
+report			Rapport de combat
+settings			Paramètres
+signup			Inscription
+stats			Statistiques
+stay			Rester
+team			Équipe
+time_1_day_ago			il y a un jour
+time_1_hour_ago			il y a une heure
+time_1_minute_ago			il y a 1 minute
+time_1_month_ago			il y a un mois
+time_format			d/m/Y à H:i:s
+time_format_hhmm			H:i
+time_in_1_hour			Dans une heure
+time_in_1_minute			Dans une minute
+time_in_1_month			Dans un mois
+time_in_x_hours			Dans %s heures
+time_in_x_minutes			Dans %s minutes
+time_in_x_months			Dans %s mois
+time_just_now			à l'instant
+time_soon			Dans quelques instants
+time_x_days_ago			il y a %s jours
+time_x_hours_ago			il y a %s heures
+time_x_minutes_ago			il y a %s minutes
+time_x_months_ago			il y a %s mois
+tournament			Tournoi
+trophies			Trophées
+tutorial			Tutoriel
+x_crystals			%s Cristaux
+x_habs			%s Habs
+yes			Oui
