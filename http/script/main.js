@@ -203,6 +203,19 @@ LW.EFFECT = {
 	SHACKLE_MAGIC: 24
 }
 
+// Effect types
+LW.EFFECT_TYPES = {
+	ATTACK: 1,
+	HEAL: 2,
+	BOOST: 3,
+	SHIELD: 4,
+	TACTIC: 5,
+	DAMAGE_RETURN: 6,
+	POISON: 7,
+	BULB: 8,
+	SHACKLE: 9
+}
+
 // Fight types
 LW.FIGHT_TYPE = {
 	SOLO: 0,
