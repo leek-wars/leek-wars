@@ -5,7 +5,7 @@ The Leek Wars website frontend, in HTML, CSS, JavaScript.
 ![Banner](https://github.com/leek-wars/leek-wars-client/blob/master/banner.jpg)
 
 ## Deployment
-Prerequisties: **Python 3**
+Prerequisites: **Python 3**
 
 The project is very easy to install and deploy in 10s:
 ```shell
