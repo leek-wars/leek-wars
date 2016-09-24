@@ -90,7 +90,7 @@ LW.pages.leek.chart = function() {
 	var labels = []
 	var time = LW.time.get()
 	for (var i = 0; i < 7; ++i) {
-		labels.push(_.format.dayMonth(time - i * 24 * 3600))
+		labels.push(_.format.dayMonthShort(time - i * 24 * 3600))
 	}
 
 	var data = {

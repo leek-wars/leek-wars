@@ -288,6 +288,11 @@ _.format.months = {
 	en: ['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december']
 }
 
+_.format.months_shorts = {
+	fr: ['janv.', 'févr.', 'mars', 'avril', 'mai', 'juin', 'juil.', 'août', 'sept.', 'oct.', 'nov.', 'déc.'],
+	en: ['janu.', 'febr.', 'march', 'april', 'may', 'june', 'july', 'augu.', 'sept.', 'oct.', 'nov.', 'dec.']
+}
+
 _.format.date = function(timestamp) {
 
 	var date = new Date(timestamp * 1000)
@@ -330,6 +335,15 @@ _.format.dayMonth = function(timestamp) {
 	var month = date.getUTCMonth()
 
 	return day + ' ' + _.format.months[_.lang.current][month]
+}
+
+_.format.dayMonth = function(timestamp) {
+
+	var date = new Date(timestamp * 1000)
+	var day = date.getUTCDate()
+	var month = date.getUTCMonth()
+
+	return day + ' ' + _.format.months_shorts[_.lang.current][month]
 }
 
 /*
