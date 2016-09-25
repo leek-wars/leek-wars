@@ -16,7 +16,7 @@
 	#garden-left .tab {
 		width: 33.3333%;
 	}
-}	
+}
 
 #garden-left .tab.active {
 	border-bottom: 3px solid #5FAD1B;
@@ -42,11 +42,11 @@
 	margin-bottom: 4px;
 	width: 24px;
 }
- 
+
 /*
  * Partie droite
  */
- 
+
 #garden-right {
 	vertical-align: top;
 	text-align: center;
@@ -69,7 +69,7 @@
 
 #garden-page .talent {
 	font-size: 22px;
-	color: #555; 
+	color: #555;
 	display: inline-block;
 	font-weight: 300;
 	margin: 3px;
@@ -81,7 +81,7 @@
 	margin-bottom: 2px;
 }
 
-#garden-page .avatar, 
+#garden-page .avatar,
 #garden-page .emblem
 {
 	width: 120px;
@@ -140,4 +140,17 @@
 
 #garden-battle-royale .leek:hover {
 	background-color: transparent;
+}
+
+.popup.battle_royale_popup .leeks {
+	white-space: nowrap;
+}
+
+.popup.battle_royale_popup .leek {
+	display: inline-block;
+	text-align: center;
+	margin: 0 3px;
+}
+.popup.battle_royale_popup .leek .level {
+	color: #aaa;
 }

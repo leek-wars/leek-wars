@@ -1791,14 +1791,16 @@ LW.initWebSocket = function() {
 				break
 			}
 			case MP_UNREAD_MESSAGES : {
-
 				LW.messages.unread = data[0]
 				LW.updateCounters()
 				break
 			}
 			case LUCKY: {
-
 				LW.lucky()
+				break
+			}
+			case BATTLE_ROYALE_UPDATE: {
+				LW.battle_royale.update({type: id, data: data})
 				break
 			}
 		}
@@ -3700,6 +3702,64 @@ LW.lucky = function() {
 			clover.remove()
 		})
 	}, 5000)
+}
+
+LW.battle_royale = {
+	popup: null,
+	last_leeks: []
+}
+
+LW.battle_royale.show = function(e) {
+
+	// Dismiss previous popup
+	if (LW.battle_royale.popup != null) {
+		LW.battle_royale.popup.dismiss()
+	}
+
+	LW.battle_royale.popup = new _.popup.new('garden.battle_royale_popup', {range: '300-301'}, 600, true, {
+		dismissable: false,
+		draggable: true
+	})
+	LW.battle_royale.popup.ondismiss = function() {
+		LW.socket.send([BATTLE_ROYALE_LEAVE])
+	}
+	LW.battle_royale.popup.show(e)
+	LW.battle_royale.popup.move($('#wrapper').offset().left + $('#wrapper').width() / 2 - 300, $(window).height() - 40)
+
+	LW.battle_royale.last_leeks = []
+}
+
+LW.battle_royale.update = function(data) {
+	if (data.type == BATTLE_ROYALE_UPDATE) {
+		if (LW.battle_royale.popup) {
+
+			var count = data.data[0]
+			var leeks = data.data[1]
+
+			LW.battle_royale.popup.find('.progress').html(count + ' / 10')
+
+			for (var l in leeks) {
+				if (l in LW.battle_royale.last_leeks) continue
+
+				var html_popup = _.view.render('garden.leek_popup', {leek: leeks[l]})
+				LW.battle_royale.popup.find('.leeks').html(LW.battle_royale.popup.find('.leeks').html() + html_popup)
+
+				LW.createLeekImage(0.3, leeks[l].level, leeks[l].skin, leeks[l].hat, function(data) {
+					LW.battle_royale.popup.find('.leek[leek=' + leeks[l].id + '] .image').html(data)
+				})
+			}
+			for (var l in LW.battle_royale.last_leeks) {
+				if (l in leeks) continue
+				LW.battle_royale.popup.find('.leek[leek=' + LW.battle_royale.last_leeks[l].id + ']').remove()
+			}
+			LW.battle_royale.last_leeks = leeks
+		}
+	}
+
+	if (data.type == BATTLE_ROYALE_START) {
+
+		LW.page('/fight/' + data.data[0])
+	}
 }
 
 LW.test_notif = function() {

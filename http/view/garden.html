@@ -242,7 +242,7 @@
 					<div id='br-select'>
 
 						@foreach (leek in LW.farmer.leeks)
-							
+
 							<div class='leek myleek @if (leek.level < 50) disabled @end' id='br-leek-{leek.id}' leek='{leek.id}' name='{leek.name}'>
 								<div class='image'></div>
 								{leek.name}<br>
@@ -278,6 +278,14 @@
 		<div class='image'></div>
 		{leek.name}<br>
 		<div class='talent'><span class='talent-icon'></span> {leek.talent}</div><br>
+		<span class='level'>{#level_n, leek.level}</span>
+	</div>
+@endview
+
+@view(leek_popup)
+	<div leek='{leek.id}' class='leek'>
+		<div class='image'></div>
+		{leek.name}<br>
 		<span class='level'>{#level_n, leek.level}</span>
 	</div>
 @endview
@@ -323,11 +331,23 @@
 @endview
 
 @view(no_opponents)
-	<img src='{{static}}/image/notgood.png'><br>
+	<img src='{{static}}image/notgood.png'><br>
 	<h4>{#no_opponent_of_your_size}</h4>
 @endview
 
 @view(no_more_fights)
-	<img src='{{static}}/image/notgood.png'><br>
+	<img src='{{static}}image/notgood.png'><br>
 	<h4>{#no_more_fights}</h4>
+@endview
+
+@view (battle_royale_popup)
+	<div class='title'>
+		{#category_battle_royale} &nbsp; <b class='progress'>0/10</b>
+		<div class='options'>
+			<div class='option dismiss'><img src='{{static}}image/icon/quit.png'></div>
+		</div>
+	</div>
+	<div class='content'>
+		<div class='leeks'></div>
+	</div>
 @endview

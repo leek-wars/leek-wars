@@ -126,8 +126,8 @@ LW.pages.garden.init = function(params, $scope, $page) {
 		$('#garden-battle-royale .myleek:not(.disabled)').click(function() {
 			$page.select_leek($(this).attr('leek'))
 		})
-		$('#garden-battle-royale #br-select-button').click(function() {
-			LW.pages.garden.battle_royale_select()
+		$('#garden-battle-royale #br-select-button').click(function(e) {
+			LW.pages.garden.battle_royale_select(e)
 		})
 		$('#garden-battle-royale #br-return').click(function() {
 			LW.socket.send([BATTLE_ROYALE_LEAVE])
@@ -211,7 +211,6 @@ LW.pages.garden.select_leek = function(leek_id) {
 					}
 				})
 			})
-
 			for (var o in data.opponents) {
 				LW.pages.garden.leek_image(data.opponents[o])
 			}
@@ -230,8 +229,6 @@ LW.pages.garden.select_farmer = function() {
 
 	if ($('#garden-farmer').attr('loaded')) return null
 	$('#garden-farmer').attr('loaded', true)
-
-	// $('#garden-farmer .enemies').show()
 
 	_.get('garden/get-farmer-opponents/' + LW.token(), function(data) {
 		if (data.success) {
@@ -335,7 +332,7 @@ LW.pages.garden.battle_royale = function() {
 	$('#br-select .myleek').first().addClass('selected')
 }
 
-LW.pages.garden.battle_royale_select = function() {
+LW.pages.garden.battle_royale_select = function(e) {
 
 	$('#br-select').hide()
 	$('#br-room').show()
@@ -347,17 +344,16 @@ LW.pages.garden.battle_royale_select = function() {
 
 	var current_range = 0
 
-	LW.socket.send([BATTLE_ROYALE_REGISTER, leek])
 	this.br_last_leeks = {}
 	$('#garden-battle-royale .leeks').html('')
-}
 
-LW.pages.garden.leave = function() {
+	LW.battle_royale.show(e)
 
-	LW.socket.send([BATTLE_ROYALE_LEAVE])
+	LW.socket.send([BATTLE_ROYALE_REGISTER, leek])
 }
 
 LW.pages.garden.wsreceive = function(data) {
+	var self = this
 
 	if (data.type == BATTLE_ROYALE_UPDATE) {
 		var count = data.data[0]
@@ -370,12 +366,10 @@ LW.pages.garden.wsreceive = function(data) {
 
 			var html = _.view.render('garden.leek', {leek: leeks[l]})
 			$('#garden-battle-royale .leeks').html($('#garden-battle-royale .leeks').html() + html)
-
 			LW.pages.garden.leek_image(leeks[l])
 		}
 		for (var l in this.br_last_leeks) {
 			if (l in leeks) continue
-
 			$('#garden-battle-royale .leek[leek=' + this.br_last_leeks[l].id + ']').remove()
 		}
 		this.br_last_leeks = leeks
