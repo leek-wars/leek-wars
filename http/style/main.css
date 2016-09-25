@@ -1526,11 +1526,18 @@ body.connected #header-signin {
 	display: none;
 	width: 700px;
 	box-shadow: 0px 0px 100px #111;
-	-webkit-transition: all ease 0.3s;
-	-moz-transition: all ease 0.3s;
-	transition: all ease 0.3s;
+	-webkit-transition: height ease 0.3s;
+	-moz-transition: height ease 0.3s;
+	transition: height ease 0.3s;
 	margin-bottom: 50px;
 	text-align: left;
+}
+
+.popup.draggable {
+	position: fixed;
+	z-index: 1000;
+	top: 0;
+	left: 0;
 }
 
 .popup .title {
@@ -1550,6 +1557,29 @@ body.connected #header-signin {
 	-webkit-border-top-right-radius: 3px;
 	-moz-border-radius-topright: 3px;
 	border-top-right-radius: 3px;
+}
+.popup .title .options {
+	float: right;
+	cursor: pointer;
+	margin-top: -6px;
+	margin-bottom: -4px;
+	margin-right: -10px;
+}
+.popup .title .options .option {
+	background: black;
+	height: 26px;
+	width: 26px;
+	padding: 7px;
+}
+.popup .title .options .option:hover {
+	background-image: linear-gradient(to bottom, rgba(110, 201, 31, 0.7) 0%, rgba(110, 201, 31, 0.9) 50%, rgba(110, 201, 31, 0.7) 100%);
+}
+.popup .title .options .option img {
+	width: 26px;
+	height: 26px;
+}
+.popup.draggable .title {
+	cursor: move;
 }
 
 .popup .content {
@@ -2730,7 +2760,7 @@ textarea.autogrow {
 	top: 0px; bottom: 0px;
 	left: 0px; right: 0px;
 	padding-top: 120px;
-	z-index: 1000;
+	z-index: 100;
 }
 
 #loader .gear1 {
