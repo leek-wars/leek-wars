@@ -43,7 +43,7 @@ $(document).ready(function() {
 
 	// Dismiss popup
 	$("html").click(function(e) {
-		if (_.popup.current && _.popup.current.dismissable) {
+		if (_.popup.current && _.popup.current.options.dismissable) {
 			_.popup.current.dismiss()
 			e.stopPropagation()
 		}
@@ -386,7 +386,9 @@ _.toast = function(message, durationOrCallback) {
 /*
  * Popups
  */
-_.popup.new = function(view, data, width, direct) {
+_.popup.new = function(view, data, width, direct, options) {
+
+	var self = this
 
 	var viewParts = view.split('.')
 	var name = view
@@ -404,8 +406,8 @@ _.popup.new = function(view, data, width, direct) {
 
 	this.height = $(window).height() - 200
 
-	this.dismissable = true
-	this.onDismiss = null
+	this.options = typeof(options) === 'undefined' ? {} : options
+	this.ondismiss = null
 
 	if (width != undefined) {
 		this.view.css('width', width)
@@ -414,15 +416,40 @@ _.popup.new = function(view, data, width, direct) {
 	var actionCount = this.view.find('.actions div').length
 	if (actionCount == 0) this.view.addClass('no-actions')
 
-	this.setDismissable = function(dismissable) {
-		this.dismissable = dismissable
+	if (this.options.draggable) {
+		var dragx, dragy, startx, starty, down
+		this.view.addClass('draggable')
+		this.view.find('.title').on('mousedown', function(e) {
+			if (e.button == 2) return false
+			dragx = e.pageX
+			dragy = e.pageY
+			startx = parseFloat(self.view.css('left').replace('px', ''))
+			starty = parseFloat(self.view.css('top').replace('px', ''))
+			down = true
+			var move_handler = function(e) {
+				if (!down) return null
+				var dx = e.pageX - dragx
+				var dy = e.pageY - dragy
+				self.move(startx + dx, starty + dy)
+			}
+			var up_handler = function(e) {
+				down = false
+				$('html').off('.popup')
+			}
+			$("html")
+				.on('mousemove.popup', move_handler)
+				.on('mouseup.popup', up_handler)
+			e.preventDefault()
+			return false
+		})
 	}
 
-	this.setOnDismiss = function(onDismiss) {
-		this.onDismiss = onDismiss
+	this.setDismissable = function(dismissable) {
+		this.options.dismissable = dismissable
 	}
-	this.setOnDissmiss = function(onDismiss) {
-		this.onDismiss = onDismiss
+
+	this.setOnDismiss = function(ondismiss) {
+		this.ondismiss = ondismiss
 	}
 
 	this.find = function(query) {
@@ -438,17 +465,21 @@ _.popup.new = function(view, data, width, direct) {
 			return
 		}
 
-		this.view.prependTo('#popups')
-		this.view.hide()
-
-		if (_.popup.queue.length == 0) {
-			$('#popups').addClass('box')
-			$('#dark').fadeIn(200)
-
+		if (this.options.draggable) {
+			this.view.appendTo('body')
 			popup.appear()
+		} else {
+			this.view.prependTo('#popups')
+			this.view.hide()
+			if (_.popup.queue.length == 0) {
+				$('#popups').addClass('box')
+				if (!this.options.draggable) {
+					$('#dark').fadeIn(200)
+				}
+				popup.appear()
+			}
+			_.popup.queue.push(popup)
 		}
-
-		_.popup.queue.push(popup)
 
 		if (e) e.stopPropagation()
 	}
@@ -462,8 +493,8 @@ _.popup.new = function(view, data, width, direct) {
 		this.view.show()
 		this.view.css('display', 'inline-block')
 
-		popup.view.css("transition", "all ease 0.3s")
-		popup.view.css("-webkit-transition", "all ease 0.3s")
+		popup.view.css("transition", "transform ease 0.3s")
+		popup.view.css("-webkit-transition", "-webkit-transform ease 0.3s")
 
 		popup.view.css("transform", "scaleY(0.5)")
 		popup.view.css("-webkit-transform", "scaleY(0.5)")
@@ -479,21 +510,28 @@ _.popup.new = function(view, data, width, direct) {
 			e.stopPropagation()
 		})
 
-		// On regarde si y'a un bouton dismiss
-		var cancelButton = this.view.find('.dismiss')
-		if (cancelButton.length > 0) {
-			cancelButton.click(function() {
-				popup.dismiss()
-			})
-		}
+		// dismiss button
+		this.view.find('.actions .action.dismiss').click(function() {
+			popup.dismiss()
+		})
+		// dismiss option
+		this.view.find('.options .option.dismiss').click(function() {
+			popup.dismiss()
+		})
 		_.popup.current = popup
 
 		LW.handleHTML('.popup.' + name, 'page')
 	}
 
+	this.move = function(x, y) {
+		if (!this.options.draggable) return null
+		self.view.css('left', Math.min(Math.max(0, x), $(window).width() - 40))
+		self.view.css('top', Math.min(Math.max(0, y), $(window).height() - 40))
+	}
+
 	this.dismiss = function() {
 
-		if (this.onDismiss) this.onDismiss()
+		if (this.ondismiss) this.ondismiss()
 
 		var popup = this
 		popup.view.css("transition", "all ease 0.2s")
