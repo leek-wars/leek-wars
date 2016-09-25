@@ -337,7 +337,7 @@ _.format.dayMonth = function(timestamp) {
 	return day + ' ' + _.format.months[_.lang.current][month]
 }
 
-_.format.dayMonth = function(timestamp) {
+_.format.dayMonthShort = function(timestamp) {
 
 	var date = new Date(timestamp * 1000)
 	var day = date.getUTCDate()
