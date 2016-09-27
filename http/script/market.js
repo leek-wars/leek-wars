@@ -27,20 +27,17 @@ LW.pages.market.init = function(params, $scope, $page) {
 				previews[item.id] = LW.createChipPreview(chip)
 
 				// Place the chip in the categories which correspond to its effects
-				for(var y in chip.effects) {
+				for (var y in chip.effects) {
 					var type = chip.effects[y].type
-
-					if(chipsType[type] !== undefined) {
-						if(chipsType[type][item.id] === undefined ) {
+					if (chipsType[type] !== undefined) {
+						if (chipsType[type][item.id] === undefined) {
 							chipsType[type][item.id] = chip
 						}
-					}
-					else {
+					} else {
 						chipsType[type] = {}
 						chipsType[type][item.id] = chip
 					}
 				}
-
 			} else if (item.type == ITEM_POTION) {
 				potions.push(LW.potions[item.id])
 				previews[item.id] = LW.createPotionPreview(LW.potions[item.id])
@@ -81,22 +78,19 @@ LW.pages.market.init = function(params, $scope, $page) {
 			}
 		})
 
-
 		// Flèches droites et gauche
 		$(document).keydown(function(e) {
 			if (e.keyCode == 37) { // Gauche
-
 				//~ var currentItem = $('#' + currentPage).find('.selected')
-			  //~
+			    //~
 				//~ var prev = currentItem.prev()
 				//~ if (prev.length == 0) prev = currentItem.parent().children().last()
 				//~ selectItem(prev)
 				return false
 			}
 			if (e.keyCode == 39) { // Droite
-
 				//~ var currentItem = $('#' + currentPage).find('.selected')
-			//~
+			    //~
 				//~ var next = currentItem.next()
 				//~ if (next.length == 0) next = currentItem.parent().children().first()
 				//~ selectItem(next)
@@ -124,16 +118,16 @@ LW.pages.market.init = function(params, $scope, $page) {
 		}
 
 		// Distributed chips according to their type
-		for(var i in LW.EFFECT_TYPES) {
+		for (var i in LW.EFFECT_TYPES) {
 			var type = LW.EFFECT_TYPES[i]
 			$('#chips').append('<div class="clear"></div><h3>' + typeLang[type] /*_.lang.get('effect', 'effect_type_' + type)*/ + '</h3><div class="clear"></div>')
-
-			if(chipsType[type] === undefined) continue
-			for(var itemID in chipsType[type]) {
+			if (chipsType[type] === undefined) {
+				continue
+			}
+			for (var itemID in chipsType[type]) {
 				$('#item-' + itemID).appendTo('#chips')
 			}
-		}		
-
+		}
 	})
 }
 
