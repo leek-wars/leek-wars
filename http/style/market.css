@@ -140,6 +140,15 @@
 	vertical-align: bottom;
 }
 
+#chips h3 {
+	float:left;
+	margin-left:0px
+}
+
+#chips .clear {
+	clear:both;
+}
+
 
 /*
  * Potions

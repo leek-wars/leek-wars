@@ -10,6 +10,7 @@ LW.pages.market.init = function(params, $scope, $page) {
 		var all = []
 		var weapons = []
 		var chips = []
+		var chipsType = {}
 		var potions = []
 		var hats = []
 		var previews = []
@@ -21,8 +22,25 @@ LW.pages.market.init = function(params, $scope, $page) {
 				weapons.push(LW.weapons[item.id])
 				previews[item.id] = LW.createWeaponPreview(LW.weapons[item.id])
 			} else if (item.type == ITEM_CHIP) {
-				chips.push(LW.chips[item.id])
-				previews[item.id] = LW.createChipPreview(LW.chips[item.id])
+				var chip = LW.chips[item.id]
+				chips.push(chip)
+				previews[item.id] = LW.createChipPreview(chip)
+
+				// Place the chip in the categories which correspond to its effects
+				for(var y in chip.effects) {
+					var type = chip.effects[y].type
+
+					if(chipsType[type] !== undefined) {
+						if(chipsType[type][item.id] === undefined ) {
+							chipsType[type][item.id] = chip
+						}
+					}
+					else {
+						chipsType[type] = {}
+						chipsType[type][item.id] = chip
+					}
+				}
+
 			} else if (item.type == ITEM_POTION) {
 				potions.push(LW.potions[item.id])
 				previews[item.id] = LW.createPotionPreview(LW.potions[item.id])
@@ -35,6 +53,7 @@ LW.pages.market.init = function(params, $scope, $page) {
 		$scope.items = all
 		$scope.weapons = weapons
 		$scope.chips = chips
+		$scope.chipsType = chipsType
 		$scope.potions = potions
 		$scope.hats = hats
 		$scope.previews = previews
@@ -90,6 +109,31 @@ LW.pages.market.init = function(params, $scope, $page) {
 		} else {
 			LW.pages.market.selectItem('pistol')
 		}
+
+		// Hardcodage dégeu parce que wala - A supprimer
+		var typeLang = {
+			1 : "Attaques",
+			2 : "Soins",
+			3 : "Boosts",
+			4 : "Protections",
+			5 : "Tactiques",
+			6 : "Renvois",
+			7 : "Poisons",
+			8 : "Bulbes",
+			9 : "Debuffs"
+		}
+
+		// Distributed chips according to their type
+		for(var i in LW.EFFECT_TYPES) {
+			var type = LW.EFFECT_TYPES[i]
+			$('#chips').append('<div class="clear"></div><h3>' + typeLang[type] /*_.lang.get('effect', 'effect_type_' + type)*/ + '</h3><div class="clear"></div>')
+
+			if(chipsType[type] === undefined) continue
+			for(var itemID in chipsType[type]) {
+				$('#item-' + itemID).appendTo('#chips')
+			}
+		}		
+
 	})
 }
 
