@@ -1,0 +1,29 @@
+# Basic docker image for leek-wars-client
+#
+# Usage:
+#   docker build -t leek-wars-client .
+#   docker run --rm -p 8012:8012 -P leek-wars-client
+#
+#   or
+#
+#   docker build -t leek-wars-client .
+#   docker run --rm -p 8012:8012 -it -P leek-wars-client /bin/sh
+#   python3 leekwars.py
+
+FROM alpine:3.4
+MAINTAINER Pierre Lauprêtre <https://github.com/5pilow>
+
+# Default port the webserver runs on
+EXPOSE 8012
+
+# Working directory for the application
+WORKDIR /app/
+
+# Install required packages
+RUN apk add --no-cache python3
+
+# Copy everything to the working directory (except files from .dockerignore)
+ADD . .
+
+# Run the application
+CMD python3 leekwars.py
