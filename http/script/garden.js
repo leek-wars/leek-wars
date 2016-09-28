@@ -314,12 +314,9 @@ LW.pages.garden.images = function(leeks) {
 }
 
 LW.pages.garden.leek_image = function(leek) {
-
-	//if ($('#garden-page .leek[leek=' + leek.id + '] .image:visible').html() == '') {
-		LW.createLeekImage(0.6, leek.level, leek.skin, leek.hat, function(data) {
-			$('#garden-page .leek[leek=' + leek.id + '] .image').html(data)
-		})
-	//}
+	LW.createLeekImage(0.6, leek.level, leek.skin, leek.hat, function(data) {
+		$('#garden-page .leek[leek=' + leek.id + '] .image').html(data)
+	})
 }
 
 LW.pages.garden.battle_royale = function() {
@@ -338,10 +335,6 @@ LW.pages.garden.battle_royale_select = function(e) {
 	$('#br-return').show()
 
 	var leek = $('#garden-battle-royale .myleek.selected').attr('leek')
-
-	var ranges = [50, 100, 200, 300]
-
-	var current_range = 0
 
 	this.br_last_leeks = {}
 	$('#garden-battle-royale .leeks').html('')
@@ -372,10 +365,5 @@ LW.pages.garden.wsreceive = function(data) {
 			$('#garden-battle-royale .leek[leek=' + this.br_last_leeks[l].id + ']').remove()
 		}
 		this.br_last_leeks = leeks
-	}
-
-	if (data.type == BATTLE_ROYALE_START) {
-
-		LW.page('/fight/' + data.data[0])
 	}
 }

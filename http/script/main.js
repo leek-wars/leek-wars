@@ -3756,9 +3756,7 @@ LW.battle_royale.update = function(data) {
 			LW.battle_royale.last_leeks = leeks
 		}
 	}
-
 	if (data.type == BATTLE_ROYALE_START) {
-
 		LW.page('/fight/' + data.data[0])
 	}
 }
