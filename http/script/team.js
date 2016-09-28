@@ -159,10 +159,8 @@ LW.pages.team.description = function() {
 
 		$('#team-status').keydown(function(e) {
 			if (e.keyCode == 13) {
-				$('#team-status').blur();
-				e.stopPropagation();
-				e.preventDefault();
-				return false;
+				$('#team-status').blur()
+				e.preventDefault()
 			}
 		})
 

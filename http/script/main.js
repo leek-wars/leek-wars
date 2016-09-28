@@ -3492,9 +3492,10 @@ var ChatController = function(chat_element, private_chat, team_chat) {
 			controller.send()
 		})
 
-		chat_element.find('.chat-input').keyup(function(e) {
+		chat_element.find('.chat-input').keydown(function(e) {
 			if (e.keyCode == 13) {
 				controller.send()
+				e.preventDefault()
 			}
 		})
 

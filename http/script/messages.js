@@ -70,9 +70,10 @@ LW.pages.messages.init = function(params, $scope, $page) {
 		$('#chat-send').click(function() {
 			sendMessage()
 		})
-		$("#messages-page .chat-input").keyup(function(e) {
+		$("#messages-page .chat-input").keydown(function(e) {
 			if (e.keyCode == 13) {
 				sendMessage()
+				e.preventDefault()
 			}
 		})
 
