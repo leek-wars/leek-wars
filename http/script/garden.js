@@ -130,7 +130,6 @@ LW.pages.garden.init = function(params, $scope, $page) {
 			LW.pages.garden.battle_royale_select(e)
 		})
 		$('#garden-battle-royale #br-return').click(function() {
-			LW.socket.send([BATTLE_ROYALE_LEAVE])
 			LW.pages.garden.battle_royale()
 		})
 
