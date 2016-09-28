@@ -21,7 +21,7 @@
 			<div class='content items'>
 
 				<div id='weapons'>
-					
+
 					@foreach (weapon in weapons)
 						<div id='item-{weapon.id}' type='weapon' name='{weapon.name}' class='item weapon' farmer-count='{items[weapon.id].farmer_count}' leek-count='{items[weapon.id].leek_count}'>
 							<img src='{{static}}/image/weapon/{weapon.name}.png'></img>
@@ -36,10 +36,15 @@
 
 			<div class='header'>
 				<h2>{#chips}</h2>
+				<div class='right'>
+					<div class='button flat' id='chips-sort-button'>
+						<img src='{{static}}image/icon/grid.png'>
+					</div>
+				</div>
 			</div>
- 
+
 			<div class='content items' id='chips'>
-					
+
 				@foreach (chip in chips)
 					<div id='item-{chip.id}' type='chip' name='{chip.name}' class='item chip' farmer-count='{items[chip.id].farmer_count}' leek-count='{items[chip.id].leek_count}'>
 						<img src='{{static}}/image/chip/small/{chip.name}.png'></img>
@@ -90,7 +95,7 @@
 			</div>
 
 			<div class='content' id='preview'>
-					
+
 				@foreach (id : preview in previews)
 
 					<div id='item-{id}'>
@@ -101,7 +106,7 @@
 
 							<h4 class='buy-label'>{#buy}</h4>
 							<div id='{id}' class="button buy-button" price='{items[id].price_habs}'type='{items[id].type}'>{%items[id].price_habs}<img src='{{static}}image/hab.png'></div>
-							
+
 							@if (items[id].price_crystals > 0)
 								<br>
 								<h4 class='buy-label'>{#buy}</h4>
@@ -132,7 +137,7 @@
 		<br><br>
 		<b>{#price}</b> : {%price} <span class='hab'></span>
 		<br>
-		<b>{#habs_before_purchase}</b> : {%habs_before} <span class='hab'></span>	
+		<b>{#habs_before_purchase}</b> : {%habs_before} <span class='hab'></span>
 		<br>
 		<b>{#habs_after_purchase}</b> : {%habs_after} <span class='hab'></span>
 
@@ -154,9 +159,9 @@
 		<br><br>
 		<b>{#price}</b> : {%price} <span class='crystal'></span>
 		<br>
-		<b>{#crystals_before_purchase}</b> : {%crystals_before} <span class='crystal'></span>	
+		<b>{#crystals_before_purchase}</b> : {%crystals_before} <span class='crystal'></span>
 		<br>
-		<b>{#crystals_after_purchase}</b> : {%crystals_after} <span class='crystal'></span>	
+		<b>{#crystals_after_purchase}</b> : {%crystals_after} <span class='crystal'></span>
 
 	</div>
 
@@ -176,9 +181,9 @@
 		<br><br>
 		<b>{#price}</b> : {%price} <span class='hab'></span>
 		<br>
-		<b>{#habs_before_sell}</b> : {%habs_before} <span class='hab'></span>	
+		<b>{#habs_before_sell}</b> : {%habs_before} <span class='hab'></span>
 		<br>
-		<b>{#habs_after_sell}</b> : {%habs_after} <span class='hab'></span>	
+		<b>{#habs_after_sell}</b> : {%habs_after} <span class='hab'></span>
 
 	</div>
 

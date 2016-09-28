@@ -10,7 +10,7 @@ LW.pages.market.init = function(params, $scope, $page) {
 		var all = []
 		var weapons = []
 		var chips = []
-		var chipsType = {}
+		var chipsByType = {}
 		var potions = []
 		var hats = []
 		var previews = []
@@ -29,13 +29,13 @@ LW.pages.market.init = function(params, $scope, $page) {
 				// Place the chip in the categories which correspond to its effects
 				for (var y in chip.effects) {
 					var type = chip.effects[y].type
-					if (chipsType[type] !== undefined) {
-						if (chipsType[type][item.id] === undefined) {
-							chipsType[type][item.id] = chip
+					if (chipsByType[type] !== undefined) {
+						if (chipsByType[type][item.id] === undefined) {
+							chipsByType[type][item.id] = chip
 						}
 					} else {
-						chipsType[type] = {}
-						chipsType[type][item.id] = chip
+						chipsByType[type] = {}
+						chipsByType[type][item.id] = chip
 					}
 				}
 			} else if (item.type == ITEM_POTION) {
@@ -50,7 +50,7 @@ LW.pages.market.init = function(params, $scope, $page) {
 		$scope.items = all
 		$scope.weapons = weapons
 		$scope.chips = chips
-		$scope.chipsType = chipsType
+		$scope.chipsByType = chipsByType
 		$scope.potions = potions
 		$scope.hats = hats
 		$scope.previews = previews
@@ -66,6 +66,7 @@ LW.pages.market.init = function(params, $scope, $page) {
 
 		LW.pages.market.updateItems()
 		LW.pages.market.buy()
+		LW.pages.market.chips()
 
 		// Sell buttons
 		$("#market-page .item").each(function() {
@@ -102,31 +103,6 @@ LW.pages.market.init = function(params, $scope, $page) {
 			LW.pages.market.selectItem(params.item)
 		} else {
 			LW.pages.market.selectItem('pistol')
-		}
-
-		// Hardcodage dégeu parce que wala - A supprimer
-		var typeLang = {
-			1 : "Attaques",
-			2 : "Soins",
-			3 : "Boosts",
-			4 : "Protections",
-			5 : "Tactiques",
-			6 : "Renvois",
-			7 : "Poisons",
-			8 : "Bulbes",
-			9 : "Debuffs"
-		}
-
-		// Distributed chips according to their type
-		for (var i in LW.EFFECT_TYPES) {
-			var type = LW.EFFECT_TYPES[i]
-			$('#chips').append('<div class="clear"></div><h3>' + typeLang[type] /*_.lang.get('effect', 'effect_type_' + type)*/ + '</h3><div class="clear"></div>')
-			if (chipsType[type] === undefined) {
-				continue
-			}
-			for (var itemID in chipsType[type]) {
-				$('#item-' + itemID).appendTo('#chips')
-			}
 		}
 	})
 }
@@ -325,10 +301,6 @@ LW.pages.market.updateItems = function() {
 			$('#item-' + $(this).attr('id')).removeClass('too-expensive')
 		}
 	})
-
-	$('.sell-button').each(function() {
-
-	})
 }
 
 LW.pages.market.selectItem = function(item) {
@@ -340,4 +312,65 @@ LW.pages.market.selectItem = function(item) {
 
 	$('.items div').removeClass('selected')
 	item.addClass('selected')
+}
+
+LW.pages.market.chips = function(sort_method) {
+	var self = this
+
+	// Hardcodage dégeu parce que wala - A supprimer
+	var typeLang = {
+		1 : "Attaques",
+		2 : "Soins",
+		3 : "Boosts",
+		4 : "Protections",
+		5 : "Tactiques",
+		6 : "Renvois",
+		7 : "Poisons",
+		8 : "Bulbes",
+		9 : "Debuffs"
+	}
+
+	var sort_mode = localStorage.getItem('market/sort_mode') == 'type' ? 'type' : 'level';
+
+	// Distributed chips according to their type
+	for (var i in LW.EFFECT_TYPES) {
+		var type = LW.EFFECT_TYPES[i]
+		$('#chips').append('<h3 type="' + type + '">' + typeLang[type] /*_.lang.get('effect', 'effect_type_' + type)*/ + '</h3>')
+	}
+
+	var update = function(sort_mode) {
+		if (sort_mode == 'type') {
+			$('#chips h3').show()
+			for (var i in LW.EFFECT_TYPES) {
+				var type = LW.EFFECT_TYPES[i]
+				$('#chips h3[type="' + type + '"]').appendTo('#chips')
+				$('#chips').append('<br>')
+				for (var itemID in self.scope.chipsByType[type]) {
+					$('#item-' + itemID).appendTo('#chips')
+				}
+				$('#chips').append('<br>')
+			}
+			$('#chips-sort-button img').attr('src', LW.staticURL + 'image/icon/grid.png')
+		} else if (sort_mode == 'level') {
+			$('#chips h3').hide()
+			$('#chips br').remove()
+			for (var i in self.scope.chips) {
+				$('#item-' + self.scope.chips[i].id).appendTo('#chips')
+			}
+			$('#chips-sort-button img').attr('src', LW.staticURL + 'image/icon/list.png')
+		}
+		localStorage['market/sort_mode'] = sort_mode
+		$('#chips').attr('sort-mode', sort_mode)
+	}
+
+	update(sort_mode)
+
+	$('#chips-sort-button').click(function() {
+		if (sort_mode === 'type') {
+			sort_mode = 'level'
+		} else if (sort_mode === 'level') {
+			sort_mode = 'type'
+		}
+		update(sort_mode)
+	})
 }

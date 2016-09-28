@@ -28,11 +28,11 @@
 	padding-bottom: 50px;
 }
 .items .item {
-	border: 2px solid #ddd; 
+	border: 2px solid #ddd;
 }
 .items .item.selected {
 	background: white;
-	border: 2px solid #999; 
+	border: 2px solid #999;
 }
 
 .buy-label {
@@ -87,7 +87,7 @@
 }
 
 
-/* 
+/*
  * Armes
  */
 #weapons {
@@ -115,22 +115,25 @@
     left: 0;
     right: 0;
     margin: auto;
-} 
+}
 
 
 /*
- * Chips 
- */ 
+ * Chips
+ */
 #chips {
+	padding: 0 10px;
+}
+#chips[sort-mode='level'] {
 	text-align: center;
 }
 
 #chips .chip {
-	width: 73px; 
-	padding: 6px;
+	width: 73px;
+	padding: 6px 9px;
 	display: inline-block;
 	position: relative;
-	cursor: pointer; 
+	cursor: pointer;
 	text-align: center;
 	margin: 6px;
 }
@@ -141,14 +144,8 @@
 }
 
 #chips h3 {
-	float:left;
-	margin-left:0px
+	margin-left: 0px;
 }
-
-#chips .clear {
-	clear:both;
-}
-
 
 /*
  * Potions
@@ -158,17 +155,17 @@
 }
 
 #potions .potion {
-	width: 90px; 
+	width: 90px;
 	padding: 5px 3px;
 	display: inline-block;
 	position: relative;
-	cursor: pointer; 
+	cursor: pointer;
 	text-align: center;
 	margin: 8px;
 }
 
 #potions .potion img {
-	width: 90px; 
+	width: 90px;
 }
 
 /*
@@ -179,19 +176,19 @@
 }
 
 #hats .hat {
-	width: 110px; 
+	width: 110px;
 	height: 80px;
 	padding: 5px 3px;
 	display: inline-block;
 	position: relative;
-	cursor: pointer; 
+	cursor: pointer;
 	text-align: center;
 	vertical-align: bottom;
 	margin: 8px;
 }
 
 #hats .hat img {
-	max-width: 100px; 
+	max-width: 100px;
 	max-height: 70px;
 	position: absolute;
     top: 0;
