@@ -344,9 +344,11 @@ LW.pages.farmer.logout = function() {
 }
 
 LW.pages.farmer.warnings = function() {
-	_.get('moderation/get-warnings/' + this.scope.farmer.id + '/$', function(data) {
+	_.get('moderation/get-warnings/' + this.scope.farmer.id + '/' + LW.token(), function(data) {
 		if (data.success) {
-			$('#farmer-warnings').html(_.view.render('farmer.warnings', data))
+			if (data.warnings.length) {
+				$('#farmer-warnings').html(_.view.render('farmer.warnings', data))
+			}
 		}
 	})
 }
