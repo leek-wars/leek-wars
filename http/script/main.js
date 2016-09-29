@@ -968,41 +968,38 @@ LW.shrink = function() {
 
 LW.setPopups = function() {
 
-	var window_width = $(window).width();
+	var window_width = $(window).width()
+	var width = Math.min(400, window_width)
 
 	// Messages popup
 	var button = $(".messages-button:visible img");
-
-	var width = Math.min(400, window_width);
-
-	var left = button.offset().left + 14 - $('#messages-popup').width() / 2;
-	if (left > window_width - width) {
-		$('#messages-arrow').css('left', 190 + (left - window_width + width))
-		left = window_width - width;
-	} else {
-		$('#messages-arrow').css('left', 190)
+	if (button.length) {
+		var left = button.offset().left + 14 - $('#messages-popup').width() / 2
+		if (left > window_width - width) {
+			$('#messages-arrow').css('left', 190 + (left - window_width + width))
+			left = window_width - width
+		} else {
+			$('#messages-arrow').css('left', 190)
+		}
+		$('#messages-popup').css('left', left)
+		$('#messages-popup').css('top', button.offset().top + 46)
+		$('#messages-popup').css('width', width)
 	}
-
-	$('#messages-popup').css('left', left);
-	$('#messages-popup').css('top', button.offset().top + 46);
-	$('#messages-popup').css('width', width);
 
 	// Notifications popup
 	var button = $(".notifications-button:visible img");
-
-	var width = Math.min(400, window_width);
-
-	var left = button.offset().left + 14 - $('#notifications-popup').width() / 2
-	if (left > window_width - width) {
-		$('#notifs-arrow').css('left', 190 + (left - window_width + width))
-		left = window_width - width
-	} else {
-		$('#notifs-arrow').css('left', 190)
+	if (button.length) {
+		var left = button.offset().left + 14 - $('#notifications-popup').width() / 2
+		if (left > window_width - width) {
+			$('#notifs-arrow').css('left', 190 + (left - window_width + width))
+			left = window_width - width
+		} else {
+			$('#notifs-arrow').css('left', 190)
+		}
+		$('#notifications-popup').css('left', left)
+		$('#notifications-popup').css('top', button.offset().top + 46)
+		$('#notifications-popup').css('width', width)
 	}
-
-	$('#notifications-popup').css('left', left);
-	$('#notifications-popup').css('top', button.offset().top + 46);
-	$('#notifications-popup').css('width', width);
 }
 
 $(window).bind("popstate", function() {
@@ -1583,7 +1580,8 @@ LW.handleHTML = function(element, location) {
 		var top = mode == 'top' || mode == ''
 		var bottom = mode == 'bottom' || mode == ''
 
-		if ((top && d > 0 && this.scrollTop == 0) || (bottom && d < 0 && this.scrollTop == this.scrollHeight - $(this).outerHeight())) {
+		if ((top && d > 0 && this.scrollTop == 0) || (bottom && d < 0
+			&& Math.abs(this.scrollTop - (this.scrollHeight - $(this).outerHeight())) < 1)) {
 			e.preventDefault()
 		}
 	})

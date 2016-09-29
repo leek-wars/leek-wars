@@ -57,60 +57,50 @@ var Editor = function(id, name, valid, code) {
 		this.tabDiv.removeClass("error").addClass("error");
 	}
 
-	// if (!_BASIC) {
-		this.editor = CodeMirror(this.editorDiv[0], {
-			value: code,
-			mode:  "leekscript",
-			tabSize: 4,
-			indentUnit: 4,
-			indentWithTabs: true,
-			highlightSelectionMatches: true,
-			matchBrackets: true,
-			lineNumbers: true,
-			lineWrapping: true,
-			undoDepth: 200,
-			autofocus: true,
-			smartIndent: false,
-			cursorHeight: 1,
-			extraKeys: {
-				"Shift-Tab": function(cm) {
-					editors[id].indentCode();
-				},
-				"Ctrl-U": function(cm) {
-					editors[id].indentCode(false);
-				},
-				"Ctrl-I": function(cm) {
-					editors[id].indentCode(true);
-				},
-				"Ctrl-D": function(cm) {
-					editors[id].duplicateLine();
-				},
-				"Ctrl-E": function(cm) {
-					editors[id].commentCode();
-				},
-				"Ctrl-K": function(cm) {
-					editors[id].removeLine();
-				},
-			}
-		});
-		this.editor.on('change', onEditorChange);
-		this.editor.on('cursorActivity', onCursorChange);
+	this.editor = CodeMirror(this.editorDiv[0], {
+		value: code,
+		mode:  "leekscript",
+		tabSize: 4,
+		indentUnit: 4,
+		indentWithTabs: true,
+		highlightSelectionMatches: true,
+		matchBrackets: true,
+		lineNumbers: true,
+		lineWrapping: true,
+		undoDepth: 200,
+		autofocus: true,
+		smartIndent: false,
+		cursorHeight: 1,
+		extraKeys: {
+			"Shift-Tab": function(cm) {
+				editors[id].indentCode();
+			},
+			"Ctrl-U": function(cm) {
+				editors[id].indentCode(false);
+			},
+			"Ctrl-I": function(cm) {
+				editors[id].indentCode(true);
+			},
+			"Ctrl-D": function(cm) {
+				editors[id].duplicateLine();
+			},
+			"Ctrl-E": function(cm) {
+				editors[id].commentCode();
+			},
+			"Ctrl-K": function(cm) {
+				editors[id].removeLine();
+			},
+		}
+	});
+	this.editor.on('change', onEditorChange);
+	this.editor.on('cursorActivity', onCursorChange);
 
-		this.editorDiv.find('.CodeMirror-scroll').bind('mousewheel', function(e, d) {
-
-			// _.log('scroll')
-			// _.log('scrollTop : ' + this.scrollTop)
-			// _.log('scrollHeight : ' + this.scrollHeight)
-			// _.log('outerHeight : ' + $(this).outerHeight())
-
-			// _.log($(this).parent().find('.CodeMirror-vscrollbar').get(0).scrollTop)
-			// _.log($(this).parent().find('.CodeMirror-vscrollbar').get(0).scrollHeight)
-
-			if (d < 0 && this.scrollTop == this.scrollHeight - ($(this).outerHeight() - 15)) {
-				e.preventDefault()
-			}
-		})
-	// }
+	this.editorDiv.find('.CodeMirror-scroll').bind('mousewheel', function(e, d) {
+		var zoom = screen.width / window.innerWidth
+		if (d < 0 && Math.abs($(this).scrollTop() - (this.scrollHeight - $(this).innerHeight() + 15 / zoom)) < 1) {
+			e.preventDefault()
+		}
+	})
 
 	this.editor.on("mousedown", function(cm, e) {
 
