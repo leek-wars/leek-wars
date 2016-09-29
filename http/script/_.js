@@ -553,7 +553,7 @@ _.popup.new = function(view, data, width, direct, options) {
 		})
 
 		// dismiss button
-		this.view.find('.actions .action.dismiss').click(function() {
+		this.view.find('.actions .dismiss').click(function() {
 			popup.dismiss()
 		})
 		// dismiss option
