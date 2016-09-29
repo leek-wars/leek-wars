@@ -22,8 +22,9 @@ WORKDIR /app/
 # Install required packages
 RUN apk add --no-cache python3
 
-# Copy everything to the working directory (except files from .dockerignore)
-ADD . .
+# Copy everything to the working directory
+ADD leekwars.py leekwars.py
+ADD http/ http/
 
 # Run the application
 CMD python3 leekwars.py
