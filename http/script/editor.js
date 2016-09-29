@@ -488,7 +488,7 @@ LW.pages.editor.resize = function() {
 	var offset = 160 + (_searchEnabled ? 40 : 0)
 
 	$('.CodeMirror-scroll').css('height', $(window).height() - offset)
-	$('#ai-list').css('height', $(window).height() - 160 - 99)
+	$('#ai-list').css('height', $(window).height() - 160 - 83)
 }
 
 LW.pages.editor.leave = function() {
