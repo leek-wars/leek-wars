@@ -3728,7 +3728,6 @@ LW.battle_royale.show = function(e) {
 		LW.socket.send([BATTLE_ROYALE_LEAVE])
 	}
 	LW.battle_royale.popup.show(e)
-	//LW.battle_royale.popup.move($('#wrapper').offset().left + $('#wrapper').width() / 2 - 300, $(window).height() - 40)
 	LW.battle_royale.popup.onminimize()
 
 	LW.battle_royale.last_leeks = []
