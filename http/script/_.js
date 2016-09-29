@@ -518,6 +518,10 @@ _.popup.new = function(view, data, width, direct, options) {
 		this.view.find('.options .option.dismiss').click(function() {
 			popup.dismiss()
 		})
+		// minimize option
+		this.view.find('.options .option.minimize').click(function() {
+			popup.minimize()
+		})
 		_.popup.current = popup
 
 		LW.handleHTML('.popup.' + name, 'page')
@@ -566,6 +570,10 @@ _.popup.new = function(view, data, width, direct, options) {
 				$('#dark').fadeOut(200)
 			}
 		}, 200)
+	}
+
+	this.minimize = function() {
+		if(this.onminimize) this.onminimize()
 	}
 
 	return this
