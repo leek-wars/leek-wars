@@ -1559,6 +1559,7 @@ body.connected #header-signin {
 	border-top-right-radius: 3px;
 }
 .popup .title .options {
+	display: flex;
 	float: right;
 	cursor: pointer;
 	margin-top: -6px;
