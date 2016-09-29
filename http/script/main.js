@@ -1882,41 +1882,15 @@ LW.smileyElem = function(elem) {
 	})
 }
 
-function linkify(text) {
-
-	var urlPattern = /(\b([\w-]+:\/\/?|www[.])[-A-Z0-9+&@#\/%?=~_|!:,.;\(\)]*)/gim;
-
-	// Email addresses
-	var emailAddressPattern = /\w+@[a-zA-Z_]+?(?:\.[a-zA-Z]{2,6})+/gim;
-
-	var blank = function (url) {
-		return (url.indexOf("http://www.leekwars.com") != 0
-		 && url.indexOf("http://leekwars.com") != 0
-		 && url.indexOf("https://www.leekwars.com") != 0
-		 && url.indexOf("www.leekwars.com") != 0
-		 && url.indexOf("leekwars.com") != 0) ? "target='_blank' rel='nofollow'" : "";
-	};
-
-	return text
-		.replace(urlPattern, function(url) {
-			var http = url.indexOf('http') != 0 ? 'http://' : '';
-			return '<a ' + blank(url) + ' href="' + http + url + '">' + url + '</a>'
-		})
-		.replace(emailAddressPattern, '<a target="_blank" rel="nofollow" href="mailto:$&">$&</a>');
-}
-
 function linkifyElem(elem) {
-
-	$(elem).html(linkify($(elem).html()));
+	$(elem).html(_.linkify($(elem).html()))
 }
 
 function commands(text, authorName) {
-
-	text = text.replace(/(^| )\/me($|\s)/g, "$1<i>" + authorName + "</i>$2");
-	text = text.replace(/(^| )\/lama($|\s)/g, "$1<i>#LamaSwag</i>$2");
-	text = text.replace(/(^| )\/admin($|\s)/g, "$1<i>" + authorName + " aime les admins !</i>$2");
-
-	return text;
+	text = text.replace(/(^| )\/me($|\s)/g, "$1<i>" + authorName + "</i>$2")
+	text = text.replace(/(^| )\/lama($|\s)/g, "$1<i>#LamaSwag</i>$2")
+	text = text.replace(/(^| )\/admin($|\s)/g, "$1<i>" + authorName + " aime les admins !</i>$2")
+	return text
 }
 
 LW.chat.init = function() {
@@ -3568,7 +3542,7 @@ var ChatController = function(chat_element, private_chat, team_chat) {
 		var message = _.protect(msg)
 
 		message = LW.smiley(message)
-		message = linkify(message)
+		message = _.linkify(message)
 		message = commands(message, authorName)
 
 		var date = new Date(time * 1000);

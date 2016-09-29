@@ -346,6 +346,48 @@ _.format.dayMonthShort = function(timestamp) {
 	return day + ' ' + _.format.months_shorts[_.lang.current][month]
 }
 
+_.linkify = function(html) {
+
+	var make_blank = function(url) {
+		return (url.indexOf("http://www.leekwars.com") != 0
+		 && url.indexOf("http://leekwars.com") != 0
+		 && url.indexOf("https://leekwars.com") != 0
+		 && url.indexOf("https://www.leekwars.com") != 0) ? "target='_blank' rel='nofollow'" : ""
+	}
+
+	var email_pattern = /\w+@[a-zA-Z_]+?(?:\.[a-zA-Z]{2,6})+/gim
+	var match, url_regex = /((?:https?):\/\/\w+\.\w+(?:\.\w+)*)|((?:www\.)?leekwars\.com)/gim
+
+	while (match = url_regex.exec(html)) {
+		var i = match.index + match[0].length
+		var par = 0, curly = 0, square = 0
+		if (html[i] == '/') {
+			while (i < html.length) {
+				var c = html[i]
+				if (c === ' ') break
+				if (c === '(') par++
+				if (c === '[') square++
+				if (c === '{') curly++
+				if (c === ')' && --par < 0) break
+				if (c === ']' && --square < 0) break
+				if (c === '}' && --curly < 0) break
+				i++
+			}
+			var last = html[i - 1]
+			while (/[\.!?:]/.test(last)) {
+				last = html[--i - 1]
+			}
+		}
+		var url = html.substring(match.index, i)
+		var real_url = (url.indexOf('http') === -1) ? 'http://' + url : url
+		var blank = make_blank(real_url)
+
+		html = html.substring(0, match.index) + '<a ' + blank + ' href="' + real_url + '">' + url + '</a>' + html.substring(i)
+		url_regex.lastIndex += real_url.length + blank.length + '<a href=""  ></a>'.length
+	}
+	return html.replace(email_pattern, '<a target="_blank" rel="nofollow" href="mailto:$&">$&</a>')
+}
+
 /*
  * Toasts
  */
