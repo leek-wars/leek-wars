@@ -8,7 +8,6 @@
 #
 #   docker build -t leek-wars-client .
 #   docker run --rm -p 8012:8012 -v /path/to/local/app/folder:/app -it -P leek-wars-client /bin/sh
-#   python3 leekwars.py
 
 FROM alpine:3.4
 MAINTAINER Pierre Lauprêtre <https://github.com/5pilow>
@@ -27,4 +26,4 @@ ADD leekwars.py leekwars.py
 ADD http/ http/
 
 # Run the application
-CMD python3 leekwars.py
+ENTRYPOINT ["python3", "leekwars.py"]
