@@ -2066,33 +2066,31 @@ LW.squares.add = function(params) {
 
 	message = _.protect(params.message)
 	message = LW.smiley(message)
-	// message = linkify(message)
 
-	var square = "<a href='" + params.link + "'>";
-	square += "<div class='square'>";
-	square += "<img class='image " + (params.padding ? 'padding' : '') + "' src='" + params.image + "'></img>";
-	square += "<div class='title'>" + params.title + "</div>";
-	square += "<div class='message'>" + message + "</div>";
-	square += "</div></a>";
+	var square = "<a href='" + params.link + "'>"
+	square += "<div class='square'>"
+	square += "<img class='image " + (params.padding ? 'padding' : '') + "' src='" + params.image + "'></img>"
+	square += "<div class='title'>" + params.title + "</div>"
+	square += "<div class='message'>" + message + "</div>"
+	square += "</div></a>"
 
-	$('#squares').append(square);
+	$('#squares').append(square)
 
 	// Animation
-	$("#squares .square").last().css('margin-bottom', -$("#squares .square").last().outerHeight());
+	$("#squares .square").last().css('margin-bottom', -$("#squares .square").last().outerHeight())
 	$("#squares .square").last().animate({
 		marginBottom: 20,
 		}, 500, function() {
-			$("#squares .square").last().css('margin-bottom', 20);
+			$("#squares .square").last().css('margin-bottom', 20)
 		}
 	);
 	$("#squares .square").last().delay(5000).animate({
 		marginRight: -220,
 		}, 500, function() {
-			$(this).remove();
+			$(this).remove()
 		}
-	);
-};
-
+	)
+}
 
 LW.util.formatDuration = function(timestamp, capital) {
 
