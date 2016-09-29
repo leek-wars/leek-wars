@@ -563,8 +563,6 @@ $(document).ready(function() {
 
 			LW.loader.show()
 
-			$('#page').css('min-height', Math.max(600, $(window).height() - 277))
-
 			LW.handleHTML('body')
 
 			resizePanel()
@@ -621,7 +619,7 @@ $(document).ready(function() {
 
 			$(".messages-button").click(function(event) {
 
-				LW.setPopups()
+				LW.resize()
 
 				$('#messages-popup .messages').html('')
 
@@ -639,7 +637,7 @@ $(document).ready(function() {
 
 			$(".notifications-button").click(function(event) {
 
-				LW.setPopups()
+				LW.resize()
 
 				$('#notifications-popup .notifications').html('')
 
@@ -669,9 +667,11 @@ $(document).ready(function() {
 			})
 
 			$(window).resize(function() {
-				LW.setPopups()
+				LW.resize()
 				LW.trigger('resize')
 			})
+			LW.resize()
+
 			$(window).keyup(function(event) {
 				if ($('#social-panel .chat-input').is(':focus')) {
 					return null
@@ -966,7 +966,9 @@ LW.shrink = function() {
 	LW.trigger('resize')
 }
 
-LW.setPopups = function() {
+LW.resize = function() {
+
+	$('#page').css('min-height', Math.max(600, $(window).height() - 257))
 
 	var window_width = $(window).width()
 	var width = Math.min(400, window_width)
