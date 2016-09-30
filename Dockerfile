@@ -10,7 +10,7 @@
 #   docker run --rm -p 8012:8012 -v /path/to/local/app/folder:/app -it -P leek-wars-client /bin/sh
 
 FROM alpine:3.4
-MAINTAINER Pierre Lauprêtre <https://github.com/5pilow>
+MAINTAINER Leek Wars <https://github.com/leek-wars>
 
 # Default port the webserver runs on
 EXPOSE 8012
