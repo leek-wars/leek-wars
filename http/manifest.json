@@ -10,5 +10,6 @@
   "orientation": "portrait",
   "permissions": [
 	  "notifications"
-  ]
+  ],
+  "gcm_sender_id": "20234258299"
 }

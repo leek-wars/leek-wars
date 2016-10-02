@@ -28,6 +28,19 @@ LW.pages.settings.init = function(params, $scope, $page) {
 		LW.pages.settings.advanced()
 		LW.pages.settings.clearLocalStorage()
 		LW.pages.settings.mails(mails)
+
+		$('#register-push').click(function() {
+
+			if ('serviceWorker' in navigator) {
+				navigator.serviceWorker.register('script/sw.js').then(function(reg) {
+					reg.pushManager.subscribe({
+						userVisibleOnly: true
+					}).then(function(subscription) {
+						_.post('push-endpoint/register', {subscription: JSON.stringify(subscription), token: LW.token()})
+					});
+				})
+			}
+		})
 	})
 }
 
