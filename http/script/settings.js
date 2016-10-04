@@ -34,7 +34,8 @@ LW.pages.settings.init = function(params, $scope, $page) {
 		$('#register-push').click(function() {
 
 			if ('serviceWorker' in navigator) {
-				navigator.serviceWorker.register('script/sw.js').then(function(reg) {
+
+				navigator.serviceWorker.ready.then(function(reg) {
 					reg.pushManager.subscribe({
 						applicationServerKey: vapid_key,
 						userVisibleOnly: true

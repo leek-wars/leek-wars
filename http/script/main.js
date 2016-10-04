@@ -67,6 +67,13 @@ var LW = {
 }
 
 /*
+ * Start service worker
+ */
+if ('serviceWorker' in navigator) {
+	 navigator.serviceWorker.register('service-worker.js')
+}
+
+/*
  * Constants
  */
 var TEAM_CHAT_SEND = 1;
