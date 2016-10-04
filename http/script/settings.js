@@ -1,3 +1,5 @@
+var vapid_key = new Uint8Array([4,32,252,255,154,105,120,132,72,225,41,243,79,52,88,153,185,153,161,231,205,247,92,110,98,91,90,206,201,2,111,70,137,209,162,137,184,113,69,22,143,215,184,6,172,40,113,137,213,15,129,183,153,154,148,27,205,52,146,168,68,31,16,209,31])
+
 LW.pages.settings.init = function(params, $scope, $page) {
 
 	_.get('settings/get-settings/$', function(data) {
@@ -34,6 +36,7 @@ LW.pages.settings.init = function(params, $scope, $page) {
 			if ('serviceWorker' in navigator) {
 				navigator.serviceWorker.register('script/sw.js').then(function(reg) {
 					reg.pushManager.subscribe({
+						applicationServerKey: vapid_key,
 						userVisibleOnly: true
 					}).then(function(subscription) {
 						_.post('push-endpoint/register', {subscription: JSON.stringify(subscription), token: LW.token()})
@@ -62,7 +65,7 @@ LW.pages.settings.language = function() {
 }
 
 LW.pages.settings.sfw = function() {
-		
+
 	$('#sfw-button').click(function() {
 
 		var sfw = !$('#sfw-switch').is(':checked')
@@ -88,16 +91,16 @@ LW.pages.settings.changePassword = function() {
 			_.toast(_.lang.get('farmer', 'error_not_same_password'))
 			return false
 		}
-	
+
 		_.post('farmer/change-password', {password: password, new_password: newPassword1}, function(data) {
-			
+
 			if (data.success == true) {
 				_.toast(_.lang.get('settings', 'password_changed'), _.reload)
 			} else {
 				_.toast(_.lang.get('farmer', 'error_' + data.error, data.params))
 			}
 		});
-		
+
 		return false
 	})
 }
@@ -114,9 +117,9 @@ LW.pages.settings.deleteAccount = function() {
 	var deleteConfirmPopup = new _.popup.new('settings.delete_confirm_popup')
 
 	deletePopup.find('#delete').click(function(e) {
-		
+
 		deletePopup.dismiss()
-		
+
 		deleteConfirmPopup.show(e)
 	})
 
@@ -127,13 +130,13 @@ LW.pages.settings.deleteAccount = function() {
 
 		var deleteForumMessages = deletePopup.find('#delete-forum-messages').is(':checked')
 
-		_.post('farmer/unregister', 
+		_.post('farmer/unregister',
 			{
-				password: $('#delete-confirm-password').val(), 
+				password: $('#delete-confirm-password').val(),
 				delete_forum_messages: !!deleteForumMessages
 
 			}, function(data) {
-			
+
 			deleteConfirmPopup.dismiss()
 
 			if (data.success) {
@@ -180,7 +183,7 @@ LW.pages.settings.clearLocalStorage = function() {
 		setTimeout(function() {
 			_.reload()
 		}, 800)
-	}) 
+	})
 }
 
 LW.pages.settings.mails = function(mails) {
@@ -209,8 +212,8 @@ LW.pages.settings.mails = function(mails) {
 
 	$('#settings-page .category-checkbox').change(function() {
 
-		var checked = $(this).is(':checked') 
-		
+		var checked = $(this).is(':checked')
+
 		$(this).next().next().find('input').each(function() {
 
 			var waschecked = $(this).is(':checked')
