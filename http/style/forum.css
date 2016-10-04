@@ -51,11 +51,11 @@
 #forum-page .category {
 	margin-bottom: 20px;
 	background-color: #FAFAFA;
-	width: 100%; 
+	width: 100%;
 }
 
 #forum-page .category td {
-	padding: 10px; 
+	padding: 10px;
 }
 
 #forum-page .category:hover {
@@ -66,18 +66,18 @@
 	width: 40px;
 	padding-right: 5px;
 }
- 	 
+
 #forum-page .category .title {
 	font-weight: 300;
 	font-size: 23px;
-	margin-bottom: 5px; 
+	margin-bottom: 5px;
 	color: #333;
 }
 
 #forum-page .category .description {
 	color: #999;
 	font-size: 14px;
-} 
+}
 
 #forum-page .category .num-topics {
 	width: 80px;
@@ -120,4 +120,21 @@
 #forum-page .chat-messages {
 	max-height: 400px;
 	min-height: 400px;
+}
+
+
+#formating {
+	color: #333;
+}
+#formating h4 {
+	margin-bottom: 4px;
+}
+#formating .rule {
+	color: #888;
+	font-weight: bold;
+	margin-right: 6px;
+}
+#formating b {
+	color: #5FAD1B;
+	font-size: 16px;
 }

@@ -273,25 +273,6 @@
 	display: none;
 }
 
-#formating {
-	color: #333;
-}
-
-#formating h4 {
-	margin-bottom: 4px;
-}
-
-#formating .rule {
-	color: #888;
-	font-weight: bold;
-	margin-right: 6px;
-}
-
-#formating b {
-	color: #5FAD1B;
-	font-size: 16px;
-}
-
 @media screen and (max-width: 599px) {
 	#forum_topic-page .message-wrapper {
 		flex-wrap: wrap;

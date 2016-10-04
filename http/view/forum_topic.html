@@ -3,9 +3,9 @@
 		<h1>
 			<a href='/forum'>{#forum.title}</a>
 			>
-			<a href='/forum/category-{category.id}'>{_.lang.get('forum', 'category_' + category.name)}</a> 
-			> 
-			<span id='topic-title'>{topic.name}</span> 
+			<a href='/forum/category-{category.id}'>{_.lang.get('forum', 'category_' + category.name)}</a>
+			>
+			<span id='topic-title'>{topic.name}</span>
 		</h1>
 		<div class='info attrs'>
 			@if (topic.resolved)
@@ -40,11 +40,11 @@
 		@foreach (message in messages)
 
 			<div class='message-wrapper' id='message-{message.id}'>
-				
+
 				<div class='profile-td'>
-					
+
 					<div class='profile'>
-						
+
 						<a class='' href='/farmer/{message.writer.id}'>
 							<img src='@include('main.avatar', message.writer)'></img>
 
@@ -133,31 +133,20 @@
 
 		@if (!topic.locked)
 			<div id='editor'>
-			
+
 				<h2>{#answer}</h2>
 
-				<textarea id='response'></textarea> 
+				<textarea id='response'></textarea>
 				<br>
-			
+
 				<center>
 					<div id='send' class='button'>{#send}</div>
 				</center>
 
-				<div id='formating'>
-					<h4>Formatage</h4>
-					<span class='rule'>Code source ➤ </span> <b>[code]</b>mon code source<b>[/code]</b> <br>
-					<span class='rule'>Grand titre ➤ </span> <b>#</b> Titre, ou souligné par des <b>=</b> <br>
-					<span class='rule'>Sous-titre ➤ </span> <b>##</b> Sous-titre, ou souligné par des <b>-</b> <br>
-					<span class='rule'>Sous-sous-titre ➤ </span> <b>###</b> Sous-sous-titre <br>
-					<span class='rule'>Gras ➤ </span> <b>*</b>gras<b>*</b> <br>
-					<span class='rule'>Italique ➤ </span> <b>/</b>italique<b>/</b> <br>
-					<span class='rule'>Souligné ➤ </span> <b>_</b>souligné<b>_</b> <br>
-					<span class='rule'>Barré ➤ </span> <b>~</b>barré<b>~</b> <br>
-					<span class='rule'>lien ➤ </span> <b>&lt;</b>https://leekwars.com/<b>&gt;</b>
-				</div>
+				@include('forum.formatting_rules')
 			</div>
 		@endif
-		
+
 		<br>
 		<center class='pagination'>
 			{{pagination}}
@@ -166,8 +155,8 @@
 		<h2>
 			<a href='/forum'>{#forum.title}</a>
 			>
-			<a href='/forum/category-{category.id}'>{_.lang.get('forum', 'category_' + category.name)}</a> 
-			> 
+			<a href='/forum/category-{category.id}'>{_.lang.get('forum', 'category_' + category.name)}</a>
+			>
 			{topic.name}
 		</h2>
 	</div>
@@ -176,9 +165,9 @@
 @view (delete_popup)
 
 	<div class='title'>{#do_you_want_to_delete_message}</div>
-	
+
 	<div class='content'>{#undoable_action}</div>
-	
+
 	<div class='actions'>
 		<div class='dismiss'>{#cancel}</div>
 		<div id='delete-button' class='red'>{#delete}</div>
@@ -188,9 +177,9 @@
 @view (delete_topic_popup)
 
 	<div class='title'>{#do_you_want_to_delete_topic}</div>
-	
+
 	<div class='content'>{#undoable_action}</div>
-	
+
 	<div class='actions'>
 		<div class='dismiss'>{#cancel}</div>
 		<div id='delete-button' class='red'>{#delete}</div>

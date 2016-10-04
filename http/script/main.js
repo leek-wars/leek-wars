@@ -417,6 +417,9 @@ LW.pages = {
 	},
 	forum_category: {
 		connected: true,
+		styles: [
+			'forum.css'
+		],
 		langs: ['forum']
 	},
 	forum_topic: {
@@ -430,6 +433,7 @@ LW.pages = {
 		styles: [
 			['third_party/codemirror/', 'codemirror.css'],
 			'code.css',
+			'forum.css'
 		]
 	},
 	chat: {
