@@ -14,7 +14,7 @@
 
 		<div class='panel'>
 
-			<div class='header'>			
+			<div class='header'>
 				<h2>{#language}</h2>
 			</div>
 
@@ -36,7 +36,7 @@
 
 		<div class='panel'>
 
-			<div class='header'>			
+			<div class='header'>
 				<h2>{#discrete_mode}</h2>
 			</div>
 
@@ -50,10 +50,10 @@
 		</div>
 
 	</div><div class='column6'>
-		
+
 		<div class='panel'>
 
-			<div class='header'>			
+			<div class='header'>
 				<h2>{#change_password}</h2>
 			</div>
 
@@ -68,7 +68,7 @@
 
 					<h4>{#confirm_password}</h4>
 					<input name="new_password2" type="password" required></input> <br>
-					
+
 					<center><input type='submit' class='button green' value='{#change}'></input></center>
 				</form>
 			</div>
@@ -78,15 +78,15 @@
 
 		<div class='panel'>
 
-			<div class='header'>		
+			<div class='header'>
 				<h2>E-mails</h2>
 			</div>
-			
+
 			<div class='content' id='mails'>
 
 				@foreach (category : notifications in mails)
 
-					<input type='checkbox' id='mails_{category}' class='category-checkbox' category='{category}'> 
+					<input type='checkbox' id='mails_{category}' class='category-checkbox' category='{category}'>
 					<label for='mails_{category}' class='category-title'>{_.lang.get('mail', 'notif_' + category)}</label>
 
 					<div class='category' category='{category}'>
@@ -106,10 +106,10 @@
 
 		<div class='panel'>
 
-			<div class='header'>		
+			<div class='header'>
 				<h2>{#delete_account}</h2>
 			</div>
-			
+
 			<div class='content'>
 				<div id='delete-button' class='button'>{#delete_account}</div>
 			</div>
@@ -118,13 +118,13 @@
 
 		<div class='panel'>
 
-			<div class='header'>		
+			<div class='header'>
 				<h2>Push notifiations</h2>
 			</div>
-			
+
 			<div class='content'>
-				
-				<button id='register-push'>Register push notifications</button>
+
+				<div class='button' id='register-push'>Register push notifications</div>
 
 			</div>
 		</div>
@@ -144,7 +144,7 @@
 
 		<div class='panel'>
 
-			<div class='header'>			
+			<div class='header'>
 				<h2>Vider le localStorage</h2>
 			</div>
 
@@ -156,20 +156,20 @@
 
 	</div><div class='column6'>
 
-		
+
 	</div>
 </div>
 
 @view (delete_popup)
 	<div class='title'>{#delete_account}</div>
-	
+
 	<div class='content'>
 		{#delete_message}
 		<br>
 		<br>
 		<input type='checkbox' id='delete-forum-messages'><label for='delete-forum-messages'>{#delete_forum_messages}</label>
 	</div>
-	
+
 	<div class='actions'>
 		<div class='action dismiss'>{#delete_cancel}</div>
 		<div id='delete' class='action red'>{#delete_confirm}</div>
@@ -179,7 +179,7 @@
 @view (delete_confirm_popup)
 
 	<div class='title'>{#delete_confirmation}</div>
-	
+
 	<div class='content'>{#delete_confirmation_password} : <br><br>
 
 	{#delete_password} : <input type='password' id='delete-confirm-password'></input>
@@ -194,14 +194,14 @@
 @view (delete_success_popup)
 
 	<div class='title'>{#delete_success}</div>
-	
+
 	<div class='content'>{#delete_success_message}</div>
 @endview
 
 @view (delete_failed_popup)
 
 	<div class='title'>{#delete_failed}</div>
-	
+
 	<div class='content'>
 		<div id='delete-error'></div>
 	</div>
