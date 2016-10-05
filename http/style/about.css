@@ -97,3 +97,7 @@
 	width: 100%;
 	max-width: 90px;
 }
+
+#about-page .fb-like {
+	vertical-align: top;
+}
