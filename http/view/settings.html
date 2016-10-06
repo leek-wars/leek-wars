@@ -79,25 +79,37 @@
 		<div class='panel'>
 
 			<div class='header'>
-				<h2>E-mails</h2>
+				<h2>Notifications</h2>
 			</div>
 
-			<div class='content' id='mails'>
+			<div class='content' id='notifications'>
 
+				<table>
 				@foreach (category : notifications in mails)
-
-					<input type='checkbox' id='mails_{category}' class='category-checkbox' category='{category}'>
-					<label for='mails_{category}' class='category-title'>{_.lang.get('mail', 'notif_' + category)}</label>
-
-					<div class='category' category='{category}'>
-
+					<tr>
+						<td class='category'>
+							{_.lang.get('mail', 'notif_' + category)}
+						</td>
+					</tr>
+					<div category='{category}'>
 						@foreach (mail in notifications)
-							<input type='checkbox' id='mails_{category}{mail}' class='checkbox' {settings['mail_' + category + '_' + mail] ? 'checked=true' : ''} category='{category}' setting='mail_{category}_{mail}'>
-							<label for='mails_{category}{mail}'>{_.lang.get('mail', 'notif_' + category + '_' + mail)}</label>
-							<br>
+							<tr>
+								<td class='item'>
+									<label for='mails_{category}{mail}'>{_.lang.get('mail', 'notif_' + category + '_' + mail)}</label>
+								</td>
+								<td class='push'>
+									<input type='checkbox' id='cb_push_{category}{mail}' setting='push_{category}{mail}' {settings['push_' + category + '_' + mail] ? 'checked=true' : ''}><label for='cb_push_{category}{mail}'>Push</label>
+								</td>
+								<td>
+									<input type='checkbox' id='cb_mail_{category}{mail}' setting='mail_{category}{mail}' {settings['mail_' + category + '_' + mail] ? 'checked=true' : ''}><label for='cb_mail_{category}{mail}'>Mail</label>
+								</td>
+							</tr>
 						@end
+						<tr class='separator'></tr>
 					</div>
 				@end
+				</table>
+				<!--<div class='button' id='register-push'>Activer les notifications push</div>-->
 			</div>
 		</div>
 	</div>
@@ -112,20 +124,6 @@
 
 			<div class='content'>
 				<div id='delete-button' class='button'>{#delete_account}</div>
-			</div>
-		</div>
-	</div><div class='column6'>
-
-		<div class='panel'>
-
-			<div class='header'>
-				<h2>Push notifiations</h2>
-			</div>
-
-			<div class='content'>
-
-				<div class='button' id='register-push'>Register push notifications</div>
-
 			</div>
 		</div>
 	</div>

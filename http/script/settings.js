@@ -2,7 +2,7 @@ var vapid_key = new Uint8Array([4,32,252,255,154,105,120,132,72,225,41,243,79,52
 
 LW.pages.settings.init = function(params, $scope, $page) {
 
-	_.get('settings/get-settings/$', function(data) {
+	_.get('settings/get-settings/' + LW.token(), function(data) {
 
 		var mails = {
 			fight: ['solo', 'farmer', /* 'team',*/ 'solo_challenge', 'farmer_challenge'],
@@ -191,7 +191,7 @@ LW.pages.settings.mails = function(mails) {
 
 	var updateCategory = function(category) {
 
-		var categoryDiv = $('#mails').find('.category[category=' + category + ']')
+		var categoryDiv = $('#notifications').find('.category[category=' + category + ']')
 
 		var count = 0
 		var inputs = categoryDiv.find('input').each(function() {
@@ -207,28 +207,11 @@ LW.pages.settings.mails = function(mails) {
 		}
 	}
 
-	$('#mails .category').each(function() {
+	$('#notifications .category').each(function() {
 		updateCategory($(this).attr('category'))
 	})
 
-	$('#settings-page .category-checkbox').change(function() {
-
-		var checked = $(this).is(':checked')
-
-		$(this).next().next().find('input').each(function() {
-
-			var waschecked = $(this).is(':checked')
-			$(this).prop('checked', checked)
-
-			if (waschecked != checked) {
-				_.post('settings/update-setting', {setting: $(this).attr('setting'), value: '' + checked})
-			}
-		})
-
-		updateCategory($(this).attr('category'))
-	})
-
-	$('#settings-page .checkbox').change(function() {
+	$('#settings-page #notifications [type="checkbox"]').change(function() {
 
 		var checked = $(this).is(':checked')
 

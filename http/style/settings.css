@@ -61,15 +61,25 @@
 	display: none;
 }
 
-#settings-page #mails {
+#settings-page #notifications {
 	text-align: left;
 }
 
-#settings-page #mails .category {
+#settings-page #notifications .category {
+	color: #888;
+	font-size: 18px;
+}
+#settings-page #notifications .item {
 	padding-left: 18px;
 	margin-bottom: 10px;
 }
-
-#settings-page #mails .category.off {
+#settings-page #notifications .push {
+	padding-right: 5px;
+	padding-left: 5px;
+}
+#settings-page #notifications .separator {
+	height: 10px;
+}
+#settings-page #notifications .category.off {
 	opacity: 0.6;
-} 
+}
