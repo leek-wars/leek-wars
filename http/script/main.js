@@ -8,11 +8,9 @@ var LW = {
 	updated: false,
 	currentPage: '/',
 	prod: location.host.indexOf("leekwars.com") === 0,
-	dev: location.host.indexOf("dev.leekwars.com") === 0,
-	test: location.host.indexOf("test.leekwars.com") === 0,
 	beta: location.host.indexOf("beta.leekwars.com") === 0,
-	local: location.host.indexOf("localhost") === 0 && __FULL_LOCAL,
-	mixed_local: location.host.indexOf("localhost") === 0 && !__FULL_LOCAL,
+	dev: location.host.indexOf("localhost") === 0 && !__LOCAL,
+	local: location.host.indexOf("localhost") === 0 && __LOCAL,
 	staticURL: __STATIC_URL,
 	avatarURL: __AVATAR_URL,
 	api: __API_URL,
@@ -549,9 +547,9 @@ $(document).ready(function() {
 		if (LW.dev) {
 			_.favicon(LW.staticURL + '/image/favicon_dev.png')
 			$('body').addClass('dev')
-		} else if (LW.test || LW.mixed_local || LW.local) {
-			_.favicon(LW.staticURL + '/image/favicon_test.png')
-			$('body').addClass('test')
+		} else if (LW.local) {
+			_.favicon(LW.staticURL + '/image/favicon_local.png')
+			$('body').addClass('local')
 		} else if (LW.beta) {
 			_.favicon(LW.staticURL + '/image/favicon_beta.png')
 			$('body').addClass('beta')
@@ -567,8 +565,8 @@ $(document).ready(function() {
 		_.view.load('main', false, function() {
 
 			$('body').html(_.view.render('main', {
+				local_site: LW.local,
 				dev_site: LW.dev,
-				test_site: LW.test || LW.mixed_local || LW.local,
 				beta_site: LW.beta
 			}))
 
@@ -935,7 +933,7 @@ LW.disconnect = function() {
 }
 
 LW.token = function() {
-	if (LW.mixed_local) return localStorage['token'] // Get the token directly
+	if (LW.dev) return localStorage['token'] // Get the token directly
 	return '$' // Get the token from the cookie
 }
 
@@ -1681,7 +1679,7 @@ LW.initWebSocket = function() {
 	}
 
 	var protocol = LW.local ? 'ws' : 'wss'
-	var host = LW.mixed_local ? 'leekwars.com' : window.location.host
+	var host = LW.dev ? 'leekwars.com' : window.location.host
 	LW.socket.socket = new WebSocket(protocol + '://' + host + "/ws")
 
 	LW.socket.socket.onopen = function() {

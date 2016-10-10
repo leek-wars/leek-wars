@@ -54,7 +54,7 @@ body.beta #background {
 	background: radial-gradient(#a0a, transparent);
 }
 
-body.test #background {
+body.local #background {
 	background: -moz-radial-gradient(#00a, transparent);
 	background: -webkit-radial-gradient(#00a, transparent);
 	background: -ms-radial-gradient(#00a, transparent);
@@ -1967,7 +1967,7 @@ input:active, input:focus {
 }
 
 /* Dev */
-.dev-label, .beta-label, .test-label {
+.dev-label, .beta-label, .local-label {
 	font-family: 'Courgette', cursive;
 	color: white;
 	border-radius: 4px;
@@ -1980,7 +1980,7 @@ input:active, input:focus {
 
 #header-mobile .dev-label,
 #header-mobile .beta-label,
-#header-mobile .test-label
+#header-mobile .local-label
 {
 	line-height: 42px;
 	vertical-align: bottom;
@@ -1995,7 +1995,7 @@ input:active, input:focus {
 	background: #b0b;
 }
 
-.test-label {
+.local-label {
 	background: blue;
 }
 

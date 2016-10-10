@@ -16,7 +16,8 @@ class LWHandler(SimpleHTTPRequestHandler):
 			bindings = {
 				'static': 'http://localhost:' + str(PORT) + '/',
 				'time': str(int(time.time())),
-				'api': 'https://leekwars.com/api/'
+				'api': 'https://leekwars.com/api/',
+				'local': 'false'
 			}
 			body = open("http" + os.sep + "view" + os.sep + "head.html").read()
 			body = re.sub(r"\{\{(.*)\}\}", lambda m: bindings[m.group(1)], body)
