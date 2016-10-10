@@ -250,7 +250,7 @@ LW.TEAM_COLORS = [
 	"#A2A2A2", // grey
 	"#9800AE", // purple
 	"#FF7D00", // orange
-	"##14D7E4", // cyan
+	"#14D7E4", // cyan
 	"#E414C9", // pink
 	"#000000", // black
 	"#ffffff" // white
