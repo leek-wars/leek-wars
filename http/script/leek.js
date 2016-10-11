@@ -1027,3 +1027,31 @@ LW.pages.leek.levelPopup = function(leek) {
 		})
 	}
 }
+
+// Conversion from characteristic amount to invested capital
+LW.pages.leek.characteristicToCapital = function(characteristic, amount, level = 1) {
+	switch (characteristic) {
+	    case CHARACTERISTIC_LIFE:
+	        return Math.min(amount-(100+(level-1)*3), 1000) * 1/4 + Math.min(Math.max(0, amount-(1100+(level-1) *3)), 999) * 1/3 + Math.max(0, amount-(2100+(level-1) *3)) * 1/2
+
+	    case CHARACTERISTIC_TP:
+	        return (amount - 10) * 80
+
+	    case CHARACTERISTIC_MP:
+	        return (amount - 3) * 50
+
+	    case CHARACTERISTIC_FREQUENCY:
+	       	return amount - 100
+
+	    case CHARACTERISTIC_STRENGTH:
+	    case CHARACTERISTIC_WISDOM:
+	    case CHARACTERISTIC_AGILITY:
+	    case CHARACTERISTIC_RESISTANCE:
+	    case CHARACTERISTIC_SCIENCE:
+	    case CHARACTERISTIC_MAGIC:
+	        return Math.min(amount, 200) / 2 + Math.min(Math.max(0, amount-200), 200) + Math.min(Math.max(0, amount-400), 200) * 2 + Math.max(0, amount-600) * 3
+
+	    default:
+	        return 0
+	} 
+}
