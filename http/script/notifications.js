@@ -12,6 +12,8 @@ LW.pages.notifications.init = function(params, $scope, $page) {
 		$scope.notifications = data.notifications
 		$page.render()
 
+		LW.setTitle(_.lang.get('notifications', 'title'))
+
 		_.post('notification/read-all')
 	})
 }
