@@ -200,6 +200,13 @@ LW.pages.garden.select_leek = function(leek_id) {
 
 	_.get('garden/get-leek-opponents/' + leek_id + '/' + LW.token(), function(data) {
 		if (data.success) {
+
+			$('#garden-solo .enemies[of=' + leek_id + '] .no-opponents').hide()
+			if (data.opponents.length == 0) {
+				$('#garden-solo .enemies[of=' + leek_id + '] .no-opponents').show()
+				return null
+			}
+
 			var html = ''
 			for (var o in data.opponents) {
 				html += _.view.render('garden.leek', {leek: data.opponents[o]})
@@ -239,6 +246,7 @@ LW.pages.garden.select_farmer = function() {
 	_.get('garden/get-farmer-opponents/' + LW.token(), function(data) {
 		if (data.success) {
 
+			$('#garden-farmer .no-opponents').hide()
 			if (data.opponents.length == 0) {
 				$('#garden-farmer .no-opponents').show()
 				return null
@@ -300,6 +308,13 @@ LW.pages.garden.select_composition = function(compo_id) {
 
 	_.get('garden/get-composition-opponents/' + compo_id + '/' + LW.token(), function(data) {
 		if (data.success) {
+
+			$('#garden-team .enemies[of=' + compo_id + '] .no-opponents').hide()
+			if (data.opponents.length == 0) {
+				$('#garden-team .enemies[of=' + compo_id + '] .no-opponents').show()
+				return null
+			}
+
 			var html = ''
 			for (var o in data.opponents) {
 				html += "<div class='compo-wrapper'>" + _.view.render('garden.compo', {compo: data.opponents[o]}) + "</div>"
