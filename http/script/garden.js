@@ -257,7 +257,7 @@ LW.pages.garden.select_farmer = function() {
 				html += _.view.render('garden.farmer', data.opponents[o])
 			}
 
-			$('#garden-farmer .enemies .opponents').html(html)
+			$('#garden-farmer .enemies .opponents').show().html(html)
 
 			$('#garden-farmer .enemies .farmer').click(function() {
 				_.post('garden/start-farmer-fight', {
@@ -319,7 +319,7 @@ LW.pages.garden.select_composition = function(compo_id) {
 			for (var o in data.opponents) {
 				html += "<div class='compo-wrapper'>" + _.view.render('garden.compo', {compo: data.opponents[o]}) + "</div>"
 			}
-			$('#garden-team .enemies[of=' + compo_id + '] .opponents').html(html)
+			$('#garden-team .enemies[of=' + compo_id + '] .opponents').show().html(html)
 
 			$('#garden-team .enemies[of=' + compo_id + '] .opponents .compo').click(function() {
 				_.post('garden/start-team-fight', {
