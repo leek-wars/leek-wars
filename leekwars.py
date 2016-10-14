@@ -6,11 +6,11 @@ import os, re, time, webbrowser
 
 PORT = 8012
 
+os.chdir('http')
+
 class LWHandler(SimpleHTTPRequestHandler):
 	def do_GET(self):
-		self.path = os.sep + os.path.join(*re.compile(r"[\/]").split(self.path))
-		if self.path != os.sep and os.access('.' + os.sep + 'http' + os.sep + self.path, os.R_OK):
-			self.path = 'http' + os.sep + self.path
+		if self.path != '/' and os.access('.' + os.sep + self.path, os.R_OK):
 			super().do_GET();
 		else:
 			bindings = {
@@ -19,7 +19,7 @@ class LWHandler(SimpleHTTPRequestHandler):
 				'api': 'https://leekwars.com/api/',
 				'local': 'false'
 			}
-			body = open("http" + os.sep + "view" + os.sep + "head.html").read()
+			body = open("view" + os.sep + "head.html").read()
 			body = re.sub(r"\{\{(.*)\}\}", lambda m: bindings[m.group(1)], body)
 
 			self.send_response(200)
@@ -30,7 +30,7 @@ class LWHandler(SimpleHTTPRequestHandler):
 			self.wfile.flush()
 
 class LWTCPServer(socketserver.TCPServer):
-    allow_reuse_address = True
+	allow_reuse_address = True
 server = LWTCPServer(("", PORT), LWHandler)
 print("Serving Leek Wars at port", PORT)
 webbrowser.open('http://localhost:' + str(PORT))
