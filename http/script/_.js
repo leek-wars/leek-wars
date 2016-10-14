@@ -936,6 +936,7 @@ _.view.load = function(view, admin, callback) {
 _.view.parse = function(fileName, view) {
 
 	view = view.replace(/\n/g, '')
+	view = view.replace(/\r/g, '')
 
 	var i = 0
 	var views = {}
