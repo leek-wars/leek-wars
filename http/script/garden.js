@@ -189,6 +189,12 @@ LW.pages.garden.select_leek = function(leek_id) {
 	localStorage["garden/leek"] = leek_id
 	$('#solo-leek').text(element.attr('name'))
 
+	$('#garden-solo .enemies[of=' + leek_id + '] .no-more-fights').hide()
+	if (this.scope.garden.solo_fights[leek_id] == 0) {
+		$('#garden-solo .enemies[of=' + leek_id + '] .no-more-fights').show()
+		return null
+	}
+
 	if (element.attr('loaded')) return null
 	element.attr('loaded', true)
 
@@ -221,6 +227,7 @@ LW.pages.garden.select_leek = function(leek_id) {
 
 LW.pages.garden.select_farmer = function() {
 
+	$('#garden-farmer .no-more-fights').hide()
 	if (this.scope.garden.farmer_fights == 0) {
 		$('#garden-farmer .no-more-fights').show()
 		return null
@@ -273,6 +280,20 @@ LW.pages.garden.select_composition = function(compo_id) {
 	this.scope.my_compo = compo_id
 	localStorage["garden/compo"] = compo_id
 	$('#my-compo').text(element.attr('name'))
+
+	$('#garden-team .enemies[of=' + compo_id + '] .no-more-fights').hide()
+	var compo_array_id = null
+	for (var i in LW.pages.garden.scope.garden.my_compositions)
+	{
+		if (LW.pages.garden.scope.garden.my_compositions[i].id == compo_id)
+		{
+			compo_array_id = i
+		}
+	}
+	if (this.scope.garden.my_compositions[compo_array_id].fights == 0) {
+		$('#garden-team .enemies[of=' + compo_id + '] .no-more-fights').show()
+		return null
+	}
 
 	if (element.attr('loaded')) return null
 	element.attr('loaded', true)
