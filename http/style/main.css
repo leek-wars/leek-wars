@@ -1779,7 +1779,6 @@ input:active, input:focus {
 }
 
 .smiley {
-	background-image: url('../image/smileys.png');
 	display: inline-block;
 	vertical-align: middle;
 	margin-top: -2px;
