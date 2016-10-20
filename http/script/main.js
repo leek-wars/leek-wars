@@ -3488,6 +3488,20 @@ var ChatController = function(chat_element, private_chat, team_chat) {
 		}
 	}
 
+	$('#chat-smileys-button').click(function(e) {
+		$('#chat-smileys-wrapper').toggle()
+	});
+
+	$('#chat-smileys-wrapper').on('click', '.smiley', function(e) {
+		var emoji = ':' + $(this).attr('emoji') + ':'
+
+		var $txt = $('#chat .chat-input')
+        var caretPos = $txt[0].selectionStart
+        var textAreaTxt = $txt.val()
+        var txtToAdd = emoji + ' '
+        $txt.val(textAreaTxt.substring(0, caretPos) + txtToAdd + textAreaTxt.substring(caretPos))
+	});
+
 	function setChatLanguage(channel) {
 		_chatLanguage = channel
 		localStorage['chat/channel'] = channel
