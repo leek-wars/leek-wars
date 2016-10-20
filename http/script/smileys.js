@@ -2507,8 +2507,7 @@ smileys.parse = function(content) {
 			callback: function(icon) {
 				return '/image/smileys/' + icon + '.png'
 			},
-			className: 'smiley',
-			draggable: true
+			className: 'smiley'
 		}
 	)
 }
