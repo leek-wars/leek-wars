@@ -3559,8 +3559,8 @@ var ChatController = function(chat_element, private_chat, team_chat) {
 
 		var message = _.protect(msg)
 
-		message = LW.smiley(message)
 		message = _.linkify(message)
+		message = LW.smiley(message)
 		message = commands(message, authorName)
 
 		var date = new Date(time * 1000);

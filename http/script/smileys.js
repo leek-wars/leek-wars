@@ -3,6 +3,7 @@
  */
 
 var smileys = {
+	url: 'https://twemoji.maxcdn.com/2/svg/',
 	smileys: {},
 	shorcuts: {}
 }
@@ -1351,7 +1352,7 @@ smileys.parse = function(content) {
 		content,
 		{
 			callback: function(icon) {
-				return '/image/smileys/' + icon + '.svg'
+				return smileys.url + icon + '.svg'
 			},
 			className: 'smiley'
 		}
