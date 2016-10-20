@@ -1779,12 +1779,12 @@ input:active, input:focus {
 }
 
 .smiley {
-	background-image: url('../image/smileys.png');
 	display: inline-block;
 	vertical-align: middle;
 	margin-top: -2px;
-	width: 16px;
-	height: 16px;
+	width: 16px !important;
+	height: 16px !important;
+	float: none !important;
 }
 
 /*
