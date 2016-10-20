@@ -27,10 +27,6 @@ var LW = {
 		tentative: 1,
 		delay: 1000
 	},
-	smileys: [
-		[":O", ":-O", ":o"], [":D", ":-D"], ["&lt;3", "(l)", "(L)", "<3"], [":)", ":-)", ":]"], [":/"], [";)", ";-)"],
-		[":("], [":p", ":P", ":-p"], ["(lama)"], [":B", ":b"], ["(lucky)"]
-	],
 	views: {},
 	chat: {
 		controller: null,
@@ -1878,20 +1874,8 @@ var FormatTime = function(time) {
 	return res;
 }
 
-function escapeRegExp(str) {
-	return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
-}
-
 LW.smiley = function(data) {
-
-	for (var s in LW.smileys) {
-		for (var i in LW.smileys[s]) {
-			var x = -1 - s * 18;
-			data = data.replace(new RegExp("(^|\\s)" + escapeRegExp(LW.smileys[s][i]), "g"),
-			"$1<span class='smiley' title='" + LW.smileys[s][i] + "' style=\"background-position: " + x + "px -1px;\"></span>");
-		}
-	}
-	return data
+	return smileys.parse(data)
 }
 
 LW.smileyElem = function(elem) {
@@ -3504,6 +3488,20 @@ var ChatController = function(chat_element, private_chat, team_chat) {
 		}
 	}
 
+	$('#chat-smileys-button').click(function(e) {
+		$('#chat-smileys-wrapper').toggle()
+	});
+
+	$('#chat-smileys-wrapper').on('click', '.smiley', function(e) {
+		var emoji = ':' + $(this).attr('emoji') + ':'
+
+		var $txt = $('#chat .chat-input')
+        var caretPos = $txt[0].selectionStart
+        var textAreaTxt = $txt.val()
+        var txtToAdd = emoji + ' '
+        $txt.val(textAreaTxt.substring(0, caretPos) + txtToAdd + textAreaTxt.substring(caretPos))
+	});
+
 	function setChatLanguage(channel) {
 		_chatLanguage = channel
 		localStorage['chat/channel'] = channel
@@ -3561,8 +3559,8 @@ var ChatController = function(chat_element, private_chat, team_chat) {
 
 		var message = _.protect(msg)
 
-		message = LW.smiley(message)
 		message = _.linkify(message)
+		message = LW.smiley(message)
 		message = commands(message, authorName)
 
 		var date = new Date(time * 1000);
