@@ -34,6 +34,10 @@ error_name_format				Your leek name must contain only alphanumeric characters
 error_under_required_level_1	Your first leek must be level %s.
 error_under_required_level_2	Your second leek must be level %s.
 error_under_required_level_3	Your third leek must be level %s.
+error_under_required_level_weapon		%s doesn't have the required level for this weapon.
+error_under_required_level_chip			%s doesn't have the required level for this chip.
+error_max_weapon						%s can't equip an additional weapon.
+error_max_chip							%s can't equip an additional chip.
 farmed_by						Raised by <a class="leek-farmer" href="/farmer/%1$s">%2$s</a>
 fights							Fights
 frequency						Frequency

@@ -676,7 +676,14 @@ LW.pages.leek.weapons = function(leek) {
 
 		if (action == 'add') {
 
-			if (leek.weapons.length >= leek.max_weapons || location == 'leek') return null
+			if (leek.weapons.length >= leek.max_weapons || location == 'leek') {
+				_.toast(leek.name + " ne peut pas équiper une arme supplémentaire." /* _.lang.get('error_under_required_level_weapon', leek.name) */)
+				return null
+			}
+			if (weapon.level > leek.level) {
+				_.toast(leek.name + " n'a pas le niveau requis pour cette arme."  /* _.lang.get('error_max_weapon', leek.name) */)
+				return null
+			}
 
 			_.log("Add weapon id " + weaponID + "...")
 
@@ -786,7 +793,14 @@ LW.pages.leek.chips = function(leek) {
 
 		if (action == 'add') {
 
-			if (location == 'leek' || leek.chips.length >= leek.max_chips) return null
+			if (location == 'leek' || leek.chips.length >= leek.max_chips) {
+				_.toast(leek.name + " ne peut pas équiper une puce supplémentaire." /* _.lang.get('error_under_required_level_chip', leek.name) */)
+				return null
+			}
+			if (chip.level > leek.level) {
+				_.toast(leek.name + " n'a pas le niveau requis pour cette puce."  /* _.lang.get('error_max_chip', leek.name) */)
+				return null
+			}
 
 			popup.view.find('.leek-chips').append(chipElem)
 			chipElem.attr('location', 'leek')
