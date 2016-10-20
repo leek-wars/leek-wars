@@ -3590,7 +3590,7 @@ var ChatController = function(chat_element, private_chat, team_chat) {
 
 		} else {
 
-			var avatar = avatarChanged > 0 ? LW.avatarURL + '/avatar/' + author + ".png" : LW.staticURL + "/image/no_avatar.png";
+			var avatar = avatarChanged > 0 ? LW.avatarURL + '/avatar/' + author + ".png?" + avatarChanged : LW.staticURL + "/image/no_avatar.png";
 
 			var messageData = "<div class='chat-message' author='" + author + "' time='" + time + "' lang='" + lang + "'>";
 			messageData += "<a href='/farmer/" + author + "'><img class='chat-avatar' src='" + avatar + "'></img></a>";
