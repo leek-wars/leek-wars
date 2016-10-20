@@ -1914,6 +1914,7 @@ function commands(text, authorName) {
 	text = text.replace(/(^| )\/me($|\s)/g, "$1<i>" + authorName + "</i>$2")
 	text = text.replace(/(^| )\/lama($|\s)/g, "$1<i>#LamaSwag</i>$2")
 	text = text.replace(/(^| )\/admin($|\s)/g, "$1<i>" + authorName + " aime les admins !</i>$2")
+	text = text.replace(/(^| )\/modo($|\s)/g, "$1<i>" + authorName + " aime les modos !</i>$2")
 	return text
 }
 
