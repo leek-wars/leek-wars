@@ -13,6 +13,22 @@
 	margin-top: 150px;
 }
 
+.chat-new-messages {
+	display: none;
+	height: 30px;
+	line-height: 30px;
+	background-color: #bbb;
+	text-align: center;
+}
+
+.chat-new-messages:hover {
+	cursor: pointer;
+}
+
+.chat-messages.new-messages + .chat-new-messages {
+	display: block;
+}
+
 .chat-input {
 	margin-top: 10px;
 	width: 100%;
@@ -27,7 +43,7 @@
 	width: 28px;
 	opacity: 0.3;
 	margin-right: 5px;
-	cursor: pointer; 
+	cursor: pointer;
 }
 
 #chat-language {

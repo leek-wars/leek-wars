@@ -3483,6 +3483,18 @@ var ChatController = function(chat_element, private_chat, team_chat) {
 		hideFlags()
 	}
 
+	$(this.msg_elem).scroll(function() {
+		if ($(this).scrollTop() + $(this).height() > $(this)[0].scrollHeight - 100) {
+			controller.msg_elem.removeClass('new-messages')
+		}
+	})
+
+	chat_element.find('.chat-new-messages').click(function() {
+		$(controller.msg_elem).animate({
+			scrollTop: $(controller.msg_elem)[0].scrollHeight + 1000
+		}, 300);
+	})
+
 	if (!private_chat) {
 
 		chat_element.find('.chat-send').click(function() {
@@ -3666,10 +3678,14 @@ var ChatController = function(chat_element, private_chat, team_chat) {
 		if (scrollAction) {
 			var e = this.msg_elem
 
+			this.msg_elem.removeClass('new-messages')
+
 			// FIXME dirty but seems working
 			setTimeout(function() {
 				e.scrollTop(e[0].scrollHeight + 1000);
 			}, 60)
+		} else {
+			this.msg_elem.addClass('new-messages')
 		}
 
 		if (LW.chat.channels.length == 1) {
