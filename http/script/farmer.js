@@ -270,6 +270,7 @@ LW.pages.farmer.avatar = function() {
 			if (data.success) {
 				_.toast(_.lang.get('farmer', 'upload_success'))
 				$('#avatar').attr('src', $('#avatar').attr('src'))
+				window.location.reload()
 			} else {
 				_.toast(_.lang.get('farmer', 'upload_failed', data.error))
 			}
