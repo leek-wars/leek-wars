@@ -87,6 +87,11 @@ LW.pages.report.init = function(params, $scope, $page) {
 					}
 				}
 
+				// Connect the button to make an other test fight with same parameters 
+				if (fight.context == LW.FIGHT_CONTEXT.TEST) {
+					$('body').on('click', '#refight-test', _refightTest)
+				}
+
 				$scope.team1_title = team1Title
 				$scope.team2_title = team2Title
 				$scope.leeks1 = leeks1
@@ -777,4 +782,32 @@ LW.pages.report.expandTabs = function() {
 
 		update(panel)
 	})
+}
+
+// Start a new test fight with same parameters
+function _refightTest() {
+
+	var _testType = localStorage['editor/test_type']
+	var _testLeek = localStorage['editor/test_leek']
+	var _testAI = localStorage['editor/test_ai']
+	var _testEnemies = JSON.parse(localStorage['editor/test_enemies'])
+
+	var data = {}
+
+	data.ai_id = _testAI
+	data.leek_id = _testLeek
+
+	data.bots = {}
+	for (var e in _testEnemies) {
+		data.bots[e] = _testEnemies[e]
+	}
+
+	data.type = _testType
+
+	_.post('ai/test', data, function(data) {
+		if (data.success) {
+			LW.page('/fight/' + data.fight)
+		}
+	})
+
 }
