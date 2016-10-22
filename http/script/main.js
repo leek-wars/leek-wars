@@ -1866,8 +1866,7 @@ LW.smiley = function(data) {
 
 	// Shorcuts
 	for (var i in smileys.shorcuts) {
-		data = data.replace(new RegExp("(^|\\s|\>)" + escapeRegExp(i) + "($|\\s|\<)", "g"), '$1:' + smileys.shorcuts[i] + ':$2')
-		data = data.replace(new RegExp("(^|\\s|\>)" + escapeRegExp(i) + "($|\\s|\<)", "g"), '$1:' + smileys.shorcuts[i] + ':$2')
+		data = data.replace(new RegExp("(^|\\s|\>)" + escapeRegExp(i) + "(?![^\\s<>])", "g"), '$1:' + smileys.shorcuts[i] + ':')
 	}
 	data = data.trim()
 
