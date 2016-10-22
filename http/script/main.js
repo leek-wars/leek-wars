@@ -3510,10 +3510,10 @@ var ChatController = function(chat_element, private_chat, team_chat) {
 		var emoji = ':' + $(this).attr('emoji') + ':'
 
 		var $txt = $('#chat .chat-input')
-        var caretPos = $txt[0].selectionStart
-        var textAreaTxt = $txt.val()
-        var txtToAdd = emoji + ' '
-        $txt.val(textAreaTxt.substring(0, caretPos) + txtToAdd + textAreaTxt.substring(caretPos))
+		var caretPos = $txt[0].selectionStart
+		var textAreaTxt = $txt.val()
+		var txtToAdd = emoji + ' '
+		$txt.val(textAreaTxt.substring(0, caretPos) + txtToAdd + textAreaTxt.substring(caretPos))
 	});
 
 	function setChatLanguage(channel) {
