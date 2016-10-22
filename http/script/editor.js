@@ -56,7 +56,7 @@ LW.pages.editor.init = function(params, $scope, $page) {
 		// New button
 		$('#new-button').click(function() {
 
-			_.post('ai/new', {}, function(data) {
+			_.post('ai/new', {folder_id: 0}, function(data) {
 
 				if (data.success) {
 
