@@ -3517,7 +3517,7 @@ var ChatController = function(chat_element, private_chat, team_chat) {
 	$('#chat-smileys-wrapper').on('click', '.smiley', function(e) {
 		var emoji = $(this).attr('emoji')
 
-		var $txt = $('#chat .chat-input')
+		var $txt = team_chat ? $('#team-chat .chat-input') : $('#chat .chat-input')
 		var caretPos = $txt[0].selectionStart
 		var textAreaTxt = $txt.val()
 		var txtToAdd = emoji + ' '
