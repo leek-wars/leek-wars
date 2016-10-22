@@ -824,7 +824,7 @@ _.lang.set = function(language) {
 	_.reload()
 }
 
-_.lang.load = function(file, admin, callback) {
+_.lang.load = function(file, private_file, callback) {
 
 	var key = 'lang/' + file + '/' + _.lang.current
 
@@ -837,17 +837,41 @@ _.lang.load = function(file, admin, callback) {
 		return
 	}
 
-	var url = admin ? 'lang/get-private/' + file + '/' + _.lang.current + '/' + LW.token() : 'lang/get/' + file + '/' + _.lang.current
+	if (private_file) {
 
-	_.get(url, function(data) {
+		var url = 'lang/get-private/' + file + '/' + _.lang.current + '/' + LW.token()
+		_.get(url, function(data) {
+			if (data.success) {
+				_.lang.langs[_.lang.current][file] = data.lang
+				localStorage[key] = JSON.stringify(data.lang)
+			}
+			if (callback) callback()
+		})
+	} else {
 
-		if (data.success) {
+		$.get(LW.staticURL + 'lang/' + _.lang.current + '/' + file + '.lang', function(data) {
 
-			_.lang.langs[_.lang.current][file] = data.lang
-			localStorage[key] = JSON.stringify(data.lang)
-		}
-		if (callback) callback()
-	})
+			if (data.indexOf('<!DOCTYPE html>') != -1) {
+				callback('error')
+				return
+			}
+			var parsed = _.lang.parse_file(data)
+			_.lang.langs[_.lang.current][file] = parsed
+			localStorage[key] = JSON.stringify(parsed)
+			callback(parsed)
+		})
+	}
+}
+
+_.lang.parse_file = function(data) {
+	var keys = {}
+	var lines = data.split('\n')
+	for (var l in lines) {
+		var line = lines[l]
+		var res = /(.*?)\s+(.*)/.exec(line)
+		if (res) keys[res[1]] = res[2]
+	}
+	return keys
 }
 
 _.lang.has = function(file, key) {
