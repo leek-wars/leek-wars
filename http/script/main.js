@@ -706,6 +706,10 @@ $(document).ready(function() {
 				return LW.trigger('leave')
 			})
 
+			$(document).on('click', function(e) {
+				$('#chat-smileys-wrapper').hide()
+			});
+
 			LW.consoleAlertMessage()
 
 			// LW is initialized
@@ -3512,6 +3516,10 @@ var ChatController = function(chat_element, private_chat, team_chat) {
 
 	$('#chat-smileys-button').click(function(e) {
 		$('#chat-smileys-wrapper').toggle()
+	});
+
+	$('#chat-smileys').on('click', function(e) {
+		e.stopPropagation();
 	});
 
 	$('#chat-smileys-wrapper').on('click', '.smiley', function(e) {
