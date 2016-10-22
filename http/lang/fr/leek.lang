@@ -34,6 +34,10 @@ error_name_format				Le nom de votre poireau doit contenir uniquement des caract
 error_under_required_level_1	Votre premier poireau doit être de niveau %s.
 error_under_required_level_2	Votre second poireau doit être de niveau %s.
 error_under_required_level_3	Votre troisième poireau doit être de niveau %s.
+error_under_required_level_weapon		%s n'a pas le niveau requis pour cette arme.
+error_under_required_level_chip			%s n'a pas le niveau requis pour cette puce.
+error_max_weapon						%s ne peut pas équiper une arme supplémentaire.
+error_max_chip							%s ne peut pas équiper une puce supplémentaire.
 farmed_by						Élevé par <a class="leek-farmer" href="/farmer/%1$s">%2$s</a> 
 fights							Combats
 frequency						Fréquence
