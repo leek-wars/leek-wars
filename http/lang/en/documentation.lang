@@ -477,10 +477,10 @@ func_getEntityTurnOrder_2_arg_1			Desired entity.
 func_getEntityTurnOrder_2_return			Given entity's position within the acting order.
 func_getEntityTurnOrder_return			Caller's position within the acting order.
 func_getFarmerCountry			Returns your farmer country.
-func_getFarmerCountry_return	Your farmer country.
+func_getFarmerCountry_return	Your farmer country, or "?" if not specified.
 func_getFarmerCountry_2			Returns the country of given <b>farmer</b>.
 func_getFarmerCountry_2_arg_1	Desired farmer.
-func_getFarmerCountry_2_return	The country of given <b>farmer</b>.
+func_getFarmerCountry_2_return	The country of given <b>farmer</b>, or "?" if not specified.
 func_getFarmerID			Returns your farmer's id.
 func_getFarmerID_2			Returns the id of the given <b>farmer</b>.
 func_getFarmerID_2_arg_1			Desired leek.

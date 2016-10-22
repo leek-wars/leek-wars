@@ -460,6 +460,11 @@ func_getFarmerID_2			Renvoie l'id de l'éleveur du poireau <b>leek</b>.
 func_getFarmerID_2_arg_1	L'id du poireau dont l'id d'éleveur sera renvoyé.
 func_getFarmerID_2_return	L'id de l'éleveur du poireau <b>leek</b>.
 func_getFarmerID_return		L'id de votre éleveur.
+func_getFarmerCountry			Renvoie votre pays.
+func_getFarmerCountry_return	Votre pays, ou "?" si non indiqué.
+func_getFarmerCountry_2			Renvoie le pays de l'éleveur du poireau <b>leek</b>.
+func_getFarmerCountry_2_arg_1	L'id du poireau dont le pays de d'éleveur sera renvoyé.
+func_getFarmerCountry_2_return	Le pays de l'éleveur du poireau <b>leek</b>, ou "?" si non indiqué.
 func_getFarmerName			Renvoie le nom de votre éleveur.
 func_getFarmerName_2			Renvoie le nom de l'éleveur du poireau <b>leek</b>.
 func_getFarmerName_2_arg_1		L'id du poireau dont le nom d'éleveur sera renvoyé.
