@@ -42,9 +42,24 @@
 					</div>
 				@end
 			</div>
-			
+
 			<div class='message-bar-wrapper'>
 				<textarea class='chat-input' type='text' class='autogrow'></textarea>
+				<div id='chat-smileys'>
+					<button id="chat-smileys-button">
+						<img class="smiley" alt="😃" src="{{smileys.url}}/1f603.svg">
+					</button>
+					<div id="chat-smileys-wrapper">
+						@foreach (smiley_category in smileys.list)
+							<div class="title">{smiley_category.name}</div>
+							<div class="list">
+								@foreach (smiley in smiley_category.list)
+									<img class="smiley" alt="😃" src="{{smiley.custom ? smiley.image : smileys.url + '/' + smiley.image + '.svg'}}" emoji="{smiley.name}">
+								@end
+							</div>
+						@end
+					</div>
+				</div>
 				<div id='chat-send' class='button green'>{#send}</div>
 			</div>
 		</div>

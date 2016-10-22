@@ -69,6 +69,10 @@
 	outline: none;
 }
 
+#messages-page #chat-smileys-button {
+	margin-top: 4px;
+}
+
 #chat-smileys-button:hover {
 	background-color: #dedede;
 	border-color: #8c8c8c;
