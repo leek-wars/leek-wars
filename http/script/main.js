@@ -541,7 +541,7 @@ $(document).ready(function() {
 		api: LW.api,
 		version: LW.subVersion,
 		view_cache: LW.prod,
-		lang_cache: true
+		lang_cache: LW.prod
 	})
 
 	_.lang.init(
