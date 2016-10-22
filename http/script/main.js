@@ -1858,8 +1858,40 @@ var FormatTime = function(time) {
 	return res;
 }
 
+function escapeRegExp(str) {
+	return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&")
+}
+
 LW.smiley = function(data) {
-	return smileys.parse(data)
+
+	// Shorcuts
+	data = (data + ' ').replace(new RegExp('<br>', 'g'), ' <br> ')
+	for (var i in smileys.shorcuts) {
+		data = data.replace(new RegExp("(^|\\s)" + escapeRegExp(i) + "($|\\s)", "g"), ' :' + smileys.shorcuts[i] + ': ')
+		data = data.replace(new RegExp("(^|\\s)" + escapeRegExp(i) + "($|\\s)", "g"), ' :' + smileys.shorcuts[i] + ': ')
+	}
+	data = data.trim()
+
+	// Emoji
+	var emojis = data.match(/:([\w]+):/gi)
+	for (var i in emojis) {
+		var emoji = emojis[i]
+		emoji = emoji.substr(1, emoji.length - 2)
+		if (emoji in smileys.emojis) {
+			data = data.replace(new RegExp(':' + emoji + ':', 'g'), smileys.emojis[emoji])
+		}
+	}
+
+	// Emoji to image
+	return twemoji.parse(
+		data,
+		{
+			callback: function(icon) {
+				return smileys.url + icon + '.svg'
+			},
+			className: 'smiley'
+		}
+	)
 }
 
 LW.smileyElem = function(elem) {
