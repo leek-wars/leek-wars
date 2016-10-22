@@ -1865,10 +1865,9 @@ function escapeRegExp(str) {
 LW.smiley = function(data) {
 
 	// Shorcuts
-	data = (data + ' ').replace(new RegExp('<br>', 'g'), ' <br> ')
 	for (var i in smileys.shorcuts) {
-		data = data.replace(new RegExp("(^|\\s)" + escapeRegExp(i) + "($|\\s)", "g"), ' :' + smileys.shorcuts[i] + ': ')
-		data = data.replace(new RegExp("(^|\\s)" + escapeRegExp(i) + "($|\\s)", "g"), ' :' + smileys.shorcuts[i] + ': ')
+		data = data.replace(new RegExp("(^|\\s|\>)" + escapeRegExp(i) + "($|\\s|\<)", "g"), '$1:' + smileys.shorcuts[i] + ':$2')
+		data = data.replace(new RegExp("(^|\\s|\>)" + escapeRegExp(i) + "($|\\s|\<)", "g"), '$1:' + smileys.shorcuts[i] + ':$2')
 	}
 	data = data.trim()
 
