@@ -1866,7 +1866,7 @@ LW.smiley = function(data) {
 
 	// Shorcuts
 	for (var i in smileys.shorcuts) {
-		data = data.replace(new RegExp("(^|\\s|\>)" + escapeRegExp(i) + "(?![^\\s<>])", "g"), '$1:' + smileys.shorcuts[i] + ':')
+		data = data.replace(new RegExp("(^|\\s|\>)" + escapeRegExp(i) + "(?![^\\s<>])", "g"), '$1' + smileys.shorcuts[i])
 	}
 	data = data.trim()
 
@@ -1880,8 +1880,14 @@ LW.smiley = function(data) {
 		}
 	}
 
+	// Custom smileys
+	for (var i in smileys.custom) {
+		var smiley = smileys.custom[i];
+		data = data.replace(new RegExp("(^|\\s|\>)" + escapeRegExp(i) + "(?![^\\s<>])", "g"), '$1<img class="smiley" alt="'+smiley.name+'" src="'+smiley.image+'">')
+	}
+
 	// Emoji to image
-	return twemoji.parse(
+	data = twemoji.parse(
 		data,
 		{
 			callback: function(icon) {
@@ -1890,6 +1896,9 @@ LW.smiley = function(data) {
 			className: 'smiley'
 		}
 	)
+
+	// Return
+	return data
 }
 
 LW.smileyElem = function(elem) {
@@ -3506,7 +3515,7 @@ var ChatController = function(chat_element, private_chat, team_chat) {
 	});
 
 	$('#chat-smileys-wrapper').on('click', '.smiley', function(e) {
-		var emoji = ':' + $(this).attr('emoji') + ':'
+		var emoji = $(this).attr('emoji')
 
 		var $txt = $('#chat .chat-input')
 		var caretPos = $txt[0].selectionStart
