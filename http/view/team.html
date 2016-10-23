@@ -143,7 +143,7 @@
 					</button>
 					<div id="chat-smileys-wrapper">
 						@foreach (smiley_category in smileys.list)
-							<div class="title">{smiley_category.name}</div>
+							<div class="title">{_.lang.get('main', 'smiley_group_' + smiley_category.name)}</div>
 							<div class="list">
 								@foreach (smiley in smiley_category.list)
 									<img class="smiley" alt="😃" src="{{smiley.custom ? smiley.image : smileys.url + '/' + smiley.image + '.svg'}}" emoji="{smiley.name}">
