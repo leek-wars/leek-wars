@@ -677,11 +677,11 @@ LW.pages.leek.weapons = function(leek) {
 		if (action == 'add') {
 
 			if (leek.weapons.length >= leek.max_weapons || location == 'leek') {
-				_.toast(_.lang.get('leek', 'error_under_required_level_weapon', leek.name))
+				_.toast(_.lang.get('leek', 'error_max_weapon', leek.name))
 				return
 			}
 			if (weapon.level > leek.level) {
-				_.toast(_.lang.get('leek', 'error_max_weapon', leek.name))
+				_.toast(_.lang.get('leek', 'error_under_required_level_weapon', leek.name))
 				return
 			}
 
@@ -794,11 +794,11 @@ LW.pages.leek.chips = function(leek) {
 		if (action == 'add') {
 
 			if (location == 'leek' || leek.chips.length >= leek.max_chips) {
-				_.toast(_.lang.get('leek', 'error_under_required_level_chip', leek.name))
+				_.toast(_.lang.get('leek', 'error_max_chip', leek.name))
 				return
 			}
 			if (chip.level > leek.level) {
-				_.toast(_.lang.get('leek', 'error_max_chip', leek.name))
+				_.toast(_.lang.get('leek', 'error_under_required_level_chip', leek.name))
 				return
 			}
 

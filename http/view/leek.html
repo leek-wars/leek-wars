@@ -158,7 +158,7 @@
 									{#life_description}
 									@if (5 > 0)
 										<br>
-										<b class='capital'>Capital investi : <span class='amount'>{LW.pages.leek.characteristicToCapital(CHARACTERISTIC_LIFE, leek.life, leek.level)}</span></b>
+										<b class='capital'>{#invested_capital} : <span class='amount'>{LW.pages.leek.characteristicToCapital(CHARACTERISTIC_LIFE, leek.life, leek.level)}</span></b>
 									@end
 								</div>
 							</div>
@@ -175,9 +175,9 @@
 									{#science_description}
 									@if (leek.science > 0)
 										<br>
-										<b class='capital'>Capital investi : <span class='amount'>{LW.pages.leek.characteristicToCapital(CHARACTERISTIC_SCIENCE, leek.science)}</span></b>
+										<b class='capital'>{#invested_capital} : <span class='amount'>{LW.pages.leek.characteristicToCapital(CHARACTERISTIC_SCIENCE, leek.science)}</span></b>
 										<br>
-										<b class='effect'>Boosts : × <span class='damage'>{_.format.numberPrecision(1 + leek.science / 100, 3)}</span></b>
+										<b class='effect'>{#boost_effect} : × <span class='damage'>{_.format.numberPrecision(1 + leek.science / 100, 3)}</span></b>
 									@end
 								</div>
 							</div>
@@ -197,9 +197,9 @@
 									{#strength_effect}
 									@if (leek.strength > 0)
 										<br>
-										<b class='capital'>Capital investi : <span class='amount'>{LW.pages.leek.characteristicToCapital(CHARACTERISTIC_STRENGTH, leek.strength)}</span></b>
+										<b class='capital'>{#invested_capital} : <span class='amount'>{LW.pages.leek.characteristicToCapital(CHARACTERISTIC_STRENGTH, leek.strength)}</span></b>
 										<br>
-										<b class='effect'>Dégâts : × <span class='damage'>{_.format.numberPrecision(1 + leek.strength / 100, 3)}</span></b>
+										<b class='effect'>{#damage_effect} : × <span class='damage'>{_.format.numberPrecision(1 + leek.strength / 100, 3)}</span></b>
 									@end
 								</div>
 							</div>
@@ -216,9 +216,9 @@
 									{#magic_description}
 									@if (leek.magic > 0)
 										<br>
-										<b class='capital'>Capital investi : <span class='amount'>{LW.pages.leek.characteristicToCapital(CHARACTERISTIC_MAGIC, leek.magic)}</span></b>
+										<b class='capital'>{#invested_capital} : <span class='amount'>{LW.pages.leek.characteristicToCapital(CHARACTERISTIC_MAGIC, leek.magic)}</span></b>
 										<br>
-										<b class='effect'>Entraves & poisons : × <span class='damage'>{_.format.numberPrecision(1 + leek.magic / 100, 3)}</span></b>
+										<b class='effect'>{#shackle_poison_effect} : × <span class='damage'>{_.format.numberPrecision(1 + leek.magic / 100, 3)}</span></b>
 									@end
 								</div>
 							</div>
@@ -237,11 +237,11 @@
 									{#wisdom_description}
 									@if (leek.wisdom > 0)
 										<br>
-										<b class='capital'>Capital investi : <span class='amount'>{LW.pages.leek.characteristicToCapital(CHARACTERISTIC_WISDOM, leek.wisdom)}</span></b>
+										<b class='capital'>{#invested_capital} : <span class='amount'>{LW.pages.leek.characteristicToCapital(CHARACTERISTIC_WISDOM, leek.wisdom)}</span></b>
 										<br>
-										<b class='effect'>Soins : × <span class='heal'>{_.format.numberPrecision(1 + leek.wisdom / 100, 3)}</span></b>
+										<b class='effect'>{#heal_effect} : × <span class='heal'>{_.format.numberPrecision(1 + leek.wisdom / 100, 3)}</span></b>
 										<br>
-										<b class='effect'>Vol de vie : <span class='life-steal'>{Math.round(leek.wisdom / 10)}%</span></b>
+										<b class='effect'>{#life_steal_effect} : <span class='life-steal'>{Math.round(leek.wisdom / 10)}%</span></b>
 									@end
 								</div>
 							</div>
@@ -258,7 +258,7 @@
 									{#frequency_description}
 									@if (leek.frequency > 100)
 										<br>
-										<b class='capital'>Capital investi : <span class='amount'>{LW.pages.leek.characteristicToCapital(CHARACTERISTIC_FREQUENCY, leek.frequency)}</span></b>
+										<b class='capital'>{#invested_capital} : <span class='amount'>{LW.pages.leek.characteristicToCapital(CHARACTERISTIC_FREQUENCY, leek.frequency)}</span></b>
 									@end
 								</div>
 							</div>
@@ -279,11 +279,11 @@
 									{#agility_description}
 									@if (leek.agility > 0)
 										<br>
-										<b class='capital'>Capital investi : <span class='amount'>{LW.pages.leek.characteristicToCapital(CHARACTERISTIC_AGILITY, leek.agility)}</span></b>
+										<b class='capital'>{#invested_capital} : <span class='amount'>{LW.pages.leek.characteristicToCapital(CHARACTERISTIC_AGILITY, leek.agility)}</span></b>
 										<br>
-										<b class='effect'>Renvoi de dégats : × <span class='damage-return'>{_.format.numberPrecision(1 + leek.agility / 100, 3)}</span></b>
+										<b class='effect'>{#return_damage_effect} : × <span class='damage-return'>{_.format.numberPrecision(1 + leek.agility / 100, 3)}</span></b>
 										<br>
-										<b class='effect'>Coups critiques : <span class='critical'>{Math.round(leek.agility / 10)}%</span></b>
+										<b class='effect'>{#critical_effect} : <span class='critical'>{Math.round(leek.agility / 10)}%</span></b>
 									@end
 								</div>
 							</div>
@@ -301,7 +301,7 @@
 									{#tp_description}
 									@if (leek.tp > 10)
 										<br>
-										<b class='capital'>Capital investi : <span class='amount'>{LW.pages.leek.characteristicToCapital(CHARACTERISTIC_TP, leek.tp)}</span></b>
+										<b class='capital'>{#invested_capital} : <span class='amount'>{LW.pages.leek.characteristicToCapital(CHARACTERISTIC_TP, leek.tp)}</span></b>
 									@end
 								</div>
 							</div>
@@ -321,9 +321,9 @@
 									{#resistance_description}
 									@if (leek.resistance > 0)
 										<br>
-										<b class='capital'>Capital investi : <span class='amount'>{LW.pages.leek.characteristicToCapital(CHARACTERISTIC_RESISTANCE, leek.resistance)}</span></b>
+										<b class='capital'>{#invested_capital} : <span class='amount'>{LW.pages.leek.characteristicToCapital(CHARACTERISTIC_RESISTANCE, leek.resistance)}</span></b>
 										<br>
-										<b class='effect'>Boucliers : × <span class='damage'>{_.format.numberPrecision(1 + leek.resistance / 100, 3)}</span></b>
+										<b class='effect'>{#shield_effect} : × <span class='damage'>{_.format.numberPrecision(1 + leek.resistance / 100, 3)}</span></b>
 									@end
 								</div>
 							</div>
@@ -340,7 +340,7 @@
 									{#mp_description}
 									@if (leek.mp > 3)
 										<br>
-										<b class='capital'>Capital investi : <span class='amount'>{LW.pages.leek.characteristicToCapital(CHARACTERISTIC_MP, leek.mp)}</span></b>
+										<b class='capital'>{#invested_capital} : <span class='amount'>{LW.pages.leek.characteristicToCapital(CHARACTERISTIC_MP, leek.mp)}</span></b>
 									@end
 								</div>
 							</div>

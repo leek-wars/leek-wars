@@ -120,12 +120,12 @@ wisdom							Sagesse
 wisdom_cost						1 capital ⇔ 1 sagesse
 wisdom_description				La sagesse accroît les soins et le vol de vie
 xp								XP : %s
-strength_effect					Dégâts
-wisdom_effect_1					Soins
-wisdom_effect_2					Vol de vie
-agility_effect_1				Renvoi de dégats
-agility_effect_2				Coups critiques
-resistance_effect				Boucliers
-science_effect					Boosts
-magic_effect					Entraves & poisons
+damage_effect					Dégâts
+heal_effect						Soins
+life_steal_effect				Vol de vie
+return_damage_effect			Renvoi de dégats
+critical_effect					Coups critiques
+shield_effect					Boucliers
+boost_effect					Boosts
+shackle_poison_effect			Entraves & poisons
 invested_capital				Capital investi
