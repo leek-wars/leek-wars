@@ -120,12 +120,12 @@ wisdom							Wisdom
 wisdom_cost						1 capital ⇔ 1 wisdom
 wisdom_description				Wisdom increases healing and life steal.
 xp								XP: %s
-strength_effect					Damages
-wisdom_effect_1					Heals
-wisdom_effect_2					Life steal
-agility_effect_1				Damages return
-agility_effect_2				Critical hits
-resistance_effect				Shields
-science_effect					Boosts
-magic_effect					Shackles & poisons
+damage_effect					Damages
+heal_effect						Heals
+life_steal_effect				Life steal
+return_damage_effect			Damages return
+critical_effect					Critical hits
+shield_effect					Shields
+boost_effect					Boosts
+shackle_poison_effect			Shackles & poisons
 invested_capital				Invested capital
