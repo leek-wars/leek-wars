@@ -68,6 +68,9 @@
 							@if (fight.type == LW.FIGHT_TYPE.SOLO && fight.context != LW.FIGHT_CONTEXT.TEST && fight.context != LW.FIGHT_CONTEXT.CHALLENGE)
 								<th class='gain'>{#talent}</th>
 							@end
+							@if (LW.farmer.admin)
+								<th class='gain'>Time</th>
+							@end
 						</tr>
 						@foreach (leek in leeks1)
 							@include('leek_tr', leek)
@@ -103,6 +106,9 @@
 							<th class='gain'>{#money}</th>
 							@if (fight.type == LW.FIGHT_TYPE.SOLO && fight.context != LW.FIGHT_CONTEXT.TEST && fight.context != LW.FIGHT_CONTEXT.CHALLENGE)
 								<th class='gain'>{#talent}</th>
+							@end
+							@if (LW.farmer.admin)
+								<th class='gain'>Time</th>
 							@end
 						</tr>
 						@foreach (leek in leeks2)
@@ -350,6 +356,11 @@
 				@if (talent_gain >= 0) + {talent_gain} @else - {Math.abs(talent_gain)} @end
 			</td>
 		@end
+		@if (LW.farmer.admin)
+			<td class='gain'>
+				{%ai_time} ms
+			</td>
+		@end
 	</tr>
 @endview
 
@@ -361,6 +372,11 @@
 		<td class='money'>
 			<span>{%money} <span class='hab' /></span>
 		</td>
+		@if (LW.farmer.admin)
+			<td class='money'>
+				<span>{%time} ms</span>
+			</td>
+		@end
 	</tr>
 @endview
 

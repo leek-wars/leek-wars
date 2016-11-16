@@ -3,8 +3,9 @@ var _fight
 LW.pages.report.init = function(params, $scope, $page) {
 
 	var id = params.id
+	var url = LW.farmer.admin ? 'fight/get-private/' + id + '/$' : 'fight/get/' + id;
 
-	_.get('fight/get/' + id, function(data) {
+	_.get(url, function(data) {
 
 		var fight = data.fight
 		_fight = fight
@@ -51,19 +52,37 @@ LW.pages.report.init = function(params, $scope, $page) {
 					flags2 = data.fight.report.flags1
 				}
 
+				if (LW.farmer.admin) {
+					var times = []
+					for (var t in report.ai_times) {
+						times[report.ai_times[t].id] = report.ai_times[t].time
+					}
+					report.ai_times = times
+				}
+
 				var total1 = {
 					level: leeks1.reduce(function(sum, leek) {return sum + leek.level}, 0),
 					xp: leeks1.reduce(function(sum, leek) {return sum + leek.xp}, 0),
 					money: leeks1.reduce(function(sum, leek) {return sum + leek.money}, 0)
+				}
+				if (LW.farmer.admin) {
+					total1.time = leeks1.reduce(function(sum, leek) {
+						return sum + Math.floor(report.ai_times[leek.id] / 1000) / 1000
+					}, 0)
 				}
 				var total2 = {
 					level: leeks2.reduce(function(sum, leek) {return sum + leek.level}, 0),
 					xp: leeks2.reduce(function(sum, leek) {return sum + leek.xp}, 0),
 					money: leeks2.reduce(function(sum, leek) {return sum + leek.money}, 0)
 				}
+				if (LW.farmer.admin) {
+					total2.time = leeks2.reduce(function(sum, leek) {
+						return sum + Math.floor(report.ai_times[leek.id] / 1000) / 1000
+					}, 0)
+				}
 
 				// Barres d'XP
-				var computeXP = function(leek) {
+				var computeXP = function(leek, i) {
 
 					var totalXP = leek.next_xp - leek.prev_xp
 					var newLevel = leek.cur_xp - leek.xp < leek.prev_xp
@@ -75,10 +94,13 @@ LW.pages.report.init = function(params, $scope, $page) {
 					leek.new_bar = Math.floor(100 * newXPInCurrentLevel / totalXP)
 
 					leek.bonus = report.bonus
+					if (LW.farmer.admin) {
+						leek.ai_time = Math.floor(report.ai_times[leek.id] / 1000) / 1000;
+					}
 				}
 
-				for (var l in leeks1) computeXP(leeks1[l])
-				for (var l in leeks2) computeXP(leeks2[l])
+				for (var l in leeks1) computeXP(leeks1[l], l)
+				for (var l in leeks2) computeXP(leeks2[l], l)
 
 				if (fight.type == LW.FIGHT_TYPE.TEAM) {
 					computeXP(team1)
@@ -716,7 +738,7 @@ LW.pages.report.highlightStatisticsTable = function(statistics) {
 		var bestl = null
 
 		for (var l = 0; l < leeks; ++l) {
-			var v = parseFloat($($(trs[l]).find('td')[c]).text().replace(/ /g, ''))
+			var v = parseFloat($($(trs[l]).find('td')[c]).text().replace(/ /g, ''))
 			if (v > best) {
 				best = v
 				bestl = l
