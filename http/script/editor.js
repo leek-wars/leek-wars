@@ -340,6 +340,8 @@ LW.pages.editor.init = function(params, $scope, $page) {
 
 			data.type = _testType
 
+			_saveTestSettings()
+
 			_.post('ai/test', data, function(data) {
 
 				if (data.success) {
