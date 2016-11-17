@@ -18,6 +18,22 @@ Then go to `localhost:8012` in your browser (you can change the port in the pyth
 *Be careful*, this project is only the front end of Leek Wars, so it's connected to the
 production server. When you log into this local version, you will use your real account!
 
+## Structure
+- http/			: All served files
+	* image/ 		: All images, icons, textures
+	* lang/ 		: Translations files
+		- en/
+		- fr/
+	* script/		: JavaScript files
+		- game/			: JS for the fight rendering
+	* sound/		: Sounds files
+	* style/		: CSS files
+	* third_party/	: Some third party libraries (JS and CSS)
+	* view/			: HTML template files
+- Dockerfile	: A Dockerfile if you need to build a Docker image
+- Makefile		: Makefile to perform some quick actions like `make serve`
+- leekwars.py	: Python script to serve the site locally
+
 ## Hacking
 I gladly accept pull requests to Leek Wars. Before starting work on a feature, see the [contribution guidelines](https://github.com/leek-wars/leek-wars-client/blob/master/CONTRIBUTING.md).
 
