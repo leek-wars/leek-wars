@@ -639,18 +639,16 @@ _.request = function(url, data, callback, method, log) {
 		params.processData = false
 		params.contentType = false
 	}
-
+	var startTime = Date.now()
 	$.ajax(params).done(function(data) {
-
+		var time = Date.now() - startTime
 		try {
 			data = JSON.parse(data)
 		} catch (e) {}
 
-		if (log) {
-			_.log("Res : ", data)
-		} else {
-			_.log("Res : [...]")
-		}
+		var m = log ? data : '[...]'
+		_.log(method + " " + _.hide_token(url), ' ' + time + 'ms ', data)
+
 		if (callback) {
 			callback(data)
 		}
@@ -664,7 +662,7 @@ _.hide_token = function(string) {
 _.get = function(url, callback, log) {
 
 	if (log || typeof(log) === 'undefined') {
- 		_.log('Get : ' + _.hide_token(url))
+ 		_.log('GET ' + _.hide_token(url), '...')
 	}
 
     _.request(url, null, callback, 'GET', log)
@@ -675,7 +673,7 @@ _.post = function(url, data, callback, log) {
 	if (!data) data = {}
 
 	if (log || typeof(log) === 'undefined') {
-    	_.log('Post : ' + _.hide_token(url), data)
+    	_.log('POST ' + _.hide_token(url), data, '...')
 	}
 
     if (data instanceof FormData) {
