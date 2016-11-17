@@ -3671,6 +3671,7 @@ var ChatController = function(chat_element, private_chat, team_chat) {
 }
 
 LW.lucky = function() {
+	$('#clover').remove(); // Delete previous clover?
 	var top = 20 + Math.random() * 50
 	var left = 20 + Math.random() * ($(window).width() - 80)
 	$('body').append("<img id='clover' style='top: " + top +
