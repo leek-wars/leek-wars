@@ -284,7 +284,7 @@
 			<td class='name'><span class='alive'><a href='/farmer/{id}'>{name}</a></span></td>
 			<td></td>
 			<td class='talent'>
-				<img src='/static/image/talent.png' />
+				<img src='{{static}}image/talent.png' />
 				{talent}
 				@if (talent_gain >= 0) + {talent_gain} @else - {Math.abs(talent_gain)} @end
 			</td>
