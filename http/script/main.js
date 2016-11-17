@@ -548,9 +548,9 @@ $(document).ready(function() {
 		__DEFAULT_LANGUAGE
 	)
 
-	// if (LW.dev || LW.test || LW.beta) {
+	if (LW.dev || LW.local || LW.beta) {
 		_.logOn()
-	// }
+	}
 
 	setTimeout(function() {
 		if (LW.dev) {
@@ -850,6 +850,10 @@ LW.connect = function(farmer, callback) {
 
 		LW.connected = true
 		LW.farmer = farmer
+		
+		if (LW.farmer.admin) {
+			_.logOn()
+		}
 
 		localStorage['connected'] = true
 
