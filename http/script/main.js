@@ -20,12 +20,8 @@ var LW = {
 	initialized: false,
 	socket: {
 		socket: null,
-		tentative: 0,
 		connected: false,
-		queue: [],
-		tentatives: 5,
-		tentative: 1,
-		delay: 1000
+		queue: []
 	},
 	smileys: [
 		[":O", ":-O", ":o"], [":D", ":-D"], ["&lt;3", "(l)", "(L)", "<3"], [":)", ":-)", ":]"], [":/"], [";)", ";-)"],
@@ -1695,13 +1691,11 @@ LW.initWebSocket = function() {
 		window.WebSocket = window.MozWebSocket;
 	}
 
-	var protocol = LW.local ? 'ws' : 'wss'
-	var host = LW.dev ? 'leekwars.com' : window.location.host
-	LW.socket.socket = new WebSocket(protocol + '://' + host + "/ws")
+	var url = 'wss://leekwars.com/ws'
+	if (LW.local) url = 'ws://localhost:1213/'
+	LW.socket.socket = new WebSocket(url)
 
 	LW.socket.socket.onopen = function() {
-
-		//_.log('Socket connected!')
 
 		LW.socket.connected = true
 
@@ -1714,27 +1708,14 @@ LW.initWebSocket = function() {
 	}
 
 	LW.socket.socket.onclose = function() {
-
 		LW.trigger('wsclosed')
-
-		if (LW.socket.tentatives > 0) {
-			LW.socket.tentatives--;
-			setTimeout(function() {
-				LW.initWebSocket();
-			}, LW.socket.delay);
-		} else {
-			//_.log("Socket closed")
-		}
 	}
 
-	LW.socket.socket.onerror = function() {
-		//_.log('Socket : Une erreur est survenue');
-	}
+	LW.socket.socket.onerror = function() {}
 
 	LW.socket.socket.onmessage = function(msg) {
 
 		data = JSON.parse(msg.data)
-		_.log("WS received : ", data)
 
 		var id = data[0]
 		var data = data[1]
