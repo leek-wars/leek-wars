@@ -49,6 +49,8 @@ function init(farmer, $scope, $page) {
 
 	$scope.farmer = farmer
 	$scope.my_farmer = _myFarmer
+	$scope.godfather = ''
+	$scope.godsons = ''
 	if (farmer.godfather != null) {
 		$scope.godfather = _.lang.get('farmer', 'godson_of', "<a href='/farmer/" + farmer.godfather.id + "'>" + _.protect(farmer.godfather.name) + "</a>")
 	}
