@@ -348,8 +348,8 @@ LW.pages = {
 		langs: ['farmer']
 	},
 	leek: {
-		scripts: [['third_party/', 'chartist.min.js']],
-		styles: ['item_preview.css', ['third_party/', 'chartist.min.css']],
+		scripts: ['https://cdnjs.cloudflare.com/ajax/libs/chartist/0.10.1/chartist.min.js'],
+		styles: ['item_preview.css', 'https://cdnjs.cloudflare.com/ajax/libs/chartist/0.10.1/chartist.min.css'],
 		langs: ['chip', 'weapon', 'hat', 'report', 'moderation']
 	},
 	new_leek: {
@@ -411,10 +411,10 @@ LW.pages = {
 	},
 	report: {
 		scripts: [
-			['third_party/', 'chartist.min.js']
+			'https://cdnjs.cloudflare.com/ajax/libs/chartist/0.10.1/chartist.min.js'
 		],
 		styles: [
-			['third_party/', 'chartist.min.css']
+			'https://cdnjs.cloudflare.com/ajax/libs/chartist/0.10.1/chartist.min.css'
 		],
 		langs: ['fight', 'entity']
 	},
@@ -1508,12 +1508,14 @@ LW.loadPage = function(pageID, params) {
 			for (var s in page.scripts) {
 				count++
 				var file = page.scripts[s]
-				var path = 'script/'
-				if (typeof file === 'object') {
-					path = file[0]
+				var path = LW.staticURL + '/script/'
+				if (file.indexOf('http') == 0) {
+					path = ''
+				} else if (typeof file === 'object') {
+					path = LW.staticURL + '/' + file[0]
 					file = file[1]
 				}
-				_.script.load(LW.staticURL + '/' + path, file, ready)
+				_.script.load(path, file, ready)
 			}
 		}
 
@@ -1521,12 +1523,14 @@ LW.loadPage = function(pageID, params) {
 		if ('styles' in page) {
 			for (var s in page.styles) {
 				var file = page.styles[s]
-				var path = 'style/'
-				if (typeof file === 'object') {
-					path = file[0]
+				var path = LW.staticURL + '/style/'
+				if (file.indexOf('http') == 0) {
+					path = ''
+				} else if (typeof file === 'object') {
+					path = LW.staticURL + '/' + file[0]
 					file = file[1]
 				}
-				_.style.load(LW.staticURL + '/' + path, file)
+				_.style.load(path, file)
 			}
 		}
 
