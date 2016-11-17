@@ -25,20 +25,20 @@
 		<div class='panel' id='team-emblem'>
 
 			<div class='content'>
-			 
+
 				@if (team_member)
-				
+
 					<div id='emblem-input'>
-						@if (team.emblem_changed > 0) 
+						@if (team.emblem_changed > 0)
 							<img id='emblem' src='{{avatar}}/emblem/{team.id}.png'></img>
 						@else
 							<img id='emblem' src='{{static}}/image/no_emblem.png'></img>
 						@end
-						<input type="file"> 
-					</div> 
+						<input type="file">
+					</div>
 					<div id='tt_emblem-input' class='tooltip'>{#change_emblem}</div>
 				@else
-					@if (team.emblem_changed > 0) 
+					@if (team.emblem_changed > 0)
 						<img id='emblem' src='{{avatar}}/emblem/{team.id}.png'></img>
 					@else
 						<img id='emblem' src='{{static}}/image/no_emblem.png'></img>
@@ -48,28 +48,28 @@
 		</div>
 
 	</div><div class='column4'>
-		
+
 		<div class='panel' id='description'>
 
 			<div class='content'>
-		
+
 				<div class='{team_status_class}'>
 					<span class='guillemet'>«</span>
 					<span id='team-status' class='text' @if(team_owner) contenteditable @end>{team.description}</span>
 					<span class='guillemet'>»</span>
-					
+
 					<span class='edit-pen'></span>
 				</div>
-			
+
 				@if (LW.connected && !team_member && LW.farmer.team == null)
 					<br>
 					<br>
 					<center>
 						@if (team.opened)
-							
+
 							<div id='send-candidacy' class='button'>{#join_team}</div>
 							<div id='cancel-candidacy' class='button'>{#cancel_candidacy}</div>
-						
+
 						@else
 							<i>{#closed_team}</i>
 						@end
@@ -79,12 +79,12 @@
 		</div>
 
 	</div><div class='column4'>
-		
+
 		<div class='panel'>
 
 			<div class='content'>
 				<h2>{#level_n, team.level}</h2>
-				
+
 				<div id='bar'>
 					<span id='xp-bar' class='striked {xp_bar_class}' style='width:{xp_bar_width}%'></span>
 				</div>
@@ -100,7 +100,7 @@
 
 				<center><div id='talent' class='talent'>{team.talent}</div></center>
 				<div class='tooltip' id='tt_talent'>{#talent}</div>
-				
+
 				<br />
 				<table id='fights'>
 					<tr>
@@ -134,10 +134,25 @@
 		</div>
 
 		<div class='content'>
-			
-			<div class='chat-messages' ></div>
-			
-			<textarea class='chat-input' type='text' class='autogrow'></textarea>
+			<div class='chat-messages'></div>
+			<div class="flex">
+				<textarea class='chat-input autogrow' type='text'></textarea>
+				<div id='chat-smileys'>
+					<button id="chat-smileys-button">
+						<img class="smiley" alt="😃" src="{{smileys.url}}/1f603.svg">
+					</button>
+					<div id="chat-smileys-wrapper">
+						@foreach (smiley_category in smileys.list)
+							<div class="title">{_.lang.get('main', 'smiley_group_' + smiley_category.name)}</div>
+							<div class="list">
+								@foreach (smiley in smiley_category.list)
+									<img class="smiley" alt="😃" src="{{smiley.custom ? smiley.image : smileys.url + '/' + smiley.image + '.svg'}}" emoji="{smiley.name}">
+								@end
+							</div>
+						@end
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
 
@@ -174,13 +189,13 @@
 	</div>
 
 	<div class='content'>
-		
+
 		@foreach (member in team.members)
-			<div class='farmer'>	
+			<div class='farmer'>
 				<a href='/farmer/{member.id}'>
 
 					<img class='avatar' src="@include('main.avatar', member)">
-					
+
 					<div class='name'>
 						@if (member.grade == 'owner')
 							<span id="member-star-{member.id}">★</span>
@@ -231,7 +246,7 @@
 	</div>
 
 	<div class='no-compos'>{#no_compositions}</div>
-	
+
 	@foreach (c : compo in team.compositions)
 
 		<div class='panel compo @if (compo.tournament.registered) in-tournament @end' compo='{compo.id}'>
@@ -270,11 +285,11 @@
 			</div>
 
 			<div class='content leeks'>
-				
+
 				<div class='empty'>{#empty_compo}</div>
-					
+
 				@foreach (leek in compo.leeks)
-					
+
 					<a href='/leek/{leek.id}'>
 						<div class='leek' leek='{leek.id}' draggable='true'>
 							<span class='image'></span><br>
@@ -289,7 +304,7 @@
 			</div>
 		</div>
 	@end
-	
+
 	<div class='panel compo' compo='-1'>
 
 		<div class='header'>
@@ -298,7 +313,7 @@
 
 		<div class='content leeks'>
 			<div class='empty'>{#empty_compo}</div>
-				
+
 			@foreach (leek in team.unengaged_leeks)
 				<a href='/leek/{leek.id}'>
 					<div class='leek' leek='{leek.id}' draggable='true'>
@@ -313,9 +328,9 @@
 			@end
 		</div>
 	</div>
-	
+
 @else
-	
+
 	<div class='panel'>
 		<div class='header'>
 			<h2>{#leeks, team.leek_count}</h2>
@@ -341,7 +356,7 @@
 			<div class='header'>
 				<h2>{#history}</h2>
 			</div>
-			
+
 			<div class='content fight-history'>
 				@foreach (fight in team.fights)
 					<div class='fight-wrapper'>
@@ -390,22 +405,22 @@
 @view (create_compo_popup)
 
 	<div class='title'>{#create_composition}</div>
-	
+
 	<div class='content'>
 		<h4>{#compo_name}</h4>
 		<input type='text' id='compo-name'></input>
 	</div>
-	
+
 	<div class='actions'>
 		<div class='dismiss'>{#compo_cancel}</div>
 		<div id='create-compo' class='green' >{#compo_create}</div>
 	</div>
 @endview
-	
+
 @view (quit_team_popup)
-	
+
 	<div class='title'>{#quit_team_confirm_title, team.name}</div>
-	
+
 	<div class='content'>
 		{#quit_team_confirm}
 	</div>
@@ -415,11 +430,11 @@
 		<div id='quit-team' class='red'>{#quit_confirm}</div>
 	</div>
 @endview
-	
+
 @view (dissolve_popup)
 
 	<div class='title'>{#disolve_confirm_title, team.name}</div>
-	
+
 	<div class='content'>
 		{#disolve_confirm}
 	</div>
@@ -429,7 +444,7 @@
 		<div id='dissolve-team' class='red'>{#disolve_disolve}</div>
 	</div>
 @endview
-	
+
 @view (ban_popup)
 
 	<div class='title'>{#ban_confirm_title, name}</div>
@@ -453,10 +468,10 @@
 
 		@foreach (member in members)
 
-			<div class='farmer {member.grade == "owner" ? "selected" : ""}' farmer-id='{member.id}'>	
+			<div class='farmer {member.grade == "owner" ? "selected" : ""}' farmer-id='{member.id}'>
 
 				<img class='avatar' src="@include('main.avatar', member)">
-				
+
 				<div class='name'>
 					@if (member.grade == 'owner')
 						<span id="member-star-{member.id}">★</span>
@@ -490,7 +505,7 @@
 		{#enter_password_to_confirm}
 		<br>
 		<br>
-		
+
 		<input id='change-owner-password' type='password'>
 	</div>
 

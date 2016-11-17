@@ -23,10 +23,6 @@ var LW = {
 		connected: false,
 		queue: []
 	},
-	smileys: [
-		[":O", ":-O", ":o"], [":D", ":-D"], ["&lt;3", "(l)", "(L)", "<3"], [":)", ":-)", ":]"], [":/"], [";)", ";-)"],
-		[":("], [":p", ":P", ":-p"], ["(lama)"], [":B", ":b"], ["(lucky)"]
-	],
 	views: {},
 	chat: {
 		controller: null,
@@ -709,6 +705,10 @@ $(document).ready(function() {
 			$(window).on('beforeunload', function() {
 				return LW.trigger('leave')
 			})
+
+			$(document).on('click', function(e) {
+				$('#chat-smileys-wrapper').hide()
+			});
 
 			LW.consoleAlertMessage()
 
@@ -1863,18 +1863,45 @@ var FormatTime = function(time) {
 }
 
 function escapeRegExp(str) {
-	return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
+	return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&")
 }
 
 LW.smiley = function(data) {
 
-	for (var s in LW.smileys) {
-		for (var i in LW.smileys[s]) {
-			var x = -1 - s * 18;
-			data = data.replace(new RegExp("(^|\\s)" + escapeRegExp(LW.smileys[s][i]), "g"),
-			"$1<span class='smiley' title='" + LW.smileys[s][i] + "' style=\"background-position: " + x + "px -1px;\"></span>");
+	// Shorcuts
+	for (var i in smileys.shorcuts) {
+		data = data.replace(new RegExp("(^|\\s|\>)" + escapeRegExp(i) + "(?![^\\s<>])", "g"), '$1' + smileys.shorcuts[i])
+	}
+	data = data.trim()
+
+	// Emoji
+	var emojis = data.match(/:([\w]+):/gi)
+	for (var i in emojis) {
+		var emoji = emojis[i]
+		emoji = emoji.substr(1, emoji.length - 2)
+		if (emoji in smileys.emojis) {
+			data = data.replace(new RegExp(':' + emoji + ':', 'g'), smileys.emojis[emoji])
 		}
 	}
+
+	// Custom smileys
+	for (var i in smileys.custom) {
+		var smiley = smileys.custom[i];
+		data = data.replace(new RegExp("(^|\\s|\>)" + escapeRegExp(i) + "(?![^\\s<>])", "g"), '$1<img class="smiley" alt="'+smiley.name+'" src="'+smiley.image+'">')
+	}
+
+	// Emoji to image
+	data = twemoji.parse(
+		data,
+		{
+			callback: function(icon) {
+				return smileys.url + icon + '.svg'
+			},
+			className: 'smiley'
+		}
+	)
+
+	// Return
 	return data
 }
 
@@ -3487,6 +3514,26 @@ var ChatController = function(chat_element, private_chat, team_chat) {
 		}
 	}
 
+	$('#chat-smileys-button').click(function(e) {
+		$('#chat-smileys-wrapper').toggle()
+	});
+
+	$('#chat-smileys').on('click', function(e) {
+		e.stopPropagation();
+	});
+
+	$('#chat-smileys-wrapper').on('click', '.smiley', function(e) {
+		var emoji = $(this).attr('emoji')
+
+		var $txt = $('#chat .chat-input')
+		if (team_chat) $txt = $('#team-page .chat-input')
+		if (private_chat) $txt = $('#messages-page .chat-input')
+		var caretPos = $txt[0].selectionStart
+		var textAreaTxt = $txt.val()
+		var txtToAdd = emoji + ' '
+		$txt.val(textAreaTxt.substring(0, caretPos) + txtToAdd + textAreaTxt.substring(caretPos))
+	});
+
 	function setChatLanguage(channel) {
 		_chatLanguage = channel
 		localStorage['chat/channel'] = channel
@@ -3544,8 +3591,8 @@ var ChatController = function(chat_element, private_chat, team_chat) {
 
 		var message = _.protect(msg)
 
-		message = LW.smiley(message)
 		message = _.linkify(message)
+		message = LW.smiley(message)
 		message = commands(message, authorName)
 
 		var date = new Date(time * 1000);

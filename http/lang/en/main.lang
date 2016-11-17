@@ -47,6 +47,15 @@ ranking			Ranking
 report			Fight report
 settings			Settings
 signup			Sign up
+smiley_group_classic	Classic
+smiley_group_people	People
+smiley_group_nature	Nature
+smiley_group_food	Food
+smiley_group_activity	Activity
+smiley_group_travel	Travel
+smiley_group_objects	Objects
+smiley_group_symbols	Symbols
+smiley_group_flags	Flags
 stats			Statistics
 stay			Stay
 team			Team

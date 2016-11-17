@@ -43,6 +43,7 @@ I gladly accept pull requests to Leek Wars. Before starting work on a feature, s
 - Page.js https://github.com/visionmedia/page.js
 - jQuery https://github.com/jquery/jquery
 - Chartist https://github.com/gionkunz/chartist-js
+- Twemoji https://github.com/twitter/twemoji
 
 ## License
 
