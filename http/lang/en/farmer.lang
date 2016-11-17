@@ -37,6 +37,9 @@ farmer_have_n_warnings			This farmer has %s advertisement
 farmer_not_found			Farmer not found
 farmer_not_found_message			Farmer with id <b>%s</b> not found :(
 fights			Fights
+garden							Garden
+garden_no						NO
+garden_yes						YES
 given_by_x_the_d			Given by par <a href='/farmer/%1$s'>%2$s</a> the %3$s
 godfather_link			Referral link
 godfather_link_description			Send this link to people you want to refer

@@ -60,6 +60,11 @@ function init(farmer, $scope, $page) {
 				return "<a href='/farmer/" + f.id + "'>" + _.protect(f.name) + "</a>"
 			}).join(', '))
 	}
+	$scope.garden_switch = {
+		id: 'in-garden-switch',
+		checked: farmer.in_garden,
+		theme: 'dark'
+	}
 	$page.render()
 
 	$('#leeks .leek').each(function() {
@@ -85,6 +90,7 @@ function init(farmer, $scope, $page) {
 		LW.pages.farmer.avatar()
 		LW.pages.farmer.logout()
 		LW.pages.farmer.warnings()
+		LW.pages.farmer.garden()
 
 	} else {
 
@@ -312,6 +318,17 @@ LW.pages.farmer.challenge = function() {
 		})
 	})
 */
+}
+
+LW.pages.farmer.garden = function() {
+
+	var farmer = this.scope.farmer
+
+	$('#in-garden-button').click(function() {
+		var inGarden = !$('#in-garden-switch').is(':checked')
+		$('#in-garden-switch').prop('checked', inGarden)
+		_.post('farmer/set-in-garden', {farmer_id: farmer.id, in_garden: inGarden})
+	})
 }
 
 LW.pages.farmer.report = function() {

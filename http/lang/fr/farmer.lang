@@ -37,6 +37,9 @@ farmer_have_n_warnings		Cet éleveur a %s avertissements
 farmer_not_found			Éleveur introuvable
 farmer_not_found_message	Éleveur d'id <b>%s</b> introuvable :(
 fights						Combats
+garden						Agressions
+garden_no					NON
+garden_yes					OUI
 given_by_x_the_d			Donné par <a href='/farmer/%1$s'>%2$s</a> le %3$s
 godfather_link				Lien de parrainage
 godfather_link_description	Envoyer ce lien aux personnes que vous voulez avoir comme fileules
