@@ -32,21 +32,21 @@ var lastFPS = new Array();
 // 			game.focus = false;
 // 		} else {
 // 			game.focus = true;
-// 		} 
+// 		}
 // 		document_hidden = document[hidden];
-// 	} 
+// 	}
 // });
 
 function update() {
 	if (!game.paused) {
-		
+
 		setTimeout(update, frameTime);
 		game.update();
 	}
 }
 
 var Game = function() {
-	
+
 	var WEAPONS = [
 		Pistol, // 1
 		MachineGun, // 2
@@ -54,7 +54,7 @@ var Game = function() {
 		Shotgun,  // 4
 		Magnum, // 5
 		Laser, // 6
-		GrenadeLauncher, // 7 
+		GrenadeLauncher, // 7
 		FlameThrower, // 8
 		Destroyer, // 9
 		Gazor, // 10
@@ -65,7 +65,7 @@ var Game = function() {
 		Broadsword, // 15
 		Axe // 16
 	];
-	
+
 	var CHIPS = [
 		Bandage, // 1
 		Cure, // 2
@@ -139,7 +139,7 @@ var Game = function() {
 	];
 
 	this.entitiesTypes = [
-		Leek, 
+		Leek,
 		Bulb
 	];
 
@@ -148,27 +148,27 @@ var Game = function() {
 	this.requestPause = false
 	this.speed = 1
 	this.focus = true
-	
+
 	this.width;
 	this.height;
-	
+
 	// Particles system
 	this.particles = new Particles();
-	
+
 	// Ground
 	this.ground = new Ground();
-	
+
 	// Drawable elements
 	this.drawableElements;
 	this.drawableElementCurrentId = -1;
-	
+
 	// Players
 	this.teams = new Array()
 	this.leeks = new Array()
 	this.entityOrder = new Array()
 	this.states = new Array()
-	
-	// Actions 
+
+	// Actions
 	this.data = null;
 	this.actions = new Array();
 	this.currentAction = -1;
@@ -176,34 +176,34 @@ var Game = function() {
 	this.actionDelay = 0;
 	this.fightEnd = false;
 	this.turn = 1;
-	
+
 	this.effects = new Array();
-	
+
 	// Chips
 	this.chips = new Array();
-	
+
 	// Hud
 	this.hud = new Hud();
-	
+
 	// Logs
 	this.logs = new Array();
 	this.currentLog = 0;
 
 	// Marqueurs
 	this.markers = new Array();
-	
+
 	// Map
 	this.map;
-	
+
 	this.drawArea = 0;
-	
+
 	// Mouse
 	this.mouseX = 0;
 	this.mouseY = 0;
 	this.mouseTileX = 0;
 	this.mouseTileY = 0;
 	this.mouseCell = 0;
-	
+
 	// Settings
 	this.large = true;
 	this.debug = false;
@@ -216,7 +216,7 @@ var Game = function() {
 	for (i = 0; i < this.ground.tilesY * 2; i++) {
 		this.drawableElements[i] = {};
 	}
-	
+
 	// Settings
 	if (localStorage['fight/large'] == undefined) localStorage['fight/large'] = true;
 	if (localStorage['fight/sound'] == undefined) localStorage['fight/sound'] = true;
@@ -232,35 +232,35 @@ var Game = function() {
 
 	/*
 	 * Rapport reçu : on peut charger les ressources
-     */	
+     */
 	this.init = function(fight) {
 
 		//if (game.inited) return false;
 
 		game.inited = true;
-		
+
 		game.data = fight;
-		
+
 		// Check data
 		if (fight == null) {
 			_.logW("Fight is null...")
 			this.error();
 			return;
 		}
-		
+
 		game.map = M[fight.data.map.type + 1]
-		
+
 		game.obstacles = fight.data.map.obstacles
-			
+
 		// Add entities
 		var entities = fight.data.leeks;
 
 		for (i = 0; i < entities.length; ++i) {
 
 			var type = typeof(entities[i].type) === 'undefined' ? Entity.LEEK : entities[i].type;
-			
+
 			var entity = new game.entitiesTypes[type]();
-			
+
 			// Infos vitales
 			entity.id = entities[i].id;
 			entity.name = entities[i].name;
@@ -294,19 +294,19 @@ var Game = function() {
 			if (typeof(entities[i].strength) !== 'undefined') {
 				entity.strength = entities[i].strength
 			}
-			
+
 			// Wisdom
 			entity.wisdom = 0
 			if (typeof(entities[i].wisdom) !== 'undefined') {
 				entity.wisdom = entities[i].wisdom
 			}
-			
+
 			// Agility
 			entity.agility = 0
 			if (typeof(entities[i].agility) !== 'undefined') {
 				entity.agility = entities[i].agility
 			}
-			
+
 			// Resistance
 			entity.resistance = 0
 			if (typeof(entities[i].resistance) !== 'undefined') {
@@ -350,12 +350,12 @@ var Game = function() {
 				entity.mp = entities[i].mp
 			}
 			entity.maxMP = entity.mp
-			
+
 			entity.setCell(entities[i].cellPos);
-			
+
 			game.leeks[entity.id] = entity;
 			game.entityOrder.push(entity)
-			
+
 			// entity
 			if (entity.type == Entity.LEEK) {
 
@@ -369,7 +369,7 @@ var Game = function() {
 				var hat = typeof(entities[i].hat) === 'undefined' ? null : entities[i].hat
 				entity.setSkin(entities[i].appearence, skin, hat)
 
-				entity.active = true; 
+				entity.active = true;
 
 				entity.drawID = game.addDrawableElement(entity, entity.y);
 
@@ -378,14 +378,14 @@ var Game = function() {
 				entity.setSkin(entities[i].skin);
 			}
 		}
-		
+
 		// Actions
 		game.actions = fight.data.actions;
 		game.currentAction = 0;
-		
+
 		// Check first action
 		if (game.actions.length == 0 || game.actions[game.currentAction][0] != ACTION_START_FIGHT) {
-			_.log("Error ! no action START_FIGHT");
+			_.logW("Error ! no action START_FIGHT");
 			this.error();
 			return;
 		}
@@ -400,9 +400,9 @@ var Game = function() {
 				}
 			})
 		}
-		
+
 		// On a chargé tout le jeu, on peut charger les ressources
-		
+
 		// le jeu démarrera quand toutes les ressources seront ok
 		game.initialized = true;
 	}
@@ -411,40 +411,40 @@ var Game = function() {
 
 		game.logs = logs
 	}
-		
+
 	/*
 	 * Ressources chargées, on peut y aller
 	 */
 	this.launch = function() {
-		
+
 		// Obstacles
 		var obstacles = game.obstacles;
-		
+
 		for (i in obstacles) {
-			
+
 			var type = obstacles[i][0];
 			var size = obstacles[i][1];
-			
+
 			if (size != -1) {
-			
+
 				var obstacle = new Obstacle(type, size, i);
-				
+
 				game.ground.addObstacle(obstacle);
 			}
 		}
-		
+
 		$('#loading').hide();
 		$('#game').show();
-		
+
 		// Mouse move
 		this.setupMouseMove();
-		
+
 		this.hud.init();
 		this.hud.refresh();
-		
+
 		if (game.large)	LW.enlarge()
 		LW.pages.fight.resize()
-		
+
 		for (var l in game.leeks) {
 			if (game.leeks[l].active) game.leeks[l].computeOrginPos()
 		}
@@ -486,21 +486,21 @@ var Game = function() {
 		 */
         update()
     }
-    
+
     this.error = function() {
-		
+
 		$('#loading').hide();
 		$('#error').show();
 		_error = true;
 	}
-	
+
 	// Click
 	$(canvas).click(function() {
 		if (game.paused) {
 			game.resume();
 		}
 	});
-	
+
 	this.computeDT = function() {
 
 		var timeNow = new Date().getTime();
@@ -509,14 +509,14 @@ var Game = function() {
 		if (dt > MAX_DT) dt = MAX_DT;
 		lastTime = timeNow;
 		game.fps = Math.floor(1000 / delay);
-		
+
 		lastFPS.push(game.fps);
 		if (lastFPS.length > 30) lastFPS.shift();
 		game.avgFPS = 0;
 		for (var f in lastFPS) game.avgFPS += lastFPS[f];
 		game.avgFPS = Math.round(game.avgFPS / 30);
 	}
-	
+
 	this.speedUp = function() {
 		if (game.speed == 1) {
 			game.speed = 3;
@@ -530,7 +530,7 @@ var Game = function() {
 			$('#speed-button').css('opacity', '');
 		}
 	}
-	
+
 	this.toggleSize = function() {
 		if (this.large) {
 			this.large = false;
@@ -541,13 +541,13 @@ var Game = function() {
 		}
 		localStorage['fight/large'] = this.large
 	}
-	
+
 	this.toggleDebug = function() {
 		this.debug = !this.debug;
 		localStorage['fight/debug'] = this.debug
 		if (this.debug) $('#debug').show(); else $('#debug').hide();
 	}
-	
+
 	this.toggleTactic = function() {
 		this.tactic = !this.tactic;
 		localStorage['fight/tactic'] = this.tactic
@@ -555,7 +555,7 @@ var Game = function() {
 		this.requestPause = this.paused;
 		this.draw(); // redraw
 	}
-	
+
 	this.toggleCells = function() {
 		this.showCells = !this.showCells;
 		localStorage['fight/cells'] = this.showCells
@@ -563,7 +563,7 @@ var Game = function() {
 		this.requestPause = this.paused;
 		this.draw(); // redraw
 	}
-	
+
 	this.toggleLifes = function() {
 		this.showLifes = !this.showLifes;
 		localStorage['fight/lifes'] = this.showLifes
@@ -571,7 +571,7 @@ var Game = function() {
 		this.requestPause = this.paused;
 		this.draw(); // redraw
 	}
-	
+
 	this.changeQuality = function(quality) {
 		this.quality = QUALITIES.indexOf(quality) != -1 ? quality : 'high';
 		localStorage['fight/quality'] = this.quality
@@ -589,40 +589,40 @@ var Game = function() {
 		this.requestPause = this.paused;
 		this.draw(); // redraw
 	}
-	
+
 	this.update = function() {
-		
+
 		if (!this.paused) {
-			
+
 			this.computeDT()
 
 			// Logs
 			var needPause = this.readLogs()
-			
+
 			// Actions
 			if (!needPause) {
 
 				if (!this.fightEnd) {
-					
+
 					if (this.actionToDo) {
-						
+
 						this.actionDelay -= dt;
-						
+
 						if (this.actionDelay <= 0) {
-							
+
 							this.actionDelay = 0
 							this.actionToDo = false
 
 							this.currentAction++
 							this.updateBar()
-						
+
 							var action = this.actions[this.currentAction]
 
 							if (action == undefined) {
 
 								this.log(_.lang.get('fight', 'end_of_fight'));
 								this.fightEnd = true;
-								
+
 								game.reportTimer = setTimeout(this.showReport, 2500)
 								return
 							}
@@ -631,7 +631,7 @@ var Game = function() {
 						}
 					}
 				}
-				
+
 				this.drawArea -= dt;
 
 				// Show cell
@@ -641,12 +641,12 @@ var Game = function() {
 						this.actionDone();
 					}
 				}
-				
+
 				// Leeks
 				for (i in this.leeks) {
 					if (this.leeks[i].active) this.leeks[i].update(dt);
 				}
-				
+
 				// Chips
 				for (var c = 0; c < this.chips.length; ++c) {
 					var chip = this.chips[c];
@@ -661,7 +661,7 @@ var Game = function() {
 						c--;
 					}
 				}
-				
+
 				// Particles
 				this.particles.update(dt);
 			}
@@ -672,16 +672,16 @@ var Game = function() {
 			}
 		}
 	}
-	
+
 	this.pause = function() {
 		if (!this.requestPause && !this.paused) {
 			this.requestPause = true;
-			
+
 			$('#play-button').attr('src', LW.staticURL + 'image/icon/play.png');
 			LW.setTooltipContent($('#tt_play-button'), _.lang.get('fight', 'resume') + ' (P)');
 		}
 	}
-	
+
 	this.resume = function() {
 		if (this.paused) {
 
@@ -692,22 +692,22 @@ var Game = function() {
 			update();
 		}
 	}
-	
+
 	this.doAction = function(action) {
-		
+
 		var type = action[0]
-		
+
 		switch (type) {
-			
+
 			case ACTION_NEW_TURN:
-			
+
 				this.turn = action[1]
 
 				this.actionDone()
 				break
-				
+
 			case ACTION_LEEK_TURN:
-			
+
 				this.currentPlayer = action[1];
 
 				if (typeof(action[2]) != 'undefined' && typeof(action[3]) != 'undefined') {
@@ -727,21 +727,21 @@ var Game = function() {
 						}
 					}
 				}
-				
+
 				this.actionDone()
 				break
-			
+
 			case ACTION_END_TURN:
-			
+
 				// Reinitialisation of characteristics
 				this.leeks[action[1]].tp = action[2]
 				this.leeks[action[1]].mp = action[3]
 				if (action.length > 4) this.leeks[action[1]].strength = action[4]
 				if (action.length > 5) this.leeks[action[1]].magic = action[5]
-				
+
 				this.actionDone()
 				break
-				
+
 			case ACTION_MOVE_TO:
 
 				if (this.jumping) {
@@ -750,31 +750,31 @@ var Game = function() {
 					this.actionDone()
 
 				} else {
-				
+
 					this.leeks[action[1]].move(action[3])
 				}
-				
+
 				break
-				
+
 			case ACTION_MP_LOST:
-				
+
 				this.leeks[action[1]].looseMP(action[2], this.jumping)
-				
+
 				this.actionDone()
 				break
-				
+
 			case ACTION_CARE:
 
 				this.leeks[action[1]].care(action[2], this.jumping)
 
 				if (!this.jumping) {
 
-					this.log(_.lang.get('fight', 'leek_win_x', 
-						this.colorText(this.leeks[action[1]].name, this.getLeekColor(action[1])), 
+					this.log(_.lang.get('fight', 'leek_win_x',
+						this.colorText(this.leeks[action[1]].name, this.getLeekColor(action[1])),
 						this.colorText(_.lang.get('fight', 'n_life', action[2]), LIFE_COLOR)
 					))
 				}
-			
+
 				this.actionDone()
 				break
 
@@ -783,30 +783,30 @@ var Game = function() {
 				this.leeks[action[1]].boostVita(action[2], this.jumping)
 
 				if (!this.jumping) {
-					this.log(_.lang.get('fight', 'leek_win_x', 
-						this.colorText(this.leeks[action[1]].name, this.getLeekColor(action[1])), 
+					this.log(_.lang.get('fight', 'leek_win_x',
+						this.colorText(this.leeks[action[1]].name, this.getLeekColor(action[1])),
 						this.colorText(_.lang.get('fight', 'n_vita', action[2]), LIFE_COLOR)
 					))
 				}
-				
+
 				this.actionDone()
 				break
-			
+
 			case ACTION_SET_WEAPON:
 
 				this.leeks[action[1]].setWeapon(new WEAPONS[action[2] - 1]())
 
 				if (!this.jumping) {
-					this.log(_.lang.get('fight' , 'leek_take_weapon', 
-						this.colorText(this.leeks[action[1]].name, this.getLeekColor(action[1])), 
+					this.log(_.lang.get('fight' , 'leek_take_weapon',
+						this.colorText(this.leeks[action[1]].name, this.getLeekColor(action[1])),
 						_.lang.get('weapon', LW.weapons[LW.weaponTemplates[action[2]].item].name)
 					))
 				}
 				this.actionDone()
 				break
-				
+
 			case ACTION_USE_CHIP:
-			
+
 				if (this.jumping) {
 					this.actionDone()
 					break
@@ -818,28 +818,28 @@ var Game = function() {
 				var result = action[4];
 				var leeksID = action[5];
 
-				var log = _.lang.get('fight', 'leek_cast', 
-					this.colorText(this.leeks[action[1]].name, this.getLeekColor(action[1])), 
+				var log = _.lang.get('fight', 'leek_cast',
+					this.colorText(this.leeks[action[1]].name, this.getLeekColor(action[1])),
 					_.lang.get('chip', LW.chips[LW.chipTemplates[chip].item].name)
 				)
-				
+
 				if (result > 0) { // Success!
 
 					if (result == 2) {
 						log += "... " + _.lang.get('effect', 'critical');
 					}
 					if (CHIPS[action[3] - 1] != undefined) {
-					
+
 						var chip = new CHIPS[action[3] - 1]();
-				
+
 						var leeks = new Array();
 						for (var l in leeksID) {
 							leeks.push(this.leeks[leeksID[l]]);
 						}
-						
+
 						this.leeks[action[1]].useChip(chip, cell, leeks);
 						this.chips.push(chip);
-						
+
 					} else {
 						this.actionDone();
 					}
@@ -847,13 +847,13 @@ var Game = function() {
 					// log += "... " + _.lang.get('fight', 'fail');
 					this.actionDone();
 				}
-				
+
 				this.log(log)
-				
+
 				break;
-				
+
 			case ACTION_USE_WEAPON: {
-				
+
 				if (this.jumping) {
 					this.actionDone()
 					break
@@ -864,12 +864,12 @@ var Game = function() {
 				var weapon = action[3];
 				var result = action[4];
 				var leeksID = action[5];
-				
+
 				var gesture = this.leeks[action[1]].weapon.white ? 'leek_hit' : 'leek_shoot'
 				var log = _.lang.get('fight', gesture, this.colorText(this.leeks[action[1]].name, this.getLeekColor(action[1])));
 
 				if (result > 0) { // Success!
-					
+
 					if (result == 2) {
 						log += "... " + _.lang.get('fight', 'critical');
 					}
@@ -878,17 +878,17 @@ var Game = function() {
 					for (var l in leeksID) {
 						leeks.push(this.leeks[leeksID[l]]);
 					}
-					
+
 					this.leeks[launcher].useWeapon(cell, leeks);
-					
+
 					// Pas de cibles workaround
 					if (leeksID.length == 0) {
 						this.actionDone();
 					}
 				}
-				
+
 				this.log(log)
-				
+
 				break
 			}
 			case ACTION_LIFE_LOST:
@@ -897,26 +897,26 @@ var Game = function() {
 
 				if (!this.jumping) {
 
-					this.log(_.lang.get('fight', 'leek_loose_x', 
-						this.colorText(this.leeks[action[1]].name, this.getLeekColor(action[1])), 
+					this.log(_.lang.get('fight', 'leek_loose_x',
+						this.colorText(this.leeks[action[1]].name, this.getLeekColor(action[1])),
 						this.colorText(_.lang.get('fight', 'n_life', action[2]), LIFE_COLOR)
 					))
-				
+
 					this.leeks[action[1]].randomHurt()
 				}
 
 				this.actionDone()
 				break
-				
+
 			case ACTION_TP_LOST:
-				
+
 				this.leeks[action[1]].looseTP(action[2], this.jumping)
 
 				this.actionDone()
 				break
-				
+
 			case ACTION_PLAYER_DEAD:
-				
+
 				var entity = this.leeks[action[1]]
 				if (entity.summon) {
 					this.hud.removeEntityBlock(entity)
@@ -936,21 +936,21 @@ var Game = function() {
 				}
 
 				break
-			
+
 			case ACTION_SAY:
-			
+
 				if (!this.jumping) {
 
 					this.log(_.lang.get('fight', 'leek_speak', this.colorText(this.leeks[action[1]].name, this.getLeekColor(action[1])), _.protect(action[2])));
-				
+
 					this.leeks[action[1]].say(action[2])
 				}
 
 				this.actionDone()
 				break
-				
+
 			case ACTION_LAMA:
-			
+
 				if (!this.jumping) {
 					this.leeks[action[1]].sayLama()
 				}
@@ -959,7 +959,7 @@ var Game = function() {
 				break
 
 			case ACTION_SUMMON:
-			
+
 				var caster = action[1];
 				var summonID = action[2];
 				var cell = action[3];
@@ -975,8 +975,8 @@ var Game = function() {
 
 					this.hud.addEntityBlock(summon);
 
-					this.log(_.lang.get('fight', 'summon', 
-						this.colorText(this.leeks[action[1]].name, this.getLeekColor(action[1])), 
+					this.log(_.lang.get('fight', 'summon',
+						this.colorText(this.leeks[action[1]].name, this.getLeekColor(action[1])),
 						this.colorText(summon.name, this.getLeekColor(summon.id))
 					))
 				}
@@ -1003,7 +1003,7 @@ var Game = function() {
 				if (!this.jumping) {
 					entity.drawID = game.addDrawableElement(entity, entity.y)
 				}
-								
+
 				this.actionDone()
 				break
 
@@ -1025,43 +1025,43 @@ var Game = function() {
 				this.log(_.lang.get('fight', 'leek_show_cell', this.colorText(this.leeks[action[1]].name, this.getLeekColor(action[1])), action[2]));
 
 				break;
-				
+
 			case ACTION_ADD_WEAPON_EFFECT : {
-				
+
 				this.addEffect(action, 'weapon')
 				this.actionDone()
 				break
 			}
-			
+
 			case ACTION_ADD_CHIP_EFFECT : {
-			
+
 				this.addEffect(action, 'chip')
 				this.actionDone()
 				break
 			}
-			
+
 			case ACTION_REMOVE_EFFECT : {
-			
+
 				this.removeEffect(action[1])
 				this.actionDone()
 				break
 			}
-			
+
 			case ACTION_BUG:
-			
+
 				if (!this.jumping) {
 					this.leeks[action[1]].bug()
 				}
 
 				this.actionDone()
 				break
-				
+
 			case ACTION_END_FIGHT:
-			
+
 				this.fightEnd = true
-				
+
 				break
-				
+
 			default: {
 				_.logW("Error : unknown action type (" + type + ")");
 				this.actionDone()
@@ -1072,7 +1072,7 @@ var Game = function() {
 
 			// On actualise le hud à chaque action
 			this.hud.refresh()
-	
+
 			// On peut logger pour cette action !
 			this.currentLog = 0
 		}
@@ -1080,30 +1080,28 @@ var Game = function() {
 
 	this.addEffect = function(action, object) {
 
-		_.log("add effect")
-		
 		var objectID = action[1];
-		var id = action[2]; 
+		var id = action[2];
 		var caster = action[3];
 		var target = action[4];
 		var effect = action[5];
 		var value = action[6];
 		var leek = this.leeks[target];
-		
+
 		// Ajout de l'effet
 		this.effects[id] = {id: id, object: objectID, objectType: object, caster: caster, target: target, effect: effect, value: value};
-		
+
 		if (!this.jumping) {
 			// Ajout de l'image sur le hud
 			var image;
 			if (object == 'chip') {
-				
+
 				if (objectID in LW.chips) {
 					image = LW.staticURL + "/image/chip/small/" + LW.chips[objectID].name + ".png";
 				}
-				
+
 			} else if (object == 'weapon') {
-				
+
 				if (objectID in LW.weapons) {
 
 					/*var WEAPONS = [
@@ -1113,7 +1111,7 @@ var Game = function() {
 						Shotgun,  // 4
 						Magnum, // 5
 						Laser, // 6
-						GrenadeLauncher, // 7 
+						GrenadeLauncher, // 7
 						FlameThrower, // 8
 						Destroyer, // 9
 						Gazor, // 10
@@ -1128,7 +1126,7 @@ var Game = function() {
 					var template = LW.weapons[objectID].template
 					var img = ["1", "2", "3", "4", "5", "6", "7", "flamme", "destroyer", "gaz_icon", "11", "12", "13", "katana", "broadswoard", "axe"][template - 1];
 					image = LW.staticURL + "/image/weapon/" + img + ".png";
-					
+
 					// Gestion des états du poireau
 					if (template == 8) {
 						leek.burn()
@@ -1139,160 +1137,160 @@ var Game = function() {
 			}
 			this.hud.addEntityEffect(this.effects[id], image)
 		}
-		
+
 		// Action !
-		
+
 		switch (effect) {
-			
+
 			case LW.EFFECT.ABSOLUTE_SHIELD:
 
 				if (!this.jumping) {
-					this.log(_.lang.get('fight', 'leek_win_x', 
-						this.colorText(leek.name, this.getLeekColor(target)), 
+					this.log(_.lang.get('fight', 'leek_win_x',
+						this.colorText(leek.name, this.getLeekColor(target)),
 						this.colorText(_.lang.get('fight', 'n_absolute_shield', value), SHIELD_COLOR)
 					))
 				}
 
 				leek.buffAbsoluteShield(value, this.jumping)
 				break;
-			
+
 			case LW.EFFECT.RELATIVE_SHIELD:
-				
+
 				if (!this.jumping) {
-					this.log(_.lang.get('fight', 'leek_win_x', 
-						this.colorText(leek.name, this.getLeekColor(target)), 
+					this.log(_.lang.get('fight', 'leek_win_x',
+						this.colorText(leek.name, this.getLeekColor(target)),
 						this.colorText(_.lang.get('fight', 'n_relative_shield', value + '%'), SHIELD_COLOR)
 					))
 				}
 
 				leek.buffRelativeShield(value, this.jumping)
 				break;
-				
+
 			case LW.EFFECT.BUFF_AGILITY:
 
 				if (!this.jumping) {
-					this.log(_.lang.get('fight', 'leek_win_x', 
-						this.colorText(leek.name, this.getLeekColor(target)), 
+					this.log(_.lang.get('fight', 'leek_win_x',
+						this.colorText(leek.name, this.getLeekColor(target)),
 						this.colorText(_.lang.get('fight', 'n_agility', value), AGILITY_COLOR)
 					))
 				}
 
 				leek.buffAgility(value, this.jumping)
 				break;
-				
+
 			case LW.EFFECT.BUFF_STRENGTH:
-				
+
 				if (!this.jumping) {
-					this.log(_.lang.get('fight', 'leek_win_x', 
-						this.colorText(leek.name, this.getLeekColor(target)), 
+					this.log(_.lang.get('fight', 'leek_win_x',
+						this.colorText(leek.name, this.getLeekColor(target)),
 						this.colorText(_.lang.get('fight', 'n_strength', value), STRENGTH_COLOR)
 					))
 				}
-				
+
 				leek.buffStrength(value, this.jumping)
 				break;
-				
+
 			case LW.EFFECT.BUFF_TP:
 
 				if (!this.jumping) {
-					this.log(_.lang.get('fight', 'leek_win_x', 
-						this.colorText(leek.name, this.getLeekColor(target)), 
+					this.log(_.lang.get('fight', 'leek_win_x',
+						this.colorText(leek.name, this.getLeekColor(target)),
 						this.colorText(_.lang.get('fight', 'n_tp', value), TP_COLOR)
 					))
 				}
 
 				leek.buffTP(value, this.jumping);
 				break;
-				
+
 			case LW.EFFECT.BUFF_MP:
 
 				if (!this.jumping) {
-					this.log(_.lang.get('fight', 'leek_win_x', 
-						this.colorText(leek.name, this.getLeekColor(target)), 
+					this.log(_.lang.get('fight', 'leek_win_x',
+						this.colorText(leek.name, this.getLeekColor(target)),
 						this.colorText(_.lang.get('fight', 'n_mp', value), MP_COLOR)
 					))
 				}
-					
+
 				leek.buffMP(value, this.jumping)
 				break;
 
 			case LW.EFFECT.BUFF_WISDOM:
 
 				if (!this.jumping) {
-					this.log(_.lang.get('fight', 'leek_win_x', 
-						this.colorText(leek.name, this.getLeekColor(target)), 
+					this.log(_.lang.get('fight', 'leek_win_x',
+						this.colorText(leek.name, this.getLeekColor(target)),
 						this.colorText(_.lang.get('fight', 'n_wisdom', value), WISDOM_COLOR)
 					))
 				}
-					
+
 				leek.buffWisdom(value, this.jumping)
 				break;
 
 			case LW.EFFECT.BUFF_RESISTANCE:
 
 				if (!this.jumping) {
-					this.log(_.lang.get('fight', 'leek_win_x', 
-						this.colorText(leek.name, this.getLeekColor(target)), 
+					this.log(_.lang.get('fight', 'leek_win_x',
+						this.colorText(leek.name, this.getLeekColor(target)),
 						this.colorText(_.lang.get('fight', 'n_resistance', value), RESISTANCE_COLOR)
 					))
 				}
-					
+
 				leek.buffResistance(value, this.jumping)
 				break;
 
 			case LW.EFFECT.SHACKLE_MP:
 
 				if (!this.jumping) {
-					this.log(_.lang.get('fight', 'leek_loose_x', 
-						this.colorText(leek.name, this.getLeekColor(target)), 
+					this.log(_.lang.get('fight', 'leek_loose_x',
+						this.colorText(leek.name, this.getLeekColor(target)),
 						this.colorText(_.lang.get('fight', 'n_mp', -value), MP_COLOR)
 					))
 				}
-					
+
 				leek.looseMP(-value, this.jumping)
 				break;
 
 			case LW.EFFECT.SHACKLE_TP:
 
 				if (!this.jumping) {
-					this.log(_.lang.get('fight', 'leek_loose_x', 
-						this.colorText(leek.name, this.getLeekColor(target)), 
+					this.log(_.lang.get('fight', 'leek_loose_x',
+						this.colorText(leek.name, this.getLeekColor(target)),
 						this.colorText(_.lang.get('fight', 'n_tp', -value), TP_COLOR)
 					))
 				}
-						
+
 				leek.looseTP(-value, this.jumping)
 				break
 
 			case LW.EFFECT.SHACKLE_STRENGTH:
 
 				if (!this.jumping) {
-					this.log(_.lang.get('fight', 'leek_loose_x', 
-						this.colorText(leek.name, this.getLeekColor(target)), 
+					this.log(_.lang.get('fight', 'leek_loose_x',
+						this.colorText(leek.name, this.getLeekColor(target)),
 						this.colorText(_.lang.get('fight', 'n_strength', -value), STRENGTH_COLOR)
 					))
 				}
-					
+
 				leek.looseStrength(-value, this.jumping)
 				break
 
 			case LW.EFFECT.SHACKLE_MAGIC:
 
 				if (!this.jumping) {
-					this.log(_.lang.get('fight', 'leek_loose_x', 
-						this.colorText(leek.name, this.getLeekColor(target)), 
+					this.log(_.lang.get('fight', 'leek_loose_x',
+						this.colorText(leek.name, this.getLeekColor(target)),
 						this.colorText(_.lang.get('fight', 'n_magic', -value), MAGIC_COLOR)
 					))
 				}
-					
+
 				leek.looseMagic(-value, this.jumping)
 				break
 
 			case LW.EFFECT.DAMAGE_RETURN:
-				
+
 				if (!this.jumping) {
-					this.log(_.lang.get('fight', 'leek_win_x', 
-						this.colorText(leek.name, this.getLeekColor(target)), 
+					this.log(_.lang.get('fight', 'leek_win_x',
+						this.colorText(leek.name, this.getLeekColor(target)),
 						this.colorText(_.lang.get('fight', 'n_damage_return', value + '%'), 'black')
 					))
 				}
@@ -1306,17 +1304,17 @@ var Game = function() {
 				break;
 		}
 	}
-	
+
 	this.removeEffect = function(id) {
-		
+
 		var effect = this.effects[id];
-		
+
 		if (!effect) return;
-		
+
 		var effectID = effect.effect;
 		var leek = this.leeks[effect.target];
 		var value = effect.value;
-		
+
 		switch (effectID) {
 
 			case LW.EFFECT.SHACKLE_MP:
@@ -1334,19 +1332,19 @@ var Game = function() {
 			case LW.EFFECT.SHACKLE_MAGIC:
 				leek.magic -= value;
 				break;
-			
+
 			case LW.EFFECT.ABSOLUTE_SHIELD:
 				leek.absoluteShield -= value;
 				break;
-			
+
 			case LW.EFFECT.RELATIVE_SHIELD:
 				leek.relativeShield -= value;
 				break;
-				
+
 			case LW.EFFECT.BUFF_AGILITY:
 				leek.agility -= value;
 				break;
-				
+
 			case LW.EFFECT.BUFF_STRENGTH:
 				leek.strength -= value;
 				break;
@@ -1363,11 +1361,11 @@ var Game = function() {
 				leek.damageReturn -= value;
 				break;
 		}
-		
+
 		if (!this.jumping) {
 
 			this.hud.removeLeekEffect(id)
-		
+
 			// Gestion des états du poireau
 			if (effect.objectType == 'weapon') {
 				if (effect.object == 46) {
@@ -1377,7 +1375,7 @@ var Game = function() {
 				}
 			}
 		}
-		
+
 		delete this.effects[id];
 	}
 
@@ -1406,13 +1404,13 @@ var Game = function() {
 
 		return false;
 	}
-	
+
 	this.actionDone = function() {
-		
+
 		this.actionToDo = true
 		this.actionDelay = 6
 	}
-	
+
 	this.getLeekColor = function(leek) {
 		return LW.TEAM_COLORS[this.leeks[leek].team - 1];
 	}
@@ -1420,7 +1418,7 @@ var Game = function() {
 	this.colorText = function(text, color) {
 		return "<span style='color: " + color + ";'>" + text + "</span>";
 	}
-	
+
 	this.log = function(log) {
 		if (typeof(log) == 'string') {
 			game.hud.addLog([log, "black"]);
@@ -1428,31 +1426,31 @@ var Game = function() {
 			game.hud.addLog(log);
 		}
 	}
-	
+
 	this.setupMouseMove = function() {
-		
+
 		var mouseOrigin = _.findPos($('#game')[0]);
-		
+
 		mouseOrigin.x += Math.round(this.ground.startX);
 		mouseOrigin.y += Math.round(this.ground.startY);
-		
+
 		$(canvas).off('mousemove');
 		$(canvas).mousemove(function(e) {
-			
+
 			game.mouseX = e.pageX - mouseOrigin.x;
 			game.mouseY = e.pageY - mouseOrigin.y;
-			
+
 			var x = (game.mouseX / game.ground.tileSizeX) * 2 - 0.5;
 			var y = (game.mouseY / game.ground.tileSizeY) * 2 - 0.5;
-			
+
 			var cx = Math.floor(x);
 			var cy = Math.floor(y);
-			
+
 			var ox = x - cx - 0.5;
 			var oy = y - cy - 0.5;
-			
+
 			if ((cx + cy) % 2 == 1) {
-				
+
 				if (-oy > Math.abs(ox)) { // en haut
 					cy--;
 				} else if (oy > Math.abs(ox)) { // en bas
@@ -1463,16 +1461,16 @@ var Game = function() {
 					cx--;
 				}
 			}
-			
+
 			if (cx >= 0 && cy >= 0 && cx < game.ground.tilesX * 2 - 1 && cy < game.ground.tilesY * 2 - 1) {
-			
+
 				game.mouseTileX = cx;
 				game.mouseTileY = cy;
-				
+
 				game.mouseCell = game.ground.xyToCell(cx, cy);
-				
+
 			} else {
-				
+
 				game.mouseTileX = undefined;
 				game.mouseTileY = undefined;
 				game.mouseCell = undefined;
@@ -1486,180 +1484,180 @@ var Game = function() {
 			var pos = this.ground.cellToXY(cells[c]);
 			var xy = this.ground.xyToXYPixels(pos.x, pos.y);
 			var x = xy.x * this.ground.scale;
-			var y = xy.y * this.ground.scale;	
+			var y = xy.y * this.ground.scale;
 			this.markers[cells[c]] = {owner: owner, color: '#' + color, duration: duration, x: x, y: y};
 		}
 	}
-	
-	
-	
+
+
+
 	this.addDrawableElement = function(element, line) {
-		
+
 		this.drawableElementCurrentId++;
-		
+
 		//
 		// if (this.drawableElements[line] == undefined) return;
 		//
-		
+
 		this.drawableElements[line][this.drawableElementCurrentId] = element;
-		
+
 		return this.drawableElementCurrentId;
 	}
-	
+
 	this.moveDrawableElement = function(element, id, line, newLine) {
 
 		if (!this.drawableElements[newLine]) {
-			_.log("Error moving object to line " + newLine)
+			_.logW("Error moving object to line " + newLine)
 			return
 		}
-	
+
 		this.drawableElements[newLine][id] = element; // Ajout de l'élément sur la nouvelle ligne
 		this.removeDrawableElement(id, line); // Destruction de l'élément sur l'ancienne ligne
 	}
 
 	this.removeDrawableElement = function(id, line) {
-		
+
 		if (this.drawableElements[line] != undefined) {
 			if (this.drawableElements[line][id] != null) {
 				delete this.drawableElements[line][id];
 			}
 		}
 	}
-	
+
 	this.setEffectArea = function(x, y, area, color, duration) {
-		
+
 		duration = duration ? duration : 80;
-			
+
 		x *= this.ground.scale;
-		y *= this.ground.scale;	
-			
+		y *= this.ground.scale;
+
 		this.drawArea = duration;
 		this.areaColor = color;
-		
+
 		this.area = [];
 		var w = this.ground.tileSizeX;
 		var h = this.ground.tileSizeY;
 
 		if (area == AREA_SINGLE_CELL) {
-			
+
 			this.area.push([x, y]);
-			
+
 		} else if (area == AREA_CIRCLE1) {
-			
+
 			this.area.push([x - w/2, y - h/2]);
 			this.area.push([x + w/2, y - h/2]);
-			
+
 			this.area.push([x, y]);
-			
+
 			this.area.push([x - w/2, y + h/2]);
 			this.area.push([x + w/2, y + h/2]);
-			
+
 		} else if (area == AREA_CIRCLE2) {
-			
+
 			this.area.push([x - w, y - h]);
 			this.area.push([x, y - h]);
 			this.area.push([x + w, y - h]);
-			
+
 			this.area.push([x - w/2, y - h/2]);
 			this.area.push([x + w/2, y - h/2]);
-			
+
 			this.area.push([x - w, y]);
 			this.area.push([x, y]);
 			this.area.push([x + w, y]);
-			
+
 			this.area.push([x - w/2, y + h/2]);
 			this.area.push([x + w/2, y + h/2]);
-			
+
 			this.area.push([x - w, y + h]);
 			this.area.push([x, y + h]);
 			this.area.push([x + w, y + h]);
-			
+
 		} else if (area == AREA_CIRCLE3) {
-			
+
 			this.area.push([x - 1.5*w, y - 1.5*h]);
 			this.area.push([x - 0.5*w, y - 1.5*h]);
 			this.area.push([x + 0.5*w, y - 1.5*h]);
 			this.area.push([x + 1.5*w, y - 1.5*h]);
-			
+
 			this.area.push([x - w, y - h]);
 			this.area.push([x, y - h]);
 			this.area.push([x + w, y - h]);
-			
+
 			this.area.push([x - 1.5*w, y - h/2]);
 			this.area.push([x - 0.5*w, y - h/2]);
 			this.area.push([x + 0.5*w, y - h/2]);
 			this.area.push([x + 1.5*w, y - h/2]);
-			
+
 			this.area.push([x - w, y]);
 			this.area.push([x, y]);
 			this.area.push([x + w, y]);
-			
+
 			this.area.push([x - 1.5*w, y + h/2]);
 			this.area.push([x - 0.5*w, y + h/2]);
 			this.area.push([x + 0.5*w, y + h/2]);
 			this.area.push([x + 1.5*w, y + h/2]);
-			
+
 			this.area.push([x - w, y + h]);
 			this.area.push([x, y + h]);
 			this.area.push([x + w, y + h]);
-			
+
 			this.area.push([x - 1.5*w, y + 1.5*h]);
 			this.area.push([x - 0.5*w, y + 1.5*h]);
 			this.area.push([x + 0.5*w, y + 1.5*h]);
 			this.area.push([x + 1.5*w, y + 1.5*h]);
 		}
 	}
-	
+
 	this.drawEffectArea = function() {
-		
+
 		ctx.save();
-		
+
 		ctx.globalAlpha = 0.4 * Math.min(1, this.drawArea / 10);
 		ctx.fillStyle = this.areaColor;
-		
+
 		for (var t in this.area) {
 			this.drawEffectTile(this.area[t][0], this.area[t][1]);
 		}
-		
+
 		ctx.restore();
 	}
-	
+
 	this.drawEffectTile = function(x, y) {
-		
+
 		ctx.save();
-		
+
 		ctx.translate(x, y);
-		
+
 		ctx.beginPath();
 		ctx.moveTo(0, -this.ground.tileSizeY / 2.1);
 		ctx.lineTo(this.ground.tileSizeX / 2.1, 0);
 		ctx.lineTo(0, this.ground.tileSizeY / 2.1);
 		ctx.lineTo(-this.ground.tileSizeX / 2.1, 0);
 		ctx.closePath();
-		
+
 		ctx.fill();
-		
+
 		ctx.restore();
 	}
 
 	this.drawMarker = function(x, y, color) {
 
 		ctx.save();
-		
+
 		ctx.globalAlpha = 0.7;
 		ctx.fillStyle = color;
 
 		ctx.translate(x, y);
-		
+
 		ctx.beginPath();
 		ctx.moveTo(0, -this.ground.tileSizeY / 2.1);
 		ctx.lineTo(this.ground.tileSizeX / 2.1, 0);
 		ctx.lineTo(0, this.ground.tileSizeY / 2.1);
 		ctx.lineTo(-this.ground.tileSizeX / 2.1, 0);
 		ctx.closePath();
-		
+
 		ctx.fill();
-		
+
 		ctx.restore();
 	}
 
@@ -1672,14 +1670,14 @@ var Game = function() {
 		ctx.save();
 
 		ctx.translate(this.showCellX, this.showCellY);
-		
+
 		ctx.beginPath();
 		ctx.moveTo(0, -this.ground.tileSizeY / 2.1);
 		ctx.lineTo(this.ground.tileSizeX / 2.1, 0);
 		ctx.lineTo(0, this.ground.tileSizeY / 2.1);
 		ctx.lineTo(-this.ground.tileSizeX / 2.1, 0);
 		ctx.closePath();
-		
+
 		ctx.lineCap = 'round';
 
 		ctx.globalAlpha = 0.4;
@@ -1707,25 +1705,25 @@ var Game = function() {
 		ctx.globalAlpha = 1;
 		ctx.fillStyle = this.showCellColor;
 		ctx.fill();
-		
+
 		ctx.restore();
 
 		ctx.globalAlpha = 1;
 	}
-	
+
     this.draw = function() {
-		
+
 		// Draw ground
 		this.ground.draw();
 
 		// Draw ground particles
 		this.particles.drawGround()
-		
+
 		// Draw leeks paths
 		for (var i in game.leeks) {
 			if (game.leeks[i].active) game.leeks[i].drawPath();
 		}
-		
+
 		// Effect area
 		if (this.drawArea > 0) {
 			this.drawEffectArea();
@@ -1736,7 +1734,7 @@ var Game = function() {
 			var marker = this.markers[m];
 			this.drawMarker(marker.x, marker.y, marker.color);
 		}
-		
+
 		// Draw elements
 		for (var i = 0; i < this.drawableElements.length; i++) {
 			var line = this.drawableElements[i];
@@ -1749,19 +1747,19 @@ var Game = function() {
 		if (this.showCellTime > 0) {
 			this.showCell();
 		}
-		
+
 		// Draw air particles
 		this.particles.drawAir();
-		
+
 		if (this.requestPause) {
-			
+
 			this.paused = true;
 			this.requestPause = false;
 			this.drawPause();
 		}
 
 		// Draw hud
-		this.hud.draw();	
+		this.hud.draw();
 
 		// Bubbles
 		for (var i in game.leeks) {
@@ -1772,15 +1770,15 @@ var Game = function() {
 		for (var i in game.leeks) {
 			if (game.leeks[i].active) game.leeks[i].drawTexts()
 		}
-		
+
 		this.ground.endDraw();
 	}
-	
+
 	this.drawPause = function() {
 		ctx.save();
-		
+
 		ctx.translate(-game.ground.startX, -game.ground.startY);
-		
+
 		if (this.discretePause) {
 
 			ctx.globalAlpha = 0.2;
@@ -1792,26 +1790,26 @@ var Game = function() {
 			ctx.globalAlpha = 0.4;
 			ctx.fillStyle = 'black';
 			ctx.fillRect(0, 0, game.width, game.height);
-			
-			ctx.fillStyle = 'white'; 
+
+			ctx.fillStyle = 'white';
 			ctx.font = "60pt Roboto";
 			ctx.textAlign = "center";
 			ctx.globalAlpha = 1;
 			ctx.fillText("Pause", game.width / 2, game.height / 2 - 25);
-			
+
 			ctx.font = "30pt Roboto";
 			ctx.fillText(_.lang.get('fight', 'pause_message'), game.width / 2, game.height / 2 + 25);
 		}
 
 		ctx.restore();
 	}
-	
+
 	this.drawElement = function(element) {
 		element.draw();
 	}
-	
+
 	this.showReport = function() {
-		
+
 		// Show report
 		LW.page('/report/' + game.data.id)
 	}
@@ -1825,7 +1823,7 @@ var Game = function() {
 
 		// Return to initial state
 		for (var i in this.states) {
-			
+
             this.leeks[i].active = this.states[i].active
             this.leeks[i].life = this.states[i].life
             this.leeks[i].maxLife = this.states[i].max_life
@@ -1870,20 +1868,20 @@ var Game = function() {
         $("#logs .log").remove()
         $("[id^=effect]").remove()
          $('#turn').text("")
-       
-        for (var effect in this.effects) { 
+
+        for (var effect in this.effects) {
         	this.removeEffect(effect)
         }
-        for (var i = 0; i < this.particles.particles.length; i++) { 
+        for (var i = 0; i < this.particles.particles.length; i++) {
         	this.particles.particles.splice(i, 1)
         	i--
         }
-        
+
         this.markers = []
         this.currentTurn = 0
         this.turn = 1
         this.currentPlayer = null
- 
+
         this.showCellTime = 0
         for (var c = 0; c < this.chips.length; ++c) {
             this.chips[c].done = true
@@ -1915,5 +1913,3 @@ var Game = function() {
 		this.draw()
 	}
 }
-
-

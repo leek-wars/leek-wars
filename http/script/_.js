@@ -393,8 +393,6 @@ _.linkify = function(html) {
  */
 _.toast = function(message, durationOrCallback) {
 
-	_.log(message)
-
 	var d = 1800
 	var callback = null
 
@@ -439,7 +437,7 @@ _.popup.new = function(view, data, width, direct, options) {
 	}
 
 	if (!(view in _.view.loaded)) {
-		_.log("Popup view '" + view + "' does not exists")
+		_.logW("Popup view '" + view + "' does not exists")
 		return null
 	}
 
@@ -1049,7 +1047,7 @@ _.view.render = function(__name, __data) {
 									__params.push(eval(__parts[__i]))
 							} catch (e) {
 								__params.push('')
-								_.log("eval error : " + __parts[__i])
+								_.logW("eval error : " + __parts[__i])
 							}
 						}
 
@@ -1065,7 +1063,7 @@ _.view.render = function(__name, __data) {
 							return ('undefined' !== typeof __v) ? _.format.number(__v) : ''
 
 						} catch (e) {
-							_.log("eval error : " + $__tag)
+							_.logW("eval error : " + $__tag)
 							return ''
 						}
 
@@ -1079,7 +1077,7 @@ _.view.render = function(__name, __data) {
 								return eval($__tag)
 							}
 						} catch (e) {
-							_.log("eval error : " + $__tag)
+							_.logW("eval error : " + $__tag)
 							return ''
 						}
 					}
@@ -1107,7 +1105,7 @@ _.view.render = function(__name, __data) {
 					try {
 						__res = eval(__value.cond)
 					} catch (e) {
-						_.log("eval error : " + __value.cond)
+						_.logW("eval error : " + __value.cond)
 					}
 
 					if (__res) {
@@ -1122,7 +1120,7 @@ _.view.render = function(__name, __data) {
 					try {
 						__array = eval(__value.array)
 					} catch (e) {
-						_.log("eval error : " + __value.array)
+						_.logW("eval error : " + __value.array)
 					}
 
 					for (var __k in __array) {
@@ -1140,7 +1138,7 @@ _.view.render = function(__name, __data) {
 					var __viewName = eval(__value.view)
 
 					if (typeof __viewName !== 'string') {
-						_.log('include error : ' + __value.view)
+						_.logW('include error : ' + __value.view)
 						continue
 					}
 

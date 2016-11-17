@@ -141,9 +141,6 @@ LW.pages.messages.wsreceive = function(data) {
 		if (conversationID == _conversation) {
 			updateScroll(conversationID)
 		}
-
-		// if (_focus)
-			// conversationRead();
 	}
 }
 
@@ -160,8 +157,6 @@ LW.pages.messages.selectConversation = function(id) {
 }
 
 LW.pages.messages.loadConversation = function(conv) {
-
-	_.log("load conv " + conv)
 
 	if (typeof(_conversations[conv]) === 'undefined') {
 

@@ -293,8 +293,6 @@ LW.pages.team.createComposition = function() {
 
 LW.pages.team.leekImages = function(leeks) {
 
-	_.log(leeks)
-
 	$('#team-page .leek').each(function() {
 
 		var id = parseInt($(this).attr('leek'))
@@ -453,8 +451,6 @@ LW.pages.team.manageCompositions = function() {
 
 		dragstart: function(e) {
 
-			_.log('Drag start')
-
 			var leek = $(e.target).find('.image').parent()
 
 			if (leek.closest('.compo').hasClass('in-tournament')) return false
@@ -466,14 +462,10 @@ LW.pages.team.manageCompositions = function() {
 			_draggedLeek = leek.attr('leek')
 			_oldCompo = leek.closest('.compo').attr('compo')
 
-			_.log("Drag leek " + _draggedLeek)
-
 			leek.addClass('dragging');
 			return true
 		},
 		dragend: function(e) {
-
-			_.log('Drag end')
 
 			var leek = $(e.target).children('.leek')
 
@@ -489,8 +481,6 @@ LW.pages.team.manageCompositions = function() {
 
 		drop: function(e) {
 
-			_.log('Drop')
-
 			$(this).removeClass('dashed')
 			moveLeek(_draggedLeek, _oldCompo, $(this).closest('.compo').attr('compo'))
 			_draggedLeek = -1
@@ -498,7 +488,6 @@ LW.pages.team.manageCompositions = function() {
 			return false
 		},
 		dragover: function(e) {
-			_.log('Drag over')
 			e.preventDefault()
 			e.stopPropagation();
 			return false

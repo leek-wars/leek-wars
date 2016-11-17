@@ -33,8 +33,6 @@ LW.pages.documentation.init = function(params, $scope, $page) {
 			items[LW.constants[c].category].push(item)
 		}
 
-		_.log(items)
-
 		$scope.categories = categories
 		$scope.items = items
 		$page.render()
@@ -137,8 +135,6 @@ String.prototype.insert = function( idx, s ) {
 
 LW.pages.documentation.filter = function() {
 
-	_.log("filter query : " + _query)
-
 	$('#items .item').hide();
 	$('#items-list .item').hide();
 
@@ -152,7 +148,7 @@ LW.pages.documentation.filter = function() {
 				found = true;
 			}
 		});
-		
+
 		if (found) {
 			$(this).show();
 			$('#items-list .item[item=' + $(this).attr('item') + ']').show();

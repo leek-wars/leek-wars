@@ -832,7 +832,6 @@ LW.initConnected = function(callback) {
 		else if (e.keyCode == 65) LW.konami += "a"
 		else if (e.keyCode == 66) LW.konami += "b"
 		if (/uuddlrlrba$/.test(LW.konami)) {
-			_.log("Konami !")
 			_.post('trophy/unlock', {trophy_id: 113})
 			LW.konami = ""
 		}
@@ -848,7 +847,7 @@ LW.connect = function(farmer, callback) {
 
 		LW.connected = true
 		LW.farmer = farmer
-		
+
 		if (LW.farmer.admin) {
 			_.logOn()
 		}
@@ -1825,8 +1824,6 @@ LW.socket.send = function(request) {
 }
 
 LW.socket.sendDirect = function(request) {
-
-	//_.log("Requête :", request);
 	LW.socket.socket.send(JSON.stringify(request))
 }
 
@@ -3315,8 +3312,6 @@ LW.createReportPopup = function(parameters) {
 
 LW.addItemToInventory = function(type, item_id, item_template) {
 
-	// _.log("Add to inventory : " + item_id + ' (type ' + type + ', template: ' + item_template + ')')
-
 	if (type == ITEM_WEAPON) {
 
 		LW.farmer.weapons.push({
@@ -3344,8 +3339,6 @@ LW.addItemToInventory = function(type, item_id, item_template) {
 }
 
 LW.removeItemFromInventory = function(type, item_template) {
-
-	// _.log("Remove from inventory : " + item_template + ' (type ' + type + ')')
 
 	if (type == ITEM_WEAPON) {
 
@@ -3612,13 +3605,11 @@ var ChatController = function(chat_element, private_chat, team_chat) {
 			}
 
 			elem.find('.mute').click(function() {
-				_.log('mute')
 				LW.socket.send([CHAT_REQUEST_MUTE, _chatLanguage, author]);
 				$(this).hide()
 				elem.find('.unmute').show()
 			})
 			elem.find('.unmute').click(function() {
-				_.log('unmute')
 				LW.socket.send([CHAT_REQUEST_UNMUTE, _chatLanguage, author]);
 				$(this).hide()
 				elem.find('.mute').show()

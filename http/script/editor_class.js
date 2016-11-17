@@ -144,7 +144,6 @@ var Editor = function(id, name, valid, code) {
 
 		if (!this.loaded && this.id > 0) {
 
-			_.log('Load ai id ' + this.id + "...");
 			this.load(true);
 
 			$('#select-msg').hide();
@@ -213,8 +212,6 @@ var Editor = function(id, name, valid, code) {
 		_saving = true;
 
 		var editor = this;
-
-		_.log("save id " + this.id + "...");
 
 		this.tabDiv.removeClass("modified");
 
@@ -635,7 +632,6 @@ var Editor = function(id, name, valid, code) {
 			this.hoverToken = tokenString
 
 			var information = this.getTokenInformation(tokenString, editorPos)
-			// _.log(information)
 
 			if (information != null) {
 

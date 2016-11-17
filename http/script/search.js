@@ -1,7 +1,5 @@
 LW.pages.search.init = function(params, $scope, $page) {
 
-	_.log(params)
-
 	var query = 'query' in params ? params.query : ''
 	if (query == '-') query = ''
 	var farmer = 'farmer' in params ? params.farmer : ''
@@ -14,12 +12,10 @@ LW.pages.search.init = function(params, $scope, $page) {
 		for (var r in results) {
 
 			var pos = results[r].title.toLowerCase().indexOf(query)
-			_.log(pos)
 
 			if (query == "") {
 				results[r].formatted_title = results[r].title
 			} else {
-				// results[r].formatted_title = results[r].title
 				results[r].formatted_title = results[r].title.split(query).join(
 					"<b>" + results[r].title.substring(pos, pos + query.length) + "</b>"
 				)
@@ -56,7 +52,7 @@ LW.pages.search.init = function(params, $scope, $page) {
 		$('#search-box-farmer img').click(function() {
 			LW.pages.search.search()
 		})
-	})	
+	})
 }
 
 LW.pages.search.search = function() {

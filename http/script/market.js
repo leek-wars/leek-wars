@@ -148,8 +148,6 @@ LW.pages.market.buy = function() {
 
 			_.toast(_.lang.get('market', 'buying'))
 
-			_.log('buy ' + id + "...")
-
 			_.post('market/buy-habs', {item_id: id}, function(data) {
 
 				if (data.success) {

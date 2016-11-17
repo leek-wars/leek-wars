@@ -213,8 +213,6 @@ LW.pages.fight.leekImages = function(leeks) {
 
 function getFight() {
 
-	_.log("getFight...")
-
 	_.get('fight/get/' + _id, function(data) {
 
 		if (!data.success) {

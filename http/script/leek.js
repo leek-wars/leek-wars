@@ -207,8 +207,6 @@ LW.pages.leek.potion = function() {
 		popup.dismiss()
 
 		var id = $(this).attr('potion')
-		_.log('Use potion ' + id + "...")
-
 		var potion = _.selectWhere(LW.farmer.potions, 'id', id)
 
 		_.post('leek/use-potion', {leek_id: leek.id, potion_id: id}, function(data) {
@@ -685,8 +683,6 @@ LW.pages.leek.weapons = function(leek) {
 				return
 			}
 
-			_.log("Add weapon id " + weaponID + "...")
-
 			popup.view.find('.leek-weapons').append(weaponElem)
 			weaponElem.attr('location', 'leek')
 			leek.weapons.push({id: weaponItem, template: weaponElem.attr('template')})
@@ -706,8 +702,6 @@ LW.pages.leek.weapons = function(leek) {
 
 			if (location == 'farmer') return null
 
-			_.log("Remove weapon id " + weaponID + "...")
-
 			popup.view.find('.farmer-weapons').append(weaponElem)
 			weaponElem.attr('location', 'farmer')
 			_.removeWhere(leek.weapons, 'id', weaponItem)
@@ -715,9 +709,7 @@ LW.pages.leek.weapons = function(leek) {
 			$("#leek-weapons .weapon[item='" + weaponItem + "'] + br").remove()
 			$("#leek-weapons .weapon[item='" + weaponItem + "']").remove()
 
-			_.post('leek/remove-weapon', {weapon_id: weaponItem}, function(data) {
-
-			})
+			_.post('leek/remove-weapon', {weapon_id: weaponItem}, function(data) {})
 		}
 
 		$('.weapon-count').text('[' + leek.weapons.length + '/' + leek.max_weapons + "]")
@@ -899,8 +891,6 @@ LW.pages.leek.ai = function(leek) {
 
 			if (location == 'leek') return null
 
-			_.log('Add AI id : ' + aiID + '...')
-
 			if (leek.ai) {
 				popup.find('.leek-ai .ai').attr('location', 'farmer')
 				popup.find('.farmer-ais').append(popup.find('.leek-ai .ai'))
@@ -911,7 +901,6 @@ LW.pages.leek.ai = function(leek) {
 			leek.ai = {id: aiID}
 			$('#leek-page #leek-ai .ai').remove()
 			var newAiElem = aiElem.clone()
-			_.log(newAiElem.html())
 			$('#leek-page #leek-ai').append(newAiElem)
 			$('#leek-page #leek-ai .ai').wrap("<a href='/editor/" + aiID + "'></a>")
 			LW.setTooltipParent('ai-' + aiID, newAiElem)
@@ -921,8 +910,6 @@ LW.pages.leek.ai = function(leek) {
 		} else if (action == 'remove') {
 
 			if (location == 'farmer') return null
-
-			_.log('Remove AI id : ' + aiID + '...')
 
 			popup.find('.farmer-ais').append(aiElem)
 			aiElem.attr('location', 'farmer')

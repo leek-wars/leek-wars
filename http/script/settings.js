@@ -217,8 +217,6 @@ LW.pages.settings.mails = function(mails) {
 
 		updateCategory($(this).attr('category'))
 
-		_.post('settings/update-setting', {setting: $(this).attr('setting'), value: '' + checked}, function(data) {
-			_.log(data)
-		})
+		_.post('settings/update-setting', {setting: $(this).attr('setting'), value: '' + checked}, function(data) {})
 	})
 }

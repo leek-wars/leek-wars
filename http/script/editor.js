@@ -233,7 +233,6 @@ LW.pages.editor.init = function(params, $scope, $page) {
 		settingsPopup.find('#setting-font-size').val(_fontSize)
 		settingsPopup.find('#setting-font-size').change(function() {
 			var fontSize = parseInt(settingsPopup.find('#setting-font-size').val())
-			_.log("Font size : " + fontSize)
 			if (!isNaN(fontSize) && _fontSize >= 6 && _fontSize <= 30) {
 				_fontSize = fontSize
 				localStorage['editor/font_size'] = _fontSize

@@ -6,9 +6,7 @@ var _query;
 LW.pages.ranking.init = function(params, $scope, $page) {
 
 	var fun = 'fun' in params ? params.fun : false
-
-	_.log(params)
-
+	
 	if (fun) {
 
 		_.get('ranking/fun/' + LW.token(), function(data) {
