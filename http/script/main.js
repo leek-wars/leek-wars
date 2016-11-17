@@ -3490,6 +3490,18 @@ var ChatController = function(chat_element, private_chat, team_chat) {
 		hideFlags()
 	}
 
+	$(this.msg_elem).scroll(function() {
+		if ($(this).scrollTop() + $(this).height() > $(this)[0].scrollHeight - 100) {
+			controller.msg_elem.removeClass('new-messages')
+		}
+	})
+
+	chat_element.find('.chat-new-messages').click(function() {
+		$(controller.msg_elem).animate({
+			scrollTop: $(controller.msg_elem)[0].scrollHeight + 1000
+		}, 300);
+	})
+
 	if (!private_chat) {
 
 		chat_element.find('.chat-send').click(function() {
@@ -3601,6 +3613,14 @@ var ChatController = function(chat_element, private_chat, team_chat) {
 
 		var completeDate = _.lang.get('forum', 'chat_the_mdy_at_hm', date.getDate(), date.getMonth() + 1, date.getFullYear(), date.getHours(), minuts);
 
+		// Scroll
+		var scrollAction = false
+		if (this.msg_elem.length > 0) {
+			if (this.msg_elem[0].scrollHeight - this.msg_elem.scrollTop() - this.msg_elem.height() < 100) {
+				scrollAction = true
+			}
+		}
+
 		// Dernier message envoyé par la meme personne, y'a moins de 2 minutes ?
 		var last = null;
 		var messages = this.msg_elem.find('.chat-message');
@@ -3680,16 +3700,17 @@ var ChatController = function(chat_element, private_chat, team_chat) {
 			})
 		}
 
-		if (this.msg_elem.length > 0) {
+		if (scrollAction) {
+			var e = this.msg_elem
 
-			if (this.msg_elem[0].scrollHeight - this.msg_elem.scrollTop() - this.msg_elem.height() < 100) {
-				var e = this.msg_elem
+			this.msg_elem.removeClass('new-messages')
 
-				// FIXME dirty but seems working
-				setTimeout(function() {
-					e.scrollTop(e[0].scrollHeight + 1000);
-				}, 60)
-			}
+			// FIXME dirty but seems working
+			setTimeout(function() {
+				e.scrollTop(e[0].scrollHeight + 1000);
+			}, 60)
+		} else {
+			this.msg_elem.addClass('new-messages')
 		}
 
 		if (LW.chat.channels.length == 1) {
