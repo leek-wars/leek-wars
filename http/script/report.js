@@ -3,7 +3,7 @@ var _fight
 LW.pages.report.init = function(params, $scope, $page) {
 
 	var id = params.id
-	var url = LW.farmer.admin ? 'fight/get-private/' + id + '/$' : 'fight/get/' + id;
+	var url = LW.farmer.admin ? 'fight/get-private/' + id + '/' + LW.token() : 'fight/get/' + id;
 
 	_.get(url, function(data) {
 
@@ -109,7 +109,7 @@ LW.pages.report.init = function(params, $scope, $page) {
 					}
 				}
 
-				// Connect the button to make an other test fight with same parameters 
+				// Connect the button to make an other test fight with same parameters
 				if (fight.context == LW.FIGHT_CONTEXT.TEST) {
 					$('body').on('click', '#refight-test', _refightTest)
 				}
@@ -435,7 +435,7 @@ LW.pages.report.generateActions = function(data, callback) {
 
 	if (LW.connected) {
 
-		_.get('fight/get-logs/' + _fight.id + '/$', function(logs) {
+		_.get('fight/get-logs/' + _fight.id + '/' + LW.token(), function(logs) {
 			next(data, logs.logs)
 		})
 
