@@ -1090,6 +1090,9 @@ _.view.render = function(__name, __data) {
 					if ($__tag == 'static') {
 						return __STATIC_URL
 					}
+					if ($__tag == 'avatar') {
+						return __AVATAR_URL
+					}
 					return __renderText($__tag, __protect)
 				})
 				__text += __t
