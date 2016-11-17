@@ -712,14 +712,12 @@ $(document).ready(function() {
 
 			LW.consoleAlertMessage()
 
-
 			// LW is initialized
 			for (var c in LW.callbacks['initialized']) {
 				LW.callbacks['initialized'][c]()
 			}
 			LW.callbacks['initialized'] = []
 			LW.initialized = true
-
 
 			// Connect and start page
 			if (localStorage['connected'] === 'true') {
@@ -1411,7 +1409,7 @@ LW.setMenuTab = function(tab) {
 
 LW.loadPage = function(pageID, params) {
 
-	_.log('Load page ' + pageID)
+	_.log('%c➟ Load page %c' + pageID, 'color: blue', 'font-weight: bold')
 
 	// Check if page exists
 	if (!(pageID in LW.pages)) {
