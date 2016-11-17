@@ -12,6 +12,7 @@ connect_message			<a href='%s'><b>Connexion</b></a> ou <a href='%s'><b>Inscripti
 console_alert_1			Attention ! Si quelqu'un vous demande d'entrez un programme ici,
 console_alert_2			il s'agit d'une tentative de piratage de votre compte sur Leek Wars.
 console_alert_3			Entrez du code ici seulement si vous savez exactement ce que vous faites.
+console_github		Dépôt GitHub du site : https://github.com/leek-wars/leek-wars-client
 date_format			%d %B %Y
 date_time_format			%d %B %Y à %R
 documentation			Documentation
