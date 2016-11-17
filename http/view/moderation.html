@@ -6,7 +6,7 @@
 	<div class='panel'>
 
 		<div class='header'>
-			<h2>Derniers signalements</h2>
+			<h2>Derniers signalements ({%faults.length})</h2>
 		</div>
 
 		<div class='content' id='faults'>
@@ -16,9 +16,9 @@
 			@end
 
 			@foreach (fault in faults)
-				<div id='{fault.id}' class='fault' target='{fault.target.id}' reason='{fault.reason}' 
+				<div id='{fault.id}' class='fault' target='{fault.target.id}' reason='{fault.reason}'
 					parameter='{fault.parameter}' data='{fault.data}'>
-					
+
 					<img src='@include('main.avatar', fault.target)'></img>
 
 					<div class='target-name'>{fault.target.name}</div>
@@ -28,7 +28,7 @@
 
 					@foreach (reporting in fault.reportings)
 						<div class='reporting'>
-							<div class='reporter'>● Signalé par <a href='/farmer/{reporting.farmer_id}'>{reporting.farmer_name}</a> 
+							<div class='reporter'>● Signalé par <a href='/farmer/{reporting.farmer_id}'>{reporting.farmer_name}</a>
 								{LW.util.formatDuration(reporting.date)}</div>
 							@if (reporting.message.length > 0)
 								<div class='message'>&nbsp; « {reporting.message} »</div>
@@ -61,14 +61,14 @@
 					<div class='details'></div>
 					<div id='report-message'></div>
 				</div>
-				
+
 				<h4>Gravité</h4>
 				<input type='number' min='1' max='10' id='warning-severity' value='1'></input> (entre 1 et 10)<br>
 
 				<h4>Message (facultatif)</h4>
 				<textarea id='warning-message'></textarea>
 
-				<br> 
+				<br>
 				<center>
 					<div class='button green' id='archive-reporting'>Supprimer le signalement</div>
 					<div class='button red' id='give-warning'>Donner avertissement</div>
