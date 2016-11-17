@@ -28,14 +28,14 @@ include('IA_2');
 }
 advanced_intro			In this section we will present more complex but useful features and techniques to win a fightin <b> Leek Wars </b>.
 advanced_order			Order of playing
-advanced_order_1			The functions <a href='documentation#getNextPlayer'> <b> getNextPlayer </b></a> and <a href='documentation#getPreviousPlayer'> <b> getPreviousPlayer </b> </a> can recover the ids of the leeks which will respectively play after you and played before you.One possible application: check if the player who plays after you (an enemy) is close to you.
+advanced_order_1			The functions <a href='documentation/getNextPlayer'> <b> getNextPlayer </b></a> and <a href='documentation/getPreviousPlayer'> <b> getPreviousPlayer </b> </a> can recover the ids of the leeks which will respectively play after you and played before you.One possible application: check if the player who plays after you (an enemy) is close to you.
 advanced_order_2			var next = getNextPlayer();
 if (isEnemy(next) and getLife() < 100
 and getCellDistance(getCell(), getCell(next)) < 10) {
 // We are in danger, the next player is a close enemy
 }
 advanced_order_3			Target of a weapon or a chip
-advanced_order_4			The functions <a href='documentation#getWeaponTargets'><b>getWeaponTargets</b></a> and <a href='documentation#getChipTargets'> <b> getChipTargets </b> </a> can be used to retrieve an array of ids of the affected leeks if you use a weapon or a chip on a certain cell. Particularly useful for weapons or chip area (a grenade launcher or a heal chip with area effect):
+advanced_order_4			The functions <a href='documentation/getWeaponTargets'><b>getWeaponTargets</b></a> and <a href='documentation/getChipTargets'> <b> getChipTargets </b> </a> can be used to retrieve an array of ids of the affected leeks if you use a weapon or a chip on a certain cell. Particularly useful for weapons or chip area (a grenade launcher or a heal chip with area effect):
 advanced_order_5			var cell = ...; // une cellule
 var targets = getChipTargets(CHIP_ICEBERG, cell);
 if (count(targets) > 1) { // we will touch more than 1 player by launching here
@@ -276,7 +276,7 @@ editor_token_strings			In orange : the strings of characters
 equip_a_weapon			Equip a weapon
 fight			Battle
 fight_chips			The chips
-fight_chips_1			Before using a chip, make sure to equip it on your leek. To use it, simply use the function<a href='documentation#useChip'> <b> useChip </b> </a>. The first parameter is the code of the chip, for example "<b> CHIP_SHOCK </b>"for the chip "<b> Shock </b>". The second parameter is the target leek:
+fight_chips_1			Before using a chip, make sure to equip it on your leek. To use it, simply use the function<a href='documentation/useChip'> <b> useChip </b> </a>. The first parameter is the code of the chip, for example "<b> CHIP_SHOCK </b>"for the chip "<b> Shock </b>". The second parameter is the target leek:
 fight_chips_10			var enemy = getNearestEnemy();
 while (getTP() >= 2) {
 useChip(CHIP_SHOCK, enemy);
@@ -299,9 +299,9 @@ useChip(CHIP_SHOCK, enemy);
 fight_chips_9			Another example : we wish to cast the spell "Shock" (which costs 2 TP) until exhaustion of our TP:
 fight_ground			The field
 fight_ground_1			The field on which the players move is a grid composed of <b> 613 </b> cells, numbered in the order as shown in the screenshot below:
-fight_ground_10			Note: We can directly use <a href='documentation#isLeek'><b> isLeek() </b> </a> to know whether a cell contains a leek or not
+fight_ground_10			Note: We can directly use <a href='documentation/isLeek'><b> isLeek() </b> </a> to know whether a cell contains a leek or not
 fight_ground_11			Coordinates (x, y)
-fight_ground_12			The coordinates of a cell can also be recovered<b> x </b> and <b> y </b> with the help of the function <a href='documentation#getCellX'> <b> getCellX </b> </a> and<a href='documentation#getCellY'> <b> getCellY </b> </a>:
+fight_ground_12			The coordinates of a cell can also be recovered<b> x </b> and <b> y </b> with the help of the function <a href='documentation/getCellX'> <b> getCellX </b> </a> and<a href='documentation/getCellY'> <b> getCellY </b> </a>:
 fight_ground_13			var cell = getCell(); // We obtain our cell
 var x = getCellX(cell); // Position in x of the cell
 var y = getCellY(cell); // Position in y of the cell
@@ -310,7 +310,7 @@ fight_ground_15			The top left cell (number <b> 0 </b>) has the coordinates <b> 
 fight_ground_16			The top right cell (number <b> 17 </b>) has the coordinates <b> (0, -17) </b>;
 fight_ground_17			The bottom left cell (number <b> 595 </b>) has the coordinates <b> (0, 17) </b>;
 fight_ground_18			The bottom right cell (number <b> 612 </b>) has the coordinates <b> (17, 0) </b>.
-fight_ground_19			Finally, to conclude with the management of cells, we can also calculate the distance between two cells (and therefore also between two leeks) with the help of the functions <a href='documentation#getDistance'> <b> GetDistance </b> </a> (distance as the crow flies), <a href='documentation#getCellDistance'> <b> getCellDistance </b> </a> (distance in number of cells) and <a href='documentation#getPathLength'> <b> getPathLength </b> </a> (distance avoiding obstacles).As an example, we will calculate the distance between our leek and its nearest enemy :
+fight_ground_19			Finally, to conclude with the management of cells, we can also calculate the distance between two cells (and therefore also between two leeks) with the help of the functions <a href='documentation/getDistance'> <b> GetDistance </b> </a> (distance as the crow flies), <a href='documentation/getCellDistance'> <b> getCellDistance </b> </a> (distance in number of cells) and <a href='documentation/getPathLength'> <b> getPathLength </b> </a> (distance avoiding obstacles).As an example, we will calculate the distance between our leek and its nearest enemy :
 fight_ground_2			The numbering of cells
 fight_ground_20			var myCell = getCell();
 var hisCell = getCell(getNearestEnemy());
@@ -318,10 +318,10 @@ var distance = getCellDistance (myCell, hisCell);
 if (distance> 10) {
 // The nearest enemy is at a distance of more than 10 cells
 }
-fight_ground_3			Because of this numbering, each cell can be identified by using a single number. The number of the cell on which is our leek can be recovered by using the function <a href='documentation#getCell'> <b> getCell </b> </a>:
+fight_ground_3			Because of this numbering, each cell can be identified by using a single number. The number of the cell on which is our leek can be recovered by using the function <a href='documentation/getCell'> <b> getCell </b> </a>:
 fight_ground_4			var myCase = getCell(); // We obtain the number of the cell on which our leek is positionned
 fight_ground_5			Content of a cell
-fight_ground_6			With the help of the function <a href='documentation#getCellContent'> <b> getCellContent </b> </a>, one can determine the contents of a cell: Is there a leek above it, an obstacle, or is it empty?
+fight_ground_6			With the help of the function <a href='documentation/getCellContent'> <b> getCellContent </b> </a>, one can determine the contents of a cell: Is there a leek above it, an obstacle, or is it empty?
 fight_ground_7			var cell = ...; // Any cell
 var content = getCellContent(cell);
 if (content == CELL_EMPTY) {
@@ -331,11 +331,11 @@ if (content == CELL_EMPTY) {
 } else if (content == CELL_LEEK) {
 // The cell contains a leek
 }
-fight_ground_8			If the cell contains a leek, one can retrieve the id of the leek through the function 
-<a href='documentation#getLeekOnCell'> <b> getLeekOnCell </b> </a>:
+fight_ground_8			If the cell contains a leek, one can retrieve the id of the leek through the function
+<a href='documentation/getLeekOnCell'> <b> getLeekOnCell </b> </a>:
 fight_ground_9			var cell = ...; // A cell
 if (getCellContent (cell) == CELL_LEEK) {
-var = getLeekOnCell(cell); 
+var = getLeekOnCell(cell);
 // We obtain the id of the leek
 if (isEnemy (leek)) {say ("It is an enemy!");
 }
@@ -343,7 +343,7 @@ if (isEnemy (leek)) {say ("It is an enemy!");
 fight_intro			We will now explain how to really fight in <b>Leek Wars</b>, the fighting system will be detailed and we will give some pieces of advice to program a good behavior.
 fight_move			Displacements and movement points (MP)
 fight_move_1			Moving can be useful in combat. Your leek has a fixed number of movement points (3 at level 1). A MP is equivalent to a cell, the more you have MPs, the more you can move away on the field.To do this, many features are available to us. They are primarily of two types: to move toward or away from various targets.
-fight_move_10			If our target is not a specific leek but a cell or group of cells, the functions to be used will be:<a href='documentation#moveTowardCell'> <b> moveTowardCell </b></a> and <a href='documentation#moveAwayFromCell'> <b> moveAwayFromCell </b> </a> for a single cell,and <a href='documentation#moveTowardCells'> <b> moveTowardCells </b></a> and <a href='documentation#moveAwayFromCells'> <b> moveAwayFromCells </b> </a>, for a group of cells.
+fight_move_10			If our target is not a specific leek but a cell or group of cells, the functions to be used will be:<a href='documentation/moveTowardCell'> <b> moveTowardCell </b></a> and <a href='documentation/moveAwayFromCell'> <b> moveAwayFromCell </b> </a> for a single cell,and <a href='documentation/moveTowardCells'> <b> moveTowardCells </b></a> and <a href='documentation/moveAwayFromCells'> <b> moveAwayFromCells </b> </a>, for a group of cells.
 fight_move_11			A cell line as a target
 fight_move_12			One can also move forward or backward to a cell line. A cell line is defined by two cells belonging to this line. For example, if an enemy in front of us has a laser-type weapon that shoots in line, we can try to flee this probably dangerous line:
 fight_move_13			var enemy = ...; // the enemy with a laser
@@ -351,7 +351,7 @@ var saCellule = getCell(enemy);
 var maCellule = getCell();
 moveAwayFromLine(saCellule, maCellule);
 fight_move_2			One or several leeks (x) as target
-fight_move_3			One can approach or move away from a leek (ally or enemy) with the help of the functions <a href='documentation#moveToward'> <b> moveToward </b> <a href='documentation#moveAwayFrom'> </a> and <b> moveAwayFrom </b> </a> respectively:
+fight_move_3			One can approach or move away from a leek (ally or enemy) with the help of the functions <a href='documentation/moveToward'> <b> moveToward </b> <a href='documentation/moveAwayFrom'> </a> and <b> moveAwayFrom </b> </a> respectively:
 fight_move_4			var enemy = getNearestEnemy();
 if (getLife() > 100) {
 moveToward(enemy); // we move toward
@@ -366,17 +366,17 @@ fight_move_7			var enemy = getNearestEnemy();
 moveToward(enemy, 3); // we move toward the enemy, of three cells maximum.
 useWeapon(enemy); // we try to shoot on him
 moveAwayFrom(enemy); // we move away from the enemy, with an undefined number of cells.
-fight_move_8			These functions also exist when our target is not one but many leeks: <a functions href='documentation#moveTowardLeeks'> <b> moveTowardLeeks </b></a> and  <a href='documentation#moveAwayFromLeeks'> <b> moveAwayFromLeeks </b> </a> to move toward or move away from a group of leeks.
+fight_move_8			These functions also exist when our target is not one but many leeks: <a functions href='documentation/moveTowardLeeks'> <b> moveTowardLeeks </b></a> and  <a href='documentation/moveAwayFromLeeks'> <b> moveAwayFromLeeks </b> </a> to move toward or move away from a group of leeks.
 fight_move_9			One or several cell(s) as a target
 fight_speak			Talk
-fight_speak_1			Your leek can talk during the fight, to encourage its allies, or taunt his enemies.The function to make your leek speak is <a href='documentation#say'> <b> say </b> </a> and costs <b> 1 TP</b>
+fight_speak_1			Your leek can talk during the fight, to encourage its allies, or taunt his enemies.The function to make your leek speak is <a href='documentation/say'> <b> say </b> </a> and costs <b> 1 TP</b>
 fight_speak_2			say("I am gonna make soup of you all !"); // taunt the enemy team
 fight_sys			The fighting system
 fight_sys_1			First of all, we will describe the fighting system of <b>Leek Wars</b>. In order to win, each leek of the opposite team have to be killed (no more health points).
-fight_sys_10			The function <b> <a href='documentation#getNearestEnemy'> getNearestEnemy() </a> </b> returns the id of the nearest leek from you. Retrieve the id of an enemy leek will be primarily useful for attacking.
+fight_sys_10			The function <b> <a href='documentation/getNearestEnemy'> getNearestEnemy() </a> </b> returns the id of the nearest leek from you. Retrieve the id of an enemy leek will be primarily useful for attacking.
 fight_sys_11			var enemy = getNearestEnemy(); // We obtain the ID of the nearest enemy
 useWeapon (enemy); // We shoot on him
-fight_sys_12			The function <b> <a href='documentation#getEnemies'> getEnemies() </a> </b> returns the enemies leeks (alive or dead) in the fight.
+fight_sys_12			The function <b> <a href='documentation/getEnemies'> getEnemies() </a> </b> returns the enemies leeks (alive or dead) in the fight.
 fight_sys_13			var enemies = getEnemies(); // Get an array of the ids of the enemies
 var n = 0;
 for (var enemy in enemies) {// We look through all enemies
@@ -386,24 +386,24 @@ n ++;
 }debug (n + "enemies having over 1000 PV");
 fight_sys_2			A turn based game
 fight_sys_3			The leeks play at their own turn. The order is determined by the frequency of the leeks, but we always alternate between the two teams: the leek with the highest frequency has more chance to start and make his team starts, and the second leek to play is the one with the highest frequency in the other team, and so on and so forth.
-fight_sys_4			Combat is divided into turns: when the last leek played, it returns to the first and the lap counter is incremented.To avoid endless fighting, the number of rounds is limited to <b> 64 </b> (<a constant href='documentation#MAX_TURNS'> MAX_TURNS </a>).When the counter reaches this limit, the fight ended in a draw. During a long fight, it will therefore be necessary to ensure monitoring of the lap counter. The function <b> <a href='documentation#getTurn'> getTurn () </a> </b> gives the current round of combat:
+fight_sys_4			Combat is divided into turns: when the last leek played, it returns to the first and the lap counter is incremented.To avoid endless fighting, the number of rounds is limited to <b> 64 </b> (<a constant href='documentation/MAX_TURNS'> MAX_TURNS </a>).When the counter reaches this limit, the fight ended in a draw. During a long fight, it will therefore be necessary to ensure monitoring of the lap counter. The function <b> <a href='documentation/getTurn'> getTurn () </a> </b> gives the current round of combat:
 fight_sys_5			var turn = getTurn();
 if (turn> 60) {
 // The fight will end soon, you have to hurry...
 }
 fight_sys_6			A numbering of the players
 fight_sys_7			Each leek has a unique code number (also called <b> id </b> for ID), which allows the appointment.
-fight_sys_8			The function <b> <a href='documentation#getLeek'> getLeek() </a> </b> returns the id of your leeks. Obtaining your id is useful, for example to use a chip to heal yourself.
+fight_sys_8			The function <b> <a href='documentation/getLeek'> getLeek() </a> </b> returns the id of your leeks. Obtaining your id is useful, for example to use a chip to heal yourself.
 fight_sys_9			var me = getLeek(); // We obtain the id of our leek
 useChip(CHIP_CURE, me); // We launch the chip "CURE" upon us
 fight_weapons			The weapons
 fight_weapons_1			Equip a weapon
-fight_weapons_2			To draw a weapon is usually the first thing to do in a fight. To do this, the weapon has to be already present in the equipment of your leek ("Edit" button on the page leek), then use the function<a href='documentation#setWeapon'> <b> setWeapon </b> </a>, for example:
+fight_weapons_2			To draw a weapon is usually the first thing to do in a fight. To do this, the weapon has to be already present in the equipment of your leek ("Edit" button on the page leek), then use the function<a href='documentation/setWeapon'> <b> setWeapon </b> </a>, for example:
 fight_weapons_3			// We equip the pistol
 setWeapon(WEAPON_PISTOL);
 fight_weapons_4			Beware ! The function <b>setWeapon</b> costs 1 TP.
 fight_weapons_5			Use a weapon
-fight_weapons_6			Now that your leek has a gun, he just has to attack with it. To do this, use <a function href='documentation#setWeapon'> <b> useWeapon </b> </a>:
+fight_weapons_6			Now that your leek has a gun, he just has to attack with it. To do this, use <a function href='documentation/setWeapon'> <b> useWeapon </b> </a>:
 fight_weapons_7			var enemy = getNearestEnemy();
 useWeapon(enemy); // attack
 fun_1			The LeekScript allows the creation of user-defined functions which will allow you to organize and simplify your AI. If you have written a complex operation and wish to re-use it a certain number of times in your code, the use of a function will be the most efficient solution.
@@ -424,7 +424,7 @@ var c = hypot(a, b);
 a = hypot(b, c) + hypot(c, 4);
 b = hypot(a, c);
 fun_15			The readability of the code has been improved, and the size of the code has been reduced.
-fun_16			It should be noted that the function <i>hypot</i> already exists in the predefined functions of the LeekScript. (see the function <a href='documentation#hypot'>hypot</a> in the documentation).
+fun_16			It should be noted that the function <i>hypot</i> already exists in the predefined functions of the LeekScript. (see the function <a href='documentation/hypot'>hypot</a> in the documentation).
 fun_17			Return without value
 fun_18			The keyword <b>return</b> can be used without any expression to its right, the function will then return the value <b>null</b>.
 fun_19			Example of <b>return</b> without value :
@@ -449,7 +449,7 @@ var a = hypot(3, 4); // a is equal to sqrt(3 * 3 + 4 * 4)
 fun_26			In this way, a function can call itself :
 fun_27			function factorial(n) {
 if (n <= 1) return 1;
-return n * factorial(n - 1);	
+return n * factorial(n - 1);
 }
 fun_28			This function returns the factorial of the number n (n!) given as a parameter (n! = n × (n - 1) × ... × 3 × 2 × 1).
 We notice the function only returns n × (n - 1)!, which is equal to n!
@@ -470,7 +470,7 @@ a();
 }
 a(); // a and b call eachother endlessly
 fun_33			Level of the functions
-fun_34			In the LeekScript, some functions have a required level. The Leek on which the AI will be equiped will have to fullfill the required conditions. Example: the function <b><a href='documentation#getPathLength'>getPathLength</a></b> 
+fun_34			In the LeekScript, some functions have a required level. The Leek on which the AI will be equiped will have to fullfill the required conditions. Example: the function <b><a href='documentation/getPathLength'>getPathLength</a></b> 
 requires the level <b>37</b> :
 fun_35			Level of a function
 fun_36			Going further in the functions
