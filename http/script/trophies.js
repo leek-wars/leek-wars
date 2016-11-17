@@ -23,9 +23,6 @@ LW.pages.trophies.init = function(params, $scope, $page) {
 			}
 		}
 
-		_.log(totals)
-		_.log(progressions)
-
 		$scope.trophies = trophies
 		$scope.categories = LW.trophyCategories
 		$scope.progressions = progressions
