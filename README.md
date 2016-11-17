@@ -11,7 +11,7 @@ The project is very easy to install and deploy in 10s:
 ```shell
 git clone https://github.com/leek-wars/leek-wars-client.git
 cd leek-wars-client
-python3 leekwars.py
+make serve
 ```
 Then go to `localhost:8012` in your browser (you can change the port in the python script).
 
