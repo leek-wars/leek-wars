@@ -869,10 +869,18 @@ _.lang.load = function(file, private_file, callback) {
 _.lang.parse_file = function(data) {
 	var keys = {}
 	var lines = data.split('\n')
+	var last = null
 	for (var l in lines) {
 		var line = lines[l]
-		var res = /(.*?)\s+(.*)/.exec(line)
-		if (res) keys[res[1]] = res[2]
+		if (last && (line[0] == ' ' || line[0] == '	')) {
+			keys[last] += '\n' + $.trim(line)
+		} else {
+			var res = /(.*?)\s+(.*)/.exec(line)
+			if (res) {
+				keys[res[1]] = res[2]
+				last = res[1]
+			}
+		}
 	}
 	return keys
 }
