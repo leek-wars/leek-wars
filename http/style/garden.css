@@ -54,12 +54,14 @@
 
 #garden-page .leek, #garden-page .compo-wrapper, #garden-page .farmer {
 	display: inline-block;
-	cursor: pointer;
 	padding: 4px;
 }
 
-#garden-page .leek:hover, #garden-page .compo:hover, #garden-page .farmer:hover  {
+#garden-page .leek:hover,
+#garden-page .compo:hover,
+#garden-page .opponents .farmer:hover  {
 	background-color: white;
+	cursor: pointer;
 }
 
 #garden-page .level {
@@ -136,10 +138,6 @@
 #garden-battle-royale .leek.disabled {
 	opacity: 0.15;
 	cursor: auto;
-}
-
-#garden-battle-royale .leek:hover {
-	background-color: transparent;
 }
 
 .popup.battle_royale_popup .leeks {
