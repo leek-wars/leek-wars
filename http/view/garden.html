@@ -124,7 +124,7 @@
 						<h2>{LW.farmer.name} {#against} :</h2>
 						<br>
 
-						<div id='enemies'>
+						<div class='opponents'>
 
 							<div class='enemy farmer' farmer='{target.id}'>
 								<img class='avatar' src='@include('main.avatar', target)'>
@@ -193,7 +193,7 @@
 
 					@include('garden.farmer', garden.farmer)
 
-					<h2 class='versus'>{garden.my_farmer.name} {#against} :</h2>
+					<h2 class='versus'>{garden.farmer.name} {#against} :</h2>
 
 					<div class='enemies'>
 						<div class='opponents'></div>
