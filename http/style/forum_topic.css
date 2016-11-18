@@ -290,4 +290,7 @@
 	#forum_topic-page .profile {
 	    padding: 0 10px;
 	}
+	#forum_topic-page #editor {
+		margin-left: 0;
+	}
 }
