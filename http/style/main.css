@@ -1208,11 +1208,7 @@ body.connected #header-signin {
 	font-size: 20px;
 }
 
-.button:not(.disabled):not(.flat):not(.red):not(.green):hover {
-	border-bottom: 3px solid #aaa;
-}
-
-.button:not(.disabled):not(.flat):active{
+.button:not(.disabled):not(.flat):active {
 	top: 3px;
 	border-bottom: none;
 	margin-bottom: 3px;
@@ -1232,7 +1228,6 @@ body.connected #header-signin {
 
 .button:not(.disabled).green:hover {
 	background-image: linear-gradient(to bottom, rgba(110, 201, 31, 0.7) 0%, rgba(110, 201, 31, 0.9) 50%, rgba(110, 201, 31, 0.7) 100%);
-	border-bottom: 3px solid #468014;
 }
 
 .button.red {
