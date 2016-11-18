@@ -1097,7 +1097,7 @@ var Game = function() {
 			if (object == 'chip') {
 
 				if (objectID in LW.chips) {
-					image = LW.staticURL + "/image/chip/small/" + LW.chips[objectID].name + ".png";
+					image = LW.staticURL + "image/chip/small/" + LW.chips[objectID].name + ".png";
 				}
 
 			} else if (object == 'weapon') {
@@ -1125,7 +1125,7 @@ var Game = function() {
 
 					var template = LW.weapons[objectID].template
 					var img = ["1", "2", "3", "4", "5", "6", "7", "flamme", "destroyer", "gaz_icon", "11", "12", "13", "katana", "broadswoard", "axe"][template - 1];
-					image = LW.staticURL + "/image/weapon/" + img + ".png";
+					image = LW.staticURL + "image/weapon/" + img + ".png";
 
 					// Gestion des états du poireau
 					if (template == 8) {

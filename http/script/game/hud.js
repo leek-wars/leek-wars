@@ -2,45 +2,45 @@ var _settings = false
 var _hoverEntity = null
 
 var Hud = function() {
-	
+
 	$('#play-button').click(function() {
 		if (game.paused)
 			game.resume();
 		else
 			game.pause();
 	});
-	
+
 	$('#speed-button').click(function() {
 		game.speedUp();
 	});
-	
+
 	var hud = this;
-	
+
 	$('#fight-settings-button').click(function(e) {
-		
+
 		if (!_settings) {
-			
+
 			hud.updateSettings();
 			$('#fight-settings').show();
-			
+
 			$('#tt_fight-settings-button').removeClass('disabled').addClass('disabled');
 			$('#tt_fight-settings-button').hide();
 			_settings = true;
-			
+
 		} else {
-			
+
 			$('#fight-settings').hide();
 			$('#tt_fight-settings-button').removeClass('disabled');
 			_settings = false;
 		}
-		
+
 		e.stopPropagation();
 	});
-	
+
 	$('#fight-settings').click(function(e) {
 		e.stopPropagation();
 	});
-	
+
 	$('#fight-size').change(function() {
 		game.toggleSize();
 		hud.updateSettings();
@@ -66,10 +66,10 @@ var Hud = function() {
 
 	var updateSoundSetting = function() {
 		if (game.sound) {
-			$('#sound-setting img').attr('src', LW.staticURL + '/image/icon/sound.png')
+			$('#sound-setting img').attr('src', LW.staticURL + 'image/icon/sound.png')
 			$('#sound-setting span').text(_.lang.get('fight', 'sound_activated'))
 		} else {
-			$('#sound-setting img').attr('src', LW.staticURL + '/image/icon/no_sound.png')
+			$('#sound-setting img').attr('src', LW.staticURL + 'image/icon/no_sound.png')
 			$('#sound-setting span').text(_.lang.get('fight', 'sound_disactivated'))
 		}
 	}
@@ -78,17 +78,17 @@ var Hud = function() {
 		game.toggleSound();
 		updateSoundSetting();
 	});
-	
+
 	$('#quit-button').click(function() {
 		game.showReport();
 	});
-	
+
 	$('html').click(function() {
 		$('#fight-settings').hide();
 		$('#tt_fight-settings-button').removeClass('disabled');
 		_settings = false;
 	});
-	
+
 	$('#logs').mouseenter(function() {
 		$('#logs-wrapper').css('height', 500);
 		$('#logs-wrapper2').css('height', 500);
@@ -97,11 +97,11 @@ var Hud = function() {
 		$('#logs-wrapper').css('height', 100);
 		$('#logs-wrapper2').css('height', 100);
 	});
-	
+
 	var space = GROUND_PADDING_LEFT + GROUND_PADDING_RIGHT;
 	var padding = 30;
 	var width = space - padding;
-	
+
 	this.currentLog = 0;
 	this.speedButtonFrame = 0;
 	this.speedButtonVisible = true;
@@ -114,9 +114,9 @@ var Hud = function() {
 		$(tt).css('left', $(parent).offset().left + $(parent).outerWidth() / 2);
 		$(tt).css('margin-left', - $(tt).outerWidth() / 2);
 	}
-	
+
 	this.init = function() {
-		
+
 		// Timeline
 		for (var e = 0; e < game.entityOrder.length; e++) {
 			if (game.entityOrder[e].active) {
@@ -135,8 +135,8 @@ var Hud = function() {
 				var background2 = 'rgba(' + rgb[0] + ',' + rgb[1] + ',' + rgb[2] + ',0.4)'
 				background = "linear-gradient(to bottom, " + background2 + " 0%, " + background2 + " 30%," + background + " 100%)"
 
-				$('#life-bar .wrapper').append("<div class='bar' id='entity-bar-" + entity.id + 
-					"' entity='" + entity.id + "' style='background: " 
+				$('#life-bar .wrapper').append("<div class='bar' id='entity-bar-" + entity.id +
+					"' entity='" + entity.id + "' style='background: "
 					+ background + "'></div>")
 
 				LW.addTooltip("entity-bar-" + entity.id, entity.name)
@@ -151,23 +151,23 @@ var Hud = function() {
 		$('#fight-lifes').prop('checked', game.showLifes);
 		$('#fight-discrete-pause').prop('checked', game.discretePause);
 		$('#fight-quality').val(game.quality);
-		
+
 		updateSoundSetting();
 	}
 
 	this.addEntityBlock = function(entity) {
 
-		var team = entity.team 
+		var team = entity.team
 		var left = team == 1
 
 		var clazz = entity.summon ? 'summon' : ''
 		var background = LW.TEAM_COLORS[entity.team - 1]
 		var rgb = hexToRgb(background)
-		background = 'rgba(' + rgb[0] + ',' + rgb[1] + ',' + rgb[2] + ',0.4)' 
+		background = 'rgba(' + rgb[0] + ',' + rgb[1] + ',' + rgb[2] + ',0.4)'
 		var border = 'rgba(' + rgb[0] + ',' + rgb[1] + ',' + rgb[2] + ',0.6)'
 
 		var backgroundCSS = "linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.1) 30%," + background + " 100%)"
-		
+
 		var div = "<div class='entity " + clazz + "' entity='" + entity.id + "' style='background: " + backgroundCSS + "; border-color: " + border + "'>"
 		div += "<div class='bar'></div>"
 		div += "<div class='image'></div>"
@@ -206,67 +206,67 @@ var Hud = function() {
 
 		// $("#entity-details-" + entity.id).remove();
 	}
-	
+
 	this.createLeekDetails = function(leek) {
-		
+
 		var view = "<div entity='" + leek.id + "' class='entity-details'>";
 
-		var avatar = LW.staticURL + '/image/avatar/' + leek.farmer + ".png";
-		var noavatar = "this.onerror=null;this.src='" + LW.staticURL + "/image/no_avatar.png';";
-		
+		var avatar = LW.staticURL + 'image/avatar/' + leek.farmer + ".png";
+		var noavatar = "this.onerror=null;this.src='" + LW.staticURL + "image/no_avatar.png';";
+
 		view += "<img class='farmer-avatar' src='" + avatar + "' onerror=\"" + noavatar + "\"></img>";
-		
+
 		view += "<h2 class='name'>" + leek.name + "</h2>";
 		view += "<div class='level'>" + _.lang.get('fight', 'leek_level', leek.level) + "</div>";
 		view += "<div class='bar-wrapper'>";
 		view += "<div class='bar'></div>";
 		view += "</div>";
-		
+
 		view += "<div>";
-		view += "<img src='" + LW.staticURL + "/image/charac/small/life.png'></img>";
+		view += "<img src='" + LW.staticURL + "image/charac/small/life.png'></img>";
 		view += "<div class='stat life color-life'></div>";
-		view += "<img src='" + LW.staticURL + "/image/charac/small/tp.png'></img>";
+		view += "<img src='" + LW.staticURL + "image/charac/small/tp.png'></img>";
 		view += "<div class='stat tp color-tp'></div>";
-		view += "<img src='" + LW.staticURL + "/image/charac/small/mp.png'></img>";
+		view += "<img src='" + LW.staticURL + "image/charac/small/mp.png'></img>";
 		view += "<div class='stat mp color-mp'></div>";
-		view += "<img src='" + LW.staticURL + "/image/charac/small/frequency.png'></img>";
+		view += "<img src='" + LW.staticURL + "image/charac/small/frequency.png'></img>";
 		view += "<div class='stat frequency color-frequency'>" + leek.frequency + "</div>"
 
 		view += "<br>";
 
-		view += "<img src='" + LW.staticURL + "/image/charac/small/strength.png'></img>";
+		view += "<img src='" + LW.staticURL + "image/charac/small/strength.png'></img>";
 		view += "<div class='stat strength color-strength'></div>";
-		view += "<img src='" + LW.staticURL + "/image/charac/small/wisdom.png'></img>";
+		view += "<img src='" + LW.staticURL + "image/charac/small/wisdom.png'></img>";
 		view += "<div class='stat wisdom color-wisdom'></div>";
-		view += "<img src='" + LW.staticURL + "/image/charac/small/agility.png'></img>";
+		view += "<img src='" + LW.staticURL + "image/charac/small/agility.png'></img>";
 		view += "<div class='stat agility color-agility'></div>";
-		view += "<img src='" + LW.staticURL + "/image/charac/small/resistance.png'></img>";
+		view += "<img src='" + LW.staticURL + "image/charac/small/resistance.png'></img>";
 		view += "<div class='stat resistance color-resistance'></div>";
-		view += "<img src='" + LW.staticURL + "/image/charac/small/science.png'></img>";
+		view += "<img src='" + LW.staticURL + "image/charac/small/science.png'></img>";
 		view += "<div class='stat science color-science'></div>";
-		view += "<img src='" + LW.staticURL + "/image/charac/small/magic.png'></img>";
+		view += "<img src='" + LW.staticURL + "image/charac/small/magic.png'></img>";
 		view += "<div class='stat magic color-magic'></div>";
 
 		view += "<br>";
-		
-		view += "<img src='" + LW.staticURL + "/image/charac/small/absolute_shield.png'></img>";
+
+		view += "<img src='" + LW.staticURL + "image/charac/small/absolute_shield.png'></img>";
 		view += "<div class='stat absolute-shield'></div>";
-		view += "<img src='" + LW.staticURL + "/image/charac/small/relative_shield.png'></img>";
+		view += "<img src='" + LW.staticURL + "image/charac/small/relative_shield.png'></img>";
 		view += "<div class='stat relative-shield'>0%</div>";
-		view += "<img src='" + LW.staticURL + "/image/charac/small/damage_return.png'></img>";
+		view += "<img src='" + LW.staticURL + "image/charac/small/damage_return.png'></img>";
 		view += "<div class='stat damage-return'>0%</div>";
 		view += "</div>";
-		
+
 		view += "<div class='effects'></div>"
-		
+
 		view += "</div>"
-		
+
 		return view
 	}
-	
+
 	this.addLog = function(log) {
 		var div = "<div class='action'>";
-		
+
 		for (var i = 0; i < log.length; i += 2) {
 	    	var text = log[i];
 			var color = log[i + 1];
@@ -274,7 +274,7 @@ var Hud = function() {
 	    }
 		div += "</div>"
 		this.addActionInternal(div)
-	} 
+	}
 
 	this.addPersonalLog = function(log) {
 
@@ -289,23 +289,23 @@ var Hud = function() {
 
 		this.addActionInternal(div)
 	}
-	
+
 	this.addActionInternal = function(actionDiv) {
 
 		$("#actions").append(actionDiv)
 
-		var margin = Math.min(0, $('#layers').height() - $("#actions").height() - 120) 
+		var margin = Math.min(0, $('#layers').height() - $("#actions").height() - 120)
 		$('#actions').css('margin-top', margin)
 	}
 
 	this.refresh = function() {
-		
+
 		// Turn
 		$('#turn').text(_.lang.get('fight', 'turn_n', game.turn));
-		
+
 		// Life bar
 		var totalLife = game.leeks.reduce(function(total, e) {
-			return total + (!e.summon ? e.life : 0) 
+			return total + (!e.summon ? e.life : 0)
 		}, 0)
 
 		for (var e in game.leeks) {
@@ -313,15 +313,15 @@ var Hud = function() {
 			var entity = game.leeks[e]
 
 			$("#life-bar .bar[entity='" + entity.id + "']").toggleClass('dead', entity.dead)
-			
+
 			var size = Math.max(1, 500 * (entity.life / totalLife) - 3)
 			$("#life-bar .bar[entity='" + entity.id + "']").width(size)
- 
+
 			LW.setTooltipContent($('#tt_entity-bar-' + entity.id), entity.name + ' (' + entity.life + ')')
 		}
 		// var team1Life = 0, team2Life = 0;
 		// for (var i in game.leeks) {
-		// 	if (game.leeks[i].team == 1) team1Life += game.leeks[i].life; 
+		// 	if (game.leeks[i].team == 1) team1Life += game.leeks[i].life;
 		// 	else if (game.leeks[i].team == 2) team2Life += game.leeks[i].life;
 		// }
 		// $('#team1-life').text(team1Life);
@@ -344,7 +344,7 @@ var Hud = function() {
 			if (current && !infos.hasClass('current')) infos.addClass('current')
 
 			infos.find('.bar').css('top', ((1 - entity.life / entity.maxLife) * 100) + "%")
-			
+
 			var color = entity.getLifeColor()
 			infos.find('.bar').css('background', color)
 
@@ -372,20 +372,20 @@ var Hud = function() {
 			detailsView.find('.damage-return').text(entity.damageReturn + "%")
 		}
 	}
-	
+
 	this.addEntityEffect = function(effect, image) {
 
 		_.log("Add entity effect")
-		
+
 		$('#details .entity-details[entity=' + effect.target + ']').find('.effects').append("<img id='effect-" + effect.id + "' src='" + image + "'></img>");
 	}
-	
+
 	this.removeLeekEffect = function(id) {
 		$('#effect-' + id).remove();
 	}
-	
+
 	this.draw = function() {
-		
+
 		/// Bottom part
 		if (game.speed > 1 && !game.paused) {
 			this.speedButtonFrame += dt;
@@ -395,7 +395,7 @@ var Hud = function() {
 				$('#speed-button').css('opacity', this.speedButtonVisible);
 			}
 		}
-		
+
 		/// Debug
 		if (game.debug) {
 			$('#debug-particles').text(game.particles.particles.length);
@@ -404,12 +404,12 @@ var Hud = function() {
 			$('#debug-mouse-cell').text(game.mouseCell);
 			$('#debug-fps').text(game.fps + ", avg : " + game.avgFPS);
 		}
-		
+
 		/// Mouse hover
 		document.body.style.cursor = 'default';
-		
+
 		if (game.showLifes) {
-			
+
 			for (var i in game.leeks) {
 				var leek = game.leeks[i];
 				if (leek.isDead() || !leek.active) continue;
@@ -419,7 +419,7 @@ var Hud = function() {
 				}
 			}
 		} else {
-		
+
 			for (var i in game.leeks) {
 				var leek = game.leeks[i];
 				if (leek.isDead() || !leek.active) continue;

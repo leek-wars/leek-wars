@@ -22,7 +22,7 @@ Leek.handSize = 14
 Leek.handSize2 = Leek.handSize / 2
 
 Leek = Entity.extend(Leek, function() {
-	
+
 	// Textures
 	this.bodyTexFront;
 	this.bodyTexBack;
@@ -32,10 +32,10 @@ Leek = Entity.extend(Leek, function() {
     this.hatBack;
     this.hatName
     this.hat
-	
+
 	// Animations
 	this.handPos = 0;
-	
+
 	// Weapon
 	this.weapon = null;
 
@@ -53,17 +53,17 @@ Leek = Entity.extend(Leek, function() {
 	this.setSkin = function(appearence, skin, hat) {
 
 		if (typeof Leek.SKINS[skin - 1] === 'undefined') skin = 1;
-	
+
 		this.skin = skin
-		this.bodyTexFront = newTexture(LW.staticURL + "/image/leek/leek" + appearence + "_front_" + Leek.SKINS[skin - 1] + ".png", true, shadowQuality);
-		this.bodyTexBack = newTexture(LW.staticURL + "/image/leek/leek" + appearence + "_back_" + Leek.SKINS[skin - 1] + ".png", true, shadowQuality);
+		this.bodyTexFront = newTexture(LW.staticURL + "image/leek/leek" + appearence + "_front_" + Leek.SKINS[skin - 1] + ".png", true, shadowQuality);
+		this.bodyTexBack = newTexture(LW.staticURL + "image/leek/leek" + appearence + "_back_" + Leek.SKINS[skin - 1] + ".png", true, shadowQuality);
 
 		if (hat) {
 			this.hat = hat
 			this.hatTemplate = LW.hats[LW.hatTemplates[hat].item]
 			this.hatName = this.hatTemplate.name
-			this.hatFront = newTexture(LW.staticURL + "/image/hat/" + this.hatName + ".png", true, shadowQuality);
-			this.hatBack = newTexture(LW.staticURL + "/image/hat/" +  this.hatName + "_back.png", true, shadowQuality);
+			this.hatFront = newTexture(LW.staticURL + "image/hat/" + this.hatName + ".png", true, shadowQuality);
+			this.hatBack = newTexture(LW.staticURL + "image/hat/" +  this.hatName + "_back.png", true, shadowQuality);
 
 			this.hatX = 0
 		}
@@ -89,23 +89,23 @@ Leek = Entity.extend(Leek, function() {
 	}
 
 	this.useWeapon = function(cell, leeks) {
-		
+
 		if (this.weapon != null) {
-			
+
 			var pos = game.ground.cellToXY(cell);
 			var x = pos.x;
 			var y = pos.y;
-			
+
 			// Angle
 			var south = this.y > y;
 			var east = this.x > x;
-			
+
 			this.setOrientation(south ? (east ? Entity.NORTH : Entity.EAST) : (east ? Entity.WEST : Entity.SOUTH));
-			
+
 			this.angle = Math.atan2(Math.abs(this.x - x), (this.y - y) / 2) - Math.PI/2;
-			
+
 			var cellPixels = game.ground.xyToXYPixels(x,y);
-			
+
 			this.weapon.shoot(this.ox, this.oy, this.handPos + this.z, this.angle, this.direction, cellPixels, leeks);
 
 			if (this.weapon.white) {
@@ -126,7 +126,7 @@ Leek = Entity.extend(Leek, function() {
 	}
 
 	this.hurt = function(x, y, z, dx, dy, dz) {
-		
+
 		// Blood
 		var dir = Math.random();
 		dx *= dir / 10;
@@ -135,24 +135,24 @@ Leek = Entity.extend(Leek, function() {
 		var by = this.oy + dy *  (40 + Math.random(60));
 		game.particles.addBlood(x, y, z, dx, dy, dz, this.bloodTex);
 		game.particles.addBloodOnGround(bx, by, this.bloodTex);
-		
+
 		dx = -dx
 		dy = -dy
 		bx = this.ox + dx * (40 + Math.random(60));
 		by = this.oy + dy * (40 + Math.random(60));
 		game.particles.addBlood(x, y, z, dx, dy, dz, this.bloodTex);
 		game.particles.addBloodOnGround(bx, by, this.bloodTex);
-		
+
 		this.flash = 5;
 	}
-	 
+
 	this.draw = function() {
-		
+
 		Entity.prototype.draw.call(this)
-		
+
 		// Draw normal
 		this.drawNormal()
-		
+
 		// Draw shadow
 		if (game.quality == 'high' && !this.dead) {
 			this.drawShadow()
@@ -162,35 +162,35 @@ Leek = Entity.extend(Leek, function() {
 	}
 
 	this.drawNormal = function() {
-		
+
 		var texture = this.front ? this.bodyTexFront : this.bodyTexBack;
 		var hatTexture = this.front ? this.hatFront : this.hatBack;
 
 		if (!this.dead) {
-		
+
 			if (this.weapon != null) {
-				
+
 				// Weapon !
 				if (this.front) {
-					
+
 					this.drawBody(texture, hatTexture);
 					this.drawWeapon(this.weapon.texture);
-					
+
 				} else {
-					
+
 					this.drawWeapon(this.weapon.texture);
 					this.drawBody(texture, hatTexture);
 				}
-				
+
 			} else {
-				// No weapon 
+				// No weapon
 				ctx.drawImage(this.handTex, 12 - 5, -20 - this.handPos - 5, 10, 10); // back hand
 				this.drawBody(texture, hatTexture);
 				ctx.drawImage(this.handTex, -12 - 7, -20 - this.handPos - 7, 14, 14); // front hand
 			}
-			
+
 		} else if (heightAnim > 0) {
-			
+
 			ctx.save();
 
 			ctx.scale(this.direction, 1)
@@ -204,15 +204,15 @@ Leek = Entity.extend(Leek, function() {
 	}
 
 	this.drawWeapon = function(texture, shadow) {
-		
+
 		ctx.save();
 
 		// Translate to center
 		ctx.translate((this.weapon.cx + (this.front ? 0 : -this.weapon.ocx)) * this.direction, - this.weapon.cz - this.handPos + (this.front ? 5 : -5));
-		
+
 		// Inverse
 		ctx.scale(this.direction * 0.8, 0.8);
-		
+
 		// Rotate
 		if (shadow) {
 			ctx.rotate(-this.angle * 1.5);
@@ -225,54 +225,54 @@ Leek = Entity.extend(Leek, function() {
 			this.weapon.draw(texture, this.front)
 
 		} else {
-			
+
 			// Translate to the weapon texture origin
 			ctx.translate(this.weapon.x - this.weapon.recoil + (this.front ? 2 : -8), this.weapon.z);
-			
+
 			// Draw the weapon
 			ctx.drawImage(texture, 0,0, this.weapon.texture.width, this.weapon.texture.height);
 		}
 
 		// Draw hands
 		if (!shadow) {
-			ctx.drawImage(this.handTex, this.weapon.mx1 - Leek.handSize2, this.weapon.mz1 - Leek.handSize2, Leek.handSize, Leek.handSize); 
-			ctx.drawImage(this.handTex, this.weapon.mx2 - Leek.handSize2, this.weapon.mz2 - Leek.handSize2, Leek.handSize, Leek.handSize); 
+			ctx.drawImage(this.handTex, this.weapon.mx1 - Leek.handSize2, this.weapon.mz1 - Leek.handSize2, Leek.handSize, Leek.handSize);
+			ctx.drawImage(this.handTex, this.weapon.mx2 - Leek.handSize2, this.weapon.mz2 - Leek.handSize2, Leek.handSize, Leek.handSize);
 		}
 
 		ctx.restore();
 	}
 
 	this.drawShadow = function() {
-		
+
 		var texture = this.front ? this.bodyTexBack : this.bodyTexFront;
 		var hatTexture = this.front ? this.hatBack : this.hatFront;
 
 		ctx.save();
 		ctx.scale(1, -SHADOW_SCALE);
 		ctx.globalAlpha = SHADOW_ALPHA;
-		
+
 		ctx.translate(0, - this.z);
-		
+
 		if (this.weapon != null) {
 			this.drawBody(texture.shadow, hatTexture ? hatTexture.shadow : null);
 			this.drawWeapon(this.weapon.texture.shadow, true);
 		} else {
 			this.drawBody(texture.shadow, hatTexture ? hatTexture.shadow : null);
 		}
-		
+
 		ctx.restore();
 	}
 
 	this.drawBody = function(texture, hatTexture) {
-		
+
 		if (texture == null) return;
-		
+
 		ctx.save();
-		
+
 		if (this.flash > 0 && (Math.random() > 0.5 || this.flash < 2)) {
 			ctx.globalCompositeOperation = 'lighter';
 		}
-		
+
 		ctx.scale(this.direction, this.oscillation)
 
 		var leekWidth = this.bodyTexFront.width / 1.5

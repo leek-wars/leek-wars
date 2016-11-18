@@ -550,13 +550,13 @@ $(document).ready(function() {
 
 	setTimeout(function() {
 		if (LW.dev) {
-			_.favicon(LW.staticURL + '/image/favicon_dev.png')
+			_.favicon(LW.staticURL + 'image/favicon_dev.png')
 			$('body').addClass('dev')
 		} else if (LW.local) {
-			_.favicon(LW.staticURL + '/image/favicon_local.png')
+			_.favicon(LW.staticURL + 'image/favicon_local.png')
 			$('body').addClass('local')
 		} else if (LW.beta) {
-			_.favicon(LW.staticURL + '/image/favicon_beta.png')
+			_.favicon(LW.staticURL + 'image/favicon_beta.png')
 			$('body').addClass('beta')
 		}
 	})
@@ -1498,18 +1498,18 @@ LW.loadPage = function(pageID, params) {
 
 		// Main script
 		count++
-		_.script.load(LW.staticURL + '/script/', pageID + '.js', ready)
+		_.script.load(LW.staticURL + 'script/', pageID + '.js', ready)
 
 		// Other page scripts
 		if ('scripts' in page) {
 			for (var s in page.scripts) {
 				count++
 				var file = page.scripts[s]
-				var path = LW.staticURL + '/script/'
+				var path = LW.staticURL + 'script/'
 				if (file.indexOf('http') == 0) {
 					path = ''
 				} else if (typeof file === 'object') {
-					path = LW.staticURL + '/' + file[0]
+					path = LW.staticURL + file[0]
 					file = file[1]
 				}
 				_.script.load(path, file, ready)
@@ -1520,11 +1520,11 @@ LW.loadPage = function(pageID, params) {
 		if ('styles' in page) {
 			for (var s in page.styles) {
 				var file = page.styles[s]
-				var path = LW.staticURL + '/style/'
+				var path = LW.staticURL + 'style/'
 				if (file.indexOf('http') == 0) {
 					path = ''
 				} else if (typeof file === 'object') {
-					path = LW.staticURL + '/' + file[0]
+					path = LW.staticURL + file[0]
 					file = file[1]
 				}
 				_.style.load(path, file)
@@ -1532,7 +1532,7 @@ LW.loadPage = function(pageID, params) {
 		}
 
 		// Load style main page
-		_.style.load(LW.staticURL + '/style/', pageID + '.css')
+		_.style.load(LW.staticURL + 'style/', pageID + '.css')
 
 		// Langs
 		if ('langs' in page) {
@@ -2553,9 +2553,9 @@ LW.messages.getConversationLastMessage = function(conversation) {
 LW.util.getAvatar = function(farmerID, avatarChanged) {
 
 	if (avatarChanged == 0) {
-		return LW.staticURL + '/image/no_avatar.png'
+		return LW.staticURL + 'image/no_avatar.png'
 	} else {
-		return LW.avatarURL + '/avatar/' + farmerID + '.png'
+		return LW.avatarURL + 'avatar/' + farmerID + '.png'
 	}
 };
 
@@ -2590,7 +2590,7 @@ LW.sfw.off = function() {
 		LW.sfw.active = false
 
 		$('body').removeClass('sfw');
-		$("#favicon").attr("href", LW.staticURL + "/image/favicon.png");
+		$("#favicon").attr("href", LW.staticURL + "image/favicon.png");
 	}
 }
 
@@ -2941,7 +2941,7 @@ LW.createWeaponPreview = function(template) {
 	}
 	preview += "</div>"
 
-	preview += "<div><img src='" + LW.staticURL + "/image/icon_tp.png'></img> " + template.cost + "</div>"
+	preview += "<div><img src='" + LW.staticURL + "image/icon_tp.png'></img> " + template.cost + "</div>"
 
 	preview += LW.createAreaView(template.area)
 
@@ -2988,7 +2988,7 @@ LW.createChipPreview = function(template) {
 	}
 	preview += "</div>"
 
-	preview += "<div><img src='" + LW.staticURL + "/image/icon_tp.png'></img> " + template.cost + "</div>";
+	preview += "<div><img src='" + LW.staticURL + "image/icon_tp.png'></img> " + template.cost + "</div>";
 
 	preview += LW.createAreaView(template.area)
 
@@ -3065,9 +3065,9 @@ LW.createPotionPreview = function(template) {
 
 	if (skin != null) {
 		preview += "<div class='leek-preview'>";
-		preview += "<img width='55' src='" + LW.staticURL + "/image/leek/leek3_front_" + SKINS[skin] + ".png'></img>"
-		preview += "<img width='75' src='" + LW.staticURL + "/image/leek/leek5_front_" + SKINS[skin] + ".png'></img>"
-		preview += "<img width='105' src='" + LW.staticURL + "/image/leek/leek8_front_" + SKINS[skin] + ".png'></img>"
+		preview += "<img width='55' src='" + LW.staticURL + "image/leek/leek3_front_" + SKINS[skin] + ".png'></img>"
+		preview += "<img width='75' src='" + LW.staticURL + "image/leek/leek5_front_" + SKINS[skin] + ".png'></img>"
+		preview += "<img width='105' src='" + LW.staticURL + "image/leek/leek8_front_" + SKINS[skin] + ".png'></img>"
 		preview += "</div>"
 	}
 	if (!template.consumable) {
@@ -3269,7 +3269,7 @@ LW.createSummonDetails = function(summonID) {
 		var characteristic = template.characteristics[charac]
 
 		details += "<div class='charac charac' id='charac-" + (template.id + charac) + "'>"
-		details += "	<img src='" + LW.staticURL + "/image/charac/" + charac + ".png'></img>"
+		details += "	<img src='" + LW.staticURL + "image/charac/" + charac + ".png'></img>"
 		details += "	<span class='color-" + charac + "'>";
 		if (charac == 'frequency') {
 			details += "0"
@@ -3299,7 +3299,7 @@ LW.createSummonDetails = function(summonID) {
 	for (var c in template.chips) {
 
 		var chip = LW.chips[template.chips[c]]
-		details += "<img class='chip' id='summon-chip-" + (template.id + c) + "' src='" + (LW.staticURL + '/image/chip/small/' + chip.name) + ".png'>"
+		details += "<img class='chip' id='summon-chip-" + (template.id + c) + "' src='" + (LW.staticURL + 'image/chip/small/' + chip.name) + ".png'>"
 		details += "<div id='tt_summon-chip-" + (template.id + c) + "' class='tooltip'>" + _.lang.get('chip', chip.name) + '</div>'
 	}
 	details += "</div>"

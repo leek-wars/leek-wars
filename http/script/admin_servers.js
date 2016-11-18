@@ -36,8 +36,8 @@ function updateThread(server, thread, connected, task, task_start, generated, er
 
 		var div = "<div id='" + server + "' class='server'>";
 		div += "<div class='load'><div></div></div>";
-		div += "<img src='" + LW.staticURL + "/image/admin/server.png'></img><br>";
-		div += "<div class='name'>" + server + "<img src='" + LW.staticURL + "/image/connected.png'></img> </div>";
+		div += "<img src='" + LW.staticURL + "image/admin/server.png'></img><br>";
+		div += "<div class='name'>" + server + "<img src='" + LW.staticURL + "image/connected.png'></img> </div>";
 		div += "<div class='total-wrapper'>Total : <span class='total'></span></div>";
 		div += "<div class='threads'></div>";
 		div += "</div>";
