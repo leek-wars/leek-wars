@@ -170,7 +170,7 @@ LW.pages.team.description = function() {
 
 LW.pages.team.recrutement = function() {
 
-	if (_member) {
+	if (_member && _owner) {
 		var setOpened = function(opened) {
 
 			_team.opened = opened
