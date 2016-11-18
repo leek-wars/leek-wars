@@ -80,10 +80,10 @@ LW.pages.market.init = function(params, $scope, $page) {
 		})
 
 		// Flèches droites et gauche
+		/*
 		$(document).keydown(function(e) {
 			if (e.keyCode == 37) { // Gauche
 				//~ var currentItem = $('#' + currentPage).find('.selected')
-			    //~
 				//~ var prev = currentItem.prev()
 				//~ if (prev.length == 0) prev = currentItem.parent().children().last()
 				//~ selectItem(prev)
@@ -91,13 +91,13 @@ LW.pages.market.init = function(params, $scope, $page) {
 			}
 			if (e.keyCode == 39) { // Droite
 				//~ var currentItem = $('#' + currentPage).find('.selected')
-			    //~
 				//~ var next = currentItem.next()
 				//~ if (next.length == 0) next = currentItem.parent().children().first()
 				//~ selectItem(next)
 				return false
 			}
 		})
+		*/
 
 		if ('item' in params) {
 			LW.pages.market.selectItem(params.item)
