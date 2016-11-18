@@ -74,7 +74,7 @@ LW.pages.leek.init = function(params, $scope, $page) {
 			LW.pages.leek.chips(leek)
 			LW.pages.leek.ai(leek)
 			LW.pages.leek.registers(leek)
-			LW.pages.leek.levelPopup(leek)
+			LW.pages.leek.levelPopup()
 			LW.pages.leek.time()
 		}
 	})
@@ -1012,19 +1012,24 @@ LW.pages.leek.time = function() {
 	this.leekTimeUpdate()
 }
 
-LW.pages.leek.levelPopup = function(leek) {
+LW.pages.leek.levelPopup = function() {
+
+	var leek = this.scope.leek
 
 	if (leek.level_seen < leek.level) {
 
-		_.get('leek/get-level-popup/' + leek.id + '/$', function(data) {
+		_.get('leek/get-level-popup/' + leek.id + '/' + LW.token(), function(data) {
 
 			var popup = new _.popup.new('leek.level_popup', {popup: data.popup, leek: leek}, 900, true)
 
-			popup.setOnDissmiss(function() {
+			popup.setOnDismiss(function() {
 				_.post('leek/set-popup-level-seen', {leek_id: leek.id})
 			})
-
 			popup.show()
+
+			LW.createLeekImage(0.6, leek.level, leek.skin, leek.hat, function(data) {
+				$('.popup.level_popup .leek-image').html(data)
+			})
 		})
 	}
 }

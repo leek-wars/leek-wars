@@ -72,6 +72,8 @@ not_found_id					Leek with id  <b>%s</b>not found
 n_remaining_fights				%s remaining fights
 ok								OK
 potion							Potion
+popup_level_301_title			Congratulations!
+popup_level_301_message			You have reached the highest level in Leek Wars, your leek is at the ultimate stage of its evolution! <br>You get a <b>gold potion</b> as well as <b>a crown</b> as a reward.
 ratio							Ratio: %s
 registered						Registered
 register_key					Key

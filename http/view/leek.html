@@ -983,18 +983,30 @@
 
 	<div class='content level-popup'>
 
-		{{popup.header}}
+		@if (leek.level == 301)
+			<h2>{#popup_level_301_title}</h2>
+			<br>
+			<div>{#popup_level_301_message}</div>
+			<br>
+			<center>
+				<img id='popup-potion' width='100' src='{{static}}image/potion/skin_gold.png'>
+				&nbsp;&nbsp;&nbsp;&nbsp;
+				<img id='popup-crown' src='{{static}}image/hat/crown.png'>
+
+				<div id='tt_popup-crown' class='tooltip'><b>{#hat.crown}</b></div>
+				<div id='tt_popup-potion' class='tooltip'><b>{#potion.skin_gold}</b></div>
+			</center>
+		@end
 
 		<table class='gains-table'><tr>
-			<td>{{leek_small_image}}</td>
-
+			<td class='leek-image'></td>
 			<td>
 				<div class='gains'>
 					<div class='life'>
-						<img src='{{static}}/image/icon_life.png'></img><span class='name'>{#life}</span> <b>+ {popup.gains.life}</b>
+						<img src='{{static}}image/icon_life.png'></img><span class='name'>{#life}</span> <b>+ {popup.gains.life}</b>
 					</div>
 					<div class='capital'>
-						<img src='{{static}}/image/add.png'></img><span class='name'>{#capital}</span> <b>+ {popup.gains.capital}</b>
+						<img src='{{static}}image/add.png'></img><span class='name'>{#capital}</span> <b>+ {popup.gains.capital}</b>
 					</div>
 				</div>
 			</td>
