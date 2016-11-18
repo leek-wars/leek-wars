@@ -2,15 +2,15 @@
 	margin-right: 6px;
 	width: 20px;
 	margin-bottom: -3.5px;
-}	
+}
 
 #unregister-tournament {
 	display: none;
 }
 
-#farmer-table { 
+#farmer-table {
 	width: 100%;
-	margin-top: 20px; 
+	margin-top: 20px;
 }
 
 #farmer-table tr > td:nth-child(n+2) {
@@ -71,6 +71,19 @@
 	font-weight: normal;
 }
 
+#farmer-page .github {
+	cursor: pointer;
+}
+#farmer-page .github img {
+	width: 24px;
+}
+#farmer-page .github span {
+	line-height: 26px;
+	vertical-align: top;
+	margin-left: 5px;
+	font-weight: bold;
+}
+
 #team img {
 	width: 150px;
 	height: 150px;
@@ -81,7 +94,7 @@
 
 #talent {
 	font-size: 25px;
-	color: #555; 
+	color: #555;
 	display: inline-block;
 	font-weight: 300;
 }
@@ -104,7 +117,7 @@
 	margin-left: 5px;
 	margin-top: 6px;
 	vertical-align: top;
-	color: #888; 
+	color: #888;
 }
 
 #farmer-page #stats {
@@ -127,7 +140,7 @@
 #farmer-page #stats tr > td:nth-child(n+2) {
 	border-left: 2px solid #ddd;
 }
- 
+
 #farmer-page #stats td {
 	padding: 0 20px;
 	text-align: center;
@@ -137,7 +150,7 @@
 	font-size: 22px;
 	font-weight: 300;
 	color: #555;
-} 
+}
 #farmer-page .grey {
 	color: #999;
 }
@@ -152,13 +165,13 @@
 /*
  * Partie milieu
  */
- 
+
 #leeks-ais {
 	width: 100%;
 	margin-top: 30px;
 }
 #leeks-ais td {
-	width: 50%; 
+	width: 50%;
 	vertical-align: top;
 }
 
@@ -186,7 +199,7 @@
 
 #farmer-page .talent {
 	font-size: 22px;
-	color: #555; 
+	color: #555;
 	display: inline-block;
 	font-weight: 300;
 	margin: 3px;
@@ -216,7 +229,7 @@
 }
 
 #farmer-page .trophy {
-	display: inline-block; 
+	display: inline-block;
 	margin: 4px 2.45px;
 	padding: 4px;
 	border: 1px solid transparent;

@@ -93,7 +93,6 @@
 
 					<div class='tooltip' id='tt_country'>{#click_to_change_country}</div>
 				@else
-
 					<h4 id='country'>
 						@if (farmer.country)
 							<span class='country'>{_.lang.get('country', farmer.country)}</span>
@@ -104,6 +103,12 @@
 						@end
 					</h4>
 				@end
+
+				<a target='_blank' href='https://github.com/5pilow'>
+					<div class='github'>
+						<img src='{{static}}image/github.png'><span>5pilow</span>
+					</div>
+				</a>
 			</div>
 		</div>
 
