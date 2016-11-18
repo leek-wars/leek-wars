@@ -1408,7 +1408,10 @@ LW.setMenuTab = function(tab) {
 
 LW.loadPage = function(pageID, params) {
 
-	_.log('%c➟ Load page %c' + pageID, 'color: blue', 'font-weight: bold')
+	var params_string = params ? '[' + Object.keys(params).map(function(k) {
+		return k + ": " + params[k]
+	}).join(', ') + ']' : '[]'
+	_.log('%c➟ Load page %c' + pageID + ' ' + params_string, 'color: blue', 'font-weight: bold')
 
 	// Check if page exists
 	if (!(pageID in LW.pages)) {
