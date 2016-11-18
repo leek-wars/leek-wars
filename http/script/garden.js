@@ -38,7 +38,9 @@ LW.pages.garden.init = function(params, $scope, $page) {
 					$(this).addClass('selected');
 					$scope.my_leek = $(this).attr('leek');
 					$('#solo-leek').text($(this).attr('name'));
-				});
+				})
+
+				LW.pages.garden.images(leeks)
 
 				$(".leek.enemy").click(function() {
 
@@ -46,7 +48,6 @@ LW.pages.garden.init = function(params, $scope, $page) {
 						leek_id: $scope.my_leek,
 						target_id: $(this).attr('leek')
 					}, function(data) {
-
 						if (data.success) {
 							LW.page('/fight/' + data.fight)
 						}
@@ -121,6 +122,7 @@ LW.pages.garden.init = function(params, $scope, $page) {
 		// Solo
 		$('#garden-page #garden-solo .myleek').click(function() {
 			$page.select_leek($(this).attr('leek'))
+			$page.load_leek($(this).attr('leek'))
 		})
 		// BR
 		$('#garden-battle-royale .myleek:not(.disabled)').click(function() {
@@ -162,6 +164,7 @@ LW.pages.garden.select_category = function(category) {
 
 	if (category == 'solo') {
 		LW.pages.garden.select_leek(this.scope.my_leek)
+		LW.pages.garden.load_leek(this.scope.my_leek)
 	}
 	if (category == 'farmer') {
 		LW.pages.garden.select_farmer()
@@ -188,6 +191,11 @@ LW.pages.garden.select_leek = function(leek_id) {
 	this.scope.my_leek = leek_id
 	localStorage["garden/leek"] = leek_id
 	$('#solo-leek').text(element.attr('name'))
+}
+
+LW.pages.garden.load_leek = function(leek_id) {
+
+	var element = $('.myleek[leek=' + leek_id + ']')
 
 	$('#garden-solo .enemies[of=' + leek_id + '] .no-more-fights').hide()
 	if (this.scope.garden.solo_fights[leek_id] == 0) {
@@ -291,10 +299,8 @@ LW.pages.garden.select_composition = function(compo_id) {
 
 	$('#garden-team .enemies[of=' + compo_id + '] .no-more-fights').hide()
 	var compo_array_id = null
-	for (var i in LW.pages.garden.scope.garden.my_compositions)
-	{
-		if (LW.pages.garden.scope.garden.my_compositions[i].id == compo_id)
-		{
+	for (var i in LW.pages.garden.scope.garden.my_compositions) {
+		if (LW.pages.garden.scope.garden.my_compositions[i].id == compo_id) {
 			compo_array_id = i
 		}
 	}
