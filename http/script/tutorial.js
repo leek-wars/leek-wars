@@ -1,9 +1,9 @@
 var _trophy = false
 
-LW.pages.tutorial.init = function(params, $scope, $page) { 
+LW.pages.tutorial.init = function(params, $scope, $page) {
 
 	// Tableaux des opérateurs === et ==
-	var values = ['false', 'true', '0', '1', '12', '" "', '"0"', '"1"', '"12"', '"lama"', 
+	var values = ['false', 'true', '0', '1', '12', '" "', '"0"', '"1"', '"12"', '"lama"',
 				  '"true"', '"false"', '[]', '[0]', '[1]', '[12]', '[1,2,3]', 'null']
 
 	var equalEqual = [
@@ -34,13 +34,13 @@ LW.pages.tutorial.init = function(params, $scope, $page) {
 	LW.setTitle(_.lang.get('tutorial', 'title'))
 
 	$('#tutorial-page screen').each(function() {
-		
+
 		var content = $(this).html();
 		var newHtml = "<img src='" + $(this).attr('src') + "'></img>";
 		newHtml += "<div class='legend'>" + content + "</div>";
-		
+
 		$(this).html(newHtml);
-		
+
 		$(this).find('img').click(function() {
 			if ($(this).hasClass('big')) {
 				$(this).removeClass('big');
@@ -50,10 +50,10 @@ LW.pages.tutorial.init = function(params, $scope, $page) {
 		});
 	});
 
-	$('a[goto]').click(function() {
+	$('#tutorial-page a[goto]').click(function() {
 		$(window).scrollTop($($(this).attr('goto')).offset().top)
 	})
-	
+
 	$('#tutorial-page code').each(function() {
 		var content = $(this).text();
 		$(this).html("<pre>" + content + "</pre>");
@@ -62,7 +62,7 @@ LW.pages.tutorial.init = function(params, $scope, $page) {
 	});
 
 	$(window).scroll(function() {
-		
+
 		if ($(window).scrollTop() > ($(document).height() - $(window).height()) - 300) {
 			if (_trophy == false) {
 
