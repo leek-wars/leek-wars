@@ -482,24 +482,22 @@ LW.pages.leek.tournament = function() {
 	var leek = this.scope.leek
 
 	if (leek.tournament.registered) {
-		$('#register-tournament').hide()
-		$('#unregister-tournament').show()
+		$('#register-tournament .register').hide()
+		$('#register-tournament .unregister').show()
 	}
 
 	$('#register-tournament').click(function() {
-
-		_.post('leek/register-tournament', {leek_id: leek.id})
-
-		$('#unregister-tournament').show()
-		$(this).hide()
-	})
-
-	$('#unregister-tournament').click(function() {
-
-		_.post('leek/unregister-tournament', {leek_id: leek.id})
-
-		$('#register-tournament').show()
-		$(this).hide()
+		if (leek.tournament.registered) {
+			leek.tournament.registered = false
+			_.post('leek/unregister-tournament', {leek_id: leek.id})
+			$(this).find('.unregister').hide()
+			$(this).find('.register').show()
+		} else {
+			leek.tournament.registered = true
+			_.post('leek/register-tournament', {leek_id: leek.id})
+			$(this).find('.unregister').show()
+			$(this).find('.register').hide()
+		}
 	})
 }
 

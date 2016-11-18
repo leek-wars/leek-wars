@@ -28,14 +28,16 @@
 				</a>
 			@end
 
-			<div class='tab'>
-				<img src='{{static}}image/icon/trophy.png' />
+			<a id='register-tournament'>
+				<div class='tab'>
+					<img src='{{static}}image/icon/trophy.png' />
 
-				<span id='register-tournament'>{#register_to_tournament}</span>
-				<span id='unregister-tournament'>{#unregister}</span>
+					<span class='register'>{#register_to_tournament}</span>
+					<span class='unregister'>{#unregister}</span>
 
-				<div class='tooltip' id='tt_register-tournament'>{#tournament_time}</div>
-			</div>
+					<div class='tooltip' id='tt_register-tournament'>{#tournament_time}</div>
+				</div>
+			</a>
 
 			<div class='tab' id='in-garden-button'>
 				<span>{#garden}</span>
