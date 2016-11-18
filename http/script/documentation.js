@@ -30,7 +30,8 @@ LW.pages.documentation.init = function(params, $scope, $page) {
 		for (var c in LW.constants) {
 			var item = LW.constants[c]
 			item.type = 'constant'
-			items[LW.constants[c].category].push(item)
+			item.real_name = item.name
+			items[item.category].push(item)
 		}
 
 		$scope.categories = categories
@@ -122,7 +123,7 @@ LW.pages.documentation.resize = function() {
 LW.pages.documentation.selectItem = function(item) {
 
 	var pos = $('#items .item[item=' + item.toLowerCase() + ']:visible').position().top + $('#items').scrollTop();
-	$('#items').scrollTop(pos - 50);
+	$('#items').scrollTop(pos - 80);
 }
 
 function isNameChar(char) {
