@@ -6,7 +6,7 @@ LW.pages.search.init = function(params, $scope, $page) {
 	if (farmer == '-') farmer = ''
 	var page = 'page' in params ? params.page : 1
 
-	_.get('forum/search/' + query + '/' + farmer + '/' + page + '/$', function(data) {
+	_.get('forum/search/' + query + '/' + farmer + '/' + page + '/' + LW.token(), function(data) {
 
 		var results = data.results
 		for (var r in results) {

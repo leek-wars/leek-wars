@@ -2,7 +2,7 @@ LW.pages.translation.init = function(params, $scope, $page) {
 
 	var file = params.file
 
-	_.get('lang/get-file-translations/' + file + '/$', function(data) {
+	_.get('lang/get-file-translations/' + file + '/' + LW.token(), function(data) {
 
 		$scope.file = data.file
 		$scope.langs = _.lang.languages
@@ -22,7 +22,7 @@ LW.pages.translation.init = function(params, $scope, $page) {
 				var index = $(this).parent().index()
 
 				_.post('lang/update-value', {
-					file: file, 
+					file: file,
 					key:  $(this).attr('key'),
 					lang: $(this).attr('lang'),
 					value: value,
@@ -54,7 +54,7 @@ LW.pages.translation.init = function(params, $scope, $page) {
 			_.post('lang/set-translator', {farmer_id: respo, lang: lang, file: file, reference: ref, supertoken: '$'}, function(data) {
 				if (data.success) {
 					_.reload()
-				}	
+				}
 			})
 		})
 
@@ -62,15 +62,15 @@ LW.pages.translation.init = function(params, $scope, $page) {
 			 $("#translation-keys").tableDnD({
 				dragHandle: ".arrows",
 				onDrop: function(table, row) {
-					
+
 					var order = []
-					
+
 					$('#translation-keys tr').each(function() {
 						if ($(this).attr('key'))
 							order.push($(this).attr('key'))
 					})
 					order = JSON.stringify(order)
-					
+
 					_.log('Update order')
 					_.post('lang/set-file-order', {order: order, file: file, supertoken: '$'})
 				}

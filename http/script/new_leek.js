@@ -1,6 +1,6 @@
 LW.pages.new_leek.init = function(params, $scope, $page) {
 
-	_.get('leek/get-next-price/$', function(data) {
+	_.get('leek/get-next-price/' + LW.token(), function(data) {
 
 		$scope.price = data.price
 		$scope.leek_count = _.objectSize(LW.farmer.leeks)
@@ -12,7 +12,7 @@ LW.pages.new_leek.init = function(params, $scope, $page) {
 		$('#create-leek').click(function() {
 
 			var name = $('#leek-name').val()
-		
+
 			_.post('leek/create', {name: name}, function(data) {
 				if (data.success) {
 					document.location.href = '/leek/' + data.id
