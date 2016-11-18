@@ -833,6 +833,11 @@ _.lang.load = function(file, private_file, callback) {
 		return
 	}
 
+	var t = Date.now()
+	var print_time = function() {
+		_.log("%cLang %c" + file + " %c" + (Date.now() - t) + 'ms', 'color: green', 'font-weight: bold', 'color: black')
+	}
+
 	if (private_file) {
 
 		var url = 'lang/get-private/' + file + '/' + _.lang.current + '/' + LW.token()
@@ -841,6 +846,7 @@ _.lang.load = function(file, private_file, callback) {
 				_.lang.langs[_.lang.current][file] = data.lang
 				localStorage[key] = JSON.stringify(data.lang)
 			}
+			print_time()
 			if (callback) callback()
 		})
 	} else {
@@ -854,6 +860,7 @@ _.lang.load = function(file, private_file, callback) {
 			var parsed = _.lang.parse_file(data)
 			_.lang.langs[_.lang.current][file] = parsed
 			localStorage[key] = JSON.stringify(parsed)
+			print_time()
 			callback(parsed)
 		})
 	}
