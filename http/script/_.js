@@ -350,6 +350,12 @@ _.format.dayMonthShort = function(timestamp) {
 	return day + ' ' + _.format.months_shorts[_.lang.current][month]
 }
 
+_.toChatLink = function(url, text, blank) {
+	blank = blank ? blank : ""
+
+	return '<a ' + blank + ' href="' + url + '">' + text + '</a>'
+}
+
 _.linkify = function(html) {
 
 	var make_blank = function(url) {
@@ -386,7 +392,7 @@ _.linkify = function(html) {
 		var real_url = (url.indexOf('http') === -1) ? 'http://' + url : url
 		var blank = make_blank(real_url)
 
-		html = html.substring(0, match.index) + '<a ' + blank + ' href="' + real_url + '">' + url + '</a>' + html.substring(i)
+		html = html.substring(0, match.index) + _.toChatLink(real_url, url, blank) + html.substring(i)
 		url_regex.lastIndex += real_url.length + blank.length + '<a href=""  ></a>'.length
 	}
 	return html.replace(email_pattern, '<a target="_blank" rel="nofollow" href="mailto:$&">$&</a>')

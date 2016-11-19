@@ -190,6 +190,12 @@ var CHARACTERISTIC_FREQUENCY = 7;
 var CHARACTERISTIC_TP = 8;
 var CHARACTERISTIC_MP = 9;
 
+// URLs for /wiki and /doc
+var URL_WIKI = "http://leekwarswiki.net"
+var URL_WIKI_PAGE = "http://leekwarswiki.net/index.php?title="
+var URL_DOC = "https://leekwars.com/help/documentation"
+var URL_MARKET = "https://leekwars.com/market"
+
 
 // Effets
 LW.EFFECT = {
@@ -1931,10 +1937,65 @@ function linkifyElem(elem) {
 }
 
 function commands(text, authorName) {
-	text = text.replace(/(^| )\/me($|\s)/g, "$1<i>" + authorName + "</i>$2")
-	text = text.replace(/(^| )\/lama($|\s)/g, "$1<i>#LamaSwag</i>$2")
-	text = text.replace(/(^| )\/admin($|\s)/g, "$1<i>" + authorName + " aime les admins !</i>$2")
-	text = text.replace(/(^| )\/fliptable($|\s)/g, "$1(╯°□°）╯︵ ┻━┻$2")
+	var matches;
+
+	text = text.replace(/(^| )\/me(?=$|\s)/g, "$1<i>" + authorName + "</i>")
+	text = text.replace(/(^| )\/lama(?=$|\s)/g, "$1<i>#LamaSwag</i>")
+	text = text.replace(/(^| )\/admin(?=$|\s)/g, "$1<i>" + authorName + " aime les admins !</i>")
+	text = text.replace(/(^| )\/fliptable(?=$|\s)/g, "$1(╯°□°）╯︵ ┻━┻")
+	text = text.replace(/(^| )\/replacetable(?=$|\s)/g, "$1┬─┬﻿ ノ( ゜-゜ノ)")
+	text = text.replace(/(^| )\/shrug(?=$|\s)/g, "$1¯\\_(ツ)_/¯")
+
+	// Wiki commands
+	while(matches = /(?:^|(\s))\/wiki([!]?)(?::([^\s#]+)(?:#([^\s]+))?)?(?=\s|$)/g.exec(text)) {
+		var urlWiki = ''
+		var textWiki = matches[2] ? 'LE WIKIIIII' : 'Wiki'
+		// /wiki
+		if (!matches[3]) {
+			urlWiki += URL_WIKI
+		}
+		// /wiki:page OR /wiki:page#anchor
+		else {
+			urlWiki += URL_WIKI_PAGE + matches[3]
+			textWiki = matches[3]
+			if(matches[4]) { 
+				urlWiki += '#' + matches[4]
+			}
+		}
+
+		text = text.replace(matches[0], ' ' + _.toChatLink(urlWiki, textWiki, "target='_blank' rel='nofollow'") + ' ')
+	}
+	
+	// Documentation commands
+	while(matches = /(?:^|(\s))\/doc([!]?)(?::([^\s#]+))?(?=\s|$)/g.exec(text)) {
+		// /doc
+		var urlDoc = URL_DOC
+		var textDoc = matches[2] ? 'LA DOOOOOC' : 'Doc'
+
+		// /doc:function
+		if (matches[3]) {
+			urlDoc += '/' + matches[3]
+			textDoc = matches[3]
+		}
+
+		text = text.replace(matches[0], ' ' + _.toChatLink(urlDoc, textDoc, "target='_blank' rel='nofollow'") + ' ')
+	}
+
+	// Market commands
+	while(matches = /(?:^|(\s))\/market(?::([^\s#]+))?(?=\s|$)/g.exec(text)) {
+		// /market
+		var urlMarket = URL_MARKET
+		var textMarket = 'Market'
+
+		// /market:item
+		if (matches[2]) {
+			urlMarket += '/' + matches[2]
+			textMarket = matches[2]
+		}
+
+		text = text.replace(matches[0], ' ' + _.toChatLink(urlMarket, textMarket, "target='_blank' rel='nofollow'") + ' ')
+	}
+
 	return text
 }
 
