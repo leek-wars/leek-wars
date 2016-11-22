@@ -55,6 +55,8 @@ life_cost						1 capital ⇔ 3 vies
 life_cost_10					10 capital ⇔ 30 vies
 life_cost_100					100 capital ⇔ 300 vies
 life_description				Dégâts que peut encaisser le poireau avant de mourir
+base_life						Vie de base
+added_life						Vie ajoutée
 magic							Magie
 magic_description				La magie augmente les entraves et les dégâts des poisons
 max_level						Niveau maximum

@@ -158,7 +158,11 @@
 								<div class='tooltip' id='tt_lifespan'>
 									<b>{#life}</b><br />
 									{#life_description}
-									@if (5 > 0)
+									@if (leek.life > leek.baseLife)
+										<br>
+										<b class='base-life'>{#base_life} : <span class='amount'>{leek.baseLife}</span></b>
+										<br>
+										<b class='added-life'>{#added_life} : <span class='amount'>{leek.life - leek.baseLife}</span></b>
 										<br>
 										<b class='capital'>{#invested_capital} : <span class='amount'>{LW.pages.leek.characteristicToCapital(CHARACTERISTIC_LIFE, leek.life, leek.level)}</span></b>
 									@end

@@ -63,7 +63,7 @@
 	font-weight: 500;
 }
 
-.tooltip .effect, .tooltip .capital {
+.tooltip .effect, .tooltip .capital, .tooltip .base-life, .tooltip .added-life {
 	font-size: 13px;
 }
 
