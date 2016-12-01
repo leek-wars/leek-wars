@@ -577,3 +577,23 @@ changelog_192	# Corrections des votes forum.
 				# Ajout du chapeau de paille.
 				# Les puces Épine et Miroir possèdent désormais une zone d'effet de 5 cases.
 				# Battle Royales !
+changelog_193	# Amélioration de l'inscription aux Battle Royales avec une fenêtre popup.
+				# Retrait du niveau des fonctions dans la popup de l'éditeur.
+				# Correction documentation getWeaponMaxRange.
+				# Noms des mois plus courts dans le graphique du talent.
+				# Amélioration de la détection des URLs dans les chats.
+				# Ajout d'une option de tri par catégorie pour les puces dans le marché.
+				# Correction de l'espace ajouté au milieu d'un mot lors d'un appui sur Entrer.
+				# Correction de la traduction du trophée "Planqué".
+				# Ajout des instructions de formattage dans la popup de création de topic.
+				# Ajout des boutons Twitter, Facebook et Github sur la page À propos.
+				# Nouvel icône pour la web app.
+				# Lorsqu'un joueur quitte une équipe, il est désinscrit de ses topics de forum.
+				# Correction du crash de getFarmerCountry() quand l'éleveur n'a pas de pays.
+				# IA correctement supprimées côtés serveur (bug des IA fantômes).
+				# Épine et mirroir ne s'appliquent plus sur les ennemis dans la zone.
+				# Correction des trophées Monstre à Titan (impossibles à obtenir).
+				# Ajout de l'avatar du joueur dans les mails de réponse forum.
+				# Documentation de getFarmerCountry.
+				# Correction des liens vers la documentation depuis le tutoriel.
+				# Ajout des constantes dans la liste de la page documentation.
