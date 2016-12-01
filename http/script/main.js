@@ -1878,31 +1878,36 @@ LW.smiley = function(data) {
 	data = data.trim()
 
 	// Emoji
+	var emoji_cache = {}
+
 	var emojis = data.match(/:([\w]+):/gi)
 	for (var i in emojis) {
 		var emoji = emojis[i]
 		emoji = emoji.substr(1, emoji.length - 2)
 		if (emoji in smileys.emojis) {
-			data = data.replace(new RegExp(':' + emoji + ':', 'g'), smileys.emojis[emoji])
+			var emoji_code = smileys.emojis[emoji]
+			emoji_cache[emoji_code.codePointAt(0)] = emoji
+			data = data.replace(new RegExp(':' + emoji + ':', 'g'), emoji_code)
 		}
 	}
 
 	// Custom smileys
 	for (var i in smileys.custom) {
 		var smiley = smileys.custom[i];
-		data = data.replace(new RegExp("(^|\\s|\>)" + escapeRegExp(i) + "(?![^\\s<>])", "g"), '$1<img class="smiley" alt="'+smiley.name+'" src="'+smiley.image+'">')
+		data = data.replace(new RegExp("(^|\\s|\>)" + escapeRegExp(i) + "(?![^\\s<>])", "g"), '$1<img class="smiley" alt="'+smiley.name+'" title="'+smiley.name+'" src="/static/'+smiley.image+'">')
 	}
 
 	// Emoji to image
-	data = twemoji.parse(
-		data,
-		{
-			callback: function(icon) {
-				return smileys.url + icon + '.svg'
-			},
-			className: 'smiley'
-		}
-	)
+	data = twemoji.parse(data, {
+		callback: function(icon, options) {
+			return smileys.url + icon + '.svg'
+		},
+		attributes: function(rawText, iconId) {
+			var text = ':' + emoji_cache[parseInt(iconId, 16)] + ':'
+			return {title: text}
+		},
+		className: 'smiley'
+	})
 
 	// Return
 	return data
