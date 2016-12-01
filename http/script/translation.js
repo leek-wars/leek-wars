@@ -57,7 +57,7 @@ LW.pages.translation.init = function(params, $scope, $page) {
 				}
 			})
 		})
-
+/*
 		var updateDragAndDrop = function() {
 			 $("#translation-keys").tableDnD({
 				dragHandle: ".arrows",
@@ -77,7 +77,7 @@ LW.pages.translation.init = function(params, $scope, $page) {
 			})
 		}
 		updateDragAndDrop()
-
+*/
 		var updateDelete = function() {
 			$('.delete').off('click')
 			$('.delete').click(function() {
@@ -115,7 +115,7 @@ LW.pages.translation.init = function(params, $scope, $page) {
 					line.find('.key').text(key)
 
 					$('#translation-keys').append(line)
-					updateDragAndDrop()
+		//			updateDragAndDrop()
 					updateDelete()
 					updateFocusout()
 
