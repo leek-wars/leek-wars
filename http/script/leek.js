@@ -484,6 +484,9 @@ LW.pages.leek.tournament = function() {
 	if (leek.tournament.registered) {
 		$('#register-tournament .register').hide()
 		$('#register-tournament .unregister').show()
+	} else {
+		$('#register-tournament .register').show()
+		$('#register-tournament .unregister').hide()
 	}
 
 	$('#register-tournament').click(function() {
