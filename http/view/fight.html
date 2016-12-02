@@ -16,9 +16,9 @@
 <div class='panel'>
 
 	<div class='content'>
- 
+
 		<div id='loading'>
-			
+
 			<table><tr>
 				<td class='team-td'>
 					@foreach (i : leek in fight.leeks1)
@@ -27,13 +27,13 @@
 							<span class='name'>{leek.name}</span>
 							<br>
 							<span class='level'>{#leek_level, leek.level}</span>
-						</div> 
+						</div>
 						@if (i == 1 && fight.leeks1.length < 5) <br> @end
 					@end
 				</td>
-				
+
 				<td><span class='vs'>VS</span></td>
-				
+
 				<td class='team-td'>
 					@foreach (i : leek in fight.leeks2)
 						<div class='leek' leek='{leek.id}'>
@@ -46,14 +46,14 @@
 					@end
 				</td>
 			</tr></table>
-			
+
 			<img class='loader' src='{{static}}image/gearing_small.png'></img><br>
 			<div class='loading-fight'>{#loading_fight}</div>
 			<div class='queue-position'></div>
 		</div>
-		
+
 		<div id='error'>
-			
+
 			<h2>{#error_generating_fight}</h2>
 			<br>
 			<img src='{{static}}/image/notgood.png'></img>
@@ -68,9 +68,9 @@
 			<br>
 			<br>
 		</div>
-		
+
 		<div id='browser'>
-			
+
 			<h2>{#browser_cannot_display}</h2>
 			<br>
 			<img src='{{static}}image/notgood.png'></img>
@@ -78,7 +78,7 @@
 			<br>
 			<h4><i>{#update_browser}</i></h4>
 			<br>
-			
+
 			<div id='browser-list'>
 				<div class='browser'>
 					<a target='blank' href='https://www.google.com/intl/fr_fr/chrome/browser/'>
@@ -117,19 +117,19 @@
 				<div class='button'>{#see_report}</div>
 			</a>
 		</div>
-		
+
 		<div id='game'>
 
 			<div id='layers'>
-				<canvas id='bg-canvas'></canvas> 	
-				<canvas id='game-canvas'></canvas> 
+				<canvas id='bg-canvas'></canvas>
+				<canvas id='game-canvas'></canvas>
 
 				<div id='progress-bar-wrapper'>
 					<div id='progress-bar'>
 						<div class='bar'></div><div class='circle'></div>
 					</div>
 				</div>
-				
+
 				<div id='hud'>
 
 					<div id='details'></div>
@@ -137,7 +137,7 @@
 					<div id='life-bar'>
 						<div class='wrapper'></div>
 					</div>
-				
+
 					<div id='debug'>
 						<div>Particles : <span id='debug-particles'></span></div>
 						<div>Mouse : <span id='debug-mouse'></span></div>
@@ -145,7 +145,7 @@
 						<div>Mouse cell : <span id='debug-mouse-cell'></span></div>
 						<div>FPS : <span id='debug-fps'></span></div>
 					</div>
-					
+
 					<div id='left-part'>
 						<div id='actions'></div>
 					</div>
@@ -160,20 +160,21 @@
 
 				<img id='play-button' src='{{static}}image/icon/pause.png'></img>
 				<div class='tooltip top' id='tt_play-button' >{#pause}</div>
-				
+
 				<img id='speed-button' src='{{static}}image/icon/speed.png'></img>
 				<div class='tooltip top' id='tt_speed-button' >{#accelerate}</div>
-				
+
 				<img id='fullscreen-button' src='{{static}}image/icon/fullscreen.png'></img>
 				<div class='tooltip top' id='tt_fullscreen-button' >{#fullscreen}</div>
-				
+
 				<img id='fight-settings-button' src='{{static}}image/icon/gearing.png'></img>
 				<div class='tooltip top' id='tt_fight-settings-button' >{#settings}</div>
-				
+
 				<img id='quit-button' src='{{static}}image/icon/quit.png'></img>
 				<div class='tooltip top' id='tt_quit-button' >{#quit}</div>
-
+				<!--
 				<input type='file' id='file-input'>
+			-->
 			</div>
 		</div>
 	</div>
@@ -222,10 +223,10 @@
 					@include('main.comment', comment)
 				@end
 			</div>
-			
+
 			<input id='comment-input' type='text'></input>
 			<div id='comment-send' class='button'>{#send_comment}</div>
-			
+
 		</div>
 	</div>
 </div>
@@ -238,7 +239,7 @@
 	<div class='fight-setting'><label><input id='fight-cells' type='checkbox'> {#display_cell_numbers}</label></div>
 	<div class='fight-setting'><label><input id='fight-discrete-pause' type='checkbox'> {#discrete_pause}</label></div>
 	<div class='fight-setting'><label>{#quality} <select id='fight-quality' >
-		<option value="high">{#quality_high}</option> 
+		<option value="high">{#quality_high}</option>
 		<option value="medium" selected>{#quality_medium}</option>
 		<option value="low">{#quality_low}</option>
 	</select></label></div>
