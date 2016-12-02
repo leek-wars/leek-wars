@@ -1192,7 +1192,7 @@ func_useChipOnCell_arg_1			Chip to use.
 func_useChipOnCell_arg_2			Targetted cell.
 func_useChipOnCell_return			See #useChip.
 func_useChip_return			<ul>
-<li>#USE_CRITICAL, in case of critical hit</li>
+	<li>#USE_CRITICAL, in case of critical hit</li>
 		<li>#USE_SUCCESS, in case of success</li>
 		<li>#USE_FAILED, in case of failure</li>
 		<li>#USE_INVALID_TARGET, if the target does not exist</li>
@@ -1206,12 +1206,12 @@ func_useWeaponOnCell			Fires your leek's weapon, targetting given <b>cell</b>.
 func_useWeaponOnCell_arg_1			Targetted cell.
 func_useWeaponOnCell_return			See #useWeapon.
 func_useWeapon_return			<ul>
-<li>#USE_CRITICAL, in case of critical hit</li>
+		<li>#USE_CRITICAL, in case of critical hit</li>
 		<li>#USE_SUCCESS, in case of success</li>
 		<li>#USE_FAILED, in case of failure</li>
 		<li>#USE_INVALID_TARGET, if the target does not exist</li>
 		<li>#USE_NOT_ENOUGH_TP, if your leek does not have enough TP</li>
-<li>#USE_INVALID_POSITION, if the weapon's scope does not allow its use, or line of sight is not clear.</li>
+		<li>#USE_INVALID_POSITION, if the weapon's scope does not allow its use, or line of sight is not clear.</li>
 	</ul>
 func_weaponNeedLos			Returns whether given <b>weapon</b> requires a line of sight in order to be shot.
 func_weaponNeedLos_arg_1			Desired weapon's id.

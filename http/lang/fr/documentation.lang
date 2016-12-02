@@ -1153,7 +1153,7 @@ func_useChipOnCell_arg_2			Cellule cible.
 func_useChipOnCell_return			Une valeur supérieure à 0 si l'attaque a été lancée.
 func_useChip_return			Les valeurs de retour de useChip sont :<br>
 	<ul>
-<li>#USE_CRITICAL, en cas de coup critique</li>
+		<li>#USE_CRITICAL, en cas de coup critique</li>
 		<li>#USE_SUCCESS, en cas de réussite</li>
 		<li>#USE_FAILED, en cas de d'échec</li>
 		<li>#USE_INVALID_TARGET, si la cible n'existe pas</li>
@@ -1168,7 +1168,7 @@ func_useWeaponOnCell_arg_1			Cellule ciblée.
 func_useWeaponOnCell_return			Une valeur supérieure à 0 si l'attaque a été lancée.
 func_useWeapon_return			Les valeurs de retour de useWeapon sont :<br>
 	<ul>
-<li>#USE_CRITICAL, en cas de coup critique</li>
+		<li>#USE_CRITICAL, en cas de coup critique</li>
 		<li>#USE_SUCCESS, en cas de réussite</li>
 		<li>#USE_FAILED, en cas de d'échec</li>
 		<li>#USE_INVALID_TARGET, si la cible n'existe pas</li>
