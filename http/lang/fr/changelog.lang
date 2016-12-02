@@ -597,3 +597,7 @@ changelog_193	# Amélioration de l'inscription aux Battle Royales avec une fenê
 				# Documentation de getFarmerCountry.
 				# Correction des liens vers la documentation depuis le tutoriel.
 				# Ajout des constantes dans la liste de la page documentation.
+				# Ajout de nombreux emojis, dans le chat, les messages privés et le forum (avec l'aide de jojo123).
+				# Possibilité de refaire un combat de test depuis la page rapport de combat (avec l'aide de TheTintin).
+				# Ajout d'un bandeau dans les chats si nouveau message n'est pas visible.
+				# Affichage du capital investi dans chaque caractéristique sur la page poireau (avec l'aide de Tintin).
