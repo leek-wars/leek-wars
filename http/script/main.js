@@ -533,7 +533,8 @@ $(document).ready(function() {
 		api: LW.api,
 		version: LW.subVersion,
 		view_cache: LW.prod,
-		lang_cache: LW.prod
+		lang_cache: LW.prod,
+		local: LW.local || LW.dev
 	})
 
 	_.lang.init(
@@ -1894,7 +1895,7 @@ LW.smiley = function(data) {
 	// Custom smileys
 	for (var i in smileys.custom) {
 		var smiley = smileys.custom[i];
-		data = data.replace(new RegExp("(^|\\s|\>)" + escapeRegExp(i) + "(?![^\\s<>])", "g"), '$1<img class="smiley" alt="'+smiley.name+'" title="'+smiley.name+'" src="/static/'+smiley.image+'">')
+		data = data.replace(new RegExp("(^|\\s|\>)" + escapeRegExp(i) + "(?![^\\s<>])", "g"), '$1<img class="smiley" alt="' + smiley.name + '" title="' + smiley.name + '" src="' + LW.staticURL + smiley.image+'">')
 	}
 
 	// Emoji to image
@@ -1908,8 +1909,6 @@ LW.smiley = function(data) {
 		},
 		className: 'smiley'
 	})
-
-	// Return
 	return data
 }
 

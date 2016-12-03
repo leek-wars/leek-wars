@@ -7,6 +7,7 @@
 var _ = {
 	api: '',
 	version: 0,
+	local: false,
 	currentTitle: '',
 	currentCounter: 0,
 	script: {
@@ -63,6 +64,9 @@ _.init = function(params) {
 	}
 	if ('lang_cache' in params) {
 		_.lang.cache = params.lang_cache
+	}
+	if ('local' in params) {
+		_.local = params.local
 	}
 	_.log = function() {}
 	_.logW = function() {}
@@ -720,7 +724,7 @@ _.script.load = function(path, file, callback) {
 		_.script.loading[url] = true
 
 		var script = document.createElement('script')
-		script.src = url + '?' + _.version
+		script.src = url + (_.local ? '' : ('?' + _.version))
 		script.async = false
 
 		script.onload = function() {
@@ -851,7 +855,7 @@ _.lang.load = function(file, private_file, callback) {
 		})
 	} else {
 
-		$.get(LW.staticURL + 'lang/' + _.lang.current + '/' + file + '.lang?' + _.version, function(data) {
+		$.get(LW.staticURL + 'lang/' + _.lang.current + '/' + file + '.lang' + (_.local ? '' : ('?' + _.version)), function(data) {
 
 			if (data.indexOf('<!DOCTYPE html>') != -1) {
 				callback('error')
