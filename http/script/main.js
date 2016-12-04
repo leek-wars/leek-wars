@@ -3536,6 +3536,12 @@ var ChatController = function(chat_element, private_chat, team_chat) {
 
 	$('#chat-smileys-button').click(function(e) {
 		$('#chat-smileys-wrapper').toggle()
+		if (!$('#chat-smileys-wrapper').hasClass('loaded')) {
+			$('#chat-smileys-wrapper img').each(function() {
+				$(this).attr('src', $(this).attr('url'));
+			})
+		}
+		$('#chat-smileys-wrapper').addClass('loaded')
 	});
 
 	$('#chat-smileys').on('click', function(e) {
