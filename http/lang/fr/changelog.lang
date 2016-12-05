@@ -253,7 +253,8 @@ changelog_149	# Ajout des 6 constantes TYPE_* dans le documentation.
 				# Correction du trophée Collectionneur.
 changelog_150	# Affichage du talent sur la page de l'équipe.
 				# Affichage des horaires des tournois sur les boutons.
-				# Implémentation des fermetures (voir le sujet sur le forum).# Affichage des dates des tournois et des combats sur leur page.
+				# Implémentation des fermetures (voir le sujet sur le forum).
+				# Affichage des dates des tournois et des combats sur leur page.
 changelog_151	# La limite de debug est calculée sur la longueur totale de texte affiché, cette limite est de 1 000 000 de caractères.
 				# La sagesse applique désormais le multiplicateur sur l'XP et les Habs uniquement en cas de victoire.
 				# Corrections diverses.
@@ -597,6 +598,7 @@ changelog_193	# Amélioration de l'inscription aux Battle Royales avec une fenê
 				# Documentation de getFarmerCountry.
 				# Correction des liens vers la documentation depuis le tutoriel.
 				# Ajout des constantes dans la liste de la page documentation.
+				# Correction des performance de certaines fonctions entraînant de très longs combats.
 				# Ajout de nombreux emojis, dans le chat, les messages privés et le forum (avec l'aide de jojo123).
 				# Possibilité de refaire un combat de test depuis la page rapport de combat (avec l'aide de TheTintin).
 				# Ajout d'un bandeau dans les chats si nouveau message n'est pas visible.
