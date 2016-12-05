@@ -25,7 +25,6 @@ LW.pages.market.init = function(params, $scope, $page) {
 				var chip = LW.chips[item.id]
 				chips.push(chip)
 				previews[item.id] = LW.createChipPreview(chip)
-
 				// Place the chip in the categories which correspond to its effects
 				for (var y in chip.effects) {
 					var type = chip.effects[y].type
@@ -42,13 +41,7 @@ LW.pages.market.init = function(params, $scope, $page) {
 				previews[item.id] = LW.createHatPreview(LW.hats[item.id])
 			}
 		}
-		// Sort chips by type by level
-		for (var c in chipsByType) {
-			chipsByType[c].sort(function(a, b) {
-				return a.level - b.level
-			})
-		}
-
+		
 		$scope.items = all
 		$scope.weapons = weapons
 		$scope.chips = chips
