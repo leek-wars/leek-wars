@@ -29,14 +29,10 @@ LW.pages.market.init = function(params, $scope, $page) {
 				// Place the chip in the categories which correspond to its effects
 				for (var y in chip.effects) {
 					var type = chip.effects[y].type
-					if (chipsByType[type] !== undefined) {
-						if (chipsByType[type][item.id] === undefined) {
-							chipsByType[type][item.id] = chip
-						}
-					} else {
-						chipsByType[type] = {}
-						chipsByType[type][item.id] = chip
+					if (chipsByType[type] === undefined) {
+						chipsByType[type] = []
 					}
+					chipsByType[type].push(chip)
 				}
 			} else if (item.type == ITEM_POTION) {
 				potions.push(LW.potions[item.id])
@@ -45,6 +41,12 @@ LW.pages.market.init = function(params, $scope, $page) {
 				hats.push(LW.hats[item.id])
 				previews[item.id] = LW.createHatPreview(LW.hats[item.id])
 			}
+		}
+		// Sort chips by type by level
+		for (var c in chipsByType) {
+			chipsByType[c].sort(function(a, b) {
+				return a.level - b.level
+			})
 		}
 
 		$scope.items = all
@@ -343,8 +345,8 @@ LW.pages.market.chips = function(sort_method) {
 				var type = LW.EFFECT_TYPES[i]
 				$('#chips h3[type="' + type + '"]').appendTo('#chips')
 				$('#chips').append('<br>')
-				for (var itemID in self.scope.chipsByType[type]) {
-					$('#item-' + itemID).appendTo('#chips')
+				for (var i in self.scope.chipsByType[type]) {
+					$('#item-' + self.scope.chipsByType[type][i].id).appendTo('#chips')
 				}
 				$('#chips').append('<br>')
 			}
