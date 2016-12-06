@@ -17,16 +17,16 @@ advanced_include_4			Séparer son code par thème dans différentes IAs, des mod
 advanced_include_5			Limites de la fonctions include
 advanced_include_6			L'utilisation de la fonction include est limitée en LeekScript, en effet il est impossible d'inclure dynamiquement une autre IA. Les codes ci-dessous ne fonctionnent pas :
 advanced_include_7			// ne fonctionne pas
-include("IA_" + 5);
+							include("IA_" + 5);
 advanced_include_8			// ne fonctionne pas
-var ia = 'IA_1';
-include('IA_1');
+							var ia = 'IA_1';
+							include('IA_1');
 advanced_include_9			// ne fonctionne pas
-if (foo > 12) {
-	include('IA_1');
-} else {
-	include('IA_2');
-}
+							if (foo > 12) {
+								include('IA_1');
+							} else {
+								include('IA_2');
+							}
 advanced_intro			Dans cette section nous présenterons des fonctions et techniques plus complexes mais néanmoins utiles pour gagner un combat
 	dans <b>Leek Wars</b>.
 advanced_order			Ordre de jeu
@@ -35,62 +35,62 @@ advanced_order_1			Les fonctions <a href='documentation/getNextPlayer'><b>getNex
 	va jouer après vous et qui a joué avant vous.
 	Une application possible : regarder si le joueur qui joue après vous (un ennemi) est proche de vous.
 advanced_order_2			var next = getNextPlayer();
-if (isEnemy(next) and getLife() < 100
-	and getCellDistance(getCell(), getCell(next)) < 10) {
-	// On est en danger, le prochain joueur est un ennemi, proche
-}
+							if (isEnemy(next) and getLife() < 100
+								and getCellDistance(getCell(), getCell(next)) < 10) {
+								// On est en danger, le prochain joueur est un ennemi, proche
+							}
 advanced_order_3			Cibles d'une arme ou d'une puce
 advanced_order_4			Les fonctions <a href='documentation/getWeaponTargets'><b>getWeaponTargets</b></a> et
 	<a href='documentation/getChipTargets'><b>getChipTargets</b></a> permettent de récupérer un tableau d'id des poireaux touchés
 	si vous utiliser une arme ou une puce sur une certaine cellule. Particulèrement utiles pour les armes ou puces de zone (aussi bien
 	un lance-grenades qu'un sort de soin en zone) :
 advanced_order_5			var cell = ...; // une cellule
-var targets = getChipTargets(CHIP_ICEBERG, cell);
-if (count(targets) > 1) { // on touche plus d'un joueur en lançant ici
-	for (var target in targets) {
-		if (isAlly(target)) {
-			// On touche un allié, pas bon :/
-		}
-	}
-}
+							var targets = getChipTargets(CHIP_ICEBERG, cell);
+							if (count(targets) > 1) { // on touche plus d'un joueur en lançant ici
+								for (var target in targets) {
+									if (isAlly(target)) {
+										// On touche un allié, pas bon :/
+									}
+								}
+							}
 advanced_ref			Le passage par référence
 advanced_ref_1			Quand vous écrivez une fonction en LeekScript, vous pouvez lui préciser des arguments, par exemple :
 advanced_ref_2			function somme(a, b, resultat) {
-	resultat = a + b;
-}
+							resultat = a + b;
+						}
 advanced_ref_3			Quand vous allez appeler cette fonction, les variables que vous lui passez seront <b>copiées</b>, c'est à dire que si vous faites :
 advanced_ref_4			function somme(a, b, resultat) {
-	resultat = a + b;
-}
+							resultat = a + b;
+						}
 
-var a = 2;
-var b = 10;
-var resultat = 0;
+						var a = 2;
+						var b = 10;
+						var resultat = 0;
 
-somme(a, b, resultat);
-debug(resultat);
+						somme(a, b, resultat);
+						debug(resultat);
 advanced_ref_5			Ici, le programme affichera 0, car la variable resultat vaudra 0. Quand vous passez ces 3 variables (a, b et resultat) dans la fonction "somme",
 		leurs valeurs sont recopiées pour être utilisées à l'intérieur. Ainsi, les valeurs 2, 10 et 0 sont envoyées. L'opération "resultat = a + b" travaille donc avec des copies des valeurs, et ne va pas affecter votre variable "resultat".
 advanced_ref_6			Il est possible de résoudre le problème en passant "resultat" par référence. Pour ce faire, il suffit de rajouter un "@" devant son nom dans la liste des arguments de la fonction :
 advanced_ref_7			function somme(a, b, @resultat) {
-	resultat = a + b;
-}
+							resultat = a + b;
+						}
 
-var a = 2;
-var b = 10;
-var resultat = 0;
+						var a = 2;
+						var b = 10;
+						var resultat = 0;
 
-somme(a, b, resultat);
-debug(resultat); // "resultat" vaut bien 12.
+						somme(a, b, resultat);
+						debug(resultat); // "resultat" vaut bien 12.
 advanced_tern			Les ternaires
 advanced_tern_1			Les ternaires sont un moyen plus rapide d'écrire une condition. La structure d'une condition ternaire est :
 advanced_tern_2			condition ? valeur_si_vrai : valeur_si_faux
 advanced_tern_3			Ainsi, on peut remplacer :
 advanced_tern_4			if (getCell() == 42) {
-	useWeapon(getNearestEnemy());
-} else {
-	moveTowardCell(42);
-}
+							useWeapon(getNearestEnemy());
+						} else {
+							moveTowardCell(42);
+						}
 advanced_tern_5			par le code suivant :
 advanced_tern_6			(getCell() == 42) ? useWeapon(getNearestEnemy()) : moveTowardCell(42);
 advanced_tern_7			Les deux codes si-dessus sont équivalents. Les ternaires permettent de condenser son code pour des conditions simples,
@@ -118,13 +118,13 @@ arr_11			<tr><th>Indice</th><th>Valeur</th></tr>
 arr_12			On peut accéder à une case d’un tableau en indiquant l’indice de la case à laquelle
 	on souhaite accéder entre crochets :
 arr_13			// Déclaration du tableau
-var monTableau = ["Poireau", "Lama", "Autruche", "Artichaut"];
-debug(monTableau[1]); // Affichera Lama
+				var monTableau = ["Poireau", "Lama", "Autruche", "Artichaut"];
+				debug(monTableau[1]); // Affichera Lama
 arr_14			On peut utiliser une case d’un tableau exactement comme une variable normale :
 arr_15			var monTableau = [2, 4, 6, 8];
-debug(monTableau[0]); // Affiche 2
-monTableau[0] = monTableau[1] + 5; // Assigne la valeur 9 à la case 0
-debug(monTableau[0]); // Affiche 9
+				debug(monTableau[0]); // Affiche 2
+				monTableau[0] = monTableau[1] + 5; // Assigne la valeur 9 à la case 0
+				debug(monTableau[0]); // Affiche 9
 arr_16			Lorsqu’on concatène un tableau avec une chaîne de caractères ou qu’on tente de l’afficher avec la fonction debug,
 	on voit apparaître la liste de tous ses éléments, c’est très pratique pour le débugage.
 arr_2			Les tableaux proposés pas le LeekScript sont des tableaux à indice (ou clé) numériques, vous pouvez y
@@ -133,18 +133,18 @@ arr_2			Les tableaux proposés pas le LeekScript sont des tableaux à indice (ou
 arr_3			Le premier indice d’un tableau sera toujours 0 et il est impossible d’utiliser des indices négatifs
 arr_4			Pour créer un tableau, il faut utiliser la syntaxe suivante :
 arr_5			// Déclaration d’un tableau
-var monTableau = [];
+				var monTableau = [];
 arr_6			On peut remplir notre tableau de deux manières :<br />
 	A l’initialisation :
 arr_7			// Déclaration du tableau
-var monTableau = ["Poireau", "Lama", "Autruche", "Artichaut"];
+				var monTableau = ["Poireau", "Lama", "Autruche", "Artichaut"];
 arr_8			Ou après l’initialisation, en utilisant des assignations :
 arr_9			// Déclaration du tableau
-var monTableau = [];
-monTableau[0] = "Poireau";
-monTableau[1] = "Lama";
-monTableau[2] = "Autruche";
-monTableau[3] = "Artichaut";
+				var monTableau = [];
+				monTableau[0] = "Poireau";
+				monTableau[1] = "Lama";
+				monTableau[2] = "Autruche";
+				monTableau[3] = "Artichaut";
 arrays			Les tableaux
 automatic_completion			La complétion automatique
 buy_a_weapon			Avant de faire combattre votre poireau, il est impératif de lui donner de quoi attaquer. Rendez vous dans
@@ -163,13 +163,13 @@ cond_10			Il est également possible de déterminer plusieurs cas, imaginons qu�
 	d’instructions.
 cond_11			Exemple :
 cond_12			var valeur = 5;
-if (valeur < 5) { // Si valeur est inférieur à 5 (entre 0 et 4 donc)
-	debug("Valeur est entre 0 et 4");
-} else if (valeur < 8) { // Sinon si valeur est inférieur à 8 (entre 5 et 7)
-	debug("Valeur est entre 5 et 7");
-} else { // Sinon (entre 8 et 10 donc)
-	debug("Valeur est entre 8 et 10");
-}
+				if (valeur < 5) { // Si valeur est inférieur à 5 (entre 0 et 4 donc)
+					debug("Valeur est entre 0 et 4");
+				} else if (valeur < 8) { // Sinon si valeur est inférieur à 8 (entre 5 et 7)
+					debug("Valeur est entre 5 et 7");
+				} else { // Sinon (entre 8 et 10 donc)
+					debug("Valeur est entre 8 et 10");
+				}
 cond_13			Nous allons maintenant voir quels sont les différents opérateurs de condition disponibles :
 cond_14			<tr><th>Opérateur</th><th>Description</th></tr>
 		<tr><td>==</td><td>Est égal à</td></tr>
@@ -184,13 +184,13 @@ cond_16			<tr><th>Opérateur</th><th>Description</th></tr>
 		<tr><td>or</td><td>ou</td></tr>
 cond_17			Ce qui donne :
 cond_18			var a = 1;
-var b = 5;
-if (a < 5 and b > 6) { // Si a est inférieur à 5 et b est supérieur à 6
-	// ...
-}
-if (a == 1 or a == 3) { // Si a est égal à 1 ou si a est égal à 3
-	// ...
-}
+				var b = 5;
+				if (a < 5 and b > 6) { // Si a est inférieur à 5 et b est supérieur à 6
+					// ...
+				}
+				if (a == 1 or a == 3) { // Si a est égal à 1 ou si a est égal à 3
+					// ...
+				}
 cond_19			Il existe aussi l'opérateur <b>===</b>, qui permet de comparer la valeur et le type de deux valeurs, voir dans <a href='#triple_equals'>la section avancée</a>.
 cond_2			Structure if… else…
 cond_20			Quelques simplifications utiles
@@ -218,23 +218,23 @@ cond_34			Si a est un <b>tableau</b>, a est vrai si il est non vide.
 cond_35			Si a est <b>null</b>, a est faux.
 cond_4			Voici un exemple :
 cond_5			var a = 1;
-if (a < 10) { // On regarde si a est inférieur à 10
-	// Si oui les instructions placées dans les accolades seront exécutées
-	debug("a est inférieur à 10");
-}
+				if (a < 10) { // On regarde si a est inférieur à 10
+					// Si oui les instructions placées dans les accolades seront exécutées
+					debug("a est inférieur à 10");
+				}
 cond_6			Dans cet exemple, a vaut 1 donc la condition est remplie, donc le debug sera executé et on aura
 	"a est inférieur à 10" d’écrit dans les logs.
 cond_7			Si on veut exécuter des instructions dans le cas où la condition est vérifiée et d’autres instructions
 	quand elle ne l’est pas, il est possible d’utiliser le mot clé <b>else</b> (sinon) pour délimiter un second bloc.
 cond_8			Exemple :
 cond_9			var a = 1;
-if (a < 10) { // On regarde si a est inférieur à 10
-	// Si oui les instructions placées dans les accolades seront exécutées
-	debug("a est inférieur à 10");
-} else { // Sinon
-	// Instructions à exécuter si a n’est pas inférieur à 10
-	debug("a n’est pas inférieur à 10");
-}
+				if (a < 10) { // On regarde si a est inférieur à 10
+					// Si oui les instructions placées dans les accolades seront exécutées
+					debug("a est inférieur à 10");
+				} else { // Sinon
+					// Instructions à exécuter si a n’est pas inférieur à 10
+					debug("a n’est pas inférieur à 10");
+				}
 conditions			Les conditions
 difficulty_child			Enfant : 30 à 40% de vos caractéristiques (force, agilité, vie..) et 50% de vos PT et PM
 difficulty_easy			Facile : 50 à 75% de vos caractéristiques et 80% de vos PT, PM
@@ -322,14 +322,14 @@ fight_chips_1			Avant d'utiliser une puce, il faut veiller à l'équiper sur not
 	<a href='documentation/useChip'><b>useChip</b></a>. Le premier paramètre est le code de la puce, par exemple "<b>CHIP_SHOCK</b>"
 	pour la puce "<b>Décharge</b>". Le second paramètre est le poireau cible :
 fight_chips_10			var enemy = getNearestEnemy();
-while (getTP() >= 2) {
-	useChip(CHIP_SHOCK, enemy);
-}
+						while (getTP() >= 2) {
+							useChip(CHIP_SHOCK, enemy);
+						}
 fight_chips_2			var enemy = getNearestEnemy();
-useChip(CHIP_SHOCK, enemy); // On lance la puce Décharge sur l'ennemi
+						useChip(CHIP_SHOCK, enemy); // On lance la puce Décharge sur l'ennemi
 
-var ally = getNearestAlly();
-useChip(CHIP_CURE, ally); // On lance la puce Guérison sur un allié
+						var ally = getNearestAlly();
+						useChip(CHIP_CURE, ally); // On lance la puce Guérison sur un allié
 fight_chips_3			La gestion des Points de Tour (PT)
 fight_chips_4			Votre poireau possède un nombre limité de points de tour, utilisés pour effectuer des
 	actions comme prendre une arme, tirer, utiliser une puce, parler...
@@ -339,11 +339,11 @@ fight_chips_6			Vous devez donc réfléchir à quelles actions effectuer durant 
 	La fonction <b>getTP()</b> (get Turn Points) vous donne le nombre de PT restants.
 fight_chips_7			Un exemple : on veut lancer le sort "Stalactite" si il nous reste 6 PT ou plus, sinon on lance le sort "Décharge" :
 fight_chips_8			var enemy = getNearestEnemy();
-if (getTP() >= 6) {
-	useChip(CHIP_STALACTITE, enemy);
-} else {
-	useChip(CHIP_SHOCK, enemy);
-}
+						if (getTP() >= 6) {
+							useChip(CHIP_STALACTITE, enemy);
+						} else {
+							useChip(CHIP_SHOCK, enemy);
+						}
 fight_chips_9			Un autre exemple : on veut lancer le sort "Décharge" (qui coûte 2 PT) jusqu'a épuisement de nos PT :
 fight_ground			Le terrain
 fight_ground_1			Le terrain sur lequel évoluent les joueurs est une grille
@@ -354,8 +354,8 @@ fight_ground_12			On peut également récupérer les coordonnées
 	<b>x</b> et <b>y</b> d'une cellule à l'aide de la fonction <a href='documentation/getCellX'><b>getCellX</b></a> et
 	<a href='documentation/getCellY'><b>getCellY</b></a> :
 fight_ground_13			var cell = getCell(); // On récupère notre cellule
-var x = getCellX(cell); // Position en x de la cellule
-var y = getCellY(cell); // Position en y de la cellule
+						var x = getCellX(cell); // Position en x de la cellule
+						var y = getCellY(cell); // Position en y de la cellule
 fight_ground_14			La cellule centrale du terrain (numéro <b>306</b>) a les coordonnées <b>(0, 0)</b>;
 fight_ground_15			La cellule en haut à gauche (numéro <b>0</b>) a les coordonnées <b>(-17, 0)</b>;
 fight_ground_16			La cellule en haut à droite (numéro <b>17</b>) a les coordonnées <b>(0, -17)</b>;
@@ -368,11 +368,11 @@ fight_ground_19			Enfin, pour finir avec la gestion des cellules, on peut aussi 
 	Un exemple, on va calculer la distance entre notre poireau et son ennemi le plus proche :
 fight_ground_2			La numérotation des cellules
 fight_ground_20			var maCellule = getCell();
-var saCellule = getCell(getNearestEnemy());
-var distance = getCellDistance(maCellule, saCellule);
-if (distance > 10) {
-	// l'ennemi le plus proche est à plus de 10 cellules
-}
+						var saCellule = getCell(getNearestEnemy());
+						var distance = getCellDistance(maCellule, saCellule);
+						if (distance > 10) {
+							// l'ennemi le plus proche est à plus de 10 cellules
+						}
 fight_ground_3			Grâce à cette numérotation, chaque cellule est identifiable à l'aide d'un seul numéro. On peut récupérer le numéro de
 	la cellule sur laquelle se trouve notre poireau à l'aide de la fonction <a href='documentation/getCell'><b>getCell</b></a> :
 fight_ground_4			var maCase = getCell(); // On récupère le numéro de notre cellule
@@ -380,23 +380,23 @@ fight_ground_5			Contenu d'une cellule
 fight_ground_6			Grâce à la fonction <a href='documentation/getCellContent'><b>getCellContent</b></a>, on peut déterminer le contenu d'une cellule :
 	est-ce qu'un poireau se trouve dessus, ou bien un obstacle, ou est-elle vide ?
 fight_ground_7			var cell = ...; // une cellule quelconque
-var content = getCellContent(cell);
-if (content == CELL_EMPTY) {
-	// la cellule est vide
-} else if (content == CELL_OBSTACLE) {
-	// la cellule est un obstacle
-} else if (content == CELL_LEEK) {
-	// la cellule contient un poireau
-}
+						var content = getCellContent(cell);
+						if (content == CELL_EMPTY) {
+							// la cellule est vide
+						} else if (content == CELL_OBSTACLE) {
+							// la cellule est un obstacle
+						} else if (content == CELL_LEEK) {
+							// la cellule contient un poireau
+						}
 fight_ground_8			Si la cellule contient un poireau, on peut récupérer l'id de ce poireau grâce à la fonction
 	<a href='documentation/getLeekOnCell'><b>getLeekOnCell</b></a> :
 fight_ground_9			var cell = ...; // une cellule
-if (getCellContent(cell) == CELL_LEEK) {
-	var leek = getLeekOnCell(cell); // on récupére l'id du poireau
-	if (isEnemy(leek)) {
-		say("C'est un ennemi !");
-	}
-}
+						if (getCellContent(cell) == CELL_LEEK) {
+							var leek = getLeekOnCell(cell); // on récupére l'id du poireau
+							if (isEnemy(leek)) {
+								say("C'est un ennemi !");
+							}
+						}
 fight_intro			Nous allons maintenant voir comment réellement combattre dans <b>Leek Wars</b>, en expliquant le système de combat,
 	puis comment programmer un bon comportement.
 fight_move			Les déplacements et Points de Mouvement (PM)
@@ -415,29 +415,29 @@ fight_move_12			On peut également avancer ou reculer vers une ligne de cellules
 	à cette ligne. Par exemple, si un ennemi en face de nous possède une arme de type laser, qui tire en ligne,
 	on peut chercher à fuir cette ligne qui semble dangereuse :
 fight_move_13			var enemy = ...; // l'ennemi en question
-var saCellule = getCell(enemy);
-var maCellule = getCell();
-moveAwayFromLine(saCellule, maCellule);
+						var saCellule = getCell(enemy);
+						var maCellule = getCell();
+						moveAwayFromLine(saCellule, maCellule);
 fight_move_2			Un ou des poireau(x) comme cible
 fight_move_3			On peut s'approcher ou s'éloigner d'un poireau (allié ou ennemi) grâce aux fonctions
 	<a href='documentation/moveToward'><b>moveToward</b></a> et <a href='documentation/moveAwayFrom'><b>moveAwayFrom</b></a> respectivement :
 fight_move_4			var enemy = getNearestEnemy();
-if (getLife() > 100) {
-	moveToward(enemy); // on se rapproche
-	// attaque...
-} else {
-	moveAwayFrom(enemy); // on s'éloigne
-	// soins...
-}
+						if (getLife() > 100) {
+							moveToward(enemy); // on se rapproche
+							// attaque...
+						} else {
+							moveAwayFrom(enemy); // on s'éloigne
+							// soins...
+						}
 fight_move_5			Ces fonctions utilisées tel quel vont utiliser le nombre de points de mouvements variable, un nombre de telle sorte à accomplir au
 	mieux leur objectif. Ainsi, si vous êtes à une très grande distance d'un ennemi, <b>moveToward</b> utilisera sans doute tous vos PM,
 	alors que si vous êtes collé à cet ennemi, elle n'en utilisera aucun.
 fight_move_6			Pour mieux contrôler le nombre de PM qu'une fonction utilise, vous pouvez spécifier le nombre de PM maximum, en deuxième paramètre :
 
 fight_move_7			var enemy = getNearestEnemy();
-moveToward(enemy, 3); // on avance vers l'ennemi, de 3 cellules max.
-useWeapon(enemy); // on essaye de lui tirer dessus
-moveAwayFrom(enemy); // on s'éloigne, d'un nombre illimité de cellules
+						moveToward(enemy, 3); // on avance vers l'ennemi, de 3 cellules max.
+						useWeapon(enemy); // on essaye de lui tirer dessus
+						moveAwayFrom(enemy); // on s'éloigne, d'un nombre illimité de cellules
 fight_move_8			Ces fonctions existent aussi quand notre cible n'est pas un mais plusieurs poireaux :
 	fonctions <a href='documentation/moveTowardLeeks'><b>moveTowardLeeks</b></a> et
 	<a href='documentation/moveAwayFromLeeks'><b>moveAwayFromLeeks</b></a>, pour s'approcher ou s'éloigner d'un groupe de poireaux.
@@ -457,13 +457,13 @@ useWeapon(enemy); // On lui tire dessus
 fight_sys_12			La fonction <b><a href='documentation/getEnemies'>getEnemies()</a></b> renvoie elle les poireaux ennemis (vivants ou morts) dans
 	le combat.
 fight_sys_13			var enemies = getEnemies(); // On récupère un tableau des ids des ennemis
-var n = 0;
-for (var enemy in enemies) { // On parcourt tous les ennemis
-	if (getLife(enemy) > 1000) { // getLife(enemy) renvoie la vie du poireau
-		n++;
-	}
-}
-debug(n + " ennemis ont plus de 1000 PV");
+						var n = 0;
+						for (var enemy in enemies) { // On parcourt tous les ennemis
+							if (getLife(enemy) > 1000) { // getLife(enemy) renvoie la vie du poireau
+								n++;
+							}
+						}
+						debug(n + " ennemis ont plus de 1000 PV");
 fight_sys_2			Ordre de jeu
 fight_sys_3			Les poireaux jouent <b>chacun leur tour</b>. L'ordre est déterminé par la fréquence des poireaux, mais on alterne toujours
 	entre les deux équipes : le poireau qui	a la plus grande fréquence a plus de chance de commencer et faire commencer son équipe, et le deuxième poireau
@@ -474,28 +474,28 @@ fight_sys_4			Le combat est divisé en tours : quand le dernier poireau a joué,
 	il faudra donc bien veiller à surveiller le compteur de tours. La fonction
 	<b><a href='documentation/getTurn'>getTurn()</a></b> donne le tour actuel du combat :
 fight_sys_5			var turn = getTurn();
-if (turn > 60) {
-	// Le combat va bientot se terminer, il faut se dépêcher de finir...
-}
+					if (turn > 60) {
+						// Le combat va bientot se terminer, il faut se dépêcher de finir...
+					}
 fight_sys_6			Une numérotation des joueurs
 fight_sys_7			Chaque poireau possède un code unique numérique (appelé aussi <b>id</b>, pour identifiant), qui permet de le désigner.
 fight_sys_8			La fonction <b><a href='documentation/getLeek'>getLeek()</a></b> renvoie l'id de votre poireau. Récupérer votre id est utile par exemple pour utiliser une puce
 	de soin sur vous-même.
 fight_sys_9			var moi = getLeek(); // On récupère l'id de notre poireau
-useChip(CHIP_CURE, moi); // On lance la puce "Guérison" sur nous
+					useChip(CHIP_CURE, moi); // On lance la puce "Guérison" sur nous
 fight_weapons			Les armes
 fight_weapons_1			Prendre une arme
 fight_weapons_2			Prendre une arme est en général la première chose à faire dans un combat. Pour ce faire, il faut équiper l'arme sur
 	votre poireau (bouton "Modifier" sur la page du poireau), puis utiliser la fonction
 	<a href='documentation/setWeapon'><b>setWeapon</b></a>, par exemple :
 fight_weapons_3			// On prend le pistolet
-setWeapon(WEAPON_PISTOL);
+						setWeapon(WEAPON_PISTOL);
 fight_weapons_4			Attention ! La fonction <b>setWeapon</b> coûte 1 PT.
 fight_weapons_5			Utiliser une arme
 fight_weapons_6			Maintenant que votre poireau possède une arme, il ne reste plus qu'a attaquer avec. Pour cela, il faut utiliser
 	la fonction <a href='documentation/setWeapon'><b>useWeapon</b></a> :
 fight_weapons_7			var enemy = getNearestEnemy();
-useWeapon(enemy); // attaque
+						useWeapon(enemy); // attaque
 fun_1			Le LeekScript permet la création de fonctions personnelles qui vont vous permettre d'organiser et de simplifier votre
 	IA. Si vous avez écrit une opération complexe et souhaitez la réutiliser un certain nombre de fois dans votre code,
 	l'utilisation d'une fonction sera la meilleure solution.
@@ -504,19 +504,19 @@ fun_10			Dans le corps de la fonction, on observe le mot-clé <b>return</b> suiv
 	et <i>y</i>.
 fun_11			On peut utiliser notre fonction <i>hypot</i> dans notre code de la manière suivante :
 fun_12			var a = 4;
-var b = 3;
-var c = hypot(a, b); // c prend la valeur sqrt(4 * 4 + 3 * 3) soit 5
+				var b = 3;
+				var c = hypot(a, b); // c prend la valeur sqrt(4 * 4 + 3 * 3) soit 5
 fun_13			On peut entièrement réécrire le code d'exemple en utilisant notre fonction :
 fun_14			// Définition de la fonction hypot
-function hypot(x, y) {
-	return sqrt(x * x + y * y);
-}
+				function hypot(x, y) {
+					return sqrt(x * x + y * y);
+				}
 
-var a = 3;
-var b = 4;
-var c = hypot(a, b);
-a = hypot(b, c) + hypot(c, 4);
-b = hypot(a, c);
+				var a = 3;
+				var b = 4;
+				var c = hypot(a, b);
+				a = hypot(b, c) + hypot(c, 4);
+				b = hypot(a, c);
 fun_15			Nous avons gagné en lisibilité et réduit la taille du code.
 fun_16			On notera que la fonction <i>hypot</i> existe déjà dans les fonctions prédéfinies du LeekScript (voir la fonction
 	<a href='documentation/hypot'>hypot</a> dans la documentation).
@@ -526,28 +526,28 @@ fun_18			Le mot clé <b>return</b> peut être utilisé sans expression à sa dro
 fun_19			Exemple de <b>return</b> sans valeur :
 fun_2			Une fonction basique
 fun_20			function logarithme(n) {
-	if (n <= 0) {
-		return;
-	}
-	// reste du calcul...
-}
+					if (n <= 0) {
+						return;
+					}
+					// reste du calcul...
+				}
 fun_21			L'exécution de la fonction étant stoppée au premier return rencontré, si n est inférieur ou égal à 0,
 	cette fonction renverra <b>null</b> puis n'effectuera pas le reste du calcul :
 fun_22			var a = logarithme(-5); // a va prendre la valeur null
 fun_23			Récursivité
 fun_24			Une fonction peut appeler une autre fonction, par exemple :
 fun_25			function carre(x) {
-	return x * x;
-}
-function hypot(x, y) {
-	return sqrt(carre(x) + carre(y));
-}
-var a = hypot(3, 4); // a vaut sqrt(3 * 3 + 4 * 4)
+					return x * x;
+				}
+				function hypot(x, y) {
+					return sqrt(carre(x) + carre(y));
+				}
+				var a = hypot(3, 4); // a vaut sqrt(3 * 3 + 4 * 4)
 fun_26			Ainsi, une fonction peut s'appeller elle-même :
 fun_27			function factorielle(n) {
-	if (n <= 1) return 1;
-	return n * factorielle(n - 1);
-}
+					if (n <= 1) return 1;
+					return n * factorielle(n - 1);
+				}
 fun_28			Cette fonction renvoie la factorielle du nombre n (n!) passé en paramètre (n! = n × (n - 1) × ... × 3 × 2 × 1).
 	On constate qu'elle se contente de renvoyer n × (n - 1)!, ce qui est égal à n!
 fun_29			<b>Attention !</b> Si une fonction s'appelle elle-même sans condition de sortie, ou que deux ou plusieurs fonctions
@@ -559,17 +559,17 @@ fun_3			Nous allons prendre l'exemple d'un code qui calcule l'hypothénuse d'un 
 	<i>c</i> peut s'obtenir avec le code suivant :
 fun_30			Exemples de codes menant à une surcharge de la pile :
 fun_31			function mauvaiseFactorielle(n) {
-	return n * mauvaiseFactorielle(n);
-}
-var a = mauvaiseFactorielle(5);
-// le code boucle à l'infini et se stoppe à 200 appels
-fun_32			function a() {
-	b();
-}
-function b() {
-	a();
-}
-a(); // a et b s'appellent entre elles en boucle
+					return n * mauvaiseFactorielle(n);
+				}
+				var a = mauvaiseFactorielle(5);
+				// le code boucle à l'infini et se stoppe à 200 appels
+				fun_32			function a() {
+					b();
+				}
+				function b() {
+					a();
+				}
+				a(); // a et b s'appellent entre elles en boucle
 fun_33			Niveau des fonctions
 fun_34			Dans le LeekScript, certaines fonctions ont un niveau minimum. Le poireau sur lequel l'IA sera équipée
 	devra donc avoir les conditions requises. Exemple : la fonction <b><a href='documentation/getPathLength'>getPathLength</a></b>
@@ -582,13 +582,13 @@ fun_39			Cela fonctionne aussi bien avec les fonctions de base du LeekScript qu'
 fun_4			var c = sqrt(a * a + b * b);
 fun_40			var variable = getLeek;
 
-variable(); // Revient à utiliser getLeek
+				variable(); // Revient à utiliser getLeek
 fun_41			On peut par exemple donner une fonction en paramètre :
 fun_42			function ma_fonction(parametre) {
-	debug(parametre());
-}
+					debug(parametre());
+				}
 
-ma_fonction(getLeek);
+				ma_fonction(getLeek);
 fun_43			Le LeekScript propose également un type de fonction un peu particulier appelé "fonction anonyme", il s'agit de fonctions sans nom, déclarées directement dans une expression.
 fun_44			Cela permet une écriture plus simple, et évite de déclarer une fonction lorsque ce n'est pas utile. Pour déclarer une fonction anonyme, il faut utiliser le mot clé function et directement ouvrir la parenthèse permetant de définir les paramètres, sans préciser de nom.
 fun_45			var ma_fonction = function() { return "Test"; };
@@ -598,28 +598,28 @@ fun_47			var ma_fonction = function() { return "Test"; };
 ma_fonction();
 fun_48			Si par exemple on a une fonction qui prend en paramètre une autre fonction, on peut lui passer directement une fonction anonyme, comme par exemple :
 fun_49			function arrayMap(tableau, fonction) {
-	var r = [];
-	for (var v in tableau) push(r, fonction(v));
-	return r;
-}
+					var r = [];
+					for (var v in tableau) push(r, fonction(v));
+					return r;
+				}
 
-var t = arrayMap([1, 2, 3, 4, 5], function(x) { return x ** 2; });
+				var t = arrayMap([1, 2, 3, 4, 5], function(x) { return x ** 2; });
 
-debug(t); // [1, 4, 9, 16, 25]
+				debug(t); // [1, 4, 9, 16, 25]
 fun_5			Imaginons maintenant que cette formule est utilisée de nombreuses fois dans votre code :
 fun_50			La fonction arrayMap prend un tableau et une fonction et retourne un nouveau tableau constitué de chaque élément du tableau d'entrée auquel on a appliqué la fonction.
 fun_6			var a = 3;
-var b = 4;
-var c = sqrt(a * a + b * b);
-a = sqrt(b * b + c * c) + sqrt(c * c + 4 * 4);
-b = sqrt(a * a + c * c);
+				var b = 4;
+				var c = sqrt(a * a + b * b);
+				a = sqrt(b * b + c * c) + sqrt(c * c + 4 * 4);
+				b = sqrt(a * a + c * c);
 fun_7			On remarque qu'il est fastidieux de recopier sans cesse la même formule, tout en compliquant de manière importante notre
 	code. <br />
 	On va donc créer une fonction <i>hypot</i> qui va directement calculer l'hypoténuse. Cette fonction est définie par le code
 	suivant :
 fun_8			function hypot(x, y) {
-	return sqrt(x * x + y * y);
-}
+					return sqrt(x * x + y * y);
+				}
 fun_9			Analysons ce code. Pour déclarer une fonction, on utilise le mot-clé <b>function</b>, on note ensuite le nom de
 	la fonction, ici <i>hypot</i>. On écrit ensuite entre parenthèses la liste des paramètres, séparés par des virgules, ici "x" et "y".
 	Le corps de la fonction est ensuite entre accolades.
@@ -631,11 +631,11 @@ loops_1			Nous allons maintenant nous intéresser un autre type de structure tou
 	les boucles !
 loops_10			La boucle <b>do while</b> est similaire à la boucle <b>while</b>, excepté que la condition se situe à la fin, le corps de la boucle est donc éxécuté toujours au moins une fois :
 loops_11			var x;
-do {
-	x = rand(); // x est un nombre aléatoire entre 0 et 1
-} while (x < 0.8); // on répète tant que x n'est pas supérieur à 0.8
+					do {
+						x = rand(); // x est un nombre aléatoire entre 0 et 1
+					} while (x < 0.8); // on répète tant que x n'est pas supérieur à 0.8
 
-debug("x : " + x); // affiche un nombre entre 0.8 et 1
+					debug("x : " + x); // affiche un nombre entre 0.8 et 1
 loops_12			La boucle for
 loops_13			Un autre type de boucle un petit peu plus complexe existe, il ressemble à une boucle while mais en plus condensé.
 	Vous verrez à l’usage que selon les cas d’utilisation il est plus pratique d’utiliser un <b>for</b> ou un while.
@@ -645,11 +645,11 @@ loops_16			La condition : tant qu’elle est valide la boucle continue de s’ex
 loops_17			L’incrémentation : faire augmenter (ou diminuer selon le cas) la valeur de votre variable “compteur”
 loops_18			Exemple de boucle <b>for</b> :
 loops_19			var i;
-// On fait une boucle de i = 1 tant que i est inférieur ou égal à 5
-// et on incrémente i à chaque tour de boucle
-for (i = 1; i <= 5; i++) {
-	debug("Le compteur i vaut : " + i);
-}
+					// On fait une boucle de i = 1 tant que i est inférieur ou égal à 5
+					// et on incrémente i à chaque tour de boucle
+					for (i = 1; i <= 5; i++) {
+						debug("Le compteur i vaut : " + i);
+					}
 loops_2			La boucle permet de répéter des instructions plusieurs fois. Il y a plusieurs types de boucle que nous allons voir dans
 	cette partie.
 loops_20			Ce code affichera dans les logs :<br />
@@ -661,21 +661,21 @@ loops_20			Ce code affichera dans les logs :<br />
 loops_21			Il est possible de déclarer le compteur dans l’initialisation de la boucle for en mettant le mot clé var
 	devant le nom de variable :
 loops_22			for (var i = 1; i <= 5; i++) {
-	// Instructions...
-}
+						// Instructions...
+					}
 loops_23			Il existe une autre variante de boucle for, la structure : <b>for</b> ... <b>in</b>, qui permet de boucler sur les valeurs d'un
 		tableau directement.
 		Un exemple :
 loops_24			var tableau = [1,1,2,3,5,8,13,21];
-for (var valeur in tableau) {
-	debug(valeur);
-}
+					for (var valeur in tableau) {
+						debug(valeur);
+					}
 loops_25			Le code affichera successivement toutes les valeurs du tableau : 1,1,2,3,5,8,13,21.
 loops_26			Si vous souhaitez aussi récupérer la clé associée à chaque valeur du tableau, vous pouvez utiliser le <b>for</b> ...
 	<b>in</b> en ajoutant :
 loops_27			for (var cle : var valeur in tableau) {
-	debug("clé " + cle + " => " + valeur);
-}
+						debug("clé " + cle + " => " + valeur);
+					}
 loops_3			La boucle while
 loops_4			La boucle while (tant que) a une syntaxe similaire au if vu dans le chapitre précédent. Elle permet d’exécuter
 	un bloc d’instruction tant qu’une condition est remplie.
@@ -683,11 +683,11 @@ loops_5			La boucle while (tant que) a une syntaxe similaire au if vu dans le ch
 	un bloc d’instruction tant qu’une condition est remplie.
 loops_6			Voici un exemple :
 loops_7			// On déclare un compteur qu’on initialise à 0
-var compteur = 0;
-while (compteur < 5) { // Tant que le compteur est inférieur à 5
-	compteur = compteur + 1;
-	debug("Compteur vaut " + compteur);
-}
+				var compteur = 0;
+				while (compteur < 5) { // Tant que le compteur est inférieur à 5
+					compteur = compteur + 1;
+					debug("Compteur vaut " + compteur);
+				}
 loops_8			Ce code affichera dans les logs lors de son exécution : <br />
 	Compteur vaut 1<br />
 	Compteur vaut 2<br />
@@ -746,49 +746,49 @@ var_30			/ : division
 var_31			% : modulo (reste d’une division euclidienne)
 var_32			On procède ainsi :
 var_33			// Déclaration de la variable a
-var a;
-// On effectue quelques calculs
-a = 2 + 8; // a prend la valeur 10
-a = 5 - 4; // a prend la valeur 1
-a = 3 * 5; // a prend la valeur 15
-a = 6 / 2; // a prend la valeur 3
-a = 8 % 3; // a prend la valeur 2
+				var a;
+				// On effectue quelques calculs
+				a = 2 + 8; // a prend la valeur 10
+				a = 5 - 4; // a prend la valeur 1
+				a = 3 * 5; // a prend la valeur 15
+				a = 6 / 2; // a prend la valeur 3
+				a = 8 % 3; // a prend la valeur 2
 
-// Mais on peut également combiner les opérateurs
-a = 1 + 2 * 3; // a prend la valeur 7
-a = 4 / 2 + 1; // a prend la valeur 3
+				// Mais on peut également combiner les opérateurs
+				a = 1 + 2 * 3; // a prend la valeur 7
+				a = 4 / 2 + 1; // a prend la valeur 3
 
-// Et même utiliser des parenthèses
-a = (2 + 3) * 2; // a prend la valeur 10
+				// Et même utiliser des parenthèses
+				a = (2 + 3) * 2; // a prend la valeur 10
 var_34			On peut également utiliser une variable dans une expression, sa valeur sera utilisée pour
 	effectuer le calcul. Par exemple :
 var_35			// Déclaration de la variable a et b
-var a, b;
+				var a, b;
 
-// On assigne la valeur 10 à a
-a = 10; // a prend la valeur 10
+				// On assigne la valeur 10 à a
+				a = 10; // a prend la valeur 10
 
-// On assigne la valeur a + 5 à b
-b = a + 5; // b prend la valeur 15
+				// On assigne la valeur a + 5 à b
+				b = a + 5; // b prend la valeur 15
 var_36			On peut également utiliser des chaînes de caractères de la manière suivante :
 var_37			var maVariable;
-maVariable = "Je suis une chaîne de caractères";
+				maVariable = "Je suis une chaîne de caractères";
 var_38			Pour une chaîne de caractère, seul l’opérateur <b>+</b> est utilisable, il permet de concaténer des morceaux
 	de chaîne, c’est à dire de les mettre bout à bout. Ainsi le code :
 var_39			// Déclaration de chaine1 et chaine2
-var chaine1, chaine2;
+				var chaine1, chaine2;
 
-chaine1 = "Bonjour "; // chaine1 prend la valeur "Bonjour "
-chaine2 = chaine1 + " tout le monde"; // chaine2 vaut "Bonjour tout le monde"
+				chaine1 = "Bonjour "; // chaine1 prend la valeur "Bonjour "
+				chaine2 = chaine1 + " tout le monde"; // chaine2 vaut "Bonjour tout le monde"
 var_4			Chaîne de caractères
 var_40			Il est intéressant de noter qu’on peut concaténer une chaîne avec un nombre, cela peut être utile
 	pour inclure le résultat d’un calcul dans une chaîne :
 var_41			// Déclaration de a et chaine
-var a, chaine;
+				var a, chaine;
 
-a = 51 * 17; // a prend la valeur 867
-chaine = "Multiplier 51 et 17 donne la valeur : " + a;
-// chaine contient alors "Multiplier 51 et 17 donne la valeur : 867"
+				a = 51 * 17; // a prend la valeur 867
+				chaine = "Multiplier 51 et 17 donne la valeur : " + a;
+				// chaine contient alors "Multiplier 51 et 17 donne la valeur : 867"
 var_42			Un bon réflex en LeekScript
 var_43			Ce que nous allons voir maintenant est un outil qui va vous être très utile dans le développement de votre IA,
 	il s’agit d’une fonction vous permettant d’afficher la valeur de variable ou d’expressions.
@@ -810,12 +810,12 @@ var_51			A chaque fois que la fonction <i>debug</i> est appelée, la valeur four
 	chronologie du combat, vous pouvez donc voir à quel moment du combat s’execute l’instruction.
 	Vous pouvez afficher la valeur d’une variable, le résultat d’un calcul...
 var_52			// Affichage d’un texte simple
-debug("Texte simple"); // Affiche : [VotrePoireau] Texte simple
-debug(5 + 6); // Affiche : [VotrePoireau] 11
+				debug("Texte simple"); // Affiche : [VotrePoireau] Texte simple
+				debug(5 + 6); // Affiche : [VotrePoireau] 11
 
-var a = 5;
-debug(a); // Affiche : [VotrePoireau] 5
-debug("Valeur de a : " + a); // Affiche : [VotrePoireau] Valeur de a : 5
+				var a = 5;
+				debug(a); // Affiche : [VotrePoireau] 5
+				debug("Valeur de a : " + a); // Affiche : [VotrePoireau] Valeur de a : 5
 var_53			Cette fonction peut vous faire gagner un temps précieux lorsque vous avez un bug dans votre code donc
 	n’hésitez pas à l’utiliser.<br>
 A noter que vous ne pouvez voir que les messages de debug de vos poireaux (et inversement, vos adversaires ne pourront

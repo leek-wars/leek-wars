@@ -2,86 +2,86 @@ advanced			Advanced
 advanced_include			Inclusions
 advanced_include_1			The function <b> include </b> allows you to include an AI in another. Specifically, if in an AI "AI Main", you write:
 advanced_include_10			// does not work :
-var ias = ['IA_1', 'IA_2', 'IA_3'];
-for (var ia in ias) {
-include(ia);
-}
+							var ias = ['IA_1', 'IA_2', 'IA_3'];
+							for (var ia in ias) {
+							include(ia);
+							}
 advanced_include_11			Why?
 advanced_include_12			The reason is that the compiler performs LeekScript inclusions at compilation time only. The inclusion of an AI at runtime (example: if the enemy is close to me, include "IA_Escape") is not supported. The AIs included in others have to be determined at compilation time, so the only way to include an AI is:
 advanced_include_13			// DOES WORK
-include("string");
+							include("string");
 advanced_include_2			include("Fonctions");
 advanced_include_3			The contents of the AI named "Functions" is copied into the AI "AI Main", which allows you to separate different parts of your code in different AI. An example: having a main AI, called "IA Main", an AI "Moving" with multiple complex functions to move,  an AI "attack" with useful functions to attack, an AI "Words" with functions for talk etc.
 advanced_include_4			To separate different parts of your into different AIs, modules, allows you to reuse them easily afterwards. If you have two leeks, all you need to do  is two IA including the two individual modules, without having to copy the code in both AI.
 advanced_include_5			Limitations of the function include
 advanced_include_6			Using the function include is limited in LeekScript, indeed it is impossible to dynamically include another AI. The codes below are not working:
 advanced_include_7			// does not work :
-include("IA_" + 5);
+							include("IA_" + 5);
 advanced_include_8			// does not work :
-var ia = 'IA_1';
-include('IA_1');
+							var ia = 'IA_1';
+							include('IA_1');
 advanced_include_9			// does not work :
-if (foo > 12) {
-include('IA_1');
-} else {
-include('IA_2');
-}
+							if (foo > 12) {
+							include('IA_1');
+							} else {
+							include('IA_2');
+							}
 advanced_intro			In this section we will present more complex but useful features and techniques to win a fightin <b> Leek Wars </b>.
 advanced_order			Order of playing
 advanced_order_1			The functions <a href='documentation/getNextPlayer'> <b> getNextPlayer </b></a> and <a href='documentation/getPreviousPlayer'> <b> getPreviousPlayer </b> </a> can recover the ids of the leeks which will respectively play after you and played before you.One possible application: check if the player who plays after you (an enemy) is close to you.
 advanced_order_2			var next = getNextPlayer();
-if (isEnemy(next) and getLife() < 100
-and getCellDistance(getCell(), getCell(next)) < 10) {
-// We are in danger, the next player is a close enemy
-}
+							if (isEnemy(next) and getLife() < 100
+							and getCellDistance(getCell(), getCell(next)) < 10) {
+							// We are in danger, the next player is a close enemy
+							}
 advanced_order_3			Target of a weapon or a chip
 advanced_order_4			The functions <a href='documentation/getWeaponTargets'><b>getWeaponTargets</b></a> and <a href='documentation/getChipTargets'> <b> getChipTargets </b> </a> can be used to retrieve an array of ids of the affected leeks if you use a weapon or a chip on a certain cell. Particularly useful for weapons or chip area (a grenade launcher or a heal chip with area effect):
 advanced_order_5			var cell = ...; // une cellule
-var targets = getChipTargets(CHIP_ICEBERG, cell);
-if (count(targets) > 1) { // we will touch more than 1 player by launching here
-for (var target in targets) {
-if (isAlly(target)) {
-// An ally will be touched, not good :/
-}
-}
-}
+							var targets = getChipTargets(CHIP_ICEBERG, cell);
+							if (count(targets) > 1) { // we will touch more than 1 player by launching here
+								for (var target in targets) {
+									if (isAlly(target)) {
+										// An ally will be touched, not good :/
+									}
+								}
+							}
 advanced_ref			Passage by reference
 advanced_ref_1			When you write a function in LeekScript, you can specify its arguments, for example:
 advanced_ref_2			function sum(a, b, result) {
-result = a + b;
-}
+							result = a + b;
+						}
 advanced_ref_3			When you call this function, the variables you pass to it will be <b> copied </b>, ie if you do:
 advanced_ref_4			function sum(a, b, resultat) {
-result = a + b;
-}
+							result = a + b;
+						}
 
-var a = 2;
-var b = 10;
-var result = 0;
+						var a = 2;
+						var b = 10;
+						var result = 0;
 
-somme(a, b, result);
-debug(result);
+						somme(a, b, result);
+						debug(result);
 advanced_ref_5			Here, the program will display 0, because the result variable is 0. When you place these three variables (a, b and result) in the "sum" function, their values are copied to be used inside. Thus, the values 2, 10 and 0 are sent. The operation "result = a + b" is working with copies of values, and will not affect your variable "result".
 advanced_ref_6			It is possible to solve the problem by passing "result" by reference. To do this, simply add an "@" in front of its name in the list of function arguments:
 advanced_ref_7			function sum(a, b, @resultat) {
-result = a + b;
-}
+							result = a + b;
+						}
 
-var a = 2;
-var b = 10;
-var result = 0;
+						var a = 2;
+						var b = 10;
+						var result = 0;
 
-somme(a, b, result);
-debug(result); // "result" is equal to 12, as expected.
+						somme(a, b, result);
+						debug(result); // "result" is equal to 12, as expected.
 advanced_tern			Ternaries
 advanced_tern_1			The ternaries are a way to quickly write a condition. The structure of a ternary condition is :
 advanced_tern_2			condition ? value_if_true : value_if_false
 advanced_tern_3			In this way, we can replace :
 advanced_tern_4			if (getCell() == 42) {
-useWeapon(getNearestEnemy());
-} else {
-moveTowardCell(42);
-}
+							useWeapon(getNearestEnemy());
+						} else {
+							moveTowardCell(42);
+						}
 advanced_tern_5			by the following code :
 advanced_tern_6			(getCell() == 42) ? useWeapon(getNearestEnemy()) : moveTowardCell(42);
 advanced_tern_7			The two codes above are equivalent. The ternaries allow to condense the code for simple conditions but be careful however not to abuse it, this may make your code hard to read.
@@ -103,30 +103,30 @@ arr_11			<tr><th>Index</th><th>Value</th></tr>
 <tr><td>3</td><td>Artichoke</td></tr>
 arr_12			A compartment of an array can be accessed by indicating the index of the required compartment in brackets :
 arr_13			// Declaring the array
-var myArray = ["Leek", "Lama", "Ostrich", "Artichoke"];
-debug(myArray[1]); // Will display Lama
+				var myArray = ["Leek", "Lama", "Ostrich", "Artichoke"];
+				debug(myArray[1]); // Will display Lama
 arr_14			A compartment of an array can be used exactly like a standard variable :
 arr_15			var myArray = [2, 4, 6, 8];
-debug(myArray[0]); // Displays 2
-myArray[0] = myArray[1] + 5; // Allocate the value 9 to the compartment 0
-debug(myArray[0]); // Displays 9
+				debug(myArray[0]); // Displays 2
+				myArray[0] = myArray[1] + 5; // Allocate the value 9 to the compartment 0
+				debug(myArray[0]); // Displays 9
 arr_16			When concatening an array with a string, or when trying to display it with the debug function, a list of every elements of the array is displayed, which is very convenient for debugging.
 arr_2			The array proposed by the LeekScript are all arrays with numerical index (or keys), you can use them to store any kind of variables (even another array) or also store a different kind of variables from one compartment to the other.
 arr_3			The first index of an array will always be zero, and it is impossible to use negative index.
 arr_4			In order to create an array, you have to use the following syntax:
 arr_5			// Declaring an array
-var myArray = [];
+				var myArray = [];
 arr_6			Our array can be filled by two methods :<br />
 When declaring :
 arr_7			// Declaring the array
-var myArray = ["Leek", "Lama", "Ostrich", "Artichoke"];
+				var myArray = ["Leek", "Lama", "Ostrich", "Artichoke"];
 arr_8			Or after the declaration, by using allocations :
-arr_9			//Declaring the array
-var myArray = [];
-myArray[0]="Leek";
-myArray[1]="Lama";
-myArray[2]="Ostrich";
-myArray[3]="Artichoke";
+arr_9			// Declaring the array
+				var myArray = [];
+				myArray[0] = "Leek";
+				myArray[1] = "Lama";
+				myArray[2] = "Ostrich";
+				myArray[3] = "Artichoke";
 arrays			The arrays
 automatic_completion			The automatic completion
 buy_a_weapon			Before you throw your leek in the arena, it's important that you give it something to fight with. Go to the "Market" tab to buy it a weapon. The "Market" page consists in two sub-tabs : "Weapons" and "Chips". In this tutorial, we will describe the procedure to equip a weapon but the process for equipping a chip is very similar.
@@ -140,13 +140,13 @@ cond_10			It is also possible to determine several cases, let's imagine we wish 
 We can then use the structure "else if". It allows us to define a new condition and a new block of instructions.
 cond_11			Example :
 cond_12			var value = 5;
-if (value < 5) { // If value is inferior to 5 (therefore between 0 and 4)
-debug("value is between 0 and 4");
-} else if (value < 8) { // Otherwise, if value is inferior to 8 (between 5 and 7)
-debug("value is between 5 and 7");
-} else { // Otherwise (therefore between 8 and 10)
-debug("value is between 8 and 10");
-}
+				if (value < 5) { // If value is inferior to 5 (therefore between 0 and 4)
+					debug("value is between 0 and 4");
+				} else if (value < 8) { // Otherwise, if value is inferior to 8 (between 5 and 7)
+					debug("value is between 5 and 7");
+				} else { // Otherwise (therefore between 8 and 10)
+					debug("value is between 8 and 10");
+				}
 cond_13			We will now describe the different available condition operators :
 cond_14			<tr><th>Operator</th><th>Description</th></tr>
 <tr><td>==</td><td>Is equal to</td></tr>
@@ -161,13 +161,13 @@ cond_16			<tr><th>Operator</th><th>Description</th></tr>
 <tr><td>or</td><td>or</td></tr>
 cond_17			Which gives :
 cond_18			var a = 1;
-var b = 5;
-if (a < 5 and b > 6) { // If a is inferior to 5 and b is superior to 6
-// ...
-}
-if (a == 1 or a == 3) { // If a is equal to 1 or if a is equal to 3
-// ...
-}
+				var b = 5;
+				if (a < 5 and b > 6) { // If a is inferior to 5 and b is superior to 6
+					// ...
+				}
+				if (a == 1 or a == 3) { // If a is equal to 1 or if a is equal to 3
+					// ...
+				}
 cond_19			The operator <b>===</b> exists as well, it allows to compare both the value and the kind of two variables, see <a href='#triple_equals'>in the advanced section</a>.
 cond_2			Structure if… else…
 cond_20			Some useful simplifications 
@@ -175,14 +175,14 @@ cond_21			We will now describe some simplifications concerning conditions which 
 cond_22			If you wish to execute only 1 instruction in your block, you can directly write the following instruction without curly bracket :
 cond_23			In the case of a "if", for example :
 cond_24			var a = 1;
-if (a == 1) debug("A is equal to 1");
+				if (a == 1) debug("A is equal to 1");
 cond_25			Or in the case of a "if else" :
 cond_26			if (valeur > 5) debug("value superior to 5")
 else debug("value inferior or equal to 5");
 cond_27			This will allow you to gain some readability.
 cond_28			It is also possible to write :
 cond_29			var a = 1;
-if (a) debug("A is true");
+				if (a) debug("A is true");
 cond_3			In order to use a condition, it is necessary to write the keyword "if", a condition in between parenthesis, then open a curly bracket, write the instructions to be executed when the condition is satisfied, then close the curly bracket.
 cond_30			This operation will verify if the value a is true.
 cond_31			If a is not a <b>boolean</b> 
@@ -192,21 +192,21 @@ cond_34			If a is an <b>array</b>, a is true if non-empty.
 cond_35			If a is <b>null</b>, a is false.
 cond_4			Here is an example:
 cond_5			var a = 1;
-if (a < 10) { // We check if a is inferior to 10
-// If that is the case, the instructions indicated in between curly bracket will be executed.
-debug("a is inferior to 10");
-}
+				if (a < 10) { // We check if a is inferior to 10
+					// If that is the case, the instructions indicated in between curly bracket will be executed.
+					debug("a is inferior to 10");
+				}
 cond_6			In this example, a equal 1 so the condition is satisfied, therefore the debug will be executed and "a is inferior to 10" will be displayed in the fight report.
 cond_7			If we wish to execute instructions in case the condition is satisfied, and other instructions when it is not the case, it is possible to use a second keyword <b>else</b> (otherwise) in order to define a second block
 cond_8			Example :
 cond_9			var a = 1;
-if (a < 10) { // We check if a is inferior to 10
-// If that is the case, the instructions indicated in between curly bracket will be executed.
-debug("a is inferior to 10");
-} else { // Otherwise
-// Instructions to be executed if a is not inferior to 10
-debug("a is not inferior to 10");
-}
+				if (a < 10) { // We check if a is inferior to 10
+					// If that is the case, the instructions indicated in between curly bracket will be executed.
+					debug("a is inferior to 10");
+				} else { // Otherwise
+					// Instructions to be executed if a is not inferior to 10
+					debug("a is not inferior to 10");
+				}
 conditions			Conditions
 difficulty_child			Child: 30 to 40% of your attributes (strength, agility, health...) and 50% of your TP and MP
 difficulty_easy			Easy: 50 to 75% of your attributes and 80% of your TP, MP
@@ -278,24 +278,24 @@ fight			Battle
 fight_chips			The chips
 fight_chips_1			Before using a chip, make sure to equip it on your leek. To use it, simply use the function<a href='documentation/useChip'> <b> useChip </b> </a>. The first parameter is the code of the chip, for example "<b> CHIP_SHOCK </b>"for the chip "<b> Shock </b>". The second parameter is the target leek:
 fight_chips_10			var enemy = getNearestEnemy();
-while (getTP() >= 2) {
-useChip(CHIP_SHOCK, enemy);
-}
+						while (getTP() >= 2) {
+							useChip(CHIP_SHOCK, enemy);
+						}
 fight_chips_2			var enemy = getNearestEnemy();
-useChip (CHIP_SHOCK, enemy); // We launch the chip Shock on the enemy
-var ally = getNearestAlly();
-useChip (CHIP_CURE, ally); // Healing chip is launched on an ally
+						useChip (CHIP_SHOCK, enemy); // We launch the chip Shock on the enemy
+						var ally = getNearestAlly();
+						useChip (CHIP_CURE, ally); // Healing chip is launched on an ally
 fight_chips_3			The management of turn points (TP)
 fight_chips_4			Your leek has a limited number of turn points, used to perform action such as equiping a weapon, shooting, using a chip, talking...
 fight_chips_5			By default, the number of TP is set to 10. You can get more points with your capital points. The number of TP is reset at the end of your turn.
 fight_chips_6			So you need to think about what actions to perform during your turn, and organize your code accordingly. The function <b> getTP()</b> (get Turn Points) gives you the number of remaining TP.
 fight_chips_7			An example:  we wish to cast the spell "Stalactite" if we still have 6 TP or more, otherwise we launch the spell "Shock":
 fight_chips_8			var enemy = getNearestEnemy();
-if (getTP() >= 6) {
-useChip(CHIP_STALACTITE, enemy);
-} else {
-useChip(CHIP_SHOCK, enemy);
-}
+						if (getTP() >= 6) {
+							useChip(CHIP_STALACTITE, enemy);
+						} else {
+							useChip(CHIP_SHOCK, enemy);
+						}
 fight_chips_9			Another example : we wish to cast the spell "Shock" (which costs 2 TP) until exhaustion of our TP:
 fight_ground			The field
 fight_ground_1			The field on which the players move is a grid composed of <b> 613 </b> cells, numbered in the order as shown in the screenshot below:
@@ -303,8 +303,8 @@ fight_ground_10			Note: We can directly use <a href='documentation/isLeek'><b> 
 fight_ground_11			Coordinates (x, y)
 fight_ground_12			The coordinates of a cell can also be recovered<b> x </b> and <b> y </b> with the help of the function <a href='documentation/getCellX'> <b> getCellX </b> </a> and<a href='documentation/getCellY'> <b> getCellY </b> </a>:
 fight_ground_13			var cell = getCell(); // We obtain our cell
-var x = getCellX(cell); // Position in x of the cell
-var y = getCellY(cell); // Position in y of the cell
+						var x = getCellX(cell); // Position in x of the cell
+						var y = getCellY(cell); // Position in y of the cell
 fight_ground_14			The cell at the center of the field (number <b> 306 </b>) has the coordinates <b> (0, 0) </b>;
 fight_ground_15			The top left cell (number <b> 0 </b>) has the coordinates <b> (- 17, 0) </b>;
 fight_ground_16			The top right cell (number <b> 17 </b>) has the coordinates <b> (0, -17) </b>;
@@ -313,33 +313,34 @@ fight_ground_18			The bottom right cell (number <b> 612 </b>) has the coordinate
 fight_ground_19			Finally, to conclude with the management of cells, we can also calculate the distance between two cells (and therefore also between two leeks) with the help of the functions <a href='documentation/getDistance'> <b> GetDistance </b> </a> (distance as the crow flies), <a href='documentation/getCellDistance'> <b> getCellDistance </b> </a> (distance in number of cells) and <a href='documentation/getPathLength'> <b> getPathLength </b> </a> (distance avoiding obstacles).As an example, we will calculate the distance between our leek and its nearest enemy :
 fight_ground_2			The numbering of cells
 fight_ground_20			var myCell = getCell();
-var hisCell = getCell(getNearestEnemy());
-var distance = getCellDistance (myCell, hisCell);
-if (distance> 10) {
-// The nearest enemy is at a distance of more than 10 cells
-}
+						var hisCell = getCell(getNearestEnemy());
+						var distance = getCellDistance (myCell, hisCell);
+						if (distance> 10) {
+							// The nearest enemy is at a distance of more than 10 cells
+						}
 fight_ground_3			Because of this numbering, each cell can be identified by using a single number. The number of the cell on which is our leek can be recovered by using the function <a href='documentation/getCell'> <b> getCell </b> </a>:
 fight_ground_4			var myCase = getCell(); // We obtain the number of the cell on which our leek is positionned
 fight_ground_5			Content of a cell
 fight_ground_6			With the help of the function <a href='documentation/getCellContent'> <b> getCellContent </b> </a>, one can determine the contents of a cell: Is there a leek above it, an obstacle, or is it empty?
 fight_ground_7			var cell = ...; // Any cell
-var content = getCellContent(cell);
-if (content == CELL_EMPTY) {
-// The cell is empty
-} else if (content == CELL_OBSTACLE) {
-// The cell is an obstacle
-} else if (content == CELL_LEEK) {
-// The cell contains a leek
-}
+						var content = getCellContent(cell);
+						if (content == CELL_EMPTY) {
+							// The cell is empty
+						} else if (content == CELL_OBSTACLE) {
+							// The cell is an obstacle
+						} else if (content == CELL_LEEK) {
+							// The cell contains a leek
+						}
 fight_ground_8			If the cell contains a leek, one can retrieve the id of the leek through the function
 <a href='documentation/getLeekOnCell'> <b> getLeekOnCell </b> </a>:
 fight_ground_9			var cell = ...; // A cell
-if (getCellContent (cell) == CELL_LEEK) {
-var = getLeekOnCell(cell);
-// We obtain the id of the leek
-if (isEnemy (leek)) {say ("It is an enemy!");
-}
-}
+						if (getCellContent (cell) == CELL_LEEK) {
+							var = getLeekOnCell(cell);
+							// We obtain the id of the leek
+							if (isEnemy (leek)) {
+								say("It is an enemy!");
+							}
+						}
 fight_intro			We will now explain how to really fight in <b>Leek Wars</b>, the fighting system will be detailed and we will give some pieces of advice to program a good behavior.
 fight_move			Displacements and movement points (MP)
 fight_move_1			Moving can be useful in combat. Your leek has a fixed number of movement points (3 at level 1). A MP is equivalent to a cell, the more you have MPs, the more you can move away on the field.To do this, many features are available to us. They are primarily of two types: to move toward or away from various targets.
@@ -353,19 +354,19 @@ moveAwayFromLine(saCellule, maCellule);
 fight_move_2			One or several leeks (x) as target
 fight_move_3			One can approach or move away from a leek (ally or enemy) with the help of the functions <a href='documentation/moveToward'> <b> moveToward </b> <a href='documentation/moveAwayFrom'> </a> and <b> moveAwayFrom </b> </a> respectively:
 fight_move_4			var enemy = getNearestEnemy();
-if (getLife() > 100) {
-moveToward(enemy); // we move toward
-// attack...
-} else {
-moveAwayFrom(enemy); // we move away
-// heal...
-}
+						if (getLife() > 100) {
+							moveToward(enemy); // we move toward
+							// attack...
+						} else {
+							moveAwayFrom(enemy); // we move away
+							// heal...
+						}
 fight_move_5			These functions used as shown above will use a certain number of MP, so as to accomplish better their goal. So if you are at a great distance from an enemy, <b> moveToward </b> probably use all your MP whereas if you are glued to the enemy, it will use none.
 fight_move_6			To better control the number of MP that a function uses, you can specify the maximum number of PM in the second parameter:
 fight_move_7			var enemy = getNearestEnemy();
-moveToward(enemy, 3); // we move toward the enemy, of three cells maximum.
-useWeapon(enemy); // we try to shoot on him
-moveAwayFrom(enemy); // we move away from the enemy, with an undefined number of cells.
+						moveToward(enemy, 3); // we move toward the enemy, of three cells maximum.
+						useWeapon(enemy); // we try to shoot on him
+						moveAwayFrom(enemy); // we move away from the enemy, with an undefined number of cells.
 fight_move_8			These functions also exist when our target is not one but many leeks: <a functions href='documentation/moveTowardLeeks'> <b> moveTowardLeeks </b></a> and  <a href='documentation/moveAwayFromLeeks'> <b> moveAwayFromLeeks </b> </a> to move toward or move away from a group of leeks.
 fight_move_9			One or several cell(s) as a target
 fight_speak			Talk
@@ -378,24 +379,25 @@ fight_sys_11			var enemy = getNearestEnemy(); // We obtain the ID of the nearest
 useWeapon (enemy); // We shoot on him
 fight_sys_12			The function <b> <a href='documentation/getEnemies'> getEnemies() </a> </b> returns the enemies leeks (alive or dead) in the fight.
 fight_sys_13			var enemies = getEnemies(); // Get an array of the ids of the enemies
-var n = 0;
-for (var enemy in enemies) {// We look through all enemies
-if (getLife(enemy)> 1000) {// getLife(enemy) returns the life of the corresponding leek
-n ++;
-}
-}debug (n + "enemies having over 1000 PV");
+						var n = 0;
+						for (var enemy in enemies) { // We look through all enemies
+							if (getLife(enemy) > 1000) { // getLife(enemy) returns the life of the corresponding leek
+								n++;
+							}
+						}
+						debug(n + "enemies having over 1000 PV");
 fight_sys_2			A turn based game
 fight_sys_3			The leeks play at their own turn. The order is determined by the frequency of the leeks, but we always alternate between the two teams: the leek with the highest frequency has more chance to start and make his team starts, and the second leek to play is the one with the highest frequency in the other team, and so on and so forth.
 fight_sys_4			Combat is divided into turns: when the last leek played, it returns to the first and the lap counter is incremented.To avoid endless fighting, the number of rounds is limited to <b> 64 </b> (<a constant href='documentation/MAX_TURNS'> MAX_TURNS </a>).When the counter reaches this limit, the fight ended in a draw. During a long fight, it will therefore be necessary to ensure monitoring of the lap counter. The function <b> <a href='documentation/getTurn'> getTurn () </a> </b> gives the current round of combat:
 fight_sys_5			var turn = getTurn();
-if (turn> 60) {
-// The fight will end soon, you have to hurry...
-}
+					if (turn > 60) {
+						// The fight will end soon, you have to hurry...
+					}
 fight_sys_6			A numbering of the players
 fight_sys_7			Each leek has a unique code number (also called <b> id </b> for ID), which allows the appointment.
 fight_sys_8			The function <b> <a href='documentation/getLeek'> getLeek() </a> </b> returns the id of your leeks. Obtaining your id is useful, for example to use a chip to heal yourself.
 fight_sys_9			var me = getLeek(); // We obtain the id of our leek
-useChip(CHIP_CURE, me); // We launch the chip "CURE" upon us
+					useChip(CHIP_CURE, me); // We launch the chip "CURE" upon us
 fight_weapons			The weapons
 fight_weapons_1			Equip a weapon
 fight_weapons_2			To draw a weapon is usually the first thing to do in a fight. To do this, the weapon has to be already present in the equipment of your leek ("Edit" button on the page leek), then use the function<a href='documentation/setWeapon'> <b> setWeapon </b> </a>, for example:
@@ -405,24 +407,24 @@ fight_weapons_4			Beware ! The function <b>setWeapon</b> costs 1 TP.
 fight_weapons_5			Use a weapon
 fight_weapons_6			Now that your leek has a gun, he just has to attack with it. To do this, use <a function href='documentation/setWeapon'> <b> useWeapon </b> </a>:
 fight_weapons_7			var enemy = getNearestEnemy();
-useWeapon(enemy); // attack
+						useWeapon(enemy); // attack
 fun_1			The LeekScript allows the creation of user-defined functions which will allow you to organize and simplify your AI. If you have written a complex operation and wish to re-use it a certain number of times in your code, the use of a function will be the most efficient solution.
 fun_10			In the block of instructions of the function, we observe the keyword <b>return</b> followed by the formula of the hypotenuse. This keyword will return the value of the expression placed to its right, here the hypotenuse of the right-angled triangle of side length <i>x</i> and <i>y</i>.
 fun_11			The function <i>hypot</i> can be used in our code in the following way :
 fun_12			var a = 4;
-var b = 3;
-var c = hypot(a, b); // c becomes equal to sqrt(4 * 4 + 3 * 3), that is to say 5
+				var b = 3;
+				var c = hypot(a, b); // c becomes equal to sqrt(4 * 4 + 3 * 3), that is to say 5
 fun_13			We can entirely rewrite the code given in example with the use of our function:
 fun_14			// Definition of the function hypot
-function hypot(x, y) {
-return sqrt(x * x + y * y);
-}
+				function hypot(x, y) {
+				return sqrt(x * x + y * y);
+				}
 
-var a = 3;
-var b = 4;
-var c = hypot(a, b);
-a = hypot(b, c) + hypot(c, 4);
-b = hypot(a, c);
+				var a = 3;
+				var b = 4;
+				var c = hypot(a, b);
+				a = hypot(b, c) + hypot(c, 4);
+				b = hypot(a, c);
 fun_15			The readability of the code has been improved, and the size of the code has been reduced.
 fun_16			It should be noted that the function <i>hypot</i> already exists in the predefined functions of the LeekScript. (see the function <a href='documentation/hypot'>hypot</a> in the documentation).
 fun_17			Return without value
@@ -430,27 +432,27 @@ fun_18			The keyword <b>return</b> can be used without any expression to its ri
 fun_19			Example of <b>return</b> without value :
 fun_2			A basic function
 fun_20			function logarithm(n) {
-if (n <= 0) {
-return;
-}
-// rest of the calculation...
-}
+					if (n <= 0) {
+						return;
+					}
+					// rest of the calculation...
+				}
 fun_21			The execution of the function being stopped at the first return, if n is inferior or equal to 0, this function will return <b>null</b>, and will not execute the remaining instructions :
 fun_22			var a = logarithm(-5); // a will be equal to null
 fun_23			Recursivity
 fun_24			A function can call another function, for instance:
 fun_25			function square(x) {
-return x * x;
-}
-function hypot(x, y) {
-return sqrt(square(x) + square(y));
-}
-var a = hypot(3, 4); // a is equal to sqrt(3 * 3 + 4 * 4)
+					return x * x;
+				}
+				function hypot(x, y) {
+					return sqrt(square(x) + square(y));
+				}
+				var a = hypot(3, 4); // a is equal to sqrt(3 * 3 + 4 * 4)
 fun_26			In this way, a function can call itself :
 fun_27			function factorial(n) {
-if (n <= 1) return 1;
-return n * factorial(n - 1);
-}
+					if (n <= 1) return 1;
+					return n * factorial(n - 1);
+				}
 fun_28			This function returns the factorial of the number n (n!) given as a parameter (n! = n × (n - 1) × ... × 3 × 2 × 1).
 We notice the function only returns n × (n - 1)!, which is equal to n!
 fun_29			<b>Beware !</b> If a function calls itself without any ending condition, or that two or several functions call themselves in a cyclic way, your code will loop infinitely, and in the case of the LeekScript, will reach the limit of the stack, which is fixed to <b>200</b>. In this way, with such a limit, your code will only be able to calculate the factorial of <i>200</i>.
@@ -458,17 +460,17 @@ fun_3			We will look at the example of a code calculating the hypotenuse of a ri
 <i>c</i> can be obtained with the following code :
 fun_30			Examples of codes leading to a stack overflow :
 fun_31			function badFactorial(n) {
-return n * badFactorial(n);
-}
-var a = badFactorial(5); 
-// the code loops endlessly and stops at 200 calls
+					return n * badFactorial(n);
+				}
+				var a = badFactorial(5); 
+				// the code loops endlessly and stops at 200 calls
 fun_32			function a() {
-b();
-}
-function b() {
-a();
-}
-a(); // a and b call eachother endlessly
+					b();
+				}
+				function b() {
+					a();
+				}
+				a(); // a and b call eachother endlessly
 fun_33			Level of the functions
 fun_34			In the LeekScript, some functions have a required level. The Leek on which the AI will be equiped will have to fullfill the required conditions. Example: the function <b><a href='documentation/getPathLength'>getPathLength</a></b> 
 requires the level <b>37</b> :
@@ -480,42 +482,42 @@ fun_39			This is the case for the basic functions of the LeekScript as well as f
 fun_4			var c = sqrt(a * a + b * b);
 fun_40			var variable = getLeek;
 
-variable(); // Gives identical results than getLeek
+				variable(); // Gives identical results than getLeek
 fun_41			We can for example give a function as a parameter :
 fun_42			function my_function(parameter) {
-debug(parameter());
-}
+					debug(parameter());
+				}
 
-my_function(getLeek);
+				my_function(getLeek);
 fun_43			The LeekScript also proposes a particular kind of function called "anonymous function", these are unnamed functions, declared directly inside an expression.
 fun_44			They allow a simpler writing, and avoid the declaration of a function when it is not useful. In order to declare an anonymous function, use the keyword function and open directly the parenthesis to define the parameters, without precising a name.
 fun_45			var my_function = function() { return "Test"; };
 fun_46			The use of an anonymous function is exactly the same as the use of a function placed in a variable :
 fun_47			var my_function = function() { return "Test"; };
 
-my_function();
+				my_function();
 fun_48			If, for example, we have a function which requires another function as a parameter, we can directly use an anonymous function as a parameter, as shown in the following example:
 fun_49			function arrayMap(array, function) {
-var r = [];
-for (var v in array) push(r, function(v));
-return r;
-}
+					var r = [];
+					for (var v in array) push(r, function(v));
+					return r;
+				}
 
-var t = arrayMap([1, 2, 3, 4, 5], function(x) { return x ** 2; });
+				var t = arrayMap([1, 2, 3, 4, 5], function(x) { return x ** 2; });
 
-debug(t); // [1, 4, 9, 16, 25]
+				debug(t); // [1, 4, 9, 16, 25]
 fun_5			Now let's imagine that this formula is used many times in your code :
 fun_50			The function arrayMap requires an array and a function in parameters. it returns a new array constituted by the results of the treatment of each element of the input array by the input function.
 fun_6			var a = 3;
-var b = 4;
-var c = sqrt(a * a + b * b);
-a = sqrt(b * b + c * c) + sqrt(c * c + 4 * 4);
-b = sqrt(a * a + c * c);
+				var b = 4;
+				var c = sqrt(a * a + b * b);
+				a = sqrt(b * b + c * c) + sqrt(c * c + 4 * 4);
+				b = sqrt(a * a + c * c);
 fun_7			We can notice that it is tiresome to copy incessantly the formula, and it makes your code much more complicated.<br />
 We will then create a function <i>hypot</i> which will calculate directly the hypotenuse. This function is defined by the following code:
 fun_8			function hypot(x, y) {
-return sqrt(x * x + y * y);
-}
+					return sqrt(x * x + y * y);
+				}
 fun_9			Let's analyse this code. In order to declare a function, we use the key-word <b>function</b>, we then note the function name, here <i>hypot</i>. We then write between parenthesis the list of the required parameters, split by comas, here "x" and "y".
 The block of instructions is then between curly brackets.
 functions			Functions
@@ -526,11 +528,11 @@ loops_1			We will now describe another kind of structures as important as condit
 Loops!
 loops_10			The loop <b>do while</b> is similar to the loop <b>while</b>, except that the condition is at the end, the block of instructions of the loop is therefore executed at least once :
 loops_11			var x;
-do {
-x = rand(); // x is a random number between 0 and 1
-} while (x < 0.8); // we repeat as long as x is not superior to 0.8
+					do {
+						x = rand(); // x is a random number between 0 and 1
+					} while (x < 0.8); // we repeat as long as x is not superior to 0.8
 
-debug("x : " + x); // displays a number between 0.8 and 1
+					debug("x : " + x); // displays a number between 0.8 and 1
 loops_12			The for loop
 loops_13			A little bit more complex kind of loop exists, it looks like a while loop but in a more condensed version.
 With experience, you will learn which loop, the while or the for, is more adapted to which case. 
@@ -540,46 +542,45 @@ loops_16			The condition : as long as it is valid, the loop continues its execut
 loops_17			The incrementation : to increase (or decrease) the value of the "counter" variable
 loops_18			Example of <b>for</b> loop :
 loops_19			var i;
-// We make a loop from i = 1 and as long as i is inferior or equal to 5 
-// and we increment i at each cycle of the loop
-for (i = 1; i <= 5; i++) { 
-debug("Counter i is equal to : " + i);
-}
+					// We make a loop from i = 1 and as long as i is inferior or equal to 5 
+					// and we increment i at each cycle of the loop
+					for (i = 1; i <= 5; i++) { 
+					debug("Counter i is equal to : " + i);
+					}
 loops_2			A loop allows the repetition of instructions a certain number of times. There are several kind of loops that will be broached in this section. 
-loops_20			This code will display in the fight report:
-: <br />
-Counter i is equal to 1<br />
-Counter i is equal to 2<br />
-Counter i is equal to 3<br />
-Counter i is equal to 4<br />
-Counter i is equal to 5
+loops_20			This code will display in the fight report: <br>
+					Counter i is equal to 1<br />
+					Counter i is equal to 2<br />
+					Counter i is equal to 3<br />
+					Counter i is equal to 4<br />
+					Counter i is equal to 5
 loops_21			It is possible to declare the counter in the initialisation of the for loop by placing the keyword var in front of the name of the variable:
 loops_22			for (var i = 1; i <= 5; i++) {
-// Block of instructions...
-}
+						// Block of instructions...
+					}
 loops_23			A variation of the for loop exists, the structure : <b>for</b> ... <b>in</b>, which allows the iteration on the values of an array directly.
-An example:
+					An example:
 loops_24			var array = [1,1,2,3,5,8,13,21];
-for (var value in array) {
-debug(value);
-}
+					for (var value in array) {
+						debug(value);
+					}
 loops_25			The code will successively display all the values of the array : 1,1,2,3,5,8,13,21.
 loops_26			If you wish to obtain the key associated to each value, you can use the
-<b>for</b> ...
-<b>in</b> by adding : 
+					<b>for</b> ...
+					<b>in</b> by adding : 
 loops_27			for (var key : var value in array) {
-debug("key " + key + " => " + value);
-}
+						debug("key " + key + " => " + value);
+					}
 loops_3			The while loop
 loops_4			The syntax of the while loop is similar to the syntax of the condition "if" of the preceding chapter. It allows the execution of a block of instruction as long as a condition is satisfied.
 loops_5			The syntax of the while loop is similar to the syntax of the condition "if" of the preceding chapter. It allows the execution of a block of instruction as long as a condition is filled.
 loops_6			Here is an example:
 loops_7			// We declare a counter of initial value 0
-var counter = 0;
-while (counter < 5) { // As long as counter is inferior to 5
-counter = counter + 1;
-debug("Counter is equal to " + counter);
-}
+				var counter = 0;
+				while (counter < 5) { // As long as counter is inferior to 5
+					counter = counter + 1;
+					debug("Counter is equal to " + counter);
+				}
 loops_8			This code will display in the fight report:
 : <br />
 Counter is equal to 1<br />
@@ -597,32 +598,32 @@ the_documentation			The documentation
 title			Tutorial
 var_1			What's a variable
 var_10			To use a variable, it's necessary to declare it beforehand.
-This declaration is done by using the keyword "var" in the following way:
+				This declaration is done by using the keyword "var" in the following way:
 var_11			// We declare a variable 'nameOfVariable'
 var nameOfVariable;
 var_12			You can also assign a value to your variable in the following way:
 var_13			// We declare a variable 'nameOfVariable' and give it the value 12
-var nameOfVariable = 12;
+				var nameOfVariable = 12;
 var_14			Note that you can also declare multiple variables by separating them by a comma:
 var_15			// Declare a firstVariable and a secondVariable variable
-var firstVariable, secondVariable;
+				var firstVariable, secondVariable;
 var_16			Be careful not to forget the semi-colon <b>;</b> at the end of the instruction.
 var_17			Declared variables with the keyword var have a lifetime of your leek's turn, there is a second type of variable which keep their value for the whole fight: the global variables.
-To declare a global variable, you just need to add the keyword "global" instead of "var":
+				To declare a global variable, you just need to add the keyword "global" instead of "var":
 var_18			// Declaring a global variable nameOfGlobal
-global nameOfGlobal;
+				global nameOfGlobal;
 var_19			You can also assign a value to your global variable in the following way:
 var_2			The variables are a fundamental point in all programming languages. They allow to keep in memory values you're going to use in calculations.
 var_20			// Declaring a global variable nameOfGlobal with value 42
-global nameOfGlobal = 42;
+				global nameOfGlobal = 42;
 var_21			The common variables and global variables are used the same way in the code, as this tutorial goes we will mostly use common variables.
 var_22			Uses of the variables
 var_23			It is possible to use the variables in your code in many different ways.
 var_24			You can assign them a value (which means make them "remember" this value in memory) by using the assignement operator <b>=</b>
 var_25			// We declare myVariable
-var myVariable;
-// We assign 1 to myVariable
-myVariable = 1;
+				var myVariable;
+				// We assign 1 to myVariable
+				myVariable = 1;
 var_26			It's possible to perform operations by writing expressions, you can use the followings operator:
 var_27			+ : addition
 var_28			- : substraction
@@ -632,46 +633,46 @@ var_30			/ : division
 var_31			% : modulo (reminder of an euclidian division)
 var_32			We proceed like this:
 var_33			// Declaring the 'a' variable
-var a;
-// We make some operations 
-a = 2 + 8; // a takes the value 10
-a = 5 - 4; // a takes the value 1
-a = 3 * 5; // a takes the value 15
-a = 6 / 2; // a takes the value 3
-a = 8 % 3; // a takes the value 2
+				var a;
+				// We make some operations 
+				a = 2 + 8; // a takes the value 10
+				a = 5 - 4; // a takes the value 1
+				a = 3 * 5; // a takes the value 15
+				a = 6 / 2; // a takes the value 3
+				a = 8 % 3; // a takes the value 2
 
-// But you can also combine operators
-a = 1 + 2 * 3; // a takes the value  7
-a = 4 / 2 + 1; // a takes the value  3
+				// But you can also combine operators
+				a = 1 + 2 * 3; // a takes the value  7
+				a = 4 / 2 + 1; // a takes the value  3
 
-// And even use parenthesis
-a = (2 + 3) * 2; // a takes the value 10
+				// And even use parenthesis
+				a = (2 + 3) * 2; // a takes the value 10
 var_34			We can also use a variable in an expression, its value will then be used to make the calculation. For example:
 var_35			// Declaring variable a and b
-var a, b;
+				var a, b;
 
-// We give a the value 10
-a = 10; // a is set to 10
+				// We give a the value 10
+				a = 10; // a is set to 10
 
-// We give the value a + 5 to b
-b = a + 5; // b is set to 15
+				// We give the value a + 5 to b
+				b = a + 5; // b is set to 15
 var_36			We can also use string in the following way:
 var_37			var myVariable;
-myVariable = "I'am a string";
+				myVariable = "I'am a string";
 var_38			For a string, only the <b>+</b> operator is usable, it allows to concatenate pieces of string, which will laid them end to end. Thus, the code:
 var_39			// Declaring string1 and string2
-var string1, string2;
+				var string1, string2;
 
-string1 = "Hello"; // string1 is set to "Hello"
-string2 = chaine1 + " world"; // string2 is set to "Hello world"
+				string1 = "Hello"; // string1 is set to "Hello"
+				string2 = chaine1 + " world"; // string2 is set to "Hello world"
 var_4			String
 var_40			It should be noted that a string can be concatenated with a number, which can be useful to include the result of a calculation in a string:
 var_41			// Declaring a and string
-var a, string;
+				var a, string;
 
-a = 51 * 17; // a is set to 867
-string = "Multiply 51 by 17 is equal to : " +a;
-// string contains " "Multiply 51 by 17 is equal to : 867"
+				a = 51 * 17; // a is set to 867
+				string = "Multiply 51 by 17 is equal to : " +a;
+				// string contains " "Multiply 51 by 17 is equal to : 867"
 var_42			A good habit in Leekscript
 var_43			What will be described herebelow is a very useful tool for the development of an efficient AI, it is a function which allows you to display the value of variables or expressions.
 var_44			We have not yet described how functions can be used, their mechanism will be explained in details further in this tutorial. For the moment, we will only explain how to use the function "debug".
@@ -687,12 +688,12 @@ var_50			This page summarizes all the actions of the fight, you can notice that 
 var_51			Each time the function <i>debug</i> is called, the value indicated in parameter is added in the chronology of the fight, you can then be informed of which instructions is executed at which moment of the fight.
 You can display the value of a variable, the result of a calculation...
 var_52			// Display of a simple text
-debug("Simple text"); // Displays : [YourLeek] Simple text
-debug(5+6); // Displays :[YourLeek] 11
+				debug("Simple text"); // Displays : [YourLeek] Simple text
+				debug(5+6); // Displays :[YourLeek] 11
 
-var a=5;
-debug(a); // Displays : [YourLeek] 5
-debug("Value of a : " + a); // Displays : [YourLeek] Value of a : 5
+				var a=5;
+				debug(a); // Displays : [YourLeek] 5
+				debug("Value of a : " + a); // Displays : [YourLeek] Value of a : 5
 var_53			This function allows you to efficiently find bugs in your code, so do not hesitate to use it.<br>
 It should be noted that you can only see the debug message of your leeks (and inversely, your opponents will not have access to your debug messages)
 var_6			Boolean (true or false)
