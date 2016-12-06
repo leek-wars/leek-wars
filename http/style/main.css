@@ -2083,8 +2083,8 @@ input:active, input:focus {
 	color: #DF1500;
 	font-weight: bold;
 }
-.vip, a.vip {
-	color: #008FD3;
+.contributor, a.contributor {
+	color: #009c1d;
 	font-weight: bold;
 }
 
