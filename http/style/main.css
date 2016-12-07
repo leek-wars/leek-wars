@@ -1295,6 +1295,7 @@ body.connected #header-signin {
 }
 #footer h4 {
 	margin-bottom: 6px;
+	display: inline-block;
 }
 #footer .copy {
 	font-size: 12px;
