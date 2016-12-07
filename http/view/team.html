@@ -30,7 +30,7 @@
 
 					<div id='emblem-input'>
 						@if (team.emblem_changed > 0)
-							<img id='emblem' src='{{avatar}}/emblem/{team.id}.png'></img>
+							<img id='emblem' src='{{avatar}}/emblem/{team.id}.png?{team.emblem_changed}'></img>
 						@else
 							<img id='emblem' src='{{static}}/image/no_emblem.png'></img>
 						@end
@@ -39,7 +39,7 @@
 					<div id='tt_emblem-input' class='tooltip'>{#change_emblem}</div>
 				@else
 					@if (team.emblem_changed > 0)
-						<img id='emblem' src='{{avatar}}/emblem/{team.id}.png'></img>
+						<img id='emblem' src='{{avatar}}/emblem/{team.id}.png?{team.emblem_changed}'></img>
 					@else
 						<img id='emblem' src='{{static}}/image/no_emblem.png'></img>
 					@end
