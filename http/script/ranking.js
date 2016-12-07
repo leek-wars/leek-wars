@@ -6,7 +6,7 @@ var _query;
 LW.pages.ranking.init = function(params, $scope, $page) {
 
 	var fun = 'fun' in params ? params.fun : false
-	
+
 	if (fun) {
 
 		_.get('ranking/fun/' + LW.token(), function(data) {
@@ -90,6 +90,7 @@ LW.pages.ranking.init = function(params, $scope, $page) {
 LW.pages.ranking.search = function() {
 
 	var searchPopup = new _.popup.new('ranking.search_popup')
+	searchPopup.setDismissable(true)
 
 	var getDescription = function(type, level) {
 		if (type == 'leek') {
