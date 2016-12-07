@@ -3371,7 +3371,8 @@ LW.addItemToInventory = function(type, item_id, item_template) {
 		} else {
 			LW.farmer.potions.push({
 				id: item_id,
-				template: item_template
+				template: item_template,
+				quantity: 1
 			})
 		}
 	}
