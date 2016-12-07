@@ -181,31 +181,47 @@
 </div>
 
 <div id='fight-info'>
-	<table><tr>
-		<td>
-			@foreach (farmer in fight.farmers1)
-				<a href='/farmer/{farmer.id}'>
-					<div class='farmer'>
-						<img src='@include('main.avatar', farmer)'></img>
-						<br>
-						<span class='name'>{farmer.name}</span>
-					</div>
-				</a>
+
+	@if (fight.type == LW.FIGHT_TYPE.BATTLE_ROYALE)
+		@foreach (farmer in fight.farmers1)
+			<a href='/farmer/{farmer.id}'>
+				<div class='farmer'>
+					<img src='@include('main.avatar', farmer)'></img>
+					<br>
+					<span class='name'>{farmer.name}</span>
+				</div>
+			</a>
+			@if (farmer != fight.farmers1[fight.farmers1].length)
+				<span>VS</span>
 			@end
-		</td>
-		<td id='versus'>VS</td>
-		<td>
-			@foreach (farmer in fight.farmers2)
-				<a href='/farmer/{farmer.id}'>
-					<div class='farmer'>
-						<img src='@include('main.avatar', farmer)'></img>
-						<br>
-						<span class='name'>{farmer.name}</span>
-					</div>
-				</a>
-			@end
-		</td>
-	</tr></table>
+		@end
+	@else
+		<table><tr>
+			<td>
+				@foreach (farmer in fight.farmers1)
+					<a href='/farmer/{farmer.id}'>
+						<div class='farmer'>
+							<img src='@include('main.avatar', farmer)'></img>
+							<br>
+							<span class='name'>{farmer.name}</span>
+						</div>
+					</a>
+				@end
+			</td>
+			<td id='versus'>VS</td>
+			<td>
+				@foreach (farmer in fight.farmers2)
+					<a href='/farmer/{farmer.id}'>
+						<div class='farmer'>
+							<img src='@include('main.avatar', farmer)'></img>
+							<br>
+							<span class='name'>{farmer.name}</span>
+						</div>
+					</a>
+				@end
+			</td>
+		</tr></table>
+	@end
 </div>
 
 <div class='panel'>
