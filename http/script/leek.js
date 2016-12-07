@@ -31,6 +31,8 @@ LW.pages.leek.init = function(params, $scope, $page) {
 
 		var leek = data.leek
 
+		leek.baseLife = 100 + (leek.level - 1) * 3
+
 		var xpBarWidth = leek.level == 301 ? 100 :
 			Math.floor(100 * (leek.xp - leek.down_xp) / (leek.up_xp - leek.down_xp))
 

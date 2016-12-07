@@ -55,6 +55,8 @@ life_cost						1 capital ⇔ 3 life points
 life_cost_10					10 capital ⇔ 30 life points
 life_cost_100					100 capital ⇔ 300 life points
 life_description				How many damage your leek can take before it dies
+base_life						Base life
+added_life						Added life
 magic							Magic
 magic_description				Magic increase shackles and poison damages
 max_level						Maximum level
