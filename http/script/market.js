@@ -328,7 +328,7 @@ LW.pages.market.chips = function(sort_method) {
 	// Distributed chips according to their type
 	for (var i in LW.EFFECT_TYPES) {
 		var type = LW.EFFECT_TYPES[i]
-		$('#chips').append('<h3 type="' + type + '">' + typeLang[type] /*_.lang.get('effect', 'effect_type_' + type)*/ + '</h3>')
+		$('#chips').append('<h3 type="' + type + '">' + _.lang.get('effect', 'effect_type_' + type) + '</h3>')
 	}
 
 	var update = function(sort_mode) {
