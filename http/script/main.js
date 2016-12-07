@@ -2799,7 +2799,7 @@ LW.didactitiel = function(event) {
 
 		didactitiel.find('.content .page').hide()
 		didactitiel.find('.content .page').first().show()
-		didactitiel.find('.content').height(didactitiel.find('.content .page').first().height() + 30)
+		didactitiel.find('.content').height(280)
 
 		didactitiel.find('.skip-previous').click(function() {
 
