@@ -129,7 +129,7 @@ LW.pages.leek.chart = function() {
 
 LW.pages.leek.updateImage = function() {
 
-	LW.createLeekImage(1, this.scope.leek.level, this.scope.leek.skin, this.scope.leek.hat, function(data) {
+	LW.createLeekImage(leek.id, 1, this.scope.leek.level, this.scope.leek.skin, this.scope.leek.hat, function(id, data) {
 		$('#page #leek-image').html(data)
 	})
 }
@@ -1028,7 +1028,7 @@ LW.pages.leek.levelPopup = function() {
 			})
 			popup.show()
 
-			LW.createLeekImage(0.6, leek.level, leek.skin, leek.hat, function(data) {
+			LW.createLeekImage(leek.id, 0.6, leek.level, leek.skin, leek.hat, function(id, data) {
 				$('.popup.level_popup .leek-image').html(data)
 			})
 		})

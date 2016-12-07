@@ -349,15 +349,15 @@ LW.pages.garden.images = function(leeks) {
 		var id = $(this).attr('leek')
 		var leek = leeks[id]
 		var elem = this
-		LW.createLeekImage(0.6, leek.level, leek.skin, leek.hat, function(data) {
+		LW.createLeekImage(id, 0.6, leek.level, leek.skin, leek.hat, function(id, data) {
 			$(elem).find('.image').html(data)
 		})
 	})
 }
 
 LW.pages.garden.leek_image = function(leek) {
-	LW.createLeekImage(0.6, leek.level, leek.skin, leek.hat, function(data) {
-		$('#garden-page .leek[leek=' + leek.id + '] .image').html(data)
+	LW.createLeekImage(leek.id, 0.6, leek.level, leek.skin, leek.hat, function(id, data) {
+		$('#garden-page .leek[leek=' + id + '] .image').html(data)
 	})
 }
 

@@ -314,7 +314,7 @@ LW.pages.editor.init = function(params, $scope, $page) {
 			var id = $(this).attr('leek')
 			var leek = LW.farmer.leeks[id]
 			var elem = this
-			LW.createLeekImage(0.7, leek.level, leek.skin, leek.hat, function(data) {
+			LW.createLeekImage(leek.id, 0.7, leek.level, leek.skin, leek.hat, function(id, data) {
 				$(elem).find('.image').html(data)
 			})
 		})

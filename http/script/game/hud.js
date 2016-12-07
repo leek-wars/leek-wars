@@ -183,8 +183,8 @@ var Hud = function() {
 			var url = LW.staticURL + 'image/bulb/' + entity.bulbName + '_front.png'
 			$('.entity[entity=' + entity.id + '] .image').append("<img src='" + url + "' />")
 		} else {
-			LW.createLeekImage(1, entity.level, entity.skin, entity.hat, function(data) {
-				$('.entity[entity=' + entity.id + '] .image').html(data)
+			LW.createLeekImage(entity.id, 1, entity.level, entity.skin, entity.hat, function(id, data) {
+				$('.entity[entity=' + id + '] .image').html(data)
 			})
 		}
 

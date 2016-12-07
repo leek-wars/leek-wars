@@ -205,7 +205,7 @@ LW.pages.fight.leekImages = function(leeks) {
 		var id = parseInt($(this).attr('leek'))
 		var image = $(this).find('.image')
 		var leek = leeks[id]
-		LW.createLeekImage(0.6, leek.level, leek.skin, leek.hat, function(data) {
+		LW.createLeekImage(id, 0.6, leek.level, leek.skin, leek.hat, function(id, data) {
 			image.html(data)
 		})
 	})

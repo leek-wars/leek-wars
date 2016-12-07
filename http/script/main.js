@@ -1815,6 +1815,10 @@ LW.initWebSocket = function() {
 				LW.battle_royale.update({type: id, data: data})
 				break
 			}
+			case BATTLE_ROYALE_START: {
+				LW.battle_royale.start(data)
+				break
+			}
 		}
 	}
 }
@@ -2708,7 +2712,7 @@ LW.getLeekSkinName = function(skin) {
 	return LW.skins[skin]
 }
 
-LW.createLeekImage = function(scale, level, skin, hat, callback) {
+LW.createLeekImage = function(id, scale, level, skin, hat, callback) {
 
 	var hatTemplate = hat ? LW.hats[LW.hatTemplates[hat].item] : null
 
@@ -2734,7 +2738,7 @@ LW.createLeekImage = function(scale, level, skin, hat, callback) {
 		}
 		data += "</svg>"
 
-		callback(data)
+		callback(id, data)
 	}
 
 	leekImage = 'leek/leek' + LW.getLeekAppearence(level) + '_front_' + LW.getLeekSkinName(skin) + '.png'
@@ -3792,34 +3796,35 @@ LW.battle_royale.show = function(e) {
 }
 
 LW.battle_royale.update = function(data) {
-	if (data.type == BATTLE_ROYALE_UPDATE) {
-		if (LW.battle_royale.popup) {
 
-			var count = data.data[0]
-			var leeks = data.data[1]
+	if (LW.battle_royale.popup) {
 
-			LW.battle_royale.popup.find('.progress').html(count + ' / 10')
+		var count = data.data[0]
+		var leeks = data.data[1]
 
-			for (var l in leeks) {
-				if (l in LW.battle_royale.last_leeks) continue
+		LW.battle_royale.popup.find('.progress').html(count + ' / 10')
 
-				var html_popup = _.view.render('garden.leek_popup', {leek: leeks[l]})
-				LW.battle_royale.popup.find('.leeks').html(LW.battle_royale.popup.find('.leeks').html() + html_popup)
+		for (var l in leeks) {
+			if (l in LW.battle_royale.last_leeks) continue
 
-				LW.createLeekImage(0.3, leeks[l].level, leeks[l].skin, leeks[l].hat, function(data) {
-					LW.battle_royale.popup.find('.leek[leek=' + leeks[l].id + '] .image').html(data)
-				})
-			}
-			for (var l in LW.battle_royale.last_leeks) {
-				if (l in leeks) continue
-				LW.battle_royale.popup.find('.leek[leek=' + LW.battle_royale.last_leeks[l].id + ']').remove()
-			}
-			LW.battle_royale.last_leeks = leeks
+			var html_popup = _.view.render('garden.leek_popup', {leek: leeks[l]})
+			LW.battle_royale.popup.find('.leeks').html(LW.battle_royale.popup.find('.leeks').html() + html_popup)
+
+			LW.createLeekImage(leeks[l].id, 0.3, leeks[l].level, leeks[l].skin, leeks[l].hat, function(id, data) {
+				LW.battle_royale.popup.find('.leek[leek=' + id + '] .image').html(data)
+			})
 		}
+		for (var l in LW.battle_royale.last_leeks) {
+			if (l in leeks) continue
+			LW.battle_royale.popup.find('.leek[leek=' + LW.battle_royale.last_leeks[l].id + ']').remove()
+		}
+		LW.battle_royale.last_leeks = leeks
 	}
-	if (data.type == BATTLE_ROYALE_START) {
-		LW.page('/fight/' + data.data[0])
-	}
+}
+
+LW.battle_royale.start = function(data) {
+	_.toast(_.lang.get('main', 'starting_battle_royale'))
+	LW.page('/fight/' + data[0])
 }
 
 LW.test_notif = function() {
