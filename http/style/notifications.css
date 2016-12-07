@@ -1,8 +1,8 @@
-#notifications {
+#notifications-page #notifications {
 	width: 800px;
 	margin: 0 auto;
 }
 
-#notifications .notif .title {
+#notifications-page #notifications .notif .title {
 	width: 700px;
 }
