@@ -2789,7 +2789,7 @@ LW.didactitiel = function(event) {
 		var currentPage = 0
 		var count = didactitiel.find('.content .page').length
 
-		didactitiel.setDismissable(false)
+		didactitiel.setDismissable(true)
 		didactitiel.show(event)
 
 		didactitiel.find('#dida-previous').hide()
