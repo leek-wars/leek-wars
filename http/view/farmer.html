@@ -74,7 +74,7 @@
 
 				@else
 					@if (farmer.avatar_changed > 0)
-						<img id='avatar' src='{{avatar}}/avatar/{farmer.id}.png'></img>
+						<img id='avatar' src='{{avatar}}/avatar/{farmer.id}.png?{farmer.avatar_changed}'></img>
 					@else
 						<img id='avatar' src='{{static}}/image/no_avatar.png'></img>
 					@end
