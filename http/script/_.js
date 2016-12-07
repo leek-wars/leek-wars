@@ -360,7 +360,7 @@ _.linkify = function(html) {
 	}
 
 	var email_pattern = /\w+@[a-zA-Z_]+?(?:\.[a-zA-Z]{2,6})+/gim
-	var match, url_regex = /((?:https?):\/\/\w+\.\w+(?:\.\w+)*)|((?:www\.)?leekwars\.com)/gim
+	var match, url_regex = /((?:https?):\/\/[\w-]+\.[\w-]+(?:\.\w+)*)|((?:www\.)?leekwars\.com)/gim
 
 	while (match = url_regex.exec(html)) {
 		var i = match.index + match[0].length
