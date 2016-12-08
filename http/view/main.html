@@ -494,49 +494,65 @@
 @view (fight)
 	<div class='fight @if (status == 0) generating @else {result} @end'>
 
-		<div class='fighters'>
-
-			@if (type == LW.FIGHT_TYPE.SOLO)
-				<a href='/leek/{leeks1[0].id}'>
-					<div class='fighter'>{leeks1[0].name}</div>
-				</a>
-			@elseif (type == LW.FIGHT_TYPE.FARMER)
-				<a href='/farmer/{farmer1}'>
-					<div class='fighter'>({farmer1_name})</div>
-				</a>
-			@elseif (type == LW.FIGHT_TYPE.TEAM)
-				<a href='/team/{team1}'>
-					<div class='fighter'>[{team1_name}]</div>
-				</a>
-			@end
-			<div class='center'>
-				<a href='/fight/{id}'>
-					@if (status == 0)
-						<img src='{{static}}image/icon/gearing.png'></img>
-					@else
-						@if (context == LW.FIGHT_CONTEXT.CHALLENGE)
-							<img src='{{static}}image/icon/flag.png'></img>
+		@if (type == LW.FIGHT_TYPE.BATTLE_ROYALE)
+			<div class='fighters'>
+				<div class='center'>
+					<a href='/fight/{id}'>
+						@if (status == 0)
+							<img src='{{static}}image/icon/gearing.png'></img>
 						@else
 							<img src='{{static}}image/icon/garden.png'></img>
 						@end
-					@end
-				</a>
-			</div>
+					</a>
+				</div>
+				<div class='fighter'>Battle royale</div>
 
-			@if (type == LW.FIGHT_TYPE.SOLO)
-				<a href='/leek/{leeks2[0].id}'>
-					<div class='fighter'>{leeks2[0].name}</div>
-				</a>
-			@elseif (type == LW.FIGHT_TYPE.FARMER)
-				<a href='/farmer/{farmer2}'>
-					<div class='fighter'>({farmer2_name})</div>
-				</a>
-			@elseif (type == LW.FIGHT_TYPE.TEAM)
-				<a href='/team/{team2}'>
-					<div class='fighter'>[{team2_name}]</div>
-				</a>
-			@end
-		</div>
+			</div>
+		@else
+			<div class='fighters'>
+
+				@if (type == LW.FIGHT_TYPE.SOLO)
+					<a href='/leek/{leeks1[0].id}'>
+						<div class='fighter'>{leeks1[0].name}</div>
+					</a>
+				@elseif (type == LW.FIGHT_TYPE.FARMER)
+					<a href='/farmer/{farmer1}'>
+						<div class='fighter'>({farmer1_name})</div>
+					</a>
+				@elseif (type == LW.FIGHT_TYPE.TEAM)
+					<a href='/team/{team1}'>
+						<div class='fighter'>[{team1_name}]</div>
+					</a>
+				@end
+				<div class='center'>
+					<a href='/fight/{id}'>
+						@if (status == 0)
+							<img src='{{static}}image/icon/gearing.png'></img>
+						@else
+							@if (context == LW.FIGHT_CONTEXT.CHALLENGE)
+								<img src='{{static}}image/icon/flag.png'></img>
+							@else
+								<img src='{{static}}image/icon/garden.png'></img>
+							@end
+						@end
+					</a>
+				</div>
+
+				@if (type == LW.FIGHT_TYPE.SOLO)
+					<a href='/leek/{leeks2[0].id}'>
+						<div class='fighter'>{leeks2[0].name}</div>
+					</a>
+				@elseif (type == LW.FIGHT_TYPE.FARMER)
+					<a href='/farmer/{farmer2}'>
+						<div class='fighter'>({farmer2_name})</div>
+					</a>
+				@elseif (type == LW.FIGHT_TYPE.TEAM)
+					<a href='/team/{team2}'>
+						<div class='fighter'>[{team2_name}]</div>
+					</a>
+				@end
+			</div>
+		@end
 
 		<div class='fight-time'>{LW.util.formatDuration(date)}</div>
 	</div>
