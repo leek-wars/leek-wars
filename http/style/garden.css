@@ -140,6 +140,14 @@
 	cursor: auto;
 }
 
+.popup.battle_royale_popup {
+	border-radius: 3px;
+}
+
+.popup.battle_royale_popup .title .options .option.dismiss {
+    border-top-right-radius: 3px;
+}
+
 .popup.battle_royale_popup .leeks {
 	white-space: nowrap;
 }
