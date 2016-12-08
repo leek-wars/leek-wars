@@ -499,6 +499,7 @@ LW.pages = {
 	notifications: {},
 	legal: {},
 	conditions: {},
+	roadmap: {},
 	search: {},
 	line_of_sight: {},
 	api: {},
@@ -1194,6 +1195,10 @@ page('/ranking/:category/:order', function(ctx) {
 
 page('/ranking/:category/:order/page-:page', function(ctx) {
 	LW.loadPage('ranking', ctx.params)
+})
+
+page('/roadmap', function() {
+	LW.loadPage('roadmap')
 })
 
 page('/help', function() {
@@ -1958,14 +1963,14 @@ function commands(text, authorName) {
 		else {
 			urlWiki += URL_WIKI_PAGE + matches[3]
 			textWiki = matches[3]
-			if(matches[4]) { 
+			if(matches[4]) {
 				urlWiki += '#' + matches[4]
 			}
 		}
 
 		text = text.replace(matches[0], ' ' + _.toChatLink(urlWiki, textWiki, "target='_blank' rel='nofollow'") + ' ')
 	}
-	
+
 	// Documentation commands
 	while(matches = /(?:^|(\s))\/doc([!]?)(?::([^\s#]+))?(?=\s|$)/g.exec(text)) {
 		// /doc
