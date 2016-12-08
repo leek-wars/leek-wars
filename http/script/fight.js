@@ -26,6 +26,7 @@ LW.pages.fight.init = function(params, $scope, $page) {
 		var fight = data.fight
 
 		$scope.fight = fight
+		$scope.first_farmer = _.first(fight.farmers1).id
 		$page.render()
 
 		LW.setTitle(fight.team1_name + ' vs ' + fight.team2_name)

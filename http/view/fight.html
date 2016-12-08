@@ -183,18 +183,20 @@
 <div id='fight-info'>
 
 	@if (fight.type == LW.FIGHT_TYPE.BATTLE_ROYALE)
-		@foreach (farmer in fight.farmers1)
-			<a href='/farmer/{farmer.id}'>
-				<div class='farmer'>
-					<img src='@include('main.avatar', farmer)'></img>
-					<br>
-					<span class='name'>{farmer.name}</span>
-				</div>
-			</a>
-			@if (farmer != fight.farmers1[fight.farmers1].length)
-				<span>VS</span>
+		<center>
+			@foreach (farmer in fight.farmers1)
+				@if (farmer.id != first_farmer)
+					<span class='br-versus'>VS</span>
+				@end
+				<a href='/farmer/{farmer.id}'>
+					<div class='farmer'>
+						<img src='@include('main.avatar', farmer)'></img>
+						<br>
+						<span class='name'>{farmer.name}</span>
+					</div>
+				</a>
 			@end
-		@end
+		</center>
 	@else
 		<table><tr>
 			<td>

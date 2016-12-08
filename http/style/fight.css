@@ -99,7 +99,7 @@
 /*
  * Game
  */
-#fight-page #game { 
+#fight-page #game {
 	display: none;
 }
 
@@ -129,7 +129,7 @@
 
 
 #fight-page #actions {
-	text-align: left; 
+	text-align: left;
 	padding: 6px;
 	width: 190px;
 	overflow: hidden;
@@ -147,7 +147,7 @@
 	font-size: 14px;
 	width: 500px;
 }
- 
+
 #fight-page #actions .action.log {
 	padding: 2px 0;
 	font-size: 11px;
@@ -301,16 +301,16 @@
 
 /*
  * Life bar
- */  
+ */
 #life-bar {
 	position: absolute;
 	top: 0; left: 0; right: 0;
 	text-align: center;
 }
- 
+
 #life-bar .wrapper {
 	display: inline-block;
-	background: rgba(255,255,255,0.2); 
+	background: rgba(255,255,255,0.2);
 	border-bottom-left-radius: 15px;
 	border-bottom-right-radius: 15px;
 	padding-top: 3px;
@@ -347,7 +347,7 @@
 	text-align: left;
 	overflow: hidden;
 }
- 
+
 #timeline {
 	position: absolute;
 	bottom: 5px;
@@ -357,7 +357,7 @@
 
 #timeline .entity {
 	display: inline-block;
-	width: 50px; 
+	width: 50px;
 	height: 70px;
 	margin: 0 5px;
 	padding: 3px;
@@ -422,7 +422,7 @@
 	font-size: 17px;
 	margin-bottom: 2px;
 }
-	
+
 #right-part {
 	position: absolute;
 	top: 20px; right: 0;
@@ -439,7 +439,7 @@
 #team1-leeks, #team2-leeks {
 	padding-top: 10px;
 	width: 135px;
-} 
+}
 #team2-leeks {
 	text-align: right;
 }
@@ -605,11 +605,11 @@
 	position: absolute;
 	content: " ";
 	bottom: -10px;
-	border-bottom: none; 
+	border-bottom: none;
 	left: 50%;
 	margin-left: -20px;
-	width: 0; 
-	height: 0; 
+	width: 0;
+	height: 0;
 	border-left: 10px solid transparent;
 	border-right: 10px solid transparent;
 	border-top: 10px solid rgba(242,242,242, 0.8);
@@ -705,6 +705,13 @@
 	width: 75px;
 	height: 75px;
 	border-radius: 2px;
+}
+
+#fight-info .br-versus {
+	line-height: 75px;
+	display: inline-block;
+	padding-top: 10px;
+    vertical-align: top;
 }
 
 #fight-settings {
