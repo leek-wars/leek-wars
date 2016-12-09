@@ -1896,7 +1896,7 @@ LW.smiley = function(data) {
 	// Emoji
 	var emoji_cache = {}
 
-	var emojis = data.match(/:([\w]+):/gi)
+	var emojis = data.match(/:(\w+):/gi)
 	for (var i in emojis) {
 		var emoji = emojis[i]
 		emoji = emoji.substr(1, emoji.length - 2)
@@ -1910,7 +1910,7 @@ LW.smiley = function(data) {
 	// Custom smileys
 	for (var i in smileys.custom) {
 		var smiley = smileys.custom[i];
-		data = data.replace(new RegExp("(^|\\s|\>)" + escapeRegExp(i) + "(?![^\\s<>])", "g"), '$1<img class="smiley" alt="' + smiley.name + '" title="' + smiley.name + '" src="' + LW.staticURL + smiley.image+'">')
+		data = data.replace(new RegExp("(^|\\s|\>)" + escapeRegExp(i) + "(?![^\\s<>])", "g"), '$1<img class="smiley" alt="' + smiley.name + '" title="' + smiley.name + '" src="' + LW.staticURL + smiley.image + '">')
 	}
 
 	// Emoji to image
@@ -3723,6 +3723,11 @@ var ChatController = function(chat_element, private_chat, team_chat) {
 			// On ajoute direct dans le message précédent
 			last.find('.chat-message-messages').append("<div>" + message + "</div>");
 
+			var last_message = last.find('.chat-message-messages div').last()
+			if (last_message.text() == '' && last_message.find('.smiley').length == 1) {
+				last_message.find('.smiley').addClass('large')
+			}
+
 		} else {
 
 			var avatar = avatarChanged > 0 ? LW.avatarURL + '/avatar/' + author + ".png" : LW.staticURL + "/image/no_avatar.png";
@@ -3783,6 +3788,11 @@ var ChatController = function(chat_element, private_chat, team_chat) {
 					parameter: msg
 				}).show(e)
 			})
+
+			var last_message = elem.find('.chat-message-messages div').last()
+			if (last_message.text() == '' && last_message.find('.smiley').length == 1) {
+				last_message.find('.smiley').addClass('large')
+			}
 		}
 
 		if (scrollAction) {
