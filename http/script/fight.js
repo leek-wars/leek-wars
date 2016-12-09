@@ -82,17 +82,17 @@ LW.pages.fight.init = function(params, $scope, $page) {
 				if (data.success) {
 					$('#comment-input').val("")
 
-					$('#comments').append(_.view.render('fight.comment', {
+					$('#comments').append(_.view.render('main.comment', {
 						comment: comment,
 						farmer: LW.farmer,
 						date: LW.time.get()
 					}))
+					LW.smileyElem($('#comments .comment').last().find('.text'))
 				}
 			})
 		})
 
 		$('#comments .comment .text').each(function() {
-
 			$(this).html(LW.smiley($(this).text()))
 		})
 
