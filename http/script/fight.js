@@ -142,6 +142,9 @@ LW.pages.fight.keydown = function(event) {
 	if ($("#comment-input").is(":focus")) return null
 
 	if (event.keyCode == 81) { // Q
+		if (_fullscreen) {
+			LW.pages.fight.fullscreen();
+		}
 		game.showReport()
 		event.preventDefault()
 	}
