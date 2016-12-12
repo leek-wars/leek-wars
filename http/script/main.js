@@ -2561,19 +2561,29 @@ LW.messages.receive = function(message) {
 		})
 	}
 
-	var element = $('#messages .list .message[conversation=' + message.conversation + ']')
+	LW.messages.updateConversationSidebar({
+		id: message.conversation,
+		last_date: message.date,
+		last_message: message.message,
+		last_farmer_id: message.farmer.id,
+		isNew: !exists
+	})
+
+}
+
+LW.messages.updateConversationSidebar = function(conversation) {
+	var element = $('#messages .list .message[conversation=' + conversation.id + ']')
 	var position = element.parent().index()
 
-	var messageHTML = LW.smiley(_.protect(message.message))
-
+	var messageHTML = LW.messages.getConversationLastMessage(conversation)
 	element.find('.message').html(messageHTML)
-	element.find('.date').text(LW.util.formatDuration(message.date))
+	element.find('.date').text(LW.util.formatDuration(conversation.last_date))
 
 	if (position > 0) {
 		$('#messages .list').prepend(element.parent().remove())
 	}
 
-	if (!exists || position != 0) {
+	if (conversation.isNew || position != 0) {
 		$('#messages .list').scrollTop(0)
 		element.css('margin-left', '100%').css('margin-right', '-100%')
 		.animate({
