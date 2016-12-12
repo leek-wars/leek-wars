@@ -136,6 +136,10 @@ LW.pages.messages.wsreceive = function(data) {
 			farmer_color: data[5],
 			avatar_changed: data[6]
 		}
+
+		if (typeof(_chat_controllers[conversationID]) === 'undefined') {
+			LW.pages.messages.loadConversation(conversationID);
+		}
 		_chat_controllers[conversationID].receive_message(message)
 
 		if (conversationID == _conversation) {
@@ -212,21 +216,37 @@ function sendMessage() {
 
 	} else {
 
-		var m = {
-			farmer_id: LW.farmer.id,
-			farmer_name: LW.farmer.name,
-			content: message,
-			date: LW.time.get(),
-			farmer_color: LW.farmer.color,
-			avatar_changed: LW.farmer.avatar_changed,
-			lang: '_'
-		}
-		_chat_controllers[_conversation].receive_message(m)
+		_.post('message/send-message', {conversation_id: _conversation, message: message}, function (data) {
 
-		updateScroll(_conversation)
+			if(data.success) {
 
-		_.post('message/send-message', {conversation_id: _conversation, message: message})
+				var m = {
+					farmer_id: LW.farmer.id,
+					farmer_name: LW.farmer.name,
+					content: message,
+					date: LW.time.get(),
+					farmer_color: LW.farmer.color,
+					avatar_changed: LW.farmer.avatar_changed,
+					lang: '_'
+				}
+				_chat_controllers[_conversation].receive_message(m)
+
+				updateScroll(_conversation)
+
+				LW.messages.updateConversationSidebar({
+					id: _conversation,
+					last_date: LW.time.get(),
+					last_message: message,
+					last_farmer_id: LW.farmer.id,
+					isNew: false
+				})
+
+			}
+
+		})
+
 	}
+
 	$('#messages-page .chat-input').val("").height(0)
 }
 
