@@ -277,15 +277,38 @@ var buildTextureShadow = function(texture, quality) {
 }
 
 var Sounds = function() {
-
-	this.machine_gun = new Sound(LW.staticURL + "sound/machine_gun.wav");
-	this.laser = new Sound(LW.staticURL + "sound/laser.wav");
-	this.m_laser = new Sound(LW.staticURL + "sound/m_laser.wav");
-	this.electrisor = new Sound(LW.staticURL + "sound/m_laser.wav");
-	this.double_gun = new Sound(LW.staticURL + "sound/double_gun.wav");
-	this.shotgun = new Sound(LW.staticURL + "sound/shotgun.wav");
-	this.grenade_launcher = new Sound(LW.staticURL + "sound/grenade_launcher.wav");
-	this.sword = new Sound(LW.staticURL + "sound/sword.wav");
+	//weapons
+	this.machine_gun = new Sound(LW.staticURL + "sound/weapons/machine_gun.wav");
+	this.laser = new Sound(LW.staticURL + "sound/weapons/laser.mp3");
+	this.electrisor = new Sound(LW.staticURL + "sound/weapons/electrisor.mp3");
+	this.double_gun = new Sound(LW.staticURL + "sound/weapons/double_gun.wav");
+	this.shotgun = new Sound(LW.staticURL + "sound/weapons/shotgun.wav");
+	this.grenade_shoot = new Sound(LW.staticURL + "sound/weapons/grenade_shoot.mp3");
+	this.grenade_rebound = new Sound(LW.staticURL + "sound/weapons/grenade_rebound.mp3");
+	this.explosion = new Sound(LW.staticURL + "sound/weapons/explosion.mp3");
+	this.sword = new Sound(LW.staticURL + "sound/weapons/sword.wav");
+	this.flame_thrower = new Sound(LW.staticURL + "sound/weapons/flame_thrower.mp3");
+	this.gazor = new Sound(LW.staticURL + "sound/weapons/gazor.mp3");
+	//chips
+	this.heal = new Sound(LW.staticURL + "sound/chips/heal.mp3");
+	this.buff = new Sound(LW.staticURL + "sound/chips/buff.mp3");
+	this.shield = new Sound(LW.staticURL + "sound/chips/shield.mp3");
+	this.poison = new Sound(LW.staticURL + "sound/chips/poison.mp3");
+	this.lightning = new Sound(LW.staticURL + "sound/chips/lightning.mp3");
+	this.fire = new Sound(LW.staticURL + "sound/chips/fire.mp3");	
+	this.rock = new Sound(LW.staticURL + "sound/chips/rock.mp3");
+	this.rockfall = new Sound(LW.staticURL + "sound/chips/rockfall.mp3");
+	this.ice = new Sound(LW.staticURL + "sound/chips/ice.mp3");
+	this.meteorite = new Sound(LW.staticURL + "sound/chips/meteorite.mp3");
+	this.liberation = new Sound(LW.staticURL + "sound/chips/liberation.mp3");
+	//-----------------------provioire----------------------------
+	this.teleportation = new Sound(LW.staticURL + "sound/chips/teleportation.mp3");
+	this.debuff = new Sound(LW.staticURL + "sound/chips/debuff.mp3");
+	
+	//other
+	this.set_weapon = new Sound(LW.staticURL + "sound/others/set_weapon.mp3");
+	this.move = new Sound(LW.staticURL + "sound/others/move.mp3");
+	this.bulb = new Sound(LW.staticURL + "sound/others/bulb.mp3");
 }
 
 function Sound(src) {

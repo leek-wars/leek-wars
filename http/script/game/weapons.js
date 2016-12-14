@@ -102,7 +102,7 @@ function BLaser() {
     this.bulletTexture = T.b_laser_bullet;
     
     // Son de l'arme
-    this.sound = S.m_laser;
+    this.sound = S.laser;
 	
 	// Position de l'arme par rapport au poireau (centre de rotation)
 	this.cx = 15;
@@ -482,6 +482,7 @@ function Electrisor() {
 		this.shoots = 40;
 		
 		game.setEffectArea(cell.x, cell.y, AREA_CIRCLE1, 'red');
+		this.sound.play();
 	}
 	
 	Electrisor.prototype.update = function(dt) {
@@ -495,7 +496,7 @@ function Electrisor() {
 				
 				game.particles.addLightning(this.lightningX, this.lightningY, this.lightningZ, this.lightningAngle, this.lightningCell, this.lightningTargets, T.lightning);
 				
-				//~ this.sound.play();
+				
 				
 				this.shoots--;
 				if (this.shoots == 0) {
@@ -512,7 +513,7 @@ function FlameThrower() {
 	this.texture = T.flame_thrower;
     
     // Son de l'arme
-    this.sound = null;
+    this.sound = S.flame_thrower;
     
 	// Position de l'arme par rapport au poireau (centre de rotation)
 	this.cx = 25;
@@ -572,6 +573,8 @@ function FlameThrower() {
 		// Send a first fire that will have a target
 		game.particles.addFire(this.bulletX, this.bulletY, this.bulletZ, this.bulletAngle, this.bulletTargets, true);
 		
+		this.sound.play();
+		
 	}
 	
 	FlameThrower.prototype.update = function(dt) {
@@ -608,7 +611,7 @@ function Gazor() {
 	this.texture = T.gazor;
     
     // Son de l'arme
-    this.sound = null;
+    this.sound = S.gazor;
     
 	// Position de l'arme par rapport au poireau (centre de rotation)
 	this.cx = 15;
@@ -668,6 +671,8 @@ function Gazor() {
 		game.particles.addGaz(this.bulletX, this.bulletY, this.bulletZ, this.bulletAngle, this.bulletTargets, true);
 		
 		game.setEffectArea(cell.x, cell.y, AREA_CIRCLE3, 'red');
+		
+		this.sound.play();
 	}
 	
 	Gazor.prototype.update = function(dt) {
@@ -704,7 +709,7 @@ function GrenadeLauncher() {
 	this.cartTexture= T.cart_grenade_launcher;
     
     // Son de l'arme
-    this.sound = S.grenade_launcher;
+    this.sound = S.grenade_shoot;
     
 	// Position de l'arme par rapport au poireau (centre de rotation)
 	this.cx = 0;
@@ -935,7 +940,7 @@ function MLaser() {
     this.bulletTexture = T.m_laser_bullet;
     
     // Son de l'arme
-    this.sound = S.m_laser;
+    this.sound = S.laser;
 	
 	// Position de l'arme par rapport au poireau (centre de rotation)
 	this.cx = 15;

@@ -959,7 +959,6 @@ var Game = function() {
 				break
 
 			case ACTION_SUMMON:
-
 				var caster = action[1];
 				var summonID = action[2];
 				var cell = action[3];
@@ -980,7 +979,7 @@ var Game = function() {
 						this.colorText(summon.name, this.getLeekColor(summon.id))
 					))
 				}
-
+				S.bulb.play()
 				this.actionDone()
 				break
 

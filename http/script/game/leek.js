@@ -74,6 +74,10 @@ Leek = Entity.extend(Leek, function() {
 
 	this.setWeapon = function(weapon) {
 		this.weapon = weapon;
+		//play sound
+		if(this.weapon != null){
+			S.set_weapon.play();
+		}
 	}
 
 	this.update = function(dt) {

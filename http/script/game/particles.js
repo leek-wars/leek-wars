@@ -227,6 +227,8 @@ var Particles = function() {
 		explosion.rotation = 0;
 		explosion.life = EXPLOSION_LIFE;
 		
+		S.explosion.play();
+		
 		this.add(explosion);
 	}
 	
