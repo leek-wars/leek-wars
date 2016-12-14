@@ -10,6 +10,9 @@ os.chdir('http')
 
 class LWHandler(SimpleHTTPRequestHandler):
 	def do_GET(self):
+		print(self.path)
+		if self.path.endswith('?local'):
+			self.path = self.path.replace('?local', '')
 		if self.path != '/' and os.access('.' + os.sep + self.path, os.R_OK):
 			super().do_GET();
 		else:
@@ -19,10 +22,10 @@ class LWHandler(SimpleHTTPRequestHandler):
 				'api': 'https://leekwars.com/api/',
 				'local': 'false',
 				'version': '1212',
-				'sub_version': '100'
+				'sub_version': 'local'
 			}
 			body = open("view" + os.sep + "head.html").read()
-			body = re.sub(r"\{\{(.*)\}\}", lambda m: bindings[m.group(1)], body)
+			body = re.sub(r"\{\{(.*?)\}\}", lambda m: bindings[m.group(1)], body)
 
 			self.send_response(200)
 			self.send_header('Content-Type', "text/html; charset=utf-8")
