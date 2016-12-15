@@ -201,6 +201,8 @@
 								<div class='opponents'></div>
 								<div class='no-opponents'>@include('no_opponents')</div>
 								<div class='no-more-fights'>@include('no_more_fights')</div>
+								<div class='no-ai-equipped'>@include('no_ai_equipped')</div>
+								<div class='ai-invalid'>@include('ai_invalid')</div>
 							</div>
 						@end
 					</div>
@@ -356,6 +358,16 @@
 @view(no_more_fights)
 	<img src='{{static}}image/notgood.png'><br>
 	<h4>{#no_more_fights}</h4>
+@endview
+
+@view(no_ai_equipped)
+	<img src='{{static}}image/notgood.png'><br>
+	<h4>{#leek_have_no_ai}</h4>
+@endview
+
+@view(ai_invalid)
+	<img src='{{static}}image/notgood.png'><br>
+	<h4>{#leek_ai_invalid}</h4>
 @endview
 
 @view (battle_royale_popup)

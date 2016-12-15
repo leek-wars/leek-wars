@@ -109,7 +109,7 @@
 	opacity: 0.4;
 }
 
-#garden-page .no-opponents, #garden-page .no-more-fights {
+#garden-page .no-opponents, #garden-page .no-more-fights, #garden-page .no-ai-equipped, #garden-page .ai-invalid {
 	display: none;
 }
 
