@@ -238,6 +238,18 @@ LW.pages.garden.load_leek = function(leek_id) {
 				LW.pages.garden.leek_image(data.opponents[o])
 			}
 		} else {
+			$('#garden-solo .enemies[of=' + leek_id + '] .ai-invalid').hide()
+			if(data.error == 'invalid_ai') {
+				$('#garden-solo .enemies[of=' + leek_id + '] .ai-invalid').show()
+				return null
+			}
+			
+			$('#garden-solo .enemies[of=' + leek_id + '] .no_ai_equipped').hide()
+			if(data.error == 'no_ai_equipped') {
+				$('#garden-solo .enemies[of=' + leek_id + '] .no_ai_equipped').show()
+				return null
+			}
+			
 			_.toast(data.error)
 		}
 	})
