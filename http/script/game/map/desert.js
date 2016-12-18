@@ -1,5 +1,8 @@
 var Desert = function() {
 	
+	// Atmosphere sound
+	this.sound = S.map_desert;
+	
 	this.groundColor = "#ffc000";
 	this.groundTexture = T.desert;
 	this.obstaclesSmall = [T.desert_rock2_small, T.desert_grass, T.cactus];

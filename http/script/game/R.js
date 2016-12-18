@@ -2,6 +2,7 @@ var R = {loadedData: 0, numData: 0};
 var _skinsLoadStarted = false;
 var shadowQuality = 0.3;
 
+
 var _iOS = navigator.userAgent.match(/(iPad|iPhone|iPod)/g) ? true : false;
 
 var Textures = function() {
@@ -276,42 +277,54 @@ var buildTextureShadow = function(texture, quality) {
 	}
 }
 
+//sound volume constant
+const VOL_MAP_SOUND = 0.02;//atmosphere sound
+const VOL_DEFFENSIVE_SOUND = 0.45;//heal, buff, shield, ...
+const VOL_OFFENSIVE_SOUND = 0.6;//weapons and offensive chips
+const VOL_SPECIAL_SOUND = 0.6;//liberation, teleportation, summon, resurection, ...
+const VOL_OTHER_SOUND = 0.1;//setWeapon, move
+
 var Sounds = function() {
 	//weapons
-	this.machine_gun = new Sound(LW.staticURL + "sound/weapons/machine_gun.wav");
-	this.laser = new Sound(LW.staticURL + "sound/weapons/laser.mp3");
-	this.electrisor = new Sound(LW.staticURL + "sound/weapons/electrisor.mp3");
-	this.double_gun = new Sound(LW.staticURL + "sound/weapons/double_gun.wav");
-	this.shotgun = new Sound(LW.staticURL + "sound/weapons/shotgun.wav");
-	this.grenade_shoot = new Sound(LW.staticURL + "sound/weapons/grenade_shoot.mp3");
-	this.grenade_rebound = new Sound(LW.staticURL + "sound/weapons/grenade_rebound.mp3");
-	this.explosion = new Sound(LW.staticURL + "sound/weapons/explosion.mp3");
-	this.sword = new Sound(LW.staticURL + "sound/weapons/sword.wav");
-	this.flame_thrower = new Sound(LW.staticURL + "sound/weapons/flame_thrower.mp3");
-	this.gazor = new Sound(LW.staticURL + "sound/weapons/gazor.mp3");
+	this.machine_gun = new Sound(LW.staticURL + "sound/weapons/machine_gun.mp3", VOL_OFFENSIVE_SOUND);
+	this.laser = new Sound(LW.staticURL + "sound/weapons/laser.mp3", VOL_OFFENSIVE_SOUND);
+	this.electrisor = new Sound(LW.staticURL + "sound/weapons/electrisor.mp3", VOL_OFFENSIVE_SOUND);
+	this.double_gun = new Sound(LW.staticURL + "sound/weapons/double_gun.mp3", VOL_OFFENSIVE_SOUND);
+	this.shotgun = new Sound(LW.staticURL + "sound/weapons/shotgun.mp3", VOL_OFFENSIVE_SOUND);
+	this.grenade_shoot = new Sound(LW.staticURL + "sound/weapons/grenade_shoot.mp3", VOL_OFFENSIVE_SOUND);
+	this.grenade_rebound = new Sound(LW.staticURL + "sound/weapons/grenade_rebound.mp3", VOL_OFFENSIVE_SOUND);
+	this.explosion = new Sound(LW.staticURL + "sound/weapons/explosion.mp3", VOL_OFFENSIVE_SOUND);
+	this.sword = new Sound(LW.staticURL + "sound/weapons/sword.mp3", VOL_OFFENSIVE_SOUND);
+	this.flame_thrower = new Sound(LW.staticURL + "sound/weapons/flame_thrower.mp3", VOL_OFFENSIVE_SOUND);
+	this.gazor = new Sound(LW.staticURL + "sound/weapons/gazor.mp3", VOL_OFFENSIVE_SOUND);
 	//chips
-	this.heal = new Sound(LW.staticURL + "sound/chips/heal.mp3");
-	this.buff = new Sound(LW.staticURL + "sound/chips/buff.mp3");
-	this.shield = new Sound(LW.staticURL + "sound/chips/shield.mp3");
-	this.poison = new Sound(LW.staticURL + "sound/chips/poison.mp3");
-	this.lightning = new Sound(LW.staticURL + "sound/chips/lightning.mp3");
-	this.fire = new Sound(LW.staticURL + "sound/chips/fire.mp3");	
-	this.rock = new Sound(LW.staticURL + "sound/chips/rock.mp3");
-	this.rockfall = new Sound(LW.staticURL + "sound/chips/rockfall.mp3");
-	this.ice = new Sound(LW.staticURL + "sound/chips/ice.mp3");
-	this.meteorite = new Sound(LW.staticURL + "sound/chips/meteorite.mp3");
-	this.liberation = new Sound(LW.staticURL + "sound/chips/liberation.mp3");
-	//-----------------------provioire----------------------------
-	this.teleportation = new Sound(LW.staticURL + "sound/chips/teleportation.mp3");
-	this.debuff = new Sound(LW.staticURL + "sound/chips/debuff.mp3");
+	this.heal = new Sound(LW.staticURL + "sound/chips/heal.mp3", VOL_DEFFENSIVE_SOUND);
+	this.buff = new Sound(LW.staticURL + "sound/chips/buff.mp3", VOL_DEFFENSIVE_SOUND);
+	this.shield = new Sound(LW.staticURL + "sound/chips/shield.mp3", VOL_DEFFENSIVE_SOUND);
+	this.poison = new Sound(LW.staticURL + "sound/chips/poison.mp3", VOL_OFFENSIVE_SOUND);
+	this.lightning = new Sound(LW.staticURL + "sound/chips/lightning.mp3", VOL_OFFENSIVE_SOUND);
+	this.fire = new Sound(LW.staticURL + "sound/chips/fire.mp3", VOL_OFFENSIVE_SOUND);	
+	this.rock = new Sound(LW.staticURL + "sound/chips/rock.mp3", VOL_OFFENSIVE_SOUND);
+	this.rockfall = new Sound(LW.staticURL + "sound/chips/rockfall.mp3", VOL_OFFENSIVE_SOUND);
+	this.ice = new Sound(LW.staticURL + "sound/chips/ice.mp3", VOL_OFFENSIVE_SOUND);
+	this.meteorite = new Sound(LW.staticURL + "sound/chips/meteorite.mp3", VOL_OFFENSIVE_SOUND);
+	this.liberation = new Sound(LW.staticURL + "sound/chips/liberation.mp3", VOL_SPECIAL_SOUND);
+	this.teleportation = new Sound(LW.staticURL + "sound/chips/teleportation.mp3", VOL_SPECIAL_SOUND);
+	this.debuff = new Sound(LW.staticURL + "sound/chips/debuff.mp3", VOL_OFFENSIVE_SOUND);
 	
 	//other
-	this.set_weapon = new Sound(LW.staticURL + "sound/others/set_weapon.mp3");
-	this.move = new Sound(LW.staticURL + "sound/others/move.mp3");
-	this.bulb = new Sound(LW.staticURL + "sound/others/bulb.mp3");
+	this.set_weapon = new Sound(LW.staticURL + "sound/others/set_weapon.mp3", VOL_OTHER_SOUND);
+	this.move = new Sound(LW.staticURL + "sound/others/move.mp3", VOL_OTHER_SOUND);
+	this.bulb = new Sound(LW.staticURL + "sound/others/bulb.mp3", VOL_SPECIAL_SOUND);
+	this.map_forest = new Sound(LW.staticURL + "sound/others/map_forest.mp3", VOL_MAP_SOUND);
+	this.map_beach = new Sound(LW.staticURL + "sound/others/map_beach.mp3", VOL_MAP_SOUND);
+	this.map_desert = new Sound(LW.staticURL + "sound/others/map_desert.mp3", VOL_MAP_SOUND);
+	this.map_factory = new Sound(LW.staticURL + "sound/others/map_factory.mp3", VOL_MAP_SOUND);
+	this.map_glacier = new Sound(LW.staticURL + "sound/others/map_glacier.mp3", VOL_MAP_SOUND);
+	this.lama = new Sound(LW.staticURL + "sound/others/lama.mp3", VOL_MAP_SOUND);
 }
 
-function Sound(src) {
+function Sound(src, volume) {
 
 	if (_iOS) return;
 
@@ -342,12 +355,43 @@ function Sound(src) {
 	}, true);
 
 	this.play = function() {
-		if (game.sound) {
+		if (game.sound && this.sound != null) {
 			this.sound.currentTime = 0;
 			this.sound.play();
 		}
 	}
 
+	this.loop = function() {
+		
+		if (game.sound && this.sound != null) {
+			if (typeof this.sound.loop == 'boolean')
+			{
+				this.sound.loop = true;
+				//cut the silence
+				//this.sound.duration = this.sound.duration -1;
+			}
+			else
+			{
+				this.sound.addEventListener('timeupdate', function() {
+					//cut the silence
+					//if(this.sound.currentTime > this.sound.duration - 1){
+						this.sound.currentTime = 0;
+						this.sound.play();
+					//}				
+				}, false);
+			}
+			this.sound.play();		
+		}
+	}
+	
+	this.stop = function() {
+		if (game.sound && this.sound != null) {
+			this.sound.pause();
+			this.sound.currentTime = 0;
+		}
+	}
+
+	this.sound.volume = volume;
 	this.sound.src = src;
 	this.sound.load();
 }

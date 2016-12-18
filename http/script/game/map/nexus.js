@@ -1,5 +1,8 @@
 var Nexus = function() {
 	
+	// Atmosphere sound
+	this.sound = null;
+	
 	this.groundColor = "#fff";
 	this.groundTexture = T.nexus_bg;
 	this.obstaclesSmall = [T.nexus_block_small, T.nexus_block_small, T.nexus_block_small];

@@ -1,5 +1,8 @@
 var Factory = function() {
 	
+	// Atmosphere sound
+	this.sound = S.map_factory;
+	
 	this.groundColor = "#8C8C8C";
 	this.groundTexture = T.factory;
 	this.obstaclesSmall = [T.box, T.barrel, T.cone];

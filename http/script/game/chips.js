@@ -593,7 +593,7 @@ var Iceberg = function() {
 var Inversion = function() {
 	
 	this.done = false;
-	//NEED SOUND
+	this.sound = S.teleportation;
 	this.inverted = false;
 	
 	this.cell;
@@ -1993,13 +1993,15 @@ var Plague = function() {
 var Thorn = function() {
 	
 	this.done = false
-	//NEED SOUND
+	this.sound = S.buff;
 	this.duration = 60
 	
 	this.launch = function(launchCell, targetCell, targets) {
 		
 		createChipImage(targets, T.chip_thorn)
 		createChipAureol(targets, T.damage_return_aureol)
+		
+		this.sound.play();
 	}
 	
 	this.update = function(dt) {
@@ -2014,13 +2016,15 @@ var Thorn = function() {
 var Mirror = function() {
 	
 	this.done = false
-	//NEED SOUND
+	this.sound = S.buff;
 	this.duration = 60
 	
 	this.launch = function(launchCell, targetCell, targets) {
 		
 		createChipImage(targets, T.chip_mirror)
 		createChipAureol(targets, T.damage_return_aureol)
+		
+		this.sound.play();
 	}
 	
 	this.update = function(dt) {

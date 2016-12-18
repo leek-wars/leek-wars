@@ -186,7 +186,7 @@ function BLaser() {
 }
 
 function Broadsword() {
-
+	
 	this.white = true
 	
 	// Textures de l'arme
@@ -219,6 +219,9 @@ function Broadsword() {
 		this.leekY = leekY
 		this.direction = (orientation == Entity.SOUTH || orientation == Entity.EAST) ? 1 : -1;
 		this.angle = angle
+		
+		// Play sound
+		this.sound.play();
 	}
 	
 	Broadsword.prototype.update = function(dt) {
