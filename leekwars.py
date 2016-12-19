@@ -10,17 +10,7 @@ PORT = 8012
 os.chdir('http')
 
 class LWHandler(SimpleHTTPRequestHandler):
-	def do_POST(self):
-		print("post !");
-		content_length = int(self.headers['Content-Length'])
-		post_data = self.rfile.read(content_length)
-		self.fight_data = parse.unquote(post_data.decode("utf-8"))
-		print(self.fight_data)
-		self.do_GET()
 	def do_GET(self):
-
-
-
 		if self.path.endswith('?0'):
 			self.path = self.path.replace('?0', '')
 		if self.path != '/' and os.access('.' + os.sep + self.path, os.R_OK):
@@ -36,7 +26,7 @@ class LWHandler(SimpleHTTPRequestHandler):
 				'fight_data': 'null'
 			}
 			if self.path.startswith('/fight/local'):
-				with open('../../leek-wars-generator/fight.json', 'r') as file:
+				with open('../../../leek-wars-generator/fight.json', 'r') as file:
 					bindings['fight_data'] = file.read()
 
 			body = open("view" + os.sep + "head.html").read()
