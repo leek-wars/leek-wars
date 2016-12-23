@@ -397,6 +397,7 @@ LW.pages.editor.init = function(params, $scope, $page) {
 
 		_theme = localStorage['editor/theme']
 		$('#editor-page').addClass(_theme)
+		$("#" + _theme).prop("checked", true)
 
 		// Popup des paramètres
 		var settingsPopup = new _.popup.new('editor.settings_popup', {}, 600)
