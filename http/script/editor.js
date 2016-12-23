@@ -312,6 +312,7 @@ LW.pages.editor.init = function(params, $scope, $page) {
 		$('#ai-name').focusout(function() {
 
 			if (editedAI == null) return
+			if (editedIAName == null) return
 
 			editors[editedAI].updateName(editedIAName)
 			editors[editedAI].save()
@@ -679,6 +680,7 @@ LW.pages.editor.update = function(params) {
 		current = params.id
 		editors[current].show()
 		localStorage['editor/last_code'] = params.id
+		editedIAName = null // Reset en cas de rename de l'ia
 	} else {
 		LW.loader.hide()
 	}
