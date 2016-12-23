@@ -646,10 +646,10 @@ LW.pages.editor.init = function(params, $scope, $page) {
 			if (searchLines.length > 0) {
 
 				var line = searchLines[searchIndex][0]
-				var t = editors[current].editor.charCoords({line: line, ch: 0}, "local").top;
-				var middleHeight = editors[current].editor.getScrollerElement().offsetHeight / 2;
+				var t = editors[current].editor.charCoords({line: line, ch: 0}, "local").top
+				var middleHeight = editors[current].editor.getScrollerElement().offsetHeight / 2
 
-				editors[current].editor.scrollTo(0, t - middleHeight - 5);
+				editors[current].editor.scrollTo(0, t - middleHeight - 5)
 			}
 		}
 
