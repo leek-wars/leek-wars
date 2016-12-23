@@ -301,7 +301,7 @@ LW.pages.editor.init = function(params, $scope, $page) {
 			if (editedAI == null) return
 
 			if (e.keyCode == 13) {
-				editors[editedAI].updateName(editedIAName)
+
 				editors[editedAI].save()
 
 				e.preventDefault()
