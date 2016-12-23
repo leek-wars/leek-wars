@@ -42,7 +42,20 @@ var Editor = function(id, name, valid, code, folder, level) {
 	this.editorDiv = $('#editors .editor[id=' + id + ']')
 	this.editorDiv.hide()
 
-	var editor = this
+	var editor = this;
+
+	// Ajout de l'onglet
+	$('#ai-list').append("<div id='" + id + "' class='ai'>" + _.protect(name) + "</div>");
+
+	this.tabDiv = $('#ai-list .ai[id=' + id + ']').last()
+
+	this.tabDiv.click(function() {
+		LW.page('/editor/' + id)
+	})
+
+	if (!valid) {
+		this.tabDiv.removeClass("error").addClass("error");
+	}
 
 	this.editor = CodeMirror(this.editorDiv[0], {
 		value: code,
@@ -140,9 +153,9 @@ var Editor = function(id, name, valid, code, folder, level) {
 		} else {
 
 			LW.loader.hide()
-			$('#top').show()
-			$('#ai-name').html(this.name)
-			$('#select-msg').hide()
+			$('#top').show();
+			$('#ai-name').text(this.name);
+			$('#select-msg').hide();
 
 			$('#editors .editor').hide()
 			$('#editors .folder-content').hide()
