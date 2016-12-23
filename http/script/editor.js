@@ -255,6 +255,8 @@ LW.pages.editor.init = function(params, $scope, $page) {
 					editors[current].show()
 					$page.resize()
 					$('.CodeMirror').css('font-size', _fontSize)
+
+					$('#test-ais').append('<option id="' + ai.id + '">' + ai.name + '</option>')
 				}
 			})
 		})
@@ -340,6 +342,7 @@ LW.pages.editor.init = function(params, $scope, $page) {
 							delete editors[editor.id]
 							$('#ai-list #' + editor.id).remove()
 							$('#editors #' + editor.id).remove()
+							$('#test-ais option[id="'+ editor.id +'"]').remove()
 
 							if (!_.isEmptyObj(editors)) {
 								LW.page('/editor/' + _.firstKey(editors))

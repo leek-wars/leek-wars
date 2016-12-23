@@ -244,6 +244,8 @@ var Editor = function(id, name, valid, code, folder, level) {
 					iaEditor.tabDiv.removeClass("error");
 					$('.line-error').removeClass("line-error");
 
+					$('#test-ais option[id="'+ editedAI +'"]').text(editedIAName);
+
 				} else if (code == 1) {
 
 					var info = res[2];
