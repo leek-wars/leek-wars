@@ -14,6 +14,7 @@ delete_validate			Delete
 delete_warning			This action is irreversible.
 display			Display
 easy			Easy
+empty_folder	Empty folder
 enlarge_window			Enlarge the window
 evil			Evil
 export			Export

@@ -376,5 +376,10 @@ body {
 
 .folder-content {
 	display: none;
-	padding: 10px;
+	padding: 20px;
+	text-align: center;
+}
+
+.folder-content img {
+	width: 80px;
 }

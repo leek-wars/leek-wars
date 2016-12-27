@@ -277,3 +277,21 @@
 		<div class='dismiss'>{#shortcuts_ok}</div>
 	</div>
 @endview
+
+@view (folder_content)
+	<div class='folder-content' folder='{folder.id}'>
+		@if (folder.contents.length == 0)
+			<div class='empty'>
+				<img src='{{static}}image/empty.png'>
+				<br>
+				<span class='message'>{#empty_folder}</span>
+			</div>
+		@else
+			@foreach (item in folder.contents)
+				<div class='item'>
+					{item.name}
+				</div>
+			@end
+		@end
+	</div>
+@endview

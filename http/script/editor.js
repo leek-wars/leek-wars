@@ -43,26 +43,68 @@ LW.pages.editor.init = function(params, $scope, $page) {
 
 		var ais = data.ais
 		var folders = data.folders
+		var items = ais.concat(folders)
 
-		for (var i in data.folders) {
-			var folder = data.folders[i]
+		// Contruct the tree
+		var build_tree = function(folder) {
+			var sub = {}
+			for (var i in folders) {
+				if (folders[i].folder == folder) {
+					sub[folders[i].id] = build_tree(folders[i].id)
+				}
+			}
+			for (var i in ais) if (ais[i].folder == folder) sub[ais[i].id] = 'ai'
+			return sub
+		}
+		var tree = []
+		for (var i in folders) {
+			tree[folders[i].id] = build_tree(folders[i].id)
+		}
+		_.log("tree:", tree)
+
+		for (var i in tree) {
+			var item = tree[i]
+			if (item == 'ai') {
+				var ai = ais[i]
+				editors[id] = new Editor(ai.id, ai.name, ai.valid, "")
+			} else {
+				var folder = null
+				//for (var j in folders) if (folders[i])
+				folder.contents = []
+				for (var j in item) {
+					folder.contents.push(items[j])
+				}
+				$('#ai-list').append("<div id='" + folder.id + "' class='item folder'><span class='icon'></span>" + folder.name + "</div>");
+				var tab = $('#ai-list .folder[id=' + folder.id + ']')
+				tab.click(function() {
+					LW.page('/editor/folder/' + $(this).attr('id'))
+				})
+				$('#editors').append(_.view.render('editor.folder_content', {folder: folder}))
+			}
+		}
+
+		for (var i in folders) {
+
+			var folder = folders[i]
+			// search contents
+			folder.contents = []
+			for (var j in folders) {
+				if (folders[j].folder == folder.id) {
+					folder.contents.push(folders[j])
+				}
+			}
+			for (var j in data.ais) {
+				if (ais[j].folder == folder.id) {
+					folder.contents.push(ais[j])
+				}
+			}
+
 			$('#ai-list').append("<div id='" + folder.id + "' class='item folder'><span class='icon'></span>" + folder.name + "</div>");
 			var tab = $('#ai-list .folder[id=' + folder.id + ']')
 			tab.click(function() {
 				LW.page('/editor/folder/' + $(this).attr('id'))
 			})
-			$('#editors').append("<div class='folder-content' folder='" + folder.id + "'>" + folder.name + " content</div>")
-		}
-
-		for (var i in data.ais) {
-
-			var ai = data.ais[i]
-
-			var id = ai.id
-			var name = ai.name
-			var valid = ai.valid
-
-			editors[id] = new Editor(id, name, valid, "")
+			$('#editors').append(_.view.render('editor.folder_content', {folder: folder}))
 		}
 
 		// New button

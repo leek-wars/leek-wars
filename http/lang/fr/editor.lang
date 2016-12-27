@@ -14,6 +14,7 @@ delete_validate	Supprimer
 delete_warning	Cette action est irreversible.
 display			Affichage
 easy			Facile
+empty_folder	Dossier vide
 enlarge_window	Agrandir la fenêtre
 evil			Diabolique
 export			Exporter
