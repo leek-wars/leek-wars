@@ -77,11 +77,22 @@ body {
 	cursor: pointer;
 	color: #555;
 }
-#ai-list .item:before {
+#ai-list .item.ai:before {
 	content: "✔";
 	font-weight: bold;
 	color: #5FAD1B;
 	padding-right: 5px;
+}
+#ai-list .item.folder .icon {
+	display: inline-block;
+	background-image: url('../image/folder.png');
+	background-size: cover;
+	width: 13px;
+	height: 10px;
+	margin-right: 5px;
+}
+#ai-list .item.selected.folder .icon {
+	background-image: url('../image/folder_white.png');
 }
 #ai-list .item:hover {
 	background: white;

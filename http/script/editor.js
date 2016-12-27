@@ -46,10 +46,10 @@ LW.pages.editor.init = function(params, $scope, $page) {
 
 		for (var i in data.folders) {
 			var folder = data.folders[i]
-			$('#ai-list').append("<div id='" + folder.id + "' class='item folder'>" + folder.name + "</div>");
+			$('#ai-list').append("<div id='" + folder.id + "' class='item folder'><span class='icon'></span>" + folder.name + "</div>");
 			var tab = $('#ai-list .folder[id=' + folder.id + ']')
 			tab.click(function() {
-				LW.page('/editor/folder/' + folder.id)
+				LW.page('/editor/folder/' + $(this).attr('id'))
 			})
 			$('#editors').append("<div class='folder-content' folder='" + folder.id + "'>" + folder.name + " content</div>")
 		}
@@ -87,7 +87,7 @@ LW.pages.editor.init = function(params, $scope, $page) {
 
 			_.post('ai-folder/new', {folder_id: 0}, function(data) {
 
-				$('#ai-list').append("<div id='" + id + "' class='item folder'>" + _.lang.get('editor', 'new_folder') + "</div>");
+				$('#ai-list').append("<div id='" + id + "' class='item folder'><span class='icon'></span>" + _.lang.get('editor', 'new_folder') + "</div>");
 				var tab = $('#ai-list .ai[id=' + id + ']').last()
 				tab.click(function() {
 					LW.page('/editor/folder/' + id)
@@ -607,9 +607,9 @@ LW.pages.editor.jumpTo = function(ai, line) {
 LW.pages.editor.open_folder = function(id) {
 	current = id
 	currentType = 'folder'
-	$('#editors .editor').hide()
+	$('#editors .editor, #editors .folder-content').hide()
 	$('#editor-page .folder-content[folder=' + id + ']').show()
-	$('#ai-list *').removeClass('selected')
+	$('#ai-list .item').removeClass('selected')
 	$('#ai-list .folder[id=' + id + ']').addClass('selected')
 }
 
