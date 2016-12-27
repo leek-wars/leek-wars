@@ -93,7 +93,7 @@ LW.pages.fight.init = function(params, $scope, $page) {
 		})
 
 		$('#comments .comment .text').each(function() {
-			$(this).html(LW.smiley($(this).text()))
+			$(this).html(LW.smiley(_.protect($(this).text())))
 		})
 
 		// Écoute de la position sur la file
