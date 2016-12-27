@@ -45,12 +45,12 @@ var Editor = function(id, name, valid, code) {
 	var editor = this;
 
 	// Ajout de l'onglet
-	$('#ai-list').append("<div id='" + id + "' class='ai'>" + name + "</div>");
+	$('#ai-list').append("<div id='" + id + "' class='item ai'>" + name + "</div>");
 
 	this.tabDiv = $('#ai-list .ai[id=' + id + ']').last()
 
 	this.tabDiv.click(function() {
-		LW.page('/editor/' + id)
+		LW.page('/editor/ai/' + id)
 	})
 
 	if (!valid) {
@@ -133,7 +133,7 @@ var Editor = function(id, name, valid, code) {
 	this.show = function() {
 
 		// Tab
-		$('#ai-list .ai').removeClass('selected');
+		$('#ai-list .item').removeClass('selected');
 		this.tabDiv.addClass('selected');
 		this.modified = false;
 
@@ -153,11 +153,12 @@ var Editor = function(id, name, valid, code) {
 		} else {
 
 			LW.loader.hide()
-			$('#top').show();
-			$('#ai-name').html(this.name);
-			$('#select-msg').hide();
+			$('#top').show()
+			$('#ai-name').html(this.name)
+			$('#select-msg').hide()
 
-			$('#editors .editor').hide();
+			$('#editors .editor').hide()
+			$('#editors .folder-content').hide()
 			this.editorDiv.show();
 
 			// if (!_BASIC) {

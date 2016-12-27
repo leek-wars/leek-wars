@@ -4,6 +4,7 @@ var DEFAULT_THEME = "leek-wars"
 var _BASIC = _.isTouchScreen()
 
 var current
+var currentType
 var editors = {}
 
 var _testEvent
@@ -41,6 +42,17 @@ LW.pages.editor.init = function(params, $scope, $page) {
 		LW.setMenuTab('editor')
 
 		var ais = data.ais
+		var folders = data.folders
+
+		for (var i in data.folders) {
+			var folder = data.folders[i]
+			$('#ai-list').append("<div id='" + folder.id + "' class='item folder'>" + folder.name + "</div>");
+			var tab = $('#ai-list .folder[id=' + folder.id + ']')
+			tab.click(function() {
+				LW.page('/editor/folder/' + folder.id)
+			})
+			$('#editors').append("<div class='folder-content' folder='" + folder.id + "'>" + folder.name + " content</div>")
+		}
 
 		for (var i in data.ais) {
 
@@ -71,29 +83,40 @@ LW.pages.editor.init = function(params, $scope, $page) {
 			})
 		})
 
-		$('#new-folder').click(function() {
+		$('#new-folder-button').click(function() {
 
-			_.post('ai-folder/new', {}, function(data) {
+			_.post('ai-folder/new', {folder_id: 0}, function(data) {
 
-				$('#ai-list').append("<div id='" + id + "' class='item folder'>" + Nouveau dossier + "</div>");
+				$('#ai-list').append("<div id='" + id + "' class='item folder'>" + _.lang.get('editor', 'new_folder') + "</div>");
+				var tab = $('#ai-list .ai[id=' + id + ']').last()
+				tab.click(function() {
+					LW.page('/editor/folder/' + id)
+				})
 			})
 		})
 
 		// IA de départ
-		if ('id' in params && params.id in editors) {
+		_.log("type " + params.type)
+		currentType = params.type
+
+		if (currentType == 'ai' && 'id' in params && params.id in editors) {
 
 			current = params.id
-			editors[current].show()
 			localStorage['editor/last_code'] = params.id
+			editors[current].show()
+
+		} else if (currentType == 'folder') {
+
+			LW.pages.editor.open_folder(params.id)
 
 		} else {
 
 			if (editors.length == 0) {
 				current = null
 			} else if ('editor/last_code' in localStorage && localStorage['editor/last_code'] in editors) {
-				LW.page('/editor/' + localStorage['editor/last_code'])
+				LW.page('/editor/ai/' + localStorage['editor/last_code'])
 			} else {
-				LW.page('/editor/' + _.firstKey(editors))
+				LW.page('/editor/ai/' + _.firstKey(editors))
 			}
 		}
 
@@ -118,6 +141,7 @@ LW.pages.editor.init = function(params, $scope, $page) {
 				$(this).blur()
 			}
 		})
+
 		$('#ai-name').focusout(function() {
 
 			if (editedAI == null) return
@@ -178,7 +202,7 @@ LW.pages.editor.init = function(params, $scope, $page) {
 		}
 
 		$(window).mousemove(function(e) {
-			if (current != null)
+			if (current != null && currentType == 'ai')
 				editors[current].mousemove(e)
 		})
 
@@ -259,7 +283,6 @@ LW.pages.editor.init = function(params, $scope, $page) {
 		$('#editor-settings-button').click(function(e) {
 			settingsPopup.show(e)
 		})
-
 
 		// Paramètres de test
 		var data = {
@@ -483,10 +506,13 @@ LW.pages.editor.init = function(params, $scope, $page) {
 
 LW.pages.editor.update = function(params) {
 
-	if (params && 'id' in params && params.id in editors) {
+	currentType = params.type
+	if (currentType == 'ai' && params && 'id' in params && params.id in editors) {
 		current = params.id
 		editors[current].show()
 		localStorage['editor/last_code'] = params.id
+	} else if (currentType == 'folder') {
+		LW.pages.editor.open_folder(params.id)
 	} else {
 		LW.loader.hide()
 	}
@@ -568,7 +594,7 @@ LW.pages.editor.test = function(e) {
 LW.pages.editor.jumpTo = function(ai, line) {
 
 	if (ai != current) {
-		LW.page('/editor/' + ai)
+		LW.page('/editor/ai/' + ai)
 	}
 
 	line--
@@ -576,6 +602,15 @@ LW.pages.editor.jumpTo = function(ai, line) {
     var myHeight = editors[current].editor.getScrollInfo().clientHeight
     var coords = editors[current].editor.charCoords({line: line, ch: 0}, "local")
     editors[current].editor.scrollTo(null, (coords.top + coords.bottom - myHeight) / 2)
+}
+
+LW.pages.editor.open_folder = function(id) {
+	current = id
+	currentType = 'folder'
+	$('#editors .editor').hide()
+	$('#editor-page .folder-content[folder=' + id + ']').show()
+	$('#ai-list *').removeClass('selected')
+	$('#ai-list .folder[id=' + id + ']').addClass('selected')
 }
 
 function _saveTestSettings() {

@@ -1137,8 +1137,18 @@ page('/editor', function() {
 	}
 })
 
-page('/editor/:id', function(ctx) {
+page('/editor/ai/:id', function(ctx) {
 	if (LW.connected) {
+		ctx.params['type'] = 'ai'
+		LW.loadPage('editor', ctx.params)
+	} else {
+		page.redirect('/')
+	}
+})
+
+page('/editor/folder/:id', function(ctx) {
+	if (LW.connected) {
+		ctx.params['type'] = 'folder'
 		LW.loadPage('editor', ctx.params)
 	} else {
 		page.redirect('/')

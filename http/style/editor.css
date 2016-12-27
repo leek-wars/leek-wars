@@ -16,10 +16,10 @@ body {
 #editor-page .search-panel .arrow {
 	width: 20px;
 	height: 12px;
-	margin: 0; 
+	margin: 0;
 	padding: 14px 10px;
 	opacity: 0.3;
-	cursor: pointer; 
+	cursor: pointer;
 }
 
 #editor-page .search-panel .arrow:hover {
@@ -72,32 +72,32 @@ body {
 	overflow-y: auto;
 }
 
-#ai-list .ai {
-	padding: 10px;
+#ai-list .item {
+	padding: 5px 10px;
 	cursor: pointer;
 	color: #555;
-} 
-#ai-list .ai:before {
+}
+#ai-list .item:before {
 	content: "✔";
 	font-weight: bold;
 	color: #5FAD1B;
 	padding-right: 5px;
 }
-#ai-list .ai:hover {
+#ai-list .item:hover {
 	background: white;
 	color: black;
 }
-#ai-list .ai.selected {
+#ai-list .item.selected {
 	background: #aaa;
 	color: white;
 }
-#ai-list .ai.selected:before {
+#ai-list .item.selected:before {
 	color: white;
 }
-#ai-list .ai.modified {
+#ai-list .item.modified {
 	color: red;
 }
-#ai-list .ai.error:before {
+#ai-list .item.error:before {
 	content: "✘";
 	font-weight: bold;
 	color: red;
@@ -149,7 +149,7 @@ body {
 
 #compilation {
 	position: fixed;
-	bottom: 150px; 
+	bottom: 150px;
 	right: 50%;
 	left: 50%;
 	width: 500px;
@@ -194,7 +194,7 @@ body {
 }
 
 
-/* Editor */ 
+/* Editor */
 
 .CodeMirror {
 	font-size: 14px;
@@ -224,7 +224,7 @@ body {
 	background-position: left bottom;
 	vertical-align: text-top;
 }
- 
+
 .popup.test_popup h4 {
 	display: inline-block;
 }
@@ -361,4 +361,9 @@ body {
 	color: #ff7f00;
 	font-weight: bold;
 	margin: 10px 0;
+}
+
+.folder-content {
+	display: none;
+	padding: 10px;
 }
