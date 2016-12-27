@@ -31,6 +31,7 @@ n_characters	%s caractères
 n_cores			%s coeurs
 new				Nouveau
 new_desc		Créer une nouvelle IA
+new_folder		Nouv. dossier
 n_lines			%s lignes
 opponent_agility			Agilité
 opponent_agility_life		Agilité / Vie

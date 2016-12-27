@@ -71,6 +71,14 @@ LW.pages.editor.init = function(params, $scope, $page) {
 			})
 		})
 
+		$('#new-folder').click(function() {
+
+			_.post('ai-folder/new', {}, function(data) {
+
+				$('#ai-list').append("<div id='" + id + "' class='item folder'>" + Nouveau dossier + "</div>");
+			})
+		})
+
 		// IA de départ
 		if ('id' in params && params.id in editors) {
 
