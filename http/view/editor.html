@@ -2,10 +2,6 @@
 
 	<div>
 		<h1>{#title}</h1>
-
-		<div class='info'>
-			<span contenteditable class='editable' id='ai-name'></span>
-		</div>
 	</div>
 
 	<div class='tabs'>
@@ -31,7 +27,9 @@
 
 			<div class='content'>
 
-				<div id='ai-list' autostopscroll></div>
+				<div id='ai-list' autostopscroll>
+					<div class='item folder' id='null' level='0'></div>
+				</div>
 
 				<div id='ai-stats'>
 					<div id='line-count-wrapper'>{{#n_lines, "<span id='line-count'></span>"}}</div>

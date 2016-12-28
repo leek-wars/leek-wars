@@ -14,6 +14,7 @@ var lastNewAI = -1
 var editedAI = -1
 var editedIAName
 var _saving = false
+var _dragging = null
 
 // Paramètres
 var _large = false
@@ -47,54 +48,165 @@ LW.pages.editor.init = function(params, $scope, $page) {
 		for (var i in ais) items[ais[i].id] = ais[i]
 		for (var i in folders) items[folders[i].id] = folders[i]
 
+		// Create editors
+		for (var i in ais) {
+			var ai = ais[i]
+			editors[ai.id] = new Editor(ai.id, ai.name, ai.valid, "", ai.folder)
+		}
+
+		var drag_and_drop = function(item) {
+			item.on({
+		        dragstart: function(e) {
+					_dragging = $(this).attr('id')
+		            $(this).addClass('dragging')
+					e.stopPropagation()
+		        },
+		        dragend: function() {
+		            $(this).removeClass('dragging')
+		        }
+		    })
+		}
+
 		var toggle_folder = function(folder_id, show) {
 			var tab = $('#ai-list .item[id=' + folder_id + ']')
-			var level = parseInt(tab.attr('level'))
-			var c = tab
-			while (c.length) {
-				c = c.next()
-				var l = parseInt(c.attr('level'))
-				if (l <= level) break;
-				if (show && l != level + 1) break;
-				if (!show && c.hasClass('folder')) {
-					toggle_folder(c.attr('id'), show)
-				}
-				show ? c.show() : c.hide()
+			if (show) {
+				tab.find('> .content').show()
+				tab.addClass('expanded')
+			} else {
+				tab.find('> .content').hide()
+				tab.removeClass('expanded')
 			}
-			show ? tab.addClass('expanded') : tab.removeClass('expanded')
+		}
+
+		var update_padding = function(item_id, level) {
+			var item = $('#ai-list .item[id=' + item_id + ']')
+			item.attr('level', level)
+			if (item.hasClass('ai')) {
+				item.find('> .label').css('padding-left', (15 + level * 15) + 'px')
+			} else {
+				item.find('> .label').css('padding-left', (10 + level * 15) + 'px')
+				item.find('> .content > .item').each(function() {
+					update_padding($(this).attr('id'), level + 1)
+				})
+			}
+		}
+
+		var move_item = function(item_id, from_folder_id, to_folder_id) {
+			//_.log('drop ' + item_id + ' from folder ' + from_folder_id + ' to folder ' + to_folder_id)
+			// Same folder
+			if (from_folder_id == to_folder_id) return null
+			var item = $('#ai-list .item[id=' + item_id + ']')
+			// Check all parents
+			var parent = $('#ai-list .item[id=' + to_folder_id + ']')
+			while (parent.length && parent.hasClass('item')) {
+				if (parent.attr('id') == item_id) return null
+				parent = parent.parent().parent()
+			}
+			// Move
+			var ai = item.hasClass('ai')
+			var name = item.text()
+			var folder = $('#ai-list .item[id=' + to_folder_id + ']')
+			var level = parseInt(folder.attr('level')) + 1
+			item.appendTo(folder.find('> .content'))
+			update_padding(item.attr('id'), level)
+			// Update new folder
+			folder.removeClass('empty')
+			toggle_folder(to_folder_id, true)
+			// Update old folder
+			var from_folder = $('#ai-list .item[id=' + from_folder_id + ']')
+			from_folder.toggleClass('empty', from_folder.find('> .content > .item').length == 0)
 		}
 
 		var build_tree = function(folder_id, level) {
-			var sub = []
+			var leaf = {html: $("<div class='content'>"), id: folder_id, content: []}
 			for (var i in folders) {
 				if (folders[i].folder == folder_id) {
 					var folder = items[folders[i].id]
+					var tree = build_tree(folders[i].id, level + 1)
+					tree.html.hide()
 					var style = 'padding-left:' + (10 + level * 15) + 'px'
-					$('#ai-list').append("<div id='" + folder.id + "' class='item folder' style='" + style + "' folder='" + folder_id + "' level='" + level + "'><div class='triangle'/><span class='icon'></span>" + folder.name + "</div>")
-					var tab = $('#ai-list .folder[id=' + folder.id + ']')
-					tab.click(function() {
-						toggle_folder($(this).attr('id'), !$(this).hasClass('expanded'))
-					})
-					if (level > 0) tab.hide()
-					var contents = build_tree(folders[i].id, level + 1)
-					sub.push({id: folders[i].id, contents: contents})
-					folder.contents = []
-					for (var j in contents) {
-						folder.contents.push(items[contents[j].id])
+					var html = $("<div id='" + folder.id + "' class='item folder' folder='" + folder_id + "' draggable='true' level='" + level + "'><div class='label' style='" + style + "'><div class='triangle'/><span class='icon'></span>" + folder.name + "</div></div>")
+					if (tree.content.length == 0) {
+						html.addClass('empty')
 					}
-					$('#editors').append(_.view.render('editor.folder_content', {folder: folder}))
+					leaf.content.push({id: folders[i].id, contents: tree.content})
+					folder.contents = []
+					for (var j in tree.content) {
+						folder.contents.push(items[tree.content[j].id])
+					}
+					html.append(tree.html)
+					leaf.html.append(html)
 				}
 			}
 			for (var i in ais) {
 				if (ais[i].folder == folder_id) {
 					var ai = ais[i]
-					sub.push({id: ai.id})
-					editors[ai.id] = new Editor(ai.id, ai.name, ai.valid, "", folder_id, level)
+					leaf.content.push({id: ai.id})
+					var style = 'padding-left:' + (15 + level * 15) + 'px'
+					leaf.html.append("<div id='" + ai.id + "' class='item ai' folder='" + ai.folder + "' draggable='true' ><div class='label' style='" + style + "'>" + ai.name + "</div></div>");
 				}
 			}
-			return sub
+			return leaf
 		}
-		var tree = build_tree(null, 0)
+
+		var update_tree = function() {
+
+			var tree = build_tree(null, 0)
+			$('#ai-list').find('> .folder').empty().append(tree.html)
+
+			$('#ai-list .item').each(function() {
+				var tab = $(this)
+				if (tab.hasClass('folder')) {
+					tab.click(function(e) {
+						toggle_folder($(this).attr('id'), !$(this).hasClass('expanded'))
+						e.stopPropagation()
+					})
+				} else {
+					var ai = items[$(this).attr('id')]
+					tab.click(function(e) {
+						var ai = items[$(this).attr('id')]
+						e.stopPropagation()
+						LW.page('/editor/ai/' + ai.id)
+					})
+					if (!ai.valid) {
+						tab.addClass("error")
+					}
+				}
+				drag_and_drop(tab)
+			})
+
+			for (var i in ais) {
+				var ai = ais[i]
+				editors[ai.id].tabDiv = $('#ai-list .ai[id=' + ai.id + ']')
+			}
+
+			$('#ai-list .folder').on({
+		        drop: function(e) {
+					var from_folder = $('#ai-list .item[id=' + _dragging + ']').parent().parent().attr('id')
+					move_item(_dragging, from_folder, $(this).attr('id'))
+					_dragging = null
+					e.preventDefault()
+					e.stopPropagation()
+					$(this).removeClass('drag-hover')
+					return false
+		        },
+				dragenter: function(e) {
+					$(this).addClass('drag-hover')
+					e.stopPropagation()
+				},
+				dragleave: function(e) {
+					$(this).removeClass('drag-hover')
+					e.stopPropagation()
+				},
+		        dragover: function(e) {
+					$(this).addClass('drag-hover')
+		            e.preventDefault()
+					e.stopPropagation()
+		        }
+			})
+		}
+
+		update_tree()
 
 		// New button
 		$('#new-button').click(function() {
@@ -152,6 +264,7 @@ LW.pages.editor.init = function(params, $scope, $page) {
 		}
 
 		// IA name
+		/*
 		$('#ai-name').click(function() {
 			editedAI = current
 		})
@@ -180,6 +293,7 @@ LW.pages.editor.init = function(params, $scope, $page) {
 			editors[editedAI].updateName(editedIAName)
 			editors[editedAI].save()
 		})
+		*/
 
 		// Boutons
 		$("#save-button").click(function() {

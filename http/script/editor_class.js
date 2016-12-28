@@ -42,22 +42,7 @@ var Editor = function(id, name, valid, code, folder, level) {
 	this.editorDiv = $('#editors .editor[id=' + id + ']')
 	this.editorDiv.hide()
 
-	var editor = this;
-
-	// Ajout de l'onglet
-	var style = 'padding-left:' + (16 + level * 15) + 'px'
-	$('#ai-list').append("<div id='" + id + "' class='item ai' style='" + style + "' folder='" + folder + "' level='" + level + "'>" + name + "</div>");
-
-	this.tabDiv = $('#ai-list .ai[id=' + id + ']').last()
-	if (level > 0) this.tabDiv.hide()
-
-	this.tabDiv.click(function() {
-		LW.page('/editor/ai/' + id)
-	})
-
-	if (!valid) {
-		this.tabDiv.removeClass("error").addClass("error");
-	}
+	var editor = this
 
 	this.editor = CodeMirror(this.editorDiv[0], {
 		value: code,
