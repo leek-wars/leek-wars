@@ -6,11 +6,11 @@
 
 	<div class='tabs'>
 
-		<div id='new-button' class='tab' title="{new_desc}">✚ {#new}</div>
-		<div id='new-folder-button' class='tab' title="{new_desc}">✚ {#new_folder}</div>
-		<div id='save-button' class="tab" title="{save_desc}">✔ {#save}</div>
-		<div id='delete-button' class="tab" title="{delete_desc}">❌ {#delete}</div>
-		<div id='test-button' class="tab" title="{test_desc}">▶ {#test}</div>
+		<div id='new-button' class='tab' title="{#new_desc}">✚ {#new}</div>
+		<div id='new-folder-button' class='tab' title="{#new_folder_desc}">✚ {#new_folder}</div>
+		<div id='save-button' class="tab" title="{#save_desc}">✔ {#save}</div>
+		<div id='delete-button' class="tab" title="{#delete_desc}">❌ {#delete}</div>
+		<div id='test-button' class="tab" title="{#test_desc}">▶ {#test}</div>
 
 		<div id='editor-settings-button' class="tab" >
 			<img src='{{static}}/image/gearing_small_white.png'></img>
@@ -28,7 +28,7 @@
 			<div class='content'>
 
 				<div id='ai-list' autostopscroll>
-					<div class='item folder' id='null' level='0'></div>
+					<div class='item folder expanded' id='0' level='0'></div>
 				</div>
 
 				<div id='ai-stats'>

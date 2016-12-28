@@ -76,6 +76,9 @@ body {
 	cursor: pointer;
 	color: #555;
 }
+#ai-list .item.dragging {
+	opacity: 1;
+}
 #ai-list .item .label {
 	padding: 5px 10px;
 }
@@ -96,7 +99,7 @@ body {
 #ai-list .item.selected.folder .icon {
 	background-image: url('../image/folder_white.png');
 }
-#ai-list .item .label:hover {
+#ai-list .item .label:hover {
 	background: white;
 	color: black;
 }
@@ -421,6 +424,9 @@ body {
 }
 #ai-list .folder.expanded.drag-hover > .content {
 	margin-bottom: -1px;
+}
+#ai-list .folder[level="0"].drag-hover > .content {
+	margin-top: -1px;
 }
 #ai-list .folder:not(.expanded).drag-hover > .label {
 	margin-bottom: -1px;

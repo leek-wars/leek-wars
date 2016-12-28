@@ -76,23 +76,40 @@ LW.pages.editor.init = function(params, $scope, $page) {
 				tab.find('> .content').hide()
 				tab.removeClass('expanded')
 			}
+			localStorage['editor/folder/' + folder_id] = show
 		}
 
 		var update_padding = function(item_id, level) {
 			var item = $('#ai-list .item[id=' + item_id + ']')
 			item.attr('level', level)
 			if (item.hasClass('ai')) {
-				item.find('> .label').css('padding-left', (15 + level * 15) + 'px')
+				item.find('> .label').css('padding-left', (level * 15) + 'px')
 			} else {
-				item.find('> .label').css('padding-left', (10 + level * 15) + 'px')
+				item.find('> .label').css('padding-left', (-5 + level * 15) + 'px')
 				item.find('> .content > .item').each(function() {
 					update_padding($(this).attr('id'), level + 1)
 				})
 			}
 		}
 
+		var insert_element = function(element, folder) {
+			var is_folder = element.hasClass('folder')
+			var name = element.text().toLowerCase()
+			var elements = folder.find('> .item')
+			var e = $(elements[0])
+			while (e.length) {
+				if ((name < e.text().toLowerCase()) || (is_folder && e.hasClass('ai'))) {
+					if (is_folder || e.hasClass('ai')) {
+						element.insertBefore(e)
+						return
+					}
+				}
+				e = e.next()
+			}
+			folder.append(element)
+		}
+
 		var move_item = function(item_id, from_folder_id, to_folder_id) {
-			//_.log('drop ' + item_id + ' from folder ' + from_folder_id + ' to folder ' + to_folder_id)
 			// Same folder
 			if (from_folder_id == to_folder_id) return null
 			var item = $('#ai-list .item[id=' + item_id + ']')
@@ -103,11 +120,9 @@ LW.pages.editor.init = function(params, $scope, $page) {
 				parent = parent.parent().parent()
 			}
 			// Move
-			var ai = item.hasClass('ai')
-			var name = item.text()
 			var folder = $('#ai-list .item[id=' + to_folder_id + ']')
 			var level = parseInt(folder.attr('level')) + 1
-			item.appendTo(folder.find('> .content'))
+			insert_element(item, folder.find('> .content'))
 			update_padding(item.attr('id'), level)
 			// Update new folder
 			folder.removeClass('empty')
@@ -115,6 +130,12 @@ LW.pages.editor.init = function(params, $scope, $page) {
 			// Update old folder
 			var from_folder = $('#ai-list .item[id=' + from_folder_id + ']')
 			from_folder.toggleClass('empty', from_folder.find('> .content > .item').length == 0)
+			// Send request
+			var ai = item.hasClass('ai')
+			var url = ai ? 'ai/change-folder' : 'ai-folder/change-folder'
+			var args = ai ? {ai_id: item_id, folder_id: to_folder_id} :
+				{folder_id: item_id, folder_dest_id: to_folder_id}
+			_.post(url, args)
 		}
 
 		var build_tree = function(folder_id, level) {
@@ -123,9 +144,12 @@ LW.pages.editor.init = function(params, $scope, $page) {
 				if (folders[i].folder == folder_id) {
 					var folder = items[folders[i].id]
 					var tree = build_tree(folders[i].id, level + 1)
-					tree.html.hide()
-					var style = 'padding-left:' + (10 + level * 15) + 'px'
-					var html = $("<div id='" + folder.id + "' class='item folder' folder='" + folder_id + "' draggable='true' level='" + level + "'><div class='label' style='" + style + "'><div class='triangle'/><span class='icon'></span>" + folder.name + "</div></div>")
+					var opened = localStorage['editor/folder/' + folders[i].id] === 'true'
+					if (!opened) {
+						tree.html.hide()
+					}
+					var style = 'padding-left:' + (-5 + level * 15) + 'px'
+					var html = $("<div id='" + folder.id + "' class='item folder " + (opened ? 'expanded' : '') + "' folder='" + folder_id + "' draggable='true' level='" + level + "'><div class='label' style='" + style + "'><div class='triangle'/><span class='icon'></span>" + folder.name + "</div></div>")
 					if (tree.content.length == 0) {
 						html.addClass('empty')
 					}
@@ -142,7 +166,7 @@ LW.pages.editor.init = function(params, $scope, $page) {
 				if (ais[i].folder == folder_id) {
 					var ai = ais[i]
 					leaf.content.push({id: ai.id})
-					var style = 'padding-left:' + (15 + level * 15) + 'px'
+					var style = 'padding-left:' + (level * 15) + 'px'
 					leaf.html.append("<div id='" + ai.id + "' class='item ai' folder='" + ai.folder + "' draggable='true' ><div class='label' style='" + style + "'>" + ai.name + "</div></div>");
 				}
 			}
@@ -151,7 +175,7 @@ LW.pages.editor.init = function(params, $scope, $page) {
 
 		var update_tree = function() {
 
-			var tree = build_tree(null, 0)
+			var tree = build_tree(null, 1)
 			$('#ai-list').find('> .folder').empty().append(tree.html)
 
 			$('#ai-list .item').each(function() {
