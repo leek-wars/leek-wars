@@ -43,69 +43,40 @@ LW.pages.editor.init = function(params, $scope, $page) {
 
 		var ais = data.ais
 		var folders = data.folders
-		var items = ais.concat(folders)
+		var items = []
+		for (var i in ais) items[ais[i].id] = ais[i]
+		for (var i in folders) items[folders[i].id] = folders[i]
 
 		// Contruct the tree
-		var build_tree = function(folder) {
-			var sub = {}
+		var build_tree = function(folder_id, level) {
+			var sub = []
 			for (var i in folders) {
-				if (folders[i].folder == folder) {
-					sub[folders[i].id] = build_tree(folders[i].id)
+				if (folders[i].folder == folder_id) {
+					var folder = items[folders[i].id]
+					var style = 'padding-left:' + (10 + level * 10) + 'px'
+					$('#ai-list').append("<div id='" + folder.id + "' class='item folder' style='" + style + "'><span class='icon'></span>" + folder.name + "</div>")
+					var tab = $('#ai-list .folder[id=' + folder.id + ']')
+					tab.click(function() {
+						LW.page('/editor/folder/' + $(this).attr('id'))
+					})
+					var contents = build_tree(folders[i].id, level + 1)
+					sub.push({id: folders[i].id, contents: contents})
+					folder.contents = []
+					for (var j in contents)
+						folder.contents.push(items[contents[j].id])
+					$('#editors').append(_.view.render('editor.folder_content', {folder: folder}))
 				}
 			}
-			for (var i in ais) if (ais[i].folder == folder) sub[ais[i].id] = 'ai'
+			for (var i in ais) {
+				if (ais[i].folder == folder_id) {
+					var ai = ais[i]
+					sub.push({id: ai.id})
+					editors[ai.id] = new Editor(ai.id, ai.name, ai.valid, "", level)
+				}
+			}
 			return sub
 		}
-		var tree = []
-		for (var i in folders) {
-			tree[folders[i].id] = build_tree(folders[i].id)
-		}
-		_.log("tree:", tree)
-
-		for (var i in tree) {
-			var item = tree[i]
-			if (item == 'ai') {
-				var ai = ais[i]
-				editors[id] = new Editor(ai.id, ai.name, ai.valid, "")
-			} else {
-				var folder = null
-				//for (var j in folders) if (folders[i])
-				folder.contents = []
-				for (var j in item) {
-					folder.contents.push(items[j])
-				}
-				$('#ai-list').append("<div id='" + folder.id + "' class='item folder'><span class='icon'></span>" + folder.name + "</div>");
-				var tab = $('#ai-list .folder[id=' + folder.id + ']')
-				tab.click(function() {
-					LW.page('/editor/folder/' + $(this).attr('id'))
-				})
-				$('#editors').append(_.view.render('editor.folder_content', {folder: folder}))
-			}
-		}
-
-		for (var i in folders) {
-
-			var folder = folders[i]
-			// search contents
-			folder.contents = []
-			for (var j in folders) {
-				if (folders[j].folder == folder.id) {
-					folder.contents.push(folders[j])
-				}
-			}
-			for (var j in data.ais) {
-				if (ais[j].folder == folder.id) {
-					folder.contents.push(ais[j])
-				}
-			}
-
-			$('#ai-list').append("<div id='" + folder.id + "' class='item folder'><span class='icon'></span>" + folder.name + "</div>");
-			var tab = $('#ai-list .folder[id=' + folder.id + ']')
-			tab.click(function() {
-				LW.page('/editor/folder/' + $(this).attr('id'))
-			})
-			$('#editors').append(_.view.render('editor.folder_content', {folder: folder}))
-		}
+		var tree = build_tree(null, 0)
 
 		// New button
 		$('#new-button').click(function() {
@@ -649,8 +620,9 @@ LW.pages.editor.jumpTo = function(ai, line) {
 LW.pages.editor.open_folder = function(id) {
 	current = id
 	currentType = 'folder'
-	$('#editors .editor, #editors .folder-content').hide()
-	$('#editor-page .folder-content[folder=' + id + ']').show()
+	currentFolder = 
+	//$('#editors .editor, #editors .folder-content').hide()
+	//$('#editor-page .folder-content[folder=' + id + ']').show()
 	$('#ai-list .item').removeClass('selected')
 	$('#ai-list .folder[id=' + id + ']').addClass('selected')
 }
