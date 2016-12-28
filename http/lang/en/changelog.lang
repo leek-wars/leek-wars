@@ -115,10 +115,9 @@ changelog_172
 changelog_173			
 changelog_174			
 changelog_180			
-changelog_181			# test							
-# other							
-# 3							
-# 4
+changelog_181			# Changed the limit for weapons and chips.						
+# Displaying the number of won tournaments (solo, farmer and team)					
+# Bug fixes.						
 changelog_182			# Improve function lineOfSight.
 # Add topper hat.
 # Devil Strike has now a linear repartition, and 5 x 25 damage.
