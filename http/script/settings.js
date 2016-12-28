@@ -111,7 +111,6 @@ LW.pages.settings.deleteAccount = function() {
 	var deletePopup = new _.popup.new('settings.delete_popup')
 
 	$('#delete-button').click(function(e) {
-
 		deletePopup.show(e)
 	})
 
@@ -145,9 +144,9 @@ LW.pages.settings.deleteAccount = function() {
 				deleteSuccessPopup.show(e)
 
 				setTimeout(function() {
-					_.post('farmer/logout', function(data) {
-						window.location.href = '/'
-					})
+					LW.disconnect()
+					deleteSuccessPopup.dismiss()
+					LW.page('/')
 				}, 3000)
 
 			} else {
