@@ -9,7 +9,7 @@ var AUTO_SHORTCUTS = [
 /*
  * Classe editor
  */
-var Editor = function(id, name, valid, code, level) {
+var Editor = function(id, name, valid, code, folder, level) {
 
 	// Infos de base
 	this.id = id;
@@ -45,10 +45,11 @@ var Editor = function(id, name, valid, code, level) {
 	var editor = this;
 
 	// Ajout de l'onglet
-	var style = 'padding-left:' + (10 + level * 10) + 'px'
-	$('#ai-list').append("<div id='" + id + "' class='item ai' style='" + style + "'>" + name + "</div>");
+	var style = 'padding-left:' + (16 + level * 15) + 'px'
+	$('#ai-list').append("<div id='" + id + "' class='item ai' style='" + style + "' folder='" + folder + "' level='" + level + "'>" + name + "</div>");
 
 	this.tabDiv = $('#ai-list .ai[id=' + id + ']').last()
+	if (level > 0) this.tabDiv.hide()
 
 	this.tabDiv.click(function() {
 		LW.page('/editor/ai/' + id)

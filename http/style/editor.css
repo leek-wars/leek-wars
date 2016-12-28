@@ -73,7 +73,7 @@ body {
 }
 
 #ai-list .item {
-	padding: 5px 10px;
+	padding: 5px 15px;
 	cursor: pointer;
 	color: #555;
 }
@@ -382,4 +382,24 @@ body {
 
 .folder-content img {
 	width: 80px;
+}
+
+#ai-list .folder .triangle {
+	width: 0;
+	height: 0;
+	border-top: 5px solid transparent;
+	border-bottom: 5px solid transparent;
+	border-left: 6px solid #aaa;
+	display: inline-block;
+	margin-left: -5px;
+	margin-right: 5px;
+	margin-top: 1px;
+}
+
+#ai-list .folder.selected .triangle {
+	border-left: 6px solid white;
+}
+
+#ai-list .folder.expanded .triangle {
+	transform: rotate(90deg);
 }
