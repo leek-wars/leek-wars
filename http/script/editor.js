@@ -5,7 +5,7 @@ var _BASIC = _.isTouchScreen()
 
 var current
 var currentType
-var currentItem
+var currentItem = 0
 var editors = {}
 
 var _testEvent
@@ -389,7 +389,7 @@ LW.pages.editor.init = function(params, $scope, $page) {
 
 		// Delete popup
 		$("#delete-button").click(function(e) {
-			if (current != null) {
+			if (currentItem != 0) {
 				var deletePopup = new _.popup.new('editor.delete_popup', {name: currentName, type: currentType}, 500)
 				deletePopup.find('#delete').click(function() {
 					var editor = editors[current]
@@ -411,6 +411,8 @@ LW.pages.editor.init = function(params, $scope, $page) {
 								} else {
 									current = null
 								}
+							} else {
+								currentItem = 0
 							}
 							deletePopup.dismiss()
 						} else {
