@@ -241,14 +241,16 @@ LW.pages.editor.init = function(params, $scope, $page) {
 
 		// New button
 		$('#new-button').click(function() {
-
 			_.post('ai/new', {folder_id: 0}, function(data) {
-
 				if (data.success) {
-
 					var ai = data.ai
+					ai.valid = true
 					editors[ai.id] = new Editor(ai.id, ai.name, true, ai.code)
-
+					items[ai.id] = ai
+					var tab = $("<div id='" + ai.id + "' class='item ai' folder='" + ai.folder + "' draggable='true' ><div class='label'>" + ai.name + "</div></div>")
+					$('#ai-list > .folder > .content').append(tab)
+					add_item_events(tab)
+					editors[ai.id].tabDiv = tab
 					current = ai.id
 					editors[current].show()
 					$page.resize()
@@ -283,7 +285,7 @@ LW.pages.editor.init = function(params, $scope, $page) {
 		}
 
 		// IA name
-		/*
+/*
 		$('#ai-name').click(function() {
 			editedAI = current
 		})
@@ -312,7 +314,7 @@ LW.pages.editor.init = function(params, $scope, $page) {
 			editors[editedAI].updateName(editedIAName)
 			editors[editedAI].save()
 		})
-		*/
+*/
 
 		// Boutons
 		$("#save-button").click(function() {
