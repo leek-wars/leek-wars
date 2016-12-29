@@ -1,151 +1,151 @@
 changelog_100			# Version 1.0 available, end of the beta!
-# All the players registered before the 6 of June receive the Beta Tester trophy.
+						# All the players registered before the 6 of June receive the Beta Tester trophy.
 changelog_101			# Sale of weapon added => give back 80% of the initial price.
-# Possibility to change ranks of team members.
-# Introduction of a sponsorship system
-# Changelog page added
-# Trophies added
+						# Possibility to change ranks of team members.
+						# Introduction of a sponsorship system
+						# Changelog page added
+						# Trophies added
 changelog_102			# Improvement of the editor, concerning the creation, name modification and removal of the AI. For extension creator => it may cause problems.
-#Trophies added 
+						# Trophies added 
 changelog_103			# Function getInstructionCount() added, to get the number of instructions executed by the leek during the current turn.
-# The maximum instructions limit are set to 10.000. This value can be obtain with the constant INSTRUCTIONS_LIMIT.
-# The maximum challenges per day are set to 200.
-# Trophies added.
+						# The maximum instructions limit are set to 10.000. This value can be obtain with the constant INSTRUCTIONS_LIMIT.
+						# The maximum challenges per day are set to 200.
+						# Trophies added.
 changelog_104			# Limit of 5.000 debug() per fight.
-# Reaching a nonexistent index of an array does no longer create this index. 
+						# Reaching a nonexistent index of an array does no longer create this index. 
 changelog_105			# Generation fights bug corrected.
-# Function getCellToUseWeapon for linear range (laser) corrected.
-# Improvement of the editor to handle a big amount of AI. 
+						# Function getCellToUseWeapon for linear range (laser) corrected.
+						# Improvement of the editor to handle a big amount of AI. 
 changelog_106			# Improvement of the editor.
-# Button enlarge/shrink added.
-# Fights: options to choose the width of the fight and display debug informations.
-# Improvement of the full screen on Firefox.
-# Tactic mode added (option in fight).
-# Option to modify display quality added.
-# Function getWeaponTargets(cell) added.
-# Error "Unknown Function" is more explicit and does no longer crash the AI, the value null is returned. 
+						# Button enlarge/shrink added.
+						# Fights: options to choose the width of the fight and display debug informations.
+						# Improvement of the full screen on Firefox.
+						# Tactic mode added (option in fight).
+						# Option to modify display quality added.
+						# Function getWeaponTargets(cell) added.
+						# Error "Unknown Function" is more explicit and does no longer crash the AI, the value null is returned. 
 changelog_107			# Improvements of fights performance (hud,decor).
 changelog_108			# Add of === and !== operators that compare types and value of two expressions.
 changelog_109			# Add of a removal option on the forum and subject (only for moderators).
-# Team page: display of connected farmers.
-# Add of buttons "My leek", "My Farmer" and "My team" in the ladder.
-# Improvement of private messages notifications.
-# Add of big notifications in the bottom-right corner page for the private messages.
-# Visibility improvement for the current player in fights.
+						# Team page: display of connected farmers.
+						# Add of buttons "My leek", "My Farmer" and "My team" in the ladder.
+						# Improvement of private messages notifications.
+						# Add of big notifications in the bottom-right corner page for the private messages.
+						# Visibility improvement for the current player in fights.
 changelog_110			# Add of a capital counter on the leek tab.
-# Add of the obtention date for each achievements earned on the farmer page.
-# Add of an display leek life option in fights.
-# Improvement of the display fights handling. 
+						# Add of the obtention date for each achievements earned on the farmer page.
+						# Add of an display leek life option in fights.
+						# Improvement of the display fights handling. 
 changelog_111			# Reimplementation of subArray, push and push all methods. 
-# getFarestAlly() and getFarestEnemy() bug fixed.
-# double converted in int while using operator "-" bug fixed.
+						# getFarestAlly() and getFarestEnemy() bug fixed.
+						# double converted in int while using operator "-" bug fixed.
 changelog_112			# Add of pathFinding for better fight performances. 
-# Achievements on number of victories bug fixed.
-# Improvement of the team description edit.
+						# Achievements on number of victories bug fixed.
+						# Improvement of the team description edit.
 changelog_113			# Add of farmer tournament everyday from 12PM to 2PM.
-# Add of 5 achievements for farmer tournament.
+						# Add of 5 achievements for farmer tournament.
 changelog_114			# Achievements display in liste (sorted by order of obtention) or in grid (sorted by achievement number).
 changelog_115			# Improvement of general help, thanks to PadiSson and McNalToo.
-# Add of a search bar on from (basic version).
-# Moderation forum function: lock a topic.
+						# Add of a search bar on from (basic version).
+						# Moderation forum function: lock a topic.
 changelog_116			# Function "pinned" for forum subject.
-# Possibility to change your forum topic into solved.
-# Add of the function getAllies() in the documentation.
-# Improvement of forum search bar function.
-changelog_117			
-changelog_118			
-changelog_119			
-changelog_120			
-changelog_121			
-changelog_122			
-changelog_123			
-changelog_124			
-changelog_125			
-changelog_126			
-changelog_127			
-changelog_128			
-changelog_129			
-changelog_130			
-changelog_131			
-changelog_132			
-changelog_133			
-changelog_134			
-changelog_135			
-changelog_136			
-changelog_137			
-changelog_138			
-changelog_139			
-changelog_140			
-changelog_141			
-changelog_142			
-changelog_143			
-changelog_144			
-changelog_145			
-changelog_146			
-changelog_147			
-changelog_148			
-changelog_149			
-changelog_150			
-changelog_151			
-changelog_152			
-changelog_153			
-changelog_154			
-changelog_155			
-changelog_156			
-changelog_157			
-changelog_158			
-changelog_159			
+						# Possibility to change your forum topic into solved.
+						# Add of the function getAllies() in the documentation.
+						# Improvement of forum search bar function.
+changelog_117
+changelog_118
+changelog_119
+changelog_120
+changelog_121
+changelog_122
+changelog_123
+changelog_124
+changelog_125
+changelog_126
+changelog_127
+changelog_128
+changelog_129
+changelog_130
+changelog_131
+changelog_132
+changelog_133
+changelog_134
+changelog_135
+changelog_136
+changelog_137
+changelog_138
+changelog_139
+changelog_140
+changelog_141
+changelog_142
+changelog_143
+changelog_144
+changelog_145
+changelog_146
+changelog_147
+changelog_148
+changelog_149
+changelog_150
+changelog_151
+changelog_152
+changelog_153
+changelog_154
+changelog_155
+changelog_156
+changelog_157
+changelog_158
+changelog_159
 changelog_160			# Possibility to rename his leeks
-# Fix consise trophy
-# Fix arrayFold function
-# Launching of English version!
+						# Fix consise trophy
+						# Fix arrayFold function
+						# Launching of English version!
 changelog_161			# Modification of the Talent system
-# Translator trophy for all the participants in the site translation
-changelog_162			
-changelog_163			
-changelog_164			
-changelog_165			
-changelog_166			
-changelog_167			
-changelog_168			
-changelog_169			
-changelog_170			
-changelog_171			
-changelog_172			
-changelog_173			
-changelog_174			
-changelog_180			
-changelog_181			# Changed the limit for weapons and chips.						
-  # Displaying the number of won tournaments (solo, farmer and team)					
-  # Bug fixes.						
+						# Translator trophy for all the participants in the site translation
+changelog_162
+changelog_163
+changelog_164
+changelog_165
+changelog_166
+changelog_167
+changelog_168
+changelog_169
+changelog_170
+changelog_171
+changelog_172
+changelog_173
+changelog_174
+changelog_180
+changelog_181			# Changed the limit for weapons and chips.
+						# Displaying the number of won tournaments (solo, farmer and team)
+						# Bug fixes.
 changelog_182			# Improve function lineOfSight.
-# Add topper hat.
-# Devil Strike has now a linear repartition, and 5 x 25 damage.
-# Bug fixes.
+						# Add topper hat.
+						# Devil Strike has now a linear repartition, and 5 x 25 damage.
+						# Bug fixes.
 changelog_183			# The summon limit is now 4 per team.
-# Summon characteristics has been reduced.
-# Summon chips cooldowns are now pooled in the team.
-# Summon chips now works on all summons.
-# Add 4 new summon chips : Whip, Acceleration, Loam and Fertilizer.
+						# Summon characteristics has been reduced.
+						# Summon chips cooldowns are now pooled in the team.
+						# Summon chips now works on all summons.
+						# Add 4 new summon chips : Whip, Acceleration, Loam and Fertilizer.
 changelog_184			# Added function getMapType(), to get the map type (environment).
-# Function getNearestAlly() is now level 1.
-# Fixed bug when the AI was empty.
-# Documentation of the API.
-# Added an initial cooldown of 1 on the chips Invertion and Teleportation.
-# Reduced costs for summons chips.
-# Fixed tournament bugs.
-# Max range of M-Laser is now 12.
-changelog_185			
-changelog_186			
-changelog_187			
-changelog_188			
-changelog_189			
-changelog_190			
+						# Function getNearestAlly() is now level 1.
+						# Fixed bug when the AI was empty.
+						# Documentation of the API.
+						# Added an initial cooldown of 1 on the chips Invertion and Teleportation.
+						# Reduced costs for summons chips.
+						# Fixed tournament bugs.
+						# Max range of M-Laser is now 12.
+changelog_185
+changelog_186
+changelog_187
+changelog_188
+changelog_189
+changelog_190
 changelog_191			
-changelog_192			
+changelog_192
 forum_topic			Forum topic
 popup_ok			OK :)
-see_all_changes			See all changes at <a href='/changelog'>leekwars.com/changelog</a>
-title			Changelog
+see_all_changes		See all changes at <a href='/changelog'>leekwars.com/changelog</a>
+title				Changelog
 version_n			Version %s
-version_online			Version <b>%s</b> available!
+version_online		Version <b>%s</b> available!
