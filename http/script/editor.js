@@ -109,6 +109,33 @@ LW.pages.editor.init = function(params, $scope, $page) {
 			folder.append(element)
 		}
 
+		var add_folder_drag_and_drop_events = function(folder) {
+			folder.on({
+				drop: function(e) {
+					var from_folder = $('#ai-list .item[id=' + _dragging + ']').parent().parent().attr('id')
+					move_item(_dragging, from_folder, $(this).attr('id'))
+					_dragging = null
+					e.preventDefault()
+					e.stopPropagation()
+					$(this).removeClass('drag-hover')
+					return false
+				},
+				dragenter: function(e) {
+					$(this).addClass('drag-hover')
+					e.stopPropagation()
+				},
+				dragleave: function(e) {
+					$(this).removeClass('drag-hover')
+					e.stopPropagation()
+				},
+				dragover: function(e) {
+					$(this).addClass('drag-hover')
+					e.preventDefault()
+					e.stopPropagation()
+				}
+			})
+		}
+
 		var move_item = function(item_id, from_folder_id, to_folder_id) {
 			// Same folder
 			if (from_folder_id == to_folder_id) return null
@@ -173,60 +200,40 @@ LW.pages.editor.init = function(params, $scope, $page) {
 			return leaf
 		}
 
-		var update_tree = function() {
-
-			var tree = build_tree(null, 1)
-			$('#ai-list').find('> .folder').empty().append(tree.html)
-
-			$('#ai-list .item').each(function() {
-				var tab = $(this)
-				if (tab.hasClass('folder')) {
-					tab.click(function(e) {
+		var add_item_events = function(item) {
+			if (item.hasClass('folder')) {
+				if (item.attr('id') != 0) {
+					item.click(function(e) {
 						toggle_folder($(this).attr('id'), !$(this).hasClass('expanded'))
 						e.stopPropagation()
 					})
-				} else {
-					var ai = items[$(this).attr('id')]
-					tab.click(function(e) {
-						var ai = items[$(this).attr('id')]
-						e.stopPropagation()
-						LW.page('/editor/ai/' + ai.id)
-					})
-					if (!ai.valid) {
-						tab.addClass("error")
-					}
 				}
-				drag_and_drop(tab)
-			})
+			} else {
+				var ai = items[item.attr('id')]
+				item.click(function(e) {
+					var ai = items[$(this).attr('id')]
+					e.stopPropagation()
+					LW.page('/editor/' + ai.id)
+				})
+				if (!ai.valid) {
+					item.addClass("error")
+				}
+			}
+			drag_and_drop(item)
+		}
 
+		var update_tree = function() {
+			var tree = build_tree(null, 1)
+			$('#ai-list').find('> .folder').empty().append(tree.html)
+			$('#ai-list .item').each(function() {
+				add_item_events($(this))
+			})
 			for (var i in ais) {
 				var ai = ais[i]
 				editors[ai.id].tabDiv = $('#ai-list .ai[id=' + ai.id + ']')
 			}
-
-			$('#ai-list .folder').on({
-		        drop: function(e) {
-					var from_folder = $('#ai-list .item[id=' + _dragging + ']').parent().parent().attr('id')
-					move_item(_dragging, from_folder, $(this).attr('id'))
-					_dragging = null
-					e.preventDefault()
-					e.stopPropagation()
-					$(this).removeClass('drag-hover')
-					return false
-		        },
-				dragenter: function(e) {
-					$(this).addClass('drag-hover')
-					e.stopPropagation()
-				},
-				dragleave: function(e) {
-					$(this).removeClass('drag-hover')
-					e.stopPropagation()
-				},
-		        dragover: function(e) {
-					$(this).addClass('drag-hover')
-		            e.preventDefault()
-					e.stopPropagation()
-		        }
+			$('#ai-list .folder').each(function() {
+				add_folder_drag_and_drop_events($(this))
 			})
 		}
 
@@ -250,40 +257,28 @@ LW.pages.editor.init = function(params, $scope, $page) {
 			})
 		})
 
+		// New folder
 		$('#new-folder-button').click(function() {
-
 			_.post('ai-folder/new', {folder_id: 0}, function(data) {
-
-				$('#ai-list').append("<div id='" + data.id + "' class='item folder'><span class='icon'></span>" + _.lang.get('editor', 'new_folder') + "</div>");
-				var tab = $('#ai-list .ai[id=' + data.id + ']').last()
-				tab.click(function() {
-					LW.page('/editor/folder/' + data.id)
-				})
+				var folder = $("<div id='" + data.id + "' class='item folder empty' draggable='true'><div class='label'><div class='triangle'></div><span class='icon'></span>" + _.lang.get('editor', 'new_folder') + "</div><div class='content'></div></div>")
+				add_folder_drag_and_drop_events(folder)
+				add_item_events(folder)
+				$('#ai-list > .folder > .content').append(folder)
 			})
 		})
 
 		// IA de départ
-		_.log("type " + params.type)
-		currentType = params.type
-
-		if (currentType == 'ai' && 'id' in params && params.id in editors) {
-
+		if (params && params.id in editors) {
 			current = params.id
 			localStorage['editor/last_code'] = params.id
 			editors[current].show()
-
-		} else if (currentType == 'folder') {
-
-			LW.pages.editor.open_folder(params.id)
-
 		} else {
-
 			if (editors.length == 0) {
 				current = null
 			} else if ('editor/last_code' in localStorage && localStorage['editor/last_code'] in editors) {
-				LW.page('/editor/ai/' + localStorage['editor/last_code'])
+				LW.page('/editor/' + localStorage['editor/last_code'])
 			} else {
-				LW.page('/editor/ai/' + _.firstKey(editors))
+				LW.page('/editor/' + _.firstKey(editors))
 			}
 		}
 
@@ -397,7 +392,6 @@ LW.pages.editor.init = function(params, $scope, $page) {
 
 		_theme = localStorage['editor/theme']
 		$('#editor-page').addClass(_theme)
-
 
 		// Popup des paramètres
 		var settingsPopup = new _.popup.new('editor.settings_popup', {}, 600)
@@ -675,13 +669,10 @@ LW.pages.editor.init = function(params, $scope, $page) {
 
 LW.pages.editor.update = function(params) {
 
-	currentType = params.type
-	if (currentType == 'ai' && params && 'id' in params && params.id in editors) {
+	if ('id' in params && params.id in editors) {
 		current = params.id
 		editors[current].show()
 		localStorage['editor/last_code'] = params.id
-	} else if (currentType == 'folder') {
-		LW.pages.editor.open_folder(params.id)
 	} else {
 		LW.loader.hide()
 	}
@@ -763,7 +754,7 @@ LW.pages.editor.test = function(e) {
 LW.pages.editor.jumpTo = function(ai, line) {
 
 	if (ai != current) {
-		LW.page('/editor/ai/' + ai)
+		LW.page('/editor/' + ai)
 	}
 
 	line--
