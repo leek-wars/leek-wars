@@ -2,6 +2,10 @@
 
 	<div>
 		<h1>{#title}</h1>
+
+		<div class='info'>
+			<span id="ai-name"></span>
+		</div>
 	</div>
 
 	<div class='tabs'>
@@ -78,10 +82,14 @@
 
 @view (delete_popup)
 
-	<div class='title'>{#delete_ai, ai}</div>
+	@if (type == 'ai')
+		<div class='title'>{#delete_ai, name}</div>
+	@else
+		<div class='title'>{#delete_folder, name}</div>
+	@end
 
 	<div class='content'>
-	{#delete_warning}
+		{#delete_warning}
 	</div>
 
 	<div class='actions'>

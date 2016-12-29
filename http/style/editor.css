@@ -88,7 +88,16 @@ body {
 	color: #5FAD1B;
 	padding-right: 5px;
 }
-#ai-list .item.folder .icon {
+#ai-list .item > .label > .edit {
+	background-image: url('../image/edit_pen.png');
+	background-size: cover;
+	display: inline-block;
+	width: 12px;
+	height: 12px;
+	margin-left: 5px;
+	display: none;
+}
+#ai-list .item.folder > .label > .icon {
 	display: inline-block;
 	background-image: url('../image/folder.png');
 	background-size: cover;
@@ -96,24 +105,32 @@ body {
 	height: 10px;
 	margin-right: 5px;
 }
-#ai-list .item.selected.folder .icon {
+#ai-list .item.selected.folder > .label > .icon {
 	background-image: url('../image/folder_white.png');
 }
-#ai-list .item .label:hover {
+#ai-list .item > .label:hover {
 	background: white;
 	color: black;
 }
-#ai-list .item.selected .label {
+#ai-list .item > .label:hover > .edit {
+	display: inline-block;
+}
+#ai-list .item > .label > .text[contenteditable="true"] {
+	background: white;
+	color: black;
+	padding: 0 5px;-
+}
+#ai-list .item.selected > .label {
 	background: #aaa;
 	color: white;
 }
-#ai-list .item.selected .label:before {
+#ai-list .item.selected > .label:before {
 	color: white;
 }
-#ai-list .item.modified .label {
+#ai-list .item.modified > .label {
 	color: red;
 }
-#ai-list .item.error .label:before {
+#ai-list .item.error > .label:before {
 	content: "✘";
 	font-weight: bold;
 	color: red;
@@ -362,10 +379,10 @@ body {
 .theme-monokai #ai-list .item:not(.modified) .label {
 	color: #eee;
 }
-.theme-monokai #ai-list .item.selected .label {
+.theme-monokai #ai-list .item.selected > .label {
 	background: #555;
 }
-.theme-monokai #ai-list .item .label:hover {
+.theme-monokai #ai-list .item > .label:hover {
 	background: #444;
 }
 .theme-monokai #ai-list .folder.drag-hover {

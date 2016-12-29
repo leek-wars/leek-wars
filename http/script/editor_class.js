@@ -149,7 +149,7 @@ var Editor = function(id, name, valid, code, folder, level) {
 			this.editorDiv.show();
 
 			// if (!_BASIC) {
-				this.editor.focus();
+				//this.editor.focus();
 				this.editor.refresh();
 			// }
 
@@ -333,15 +333,6 @@ var Editor = function(id, name, valid, code, folder, level) {
 
 		if (this.hlLine) this.editor.removeLineClass(this.hlLine, "background", "activeline");
 		this.hlLine = this.editor.addLineClass(cursor.line, "background", "activeline");
-	}
-
-
-	this.updateName = function(name) {
-
-		this.name = name
-		this.tabDiv.text(name);
-
-		_.post('ai/rename', {ai_id: this.id, new_name: name})
 	}
 
 	// Not used
