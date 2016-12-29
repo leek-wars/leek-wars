@@ -161,7 +161,7 @@ LW.pages.editor.init = function(params, $scope, $page) {
 			var ai = item.hasClass('ai')
 			var url = ai ? 'ai/change-folder' : 'ai-folder/change-folder'
 			var args = ai ? {ai_id: item_id, folder_id: to_folder_id} :
-				{folder_id: item_id, folder_dest_id: to_folder_id}
+				{folder_id: item_id, dest_folder_id: to_folder_id}
 			_.post(url, args)
 		}
 
