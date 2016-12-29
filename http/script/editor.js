@@ -223,7 +223,7 @@ LW.pages.editor.init = function(params, $scope, $page) {
 		}
 
 		var update_tree = function() {
-			var tree = build_tree(null, 1)
+			var tree = build_tree(0, 1)
 			$('#ai-list').find('> .folder').empty().append(tree.html)
 			$('#ai-list .item').each(function() {
 				add_item_events($(this))
