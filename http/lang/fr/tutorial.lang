@@ -709,34 +709,34 @@ var_1			Qu’est ce qu’une variable ?
 var_10			Pour utiliser une variable, il est nécessaire de la déclarer au préalable. Cette déclaration se fait en utilisant
 	le mot clé “var” de la manière suivante :
 var_11			// On déclare la variable nomDeVariable
-var nomDeVariable;
+				var nomDeVariable;
 var_12			Il est également possible d’attribuer une valeur à votre variable de la manière suivante :
 var_13			// On déclare la variable nomDeVariable et on lui assigne la valeur 12
-var nomDeVariable = 12;
+				var nomDeVariable = 12;
 var_14			À noter qu’on peut également déclarer plusieurs variables en les séparant par une virgule :
 var_15			// Déclaration de premiereVariable et deuxiemeVariable
-var premiereVariable, deuxiemeVariable;
+				var premiereVariable, deuxiemeVariable;
 var_16			Attention à ne pas oublier le point-virgule <b>;</b> à la fin de l’instruction.
 var_17			Les variables déclarées avec le mot clé var ont comme durée de vie le tour de votre poireau,
-	il existe un second type de variable qui gardent leur valeur durant toute la durée du combat : les variables globales.
-Pour déclarer une variable globale, il suffit d’utiliser le mot-clé “global” au lieu de “var” :
+				il existe un second type de variable qui gardent leur valeur durant toute la durée du combat : les variables globales.
+				Pour déclarer une variable globale, il suffit d’utiliser le mot-clé “global” au lieu de “var” :
 var_18			// Déclaration d’une variable globale
-global nomDeGlobale;
+				global nomDeGlobale;
 var_19			Il est également possible d’assigner une valeur à une globale lors de sa déclaration :
 var_2			Les variables sont un point fondamental dans tous les langages de programmation. Elles permettent de garder
-    en mémoire des valeurs afin de les réutiliser dans des calculs.
+    			en mémoire des valeurs afin de les réutiliser dans des calculs.
 var_20			// Déclaration de la variable globale nomDeGlobale, de valeur 42
-global nomDeGlobale = 42;
+				global nomDeGlobale = 42;
 var_21			Les variables et variables globales peuvent s’utiliser de la même manière dans le code, dans la suite
-	du tuto nous utiliserons principalement des variables normales.
+				du tuto nous utiliserons principalement des variables normales.
 var_22			Utilisation des variables
 var_23			Il est possible d’utiliser les variables dans votre code de différentes façons.
 var_24			On peut leur assigner une valeur (c’est à dire leur faire “retenir” cette valeur en mémoire) en utilisant
 	l’opérateur d’assignation <b>=</b> :
 var_25			// On déclare maVariable
-var maVariable;
-// On assigne 1 à maVariable
-maVariable = 1;
+				var maVariable;
+				// On assigne 1 à maVariable
+				maVariable = 1;
 var_26			Il est possible d’effectuer des calculs écrivant des expressions, vous pouvez utiliser les opérateurs suivants :
 var_27			+ : addition
 var_28			- : soustraction
@@ -761,7 +761,7 @@ var_33			// Déclaration de la variable a
 				// Et même utiliser des parenthèses
 				a = (2 + 3) * 2; // a prend la valeur 10
 var_34			On peut également utiliser une variable dans une expression, sa valeur sera utilisée pour
-	effectuer le calcul. Par exemple :
+				effectuer le calcul. Par exemple :
 var_35			// Déclaration de la variable a et b
 				var a, b;
 
@@ -774,7 +774,7 @@ var_36			On peut également utiliser des chaînes de caractères de la manière 
 var_37			var maVariable;
 				maVariable = "Je suis une chaîne de caractères";
 var_38			Pour une chaîne de caractère, seul l’opérateur <b>+</b> est utilisable, il permet de concaténer des morceaux
-	de chaîne, c’est à dire de les mettre bout à bout. Ainsi le code :
+				de chaîne, c’est à dire de les mettre bout à bout. Ainsi le code :
 var_39			// Déclaration de chaine1 et chaine2
 				var chaine1, chaine2;
 
@@ -782,7 +782,7 @@ var_39			// Déclaration de chaine1 et chaine2
 				chaine2 = chaine1 + " tout le monde"; // chaine2 vaut "Bonjour tout le monde"
 var_4			Chaîne de caractères
 var_40			Il est intéressant de noter qu’on peut concaténer une chaîne avec un nombre, cela peut être utile
-	pour inclure le résultat d’un calcul dans une chaîne :
+				pour inclure le résultat d’un calcul dans une chaîne :
 var_41			// Déclaration de a et chaine
 				var a, chaine;
 
@@ -791,24 +791,24 @@ var_41			// Déclaration de a et chaine
 				// chaine contient alors "Multiplier 51 et 17 donne la valeur : 867"
 var_42			Un bon réflex en LeekScript
 var_43			Ce que nous allons voir maintenant est un outil qui va vous être très utile dans le développement de votre IA,
-	il s’agit d’une fonction vous permettant d’afficher la valeur de variable ou d’expressions.
+				il s’agit d’une fonction vous permettant d’afficher la valeur de variable ou d’expressions.
 var_44			Nous n’avons pas encore vu comment utiliser de fonction et nous expliqueront leur mécanisme plus en détail un peu plus
-	loin dans ce cours, pour le moment nous allons juste apprendre à utiliser "debug".
+				loin dans ce cours, pour le moment nous allons juste apprendre à utiliser "debug".
 var_45			<i>debug</i> est une fonction du LeekScript qui permet d’afficher dans les log de combat (il s’agit un peu d’une
-	sortie standard).
-	Vous pourrez donc en savoir un peu plus sur l’exécution de votre script.
-	Nous allons apprendre à l’utiliser.
+				sortie standard).
+				Vous pourrez donc en savoir un peu plus sur l’exécution de votre script.
+				Nous allons apprendre à l’utiliser.
 var_46			Rendez vous dans l’éditeur et créez une nouvelle IA, mettez y le code suivant :
 var_47			debug("Je suis un texte de test");
 var_48			Lancez un combat de test et faites “Quitter” (la petite croix en bas)  afin d’accéder directement au
-	rapport de combat. Cliquez sur le sous onglet “Actions”, vous arrivez alors sur cette page :
+				rapport de combat. Cliquez sur le sous onglet “Actions”, vous arrivez alors sur cette page :
 var_49			La fonction debug() en action
 var_5			Nombre
 var_50			Cette page récapitule toutes les actions du combat, vous pouvez remarquer qu’à chaque début de votre tour,
-	une ligne : “[VotrePoireau] Je suis un texte de test” apparaît.
+				une ligne : “[VotrePoireau] Je suis un texte de test” apparaît.
 var_51			A chaque fois que la fonction <i>debug</i> est appelée, la valeur fournie en paramètre est ajoutée dans les logs dans la
-	chronologie du combat, vous pouvez donc voir à quel moment du combat s’execute l’instruction.
-	Vous pouvez afficher la valeur d’une variable, le résultat d’un calcul...
+				chronologie du combat, vous pouvez donc voir à quel moment du combat s’execute l’instruction.
+				Vous pouvez afficher la valeur d’une variable, le résultat d’un calcul...
 var_52			// Affichage d’un texte simple
 				debug("Texte simple"); // Affiche : [VotrePoireau] Texte simple
 				debug(5 + 6); // Affiche : [VotrePoireau] 11
