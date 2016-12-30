@@ -538,6 +538,7 @@ Entity = Class.extend(Entity, function() {
 		if (!this.dead) {
 			this.bubble.setLama();
 			this.bubble.show(10);
+			S.lama.play();
 		}
 	}
 
