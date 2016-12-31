@@ -50,7 +50,7 @@ n_tp			%s TP
 n_vita			%s total health
 n_wisdom			%s wisdom
 pause			Pause
-pause_message			Clic or press 'P' to resume
+pause_message			Click or press 'P' to resume
 position_in_queue			Position in queue : %1$s / %2$s
 quality			Display quality
 quality_high			High
