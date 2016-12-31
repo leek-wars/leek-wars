@@ -44,19 +44,6 @@ var Editor = function(id, name, valid, code, folder, level) {
 
 	var editor = this
 
-	// Ajout de l'onglet
-	$('#ai-list').append("<div id='" + id + "' class='ai'>" + _.protect(name) + "</div>")
-
-	this.tabDiv = $('#ai-list .ai[id=' + id + ']').last()
-
-	this.tabDiv.click(function() {
-		LW.page('/editor/' + id)
-	})
-
-	if (!valid) {
-		this.tabDiv.removeClass("error").addClass("error")
-	}
-
 	this.editor = CodeMirror(this.editorDiv[0], {
 		value: code,
 		mode:  "leekscript",
