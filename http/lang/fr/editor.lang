@@ -1,6 +1,7 @@
 1_core			1 coeur
 ai_error		<b>%1$s</b> ligne <b>%2$s</b>
 ai_to_test		IA à tester
+ai_renamed		IA renommée en <b>%s</b>
 auto_closing	Fermeture automatique des parenthèses, crochets, accolades et guillemets
 autocompletion	Autocomplétion (proposition des variables courantes et fonctions de la doc)
 child			Enfant
@@ -8,8 +9,9 @@ constant		Constante %s
 defined_in		Définie dans <b>%1$s</b> à la ligne <b>%2$s</b>
 delete			Supprimer
 delete_ai		Supprimer l'IA "%s" ?
+delete_folder	Supprimer le dossier "%s" ?
 delete_cancel	Annuler
-delete_desc		Supprimer l'IA courante
+delete_desc		Supprimer l'IA ou le dossier courant
 delete_validate	Supprimer
 delete_warning	Cette action est irreversible.
 display			Affichage
@@ -20,6 +22,7 @@ evil			Diabolique
 export			Exporter
 export_desc		Télécharger l'IA courante dans un fichier.
 font_size		Taille de la police
+folder_renamed	Dossier renommé en <b>%s</b>
 function_f		Fonction %s
 hard			Difficile
 import			Importer
@@ -30,9 +33,10 @@ medium			Moyen
 n_ais_unsaved	Vous avez %s IA(s) non sauvegardée(s).
 n_characters	%s caractères
 n_cores			%s coeurs
-new				Nouveau
+name_already_exists		Le nom <b>%s</b> est déjà utilisé !
+new				IA
 new_desc		Créer une nouvelle IA
-new_folder		Nouv. dossier
+new_folder		Dossier
 n_lines			%s lignes
 opponent_agility			Agilité
 opponent_agility_life		Agilité / Vie
