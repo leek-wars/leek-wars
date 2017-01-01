@@ -251,7 +251,7 @@ var Game = function() {
 		game.map = M[fight.data.map.type + 1]
 
 		// Atmosphere sound of the map
-		game.sound = game.map.sound;
+		game.atmosphere = game.map.sound;
 
 		game.obstacles = fight.data.map.obstacles
 
@@ -420,8 +420,8 @@ var Game = function() {
 	this.launch = function() {
 
 		// Atmosphere sound
-		if(game.sound != null){
-			game.sound.loop();
+		if (game.atmosphere != null && game.sound) {
+			game.atmosphere.loop()
 		}
 
 		// Obstacles
@@ -586,6 +586,9 @@ var Game = function() {
 
 	this.toggleSound = function() {
 		this.sound = !this.sound;
+		if (this.atmosphere != null) {
+			this.atmosphere.stop()
+		}
 		localStorage['fight/sound'] = this.sound
 	}
 
@@ -685,8 +688,8 @@ var Game = function() {
 		if (!this.requestPause && !this.paused) {
 
 			// Stop atmosphere sound
-			if(game.sound != null){
-				game.sound.stop();
+			if (game.atmosphere != null) {
+				game.atmosphere.stop();
 			}
 
 			this.requestPause = true;
@@ -699,8 +702,8 @@ var Game = function() {
 	this.resume = function() {
 		if (this.paused) {
 			// Start atmosphere sound
-			if(game.sound != null){
-				game.sound.loop();
+			if (game.atmosphere != null) {
+				game.atmosphere.loop();
 			}
 
 			this.paused = false;

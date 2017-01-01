@@ -302,7 +302,7 @@ var Sounds = function() {
 	this.shield = new Sound(LW.staticURL + "sound/chips/shield.mp3", VOL_DEFFENSIVE_SOUND);
 	this.poison = new Sound(LW.staticURL + "sound/chips/poison.mp3", VOL_OFFENSIVE_SOUND);
 	this.lightning = new Sound(LW.staticURL + "sound/chips/lightning.mp3", VOL_OFFENSIVE_SOUND);
-	this.fire = new Sound(LW.staticURL + "sound/chips/fire.mp3", VOL_OFFENSIVE_SOUND);	
+	this.fire = new Sound(LW.staticURL + "sound/chips/fire.mp3", VOL_OFFENSIVE_SOUND);
 	this.rock = new Sound(LW.staticURL + "sound/chips/rock.mp3", VOL_OFFENSIVE_SOUND);
 	this.rockfall = new Sound(LW.staticURL + "sound/chips/rockfall.mp3", VOL_OFFENSIVE_SOUND);
 	this.ice = new Sound(LW.staticURL + "sound/chips/ice.mp3", VOL_OFFENSIVE_SOUND);
@@ -310,7 +310,7 @@ var Sounds = function() {
 	this.liberation = new Sound(LW.staticURL + "sound/chips/liberation.mp3", VOL_SPECIAL_SOUND);
 	this.teleportation = new Sound(LW.staticURL + "sound/chips/teleportation.mp3", VOL_SPECIAL_SOUND);
 	this.debuff = new Sound(LW.staticURL + "sound/chips/debuff.mp3", VOL_OFFENSIVE_SOUND);
-	
+
 	//other
 	this.set_weapon = new Sound(LW.staticURL + "sound/others/set_weapon.mp3", VOL_OTHER_SOUND);
 	this.move = new Sound(LW.staticURL + "sound/others/move.mp3", VOL_OTHER_SOUND);
@@ -362,28 +362,24 @@ function Sound(src, volume) {
 	}
 
 	this.loop = function() {
-		
 		if (game.sound && this.sound != null) {
-			if (typeof this.sound.loop == 'boolean')
-			{
+			if (typeof this.sound.loop == 'boolean') {
 				this.sound.loop = true;
 				//cut the silence
 				//this.sound.duration = this.sound.duration -1;
-			}
-			else
-			{
+			} else {
 				this.sound.addEventListener('timeupdate', function() {
 					//cut the silence
 					//if(this.sound.currentTime > this.sound.duration - 1){
 						this.sound.currentTime = 0;
 						this.sound.play();
-					//}				
+					//}
 				}, false);
 			}
-			this.sound.play();		
+			this.sound.play()
 		}
 	}
-	
+
 	this.stop = function() {
 		if (game.sound && this.sound != null) {
 			this.sound.pause();
