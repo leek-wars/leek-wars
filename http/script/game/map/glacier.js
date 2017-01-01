@@ -1,5 +1,8 @@
 var Glacier = function() {
 	
+	// Atmosphere sound
+	this.sound = S.map_glacier;
+	
 	this.groundColor = "#2effff";
 	this.groundTexture = T.glacier;
 	this.obstaclesSmall = [T.ice_small, T.ice_small, T.ice_small];

@@ -1,5 +1,4 @@
 var Bulb = Entity.extend({}, function() {
-
 	this.skin
 	this.bulbName
 	
@@ -50,7 +49,6 @@ var Bulb = Entity.extend({}, function() {
 	}
 
 	this.update = function(dt) {
-
 		Entity.prototype.update.call(this, dt)
 	}
 
