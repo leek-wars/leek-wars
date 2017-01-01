@@ -292,7 +292,6 @@ var Sounds = function() {
 	this.double_gun = new Sound(LW.staticURL + "sound/weapons/double_gun.mp3", VOL_OFFENSIVE_SOUND);
 	this.shotgun = new Sound(LW.staticURL + "sound/weapons/shotgun.mp3", VOL_OFFENSIVE_SOUND);
 	this.grenade_shoot = new Sound(LW.staticURL + "sound/weapons/grenade_shoot.mp3", VOL_OFFENSIVE_SOUND);
-	this.grenade_rebound = new Sound(LW.staticURL + "sound/weapons/grenade_rebound.mp3", VOL_OFFENSIVE_SOUND);
 	this.explosion = new Sound(LW.staticURL + "sound/weapons/explosion.mp3", VOL_OFFENSIVE_SOUND);
 	this.sword = new Sound(LW.staticURL + "sound/weapons/sword.mp3", VOL_OFFENSIVE_SOUND);
 	this.flame_thrower = new Sound(LW.staticURL + "sound/weapons/flame_thrower.mp3", VOL_OFFENSIVE_SOUND);
@@ -315,13 +314,14 @@ var Sounds = function() {
 	//other
 	this.set_weapon = new Sound(LW.staticURL + "sound/others/set_weapon.mp3", VOL_OTHER_SOUND);
 	this.move = new Sound(LW.staticURL + "sound/others/move.mp3", VOL_OTHER_SOUND);
+	this.lama = new Sound(LW.staticURL + "sound/others/lama.mp3", VOL_OTHER_SOUND);
 	this.bulb = new Sound(LW.staticURL + "sound/others/bulb.mp3", VOL_SPECIAL_SOUND);
 	this.map_forest = new Sound(LW.staticURL + "sound/others/map_forest.mp3", VOL_MAP_SOUND);
 	this.map_beach = new Sound(LW.staticURL + "sound/others/map_beach.mp3", VOL_MAP_SOUND);
 	this.map_desert = new Sound(LW.staticURL + "sound/others/map_desert.mp3", VOL_MAP_SOUND);
 	this.map_factory = new Sound(LW.staticURL + "sound/others/map_factory.mp3", VOL_MAP_SOUND);
 	this.map_glacier = new Sound(LW.staticURL + "sound/others/map_glacier.mp3", VOL_MAP_SOUND);
-	this.lama = new Sound(LW.staticURL + "sound/others/lama.mp3", VOL_MAP_SOUND);
+	this.map_nexus = new Sound(LW.staticURL + "sound/others/map_nexus.mp3", VOL_MAP_SOUND)
 }
 
 function Sound(src, volume) {

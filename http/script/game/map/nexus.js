@@ -1,7 +1,7 @@
 var Nexus = function() {
 	
 	// Atmosphere sound
-	this.sound = null;
+	this.sound = S.map_nexus;
 	
 	this.groundColor = "#fff";
 	this.groundTexture = T.nexus_bg;
