@@ -482,7 +482,7 @@
 
 @view (notification)
 	<a href='{link}'><div class='notification' notif='{id}' type='{type}'>
-		<img src='{{static}}/image/notif/{image}.png'></img>
+		<img class='avatar' src='{{static}}/image/notif/{image}.png'></img>
 		<div class='title'>{{_.lang.get('notifications', 'title_' + type, title)}}</div>
 			<div class='message'>{_.lang.get('notifications', 'message_' + type, message)}</div>
 			<span class='date'>{formatted_date}</span>

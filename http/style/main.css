@@ -608,9 +608,8 @@ body.social-collapsed #social-button .icon {
 	background-color: white;
 }
 
-#messages .message img,
-#messages-popup .message img
-{
+#messages .message .avatar,
+#messages-popup .message .avatar {
 	height: 40px;
 	width: 40px;
 	float: left;

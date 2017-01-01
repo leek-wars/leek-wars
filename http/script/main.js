@@ -2601,7 +2601,7 @@ LW.messages.getAvatars = function(conversation) {
 
 	for (var f in conversation.farmers) {
 		if (conversation.farmers[f].id == LW.farmer.id) continue
-		return "<img src='" + LW.util.getAvatar(conversation.farmers[f].id, conversation.farmers[f].avatar_changed) + "'></img>"
+		return "<img class='avatar' src='" + LW.util.getAvatar(conversation.farmers[f].id, conversation.farmers[f].avatar_changed) + "'></img>"
 	}
 }
 
