@@ -870,6 +870,7 @@ LW.connect = function(farmer, callback) {
 		$('.farmer-name').text(LW.farmer.name)
 		$('#farmer-habs').html(_.format.number(LW.farmer.habs))
 		$('#farmer-crystals').html(_.format.number(LW.farmer.crystals))
+		$('#farmer-fights').text(LW.farmer.fights)
 
 		// Leek tabs
 		var leeks = LW.farmer.leeks
@@ -1876,7 +1877,7 @@ var FormatTime = function(time) {
 	var res = "";
 	if (hours > 0) res += hours + "h ";
 	if (minuts > 0) res += minuts + "m ";
-	res += seconds + "s";
+	if (seconds != 0) res += seconds + "s";
 
 	return res;
 }

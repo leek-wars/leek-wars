@@ -67,11 +67,9 @@ n_capital						<span id='capital-count'>%s</span> capital
 new_chips						Nouvelles puces
 new_functions					Nouvelles fonctions
 new_weapons						Nouvelles armes
-next_fight_in					Prochain combat dans %s
 no_hat							Pas de chapeau
 not_found						Poireau introuvable
 not_found_id					Poireau d'id <b>%s</b> introuvable
-n_remaining_fights				%s combats restants
 ok								OK
 potion							Potion
 popup_level_301_title			Félicitations !
