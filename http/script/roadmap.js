@@ -7,7 +7,7 @@ LW.pages.roadmap.init = function(params, $scope, $page) {
 				"Visualiser les anciens combats",
 				"Dossiers dans l'éditeur",
 				"Mail recap de toutes les mises à jour (mi-janvier)",
-				"[secret][important] lié aux combats",
+				"Fusion des compteurs de combats en un seul",
 			]
 		},
 		{
