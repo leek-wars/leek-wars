@@ -16,7 +16,7 @@ LW.pages.fight.init = function(params, $scope, $page) {
 	var id = params.id
 	_id = id
 
-	_.get('fight/get/' + id, function(data) {
+	var callback = function(data) {
 
 		if (!data.success) {
 			LW.error("Fight not found")
@@ -93,14 +93,39 @@ LW.pages.fight.init = function(params, $scope, $page) {
 		})
 
 		$('#comments .comment .text').each(function() {
-			$(this).html(LW.smiley($(this).text()))
+			$(this).html(LW.smiley(_.protect($(this).text())))
 		})
 
 		// Écoute de la position sur la file
 		// LW.socket.send([FIGHT_LISTEN, id]);
 
 		LW.pages.fight.file_input();
-	})
+	}
+
+	if (id == 'local') {
+		var local_fight = {
+			context: 3,
+			date: 0,
+			farmers1: {1: {id: 1}},
+			farmers2: {1: {id: 1}},
+			id: 0,
+			leeks1: [],
+			leeks2: [],
+			report: null,
+			status: 1,
+			team1_name: "A",
+			team2_name: "B",
+			tournament: 0,
+			type: 0,
+			winner: 1,
+			year: 2016,
+			data: __FIGHT_DATA
+		}
+		_.log("Local fight: ", local_fight);
+		callback({success: true, fight: local_fight})
+	} else {
+		_.get('fight/get/' + id, callback)
+	}
 }
 
 LW.pages.fight.pause = function() {
@@ -117,6 +142,9 @@ LW.pages.fight.keydown = function(event) {
 	if ($("#comment-input").is(":focus")) return null
 
 	if (event.keyCode == 81) { // Q
+		if (_fullscreen) {
+			LW.pages.fight.fullscreen();
+		}
 		game.showReport()
 		event.preventDefault()
 	}

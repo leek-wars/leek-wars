@@ -16,10 +16,10 @@ body {
 #editor-page .search-panel .arrow {
 	width: 20px;
 	height: 12px;
-	margin: 0; 
+	margin: 0;
 	padding: 14px 10px;
 	opacity: 0.3;
-	cursor: pointer; 
+	cursor: pointer;
 }
 
 #editor-page .search-panel .arrow:hover {
@@ -72,32 +72,65 @@ body {
 	overflow-y: auto;
 }
 
-#ai-list .ai {
-	padding: 10px;
+#ai-list .item {
 	cursor: pointer;
 	color: #555;
-} 
-#ai-list .ai:before {
+}
+#ai-list .item.dragging {
+	opacity: 1;
+}
+#ai-list .item .label {
+	padding: 5px 10px;
+}
+#ai-list .item.ai .label:before {
 	content: "✔";
 	font-weight: bold;
 	color: #5FAD1B;
 	padding-right: 5px;
 }
-#ai-list .ai:hover {
+#ai-list .item > .label > .edit {
+	background-image: url('../image/edit_pen.png');
+	background-size: cover;
+	display: inline-block;
+	width: 12px;
+	height: 12px;
+	margin-left: 5px;
+	display: none;
+}
+#ai-list .item.folder > .label > .icon {
+	display: inline-block;
+	background-image: url('../image/folder.png');
+	background-size: cover;
+	width: 13px;
+	height: 10px;
+	margin-right: 5px;
+}
+#ai-list .item.selected.folder > .label > .icon {
+	background-image: url('../image/folder_white.png');
+}
+#ai-list .item > .label:hover {
 	background: white;
 	color: black;
 }
-#ai-list .ai.selected {
+#ai-list .item > .label:hover > .edit {
+	display: inline-block;
+}
+#ai-list .item > .label > .text[contenteditable="true"] {
+	background: white;
+	color: black;
+	padding: 0 5px;-
+}
+#ai-list .item.selected > .label {
 	background: #aaa;
 	color: white;
 }
-#ai-list .ai.selected:before {
+#ai-list .item.selected > .label:before {
 	color: white;
 }
-#ai-list .ai.modified {
+#ai-list .item.modified > .label {
 	color: red;
 }
-#ai-list .ai.error:before {
+#ai-list .item.error > .label:before {
 	content: "✘";
 	font-weight: bold;
 	color: red;
@@ -149,7 +182,7 @@ body {
 
 #compilation {
 	position: fixed;
-	bottom: 150px; 
+	bottom: 150px;
 	right: 50%;
 	left: 50%;
 	width: 500px;
@@ -194,7 +227,7 @@ body {
 }
 
 
-/* Editor */ 
+/* Editor */
 
 .CodeMirror {
 	font-size: 14px;
@@ -224,7 +257,7 @@ body {
 	background-position: left bottom;
 	vertical-align: text-top;
 }
- 
+
 .popup.test_popup h4 {
 	display: inline-block;
 }
@@ -332,10 +365,10 @@ body {
 }
 
 
-#editor-page.theme-monokai  .panel {
+#editor-page.theme-monokai .panel {
 	background: #272822;
 }
-#editor-page.theme-monokai  .button {
+#editor-page.theme-monokai .button {
 	background: #444;
 	color: #eee;
 	box-shadow: 0px 3px 0px black;
@@ -343,14 +376,17 @@ body {
 .theme-monokai #ai-name {
 	color: #eee;
 }
-.theme-monokai #ai-list .ai:not(.modified) {
+.theme-monokai #ai-list .item:not(.modified) .label {
 	color: #eee;
 }
-.theme-monokai #ai-list .ai.selected {
+.theme-monokai #ai-list .item.selected > .label {
 	background: #555;
 }
-.theme-monokai #ai-list .ai:hover {
+.theme-monokai #ai-list .item > .label:hover {
 	background: #444;
+}
+.theme-monokai #ai-list .folder.drag-hover {
+	background: #333;
 }
 .theme-monokai #ai-stats {
 	background: #444;
@@ -361,4 +397,62 @@ body {
 	color: #ff7f00;
 	font-weight: bold;
 	margin: 10px 0;
+}
+
+.folder-content {
+	display: none;
+	padding: 20px;
+	text-align: center;
+}
+
+.folder-content img {
+	width: 80px;
+}
+
+#ai-list .folder > .label > .triangle {
+	width: 0;
+	height: 0;
+	border-top: 5px solid transparent;
+	border-bottom: 5px solid transparent;
+	border-left: 6px solid #aaa;
+	display: inline-block;
+	margin-left: -5px;
+	margin-right: 5px;
+	margin-top: 1px;
+}
+
+#ai-list .folder.selected > .label > .triangle {
+	border-left: 6px solid white;
+}
+
+#ai-list .folder.expanded > .label > .triangle {
+	transform: rotate(90deg);
+}
+
+#ai-list .folder.drag-hover {
+	border: 1px dashed #777;
+	background: #ddd;
+}
+#ai-list .folder.drag-hover > .label {
+	margin-top: -1px;
+	font-weight: bold;
+	margin-left: -1px;
+	margin-right: -1px;
+}
+#ai-list .folder.expanded.drag-hover > .content {
+	margin-bottom: -1px;
+}
+#ai-list .folder[level="0"].drag-hover > .content {
+	margin-top: -1px;
+}
+#ai-list .folder:not(.expanded).drag-hover > .label {
+	margin-bottom: -1px;
+}
+#ai-list .folder.drag-hover > .content {
+	margin-left: -1px;
+	margin-right: 1px;
+}
+
+#ai-list .folder.empty .triangle {
+	opacity: 0;
 }

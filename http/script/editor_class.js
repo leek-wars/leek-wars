@@ -9,7 +9,7 @@ var AUTO_SHORTCUTS = [
 /*
  * Classe editor
  */
-var Editor = function(id, name, valid, code) {
+var Editor = function(id, name, valid, code, folder, level) {
 
 	// Infos de base
 	this.id = id;
@@ -42,20 +42,7 @@ var Editor = function(id, name, valid, code) {
 	this.editorDiv = $('#editors .editor[id=' + id + ']')
 	this.editorDiv.hide()
 
-	var editor = this;
-
-	// Ajout de l'onglet
-	$('#ai-list').append("<div id='" + id + "' class='ai'>" + name + "</div>");
-
-	this.tabDiv = $('#ai-list .ai[id=' + id + ']').last()
-
-	this.tabDiv.click(function() {
-		LW.page('/editor/' + id)
-	})
-
-	if (!valid) {
-		this.tabDiv.removeClass("error").addClass("error");
-	}
+	var editor = this
 
 	this.editor = CodeMirror(this.editorDiv[0], {
 		value: code,
@@ -133,7 +120,7 @@ var Editor = function(id, name, valid, code) {
 	this.show = function() {
 
 		// Tab
-		$('#ai-list .ai').removeClass('selected');
+		$('#ai-list .item').removeClass('selected');
 		this.tabDiv.addClass('selected');
 		this.modified = false;
 
@@ -153,15 +140,16 @@ var Editor = function(id, name, valid, code) {
 		} else {
 
 			LW.loader.hide()
-			$('#top').show();
-			$('#ai-name').html(this.name);
-			$('#select-msg').hide();
+			$('#top').show()
+			$('#ai-name').html(this.name)
+			$('#select-msg').hide()
 
-			$('#editors .editor').hide();
+			$('#editors .editor').hide()
+			$('#editors .folder-content').hide()
 			this.editorDiv.show();
 
 			// if (!_BASIC) {
-				this.editor.focus();
+				//this.editor.focus();
 				this.editor.refresh();
 			// }
 
@@ -345,15 +333,6 @@ var Editor = function(id, name, valid, code) {
 
 		if (this.hlLine) this.editor.removeLineClass(this.hlLine, "background", "activeline");
 		this.hlLine = this.editor.addLineClass(cursor.line, "background", "activeline");
-	}
-
-
-	this.updateName = function(name) {
-
-		this.name = name
-		this.tabDiv.text(name);
-
-		_.post('ai/rename', {ai_id: this.id, new_name: name})
 	}
 
 	// Not used

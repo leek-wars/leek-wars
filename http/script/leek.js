@@ -77,7 +77,6 @@ LW.pages.leek.init = function(params, $scope, $page) {
 			LW.pages.leek.ai(leek)
 			LW.pages.leek.registers(leek)
 			LW.pages.leek.levelPopup()
-			LW.pages.leek.time()
 		}
 	})
 }
@@ -981,38 +980,6 @@ LW.pages.leek.ai = function(leek) {
 	$('#edit-ai').click(function(e) {
 		popup.show(e)
 	})
-}
-
-LW.pages.leek.time = function() {
-
-	if (this.scope.leek.remaining_fights > 0) {
-		$('#remaining-fights .on').show()
-		$('#remaining-fights .off').hide()
-	} else {
-		$('#remaining-fights .on').hide()
-		$('#remaining-fights .off').show()
-	}
-
-	var midnignt = new Date()
-	midnignt.setHours(24, 0, 0, 0)
-
-	var timeUntilMidnight = Math.round((midnignt.getTime() - Date.now()) / 1000)
-
-	var update = null
-	this.leekTimeUpdate = function() {
-
-		timeUntilMidnight--
-		if (timeUntilMidnight < 0) {
-			$('#remaining-fights .on').show()
-			$('#remaining-fights .off').show()
-		} else {
-			$('.remaining-time').text(FormatTime(timeUntilMidnight))
-			setTimeout(update, 1000)
-		}
-	}
-	update = this.leekTimeUpdate
-
-	this.leekTimeUpdate()
 }
 
 LW.pages.leek.levelPopup = function() {

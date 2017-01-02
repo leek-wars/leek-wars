@@ -6,22 +6,6 @@
 
 		@if (my_leek)
 
-			<a href='/garden'>
-				<div class='tab'>
-					<div id='remaining-fights'>
-						<img src='{{static}}/image/icon/garden.png'>
-						<span class='on'>
-							<span>{leek.remaining_fights}</span>
-							<div id='tt_remaining-fights' class='tooltip'>{{#n_remaining_fights, leek.remaining_fights}}</div>
-						</span>
-						<span class='off'>
-							<span class='remaining-time'></span>
-							<div id='tt_remaining-time' class='tooltip'>{{#next_fight_in, "<span class='remaining-time'></span>"}}</div>
-						</span>
-					</div>
-				</div>
-			</a>
-
 			@if (leek.tournament.current)
 				<a id='view-tournament' href='/tournament/{leek.tournament.current}'>
 					<div class='tab green'>{#see_tournament}</div>

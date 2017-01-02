@@ -84,7 +84,6 @@ LW.pages.tournament.comments = function() {
 	})
 
 	$('#comments .comment .text').each(function() {
-
-		$(this).html(LW.smiley($(this).text()))
+		$(this).html(LW.smiley(_.protect($(this).text())))
 	})
 }

@@ -42,6 +42,21 @@
 	margin-bottom: 4px;
 	width: 24px;
 }
+#garden-page .player-count {
+	font-size: 20px;
+	color: #999;
+}
+#garden-page .sword {
+	height: 20px;
+	margin: 0 10px;
+	vertical-align: middle;
+	margin-bottom: 6px;
+}
+#garden-page .player {
+	height: 20px;
+	vertical-align: middle;
+	margin-bottom: 7px;
+}
 
 /*
  * Partie droite

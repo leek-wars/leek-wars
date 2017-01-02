@@ -283,7 +283,7 @@
 <div class='flex-container'>
 	<div class='column6'>
 
-		@if (farmer.fights.length > 0)
+		@if (farmer.fight_history.length > 0)
 			<div id='history' class='panel'>
 
 				<div class='header'>
@@ -291,7 +291,7 @@
 				</div>
 
 				<div class='content fight-history'>
-					@foreach (fight in farmer.fights)
+					@foreach (fight in farmer.fight_history)
 						<div class='fight-wrapper'>
 							@include('main.fight', fight)
 						</div>

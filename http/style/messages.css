@@ -45,7 +45,7 @@
 	padding: 5px;
 }
 
-.conversation-preview img {
+.conversation-preview .avatar {
 	width: 52px;
 	height: 52px;
 }
@@ -70,4 +70,3 @@
 #conversations .loader {
 	padding: 40px;
 }
-

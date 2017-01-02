@@ -314,7 +314,7 @@
 				<span>{%xp}</span>
 			</td>
 			<td class='talent'>
-				<img src='/static/image/talent.png' />
+				<img src='{{static}}image/talent.png' />
 				{talent}
 				@if (talent_gain >= 0) + {talent_gain} @else - {Math.abs(talent_gain)} @end
 			</td>
@@ -353,7 +353,7 @@
 		</td>
 		@if (talent)
 			<td class='talent'>
-				<img src='/static/image/talent.png' />
+				<img src='{{static}}image/talent.png' />
 				{talent}
 				@if (talent_gain >= 0) + {talent_gain} @else - {Math.abs(talent_gain)} @end
 			</td>

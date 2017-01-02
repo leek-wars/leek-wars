@@ -67,11 +67,9 @@ n_capital						<span id='capital-count'>%s</span> capital
 new_chips						New chips
 new_functions					New functions
 new_weapons						New weapons
-next_fight_in					Next fight in %s
 no_hat							No hat
 not_found						Leek not found
 not_found_id					Leek with id  <b>%s</b>not found
-n_remaining_fights				%s remaining fights
 ok								OK
 potion							Potion
 popup_level_301_title			Congratulations!

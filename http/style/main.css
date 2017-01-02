@@ -608,9 +608,8 @@ body.social-collapsed #social-button .icon {
 	background-color: white;
 }
 
-#messages .message img,
-#messages-popup .message img
-{
+#messages .message .avatar,
+#messages-popup .message .avatar {
 	height: 40px;
 	width: 40px;
 	float: left;
@@ -978,10 +977,17 @@ body.connected #header-signin {
 	margin-right: -4px;
 }
 
-#settings-button img, .notifications-button img, .messages-button img{
+#settings-button img, .notifications-button img, .messages-button img {
 	height: 26px;
 	width: 26px;
 	margin: 8px 0;
+	opacity: 0.8;
+}
+
+.fights-button img {
+	height: 20px;
+	width: 20px;
+	margin: 11px 0;
 	opacity: 0.8;
 }
 

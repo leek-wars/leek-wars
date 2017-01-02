@@ -194,7 +194,7 @@ var Game = function() {
 
 	// Map
 	this.map;
-	
+
 	this.drawArea = 0;
 
 	// Mouse
@@ -249,9 +249,9 @@ var Game = function() {
 		}
 
 		game.map = M[fight.data.map.type + 1]
-		
+
 		// Atmosphere sound of the map
-		game.sound = game.map.sound;
+		game.atmosphere = game.map.sound;
 
 		game.obstacles = fight.data.map.obstacles
 
@@ -418,12 +418,12 @@ var Game = function() {
 	 * Ressources chargées, on peut y aller
 	 */
 	this.launch = function() {
-		
+
 		// Atmosphere sound
-		if(game.sound != null){
-			game.sound.loop();
+		if (game.atmosphere != null && game.sound) {
+			game.atmosphere.loop()
 		}
-			
+
 		// Obstacles
 		var obstacles = game.obstacles;
 
@@ -586,6 +586,9 @@ var Game = function() {
 
 	this.toggleSound = function() {
 		this.sound = !this.sound;
+		if (this.sound == false && this.atmosphere != null) {
+			this.atmosphere.stop()
+		}
 		localStorage['fight/sound'] = this.sound
 	}
 
@@ -598,9 +601,9 @@ var Game = function() {
 	}
 
 	this.update = function() {
-		
-		if (!this.paused) {	
-		
+
+		if (!this.paused) {
+
 			this.computeDT()
 
 			// Logs
@@ -681,14 +684,14 @@ var Game = function() {
 	}
 
 	this.pause = function() {
-		
+
 		if (!this.requestPause && !this.paused) {
-			
+
 			// Stop atmosphere sound
-			if(game.sound != null){
-				game.sound.stop();
-			}		
-			
+			if (game.atmosphere != null) {
+				game.atmosphere.stop()
+			}
+
 			this.requestPause = true;
 
 			$('#play-button').attr('src', LW.staticURL + 'image/icon/play.png');
@@ -699,9 +702,9 @@ var Game = function() {
 	this.resume = function() {
 		if (this.paused) {
 			// Start atmosphere sound
-			if(game.sound != null){
-				game.sound.loop();
-			}		
+			if (game.atmosphere != null) {
+				game.atmosphere.loop()
+			}
 
 			this.paused = false;
 			$('#play-button').attr('src', LW.staticURL + 'image/icon/pause.png');
@@ -996,8 +999,8 @@ var Game = function() {
 						this.colorText(this.leeks[action[1]].name, this.getLeekColor(action[1])),
 						this.colorText(summon.name, this.getLeekColor(summon.id))
 					))
+					S.bulb.play()
 				}
-				S.bulb.play()
 				this.actionDone()
 				break
 

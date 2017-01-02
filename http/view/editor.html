@@ -4,16 +4,17 @@
 		<h1>{#title}</h1>
 
 		<div class='info'>
-			<span contenteditable class='editable' id='ai-name'></span>
+			<span id="ai-name"></span>
 		</div>
 	</div>
 
 	<div class='tabs'>
 
-		<div id='new-button' class='tab' title="{new_desc}">✚ {#new}</div>
-		<div id='save-button' class="tab" title="{save_desc}">✔ {#save}</div>
-		<div id='delete-button' class="tab" title="{delete_desc}">❌ {#delete}</div>
-		<div id='test-button' class="tab" title="{test_desc}">▶ {#test}</div>
+		<div id='new-button' class='tab' title="{#new_desc}">✚ {#new}</div>
+		<div id='new-folder-button' class='tab' title="{#new_folder_desc}">✚ {#new_folder}</div>
+		<div id='save-button' class="tab" title="{#save_desc}">✔ {#save}</div>
+		<div id='delete-button' class="tab" title="{#delete_desc}">❌ {#delete}</div>
+		<div id='test-button' class="tab" title="{#test_desc}">▶ {#test}</div>
 
 		<div id='editor-settings-button' class="tab" >
 			<img src='{{static}}/image/gearing_small_white.png'></img>
@@ -24,13 +25,15 @@
 
 <div class='container'>
 
-	<div class='column2'>
+	<div class='column3'>
 
 		<div class='panel' id='editor-left'>
 
 			<div class='content'>
 
-				<div id='ai-list' autostopscroll></div>
+				<div id='ai-list' autostopscroll>
+					<div class='item folder expanded' id='0' level='0'></div>
+				</div>
 
 				<div id='ai-stats'>
 					<div id='line-count-wrapper'>{{#n_lines, "<span id='line-count'></span>"}}</div>
@@ -47,7 +50,7 @@
 			</div>
 		</div>
 
-	</div><div class='column10'>
+	</div><div class='column9'>
 
 		<div class='panel'>
 
@@ -79,10 +82,14 @@
 
 @view (delete_popup)
 
-	<div class='title'>{#delete_ai, ai}</div>
+	@if (type == 'ai')
+		<div class='title'>{#delete_ai, name}</div>
+	@else
+		<div class='title'>{#delete_folder, name}</div>
+	@end
 
 	<div class='content'>
-	{#delete_warning}
+		{#delete_warning}
 	</div>
 
 	<div class='actions'>
@@ -274,5 +281,23 @@
 
 	<div class='actions'>
 		<div class='dismiss'>{#shortcuts_ok}</div>
+	</div>
+@endview
+
+@view (folder_content)
+	<div class='folder-content' folder='{folder.id}'>
+		@if (folder.contents.length == 0)
+			<div class='empty'>
+				<img src='{{static}}image/empty.png'>
+				<br>
+				<span class='message'>{#empty_folder}</span>
+			</div>
+		@else
+			@foreach (item in folder.contents)
+				<div class='item'>
+					{item.name}
+				</div>
+			@end
+		@end
 	</div>
 @endview
