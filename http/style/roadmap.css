@@ -24,3 +24,13 @@
 	font-size: 18px;
 	margin-top: 5px;
 }
+
+#roadmap-page .milestone.ok ul {
+	list-style-type: none;
+	margin-left: -23px;
+}
+#roadmap-page .milestone.ok li:before {
+	content: "✔";
+    display: inline-block;
+	color: green;
+}

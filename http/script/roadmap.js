@@ -3,6 +3,7 @@ LW.pages.roadmap.init = function(params, $scope, $page) {
 	$scope.milestones = [
 		{
 			title: "Janvier 1.94",
+			ok: true,
 			changes: [
 				"Visualiser les anciens combats",
 				"Dossiers dans l'éditeur",
