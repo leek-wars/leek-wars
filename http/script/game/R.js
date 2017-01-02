@@ -278,10 +278,10 @@ var buildTextureShadow = function(texture, quality) {
 }
 
 //sound volume constant
-const VOL_MAP_SOUND = 0.02;//atmosphere sound
-const VOL_DEFFENSIVE_SOUND = 0.45;//heal, buff, shield, ...
-const VOL_OFFENSIVE_SOUND = 0.6;//weapons and offensive chips
-const VOL_SPECIAL_SOUND = 0.6;//liberation, teleportation, summon, resurection, ...
+const VOL_MAP_SOUND = 0.05;//atmosphere sound
+const VOL_DEFFENSIVE_SOUND = 0.4;//heal, buff, shield, ...
+const VOL_OFFENSIVE_SOUND = 0.5;//weapons and offensive chips
+const VOL_SPECIAL_SOUND = 0.5;//liberation, teleportation, summon, resurection, ...
 const VOL_OTHER_SOUND = 0.1;//setWeapon, move
 
 var Sounds = function() {
@@ -312,7 +312,6 @@ var Sounds = function() {
 	this.debuff = new Sound(LW.staticURL + "sound/chips/debuff.mp3", VOL_OFFENSIVE_SOUND);
 
 	//other
-	this.set_weapon = new Sound(LW.staticURL + "sound/others/set_weapon.mp3", VOL_OTHER_SOUND);
 	this.move = new Sound(LW.staticURL + "sound/others/move.mp3", VOL_OTHER_SOUND);
 	this.lama = new Sound(LW.staticURL + "sound/others/lama.mp3", VOL_OTHER_SOUND);
 	this.bulb = new Sound(LW.staticURL + "sound/others/bulb.mp3", VOL_SPECIAL_SOUND);
