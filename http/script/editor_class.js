@@ -133,28 +133,28 @@ var Editor = function(id, name, valid, code, folder, level) {
 
 			this.load(true);
 
-			$('#select-msg').hide();
+			$('#select-msg').hide()
 			LW.loader.show()
-			$('#top').hide();
+			$('#top').hide()
 
 		} else {
 
 			LW.loader.hide()
 			$('#top').show()
-			$('#ai-name').html(this.name)
+			$('#ai-name').text(this.name)
 			$('#select-msg').hide()
 
 			$('#editors .editor').hide()
 			$('#editors .folder-content').hide()
-			this.editorDiv.show();
+			this.editorDiv.show()
 
 			// if (!_BASIC) {
 				//this.editor.focus();
-				this.editor.refresh();
+				this.editor.refresh()
 			// }
 
 			if (this.error) {
-				this.showErrors();
+				this.showErrors()
 			}
 
 			localStorage["editor/last_code"] = this.id
@@ -743,52 +743,52 @@ var Editor = function(id, name, valid, code, folder, level) {
 			}
 		}
 
-		this.completions = completions;
-		this.completionFrom = {line: cur.line, ch: startPos};
-		this.completionTo = {line: cur.line, ch: token.end};
+		this.completions = completions
+		this.completionFrom = {line: cur.line, ch: startPos}
+		this.completionTo = {line: cur.line, ch: token.end}
 
 		if (completions.length == 0) {
 
-			this.close();
+			this.close()
 
 		} else {
 
-			this.hintDialog.show();
-			this.detailDialog.hide();
+			this.hintDialog.show()
+			this.detailDialog.hide()
 
-			var pos = editor.cursorCoords({line: cur.line, ch: cur.ch - token.string.length});
+			var pos = editor.cursorCoords({line: cur.line, ch: cur.ch - token.string.length})
 			var left = pos.left, top = pos.bottom;
 
-			this.hintDialog.css('top', top);
-			this.hintDialog.css('left', left);
+			this.hintDialog.css('top', top)
+			this.hintDialog.css('left', left)
 
-			this.hintDialog.find('.hints').html("");
-			this.hintDialog.find('.details').html("");
+			this.hintDialog.find('.hints').text("")
+			this.hintDialog.find('.details').text("")
 			for (var i in completions) {
-				this.hintDialog.find('.hints').append("<div class='hint'>" + completions[i].name + "</div>");
-				this.hintDialog.find('.details').append("<div class='detail'>" + completions[i].details + "</div>");
+				this.hintDialog.find('.hints').append("<div class='hint'>" + completions[i].name + "</div>")
+				this.hintDialog.find('.details').append("<div class='detail'>" + completions[i].details + "</div>")
 			}
 
-			this.selectHint(0);
+			this.selectHint(0)
 
-			var thisEditor = this;
+			var thisEditor = this
 			this.hintDialog.find('.hint').click(function(e) {
 
 				if ($(this).index() == thisEditor.selectedCompletion) {
-					thisEditor.pick();
+					thisEditor.pick()
 				} else {
-					thisEditor.selectHint($(this).index());
+					thisEditor.selectHint($(this).index())
 				}
 
-				thisEditor.editor.focus();
+				thisEditor.editor.focus()
 
-				e.stopPropagation();
-				e.preventDefault();
-				return false;
-			});
+				e.stopPropagation()
+				e.preventDefault()
+				return false
+			})
 
 			$('html').click(function() {
-				thisEditor.close();
+				thisEditor.close()
 			});
 
 			this.keyMap = {
@@ -801,12 +801,12 @@ var Editor = function(id, name, valid, code, folder, level) {
 			  Enter: thisEditor.pick,
 			  Tab: thisEditor.pick,
 			  Esc: thisEditor.close
-			};
+			}
 
-			this.editor.removeKeyMaps();
-			this.editor.addKeyMap(this.keyMap);
+			this.editor.removeKeyMaps()
+			this.editor.addKeyMap(this.keyMap)
 		}
-	}.bind(this);
+	}.bind(this)
 
 	this.up = function() {
 		var index = this.selectedCompletion == 0 ? (this.hintDialog.find('.hint').length - 1) : this.selectedCompletion - 1;
