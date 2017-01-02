@@ -347,6 +347,8 @@ LW.pages.editor.init = function(params, $scope, $page) {
 					editors[current].show()
 					$page.resize()
 					$('.CodeMirror').css('font-size', _fontSize)
+
+					$('#test-ais').append('<option id="' + ai.id + '">' + ai.name + '</option>')
 				}
 			})
 		})
@@ -460,6 +462,7 @@ LW.pages.editor.init = function(params, $scope, $page) {
 
 		_theme = localStorage['editor/theme']
 		$('#editor-page').addClass(_theme)
+		$("#" + _theme).prop("checked", true)
 
 		// Popup des paramètres
 		var settingsPopup = new _.popup.new('editor.settings_popup', {}, 600)
@@ -710,10 +713,10 @@ LW.pages.editor.init = function(params, $scope, $page) {
 			if (searchLines.length > 0) {
 
 				var line = searchLines[searchIndex][0]
-				var t = editors[current].editor.charCoords({line: line, ch: 0}, "local").top;
-				var middleHeight = editors[current].editor.getScrollerElement().offsetHeight / 2;
+				var t = editors[current].editor.charCoords({line: line, ch: 0}, "local").top
+				var middleHeight = editors[current].editor.getScrollerElement().offsetHeight / 2
 
-				editors[current].editor.scrollTo(0, t - middleHeight - 5);
+				editors[current].editor.scrollTo(0, t - middleHeight - 5)
 			}
 		}
 
@@ -744,6 +747,7 @@ LW.pages.editor.update = function(params) {
 		currentName = editors[current].name
 		editors[current].show()
 		localStorage['editor/last_code'] = params.id
+		editedIAName = null // Reset en cas de rename de l'ia
 	} else {
 		LW.loader.hide()
 	}
