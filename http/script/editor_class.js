@@ -196,20 +196,22 @@ var Editor = function(id, name, valid, code, folder, level) {
 
 	this.save = function() {
 
-		if (_saving) return;
-		_saving = true;
+		if (_saving || !this.loaded) {
+			return
+		}
+		_saving = true
 
-		var editor = this;
+		var editor = this
 
-		this.tabDiv.removeClass("modified");
+		this.tabDiv.removeClass("modified")
 
-		$('#compiling').show();
-		$('#results').empty().hide();
+		$('#compiling').show()
+		$('#results').empty().hide()
 
-		var saveID = this.id > 0 ? this.id : 0;
+		var saveID = this.id > 0 ? this.id : 0
 
 		// var content = _BASIC ? this.editorDiv.find('textarea').val() : this.editor.getValue();
-		var content = this.editor.getValue();
+		var content = this.editor.getValue()
 
 		_.post('ai/save/', {ai_id: saveID, code: content}, function(data) {
 
