@@ -202,7 +202,11 @@ Entity = Class.extend(Entity, function() {
 
 		// Jump
 		this.jump();
+<<<<<<< HEAD
 		S.move.play();
+=======
+
+>>>>>>> 54b0b16... [entity] Remove whitespaces
 		// Orientation
 		if (this.dx > this.rx) {
 			if (this.dy > this.ry)
