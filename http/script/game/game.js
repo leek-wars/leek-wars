@@ -406,7 +406,11 @@ var Game = function() {
 
 		// On a chargé tout le jeu, on peut charger les ressources
 		// le jeu démarrera quand toutes les ressources seront ok
-		game.initialized = true;
+		game.initialized = true
+
+		if (R.loadedData == R.numData) {
+			game.launch() // Start game if all resources are loaded
+		}
 	}
 
 	this.setLogs = function(logs) {
