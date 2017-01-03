@@ -57,6 +57,7 @@ LW.pages.editor.init = function(params, $scope, $page) {
 		var drag_and_drop = function(item) {
 			item.on({
 		        dragstart: function(e) {
+					e.originalEvent.dataTransfer.setData('text/plain', 'drag !!!')
 					_dragging = $(this).attr('id')
 		            $(this).addClass('dragging')
 					e.stopPropagation()
