@@ -4,7 +4,7 @@ var game
 var T, S
 
 var _fullscreen = false
-
+var _resources_initialized = false
 var _getDelay = 2000
 var _error = false
 var _load = true
@@ -51,9 +51,12 @@ LW.pages.fight.init = function(params, $scope, $page) {
 		// Initaliase a 2-dimensional drawing context
 		ctx = canvas.getContext('2d')
 
-		T = new Textures()
-		S = new Sounds()
-		M = new Maps()
+		if (!_resources_initialized) {
+			T = new Textures()
+			S = new Sounds()
+			M = new Maps()
+			_resources_initialized = true
+		}
 
 		// Create game
 		game = new Game()
@@ -251,6 +254,7 @@ function getFight() {
 
 		if (data.fight.status >= 1) {
 
+			_.log("init fight", data.fight)
 			game.init(data.fight)
 
 		} else {
