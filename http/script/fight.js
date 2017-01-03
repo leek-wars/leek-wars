@@ -5,7 +5,7 @@ var T, S
 
 var _fullscreen = false
 var _resources_initialized = false
-var _getDelay = 2000
+var _getDelay = 1000
 var _error = false
 var _load = true
 
