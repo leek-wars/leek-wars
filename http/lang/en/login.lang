@@ -2,7 +2,7 @@ connection			Log in
 error_farmer_banned			Your account has been banned
 error_farmer_inactive			Your account is not activated. To confirme the creation of your account, access your email and click on the link provided.
 error_invalid			Your IDs are invalid.
-forgot_password			Forgot password?
+forgot_password			Forgot your password?
 incorrect_login			Login or password incorrect.
 keep_connected			Remember me.
 login			Login
