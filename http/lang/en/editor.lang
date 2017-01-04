@@ -52,7 +52,7 @@ save_desc			Save the current AI
 saving				Saving...
 select_opponents	Select your opponents
 select_your_leek	Select your leek
-server_error		Server error
+server_error		An error happened. (Server Error)
 settings			Editor settings
 settings_editor		Editor
 settings_ok			OK
