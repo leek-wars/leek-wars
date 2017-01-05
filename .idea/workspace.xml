@@ -1,0 +1,419 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="6da4070c-aef2-4904-ac12-54ac3573437c" name="Default" comment="">
+      <change type="DELETED" beforePath="$PROJECT_DIR$/http/sound/others/map_beach.mp3.asd" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/http/sound/others/map_desert.mp3.asd" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/http/sound/others/map_factory.mp3.asd" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/http/sound/others/map_forest.mp3.asd" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/http/sound/others/map_glacier.mp3.asd" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/http/sound/weapons/grenade_rebound.mp3" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/http/sound/chips/buff.mp3" afterPath="$PROJECT_DIR$/http/sound/chips/buff.mp3" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/http/sound/chips/debuff.mp3" afterPath="$PROJECT_DIR$/http/sound/chips/debuff.mp3" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/http/sound/chips/fire.mp3" afterPath="$PROJECT_DIR$/http/sound/chips/fire.mp3" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/http/sound/chips/heal.mp3" afterPath="$PROJECT_DIR$/http/sound/chips/heal.mp3" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/http/sound/chips/ice.mp3" afterPath="$PROJECT_DIR$/http/sound/chips/ice.mp3" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/http/sound/chips/liberation.mp3" afterPath="$PROJECT_DIR$/http/sound/chips/liberation.mp3" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/http/sound/chips/lightning.mp3" afterPath="$PROJECT_DIR$/http/sound/chips/lightning.mp3" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/http/sound/chips/meteorite.mp3" afterPath="$PROJECT_DIR$/http/sound/chips/meteorite.mp3" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/http/sound/chips/poison.mp3" afterPath="$PROJECT_DIR$/http/sound/chips/poison.mp3" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/http/sound/chips/rock.mp3" afterPath="$PROJECT_DIR$/http/sound/chips/rock.mp3" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/http/sound/chips/rockfall.mp3" afterPath="$PROJECT_DIR$/http/sound/chips/rockfall.mp3" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/http/sound/chips/shield.mp3" afterPath="$PROJECT_DIR$/http/sound/chips/shield.mp3" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/http/sound/chips/teleportation.mp3" afterPath="$PROJECT_DIR$/http/sound/chips/teleportation.mp3" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/http/sound/others/bulb.mp3" afterPath="$PROJECT_DIR$/http/sound/others/bulb.mp3" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/http/sound/others/lama.mp3" afterPath="$PROJECT_DIR$/http/sound/others/lama.mp3" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/http/sound/others/map_beach.mp3" afterPath="$PROJECT_DIR$/http/sound/others/map_beach.mp3" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/http/sound/others/map_desert.mp3" afterPath="$PROJECT_DIR$/http/sound/others/map_desert.mp3" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/http/sound/others/map_factory.mp3" afterPath="$PROJECT_DIR$/http/sound/others/map_factory.mp3" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/http/sound/others/map_forest.mp3" afterPath="$PROJECT_DIR$/http/sound/others/map_forest.mp3" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/http/sound/others/map_glacier.mp3" afterPath="$PROJECT_DIR$/http/sound/others/map_glacier.mp3" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/http/sound/others/move.mp3" afterPath="$PROJECT_DIR$/http/sound/others/move.mp3" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/http/sound/others/set_weapon.mp3" afterPath="$PROJECT_DIR$/http/sound/others/set_weapon.mp3" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/http/sound/weapons/double_gun.mp3" afterPath="$PROJECT_DIR$/http/sound/weapons/double_gun.mp3" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/http/sound/weapons/electrisor.mp3" afterPath="$PROJECT_DIR$/http/sound/weapons/electrisor.mp3" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/http/sound/weapons/explosion.mp3" afterPath="$PROJECT_DIR$/http/sound/weapons/explosion.mp3" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/http/sound/weapons/flame_thrower.mp3" afterPath="$PROJECT_DIR$/http/sound/weapons/flame_thrower.mp3" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/http/sound/weapons/gazor.mp3" afterPath="$PROJECT_DIR$/http/sound/weapons/gazor.mp3" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/http/sound/weapons/grenade_shoot.mp3" afterPath="$PROJECT_DIR$/http/sound/weapons/grenade_shoot.mp3" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/http/sound/weapons/laser.mp3" afterPath="$PROJECT_DIR$/http/sound/weapons/laser.mp3" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/http/sound/weapons/machine_gun.mp3" afterPath="$PROJECT_DIR$/http/sound/weapons/machine_gun.mp3" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/http/sound/weapons/shotgun.mp3" afterPath="$PROJECT_DIR$/http/sound/weapons/shotgun.mp3" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/http/sound/weapons/sword.mp3" afterPath="$PROJECT_DIR$/http/sound/weapons/sword.mp3" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/http/script/game/R.js" afterPath="$PROJECT_DIR$/http/script/game/R.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/http/script/game/entity.js" afterPath="$PROJECT_DIR$/http/script/game/entity.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/http/script/game/map/nexus.js" afterPath="$PROJECT_DIR$/http/script/game/map/nexus.js" />
+    </list>
+    <ignored path="leek-wars-client.iws" />
+    <ignored path=".idea/workspace.xml" />
+    <ignored path=".idea/dataSources.local.xml" />
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="TRACKING_ENABLED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ChangesViewManager" flattened_view="true" show_ignored="false" />
+  <component name="CreatePatchCommitExecutor">
+    <option name="PATCH_PATH" value="" />
+  </component>
+  <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
+  <component name="FavoritesManager">
+    <favorites_list name="leek-wars-client" />
+  </component>
+  <component name="FileEditorManager">
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file leaf-file-name="chips.js" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/http/script/game/chips.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="7.111111">
+              <caret line="386" column="8" selection-start-line="386" selection-start-column="5" selection-end-line="386" selection-end-column="8" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="$PROJECT_DIR$/http/script/game/entity.js" />
+        <option value="$PROJECT_DIR$/http/script/game/map/nexus.js" />
+        <option value="$PROJECT_DIR$/http/script/game/R.js" />
+      </list>
+    </option>
+  </component>
+  <component name="JsBuildToolGruntFileManager" detection-done="true" />
+  <component name="JsBuildToolPackageJson" detection-done="true" />
+  <component name="JsGulpfileManager">
+    <detection-done>true</detection-done>
+  </component>
+  <component name="PhpServers">
+    <servers />
+  </component>
+  <component name="PhpWorkspaceProjectConfiguration" backward_compatibility_performed="true" />
+  <component name="ProjectFrameBounds">
+    <option name="x" value="-8" />
+    <option name="y" value="-8" />
+    <option name="width" value="1924" />
+    <option name="height" value="1056" />
+  </component>
+  <component name="ProjectLevelVcsManager" settingsEditedManually="false">
+    <OptionsSetting value="true" id="Add" />
+    <OptionsSetting value="true" id="Remove" />
+    <OptionsSetting value="true" id="Checkout" />
+    <OptionsSetting value="true" id="Update" />
+    <OptionsSetting value="true" id="Status" />
+    <OptionsSetting value="true" id="Edit" />
+    <ConfirmationsSetting value="0" id="Add" />
+    <ConfirmationsSetting value="0" id="Remove" />
+  </component>
+  <component name="ProjectView">
+    <navigator currentView="ProjectPane" proportions="" version="1">
+      <flattenPackages />
+      <showMembers />
+      <showModules />
+      <showLibraryContents />
+      <hideEmptyPackages />
+      <abbreviatePackageNames />
+      <autoscrollToSource />
+      <autoscrollFromSource />
+      <sortByType />
+      <manualOrder />
+      <foldersAlwaysOnTop value="true" />
+    </navigator>
+    <panes>
+      <pane id="ProjectPane">
+        <subPane>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="leek-wars-client" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="leek-wars-client" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="leek-wars-client" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="leek-wars-client" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="leek-wars-client" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="http" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="leek-wars-client" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="leek-wars-client" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="http" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="script" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="leek-wars-client" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="leek-wars-client" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="http" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="script" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="game" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+        </subPane>
+      </pane>
+      <pane id="Scope" />
+      <pane id="Scratches" />
+    </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="settings.editor.selected.configurable" value="terminal" />
+    <property name="settings.editor.splitter.proportion" value="0.2" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="WebServerToolWindowFactoryState" value="true" />
+  </component>
+  <component name="RunManager">
+    <configuration default="true" type="JavascriptDebugType" factoryName="JavaScript Debug">
+      <method />
+    </configuration>
+    <configuration default="true" type="PHPUnitRunConfigurationType" factoryName="PHPUnit">
+      <TestRunner />
+      <method />
+    </configuration>
+    <configuration default="true" type="PhpBehatConfigurationType" factoryName="Behat">
+      <BehatRunner />
+      <method />
+    </configuration>
+    <configuration default="true" type="PhpLocalRunConfigurationType" factoryName="PHP Console">
+      <method />
+    </configuration>
+    <configuration default="true" type="js.build_tools.gulp" factoryName="Gulp.js">
+      <node-options />
+      <gulpfile />
+      <tasks />
+      <arguments />
+      <envs />
+      <method />
+    </configuration>
+    <configuration default="true" type="js.build_tools.npm" factoryName="npm">
+      <command value="run-script" />
+      <scripts />
+      <envs />
+      <method />
+    </configuration>
+  </component>
+  <component name="ShelveChangesManager" show_recycled="false" />
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="6da4070c-aef2-4904-ac12-54ac3573437c" name="Default" comment="" />
+      <created>1483103869241</created>
+      <option name="number" value="Default" />
+      <updated>1483103869241</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="-8" y="-8" width="1924" height="1056" extended-state="0" />
+    <editor active="true" />
+    <layout>
+      <window_info id="Remote Host" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+    </layout>
+  </component>
+  <component name="Vcs.Log.UiProperties">
+    <option name="RECENTLY_FILTERED_USER_GROUPS">
+      <collection />
+    </option>
+    <option name="RECENTLY_FILTERED_BRANCH_GROUPS">
+      <collection />
+    </option>
+  </component>
+  <component name="VcsContentAnnotationSettings">
+    <option name="myLimit" value="2678400000" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager />
+    <watches-manager />
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/http/script/game/game.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="422" column="21" selection-start-line="422" selection-start-column="21" selection-end-line="422" selection-end-column="21" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/http/script/game/entity.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="540" column="26" selection-start-line="540" selection-start-column="26" selection-end-line="540" selection-end-column="26" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/http/script/game/R.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="320" column="95" selection-start-line="320" selection-start-column="95" selection-end-line="320" selection-end-column="95" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/http/script/game/map/nexus.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/http/script/game/map/factory.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/http/script/game/game.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="422" column="21" selection-start-line="422" selection-start-column="21" selection-end-line="422" selection-end-column="21" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/http/script/game/entity.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="540" column="26" selection-start-line="540" selection-start-column="26" selection-end-line="540" selection-end-column="26" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/http/script/game/map/factory.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/http/script/game/map/nexus.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/http/script/game/map/factory.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/http/script/game/map/nexus.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-1.8888888">
+          <caret line="3" column="28" selection-start-line="3" selection-start-column="28" selection-end-line="3" selection-end-column="28" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/http/script/game/R.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.34343433">
+          <caret line="280" column="26" selection-start-line="280" selection-start-column="26" selection-end-line="280" selection-end-column="26" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/http/script/game/entity.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.018518519">
+          <caret line="540" column="26" selection-start-line="540" selection-start-column="26" selection-end-line="540" selection-end-column="26" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/http/script/game/game.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.018518519">
+          <caret line="422" column="21" selection-start-line="422" selection-start-column="21" selection-end-line="422" selection-end-column="21" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/http/script/game/chips.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="7.111111">
+          <caret line="386" column="8" selection-start-line="386" selection-start-column="5" selection-end-line="386" selection-end-column="8" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+  </component>
+</project>
