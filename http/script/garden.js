@@ -145,6 +145,8 @@ LW.pages.garden.init = function(params, $scope, $page) {
 		})
 
 		$page.select_category($scope.category)
+
+		LW.pages.garden.time()
 	})
 }
 
@@ -198,7 +200,7 @@ LW.pages.garden.load_leek = function(leek_id) {
 	var element = $('.myleek[leek=' + leek_id + ']')
 
 	$('#garden-solo .enemies[of=' + leek_id + '] .no-more-fights').hide()
-	if (this.scope.garden.solo_fights[leek_id] == 0) {
+	if (this.scope.garden.fights == 0) {
 		$('#garden-solo .enemies[of=' + leek_id + '] .no-more-fights').show()
 		return null
 	}
@@ -228,6 +230,7 @@ LW.pages.garden.load_leek = function(leek_id) {
 				}, function(data) {
 					if (data.success) {
 						LW.page('/fight/' + data.fight)
+						$('#farmer-fights').text(parseInt($('#farmer-fights').text()) - 1)
 					}
 				})
 			})
@@ -243,7 +246,7 @@ LW.pages.garden.load_leek = function(leek_id) {
 LW.pages.garden.select_farmer = function() {
 
 	$('#garden-farmer .no-more-fights').hide()
-	if (this.scope.garden.farmer_fights == 0) {
+	if (this.scope.garden.fights == 0) {
 		$('#garden-farmer .no-more-fights').show()
 		return null
 	}
@@ -273,6 +276,7 @@ LW.pages.garden.select_farmer = function() {
 				}, function(data) {
 					if (data.success) {
 						LW.page('/fight/' + data.fight)
+						$('#farmer-fights').text(parseInt($('#farmer-fights').text()) - 1)
 					}
 				})
 			})
@@ -408,4 +412,33 @@ LW.pages.garden.wsreceive = function(data) {
 		}
 		this.br_last_leeks = leeks
 	}
+}
+
+LW.pages.garden.time = function() {
+
+	if (this.scope.garden.fights > 0) {
+		$('#remaining-fights .on').show()
+		$('#remaining-fights .off').hide()
+	} else {
+		$('#remaining-fights .on').hide()
+		$('#remaining-fights .off').show()
+	}
+
+	var midnignt = new Date()
+	midnignt.setHours(24, 0, 0, 0)
+
+	var timeUntilMidnight = Math.round((midnignt.getTime() - Date.now()) / 1000)
+	var update = null
+	this.gardenTimeUpdate = function() {
+		timeUntilMidnight--
+		if (timeUntilMidnight < 0) {
+			$('#remaining-fights .on').show()
+			$('#remaining-fights .off').show()
+		} else {
+			$('.remaining-time').text(FormatTime(timeUntilMidnight))
+			setTimeout(update, 1000)
+		}
+	}
+	update = this.gardenTimeUpdate
+	this.gardenTimeUpdate()
 }

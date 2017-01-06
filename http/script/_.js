@@ -413,7 +413,7 @@ _.toast = function(message, durationOrCallback) {
 		callback = durationOrCallback
 	}
 
-	var toast = $("<div class='toast-wrapper'><div class='toast'>" + message + "</div></div>")
+	var toast = $("<div class='toast-wrapper'><div class='toast'>" + _.protect(message) + "</div></div>")
 
 	$('#toasts').append(toast)
 

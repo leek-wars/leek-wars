@@ -603,3 +603,15 @@ changelog_193	# Amélioration de l'inscription aux Battle Royales avec une fenê
 				# Possibilité de refaire un combat de test depuis la page rapport de combat (avec l'aide de TheTintin).
 				# Ajout d'un bandeau dans les chats si nouveau message n'est pas visible.
 				# Affichage du capital investi dans chaque caractéristique sur la page poireau (avec l'aide de Tintin).
+changelog_194	# Ajout d'un système de dossiers pour ranger les IAs.
+				# Unification des compteurs de combats solo, éleveur et battle royale dans un seul compteur.
+				# Les anciens combats sont à nouveau visionnables.
+				# Ajout de nouveaux bruitages et ambiances dans les combats (merci à BadPick !)
+				# Ajout de la page Roadmap : https://leekwars.com/roadmap.
+				# Ajout du grade contributeur, qui remplace le grade VIP.
+				# Corrections sur la popup des Battle Royales.
+				# Ajout de commandes dans le chat : /doc, /wiki, /shrug.
+				# Correction de urls avec des tirets.
+				# Correction des commentaires sous les combats et tournois.
+				# Correction de la taille du combat lorsqu'on le quitte en plein écran.
+				# Smileys et emojis plus grands lorsqu'ils sont seuls dans un message.

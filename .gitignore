@@ -3,3 +3,4 @@ http/monitor.php
 http/htaccess
 http/getimagesize.php
 http/*.php
+.idea/

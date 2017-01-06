@@ -1,5 +1,8 @@
 var Forest = function() {
 	
+	// Atmosphere sound
+	this.sound = S.map_forest;
+	
 	this.groundColor = "#2a6800";
 	this.groundTexture = T.forest;
 	this.obstaclesSmall = [T.forest_rock_small, T.forest_rock_small, T.mushroom];

@@ -14,7 +14,7 @@
 	<div class='content'>
 		<div class='wrapper'>
 			@foreach (milestone in milestones)
-				<div class='milestone'>
+				<div class='milestone @if (milestone.ok) ok @end'>
 					<div class='title'>{milestone.title}</div>
 					<ul class='changes'>
 						@foreach (change in milestone.changes)

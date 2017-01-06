@@ -1,22 +1,24 @@
-against			against
-category_battle_royale			Battle Royale
-category_farmer_fight			Farmer
-category_solo_fight			Solo
-category_team_fight			Team
-challenge			Challenge
+against					against
+category_battle_royale	Battle Royale
+category_farmer_fight	Farmer
+category_solo_fight		Solo
+category_team_fight		Team
+challenge				Challenge
 farmer_fight			Farmer fight
 leek_ai_invalid			Leek AI is not valid!
 leek_have_no_ai			Leek has no AI equipped!
-level_n			Level %s
-n_leeks			%s leeks
+level_n					Level %s
+n_leeks					%s leeks
+n_remaining_fights		%s remaining fights
+next_fight_in			Next fight in %s
 no_more_fights			No more fights
-no_opponent_of_your_size			No opponent to your size!
-no_team_of_your_size			No team to your size!
-solo_fight			Solo fight
-team_fight			Team fight (with %s)
-title			Garden
+no_opponent_of_your_size	No opponent to your size!
+no_team_of_your_size		No team to your size!
+solo_fight				Solo fight
+team_fight				Team fight (with %s)
+title					Garden
 total_level_n			Total level %s
-you_have_no_team			You don't have a team
-you_must_be_level_50			You must be level 50
-you_must_have_2_leeks			You must have at least 2 leeks
-you_must_have_a_team			You must be part of a team
+you_have_no_team		You don't have a team
+you_must_be_level_50	You must be level 50
+you_must_have_2_leeks	You must have at least 2 leeks
+you_must_have_a_team	You must be part of a team

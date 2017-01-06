@@ -5,15 +5,16 @@ var _BASIC = _.isTouchScreen()
 
 var current
 var currentType
+var currentItem = 0
 var editors = {}
 
 var _testEvent
 var _testPopup
 var lastKey = -1
 var lastNewAI = -1
-var editedAI = -1
-var editedIAName
+var initialName = null
 var _saving = false
+var _dragging = null
 
 // Paramètres
 var _large = false
@@ -47,66 +48,303 @@ LW.pages.editor.init = function(params, $scope, $page) {
 		for (var i in ais) items[ais[i].id] = ais[i]
 		for (var i in folders) items[folders[i].id] = folders[i]
 
+		// Create editors
+		for (var i in ais) {
+			var ai = ais[i]
+			editors[ai.id] = new Editor(ai.id, ai.name, ai.valid, "", ai.folder)
+		}
+
+		var drag_and_drop = function(item) {
+			item.on({
+		        dragstart: function(e) {
+					e.originalEvent.dataTransfer.setData('text/plain', 'drag !!!')
+					_dragging = $(this).attr('id')
+		            $(this).addClass('dragging')
+					e.stopPropagation()
+		        },
+		        dragend: function() {
+		            $(this).removeClass('dragging')
+		        }
+		    })
+		}
+
 		var toggle_folder = function(folder_id, show) {
 			var tab = $('#ai-list .item[id=' + folder_id + ']')
-			var level = parseInt(tab.attr('level'))
-			var c = tab
-			while (c.length) {
-				c = c.next()
-				var l = parseInt(c.attr('level'))
-				if (l <= level) break;
-				if (show && l != level + 1) break;
-				if (!show && c.hasClass('folder')) {
-					toggle_folder(c.attr('id'), show)
-				}
-				show ? c.show() : c.hide()
+			if (show) {
+				tab.find('> .content').show()
+				tab.addClass('expanded')
+			} else {
+				tab.find('> .content').hide()
+				tab.removeClass('expanded')
 			}
-			show ? tab.addClass('expanded') : tab.removeClass('expanded')
+			$('#ai-list .item').removeClass('selected')
+			tab.addClass('selected')
+			currentItem = folder_id
+			currentType = 'folder'
+			currentName = tab.find('> .label').text()
+			localStorage['editor/folder/' + folder_id] = show
+		}
+
+		var update_padding = function(item_id, level) {
+			var item = $('#ai-list .item[id=' + item_id + ']')
+			update_padding_element(item, level)
+		}
+
+		var update_padding_element = function(item, level) {
+			item.attr('level', level)
+			if (item.hasClass('ai')) {
+				item.find('> .label').css('padding-left', (level * 15) + 'px')
+			} else {
+				item.find('> .label').css('padding-left', (-5 + level * 15) + 'px')
+				item.find('> .content > .item').each(function() {
+					update_padding($(this).attr('id'), level + 1)
+				})
+			}
+		}
+
+		var insert_element = function(element, folder) {
+			var is_folder = element.hasClass('folder')
+			var name = element.text().toLowerCase()
+			var elements = folder.find('> .item')
+			folder.removeClass('empty')
+			update_padding_element(element, parseInt(folder.attr('level')) + 1)
+			var e = $(elements[0])
+			while (e.length) {
+				if ((name < e.text().toLowerCase()) || (is_folder && e.hasClass('ai'))) {
+					if (is_folder || e.hasClass('ai')) {
+						element.insertBefore(e)
+						return
+					}
+				}
+				e = e.next()
+			}
+			folder.find('> .content').append(element)
+		}
+
+		var add_folder_drag_and_drop_events = function(folder) {
+			folder.on({
+				drop: function(e) {
+					var from_folder = $('#ai-list .item[id=' + _dragging + ']').parent().parent().attr('id')
+					move_item(_dragging, from_folder, $(this).attr('id'))
+					_dragging = null
+					e.preventDefault()
+					e.stopPropagation()
+					$(this).removeClass('drag-hover')
+					return false
+				},
+				dragenter: function(e) {
+					$(this).addClass('drag-hover')
+					e.stopPropagation()
+				},
+				dragleave: function(e) {
+					$(this).removeClass('drag-hover')
+					e.stopPropagation()
+				},
+				dragover: function(e) {
+					$(this).addClass('drag-hover')
+					e.preventDefault()
+					e.stopPropagation()
+				}
+			})
+		}
+
+		var move_item = function(item_id, from_folder_id, to_folder_id) {
+			// Same folder
+			if (from_folder_id == to_folder_id) return null
+			var item = $('#ai-list .item[id=' + item_id + ']')
+			// Check all parents
+			var parent = $('#ai-list .item[id=' + to_folder_id + ']')
+			while (parent.length && parent.hasClass('item')) {
+				if (parent.attr('id') == item_id) return null
+				parent = parent.parent().parent()
+			}
+			// Move
+			var folder = $('#ai-list .item[id=' + to_folder_id + ']')
+			var level = parseInt(folder.attr('level')) + 1
+			insert_element(item, folder)
+			update_padding(item.attr('id'), level)
+			// Update new folder
+			toggle_folder(to_folder_id, true)
+			// Update old folder
+			var from_folder = $('#ai-list .item[id=' + from_folder_id + ']')
+			from_folder.toggleClass('empty', from_folder.find('> .content > .item').length == 0)
+			// Send request
+			var ai = item.hasClass('ai')
+			var url = ai ? 'ai/change-folder' : 'ai-folder/change-folder'
+			var args = ai ? {ai_id: item_id, folder_id: to_folder_id} :
+				{folder_id: item_id, dest_folder_id: to_folder_id}
+			_.post(url, args)
 		}
 
 		var build_tree = function(folder_id, level) {
-			var sub = []
+			var leaf = {html: $("<div class='content'>"), id: folder_id, content: []}
 			for (var i in folders) {
 				if (folders[i].folder == folder_id) {
 					var folder = items[folders[i].id]
-					var style = 'padding-left:' + (10 + level * 15) + 'px'
-					$('#ai-list').append("<div id='" + folder.id + "' class='item folder' style='" + style + "' folder='" + folder_id + "' level='" + level + "'><div class='triangle'/><span class='icon'></span>" + folder.name + "</div>")
-					var tab = $('#ai-list .folder[id=' + folder.id + ']')
-					tab.click(function() {
-						toggle_folder($(this).attr('id'), !$(this).hasClass('expanded'))
-					})
-					if (level > 0) tab.hide()
-					var contents = build_tree(folders[i].id, level + 1)
-					sub.push({id: folders[i].id, contents: contents})
-					folder.contents = []
-					for (var j in contents) {
-						folder.contents.push(items[contents[j].id])
+					var tree = build_tree(folders[i].id, level + 1)
+					var opened = localStorage['editor/folder/' + folders[i].id] === 'true'
+					if (!opened) {
+						tree.html.hide()
 					}
-					$('#editors').append(_.view.render('editor.folder_content', {folder: folder}))
+					var style = 'padding-left:' + (-5 + level * 15) + 'px'
+					var html = $("<div id='" + folder.id + "' class='item folder " + (opened ? 'expanded' : '') + "' folder='" + folder_id + "' draggable='true' level='" + level + "'><div class='label' style='" + style + "'><div class='triangle'/><span class='icon'></span><span class='text'>" + folder.name + "</span><div class='edit'/></div></div>")
+					if (tree.content.length == 0) {
+						html.addClass('empty')
+					}
+					leaf.content.push({id: folders[i].id, contents: tree.content})
+					folder.contents = []
+					for (var j in tree.content) {
+						folder.contents.push(items[tree.content[j].id])
+					}
+					html.append(tree.html)
+					leaf.html.append(html)
 				}
 			}
 			for (var i in ais) {
 				if (ais[i].folder == folder_id) {
 					var ai = ais[i]
-					sub.push({id: ai.id})
-					editors[ai.id] = new Editor(ai.id, ai.name, ai.valid, "", folder_id, level)
+					leaf.content.push({id: ai.id})
+					var style = 'padding-left:' + (level * 15) + 'px'
+					leaf.html.append("<div id='" + ai.id + "' class='item ai' folder='" + ai.folder + "' draggable='true' ><div class='label' style='" + style + "'><span class='text'>" + ai.name + "</span><div class='edit'/></div></div>");
 				}
 			}
-			return sub
+			return leaf
 		}
-		var tree = build_tree(null, 0)
+
+		var set_cursor_position = function(node, position) {
+			node.focus()
+			var textNode = node.firstChild
+			var caret = position
+			var range = document.createRange()
+			range.setStart(textNode, caret)
+			range.setEnd(textNode, caret)
+			var sel = window.getSelection()
+			sel.removeAllRanges()
+			sel.addRange(range)
+		}
+
+		var edit_name = function(item) {
+			var pen = item.find('> .label > .edit')
+			var id = item.attr('id')
+			var text = item.find('> .label > .text')
+			pen.click(function(e) {
+				text.attr('contenteditable', true)
+				text.focus()
+				set_cursor_position(text[0], text.text().length)
+				initialName = text.text()
+				e.stopPropagation()
+			})
+			var save = function() {
+				text.attr('contenteditable', false)
+				var name = text.text()
+				if (name == initialName) return
+				if (name.length == 0) {
+					text.text(initialName)
+					return;
+				}
+				if (item.hasClass('ai')) {
+					_.post('ai/rename', {ai_id: id, new_name: name}, function(data) {
+						if (data.success) {
+							_.toast(_.lang.get('editor', 'ai_renamed', name))
+						} else {
+							text.text(initialName)
+							_.toast(_.lang.get('editor', 'name_already_exists', name))
+						}
+					})
+				} else {
+					_.post('ai-folder/rename', {folder_id: id, new_name: name}, function(data) {
+						if (data.success) {
+							_.toast(_.lang.get('editor', 'folder_renamed', name))
+						} else {
+							text.text(initialName)
+							_.toast(_.lang.get('editor', 'name_already_exists', name))
+						}
+					})
+				}
+			}
+			text.keydown(function(e) {
+				if (e.keyCode == 13) {
+					text.blur()
+					e.preventDefault()
+				}
+			})
+			text.focusout(function() {
+				save()
+			})
+		}
+
+		var add_item_events = function(item) {
+			if (item.hasClass('folder')) {
+				if (item.attr('id') != 0) {
+					item.click(function(e) {
+						toggle_folder($(this).attr('id'), !$(this).hasClass('expanded'))
+						e.stopPropagation()
+					})
+				}
+			} else {
+				var ai = items[item.attr('id')]
+				item.click(function(e) {
+					var ai = items[$(this).attr('id')]
+					e.stopPropagation()
+					LW.page('/editor/' + ai.id)
+				})
+				if (!ai.valid) {
+					item.addClass("error")
+				}
+			}
+			item.find('> .label .text').click(function(e) {
+				if ($(this).attr('contenteditable') == 'true') {
+					e.stopPropagation()
+				}
+			})
+			drag_and_drop(item)
+			edit_name(item)
+		}
+
+		var update_tree = function() {
+			var tree = build_tree(0, 1)
+			$('#ai-list').find('> .folder').empty().append(tree.html)
+			$('#ai-list .item').each(function() {
+				add_item_events($(this))
+			})
+			for (var i in ais) {
+				var ai = ais[i]
+				editors[ai.id].tabDiv = $('#ai-list .ai[id=' + ai.id + ']')
+			}
+			$('#ai-list .folder').each(function() {
+				add_folder_drag_and_drop_events($(this))
+			})
+		}
+
+		update_tree()
+
+		var get_current_folder = function() {
+			var item = items[currentItem]
+			if (currentType == 'ai') {
+				return item.folder
+			} else {
+				return currentItem
+			}
+		}
 
 		// New button
 		$('#new-button').click(function() {
-
-			_.post('ai/new', {folder_id: 0}, function(data) {
-
+			var current_folder = get_current_folder()
+			_.post('ai/new', {folder_id: current_folder}, function(data) {
 				if (data.success) {
-
 					var ai = data.ai
+					ai.valid = true
 					editors[ai.id] = new Editor(ai.id, ai.name, true, ai.code)
-
+					items[ai.id] = ai
+					var tab = $("<div id='" + ai.id + "' class='item ai' folder='" + ai.folder + "' draggable='true' ><div class='label'><span class='text'>" + ai.name + "</span><div class='edit'/></div></div>")
+					insert_element(tab, $('#ai-list #' + current_folder))
+					toggle_folder(current_folder, true)
+					add_item_events(tab)
+					editors[ai.id].tabDiv = tab
 					current = ai.id
+					currentItem = ai.id
+					currentType = 'ai'
+					currentName = editors[current].name
 					editors[current].show()
 					$page.resize()
 					$('.CodeMirror').css('font-size', _fontSize)
@@ -114,72 +352,35 @@ LW.pages.editor.init = function(params, $scope, $page) {
 			})
 		})
 
+		// New folder
 		$('#new-folder-button').click(function() {
-
-			_.post('ai-folder/new', {folder_id: 0}, function(data) {
-
-				$('#ai-list').append("<div id='" + data.id + "' class='item folder'><span class='icon'></span>" + _.lang.get('editor', 'new_folder') + "</div>");
-				var tab = $('#ai-list .ai[id=' + data.id + ']').last()
-				tab.click(function() {
-					LW.page('/editor/folder/' + data.id)
-				})
+			var current_folder = get_current_folder()
+			_.post('ai-folder/new', {folder_id: current_folder}, function(data) {
+				var folder = $("<div id='" + data.id + "' class='item folder empty' draggable='true' level='1'><div class='label'><div class='triangle'></div><span class='icon'></span><span class='text'>" + _.lang.get('editor', 'new_folder') + "</span><div class='edit'/></div><div class='content'></div></div>")
+				add_folder_drag_and_drop_events(folder)
+				add_item_events(folder)
+				insert_element(folder, $('#ai-list #' + current_folder))
+				toggle_folder(current_folder, true)
 			})
 		})
 
 		// IA de départ
-		_.log("type " + params.type)
-		currentType = params.type
-
-		if (currentType == 'ai' && 'id' in params && params.id in editors) {
-
+		if (params && params.id in editors) {
 			current = params.id
+			currentType = 'ai'
+			currentItem = params.id
+			currentName = editors[current].name
 			localStorage['editor/last_code'] = params.id
 			editors[current].show()
-
-		} else if (currentType == 'folder') {
-
-			LW.pages.editor.open_folder(params.id)
-
 		} else {
-
 			if (editors.length == 0) {
 				current = null
 			} else if ('editor/last_code' in localStorage && localStorage['editor/last_code'] in editors) {
-				LW.page('/editor/ai/' + localStorage['editor/last_code'])
+				LW.page('/editor/' + localStorage['editor/last_code'])
 			} else {
-				LW.page('/editor/ai/' + _.firstKey(editors))
+				LW.page('/editor/' + _.firstKey(editors))
 			}
 		}
-
-		// IA name
-		$('#ai-name').click(function() {
-			editedAI = current
-		})
-
-		$('#ai-name').keyup(function(e) {
-			editedIAName = $(this).text()
-		})
-
-		$('#ai-name').keydown(function(e) {
-
-			if (editedAI == null) return
-
-			if (e.keyCode == 13) {
-				editors[editedAI].updateName(editedIAName)
-				editors[editedAI].save()
-
-				e.preventDefault()
-				$(this).blur()
-			}
-		})
-
-		$('#ai-name').focusout(function() {
-
-			if (editedAI == null) return
-
-			editors[editedAI].updateName(editedIAName)
-			editors[editedAI].save()
-		})
 
 		// Boutons
 		$("#save-button").click(function() {
@@ -189,31 +390,32 @@ LW.pages.editor.init = function(params, $scope, $page) {
 
 		// Delete popup
 		$("#delete-button").click(function(e) {
-
-			if (current != null) {
-
-				var deletePopup = new _.popup.new('editor.delete_popup', {ai: editors[current].name}, 500)
-
+			if (currentItem != 0) {
+				var deletePopup = new _.popup.new('editor.delete_popup', {name: currentName, type: currentType}, 500)
 				deletePopup.find('#delete').click(function() {
-
 					var editor = editors[current]
-
-					_.post('ai/delete', {ai_id: editor.id}, function(data) {
-
+					var url = currentType == 'folder' ? 'ai-folder/delete' : 'ai/delete'
+					var args = currentType == 'folder' ? {folder_id: currentItem} : {ai_id: currentItem}
+					_.post(url, args, function(data) {
 						if (data.success) {
-
-							delete editors[editor.id]
-							$('#ai-list #' + editor.id).remove()
-							$('#editors #' + editor.id).remove()
-
-							if (!_.isEmptyObj(editors)) {
-								LW.page('/editor/' + _.firstKey(editors))
-							} else {
-								current = null
+							var item = $('#ai-list #' + currentItem)
+							var folder = item.parent().parent()
+							if (folder.find('> .content > .item').length == 1) {
+								folder.addClass('empty')
 							}
-
+							item.remove()
+							if (currentType == 'ai') {
+								delete editors[editor.id]
+								$('#editors #' + editor.id).remove()
+								if (!_.isEmptyObj(editors)) {
+									LW.page('/editor/' + _.firstKey(editors))
+								} else {
+									current = null
+								}
+							} else {
+								currentItem = 0
+							}
 							deletePopup.dismiss()
-
 						} else {
 							_.toast(data.error)
 						}
@@ -259,7 +461,6 @@ LW.pages.editor.init = function(params, $scope, $page) {
 
 		_theme = localStorage['editor/theme']
 		$('#editor-page').addClass(_theme)
-
 
 		// Popup des paramètres
 		var settingsPopup = new _.popup.new('editor.settings_popup', {}, 600)
@@ -537,13 +738,13 @@ LW.pages.editor.init = function(params, $scope, $page) {
 
 LW.pages.editor.update = function(params) {
 
-	currentType = params.type
-	if (currentType == 'ai' && params && 'id' in params && params.id in editors) {
+	if ('id' in params && params.id in editors) {
 		current = params.id
+		currentType = 'ai'
+		currentItem = params.id
+		currentName = editors[current].name
 		editors[current].show()
 		localStorage['editor/last_code'] = params.id
-	} else if (currentType == 'folder') {
-		LW.pages.editor.open_folder(params.id)
 	} else {
 		LW.loader.hide()
 	}
@@ -625,7 +826,7 @@ LW.pages.editor.test = function(e) {
 LW.pages.editor.jumpTo = function(ai, line) {
 
 	if (ai != current) {
-		LW.page('/editor/ai/' + ai)
+		LW.page('/editor/' + ai)
 	}
 
 	line--

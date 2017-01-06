@@ -870,6 +870,7 @@ LW.connect = function(farmer, callback) {
 		$('.farmer-name').text(LW.farmer.name)
 		$('#farmer-habs').html(_.format.number(LW.farmer.habs))
 		$('#farmer-crystals').html(_.format.number(LW.farmer.crystals))
+		$('#farmer-fights').text(LW.farmer.fights)
 
 		// Leek tabs
 		var leeks = LW.farmer.leeks
@@ -1137,18 +1138,8 @@ page('/editor', function() {
 	}
 })
 
-page('/editor/ai/:id', function(ctx) {
+page('/editor/:id', function(ctx) {
 	if (LW.connected) {
-		ctx.params['type'] = 'ai'
-		LW.loadPage('editor', ctx.params)
-	} else {
-		page.redirect('/')
-	}
-})
-
-page('/editor/folder/:id', function(ctx) {
-	if (LW.connected) {
-		ctx.params['type'] = 'folder'
 		LW.loadPage('editor', ctx.params)
 	} else {
 		page.redirect('/')
@@ -1886,7 +1877,7 @@ var FormatTime = function(time) {
 	var res = "";
 	if (hours > 0) res += hours + "h ";
 	if (minuts > 0) res += minuts + "m ";
-	res += seconds + "s";
+	if (seconds != 0) res += seconds + "s";
 
 	return res;
 }
@@ -2610,7 +2601,7 @@ LW.messages.getAvatars = function(conversation) {
 
 	for (var f in conversation.farmers) {
 		if (conversation.farmers[f].id == LW.farmer.id) continue
-		return "<img src='" + LW.util.getAvatar(conversation.farmers[f].id, conversation.farmers[f].avatar_changed) + "'></img>"
+		return "<img class='avatar' src='" + LW.util.getAvatar(conversation.farmers[f].id, conversation.farmers[f].avatar_changed) + "'></img>"
 	}
 }
 

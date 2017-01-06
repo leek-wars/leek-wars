@@ -163,9 +163,11 @@ Entity = Class.extend(Entity, function() {
 	}
 
 	this.jump = function() {
+		
 		if (this.dz == 0) {
 			this.dz = this.jumpForce;
 		}
+		
 	}
 
 	this.move = function(path) { // Move along a path
@@ -200,7 +202,7 @@ Entity = Class.extend(Entity, function() {
 
 		// Jump
 		this.jump();
-
+		S.move.play();
 		// Orientation
 		if (this.dx > this.rx) {
 			if (this.dy > this.ry)
@@ -536,6 +538,7 @@ Entity = Class.extend(Entity, function() {
 		if (!this.dead) {
 			this.bubble.setLama();
 			this.bubble.show(10);
+			S.lama.play();
 		}
 	}
 

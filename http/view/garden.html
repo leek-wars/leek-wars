@@ -1,5 +1,23 @@
-<h1>{#title}</h1>
-<br>
+<div class='page-header page-bar'>
+
+	<h1>{#title}</h1>
+
+	<div class='tabs'>
+		<div class='tab'>
+			<div id='remaining-fights'>
+				<img src='{{static}}image/icon/garden.png'>
+				<span class='on'>
+					<span>{garden.fights}</span>
+					<div id='tt_remaining-fights' class='tooltip'>{{#n_remaining_fights, garden.fights}}</div>
+				</span>
+				<span class='off'>
+					<span class='remaining-time'></span>
+					<div id='tt_remaining-time' class='tooltip'>{{#next_fight_in, "<span class='remaining-time'></span>"}}</div>
+				</span>
+			</div>
+		</div>
+	</div>
+</div>
 
 <div class='column3'>
 
@@ -18,14 +36,16 @@
 
 				<div id='tab-solo' class='card tab active enabled' tab='solo'>
 					<h2>{#category_solo_fight}</h2>
-					<span class='fights'><img src='{{static}}image/icon/grey/garden.png' /> {garden.total_solo_fights}</span>
-					<span class='grey'>/ {garden.max_solo_fights}</span>
+					<img class='player' src='{{static}}image/player.png'>
+					<img class='sword' src='{{static}}image/icon/grey/garden.png'>
+					<img class='player' src='{{static}}image/player.png'>
 				</div>
 
 				<div id='tab-farmer' class='card tab {garden.farmer_enabled ? 'enabled' : ''}' tab='farmer'>
 					<h2>{#category_farmer_fight}</h2>
-					<span class='fights'><img src='{{static}}image/icon/grey/garden.png' /> {garden.farmer_fights}</span>
-					<span class='grey'>/ {garden.max_farmer_fights}</span>
+					<span class='player-count'>4</span> <img class='player' src='{{static}}image/player.png'>
+					<img class='sword' src='{{static}}image/icon/grey/garden.png'>
+					<span class='player-count'>4</span> <img class='player' src='{{static}}image/player.png'>
 				</div>
 
 				@if (!garden.farmer_enabled)
@@ -36,8 +56,9 @@
 
 				<div id='tab-team' class='card tab {garden.team_enabled ? 'enabled' : ''}' tab='team'>
 					<h2>{#category_team_fight}</h2>
-					<span class='fights'><img src='{{static}}image/icon/grey/garden.png' /> {garden.team_fights}</span>
-					<span class='grey'>/ {garden.max_team_fights}</span>
+					<span class='player-count'>6</span> <img class='player' src='{{static}}image/player.png'>
+					<img class='sword' src='{{static}}image/icon/grey/garden.png'>
+					<span class='player-count'>6</span> <img class='player' src='{{static}}image/player.png'>
 				</div>
 
 				@if (!garden.team_enabled)
@@ -48,8 +69,7 @@
 
 				<div id='tab-battle-royale' class='card tab {garden.battle_royale_enabled ? 'enabled' : ''}' tab='battle-royale'>
 					<h2>{#category_battle_royale}</h2>
-					<span class='fights'><img src='{{static}}image/icon/grey/garden.png' /> {garden.battle_royale_fights}</span>
-					<span class='grey'>/ {garden.max_battle_royale_fights}</span>
+					<span class='player-count'>10</span> <img class='player' src='{{static}}image/player.png'>
 				</div>
 
 				@if (!garden.battle_royale_enabled)
@@ -167,7 +187,6 @@
 								<div class='talent'><span class='talent-icon'></span> {leek.talent}</div>
 
 								<div class='level'>{#level_n, leek.level}</div>
-								<span class='fights'><img src='{{static}}/image/fight.png' />{garden.solo_fights[leek.id]}</span>
 							</div>
 						@end
 					</div>
@@ -210,7 +229,6 @@
 						@foreach (compo in garden.my_compositions)
 							<div class='compo-wrapper'>
 								@includeobj('garden.compo', compo)
-								<br>
 								<span class='fights'>
 									<img src='{{static}}/image/fight.png'>{compo.fights}
 								</span>
