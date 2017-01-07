@@ -34,6 +34,7 @@ LW.pages.team.init = function(params, $scope, $page) {
 		}
 
 		var team = data.team
+		$page.team = team
 		_team = team
 
 		_team.membersById = []
@@ -96,6 +97,7 @@ LW.pages.team.init = function(params, $scope, $page) {
 		LW.pages.team.deleteComposition()
 		LW.pages.team.tournaments()
 		LW.pages.team.changeOwner()
+		LW.pages.team.report()
 	})
 }
 
@@ -658,5 +660,19 @@ LW.pages.team.changeOwner = function() {
 
 	$('#change-owner-button').click(function(e) {
 		changePopup.show(e)
+	})
+}
+
+LW.pages.team.report = function() {
+	var self = this
+	$('#report-button').click(function(e) {
+		LW.createReportPopup({
+			title: _.lang.get('moderation', 'report_farmer', self.team.name),
+			message: _.lang.get('moderation', 'report_farmer_for_reason', self.team.name),
+			target: self.team.emblem_author,
+			reasons: [
+				LW.WARNING.INCORRECT_EMBLEM
+			]
+		}).show(e)
 	})
 }

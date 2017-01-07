@@ -357,6 +357,7 @@ LW.pages = {
 		langs: ['report', 'country', 'moderation']
 	},
 	team: {
+		langs: ['report', 'moderation'],
 		styles: ['chat.css']
 	},
 	editor: {

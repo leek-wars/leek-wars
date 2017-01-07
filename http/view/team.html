@@ -377,13 +377,21 @@
 		@if (team_member)
 			<div class='tab' id='quit-team-button'>{#quit_team}</div>
 		@end
-
 		@if (team_owner)
 			<div class='tab' id='change-owner-button'>{#change_owner}</div>
 		@end
-
 		@if (team_owner)
 			<div class='tab' id='dissolve-team-button'>{#disolve_team}</div>
+		@end
+		@if (!team_member)
+			@if (LW.connected)
+				<div id='report-button-container'>
+					<div id='report-button' class='report-button tab'>
+						<img src='{{static}}image/icon/flag.png'>
+						<span>{#report}</span>
+					</div>
+				</div>
+			@end
 		@end
 	</div>
 </div>
