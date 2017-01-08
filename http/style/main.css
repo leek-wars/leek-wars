@@ -1944,6 +1944,7 @@ input:active, input:focus {
 	position: relative;
 	margin-bottom: 5px;
 	max-height: 999999px;
+	clear:left;
 }
 .chat-message .report,
 .chat-message .mute,
