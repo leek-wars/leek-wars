@@ -1893,9 +1893,8 @@ var Game = function() {
         $("[id^=effect]").remove()
          $('#turn').text("")
 
-        for (var effect in this.effects) {
-        	this.removeEffect(effect)
-        }
+		this.effects = []
+
         for (var i = 0; i < this.particles.particles.length; i++) {
         	this.particles.particles.splice(i, 1)
         	i--
