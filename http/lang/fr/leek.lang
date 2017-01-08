@@ -14,6 +14,7 @@ available_on_market				(Disponible à l'achat dans le marché)
 cancel							Annuler
 capital							Capital
 challenge						Défier
+characteristics       Caractéristiques
 chip_level_n					Niveau %s
 chips							Puces
 chips_of						Puces équipées sur %s
@@ -99,6 +100,7 @@ science_description				La science augmente les boosts et contre les entraves
 see_tournament					Voir le tournoi
 select_a_hat					Sélectionner un chapeau
 show_registers					Afficher les registres
+statistics          Statistiques
 strength						Force
 strength_cost					1 capital ⇔ 1 force
 strength_description			La force augmente les dégâts causés par les armes et les puces
