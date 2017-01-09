@@ -1003,11 +1003,11 @@ var Game = function() {
 				summon.summoner = this.leeks[caster]
 				summon.active = true;
 
+				summon.drawID = this.addDrawableElement(summon, summon.y);
+
+				this.hud.addEntityBlock(summon);
+
 				if (!this.jumping) {
-					summon.drawID = this.addDrawableElement(summon, summon.y);
-
-					this.hud.addEntityBlock(summon);
-
 					this.log(_.lang.get('fight', 'summon',
 						this.colorText(this.leeks[action[1]].name, this.getLeekColor(action[1])),
 						this.colorText(summon.name, this.getLeekColor(summon.id))
@@ -1033,9 +1033,7 @@ var Game = function() {
 				entity.active = true
 				entity.reborn()
 
-				if (!this.jumping) {
-					entity.drawID = game.addDrawableElement(entity, entity.y)
-				}
+				entity.drawID = game.addDrawableElement(entity, entity.y)
 
 				this.actionDone()
 				break
@@ -1900,7 +1898,7 @@ var Game = function() {
         $("#actions .action").remove()
         $("#logs .log").remove()
         $("[id^=effect]").remove()
-         $('#turn').text("")
+        $('#turn').text("")
 
 		this.effects = []
 
