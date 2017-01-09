@@ -832,16 +832,25 @@ var Game = function() {
 
 			case ACTION_USE_CHIP:
 
-				if (this.jumping) {
-					this.actionDone()
-					break
-				}
-
 				var launcher = action[1];
 				var cell = action[2];
 				var chip = action[3];
 				var result = action[4];
 				var leeksID = action[5];
+
+				if (this.jumping) {
+					// Update leek cell after teleportation
+					if (chip == 37) {
+						this.leeks[launcher].cell = cell;
+					}
+					// Update leeks cells after inversion
+					if (chip == 39) {
+						this.leeks[leeksID[0]].cell = this.leeks[launcher].cell;
+						this.leeks[launcher].cell = cell;
+					}
+					this.actionDone()
+					break
+				}
 
 				var log = _.lang.get('fight', 'leek_cast',
 					this.colorText(this.leeks[action[1]].name, this.getLeekColor(action[1])),
