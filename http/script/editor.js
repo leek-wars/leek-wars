@@ -530,7 +530,9 @@ LW.pages.editor.init = function(params, $scope, $page) {
 		if (['solo', 'farmer', 'team'].indexOf(_testType) == -1) _testType = 'solo'
 
 		_testLeek = localStorage['editor/test_leek']
-		if (isNaN(_testLeek)) _testLeek = _testPopup.find('.myleek').first().attr('leek')
+		if (isNaN(_testLeek) || !LW.farmer.leeks[_testLeek]) {
+			_testLeek = _testPopup.find('.myleek').first().attr('leek')
+		}
 
 		_testEnemies = 'editor/test_enemies' in localStorage ? JSON.parse(localStorage['editor/test_enemies']) : {'leek1': 2}
 
