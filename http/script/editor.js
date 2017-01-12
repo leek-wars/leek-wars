@@ -49,6 +49,7 @@ LW.pages.editor.init = function(params, $scope, $page) {
 		for (var i in folders) items[folders[i].id] = folders[i]
 
 		// Create editors
+		editors = {}
 		for (var i in ais) {
 			var ai = ais[i]
 			editors[ai.id] = new Editor(ai.id, ai.name, ai.valid, "", ai.folder)
@@ -524,6 +525,7 @@ LW.pages.editor.init = function(params, $scope, $page) {
 		_testPopup = new _.popup.new('editor.test_popup', data, 960)
 
 		_testAI = parseInt(localStorage['editor/test_ai'])
+
 		if (!(_testAI in editors)) _testAI = _firstKey(editors)
 
 		_testType = localStorage['editor/test_type']
