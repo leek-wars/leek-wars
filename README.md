@@ -23,9 +23,7 @@ production server. When you log into this local version, you will use your real 
 ## Structure
 - http/			: All served files
 	* image/ 		: All images, icons, textures
-	* lang/ 		: Translations files
-		- en/
-		- fr/
+	* lang/ 		: Translations files : en/ and fr/
 	* script/		: JavaScript files
 		- game/			: JS for the fight rendering
 	* sound/		: Sounds files
