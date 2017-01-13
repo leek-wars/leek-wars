@@ -2,6 +2,8 @@
 
 The Leek Wars website frontend, in HTML, CSS, JavaScript.
 
+Related projects: [LeekScript](https://github.com/leek-wars/leekscript) and [Leek Wars fight generator](https://github.com/leek-wars/leek-wars-generator).
+
 ![Banner](https://github.com/leek-wars/leek-wars-client/blob/master/banner.jpg)
 
 ## Deployment
