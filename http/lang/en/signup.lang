@@ -8,7 +8,7 @@ fight_factory			Team fight in the factory
 fight_forest			Team fight in the forest
 fight_ice			Solo fight on the ice
 fight_test			Fight on the test map
-godfather			Godfather (Optional)
+godfather			Referrer (Optional)
 intro			In <b>Leek Wars</b>, create the most powerful leek in the world and destroy your enemies!<br><br>
 Develop your own artificial intelligence with <b>LeekScript</b>, a language easy to learn, and become the best farmer!
 leek			Leek
@@ -21,7 +21,7 @@ password			Password
 place			Rank
 ranking			Ranking
 screenshots			Screenshots
-signup			Register!
+signup			Sign up!
 signup_done			Registration done successfully!
 signup_done_message			Your account is now activated! Log in and starts fighting
 signup_validated			Registration validated!
