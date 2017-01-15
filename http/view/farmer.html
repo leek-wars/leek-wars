@@ -103,12 +103,22 @@
 						@end
 					</h4>
 				@end
-				<!--
-				<a target='_blank' href='https://github.com/5pilow'>
-					<div class='github'>
-						<img src='{{static}}image/github.png'><span>5pilow</span>
-					</div>
-				</a>-->
+				<div class='infos'>
+					@if (farmer.website)
+						<a target='_blank' href='{farmer.website}'>
+							<div class='info'>
+								<img src='{{static}}image/website.png'><span>{farmer.website}</span>
+							</div>
+						</a>
+					@end
+					@if (farmer.github)
+						<a target='_blank' href='https://github.com/{farmer.github}'>
+							<div class='info'>
+								<img src='{{static}}image/github.png'><span>{farmer.github}</span>
+							</div>
+						</a>
+					@end
+				</div>
 			</div>
 		</div>
 

@@ -71,14 +71,19 @@
 	font-weight: normal;
 }
 
-#farmer-page .github {
+#farmer-page .infos {
+	text-align: left;
+}
+
+#farmer-page .info {
 	cursor: pointer;
+	padding: 2px;
 }
-#farmer-page .github img {
-	width: 24px;
+#farmer-page .info img {
+	width: 20px;
 }
-#farmer-page .github span {
-	line-height: 26px;
+#farmer-page .info span {
+	line-height: 22px;
 	vertical-align: top;
 	margin-left: 5px;
 	font-weight: bold;
