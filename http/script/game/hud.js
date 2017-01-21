@@ -188,6 +188,7 @@ var Hud = function() {
 			})
 		}
 
+		$('#details [entity=' + entity.id + ']').remove()
 		$('#details').append(this.createLeekDetails(entity))
 
 		$('.entity[entity=' + entity.id + ']').mouseenter(function() {
