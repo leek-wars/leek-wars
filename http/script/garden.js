@@ -239,17 +239,15 @@ LW.pages.garden.load_leek = function(leek_id) {
 			}
 		} else {
 			$('#garden-solo .enemies[of=' + leek_id + '] .ai-invalid').hide()
-			if(data.error == 'invalid_ai') {
+			if (data.error == 'invalid_ai') {
 				$('#garden-solo .enemies[of=' + leek_id + '] .ai-invalid').show()
 				return null
 			}
-			
-			$('#garden-solo .enemies[of=' + leek_id + '] .no_ai_equipped').hide()
-			if(data.error == 'no_ai_equipped') {
-				$('#garden-solo .enemies[of=' + leek_id + '] .no_ai_equipped').show()
+			$('#garden-solo .enemies[of=' + leek_id + '] .no-ai-equipped').hide()
+			if (data.error == 'no_ai_equipped') {
+				$('#garden-solo .enemies[of=' + leek_id + '] .no-ai-equipped').show()
 				return null
 			}
-			
 			_.toast(data.error)
 		}
 	})
