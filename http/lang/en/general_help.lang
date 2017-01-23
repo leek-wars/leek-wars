@@ -25,20 +25,20 @@ farmer_8			Reaching higher levels for your leek will allow you to use more LeekS
 Each function is rated with a level which is displayed on the right of the function name in the <a href='/help/documentation'>documentation</a>. These level is the mimimum requested to be allowed to use this specific LeekScript function.
 fights			Fights
 fights_1			All information related to fights are available on the Garden page. There are 3 different kinds of fights:
-fights_10			All your leeks fight all the leeks of another farmer. You get 10 farmer fights every day. You can postpone these fights to the day after (and only).
-fights_11			Team Fights
-fights_12			All the leeks inside a composition of your team fight together all the leeks of a composition of another team.
-Each of your leek is allowed to do 10 team fights with its composition. A composition is allowed to fight only if all its leeks have at least 1 team fight left.
-fights_13			Team fights do not add up to the total of your wins, draws and losses (ratio).
 fights_2			Solo fight (1 vs 1): one of your leeks is fighting another leek.
 fights_3			Farmer fight: all your leeks fight all the leeks of another farmer.
 fights_4			Team fight: one composition of your team is fighting another composition of another team.
-fights_5			Solo Fights
-fights_6			In a solo fight your leek is against another leek which has mainly the same power (automatically calculated by the game). As long as the level of your first leek is below 50, you are allowed up to 30 fights per day. When your first leek reaches level 50, the limitation drops down to 10 fights per day.
-fights_7			The fights of your leek which have not been done on day can be postponed to the day after. If you cannot perform the fights (due to any other IRL constraint) you will have the opportunity to trigger them the day after. The postponing is done only the day after. If you do not perform your late fights the day after, they are definitively lost. For example, if your first leek is below level 50 and you have no time today to do the 30 fights of this leek, you will then have the possibility to perform 60 fights tomorrow. If the level of your first leek is above 50 and you have no time today to do the 10 fights of this first leek, you will then have 20 fights available tomorrow for this leek.
-As soon as you recruit your second leek, you get now 10 additional farmer fights available per day.
-fights_8			The allowed number of fights is reset every day at midnight. (New fights for the new day, plus potentially the postponed fights from yesterday).
-fights_9			Farmer Fights
+fights_5			Your daily fights not been done on day can be postponed to the day after. If you cannot perform the fights (due to any other IRL constraint) you will have the opportunity to trigger them the day after. The postponing is done only the day after. If you do not perform your late fights the day after, they are definitively lost. For example, if you have no time today to do the <b>50</b> daily fights, you will then have the possibility to perform <b>100</b> fights tomorrow.
+fights_6			The allowed number of fights is reset every day at midnight. (New fights for the new day, plus potentially the postponed fights from yesterday).
+fights_7			Solo Fights
+fights_8			In a <b>solo fight</b> your leek is against another leek which has mainly the same power (automatically calculated by the game).
+fights_9			A fight will be counted, and removed to your remaining daily fights.
+fights_10			Farmer Fights
+fights_11			All your leeks fight all the leeks of another farmer.
+fights_12			Although all your leeks fight, it counts only for a fight.
+fights_13			Team Fights
+fights_14			All the leeks inside a composition of your team fight together all the leeks of a composition of another team. Each of your leek is allowed to do <b>10</b> team fights with its composition, apart from your daily fights. A composition is allowed to fight only if all its leeks have at least 1 team fight left.
+fights_15			Team fights do not add up to the total of your wins, draws and losses (ratio).
 habs			Habs
 habs_1			Hab(s) is the name of the Leek Wars currency. You earn Habs thanks to fights. You spend Habs to buy weapons and chips in the market, or to recruit an additional leek.
 intro			This page will provide you with the detailed mechanisms regarding : leek evolution, fights, weapons, chips, tournaments...
