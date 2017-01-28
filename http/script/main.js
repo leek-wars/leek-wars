@@ -501,7 +501,9 @@ LW.pages = {
 	legal: {},
 	conditions: {},
 	roadmap: {},
-	search: {},
+	search: {
+		langs: ['forum']
+	},
 	line_of_sight: {},
 	api: {},
 	translation: {

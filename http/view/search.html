@@ -28,12 +28,7 @@
 								<div class='title'>{{result.formatted_title}}</div>
 							</a>
 
-							<div class='info'>
-								{{#post_by_x_the_x_in_x,
-								"<a href='/farmer/" + result.fid + "'>" + result.fname + "</a>",
-								"<dark>" + _.format.date(result.date) + "</dark>",
-								"<a href='/forum/category-" + result.cid + "'>" + _.lang.get('forum_category', result.cname) + "</a>"}}
-							</div>
+							<div class='info'>{{result.link}}</div>
 
 							<a href='/forum/category-{result.cid}/topic-{result.tid}'>
 								<div class='headline'>{{result.message}}</div>
