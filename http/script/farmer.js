@@ -79,6 +79,7 @@ function init(farmer, $scope, $page) {
 	LW.setTitle(farmer.name)
 
 	LW.pages.farmer.trophies()
+	LW.pages.farmer.infos()
 
 	if (_myFarmer) {
 
@@ -231,9 +232,12 @@ LW.pages.farmer.country = function() {
 	_.get('country/get-all', function(data) {
 		if (data.success) {
 
-			var countryPopup = new _.popup.new('farmer.country_popup', data, 850)
+			if (!_myFarmer) return null
 
-			$('#country.my-farmer').click(function(e) {
+			var countryPopup = new _.popup.new('farmer.country_popup', data, 850)
+			countryPopup.setDismissable(true)
+
+			$('#farmer-page .country').click(function(e) {
 				countryPopup.show(e)
 			})
 
@@ -244,14 +248,71 @@ LW.pages.farmer.country = function() {
 					if (data.success) {
 
 						LW.farmer.country = code
-						$('#country .country').text(code == 'null' ? _.lang.get('farmer', 'no_country') : _.lang.get('country', code))
-						$('#country .flag').attr('src', LW.staticURL + 'image/flag/32/' + (code == 'null' ? '_' : code) + '.png')
+						$('#farmer-page .country .country').text(code == 'null' ? _.lang.get('farmer', 'no_country') : _.lang.get('country', code))
+						$('#farmer-page .country .flag').attr('src', LW.staticURL + 'image/flag/32/' + (code == 'null' ? '_' : code) + '.png')
 						countryPopup.dismiss()
 					}
 				})
 			})
 		}
 	})
+}
+
+LW.pages.farmer.infos = function() {
+	if (_farmer.website) {
+		$('#farmer-page .infos .add-website').hide()
+	} else {
+		$('#farmer-page .infos .website').hide()
+	}
+	if (_farmer.github) {
+		$('#farmer-page .infos .add-github').hide()
+	} else {
+		$('#farmer-page .infos .github').hide()
+	}
+
+	if (_myFarmer) {
+		var website = _farmer.website ? _farmer.website : ''
+		var websitePopup = new _.popup.new('farmer.website_popup', {website: website})
+		websitePopup.setDismissable(true)
+		websitePopup.find('.validate').click(function() {
+			var website = websitePopup.find('input').val()
+			if (website) {
+				$('#farmer-page .infos .add-website').hide()
+				$('#farmer-page .infos .website .text').text(website)
+				$('#farmer-page .infos .website a').attr('href', website)
+				$('#farmer-page .infos .website').show()
+			} else {
+				$('#farmer-page .infos .add-website').show()
+				$('#farmer-page .infos .website').hide()
+			}
+			websitePopup.dismiss()
+			_.post('farmer/set-website', {website: website})
+		})
+		$('#farmer-page .infos .add-website, #farmer-page .website .edit').click(function(e) {
+			websitePopup.show(e)
+		})
+
+		var github = _farmer.github ? _farmer.github : ''
+		var githubPopup = new _.popup.new('farmer.github_popup', {github: github})
+		githubPopup.setDismissable(true)
+		githubPopup.find('.validate').click(function() {
+			var github = githubPopup.find('input').val()
+			if (github) {
+				$('#farmer-page .infos .add-github').hide()
+				$('#farmer-page .infos .github .text').text(github)
+				$('#farmer-page .infos .github a').attr('href', 'https://github.com/' + github)
+				$('#farmer-page .infos .github').show()
+			} else {
+				$('#farmer-page .infos .add-github').show()
+				$('#farmer-page .infos .github').hide()
+			}
+			githubPopup.dismiss()
+			_.post('farmer/set-github', {github: github})
+		})
+		$('#farmer-page .infos .add-github, #farmer-page .github .edit').click(function(e) {
+			githubPopup.show(e)
+		})
+	}
 }
 
 LW.pages.farmer.avatar = function() {

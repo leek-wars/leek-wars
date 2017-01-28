@@ -1,3 +1,5 @@
+add_website				Ajouter un site web
+add_github				Ajouter un GitHub
 banned					Éleveur banni
 banned_message			Cet éleveur a été banni
 bonus_trophies			Trophées bonus
@@ -37,6 +39,7 @@ farmer_have_n_warnings		Cet éleveur a %s avertissements
 farmer_not_found			Éleveur introuvable
 farmer_not_found_message	Éleveur d'id <b>%s</b> introuvable :(
 fights						Combats
+forum_messages				%s messages
 garden						Agressions
 garden_no					NON
 garden_yes					OUI
@@ -77,6 +80,7 @@ unregister_wrong_password			Le mot de passe est incorrect
 upload_failed				Une erreur s'est produite : %s
 uploading_avatar			Envoi de l'avatar...
 upload_success				Envoi réussi !
+validate					Valider
 victories					victoires
 warnings					Avertissements
 warning_severity_s			gravité %s

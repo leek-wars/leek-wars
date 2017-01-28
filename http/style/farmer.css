@@ -36,17 +36,8 @@
 	display: none;
 }
 
-#country {
-	margin-top: 10px;
-}
-#country.my-farmer {
-	cursor: pointer;
-}
-
-#country img {
-	vertical-align: middle;
-	width: 28px;
-	margin-bottom: 2px;
+#farmer-page .country.no {
+	font-style: italic;
 }
 
 .country_popup .country {
@@ -73,20 +64,55 @@
 
 #farmer-page .infos {
 	text-align: left;
+	width: 200px;
+	margin: 0 auto;
+	margin-top: 6px;
+}
+
+#farmer-page .infos .add {
+	font-size: 13px;
+	color: #999;
+	cursor: pointer;
+	margin: 3px 0;
 }
 
 #farmer-page .info {
-	cursor: pointer;
-	padding: 2px;
+	padding: 1px;
+	color: #666;
 }
+#farmer-page .info a {
+	color: #666;
+}
+
 #farmer-page .info img {
 	width: 20px;
 }
+
 #farmer-page .info span {
 	line-height: 22px;
 	vertical-align: top;
 	margin-left: 5px;
 	font-weight: bold;
+}
+
+#farmer-page .info .edit {
+	background-image: url('../image/edit_pen.png');
+	background-size: cover;
+	display: inline-block;
+	cursor: pointer;
+	width: 12px;
+	height: 12px;
+	margin-left: 5px;
+	display: none;
+	margin-top: 4px;
+}
+
+#farmer-page .info:hover .edit {
+	display: inline-block;
+}
+
+.popup.website_popup input, .popup.github_popup input {
+	width: 90%;
 }
 
 #team img {

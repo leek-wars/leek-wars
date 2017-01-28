@@ -1,3 +1,5 @@
+add_website				Add a website
+add_github				Add a GitHub
 banned			Farmer banned
 banned_message			This farmer have been banned
 bonus_trophies			Bonus trophies
@@ -36,6 +38,7 @@ farmer_have_1_warning			This farmer has 1 advertisement
 farmer_have_n_warnings			This farmer has %s advertisement
 farmer_not_found			Farmer not found
 farmer_not_found_message			Farmer with id <b>%s</b> not found :(
+forum_messages				%s messages
 fights			Fights
 garden							Garden
 garden_no						NO
@@ -77,6 +80,7 @@ unregister_wrong_password			The password is incorrect
 upload_failed			An error occurred: %s
 uploading_avatar			Uploading avatar...
 upload_success			Upload succeed!
+validate			Validate
 victories			victories
 warnings			advertisements
 warning_severity_s			Severity %s

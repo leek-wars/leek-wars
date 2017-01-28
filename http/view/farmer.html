@@ -80,43 +80,39 @@
 					@end
 				@end
 
-				@if (my_farmer)
-					<h4 id='country' class='my-farmer'>
-						@if (farmer.country)
-							<span class='country'>{_.lang.get('country', farmer.country)}</span>
-							<img class='flag' src='{{static}}image/flag/32/{farmer.country}.png'/>
-						@else
-							<span class='country'><i>{#no_country}</i></span>
-							<img class='flag' src='{{static}}image/flag/32/_.png'></img>
-						@end
-					</h4>
-
-					<div class='tooltip' id='tt_country'>{#click_to_change_country}</div>
-				@else
-					<h4 id='country'>
-						@if (farmer.country)
-							<span class='country'>{_.lang.get('country', farmer.country)}</span>
-							<img class='flag' src='{{static}}image/flag/32/{farmer.country}.png'/>
-						@else
-							<span class='country'><i>{#no_country}</i></span>
-							<img class='flag' src='{{static}}image/flag/32/_.png'></img>
-						@end
-					</h4>
-				@end
 				<div class='infos'>
-					@if (farmer.website)
-						<a target='_blank' href='{farmer.website}'>
-							<div class='info'>
-								<img src='{{static}}image/website.png'><span>{farmer.website}</span>
-							</div>
-						</a>
+					<a href='/search/-/{farmer.name}'>
+						<div class='info'>
+							<img class='flag' src='{{static}}image/forum.png'/><span>{#forum_messages, farmer.forum_messages}</span>
+						</div>
+					</a>
+					<div class='info country'>
+						@if (farmer.country)
+							<img class='flag' src='{{static}}image/flag/32/{farmer.country}.png'/><span class='country'>{_.lang.get('country', farmer.country)}</span>
+							@if (my_farmer)
+								<span class='edit'></span>
+							@end
+						@else
+							<img class='flag' src='{{static}}image/flag/32/_.png'/><span class='country no'>{#no_country}</span>
+						@end
+					</div>
+					<div class='info website'>
+						<img src='{{static}}image/website.png'><a target='_blank' href='{farmer.website}'><span class='text'>{farmer.website}</span></a>
+						@if (my_farmer)
+							<span class='edit'></span>
+						@end
+					</div>
+					@if (my_farmer)
+						<div class='add add-website'>{#add_website}</div>
 					@end
-					@if (farmer.github)
-						<a target='_blank' href='https://github.com/{farmer.github}'>
-							<div class='info'>
-								<img src='{{static}}image/github.png'><span>{farmer.github}</span>
-							</div>
-						</a>
+					<div class='info github'>
+						<img src='{{static}}image/github.png'><a target='_blank' href='https://github.com/{farmer.github}'><span class='text'>{farmer.github}</span></a>
+						@if (my_farmer)
+							<span class='edit'></span>
+						@end
+					</div>
+					@if (my_farmer)
+						<div class='add add-github'>{#add_github}</div>
 					@end
 				</div>
 			</div>
@@ -397,6 +393,29 @@
 
 	<div class='actions'>
 		<div class='dismiss'>{#country_ok}</div>
+	</div>
+@endview
+
+
+@view (website_popup)
+	<div class='title'>{#add_website}</div>
+	<div class='content'>
+		<input type='text' class='input' value='{website}'/>
+	</div>
+	<div class='actions'>
+		<div class='dismiss'>{#cancel}</div>
+		<div class='validate green'>{#validate}</div>
+	</div>
+@endview
+
+@view (github_popup)
+	<div class='title'>{#add_github}</div>
+	<div class='content'>
+		<input type='text' class='input' value='{github}'/>
+	</div>
+	<div class='actions'>
+		<div class='dismiss'>{#cancel}</div>
+		<div class='validate green'>{#validate}</div>
 	</div>
 @endview
 
