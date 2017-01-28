@@ -20,9 +20,16 @@ LW.pages.search.init = function(params, $scope, $page) {
 					"<b>" + results[r].title.substring(pos, pos + query.length) + "</b>"
 				)
 			}
+			if (farmer == "") {
+				results[r].formatted_farmer = results[r].fname
+			} else {
+				results[r].formatted_farmer = results[r].fname.split(farmer).join(
+					"<b>" + results[r].fname.substring(pos, pos + farmer.length) + "</b>"
+				)
+			}
 
 			// link
-			var f = "<a href='/farmer/" + results[r].fid + "'>" + results[r].fname + "</a>"
+			var f = "<a href='/farmer/" + results[r].fid + "'>" + results[r].formatted_farmer + "</a>"
 			var date = "<dark>" + _.format.date(results[r].date) + "</dark>"
 			var category = "<a href='/forum/category-" + results[r].cid + "'>" + _.lang.get('forum', 'category_' + results[r].cname) + "</a>"
 			results[r].link = _.lang.get('search', 'post_by_x_the_x_in_x', f, date, category)
