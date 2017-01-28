@@ -76,26 +76,26 @@
 	margin: 3px 0;
 }
 
-#farmer-page .info {
+#farmer-page .infos .info {
 	padding: 1px;
 	color: #666;
 }
-#farmer-page .info a {
+#farmer-page .infos .info a {
 	color: #666;
 }
 
-#farmer-page .info img {
+#farmer-page .infos .info img {
 	width: 20px;
 }
 
-#farmer-page .info span {
+#farmer-page .infos .info span {
 	line-height: 22px;
 	vertical-align: top;
 	margin-left: 5px;
 	font-weight: bold;
 }
 
-#farmer-page .info .edit {
+#farmer-page .infos .info .edit {
 	background-image: url('../image/edit_pen.png');
 	background-size: cover;
 	display: inline-block;
@@ -107,7 +107,7 @@
 	margin-top: 4px;
 }
 
-#farmer-page .info:hover .edit {
+#farmer-page .infos .info:hover .edit {
 	display: inline-block;
 }
 
