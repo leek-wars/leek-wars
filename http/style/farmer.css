@@ -78,10 +78,11 @@
 
 #farmer-page .infos .info {
 	padding: 1px;
-	color: #666;
+	color: #888;
+	font-size: 14px;
 }
 #farmer-page .infos .info a {
-	color: #666;
+	color: #888;
 }
 
 #farmer-page .infos .info img {
