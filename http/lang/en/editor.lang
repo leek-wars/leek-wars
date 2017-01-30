@@ -4,6 +4,7 @@ ai_to_test			AI to test
 ai_renamed			AI renamed to <b>%s</b>
 auto_closing		Automatic closing of parentheses, brackets and quotation marks.
 autocompletion		Code completion (propose current variables and leekscript functions)
+cancel-test			Cancel
 child				Child
 constant			Constant %s
 defined_in			Defined in <b>%1$s</b> at line <b>%2$s</b>
@@ -46,7 +47,7 @@ opponent_strength_life	 Force / Life
 parameters			Parameters
 popups				Display information when the cursor is over a variable or a function.
 return				Return
-run_test			Run a test
+run_test			Test configuration
 save				Save
 save_desc			Save the current AI
 saving				Saving...
@@ -71,7 +72,11 @@ test_desc			Test an AI
 test_type_farmer	Farmer
 test_type_solo		Solo
 test_type_team		Team
-test_validate		Test
+test_validate		Run test
+test_scenario		Scenario
+test_leeks			Leeks
+test_map			Maps
+test_advanced		Advanced
 title				Editor
 valid_ai			<b>%s</b> is valid.
 variable				Variable <b>%s<b>

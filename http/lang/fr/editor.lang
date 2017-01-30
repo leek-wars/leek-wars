@@ -4,6 +4,7 @@ ai_to_test		IA à tester
 ai_renamed		IA renommée en <b>%s</b>
 auto_closing	Fermeture automatique des parenthèses, crochets, accolades et guillemets
 autocompletion	Autocomplétion (proposition des variables courantes et fonctions de la doc)
+cancel			Annuler
 child			Enfant
 constant		Constante %s
 defined_in		Définie dans <b>%1$s</b> à la ligne <b>%2$s</b>
@@ -47,7 +48,7 @@ opponent_strength_life		Force / Vie
 parameters		Paramètres
 popups			Affichage des informations au survol des constantes et fonctions
 return			Retour
-run_test		Lancer un test
+run_test		Configuration du test
 save			Sauvegarder
 save_desc		Sauvegarder l'IA courante
 saving			Sauvegarde...
@@ -72,7 +73,11 @@ test_desc			Tester une IA
 test_type_farmer	Éleveur
 test_type_solo		Solo
 test_type_team		Équipe
-test_validate		Tester
+test_validate		Lancer le test
+test_scenario		Scénario
+test_leeks			Poireaux
+test_map			Cartes
+test_advanced		Avancé
 title				Éditeur
 valid_ai			<b>%s</b> valide
 variable			Variable <b>%s</b>
