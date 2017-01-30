@@ -1528,16 +1528,20 @@ body.connected #header-signin {
 
 #popups {
 	position: fixed;
-	top: 0; bottom: 0;
-	left: 0; right: 0;
 	z-index: 600;
-	width: 100%;
-	height: 100%;
-	text-align: center;
 }
 
 #popups:not(.box) {
 	display: none;
+}
+
+.popup-wrapper {
+	position: fixed;
+	top: 0; bottom: 0;
+	left: 0; right: 0;
+	width: 100%;
+	height: 100%;
+	text-align: center;
 }
 
 .popup {
@@ -1558,7 +1562,7 @@ body.connected #header-signin {
 	left: 0;
 }
 
-.popup .title {
+.popup > .title {
 	background-image: url('../image/background.png');
 	color: #eee;
 	font-weight: 300;

@@ -452,11 +452,16 @@ _.popup.new = function(view, data, width, direct, options) {
 	}
 
 	this.id = view
+	this.wrapper = $("<div class='popup-wrapper box'></div>")
 	this.view = $("<div class='popup " + name + "'>" + _.view.render(view, data) + "</div>")
+	this.wrapper.append(this.view)
 
 	this.height = $(window).height() - 200
 
-	this.options = typeof(options) === 'undefined' ? {} : options
+	this.options = typeof(options) === 'undefined' ? {
+		dismissable: true
+	} : options
+
 	this.ondismiss = null
 
 	if (width != undefined) {
@@ -519,15 +524,16 @@ _.popup.new = function(view, data, width, direct, options) {
 			this.view.appendTo('body')
 			popup.appear()
 		} else {
-			this.view.prependTo('#popups')
-			this.view.hide()
-			if (_.popup.queue.length == 0) {
+			//this.view.appendTo('body')
+			this.wrapper.appendTo('#popups')
+			//this.view.hide()
+			//if (_.popup.queue.length == 0) {
 				$('#popups').addClass('box')
 				if (!this.options.draggable) {
 					$('#dark').fadeIn(200)
 				}
 				popup.appear()
-			}
+			//}
 			_.popup.queue.push(popup)
 		}
 
@@ -540,7 +546,7 @@ _.popup.new = function(view, data, width, direct, options) {
 
 		popup.view.find('.content').css('max-height', $(window).height() - 250)
 
-		this.view.show()
+		this.wrapper.show()
 		this.view.css('display', 'inline-block')
 
 		popup.view.css("transition", "transform ease 0.3s")
@@ -603,18 +609,18 @@ _.popup.new = function(view, data, width, direct, options) {
 
 		setTimeout(function() {
 
-			popup.view.hide()
+			popup.wrapper.hide()
 
 			_.popup.current = null
 
 			_.popup.queue.shift()
 
 			if (_.popup.queue.length > 0) {
-
+/*
 				setTimeout(function() {
 					_.popup.queue[0].appear()
 				}, 250)
-
+*/
 			} else {
 				$('#popups').removeClass('box')
 				$('#dark').fadeOut(200)
