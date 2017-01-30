@@ -518,133 +518,7 @@ LW.pages.editor.init = function(params, $scope, $page) {
 		})
 
 		// Paramètres de test
-		var data = {
-			ais: ais
-		}
-
-		_testPopup = new _.popup.new('editor.test_popup', data, 960)
-
-		_testAI = parseInt(localStorage['editor/test_ai'])
-
-		if (!(_testAI in editors)) _testAI = _firstKey(editors)
-
-		_testType = localStorage['editor/test_type']
-		if (['solo', 'farmer', 'team'].indexOf(_testType) == -1) _testType = 'solo'
-
-		_testLeek = localStorage['editor/test_leek']
-		if (isNaN(_testLeek) || !LW.farmer.leeks[_testLeek]) {
-			_testLeek = _testPopup.find('.myleek').first().attr('leek')
-		}
-
-		_testEnemies = 'editor/test_enemies' in localStorage ? JSON.parse(localStorage['editor/test_enemies']) : {'leek1': 2}
-
-		_testPopup.view.find('.enemy select').click(function(e) {
-			e.stopPropagation()
-		})
-
-		_testPopup.view.find('.enemy').click(function(e) {
-
-			if ($(this).hasClass('selected') && _testPopup.view.find('.enemy.selected').length > 1) {
-				$(this).removeClass('selected')
-				$(this).find('input[type=checkbox]').prop('checked', false)
-				delete _testEnemies['leek' + ($(this).index() + 1)]
-			} else {
-				$(this).addClass('selected')
-				$(this).find('input[type=checkbox]').prop('checked', true)
-				_testEnemies['leek' + ($(this).index() + 1)] = $(this).find('select')[0].selectedIndex
-			}
-			_saveTestSettings()
-		})
-
-		_testPopup.view.find('.enemy select').change(function() {
-			var enemy = $(this).closest('.leek').index()
-			_testEnemies['leek' + (enemy + 1)] = this.selectedIndex
-			_saveTestSettings()
-		})
-
-		_testPopup.view.find("input:radio[name='test-type']").change(function() {
-			_testType = $(this).attr('val')
-			_saveTestSettings()
-		})
-
-		_testPopup.view.find('.myleek').click(function(e) {
-
-			_testPopup.view.find('.myleek').removeClass('selected')
-			$(this).addClass('selected')
-
-			_testLeek = parseInt($(this).attr('leek'))
-			_saveTestSettings()
-		})
-
-		_testPopup.view.find('.myleek').each(function() {
-
-			var id = $(this).attr('leek')
-			var leek = LW.farmer.leeks[id]
-			var elem = this
-			LW.createLeekImage(leek.id, 0.7, leek.level, leek.skin, leek.hat, function(id, data) {
-				$(elem).find('.image').html(data)
-			})
-		})
-
-		_testPopup.view.find('#test-ais').change(function() {
-			_testAI = this[this.selectedIndex].id
-			_saveTestSettings()
-		})
-
-		// Bouton tester
-		_testPopup.view.find("#launch").click(function() {
-
-			var data = {}
-
-			data.ai_id = _testAI
-			data.leek_id = _testLeek
-
-			data.bots = {}
-			for (var e in _testEnemies) {
-				data.bots[e] = _testEnemies[e]
-			}
-
-			data.type = _testType
-
-			_saveTestSettings()
-
-			_.post('ai/test', data, function(data) {
-
-				if (data.success) {
-					_testPopup.dismiss()
-					LW.page('/fight/' + data.fight)
-				} else {
-					_.toast("Erreur : " + data.error)
-				}
-			})
-		})
-
-
-		$('#cancel-test').click(function() {
-			_testPopup.dismiss()
-		})
-
-		// Ajout des IA dans la liste de test
-		_testPopup.view.find('#test-ais option[id=' + _testAI + ']').attr('selected', 'selected')
-
-		_testPopup.view.find("input[name='test-type'][val='" + _testType + "']").prop('checked', true)
-
-		_testPopup.view.find(".myleek[leek='" + _testLeek + "']").addClass('selected')
-
-		for (var e in _testEnemies) {
-			var enemy = _testPopup.view.find('.enemy')[parseInt(e.substring(4)) - 1]
-
-			$(enemy).addClass('selected')
-			$(enemy).find('input[type=checkbox]').prop('checked', true)
-			$(enemy).find("select option[value='value" + _testEnemies[e] + "']").attr('selected', 'selected')
-		}
-
-		$("#test-button").click(function(e) {
-			if (current != null) {
-				_testEvent = e
-				editors[current].test()
-			}
-		})
+		LW.pages.editor.test_popup(ais)
 
 		// Recherche
 		var searchQuery = null
@@ -823,8 +697,10 @@ LW.pages.editor.keydown = function(e) {
 }
 
 LW.pages.editor.test = function(e) {
-
 	_testPopup.show(e)
+	_testPopup.find('.tab').removeClass('selected').first().addClass('selected')
+	_testPopup.find('.view').hide()
+	_testPopup.find('.view').first().css('display', 'flex')
 }
 
 LW.pages.editor.jumpTo = function(ai, line) {
@@ -892,6 +768,318 @@ LW.pages.editor.search = function(activate) {
 		$('#editor-page .search-panel').hide()
 		LW.pages.editor.resize()
 	}
+}
+
+LW.pages.editor.test_popup = function(ais) {
+
+	var data = {
+		ais: ais
+	}
+	_testPopup = new _.popup.new('editor.test_popup', data, 1024)
+	_testPopup.setDismissable(true)
+
+	_testPopup.find('.tab').click(function() {
+		_testPopup.find('.view').hide()
+		_testPopup.find('.tab').removeClass('selected')
+		$(this).addClass('selected')
+		_testPopup.find('.view[tab=' + $(this).attr('tab') + ']').css('display', 'flex')
+	})
+
+	/*
+	 * Maps
+	 */
+	var _maps = {}
+	var _current_map = null
+	var load_map = function(map) {
+		_current_map = map.id
+		_testPopup.find('.map .cell').removeClass('obstacle').removeClass('team1').removeClass('team2')
+		for (var c in map.data.obstacles) {
+			_testPopup.find('.map .cell[cell=' + map.data.obstacles[c] + ']').addClass('obstacle')
+		}
+		for (var c in map.data.team1) {
+			_testPopup.find('.map .cell[cell=' + map.data.team1[c] + ']').addClass('team1')
+		}
+		for (var c in map.data.team1) {
+			_testPopup.find('.map .cell[cell=' + map.data.team2[c] + ']').addClass('team2')
+		}
+	}
+	var select_map = function(map) {
+		_testPopup.find('.maps .map').removeClass('selected')
+		_testPopup.find('.maps .map[map=' + map + ']').addClass('selected')
+		load_map(_maps[map])
+	}
+	var add_map_events = function(e) {
+		e.click(function() {
+			select_map($(this).attr('map'))
+		})
+	}
+	_.get('test-map/get-all/' + LW.token(), function(data) {
+		if (data.success) {
+			for (var m in data.maps) {
+				_maps = data.maps
+				var e = $("<div class='item map' map='" +  data.maps[m].id + "'>" + data.maps[m].name + "</div>")
+				_testPopup.find('.maps').append(e)
+				add_map_events(e)
+			}
+			select_map(_.first(data.maps).id)
+		} else {
+			_.toast(data.error)
+		}
+	})
+	var add_map_popup = new _.popup.new('editor.input_popup', {title: "Ajouter une carte", validate: "Ajouter"})
+	add_map_popup.find('.validate').click(function() {
+		var name = add_map_popup.find('input').val()
+		_.post('test-map/new', {name: name}, function(data) {
+			if (data.success) {
+				var e = $("<div class='item map' map='" +  data.id + "'>" + name + "</div>")
+				_testPopup.find('.maps').append(e)
+				_maps[data.id] = ({name: name, id: data.id, data: {}})
+				add_map_events(e)
+				add_map_popup.dismiss()
+				add_map_popup.find('input').val('')
+			} else {
+				_.toast(data.error)
+			}
+		})
+	})
+ 	_testPopup.find('.view[tab="maps"] .item.add').click(function(e) {
+ 		add_map_popup.show(e)
+ 	})
+
+	var timeout = null
+	var reset_save_timeout = function() {
+		if (timeout) window.clearTimeout(timeout)
+		timeout = window.setTimeout(function() {
+			var map = _maps[_current_map]
+			var obstacles = []
+			var team1 = []
+			var team2 = []
+			_testPopup.find('.map .cell').each(function() {
+				if ($(this).hasClass('obstacle')) {
+					obstacles.push($(this).attr('cell'))
+				} else if ($(this).hasClass('team1')) {
+					team1.push($(this).attr('cell'))
+				} else if ($(this).hasClass('team2')) {
+					team2.push($(this).attr('cell'))
+				}
+			})
+			map.data = {
+				obstacles: obstacles,
+				team1: team1,
+				team2: team2
+			}
+			_.post('test-map/update', {id: map.id, data: JSON.stringify(map.data)}, function(data) {
+				if (!data.success) {
+					_.toast(data.error)
+				}
+			})
+		}, 3000)
+	}
+
+	var init_map = function(element) {
+		var size = 34;
+		element.empty()
+		for (var i = 0; i <= size; ++i) {
+			var line = $("<div class='line'></div>");
+			for (var j = 0; j <= size; ++j) {
+				var y = i - Math.floor(size / 2)
+				var x = j - Math.floor(size / 2)
+				var enabled = Math.abs(x) + Math.abs(y) <= size / 2
+				var clazz = enabled ? '' : 'disabled'
+				var team = j < (size * (5 / 6) - i) ? '1' : (j > (size * (7 / 6) - i) ? '2' : '0')
+				var cell = 306 + 18 * x + 17 * y
+				line.append("<span class='cell " + clazz + "' cell='" + cell + "' team='" + team + "'></span>");
+			}
+			element.append(line)
+		}
+
+		map_down = false
+		map_add = false
+		element.find('.cell:not(.disabled)').each(function() {
+			$(this).on({
+				contextmenu: function(e) { // right click
+					var team = $(this).attr('team')
+					if (team != 0) {
+						$(this).removeClass('obstacle').toggleClass(team === '1' ? 'team1' : 'team2')
+						reset_save_timeout()
+					}
+					e.preventDefault();
+				},
+				pointerdown: function(e) {
+					if (e.originalEvent.button === 0) { // only left click
+						map_down = true
+						map_add = !$(this).hasClass('obstacle')
+						$(this).toggleClass('obstacle')
+						reset_save_timeout()
+					}
+				},
+				pointerenter: function(e) {
+					if (map_down) {
+						$(this).toggleClass('obstacle', map_add)
+						reset_save_timeout()
+					}
+				},
+				pointerup: function(e) {
+					map_down = false
+				},
+				dragstart: function(e) {
+					e.preventDefault()
+					return false
+				}
+			})
+		})
+	}
+	init_map(_testPopup.find('.map .map-wrapper'))
+
+	_testPopup.find('.button.clear').click(function() {
+		_testPopup.find('.map .cell').removeClass('obstacle')
+		reset_save_timeout()
+	})
+	_testPopup.find('.button.random').click(function() {
+		_testPopup.find('.map .cell').removeClass('obstacle')
+		_testPopup.find('.map .cell').each(function() {
+			if (Math.random() > 0.8) {
+				$(this).addClass('obstacle')
+			}
+		})
+		reset_save_timeout()
+	})
+
+
+	/*
+	 * Scenarios
+	 */
+	_testPopup.find('.scenario').click(function() {
+		_testPopup.find('.scenario').removeClass('selected')
+		$(this).addClass('selected')
+
+		var scenario_view = _testPopup.find('.column-scenario')
+	})
+
+	/*
+	 * Leeks
+	 */
+	var add_leek_popup = new _.popup.new('editor.input_popup', {title: "Ajouter un poireau", validate: "Ajouter"})
+	_testPopup.find('.view[tab="leeks"] .item.add').click(function(e) {
+		add_leek_popup.show(e)
+	})
+
+	_testAI = parseInt(localStorage['editor/test_ai'])
+
+	if (!(_testAI in editors)) _testAI = _firstKey(editors)
+
+	_testType = localStorage['editor/test_type']
+	if (['solo', 'farmer', 'team'].indexOf(_testType) == -1) _testType = 'solo'
+
+	_testLeek = localStorage['editor/test_leek']
+	if (isNaN(_testLeek) || !LW.farmer.leeks[_testLeek]) {
+		_testLeek = _testPopup.find('.myleek').first().attr('leek')
+	}
+
+	_testEnemies = 'editor/test_enemies' in localStorage ? JSON.parse(localStorage['editor/test_enemies']) : {'leek1': 2}
+
+	_testPopup.view.find('.enemy select').click(function(e) {
+		e.stopPropagation()
+	})
+
+	_testPopup.view.find('.enemy').click(function(e) {
+
+		if ($(this).hasClass('selected') && _testPopup.view.find('.enemy.selected').length > 1) {
+			$(this).removeClass('selected')
+			$(this).find('input[type=checkbox]').prop('checked', false)
+			delete _testEnemies['leek' + ($(this).index() + 1)]
+		} else {
+			$(this).addClass('selected')
+			$(this).find('input[type=checkbox]').prop('checked', true)
+			_testEnemies['leek' + ($(this).index() + 1)] = $(this).find('select')[0].selectedIndex
+		}
+		_saveTestSettings()
+	})
+
+	_testPopup.view.find('.enemy select').change(function() {
+		var enemy = $(this).closest('.leek').index()
+		_testEnemies['leek' + (enemy + 1)] = this.selectedIndex
+		_saveTestSettings()
+	})
+
+	_testPopup.view.find("input:radio[name='test-type']").change(function() {
+		_testType = $(this).attr('val')
+		_saveTestSettings()
+	})
+
+	_testPopup.view.find('.myleek').click(function(e) {
+
+		_testPopup.view.find('.myleek').removeClass('selected')
+		$(this).addClass('selected')
+
+		_testLeek = parseInt($(this).attr('leek'))
+		_saveTestSettings()
+	})
+
+	_testPopup.view.find('.myleek').each(function() {
+
+		var id = $(this).attr('leek')
+		var leek = LW.farmer.leeks[id]
+		var elem = this
+		LW.createLeekImage(leek.id, 0.7, leek.level, leek.skin, leek.hat, function(id, data) {
+			$(elem).find('.image').html(data)
+		})
+	})
+
+	_testPopup.view.find('#test-ais').change(function() {
+		_testAI = this[this.selectedIndex].id
+		_saveTestSettings()
+	})
+
+	_testPopup.view.find("#launch").click(function() {
+
+		var data = {}
+
+		data.ai_id = _testAI
+		data.leek_id = _testLeek
+		data.bots = {}
+		for (var e in _testEnemies) {
+			data.bots[e] = _testEnemies[e]
+		}
+		data.type = _testType
+
+		_saveTestSettings()
+
+		_.post('ai/test', data, function(data) {
+
+			if (data.success) {
+				_testPopup.dismiss()
+				LW.page('/fight/' + data.fight)
+			} else {
+				_.toast("Erreur : " + data.error)
+			}
+		})
+	})
+
+	$('#cancel-test').click(function() {
+		_testPopup.dismiss()
+	})
+
+	_testPopup.view.find('#test-ais option[id=' + _testAI + ']').attr('selected', 'selected')
+
+	_testPopup.view.find("input[name='test-type'][val='" + _testType + "']").prop('checked', true)
+
+	_testPopup.view.find(".myleek[leek='" + _testLeek + "']").addClass('selected')
+
+	for (var e in _testEnemies) {
+		var enemy = _testPopup.view.find('.enemy')[parseInt(e.substring(4)) - 1]
+
+		$(enemy).addClass('selected')
+		$(enemy).find('input[type=checkbox]').prop('checked', true)
+		$(enemy).find("select option[value='value" + _testEnemies[e] + "']").attr('selected', 'selected')
+	}
+
+	$("#test-button").click(function(e) {
+		if (current != null) {
+			_testEvent = e
+			editors[current].test()
+		}
+	})
 }
 
 function generateDocumentation() {

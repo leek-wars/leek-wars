@@ -103,116 +103,92 @@
 	<div class='title'>{#run_test}</div>
 
 	<div class='content'>
-		<center>
-
-		<h4>{#ai_to_test} :</h4>
-		<select id='test-ais'>
-			@foreach (ai in ais)
-				<option id='{ai.id}'>{ai.name}</option>
-			@end
-		</select>
-
-		&nbsp;&nbsp;&nbsp;&nbsp;
-
-		<h4>
-			<input type='radio' id='test-type-solo' name='test-type' val='solo' checked /><label for='test-type-solo'>{#test_type_solo}</label>
-			<input type='radio' id='test-type-farmer' name='test-type' val='farmer' /><label for='test-type-farmer'>{#test_type_farmer}</label>
-			<input type='radio' id='test-type-team' name='test-type' val='team' /><label for='test-type-team'>{#test_type_team}</label>
-		</h4>
-		</center>
-
-		<h4>{#select_your_leek} :</h4>
-
-		<center>
-			@foreach (leek in LW.farmer.leeks)
-				<div class='leek myleek' leek='{leek.id}'>
-					<div class='image'></div>
-					{leek.name}
+		<div class='tabs'>
+			<div class='tab' tab='scenario'>{#test_scenario}</div><div class='tab' tab='leeks'>{#test_leeks}</div><div class='tab' tab='maps'>{#test_map}</div><div class='tab' tab='advanced'>{#test_advanced}</div>
+		</div>
+		<div tab='scenario' class='view'>
+			<div class='column lateral-column'>
+				<h4>Scénarios</h4>
+				<div class='items scenarios'>
+					<div class='item scenario' scenario='solo'>Solo</div>
+					<div class='item scenario' scenario='farmer'>Éleveur</div>
+					<div class='item scenario' scenario='team'>Équipe</div>
+					<div class='item add'>✚ Ajouter</div>
 				</div>
-			@end
-		</center>
+			</div>
+			<div class='column column-scenario'>
+				<div class='title'>Leeks</div>
 
-		<h4>{#select_opponents} :</h4>
 
-		<center>
-			<div class='leek enemy'>
-				<img width='100px' src='{{static}}/image/leek/leek4_front_green.png'>
-				<h3><input type='checkbox' />Domingo</h3>
-				{#opponent_strength}<br />
-				<select name="select">
-				  <option value="value0">{#child}</option>
-				  <option value="value1">{#easy}</option>
-				  <option value="value2" selected>{#medium}</option>
-				  <option value="value3">{#hard}</option>
-				  <option value="value4">{#evil}</option>
+				<div class='title'>{#ai_to_test} :</div>
+				<select id='test-ais'>
+					@foreach (ai in ais)
+						<option id='{ai.id}'>{ai.name}</option>
+					@end
 				</select>
+
+				<div class='title'>Map</div>
 			</div>
-			<div class='leek enemy'>
-				<img width='100px' src='{{static}}/image/leek/leek4_front_blue.png'>
-				<h3><input type='checkbox' />Tisma</h3>
-				{#opponent_agility}<br />
-				<select name="select">
-				  <option value="value0">{#child}</option>
-				  <option value="value1">{#easy}</option>
-				  <option value="value2" selected>{#medium}</option>
-				  <option value="value3">{#hard}</option>
-				  <option value="value4">{#evil}</option>
-				</select>
+		</div>
+
+		<div tab='leeks' class='view'>
+			<div class='column lateral-column'>
+				<h4>Poireaux</h4>
+				<div class='items leeks'>
+					@foreach (leek in LW.farmer.leeks)
+						<div class='item leek' leek='{leek.id}'>{leek.name}</div>
+					@end
+					<div class='item leek' leek='8'>Franjou</div>
+					<div class='item add'>✚ Ajouter</div>
+				</div>
 			</div>
-			<div class='leek enemy'>
-				<img width='100px' src='{{static}}/image/leek/leek4_front_yellow.png'>
-				<h3><input type='checkbox' />Rioupi</h3>
-				{#opponent_life}<br />
-				<select name="select">
-				  <option value="value0">{#child}</option>
-				  <option value="value1">{#easy}</option>
-				  <option value="value2" selected>{#medium}</option>
-				  <option value="value3">{#hard}</option>
-				  <option value="value4">{#evil}</option>
-				</select>
+			<div class='column leek-column'>
+
+				<div class='leek enemy'>
+					<img width='100px' src='{{static}}/image/leek/leek4_front_green.png'>
+					<h3><input type='checkbox' />Domingo</h3>
+					{#opponent_strength}<br />
+					<select name="select">
+					  <option value="value0">{#child}</option>
+					  <option value="value1">{#easy}</option>
+					  <option value="value2" selected>{#medium}</option>
+					  <option value="value3">{#hard}</option>
+					  <option value="value4">{#evil}</option>
+					</select>
+				</div>
 			</div>
-			<div class='leek enemy'>
-				<img width='100px' src='{{static}}/image/leek/leek4_front_red.png' /><br>
-				<h3><input type='checkbox' />Guj</h3>
-				{#opponent_strength_agility}<br />
-				<select name="select">
-				  <option value="value0">{#child}</option>
-				  <option value="value1">{#easy}</option>
-				  <option value="value2" selected>{#medium}</option>
-				  <option value="value3">{#hard}</option>
-				  <option value="value4">{#evil}</option>
-				</select>
+		</div>
+		<div tab='maps' class='view'>
+			<div class='column lateral-column'>
+				<h4>Maps</h4>
+				<div class='items maps'>
+					
+				</div>
+				<div class='item add'>✚ Ajouter</div>
 			</div>
-			<div class='leek enemy'>
-				<img width='100px' src='{{static}}/image/leek/leek4_front_orange.png' /><br>
-				<h3><input type='checkbox' />Hachess</h3>
-				{#opponent_strength_life}<br />
-				<select name="select">
-				  <option value="value0">{#child}</option>
-				  <option value="value1">{#easy}</option>
-				  <option value="value2" selected>{#medium}</option>
-				  <option value="value3">{#hard}</option>
-				  <option value="value4">{#evil}</option>
-				</select>
+			<div class='column map-column'>
+				<div class='map' oncontextmenu="return false;">
+					<div class='map-wrapper'></div>
+				</div>
+				<center>
+					<div class='button clear'>Clear</div>
+					<div class='button random'>Random</div>
+				</center>
 			</div>
-			<div class='leek enemy'>
-				<img width='100px' src='{{static}}/image/leek/leek4_front_pink.png' /><br>
-				<h3><input type='checkbox' />Betalpha</h3>
-				{#opponent_agility_life}<br />
-				<select name="select">
-				  <option value="value0">{#child}</option>
-				  <option value="value1">{#easy}</option>
-				  <option value="value2" selected>{#medium}</option>
-				  <option value="value3">{#hard}</option>
-				  <option value="value4">{#evil}</option>
-				</select>
-			</div>
-		</center>
+
+		</div>
+		<div tab='advanced' class='view'>
+			<h4>Seed</h4>
+			<br>
+			<input type='radio' name='test-seed' id='test-seed-random'><label for='test-seed-random'>Random</label>
+			<br>
+			<input type='radio' name='test-seed' id='test-seed-fixed'><label for='test-seed-fixed'>Valeur fixe</label>
+		</div>
 	</div>
 
 	<div class='actions'>
 		<div id='cancel-test' class='dismiss'>❌ {#test_cancel}</div>
-		<div id='launch'>▶ {#test_validate}</div>
+		<div id='launch' class='green'>▶ {#test_validate}</div>
 	</div>
 @endview
 
@@ -260,6 +236,17 @@
 
 	<div class='actions'>
 		<div class='dismiss'>{#settings_ok}</div>
+	</div>
+@endview
+
+@view (input_popup)
+	<div class='title'>{title}</div>
+	<div class='content'>
+		<input type='text' class='input' value='{input}'/>
+	</div>
+	<div class='actions'>
+		<div class='dismiss'>{#cancel}</div>
+		<div class='validate green'>{validate}</div>
 	</div>
 @endview
 

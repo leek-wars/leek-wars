@@ -258,6 +258,9 @@ body {
 	vertical-align: text-top;
 }
 
+/*
+ * Test configuration popup
+ */
 .popup.test_popup h4 {
 	display: inline-block;
 }
@@ -266,7 +269,7 @@ body {
 	font-size: 16px;
 }
 
-.popup.test_popup .leek {
+.popup.test_popup .leek-column .leek {
 	width: 165px;
 	text-align: center;
 	margin: 5px 15px;
@@ -276,24 +279,153 @@ body {
 	opacity: 0.2;
 }
 
-.popup.test_popup .leek h3 {
+.popup.test_popup .leek-column .leek h3 {
 	display: block;
 	margin-left: 0;
 }
 
-.popup.test_popup .leek.enemy {
+.popup.test_popup .leek-column .leek.enemy {
 	width: 120px;
 }
 
-.popup.test_popup .leek:hover {
+.popup.test_popup .leek-column .leek:hover {
 	background-color: white;
 	opacity: 0.35;
 }
 
-.popup.test_popup .leek.selected {
+.popup.test_popup .leek-column .leek.selected {
 	opacity: 1;
 }
 
+.popup.test_popup .tabs {
+	margin: 0 -15px;
+	margin-top: -15px;
+	margin-bottom: 15px;
+}
+
+.popup.test_popup .tabs .tab {
+	display: inline-block;
+	width: 25%;
+	text-align: center;
+	line-height: 35px;
+	height: 35px;
+	cursor: pointer;
+	font-size: 18px;
+	background: #ccc;
+	color: #555;
+}
+.popup.test_popup .tabs .tab:hover {
+	background: white;
+}
+.popup.test_popup .tabs .tab.selected {
+	background: #888;
+	color: white;
+}
+
+.popup.test_popup .view {
+	display: none;
+	min-height: 500px;
+}
+
+.popup.test_popup .column {
+	display: inline-block;
+	vertical-align: top;
+}
+
+.popup.test_popup .lateral-column {
+	width: 180px;
+	margin-left: -15px;
+	margin-top: -15px;
+	margin-bottom: -15px;
+	margin-right: 15px;
+	background: #333;
+	color: #bbb;
+}
+.popup.test_popup .lateral-column h4 {
+	padding: 5px 10px;
+	color: white;
+	text-transform: uppercase;
+	font-size: 16px;
+	background: #555;
+	display: block;
+}
+.popup.test_popup .item {
+	padding: 8px;
+	cursor: pointer;
+}
+.popup.test_popup .item:hover {
+	background: #222;
+}
+.popup.test_popup .item.selected {
+	background: #5FAD1B;
+	color: white;
+}
+.popup.test_popup .lateral-column .add {
+	background: #444;
+}
+
+.popup.test_popup .column .title {
+	font-size: 16px;
+	font-weight: bold;
+	text-transform: uppercase;
+	color: #555;
+	padding-bottom: 10px;
+}
+
+.popup.test_popup .map-column .map {
+	height: 420px;
+	width: 800px;
+	overflow: hidden;
+}
+
+.popup.test_popup .map-wrapper {
+	transform: scale(1, 0.5) rotate(-45deg);
+	margin-top: -280px;
+	margin-left: -110px;
+}
+.popup.test_popup .map .line {
+	margin-bottom: -5px;
+	white-space: nowrap;
+}
+.popup.test_popup .map .cell {
+	width: 27px;
+	height: 27px;
+	display: inline-block;
+	border: 1px solid #555;
+	margin: 1px;
+	cursor: pointer;
+	border-radius: 2px;
+}
+.popup.test_popup .map .cell.disabled {
+	border: 1px solid transparent;
+}
+.popup.test_popup .map .cell:not(.disabled)[team='1'] {
+	background: rgb(210, 210, 255);
+}
+.popup.test_popup .map .cell:not(.disabled)[team='2'] {
+	background: rgb(255, 210, 210);
+}
+.popup.test_popup .map .cell:not(.disabled).obstacle {
+	background: #666;
+}
+.popup.test_popup .map .cell:not(.disabled).team1 {
+	background: blue;
+}
+.popup.test_popup .map .cell:not(.disabled).team2 {
+	background: red;
+}
+.popup.test_popup .map .cell:not(.disabled):hover {
+	background: green;
+}
+
+.popup.input_popup input {
+	width: 90%;
+}
+
+
+/*
+ *
+ */
 .hint-dialog {
 	position: absolute;
 	z-index: 100;
