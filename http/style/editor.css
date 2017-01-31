@@ -373,7 +373,7 @@ body {
 }
 
 .popup.test_popup .map-column .map {
-	height: 420px;
+	height: 415px;
 	width: 800px;
 	overflow: hidden;
 }
@@ -391,7 +391,7 @@ body {
 	width: 25px;
 	height: 25px;
 	display: inline-block;
-	border: 1px solid #666;
+	border: 1px solid #888;
 	margin: 2px;
 	cursor: pointer;
 	border-radius: 2px;
