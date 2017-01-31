@@ -840,10 +840,11 @@ LW.pages.editor.test_popup = function(ais) {
 			if (data.success) {
 				var e = $("<div class='item map' map='" +  data.id + "'>" + name + "</div>")
 				_testPopup.find('.maps').append(e)
-				_maps[data.id] = ({name: name, id: data.id, data: {}})
+				_maps[data.id] = ({name: name, id: data.id, data: {obstacles: [], team1: [], team2: []}})
 				add_map_events(e)
 				add_map_popup.dismiss()
 				add_map_popup.find('input').val('')
+				select_map(_maps[data.id])
 			} else {
 				_.toast(data.error)
 			}
