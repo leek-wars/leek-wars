@@ -886,15 +886,18 @@ _.lang.parse_file = function(data) {
 	var keys = {}
 	var lines = data.split('\n')
 	var last = null
+	var indent = 0
 	for (var l in lines) {
 		var line = lines[l]
-		if (last && (line[0] == ' ' || line[0] == '	')) {
-			keys[last] += '\n' + $.trim(line)
+		if (last && (line[0] == ' ' || line[0] == '	' || !line.length)) {
+			var spaces = /^(\s*)/.exec(line)[1].length
+			keys[last] += '\n' + line.substring(Math.min(spaces, indent))
 		} else {
-			var res = /(.*?)\s+(.*)/.exec(line)
+			var res = /(.*?)(\s+)(.*)/.exec(line)
 			if (res) {
-				keys[res[1]] = res[2]
+				keys[res[1]] = res[3]
 				last = res[1]
+				indent = res[2].length + res[1].length / 4
 			}
 		}
 	}
