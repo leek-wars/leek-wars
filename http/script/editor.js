@@ -791,7 +791,14 @@ LW.pages.editor.test_popup = function(ais) {
 	var _maps = {}
 	var _current_map = null
 	var load_map = function(map) {
-		_current_map = map.id
+		if (_current_map && timeout) {
+			if (timeout) {
+				window.clearTimeout(timeout)
+				timeout = null
+			}
+			save_map(_current_map)
+		}
+		_current_map = map
 		_testPopup.find('.map .cell').removeClass('obstacle').removeClass('team1').removeClass('team2')
 		for (var c in map.data.obstacles) {
 			_testPopup.find('.map .cell[cell=' + map.data.obstacles[c] + ']').addClass('obstacle')
@@ -805,12 +812,12 @@ LW.pages.editor.test_popup = function(ais) {
 	}
 	var select_map = function(map) {
 		_testPopup.find('.maps .map').removeClass('selected')
-		_testPopup.find('.maps .map[map=' + map + ']').addClass('selected')
-		load_map(_maps[map])
+		_testPopup.find('.maps .map[map=' + map.id + ']').addClass('selected')
+		load_map(map)
 	}
 	var add_map_events = function(e) {
 		e.click(function() {
-			select_map($(this).attr('map'))
+			select_map(_maps[$(this).attr('map')])
 		})
 	}
 	_.get('test-map/get-all/' + LW.token(), function(data) {
@@ -821,7 +828,7 @@ LW.pages.editor.test_popup = function(ais) {
 				_testPopup.find('.maps').append(e)
 				add_map_events(e)
 			}
-			select_map(_.first(data.maps).id)
+			select_map(_.first(data.maps))
 		} else {
 			_.toast(data.error)
 		}
@@ -846,33 +853,20 @@ LW.pages.editor.test_popup = function(ais) {
  		add_map_popup.show(e)
  	})
 
+	var save_map = function(map) {
+		_.post('test-map/update', {id: map.id, data: JSON.stringify(map.data)}, function(data) {
+			if (!data.success) {
+				_.toast(data.error)
+			}
+		})
+	}
+
 	var timeout = null
 	var reset_save_timeout = function() {
 		if (timeout) window.clearTimeout(timeout)
 		timeout = window.setTimeout(function() {
-			var map = _maps[_current_map]
-			var obstacles = []
-			var team1 = []
-			var team2 = []
-			_testPopup.find('.map .cell').each(function() {
-				if ($(this).hasClass('obstacle')) {
-					obstacles.push($(this).attr('cell'))
-				} else if ($(this).hasClass('team1')) {
-					team1.push($(this).attr('cell'))
-				} else if ($(this).hasClass('team2')) {
-					team2.push($(this).attr('cell'))
-				}
-			})
-			map.data = {
-				obstacles: obstacles,
-				team1: team1,
-				team2: team2
-			}
-			_.post('test-map/update', {id: map.id, data: JSON.stringify(map.data)}, function(data) {
-				if (!data.success) {
-					_.toast(data.error)
-				}
-			})
+			timeout = null
+			save_map(_current_map)
 		}, 3000)
 	}
 
@@ -892,31 +886,55 @@ LW.pages.editor.test_popup = function(ais) {
 			}
 			element.append(line)
 		}
-
 		map_down = false
 		map_add = false
 		element.find('.cell:not(.disabled)').each(function() {
 			$(this).on({
 				contextmenu: function(e) { // right click
 					var team = $(this).attr('team')
+					var cell = parseInt($(this).attr('cell'))
 					if (team != 0) {
 						$(this).removeClass('obstacle').toggleClass(team === '1' ? 'team1' : 'team2')
+						var team_array = team === '1' ? _current_map.data.team1 : _current_map.data.team2
+						var index = team_array.indexOf(cell)
+						if (index != -1) {
+							team_array.splice(index, 1)
+						} else {
+							team_array.push(cell)
+						}
 						reset_save_timeout()
 					}
-					e.preventDefault();
+					e.preventDefault()
 				},
 				pointerdown: function(e) {
 					if (e.originalEvent.button === 0) { // only left click
+						var cell = parseInt($(this).attr('cell'))
 						map_down = true
 						map_add = !$(this).hasClass('obstacle')
 						$(this).toggleClass('obstacle')
+						var index = _current_map.data.obstacles.indexOf(cell)
+						if (index != -1) {
+							_current_map.data.obstacles.splice(index, 1)
+						} else {
+							_current_map.data.obstacles.push(cell)
+						}
 						reset_save_timeout()
 					}
 				},
 				pointerenter: function(e) {
 					if (map_down) {
-						$(this).toggleClass('obstacle', map_add)
-						reset_save_timeout()
+						var has_class = $(this).hasClass('obstacle')
+						if (has_class != map_add) {
+							$(this).toggleClass('obstacle', map_add)
+							var cell = parseInt($(this).attr('cell'))
+							var index = _current_map.data.obstacles.indexOf(cell)
+							if (index != -1) {
+								_current_map.data.obstacles.splice(index, 1)
+							} else {
+								_current_map.data.obstacles.push(cell)
+							}
+							reset_save_timeout()
+						}
 					}
 				},
 				pointerup: function(e) {
@@ -933,13 +951,16 @@ LW.pages.editor.test_popup = function(ais) {
 
 	_testPopup.find('.button.clear').click(function() {
 		_testPopup.find('.map .cell').removeClass('obstacle')
+		_current_map.data.obstacles = []
 		reset_save_timeout()
 	})
 	_testPopup.find('.button.random').click(function() {
+		_current_map.data.obstacles = []
 		_testPopup.find('.map .cell').removeClass('obstacle')
 		_testPopup.find('.map .cell').each(function() {
 			if (Math.random() > 0.8) {
 				$(this).addClass('obstacle')
+				_current_map.data.obstacles.push(parseInt($(this).attr('cell')))
 			}
 		})
 		reset_save_timeout()

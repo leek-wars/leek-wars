@@ -379,7 +379,7 @@ body {
 }
 
 .popup.test_popup .map-wrapper {
-	transform: scale(1, 0.5) rotate(-45deg);
+	transform: scale(1, 0.5) rotate(-45.5deg);
 	margin-top: -280px;
 	margin-left: -110px;
 }
@@ -388,16 +388,18 @@ body {
 	white-space: nowrap;
 }
 .popup.test_popup .map .cell {
-	width: 27px;
-	height: 27px;
+	width: 25px;
+	height: 25px;
 	display: inline-block;
-	border: 1px solid #555;
-	margin: 1px;
+	border: 1px solid #666;
+	margin: 2px;
 	cursor: pointer;
 	border-radius: 2px;
+	background: white;
 }
 .popup.test_popup .map .cell.disabled {
 	border: 1px solid transparent;
+	background: transparent;
 }
 .popup.test_popup .map .cell:not(.disabled)[team='1'] {
 	background: rgb(210, 210, 255);
