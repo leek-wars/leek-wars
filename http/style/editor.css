@@ -413,6 +413,13 @@ body {
 .popup.test_popup .map .cell:not(.disabled):hover {
 	background: green;
 }
+.popup.test_popup .map-column .buttons {
+	text-align: right;
+	padding-right: 10px;
+}
+.popup.test_popup .map-column .buttons .button {
+	margin: 0 3px;
+}
 .popup.test_popup .map-column .instructions {
 	color: #aaa;
 	padding-left: 20px;
