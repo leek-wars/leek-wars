@@ -25,12 +25,27 @@
 	margin-top: 5px;
 }
 
-#roadmap-page .milestone.ok ul {
+#roadmap-page .milestone ul {
 	list-style-type: none;
-	margin-left: -23px;
+	margin-left: -25px;
 }
-#roadmap-page .milestone.ok li:before {
+
+#roadmap-page .milestone li:before {
+	display: inline-block;
+	width: 10px;
+}
+#roadmap-page .milestone li.ok:before {
 	content: "✔";
-    display: inline-block;
-	color: green;
+	color: #5FAD1B;
+	font-size: 20px;
+}
+#roadmap-page .milestone li:not(.ok):before {
+	content: "⚫";
+	padding-left: 2px;
+	width: 8px;
+	color: #aaa;
+}
+
+#roadmap-page .milestone li .text {
+	margin-left: 7px;
 }

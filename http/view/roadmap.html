@@ -14,12 +14,12 @@
 	<div class='content'>
 		<div class='wrapper'>
 			@foreach (milestone in milestones)
-				<div class='milestone @if (milestone.ok) ok @end'>
+				<div class='milestone'>
 					<div class='title'>{milestone.title}</div>
 					<ul class='changes'>
 						@foreach (change in milestone.changes)
-							<li class='change'>
-								<span class='text'>{change}</span>
+							<li class='change @if (change.ok) ok @end'>
+								<span class='text'>{change.text}</span>
 							</li>
 						@end
 					</ul>

@@ -3,77 +3,76 @@ LW.pages.roadmap.init = function(params, $scope, $page) {
 	$scope.milestones = [
 		{
 			title: "Janvier 1.94",
-			ok: true,
 			changes: [
-				"Visualiser les anciens combats",
-				"Dossiers dans l'éditeur",
-				"Mail recap de toutes les mises à jour (mi-janvier)",
-				"Fusion des compteurs de combats en un seul",
+				{text: "Visualiser les anciens combats", ok: true},
+				{text: "Dossiers dans l'éditeur", ok: true},
+				{text: "Mail recap de toutes les mises à jour (mi-janvier)", ok: false},
+				{text: "Fusion des compteurs de combats en un seul", ok: true}
 			]
 		},
 		{
 			title: "Février 1.95",
 			changes: [
-				"Améliorer le profil éleveur (GitHub, site, description, ...)",
-				"Plus d'options de test",
-				"[secret][secondaire] nouvelle page sur le site",
-				"[secret][secondaire] lié à la page combat"
+				{text: "Améliorer le profil éleveur (GitHub, site, description, ...)", ok: true},
+				{text: "Plus d'options de test", ok: true},
+				{text: "[secret][secondaire] nouvelle page sur le site", ok: true},
+				{text: "[secret][secondaire] lié à la page combat", ok: true}
 			]
 		},
 		{
 			title: "Mars 1.96",
 			changes: [
-				"Historiques de combat détaillés",
-				"Codes LeekScript V2 dans l'éditeur + console LeekScript",
-				"[secret][secondaire] lié à la page combat",
-				"[secret][important] lié aux trophées"
+				{text: "Historiques de combat détaillés", ok: false},
+				{text: "Codes LeekScript V2 dans l'éditeur + console LeekScript", ok: false},
+				{text: "[secret][secondaire] lié à la page combat", ok: false},
+				{text: "[secret][important] lié aux trophées", ok: false}
 			]
 		},
 		{
 			title: "Avril 1.97",
 			changes: [
-				"Outil de recherche d'aide globale",
-				"Meilleure recherche dans le forum",
-				"[secret][important] lié au gameplay"
+				{text: "Outil de recherche d'aide globale", ok: false},
+				{text: "Meilleure recherche dans le forum", ok: false},
+				{text: "[secret][important] lié au gameplay", ok: false}
 			]
 		},
 		{
 			title: "Mai 1.98",
 			changes: [
-				"LeekScript V2 Bêta",
-				"Refonte graphique légère (mobile en particulier)",
-				"[secret][important] lié aux combats de team"
+				{text: "LeekScript V2 Bêta", ok: false},
+				{text: "Refonte graphique légère (mobile en particulier)", ok: false},
+				{text: "[secret][important] lié aux combats de team", ok: false}
 			]
 		},
 		{
 			title: "Juin 1.99",
 			changes: [
-				"1er boss"
+				{text: "1er boss", ok: false}
 			]
 		},
 		{
 			title: "Juillet 2.00",
 			changes: [
-				"Sortie finale du LeekScript V2"
+				{text: "Sortie finale du LeekScript V2", ok: false}
 			]
 		},
 		{
 			title: "Août 2.01",
 			changes: [
-				"[secret][important] lié au gameplay"
+				{text: "[secret][important] lié au gameplay", ok: false}
 			]
 		},
 		{
 			title: "Septembre 2.02",
 			changes: [
-				"Nouvelles puces tactiques",
-				"1 ou 2 nouveaux boss (liés aux nouvelles puces)"
+				{text: "Nouvelles puces tactiques", ok: false},
+				{text: "1 ou 2 nouveaux boss (liés aux nouvelles puces)", ok: false}
 			]
 		},
 		{
 			title: "Octobre 2.03",
 			changes: [
-				"[secret][important] lié au gameplay"
+				{text: "[secret][important] lié au gameplay", ok: false}
 			]
 		},
 		{
