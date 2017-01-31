@@ -1725,6 +1725,9 @@ LW.initWebSocket = function() {
 		LW.socket.queue = []
 
 		LW.trigger('wsconnected')
+
+		// Relaunch battle royale?
+		LW.battle_royale.init()
 	}
 
 	LW.socket.socket.onclose = function() {
@@ -3863,14 +3866,23 @@ LW.battle_royale = {
 	last_leeks: []
 }
 
-LW.battle_royale.show = function(e) {
+LW.battle_royale.init = function() {
+	var leek = localStorage['battle-royale']
+	if (leek && leek != 'null') {
+		LW.battle_royale.show(new Event(12), leek)
+	}
+}
+
+LW.battle_royale.show = function(e, leek) {
 
 	// Dismiss previous popup
 	if (LW.battle_royale.popup != null) {
 		LW.battle_royale.popup.dismiss()
 	}
 
-	LW.battle_royale.popup = new _.popup.new('garden.battle_royale_popup', {range: '300-301'}, 600, true, {
+	LW.socket.send([BATTLE_ROYALE_REGISTER, leek])
+
+	LW.battle_royale.popup = new _.popup.new('main.battle_royale_popup', {range: '300-301'}, 600, true, {
 		dismissable: false,
 		draggable: true
 	})
@@ -3879,11 +3891,14 @@ LW.battle_royale.show = function(e) {
 	}
 	LW.battle_royale.popup.ondismiss = function() {
 		LW.socket.send([BATTLE_ROYALE_LEAVE])
+		localStorage['battle-royale'] = null
 	}
 	LW.battle_royale.popup.show(e)
 	LW.battle_royale.popup.onminimize()
 
-	LW.battle_royale.last_leeks = []
+	LW.battle_royale.last_leeks = {}
+
+	localStorage['battle-royale'] = leek
 }
 
 LW.battle_royale.update = function(data) {
@@ -3898,7 +3913,7 @@ LW.battle_royale.update = function(data) {
 		for (var l in leeks) {
 			if (l in LW.battle_royale.last_leeks) continue
 
-			var html_popup = _.view.render('garden.leek_popup', {leek: leeks[l]})
+			var html_popup = _.view.render('main.leek_popup', {leek: leeks[l]})
 			LW.battle_royale.popup.find('.leeks').html(LW.battle_royale.popup.find('.leeks').html() + html_popup)
 
 			LW.createLeekImage(leeks[l].id, 0.3, leeks[l].level, leeks[l].skin, leeks[l].hat, function(id, data) {

@@ -302,14 +302,6 @@
 	</div>
 @endview
 
-@view(leek_popup)
-	<div leek='{leek.id}' class='leek'>
-		<div class='image'></div>
-		{leek.name}<br>
-		<span class='level'>{#level_n, leek.level}</span>
-	</div>
-@endview
-
 @view(farmer)
 	<div class='farmer' id='{data.id}'>
 		<img class='avatar' src='@include('main.avatar', data)'>
@@ -368,17 +360,4 @@
 @view(ai_invalid)
 	<img src='{{static}}image/notgood.png'><br>
 	<h4>{#leek_ai_invalid}</h4>
-@endview
-
-@view (battle_royale_popup)
-	<div class='title'>
-		{#category_battle_royale} &nbsp; <b class='progress'>0/10</b>
-		<div class='options'>
-			<div class='option minimize'><img src='{{static}}image/icon/expand.png'></div>
-			<div class='option dismiss'><img src='{{static}}image/icon/quit.png'></div>
-		</div>
-	</div>
-	<div class='content'>
-		<div class='leeks'></div>
-	</div>
 @endview

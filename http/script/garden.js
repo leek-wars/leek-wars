@@ -395,9 +395,7 @@ LW.pages.garden.battle_royale_select = function(e) {
 	this.br_last_leeks = {}
 	$('#garden-battle-royale .leeks').html('')
 
-	LW.battle_royale.show(e)
-
-	LW.socket.send([BATTLE_ROYALE_REGISTER, leek])
+	LW.battle_royale.show(e, leek)
 }
 
 LW.pages.garden.wsreceive = function(data) {

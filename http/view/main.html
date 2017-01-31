@@ -683,3 +683,24 @@
 		</div>
 	</div>
 @endview
+
+@view (battle_royale_popup)
+	<div class='title'>
+		{#category_battle_royale} &nbsp; <b class='progress'>...</b>
+		<div class='options'>
+			<div class='option minimize'><img src='{{static}}image/icon/expand.png'></div>
+			<div class='option dismiss'><img src='{{static}}image/icon/quit.png'></div>
+		</div>
+	</div>
+	<div class='content'>
+		<div class='leeks'></div>
+	</div>
+@endview
+
+@view(leek_popup)
+	<div leek='{leek.id}' class='leek'>
+		<div class='image'></div>
+		{leek.name}<br>
+		<span class='level'>{#level_n, leek.level}</span>
+	</div>
+@endview
