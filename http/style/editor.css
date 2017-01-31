@@ -401,12 +401,6 @@ body {
 	border: 1px solid transparent;
 	background: transparent;
 }
-.popup.test_popup .map .cell:not(.disabled)[team='1'] {
-	background: rgb(210, 210, 255);
-}
-.popup.test_popup .map .cell:not(.disabled)[team='2'] {
-	background: rgb(255, 210, 210);
-}
 .popup.test_popup .map .cell:not(.disabled).obstacle {
 	background: #666;
 }
