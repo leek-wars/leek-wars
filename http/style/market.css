@@ -24,30 +24,30 @@
 /*
  * Items
  */
-.items {
+#market-page .items {
 	padding-bottom: 50px;
 }
-.items .item {
+#market-page .items .item {
 	border: 2px solid #ddd;
 }
-.items .item.selected {
+#market-page .items .item.selected {
 	background: white;
 	border: 2px solid #999;
 }
 
-.buy-label {
+#market-page .buy-label {
 	display: inline-block;
 }
 
-.items .item:hover {
+#market-page .items .item:hover {
 	background: white;
 }
 
-.items .item {
+#market-page .items .item {
 	position: relative;
 }
 
-.items .item:not([leek-count='0']):before {
+#market-page .items .item:not([leek-count='0']):before {
 	position: absolute;
 	bottom: -5px;
 	right: -5px;
@@ -61,7 +61,7 @@
 	font-weight: bold;
 }
 
-.items .item:not([farmer-count='0']):after {
+#market-page .items .item:not([farmer-count='0']):after {
 	position: absolute;
 	bottom: -5px;
 	right: -5px;
@@ -74,15 +74,15 @@
 	font-weight: bold;
 	background-color: #777;
 }
-.items .item:not([farmer-count='0']):not([leek-count='0']):before {
+#market-page .items .item:not([farmer-count='0']):not([leek-count='0']):before {
 	border-radius: 20px 0 0 20px;
 	right: 16px;
 }
-.items .item:not([farmer-count='0']):not([leek-count='0']):after {
+#market-page .items .item:not([farmer-count='0']):not([leek-count='0']):after {
 	border-radius: 0 20px 20px 0;
 }
 
-.items .item.too-expensive img {
+#market-page .items .item.too-expensive img {
 	opacity: 0.4;
 }
 
