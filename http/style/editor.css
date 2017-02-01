@@ -373,7 +373,7 @@ body {
 }
 
 .popup.test_popup .column-scenario .team {
-	width: 800px;
+	width: 810px;
 }
 .popup.test_popup .column-scenario .team {
 	text-align: center;
@@ -409,17 +409,59 @@ body {
 }
 .popup.test_popup .column-scenario .leek {
 	display: inline-block;
-	text-align: center;
-	background: white;
-	border-bottom: 2px solid #eee;
-	padding: 2px 5px;
-	border-radius: 5px;
-	margin: 0 6px;
+	margin: 0 4px;
 	font-size: 16px;
+	position: relative;
+}
+.popup.test_popup .column-scenario .leek .card {
+	display: inline-block;
+	text-align: center;
+	padding: 5px;
+	cursor: pointer;
+}
+.popup.test_popup .column-scenario .leek .ai {
+	display: inline-block;
+	vertical-align: top;
 }
 .popup.test_popup .column-scenario .leek svg {
-	height: 120px;
-	width: 90px;
+	height: 100px;
+	width: 80px;
+}
+.popup.test_popup .column-scenario .leek .delete {
+	color: red;
+	background: white;
+	border-radius: 50%;
+	border-bottom: 2px solid #aaa;
+	display: inline-block;
+	vertical-align: top;
+	padding: 1px 7px;
+	font-size: 18px;
+	position: absolute;
+	top: -5px;
+	left: -10px;
+	cursor: pointer;
+}
+.popup.test_popup .column-scenario .leek .ai {
+	background-image: url('../image/ai.png');
+	background-size: cover;
+	width: 55px;
+	height: 65px;
+	margin-top: 10px;
+	margin-left: -30px;
+	padding: 6px;
+	word-wrap: break-word;
+	color: #888;
+	font-size: 13px;
+	padding-top: 20px;
+	font-weight: bold;
+	cursor: pointer;
+}
+.popup.editor_leek_popup .leek {
+	display: inline-block;
+	text-align: center;
+	padding: 8px;
+	margin: 6px;
+	cursor: pointer;
 }
 .popup.test_popup .column-scenario .map-container {
 	text-align: center;
@@ -439,7 +481,7 @@ body {
 	width: 80px;
 }
 
-.popup.test_popup .item.leek .bot {
+.popup.test_popup .item.leek .bot, .popup.test_popup .item.scenario .base {
 	background: #777;
 	color: white;
 	border-radius: 4px;

@@ -123,7 +123,7 @@
 					<div class='leeks'></div>
 					<div class='add'>+</div>
 				</div>
-
+				<br>
 				<div class='title'>Map</div>
 				<div class='map-container'>
 					<div class='map'>
@@ -365,5 +365,23 @@
 	<div class='actions'>
 		<div class='dismiss'>{#cancel}</div>
 		<div class='validate green'>Choisir</div>
+	</div>
+@endview
+
+@view (editor_leek_popup)
+	<div class='title'>Sélectionnez une poireau</div>
+	<div class='content'>
+		@foreach (leek in LW.farmer.leeks)
+			<div class='leek card real' leek='{leek.id}'>
+				<div class='image'></div>
+				<div class='name'>{leek.name}</div>
+			</div>
+		@end
+		@foreach (leek in leeks)
+			<div class='leek card' leek='{leek.id}'>
+				<div class='image'></div>
+				<div class='name'>{leek.name}</div>
+			</div>
+		@end
 	</div>
 @endview
