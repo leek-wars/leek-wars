@@ -372,6 +372,14 @@ body {
 	padding-bottom: 10px;
 }
 
+.popup.test_popup .item.leek .bot {
+	background: #777;
+	color: white;
+	border-radius: 4px;
+	padding: 0 4px;
+	margin-left: 5px;
+}
+
 .popup.test_popup .leek-column .image {
 	display: inline-block;
 	width: 300px;

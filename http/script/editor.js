@@ -804,40 +804,52 @@ LW.pages.editor.test_popup = function(ais) {
 	var _characs_limits = {
 		life: {min: 1, max: 100000},
 		strength: {min: 0, max: 3000},
-		wisdom: {min: 1, max: 3000},
-		agility: {min: 1, max: 3000},
-		resistance: {min: 1, max: 3000},
-		science: {min: 1, max: 3000},
-		magic: {min: 1, max: 3000},
-		frequency: {min: 1, max: 3000},
-		tp: {min: 1, max: 100},
-		mp: {min: 1, max: 50}
+		wisdom: {min: 0, max: 3000},
+		agility: {min: 0, max: 3000},
+		resistance: {min: 0, max: 3000},
+		science: {min: 0, max: 3000},
+		magic: {min: 0, max: 3000},
+		frequency: {min: 100, max: 3000},
+		tp: {min: 0, max: 100},
+		mp: {min: 0, max: 50}
 	}
 	var _current_leek = null
 	var generate_bots = function(leeks) {
-		leeks["-1"] = {id: -1, name: "Domingo", data: {
-			level: 200, skin: 1, hat: null,
-			life: 2000
+		leeks["-1"] = {id: -1, name: "Domingo", bot: true, data: {
+			level: 150, skin: 1, hat: null,
+			tp: "10 to 20", mp: "3 to 8", frequency: 100,
+			life: "100 to 3000", strength: "50 to 1500", wisdom: 0, agility: 0,
+			resistance: 0, science: 0, magic: 0
 		}}
-		leeks["-2"] = {id: -2, name: "Tisma", data: {
-			level: 200, skin: 2, hat: null,
-			life: 2000
+		leeks["-2"] = {id: -2, name: "Tisma", bot: true, data: {
+			level: 150, skin: 2, hat: null,
+			tp: "10 to 20", mp: "3 to 8", frequency: 100,
+			life: "100 to 3000", strength: 0, wisdom: "50 to 1500", agility: 0,
+			resistance: 0, science: 0, magic: 0
 		}}
-		leeks["-3"] = {id: -3, name: "Rioupi", data: {
-			level: 200, skin: 3, hat: null,
-			life: 2000
+		leeks["-3"] = {id: -3, name: "Rioupi", bot: true, data: {
+			level: 150, skin: 3, hat: null,
+			tp: "10 to 20", mp: "3 to 8", frequency: 100,
+			life: "100 to 3000", strength: 0, wisdom: 0, agility: "50 to 1500",
+			resistance: 0, science: 0, magic: 0
 		}}
-		leeks["-4"] = {id: -4, name: "Guj", data: {
-			level: 200, skin: 4, hat: null,
-			life: 2000
+		leeks["-4"] = {id: -4, name: "Guj", bot: true, data: {
+			level: 150, skin: 4, hat: null,
+			tp: "10 to 20", mp: "3 to 8", frequency: 100,
+			life: "100 to 3000", strength: 0, wisdom: 0, agility: 0,
+			resistance: "50 to 1500", science: 0, magic: 0
 		}}
-		leeks["-5"] = {id: -5, name: "Hachess", data: {
-			level: 200, skin: 5, hat: null,
-			life: 2000
+		leeks["-5"] = {id: -5, name: "Hachess", bot: true, data: {
+			level: 150, skin: 5, hat: null,
+			tp: "10 to 20", mp: "3 to 8", frequency: 100,
+			life: "100 to 3000", strength: 0, wisdom: 0, agility: 0,
+			resistance: 0, science: "50 to 1500", magic: 0
 		}}
-		leeks["-6"] = {id: -6, name: "Betalpha", data: {
-			level: 200, skin: 6, hat: null,
-			life: 2000
+		leeks["-6"] = {id: -6, name: "Betalpha", bot: true, data: {
+			level: 150, skin: 6, hat: null,
+			tp: "10 to 20", mp: "3 to 8", frequency: 100,
+			life: "100 to 3000", strength: 0, wisdom: 0, agility: 0,
+			resistance: 0, science: 0, magic: "50 to 1500"
 		}}
 	}
 	var load_leek = function(leek) {
@@ -865,7 +877,7 @@ LW.pages.editor.test_popup = function(ais) {
 			_leeks = data.leeks
 			generate_bots(_leeks)
 			for (var m in data.leeks) {
-				var e = $("<div class='item leek' leek='" +  _leeks[m].id + "'>" + _leeks[m].name + "</div>")
+				var e = $("<div class='item leek' leek='" +  _leeks[m].id + "'>" + _leeks[m].name + (_leeks[m].bot ? "<span class='bot'>bot</span>" : '') + "</div>")
 				_testPopup.find('.leeks').append(e)
 				add_leek_events(e)
 			}
