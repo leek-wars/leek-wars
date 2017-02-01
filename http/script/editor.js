@@ -785,17 +785,165 @@ LW.pages.editor.test_popup = function(ais) {
 		_testPopup.find('.view[tab=' + $(this).attr('tab') + ']').css('display', 'flex')
 	})
 
+	var domingo = {id: -1, name: "Domingo", bot: true, level: 150, skin: 1, hat: null,
+		tp: "10 to 20", mp: "3 to 8", frequency: 100,
+		life: "100 to 3000", strength: "50 to 1500", wisdom: 0, agility: 0,
+		resistance: 0, science: 0, magic: 0
+	}
+	var tisma = {id: -2, name: "Tisma", bot: true, level: 150, skin: 2, hat: null,
+		tp: "10 to 20", mp: "3 to 8", frequency: 100,
+		life: "100 to 3000", strength: 0, wisdom: "50 to 1500", agility: 0,
+		resistance: 0, science: 0, magic: 0
+	}
+	var rioupi = {id: -3, name: "Rioupi", bot: true, level: 150, skin: 3, hat: null,
+		tp: "10 to 20", mp: "3 to 8", frequency: 100,
+		life: "100 to 3000", strength: 0, wisdom: 0, agility: "50 to 1500",
+		resistance: 0, science: 0, magic: 0
+	}
+	var guj = {id: -4, name: "Guj", bot: true, level: 150, skin: 4, hat: null,
+		tp: "10 to 20", mp: "3 to 8", frequency: 100,
+		life: "100 to 3000", strength: 0, wisdom: 0, agility: 0,
+		resistance: "50 to 1500", science: 0, magic: 0
+	}
+	var hachess = {id: -5, name: "Hachess", bot: true, level: 150, skin: 5, hat: null,
+		tp: "10 to 20", mp: "3 to 8", frequency: 100,
+		life: "100 to 3000", strength: 0, wisdom: 0, agility: 0,
+		resistance: 0, science: "50 to 1500", magic: 0
+	}
+	var betalpha = {id: -6, name: "Betalpha", bot: true, level: 150, skin: 6, hat: null,
+		tp: "10 to 20", mp: "3 to 8", frequency: 100,
+		life: "100 to 3000", strength: 0, wisdom: 0, agility: 0,
+		resistance: 0, science: 0, magic: "50 to 1500"
+	}
+	var _bots = [domingo, tisma, rioupi, guj, hachess, betalpha]
+	var _scenarios = {}
 	var _maps = {}
 	var _leeks = {}
 
 	/*
 	 * Scenarios
 	 */
+	var _current_scenario = null
+	var generate_default_scenarios = function(scenarios) {
+		for (var l in LW.farmer.leeks) {
+			scenarios["solo" + l] = {
+				id: "solo" + l,
+				name: "Solo " + LW.farmer.leeks[l].name,
+				data: {
+					team1: [LW.farmer.leeks[l]],
+					team2: [domingo]
+				}
+			}
+		}
+		scenarios["farmer"] = {
+			name: "Éleveur",
+			id: "farmer",
+			data: {
+				team1: LW.farmer.leeks,
+				team2: _bots.slice(0, _.objectSize(LW.farmer.leeks))
+			}
+		}
+		scenarios["team"] = {
+			name: "Équipe",
+			id: "team",
+			data: {
+				team1: LW.farmer.leeks,
+				team2: _bots.slice(0, _.objectSize(LW.farmer.leeks))
+			}
+		}
+	}
+	var load_scenario = function(scenario) {
+		_.log("Load scenario", scenario)
+		_current_scenario = scenario
+		_testPopup.find('.team1 .leek').remove()
+		_testPopup.find('.team2 .leek').remove()
+		for (var l in scenario.data.team1) {
+			var leek = scenario.data.team1[l]
+			_testPopup.find('.team1 .leeks').append("<div class='leek' leek='" + leek.id + "'><div class='image'></div>" + leek.name + "</div>")
+			LW.createLeekImage(leek.id, 0.4, leek.level, leek.skin, leek.hat, function(id, data) {
+				_testPopup.find('.team1 .leek[leek=' + id + '] .image').html(data)
+			})
+		}
+		for (var l in scenario.data.team2) {
+			var leek = scenario.data.team2[l]
+			_testPopup.find('.team2 .leeks').append("<div class='leek' leek='" + leek.id + "'><div class='image'></div>" + leek.name + "</div>")
+			LW.createLeekImage(leek.id, 0.4, leek.level, leek.skin, leek.hat, function(id, data) {
+				_testPopup.find('.team2 .leek[leek=' + id + '] .image').html(data)
+			})
+		}
+		if (scenario.data.map) {
+			_testPopup.find('.column-scenario .map .name').text(scenario.data.map.name)
+			_testPopup.find('.column-scenario .map img').attr('src', LW.staticURL + 'image/map_icon.png')
+		} else {
+			_testPopup.find('.column-scenario .map .name').text("Random")
+			_testPopup.find('.column-scenario .map img').attr('src', LW.staticURL + 'image/map_icon_random.png')
+		}
+	}
+	var select_scenario = function(scenario) {
+		_testPopup.find('.scenarios .scenario').removeClass('selected')
+		_testPopup.find('.scenarios .scenario[scenario=' + scenario.id + ']').addClass('selected')
+		load_scenario(scenario)
+	}
+	var add_scenario_events = function(e) {
+		e.click(function() {
+			select_scenario(_scenarios[$(this).attr('scenario')])
+		})
+	}
+	_.get('test-scenario/get-all/' + LW.token(), function(data) {
+		if (data.success) {
+			_scenarios = data.scenarios
+			generate_default_scenarios(_scenarios)
+			for (var m in data.scenarios) {
+				var e = $("<div class='item scenario' scenario='" +  _scenarios[m].id + "'>" + _scenarios[m].name + (_scenarios[m].base ? "<span class='base'>base</span>" : '') + "</div>")
+				_testPopup.find('.scenarios').append(e)
+				add_scenario_events(e)
+			}
+			select_scenario(_.first(_scenarios))
+		} else {
+			_.toast(data.error)
+		}
+	})
 	_testPopup.find('.scenario').click(function() {
 		_testPopup.find('.scenario').removeClass('selected')
 		$(this).addClass('selected')
+	})
+	var add_scenario_popup = new _.popup.new('editor.input_popup', {title: "Ajouter un scénario", validate: "Ajouter"})
+	add_scenario_popup.find('.validate').click(function() {
+		var name = add_scenario_popup.find('input').val()
+		_.post('test-scenario/new', {name: name}, function(data) {
+			if (data.success) {
+				var e = $("<div class='item scenario' scenario='" +  data.id + "'>" + name + "</div>")
+				_testPopup.find('.scenarios').append(e)
+				_scenarios[data.id] = ({name: name, id: data.id, data: data.data})
+				add_scenario_events(e)
+				add_scenario_popup.dismiss()
+				add_scenario_popup.find('input').val('')
+				select_scenario(_scenarios[data.id])
+			} else {
+				_.toast(data.error)
+			}
+		})
+	})
+	_testPopup.find('.view[tab="scenario"] .item.add').click(function(e) {
+ 		add_scenario_popup.show(e)
+ 	})
 
-		var scenario_view = _testPopup.find('.column-scenario')
+	_testPopup.find('.column-scenario .map').click(function(e) {
+		var set_map_popup = _.popup.new('editor.map_popup', {maps: _maps})
+		set_map_popup.find('.map').click(function() {
+			var map_id = parseInt($(this).attr('map'))
+			_current_scenario.map = map_id
+			if (map_id == -1) {
+				_testPopup.find('.column-scenario .map .name').text("Random")
+				_testPopup.find('.column-scenario .map img').attr('src', LW.staticURL + 'image/map_icon_random.png')
+			} else {
+				var map = _maps[map_id]
+				_testPopup.find('.column-scenario .map .name').text(map.name)
+				_testPopup.find('.column-scenario .map img').attr('src', LW.staticURL + 'image/map_icon.png')
+			}
+			set_map_popup.dismiss()
+		})
+		set_map_popup.show(e)
 	})
 
 	/*
@@ -815,50 +963,17 @@ LW.pages.editor.test_popup = function(ais) {
 	}
 	var _current_leek = null
 	var generate_bots = function(leeks) {
-		leeks["-1"] = {id: -1, name: "Domingo", bot: true, data: {
-			level: 150, skin: 1, hat: null,
-			tp: "10 to 20", mp: "3 to 8", frequency: 100,
-			life: "100 to 3000", strength: "50 to 1500", wisdom: 0, agility: 0,
-			resistance: 0, science: 0, magic: 0
-		}}
-		leeks["-2"] = {id: -2, name: "Tisma", bot: true, data: {
-			level: 150, skin: 2, hat: null,
-			tp: "10 to 20", mp: "3 to 8", frequency: 100,
-			life: "100 to 3000", strength: 0, wisdom: "50 to 1500", agility: 0,
-			resistance: 0, science: 0, magic: 0
-		}}
-		leeks["-3"] = {id: -3, name: "Rioupi", bot: true, data: {
-			level: 150, skin: 3, hat: null,
-			tp: "10 to 20", mp: "3 to 8", frequency: 100,
-			life: "100 to 3000", strength: 0, wisdom: 0, agility: "50 to 1500",
-			resistance: 0, science: 0, magic: 0
-		}}
-		leeks["-4"] = {id: -4, name: "Guj", bot: true, data: {
-			level: 150, skin: 4, hat: null,
-			tp: "10 to 20", mp: "3 to 8", frequency: 100,
-			life: "100 to 3000", strength: 0, wisdom: 0, agility: 0,
-			resistance: "50 to 1500", science: 0, magic: 0
-		}}
-		leeks["-5"] = {id: -5, name: "Hachess", bot: true, data: {
-			level: 150, skin: 5, hat: null,
-			tp: "10 to 20", mp: "3 to 8", frequency: 100,
-			life: "100 to 3000", strength: 0, wisdom: 0, agility: 0,
-			resistance: 0, science: "50 to 1500", magic: 0
-		}}
-		leeks["-6"] = {id: -6, name: "Betalpha", bot: true, data: {
-			level: 150, skin: 6, hat: null,
-			tp: "10 to 20", mp: "3 to 8", frequency: 100,
-			life: "100 to 3000", strength: 0, wisdom: 0, agility: 0,
-			resistance: 0, science: 0, magic: "50 to 1500"
-		}}
+		for (var b in _bots) {
+			leeks[_bots[b].id] = _bots[b]
+		}
 	}
 	var load_leek = function(leek) {
 		_current_leek = leek
-		LW.createLeekImage(leek.id, 1, leek.data.level, leek.data.skin, leek.data.hat, function(id, data) {
+		LW.createLeekImage(leek.id, 1, leek.level, leek.skin, leek.hat, function(id, data) {
 			_testPopup.find('.leek-column .image').html(data)
 		})
 		;['life', 'strength', 'wisdom', 'agility', 'resistance', 'science', 'magic', 'frequency', 'tp', 'mp'].forEach(function(s) {
-			_testPopup.find('.leek-column [stat="' + s + '"]').text(leek.data[s])
+			_testPopup.find('.leek-column [stat="' + s + '"]').text(leek[s])
 		})
 		_testPopup.find('.leek-column .name').text(leek.name)
 	}
@@ -878,7 +993,7 @@ LW.pages.editor.test_popup = function(ais) {
 			generate_bots(_leeks)
 			for (var m in data.leeks) {
 				var e = $("<div class='item leek' leek='" +  _leeks[m].id + "'>" + _leeks[m].name + (_leeks[m].bot ? "<span class='bot'>bot</span>" : '') + "</div>")
-				_testPopup.find('.leeks').append(e)
+				_testPopup.find('.lateral-column .leeks').append(e)
 				add_leek_events(e)
 			}
 			select_leek(_.first(_leeks))
@@ -904,7 +1019,7 @@ LW.pages.editor.test_popup = function(ais) {
 		})
 	})
 	var save_leek = function(leek) {
-		_.post('test-leek/update', {id: leek.id, data: JSON.stringify(leek.data)}, function(data) {
+		_.post('test-leek/update', {id: leek.id, data: JSON.stringify(leek)}, function(data) {
 			if (!data.success) {
 				_.toast(data.error)
 			}

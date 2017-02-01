@@ -305,7 +305,7 @@ body {
 
 .popup.test_popup .tabs .tab {
 	display: inline-block;
-	width: 25%;
+	width: 33.3333%;
 	text-align: center;
 	line-height: 35px;
 	height: 35px;
@@ -369,7 +369,74 @@ body {
 	font-weight: bold;
 	text-transform: uppercase;
 	color: #555;
-	padding-bottom: 10px;
+	padding-bottom: 8px;
+}
+
+.popup.test_popup .column-scenario .team {
+	width: 800px;
+}
+.popup.test_popup .column-scenario .team {
+	text-align: center;
+}
+.popup.test_popup .column-scenario .leeks {
+	text-align: center;
+	display: inline-block;
+}
+.popup.test_popup .column-scenario .add {
+	background: white;
+	font-size: 40px;
+	border-radius: 50%;
+	font-weight: 300;
+	padding: 2px 14px;
+	color: #bbb;
+	cursor: pointer;
+	display: inline-block;
+	vertical-align: top;
+	margin-top: 46px;
+	margin-bottom: 46px;
+	margin-left: 20px;
+	margin-right: 20px;
+}
+.popup.test_popup .column-scenario .add:hover {
+	color: #555;
+	background: #ccc;
+}
+.popup.test_popup .column-scenario .vs {
+	font-size: 22px;
+	font-weight: 300;
+	padding: 5px 30px;
+	text-align: center;
+}
+.popup.test_popup .column-scenario .leek {
+	display: inline-block;
+	text-align: center;
+	background: white;
+	border-bottom: 2px solid #eee;
+	padding: 2px 5px;
+	border-radius: 5px;
+	margin: 0 6px;
+	font-size: 16px;
+}
+.popup.test_popup .column-scenario .leek svg {
+	height: 120px;
+	width: 90px;
+}
+.popup.test_popup .column-scenario .map-container {
+	text-align: center;
+}
+.popup.test_popup .column-scenario .map, .popup.map_popup .map {
+	display: inline-block;
+	background: white;
+	border-bottom: 2px solid #eee;
+	padding: 5px 10px;
+	border-radius: 5px;
+	text-align: center;
+	font-size: 16px;
+	cursor: pointer;
+	margin: 5px;
+}
+.popup.test_popup .column-scenario .map img, .popup.map_popup .map img {
+	width: 80px;
 }
 
 .popup.test_popup .item.leek .bot {

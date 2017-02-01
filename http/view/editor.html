@@ -104,29 +104,33 @@
 
 	<div class='content'>
 		<div class='tabs'>
-			<div class='tab' tab='scenario'>{#test_scenario}</div><div class='tab' tab='leeks'>{#test_leeks}</div><div class='tab' tab='maps'>{#test_map}</div><div class='tab' tab='advanced'>{#test_advanced}</div>
+			<div class='tab' tab='scenario'>{#test_scenario}</div><div class='tab' tab='leeks'>{#test_leeks}</div><div class='tab' tab='maps'>{#test_map}</div>
 		</div>
 		<div tab='scenario' class='view'>
 			<div class='column lateral-column'>
 				<h4>Scénarios</h4>
-				<div class='items scenarios'>
-					<div class='item scenario' scenario='solo'>Solo</div>
-					<div class='item scenario' scenario='farmer'>Éleveur</div>
-					<div class='item scenario' scenario='team'>Équipe</div>
-					<div class='item add'>✚ Ajouter</div>
-				</div>
+				<div class='items scenarios'></div>
+				<div class='item add'>✚ Ajouter</div>
 			</div>
 			<div class='column column-scenario'>
-				<div class='title'>Leeks</div>
-
-				<div class='title'>{#ai_to_test} :</div>
-				<select id='test-ais'>
-					@foreach (ai in ais)
-						<option id='{ai.id}'>{ai.name}</option>
-					@end
-				</select>
+				<div class='title'>Poireaux</div>
+				<div class='team team1'>
+					<div class='leeks'></div>
+					<div class='add'>+</div>
+				</div>
+				<div class='vs'>VS</div>
+				<div class='team team2'>
+					<div class='leeks'></div>
+					<div class='add'>+</div>
+				</div>
 
 				<div class='title'>Map</div>
+				<div class='map-container'>
+					<div class='map'>
+						<img src='{{static}}image/map_icon_random.png'>
+						<div class='name'></div>
+					</div>
+				</div>
 			</div>
 		</div>
 
@@ -238,14 +242,6 @@
 					<div class='instruction'>✔ Clic droit pour sélectionner les cellules de départ</div>
 				</div>
 			</div>
-
-		</div>
-		<div tab='advanced' class='view'>
-			<h4>Seed</h4>
-			<br>
-			<input type='radio' name='test-seed' id='test-seed-random'><label for='test-seed-random'>Random</label>
-			<br>
-			<input type='radio' name='test-seed' id='test-seed-fixed'><label for='test-seed-fixed'>Valeur fixe</label>
 		</div>
 	</div>
 
@@ -349,5 +345,25 @@
 				</div>
 			@end
 		@end
+	</div>
+@endview
+
+@view (map_popup)
+	<div class='title'>Sélectionnez une carte</div>
+	<div class='content'>
+		<div class='map' map='-1'>
+			<img src='{{static}}image/map_icon_random.png'>
+			<div class='name'>Random</div>
+		</div>
+		@foreach (map in maps)
+			<div class='map' map='{map.id}'>
+				<img src='{{static}}image/map_icon.png'>
+				<div class='name'>{map.name}</div>
+			</div>
+		@end
+	</div>
+	<div class='actions'>
+		<div class='dismiss'>{#cancel}</div>
+		<div class='validate green'>Choisir</div>
 	</div>
 @endview
