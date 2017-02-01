@@ -491,13 +491,18 @@ body {
 
 .popup.test_popup .leek-column .image {
 	display: inline-block;
-	width: 300px;
 	text-align: center;
+	margin-left: 140px;
+	padding: 7px;
+}
+.popup.test_popup .leek-column .image svg {
+	height: 156px;
+	width: 120px;
 }
 .popup.test_popup .leek-column .stats {
 	display: inline-block;
 	vertical-align: top;
-	margin-top: 10px;
+	margin-left: 10px;
 }
 .popup.test_popup .leek-column .stats tr:nth-child(even) {
 	background: white;
