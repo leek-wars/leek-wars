@@ -785,10 +785,108 @@ LW.pages.editor.test_popup = function(ais) {
 		_testPopup.find('.view[tab=' + $(this).attr('tab') + ']').css('display', 'flex')
 	})
 
+	var _maps = {}
+	var _leeks = {}
+
+	/*
+	 * Scenarios
+	 */
+	_testPopup.find('.scenario').click(function() {
+		_testPopup.find('.scenario').removeClass('selected')
+		$(this).addClass('selected')
+
+		var scenario_view = _testPopup.find('.column-scenario')
+	})
+
+	/*
+	 * Leeks
+	 */
+	var _current_leek = null
+	var generate_bots = function(leeks) {
+		leeks["-1"] = {id: -1, name: "Domingo", data: {
+			level: 200, skin: 1, hat: null,
+			life: 2000
+		}}
+		leeks["-2"] = {id: -2, name: "Tisma", data: {
+			level: 200, skin: 2, hat: null,
+			life: 2000
+		}}
+		leeks["-3"] = {id: -3, name: "Rioupi", data: {
+			level: 200, skin: 3, hat: null,
+			life: 2000
+		}}
+		leeks["-4"] = {id: -4, name: "Guj", data: {
+			level: 200, skin: 4, hat: null,
+			life: 2000
+		}}
+		leeks["-5"] = {id: -5, name: "Hachess", data: {
+			level: 200, skin: 5, hat: null,
+			life: 2000
+		}}
+		leeks["-6"] = {id: -6, name: "Betalpha", data: {
+			level: 200, skin: 6, hat: null,
+			life: 2000
+		}}
+	}
+	var load_leek = function(leek) {
+		_current_leek = leek
+		LW.createLeekImage(leek.id, 1, leek.data.level, leek.data.skin, leek.data.hat, function(id, data) {
+			_testPopup.find('.leek-column .image').html(data)
+		})
+		;['life', 'strength', 'wisdom', 'agility', 'resistance', 'science', 'magic', 'frequency', 'tp', 'mp'].forEach(function(s) {
+			_.log(s)
+			_testPopup.find('.leek-column [stat="' + s + '"]').text(leek.data[s])
+		})
+		_testPopup.find('.leek-column .name').text(leek.name)
+	}
+	var select_leek = function(leek) {
+		_testPopup.find('.leeks .leek').removeClass('selected')
+		_testPopup.find('.leeks .leek[leek=' + leek.id + ']').addClass('selected')
+		load_leek(leek)
+	}
+	var add_leek_events = function(e) {
+		e.click(function() {
+			select_leek(_leeks[$(this).attr('leek')])
+		})
+	}
+	_.get('test-leek/get-all/' + LW.token(), function(data) {
+		if (data.success) {
+			_leeks = data.leeks
+			generate_bots(_leeks)
+			for (var m in data.leeks) {
+				var e = $("<div class='item leek' leek='" +  _leeks[m].id + "'>" + _leeks[m].name + "</div>")
+				_testPopup.find('.leeks').append(e)
+				add_leek_events(e)
+			}
+			select_leek(_.first(_leeks))
+		} else {
+			_.toast(data.error)
+		}
+	})
+	var add_leek_popup = new _.popup.new('editor.input_popup', {title: "Ajouter un poireau", validate: "Ajouter"})
+	add_leek_popup.find('.validate').click(function() {
+		var name = add_leek_popup.find('input').val()
+		_.post('test-leek/new', {name: name}, function(data) {
+			if (data.success) {
+				var e = $("<div class='item leek' leek='" +  data.id + "'>" + name + "</div>")
+				_testPopup.find('.leeks').append(e)
+				_leeks[data.id] = ({name: name, id: data.id, data: data.data})
+				add_leek_events(e)
+				add_leek_popup.dismiss()
+				add_leek_popup.find('input').val('')
+				select_leek(_leeks[data.id])
+			} else {
+				_.toast(data.error)
+			}
+		})
+	})
+ 	_testPopup.find('.view[tab="leeks"] .item.add').click(function(e) {
+ 		add_leek_popup.show(e)
+ 	})
+
 	/*
 	 * Maps
 	 */
-	var _maps = {}
 	var _current_map = null
 	var load_map = function(map) {
 		if (_current_map && timeout) {
@@ -822,13 +920,15 @@ LW.pages.editor.test_popup = function(ais) {
 	}
 	_.get('test-map/get-all/' + LW.token(), function(data) {
 		if (data.success) {
+			_maps = data.maps
 			for (var m in data.maps) {
-				_maps = data.maps
 				var e = $("<div class='item map' map='" +  data.maps[m].id + "'>" + data.maps[m].name + "</div>")
 				_testPopup.find('.maps').append(e)
 				add_map_events(e)
 			}
-			select_map(_.first(data.maps))
+			if (!_.isEmptyObj(data.maps)) {
+				select_map(_.first(data.maps))
+			}
 		} else {
 			_.toast(data.error)
 		}
@@ -968,23 +1068,6 @@ LW.pages.editor.test_popup = function(ais) {
 	})
 
 
-	/*
-	 * Scenarios
-	 */
-	_testPopup.find('.scenario').click(function() {
-		_testPopup.find('.scenario').removeClass('selected')
-		$(this).addClass('selected')
-
-		var scenario_view = _testPopup.find('.column-scenario')
-	})
-
-	/*
-	 * Leeks
-	 */
-	var add_leek_popup = new _.popup.new('editor.input_popup', {title: "Ajouter un poireau", validate: "Ajouter"})
-	_testPopup.find('.view[tab="leeks"] .item.add').click(function(e) {
-		add_leek_popup.show(e)
-	})
 
 	_testAI = parseInt(localStorage['editor/test_ai'])
 

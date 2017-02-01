@@ -119,7 +119,6 @@
 			<div class='column column-scenario'>
 				<div class='title'>Leeks</div>
 
-
 				<div class='title'>{#ai_to_test} :</div>
 				<select id='test-ais'>
 					@foreach (ai in ais)
@@ -134,36 +133,110 @@
 		<div tab='leeks' class='view'>
 			<div class='column lateral-column'>
 				<h4>Poireaux</h4>
-				<div class='items leeks'>
-					@foreach (leek in LW.farmer.leeks)
-						<div class='item leek' leek='{leek.id}'>{leek.name}</div>
-					@end
-					<div class='item leek' leek='8'>Franjou</div>
-					<div class='item add'>✚ Ajouter</div>
-				</div>
+				<div class='items leeks'></div>
+				<div class='item add'>✚ Ajouter</div>
 			</div>
 			<div class='column leek-column'>
-
-				<div class='leek enemy'>
-					<img width='100px' src='{{static}}/image/leek/leek4_front_green.png'>
-					<h3><input type='checkbox' />Domingo</h3>
-					{#opponent_strength}<br />
-					<select name="select">
-					  <option value="value0">{#child}</option>
-					  <option value="value1">{#easy}</option>
-					  <option value="value2" selected>{#medium}</option>
-					  <option value="value3">{#hard}</option>
-					  <option value="value4">{#evil}</option>
-					</select>
-				</div>
+				<div class='title name'></div>
+				<div class='image'></div>
+				<table class='stats'>
+					<tr>
+						<td>
+							<div class='stat'>
+								<div id='lifespan'>
+									<img src='{{static}}image/charac/life.png'></img>
+									<span class='color-life' stat='life'>{leek.life}</span>
+								</div>
+							</div>
+						</td>
+						<td>
+							<div class='stat'>
+								<div id='sciencespan'>
+									<img src='{{static}}image/charac/science.png'></img>
+									<span class='color-science' stat='science'>{leek.science}</span>
+								</div>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<div class='stat'>
+								<div id='strengthspan'>
+									<img src='{{static}}image/charac/strength.png'></img>
+									<span class='color-strength' stat='strength'>{leek.strength}</span>
+								</div>
+							</div>
+						</td>
+						<td>
+							<div class='stat'>
+								<div id='magicspan'>
+									<img src='{{static}}image/charac/magic.png'></img>
+									<span class='color-magic' stat='magic'>{leek.magic}</span>
+								</div>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<div class='stat'>
+								<div id='wisdomspan'>
+									<img src='{{static}}image/charac/wisdom.png'></img>
+									<span class='color-wisdom' stat='wisdom'>{leek.wisdom}</span>
+								</div>
+							</div>
+						</td>
+						<td>
+							<div class='stat'>
+								<div id='frequencyspan'>
+									<img src='{{static}}image/charac/frequency.png'></img>
+									<span class='color-frequency' stat='frequency'>{leek.frequency}</span>
+								</div>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<div class='stat'>
+								<div id='agilityspan'>
+									<img src='{{static}}image/charac/agility.png'></img>
+									<span class='color-agility' stat='agility'>{leek.agility}</span>
+								</div>
+							</div>
+						</td>
+						<td>
+							<div class='stat'>
+								<div id='tpspan'>
+									<img src='{{static}}image/charac/tp.png'></img>
+									<span class='color-tp' stat='tp'>{leek.tp}</span>
+								</div>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<div class='stat'>
+								<div id='resistancespan'>
+									<img src='{{static}}image/charac/resistance.png'></img>
+									<span class='color-resistance' stat='resistance'>{leek.resistance}</span>
+								</div>
+							</div>
+						</td>
+						<td>
+							<div class='stat'>
+								<div id='mpspan'>
+									<img src='{{static}}image/charac/mp.png'></img>
+									<span class='color-mp' stat='mp'>{leek.mp}</span>
+								</div>
+							</div>
+						</td>
+					</tr>
+				</table>
 			</div>
 		</div>
 		<div tab='maps' class='view'>
 			<div class='column lateral-column'>
 				<h4>Maps</h4>
-				<div class='items maps'>
-
-				</div>
+				<div class='items maps'></div>
 				<div class='item add'>✚ Ajouter</div>
 			</div>
 			<div class='column map-column'>
