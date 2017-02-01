@@ -406,7 +406,7 @@ body.menu-collapsed .menu .section img {
 	top: 80px;
 	bottom: 0;
 	right: 0;
-	z-index: 1000;
+	z-index: 300;
 }
 
 body:not(.connected) #social-panel {
