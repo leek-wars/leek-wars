@@ -877,6 +877,7 @@ LW.pages.editor.test_popup = function(ais) {
 			var team = team_id == 1 ? _current_scenario.data.team1 : _current_scenario.data.team2
 			delete team[id]
 			leek.remove()
+			_testPopup.find('.team' + team_id + ' .add').show()
 			save_scenario(_current_scenario)
 		})
 	}
