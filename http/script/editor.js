@@ -801,6 +801,18 @@ LW.pages.editor.test_popup = function(ais) {
 	/*
 	 * Leeks
 	 */
+	var _characs_limits = {
+		life: {min: 1, max: 100000},
+		strength: {min: 0, max: 3000},
+		wisdom: {min: 1, max: 3000},
+		agility: {min: 1, max: 3000},
+		resistance: {min: 1, max: 3000},
+		science: {min: 1, max: 3000},
+		magic: {min: 1, max: 3000},
+		frequency: {min: 1, max: 3000},
+		tp: {min: 1, max: 100},
+		mp: {min: 1, max: 50}
+	}
 	var _current_leek = null
 	var generate_bots = function(leeks) {
 		leeks["-1"] = {id: -1, name: "Domingo", data: {
@@ -834,7 +846,6 @@ LW.pages.editor.test_popup = function(ais) {
 			_testPopup.find('.leek-column .image').html(data)
 		})
 		;['life', 'strength', 'wisdom', 'agility', 'resistance', 'science', 'magic', 'frequency', 'tp', 'mp'].forEach(function(s) {
-			_.log(s)
 			_testPopup.find('.leek-column [stat="' + s + '"]').text(leek.data[s])
 		})
 		_testPopup.find('.leek-column .name').text(leek.name)
@@ -880,9 +891,31 @@ LW.pages.editor.test_popup = function(ais) {
 			}
 		})
 	})
+	var save_leek = function(leek) {
+		_.post('test-leek/update', {id: leek.id, data: JSON.stringify(leek.data)}, function(data) {
+			if (!data.success) {
+				_.toast(data.error)
+			}
+		})
+	}
  	_testPopup.find('.view[tab="leeks"] .item.add').click(function(e) {
  		add_leek_popup.show(e)
  	})
+	_testPopup.find('.leek-column .stat').click(function() {
+		$(this).find('span').attr('contenteditable', 'true').focus()
+	})
+	_testPopup.find('.leek-column .stat span').on('focusout', function() {
+		var charac = $(this).attr('stat')
+		var value = parseInt($(this).text())
+		if (isNaN(value)) {
+			value = _characs_limits[charac].min
+		}
+		value = Math.max(value, _characs_limits[charac].min)
+		value = Math.min(value, _characs_limits[charac].max)
+		$(this).text(value)
+		_current_leek.data[charac] = value
+		save_leek(_current_leek)
+	})
 
 	/*
 	 * Maps
@@ -907,6 +940,7 @@ LW.pages.editor.test_popup = function(ais) {
 		for (var c in map.data.team1) {
 			_testPopup.find('.map .cell[cell=' + map.data.team2[c] + ']').addClass('team2')
 		}
+		_testPopup.find('.map-column .name').text(map.name)
 	}
 	var select_map = function(map) {
 		_testPopup.find('.maps .map').removeClass('selected')

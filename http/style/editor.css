@@ -393,10 +393,11 @@ body {
 	padding: 5px 0;
 	text-align: left;
 	display: inline-block;
+	cursor: text;
 }
 .popup.test_popup .leek-column .stats img {
 	vertical-align: top;
-	margin-right: 7px;
+	margin-right: 1px;
 	margin-left: 20px;
 	width: 25px;
 }
@@ -405,6 +406,7 @@ body {
 	vertical-align: top;
 	display: inline-block;
 	margin-top: 2px;
+	padding: 0 6px;
 	font-weight: 500;
 }
 
@@ -412,6 +414,7 @@ body {
 	height: 415px;
 	width: 800px;
 	overflow: hidden;
+	margin-top: -20px;
 }
 
 .popup.test_popup .map-wrapper {
