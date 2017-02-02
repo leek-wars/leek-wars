@@ -1448,9 +1448,11 @@ LW.pages.editor.test_popup = function(ais) {
 		reset_save_timeout()
 	})
 
-
+	/*
+	 * Launch scenario
+	 */
 	_testPopup.view.find("#launch").click(function() {
-
+		_.log("Test scenario", JSON.stringify(_current_scenario))
 		_.post('ai/test-new', {data: _current_scenario}, function(data) {
 			if (data.success) {
 				_testPopup.dismiss()
