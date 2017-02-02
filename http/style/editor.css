@@ -531,7 +531,12 @@ body {
 	padding: 0 6px;
 	font-weight: 500;
 }
-
+.popup.test_popup .leek-column .chips {
+	
+}
+.popup.test_popup .leek-column .chip {
+	width: 63px;
+}
 .popup.test_popup .map-column .map {
 	height: 415px;
 	width: 800px;
