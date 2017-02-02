@@ -238,6 +238,7 @@
 					<img class='chip' src='{{static}}image/chip/small/whip.png'>
 					<img class='chip' src='{{static}}image/chip/small/rocky_bulb.png'>
 					<img class='chip' src='{{static}}image/chip/small/armor.png'>
+					<div class='add'>+</div>
 				</div>
 				<br>
 				<div class='title'>Armes</div>
@@ -246,6 +247,7 @@
 					<img src="{{static}}image/weapon/b_laser.png">
 					<img src="{{static}}image/weapon/electrisor.png">
 					<img src="{{static}}image/weapon/m_laser.png">
+					<div class='add'>+</div>
 				</div>
 			</div>
 		</div>
@@ -398,16 +400,22 @@
 @view (editor_leek_popup)
 	<div class='title'>Sélectionnez une poireau</div>
 	<div class='content'>
-		@foreach (leek in LW.farmer.leeks)
-			<div class='leek card real' leek='{leek.id}'>
+		@foreach (leek in leeks)
+			<div class='leek card {leek.real ? "real": ""}' leek='{leek.id}'>
 				<div class='image'></div>
 				<div class='name'>{leek.name}</div>
 			</div>
 		@end
-		@foreach (leek in leeks)
-			<div class='leek card' leek='{leek.id}'>
+	</div>
+@endview
+
+@view (editor_ai_popup)
+	<div class='title'>Sélectionnez une IA</div>
+	<div class='content'>
+		@foreach (ai in ais)
+			<div class='leek ai' ai='{ai.id}'>
 				<div class='image'></div>
-				<div class='name'>{leek.name}</div>
+				<div class='name'>{ai.path}</div>
 			</div>
 		@end
 	</div>

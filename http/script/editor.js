@@ -48,11 +48,17 @@ LW.pages.editor.init = function(params, $scope, $page) {
 		for (var i in ais) items[ais[i].id] = ais[i]
 		for (var i in folders) items[folders[i].id] = folders[i]
 
+		var get_full_path = function(item) {
+			if (item.folder == 0) return item.name
+			return get_full_path(items[item.folder]) + "/" + item.name
+		}
+
 		// Create editors
 		editors = {}
 		for (var i in ais) {
 			var ai = ais[i]
 			editors[ai.id] = new Editor(ai.id, ai.name, ai.valid, "", ai.folder)
+			editors[ai.id].path = get_full_path(ai)
 		}
 
 		var drag_and_drop = function(item) {
@@ -772,6 +778,10 @@ LW.pages.editor.search = function(activate) {
 
 LW.pages.editor.test_popup = function(ais) {
 
+	for (var l in LW.farmer.leeks) {
+		LW.farmer.leeks[l].real = true
+	}
+
 	var data = {
 		ais: ais
 	}
@@ -843,6 +853,11 @@ LW.pages.editor.test_popup = function(ais) {
 		for (var i = 0; i < leek_count; ++i) {
 			team2[_bots[i].id] = _bots[i]
 		}
+		var ais = {}
+		for (var l in LW.farmer.leeks) {
+			var ai = editors[LW.farmer.leeks[l].ai]
+			//ais[l] = {id: LW.farmer.leeks[l], name: LW.farmer.leeks[]}
+		}
 		scenarios["farmer"] = {
 			name: "Éleveur",
 			id: "farmer",
@@ -851,7 +866,8 @@ LW.pages.editor.test_popup = function(ais) {
 			data: {
 				map: -1,
 				team1: _.clone(LW.farmer.leeks),
-				team2: team2
+				team2: team2,
+				ais: ais
 			}
 		}
 		/*
@@ -879,6 +895,30 @@ LW.pages.editor.test_popup = function(ais) {
 			leek.remove()
 			_testPopup.find('.team' + team_id + ' .add').show()
 			save_scenario(_current_scenario)
+		})
+		leek.find('.ai').click(function(e) {
+			var ais = []
+			for (var ai in editors) {
+				ais.push({id: ai, path: editors[ai].path})
+			}
+			ais.sort(function(a, b) {
+				var al = a.path.toLowerCase()
+				var bl = b.path.toLowerCase()
+				if (al < bl) return -1;
+    			if (al > bl) return 1;
+    			return 0;
+			})
+			var set_ai_popup = _.popup.new('editor.editor_ai_popup', {ais: ais})
+			var leek_id = $(this).parent().attr('leek')
+			var ai_element = $(this)
+			set_ai_popup.find('.ai').click(function() {
+				var ai_id = parseInt($(this).attr('ai'))
+				ai_element.text($(this).text())
+				_current_scenario.data.ais[leek_id] = ai_id
+				save_scenario(_current_scenario)
+				set_ai_popup.dismiss()
+			})
+			set_ai_popup.show(e)
 		})
 	}
 	var add_scenario_leek = function(leek, team) {
@@ -975,6 +1015,7 @@ LW.pages.editor.test_popup = function(ais) {
 		})
 	})
 	var save_scenario = function(scenario) {
+		if (scenario.base) return null
 		_.post('test-scenario/update', {id: scenario.id, data: JSON.stringify(scenario.data)}, function(data) {
 			if (!data.success) {
 				_.toast(data.error)
@@ -987,7 +1028,17 @@ LW.pages.editor.test_popup = function(ais) {
 	_testPopup.find('.column-scenario .add').click(function(e) {
 		var team1 = $(this).parent().hasClass('team1')
 		var team = team1 ? _current_scenario.data.team1 : _current_scenario.data.team2
-		var leek_popup = _.popup.new('editor.editor_leek_popup', {leeks: _leeks})
+		var available_leeks = {}
+		for (var l in _leeks) {
+			if (l in _current_scenario.data.team1 || l in _current_scenario.data.team2) continue
+			available_leeks[l] = _leeks[l]
+		}
+		for (var l in LW.farmer.leeks) {
+			if (l in _current_scenario.data.team1 || l in _current_scenario.data.team2) continue
+			available_leeks[l] = LW.farmer.leeks[l]
+		}
+		_.log(available_leeks)
+		var leek_popup = _.popup.new('editor.editor_leek_popup', {leeks: available_leeks})
 		leek_popup.find('.leek').each(function() {
 			var leek_id = parseInt($(this).attr('leek'))
 			var leek = $(this).hasClass('real') > 0 ? LW.farmer.leeks[leek_id] : _leeks[leek_id]
@@ -1005,6 +1056,7 @@ LW.pages.editor.test_popup = function(ais) {
 		})
 		leek_popup.show(e)
 	})
+
 	_testPopup.find('.column-scenario .map').click(function(e) {
 		var set_map_popup = _.popup.new('editor.map_popup', {maps: _maps})
 		set_map_popup.find('.map').click(function() {

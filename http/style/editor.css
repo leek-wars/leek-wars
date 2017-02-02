@@ -382,7 +382,7 @@ body {
 	text-align: center;
 	display: inline-block;
 }
-.popup.test_popup .column-scenario .add {
+.popup.test_popup .column-scenario .add, .popup.test_popup .leek-column .add {
 	background: white;
 	font-size: 40px;
 	border-radius: 50%;
@@ -392,12 +392,16 @@ body {
 	cursor: pointer;
 	display: inline-block;
 	vertical-align: top;
+	margin-left: 10px;
+	margin-right: 10px;
+}
+.popup.test_popup .column-scenario .add {
 	margin-top: 46px;
 	margin-bottom: 46px;
 	margin-left: 20px;
 	margin-right: 20px;
 }
-.popup.test_popup .column-scenario .add:hover {
+.popup.test_popup .column-scenario .add:hover, .popup.test_popup .leek-column .add:hover {
 	color: #555;
 	background: #ccc;
 }
@@ -423,6 +427,20 @@ body {
 	display: inline-block;
 	vertical-align: top;
 }
+
+.popup.editor_ai_popup .content {
+	height: 400px;
+}
+.popup.editor_ai_popup .ai {
+	padding: 3px 10px;
+	cursor: pointer;
+	border-radius: 3px;
+}
+.popup.editor_ai_popup .ai:hover {
+	background: white;
+	color: #5FAD1B;
+}
+
 .popup.test_popup .column-scenario .leek svg {
 	height: 100px;
 	width: 80px;
@@ -532,7 +550,7 @@ body {
 	font-weight: 500;
 }
 .popup.test_popup .leek-column .chips {
-	
+
 }
 .popup.test_popup .leek-column .chip {
 	width: 63px;
