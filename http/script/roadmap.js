@@ -15,8 +15,8 @@ LW.pages.roadmap.init = function(params, $scope, $page) {
 			changes: [
 				{text: "Améliorer le profil éleveur (GitHub, site, description, ...)", ok: true},
 				{text: "Plus d'options de test", ok: true},
-				{text: "[secret][secondaire] nouvelle page sur le site", ok: true},
-				{text: "[secret][secondaire] lié à la page combat", ok: true}
+				{text: "[secret][secondaire] nouvelle page sur le site", ok: false},
+				{text: "[secret][secondaire] lié à la page combat", ok: false}
 			]
 		},
 		{
