@@ -7,6 +7,7 @@ var current
 var currentType
 var currentItem = 0
 var editors = {}
+var _leek_ais = {}
 
 var _testEvent
 var _testPopup
@@ -45,6 +46,7 @@ LW.pages.editor.init = function(params, $scope, $page) {
 		var ais = data.ais
 		var folders = data.folders
 		var items = []
+		_leek_ais = data.leek_ais
 		for (var i in ais) items[ais[i].id] = ais[i]
 		for (var i in folders) items[folders[i].id] = folders[i]
 
@@ -836,6 +838,11 @@ LW.pages.editor.test_popup = function(ais) {
 	var _current_scenario = null
 	var generate_default_scenarios = function(scenarios) {
 		for (var l in LW.farmer.leeks) {
+			var ai = editors[_leek_ais[l]]
+			var ais = {}
+			ais[l] = {id: ai.id, name: ai.path}
+			var team1 = {}
+			team1[l] = LW.farmer.leeks[l]
 			scenarios["solo" + l] = {
 				id: "solo" + l,
 				name: "Solo " + LW.farmer.leeks[l].name,
@@ -843,7 +850,8 @@ LW.pages.editor.test_popup = function(ais) {
 				type: 'solo',
 				data: {
 					map: -1,
-					team1: {l: LW.farmer.leeks[l]},
+					ais: ais,
+					team1: team1,
 					team2: {"-1": domingo}
 				}
 			}
@@ -855,8 +863,8 @@ LW.pages.editor.test_popup = function(ais) {
 		}
 		var ais = {}
 		for (var l in LW.farmer.leeks) {
-			var ai = editors[LW.farmer.leeks[l].ai]
-			//ais[l] = {id: LW.farmer.leeks[l], name: LW.farmer.leeks[]}
+			var ai = editors[_leek_ais[l]]
+			ais[l] = {id: ai.id, name: ai.path}
 		}
 		scenarios["farmer"] = {
 			name: "Éleveur",
@@ -870,22 +878,7 @@ LW.pages.editor.test_popup = function(ais) {
 				ais: ais
 			}
 		}
-		/*
-		team2 = {}
-		var leek_count = _.objectSize(LW.farmer.leeks)
-		for (var i = 0; i < leek_count; ++i) {
-			team2[_bots[i].id] = _bots[i]
-		}
-		scenarios["team"] = {
-			name: "Équipe",
-			id: "team",
-			base: true,
-			data: {
-				team1: _.clone(LW.farmer.leeks),
-				team2: team2
-			}
-		}
-		*/
+		_.log(scenarios)
 	}
 	var add_scenario_leek_events = function(leek, team_id) {
 		leek.find('.delete').click(function() {
@@ -914,14 +907,17 @@ LW.pages.editor.test_popup = function(ais) {
 			set_ai_popup.find('.ai').click(function() {
 				var ai_id = parseInt($(this).attr('ai'))
 				ai_element.text($(this).text())
-				_current_scenario.data.ais[leek_id] = ai_id
+				if (!_current_scenario.data.ais) {
+					_current_scenario.data.ais = {}
+				}
+				_current_scenario.data.ais[leek_id] = {id: ai_id, name: $(this).text()}
 				save_scenario(_current_scenario)
 				set_ai_popup.dismiss()
 			})
 			set_ai_popup.show(e)
 		})
 	}
-	var add_scenario_leek = function(leek, team) {
+	var add_scenario_leek = function(leek, ai, team) {
 		var count = _testPopup.find('.team' + team + ' .leeks .leek').length
 		if (count >= 6) return null
 		var e = $("<div class='leek' leek='" + leek.id + "'><div class='delete'>×</div><div class='card'><div class='image'></div>" + leek.name + "</div><div class='ai'>" + leek.ai_name + "</div></div>")
@@ -929,6 +925,11 @@ LW.pages.editor.test_popup = function(ais) {
 		LW.createLeekImage(leek.id, 0.4, leek.level, leek.skin, leek.hat, function(id, data) {
 			_testPopup.find('.team' + team + ' .leek[leek=' + id + '] .image').html(data)
 		})
+		if (ai != null) {
+			e.find('.ai').text(ai.name)
+		} else {
+			e.find('.ai').text("?")
+		}
 		add_scenario_leek_events(e, team)
 		if (count == 5) {
 			_testPopup.find('.team' + team + ' .add').hide()
@@ -942,7 +943,8 @@ LW.pages.editor.test_popup = function(ais) {
 		_testPopup.find('.team2 .leek').remove()
 		for (var l in scenario.data.team1) {
 			var leek = scenario.data.team1[l]
-			add_scenario_leek(leek, 1)
+			var ai = scenario.data.ais[l]
+			add_scenario_leek(leek, ai, 1)
 		}
 		if (_.objectSize(scenario.data.team1) >= 6) {
 			_testPopup.find('.column-scenario .team1 .add').hide()
@@ -951,7 +953,8 @@ LW.pages.editor.test_popup = function(ais) {
 		}
 		for (var l in scenario.data.team2) {
 			var leek = scenario.data.team2[l]
-			add_scenario_leek(leek, 2)
+			var ai = scenario.data.ais[l]
+			add_scenario_leek(leek, ai, 2)
 		}
 		if (_.objectSize(scenario.data.team2) >= 6) {
 			_testPopup.find('.column-scenario .team2 .add').hide()
@@ -959,7 +962,9 @@ LW.pages.editor.test_popup = function(ais) {
 			_testPopup.find('.column-scenario .team2 .add').show()
 		}
 		if (scenario.data.map != -1) {
-			_testPopup.find('.column-scenario .map .name').text(_maps[scenario.data.map].name)
+			var map = _maps[scenario.data.map]
+			var name = map ? map.name : '?'
+			_testPopup.find('.column-scenario .map .name').text(name)
 			_testPopup.find('.column-scenario .map img').attr('src', LW.staticURL + 'image/map_icon.png')
 		} else {
 			_testPopup.find('.column-scenario .map .name').text("Random")
@@ -1037,7 +1042,6 @@ LW.pages.editor.test_popup = function(ais) {
 			if (l in _current_scenario.data.team1 || l in _current_scenario.data.team2) continue
 			available_leeks[l] = LW.farmer.leeks[l]
 		}
-		_.log(available_leeks)
 		var leek_popup = _.popup.new('editor.editor_leek_popup', {leeks: available_leeks})
 		leek_popup.find('.leek').each(function() {
 			var leek_id = parseInt($(this).attr('leek'))
@@ -1048,9 +1052,16 @@ LW.pages.editor.test_popup = function(ais) {
 		})
 		leek_popup.find('.leek').click(function() {
 			var leek_id = parseInt($(this).attr('leek'))
-			var leek = $(this).hasClass('real') > 0 ? LW.farmer.leeks[leek_id] : _leeks[leek_id]
+			var real = $(this).hasClass('real') > 0
+			var leek = real ? LW.farmer.leeks[leek_id] : _leeks[leek_id]
 			team[leek_id] = leek
-			add_scenario_leek(leek, team1 ? 1 : 2)
+			var ai = null
+			if (real) {
+				var real_ai = editors[_leek_ais[leek_id]]
+				ai = {id: real_ai.id, name: real_ai.path}
+			}
+			_current_scenario.data.ais[leek_id] = ai
+			add_scenario_leek(leek, ai, team1 ? 1 : 2)
 			save_scenario(_current_scenario)
 			leek_popup.dismiss()
 		})
@@ -1097,6 +1108,24 @@ LW.pages.editor.test_popup = function(ais) {
 			leeks[_bots[b].id] = _bots[b]
 		}
 	}
+	var add_chip_events = function(chip) {
+		var id = parseInt(chip.attr('chip'))
+		chip.click(function() {
+			_current_leek.chips.splice(_current_leek.chips.indexOf(id), 1)
+			$(this).remove()
+			_testPopup.find('.chips .add').show()
+			save_leek(_current_leek)
+		})
+	}
+	var add_weapon_events = function(weapon) {
+		var id = parseInt(weapon.attr('weapon'))
+		weapon.click(function() {
+			_current_leek.weapons.splice(_current_leek.weapons.indexOf(id), 1)
+			$(this).remove()
+			_testPopup.find('.weapons .add').show()
+			save_leek(_current_leek)
+		})
+	}
 	var load_leek = function(leek) {
 		_current_leek = leek
 		LW.createLeekImage(leek.id, 1, leek.level, leek.skin, leek.hat, function(id, data) {
@@ -1106,6 +1135,30 @@ LW.pages.editor.test_popup = function(ais) {
 			_testPopup.find('.leek-column [stat="' + s + '"]').text(leek[s])
 		})
 		_testPopup.find('.leek-column .name').text(leek.name)
+		_testPopup.find('.leek-column .chips .container').empty()
+		for (var c in leek.chips) {
+			var chip = LW.chips[leek.chips[c]]
+			var e = $("<img class='chip' chip='" + chip.id + "' src='" + LW.staticURL + "image/chip/small/" + chip.name + ".png'/>")
+			_testPopup.find('.leek-column .chips .container').append(e)
+			add_chip_events(e)
+		}
+		if (leek.chips.length >= 12) {
+			_testPopup.find('.chips .add').hide()
+		} else {
+			_testPopup.find('.chips .add').show()
+		}
+		_testPopup.find('.leek-column .weapons .container').empty()
+		for (var c in leek.weapons) {
+			var weapon = LW.weapons[leek.weapons[c]]
+			var e = $("<img class='weapon' weapon='" + weapon.id + "' src='" + LW.staticURL + "image/weapon/" + weapon.name + ".png'/>")
+			_testPopup.find('.leek-column .weapons .container').append(e)
+			add_weapon_events(e)
+		}
+		if (leek.weapons.length >= 4) {
+			_testPopup.find('.weapons .add').hide()
+		} else {
+			_testPopup.find('.weapons .add').show()
+		}
 	}
 	var select_leek = function(leek) {
 		_testPopup.find('.leeks .leek').removeClass('selected')
@@ -1122,6 +1175,8 @@ LW.pages.editor.test_popup = function(ais) {
 			_leeks = data.leeks
 			generate_bots(_leeks)
 			for (var m in data.leeks) {
+				if (!_leeks[m].chips)_leeks[m].chips = []
+				if (!_leeks[m].weapons)_leeks[m].weapons = []
 				var e = $("<div class='item leek' leek='" +  _leeks[m].id + "'>" + _leeks[m].name + (_leeks[m].bot ? "<span class='bot'>bot</span>" : '') + "</div>")
 				_testPopup.find('.lateral-column .leeks').append(e)
 				add_leek_events(e)
@@ -1160,9 +1215,11 @@ LW.pages.editor.test_popup = function(ais) {
  		add_leek_popup.show(e)
  	})
 	_testPopup.find('.leek-column .stat').click(function() {
+		if (_current_leek.bot) return null
 		$(this).find('span').attr('contenteditable', 'true').focus()
 	})
 	_testPopup.find('.leek-column .stat span').on('focusout', function() {
+		if (_current_leek.bot) return null
 		var charac = $(this).attr('stat')
 		var value = parseInt($(this).text())
 		if (isNaN(value)) {
@@ -1172,6 +1229,38 @@ LW.pages.editor.test_popup = function(ais) {
 		value = Math.min(value, _characs_limits[charac].max)
 		$(this).text(value)
 		_current_leek[charac] = value
+		save_leek(_current_leek)
+	})
+	var add_chip_popup = new _.popup.new('editor.editor_chips_popup', {chips: LW.chips})
+	_testPopup.find('.leek-column .chips .add').click(function(e) {
+		add_chip_popup.show(e)
+	})
+	add_chip_popup.find('.chip').click(function() {
+		var chip = parseInt($(this).attr('chip'))
+		_current_leek.chips.push(chip)
+		if (_current_leek.chips.length >= 12) {
+			_testPopup.find('.chips .add').hide()
+		}
+		var e = $(this).clone()
+		_testPopup.find('.leek-column .chips .container').append(e)
+		add_chip_events(e)
+		add_chip_popup.dismiss()
+		save_leek(_current_leek)
+	})
+	var add_weapon_popup = new _.popup.new('editor.editor_weapons_popup', {weapons: LW.weapons})
+	_testPopup.find('.leek-column .weapons .add').click(function(e) {
+		add_weapon_popup.show(e)
+	})
+	add_weapon_popup.find('.weapon').click(function() {
+		var weapon = parseInt($(this).attr('weapon'))
+		_current_leek.weapons.push(weapon)
+		if (_current_leek.weapons.length >= 4) {
+			_testPopup.find('.weapons .add').hide()
+		}
+		var e = $(this).clone()
+		_testPopup.find('.leek-column .weapons .container').append(e)
+		add_weapon_events(e)
+		add_weapon_popup.dismiss()
 		save_leek(_current_leek)
 	})
 

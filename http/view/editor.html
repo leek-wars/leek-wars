@@ -223,30 +223,13 @@
 				<br><br>
 				<div class='title'>Puces</div>
 				<div class='chips'>
-					<img class='chip' src='{{static}}image/chip/small/stalactite.png'>
-					<img class='chip' src='{{static}}image/chip/small/doping.png'>
-					<img class='chip' src='{{static}}image/chip/small/fortress.png'>
-
-					<img class='chip' src='{{static}}image/chip/small/mirror.png'>
-					<img class='chip' src='{{static}}image/chip/small/armoring.png'>
-					<img class='chip' src='{{static}}image/chip/small/liberation.png'>
-
-					<img class='chip' src='{{static}}image/chip/small/carapace.png'>
-					<img class='chip' src='{{static}}image/chip/small/teleportation.png'>
-					<img class='chip' src='{{static}}image/chip/small/lightning.png'>
-
-					<img class='chip' src='{{static}}image/chip/small/whip.png'>
-					<img class='chip' src='{{static}}image/chip/small/rocky_bulb.png'>
-					<img class='chip' src='{{static}}image/chip/small/armor.png'>
+					<div class='container'></div>
 					<div class='add'>+</div>
 				</div>
 				<br>
 				<div class='title'>Armes</div>
 				<div class='weapons'>
-					<img src="{{static}}image/weapon/grenade_launcher.png">
-					<img src="{{static}}image/weapon/b_laser.png">
-					<img src="{{static}}image/weapon/electrisor.png">
-					<img src="{{static}}image/weapon/m_laser.png">
+					<div class='container'></div>
 					<div class='add'>+</div>
 				</div>
 			</div>
@@ -413,10 +396,28 @@
 	<div class='title'>Sélectionnez une IA</div>
 	<div class='content'>
 		@foreach (ai in ais)
-			<div class='leek ai' ai='{ai.id}'>
+			<div class='ai' ai='{ai.id}'>
 				<div class='image'></div>
 				<div class='name'>{ai.path}</div>
 			</div>
+		@end
+	</div>
+@endview
+
+@view (editor_chips_popup)
+	<div class='title'>Sélectionnez une puce</div>
+	<div class='content'>
+		@foreach (chip in chips)
+			<img class='chip' chip='{chip.id}' src='{{static}}image/chip/small/{chip.name}.png' />
+		@end
+	</div>
+@endview
+
+@view (editor_weapons_popup)
+	<div class='title'>Sélectionnez une arme</div>
+	<div class='content'>
+		@foreach (weapon in weapons)
+			<img class='weapon' weapon='{weapon.id}' src='{{static}}image/weapon/{weapon.name}.png' />
 		@end
 	</div>
 @endview

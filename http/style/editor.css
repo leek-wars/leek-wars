@@ -394,6 +394,7 @@ body {
 	vertical-align: top;
 	margin-left: 10px;
 	margin-right: 10px;
+	margin-top: 5px;
 }
 .popup.test_popup .column-scenario .add {
 	margin-top: 46px;
@@ -469,7 +470,7 @@ body {
 	padding: 6px;
 	word-wrap: break-word;
 	color: #888;
-	font-size: 13px;
+	font-size: 12px;
 	padding-top: 20px;
 	font-weight: bold;
 	cursor: pointer;
@@ -549,11 +550,18 @@ body {
 	padding: 0 6px;
 	font-weight: 500;
 }
-.popup.test_popup .leek-column .chips {
-
+.popup.test_popup .leek-column .chips .container, .popup.test_popup .leek-column .weapons .container {
+	display: inline-block;
 }
-.popup.test_popup .leek-column .chip {
+.popup.test_popup .leek-column .chip, .popup.editor_chips_popup .chip {
 	width: 63px;
+	cursor: pointer;
+}
+.popup.test_popup .leek-column .weapon, .popup.editor_weapons_popup .weapon {
+	cursor: pointer;
+}
+.popup.test_popup .leek-column .chip, .popup.test_popup .leek-column .weapon {
+	margin: 0 2px;
 }
 .popup.test_popup .map-column .map {
 	height: 415px;
