@@ -961,8 +961,8 @@ LW.pages.editor.test_popup = function(ais) {
 		} else {
 			_testPopup.find('.column-scenario .team2 .add').show()
 		}
-		if (scenario.data.map != -1) {
-			var map = _maps[scenario.data.map]
+		if (scenario.data.map) {
+			var map = scenario.data.map
 			var name = map ? map.name : '?'
 			_testPopup.find('.column-scenario .map .name').text(name)
 			_testPopup.find('.column-scenario .map img').attr('src', LW.staticURL + 'image/map_icon.png')
@@ -1072,7 +1072,7 @@ LW.pages.editor.test_popup = function(ais) {
 		var set_map_popup = _.popup.new('editor.map_popup', {maps: _maps})
 		set_map_popup.find('.map').click(function() {
 			var map_id = parseInt($(this).attr('map'))
-			_current_scenario.data.map = map_id
+			_current_scenario.data.map = _maps[map_id]
 			if (map_id == -1) {
 				_testPopup.find('.column-scenario .map .name').text("Random")
 				_testPopup.find('.column-scenario .map img').attr('src', LW.staticURL + 'image/map_icon_random.png')
@@ -1278,15 +1278,17 @@ LW.pages.editor.test_popup = function(ais) {
 		}
 		_current_map = map
 		_testPopup.find('.map .cell').removeClass('obstacle').removeClass('team1').removeClass('team2')
-		for (var c in map.data.obstacles) {
-			_testPopup.find('.map .cell[cell=' + map.data.obstacles[c] + ']').addClass('obstacle')
-		}
-		for (var c in map.data.team1) {
-			_testPopup.find('.map .cell[cell=' + map.data.team1[c] + ']').addClass('team1')
-		}
-		for (var c in map.data.team1) {
-			_testPopup.find('.map .cell[cell=' + map.data.team2[c] + ']').addClass('team2')
-		}
+
+		_testPopup.find('.map .cell').each(function() {
+			var cell = parseInt($(this).attr('cell'))
+			if (map.data.obstacles[cell]) {
+				$(this).addClass('obstacle')
+			} else if (map.data.team1.indexOf(cell) != -1) {
+				$(this).addClass('team1')
+			} else if (map.data.team2.indexOf(cell) != -1) {
+				$(this).addClass('team2')
+			}
+		})
 		_testPopup.find('.map-column .name').text(map.name)
 	}
 	var select_map = function(map) {
@@ -1321,7 +1323,7 @@ LW.pages.editor.test_popup = function(ais) {
 			if (data.success) {
 				var e = $("<div class='item map' map='" +  data.id + "'>" + name + "</div>")
 				_testPopup.find('.maps').append(e)
-				_maps[data.id] = ({name: name, id: data.id, data: {obstacles: [], team1: [], team2: []}})
+				_maps[data.id] = ({name: name, id: data.id, data: {obstacles: {}, team1: [], team2: []}})
 				add_map_events(e)
 				add_map_popup.dismiss()
 				add_map_popup.find('input').val('')
@@ -1394,12 +1396,7 @@ LW.pages.editor.test_popup = function(ais) {
 						map_down = true
 						map_add = !$(this).hasClass('obstacle')
 						$(this).toggleClass('obstacle')
-						var index = _current_map.data.obstacles.indexOf(cell)
-						if (index != -1) {
-							_current_map.data.obstacles.splice(index, 1)
-						} else {
-							_current_map.data.obstacles.push(cell)
-						}
+						_current_map.data.obstacles[cell] = !_current_map.data.obstacles[cell]
 						reset_save_timeout()
 					}
 				},
@@ -1409,12 +1406,7 @@ LW.pages.editor.test_popup = function(ais) {
 						if (has_class != map_add) {
 							$(this).toggleClass('obstacle', map_add)
 							var cell = parseInt($(this).attr('cell'))
-							var index = _current_map.data.obstacles.indexOf(cell)
-							if (index != -1) {
-								_current_map.data.obstacles.splice(index, 1)
-							} else {
-								_current_map.data.obstacles.push(cell)
-							}
+							_current_map.data.obstacles[cell] = !_current_map.data.obstacles[cell]
 							reset_save_timeout()
 						}
 					}
@@ -1433,16 +1425,16 @@ LW.pages.editor.test_popup = function(ais) {
 
 	_testPopup.find('.button.clear').click(function() {
 		_testPopup.find('.map .cell').removeClass('obstacle')
-		_current_map.data.obstacles = []
+		_current_map.data.obstacles = {}
 		reset_save_timeout()
 	})
 	_testPopup.find('.button.random').click(function() {
-		_current_map.data.obstacles = []
+		_current_map.data.obstacles = {}
 		_testPopup.find('.map .cell').removeClass('obstacle')
 		_testPopup.find('.map .cell').each(function() {
 			if (Math.random() > 0.8) {
 				$(this).addClass('obstacle')
-				_current_map.data.obstacles.push(parseInt($(this).attr('cell')))
+				_current_map.data.obstacles[parseInt($(this).attr('cell'))] = true
 			}
 		})
 		reset_save_timeout()
