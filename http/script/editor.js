@@ -1363,7 +1363,7 @@ LW.pages.editor.test_popup = function(ais) {
 				var enabled = Math.abs(x) + Math.abs(y) <= size / 2
 				var clazz = enabled ? '' : 'disabled'
 				var team = j < (size * (5 / 6) - i) ? '1' : (j > (size * (7 / 6) - i) ? '2' : '0')
-				var cell = 306 + 18 * x + 17 * y
+				var cell = 306 + 18 * y - 17 * x
 				line.append("<span class='cell " + clazz + "' cell='" + cell + "' team='" + team + "'></span>");
 			}
 			element.append(line)
