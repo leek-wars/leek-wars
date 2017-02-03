@@ -615,3 +615,14 @@ changelog_194	# Ajout d'un système de dossiers pour ranger les IAs.
 				# Correction des commentaires sous les combats et tournois.
 				# Correction de la taille du combat lorsqu'on le quitte en plein écran.
 				# Smileys et emojis plus grands lorsqu'ils sont seuls dans un message.
+changelog_195	# Refonte de l'interface de test : ajouts d'options avancées pour paramétrer ses combats de test.
+				# Amélioration du profil éleveur : ajout du nombre de messages forum, du site web et du profil GitHub.
+				# Amélioration des signalements d'emblèmes d'équipe.
+				# Correction d'un bug de sauvegarde d'une IA (merci à jeuxjeux20).
+				# Amélioration du rafraichissement des messages privés (merci à Rominou).
+				# Correction de la recherche dans le forum par nom de joueur.
+				# Amélioration des messages d'erreurs relatifs aux IA dans le potager (merci à TheTintin).
+				# Corrections dans la traduction anglaise du site (merci à MDMCK10 et jeuxjeux20).
+				# Corrections relatifs à la barre de progression dans l'affichage du combat (merci à artorias).
+				# Reconnection à la Battle Royale après de l'actualisation de la page.
+				# Correction de l'indentation des codes d'exemple dans le tutoriel.
