@@ -1456,8 +1456,7 @@ LW.pages.editor.test_popup = function(ais) {
 	 * Launch scenario
 	 */
 	_testPopup.view.find("#launch").click(function() {
-		_.log("Test scenario", JSON.stringify(_current_scenario))
-		_.post('ai/test-new', {data: _current_scenario}, function(data) {
+		_.post('ai/test-new', {data: JSON.stringify(_current_scenario.data)}, function(data) {
 			if (data.success) {
 				_testPopup.dismiss()
 				LW.page('/fight/' + data.fight)
