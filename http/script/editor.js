@@ -989,7 +989,7 @@ LW.pages.editor.test_popup = function(ais) {
 			_scenarios = data.scenarios
 			generate_default_scenarios(_scenarios)
 			for (var m in data.scenarios) {
-				var e = $("<div class='item scenario' scenario='" +  _scenarios[m].id + "'>" + _scenarios[m].name + (_scenarios[m].base ? "<span class='base'>base</span>" : '') + "</div>")
+				var e = $("<div class='item scenario' scenario='" +  _scenarios[m].id + "'>" + _scenarios[m].name + (_scenarios[m].base ? "<span class='base'>base</span>" : "<div class='delete'/>") + "</div>")
 				_testPopup.find('.scenarios').append(e)
 				add_scenario_events(e)
 			}
@@ -1177,7 +1177,7 @@ LW.pages.editor.test_popup = function(ais) {
 			for (var m in data.leeks) {
 				if (!_leeks[m].chips)_leeks[m].chips = []
 				if (!_leeks[m].weapons)_leeks[m].weapons = []
-				var e = $("<div class='item leek' leek='" +  _leeks[m].id + "'>" + _leeks[m].name + (_leeks[m].bot ? "<span class='bot'>bot</span>" : '') + "</div>")
+				var e = $("<div class='item leek' leek='" +  _leeks[m].id + "'>" + _leeks[m].name + (_leeks[m].bot ? "<span class='bot'>bot</span>" : "<div class='delete'/>") + "</div>")
 				_testPopup.find('.lateral-column .leeks').append(e)
 				add_leek_events(e)
 			}
@@ -1303,7 +1303,7 @@ LW.pages.editor.test_popup = function(ais) {
 		if (data.success) {
 			_maps = data.maps
 			for (var m in data.maps) {
-				var e = $("<div class='item map' map='" +  data.maps[m].id + "'>" + data.maps[m].name + "</div>")
+				var e = $("<div class='item map' map='" +  data.maps[m].id + "'>" + data.maps[m].name + "<div class='delete'/></div>")
 				_testPopup.find('.maps').append(e)
 				add_map_events(e)
 			}

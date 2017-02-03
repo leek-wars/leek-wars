@@ -352,6 +352,7 @@ body {
 .popup.test_popup .item {
 	padding: 8px;
 	cursor: pointer;
+	position: relative;
 }
 .popup.test_popup .item:hover {
 	background: #222;
@@ -362,6 +363,19 @@ body {
 }
 .popup.test_popup .lateral-column .add {
 	background: #444;
+}
+.popup.test_popup .lateral-column .item .delete {
+	position: absolute;
+	right: 7px;
+	top: 10px;
+	width: 15px;
+	height: 15px;
+	background-image: url("../image/delete_new.png");
+	background-size: cover;
+	opacity: 0.6;
+}
+.popup.test_popup .lateral-column .item .delete:hover {
+	opacity: 1.0;
 }
 
 .popup.test_popup .column .title {
@@ -506,6 +520,9 @@ body {
 	border-radius: 4px;
 	padding: 0 4px;
 	margin-left: 5px;
+	position: absolute;
+	right: 7px;
+	top: 5px:
 }
 
 .popup.test_popup .leek-column .image {
