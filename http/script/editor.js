@@ -1300,6 +1300,18 @@ LW.pages.editor.test_popup = function(ais) {
 		e.click(function() {
 			select_map(_maps[$(this).attr('map')])
 		})
+		e.find('.delete').click(function() {
+			_.post('test-map/delete', {id: _current_map.id}, function(data) {
+				if (!data.success) {
+					_.toast(data.error)
+				}
+			})
+			_testPopup.find('.maps .map[map=' + _current_map.id + ']').remove()
+			delete _maps[_current_map.id]
+			if (!_.isEmptyObj(_maps)) {
+				select_map(_.first(_maps))
+			}
+		})
 	}
 	_.get('test-map/get-all/' + LW.token(), function(data) {
 		if (data.success) {
