@@ -705,7 +705,7 @@ _.style.load = function(path, file) {
 
 	if ((path + file) in _.style.loaded) return null
 
-	$('head').append('<link rel="stylesheet" href="' + path + file + '" type="text/css" />')
+	$('head').append('<link rel="stylesheet" href="' + path + file + (_.local ? '' : ('?' + _.version)) + '" type="text/css" />')
 
 	_.style.loaded[path + file] = true
 }
