@@ -80,6 +80,7 @@
 	padding: 1px;
 	color: #888;
 	font-size: 14px;
+	word-break: break-all;
 }
 #farmer-page .infos .info a {
 	color: #888;
