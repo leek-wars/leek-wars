@@ -1408,7 +1408,12 @@ LW.pages.editor.test_popup = function(ais) {
 						map_down = true
 						map_add = !$(this).hasClass('obstacle')
 						$(this).toggleClass('obstacle')
-						_current_map.data.obstacles[cell] = !_current_map.data.obstacles[cell]
+						if (map_add) {
+							_current_map.data.obstacles[cell] = true
+						} else {
+							delete _current_map.data.obstacles[cell]
+						}
+						_.log(_current_map.data.obstacles)
 						reset_save_timeout()
 					}
 				},
@@ -1418,7 +1423,11 @@ LW.pages.editor.test_popup = function(ais) {
 						if (has_class != map_add) {
 							$(this).toggleClass('obstacle', map_add)
 							var cell = parseInt($(this).attr('cell'))
-							_current_map.data.obstacles[cell] = !_current_map.data.obstacles[cell]
+							if (map_add) {
+								_current_map.data.obstacles[cell] = true
+							} else {
+								delete _current_map.data.obstacles[cell]
+							}
 							reset_save_timeout()
 						}
 					}
