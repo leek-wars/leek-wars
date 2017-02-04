@@ -122,8 +122,11 @@ LW.pages.documentation.resize = function() {
 
 LW.pages.documentation.selectItem = function(item) {
 
-	var pos = $('#items .item[item=' + item.toLowerCase() + ']:visible').position().top + $('#items').scrollTop();
-	$('#items').scrollTop(pos - 80);
+	var element = $('#items .item[item=' + item.toLowerCase() + ']:visible')
+	if (element.length) {
+		var pos = element.position().top + $('#items').scrollTop();
+		$('#items').scrollTop(pos - 80);
+	}
 }
 
 function isNameChar(char) {
