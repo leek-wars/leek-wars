@@ -526,6 +526,9 @@ body {
 	top: 5px:
 }
 
+.popup.test_popup .leek-column {
+	width: 820px;
+}
 .popup.test_popup .leek-column .image {
 	display: inline-block;
 	text-align: center;
