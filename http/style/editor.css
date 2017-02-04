@@ -498,6 +498,7 @@ body {
 }
 .popup.test_popup .column-scenario .map-container {
 	text-align: center;
+	width: 800px;
 }
 .popup.test_popup .column-scenario .map, .popup.map_popup .map {
 	display: inline-block;
