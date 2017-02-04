@@ -973,6 +973,7 @@ LW.pages.editor.test_popup = function(ais) {
 		if (scenario.base) {
 			_testPopup.find('.column-scenario .add').hide()
 		}
+		localStorage['editor/scenario'] = scenario.id
 	}
 	var select_scenario = function(scenario) {
 		_testPopup.find('.scenarios .scenario').removeClass('selected')
@@ -993,7 +994,13 @@ LW.pages.editor.test_popup = function(ais) {
 				_testPopup.find('.scenarios').append(e)
 				add_scenario_events(e)
 			}
-			select_scenario(_.first(_scenarios))
+			var start_scenario = localStorage['editor/scenario']
+			if (start_scenario && start_scenario in _scenarios) {
+				start_scenario = _scenarios[start_scenario]
+			} else {
+				start_scenario = _.first(_scenarios)
+			}
+			select_scenario(start_scenario)
 		} else {
 			_.toast(data.error)
 		}
