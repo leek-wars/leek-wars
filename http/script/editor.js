@@ -878,7 +878,6 @@ LW.pages.editor.test_popup = function(ais) {
 				ais: ais
 			}
 		}
-		_.log(scenarios)
 	}
 	var add_scenario_leek_events = function(leek, team_id) {
 		leek.find('.delete').click(function() {
@@ -1420,7 +1419,6 @@ LW.pages.editor.test_popup = function(ais) {
 						} else {
 							delete _current_map.data.obstacles[cell]
 						}
-						_.log(_current_map.data.obstacles)
 						reset_save_timeout()
 					}
 				},
