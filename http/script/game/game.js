@@ -590,8 +590,12 @@ var Game = function() {
 
 	this.toggleSound = function() {
 		this.sound = !this.sound;
-		if (this.sound == false && this.atmosphere != null) {
-			this.atmosphere.stop()
+		if (game.atmosphere != null) {
+			if (this.sound) {
+				game.atmosphere.loop()
+			} else {
+				game.atmosphere.stop()
+			}
 		}
 		localStorage['fight/sound'] = this.sound
 	}

@@ -355,40 +355,35 @@ function Sound(src, volume) {
 
 	this.play = function() {
 		if (game.sound && this.sound != null) {
-			this.sound.currentTime = 0;
-			this.sound.play();
+			this.sound.currentTime = 0
+			this.sound.play()
 		}
 	}
 
 	this.loop = function() {
-		if (game.sound && this.sound != null) {
+		if (this.sound != null) {
 			if (typeof this.sound.loop == 'boolean') {
-				this.sound.loop = true;
-				//cut the silence
-				//this.sound.duration = this.sound.duration -1;
+				this.sound.loop = true
 			} else {
 				this.sound.addEventListener('timeupdate', function() {
-					//cut the silence
-					//if(this.sound.currentTime > this.sound.duration - 1){
-						this.sound.currentTime = 0;
-						this.sound.play();
-					//}
-				}, false);
+					this.sound.currentTime = 0
+					this.sound.play()
+				}, false)
 			}
 			this.sound.play()
 		}
 	}
 
 	this.stop = function() {
-		if (game.sound && this.sound != null) {
-			this.sound.pause();
-			this.sound.currentTime = 0;
+		if (this.sound != null) {
+			this.sound.pause()
+			this.sound.currentTime = 0
 		}
 	}
 
-	this.sound.volume = volume;
-	this.sound.src = src;
-	this.sound.load();
+	this.sound.volume = volume
+	this.sound.src = src
+	this.sound.load()
 }
 
 var Maps = function() {
