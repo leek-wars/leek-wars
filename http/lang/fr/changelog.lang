@@ -111,7 +111,7 @@ changelog_126	# Ajout des fonctions getCores() et getFrequency().
 changelog_127	# Ajout du tutoriel sur les opérateurs == et ===.
 				# Amélioration de la page "À Propos".
 				# Affichage des carrés de notification en direct.
-				# Colorisation des constantes et fonctions du LeekScript.
+				# Coloration des constantes et fonctions du LeekScript.
 				# L'éditeur devient une simple zone de texte sur mobile, pour faciliter une édition rapide (l'éditeur normal est accessible avec l'option "Voir version ordinateur" sur votre téléphone).
 				# Améliorations sur mobile (superpositions de texte, taille de texte).
 changelog_128	# Ajout du tutoriel sur le passage par référence.
@@ -142,7 +142,7 @@ changelog_133	# Affichage de la ligne de plantage ou d'avertissement lors de l'�
 				# Modifications des classements.
 				# Tris par colonne dans le classement.
 changelog_134	# Mise à jour du matchmaking pour les niveaux < 100.
-changelog_135	# Ajout des potions (réinitialisation du capital et colorisation du poireau).
+changelog_135	# Ajout des potions (réinitialisation du capital et coloration du poireau).
 				# Les chips sont désormais revendables.
 				# Une chip ne peut être équipée que sur un seul poireau à la fois.
 				# Ajout de la sagesse, qui augmente l'xp et les habs : xp = xp * (1 + sagesse / 100).
@@ -169,7 +169,7 @@ changelog_138	# Ajout du B-Laser.
 				# Ajout des opérateurs binaires &, |, ^, <<, >> et >>>.
 				# Modification du fonctionnement des fonction getWeaponEffects et getChipEffects.
 				# Ajout du lien vers le Wiki dans l'aide.
-changelog_139	# Ajout des fonctions mark(cell), mark(cell, color), mark(cell, color, duration) pour colorier des cases.
+changelog_139	# Ajout des fonctions mark(cell), mark(cell, color), mark(cell, color, duration) pour colorer des cases.
 				# Ajout des opérateurs |= , &= et ^=.
 				# Option dans l'éditeur pour activer l'autocomplétion ou pas.
 				# getCurrentCooldown() devient getCooldown().

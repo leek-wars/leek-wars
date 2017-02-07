@@ -1,5 +1,5 @@
 effect_1			Réinitialise les points de capital du poireau
-effect_2			Colorise le poireau en <b>%s</b>
+effect_2			Colore le poireau en <b>%s</b>
 restat			Potion de réinitialisation
 restat_admin			Potion de réinitialisation
 restat_admin_desc			Une nouvelle vie ! Offerte par vos admin préférés !
@@ -23,9 +23,9 @@ skin_9			multicolore
 skin_alpha			Potion transparente
 skin_alpha_desc			Où suis-je ?
 skin_apple			Potion verte pomme
-skin_apple_desc			
+skin_apple_desc
 skin_black			Potion noire
-skin_black_desc			
+skin_black_desc
 skin_blue			Potion bleue
 skin_blue_desc			Sacrebleu !
 skin_cyan			Potion turquoise
