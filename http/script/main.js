@@ -3502,6 +3502,16 @@ function rgbToHex(r, g, b) {
     return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
 }
 
+LW.latexify = function(html) {
+	return html.replace(/\$(.*?)\$/gi, function(m, f) {
+		try {
+			return katex.renderToString(f)
+		} catch (e) {
+			return m
+		}
+	})
+}
+
 var ChatController = function(chat_element, private_chat, team_chat) {
 
 	var controller = this
@@ -3706,6 +3716,7 @@ var ChatController = function(chat_element, private_chat, team_chat) {
 		var message = _.protect(msg)
 
 		message = _.linkify(message)
+		message = LW.latexify(message)
 		message = LW.smiley(message)
 		message = commands(message, authorName)
 
