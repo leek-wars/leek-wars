@@ -983,6 +983,16 @@ LW.pages.editor.test_popup = function(ais) {
 		e.click(function() {
 			select_scenario(_scenarios[$(this).attr('scenario')])
 		})
+		e.find('.delete').click(function() {
+			_.log('delete scenario ', _current_scenario)
+			_.post('test-scenario/delete', {id: _current_scenario.id}, function(data) {
+				if (data.error) {
+					_.toast(data.error)
+				}
+			})
+			e.remove()
+			select_scenario(_.first(_scenarios))
+		})
 	}
 	_.get('test-scenario/get-all/' + LW.token(), function(data) {
 		if (data.success) {
