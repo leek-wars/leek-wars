@@ -684,6 +684,12 @@ LW.pages.leek.weapons = function(leek) {
 				_.toast(_.lang.get('leek', 'error_under_required_level_weapon', leek.name))
 				return
 			}
+			for(var w of leek.weapons){
+				if(w.template == weaponTemplate){
+					_.toast(_.lang.get('leek', 'error_weapon_already_equipped', leek.name))
+					return
+				}
+			}
 
 			popup.view.find('.leek-weapons').append(weaponElem)
 			weaponElem.attr('location', 'leek')
@@ -795,6 +801,12 @@ LW.pages.leek.chips = function(leek) {
 				_.toast(_.lang.get('leek', 'error_under_required_level_chip', leek.name))
 				return
 			}
+			for(var c of leek.chips){
+				if(c.template == chipTemplate){
+					_.toast(_.lang.get('leek', 'error_chip_already_equipped', leek.name))
+					return
+				}
+			}
 
 			popup.view.find('.leek-chips').append(chipElem)
 			chipElem.attr('location', 'leek')
@@ -807,6 +819,7 @@ LW.pages.leek.chips = function(leek) {
 			LW.addTooltip("leek-chip-" + chipID, "<b>" + _.lang.get('chip', chip.name) + "</b><br>" +
 				_.lang.get('leek', 'level_n', chip.level) + "<br>CHIP_" + chip.name.toUpperCase())
 
+			
 			_.post('leek/add-chip', {leek_id: leek.id, chip_id: chipItem})
 
 		} else if (action == 'remove') {
