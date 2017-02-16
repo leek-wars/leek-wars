@@ -37,6 +37,8 @@ error_under_required_level_2	Your second leek must be level %s.
 error_under_required_level_3	Your third leek must be level %s.
 error_under_required_level_weapon		%s doesn't have the required level for this weapon.
 error_under_required_level_chip			%s doesn't have the required level for this chip.
+error_weapon_already_equipped			The weapon is already equipped on %s.
+error_chip_already_equipped				The chip is alredy equipped on %s.
 error_max_weapon						%s can't equip an additional weapon.
 error_max_chip							%s can't equip an additional chip.
 farmed_by						Raised by <a class="leek-farmer" href="/farmer/%1$s">%2$s</a>
