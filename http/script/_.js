@@ -405,8 +405,8 @@ _.toast = function(message, durationOrCallback) {
 	var d = 1800
 	var callback = null
 
-	if (typeof(durationOrCallBack) == "number") {
-		d = durationOrCallBack
+	if (typeof(durationOrCallback) == "number") {
+		d = durationOrCallback
 	}
 	if (typeof(durationOrCallback) == "function") {
 		callback = durationOrCallback
