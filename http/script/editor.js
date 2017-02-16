@@ -327,6 +327,14 @@ LW.pages.editor.init = function(params, $scope, $page) {
 			}
 		}
 
+		// Base folder selection
+		$('#ai-list').click(function() {
+			currentItem = 0;
+			currentType = 'baseFolder'
+			$('#ai-list .item').removeClass('selected')
+			$('#ai-list .folder[id=' + currentItem + ']').addClass('selected')
+		})
+
 		// New button
 		$('#new-button').click(function() {
 			var current_folder = get_current_folder()
