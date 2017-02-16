@@ -1262,7 +1262,7 @@ LW.pages.editor.test_popup = function(ais) {
 			}
 		}
 		if(chip_already_equipped)
-			_.toast('chip_already_equipped', 1200)
+			_.toast(_.lang.get('leek', 'error_chip_already_equipped', _current_leek.name))
 		else {
 			_current_leek.chips.push(chip)
 			var e = $(this).clone()
@@ -1290,7 +1290,7 @@ LW.pages.editor.test_popup = function(ais) {
 			}
 		}
 		if(weapon_already_equipped)
-			_.toast('weapon_already_equipped', 1200)
+			_.toast(_.lang.get('leek', 'error_weapon_already_equipped', _current_leek.name))
 		else {
 			_current_leek.weapons.push(weapon)
 			var e = $(this).clone()
