@@ -1957,6 +1957,7 @@ function commands(text, authorName) {
 	text = text.replace(/(^| )\/fliptable(?=$|\s)/g, "$1(╯°□°）╯︵ ┻━┻")
 	text = text.replace(/(^| )\/replacetable(?=$|\s)/g, "$1┬─┬﻿ ノ( ゜-゜ノ)")
 	text = text.replace(/(^| )\/shrug(?=$|\s)/g, "$1¯\\_(ツ)_/¯")
+	text = text.replace(/(^| )\/lenny(?=$|\s)/g, "$1( ͡° ͜ʖ ͡° )")
 
 	// Wiki commands
 	while(matches = /(?:^|(\s))\/wiki([!]?)(?::([^\s#]+)(?:#([^\s]+))?)?(?=\s|$)/g.exec(text)) {
