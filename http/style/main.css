@@ -2941,3 +2941,65 @@ textarea.autogrow {
 	overflow-x: auto;
 	overflow-y: hidden;
 }
+
+/* LeekScript console */
+.popup.console_popup .content {
+	padding: 0;
+	background: transparent;
+	height: 360px;
+}
+.console {
+	height: 350px;
+	background: rgba(45, 45, 45, 0.9);
+	color: #ccc;
+	font-family: monospace;
+	font-size: 16px;
+	overflow-y: auto;
+	overflow-x: hidden;
+	padding: 5px;
+}
+.console .lines .line {
+	padding: 2px 4px;
+	word-wrap: break-word;
+}
+.console .line .line span {
+	vertical-align: top;
+}
+.console .lines .line.result {
+	color: white;
+	font-weight: bold;
+	font-size: 16px;
+	margin-bottom: 2px;
+}
+.console .lines .line.result.error {
+	color: red;
+}
+.console .lines .line.result .time {
+	font-size: 13px;
+	margin-left: 10px;
+	font-weight: normal;
+	color: #888;
+}
+.console .input {
+	padding: 2px 4px;
+}
+.console input {
+	border: none;
+	background: transparent;
+	color: white;
+	font-family: monospace;
+	margin: 0;
+	padding: 0;
+	font-size: 16px;
+	min-height: 0;
+	width: calc(100% - 18px);
+}
+.console .arrow {
+	width: 18px;
+	margin-right: 6px;
+	color: white;
+	vertical-align: top;
+}
+.console .lines {
+
+}

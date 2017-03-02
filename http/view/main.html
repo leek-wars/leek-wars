@@ -701,10 +701,28 @@
 	</div>
 @endview
 
-@view(leek_popup)
+@view (leek_popup)
 	<div leek='{leek.id}' class='leek'>
 		<div class='image'></div>
 		{leek.name}<br>
 		<span class='level'>{#level_n, leek.level}</span>
+	</div>
+@endview
+
+@view (console_popup)
+	<div class='title'>
+		Console LeekScript V2
+		<div class='options'>
+			<div class='option expand'><img src='{{static}}image/icon/open_new_window.png'></div>
+			<div class='option dismiss'><img src='{{static}}image/icon/quit.png'></div>
+		</div>
+	</div>
+	<div class='content'>
+		<div class='console' autostopscroll>
+			<div class='lines'></div>
+			<div class='input'>
+				<span class='arrow'>►</span><input type='text' autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+			</div>
+		</div>
 	</div>
 @endview

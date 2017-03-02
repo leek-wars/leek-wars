@@ -622,6 +622,21 @@ $(document).ready(function() {
 				localStorage['main/' + panel.attr('panel') + '-collapsed'] = panel.hasClass('collapsed')
 			})
 
+			var consolePopup = new _.popup.new('main.console_popup', {}, 650, true, {
+				dismissable: false,
+				draggable: true
+			})
+			var consoleShown = false
+			var console = new ConsoleController(consolePopup.find('.console'))
+			$("#console").click(function(e) {
+				consolePopup.show(e)
+				if (!consoleShown) {
+					consolePopup.move($('#wrapper').offset().left + $('#wrapper').width() / 2 - 300, $(window).height() / 2 - 200)
+					consoleShown = true
+				}
+				console.focus()
+			})
+
 			$('#menu-button').click(function() {
 				$('body').toggleClass('menu-collapsed')
 				LW.trigger('resize')
