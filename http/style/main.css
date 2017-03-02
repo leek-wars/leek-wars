@@ -1567,7 +1567,7 @@ body.connected #header-signin {
 .popup {
 	display: none;
 	width: 700px;
-	box-shadow: 0px 0px 100px #111;
+	box-shadow: 0px 0px 50px #111;
 	-webkit-transition: height ease 0.3s;
 	-moz-transition: height ease 0.3s;
 	transition: height ease 0.3s;
