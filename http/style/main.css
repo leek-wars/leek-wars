@@ -244,6 +244,26 @@ textarea {
 	background-color: white;
 }
 
+/* Console button */
+#console {
+	position: fixed;
+	top: 46px;
+	left: 38px;
+	cursor: pointer;
+	display: none;
+}
+#console img {
+	width: 30px;
+	opacity: 0.3;
+}
+#console:hover img {
+	opacity: 0.6;
+}
+
+body.connected #console {
+	display: block;
+}
+
 /*
  * Menu
  */
