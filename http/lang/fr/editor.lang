@@ -36,6 +36,7 @@ n_characters	%s caractères
 n_cores			%s coeurs
 name_already_exists		Le nom <b>%s</b> est déjà utilisé !
 new				IA
+new_v2			IA V2
 new_desc		Créer une nouvelle IA
 new_folder		Dossier
 n_lines			%s lignes

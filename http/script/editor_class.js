@@ -215,16 +215,20 @@ var Editor = function(id, name, valid, code, folder, level) {
 
 		_.post('ai/save/', {ai_id: saveID, code: content}, function(data) {
 
+			_.log(editor)
+
 			_saving = false;
 			$('#results').empty().show();
 			$('#compiling').hide();
 
+			if (editor.v2 == false)
 			if (!data.success || data.result.length == 0) {
 
 				$('#results').append("<div class='error'>× <i>" + _.lang.get('editor', 'server_error') + "</i></div>");
 				return;
 			}
 
+			if (editor.v2 == false)
 			for (var r in data.result) {
 
 				var res = data.result[r];
@@ -306,6 +310,8 @@ var Editor = function(id, name, valid, code, folder, level) {
 
 	this.test = function() {
 
+		_.log(this)
+
 		// Save before
 		if (this.modified) {
 
@@ -313,13 +319,24 @@ var Editor = function(id, name, valid, code, folder, level) {
 			this.save();
 			return;
 		}
-
-		// Sauvegardé et erreur, on teste pas ça !
-		if (this.error) {
-			return;
+		
+		if (!this.v2) {
+			// Sauvegardé et erreur, on teste pas ça !
+			if (this.error) {
+				return;
+			}
+			LW.pages.editor.test(_testEvent)
+		} else {
+			var content = this.editor.getValue()
+			_.post('leekscript/execute', {code: content}, function(data) {
+				if (data.success) {
+					var result = JSON.parse(data.result)
+					_.toast(result.res)
+				} else {
+					_.toast(data.error)
+				}
+			})
 		}
-
-		LW.pages.editor.test(_testEvent)
 	}
 
 	this.cursorChange = function() {

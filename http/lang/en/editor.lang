@@ -36,6 +36,7 @@ n_characters		%s characters
 n_cores				%s cores
 name_already_exists		The name <b>%s</b> is already used!
 new					New AI
+new_v2				New V2 AI
 new_desc			Create a new AI
 n_lines				%s lines
 opponent_agility		Agility

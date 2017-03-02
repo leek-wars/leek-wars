@@ -61,6 +61,7 @@ LW.pages.editor.init = function(params, $scope, $page) {
 			var ai = ais[i]
 			editors[ai.id] = new Editor(ai.id, ai.name, ai.valid, "", ai.folder)
 			editors[ai.id].path = get_full_path(ai)
+			editors[ai.id].v2 = ai.v2
 		}
 
 		var drag_and_drop = function(item) {
@@ -337,13 +338,15 @@ LW.pages.editor.init = function(params, $scope, $page) {
 		}
 
 		// New button
-		$('#new-button').click(function() {
+		var new_function = function(v2) {
 			var current_folder = get_current_folder()
-			_.post('ai/new', {folder_id: current_folder}, function(data) {
+			_.post('ai/new', {folder_id: current_folder, v2: v2}, function(data) {
 				if (data.success) {
 					var ai = data.ai
 					ai.valid = true
+					ai.v2 = v2
 					editors[ai.id] = new Editor(ai.id, ai.name, true, ai.code)
+					editors[ai.id].v2 = v2
 					items[ai.id] = ai
 					var tab = $("<div id='" + ai.id + "' class='item ai' folder='" + ai.folder + "' draggable='true' ><div class='label'><span class='text'>" + ai.name + "</span><div class='edit'/></div></div>")
 					insert_element(tab, $('#ai-list #' + current_folder))
@@ -359,6 +362,12 @@ LW.pages.editor.init = function(params, $scope, $page) {
 					$('.CodeMirror').css('font-size', _fontSize)
 				}
 			})
+		}
+		$('#new-button').click(function() {
+			new_function(false)
+		})
+		$('#new-v2-button').click(function() {
+			new_function(true)
 		})
 
 		// New folder
