@@ -626,3 +626,5 @@ changelog_195	# Refonte de l'interface de test : ajouts d'options avancées pour
 				# Corrections relatifs à la barre de progression dans l'affichage du combat (merci à artorias).
 				# Reconnection à la Battle Royale après de l'actualisation de la page.
 				# Correction de l'indentation des codes d'exemple dans le tutoriel.
+changelog_196	# Ajout d'une console LeekScript v2 (bêta)
+				# Possibilité d'écrire des IA v2 dans l'éditeur (bêta)

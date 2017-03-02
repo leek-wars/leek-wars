@@ -1,3 +1,9 @@
+forum_topic			Forum topic
+popup_ok			OK :)
+see_all_changes		See all changes at <a href='/changelog'>leekwars.com/changelog</a>
+title				Changelog
+version_n			Version %s
+version_online		Version <b>%s</b> available!
 changelog_100			# Version 1.0 available, end of the beta!
 						# All the players registered before the 6 of June receive the Beta Tester trophy.
 changelog_101			# Sale of weapon added => give back 80% of the initial price.
@@ -141,11 +147,7 @@ changelog_187
 changelog_188
 changelog_189
 changelog_190
-changelog_191			
+changelog_191
 changelog_192
-forum_topic			Forum topic
-popup_ok			OK :)
-see_all_changes		See all changes at <a href='/changelog'>leekwars.com/changelog</a>
-title				Changelog
-version_n			Version %s
-version_online		Version <b>%s</b> available!
+changelog_196			# Added a LeekScript v2 console (beta)
+						# Added the possibility of writing v2 AIs in the editor (beta)
