@@ -626,6 +626,10 @@ $(document).ready(function() {
 				dismissable: false,
 				draggable: true
 			})
+			consolePopup.find('.expand').click(function() {
+				_.popupWindow("/console", "title", 650, 360)
+				consolePopup.dismiss()
+			})
 			var consoleShown = false
 			var console = new ConsoleController(consolePopup.find('.console'))
 			$("#console").click(function(e) {

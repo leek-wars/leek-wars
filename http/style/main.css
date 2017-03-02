@@ -2958,6 +2958,10 @@ textarea.autogrow {
 	overflow-x: hidden;
 	padding: 5px;
 }
+.console.fullscreen {
+	width: calc(100% - 10px);
+	height: calc(100% - 10px);
+}
 .console .lines .line {
 	padding: 2px 4px;
 	word-wrap: break-word;
