@@ -49,4 +49,7 @@ var ConsoleController = function(console_element) {
 	this.scroll_down = function() {
 		console_element[0].scrollTop = console_element[0].scrollHeight
 	}
+	this.set_content = function(content) {
+		input.val(content)
+	}
 }

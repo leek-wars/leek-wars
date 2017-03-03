@@ -640,6 +640,15 @@ $(document).ready(function() {
 				}
 				console.focus()
 			})
+			consolePopup.find('.random').click(function() {
+				_.get('leekscript/random', function(data) {
+					if (data.success) {
+						console.set_content(data.code)
+					} else {
+						_.toast(data.error)
+					}
+				})
+			})
 
 			$('#menu-button').click(function() {
 				$('body').toggleClass('menu-collapsed')
