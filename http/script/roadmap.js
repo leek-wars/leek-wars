@@ -23,7 +23,7 @@ LW.pages.roadmap.init = function(params, $scope, $page) {
 			title: "Mars 1.96",
 			changes: [
 				{text: "Historiques de combat détaillés", ok: false},
-				{text: "Codes LeekScript V2 dans l'éditeur + console LeekScript", ok: false},
+				{text: "Codes LeekScript V2 dans l'éditeur + console LeekScript", ok: true},
 				{text: "[secret][secondaire] lié à la page combat", ok: false},
 				{text: "[secret][important] lié aux trophées", ok: false}
 			]
