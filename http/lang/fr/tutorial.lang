@@ -677,10 +677,9 @@ loops_27			for (var cle : var valeur in tableau) {
 						debug("clé " + cle + " => " + valeur);
 					}
 loops_3			La boucle while
-loops_4			La boucle while (tant que) a une syntaxe similaire au if vu dans le chapitre précédent. Elle permet d’exécuter
-	un bloc d’instruction tant qu’une condition est remplie.
-loops_5			La boucle while (tant que) a une syntaxe similaire au if vu dans le chapitre précédent. Elle permet d’exécuter
-	un bloc d’instruction tant qu’une condition est remplie.
+loops_4			La boucle while (tant que) a une syntaxe similaire au if vu dans le chapitre
+				précédent. Elle permet d’exécuter un bloc d’instruction tant qu’une condition
+				est remplie.
 loops_6			Voici un exemple :
 loops_7			// On déclare un compteur qu’on initialise à 0
 				var compteur = 0;

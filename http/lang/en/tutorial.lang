@@ -572,8 +572,9 @@ loops_27			for (var key : var value in array) {
 						debug("key " + key + " => " + value);
 					}
 loops_3			The while loop
-loops_4			The syntax of the while loop is similar to the syntax of the condition "if" of the preceding chapter. It allows the execution of a block of instruction as long as a condition is satisfied.
-loops_5			The syntax of the while loop is similar to the syntax of the condition "if" of the preceding chapter. It allows the execution of a block of instruction as long as a condition is filled.
+loops_4			The syntax of the while loop is similar to the syntax of the condition "if" of
+				the preceding chapter. It allows the execution of a block of instruction as
+				long as a condition is satisfied.
 loops_6			Here is an example:
 loops_7			// We declare a counter of initial value 0
 				var counter = 0;
