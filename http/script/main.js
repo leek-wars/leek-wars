@@ -980,6 +980,8 @@ LW.disconnect = function() {
 	$('#menu #team-tab').hide()
 
 	LW.chat.messages = {}
+
+	window.location.reload()
 }
 
 LW.token = function() {
