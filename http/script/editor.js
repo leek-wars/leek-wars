@@ -485,8 +485,8 @@ LW.pages.editor.init = function(params, $scope, $page) {
 		if (isNaN(_fontSize)) _fontSize = DEFAULT_FONT_SIZE
 		$('.CodeMirror').css('font-size', _fontSize)
 
-		_theme = localStorage['editor/theme']
-		$('#editor-page').addClass(_theme)
+		_theme = 'editor/theme' in localStorage ? localStorage['editor/theme'] : _theme
+		$('#editor-page').addClass('theme-' + _theme)
 
 		// Popup des paramètres
 		var settingsPopup = new _.popup.new('editor.settings_popup', {}, 600)
@@ -530,12 +530,12 @@ LW.pages.editor.init = function(params, $scope, $page) {
 			}
 		})
 
-		settingsPopup.find('#settings-theme #' + _theme).prop('checked', true)
+		settingsPopup.find('#settings-theme #theme-' + _theme).prop('checked', true)
 		settingsPopup.find('#settings-theme input').click(function() {
-			$('#editor-page').removeClass(_theme)
+			$('#editor-page').removeClass('theme-' + _theme)
 			_theme = $(this).val()
 			localStorage['editor/theme'] = _theme
-			$('#editor-page').addClass(_theme)
+			$('#editor-page').addClass('theme-' + _theme)
 		})
 
 		$('#editor-settings-button').click(function(e) {
