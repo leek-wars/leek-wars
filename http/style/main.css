@@ -206,10 +206,14 @@ textarea {
 }
 
 #notifs-menu, #messages-menu {
-	width: 400px;
 	position: relative;
+}
+
+#messages-menu .messages,
+#notifs-menu .notifications {
 	max-height: 360px;
-	overflow: auto;
+	overflow-y: auto;
+	overflow-x: hidden;
 }
 
 #notifs-arrow, #messages-arrow {
