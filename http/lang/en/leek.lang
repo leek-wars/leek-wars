@@ -100,7 +100,7 @@ science_description				Science increase boosts and prevent shackles
 see_tournament					See the tournament
 select_a_hat					Select a hat
 show_registers					Show registers
-stats               Statistics
+statistics          			Statistics
 strength						Strength
 strength_cost					1 capital ⇔ 1 strength
 strength_description			Strength increases the damage you deal with your weapons and chips
