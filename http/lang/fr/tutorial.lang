@@ -2,18 +2,19 @@ advanced			Avancé
 advanced_include			Les inclusions
 advanced_include_1			La fonction <b>include</b> permet d'inclure une IA dans une autre. Concrètement, si dans une IA "IA Principale", vous écrivez :
 advanced_include_10			// ne fonctionne pas
-var ias = ['IA_1', 'IA_2', 'IA_3'];
-for (var ia in ias) {
-	include(ia);
-}
+							var ias = ['IA_1', 'IA_2', 'IA_3'];
+							for (var ia in ias) {
+								include(ia);
+							}
 advanced_include_11			Pourquoi ?
 advanced_include_12			La raison est que le compilateur du LeekScript réalise les inclusions à la compilation uniquement. L'inclusion d'une IA à l'éxécution (exemple : si l'ennemi est proche de moi, inclure "IA_Fuite") n'est pas supporté. Les IA incluses dans les autres doivent être déterminées à la compilation, c'est pourquoi la seule façon d'include une ia est :
 advanced_include_13			// Fonctionne
-include("chaine_de_caractères");
+							include("chaine_de_caractères");
 advanced_include_2			include("Fonctions");
 advanced_include_3			Le contenu de l'IA se nommant "Fonctions" est recopié dans l'IA "IA Principale", ce qui vous permet de séparer différentes parties de votre code dans différentes IA.
 	Un exemple : avoir une IA principale, appelée "IA Principale", une IA "Déplacement" contenant plusieurs fonctions complexes pour se déplacer, une IA "attaque" contenant des fonctions utiles pour attaquer, une IA "Paroles", avec des fonctions permettant de parler etc.
-advanced_include_4			Séparer son code par thème dans différentes IAs, des modules, permet de les réutiliser plus facilement ensuite. Si vous avez deux poireaux, il vous suffit de faire deux IA incluant toutes les deux les différents modules, sans devoir recopier le code dans les deux IA.
+advanced_include_4			Séparer son code par thème dans différentes IAs, des modules, permet de les réutiliser plus facilement ensuite. Si vous avez deux poireaux, il vous suffit de faire deux IA incluant toutes les deux les
+							différents modules, sans devoir recopier le code dans les deux IA.
 advanced_include_5			Limites de la fonctions include
 advanced_include_6			L'utilisation de la fonction include est limitée en LeekScript, en effet il est impossible d'inclure dynamiquement une autre IA. Les codes ci-dessous ne fonctionnent pas :
 advanced_include_7			// ne fonctionne pas
@@ -98,8 +99,8 @@ advanced_tern_7			Les deux codes si-dessus sont équivalents. Les ternaires perm
 advanced_triple_equal			L'opérateur ===
 advanced_triple_equal_1			L'opérateur <b>===</b> permet de comparer deux valeurs, ainsi que leur type. Il est plus restrictif que l'opérateur <b>==</b>.
 advanced_triple_equal_2			<tr><th>Opérateur</th><th>Description</th></tr>
-		<tr><td>===</td><td>Vérifie si les deux opérandes sont de même valeur et de même type</td></tr>
-		<tr><td>!==</td><td>Vérifie si les deux opérandes ne sont pas de même valeur ou ne sont pas de même type</td></tr>
+								<tr><td>===</td><td>Vérifie si les deux opérandes sont de même valeur et de même type</td></tr>
+								<tr><td>!==</td><td>Vérifie si les deux opérandes ne sont pas de même valeur ou ne sont pas de même type</td></tr>
 advanced_triple_equal_3			Le fonctionnement de l'opérateur <b>===</b> est très simple :
 advanced_triple_equal_4			Celui de <b>==</b>, en revanche, est plus complexe, car il tente d'effectuer certaines conversions :
 advanced_triple_equal_5			Le fonctionnement global du <b>==</b> est de convertir les valeurs quand ces deux dernières ne sont pas de même type, par exemple, "true" == 1,
@@ -111,12 +112,12 @@ arr_1			Il y a un autre type de variable que nous avons rapidement évoqué tout
 	également un nom, mais il est possible de leur associer plusieurs valeurs, elles sont alors rangées dans des “cases”.
 arr_10			Dans les deux cas le tableau obtenu peut être représenté ainsi :
 arr_11			<tr><th>Indice</th><th>Valeur</th></tr>
-		<tr><td>0</td><td>Poireau</td></tr>
-		<tr><td>1</td><td>Lama</td></tr>
-		<tr><td>2</td><td>Autruche</td></tr>
-		<tr><td>3</td><td>Artichaut</td></tr>
+				<tr><td>0</td><td>Poireau</td></tr>
+				<tr><td>1</td><td>Lama</td></tr>
+				<tr><td>2</td><td>Autruche</td></tr>
+				<tr><td>3</td><td>Artichaut</td></tr>
 arr_12			On peut accéder à une case d’un tableau en indiquant l’indice de la case à laquelle
-	on souhaite accéder entre crochets :
+				on souhaite accéder entre crochets :
 arr_13			// Déclaration du tableau
 				var monTableau = ["Poireau", "Lama", "Autruche", "Artichaut"];
 				debug(monTableau[1]); // Affichera Lama
@@ -200,16 +201,16 @@ cond_22			Si vous ne voulez exécuter qu’une seule instruction dans votre bloc
 	cette instruction sans accolade :
 cond_23			Pour un if par exemple :
 cond_24			var a = 1;
-if (a == 1) debug("A est égal à 1");
+				if (a == 1) debug("A est égal à 1");
 cond_25			Ou bien pour un if else :
 cond_26			if (valeur > 5) debug("valeur supérieur à 5")
-else debug("valeur inférieure ou égale à 5");
+				else debug("valeur inférieure ou égale à 5");
 cond_27			Cette écriture permet de gagner un peu en lisibilité.
 cond_28			Il est également possible d’écrire :
 cond_29			var a = 1;
-if (a) debug("A est vrai");
+				if (a) debug("A est vrai");
 cond_3			Pour utiliser une condition, il faut écrire le mot clé if (si), une condition entre parenthèses,
-	puis ouvrir une accolade, écrire les instructions à exécuter lorsque la condition est vérifiée, puis refermer l’accolade.
+				puis ouvrir une accolade, écrire les instructions à exécuter lorsque la condition est vérifiée, puis refermer l’accolade.
 cond_30			Cette opération va vérifier si la valeur de a est vraie.
 cond_31			Si a n'est pas un <b>booléen</b> :
 cond_32			Si a est un <b>nombre</b>, toute valeur différente de 0 sera considérée comme vraie.
@@ -236,11 +237,11 @@ cond_9			var a = 1;
 					debug("a n’est pas inférieur à 10");
 				}
 conditions			Les conditions
-difficulty_child			Enfant : 30 à 40% de vos caractéristiques (force, agilité, vie..) et 50% de vos PT et PM
+difficulty_child		Enfant : 30 à 40% de vos caractéristiques (force, agilité, vie..) et 50% de vos PT et PM
 difficulty_easy			Facile : 50 à 75% de vos caractéristiques et 80% de vos PT, PM
 difficulty_evil			Diabolique : 200 à 250% de vos caractéristiques et 160% de vos PT, PM
 difficulty_hard			Difficile : 130 à 160% de vos caractéristiques et 130% de vos PT, PM
-difficulty_medium			Moyen : 95 à 110% de vos caractéristiques et 100% de vos PT, PM
+difficulty_medium		Moyen : 95 à 110% de vos caractéristiques et 100% de vos PT, PM
 do_a_test_fight			Faire un combat de test
 doc_1			Un dernier point important à aborder avant de commencer ce cours est la documentation. Toutes les fonctions
     et constantes disponibles dans le leekScript sont regroupées sur une page : la documentation.
@@ -595,7 +596,7 @@ fun_45			var ma_fonction = function() { return "Test"; };
 fun_46			Pour utiliser une fonction anonyme, c'est exactement comme utiliser une fonction que l'on aurait mise dans une variable :
 fun_47			var ma_fonction = function() { return "Test"; };
 
-ma_fonction();
+				ma_fonction();
 fun_48			Si par exemple on a une fonction qui prend en paramètre une autre fonction, on peut lui passer directement une fonction anonyme, comme par exemple :
 fun_49			function arrayMap(tableau, fonction) {
 					var r = [];
