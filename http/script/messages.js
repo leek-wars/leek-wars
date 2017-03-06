@@ -47,7 +47,7 @@ LW.pages.messages.init = function(params, $scope, $page) {
 
 				_conversation = 0
 				$('#conversations-list').prepend("<div class='conversation-preview selected' conv='0'>" +
-					"<img src='" + LW.staticURL + "image/no_avatar.png'>" +
+					"<img class='avatar' src='" + LW.staticURL + "image/no_avatar.png'>" +
 					"<div class='content'>" + _.lang.get('messages', 'new_message') + "</div>" +
 					"</div>")
 			}
