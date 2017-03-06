@@ -238,7 +238,8 @@ func_getCell_2_return		Le numéro de la cellule où se trouve le poireau <b>leek
 func_getCellContent			Retourne le contenu d'une cellule d'id <b>cell</b>.
 func_getCellContent_arg_1	L'id de la cellule dont le contenu sera retourné.
 func_getCellContent_return	Le contenu de la cellule <b>cell</b>
-func_getCellDistance		Retourne la distance entre deux cellules <b>cell1</b> et <b>cell2</b>. <br />La distance retournée est exprimée en nombre de cellules, et ne tient pas compte des divers obstacles entre les deux cellules. Pour obtenir la distance à vol d'oiseau, voir #getDistance et pour obtenir la distance du chemin entre les deux cellules en évitant les obstacles, voir #getPathLength.
+func_getCellDistance		Retourne la distance entre deux cellules <b>cell1</b> et <b>cell2</b>. <br />La distance retournée est exprimée en nombre de cellules, et ne tient pas compte des divers obstacles entre les deux cellules.
+							Pour obtenir la distance à vol d'oiseau, voir #getDistance et pour obtenir la distance du chemin entre les deux cellules en évitant les obstacles, voir #getPathLength.
 func_getCellDistance_arg_1	L'id de la cellule de départ.
 func_getCellDistance_arg_2	L'id de la cellule d'arrivée.
 func_getCellDistance_return	La distance entre les deux cellules <b>cell1</b> et <b>cell2</b>.
@@ -587,8 +588,10 @@ func_getPath_2_arg_3	Le tableau des cellules à ignorer.
 func_getPath_2_return	Le tableau contenant les cellules constituant le chemin entre les deux cellules.
 func_getPath_arg_1		La cellule de départ.
 func_getPath_arg_2		La cellule d'arrivée.
-func_getPathLength		Renvoie la longueur du chemin entre deux cellules <b>cell1</b> et <b>cell2</b>, en esquivant les obstacles. Cette fonction équivaut à <i>count(getPath(<b>cell1</b>, <b>cell2</b>))</i>.<br /><br />Pour obtenir la distance à vol d'oiseau, utilisez #getDistance, et pour obtenir la distance entre deux cellules sans tenir compte des obstacles, utilisez #getCellDistance.
-func_getPathLength_2		Renvoie la longueur du chemin entre deux cellules <b>cell1</b> et <b>cell2</b>, en esquivant les obstacles, en ignorant les cellules contenues dans le tableau <b>ignoredCells</b>. Si un joueur ce situe sur une cellule ignorée, le chemin peut passer sur lui.
+func_getPathLength		Renvoie la longueur du chemin entre deux cellules <b>cell1</b> et <b>cell2</b>, en esquivant les obstacles. Cette fonction équivaut à <i>count(getPath(<b>cell1</b>, <b>cell2</b>))</i>.<br /><br />
+						Pour obtenir la distance à vol d'oiseau, utilisez #getDistance, et pour obtenir la distance entre deux cellules sans tenir compte des obstacles, utilisez #getCellDistance.
+func_getPathLength_2		Renvoie la longueur du chemin entre deux cellules <b>cell1</b> et <b>cell2</b>, en esquivant les obstacles, en ignorant les cellules contenues dans le tableau <b>ignoredCells</b>.
+							Si un joueur ce situe sur une cellule ignorée, le chemin peut passer sur lui.
 func_getPathLength_2_arg_1	La cellule de départ.
 func_getPathLength_2_arg_2	La cellule d'arrivée.
 func_getPathLength_2_arg_3	Le tableau des cellules à ignorer.
@@ -706,28 +709,29 @@ func_getWeaponEffectiveArea_arg_1			La cellule cible.
 func_getWeaponEffectiveArea_return			Le tableau contenant les ids de toutes les cellules qui seront affectées.
 func_getWeaponEffects			Renvoie les effets de l'arme <b>weapon</b>.
 func_getWeaponEffects_arg_1			L'id de l'arme dont les effets seront retournés.
-func_getWeaponEffects_return			Un tableau contenant les effets de l'arme <b>weapon</b>. Chaque effet est lui-même un tableau de la forme
-	[type, min, max, turns, targets].
-	<ul>
-	<li><b>type</b> est une constante parmis les constantes d'effet : #EFFECT_DAMAGE, #EFFECT_HEAL, #EFFECT_ABSOLUTE_SHIELD, #EFFECT_RELATIVE_SHIELD, #EFFECT_DEBUFF, #EFFECT_BUFF_FORCE, #EFFECT_BUFF_AGILITY, #EFFECT_BUFF_MP, #EFFECT_BUFF_TP etc.</li>
-	<li><b>min</b> et <b>max</b> sont la valeur minimum et maximum de l'effet (comme indiqué dans le marché).</li>
-	<li><b>turns</b> est la durée de l'effet en nombre de tours.</li>
-	<li><b>targets</b> représente les joueurs qui seront touchés par cet effet dans la zone. Il s'agit d'une combinaison binaire des constantes :
-		<ul>
-			<li> #EFFECT_TARGET_ALLIES : Affecte les alliés</li>
-			<li> #EFFECT_TARGET_ENEMIES : Affecte les ennemis</li>
-			<li> #EFFECT_TARGET_CASTER : Affecte toujours le lanceur</li>
-			<li> #EFFECT_TARGET_NOT_CASTER : N'affecte jamais le lanceur</li>
-<li> #EFFECT_TARGET_SUMMONS : Affecte les invocations du lanceur</li>
-</ul>
-		On peut lire cette valeur de la manière suivante :<br>
-		<code>if (targets & EFFECT_TARGET_ALLIES) debug('Affecte les alliés');
-if (targets & EFFECT_TARGET_ENEMIES) debug('Affecte les ennemis');
-if (targets & EFFECT_TARGET_CASTER) debug('Affecte toujours le lanceur');
-if (targets & EFFECT_TARGET_NOT_CASTER) debug('N'affecte jamais le lanceur');
-if (targets & EFFECT_TARGET_SUMMONS) debug('Affecte les invocations');</code>
-</li>
-	</ul>
+func_getWeaponEffects_return		Un tableau contenant les effets de l'arme <b>weapon</b>. Chaque effet est lui-même un tableau de la forme
+									[type, min, max, turns, targets].
+									<ul>
+										<li><b>type</b> est une constante parmis les constantes d'effet : #EFFECT_DAMAGE, #EFFECT_HEAL, #EFFECT_ABSOLUTE_SHIELD, #EFFECT_RELATIVE_SHIELD, #EFFECT_DEBUFF, #EFFECT_BUFF_FORCE,
+										#EFFECT_BUFF_AGILITY, #EFFECT_BUFF_MP, #EFFECT_BUFF_TP etc.</li>
+										<li><b>min</b> et <b>max</b> sont la valeur minimum et maximum de l'effet (comme indiqué dans le marché).</li>
+										<li><b>turns</b> est la durée de l'effet en nombre de tours.</li>
+										<li><b>targets</b> représente les joueurs qui seront touchés par cet effet dans la zone. Il s'agit d'une combinaison binaire des constantes :
+										<ul>
+											<li> #EFFECT_TARGET_ALLIES : Affecte les alliés</li>
+											<li> #EFFECT_TARGET_ENEMIES : Affecte les ennemis</li>
+											<li> #EFFECT_TARGET_CASTER : Affecte toujours le lanceur</li>
+											<li> #EFFECT_TARGET_NOT_CASTER : N'affecte jamais le lanceur</li>
+											<li> #EFFECT_TARGET_SUMMONS : Affecte les invocations du lanceur</li>
+										</ul>
+										On peut lire cette valeur de la manière suivante :<br>
+										<code>if (targets & EFFECT_TARGET_ALLIES) debug('Affecte les alliés');
+										if (targets & EFFECT_TARGET_ENEMIES) debug('Affecte les ennemis');
+										if (targets & EFFECT_TARGET_CASTER) debug('Affecte toujours le lanceur');
+										if (targets & EFFECT_TARGET_NOT_CASTER) debug('N'affecte jamais le lanceur');
+										if (targets & EFFECT_TARGET_SUMMONS) debug('Affecte les invocations');</code>
+										</li>
+									</ul>
 func_getWeaponFailure			Renvoie le pourcentage de risque d'échec de l'arme <b>weapon</b>.
 func_getWeaponFailure_arg_1			L'id de l'arme dont le pourcentage d'échec sera renvoyé.
 func_getWeaponFailure_return			Pourcentage d'échec de l'arme <b>weapon</b>, un nombre entier entre <b>0</b> et <b>100</b>.
@@ -772,7 +776,8 @@ func_inArray			Détermine si l'élément <b>element</b> est dans le tableau <b>a
 func_inArray_arg_1			Le tableau de recherche.
 func_inArray_arg_2			L'élément à rechercher.
 func_inArray_return			<i>vrai</i> si l'élément est dans le tableau, <i>faux</i> sinon.
-func_include			Inclut l'IA de nom <b>ai</b> dans l'IA courante. <br><br><b>Attention</b>, la fonction include doit être appelée uniquement dans le bloc principal, et son paramètre doit être une chaîne écrite directement dans le code. Pour plus d'informations, voir la section dans le tutoriel : <a href='http://leekwars.com/tutorial#includes'>http://leekwars.com/tutorial#includes</a>.
+func_include			Inclut l'IA de nom <b>ai</b> dans l'IA courante. <br><br><b>Attention</b>, la fonction include doit être appelée uniquement dans le bloc principal, et son paramètre doit être une chaîne écrite directement
+						dans le code. Pour plus d'informations, voir la section dans le tutoriel : <a href='http://leekwars.com/tutorial#includes'>http://leekwars.com/tutorial#includes</a>.
 func_include_arg_1			Le nom de l'IA à inclure.
 func_indexOf			Détermine la position de la première occurrence de la chaîne <b>search</b> dans la chaîne <b>string</b>.
 func_indexOf_2			Détermine la position de la première occurrence de la chaîne <b>search</b> dans la chaîne <b>string</b>, à partir de la position <b>start</b>.
@@ -1030,11 +1035,15 @@ func_sendTo			Envoie un message au poireau d'id <b>leek</b>.
 func_sendTo_arg_1			L'id du poireau auquel sera envoyé le message.
 func_sendTo_arg_2			Le type du message à envoyer (voir les constantes MESSAGE_*).
 func_sendTo_arg_3			Les paramètres du message, qui peuvent être n'importe quelle valeur.
-func_setRegister			Stocke la valeur <b>value</b> dans le registre de clé <b>key</b>. La clé et la valeur sont des chaînes qui doivent contenir respectivement <i>100</i> et <i>5000</i> caractères au maximum.
-Un poireau peut posséder au maximum <i>100</i> registres, le stockage dans un nouveau registre ne fonctionnera pas si tous les registres sont déjà occupés.
-func_setRegister_arg_1			La clé du registre où stocker la valeur.
-func_setRegister_arg_2			La valeur à stocker.
-func_setRegister_return			<i>true</i> si l'opération s'est bien passée, <i>false</i> sinon.
+func_setRegister			Stocke la valeur <b>value</b> dans le registre de clé <b>key</b>.
+							La clé et la valeur sont des chaînes qui doivent contenir
+							respectivement <i>100</i> et <i>5000</i> caractères au maximum. Un
+							poireau peut posséder au maximum <i>100</i> registres, le stockage
+							dans un nouveau registre ne fonctionnera pas si tous les registres
+							sont déjà occupés.
+func_setRegister_arg_1		La clé du registre où stocker la valeur.
+func_setRegister_arg_2		La valeur à stocker.
+func_setRegister_return		<i>true</i> si l'opération s'est bien passée, <i>false</i> sinon.
 func_setWeapon			Équipe l'arme <b>weapon</b> sur votre poireau.
 func_setWeapon_arg_1			Id de l'arme à équiper.
 func_shift			Supprime la première case du tableau <b>array</b> et renvoie l'élément correspondant.
@@ -1056,12 +1065,12 @@ func_sin			Calcule le sinus de l'angle <b>angle</b> passé en paramètre
 func_sin_arg_1			L'angle dont le sinus sera calculé
 func_sin_return			Retourne le sinus de l'angle <b>angle</b>
 func_sort			Trie le tableau <b>array</b> selon l'ordre suivant :
-<ul>
-<li>Tous les booléens (d'abord faux puis vrais)</li>
-<li>Tous les nombres (classés du plus petit au plus grand)</li>
-<li>Toutes les chaînes (dans l'ordre alphabétique)</li>
-<li>Tous les éléments null.</li>
-</ul>
+					<ul>
+						<li>Tous les booléens (d'abord faux puis vrais)</li>
+						<li>Tous les nombres (classés du plus petit au plus grand)</li>
+						<li>Toutes les chaînes (dans l'ordre alphabétique)</li>
+						<li>Tous les éléments null.</li>
+					</ul>
 func_sort_2			Trie le tableau <b>array</b> par ordre croissant ou décroissant. Voir #sort pour l'ordre de tri.
 func_sort_2_arg_1			Tableau à trier.
 func_sort_2_arg_2			#SORT_ASC pour trier <b>array</b> dans l'ordre croissant ou #SORT_DESC pour le trier dans l'ordre décroissant.
@@ -1083,11 +1092,11 @@ func_startsWith_arg_1			Chaîne de recherche.
 func_startsWith_arg_2			Préfixe recherché.
 func_startsWith_return			Vrai si la <b>string</b> commence par <b>prefix</b>.
 func_string			Convertit une valeur en chaîne de caractères.<br>
-		Si la valeur est déjà une chaîne, elle est renvoyée.<br>
-		Si la valeur est nombre x, "x" est renvoyé.<br>
-		Si la valeur est un tableau, une chaîne sous la forme "[clé1 : valeur1, clé2 : valeur2, ...]" est renvoyée.<br>
-		Si la valeur est un booléen, "true" et "false" sont respectivement renvoyées pour les valeurs true et false.<br>
-		Si la valeur est null, "null" est renvoyée.
+					Si la valeur est déjà une chaîne, elle est renvoyée.<br>
+					Si la valeur est nombre x, "x" est renvoyé.<br>
+					Si la valeur est un tableau, une chaîne sous la forme "[clé1 : valeur1, clé2 : valeur2, ...]" est renvoyée.<br>
+					Si la valeur est un booléen, "true" et "false" sont respectivement renvoyées pour les valeurs true et false.<br>
+					Si la valeur est null, "null" est renvoyée.
 func_string_arg_1			La valeur à convertir en chaîne de caractères.
 func_string_return			La chaîne convertie.
 func_subArray			Retourne un sous-tableau de <b>array</b> commençant à la position <b>start</b> et finissant à la position <b>end</b>.
@@ -1152,29 +1161,29 @@ func_useChipOnCell_arg_1			Chip à utiliser.
 func_useChipOnCell_arg_2			Cellule cible.
 func_useChipOnCell_return			Une valeur supérieure à 0 si l'attaque a été lancée.
 func_useChip_return			Les valeurs de retour de useChip sont :<br>
-	<ul>
-		<li>#USE_CRITICAL, en cas de coup critique</li>
-		<li>#USE_SUCCESS, en cas de réussite</li>
-		<li>#USE_FAILED, en cas de d'échec</li>
-		<li>#USE_INVALID_TARGET, si la cible n'existe pas</li>
-		<li>#USE_NOT_ENOUGH_TP, si votre poireau n'a pas assez de TP</li>
-		<li>#USE_INVALID_COOLDOWN, si la puce n'est pas encore utilisable</li>
-		<li>#USE_INVALID_POSITION, si la portée est mauvaise ou la ligne de vue n'est pas dégagée</li>
-	</ul>
+							<ul>
+								<li>#USE_CRITICAL, en cas de coup critique</li>
+								<li>#USE_SUCCESS, en cas de réussite</li>
+								<li>#USE_FAILED, en cas de d'échec</li>
+								<li>#USE_INVALID_TARGET, si la cible n'existe pas</li>
+								<li>#USE_NOT_ENOUGH_TP, si votre poireau n'a pas assez de TP</li>
+								<li>#USE_INVALID_COOLDOWN, si la puce n'est pas encore utilisable</li>
+								<li>#USE_INVALID_POSITION, si la portée est mauvaise ou la ligne de vue n'est pas dégagée</li>
+							</ul>
 func_useWeapon			Utilise l'arme sélectionnée sur le poireau <b>leek</b>.
 func_useWeapon_arg_1			Poireau ciblé.
 func_useWeaponOnCell			Utilise l'arme sélectionnée sur la cellule <b>cell</b>.
 func_useWeaponOnCell_arg_1			Cellule ciblée.
 func_useWeaponOnCell_return			Une valeur supérieure à 0 si l'attaque a été lancée.
 func_useWeapon_return			Les valeurs de retour de useWeapon sont :<br>
-	<ul>
-		<li>#USE_CRITICAL, en cas de coup critique</li>
-		<li>#USE_SUCCESS, en cas de réussite</li>
-		<li>#USE_FAILED, en cas de d'échec</li>
-		<li>#USE_INVALID_TARGET, si la cible n'existe pas</li>
-		<li>#USE_NOT_ENOUGH_TP, si votre poireau n'a pas assez de TP</li>
-		<li>#USE_INVALID_POSITION, si la portée est mauvaise ou la ligne de vue n'est pas dégagée</li>
-	</ul>
+								<ul>
+									<li>#USE_CRITICAL, en cas de coup critique</li>
+									<li>#USE_SUCCESS, en cas de réussite</li>
+									<li>#USE_FAILED, en cas de d'échec</li>
+									<li>#USE_INVALID_TARGET, si la cible n'existe pas</li>
+									<li>#USE_NOT_ENOUGH_TP, si votre poireau n'a pas assez de TP</li>
+									<li>#USE_INVALID_POSITION, si la portée est mauvaise ou la ligne de vue n'est pas dégagée</li>
+								</ul>
 func_weaponNeedLos			Renvoie si l'arme <b>weapon</b> a besoin d'une ligne de vue pour tirer.
 func_weaponNeedLos_arg_1			L'id de l'arme à tester.
 func_weaponNeedLos_return			<i>true</i> si l'arme <b>weapon</b> a besoin d'une ligne de vue pour tirer, <i>false</i> sinon.
