@@ -56,45 +56,46 @@ func_arrayConcat_arg_1			First array.
 func_arrayConcat_arg_2			Second array.
 func_arrayConcat_return			Resulting array.
 func_arrayFilter			Returns an array containing all (key: value) pairs from given <b>array</b> for which <b>callback</b> function returned true. If the <b>callback</b> function is single-input, it is
-applied on the array's values, if the <b>callback</b>
-function requires two inputs, it is applied on the array's (key: value) pairs.
+							applied on the array's values, if the <b>callback</b>
+							function requires two inputs, it is applied on the array's (key: value) pairs.
 func_arrayFilter_arg_1			Source array.
 func_arrayFilter_arg_2			Filtering function.
 func_arrayFilter_return			Resulting array.
 func_arrayFlatten			Returns an array containing all elements contained in given <b>array</b>. All elements within a sub-array are recursively exported to the new array.
-<code>var tableau = [1, 2, [3, 4], 5, [6]];
-debug(arrayFlatten(tableau)); // [1,2,3,4,5,6]</code>
+							<code>var tableau = [1, 2, [3, 4], 5, [6]];
+							debug(arrayFlatten(tableau)); // [1,2,3,4,5,6]</code>
 func_arrayFlatten_2			Returns an array containing all elements contained in given <b>array</b>. All elements within a sub-array are recursively exported to the new array, stopping given recursion <b>depth</b>.
-<code>var tableau = [1, 2, [3, [4]], 5, [6]];
-debug(arrayFlatten(tableau,1)); // [1,2,3,[4],5,6]</code>
+							<code>var tableau = [1, 2, [3, [4]], 5, [6]];
+							debug(arrayFlatten(tableau,1)); // [1,2,3,[4],5,6]</code>
 func_arrayFlatten_2_arg_1			Source array.
 func_arrayFlatten_2_arg_2			Maximun recursion depth.
 func_arrayFlatten_2_return			Resulting array.
 func_arrayFlatten_arg_1			Source array.
 func_arrayFlatten_return			Resulting (flat) array.
 func_arrayFoldLeft			Reduces given <b>array</b> [v1, v2, ..., vn] from the left and starting with <b>v0</b>, through successive application of <b>f</b> function. Is equivalent to:
-<code>f(f(f(v0, v1), v2), ...).</code>
+							<code>f(f(f(v0, v1), v2), ...).</code>
 func_arrayFoldLeft_arg_1			Source array.
 func_arrayFoldLeft_arg_2			Reducing function.
 func_arrayFoldLeft_arg_3			Starting value.
 func_arrayFoldLeft_return			Array reduced to final result.
 func_arrayFoldRight			Reduces given <b>array</b> [v1, v2, ..., vn]
-from the right and starting with <b>v0</b>, through
-successive application of <b>f</b> function. Is equivalent
-to:
-<code>f(v0, f(v1, f(v2), ...))).</code>
+							from the right and starting with <b>v0</b>, through
+							successive application of <b>f</b> function. Is equivalent
+							to:
+							<code>f(v0, f(v1, f(v2), ...))).</code>
 func_arrayFoldRight_arg_1			Source array.
 func_arrayFoldRight_arg_2			Reducing function.
 func_arrayFoldRight_arg_3			Starting value.
 func_arrayFoldRight_return			Array reduced to final result.
 func_arrayIter			Calls a <b>callback</b> function for each element
-within given <b>array</b>. If the <b>callback</b> function
- is single-input, it is applied on the array's values, if the
-<b>callback</b> function requires two inputs, it is applied
-on the array's (key: value) pairs.
+						within given <b>array</b>. If the <b>callback</b> function
+						 is single-input, it is applied on the array's values, if the
+						<b>callback</b> function requires two inputs, it is applied
+						on the array's (key: value) pairs.
 func_arrayIter_arg_1			Source array.
 func_arrayIter_arg_2			Callback function.
-func_arrayMap			Returns an array which contains the results of <b>callback</b> function when called on each element within given <b>array</b> (and indexed with the same keys as the original array). If the <b>callback</b> function is single-input, it is applied on the array's values, if the <b>callback</b> function requires two inputs, it is applied on the array's (key: value) pairs.
+func_arrayMap			Returns an array which contains the results of <b>callback</b> function when called on each element within given <b>array</b> (and indexed with the same keys as the original array). If the <b>callback</b>
+						function is single-input, it is applied on the array's values, if the <b>callback</b> function requires two inputs, it is applied on the array's (key: value) pairs.
 func_arrayMap_arg_1			Source array.
 func_arrayMap_arg_2			Function to be applied on each element from given array.
 func_arrayMap_return			Resulting array.
@@ -104,22 +105,23 @@ func_arrayMax_return			The greatest value contained in given array.
 func_arrayMin			Finds the least value within given <b>array</b>.<br/>See also: #sort.
 func_arrayMin_arg_1			An array of numbers.
 func_arrayMin_return			The least value contained in given array.
-func_arrayPartition			Returns a two elements array, each being a list of (key: value) pairs from given <b>array</b>. The first element contains pairs for which <b>callback</b> function returned true, and the second one contains all other pairs. If the <b>callback</b> function is single-input, it is
-applied on the array's values, if the <b>callback</b>
+func_arrayPartition			Returns a two elements array, each being a list of (key: value) pairs from given <b>array</b>. The first element contains pairs for which <b>callback</b> function returned true, and the second one
+							contains all other pairs. If the <b>callback</b> function is single-input, it is applied on the array's values, if the <b>callback</b>
 function requires two inputs, it is applied on the array's (key: value) pairs.
 func_arrayPartition_arg_1			Source array.
 func_arrayPartition_arg_2			Callback function.
 func_arrayPartition_return			Resulting two element array.
-func_arraySort			Sorts the elements from given <b>array</b> according to <b>callback</b> function. Elements are compared by pairs, each one being an input of the callback function. The callback functions needs to return -1, 0 or 1, respectively if the first input element is before, at the same place or after the second input element.
+func_arraySort			Sorts the elements from given <b>array</b> according to <b>callback</b> function. Elements are compared by pairs, each one being an input of the callback function. The callback functions needs to return
+						-1, 0 or 1, respectively if the first input element is before, at the same place or after the second input element.
 
-If the <b>callback</b> function requires two inputs, it is
-applied on the array's values, if the <b>callback</b>
-function requires four inputs, it is applied on the array's (key: value) pairs.
+						If the <b>callback</b> function requires two inputs, it is
+						applied on the array's values, if the <b>callback</b>
+						function requires four inputs, it is applied on the array's (key: value) pairs.
 
-<code>var tableau = [1, 8, 4, 5, 3, 2, 7, 6];
-debug(arraySort(tableau, function(a, b) {
-    return (a == b) ? 0 : (a < b ? (-1) : 1);
-})); // returns [1, 2, 3, 4, 5, 6, 7, 8]</code>
+						<code>var tableau = [1, 8, 4, 5, 3, 2, 7, 6];
+						debug(arraySort(tableau, function(a, b) {
+						    return (a == b) ? 0 : (a < b ? (-1) : 1);
+						})); // returns [1, 2, 3, 4, 5, 6, 7, 8]</code>
 func_arraySort_arg_1			Source array.
 func_arraySort_arg_2			Sorting function.
 func_arraySort_return			Sorted array
@@ -363,13 +365,13 @@ func_getCellY_return			Its y-coordinate/
 func_getChipArea			Returns given <b>chip</b>'s effective area type.
 func_getChipArea_arg_1			Desired chip.
 func_getChipArea_return			Given <b>chip</b>'s effective area type among AREA_* constants:
-<ul>
-<li>#AREA_POINT: single-cell effective area</li>
-<li>#AREA_LASER_LINE: laser-type effective area (line)</li>
-<li>#AREA_CIRCLE_1: circular effective area with 3 cells diameter (cross)</li>
-<li>#AREA_CIRCLE_2: circular effective area with 5 cells diameter </li>
-<li>#AREA_CIRCLE_3: circular effective area with 7 cells diameter.</li>
-</ul>
+								<ul>
+								<li>#AREA_POINT: single-cell effective area</li>
+								<li>#AREA_LASER_LINE: laser-type effective area (line)</li>
+								<li>#AREA_CIRCLE_1: circular effective area with 3 cells diameter (cross)</li>
+								<li>#AREA_CIRCLE_2: circular effective area with 5 cells diameter </li>
+								<li>#AREA_CIRCLE_3: circular effective area with 7 cells diameter.</li>
+								</ul>
 func_getChipCooldown			Returns a <b>chip</b>'s cooldown as shown in the market.
 func_getChipCooldown_arg_1			Desired chip.
 func_getChipCooldown_return			Given <b>chip</b>'s coolodwn
@@ -451,19 +453,19 @@ func_getEffects			Lists the effects affecting your leek.
 func_getEffects_2			Lists the effects affecting given leek. For your leek, prefer #getEffects() with no input.
 func_getEffects_2_arg_1			Leek whose effects are listed.
 func_getEffects_2_return			Array of effects affecting given <b>leek</b>.
-An effect itself is a 7-cell array of the following form: [<b>type</b>, b>value</b>, <b>caster_id</b>, <b>turns</b>, <b>critical</b>, <b>item_id</b>, <b>target_id</b>], with <b>type</b> describing the type of effect, among:
-<ul>
-		<li>#EFFECT_DAMAGE, <b>value</b> is the amount of damage</li>
-		<li>#EFFECT_HEAL, <b>value</b> is the number of HP healed</li>
-		<li>#EFFECT_BUFF_FORCE, <b>value</b> is the added strength</li>
-		<li>#EFFECT_BUFF_AGILITY, <b>value</b> is the added agility</li>
-		<li>#EFFECT_BUFF_TP, <b>value</b> is the number of added TP</li>
-		<li>#EFFECT_BUFF_MP, <b>value</b>is the number of added MP</li>
-		<li>#EFFECT_ABSOLUTE_SHIELD, <b>value</b> is the absolute shield gained</li>
-		<li>#EFFECT_RELATIVE_SHIELD, <b>value</b> is the relative shield gained</li>
-		<li>#EFFECT_DEBUFF, indicates a debuff, <b>value</b> is not significant.</li>
-<li>etc.</li>
-	</ul>
+									An effect itself is a 7-cell array of the following form: [<b>type</b>, b>value</b>, <b>caster_id</b>, <b>turns</b>, <b>critical</b>, <b>item_id</b>, <b>target_id</b>], with <b>type</b> describing the type of effect, among:
+									<ul>
+											<li>#EFFECT_DAMAGE, <b>value</b> is the amount of damage</li>
+											<li>#EFFECT_HEAL, <b>value</b> is the number of HP healed</li>
+											<li>#EFFECT_BUFF_FORCE, <b>value</b> is the added strength</li>
+											<li>#EFFECT_BUFF_AGILITY, <b>value</b> is the added agility</li>
+											<li>#EFFECT_BUFF_TP, <b>value</b> is the number of added TP</li>
+											<li>#EFFECT_BUFF_MP, <b>value</b>is the number of added MP</li>
+											<li>#EFFECT_ABSOLUTE_SHIELD, <b>value</b> is the absolute shield gained</li>
+											<li>#EFFECT_RELATIVE_SHIELD, <b>value</b> is the relative shield gained</li>
+											<li>#EFFECT_DEBUFF, indicates a debuff, <b>value</b> is not significant.</li>
+											<li>etc.</li>
+									</ul>
 func_getEffects_return			Array of effects affecting your leek. More details in #getEffects(leek).
 func_getEnemies			Lists all enemies (dead and alive) within a fight.
 func_getEnemiesCount			Counts the enemies in the fight.
@@ -509,8 +511,7 @@ func_getFrequency_2			Return's given <b>leek</b>'s frequency.
 func_getFrequency_2_arg_1			Desired leek.
 func_getFrequency_2_return			Given <b>leek</b>'s frequency.
 func_getFrequency_return			Your leek's frequency.
-func_getGreen			Returns the green component of given <b>color</b>. For
-instance getGreen(#COLOR_GREEN) = 255 and getGreen(#COLOR_BLUE) = 0.
+func_getGreen			Returns the green component of given <b>color</b>. For instance getGreen(#COLOR_GREEN) = 255 and getGreen(#COLOR_BLUE) = 0.
 func_getGreen_arg_1			Color whose green component is to be returned.
 func_getGreen_return			Green component of given <b>color</b>.
 func_getInstructionsCount			Returns the number of instructions used by your leek this turn.
@@ -558,12 +559,12 @@ func_getMessages_2			Lists all messages addressed to given <b>leek</b>.
 func_getMessages_2_arg_1			Leek whose messages are returned.
 func_getMessages_2_return			Array of messages addressed to given <b>leek</b>.
 func_getMessages_return			Array of messages.<br />A message itself is a 3-cell array of the following form: [<b>author</b>, <b>type</b>, <b>parameters</b>]<br />Message types are:
-<ul>
-		<li>#MESSAGE_HEAL: request for heal</li>
-		<li>#MESSAGE_ATTACK: request for attack</li>
-		<li>#MESSAGE_BUFF_FORCE: request for strength buff</li>
-		<li>...</li>
-	</ul>
+								<ul>
+									<li>#MESSAGE_HEAL: request for heal</li>
+									<li>#MESSAGE_ATTACK: request for attack</li>
+									<li>#MESSAGE_BUFF_FORCE: request for strength buff</li>
+									<li>...</li>
+								</ul>
 func_getMessageType			Returns given <b>message</b>'s message type.
 func_getMessageType_arg_1			Message whose type is desired.
 func_getMessageType_return			Given <b>message</b>'s type.
@@ -607,7 +608,8 @@ func_getPath_2_arg_3			Array of cells considered inoccupied even when a leek is 
 func_getPath_2_return			Array of cells that build a path between given cells. Considering <b>ignoredCells</b> as empty.  Empty array if no path is found.
 func_getPath_arg_1			Cell id of starting point.
 func_getPath_arg_2			Cell id of destination.
-func_getPathLength			Returns the length of a path between <b>cell1</b> and <b>cell2</b> that avoids occupied cells. This function is equivalent to <i>count(getPath(<b>cell1</b>, <b>cell2</b>))</i>.<br /><br />For as a crow's flies distance, see #getDistance and for distance in number of cells, see #getCellDistance
+func_getPathLength			Returns the length of a path between <b>cell1</b> and <b>cell2</b> that avoids occupied cells. This function is equivalent to <i>count(getPath(<b>cell1</b>, <b>cell2</b>))</i>.<br /><br />For as a crow's
+							flies distance, see #getDistance and for distance in number of cells, see #getCellDistance
 func_getPathLength_2			Returns the length of a path between <b>cell1</b> and <b>cell2</b> that avoids occupied cells, except <b>ignoredCells</b> which are considered empty even when a leek is present.
 func_getPathLength_2_arg_1			Cell id of starting point.
 func_getPathLength_2_arg_2			Cell id of destination.
@@ -619,17 +621,16 @@ func_getPathLength_return			Length of the path between <b>cell1</b> and <b>cell2
 func_getPath_return			Array of empty cells that build a path between given cells. Empty array if no path is found.
 func_getPreviousPlayer			Returns the leek id of the leek who just played.
 func_getPreviousPlayer_return			Leek id of the leek who just played.
-func_getRed			Returns the red component of given <b>color</b>. For
-instance getRed(#COLOR_RED) = 255 and getRed(#COLOR_BLUE) = 0.
+func_getRed			Returns the red component of given <b>color</b>. For instance getRed(#COLOR_RED) = 255 and getRed(#COLOR_BLUE) = 0.
 func_getRed_arg_1			Color whose red component is to be returned.
 func_getRed_return			Red component of given <b>color</b>.
 func_getRegister			Returns the value associated to given <b>key</b> in your leek's register, <i>null</i> if it is not found.
 func_getRegister_arg_1			Desired key.
 func_getRegister_return			The value associated to given <b>key</b> in your leek's register.
 func_getRegisters			Returns your leek's whole register, as a [<i>key</i>: <i>value</i>] associative array. For example:
-<code>debug(getRegisters());
-// would, for example, debug :
-// ['reg1' : '314323', 'reg2' : 'test_string']</code>
+							<code>debug(getRegisters());
+							// would, for example, debug :
+							// ['reg1' : '314323', 'reg2' : 'test_string']</code>
 func_getRegisters_return			Your leek's register, as an associative array.
 func_getRelativeShield			Returns your leek's relative shield.
 func_getRelativeShield_2			Returns given <b>leek</b>'s relative shield. For your leek's relative shield, prefer #getRelativeShield() with no input.
@@ -691,30 +692,30 @@ func_getTurn_return			Current turn's count.
 func_getType			Returns caller's entity type.
 func_getType_2			Returns given <b>entity</b>'s type.
 func_getType_2_arg_1			Entity's ID
-func_getType_2_return			Given entity's type:
-<ul>
-<li>#ENTITY_LEEK if given entity is a leek.</li>
-<li>#ENTITY_BULB if given entity is a bulb.</li>
-</ul>
+func_getType_2_return		Given entity's type:
+							<ul>
+							<li>#ENTITY_LEEK if given entity is a leek.</li>
+							<li>#ENTITY_BULB if given entity is a bulb.</li>
+							</ul>
 func_getType_return			Caller's entity type:
-<ul>
-<li>#ENTITY_LEEK if called by a leek.</li>
-<li>#ENTITY_BULB if called by a bulb.</li>
-</ul>
+							<ul>
+							<li>#ENTITY_LEEK if called by a leek.</li>
+							<li>#ENTITY_BULB if called by a bulb.</li>
+							</ul>
 func_getWeapon			Returns the weapon currently equipped by your leek.
 func_getWeapon_2			Returns the weapon currently equipped by given <b>leek</b>.
 func_getWeapon_2_arg_1			Desired leek.
 func_getWeapon_2_return			The weapon's id, null if given <b>leek</b> has no equipped weapon.
 func_getWeaponArea			Returns given <b>weapon</b>'s effective area type.
 func_getWeaponArea_arg_1			Desired weapon.
-func_getWeaponArea_return			Given <b>weapon</b>'s effective area type among AREA_* constants:
-<ul>
-<li>#AREA_POINT: single-cell effective area</li>
-<li>#AREA_LASER_LINE: laser-type effective area (line)</li>
-<li>#AREA_CIRCLE_1: circular effective area with 3 cells diameter (cross)</li>
-<li>#AREA_CIRCLE_2: circular effective area with 5 cells diameter </li>
-<li>#AREA_CIRCLE_3: circular effective area with 7 cells diameter.</li>
-</ul>
+func_getWeaponArea_return		Given <b>weapon</b>'s effective area type among AREA_* constants:
+								<ul>
+								<li>#AREA_POINT: single-cell effective area</li>
+								<li>#AREA_LASER_LINE: laser-type effective area (line)</li>
+								<li>#AREA_CIRCLE_1: circular effective area with 3 cells diameter (cross)</li>
+								<li>#AREA_CIRCLE_2: circular effective area with 5 cells diameter </li>
+								<li>#AREA_CIRCLE_3: circular effective area with 7 cells diameter.</li>
+								</ul>
 func_getWeaponCost			Returns a <b>weapon</b>'s cost, in TP.
 func_getWeaponCost_arg_1			Desired weapon.
 func_getWeaponCost_return			Given <b>weapon</b>'s cost, in TP.
@@ -722,40 +723,40 @@ func_getWeaponEffectiveArea			Lists the cells affected if your leek's current we
 func_getWeaponEffectiveArea_2			Lists the cells affected if given <b>weapon</b> were shot on given <b>cell</b>.
 func_getWeaponEffectiveArea_2_arg_1			Weapon to be used.
 func_getWeaponEffectiveArea_2_arg_2			Targetted cell.
-func_getWeaponEffectiveArea_2_return			Array that contains the id of all affected cells.
-func_getWeaponEffectiveArea_3			Lists the cells affected if given <b>weapon</b> were shot on given <b>cell</b>, from <b>from</b> cell.
+func_getWeaponEffectiveArea_2_return		Array that contains the id of all affected cells.
+func_getWeaponEffectiveArea_3				Lists the cells affected if given <b>weapon</b> were shot on given <b>cell</b>, from <b>from</b> cell.
 func_getWeaponEffectiveArea_3_arg_1			Weapon to be used.
 func_getWeaponEffectiveArea_3_arg_2			Targetted cell.
 func_getWeaponEffectiveArea_3_arg_3			Cell from which the chip is used.
-func_getWeaponEffectiveArea_3_return			Array that contains the id of all affected cells.
+func_getWeaponEffectiveArea_3_return		Array that contains the id of all affected cells.
 func_getWeaponEffectiveArea_arg_1			Targetted cell.
 func_getWeaponEffectiveArea_return			Array that contains the id of all affected cells.
-func_getWeaponEffects			Lists a <b>weapon</b>'s effects.
+func_getWeaponEffects				Lists a <b>weapon</b>'s effects.
 func_getWeaponEffects_arg_1			Desired weapon.
-func_getWeaponEffects_return			Array containing given's weapon effects. An effect itself if an array, in the following format: [type, min, max, turns, targets].
-<ul>
-	<li><b>type</b> is an effect type, among: #EFFECT_DAMAGE, #EFFECT_HEAL,
-#EFFECT_ABSOLUTE_SHIELD, #EFFECT_RELATIVE_SHIELD, #EFFECT_DEBUFF,
-#EFFECT_BUFF_FORCE, #EFFECT_BUFF_AGILITY, #EFFECT_BUFF_MP,
-#EFFECT_BUFF_TP etc.</li>
-	<li><b>min</b> and <b>max</b> are the min and max values of the effect (from the market).</li>
-	<li><b>turns</b> is the duration of the effect, in turns.</li>
-	<li><b>targets</b> gives which players can be affected. It is a binary construct of:
-		<ul>
-			<li> #EFFECT_TARGET_ALLIES: Affects allies</li>
-			<li> #EFFECT_TARGET_ENEMIES: Affects enemies</li>
-			<li> #EFFECT_TARGET_CASTER: Always affects caster</li>
-			<li> #EFFECT_TARGET_NOT_CASTER: Cannot affect caster</li>
-<li> #EFFECT_TARGET_SUMMONS : Affects caster's summons</li>
-		</ul>
-It can be parsed with:<br>
-		<code>if (targets & EFFECT_TARGET_ALLIES) debug('Affects allies');
-if (targets & EFFECT_TARGET_ENEMIES) debug('Affects enemies');
-if (targets & EFFECT_TARGET_CASTER) debug('Always affects caster');
-if (targets & EFFECT_TARGET_NOT_CASTER) debug('Cannot affect caster');
-if (targets & EFFECT_TARGET_SUMMONS) debug("Affects summons");</code>
-	</li>
-	</ul>
+func_getWeaponEffects_return		Array containing given's weapon effects. An effect itself if an array, in the following format: [type, min, max, turns, targets].
+									<ul>
+										<li><b>type</b> is an effect type, among: #EFFECT_DAMAGE, #EFFECT_HEAL,
+										#EFFECT_ABSOLUTE_SHIELD, #EFFECT_RELATIVE_SHIELD, #EFFECT_DEBUFF,
+										#EFFECT_BUFF_FORCE, #EFFECT_BUFF_AGILITY, #EFFECT_BUFF_MP,
+										#EFFECT_BUFF_TP etc.</li>
+										<li><b>min</b> and <b>max</b> are the min and max values of the effect (from the market).</li>
+										<li><b>turns</b> is the duration of the effect, in turns.</li>
+										<li><b>targets</b> gives which players can be affected. It is a binary construct of:
+											<ul>
+												<li> #EFFECT_TARGET_ALLIES: Affects allies</li>
+												<li> #EFFECT_TARGET_ENEMIES: Affects enemies</li>
+												<li> #EFFECT_TARGET_CASTER: Always affects caster</li>
+												<li> #EFFECT_TARGET_NOT_CASTER: Cannot affect caster</li>
+												<li> #EFFECT_TARGET_SUMMONS : Affects caster's summons</li>
+											</ul>
+											It can be parsed with:<br>
+											<code>if (targets & EFFECT_TARGET_ALLIES) debug('Affects allies');
+											if (targets & EFFECT_TARGET_ENEMIES) debug('Affects enemies');
+											if (targets & EFFECT_TARGET_CASTER) debug('Always affects caster');
+											if (targets & EFFECT_TARGET_NOT_CASTER) debug('Cannot affect caster');
+											if (targets & EFFECT_TARGET_SUMMONS) debug("Affects summons");</code>
+										</li>
+									</ul>
 func_getWeaponFailure			Returns a <b>weapon</b>'s failure rate.
 func_getWeaponFailure_arg_1			Desired weapon.
 func_getWeaponFailure_return			Given <b>chip</b>'s failure rate, in percents, integer between <b>0</b> and <b>100</b>.
@@ -900,8 +901,7 @@ func_mark_2			Marks one or several cells on terrain in given <b>color</b> for on
 func_mark_2_arg_1			A cell or array of cells.
 func_mark_2_arg_2			Marking's color (see #getColor()).
 func_mark_2_return			<i>true</i> if all went well, <i>false</i> otherwise.
-func_mark_3			Marks one or several cells on terrain in given <b>color</b>
-for the given <b>duration</b>. The mark is only visible by the marking leek's farmer.
+func_mark_3			Marks one or several cells on terrain in given <b>color</b> for the given <b>duration</b>. The mark is only visible by the marking leek's farmer.
 func_mark_3_arg_1			A cell or array of cells.
 func_mark_3_arg_2			Marking's color (see #getColor()).
 func_mark_3_arg_3			Duration of the marking.
@@ -944,9 +944,7 @@ func_moveAwayFromLeeks_2_return			The actual amount of MP spent.
 func_moveAwayFromLeeks_arg_1			Array containig the leeks from which you want to flee.
 func_moveAwayFromLeeks_return			The amount of MP spent.
 func_moveAwayFromLine			Moves your leek away from the line between <b>cell1</b> and <b>cell2</b>.
-func_moveAwayFromLine_2			Moves your leek away from the line between <b>cell1</b>
-and <b>cell2</b>, using at most <b>mp</b>
-Movement Points.
+func_moveAwayFromLine_2			Moves your leek away from the line between <b>cell1</b> and <b>cell2</b>, using at most <b>mp</b> Movement Points.
 func_moveAwayFromLine_2_arg_1			First cell of the line.
 func_moveAwayFromLine_2_arg_2			Final cell of the line.
 func_moveAwayFromLine_2_arg_3			The maximum amount of MP to spend.
@@ -956,41 +954,34 @@ func_moveAwayFromLine_arg_2			The final cell of the line.
 func_moveAwayFromLine_return			The amount of MP spent.
 func_moveAwayFrom_return			The amount of MP spent doing so.
 func_moveToward			Moves your leek closer to another <b>leek</b>.
-func_moveToward_2			Moves your leek closer to another <b>leek</b>, using at most <b>mp</b>
-Movement Points.
+func_moveToward_2			Moves your leek closer to another <b>leek</b>, using at most <b>mp</b> Movement Points.
 func_moveToward_2_arg_1			The leek you want to get closer to.
 func_moveToward_2_arg_2			The maximum amount of MP to spend.
 func_moveToward_2_return			The actual amount of MP spent.
 func_moveToward_arg_1			The leek you want to get closer to.
 func_moveTowardCell			Moves your leek closer to given <b>cell</b>.
-func_moveTowardCell_2			Moves your leek closer to given <b>cell</b>, using at most <b>mp</b>
-Movement Points.
+func_moveTowardCell_2			Moves your leek closer to given <b>cell</b>, using at most <b>mp</b> Movement Points.
 func_moveTowardCell_2_arg_1			The cell you want to get closer to.
 func_moveTowardCell_2_arg_2			The maximum amount of MP to spend.
 func_moveTowardCell_2_return			The actual amount of MP spent.
 func_moveTowardCell_arg_1			The cell you want to get closer to.
 func_moveTowardCell_return			The amount of MP spent.
 func_moveTowardCells			Moves your leek closer to a given group of <b>cells</b>.
-func_moveTowardCells_2			Moves your leek closer to a given group of <b>cells</b>, using at most <b>mp</b>
-Movement Points.
+func_moveTowardCells_2			Moves your leek closer to a given group of <b>cells</b>, using at most <b>mp</b> Movement Points.
 func_moveTowardCells_2_arg_1			Array containig the cells to which you want to get closer.
 func_moveTowardCells_2_arg_2			The maximum amount of MP to spend.
 func_moveTowardCells_2_return			The actual amount of MP spent.
 func_moveTowardCells_arg_1			Array containig the cells to which you want to get closer.
 func_moveTowardCells_return			The amount of MP spent.
 func_moveTowardLeeks			Moves your leek closer to a given group of <b>leeks</b>.
-func_moveTowardLeeks_2			Moves your leek closer to a given group of <b>leeks</b>, using at most <b>mp</b>
-Movement Points.
+func_moveTowardLeeks_2			Moves your leek closer to a given group of <b>leeks</b>, using at most <b>mp</b> Movement Points.
 func_moveTowardLeeks_2_arg_1			Array containig the leeks to which you want to get closer.
 func_moveTowardLeeks_2_arg_2			The maximum amount of MP to spend.
 func_moveTowardLeeks_2_return			The actual amount of MP spent.
 func_moveTowardLeeks_arg_1			Array containig the leeks to which you want to get closer.
 func_moveTowardLeeks_return			The amount of MP spent.
-func_moveTowardLine			Moves your leek towards the line between <b>cell1</b>
-and <b>cell2</b>.
-func_moveTowardLine_2			Moves your leek towards the line between <b>cell1</b>
-and <b>cell2</b>, using at most <b>mp</b>
-Movement Points.
+func_moveTowardLine			Moves your leek towards the line between <b>cell1</b> and <b>cell2</b>.
+func_moveTowardLine_2			Moves your leek towards the line between <b>cell1</b> and <b>cell2</b>, using at most <b>mp</b> Movement Points.
 func_moveTowardLine_2_arg_1			The first cell of the line.
 func_moveTowardLine_2_arg_2			The final cell of the line.
 func_moveTowardLine_2_arg_3			The maximum amount of MP to spend.
@@ -999,7 +990,8 @@ func_moveTowardLine_arg_1			The first cell of the line.
 func_moveTowardLine_arg_2			The final cell of the line.
 func_moveTowardLine_return			The amount of MP spent.
 func_moveToward_return			The amount of MP spent.
-func_number			Casts a value into a number. If the value is a string, this function attempts to convert it into a number. If the value is a number, this function returns the number. For any other type, this function returns <i>null</i>
+func_number			Casts a value into a number. If the value is a string, this function attempts to convert it into a number. If the value is a number, this function returns the number. For any other type,
+					this function returns <i>null</i>
 func_number_arg_1			The value to convert.
 func_number_return			The resulting number.
 func_pause			Pauses the fight, only for the pausing leek's farmer.
@@ -1068,8 +1060,8 @@ func_sendTo			Sends a message to given <b>leek</b>.
 func_sendTo_arg_1			Message's addressee
 func_sendTo_arg_2			The type of message to send (see MESSAGE_* constants).
 func_sendTo_arg_3			The parameters of the message, which can take any form.
-func_setRegister			Stores given <b>value</b> in your leek's register, associated with given <b>key</b>. Given <b>key</b> and <b>value</b> are strings, respectively  with maximum length of <i>100</i> and <i>5000</i> characters.
-A leek can have at most 100 distinct keys in its register, any additionnal (key:value) pair will not be stored if your leek's register is full.
+func_setRegister			Stores given <b>value</b> in your leek's register, associated with given <b>key</b>. Given <b>key</b> and <b>value</b> are strings, respectively  with maximum length of <i>100</i> and <i>5000</i>
+							characters. A leek can have at most 100 distinct keys in its register, any additionnal (key:value) pair will not be stored if your leek's register is full.
 func_setRegister_arg_1			Register key to index given value.
 func_setRegister_arg_2			Value to be stored.
 func_setRegister_return			<i>true</i> if operation succeeded, <i>false</i> otherwise.
@@ -1094,12 +1086,12 @@ func_sin			Computes an <b>angle</b>'s sine.
 func_sin_arg_1			A number.
 func_sin_return			Given number's sine, within [-1, 1].
 func_sort			Sorts given <b>array</b>, using the following order:
-<ul>
-<li>Booleans (false then true)</li>
-<li>Numbers (least to greatest)</li>
-<li>Strings (sorted alphabetically)</li>
-<li>null elements</li>
-</ul>
+					<ul>
+					<li>Booleans (false then true)</li>
+					<li>Numbers (least to greatest)</li>
+					<li>Strings (sorted alphabetically)</li>
+					<li>null elements</li>
+					</ul>
 func_sort_2			Sorts given <b>array</b>, using the given order.
 func_sort_2_arg_1			Array that needs sorting.
 func_sort_2_arg_2			#SORT_ASC to sort from least to greatest, or #SORT_DESC to sort from greatest to least. More details in #sort (especially for multiple types arrays).
@@ -1121,12 +1113,12 @@ func_startsWith_arg_1			String to look into.
 func_startsWith_arg_2			Prefix to look for.
 func_startsWith_return			<i>true</i> if given <b>string</b> starts with given <b>prefix</b>, <i>false</i> otherwise.
 func_string			Casts a value to a string container.<br />Returns:
-<ul><li>value if it is a string</li>
-<li>"value" if it is a number</li>
-<li>"[key1: value1, key2: value2... ...]" if value is an array</li>
-<li>"true" or "false" if value is a boolean</li>
-<li>"null" if value is null</li>
-</ul>.
+					<ul><li>value if it is a string</li>
+					<li>"value" if it is a number</li>
+					<li>"[key1: value1, key2: value2... ...]" if value is an array</li>
+					<li>"true" or "false" if value is a boolean</li>
+					<li>"null" if value is null</li>
+					</ul>.
 func_string_arg_1			Value that needs conversion.
 func_string_return			Resulting string.
 func_subArray			Extracts a sub-array, starting at <b>start</b> position and ending at <b>end</b> position, from given <b>array</b>.
@@ -1135,8 +1127,7 @@ func_subArray_arg_2			Starting position.
 func_subArray_arg_3			Ending position.
 func_subArray_return			The desired sub-array.
 func_substring			Extracts a substring, starting at <b>start</b> position, from given <b>string</b>.
-func_substring_2			Extracts a substring, starting at <b>start</b> position and
-of given <b>length</b>, from given <b>string</b>
+func_substring_2			Extracts a substring, starting at <b>start</b> position and of given <b>length</b>, from given <b>string</b>
 func_substring_2_arg_1			Source string.
 func_substring_2_arg_2			Starting position.
 func_substring_2_arg_3			Length of the output.
@@ -1192,27 +1183,27 @@ func_useChipOnCell_arg_1			Chip to use.
 func_useChipOnCell_arg_2			Targetted cell.
 func_useChipOnCell_return			See #useChip.
 func_useChip_return			<ul>
-	<li>#USE_CRITICAL, in case of critical hit</li>
-		<li>#USE_SUCCESS, in case of success</li>
-		<li>#USE_FAILED, in case of failure</li>
-		<li>#USE_INVALID_TARGET, if the target does not exist</li>
-		<li>#USE_NOT_ENOUGH_TP, if your leek does not have enough TP</li>
-		<li>#USE_INVALID_COOLDOWN, if given <b>chip</b>'s cooldown is not expired</li>
-		<li>#USE_INVALID_POSITION, if the chip's scope does not allow its use, or line of sight is not clear.</li>
-	</ul>
+								<li>#USE_CRITICAL, in case of critical hit</li>
+								<li>#USE_SUCCESS, in case of success</li>
+								<li>#USE_FAILED, in case of failure</li>
+								<li>#USE_INVALID_TARGET, if the target does not exist</li>
+								<li>#USE_NOT_ENOUGH_TP, if your leek does not have enough TP</li>
+								<li>#USE_INVALID_COOLDOWN, if given <b>chip</b>'s cooldown is not expired</li>
+								<li>#USE_INVALID_POSITION, if the chip's scope does not allow its use, or line of sight is not clear.</li>
+							</ul>
 func_useWeapon			Fires your leek's weapon, targetting given <b>leek</b>.
 func_useWeapon_arg_1			Targetted leek.
 func_useWeaponOnCell			Fires your leek's weapon, targetting given <b>cell</b>.
 func_useWeaponOnCell_arg_1			Targetted cell.
 func_useWeaponOnCell_return			See #useWeapon.
 func_useWeapon_return			<ul>
-		<li>#USE_CRITICAL, in case of critical hit</li>
-		<li>#USE_SUCCESS, in case of success</li>
-		<li>#USE_FAILED, in case of failure</li>
-		<li>#USE_INVALID_TARGET, if the target does not exist</li>
-		<li>#USE_NOT_ENOUGH_TP, if your leek does not have enough TP</li>
-		<li>#USE_INVALID_POSITION, if the weapon's scope does not allow its use, or line of sight is not clear.</li>
-	</ul>
+									<li>#USE_CRITICAL, in case of critical hit</li>
+									<li>#USE_SUCCESS, in case of success</li>
+									<li>#USE_FAILED, in case of failure</li>
+									<li>#USE_INVALID_TARGET, if the target does not exist</li>
+									<li>#USE_NOT_ENOUGH_TP, if your leek does not have enough TP</li>
+									<li>#USE_INVALID_POSITION, if the weapon's scope does not allow its use, or line of sight is not clear.</li>
+								</ul>
 func_weaponNeedLos			Returns whether given <b>weapon</b> requires a line of sight in order to be shot.
 func_weaponNeedLos_arg_1			Desired weapon's id.
 func_weaponNeedLos_return			<i>true</i> if given <b>chip</b> requires a line of sight, <i>false</i> otherwise.
