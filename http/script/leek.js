@@ -66,6 +66,9 @@ LW.pages.leek.init = function(params, $scope, $page) {
 
 		if (myLeek) {
 
+			// Remove existing popups
+			$("#popups").children().remove();
+
 			LW.pages.leek.garden()
 			LW.pages.leek.tournament()
 			LW.pages.leek.capital()
