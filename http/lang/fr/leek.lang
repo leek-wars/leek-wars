@@ -39,6 +39,8 @@ error_under_required_level_weapon		%s n'a pas le niveau requis pour cette arme.
 error_under_required_level_chip			%s n'a pas le niveau requis pour cette puce.
 error_max_weapon						%s ne peut pas équiper une arme supplémentaire.
 error_max_chip							%s ne peut pas équiper une puce supplémentaire.
+error_weapon_already_equipped			%s a déjà équipé cette arme.
+error_chip_already_equipped				%s a déjà équipé cette puce.
 farmed_by						Élevé par <a class="leek-farmer" href="/farmer/%1$s">%2$s</a> 
 fights							Combats
 frequency						Fréquence

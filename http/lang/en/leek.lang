@@ -39,6 +39,8 @@ error_under_required_level_weapon		%s doesn't have the required level for this w
 error_under_required_level_chip			%s doesn't have the required level for this chip.
 error_max_weapon						%s can't equip an additional weapon.
 error_max_chip							%s can't equip an additional chip.
+error_weapon_already_equipped			%s has already equipped this weapon.
+error_chip_already_equipped				%s has already equipped this chip.
 farmed_by						Raised by <a class="leek-farmer" href="/farmer/%1$s">%2$s</a>
 fights							Fights
 frequency						Frequency

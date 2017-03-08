@@ -391,11 +391,11 @@
 
 			<div class='content center'>
 				<div id='leek-chips'>
-					@foreach (chip in leek.chips)
-						<div id="leek-chip-{chip.id}" item="{chip.id}" template="{chip.template}" class="chip available">
+					@foreach (chip in leek.orderedChips)
+						<div id="leek-chip-{chip.template}" class="chip available" item="{chip.id}" chip="{chip.template}" position="{chip.position}">
 							<img src="{{static}}/image/chip/small/{LW.chips[chip.template].name}.png">
 						</div>
-						<div class='tooltip' id='tt_leek-chip-{chip.id}'>
+						<div class='tooltip' id='tt_leek-chip-{chip.template}'>
 							<b>{_.lang.get('chip', LW.chips[chip.template].name)}</b>
 							<br>
 							{#chip_level_n, LW.chips[chip.template].level}
@@ -572,11 +572,11 @@
 	<div class='content' autostopscroll>
 
 		<div class='leek-chips'>
-			@foreach (i : chip in leek.chips)
-				<div id='chip-{chip.id}-{i}' class='chip available' location='leek' chip='{chip.id}-{i}' item='{chip.id}' template='{chip.template}'>
+			@foreach (i : chip in leek.orderedChips)
+				<div id='popup-leek-chip-{chip.template}' class='chip available' location='leek' item='{chip.id}' chip='{chip.template}' position='{chip.position}'>
 					<img src='{{static}}image/chip/small/{LW.chips[chip.template].name}.png'>
 				</div>
-				<div class='tooltip' id='tt_chip-{chip.id}-{i}'>
+				<div class='tooltip' id='tt_popup-leek-chip-{chip.template}'>
 					<b>{_.lang.get('chip', LW.chips[chip.template].name)}</b>
 				</div>
 			@end
@@ -589,10 +589,10 @@
 
 		<div class='farmer-chips'>
 			@foreach (i : chip in farmer_chips)
-				<div id='chip-{chip.id}-{i}' class='chip available' location='farmer' chip='{chip.id}-{i}' item='{chip.id}' template='{chip.template}'>
+				<div id='popup-farmer-chip-{chip.template}' class='chip available' location='farmer' item='{chip.id}' chip='{chip.template}' position='{chip.position}' quantity='{chip.quantity}'>
 					<img src='{{static}}image/chip/small/{LW.chips[chip.template].name}.png'>
 				</div>
-				<div class='tooltip' id='tt_chip-{chip.id}-{i}'>
+				<div class='tooltip' id='tt_popup-farmer-chip-{chip.template}'>
 					<b>{_.lang.get('chip', LW.chips[chip.template].name)}</b>
 				</div>
 			@end
