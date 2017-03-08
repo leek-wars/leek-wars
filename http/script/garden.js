@@ -432,10 +432,10 @@ LW.pages.garden.time = function() {
 		$('#remaining-fights .off').show()
 	}
 
-	var midnignt = new Date()
+	var midnignt = new Date(LW.time.get() * 1000)
 	midnignt.setHours(24, 0, 0, 0)
 
-	var timeUntilMidnight = Math.round((midnignt.getTime() - Date.now()) / 1000)
+	var timeUntilMidnight = Math.round(midnignt.getTime() / 1000 - LW.time.get())
 	var update = null
 	this.gardenTimeUpdate = function() {
 		timeUntilMidnight--
