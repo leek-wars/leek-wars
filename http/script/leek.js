@@ -43,14 +43,9 @@ LW.pages.leek.init = function(params, $scope, $page) {
 
 		leek.talent_gains = Math.round(leek.talent_more / 3)
 
-		leek.orderedChips = leek.chips
-			.map(function(chip) {
-				chip.position = LW.orderedChips[chip.template]
-				return chip
-			})
-			.sort(function(chipA, chipB) {
-				return chipA.position - chipB.position
-			})
+		leek.orderedChips = leek.chips.sort(function(chipA, chipB) {
+			return LW.orderedChips[chipA.template] - LW.orderedChips[chipB.template]
+		})
 
 		$scope.leek = leek
 		$scope.my_leek = myLeek
@@ -847,7 +842,7 @@ LW.pages.leek.chips = function(leek) {
 
 		if(children.length > 0) {
 			while(i < children.length && !inserted) {
-				if(parseInt(children.eq(i).attr('position')) > position) {
+				if(LW.orderedChips[parseInt(children.eq(i).attr('chip'))] > position) {
 					children.eq(i).before(elem)
 					inserted = true
 				}
@@ -866,7 +861,7 @@ LW.pages.leek.chips = function(leek) {
 		var chipElem = popup.view.find('.chip[chip=' + chipID + "][location='" + chipContainer + "']")
 		var chipItem = parseInt(chipElem.attr('item'))
 		var chipLocation = chipElem.attr('location')
-		var chipPosition = chipElem.attr('position')
+		var chipPosition = LW.orderedChips[chipID]
 		var chip = LW.chips[chipID]
 		
 		chipElem.removeClass('dragging')

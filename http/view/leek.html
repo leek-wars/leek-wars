@@ -392,7 +392,7 @@
 			<div class='content center'>
 				<div id='leek-chips'>
 					@foreach (chip in leek.orderedChips)
-						<div id="leek-chip-{chip.template}" class="chip available" item="{chip.id}" chip="{chip.template}" position="{chip.position}">
+						<div id="leek-chip-{chip.template}" class="chip available" item="{chip.id}" chip="{chip.template}">
 							<img src="{{static}}/image/chip/small/{LW.chips[chip.template].name}.png">
 						</div>
 						<div class='tooltip' id='tt_leek-chip-{chip.template}'>
@@ -573,7 +573,7 @@
 
 		<div class='leek-chips'>
 			@foreach (i : chip in leek.orderedChips)
-				<div id='popup-leek-chip-{chip.template}' class='chip available' location='leek' item='{chip.id}' chip='{chip.template}' position='{chip.position}'>
+				<div id='popup-leek-chip-{chip.template}' class='chip available' location='leek' item='{chip.id}' chip='{chip.template}'>
 					<img src='{{static}}image/chip/small/{LW.chips[chip.template].name}.png'>
 				</div>
 				<div class='tooltip' id='tt_popup-leek-chip-{chip.template}'>
@@ -589,7 +589,7 @@
 
 		<div class='farmer-chips'>
 			@foreach (i : chip in farmer_chips)
-				<div id='popup-farmer-chip-{chip.template}' class='chip available' location='farmer' item='{chip.id}' chip='{chip.template}' position='{chip.position}' quantity='{chip.quantity}'>
+				<div id='popup-farmer-chip-{chip.template}' class='chip available' location='farmer' item='{chip.id}' chip='{chip.template}' quantity='{chip.quantity}'>
 					<img src='{{static}}image/chip/small/{LW.chips[chip.template].name}.png'>
 				</div>
 				<div class='tooltip' id='tt_popup-farmer-chip-{chip.template}'>
