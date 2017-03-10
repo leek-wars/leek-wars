@@ -848,6 +848,7 @@ LW.init = function(callback) {
 	}
 
 	LW.orderedChips = LW.orderChips(LW.chips)
+	LW.orderedWeapons = LW.orderWeapons(LW.weapons)
 
 	all = true
 	++count && ready()
@@ -3067,7 +3068,18 @@ LW.orderChips = function(chips) {
 	}
 
 	return orderedChips
-} 
+}
+
+LW.orderWeapons = function(weapons) {
+	// Order weapons by level
+	var orderedWeapons = {}
+	var position = 0
+	for(var i in weapons) {
+		orderedWeapons[weapons[i].id] = position++
+	}
+
+	return orderedWeapons
+}
 
 LW.createWeaponPreview = function(template) {
 

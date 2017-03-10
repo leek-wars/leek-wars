@@ -46,6 +46,9 @@ LW.pages.leek.init = function(params, $scope, $page) {
 		leek.orderedChips = leek.chips.sort(function(chipA, chipB) {
 			return LW.orderedChips[chipA.template] - LW.orderedChips[chipB.template]
 		})
+		leek.orderedWeapons = leek.weapons.sort(function(weaponA, weaponB) {
+			return LW.weapons[weaponA.template].level - LW.weapons[weaponB.template].level
+		})
 
 		$scope.leek = leek
 		$scope.my_leek = myLeek
@@ -669,62 +672,29 @@ LW.pages.leek.registers = function() {
 
 LW.pages.leek.weapons = function(leek) {
 
-	var popup = new _.popup.new('leek.weapon_popup', {leek: leek, farmer_weapons: LW.farmer.weapons}, 800)
-	var draggedWeapon = null
+	var groupedFarmerWeapons = []
 
-	var changeWeapon = function(action, weaponID) {
+	// Group identicals weapons
+	for(var i in LW.farmer.weapons) {
+		var weapon = LW.farmer.weapons[i]
 
-		var weaponElem = popup.view.find('.weapon[weapon=' + weaponID + ']')
-		var weaponItem = parseInt(weaponElem.attr('item'))
-		var weaponTemplate = parseInt(weaponElem.attr('template'))
-		var weapon = LW.weapons[weaponTemplate]
-		var location = weaponElem.attr('location')
-		weaponElem.removeClass('dragging')
-
-		if (action == 'add') {
-
-			if (leek.weapons.length >= leek.max_weapons || location == 'leek') {
-				_.toast(_.lang.get('leek', 'error_max_weapon', leek.name))
-				return
-			}
-			if (weapon.level > leek.level) {
-				_.toast(_.lang.get('leek', 'error_under_required_level_weapon', leek.name))
-				return
-			}
-
-			popup.view.find('.leek-weapons').append(weaponElem)
-			weaponElem.attr('location', 'leek')
-			leek.weapons.push({id: weaponItem, template: weaponElem.attr('template')})
-
-			$('#leek-weapons').append("<div class='weapon' id='leek-weapon-" + weaponID + "' weapon='" + weaponID +
-				"' item='" + weaponItem + "' template='" + weaponTemplate + "'><img src='" + LW.staticURL + 'image/weapon/' +
-				weapon.name + ".png'></div><br>")
-
-			LW.addTooltip("leek-weapon-" + weaponID, "<b>" + _.lang.get('weapon', weapon.name) + "</b><br>" +
-				_.lang.get('leek', 'level_n', weapon.level) + "<br>WEAPON_" + weapon.name.toUpperCase())
-
-			_.post('leek/add-weapon', {leek_id: leek.id, weapon_id: weaponItem}, function(data) {
-
-			})
-
-		} else if (action == 'remove') {
-
-			if (location == 'farmer') return null
-
-			popup.view.find('.farmer-weapons').append(weaponElem)
-			weaponElem.attr('location', 'farmer')
-			_.removeWhere(leek.weapons, 'id', weaponItem)
-
-			$("#leek-weapons .weapon[item='" + weaponItem + "'] + br").remove()
-			$("#leek-weapons .weapon[item='" + weaponItem + "']").remove()
-
-			_.post('leek/remove-weapon', {weapon_id: weaponItem}, function(data) {})
+		if(groupedFarmerWeapons[weapon.template] === undefined) {
+			groupedFarmerWeapons[weapon.template] = weapon
+			groupedFarmerWeapons[weapon.template].quantity = 0
 		}
 
-		$('.weapon-count').text('[' + leek.weapons.length + '/' + leek.max_weapons + "]")
+		groupedFarmerWeapons[weapon.template].quantity++
 	}
 
-	popup.view.find('.weapon.available').on({
+	// Sort weapons by level
+	var sortedFarmerWeapons = groupedFarmerWeapons.sort(function(weaponA, weaponB) {
+		return LW.weapons[weaponA.template].level - LW.weapons[weaponB.template].level
+	})
+
+	var popup = new _.popup.new('leek.weapon_popup', {leek: leek, farmer_weapons: sortedFarmerWeapons}, 800)
+	var draggedWeapon = null
+
+	var weaponEventsFunctions = {
 
         dragstart: function(e) {
 
@@ -744,15 +714,148 @@ LW.pages.leek.weapons = function(leek) {
             $(this).removeClass('dragging')
             popup.find('.leek-weapons').removeClass('dashed')
             popup.find('.farmer-weapons').removeClass('dashed')
-        }
-    }).click(function() {
+        },
+        click: function() {
 
-		if ($(this).attr('location') == 'leek') {
-			changeWeapon('remove', $(this).attr('weapon'))
-		} else {
-			changeWeapon('add', $(this).attr('weapon'))
+			if ($(this).attr('location') == 'leek') {
+				changeWeapon('remove', $(this).attr('weapon'))
+			} else {
+				changeWeapon('add', $(this).attr('weapon'))
+			}
 		}
-	})
+    }
+
+    // Insert a weapon to the correct position in the container
+	var insertWeapon = function(container, elem, position) {
+		var children = container.children()
+		var inserted = false
+		var i = 0
+
+		if(children.length > 0) {
+			while(i < children.length && !inserted) {
+				if(LW.orderedWeapons[parseInt(children.eq(i).attr('weapon'))] > position) {
+					children.eq(i).before(elem)
+					inserted = true
+				}
+				i++
+			}
+		}
+
+		if(!inserted) {
+			container.append(elem)
+		}
+	}
+
+	var changeWeapon = function(action, weaponID) {
+
+		var weaponContainer = (action == 'add') ? 'farmer' : 'leek'
+		var weaponElem = popup.view.find('.weapon[weapon=' + weaponID + "][location='" + weaponContainer + "']")
+		var weaponItem = parseInt(weaponElem.attr('item'))
+		var weaponLocation = weaponElem.attr('location')
+		var weaponPosition = LW.orderedWeapons[weaponID]
+		var weapon = LW.weapons[weaponID]
+
+		weaponElem.removeClass('dragging')
+
+		if (action == 'add') {
+
+			// Conditions to add a weapon on a leek
+			if (weaponLocation == 'leek') return null
+
+			var weaponQuantity = parseInt(weaponElem.attr('quantity'))
+			
+			if (weaponQuantity < 1) return null
+			if (leek.weapons.length >= leek.max_weapons) {
+				_.toast(_.lang.get('leek', 'error_max_weapon', leek.name))
+				return
+			}
+			if (weapon.level > leek.level) {
+				_.toast(_.lang.get('leek', 'error_under_required_level_weapon', leek.name))
+				return
+			}
+			if (popup.view.find('.weapon[weapon=' + weaponID + "][location='leek']").length > 0) {
+				_.toast(_.lang.get('leek', 'error_weapon_already_equipped', leek.name))
+				return
+			}
+
+			// Add weapon to leek inventory in popup
+			var newElem = weaponElem
+				.clone()
+				.attr('id', "popup-leek-weapon-" + weaponID)
+				.attr('location', 'leek')
+				.removeAttr('quantity')
+				.on(weaponEventsFunctions)
+
+			insertWeapon(popup.view.find('.leek-weapons'), newElem, weaponPosition)
+
+			LW.addTooltip('popup-leek-weapon-' + weaponID, '<b>' + _.lang.get('weapon', LW.weapons[weaponID].name) + '</b>')
+
+			// Add weapon to leek inventory on the leek page
+			newElem = weaponElem
+				.clone()
+				.attr('id', "leek-weapon-" + weaponID)
+				.removeAttr('location')
+				.removeAttr('quantity')
+				.on(weaponEventsFunctions)
+
+			insertWeapon($('#leek-weapons'), newElem, weaponPosition)
+			newElem.after("<br>")
+
+			LW.addTooltip("leek-weapon-" + weaponID, "<b>" + _.lang.get('weapon', weapon.name) + "</b><br>" +
+				_.lang.get('leek', 'level_n', weapon.level) + "<br>WEAPON_" + weapon.name.toUpperCase())
+
+			// Update farmer inventory
+			if (weaponQuantity > 1) {
+				weaponElem.attr('quantity', weaponQuantity - 1)
+			} else {
+				weaponElem.remove()
+				$('#tt_' + weaponElem.attr('id')).remove()
+			}
+
+			leek.weapons.push({id: weaponItem, template: weaponID})
+			_.post('leek/add-weapon', {leek_id: leek.id, weapon_id: weaponItem}, function(r) { console.log(r) })
+
+		} else if (action == 'remove') {
+
+
+			if (weaponLocation == 'farmer') return null
+
+			// Add weapon to farmer inventory in popup
+			var farmerWeapon = popup.view.find('.weapon[weapon=' + weaponID + "][location='farmer']")
+
+			if (farmerWeapon.length > 0) {
+				farmerWeapon.attr('quantity', parseInt(farmerWeapon.attr('quantity')) + 1)
+			} else {
+				newElem = weaponElem
+					.clone()
+					.attr('id', "popup-farmer-weapon-" + weaponID)
+					.attr('location', 'farmer')
+					.attr('quantity', 1)
+					.on(weaponEventsFunctions)
+
+				insertWeapon(popup.view.find('.farmer-weapons'), newElem, weaponPosition)
+
+				LW.addTooltip('popup-farmer-weapon-' + weaponID, '<b>' + _.lang.get('weapon', LW.weapons[weaponid].name) + '</b>')
+			}
+
+			// Remove weapon in popup
+			weaponElem.remove()
+			$('#tt_' + weaponElem.attr('id')).remove()
+
+			// Remove weapon on the leek page
+			var leekPageWeapon = $('#leek-weapons').find(".weapon[weapon='" + weaponID + "']")
+			if(leekPageWeapon.next().prop("tagName") === "BR") leekPageWeapon.next().remove()
+			leekPageWeapon.remove()
+			$('#tt_leek-weapon-' + weaponID).remove()
+
+			_.removeWhere(leek.weapons, 'id', weaponItem)
+			_.post('leek/remove-weapon', {weapon_id: weaponItem}, function(r) { console.log(r) })
+		}
+
+		$('.weapon-count').text('[' + leek.weapons.length + '/' + leek.max_weapons + "]")
+	}
+
+	popup.view.find('.weapon.available').on(weaponEventsFunctions)
 
     popup.view.find('.leek-weapons, .farmer-weapons').on({
         drop: function(e) {
@@ -789,7 +892,6 @@ LW.pages.leek.chips = function(leek) {
 		if(groupedFarmerChips[chip.template] === undefined) {
 			groupedFarmerChips[chip.template] = chip
 			groupedFarmerChips[chip.template].quantity = 0
-			groupedFarmerChips[chip.template].position = LW.orderedChips[chip.template]
 		}
 
 		groupedFarmerChips[chip.template].quantity++
