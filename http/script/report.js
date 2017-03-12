@@ -743,7 +743,7 @@ LW.pages.report.highlightStatisticsTable = function(statistics) {
 		var bestl = null
 
 		for (var l = 0; l < leeks; ++l) {
-			var v = parseFloat($($(trs[l]).find('td')[c]).text().replace(/( |\u00a0)/g, ''));
+			var v = parseFloat($($(trs[l]).find('td')[c]).text().replace(/( |\u00a0)/g, ''))
 			if (v > best) {
 				best = v
 				bestl = l
