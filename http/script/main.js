@@ -1904,16 +1904,16 @@ LW.updateCounters = function() {
 
 var FormatTime = function(time) {
 
-	var hours = Math.floor(time / 3600);
-	var minuts = Math.floor((time % 3600) / 60);
-	var seconds = time - hours * 3600 - minuts * 60;
+	var hours = Math.floor(time / 3600)
+	var minuts = Math.floor((time % 3600) / 60)
+	var seconds = time - hours * 3600 - minuts * 60
 
-	var res = "";
-	if (hours > 0) res += ("0" + hours + "h ").substr(-4);
-	if (minuts > 0) res += ("0" + minuts + "m ").substr(-4);
-	if (seconds != 0) res += ("0" + seconds + "s").substr(-3);
+	var res = ""
+	if (hours > 0) res += hours + "h "
+	if (minuts > 0) res += ("0" + minuts + "m ").substr(-4)
+	if (seconds != 0) res += ("0" + seconds + "s").substr(-3)
 
-	return res;
+	return res
 }
 
 function escapeRegExp(str) {
