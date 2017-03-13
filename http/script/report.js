@@ -109,11 +109,6 @@ LW.pages.report.init = function(params, $scope, $page) {
 					}
 				}
 
-				// Connect the button to make an other test fight with same parameters
-				if (fight.context == LW.FIGHT_CONTEXT.TEST) {
-					$('body').on('click', '#refight-test', _refightTest)
-				}
-
 				$scope.team1_title = team1Title
 				$scope.team2_title = team2Title
 				$scope.leeks1 = leeks1
@@ -171,10 +166,29 @@ LW.pages.report.init = function(params, $scope, $page) {
 			LW.pages.report.graph($scope.statistics, fight)
 			LW.pages.report.highlightStatisticsTable($scope.statistics)
 			LW.pages.report.expandTabs()
+			LW.pages.report.refightButton(fight)
 
 			LW.setTitle(_.lang.get('report', 'title') + " - " + fight.team1_name + " vs " + fight.team2_name)
 		})
 	})
+}
+
+// Connect the button to make an other test fight with same parameters
+LW.pages.report.refightButton = function(fight) {
+	if (fight.context == LW.FIGHT_CONTEXT.TEST) {
+		$('#refight-test').click(function() {
+
+			var data = localStorage['editor/last-scenario-data']
+
+			_.post('ai/test-new', {data: data}, function(data) {
+				if (data.success) {
+					LW.page('/fight/' + data.fight)
+				} else {
+					_.toast("Erreur : " + data.error)
+				}
+			})
+		})
+	}
 }
 
 LW.pages.report.generateActions = function(data, callback) {
@@ -803,19 +817,5 @@ LW.pages.report.expandTabs = function() {
 		})
 
 		update(panel)
-	})
-}
-
-// Start a new test fight with same parameters
-function _refightTest() {
-
-	var data = localStorage['editor/last-scenario-data']
-
-	_.post('ai/test-new', {data: data}, function(data) {
-		if (data.success) {
-			LW.page('/fight/' + data.fight)
-		} else {
-			_.toast("Erreur : " + data.error)
-		}
 	})
 }
