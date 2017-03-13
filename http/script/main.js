@@ -1909,9 +1909,9 @@ var FormatTime = function(time) {
 	var seconds = time - hours * 3600 - minuts * 60;
 
 	var res = "";
-	if (hours > 0) res += hours + "h ";
-	if (minuts > 0) res += minuts + "m ";
-	if (seconds != 0) res += seconds + "s";
+	if (hours > 0) res += ("0" + hours + "h ").substr(-4);
+	if (minuts > 0) res += ("0" + minuts + "m ").substr(-4);
+	if (seconds != 0) res += ("0" + seconds + "s").substr(-3);
 
 	return res;
 }
