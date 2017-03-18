@@ -157,7 +157,10 @@ _.anyAttrEqual = function(array, attr, condition) {
 }
 
 _.protect = function(string) {
-	return ('' + string).replace(/&/g, "&amp;").replace(/>/g, "&gt;").replace(/</g, "&lt;").replace(/"/g, "&quot;");
+	return ('' + string).replace(/&/g, "&amp;")
+	.replace(/>/g, "&gt;").replace(/</g, "&lt;")
+	.replace(/"/g, "&quot;").replace(/'/g, "&#39;")
+
 }
 
 _.clone = function(obj) {
