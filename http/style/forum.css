@@ -64,7 +64,12 @@
 
 #forum-page .category .seen {
 	width: 40px;
+	padding-top: 10px;
+	padding-bottom: 10px;
 	padding-right: 5px;
+}
+#forum-page .category .seen img {
+	height: 40px;
 }
 
 #forum-page .category .title {
