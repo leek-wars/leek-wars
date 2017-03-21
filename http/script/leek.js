@@ -386,6 +386,7 @@ LW.pages.leek.capital = function() {
 
 			$('#capital').toggle(capital > 0)
 			$('#menu .section[leek=' + leek.id + ']').attr('label', capital == 0 ? '' : capital)
+			$('#stats #capital').find('#capital-count').text(capital)
 		}
 
 		popup.view.find('.add').click(function() {
@@ -428,7 +429,11 @@ LW.pages.leek.capital = function() {
 			update()
 		})
 
-		popup.view.find('.reset').click(function() {
+		popup.view.find('.reset, .dismiss').click(function() {
+			reset()
+		})
+
+		popup.wrapper.click(function() {
 			reset()
 		})
 
