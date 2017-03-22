@@ -778,81 +778,94 @@ LW.pages.leek.weapons = function(leek) {
 				return
 			}
 
-			// Add weapon to leek inventory in popup
-			var newElem = weaponElem
-				.clone()
-				.attr('id', "popup-leek-weapon-" + weaponID)
-				.attr('location', 'leek')
-				.removeAttr('quantity')
-				.on(weaponEventsFunctions)
+			_.post('leek/add-weapon', {leek_id: leek.id, weapon_id: weaponItem}, function(data) {
+				if(data.success) {
+					// Add weapon to leek inventory in popup
+					var newElem = weaponElem
+						.clone()
+						.attr('id', "popup-leek-weapon-" + weaponID)
+						.attr('item', data.id)
+						.attr('location', 'leek')
+						.removeAttr('quantity')
+						.on(weaponEventsFunctions)
 
-			insertWeapon(popup.view.find('.leek-weapons'), newElem, weaponPosition)
+					insertWeapon(popup.view.find('.leek-weapons'), newElem, weaponPosition)
 
-			LW.addTooltip('popup-leek-weapon-' + weaponID, '<b>' + _.lang.get('weapon', LW.weapons[weaponID].name) + '</b>')
+					LW.addTooltip('popup-leek-weapon-' + weaponID, '<b>' + _.lang.get('weapon', LW.weapons[weaponID].name) + '</b>')
 
-			// Add weapon to leek inventory on the leek page
-			newElem = weaponElem
-				.clone()
-				.attr('id', "leek-weapon-" + weaponID)
-				.removeAttr('location')
-				.removeAttr('quantity')
-				.on(weaponEventsFunctions)
+					// Add weapon to leek inventory on the leek page
+					newElem = weaponElem
+						.clone()
+						.attr('id', "leek-weapon-" + weaponID)
+						.attr('item', data.id)
+						.removeAttr('location')
+						.removeAttr('quantity')
+						.on(weaponEventsFunctions)
 
-			insertWeapon($('#leek-weapons'), newElem, weaponPosition)
-			newElem.after("<br>")
+					insertWeapon($('#leek-weapons'), newElem, weaponPosition)
+					newElem.after("<br>")
 
-			LW.addTooltip("leek-weapon-" + weaponID, "<b>" + _.lang.get('weapon', weapon.name) + "</b><br>" +
-				_.lang.get('leek', 'level_n', weapon.level) + "<br>WEAPON_" + weapon.name.toUpperCase())
+					LW.addTooltip("leek-weapon-" + weaponID, "<b>" + _.lang.get('weapon', weapon.name) + "</b><br>" +
+						_.lang.get('leek', 'level_n', weapon.level) + "<br>WEAPON_" + weapon.name.toUpperCase())
 
-			// Update farmer inventory
-			if (weaponQuantity > 1) {
-				weaponElem.attr('quantity', weaponQuantity - 1)
-			} else {
-				weaponElem.remove()
-				$('#tt_' + weaponElem.attr('id')).remove()
-			}
+					// Update farmer inventory
+					if (weaponQuantity > 1) {
+						weaponElem.attr('quantity', weaponQuantity - 1)
+					} else {
+						weaponElem.remove()
+						$('#tt_' + weaponElem.attr('id')).remove()
+					}
 
-			leek.weapons.push({id: weaponItem, template: weaponID})
-			_.post('leek/add-weapon', {leek_id: leek.id, weapon_id: weaponItem}, function(r) { console.log(r) })
+					leek.weapons.push({id: data.id, template: weaponID})
+					$('.weapon-count').text('[' + leek.weapons.length + '/' + leek.max_weapons + "]")
+
+				} else {
+					_.toast(data.error)
+				}
+			})
 
 		} else if (action == 'remove') {
 
-
 			if (weaponLocation == 'farmer') return null
 
-			// Add weapon to farmer inventory in popup
-			var farmerWeapon = popup.view.find('.weapon[weapon=' + weaponID + "][location='farmer']")
+			_.post('leek/remove-weapon', {weapon_id: weaponItem}, function(data) {
+				if(data.success) {
+					// Add weapon to farmer inventory in popup
+					var farmerWeapon = popup.view.find('.weapon[weapon=' + weaponID + "][location='farmer']")
 
-			if (farmerWeapon.length > 0) {
-				farmerWeapon.attr('quantity', parseInt(farmerWeapon.attr('quantity')) + 1)
-			} else {
-				newElem = weaponElem
-					.clone()
-					.attr('id', "popup-farmer-weapon-" + weaponID)
-					.attr('location', 'farmer')
-					.attr('quantity', 1)
-					.on(weaponEventsFunctions)
+					if (farmerWeapon.length > 0) {
+						farmerWeapon.attr('quantity', parseInt(farmerWeapon.attr('quantity')) + 1)
+					} else {
+						newElem = weaponElem
+							.clone()
+							.attr('id', "popup-farmer-weapon-" + weaponID)
+							.attr('location', 'farmer')
+							.attr('quantity', 1)
+							.on(weaponEventsFunctions)
 
-				insertWeapon(popup.view.find('.farmer-weapons'), newElem, weaponPosition)
+						insertWeapon(popup.view.find('.farmer-weapons'), newElem, weaponPosition)
 
-				LW.addTooltip('popup-farmer-weapon-' + weaponID, '<b>' + _.lang.get('weapon', LW.weapons[weaponid].name) + '</b>')
-			}
+						LW.addTooltip('popup-farmer-weapon-' + weaponID, '<b>' + _.lang.get('weapon', LW.weapons[weaponid].name) + '</b>')
+					}
 
-			// Remove weapon in popup
-			weaponElem.remove()
-			$('#tt_' + weaponElem.attr('id')).remove()
+					// Remove weapon in popup
+					weaponElem.remove()
+					$('#tt_' + weaponElem.attr('id')).remove()
 
-			// Remove weapon on the leek page
-			var leekPageWeapon = $('#leek-weapons').find(".weapon[weapon='" + weaponID + "']")
-			if(leekPageWeapon.next().prop("tagName") === "BR") leekPageWeapon.next().remove()
-			leekPageWeapon.remove()
-			$('#tt_leek-weapon-' + weaponID).remove()
+					// Remove weapon on the leek page
+					var leekPageWeapon = $('#leek-weapons').find(".weapon[weapon='" + weaponID + "']")
+					if(leekPageWeapon.next().prop("tagName") === "BR") leekPageWeapon.next().remove()
+					leekPageWeapon.remove()
+					$('#tt_leek-weapon-' + weaponID).remove()
 
-			_.removeWhere(leek.weapons, 'id', weaponItem)
-			_.post('leek/remove-weapon', {weapon_id: weaponItem}, function(r) { console.log(r) })
+					_.removeWhere(leek.weapons, 'id', weaponItem)
+					$('.weapon-count').text('[' + leek.weapons.length + '/' + leek.max_weapons + "]")
+
+				} else {
+					_.toast(data.error)
+				}
+			})
 		}
-
-		$('.weapon-count').text('[' + leek.weapons.length + '/' + leek.max_weapons + "]")
 	}
 
 	popup.view.find('.weapon.available').on(weaponEventsFunctions)
@@ -989,77 +1002,93 @@ LW.pages.leek.chips = function(leek) {
 				return
 			}
 
-			// Add chip to leek inventory in popup
-			var newElem = chipElem
-				.clone()
-				.attr('id', "popup-leek-chip-" + chipID)
-				.attr('location', 'leek')
-				.removeAttr('quantity')
-				.on(chipEventsFunctions)
+			_.post('leek/add-chip', {leek_id: leek.id, chip_id: chipItem}, function(data) {
+				if(data.success) {
+					console.log('DATA', data)
+					// Add chip to leek inventory in popup
+					var newElem = chipElem
+						.clone()
+						.attr('id', "popup-leek-chip-" + chipID)
+						.attr('item', data.id)
+						.attr('location', 'leek')
+						.removeAttr('quantity')
+						.on(chipEventsFunctions)
 
-			insertChip(popup.view.find('.leek-chips'), newElem, chipPosition)
+					insertChip(popup.view.find('.leek-chips'), newElem, chipPosition)
 
-			LW.addTooltip('popup-leek-chip-' + chipID, '<b>' + _.lang.get('chip', LW.chips[chipID].name) + '</b>')
+					LW.addTooltip('popup-leek-chip-' + chipID, '<b>' + _.lang.get('chip', LW.chips[chipID].name) + '</b>')
 
-			// Add chip to leek inventory on the leek page
-			newElem = chipElem
-				.clone()
-				.attr('id', "leek-chip-" + chipID)
-				.removeAttr('location')
-				.removeAttr('quantity')
-				.on(chipEventsFunctions)
+					// Add chip to leek inventory on the leek page
+					newElem = chipElem
+						.clone()
+						.attr('id', "leek-chip-" + chipID)
+						.attr('item', data.id)
+						.removeAttr('location')
+						.removeAttr('quantity')
+						.on(chipEventsFunctions)
 
-			insertChip($('#leek-chips'), newElem, chipPosition)
+					insertChip($('#leek-chips'), newElem, chipPosition)
 
-			LW.addTooltip("leek-chip-" + chipID, "<b>" + _.lang.get('chip', chip.name) + "</b><br>" +
-				_.lang.get('leek', 'level_n', chip.level) + "<br>CHIP_" + chip.name.toUpperCase())
+					LW.addTooltip("leek-chip-" + chipID, "<b>" + _.lang.get('chip', chip.name) + "</b><br>" +
+						_.lang.get('leek', 'level_n', chip.level) + "<br>CHIP_" + chip.name.toUpperCase())
 
-			// Update farmer inventory
-			if (chipQuantity > 1) {
-				chipElem.attr('quantity', chipQuantity - 1)
-			} else {
-				chipElem.remove()
-				$('#tt_' + chipElem.attr('id')).remove()
-			}
+					// Update farmer inventory
+					if (chipQuantity > 1) {
+						chipElem.attr('quantity', chipQuantity - 1)
+					} else {
+						chipElem.remove()
+						$('#tt_' + chipElem.attr('id')).remove()
+					}
 
-			leek.chips.push({id: chipItem, template: chipID})
-			_.post('leek/add-chip', {leek_id: leek.id, chip_id: chipItem})
+					leek.chips.push({id: data.id, template: chipID})
+					$('.chip-count').text('[' + leek.chips.length + '/' + leek.max_chips + "]")
+
+				} else {
+					_.toast(data.error)
+				}
+			})
 
 		} else if (action == 'remove') {
 
 			if (chipLocation == 'farmer') return null
 
-			// Add chip to farmer inventory in popup
-			var farmerChip = popup.view.find('.chip[chip=' + chipID + "][location='farmer']")
+			_.post('leek/remove-chip', {chip_id: chipItem}, function(data) {
+				console.log('DATA', data)
+				if(data.success) {
+					// Add chip to farmer inventory in popup
+					var farmerChip = popup.view.find('.chip[chip=' + chipID + "][location='farmer']")
 
-			if (farmerChip.length > 0) {
-				farmerChip.attr('quantity', parseInt(farmerChip.attr('quantity')) + 1)
-			} else {
-				newElem = chipElem
-					.clone()
-					.attr('id', "popup-farmer-chip-" + chipID)
-					.attr('location', 'farmer')
-					.attr('quantity', 1)
-					.on(chipEventsFunctions)
+					if (farmerChip.length > 0) {
+						farmerChip.attr('quantity', parseInt(farmerChip.attr('quantity')) + 1)
+					} else {
+						newElem = chipElem
+							.clone()
+							.attr('id', "popup-farmer-chip-" + chipID)
+							.attr('location', 'farmer')
+							.attr('quantity', 1)
+							.on(chipEventsFunctions)
 
-				insertChip(popup.view.find('.farmer-chips'), newElem, chipPosition)
+						insertChip(popup.view.find('.farmer-chips'), newElem, chipPosition)
 
-				LW.addTooltip('popup-farmer-chip-' + chipID, '<b>' + _.lang.get('chip', LW.chips[chipID].name) + '</b>')
-			}
+						LW.addTooltip('popup-farmer-chip-' + chipID, '<b>' + _.lang.get('chip', LW.chips[chipID].name) + '</b>')
+					}
 
-			// Remove chip in popup
-			chipElem.remove()
-			$('#tt_' + chipElem.attr('id')).remove()
+					// Remove chip in popup
+					chipElem.remove()
+					$('#tt_' + chipElem.attr('id')).remove()
 
-			// Remove chip on the leek page
-			$('#leek-chips').find(".chip[chip='" + chipID + "']").remove()
-			$('#tt_leek-chip-' + chipID).remove()
+					// Remove chip on the leek page
+					$('#leek-chips').find(".chip[chip='" + chipID + "']").remove()
+					$('#tt_leek-chip-' + chipID).remove()
 
-			_.removeWhere(leek.chips, 'id', chipItem)
-			_.post('leek/remove-chip', {chip_id: chipItem})
+					_.removeWhere(leek.chips, 'id', chipItem)
+					$('.chip-count').text('[' + leek.chips.length + '/' + leek.max_chips + "]")
+
+				} else {
+					_.toast(data.error)
+				}
+			})
 		}
-
-   		$('.chip-count').text('[' + leek.chips.length + '/' + leek.max_chips + "]")
 	}
 
 	popup.view.find('.chip.available').on(chipEventsFunctions)
