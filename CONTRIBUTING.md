@@ -22,7 +22,7 @@ If you don't know how to format your code, follow the style of the existing code
 
 ## Pull requests and commits
 
-- Create one pull request per feature of bug fix you want to propose. Don't include two features in the same pull request, or one feature plus some bug fix etc.
+- Create one pull request per feature or bug fix you want to propose. Don't include two features in the same pull request, or one feature plus some bug fix etc.
 - Write a clear and meaningful pull request title and description. Explain the purpose, the context, how do you implement your solution as much as possible.
 
 - Create reasonable sized commits, avoid modifying too much different files in a single commit
