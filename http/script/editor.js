@@ -856,6 +856,7 @@ LW.pages.editor.test_popup = function(ais) {
 	var generate_default_scenarios = function(scenarios) {
 		for (var l in LW.farmer.leeks) {
 			var ai = editors[_leek_ais[l]]
+			if (!ai) continue;
 			var ais = {}
 			ais[l] = {id: ai.id, name: ai.path}
 			var team1 = {}
