@@ -183,7 +183,7 @@
 
 				<br>
 
-				@if (!my_farmer)
+				@if (!my_farmer && LW.connected)
 					<center><a href='/messages/new/{farmer.id}'><div class='button' id='send-message'>{#send_private_message}</div></a></center>
 				@end
 			</div>
