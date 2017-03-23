@@ -1271,15 +1271,27 @@ LW.pages.editor.test_popup = function(ais) {
 	})
 	add_chip_popup.find('.chip').click(function() {
 		var chip = parseInt($(this).attr('chip'))
-		_current_leek.chips.push(chip)
+		var chip_already_equipped = false
+		for(var c of _current_leek.chips)
+		{
+			if(c == chip) {
+				chip_already_equipped = true
+				break
+			}
+		}
+		if(chip_already_equipped)
+			_.toast('chip_already_equipped', 1200)
+		else {
+			_current_leek.chips.push(chip)
+			var e = $(this).clone()
+			_testPopup.find('.leek-column .chips .container').append(e)
+			add_chip_events(e)
+			add_chip_popup.dismiss()
+			save_leek(_current_leek)
+		}
 		if (_current_leek.chips.length >= 12) {
 			_testPopup.find('.chips .add').hide()
 		}
-		var e = $(this).clone()
-		_testPopup.find('.leek-column .chips .container').append(e)
-		add_chip_events(e)
-		add_chip_popup.dismiss()
-		save_leek(_current_leek)
 	})
 	var add_weapon_popup = new _.popup.new('editor.editor_weapons_popup', {weapons: LW.weapons})
 	_testPopup.find('.leek-column .weapons .add').click(function(e) {
@@ -1287,15 +1299,27 @@ LW.pages.editor.test_popup = function(ais) {
 	})
 	add_weapon_popup.find('.weapon').click(function() {
 		var weapon = parseInt($(this).attr('weapon'))
-		_current_leek.weapons.push(weapon)
+		var weapon_already_equipped = false
+		for(var w of _current_leek.weapons)
+		{
+			if(w == weapon) {
+				weapon_already_equipped = true
+				break
+			}
+		}
+		if(weapon_already_equipped)
+			_.toast('weapon_already_equipped', 1200)
+		else {
+			_current_leek.weapons.push(weapon)
+			var e = $(this).clone()
+			_testPopup.find('.leek-column .weapons .container').append(e)
+			add_weapon_events(e)
+			add_weapon_popup.dismiss()
+			save_leek(_current_leek)
+		}
 		if (_current_leek.weapons.length >= 4) {
 			_testPopup.find('.weapons .add').hide()
 		}
-		var e = $(this).clone()
-		_testPopup.find('.leek-column .weapons .container').append(e)
-		add_weapon_events(e)
-		add_weapon_popup.dismiss()
-		save_leek(_current_leek)
 	})
 
 	/*
