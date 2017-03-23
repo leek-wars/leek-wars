@@ -1516,9 +1516,9 @@ LW.loadPage = function(pageID, params) {
 					page.render = function() {
 
 						var render = _.view.render(pageID, page.scope)
+						$(window).scrollTop(0)
 						LW.setPageContent(pageID, render)
 
-						$(window).scrollTop(0)
 						LW.loader.hide()
 						LW.shrink()
 						LW.setMenuTab(null)
