@@ -495,6 +495,7 @@ LW.pages = {
 		connected: true
 	},
 	messages: {
+		connected: true,
 		styles: ['chat.css']
 	},
 	notifications: {},
