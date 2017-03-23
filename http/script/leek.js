@@ -435,10 +435,9 @@ LW.pages.leek.capital = function() {
 		popup.view.find('.reset, .dismiss').click(function() {
 			reset()
 		})
-
-		popup.wrapper.click(function() {
+		popup.ondismiss = function() {
 			reset()
-		})
+		}
 
 		popup.view.find('.validate').click(function() {
 
