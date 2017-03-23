@@ -53,7 +53,7 @@ LW.pages.forum_topic.selectMessage = function(messageID) {
 			var element = $('#forum_topic-page').find('#message-' + messageID)
 			if (element.length) {
 				var pos = element.position().top + 63
-				$('body').scrollTop(pos)
+				$('body, html').scrollTop(pos)
 			}
 		}
 }
