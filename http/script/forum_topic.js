@@ -3,10 +3,11 @@ var _messageSent = false
 
 LW.pages.forum_topic.init = function(params, $scope, $page) {
 
+	var hash = window.location.hash ? window.location.hash : ''
 	var topic = params.topic
 	var page = 'page' in params ? params.page : 1
 
-	_.get('forum/get-messages/' + topic + '/' + page + '/' + LW.token(), function(data) { 
+	_.get('forum/get-messages/' + topic + '/' + page + '/' + LW.token(), function(data) {
 
 		if (!data.success) {
 			LW.error()
@@ -35,6 +36,7 @@ LW.pages.forum_topic.init = function(params, $scope, $page) {
 		LW.pages.forum_topic.format()
 		LW.pages.forum_topic.subscribe()
 		LW.pages.forum_topic.vote()
+		LW.pages.forum_topic.selectMessage(hash.replace(/#/, ''))
 	})
 }
 
@@ -44,6 +46,17 @@ $('#forum_topic-page .text, #topic-title').on('paste',function(e) {
 	var text = (e.originalEvent || e).clipboardData.getData('text/plain') || prompt('Paste something..')
 	document.execCommand('insertText', false, text)
 })
+
+LW.pages.forum_topic.selectMessage = function(messageID) {
+
+		if (messageID) {
+			var element = $('#forum_topic-page').find('#message-' + messageID)
+			if (element.length) {
+				var pos = element.position().top + 63
+				$('body, html').scrollTop(pos)
+			}
+		}
+}
 
 LW.pages.forum_topic.resize = function() {
 
