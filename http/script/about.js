@@ -9,6 +9,7 @@ LW.pages.about.init = function(params, $scope, $page) {
 		["Game Side Story", "http://www.gamesidestory.com/2014/09/02/gametest-leekwars-navigateur/"],
 		['MacAttac', "http://www.macattac.fr/2014/09/28/test-du-jeu-leek-wars/"]
 	]
+	LW.setTitle(_.lang.get('about', 'title'))
 	$page.render()
 
 	// Twitter button
