@@ -3,7 +3,7 @@
 }
 
 #top-panel {
-	margin-bottom: 10px; 
+	margin-bottom: 10px;
 }
 
 #top-panel .column {
@@ -125,7 +125,7 @@
 	cursor: auto;
 	opacity: 0.2;
 }
- 
+
 .popup.capital_popup .add:hover {
 	opacity: 1;
 }
@@ -140,7 +140,7 @@
 	display: inline-block;
 	margin-top: 2px;
 	font-weight: 500;
-} 
+}
 
 
 /*
@@ -178,7 +178,7 @@
 #bar {
 	width: 100%;
 	height: 10px;
-	margin-top: 5px; 
+	margin-top: 5px;
 	background: white;
 	border: 1px solid #ddd;
 	position:relative;
@@ -198,7 +198,7 @@
 
 #talent {
 	font-size: 23px;
-	color: #555; 
+	color: #555;
 	display: inline-block;
 	font-weight: 300;
 	margin-top: 10px;
@@ -222,7 +222,7 @@
 	margin-left: 5px;
 	margin-top: 13px;
 	vertical-align: top;
-	color: #888; 
+	color: #888;
 }
 
 #leek-page #fights {
@@ -255,7 +255,7 @@
 }
 
 #leek-page #talent-history .ct-line:hover {
-	stroke-width: 5px; 
+	stroke-width: 5px;
 }
 
 #leek-page #talent-history .ct-point {
@@ -286,11 +286,11 @@
 	cursor: pointer;
 	color: #aaa;
 	margin: 10px 0;
-}	
+}
 
 .edit-button:hover {
 	color: black;
-}	
+}
 
 #capital {
 	text-align: center;
@@ -313,7 +313,7 @@
 
 .dashed {
 	border: 5px dashed #999;
-	margin: -5px; 
+	margin: -5px;
 }
 
 .dragging {
@@ -326,8 +326,8 @@
 #leek-weapons {
 	text-align: center;
 }
- 
-.popup.weapon_popup .leek-weapons, 
+
+.popup.weapon_popup .leek-weapons,
 .popup.weapon_popup .farmer-weapons {
 	min-height: 80px;
 }
@@ -376,7 +376,7 @@
 	width: 70px;
 }
 
-.popup.chip_popup .leek-chips, 
+.popup.chip_popup .leek-chips,
 .popup.chip_popup .farmer-chips {
 	min-height: 80px;
 }
@@ -423,7 +423,7 @@
 	padding: 5px 20px;
 }
 
-#popup-ai{
+#popup-ai {
 	text-align: center;
 }
 
@@ -439,7 +439,7 @@
 	text-align: center;
 }
 
-.popup.ai_popup .leek-ai, 
+.popup.ai_popup .leek-ai,
 .popup.ai_popup .farmer-ais {
 	min-height: 80px;
 }

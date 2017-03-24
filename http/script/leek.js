@@ -1088,7 +1088,7 @@ LW.pages.leek.chips = function(leek) {
 
 LW.pages.leek.ai = function(leek) {
 
-	var popup = new _.popup.new('leek.ai_popup', {leek: leek, farmer_ais: LW.farmer.ais}, 800)
+	var popup = new _.popup.new('leek.ai_popup', {leek: leek, farmer_ais: LW.farmer.ais}, 930)
 	var draggedAI = null
 
 	var changeAI = function(action, aiID) {
@@ -1187,6 +1187,7 @@ LW.pages.leek.ai = function(leek) {
 
 	$('#edit-ai').click(function(e) {
 		popup.show(e)
+		popup.find('.content').css('max-height', '600px')
 	})
 }
 
