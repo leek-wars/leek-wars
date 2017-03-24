@@ -92,7 +92,6 @@ LW.pages.leek.init = function(params, $scope, $page) {
 }
 
 LW.pages.leek.pause = function() {
-
 	clearInterval(this.leekTimeUpdate)
 }
 
@@ -103,43 +102,37 @@ LW.pages.leek.chart = function() {
 	for (var i = 0; i < 7; ++i) {
 		labels.push(_.format.dayMonthShort(time - i * 24 * 3600))
 	}
-
 	var data = {
 		labels: labels.reverse(),
 		series: [this.scope.leek.talent_history]
-	};
+	}
+	new Chartist.Line('.ct-chart', data, {height: 130, showArea: true, fullWidth: true, fullHeight: true})
 
-	new Chartist.Line('.ct-chart', data, {height: 130, showArea: true, fullWidth: true, fullHeight: true});
-
-	var chart = $('.ct-chart');
-
+	var chart = $('.ct-chart')
 	var toolTip = chart
 		.append('<div class="tooltip top"><div class="content"></div><div class="arrow"></div></div>')
 		.find('.tooltip')
-		.hide();
+		.hide()
 
 	chart.on('mouseenter', '.ct-point', function() {
 		var point = $(this),
 		value = point.attr('ct:value'),
-		seriesName = point.parent().attr('ct:series-name');
+		seriesName = point.parent().attr('ct:series-name')
 		toolTip.find('.content').html(value)
-		toolTip.show();
-	});
-
+		toolTip.show()
+	})
 	chart.on('mouseleave', '.ct-point', function() {
-		toolTip.hide();
-	});
-
+		toolTip.hide()
+	})
 	chart.on('mousemove', function(event) {
 		toolTip.css({
 			left: (event.offsetX || event.originalEvent.layerX) - toolTip.width() / 2 - 5,
 			top: (event.offsetY || event.originalEvent.layerY) - toolTip.height() - 20
-		});
-	});
+		})
+	})
 }
 
 LW.pages.leek.updateImage = function() {
-
 	LW.createLeekImage(this.scope.leek.id, 1, this.scope.leek.level, this.scope.leek.skin, this.scope.leek.hat, function(id, data) {
 		$('#page #leek-image').html(data)
 	})
@@ -148,7 +141,6 @@ LW.pages.leek.updateImage = function() {
 LW.pages.leek.rename = function(e) {
 
 	var leek = this.scope.leek
-
 	var prices = {
 		habs: 2000000,
 		crystals: 200
@@ -180,7 +172,6 @@ LW.pages.leek.rename = function(e) {
 			var name = $('#rename-new-name').val()
 
 			_.post('leek/rename-habs', {leek_id: leek.id, new_name: name}, function(data) {
-
 				if (data.success) {
 					done(name, 'habs')
 				} else {
@@ -194,7 +185,6 @@ LW.pages.leek.rename = function(e) {
 			var name = $('#rename-new-name').val()
 
 			_.post('leek/rename-crystals', {leek_id: leek.id, new_name: name}, function(data) {
-
 				if (data.success) {
 					done(name, 'crystals')
 				} else {
@@ -229,11 +219,8 @@ LW.pages.leek.potion = function() {
 				var effect = template.effects[e]
 
 				if (effect.type == 1) { // Restat
-
 					_.reload()
-
 				} else if (effect.type == 2) { // Skin
-
 					leek.skin = effect.params[0]
 					LW.pages.leek.updateImage()
 				}
@@ -679,14 +666,12 @@ LW.pages.leek.weapons = function(leek) {
 	var groupedFarmerWeapons = []
 
 	// Group identicals weapons
-	for(var i in LW.farmer.weapons) {
+	for (var i in LW.farmer.weapons) {
 		var weapon = LW.farmer.weapons[i]
-
-		if(groupedFarmerWeapons[weapon.template] === undefined) {
+		if (groupedFarmerWeapons[weapon.template] === undefined) {
 			groupedFarmerWeapons[weapon.template] = weapon
 			groupedFarmerWeapons[weapon.template].quantity = 0
 		}
-
 		groupedFarmerWeapons[weapon.template].quantity++
 	}
 
@@ -699,9 +684,7 @@ LW.pages.leek.weapons = function(leek) {
 	var draggedWeapon = null
 
 	var weaponEventsFunctions = {
-
-        dragstart: function(e) {
-
+		dragstart: function(e) {
 			if ($(this).attr('location') == 'leek') {
 				popup.find('.farmer-weapons').addClass('dashed')
 			} else {
@@ -709,43 +692,38 @@ LW.pages.leek.weapons = function(leek) {
 					popup.find('.leek-weapons').addClass('dashed')
 				}
 			}
-
 			draggedWeapon = $(this).attr('weapon')
-            $(this).addClass('dragging');
-        },
-        dragend: function() {
-
-            $(this).removeClass('dragging')
-            popup.find('.leek-weapons').removeClass('dashed')
-            popup.find('.farmer-weapons').removeClass('dashed')
-        },
-        click: function() {
-
+			$(this).addClass('dragging');
+		},
+		dragend: function() {
+			$(this).removeClass('dragging')
+			popup.find('.leek-weapons').removeClass('dashed')
+			popup.find('.farmer-weapons').removeClass('dashed')
+		},
+		click: function() {
 			if ($(this).attr('location') == 'leek') {
 				changeWeapon('remove', $(this).attr('weapon'))
 			} else {
 				changeWeapon('add', $(this).attr('weapon'))
 			}
 		}
-    }
+	}
 
-    // Insert a weapon to the correct position in the container
+	// Insert a weapon to the correct position in the container
 	var insertWeapon = function(container, elem, position) {
 		var children = container.children()
 		var inserted = false
 		var i = 0
-
-		if(children.length > 0) {
-			while(i < children.length && !inserted) {
-				if(LW.orderedWeapons[parseInt(children.eq(i).attr('weapon'))] > position) {
+		if (children.length > 0) {
+			while (i < children.length && !inserted) {
+				if (LW.orderedWeapons[parseInt(children.eq(i).attr('weapon'))] > position) {
 					children.eq(i).before(elem)
 					inserted = true
 				}
 				i++
 			}
 		}
-
-		if(!inserted) {
+		if (!inserted) {
 			container.append(elem)
 		}
 	}
@@ -767,7 +745,7 @@ LW.pages.leek.weapons = function(leek) {
 			if (weaponLocation == 'leek') return null
 
 			var weaponQuantity = parseInt(weaponElem.attr('quantity'))
-			
+
 			if (weaponQuantity < 1) return null
 			if (leek.weapons.length >= leek.max_weapons) {
 				_.toast(_.lang.get('leek', 'error_max_weapon', leek.name))
@@ -874,8 +852,8 @@ LW.pages.leek.weapons = function(leek) {
 
 	popup.view.find('.weapon.available').on(weaponEventsFunctions)
 
-    popup.view.find('.leek-weapons, .farmer-weapons').on({
-        drop: function(e) {
+	popup.view.find('.leek-weapons, .farmer-weapons').on({
+		drop: function(e) {
 
 			$(this).removeClass('dashed')
 
@@ -887,10 +865,10 @@ LW.pages.leek.weapons = function(leek) {
 			draggedWeapon = null
 			e.preventDefault()
 			return false
-        },
-        dragover: function(e) {
-            e.preventDefault()
-        }
+		},
+		dragover: function(e) {
+			e.preventDefault()
+		}
 	})
 
 	$('#edit-weapons').click(function(e) {
@@ -903,17 +881,14 @@ LW.pages.leek.chips = function(leek) {
 	var groupedFarmerChips = []
 
 	// Group identicals chips
-	for(var i in LW.farmer.chips) {
+	for (var i in LW.farmer.chips) {
 		var chip = LW.farmer.chips[i]
-
-		if(groupedFarmerChips[chip.template] === undefined) {
+		if (groupedFarmerChips[chip.template] === undefined) {
 			groupedFarmerChips[chip.template] = chip
 			groupedFarmerChips[chip.template].quantity = 0
 		}
-
 		groupedFarmerChips[chip.template].quantity++
 	}
-
 	// Sort chips by types
 	var sortedFarmerChips = groupedFarmerChips.sort(function(chipA, chipB) {
 		return LW.orderedChips[chipA.template] - LW.orderedChips[chipB.template]
@@ -923,9 +898,7 @@ LW.pages.leek.chips = function(leek) {
 	var draggedChip = null
 
 	var chipEventsFunctions = {
-
-        dragstart: function(e) {
-
+		dragstart: function(e) {
 			if ($(this).attr('location') == 'leek') {
 				popup.find('.farmer-chips').addClass('dashed')
 			} else {
@@ -933,43 +906,38 @@ LW.pages.leek.chips = function(leek) {
 					popup.find('.leek-chips').addClass('dashed')
 				}
 			}
-
 			draggedChip = $(this).attr('chip')
-            $(this).addClass('dragging');
-        },
-        dragend: function() {
-
-            $(this).removeClass('dragging')
-            popup.find('.leek-chips').removeClass('dashed')
-            popup.find('.farmer-chips').removeClass('dashed')
-        },
-        click: function() {
-
+			$(this).addClass('dragging');
+		},
+		dragend: function() {
+			$(this).removeClass('dragging')
+			popup.find('.leek-chips').removeClass('dashed')
+			popup.find('.farmer-chips').removeClass('dashed')
+		},
+		click: function() {
 			if ($(this).attr('location') == 'leek') {
 				changeChip('remove', $(this).attr('chip'))
 			} else {
 				changeChip('add', $(this).attr('chip'))
 			}
 		}
-    }
+	}
 
-    // Insert a chip to the correct position in the container
+	// Insert a chip to the correct position in the container
 	var insertChip = function(container, elem, position) {
 		var children = container.children()
 		var inserted = false
 		var i = 0
-
-		if(children.length > 0) {
-			while(i < children.length && !inserted) {
-				if(LW.orderedChips[parseInt(children.eq(i).attr('chip'))] > position) {
+		if (children.length > 0) {
+			while (i < children.length && !inserted) {
+				if (LW.orderedChips[parseInt(children.eq(i).attr('chip'))] > position) {
 					children.eq(i).before(elem)
 					inserted = true
 				}
 				i++
 			}
 		}
-
-		if(!inserted) {
+		if (!inserted) {
 			container.append(elem)
 		}
 	}
@@ -982,7 +950,7 @@ LW.pages.leek.chips = function(leek) {
 		var chipLocation = chipElem.attr('location')
 		var chipPosition = LW.orderedChips[chipID]
 		var chip = LW.chips[chipID]
-		
+
 		chipElem.removeClass('dragging')
 
 		if (action == 'add') {
@@ -991,7 +959,7 @@ LW.pages.leek.chips = function(leek) {
 			if (chipLocation == 'leek') return null
 
 			var chipQuantity = parseInt(chipElem.attr('quantity'))
-			
+
 			if (chipQuantity < 1) return null
 			if (leek.chips.length >= leek.max_chips) {
 				_.toast(_.lang.get('leek', 'error_max_chip', leek.name))
@@ -1008,7 +976,6 @@ LW.pages.leek.chips = function(leek) {
 
 			_.post('leek/add-chip', {leek_id: leek.id, chip_id: chipItem}, function(data) {
 				if(data.success) {
-					console.log('DATA', data)
 					// Add chip to leek inventory in popup
 					var newElem = chipElem
 						.clone()
@@ -1057,8 +1024,7 @@ LW.pages.leek.chips = function(leek) {
 			if (chipLocation == 'farmer') return null
 
 			_.post('leek/remove-chip', {chip_id: chipItem}, function(data) {
-				console.log('DATA', data)
-				if(data.success) {
+				if (data.success) {
 					// Add chip to farmer inventory in popup
 					var farmerChip = popup.view.find('.chip[chip=' + chipID + "][location='farmer']")
 
@@ -1097,8 +1063,8 @@ LW.pages.leek.chips = function(leek) {
 
 	popup.view.find('.chip.available').on(chipEventsFunctions)
 
-    popup.view.find('.leek-chips, .farmer-chips').on({
-        drop: function(e) {
+	popup.view.find('.leek-chips, .farmer-chips').on({
+		drop: function(e) {
 			$(this).removeClass('dashed')
 
 			if ($(this).hasClass('leek-chips'))
@@ -1109,10 +1075,10 @@ LW.pages.leek.chips = function(leek) {
 			draggedChip = null
 			e.preventDefault()
 			return false
-        },
-        dragover: function(e) {
-            e.preventDefault()
-        }
+		},
+		dragover: function(e) {
+			e.preventDefault()
+		}
 	})
 
 	$('#edit-chips').click(function(e) {
@@ -1169,7 +1135,7 @@ LW.pages.leek.ai = function(leek) {
 
 	popup.find('.ai').on({
 
-        dragstart: function(e) {
+		dragstart: function(e) {
 
 			e.originalEvent.dataTransfer.setData('text/plain', 'drag !!!');
 
@@ -1179,20 +1145,20 @@ LW.pages.leek.ai = function(leek) {
 				popup.find('.leek-ai').addClass('dashed')
 			}
 			draggedAI = $(this).attr('ai')
-            $(this).addClass('dragging')
+			$(this).addClass('dragging')
 
-            return true
-        },
-        dragend: function(e) {
+			return true
+		},
+		dragend: function(e) {
 
-            $(this).removeClass('dragging')
-            popup.find('.leek-ai').removeClass('dashed')
-            popup.find('.farmer-ais').removeClass('dashed')
+			$(this).removeClass('dragging')
+			popup.find('.leek-ai').removeClass('dashed')
+			popup.find('.farmer-ais').removeClass('dashed')
 
-            e.preventDefault()
-            return false
-        }
-    }).click(function() {
+			e.preventDefault()
+			return false
+		}
+	}).click(function() {
 
 		if ($(this).attr('location') == 'leek') {
 			changeAI('remove', $(this).attr('ai'))
@@ -1202,7 +1168,7 @@ LW.pages.leek.ai = function(leek) {
 	})
 
 	popup.view.find('.leek-ai, .farmer-ais').on({
-        drop: function(e) {
+		drop: function(e) {
 			$(this).removeClass('dashed')
 
 			if ($(this).hasClass('leek-ai'))
@@ -1213,10 +1179,10 @@ LW.pages.leek.ai = function(leek) {
 			draggedAI = null
 			e.preventDefault()
 			return false
-        },
-        dragover: function(e) {
-            e.preventDefault()
-        }
+		},
+		dragover: function(e) {
+			e.preventDefault()
+		}
 	})
 
 	$('#edit-ai').click(function(e) {
@@ -1249,27 +1215,22 @@ LW.pages.leek.levelPopup = function() {
 // Conversion from characteristic amount to invested capital
 LW.pages.leek.characteristicToCapital = function(characteristic, amount, level = 1) {
 	switch (characteristic) {
-	    case CHARACTERISTIC_LIFE:
-	        return Math.min(amount-(100+(level-1)*3), 1000) * 1/4 + Math.min(Math.max(0, amount-(1100+(level-1) *3)), 999) * 1/3 + Math.max(0, amount-(2100+(level-1) *3)) * 1/2
-
-	    case CHARACTERISTIC_TP:
-	        return (amount - 10) * 80
-
-	    case CHARACTERISTIC_MP:
-	        return (amount - 3) * 50
-
-	    case CHARACTERISTIC_FREQUENCY:
-	       	return amount - 100
-
-	    case CHARACTERISTIC_STRENGTH:
-	    case CHARACTERISTIC_WISDOM:
-	    case CHARACTERISTIC_AGILITY:
-	    case CHARACTERISTIC_RESISTANCE:
-	    case CHARACTERISTIC_SCIENCE:
-	    case CHARACTERISTIC_MAGIC:
-	        return Math.min(amount, 200) / 2 + Math.min(Math.max(0, amount-200), 200) + Math.min(Math.max(0, amount-400), 200) * 2 + Math.max(0, amount-600) * 3
-
-	    default:
-	        return 0
+		case CHARACTERISTIC_LIFE:
+			return Math.min(amount - (100 + (level - 1) * 3), 1000) * 1 / 4 + Math.min(Math.max(0, amount - (1100 + (level - 1) * 3)), 999) * 1 / 3 + Math.max(0, amount - (2100 + (level - 1) * 3)) * 1 / 2
+		case CHARACTERISTIC_TP:
+			return (amount - 10) * 80
+		case CHARACTERISTIC_MP:
+			return (amount - 3) * 50
+		case CHARACTERISTIC_FREQUENCY:
+		   	return amount - 100
+		case CHARACTERISTIC_STRENGTH:
+		case CHARACTERISTIC_WISDOM:
+		case CHARACTERISTIC_AGILITY:
+		case CHARACTERISTIC_RESISTANCE:
+		case CHARACTERISTIC_SCIENCE:
+		case CHARACTERISTIC_MAGIC:
+			return Math.min(amount, 200) / 2 + Math.min(Math.max(0, amount - 200), 200) + Math.min(Math.max(0, amount - 400), 200) * 2 + Math.max(0, amount-600) * 3
+		default:
+			return 0
 	}
 }
