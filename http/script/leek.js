@@ -680,7 +680,7 @@ LW.pages.leek.weapons = function(leek) {
 		return LW.weapons[weaponA.template].level - LW.weapons[weaponB.template].level
 	})
 
-	var popup = new _.popup.new('leek.weapon_popup', {leek: leek, farmer_weapons: sortedFarmerWeapons}, 800)
+	var popup = new _.popup.new('leek.weapon_popup', {leek: leek, farmer_weapons: sortedFarmerWeapons}, 1000)
 	var draggedWeapon = null
 
 	var weaponEventsFunctions = {
@@ -894,7 +894,7 @@ LW.pages.leek.chips = function(leek) {
 		return LW.orderedChips[chipA.template] - LW.orderedChips[chipB.template]
 	})
 
-	var popup = new _.popup.new('leek.chip_popup', {leek: leek, farmer_chips: sortedFarmerChips}, 800)
+	var popup = new _.popup.new('leek.chip_popup', {leek: leek, farmer_chips: sortedFarmerChips}, 1035)
 	var draggedChip = null
 
 	var chipEventsFunctions = {
