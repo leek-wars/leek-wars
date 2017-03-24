@@ -215,7 +215,7 @@ LW.pages.editor.init = function(params, $scope, $page) {
 					var ai = ais[i]
 					leaf.content.push({id: ai.id})
 					var style = 'padding-left:' + (level * 15) + 'px'
-					leaf.html.append("<div id='" + ai.id + "' class='item ai' folder='" + ai.folder + "' draggable='true' ><div class='label' style='" + style + "'><span class='text'>" + ai.name + "</span><div class='edit'/></div></div>");
+					leaf.html.append("<div id='" + ai.id + "' class='item ai " + (ai.v2 ? 'v2' : '') + "' folder='" + ai.folder + "' draggable='true' ><div class='label' style='" + style + "'><span class='text'>" + ai.name + "</span><div class='edit'/></div></div>");
 				}
 			}
 			return leaf
@@ -356,7 +356,7 @@ LW.pages.editor.init = function(params, $scope, $page) {
 					editors[ai.id] = new Editor(ai.id, ai.name, true, ai.code)
 					editors[ai.id].v2 = v2
 					items[ai.id] = ai
-					var tab = $("<div id='" + ai.id + "' class='item ai' folder='" + ai.folder + "' draggable='true' ><div class='label'><span class='text'>" + ai.name + "</span><div class='edit'/></div></div>")
+					var tab = $("<div id='" + ai.id + "' class='item ai " + (ai.v2 ? 'v2' : '') + "' folder='" + ai.folder + "' draggable='true' ><div class='label'><span class='text'>" + ai.name + "</span><div class='edit'/></div></div>")
 					insert_element(tab, $('#ai-list #' + current_folder))
 					toggle_folder(current_folder, true)
 					add_item_events(tab)
@@ -856,7 +856,7 @@ LW.pages.editor.test_popup = function(ais) {
 	var generate_default_scenarios = function(scenarios) {
 		for (var l in LW.farmer.leeks) {
 			var ai = editors[_leek_ais[l]]
-			if (!ai) continue;
+			if (!ai) continue
 			var ais = {}
 			ais[l] = {id: ai.id, name: ai.path}
 			var team1 = {}
@@ -882,6 +882,7 @@ LW.pages.editor.test_popup = function(ais) {
 		var ais = {}
 		for (var l in LW.farmer.leeks) {
 			var ai = editors[_leek_ais[l]]
+			if (!ai) continue
 			ais[l] = {id: ai.id, name: ai.path}
 		}
 		scenarios["farmer"] = {

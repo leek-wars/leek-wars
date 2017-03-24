@@ -136,6 +136,16 @@ body {
 	color: red;
 	padding-right: 5px;
 }
+#ai-list .item.v2 > .label:after {
+	content: "V2";
+	font-weight: bold;
+	color: #00AAE2;
+	padding-left: 5px;
+	display: inline-block;
+}
+#ai-list .item.v2.selected > .label:after {
+	color: white;
+}
 
 #ai-stats {
 	padding: 8px;
