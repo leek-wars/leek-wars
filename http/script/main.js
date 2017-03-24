@@ -856,6 +856,9 @@ LW.init = function(callback) {
 		}
 	}
 
+	LW.orderedChips = LW.orderChips(LW.chips)
+	LW.orderedWeapons = LW.orderWeapons(LW.weapons)
+
 	all = true
 	++count && ready()
 }
@@ -3052,6 +3055,48 @@ LW.getChipIDByName = function(name) {
 		if (LW.chips[c].name == name) return c
 	}
 	return null
+}
+
+LW.orderChips = function(chips) {
+	// Regroup chips by effects type
+	var chipsByType = {}
+	for(var i in chips) {
+		var chip = chips[i]
+		var type = chip.effects[0].type
+
+		if(chipsByType[type] === undefined) chipsByType[type] = []
+		chipsByType[type].push(chip)
+	}
+
+	// Order chips by level and associates each chips with his position
+	var orderedChips = {}
+	var position = 0
+	for(var i in LW.EFFECT_TYPES) {
+		var type = LW.EFFECT_TYPES[i]
+		if(chipsByType[type] !== undefined) {
+			
+			chipsByType[type]
+				.sort(function(chipA, chipB) {
+					return chipA.level - chipB.level  
+				})
+				.forEach(function(chip) {
+					orderedChips[chip.id] = position++
+				})
+		}
+	}
+
+	return orderedChips
+}
+
+LW.orderWeapons = function(weapons) {
+	// Order weapons by level
+	var orderedWeapons = {}
+	var position = 0
+	for(var i in weapons) {
+		orderedWeapons[weapons[i].id] = position++
+	}
+
+	return orderedWeapons
 }
 
 LW.createWeaponPreview = function(template) {

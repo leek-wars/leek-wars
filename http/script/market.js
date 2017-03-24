@@ -310,19 +310,6 @@ LW.pages.market.selectItem = function(item) {
 LW.pages.market.chips = function(sort_method) {
 	var self = this
 
-	// Hardcodage dégeu parce que wala - A supprimer
-	var typeLang = {
-		1 : "Attaques",
-		2 : "Soins",
-		3 : "Boosts",
-		4 : "Protections",
-		5 : "Tactiques",
-		6 : "Renvois",
-		7 : "Poisons",
-		8 : "Bulbes",
-		9 : "Debuffs"
-	}
-
 	var sort_mode = localStorage.getItem('market/sort_mode') == 'type' ? 'type' : 'level';
 
 	// Distributed chips according to their type
