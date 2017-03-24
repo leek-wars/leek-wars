@@ -53,7 +53,8 @@ var LW = {
 	tooltipCount: 0,
 	beta_options: {
 		desactivated_pages: ['forum', 'forum_category', 'forum_topic', 'messages', 'bank']
-	}
+	},
+	first_page: true
 }
 
 /*
@@ -739,7 +740,9 @@ $(document).ready(function() {
 				LW.trigger('keydown', event)
 			})
 			$(window).scroll(function() {
-				LW.trigger('scroll', $(window).scrollTop())
+				var scroll = $(window).scrollTop()
+				LW.trigger('scroll', scroll)
+				localStorage['scroll'] = scroll
 			})
 
 			$(window).on('beforeunload', function() {
@@ -1516,8 +1519,21 @@ LW.loadPage = function(pageID, params) {
 					page.render = function() {
 
 						var render = _.view.render(pageID, page.scope)
-						$(window).scrollTop(0)
 						LW.setPageContent(pageID, render)
+
+						// Scroll position
+						if (window.location.hash) {
+							var element = $(window.location.hash)
+							if (element.length) {
+								$(window).scrollTop(element.offset().top)
+							}
+						} else if (LW.first_page && pageID == localStorage['last_page']) {
+							$(window).scrollTop(parseFloat(localStorage['scroll']))
+						} else {
+							$(window).scrollTop(0)
+						}
+						LW.first_page = false
+						localStorage['last_page'] = pageID
 
 						LW.loader.hide()
 						LW.shrink()

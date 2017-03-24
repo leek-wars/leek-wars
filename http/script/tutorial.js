@@ -50,10 +50,6 @@ LW.pages.tutorial.init = function(params, $scope, $page) {
 		});
 	});
 
-	$('#tutorial-page a[goto]').click(function() {
-		$(window).scrollTop($($(this).attr('goto')).offset().top)
-	})
-
 	$('#tutorial-page code').each(function() {
 		var content = $(this).text();
 		$(this).html("<pre>" + content + "</pre>");
