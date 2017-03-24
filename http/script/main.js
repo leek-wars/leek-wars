@@ -903,6 +903,7 @@ LW.connect = function(farmer, callback) {
 		localStorage['connected'] = true
 
 		$('body').addClass('connected')
+		LW.sfw.on()
 
 		if (LW.farmer.avatar_changed > 0) {
 			$('.farmer-avatar').attr('src', LW.avatarURL + '/avatar/' + LW.farmer.id + '.png?' + LW.farmer.avatar_changed)
@@ -982,6 +983,7 @@ LW.disconnect = function() {
 	LW.connected = false
 	LW.farmer = null
 	LW.socket.disconnect()
+	LW.sfw.off()
 	localStorage['connected'] = false
 	$('body').removeClass('connected')
 
@@ -2722,23 +2724,15 @@ LW.sfw.init = function() {
 }
 
 LW.sfw.on = function() {
-
-	localStorage['sfw'] = true
-	LW.sfw.active = true
-
-	$('body').addClass('sfw');
-	$("#favicon").attr("href", "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAAZiS0dEAP8A/wD/oL2nkwAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAd0SU1FB9oFFAADATTAuQQAAAAZdEVYdENvbW1lbnQAQ3JlYXRlZCB3aXRoIEdJTVBXgQ4XAAAAEklEQVQ4y2NgGAWjYBSMAggAAAQQAAGFP6pyAAAAAElFTkSuQmCC");
+	if (localStorage['connected'] == 'true' && localStorage['sfw'] == 'true') {
+		$('body').addClass('sfw')
+		$("#favicon").attr("href", "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAAZiS0dEAP8A/wD/oL2nkwAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAd0SU1FB9oFFAADATTAuQQAAAAZdEVYdENvbW1lbnQAQ3JlYXRlZCB3aXRoIEdJTVBXgQ4XAAAAEklEQVQ4y2NgGAWjYBSMAggAAAQQAAGFP6pyAAAAAElFTkSuQmCC")
+	}
 }
 
 LW.sfw.off = function() {
-
-	if (LW.sfw.active) {
-		localStorage['sfw'] = false
-		LW.sfw.active = false
-
-		$('body').removeClass('sfw');
-		$("#favicon").attr("href", LW.staticURL + "image/favicon.png");
-	}
+	$('body').removeClass('sfw')
+	$("#favicon").attr("href", LW.staticURL + "image/favicon.png")
 }
 
 

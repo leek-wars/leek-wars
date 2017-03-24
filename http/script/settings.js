@@ -14,7 +14,7 @@ LW.pages.settings.init = function(params, $scope, $page) {
 		$scope.languages = _.lang.languages
 		$scope.sfw_switch = {
 			id: 'sfw-switch',
-			checked: LW.sfw.active
+			checked: localStorage['sfw'] == 'true'
 		}
 		$scope.mails = mails
 		$scope.settings = data.settings
@@ -73,8 +73,10 @@ LW.pages.settings.sfw = function() {
 		$('#sfw-switch').prop('checked', sfw)
 
 		if (sfw) {
+			localStorage['sfw'] = true
 			LW.sfw.on()
 		} else {
+			localStorage['sfw'] = false
 			LW.sfw.off()
 		}
 	})
