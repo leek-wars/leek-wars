@@ -14,7 +14,7 @@ If you don't know how to format your code, follow the style of the existing code
 - Indent with *a simple tab* character, not using 2 or 4 spaces.
 - Don't write too long lines (not more than 80-100 characters).
 - Put spaces around operators (= + - * /) and after commas and colons: `var a = {a: 1, b: 2} + 2 * 5`.
-
+- Put spaces after `if`, `while`, `for` etc. : `if (a > 12) {`, `while (true) {`.
 ### Naming
 - Give meaningful names to variables, avoid names like `a`, `foo`, `data` (except for loop counters of course).
 - In JavaScript, write names in camelCase : `farmerName`, `weaponLevel` etc.
