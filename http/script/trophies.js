@@ -22,6 +22,11 @@ LW.pages.trophies.init = function(params, $scope, $page) {
 				}
 			}
 		}
+		for (var c in trophies) {
+			trophies[c].sort(function(a, b) {
+				return a.index - b.index
+			})
+		}
 
 		$scope.trophies = trophies
 		$scope.categories = LW.trophyCategories
