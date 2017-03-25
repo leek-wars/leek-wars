@@ -3074,10 +3074,10 @@ LW.orderChips = function(chips) {
 	for(var i in LW.EFFECT_TYPES) {
 		var type = LW.EFFECT_TYPES[i]
 		if(chipsByType[type] !== undefined) {
-			
+
 			chipsByType[type]
 				.sort(function(chipA, chipB) {
-					return chipA.level - chipB.level  
+					return chipA.level - chipB.level
 				})
 				.forEach(function(chip) {
 					orderedChips[chip.id] = position++
@@ -4033,6 +4033,7 @@ LW.battle_royale.update = function(data) {
 
 LW.battle_royale.start = function(data) {
 	_.toast(_.lang.get('main', 'starting_battle_royale'))
+	LW.battle_royale.popup.dismiss()
 	LW.page('/fight/' + data[0])
 }
 
