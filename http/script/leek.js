@@ -827,7 +827,7 @@ LW.pages.leek.weapons = function(leek) {
 
 						insertWeapon(popup.view.find('.farmer-weapons'), newElem, weaponPosition)
 
-						LW.addTooltip('popup-farmer-weapon-' + weaponID, '<b>' + _.lang.get('weapon', LW.weapons[weaponid].name) + '</b>')
+						LW.addTooltip('popup-farmer-weapon-' + weaponID, '<b>' + _.lang.get('weapon', LW.weapons[weaponID].name) + '</b>')
 					}
 
 					// Remove weapon in popup
