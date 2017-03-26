@@ -70,7 +70,7 @@
 						<textarea class='original'>{message.message}</textarea>
 
 						<div class='date'>
-							{_.format.dateTime(message.date)}
+							(<a href="#{message.id}">#</a>) {_.format.dateTime(message.date)}
 							<br>
 							@if (message.edition_date != null)
 								{#forum.edited_the, _.format.dateTime(message.edition_date)}
