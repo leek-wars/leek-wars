@@ -212,18 +212,30 @@ LW.pages.farmer.tournament = function() {
 
 	$('#register-tournament').click(function() {
 
-		_.post('farmer/register-tournament')
+		_.post('farmer/register-tournament', {}, function(data) {
 
-		$('#unregister-tournament').show()
-		$(this).hide()
+			if (data.success) {
+				$('#unregister-tournament').show()
+				$(this).hide()
+			} else {
+				_.toast(_.lang.get('farmer', data.error), 6000)
+			}
+		})
+
 	})
 
 	$('#unregister-tournament').click(function() {
 
-		_.post('farmer/unregister-tournament')
+		_.post('farmer/unregister-tournament', {}, function(data) {
 
-		$('#register-tournament').show()
-		$(this).hide()
+			if (data.success) {
+				$('#register-tournament').show()
+				$(this).hide()
+			} else {
+				_.toast(_.lang.get('farmer', data.error), 6000)
+			}
+		})
+
 	})
 }
 
