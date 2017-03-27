@@ -49,6 +49,7 @@ godfather_link_description	Envoyer ce lien aux personnes que vous voulez avoir c
 godfather_link_ok			D'accord
 godfather_of				Parrain de %s
 godson_of					Filleul de %s
+invalid_name				Nom invalide
 last_connection				Dernière connexion %s
 leek_level_n				Niveau %s
 leeks						Poireaux

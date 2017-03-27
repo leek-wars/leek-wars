@@ -173,11 +173,12 @@ LW.pages.farmer.createTeam = function() {
 	createPopup.find('#create-team').click(function(e) {
 
 		_.post('team/create', {team_name: $('#team-name').val()}, function(data) {
+
 			if (data.success) {
 				_.toast(_.lang.get('farmer', 'team_created'), _.reload)
 				createPopup.dismiss()
 			} else {
-				_.toast(data)
+				_.toast(_.lang.get('farmer', data.error))
 			}
 		})
 	})

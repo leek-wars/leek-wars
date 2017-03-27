@@ -49,6 +49,7 @@ godfather_link_description			Send this link to people you want to refer
 godfather_link_ok			Agree
 godfather_of			%s's referrer
 godson_of			%s's recommendee
+invalid_name			Invalid name
 last_connection			Last connection %s
 leek_level_n			Level %s
 leeks			Leeks
