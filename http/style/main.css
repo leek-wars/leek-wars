@@ -1824,7 +1824,7 @@ input:active, input:focus {
 	font-size: 12px;
 }
 
-.smiley {
+.smiley, .smiley-option {
 	display: inline-block;
 	vertical-align: middle;
 	margin-top: -2px;

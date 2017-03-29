@@ -488,6 +488,15 @@
 				@foreach (smiley in smiley_category.list)<img class="smiley" title="{smiley.name}" url="{{smiley.custom ? LW.staticURL + smiley.image : smileys.url + '/' + smiley.image + '.svg'}}" emoji="{smiley.name}">@end
 			</div>
 		@end
+		@foreach (smiley_option in smileys.options)
+			<div class="title">{_.lang.get('main', 'smiley_option_' + smiley_option.name)}</div>
+			<div class="list">
+				@foreach (smiley in smiley_option.list)
+					<input type="radio" name="{{'smiley_option_' + smiley_option.name}}" value="{smiley.unicode}" id="{{'smiley_option_' + smiley_option.name + '_' + smiley.unicode}">
+					<label for="{{'smiley_option_' + smiley_option.name + '_' + smiley.unicode}"><img class="smiley-option" alt="😃" url="{{smileys.url + '/' + smiley.image + '.svg'}}" unicode="{smiley.unicode}">
+				@end
+			</div>
+		@end
 	</div>
 </div>
 

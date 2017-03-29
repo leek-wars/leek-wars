@@ -147,7 +147,7 @@
 	text-align: center;
 }
 
-#chat-smileys-wrapper .list .smiley {
+#chat-smileys-wrapper .list .smiley, #chat-smileys-wrapper .list .smiley-option {
 	margin-top: 0;
 	padding: 4px;
 	width: 25px !important;
@@ -179,7 +179,7 @@
 	font-size: 14px;
 }
 
-#chat-smileys-wrapper .list .smiley:hover, #chat-commands-wrapper .list .command:hover, #chat-commands-wrapper .list .sub-command:hover  {
+#chat-smileys-wrapper .list .smiley:hover, #chat-smileys-wrapper .list .smiley-option:hover , #chat-commands-wrapper .list .command:hover, #chat-commands-wrapper .list .sub-command:hover  {
 	background-color: #dcdcdc;
 	cursor: pointer;
 }

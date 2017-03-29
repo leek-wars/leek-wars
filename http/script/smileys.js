@@ -4841,3 +4841,35 @@ smileys.custom = {
 		"image": "/image/smileys/clover.png"
 	}
 }
+
+// List of smileys options
+smileys.options = [
+	{
+		"name": "colors",
+		"list": [{
+			"name": "none_skin_tone",
+			"image": "25fb",
+			"unicode": ''
+		},, {
+			"name": "light_skin_tone",
+			"image": "1f3fb",
+			"unicode": '🏻'
+		}, {
+			"name": "medium_dark_skin_tone",
+			"image": "1f3fc",
+			"unicode": '🏼'
+		}, {
+			"name": "medium_skin_tone",
+			"image": "1f3fd",
+			"unicode": '🏽'
+		}, {
+			"name": "medium_dark_skin_tone",
+			"image": "1f3fe",
+			"unicode": '🏾'
+		}, {
+			"name": "dark_skin_tone",
+			"image": "1f3ff",
+			"unicode": '🏿'
+		}]
+	}
+]
