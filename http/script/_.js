@@ -160,7 +160,6 @@ _.protect = function(string) {
 	return ('' + string).replace(/&/g, "&amp;")
 	.replace(/>/g, "&gt;").replace(/</g, "&lt;")
 	.replace(/"/g, "&quot;").replace(/'/g, "&#39;")
-
 }
 
 _.clone = function(obj) {
