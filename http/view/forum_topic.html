@@ -65,12 +65,13 @@
 
 				<div class='message' id='{message.id}'>
 					<div class='wrapper'>
+						<a class='link' href="#{message.id}">#</a>
 						<div class='text'>{{message.html}}</div>
 
 						<textarea class='original'>{message.message}</textarea>
 
 						<div class='date'>
-							(<a href="#{message.id}">#</a>) {_.format.dateTime(message.date)}
+							{_.format.dateTime(message.date)}
 							<br>
 							@if (message.edition_date != null)
 								{#forum.edited_the, _.format.dateTime(message.edition_date)}

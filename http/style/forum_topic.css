@@ -87,6 +87,14 @@
 	width: 100%;
 }
 
+#forum_topic-page .message .wrapper .link {
+	position: absolute;
+	top: 5px;
+	right: 7px;
+	color: #ccc;
+	font-size: 18px;
+}
+
 #forum_topic-page .edit-wrapper > span:hover {
 	color: #777;
 }
