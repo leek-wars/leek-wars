@@ -93,6 +93,11 @@
 	right: 7px;
 	color: #ccc;
 	font-size: 18px;
+	display: none;
+}
+
+#forum_topic-page .message:hover .wrapper .link {
+	display: block;
 }
 
 #forum_topic-page .edit-wrapper > span:hover {
@@ -101,6 +106,7 @@
 
 #forum_topic-page .message .text {
 	padding: 5px;
+	padding-right: 10px;
 	margin-bottom: 40px;
 	word-break: break-word;
 }
