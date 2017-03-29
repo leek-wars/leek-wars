@@ -1922,6 +1922,9 @@ function escapeRegExp(str) {
 
 LW.smiley = function(data) {
 
+	// Hack to replace HTML entities
+	data = $('<div>').html(data).text() 
+
 	// Shorcuts
 	for (var i in smileys.shorcuts) {
 		data = data.replace(new RegExp("(^|\\s|\>)" + escapeRegExp(i) + "(?![^\\s<>])", "g"), '$1' + smileys.shorcuts[i])
