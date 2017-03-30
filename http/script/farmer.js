@@ -215,7 +215,7 @@ LW.pages.farmer.tournament = function() {
 				$('#unregister-tournament').show()
 				$(this).hide()
 			} else {
-				_.toast(_.lang.get('farmer', data.error), 6000)
+				_.toast(_.lang.get('farmer', data.error))
 			}
 		})
 
@@ -228,7 +228,7 @@ LW.pages.farmer.tournament = function() {
 				$('#register-tournament').show()
 				$(this).hide()
 			} else {
-				_.toast(_.lang.get('farmer', data.error), 6000)
+				_.toast(_.lang.get('farmer', data.error))
 			}
 		})
 
