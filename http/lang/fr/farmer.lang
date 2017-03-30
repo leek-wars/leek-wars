@@ -1,5 +1,7 @@
 add_website				Ajouter un site web
 add_github				Ajouter un GitHub
+already_in_team			Vous faites déjà parti d'une équipe
+already_registered		Vous êtes déjà inscrit à ce tournoi
 banned					Éleveur banni
 banned_message			Cet éleveur a été banni
 bonus_trophies			Trophées bonus
@@ -55,9 +57,11 @@ leek_level_n				Niveau %s
 leeks						Poireaux
 logout						Déconnexion
 never_connected				Jamais connecté
+name_already_used			Ce nom d'équipe n'est pas disponible
 no_country					pas de pays
 no_team						Pas d'équipe
 no_trophies_yet				Pas encore de trophées
+not_registered				Vous n'êtes pas inscrit à un tournoi
 ratio						Ratio
 registered					Inscrit
 registered_the				Inscrit le %s
