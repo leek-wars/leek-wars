@@ -1920,25 +1920,7 @@ function escapeRegExp(str) {
 	return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&")
 }
 
-function replaceHtmlEntities(str) {
-	var regex = /&#(160|38|34|60|62|39);/g
-	var translate = {
-		"160": " ",
-		"38" : "&",
-		"34": "\"",
-		"60"  : "<",
-		"62"  : ">",
-		"39" : "'"
-	}
-	return str.replace(regex, function(match, entity) {
-		return translate[entity]
-	})
-}
-
 LW.smiley = function(data) {
-
-	// Hack to replace HTML entities
-	data = replaceHtmlEntities(data)
 
 	// Shorcuts
 	for (var i in smileys.shorcuts) {
