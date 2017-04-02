@@ -1,5 +1,7 @@
 add_website				Ajouter un site web
 add_github				Ajouter un GitHub
+already_in_team			Vous faites déjà parti d'une équipe
+already_registered		Vous êtes déjà inscrit à ce tournoi
 banned					Éleveur banni
 banned_message			Cet éleveur a été banni
 bonus_trophies			Trophées bonus
@@ -49,14 +51,17 @@ godfather_link_description	Envoyer ce lien aux personnes que vous voulez avoir c
 godfather_link_ok			D'accord
 godfather_of				Parrain de %s
 godson_of					Filleul de %s
+invalid_name				Nom invalide
 last_connection				Dernière connexion %s
 leek_level_n				Niveau %s
 leeks						Poireaux
 logout						Déconnexion
 never_connected				Jamais connecté
+name_already_used			Ce nom d'équipe n'est pas disponible
 no_country					pas de pays
 no_team						Pas d'équipe
 no_trophies_yet				Pas encore de trophées
+not_registered				Vous n'êtes pas inscrit à un tournoi
 ratio						Ratio
 registered					Inscrit
 registered_the				Inscrit le %s
@@ -85,5 +90,6 @@ victories					victoires
 warnings					Avertissements
 warning_severity_s			gravité %s
 wins						victoires
+you_must_have_2_leeks		Vous devez avoir au minimum 2 poireaux pour participer à un tournoi d'éleveur
 you_have_1_warning			Vous avez 1 avertissement
 you_have_n_warnings			Vous avez %s avertissements

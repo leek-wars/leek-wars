@@ -131,7 +131,6 @@ LW.pages.farmer.trophies = function() {
 	})
 
 	_.get('trophy/get-farmer-trophies/' + _farmer.id + '/' + _.lang.current + '/' + LW.token(), function(data) {
-
 		var list = []
 		var bonus = []
 		for (var t in data.trophies) {
@@ -177,7 +176,7 @@ LW.pages.farmer.createTeam = function() {
 				_.toast(_.lang.get('farmer', 'team_created'), _.reload)
 				createPopup.dismiss()
 			} else {
-				_.toast(data)
+				_.toast(_.lang.get('farmer', data.error))
 			}
 		})
 	})
@@ -192,7 +191,6 @@ LW.pages.farmer.cancelCandidacy = function() {
 	$('#cancel-candidacy').click(function() {
 
 		_.post('team/cancel-candidacy', {}, function(data) {
-
 			if (data.success) {
 				_.toast(_.lang.get('farmer', 'candidacy_canceled'))
 				$('#cancel-candidacy-wrapper').hide()
@@ -212,18 +210,28 @@ LW.pages.farmer.tournament = function() {
 
 	$('#register-tournament').click(function() {
 
-		_.post('farmer/register-tournament')
+		_.post('farmer/register-tournament', {}, function(data) {
+			if (data.success) {
+				$('#unregister-tournament').show()
+				$(this).hide()
+			} else {
+				_.toast(_.lang.get('farmer', data.error))
+			}
+		})
 
-		$('#unregister-tournament').show()
-		$(this).hide()
 	})
 
 	$('#unregister-tournament').click(function() {
 
-		_.post('farmer/unregister-tournament')
+		_.post('farmer/unregister-tournament', {}, function(data) {
+			if (data.success) {
+				$('#register-tournament').show()
+				$(this).hide()
+			} else {
+				_.toast(_.lang.get('farmer', data.error))
+			}
+		})
 
-		$('#register-tournament').show()
-		$(this).hide()
 	})
 }
 
@@ -335,7 +343,6 @@ LW.pages.farmer.avatar = function() {
 		_.toast(_.lang.get('farmer', 'uploading_avatar'))
 
 		_.post('farmer/set-avatar', formdata, function(data) {
-
 			if (data.success) {
 				_.toast(_.lang.get('farmer', 'upload_success'))
 				$('#avatar').attr('src', $('#avatar').attr('src'))

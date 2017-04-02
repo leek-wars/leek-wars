@@ -1,5 +1,7 @@
 add_website				Add a website
 add_github				Add a GitHub
+already_in_team			You are already member of a team
+already_registered		You are already registered for this tournament
 banned			Farmer banned
 banned_message			This farmer have been banned
 bonus_trophies			Bonus trophies
@@ -49,14 +51,17 @@ godfather_link_description			Send this link to people you want to refer
 godfather_link_ok			Agree
 godfather_of			%s's referrer
 godson_of			%s's recommendee
+invalid_name			Invalid name
 last_connection			Last connection %s
 leek_level_n			Level %s
 leeks			Leeks
 logout			Logout
 never_connected			Never connected
+name_already_used			The name's team is already used
 no_country			No country
 no_team			No team
 no_trophies_yet			No trophies yet
+not_registered				You are not registered for a tournament
 ratio			Ratio
 registered			Registered 
 registered_the			Registered on %s
@@ -85,5 +90,6 @@ victories			victories
 warnings			advertisements
 warning_severity_s			Severity %s
 wins			wins
+you_must_have_2_leeks		You need at least 2 leeks to register for the farmer tournament
 you_have_1_warning			You have 1 advertisement
 you_have_n_warnings			You have %s advertisements
