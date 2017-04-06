@@ -3597,7 +3597,23 @@ function rgbToHex(r, g, b) {
 LW.latexify = function(html) {
 	return html.replace(/\$(.*?)\$/gi, function(m, f) {
 		try {
-			return katex.renderToString(f)
+			return katex.renderToString(f,
+			{
+				macros: {
+				"\\R": "\\mathbb{R}",
+				"\\Q": "\\mathbb{Q}",
+				"\\N": "\\mathbb{N}",
+				"\\Z": "\\mathbb{Z}",
+				"\\C": "\\mathbb{C}",
+				"\\E": "\\mathbb{E}",
+				"\\H": "\\mathbb{H}",
+				"\\iff": "\\Leftrightarrow",
+				"\\implies": "\\Rightarrow"
+				"\\inj": "\\hookrightarrow",
+				"\\surj": "\\twoheadrightarrow"
+				"\\qed": "\\Box"
+				}
+			})
 		} catch (e) {
 			return m
 		}
