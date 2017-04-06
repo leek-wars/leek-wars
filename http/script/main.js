@@ -3608,9 +3608,9 @@ LW.latexify = function(html) {
 				"\\E": "\\mathbb{E}",
 				"\\H": "\\mathbb{H}",
 				"\\iff": "\\Leftrightarrow",
-				"\\implies": "\\Rightarrow"
+				"\\implies": "\\Rightarrow",
 				"\\inj": "\\hookrightarrow",
-				"\\surj": "\\twoheadrightarrow"
+				"\\surj": "\\twoheadrightarrow",
 				"\\qed": "\\Box"
 				}
 			})
