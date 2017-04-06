@@ -3824,8 +3824,8 @@ var ChatController = function(chat_element, private_chat, team_chat) {
 		var message = _.protect(msg)
 
 		message = _.linkify(message)
-		message = LW.latexify(message)
 		message = LW.smiley(message)
+		message = LW.latexify(message)
 		message = commands(message, authorName)
 
 		var date = new Date(time * 1000);
