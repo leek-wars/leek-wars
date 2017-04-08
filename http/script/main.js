@@ -3759,6 +3759,12 @@ var ChatController = function(chat_element, send_callback, enable_moderation) {
 		e.stopPropagation()
 	})
 
+	$('#chat-smileys-wrapper').on('click', '.smileys-tab-title', function(e) {
+		smileys.selectTab($(this).attr('tab'))
+	});
+
+	smileys.selectFirstTab()
+
 	function setChatLanguage(channel) {
 		controller.channel = channel
 		localStorage['chat/channel'] = channel

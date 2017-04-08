@@ -60,6 +60,8 @@ smiley_group_objects	Objects
 smiley_group_symbols	Symbols
 smiley_group_flags	Flags
 smiley_option_colors	Colors
+smiley_tab_classic	Classic
+smiley_tab_skin	Skin
 starting_battle_royale	The battle royale begins!
 stats			Statistics
 stay			Stay

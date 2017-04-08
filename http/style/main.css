@@ -1839,6 +1839,35 @@ input:active, input:focus {
 	margin-top: 4px;
 }
 
+.smileys-tab-title {
+	display: inline-block;
+    margin-top: 10px;
+    padding-bottom: 8px;
+    font-weight: bold;
+	padding: 5px;
+}
+
+.smileys-tab-title.selected {
+	background-color: #bbbbbb;
+	border-bottom-left-radius: 6px;
+	border-bottom-right-radius: 6px;
+	cursor: pointer;
+}
+
+.smileys-tab-title.selected:hover {
+	background-color: #aaaaaa;
+	border-bottom-left-radius: 6px;
+	border-bottom-right-radius: 6px;
+	cursor: pointer;
+}
+
+.smileys-tab-title:hover {
+	background-color: #dcdcdc;
+	border-bottom-left-radius: 6px;
+	border-bottom-right-radius: 6px;
+	cursor: pointer;
+}
+
 /*
  * Fight history
  */
