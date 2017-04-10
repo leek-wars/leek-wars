@@ -2945,8 +2945,8 @@ LW.didactitiel = function(event) {
 					$(this).find('#dida-previous').hide()
 				}
 
-				didactitiel.find('#dida-play').show()
-				didactitiel.find('#dida-next').hide()
+				didactitiel.find('#dida-play').hide()
+				didactitiel.find('#dida-next').show()
 
 				$(didactitiel.find('.content .page')[currentPage + 1]).animate({
 					left: '820px'
