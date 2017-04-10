@@ -60,8 +60,12 @@ smiley_group_objects	Objets
 smiley_group_symbols	Symboles
 smiley_group_flags	Drapeaux
 smiley_option_colors	Couleurs
+smiley_option_activities	Activités
+smiley_option_genders	Genres
 smiley_tab_classic	Classique
 smiley_tab_skin	Teint
+smiley_tab_activity1	Activité 1
+smiley_tab_activity2	Activité 2
 starting_battle_royale	La battle royale commence !
 stats			Statistiques
 stay			Rester
