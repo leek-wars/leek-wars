@@ -710,7 +710,7 @@ var Game = function() {
 	this.resume = function() {
 		if (this.paused) {
 			// Start atmosphere sound
-			if (game.atmosphere != null) {
+			if (game.atmosphere != null && game.sound) {
 				game.atmosphere.loop()
 			}
 
