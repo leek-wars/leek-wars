@@ -692,33 +692,25 @@ var Game = function() {
 	}
 
 	this.pause = function() {
-
 		if (!this.requestPause && !this.paused) {
-
-			// Stop atmosphere sound
 			if (game.atmosphere != null) {
 				game.atmosphere.stop()
 			}
-
-			this.requestPause = true;
-
-			$('#play-button').attr('src', LW.staticURL + 'image/icon/play.png');
-			LW.setTooltipContent($('#tt_play-button'), _.lang.get('fight', 'resume') + ' (P)');
+			this.requestPause = true
+			$('#play-button').attr('src', LW.staticURL + 'image/icon/play.png')
+			LW.setTooltipContent($('#tt_play-button'), _.lang.get('fight', 'resume') + ' (P)')
 		}
 	}
 
 	this.resume = function() {
 		if (this.paused) {
-			// Start atmosphere sound
-			if (game.atmosphere != null && game.sound) {
+			if (game.atmosphere != null) {
 				game.atmosphere.loop()
 			}
-
-			this.paused = false;
-			$('#play-button').attr('src', LW.staticURL + 'image/icon/pause.png');
-			LW.setTooltipContent($('#tt_play-button'), _.lang.get('fight', 'pause') + ' (P)');
-
-			update();
+			this.paused = false
+			$('#play-button').attr('src', LW.staticURL + 'image/icon/pause.png')
+			LW.setTooltipContent($('#tt_play-button'), _.lang.get('fight', 'pause') + ' (P)')
+			update()
 		}
 	}
 

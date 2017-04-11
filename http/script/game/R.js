@@ -361,7 +361,7 @@ function Sound(src, volume) {
 	}
 
 	this.loop = function() {
-		if (this.sound != null) {
+		if (game.sound && this.sound != null) {
 			if (typeof this.sound.loop == 'boolean') {
 				this.sound.loop = true
 			} else {
