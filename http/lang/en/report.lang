@@ -19,7 +19,7 @@ talent			Talent
 talent_difference			This leek <b>%1$s</b> has <b>%2$s</b> more talent points than the average of his level. His gains are increased by <b>%3$s</b>.
 talent_difference_farmer			This farmer <b>%1$s</b> has <b>%2$s</b> more talent points than the average of his level. His leek's gains are increased by <b>%3$s</b>.
 talent_difference_farmer_no_gains			This farmer <b>%s</b> has no more talent points than the average of his level, his gains are not incresed.
-talent_difference_no_gains			The Leek <b>%s</b> has no talent points more than the average of his level, his gains are not incresed.
+talent_difference_no_gains			The Leek <b>%s</b> has no more talent points than the average of his level, his gains are not incresed.
 team			Team
 team1			Team 1
 team2			Team 2
