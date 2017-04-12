@@ -7,7 +7,7 @@ advanced_include_10			// does not work :
 								include(ia);
 							}
 advanced_include_11			Why?
-advanced_include_12			The reason is that the compiler performs LeekScript inclusions at compilation time only. The inclusion of an AI at runtime (example: if the enemy is close to me, include "IA_Escape") is not supported. The AIs included in others have to be determined at compilation time, so the only way to include an AI is:
+advanced_include_12			The reason is that the compiler performs LeekScript inclusions at compile time only. The inclusion of an AI at runtime (example: if the enemy is close to me, include "IA_Escape") is not supported. The AIs included in others have to be determined at compile time, so the only way to include an AI is:
 advanced_include_13			// DOES WORK
 							include("string");
 advanced_include_2			include("Fonctions");
@@ -26,7 +26,7 @@ advanced_include_9			// does not work :
 							} else {
 								include('IA_2');
 							}
-advanced_intro			In this section we will present more complex but useful features and techniques to win a fightin <b> Leek Wars </b>.
+advanced_intro			In this section we will present more complex but useful features and techniques to win a fight in <b> Leek Wars </b>.
 advanced_order			Order of playing
 advanced_order_1			The functions <a href='documentation/getNextPlayer'> <b> getNextPlayer </b></a> and <a href='documentation/getPreviousPlayer'> <b> getPreviousPlayer </b> </a> can recover the ids of the leeks which will respectively play after you and played before you.One possible application: check if the player who plays after you (an enemy) is close to you.
 advanced_order_2			var next = getNextPlayer();
@@ -44,8 +44,8 @@ advanced_order_5			var cell = ...; // une cellule
 									}
 								}
 							}
-advanced_ref			Passage by reference
-advanced_ref_1			When you write a function in LeekScript, you can specify its arguments, for example:
+advanced_ref			Passing by reference
+advanced_ref_1			When you write a function in LeekScript, you can specify its parameters, for example:
 advanced_ref_2			function sum(a, b, result) {
 							result = a + b;
 						}
@@ -61,7 +61,7 @@ advanced_ref_4			function sum(a, b, resultat) {
 						somme(a, b, result);
 						debug(result);
 advanced_ref_5			Here, the program will display 0, because the result variable is 0. When you place these three variables (a, b and result) in the "sum" function, their values are copied to be used inside. Thus, the values 2, 10 and 0 are sent. The operation "result = a + b" is working with copies of values, and will not affect your variable "result".
-advanced_ref_6			It is possible to solve the problem by passing "result" by reference. To do this, simply add an "@" in front of its name in the list of function arguments:
+advanced_ref_6			It is possible to solve the problem by passing "result" by reference. To do this, simply add an "@" in front of its name in the list of function parameter:
 advanced_ref_7			function sum(a, b, @resultat) {
 							result = a + b;
 						}
@@ -83,7 +83,7 @@ advanced_tern_4			if (getCell() == 42) {
 						}
 advanced_tern_5			by the following code :
 advanced_tern_6			(getCell() == 42) ? useWeapon(getNearestEnemy()) : moveTowardCell(42);
-advanced_tern_7			The two codes above are equivalent. The ternaries allow to condense the code for simple conditions but be careful however not to abuse it, this may make your code hard to read.
+advanced_tern_7			The two codes above are equivalent. The ternaries allow to condense the code for simple conditions but be careful not to abuse it, this may make your code hard to read.
 advanced_triple_equal			The operator ===
 advanced_triple_equal_1			The operator <b>===</b> allows you to compare two values, as well as their type. It is more restrictive than the operator <b>==</b>.
 advanced_triple_equal_2			<tr> <th> Operator </th> <th> Description </th> </tr><tr> <td> === </td> <td> Checks if both operands are of the same value and type </td> </tr><tr> <td>! == </td> <td> Checks if the two operands are not of the same value or are not of the same type </td> </tr>
@@ -93,7 +93,7 @@ advanced_triple_equal_5			The global functioning of <b> == </b> is to convert th
 advanced_triple_equal_6			When the <b> == </b> compares an array with a single element, this array is assimilated to that element. For example, 1 == [1], "1" == ["1"], and therefore "1" == [1] == 1 ["1"]. By recursivity, we also have 1 == [[1]], 1 == [[[1]]] etc.
 advanced_triple_equal_7			The operator <b> == </b> is therefore to be used with caution, if you want to be sure of the test of equality between the two values, use <b> === </b>.
 arr_1			There is another kind of variable which has been quickly introduced here above: the arrays.
-Up to now, the described variables have all a name and a value, the arrays also have a name, but it is also possible to associate several values which then ordered in compartments.
+Up to now, the described variables have all a name and a value, the arrays also have a name, but it is also possible to associate several values which are then ordered in compartments.
 arr_10			In both cases, the obtained array can be represented as shown:
 arr_11			<tr><th>Index</th><th>Value</th></tr>
 				<tr><td>0</td><td>Leek</td></tr>
@@ -132,7 +132,7 @@ buy_a_weapon			Before you throw your leek in the arena, it's important that you 
 buy_a_weapon_2			Choose in the list the weapon you like (and one with minimum level is <b>below</b> your leek's current level), and click the "Buy" button.
 buy_a_weapon_3			Next, visit the "Leek" tab, at the bottom of this page, you can see three columns : Weapons, Chips and AI.
 Click on the "Modify" of the "Weapons" column, a small popup appears. Drag and drop your brand new weapon from the "All weapons" category to the "Weapons of [current leek's name]" category. Here you go, your weapon is equiped.
-cond_1			We are now going to broach an important point in LeekScript (and more generally every langage) : the conditions !<br />
+cond_1			We are now going to approach an important point in LeekScript (and more generally every langage) : the conditions !<br />
 They will allow you to make your leek execute different actions depending on the cases.
 cond_10			It is also possible to determine several cases, let's imagine we wish to execute a different action if this value is between 0 and 4, between 5 and 7 or between 8 and 10.
 
@@ -213,7 +213,7 @@ difficulty_evil			Evil: 200 to 250% of your attributes and 160% of your TP, MP
 difficulty_hard			Hard: 130 to 160% of your attributes and 130% of your TP, MP
 difficulty_medium			Medium: 95 to 110% of your attributes and 100% of your TP, MP
 do_a_test_fight			Do a test fight
-doc_1			The last important point to talk about before starting this class is the documentation. All the functions and constants availables in LeekScript are regrouped on one page: the documentation.
+doc_1			The last important point to talk about before starting this class is the documentation. All the functions and constants availables in LeekScript are regrouped in one page: the documentation.
 To go to the documentation for <b>Leek Wars</b>, use the Help tab, then click on documentation.
 doc_10			Type of return of the function and a description of this return
 doc_11			The minimum level needed to use this function

@@ -23,7 +23,7 @@ ranking			Ranking
 screenshots			Screenshots
 signup			Sign up!
 signup_done			Registration done successfully!
-signup_done_message			Your account is now activated! Log in and starts fighting
+signup_done_message			Your account is now activated! Log in and start fighting
 signup_validated			Registration validated!
 signup_validated_message			Congratulations <b>%s</b>, check your email and look for the verification email to finalize your registration!
 talent			Talent

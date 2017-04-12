@@ -5,7 +5,7 @@ category_solo_fight		Solo
 category_team_fight		Team
 challenge				Challenge
 farmer_fight			Farmer fight
-leek_ai_invalid			Leek AI is not valid!
+leek_ai_invalid			Leek's AI is not valid!
 leek_have_no_ai			Leek has no AI equipped!
 level_n					Level %s
 n_leeks					%s leeks

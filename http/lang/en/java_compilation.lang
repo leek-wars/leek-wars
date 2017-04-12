@@ -1,8 +1,8 @@
 ai_name_expected			An AI name is expected here
 ai_not_existing			AI %s doesn't exist
-associative_array			This array is an associative one, it's impossible to add a value without key
-break_out_of_loop			Keyword break can only be used into a loop
-cant_add_instruction_after_break			It's not possible to add an instruction if there is already a break, return or continue in the actual block.
+associative_array			This array is an associative one, it's impossible to add a value without a key
+break_out_of_loop			Keyword break can only be used inside a loop
+cant_add_instruction_after_break			It's not possible to add an instruction if there is already a break, return or continue in the current block.
 cant_assign_value			Impossible to assign a value to this expression
 closing_parenthesis_expected			Closing parenthesis expected
 closing_square_bracket_expected			Closing square bracket expected
@@ -12,12 +12,12 @@ end_of_script_unexpected			Unexpected end of file
 function_name_expected			A function name was required
 function_name_unavailable			Invalid function name
 function_not_exists			Function does not exist
-function_only_in_main_block			Function can't be declared elsewhere than the main scope
+function_only_in_main_block			Function can't be declared elsewhere than in the main scope
 global_only_in_main_block			Global variable can only be declared in the main scope
-include_only_in_main_block			It's not possible to include an AI elsewhere than the main scope
+include_only_in_main_block			It's not possible to include an AI elsewhere than in the main scope
 invalid_char			Invalid character
 invalid_number			Invalid number
-invalid_parameter_count			Invalid parameters number
+invalid_parameter_count			Invalid number of arguments
 keyword_unexpected			Unexpected keyword
 keywork_in_expected			in keyword expected here
 no_bloc_to_close			No block to close
@@ -26,7 +26,7 @@ open_bloc_remaining			Some blocks remains open
 opening_curly_bracket_expected			Opening curly bracket expected
 opening_parenthesis_expected			Opening parenthesis expected
 operator_unexpected			This operator is unexpected here
-parameter_name_expected			Name parameter expected
+parameter_name_expected			Parameter name expected
 parameter_name_unavailable			Invalid parameter name
 parenthesis_expected_after_function			Opening parenthesis is expected after function keyword
 parenthesis_expected_after_parameters			Closing parenthesis is expected after function parameters

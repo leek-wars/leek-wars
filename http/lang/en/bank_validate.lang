@@ -2,4 +2,4 @@ back_to_bank			Back to bank
 payment_fail			<b>%s</b> payment failed.
 payment_fail_reason			Payment has failed: %s
 payment_success			<b>%s</b> payment validated!
-you_earn_n_crystals			You get <b>%s</b> crystals.
+you_earn_n_crystals			You got <b>%s</b> crystals.
