@@ -39,6 +39,9 @@ LW.pages.moderation.init = function(params, $scope, $page) {
 			if (_reason == LW.WARNING.INCORRECT_LEEK_NAME) {
 				$('#warning .details').html("Poireau : <a href='/leek/" + _parameter + "'>" + _data + "</a>")
 			}
+			if (_reason == LW.WARNING.INCORRECT_AI_NAME) {
+				$('#warning .details').html("AI " + _parameter + " : " + _data)
+			}
 
 			if (_reason == LW.WARNING.FLOOD_CHAT || _reason == LW.WARNING.RUDE_CHAT) {
 				$('#warning .details').html("Message : " + _.protect(_parameter))
