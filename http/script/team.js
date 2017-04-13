@@ -671,7 +671,8 @@ LW.pages.team.report = function() {
 			message: _.lang.get('moderation', 'report_farmer_for_reason', self.team.name),
 			target: self.team.emblem_author,
 			reasons: [
-				LW.WARNING.INCORRECT_EMBLEM
+				LW.WARNING.INCORRECT_EMBLEM,
+				LW.WARNING.INCORRECT_TEAM_NAME
 			]
 		}).show(e)
 	})
