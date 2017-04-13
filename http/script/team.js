@@ -669,7 +669,8 @@ LW.pages.team.report = function() {
 		LW.createReportPopup({
 			title: _.lang.get('moderation', 'report_farmer', self.team.name),
 			message: _.lang.get('moderation', 'report_farmer_for_reason', self.team.name),
-			target: self.team.emblem_author,
+			target: self.team.emblem_author ? self.team.emblem_author : 0,
+			parameter: self.team.id,
 			reasons: [
 				LW.WARNING.INCORRECT_EMBLEM,
 				LW.WARNING.INCORRECT_TEAM_NAME
