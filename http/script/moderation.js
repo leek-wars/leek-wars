@@ -30,7 +30,9 @@ LW.pages.moderation.init = function(params, $scope, $page) {
 
 			$('#warning-avatar').attr('src', $(this).find('img').attr('src'))
 			$('#warning-target').text(_targetName)
-			$('#warning-target-link').attr('href', '/farmer/' + _target)
+			if (_target != 0) {
+				$('#warning-target-link').attr('href', '/farmer/' + _target)
+			}
 			$('#warning .reason').text("Motif : " + _reasonText)
 			$('#warning .details').text("")
 
