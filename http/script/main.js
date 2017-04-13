@@ -3505,8 +3505,8 @@ LW.createReportPopup = function(parameters) {
 			return
 		}
 
-		var target = parameters.target
 		var reason = parseInt(popup.find("input:radio[name='reason']:checked").attr('id').replace('reason-', ''))
+		var target = typeof(parameters.target) === 'function' ? parameters.target(reason) : parameters.target
 		var message = popup.find('.report-message').val()
 		var parameter = parameters.parameter ? parameters.parameter : ''
 

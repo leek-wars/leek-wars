@@ -669,7 +669,14 @@ LW.pages.team.report = function() {
 		LW.createReportPopup({
 			title: _.lang.get('moderation', 'report_farmer', self.team.name),
 			message: _.lang.get('moderation', 'report_farmer_for_reason', self.team.name),
-			target: self.team.emblem_author ? self.team.emblem_author : 0,
+			target: function(reason) {
+				if (reason == LW.WARNING.INCORRECT_EMBLEM) {
+					return self.team.emblem_author ? self.team.emblem_author : 0
+				} else {
+					var owner = _.selectWhere(self.team.members, 'grade', 'owner')
+					return owner.id
+				}
+			},
 			parameter: self.team.id,
 			reasons: [
 				LW.WARNING.INCORRECT_EMBLEM,
