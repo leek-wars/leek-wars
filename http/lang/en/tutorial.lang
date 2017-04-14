@@ -132,7 +132,7 @@ buy_a_weapon			Before you throw your leek in the arena, it's important that you 
 buy_a_weapon_2			Choose in the list the weapon you like (and one with minimum level is <b>below</b> your leek's current level), and click the "Buy" button.
 buy_a_weapon_3			Next, visit the "Leek" tab, at the bottom of this page, you can see three columns : Weapons, Chips and AI.
 Click on the "Modify" of the "Weapons" column, a small popup appears. Drag and drop your brand new weapon from the "All weapons" category to the "Weapons of [current leek's name]" category. Here you go, your weapon is equiped.
-cond_1			We are now going to approach an important point in LeekScript (and more generally every langage) : the conditions !<br />
+cond_1			We are now going to broach an important point in LeekScript (and more generally every langage) : the conditions !<br />
 They will allow you to make your leek execute different actions depending on the cases.
 cond_10			It is also possible to determine several cases, let's imagine we wish to execute a different action if this value is between 0 and 4, between 5 and 7 or between 8 and 10.
 
@@ -495,7 +495,7 @@ fun_46			The use of an anonymous function is exactly the same as the use of a fu
 fun_47			var my_function = function() { return "Test"; };
 
 				my_function();
-fun_48			If, for example, we have a function which requires another function as a parameter, we can directly use an anonymous function as a parameter, as shown in the following example:
+fun_48			If, for example, we have a function which requires another function as a parameter, we can directly use an anonymous function as argument, as shown in the following example:
 fun_49			function arrayMap(array, function) {
 					var r = [];
 					for (var v in array) push(r, function(v));
@@ -521,7 +521,7 @@ fun_9			Let's analyse this code. In order to declare a function, we use the key-
 				The block of instructions is then between curly brackets.
 functions			Functions
 interface			Interface
-intro			<b>LeekScript</b> is the programming language dedicated to the creation of your leek's artificial intelligence. The syntax is really close to Javascript and should not disturbed C, Java or even PHP enthusiast. If you're a total beginner or just want to know some subtleties of <b>LeekScript</b>, this tutorial is just right for you :)
+intro			<b>LeekScript</b> is the programming language dedicated to the creation of your leek's artificial intelligence. The syntax is really close to Javascript and should not disturb C, Java or even PHP enthusiast. If you're a total beginner or just want to know some subtleties of <b>LeekScript</b>, this tutorial is just right for you :)
 loops			Loops
 loops_1			We will now describe another kind of structures as important as conditions:
 Loops!
@@ -537,7 +537,7 @@ loops_13			A little bit more complex kind of loop exists, it looks like a while 
 					With experience, you will learn which loop, the while or the for, is more adapted to which case. 
 loops_14			The <b>for</b> loop can be decomposed into three parts :
 loops_15			The initialisation: the allocation of an initial value to a "counter" variable
-loops_16			The condition : as long as it is valid, the loop continues its execution
+loops_16			The condition : as long as it is verified, the loop continues its execution
 loops_17			The incrementation : to increase (or decrease) the value of the "counter" variable
 loops_18			Example of <b>for</b> loop :
 loops_19			var i;
@@ -609,14 +609,14 @@ var_15			// Declare a firstVariable and a secondVariable variable
 				var firstVariable, secondVariable;
 var_16			Be careful not to forget the semi-colon <b>;</b> at the end of the instruction.
 var_17			Declared variables with the keyword var have a lifetime of your leek's turn, there is a second type of variable which keep their value for the whole fight: the global variables.
-				To declare a global variable, you just need to add the keyword "global" instead of "var":
+				To declare a global variable, you just need to use the keyword "global" instead of "var":
 var_18			// Declaring a global variable nameOfGlobal
 				global nameOfGlobal;
 var_19			You can also assign a value to your global variable in the following way:
 var_2			The variables are a fundamental point in all programming languages. They allow to keep in memory values you're going to use in calculations.
 var_20			// Declaring a global variable nameOfGlobal with value 42
 				global nameOfGlobal = 42;
-var_21			The common variables and global variables are used the same way in the code, as this tutorial goes we will mostly use common variables.
+var_21			The local variables and global variables are used the same way in the code, as this tutorial goes we will mostly use local variables.
 var_22			Uses of the variables
 var_23			It is possible to use the variables in your code in many different ways.
 var_24			You can assign them a value (which means make them "remember" this value in memory) by using the assignement operator <b>=</b>
@@ -659,7 +659,7 @@ var_35			// Declaring variable a and b
 var_36			We can also use string in the following way:
 var_37			var myVariable;
 				myVariable = "I'am a string";
-var_38			For a string, only the <b>+</b> operator is usable, it allows to concatenate pieces of string, which will laid them end to end. Thus, the code:
+var_38			For a string, only the <b>+</b> operator is usable, it will concatenate pieces of string, which will be laid end to end. Thus, the code:
 var_39			// Declaring string1 and string2
 				var string1, string2;
 
@@ -685,7 +685,7 @@ var_48			Launch a fight and access directly the fight report (the little cross b
 var_49			the function debug() in action
 var_5			Number
 var_50			This page summarizes all the actions of the fight, you can notice that at the beginning of each turn, a line: "[YourLeek] This sentence is a test " is displayed. 
-var_51			Each time the function <i>debug</i> is called, the value indicated in parameter is added in the chronology of the fight, you can then be informed of which instructions is executed at which moment of the fight.
+var_51			Each time the function <i>debug</i> is called, the value indicated in parameter is added to the chronology of the fight, you can then be informed of which instructions is executed at which moment of the fight.
 You can display the value of a variable, the result of a calculation...
 var_52			// Display of a simple text
 				debug("Simple text"); // Displays : [YourLeek] Simple text
@@ -695,7 +695,7 @@ var_52			// Display of a simple text
 				debug(a); // Displays : [YourLeek] 5
 				debug("Value of a : " + a); // Displays : [YourLeek] Value of a : 5
 var_53			This function allows you to efficiently find bugs in your code, so do not hesitate to use it.<br>
-It should be noted that you can only see the debug message of your leeks (and inversely, your opponents will not have access to your debug messages)
+It should be noted that you can only see the debug messages of your own leeks (and inversely, your opponents will not have access to your debug messages)
 var_6			Boolean (true or false)
 var_7			Array (we will get back to it later)
 var_8			null
@@ -708,5 +708,5 @@ The code that you are going to create will be executed at the beginning of each 
 what_is_ai_2			When a fight is launched, you won't be able to change the actions of your <i>protégé</i>, only the AI will come into play, which is why it's highly recommended to program it with care.
 what_is_ai_3			We will now see the environment offered by <b>Leek Wars</b> to develop your AI.
 what_is_leekscript			What is LeekScript ?
-what_is_leekscript_1			Now that you got a weapon, we will start to learn about creating Artificial Intelligence (AI), which is the main goal of this tutorial. <b>Leek Wars</b> offers you to program your AI in a language called LeekScript, it's a programming language close to Javascript and PHP, non typed and not object oriented.
+what_is_leekscript_1			Now that you got a weapon, we will learn about creating Artificial Intelligence (AI), which is the main goal of this tutorial. <b>Leek Wars</b> offers you to program your AI in a language called LeekScript, it's a programming language close to Javascript and PHP, dynamically typed and not object oriented.
 what_is_leekscript_2			The language is easy to use and to learn. It gives you powerful functions which in turn will allow you to create an efficient AI even if you're a beginner. On the contrary, if you're already an expert in programming, more advanced funtions will allow you to create even more sophisticated AI.

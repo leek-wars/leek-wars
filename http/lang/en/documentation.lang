@@ -8,7 +8,7 @@ arg_type_42			ArrayOfStrings
 arg_type_43			ArrayOfBooleans
 arg_type_44			ArrayOfArrays
 arg_type_5			Function
-const_AREA_CIRCLE_1			Circular area with a  diameter of 3 cells (cross).
+const_AREA_CIRCLE_1			Circular area with a diameter of 3 cells (cross).
 const_AREA_CIRCLE_2			Circular area with a diameter of 5 cells.
 const_AREA_CIRCLE_3			Circular area with a diameter of 7 cells.
 const_AREA_LASER_LINE			Laser-type effective area: line going from the chip/weapon's min range to its max range (or the first obstacle)
