@@ -487,7 +487,11 @@ LW.pages.report.statistics = function(fight) {
 			resurrection  : 0,
 			critical      : 0,
 			crashes       : 0,
-			life          : leek.life
+			life          : leek.life,
+			next_ph_queue : [],	// Whenever we receive a poison or vaccine
+								// we add it to a queue for the next turn.
+			ph_queue      : []	// When it is our turn, we will receive damage
+								// or healing in the same order as in this queue.
 		}
 	}
 
@@ -516,6 +520,8 @@ LW.pages.report.statistics = function(fight) {
 			case ACTION_LEEK_TURN:
 				leeks[action[1]].roundsPlayed++
 				currentPlayer = action[1]
+				leeks[currentPlayer].ph_queue = leeks[currentPlayer].next_ph_queue
+				leeks[currentPlayer].next_ph_queue = []
 			break
 
 			case ACTION_MP_LOST:
@@ -524,7 +530,13 @@ LW.pages.report.statistics = function(fight) {
 
 			case ACTION_CARE:
 				leeks[action[1]].heal_in += action[2]
-				leeks[currentPlayer].heal_out += action[2]
+				if (leeks[currentPlayer].ph_queue.length == 0) {
+					leeks[currentPlayer].heal_out += action[2]
+				} else {
+					let effect = leeks[currentPlayer].ph_queue.shift()
+					leeks[effect.caster].heal_out += action[2]
+					leeks[currentPlayer].next_ph_queue.push(effect)
+				}
 				leeks[action[1]].life += action[2]
 				break
 
@@ -536,7 +548,13 @@ LW.pages.report.statistics = function(fight) {
 
 			case ACTION_LIFE_LOST:
 				leeks[action[1]].dmg_in += action[2]
-				leeks[currentPlayer].dmg_out += action[2]
+				if (leeks[currentPlayer].ph_queue.length == 0) {
+					leeks[currentPlayer].dmg_out += action[2]
+				} else {
+					let effect = leeks[currentPlayer].ph_queue.shift()
+					leeks[effect.caster].dmg_out += action[2]
+					leeks[currentPlayer].next_ph_queue.push(effect)
+				}
 				leeks[action[1]].life -= action[2]
 				break
 
@@ -576,6 +594,29 @@ LW.pages.report.statistics = function(fight) {
 			case ACTION_BUG:
 				leeks[action[1]].crashes++
 				break
+
+			case ACTION_ADD_WEAPON_EFFECT:
+			case ACTION_ADD_CHIP_EFFECT:
+				// These actions are of the form
+				// [actionType, itemID, effectID, caster, target, effect, value, turns]
+				// The effectID is unique and allows us to keep track of it easily
+				let effect = action[5]
+				if (effect == LW.EFFECT.POISON || effect == LW.EFFECT.HEAL) {
+					leeks[action[4]].next_ph_queue.push({id : action[2], caster : action[3]})
+				}
+				break
+
+			case ACTION_REMOVE_EFFECT:
+				// This action is of the form [actionType, effectID]
+				// Wether through Antidote, Liberation, or end of lifetime
+				// we have to remove vaccine or poison from our queues.
+				let id = action[1]
+				for (var j in leeks) {
+					leeks[j].ph_queue = leeks[j].ph_queue.filter(function(e) { return e.id != id })
+					leeks[j].next_ph_queue = leeks[j].next_ph_queue.filter(function(e) { return e.id != id })
+				}
+				break
+
 		}
 	}
 
