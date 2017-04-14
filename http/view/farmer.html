@@ -81,11 +81,13 @@
 				@end
 
 				<div class='infos'>
-					<a href='/search/-/{farmer.name}'>
-						<div class='info'>
-							<img class='flag' src='{{static}}image/forum.png'/><span>{#forum_messages, farmer.forum_messages}</span>
-						</div>
-					</a>
+					@if (farmer.forum_messages > 0)
+						<a href='/search/-/{farmer.name}'>
+							<div class='info'>
+								<img class='flag' src='{{static}}image/forum.png'/><span>{#forum_messages, farmer.forum_messages}</span>
+							</div>
+						</a>
+					@end
 					<div class='info country'>
 						@if (farmer.country)
 							<img class='flag' src='{{static}}image/flag/32/{farmer.country}.png'/><span class='country'>{_.lang.get('country', farmer.country)}</span>
