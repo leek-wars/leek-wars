@@ -587,7 +587,8 @@ LW.pages.leek.report = function() {
 			message: _.lang.get('moderation', 'report_farmer_for_reason', leek.farmer.name),
 			target: leek.farmer.id,
 			reasons: [
-				LW.WARNING.INCORRECT_LEEK_NAME
+				LW.WARNING.INCORRECT_LEEK_NAME,
+				LW.WARNING.INCORRECT_AI_NAME
 			],
 			parameter: leek.id
 		}).show(e)
