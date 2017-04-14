@@ -777,6 +777,8 @@ $(document).ready(function() {
 						})
 					} else {
 						localStorage['connected'] = false
+						$('body').removeClass('connected')
+						LW.sfw.off()
 						LW.page('/')
 					}
 				})
