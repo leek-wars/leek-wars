@@ -515,7 +515,7 @@ LW.pages.leek.hat = function() {
 	for (var i in LW.farmer.hats) {
 		var hat = LW.farmer.hats[i]
 		if (groupedFarmerHats[hat.hat_template] === undefined) {
-			groupedFarmerHats[hat.hat_template] = hat
+			groupedFarmerHats[hat.hat_template] = _.clone(hat)
 			groupedFarmerHats[hat.hat_template].quantity = 0
 		}
 		groupedFarmerHats[hat.hat_template].quantity++
@@ -698,7 +698,7 @@ LW.pages.leek.weapons = function(leek) {
 	for (var i in LW.farmer.weapons) {
 		var weapon = LW.farmer.weapons[i]
 		if (groupedFarmerWeapons[weapon.template] === undefined) {
-			groupedFarmerWeapons[weapon.template] = weapon
+			groupedFarmerWeapons[weapon.template] = _.clone(weapon)
 			groupedFarmerWeapons[weapon.template].quantity = 0
 		}
 		groupedFarmerWeapons[weapon.template].quantity++
@@ -913,7 +913,7 @@ LW.pages.leek.chips = function(leek) {
 	for (var i in LW.farmer.chips) {
 		var chip = LW.farmer.chips[i]
 		if (groupedFarmerChips[chip.template] === undefined) {
-			groupedFarmerChips[chip.template] = chip
+			groupedFarmerChips[chip.template] = _.clone(chip)
 			groupedFarmerChips[chip.template].quantity = 0
 		}
 		groupedFarmerChips[chip.template].quantity++
