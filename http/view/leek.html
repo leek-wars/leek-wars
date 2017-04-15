@@ -679,7 +679,7 @@
 	<div class='content'>
 		<div id='farmer-hats'>
 
-			<div class='hat' id='hat--1' hat='-1'>
+			<div id='hat--1' class='hat' hat='-1' quantity=1>
 				<img src='{{static}}/image/hat/no_hat.png' />
 			</div>
 			<div class='tooltip' id='tt_hat--1'>
@@ -687,10 +687,10 @@
 			</div>
 
 			@foreach (i : hat in farmer_hats)
-				<div class='hat' id='hat-{i}' hat='{hat.template}' item_id='{hat.id}' template='{hat.hat_template}'>
+				<div id='popup-leek-hat-{hat.template}' class='hat' hat='{hat.template}' hatTemplate='{hat.hat_template}' quantity='{hat.quantity}'>
 					<img src='{{static}}image/hat/{hat.name}.png'>
 				</div>
-				<div class='tooltip' id='tt_hat-{i}'>
+				<div class='tooltip' id='tt_popup-leek-hat-{hat.template}'>
 					<b>{_.lang.get('hat', hat.name)}</b>
 					<br>
 					{#level_n, hat.level}
