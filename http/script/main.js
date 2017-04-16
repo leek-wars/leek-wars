@@ -566,18 +566,7 @@ $(document).ready(function() {
 		_.logOn()
 	}
 
-	setTimeout(function() {
-		if (LW.dev) {
-			_.favicon(LW.staticURL + 'image/favicon_dev.png')
-			$('body').addClass('dev')
-		} else if (LW.local) {
-			_.favicon(LW.staticURL + 'image/favicon_local.png')
-			$('body').addClass('local')
-		} else if (LW.beta) {
-			_.favicon(LW.staticURL + 'image/favicon_beta.png')
-			$('body').addClass('beta')
-		}
-	})
+	setTimeout(LW.set_favicon)
 	_.title('Leek Wars')
 
 	LW.page = page
@@ -2719,8 +2708,20 @@ LW.time.get = function() {
 	return (Date.now() / 1000 | 0) - LW.time.delta
 }
 
-LW.sfw.init = function() {
+LW.set_favicon = function() {
+	if (LW.dev) {
+		_.favicon(LW.staticURL + 'image/favicon_dev.png')
+		$('body').addClass('dev')
+	} else if (LW.local) {
+		_.favicon(LW.staticURL + 'image/favicon_local.png')
+		$('body').addClass('local')
+	} else if (LW.beta) {
+		_.favicon(LW.staticURL + 'image/favicon_beta.png')
+		$('body').addClass('beta')
+	}
+}
 
+LW.sfw.init = function() {
 	if (localStorage['sfw'] === 'true') {
 		LW.sfw.on()
 	} else {
@@ -2737,9 +2738,8 @@ LW.sfw.on = function() {
 
 LW.sfw.off = function() {
 	$('body').removeClass('sfw')
-	$("#favicon").attr("href", LW.staticURL + "image/favicon.png")
+	LW.set_favicon()
 }
-
 
 LW.util.createCodeArea = function(code, element) {
 
