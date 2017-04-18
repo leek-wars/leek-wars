@@ -17,19 +17,19 @@ smileys.options = {
 			unicode: ''
 		}, {
 			image: "270b-1f3fb",
-			unicode: '🏻'
+			unicode: '\ud83c\udffb'
 		}, {
 			image: "270b-1f3fc",
-			unicode: '🏼'
+			unicode: '\ud83c\udffc'
 		}, {
 			image: "270b-1f3fd",
-			unicode: '🏽'
+			unicode: '\ud83c\udffd'
 		}, {
 			image: "270b-1f3fe",
-			unicode: '🏾'
+			unicode: '\ud83c\udffe'
 		}, {
 			image: "270b-1f3ff",
-			unicode: '🏿'
+			unicode: '\ud83c\udfff'
 		}]
 	},
 	activity : {
@@ -39,62 +39,62 @@ smileys.options = {
 			unicode: ''
 		}, {
 			image: "2695",
-			unicode: '\u{200d}⚕️'
+			unicode: '\u200d\u2695\ufe0f'
 		}, {
 			image: "2696",
-			unicode: '\u{200d}⚖️'
+			unicode: '\u200d\u2696\ufe0f'
 		}, {
 			image: "2708",
-			unicode: '\u{200d}✈️'
+			unicode: '\u200d\u2708\ufe0f'
 		}, {
 			image: "1f33e",
-			unicode: '\u{200d}🌾'
+			unicode: '\u200d\ud83c\udf3e'
 		}, {
 			image: "1f373",
-			unicode: '\u{200d}🍳'
+			unicode: '\u200d\ud83c\udf73'
 		}, {
 			image: "1f393",
-			unicode: '\u{200d}🎓'
+			unicode: '\u200d\ud83c\udf93'
 		}, {
 			image: "1f3a4",
-			unicode: '\u{200d}🎤'
+			unicode: '\u200d\ud83c\udfa4'
 		}, {
 			image: "1f3a8",
-			unicode: '\u{200d}🎨'
+			unicode: '\u200d\ud83c\udfa8'
 		}, {
 			image: "1f3eb",
-			unicode: '\u{200d}🏫'
+			unicode: '\u200d\ud83c\udfeb'
 		}, {
 			image: "1f3ed",
-			unicode: '\u{200d}🏭'
+			unicode: '\u200d\ud83c\udfed'
 		}, {
 			image: "1f4bb",
-			unicode: '\u{200d}💻'
+			unicode: '\u200d\ud83d\udcbb'
 		}, {
 			image: "1f4bc",
-			unicode: '\u{200d}💼'
+			unicode: '\u200d\ud83d\udcbc'
 		}, {
 			image: "1f527",
-			unicode: '\u{200d}🔧'
+			unicode: '\u200d\ud83d\udd27'
 		}, {
 			image: "1f52c",
-			unicode: '\u{200d}🔬'
+			unicode: '\u200d\ud83d\udd2c'
 		}, {
 			image: "1f680",
-			unicode: '\u{200d}🚀'
+			unicode: '\u200d\ud83d\ude80'
 		}, {
 			image: "1f692",
-			unicode: '\u{200d}🚒'
+			unicode: '\u200d\ud83d\ude92'
 		}]
 	},
 	genders : {
 		name: "genders",
 		list: [{
 			image: "2642",
-			unicode: '\u{200d}♂\u{fe0f}'
+			unicode: '\u200d\u2642\ufe0f'
 		}, {
 			image: "2640",
-			unicode: '\u{200d}♀\u{fe0f}'
+			unicode: '\u200d\u2640\ufe0f'
 		}]
 	}
 }
@@ -5155,14 +5155,14 @@ smileys.selectFirstTab = function() {
 
 smileys.filterOption = function(option) {
 	var s = [];
-	smileys.list.forEach(category => {
-		var filter = category.list.filter(smiley => {
+	smileys.list.forEach(function(category) {
+		var filter = category.list.filter(function(smiley) {
 			if(smiley.options == undefined) return false
 			return smiley.options[option] == true
 		})
 		if(filter.length > 0) s.push({
-			"name" : category.name,
-			"list" : filter
+			name: category.name,
+			list: filter
 		})
 	})
 	return s
@@ -5171,8 +5171,8 @@ smileys.filterOption = function(option) {
 // List of tabs
 smileys.tabs = [
 	{
-		"name": "classic",
-		"list": smileys.list
+		name: "classic",
+		list: smileys.list
 	},
 	{
 		name: "skin",

@@ -497,8 +497,8 @@
 					<div class="title">{_.lang.get('main', 'smiley_option_' + smiley_option.name)}</div>
 					<div class="list">
 						@foreach (smiley in smiley_option.list)
-							<input type="radio" name="{{'smiley_option_' + smiley_option.name}}" value="{smiley.unicode}" id="{{'smiley_option_' + smiley_option.name + '_' + smiley.unicode}" tab="{smiley_tab.name}">
-							<label for="{{'smiley_option_' + smiley_option.name + '_' + smiley.unicode}"><img class="smiley-option" alt="😃" url="{{smileys.url + '/' + smiley.image + '.svg'}}" unicode="{smiley.unicode}">
+							<input type="radio" name="{{'smiley_tab_' + smiley_tab.name + '_option_' + smiley_option.name}}" value="{smiley.unicode}" id="{{'smiley_tab_' + smiley_tab.name + '_option_' + smiley_option.name + '_' + smiley.unicode}" tab="{smiley_tab.name}">
+							<label for="{{'smiley_tab_' + smiley_tab.name + '_option_' + smiley_option.name + '_' + smiley.unicode}"><img class="smiley-option" alt="😃" url="{{smileys.url + '/' + smiley.image + '.svg'}}" unicode="{smiley.unicode}">
 						@end
 					</div>
 				@end
@@ -702,7 +702,6 @@
 	</div>
 @endview
 
-<<<<<<< HEAD
 @view (mute_popup)
 
 	<div class='title'>{#moderation.mute}</div>
@@ -724,39 +723,6 @@
 	<div class='actions'>
 		<div class='dismiss'>{#moderation.cancel}</div>
 		<div class='unmute red'>{#moderation.confirm}</div>
-=======
-@view (emojis)
-	<div id='chat-smileys'>
-		<button id="chat-smileys-button">
-			<img class="smiley" alt="😃" src="{{smileys.url}}/1f603.svg">
-		</button>
-		<div id="chat-smileys-wrapper" autostopscroll>
-			@foreach(smiley_tab in smileys.tabs)
-				<div class="smileys-tab-title" tab="{{smiley_tab.name}}">{_.lang.get('main', 'smiley_tab_' + smiley_tab.name)}</div>
-			@end
-			@foreach(smiley_tab in smileys.tabs)
-				<div class="smileys-tab" tab="{{smiley_tab.name}}">
-					@foreach (smiley_category in smiley_tab.list)
-						<div class="title">{_.lang.get('main', 'smiley_group_' + smiley_category.name)}</div>
-						<div class="list">
-							@foreach (smiley in smiley_category.list)
-								<img class="smiley" alt="😃" url="{{smiley.custom ? LW.staticURL + smiley.image : smileys.url + '/' + smiley.image + '.svg'}}" emoji="{smiley.name}" tab="{smiley_tab.name}">
-							@end
-						</div>
-					@end
-					@foreach (smiley_option in smiley_tab.options)
-						<div class="title">{_.lang.get('main', 'smiley_option_' + smiley_option.name)}</div>
-						<div class="list">
-							@foreach (smiley in smiley_option.list)
-								<input type="radio" name="{{'smiley_tab_' + smiley_tab.name + '_option_' + smiley_option.name}}" value="{smiley.unicode}" id="{{'smiley_tab_' + smiley_tab.name + '_option_' + smiley_option.name + '_' + smiley.unicode}" tab="{smiley_tab.name}">
-								<label for="{{'smiley_tab_' + smiley_tab.name + '_option_' + smiley_option.name + '_' + smiley.unicode}"><img class="smiley-option" alt="😃" url="{{smileys.url + '/' + smiley.image + '.svg'}}" unicode="{smiley.unicode}">
-							@end
-						</div>
-					@end
-				</div>
-			@end
-		</div>
->>>>>>> [Smileys] Factorization + activities tabs
 	</div>
 @endview
 
