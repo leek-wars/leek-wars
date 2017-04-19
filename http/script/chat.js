@@ -34,7 +34,9 @@ LW.pages.chat.wsreceive = function(data) {
 			avatar_changed: data[6]
 		}
 		this.chat.receive_message(message)
+
 	} else if (data.type == CHAT_MUTE_USER) {
-		this.chat.mute_user(data[1])
+		this.chat.mute_user(data.data)
+
 	}
 }
