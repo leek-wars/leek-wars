@@ -670,6 +670,30 @@
 	</div>
 @endview
 
+@view (mute_popup)
+
+	<div class='title'>{#moderation.mute}</div>
+
+	<div class='content'>{#moderation.mute_popup, name}</div>
+
+	<div class='actions'>
+		<div class='dismiss'>{#moderation.cancel}</div>
+		<div class='mute red'>{#moderation.confirm}</div>
+	</div>
+@endview
+
+@view (unmute_popup)
+
+	<div class='title'>{#moderation.unmute}</div>
+
+	<div class='content'>{#moderation.unmute_popup, name}</div>
+
+	<div class='actions'>
+		<div class='dismiss'>{#moderation.cancel}</div>
+		<div class='unmute red'>{#moderation.confirm}</div>
+	</div>
+@endview
+
 @view (emojis)
 	<div id='chat-smileys'>
 		<button id="chat-smileys-button">

@@ -3899,15 +3899,33 @@ var ChatController = function(chat_element, private_chat, team_chat) {
 				elem.insertAfter(last);
 			}
 
-			elem.find('.mute').click(function() {
-				LW.socket.send([CHAT_REQUEST_MUTE, _chatLanguage, author]);
-				$(this).hide()
-				elem.find('.unmute').show()
+			elem.find('.mute').click(function(e) {
+				
+				var mutePopup = new _.popup.new('main.mute_popup', { name: authorName })
+				var self = $(this)
+
+				mutePopup.find('.mute').click(function() {
+					LW.socket.send([CHAT_REQUEST_MUTE, _chatLanguage, author]);
+					self.hide()
+					elem.find('.unmute').show()
+					mutePopup.dismiss()
+				})
+				
+				mutePopup.show(e)				
 			})
-			elem.find('.unmute').click(function() {
-				LW.socket.send([CHAT_REQUEST_UNMUTE, _chatLanguage, author]);
-				$(this).hide()
-				elem.find('.mute').show()
+			elem.find('.unmute').click(function(e) {
+
+				var unmutePopup = new _.popup.new('main.unmute_popup', { name: authorName })
+				var self = $(this)
+
+				unmutePopup.find('.unmute').click(function() {
+					LW.socket.send([CHAT_REQUEST_UNMUTE, _chatLanguage, author]);
+					self.hide()
+					elem.find('.mute').show()
+					unmutePopup.dismiss()
+				})
+				
+				unmutePopup.show(e)
 			})
 			elem.find('.unmute').hide()
 
