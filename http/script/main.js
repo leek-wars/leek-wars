@@ -589,12 +589,33 @@ $(document).ready(function() {
 			resizePanel()
 
 			$('#social-panel .chat-input').keydown(function(e) {
+				if (e.keyCode === 9) {
+					e.preventDefault();
+					if($('#chat-commands-wrapper').is(":visible")) {
+						var command = $('.command:visible:first').attr('command')
+						var $txt = $('#chat .chat-input')
+						var text = $txt.val()
+						text = text.replace(/\/(\w*)$/g, "/" + command + " ")
+						$txt.val(text)
+						$txt.focus()
+					}
+				}
 				if (e.keyCode == 13) {
 					if ($.trim($(this).val()).length > 0) {
 						LW.socket.send([FORUM_CHAT_SEND, _.lang.current, $(this).val()])
 						$(this).val("").height(0)
 					}
 					e.preventDefault()
+				}
+			})
+
+			$('#social-panel .chat-input').keyup(function(e) {
+				if(chat_commands.isCommand($(this).val())) {
+					chat_commands.filterPopup($(this).val())
+					$('#chat-smileys-wrapper').hide()
+					$('#chat-commands-wrapper').show()
+				} else {
+					$('#chat-commands-wrapper').hide()
 				}
 			})
 
@@ -745,6 +766,7 @@ $(document).ready(function() {
 
 			$(document).on('click', function(e) {
 				$('#chat-smileys-wrapper').hide()
+				$('#chat-commands-wrapper').hide()
 			});
 
 			LW.consoleAlertMessage()
@@ -1999,13 +2021,9 @@ function linkifyElem(elem) {
 function commands(text, authorName) {
 	var matches;
 
-	text = text.replace(/(^| )\/me(?=$|\s)/g, "$1<i>" + authorName + "</i>")
-	text = text.replace(/(^| )\/lama(?=$|\s)/g, "$1<i>#LamaSwag</i>")
-	text = text.replace(/(^| )\/admin(?=$|\s)/g, "$1<i>" + authorName + " aime les admins !</i>")
-	text = text.replace(/(^| )\/fliptable(?=$|\s)/g, "$1(╯°□°）╯︵ ┻━┻")
-	text = text.replace(/(^| )\/replacetable(?=$|\s)/g, "$1┬─┬﻿ ノ( ゜-゜ノ)")
-	text = text.replace(/(^| )\/shrug(?=$|\s)/g, "$1¯\\_(ツ)_/¯")
-	text = text.replace(/(^| )\/lenny(?=$|\s)/g, "$1( ͡° ͜ʖ ͡° )")
+	chat_commands.list.forEach(function(command) {
+		text = text.replace(command.regex, command.replacement(authorName));
+	})
 
 	// Wiki commands
 	while(matches = /(?:^|(\s))\/wiki([!]?)(?::([^\s#]+)(?:#([^\s]+))?)?(?=\s|$)/g.exec(text)) {
@@ -3725,9 +3743,30 @@ var ChatController = function(chat_element, private_chat, team_chat) {
 		})
 
 		chat_element.find('.chat-input').keydown(function(e) {
+			if (e.keyCode === 9) {
+				e.preventDefault();
+				if($('#chat-commands-wrapper').is(":visible")) {
+					var command = $('.command:visible:first').attr('command')
+					var $txt = $('#chat .chat-input')
+					var text = $txt.val()
+					text = text.replace(/\/(\w*)$/g, "/" + command + " ")
+					$txt.val(text)
+					$txt.focus()
+				}
+			}
 			if (e.keyCode == 13) {
 				controller.send()
 				e.preventDefault()
+			}
+		})
+
+		chat_element.find('.chat-input').keyup(function(e) {
+			if(chat_commands.isCommand($(this).val())) {
+				chat_commands.filterPopup($(this).val())
+				$('#chat-smileys-wrapper').hide()
+				$('#chat-commands-wrapper').show()
+			} else {
+				$('#chat-commands-wrapper').hide()
 			}
 		})
 
@@ -3743,6 +3782,7 @@ var ChatController = function(chat_element, private_chat, team_chat) {
 	}
 
 	$('#chat-smileys-button').click(function(e) {
+		$('#chat-commands-wrapper').hide()
 		$('#chat-smileys-wrapper').toggle()
 		if (!$('#chat-smileys-wrapper').hasClass('loaded')) {
 			$('#chat-smileys-wrapper img').each(function() {
@@ -3766,6 +3806,21 @@ var ChatController = function(chat_element, private_chat, team_chat) {
 		var textAreaTxt = $txt.val()
 		var txtToAdd = emoji + ' '
 		$txt.val(textAreaTxt.substring(0, caretPos) + txtToAdd + textAreaTxt.substring(caretPos))
+		$txt.focus()
+	});
+
+	$('#chat-commands').on('click', function(e) {
+		e.stopPropagation();
+	});
+
+	$('#chat-commands').on('click', '.command', function(e) {
+		$('#chat-commands-wrapper').hide()
+		var command = $(this).attr('command')
+		var $txt = $('#chat .chat-input')
+		var text = $txt.val()
+		text = text.replace(/\/(\w*)$/g, "/" + command + " ")
+		$txt.val(text)
+		$txt.focus()
 	});
 
 	function setChatLanguage(channel) {

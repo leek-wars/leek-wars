@@ -71,9 +71,30 @@ LW.pages.messages.init = function(params, $scope, $page) {
 			sendMessage()
 		})
 		$("#messages-page .chat-input").keydown(function(e) {
+			if (e.keyCode === 9) {
+				e.preventDefault();
+				if($('#chat-commands-wrapper').is(":visible")) {
+					var command = $('.command:visible:first').attr('command')
+					var $txt = $('#chat .chat-input')
+					var text = $txt.val()
+					text = text.replace(/\/(\w*)$/g, "/" + command + " ")
+					$txt.val(text)
+					$txt.focus()
+				}
+			}
 			if (e.keyCode == 13) {
 				sendMessage()
 				e.preventDefault()
+			}
+		})
+
+		$('#messages-page .chat-input').keyup(function(e) {
+			if(chat_commands.isCommand($(this).val())) {
+				chat_commands.filterPopup($(this).val())
+				$('#chat-smileys-wrapper').hide()
+				$('#chat-commands-wrapper').show()
+			} else {
+				$('#chat-commands-wrapper').hide()
 			}
 		})
 

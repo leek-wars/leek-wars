@@ -727,3 +727,19 @@
 		</div>
 	</div>
 @endview
+
+@view (chat_commands)
+	<div id='chat-commands'>
+		<div id="chat-commands-wrapper" autostopscroll>
+			<div class="title">{#commands}</div>
+			<div class="list">
+				@foreach (command in chat_commands.list)
+					<div class="command" command="{command.command}">
+						<div class="cmd">/{command.command}</div>
+						<div class="description">{command.description}</div>
+					</div>
+				@end
+			</div>
+		</div>
+	</div>
+@endview
