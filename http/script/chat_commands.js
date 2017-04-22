@@ -89,7 +89,6 @@ chat_commands.isCommand = function(command) {
 
 chat_commands.filterPopup = function(command) {
     var match = /\/(\w*)$/g.exec(command);
-    console.log(URL_WIKI)
     $('.command').hide()
     if(match) {
         var c = match[1];

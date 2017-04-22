@@ -3817,9 +3817,11 @@ var ChatController = function(chat_element, private_chat, team_chat) {
 		$('#chat-commands-wrapper').hide()
 		var command = $(this).attr('command')
 		var $txt = $('#chat .chat-input')
-		var text = $txt.val()
-		text = text.replace(/\/(\w*)$/g, "/" + command + " ")
-		$txt.val(text)
+		if (team_chat) $txt = $('#team-page .chat-input')
+		if (private_chat) $txt = $('#messages-page .chat-input')
+		var textAreaTxt = $txt.val()
+		textAreaTxt = textAreaTxt.replace(/\/(\w*)$/g, "/" + command + " ")
+		$txt.val(textAreaTxt)
 		$txt.focus()
 	});
 
