@@ -81,7 +81,7 @@ chat_commands.isCommand = function(command) {
     if(match) {
         var c = match[1];
         for(var i in chat_commands.list) {
-            if(chat_commands.list[i].command.includes(c)) return true;
+            if(chat_commands.list[i].command.substring(0, c.length) == c) return true;
         }
     }
     return false;

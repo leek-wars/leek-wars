@@ -75,7 +75,7 @@ LW.pages.messages.init = function(params, $scope, $page) {
 				e.preventDefault();
 				if($('#chat-commands-wrapper').is(":visible")) {
 					var command = $('.command:visible:first').attr('command')
-					var $txt = $('#chat .chat-input')
+					var $txt = $('#messages-page .chat-input')
 					var text = $txt.val()
 					text = text.replace(/\/(\w*)$/g, "/" + command + " ")
 					$txt.val(text)

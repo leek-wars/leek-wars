@@ -3748,10 +3748,13 @@ var ChatController = function(chat_element, private_chat, team_chat) {
 				if($('#chat-commands-wrapper').is(":visible")) {
 					var command = $('.command:visible:first').attr('command')
 					var $txt = $('#chat .chat-input')
-					var text = $txt.val()
-					text = text.replace(/\/(\w*)$/g, "/" + command + " ")
-					$txt.val(text)
+					if (team_chat) $txt = $('#team-page .chat-input')
+					if (private_chat) $txt = $('#messages-page .chat-input')
+					var textAreaTxt = $txt.val()
+					textAreaTxt = textAreaTxt.replace(/\/(\w*)$/g, "/" + command + " ")
+					$txt.val(textAreaTxt)
 					$txt.focus()
+					$('#chat-commands-wrapper').hide()
 				}
 			}
 			if (e.keyCode == 13) {
