@@ -592,10 +592,10 @@ $(document).ready(function() {
 				if (e.keyCode === 9) {
 					e.preventDefault();
 					if($('#chat-commands-wrapper').is(":visible")) {
-						var command = $('.command:visible:first').attr('command')
+						var command = $('.command:visible:first').attr('command') || $('.sub-command:visible:first').attr('subcommand')
 						var $txt = $('#chat .chat-input')
 						var text = $txt.val()
-						text = text.replace(/\/(\w*)$/g, "/" + command + " ")
+						text = text.replace(chat_commands.regex, "/" + command + " ")
 						$txt.val(text)
 						$txt.focus()
 					}
@@ -796,6 +796,9 @@ $(document).ready(function() {
 			} else {
 				page()
 			}
+
+			chat_commands.setDocumentationOptions()
+			chat_commands.setMarketOptions()
 		})
 	})
 })
@@ -2019,61 +2022,18 @@ function linkifyElem(elem) {
 }
 
 function commands(text, authorName) {
-	var matches;
+	var matches
+
+	text = chat_commands.wikiCommands(text);
 
 	chat_commands.list.forEach(function(command) {
-		text = text.replace(command.regex, command.replacement(authorName));
+		if(command.options) {
+			command.options.forEach(function(subCommand) {
+				text = text.replace(subCommand.regex, subCommand.replacement(authorName))
+			})
+		}
+		text = text.replace(command.regex, command.replacement(authorName))
 	})
-
-	// Wiki commands
-	while(matches = /(?:^|(\s))\/wiki([!]?)(?::([^\s#]+)(?:#([^\s]+))?)?(?=\s|$)/g.exec(text)) {
-		var urlWiki = ''
-		var textWiki = matches[2] ? 'LE WIKIIIII' : 'Wiki'
-		// /wiki
-		if (!matches[3]) {
-			urlWiki += URL_WIKI
-		}
-		// /wiki:page OR /wiki:page#anchor
-		else {
-			urlWiki += URL_WIKI_PAGE + matches[3]
-			textWiki = matches[3]
-			if(matches[4]) {
-				urlWiki += '#' + matches[4]
-			}
-		}
-
-		text = text.replace(matches[0], ' ' + _.toChatLink(urlWiki, textWiki, "target='_blank' rel='nofollow'") + ' ')
-	}
-
-	// Documentation commands
-	while(matches = /(?:^|(\s))\/doc([!]?)(?::([^\s#]+))?(?=\s|$)/g.exec(text)) {
-		// /doc
-		var urlDoc = URL_DOC
-		var textDoc = matches[2] ? 'LA DOOOOOC' : 'Doc'
-
-		// /doc:function
-		if (matches[3]) {
-			urlDoc += '/' + matches[3]
-			textDoc = matches[3]
-		}
-
-		text = text.replace(matches[0], ' ' + _.toChatLink(urlDoc, textDoc, "target='_blank' rel='nofollow'") + ' ')
-	}
-
-	// Market commands
-	while(matches = /(?:^|(\s))\/market(?::([^\s#]+))?(?=\s|$)/g.exec(text)) {
-		// /market
-		var urlMarket = URL_MARKET
-		var textMarket = 'Market'
-
-		// /market:item
-		if (matches[2]) {
-			urlMarket += '/' + matches[2]
-			textMarket = matches[2]
-		}
-
-		text = text.replace(matches[0], ' ' + _.toChatLink(urlMarket, textMarket, "target='_blank' rel='nofollow'") + ' ')
-	}
 
 	return text
 }
@@ -3746,12 +3706,12 @@ var ChatController = function(chat_element, private_chat, team_chat) {
 			if (e.keyCode === 9) {
 				e.preventDefault();
 				if($('#chat-commands-wrapper').is(":visible")) {
-					var command = $('.command:visible:first').attr('command')
+					var command = $('.command:visible:first').attr('command') || $('.sub-command:visible:first').attr('subcommand')
 					var $txt = $('#chat .chat-input')
 					if (team_chat) $txt = $('#team-page .chat-input')
 					if (private_chat) $txt = $('#messages-page .chat-input')
 					var textAreaTxt = $txt.val()
-					textAreaTxt = textAreaTxt.replace(/\/(\w*)$/g, "/" + command + " ")
+					textAreaTxt = textAreaTxt.replace(chat_commands.regex, "/" + command + " ")
 					$txt.val(textAreaTxt)
 					$txt.focus()
 					$('#chat-commands-wrapper').hide()
@@ -3823,7 +3783,19 @@ var ChatController = function(chat_element, private_chat, team_chat) {
 		if (team_chat) $txt = $('#team-page .chat-input')
 		if (private_chat) $txt = $('#messages-page .chat-input')
 		var textAreaTxt = $txt.val()
-		textAreaTxt = textAreaTxt.replace(/\/(\w*)$/g, "/" + command + " ")
+		textAreaTxt = textAreaTxt.replace(chat_commands.regex, "/" + command + " ")
+		$txt.val(textAreaTxt)
+		$txt.focus()
+	});
+
+	$('#chat-commands').on('click', '.sub-command', function(e) {
+		$('#chat-commands-wrapper').hide()
+		var command = $(this).attr('subcommand')
+		var $txt = $('#chat .chat-input')
+		if (team_chat) $txt = $('#team-page .chat-input')
+		if (private_chat) $txt = $('#messages-page .chat-input')
+		var textAreaTxt = $txt.val()
+		textAreaTxt = textAreaTxt.replace(chat_commands.regex, "/" + command + " ")
 		$txt.val(textAreaTxt)
 		$txt.focus()
 	});

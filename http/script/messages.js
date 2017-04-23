@@ -74,10 +74,10 @@ LW.pages.messages.init = function(params, $scope, $page) {
 			if (e.keyCode === 9) {
 				e.preventDefault();
 				if($('#chat-commands-wrapper').is(":visible")) {
-					var command = $('.command:visible:first').attr('command')
+					var command = $('.command:visible:first').attr('command') || $('.sub-command:visible:first').attr('subcommand')
 					var $txt = $('#messages-page .chat-input')
 					var text = $txt.val()
-					text = text.replace(/\/(\w*)$/g, "/" + command + " ")
+					text = text.replace(chat_commands.regex, "/" + command + " ")
 					$txt.val(text)
 					$txt.focus()
 				}
