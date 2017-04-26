@@ -1,0 +1,235 @@
+﻿challenges			Les défis
+challenges_1		Des défis peuvent être lancés sur n'importe quel autre poireau.
+					Pour en lancer un, rendez-vous sur la page du poireau
+					adverse et cliquez sur le bouton "Défier" situé en haut à droite de sa fiche.
+					Vous avez un maximum de <b>200</b> défis par jour.
+challenges_2		Les défis ne font gagner aucune expérience ni aucun Habs et n'entrent pas
+					en compte avec le nombre de victoires, nuls et défaites (ratio).
+chips				Les puces
+chips_1				Les puces ont de nombreuses fonctions : dégâts, soins, boucliers, boosts,
+					entraves, déplacement...
+chips_2				Chaque puce requiert un certain niveau pour pouvoir être utilisée et a un
+					coût en points de tour. Elles comportent également un pourcentage d'échecs,
+					une portée spécifique et une durée de refroidissement "Cooldown" pour
+					pouvoir être utilisée à nouveau.
+chips_3				Si une puce indique "Protège de 15 de dégâts sur 3 tours", elle protègera
+					de 15 de dégâts sur chacun des 3 tours, le tour durant lequel elle est lancée
+					et les 2 suivants.
+chips_4				Certaines armes ont une zone d'effets comme pour la puce "Foudre". Le calcul
+					pour les dégâts de zones est linéaire : 100% pour la case centrale et jusqu'à
+					50% pour les cases aux extrémités.
+credits				Aide rédigée avec l'aide de <a href='/farmer/284'>PadiSson</a> et
+					<a href='/farmer/273'>McNalYoo</a>.
+editor				L'éditeur
+editor_1			Vous avez la possibilité d'éditer le nom de vos intelligences artificielles.
+					Pour cela, il suffit de cliquer sur le nom présent en haut à gauche puis
+					d'enregistrer la modification à l'aide du bouton "Sauvegarder".
+editor_2			Une limite de <b>20 millions</b> d'opérations par tour a été mise en place
+					pour votre intelligence artificielle.
+editor_3			Pour en savoir plus sur l'éditeur et le langage LeekScript, rendez-vous sur
+					la <a href='/help/tutorial'>page de tutoriel</a>.
+farmer				L'éleveur
+farmer_1			Dans Leek Wars, vous incarnez un éleveur de poireau. Dès votre inscription,
+					vous obtenez un poireau de niveau 1. Le but est de combattre d'autres poireaux
+					en développant l'intelligence artificielle de votre poireau à l'aide du
+					langage LeekScript.
+farmer_2			Ces combats permettent ainsi de gagner de l'expérience afin de passer des
+					niveaux. Ces niveaux vous permettent d'accéder à un arsenal d'armes et de
+					puces plus important ainsi que la possibilité de dépenser des points de
+					capital pour améliorer les caractéristiques de votre poireau.
+farmer_3			Par la suite vous pourrez obtenir jusqu’a 4 poireaux, aux conditions
+					suivantes :
+farmer_4			1er poireau : débloqué dès l’inscription
+farmer_5			2ème poireau : 10 000 Habs, 1er poireau niveau 50.
+farmer_6			3ème poireau : 100 000 Habs, 1er poireau niveau 100 et 2ème poireau niveau 50.
+farmer_7			4ème poireau : 1 000 000 Habs, 1er poireau niveau 150, 2ème poireau niveau 100
+					et 3ème poireau niveau 50.
+farmer_8			L'évolution du niveau de vos poireaux vous permettra aussi d'accéder à plus de
+					fonctions du langage LeekScript. Chaque fonction du langage a un niveau requis
+					situé à droite de chaque fonction sur la page de la
+					<a href='/help/documentation'>documentation</a>.
+fights				Les combats
+fights_1			Les combats sont accessibles depuis la page "Potager", il en existe 3
+					types différents :
+fights_2			Les combats solo, en 1 contre 1 : Un de vos poireaux affronte un poireau
+					adverse.
+fights_3			Les combats d’éleveur, tous vos poireaux affrontent ensemble tous les poireaux
+					d’un éleveur adverse.
+fights_4			Les combats d’équipe, une composition de votre équipe affronte une composition
+					d’une équipe adverse.
+fights_5			Les battle royales, votre poireau affronte 9 autres poireaux.
+fights_6			Vous disposez de <b>50</b> combats journaliers. Ceux-ci sont cumulables sur
+					deux jours. Ainsi, si vous n’avez pas fait vos combats, vous en aurez jusqu’à
+					<b>100</b> le lendemain.
+fights_7			Le nombre de combats se voit renouvelé tous les jours à minuit, heure
+					française.
+fights_8			Les combats solo (1 contre 1)
+fights_9			Dans un combat <b>solo</b>, votre poireau affronte un autre poireau de son
+					niveau.
+fights_10			Quel que soit le poireau envoyé sur le champ de bataille, un combat sera
+					comptabilisé, et donc soustrait à vos combats journaliers restants.
+fights_11			Les combats d'éleveur
+fights_12			Dans un combat d'éleveur, tous vos poireaux affrontent tous les poireaux d'un
+					autre éleveur.
+fights_13			Bien que tous vos poireaux se mobilisent, un seul combat est soustrait de
+					votre total de combats journaliers.
+fights_14			Les combats en équipe
+fights_15			Les combats d'équipe opposent les poireaux d'une composition adverse contre
+					les poireaux d'une de vos compositions. Chaque poireau peut effectuer
+					<b>10</b> combats d'équipe par jour avec sa composition, indépendamment de
+					vos combats journaliers. Une composition peut combattre quand
+					chacun de ses poireaux a un nombre de combats d'équipe restant supérieur à 0.
+fights_16			Ces combats en équipe ne sont pas comptabilisés dans votre nombre de
+					victoires, nuls et défaites (ratio).
+fights_17			Les battle royales
+fights_18			Les battle royales opposent votre poireau à 9 autres poireaux. Vous pouvez faire autant de battle royales que vous le souhaitez,
+					mais il faut qu'il y ait 10 poireaux inscrits pour qu'une battle royale soit lancée.					
+fights_19			Les battle royales ne font gagner aucune expérience ni aucun Habs et n'entrent pas
+					en compte avec le nombre de victoires, nuls et défaites (ratio).
+habs				Les Habs
+habs_1				Les Habs <span class='hab'></span> sont la monnaie de Leek Wars, vous en
+					obtenez en réalisant des combats. Les Habs servent ensuite à acheter des
+					armes et des puces dans le marché, ou des poireaux supplémentaires pour
+					votre élevage.
+intro				Cette page d’aide explique en détails tous les mécanismes du jeu :
+					l’évolution des poireaux, les combats, les armes, les puces, les tournois…
+					En revanche le tutoriel sur la programmation des IAs, avec le langage
+					LeekScript se trouve sur la page <a href='/help/tutorial'>Tutoriel
+					LeekScript</a>.
+leeks				Les poireaux
+leeks_1				Chaque poireau peut équiper des <b>armes</b>, des <b>puces</b> et une
+					intelligence artificielle pour combattre.
+leeks_10			Vol de vie = Sagesse / 10 (en %)
+leeks_11			La force
+leeks_12			La force augmente les dégâts causés par une attaque, aussi bien par les armes
+					que par les puces :
+leeks_13			Dégâts de l'attaque = (Dégâts de base) × (1 + Force / 100)
+leeks_14			L’agilité
+leeks_15			L'agilité augmente le renvoi de dégâts ainsi que le taux de coups critiques :
+leeks_16			Renvoi de dégats = (Renvoi de dégâts de base) × (1 + Agilité / 100)
+leeks_17			Pour les boucliers, il en existe deux types : le bouclier absolu et le
+					bouclier relatif :
+leeks_18			Bouclier absolu = (Bouclier absolu de base) * (1 + Résistance / 100)
+leeks_19			Bouclier relatif = (Bouclier relatif de base) * (1 + Résistance / 100)
+leeks_2				Le skin de votre poireau évolue en fonction du niveau, lorsqu'il franchit
+					certains paliers.
+leeks_21			Dégâts finaux = (Dégâts de base) * (1 - Bouclier relatif / 100) - Bouclier
+					absolu
+leeks_22			Points de mouvement
+leeks_23			Ces points permettent de se déplacer d'un certain nombre de cases durant
+					chaque tour d'un combat.
+leeks_24			Points de tour
+leeks_25			Ces points permettent d'utiliser une ou plusieurs armes et puces durant chaque
+					tour d'un combat.
+leeks_26			Fréquence
+leeks_27			Plus votre fréquence est élevée, plus vous aurez de chance de commencer en
+					premier durant le combat avec votre adversaire.
+leeks_28			Science
+leeks_29			La science augmente les boosts et réduit les entraves :
+leeks_3				Votre poireau peut aussi sortir du potager pour éviter les agressions d'autres
+					poireaux lorsque l'on part en vacances par exemple. Pour cela, il suffit de
+					modifier l'indicateur de statut "Potager" de Oui à Non sur la page du poireau
+					en question. Ainsi, votre poireau ne sera plus suggéré dans le potager
+					d'autres poireaux.
+leeks_30			Magie
+leeks_31			La magie augmente les entraves et les poisons :
+leeks_32			Taux de coup critique = Agilité / 10 (en %)
+leeks_33			Résistance
+leeks_34			Un coup critique augmente les effets de 40%.
+leeks_35			Les boucliers réduisent les dégâts directs, de la manière suivante :
+leeks_36			La résistance augmente les boucliers.
+leeks_37			Boost = (Boost de base) × (1 + Science / 100)
+leeks_38			Entrave = (Entrave de base) × (1 + Magie / 100)
+leeks_39			Les entraves sont réduites par la science de la manière suivante :
+leeks_4				Un poireau a aussi de nombreuses caractéristiques :
+leeks_40			Entrave finale = Entrave × (1 + (Magie lanceur - Science cible) / 100)
+leeks_41			Dégâts poison = (Dégâts de base) × (1 + Magie / 100)
+leeks_5				La vie
+leeks_6				À chaque niveau gagné, votre poireau gagne automatiquement 5 points de vie.
+leeks_7				La sagesse
+leeks_8				La sagesse augmente les soins, ainsi que le vol de vie :
+leeks_9				Soins finaux = (Soins de base) × (1 + Sagesse / 100)
+market				Le marché
+market_1			Le marché permet de dépenser vos Habs en achetant de nouvelles armes et de
+					nouvelles puces.
+market_2			La fiche d'une puce par exemple se présente sous cette forme :
+teams				Les équipes
+teams_1				Vous pouvez rejoindre à tout moment une équipe avec d’autres éleveurs, pour
+					pouvoir combattre en équipe contre d’autres équipes. Pour se faire, il suffit
+					de se rendre sur la page de l'équipe que vous souhaitez rejoindre et de cliquer sur le bouton "Rejoindre cette équipe" situé en haut à droite.
+					Attention, il n'est pas possible de rejoindre une équipe ayant désactivé le
+					recrutement ouvert à tous. Pour quitter votre équipe actuelle, le bouton
+					"Quitter cette équipe" est situé en bas à droite de la fiche de votre équipe.
+teams_2				Au sein d'une même équipe, les poireaux sont répartis en différentes
+					compositions. Chaque composition peut accueillir au maximum <b>6</b> poireaux.
+					De plus, une équipe peut accueillir au maximum <b>40</b> éleveurs.
+teams_3				Capitaines
+teams_4				Des capitaines peuvent être nommés dans chaque équipe et ont accès à la
+					gestion des compositions de l'équipe. Ils sont distingués par une petite
+					étoile claire devant leurs pseudonymes sur la page de l'équipe. Le créateur
+					de l'équipe a quant à lui une étoile foncée devant son pseudonyme.
+teams_5				Emblème et slogan
+teams_6				Un emblème et un cri de guerre peuvent être associés à l'équipe. Seuls le
+					créateur de l'équipe et ses capitaines ont la possibilité de modifier ces
+					informations. Pour ajouter un logo ou le modifier, cliquez à l'emplacement
+					prévu à cet effet. Et pour modifier le slogan de votre équipe, il faut
+					double-cliquer entre les deux guillemets présents à droite de votre logo sur
+					la page de l'équipe.
+title				Aide
+tournaments			Les Tournois
+tournaments_1		Les tournois sont de 3 types :
+tournaments_10		Les tournois d'équipe
+tournaments_11		Votre équipe peut participer à des tournois d'équipe, dans lequel les
+					compositions s'affrontent. Ces tournois débutent à 21h avec la 1ère manche et
+					regroupe 32 compositions. Il y a un round toutes les 30 minutes jusqu'à la
+					finale à 23h.
+tournaments_12		Pour s'inscrire aux tournois d'équipe, un bouton "S'inscrire à un tournoi" se
+					trouve sur la page de votre équipe pour chacune des compositions. Vous devez
+					être capitaine pour inscrire une composition. Les récompenses en expérience et
+					en Habs à la fin de ces combats sont associées à des multiplicateurs (x2, x3,
+					x4, x6 et x10).
+tournaments_13		Tournois d'équipe : une composition de votre équipe affronte une composition
+					d'une équipe adverse.
+tournaments_2		Les tournois solos, en 1 contre 1 : Un de vos poireaux affronte d'autres
+					poireaux adverses.
+tournaments_3		Les tournois d’éleveur, tous vos poireaux affrontent ensemble tous les
+					poireaux d'autres éleveurs adverses.
+tournaments_4		Les tournois solos (1 contre 1)
+tournaments_5		Chaque poireau de votre élevage peut participer à un tournoi quotidien
+					individuel. Les tournois débutent à 12h avec la 1ère manche et regroupe 32
+					poireaux. Toutes les 30 minutes suivantes, une autre manche est générée
+					jusqu'à la finale programmée à 14h.
+tournaments_6		Pour s'inscrire aux tournois individuels, il suffit de cliquer sur le bouton
+					"S'inscrire à un tournoi" situé sur la page de votre poireau. Les récompenses
+					en expérience et en Habs à la fin de ces combats sont associées à des
+					multiplicateurs (x2, x3, x4, x6 et x10).
+tournaments_7		Les tournois d'éleveur
+tournaments_8		À partir du 2ème poireau, vous avez la possibilité d'accéder aux tournois
+					quotidiens d'éleveur. Ces tournois débutent à 18h avec la 1ère manche et
+					regroupe 32 éleveurs. Toutes les 30 minutes suivantes, une autre manche est
+					générée jusqu'à la finale programmée à 20h.
+tournaments_9		Pour s'inscrire aux tournois d'éleveurs, le bouton "S'inscrire à un tournoi"
+					se trouve sur votre page de joueur. Les récompenses en expérience et en Habs à
+					la fin de ces combats sont associées à des multiplicateurs (x2, x3, x4, x6 et
+					x10).
+trophies			Les trophées
+trophies_1			Les trophées sont des récompenses que peuvent débloquer les éleveurs en
+					réalisant certaines actions sur Leek Wars. Sur la page d'un joueur, vous avez
+					la possibilité de classer ses trophées à l'aide du bouton situé en haut à
+					droite de la liste des trophées par ordre d'obtention ou par numéro du
+					trophée.
+trophies_2			À vous de les découvrir !
+weapons				Les armes
+weapons_1			Les armes sont utiles pour attaquer d'autres poireaux durant un combat. Un
+					poireau ne peut avoir dans ses mains qu’une seule arme à la fois, mais peut en
+					porter jusqu’à 3 sur lui.
+weapons_2			Chaque arme requiert un certain niveau pour pouvoir être utilisée et a un coût
+					en points de tour. Elle comporte également un pourcentage d'échecs et une
+					portée spécifique. Ces armes peuvent être achetées en plusieurs exemplaires
+					pour permettre à plusieurs de vos poireaux d'utiliser la même arme en même
+					temps. Par contre, il n'est pas possible d'attaquer avec deux armes en même
+					temps.
+weapons_3			Certaines armes ont une zone d'effets comme pour l'arme "Lance-grenades". Le
+					calcul pour les dégâts de zones est linéaire : 100% pour la case centrale et
+					jusqu'à 50% pour les cases aux extrémités.
+welcome				Bienvenue sur Leek Wars !
