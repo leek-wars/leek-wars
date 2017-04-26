@@ -1,4 +1,4 @@
-challenges			Challenges
+﻿challenges			Challenges
 challenges_1			You can Challenge any other leek.
 To do so, go on the page of the leek you want to fight against and click on the "Challenge" button located in the upper right. You are allowed up to 200 Challenges per day.
 challenges_2			Challenges reward no Experience point nor Habs. Challenges do not add up to the total of your wins, draws and losses (ratio).
@@ -28,17 +28,24 @@ fights_1			All information related to fights are available on the Garden page. T
 fights_2			Solo fight (1 vs 1): one of your leeks is fighting another leek.
 fights_3			Farmer fight: all your leeks fight all the leeks of another farmer.
 fights_4			Team fight: one composition of your team is fighting another composition of another team.
-fights_5			Your daily fights not been done on day can be postponed to the day after. If you cannot perform the fights (due to any other IRL constraint) you will have the opportunity to trigger them the day after. The postponing is done only the day after. If you do not perform your late fights the day after, they are definitively lost. For example, if you have no time today to do the <b>50</b> daily fights, you will then have the possibility to perform <b>100</b> fights tomorrow.
-fights_6			The allowed number of fights is reset every day at midnight. (New fights for the new day, plus potentially the postponed fights from yesterday).
-fights_7			Solo Fights
-fights_8			In a <b>solo fight</b> your leek is against another leek which has mainly the same power (automatically calculated by the game).
-fights_9			A fight will be counted, and removed to your remaining daily fights.
-fights_10			Farmer Fights
-fights_11			All your leeks fight all the leeks of another farmer.
-fights_12			Although all your leeks fight, it counts only for a fight.
-fights_13			Team Fights
-fights_14			All the leeks inside a composition of your team fight together all the leeks of a composition of another team. Each of your leek is allowed to do <b>10</b> team fights with its composition, apart from your daily fights. A composition is allowed to fight only if all its leeks have at least 1 team fight left.
-fights_15			Team fights do not add up to the total of your wins, draws and losses (ratio).
+fights_5			Royal battles : one of your leek is fighting 9 other leeks
+fights_6			Your daily fights not been done on day can be postponed to the day after. If you cannot perform the fights (due to any other IRL constraint) you will have the opportunity to trigger them the day after. The postponing is done only the day after. If you do not perform your late fights the day after, they are definitively lost. For example, if you have no time today to do the <b>50</b> daily fights, you will then have the possibility to perform <b>100</b> fights tomorrow.
+fights_7			The allowed number of fights is reset every day at midnight. (New fights for the new day, plus potentially the postponed fights from yesterday).
+fights_8			Solo Fights
+fights_9			In a <b>solo fight</b> your leek is against another leek which has mainly the same power (automatically calculated by the game).
+fights_10			A fight will be counted, and removed to your remaining daily fights.
+fights_11			Farmer Fights
+fights_12			All your leeks fight all the leeks of another farmer.
+fights_13			Although all your leeks fight, it counts only for a fight.
+fights_14			Team Fights
+fights_15			All the leeks inside a composition of your team fight together all the leeks of a composition of another team. Each of your leek is allowed to do <b>10</b> team fights with its composition, apart from your daily fights. A composition is allowed to fight only if all its leeks have at least 1 team fight left.
+fights_16			Team fights do not add up to the total of your wins, draws and losses (ratio).
+fights_17			Royal battles
+fights_18			One of your leek is fighting 9 other leeks. Royal battles are available at the level 50. You can do them 
+				as much as you want, but you jave to wait for 10 leeks registered.
+				
+fights_19			Royal battles reward no Experience point nor Habs. Royal battles do not add up to the total of your wins, draws and losses (ratio).
+
 habs			Habs
 habs_1			Hab(s) is the name of the Leek Wars currency. You earn Habs thanks to fights. You spend Habs to buy weapons and chips in the market, or to recruit an additional leek.
 intro			This page will provide you with the detailed mechanisms regarding : leek evolution, fights, weapons, chips, tournaments...
