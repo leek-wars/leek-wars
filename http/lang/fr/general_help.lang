@@ -1,4 +1,4 @@
-challenges			Les défis
+﻿challenges			Les défis
 challenges_1		Des défis peuvent être lancés sur n'importe quel autre poireau.
 					Pour en lancer un, rendez-vous sur la page du poireau
 					adverse et cliquez sur le bouton "Défier" situé en haut à droite de sa fiche.
@@ -9,7 +9,7 @@ chips				Les puces
 chips_1				Les puces ont de nombreuses fonctions : dégâts, soins, boucliers, boosts,
 					entraves, déplacement...
 chips_2				Chaque puce requiert un certain niveau pour pouvoir être utilisée et a un
-					coût en points de tour. Elles comportent également un pourcentage d'échecs,
+					coût en points de tour. Elles comportent également
 					une portée spécifique et une durée de refroidissement "Cooldown" pour
 					pouvoir être utilisée à nouveau.
 chips_3				Si une puce indique "Protège de 15 de dégâts sur 3 tours", elle protègera
@@ -49,7 +49,7 @@ farmer_8			L'évolution du niveau de vos poireaux vous permettra aussi d'accéde
 					situé à droite de chaque fonction sur la page de la
 					<a href='/help/documentation'>documentation</a>.
 fights				Les combats
-fights_1			Les combats sont accessibles depuis la page "Potager", il en existe 3
+fights_1			Les combats sont accessibles depuis la page "Potager", il en existe 4
 					types différents :
 fights_2			Les combats solo, en 1 contre 1 : Un de vos poireaux affronte un poireau
 					adverse.
@@ -57,29 +57,35 @@ fights_3			Les combats d’éleveur, tous vos poireaux affrontent ensemble tous 
 					d’un éleveur adverse.
 fights_4			Les combats d’équipe, une composition de votre équipe affronte une composition
 					d’une équipe adverse.
-fights_5			Vous disposez de <b>50</b> combats journaliers. Ceux-ci sont cumulables sur
+fights_5			Les battle royales, votre poireau affronte 9 autres poireaux.
+fights_6			Vous disposez de <b>50</b> combats journaliers. Ceux-ci sont cumulables sur
 					deux jours. Ainsi, si vous n’avez pas fait vos combats, vous en aurez jusqu’à
 					<b>100</b> le lendemain.
-fights_6			Le nombre de combats se voit renouvelé tous les jours à minuit, heure
+fights_7			Le nombre de combats se voit renouvelé tous les jours à minuit, heure
 					française.
-fights_7			Les combats solo (1 contre 1)
-fights_8			Dans un combat <b>solo</b>, votre poireau affronte un autre poireau de son
+fights_8			Les combats solo (1 contre 1)
+fights_9			Dans un combat <b>solo</b>, votre poireau affronte un autre poireau de son
 					niveau.
-fights_9			Quel que soit le poireau envoyé sur le champ de bataille, un combat sera
+fights_10			Quel que soit le poireau envoyé sur le champ de bataille, un combat sera
 					comptabilisé, et donc soustrait à vos combats journaliers restants.
-fights_10			Les combats d'éleveur
-fights_11			Dans un combat d'éleveur, tous vos poireaux affrontent tous les poireaux d'un
+fights_11			Les combats d'éleveur
+fights_12			Dans un combat d'éleveur, tous vos poireaux affrontent tous les poireaux d'un
 					autre éleveur.
-fights_12			Bien que tous vos poireaux se mobilisent, un seul combat est soustrait de
+fights_13			Bien que tous vos poireaux se mobilisent, un seul combat est soustrait de
 					votre total de combats journaliers.
-fights_13			Les combats en équipe
-fights_14			Les combats d'équipe opposent les poireaux d'une composition adverse contre
+fights_14			Les combats en équipe
+fights_15			Les combats d'équipe opposent les poireaux d'une composition adverse contre
 					les poireaux d'une de vos compositions. Chaque poireau peut effectuer
 					<b>10</b> combats d'équipe par jour avec sa composition, indépendamment de
 					vos combats journaliers. Une composition peut combattre quand
 					chacun de ses poireaux a un nombre de combats d'équipe restant supérieur à 0.
-fights_15			Ces combats en équipe ne sont pas comptabilisés avec votre nombre de
+fights_16			Ces combats en équipe ne sont pas comptabilisés dans votre nombre de
 					victoires, nuls et défaites (ratio).
+fights_17			Les battle royales
+fights_18			Les battle royales opposent votre poireau à 9 autres de niveau proche. Vous pouvez faire autant de battle royales que vous le souhaitez, mais une battle royale n'est lancée 
+					que lorsque 10 poireaux sont inscrits. Les battle royales sont disponibles à partir du niveau 50.
+fights_19			Ces battle royales ne font gagner aucune expérience ni aucun Habs et n'entrent pas
+					en compte avec le nombre de victoires, nuls et défaites (ratio).
 habs				Les Habs
 habs_1				Les Habs <span class='hab'></span> sont la monnaie de Leek Wars, vous en
 					obtenez en réalisant des combats. Les Habs servent ensuite à acheter des
