@@ -224,7 +224,7 @@ weapons_1			Les armes sont utiles pour attaquer d'autres poireaux durant un comb
 					poireau ne peut avoir dans ses mains qu’une seule arme à la fois, mais peut en
 					porter jusqu’à 3 sur lui.
 weapons_2			Chaque arme requiert un certain niveau pour pouvoir être utilisée et a un coût
-					en points de tour. Elle comporte également un pourcentage d'échecs et une
+					en points de tour. Elle comporte également une
 					portée spécifique. Ces armes peuvent être achetées en plusieurs exemplaires
 					pour permettre à plusieurs de vos poireaux d'utiliser la même arme en même
 					temps. Par contre, il n'est pas possible d'attaquer avec deux armes en même

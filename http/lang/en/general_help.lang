@@ -127,6 +127,6 @@ trophies_1			Achievements are rewarded to farmers upon completion of specific ac
 trophies_2			It's up to you now!
 weapons			Weapons
 weapons_1			Weapons are efficent to attack other leeks. Only one weapon can be taken in hands but a leek can carry up to 3 weapons (including the one in hands).
-weapons_2			Each weapon requests a minimum level to be used. The use of a weapon costs a specific amount of Turn Points. Every weapon has also a failure percentage and a specific range. You can buy several occurences of each weapon in order to equip your different leeks with the same weapon. Your leeks are not allowed to fire more than one weapon at the same time. But one leek can of course fire one weapon, then replace it with another weapon, and then fire the new one (as long as it has enough Turn Points).
+weapons_2			Each weapon requests a minimum level to be used. The use of a weapon costs a specific amount of Turn Points. Every weapon has also a specific range. You can buy several occurences of each weapon in order to equip your different leeks with the same weapon. Your leeks are not allowed to fire more than one weapon at the same time. But one leek can of course fire one weapon, then replace it with another weapon, and then fire the new one (as long as it has enough Turn Points).
 weapons_3			Some weapons have an area of effect. See "Grenade Launcher" for example. Damage decrease linearly from the center cell (100% damage) to the border cells (50% damage).
 welcome			Welcome to Leek Wars!
