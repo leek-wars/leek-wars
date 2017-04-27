@@ -1,4 +1,4 @@
-advanced			Avancé
+﻿advanced			Avancé
 advanced_include			Les inclusions
 advanced_include_1			La fonction <b>include</b> permet d'inclure une IA dans une autre. Concrètement, si dans une IA "IA Principale", vous écrivez :
 advanced_include_10			// ne fonctionne pas
@@ -292,7 +292,7 @@ editor_5			En cliquant sur le nom de l’IA, le champ devient éditable et vous 
 	contient des erreurs. <br />
 	Le bouton “Tester” permet de lancer un combat dans une arène de test pour vérifier que votre code s’exécute
 	correctement (nous reviendrons sur cette fonctionnalité un peu plus loin).
-editor_6			En dessous de ces boutons se trouve un éditeur de texte, c’est ici que vous pouvez tapper votre code,
+editor_6			En dessous de ces boutons se trouve un éditeur de texte, c’est ici que vous pouvez taper votre code,
 	une coloration syntaxique est appliquée suivant le code couleur suivant :
 editor_7			Il est intéressant de noter aussi qu’en plaçant son curseur près d’une parenthèse, accolade ou crochet ouvrant,
 	son équivalent fermant est mis en évidence, (inversement quand on place le curseur près d’un fermant).
@@ -302,7 +302,7 @@ editor_9			La complétion automatique ouvre un dialogue pour compléter la fonct
 	L’éditeur connaît toutes les fonctions du LeekScript ainsi que leurs paramètres, les constantes de jeu ainsi
 	que les fonctions et variables que vous aurez définies.
 editor_domingo			Domingo : IA agressive, uniquement en attaque
-editor_guj			Guj : IA incompréhensible, attaque, se soigne, fuis, vient vers vous… personne ne sait</li>
+editor_guj			Guj : IA incompréhensible, attaque, se soigne, fuit, vient vers vous… personne ne sait</li>
 		vraiment ce que ce poireau veut.
 editor_image_1			L'Éditeur de code de <b>Leek Wars</b>
 editor_image_2			Une IA dans L'éditeur
@@ -321,7 +321,7 @@ fight			Combat
 fight_chips			Les puces
 fight_chips_1			Avant d'utiliser une puce, il faut veiller à l'équiper sur notre poireau. Pour l'utiliser, il suffit d'utiliser la fonction
 	<a href='documentation/useChip'><b>useChip</b></a>. Le premier paramètre est le code de la puce, par exemple "<b>CHIP_SHOCK</b>"
-	pour la puce "<b>Décharge</b>". Le second paramètre est le poireau cible :
+	pour la puce "<b>Décharge</b>". Le second paramètre est le poireau ciblé :
 fight_chips_10			var enemy = getNearestEnemy();
 						while (getTP() >= 2) {
 							useChip(CHIP_SHOCK, enemy);
@@ -467,11 +467,11 @@ fight_sys_13			var enemies = getEnemies(); // On récupère un tableau des ids d
 						debug(n + " ennemis ont plus de 1000 PV");
 fight_sys_2			Ordre de jeu
 fight_sys_3			Les poireaux jouent <b>chacun leur tour</b>. L'ordre est déterminé par la fréquence des poireaux, mais on alterne toujours
-	entre les deux équipes : le poireau qui	a la plus grande fréquence a plus de chance de commencer et faire commencer son équipe, et le deuxième poireau
+	entre les deux équipes : le poireau qui	a la plus grande fréquence a plus de chances de commencer et faire commencer son équipe, et le deuxième poireau
 	à jouer est celui qui a la plus grande fréquence dans l'autre équipe, et ainsi de suite.
 fight_sys_4			Le combat est divisé en tours : quand le dernier poireau a joué, on repasse au premier et le compteur de tours s'incrémente.
 	Pour éviter des combats infinis, le nombre de tours est limité à <b>64</b> (constante <a href='documentation/MAX_TURNS'>MAX_TURNS</a>).
-	Quand le compteur atteind cette limite, le combat se solde par une égalite. Lors d'un combat qui dure longtemps,
+	Quand le compteur atteint cette limite, le combat se solde par une égalite. Lors d'un combat qui dure longtemps,
 	il faudra donc bien veiller à surveiller le compteur de tours. La fonction
 	<b><a href='documentation/getTurn'>getTurn()</a></b> donne le tour actuel du combat :
 fight_sys_5			var turn = getTurn();
@@ -493,7 +493,7 @@ fight_weapons_3			// On prend le pistolet
 						setWeapon(WEAPON_PISTOL);
 fight_weapons_4			Attention ! La fonction <b>setWeapon</b> coûte 1 PT.
 fight_weapons_5			Utiliser une arme
-fight_weapons_6			Maintenant que votre poireau possède une arme, il ne reste plus qu'a attaquer avec. Pour cela, il faut utiliser
+fight_weapons_6			Maintenant que votre poireau possède une arme, il ne reste plus qu'à attaquer avec. Pour cela, il faut utiliser
 	la fonction <a href='documentation/setWeapon'><b>useWeapon</b></a> :
 fight_weapons_7			var enemy = getNearestEnemy();
 						useWeapon(enemy); // attaque
@@ -651,7 +651,7 @@ loops_19			var i;
 					for (i = 1; i <= 5; i++) {
 						debug("Le compteur i vaut : " + i);
 					}
-loops_2			La boucle permet de répéter des instructions plusieurs fois. Il y a plusieurs types de boucle que nous allons voir dans
+loops_2			La boucle permet de répéter des instructions plusieurs fois. Il y a plusieurs types de boucles. Nous allons les voir dans
 	cette partie.
 loops_20			Ce code affichera dans les logs :<br />
 	Le compteur i vaut 1<br />
@@ -728,7 +728,7 @@ var_2			Les variables sont un point fondamental dans tous les langages de progra
 var_20			// Déclaration de la variable globale nomDeGlobale, de valeur 42
 				global nomDeGlobale = 42;
 var_21			Les variables et variables globales peuvent s’utiliser de la même manière dans le code, dans la suite
-				du tuto nous utiliserons principalement des variables normales.
+				du tuto nous utiliserons principalement des variables normales (parfois appelées locales).
 var_22			Utilisation des variables
 var_23			Il est possible d’utiliser les variables dans votre code de différentes façons.
 var_24			On peut leur assigner une valeur (c’est à dire leur faire “retenir” cette valeur en mémoire) en utilisant
@@ -774,7 +774,7 @@ var_36			On peut également utiliser des chaînes de caractères de la manière 
 var_37			var maVariable;
 				maVariable = "Je suis une chaîne de caractères";
 var_38			Pour une chaîne de caractère, seul l’opérateur <b>+</b> est utilisable, il permet de concaténer des morceaux
-				de chaîne, c’est à dire de les mettre bout à bout. Ainsi le code :
+				de chaîne, c’est à dire de les mettre bout à bout. Comme le montre le code :
 var_39			// Déclaration de chaine1 et chaine2
 				var chaine1, chaine2;
 
@@ -789,7 +789,7 @@ var_41			// Déclaration de a et chaine
 				a = 51 * 17; // a prend la valeur 867
 				chaine = "Multiplier 51 et 17 donne la valeur : " + a;
 				// chaine contient alors "Multiplier 51 et 17 donne la valeur : 867"
-var_42			Un bon réflex en LeekScript
+var_42			Un bon réflexe en LeekScript
 var_43			Ce que nous allons voir maintenant est un outil qui va vous être très utile dans le développement de votre IA,
 				il s’agit d’une fonction vous permettant d’afficher la valeur de variable ou d’expressions.
 var_44			Nous n’avons pas encore vu comment utiliser de fonction et nous expliqueront leur mécanisme plus en détail un peu plus
@@ -828,16 +828,16 @@ var_9			Cependant le type de la variable n’est pas fixe (comme en C ou en Java
 variables		Les variables
 welcome			Bienvenue dans le tutoriel LeekScript !
 what_is_ai		Qu’est-ce qu’une IA ?
-what_is_ai_1	Une <b>Intelligence Artificielle</b> (<b>IA</b>) est un code en <i>LeekScript</i> qui va contrôler votre poireau durant son tours de jeu.
+what_is_ai_1	Une <b>Intelligence Artificielle</b> (<b>IA</b>) est un code en <i>LeekScript</i> qui va contrôler votre poireau durant son tour de jeu.
 				Le code que vous allez créer sera exécuté à chaque début de tour de votre poireau, il contrôlera les actions que votre
 				poireau va effectuer (attaquer, se déplacer, utiliser une puce…).
-what_is_ai_2	Lorsqu’un combat sera lancé, vous ne pourrez pas intervenir sur les actions de votre protégé, seule l’IA entrera en jeu,
-				c’est pourquoi il est conseillé de la programmer avec soin.
+what_is_ai_2	Lorsqu’un combat est lancé, vous ne pouvez plus intervenir sur les actions de votre protégé: seule l’IA est prise en compte,
+				c’est pourquoi il est primordial de la programmer avec soin.
 what_is_ai_3	Nous allons maintenant voir l’environnement proposé par <b>Leek Wars</b> pour développer votre IA.
 what_is_leekscript			Qu’est ce que le LeekScript ?
 what_is_leekscript_1		Maintenant que vous avez une arme, nous allons pouvoir nous pencher sur la partie création d'intelligences
 							Artificielle (IA) qui est le sujet de ce tutoriel. <b>Leek Wars</b> vous propose de programmer vos IA dans un langage
 							appelé le LeekScript, il s’agit d’un langage proche du Javascript et du PHP, non typé et non orienté objet.
-what_is_leekscript_2			Le langage est facile à utiliser et à apprendre. Il met à votre disposition des fonction puissantes qui vous
+what_is_leekscript_2			Le langage est facile à utiliser et à apprendre. Il met à votre disposition des fonctions puissantes qui vous
 	permettront de créer une IA efficace même si vous débutez. A l’inverse, si vous êtes déjà expérimentés en
 	programmation, des fonctions plus poussées vous permettrons de créer des IA plus sophistiquées.
