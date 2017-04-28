@@ -5,6 +5,8 @@ LW.pages.statistics.init = function(params, $scope, $page) {
 	_.get('statistic/get-all', function(data) {
 
 		LW.setTitle(_.lang.get('statistics', 'title'))
+		data.statistics[3].operations.value *= 1000000
+		data.statistics[3].operations.value += Math.floor(Math.random() * 1000000)
 		$scope.statistics = data.statistics
 		$page.render()
 
