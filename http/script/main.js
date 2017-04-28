@@ -513,6 +513,8 @@ LW.pages = {
 			['third_party/', 'jquery.tablednd.0.7.min.js']
 		]
 	},
+	statistics: {
+	},
 
 	moderation: {
 		moderator: true
@@ -1414,6 +1416,10 @@ page('/help/api', function() {
 
 page('/translation/:file', function(ctx) {
 	LW.loadPage('translation', ctx.params)
+})
+
+page('/statistics', function(ctx) {
+	LW.loadPage('statistics')
 })
 
 page('/moderation', function() {
