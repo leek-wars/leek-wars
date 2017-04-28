@@ -21,5 +21,9 @@ LW.pages.statistics.init = function(params, $scope, $page) {
 				}
 			}
 		}, _DELAY)
+
+LW.pages.statistics.leave = function() {
+	clearInterval(this.interval)
+}
 	});
 });
