@@ -792,3 +792,9 @@
 		display: none;
 	}
 }
+
+#views-counter {
+	color: white;
+	font-size: 20px;
+	padding: 6px 12px;
+}
