@@ -1,0 +1,21 @@
+<div class='page-header page-bar'>
+	<div>
+		<h1>{#title}</h1>
+	</div>
+</div>
+
+<div class='panel'>
+
+	@foreach (category_id : category in statistics)
+		<h2>{_.lang.get('statistics', 'category_' + category_id)}</h2>
+		<div class='category' category='{category_id}'>
+			@foreach (name : statistic in category)
+				<div class='statistic {statistic.private ? 'private' : ''}' statistic='{name}' value='{statistic.value}'>
+					<div class='label'>{_.lang.get('statistics', name)}</div>
+					<div class='value'>{statistic.value.toLocaleString('fr-FR')}</div>
+				</div>
+			@end
+		</div>
+		<br>
+	@end
+</div>
