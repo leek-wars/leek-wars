@@ -1,18 +1,15 @@
-@font-face {
-	font-family: 'blenda';
-	src: url('../R/font/Blenda_Script.ttf');
-	font-weight: normal;
-	font-style: normal;
+#statistics-page .panel {
+	padding-top: 20px;
+	text-align: center;
 }
 
-h2 {
-	font-family: 'blenda';
+#statistics-page h2 {
+	font-family: 'Fjalla One', sans-serif;
 	text-align: center;
-	font-size: 42px;
-	margin-top: 10px;
-	
+	font-size: 28px;
 }
-h2:before, h2:after {
+
+#statistics-page h2:before, #statistics-page h2:after {
 	height: 5px;
 	width: 150px;
 	vertical-align: middle;
@@ -20,73 +17,84 @@ h2:before, h2:after {
 	display: inline-block;
 	content: "";
 }
-h2:before {
+#statistics-page h2:before {
 	background: linear-gradient(to left, #aaa, rgba(0,0,0,0));
 }
-h2:after {
+#statistics-page h2:after {
 	background: linear-gradient(to right, #aaa, rgba(0,0,0,0));
 }
-h2.blue {
+#statistics-page h2.blue {
 	color: #0079DE;
 }
-h2.green {
+#statistics-page h2.green {
 	color: #0a0;
 }
-h2.red {
+#statistics-page h2.red {
 	color: #DC0006;
 }
-h2.orange {
+#statistics-page h2.orange {
 	color: #FF7600;
 }
-h2.pink {
+#statistics-page h2.pink {
 	color: #FF00A4;
 }
 
-.stats {
+#statistics-page .stats {
 	padding-top: 10px;
 	padding-bottom: 20px;
 	text-align: center;
 }
 
-stat {
+#statistics-page .category {
+	display: inline-block;
+	vertical-align: top;
+	padding: 5px;
+	margin-bottom: 20px;
+}
+
+#statistics-page .statistic {
 	text-align: center;
 	height: 100%;
 	vertical-align: top;
 	display: inline-block;
 	padding: 6px 10px;
-	padding-bottom: 10px;
 	margin: 10px;
 	background: white;
 	border-radius: 3px;
 	border-bottom: 3px solid #ddd;
 }
 
-stat:hover value {
+#statistics-page .statistic.private {
+	border-bottom: 3px solid red;
+}
+
+#statistics-page .statistic:hover .value {
 	color: #222;
 }
-stat:hover label {
+#statistics-page .statistic:hover .label {
 	color: #333;
 }
 
-unit {
+#statistics-page .unit {
 	display: inline-block;
 	margin-left: 4px;
 }
 
-value {
-	font-size: 32px;
+#statistics-page .value {
+	font-size: 28px;
 	display: block;
 	color: #888;
-	margin-bottom: 4px;
 	display: inline-block;
 }
 
-label {
+#statistics-page .label {
 	text-align: center;
-	font-size: 18px;
+	font-size: 16px;
 	color: #888;
 	display: block;
 	font-weight: 300;
-	max-width: 120px;
+	max-width: 140px;
 	margin: 0 auto;
+	margin-bottom: 2px;
+}
 }
