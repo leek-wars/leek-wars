@@ -31,9 +31,9 @@ advanced_include_9			// ne fonctionne pas
 advanced_intro			Dans cette section nous présenterons des fonctions et techniques plus complexes mais néanmoins utiles pour gagner un combat
 	dans <b>Leek Wars</b>.
 advanced_order			Ordre de jeu
-advanced_order_1			Les fonctions <a href='documentation/getNextPlayer'><b>getNextPlayer</b></a> et
-	<a href='documentation/getPreviousPlayer'><b>getPreviousPlayer</b></a> permettent de récupérer les ids des poireaux qui, respectivement,
-	va jouer après vous et qui a joué avant vous.
+advanced_order_1			Les fonctions <a href='documentation/getNextPlayer'><b>getNextPlayer</b></a>
+	(resp. <a href='documentation/getPreviousPlayer'><b>getPreviousPlayer</b></a>) permettent de récupérer l'id du poireau qui
+	va jouer (resp. a joué) après (resp. avant) vous.
 	Une application possible : regarder si le joueur qui joue après vous (un ennemi) est proche de vous.
 advanced_order_2			var next = getNextPlayer();
 							if (isEnemy(next) and getLife() < 100
@@ -43,7 +43,7 @@ advanced_order_2			var next = getNextPlayer();
 advanced_order_3			Cibles d'une arme ou d'une puce
 advanced_order_4			Les fonctions <a href='documentation/getWeaponTargets'><b>getWeaponTargets</b></a> et
 	<a href='documentation/getChipTargets'><b>getChipTargets</b></a> permettent de récupérer un tableau d'id des poireaux touchés
-	si vous utiliser une arme ou une puce sur une certaine cellule. Particulèrement utiles pour les armes ou puces de zone (aussi bien
+	si vous utilisez une arme ou une puce sur une certaine cellule. Particulèrement utiles pour les armes ou puces de zone (aussi bien
 	un lance-grenades qu'un sort de soin en zone) :
 advanced_order_5			var cell = ...; // une cellule
 							var targets = getChipTargets(CHIP_ICEBERG, cell);
@@ -430,10 +430,10 @@ fight_move_4			var enemy = getNearestEnemy();
 							moveAwayFrom(enemy); // on s'éloigne
 							// soins...
 						}
-fight_move_5			Ces fonctions utilisées tel quel vont utiliser le nombre de points de mouvements variable, un nombre de telle sorte à accomplir au
+fight_move_5			Ces fonctions utilisées telles quelles vont utiliser un nombre de points de mouvements variable, de telle sorte à accomplir au
 	mieux leur objectif. Ainsi, si vous êtes à une très grande distance d'un ennemi, <b>moveToward</b> utilisera sans doute tous vos PM,
 	alors que si vous êtes collé à cet ennemi, elle n'en utilisera aucun.
-fight_move_6			Pour mieux contrôler le nombre de PM qu'une fonction utilise, vous pouvez spécifier le nombre de PM maximum, en deuxième paramètre :
+fight_move_6			Pour mieux contrôler le nombre de PM qu'une fonction utilise, vous pouvez indiquer le nombre de PM maximum que la fonction peut utiliser, en deuxième paramètre :
 
 fight_move_7			var enemy = getNearestEnemy();
 						moveToward(enemy, 3); // on avance vers l'ennemi, de 3 cellules max.
