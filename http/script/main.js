@@ -514,6 +514,8 @@ LW.pages = {
 		]
 	},
 	statistics: {
+		scripts: ['https://cdnjs.cloudflare.com/ajax/libs/chartist/0.10.1/chartist.min.js'],
+		styles: [ 'https://cdnjs.cloudflare.com/ajax/libs/chartist/0.10.1/chartist.min.css']
 	},
 
 	moderation: {
