@@ -1,0 +1,50 @@
+title				Statistiques
+
+category_1			Démographie
+category_2			Combat
+category_3			Code
+category_4			Social
+category_5			Projet LW
+
+farmers				Éleveurs
+leeks				Poireaux
+teams				Équipes
+ai_day				AI 24h
+fight_day			Combats 24h
+fights				Combats
+banned_farmers		Éleveurs bannis
+deleted_farmers		Désinscriptions
+forum_messages		Messages forum
+forum_topics		Topics forum
+forum_votes			Votes forum
+ais					AI
+ai_characters		Caractères AI
+ai_lines			Lignes AI
+trophies			Trophées
+connected_farmers	Connectés
+registered_day		Inscrits 24h
+comments			Commentaires
+lw_code_cpp			C++
+lw_code_java		Java
+lw_code_php			PHP
+lw_code_javascript	JavaScript
+lw_code_css			CSS
+lw_code_html		HTML
+damage				Dommages
+heal				Soin
+distance			Distance parcourue
+kills				Kills
+bullets				Balles tirées
+chips				Puces utilisées
+stack_overflows		Stack overflows
+crashes				Crashs
+summons				Invocations
+resurrects			Résurrections
+damage_poison		Dommages poison
+damage_return		Dommages renvoi
+critical_hits		Coups critiques
+tp_used				PT utilisés
+mp_used				PM utilisés
+operations			Opérations
+says				Says
+says_length			Taille des says
