@@ -67,7 +67,11 @@ LW.pages.statistics.languages_chart = function(statistics) {
 	var stats_elems = $('.category[category=' + CODE_CATEGORY + '] .statistic')
 	// Sort languages by lines of code
 	stats_elems.sort(function(a, b) {
-		return parseInt($(a).attr('value')) < parseInt($(b).attr('value'));
+		var va = parseInt($(a).attr('value'))
+		if ($(a).attr('statistic').indexOf('lw_code') == -1) va = -1
+		var vb = parseInt($(b).attr('value'))
+		if ($(b).attr('statistic').indexOf('lw_code') == -1) vb = -1
+		return va < vb;
 	}).appendTo('.category[category=' + CODE_CATEGORY + ']');
 
 	var select_stat = function(stat) {
@@ -78,9 +82,9 @@ LW.pages.statistics.languages_chart = function(statistics) {
 			chart.find('.ct-series').removeClass('selected').addClass('unselected')
 			$(chart.find('.ct-series')[stat]).addClass('selected').removeClass('unselected')
 			stats_elems.removeClass('selected').find('.value').removeAttr('style');
-			$(stats_elems[stat]).addClass('selected')
+			$(stats_elems[stat + 1]).addClass('selected')
 			var color = $(chart.find('.ct-series')[stat]).find('path').css('stroke')
-			$(stats_elems[stat]).find('.value').css('color', color)
+			$(stats_elems[stat + 1]).find('.value').css('color', color)
 		}
 	}
 	chart.on('mouseenter', '.ct-series', function(event) {
@@ -89,7 +93,7 @@ LW.pages.statistics.languages_chart = function(statistics) {
 		select_stat(-1)
 	})
 	stats_elems.on('mouseenter', function() {
-		select_stat($(this).index())
+		select_stat($(this).index() - 1)
 	}).on('mouseleave', function() {
 		select_stat(-1)
 	})

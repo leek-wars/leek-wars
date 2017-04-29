@@ -149,8 +149,8 @@
 }
 
 #statistics-page .category[category="6"] {
-	width: 450px;
+	max-width: 650px;
 }
 #statistics-page .category[category="6"] .statistic {
-	width: 110px;
+	width: 120px;
 }
