@@ -1,3 +1,5 @@
+var CODE_CATEGORY = 6
+
 LW.pages.statistics.init = function(params, $scope, $page) {
 
 	var _DELAY = 40
@@ -24,7 +26,7 @@ LW.pages.statistics.init = function(params, $scope, $page) {
 			}
 		}, _DELAY)
 
-		LW.pages.statistics.languages_chart(data.statistics[5])
+		LW.pages.statistics.languages_chart(data.statistics[CODE_CATEGORY])
 	})
 }
 
@@ -47,7 +49,7 @@ LW.pages.statistics.languages_chart = function(statistics) {
 		names[n] = short_names[names[n]]
 
 	var chart = $('<div id="chart">')
-	chart.insertBefore($('.category[category=5]'))
+	chart.insertBefore($('.category[category=' + CODE_CATEGORY + ']'))
 	new Chartist.Pie('#chart', {
 		labels: names,
 		series: Object.values(stats)
@@ -60,11 +62,11 @@ LW.pages.statistics.languages_chart = function(statistics) {
 	setTimeout(function() {
 		chart.find('.ct-series path').css('stroke-width', '')
 	})
-	var stats_elems = $('.category[category=5] .statistic')
+	var stats_elems = $('.category[category=' + CODE_CATEGORY + '] .statistic')
 	// Sort languages by lines of code
 	stats_elems.sort(function(a, b) {
 		return parseInt($(a).attr('value')) < parseInt($(b).attr('value'));
-	}).appendTo('.category[category=5]');
+	}).appendTo('.category[category=' + CODE_CATEGORY + ']');
 
 	var select_stat = function(stat) {
 		if (stat == -1) {
