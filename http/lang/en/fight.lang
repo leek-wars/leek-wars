@@ -40,6 +40,7 @@ n_damage_return			<b>%s damage return</b>
 n_life			%s HP
 n_magic			%s magic
 n_mp			%s MP
+n_views			% views
 no_data_received			No data received
 not_found			Fight not found :(
 not_found_id			Fight with id <b>%s</b> not found :(
