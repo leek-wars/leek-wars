@@ -111,7 +111,7 @@
 }
 #statistics-page .chart .ct-series path {
 	cursor: pointer;
-	stroke-width: 40px;
+	stroke-width: 38px;
 	transition: stroke-width 0.1s ease;
 }
 #statistics-page .chart .ct-series.selected path {

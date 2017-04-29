@@ -94,7 +94,7 @@ LW.pages.statistics.languages_chart = function(statistics) {
 	}, {
 	  donut: true,
 	  donutSolid: true,
-	  donutWidth: 40,
+	  donutWidth: 38,
 	  startAngle: 90,
 	  showLabel: true
 	})
