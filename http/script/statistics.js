@@ -1,3 +1,4 @@
+var AI_CATEGORY = 3
 var CODE_CATEGORY = 6
 
 LW.pages.statistics.init = function(params, $scope, $page) {
@@ -28,11 +29,41 @@ LW.pages.statistics.init = function(params, $scope, $page) {
 
 		$($("#statistics-page .category[category='3']").find('.statistic')[2]).after('<br/>')
 		LW.pages.statistics.languages_chart(data.statistics[CODE_CATEGORY])
+		LW.pages.statistics.ais_chart(data.statistics[AI_CATEGORY])
 	})
 }
 
 LW.pages.statistics.leave = function() {
 	clearInterval(this.interval)
+}
+
+LW.pages.statistics.ais_chart = function(statistics) {
+	var v1 = statistics.ais_v1.value
+	var v2 = statistics.ais_v2.value
+	var sum = v1 + v2
+	v1 = v1 / sum
+	v2 = v2 / sum
+	v2 = Math.max(0.04, v2)
+	var chart = $('<div class="chart">')
+	chart.insertBefore($('.category[category=' + AI_CATEGORY + ']'))
+	new Chartist.Pie('#statistics-page .chart', {
+		labels: ['V1', 'V2'],
+		series: [v1, v2]
+	}, {
+	  donut: true,
+	  donutSolid: true,
+	  donutWidth: 38,
+	  startAngle: 90,
+	  showLabel: true
+	})
+	setTimeout(function() {
+		chart.find('.ct-series path').css('stroke-width', '')
+	}, 10)
+	chart.on('mouseenter', '.ct-series', function(event) {
+		$(this).addClass('selected')
+	}).on('mouseleave', '.ct-series', function(event) {
+		$(this).removeClass('selected')
+	})
 }
 
 LW.pages.statistics.languages_chart = function(statistics) {
@@ -49,9 +80,9 @@ LW.pages.statistics.languages_chart = function(statistics) {
 	for (var n in names)
 		names[n] = short_names[names[n]]
 
-	var chart = $('<div id="chart">')
+	var chart = $('<div class="chart languages">')
 	chart.insertBefore($('.category[category=' + CODE_CATEGORY + ']'))
-	new Chartist.Pie('#chart', {
+	new Chartist.Pie('#statistics-page .chart.languages', {
 		labels: names,
 		series: Object.values(stats)
 	}, {
@@ -60,7 +91,7 @@ LW.pages.statistics.languages_chart = function(statistics) {
 	  donutWidth: 40,
 	  startAngle: 90,
 	  showLabel: true
-	});
+	})
 	setTimeout(function() {
 		chart.find('.ct-series path').css('stroke-width', '')
 	}, 10)

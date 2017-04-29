@@ -98,43 +98,43 @@
 	margin-bottom: 2px;
 }
 
-#chart {
+#statistics-page .chart {
 	width: 200px;
 	height: 200px;
 	display: inline-block;
 }
-#chart .ct-label {
+#statistics-page .chart .ct-label {
 	font-size: 13px;
 	fill: rgba(0,0,0,.7);
 	font-weight: bold;
 	pointer-events: none;
 }
-#chart .ct-series path {
+#statistics-page .chart .ct-series path {
 	cursor: pointer;
 	stroke-width: 40px;
 	transition: stroke-width 0.1s ease;
 }
-#chart .ct-series.selected path {
+#statistics-page .chart .ct-series.selected path {
 	stroke-width: 50px;
 }
-#chart .ct-series.unselected path {
+#statistics-page .chart .ct-series.unselected path {
 }
-#chart .ct-series-a path {
 	stroke: #63FF61;
+#statistics-page .chart .ct-series-a path {
 }
-#chart .ct-series-b path {
+#statistics-page .chart .ct-series-b path {
 	stroke: #FFD45D;
 }
-#chart .ct-series-c path {
+#statistics-page .chart .ct-series-c path {
 	stroke: #FF6161;
 }
-#chart .ct-series-d path {
+#statistics-page .chart .ct-series-d path {
 	stroke:	#FF61C6;
 }
-#chart .ct-series-e path {
+#statistics-page .chart .ct-series-e path {
 	stroke: #6179FF;
 }
-#chart .ct-series-f path {
+#statistics-page .chart .ct-series-f path {
 	stroke: #65E5FF;
 }
 #stats {
