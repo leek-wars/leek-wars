@@ -31,6 +31,7 @@ lw_code_php			PHP
 lw_code_javascript	JavaScript
 lw_code_css			CSS
 lw_code_html		HTML
+lw_code_all			Total
 damage				Dommages
 heal				Soin
 distance			Distance parcourue
@@ -56,3 +57,10 @@ potions 			Potions bues
 avatars				Avatars uploadés
 mails				Mails envoyés
 habs				Habs en circulation
+pause				Pause
+private_messages	Messages privés
+translation_words	Mots traductions
+godsons				Filleuls
+moderators			Modérateurs
+contributors		Contributeurs
+forum_views			Topics vus
