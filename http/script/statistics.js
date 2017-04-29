@@ -37,6 +37,12 @@ LW.pages.statistics.leave = function() {
 	clearInterval(this.interval)
 }
 
+LW.pages.statistics.resize = function() {
+	setTimeout(function() {
+		$('#statistics-page .chart').find('.ct-series path').css('stroke-width', '')
+	})
+}
+
 LW.pages.statistics.ais_chart = function(statistics) {
 	var v1 = statistics.ais_v1.value
 	var v2 = statistics.ais_v2.value
