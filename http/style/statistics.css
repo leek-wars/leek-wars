@@ -119,8 +119,8 @@
 }
 #statistics-page .chart .ct-series.unselected path {
 }
-	stroke: #63FF61;
 #statistics-page .chart .ct-series-a path {
+	stroke: #55E055;
 }
 #statistics-page .chart .ct-series-b path {
 	stroke: #FFD45D;
