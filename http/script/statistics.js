@@ -56,12 +56,13 @@ LW.pages.statistics.languages_chart = function(statistics) {
 	}, {
 	  donut: true,
 	  donutSolid: true,
+	  donutWidth: 40,
 	  startAngle: 90,
 	  showLabel: true
 	});
 	setTimeout(function() {
 		chart.find('.ct-series path').css('stroke-width', '')
-	})
+	}, 10)
 	var stats_elems = $('.category[category=' + CODE_CATEGORY + '] .statistic')
 	// Sort languages by lines of code
 	stats_elems.sort(function(a, b) {
