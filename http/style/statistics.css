@@ -115,10 +115,9 @@
 	transition: stroke-width 0.1s ease;
 }
 #chart .ct-series.selected path {
-	stroke-width: 45px;
+	stroke-width: 50px;
 }
 #chart .ct-series.unselected path {
-	opacity: 0.7;
 }
 #chart .ct-series-a path {
 	stroke: #63FF61;
