@@ -286,7 +286,7 @@ editor_2			On trouve un bouton “Nouvelle IA”, il permet de créer une nouvel
 editor_3			Lors de la création de votre compte, une IA appelée “IA_Exemple” a été créée et équipée automatiquement afin que vous
 	disposiez d’un exemple de code.
 editor_4			Cliquez sur cette IA. Un éditeur de texte s’ouvre avec le code :
-editor_5			En cliquant sur le style à côté du nom de l’IA (dans la liste des IA à gauche), le champ devient éditable et vous pouvez ainsi la renommer. <br />
+editor_5			En cliquant sur le stylo à côté du nom de l’IA (dans la liste des IA à gauche), le champ devient éditable et vous pouvez ainsi la renommer. <br />
 	Le bouton “Supprimer” supprime l’IA actuelle. <br />
 	Le bouton “Sauvegarder” enregistre le code de votre IA, le compile et vous indique s’il est valide ou s’il
 	contient des erreurs. <br />
