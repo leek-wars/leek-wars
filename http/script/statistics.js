@@ -26,6 +26,7 @@ LW.pages.statistics.init = function(params, $scope, $page) {
 			}
 		}, _DELAY)
 
+		$($("#statistics-page .category[category='3']").find('.statistic')[2]).after('<br/>')
 		LW.pages.statistics.languages_chart(data.statistics[CODE_CATEGORY])
 	})
 }
