@@ -1,3 +1,4 @@
+var FIGHT_CATEGORY = 2
 var AI_CATEGORY = 3
 var CODE_CATEGORY = 6
 
@@ -30,6 +31,10 @@ LW.pages.statistics.init = function(params, $scope, $page) {
 		$($("#statistics-page .category[category='3']").find('.statistic')[2]).after('<br/>')
 		LW.pages.statistics.languages_chart(data.statistics[CODE_CATEGORY])
 		LW.pages.statistics.ais_chart(data.statistics[AI_CATEGORY])
+		// LW.pages.statistics.damage_chart(data.statistics[FIGHT_CATEGORY])
+		LW.pages.statistics.fight_type_chart(data.statistics[FIGHT_CATEGORY])
+		LW.pages.statistics.fight_context_chart(data.statistics[FIGHT_CATEGORY])
+		LW.pages.statistics.fight_categories()
 	})
 }
 
@@ -40,6 +45,111 @@ LW.pages.statistics.leave = function() {
 LW.pages.statistics.resize = function() {
 	setTimeout(function() {
 		$('#statistics-page .chart').find('.ct-series path').css('stroke-width', '')
+	})
+}
+
+LW.pages.statistics.fight_categories = function() {
+	var cat = $('#statistics-page .category[category=' + FIGHT_CATEGORY + ']')
+	var g1 = $('<div class="group" />')
+	var g2 = $('<div class="group" />')
+	var stats = cat.find('.statistic')
+	for (var i = 0; i < 8; ++i) g1.append($(stats[i]))
+	for (var i = 8; i < stats.length; ++i) g2.append($(stats[i]))
+	// g1.before(cat.find('.chart.type'))
+	// g2.after(cat.find('.chart.context'))
+	cat.append(g1)
+	cat.append(g2)
+	g1.before(cat.find('.chart.type'))
+	g2.after(cat.find('.chart.context'))
+}
+
+LW.pages.statistics.fight_type_chart = function(statistics) {
+	var stats = {}
+	stats[_.lang.get('statistics', 'fight_solo')] = statistics.fight_solo.value
+	stats[_.lang.get('statistics', 'fight_farmer')] = statistics.fight_farmer.value
+	stats[_.lang.get('statistics', 'fight_team')] = statistics.fight_team.value
+	var chart = $('<div class="chart type">')
+	$('.category[category=' + FIGHT_CATEGORY + ']').append(chart)
+	new Chartist.Pie('#statistics-page .chart', {
+		labels: Object.keys(stats),
+		series: Object.values(stats)
+	}, {
+	  donut: true,
+	  donutSolid: true,
+	  donutWidth: 38,
+	  startAngle: 90,
+	  showLabel: true
+	})
+	setTimeout(function() {
+		chart.find('.ct-series path').css('stroke-width', '')
+	}, 10)
+	chart.on('mouseenter', '.ct-series', function(event) {
+		$(this).addClass('selected')
+	}).on('mouseleave', '.ct-series', function(event) {
+		$(this).removeClass('selected')
+	})
+}
+
+LW.pages.statistics.fight_context_chart = function(statistics) {
+	var stats = {}
+	stats[_.lang.get('statistics', 'fight_garden')] = statistics.fight_garden.value
+	stats[_.lang.get('statistics', 'fight_test')] = statistics.fight_test.value
+	stats[_.lang.get('statistics', 'fight_tournament')] = statistics.fight_tournament.value
+	stats[_.lang.get('statistics', 'fight_challenge')] = statistics.fight_challenge.value
+	var chart = $('<div class="chart context">')
+	$('.category[category=' + FIGHT_CATEGORY + ']').append(chart)
+	new Chartist.Pie(chart[0], {
+		labels: Object.keys(stats),
+		series: Object.values(stats)
+	}, {
+	  donut: true,
+	  donutSolid: true,
+	  donutWidth: 38,
+	  startAngle: 90,
+	  showLabel: true
+	})
+	setTimeout(function() {
+		chart.find('.ct-series path').css('stroke-width', '')
+	}, 10)
+	chart.on('mouseenter', '.ct-series', function(event) {
+		$(this).addClass('selected')
+	}).on('mouseleave', '.ct-series', function(event) {
+		$(this).removeClass('selected')
+	})
+}
+
+LW.pages.statistics.damage_chart = function(statistics) {
+	var stats = {}
+	var direct = statistics.damage.value - statistics.damage_poison.value - statistics.damage_return.value
+	var poison = statistics.damage_poison.value
+	var back = statistics.damage_return.value
+	var sum = direct + poison + back
+	direct = direct / sum
+	poison = poison / sum
+	back = Math.max(0.04, back / sum)
+	stats[_.lang.get('statistics', 'chart_damage_direct')] = direct
+	stats[_.lang.get('statistics', 'chart_damage_poison')] = poison
+	stats[_.lang.get('statistics', 'chart_damage_return')] = back
+	console.log(stats)
+	var chart = $('<div class="chart">')
+	chart.insertBefore($('.category[category=' + FIGHT_CATEGORY + ']'))
+	new Chartist.Pie('#statistics-page .chart', {
+		labels: Object.keys(stats),
+		series: Object.values(stats)
+	}, {
+	  donut: true,
+	  donutSolid: true,
+	  donutWidth: 38,
+	  startAngle: 90,
+	  showLabel: true
+	})
+	setTimeout(function() {
+		chart.find('.ct-series path').css('stroke-width', '')
+	}, 10)
+	chart.on('mouseenter', '.ct-series', function(event) {
+		$(this).addClass('selected')
+	}).on('mouseleave', '.ct-series', function(event) {
+		$(this).removeClass('selected')
 	})
 }
 
