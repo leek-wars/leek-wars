@@ -4,9 +4,8 @@
 	</div>
 </div>
 
-<div class='panel'>
-
-	@foreach (category_id : category in statistics)
+@foreach (category_id : category in statistics)
+	<div class='panel'>
 		<h2>{_.lang.get('statistics', 'category_' + category_id)}</h2>
 		<div class='category' category='{category_id}'>
 			@foreach (name : statistic in category)
@@ -18,5 +17,5 @@
 				@end
 			@end
 		</div>
-	@end
-</div>
+	</div>
+@end

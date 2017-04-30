@@ -1,5 +1,5 @@
 #statistics-page .panel {
-	padding-top: 20px;
+	padding-top: 10px;
 	text-align: center;
 }
 
@@ -49,7 +49,7 @@
 	display: inline-block;
 	vertical-align: top;
 	padding: 5px;
-	margin-bottom: 20px;
+	margin-bottom: 10px;
 }
 
 #statistics-page .statistic {
