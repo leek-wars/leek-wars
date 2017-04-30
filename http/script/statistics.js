@@ -158,8 +158,7 @@ LW.pages.statistics.ais_chart = function(statistics) {
 	var v2 = statistics.ais_v2.value
 	var sum = v1 + v2
 	v1 = v1 / sum
-	v2 = v2 / sum
-	v2 = Math.max(0.04, v2)
+	v2 = Math.max(0.04, v2 / sum)
 	var chart = $('<div class="chart">')
 	chart.insertBefore($('.category[category=' + AI_CATEGORY + ']'))
 	new Chartist.Pie('#statistics-page .chart', {
