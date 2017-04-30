@@ -49,7 +49,7 @@ garden_no						NON
 garden_yes						OUI
 hide_registers					Masquer les registres
 level_n							Niveau %s
-level_popup_no_news				Pas de nouvel item ou fonction pour ce niveau.
+level_popup_no_news				Pas de nouvel item pour ce niveau.
 level_popup_title				<b>%1$s</b> passe niveau <b>%2$s</b> !
 life							Points de vie
 life_cost						1 capital ⇔ 3 vies
@@ -84,10 +84,10 @@ register_value					Valeur
 remaining_xp					XP restante : %s
 rename_description				Cette opération va vous permettre de renommer votre poireau, vous pouvez payer avec des Habs ou bien avec des cristaux.
 rename_done						Poireau renommé !
-rename_error_delay				Vous devez attendre un jour entre deux renommage de votre poireau.
+rename_error_delay				Vous devez attendre un jour entre deux renommages de votre poireau.
 rename_leek						Renommer le poireau
 rename_new_name					Nouveau nom
-rename_not_enough_crystals		Vous n'avez pas assez de crystaux.
+rename_not_enough_crystals		Vous n'avez pas assez de cristaux.
 rename_not_enough_habs			Vous n'avez pas assez d'Habs.
 rename_pay_crystals				Payer en cristaux
 rename_pay_habs					Payer en habs
