@@ -34,7 +34,7 @@ lw_code_html		HTML
 lw_code_all			Total
 damage				Dommages
 heal				Soin
-distance			Distance parcourue
+distance			Cases parcourues
 kills				Kills
 bullets				Balles tirées
 chips				Puces utilisées
@@ -57,7 +57,6 @@ potions 			Potions bues
 avatars				Avatars uploadés
 mails				Mails envoyés
 habs				Habs en circulation
-pause				Pause
 private_messages	Messages privés
 translation_words	Mots traductions
 godsons				Filleuls
@@ -71,6 +70,8 @@ fight_garden		Potager
 fight_test			Test
 fight_challenge		Défi
 fight_tournament	Tournoi
+tournaments			Tournois
+used_chips			Puces utilisées
 
 chart_damage_direct Direct
 chart_damage_poison	Poison
@@ -78,3 +79,6 @@ chart_damage_return	Renvoi
 
 pause				Pause
 play				Lancer
+
+total				total
+today				aujourd'hui
