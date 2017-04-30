@@ -23,6 +23,7 @@ LW.pages.statistics.init = function(params, $scope, $page) {
 		LW.pages.statistics.fight_context_chart(data.statistics[FIGHT_CATEGORY])
 		LW.pages.statistics.fight_categories()
 		LW.pages.statistics.interpolate_button(data.statistics)
+		LW.pages.statistics.statistic_click()
 	})
 }
 
@@ -33,6 +34,22 @@ LW.pages.statistics.leave = function() {
 LW.pages.statistics.resize = function() {
 	setTimeout(function() {
 		$('#statistics-page .chart').find('.ct-series path').css('stroke-width', '')
+	})
+}
+
+LW.pages.statistics.statistic_click = function() {
+	$('#statistics-page .statistic').click(function() {
+		var s = $(this)
+		if (!s.hasClass('show_today')) return null
+		if (s.find('.value.today').is(':visible')) {
+			s.find('.value.today').hide()
+			s.find('.value.total').show()
+			s.find('.type').text(_.lang.get('statistics', 'total'))
+		} else {
+			s.find('.value.today').show()
+			s.find('.value.total').hide()
+			s.find('.type').text(_.lang.get('statistics', 'today'))
+		}
 	})
 }
 
