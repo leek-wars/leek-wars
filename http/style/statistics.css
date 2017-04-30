@@ -94,12 +94,13 @@
 	cursor: pointer;
 }
 
-#statistics-page .statistic.show_today:hover .value {
+#statistics-page .statistic.show_today:hover .value.total {
 	color: #222;
 }
 
 #statistics-page .value.today {
 	display: none;
+	color: #00C0E5;
 }
 
 #statistics-page .label {
