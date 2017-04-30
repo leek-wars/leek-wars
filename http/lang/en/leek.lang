@@ -51,7 +51,7 @@ garden_no						NO
 garden_yes						YES
 hide_registers					Hide registers
 level_n							Level %s
-level_popup_no_news				No new item of function for this level.
+level_popup_no_news				No new item for this level.
 level_popup_title				<b>%1$s</b> reaches level <b>%2$s</b>!
 life							Life points
 life_cost						1 capital ⇔ 3 life points
@@ -61,7 +61,7 @@ life_description				How many damage your leek can take before it dies
 base_life						Base life
 added_life						Added life
 magic							Magic
-magic_description				Magic increase shackles and poison damages
+magic_description				Magic increases shackles and poison damages
 max_level						Maximum level
 mp								Movement points
 mp_cost							50 capital ⇔ 1 MP
@@ -96,9 +96,9 @@ rename_pay_habs					Pay with Habs
 report							Report
 reset							Reset
 resistance						Resistance
-resistance_description			Resistance increase shields
+resistance_description			Resistance increases shields
 science							Science
-science_description				Science increase boosts and prevent shackles
+science_description				Science increases boosts and prevents shackles
 see_tournament					See the tournament
 select_a_hat					Select a hat
 show_registers					Show registers
