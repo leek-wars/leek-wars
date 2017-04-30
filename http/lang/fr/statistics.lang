@@ -75,3 +75,6 @@ fight_tournament	Tournoi
 chart_damage_direct Direct
 chart_damage_poison	Poison
 chart_damage_return	Renvoi
+
+pause				Pause
+play				Lancer

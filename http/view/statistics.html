@@ -2,6 +2,12 @@
 	<div>
 		<h1>{#title}</h1>
 	</div>
+	<div class='tabs'>
+		<div class='tab' id='play-pause-button'>
+			<img src='{{static}}image/icon/pause.png'>
+			<span>{#pause}</span>
+		</div>
+	</div>
 </div>
 
 @foreach (category_id : category in statistics)

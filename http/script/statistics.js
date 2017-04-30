@@ -4,36 +4,17 @@ var CODE_CATEGORY = 6
 
 LW.pages.statistics.init = function(params, $scope, $page) {
 
-	var _DELAY = 80
-
 	_.get('statistic/get-all', function(data) {
 
 		LW.setTitle(_.lang.get('statistics', 'title'))
 		data.statistics[3].operations.value *= 1000000
 		data.statistics[3].operations.speed *= 1000000
+		data.statistics[3].operations.today *= 1000000
 		data.statistics[3].operations.value += Math.floor(Math.random() * 1000000)
+		data.statistics[3].operations.today += Math.floor(Math.random() * 1000000)
 		data.statistics[3].operations.speed += Math.floor(Math.random() * 10000)
 		$scope.statistics = data.statistics
 		$page.render()
-
-		var interpolated_stats = []
-		for (var c in data.statistics) {
-			for (var s in data.statistics[c]) {
-				var element = $('#statistics-page .statistic[statistic="' + s + '"] .value')
-				var speed = data.statistics[c][s].speed * (_DELAY / 1000)
-				if (speed > 0.002) {
-					interpolated_stats.push({element: element, speed: speed, value: data.statistics[c][s].value})
-				}
-			}
-		}
-
-		$page.interval = setInterval(function() {
-			for (var s in interpolated_stats) {
-				var statistic = interpolated_stats[s]
-				statistic.value += statistic.speed
-				statistic.element.html(Math.floor(statistic.value).toLocaleString('fr-FR'))
-			}
-		}, _DELAY)
 
 		$($("#statistics-page .category[category='3']").find('.statistic')[2]).after('<br/>')
 		LW.pages.statistics.languages_chart(data.statistics[CODE_CATEGORY])
@@ -41,6 +22,7 @@ LW.pages.statistics.init = function(params, $scope, $page) {
 		LW.pages.statistics.fight_type_chart(data.statistics[FIGHT_CATEGORY])
 		LW.pages.statistics.fight_context_chart(data.statistics[FIGHT_CATEGORY])
 		LW.pages.statistics.fight_categories()
+		LW.pages.statistics.interpolate_button(data.statistics)
 	})
 }
 
@@ -51,6 +33,55 @@ LW.pages.statistics.leave = function() {
 LW.pages.statistics.resize = function() {
 	setTimeout(function() {
 		$('#statistics-page .chart').find('.ct-series path').css('stroke-width', '')
+	})
+}
+
+LW.pages.statistics.interpolate_button = function(statistics) {
+	var _DELAY = 80
+	var self = this
+	var interpolated_stats = []
+	for (var c in statistics) {
+		for (var s in statistics[c]) {
+			if (!statistics[c][s].visible || !statistics[c][s].interpolate) continue
+			var element_total = $('#statistics-page .statistic[statistic="' + s + '"] .value.total')
+			var element_today = $('#statistics-page .statistic[statistic="' + s + '"] .value.today')
+			var speed = statistics[c][s].speed * (_DELAY / 1000)
+			if (speed > 0.002) {
+				interpolated_stats.push({element_total: element_total, element_today: element_today, speed: speed, value: statistics[c][s].value, today: statistics[c][s].today})
+			}
+		}
+	}
+	var play = function() {
+		localStorage['statistics/play'] = true
+		self.interval = setInterval(function() {
+			for (var s in interpolated_stats) {
+				var statistic = interpolated_stats[s]
+				statistic.value += statistic.speed
+				statistic.today += statistic.speed
+				statistic.element_total.html(Math.floor(statistic.value).toLocaleString('fr-FR'))
+				statistic.element_today.html(Math.floor(statistic.today).toLocaleString('fr-FR'))
+			}
+		}, _DELAY)
+		$('#play-pause-button img').attr('src', LW.staticURL + 'image/icon/pause.png')
+		$('#play-pause-button span').text(_.lang.get('statistics', 'pause'))
+	}
+	var pause = function() {
+		localStorage['statistics/play'] = false
+		clearInterval(self.interval)
+		$('#play-pause-button img').attr('src', LW.staticURL + 'image/icon/play.png')
+		$('#play-pause-button span').text(_.lang.get('statistics', 'play'))
+	}
+	if (localStorage['statistics/play'] === 'false') {
+		pause()
+	} else {
+		play()
+	}
+	$('#play-pause-button').click(function() {
+		if (localStorage['statistics/play'] === 'true') {
+			pause()
+		} else {
+			play()
+		}
 	})
 }
 
