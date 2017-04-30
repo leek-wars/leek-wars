@@ -144,3 +144,9 @@
 #statistics-page .category[category="6"] .statistic {
 	width: 120px;
 }
+
+#statistics-page .group {
+	max-width: 800px;
+	display: inline-block;
+	vertical-align: top;
+}
