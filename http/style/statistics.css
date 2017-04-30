@@ -61,18 +61,13 @@
 	margin: 10px;
 	background: white;
 	border-radius: 3px;
-	border-bottom: 3px solid #ddd;
+	border-bottom: 2px solid #ddd;
+	padding-bottom: 4px;
+	min-width: 120px;
 }
 
 #statistics-page .statistic.private {
-	border-bottom: 3px solid red;
-}
-
-#statistics-page .statistic:hover .value {
-	color: #222;
-}
-#statistics-page .statistic:hover .label {
-	color: #333;
+	background: #eee;
 }
 
 #statistics-page .unit {
@@ -80,29 +75,46 @@
 	margin-left: 4px;
 }
 
+#statistics-page .type {
+	font-size: 14px;
+	color: #888;
+	font-weight: 300;
+	text-align: right;
+	margin-top: -3px;
+}
+
 #statistics-page .value {
-	font-size: 28px;
+	font-size: 24px;
 	display: block;
 	color: #888;
-	display: inline-block;
+	text-align: right;
+}
+
+#statistics-page .statistic.show_today {
+	cursor: pointer;
+}
+
+#statistics-page .statistic.show_today:hover .value {
+	color: #222;
+}
+
+#statistics-page .value.today {
+	display: none;
 }
 
 #statistics-page .label {
-	text-align: center;
+	text-align: left;
 	font-size: 16px;
 	color: #888;
 	display: block;
 	font-weight: 300;
-	max-width: 140px;
 	margin: 0 auto;
-	margin-bottom: 2px;
 }
 
 #statistics-page .chart {
 	width: 190px;
 	height: 190px;
 	display: inline-block;
-	margin-top: -8px;
 }
 #statistics-page .chart .ct-label {
 	font-size: 13px;
