@@ -4,34 +4,40 @@ var CODE_CATEGORY = 6
 
 LW.pages.statistics.init = function(params, $scope, $page) {
 
-	var _DELAY = 40
+	var _DELAY = 80
 
 	_.get('statistic/get-all', function(data) {
 
 		LW.setTitle(_.lang.get('statistics', 'title'))
 		data.statistics[3].operations.value *= 1000000
+		data.statistics[3].operations.speed *= 1000000
 		data.statistics[3].operations.value += Math.floor(Math.random() * 1000000)
+		data.statistics[3].operations.speed += Math.floor(Math.random() * 10000)
 		$scope.statistics = data.statistics
 		$page.render()
 
-		$page.interval = setInterval(function() {
-			for (var c in data.statistics) {
-				for (var s in data.statistics[c]) {
-					var statistic = data.statistics[c][s]
-					var element = $('#statistics-page .statistic[statistic="' + s + '"] .value')
-					var speed = statistic.speed * (_DELAY / 1000)
-					if (speed > 0) {
-						statistic.value += speed
-						element.html(Math.floor(statistic.value).toLocaleString('fr-FR'))
-					}
+		var interpolated_stats = []
+		for (var c in data.statistics) {
+			for (var s in data.statistics[c]) {
+				var element = $('#statistics-page .statistic[statistic="' + s + '"] .value')
+				var speed = data.statistics[c][s].speed * (_DELAY / 1000)
+				if (speed > 0.002) {
+					interpolated_stats.push({element: element, speed: speed, value: data.statistics[c][s].value})
 				}
+			}
+		}
+
+		$page.interval = setInterval(function() {
+			for (var s in interpolated_stats) {
+				var statistic = interpolated_stats[s]
+				statistic.value += statistic.speed
+				statistic.element.html(Math.floor(statistic.value).toLocaleString('fr-FR'))
 			}
 		}, _DELAY)
 
 		$($("#statistics-page .category[category='3']").find('.statistic')[2]).after('<br/>')
 		LW.pages.statistics.languages_chart(data.statistics[CODE_CATEGORY])
 		LW.pages.statistics.ais_chart(data.statistics[AI_CATEGORY])
-		// LW.pages.statistics.damage_chart(data.statistics[FIGHT_CATEGORY])
 		LW.pages.statistics.fight_type_chart(data.statistics[FIGHT_CATEGORY])
 		LW.pages.statistics.fight_context_chart(data.statistics[FIGHT_CATEGORY])
 		LW.pages.statistics.fight_categories()
