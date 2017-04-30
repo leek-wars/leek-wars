@@ -18,9 +18,9 @@ deleted_farmers		Désinscriptions
 forum_messages		Messages forum
 forum_topics		Topics forum
 forum_votes			Votes forum
-ais					AI
-ai_characters		Caractères AI
-ai_lines			Lignes AI
+ais					IA
+ai_characters		Caractères IA
+ai_lines			Lignes IA
 trophies			Trophées
 connected_farmers	Connectés
 registered_day		Inscrits 24h
@@ -64,3 +64,14 @@ godsons				Filleuls
 moderators			Modérateurs
 contributors		Contributeurs
 forum_views			Topics vus
+fight_solo			Solo
+fight_farmer		Éleveur
+fight_team			Équipe
+fight_garden		Potager
+fight_test			Test
+fight_challenge		Défi
+fight_tournament	Tournoi
+
+chart_damage_direct Direct
+chart_damage_poison	Poison
+chart_damage_return	Renvoi
