@@ -137,15 +137,6 @@
 #statistics-page .chart .ct-series-f path {
 	stroke: #65E5FF;
 }
-#stats {
-	display: inline-block;
-	width: 200px;
-	vertical-align: top;
-	padding-top: 40px;
-}
-#stats .stat.selected {
-	font-weight: bold;
-}
 
 #statistics-page .category[category="6"] {
 	max-width: 650px;
