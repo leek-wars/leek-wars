@@ -99,8 +99,8 @@
 }
 
 #statistics-page .chart {
-	width: 200px;
-	height: 200px;
+	width: 190px;
+	height: 190px;
 	display: inline-block;
 }
 #statistics-page .chart .ct-label {
@@ -115,7 +115,7 @@
 	transition: stroke-width 0.1s ease;
 }
 #statistics-page .chart .ct-series.selected path {
-	stroke-width: 50px;
+	stroke-width: 48px;
 }
 #statistics-page .chart .ct-series.unselected path {
 }
