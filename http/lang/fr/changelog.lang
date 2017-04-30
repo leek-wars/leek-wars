@@ -628,3 +628,13 @@ changelog_195	# Refonte de l'interface de test : ajouts d'options avancées pour
 				# Correction de l'indentation des codes d'exemple dans le tutoriel.
 changelog_196	# Ajout d'une console LeekScript v2 (bêta)
 				# Possibilité d'écrire des IA v2 dans l'éditeur (bêta)
+changelog_197	# Correction du choix du thème dans l'éditeur.
+				# Ajout d'un bouton Random dans la console LeekScript.
+				# Possibilité de sélectionner le dossier racine dans l'éditeur (merci à Amal).
+				# Amélioration de la sélection et de la présentation des armes et des puces sur la page poireau (merci à Tintin).
+				# Correction et ajout de traductions.
+				# Amélioration du chargement du mode discret (s'active instantanément au chargement de la page).
+				# Amélioration du scroll et de la gestion des ancres (lien vers un message précis dans le forum).
+				# Amélioration des signalements et de la modération.
+				# Ajout de la page des statistiques (leekwars.com/statistics).
+				# Ajout d'un compteur de vues sur les combats.
