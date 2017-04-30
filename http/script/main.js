@@ -706,6 +706,12 @@ $(document).ready(function() {
 				event.stopPropagation()
 			})
 
+			$("#notifications .label").click(function() {
+				_.post("notification/read-all", {});
+				LW.notifications.unread = 0;
+				LW.updateCounters();
+			});
+
 			$('html').click(function() {
 				if ($('#notifications-popup').is(':visible')) {
 					$('#notifications-popup').hide()

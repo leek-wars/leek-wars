@@ -509,6 +509,10 @@ body.social-collapsed #social-button .icon {
 	display: none;
 }
 
+#notifications .label {
+	cursor: pointer;
+}
+
 #notifications .panel > .content {
 	padding: 0;
 }
