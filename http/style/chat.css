@@ -98,7 +98,6 @@
 	position: absolute;
 	bottom: 40px;
 	right: 20px;
-	padding: 0 10px;
 	width: 570px;
 	height: 300px;
 	background-color: #f2f2f2;
@@ -109,16 +108,23 @@
 	display: none;
 }
 
-#chat-smileys-wrapper .title, #chat-commands-wrapper .title {
+#chat-smileys-wrapper .title {
 	display: block;
 	margin-top: 10px;
 	padding-bottom: 8px;
+	padding-left: 10px;
 	font-weight: bold;
+}
 
+#chat-commands-wrapper .title {
+	display: block;
+	margin-top: 10px;
+	padding-bottom: 5px;
+	padding-left: 10px;
+	font-weight: bold;
 }
 
 #chat-smileys-wrapper .list, #chat-commands-wrapper .list {
-	padding-bottom: 10px;
 	text-align: center;
 }
 
@@ -131,9 +137,7 @@
 
 #chat-commands-wrapper .list .command, #chat-commands-wrapper .list .sub-command {
 	background-color: #fcfcfc;
-	border: 1px solid #bbbbbb;
-	border-radius: 6px;
-	margin-top: 1px;
+	margin-top: 3px;
 	padding: 4px;
 }
 
@@ -143,7 +147,7 @@
 	font-weight: bold;
 	margin-top: 0;
 	padding: 4px;
-	width: 250px !important;
+	width: 195px;
 }
 
 #chat-commands-wrapper .list .command .description, #chat-commands-wrapper .list .sub-command .description {
@@ -152,8 +156,11 @@
 	padding: 4px;
 }
 
+#chat-commands-wrapper .list .cmd, #chat-commands-wrapper .list .description {
+	font-size: 14px;
+}
+
 #chat-smileys-wrapper .list .smiley:hover, #chat-commands-wrapper .list .command:hover, #chat-commands-wrapper .list .sub-command:hover  {
 	background-color: #dcdcdc;
-	border-radius: 6px;
 	cursor: pointer;
 }
