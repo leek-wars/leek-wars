@@ -194,9 +194,9 @@ var CHARACTERISTIC_MP = 9;
 // URLs for /wiki and /doc
 var URL_WIKI = "http://leekwarswiki.net"
 var URL_WIKI_PAGE = "http://leekwarswiki.net/index.php?title="
-var URL_DOC = "https://leekwars.com/help/documentation"
-var URL_MARKET = "https://leekwars.com/market"
 
+var URL_DOC = "/help/documentation"
+var URL_MARKET = "/market"
 
 // Effets
 LW.EFFECT = {
