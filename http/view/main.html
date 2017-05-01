@@ -443,7 +443,7 @@
 			<td width=50%>
 				<a href='/'><h4>Leek Wars {LW.version / 100}</h4></a>
 				<br>
-				<a href='/about'>{#main.about}</a> - <a href='/roadmap'>{#main.roadmap}</a> - <a href='/changelog'>{#main.changelog}</a>
+				<a href='/about'>{#main.about}</a> - <a href='/roadmap'>{#main.roadmap}</a> - <a href='/statistics'>{#main.statistics}</a> - <a href='/changelog'>{#main.changelog}</a>
 				<div class='social'>
 
 					<a target='_blank' href='https://www.facebook.com/LeekWars' title='Facebook'>
@@ -667,6 +667,30 @@
 	<div class='actions'>
 		<div class='dismiss'>{#moderation.cancel}</div>
 		<div class='report-validate red'>{#moderation.report}</div>
+	</div>
+@endview
+
+@view (mute_popup)
+
+	<div class='title'>{#moderation.mute}</div>
+
+	<div class='content'>{#moderation.mute_popup, name}</div>
+
+	<div class='actions'>
+		<div class='dismiss'>{#moderation.cancel}</div>
+		<div class='mute red'>{#moderation.confirm}</div>
+	</div>
+@endview
+
+@view (unmute_popup)
+
+	<div class='title'>{#moderation.unmute}</div>
+
+	<div class='content'>{#moderation.unmute_popup, name}</div>
+
+	<div class='actions'>
+		<div class='dismiss'>{#moderation.cancel}</div>
+		<div class='unmute red'>{#moderation.confirm}</div>
 	</div>
 @endview
 

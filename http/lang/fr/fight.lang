@@ -41,6 +41,7 @@ n_damage_return			<b>%s renvoi dommages</b>
 n_life					%s PV
 n_magic					%s magie
 n_mp					%s PM
+n_views					%s vues
 no_data_received		Aucune donnée reçue
 not_found				Combat introuvable :(
 not_found_id			Combat d'id <b>%s</b> introuvable :(

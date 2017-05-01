@@ -588,9 +588,7 @@ LW.pages.leek.report = function() {
 			target: leek.farmer.id,
 			reasons: [
 				LW.WARNING.INCORRECT_LEEK_NAME,
-				LW.WARNING.INCORRECT_AI_NAME,
-				LW.WARNING.RUDE_SAY,
-				LW.WARNING.CHEAT
+				LW.WARNING.INCORRECT_AI_NAME
 			],
 			parameter: leek.id
 		}).show(e)
@@ -1214,7 +1212,7 @@ LW.pages.leek.levelPopup = function() {
 }
 
 // Conversion from characteristic amount to invested capital
-LW.pages.leek.characteristicToCapital = function(characteristic, amount, level = 1) {
+LW.pages.leek.characteristicToCapital = function(characteristic, amount, level) {
 	switch (characteristic) {
 		case CHARACTERISTIC_LIFE:
 			return Math.min(amount - (100 + (level - 1) * 3), 1000) * 1 / 4 + Math.min(Math.max(0, amount - (1100 + (level - 1) * 3)), 999) * 1 / 3 + Math.max(0, amount - (2100 + (level - 1) * 3)) * 1 / 2
@@ -1230,7 +1228,7 @@ LW.pages.leek.characteristicToCapital = function(characteristic, amount, level =
 		case CHARACTERISTIC_RESISTANCE:
 		case CHARACTERISTIC_SCIENCE:
 		case CHARACTERISTIC_MAGIC:
-			return Math.min(amount, 200) / 2 + Math.min(Math.max(0, amount - 200), 200) + Math.min(Math.max(0, amount - 400), 200) * 2 + Math.max(0, amount-600) * 3
+			return Math.min(amount, 200) / 2 + Math.min(Math.max(0, amount - 200), 200) + Math.min(Math.max(0, amount - 400), 200) * 2 + Math.max(0, amount - 600) * 3
 		default:
 			return 0
 	}

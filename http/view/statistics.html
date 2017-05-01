@@ -1,0 +1,31 @@
+<div class='page-header page-bar'>
+	<div>
+		<h1>{#title}</h1>
+	</div>
+	<div class='tabs'>
+		<div class='tab' id='play-pause-button'>
+			<img src='{{static}}image/icon/pause.png'>
+			<span>{#pause}</span>
+		</div>
+	</div>
+</div>
+
+@foreach (category_id : category in statistics)
+	<div class='panel'>
+		<h2>{_.lang.get('statistics', 'category_' + category_id)}</h2>
+		<div class='category' category='{category_id}'>
+			@foreach (name : statistic in category)
+				@if (statistic.visible)
+					<div class='statistic {statistic.private ? 'private' : ''} {statistic.show_today ? 'show_today' : ''}' statistic='{name}' value='{statistic.value}'>
+						<div class='label'>{_.lang.get('statistics', name)}</div>
+						<div class='value total'>{statistic.value.toLocaleString('fr-FR')}</div>
+						@if (statistic.show_today)
+							<div class='value today'>{statistic.today.toLocaleString('fr-FR')}</div>
+						@end
+						<div class='type'>{#total}</div>
+					</div>
+				@end
+			@end
+		</div>
+	</div>
+@end

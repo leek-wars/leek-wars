@@ -1,18 +1,15 @@
-@font-face {
-	font-family: 'blenda';
-	src: url('../R/font/Blenda_Script.ttf');
-	font-weight: normal;
-	font-style: normal;
+#statistics-page .panel {
+	padding-top: 10px;
+	text-align: center;
 }
 
-h2 {
-	font-family: 'blenda';
+#statistics-page h2 {
+	font-family: 'Fjalla One', sans-serif;
 	text-align: center;
-	font-size: 42px;
-	margin-top: 10px;
-	
+	font-size: 28px;
 }
-h2:before, h2:after {
+
+#statistics-page h2:before, #statistics-page h2:after {
 	height: 5px;
 	width: 150px;
 	vertical-align: middle;
@@ -20,73 +17,150 @@ h2:before, h2:after {
 	display: inline-block;
 	content: "";
 }
-h2:before {
+#statistics-page h2:before {
 	background: linear-gradient(to left, #aaa, rgba(0,0,0,0));
 }
-h2:after {
+#statistics-page h2:after {
 	background: linear-gradient(to right, #aaa, rgba(0,0,0,0));
 }
-h2.blue {
+#statistics-page h2.blue {
 	color: #0079DE;
 }
-h2.green {
+#statistics-page h2.green {
 	color: #0a0;
 }
-h2.red {
+#statistics-page h2.red {
 	color: #DC0006;
 }
-h2.orange {
+#statistics-page h2.orange {
 	color: #FF7600;
 }
-h2.pink {
+#statistics-page h2.pink {
 	color: #FF00A4;
 }
 
-.stats {
+#statistics-page .stats {
 	padding-top: 10px;
 	padding-bottom: 20px;
 	text-align: center;
 }
 
-stat {
+#statistics-page .category {
+	display: inline-block;
+	vertical-align: top;
+	padding: 5px;
+	margin-bottom: 10px;
+}
+
+#statistics-page .statistic {
 	text-align: center;
 	height: 100%;
 	vertical-align: top;
 	display: inline-block;
 	padding: 6px 10px;
-	padding-bottom: 10px;
 	margin: 10px;
 	background: white;
 	border-radius: 3px;
-	border-bottom: 3px solid #ddd;
+	border-bottom: 2px solid #ddd;
+	padding-bottom: 4px;
+	min-width: 120px;
 }
 
-stat:hover value {
-	color: #222;
-}
-stat:hover label {
-	color: #333;
+#statistics-page .statistic.private {
+	background: #eee;
 }
 
-unit {
+#statistics-page .unit {
 	display: inline-block;
 	margin-left: 4px;
 }
 
-value {
-	font-size: 32px;
-	display: block;
+#statistics-page .type {
+	font-size: 14px;
 	color: #888;
-	margin-bottom: 4px;
-	display: inline-block;
+	font-weight: 300;
+	text-align: right;
+	margin-top: -3px;
 }
 
-label {
-	text-align: center;
-	font-size: 18px;
+#statistics-page .value {
+	font-size: 24px;
+	display: block;
+	color: #888;
+	text-align: right;
+}
+
+#statistics-page .statistic.show_today {
+	cursor: pointer;
+}
+
+#statistics-page .statistic.show_today:hover .value.total {
+	color: #222;
+}
+
+#statistics-page .value.today {
+	display: none;
+	color: #00C0E5;
+}
+
+#statistics-page .label {
+	text-align: left;
+	font-size: 16px;
 	color: #888;
 	display: block;
 	font-weight: 300;
-	max-width: 120px;
 	margin: 0 auto;
+}
+
+#statistics-page .chart {
+	width: 190px;
+	height: 190px;
+	display: inline-block;
+}
+#statistics-page .chart .ct-label {
+	font-size: 13px;
+	fill: rgba(0,0,0,.7);
+	font-weight: bold;
+	pointer-events: none;
+}
+#statistics-page .chart .ct-series path {
+	cursor: pointer;
+	stroke-width: 38px;
+	transition: stroke-width 0.1s ease;
+}
+#statistics-page .chart .ct-series.selected path {
+	stroke-width: 48px;
+}
+#statistics-page .chart .ct-series.unselected path {
+}
+#statistics-page .chart .ct-series-a path {
+	stroke: #55E055;
+}
+#statistics-page .chart .ct-series-b path {
+	stroke: #FFD45D;
+}
+#statistics-page .chart .ct-series-c path {
+	stroke: #FF5C5C;
+}
+#statistics-page .chart .ct-series-d path {
+	stroke:	#FF61C6;
+}
+#statistics-page .chart .ct-series-e path {
+	stroke: #6179FF;
+}
+#statistics-page .chart .ct-series-f path {
+	stroke: #65E5FF;
+}
+
+#statistics-page .category[category="6"] {
+	max-width: 650px;
+}
+#statistics-page .category[category="6"] .statistic {
+	width: 120px;
+}
+
+#statistics-page .group {
+	max-width: 800px;
+	display: inline-block;
+	vertical-align: top;
 }

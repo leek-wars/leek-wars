@@ -513,6 +513,10 @@ LW.pages = {
 			['third_party/', 'jquery.tablednd.0.7.min.js']
 		]
 	},
+	statistics: {
+		scripts: ['https://cdnjs.cloudflare.com/ajax/libs/chartist/0.10.1/chartist.min.js'],
+		styles: [ 'https://cdnjs.cloudflare.com/ajax/libs/chartist/0.10.1/chartist.min.css']
+	},
 
 	moderation: {
 		moderator: true
@@ -566,18 +570,7 @@ $(document).ready(function() {
 		_.logOn()
 	}
 
-	setTimeout(function() {
-		if (LW.dev) {
-			_.favicon(LW.staticURL + 'image/favicon_dev.png')
-			$('body').addClass('dev')
-		} else if (LW.local) {
-			_.favicon(LW.staticURL + 'image/favicon_local.png')
-			$('body').addClass('local')
-		} else if (LW.beta) {
-			_.favicon(LW.staticURL + 'image/favicon_beta.png')
-			$('body').addClass('beta')
-		}
-	})
+	setTimeout(LW.set_favicon)
 	_.title('Leek Wars')
 
 	LW.page = page
@@ -777,6 +770,8 @@ $(document).ready(function() {
 						})
 					} else {
 						localStorage['connected'] = false
+						$('body').removeClass('connected')
+						LW.sfw.off()
 						LW.page('/')
 					}
 				})
@@ -1423,6 +1418,10 @@ page('/help/api', function() {
 
 page('/translation/:file', function(ctx) {
 	LW.loadPage('translation', ctx.params)
+})
+
+page('/statistics', function(ctx) {
+	LW.loadPage('statistics')
 })
 
 page('/moderation', function() {
@@ -2717,8 +2716,20 @@ LW.time.get = function() {
 	return (Date.now() / 1000 | 0) - LW.time.delta
 }
 
-LW.sfw.init = function() {
+LW.set_favicon = function() {
+	if (LW.dev) {
+		_.favicon(LW.staticURL + 'image/favicon_dev.png')
+		$('body').addClass('dev')
+	} else if (LW.local) {
+		_.favicon(LW.staticURL + 'image/favicon_local.png')
+		$('body').addClass('local')
+	} else if (LW.beta) {
+		_.favicon(LW.staticURL + 'image/favicon_beta.png')
+		$('body').addClass('beta')
+	}
+}
 
+LW.sfw.init = function() {
 	if (localStorage['sfw'] === 'true') {
 		LW.sfw.on()
 	} else {
@@ -2735,9 +2746,8 @@ LW.sfw.on = function() {
 
 LW.sfw.off = function() {
 	$('body').removeClass('sfw')
-	$("#favicon").attr("href", LW.staticURL + "image/favicon.png")
+	LW.set_favicon()
 }
-
 
 LW.util.createCodeArea = function(code, element) {
 
@@ -3505,8 +3515,8 @@ LW.createReportPopup = function(parameters) {
 			return
 		}
 
-		var target = parameters.target
 		var reason = parseInt(popup.find("input:radio[name='reason']:checked").attr('id').replace('reason-', ''))
+		var target = typeof(parameters.target) === 'function' ? parameters.target(reason) : parameters.target
 		var message = popup.find('.report-message').val()
 		var parameter = parameters.parameter ? parameters.parameter : ''
 
@@ -3897,15 +3907,33 @@ var ChatController = function(chat_element, private_chat, team_chat) {
 				elem.insertAfter(last);
 			}
 
-			elem.find('.mute').click(function() {
-				LW.socket.send([CHAT_REQUEST_MUTE, _chatLanguage, author]);
-				$(this).hide()
-				elem.find('.unmute').show()
+			elem.find('.mute').click(function(e) {
+				
+				var mutePopup = new _.popup.new('main.mute_popup', { name: authorName })
+				var self = $(this)
+
+				mutePopup.find('.mute').click(function() {
+					LW.socket.send([CHAT_REQUEST_MUTE, _chatLanguage, author]);
+					self.hide()
+					elem.find('.unmute').show()
+					mutePopup.dismiss()
+				})
+				
+				mutePopup.show(e)				
 			})
-			elem.find('.unmute').click(function() {
-				LW.socket.send([CHAT_REQUEST_UNMUTE, _chatLanguage, author]);
-				$(this).hide()
-				elem.find('.mute').show()
+			elem.find('.unmute').click(function(e) {
+
+				var unmutePopup = new _.popup.new('main.unmute_popup', { name: authorName })
+				var self = $(this)
+
+				unmutePopup.find('.unmute').click(function() {
+					LW.socket.send([CHAT_REQUEST_UNMUTE, _chatLanguage, author]);
+					self.hide()
+					elem.find('.mute').show()
+					unmutePopup.dismiss()
+				})
+				
+				unmutePopup.show(e)
 			})
 			elem.find('.unmute').hide()
 

@@ -230,6 +230,12 @@
 
 	<div class='header'>
 		<h2>{#comments}</h2>
+
+		<div class='right'>
+			<div id='views-counter'>
+				{{#n_views, _.format.number(fight.views)}}
+			</div>
+		</div>
 	</div>
 
 	<div class='content'>

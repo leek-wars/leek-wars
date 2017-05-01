@@ -33,3 +33,8 @@ you_are_muted			You are muted.
 you_have_been_muted_by_x			You have been muted by %s.
 you_have_been_unmuted_by_x			%s allowed you to speak again on the chat.
 you_must_choose_reason			You must choose a reason!
+mute        Mute
+mute_popup      Are you sure to mute <b>%s</b> ?
+unmute      Unmute
+unmute_popup        Are you sure to unmute <b>%s</b> ?
+confirm        Confirm

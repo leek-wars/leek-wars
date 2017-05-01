@@ -2946,6 +2946,11 @@ textarea.autogrow {
 	overflow-y: hidden;
 }
 
+/** BR Popup */
+.popup.battle_royale_popup .leek {
+	display: inline-block;
+}
+
 /* LeekScript console */
 .popup.console_popup .content {
 	padding: 0;
