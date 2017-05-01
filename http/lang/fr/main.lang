@@ -6,6 +6,7 @@ all_private_messages			Tous les messages privés
 bank			Banque
 changelog			Historique des modifications
 chat_the_mdy_at_hm			Le %1$s/%2$s/%3$s à %4$s:%5$s
+commands       Commandes
 conditions			Conditions d'utilisation
 connection			Connexion
 connect_message			<a href='%s'><b>Connexion</b></a> ou <a href='%s'><b>Inscription</b></a> à Leek Wars
