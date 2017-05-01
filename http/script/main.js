@@ -194,7 +194,6 @@ var CHARACTERISTIC_MP = 9;
 // URLs for /wiki and /doc
 var URL_WIKI = "http://leekwarswiki.net"
 var URL_WIKI_PAGE = "http://leekwarswiki.net/index.php?title="
-
 var URL_DOC = "/help/documentation"
 var URL_MARKET = "/market"
 
@@ -3940,7 +3939,7 @@ var ChatController = function(chat_element, private_chat, team_chat) {
 			}
 
 			elem.find('.mute').click(function(e) {
-				
+
 				var mutePopup = new _.popup.new('main.mute_popup', { name: authorName })
 				var self = $(this)
 
@@ -3950,8 +3949,8 @@ var ChatController = function(chat_element, private_chat, team_chat) {
 					elem.find('.unmute').show()
 					mutePopup.dismiss()
 				})
-				
-				mutePopup.show(e)				
+
+				mutePopup.show(e)
 			})
 			elem.find('.unmute').click(function(e) {
 
@@ -3964,7 +3963,7 @@ var ChatController = function(chat_element, private_chat, team_chat) {
 					elem.find('.mute').show()
 					unmutePopup.dismiss()
 				})
-				
+
 				unmutePopup.show(e)
 			})
 			elem.find('.unmute').hide()
