@@ -593,8 +593,8 @@ $(document).ready(function() {
 
 			$('#social-panel .chat-input').keydown(function(e) {
 				if (e.keyCode === 9) {
-					e.preventDefault();
-					if($('#chat-commands-wrapper').is(":visible")) {
+					e.preventDefault()
+					if ($('#chat-commands-wrapper').is(":visible")) {
 						var command = $('.command:visible:first').attr('command') || $('.sub-command:visible:first').attr('subcommand')
 						var $txt = $('#chat .chat-input')
 						var text = $txt.val()
@@ -613,7 +613,7 @@ $(document).ready(function() {
 			})
 
 			$('#social-panel .chat-input').keyup(function(e) {
-				if(chat_commands.isCommand($(this).val())) {
+				if (chat_commands.isCommand($(this).val())) {
 					chat_commands.filterPopup($(this).val())
 					$('#chat-smileys-wrapper').hide()
 					$('#chat-commands-wrapper').show()
@@ -2029,19 +2029,15 @@ function linkifyElem(elem) {
 }
 
 function commands(text, authorName) {
-	var matches
-
-	text = chat_commands.wikiCommands(text);
-
+	text = chat_commands.wikiCommands(text)
 	chat_commands.list.forEach(function(command) {
-		if(command.options) {
+		if (command.options) {
 			command.options.forEach(function(subCommand) {
 				text = text.replace(subCommand.regex, subCommand.replacement(authorName))
 			})
 		}
 		text = text.replace(command.regex, command.replacement(authorName))
 	})
-
 	return text
 }
 
@@ -3711,8 +3707,8 @@ var ChatController = function(chat_element, private_chat, team_chat) {
 
 		chat_element.find('.chat-input').keydown(function(e) {
 			if (e.keyCode === 9) {
-				e.preventDefault();
-				if($('#chat-commands-wrapper').is(":visible")) {
+				e.preventDefault()
+				if ($('#chat-commands-wrapper').is(":visible")) {
 					var command = $('.command:visible:first').attr('command') || $('.sub-command:visible:first').attr('subcommand')
 					var $txt = $('#chat .chat-input')
 					if (team_chat) $txt = $('#team-page .chat-input')
@@ -3731,7 +3727,7 @@ var ChatController = function(chat_element, private_chat, team_chat) {
 		})
 
 		chat_element.find('.chat-input').keyup(function(e) {
-			if(chat_commands.isCommand($(this).val())) {
+			if (chat_commands.isCommand($(this).val())) {
 				chat_commands.filterPopup($(this).val())
 				$('#chat-smileys-wrapper').hide()
 				$('#chat-commands-wrapper').show()
