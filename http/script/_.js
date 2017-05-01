@@ -353,7 +353,6 @@ _.format.dayMonthShort = function(timestamp) {
 
 _.toChatLink = function(url, text, blank) {
 	blank = blank ? blank : ""
-
 	return '<a ' + blank + ' href="' + url + '">' + text + '</a>'
 }
 
