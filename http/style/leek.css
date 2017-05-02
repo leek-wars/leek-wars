@@ -620,4 +620,7 @@
 	border-radius: 20px;
 	background-color: #0a0;
 	font-weight: bold;
+	padding-left: 4px;
+	padding-right: 4px;
+	padding-top: 1px;
 }
