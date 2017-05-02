@@ -29,7 +29,7 @@ fights_2			Solo fight (1 vs 1): one of your leeks is fighting another leek.
 fights_3			Farmer fight: all your leeks fight all the leeks of another farmer.
 fights_4			Team fight: one composition of your team is fighting another composition of another team.
 fights_5			Battle Royale : one of your leeks is fighting 9 other leeks in a last man standing free for all.
-fights_6			Your daily fights unused one day can be postponed to the day after. If you cannot perform the fights (due to any other IRL constraint) you will have the opportunity to trigger them the day after. The postponing is done only the day after. If you do not perform your late fights the day after, they are definitively lost. For example, if you have no time today to do the <b>50</b> daily fights, you will then have the possibility to perform <b>100</b> fights tomorrow.
+fights_6			You may keep up to a total of <b>100</b> fight. Any additional fight earned with the daily <b>50</b> will be discarded unless you use some of them.
 fights_7			The allowed number of fights is reset every day at midnight. (New fights for the new day, plus potentially the postponed fights from yesterday).
 fights_8			Solo Fights
 fights_9			In a <b>solo fight</b> your leek is against another leek whith approximately the same power (automatically calculated by the game).
@@ -45,7 +45,7 @@ fights_18			One of your leeks is fighting 9 other leeks. You can do as much batl
 				are available at the level 50.
 fights_19			Battle royales reward no Experience point nor Hab. Battle royales do not add up to the total of your wins, draws and losses (ratio).
 habs			Habs
-habs_1			The Hab(s) is the name of the Leek Wars currency. You earn Habs thanks to fights. You spend Habs to buy weapons and chips in the market, or to recruit an additional leek.
+habs_1			The Hab(s) is the name of the Leek Wars currency. You earn Habs through fights. You spend Habs to buy weapons and chips in the market, or to recruit an additional leek.
 intro			This page will provide you with the detailed mechanisms regarding : leek evolution, fights, weapons, chips, tournaments...
 If you are looking for the AI programming howto, you will find it on the LeekScript <a href='/help/tutorial'>Tutorial page</a>.
 leeks			Leeks
