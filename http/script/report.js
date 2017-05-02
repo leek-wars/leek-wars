@@ -66,9 +66,9 @@ LW.pages.report.init = function(params, $scope, $page) {
 					money: leeks1.reduce(function(sum, leek) {return sum + leek.money}, 0)
 				}
 				if (LW.farmer.admin) {
-					total1.time = leeks1.reduce(function(sum, leek) {
+					total1.time = Math.round(leeks1.reduce(function(sum, leek) {
 						return sum + Math.floor(report.ai_times[leek.id] / 1000) / 1000
-					}, 0)
+					}, 0))
 				}
 				var total2 = {
 					level: leeks2.reduce(function(sum, leek) {return sum + leek.level}, 0),
@@ -76,9 +76,9 @@ LW.pages.report.init = function(params, $scope, $page) {
 					money: leeks2.reduce(function(sum, leek) {return sum + leek.money}, 0)
 				}
 				if (LW.farmer.admin) {
-					total2.time = leeks2.reduce(function(sum, leek) {
+					total2.time = Math.round(leeks2.reduce(function(sum, leek) {
 						return sum + Math.floor(report.ai_times[leek.id] / 1000) / 1000
-					}, 0)
+					}, 0))
 				}
 
 				// Barres d'XP
