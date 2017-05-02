@@ -95,6 +95,17 @@ LW.pages.leek.pause = function() {
 	clearInterval(this.leekTimeUpdate)
 }
 
+LW.pages.leek.resize = function() {
+	// Center leek image vertically (nicer for small leeks)
+	setTimeout(function() {
+		var panel = $('#leek-page .flex-container .panel.first')
+		var image = $('#leek-image')
+		var margin = (panel.height() - 36 - 30 - image.height()) / 2
+		if (margin > 0)
+			image.css('margin-top', margin)
+	}, 50)
+}
+
 LW.pages.leek.chart = function() {
 
 	var labels = []
