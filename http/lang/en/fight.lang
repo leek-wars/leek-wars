@@ -27,6 +27,7 @@ leek_hit			%s hits
 leek_is_dead			%s is dead!
 leek_level			Level %s
 leek_loose_x			%1$s loses <b>%2$s</b>
+leek_resurrect			%1$s resurrect %2$s
 leek_move			%s moves
 leek_shoot			%s shoots
 leek_show_cell			%1$s indicates cell <b>%2$s</b>

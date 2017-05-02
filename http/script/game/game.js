@@ -1031,6 +1031,8 @@ var Game = function() {
 
 				entity.drawID = game.addDrawableElement(entity, entity.y)
 
+				this.log(_.lang.get('fight', 'leek_resurrect', getLeekName(this.leeks[action[1]]), getLeekName(this.leeks[action[2]])))
+
 				this.actionDone()
 				break
 

@@ -403,7 +403,8 @@ LW.pages.report.generateActions = function(data, callback) {
 
 				leek = leeks[action[1]]
 				html += _.lang.get('fight', 'leek_bug', getLeekName(leek))
-
+			} else if (type == ACTION_RESURRECTION) {
+				html += _.lang.get('fight', 'leek_resurrect', getLeekName(leeks[action[1]]), getLeekName(leeks[action[2]]))
 			} else {
 				html += "Unknown action : number " + type
 			}
