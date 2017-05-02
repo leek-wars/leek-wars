@@ -690,7 +690,7 @@ LW.pages.report.graph = function(statistics, fight) {
 		$('#chart .ct-chart').off('mouseenter', '.ct-line').on('mouseenter', '.ct-line', function() {
 			$('#chart .ct-line').css('stroke-opacity', '0.3')
 			$(this).css('stroke-opacity', '1').css('stroke-width', '4px')
-			tooltipLeek = $(this).parent().index() - 2
+			tooltipLeek = $(this).parent().index()
 			toolTip.show()
 			selected = $(this).parent().index()
 		})
