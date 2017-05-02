@@ -108,6 +108,8 @@ LW.pages.leek.resize = function() {
 
 LW.pages.leek.chart = function() {
 
+	if ($('#talent-history').length === 0) return ;
+
 	var labels = []
 	var time = LW.time.get()
 	for (var i = 0; i < 7; ++i) {
