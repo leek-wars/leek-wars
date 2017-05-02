@@ -3869,7 +3869,7 @@ var ChatController = function(chat_element, private_chat, team_chat) {
 		var minuts = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
 		var timeStr = date.getHours() + ":" + minuts;
 
-		var completeDate = _.lang.get('forum', 'chat_the_mdy_at_hm', date.getDate(), date.getMonth() + 1, date.getFullYear(), date.getHours(), minuts);
+		var completeDate = _.format.dateTime(time);
 
 		// Scroll
 		var scrollAction = false
