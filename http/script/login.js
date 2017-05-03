@@ -1,6 +1,7 @@
 LW.pages.login.init = function(params, $scope, $page) {
 
 	this.render()
+	LW.setTitle(_.lang.get('login', 'title'))
 
 	$('#login-form').submit(function() {
 
