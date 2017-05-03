@@ -4098,6 +4098,7 @@ LW.battle_royale.update = function(data) {
 		var leeks = data.data[1]
 
 		LW.battle_royale.popup.find('.progress').html(count + ' / 10')
+		_.titleTag('BR ' + count + '/10')
 
 		for (var l in leeks) {
 			if (l in LW.battle_royale.last_leeks) continue

@@ -10,6 +10,7 @@ var _ = {
 	local: false,
 	currentTitle: '',
 	currentCounter: 0,
+	currentTag: null,
 	script: {
 		loaded: {},
 		loading: {},
@@ -91,11 +92,20 @@ _.titleCounter = function(counter) {
 	_.privateUpdateTitle()
 }
 
+_.titleTag = function(tag) {
+	_.currentTag = tag
+	_.privateUpdateTitle()
+}
+
 _.privateUpdateTitle = function() {
-	if (_.currentCounter > 0)
-		document.title = '(' + _.currentCounter + ') ' + _.currentTitle
-	else
-		document.title = _.currentTitle
+	var title = _.currentTitle
+	if (_.currentCounter > 0) {
+		title = '(' + _.currentCounter + ') ' + title
+	}
+	if (_.currentTag !== null) {
+		title = '[' + _.currentTag + '] ' + title
+	}
+	document.title = title
 }
 
 _.favicon = function(image) {
