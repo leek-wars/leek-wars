@@ -1005,8 +1005,10 @@ LW.disconnect = function() {
 	LW.sfw.off()
 	localStorage['connected'] = false
 	_.titleCounter(0)
-	LW.battle_royale.popup.dismiss()
-	LW.battle_royale.popup = null
+	if (LW.battle_royale.popup != null) {
+		LW.battle_royale.popup.dismiss()
+		LW.battle_royale.popup = null
+	}
 	$('body').removeClass('connected')
 
 	$('#menu .leeks').empty()
