@@ -460,7 +460,7 @@ LW.pages.editor.init = function(params, $scope, $page) {
 			LW.keywords = generateDocumentation()
 		}
 
-		$(window).mousemove(function(e) {
+		$('#editors').mousemove(function(e) {
 			if (current != null && currentType == 'ai')
 				editors[current].mousemove(e)
 		})
