@@ -991,6 +991,10 @@ LW.connect = function(farmer, callback) {
 		if (LW.updated) {
 			LW.changelogPopup()
 		}
+		// Didactitiel
+		if (!LW.farmer.didactitiel_seen) {
+			LW.didactitiel(null, true)
+		}
 
 		callback()
 	})
@@ -2888,8 +2892,7 @@ LW.createLeekImage = function(id, scale, level, skin, hat, callback) {
 	})
 }
 
-
-LW.didactitiel = function(event) {
+LW.didactitiel = function(event, direct) {
 
 	var load = function(c) {
 		_.view.load('didactitiel', false, function() {
@@ -2906,7 +2909,7 @@ LW.didactitiel = function(event) {
 		var didactitiel = new _.popup.new('didactitiel', {
 			farmer_name: LW.farmer.name,
 			farmer_fisrt_leek: _.first(LW.farmer.leeks).name
-		}, 800)
+		}, 800, direct)
 
 		var currentPage = 0
 		var count = didactitiel.find('.content .page').length
