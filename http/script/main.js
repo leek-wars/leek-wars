@@ -2908,7 +2908,7 @@ LW.didactitiel = function(event, direct) {
 
 		var didactitiel = new _.popup.new('didactitiel', {
 			farmer_name: LW.farmer.name,
-			farmer_fisrt_leek: _.first(LW.farmer.leeks).name
+			farmer_first_leek: _.first(LW.farmer.leeks).name
 		}, 800, direct)
 
 		var currentPage = 0
