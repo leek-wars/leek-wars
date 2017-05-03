@@ -464,6 +464,10 @@ LW.pages.editor.init = function(params, $scope, $page) {
 			if (current != null && currentType == 'ai')
 				editors[current].mousemove(e)
 		})
+		$('#editors').mouseleave(function(e) {
+			if (current != null && currentType == 'ai')
+				editors[current].mouseleave(e)
+		})
 
 		$('#info-button').click(function(e) {
 
@@ -662,7 +666,9 @@ LW.pages.editor.resize = function() {
 }
 
 LW.pages.editor.leave = function() {
-
+	// Remove detail dialogs
+	$('#hints').empty()
+	// Unsaved AIs confirmation
 	var num = 0
 	for (var i in editors) {
 		if (editors[i].modified) {
