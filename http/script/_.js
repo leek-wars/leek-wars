@@ -610,42 +610,35 @@ _.popup.new = function(view, data, width, direct, options) {
 	}
 
 	this.dismiss = function() {
-
-		if (this.ondismiss) this.ondismiss()
-
 		var popup = this
+		// Callback
+		if (this.ondismiss) this.ondismiss()
+		// Animation
 		popup.view.css("transition", "all ease 0.2s")
 		popup.view.css("-webkit-transition", "all ease 0.2s")
-
 		popup.view.css("transform", "scaleY(1)")
 		popup.view.css("-webkit-transform", "scaleY(1)")
-
 		setTimeout(function() {
 			popup.view.css("transform", "scaleY(0)")
 			popup.view.css("-webkit-transform", "scaleY(0)")
-
 			popup.view.css("opacity", "0")
 		})
-
-		setTimeout(function() {
-
-			popup.wrapper.hide()
-
-			_.popup.current = null
-
-			_.popup.queue.shift()
-
-			if (_.popup.queue.length > 0) {
-/*
-				setTimeout(function() {
-					_.popup.queue[0].appear()
-				}, 250)
-*/
-			} else {
-				$('#popups').removeClass('box')
-				$('#dark').fadeOut(200)
-			}
-		}, 200)
+		// Show next popup
+		if (!this.options.draggable) {
+			setTimeout(function() {
+				popup.wrapper.hide()
+				_.popup.current = null
+				_.popup.queue.shift()
+				if (_.popup.queue.length > 0) {
+					// setTimeout(function() {
+					// 	_.popup.queue[0].appear()
+					// }, 250)
+				} else {
+					$('#popups').removeClass('box')
+					$('#dark').fadeOut(200)
+				}
+			}, 200)
+		}
 	}
 
 	this.minimize = function() {
