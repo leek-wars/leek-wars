@@ -712,13 +712,6 @@ $(document).ready(function() {
 
 				LW.resize()
 
-				$('#notifications-popup .notifications').html('')
-
-				for (var c = LW.notifications.notifications.length - 1; c >= 0; --c) {
-					var notification = LW.notifications.notifications[c]
-					$('#notifications-popup .notifications').append(_.view.render('main.notification', notification))
-				}
-
 				LW.notifications.unread = 0
 				LW.updateCounters()
 				_.post('notification/read-all')
@@ -2196,6 +2189,7 @@ LW.notifications.add = function(notification, animation) {
 	var view = _.view.render('main.notification', notification)
 
 	$('#notifications .list').prepend(view)
+	$('#notifications-popup .notifications').prepend(view)
 
 	if (animation === true) {
 		$('#notifications .list').scrollTop(0)
