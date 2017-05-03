@@ -164,7 +164,12 @@
 				<div id='tt_fights' class='tooltip'>{#ratio} : {farmer.ratio}</div>
 
 				<div class='log-time grey'>
-					{#registered_the, _.format.date(farmer.register_date)} <br>
+					@if (LW.connected && LW.farmer.moderator)
+						{#registered_the, _.format.dateTime(farmer.register_date)}
+					@else
+						{#registered_the, _.format.date(farmer.register_date)}
+					@end
+					<br>
 					@if (farmer.connected)
 						{#connected}
 					@else
