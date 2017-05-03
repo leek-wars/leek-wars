@@ -3624,6 +3624,7 @@ var ChatController = function(chat_element, private_chat, team_chat) {
 
 	var controller = this
 	this.msg_elem = chat_element.find('.chat-messages')
+	this.msg_date = []
 
 	if (team_chat) {
 		LW.socket.send([TEAM_CHAT_ENABLE])
@@ -3922,7 +3923,14 @@ var ChatController = function(chat_element, private_chat, team_chat) {
 
 			var avatar = avatarChanged > 0 ? LW.avatarURL + '/avatar/' + author + ".png" : LW.staticURL + "/image/no_avatar.png";
 
-			var messageData = "<div class='chat-message' author='" + author + "' time='" + time + "' lang='" + lang + "'>";
+			var m_date = _.lang.get('main', 'chat_mdy', date.getDate(), date.getMonth() + 1, date.getFullYear())
+			var messageData = ""
+
+			if(this.msg_date.indexOf(m_date) === -1) {
+				this.msg_date.push(m_date)
+				messageData = "<div class='chat-date'>" + m_date + "</div>"
+			}
+			messageData += "<div class='chat-message' author='" + author + "' time='" + time + "' lang='" + lang + "'>";
 			messageData += "<a href='/farmer/" + author + "'><img class='chat-avatar' src='" + avatar + "'></img></a>";
 			messageData += "<div><a href='/farmer/" + author + "'><span class='chat-message-author " + color + "'>";
 			if (lang != "_") {

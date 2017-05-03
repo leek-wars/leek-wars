@@ -690,6 +690,28 @@ body.social-collapsed #social-button .icon {
 	display: block;
 }
 
+.chat-date {
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	text-align: center;
+	color: #bbb;
+}
+.chat-date:before, .chat-date:after {
+	background-color: #bbb;
+	content: '\a0';
+	flex-grow: 1;
+	height: 2px;
+	position: relative;
+	top: 0.5em;
+}
+.chat-date:before {
+	margin-right:10px;
+}
+.chat-date:after {
+	margin-left:10px;
+}
+
 /*
  * Wrapper
  */
