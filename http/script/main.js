@@ -3943,7 +3943,7 @@ var ChatController = function(chat_element, private_chat, team_chat) {
 			}
 			if(flag) {
 				this.msg_date.push(objDate)
-				messageData = "<div class='chat-date' lang='" + lang + "'>" + m_date + "</div>"
+				messageData += "<div class='chat-date' lang='" + lang + "'>" + m_date + "</div>"
 			}
 			messageData += "<div class='chat-message' author='" + author + "' time='" + time + "' lang='" + lang + "'>";
 			messageData += "<a href='/farmer/" + author + "'><img class='chat-avatar' src='" + avatar + "'></img></a>";
