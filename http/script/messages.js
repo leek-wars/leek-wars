@@ -103,15 +103,6 @@ LW.pages.messages.init = function(params, $scope, $page) {
 			// $(this).html(smiley($(this).html()));
 		});
 
-		// Focus
-		$(window).focus(function() {
-			_focus = true;
-			conversationRead();
-		});
-		$(window).blur(function() {
-			_focus = false;
-		});
-
 		// Quit conversation
 		var quitPopup = new _.popup.new('messages.quit_popup')
 
@@ -136,8 +127,15 @@ LW.pages.messages.resize = function() {
 	$('#conversations-list').css('height', $(window).height() - h + 45);
 }
 
-LW.pages.messages.update = function(params) {
+LW.pages.messages.focus = function() {
+	_focus = true
+	conversationRead()
+}
+LW.pages.messages.blur = function() {
+	_focus = false
+}
 
+LW.pages.messages.update = function(params) {
 	LW.pages.messages.selectConversation(params.id)
 }
 

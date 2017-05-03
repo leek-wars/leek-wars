@@ -755,9 +755,14 @@ $(document).ready(function() {
 				LW.trigger('scroll', scroll)
 				localStorage['scroll'] = scroll
 			})
-
 			$(window).on('beforeunload', function() {
 				return LW.trigger('leave')
+			})
+			$(window).focus(function() {
+				LW.trigger('focus')
+			})
+			$(window).blur(function() {
+				LW.trigger('blur')
 			})
 
 			$(document).on('click', function(e) {
