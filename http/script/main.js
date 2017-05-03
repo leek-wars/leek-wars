@@ -1476,7 +1476,11 @@ page('*', function() {
 })
 
 LW.setTitle = function(title) {
-	_.title(title + ' - Leek Wars')
+	if (title === null) {
+		_.title('Leek Wars')
+	} else {
+		_.title(title + ' - Leek Wars')
+	}
 }
 
 LW.setMenuTab = function(tab) {

@@ -4,6 +4,7 @@ LW.pages.signup.init = function(params, $scope, $page) {
 
 	$scope.godfather = godfather
 	$page.render()
+	LW.setTitle(null)
 
 	_.get('leek/get-count', function(data) {
 		if (data.success) {	
