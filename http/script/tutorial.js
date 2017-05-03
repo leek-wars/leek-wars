@@ -55,17 +55,14 @@ LW.pages.tutorial.init = function(params, $scope, $page) {
 		$(this).html("<pre>" + content + "</pre>");
 
 		LW.util.createCodeArea(content, $(this).find('pre')[0]);
-	});
+	})
+}
 
-	$(window).scroll(function() {
-
-		if ($(window).scrollTop() > ($(document).height() - $(window).height()) - 300) {
-			if (_trophy == false) {
-
-				_.log("Trophée")
-				_.post('trophy/unlock', {trophy_id: 46}) // Trophée Instruit
-				_trophy = true;
-			}
+LW.pages.tutorial.scroll = function(scroll) {
+	if (scroll > ($(document).height() - $(window).height()) - 300) {
+		if (_trophy == false) {
+			_.post('trophy/unlock', {trophy_id: 46}) // Trophée Instruit
+			_trophy = true
 		}
-	});
+	}
 }
