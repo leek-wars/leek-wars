@@ -236,22 +236,8 @@ function sendMessage() {
 	} else {
 
 		_.post('message/send-message', {conversation_id: _conversation, message: message}, function (data) {
-
-			if(data.success) {
-
-				var m = {
-					farmer_id: LW.farmer.id,
-					farmer_name: LW.farmer.name,
-					content: message,
-					date: LW.time.get(),
-					farmer_color: LW.farmer.color,
-					avatar_changed: LW.farmer.avatar_changed,
-					lang: '_'
-				}
-				_chat_controllers[_conversation].receive_message(m)
-
+			if (data.success) {
 				updateScroll(_conversation)
-
 				LW.messages.updateConversationSidebar({
 					id: _conversation,
 					last_date: LW.time.get(),
@@ -259,16 +245,11 @@ function sendMessage() {
 					last_farmer_id: LW.farmer.id,
 					isNew: false
 				})
-
 			}
-
 		})
-
 	}
-
 	$('#messages-page .chat-input').val("").height(0)
 }
-
 
 function conversationRead() {
 	LW.socket.send([MP_READ, _conversation])
