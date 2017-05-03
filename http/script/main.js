@@ -2754,17 +2754,15 @@ LW.util.createCodeArea = function(code, element) {
 }
 
 LW.consoleAlertMessage = function() {
-	if (!LW.admin) {
-		var style = "color: black; font-size: 13px; font-weight: bold;"
-		var styleRed = "color: red; font-size: 14px; font-weight: bold;"
-		var styleBlue = "color: blue; font-size: 14px;"
-		console.log("%c" + _.lang.get('main', 'console_alert_1'), style)
-		console.log("%c" + _.lang.get('main', 'console_alert_2'), styleRed)
-		console.log("%c" + _.lang.get('main', 'console_alert_3'), style)
-		console.log("")
-		console.log("%c✔️ " + _.lang.get('main', 'console_github'), style)
-		console.log("")
-	}
+	var style = "color: black; font-size: 13px; font-weight: bold;"
+	var styleRed = "color: red; font-size: 14px; font-weight: bold;"
+	var styleBlue = "color: blue; font-size: 14px;"
+	console.log("%c" + _.lang.get('main', 'console_alert_1'), style)
+	console.log("%c" + _.lang.get('main', 'console_alert_2'), styleRed)
+	console.log("%c" + _.lang.get('main', 'console_alert_3'), style)
+	console.log("")
+	console.log("%c✔️ " + _.lang.get('main', 'console_github'), style)
+	console.log("")
 }
 
 LW.updateHabs = function(delta) {
