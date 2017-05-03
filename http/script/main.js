@@ -2590,14 +2590,15 @@ LW.messages.load = function() {
 
 LW.messages.receive = function(message) {
 
-	LW.squares.add({
-		image: LW.util.getAvatar(message.farmer.id, message.farmer.avatar_changed),
-		title: message.farmer.name,
-		message: "► " + message.message,
-		link: "/messages/conversation/" + message.conversation,
-		padding: false
-	})
-
+	if (message.farmer.id != LW.farmer.id) {
+		LW.squares.add({
+			image: LW.util.getAvatar(message.farmer.id, message.farmer.avatar_changed),
+			title: message.farmer.name,
+			message: "► " + message.message,
+			link: "/messages/conversation/" + message.conversation,
+			padding: false
+		})
+	}
 	var exists = LW.messages.conversations.reduce(function(e, c) {
 		return c.id == message.conversation || e
 	}, false)
