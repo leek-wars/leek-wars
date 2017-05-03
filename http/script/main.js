@@ -82,7 +82,7 @@ var FIGHT_LISTEN = 12;
 var FIGHT_GENERATED = 12;
 var FIGHT_WAITING_POSITION = 13;
 var FORUM_CHAT_DISABLE = 19;
-var RESET_NOTIFICATIONS = 20;
+var UPDATE_NOTIFICATIONS = 20;
 var CHAT_REQUEST_MUTE = 21;
 var CHAT_MUTE_USER = 22;
 var CHAT_REQUEST_UNMUTE = 23;
@@ -1871,9 +1871,8 @@ LW.initWebSocket = function() {
 				break
 			}
 
-			case RESET_NOTIFICATIONS : {
-
-				LW.notifications.unread = 0
+			case UPDATE_NOTIFICATIONS : {
+				LW.notifications.unread = data[0]
 				LW.updateCounters()
 				break
 			}
@@ -2190,6 +2189,14 @@ LW.notifications.add = function(notification, animation) {
 
 	$('#notifications .list').prepend(view)
 	$('#notifications-popup .notifications').prepend(view)
+
+	var click_handler = function() {
+		var id = $(this).attr('notif')
+		_.post('notification/read', {notification_id: id})
+		// The notification counter will be updated via the WS
+	}
+	$('#notifications .list .notification').first().click(click_handler)
+	$('#notifications-popup .notifications .notification').first().click(click_handler)
 
 	if (animation === true) {
 		$('#notifications .list').scrollTop(0)
@@ -2542,7 +2549,7 @@ LW.notifications.getData = function(notification) {
 
 	for (var t in title) title[t] = _.protect(title[t])
 
-	return {type: type, link: link, image: image, title: title, message: message,
+	return {id: notification.id, type: type, link: link, image: image, title: title, message: message,
 		date: notification.date}
 }
 
