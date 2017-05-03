@@ -101,7 +101,6 @@ LW.pages.moderation.init = function(params, $scope, $page) {
 		})
 
 		$('.ban').click(function() {
-
 			_.post('moderation/ban', {target: $(this).attr('target')}, function(data) {
 				if (data.success) {
 					_.toast("Éleveur banni")
@@ -110,27 +109,23 @@ LW.pages.moderation.init = function(params, $scope, $page) {
 				}
 			})
 		})
-
-		if (!_.isTouchScreen()) {
-
-			$(window).scroll(function() {
-
-				var scroll = $(window).scrollTop()
-
-				if (scroll < 80) {
-					$('#warning-wrapper').css('position', 'absolute')
-					$('#warning-wrapper').css('top', 55)
-				} else {
-					$('#warning-wrapper').css('position', 'fixed')
-					$('#warning-wrapper').css('top', 20)
-					$('#warning-wrapper').css('left', 'auto')
-					$('#warning-wrapper').css('margin-top', 0)
-				}
-			})
-		}
 	})
 }
 
 LW.pages.moderation.resize = function() {
 	$('#warning-wrapper').css('width', $('#warning-wrapper').parent('.column5 ').width())
+}
+
+LW.pages.moderation.scroll = function(scroll) {
+	if (!_.isTouchScreen()) {
+		if (scroll < 80) {
+			$('#warning-wrapper').css('position', 'absolute')
+			$('#warning-wrapper').css('top', 55)
+		} else {
+			$('#warning-wrapper').css('position', 'fixed')
+			$('#warning-wrapper').css('top', 20)
+			$('#warning-wrapper').css('left', 'auto')
+			$('#warning-wrapper').css('margin-top', 0)
+		}
+	}
 }
