@@ -5,7 +5,6 @@ all_notifications			All notifications
 all_private_messages			All privates messages
 bank			Bank
 changelog			Changelog
-chat_mdy			%2$s/%1$s/%3$s
 chat_the_mdy_at_hm			The %2$s/%1$s/%3$s at %4$s:%5$s
 commands       Commands
 conditions			Terms of use

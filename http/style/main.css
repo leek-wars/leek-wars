@@ -701,7 +701,7 @@ body.social-collapsed #social-button .icon {
 	background-color: #bbb;
 	content: '\a0';
 	flex-grow: 1;
-	height: 2px;
+	height: 1px;
 	position: relative;
 	top: 0.5em;
 }
