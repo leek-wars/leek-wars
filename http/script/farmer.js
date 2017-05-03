@@ -213,7 +213,7 @@ LW.pages.farmer.tournament = function() {
 		_.post('farmer/register-tournament', {}, function(data) {
 			if (data.success) {
 				$('#unregister-tournament').show()
-				$(this).hide()
+				$('#register-tournament').hide()
 			} else {
 				_.toast(_.lang.get('farmer', data.error))
 			}
