@@ -991,13 +991,6 @@ LW.connect = function(farmer, callback) {
 		if (LW.updated) {
 			LW.changelogPopup()
 		}
-		// Didactitiel
-		if (!LW.farmer.didactitiel_seen) {
-			setTimeout(function() {
-				LW.didactitiel(null, true)
-			}, 200)
-		}
-
 		callback()
 	})
 }
@@ -1581,6 +1574,12 @@ LW.loadPage = function(pageID, params) {
 						// Page load callbacks
 						for (var c in LW.callbacks['pageload']) {
 							LW.callbacks['pageload'][c]()
+						}
+
+						// Didactitiel
+						if (LW.connected && !LW.farmer.didactitiel_seen) {
+							LW.didactitiel(null, true)
+							LW.farmer.didactitiel_seen = true
 						}
 					}
 				}
@@ -2916,7 +2915,9 @@ LW.didactitiel = function(event, direct) {
 		var currentPage = 0
 		var count = didactitiel.find('.content .page').length
 
-		didactitiel.setDismissable(true)
+		if (direct) {
+			didactitiel.setDismissable(false)
+		}
 		didactitiel.show(event)
 
 		didactitiel.find('#dida-previous').hide()
