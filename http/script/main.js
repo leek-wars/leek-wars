@@ -1004,6 +1004,7 @@ LW.disconnect = function() {
 	LW.socket.disconnect()
 	LW.sfw.off()
 	localStorage['connected'] = false
+	_.titleCounter(0)
 	$('body').removeClass('connected')
 
 	$('#menu .leeks').empty()
