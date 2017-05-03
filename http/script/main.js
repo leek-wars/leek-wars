@@ -993,7 +993,9 @@ LW.connect = function(farmer, callback) {
 		}
 		// Didactitiel
 		if (!LW.farmer.didactitiel_seen) {
-			LW.didactitiel(null, true)
+			setTimeout(function() {
+				LW.didactitiel(null, true)
+			}, 200)
 		}
 
 		callback()
