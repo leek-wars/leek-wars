@@ -119,7 +119,12 @@ LW.pages.leek.chart = function() {
 		labels: labels.reverse(),
 		series: [this.scope.leek.talent_history]
 	}
-	new Chartist.Line('.ct-chart', data, {height: 130, showArea: true, fullWidth: true, fullHeight: true})
+	var graph = new Chartist.Line('.ct-chart', data, {height: 130, showArea: true, fullWidth: true, fullHeight: true})
+	graph.on('draw', function(data) {
+		if (data.type === 'label' && data.axis.units.pos === 'x') {
+			data.element.attr({x: data.x - data.width / 2})
+		}
+	})
 
 	var chart = $('.ct-chart')
 	var toolTip = chart

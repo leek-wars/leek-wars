@@ -267,7 +267,8 @@
 	fill-opacity: .2;
 }
 #leek-page #talent-history .ct-label.ct-horizontal {
-  text-align: center;
+	text-align: center;
+	display: block;
 }
 
 #talent-history .tooltip {
