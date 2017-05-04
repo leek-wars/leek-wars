@@ -680,6 +680,10 @@ _.popup.new = function(view, data, width, direct, options) {
 					$('#dark').fadeOut(200)
 				}
 			}, 200)
+		} else {
+			setTimeout(function() {
+				popup.view.hide()
+			}, 200)
 		}
 	}
 
