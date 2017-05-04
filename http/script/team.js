@@ -88,7 +88,6 @@ LW.pages.team.init = function(params, $scope, $page) {
 		LW.pages.team.description()
 		LW.pages.team.recrutement()
 		LW.pages.team.adminMembers()
-		LW.pages.team.setupChat()
 		LW.pages.team.createComposition()
 		LW.pages.team.quitTeam()
 		LW.pages.team.dissolveTeam()
@@ -98,6 +97,10 @@ LW.pages.team.init = function(params, $scope, $page) {
 		LW.pages.team.tournaments()
 		LW.pages.team.changeOwner()
 		LW.pages.team.report()
+
+		if (LW.connected) {
+			LW.pages.team.setupChat()
+		}
 	})
 }
 
