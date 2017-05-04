@@ -285,6 +285,40 @@ _.rgbToHex = function(rgb) {
 	return "#" + ((1 << 24) + (rgb[0] << 16) + (rgb[1] << 8) + rgb[2]).toString(16).slice(1);
 }
 
+_.cursor_position = function(editableDiv) {
+  var caretPos = 0,
+    sel, range;
+  if (window.getSelection) {
+    sel = window.getSelection();
+    if (sel.rangeCount) {
+      range = sel.getRangeAt(0);
+      if (range.commonAncestorContainer.parentNode == editableDiv) {
+        caretPos = range.endOffset;
+      }
+    }
+  } else if (document.selection && document.selection.createRange) {
+    range = document.selection.createRange();
+    if (range.parentElement() == editableDiv) {
+      var tempEl = document.createElement("span");
+      editableDiv.insertBefore(tempEl, editableDiv.firstChild);
+      var tempRange = range.duplicate();
+      tempRange.moveToElementText(tempEl);
+      tempRange.setEndPoint("EndToEnd", range);
+      caretPos = tempRange.text.length;
+    }
+  }
+  return caretPos;
+}
+
+_.set_cursor_position = function(el, pos) {
+	var range = document.createRange();
+	var sel = window.getSelection();
+	range.setStart(el.firstChild, pos);
+	range.collapse(true);
+	sel.removeAllRanges();
+	sel.addRange(range);
+}
+
 /*
  * Fonctions de formatage
  */
@@ -650,9 +684,8 @@ _.popup.new = function(view, data, width, direct, options) {
 	}
 
 	this.minimize = function() {
-		if(this.onminimize) this.onminimize()
+		if (this.onminimize) this.onminimize()
 	}
-
 	return this
 }
 

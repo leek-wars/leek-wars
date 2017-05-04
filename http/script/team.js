@@ -368,7 +368,10 @@ LW.pages.team.setupChat = function() {
 		change(!chatExpanded)
 	})
 
-	this.chat = new ChatController($('#team-chat .content'), false, true)
+	LW.socket.send([TEAM_CHAT_ENABLE])
+	this.chat = new ChatController($('#team-chat .content'), function(message) {
+		LW.socket.send([TEAM_CHAT_SEND, message])
+	})
 }
 
 LW.pages.team.wsreceive = function(data) {

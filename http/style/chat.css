@@ -3,7 +3,7 @@
 }
 
 #chat .chat-messages {
-	background: white;
+	/*background: white;*/
 	padding: 5px;
 	overflow-y: scroll;
 }
@@ -14,13 +14,36 @@
 }
 
 .chat-input {
-	margin-top: 10px;
 	width: 100%;
-	margin-right: 10px;
+	position: relative;
 }
 
-#chat-send {
-	vertical-align: top;
+.chat-input .chat-input-content {
+	background: white;
+	padding: 8px;
+	border: 2px solid #eee;
+	padding-right: 36px;
+}
+
+.chat-input .chat-input-content:empty:before {
+	content: attr(placeholder);
+	display: block;
+	color: #aaa;
+}
+
+.chat-input .chat-input-content:focus {
+    outline: 0px solid transparent;
+	border: 2px solid #ccc;
+}
+
+.chat-input .chat-input-emoji {
+	position: absolute;
+	width: 24px;
+	height: 24px;
+	right: 8px;
+	top: 7px;
+	background: url("https://twemoji.maxcdn.com/2/svg//1f603.svg");
+	cursor: pointer;
 }
 
 #chat-languages img {
@@ -34,7 +57,7 @@
 	display: inline-block;
 	cursor: pointer;
 	vertical-align: top;
-	margin-top: 10px;
+	margin-top: 4px;
 }
 
 #chat-languages {
@@ -48,7 +71,7 @@
 
 #chat-language img {
 	width: 30px;
-	margin: 0 10px;
+	margin: 0 8px;
 }
 
 #chat-language-selection input, #chat-language-selection label {
@@ -56,7 +79,9 @@
 }
 
 #chat-smileys, #chat-commands {
-	position: relative;
+	position: absolute;
+	z-index: 600;
+	display: none;
 }
 
 #chat-smileys-button {
@@ -80,9 +105,6 @@
 }
 
 #chat-smileys-wrapper {
-	position: absolute;
-	bottom: 40px;
-	right: 20px;
 	padding: 0 10px;
 	width: 420px;
 	height: 300px;
@@ -91,13 +113,9 @@
 	border-radius: 2px;
 	cursor: default;
 	overflow-y: scroll;
-	display: none;
 }
 
 #chat-commands-wrapper {
-	position: absolute;
-	bottom: 40px;
-	right: 20px;
 	width: 570px;
 	height: 300px;
 	background-color: #f2f2f2;
@@ -105,7 +123,6 @@
 	border-radius: 2px;
 	cursor: default;
 	overflow-y: scroll;
-	display: none;
 }
 
 #chat-smileys-wrapper .title {
