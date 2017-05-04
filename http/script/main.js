@@ -3686,7 +3686,6 @@ var ChatController = function(chat_element, send_callback, enable_moderation) {
 		}
 		if (e.keyCode == 13 && !e.shiftKey) {
 			var message = $.trim(chat_element.find('.chat-input-content')[0].innerText)
-			_.log("message: " + message)
 			if (message.length == 0) return ;
 			if (message.length > 1000) {
 				_.toast(_.lang.get('chat', 'too_long'))
@@ -3738,7 +3737,6 @@ var ChatController = function(chat_element, send_callback, enable_moderation) {
 	chat_element.find('.chat-input-emoji').mousedown(function(e) {
 		var input = chat_element.find('.chat-input-content')
 		var pos = _.cursor_position(input[0])
-		_.log("pos", pos)
 		cursor_position = pos
 	})
 	chat_element.find('.chat-input-emoji').click(function(e) {
