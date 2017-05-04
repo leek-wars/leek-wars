@@ -394,7 +394,7 @@ _.linkify = function(html) {
 				i++
 			}
 			var last = html[i - 1]
-			while (/[\.!?:]/.test(last)) {
+			while (/[\.,!?:]/.test(last)) {
 				last = html[--i - 1]
 			}
 		}
