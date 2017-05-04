@@ -74,7 +74,7 @@ register_tournament			Inscription tournoi
 remaining_xp			XP restante : %s
 report					Signaler
 see_tournament			Voir le tournoi
-talent			Talent de l'équipe : moyenne des Talents des compositions
+talent			Talent de l'équipe : talent de la meilleure composition
 team_have_been_disolved			L'équipe a été dissoute
 too_much_farmers			L'équipe a déjà atteind le nombre maximal d'éleveurs
 tournament_of			Tournoi du %s
