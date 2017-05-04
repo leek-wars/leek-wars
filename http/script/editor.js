@@ -645,7 +645,7 @@ LW.pages.editor.init = function(params, $scope, $page) {
 
 LW.pages.editor.update = function(params) {
 
-	if ('id' in params && params.id in editors) {
+	if (params && 'id' in params && params.id in editors) {
 		current = params.id
 		currentType = 'ai'
 		currentItem = params.id
