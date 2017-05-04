@@ -240,7 +240,9 @@ LW.pages.leek.potion = function() {
 				if (effect.type == 1) { // Restat
 					_.reload()
 				} else if (effect.type == 2) { // Skin
-					leek.skin = effect.params[0]
+					var skin = effect.params[0]
+					leek.skin = skin
+					LW.farmer.leeks[leek.id].skin = skin
 					LW.pages.leek.updateImage()
 				}
 			}
