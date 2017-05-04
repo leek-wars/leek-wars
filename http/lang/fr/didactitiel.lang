@@ -2,7 +2,7 @@ ai					L'IA
 ai_1				L'Intelligence Artificielle (ou IA) est le programme qui définit le comportement de ton poireau durant un combat.
 					Tu vas pouvoir développer l'IA de ton poireau depuis la page <a href='/editor' target='_blank'>Éditeur</a>.
 ai_2				Dans Leek Wars, le langage utilisé pour coder son IA est le <b>Leek Script</b>.
-ai_3				Si tu débutes en programmation, nous te conseillons de commencer par lire le <a href='/tutoriel' target='_blank'>Tutoriel</a>.
+ai_3				Si tu débutes en programmation, nous te conseillons de commencer par lire le <a href='/tutorial' target='_blank'>Tutoriel</a>.
 ai_4				Ensuite tu pourras consulter la <a href='/documentation' target='_blank'>Documentation</a> des fonctions pour perfectionner ton IA.
 dismiss				Passer
 end					Et voilà !
