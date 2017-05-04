@@ -1,7 +1,7 @@
 <div class='page-header page-bar'>
 
 	<div>
-		<h1>{fight.team1_name} vs {fight.team2_name}</h1>
+		<h1>{fight.title}</h1>
 
 		<div class='info'>{_.format.date(fight.date)}</div>
 	</div>
@@ -19,6 +19,21 @@
 
 		<div id='loading'>
 
+			@if (fight.type == LW.FIGHT_TYPE.BATTLE_ROYALE)
+				@foreach (i : leek in fight.leeks1)
+					<div class='leek' leek='{leek.id}'>
+						<div class='image'></div>
+						<span class='name'>{leek.name}</span>
+						<br>
+						<span class='level'>{#leek_level, leek.level}</span>
+					</div>
+					@if (i == 1 && fight.leeks1.length < 5) <br> @end
+					@if (i < fight.leeks1.length - 1)
+						<span class='vs'>VS</span>
+					@end
+				@end
+				<br><br>
+			@else
 			<table><tr>
 				<td class='team-td'>
 					@foreach (i : leek in fight.leeks1)
@@ -46,6 +61,7 @@
 					@end
 				</td>
 			</tr></table>
+			@endif
 
 			<img class='loader' src='{{static}}image/gearing_small.png'></img><br>
 			<div class='loading-fight'>{#loading_fight}</div>

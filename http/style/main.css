@@ -1552,7 +1552,7 @@ body.connected #header-signin {
 
 #popups {
 	position: fixed;
-	z-index: 600;
+	z-index: 1000;
 }
 
 #popups:not(.box) {
@@ -1581,7 +1581,7 @@ body.connected #header-signin {
 
 .popup.draggable {
 	position: fixed;
-	z-index: 1000;
+	z-index: 600;
 	top: 0;
 	left: 0;
 }

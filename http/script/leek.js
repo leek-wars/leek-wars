@@ -95,7 +95,20 @@ LW.pages.leek.pause = function() {
 	clearInterval(this.leekTimeUpdate)
 }
 
+LW.pages.leek.resize = function() {
+	// Center leek image vertically (nicer for small leeks)
+	var panel = $('#leek-page .flex-container .panel.first')
+	var image = $('#leek-image')
+	if (image.height() > 0) {
+		var margin = (panel.height() - 36 - 30 - image.height()) / 2
+		if (margin > 0)
+			image.css('margin-top', margin)
+	}
+}
+
 LW.pages.leek.chart = function() {
+
+	if ($('#talent-history').length === 0) return ;
 
 	var labels = []
 	var time = LW.time.get()
@@ -106,7 +119,12 @@ LW.pages.leek.chart = function() {
 		labels: labels.reverse(),
 		series: [this.scope.leek.talent_history]
 	}
-	new Chartist.Line('.ct-chart', data, {height: 130, showArea: true, fullWidth: true, fullHeight: true})
+	var graph = new Chartist.Line('.ct-chart', data, {height: 130, showArea: true, fullWidth: true, fullHeight: true})
+	graph.on('draw', function(data) {
+		if (data.type === 'label' && data.axis.units.pos === 'x') {
+			data.element.attr({x: data.x - data.width / 2})
+		}
+	})
 
 	var chart = $('.ct-chart')
 	var toolTip = chart
@@ -135,6 +153,7 @@ LW.pages.leek.chart = function() {
 LW.pages.leek.updateImage = function() {
 	LW.createLeekImage(this.scope.leek.id, 1, this.scope.leek.level, this.scope.leek.skin, this.scope.leek.hat, function(id, data) {
 		$('#page #leek-image').html(data)
+		LW.pages.leek.resize()
 	})
 }
 
@@ -221,7 +240,9 @@ LW.pages.leek.potion = function() {
 				if (effect.type == 1) { // Restat
 					_.reload()
 				} else if (effect.type == 2) { // Skin
-					leek.skin = effect.params[0]
+					var skin = effect.params[0]
+					leek.skin = skin
+					LW.farmer.leeks[leek.id].skin = skin
 					LW.pages.leek.updateImage()
 				}
 			}

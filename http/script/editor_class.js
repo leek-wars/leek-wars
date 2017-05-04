@@ -30,11 +30,11 @@ var Editor = function(id, name, valid, code, folder, level) {
 
 	// Dialog d'autocomplétion
 	this.hintDialog = $("<div class='hint-dialog'><div class='hints'></div><div class='details'></div></div>");
-	$('body').append(this.hintDialog);
+	$('#hints').append(this.hintDialog);
 
 	// Dialog de détail
 	this.detailDialog = $("<div class='detail-dialog'></div>");
-	$('body').append(this.detailDialog);
+	$('#hints').append(this.detailDialog);
 
 	// Ajout de l'éditeur
 	$('#editors').append("<div id='" + id + "' class='editor'></div>");
@@ -215,8 +215,6 @@ var Editor = function(id, name, valid, code, folder, level) {
 
 		_.post('ai/save/', {ai_id: saveID, code: content}, function(data) {
 
-			_.log(editor)
-
 			_saving = false;
 			$('#results').empty().show();
 			$('#compiling').hide();
@@ -310,8 +308,6 @@ var Editor = function(id, name, valid, code, folder, level) {
 
 	this.test = function() {
 
-		_.log(this)
-
 		// Save before
 		if (this.modified) {
 
@@ -319,7 +315,7 @@ var Editor = function(id, name, valid, code, folder, level) {
 			this.save();
 			return;
 		}
-		
+
 		if (!this.v2) {
 			// Sauvegardé et erreur, on teste pas ça !
 			if (this.error) {
@@ -657,6 +653,11 @@ var Editor = function(id, name, valid, code, folder, level) {
 				editor.detailDialog.hide()
 			}
 		}
+	}
+
+	this.mouseleave = function() {
+		clearTimeout(editor.detailTimer)
+		editor.detailDialog.hide()
 	}
 
 	this.autocomplete = function(force) {

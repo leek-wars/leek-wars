@@ -10,6 +10,7 @@ var _ = {
 	local: false,
 	currentTitle: '',
 	currentCounter: 0,
+	currentTag: null,
 	script: {
 		loaded: {},
 		loading: {},
@@ -91,11 +92,20 @@ _.titleCounter = function(counter) {
 	_.privateUpdateTitle()
 }
 
+_.titleTag = function(tag) {
+	_.currentTag = tag
+	_.privateUpdateTitle()
+}
+
 _.privateUpdateTitle = function() {
-	if (_.currentCounter > 0)
-		document.title = '(' + _.currentCounter + ') ' + _.currentTitle
-	else
-		document.title = _.currentTitle
+	var title = _.currentTitle
+	if (_.currentCounter > 0) {
+		title = '(' + _.currentCounter + ') ' + title
+	}
+	if (_.currentTag !== null) {
+		title = '[' + _.currentTag + '] ' + title
+	}
+	document.title = title
 }
 
 _.favicon = function(image) {
@@ -275,6 +285,40 @@ _.rgbToHex = function(rgb) {
 	return "#" + ((1 << 24) + (rgb[0] << 16) + (rgb[1] << 8) + rgb[2]).toString(16).slice(1);
 }
 
+_.cursor_position = function(editableDiv) {
+  var caretPos = 0,
+    sel, range;
+  if (window.getSelection) {
+    sel = window.getSelection();
+    if (sel.rangeCount) {
+      range = sel.getRangeAt(0);
+      if (range.commonAncestorContainer.parentNode == editableDiv) {
+        caretPos = range.endOffset;
+      }
+    }
+  } else if (document.selection && document.selection.createRange) {
+    range = document.selection.createRange();
+    if (range.parentElement() == editableDiv) {
+      var tempEl = document.createElement("span");
+      editableDiv.insertBefore(tempEl, editableDiv.firstChild);
+      var tempRange = range.duplicate();
+      tempRange.moveToElementText(tempEl);
+      tempRange.setEndPoint("EndToEnd", range);
+      caretPos = tempRange.text.length;
+    }
+  }
+  return caretPos;
+}
+
+_.set_cursor_position = function(el, pos) {
+	var range = document.createRange();
+	var sel = window.getSelection();
+	range.setStart(el.firstChild, pos);
+	range.collapse(true);
+	sel.removeAllRanges();
+	sel.addRange(range);
+}
+
 /*
  * Fonctions de formatage
  */
@@ -353,7 +397,6 @@ _.format.dayMonthShort = function(timestamp) {
 
 _.toChatLink = function(url, text, blank) {
 	blank = blank ? blank : ""
-
 	return '<a ' + blank + ' href="' + url + '">' + text + '</a>'
 }
 
@@ -385,7 +428,7 @@ _.linkify = function(html) {
 				i++
 			}
 			var last = html[i - 1]
-			while (/[\.!?:]/.test(last)) {
+			while (/[\.,!?:]/.test(last)) {
 				last = html[--i - 1]
 			}
 		}
@@ -567,20 +610,18 @@ _.popup.new = function(view, data, width, direct, options) {
 
 		popup.view.find('.content').css('max-height', $(window).height() - 250)
 
-		this.wrapper.show()
-		this.view.css('display', 'inline-block')
-
-		popup.view.css("transition", "transform ease 0.3s")
-		popup.view.css("-webkit-transition", "-webkit-transform ease 0.3s")
-
-		popup.view.css("transform", "scaleY(0.5)")
-		popup.view.css("-webkit-transform", "scaleY(0.5)")
-
+		popup.view.css("transition", "transform ease 0.3s, opacity ease 0.3s")
+		popup.view.css("-webkit-transition", "-webkit-transform ease 0.3s, opacity ease 0.3s")
+		popup.view.css("transform", "scale(0.95)")
+		popup.view.css("-webkit-transform", "scale(0.95)")
 		popup.view.css("opacity", "1")
+		this.view.css('display', 'inline-block')
+		this.wrapper.show()
 
 		setTimeout(function() {
-			popup.view.css("transform", "scaleY(1)")
-			popup.view.css("-webkit-transform", "scaleY(1)")
+			popup.view.css("transform", "scale(1)")
+			popup.view.css("-webkit-transform", "scale(1)")
+			popup.view.css("opacity", "1")
 		})
 
 		this.view.click(function(e) {
@@ -611,48 +652,40 @@ _.popup.new = function(view, data, width, direct, options) {
 	}
 
 	this.dismiss = function() {
-
-		if (this.ondismiss) this.ondismiss()
-
 		var popup = this
+		// Callback
+		if (this.ondismiss) this.ondismiss()
+		// Animation
 		popup.view.css("transition", "all ease 0.2s")
 		popup.view.css("-webkit-transition", "all ease 0.2s")
-
-		popup.view.css("transform", "scaleY(1)")
-		popup.view.css("-webkit-transform", "scaleY(1)")
-
+		popup.view.css("transform", "scale(1)")
+		popup.view.css("-webkit-transform", "scale(1)")
 		setTimeout(function() {
-			popup.view.css("transform", "scaleY(0)")
-			popup.view.css("-webkit-transform", "scaleY(0)")
-
+			popup.view.css("transform", "scale(0.95))")
+			popup.view.css("-webkit-transform", "scale(0.95)")
 			popup.view.css("opacity", "0")
 		})
-
-		setTimeout(function() {
-
-			popup.wrapper.hide()
-
-			_.popup.current = null
-
-			_.popup.queue.shift()
-
-			if (_.popup.queue.length > 0) {
-/*
-				setTimeout(function() {
-					_.popup.queue[0].appear()
-				}, 250)
-*/
-			} else {
-				$('#popups').removeClass('box')
-				$('#dark').fadeOut(200)
-			}
-		}, 200)
+		// Show next popup
+		if (!this.options.draggable) {
+			setTimeout(function() {
+				popup.wrapper.hide()
+				_.popup.current = null
+				_.popup.queue.shift()
+				if (_.popup.queue.length > 0) {
+					// setTimeout(function() {
+					// 	_.popup.queue[0].appear()
+					// }, 250)
+				} else {
+					$('#popups').removeClass('box')
+					$('#dark').fadeOut(200)
+				}
+			}, 200)
+		}
 	}
 
 	this.minimize = function() {
-		if(this.onminimize) this.onminimize()
+		if (this.onminimize) this.onminimize()
 	}
-
 	return this
 }
 

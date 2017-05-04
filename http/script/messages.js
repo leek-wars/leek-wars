@@ -66,29 +66,9 @@ LW.pages.messages.init = function(params, $scope, $page) {
 			LW.page('/messages/conversation/' + id)
 		})
 
-		// Send message
-		$('#chat-send').click(function() {
-			sendMessage()
-		})
-		$("#messages-page .chat-input").keydown(function(e) {
-			if (e.keyCode == 13) {
-				sendMessage()
-				e.preventDefault()
-			}
-		})
-
 		// Smileys
 		$('.chat-message-messages div, .conversation-preview .content').each(function() {
 			// $(this).html(smiley($(this).html()));
-		});
-
-		// Focus
-		$(window).focus(function() {
-			_focus = true;
-			conversationRead();
-		});
-		$(window).blur(function() {
-			_focus = false;
 		});
 
 		// Quit conversation
@@ -99,7 +79,6 @@ LW.pages.messages.init = function(params, $scope, $page) {
 		})
 
 		quitPopup.find('#quit-conversation-validate').click(function() {
-
 			_.post('message/quit-conversation', {conversation_id: _conversation}, function(data) {
 				if (data.success) {
 					_.reload()
@@ -110,13 +89,21 @@ LW.pages.messages.init = function(params, $scope, $page) {
 }
 
 LW.pages.messages.resize = function() {
-	var h = $('#header').height() + 135
-	$('#conversations').css('height', $(window).height() - h);
-	$('#conversations-list').css('height', $(window).height() - h + 45);
+	var h = $(window).height() - $('#header').height() - 75
+	$('#conversations').css('height', h);
+	$('#conversations .conversation').css('height', h);
+	$('#conversations-list').css('height', h);
+}
+
+LW.pages.messages.focus = function() {
+	_focus = true
+	conversationRead()
+}
+LW.pages.messages.blur = function() {
+	_focus = false
 }
 
 LW.pages.messages.update = function(params) {
-
 	LW.pages.messages.selectConversation(params.id)
 }
 
@@ -165,7 +152,9 @@ LW.pages.messages.loadConversation = function(conv) {
 	if (typeof(_conversations[conv]) === 'undefined') {
 
 		_conversations[conv] = []
-		_chat_controllers[conv] = new ChatController($('.conversation[conv=' + conv + ']'), true)
+		_chat_controllers[conv] = new ChatController($('.conversation[conv=' + conv + ']'), function(message) {
+			sendMessage(message)
+		})
 
 		// Ajout d'un loader
 		$('#conversation-' + conv).append("<center class='loader'><img src='" + LW.staticURL + "image/loader.gif' class='loader'></img></center>");
@@ -200,9 +189,8 @@ function updateScroll(conv) {
 	$("#conversations").scrollTop($('.conversation[conv=' + conv + ']').height());
 }
 
-function sendMessage() {
+function sendMessage(message) {
 
-	var message = $.trim($('#messages-page .chat-input').val())
 	if (message.length == 0) return null
 
 	if (_conversation == 0) { // Nouvelle conversation
@@ -217,22 +205,8 @@ function sendMessage() {
 	} else {
 
 		_.post('message/send-message', {conversation_id: _conversation, message: message}, function (data) {
-
-			if(data.success) {
-
-				var m = {
-					farmer_id: LW.farmer.id,
-					farmer_name: LW.farmer.name,
-					content: message,
-					date: LW.time.get(),
-					farmer_color: LW.farmer.color,
-					avatar_changed: LW.farmer.avatar_changed,
-					lang: '_'
-				}
-				_chat_controllers[_conversation].receive_message(m)
-
+			if (data.success) {
 				updateScroll(_conversation)
-
 				LW.messages.updateConversationSidebar({
 					id: _conversation,
 					last_date: LW.time.get(),
@@ -240,16 +214,10 @@ function sendMessage() {
 					last_farmer_id: LW.farmer.id,
 					isNew: false
 				})
-
 			}
-
 		})
-
 	}
-
-	$('#messages-page .chat-input').val("").height(0)
 }
-
 
 function conversationRead() {
 	LW.socket.send([MP_READ, _conversation])

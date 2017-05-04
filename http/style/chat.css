@@ -3,7 +3,7 @@
 }
 
 #chat .chat-messages {
-	background: white;
+	/*background: white;*/
 	padding: 5px;
 	overflow-y: scroll;
 }
@@ -14,13 +14,37 @@
 }
 
 .chat-input {
-	margin-top: 10px;
 	width: 100%;
-	margin-right: 10px;
+	position: relative;
 }
 
-#chat-send {
-	vertical-align: top;
+.chat-input .chat-input-content {
+	background: white;
+	padding: 8px;
+	border: 2px solid #eee;
+	padding-right: 36px;
+	cursor: text;
+}
+
+.chat-input .chat-input-content:empty:before {
+	content: attr(placeholder);
+	display: block;
+	color: #aaa;
+}
+
+.chat-input .chat-input-content:focus {
+    outline: 0px solid transparent;
+	border: 2px solid #ccc;
+}
+
+.chat-input .chat-input-emoji {
+	position: absolute;
+	width: 24px;
+	height: 24px;
+	right: 8px;
+	top: 7px;
+	background: url("https://twemoji.maxcdn.com/2/svg//1f603.svg");
+	cursor: pointer;
 }
 
 #chat-languages img {
@@ -34,7 +58,7 @@
 	display: inline-block;
 	cursor: pointer;
 	vertical-align: top;
-	margin-top: 10px;
+	margin-top: 4px;
 }
 
 #chat-languages {
@@ -48,15 +72,17 @@
 
 #chat-language img {
 	width: 30px;
-	margin: 0 10px;
+	margin: 0 8px;
 }
 
 #chat-language-selection input, #chat-language-selection label {
 	cursor: pointer;
 }
 
-#chat-smileys {
-	position: relative;
+#chat-smileys, #chat-commands {
+	position: absolute;
+	z-index: 600;
+	display: none;
 }
 
 #chat-smileys-button {
@@ -80,9 +106,6 @@
 }
 
 #chat-smileys-wrapper {
-	position: absolute;
-	bottom: 40px;
-	right: 20px;
 	padding: 0 10px;
 	width: 420px;
 	height: 300px;
@@ -91,19 +114,35 @@
 	border-radius: 2px;
 	cursor: default;
 	overflow-y: scroll;
-	display: none;
+}
+
+#chat-commands-wrapper {
+	width: 570px;
+	height: 300px;
+	background-color: #f2f2f2;
+	border: 1px solid #bbbbbb;
+	border-radius: 2px;
+	cursor: default;
+	overflow-y: scroll;
 }
 
 #chat-smileys-wrapper .title {
 	display: block;
 	margin-top: 10px;
 	padding-bottom: 8px;
+	padding-left: 10px;
 	font-weight: bold;
-
 }
 
-#chat-smileys-wrapper .list {
-	padding-bottom: 10px;
+#chat-commands-wrapper .title {
+	display: block;
+	margin-top: 10px;
+	padding-bottom: 5px;
+	padding-left: 10px;
+	font-weight: bold;
+}
+
+#chat-smileys-wrapper .list, #chat-commands-wrapper .list {
 	text-align: center;
 }
 
@@ -114,8 +153,32 @@
 	height: 25px !important;
 }
 
-#chat-smileys-wrapper .list .smiley:hover {
+#chat-commands-wrapper .list .command, #chat-commands-wrapper .list .sub-command {
+	background-color: #fcfcfc;
+	margin-top: 3px;
+	padding: 4px;
+}
+
+#chat-commands-wrapper .list .command .cmd, #chat-commands-wrapper .list .sub-command .cmd {
+	float: left;
+	text-align: left;
+	font-weight: bold;
+	margin-top: 0;
+	padding: 4px;
+	width: 195px;
+}
+
+#chat-commands-wrapper .list .command .description, #chat-commands-wrapper .list .sub-command .description {
+	text-align: left;
+	margin-top: 0;
+	padding: 4px;
+}
+
+#chat-commands-wrapper .list .cmd, #chat-commands-wrapper .list .description {
+	font-size: 14px;
+}
+
+#chat-smileys-wrapper .list .smiley:hover, #chat-commands-wrapper .list .command:hover, #chat-commands-wrapper .list .sub-command:hover  {
 	background-color: #dcdcdc;
-	border-radius: 6px;
 	cursor: pointer;
 }

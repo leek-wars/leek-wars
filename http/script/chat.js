@@ -1,12 +1,18 @@
-
-
 LW.pages.chat.init = function(params, $scope, $page) {
 
 	$page.render()
 
 	LW.setTitle(_.lang.get('chat', 'title'))
 
-	$page.chat = new ChatController($('#chat .content'))
+	$page.chat = new ChatController($('#chat .content'), function(message) {
+		LW.socket.send([FORUM_CHAT_SEND, $page.chat.channel, message])
+	})
+	for (var c in LW.chat.channels) {
+		for (var m in LW.chat.messages[LW.chat.channels[c]]) {
+			var message = LW.chat.messages[LW.chat.channels[c]][m]
+			$page.chat.receive_message(message)
+		}
+	}
 }
 
 LW.pages.chat.resize = function() {
@@ -14,7 +20,6 @@ LW.pages.chat.resize = function() {
 }
 
 LW.pages.chat.wsconnected = function() {
-
 	$('#chat .websocket-loader').remove()
 }
 
@@ -37,6 +42,5 @@ LW.pages.chat.wsreceive = function(data) {
 
 	} else if (data.type == CHAT_MUTE_USER) {
 		this.chat.mute_user(data.data)
-
 	}
 }

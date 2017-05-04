@@ -6,6 +6,8 @@ all_private_messages			All privates messages
 bank			Bank
 changelog			Changelog
 chat_the_mdy_at_hm			The %2$s/%1$s/%3$s at %4$s:%5$s
+chat_placeholder	Enter your message...
+commands       Commands
 conditions			Terms of use
 connection			Log in
 connect_message			<a href='%s'><b>Log in</b></a> or <a href='%s'><b>Sign up</b></a> to Leek Wars

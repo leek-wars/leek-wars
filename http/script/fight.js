@@ -29,9 +29,14 @@ LW.pages.fight.init = function(params, $scope, $page) {
 		if (!_.isEmptyObj(fight.farmers1)) {
 			$scope.first_farmer = _.first(fight.farmers1).id
 		}
-		$page.render()
 
-		LW.setTitle(fight.team1_name + ' vs ' + fight.team2_name)
+		fight.title = fight.team1_name + ' vs ' + fight.team2_name
+		if (fight.type == LW.FIGHT_TYPE.BATTLE_ROYALE) {
+			fight.title = _.lang.get('fight', 'battle_royale')
+		}
+		LW.setTitle(fight.title)
+
+		$page.render()
 
 		var leeks = []
 		for (var l in fight.leeks1) leeks[fight.leeks1[l].id] = fight.leeks1[l]

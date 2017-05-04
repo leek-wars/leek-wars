@@ -134,10 +134,10 @@
 		</div>
 
 		<div class='content'>
-			<div class='chat-messages'></div>
-			<div class="flex">
-				<textarea class='chat-input autogrow' type='text'></textarea>
-				@includeobj('main.emojis', smileys)
+			<div class='chat-messages' autostopscroll='bottom'></div>
+			<div class='chat-input'>
+				<div class='chat-input-content' contenteditable="true" placeholder="{#main.chat_placeholder}"></div>
+				<div class='chat-input-emoji'></div>
 			</div>
 		</div>
 	</div>

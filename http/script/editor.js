@@ -460,9 +460,13 @@ LW.pages.editor.init = function(params, $scope, $page) {
 			LW.keywords = generateDocumentation()
 		}
 
-		$(window).mousemove(function(e) {
+		$('#editors').mousemove(function(e) {
 			if (current != null && currentType == 'ai')
 				editors[current].mousemove(e)
+		})
+		$('#editors').mouseleave(function(e) {
+			if (current != null && currentType == 'ai')
+				editors[current].mouseleave(e)
 		})
 
 		$('#info-button').click(function(e) {
@@ -641,7 +645,7 @@ LW.pages.editor.init = function(params, $scope, $page) {
 
 LW.pages.editor.update = function(params) {
 
-	if ('id' in params && params.id in editors) {
+	if (params && 'id' in params && params.id in editors) {
 		current = params.id
 		currentType = 'ai'
 		currentItem = params.id
@@ -662,7 +666,9 @@ LW.pages.editor.resize = function() {
 }
 
 LW.pages.editor.leave = function() {
-
+	// Remove detail dialogs
+	$('#hints').empty()
+	// Unsaved AIs confirmation
 	var num = 0
 	for (var i in editors) {
 		if (editors[i].modified) {

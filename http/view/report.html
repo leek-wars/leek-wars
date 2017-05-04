@@ -36,7 +36,7 @@
 						@end
 					</tr>
 					@foreach (leek in leeks)
-						@include('leek_tr', leek)
+						@includeobj('leek_tr', leek)
 					@end
 				</table>
 
@@ -73,7 +73,7 @@
 							@end
 						</tr>
 						@foreach (leek in leeks1)
-							@include('leek_tr', leek)
+							@includeobj('leek_tr', leek)
 						@end
 						@if (leeks1.length > 1)
 							@include('total', total1)
@@ -112,7 +112,7 @@
 							@end
 						</tr>
 						@foreach (leek in leeks2)
-							@include('leek_tr', leek)
+							@includeobj('leek_tr', leek)
 						@end
 						@if (leeks2.length > 1)
 							@include('total', total2)
@@ -325,42 +325,42 @@
 @view (leek_tr)
 	<tr>
 		<td class='name'>
-			@if (dead)
+			@if (leek.dead)
 				<span class='dead'></span>
 			@else
 				<span class='alive'></span>
 			@end
-			@if (id != -1)
-				<a href='/leek/{id}'>{name}</a>
+			@if (leek.id != -1)
+				<a href='/leek/{leek.id}'>{leek.name}</a>
 			@else
-				{name}
+				{leek.name}
 			@end
 			</span>
 		</td>
-		<td class='level'>{level}</td>
+		<td class='level'>{leek.level}</td>
 		<td class='xp'>
-			<div id='bar{id}' class='bar'>
-				<span class='current_xp' style='width:{current_bar}%'></span><span class='new_xp' style='width:{new_bar}%'></span>
+			<div id='bar{leek.id}' class='bar'>
+				<span class='current_xp' style='width:{leek.current_bar}%'></span><span class='new_xp' style='width:{leek.new_bar}%'></span>
 			</div>
-			<div class='tooltip fluid' id='tt_bar{id}'>{%prev_xp} / {%next_xp}</div>
-			<span>{%xp}</span>
-			@if (bonus > 1)
-				<span class='bonus'>x{bonus}</span>
+			<div class='tooltip fluid' id='tt_bar{leek.id}'>{%leek.prev_xp} / {%leek.next_xp}</div>
+			<span>{%leek.xp}</span>
+			@if (leek.bonus > 1)
+				<span class='bonus'>x{leek.bonus}</span>
 			@end
 		</td>
 		<td class='money'>
-			<span>{%money} <span class='hab' /></span>
+			<span>{%leek.money} <span class='hab' /></span>
 		</td>
-		@if (talent)
+		@if (leek.talent)
 			<td class='talent'>
 				<img src='{{static}}image/talent.png' />
-				{talent}
-				@if (talent_gain >= 0) + {talent_gain} @else - {Math.abs(talent_gain)} @end
+				{leek.talent}
+				@if (leek.talent_gain >= 0) + {leek.talent_gain} @else - {Math.abs(leek.talent_gain)} @end
 			</td>
 		@end
 		@if (LW.farmer.admin)
 			<td class='gain'>
-				{%ai_time} ms
+				{%leek.ai_time} ms
 			</td>
 		@end
 	</tr>
