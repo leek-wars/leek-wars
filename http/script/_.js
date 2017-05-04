@@ -576,20 +576,18 @@ _.popup.new = function(view, data, width, direct, options) {
 
 		popup.view.find('.content').css('max-height', $(window).height() - 250)
 
-		this.wrapper.show()
-		this.view.css('display', 'inline-block')
-
-		popup.view.css("transition", "transform ease 0.3s")
-		popup.view.css("-webkit-transition", "-webkit-transform ease 0.3s")
-
-		popup.view.css("transform", "scaleY(0.5)")
-		popup.view.css("-webkit-transform", "scaleY(0.5)")
-
+		popup.view.css("transition", "transform ease 0.3s, opacity ease 0.3s")
+		popup.view.css("-webkit-transition", "-webkit-transform ease 0.3s, opacity ease 0.3s")
+		popup.view.css("transform", "scale(0.95)")
+		popup.view.css("-webkit-transform", "scale(0.95)")
 		popup.view.css("opacity", "1")
+		this.view.css('display', 'inline-block')
+		this.wrapper.show()
 
 		setTimeout(function() {
-			popup.view.css("transform", "scaleY(1)")
-			popup.view.css("-webkit-transform", "scaleY(1)")
+			popup.view.css("transform", "scale(1)")
+			popup.view.css("-webkit-transform", "scale(1)")
+			popup.view.css("opacity", "1")
 		})
 
 		this.view.click(function(e) {
@@ -626,11 +624,11 @@ _.popup.new = function(view, data, width, direct, options) {
 		// Animation
 		popup.view.css("transition", "all ease 0.2s")
 		popup.view.css("-webkit-transition", "all ease 0.2s")
-		popup.view.css("transform", "scaleY(1)")
-		popup.view.css("-webkit-transform", "scaleY(1)")
+		popup.view.css("transform", "scale(1)")
+		popup.view.css("-webkit-transform", "scale(1)")
 		setTimeout(function() {
-			popup.view.css("transform", "scaleY(0)")
-			popup.view.css("-webkit-transform", "scaleY(0)")
+			popup.view.css("transform", "scale(0.95))")
+			popup.view.css("-webkit-transform", "scale(0.95)")
 			popup.view.css("opacity", "0")
 		})
 		// Show next popup
