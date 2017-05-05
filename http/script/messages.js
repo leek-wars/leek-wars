@@ -162,6 +162,7 @@ LW.pages.messages.loadConversation = function(conv) {
 
 		// Load messages
 		if (conv != 0) {
+			LW.loader.show()
 			_.get('message/get-messages/' + conv + '/' + 50 + '/' + 1 + '/' + LW.token(), function(data) {
 				if (!data.success) {
 					_.toast(data.error)
@@ -179,13 +180,9 @@ LW.pages.messages.loadConversation = function(conv) {
 				}
 				updateScroll(conv)
 				conversationRead()
+				LW.loader.hide()
 			})
 		}
-		// Ajout d'un loader
-		$('#conversation-' + conv).append("<center class='loader'><img src='" + LW.staticURL + "image/loader.gif' class='loader'></img></center>");
-			$('#conversation-' + conv).find('.loader').remove();
-		})
-
 	} else {
 		updateScroll(conv)
 	}
