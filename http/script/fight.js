@@ -310,7 +310,6 @@ function showQueueMessage(position, queue) {
 }
 
 LW.pages.fight.file_input = function() {
-	_.log("file_input")
 	$('#fight-page #file-input').on('change', function() {
 		var file = this.files[0]
 		if (file) {
