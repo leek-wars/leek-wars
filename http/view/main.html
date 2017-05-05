@@ -478,25 +478,7 @@
 
 <div id='hints'></div>
 
-<div id='chat-commands' style='display: none'>
-	<div id="chat-commands-wrapper" autostopscroll>
-		<div class="title">{#commands}</div>
-		<div class="list">
-			@foreach (command in chat_commands.list)
-				<div class="command" command="{command.command}">
-					<div class="cmd">/{command.command}</div>
-					<div class="description">{command.description}</div>
-				</div>
-				@foreach (sub_command in command.options)
-					<div class="sub-command" command="{command.command}" subcommand="{sub_command.command}">
-						<div class="cmd">/{sub_command.command}</div>
-						<div class="description">{sub_command.description}</div>
-					￼</div>
-				￼@end
-			@end
-		</div>
-	</div>
-</div>
+<div id='chat-commands' style='display: none'></div>
 
 <div id='chat-smileys' style='display: none'>
 	<div id="chat-smileys-wrapper" autostopscroll>
@@ -764,6 +746,26 @@
 			<div class='input'>
 				<span class='arrow'>►</span><input type='text' autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
 			</div>
+		</div>
+	</div>
+@endview
+
+@view (chat_commands)
+	<div id="chat-commands-wrapper" autostopscroll>
+		<div class="title">{#commands}</div>
+		<div class="list">
+			@foreach (command in chat_commands.list)
+				<div class="command" command="{command.command}">
+					<div class="cmd">/{command.command}</div>
+					<div class="description">{command.description}</div>
+				</div>
+				@foreach (sub_command in command.options)
+					<div class='sub-command' command="{command.command}" subcommand="{sub_command.command}">
+						<div class="cmd">/{sub_command.command}</div>
+						<div class="description">{sub_command.description}</div>
+					</div>
+				@end
+			@end
 		</div>
 	</div>
 @endview

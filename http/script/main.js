@@ -766,9 +766,6 @@ $(document).ready(function() {
 			} else {
 				page()
 			}
-
-			chat_commands.setDocumentationOptions()
-			chat_commands.setMarketOptions()
 		})
 	})
 })
@@ -3990,6 +3987,9 @@ LW.command_panel = {
 }
 
 LW.command_panel.init = function() {
+	chat_commands.setDocumentationOptions()
+	chat_commands.setMarketOptions()
+	$('#chat-commands').html(_.view.render('main.chat_commands'))
 	$('#chat-commands .command, #chat-commands .sub-command').click(function(e) {
 		if (LW.command_panel.callback) {
 			$('#chat-commands').hide()

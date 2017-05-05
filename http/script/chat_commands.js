@@ -142,7 +142,6 @@ chat_commands.filterPopup = function(command) {
     }
 }
 
-
 chat_commands.setDocumentationOptions = function() {
     var docCommand = this.list.find(function(cmd) {
         return cmd.command == "doc"
