@@ -24,6 +24,7 @@
 	border: 2px solid #eee;
 	padding-right: 36px;
 	cursor: text;
+	word-wrap: break-word;
 }
 
 .chat-input .chat-input-content:empty:before {
