@@ -423,7 +423,9 @@ LW.pages = {
 		],
 		langs: ['leek']
 	},
-	ranking: {},
+	ranking: {
+		langs: ['country']
+	},
 	help: {},
 	forum: {
 		connected: true,
