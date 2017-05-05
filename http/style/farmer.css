@@ -189,7 +189,7 @@
 }
 
 #farmer-page #stats .log-time, #stats .godfather {
-	margin-top: 12px;
+	margin-top: 10px;
 	padding: 0 20px;
 	font-size: 13px;
 }
@@ -198,10 +198,11 @@
 	border-radius: 5px;
 	color: white;
 	display: inline-block;
-	padding: 4px 7px;
+	padding: 3px 6px;
 	margin-left: 20px;
 	margin-top: 5px;
 	font-weight: normal;
+	font-size: 14px;
 }
 #farmer-page #stats .grade.admin {
 	background: #FF3333;

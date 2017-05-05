@@ -7,3 +7,6 @@ send			Send
 subscribe			Subscribe to topic
 undoable_action			This action is irreversible.
 unsubscribe			Unsubscribe to topic
+admin							Adminitrator
+moderator						Moderator
+contributor						Contributor
