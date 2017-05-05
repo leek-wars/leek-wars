@@ -1360,7 +1360,14 @@ page('/messages/conversation/:id', function(ctx) {
 })
 
 page('/messages/new/:id', function(ctx) {
-	LW.loadPage('messages', {new_conversation: true, new_farmer: ctx.params.id})
+	LW.loadPage('messages', {new_conversation: true, new_farmer: {
+		id: ctx.params.id, name: "?", avatar_changed: 0
+	}})
+})
+page('/messages/new/:id/:name/:avatar', function(ctx) {
+	LW.loadPage('messages', {new_conversation: true, new_farmer: {
+		id: ctx.params.id, name: ctx.params.name, avatar_changed: ctx.params.avatar
+	}})
 })
 
 page('/notifications', function() {
