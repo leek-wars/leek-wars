@@ -68,11 +68,6 @@ LW.pages.messages.init = function(params, $scope, $page) {
 			}
 		})
 
-		// Smileys
-		$('.chat-message-messages div, .conversation-preview .content').each(function() {
-			// $(this).html(smiley($(this).html()));
-		});
-
 		// Quit conversation
 		var quitPopup = new _.popup.new('messages.quit_popup')
 
