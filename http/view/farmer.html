@@ -177,6 +177,14 @@
 					@end
 				</div>
 
+				@if (farmer.admin)
+					<div class='grade admin'>{#admin}</div>
+				@elseif (farmer.moderator)
+					<div class='grade moderator'>{#moderator}</div>
+				@elseif (farmer.contributor)
+					<div class='grade contributor'>{#contributor}</div>
+				@end
+
 				<div class='godfather grey'>
 					<div>{{godfather}}</div>
 					@if (godsons)

@@ -188,12 +188,30 @@
 	color: #999;
 }
 
-#stats .log-time, #stats .godfather {
-	margin-top: 20px;
+#farmer-page #stats .log-time, #stats .godfather {
+	margin-top: 12px;
 	padding: 0 20px;
 	font-size: 13px;
 }
 
+#farmer-page #stats .grade {
+	border-radius: 5px;
+	color: white;
+	display: inline-block;
+	padding: 4px 7px;
+	margin-left: 20px;
+	margin-top: 5px;
+	font-weight: normal;
+}
+#farmer-page #stats .grade.admin {
+	background: #FF3333;
+}
+#farmer-page #stats .grade.moderator {
+	background: #FFA900;
+}
+#farmer-page #stats .grade.contributor {
+	background: #009c1d;
+}
 
 /*
  * Partie milieu
