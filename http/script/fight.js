@@ -292,11 +292,6 @@ function getFight() {
 	})
 }
 
-function fightWaitingPosition(data) {
-	// _log("Position : " + data[1] + " sur " + data[2]);
-	//showQueueMessage(data[1], data[2]);
-}
-
 function showQueueMessage(position, queue) {
 	if (position == -1) {
 
