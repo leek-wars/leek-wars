@@ -101,7 +101,7 @@ LW.pages.messages.blur = function() {
 }
 
 LW.pages.messages.update = function(params) {
-	var new_conversation = 'new_conversation' in params
+	var new_conversation = params && 'new_conversation' in params
 	if (new_conversation) {
 		LW.pages.messages.selectConversation(0)
 	} else {
