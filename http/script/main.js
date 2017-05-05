@@ -3684,6 +3684,8 @@ var ChatController = function(chat_element, send_callback, enable_moderation) {
 		}, 300)
 	})
 
+	_.contenteditable_paste_protect(chat_element.find('.chat-input-content'))
+
 	chat_element.find('.chat-input-content').keydown(function(e) {
 		if (e.keyCode === 9) {
 			e.preventDefault()
