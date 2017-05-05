@@ -68,6 +68,7 @@
 }
 #conversations .conversation .chat-messages {
 	overflow-y: auto;
+	flex-grow: 1;
 }
 #conversations .loader {
 	padding: 40px;
