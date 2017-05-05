@@ -195,10 +195,9 @@
 						<div id='godfather-link'>{#godfather_link}</div>
 					@end
 				</div>
-
-				<br>
-
+				
 				@if (!my_farmer && LW.connected)
+					<br>
 					<center><a href='/messages/new/{farmer.id}/{farmer.name}/{farmer.avatar_changed}'><div class='button' id='send-message'>{#send_private_message}</div></a></center>
 				@end
 			</div>
