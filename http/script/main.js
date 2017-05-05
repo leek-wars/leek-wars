@@ -4062,6 +4062,7 @@ LW.battle_royale.show = function(e, leek) {
 	LW.battle_royale.popup.ondismiss = function() {
 		LW.socket.send([BATTLE_ROYALE_LEAVE])
 		localStorage['battle-royale'] = null
+		_.titleTag(null)
 	}
 	LW.battle_royale.popup.show(e)
 	LW.battle_royale.popup.onminimize()
