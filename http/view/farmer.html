@@ -64,9 +64,9 @@
 				@if (my_farmer)
 					<div id='avatar-input'>
 						@if (farmer.avatar_changed > 0)
-							<img id='avatar' src='{{avatar}}/avatar/{farmer.id}.png?{farmer.avatar_changed}'></img>
+							<img id='avatar' src='{{avatar}}avatar/{farmer.id}.png?{farmer.avatar_changed}'></img>
 						@else
-							<img id='avatar' src='{{static}}/image/no_avatar.png'></img>
+							<img id='avatar' src='{{static}}image/no_avatar.png'></img>
 						@end
 						<input type="file">
 					</div>
@@ -74,9 +74,9 @@
 
 				@else
 					@if (farmer.avatar_changed > 0)
-						<img id='avatar' src='{{avatar}}/avatar/{farmer.id}.png?{farmer.avatar_changed}'></img>
+						<img id='avatar' src='{{avatar}}avatar/{farmer.id}.png?{farmer.avatar_changed}'></img>
 					@else
-						<img id='avatar' src='{{static}}/image/no_avatar.png'></img>
+						<img id='avatar' src='{{static}}image/no_avatar.png'></img>
 					@end
 				@end
 
