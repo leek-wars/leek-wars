@@ -331,26 +331,27 @@ function Sound(src, volume) {
 	this.sound = document.createElement('audio');
 	this.sound.controls = true;
 	this.sound.addEventListener("loadeddata", function() {
+		// _.log("loading (loaded) : " + src);
 		resourceLoaded(src);
 	}, true);
 	this.sound.addEventListener("error", function() {
-		//~ _.log("Error loading (error) : " + src);
+		// _.log("Error loading (error) : " + src);
 		resourceLoaded(src);
 	}, true);
 	this.sound.addEventListener("abort", function() {
-		//~ _.log("Error loading (abort) : " + src);
+		// _.log("Error loading (abort) : " + src);
 		resourceLoaded(src);
 	}, true);
 	this.sound.addEventListener("stalled", function() {
-		//~ _.log("Error loading (stalled) : " + src);
+		// _.log("Error loading (stalled) : " + src);
 		resourceLoaded(src);
 	}, true);
-	this.sound.addEventListener("suspend", function() {
-		//~ _.log("Suspend : " + src);
-	}, true);
-	this.sound.addEventListener("emptied", function() {
-		//~ _.log("Emptied : " + src);
-	}, true);
+	// this.sound.addEventListener("suspend", function() {
+		// _.log("Suspend : " + src);
+	// }, true);
+	// this.sound.addEventListener("emptied", function() {
+		// _.log("Emptied : " + src);
+	// }, true);
 
 	this.play = function() {
 		if (game.sound && this.sound != null) {
@@ -399,7 +400,7 @@ var Maps = function() {
 
 function resourceLoaded(res) {
 	R.loadedData++;
-	//~ console.log("Resource loaded : " + res + " (" + R.loadedData + "/" + R.numData + ")");
+	// console.log("Resource loaded : " + res + " (" + R.loadedData + "/" + R.numData + ")");
 	if (R.loadedData == R.numData && game.initialized == true) {
 		game.launch(); // Start game if all resources are loaded
 	}
