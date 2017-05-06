@@ -338,7 +338,8 @@ LW.pages.farmer.avatar = function() {
 		_.post('farmer/set-avatar', formdata, function(data) {
 			if (data.success) {
 				_.toast(_.lang.get('farmer', 'upload_success'))
-				var url = LW.avatarURL + 'avatar/' + LW.farmer.id + '.png?' + Date.now()
+				LW.farmer.avatar_changed = data.avatar_changed
+				var url = LW.avatarURL + 'avatar/' + LW.farmer.id + '.png?' + data.avatar_changed
 				$('#avatar').attr('src', url)
 				// Update top bar avatar
 				$('#header-farmer .farmer-avatar').attr('src', url)
