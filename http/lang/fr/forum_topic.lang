@@ -7,6 +7,6 @@ send							Envoyer
 subscribe						S'abonner au sujet
 undoable_action					Cette action est irréversible.
 unsubscribe						Se désabonner du sujet
-admin							Adminitrateur
+admin							Administrateur
 moderator						Modérateur
 contributor						Contributeur
