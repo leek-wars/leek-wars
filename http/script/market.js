@@ -41,7 +41,7 @@ LW.pages.market.init = function(params, $scope, $page) {
 				previews[item.id] = LW.createHatPreview(LW.hats[item.id])
 			}
 		}
-		
+
 		$scope.items = all
 		$scope.weapons = weapons
 		$scope.chips = chips
@@ -141,8 +141,6 @@ LW.pages.market.buy = function() {
 
 		buyPopup.find('.buy').click(function() {
 
-			_.toast(_.lang.get('market', 'buying'))
-
 			_.post('market/buy-habs', {item_id: id}, function(data) {
 
 				if (data.success) {
@@ -189,8 +187,6 @@ LW.pages.market.buy = function() {
 		buyPopup.find('.buy').click(function() {
 
 			buyPopup.find('.buy').off()
-
-			_.toast(_.lang.get('market', 'buying'))
 
 			_.post('market/buy-crystals', {item_id: id}, function(data) {
 
