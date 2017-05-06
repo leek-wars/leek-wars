@@ -292,11 +292,6 @@ function getFight() {
 	})
 }
 
-function fightWaitingPosition(data) {
-	// _log("Position : " + data[1] + " sur " + data[2]);
-	//showQueueMessage(data[1], data[2]);
-}
-
 function showQueueMessage(position, queue) {
 	if (position == -1) {
 
@@ -310,7 +305,6 @@ function showQueueMessage(position, queue) {
 }
 
 LW.pages.fight.file_input = function() {
-	_.log("file_input")
 	$('#fight-page #file-input').on('change', function() {
 		var file = this.files[0]
 		if (file) {

@@ -423,7 +423,9 @@ LW.pages = {
 		],
 		langs: ['leek']
 	},
-	ranking: {},
+	ranking: {
+		langs: ['country']
+	},
 	help: {},
 	forum: {
 		connected: true,
@@ -766,9 +768,6 @@ $(document).ready(function() {
 			} else {
 				page()
 			}
-
-			chat_commands.setDocumentationOptions()
-			chat_commands.setMarketOptions()
 		})
 	})
 })
@@ -1360,7 +1359,14 @@ page('/messages/conversation/:id', function(ctx) {
 })
 
 page('/messages/new/:id', function(ctx) {
-	LW.loadPage('messages', {new_conversation: true, new_farmer: ctx.params.id})
+	LW.loadPage('messages', {new_conversation: true, new_farmer: {
+		id: ctx.params.id, name: "?", avatar_changed: 0
+	}})
+})
+page('/messages/new/:id/:name/:avatar', function(ctx) {
+	LW.loadPage('messages', {new_conversation: true, new_farmer: {
+		id: ctx.params.id, name: ctx.params.name, avatar_changed: ctx.params.avatar
+	}})
 })
 
 page('/notifications', function() {
@@ -3680,13 +3686,14 @@ var ChatController = function(chat_element, send_callback, enable_moderation) {
 		}, 300)
 	})
 
+	_.contenteditable_paste_protect(chat_element.find('.chat-input-content'))
+
 	chat_element.find('.chat-input-content').keydown(function(e) {
 		if (e.keyCode === 9) {
 			e.preventDefault()
 		}
 		if (e.keyCode == 13 && !e.shiftKey) {
 			var message = $.trim(chat_element.find('.chat-input-content')[0].innerText)
-			_.log("message: " + message)
 			if (message.length == 0) return ;
 			if (message.length > 1000) {
 				_.toast(_.lang.get('chat', 'too_long'))
@@ -3738,7 +3745,6 @@ var ChatController = function(chat_element, send_callback, enable_moderation) {
 	chat_element.find('.chat-input-emoji').mousedown(function(e) {
 		var input = chat_element.find('.chat-input-content')
 		var pos = _.cursor_position(input[0])
-		_.log("pos", pos)
 		cursor_position = pos
 	})
 	chat_element.find('.chat-input-emoji').click(function(e) {
@@ -3985,6 +3991,9 @@ LW.command_panel = {
 }
 
 LW.command_panel.init = function() {
+	chat_commands.setDocumentationOptions()
+	chat_commands.setMarketOptions()
+	$('#chat-commands').html(_.view.render('main.chat_commands'))
 	$('#chat-commands .command, #chat-commands .sub-command').click(function(e) {
 		if (LW.command_panel.callback) {
 			$('#chat-commands').hide()
@@ -4055,6 +4064,7 @@ LW.battle_royale.show = function(e, leek) {
 	LW.battle_royale.popup.ondismiss = function() {
 		LW.socket.send([BATTLE_ROYALE_LEAVE])
 		localStorage['battle-royale'] = null
+		_.titleTag(null)
 	}
 	LW.battle_royale.popup.show(e)
 	LW.battle_royale.popup.onminimize()

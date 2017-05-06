@@ -1,5 +1,6 @@
 add_website				Add a website
 add_github				Add a GitHub
+admin					Administrator
 already_in_team			You are already a member of a team
 already_registered		You are already registered for this tournament
 banned			Farmer banned
@@ -13,6 +14,7 @@ challenge			Challenge
 click_to_change_avatar			Click to change
 click_to_change_country			Click to change
 connected			Connected
+contributor			Contributor
 country_ok			Back
 country_selection			Country selection
 create			Create
@@ -56,6 +58,7 @@ last_connection			Last connection %s
 leek_level_n			Level %s
 leeks			Leeks
 logout			Logout
+moderator		Moderator
 never_connected			Never connected
 name_already_used			This team name is already used
 no_country			No country

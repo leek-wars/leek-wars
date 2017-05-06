@@ -442,6 +442,22 @@ _.linkify = function(html) {
 	return html.replace(email_pattern, '<a target="_blank" rel="nofollow" href="mailto:$&">$&</a>')
 }
 
+_.contenteditable_paste_protect = function(element) {
+	// Paste : keep the pure text of the element
+	element.on('paste', function(e) {
+		e.preventDefault()
+		var text = (e.originalEvent || e).clipboardData.getData('text/plain')
+		document.execCommand('insertText', false, text)
+	})
+	// Drop : take the string data in the event and append it to the element
+	element.on('drop', function(e) {
+		e.preventDefault()
+		e.originalEvent.dataTransfer.items[0].getAsString(function(str) {
+			element.text(element[0].innerText + str)
+		})
+	})
+}
+
 /*
  * Open a centered popup window
  * http://stackoverflow.com/a/16861050/1375853
@@ -679,6 +695,10 @@ _.popup.new = function(view, data, width, direct, options) {
 					$('#popups').removeClass('box')
 					$('#dark').fadeOut(200)
 				}
+			}, 200)
+		} else {
+			setTimeout(function() {
+				popup.view.hide()
 			}, 200)
 		}
 	}
