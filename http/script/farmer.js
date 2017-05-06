@@ -338,7 +338,10 @@ LW.pages.farmer.avatar = function() {
 		_.post('farmer/set-avatar', formdata, function(data) {
 			if (data.success) {
 				_.toast(_.lang.get('farmer', 'upload_success'))
-				$('#avatar').attr('src', $('#avatar').attr('src'))
+				var url = LW.avatarURL + 'avatar/' + LW.farmer.id + '.png?' + Date.now()
+				$('#avatar').attr('src', url)
+				// Update top bar avatar
+				$('#header-farmer .farmer-avatar').attr('src', url)
 			} else {
 				_.toast(_.lang.get('farmer', 'upload_failed', data.error))
 			}
