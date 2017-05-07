@@ -490,7 +490,7 @@
 				@foreach (smiley_category in smiley_tab.list)
 					<div class="title">{_.lang.get('main', 'smiley_group_' + smiley_category.name)}</div>
 					<div class="list">
-						@foreach (smiley in smiley_category.list)<img class="smiley" title="{smiley.name}" url="{{smiley.custom ? LW.staticURL + smiley.image : smileys.url + '/' + smiley.image + '.svg'}}" emoji="{smiley.name}">@end
+						@foreach (smiley in smiley_category.list)<img class="smiley" title="{smiley.name}" url="{{smiley.custom ? LW.staticURL + smiley.image : smileys.url + '/' + smiley.image + '.svg'}}" emoji="{smiley.name}" tab="{smiley_tab.name}">@end
 					</div>
 				@end
 				@foreach (smiley_option in smiley_tab.options)

@@ -3971,6 +3971,7 @@ LW.emoji_panel.init = function() {
 	$('#chat-smileys-wrapper .smiley').click(function(e) {
 		if (LW.emoji_panel.callback) {
 			var txtToAdd = $(this).attr('emoji')
+			var tab = $(this).attr('tab')
 			$.each(smileys.options, function(key, option) {
 				var name = option.name
 				if($('input[tab=' + tab + '][name=smiley_tab_' + tab + '_option_' + name + ']:checked', '#chat-smileys-wrapper').length)
