@@ -215,8 +215,6 @@ var Editor = function(id, name, valid, code, folder, level) {
 
 		_.post('ai/save/', {ai_id: saveID, code: content}, function(data) {
 
-			_.log(editor)
-
 			_saving = false;
 			$('#results').empty().show();
 			$('#compiling').hide();
@@ -309,8 +307,6 @@ var Editor = function(id, name, valid, code, folder, level) {
 	}
 
 	this.test = function() {
-
-		_.log(this)
 
 		// Save before
 		if (this.modified) {

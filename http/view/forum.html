@@ -113,9 +113,10 @@
 
 		<div class='flex'>
 			<div id='chat-language'><img /></div>
-			<textarea class='chat-input autogrow' type='text'></textarea>
-			@includeobj('main.emojis', smileys)
-			@includeobj('main.chat_commands', chat_commands)
+			<div class='chat-input'>
+				<div class='chat-input-content' contenteditable="true" placeholder="{#main.chat_placeholder}"></div>
+				<div class='chat-input-emoji'></div>
+			</div>
 		</div>
 
 		<div id='chat-languages'>

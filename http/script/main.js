@@ -423,7 +423,9 @@ LW.pages = {
 		],
 		langs: ['leek']
 	},
-	ranking: {},
+	ranking: {
+		langs: ['country']
+	},
 	help: {},
 	forum: {
 		connected: true,
@@ -591,37 +593,6 @@ $(document).ready(function() {
 
 			resizePanel()
 
-			$('#social-panel .chat-input').keydown(function(e) {
-				if (e.keyCode === 9) {
-					e.preventDefault()
-					if ($('#chat-commands-wrapper').is(":visible")) {
-						var command = $('.command:visible:first').attr('command') || $('.sub-command:visible:first').attr('subcommand')
-						var $txt = $('#chat .chat-input')
-						var text = $txt.val()
-						text = text.replace(chat_commands.regex, "/" + command + " ")
-						$txt.val(text)
-						$txt.focus()
-					}
-				}
-				if (e.keyCode == 13) {
-					if ($.trim($(this).val()).length > 0) {
-						LW.socket.send([FORUM_CHAT_SEND, _.lang.current, $(this).val()])
-						$(this).val("").height(0)
-					}
-					e.preventDefault()
-				}
-			})
-
-			$('#social-panel .chat-input').keyup(function(e) {
-				if (chat_commands.isCommand($(this).val())) {
-					chat_commands.filterPopup($(this).val())
-					$('#chat-smileys-wrapper').hide()
-					$('#chat-commands-wrapper').show()
-				} else {
-					$('#chat-commands-wrapper').hide()
-				}
-			})
-
 			$('#social-panel .panel').each(function() {
 				var key = 'main/' + $(this).attr('panel') + '-collapsed'
 				if (key in localStorage && localStorage[key] === 'true') {
@@ -723,6 +694,9 @@ $(document).ready(function() {
 				event.stopPropagation()
 			})
 
+			LW.emoji_panel.init()
+			LW.command_panel.init()
+
 			$('html').click(function() {
 				if ($('#notifications-popup').is(':visible')) {
 					$('#notifications-popup').hide()
@@ -730,6 +704,8 @@ $(document).ready(function() {
 				if ($('#messages-popup').is(':visible')) {
 					$('#messages-popup').hide()
 				}
+				$('#chat-smileys').hide()
+				$('#chat-commands').hide()
 			})
 
 			$(window).resize(function() {
@@ -739,13 +715,13 @@ $(document).ready(function() {
 			LW.resize()
 
 			$(window).keyup(function(event) {
-				if ($('#social-panel .chat-input').is(':focus')) {
+				if ($('#social-panel .chat-input-content').is(':focus')) {
 					return null
 				}
 				LW.trigger('keyup')
 			})
 			$(window).keydown(function(event) {
-				if ($('#social-panel .chat-input').is(':focus')) {
+				if ($('#social-panel .chat-input-content').is(':focus')) {
 					return null
 				}
 				LW.trigger('keydown', event)
@@ -764,11 +740,6 @@ $(document).ready(function() {
 			$(window).blur(function() {
 				LW.trigger('blur')
 			})
-
-			$(document).on('click', function(e) {
-				$('#chat-smileys-wrapper').hide()
-				$('#chat-commands-wrapper').hide()
-			});
 
 			LW.consoleAlertMessage()
 
@@ -797,9 +768,6 @@ $(document).ready(function() {
 			} else {
 				page()
 			}
-
-			chat_commands.setDocumentationOptions()
-			chat_commands.setMarketOptions()
 		})
 	})
 })
@@ -1005,8 +973,10 @@ LW.disconnect = function() {
 	LW.sfw.off()
 	localStorage['connected'] = false
 	_.titleCounter(0)
-	LW.battle_royale.popup.dismiss()
-	LW.battle_royale.popup = null
+	if (LW.battle_royale.popup != null) {
+		LW.battle_royale.popup.dismiss()
+		LW.battle_royale.popup = null
+	}
 	$('body').removeClass('connected')
 
 	$('#menu .leeks').empty()
@@ -1389,7 +1359,14 @@ page('/messages/conversation/:id', function(ctx) {
 })
 
 page('/messages/new/:id', function(ctx) {
-	LW.loadPage('messages', {new_conversation: true, new_farmer: ctx.params.id})
+	LW.loadPage('messages', {new_conversation: true, new_farmer: {
+		id: ctx.params.id, name: "?", avatar_changed: 0
+	}})
+})
+page('/messages/new/:id/:name/:avatar', function(ctx) {
+	LW.loadPage('messages', {new_conversation: true, new_farmer: {
+		id: ctx.params.id, name: ctx.params.name, avatar_changed: ctx.params.avatar
+	}})
 })
 
 page('/notifications', function() {
@@ -2057,7 +2034,9 @@ LW.chat.init = function() {
 		LW.chat.channels.push(_.lang.current)
 	}
 
-	LW.chat.controller = new ChatController($('#mini-chat'))
+	LW.chat.controller = new ChatController($('#mini-chat'), function(message) {
+		LW.socket.send([FORUM_CHAT_SEND, LW.chat.controller.channel, message])
+	}, true)
 
 	for (var c in LW.chat.channels) {
 		LW.socket.send([LW.ENABLE_CHAT, LW.chat.channels[c]])
@@ -2588,14 +2567,15 @@ LW.messages.load = function() {
 
 LW.messages.receive = function(message) {
 
-	LW.squares.add({
-		image: LW.util.getAvatar(message.farmer.id, message.farmer.avatar_changed),
-		title: message.farmer.name,
-		message: "► " + message.message,
-		link: "/messages/conversation/" + message.conversation,
-		padding: false
-	})
-
+	if (message.farmer.id != LW.farmer.id) {
+		LW.squares.add({
+			image: LW.util.getAvatar(message.farmer.id, message.farmer.avatar_changed),
+			title: message.farmer.name,
+			message: "► " + message.message,
+			link: "/messages/conversation/" + message.conversation,
+			padding: false
+		})
+	}
 	var exists = LW.messages.conversations.reduce(function(e, c) {
 		return c.id == message.conversation || e
 	}, false)
@@ -3620,17 +3600,12 @@ LW.latexify = function(html) {
 	})
 }
 
-var ChatController = function(chat_element, private_chat, team_chat) {
+var ChatController = function(chat_element, send_callback, enable_moderation) {
 
 	var controller = this
 	this.msg_elem = chat_element.find('.chat-messages')
 	this.msg_date = []
-
-	if (team_chat) {
-		LW.socket.send([TEAM_CHAT_ENABLE])
-	}
-
-	var _chatLanguage = null
+	this.channel = null
 
 	LW.chat.channels.forEach(function(l) {
 		$("#chat-languages img[code='" + l + "']").addClass('activated')
@@ -3656,7 +3631,7 @@ var ChatController = function(chat_element, private_chat, team_chat) {
 				$(this).removeClass('activated')
 				removeChatLang(code)
 				if (LW.chat.channels.length == 1) hideFlags()
-				if (_chatLanguage == code && _chatLanguage != LW.chat.channels[0]) {
+				if (controller.channel == code && controller.channel != LW.chat.channels[0]) {
 					setChatLanguage(LW.chat.channels[0])
 				}
 			}
@@ -3671,21 +3646,16 @@ var ChatController = function(chat_element, private_chat, team_chat) {
 	})
 
 	$('#chat-language').click(function(e) {
-
 		if (!_languageSelection) {
-
 			updateLanguageSelection()
 			$('#chat-language-selection').show()
 			_languageSelection = true
-
 		} else {
-
 			$('#chat-language-selection').hide()
 			_languageSelection = false
 		}
-
 		e.stopPropagation()
-	});
+	})
 
 	$('html').click(function() {
 		$('#chat-language-selection').hide()
@@ -3714,118 +3684,87 @@ var ChatController = function(chat_element, private_chat, team_chat) {
 	chat_element.find('.chat-new-messages').click(function() {
 		$(controller.msg_elem).animate({
 			scrollTop: $(controller.msg_elem)[0].scrollHeight + 1000
-		}, 300);
+		}, 300)
 	})
 
-	if (!private_chat) {
+	_.contenteditable_paste_protect(chat_element.find('.chat-input-content'))
 
-		chat_element.find('.chat-send').click(function() {
-			controller.send()
-		})
-
-		chat_element.find('.chat-input').keydown(function(e) {
-			if (e.keyCode === 9) {
-				e.preventDefault()
-				if ($('#chat-commands-wrapper').is(":visible")) {
-					var command = $('.command:visible:first').attr('command') || $('.sub-command:visible:first').attr('subcommand')
-					var $txt = $('#chat .chat-input')
-					if (team_chat) $txt = $('#team-page .chat-input')
-					if (private_chat) $txt = $('#messages-page .chat-input')
-					var textAreaTxt = $txt.val()
-					textAreaTxt = textAreaTxt.replace(chat_commands.regex, "/" + command + " ")
-					$txt.val(textAreaTxt)
-					$txt.focus()
-					$('#chat-commands-wrapper').hide()
-				}
+	chat_element.find('.chat-input-content').keydown(function(e) {
+		if (e.keyCode === 9) {
+			e.preventDefault()
+		}
+		if (e.keyCode == 13 && !e.shiftKey) {
+			var message = $.trim(chat_element.find('.chat-input-content')[0].innerText)
+			if (message.length == 0) return ;
+			if (message.length > 1000) {
+				_.toast(_.lang.get('chat', 'too_long'))
+				return ;
 			}
-			if (e.keyCode == 13) {
-				controller.send()
-				e.preventDefault()
-			}
-		})
+			send_callback(message)
+			chat_element.find('.chat-input-content').text("")
+			e.preventDefault()
+		}
+	})
 
-		chat_element.find('.chat-input').keyup(function(e) {
-			if (chat_commands.isCommand($(this).val())) {
-				chat_commands.filterPopup($(this).val())
-				$('#chat-smileys-wrapper').hide()
-				$('#chat-commands-wrapper').show()
-			} else {
-				$('#chat-commands-wrapper').hide()
-			}
-		})
-
-		if (!team_chat) {
-			for (var c in LW.chat.channels) {
-				for (var m in LW.chat.messages[LW.chat.channels[c]]) {
-
-					var message = LW.chat.messages[LW.chat.channels[c]][m]
-					controller.receive_message(message);
-				}
-			}
+	var validate_command = function(input, command) {
+		var text = input.text()
+		var match = chat_commands.regex.exec(text)
+		text = text.replace(chat_commands.regex, "/" + command + " ")
+		input.text(text)
+		input.focus()
+		if (match) {
+			_.set_cursor_position(input[0], match.index + command.length + 2)
 		}
 	}
 
-	$('#chat-smileys-button').click(function(e) {
-		$('#chat-commands-wrapper').hide()
-		$('#chat-smileys-wrapper').toggle()
-		if (!$('#chat-smileys-wrapper').hasClass('loaded')) {
-			$('#chat-smileys-wrapper img').each(function() {
-				$(this).attr('src', $(this).attr('url'));
-			})
+	chat_element.find('.chat-input-content').keyup(function(e) {
+		if (e.keyCode === 9) {
+			e.preventDefault()
+			if ($('#chat-commands').is(":visible")) {
+				var command = $('.command:visible:first').attr('command') || $('.sub-command:visible:first').attr('subcommand')
+				validate_command($(this), command)
+				$('#chat-commands').hide()
+			}
 		}
-		$('#chat-smileys-wrapper').addClass('loaded')
-	});
+		if (chat_commands.isCommand($(this).text())) {
+			chat_commands.filterPopup($(this).text())
+			LW.command_panel.show($(this).parent(), function(command) {
+				var input = chat_element.find('.chat-input-content')
+				validate_command(input, command)
+			})
+			$('#chat-smileys').hide()
+			$('#chat-commands').show()
+			$('#chat-commands')
+				.css('top', $(this).offset().top - $('#chat-commands').height())
+				.css('left', $(this).offset().left + $(this).width() - $('#chat-commands').width())
+		} else {
+			$('#chat-commands').hide()
+		}
+	})
 
-	$('#chat-smileys').on('click', function(e) {
-		e.stopPropagation();
-	});
-
-	$('#chat-smileys-wrapper').on('click', '.smiley', function(e) {
-		var emoji = $(this).attr('emoji')
-
-		var $txt = $('#chat .chat-input')
-		if (team_chat) $txt = $('#team-page .chat-input')
-		if (private_chat) $txt = $('#messages-page .chat-input')
-		var caretPos = $txt[0].selectionStart
-		var textAreaTxt = $txt.val()
-		var txtToAdd = emoji + ' '
-		$txt.val(textAreaTxt.substring(0, caretPos) + txtToAdd + textAreaTxt.substring(caretPos))
-		$txt.focus()
-	});
-
-	$('#chat-commands').on('click', function(e) {
-		e.stopPropagation();
-	});
-
-	$('#chat-commands').on('click', '.command', function(e) {
-		$('#chat-commands-wrapper').hide()
-		var command = $(this).attr('command')
-		var $txt = $('#chat .chat-input')
-		if (team_chat) $txt = $('#team-page .chat-input')
-		if (private_chat) $txt = $('#messages-page .chat-input')
-		var textAreaTxt = $txt.val()
-		textAreaTxt = textAreaTxt.replace(chat_commands.regex, "/" + command + " ")
-		$txt.val(textAreaTxt)
-		$txt.focus()
-	});
-
-	$('#chat-commands').on('click', '.sub-command', function(e) {
-		$('#chat-commands-wrapper').hide()
-		var command = $(this).attr('subcommand')
-		var $txt = $('#chat .chat-input')
-		if (team_chat) $txt = $('#team-page .chat-input')
-		if (private_chat) $txt = $('#messages-page .chat-input')
-		var textAreaTxt = $txt.val()
-		textAreaTxt = textAreaTxt.replace(chat_commands.regex, "/" + command + " ")
-		$txt.val(textAreaTxt)
-		$txt.focus()
-	});
+	var cursor_position = 0
+	chat_element.find('.chat-input-emoji').mousedown(function(e) {
+		var input = chat_element.find('.chat-input-content')
+		var pos = _.cursor_position(input[0])
+		cursor_position = pos
+	})
+	chat_element.find('.chat-input-emoji').click(function(e) {
+		LW.emoji_panel.show($(this).parent(), function(emoji) {
+			var input = chat_element.find('.chat-input-content')
+			var text = input.text()
+			input.text(text.substring(0, cursor_position) + emoji + ' ' + text.substring(cursor_position))
+			input.focus()
+			cursor_position += emoji.length + 1
+			_.set_cursor_position(input[0], cursor_position)
+		})
+		e.stopPropagation()
+	})
 
 	function setChatLanguage(channel) {
-		_chatLanguage = channel
+		controller.channel = channel
 		localStorage['chat/channel'] = channel
-		$('#chat-language img').attr('src', $("#chat-languages img[code='" + _chatLanguage + "']").attr('src'));
-		$("#chat-language-selection input[name='language'][value='" + _chatLanguage + "']").prop('checked', true);
+		$('#chat-language img').attr('src', $("#chat-languages img[code='" + channel + "']").attr('src'));
+		$("#chat-language-selection input[name='language'][value='" + channel + "']").prop('checked', true);
 	}
 
 	function updateLanguageSelection() {
@@ -3855,21 +3794,6 @@ var ChatController = function(chat_element, private_chat, team_chat) {
 		$('#chat-messages .chat-message .flag').hide()
 	}
 
-	ChatController.prototype.send = function() {
-		var message = $.trim(chat_element.find('.chat-input').val())
-		if (message.length == 0) return ;
-		if (message.length > 1000) {
-			_.toast(_.lang.get('chat', 'too_long'))
-			return ;
-		}
-		if (team_chat) {
-			LW.socket.send([TEAM_CHAT_SEND, message])
-		} else {
-			LW.socket.send([FORUM_CHAT_SEND, _chatLanguage, message])
-		}
-		chat_element.find('.chat-input').val("").height(0)
-	}
-
 	ChatController.prototype.receive_message = function(data) {
 
 		var lang = data.lang
@@ -3887,6 +3811,7 @@ var ChatController = function(chat_element, private_chat, team_chat) {
 		message = LW.smiley(message)
 		message = LW.latexify(message)
 		message = commands(message, authorName)
+		message = message.replace(/\n/g, '<br>')
 
 		var date = new Date(time * 1000);
 		var minuts = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
@@ -3953,7 +3878,7 @@ var ChatController = function(chat_element, private_chat, team_chat) {
 			}
 			messageData += authorName + "</span></a>"
 
-			if (!private_chat && author != LW.farmer.id && color != 'admin') {
+			if (enable_moderation && author != LW.farmer.id && color != 'admin') {
 				messageData += "<span class='report'> • report</span>"
 				if (LW.farmer.moderator) {
 					messageData += "<span class='mute'> • mute</span> "
@@ -3980,7 +3905,7 @@ var ChatController = function(chat_element, private_chat, team_chat) {
 				var self = $(this)
 
 				mutePopup.find('.mute').click(function() {
-					LW.socket.send([CHAT_REQUEST_MUTE, _chatLanguage, author]);
+					LW.socket.send([CHAT_REQUEST_MUTE, controller.channel, author]);
 					self.hide()
 					elem.find('.unmute').show()
 					mutePopup.dismiss()
@@ -3994,7 +3919,7 @@ var ChatController = function(chat_element, private_chat, team_chat) {
 				var self = $(this)
 
 				unmutePopup.find('.unmute').click(function() {
-					LW.socket.send([CHAT_REQUEST_UNMUTE, _chatLanguage, author]);
+					LW.socket.send([CHAT_REQUEST_UNMUTE, controller.channel, author]);
 					self.hide()
 					elem.find('.mute').show()
 					unmutePopup.dismiss()
@@ -4055,6 +3980,62 @@ var ChatController = function(chat_element, private_chat, team_chat) {
 	}
 }
 
+LW.emoji_panel = {
+	callback: null
+}
+
+LW.emoji_panel.init = function() {
+	$('#chat-smileys-wrapper .smiley').click(function(e) {
+		if (LW.emoji_panel.callback) {
+			LW.emoji_panel.callback($(this).attr('emoji'))
+		}
+	})
+	$('#chat-smileys').on('click', function(e) {
+		e.stopPropagation()
+	})
+}
+
+LW.emoji_panel.show = function(relative, callback) {
+	$('#chat-commands').hide()
+	$('#chat-smileys').show()
+		.css('top', relative.offset().top - $('#chat-smileys').height())
+		.css('left', relative.offset().left + relative.width() - $('#chat-smileys').width())
+	if (!$('#chat-smileys-wrapper').hasClass('loaded')) {
+		$('#chat-smileys-wrapper img').each(function() {
+			$(this).attr('src', $(this).attr('url'));
+		})
+	}
+	$('#chat-smileys-wrapper').addClass('loaded')
+	LW.emoji_panel.callback = callback
+}
+
+LW.command_panel = {
+	callback: null
+}
+
+LW.command_panel.init = function() {
+	chat_commands.setDocumentationOptions()
+	chat_commands.setMarketOptions()
+	$('#chat-commands').html(_.view.render('main.chat_commands'))
+	$('#chat-commands .command, #chat-commands .sub-command').click(function(e) {
+		if (LW.command_panel.callback) {
+			$('#chat-commands').hide()
+			LW.command_panel.callback($(this).attr('command'))
+		}
+	})
+	$('#chat-commands').on('click', function(e) {
+		e.stopPropagation()
+	})
+}
+
+LW.command_panel.show = function(relative, callback) {
+	$('#chat-smileys').hide()
+	$('#chat-commands').show()
+		.css('top', relative.offset().top - $('#chat-commands').height())
+		.css('left', relative.offset().left + relative.width() - $('#chat-commands').width())
+	LW.command_panel.callback = callback
+}
+
 LW.lucky = function() {
 	$('#clover').remove(); // Delete previous clover?
 	var top = 20 + Math.random() * 50
@@ -4106,6 +4087,7 @@ LW.battle_royale.show = function(e, leek) {
 	LW.battle_royale.popup.ondismiss = function() {
 		LW.socket.send([BATTLE_ROYALE_LEAVE])
 		localStorage['battle-royale'] = null
+		_.titleTag(null)
 	}
 	LW.battle_royale.popup.show(e)
 	LW.battle_royale.popup.onminimize()

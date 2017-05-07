@@ -402,9 +402,9 @@ LW.pages.editor.init = function(params, $scope, $page) {
 			if (editors.length == 0) {
 				current = null
 			} else if ('editor/last_code' in localStorage && localStorage['editor/last_code'] in editors) {
-				LW.page('/editor/' + localStorage['editor/last_code'])
+				LW.page.redirect('/editor/' + localStorage['editor/last_code'])
 			} else {
-				LW.page('/editor/' + _.firstKey(editors))
+				LW.page.redirect('/editor/' + _.firstKey(editors))
 			}
 		}
 
@@ -645,7 +645,7 @@ LW.pages.editor.init = function(params, $scope, $page) {
 
 LW.pages.editor.update = function(params) {
 
-	if ('id' in params && params.id in editors) {
+	if (params && 'id' in params && params.id in editors) {
 		current = params.id
 		currentType = 'ai'
 		currentItem = params.id

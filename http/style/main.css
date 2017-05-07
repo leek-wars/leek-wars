@@ -1655,7 +1655,7 @@ body.connected #header-signin {
 	background: rgba(240,240,240, 0.95);
 	padding: 15px;
 	overflow-y: auto;
-	/*overflow-x: visible;*/
+	overflow-x: hidden;
 }
 
 .popup.no-actions .content {

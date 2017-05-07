@@ -202,36 +202,29 @@ LW.pages.farmer.cancelCandidacy = function() {
 }
 
 LW.pages.farmer.tournament = function() {
-
 	if (_farmer.tournament && _farmer.tournament.registered) {
 		$('#register-tournament').hide()
 		$('#unregister-tournament').show()
 	}
-
 	$('#register-tournament').click(function() {
-
 		_.post('farmer/register-tournament', {}, function(data) {
 			if (data.success) {
 				$('#unregister-tournament').show()
-				$(this).hide()
+				$('#register-tournament').hide()
 			} else {
 				_.toast(_.lang.get('farmer', data.error))
 			}
 		})
-
 	})
-
 	$('#unregister-tournament').click(function() {
-
 		_.post('farmer/unregister-tournament', {}, function(data) {
 			if (data.success) {
 				$('#register-tournament').show()
-				$(this).hide()
+				$('#unregister-tournament').hide()
 			} else {
 				_.toast(_.lang.get('farmer', data.error))
 			}
 		})
-
 	})
 }
 

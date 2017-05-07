@@ -57,7 +57,13 @@
 								@end
 							</div>
 						</a>
-
+						@if (message.writer.color == 'admin')
+							<div class='grade admin'>{#admin}</div>
+						@elseif (message.writer.color == 'moderator')
+							<div class='grade moderator'>{#moderator}</div>
+						@elseif (message.writer.color == 'contributor')
+							<div class='grade contributor'>{#contributor}</div>
+						@end
 						<div class='messages-count'><b>{message.writer.messages}</b> messages</div>
 						<div class='trophy-count'><b>{message.writer.trophies}</b> trophées</div>
 					</div>

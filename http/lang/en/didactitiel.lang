@@ -1,18 +1,18 @@
 ai			AI
 ai_1			The Artificial Intelligence (or AI) is the program that defines your leek's behaviour during a fight.
-You will be able to program your leek's AI from the page <a href='/editor'>Editor</a>.
+You will be able to program your leek's AI from the page <a href='/editor' target='_blank'>Editor</a>.
 ai_2			In Leek Wars, the language used for the coding of AIs is the <b>Leek Script</b>.
-ai_3			If you are a beginner in programming, you should first read the <a href='/tutorial'>LeekScript Tutorial</a>.
-ai_4			You will then be able to consult the <a href='/documentation'>Documentation</a> of the language to improve your AI.
+ai_3			If you are a beginner in programming, you should first read the <a href='/tutorial' target='_blank'>LeekScript Tutorial</a>.
+ai_4			You will then be able to consult the <a href='/documentation' target='_blank'>Documentation</a> of the language to improve your AI.
 dismiss			Skip
 end			That's it!
 end_1			You now know the basics of <b>Leek Wars</b>, and are ready to begin the programming of a powerful AI to fight the other leeks in the garden! Good game!
-end_2			If you encounter a problem or if you need help, feel free to visit the <a href='/forum'>Forum</a>, where the community will be pleased to answer your questions.
-end_3			You can see this tutorial again at any time from the page <a href='/help'>Help</a>
+end_2			If you encounter a problem or if you need help, feel free to visit the <a href='/forum' target='_blank'>Forum</a>, where the community will be pleased to answer your questions.
+end_3			You can see this tutorial again at any time from the page <a href='/help' target='_blank'>Help</a>
 fights			Fights
-fights_1			In order for your leek to progress (by gaining experience), you will have to make him fight. To do this, go to the page <a href='/garden'>Garden</a>.
-fights_2			The first day, you will be given <b>50</b> fights. Then, you will get <b>20</b> fights every day until the level 50. Once you reach level 50, you will be able to create a second leek. Each leek will then be given <b>10</b> fights a day.
-fights_3			When you get your second leek, you will be able to make them fight together during farmer battles. You will also be given 10 daily farmer fights.
+fights_1			In order for your leek to progress (by gaining experience), you will have to make him fight. To do this, go to the page <a href='/garden' target='_blank'>Garden</a>.
+fights_2			The first day, you will be given <b>100</b> fights. Then, you will get <b>50</b> fights every day, which can be cumulated up to <b>100</b>.
+fights_3			When you get your second leek, you will be able to make them fight together during farmer battles.
 first_leek			You can now start raising <b>%s</b>, your first leek.
 First of all, you have to know that a leek has several attributes, which are as follows :
 goal			The goal of <b>Leek Wars</b> is to make your leek fight against the other players' leeks.
@@ -21,16 +21,15 @@ hi			Hello to you <b>%s</b>, young leek farmer!
 In this short tutorial, you will be explained the basics of the game.
 leeks			Leeks
 market			Market
-market_1			To buy weapons, chips or potions, go to the page <a href='/market'>Market</a>. You will be able to spend your <b>Habs</b>, the game currency, to acquire these objects. You will then have to equip the items on your leek in order to use them in combat.
+market_1			To buy weapons, chips or potions, go to the page <a href='/market' target='_blank'>Market</a>. You will be able to spend your <b>Habs</b>, the game currency, to acquire these objects. You will then have to equip the items on your leek in order to use them in combat.
 market_2			How can you earn Habs? Simply by fighting other leeks. The amount of Habs you gain depends on your opponent's power compared to your leek.
 next			Next
 play			Play!
 previous			Previous
 teams			Teams
 teams_1			You will also have the opportunity to create or join a team, to make your leeks fight with other farmers and their leeks.
-teams_2			<b>10</b> daily team fights are available per leek.
 title			Tutorial
 weapons_chips			Weapons and chips
-weapons_chips_1			A leek can use <b>weapons</b> to shoot other leeks. He can equip up to 3 weapons at the same time.
-weapons_chips_2			But he can also use <b>chips</b> (up to 9 at the same time), that allow him to perform various actions in combat, like attacking, healing, protecting, and even teleporting...
+weapons_chips_1			A leek can use <b>weapons</b> to shoot other leeks. He can equip up to <b>2</b> weapons at the same time, up to <b>4</b> by leveling.
+weapons_chips_2			But he can also use <b>chips</b> (from <b>7</b> to <b>12</b> at the same time), that allow him to perform various actions in combat, like attacking, healing, protecting, and even teleporting...
 welcome			Welcome to Leek Wars!
