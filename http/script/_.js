@@ -345,9 +345,9 @@ _.format.months_shorts = {
 _.format.date = function(timestamp) {
 
 	var date = new Date(timestamp * 1000)
-	var day = date.getUTCDate()
-	var month = date.getUTCMonth()
-	var year = date.getUTCFullYear()
+	var day = date.getDate()
+	var month = date.getMonth()
+	var year = date.getFullYear()
 
 	if (_.lang.current == 'fr') {
 		return day + ' ' + _.format.months[_.lang.current][month] + ' ' + year
@@ -380,8 +380,8 @@ _.format.dateTime = function(timestamp) {
 _.format.dayMonth = function(timestamp) {
 
 	var date = new Date(timestamp * 1000)
-	var day = date.getUTCDate()
-	var month = date.getUTCMonth()
+	var day = date.getDate()
+	var month = date.getMonth()
 
 	return day + ' ' + _.format.months[_.lang.current][month]
 }
@@ -389,8 +389,8 @@ _.format.dayMonth = function(timestamp) {
 _.format.dayMonthShort = function(timestamp) {
 
 	var date = new Date(timestamp * 1000)
-	var day = date.getUTCDate()
-	var month = date.getUTCMonth()
+	var day = date.getDate()
+	var month = date.getMonth()
 
 	return day + ' ' + _.format.months_shorts[_.lang.current][month]
 }

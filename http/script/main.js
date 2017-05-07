@@ -3604,6 +3604,7 @@ var ChatController = function(chat_element, send_callback, enable_moderation) {
 
 	var controller = this
 	this.msg_elem = chat_element.find('.chat-messages')
+	this.msg_date = []
 	this.channel = null
 
 	LW.chat.channels.forEach(function(l) {
@@ -3776,9 +3777,14 @@ var ChatController = function(chat_element, send_callback, enable_moderation) {
 	}
 
 	function removeChatLang(lang) {
-		controller.msg_elem.find('.chat-message').each(function() {
+		controller.msg_elem.find('.chat-message, .chat-date').each(function() {
 			if ($(this).attr('lang') == lang) $(this).remove()
 		})
+		for(var i = controller.msg_date.length - 1; i >= 0; i--) {
+			if(controller.msg_date[i].lang == lang) {
+				controller.msg_date.splice(i, 1)
+			}
+		}
 	}
 
 	function showFlags() {
@@ -3847,7 +3853,24 @@ var ChatController = function(chat_element, send_callback, enable_moderation) {
 
 			var avatar = avatarChanged > 0 ? LW.avatarURL + '/avatar/' + author + ".png" : LW.staticURL + "/image/no_avatar.png";
 
-			var messageData = "<div class='chat-message' author='" + author + "' time='" + time + "' lang='" + lang + "'>";
+			var m_date = _.format.date(time)
+			var flag = true
+			var objDate = {
+				"date": m_date,
+				"lang": lang
+			}
+			var messageData = ""
+			for(var i = 0; i < this.msg_date.length; i++) {
+				if(this.msg_date[i].date == m_date && this.msg_date[i].lang == lang) {
+					flag = false;
+					break;
+				}
+			}
+			if(flag) {
+				this.msg_date.push(objDate)
+				messageData += "<div class='chat-date' lang='" + lang + "'>" + m_date + "</div>"
+			}
+			messageData += "<div class='chat-message' author='" + author + "' time='" + time + "' lang='" + lang + "'>";
 			messageData += "<a href='/farmer/" + author + "'><img class='chat-avatar' src='" + avatar + "'></img></a>";
 			messageData += "<div><a href='/farmer/" + author + "'><span class='chat-message-author " + color + "'>";
 			if (lang != "_") {
