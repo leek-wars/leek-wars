@@ -530,64 +530,95 @@ LW.pages.leek.tournament = function() {
 LW.pages.leek.hat = function() {
 
 	var leek = this.scope.leek
+	var groupedFarmerHats = []
+
+	// Group identicals hats
+	for (var i in LW.farmer.hats) {
+		var hat = LW.farmer.hats[i]
+		if (groupedFarmerHats[hat.hat_template] === undefined) {
+			groupedFarmerHats[hat.hat_template] = _.clone(hat)
+			groupedFarmerHats[hat.hat_template].quantity = 0
+		}
+		groupedFarmerHats[hat.hat_template].quantity++
+	}
 
 	$('#leek-image').click(function(e) {
 
-		var popup = new _.popup.new('leek.hat_popup', {farmer_hats: LW.farmer.hats})
+		var popup = new _.popup.new('leek.hat_popup', {farmer_hats: groupedFarmerHats})
+
+		var addHat = function(hatTemplate) {
+
+			var template = LW.hats[LW.hatTemplates[hatTemplate].item]
+			var newHat = {
+				template: LW.hatTemplates[hatTemplate].item,
+				id: 0,
+				name: template.name,
+				level: template.level,
+				hat_template: hatTemplate
+			}
+						
+			LW.farmer.hats.push(newHat)
+			
+			if(groupedFarmerHats[hatTemplate] === undefined) {
+				groupedFarmerHats[hatTemplate] = _.clone(newHat)
+				groupedFarmerHats[hatTemplate].quantity = 0
+				
+			}
+
+			groupedFarmerHats[hatTemplate].quantity++
+		}
+
+		var removeHat = function(hatTemplate) {
+
+			_.removeOneWhere(LW.farmer.hats, 'hat_template', hatTemplate)
+
+			groupedFarmerHats[hatTemplate].quantity--
+
+			if(groupedFarmerHats[hatTemplate].quantity < 1) {
+				delete groupedFarmerHats[hatTemplate]
+			}
+		}
 
 		popup.view.find('.hat').click(function() {
 
-			var hatID = parseInt($(this).attr('hat'))
-			var hatItemID = parseInt($(this).attr('item_id'))
-			var hatTemplate = parseInt($(this).attr('template'))
+			var hat = parseInt($(this).attr('hat'))
+			var hatTemplate = parseInt($(this).attr('hattemplate'))
 
-			if (hatID == -1) {
+			if(leek.hat === hatTemplate) {
+				popup.dismiss()
+				return
+			}
+			
+			if (hat == -1) {
 
-				_.post('leek/remove-hat', {leek_id: leek.id}, function(data) {
-
+				_.post('leek/remove-hat', {leek_id: leek.id}, function(data) { console.log("REQUEST", data)
 					if (data.success) {
 
-						// Add old one
-						var template = LW.hats[LW.hatTemplates[leek.hat].item]
-						LW.farmer.hats.push({
-							template: LW.hatTemplates[leek.hat].item,
-							id: 0,
-							name: template.name,
-							level: template.level,
-							hat_template: leek.hat
-						})
+						if(leek.hat) addHat(leek.hat)
 
 						leek.hat = null
 						LW.pages.leek.updateImage()
 						popup.dismiss()
+
+					} else {
+						_.toast(data.error)
 					}
 				})
 
 			} else {
 
-				_.post('leek/set-hat', {leek_id: leek.id, hat_id: hatID}, function(data) {
-
+				_.post('leek/set-hat', {leek_id: leek.id, hat_id: hat}, function(data) { console.log("REQUEST", data)
 					if (data.success) {
 
-						// Remove new hat
-						_.removeOneWhere(LW.farmer.hats, 'id', hatItemID)
-
-						// Add old one
-						if (leek.hat) {
-							var template = LW.hats[LW.hatTemplates[leek.hat].item]
-							LW.farmer.hats.push({
-								template: LW.hatTemplates[leek.hat].item,
-								id: 0,
-								name: template.name,
-								level: template.level,
-								hat_template: leek.hat
-							})
-						}
+						removeHat(hatTemplate)
+						if(leek.hat) addHat(leek.hat)
 
 						leek.hat = hatTemplate
 						LW.pages.leek.updateImage()
-
 						popup.dismiss()
+
+					} else {
+						_.toast(data.error)
 					}
 				})
 			}
@@ -688,7 +719,7 @@ LW.pages.leek.weapons = function(leek) {
 	for (var i in LW.farmer.weapons) {
 		var weapon = LW.farmer.weapons[i]
 		if (groupedFarmerWeapons[weapon.template] === undefined) {
-			groupedFarmerWeapons[weapon.template] = weapon
+			groupedFarmerWeapons[weapon.template] = _.clone(weapon)
 			groupedFarmerWeapons[weapon.template].quantity = 0
 		}
 		groupedFarmerWeapons[weapon.template].quantity++
@@ -903,7 +934,7 @@ LW.pages.leek.chips = function(leek) {
 	for (var i in LW.farmer.chips) {
 		var chip = LW.farmer.chips[i]
 		if (groupedFarmerChips[chip.template] === undefined) {
-			groupedFarmerChips[chip.template] = chip
+			groupedFarmerChips[chip.template] = _.clone(chip)
 			groupedFarmerChips[chip.template].quantity = 0
 		}
 		groupedFarmerChips[chip.template].quantity++

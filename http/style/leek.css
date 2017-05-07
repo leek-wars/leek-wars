@@ -604,12 +604,13 @@
 /*
  * Count indicator
  */
-.farmer-weapons .weapon, .farmer-chips .chip {
+.farmer-weapons .weapon, .farmer-chips .chip, #farmer-hats .hat {
 	position: relative;
 }
 
 .farmer-weapons .weapon:not([quantity='1']):before,
-.farmer-chips .chip:not([quantity='1']):before {
+.farmer-chips .chip:not([quantity='1']):before,
+#farmer-hats .hat:not([quantity='1']):before {
 	position: absolute;
 	bottom: -5px;
 	right: -5px;
