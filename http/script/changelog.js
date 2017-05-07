@@ -16,5 +16,6 @@ LW.pages.changelog.init = function(params, $scope, $page) {
 
 		$scope.changelog = data.changelog
 		$page.render()
+		LW.setTitle(_.lang.get('changelog', 'title'))
 	})
 }
