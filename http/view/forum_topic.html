@@ -3,7 +3,11 @@
 		<h1>
 			<a href='/forum'>{#forum.title}</a>
 			>
-			<a href='/forum/category-{category.id}'>{_.lang.get('forum', 'category_' + category.name)}</a>
+			@if (category.team == -1)
+				<a href='/forum/category-{category.id}'>{_.lang.get('forum', 'category_' + category.name)}</a>
+			@else
+				<a href='/forum/category-{category.id}'>{category.name}</a>
+			@end
 			>
 			<span id='topic-title'>{topic.name}</span>
 		</h1>
