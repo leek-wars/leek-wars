@@ -3997,7 +3997,8 @@ LW.command_panel.init = function() {
 	$('#chat-commands .command, #chat-commands .sub-command').click(function(e) {
 		if (LW.command_panel.callback) {
 			$('#chat-commands').hide()
-			LW.command_panel.callback($(this).attr('command'))
+			var command = $(this).attr('subcommand') || $(this).attr('command')
+			LW.command_panel.callback(command)
 		}
 	})
 	$('#chat-commands').on('click', function(e) {
