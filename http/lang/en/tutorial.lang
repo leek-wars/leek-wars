@@ -7,7 +7,7 @@ advanced_include_10			// does not work :
 								include(ia);
 							}
 advanced_include_11			Why?
-advanced_include_12			The reason is that the compiler performs LeekScript inclusions at compilation time only. The inclusion of an AI at runtime (example: if the enemy is close to me, include "IA_Escape") is not supported. The AIs included in others have to be determined at compilation time, so the only way to include an AI is:
+advanced_include_12			The reason is that the compiler performs LeekScript inclusions at compile time only. The inclusion of an AI at runtime (example: if the enemy is close to me, include "IA_Escape") is not supported. The AIs included in others have to be determined at compile time, so the only way to include an AI is:
 advanced_include_13			// DOES WORK
 							include("string");
 advanced_include_2			include("Fonctions");
@@ -26,7 +26,7 @@ advanced_include_9			// does not work :
 							} else {
 								include('IA_2');
 							}
-advanced_intro			In this section we will present more complex but useful features and techniques to win a fightin <b> Leek Wars </b>.
+advanced_intro			In this section we will present more complex but useful features and techniques to win a fight in <b> Leek Wars </b>.
 advanced_order			Order of playing
 advanced_order_1			The functions <a href='documentation/getNextPlayer'> <b> getNextPlayer </b></a> and <a href='documentation/getPreviousPlayer'> <b> getPreviousPlayer </b> </a> can recover the ids of the leeks which will respectively play after you and played before you.One possible application: check if the player who plays after you (an enemy) is close to you.
 advanced_order_2			var next = getNextPlayer();
@@ -44,8 +44,8 @@ advanced_order_5			var cell = ...; // une cellule
 									}
 								}
 							}
-advanced_ref			Passage by reference
-advanced_ref_1			When you write a function in LeekScript, you can specify its arguments, for example:
+advanced_ref			Passing by reference
+advanced_ref_1			When you write a function in LeekScript, you can specify its parameters, for example:
 advanced_ref_2			function sum(a, b, result) {
 							result = a + b;
 						}
@@ -61,7 +61,7 @@ advanced_ref_4			function sum(a, b, resultat) {
 						somme(a, b, result);
 						debug(result);
 advanced_ref_5			Here, the program will display 0, because the result variable is 0. When you place these three variables (a, b and result) in the "sum" function, their values are copied to be used inside. Thus, the values 2, 10 and 0 are sent. The operation "result = a + b" is working with copies of values, and will not affect your variable "result".
-advanced_ref_6			It is possible to solve the problem by passing "result" by reference. To do this, simply add an "@" in front of its name in the list of function arguments:
+advanced_ref_6			It is possible to solve the problem by passing "result" by reference. To do this, simply add an "@" in front of its name in the list of function parameter:
 advanced_ref_7			function sum(a, b, @resultat) {
 							result = a + b;
 						}
@@ -83,7 +83,7 @@ advanced_tern_4			if (getCell() == 42) {
 						}
 advanced_tern_5			by the following code :
 advanced_tern_6			(getCell() == 42) ? useWeapon(getNearestEnemy()) : moveTowardCell(42);
-advanced_tern_7			The two codes above are equivalent. The ternaries allow to condense the code for simple conditions but be careful however not to abuse it, this may make your code hard to read.
+advanced_tern_7			The two codes above are equivalent. The ternaries allow to condense the code for simple conditions but be careful not to abuse it, this may make your code hard to read.
 advanced_triple_equal			The operator ===
 advanced_triple_equal_1			The operator <b>===</b> allows you to compare two values, as well as their type. It is more restrictive than the operator <b>==</b>.
 advanced_triple_equal_2			<tr> <th> Operator </th> <th> Description </th> </tr><tr> <td> === </td> <td> Checks if both operands are of the same value and type </td> </tr><tr> <td>! == </td> <td> Checks if the two operands are not of the same value or are not of the same type </td> </tr>
@@ -93,7 +93,7 @@ advanced_triple_equal_5			The global functioning of <b> == </b> is to convert th
 advanced_triple_equal_6			When the <b> == </b> compares an array with a single element, this array is assimilated to that element. For example, 1 == [1], "1" == ["1"], and therefore "1" == [1] == 1 ["1"]. By recursivity, we also have 1 == [[1]], 1 == [[[1]]] etc.
 advanced_triple_equal_7			The operator <b> == </b> is therefore to be used with caution, if you want to be sure of the test of equality between the two values, use <b> === </b>.
 arr_1			There is another kind of variable which has been quickly introduced here above: the arrays.
-Up to now, the described variables have all a name and a value, the arrays also have a name, but it is also possible to associate several values which then ordered in compartments.
+Up to now, the described variables have all a name and a value, the arrays also have a name, but it is also possible to associate several values which are then ordered in compartments.
 arr_10			In both cases, the obtained array can be represented as shown:
 arr_11			<tr><th>Index</th><th>Value</th></tr>
 				<tr><td>0</td><td>Leek</td></tr>
@@ -213,7 +213,7 @@ difficulty_evil			Evil: 200 to 250% of your attributes and 160% of your TP, MP
 difficulty_hard			Hard: 130 to 160% of your attributes and 130% of your TP, MP
 difficulty_medium			Medium: 95 to 110% of your attributes and 100% of your TP, MP
 do_a_test_fight			Do a test fight
-doc_1			The last important point to talk about before starting this class is the documentation. All the functions and constants availables in LeekScript are regrouped on one page: the documentation.
+doc_1			The last important point to talk about before starting this class is the documentation. All the functions and constants availables in LeekScript are regrouped in one page: the documentation.
 To go to the documentation for <b>Leek Wars</b>, use the Help tab, then click on documentation.
 doc_10			Type of return of the function and a description of this return
 doc_11			The minimum level needed to use this function
@@ -495,7 +495,7 @@ fun_46			The use of an anonymous function is exactly the same as the use of a fu
 fun_47			var my_function = function() { return "Test"; };
 
 				my_function();
-fun_48			If, for example, we have a function which requires another function as a parameter, we can directly use an anonymous function as a parameter, as shown in the following example:
+fun_48			If, for example, we have a function which requires another function as a parameter, we can directly use an anonymous function as argument, as shown in the following example:
 fun_49			function arrayMap(array, function) {
 					var r = [];
 					for (var v in array) push(r, function(v));
@@ -521,7 +521,7 @@ fun_9			Let's analyse this code. In order to declare a function, we use the key-
 				The block of instructions is then between curly brackets.
 functions			Functions
 interface			Interface
-intro			<b>LeekScript</b> is the programming language dedicated to the creation of your leek's artificial intelligence. The syntax is really close to Javascript and should not disturbed C, Java or even PHP enthusiast. If you're a total beginner or just want to know some subtleties of <b>LeekScript</b>, this tutorial is just right for you :)
+intro			<b>LeekScript</b> is the programming language dedicated to the creation of your leek's artificial intelligence. The syntax is really close to Javascript and should not disturb C, Java or even PHP enthusiast. If you're a total beginner or just want to know some subtleties of <b>LeekScript</b>, this tutorial is just right for you :)
 loops			Loops
 loops_1			We will now describe another kind of structures as important as conditions:
 Loops!
@@ -537,7 +537,7 @@ loops_13			A little bit more complex kind of loop exists, it looks like a while 
 					With experience, you will learn which loop, the while or the for, is more adapted to which case. 
 loops_14			The <b>for</b> loop can be decomposed into three parts :
 loops_15			The initialisation: the allocation of an initial value to a "counter" variable
-loops_16			The condition : as long as it is valid, the loop continues its execution
+loops_16			The condition : as long as it is verified, the loop continues its execution
 loops_17			The incrementation : to increase (or decrease) the value of the "counter" variable
 loops_18			Example of <b>for</b> loop :
 loops_19			var i;
@@ -609,14 +609,14 @@ var_15			// Declare a firstVariable and a secondVariable variable
 				var firstVariable, secondVariable;
 var_16			Be careful not to forget the semi-colon <b>;</b> at the end of the instruction.
 var_17			Declared variables with the keyword var have a lifetime of your leek's turn, there is a second type of variable which keep their value for the whole fight: the global variables.
-				To declare a global variable, you just need to add the keyword "global" instead of "var":
+				To declare a global variable, you just need to use the keyword "global" instead of "var":
 var_18			// Declaring a global variable nameOfGlobal
 				global nameOfGlobal;
 var_19			You can also assign a value to your global variable in the following way:
 var_2			The variables are a fundamental point in all programming languages. They allow to keep in memory values you're going to use in calculations.
 var_20			// Declaring a global variable nameOfGlobal with value 42
 				global nameOfGlobal = 42;
-var_21			The common variables and global variables are used the same way in the code, as this tutorial goes we will mostly use common variables.
+var_21			The local variables and global variables are used the same way in the code, as this tutorial goes we will mostly use local variables.
 var_22			Uses of the variables
 var_23			It is possible to use the variables in your code in many different ways.
 var_24			You can assign them a value (which means make them "remember" this value in memory) by using the assignement operator <b>=</b>
@@ -659,7 +659,7 @@ var_35			// Declaring variable a and b
 var_36			We can also use string in the following way:
 var_37			var myVariable;
 				myVariable = "I'am a string";
-var_38			For a string, only the <b>+</b> operator is usable, it allows to concatenate pieces of string, which will laid them end to end. Thus, the code:
+var_38			For a string, only the <b>+</b> operator is usable, it will concatenate pieces of string, which will be laid end to end. Thus, the code:
 var_39			// Declaring string1 and string2
 				var string1, string2;
 
@@ -685,7 +685,7 @@ var_48			Launch a fight and access directly the fight report (the little cross b
 var_49			the function debug() in action
 var_5			Number
 var_50			This page summarizes all the actions of the fight, you can notice that at the beginning of each turn, a line: "[YourLeek] This sentence is a test " is displayed. 
-var_51			Each time the function <i>debug</i> is called, the value indicated in parameter is added in the chronology of the fight, you can then be informed of which instructions is executed at which moment of the fight.
+var_51			Each time the function <i>debug</i> is called, the value indicated in parameter is added to the chronology of the fight, you can then be informed of which instructions is executed at which moment of the fight.
 You can display the value of a variable, the result of a calculation...
 var_52			// Display of a simple text
 				debug("Simple text"); // Displays : [YourLeek] Simple text
@@ -695,7 +695,7 @@ var_52			// Display of a simple text
 				debug(a); // Displays : [YourLeek] 5
 				debug("Value of a : " + a); // Displays : [YourLeek] Value of a : 5
 var_53			This function allows you to efficiently find bugs in your code, so do not hesitate to use it.<br>
-It should be noted that you can only see the debug message of your leeks (and inversely, your opponents will not have access to your debug messages)
+It should be noted that you can only see the debug messages of your own leeks (and inversely, your opponents will not have access to your debug messages)
 var_6			Boolean (true or false)
 var_7			Array (we will get back to it later)
 var_8			null
@@ -708,5 +708,5 @@ The code that you are going to create will be executed at the beginning of each 
 what_is_ai_2			When a fight is launched, you won't be able to change the actions of your <i>protégé</i>, only the AI will come into play, which is why it's highly recommended to program it with care.
 what_is_ai_3			We will now see the environment offered by <b>Leek Wars</b> to develop your AI.
 what_is_leekscript			What is LeekScript ?
-what_is_leekscript_1			Now that you got a weapon, we will start to learn about creating Artificial Intelligence (AI), which is the main goal of this tutorial. <b>Leek Wars</b> offers you to program your AI in a language called LeekScript, it's a programming language close to Javascript and PHP, non typed and not object oriented.
+what_is_leekscript_1			Now that you got a weapon, we will learn about creating Artificial Intelligence (AI), which is the main goal of this tutorial. <b>Leek Wars</b> offers you to program your AI in a language called LeekScript, it's a programming language close to Javascript and PHP, dynamically typed and not object oriented.
 what_is_leekscript_2			The language is easy to use and to learn. It gives you powerful functions which in turn will allow you to create an efficient AI even if you're a beginner. On the contrary, if you're already an expert in programming, more advanced funtions will allow you to create even more sophisticated AI.

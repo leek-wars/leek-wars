@@ -6,7 +6,7 @@ connection_title			Days connected
 country			Country
 days			Days
 distance			Distance
-distance_title			Total traveled distance
+distance_title			Total distance traveled
 farmer			Farmer
 farmers			Farmers
 fun			Fun
@@ -22,7 +22,7 @@ my_leek			My leek
 my_team			My team
 place			Rank
 results			Results
-richest_title			Earned money
+richest_title			Money earned
 search_in_ranking			Search in the ranking
 search_name			Name
 shots			Shots

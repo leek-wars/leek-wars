@@ -28,10 +28,10 @@ report_informations			Additional information (optional)
 reporting_deleted			Reporting deleted
 thank_you_for_reporting			Thanks for your reporting
 title			Moderation
-warning_sent			Warning sended!
+warning_sent			Warning sent!
 you_are_muted			You are muted.
 you_have_been_muted_by_x			You have been muted by %s.
-you_have_been_unmuted_by_x			%s allows you to speak again on the chat.
+you_have_been_unmuted_by_x			%s allowed you to speak again on the chat.
 you_must_choose_reason			You must choose a reason!
 mute        Mute
 mute_popup      Are you sure to mute <b>%s</b> ?

@@ -1,16 +1,16 @@
-﻿challenges			Challenges
+challenges			Challenges
 challenges_1			You can Challenge any other leek.
 To do so, go on the page of the leek you want to fight against and click on the "Challenge" button located in the upper right. You are allowed up to 200 Challenges per day.
 challenges_2			Challenges reward no Experience point nor Habs. Challenges do not add up to the total of your wins, draws and losses (ratio).
 chips			Chips
 chips_1			Chips have different purposes: damage, healing, boost, shields, shackles, moving...
-chips_2			Each chip requests a minimum level to be used. The use of a chip costs a specific amount of Turn Points. Each type of chip has a specific range and a specific cooldown preventing the chip to be used again during next Turn(s).
+chips_2			Each chip requires a minimum level to be used. The use of a chip costs a specific amount of Turn Points. Each type of chip has a specific failure percentage, a specific range and a specific cooldown preventing the chip to be used again during the next Turn(s).
 chips_3			If a chip effect is "Will remove 15 damage for 3 turns", the protection is active for the current turn (when the chip is activated) and the next 2 turns.
 chips_4			Some chips have an area of effect. See CHIP_LIGHTNING for example. Damage will decrease linearly from the center cell (100% damage) to the border cells (50% damage).
 credits			This help page was written thanks to the help of <a href='/farmer/284'>PadiSson</a>, <a href='/farmer/273'>McNalYoo</a> and <a href='/farmer/14762'>Mmonsanto</a>
 editor			The Editor
 editor_1			You can change the name of your Artificial Intelligences. Click on the name (upper left), modify, then click on the "Save" button.
-editor_2			A limit of 2 millions operations maximum per turn is defined for the execution of your Artificial Intelligence.
+editor_2			A limit of 20 millions operations maximum per turn is defined for the execution of your Artificial Intelligence.
 editor_3			For more information about the Editor or the LeekScript language, go and visit the <a href='/help/tutorial'>Tutorial page</a>.
 farmer			Being a Farmer
 farmer_1			In Leek Wars you play a Farmer.
@@ -28,25 +28,24 @@ fights_1			All information related to fights are available on the Garden page. T
 fights_2			Solo fight (1 vs 1): one of your leeks is fighting another leek.
 fights_3			Farmer fight: all your leeks fight all the leeks of another farmer.
 fights_4			Team fight: one composition of your team is fighting another composition of another team.
-fights_5			Royal battles : one of your leeks is fighting 9 other leeks.
-fights_6			Your daily fights not been done on day can be postponed to the day after. If you cannot perform the fights (due to any other IRL constraint) you will have the opportunity to trigger them the day after. The postponing is done only the day after. If you do not perform your late fights the day after, they are definitively lost. For example, if you have no time today to do the <b>50</b> daily fights, you will then have the possibility to perform <b>100</b> fights tomorrow.
+fights_5			Battle Royale : one of your leeks is fighting 9 other leeks in a last man standing free for all.
+fights_6			You may keep up to a total of <b>100</b> fight. Any additional fight earned with the daily <b>50</b> will be discarded unless you use some of them.
 fights_7			The allowed number of fights is reset every day at midnight. (New fights for the new day, plus potentially the postponed fights from yesterday).
 fights_8			Solo Fights
-fights_9			In a <b>solo fight</b> your leek is against another leek which has mainly the same power (automatically calculated by the game).
+fights_9			In a <b>solo fight</b> your leek is against another leek whith approximately the same power (automatically calculated by the game).
 fights_10			A fight will be counted, and removed to your remaining daily fights.
 fights_11			Farmer Fights
 fights_12			All your leeks fight all the leeks of another farmer.
-fights_13			Although all your leeks fight, it counts only for a fight.
+fights_13			Although all your leeks fight, it counts only as one fight.
 fights_14			Team Fights
 fights_15			All the leeks inside a composition of your team fight together all the leeks of a composition of another team. Each of your leek is allowed to do <b>10</b> team fights with its composition, apart from your daily fights. A composition is allowed to fight only if all its leeks have at least 1 team fight left.
 fights_16			Team fights do not add up to the total of your wins, draws and losses (ratio).
-fights_17			Royal battles
-fights_18			One of your leeks is fighting 9 other leeks. You can do as much royal battles as you want, but they begin only when 10 leeks are registered. Royal battles 
-				are available at the level 50.	
-				
-fights_19			Royal battles reward no Experience point nor Habs. Royal battles do not add up to the total of your wins, draws and losses (ratio).
+fights_17			Battle Royale
+fights_18			One of your leeks is fighting 9 other leeks. You can do as much batlle royales as you want, but they start only when 10 leeks are registered. Battle Royales 
+				are available at the level 50.
+fights_19			Battle royales reward no Experience point nor Hab. Battle royales do not add up to the total of your wins, draws and losses (ratio).
 habs			Habs
-habs_1			Hab(s) is the name of the Leek Wars currency. You earn Habs thanks to fights. You spend Habs to buy weapons and chips in the market, or to recruit an additional leek.
+habs_1			The Hab(s) is the name of the Leek Wars currency. You earn Habs through fights. You spend Habs to buy weapons and chips in the market, or to recruit an additional leek.
 intro			This page will provide you with the detailed mechanisms regarding : leek evolution, fights, weapons, chips, tournaments...
 If you are looking for the AI programming howto, you will find it on the LeekScript <a href='/help/tutorial'>Tutorial page</a>.
 leeks			Leeks
@@ -57,10 +56,10 @@ leeks_12			Strength increases attack damage (may it come from a weapon or a chip
 leeks_13			Attack damage = (initial damage) × (1 + Strength / 100)
 leeks_14			Agility
 leeks_15			Agility increases damage return and critical hits rate:
-leeks_16			Final healing = (initial healing) × (1 + Agility / 100)
+leeks_16			Final damage return = (initial damage return) × (1 + Agility / 100)
 leeks_17			There are two kinds of shields: absolute shield and relative shield:
 leeks_18			Absolute shield = (initial absolute shield) × (1 + Resistance / 100)
-leeks_19			Relative shield = (initial relative shield) * (1 + Resistance / 100)
+leeks_19			Relative shield = (initial relative shield) × (1 + Resistance / 100)
 leeks_2			The look and feel of your leek will change over time when the level of your leek reaches some specific thresholds (getting older...)
 leeks_21			Final damage = (initial damage) * (1 - Relative shield / 100) - Absolute shield
 leeks_22			Movement Points
@@ -127,6 +126,6 @@ trophies_1			Achievements are rewarded to farmers upon completion of specific ac
 trophies_2			It's up to you now!
 weapons			Weapons
 weapons_1			Weapons are efficent to attack other leeks. Only one weapon can be taken in hands but a leek can carry up to 3 weapons (including the one in hands).
-weapons_2			Each weapon requests a minimum level to be used. The use of a weapon costs a specific amount of Turn Points. Every weapon has also a specific range. You can buy several occurences of each weapon in order to equip your different leeks with the same weapon. Your leeks are not allowed to fire more than one weapon at the same time. But one leek can of course fire one weapon, then replace it with another weapon, and then fire the new one (as long as it has enough Turn Points).
+weapons_2			Each weapon require a minimum level to be used. The use of a weapon costs a specific amount of Turn Points. Every weapon has also a specific range. You can buy several time each weapon in order to equip multiple leeks with the same weapon. Your leeks are not allowed to fire more than one weapon at the same time. But one leek can of course fire one weapon, then replace it with another weapon, and then fire the new one (as long as it has enough Turn Points).
 weapons_3			Some weapons have an area of effect. See "Grenade Launcher" for example. Damage decrease linearly from the center cell (100% damage) to the border cells (50% damage).
 welcome			Welcome to Leek Wars!

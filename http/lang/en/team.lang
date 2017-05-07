@@ -28,7 +28,7 @@ closed_team			Team closed
 compo_cancel			Cancel
 compo_create			Create
 compo_deleted			Composition %s deleted
-compo_must_contain_4_leeks			The composition must contain at least 4 leeks
+compo_must_contain_4_leeks			This composition must contain at least 4 leeks
 compo_name			Name
 composition_default_name			Nameless composition
 composition_invalid_name			The composition name cannot be empty
