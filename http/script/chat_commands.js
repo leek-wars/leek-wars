@@ -4,13 +4,6 @@ var chat_commands = {
 
 chat_commands.list = [
     {
-        command: "admin",
-        regex: /(^| )\/admin(?=$|\s)/gi,
-        replacement: function(authorName) {
-            return "$1<i>" + authorName + " aime les admins !</i>"
-        },
-        description: "Ajoute votre amour pour Pilow avec une emphase au message"
-    }, {
         command: "doc",
         regex: /(?:^|(\s))\/doc([!]?)(?::([^\s#]+))?(?=\s|$)/gi,
         replacement: function(authorName) {
@@ -154,7 +147,6 @@ chat_commands.filterPopup = function(command) {
         }
     }
 }
-
 
 chat_commands.setDocumentationOptions = function() {
     var docCommand = this.list.find(function(cmd) {

@@ -17,9 +17,10 @@
 
 		<div class='flex'>
 			<div id='chat-language'><img /></div>
-			<textarea class='chat-input autogrow' type='text'></textarea>
-			@includeobj('main.emojis', smileys)
-			@includeobj('main.chat_commands', chat_commands)
+			<div class='chat-input'>
+				<div class='chat-input-content' contenteditable="true" placeholder="{#main.chat_placeholder}"></div>
+				<div class='chat-input-emoji'></div>
+			</div>
 		</div>
 
 		<div id='chat-languages'>
@@ -30,12 +31,10 @@
 		</div>
 
 		<div id='chat-language-selection' class='tooltip'>
-
 			@foreach (lang in _.lang.languages)
 				<input type='radio' id='chat-sel-lang-{lang.code}' value="{lang.code}" name='language'></input>
 				<label for='chat-sel-lang-{lang.code}'>{lang.name}</label><br>
 			@end
-
 		</div>
 	</div>
 </div>

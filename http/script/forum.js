@@ -22,7 +22,15 @@ LW.pages.forum.init = function(params, $scope, $page) {
 			$('#connected-farmers-title').text(_.lang.get('forum', 'connected_farmers', _.format.number(data.count)))
 		})
 
-		$page.chat = new ChatController($('#chat .content'))
+		$page.chat = new ChatController($('#chat .content'), function(message) {
+			LW.socket.send([FORUM_CHAT_SEND, $page.chat.channel, message])
+		}, true)
+		for (var c in LW.chat.channels) {
+			for (var m in LW.chat.messages[LW.chat.channels[c]]) {
+				var message = LW.chat.messages[LW.chat.channels[c]][m]
+				$page.chat.receive_message(message)
+			}
+		}
 
 		// Expand connected farmers
 		$('#expand-connected-farmers').click(function() {

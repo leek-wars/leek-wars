@@ -35,15 +35,10 @@ LW.pages.forum_topic.init = function(params, $scope, $page) {
 		LW.pages.forum_topic.format()
 		LW.pages.forum_topic.subscribe()
 		LW.pages.forum_topic.vote()
+
+		_.contenteditable_paste_protect($('#topic-title'))
 	})
 }
-
-// Pour enlever le formattage du texte lors d'un paste
-$('#forum_topic-page .text, #topic-title').on('paste',function(e) {
-	e.preventDefault()
-	var text = (e.originalEvent || e).clipboardData.getData('text/plain') || prompt('Paste something..')
-	document.execCommand('insertText', false, text)
-})
 
 LW.pages.forum_topic.resize = function() {
 

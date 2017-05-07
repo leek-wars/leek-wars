@@ -32,7 +32,7 @@
 
 #forum_topic-page .profile .pseudo {
 	font-size: 15px;
-	margin-bottom: 4px;
+	margin-bottom: 2px;
 	white-space: nowrap;
 	max-width: 120px;
 	padding: 0 5px;
@@ -43,6 +43,25 @@
 #forum_topic-page .profile img {
 	width: 130px;
 	height: 130px;
+}
+
+#forum_topic-page .grade {
+	border-radius: 5px;
+	color: white;
+	display: inline-block;
+	padding: 2px 4px;
+	margin-bottom: 5px;
+	font-weight: normal;
+	font-size: 13px;
+}
+#forum_topic-page .grade.admin {
+	background: #FF3333;
+}
+#forum_topic-page .grade.moderator {
+	background: #FFA900;
+}
+#forum_topic-page .grade.contributor {
+	background: #009c1d;
 }
 
 #forum_topic-page .profile .messages-count, #forum_topic-page .profile .trophy-count {

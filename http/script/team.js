@@ -88,7 +88,6 @@ LW.pages.team.init = function(params, $scope, $page) {
 		LW.pages.team.description()
 		LW.pages.team.recrutement()
 		LW.pages.team.adminMembers()
-		LW.pages.team.setupChat()
 		LW.pages.team.createComposition()
 		LW.pages.team.quitTeam()
 		LW.pages.team.dissolveTeam()
@@ -98,6 +97,10 @@ LW.pages.team.init = function(params, $scope, $page) {
 		LW.pages.team.tournaments()
 		LW.pages.team.changeOwner()
 		LW.pages.team.report()
+
+		if (LW.connected) {
+			LW.pages.team.setupChat()
+		}
 	})
 }
 
@@ -368,7 +371,10 @@ LW.pages.team.setupChat = function() {
 		change(!chatExpanded)
 	})
 
-	this.chat = new ChatController($('#team-chat .content'), false, true)
+	LW.socket.send([TEAM_CHAT_ENABLE])
+	this.chat = new ChatController($('#team-chat .content'), function(message) {
+		LW.socket.send([TEAM_CHAT_SEND, message])
+	})
 }
 
 LW.pages.team.wsreceive = function(data) {

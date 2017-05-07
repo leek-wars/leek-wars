@@ -35,19 +35,16 @@
 
 		<div classs='content'>
 
-			<div id='conversations' autostopscroll='bottom'>
+			<div id='conversations'>
 				@foreach (conversation in conversations)
 					<div class='conversation' id='conversation-{conversation.id}' conv='{conversation.id}' >
-						<div class='chat-messages'></div>
+						<div class='chat-messages' autostopscroll='bottom'></div>
+						<div class='chat-input'>
+							<div class='chat-input-content' contenteditable="true" placeholder="{#main.chat_placeholder}"></div>
+							<div class='chat-input-emoji'></div>
+						</div>
 					</div>
 				@end
-			</div>
-
-			<div class='message-bar-wrapper'>
-				<textarea class='chat-input' type='text' class='autogrow'></textarea>
-				@includeobj('main.emojis', smileys)
-				@includeobj('main.chat_commands', chat_commands)
-				<div id='chat-send' class='button green'>{#send}</div>
 			</div>
 		</div>
 	</div>

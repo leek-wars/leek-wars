@@ -62,11 +62,14 @@
 	color: #eee;
 }
 
-#conversations {
-	margin-bottom: 10px;
-	overflow-y: auto;
+#conversations .conversation {
+	display: flex;
+	flex-direction: column;
 }
-
+#conversations .conversation .chat-messages {
+	overflow-y: auto;
+	flex-grow: 1;
+}
 #conversations .loader {
 	padding: 40px;
 }

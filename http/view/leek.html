@@ -80,7 +80,7 @@
 				<div class='tooltip fluid' id='tt_bar'>
 					@if (max_level)
 						<b>{#max_level}</b> <br>
-						{#xp, leek.xp}
+						{{#xp, _.format.number(leek.xp)}}
 					@else
 						<b>{{#remaining_xp, _.format.number(leek.remaining_xp)}}</b> <br>
 						{{#xp, _.format.number(leek.xp) + " / " + _.format.number(leek.up_xp)}}

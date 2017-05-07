@@ -9,11 +9,10 @@ LW.pages.bank_validate.init = function($params, $scope, $page) {
 
 		$page.render()
 
-		return 
+		return
 	}
 
 	var url = document.location.search
-
 	var match = url.match(/\?paymentId=(.*?)&token=(.*?)&PayerID=(.*?)$/)
 
 	if (match) {
@@ -23,19 +22,14 @@ LW.pages.bank_validate.init = function($params, $scope, $page) {
 		var payer_id = match[3]
 
 		_.post('bank/execute-paypal-payment', {payment_id: payment_id, paypal_token: token, payer_id: payer_id}, function(data) {
-
 			if (data.success) {
-
+				LW.updateCrystals(data.crystals)
 				LW.page('/bank/validate/success/' + data.crystals + '/PayPal')
-
 			} else {
-
 				LW.page('/bank/validate/failed/PayPal/' + data.error)
 			}
 		})
-
 	} else {
-
 		LW.page('/bank/validate/failed/PayPal/cancelled')
 	}
 }

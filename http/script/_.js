@@ -285,6 +285,40 @@ _.rgbToHex = function(rgb) {
 	return "#" + ((1 << 24) + (rgb[0] << 16) + (rgb[1] << 8) + rgb[2]).toString(16).slice(1);
 }
 
+_.cursor_position = function(editableDiv) {
+  var caretPos = 0,
+    sel, range;
+  if (window.getSelection) {
+    sel = window.getSelection();
+    if (sel.rangeCount) {
+      range = sel.getRangeAt(0);
+      if (range.commonAncestorContainer.parentNode == editableDiv) {
+        caretPos = range.endOffset;
+      }
+    }
+  } else if (document.selection && document.selection.createRange) {
+    range = document.selection.createRange();
+    if (range.parentElement() == editableDiv) {
+      var tempEl = document.createElement("span");
+      editableDiv.insertBefore(tempEl, editableDiv.firstChild);
+      var tempRange = range.duplicate();
+      tempRange.moveToElementText(tempEl);
+      tempRange.setEndPoint("EndToEnd", range);
+      caretPos = tempRange.text.length;
+    }
+  }
+  return caretPos;
+}
+
+_.set_cursor_position = function(el, pos) {
+	var range = document.createRange();
+	var sel = window.getSelection();
+	range.setStart(el.firstChild, pos);
+	range.collapse(true);
+	sel.removeAllRanges();
+	sel.addRange(range);
+}
+
 /*
  * Fonctions de formatage
  */
@@ -394,7 +428,7 @@ _.linkify = function(html) {
 				i++
 			}
 			var last = html[i - 1]
-			while (/[\.!?:]/.test(last)) {
+			while (/[\.,!?:]/.test(last)) {
 				last = html[--i - 1]
 			}
 		}
@@ -406,6 +440,22 @@ _.linkify = function(html) {
 		url_regex.lastIndex += real_url.length + blank.length + '<a href=""  ></a>'.length
 	}
 	return html.replace(email_pattern, '<a target="_blank" rel="nofollow" href="mailto:$&">$&</a>')
+}
+
+_.contenteditable_paste_protect = function(element) {
+	// Paste : keep the pure text of the element
+	element.on('paste', function(e) {
+		e.preventDefault()
+		var text = (e.originalEvent || e).clipboardData.getData('text/plain')
+		document.execCommand('insertText', false, text)
+	})
+	// Drop : take the string data in the event and append it to the element
+	element.on('drop', function(e) {
+		e.preventDefault()
+		e.originalEvent.dataTransfer.items[0].getAsString(function(str) {
+			element.text(element[0].innerText + str)
+		})
+	})
 }
 
 /*
@@ -576,20 +626,18 @@ _.popup.new = function(view, data, width, direct, options) {
 
 		popup.view.find('.content').css('max-height', $(window).height() - 250)
 
-		this.wrapper.show()
-		this.view.css('display', 'inline-block')
-
-		popup.view.css("transition", "transform ease 0.3s")
-		popup.view.css("-webkit-transition", "-webkit-transform ease 0.3s")
-
-		popup.view.css("transform", "scaleY(0.5)")
-		popup.view.css("-webkit-transform", "scaleY(0.5)")
-
+		popup.view.css("transition", "transform ease 0.3s, opacity ease 0.3s")
+		popup.view.css("-webkit-transition", "-webkit-transform ease 0.3s, opacity ease 0.3s")
+		popup.view.css("transform", "scale(0.95)")
+		popup.view.css("-webkit-transform", "scale(0.95)")
 		popup.view.css("opacity", "1")
+		this.view.css('display', 'inline-block')
+		this.wrapper.show()
 
 		setTimeout(function() {
-			popup.view.css("transform", "scaleY(1)")
-			popup.view.css("-webkit-transform", "scaleY(1)")
+			popup.view.css("transform", "scale(1)")
+			popup.view.css("-webkit-transform", "scale(1)")
+			popup.view.css("opacity", "1")
 		})
 
 		this.view.click(function(e) {
@@ -626,11 +674,11 @@ _.popup.new = function(view, data, width, direct, options) {
 		// Animation
 		popup.view.css("transition", "all ease 0.2s")
 		popup.view.css("-webkit-transition", "all ease 0.2s")
-		popup.view.css("transform", "scaleY(1)")
-		popup.view.css("-webkit-transform", "scaleY(1)")
+		popup.view.css("transform", "scale(1)")
+		popup.view.css("-webkit-transform", "scale(1)")
 		setTimeout(function() {
-			popup.view.css("transform", "scaleY(0)")
-			popup.view.css("-webkit-transform", "scaleY(0)")
+			popup.view.css("transform", "scale(0.95))")
+			popup.view.css("-webkit-transform", "scale(0.95)")
 			popup.view.css("opacity", "0")
 		})
 		// Show next popup
@@ -648,13 +696,16 @@ _.popup.new = function(view, data, width, direct, options) {
 					$('#dark').fadeOut(200)
 				}
 			}, 200)
+		} else {
+			setTimeout(function() {
+				popup.view.hide()
+			}, 200)
 		}
 	}
 
 	this.minimize = function() {
-		if(this.onminimize) this.onminimize()
+		if (this.onminimize) this.onminimize()
 	}
-
 	return this
 }
 
