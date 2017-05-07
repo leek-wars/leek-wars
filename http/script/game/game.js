@@ -1030,6 +1030,12 @@ var Game = function() {
 				entity.reborn()
 
 				entity.drawID = game.addDrawableElement(entity, entity.y)
+				if (!this.jumping) {
+					this.log(_.lang.get('fight', 'leek_resurrect',
+						this.colorText(this.leeks[action[1]].name, this.getLeekColor(action[1])),
+						this.colorText(this.leeks[action[2]].name, this.getLeekColor(action[2]))
+					))
+				}
 
 				this.actionDone()
 				break

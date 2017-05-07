@@ -289,48 +289,47 @@ LW.pages.report.generateActions = function(data, callback) {
 
 			var action = data.actions[a]
 			var type = action[0]
-
-			html += "<div class='action'>"
+			var action_text = ""
 
 			if (type == ACTION_START_FIGHT) {
 
 				turn++
-				html += "<span class='turn'>" + _.lang.get('fight', 'turn_n', 1) + "</span>"
+				action_text += "<span class='turn'>" + _.lang.get('fight', 'turn_n', 1) + "</span>"
 
 			} else if (type == ACTION_USE_WEAPON) {
 
 				leek = leeks[action[1]]
-				html += _.lang.get('fight', 'leek_hit', getLeekName(leek))
-				if (action[4] == 2) html += "... " + _.lang.get('effect', 'critical')
+				action_text += _.lang.get('fight', 'leek_hit', getLeekName(leek))
+				if (action[4] == 2) action_text += "... " + _.lang.get('effect', 'critical')
 
 			} else if (type == ACTION_USE_CHIP) {
 
 				var chip = LW.chips[LW.chipTemplates[action[3]].item]
 
 				leek = leeks[action[1]]
-				html += _.lang.get('fight', 'leek_cast', getLeekName(leek), _.lang.get('chip', chip.name))
-				if (action[4] == 2) html += "... " + _.lang.get('effect', 'critical')
+				action_text += _.lang.get('fight', 'leek_cast', getLeekName(leek), _.lang.get('chip', chip.name))
+				if (action[4] == 2) action_text += "... " + _.lang.get('effect', 'critical')
 
 			} else if (type == ACTION_SET_WEAPON) {
 
 				var weapon = LW.weapons[LW.weaponTemplates[action[2]].item]
 
 				leek = leeks[action[1]]
-				html += _.lang.get('fight', 'leek_take_weapon', getLeekName(leek), _.lang.get('weapon', weapon.name))
+				action_text += _.lang.get('fight', 'leek_take_weapon', getLeekName(leek), _.lang.get('weapon', weapon.name))
 
 			} else if (type == ACTION_END_FIGHT) {
 
-				html += _.lang.get('fight', 'end_of_fight')
+				action_text += _.lang.get('fight', 'end_of_fight')
 
 			} else if (type == ACTION_PLAYER_DEAD) {
 
 				leek = leeks[action[1]]
-				html += _.lang.get('fight', 'leek_is_dead', getLeekName(leek))
+				action_text += _.lang.get('fight', 'leek_is_dead', getLeekName(leek))
 
 			} else if (type == ACTION_NEW_TURN) {
 
 				turn++
-				html += "<span class='turn'>" + _.lang.get('fight', 'turn_n', turn) + "</span>"
+				action_text += "<span class='turn'>" + _.lang.get('fight', 'turn_n', turn) + "</span>"
 
 			} else if (type == ACTION_END_TURN) {
 				// rien
@@ -338,77 +337,82 @@ LW.pages.report.generateActions = function(data, callback) {
 			} else if (type == ACTION_LEEK_TURN) {
 
 				leek = leeks[action[1]]
-				html += _.lang.get('fight', 'turn_of_leek', getLeekName(leek))
+				action_text += _.lang.get('fight', 'turn_of_leek', getLeekName(leek))
 
 			} else if (type == ACTION_MOVE_TO) {
 
 				leek = leeks[action[1]]
-				html += _.lang.get('fight', 'leek_move', getLeekName(leek))
+				action_text += _.lang.get('fight', 'leek_move', getLeekName(leek))
 
 			} else if (type == ACTION_TP_LOST) {
 
 				leek = leeks[action[1]]
-				html += _.lang.get('fight', 'leek_loose_x', getLeekName(leek), colorText(_.lang.get('fight', 'n_tp', action[2]), TP_COLOR))
+				action_text += _.lang.get('fight', 'leek_loose_x', getLeekName(leek), colorText(_.lang.get('fight', 'n_tp', action[2]), TP_COLOR))
 
 			} else if (type == ACTION_LIFE_LOST) {
 
 				leek = leeks[action[1]]
-				html += _.lang.get('fight', 'leek_loose_x', getLeekName(leek), colorText(_.lang.get('fight', 'n_life', action[2]), LIFE_COLOR))
+				action_text += _.lang.get('fight', 'leek_loose_x', getLeekName(leek), colorText(_.lang.get('fight', 'n_life', action[2]), LIFE_COLOR))
 
 			} else if (type == ACTION_MP_LOST) {
 
 				leek = leeks[action[1]]
-				html += _.lang.get('fight', 'leek_loose_x', getLeekName(leek), colorText(_.lang.get('fight', 'n_mp', action[2]), MP_COLOR))
+				action_text += _.lang.get('fight', 'leek_loose_x', getLeekName(leek), colorText(_.lang.get('fight', 'n_mp', action[2]), MP_COLOR))
 
 			} else if (type == ACTION_CARE) {
 
 				leek = leeks[action[1]]
-				html += _.lang.get('fight', 'leek_win_x', getLeekName(leek), colorText(_.lang.get('fight', 'n_life', action[2]), LIFE_COLOR))
+				action_text += _.lang.get('fight', 'leek_win_x', getLeekName(leek), colorText(_.lang.get('fight', 'n_life', action[2]), LIFE_COLOR))
 
 			} else if (type == ACTION_BOOST_VITA) {
 
 				leek = leeks[action[1]]
-				html += _.lang.get('fight', 'leek_win_x', getLeekName(leek), colorText(_.lang.get('fight', 'n_vita', action[2]), LIFE_COLOR))
+				action_text += _.lang.get('fight', 'leek_win_x', getLeekName(leek), colorText(_.lang.get('fight', 'n_vita', action[2]), LIFE_COLOR))
 
 			} else if (type == ACTION_ADD_CHIP_EFFECT) {
 
-				html += createEffectAction(leeks, action)
+				action_text += createEffectAction(leeks, action)
 
 			} else if (type == ACTION_ADD_WEAPON_EFFECT) {
 
-				html += createEffectAction(leeks, action)
+				action_text += createEffectAction(leeks, action)
 
 			} else if (type == ACTION_REMOVE_EFFECT) {
 
 			} else if (type == ACTION_SAY) {
 
 				leek = leeks[action[1]]
-				html += _.lang.get('fight', 'leek_speak', getLeekName(leek), _.protect(action[2]))
+				action_text += _.lang.get('fight', 'leek_speak', getLeekName(leek), _.protect(action[2]))
 
 			} else if (type == ACTION_SUMMON) {
 
 				leek = leeks[action[1]]
 				summon = leeks[action[2]]
 
-				html += _.lang.get('fight', 'summon', getLeekName(leek), getLeekName(summon))
+				action_text += _.lang.get('fight', 'summon', getLeekName(leek), getLeekName(summon))
 
 			} else if (type == ACTION_LAMA) {
 
 			} else if (type == ACTION_SHOW) {
 
 				leek = leeks[action[1]]
-				html += _.lang.get('fight', 'leek_show_cell', getLeekName(leek), action[2])
+				action_text += _.lang.get('fight', 'leek_show_cell', getLeekName(leek), action[2])
 
 			} else if (type == ACTION_BUG) {
 
 				leek = leeks[action[1]]
-				html += _.lang.get('fight', 'leek_bug', getLeekName(leek))
-
+				action_text += _.lang.get('fight', 'leek_bug', getLeekName(leek))
+			} else if (type == ACTION_RESURRECTION) {
+				action_text += _.lang.get('fight', 'leek_resurrect', getLeekName(leeks[action[1]]), getLeekName(leeks[action[2]]))
 			} else {
-				html += "Unknown action : number " + type
+				action_text += "Unknown action : number " + type
 			}
 
-			html += "</div>"
+			if (action_text != "") {
+				html += "<div class='action'>"
+				html += action_text
+				html += "</div>"
+			}
 
 			// Logs personnels ?
 			if (logs != null && a in logs) {
