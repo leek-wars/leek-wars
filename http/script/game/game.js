@@ -176,6 +176,7 @@ var Game = function() {
 	this.actionDelay = 0;
 	this.fightEnd = false;
 	this.turn = 1;
+	this.turnPosition = new Object();
 
 	this.effects = new Array();
 
@@ -391,6 +392,14 @@ var Game = function() {
 			_.logW("Error ! no action START_FIGHT");
 			this.error();
 			return;
+		}
+
+		// Get the relative position of the turns in the actions
+		game.turnPosition = {1: 0}
+		for (var i = 0; i < game.actions.length; ++i) {
+			if (game.actions[i][0] === ACTION_NEW_TURN) {
+				game.turnPosition[game.actions[i][1]] = i / game.actions.length
+			}
 		}
 
 		// Chargement des logs
