@@ -98,6 +98,30 @@ var Hud = function() {
 		$('#logs-wrapper2').css('height', 100);
 	});
 
+	$('#progress-bar').mousemove(function(e) {
+		var tooltip = $('#progress-bar-turn')
+		var turn = 0
+
+		var pos = (e.pageX - $(this).offset().left) / $(this).width()
+
+		for (var i in game.turnPosition) {
+			if (game.turnPosition.hasOwnProperty(i) && pos >= game.turnPosition[i]) {
+				turn = i
+			}
+		}
+
+		var margin = Math.min(Math.max((e.pageX - $(this).offset().left) 
+			- (tooltip.outerWidth() / 2), 0), $(this).outerWidth() - tooltip.outerWidth())
+		tooltip.text(_.lang.get('fight', 'turn_n', turn))
+			.css('margin-left', margin)
+	})
+
+	$('#progress-bar').hover(function() {
+		$('#progress-bar-turn').show()
+	}, function() {
+		$('#progress-bar-turn').hide()
+	})
+
 	var space = GROUND_PADDING_LEFT + GROUND_PADDING_RIGHT;
 	var padding = 30;
 	var width = space - padding;
@@ -151,6 +175,7 @@ var Hud = function() {
 		$('#fight-lifes').prop('checked', game.showLifes);
 		$('#fight-discrete-pause').prop('checked', game.discretePause);
 		$('#fight-quality').val(game.quality);
+		$('#progress-bar-turn').hide()
 
 		updateSoundSetting();
 	}
