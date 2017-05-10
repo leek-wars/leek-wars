@@ -567,33 +567,40 @@ LW.pages.editor.init = function(params, $scope, $page) {
 		var searchLines = []
 		var searchFirstLine = null
 
-		$('.search-panel .query').keyup(function() {
+		var search_next = function() {
+			searchIndex = (searchIndex + 1) % searchLines.length
+			searchUpdate()
+		}
+		var search_previous = function() {
+			searchIndex--
+			if (searchIndex < 0) searchIndex = searchLines.length - 1
+			searchUpdate()
+		}
 
-			searchQuery = $(this).val().toLowerCase()
-			searchIndex = 0
-			searchElement = null
-			searchFirstLine = null
-
-			if (searchQuery.length > 0) {
-
-				searchLines = []
-
-				for (var l = 0; l < editors[current].editor.lineCount(); ++l) {
-					var line = editors[current].editor.getLine(l)
-					var index = -1
-					while ((index = line.toLowerCase().indexOf(searchQuery, index + 1)) > -1) {
-						searchLines.push([l, index])
-					}
-				}
-
-				searchUpdate()
-
+		$('.search-panel .query').keyup(function(e) {
+			if (e.keyCode == 13) {
+				search_next()
 			} else {
+				searchQuery = $(this).val().toLowerCase()
+				searchIndex = 0
+				searchElement = null
+				searchFirstLine = null
 
-				$('.search-panel .results').text("")
-
-				if (editors[current].editor.overlay) {
-					editors[current].editor.removeOverlay(editors[current].editor.overlay)
+				if (searchQuery.length > 0) {
+					searchLines = []
+					for (var l = 0; l < editors[current].editor.lineCount(); ++l) {
+						var line = editors[current].editor.getLine(l)
+						var index = -1
+						while ((index = line.toLowerCase().indexOf(searchQuery, index + 1)) > -1) {
+							searchLines.push([l, index])
+						}
+					}
+					searchUpdate()
+				} else {
+					$('.search-panel .results').text("")
+					if (editors[current].editor.overlay) {
+						editors[current].editor.removeOverlay(editors[current].editor.overlay)
+					}
 				}
 			}
 		})
@@ -635,19 +642,8 @@ LW.pages.editor.init = function(params, $scope, $page) {
 				editors[current].editor.scrollTo(0, t - middleHeight - 5);
 			}
 		}
-
-		$('.search-panel .next').click(function() {
-
-			searchIndex = (searchIndex + 1) % searchLines.length
-			searchUpdate()
-		})
-
-		$('.search-panel .previous').click(function() {
-
-			searchIndex--
-			if (searchIndex < 0) searchIndex = searchLines.length - 1
-			searchUpdate()
-		})
+		$('.search-panel .next').click(search_next)
+		$('.search-panel .previous').click(search_previous)
 	})
 
 	setTimeout(LW.pages.editor.resize, 200)
