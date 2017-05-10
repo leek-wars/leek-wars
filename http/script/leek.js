@@ -598,6 +598,7 @@ LW.pages.leek.hat = function() {
 
 						leek.hat = null
 						LW.pages.leek.updateImage()
+						LW.farmer.leeks[leek.id].hat = null
 						popup.dismiss()
 
 					} else {
@@ -615,6 +616,7 @@ LW.pages.leek.hat = function() {
 
 						leek.hat = hatTemplate
 						LW.pages.leek.updateImage()
+						LW.farmer.leeks[leek.id].hat = hatTemplate
 						popup.dismiss()
 
 					} else {
