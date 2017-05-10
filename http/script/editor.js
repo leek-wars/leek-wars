@@ -689,20 +689,20 @@ LW.pages.editor.keydown = function(e) {
 		LW.pages.editor.search(false)
 	}
 
-	// Ctrl-Q" : test
+	// Ctrl-Q : test
 	if (e.ctrlKey && e.keyCode == 81) {
 		_testEvent = e
 		editors[current].test()
 		e.preventDefault()
 	}
 
-	// Ctrl-S" : save
+	// Ctrl-S : save
 	if (e.ctrlKey && e.keyCode == 83) {
 		editors[current].save()
 		e.preventDefault()
 	}
 
-	// Ctrl-F" : search
+	// Ctrl-F : search
 	if (e.ctrlKey && e.keyCode == 70) {
 		LW.pages.editor.search(true)
 		e.preventDefault()
