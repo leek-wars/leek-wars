@@ -2,27 +2,27 @@
  * Thème Leek Wars (par défaut)
  */
 .cm-number {
-	color: #007F00; 
+	color: #007F00;
 }
 .cm-string {
-	color: #FF901E; 
+	color: #FF901E;
 }
 .cm-keyword, .cm-variable-declaration, .cm-function-declaration {
-	color: #00007f; 
+	color: #00007f;
 	font-weight: bold;
 }
 .cm-atom {
-	color: #0086BC; 
+	color: #0086BC;
 	font-weight: bold;
 }
 .cm-comment {
-	color: #CE1400; 
+	color: #CE1400;
 }
 .cm-def {
-	color: black; 
+	color: black;
 }
 .cm-variable-2 {
-	color: black; 
+	color: black;
 }
 .CodeMirror-lines .activeline {
 	background: #f2f2f2;
@@ -31,20 +31,20 @@
 	color: black;
 }
 .cm-lsfunc {
-	color: black; 
+	color: black;
 }
 .cm-lsfunc-deprec {
-	color: black; 
+	color: black;
 	font-style: italic;
 	text-decoration: line-through;
 	opacity: 0.6;
 }
 .cm-lsconst {
-	color: black; 
+	color: black;
 	font-weight: bold;
 }
 .cm-lsfunc {
-	color: black; 
+	color: black;
 	font-style: italic;
 }
 .cm-matchhighlight {
@@ -57,11 +57,11 @@
 	padding: 3px 0;
 }
 .CodeMirror-matchingbracket {
-    color: #00F; 
+    color: #00F;
 	font-weight: bold;
 }
 .CodeMirror-nonmatchingbracket {
-	color: #F00; 
+	color: #F00;
 	font-weight: bold;
 }
 
@@ -70,44 +70,44 @@
  */
 .theme-monokai .CodeMirror {
 	background: #272822;
-	color: #F8F8F2; 
+	color: #F8F8F2;
 }
 .theme-monokai .CodeMirror-gutters {
 	background: #303029;
 	border-right: 1px solid #444;
 }
 .theme-monokai .cm-number {
-	color: #AE81FF; 
+	color: #AE81FF;
 }
 .theme-monokai .cm-string {
-	color: #E6DB74; 
+	color: #E6DB74;
 }
 .theme-monokai .cm-variable-declaration,
 .theme-monokai .cm-function-declaration
 {
-	color: #66D9EF; 
+	color: #66D9EF;
 	font-weight: normal;
 	font-style: italic;
 }
 .theme-monokai .cm-keyword {
-	color: #F92672; 
+	color: #F92672;
 	font-weight: normal;
 }
 .theme-monokai .cm-atom {
-	color: #AE81FF; 
+	color: #AE81FF;
 	font-weight: normal;
 }
 .theme-monokai .cm-comment {
-	color: #75715E; 
+	color: #75715E;
 }
 .theme-monokai .cm-def {
-	color: #F8F8F2; 
+	color: #F8F8F2;
 }
 .theme-monokai .cm-variable {
-	color: #F8F8F2; 
+	color: #F8F8F2;
 }
 .theme-monokai .cm-variable-2 {
-	color: #F8F8F2; 
+	color: #F8F8F2;
 }
 .theme-monokai .CodeMirror-lines .activeline {
 	background: #222;
@@ -122,11 +122,11 @@
 	color: #FD971F;
 }
 .theme-monokai .cm-lsconst {
-	color: white; 
+	color: white;
 	font-weight: bold;
 }
 .theme-monokai .cm-lsfunc {
-	color: white; 
+	color: white;
 	font-style: italic;
 }
 .theme-monokai .cm-lsfunc-deprec {
@@ -140,16 +140,16 @@
 .theme-monokai .cm-matchhighlight-green {
 	background: #5FAD1B;
 }
-.theme-monokai .CodeMirror-selected, 
-.theme-monokai .CodeMirror-focused .CodeMirror-selected { 
+.theme-monokai .CodeMirror-selected,
+.theme-monokai .CodeMirror-focused .CodeMirror-selected {
 	background: #555;
 }
 .theme-monokai .CodeMirror-matchingbracket {
-	color: #F8F8F2; 
+	color: #F8F8F2;
 	border-bottom: 1px solid #F8F8F2;
 }
 .theme-monokai .CodeMirror-nonmatchingbracket {
-	color: #F00; 
+	color: #F00;
 	font-weight: bold;
 }
 .theme-monokai .CodeMirror div.CodeMirror-cursor {
@@ -166,7 +166,7 @@ code pre {
 	overflow-x: auto;
 	background: white;
 }
- 
+
 code pre .line-number {
 	color: #666;
 	display: block;
