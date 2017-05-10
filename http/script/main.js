@@ -1524,11 +1524,6 @@ LW.loadPage = function(pageID, params) {
 
 		LW.currentPage = pageID
 
-		// if (page.initialized && page.cache) {
-		// 	page.render()
-		// 	return
-		// }
-
 		LW.loader.show()
 
 		// We have to load all the ressources the page want
