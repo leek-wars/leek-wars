@@ -984,6 +984,8 @@ LW.disconnect = function() {
 	$('#mini-chat .chat-messages').empty()
 
 	LW.chat.messages = {}
+	LW.messages.conversations = []
+	LW.messages.unread = 0
 	_.clearConsole()
 
 	if (LW.dev) localStorage.removeItem('token')
