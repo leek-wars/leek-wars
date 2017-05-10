@@ -1068,7 +1068,7 @@ _.view.load = function(view, admin, callback) {
 				save_view(data)
 			}, false)
 		} else {
-			$.get(LW.staticURL + 'view/' + view + '.html', save_view)
+			$.get(LW.staticURL + 'view/' + view + '.html' + (_.local ? '' : ('?' + _.version)), save_view)
 		}
 	}
 }
