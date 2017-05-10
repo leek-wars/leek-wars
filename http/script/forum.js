@@ -66,8 +66,8 @@ LW.pages.forum.init = function(params, $scope, $page) {
 }
 
 LW.pages.forum.wsconnected = function() {
-
 	$('#chat .websocket-loader').remove()
+	$('#chat .chat-messages').empty()
 }
 
 LW.pages.forum.wsreceive = function(data) {

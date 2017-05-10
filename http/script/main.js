@@ -43,7 +43,10 @@ var LW = {
 	sfw: {},
 	callbacks: {
 		pageload: [],
-		initialized: []
+		initialized: [],
+		wsclosed: [],
+		wsconnecting: [],
+		wsconnected: []
 	},
 	konami: '',
 	hatTemplates: {},
@@ -861,7 +864,7 @@ LW.initConnected = function(callback) {
 	LW.sfw.init()
 
 	// Init websocket
-	LW.initWebSocket()
+	LW.socket.connect()
 	LW.chat.init()
 
 	// Konami code
@@ -1013,7 +1016,6 @@ LW.clear = function() {
 }
 
 LW.changelogPopup = function() {
-
 	_.lang.load('changelog', false, function() {
 		_.get('changelog/get-last/' + _.lang.current, function(data) {
 			if (data.success) {
@@ -1024,6 +1026,11 @@ LW.changelogPopup = function() {
 }
 
 LW.trigger = function(action, params) {
+	if (action in LW.callbacks) {
+		for (var c in LW.callbacks[action]) {
+			LW.callbacks[action][c]()
+		}
+	}
 	if (LW.currentPage != null && LW.pages[LW.currentPage] && action in LW.pages[LW.currentPage]) {
 		return LW.pages[LW.currentPage][action](params)
 	}
@@ -1557,7 +1564,9 @@ LW.loadPage = function(pageID, params) {
 						LW.shrink()
 						LW.setMenuTab(null)
 
-						if (LW.socket.connected) LW.trigger('wsconnected')
+						if (LW.socket.connected() && page.wsconnected) {
+							page.wsconnected()
+						}
 
 						// Page load callbacks
 						for (var c in LW.callbacks['pageload']) {
@@ -1666,14 +1675,17 @@ LW.loadPage = function(pageID, params) {
 }
 
 LW.on = function(event, callback) {
-
 	if (event in LW.callbacks) {
-
 		if (event == 'initialized' && LW.initialized) {
 			callback()
 			return
+		} else if (event == 'wsclosed' && LW.socket.closed()) {
+			callback()
+		} else if (event == 'wsconnected' && LW.socket.connected()) {
+			callback()
+		} else if (event == 'wsconnecting' && (LW.socket.connected() || LW.socket.connecting())) {
+			callback()
 		}
-
 		LW.callbacks[event].push(callback)
 	}
 }
@@ -1776,8 +1788,27 @@ LW.addTooltip = function(id, content) {
 	LW.setTooltipParent(id, $('#' + id), false)
 }
 
-LW.initWebSocket = function() {
+/*
+ * WebSocket management
+ */
+LW.socket.connected = function() {
+	return LW.socket.socket && LW.socket.socket.readyState == WebSocket.OPEN
+}
+LW.socket.connecting = function() {
+	return LW.socket.socket && LW.socket.socket.readyState == WebSocket.CONNECTING
+}
+LW.socket.closing = function() {
+	return LW.socket.socket && LW.socket.socket.readyState == WebSocket.CLOSING
+}
+LW.socket.closed = function() {
+	return !LW.socket.socket || LW.socket.socket.readyState == WebSocket.CLOSED
+}
 
+LW.socket.connect = function() {
+
+	if (LW.socket.connecting() || LW.socket.connected()) {
+		_.logW("WebSocket already connected!")
+		return
 	}
 
 	var url = 'wss://leekwars.com/ws'
@@ -1785,8 +1816,6 @@ LW.initWebSocket = function() {
 	LW.socket.socket = new WebSocket(url)
 
 	LW.socket.socket.onopen = function() {
-
-		LW.socket.connected = true
 
 		for (var p in LW.socket.queue) {
 			LW.socket.sendDirect(LW.socket.queue[p])
@@ -1801,6 +1830,10 @@ LW.initWebSocket = function() {
 
 	LW.socket.socket.onclose = function() {
 		LW.trigger('wsclosed')
+		// Try to reconnect
+		setTimeout(function() {
+			LW.socket.connect()
+		}, 2000)
 	}
 
 	LW.socket.socket.onerror = function() {}
@@ -1910,7 +1943,7 @@ LW.initWebSocket = function() {
 }
 
 LW.socket.send = function(request) {
-	if (LW.socket.connected) {
+	if (LW.socket.connected()) {
 		LW.socket.sendDirect(request)
 	} else {
 		LW.socket.queue.push(request)
@@ -1922,9 +1955,8 @@ LW.socket.sendDirect = function(request) {
 }
 
 LW.socket.disconnect = function() {
-
 	LW.socket.socket.close()
-	LW.socket.connected = false
+	LW.socket.socket = null
 }
 
 LW.updateCounters = function() {
@@ -2039,10 +2071,16 @@ LW.chat.init = function() {
 	LW.chat.controller = new ChatController($('#mini-chat'), function(message) {
 		LW.socket.send([FORUM_CHAT_SEND, LW.chat.controller.channel, message])
 	}, true)
-
-	for (var c in LW.chat.channels) {
-		LW.socket.send([LW.ENABLE_CHAT, LW.chat.channels[c]])
-	}
+	LW.on('wsclosed', function() {
+		LW.chat.messages = {}
+	})
+	LW.on('wsconnected', function() {
+		// LW.chat.messages = {}
+		LW.chat.controller.clear()
+		for (var c in LW.chat.channels) {
+			LW.socket.send([LW.ENABLE_CHAT, LW.chat.channels[c]])
+		}
+	})
 }
 
 LW.chat.addChannel = function(channel) {
@@ -3969,6 +4007,10 @@ var ChatController = function(chat_element, send_callback, enable_moderation) {
 		if (LW.chat.channels.length == 1) {
 			hideFlags()
 		}
+	}
+
+	ChatController.prototype.clear = function() {
+		this.msg_elem.empty()
 	}
 
 	ChatController.prototype.mute_user = function(data) {

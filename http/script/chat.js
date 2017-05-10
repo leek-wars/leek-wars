@@ -21,6 +21,7 @@ LW.pages.chat.resize = function() {
 
 LW.pages.chat.wsconnected = function() {
 	$('#chat .websocket-loader').remove()
+	$('#chat .chat-messages').empty()
 }
 
 LW.pages.chat.wsreceive = function(data) {

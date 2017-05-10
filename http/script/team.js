@@ -104,6 +104,11 @@ LW.pages.team.init = function(params, $scope, $page) {
 	})
 }
 
+LW.pages.team.wsconnected = function() {
+	$('#team-chat .chat-messages').empty()
+	LW.socket.send([TEAM_CHAT_ENABLE])
+}
+
 LW.pages.team.emblem = function() {
 
 	$('#emblem').click(function() {
@@ -371,7 +376,6 @@ LW.pages.team.setupChat = function() {
 		change(!chatExpanded)
 	})
 
-	LW.socket.send([TEAM_CHAT_ENABLE])
 	this.chat = new ChatController($('#team-chat .content'), function(message) {
 		LW.socket.send([TEAM_CHAT_SEND, message])
 	})
