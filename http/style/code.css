@@ -54,6 +54,7 @@
 }
 .cm-matchhighlight-green {
 	background: #76d820;
+	padding: 3px 0;
 }
 .CodeMirror-matchingbracket {
     color: #00F; 
