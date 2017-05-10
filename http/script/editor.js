@@ -708,8 +708,8 @@ LW.pages.editor.keydown = function(e) {
 		e.preventDefault()
 	}
 
-	// Ctrl-F" : search
-	if (e.ctrlKey && e.shiftKey && e.keyCode == 191) {
+	// Ctrl + '/' or Ctrl + ':' : comment
+	if (e.ctrlKey && e.keyCode == 191) {
 		editors[current].commentCode()
 		e.preventDefault()
 	}
