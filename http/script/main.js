@@ -64,6 +64,11 @@ if ('serviceWorker' in navigator) {
 	 //navigator.serviceWorker.register('service-worker.js', {scope: '/'})
 }
 
+// WebSocket on Firefox
+if (window.MozWebSocket) {
+	window.WebSocket = window.MozWebSocket
+}
+
 /*
  * Constants
  */
@@ -1778,8 +1783,6 @@ LW.addTooltip = function(id, content) {
 
 LW.initWebSocket = function() {
 
-	if (window.MozWebSocket) {
-		window.WebSocket = window.MozWebSocket;
 	}
 
 	var url = 'wss://leekwars.com/ws'
