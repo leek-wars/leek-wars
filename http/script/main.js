@@ -3658,6 +3658,16 @@ var ChatController = function(chat_element, send_callback, enable_moderation) {
 		setChatLanguage(_.lang.current)
 	}
 
+	LW.on('wsclosed', function() {
+		chat_element.find('.chat-disconnected').css('height', '30px')
+	})
+	LW.on('wsconnecting', function() {
+		chat_element.find('.chat-disconnected').css('height', '0')
+	})
+	LW.on('wsconnected', function() {
+		chat_element.find('.chat-disconnected').css('height', '0')
+	})
+
 	$('#chat-languages img').click(function() {
 
 		var code = $(this).attr('code')

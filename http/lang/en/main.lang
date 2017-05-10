@@ -17,6 +17,7 @@ console_alert_3			Enter code here only if you know exactly what you are doing.
 console_github		GitHub repository : https://github.com/leek-wars/leek-wars-client
 date_format			%B %d, %Y
 date_time_format			%B %d, %Y at %R
+disconnected		Disconnected
 documentation			Documentation
 editor			Editor
 error			Error

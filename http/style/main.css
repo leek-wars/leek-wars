@@ -674,12 +674,25 @@ body.social-collapsed #social-button .icon {
 	width: 100%;
 }
 
+.chat {
+	position: relative;
+}
+
 .chat-new-messages {
 	display: none;
 	height: 30px;
 	line-height: 30px;
 	background-color: #bbb;
 	text-align: center;
+}
+
+.chat-disconnected {
+	height: 0px;
+	line-height: 30px;
+	background-color: #d3324d;
+	color: white;
+	text-align: center;
+	transition: height ease 0.5s
 }
 
 .chat-new-messages:hover {

@@ -17,6 +17,7 @@ console_alert_3			Entrez du code ici seulement si vous savez exactement ce que v
 console_github		Dépôt GitHub du site : https://github.com/leek-wars/leek-wars-client
 date_format			%d %B %Y
 date_time_format			%d %B %Y à %R
+disconnected		Déconnecté
 documentation			Documentation
 editor			Éditeur
 error			Erreur
