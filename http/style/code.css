@@ -52,6 +52,9 @@
 	border-radius: 2px;
 	margin: -1px;
 }
+.cm-matchhighlight-green {
+	background: #76d820;
+}
 .CodeMirror-matchingbracket {
     color: #00F; 
 	font-weight: bold;
