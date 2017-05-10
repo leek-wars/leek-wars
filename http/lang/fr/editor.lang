@@ -1,7 +1,7 @@
 1_core			1 coeur
 ai_error		<b>%1$s</b> ligne <b>%2$s</b>
 ai_to_test		IA à tester
-ai_renamed		IA renommée en <b>%s</b>
+ai_renamed		IA renommée en %s
 auto_closing	Fermeture automatique des parenthèses, crochets, accolades et guillemets
 autocompletion	Autocomplétion (proposition des variables courantes et fonctions de la doc)
 cancel			Annuler

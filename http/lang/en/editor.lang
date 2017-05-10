@@ -1,7 +1,7 @@
 1_core				1 core
 ai_error			<b>%1$s</b> line <b>%2$s</b>
 ai_to_test			AI to test
-ai_renamed			AI renamed to <b>%s</b>
+ai_renamed			AI renamed to %s
 auto_closing		Automatic closing of parentheses, brackets and quotation marks.
 autocompletion		Code completion (propose current variables and leekscript functions)
 cancel-test			Cancel
