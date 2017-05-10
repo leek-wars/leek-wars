@@ -3910,13 +3910,13 @@ var ChatController = function(chat_element, send_callback, enable_moderation) {
 				"lang": lang
 			}
 			var messageData = ""
-			for(var i = 0; i < this.msg_date.length; i++) {
-				if(this.msg_date[i].date == m_date && this.msg_date[i].lang == lang) {
+			for (var i = 0; i < this.msg_date.length; i++) {
+				if (this.msg_date[i].date == m_date && this.msg_date[i].lang == lang) {
 					flag = false;
 					break;
 				}
 			}
-			if(flag) {
+			if (flag) {
 				this.msg_date.push(objDate)
 				messageData += "<div class='chat-date' lang='" + lang + "'>" + m_date + "</div>"
 			}
