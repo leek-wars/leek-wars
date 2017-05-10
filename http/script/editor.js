@@ -424,22 +424,33 @@ LW.pages.editor.init = function(params, $scope, $page) {
 					var args = currentType == 'folder' ? {folder_id: currentItem} : {ai_id: currentItem}
 					_.post(url, args, function(data) {
 						if (data.success) {
+							ai_deleted = false
+							if (currentType == 'ai') {
+								delete editors[editor.id]
+								$('#editors #' + editor.id).remove()
+								ai_deleted = true
+							} else {
+								$('#ai-list #' + currentItem + ' .item.ai').each(function() {
+									var id = $(this).attr('id')
+									delete editors[id]
+									if (current == id) {
+										ai_deleted = true
+									}
+								})
+							}
 							var item = $('#ai-list #' + currentItem)
 							var folder = item.parent().parent()
 							if (folder.find('> .content > .item').length == 1) {
 								folder.addClass('empty')
 							}
 							item.remove()
-							if (currentType == 'ai') {
-								delete editors[editor.id]
-								$('#editors #' + editor.id).remove()
+							if (ai_deleted) {
 								if (!_.isEmptyObj(editors)) {
 									LW.page('/editor/' + _.firstKey(editors))
 								} else {
+									currentItem = 0
 									current = null
 								}
-							} else {
-								currentItem = 0
 							}
 							deletePopup.dismiss()
 						} else {
