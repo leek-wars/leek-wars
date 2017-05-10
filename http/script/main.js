@@ -981,6 +981,7 @@ LW.disconnect = function() {
 
 	$('#menu .leeks').empty()
 	$('#menu #team-tab').hide()
+	$('#mini-chat .chat-messages').empty()
 
 	LW.chat.messages = {}
 
