@@ -556,15 +556,13 @@ LW.pages.leek.hat = function() {
 				level: template.level,
 				hat_template: hatTemplate
 			}
-						
+
 			LW.farmer.hats.push(newHat)
-			
-			if(groupedFarmerHats[hatTemplate] === undefined) {
+
+			if (groupedFarmerHats[hatTemplate] === undefined) {
 				groupedFarmerHats[hatTemplate] = _.clone(newHat)
 				groupedFarmerHats[hatTemplate].quantity = 0
-				
 			}
-
 			groupedFarmerHats[hatTemplate].quantity++
 		}
 
@@ -574,7 +572,7 @@ LW.pages.leek.hat = function() {
 
 			groupedFarmerHats[hatTemplate].quantity--
 
-			if(groupedFarmerHats[hatTemplate].quantity < 1) {
+			if (groupedFarmerHats[hatTemplate].quantity < 1) {
 				delete groupedFarmerHats[hatTemplate]
 			}
 		}
@@ -584,48 +582,42 @@ LW.pages.leek.hat = function() {
 			var hat = parseInt($(this).attr('hat'))
 			var hatTemplate = parseInt($(this).attr('hattemplate'))
 
-			if(leek.hat === hatTemplate) {
+			if (leek.hat === hatTemplate) {
 				popup.dismiss()
 				return
 			}
-			
-			if (hat == -1) {
 
+			if (hat == -1) {
 				_.post('leek/remove-hat', {leek_id: leek.id}, function(data) { console.log("REQUEST", data)
 					if (data.success) {
-
-						if(leek.hat) addHat(leek.hat)
-
+						if (leek.hat) {
+							addHat(leek.hat)
+						}
 						leek.hat = null
 						LW.pages.leek.updateImage()
 						LW.farmer.leeks[leek.id].hat = null
 						popup.dismiss()
-
 					} else {
 						_.toast(data.error)
 					}
 				})
-
 			} else {
-
 				_.post('leek/set-hat', {leek_id: leek.id, hat_id: hat}, function(data) { console.log("REQUEST", data)
 					if (data.success) {
-
 						removeHat(hatTemplate)
-						if(leek.hat) addHat(leek.hat)
-
+						if (leek.hat) {
+							addHat(leek.hat)
+						}
 						leek.hat = hatTemplate
 						LW.pages.leek.updateImage()
 						LW.farmer.leeks[leek.id].hat = hatTemplate
 						popup.dismiss()
-
 					} else {
 						_.toast(data.error)
 					}
 				})
 			}
 		})
-
 		popup.show(e)
 	})
 }
@@ -813,7 +805,7 @@ LW.pages.leek.weapons = function(leek) {
 			}
 
 			_.post('leek/add-weapon', {leek_id: leek.id, weapon_id: weaponItem}, function(data) {
-				if(data.success) {
+				if (data.success) {
 					// Add weapon to leek inventory in popup
 					var newElem = weaponElem
 						.clone()
@@ -863,7 +855,7 @@ LW.pages.leek.weapons = function(leek) {
 			if (weaponLocation == 'farmer') return null
 
 			_.post('leek/remove-weapon', {weapon_id: weaponItem}, function(data) {
-				if(data.success) {
+				if (data.success) {
 					// Add weapon to farmer inventory in popup
 					var farmerWeapon = popup.view.find('.weapon[weapon=' + weaponID + "][location='farmer']")
 
@@ -888,7 +880,7 @@ LW.pages.leek.weapons = function(leek) {
 
 					// Remove weapon on the leek page
 					var leekPageWeapon = $('#leek-weapons').find(".weapon[weapon='" + weaponID + "']")
-					if(leekPageWeapon.next().prop("tagName") === "BR") leekPageWeapon.next().remove()
+					if (leekPageWeapon.next().prop("tagName") === "BR") leekPageWeapon.next().remove()
 					leekPageWeapon.remove()
 					$('#tt_leek-weapon-' + weaponID).remove()
 
@@ -1027,7 +1019,7 @@ LW.pages.leek.chips = function(leek) {
 			}
 
 			_.post('leek/add-chip', {leek_id: leek.id, chip_id: chipItem}, function(data) {
-				if(data.success) {
+				if (data.success) {
 					// Add chip to leek inventory in popup
 					var newElem = chipElem
 						.clone()
