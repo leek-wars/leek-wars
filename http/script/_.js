@@ -458,6 +458,18 @@ _.contenteditable_paste_protect = function(element) {
 	})
 }
 
+_.clearConsole = function() {
+	console.API
+	if (typeof console._commandLineAPI !== 'undefined') {
+	    console.API = console._commandLineAPI // chrome
+	} else if (typeof console._inspectorCommandLineAPI !== 'undefined') {
+	    console.API = console._inspectorCommandLineAPI // Safari
+	} else if (typeof console.clear !== 'undefined') {
+	    console.API = console
+	}
+	console.API.clear()
+}
+
 /*
  * Open a centered popup window
  * http://stackoverflow.com/a/16861050/1375853
