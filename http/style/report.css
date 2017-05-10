@@ -136,7 +136,7 @@
 	padding-top: 2px;
 }
 #report-page .turn {
-	font-size: 18px; 
+	font-size: 18px;
 	color: #888;
 	margin-left: -20px;
 }
@@ -163,7 +163,7 @@
 }
 #report-page .error {
 	color: #FF1900;
-}	
+}
 
 #report-page #too-long {
 	padding: 10px;
@@ -184,7 +184,7 @@
 
 #report-page #chart  .ct-line {
 	stroke: rgba(95,173,27,0.7);
-	stroke-width: 3px; 
+	stroke-width: 3px;
 }
 
 #report-page #chart  .ct-area {
