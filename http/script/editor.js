@@ -1454,7 +1454,7 @@ LW.pages.editor.test_popup = function(ais) {
 					}
 					e.preventDefault()
 				},
-				pointerdown: function(e) {
+				mousedown: function(e) {
 					if (e.originalEvent.button === 0) { // only left click
 						var cell = parseInt($(this).attr('cell'))
 						map_down = true
@@ -1468,7 +1468,7 @@ LW.pages.editor.test_popup = function(ais) {
 						reset_save_timeout()
 					}
 				},
-				pointerenter: function(e) {
+				mouseenter: function(e) {
 					if (map_down) {
 						var has_class = $(this).hasClass('obstacle')
 						if (has_class != map_add) {
@@ -1483,7 +1483,7 @@ LW.pages.editor.test_popup = function(ais) {
 						}
 					}
 				},
-				pointerup: function(e) {
+				mouseup: function(e) {
 					map_down = false
 				},
 				dragstart: function(e) {
