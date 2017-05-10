@@ -578,8 +578,13 @@ LW.pages.editor.init = function(params, $scope, $page) {
 		}
 
 		$('.search-panel .query').keyup(function(e) {
+			if (e.keyCode == 16) return ; // ignore shift key
 			if (e.keyCode == 13) {
-				search_next()
+				if (e.shiftKey) {
+					search_previous()
+				} else {
+					search_next()
+				}
 			} else {
 				searchQuery = $(this).val().toLowerCase()
 				searchIndex = 0
@@ -606,7 +611,6 @@ LW.pages.editor.init = function(params, $scope, $page) {
 		})
 
 		var searchUpdate = function() {
-
 			var overlay = {token: function(stream, state, lineNo) {
 				if (stream.match(searchQuery, true, true)) {
 					var index = -1
@@ -791,11 +795,11 @@ LW.pages.editor.search = function(activate) {
 
 	if (activate) {
 
+		var query = current in editors ? editors[current].editor.getSelection() : ''
 		_searchEnabled = true
 		LW.pages.editor.resize()
 		$('#editor-page .search-panel').css('display', 'flex')
-
-		$('#editor-page .search-panel input').focus()
+		$('#editor-page .search-panel input').val(query).focus()
 
 	} else {
 
