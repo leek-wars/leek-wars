@@ -3767,6 +3767,18 @@ var ChatController = function(chat_element, send_callback, enable_moderation) {
 		}
 	}
 
+	var validate_smiley_command = function(input, command) {
+		var text = input.text()
+		var match = smiley_commands.regex.exec(text)
+		text = text.replace(smiley_commands.regex, command + " ")
+		input.text(text)
+		input.focus()
+		if (match) {
+			_.set_cursor_position(input[0], match.index + command.length)
+			$('#chat-smileys').hide()
+		}
+	}
+
 	chat_element.find('.chat-input-content').keyup(function(e) {
 		if (e.keyCode === 9) {
 			e.preventDefault()
@@ -3774,6 +3786,11 @@ var ChatController = function(chat_element, send_callback, enable_moderation) {
 				var command = $('.command:visible:first').attr('command') || $('.sub-command:visible:first').attr('subcommand')
 				validate_command($(this), command)
 				$('#chat-commands').hide()
+			}
+			if ($('#chat-smileys').is(":visible")) {
+				var smiley = $('.smiley:visible:first').attr('smiley')
+				validate_smiley_command($(this), command)
+				$('#chat-smileys').hide()
 			}
 		}
 		if (chat_commands.isCommand($(this).text())) {
@@ -3789,6 +3806,20 @@ var ChatController = function(chat_element, send_callback, enable_moderation) {
 				.css('left', $(this).offset().left + $(this).width() - $('#chat-commands').width())
 		} else {
 			$('#chat-commands').hide()
+		}
+		if (smiley_commands.isSmiley($(this).text())) {
+			smiley_commands.filterPopup($(this).text())
+			LW.emoji_panel.show($(this).parent(), function(command) {
+				var input = chat_element.find('.chat-input-content')
+				validate_smiley_command(input, command)
+			})
+			$('#chat-commands').hide()
+			$('#chat-smileys').show()
+			$('#chat-smileys')
+				.css('top', $(this).offset().top - $('#chat-smileys').height())
+				.css('left', $(this).offset().left + $(this).width() - $('#chat-smileys').width())
+		} else {
+			$('#chat-smileys').hide()
 		}
 	})
 
@@ -3807,6 +3838,7 @@ var ChatController = function(chat_element, send_callback, enable_moderation) {
 			cursor_position += emoji.length + 1
 			_.set_cursor_position(input[0], cursor_position)
 		})
+		$(".smiley").show()
 		e.stopPropagation()
 	})
 
