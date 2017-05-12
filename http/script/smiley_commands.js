@@ -19,18 +19,19 @@ smiley_commands.isSmiley = function(command) {
 
 smiley_commands.filterPopup = function(command) {
     var match = /:(\w+(!|(:\w*))?)$/gi.exec(command)
-    $(".title").hide()
-    $('.smiley').hide()
+    $("#chat-smileys .title").hide()
+    $('#chat-smileys .smiley').hide()
     if (match) {
         var m = match[1]
         if (m.length) {
-            $("#chat-smileys .title").hide()
-            $(".smiley[emoji]").filter(function() {
+            var smileys = $("#chat-smileys .smiley[emoji]").filter(function() {
                 return $(this).attr("emoji").substring(1, 1 + m.length).toLowerCase() == m.toLowerCase()
-            }).show()
+            })
+            smileys.show()
+            smileys.parent().prev(".title").show()
         } else {
             $("#chat-smileys .title").show()
-            $(".smiley").show()
+            $("#chat-smileys .smiley").show()
         }
     }
 }
