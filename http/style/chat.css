@@ -80,7 +80,7 @@
 	cursor: pointer;
 }
 
-#chat-smileys, #chat-commands {
+#chat-smileys, #chat-commands, #smiley-commands {
 	position: absolute;
 	z-index: 600;
 	display: none;
@@ -135,7 +135,7 @@
 	font-weight: bold;
 }
 
-#chat-commands-wrapper .title {
+#chat-commands-wrapper .title, , #smiley-commands-wrapper .title {
 	display: block;
 	margin-top: 10px;
 	padding-bottom: 5px;
@@ -152,6 +152,44 @@
 	padding: 4px;
 	width: 25px !important;
 	height: 25px !important;
+}
+
+#smiley-commands-wrapper {
+	width: 570px;
+	height: 100%;
+	max-height: 300px;
+	background-color: #f2f2f2;
+	border: 1px solid #bbbbbb;
+	border-radius: 2px;
+	cursor: default;
+	overflow-y: scroll;
+}
+
+#smiley-commands-wrapper .list {
+	padding: 10px;
+}
+
+#smiley-commands-wrapper .list li{
+    display: inline-block;
+    list-style-type: none;
+    padding-right: 20px;
+	margin-bottom: 5px;
+	margin-right: 5px;
+}
+
+#smiley-commands-wrapper .list li img{
+    vertical-align: middle;
+	margin-right: 3px;
+}
+
+#smiley-commands-wrapper .list .smiley-command {
+	display: inline-block;
+	color: #797979;
+}
+
+#smiley-commands-wrapper .list .smiley-command-img {
+	width: 25px;
+	height: 25px;
 }
 
 #chat-commands-wrapper .list .command, #chat-commands-wrapper .list .sub-command {
@@ -179,7 +217,7 @@
 	font-size: 14px;
 }
 
-#chat-smileys-wrapper .list .smiley:hover, #chat-commands-wrapper .list .command:hover, #chat-commands-wrapper .list .sub-command:hover  {
+#chat-smileys-wrapper .list .smiley:hover, #chat-commands-wrapper .list .command:hover, #chat-commands-wrapper .list .sub-command:hover, #smiley-commands-wrapper .list .smiley-command:hover  {
 	background-color: #dcdcdc;
 	cursor: pointer;
 }

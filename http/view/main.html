@@ -492,6 +492,18 @@
 	</div>
 </div>
 
+<div id='smiley-commands' style='display: none'>
+	<div id="smiley-commands-wrapper" autostopscroll>
+		<div class="title">{#smileys}</div>
+		<ul class="list">
+			@foreach (smiley_category in smileys.list)
+				@foreach (smiley in smiley_category.list)<li class="smiley-command" emoji="{smiley.name}">
+					<img class="smiley-command-img" title="{smiley.name}" url="{{smiley.custom ? LW.staticURL + smiley.image : smileys.url + '/' + smiley.image + '.svg'}}" emoji="{smiley.name}"/>{smiley.name}</li>@end
+			@end
+		</<ul>
+	</div>
+</div>
+
 @view (leek_tab)
 	<a href="/leek/{id}" >
 		<div class="section" id='leek-tab-{id}' leek='{id}' tab='leek-{id}'>

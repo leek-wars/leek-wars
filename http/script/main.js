@@ -704,6 +704,7 @@ $(document).ready(function() {
 
 			LW.emoji_panel.init()
 			LW.command_panel.init()
+			LW.smiley_command_panel.init()
 
 			$('html').click(function() {
 				if ($('#notifications-popup').is(':visible')) {
@@ -714,6 +715,7 @@ $(document).ready(function() {
 				}
 				$('#chat-smileys').hide()
 				$('#chat-commands').hide()
+				$('#smiley-commands').hide()
 			})
 
 			$(window).resize(function() {
@@ -3775,7 +3777,7 @@ var ChatController = function(chat_element, send_callback, enable_moderation) {
 		input.focus()
 		if (match) {
 			_.set_cursor_position(input[0], match.index + command.length)
-			$('#chat-smileys').hide()
+			$('#smiley-commands').hide()
 		}
 	}
 
@@ -3787,10 +3789,10 @@ var ChatController = function(chat_element, send_callback, enable_moderation) {
 				validate_command($(this), command)
 				$('#chat-commands').hide()
 			}
-			if ($('#chat-smileys').is(":visible")) {
-				var smiley = $('.smiley:visible:first').attr('smiley')
-				validate_smiley_command($(this), command)
-				$('#chat-smileys').hide()
+			if ($('#smiley-commands').is(":visible")) {
+				var smiley = $('#smiley-commands .smiley-command:visible:first').attr('emoji')
+				validate_smiley_command($(this), smiley)
+				$('#smiley-commands').hide()
 			}
 		}
 		if (chat_commands.isCommand($(this).text())) {
@@ -3800,6 +3802,7 @@ var ChatController = function(chat_element, send_callback, enable_moderation) {
 				validate_command(input, command)
 			})
 			$('#chat-smileys').hide()
+			$('#smiley-commands').hide()
 			$('#chat-commands').show()
 			$('#chat-commands')
 				.css('top', $(this).offset().top - $('#chat-commands').height())
@@ -3809,17 +3812,18 @@ var ChatController = function(chat_element, send_callback, enable_moderation) {
 		}
 		if (smiley_commands.isSmiley($(this).text())) {
 			smiley_commands.filterPopup($(this).text())
-			LW.emoji_panel.show($(this).parent(), function(command) {
+			LW.smiley_command_panel.show($(this).parent(), function(command) {
 				var input = chat_element.find('.chat-input-content')
 				validate_smiley_command(input, command)
 			})
-			$('#chat-commands').hide()
-			$('#chat-smileys').show()
-			$('#chat-smileys')
-				.css('top', $(this).offset().top - $('#chat-smileys').height())
-				.css('left', $(this).offset().left + $(this).width() - $('#chat-smileys').width())
-		} else {
 			$('#chat-smileys').hide()
+			$('#chat-commands').hide()
+			$('#smiley-commands').show()
+			$('#smiley-commands')
+				.css('top', $(this).offset().top - $('#smiley-commands').height())
+				.css('left', $(this).offset().left + $(this).width() - $('#smiley-commands').width())
+		} else {
+			$('#smiley-commands').hide()
 		}
 	})
 
@@ -4083,6 +4087,7 @@ LW.emoji_panel.init = function() {
 
 LW.emoji_panel.show = function(relative, callback) {
 	$('#chat-commands').hide()
+	$('#smiley-commands').hide()
 	$('#chat-smileys').show()
 		.css('top', relative.offset().top - $('#chat-smileys').height())
 		.css('left', relative.offset().left + relative.width() - $('#chat-smileys').width())
@@ -4117,10 +4122,41 @@ LW.command_panel.init = function() {
 
 LW.command_panel.show = function(relative, callback) {
 	$('#chat-smileys').hide()
+	$('#smiley-commands').hide()
 	$('#chat-commands').show()
 		.css('top', relative.offset().top - $('#chat-commands').height())
 		.css('left', relative.offset().left + relative.width() - $('#chat-commands').width())
 	LW.command_panel.callback = callback
+}
+
+LW.smiley_command_panel = {
+	callback: null
+}
+
+LW.smiley_command_panel.init = function() {
+	$('#smiley-commands .smiley-command').click(function(e) {
+		if (LW.smiley_command_panel.callback) {
+			LW.smiley_command_panel.callback($(this).attr('emoji'))
+		}
+	})
+	$('#smiley-commands').on('click', function(e) {
+		e.stopPropagation()
+	})
+}
+
+LW.smiley_command_panel.show = function(relative, callback) {
+	$('#chat-commands').hide()
+	$('#chat-smileys').hide()
+	$('#smiley-commands').show()
+		.css('top', relative.offset().top - $('#smiley-commands').height())
+		.css('left', relative.offset().left + relative.width() - $('#smiley-commands').width())
+	if (!$('#smiley-commands-wrapper').hasClass('loaded')) {
+		$('#smiley-commands-wrapper img').each(function() {
+			$(this).attr('src', $(this).attr('url'));
+		})
+	}
+	$('#smiley-commands-wrapper').addClass('loaded')
+	LW.smiley_command_panel.callback = callback
 }
 
 LW.lucky = function() {

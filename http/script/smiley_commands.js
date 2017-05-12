@@ -19,19 +19,16 @@ smiley_commands.isSmiley = function(command) {
 
 smiley_commands.filterPopup = function(command) {
     var match = /:(\w+(!|(:\w*))?)$/gi.exec(command)
-    $("#chat-smileys .title").hide()
-    $('#chat-smileys .smiley').hide()
+    $('#smiley-commands-wrapper .smiley-command').hide()
     if (match) {
         var m = match[1]
         if (m.length) {
-            var smileys = $("#chat-smileys .smiley[emoji]").filter(function() {
+            var smileys = $("#smiley-commands-wrapper .smiley-command[emoji]").filter(function() {
                 return $(this).attr("emoji").substring(1, 1 + m.length).toLowerCase() == m.toLowerCase()
             })
             smileys.show()
-            smileys.parent().prev(".title").show()
         } else {
-            $("#chat-smileys .title").show()
-            $("#chat-smileys .smiley").show()
+            $("#smiley-commands-wrapper .smiley-command").show()
         }
     }
 }
