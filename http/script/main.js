@@ -1716,9 +1716,10 @@ LW.handleHTML = function(element, location) {
 	$(element + ' .tooltip').each(function() {
 
 		LW.tooltipCount++
-
-		$(this).appendTo('#tooltips');
 		$(this).append("<div class='arrow'></div>")
+		if ($(this).hasClass('fixed')) return ;
+
+		$(this).appendTo('#tooltips')
 		if (location) $(this).attr('location', location)
 
 		var tt = this

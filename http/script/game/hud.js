@@ -101,7 +101,6 @@ var Hud = function() {
 	$('#progress-bar').mousemove(function(e) {
 		var tooltip = $('#progress-bar-turn')
 		var turn = 0
-
 		var pos = (e.pageX - $(this).offset().left) / $(this).width()
 
 		for (var i in game.turnPosition) {
@@ -109,11 +108,9 @@ var Hud = function() {
 				turn = i
 			}
 		}
-
-		var margin = Math.min(Math.max((e.pageX - $(this).offset().left) 
-			- (tooltip.outerWidth() / 2), 0), $(this).outerWidth() - tooltip.outerWidth())
-		tooltip.text(_.lang.get('fight', 'turn_n', turn))
-			.css('margin-left', margin)
+		var margin = Math.min(Math.max((e.pageX - $(this).offset().left) - (tooltip.outerWidth() / 2), 0), $(this).outerWidth() - tooltip.outerWidth())
+		tooltip.find('.content').text(_.lang.get('fight', 'turn_n', turn))
+		tooltip.css('margin-left', margin)
 	})
 
 	$('#progress-bar').hover(function() {
