@@ -519,10 +519,10 @@
 					@include('main.comment', comment)
 				@end
 			</div>
-
-			<input id='comment-input' type='text'></input>
-			<div id='comment-send' class='button'>{#send}</div>
-
+			<div class='chat-input'>
+				<div class='chat-input-content' contenteditable="true" placeholder="{#main.chat_placeholder}"></div>
+				<div class='chat-input-emoji'></div>
+			</div>
 		</div>
 	</div>
 </div>

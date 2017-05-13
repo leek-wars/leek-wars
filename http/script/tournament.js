@@ -64,25 +64,18 @@ LW.pages.tournament.nextTime = function() {
 }
 
 LW.pages.tournament.comments = function() {
-
-	$('#comment-send').click(function() {
-
-		var comment = $('#comment-input').val()
-
+	var controller = new ChatController($('#comments-wrapper'), function(comment) {
 		_.post('tournament/comment', {tournament_id: _tournament.id, comment: comment}, function(data) {
-
 			if (data.success) {
-				$('#comment-input').val("")
-
 				$('#comments').append(_.view.render('main.comment', {
 					comment: comment,
 					farmer: LW.farmer,
 					date: LW.time.get()
 				}))
+				LW.smileyElem($('#comments .comment').last().find('.text'))
 			}
 		})
 	})
-
 	$('#comments .comment .text').each(function() {
 		$(this).html(LW.smiley(_.protect($(this).text())))
 	})
