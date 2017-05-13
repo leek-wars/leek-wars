@@ -99,9 +99,6 @@ LW.pages.fight.init = function(params, $scope, $page) {
 			$(this).html(LW.smiley(_.protect($(this).text())))
 		})
 
-		// Écoute de la position sur la file
-		// LW.socket.send([FIGHT_LISTEN, id]);
-
 		LW.pages.fight.file_input()
 	}
 
