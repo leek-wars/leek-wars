@@ -51,6 +51,7 @@ LW.pages.editor.init = function(params, $scope, $page) {
 		for (var i in folders) items[folders[i].id] = folders[i]
 
 		var get_full_path = function(item) {
+			if (!item) return ''
 			if (item.folder == 0) return item.name
 			return get_full_path(items[item.folder]) + "/" + item.name
 		}
