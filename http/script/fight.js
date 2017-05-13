@@ -83,15 +83,9 @@ LW.pages.fight.init = function(params, $scope, $page) {
 		});
 
 		// Commenatires
-		$('#comment-send').click(function() {
-
-			var comment = $('#comment-input').val()
-
+		var controller = new ChatController($('#comments-wrapper'), function(comment) {
 			_.post('fight/comment', {fight_id: id, comment: comment}, function(data) {
-
 				if (data.success) {
-					$('#comment-input').val("")
-
 					$('#comments').append(_.view.render('main.comment', {
 						comment: comment,
 						farmer: LW.farmer,
@@ -101,7 +95,6 @@ LW.pages.fight.init = function(params, $scope, $page) {
 				}
 			})
 		})
-
 		$('#comments .comment .text').each(function() {
 			$(this).html(LW.smiley(_.protect($(this).text())))
 		})
@@ -109,7 +102,7 @@ LW.pages.fight.init = function(params, $scope, $page) {
 		// Écoute de la position sur la file
 		// LW.socket.send([FIGHT_LISTEN, id]);
 
-		LW.pages.fight.file_input();
+		LW.pages.fight.file_input()
 	}
 
 	if (id == 'local') {
@@ -149,7 +142,7 @@ LW.pages.fight.pause = function() {
 
 LW.pages.fight.keydown = function(event) {
 
-	if ($("#comment-input").is(":focus")) return null
+	if ($("#fight-page .chat-input-content").is(":focus")) return null
 
 	if (event.keyCode == 81) { // Q
 		if (_fullscreen) {

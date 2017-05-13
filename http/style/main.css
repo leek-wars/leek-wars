@@ -2119,10 +2119,11 @@ input:active, input:focus {
 #comments-wrapper {
 	margin: 0 auto;
 	padding: 15px;
+	max-width: 700px;
 }
 
 #comments {
-	padding: 30px;
+	padding: 3px;
 }
 
 .comment {
