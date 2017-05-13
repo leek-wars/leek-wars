@@ -1836,7 +1836,11 @@ LW.socket.connect = function() {
 		}, 2000)
 	}
 
-	LW.socket.socket.onerror = function() {}
+	LW.socket.socket.onerror = function() {
+		setTimeout(function() {
+			LW.socket.connect()
+		}, 2000)
+	}
 
 	LW.socket.socket.onmessage = function(msg) {
 
