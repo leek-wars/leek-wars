@@ -6,7 +6,7 @@ LW.pages.chat.init = function(params, $scope, $page) {
 
 	$page.chat = new ChatController($('#chat .content'), function(message) {
 		LW.socket.send([FORUM_CHAT_SEND, $page.chat.channel, message])
-	})
+	}, true)
 	for (var c in LW.chat.channels) {
 		for (var m in LW.chat.messages[LW.chat.channels[c]]) {
 			var message = LW.chat.messages[LW.chat.channels[c]][m]
