@@ -258,7 +258,7 @@ function getFight() {
 
 			var queue = data.fight.queue
 
-			if (queue.position == -1) {
+			if (queue.position == -1 || queue.position == 0) {
 
 				$('.queue-position').show().text(_.lang.get('fight', 'generating'))
 
