@@ -102,6 +102,7 @@ var BATTLE_ROYALE_REGISTER = 28;
 var BATTLE_ROYALE_UPDATE = 29;
 var BATTLE_ROYALE_START = 30;
 var BATTLE_ROYALE_LEAVE = 31;
+var BATTLE_ROYALE_CHAT_NOTIF = 32;
 
 var NOTIFICATION_UP_LEVEL = 1 // Passage de niveau
 var NOTIFICATION_FIGHT_REPORT = 2 // Rapport de combat
@@ -1869,6 +1870,10 @@ LW.socket.connect = function() {
 				LW.chat.receive(data)
 				break
 			}
+			case BATTLE_ROYALE_CHAT_NOTIF: {
+				LW.chat.br_notif(data)
+				break
+			}
 
 			case CHAT_MUTE_USER : {
 
@@ -2133,6 +2138,10 @@ LW.chat.receive = function(data) {
 
 	if (!(message.lang in LW.chat.messages)) LW.chat.messages[message.lang] = []
 	LW.chat.messages[message.lang].push(message)
+}
+
+LW.chat.br_notif = function(data) {
+
 }
 
 LW.chat.mute_user = function(data) {
@@ -3874,111 +3883,25 @@ var ChatController = function(chat_element, send_callback, enable_moderation) {
 		$('#chat-messages .chat-message .flag').hide()
 	}
 
+	ChatController.prototype.receive_br_notif = function(data) {
+
+		var html = "<a href='/fight/" + data.fight_id + "'>" +
+			"<div class='chat-br-notification'>" + data.content + "</div></a>"
+		this.insert_message(html, data)
+	}
+
 	ChatController.prototype.receive_message = function(data) {
 
-		message = LW.commands(message, data.author_name)
-		var lang = data.lang
-		var author = data.farmer_id
-		var authorName = data.farmer_name
-		var msg = data.content
-		var time = data.date
-		var color = data.farmer_color
-		var avatarChanged = data.avatar_changed
-		var flag = $("#chat-languages img[code='" + lang + "']").attr('src')
-
-		var message = _.protect(msg)
-
+		var message = _.protect(data.content)
 		message = _.linkify(message)
 		message = LW.smiley(message)
 		message = LW.latexify(message)
+		message = LW.commands(message, data.author_name)
 		message = message.replace(/\n/g, '<br>')
 
-		var date = new Date(time * 1000);
-		var minuts = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
-		var timeStr = date.getHours() + ":" + minuts;
+		var elem = this.insert_message(message, data)
 
-		var completeDate = _.format.dateTime(time);
-
-		// Scroll
-		var scrollAction = false
-		if (this.msg_elem.length > 0) {
-			if (this.msg_elem[0].scrollHeight - this.msg_elem.scrollTop() - this.msg_elem.height() < 100) {
-				scrollAction = true
-			}
-		}
-
-		// Dernier message envoyé par la meme personne, y'a moins de 2 minutes ?
-		var last = null;
-		var messages = this.msg_elem.find('.chat-message');
-		for (var i = 0; i < messages.length; ++i) {
-			var m = messages[i];
-			var t = parseInt($(m).attr('time'));
-			if (t > time) break;
-			last = $(m);
-		}
-
-		if (lang == null) lang = '_';
-
-		if (last != null && last.attr('author') == author && time - parseInt(last.attr('time')) < 120 && last.attr('lang') == lang) {
-
-			// On ajoute direct dans le message précédent
-			last.find('.chat-message-messages').append("<div>" + message + "</div>");
-
-			var last_message = last.find('.chat-message-messages div').last()
-			if (last_message.text() == '' && last_message.find('.smiley').length == 1) {
-				last_message.find('.smiley').addClass('large')
-			}
-
-		} else {
-
-			var avatar = avatarChanged > 0 ? LW.avatarURL + '/avatar/' + author + ".png" : LW.staticURL + "/image/no_avatar.png";
-
-			var m_date = _.format.date(time)
-			var flag = true
-			var objDate = {
-				"date": m_date,
-				"lang": lang
-			}
-			var messageData = ""
-			for (var i = 0; i < this.msg_date.length; i++) {
-				if (this.msg_date[i].date == m_date && this.msg_date[i].lang == lang) {
-					flag = false;
-					break;
-				}
-			}
-			if (flag) {
-				this.msg_date.push(objDate)
-				messageData += "<div class='chat-date' lang='" + lang + "'>" + m_date + "</div>"
-			}
-			messageData += "<div class='chat-message' author='" + author + "' time='" + time + "' lang='" + lang + "'>";
-			messageData += "<a href='/farmer/" + author + "'><img class='chat-avatar' src='" + avatar + "'></img></a>";
-			messageData += "<div><a href='/farmer/" + author + "'><span class='chat-message-author " + color + "'>";
-			if (lang != "_") {
-				messageData += "<img class='flag' src='" + LW.staticURL + _.lang.languages[lang].flag + "'></img>";
-			}
-			messageData += authorName + "</span></a>"
-
-			if (enable_moderation && author != LW.farmer.id && color != 'admin') {
-				messageData += "<span class='report'> • report</span>"
-				if (LW.farmer.moderator) {
-					messageData += "<span class='mute'> • mute</span> "
-					messageData += "<span class='unmute'> • unmute</span>"
-				}
-			}
-			messageData += "</div>";
-			messageData += "<div class='chat-message-time' title='" + completeDate + "'>" + timeStr + "</div>";
-			messageData += "<div class='chat-message-messages'><div>" + message + "</div></div>";
-
-			messageData += "</div>";
-
-			var elem = $(messageData)
-
-			if (last == null) {
-				this.msg_elem.prepend(elem);
-			} else {
-				elem.insertAfter(last);
-			}
-
+		if (elem != null) {
 			elem.find('.mute').click(function(e) {
 
 				var mutePopup = new _.popup.new('main.mute_popup', { name: authorName })
@@ -4030,12 +3953,109 @@ var ChatController = function(chat_element, send_callback, enable_moderation) {
 				last_message.find('.smiley').addClass('large')
 			}
 		}
+	}
+
+	ChatController.prototype.insert_message = function(message_html, data) {
+
+		var lang = data.lang
+		var author = data.farmer_id
+		var authorName = data.farmer_name
+		var msg = data.content
+		var time = data.date
+		var color = data.farmer_color
+		var avatarChanged = data.avatar_changed
+
+		var date = new Date(time * 1000)
+		var minuts = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes()
+		var timeStr = date.getHours() + ":" + minuts
+		var completeDate = _.format.dateTime(time)
+
+		// Scroll
+		var scrollAction = false
+		if (this.msg_elem.length > 0) {
+			if (this.msg_elem[0].scrollHeight - this.msg_elem.scrollTop() - this.msg_elem.height() < 100) {
+				scrollAction = true
+			}
+		}
+
+		// Dernier message envoyé par la meme personne, y'a moins de 2 minutes ?
+		var last = null
+		var messages = this.msg_elem.find('.chat-message')
+		for (var i = 0; i < messages.length; ++i) {
+			var m = messages[i]
+			var t = parseInt($(m).attr('time'))
+			if (t > time) break
+			last = $(m)
+		}
+
+		if (lang == null) lang = '_'
+
+		if (last != null && last.attr('author') == author && time - parseInt(last.attr('time')) < 120 && last.attr('lang') == lang) {
+
+			// On ajoute direct dans le message précédent
+			last.find('.chat-message-messages').append("<div>" + message_html + "</div>");
+
+		} else {
+
+			var avatar = avatarChanged > 0 ? LW.avatarURL + '/avatar/' + author + ".png" : LW.staticURL + "/image/no_avatar.png";
+
+			var m_date = _.format.date(time)
+			var flag = true
+			var objDate = {
+				"date": m_date,
+				"lang": lang
+			}
+			var messageData = ""
+			for (var i = 0; i < this.msg_date.length; i++) {
+				if (this.msg_date[i].date == m_date && this.msg_date[i].lang == lang) {
+					flag = false;
+					break;
+				}
+			}
+			if (flag) {
+				this.msg_date.push(objDate)
+				messageData += "<div class='chat-date' lang='" + lang + "'>" + m_date + "</div>"
+			}
+			messageData += "<div class='chat-message' author='" + author + "' time='" + time + "' lang='" + lang + "'>";
+			if (author != 0) {
+				messageData += "<a href='/farmer/" + author + "'><img class='chat-avatar' src='" + avatar + "'></img></a>";
+			} else {
+				messageData += "<img class='chat-avatar' src='" + LW.staticURL + 'image/favicon.png' + "'></img>";
+			}
+			messageData += "<div>"
+			if (author != 0) {
+				messageData += "<a href='/farmer/" + author + "'>"
+			}
+			messageData += "<span class='chat-message-author " + color + "'>";
+			if (lang != "_") {
+				messageData += "<img class='flag' src='" + LW.staticURL + _.lang.languages[lang].flag + "'></img>";
+			}
+			messageData += authorName + "</span>"
+			if (author != 0) messageData += "</a>"
+
+			if (enable_moderation && author != LW.farmer.id && color != 'admin' && author != 0) {
+				messageData += "<span class='report'> • report</span>"
+				if (LW.farmer.moderator) {
+					messageData += "<span class='mute'> • mute</span> "
+					messageData += "<span class='unmute'> • unmute</span>"
+				}
+			}
+			messageData += "</div>";
+			messageData += "<div class='chat-message-time' title='" + completeDate + "'>" + timeStr + "</div>";
+			messageData += "<div class='chat-message-messages'><div>" + message_html + "</div></div>";
+			messageData += "</div>";
+
+			var elem = $(messageData)
+			if (last == null) {
+				this.msg_elem.prepend(elem);
+			} else {
+				elem.insertAfter(last);
+			}
+		}
 
 		if (scrollAction) {
 			var e = this.msg_elem
-
 			this.msg_elem.removeClass('new-messages')
-
 			// FIXME dirty but seems working
 			setTimeout(function() {
 				e.scrollTop(e[0].scrollHeight + 1000);

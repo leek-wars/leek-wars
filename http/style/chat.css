@@ -183,3 +183,12 @@
 	background-color: #dcdcdc;
 	cursor: pointer;
 }
+
+.chat-br-notification {
+	padding: 4px 7px;
+	background: #5FAD1B;
+	border-radius: 4px;
+	color: white;
+	display: inline-block;
+	margin: 2px;
+}
