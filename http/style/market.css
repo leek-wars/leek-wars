@@ -86,6 +86,22 @@
 	opacity: 0.4;
 }
 
+/*
+ * Fights
+ */
+#market-page .fights {
+	width: 140px;
+	display: inline-block;
+	margin: 10px 5px;
+	padding: 10px;
+	font-size: 18px;
+	color: #777;
+	cursor: pointer;
+}
+
+#market-page .fights img {
+	width: 60px;
+}
 
 /*
  * Armes

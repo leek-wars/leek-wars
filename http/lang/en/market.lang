@@ -12,6 +12,7 @@ confirm_purchase				Confirm the purchase
 confirm_sell					Confirm the sale
 crystals_after_purchase			Crystals after purchase
 crystals_before_purchase		Crystals before purchase
+fights							Fights
 habs_after_purchase				Habs after purchase
 habs_after_sell					Habs after sale
 habs_before_purchase			Habs before purchase
@@ -19,6 +20,8 @@ habs_before_sell				Habs before sale
 hat_bought						Hat bought!
 hats							Hats
 hat_selled						Hat sold!
+n_fights						%s fights
+n_fights_desc					Pack of %s combats to be used immediately
 potion							Potion
 potion_bought					Potion bought!
 potions							Potions

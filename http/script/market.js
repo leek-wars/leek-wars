@@ -42,6 +42,26 @@ LW.pages.market.init = function(params, $scope, $page) {
 			}
 		}
 
+		var fights = [100, 200, 500, 1000]
+		var costs = [1, 1.8, 4, 7]
+		$scope.fight_packs = []
+		for (var p in fights) {
+			var count = fights[p]
+			var pack = {
+				id: count + 'fights',
+				name: count + 'fights',
+				title: _.lang.get('market', 'n_fights', count),
+				price_habs: costs[p] * 1000000,
+				price_crystals: costs[p] * 100,
+				sellable: false,
+				type: ITEM_FIGHTS,
+				description: _.lang.get('market', 'n_fights_desc', count)
+			}
+			$scope.fight_packs.push(pack)
+			previews[count + 'fights'] = LW.createFightsPreview(pack)
+			all[pack.id] = pack
+		}
+
 		$scope.items = all
 		$scope.weapons = weapons
 		$scope.chips = chips

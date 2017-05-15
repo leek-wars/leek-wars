@@ -13,6 +13,22 @@
 	<div class='column8'>
 
 		<div class='panel'>
+			<div class='header'>
+				<h2>{#fights}</h2>
+			</div>
+			<div class='content items'>
+				<div id='weapons'>
+					@foreach (pack in fight_packs)
+						<div id='item-{pack.id}' type='fights' name='{pack.name}' class='item fights' farmer-count='0' leek-count='0'>
+							<img src='{{static}}image/market/fights.png'></img>
+							<div>{pack.title}</div>
+						</div>
+					@end
+				</div>
+			</div>
+		</div>
+
+		<div class='panel'>
 
 			<div class='header'>
 				<h2>{#weapons}</h2>

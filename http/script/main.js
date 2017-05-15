@@ -157,6 +157,7 @@ var ITEM_WEAPON = 1
 var ITEM_CHIP = 2
 var ITEM_POTION = 3
 var ITEM_HAT = 4
+var ITEM_FIGHTS = 99
 
 var POTION_EFFECT_RESTAT = 1;
 var POTION_EFFECT_CHANGE_SKIN = 2;
@@ -3312,6 +3313,25 @@ LW.createHatPreview = function(template) {
 	if (_.lang.has('hat', template.name + "_desc")) {
 		preview += "<div class='desc'>" + _.lang.get('hat', template.name + "_desc") + "</div>"
 	}
+
+	preview += "<div class='stats'></div>"
+	preview += "</div>"
+
+	return preview
+}
+
+LW.createFightsPreview = function(pack) {
+
+	var preview = "<div class='item-preview'>"
+	preview += "<div class='header'>"
+
+	preview += "<h2 class='name'>" + pack.title + "</h2>";
+	// preview += "<div class='level'>" + _.lang.get('effect', 'level_n', template.level) + "</div>";
+	preview += "</div><br>"
+
+	preview += "<div class='image'><img src='" + LW.staticURL + "image/market/fights.png'></img></div><br>";
+
+	preview += "<div class='desc'>" + pack.description + "</div>"
 
 	preview += "<div class='stats'></div>"
 	preview += "</div>"
