@@ -50,6 +50,7 @@ garden							Agressions
 garden_no						NON
 garden_yes						OUI
 hide_registers					Masquer les registres
+history							Historique
 level_n							Niveau %s
 level_popup_no_news				Pas de nouvel item pour ce niveau.
 level_popup_title				<b>%1$s</b> passe niveau <b>%2$s</b> !

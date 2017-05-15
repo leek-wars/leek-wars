@@ -50,6 +50,7 @@ garden							Garden
 garden_no						NO
 garden_yes						YES
 hide_registers					Hide registers
+history							History
 level_n							Level %s
 level_popup_no_news				No new item for this level.
 level_popup_title				<b>%1$s</b> reaches level <b>%2$s</b>!

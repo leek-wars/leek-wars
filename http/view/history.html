@@ -1,0 +1,22 @@
+<h1>{#title}</h1>
+
+<div class='panel'>
+
+	<div class='content'>
+
+		<div class='summary'>
+			<div class='image'></div>
+		</div>
+
+		<div class='fight-history'>
+			@foreach (fight in fights)
+				<a href='/fight/{fight.id}'>
+					<div class='fight {fight.result}'>
+						Fight {fight.id}
+						<div class='fight-time'>{_.format.dateTime(fight.date)}</div>
+					</div>
+				</a>
+			@end
+		</div>
+	</div>
+</div>

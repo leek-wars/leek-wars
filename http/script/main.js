@@ -526,6 +526,7 @@ LW.pages = {
 		scripts: ['https://cdnjs.cloudflare.com/ajax/libs/chartist/0.10.1/chartist.min.js'],
 		styles: [ 'https://cdnjs.cloudflare.com/ajax/libs/chartist/0.10.1/chartist.min.css']
 	},
+	history: {},
 
 	moderation: {
 		moderator: true
@@ -1148,6 +1149,10 @@ page('/leek', function(ctx) {
 
 page('/leek/:id', function(ctx) {
 	LW.loadPage('leek', ctx.params)
+})
+
+page('/leek/:id/history', function(ctx) {
+	LW.loadPage('history', ctx.params)
 })
 
 page('/farmer', function() {
