@@ -1892,7 +1892,6 @@ input:active, input:focus {
 	margin: 5px;
 	color: #333;
 	text-align: center;
-	/*min-width: 240px;*/
 	border-radius: 3px;
 	font-size: 15px;
 	height: 42px;
