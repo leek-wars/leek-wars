@@ -4063,10 +4063,6 @@ var ChatController = function(chat_element, send_callback, enable_moderation) {
 		} else {
 			this.msg_elem.addClass('new-messages')
 		}
-
-		if (LW.chat.channels.length == 1) {
-			hideFlags()
-		}
 	}
 
 	ChatController.prototype.clear = function() {
