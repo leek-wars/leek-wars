@@ -1871,7 +1871,7 @@ LW.socket.connect = function() {
 				break
 			}
 			case BATTLE_ROYALE_CHAT_NOTIF: {
-				LW.chat.br_notif(data)
+				LW.chat.controller.receive_br_notif({fight_id: data[0]})
 				break
 			}
 
@@ -2140,12 +2140,7 @@ LW.chat.receive = function(data) {
 	LW.chat.messages[message.lang].push(message)
 }
 
-LW.chat.br_notif = function(data) {
-
-}
-
 LW.chat.mute_user = function(data) {
-
 	LW.chat.controller.mute_user(data);
 }
 
