@@ -16,6 +16,9 @@ var ConsoleController = function(console_element) {
 	console_element.on('mouseup', function() {
 		input.focus()
 	})
+	input.on('keyup', function(e) {
+		e.stopPropagation()
+	})
 	input.on('keydown', function(e) {
 		if (e.keyCode == 13) {
 			var code = $(this).val()
@@ -42,6 +45,7 @@ var ConsoleController = function(console_element) {
 				input.val('')
 			})
 		}
+		e.stopPropagation()
 	})
 	this.focus = function() {
 		input.focus()
