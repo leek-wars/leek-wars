@@ -94,26 +94,6 @@ LW.pages.market.init = function(params, $scope, $page) {
 			}
 		})
 
-		// Flèches droites et gauche
-		/*
-		$(document).keydown(function(e) {
-			if (e.keyCode == 37) { // Gauche
-				//~ var currentItem = $('#' + currentPage).find('.selected')
-				//~ var prev = currentItem.prev()
-				//~ if (prev.length == 0) prev = currentItem.parent().children().last()
-				//~ selectItem(prev)
-				return false
-			}
-			if (e.keyCode == 39) { // Droite
-				//~ var currentItem = $('#' + currentPage).find('.selected')
-				//~ var next = currentItem.next()
-				//~ if (next.length == 0) next = currentItem.parent().children().first()
-				//~ selectItem(next)
-				return false
-			}
-		})
-		*/
-
 		if ('item' in params) {
 			LW.pages.market.selectItem(params.item)
 		} else {
@@ -127,7 +107,6 @@ LW.pages.market.resize = function() {
 }
 
 LW.pages.market.scroll = function(scroll) {
-
 	if (scroll < 137) {
 		$('#preview-panel').css('position', 'static')
 	} else {
@@ -136,8 +115,40 @@ LW.pages.market.scroll = function(scroll) {
 	}
 }
 
-LW.pages.market.update = function(params) {
+LW.pages.market.keydown = function(e) {
+	var get_line_count = function(item) {
+		return Math.floor(item.parent().innerWidth() / item.outerWidth())
+	}
+	var current = $('#market-page .item.selected')
+	if (e.keyCode == 37) { // Left arrow
+		var prev = current.prev('.item')
+		if (prev.length == 0) prev = current.parent().children().last('.item')
+		LW.pages.market.selectItem(prev.attr('name'))
+	}
+	else if (e.keyCode == 39) { // Right arrow
+		var next = current.next('.item')
+		if (next.length == 0) next = current.parent().children().first('.item')
+		LW.pages.market.selectItem(next.attr('name'))
+	}
+	else if (e.keyCode == 40) { // Down arrow
+		var index = (current.index() + get_line_count(current)) % current.parent().children().length
+		var next = $(current.parent().children()[index])
+		LW.pages.market.selectItem(next.attr('name'))
+	}
+	else if (e.keyCode == 38) { // Top arrow
+		var index = current.index() - get_line_count(current)
+		if (index < 0) index = current.parent().children().length + index
+		var next = $(current.parent().children()[index])
+		LW.pages.market.selectItem(next.attr('name'))
+	}
+	event.preventDefault()
+}
 
+LW.pages.market.keyup = function(e) {
+
+}
+
+LW.pages.market.update = function(params) {
 	LW.pages.market.selectItem(params.item)
 }
 
