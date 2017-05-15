@@ -727,7 +727,7 @@ $(document).ready(function() {
 				if ($('#social-panel .chat-input-content').is(':focus')) {
 					return null
 				}
-				LW.trigger('keyup')
+				LW.trigger('keyup', event)
 			})
 			$(window).keydown(function(event) {
 				if ($('#social-panel .chat-input-content').is(':focus')) {
