@@ -2984,6 +2984,7 @@ textarea.autogrow {
 /** BR Popup */
 .popup.battle_royale_popup .leek {
 	display: inline-block;
+	text-align: center;
 }
 
 /* LeekScript console */
