@@ -2059,7 +2059,7 @@ function linkifyElem(elem) {
 	$(elem).html(_.linkify($(elem).html()))
 }
 
-function commands(text, authorName) {
+LW.commands = function(text, authorName) {
 	text = chat_commands.wikiCommands(text)
 	chat_commands.list.forEach(function(command) {
 		if (command.options) {
@@ -3876,6 +3876,7 @@ var ChatController = function(chat_element, send_callback, enable_moderation) {
 
 	ChatController.prototype.receive_message = function(data) {
 
+		message = LW.commands(message, data.author_name)
 		var lang = data.lang
 		var author = data.farmer_id
 		var authorName = data.farmer_name
@@ -3890,7 +3891,6 @@ var ChatController = function(chat_element, send_callback, enable_moderation) {
 		message = _.linkify(message)
 		message = LW.smiley(message)
 		message = LW.latexify(message)
-		message = commands(message, authorName)
 		message = message.replace(/\n/g, '<br>')
 
 		var date = new Date(time * 1000);
