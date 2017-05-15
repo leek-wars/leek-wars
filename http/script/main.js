@@ -3881,7 +3881,7 @@ var ChatController = function(chat_element, send_callback, enable_moderation) {
 	ChatController.prototype.receive_br_notif = function(data) {
 
 		var html = "<a href='/fight/" + data.fight_id + "'>" +
-			"<div class='chat-br-notification'>" + data.content + "</div></a>"
+			"<div class='chat-br-notification'>" + _.lang.get('main', 'br_started_message') + "</div></a>"
 		this.insert_message(html, data)
 	}
 
