@@ -129,6 +129,7 @@ var NOTIFICATION_TEAM_TOURNAMENT_WIN = 22 // Victoire tournoi team
 var NOTIFICATION_TEAM_TOURNAMENT_END = 23 // Fin d'un tournoi de team
 var NOTIFICATION_REPORTING_PROCESSED = 24 // Signalement traité par un modérateur
 var NOTIFICATION_FARMER_CHALLENGE = 25 // Défi éleveur
+var NOTIFICATION_BATTLE_ROYALE_STARTED = 26; // Battle royale
 
 LW.WARNING = {
 	INCORRECT_FARMER_NAME: 1,
@@ -2591,6 +2592,12 @@ LW.notifications.getData = function(notification) {
 
 		image = "reporting_processed"
 		title = [targetName]
+
+	} else if (type == NOTIFICATION_BATTLE_ROYALE_STARTED) {
+
+		fightID = params[0]
+		link = "/fight/" + fightID
+		image = "fight"
 
 	} else {
 

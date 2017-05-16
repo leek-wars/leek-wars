@@ -16,6 +16,7 @@ message_22			Voir le tournoi
 message_23			Voir le tournoi
 message_24			Merci pour le signalement
 message_25			Voir le combat
+message_26			Voir la Battle Royale
 message_3			Voir le message
 message_3_old			Voir le message
 message_4			Voir le combat
@@ -43,6 +44,7 @@ title_22			Votre compo <b>%s</b> a gagné un tournoi d'équipe !
 title_23			Votre compo <b>%s</b> a terminé son combat de <b>%s</b> !
 title_24			Le signalement contre <b>%s</b> a été traité par un modérateur
 title_25			<b>%s</b> vous a défié!
+title_26			Une Battle Royale a commencé!
 title_3			<b>%s</b> a répondu au sujet <b>%s</b>
 title_3_old			<b>%s</b> a répondu sur le forum
 title_4			<b>%s</b> a participé à un combat contre <b>%s</b>

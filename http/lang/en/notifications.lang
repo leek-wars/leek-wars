@@ -16,6 +16,7 @@ message_22			See the tournament
 message_23			See the tournament
 message_24			Thank you for your report
 message_25			See the fight
+message_26			See the Battle Royale
 message_3			See the message
 message_3_old			See the message
 message_4			See the fight
@@ -43,6 +44,7 @@ title_22			Your composition <b>%s</b> has won a team tournament!
 title_23			Your composition <b>%s</b> has finished its <b>%s</b> fight!
 title_24			The report against <b>%s</b> has been processed by a moderator
 title_25			You have been challenged by <b>%s</b>!
+title_26			A Battle Royale has started!
 title_3			<b>%s</b> answered to the topic </b>%s</b>
 title_3_old			<b>%s</b> answered on the forum
 title_4			<b>%s</b> was involved in a fight against <b>%s</b>
