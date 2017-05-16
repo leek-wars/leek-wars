@@ -3900,6 +3900,7 @@ var ChatController = function(chat_element, send_callback, enable_moderation) {
 	}
 
 	ChatController.prototype.receive_message = function(data) {
+		if (data.length < 7) return ;
 
 		var message = _.protect(data.content)
 		message = _.linkify(message)
