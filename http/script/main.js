@@ -3909,44 +3909,45 @@ var ChatController = function(chat_element, send_callback, enable_moderation) {
 		message = LW.commands(message, data.author_name)
 		message = message.replace(/\n/g, '<br>')
 
-		var elem = this.insert_message(message, data)
+		var result = this.insert_message(message, data)
 
-		if (elem != null) {
-			elem.find('.mute').click(function(e) {
+		// Add moderation tools
+		if (result.wrapper != null) {
+			result.wrapper.find('.mute').click(function(e) {
 
-				var mutePopup = new _.popup.new('main.mute_popup', { name: authorName })
+				var mutePopup = new _.popup.new('main.mute_popup', { name: data.farmer_name })
 				var self = $(this)
 
 				mutePopup.find('.mute').click(function() {
-					LW.socket.send([CHAT_REQUEST_MUTE, controller.channel, author]);
+					LW.socket.send([CHAT_REQUEST_MUTE, controller.channel, data.farmer_id]);
 					self.hide()
-					elem.find('.unmute').show()
+					result.wrapper.find('.unmute').show()
 					mutePopup.dismiss()
 				})
 
 				mutePopup.show(e)
 			})
-			elem.find('.unmute').click(function(e) {
+			result.wrapper.find('.unmute').click(function(e) {
 
-				var unmutePopup = new _.popup.new('main.unmute_popup', { name: authorName })
+				var unmutePopup = new _.popup.new('main.unmute_popup', { name: data.farmer_name })
 				var self = $(this)
 
 				unmutePopup.find('.unmute').click(function() {
-					LW.socket.send([CHAT_REQUEST_UNMUTE, controller.channel, author]);
+					LW.socket.send([CHAT_REQUEST_UNMUTE, controller.channel, data.farmer_id]);
 					self.hide()
-					elem.find('.mute').show()
+					result.wrapper.find('.mute').show()
 					unmutePopup.dismiss()
 				})
 
 				unmutePopup.show(e)
 			})
-			elem.find('.unmute').hide()
+			result.wrapper.find('.unmute').hide()
 
-			elem.find('.report').click(function(e) {
+			result.wrapper.find('.report').click(function(e) {
 				LW.createReportPopup({
-					title: _.lang.get('moderation', 'report_farmer', authorName),
-					message: _.lang.get('moderation', 'report_farmer_for_reason', authorName),
-					target: author,
+					title: _.lang.get('moderation', 'report_farmer', data.farmer_name),
+					message: _.lang.get('moderation', 'report_farmer_for_reason', data.farmer_name),
+					target: data.farmer_id,
 					reasons: [
 						LW.WARNING.INCORRECT_FARMER_NAME,
 						LW.WARNING.INCORRECT_AVATAR,
@@ -3954,14 +3955,13 @@ var ChatController = function(chat_element, send_callback, enable_moderation) {
 						LW.WARNING.RUDE_CHAT,
 						LW.WARNING.PROMO_CHAT
 					],
-					parameter: msg
+					parameter: data.content
 				}).show(e)
 			})
-
-			var last_message = elem.find('.chat-message-messages div').last()
-			if (last_message.text() == '' && last_message.find('.smiley').length == 1) {
-				last_message.find('.smiley').addClass('large')
-			}
+		}
+		// Bigger emoji if single emoji
+		if (result.message.text() == '' && result.message.find('.smiley').length == 1) {
+			result.message.find('.smiley').addClass('large')
 		}
 	}
 
@@ -3970,7 +3970,6 @@ var ChatController = function(chat_element, send_callback, enable_moderation) {
 		var lang = data.lang
 		var author = data.farmer_id
 		var authorName = data.farmer_name
-		var msg = data.content
 		var time = data.date
 		var color = data.farmer_color
 		var avatarChanged = data.avatar_changed
@@ -4000,10 +3999,14 @@ var ChatController = function(chat_element, send_callback, enable_moderation) {
 
 		if (lang == null) lang = '_'
 
+		var insertedWrapper = null
+		var insertedMessage = null
+
 		if (last != null && last.attr('author') == author && time - parseInt(last.attr('time')) < 120 && last.attr('lang') == lang) {
 
 			// On ajoute direct dans le message précédent
-			last.find('.chat-message-messages').append("<div>" + message_html + "</div>");
+			insertedMessage = $("<div>" + message_html + "</div>")
+			last.find('.chat-message-messages').append(insertedMessage)
 
 		} else {
 
@@ -4037,7 +4040,7 @@ var ChatController = function(chat_element, send_callback, enable_moderation) {
 				messageData += "<a href='/farmer/" + author + "'>"
 			}
 			messageData += "<span class='chat-message-author " + color + "'>";
-			if (lang != "_") {
+			if (lang in _.lang.languages) {
 				messageData += "<img class='flag' src='" + LW.staticURL + _.lang.languages[lang].flag + "'></img>";
 			}
 			messageData += authorName + "</span>"
@@ -4052,15 +4055,17 @@ var ChatController = function(chat_element, send_callback, enable_moderation) {
 			}
 			messageData += "</div>";
 			messageData += "<div class='chat-message-time' title='" + completeDate + "'>" + timeStr + "</div>";
-			messageData += "<div class='chat-message-messages'><div>" + message_html + "</div></div>";
+			messageData += "<div class='chat-message-messages'></div>";
 			messageData += "</div>";
 
-			var elem = $(messageData)
+			insertedWrapper = $(messageData)
 			if (last == null) {
-				this.msg_elem.prepend(elem);
+				this.msg_elem.prepend(insertedWrapper);
 			} else {
-				elem.insertAfter(last);
+				insertedWrapper.insertAfter(last);
 			}
+			insertedMessage = $('<div>' + message_html + '</div>')
+			insertedWrapper.find('.chat-message-messages').append(insertedMessage)
 		}
 
 		if (scrollAction) {
@@ -4073,6 +4078,7 @@ var ChatController = function(chat_element, send_callback, enable_moderation) {
 		} else {
 			this.msg_elem.addClass('new-messages')
 		}
+		return {wrapper: insertedWrapper, message: insertedMessage}
 	}
 
 	ChatController.prototype.clear = function() {
