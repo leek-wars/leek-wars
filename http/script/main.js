@@ -1871,7 +1871,7 @@ LW.socket.connect = function() {
 				break
 			}
 			case BATTLE_ROYALE_CHAT_NOTIF: {
-				LW.chat.controller.receive_br_notif({fight_id: data[0]})
+				LW.chat.controller.receive_br_notif(data)
 				break
 			}
 
@@ -3879,10 +3879,17 @@ var ChatController = function(chat_element, send_callback, enable_moderation) {
 	}
 
 	ChatController.prototype.receive_br_notif = function(data) {
-
-		var html = "<a href='/fight/" + data.fight_id + "'>" +
+		if (data.length < 3) return ;
+		var fight_id = data[1]
+		var html = "<a href='/fight/" + fight_id + "'>" +
 			"<div class='chat-br-notification'>" + _.lang.get('main', 'br_started_message') + "</div></a>"
-		this.insert_message(html, data)
+
+		this.insert_message(html, {
+			lang: data[0],
+			date: data[2],
+			farmer_id: 0,
+			farmer_name: "Leek Wars"
+		})
 	}
 
 	ChatController.prototype.receive_message = function(data) {

@@ -71,7 +71,6 @@ LW.pages.forum.wsconnected = function() {
 }
 
 LW.pages.forum.wsreceive = function(data) {
-
 	if (!this.chat) return ;
 
 	if (data.type == FORUM_CHAT_RECEIVE) {
@@ -89,7 +88,7 @@ LW.pages.forum.wsreceive = function(data) {
 	} else if (data.type == CHAT_MUTE_USER) {
 		this.chat.mute_user(data.data)
 	} else if (data.type == BATTLE_ROYALE_CHAT_NOTIF) {
-		this.chat.receive_br_notif({fight_id: data.data[0]})
+		this.chat.receive_br_notif(data.data)
 	}
 }
 
