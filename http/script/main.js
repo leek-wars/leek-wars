@@ -862,6 +862,8 @@ LW.init = function(callback) {
 
 LW.initConnected = function(callback) {
 
+	LW.connected = true
+
 	LW.loader.show()
 
 	// SFW
@@ -893,7 +895,6 @@ LW.connect = function(farmer, callback) {
 
 	LW.initConnected(function() {
 
-		LW.connected = true
 		LW.farmer = farmer
 
 		if (LW.farmer.admin) {
@@ -1811,6 +1812,10 @@ LW.socket.closed = function() {
 }
 
 LW.socket.connect = function() {
+
+	if (!LW.connected) {
+		return
+	}
 
 	if (LW.socket.connecting() || LW.socket.connected()) {
 		_.logW("WebSocket already connected!")
