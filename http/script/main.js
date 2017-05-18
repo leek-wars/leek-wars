@@ -985,10 +985,7 @@ LW.disconnect = function() {
 	LW.sfw.off()
 	localStorage['connected'] = false
 	_.titleCounter(0)
-	if (LW.battle_royale.popup != null) {
-		LW.battle_royale.popup.dismiss()
-		LW.battle_royale.popup = null
-	}
+	LW.battle_royale.leave()
 	$('body').removeClass('connected')
 
 	$('#menu .leeks').empty()
@@ -1872,7 +1869,7 @@ LW.socket.connect = function() {
 				break
 			}
 			case BATTLE_ROYALE_CHAT_NOTIF: {
-				LW.chat.controller.receive_br_notif(data)
+				LW.chat.receive_br_notif(data)
 				break
 			}
 
@@ -1953,6 +1950,10 @@ LW.socket.connect = function() {
 			}
 			case BATTLE_ROYALE_START: {
 				LW.battle_royale.start(data)
+				break
+			}
+			case BATTLE_ROYALE_LEAVE: {
+				LW.battle_royale.leave()
 				break
 			}
 		}
@@ -2139,6 +2140,14 @@ LW.chat.receive = function(data) {
 
 	if (!(message.lang in LW.chat.messages)) LW.chat.messages[message.lang] = []
 	LW.chat.messages[message.lang].push(message)
+}
+
+LW.chat.receive_br_notif = function(data) {
+
+	LW.chat.controller.receive_br_notif(data)
+
+	if (!(data[0] in LW.chat.messages)) LW.chat.messages[data[0]] = []
+	LW.chat.messages[data[0]].push(data)
 }
 
 LW.chat.mute_user = function(data) {
@@ -4181,65 +4190,74 @@ LW.battle_royale = {
 LW.battle_royale.init = function() {
 	var leek = localStorage['battle-royale']
 	if (leek && leek != 'null') {
-		LW.battle_royale.show(new Event(12), leek)
+		LW.battle_royale.register(leek)
 	}
 }
 
-LW.battle_royale.show = function(e, leek) {
+LW.battle_royale.register = function(leek) {
+	LW.socket.send([BATTLE_ROYALE_REGISTER, leek])
+	localStorage['battle-royale'] = leek
+	LW.battle_royale.show()
+}
+
+LW.battle_royale.show = function() {
 
 	// Dismiss previous popup
-	if (LW.battle_royale.popup != null) {
-		LW.battle_royale.popup.dismiss()
+	if (LW.battle_royale.popup == null) {
+		LW.battle_royale.popup = new _.popup.new('main.battle_royale_popup', {range: '300-301'}, 600, true, {
+			dismissable: false,
+			draggable: true
+		})
+		LW.battle_royale.popup.onminimize = function() {
+			LW.battle_royale.popup.move($('#wrapper').offset().left + $('#wrapper').width() / 2 - 300, $(window).height() - 40)
+		}
+		LW.battle_royale.popup.ondismiss = function() {
+			LW.battle_royale.leave()
+		}
 	}
-
-	LW.socket.send([BATTLE_ROYALE_REGISTER, leek])
-
-	LW.battle_royale.popup = new _.popup.new('main.battle_royale_popup', {range: '300-301'}, 600, true, {
-		dismissable: false,
-		draggable: true
-	})
-	LW.battle_royale.popup.onminimize = function() {
-		LW.battle_royale.popup.move($('#wrapper').offset().left + $('#wrapper').width() / 2 - 300, $(window).height() - 40)
-	}
-	LW.battle_royale.popup.ondismiss = function() {
-		LW.socket.send([BATTLE_ROYALE_LEAVE])
-		localStorage['battle-royale'] = null
-		_.titleTag(null)
-	}
-	LW.battle_royale.popup.show(e)
+	LW.battle_royale.popup.show()
 	LW.battle_royale.popup.onminimize()
 
+	LW.battle_royale.popup.find('.leeks').html('')
 	LW.battle_royale.last_leeks = {}
-
-	localStorage['battle-royale'] = leek
 }
 
 LW.battle_royale.update = function(data) {
 
-	if (LW.battle_royale.popup) {
-
-		var count = data.data[0]
-		var leeks = data.data[1]
-
-		LW.battle_royale.popup.find('.progress').html(count + ' / 10')
-		_.titleTag('BR ' + count + '/10')
-
-		for (var l in leeks) {
-			if (l in LW.battle_royale.last_leeks) continue
-
-			var html_popup = _.view.render('main.leek_popup', {leek: leeks[l]})
-			LW.battle_royale.popup.find('.leeks').html(LW.battle_royale.popup.find('.leeks').html() + html_popup)
-
-			LW.createLeekImage(leeks[l].id, 0.3, leeks[l].level, leeks[l].skin, leeks[l].hat, function(id, data) {
-				LW.battle_royale.popup.find('.leek[leek=' + id + '] .image').html(data)
-			})
-		}
-		for (var l in LW.battle_royale.last_leeks) {
-			if (l in leeks) continue
-			LW.battle_royale.popup.find('.leek[leek=' + LW.battle_royale.last_leeks[l].id + ']').remove()
-		}
-		LW.battle_royale.last_leeks = leeks
+	if (!LW.battle_royale.popup || !LW.battle_royale.visible) {
+		LW.battle_royale.show()
 	}
+
+	var count = data.data[0]
+	var leeks = data.data[1]
+
+	LW.battle_royale.popup.find('.progress').html(count + ' / 10')
+	_.titleTag('BR ' + count + '/10')
+
+	for (var l in leeks) {
+		if (l in LW.battle_royale.last_leeks) continue
+
+		var html_popup = _.view.render('main.leek_popup', {leek: leeks[l]})
+		LW.battle_royale.popup.find('.leeks').html(LW.battle_royale.popup.find('.leeks').html() + html_popup)
+
+		LW.createLeekImage(leeks[l].id, 0.3, leeks[l].level, leeks[l].skin, leeks[l].hat, function(id, data) {
+			LW.battle_royale.popup.find('.leek[leek=' + id + '] .image').html(data)
+		})
+	}
+	for (var l in LW.battle_royale.last_leeks) {
+		if (l in leeks) continue
+		LW.battle_royale.popup.find('.leek[leek=' + LW.battle_royale.last_leeks[l].id + ']').remove()
+	}
+	LW.battle_royale.last_leeks = leeks
+}
+
+LW.battle_royale.leave = function() {
+	LW.socket.send([BATTLE_ROYALE_LEAVE])
+	localStorage['battle-royale'] = null
+	if (LW.battle_royale.popup.visible) {
+		LW.battle_royale.popup.dismiss()
+	}
+	_.titleTag(null)
 }
 
 LW.battle_royale.start = function(data) {
