@@ -1854,6 +1854,7 @@ LW.socket.connect = function() {
 
 		var id = data[0]
 		var data = data[1]
+		_.log("[WS] Receive " + id, data)
 
 		LW.trigger('wsreceive', {type: id, data: data})
 
@@ -1969,6 +1970,7 @@ LW.socket.send = function(request) {
 }
 
 LW.socket.sendDirect = function(request) {
+	_.log("[WS] Send ", request)
 	LW.socket.socket.send(JSON.stringify(request))
 }
 
