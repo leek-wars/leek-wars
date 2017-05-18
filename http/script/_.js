@@ -606,6 +606,7 @@ _.popup.new = function(view, data, width, direct, options) {
 	this.show = function(e) {
 
 		var popup = this
+		this.visible = true
 
 		if (e == undefined && !direct) {
 			alert("Pas d'event passé dans le show()")
@@ -681,6 +682,8 @@ _.popup.new = function(view, data, width, direct, options) {
 
 	this.dismiss = function() {
 		var popup = this
+		if (!this.visible) return ;
+		this.visible = false
 		// Callback
 		if (this.ondismiss) this.ondismiss()
 		// Animation
