@@ -10,7 +10,11 @@ LW.pages.chat.init = function(params, $scope, $page) {
 	for (var c in LW.chat.channels) {
 		for (var m in LW.chat.messages[LW.chat.channels[c]]) {
 			var message = LW.chat.messages[LW.chat.channels[c]][m]
-			$page.chat.receive_message(message)
+			if (message.length <= 3) {
+				$page.chat.receive_br_notif(message)
+			} else {
+				$page.chat.receive_message(message)
+			}
 		}
 	}
 }
