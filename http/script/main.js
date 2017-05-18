@@ -4261,7 +4261,7 @@ LW.battle_royale.update = function(data) {
 LW.battle_royale.leave = function() {
 	LW.socket.send([BATTLE_ROYALE_LEAVE])
 	localStorage['battle-royale'] = null
-	if (LW.battle_royale.popup.visible) {
+	if (LW.battle_royale.popup && LW.battle_royale.popup.visible) {
 		LW.battle_royale.popup.dismiss()
 	}
 	_.titleTag(null)
