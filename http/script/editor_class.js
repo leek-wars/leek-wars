@@ -4,7 +4,7 @@ var AUTO_SHORTCUTS = [
 	["while", "while (", ") {\n\t\n}", "<h3>Boucle while</h3><br>while ( ... ) { ... }"],
 	["do", "do {\n\t\n} while (", ");", "<h3>Boucle do while</h3><br>do { ... } while( ... );"],
 	["if", 'if (', ') {\n\t\n}', "<h3>Condition if</h3><br>if ( ... ) { ... }"]
-];
+]
 
 /*
  * Classe editor
@@ -12,32 +12,32 @@ var AUTO_SHORTCUTS = [
 var Editor = function(id, name, valid, code, folder, level) {
 
 	// Infos de base
-	this.id = id;
-	this.name = name;
-	this.loaded = false;
-	this.modified = false;
-	this.error = !valid;
-	this.errorLine;
-	this.needTest = false;
-	this.hlLine = null;
-	this.pos;
-	this.completionSelected;
-	this.completionFrom;
-	this.completionTo;
-	this.hoverToken;
-	this.detailTimer;
+	this.id = id
+	this.name = name
+	this.loaded = false
+	this.modified = false
+	this.error = !valid
+	this.errorLine
+	this.needTest = false
+	this.hlLine = null
+	this.pos
+	this.completionSelected
+	this.completionFrom
+	this.completionTo
+	this.hoverToken
+	this.detailTimer
 	this.functions = []
 
 	// Dialog d'autocomplétion
-	this.hintDialog = $("<div class='hint-dialog'><div class='hints'></div><div class='details'></div></div>");
-	$('#hints').append(this.hintDialog);
+	this.hintDialog = $("<div class='hint-dialog'><div class='hints'></div><div class='details'></div></div>")
+	$('#hints').append(this.hintDialog)
 
 	// Dialog de détail
-	this.detailDialog = $("<div class='detail-dialog'></div>");
-	$('#hints').append(this.detailDialog);
+	this.detailDialog = $("<div class='detail-dialog'></div>")
+	$('#hints').append(this.detailDialog)
 
 	// Ajout de l'éditeur
-	$('#editors').append("<div id='" + id + "' class='editor'></div>");
+	$('#editors').append("<div id='" + id + "' class='editor'></div>")
 
 	this.editorDiv = $('#editors .editor[id=' + id + ']')
 	this.editorDiv.hide()
@@ -78,9 +78,9 @@ var Editor = function(id, name, valid, code, folder, level) {
 				editors[id].removeLine();
 			},
 		}
-	});
-	this.editor.on('change', onEditorChange);
-	this.editor.on('cursorActivity', onCursorChange);
+	})
+	this.editor.on('change', onEditorChange)
+	this.editor.on('cursorActivity', onCursorChange)
 
 	this.editorDiv.find('.CodeMirror-scroll').bind('mousewheel', function(e, d) {
 		var zoom = screen.width / window.innerWidth
@@ -109,12 +109,9 @@ var Editor = function(id, name, valid, code, folder, level) {
 	})
 
 	this.hasBeenModified = function() {
-
-		editors[id].modified = true;
-
-		editors[id].removeErrors();
-
-		this.tabDiv.removeClass("modified").addClass("modified");
+		editors[id].modified = true
+		editors[id].removeErrors()
+		this.tabDiv.removeClass("modified").addClass("modified")
 	}
 
 	this.show = function() {
@@ -125,8 +122,8 @@ var Editor = function(id, name, valid, code, folder, level) {
 		this.modified = false;
 
 		// if (!_BASIC) {
-			$('#line-count').text(this.editor.getDoc().lineCount());
-			$('#char-count').text(this.editor.getDoc().getValue().length);
+			$('#line-count').text(this.editor.getDoc().lineCount())
+			$('#char-count').text(this.editor.getDoc().getValue().length)
 		// }
 
 		if (!this.loaded && this.id > 0) {
@@ -177,8 +174,8 @@ var Editor = function(id, name, valid, code, folder, level) {
 					// _editorResize();
 
 				// } else {
-					editor.editor.setValue(ai);
-					editor.editor.getDoc().clearHistory();
+					editor.editor.setValue(ai)
+					editor.editor.getDoc().clearHistory()
 
 					setTimeout(function() {
 						editor.updateIncludes()
@@ -191,7 +188,7 @@ var Editor = function(id, name, valid, code, folder, level) {
 					editor.show()
 				}
 			}
-		});
+		})
 	}
 
 	this.save = function() {
@@ -215,46 +212,46 @@ var Editor = function(id, name, valid, code, folder, level) {
 
 		_.post('ai/save/', {ai_id: saveID, code: content}, function(data) {
 
-			_saving = false;
-			$('#results').empty().show();
-			$('#compiling').hide();
+			_saving = false
+			$('#results').empty().show()
+			$('#compiling').hide()
 
 			if (editor.v2 == false)
 			if (!data.success || data.result.length == 0) {
 
-				$('#results').append("<div class='error'>× <i>" + _.lang.get('editor', 'server_error') + "</i></div>");
-				return;
+				$('#results').append("<div class='error'>× <i>" + _.lang.get('editor', 'server_error') + "</i></div>")
+				return
 			}
 
 			if (editor.v2 == false)
 			for (var r in data.result) {
 
-				var res = data.result[r];
-				var code = res[0];
-				var ia = res[1];
+				var res = data.result[r]
+				var code = res[0]
+				var ia = res[1]
 
-				var iaEditor = editors[ia];
-				if (!iaEditor) continue;
-				var iaName = iaEditor.name;
+				var iaEditor = editors[ia]
+				if (!iaEditor) continue
+				var iaName = iaEditor.name
 
 				if (code == 2) {
 
-					$('#results').append("<div class='good'>✓ " + _.lang.get('editor', 'valid_ai', _.protect(iaName)) + "</div><br>");
+					$('#results').append("<div class='good'>✓ " + _.lang.get('editor', 'valid_ai', _.protect(iaName)) + "</div><br>")
 					$('#results .good').last().delay(800).fadeOut(function() {
-						$('#results').hide();
-					});
+						$('#results').hide()
+					})
 
-					iaEditor.error = false;
-					iaEditor.tabDiv.removeClass("error");
-					$('.line-error').removeClass("line-error");
+					iaEditor.error = false
+					iaEditor.tabDiv.removeClass("error")
+					$('.line-error').removeClass("line-error")
 
 				} else if (code == 1) {
 
-					var info = res[2];
+					var info = res[2]
 
-					$('#results').append("<div class='error'>× <b>" + _.protect(iaName) + "</b>&nbsp; ▶ " + info + "</div><br>");
-					iaEditor.tabDiv.removeClass("error").addClass("error");
-					iaEditor.error = true;
+					$('#results').append("<div class='error'>× <b>" + _.protect(iaName) + "</b>&nbsp; ▶ " + info + "</div><br>")
+					iaEditor.tabDiv.removeClass("error").addClass("error")
+					iaEditor.error = true
 
 				} else if (code == 0) {
 
@@ -269,14 +266,14 @@ var Editor = function(id, name, valid, code, folder, level) {
 					}
 					info = '(' + res[5] + ') ' + info
 
-					$('#results').append("<div class='error'>× " + _.lang.get('editor', 'ai_error', _.protect(iaName), line) + "&nbsp; ▶ " + info + "</div><br>");
+					$('#results').append("<div class='error'>× " + _.lang.get('editor', 'ai_error', _.protect(iaName), line) + "&nbsp; ▶ " + info + "</div><br>")
 
-					iaEditor.tabDiv.removeClass("error").addClass("error");
+					iaEditor.tabDiv.removeClass("error").addClass("error")
 
-					iaEditor.error = true;
-					iaEditor.errorLine = line;
+					iaEditor.error = true
+					iaEditor.errorLine = line
 
-					iaEditor.showErrors();
+					iaEditor.showErrors()
 				}
 			}
 
@@ -311,15 +308,15 @@ var Editor = function(id, name, valid, code, folder, level) {
 		// Save before
 		if (this.modified) {
 
-			this.needTest = true;
-			this.save();
-			return;
+			this.needTest = true
+			this.save()
+			return
 		}
 
 		if (!this.v2) {
 			// Sauvegardé et erreur, on teste pas ça !
 			if (this.error) {
-				return;
+				return
 			}
 			LW.pages.editor.test(_testEvent)
 		} else {
@@ -340,54 +337,53 @@ var Editor = function(id, name, valid, code, folder, level) {
 		var cursor = this.editor.getCursor();
 
 		if (!this.pos) {
-			this.pos = cursor;
+			this.pos = cursor
 		} else if (this.pos.line != cursor.line) {
-			this.close();
-			this.pos = cursor;
+			this.close()
+			this.pos = cursor
 		}
 
-		if (this.hlLine) this.editor.removeLineClass(this.hlLine, "background", "activeline");
-		this.hlLine = this.editor.addLineClass(cursor.line, "background", "activeline");
+		if (this.hlLine) this.editor.removeLineClass(this.hlLine, "background", "activeline")
+		this.hlLine = this.editor.addLineClass(cursor.line, "background", "activeline")
 	}
 
 	// Not used
 	this.mergeLastTwoOperations = function() {
-		var history = this.editor.getDoc().getHistory();
-		var last = history.done.pop();
-		history.done[history.done.length - 1].changes.push(last.changes[0]);
-		this.editor.getDoc().setHistory(history);
+		var history = this.editor.getDoc().getHistory()
+		var last = history.done.pop()
+		history.done[history.done.length - 1].changes.push(last.changes[0])
+		this.editor.getDoc().setHistory(history)
 	}
 
 	this.change = function(changes) {
 
-		var userChange = changes.origin == "+input" || changes.origin == "+delete";
+		var userChange = changes.origin == "+input" || changes.origin == "+delete"
 
 		if (changes.origin != "setValue") {
-			this.hasBeenModified();
+			this.hasBeenModified()
 		}
 
 		if (changes.origin == "+input" || (this.hintDialog.is(":visible") && changes.origin == "+delete")) {
-			this.autocomplete();
+			this.autocomplete()
 		}
 
-		$('#line-count').text(this.editor.getDoc().lineCount());
-		$('#char-count').text(this.editor.getDoc().getValue().length);
+		$('#line-count').text(this.editor.getDoc().lineCount())
+		$('#char-count').text(this.editor.getDoc().getValue().length)
 
 		if (userChange && _autoClosing) {
 
-			var editor = this.editor;
-			var chars = '{([\'"';
-			var add = '})]\'"';
+			var editor = this.editor
+			var chars = '{([\'"'
+			var add = '})]\'"'
 
-			var cursor = editor.getCursor();
-			var nextChar = editor.getLine(cursor.line)[cursor.ch];
+			var cursor = editor.getCursor()
+			var nextChar = editor.getLine(cursor.line)[cursor.ch]
 
 			// Enter
-			if (changes.from.ch == changes.to.ch && changes.from.line == changes.to.line && changes.text.length == 2
-				&& changes.text[0] == '' && changes.text[1] == '') {
+			if (changes.from.ch == changes.to.ch && changes.from.line == changes.to.line && changes.text.length == 2 && changes.text[0] == '' && changes.text[1] == '') {
 
-				var prevLine = editor.getLine(cursor.line - 1);
-				var prevChar = prevLine[prevLine.length - 1];
+				var prevLine = editor.getLine(cursor.line - 1)
+				var prevChar = prevLine[prevLine.length - 1]
 
 				if (prevChar == '{' && nextChar == '}') {
 
@@ -423,57 +419,55 @@ var Editor = function(id, name, valid, code, folder, level) {
 
 			} else if (changes.text[0] == "" && changes.from.ch - changes.to.ch == -1) { // Delete
 
-				var pos = chars.indexOf(changes.removed[0]);
+				var pos = chars.indexOf(changes.removed[0])
 
-				var cursor = editor.getCursor();
-				var nextChar = editor.getLine(cursor.line)[cursor.ch];
+				var cursor = editor.getCursor()
+				var nextChar = editor.getLine(cursor.line)[cursor.ch]
 
 				if (pos > -1 && add.indexOf(nextChar) == pos) { // Delete closing delimitor
 
-					var pos2 = add[pos];
+					var pos2 = add[pos]
 
-					var start = editor.getCursor("from");
-					var end = editor.getCursor("to");
-					end.ch++;
+					var start = editor.getCursor("from")
+					var end = editor.getCursor("to")
+					end.ch++
 
-					editor.setSelection(start, end);
-					editor.replaceSelection("");
-					editor.setSelection(start, start);
-					editor.matchBrackets();
+					editor.setSelection(start, end)
+					editor.replaceSelection("")
+					editor.setSelection(start, start)
+					editor.matchBrackets()
 				}
-
-				editor.matchBrackets();
+				editor.matchBrackets()
 			}
 		}
 	}
 
 	this.formatCode = function() {
 
-		this.editor.setValue(js_beautify(this.editor.getValue(), {'indent_size': 1, 'indent_char': '\t'}));
-
-		this.editor.matchBrackets();
+		this.editor.setValue(js_beautify(this.editor.getValue(), {'indent_size': 1, 'indent_char': '\t'}))
+		this.editor.matchBrackets()
 	}
 
 	this.commentCode = function() {
 
-		var selection = this.editor.getSelection();
-		var start = this.editor.getCursor(true).line;
-		var end = this.editor.getCursor(false).line;
+		var selection = this.editor.getSelection()
+		var start = this.editor.getCursor(true).line
+		var end = this.editor.getCursor(false).line
 
 		for (i = 0; i < end - start + 1; i++) {
 
-			var line = this.editor.getLine(start + i);
+			var line = this.editor.getLine(start + i)
 
-			var pos = 0;
+			var pos = 0
 			for (var j = 0; j < line.length; j++) {
 				if (line.charAt(j) == ' ' || line.charAt(j) == '\t') {
-					pos++;
+					pos++
 				} else {
-					break;
+					break
 				}
 			}
 
-			var cuttedLine = line.slice(pos);
+			var cuttedLine = line.slice(pos)
 			if (cuttedLine.length > 0) {
 
 				var from = {line: start + i, ch: 0}
@@ -486,75 +480,74 @@ var Editor = function(id, name, valid, code, folder, level) {
 				}
 			}
 		}
-		this.editor.matchBrackets();
+		this.editor.matchBrackets()
 	}
 
 	this.getLineIndentation = function(line) {
 
-		var line = this.editor.getLine(line);
+		var line = this.editor.getLine(line)
 
-		var indent = "";
+		var indent = ""
 		for (var j = 0; j < line.length; j++) {
 			if (line[j] == ' ' || line[j] == '\t') {
-				indent += line[j];
+				indent += line[j]
 			} else {
-				break;
+				break
 			}
 		}
-		return indent;
+		return indent
 	}
 
 	this.indentCode = function() {
 
-		var selection = this.editor.getSelection();
-		var start = this.editor.getCursor(true).line;
-		var end = this.editor.getCursor(false).line;
+		var selection = this.editor.getSelection()
+		var start = this.editor.getCursor(true).line
+		var end = this.editor.getCursor(false).line
 
 		for (i = 0; i < end - start + 1; i++) {
 
-			var line = this.editor.getLine(start + i);
+			var line = this.editor.getLine(start + i)
 
 			if (line.length > 0) {
-				this.editor.indentLine(start + i, false);
+				this.editor.indentLine(start + i, false)
 			}
 		}
-		this.editor.matchBrackets();
+		this.editor.matchBrackets()
 	}
 
 	this.removeLine = function() {
 
-		var pos = this.editor.getCursor(true).line;
+		var pos = this.editor.getCursor(true).line
 
 		if (this.editor.somethingSelected()) {
-			this.editor.replaceSelection("");
+			this.editor.replaceSelection("")
 		} else {
-			this.editor.removeLine(this.editor.getCursor(true).line);
+			this.editor.removeLine(this.editor.getCursor(true).line)
 		}
-
-		this.editor.setCursor(pos);
+		this.editor.setCursor(pos)
 	}
 
 	this.duplicateLine = function() {
 
-		var selection = this.editor.getSelection();
+		var selection = this.editor.getSelection()
 
 		if (this.editor.somethingSelected()) {
 
-			var start = this.editor.getCursor(true);
-			var end = this.editor.getCursor(false);
+			var start = this.editor.getCursor(true)
+			var end = this.editor.getCursor(false)
 
-			var selection = this.editor.getSelection();
-			this.editor.replaceSelection(selection + selection);
+			var selection = this.editor.getSelection()
+			this.editor.replaceSelection(selection + selection)
 
-			this.editor.setSelection(start, end);
+			this.editor.setSelection(start, end)
 
 		} else {
-			var start = this.editor.getCursor(true).line;
-			var line = this.editor.getLine(start);
+			var start = this.editor.getCursor(true).line
+			var line = this.editor.getLine(start)
 			this.editor.replaceRange(line + "\n" + line, {line: start, ch: 0}, {line: start, ch: line.length})
 		}
 
-		this.editor.matchBrackets();
+		this.editor.matchBrackets()
 	}
 
 	this.getTokenInformation = function(token, pos) {
@@ -610,7 +603,7 @@ var Editor = function(id, name, valid, code, folder, level) {
 
 		if (this.hintDialog.is(':visible')) return null
 
-		var pos = {left: e.pageX, top: e.pageY };
+		var pos = {left: e.pageX, top: e.pageY }
 
 		if (pos.left < editor.editorDiv.offset().left || pos.top < editor.editorDiv.offset().top) {
 			clearTimeout(editor.detailTimer)
@@ -667,32 +660,32 @@ var Editor = function(id, name, valid, code, folder, level) {
 		// Mise à jour des includes avant
 		this.updateIncludes()
 
-		var editor = this.editor;
-		var Pos = CodeMirror.Pos;
+		var editor = this.editor
+		var Pos = CodeMirror.Pos
 
-		var cur = editor.getCursor();
-		var token = editor.getTokenAt(cur);
+		var cur = editor.getCursor()
+		var token = editor.getTokenAt(cur)
 		var startPos = token.start
 
 		// Trim token
 		var previousLength = token.string.length
-		token.string = $.trim(token.string);
+		token.string = $.trim(token.string)
 		startPos += previousLength - token.string.length
 
 		if (!force && token.string.length == 0) {
-			this.close();
-			return;
+			this.close()
+			return
 		}
 
 		function forEach(arr, f) {
-			for (var i = 0, e = arr.length; i < e; ++i) f(arr[i]);
+			for (var i = 0, e = arr.length; i < e; ++i) f(arr[i])
 		}
 
-		var tprop = token;
-		token.state = CodeMirror.innerMode(editor.getMode(), token.state).state;
+		var tprop = token
+		token.state = CodeMirror.innerMode(editor.getMode(), token.state).state
 
-		var completions = new Array();
-		var start = token.string;
+		var completions = new Array()
+		var start = token.string
 
 		function maybeAdd(data) {
 			if (typeof data == 'string') {
@@ -714,8 +707,8 @@ var Editor = function(id, name, valid, code, folder, level) {
 		}
 
 		// Variables globales
-		var vars = [];
-		vars[this.id] = token.state.globalVars;
+		var vars = []
+		vars[this.id] = token.state.globalVars
 
 		for (var i in this.getGlobalVars(vars)) {
 			var file = vars[i];
@@ -807,7 +800,7 @@ var Editor = function(id, name, valid, code, folder, level) {
 
 			$('html').click(function() {
 				thisEditor.close()
-			});
+			})
 
 			this.keyMap = {
 			  Up: thisEditor.up,
@@ -827,50 +820,48 @@ var Editor = function(id, name, valid, code, folder, level) {
 	}.bind(this)
 
 	this.up = function() {
-		var index = this.selectedCompletion == 0 ? (this.hintDialog.find('.hint').length - 1) : this.selectedCompletion - 1;
-		this.selectHint(index);
-	}.bind(this);
+		var index = this.selectedCompletion == 0 ? (this.hintDialog.find('.hint').length - 1) : this.selectedCompletion - 1
+		this.selectHint(index)
+	}.bind(this)
 
 	this.down = function() {
-		var index = (this.selectedCompletion + 1) % this.hintDialog.find('.hint').length;
-		this.selectHint(index);
-	}.bind(this);
+		var index = (this.selectedCompletion + 1) % this.hintDialog.find('.hint').length
+		this.selectHint(index)
+	}.bind(this)
 
 	this.top = function() {
-		this.selectHint(0);
-	}.bind(this);
+		this.selectHint(0)
+	}.bind(this)
 
 	this.bottom = function() {
-		this.selectHint(this.hintDialog.find('.hint').length);
-	}.bind(this);
+		this.selectHint(this.hintDialog.find('.hint').length)
+	}.bind(this)
 
 	this.pick = function() {
 
-		var completion = this.completions[this.selectedCompletion];
+		var completion = this.completions[this.selectedCompletion]
 
 		if (completion.type == 'function' || completion.type == 'user-function') {
 
 			var name = completion.name;
 			if (name.indexOf(':') > -1) {
-				name = name.substring(0, name.indexOf(':') - 1);
+				name = name.substring(0, name.indexOf(':') - 1)
 			}
 
-			this.editor.replaceRange(name, this.completionFrom, this.completionTo);
-			var pos = this.editor.getCursor();
-			var argCount = name.split(',').length;
+			this.editor.replaceRange(name, this.completionFrom, this.completionTo)
+			var pos = this.editor.getCursor()
+			var argCount = name.split(',').length
 			if (argCount == 1) {
-				if (name.indexOf(')') - name.indexOf('(') == 1) argCount = 0;
+				if (name.indexOf(')') - name.indexOf('(') == 1) argCount = 0
 			}
 
 			if (argCount > 0) {
 
-				var firstArgLength = (argCount > 1 ? name.indexOf(',') : name.indexOf(')')) - name.indexOf('(') - 1;
+				var firstArgLength = (argCount > 1 ? name.indexOf(',') : name.indexOf(')')) - name.indexOf('(') - 1
 
-				this.editor.setSelection({line: pos.line, ch: this.completionFrom.ch + completion.text.length + 1},
-										 {line: pos.line, ch: this.completionFrom.ch + completion.text.length + 1 + firstArgLength});
+				this.editor.setSelection({line: pos.line, ch: this.completionFrom.ch + completion.text.length + 1}, {line: pos.line, ch: this.completionFrom.ch + completion.text.length + 1 + firstArgLength})
 			} else {
-
-				this.editor.setCursor({line: pos.line, ch: this.completionFrom.ch + name.length});
+				this.editor.setCursor({line: pos.line, ch: this.completionFrom.ch + name.length})
 			}
 
 		} else if (completion.type == 'shortcut') {
@@ -904,31 +895,31 @@ var Editor = function(id, name, valid, code, folder, level) {
 	}.bind(this)
 
 	this.close = function() {
-		this.hintDialog.hide();
+		this.hintDialog.hide()
 		this.editor.removeKeyMaps()
-		this.editor.off("blur", this.onBlur);
-	}.bind(this);
+		this.editor.off("blur", this.onBlur)
+	}.bind(this)
 
 	this.selectHint = function(hint) {
 
-		this.selectedCompletion = hint;
+		this.selectedCompletion = hint
 
-		this.hintDialog.find('.hint').removeClass('active');
-		var elem = $(this.hintDialog.find('.hint')[hint]);
-		elem.addClass('active');
+		this.hintDialog.find('.hint').removeClass('active')
+		var elem = $(this.hintDialog.find('.hint')[hint])
+		elem.addClass('active')
 
-		this.hintDialog.find('.details').children().hide();
-		$(this.hintDialog.find('.details').children()[hint]).show();
+		this.hintDialog.find('.details').children().hide()
+		$(this.hintDialog.find('.details').children()[hint]).show()
 
-		var posIndex = Math.round(hint - (this.hintDialog.find('.hints').height() / elem.height()) / 2 + 1);
-		posIndex = Math.max(posIndex, 0);
-		this.hintDialog.find('.hints').scrollTop(-2 + this.hintDialog.find('.hints').scrollTop() + $(this.hintDialog.find('.hint')[posIndex]).position().top);
+		var posIndex = Math.round(hint - (this.hintDialog.find('.hints').height() / elem.height()) / 2 + 1)
+		posIndex = Math.max(posIndex, 0)
+		this.hintDialog.find('.hints').scrollTop(-2 + this.hintDialog.find('.hints').scrollTop() + $(this.hintDialog.find('.hint')[posIndex]).position().top)
 
-	}.bind(this);
+	}.bind(this)
 
 	this.onBlur = function() {
-		this.close();
-	}.bind(this);
+		this.close()
+	}.bind(this)
 
 	this.updateIncludes = function() {
 
@@ -993,17 +984,16 @@ var Editor = function(id, name, valid, code, folder, level) {
 		this.updateIncludes()
 
 		for (var i in this.includes) {
-			var include = this.includes[i];
+			var include = this.includes[i]
 
 			if (!(include in vars)) {
 
-				var vars2 = editors[include].getGlobalVars(vars);
+				var vars2 = editors[include].getGlobalVars(vars)
 				for (var v in vars2) {
-					vars[v] = vars2[v];
+					vars[v] = vars2[v]
 				}
 			}
 		}
-
 		return vars;
 	}
 }
