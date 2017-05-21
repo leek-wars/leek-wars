@@ -3922,7 +3922,7 @@ var ChatController = function(chat_element, send_callback, enable_moderation) {
 		message = _.linkify(message)
 		message = LW.smiley(message)
 		message = LW.latexify(message)
-		message = LW.commands(message, data.author_name)
+		message = LW.commands(message, data.farmer_name)
 		message = message.replace(/\n/g, '<br>')
 
 		var result = this.insert_message(message, data)
