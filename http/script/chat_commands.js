@@ -76,6 +76,10 @@ chat_commands.list = [
         },
         description: "Ajoute ¯\\_(ツ)_/¯ au message"
     }, {
+        command: "ping",
+        regex: /(^| )\/ping(?=$|\s)/gi,
+        description: "Envoie un message ping au serveur"
+    }, {
         command: "wiki",
         regex: /(?:^|(\s))\/wiki([!]?)(?::([^\s#]+)(?:#([^\s]+))?)?(?=\s|$)/gi,
         replacement: function(authorName) {

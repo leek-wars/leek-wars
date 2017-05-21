@@ -103,6 +103,7 @@ var BATTLE_ROYALE_UPDATE = 29;
 var BATTLE_ROYALE_START = 30;
 var BATTLE_ROYALE_LEAVE = 31;
 var BATTLE_ROYALE_CHAT_NOTIF = 32;
+var PONG = 33;
 
 var NOTIFICATION_UP_LEVEL = 1 // Passage de niveau
 var NOTIFICATION_FIGHT_REPORT = 2 // Rapport de combat
@@ -1878,6 +1879,11 @@ LW.socket.connect = function() {
 				LW.chat.receive_br_notif(data)
 				break
 			}
+			case PONG: {
+				data[2] = Date.now() - LW.chat.last_ping
+				LW.chat.receive_pong(data)
+				break
+			}
 
 			case CHAT_MUTE_USER : {
 
@@ -2076,6 +2082,9 @@ function linkifyElem(elem) {
 LW.commands = function(text, authorName) {
 	text = chat_commands.wikiCommands(text)
 	chat_commands.list.forEach(function(command) {
+		if (typeof(command.replacement) !== 'function') {
+			return
+		}
 		if (command.options) {
 			command.options.forEach(function(subCommand) {
 				text = text.replace(subCommand.regex, subCommand.replacement(authorName))
@@ -2155,6 +2164,10 @@ LW.chat.receive_br_notif = function(data) {
 
 	if (!(data[0] in LW.chat.messages)) LW.chat.messages[data[0]] = []
 	LW.chat.messages[data[0]].push(data)
+}
+
+LW.chat.receive_pong = function(data) {
+	LW.chat.controller.receive_pong(data)
 }
 
 LW.chat.mute_user = function(data) {
@@ -3807,6 +3820,9 @@ var ChatController = function(chat_element, send_callback, enable_moderation) {
 				_.toast(_.lang.get('chat', 'too_long'))
 				return ;
 			}
+			if (message == '/ping') {
+				LW.chat.last_ping = Date.now()
+			}
 			send_callback(message)
 			chat_element.find('.chat-input-content').text("")
 			e.preventDefault()
@@ -3912,6 +3928,16 @@ var ChatController = function(chat_element, send_callback, enable_moderation) {
 			date: data[2],
 			farmer_id: 0,
 			farmer_name: "Leek Wars"
+		})
+	}
+
+	ChatController.prototype.receive_pong = function(data) {
+		var message = "pong ! " + data[2] + "ms"
+		this.insert_message(message, {
+			lang: data[0],
+			date: data[1],
+			farmer_id: LW.farmer.id,
+			farmer_name: LW.farmer.name
 		})
 	}
 

@@ -93,6 +93,8 @@ LW.pages.forum.wsreceive = function(data) {
 		this.chat.mute_user(data.data)
 	} else if (data.type == BATTLE_ROYALE_CHAT_NOTIF) {
 		this.chat.receive_br_notif(data.data)
+	} else if (data.type == PONG) {
+		this.chat.receive_pong(data.data)
 	}
 }
 
