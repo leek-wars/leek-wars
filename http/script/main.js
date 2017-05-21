@@ -1862,8 +1862,6 @@ LW.socket.connect = function() {
 		var data = data[1]
 		_.log("[WS] Receive " + id, data)
 
-		LW.trigger('wsreceive', {type: id, data: data})
-
 		switch (id) {
 
 			case 0 : {
@@ -1969,6 +1967,8 @@ LW.socket.connect = function() {
 				break
 			}
 		}
+		// Send message to registered callbacks
+		LW.trigger('wsreceive', {type: id, data: data})
 	}
 }
 
