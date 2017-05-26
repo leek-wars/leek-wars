@@ -23,6 +23,8 @@ discrete_mode			Mode discret
 language			Langue
 logout			Déconnexion
 new_password			Nouveau mot de passe
+notifs_results			Résultats des combats dans les notifications
 old_password			Ancien mot de passe
+misc_options			Options diverses
 password_changed			Mot de passe changé !
 title			Paramètres

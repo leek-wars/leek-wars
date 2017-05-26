@@ -579,6 +579,9 @@ $(document).ready(function() {
 	if (localStorage['connected'] == 'true') {
 		$('body').addClass('connected')
 	}
+	if (localStorage['options/notifs-results'] === 'true') {
+		$('body').addClass('notifs-results')
+	}
 
 	if (LW.dev || LW.local || LW.beta) {
 		_.logOn()

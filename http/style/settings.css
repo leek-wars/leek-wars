@@ -19,13 +19,13 @@
 	text-align: center;
 }
 
-#settings-page #sfw-button > .switch {
-	vertical-align: top;
-	margin-left: 20px;
+#settings-page .misc-settings {
+	width: 100%;
 }
 
-#settings-page #sfw-button h4 {
-	display: inline-block;
+#settings-page .misc-settings td {
+	text-align: left;
+	padding: 2px;
 }
 
 #settings-page #change-password {
