@@ -2382,6 +2382,7 @@ LW.notifications.getData = function(notification) {
 	var image = ""
 	var title = []
 	var message = []
+	var result = null
 
 	if (type == NOTIFICATION_UP_LEVEL) {
 
@@ -2402,6 +2403,7 @@ LW.notifications.getData = function(notification) {
 		}
 		fightId = params[1]
 		enemyName = params[2]
+		result = params.length > 3 ? params[3] : null
 
 		link = "/fight/" + fightId
 		image = "fight"
@@ -2424,6 +2426,7 @@ LW.notifications.getData = function(notification) {
 		leekName = leeks[params[0]].name
 		fightId = params[1]
 		teamName = params[2]
+		result = params.length > 3 ? params[3] : null
 
 		link = "/fight/" + fightId
 		image = "team_fight"
@@ -2544,6 +2547,7 @@ LW.notifications.getData = function(notification) {
 
 		fightID = params[1]
 		farmerName = params[2]
+		result = params.length > 3 ? params[3] : null
 
 		link = "/fight/" + fightID
 		image = "fight"
@@ -2636,8 +2640,10 @@ LW.notifications.getData = function(notification) {
 
 	for (var t in title) title[t] = _.protect(title[t])
 
+	var result_class = result === null ? '' : result == 1 ? 'win' : result == 0 ? 'draw' : 'lose'
+
 	return {id: notification.id, type: type, link: link, image: image, title: title, message: message,
-		date: notification.date}
+		date: notification.date, result: result_class}
 }
 
 LW.messages.load = function() {
