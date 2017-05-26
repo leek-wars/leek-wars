@@ -19,6 +19,8 @@ discrete_mode			Discreet mode
 language			Language
 logout			Log out
 new_password			New password
+notifs_results			Fights results in notifications
 old_password			Old password
+misc_options			Miscellaneous settings
 password_changed			Password changed!
 title			Settings

@@ -16,6 +16,10 @@ LW.pages.settings.init = function(params, $scope, $page) {
 			id: 'sfw-switch',
 			checked: localStorage['sfw'] == 'true'
 		}
+		$scope.notifs_results_switch = {
+			id: 'notifs-results-switch',
+			checked: localStorage['options/notifs-results'] == 'true'
+		}
 		$scope.mails = mails
 		$scope.settings = data.settings
 		$page.render()
@@ -25,6 +29,7 @@ LW.pages.settings.init = function(params, $scope, $page) {
 		LW.pages.settings.logout()
 		LW.pages.settings.language()
 		LW.pages.settings.sfw()
+		LW.pages.settings.notifs_results()
 		LW.pages.settings.changePassword()
 		LW.pages.settings.deleteAccount()
 		LW.pages.settings.advanced()
@@ -66,18 +71,29 @@ LW.pages.settings.language = function() {
 }
 
 LW.pages.settings.sfw = function() {
-
 	$('#sfw-button').click(function() {
-
 		var sfw = !$('#sfw-switch').is(':checked')
 		$('#sfw-switch').prop('checked', sfw)
-
 		if (sfw) {
 			localStorage['sfw'] = true
 			LW.sfw.on()
 		} else {
 			localStorage['sfw'] = false
 			LW.sfw.off()
+		}
+	})
+}
+
+LW.pages.settings.notifs_results = function() {
+	$('#notifs-results-button').click(function() {
+		var enabled = !$('#notifs-results-switch').is(':checked')
+		$('#notifs-results-switch').prop('checked', enabled)
+		if (enabled) {
+			localStorage['options/notifs-results'] = true
+			$('body').addClass('notifs-results')
+		} else {
+			localStorage['options/notifs-results'] = false
+			$('body').removeClass('notifs-results')
 		}
 	})
 }

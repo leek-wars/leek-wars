@@ -37,15 +37,28 @@
 		<div class='panel'>
 
 			<div class='header'>
-				<h2>{#discrete_mode}</h2>
+				<h2>{#misc_options}</h2>
 			</div>
 
 			<div class='content'>
-
-				<div id='sfw-button'>
-					<h4>{#activate_discrete_mode}</h4>
-					@include('main.switch', sfw_switch)
-				</div>
+				<table class='misc-settings'>
+					<tr id='sfw-button'>
+						<td>
+							<h4>{#activate_discrete_mode}</h4>
+						</td>
+						<td>
+							@include('main.switch', sfw_switch)
+						</td>
+					</tr>
+					<tr id='notifs-results-button'>
+						<td>
+							<h4>{#notifs_results}</h4>
+						</td>
+						<td>
+							@include('main.switch', notifs_results_switch)
+						</td>
+					</tr>
+				</table>
 			</div>
 		</div>
 
