@@ -524,6 +524,7 @@ body.social-collapsed #social-button .icon {
 {
 	cursor: pointer;
 	height: 50px;
+	position: relative;
 }
 
 #notifications .notification .title,
@@ -534,6 +535,35 @@ body.social-collapsed #social-button .icon {
 	text-overflow: ellipsis;
 	white-space: nowrap;
 	overflow: hidden;
+}
+
+body.notifs-results .notification.win:before,
+body.notifs-results .notification.draw:before,
+body.notifs-results .notification.lose:before {
+	font-size: 22px;
+	position: absolute;
+	background: white;
+	height: 24px;
+	width: 24px;
+	border-radius: 50%;
+	text-align: center;
+	border-bottom: 2px solid #ccc;
+	border-right: 2px solid #ccc;
+	left: 2px;
+	top: 2px;
+}
+
+body.notifs-results .notification.win:before {
+	content: "✔";
+	color: green;
+}
+body.notifs-results .notification.lose:before {
+	content: "❌";
+	color: red;
+}
+body.notifs-results .notification.draw:before {
+	content: "=";
+	color: #777;
 }
 
 #notifications .notification .message,
