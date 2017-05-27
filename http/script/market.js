@@ -123,23 +123,23 @@ LW.pages.market.keydown = function(e) {
 	if (e.keyCode == 37) { // Left arrow
 		var prev = current.prev('.item')
 		if (prev.length == 0) prev = current.parent().children().last('.item')
-		LW.pages.market.selectItem(prev.attr('name'))
+		LW.page('/market/' + prev.attr('name'))
 	}
 	else if (e.keyCode == 39) { // Right arrow
 		var next = current.next('.item')
 		if (next.length == 0) next = current.parent().children().first('.item')
-		LW.pages.market.selectItem(next.attr('name'))
+		LW.page('/market/' + next.attr('name'))
 	}
 	else if (e.keyCode == 40) { // Down arrow
 		var index = (current.index() + get_line_count(current)) % current.parent().children().length
 		var next = $(current.parent().children()[index])
-		LW.pages.market.selectItem(next.attr('name'))
+		LW.page('/market/' + next.attr('name'))
 	}
 	else if (e.keyCode == 38) { // Top arrow
 		var index = current.index() - get_line_count(current)
 		if (index < 0) index = current.parent().children().length + index
 		var next = $(current.parent().children()[index])
-		LW.pages.market.selectItem(next.attr('name'))
+		LW.page('/market/' + next.attr('name'))
 	}
 	event.preventDefault()
 }
