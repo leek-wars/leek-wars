@@ -144,10 +144,6 @@ LW.pages.market.keydown = function(e) {
 	event.preventDefault()
 }
 
-LW.pages.market.keyup = function(e) {
-
-}
-
 LW.pages.market.update = function(params) {
 	LW.pages.market.selectItem(params.item)
 }
