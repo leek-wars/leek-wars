@@ -34,6 +34,9 @@
 						@if (fight.type == LW.FIGHT_TYPE.SOLO)
 							<th class='gain'>{#talent}</th>
 						@end
+						@if (LW.farmer.admin)
+							<th class='gain'>Time</th>
+						@end
 					</tr>
 					@foreach (leek in leeks)
 						@includeobj('leek_tr', leek)
