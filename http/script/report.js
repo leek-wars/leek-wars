@@ -18,6 +18,14 @@ LW.pages.report.init = function(params, $scope, $page) {
 
 			var report = fight.report
 
+			if (LW.farmer.admin) {
+				var times = []
+				for (var t in report.ai_times) {
+					times[report.ai_times[t].id] = report.ai_times[t].time
+				}
+				report.ai_times = times
+			}
+
 			// Barres d'XP
 			var computeXP = function(leek, i) {
 
@@ -69,14 +77,6 @@ LW.pages.report.init = function(params, $scope, $page) {
 					team2 = data.fight.report.team1
 					flags1 = data.fight.report.flags2
 					flags2 = data.fight.report.flags1
-				}
-
-				if (LW.farmer.admin) {
-					var times = []
-					for (var t in report.ai_times) {
-						times[report.ai_times[t].id] = report.ai_times[t].time
-					}
-					report.ai_times = times
 				}
 
 				var total1 = {
