@@ -16,13 +16,32 @@ LW.pages.report.init = function(params, $scope, $page) {
 			$scope.report = fight.report
 			$scope.actionsHTML = html
 
+			var report = fight.report
+
+			// Barres d'XP
+			var computeXP = function(leek, i) {
+
+				var totalXP = leek.next_xp - leek.prev_xp
+				var newLevel = leek.cur_xp - leek.xp < leek.prev_xp
+
+				var oldXP = newLevel ? 0 : leek.cur_xp - leek.xp - leek.prev_xp
+				var newXPInCurrentLevel = newLevel ? leek.cur_xp - leek.prev_xp : leek.xp
+
+				leek.current_bar = Math.floor(100 * oldXP / totalXP)
+				leek.new_bar = Math.floor(100 * newXPInCurrentLevel / totalXP)
+
+				leek.bonus = report.bonus
+				if (LW.farmer.admin) {
+					leek.ai_time = Math.floor(report.ai_times[leek.id] / 1000) / 1000;
+				}
+			}
+
 			if (fight.type == LW.FIGHT_TYPE.BATTLE_ROYALE) {
 
 				$scope.leeks = data.fight.report.leeks
+				for (var l in $scope.leeks) computeXP($scope.leeks[l], l)
 
 			} else {
-
-				var report = fight.report
 
 				var team1Title = _.lang.get('report', 'winners')
 				var team2Title = _.lang.get('report', 'loosers')
@@ -79,24 +98,6 @@ LW.pages.report.init = function(params, $scope, $page) {
 					total2.time = Math.round(leeks2.reduce(function(sum, leek) {
 						return sum + Math.floor(report.ai_times[leek.id] / 1000) / 1000
 					}, 0))
-				}
-
-				// Barres d'XP
-				var computeXP = function(leek, i) {
-
-					var totalXP = leek.next_xp - leek.prev_xp
-					var newLevel = leek.cur_xp - leek.xp < leek.prev_xp
-
-					var oldXP = newLevel ? 0 : leek.cur_xp - leek.xp - leek.prev_xp
-					var newXPInCurrentLevel = newLevel ? leek.cur_xp - leek.prev_xp : leek.xp
-
-					leek.current_bar = Math.floor(100 * oldXP / totalXP)
-					leek.new_bar = Math.floor(100 * newXPInCurrentLevel / totalXP)
-
-					leek.bonus = report.bonus
-					if (LW.farmer.admin) {
-						leek.ai_time = Math.floor(report.ai_times[leek.id] / 1000) / 1000;
-					}
 				}
 
 				for (var l in leeks1) computeXP(leeks1[l], l)
