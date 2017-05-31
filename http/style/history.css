@@ -1,6 +1,56 @@
+#history-page .summary {
+	position: relative;
+}
+
+#history-page .image {
+	display: inline-block;
+}
+
+#history-page .periods {
+	user-select: none;
+	vertical-align: top;
+	position: absolute;
+	right: 0;
+	top: 5px;
+}
+
+#history-page .period {
+	display: inline-block;
+	padding: 10px;
+	background: white;
+	cursor: pointer;
+	font-size: 16px;
+	color: #555;
+	width: 100px;
+	text-align: center;
+	margin-right: 4px;
+}
+
+#history-page .period:hover {
+	background: #ddd;
+}
+
+#history-page .period.selected {
+	background: #777;
+	color: #eee;
+}
+
+#history-page .fight-history {
+	text-align: center;
+	display: block;
+}
+
 #history-page .fight {
 	padding: 10px;
 	display: inline-block;
 	cursor: pointer;
 	margin: 5px;
+	background: white;
+	width: 137px;
+	height: 30px;
+}
+
+#history-page .fight-time {
+	margin-top: 0px;
+	font-size: 12px;
 }

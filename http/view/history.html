@@ -6,12 +6,19 @@
 
 		<div class='summary'>
 			<div class='image'></div>
+
+			<div class='periods'>
+				<div class='period' period='today'>{#today}</div><div class='period' period='24h'>{#24h}</div><div class='period' period='2days'>{#2days}</div><div class='period selected' period='1week'>{#1week}</div>
+			</div>
 		</div>
+
+		<br>
+		<h2 class='n-fights'></h2>
 
 		<div class='fight-history'>
 			@foreach (fight in fights)
 				<a href='/fight/{fight.id}'>
-					<div class='fight {fight.result}'>
+					<div class='fight {fight.result}' date='{fight.date}'>
 						Fight {fight.id}
 						<div class='fight-time'>{_.format.dateTime(fight.date)}</div>
 					</div>
