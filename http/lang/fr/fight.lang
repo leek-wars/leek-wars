@@ -36,6 +36,7 @@ leek_show_cell			%1$s montre la cellule <b>%2$s</b>
 leek_speak				%1$s dit : ''<i>%2$s</i>''
 leek_take_weapon		%1$s prend l'arme <b>%2$s</b>
 leek_win_x				%1$s gagne <b>%2$s</b>
+leek_receives_x			%1$s reçoit <b>%2$s</b>
 loading_fight			Chargement du combat...
 n_absolute_shield		%s bouclier absolu
 n_agility				%s agilité
@@ -53,6 +54,7 @@ n_strength				%s force
 n_tp					%s PT
 n_vita					%s vitalité
 n_wisdom				%s sagesse
+n_vulnerability			une vulnérabilité de %s
 pause					Pause
 pause_message			Cliquer ou appuyez sur 'P' pour reprendre
 position_in_queue		Position dans la file : %1$s / %2$s

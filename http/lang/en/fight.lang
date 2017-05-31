@@ -35,6 +35,7 @@ leek_show_cell			%1$s indicates cell <b>%2$s</b>
 leek_speak			%1$s says : ''<i>%2$s</i>''
 leek_take_weapon			%1$s takes weapon <b>%2$s</b>
 leek_win_x			%1$s gains <b>%2$s</b>
+leek_receives_x			%1$s receives <b>%2$s</b>
 loading_fight			Loading fight...
 n_absolute_shield			%s absolute shield
 n_agility			%s agility
@@ -52,6 +53,7 @@ n_strength			%s strength
 n_tp			%s TP
 n_vita			%s total health
 n_wisdom			%s wisdom
+n_vulnerability		a %s vulnerability
 pause			Pause
 pause_message			Click or press 'P' to resume
 position_in_queue			Position in queue : %1$s / %2$s
