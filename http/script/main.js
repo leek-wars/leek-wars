@@ -1027,7 +1027,18 @@ LW.changelogPopup = function() {
 	_.lang.load('changelog', false, function() {
 		_.get('changelog/get-last/' + _.lang.current, function(data) {
 			if (data.success) {
-				new _.popup.new('main.changelog_popup', data.changelog, undefined, true).show()
+				for (var d in data.changelog) {
+					var changes_data = _.lang.get('changelog', data.changelog.data)
+					data.changelog.changes = []
+					var changes_array = changes_data.split("\n")
+					for (var c in changes_array) {
+						var change = changes_array[c].replace('# ', '')
+						if (change.length > 0) {
+							data.changelog.changes.push(change)
+						}
+					}
+				}
+				new _.popup.new('main.changelog_popup', data.changelog, 800, true).show()
 			}
 		})
 	})
