@@ -1157,7 +1157,7 @@ page('/leek/:id', function(ctx) {
 })
 
 page('/leek/:id/history', function(ctx) {
-	LW.loadPage('history', ctx.params)
+	LW.loadPage('history', {id: ctx.params.id, type: 'leek'})
 })
 
 page('/farmer', function() {
@@ -1170,6 +1170,10 @@ page('/farmer', function() {
 
 page('/farmer/:id', function(ctx) {
 	LW.loadPage('farmer', ctx.params)
+})
+
+page('/farmer/:id/history', function(ctx) {
+	LW.loadPage('history', {id: ctx.params.id, type: 'farmer'})
 })
 
 page('/trophies', function() {
