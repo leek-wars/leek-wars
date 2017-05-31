@@ -37,20 +37,9 @@
 
 #history-page .fight-history {
 	text-align: center;
-	display: block;
+	display: flex;
 }
 
-#history-page .fight {
-	padding: 10px;
-	display: inline-block;
-	cursor: pointer;
-	margin: 5px;
-	background: white;
-	width: 137px;
-	height: 30px;
-}
-
-#history-page .fight-time {
-	margin-top: 0px;
-	font-size: 12px;
+#history-page .fight-wrapper {
+	min-width: 25%;
 }

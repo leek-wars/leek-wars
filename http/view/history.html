@@ -26,12 +26,9 @@
 
 		<div class='fight-history'>
 			@foreach (fight in fights)
-				<a href='/fight/{fight.id}'>
-					<div class='fight {fight.result}' date='{fight.date}'>
-						Fight {fight.id}
-						<div class='fight-time'>{_.format.dateTime(fight.date)}</div>
-					</div>
-				</a>
+				<div class='fight-wrapper'>
+					@include('main.fight', fight)
+				</div>
 			@end
 		</div>
 	</div>
