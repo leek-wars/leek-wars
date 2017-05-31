@@ -72,10 +72,7 @@ LW.pages.leek.init = function(params, $scope, $page) {
 		LW.pages.leek.report()
 
 		if (myLeek) {
-
-			// Remove existing popups
-			// $("#popups").empty()
-
+			
 			LW.pages.leek.garden()
 			LW.pages.leek.tournament()
 			LW.pages.leek.capital()
@@ -557,9 +554,9 @@ LW.pages.leek.hat = function() {
 		groupedFarmerHats[hat.hat_template].quantity++
 	}
 
-	$('#leek-image').click(function(e) {
+	var popup = new _.popup.new('leek.hat_popup', {farmer_hats: groupedFarmerHats})
 
-		var popup = new _.popup.new('leek.hat_popup', {farmer_hats: groupedFarmerHats})
+	$('#leek-image').click(function(e) {
 
 		var addHat = function(hatTemplate) {
 
