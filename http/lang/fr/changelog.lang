@@ -638,3 +638,28 @@ changelog_197	# Correction du choix du thème dans l'éditeur.
 				# Amélioration des signalements et de la modération.
 				# Ajout de la page des statistiques (leekwars.com/statistics).
 				# Ajout d'un compteur de vues sur les combats.
+changelog_198	# Le talent d'équipe est désormais le talent de la meilleure compo (au lieu de la moyenne).
+				# Affichage de la progression de la BR dans le titre de la page.
+				# Amélioration de la page combat en cas de BR (titre et écran de chargement).
+				# Amélioration de l'interface des commentaires sur les pages combat et tournoi.
+				# Affichage du tour au passage de la souris sur la barre de progression des combats (merci à Twilight).
+				# Affichage d'un message dans le chat et notification lorsqu'une BR se lance.
+				# Possibilité de naviguer dans le marché avec les flèches du clavier.
+				# Ajout de l'achat de combats dans le marché.
+				# Historique détaillé des combats pour les poireaux et les éleveurs.
+				# Ajout d'une option pour afficher les résultats des combats dans les notifications.
+				# Les BR rapportent des habs et de l'XP mais coûtent désormais 1 combat.
+				# Possibilité d'acheter des cristaux avec StarPass (SMS et téléphone).
+				# Ajout d'un système d'érosion : la vie max diminue de 5% des dégâts subits et 10% pour le poison.
+				# Rééquilibrage de certaines puces (voir forum pour les détails).
+				# Notification marquée comme lue lorsque l'on clique dessus.
+				# Réinitialisation du titre de la page et du compteur lors de la déconnexion.
+				# Affichage de la date complète des messages sur les chats.
+				# Correction du survol du graphique sur la page rapport de combat.
+				# Correction de l'apparition de fenêtres fantômes de l'éditeur.
+				# Correction de l'affichage du didactitiel lors de la première connexion.
+				# Correction de la fermeture des popups dans le cas de plusieurs popups.
+				# Correction de l'affichage des labels du graphique de talent sur la page poireau.
+				# Corrections et améliorations sur les BR : synchronisation entre onglets et autres petits bugs.
+				# Accélération du chargement des classements fun.
+				# Correction du calcul des dégâts du poison dans les rapports de combat (merci à Pump).
