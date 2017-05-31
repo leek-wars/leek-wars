@@ -38,12 +38,23 @@ LW.pages.history.init = function(params, $scope, $page) {
 		var filter_fights = function(start_date) {
 			_.log("Filter fights ", start_date)
 			var count = 0
+			var victories = 0
+			var defeats = 0
+			var draws = 0
 			$('#history-page .fight').each(function() {
 				var visible = parseInt($(this).attr('date')) >= start_date
 				$(this).toggle(visible)
-				if (visible) count++
+				if (visible) {
+					count++
+					if ($(this).hasClass('win')) victories++
+					if ($(this).hasClass('defeat')) defeats++
+					if ($(this).hasClass('draw')) draws++
+				}
 			})
 			$('#history-page .n-fights').html(_.lang.get('history', 'n_fights', count))
+			$('#history-page .victories').text(victories)
+			$('#history-page .draws').text(draws)
+			$('#history-page .defeats').text(defeats)
 		}
 
 		$('#history-page .period').click(function() {
