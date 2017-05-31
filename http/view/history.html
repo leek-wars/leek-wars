@@ -5,19 +5,30 @@
 	<div class='content'>
 
 		<div class='summary'>
-			<div class='image'></div>
+			<div class='image'><img/></div>
 
 			<div class='periods'>
 				<div class='period' period='today'>{#today}</div><div class='period' period='24h'>{#24h}</div><div class='period' period='2days'>{#2days}</div><div class='period selected' period='1week'>{#1week}</div>
 			</div>
 
 			<div class='stats'>
-				<div>
-					<div class='victories'></div>
-					<div class='draws'></div>
-					<div class='defeats'></div>
-				</div>
-				<div class='ratio'></div>
+
+				<center><div class='talent'>{entity.talent}</div><div class='talent-more'>({entity.talent_more >= 0 ? '+' + entity.talent_more : entity.talent_more})</div></center>
+
+				<table>
+					<tr>
+						<td class='big victories'></td>
+						<td class='big draws'></td>
+						<td class='big defeats'></td>
+						<td class='big ratio'></td>
+					</tr>
+					<tr>
+						<td class='grey'>{#victories}</td>
+						<td class='grey'>{#draws}</td>
+						<td class='grey'>{#defeats}</td>
+						<td class='grey'>{#ratio}</td>
+					</tr>
+				</table>
 			</div>
 		</div>
 
