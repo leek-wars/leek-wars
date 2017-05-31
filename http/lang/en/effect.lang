@@ -46,14 +46,14 @@ type_23_fixed			Removes all poisons
 type_24					Removes <b>%1$s</b> to <b>%2$s</b> magic
 type_25					Deals <b>%1$s</b> to <b>%2$s</b> aftereffects
 type_25_fixed			Deals <b>%s</b> aftereffects
-type_26_fixed			Apply a vulnerability of <b>%s%%</b>
+type_26_fixed			Apply a vulnerability of <b>%s%</b>
 type_2_fixed			Restores <b>%d</b> HP
 type_3					Increases strength by <b>%d</b> to <b>%d</b>
 type_3_fixed			Increases strength by <b>%d</b>
 type_4					Increases agility by <b>%d</b> to <b>%d</b>
 type_4_fixed			Increases agility by <b>%d</b>
-type_5					Reduces damage taken by <b>%d%%</b> to <b>%d%%</b>
-type_5_fixed			Reduces damage taken by <b>%d%%</b> 
+type_5					Reduces damage taken by <b>%d%</b> to <b>%d%</b>
+type_5_fixed			Reduces damage taken by <b>%d%</b> 
 type_6					Reduces damage taken by <b>%d</b> to <b>%d</b>
 type_6_fixed			Reduces damage taken by <b>%d</b>
 type_7					Increases MP by <b>%d</b> to <b>%d</b>
