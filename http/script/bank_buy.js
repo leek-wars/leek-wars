@@ -19,7 +19,7 @@ LW.pages.bank_buy.init = function(params, $scope, $page) {
 
 		if (vendor == 'StarPass') {
 
-			obj['id'] = LW.dev ? offer.id[1] : LW.beta ? offer.id[2] : offer.id[0]
+			obj['id'] = LW.local ? offer.id[1] : LW.beta ? offer.id[2] : offer.id[0]
 
 			_.post('bank/begin-starpass-payment', {pack_id: packID, offer_id: offerID}, function() {
 				if (data.success) {
