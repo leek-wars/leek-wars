@@ -380,7 +380,7 @@ var Hud = function() {
 			var life = entity.life / entity.maxLife
 			detailsView.find('.bar').css('width', (life * 100) + "%")
 			detailsView.find('.bar').css('background', color)
-			detailsView.find('.life').text(entity.life)
+			detailsView.find('.life').text(entity.life + ' / ' + entity.maxLife)
 			detailsView.find('.tp').text(entity.tp)
 			detailsView.find('.mp').text(entity.mp)
 			detailsView.find('.agility').text(entity.agility)

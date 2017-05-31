@@ -932,7 +932,8 @@ var Game = function() {
 			}
 			case ACTION_LIFE_LOST:
 
-				this.leeks[action[1]].looseLife(action[2], this.jumping)
+				var erosion = action.length > 3 ? action[3] : 0
+				this.leeks[action[1]].looseLife(action[2], erosion, this.jumping)
 
 				if (!this.jumping) {
 
@@ -1208,6 +1209,17 @@ var Game = function() {
 				leek.buffRelativeShield(value, this.jumping)
 				break;
 
+			case LW.EFFECT.VULNERABILITY:
+
+				if (!this.jumping) {
+					this.log(_.lang.get('fight', 'leek_receives_x',
+						this.colorText(leek.name, this.getLeekColor(target)),
+						this.colorText(_.lang.get('fight', 'n_vulnerability', value + '%'), SHIELD_COLOR)
+					))
+				}
+				leek.buffRelativeShield(-value, this.jumping)
+				break;
+
 			case LW.EFFECT.BUFF_AGILITY:
 
 				if (!this.jumping) {
@@ -1381,6 +1393,10 @@ var Game = function() {
 
 			case LW.EFFECT.RELATIVE_SHIELD:
 				leek.relativeShield -= value;
+				break;
+
+			case LW.EFFECT.VULNERABILITY:
+				leek.relativeShield += value;
 				break;
 
 			case LW.EFFECT.BUFF_AGILITY:

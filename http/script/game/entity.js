@@ -163,11 +163,11 @@ Entity = Class.extend(Entity, function() {
 	}
 
 	this.jump = function() {
-		
+
 		if (this.dz == 0) {
 			this.dz = this.jumpForce;
 		}
-		
+
 	}
 
 	this.move = function(path) { // Move along a path
@@ -182,7 +182,7 @@ Entity = Class.extend(Entity, function() {
 	}
 
 	this.pathNext = function() {
-		
+
 		if (this.path.length == 0) {
 			game.actionDone();
 			return;
@@ -266,10 +266,13 @@ Entity = Class.extend(Entity, function() {
 		}
 	}
 
-	this.looseLife = function(life, jump) {
+	this.looseLife = function(life, erosion, jump) {
 
 		this.life -= life;
 		if (this.life < 0) this.life = 0;
+
+		this.maxLife -= erosion;
+		if (this.maxLife < 0) this.maxLife = 0;
 
 		if (!jump) {
 			var info = new InfoText();

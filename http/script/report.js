@@ -223,6 +223,10 @@ LW.pages.report.generateActions = function(data, callback) {
 				data = _.lang.get('fight', 'leek_win_x', getLeekName(leek), colorText(_.lang.get('fight', 'n_relative_shield', value + '%'), SHIELD_COLOR));
 				break;
 
+			case LW.EFFECT.VULNERABILITY:
+				data = _.lang.get('fight', 'leek_receives_x', getLeekName(leek), colorText(_.lang.get('fight', 'n_vulnerability', value + '%'), SHIELD_COLOR));
+				break;
+
 			case LW.EFFECT.BUFF_AGILITY:
 				data = _.lang.get('fight', 'leek_win_x', getLeekName(leek), colorText(_.lang.get('fight', 'n_agility', value), AGILITY_COLOR));
 				break;
