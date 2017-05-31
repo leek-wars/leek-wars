@@ -160,7 +160,7 @@ var ITEM_WEAPON = 1
 var ITEM_CHIP = 2
 var ITEM_POTION = 3
 var ITEM_HAT = 4
-var ITEM_FIGHTS = 99
+var ITEM_FIGHTS = 5
 
 var POTION_EFFECT_RESTAT = 1;
 var POTION_EFFECT_CHANGE_SKIN = 2;
@@ -2870,6 +2870,11 @@ LW.updateCrystals = function(delta) {
 LW.setCrystals = function(crystals) {
 	LW.farmer.crystals = crystals
 	$('#farmer-crystals').html(_.format.number(LW.farmer.crystals))
+}
+
+LW.updateFights = function(delta) {
+	LW.farmer.fights += delta
+	$('#farmer-fights').html(_.format.number(LW.farmer.fights))
 }
 
 LW.getImageSize = function(image, callback) {
