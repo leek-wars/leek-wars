@@ -1,1 +1,7 @@
-title			Historique
+title			Historique de %s
+title_html		Historique de <b>%s</b>
+24h				24h
+today			Aujourd'hui
+2days			2 jours
+1week			1 semaine
+n_fights		%s combats
