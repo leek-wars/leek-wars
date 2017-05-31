@@ -5,10 +5,6 @@ LW.pages.history.init = function(params, $scope, $page) {
 
 	_.get('history/get-' + type + '-history/' + id, function(data) {
 
-		// TODO
-		data.entity = data.leek
-		data.entity.name = "Gorglucks"
-
 		$scope.fights = data.fights
 		$scope.entity = data.entity
 
@@ -19,6 +15,8 @@ LW.pages.history.init = function(params, $scope, $page) {
 			LW.createLeekImage(data.entity.id, 0.8, data.entity.level, data.entity.skin, data.entity.hat, function(id, data) {
 				$('#history-page .summary .image').html(data)
 			})
+		} else if (type == 'farmer') {
+			$('#history-page .summary .image img').attr('src', _.view.render('main.avatar', data.entity))
 		}
 
 		var select_period = function(period) {
@@ -36,7 +34,6 @@ LW.pages.history.init = function(params, $scope, $page) {
 		}
 
 		var filter_fights = function(start_date) {
-			_.log("Filter fights ", start_date)
 			var count = 0
 			var victories = 0
 			var defeats = 0
@@ -55,6 +52,8 @@ LW.pages.history.init = function(params, $scope, $page) {
 			$('#history-page .victories').text(victories)
 			$('#history-page .draws').text(draws)
 			$('#history-page .defeats').text(defeats)
+			var ratio = defeats == 0 ? victories : _.format.numberPrecision(victories / defeats, 3)
+			$('#history-page .ratio').text(ratio)
 		}
 
 		$('#history-page .period').click(function() {

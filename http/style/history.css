@@ -1,5 +1,6 @@
 #history-page .summary {
 	position: relative;
+	display: flex;
 }
 
 #history-page .image {
@@ -33,6 +34,68 @@
 #history-page .period.selected {
 	background: #777;
 	color: #eee;
+}
+
+#history-page .stats {
+	display: inline-block;
+	vertical-align: top;
+	margin-top: 80px;
+	text-align: center;
+	width: 100%;
+}
+
+#history-page .stats table {
+	margin: 0 auto;
+}
+
+#history-page .talent:before {
+	background-image: url('../image/talent.png');
+	width: 28px;
+	height: 28px;
+	margin-right: 6px;
+	content: " ";
+	display: inline-block;
+	vertical-align: middle;
+	margin-bottom: 4px;
+}
+
+#history-page .talent-more {
+	display: inline-block;
+	font-weight: 300;
+	font-size: 20px;
+	margin-left: 5px;
+	margin-top: 6px;
+	vertical-align: top;
+	color: #888;
+}
+
+#history-page .talent {
+	font-size: 22px;
+	color: #555;
+	display: inline-block;
+	font-weight: 300;
+	margin: 3px;
+}
+
+#history-page .talent img {
+	width: 22px;
+	vertical-align: bottom;
+	margin-right: 4px;
+	margin-bottom: 2px;
+}
+
+#history-page .stats tr > td:nth-child(n+2) {
+	border-left: 2px solid #ddd;
+}
+
+#history-page .stats td {
+	padding: 0px 15px;
+}
+
+#history-page .stats .big {
+	font-size: 22px;
+	font-weight: 300;
+	color: #555;
 }
 
 #history-page .fight-history {
