@@ -313,10 +313,25 @@ LW.pages.leek.capital = function() {
 				{step : 0, capital : 1, sup : 1}
 			],
 			tp : [
-				{step : 0, capital : 80, sup : 1}
+				{step : 0, capital : 30, sup : 1}, {step : 1, capital : 35, sup : 1},
+				{step : 2, capital : 40, sup : 1}, {step : 3, capital : 45, sup : 1},
+				{step : 4, capital : 50, sup : 1}, {step : 5, capital : 55, sup : 1},
+				{step : 6, capital : 60, sup : 1}, {step : 7, capital : 65, sup : 1},
+				{step : 8, capital : 70, sup : 1}, {step : 9, capital : 75, sup : 1},
+				{step : 10, capital : 80, sup : 1}, {step : 11, capital : 85, sup : 1},
+				{step : 12, capital : 90, sup : 1}, {step : 13, capital : 95, sup : 1},
+				{step : 14, capital : 100, sup : 1}
 			],
 			mp : [
-				{step : 0, capital : 50, sup : 1}
+				{step : 0, capital : 20, sup : 1},
+				{step : 1, capital : 30, sup : 1},
+				{step : 2, capital : 40, sup : 1},
+				{step : 3, capital : 50, sup : 1},
+				{step : 4, capital : 60, sup : 1},
+				{step : 5, capital : 70, sup : 1},
+				{step : 6, capital : 80, sup : 1},
+				{step : 7, capital : 90, sup : 1},
+				{step : 8, capital : 100, sup : 1}
 			]
 		}
 
