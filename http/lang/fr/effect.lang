@@ -44,6 +44,9 @@ type_21					Augmente la résistance de <b>%1$s</b> à <b>%2$s</b>
 type_22					Augmente la sagesse de <b>%1$s</b> à <b>%2$s</b>
 type_23_fixed			Retire tous les poisons
 type_24					Retire <b>%1$s</b> à <b>%2$s</b> magie
+type_25					Inflige des séquelles de <b>%1$s</b> à <b>%2$s</b>
+type_25_fixed			Inflige des séquelles de <b>%s</b>
+type_26_fixed			Applique une vulnérabilité de <b>%s%%</b>
 type_2_fixed			Soigne de <b>%d</b>
 type_3					Booste la force de <b>%d</b> à <b>%d</b>
 type_3_fixed			Booste la force de <b>%d</b>
