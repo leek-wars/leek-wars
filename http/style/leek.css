@@ -355,16 +355,17 @@
  */
 #leek-chips {
 	text-align: center;
+	padding: 27px 8px;
 }
 
 #leek-page .chip {
 	display: inline-block;
 	vertical-align: bottom;
-	margin: 5px 3px;
+	margin: 3px 1px;
 }
 
 #leek-page .chip img {
-	width: 70px;
+	width: 65px;
 	vertical-align: bottom;
 }
 

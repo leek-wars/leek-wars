@@ -389,21 +389,19 @@
 				@end
 			</div>
 
-			<div class='content center'>
-				<div id='leek-chips'>
-					@foreach (chip in leek.orderedChips)
-						<div id="leek-chip-{chip.template}" class="chip available" item="{chip.id}" chip="{chip.template}">
-							<img src="{{static}}/image/chip/small/{LW.chips[chip.template].name}.png">
-						</div>
-						<div class='tooltip' id='tt_leek-chip-{chip.template}'>
-							<b>{_.lang.get('chip', LW.chips[chip.template].name)}</b>
-							<br>
-							{#chip_level_n, LW.chips[chip.template].level}
-							<br>
-							<small>{'CHIP_' + LW.chips[chip.template].name.toUpperCase()}</small>
-						</div>
-					@end
-				</div>
+			<div id='leek-chips' class='content center'>
+				@foreach (chip in leek.orderedChips)
+					<div id="leek-chip-{chip.template}" class="chip available" item="{chip.id}" chip="{chip.template}">
+						<img src="{{static}}/image/chip/small/{LW.chips[chip.template].name}.png">
+					</div>
+					<div class='tooltip' id='tt_leek-chip-{chip.template}'>
+						<b>{_.lang.get('chip', LW.chips[chip.template].name)}</b>
+						<br>
+						{#chip_level_n, LW.chips[chip.template].level}
+						<br>
+						<small>{'CHIP_' + LW.chips[chip.template].name.toUpperCase()}</small>
+					</div>
+				@end
 			</div>
 		</div>
 
