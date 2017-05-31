@@ -522,7 +522,7 @@
 @endview
 
 @view (fight)
-	<div class='fight @if (status == 0) generating @else {result} @end'>
+	<div class='fight @if (status == 0) generating @else {result} @end' date='{date}'>
 
 		@if (type == LW.FIGHT_TYPE.BATTLE_ROYALE)
 			<div class='fighters'>
