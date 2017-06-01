@@ -542,7 +542,7 @@ LW.pages.report.statistics = function(fight) {
 				if (leeks[currentPlayer].ph_queue.length == 0) {
 					leeks[currentPlayer].heal_out += action[2]
 				} else {
-					let effect = leeks[currentPlayer].ph_queue.shift()
+					var effect = leeks[currentPlayer].ph_queue.shift()
 					leeks[effect.caster].heal_out += action[2]
 					leeks[currentPlayer].next_ph_queue.push(effect)
 				}
@@ -560,7 +560,7 @@ LW.pages.report.statistics = function(fight) {
 				if (leeks[currentPlayer].ph_queue.length == 0) {
 					leeks[currentPlayer].dmg_out += action[2]
 				} else {
-					let effect = leeks[currentPlayer].ph_queue.shift()
+					var effect = leeks[currentPlayer].ph_queue.shift()
 					leeks[effect.caster].dmg_out += action[2]
 					leeks[currentPlayer].next_ph_queue.push(effect)
 				}
@@ -609,7 +609,7 @@ LW.pages.report.statistics = function(fight) {
 				// These actions are of the form
 				// [actionType, itemID, effectID, caster, target, effect, value, turns]
 				// The effectID is unique and allows us to keep track of it easily
-				let effect = action[5]
+				var effect = action[5]
 				if (effect == LW.EFFECT.POISON || effect == LW.EFFECT.HEAL) {
 					leeks[action[4]].next_ph_queue.push({id : action[2], caster : action[3]})
 				}
@@ -619,7 +619,7 @@ LW.pages.report.statistics = function(fight) {
 				// This action is of the form [actionType, effectID]
 				// Wether through Antidote, Liberation, or end of lifetime
 				// we have to remove vaccine or poison from our queues.
-				let id = action[1]
+				var id = action[1]
 				for (var j in leeks) {
 					leeks[j].ph_queue = leeks[j].ph_queue.filter(function(e) { return e.id != id })
 					leeks[j].next_ph_queue = leeks[j].next_ph_queue.filter(function(e) { return e.id != id })
