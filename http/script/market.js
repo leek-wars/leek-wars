@@ -51,7 +51,7 @@ LW.pages.market.init = function(params, $scope, $page) {
 				id: count + 'fights',
 				name: count + 'fights',
 				title: _.lang.get('market', 'n_fights', count),
-				price_habs: costs[p] * 1000000,
+				price_habs: p == 0 ? costs[p] * 1000000 : 0,
 				price_crystals: costs[p] * 100,
 				sellable: false,
 				type: ITEM_FIGHTS,
@@ -193,6 +193,12 @@ LW.pages.market.buy = function() {
 					LW.pages.market.updateItems()
 
 					LW.addItemToInventory(type, data.item, id)
+				} else {
+					var error = data.error
+					if (data.error == 'already_bought_fights_with_habs') {
+						error = _.lang.get('market', data.error)
+					}
+					_.toast(error)
 				}
 			})
 		})
