@@ -145,7 +145,11 @@ LW.pages.market.keydown = function(e) {
 }
 
 LW.pages.market.update = function(params) {
-	LW.pages.market.selectItem(params.item)
+	if (params && 'item' in params) {
+		LW.pages.market.selectItem(params.item)
+	} else {
+		LW.pages.market.selectItem('pistol')
+	}
 }
 
 LW.pages.market.buy = function() {
