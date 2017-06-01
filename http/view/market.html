@@ -120,21 +120,25 @@
 
 						<div class='buy-buttons'>
 
-							<h4 class='buy-label'>{#buy}</h4>
-							<div id='{id}' class="button buy-button" price='{items[id].price_habs}'type='{items[id].type}'>{%items[id].price_habs}<img src='{{static}}image/hab.png'></div>
+							@if (items[id].price_habs > 0)
+								<h4 class='buy-label'>{#buy}</h4>
+								<div id='{id}' class="button buy-button" price='{items[id].price_habs}'type='{items[id].type}'>{%items[id].price_habs}<img src='{{static}}image/hab.png'></div>
+							@end
 
 							@if (items[id].price_crystals > 0)
-								<br>
+								@if (items[id].price_habs > 0)
+									<br>
+								@end
 								<h4 class='buy-label'>{#buy}</h4>
 								<div id='{id}' class="button buy-crystals-button" price='{items[id].price_crystals}' type='{items[id].type}'>{%items[id].price_crystals}<img src='{{static}}image/crystal.png'></div>
-							@endif
+							@end
 
 							@if (items[id].sellable)
 								<div class='sell'>
 									<h4 class='buy-label'>{#resell}</h4>
 									<div id='{id}' class='button sell-button' price='{items[id].sell_price}' type='{items[id].type}'>{%items[id].sell_price} <span class='hab'></span></div>
 								</div>
-							@endif
+							@end
 						</div>
 					</div>
 				@end
