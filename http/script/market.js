@@ -229,13 +229,16 @@ LW.pages.market.buy = function() {
 						_.lang.get('market', 'weapon_bought'),
 						_.lang.get('market', 'chip_bought'),
 						_.lang.get('market', 'potion_bought'),
-						_.lang.get('market', 'hat_bought')
+						_.lang.get('market', 'hat_bought'),
+						_.lang.get('market', 'fights_bought')
 					][type - 1])
 
-					$("#item-" + id).attr('farmer-count', parseInt($("#item-" + id).attr('farmer-count')) + 1)
-
+					if (type != ITEM_FIGHTS) {
+						$("#item-" + id).attr('farmer-count', parseInt($("#item-" + id).attr('farmer-count')) + 1)
+					}
 					$('#preview #item-' + id).find('.sell').show()
 
+					if (type == ITEM_FIGHTS) LW.updateFights(data.fights)
 					LW.setCrystals(data.crystals)
 					LW.pages.market.updateItems()
 				}
