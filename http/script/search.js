@@ -11,21 +11,19 @@ LW.pages.search.init = function(params, $scope, $page) {
 		var results = data.results
 		for (var r in results) {
 
-			var pos = results[r].title.toLowerCase().indexOf(query)
-
-			if (query == "") {
-				results[r].formatted_title = results[r].title
+			if (query != "" && results[r].title.toLowerCase().indexOf(query) != -1) {
+				var text = results[r].title
+				var pos = results[r].title.toLowerCase().indexOf(query)
+				results[r].formatted_title = text.substring(0, pos) + "<b>" + text.substring(pos, pos + query.length) + "</b>" + text.substring(pos + query.length)
 			} else {
-				results[r].formatted_title = results[r].title.split(query).join(
-					"<b>" + results[r].title.substring(pos, pos + query.length) + "</b>"
-				)
+				results[r].formatted_title = results[r].title
 			}
 			if (farmer == "") {
 				results[r].formatted_farmer = results[r].fname
 			} else {
-				results[r].formatted_farmer = results[r].fname.split(farmer).join(
-					"<b>" + results[r].fname.substring(pos, pos + farmer.length) + "</b>"
-				)
+				var text = results[r].fname
+				var pos = text.toLowerCase().indexOf(farmer)
+				results[r].formatted_farmer = text.substring(0, pos) + "<b>" + text.substring(pos, pos + farmer.length + 1) + "</b>" + text.substring(pos + farmer.length + 1)
 			}
 
 			// link
