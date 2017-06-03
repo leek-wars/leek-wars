@@ -4327,6 +4327,7 @@ LW.battle_royale.leave = function() {
 LW.battle_royale.start = function(data) {
 	_.toast(_.lang.get('main', 'starting_battle_royale'))
 	LW.battle_royale.popup.dismiss()
+	LW.updateFights(-1)
 	LW.page('/fight/' + data[0])
 }
 
