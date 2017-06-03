@@ -293,18 +293,14 @@ LW.pages.market.buy = function() {
 						_.lang.get('market', 'hat_selled')
 					][type - 1])
 
-					// On actualise
 					var div = $("#item-" + id)
-
 					$("#item-" + id).attr('farmer-count', parseInt($("#item-" + id).attr('farmer-count')) - 1)
 
 					if ($("#item-" + id).attr('farmer-count') == 0) {
 						$('#preview #item-' + id).find('.sell').hide()
 					}
-
 					LW.setHabs(data.money)
 					LW.pages.market.updateItems()
-
 					LW.removeItemFromInventory(type, id)
 				}
 			})
