@@ -124,24 +124,27 @@ LW.pages.market.keydown = function(e) {
 		var prev = current.prev('.item')
 		if (prev.length == 0) prev = current.parent().children().last('.item')
 		LW.page('/market/' + prev.attr('name'))
+		event.preventDefault()
 	}
 	else if (e.keyCode == 39) { // Right arrow
 		var next = current.next('.item')
 		if (next.length == 0) next = current.parent().children().first('.item')
 		LW.page('/market/' + next.attr('name'))
+		event.preventDefault()
 	}
 	else if (e.keyCode == 40) { // Down arrow
 		var index = (current.index() + get_line_count(current)) % current.parent().children().length
 		var next = $(current.parent().children()[index])
 		LW.page('/market/' + next.attr('name'))
+		event.preventDefault()
 	}
 	else if (e.keyCode == 38) { // Top arrow
 		var index = current.index() - get_line_count(current)
 		if (index < 0) index = current.parent().children().length + index
 		var next = $(current.parent().children()[index])
 		LW.page('/market/' + next.attr('name'))
+		event.preventDefault()
 	}
-	event.preventDefault()
 }
 
 LW.pages.market.update = function(params) {
