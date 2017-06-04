@@ -73,7 +73,7 @@ new_functions					New functions
 new_weapons						New weapons
 no_hat							No hat
 not_found						Leek not found
-not_found_id					Leek with id  <b>%s</b>not found
+not_found_id					Leek with id %s not found
 ok								OK
 potion							Potion
 popup_level_301_title			Congratulations!
