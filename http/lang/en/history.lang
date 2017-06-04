@@ -9,3 +9,4 @@ victories		victories
 draws			draws
 defeats			defeats
 ratio			ratio
+not_found_id	Leek with id %s not found
