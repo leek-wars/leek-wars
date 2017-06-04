@@ -82,6 +82,13 @@ LW.pages.fight.init = function(params, $scope, $page) {
 			LW.pages.fight.fullscreen()
 		});
 
+		$(document).on("webkitfullscreenchange mozfullscreenchange fullscreenchange MSFullscreenChange", function () {
+			var fullscreenElement = document.fullscreenElement || document.mozFullScreenElement || document.webkitFullscreenElement;
+
+			if (!fullscreenElement && _fullscreen) // Quand on appuis sur ESC ou F11
+				LW.pages.fight.fullscreen();
+		});
+
 		// Commenatires
 		var controller = new ChatController($('#comments-wrapper'), function(comment) {
 			_.post('fight/comment', {fight_id: id, comment: comment}, function(data) {
@@ -230,7 +237,7 @@ LW.pages.fight.fullscreen = function() {
 	if (_fullscreen) {
 		_fullscreen = false
 		_.fullscreen.exit()
-		setTimeout(LW.pages.fight.resize, 100)
+		LW.pages.fight.resize();
 	} else {
 		_fullscreen = true
 		_.fullscreen.enter($('#game')[0], function() {
