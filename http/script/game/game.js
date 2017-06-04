@@ -1869,6 +1869,7 @@ var Game = function() {
 
 	this.showReport = function() {
 		this.going_to_report = true
+		document.body.style.cursor = ''
 		LW.page('/report/' + game.data.id)
 	}
 

@@ -416,10 +416,10 @@ var Hud = function() {
 		}
 
 		/// Mouse hover
-		document.body.style.cursor = 'default';
+		document.body.style.cursor = ''
 
+		if (game.going_to_report) return null
 		if (game.showLifes) {
-
 			for (var i in game.leeks) {
 				var leek = game.leeks[i];
 				if (leek.isDead() || !leek.active) continue;
@@ -429,7 +429,6 @@ var Hud = function() {
 				}
 			}
 		} else {
-
 			for (var i in game.leeks) {
 				var leek = game.leeks[i];
 				if (leek.isDead() || !leek.active) continue;
