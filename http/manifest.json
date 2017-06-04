@@ -12,7 +12,7 @@
       }
   ],
   "start_url": "/",
-  "display": "minimal-ui",
+  "display": "standalone",
   "orientation": "portrait",
   "permissions": [
 	  "notifications"
