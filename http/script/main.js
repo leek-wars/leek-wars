@@ -1507,6 +1507,7 @@ LW.setTitle = function(title) {
 	} else {
 		_.title(title + ' - Leek Wars')
 	}
+	$('#app-bar').text(title)
 }
 
 LW.setMenuTab = function(tab) {
@@ -4247,6 +4248,10 @@ LW.lucky = function() {
 			clover.remove()
 		})
 	}, 5000)
+}
+
+LW.app = function() {
+	$('body').toggleClass('app')
 }
 
 LW.battle_royale = {
