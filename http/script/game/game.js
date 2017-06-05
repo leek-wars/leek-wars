@@ -39,9 +39,8 @@ var lastFPS = new Array();
 
 function update() {
 	if (!game.paused) {
-
-		setTimeout(update, frameTime);
-		game.update();
+		setTimeout(update, frameTime)
+		game.update()
 	}
 }
 
@@ -1811,9 +1810,8 @@ var Game = function() {
 		this.particles.drawAir();
 
 		if (this.requestPause) {
-
-			this.paused = true;
-			this.requestPause = false;
+			this.paused = true
+			this.requestPause = false
 			if (!this.going_to_report) {
 				this.drawPause()
 			}
@@ -1871,8 +1869,6 @@ var Game = function() {
 
 	this.showReport = function() {
 		this.going_to_report = true
-
-		// Show report
 		LW.page('/report/' + game.data.id)
 	}
 
