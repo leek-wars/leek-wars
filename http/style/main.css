@@ -2639,7 +2639,8 @@ textarea.autogrow {
 	}
 
 	#page-wrapper {
-		padding: 15px;
+		padding: 8px;
+		padding-bottom: 0;
 	}
 	.panel > .content {
 		padding: 10px;
