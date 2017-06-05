@@ -148,6 +148,7 @@ var Game = function() {
 	this.requestPause = false
 	this.speed = 1
 	this.focus = true
+	this.going_to_report = false
 
 	this.width;
 	this.height;
@@ -1813,7 +1814,9 @@ var Game = function() {
 
 			this.paused = true;
 			this.requestPause = false;
-			this.drawPause();
+			if (!this.going_to_report) {
+				this.drawPause()
+			}
 		}
 
 		// Draw hud
@@ -1867,6 +1870,7 @@ var Game = function() {
 	}
 
 	this.showReport = function() {
+		this.going_to_report = true
 
 		// Show report
 		LW.page('/report/' + game.data.id)
