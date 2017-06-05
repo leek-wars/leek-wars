@@ -267,6 +267,9 @@ textarea {
 body.connected #console {
 	display: block;
 }
+body.app #console {
+	display: none;
+}
 
 /*
  * Menu
