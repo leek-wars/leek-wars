@@ -1348,6 +1348,10 @@ body.connected #header-signin {
 	height: 150px;
 }
 
+body.app #footer-wrapper {
+	display: none;
+}
+
 #footer-wrapper.connected {
 	padding-left: 170px;
 }
