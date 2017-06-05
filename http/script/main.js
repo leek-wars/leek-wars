@@ -577,6 +577,9 @@ $(document).ready(function() {
 		__DEFAULT_LANGUAGE
 	)
 	// Set body classes as soon as possible
+	if (_.is_mobile()) {
+		$('body').addClass('app')
+	}
 	LW.sfw.init()
 	if (localStorage['connected'] == 'true') {
 		$('body').addClass('connected')
