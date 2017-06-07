@@ -430,7 +430,7 @@ body.app #app-bar {
 	top: 0;
 	left: 0;
 	right: 0;
-	background: black;
+	background: #6ab344;
 	z-index: 200;
 	color: white;
 	line-height: 50px;
@@ -442,6 +442,7 @@ body.app #app-bar {
 	word-break: break-all;
 	white-space: nowrap;
 	display: flex;
+	box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.07);
 }
 body.connected.app #page-wrapper {
 	padding-top: 54px;
@@ -487,6 +488,9 @@ body.app #header-mobile .header-button {
 }
 body.app .notifications-button img, body.app .messages-button img {
 	margin: 14px 0;
+}
+body.app #app-bar .counter {
+	background: #ff6f00
 }
 
 body.app #menu {
