@@ -1,0 +1,7 @@
+body.app #console-page .panel {
+	margin-bottom: 0;
+}
+
+#console-page .panel .content {
+	padding: 0;
+}

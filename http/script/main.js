@@ -392,6 +392,7 @@ LW.pages = {
 		],
 		langs: ['documentation', 'java_compilation']
 	},
+	console: {},
 	garden: {},
 	fight: {
 		langs: ['entity'],
@@ -1241,6 +1242,10 @@ page('/editor/:id', function(ctx) {
 	} else {
 		page.redirect('/')
 	}
+})
+
+page('/console', function() {
+	LW.loadPage('console')
 })
 
 page('/garden', function() {
