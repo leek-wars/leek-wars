@@ -157,6 +157,7 @@ LW.pages.market.update = function(params) {
 		LW.pages.market.selectItem(params.item)
 	} else {
 		if (_.is_mobile()) {
+			LW.setTitle(_.lang.get('market', 'title'))
 			LW.app.split_show_list()
 		} else {
 			LW.pages.market.selectItem('pistol')
@@ -353,10 +354,13 @@ LW.pages.market.selectItem = function(item) {
 	var item = $('#market-page .item[name=' + item + ']')
 
 	$('#preview > div').hide()
-	$('#preview').find('#' + item.attr('id')).show()
+	var preview = $('#preview').find('#' + item.attr('id'))
+	preview.show()
 
 	$('.items div').removeClass('selected')
 	item.addClass('selected')
+
+	LW.setTitle(preview.find('.name').text())
 
 	LW.app.split_show_content()
 }
