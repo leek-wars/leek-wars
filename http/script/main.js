@@ -1088,7 +1088,7 @@ LW.resize = function() {
 	var width = Math.min(400, window_width)
 
 	// Messages popup
-	var button = $(".messages-button:visible img");
+	var button = $(".messages-button:visible .icon");
 	if (button.length) {
 		var left = button.offset().left + 14 - $('#messages-popup').width() / 2
 		if (left > window_width - width) {
@@ -1103,7 +1103,7 @@ LW.resize = function() {
 	}
 
 	// Notifications popup
-	var button = $(".notifications-button:visible img");
+	var button = $(".notifications-button:visible .icon");
 	if (button.length) {
 		var left = button.offset().left + 14 - $('#notifications-popup').width() / 2
 		if (left > window_width - width) {
