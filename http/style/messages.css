@@ -73,3 +73,7 @@
 #conversations .loader {
 	padding: 40px;
 }
+
+body.app #messages-page .panel {
+	margin-bottom: 0;
+}
