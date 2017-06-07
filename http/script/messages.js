@@ -55,7 +55,11 @@ LW.pages.messages.init = function(params, $scope, $page) {
 			if (id != null) {
 				LW.page.redirect('/messages/conversation/' + id)
 			} else {
-				LW.page.redirect('/messages/conversation/' + $('.conversation-preview').first().attr('conv'))
+				if (_.is_mobile()) {
+					LW.app.split_show_list()
+				} else {
+					LW.page.redirect('/messages/conversation/' + $('.conversation-preview').first().attr('conv'))
+				}
 			}
 		}
 
@@ -86,10 +90,15 @@ LW.pages.messages.init = function(params, $scope, $page) {
 }
 
 LW.pages.messages.resize = function() {
-	var h = $(window).height() - $('#header').height() - 75
-	$('#conversations').css('height', h);
-	$('#conversations .conversation').css('height', h);
-	$('#conversations-list').css('height', h);
+	if (!_.is_mobile()) {
+		var h = $(window).height() - $('#header').height() - 75
+		$('#conversations').css('height', h);
+		$('#conversations .conversation').css('height', h);
+		$('#conversations-list').css('height', h);
+	} else {
+		var h = $(window).height() - $('#app-bar').height() - $('#page .page-header').height()
+		$('#conversations .conversation').css('height', h)
+	}
 }
 
 LW.pages.messages.focus = function() {
@@ -104,8 +113,12 @@ LW.pages.messages.update = function(params) {
 	var new_conversation = params && 'new_conversation' in params
 	if (new_conversation) {
 		LW.pages.messages.selectConversation(0)
-	} else {
+	} else if (params && 'id' in params) {
 		LW.pages.messages.selectConversation(params.id)
+	} else {
+		if (_.is_mobile()) {
+			LW.app.split_show_list()
+		}
 	}
 }
 
@@ -143,6 +156,9 @@ LW.pages.messages.selectConversation = function(id) {
 	$('.conversation[conv=' + id + ']').show()
 	$('.conversation-preview').removeClass('selected')
 	$('.conversation-preview[conv=' + id + ']').addClass('selected')
+
+	LW.app.split_show_content()
+
 	LW.pages.messages.loadConversation(id)
 }
 
