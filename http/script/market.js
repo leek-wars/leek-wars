@@ -97,7 +97,11 @@ LW.pages.market.init = function(params, $scope, $page) {
 		if ('item' in params) {
 			LW.pages.market.selectItem(params.item)
 		} else {
-			LW.pages.market.selectItem('pistol')
+			if (_.is_mobile()) {
+				LW.app.split_show_list()
+			} else {
+				LW.pages.market.selectItem('pistol')
+			}
 		}
 	})
 }
@@ -107,6 +111,7 @@ LW.pages.market.resize = function() {
 }
 
 LW.pages.market.scroll = function(scroll) {
+	if (_.is_mobile()) return null
 	if (scroll < 137) {
 		$('#preview-panel').css('position', 'static')
 	} else {
@@ -151,8 +156,16 @@ LW.pages.market.update = function(params) {
 	if (params && 'item' in params) {
 		LW.pages.market.selectItem(params.item)
 	} else {
-		LW.pages.market.selectItem('pistol')
+		if (_.is_mobile()) {
+			LW.app.split_show_list()
+		} else {
+			LW.pages.market.selectItem('pistol')
+		}
 	}
+}
+
+LW.pages.market.back = function() {
+	LW.page('/market')
 }
 
 LW.pages.market.buy = function() {
@@ -344,6 +357,8 @@ LW.pages.market.selectItem = function(item) {
 
 	$('.items div').removeClass('selected')
 	item.addClass('selected')
+
+	LW.app.split_show_content()
 }
 
 LW.pages.market.chips = function(sort_method) {

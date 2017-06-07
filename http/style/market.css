@@ -121,7 +121,10 @@
 	vertical-align: bottom;
 	margin: 8px;
 }
-
+body.app #weapons .weapon {
+	width: 150px;
+	margin: 5px;
+}
 #weapons .weapon img {
 	max-height: 52px;
 	max-width: 160px;
@@ -153,12 +156,17 @@
 	text-align: center;
 	margin: 6px;
 }
-
+body.app #chips .chip {
+	width: 50px;
+	margin: 3px;
+}
 #chips .chip img {
 	height: 68px;
 	vertical-align: bottom;
 }
-
+body.app #chips .chip img {
+	height: 50px;
+}
 #chips h3 {
 	margin-left: 0px;
 }
@@ -202,7 +210,9 @@
 	vertical-align: bottom;
 	margin: 8px;
 }
-
+body.app #hats .hat {
+	margin: 4px;
+}
 #hats .hat img {
 	max-width: 100px;
 	max-height: 70px;
