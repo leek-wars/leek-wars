@@ -42,18 +42,19 @@ LW.pages.documentation.init = function(params, $scope, $page) {
 
 		if (urlItem != null) {
 			LW.pages.documentation.selectItem(urlItem)
+		} else {
+			if (_.is_mobile()) {
+				LW.app.split_show_list()
+			}
 		}
 
 		$('#items-list .item').click(function() {
-
 			LW.page('/help/documentation/' + $(this).attr('name'))
 		})
 
 		// Search
 		$('#query').keyup(function() {
-
 			_query = $.trim($('#query').val().toLowerCase())
-
 			LW.pages.documentation.filter()
 		})
 
@@ -110,18 +111,20 @@ LW.pages.documentation.init = function(params, $scope, $page) {
 }
 
 LW.pages.documentation.update = function(params) {
-
-	LW.pages.documentation.selectItem(params.item)
+	if (params && 'item' in params) {
+		LW.pages.documentation.selectItem(params.item)
+	}
 }
 
 LW.pages.documentation.resize = function() {
-
-	$('#items-list').height($(window).height() - 190)
-	$('#items').height($(window).height() - 190)
+	if (!_.is_mobile()) {
+		$('#items-list').height($(window).height() - 190)
+		$('#items').height($(window).height() - 190)
+	}
 }
 
 LW.pages.documentation.selectItem = function(item) {
-
+	LW.app.split_show_content()
 	var element = $('#items .item[item=' + item.toLowerCase() + ']:visible')
 	if (element.length) {
 		var pos = element.position().top + $('#items').scrollTop();
