@@ -16,5 +16,6 @@
   "orientation": "portrait",
   "permissions": [
 	  "notifications"
-  ]
+  ],
+  "theme_color": "#6ab344"
 }
