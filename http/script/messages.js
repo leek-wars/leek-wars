@@ -15,10 +15,12 @@ LW.pages.messages.init = function(params, $scope, $page) {
 
 	_.get('message/get-latest-conversations/100/' + LW.token(), function(data) {
 
+		$scope.conversations_by_id = {}
 		for (var c in data.conversations) {
 			data.conversations[c].avatars = LW.messages.getAvatars(data.conversations[c])
 			data.conversations[c].name = LW.messages.getConversationList(data.conversations[c])
 			data.conversations[c].last_message = LW.messages.getConversationLastMessage(data.conversations[c])
+			$scope.conversations_by_id[data.conversations[c].id] = data.conversations[c]
  		}
 		// new conversation
 		if (new_conversation) {
@@ -101,6 +103,10 @@ LW.pages.messages.resize = function() {
 	}
 }
 
+LW.pages.messages.back = function() {
+	LW.page('/messages')
+}
+
 LW.pages.messages.focus = function() {
 	_focus = true
 	conversationRead()
@@ -117,6 +123,7 @@ LW.pages.messages.update = function(params) {
 		LW.pages.messages.selectConversation(params.id)
 	} else {
 		if (_.is_mobile()) {
+			LW.setTitle(_.lang.get('messages', 'title'))
 			LW.app.split_show_list()
 		}
 	}
@@ -158,6 +165,7 @@ LW.pages.messages.selectConversation = function(id) {
 	$('.conversation-preview[conv=' + id + ']').addClass('selected')
 
 	LW.app.split_show_content()
+	LW.setTitle($(this.scope.conversations_by_id[id].name).text())
 
 	LW.pages.messages.loadConversation(id)
 }
