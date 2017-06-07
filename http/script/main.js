@@ -1596,7 +1596,9 @@ LW.loadPage = function(pageID, params) {
 						if (window.location.hash) {
 							var element = $(window.location.hash)
 							if (element.length) {
-								$(window).scrollTop(element.offset().top)
+								var top = element.offset().top
+								if (_.is_mobile()) top -= 54
+								$(window).scrollTop(top)
 							}
 						} else if (LW.first_page && pageID == localStorage['last_page']) {
 							$(window).scrollTop(parseFloat(localStorage['scroll']))
