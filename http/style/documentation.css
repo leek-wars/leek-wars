@@ -22,7 +22,10 @@
 #items-list div {
 	cursor: pointer;
 	padding: 1px 10px;
-}	
+}
+body.app #items-list div {
+	padding: 5px 10px;
+}
 
 #items-list div:last-child {
 	margin-bottom: 10px;
