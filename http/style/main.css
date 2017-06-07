@@ -406,6 +406,12 @@ body.menu-collapsed .menu .section img {
 body.app #page {
 	padding-bottom: 0;
 }
+body.app #header {
+	display: none;
+}
+body.app.connected #center {
+	margin-left: auto;
+}
 body.app #page-wrapper {
 	padding: 0;
 }
