@@ -1165,7 +1165,7 @@ body.connected #header-signin {
 	height: 26px;
 	width: 26px;
 	margin: 8px 0;
-	opacity: 0.8;
+	opacity: 1;
 }
 
 .fights-button img {
