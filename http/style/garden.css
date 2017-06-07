@@ -8,16 +8,6 @@
 	padding: 10px;
 }
 
-@media screen and (max-width: 799px) {
-	#garden-left .content {
-		display: flex;
-		flex-direction: row;
-	}
-	#garden-left .tab {
-		width: 33.3333%;
-	}
-}
-
 #garden-left .tab.active {
 	border-bottom: 3px solid #5FAD1B;
 }
