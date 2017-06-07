@@ -668,6 +668,16 @@ $(document).ready(function() {
 				localStorage['main/menu-collapsed'] = $('body').hasClass('menu-collapsed')
 			})
 
+			$('#app-bar .menu').click(function(e) {
+				if (LW.app.split_back) {
+					if ('back' in LW.pages[LW.currentPage]) LW.pages[LW.currentPage].back()
+					LW.app.split_show_list()
+				} else {
+					$('#menu').toggleClass('expanded')
+				}
+				e.stopPropagation()
+			})
+
 			$('#social-button').click(function() {
 				$('body').toggleClass('social-collapsed')
 				LW.trigger('resize')
@@ -727,6 +737,7 @@ $(document).ready(function() {
 				}
 				$('#chat-smileys').hide()
 				$('#chat-commands').hide()
+				$('body.app #menu').removeClass('expanded')
 			})
 
 			$(window).resize(function() {
@@ -925,16 +936,16 @@ LW.connect = function(farmer, callback) {
 
 		// Leek tabs
 		var leeks = LW.farmer.leeks
-		$('#menu .leeks, #menu-mobile .leeks').empty()
+		$('#menu .leeks').empty()
 		for (var l in leeks) {
 			var leek = leeks[l]
-			$('#menu .leeks, #menu-mobile .leeks').append(_.view.render('main.leek_tab', leek))
+			$('#menu .leeks').append(_.view.render('main.leek_tab', leek))
 			if (leek.capital > 0) {
 				$('#leek-tab-' + leek.id).attr('label', leek.capital)
 			}
 		}
 		if (_.objectSize(LW.farmer.leeks) < 4) {
-			$('#menu .leeks, #menu-mobile .leeks').append("<a href='/new-leek'>" +
+			$('#menu .leeks').append("<a href='/new-leek'>" +
 				"<div class='section'>" +
 				"<img src='" + LW.staticURL + "image/icon/add.png'>" +
 				"<div class='text'>" + _.lang.get('main', 'add_leek') + "</div>" +
@@ -948,7 +959,6 @@ LW.connect = function(farmer, callback) {
 		// Team ?
 		if (LW.farmer.team) {
 			$('#menu #team-tab').show()
-			$('#menu-mobile #team-tab').css('display', 'inline-block')
 		}
 
 		// Load notifications
@@ -1070,7 +1080,9 @@ LW.shrink = function() {
 
 LW.resize = function() {
 
-	$('#page').css('min-height', Math.max(600, $(window).height() - 257))
+	if (!_.is_mobile()) {
+		$('#page').css('min-height', Math.max(600, $(window).height() - 257))
+	}
 
 	var window_width = $(window).width()
 	var width = Math.min(400, window_width)
@@ -1507,7 +1519,7 @@ LW.setTitle = function(title) {
 	} else {
 		_.title(title + ' - Leek Wars')
 	}
-	$('#app-bar').text(title)
+	$('#app-bar .title').text(title)
 }
 
 LW.setMenuTab = function(tab) {
@@ -4250,10 +4262,6 @@ LW.lucky = function() {
 	}, 5000)
 }
 
-LW.app = function() {
-	$('body').toggleClass('app')
-}
-
 LW.battle_royale = {
 	popup: null,
 	last_leeks: []
@@ -4337,6 +4345,32 @@ LW.battle_royale.start = function(data) {
 	LW.battle_royale.popup.dismiss()
 	LW.updateFights(-1)
 	LW.page('/fight/' + data[0])
+}
+
+LW.app = {
+	split_back: false
+}
+
+LW.app.toggle = function() {
+	$('body').toggleClass('app')
+}
+
+LW.app.split_show_list = function() {
+	if (!_.is_mobile()) return null
+	$('#page .column3, #page .split-list').show().css('height', $(window).height() - $('#app-bar').height())
+	$('#page .column9, #page .split-content').hide()
+	$('#page .page-header').hide()
+	$('#app-bar .menu').removeClass('back')
+	LW.app.split_back = false
+}
+
+LW.app.split_show_content = function() {
+	if (!_.is_mobile()) return null
+	$('#page .column3, #page .split-list').hide()
+	$('#page .column9, #page .split-content').show().css('height', $(window).height() - $('#app-bar').height() - $('#page .page-header').height())
+	$('#page .page-header').show()
+	$('#app-bar .menu').addClass('back')
+	LW.app.split_back = true
 }
 
 LW.test_notif = function() {
