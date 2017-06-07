@@ -20,7 +20,11 @@ LW.pages.chat.init = function(params, $scope, $page) {
 }
 
 LW.pages.chat.resize = function() {
-	$('#chat .chat-messages').height($(window).height() - $('#header').height() - 170)
+	if (_.is_mobile()) {
+		$('#chat .chat-messages').height($(window).height() - 155)
+	} else {
+		$('#chat .chat-messages').height($(window).height() - $('#header').height() - 170)
+	}
 }
 
 LW.pages.chat.wsconnected = function() {
