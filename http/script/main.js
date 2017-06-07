@@ -1602,7 +1602,7 @@ LW.loadPage = function(pageID, params) {
 							var element = $(window.location.hash)
 							if (element.length) {
 								var top = element.offset().top
-								if (_.is_mobile()) top -= 54
+								if (_.is_mobile()) top -= $('#app-bar').height()
 								$(window).scrollTop(top)
 							}
 						} else if (LW.first_page && pageID == localStorage['last_page']) {
