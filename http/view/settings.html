@@ -43,21 +43,19 @@
 			<div class='content'>
 				<table class='misc-settings'>
 					<tr id='sfw-button'>
-						<td>
-							<h4>{#activate_discrete_mode}</h4>
-						</td>
-						<td>
-							@include('main.switch', sfw_switch)
-						</td>
+						<td><h4>{#activate_discrete_mode}</h4></td>
+						<td>@include('main.switch', sfw_switch)</td>
 					</tr>
 					<tr id='notifs-results-button'>
-						<td>
-							<h4>{#notifs_results}</h4>
-						</td>
-						<td>
-							@include('main.switch', notifs_results_switch)
-						</td>
+						<td><h4>{#notifs_results}</h4></td>
+						<td>@include('main.switch', notifs_results_switch)</td>
 					</tr>
+					@if (mobile)
+						<tr id='chat-first-button'>
+							<td><h4>{#chat_first}</h4></td>
+							<td>@include('main.switch', chat_first_switch)</td>
+						</tr>
+					@end
 				</table>
 			</div>
 		</div>
