@@ -135,6 +135,10 @@ LW.pages.garden.init = function(params, $scope, $page) {
 			LW.pages.garden.battle_royale()
 		})
 
+		if (_.is_mobile()) {
+			LW.app.split_show_list()
+		}
+
 		for (var l in LW.farmer.leeks) {
 			$page.leek_image(LW.farmer.leeks[l])
 		}
@@ -144,8 +148,9 @@ LW.pages.garden.init = function(params, $scope, $page) {
 			$page.select_composition($(this).attr('compo'))
 		})
 
-		$page.select_category($scope.category)
-
+		if (!_.is_mobile()) {
+			$page.select_category($scope.category)
+		}
 		LW.pages.garden.time()
 	})
 }
@@ -176,6 +181,9 @@ LW.pages.garden.select_category = function(category) {
 	}
 	if (category == 'battle-royale') {
 		LW.pages.garden.battle_royale()
+	}
+	if (_.is_mobile()) {
+		LW.app.split_show_content()
 	}
 }
 
