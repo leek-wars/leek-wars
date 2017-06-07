@@ -425,7 +425,7 @@ body.app #app-bar {
 	left: 0;
 	right: 0;
 	background: black;
-	z-index: 50;
+	z-index: 200;
 	color: white;
 	line-height: 50px;
 	padding-left: 5px;
