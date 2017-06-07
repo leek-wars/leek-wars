@@ -406,6 +406,13 @@ body.menu-collapsed .menu .section img {
 body.app #page {
 	padding-bottom: 0;
 }
+body.app #page-wrapper {
+	padding: 0;
+}
+body.app .panel {
+	border-radius: 0;
+	-webkit-border-radius: 0;
+}
 
 #app-bar {
 	display: none;
@@ -518,10 +525,6 @@ body.app #menu .section {
 body.app .column3, body.app .column9,
 body.app .split-list, body.app .split-content {
 	overflow-y: auto;
-}
-body.app .column3 .panel, body.app .column9 .panel,
-body.app .split-list .panel, body.app .split-content .panel {
-	margin-bottom: 0;
 }
 
 /*
