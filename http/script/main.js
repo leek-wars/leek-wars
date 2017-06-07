@@ -784,7 +784,6 @@ $(document).ready(function() {
 
 			// Connect and start page
 			if (localStorage['connected'] === 'true') {
-
 				_.get('farmer/get-from-token/' + LW.token(), function(data) {
 					if (data.success) {
 						LW.connect(data.farmer, function() {
@@ -1141,7 +1140,11 @@ onPushState(function() {
 
 page('/', function() {
 	if (LW.connected) {
-		LW.loadPage('leek')
+		if (_.is_mobile() && localStorage['options/chat-first'] === 'true') {
+			LW.loadPage('chat')
+		} else {
+			LW.loadPage('leek')
+		}
 	} else {
 		LW.loadPage('signup')
 	}

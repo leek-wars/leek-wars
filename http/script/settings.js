@@ -10,7 +10,7 @@ LW.pages.settings.init = function(params, $scope, $page) {
 			forum: ['response'],
 			changelog: ['changelog']
 		}
-
+		$scope.mobile = _.is_mobile()
 		$scope.languages = _.lang.languages
 		$scope.sfw_switch = {
 			id: 'sfw-switch',
@@ -19,6 +19,10 @@ LW.pages.settings.init = function(params, $scope, $page) {
 		$scope.notifs_results_switch = {
 			id: 'notifs-results-switch',
 			checked: localStorage['options/notifs-results'] == 'true'
+		}
+		$scope.chat_first_switch = {
+			id: 'chat-first-switch',
+			checked: localStorage['options/chat-first'] == 'true'
 		}
 		$scope.mails = mails
 		$scope.settings = data.settings
@@ -30,6 +34,7 @@ LW.pages.settings.init = function(params, $scope, $page) {
 		LW.pages.settings.language()
 		LW.pages.settings.sfw()
 		LW.pages.settings.notifs_results()
+		LW.pages.settings.chat_first()
 		LW.pages.settings.changePassword()
 		LW.pages.settings.deleteAccount()
 		LW.pages.settings.advanced()
@@ -94,6 +99,18 @@ LW.pages.settings.notifs_results = function() {
 		} else {
 			localStorage['options/notifs-results'] = false
 			$('body').removeClass('notifs-results')
+		}
+	})
+}
+
+LW.pages.settings.chat_first = function() {
+	$('#chat-first-button').click(function() {
+		var enabled = !$('#chat-first-switch').is(':checked')
+		$('#chat-first-switch').prop('checked', enabled)
+		if (enabled) {
+			localStorage['options/chat-first'] = true
+		} else {
+			localStorage['options/chat-first'] = false
 		}
 	})
 }
