@@ -29,7 +29,7 @@
 	white-space: nowrap;
 }
 .conversation-preview.selected {
-	background: #aaa;
+	background: #ddd;
 	color: white;
 }
 .conversation-preview:hover {
@@ -59,7 +59,7 @@
 	max-width: 100%;
 }
 .conversation-preview.selected .last-message {
-	color: #eee;
+	color: #333;
 }
 
 #conversations .conversation {
