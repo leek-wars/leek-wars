@@ -64,7 +64,7 @@ var LW = {
  * Start service worker
  */
 if ('serviceWorker' in navigator) {
-	 //navigator.serviceWorker.register('service-worker.js', {scope: '/'})
+	 navigator.serviceWorker.register('/service-worker.js', {scope: '/'})
 }
 
 // WebSocket on Firefox
