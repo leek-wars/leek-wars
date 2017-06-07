@@ -343,29 +343,6 @@ body.menu-collapsed #menu-button .icon {
 	overflow: hidden;
 }
 
-#menu-mobile {
-	display: none;
-	white-space: nowrap;
-	overflow-x: auto;
-}
-
-#menu-mobile .section {
-	display: inline-block;
-	vertical-align: top;
-	margin-bottom: 0;
-	height: 48px;
-}
-
-#menu-mobile .section div {
-	display: none;
-}
-
-#menu-mobile .section img {
-	height: 28px;
-	width: 28px;
-	margin: 10px;
-}
-
 .menu .section[label]:not([label='']):after {
 	position: absolute;
 	background: #5FAD1B;
@@ -423,6 +400,129 @@ body.menu-collapsed .menu .section img {
 	display: none;
 }
 
+/*
+ * App bar
+ */
+body.app #page {
+	padding-bottom: 0;
+}
+
+#app-bar {
+	display: none;
+}
+body.app #app-bar {
+	display: block;
+	position: fixed;
+	height: 54px;
+	top: 0;
+	left: 0;
+	right: 0;
+	background: black;
+	z-index: 50;
+	color: white;
+	line-height: 50px;
+	padding-left: 5px;
+	padding-right: 5px;
+	font-size: 18px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	word-break: break-all;
+	white-space: nowrap;
+	display: flex;
+}
+body.connected.app #page-wrapper {
+	padding-top: 54px;
+}
+body:not(.connected) #app-bar {
+	display: none;
+}
+
+body.app #app-bar .menu {
+	width: 26px;
+	padding: 14px;
+}
+body.app #app-bar .menu .bar {
+	width: 20px;
+	height: 2px;
+	border-radius: 2px;
+	margin: 5px 0;
+	background: white;
+	transition: all ease 400ms;
+}
+body.app #app-bar .menu.back .bar:first-child {
+	transform: translateY(2px) rotate(-38deg);
+}
+body.app #app-bar .menu.back .bar:nth-child(2) {
+	opacity: 0;
+}
+body.app #app-bar .menu.back .bar:last-child {
+	transform: rotate(38deg);
+}
+
+body.app #app-bar .title {
+	flex: 1;
+}
+body.app.connected #page .page-bar h1 {
+	display: none;
+}
+#header-mobile, #menu-mobile {
+	display: none;
+}
+body.app #header-mobile .header-button {
+	line-height: 54px;
+	color: #eee;
+}
+body.app .notifications-button img, body.app .messages-button img {
+	margin: 14px 0;
+}
+
+body.app #menu {
+	position: fixed;
+	top: 54px;
+	left: -100%;
+	bottom: 0;
+	background: rgba(0, 0, 0, 0.5);
+	z-index: 1000;
+	transition: left ease 200ms;
+	padding: 0;
+	width: auto;
+}
+body.app #menu.expanded {
+	left: 0;
+	right: 0;
+}
+body.app #menu-button {
+	display: none;
+}
+body.app #menu .menu-wrapper {
+	padding: 0;
+	background: rgba(0, 0, 0, 0.8);
+	width: 270px;
+	overflow-y: auto;
+	height: 100%;
+}
+body.app #menu .separator {
+	display: none;
+}
+#menu [tab='farmer'] {
+	display: none;
+}
+body.app #menu [tab='farmer'] {
+	display: block;
+}
+body.app #menu .section {
+	line-height: 46px;
+	background: transparent;
+}
+
+body.app .column3, body.app .column9,
+body.app .split-list, body.app .split-content {
+	overflow-y: auto;
+}
+body.app .column3 .panel, body.app .column9 .panel,
+body.app .split-list .panel, body.app .split-content .panel {
+	margin-bottom: 0;
+}
 
 /*
  * Social panel (right)
@@ -923,11 +1023,6 @@ body.menu-collapsed #big-leeks {
 	height: 80px;
 }
 
-#header-mobile {
-	display: none;
-	height: 42px;
-}
-
 #header-left {
 	padding-right: 20px;
 }
@@ -984,11 +1079,6 @@ body.connected #header-signin {
 	white-space: nowrap;
 }
 
-#header-mobile .header-button {
-	line-height: 42px;
-	color: #eee;
-}
-
 #header .button-wrapper:first-child .header-button {
 	margin-left: 0;
 }
@@ -1011,6 +1101,8 @@ body.connected #header-signin {
 }
 #header-mobile .header-button .text {
 	font-size: 16px;
+	line-height: 50px;
+	height: 50px;
 }
 
 #header .header-button .crystal {
@@ -2667,9 +2759,6 @@ textarea.autogrow {
 	.menu .section {
 		height: 46px;
 	}
-	.menu .section .text {
-		display: none;
-	}
 	.menu .section img {
 		height: 30px;
 		width: 30px;
@@ -2685,12 +2774,6 @@ textarea.autogrow {
 }
 
 @media screen and (max-width: 599px) {
-	body.connected #menu-mobile {
-		display: block;
-	}
-	body.connected #menu {
-		display: none;
-	}
 	body.connected #center,
 	body.connected #footer
 	{
@@ -2877,10 +2960,9 @@ textarea.autogrow {
 }
 
 #loader {
-	position: absolute;
+	position: fixed;
 	background-color: rgba(0,0,0,0.4);
 	text-align: center;
-	/*align-items: center;*/
 	justify-content: center;
 	display: none;
 	pointer-events: none;
