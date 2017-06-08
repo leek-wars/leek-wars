@@ -695,8 +695,6 @@ $(document).ready(function() {
 
 			$(".messages-button").click(function(event) {
 
-				LW.resize()
-
 				$('#messages-popup .messages').html('')
 
 				for (var c = LW.messages.conversations.length - 1; c >= 0; --c) {
@@ -705,24 +703,28 @@ $(document).ready(function() {
 				}
 
 				$('#messages-popup').toggle()
+				LW.resize_notifs_popups()
 				if ($('#notifications-popup').is(':visible')) {
 					$('#notifications-popup').hide()
 				}
+				LW.updateCounters()
+				LW.resize_notifs_popups()
 				event.stopPropagation()
 			});
 
 			$(".notifications-button").click(function(event) {
 
-				LW.resize()
-
 				LW.notifications.unread = 0
-				LW.updateCounters()
+				LW.updateCounters(true)
 				_.post('notification/read-all')
 
 				$('#notifications-popup').toggle()
+				LW.resize_notifs_popups()
 				if ($('#messages-popup').is(':visible')) {
 					$('#messages-popup').hide()
 				}
+				LW.resize_notifs_popups()
+				LW.updateCounters()
 				event.stopPropagation()
 			})
 
@@ -732,9 +734,11 @@ $(document).ready(function() {
 			$('html').click(function() {
 				if ($('#notifications-popup').is(':visible')) {
 					$('#notifications-popup').hide()
+					LW.updateCounters()
 				}
 				if ($('#messages-popup').is(':visible')) {
 					$('#messages-popup').hide()
+					LW.updateCounters()
 				}
 				$('#chat-smileys').hide()
 				$('#chat-commands').hide()
@@ -1079,10 +1083,13 @@ LW.shrink = function() {
 }
 
 LW.resize = function() {
-
 	if (!_.is_mobile()) {
 		$('#page').css('min-height', Math.max(600, $(window).height() - 257))
 	}
+	LW.resize_notifs_popups()
+}
+
+LW.resize_notifs_popups = function() {
 
 	var window_width = $(window).width()
 	var width = Math.min(400, window_width)
@@ -2039,7 +2046,7 @@ LW.socket.disconnect = function() {
 	LW.socket.socket = null
 }
 
-LW.updateCounters = function() {
+LW.updateCounters = function(user_click) {
 
 	_.titleCounter(LW.messages.unread + LW.notifications.unread)
 
@@ -2048,7 +2055,11 @@ LW.updateCounters = function() {
 		.toggle(LW.notifications.unread > 0)
 		.text(LW.notifications.unread)
 	if (_.is_mobile()) {
-		$('#app-bar .notifications-button').toggle(LW.notifications.unread > 0)
+		if (LW.notifications.unread > 0) {
+			$('#app-bar .notifications-button').css('display', 'inline-block')
+		} else if (!$('#notifications-popup').is(':visible') && !user_click) {
+			$('#app-bar .notifications-button').hide()
+		}
 	}
 
 	$('#social-panel #messages .header .label, \
@@ -2056,7 +2067,11 @@ LW.updateCounters = function() {
 		.toggle(LW.messages.unread > 0)
 		.text(LW.messages.unread)
 	if (_.is_mobile()) {
-		$('#app-bar .messages-button').toggle(LW.messages.unread > 0)
+		if (LW.messages.unread > 0) {
+			$('#app-bar .messages-button').css('display', 'inline-block')
+		} else if (!$('#messages-popup').is(':visible') && !user_click) {
+			$('#app-bar .messages-button').hide()
+		}
 	}
 }
 
