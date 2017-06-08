@@ -1613,6 +1613,9 @@ LW.loadPage = function(pageID, params) {
 						LW.first_page = false
 						localStorage['last_page'] = pageID
 
+						// Actions
+						LW.app.add_actions()
+
 						LW.loader.hide()
 						LW.shrink()
 						LW.setMenuTab(null)
@@ -4363,6 +4366,27 @@ LW.app = {
 
 LW.app.toggle = function() {
 	$('body').toggleClass('app')
+}
+
+LW.app.add_actions = function() {
+	if (!_.is_mobile()) return ;
+	$('#app-bar .actions').empty()
+	$('#page .page-header .action').each(function() {
+		$(this).appendTo($('#app-bar .actions'))
+		var icon = $(this).attr('icon')
+		if (icon) {
+			$(this).html('<i class="icon material-icons">' + $(this).attr('icon') + '</i>')
+		} else {
+			var src = $(this).find('img').attr('src')
+			$(this).html('<img class="icon" src="' + src + '"/>')
+		}
+		var link = $(this).attr('link')
+		if (link) {
+			$(this).click(function() {
+				page(link)
+			})
+		}
+	})
 }
 
 LW.app.split_show_list = function() {
