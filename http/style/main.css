@@ -1,26 +1,5 @@
 .material-icons {
-  font-family: 'Material Icons';
-  font-weight: normal;
-  font-style: normal;
-  font-size: 26px;  /* Preferred icon size */
-  display: inline-block;
-  line-height: 1;
-  text-transform: none;
-  letter-spacing: normal;
-  word-wrap: normal;
-  white-space: nowrap;
-  direction: ltr;
-
-  /* Support for all WebKit browsers. */
-  -webkit-font-smoothing: antialiased;
-  /* Support for Safari and Chrome. */
-  text-rendering: optimizeLegibility;
-
-  /* Support for Firefox. */
-  -moz-osx-font-smoothing: grayscale;
-
-  /* Support for IE. */
-  font-feature-settings: 'liga';
+	font-size: 26px;
 }
 
 html {
@@ -460,7 +439,6 @@ body.app #app-bar {
 	color: white;
 	line-height: 55px;
 	padding-left: 5px;
-	padding-right: 5px;
 	font-size: 18px;
 	overflow: hidden;
 	text-overflow: ellipsis;
@@ -504,12 +482,12 @@ body.app #app-bar .title {
 	overflow-x: hidden;
 }
 body.app #app-bar .actions-wrapper {
-	padding-right: 8px;
+	padding-right: 4px;
 }
 body.app #app-bar .action {
 	display: inline-block;
-	line-height: 66px;
-	margin: 0 8px;
+	line-height: 68px;
+	margin: 0 14px;
 }
 body.app.connected #page .page-bar h1 {
 	display: none;
