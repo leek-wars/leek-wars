@@ -2,7 +2,7 @@
   font-family: 'Material Icons';
   font-weight: normal;
   font-style: normal;
-  font-size: 24px;  /* Preferred icon size */
+  font-size: 26px;  /* Preferred icon size */
   display: inline-block;
   line-height: 1;
   text-transform: none;
@@ -500,6 +500,16 @@ body.app #app-bar .menu.back .bar:last-child {
 
 body.app #app-bar .title {
 	flex: 1;
+	text-overflow: ellipsis;
+	overflow-x: hidden;
+}
+body.app #app-bar .actions-wrapper {
+	padding-right: 8px;
+}
+body.app #app-bar .action {
+	display: inline-block;
+	line-height: 66px;
+	margin: 0 8px;
 }
 body.app.connected #page .page-bar h1 {
 	display: none;
