@@ -1,6 +1,9 @@
 #search-page #search {
 	padding: 20px;
 }	
+body.app #search-page #search {
+	padding: 0;
+}
 
 #search-page #search-box img {
 	vertical-align: middle;
