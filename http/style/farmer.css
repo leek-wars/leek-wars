@@ -382,4 +382,5 @@ body.app #farmer-page #send-message {
 	font-size: 20px;
 	font-family: monospace;
 	text-align: center;
+	word-break: break-all;
 }
