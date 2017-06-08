@@ -2,6 +2,10 @@
 	margin-top: 20px;
 }
 
+#forum-page .panel:last-child {
+	margin-bottom: 0;
+}
+
 #forum-language {
 	display: inline-block;
 	padding: 0 4px;
