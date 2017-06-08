@@ -492,8 +492,8 @@ body.app #app-bar .static-actions .action {
 }
 body.app #app-bar .action {
 	display: inline-block;
-	line-height: 68px;
-	margin: 0 14px;
+	line-height: normal;
+	margin: 13px 14px;
 }
 body.app #app-bar .action img {
 	width: 26px;
@@ -513,7 +513,10 @@ body.app .notifications-button img, body.app .messages-button img {
 	margin: 0;
 }
 body.app #app-bar .counter {
-	top: 4px;
+	top: -7px;
+	right: -9px;
+	padding-left: 3px;
+	padding-right: 3px;
 	background: #ff6f00
 }
 
