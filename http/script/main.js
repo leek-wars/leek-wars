@@ -1098,7 +1098,7 @@ LW.resize = function() {
 			$('#messages-arrow').css('left', 190)
 		}
 		$('#messages-popup').css('left', left)
-		$('#messages-popup').css('top', button.offset().top + 46)
+		$('#messages-popup').css('top', button.offset().top + 40)
 		$('#messages-popup').css('width', width)
 	}
 
@@ -1113,7 +1113,7 @@ LW.resize = function() {
 			$('#notifs-arrow').css('left', 190)
 		}
 		$('#notifications-popup').css('left', left)
-		$('#notifications-popup').css('top', button.offset().top + 46)
+		$('#notifications-popup').css('top', button.offset().top + 40)
 		$('#notifications-popup').css('width', width)
 	}
 }
