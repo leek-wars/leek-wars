@@ -8,6 +8,10 @@
 	display: none;
 }
 
+#farmer-page .panel.first .content {
+	padding-top: 0;
+}
+
 #farmer-table {
 	width: 100%;
 	margin-top: 20px;
