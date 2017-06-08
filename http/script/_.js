@@ -565,8 +565,8 @@ _.popup.new = function(view, data, width, direct, options) {
 	this.ondismiss = null
 
 	if (width != undefined) {
-		width = Math.min($(window).width(), width)
-		this.view.css('max-width', width)
+		this.view.css('width', width)
+		this.view.css('max-width', Math.min($(window).width(), width))
 	}
 
 	var actionCount = this.view.find('.actions div').length
