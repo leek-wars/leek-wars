@@ -45,6 +45,10 @@ LW.pages.search.init = function(params, $scope, $page) {
 
 		LW.setTitle(_.lang.get('search', 'title'))
 
+		if (query != '' || farmer != '') {
+			$('#search-page .results-wrapper').show()
+		}
+
 		// Recherche
 		$('#search-box #query').keyup(function(e) {
 			if (e.keyCode == 13) {

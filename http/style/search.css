@@ -17,6 +17,10 @@
 	margin-top: 20px;
 }
 
+#search .results-wrapper {
+	display: none;
+}
+
 #search .result {
 	background: #FAFAFA;
 	padding: 6px 10px;
