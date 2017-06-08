@@ -3,6 +3,13 @@
 }
 body.app #search-page #search {
 	padding: 0;
+	padding-top: 10px;
+}
+
+#search-page .label {
+	width: 90px;
+	display: inline-block;
+	text-align: right;
 }
 
 #search-page #search-box img {

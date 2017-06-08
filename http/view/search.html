@@ -9,12 +9,13 @@
 		<div id='search'>
 
 			<div id='search-box'>
-				{#query} <input type='text' id='query' value='{query}'></input> <img src='{{static}}image/search_black.png'></img>
+				<div class='label'>{#query}</div>
+				<input type='text' id='query' value='{query}'></input> <img src='{{static}}image/search_black.png'></img>
 			</div>
 			<br>
-
 			<div id='search-box-farmer'>
-				{#author} <input type='text' id='farmer-query' value='{farmer_query}'></input>
+				<div class='label'>{#author}</div>
+				<input type='text' id='farmer-query' value='{farmer_query}'></input>
 			</div>
 
 			<div class='results-wrapper'>
