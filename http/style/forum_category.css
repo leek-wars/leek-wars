@@ -9,7 +9,7 @@
 	margin: 0;
 }
 
-#forum_category-page .panel .content {
+body.app #forum_category-page .panel .content {
 	padding: 0;
 }
 
