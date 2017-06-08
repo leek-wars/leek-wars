@@ -8,7 +8,7 @@
 	display: none;
 }
 
-#farmer-page .panel.first .content {
+body.app #farmer-page .panel.first .content {
 	padding-top: 0;
 }
 
