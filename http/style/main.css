@@ -431,7 +431,7 @@ body.menu-collapsed .menu .section img {
 body.app #page {
 	padding-bottom: 0;
 }
-body.app #header {
+body.app.connected #header {
 	display: none;
 }
 body.app.connected #center {
