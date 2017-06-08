@@ -2047,11 +2047,17 @@ LW.updateCounters = function() {
 	   .notifications-button .counter')
 		.toggle(LW.notifications.unread > 0)
 		.text(LW.notifications.unread)
+	if (_.is_mobile()) {
+		$('#app-bar .notifications-button').toggle(LW.notifications.unread > 0)
+	}
 
 	$('#social-panel #messages .header .label, \
 	   .messages-button .counter')
 		.toggle(LW.messages.unread > 0)
 		.text(LW.messages.unread)
+	if (_.is_mobile()) {
+		$('#app-bar .messages-button').toggle(LW.messages.unread > 0)
+	}
 }
 
 var FormatTime = function(time) {
