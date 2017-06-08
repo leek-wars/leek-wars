@@ -484,10 +484,20 @@ body.app #app-bar .title {
 body.app #app-bar .actions-wrapper {
 	padding-right: 4px;
 }
+body.app #app-bar .actions, body.app #app-bar .static-actions {
+	display: inline-block;
+}
+body.app #app-bar .static-actions .action {
+	display: none;
+}
 body.app #app-bar .action {
 	display: inline-block;
 	line-height: 68px;
 	margin: 0 14px;
+}
+body.app #app-bar .action img {
+	width: 26px;
+	opacity: 1;
 }
 body.app.connected #page .page-bar h1 {
 	display: none;
@@ -503,6 +513,7 @@ body.app .notifications-button img, body.app .messages-button img {
 	margin: 0;
 }
 body.app #app-bar .counter {
+	top: 4px;
 	background: #ff6f00
 }
 
@@ -1191,7 +1202,7 @@ body.connected #header-signin {
 	height: 26px;
 	width: 26px;
 	margin: 8px 0;
-	opacity: 1;
+	opacity: 0.8;
 }
 
 .fights-button img {
