@@ -37,18 +37,19 @@
 				@include('main.switch', garden_switch)
 			</div>
 
-			<div class='tab' id='logout'>
+			<div class='tab action' id='logout' icon='power_settings_new'>
 				{#logout}
 			</div>
 		@else
 			@if (LW.connected)
 				<a href='/garden/challenge/farmer/{farmer.id}'>
-					<div id='challenge' class='tab'>
+					<div id='challenge' class='tab action' link='/garden/challenge/farmer/{farmer.id}'>
 						<img src='{{static}}/image/icon/garden.png'></img>
 						<span>{#challenge}</span>
 					</div>
 				</a>
 			@end
+			<div class='action' icon='question_answer' link='/messages/new/{farmer.id}/{farmer.name}/{farmer.avatar_changed}'></div>
 		@end
 	</div>
 </div>
