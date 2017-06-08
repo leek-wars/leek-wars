@@ -29,12 +29,10 @@
 			</div>
 
 			<div id='tt_in-garden-button' class='tooltip fluid'>{#authorize_agressions}</div>
-
 		@else
-
 			@if (LW.connected)
 				<a id='challenge' href='/garden/challenge/{leek.id}'>
-					<div class='tab'>
+					<div class='tab action' link='/garden/challenge/{leek.id}'>
 						<img src='{{static}}image/icon/garden.png'></img><span>{#challenge}</span>
 					</div>
 				</a>
