@@ -435,7 +435,7 @@ body.app #app-bar {
 	left: 0;
 	right: 0;
 	background: #4b9e06;
-	z-index: 200;
+	z-index: 600;
 	color: white;
 	line-height: 55px;
 	padding-left: 5px;
@@ -523,25 +523,32 @@ body.app #app-bar .counter {
 body.app #menu {
 	position: fixed;
 	top: 56px;
-	left: -100%;
+	left: 0;
+	transform: translateX(-250px);
+	width: 250px;
 	bottom: 0;
 	background: rgba(0, 0, 0, 0.5);
 	z-index: 1000;
-	transition: left ease 200ms;
+	transition: transform ease 200ms, background ease 200ms;
 	padding: 0;
 	width: auto;
 }
-body.app #menu.expanded {
-	left: 0;
-	right: 0;
+body.app.menu-expanded #menu {
+	transform: translateX(0px);
+}
+body.app #center {
+	transition: transform ease 200ms;
+}
+body.app.menu-expanded #center {
+	transform: translateX(250px);
 }
 body.app #menu-button {
 	display: none;
 }
 body.app #menu .menu-wrapper {
 	padding: 0;
-	background: rgba(0, 0, 0, 0.8);
-	width: 270px;
+	background: #222;
+	width: 250px;
 	overflow-y: auto;
 	height: 100%;
 }
@@ -1749,9 +1756,12 @@ body.app #footer-wrapper {
 	top: 0; bottom: 0;
 	left: 0; right: 0;
 	background: black;
-	opacity: 0.6;
+	opacity: 0;
 	z-index: 500;
-	pointer-events: none;
+	transition: opacity ease 500ms;
+}
+#dark.visible {
+	opacity: 0.6;
 }
 
 #popups {

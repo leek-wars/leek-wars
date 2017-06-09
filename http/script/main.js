@@ -674,7 +674,8 @@ $(document).ready(function() {
 					if ('back' in LW.pages[LW.currentPage]) LW.pages[LW.currentPage].back()
 					LW.app.split_show_list()
 				} else {
-					$('#menu').toggleClass('expanded')
+					$('body.app').toggleClass('menu-expanded')
+					LW.dark.toggle()
 				}
 				e.stopPropagation()
 			})
@@ -742,7 +743,10 @@ $(document).ready(function() {
 				}
 				$('#chat-smileys').hide()
 				$('#chat-commands').hide()
-				$('body.app #menu').removeClass('expanded')
+				if ($('body').hasClass('menu-expanded')) {
+					$('body.app').removeClass('menu-expanded')
+					LW.dark.hide()
+				}
 			})
 
 			$(window).resize(function() {
@@ -4426,6 +4430,34 @@ LW.app.split_show_content = function() {
 	$('#page .page-header').show()
 	$('#app-bar .menu').addClass('back')
 	LW.app.split_back = true
+}
+
+LW.dark = {
+	timeout: null
+}
+LW.dark.toggle = function() {
+	var dark = $('#dark')
+	if (dark.hasClass('visible')) {
+		dark.removeClass('visible')
+		clearTimeout(LW.dark.timeout)
+		LW.dark.timeout = setTimeout(function() {
+			dark.hide()
+		}, 500)
+	} else {
+		dark.show()
+		clearTimeout(LW.dark.timeout)
+		LW.dark.timeout = setTimeout(function() {
+			dark.addClass('visible')
+		}, 100)
+	}
+}
+LW.dark.hide = function() {
+	var dark = $('#dark')
+	dark.removeClass('visible')
+	clearTimeout(LW.dark.timeout)
+	LW.dark.timeout = setTimeout(function() {
+		dark.hide()
+	}, 500)
 }
 
 LW.test_notif = function() {
