@@ -24,7 +24,9 @@ LW.pages.messages.init = function(params, $scope, $page) {
  		}
 		// new conversation
 		if (new_conversation) {
-			data.conversations.unshift({id: 0, avatars: "<img class='avatar' src='" + _.view.render('main.avatar', new_farmer) + "'>", last_message: _.lang.get('messages', 'new_message'), name: _.protect(new_farmer.name), farmers: [_.protect(new_farmer)]})
+			var new_conv = {id: 0, avatars: "<img class='avatar' src='" + _.view.render('main.avatar', new_farmer) + "'>", last_message: _.lang.get('messages', 'new_message'), name: _.protect(new_farmer.name), farmers: [_.protect(new_farmer)]}
+			data.conversations.unshift(new_conv)
+			$scope.conversations_by_id[0] = new_conv
 		}
 
 		$scope.conversations = data.conversations
