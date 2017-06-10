@@ -402,10 +402,16 @@ LW.pages.editor.init = function(params, $scope, $page) {
 		} else {
 			if (editors.length == 0) {
 				current = null
-			} else if ('editor/last_code' in localStorage && localStorage['editor/last_code'] in editors) {
-				LW.page.redirect('/editor/' + localStorage['editor/last_code'])
 			} else {
-				LW.page.redirect('/editor/' + _.firstKey(editors))
+				if (_.is_mobile()) {
+					LW.app.split_show_list()
+				} else {
+					if ('editor/last_code' in localStorage && localStorage['editor/last_code'] in editors) {
+						LW.page.redirect('/editor/' + localStorage['editor/last_code'])
+					} else {
+						LW.page.redirect('/editor/' + _.firstKey(editors))
+					}
+				}
 			}
 		}
 
@@ -656,7 +662,6 @@ LW.pages.editor.init = function(params, $scope, $page) {
 }
 
 LW.pages.editor.update = function(params) {
-
 	if (params && 'id' in params && params.id in editors) {
 		current = params.id
 		currentType = 'ai'
@@ -664,8 +669,10 @@ LW.pages.editor.update = function(params) {
 		currentName = editors[current].name
 		editors[current].show()
 		localStorage['editor/last_code'] = params.id
+		LW.app.split_show_content()
 	} else {
 		LW.loader.hide()
+		LW.app.split_show_list()
 	}
 }
 
@@ -674,7 +681,9 @@ LW.pages.editor.resize = function() {
 	var offset = 160 + (_searchEnabled ? 40 : 0)
 
 	$('.CodeMirror-scroll').css('height', $(window).height() - offset)
-	$('#ai-list').css('height', $(window).height() - 160 - 83)
+	if (!_.is_mobile()) {
+		$('#ai-list').css('height', $(window).height() - 160 - 83)
+	}
 }
 
 LW.pages.editor.leave = function() {

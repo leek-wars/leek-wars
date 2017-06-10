@@ -30,8 +30,8 @@ class LWHandler(SimpleHTTPRequestHandler):
 			if self.path.startswith('/fight/local'):
 				with open('../../../leek-wars-generator/fight.json', 'r') as file:
 					bindings['fight_data'] = file.read()
-			if self.path.startswith('/console'):
-				bindings['start_script'] = 'console.js'
+			if self.path.startswith('/console-standalone'):
+				bindings['start_script'] = 'console_standalone.js'
 
 			body = open("view" + os.sep + "head.html").read()
 			body = re.sub(r"\{\{(.*?)\}\}", lambda m: bindings[m.group(1)], body)

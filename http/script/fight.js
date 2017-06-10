@@ -136,7 +136,6 @@ LW.pages.fight.init = function(params, $scope, $page) {
 }
 
 LW.pages.fight.pause = function() {
-
 	if (game) {
 		game.pause()
 		clearTimeout(game.reportTimer)
@@ -150,7 +149,7 @@ LW.pages.fight.keydown = function(event) {
 
 	if (event.keyCode == 81) { // Q
 		if (_fullscreen) {
-			LW.pages.fight.fullscreen();
+			LW.pages.fight.fullscreen()
 		}
 		game.showReport()
 		event.preventDefault()
@@ -162,7 +161,7 @@ LW.pages.fight.keydown = function(event) {
 		} else {
 			game.pause()
 		}
-		event.preventDefault();
+		event.preventDefault()
 	}
 
 	if (event.keyCode == 83) { // S
@@ -171,7 +170,6 @@ LW.pages.fight.keydown = function(event) {
 	}
 
 	if (event.keyCode == 70) { // F
-
 		LW.pages.fight.fullscreen()
 		event.preventDefault()
 	}
@@ -219,18 +217,15 @@ LW.pages.fight.resize = function() {
 }
 
 LW.pages.fight.fullscreen = function() {
-
 	if (_fullscreen) {
-
 		_fullscreen = false
 		_.fullscreen.exit()
 		LW.pages.fight.resize();
-		//setTimeout(LW.pages.fight.resize, 100);
-
+		//setTimeout(LW.pages.fight.resize, 100)
 	} else {
 		_fullscreen = true
 		_.fullscreen.enter($('#game')[0], function() {
-			setTimeout(LW.pages.fight.resize, 100);
+			setTimeout(LW.pages.fight.resize, 100)
 		})
 	}
 }
@@ -265,14 +260,10 @@ function getFight() {
 		} else {
 
 			var queue = data.fight.queue
-
 			if (queue.position == -1 || queue.position == 0) {
-
 				$('.queue-position').show().text(_.lang.get('fight', 'generating'))
-
 			} else {
 				var message = _.lang.get('fight', 'position_in_queue', queue.position + 1, queue.total)
-
 				$('.queue-position').show().text(message)
 			}
 

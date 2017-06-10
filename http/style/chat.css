@@ -3,7 +3,6 @@
 }
 
 #chat .chat-messages {
-	/*background: white;*/
 	padding: 5px;
 	overflow-y: scroll;
 }

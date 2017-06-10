@@ -3,7 +3,10 @@
 	<h1><a href='/forum'>{#forum.title}</a> > {category.name}</h1>
 
 	<div class='tabs'>
-		<div id='search-box' class='tab disabled'>
+		<div id='create' class='tab action' icon='edit'>
+			{#create_new_topic}
+		</div>
+		<div id='search-box' class='tab action disabled' icon='search'>
 			<img src='{{static}}image/search.png'></img>
 			<input type='text' id='query'></input>
 		</div>
@@ -13,10 +16,6 @@
 <div class='panel'>
 
 	<div class='content'>
-
-		<center>
-			<div id='create' class='button'>{#create_new_topic}</div>
-		</center>
 
 		<center class='pagination'>{{pagination}}</center>
 

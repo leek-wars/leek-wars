@@ -9,6 +9,10 @@
 	margin: 0;
 }
 
+body.app #forum_category-page .panel .content {
+	padding: 0;
+}
+
 .topic {
 	margin-bottom: 10px;
 	background-color: #FAFAFA;

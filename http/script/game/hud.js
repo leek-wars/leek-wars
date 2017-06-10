@@ -5,98 +5,91 @@ var Hud = function() {
 
 	$('#play-button').click(function() {
 		if (game.paused)
-			game.resume();
+			game.resume()
 		else
-			game.pause();
-	});
+			game.pause()
+	})
 
 	$('#speed-button').click(function() {
-		game.speedUp();
-	});
+		game.speedUp()
+	})
 
-	var hud = this;
+	var hud = this
 
 	$('#fight-settings-button').click(function(e) {
-
 		if (!_settings) {
-
-			hud.updateSettings();
-			$('#fight-settings').show();
-
-			$('#tt_fight-settings-button').removeClass('disabled').addClass('disabled');
-			$('#tt_fight-settings-button').hide();
-			_settings = true;
-
+			hud.updateSettings()
+			$('#fight-settings').show()
+			$('#tt_fight-settings-button').removeClass('disabled').addClass('disabled')
+			$('#tt_fight-settings-button').hide()
+			_settings = true
 		} else {
-
-			$('#fight-settings').hide();
-			$('#tt_fight-settings-button').removeClass('disabled');
-			_settings = false;
+			$('#fight-settings').hide()
+			$('#tt_fight-settings-button').removeClass('disabled')
+			_settings = false
 		}
-
-		e.stopPropagation();
-	});
+		e.stopPropagation()
+	})
 
 	$('#fight-settings').click(function(e) {
-		e.stopPropagation();
-	});
-
+		e.stopPropagation()
+	})
 	$('#fight-size').change(function() {
-		game.toggleSize();
-		hud.updateSettings();
-	});
+		game.toggleSize()
+		hud.updateSettings()
+	})
 	$('#fight-debug').change(function() {
-		game.toggleDebug();
-	});
+		game.toggleDebug()
+	})
 	$('#fight-tactic').change(function() {
-		game.toggleTactic();
-	});
+		game.toggleTactic()
+	})
 	$('#fight-cells').change(function() {
-		game.toggleCells();
-	});
+		game.toggleCells()
+	})
 	$('#fight-lifes').change(function() {
-		game.toggleLifes();
-	});
+		game.toggleLifes()
+	})
 	$('#fight-discrete-pause').change(function() {
-		game.toggleDiscretePause();
-	});
+		game.toggleDiscretePause()
+	})
 	$('#fight-quality').change(function() {
-		game.changeQuality($('#fight-quality').val());
-	});
+		game.changeQuality($('#fight-quality').val())
+	})
 
 	var updateSoundSetting = function() {
 		if (game.sound) {
 			$('#sound-setting img').attr('src', LW.staticURL + 'image/icon/sound.png')
+			$('#sound-setting .icon').text('volume_up')
 			$('#sound-setting span').text(_.lang.get('fight', 'sound_activated'))
 		} else {
 			$('#sound-setting img').attr('src', LW.staticURL + 'image/icon/no_sound.png')
+			$('#sound-setting .icon').text('volume_mute')
 			$('#sound-setting span').text(_.lang.get('fight', 'sound_disactivated'))
 		}
 	}
-
 	$('#sound-setting').click(function() {
-		game.toggleSound();
-		updateSoundSetting();
-	});
-
+		game.toggleSound()
+		updateSoundSetting()
+	})
 	$('#quit-button').click(function() {
-		game.showReport();
-	});
+		game.showReport()
+	})
 
 	$('html').click(function() {
-		$('#fight-settings').hide();
-		$('#tt_fight-settings-button').removeClass('disabled');
-		_settings = false;
-	});
+		$('#fight-settings').hide()
+		$('#tt_fight-settings-button').removeClass('disabled')
+		_settings = false
+	})
 
 	$('#logs').mouseenter(function() {
-		$('#logs-wrapper').css('height', 500);
-		$('#logs-wrapper2').css('height', 500);
-	});
+		$('#logs-wrapper').css('height', 500)
+		$('#logs-wrapper2').css('height', 500)
+	})
 	$('#logs').mouseleave(function() {
-		$('#logs-wrapper').css('height', 100);
-		$('#logs-wrapper2').css('height', 100);
-	});
+		$('#logs-wrapper').css('height', 100)
+		$('#logs-wrapper2').css('height', 100)
+	})
 
 	$('#progress-bar').mousemove(function(e) {
 		var tooltip = $('#progress-bar-turn')
@@ -119,32 +112,30 @@ var Hud = function() {
 		$('#progress-bar-turn').hide()
 	})
 
-	var space = GROUND_PADDING_LEFT + GROUND_PADDING_RIGHT;
-	var padding = 30;
-	var width = space - padding;
+	var space = GROUND_PADDING_LEFT + GROUND_PADDING_RIGHT
+	var padding = 30
+	var width = space - padding
 
-	this.currentLog = 0;
-	this.speedButtonFrame = 0;
-	this.speedButtonVisible = true;
+	this.currentLog = 0
+	this.speedButtonFrame = 0
+	this.speedButtonVisible = true
 
 	this.updateSettings = function() {
 
-		var parent = '#fight-settings-button';
-		var tt = '#fight-settings';
-		$(tt).css('top', $(tt).css('top', $(parent).offset().top - $(tt).outerHeight() - 15));
-		$(tt).css('left', $(parent).offset().left + $(parent).outerWidth() / 2);
-		$(tt).css('margin-left', - $(tt).outerWidth() / 2);
+		var parent = '#fight-settings-button'
+		var tt = '#fight-settings'
+		$(tt).css('top', $(tt).css('top', $(parent).offset().top - $(tt).outerHeight() - 15))
+		$(tt).css('left', $(parent).offset().left + $(parent).outerWidth() / 2)
+		$(tt).css('margin-left', - $(tt).outerWidth() / 2)
 	}
 
 	this.init = function() {
-
 		// Timeline
 		for (var e = 0; e < game.entityOrder.length; e++) {
 			if (game.entityOrder[e].active) {
 				this.addEntityBlock(game.entityOrder[e])
 			}
 		}
-
 		// Life bar
 		for (var t = 0; t < game.teams.length; ++t) {
 			for (var e = 0; e < game.teams[t].length; ++e) {
@@ -427,10 +418,10 @@ var Hud = function() {
 		}
 
 		/// Mouse hover
-		document.body.style.cursor = 'default';
+		document.body.style.cursor = ''
 
+		if (game.going_to_report) return null
 		if (game.showLifes) {
-
 			for (var i in game.leeks) {
 				var leek = game.leeks[i];
 				if (leek.isDead() || !leek.active) continue;
@@ -440,7 +431,6 @@ var Hud = function() {
 				}
 			}
 		} else {
-
 			for (var i in game.leeks) {
 				var leek = game.leeks[i];
 				if (leek.isDead() || !leek.active) continue;

@@ -1,11 +1,21 @@
 #search-page #search {
 	padding: 20px;
-}	
+}
+body.app #search-page #search {
+	padding: 0;
+	padding-top: 10px;
+}
+
+#search-page .label {
+	width: 90px;
+	display: inline-block;
+	text-align: right;
+}
 
 #search-page #search-box img {
 	vertical-align: middle;
 	cursor: pointer;
-}	
+}
 
 #search-page #query:focus {
 	border: 1px solid #5FAD1B;
@@ -17,11 +27,15 @@
 	margin-top: 20px;
 }
 
+#search .results-wrapper {
+	display: none;
+}
+
 #search .result {
 	background: #FAFAFA;
 	padding: 6px 10px;
 	margin: 14px 0;
-}	
+}
 
 #search .result:hover {
 	background: white;
@@ -30,38 +44,38 @@
 #search .result .title {
 	font-weight: 300;
 	font-size: 22px;
-	margin-bottom: 5px; 
+	margin-bottom: 5px;
 	color: black;
-}	
+}
 
 #search .result .headline {
 	color: #777;
 	font-size: 14px;
-} 
+}
 #search .result b {
 	color: #5FAD1B;
 	font-weight: bold;
-}	
+}
 
 #search .info {
 	color: #aaa;
 	margin-bottom: 10px;
-}	
+}
 #search .result dark {
 	color: #555;
-}	
+}
 
 
 #search .pagination {
 	text-align: center;
 	margin-top: 20px;
-}	
+}
 
 #no-results {
 	text-align: center;
 	padding: 10px;
 	color: #999;
-}	
+}
 #no-results img {
 	margin-bottom: 8px;
 }

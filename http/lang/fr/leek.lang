@@ -73,7 +73,7 @@ new_functions					Nouvelles fonctions
 new_weapons						Nouvelles armes
 no_hat							Pas de chapeau
 not_found						Poireau introuvable
-not_found_id					Poireau d'id <b>%s</b> introuvable
+not_found_id					Poireau d'id %s introuvable
 ok								OK
 potion							Potion
 popup_level_301_title			Félicitations !

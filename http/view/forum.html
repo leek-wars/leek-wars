@@ -19,12 +19,12 @@
 
 	<div class='tabs'>
 		<a href='/chat'>
-			<div class='tab'>
+			<div class='tab action' icon='chat_bubble' link='/chat'>
 				<img src='{{static}}image/icon/forum.png'></img>
 				<span>{#chat}</span>
 			</div>
 		</a>
-		<div id='search-box' class='tab disabled'>
+		<div id='search-box' class='tab action disabled' icon='search' link='/search'>
 			<img src='{{static}}image/search.png'></img>
 			<input type='text' id='query'></input>
 		</div>
@@ -111,7 +111,7 @@
 
 		<div class='chat-new-messages'>{#main.unread_messages}</div>
 		<div class='chat-disconnected'>{#main.disconnected}</div>
-		
+
 		<div class='flex'>
 			<div id='chat-language'><img /></div>
 			<div class='chat-input'>

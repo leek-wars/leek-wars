@@ -97,7 +97,11 @@ LW.pages.market.init = function(params, $scope, $page) {
 		if ('item' in params) {
 			LW.pages.market.selectItem(params.item)
 		} else {
-			LW.pages.market.selectItem('pistol')
+			if (_.is_mobile()) {
+				LW.app.split_show_list()
+			} else {
+				LW.pages.market.selectItem('pistol')
+			}
 		}
 	})
 }
@@ -107,6 +111,7 @@ LW.pages.market.resize = function() {
 }
 
 LW.pages.market.scroll = function(scroll) {
+	if (_.is_mobile()) return null
 	if (scroll < 137) {
 		$('#preview-panel').css('position', 'static')
 	} else {
@@ -124,32 +129,44 @@ LW.pages.market.keydown = function(e) {
 		var prev = current.prev('.item')
 		if (prev.length == 0) prev = current.parent().children().last('.item')
 		LW.page('/market/' + prev.attr('name'))
+		event.preventDefault()
 	}
 	else if (e.keyCode == 39) { // Right arrow
 		var next = current.next('.item')
 		if (next.length == 0) next = current.parent().children().first('.item')
 		LW.page('/market/' + next.attr('name'))
+		event.preventDefault()
 	}
 	else if (e.keyCode == 40) { // Down arrow
 		var index = (current.index() + get_line_count(current)) % current.parent().children().length
 		var next = $(current.parent().children()[index])
 		LW.page('/market/' + next.attr('name'))
+		event.preventDefault()
 	}
 	else if (e.keyCode == 38) { // Top arrow
 		var index = current.index() - get_line_count(current)
 		if (index < 0) index = current.parent().children().length + index
 		var next = $(current.parent().children()[index])
 		LW.page('/market/' + next.attr('name'))
+		event.preventDefault()
 	}
-	event.preventDefault()
 }
 
 LW.pages.market.update = function(params) {
 	if (params && 'item' in params) {
 		LW.pages.market.selectItem(params.item)
 	} else {
-		LW.pages.market.selectItem('pistol')
+		if (_.is_mobile()) {
+			LW.setTitle(_.lang.get('market', 'title'))
+			LW.app.split_show_list()
+		} else {
+			LW.pages.market.selectItem('pistol')
+		}
 	}
+}
+
+LW.pages.market.back = function() {
+	LW.page('/market')
 }
 
 LW.pages.market.buy = function() {
@@ -290,18 +307,14 @@ LW.pages.market.buy = function() {
 						_.lang.get('market', 'hat_selled')
 					][type - 1])
 
-					// On actualise
 					var div = $("#item-" + id)
-
 					$("#item-" + id).attr('farmer-count', parseInt($("#item-" + id).attr('farmer-count')) - 1)
 
 					if ($("#item-" + id).attr('farmer-count') == 0) {
 						$('#preview #item-' + id).find('.sell').hide()
 					}
-
 					LW.setHabs(data.money)
 					LW.pages.market.updateItems()
-
 					LW.removeItemFromInventory(type, id)
 				}
 			})
@@ -341,10 +354,15 @@ LW.pages.market.selectItem = function(item) {
 	var item = $('#market-page .item[name=' + item + ']')
 
 	$('#preview > div').hide()
-	$('#preview').find('#' + item.attr('id')).show()
+	var preview = $('#preview').find('#' + item.attr('id'))
+	preview.show()
 
 	$('.items div').removeClass('selected')
 	item.addClass('selected')
+
+	LW.setTitle(preview.find('.name').text())
+
+	LW.app.split_show_content()
 }
 
 LW.pages.market.chips = function(sort_method) {

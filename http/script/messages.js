@@ -15,14 +15,18 @@ LW.pages.messages.init = function(params, $scope, $page) {
 
 	_.get('message/get-latest-conversations/100/' + LW.token(), function(data) {
 
+		$scope.conversations_by_id = {}
 		for (var c in data.conversations) {
 			data.conversations[c].avatars = LW.messages.getAvatars(data.conversations[c])
 			data.conversations[c].name = LW.messages.getConversationList(data.conversations[c])
 			data.conversations[c].last_message = LW.messages.getConversationLastMessage(data.conversations[c])
+			$scope.conversations_by_id[data.conversations[c].id] = data.conversations[c]
  		}
 		// new conversation
 		if (new_conversation) {
-			data.conversations.unshift({id: 0, avatars: "<img class='avatar' src='" + _.view.render('main.avatar', new_farmer) + "'>", last_message: _.lang.get('messages', 'new_message'), name: _.protect(new_farmer.name), farmers: [_.protect(new_farmer)]})
+			var new_conv = {id: 0, avatars: "<img class='avatar' src='" + _.view.render('main.avatar', new_farmer) + "'>", last_message: _.lang.get('messages', 'new_message'), name: _.protect(new_farmer.name), farmers: [_.protect(new_farmer)]}
+			data.conversations.unshift(new_conv)
+			$scope.conversations_by_id[0] = new_conv
 		}
 
 		$scope.conversations = data.conversations
@@ -55,7 +59,11 @@ LW.pages.messages.init = function(params, $scope, $page) {
 			if (id != null) {
 				LW.page.redirect('/messages/conversation/' + id)
 			} else {
-				LW.page.redirect('/messages/conversation/' + $('.conversation-preview').first().attr('conv'))
+				if (_.is_mobile()) {
+					LW.app.split_show_list()
+				} else {
+					LW.page.redirect('/messages/conversation/' + $('.conversation-preview').first().attr('conv'))
+				}
 			}
 		}
 
@@ -86,10 +94,19 @@ LW.pages.messages.init = function(params, $scope, $page) {
 }
 
 LW.pages.messages.resize = function() {
-	var h = $(window).height() - $('#header').height() - 75
-	$('#conversations').css('height', h);
-	$('#conversations .conversation').css('height', h);
-	$('#conversations-list').css('height', h);
+	if (!_.is_mobile()) {
+		var h = $(window).height() - $('#header').height() - 75
+		$('#conversations').css('height', h);
+		$('#conversations .conversation').css('height', h);
+		$('#conversations-list').css('height', h);
+	} else {
+		var h = $(window).height() - $('#app-bar').height() - $('#page .page-header').height()
+		$('#conversations .conversation').css('height', h)
+	}
+}
+
+LW.pages.messages.back = function() {
+	LW.page('/messages')
 }
 
 LW.pages.messages.focus = function() {
@@ -104,8 +121,13 @@ LW.pages.messages.update = function(params) {
 	var new_conversation = params && 'new_conversation' in params
 	if (new_conversation) {
 		LW.pages.messages.selectConversation(0)
-	} else {
+	} else if (params && 'id' in params) {
 		LW.pages.messages.selectConversation(params.id)
+	} else {
+		if (_.is_mobile()) {
+			LW.setTitle(_.lang.get('messages', 'title'))
+			LW.app.split_show_list()
+		}
 	}
 }
 
@@ -143,6 +165,10 @@ LW.pages.messages.selectConversation = function(id) {
 	$('.conversation[conv=' + id + ']').show()
 	$('.conversation-preview').removeClass('selected')
 	$('.conversation-preview[conv=' + id + ']').addClass('selected')
+
+	LW.app.split_show_content()
+	LW.setTitle($(this.scope.conversations_by_id[id].name).text())
+
 	LW.pages.messages.loadConversation(id)
 }
 

@@ -80,12 +80,14 @@ LW.pages.statistics.interpolate_button = function(statistics) {
 			}
 		}, _DELAY)
 		$('#play-pause-button img').attr('src', LW.staticURL + 'image/icon/pause.png')
+		$('#play-pause-button .icon').text('pause')
 		$('#play-pause-button span').text(_.lang.get('statistics', 'pause'))
 	}
 	var pause = function() {
 		localStorage['statistics/play'] = false
 		clearInterval(self.interval)
 		$('#play-pause-button img').attr('src', LW.staticURL + 'image/icon/play.png')
+		$('#play-pause-button .icon').text('play_arrow')
 		$('#play-pause-button span').text(_.lang.get('statistics', 'play'))
 	}
 	if (localStorage['statistics/play'] === 'false') {

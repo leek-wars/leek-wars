@@ -11,17 +11,18 @@
 
 #statistics-page h2:before, #statistics-page h2:after {
 	height: 5px;
-	width: 150px;
+	width: 80px;
 	vertical-align: middle;
-	margin: 0 15px;
 	display: inline-block;
 	content: "";
 }
 #statistics-page h2:before {
 	background: linear-gradient(to left, #aaa, rgba(0,0,0,0));
+	margin-right: 10px;
 }
 #statistics-page h2:after {
 	background: linear-gradient(to right, #aaa, rgba(0,0,0,0));
+	margin-left: 10px;
 }
 #statistics-page h2.blue {
 	color: #0079DE;

@@ -8,6 +8,10 @@
 	display: none;
 }
 
+body.app #farmer-page .panel.first .content {
+	padding-top: 0;
+}
+
 #farmer-table {
 	width: 100%;
 	margin-top: 20px;
@@ -121,6 +125,13 @@
 	width: 150px;
 	height: 150px;
 	border-radius: 2px;
+}
+
+#farmer-page #send-message {
+	margin-top: 10px;
+}
+body.app #farmer-page #send-message {
+	display: none;
 }
 
 #trophies {}
@@ -371,4 +382,5 @@
 	font-size: 20px;
 	font-family: monospace;
 	text-align: center;
+	word-break: break-all;
 }

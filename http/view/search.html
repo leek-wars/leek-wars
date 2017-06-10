@@ -1,4 +1,6 @@
-<h1>{#title}</h1>
+<div class='page-bar'>
+	<h1>{#title}</h1>
+</div>
 
 <div class='panel'>
 
@@ -7,41 +9,44 @@
 		<div id='search'>
 
 			<div id='search-box'>
-				{#query} <input type='text' id='query' value='{query}'></input> <img src='{{static}}image/search_black.png'></img>
+				<div class='label'>{#query}</div>
+				<input type='text' id='query' value='{query}'></input> <img src='{{static}}image/search_black.png'></img>
 			</div>
 			<br>
-
 			<div id='search-box-farmer'>
-				{#author} <input type='text' id='farmer-query' value='{farmer_query}'></input>
+				<div class='label'>{#author}</div>
+				<input type='text' id='farmer-query' value='{farmer_query}'></input>
 			</div>
 
-			<br>
-			<h4>{#results}</h4>
+			<div class='results-wrapper'>
+				<br>
+				<h4>{#results}</h4>
 
-			@if (results.length > 0)
-				<div class='results'>
-					@foreach (result in results)
+				@if (results.length > 0)
+					<div class='results'>
+						@foreach (result in results)
 
-						<div class='result'>
+							<div class='result'>
 
-							<a href='/forum/category-{result.cid}/topic-{result.tid}'>
-								<div class='title'>{{result.formatted_title}}</div>
-							</a>
+								<a href='/forum/category-{result.cid}/topic-{result.tid}'>
+									<div class='title'>{{result.formatted_title}}</div>
+								</a>
 
-							<div class='info'>{{result.link}}</div>
+								<div class='info'>{{result.link}}</div>
 
-							<a href='/forum/category-{result.cid}/topic-{result.tid}'>
-								<div class='headline'>{{result.message}}</div>
-							</a>
-						</div>
-					@end
-				</div>
-			@else
-				<div id='no-results'>
-					<img src='{{static}}image/notgood.png'></img>
-					<div>{#no_results_found}</div>
-				</div>
-			@end
+								<a href='/forum/category-{result.cid}/topic-{result.tid}'>
+									<div class='headline'>{{result.message}}</div>
+								</a>
+							</div>
+						@end
+					</div>
+				@else
+					<div id='no-results'>
+						<img src='{{static}}image/notgood.png'></img>
+						<div>{#no_results_found}</div>
+					</div>
+				@end
+			</div>
 
 			<div class='pagination'>
 				{{pagination}}

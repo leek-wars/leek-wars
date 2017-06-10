@@ -64,7 +64,7 @@ var LW = {
  * Start service worker
  */
 if ('serviceWorker' in navigator) {
-	 //navigator.serviceWorker.register('service-worker.js', {scope: '/'})
+	 navigator.serviceWorker.register('/service-worker.js?' + LW.subVersion, {scope: '/'})
 }
 
 // WebSocket on Firefox
@@ -392,6 +392,7 @@ LW.pages = {
 		],
 		langs: ['documentation', 'java_compilation']
 	},
+	console: {},
 	garden: {},
 	fight: {
 		langs: ['entity'],
@@ -577,6 +578,9 @@ $(document).ready(function() {
 		__DEFAULT_LANGUAGE
 	)
 	// Set body classes as soon as possible
+	if (_.is_mobile()) {
+		$('body').addClass('app')
+	}
 	LW.sfw.init()
 	if (localStorage['connected'] == 'true') {
 		$('body').addClass('connected')
@@ -665,6 +669,17 @@ $(document).ready(function() {
 				localStorage['main/menu-collapsed'] = $('body').hasClass('menu-collapsed')
 			})
 
+			$('#app-bar .menu').click(function(e) {
+				if (LW.app.split_back) {
+					if ('back' in LW.pages[LW.currentPage]) LW.pages[LW.currentPage].back()
+					LW.app.split_show_list()
+				} else {
+					$('body.app').toggleClass('menu-expanded')
+					LW.dark.toggle()
+				}
+				e.stopPropagation()
+			})
+
 			$('#social-button').click(function() {
 				$('body').toggleClass('social-collapsed')
 				LW.trigger('resize')
@@ -681,8 +696,6 @@ $(document).ready(function() {
 
 			$(".messages-button").click(function(event) {
 
-				LW.resize()
-
 				$('#messages-popup .messages').html('')
 
 				for (var c = LW.messages.conversations.length - 1; c >= 0; --c) {
@@ -691,24 +704,28 @@ $(document).ready(function() {
 				}
 
 				$('#messages-popup').toggle()
+				LW.resize_notifs_popups()
 				if ($('#notifications-popup').is(':visible')) {
 					$('#notifications-popup').hide()
 				}
+				LW.updateCounters()
+				LW.resize_notifs_popups()
 				event.stopPropagation()
 			});
 
 			$(".notifications-button").click(function(event) {
 
-				LW.resize()
-
 				LW.notifications.unread = 0
-				LW.updateCounters()
+				LW.updateCounters(true)
 				_.post('notification/read-all')
 
 				$('#notifications-popup').toggle()
+				LW.resize_notifs_popups()
 				if ($('#messages-popup').is(':visible')) {
 					$('#messages-popup').hide()
 				}
+				LW.resize_notifs_popups()
+				LW.updateCounters()
 				event.stopPropagation()
 			})
 
@@ -718,12 +735,18 @@ $(document).ready(function() {
 			$('html').click(function() {
 				if ($('#notifications-popup').is(':visible')) {
 					$('#notifications-popup').hide()
+					LW.updateCounters()
 				}
 				if ($('#messages-popup').is(':visible')) {
 					$('#messages-popup').hide()
+					LW.updateCounters()
 				}
 				$('#chat-smileys').hide()
 				$('#chat-commands').hide()
+				if ($('body').hasClass('menu-expanded')) {
+					$('body.app').removeClass('menu-expanded')
+					LW.dark.hide()
+				}
 			})
 
 			$(window).resize(function() {
@@ -770,7 +793,6 @@ $(document).ready(function() {
 
 			// Connect and start page
 			if (localStorage['connected'] === 'true') {
-
 				_.get('farmer/get-from-token/' + LW.token(), function(data) {
 					if (data.success) {
 						LW.connect(data.farmer, function() {
@@ -922,16 +944,16 @@ LW.connect = function(farmer, callback) {
 
 		// Leek tabs
 		var leeks = LW.farmer.leeks
-		$('#menu .leeks, #menu-mobile .leeks').empty()
+		$('#menu .leeks').empty()
 		for (var l in leeks) {
 			var leek = leeks[l]
-			$('#menu .leeks, #menu-mobile .leeks').append(_.view.render('main.leek_tab', leek))
+			$('#menu .leeks').append(_.view.render('main.leek_tab', leek))
 			if (leek.capital > 0) {
 				$('#leek-tab-' + leek.id).attr('label', leek.capital)
 			}
 		}
 		if (_.objectSize(LW.farmer.leeks) < 4) {
-			$('#menu .leeks, #menu-mobile .leeks').append("<a href='/new-leek'>" +
+			$('#menu .leeks').append("<a href='/new-leek'>" +
 				"<div class='section'>" +
 				"<img src='" + LW.staticURL + "image/icon/add.png'>" +
 				"<div class='text'>" + _.lang.get('main', 'add_leek') + "</div>" +
@@ -945,7 +967,6 @@ LW.connect = function(farmer, callback) {
 		// Team ?
 		if (LW.farmer.team) {
 			$('#menu #team-tab').show()
-			$('#menu-mobile #team-tab').css('display', 'inline-block')
 		}
 
 		// Load notifications
@@ -1066,14 +1087,19 @@ LW.shrink = function() {
 }
 
 LW.resize = function() {
+	if (!_.is_mobile()) {
+		$('#page').css('min-height', Math.max(600, $(window).height() - 257))
+	}
+	LW.resize_notifs_popups()
+}
 
-	$('#page').css('min-height', Math.max(600, $(window).height() - 257))
+LW.resize_notifs_popups = function() {
 
 	var window_width = $(window).width()
 	var width = Math.min(400, window_width)
 
 	// Messages popup
-	var button = $(".messages-button:visible img");
+	var button = $(".messages-button:visible .icon");
 	if (button.length) {
 		var left = button.offset().left + 14 - $('#messages-popup').width() / 2
 		if (left > window_width - width) {
@@ -1083,12 +1109,12 @@ LW.resize = function() {
 			$('#messages-arrow').css('left', 190)
 		}
 		$('#messages-popup').css('left', left)
-		$('#messages-popup').css('top', button.offset().top + 46)
+		$('#messages-popup').css('top', button.offset().top + 40)
 		$('#messages-popup').css('width', width)
 	}
 
 	// Notifications popup
-	var button = $(".notifications-button:visible img");
+	var button = $(".notifications-button:visible .icon");
 	if (button.length) {
 		var left = button.offset().left + 14 - $('#notifications-popup').width() / 2
 		if (left > window_width - width) {
@@ -1098,7 +1124,7 @@ LW.resize = function() {
 			$('#notifs-arrow').css('left', 190)
 		}
 		$('#notifications-popup').css('left', left)
-		$('#notifications-popup').css('top', button.offset().top + 46)
+		$('#notifications-popup').css('top', button.offset().top + 40)
 		$('#notifications-popup').css('width', width)
 	}
 }
@@ -1126,7 +1152,11 @@ onPushState(function() {
 
 page('/', function() {
 	if (LW.connected) {
-		LW.loadPage('leek')
+		if (_.is_mobile() && localStorage['options/chat-first'] === 'true') {
+			LW.loadPage('chat')
+		} else {
+			LW.loadPage('leek')
+		}
 	} else {
 		LW.loadPage('signup')
 	}
@@ -1223,6 +1253,10 @@ page('/editor/:id', function(ctx) {
 	} else {
 		page.redirect('/')
 	}
+})
+
+page('/console', function() {
+	LW.loadPage('console')
 })
 
 page('/garden', function() {
@@ -1504,6 +1538,7 @@ LW.setTitle = function(title) {
 	} else {
 		_.title(title + ' - Leek Wars')
 	}
+	$('#app-bar .title').text(title)
 }
 
 LW.setMenuTab = function(tab) {
@@ -1577,7 +1612,9 @@ LW.loadPage = function(pageID, params) {
 						if (window.location.hash) {
 							var element = $(window.location.hash)
 							if (element.length) {
-								$(window).scrollTop(element.offset().top)
+								var top = element.offset().top
+								if (_.is_mobile()) top -= $('#app-bar').height()
+								$(window).scrollTop(top)
 							}
 						} else if (LW.first_page && pageID == localStorage['last_page']) {
 							$(window).scrollTop(parseFloat(localStorage['scroll']))
@@ -1586,6 +1623,9 @@ LW.loadPage = function(pageID, params) {
 						}
 						LW.first_page = false
 						localStorage['last_page'] = pageID
+
+						// Actions
+						LW.app.add_actions()
 
 						LW.loader.hide()
 						LW.shrink()
@@ -2010,7 +2050,7 @@ LW.socket.disconnect = function() {
 	LW.socket.socket = null
 }
 
-LW.updateCounters = function() {
+LW.updateCounters = function(user_click) {
 
 	_.titleCounter(LW.messages.unread + LW.notifications.unread)
 
@@ -2018,11 +2058,25 @@ LW.updateCounters = function() {
 	   .notifications-button .counter')
 		.toggle(LW.notifications.unread > 0)
 		.text(LW.notifications.unread)
+	if (_.is_mobile()) {
+		if (LW.notifications.unread > 0) {
+			$('#app-bar .notifications-button').css('display', 'inline-block')
+		} else if (!$('#notifications-popup').is(':visible') && !user_click) {
+			$('#app-bar .notifications-button').hide()
+		}
+	}
 
 	$('#social-panel #messages .header .label, \
 	   .messages-button .counter')
 		.toggle(LW.messages.unread > 0)
 		.text(LW.messages.unread)
+	if (_.is_mobile()) {
+		if (LW.messages.unread > 0) {
+			$('#app-bar .messages-button').css('display', 'inline-block')
+		} else if (!$('#messages-popup').is(':visible') && !user_click) {
+			$('#app-bar .messages-button').hide()
+		}
+	}
 }
 
 var FormatTime = function(time) {
@@ -4327,7 +4381,83 @@ LW.battle_royale.leave = function() {
 LW.battle_royale.start = function(data) {
 	_.toast(_.lang.get('main', 'starting_battle_royale'))
 	LW.battle_royale.popup.dismiss()
+	LW.updateFights(-1)
 	LW.page('/fight/' + data[0])
+}
+
+LW.app = {
+	split_back: false
+}
+
+LW.app.toggle = function() {
+	$('body').toggleClass('app')
+}
+
+LW.app.add_actions = function() {
+	if (!_.is_mobile()) return ;
+	$('#app-bar .actions').empty()
+	$('#page .page-header .action').each(function() {
+		$(this).appendTo($('#app-bar .actions'))
+		var icon = $(this).attr('icon')
+		if (icon) {
+			$(this).html('<i class="icon material-icons">' + $(this).attr('icon') + '</i>')
+		} else {
+			var src = $(this).find('img').attr('src')
+			$(this).html('<img class="icon" src="' + src + '"/>')
+		}
+		var link = $(this).attr('link')
+		if (link) {
+			$(this).click(function() {
+				page(link)
+			})
+		}
+	})
+}
+
+LW.app.split_show_list = function() {
+	if (!_.is_mobile()) return null
+	$('#page .column3, #page .split-list').show().css('height', $(window).height() - $('#app-bar').height())
+	$('#page .column9, #page .split-content').hide()
+	$('#page .page-header').hide()
+	$('#app-bar .menu').removeClass('back')
+	LW.app.split_back = false
+}
+
+LW.app.split_show_content = function() {
+	if (!_.is_mobile()) return null
+	$('#page .column3, #page .split-list').hide()
+	$('#page .column9, #page .split-content').show().css('height', $(window).height() - $('#app-bar').height() - $('#page .page-header').height())
+	$('#page .page-header').show()
+	$('#app-bar .menu').addClass('back')
+	LW.app.split_back = true
+}
+
+LW.dark = {
+	timeout: null
+}
+LW.dark.toggle = function() {
+	var dark = $('#dark')
+	if (dark.hasClass('visible')) {
+		dark.removeClass('visible')
+		clearTimeout(LW.dark.timeout)
+		LW.dark.timeout = setTimeout(function() {
+			dark.hide()
+		}, 500)
+	} else {
+		dark.show()
+		clearTimeout(LW.dark.timeout)
+		LW.dark.timeout = setTimeout(function() {
+			dark.addClass('visible')
+		}, 100)
+	}
+}
+LW.dark.hide = function() {
+	var dark = $('#dark')
+	dark.removeClass('visible')
+	clearTimeout(LW.dark.timeout)
+	LW.dark.timeout = setTimeout(function() {
+		dark.hide()
+	}, 500)
 }
 
 LW.test_notif = function() {

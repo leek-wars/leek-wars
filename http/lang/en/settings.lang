@@ -24,3 +24,4 @@ old_password			Old password
 misc_options			Miscellaneous settings
 password_changed			Password changed!
 title			Settings
+chat_first		Display the Chat page first

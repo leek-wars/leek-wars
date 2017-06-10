@@ -5,6 +5,14 @@ LW.pages.history.init = function(params, $scope, $page) {
 
 	_.get('history/get-' + type + '-history/' + id, function(data) {
 
+		if (data.success == false) {
+			LW.error(
+				_.lang.get('history', 'not_found_id', [id]),
+				_.lang.get('history', 'not_found_id', [id])
+			)
+			return
+		}
+
 		$scope.fights = data.fights
 		$scope.entity = data.entity
 

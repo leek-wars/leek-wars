@@ -39,9 +39,8 @@ var lastFPS = new Array();
 
 function update() {
 	if (!game.paused) {
-
-		setTimeout(update, frameTime);
-		game.update();
+		setTimeout(update, frameTime)
+		game.update()
 	}
 }
 
@@ -148,6 +147,7 @@ var Game = function() {
 	this.requestPause = false
 	this.speed = 1
 	this.focus = true
+	this.going_to_report = false
 
 	this.width;
 	this.height;
@@ -1810,10 +1810,11 @@ var Game = function() {
 		this.particles.drawAir();
 
 		if (this.requestPause) {
-
-			this.paused = true;
-			this.requestPause = false;
-			this.drawPause();
+			this.paused = true
+			this.requestPause = false
+			if (!this.going_to_report) {
+				this.drawPause()
+			}
 		}
 
 		// Draw hud
@@ -1867,8 +1868,8 @@ var Game = function() {
 	}
 
 	this.showReport = function() {
-
-		// Show report
+		this.going_to_report = true
+		document.body.style.cursor = ''
 		LW.page('/report/' + game.data.id)
 	}
 

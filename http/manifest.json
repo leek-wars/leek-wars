@@ -12,9 +12,10 @@
       }
   ],
   "start_url": "/",
-  "display": "minimal-ui",
+  "display": "standalone",
   "orientation": "portrait",
   "permissions": [
 	  "notifications"
-  ]
+  ],
+  "theme_color": "#4b9e06"
 }

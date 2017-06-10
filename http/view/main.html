@@ -43,13 +43,20 @@
 
 	<div class='menu-wrapper'>
 
+		<a href='/farmer'>
+			<div class="section" tab='farmer'>
+				<img class='farmer-avatar'></img>
+				<div class='text farmer-name'></div>
+			</div>
+		</a>
+
 		<span class='leeks'></span>
 
 		<div class='separator'></div>
 
 		<a href='/editor'>
 			<div class="section" tab='editor'>
-				<img src='{{static}}image/gearing_small_white.png'></img>
+				<img src='{{static}}image/icon/gearing.png'></img>
 				<div class='text'>{#editor}</div>
 			</div>
 		</a>
@@ -133,6 +140,24 @@
 	</div>
 </div>
 
+<div id='app-bar'>
+	<div class='menu'>
+		<div class='bar'/><div class='bar'/><div class='bar'/>
+	</div>
+	<div class='title'>Leek Wars</div>
+	<div class='actions-wrapper'>
+		<div class='static-actions'>
+			<div class='action header-button mobile messages-button' >
+				<i class="icon material-icons">chat</i>
+				<span class='counter messages-counter'></span>
+			</div><div class='action header-button mobile notifications-button' >
+				<i class="icon material-icons">info</i>
+				<span class='counter notifications-counter'></span>
+			</div>
+		</div><div class='actions'></div>
+	</div>
+</div>
+
 <div id='center'>
 
 	<div id='wrapper'>
@@ -207,14 +232,14 @@
 					</div>@if (!LW.beta)<div class='button-wrapper'>
 
 						<div class='header-button messages-button' >
-							<img src='{{static}}image/icon/message.png'>
+							<img class='icon' src='{{static}}image/icon/message.png'>
 							<span class='counter messages-counter'></span>
 						</div>
 
 					</div>@end<div class='button-wrapper'>
 
 						<div class='header-button notifications-button' >
-							<img src='{{static}}image/icon/notification.png'>
+							<img class='icon' src='{{static}}image/icon/notification.png'>
 							<span class='counter notifications-counter'></span>
 						</div>
 
@@ -238,117 +263,6 @@
 					</div>
 				</div>
 			</div>
-		</div>
-
-		<div id='header-mobile'>
-			<a href="/" >
-				<img id='logo' src="{{static}}image/logo_short.png"></img>
-
-				@if (local_site)
-					<span class="local-label">local</span>
-				@end
-				@if (dev_site)
-					<span class="dev-label">dev</span>
-				@end
-				@if (beta_site)
-					<span class="beta-label">Bêta</span>
-				@end
-			</a>
-
-			<div id='header-right'>
-				@if (!LW.beta)
-					<div class='header-button mobile messages-button' >
-						<img src='{{static}}image/icon/message.png'>
-						<span class='counter messages-counter'></span>
-					</div>
-				@end
-
-				<div class='header-button mobile notifications-button' >
-					<img src='{{static}}image/icon/notification.png'>
-					<span class='counter notifications-counter'></span>
-				</div>
-
-				<a href="/farmer">
-					<div class='header-button'>
-						<span class='farmer-name text'></span>
-						<img class='farmer-avatar' src='{{static}}image/no_avatar.png'>
-					</div>
-				</a>
-			</div>
-		</div>
-
-		<!-- Menu mobile -->
-		<div id='menu-mobile' class='menu'>
-
-			<span class='leeks'></span>
-
-			<a href='/editor'>
-				<div class="section">
-					<img src='{{static}}/image/gearing_small_white.png'></img>
-				</div>
-			</a>
-
-			<a href='/garden'>
-				<div class="section">
-					<img src='{{static}}/image/icon/garden.png'></img>
-				</div>
-			</a>
-
-			<a href='/market'>
-				<div class="section">
-					<img src='{{static}}/image/icon/market.png'></img>
-				</div>
-			</a>
-
-			<a href="/team" >
-				<div id='team-tab' class="section" >
-					<img src='{{static}}/image/icon/team.png'></img>
-				</div>
-			</a>
-
-			<a href="/trophies" >
-				<div class="section">
-					<img src='{{static}}/image/icon/trophy.png'></img>
-				</div>
-			</a>
-
-			<a href="/ranking" >
-				<div class="section">
-					<img src='{{static}}/image/icon/ranking.png'></img>
-				</div>
-			</a>
-
-			<a href="/help" >
-				<div class="section">
-					<img src='{{static}}/image/icon/help.png'></img>
-				</div>
-			</a>
-
-			@if (!LW.beta)
-				<a href='/forum'>
-					<div class="section">
-						<img src='{{static}}/image/icon/forum.png'></img>
-					</div>
-				</a>
-			@end
-
-			<a href='/settings'>
-				<div class="section">
-					<img src='{{static}}/image/icon/gearing.png'></img>
-				</div>
-			</a>
-
-			<a href="/moderation" style='display: none'>
-				<div class="section">
-					<img src='{{static}}/image/icon/moderation.png'></img>
-				</div>
-			</a>
-
-			<a href="/admin" id='admin-tab' style='display: none'>
-				<div class="section">
-					<img src='{{static}}/image/icon/admin.png'></img>
-				</div>
-			</a>
 		</div>
 
 		<div id='page-wrapper'>
