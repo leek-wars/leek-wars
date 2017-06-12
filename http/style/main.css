@@ -567,7 +567,7 @@ body.app #menu .top .right {
 }
 body.app #menu .icons {
 	padding-top: 8px;
-	padding-bottom: 4px;
+	padding-bottom: 6px;
 	display: flex;
 }
 body.app #menu .icons .icon {
@@ -582,11 +582,22 @@ body.app #menu .menu-top .text {
 }
 body.app #menu .menu-top .moneys {
 	display: flex;
-	font-size: 14px;
+	font-size: 12px;
 	justify-content: space-between;
 	padding: 0 6px;
 	padding-bottom: 8px;
 	align-items: baseline;
+	padding-top: 3px;
+}
+body.app #menu .menu-top .moneys img {
+	width: 18px;
+	vertical-align: bottom;
+}
+body.app #menu .menu-top .moneys .crystal {
+	width: 4px;
+	margin-bottom: -6px;
+	height: 29px;
+	background-size: cover;
 }
 body.app #menu .menu-top .farmer-avatar {
 	margin: 0;
