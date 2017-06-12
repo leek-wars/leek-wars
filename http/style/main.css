@@ -552,9 +552,13 @@ body.app #menu .menu-wrapper {
 	overflow-y: auto;
 	height: 100%;
 }
+#menu .menu-top {
+	display: none;
+}
 body.app #menu .menu-top {
 	background: #333;
 	color: #eee;
+	display: block;
 }
 body.app #menu .menu-top a {
 	color: #eee;
