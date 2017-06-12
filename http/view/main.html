@@ -43,12 +43,55 @@
 
 	<div class='menu-wrapper'>
 
-		<a href='/farmer'>
-			<div class="section" tab='farmer'>
-				<img class='farmer-avatar'></img>
-				<div class='text farmer-name'></div>
+		<div class='menu-top'>
+			<div class='top'>
+				<div>
+					<a href='/farmer'>
+						<img class='farmer-avatar'></img>
+					</a>
+				</div>
+				<div class='right'>
+					<div class='icons'>
+						<div class='icon'>
+							<a href='/notifications'><div>
+								<img src='{{static}}image/icon/notification.png'>
+							</div></a>
+						</div>
+						<div class='icon'>
+							<a href='/messages'><div>
+								<img src='{{static}}image/icon/message.png'>
+							</div></a>
+						</div>
+						<div class='icon'>
+							<a href='/settings'><div>
+								<img src='{{static}}image/icon/gearing.png'>
+							</div></a>
+						</div>
+					</div>
+					<div class='text farmer-name'></div>
+				</div>
 			</div>
-		</a>
+			<div class='moneys'>
+				<div>
+					<a href='/market'><div>
+						<span class='hab text'></span>
+						<span class='farmer-habs' class='text'></span>
+					</div></a>
+				</div>
+				<div>
+					<a href='/bank'><div>
+						<span class='crystal text'></span>
+						<span class='farmer-crystals' class='text'></span>
+					</div></a>
+				</div>
+				<div>
+					<a href='/garden'><div>
+						<img src='{{static}}image/icon/garden.png'>
+						<span class='farmer-fights'></span>
+					</div></a>
+				</div>
+			</div>
+		</div>
 
 		<span class='leeks'></span>
 
@@ -206,7 +249,7 @@
 
 						<a href="/bank">
 							<div class='header-button'>
-								<span id='farmer-crystals' class='text'></span>
+								<span class='farmer-crystals' class='text'></span>
 								<span class='crystal text'></span>
 							</div>
 						</a>
@@ -215,7 +258,7 @@
 
 						<a href="/market">
 							<div class='header-button'>
-								<span id='farmer-habs' class='text'></span>
+								<span class='farmer-habs' class='text'></span>
 								<span class='hab text'></span>
 							</div>
 						</a>
@@ -224,7 +267,7 @@
 
 						<a href="/garden">
 							<div class='header-button fights-button'>
-								<span id='farmer-fights' class='text'></span>
+								<span class='farmer-fights' class='text'></span>
 								<img src='{{static}}image/icon/garden.png'>
 							</div>
 						</a>
