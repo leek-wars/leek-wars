@@ -938,9 +938,9 @@ LW.connect = function(farmer, callback) {
 			$('.farmer-avatar').attr('src', LW.avatarURL + '/avatar/' + LW.farmer.id + '.png?' + LW.farmer.avatar_changed)
 		}
 		$('.farmer-name').text(LW.farmer.name)
-		$('#farmer-habs').html(_.format.number(LW.farmer.habs))
-		$('#farmer-crystals').html(_.format.number(LW.farmer.crystals))
-		$('#farmer-fights').text(LW.farmer.fights)
+		$('.farmer-habs').html(_.format.number(LW.farmer.habs))
+		$('.farmer-crystals').html(_.format.number(LW.farmer.crystals))
+		$('.farmer-fights').text(LW.farmer.fights)
 
 		// Leek tabs
 		var leeks = LW.farmer.leeks
@@ -2921,27 +2921,27 @@ LW.consoleAlertMessage = function() {
 
 LW.updateHabs = function(delta) {
 	LW.farmer.habs += delta
-	$('#farmer-habs').html(_.format.number(LW.farmer.habs))
+	$('.farmer-habs').html(_.format.number(LW.farmer.habs))
 }
 
 LW.setHabs = function(habs) {
 	LW.farmer.habs = habs
-	$('#farmer-habs').html(_.format.number(LW.farmer.habs))
+	$('.farmer-habs').html(_.format.number(LW.farmer.habs))
 }
 
 LW.updateCrystals = function(delta) {
 	LW.farmer.crystals += delta
-	$('#farmer-crystals').html(_.format.number(LW.farmer.crystals))
+	$('.farmer-crystals').html(_.format.number(LW.farmer.crystals))
 }
 
 LW.setCrystals = function(crystals) {
 	LW.farmer.crystals = crystals
-	$('#farmer-crystals').html(_.format.number(LW.farmer.crystals))
+	$('.farmer-crystals').html(_.format.number(LW.farmer.crystals))
 }
 
 LW.updateFights = function(delta) {
 	LW.farmer.fights += delta
-	$('#farmer-fights').html(_.format.number(LW.farmer.fights))
+	$('.farmer-fights').html(_.format.number(LW.farmer.fights))
 }
 
 LW.getImageSize = function(image, callback) {
