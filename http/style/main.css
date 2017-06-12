@@ -522,7 +522,7 @@ body.app #app-bar .counter {
 
 body.app #menu {
 	position: fixed;
-	top: 56px;
+	top: 0;
 	left: 0;
 	transform: translateX(-250px);
 	width: 250px;
