@@ -476,10 +476,25 @@ body.app #app-bar .menu.back .bar:last-child {
 	transform: rotate(38deg);
 }
 
-body.app #app-bar .title {
+body.app #app-bar .title-wrapper {
 	flex: 1;
 	text-overflow: ellipsis;
 	overflow-x: hidden;
+}
+body.app #app-bar .title {
+	text-overflow: ellipsis;
+	overflow-x: hidden;
+}
+body.app #app-bar.subtitle .title {
+	line-height: 25px;
+	padding-top: 7px;
+	font-weight: bold;
+}
+body.app #app-bar .subtitle {
+	text-overflow: ellipsis;
+	overflow-x: hidden;
+	line-height: 15px;
+	font-size: 12px;
 }
 body.app #app-bar .actions-wrapper {
 	padding-right: 4px;

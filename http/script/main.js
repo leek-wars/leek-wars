@@ -1532,13 +1532,22 @@ page('*', function() {
 	LW.error('404')
 })
 
-LW.setTitle = function(title) {
+LW.setTitle = function(title, subtitle) {
 	if (title === null) {
 		_.title('Leek Wars')
 	} else {
 		_.title(title + ' - Leek Wars')
 	}
 	$('#app-bar .title').text(title)
+	if (typeof(subtitle) !== 'undefined') {
+		LW.setSubTitle(subtitle)
+	}
+}
+LW.setSubTitle = function(subtitle) {
+	if (subtitle) {
+		$('#app-bar .subtitle').text(subtitle)
+	}
+	$('#app-bar').toggleClass('subtitle', !!subtitle)
 }
 
 LW.setMenuTab = function(tab) {
