@@ -1100,16 +1100,21 @@ LW.resize_notifs_popups = function() {
 
 	var window_width = $(window).width()
 	var width = Math.min(400, window_width)
+	var offset = 190
+	if (_.is_mobile()) {
+		width = window_width
+		offset = 196
+	}
 
 	// Messages popup
 	var button = $(".messages-button:visible .icon");
 	if (button.length) {
 		var left = button.offset().left + 14 - $('#messages-popup').width() / 2
 		if (left > window_width - width) {
-			$('#messages-arrow').css('left', 190 + (left - window_width + width))
+			$('#messages-arrow').css('left', offset + (left - window_width + width))
 			left = window_width - width
 		} else {
-			$('#messages-arrow').css('left', 190)
+			$('#messages-arrow').css('left', offset)
 		}
 		$('#messages-popup').css('left', left)
 		$('#messages-popup').css('top', button.offset().top + 40)
@@ -1121,10 +1126,10 @@ LW.resize_notifs_popups = function() {
 	if (button.length) {
 		var left = button.offset().left + 14 - $('#notifications-popup').width() / 2
 		if (left > window_width - width) {
-			$('#notifs-arrow').css('left', 190 + (left - window_width + width))
+			$('#notifs-arrow').css('left', offset + (left - window_width + width))
 			left = window_width - width
 		} else {
-			$('#notifs-arrow').css('left', 190)
+			$('#notifs-arrow').css('left', offset)
 		}
 		$('#notifications-popup').css('left', left)
 		$('#notifications-popup').css('top', button.offset().top + 40)
