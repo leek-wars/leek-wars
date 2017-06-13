@@ -495,6 +495,10 @@ body.app #app-bar .subtitle {
 	overflow-x: hidden;
 	line-height: 15px;
 	font-size: 12px;
+	display: none;
+}
+body.app #app-bar.subtitle .subtitle {
+	display: block;
 }
 body.app #app-bar .actions-wrapper {
 	padding-right: 4px;
@@ -1840,6 +1844,9 @@ body.app #footer-wrapper {
 	z-index: 500;
 	transition: opacity ease 500ms;
 }
+body.app #dark {
+	top: 56px;
+}
 #dark.visible {
 	opacity: 0.6;
 }
@@ -3098,8 +3105,11 @@ textarea.autogrow {
 	pointer-events: none;
 	top: 0px; bottom: 0px;
 	left: 0px; right: 0px;
-	padding-top: 120px;
+	padding-top: 80px;
 	z-index: 100;
+}
+body.app #loader {
+	top: 56px;
 }
 
 #loader .gear1 {
