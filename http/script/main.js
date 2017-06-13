@@ -1648,6 +1648,7 @@ LW.loadPage = function(pageID, params) {
 						LW.loader.hide()
 						LW.shrink()
 						LW.setMenuTab(null)
+						LW.app.split_show_list()
 
 						if (LW.socket.connected() && page.wsconnected) {
 							page.wsconnected()
