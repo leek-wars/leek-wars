@@ -106,6 +106,9 @@
 #garden-page .title {
 	margin-bottom: 10px;
 }
+body.app #garden-page .title {
+	display: none;
+}
 
 #garden-page .versus {
 	margin: 10px 0;
