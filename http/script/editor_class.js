@@ -121,10 +121,11 @@ var Editor = function(id, name, valid, code, folder, level) {
 		this.tabDiv.addClass('selected');
 		this.modified = false;
 
-		// if (!_BASIC) {
-			$('#line-count').text(this.editor.getDoc().lineCount())
-			$('#char-count').text(this.editor.getDoc().getValue().length)
-		// }
+		var lines = this.editor.getDoc().lineCount()
+		var chars = this.editor.getDoc().getValue().length
+		$('#line-count').text(lines)
+		$('#char-count').text(chars)
+		LW.setSubTitle(_.lang.get('editor', 'n_lines', lines))
 
 		if (!this.loaded && this.id > 0) {
 
@@ -367,8 +368,11 @@ var Editor = function(id, name, valid, code, folder, level) {
 			this.autocomplete()
 		}
 
-		$('#line-count').text(this.editor.getDoc().lineCount())
-		$('#char-count').text(this.editor.getDoc().getValue().length)
+		var lines = this.editor.getDoc().lineCount()
+		var chars = this.editor.getDoc().getValue().length
+		$('#line-count').text(lines)
+		$('#char-count').text(chars)
+		LW.setSubTitle(_.lang.get('editor', 'n_lines', lines))
 
 		if (userChange && _autoClosing) {
 
