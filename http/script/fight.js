@@ -34,7 +34,7 @@ LW.pages.fight.init = function(params, $scope, $page) {
 		if (fight.type == LW.FIGHT_TYPE.BATTLE_ROYALE) {
 			fight.title = _.lang.get('fight', 'battle_royale')
 		}
-		LW.setTitle(fight.title)
+		LW.setTitle(fight.title, _.format.date(fight.date))
 
 		$page.render()
 
