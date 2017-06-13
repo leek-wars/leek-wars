@@ -509,6 +509,12 @@ body.app #app-bar .actions, body.app #app-bar .static-actions {
 body.app #app-bar .static-actions .action {
 	display: none;
 }
+body.app.menu-expanded #app-bar .static-actions .action {
+	display: inline-block;
+}
+body.app.menu-expanded #app-bar .actions .action {
+	display: none;
+}
 body.app #app-bar .action {
 	display: inline-block;
 	line-height: normal;
@@ -591,23 +597,12 @@ body.app #menu .menu-top a {
 body.app #menu .top {
 	display: flex;
 }
-body.app #menu .top .right {
-	flex: 1;
-}
-body.app #menu .icons {
-	padding-top: 8px;
-	padding-bottom: 6px;
-	display: flex;
-}
-body.app #menu .icons .icon {
-	flex: 1;
-	text-align: center;
-}
-body.app #menu .icons img {
-	width: 20px;
-}
 body.app #menu .menu-top .text {
 	padding-left: 10px;
+}
+body.app #menu .menu-top .text.farmer-name {
+	padding-left: 10px;
+	line-height: 45px;
 }
 body.app #menu .menu-top .moneys {
 	display: flex;
@@ -630,11 +625,14 @@ body.app #menu .menu-top .moneys .crystal {
 }
 body.app #menu .menu-top .farmer-avatar {
 	margin: 0;
-	width: 60px;
-	height: 60px;
+	width: 45px;
+	height: 45px;
 }
 body.app .menu-top .moneys img {
 	width: 20px;
+}
+body.app .menu-top .section {
+	background: transparent;
 }
 body.app #menu .separator {
 	display: none;
@@ -2578,6 +2576,10 @@ body.sfw #menu .menu-wrapper {
 	background: rgba(255,255,255,0.4);
 }
 body.sfw #menu .section {
+	background: white;
+	color: #777;
+}
+body.sfw #menu .menu-top {
 	background: white;
 	color: #777;
 }
