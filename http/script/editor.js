@@ -688,8 +688,10 @@ LW.pages.editor.resize = function() {
 
 	var offset = 160 + (_searchEnabled ? 40 : 0)
 
-	$('.CodeMirror-scroll').css('height', $(window).height() - offset)
-	if (!_.is_mobile()) {
+	if (_.is_mobile()) {
+		$('.CodeMirror-scroll').css('height', $(window).height() - $('#app-bar').height())
+	} else {
+		$('.CodeMirror-scroll').css('height', $(window).height() - offset)
 		$('#ai-list').css('height', $(window).height() - 160 - 83)
 	}
 }

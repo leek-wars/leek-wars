@@ -6,6 +6,10 @@ body.app #editor-page .panel {
 	margin-bottom: 0;
 }
 
+#editor-page .page-bar .info {
+	display: none;
+}
+
 #editor-page .search-panel {
 	display: none;
 	height: 40px;
