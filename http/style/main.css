@@ -233,8 +233,8 @@ textarea {
 
 #all-notifs, #all-messages {
 	cursor: pointer;
-	height: 30px;
-	line-height: 30px;
+	height: 42px;
+	line-height: 42px;
 	text-align: center;
 	-webkit-border-bottom-right-radius: 5px;
 	-webkit-border-bottom-left-radius: 5px;
