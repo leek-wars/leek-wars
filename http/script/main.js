@@ -4450,7 +4450,7 @@ LW.dark.toggle = function() {
 		clearTimeout(LW.dark.timeout)
 		LW.dark.timeout = setTimeout(function() {
 			dark.hide()
-		}, 500)
+		}, 200)
 	} else {
 		dark.show()
 		clearTimeout(LW.dark.timeout)
@@ -4459,13 +4459,21 @@ LW.dark.toggle = function() {
 		}, 100)
 	}
 }
+LW.dark.show = function() {
+	var dark = $('#dark')
+	dark.show()
+	clearTimeout(LW.dark.timeout)
+	LW.dark.timeout = setTimeout(function() {
+		dark.addClass('visible')
+	}, 100)
+}
 LW.dark.hide = function() {
 	var dark = $('#dark')
 	dark.removeClass('visible')
 	clearTimeout(LW.dark.timeout)
 	LW.dark.timeout = setTimeout(function() {
 		dark.hide()
-	}, 500)
+	}, 200)
 }
 
 LW.test_notif = function() {
