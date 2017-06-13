@@ -1262,6 +1262,9 @@ page('/console', function() {
 page('/garden', function() {
 	LW.loadPage('garden')
 })
+page('/garden/:category', function(ctx) {
+	LW.loadPage('garden', ctx.params)
+})
 
 page('/garden/challenge/:id', function(ctx) {
 	LW.loadPage('garden', {challenge: true, type: 'leek', challenge_target: ctx.params.id})

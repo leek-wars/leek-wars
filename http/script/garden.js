@@ -106,16 +106,16 @@ LW.pages.garden.init = function(params, $scope, $page) {
 
 		// Tabs
 		$('#tab-solo').click(function() {
-			$page.select_category('solo')
+			LW.page('/garden/solo')
 		})
 		$('#tab-farmer.enabled').click(function() {
-			$page.select_category('farmer')
+			LW.page('/garden/farmer')
 		})
 		$('#tab-team.enabled').click(function() {
-			$page.select_category('team')
+			LW.page('/garden/team')
 		})
 		$('#tab-battle-royale.enabled').click(function() {
-			$page.select_category('battle-royale')
+			LW.page('/garden/battle-royale')
 		})
 		$('#garden-left .enabled .tooltip').remove()
 
@@ -135,10 +135,6 @@ LW.pages.garden.init = function(params, $scope, $page) {
 			LW.pages.garden.battle_royale()
 		})
 
-		if (_.is_mobile()) {
-			LW.app.split_show_list()
-		}
-
 		for (var l in LW.farmer.leeks) {
 			$page.leek_image(LW.farmer.leeks[l])
 		}
@@ -148,43 +144,64 @@ LW.pages.garden.init = function(params, $scope, $page) {
 			$page.select_composition($(this).attr('compo'))
 		})
 
-		if (!_.is_mobile()) {
-			$page.select_category($scope.category)
+		if (!$scope.category && !_.is_mobile()) {
+			$scope.category = 'solo'
 		}
+		if ($scope.category) {
+			LW.page('/garden/' + $scope.category)
+		} else {
+			LW.app.split_show_list()
+		}
+
 		LW.pages.garden.time()
 	})
 }
 
-LW.pages.garden.select_category = function(category) {
+LW.pages.garden.update = function(params) {
+	_.log("update ", params)
+	if (params && 'category' in params && params.category) {
 
-	_category = category
-	localStorage["garden/category"] = _category
+		var category = params.category
 
-	$('.tab').removeClass('active')
-	$('#tab-' + category).addClass('active')
+		_category = category
+		localStorage["garden/category"] = _category
 
-	$('#garden-solo').hide()
-	$('#garden-farmer').hide()
-	$('#garden-team').hide()
-	$('#garden-battle-royale').hide()
-	$('#garden-' + _category).show()
+		$('.tab').removeClass('active')
+		$('#tab-' + category).addClass('active')
 
-	if (category == 'solo') {
-		LW.pages.garden.select_leek(this.scope.my_leek)
-		LW.pages.garden.load_leek(this.scope.my_leek)
-	}
-	if (category == 'farmer') {
-		LW.pages.garden.select_farmer()
-	}
-	if (category == 'team') {
-		LW.pages.garden.select_composition(this.scope.my_compo)
-	}
-	if (category == 'battle-royale') {
-		LW.pages.garden.battle_royale()
-	}
-	if (_.is_mobile()) {
+		$('#garden-solo').hide()
+		$('#garden-farmer').hide()
+		$('#garden-team').hide()
+		$('#garden-battle-royale').hide()
+		$('#garden-' + _category).show()
+
+		var category_underscore = category.replace('-', '_')
+		LW.setTitle(_.lang.get('garden', 'garden_' + category_underscore), _.lang.get('garden', 'n_fights', LW.farmer.fights))
+
 		LW.app.split_show_content()
+
+		if (category == 'solo') {
+			LW.pages.garden.select_leek(this.scope.my_leek)
+			LW.pages.garden.load_leek(this.scope.my_leek)
+		}
+		if (category == 'farmer') {
+			LW.pages.garden.select_farmer()
+		}
+		if (category == 'team') {
+			LW.pages.garden.select_composition(this.scope.my_compo)
+		}
+		if (category == 'battle-royale') {
+			LW.pages.garden.battle_royale()
+		}
+	} else {
+		localStorage["garden/category"] = ''
+		LW.setTitle(_.lang.get('garden', 'title'))
+		LW.app.split_show_list()
 	}
+}
+
+LW.pages.garden.back = function() {
+	LW.page('/garden')
 }
 
 LW.pages.garden.select_leek = function(leek_id) {
