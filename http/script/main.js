@@ -980,7 +980,7 @@ LW.connect = function(farmer, callback) {
 
 		// Moderation
 		if (farmer.moderator) {
-			$('#moderation-tab').show()
+			$('#moderation-tab').show().find('.section').attr('label', LW.farmer.reportings)
 		} else {
 			$('#moderation-tab').remove()
 		}
