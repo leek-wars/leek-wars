@@ -1392,6 +1392,12 @@ body.connected #header-signin {
 	border-top-right-radius: 3px;
 }
 
+body.app .panel > .header {
+	border-radius: 0;
+	-webkit-border-radius: 0;
+	-moz-border-radius: 0;
+}
+
 .panel.first > .header {
 	webkit-border-top-left-radius: 0px;
 	-moz-border-radius-topleft: 0px;
