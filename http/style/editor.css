@@ -5,8 +5,7 @@ body {
 body.app #editor-page .panel {
 	margin-bottom: 0;
 }
-
-#editor-page .page-bar .info {
+body.app #editor-page .page-bar .info {
 	display: none;
 }
 
