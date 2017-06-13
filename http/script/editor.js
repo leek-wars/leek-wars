@@ -40,7 +40,7 @@ LW.pages.editor.init = function(params, $scope, $page) {
 
 		$page.render()
 
-		LW.setTitle(_.lang.get('editor', 'title'))
+		LW.setTitle(_.lang.get('editor', 'title'), _.lang.get('editor', 'n_ais', _.objectSize(data.ais)))
 		LW.setMenuTab('editor')
 
 		var ais = data.ais
@@ -675,7 +675,7 @@ LW.pages.editor.update = function(params) {
 		LW.app.split_show_content()
 	} else {
 		LW.loader.hide()
-		LW.setTitle(_.lang.get('editor', 'title'), '')
+		LW.setTitle(_.lang.get('editor', 'title'), _.lang.get('editor', 'n_ais', _.objectSize(editors)))
 		LW.app.split_show_list()
 	}
 }
