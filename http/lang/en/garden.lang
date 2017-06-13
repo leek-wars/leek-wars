@@ -10,6 +10,7 @@ leek_have_no_ai			Leek has no AI equipped!
 level_n					Level %s
 n_leeks					%s leeks
 n_remaining_fights		%s remaining fights
+n_fights				%s fights
 next_fight_in			Next fight in %s
 no_more_fights			No more fights
 no_opponent_of_your_size	No opponent to your size!

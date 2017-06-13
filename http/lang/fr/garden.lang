@@ -10,6 +10,7 @@ leek_have_no_ai				Le poireau n'a pas d'IA équipée !
 level_n						Niveau %s
 n_leeks						%s poireaux
 n_remaining_fights			%s combats restants
+n_fights					%s combats
 next_fight_in				Prochain combat dans %s
 no_more_fights				Plus de combats
 no_opponent_of_your_size	Pas d'adversaire à ta taille !
