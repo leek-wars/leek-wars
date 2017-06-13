@@ -80,6 +80,7 @@ LW.pages.ranking.init = function(params, $scope, $page) {
 			$page.render()
 
 			LW.setTitle(_.lang.get('ranking', 'title'))
+			LW.setMenuTab('ranking')
 
 			LW.pages.ranking.search()
 			LW.pages.ranking.my_ranking()
