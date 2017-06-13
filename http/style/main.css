@@ -586,6 +586,12 @@ body.app #menu .menu-wrapper {
 #menu .menu-top {
 	display: none;
 }
+#menu .section.console {
+	display: none;
+}
+body.app #menu .section.console {
+	display: block;
+}
 body.app #menu .menu-top {
 	background: #333;
 	color: #eee;
