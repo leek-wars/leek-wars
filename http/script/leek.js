@@ -72,7 +72,7 @@ LW.pages.leek.init = function(params, $scope, $page) {
 		LW.pages.leek.report()
 
 		if (myLeek) {
-			
+
 			LW.pages.leek.garden()
 			LW.pages.leek.tournament()
 			LW.pages.leek.capital()
@@ -1275,9 +1275,15 @@ LW.pages.leek.characteristicToCapital = function(characteristic, amount, level) 
 		case CHARACTERISTIC_LIFE:
 			return Math.min(amount - (100 + (level - 1) * 3), 1000) * 1 / 4 + Math.min(Math.max(0, amount - (1100 + (level - 1) * 3)), 999) * 1 / 3 + Math.max(0, amount - (2100 + (level - 1) * 3)) * 1 / 2
 		case CHARACTERISTIC_TP:
-			return (amount - 10) * 80
+			var added = amount - 10
+			var progression = added <= 14 ? added : 14
+			var leftover = added > 14 ? added - 14 : 0
+			return added > 0 ? 25 * progression + progression * (progression + 1) * 5 / 2 + leftover * 100 : 0
 		case CHARACTERISTIC_MP:
-			return (amount - 3) * 50
+			var added = amount - 3
+			var progression = added <= 8 ? added : 8
+			var leftover = added > 8 ? added - 8 : 0
+			return added > 0 ? 10 * progression + progression * (progression + 1) * 10 / 2 + leftover * 100 : 0
 		case CHARACTERISTIC_FREQUENCY:
 		   	return amount - 100
 		case CHARACTERISTIC_STRENGTH:
