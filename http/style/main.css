@@ -2904,8 +2904,8 @@ textarea.autogrow {
 
 @media screen and (max-width: 799px) {
 
-	.column2, .column3, .column4, .column6,
-	.column8, .column9, .column10 {
+	.column2, .column3, .column4, .column5,
+	.column6, .column7, .column8, .column9, .column10 {
 		width: 100%;
 	}
 }

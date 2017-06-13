@@ -14,7 +14,7 @@ LW.pages.moderation.init = function(params, $scope, $page) {
 		$scope.thugs = data.thugs
 
 		$page.render()
-		LW.setTitle('Modération')
+		LW.setTitle('Modération', data.faults.length + ' signalements')
 		LW.setMenuTab('moderation')
 
 		$('.fault').click(function() {
@@ -48,6 +48,7 @@ LW.pages.moderation.init = function(params, $scope, $page) {
 
 			$('.fault').removeClass('selected')
 			$(this).addClass('selected')
+			LW.app.split_show_content()
 		})
 
 		$('.fault').first().click()
@@ -109,6 +110,8 @@ LW.pages.moderation.init = function(params, $scope, $page) {
 				}
 			})
 		})
+
+		LW.app.split_show_list()
 	})
 }
 
