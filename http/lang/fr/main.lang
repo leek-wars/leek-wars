@@ -12,6 +12,7 @@ commands       Commandes
 conditions			Conditions d'utilisation
 connection			Connexion
 connect_message			<a href='%s'><b>Connexion</b></a> ou <a href='%s'><b>Inscription</b></a> à Leek Wars
+console					Console (bêta)
 console_alert_1			Attention ! Si quelqu'un vous demande d'entrez un programme ici,
 console_alert_2			il s'agit d'une tentative de piratage de votre compte sur Leek Wars.
 console_alert_3			Entrez du code ici seulement si vous savez exactement ce que vous faites.

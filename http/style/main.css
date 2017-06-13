@@ -3260,7 +3260,7 @@ body.app #loader {
 	background: transparent;
 	height: 360px;
 }
-.console {
+.leekscript-console {
 	height: 350px;
 	background: rgba(45, 45, 45, 0.9);
 	color: #ccc;
@@ -3270,36 +3270,36 @@ body.app #loader {
 	overflow-x: hidden;
 	padding: 5px;
 }
-.console.fullscreen {
+.leekscript-console.fullscreen {
 	width: calc(100% - 10px);
 	height: calc(100% - 10px);
 }
-.console .lines .line {
+.leekscript-console .lines .line {
 	padding: 2px 4px;
 	word-wrap: break-word;
 }
-.console .line .line span {
+.leekscript-onsole .line .line span {
 	vertical-align: top;
 }
-.console .lines .line.result {
+.leekscript-console .lines .line.result {
 	color: white;
 	font-weight: bold;
 	font-size: 16px;
 	margin-bottom: 2px;
 }
-.console .lines .line.result.error {
+.leekscript-console .lines .line.result.error {
 	color: red;
 }
-.console .lines .line.result .time {
+.leekscript-console .lines .line.result .time {
 	font-size: 13px;
 	margin-left: 10px;
 	font-weight: normal;
 	color: #888;
 }
-.console .input {
+.leekscript-console .input {
 	padding: 2px 4px;
 }
-.console input {
+.leekscript-console input {
 	border: none;
 	background: transparent;
 	color: white;
@@ -3310,12 +3310,12 @@ body.app #loader {
 	min-height: 0;
 	width: calc(100% - 18px);
 }
-.console .arrow {
+.leekscript-console .arrow {
 	width: 18px;
 	margin-right: 6px;
 	color: white;
 	vertical-align: top;
 }
-.console .lines {
+.leekscript-console .lines {
 
 }

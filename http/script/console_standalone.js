@@ -14,7 +14,7 @@ LW.token = function() {
 	return '$'
 }
 
-var html = "<div class='console fullscreen' autostopscroll>\
+var html = "<div class='leekscript-console fullscreen' autostopscroll>\
 	<div class='lines'></div>\
 	<div class='input'>\
 		<span class='arrow'>►</span><input type='text' autocomplete='off' autocorrect='off' autocapitalize='off' spellcheck='false'>\
@@ -36,6 +36,6 @@ $(document).ready(function() {
 	$("body").append(html)
 	_.title("LeekScript V2 Console")
 
-	var console = new ConsoleController($('.console'))
+	var console = new ConsoleController($('.leekscript-console'))
 	console.focus()
 })
