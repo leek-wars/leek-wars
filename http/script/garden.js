@@ -88,7 +88,7 @@ LW.pages.garden.init = function(params, $scope, $page) {
 
 		$page.render()
 
-		LW.setTitle(_.lang.get('garden', 'title'))
+		LW.setTitle(_.lang.get('garden', 'title'), _.lang.get('garden', 'n_fights', LW.farmer.fights))
 		LW.setMenuTab('garden')
 
 		// Restore
