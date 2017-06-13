@@ -4420,6 +4420,7 @@ LW.app.split_show_list = function() {
 	$('#page .column9, #page .split-content').hide()
 	$('#page .page-header').hide()
 	$('#app-bar .menu').removeClass('back')
+	$('#app-bar').removeClass('content').addClass('list')
 	LW.app.split_back = false
 }
 
@@ -4429,6 +4430,7 @@ LW.app.split_show_content = function() {
 	$('#page .column9, #page .split-content').show().css('height', $(window).height() - $('#app-bar').height() - $('#page .page-header').height())
 	$('#page .page-header').show()
 	$('#app-bar .menu').addClass('back')
+	$('#app-bar').removeClass('list').addClass('content')
 	LW.app.split_back = true
 }
 

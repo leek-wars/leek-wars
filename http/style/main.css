@@ -499,6 +499,12 @@ body.app #app-bar .action img {
 	width: 26px;
 	opacity: 1;
 }
+body.app #app-bar.content .action.list:not(.content),
+body.app #app-bar.list .action.content:not(.list),
+body.app #app-bar .action.hidden {
+	display: none;
+}
+
 body.app.connected #page .page-bar h1 {
 	display: none;
 }
