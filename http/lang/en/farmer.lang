@@ -82,6 +82,7 @@ tournaments			Tournaments
 tournament_time			Farmer tournament every day from 6PM to 8PM (French timezone)
 trophies			Trophies
 trophy_obtained			Obtained %s
+n_trophies					%s trophies
 unregister			Unregister
 unregister_impossible_moderator			Impossible to delete a moderator.
 unregister_impossible_team			You are the owner of a team, you shall first dissolve before deleting your account.
