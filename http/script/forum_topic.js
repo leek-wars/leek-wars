@@ -15,6 +15,7 @@ LW.pages.forum_topic.init = function(params, $scope, $page) {
 
 		_topic = data.topic
 		_category = data.category
+		_category.name = _category.team > 0 ? _category.name : _.lang.get('forum', 'category_' + _category.name)
 
 		$scope.messages = data.messages
 		$scope.topic = data.topic
