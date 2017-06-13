@@ -399,6 +399,8 @@ LW.pages.editor.init = function(params, $scope, $page) {
 			currentName = editors[current].name
 			localStorage['editor/last_code'] = params.id
 			editors[current].show()
+			LW.setTitle(currentName)
+			LW.app.split_show_content()
 		} else {
 			if (editors.length == 0) {
 				current = null
@@ -669,11 +671,17 @@ LW.pages.editor.update = function(params) {
 		currentName = editors[current].name
 		editors[current].show()
 		localStorage['editor/last_code'] = params.id
+		LW.setTitle(currentName)
 		LW.app.split_show_content()
 	} else {
 		LW.loader.hide()
+		LW.setTitle(_.lang.get('editor', 'title'))
 		LW.app.split_show_list()
 	}
+}
+
+LW.pages.editor.back = function() {
+	LW.page('/editor')
 }
 
 LW.pages.editor.resize = function() {
