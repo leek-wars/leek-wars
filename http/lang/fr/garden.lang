@@ -5,6 +5,10 @@ category_solo_fight			Solo
 category_team_fight			Équipe
 challenge					Défi
 farmer_fight				Combat d'éleveur
+garden_solo					Potager solo
+garden_farmer				Potager éleveur
+garden_team					Potager équipe
+garden_battle_royale		Potager Battle Royale
 leek_ai_invalid				L'IA du poireau n'est pas valide !
 leek_have_no_ai				Le poireau n'a pas d'IA équipée !
 level_n						Niveau %s

@@ -5,6 +5,10 @@ category_solo_fight		Solo
 category_team_fight		Team
 challenge				Challenge
 farmer_fight			Farmer fight
+garden_solo				Solo garden
+garden_farmer			Farmer garden
+garden_team				Team garden
+garden_battle_royale	Battle Royale garden
 leek_ai_invalid			Leek's AI is not valid!
 leek_have_no_ai			Leek has no AI equipped!
 level_n					Level %s
