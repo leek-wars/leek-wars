@@ -634,7 +634,7 @@ _.popup.new = function(view, data, width, direct, options) {
 			//if (_.popup.queue.length == 0) {
 				$('#popups').addClass('box')
 				if (!this.options.draggable) {
-					$('#dark').fadeIn(200)
+					LW.dark.show()
 				}
 				popup.appear()
 			//}
@@ -719,7 +719,7 @@ _.popup.new = function(view, data, width, direct, options) {
 					// }, 250)
 				} else {
 					$('#popups').removeClass('box')
-					$('#dark').fadeOut(200)
+					LW.dark.hide()
 				}
 			}, 200)
 		} else {

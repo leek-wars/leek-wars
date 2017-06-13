@@ -1842,7 +1842,7 @@ body.app #footer-wrapper {
 	background: black;
 	opacity: 0;
 	z-index: 500;
-	transition: opacity ease 500ms;
+	transition: opacity ease 200ms;
 }
 body.app #dark {
 	top: 56px;
