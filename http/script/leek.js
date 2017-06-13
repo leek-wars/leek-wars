@@ -72,7 +72,6 @@ LW.pages.leek.init = function(params, $scope, $page) {
 		LW.pages.leek.report()
 
 		if (myLeek) {
-
 			LW.pages.leek.garden()
 			LW.pages.leek.tournament()
 			LW.pages.leek.capital()
