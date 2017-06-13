@@ -398,8 +398,8 @@ LW.pages.editor.init = function(params, $scope, $page) {
 			currentItem = params.id
 			currentName = editors[current].name
 			localStorage['editor/last_code'] = params.id
-			editors[current].show()
 			LW.setTitle(currentName, '')
+			editors[current].show()
 			LW.app.split_show_content()
 		} else {
 			if (editors.length == 0) {
@@ -669,9 +669,9 @@ LW.pages.editor.update = function(params) {
 		currentType = 'ai'
 		currentItem = params.id
 		currentName = editors[current].name
-		editors[current].show()
 		localStorage['editor/last_code'] = params.id
 		LW.setTitle(currentName)
+		editors[current].show()
 		LW.app.split_show_content()
 	} else {
 		LW.loader.hide()
