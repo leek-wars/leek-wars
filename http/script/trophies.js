@@ -43,13 +43,12 @@ LW.pages.trophies.init = function(params, $scope, $page) {
 
 		$page.render()
 
+		var subtitle = $scope.count + ' / ' + $scope.total + ' - ' + Math.floor(100 * $scope.count / $scope.total) + '%'
 		if (farmerID == LW.farmer.id) {
-			LW.setTitle(_.lang.get('trophies', 'title_me'))
+			LW.setTitle(_.lang.get('trophies', 'title_me'), subtitle)
 		} else {
-			LW.setTitle(_.lang.get('trophies', 'title_text', data.farmer_name))
+			LW.setTitle(_.lang.get('trophies', 'title_text', data.farmer_name), subtitle)
 		}
 		LW.setMenuTab('trophies')
 	})
-
-
 }
