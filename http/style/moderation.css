@@ -1,3 +1,7 @@
+body.app #moderation-page .panel.first .header {
+	display: none;
+}
+
 #faults {
 	padding: 5px;
 }
@@ -9,7 +13,11 @@
 	margin: 10px;
 	cursor: pointer;
 	opacity: 0.6;
-	border: 2px solid white; 
+	border: 2px solid white;
+}
+body.app #faults .fault {
+	margin: 0;
+	margin-bottom: 10px;
 }
 
 #faults .fault.selected {
