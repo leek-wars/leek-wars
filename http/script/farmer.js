@@ -71,7 +71,8 @@ function init(farmer, $scope, $page) {
 		var id = $(this).attr('id')
 		var leek = farmer.leeks[id]
 		var elem = this
-		LW.createLeekImage(id, 1, leek.level, leek.skin, leek.hat, function(id, data) {
+		var scale = _.is_mobile() ? 0.6 : 1
+		LW.createLeekImage(id, scale, leek.level, leek.skin, leek.hat, function(id, data) {
 			$(elem).find('.image').html(data)
 		})
 	})

@@ -244,10 +244,6 @@ body.app #farmer-page #send-message {
 	vertical-align: top;
 }
 
-#farmer-page #leeks {
-	padding: 15px;
-}
-
 #farmer-page .leek {
 	text-align: center;
 	display: inline-block;
