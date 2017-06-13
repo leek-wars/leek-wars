@@ -2,7 +2,7 @@
 	padding: 0
 }
 
-#ranking-page .pagination { 
+#ranking-page .pagination {
 	text-align: center;
 	display: inline-block;
 }
@@ -143,10 +143,18 @@
 	display: inline-block;
 	margin: 8px 3px;
 }
+body.app #fun-rankings .fun-ranking {
+	width: 100%;
+	margin: 0px;
+}
 
 #fun-rankings .fun-ranking table {
 	margin: 4px;
 	width: 320px;
+}
+body.app #fun-rankings .fun-ranking table {
+	width: 100%;
+	margin: 6px 0;
 }
 
 #fun-rankings .ranking tr td:first-child {
