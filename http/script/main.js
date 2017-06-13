@@ -1539,9 +1539,7 @@ LW.setTitle = function(title, subtitle) {
 		_.title(title + ' - Leek Wars')
 	}
 	$('#app-bar .title').text(title)
-	if (typeof(subtitle) !== 'undefined') {
-		LW.setSubTitle(subtitle)
-	}
+	LW.setSubTitle(subtitle)
 }
 LW.setSubTitle = function(subtitle) {
 	if (subtitle) {
@@ -1725,7 +1723,6 @@ LW.loadPage = function(pageID, params) {
 	if (LW.currentPage) {
 
 		LW.trigger('pause')
-
 		$('#tooltips .tooltip[location=page]').remove()
 
 		var message = LW.trigger('leave')
