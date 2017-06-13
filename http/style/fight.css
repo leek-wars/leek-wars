@@ -2,6 +2,10 @@
 	padding: 0;
 }
 
+body.app #fight-page .page-bar .info {
+	display: none;
+}
+
 #fight-page #loading {
 	text-align: center;
 }
