@@ -197,9 +197,24 @@ LW.pages.fight.resize = function() {
 			$("#game").css("height", 'auto')
 		}
 
-		$(canvas).attr("width", game.width)
-		$(canvas).attr("height", game.height)
-		$("#layers").css("height", game.height)
+		var devicePixelRatio = window.devicePixelRatio || 1
+		var backingStoreRatio = ctx.webkitBackingStorePixelRatio ||
+								ctx.mozBackingStorePixelRatio ||
+								ctx.msBackingStorePixelRatio ||
+								ctx.oBackingStorePixelRatio ||
+								ctx.backingStorePixelRatio || 1
+		var ratio = devicePixelRatio / backingStoreRatio
+
+		var oldWidth = game.width
+		var oldHeight = game.height
+		canvas.width = oldWidth * ratio
+		canvas.height = oldHeight * ratio
+		canvas.style.width = oldWidth + 'px'
+		canvas.style.height = oldHeight + 'px'
+		game.width = canvas.width
+		game.height = canvas.height
+		$('#bg-canvas').css('width', oldWidth).css('height', oldHeight)
+		$("#layers").css("height", oldHeight)
 
 		game.ground.resize(game.width, game.height, _fullscreen, game.quality)
 		game.setupMouseMove()
