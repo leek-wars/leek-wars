@@ -28,7 +28,7 @@ LW.pages.settings.init = function(params, $scope, $page) {
 		$scope.settings = data.settings
 		$page.render()
 
-		LW.setTitle(_.lang.get('settings', 'title'))
+		LW.setTitle(_.lang.get('settings', 'title'), LW.farmer.name)
 
 		LW.pages.settings.logout()
 		LW.pages.settings.language()
