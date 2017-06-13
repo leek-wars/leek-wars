@@ -20,6 +20,7 @@ LW.pages.forum.init = function(params, $scope, $page) {
 			}))
 
 			$('#connected-farmers-title').text(_.lang.get('forum', 'connected_farmers', _.format.number(data.count)))
+			LW.setSubTitle(_.lang.get('forum', 'connected_farmers_subtitle',  _.format.number(data.count)))
 		})
 
 		$page.chat = new ChatController($('#chat .content'), function(message) {

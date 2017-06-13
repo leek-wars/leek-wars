@@ -20,6 +20,7 @@ category_suggestions_ideas_desc	Si vous avez des idées d'amélioration pour le 
 chat						Chat
 chat_send					Envoyer
 connected_farmers			Éleveurs connectés (%s)
+connected_farmers_subtitle	%s éleveurs connectés
 delete						Supprimer
 deleted_message				Message supprimé
 edit						Éditer

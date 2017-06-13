@@ -21,6 +21,7 @@ category_suggestions_ideas_desc			If you have some improvements or ideas for the
 chat			Chat
 chat_send			Send
 connected_farmers			Connected farmers (%s)
+connected_farmers_subtitle	%s connected farmers
 delete			Delete
 deleted_message			Message deleted
 edit			Edit
