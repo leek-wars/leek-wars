@@ -31,6 +31,7 @@ import_desc			Import a file from your computer.
 keyword				Keyword %s
 level_n				Level %s
 medium				Medium
+n_ais				%s AI(s)
 n_ais_unsaved		You have %s unsaved AI(s).
 n_characters		%s characters
 n_cores				%s cores

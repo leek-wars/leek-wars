@@ -31,6 +31,7 @@ import_desc		Importer une IA depuis votre ordinateur.
 keyword			Mot-clé %s
 level_n			Niveau %s
 medium			Moyen
+n_ais			%s IA(s)
 n_ais_unsaved	Vous avez %s IA(s) non sauvegardée(s).
 n_characters	%s caractères
 n_cores			%s coeurs
