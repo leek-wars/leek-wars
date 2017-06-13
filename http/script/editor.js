@@ -734,7 +734,7 @@ LW.pages.editor.keydown = function(e) {
 	}
 
 	// Ctrl-F : search
-	if (e.ctrlKey && e.keyCode == 70) {
+	if (e.ctrlKey && e.keyCode == 70 && !e.shiftKey) {
 		LW.pages.editor.search(true)
 		e.preventDefault()
 	}
