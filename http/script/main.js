@@ -4425,7 +4425,7 @@ LW.app.add_actions = function() {
 		var link = $(this).attr('link')
 		if (link) {
 			$(this).click(function() {
-				page(link)
+				LW.page(link)
 			})
 		}
 	})
