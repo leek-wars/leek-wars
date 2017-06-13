@@ -2860,11 +2860,13 @@ textarea.autogrow {
 	}
 }
 
+body.app #center {
+	margin: 0;
+	padding: 0;
+}
+
 @media screen and (max-width: 999px) {
 
-	#center {
-		margin: 0;
-	}
 	#header .header-button {
 		padding: 0;
 	}
