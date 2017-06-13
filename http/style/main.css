@@ -2902,12 +2902,9 @@ textarea.autogrow {
 	}
 }
 
-@media screen and (max-width: 799px) {
-
-	.column2, .column3, .column4, .column5,
-	.column6, .column7, .column8, .column9, .column10 {
-		width: 100%;
-	}
+body.app .column2, body.app .column3, body.app .column4, body.app .column5,
+body.app .column6, body.app .column7, body.app .column8, body.app .column9, body.app .column10 {
+	width: 100%;
 }
 
 @media screen and (max-width: 599px) {
