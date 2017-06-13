@@ -6,6 +6,9 @@
 	padding: 20px;
 	font-size: 17px;
 }
+body.app #bank-description {
+	padding: 5px 0;
+}
 
 #bank-page #habs-info {
 	display: inline-block;
@@ -25,6 +28,9 @@
 	padding: 10px;
 	margin: 20px;
 	min-height: 90px;
+}
+body.app #bank-page .pack {
+	margin: 10px 0;
 }
 
 #bank-page .pack > img {
