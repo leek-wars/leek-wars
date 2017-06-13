@@ -82,6 +82,7 @@ tournaments					Tournois
 tournament_time				Tournoi d'éleveur tous jours de 18h à 20h
 trophies					Trophées
 trophy_obtained				Obtenu %s
+n_trophies					%s trophées
 unregister					Se désinscrire
 unregister_impossible_moderator		Impossible de supprimer un modérateur.
 unregister_impossible_team			Vous êtes le propriétaire d'une équipe, vous devez d'abord la dissoudre avant de supprimer votre compte.

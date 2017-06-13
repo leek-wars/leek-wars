@@ -76,7 +76,7 @@ function init(farmer, $scope, $page) {
 		})
 	})
 
-	LW.setTitle(farmer.name)
+	LW.setTitle(farmer.name, _.lang.get('farmer', 'n_trophies', farmer.trophies))
 
 	LW.pages.farmer.trophies()
 	LW.pages.farmer.infos()
