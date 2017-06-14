@@ -45,19 +45,18 @@ LW.pages.tournament.display = function() {
 }
 
 LW.pages.tournament.nextTime = function() {
-
+	var self = this
 	var update = function() {
-
 		var time = _tournament.next_round - LW.time.get()
-
 		if (time < 0) {
-
-			$('#next-round-time').text(_.lang.get('tournament', 'next_round_in', _.lang.get('tournament', 'few_seconds')))
-
+			var text = _.lang.get('tournament', 'next_round_in', _.lang.get('tournament', 'few_seconds'))
+			$('#next-round-time').text(text)
+			LW.setSubTitle(text)
 		} else {
-
-			$('#next-round-time').text(_.lang.get('tournament', 'next_round_in', FormatTime(time)))
-			setTimeout(update, 1000)
+			var text = _.lang.get('tournament', 'next_round_in', FormatTime(time))
+			$('#next-round-time').text(text)
+			LW.setSubTitle(text)
+			self.timer = setTimeout(update, 1000)
 		}
 	}
 
