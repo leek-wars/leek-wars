@@ -37,15 +37,17 @@ LW.pages.tournament.leave = function() {
 }
 
 LW.pages.tournament.display = function() {
-
 	$('#tournament a').each(function() {
-
 		if ($(this).attr('xlink:href') == 'null' || $(this).attr('xlink:href') == '') {
-
 			$(this).find('rect').css('fill', '#f2f2f2').addClass('no-fight')
 			$(this).find('image').attr('id', '').addClass('no-fight')
 			$(this).find('image, rect').unwrap()
 		}
+	})
+	$('#tournament a').click(function(e) {
+		e.preventDefault()
+		var link = this.getAttribute('xlink:href')
+		LW.page(link)
 	})
 }
 
