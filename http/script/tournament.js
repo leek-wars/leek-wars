@@ -31,6 +31,10 @@ LW.pages.tournament.init = function(params, $scope, $page) {
 	})
 }
 
+LW.pages.tournament.leave = function() {
+	clearTimeout(this.timer)
+}
+
 LW.pages.tournament.display = function() {
 
 	$('#tournament a').each(function() {
