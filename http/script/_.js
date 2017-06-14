@@ -685,6 +685,10 @@ _.popup.new = function(view, data, width, direct, options) {
 		LW.handleHTML('.popup.' + name, 'page')
 	}
 
+	this.remove = function() {
+		this.wrapper.remove()
+	}
+
 	this.move = function(x, y) {
 		if (!this.options.draggable) return null
 		self.view.css('left', Math.min(Math.max(0, x), $(window).width() - 40))
