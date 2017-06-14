@@ -518,11 +518,15 @@ body.app.menu-expanded #app-bar .actions .action {
 body.app #app-bar .action {
 	display: inline-block;
 	line-height: normal;
-	margin: 13px 14px;
+	vertical-align: top;
+}
+body.app #app-bar .action i {
+	padding: 15px 14px;
 }
 body.app #app-bar .action img {
 	width: 26px;
 	opacity: 1;
+	padding: 15px 14px;
 }
 body.app #app-bar.content .action.list:not(.content),
 body.app #app-bar.list .action.content:not(.list),
