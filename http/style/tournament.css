@@ -4,6 +4,9 @@
 body.app #tournament-page #tournament.zoomed {
 	width: auto;
 }
+body.app #tournament-page .page-header {
+	display: none;
+}
 
 #tournament-page #join {
 	float: right;
