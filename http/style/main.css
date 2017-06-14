@@ -533,6 +533,9 @@ body.app #app-bar.list .action.content:not(.list),
 body.app #app-bar .action.hidden {
 	display: none;
 }
+body.app #app-bar .action.visible {
+	display: inline-block;
+}
 
 body.app.connected #page .page-bar h1 {
 	display: none;
@@ -548,8 +551,8 @@ body.app .notifications-button img, body.app .messages-button img {
 	margin: 0;
 }
 body.app #app-bar .counter {
-	top: -7px;
-	right: -9px;
+	top: 7px;
+	right: 5px;
 	padding-left: 3px;
 	padding-right: 3px;
 	background: #ff6f00
