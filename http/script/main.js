@@ -1100,10 +1100,12 @@ LW.resize_notifs_popups = function() {
 
 	var window_width = $(window).width()
 	var width = Math.min(400, window_width)
-	var offset = 190
+	var offset_x = 190
+	var offset_y = 40
 	if (_.is_mobile()) {
 		width = window_width
-		offset = 196
+		offset_x = 209
+		offset_y = 56
 	}
 
 	// Messages popup
@@ -1111,13 +1113,13 @@ LW.resize_notifs_popups = function() {
 	if (button.length) {
 		var left = button.offset().left + 14 - $('#messages-popup').width() / 2
 		if (left > window_width - width) {
-			$('#messages-arrow').css('left', offset + (left - window_width + width))
+			$('#messages-arrow').css('left', offset_x + (left - window_width + width))
 			left = window_width - width
 		} else {
-			$('#messages-arrow').css('left', offset)
+			$('#messages-arrow').css('left', offset_x)
 		}
 		$('#messages-popup').css('left', left)
-		$('#messages-popup').css('top', button.offset().top + 40)
+		$('#messages-popup').css('top', button.offset().top + offset_y)
 		$('#messages-popup').css('width', width)
 	}
 
@@ -1126,13 +1128,13 @@ LW.resize_notifs_popups = function() {
 	if (button.length) {
 		var left = button.offset().left + 14 - $('#notifications-popup').width() / 2
 		if (left > window_width - width) {
-			$('#notifs-arrow').css('left', offset + (left - window_width + width))
+			$('#notifs-arrow').css('left', offset_x + (left - window_width + width))
 			left = window_width - width
 		} else {
-			$('#notifs-arrow').css('left', offset)
+			$('#notifs-arrow').css('left', offset_x)
 		}
 		$('#notifications-popup').css('left', left)
-		$('#notifications-popup').css('top', button.offset().top + 40)
+		$('#notifications-popup').css('top', button.offset().top + offset_y)
 		$('#notifications-popup').css('width', width)
 	}
 }
@@ -2081,9 +2083,9 @@ LW.updateCounters = function(user_click) {
 		.text(LW.notifications.unread)
 	if (_.is_mobile()) {
 		if (LW.notifications.unread > 0) {
-			$('#app-bar .notifications-button').removeClass('hidden')
+			$('#app-bar .notifications-button').removeClass('hidden').addClass('visible')
 		} else if (!$('#notifications-popup').is(':visible') && !user_click) {
-			$('#app-bar .notifications-button').addClass('hidden')
+			$('#app-bar .notifications-button').removeClass('visible').addClass('hidden')
 		}
 	}
 
@@ -2093,9 +2095,9 @@ LW.updateCounters = function(user_click) {
 		.text(LW.messages.unread)
 	if (_.is_mobile()) {
 		if (LW.messages.unread > 0) {
-			$('#app-bar .messages-button').removeClass('hidden')
+			$('#app-bar .messages-button').removeClass('hidden').addClass('visible')
 		} else if (!$('#messages-popup').is(':visible') && !user_click) {
-			$('#app-bar .messages-button').addClass('hidden')
+			$('#app-bar .messages-button').removeClass('visible').addClass('hidden')
 		}
 	}
 }
