@@ -1786,17 +1786,20 @@ LW.setPageContent = function(page, content) {
 
 LW.handleHTML = function(element, location) {
 
-	$(element + ' [autostopscroll]').bind('mousewheel', function(e, d) {
+	if (!_.is_mobile()) {
+		// No autostopscroll in mobile (useless)
+		$(element + ' [autostopscroll]').bind('mousewheel', function(e, d) {
 
-		var mode = $(this).attr('autostopscroll')
-		var top = mode == 'top' || mode == ''
-		var bottom = mode == 'bottom' || mode == ''
+			var mode = $(this).attr('autostopscroll')
+			var top = mode == 'top' || mode == ''
+			var bottom = mode == 'bottom' || mode == ''
 
-		if ((top && d > 0 && this.scrollTop == 0) || (bottom && d < 0
-			&& Math.abs(this.scrollTop - (this.scrollHeight - $(this).outerHeight())) < 1)) {
-			e.preventDefault()
-		}
-	})
+			if ((top && d > 0 && this.scrollTop == 0) || (bottom && d < 0
+				&& Math.abs(this.scrollTop - (this.scrollHeight - $(this).outerHeight())) < 1)) {
+				e.preventDefault()
+			}
+		})
+	}
 
 	$(element + ' .tooltip').each(function() {
 
