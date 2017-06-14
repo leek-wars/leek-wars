@@ -20,7 +20,10 @@ LW.pages.tournament.init = function(params, $scope, $page) {
 		$scope.semifinals = data.tournament.rounds.semifinals
 		$scope.finals = data.tournament.rounds.finals
 		$scope.tournament = data.tournament
+		$scope.title = _.lang.get('tournament', data.tournament.type, _.format.date(data.tournament.date))
 		$page.render()
+
+		LW.setTitle($scope.title)
 
 		LW.pages.tournament.display()
 		LW.pages.tournament.nextTime()
