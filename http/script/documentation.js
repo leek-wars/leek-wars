@@ -41,7 +41,7 @@ LW.pages.documentation.init = function(params, $scope, $page) {
 		LW.setTitle(_.lang.get('documentation', 'title'))
 
 		if (urlItem != null) {
-			LW.pages.documentation.selectItem(urlItem)
+			LW.pages.documentation.update({item: urlItem})
 		} else {
 			if (_.is_mobile()) {
 				LW.app.split_show_list()
@@ -112,23 +112,34 @@ LW.pages.documentation.init = function(params, $scope, $page) {
 
 LW.pages.documentation.update = function(params) {
 	if (params && 'item' in params) {
+		LW.app.split_show_content()
 		LW.pages.documentation.selectItem(params.item)
+		LW.setTitle(params.item)
+	} else {
+		LW.app.split_show_list()
+		LW.setTitle(_.lang.get('documentation', 'title'))
 	}
+}
+
+LW.pages.documentation.back = function() {
+	LW.page('/help/documentation')
 }
 
 LW.pages.documentation.resize = function() {
 	if (!_.is_mobile()) {
 		$('#items-list').height($(window).height() - 190)
 		$('#items').height($(window).height() - 190)
+	} else {
+		$('#items').height($(window).height() - $('#app-bar').height() - $('#page .page-header').height())
 	}
 }
 
 LW.pages.documentation.selectItem = function(item) {
-	LW.app.split_show_content()
 	var element = $('#items .item[item=' + item.toLowerCase() + ']:visible')
 	if (element.length) {
-		var pos = element.position().top + $('#items').scrollTop();
-		$('#items').scrollTop(pos - 80);
+		var pos = element.position().top + $('#items').scrollTop()
+		var offset = _.is_mobile() ? 100 : 80
+		$('#items').scrollTop(pos - offset)
 	}
 }
 
@@ -161,6 +172,7 @@ LW.pages.documentation.filter = function() {
 			$('#items-list .item[item=' + $(this).attr('item') + ']').show();
 		}
 	});
+	$('#items').scrollTop(0)
 }
 
 String.prototype.regexIndexOf = function(regex, startpos) {
