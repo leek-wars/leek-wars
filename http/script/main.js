@@ -4420,8 +4420,7 @@ LW.app.add_actions = function() {
 		if (icon) {
 			$(this).html('<i class="icon material-icons">' + $(this).attr('icon') + '</i>')
 		} else {
-			var src = $(this).find('img').attr('src')
-			$(this).html('<img class="icon" src="' + src + '"/>')
+			$(this).find('span').hide()
 		}
 		var link = $(this).attr('link')
 		if (link) {
