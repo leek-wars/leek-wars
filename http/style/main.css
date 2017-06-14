@@ -660,6 +660,12 @@ body.app #menu .section {
 	line-height: 46px;
 	background: transparent;
 }
+#menu .section.about {
+	display: none;
+}
+body.app #menu .section.about {
+	display: block;
+}
 
 body.app .column3, body.app .column9,
 body.app .split-list, body.app .split-content {
