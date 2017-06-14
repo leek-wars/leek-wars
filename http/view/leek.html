@@ -417,11 +417,14 @@
 			</div>
 
 			<div id='leek-ai' class='content'>
-
 				@if (leek.ai)
-					<a href='/editor/{leek.ai.id}'>
+					@if (my_leek)
+						<a href='/editor/{leek.ai.id}'>
+					@end
 						@include('ai', leek.ai)
-					</a>
+					@if (my_leek)
+						</a>
+					@end
 				@else
 					{#no_ai}
 				@end
