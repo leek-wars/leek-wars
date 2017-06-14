@@ -144,38 +144,34 @@ LW.pages.documentation.selectItem = function(item) {
 }
 
 function isNameChar(char) {
-	return /[a-zA-Z0-9_]/.test(char);
+	return /[a-zA-Z0-9_]/.test(char)
 }
 
 String.prototype.insert = function( idx, s ) {
-    return (this.slice(0,idx) + s + this.slice(idx));
+    return (this.slice(0,idx) + s + this.slice(idx))
 };
 
 LW.pages.documentation.filter = function() {
 
-	$('#items .item').hide();
-	$('#items-list .item').hide();
+	$('#items .item').hide()
+	$('#items-list .item').hide()
 
 	$('#items .item').each(function() {
-
 		var found = false;
-
 		$(this).find('.searchable').each(function() {
-
 			if ($(this).text().toLowerCase().indexOf(_query) != -1) {
-				found = true;
+				found = true
 			}
-		});
-
+		})
 		if (found) {
-			$(this).show();
-			$('#items-list .item[item=' + $(this).attr('item') + ']').show();
+			$(this).show()
+			$('#items-list .item[item=' + $(this).attr('item') + ']').show()
 		}
-	});
+	})
 	$('#items').scrollTop(0)
 }
 
 String.prototype.regexIndexOf = function(regex, startpos) {
-    var indexOf = this.substring(startpos || 0).search(regex);
-    return (indexOf >= 0) ? (indexOf + (startpos || 0)) : indexOf;
+    var indexOf = this.substring(startpos || 0).search(regex)
+    return (indexOf >= 0) ? (indexOf + (startpos || 0)) : indexOf
 }
