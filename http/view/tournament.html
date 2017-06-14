@@ -509,10 +509,15 @@
 		@if (winner.name)
 			<div id='tt_winner' class='tooltip fluid top'>{winner.name}</div>
 		@end
+	</div>
+</div>
 
+<div class='panel'>
+	<div class='header'>
+		<h2>{#comments}</h2>
+	</div>
+	<div class='content'>
 		<div id='comments-wrapper'>
-			<h2>{#comments}</h2>
-
 			<div id='comments'>
 				@foreach (comment in tournament.comments)
 					@include('main.comment', comment)
