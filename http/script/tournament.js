@@ -59,8 +59,7 @@ LW.pages.tournament.nextTime = function() {
 			self.timer = setTimeout(update, 1000)
 		}
 	}
-
-	if (_tournament.next_round > 0) {
+	if (!_tournament.finished && _tournament.next_round > 0) {
 		update()
 	}
 }
