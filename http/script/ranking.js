@@ -88,9 +88,14 @@ LW.pages.ranking.init = function(params, $scope, $page) {
 	}
 }
 
+LW.pages.ranking.leave = function() {
+	this.searchPopup.remove()
+}
+
 LW.pages.ranking.search = function() {
 
-	var searchPopup = new _.popup.new('ranking.search_popup')
+	this.searchPopup = new _.popup.new('ranking.search_popup')
+	var searchPopup = this.searchPopup
 	searchPopup.setDismissable(true)
 
 	var getDescription = function(type, level) {
@@ -116,11 +121,8 @@ LW.pages.ranking.search = function() {
 			search_teams: _searchTeams
 
 		}, function(data) {
-
 			$('#search-results').html("")
-
 			for (var r in data.results) {
-
 				var result = "<a href='/" + data.results[r].type + "/" + data.results[r].id + "'>"
 				result += "<div class='result'>"
 				result += "<div class='image'><img src='" + data.results[r].image + "' /></div>"
