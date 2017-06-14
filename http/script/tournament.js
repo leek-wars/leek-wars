@@ -28,6 +28,7 @@ LW.pages.tournament.init = function(params, $scope, $page) {
 		LW.pages.tournament.display()
 		LW.pages.tournament.nextTime()
 		LW.pages.tournament.comments()
+		LW.pages.tournament.zoom()
 	})
 }
 
@@ -83,5 +84,26 @@ LW.pages.tournament.comments = function() {
 	})
 	$('#comments .comment .text').each(function() {
 		$(this).html(LW.smiley(_.protect($(this).text())))
+	})
+}
+
+LW.pages.tournament.zoom = function() {
+	$('#app-bar .action.zoom').click(function() {
+		var t = $('#tournament')
+		if (!t.hasClass('zoomed')) {
+			if ($(window).height() > $(window).width()) {
+				t.css('height', $(window).height() - $('#app-bar').height() - 20)
+				$('#tournament-page .content').css('overflow-x', 'auto')
+			}
+			t.addClass('zoomed')
+			$(this).find('.icon').text('zoom_out')
+		} else {
+			if ($(window).height() > $(window).width()) {
+				t.css('height', 'auto')
+				$('#tournament-page .content').css('overflow-x', 'hidden')
+			}
+			t.removeClass('zoomed')
+			$(this).find('.icon').text('zoom_in')
+		}
 	})
 }
