@@ -127,9 +127,13 @@ LW.pages.ranking.search = function() {
 				result += "<div class='name'>" + _.protect(data.results[r].name) + "</div>"
 				result += "<div class='level'>" + getDescription(data.results[r].type, data.results[r].level) + "</div>"
 				result += "</div></a>"
-
 				$('#search-results').append(result)
 			}
+			$('#search-results a').click(function(e) {
+				e.preventDefault()
+				LW.page($(this).attr('href'))
+				searchPopup.dismiss()
+			})
 		})
 	}
 
