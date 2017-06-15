@@ -644,7 +644,7 @@ $(document).ready(function() {
 				consolePopup.dismiss()
 			})
 			var consoleShown = false
-			var console = new ConsoleController(consolePopup.find('.console'))
+			var console = new ConsoleController(consolePopup.find('.leekscript-console'))
 			$("#console").click(function(e) {
 				consolePopup.show(e)
 				if (!consoleShown) {
