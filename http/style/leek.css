@@ -501,6 +501,21 @@
 	max-width: 125px;
 }
 
+body.app #leek-page .hat-button {
+	display: none;
+}
+body.app .popup.hat_popup #farmer-hats {
+	text-align: center;
+}
+body.app .popup.hat_popup .hat {
+	width: 100px;
+	height: 70px;
+	margin: 6px;
+}
+body.app .popup.hat_popup .hat img {
+	max-height: 70px;
+	max-width: 100px;
+}
 /*
  * Registers
  */
