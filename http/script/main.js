@@ -948,7 +948,7 @@ LW.connect = function(farmer, callback) {
 		$('.farmer-name').text(LW.farmer.name)
 		$('.farmer-habs').html(_.format.number(LW.farmer.habs))
 		$('.farmer-crystals').html(_.format.number(LW.farmer.crystals))
-		$('.farmer-fights').text(LW.farmer.fights)
+		$('.farmer-fights').html(_.format.number(LW.farmer.fights))
 
 		// Leek tabs
 		var leeks = LW.farmer.leeks
