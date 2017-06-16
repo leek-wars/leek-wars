@@ -75,33 +75,39 @@ self.addEventListener('fetch', function(event) {
 
 self.addEventListener('push', event => {
 
-	console.log(event)
+	console.log("Push event", event)
+
 	var icon = null
 	var title = "Notification de Leek Wars"
 	var message = "Cliquer pour voir la notification"
+	var data = null
 
 	if (event.data) {
 		var data = event.data.json()
-		console.log(data)
 		icon = data.image
 		title = data.title
 		message = data.message
+		data = data
 	}
 
 	event.waitUntil(
 		self.registration.showNotification(title, {
 			body: message,
 			icon: icon,
-			tag: 'request'
+			tag: 'request',
+			data: data
 		})
 	);
 });
 
 self.addEventListener('notificationclick', function(event) {
-    console.log('Notification click: tag ', event.notification.tag);
+    console.log('Notification click', event.notification);
     event.notification.close();
-    var url = 'https://leekwars.com';
-    event.waitUntil(
+	var url = 'https://leekwars.com';
+	if (event.notification.data) {
+		url = event.notification.data.url
+	}
+	event.waitUntil(
         clients.matchAll({
             type: 'window'
         })
