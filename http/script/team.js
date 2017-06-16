@@ -292,6 +292,7 @@ LW.pages.team.createComposition = function() {
 					team_captain: self.scope.team_captain
 				}
 				self.team.compositions.push(compo)
+				self.team.compositions_by_id[compo.id] = compo
 				$('#team-page .compos').append(_.view.render('team.composition', {compo: compo}))
 				LW.pages.team.add_composition_events($('#team-page .compos .compo').last())
 				popup.dismiss()
