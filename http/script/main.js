@@ -64,7 +64,12 @@ var LW = {
  * Start service worker
  */
 if ('serviceWorker' in navigator) {
-	 navigator.serviceWorker.register('/service-worker.js?' + LW.subVersion, {scope: '/'})
+	navigator.serviceWorker.register('/service-worker.js?' + LW.subVersion, {scope: '/'}).then(function(registration) {
+		LW.service_worker = registration
+		if (LW.updated) {
+			LW.service_worker.update()
+		}
+	})
 }
 
 // WebSocket on Firefox
@@ -1044,6 +1049,14 @@ LW.clear = function() {
 		if (prefixesToRemove.indexOf(key.split('/')[0]) != -1) {
 			localStorage.removeItem(key)
 		}
+	}
+	LW.update()
+}
+
+LW.update = function() {
+	// Update service worker
+	if (LW.service_worker) {
+		LW.service_worker.update()
 	}
 }
 
