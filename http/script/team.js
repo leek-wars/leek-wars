@@ -60,6 +60,8 @@ LW.pages.team.init = function(params, $scope, $page) {
 		} else {
 			for (var l in team.leeks) leeks[team.leeks[l].id] = team.leeks[l]
 		}
+		team.compositions_by_id = {}
+		for (var c in team.compositions) team.compositions_by_id[team.compositions[c].id] = team.compositions[c]
 
 		for (var t in team.tournaments) {
 			team.tournaments[t].name = _.lang.get('team', 'tournament_of',
@@ -561,8 +563,10 @@ LW.pages.team.add_tournaments_events = function(compo) {
 
 LW.pages.team.add_composition_delete_events = function(elem) {
 
-	elem.find('.delete-compo').click(function() {
+	var compo = this.team.compositions_by_id[elem.attr('compo')]
+	var popup = new _.popup.new('team.delete_compo_popup', {compo: compo}, 500)
 
+	popup.find('.delete-compo').click(function() {
 		var compo = elem.attr('compo')
 
 		_.post('team/delete-composition', {composition_id: compo}, function(data) {
@@ -580,10 +584,15 @@ LW.pages.team.add_composition_delete_events = function(elem) {
 				if ($('.compo').length == 1) { // il reste plus que la compo des non engagés
 					$('.no-compos').show()
 				}
+				popup.dismiss()
 			} else {
 				_.toast(data.error)
 			}
 		})
+	})
+
+	elem.find('.delete-compo').click(function(e) {
+		popup.show(e)
 	})
 }
 
