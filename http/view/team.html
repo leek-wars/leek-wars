@@ -235,63 +235,11 @@
 
 	<div class='no-compos'>{#no_compositions}</div>
 
-	@foreach (c : compo in team.compositions)
-
-		<div class='panel compo @if (compo.tournament.registered) in-tournament @end' compo='{compo.id}'>
-
-			<div class='header'>
-
-				<h2>{compo.name}</h2>
-
-				<div class='talent'>
-					<span>{#level_n, compo.total_level}</span>
-					<img src='{{static}}image/icon/talent.png'>
-					<span>{compo.talent}</span>
-				</div>
-
-				<div class='right'>
-
-					@if (compo.tournament.current)
-						<a class='view-tournament' href='/tournament/{compo.tournament.current}'>
-							<div class='button flat'>
-								{#see_tournament}
-							</div>
-						</a>
-					@end
-					@if (team_captain)
-						<div class='button flat' id='compo-tournament-{c}'>
-							<img src='{{static}}image/icon/trophy.png'>
-							<span class='register-tournament' >{#register_tournament}</span>
-							<span class='unregister-tournament' >{#unregister}</span>
-						</div>
-						<div class='tooltip' id='tt_compo-tournament-{c}'>{#tournament_time}</div>
-					@end
-					@if (team_captain)
-						<div class='delete-compo button flat' compo='{compo.id}'>❌</div>
-					@end
-				</div>
-			</div>
-
-			<div class='content leeks'>
-
-				<div class='empty'>{#empty_compo}</div>
-
-				@foreach (leek in compo.leeks)
-
-					<a href='/leek/{leek.id}'>
-						<div class='leek' leek='{leek.id}' draggable='true'>
-							<span class='image'></span><br>
-							<div class='name'>{leek.name} ({leek.level})</div><br>
-							<div class='fights'>
-								<img src='{{static}}image/icon/grey/garden.png' />
-								<span>{leek.team_fights}</span>
-							</div>
-						</div>
-					</a>
-				@end
-			</div>
-		</div>
-	@end
+	<div class='compos'>
+		@foreach (c : compo in team.compositions)
+			@includeobj('team.composition', compo)
+		@end
+	</div>
 
 	<div class='panel compo' compo='-1'>
 
@@ -397,6 +345,62 @@
 		@end
 	</div>
 </div>
+
+@view (composition)
+	<div class='panel compo @if (compo.tournament.registered) in-tournament @end' compo='{compo.id}'>
+
+		<div class='header'>
+
+			<h2>{compo.name}</h2>
+
+			<div class='talent'>
+				<span>{#level_n, compo.total_level}</span>
+				<img src='{{static}}image/icon/talent.png'>
+				<span>{compo.talent}</span>
+			</div>
+
+			<div class='right'>
+				@if (compo.tournament.current)
+					<a class='view-tournament' href='/tournament/{compo.tournament.current}'>
+						<div class='button flat'>
+							{#see_tournament}
+						</div>
+					</a>
+				@end
+				@if (compo.team_captain)
+					<div class='button flat' id='compo-tournament-{c}'>
+						<img src='{{static}}image/icon/trophy.png'>
+						<span class='register-tournament' >{#register_tournament}</span>
+						<span class='unregister-tournament' >{#unregister}</span>
+					</div>
+					<div class='tooltip' id='tt_compo-tournament-{c}'>{#tournament_time}</div>
+				@end
+				@if (compo.team_captain)
+					<div class='delete-compo button flat' compo='{compo.id}'>❌</div>
+				@end
+			</div>
+		</div>
+
+		<div class='content leeks'>
+
+			<div class='empty'>{#empty_compo}</div>
+
+			@foreach (leek in compo.leeks)
+
+				<a href='/leek/{leek.id}'>
+					<div class='leek' leek='{leek.id}' draggable='true'>
+						<span class='image'></span><br>
+						<div class='name'>{leek.name} ({leek.level})</div><br>
+						<div class='fights'>
+							<img src='{{static}}image/icon/grey/garden.png' />
+							<span>{leek.team_fights}</span>
+						</div>
+					</div>
+				</a>
+			@end
+		</div>
+	</div>
+@endview
 
 @view (create_compo_popup)
 
