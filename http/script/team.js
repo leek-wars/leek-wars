@@ -270,6 +270,7 @@ LW.pages.team.candidacies = function() {
 
 LW.pages.team.createComposition = function() {
 
+	var self = this
 	var popup = new _.popup.new('team.create_compo_popup', 500)
 
 	var createCompo = function() {
@@ -278,7 +279,20 @@ LW.pages.team.createComposition = function() {
 
 		_.post('team/create-composition', {composition_name: name}, function(data) {
 			if (data.success) {
-				_.reload()
+				if (!data.id) data.id = Math.floor(Math.random() * 100000)
+				var compo = {
+					id: data.id,
+					name: name,
+					leeks: [],
+					talent: 1000,
+					total_level: 0,
+					tournament: {current: null, registered: false},
+					team_captain: self.scope.team_captain
+				}
+				self.team.compositions.push(compo)
+				$('#team-page .compos').append(_.view.render('team.composition', {c: data.id, compo: compo}))
+				LW.pages.team.add_composition_events($('#team-page .compos .compo').last())
+				popup.dismiss()
 			} else {
 				_.toast(data.error)
 			}
