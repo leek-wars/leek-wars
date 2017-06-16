@@ -34,6 +34,8 @@ notif_forum_response			Mail when someone answers in a topic you follow
 notif_tournament			Tournament
 notif_tournament_farmer_round_finished			Mail when a farmer tournament round is finished
 notif_tournament_solo_round_finished			Mail when a solo tournament round is finished
+notif_private_message		Private messages
+notif_private_message_private_message		Notification on receiving a private message
 register_mail			Congratulation %s, you are now registered on Leek Wars.
 
 Go to this page to validate your account : %s.
