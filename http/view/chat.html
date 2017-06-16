@@ -1,7 +1,14 @@
 <div class='page-header page-bar'>
-
 	<div>
 		<h1>{#title}</h1>
+	</div>
+	<div class='tabs'>
+		<a href='/forum'>
+			<div class='tab action' icon='forum' link='/forum'>
+				<img src='{{static}}image/icon/forum.png'></img>
+				<span>{#forum}</span>
+			</div>
+		</a>
 	</div>
 </div>
 
@@ -15,7 +22,7 @@
 
 		<div class='chat-new-messages'>{#main.unread_messages}</div>
 		<div class='chat-disconnected'>{#main.disconnected}</div>
-		
+
 		<div class='flex'>
 			<div id='chat-language'><img /></div>
 			<div class='chat-input'>
