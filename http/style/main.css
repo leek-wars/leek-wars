@@ -3145,7 +3145,7 @@ body.app #loader {
 	height: 94px;
 	background: rgba(0,0,0,0.1);
 	border-radius: 8px;
-	border: 1px solid #555;
+	border: 1px solid #333;
 	padding: 8px 10px;
 }
 
