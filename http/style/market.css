@@ -28,11 +28,11 @@
 	padding-bottom: 50px;
 }
 #market-page .items .item {
-	border: 2px solid #ddd;
+	border: 1px solid #ddd;
 }
 #market-page .items .item.selected {
 	background: white;
-	border: 2px solid #999;
+	border: 1px solid #999;
 }
 
 #market-page .buy-label {
