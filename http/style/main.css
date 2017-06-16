@@ -3143,7 +3143,7 @@ body.app #loader {
 	background: rgba(0,0,0,0.1);
 	border-radius: 8px;
 	border: 1px solid #555;
-	padding: 12px 20px;
+	padding: 8px 10px;
 }
 
 #loader .gear1 {
