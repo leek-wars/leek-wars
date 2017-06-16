@@ -255,7 +255,7 @@ LW.pages.garden.load_leek = function(leek_id) {
 				}, function(data) {
 					if (data.success) {
 						LW.page('/fight/' + data.fight)
-						$('#farmer-fights').text(parseInt($('#farmer-fights').text()) - 1)
+						LW.updateFights(-1)
 					}
 				})
 			})
@@ -311,7 +311,7 @@ LW.pages.garden.select_farmer = function() {
 				}, function(data) {
 					if (data.success) {
 						LW.page('/fight/' + data.fight)
-						$('#farmer-fights').text(parseInt($('#farmer-fights').text()) - 1)
+						LW.updateFights(-1)
 					}
 				})
 			})
