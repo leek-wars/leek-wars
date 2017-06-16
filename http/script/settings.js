@@ -8,7 +8,8 @@ LW.pages.settings.init = function(params, $scope, $page) {
 			fight: ['solo', 'farmer', /* 'team',*/ 'solo_challenge', 'farmer_challenge'],
 			tournament: ['solo_round_finished', 'farmer_round_finished'],
 			forum: ['response'],
-			changelog: ['changelog']
+			changelog: ['changelog'],
+			private_message: ['private_message']
 		}
 		$scope.mobile = _.is_mobile()
 		$scope.languages = _.lang.languages
