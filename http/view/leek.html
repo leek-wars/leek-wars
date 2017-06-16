@@ -29,6 +29,10 @@
 			</div>
 
 			<div id='tt_in-garden-button' class='tooltip fluid'>{#authorize_agressions}</div>
+
+			<div class='tab action app hat-button'>
+				<img src='{{static}}image/hat.png'>
+			</div>
 		@else
 			@if (LW.connected)
 				<a id='challenge' href='/garden/challenge/{leek.id}'>
@@ -47,16 +51,14 @@
 		<div class='panel'>
 			<div class='header'>
 				<h2 class='leek-farmer-div'>{#farmed_by, leek.farmer.id, leek.farmer.name}</h2>
+				<div class='right'>
+					<div class='button flat hat-button'>
+						<img src='{{static}}image/hat.png'>
+					</div>
+				</div>
 			</div>
 			<div class='content'>
-
-				<div id='leek-image' class='@if (my_leek) my-leek @end'></div>
-
-				@if (my_leek)
-					<div id='tt_leek-image' class='tooltip'>
-						{#click_to_change_hat}
-					</div>
-				@end
+				<div id='leek-image'></div>
 			</div>
 		</div>
 
