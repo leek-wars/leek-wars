@@ -3,7 +3,6 @@ var _member = false
 var _captain = false
 var _owner = false
 var _candidacySent = false
-
 var _draggedLeek = null
 var _oldCompo = null
 
@@ -94,9 +93,7 @@ LW.pages.team.init = function(params, $scope, $page) {
 		LW.pages.team.quitTeam()
 		LW.pages.team.dissolveTeam()
 		LW.pages.team.manageMembers()
-		LW.pages.team.manageCompositions()
-		LW.pages.team.deleteComposition()
-		LW.pages.team.tournaments()
+		LW.pages.team.add_compositions_events()
 		LW.pages.team.changeOwner()
 		LW.pages.team.report()
 
@@ -425,7 +422,20 @@ LW.pages.team.manageMembers = function() {
 	})
 }
 
-LW.pages.team.manageCompositions = function() {
+LW.pages.team.add_compositions_events = function() {
+	$('#team-page .compo').each(function() {
+		LW.pages.team.add_composition_events($(this))
+	})
+}
+
+LW.pages.team.add_composition_events = function(compo) {
+	LW.pages.team.add_composition_leeks_events(compo)
+	LW.pages.team.add_tournaments_events(compo)
+	LW.pages.team.add_composition_delete_events(compo)
+	compo.find('.empty').toggle(compo.find('.leek').length == 0)
+}
+
+LW.pages.team.add_composition_leeks_events = function(compo) {
 
 	function moveLeek(leek, oldCompo, newCompo) {
 
@@ -461,10 +471,8 @@ LW.pages.team.manageCompositions = function() {
 		}
 	}
 
-	$('#team-page .compo .leeks').on({
-
+	compo.find('.leeks').on({
 		dragstart: function(e) {
-
 			var leek = $(e.target).find('.image').parent()
 
 			if (leek.closest('.compo').hasClass('in-tournament')) return false
@@ -480,7 +488,6 @@ LW.pages.team.manageCompositions = function() {
 			return true
 		},
 		dragend: function(e) {
-
 			var leek = $(e.target).children('.leek')
 
 			leek.removeClass('dragging');
@@ -488,13 +495,8 @@ LW.pages.team.manageCompositions = function() {
 
 			e.preventDefault()
 			return false
-		}
-	})
-
-	$('#team-page .compo .leeks').on({
-
+		},
 		drop: function(e) {
-
 			$(this).removeClass('dashed')
 			moveLeek(_draggedLeek, _oldCompo, $(this).closest('.compo').attr('compo'))
 			_draggedLeek = -1
@@ -507,56 +509,47 @@ LW.pages.team.manageCompositions = function() {
 			return false
 		}
 	})
-
-	$('.compo').each(function() {
-		$(this).find('.empty').toggle($(this).find('.leek').length == 0)
-	})
 }
 
-LW.pages.team.tournaments = function() {
+LW.pages.team.add_tournaments_events = function(compo) {
+	var compoID = compo.attr('compo')
 
-	$('.compo').each(function() {
+	if (compo.hasClass('in-tournament')) {
+		compo.find('.register-tournament').hide()
+		compo.find('.unregister-tournament').show()
+	}
 
-		var compo = $(this)
-		var compoID = $(this).attr('compo')
+	compo.find('.register-tournament').click(function() {
 
-		if ($(this).hasClass('in-tournament')) {
-			$(this).find('.register-tournament').hide()
-			$(this).find('.unregister-tournament').show()
+		if ($(this).closest('.compo').find('.leeks .leek').length < 4) {
+			_.toast(_.lang.get('team', 'compo_must_contain_4_leeks'))
+			return
 		}
 
-		$(this).find('.register-tournament').click(function() {
+		_.post('team/register-tournament', {composition_id: compoID})
 
-			if ($(this).closest('.compo').find('.leeks .leek').length < 4) {
-				_.toast(_.lang.get('team', 'compo_must_contain_4_leeks'))
-				return
-			}
+		$(this).hide()
+		compo.find('.unregister-tournament').show()
 
-			_.post('team/register-tournament', {composition_id: compoID})
+		compo.addClass('in-tournament')
+	});
 
-			$(this).hide()
-			compo.find('.unregister-tournament').show()
+	compo.find('.unregister-tournament').click(function() {
 
-			compo.addClass('in-tournament')
-		});
+		_.post('team/unregister-tournament', {composition_id: compoID})
 
-		$(this).find('.unregister-tournament').click(function() {
+		$(this).hide()
+		compo.find('.register-tournament').show()
 
-			_.post('team/unregister-tournament', {composition_id: compoID})
-
-			$(this).hide()
-			compo.find('.register-tournament').show()
-
-			compo.removeClass('in-tournament')
-		})
+		compo.removeClass('in-tournament')
 	})
 }
 
-LW.pages.team.deleteComposition = function() {
+LW.pages.team.add_composition_delete_events = function(elem) {
 
-	$('.delete-compo').click(function() {
+	elem.find('.delete-compo').click(function() {
 
-		var compo = $(this).attr('compo')
+		var compo = elem.attr('compo')
 
 		_.post('team/delete-composition', {composition_id: compo}, function(data) {
 
