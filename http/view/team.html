@@ -417,6 +417,20 @@
 	</div>
 @endview
 
+@view (delete_compo_popup)
+
+	<div class='title'>{#delete_compo_confirm_title, compo.name}</div>
+
+	<div class='content'>
+		{#delete_compo_confirm, compo.name}
+	</div>
+
+	<div class='actions'>
+		<div class='dismiss'>{#delete_cancel}</div>
+		<div class='delete-compo red'>{#delete_confirm}</div>
+	</div>
+@endview
+
 @view (quit_team_popup)
 
 	<div class='title'>{#quit_team_confirm_title, team.name}</div>

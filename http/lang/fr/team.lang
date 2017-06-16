@@ -36,6 +36,10 @@ compositions			Compositions
 create_composition			Créer une compostion
 defeats			défaites
 delete_compo			Supprimer
+delete_confirm			Supprimer
+delete_cancel			Annuler
+delete_compo_confirm	Êtes-vous sûr de vouloir supprimer la composition <b>%s</b> ?
+delete_compo_confirm_title	Supprimer la composition <b>%s</b> ?
 disolve_cancel			Annuler
 disolve_confirm			Avant de dissoudre l'équipe, tous les autres membres doivent avoir été bannis.
 disolve_confirm_title			Dissoudre %s ?
