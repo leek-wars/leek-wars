@@ -236,7 +236,7 @@
 	<div class='no-compos'>{#no_compositions}</div>
 
 	<div class='compos'>
-		@foreach (c : compo in team.compositions)
+		@foreach (compo in team.compositions)
 			@includeobj('team.composition', compo)
 		@end
 	</div>
@@ -368,12 +368,12 @@
 					</a>
 				@end
 				@if (compo.team_captain)
-					<div class='button flat' id='compo-tournament-{c}'>
+					<div class='button flat' id='compo-tournament-{compo.id}'>
 						<img src='{{static}}image/icon/trophy.png'>
 						<span class='register-tournament' >{#register_tournament}</span>
 						<span class='unregister-tournament' >{#unregister}</span>
 					</div>
-					<div class='tooltip' id='tt_compo-tournament-{c}'>{#tournament_time}</div>
+					<div class='tooltip' id='tt_compo-tournament-{compo.id}'>{#tournament_time}</div>
 				@end
 				@if (compo.team_captain)
 					<div class='delete-compo button flat' compo='{compo.id}'>❌</div>
