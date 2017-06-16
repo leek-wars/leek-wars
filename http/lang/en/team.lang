@@ -70,7 +70,7 @@ quit_team_confirm			Do you really want to leave the team?
 quit_team_confirm_title			Leave the team %s?
 ratio			Ratio : %s
 recrutment_mode			Recruitment mode
-register_tournament			Register for the tournament
+register_tournament			Register
 remaining_xp			Remaining XP: %s
 report					Report
 see_tournament			See the tournament
