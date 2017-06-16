@@ -51,9 +51,11 @@ LW.pages.team.init = function(params, $scope, $page) {
 
 		var leeks = []
 		if (_member) {
-			for (var c in team.compositions)
+			for (var c in team.compositions) {
+				team.compositions[c].team_captain = teamCaptain
 				for (var l in team.compositions[c].leeks)
 					leeks[team.compositions[c].leeks[l].id] = team.compositions[c].leeks[l]
+			}
 			for (var l in team.unengaged_leeks)
 				leeks[team.unengaged_leeks[l].id] = team.unengaged_leeks[l]
 		} else {
