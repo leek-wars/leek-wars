@@ -555,7 +555,7 @@ LW.pages.leek.hat = function() {
 
 	var popup = new _.popup.new('leek.hat_popup', {farmer_hats: groupedFarmerHats})
 
-	$('#leek-image').click(function(e) {
+	$('.hat-button').click(function(e) {
 
 		var addHat = function(hatTemplate) {
 

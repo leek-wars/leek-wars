@@ -528,6 +528,9 @@ body.app #app-bar .action img {
 	opacity: 1;
 	padding: 15px 14px;
 }
+#page .page-header .action.app {
+	display: none;
+}
 body.app #app-bar.content .action.list:not(.content),
 body.app #app-bar.list .action.content:not(.list),
 body.app #app-bar .action.hidden {
