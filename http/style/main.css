@@ -3138,16 +3138,26 @@ body.app #loader {
 	top: 56px;
 }
 
+#loader .gearing {
+	height: 94px;
+	background: rgba(0,0,0,0.1);
+	border-radius: 8px;
+	border: 1px solid #555;
+	padding: 12px 20px;
+}
+
 #loader .gear1 {
+	width: 94px;
 	animation: spin 2.5s infinite linear;
 	-webkit-animation: spin 2.5s infinite linear;
 }
 
 #loader .gear2 {
+	width: 67.5px;
 	animation: spinoff 2.5s infinite linear;
 	-webkit-animation: spinoff 2.5s infinite linear;
-	margin-left: -13.5px;
-	margin-bottom: 20px;
+	margin-left: -9.8px;
+	margin-bottom: 15px;
 }
 @keyframes spin {
     0% {
