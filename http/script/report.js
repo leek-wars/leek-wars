@@ -280,7 +280,8 @@ LW.pages.report.generateActions = function(data, callback) {
 		var chipsNames = []
 
 		var leeks = []
-		for (var leek of data.leeks) {
+		for (var l in data.leeks) {
+			var leek = data.leeks[l]
 			leeks[leek.id] = leek
 			if (leek.summon) {
 				leek.name = _.lang.get('entity', leek.name)
