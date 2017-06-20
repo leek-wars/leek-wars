@@ -125,7 +125,7 @@ body.app #editor-page .page-bar .info {
 #ai-list .item > .label > .text[contenteditable="true"] {
 	background: white;
 	color: black;
-	padding: 0 5px;-
+	padding: 0 5px;
 }
 #ai-list .item.selected > .label {
 	background: #aaa;
@@ -542,7 +542,7 @@ body.app #ai-stats {
 	margin-left: 5px;
 	position: absolute;
 	right: 7px;
-	top: 5px:
+	top: 5px;
 }
 
 .popup.test_popup .leek-column {
