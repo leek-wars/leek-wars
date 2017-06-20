@@ -28,21 +28,31 @@ CSS_FILES := src/third_party/codemirror/codemirror.css \
 all: http/leekwars.min.js http/leekwars.min.css
 
 http/leekwars.min.js: http/bundle.min.js http/libs.min.js
+	@echo "Merge JavaScript bundles..."
+	@echo "==========================="
 	cat http/libs.min.js http/bundle.min.js > http/leekwars.min.js
 
 serve: bundle
 	python3 leekwars.py
 
 http/bundle.min.js: $(JS_FILES)
+	@echo "Minify JavaScript..."
+	@echo "===================="
 	uglifyjs $(JS_FILES) -o http/bundle.min.js -c -m --source-map root="http://leekwars.com/",url=bundle.min.js.map
 
 http/libs.min.js: $(LIB_FILES)
+	@echo "Minify JavaScript libraries..."
+	@echo "=============================="
 	uglifyjs $(LIB_FILES) -o http/libs.min.js -c -m
 
 http/leekwars.min.css: $(CSS_FILES)
+	@echo "Minify CSS..."
+	@echo "============="
 	cat $(CSS_FILES) | csso -o bundle -o http/leekwars.min.css --stat
 
 clean:
+	@echo "Clean project..."
+	@echo "================"
 	rm -f http/bundle.min.js
 	rm -f http/bundle.min.js.map
 	rm -f http/libs.min.js
