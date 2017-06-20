@@ -25,8 +25,9 @@ CSS_FILES := src/third_party/codemirror/codemirror.css \
 			 src/third_party/katex/katex.min.css \
 			 src/style/*.css
 
+all: http/leekwars.min.js http/leekwars.min.css
 
-bundle: http/bundle.min.js http/libs.min.js http/leekwars.min.css
+http/leekwars.min.js: http/bundle.min.js http/libs.min.js
 	cat http/libs.min.js http/bundle.min.js > http/leekwars.min.js
 
 serve: bundle
