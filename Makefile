@@ -1,29 +1,29 @@
-CLOC_EXCLUDED := .git,http/third_party,http/image,http/lang,http/sound
+CLOC_EXCLUDED := .git,src/third_party,http/image,http/lang,http/sound
 
-LIB_FILES := http/third_party/jquery.min.js \
-			 http/third_party/page.js \
-			 http/third_party/mousewheel.js \
-			 http/third_party/codemirror/codemirror.js \
-			 http/third_party/codemirror/matchbrackets.js \
-			 http/third_party/codemirror/match-highlighter.js \
-			 http/third_party/jsbeautifier/beautify.js \
-			 http/third_party/mousewheel.js \
-			 http/third_party/twemoji/twemoji.js \
-			 http/third_party/chartist/chartist.min.js \
-			 http/third_party/katex/katex.min.js
+LIB_FILES := src/third_party/jquery.min.js \
+			 src/third_party/page.js \
+			 src/third_party/mousewheel.js \
+			 src/third_party/codemirror/codemirror.js \
+			 src/third_party/codemirror/matchbrackets.js \
+			 src/third_party/codemirror/match-highlighter.js \
+			 src/third_party/jsbeautifier/beautify.js \
+			 src/third_party/mousewheel.js \
+			 src/third_party/twemoji/twemoji.js \
+			 src/third_party/chartist/chartist.min.js \
+			 src/third_party/katex/katex.min.js
 
-JS_FILES := http/script/main.js \
-			http/third_party/codemirror/leekscript.js \
-			http/third_party/codemirror/runmode.js \
-			http/script/*.js \
-			http/script/game/entity.js \
-			http/script/game/map/*.js \
-			http/script/game/*.js
+JS_FILES := src/script/main.js \
+			src/third_party/codemirror/leekscript.js \
+			src/third_party/codemirror/runmode.js \
+			src/script/*.js \
+			src/script/game/entity.js \
+			src/script/game/map/*.js \
+			src/script/game/*.js
 
-CSS_FILES := http/third_party/codemirror/codemirror.css \
-			 http/third_party/chartist/chartist.css \
-			 http/third_party/katex/katex.min.css \
-			 http/style/*.css
+CSS_FILES := src/third_party/codemirror/codemirror.css \
+			 src/third_party/chartist/chartist.css \
+			 src/third_party/katex/katex.min.css \
+			 src/style/*.css
 
 
 bundle: http/bundle.min.js http/libs.min.js http/leekwars.min.css
