@@ -3,4 +3,7 @@ http/monitor.php
 http/htaccess
 http/getimagesize.php
 http/*.php
+http/*.min.css
+http/*.min.js
+http/*.map
 .idea/
