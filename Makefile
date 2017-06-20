@@ -25,11 +25,12 @@ CSS_FILES := http/third_party/codemirror/codemirror.css \
 			 http/third_party/katex/katex.min.css \
 			 http/style/*.css
 
-serve: bundle
-	python3 leekwars.py
 
 bundle: http/bundle.min.js http/libs.min.js http/leekwars.min.css
 	cat http/libs.min.js http/bundle.min.js > http/leekwars.min.js
+
+serve: bundle
+	python3 leekwars.py
 
 http/bundle.min.js: $(JS_FILES)
 	uglifyjs $(JS_FILES) -o http/bundle.min.js -c -m --source-map root="http://leekwars.com/",url=bundle.min.js.map
