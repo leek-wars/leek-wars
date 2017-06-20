@@ -365,8 +365,6 @@ LW.pages = {
 		langs: ['farmer']
 	},
 	leek: {
-		scripts: ['https://cdnjs.cloudflare.com/ajax/libs/chartist/0.10.1/chartist.min.js'],
-		styles: ['item_preview.css', 'https://cdnjs.cloudflare.com/ajax/libs/chartist/0.10.1/chartist.min.css'],
 		langs: ['chip', 'weapon', 'hat', 'report', 'moderation']
 	},
 	new_leek: {
@@ -376,71 +374,21 @@ LW.pages = {
 		langs: ['report', 'country', 'moderation']
 	},
 	team: {
-		langs: ['report', 'moderation'],
-		styles: ['chat.css']
+		langs: ['report', 'moderation']
 	},
 	editor: {
 		cache: true,
-		scripts: [
-			['third_party/codemirror/', 'codemirror.js'],
-			['third_party/codemirror/', 'leekscript.js'],
-			['third_party/codemirror/', 'matchbrackets.js'],
-			['third_party/codemirror/', 'match-highlighter.js'],
-			'editor_class.js',
-			['third_party/jsbeautifier/', 'beautify.js']
-		],
-		styles: [
-			['third_party/codemirror/', 'codemirror.css'],
-			['third_party/codemirror/', 'dialog.css'],
-			'code.css',
-			'item_preview.css'
-		],
 		langs: ['documentation', 'java_compilation']
 	},
 	console: {},
 	garden: {},
 	fight: {
-		langs: ['entity'],
-		scripts: [
-			'game/R.js',
-			'game/class.js',
-			'game/entity.js',
-			'game/bubble.js',
-			'game/leek.js',
-			'game/bulb.js',
-			'game/ground.js',
-			'game/game.js',
-			'game/particles.js',
-			'game/particle.js',
-			'game/obstacle.js',
-			'game/hud.js',
-			'game/infotext.js',
-			'game/map/nexus.js',
-			'game/map/factory.js',
-			'game/map/desert.js',
-			'game/map/forest.js',
-			'game/map/glacier.js',
-			'game/map/beach.js',
-			'game/weapons.js',
-			'game/chips.js',
-		],
-		styles: [
-
-		]
+		langs: ['entity']
 	},
 	report: {
-		scripts: [
-			'https://cdnjs.cloudflare.com/ajax/libs/chartist/0.10.1/chartist.min.js'
-		],
-		styles: [
-			'https://cdnjs.cloudflare.com/ajax/libs/chartist/0.10.1/chartist.min.css'
-		],
 		langs: ['fight', 'entity']
 	},
 	market: {
-		styles: [
-			'item_preview.css'
-		],
 		langs: ['leek']
 	},
 	ranking: {
@@ -449,31 +397,15 @@ LW.pages = {
 	help: {},
 	forum: {
 		connected: true,
-		styles: [
-			'chat.css'
-		],
 		langs: ['report', 'moderation']
 	},
 	forum_category: {
 		connected: true,
-		styles: [
-			'forum.css'
-		],
 		langs: ['forum']
 	},
 	forum_topic: {
 		connected: true,
-		langs: ['forum'],
-		scripts: [
-			['third_party/codemirror/', 'codemirror.js'],
-			['third_party/codemirror/', 'leekscript.js'],
-			['third_party/codemirror/', 'runmode.js']
-		],
-		styles: [
-			['third_party/codemirror/', 'codemirror.css'],
-			'code.css',
-			'forum.css'
-		]
+		langs: ['forum']
 	},
 	chat: {
 		connected: true,
@@ -488,37 +420,17 @@ LW.pages = {
 	bank_buy: {},
 	bank_validate: {},
 	tutorial: {
-		scripts: [
-			['third_party/codemirror/', 'codemirror.js'],
-			['third_party/codemirror/', 'leekscript.js'],
-			['third_party/codemirror/', 'runmode.js']
-		],
-		styles: [
-			['third_party/codemirror/', 'codemirror.css'],
-			'code.css',
-		],
 		langs: ['editor']
 	},
 	general_help: {},
-	documentation: {
-		scripts: [
-			['third_party/codemirror/', 'codemirror.js'],
-			['third_party/codemirror/', 'leekscript.js'],
-			['third_party/codemirror/', 'runmode.js']
-		],
-		styles: [
-			['third_party/codemirror/', 'codemirror.css'],
-			'code.css',
-		],
-	},
+	documentation: {},
 	trophies: {},
 	changelog: {},
 	tournament: {
 		connected: true
 	},
 	messages: {
-		connected: true,
-		styles: ['chat.css']
+		connected: true
 	},
 	notifications: {},
 	legal: {},
@@ -530,14 +442,8 @@ LW.pages = {
 	line_of_sight: {},
 	api: {},
 	translation: {
-		scripts: [
-			['third_party/', 'jquery.tablednd.0.7.min.js']
-		]
 	},
-	statistics: {
-		scripts: ['https://cdnjs.cloudflare.com/ajax/libs/chartist/0.10.1/chartist.min.js'],
-		styles: [ 'https://cdnjs.cloudflare.com/ajax/libs/chartist/0.10.1/chartist.min.css']
-	},
+	statistics: {},
 	history: {},
 
 	moderation: {
@@ -548,16 +454,7 @@ LW.pages = {
 	admin_services: {connected: true, admin: true},
 	admin_error_manager: {
 		connected: true,
-		admin: true,
-		scripts: [
-			['third_party/codemirror/', 'codemirror.js'],
-			['third_party/codemirror/', 'leekscript.js'],
-			['third_party/codemirror/', 'runmode.js']
-		],
-		styles: [
-			['third_party/codemirror/', 'codemirror.css'],
-			'code.css',
-		]
+		admin: true
 	},
 	admin_servers: {connected: true, admin: true},
 	admin_trophies: {connected: true, admin: true},
@@ -1695,44 +1592,6 @@ LW.loadPage = function(pageID, params) {
 		// Load page main langs
 		count++
 		_.lang.load(pageID, admin, ready)
-
-		// Main script
-		count++
-		_.script.load(LW.staticURL + 'script/', pageID + '.js', ready)
-
-		// Other page scripts
-		if ('scripts' in page) {
-			for (var s in page.scripts) {
-				count++
-				var file = page.scripts[s]
-				var path = LW.staticURL + 'script/'
-				if (file.indexOf('http') == 0) {
-					path = ''
-				} else if (typeof file === 'object') {
-					path = LW.staticURL + file[0]
-					file = file[1]
-				}
-				_.script.load(path, file, ready)
-			}
-		}
-
-		// Other page styles
-		if ('styles' in page) {
-			for (var s in page.styles) {
-				var file = page.styles[s]
-				var path = LW.staticURL + 'style/'
-				if (file.indexOf('http') == 0) {
-					path = ''
-				} else if (typeof file === 'object') {
-					path = LW.staticURL + file[0]
-					file = file[1]
-				}
-				_.style.load(path, file)
-			}
-		}
-
-		// Load style main page
-		_.style.load(LW.staticURL + 'style/', pageID + '.css')
 
 		// Langs
 		if ('langs' in page) {
