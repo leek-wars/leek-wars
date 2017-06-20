@@ -16,9 +16,6 @@ var _ = {
 		loading: {},
 		callbacks: {}
 	},
-	style: {
-		loaded: {}
-	},
 	lang: {
 		cache: true,
 		current: null,
@@ -801,18 +798,6 @@ _.post = function(url, data, callback, log) {
 	}
 
     _.request(url, data, callback, 'POST', log)
-}
-
-/*
- * Styles
- */
-_.style.load = function(path, file) {
-
-	if ((path + file) in _.style.loaded) return null
-
-	$('head').append('<link rel="stylesheet" href="' + path + file + (_.local ? '' : ('?' + _.version)) + '" type="text/css" />')
-
-	_.style.loaded[path + file] = true
 }
 
 /*
