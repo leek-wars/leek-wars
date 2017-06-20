@@ -1,6 +1,6 @@
 CLOC_EXCLUDED := .git,http/third_party,http/image,http/lang,http/sound
 
-LIB_FILES := http/third_party/page.js http/third_party/mousewheel.js http/third_party/codemirror/codemirror.js
+LIB_FILES := http/third_party/page.js http/third_party/mousewheel.js http/third_party/codemirror/codemirror.js http/third_party/codemirror/matchbrackets.js http/third_party/codemirror/match-highlighter.js http/third_party/jsbeautifier/beautify.js
 
 JS_FILES := http/script/main.js http/third_party/codemirror/leekscript.js http/third_party/codemirror/runmode.js http/script/*.js
 CSS_FILES := http/third_party/codemirror/codemirror.css http/style/*.css
