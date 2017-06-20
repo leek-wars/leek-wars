@@ -441,8 +441,6 @@ LW.pages = {
 	},
 	line_of_sight: {},
 	api: {},
-	translation: {
-	},
 	statistics: {},
 	history: {},
 
