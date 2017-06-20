@@ -11,11 +11,6 @@ var _ = {
 	currentTitle: '',
 	currentCounter: 0,
 	currentTag: null,
-	script: {
-		loaded: {},
-		loading: {},
-		callbacks: {}
-	},
 	lang: {
 		cache: true,
 		current: null,
@@ -798,50 +793,6 @@ _.post = function(url, data, callback, log) {
 	}
 
     _.request(url, data, callback, 'POST', log)
-}
-
-/*
- * Scripts
- */
-_.script.load = function(path, file, callback) {
-
-	var url = path + file
-
-	if (url in _.script.loaded) {
-		callback()
-		return null
-	}
-
-	if (!_.script.loading[url]) {
-		_.script.callbacks[url] = []
-	}
-
-	if (typeof(callback) === 'function') {
-		_.script.callbacks[url].push(callback)
-	}
-
-	if (!_.script.loading[url]) {
-
-		_.script.loading[url] = true
-
-		var script = document.createElement('script')
-		script.src = url + (_.local ? '' : ('?' + _.version))
-		script.async = false
-
-		script.onload = function() {
-			_.script.loaded[url] = true
-			_.script.loading[url] = false
-			_.script.callbacks[url].forEach(function(c) { c() })
-			_.script.callbacks[url] = []
-		}
-		script.onerror = function() {
-			_.logW('Script load failed: ' + url)
-			_.script.loading[url] = false
-			_.script.callbacks[url].forEach(function(c) { c() })
-			_.script.callbacks[url] = []
-		}
-		document.head.appendChild(script)
-	}
 }
 
 /*
