@@ -925,7 +925,7 @@ body.notifs-results .notification.draw:before {
 }
 
 #messages .message.unseen,
-#messages-popup .message.unseen,
+#messages-popup .message.unseen
 {
 	background-color: #9AE59A;
 }
@@ -2848,7 +2848,7 @@ textarea.autogrow {
 		margin-right: 400px;
 	}
 	body.connected.social-collapsed #center,
-	body.connected.social-collapsed #footer,
+	body.connected.social-collapsed #footer
 	{
 		margin-right: 30px;
 	}
