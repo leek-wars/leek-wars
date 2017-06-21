@@ -226,10 +226,10 @@
 	margin-right: 20px;
 }
 #forum_topic-page .vote.up .image {
-	background-image: url('../image/vote_up.png');
+	background-image: url('image/vote_up.png');
 }
 #forum_topic-page .vote.down .image {
-	background-image: url('../image/vote_down.png');
+	background-image: url('image/vote_down.png');
 }
 
 #forum_topic-page .vote.up.active {
@@ -242,10 +242,10 @@
 }
 
 #forum_topic-page .vote.up.active .image {
-	background-image: url('../image/vote_up_white.png');
+	background-image: url('image/vote_up_white.png');
 }
 #forum_topic-page .vote.down.active .image {
-	background-image: url('../image/vote_down_white.png');
+	background-image: url('image/vote_down_white.png');
 }
 
 .tooltip.votes-tooltip .content img {

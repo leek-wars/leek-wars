@@ -100,7 +100,7 @@
 	vertical-align: top;
 	width: 20px;
 	height: 27px;
-	background-image: url('../image/add.png');
+	background-image: url('image/add.png');
 	cursor: pointer;
 	opacity: 0.5;
 	user-select: none;
@@ -111,11 +111,11 @@
 
 .popup.capital_popup .add[q='10'] {
 	width: 25px;
-	background-image: url('../image/add10.png');
+	background-image: url('image/add10.png');
 }
 .popup.capital_popup .add[q='100'] {
 	width: 30px;
-	background-image: url('../image/add100.png');
+	background-image: url('image/add100.png');
 }
 
 .popup.capital_popup .add.locked {
@@ -202,7 +202,7 @@
 }
 
 #talent:before {
-	background-image: url('../image/talent.png');
+	background-image: url('image/talent.png');
 	width: 28px;
 	height: 28px;
 	margin-right: 6px;
@@ -403,7 +403,7 @@
 }
 
 .ai-sheet {
-	background-image: url('../image/ai.png');
+	background-image: url('image/ai.png');
 	background-size: 100% 100%;
 	padding: 0 14px;
 	padding-top: 45px;
@@ -555,7 +555,7 @@ body.app .popup.hat_popup .hat img {
 
 #registers .delete {
 	padding: 0 20px;
-	background-image: url('../image/register_delete.png');
+	background-image: url('image/register_delete.png');
 	background-position: center;
 	background-repeat: no-repeat;
 	background-size: contain;
