@@ -2,7 +2,6 @@
 
 var CACHE_NAME = 'my-site-cache-v1';
 var urlsToCache = [
-	'/'
 	'/static/leekwars.min.js',
 	'/static/leekwars.min.css'
 ];
