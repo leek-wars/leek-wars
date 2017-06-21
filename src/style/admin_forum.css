@@ -7,21 +7,21 @@
 	width: 100%;
 	background: white;
 	margin: 10px;
-	
+
 }
 
 #admin #categories td, #admin #categories th {
-	padding: 5px; 
+	padding: 5px;
 	border-top: 5px solid #eee;
 	border-bottom: 5px solid #eee;
 }
 
-#admin .name { 
+#admin .name {
 	font-weight: 300;
 	font-size: 16px;
 	padding: 5px;
 }
-#admin .description { 
+#admin .description {
 	color: #777;
 	padding: 5px;
 }
@@ -29,17 +29,17 @@
 	width: 80px;
 	text-align: center;
 }
-#admin .delete { 
-	width: 80px; 
+#admin .delete {
+	width: 80px;
 	text-align: center;
 	cursor: pointer;
 }
 
 #admin .arrows {
 	width: 30px;
-	cursor: row-resize; 
-	background-image: url('../image/arrows.png');
-	background-repeat: no-repeat; 
+	cursor: row-resize;
+	background-image: url('image/arrows.png');
+	background-repeat: no-repeat;
 	background-position: center;
 }
 #admin .tDnD_whileDrag {

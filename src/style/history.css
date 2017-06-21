@@ -49,7 +49,7 @@
 }
 
 #history-page .talent:before {
-	background-image: url('../image/talent.png');
+	background-image: url('image/talent.png');
 	width: 28px;
 	height: 28px;
 	margin-right: 6px;

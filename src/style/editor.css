@@ -96,7 +96,7 @@ body.app #editor-page .page-bar .info {
 	padding-right: 5px;
 }
 #ai-list .item > .label > .edit {
-	background-image: url('../image/edit_pen.png');
+	background-image: url('image/edit_pen.png');
 	background-size: cover;
 	display: inline-block;
 	width: 12px;
@@ -106,14 +106,14 @@ body.app #editor-page .page-bar .info {
 }
 #ai-list .item.folder > .label > .icon {
 	display: inline-block;
-	background-image: url('../image/folder.png');
+	background-image: url('image/folder.png');
 	background-size: cover;
 	width: 13px;
 	height: 10px;
 	margin-right: 5px;
 }
 #ai-list .item.selected.folder > .label > .icon {
-	background-image: url('../image/folder_white.png');
+	background-image: url('image/folder_white.png');
 }
 #ai-list .item > .label:hover {
 	background: white;
@@ -271,7 +271,7 @@ body.app #ai-stats {
 	content: "";
 	height: 20px;
 	width: 100%;
-	background-image: url("../image/squiggle.gif");
+	background-image: url("image/squiggle.gif");
 	background-repeat: repeat-x;
 	background-position: left bottom;
 	vertical-align: text-top;
@@ -389,7 +389,7 @@ body.app #ai-stats {
 	top: 10px;
 	width: 15px;
 	height: 15px;
-	background-image: url("../image/delete_new.png");
+	background-image: url("image/delete_new.png");
 	background-size: cover;
 	opacity: 0.6;
 }
@@ -494,7 +494,7 @@ body.app #ai-stats {
 	cursor: pointer;
 }
 .popup.test_popup .column-scenario .leek .ai {
-	background-image: url('../image/ai.png');
+	background-image: url('image/ai.png');
 	background-size: cover;
 	width: 55px;
 	height: 65px;
