@@ -1,6 +1,6 @@
 CLOC_EXCLUDED := .git,src/third_party,http/image,http/lang,http/sound
 
-JS_FILES := src/third_party/jquery.js \
+JS_LIB_FILES := src/third_party/jquery.js \
 			src/third_party/page.js \
 			src/third_party/mousewheel.js \
 			src/third_party/codemirror/codemirror.js \
@@ -9,9 +9,9 @@ JS_FILES := src/third_party/jquery.js \
 			src/third_party/jsbeautifier/beautify.js \
 			src/third_party/mousewheel.js \
 			src/third_party/twemoji/twemoji.js \
-			src/third_party/chartist/chartist.min.js \
-			src/third_party/katex/katex.min.js \
-			src/script/main.js \
+			src/third_party/chartist/chartist.js \
+			src/third_party/katex/katex.min.js
+JS_FILES :=	src/script/main.js \
 			src/third_party/codemirror/leekscript.js \
 			src/third_party/codemirror/runmode.js \
 			$(wildcard src/script/*.js) \
@@ -19,29 +19,38 @@ JS_FILES := src/third_party/jquery.js \
 			$(wildcard src/script/game/map/*.js) \
 			$(wildcard src/script/game/*.js)
 
-JS_SRC_FILES :=  $(subst src/,,$(JS_FILES))
+JS_LIB_SRC_FILES :=  $(subst src/third_party/,,$(JS_LIB_FILES))
 
 CSS_FILES := src/third_party/codemirror/codemirror.css \
 			 src/third_party/chartist/chartist.css \
 			 src/third_party/katex/katex.min.css \
 			 $(wildcard src/style/*.css)
 
-JS_MIN := $(patsubst %.js,build/%.min.js, $(JS_SRC_FILES))
+CSS_SRC_FILES :=  $(subst src/,,$(CSS_FILES))
+
+JS_LIB_MIN := $(patsubst %.js,build/third_party/%.min.js, $(JS_LIB_SRC_FILES))
+CSS_MIN := $(patsubst %.css,build/%.min.css, $(CSS_SRC_FILES))
 
 all: build_dir build/leekwars.min.js build/leekwars.min.css
+	@cp build/leekwars.min.js http/leekwars.min.js
+	@cp build/leekwars.min.css http/leekwars.min.css
 
-build/leekwars.min.js: $(JS_MIN)
-	cat $(JS_MIN) > build/leekwars.min.js
+build/leekwars.min.js: $(JS_LIB_MIN) build/sources.min.js
+	cat $(JS_LIB_MIN) build/sources.min.js > build/leekwars.min.js
 
-#
-# http/libs.min.js: $(LIB_FILES)
-# 	@echo "Minify JavaScript libraries..."
-# 	@echo "=============================="
-# 	uglifyjs $(LIB_FILES) -o http/libs.min.js -c -m
+build/leekwars.min.css: $(CSS_MIN)
+	cat $(CSS_MIN) > build/leekwars.min.css
 
-build/%.min.js: src/%.js
+build/sources.min.js:
+	uglifyjs $(JS_FILES) -o $@ -c -m --source-map root="http://leekwars.com/",url=$@.map
+
+build/third_party/%.min.js: src/third_party/%.js
 	@mkdir -p $(@D)
-	uglifyjs $? -o $@ -c -m --source-map root="http://leekwars.com/",url=$<.map
+	uglifyjs $? -o $@ -c -m
+
+build/%.min.css: src/%.css
+	@mkdir -p $(@D)
+	csso $? -o $@
 
 test:
 	uglifyjs $(JS_FILES) -o all.min.js -c -m
@@ -56,7 +65,7 @@ build_dir:
 	@mkdir -p build/script
 	@mkdir -p build/style
 
-serve: bundle
+serve: all
 	python3 leekwars.py
 
 clean:
