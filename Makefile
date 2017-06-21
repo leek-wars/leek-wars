@@ -41,7 +41,7 @@ build/leekwars.min.js: $(JS_LIB_MIN) build/sources.min.js
 build/leekwars.min.css: $(CSS_MIN)
 	cat $(CSS_MIN) > build/leekwars.min.css
 
-build/sources.min.js:
+build/sources.min.js: $(JS_FILES)
 	uglifyjs $(JS_FILES) -o $@ -c -m --source-map root="http://leekwars.com/",url=$@.map
 
 build/third_party/%.min.js: src/third_party/%.js
