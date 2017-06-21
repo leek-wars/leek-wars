@@ -7,3 +7,4 @@ http/*.min.css
 http/*.min.js
 http/*.map
 .idea/
+build/
