@@ -112,7 +112,7 @@ LW.pages.market.resize = function() {
 
 LW.pages.market.scroll = function(scroll) {
 	if (_.is_mobile()) return null
-	if (scroll < 137) {
+	if (scroll < 115) {
 		$('#preview-panel').css('position', 'static')
 	} else {
 		$('#preview-panel').css('position', 'fixed')
