@@ -7,6 +7,10 @@
 	display: none;
 }
 
+body.app #forum_topic-page .panel .content {
+	padding: 0;
+}
+
 #forum_topic-page .message-wrapper {
 	border-radius: 2px;
 	width: 100%;
