@@ -261,6 +261,11 @@ body.app #forum_topic-page .panel .content {
 	word-break: break-all;
 }
 
+body.app #forum_topic-page code pre {
+	margin-left: -15px;
+	margin-left: -20px;
+}
+
 
 /*
  * Message style
