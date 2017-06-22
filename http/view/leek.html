@@ -52,9 +52,11 @@
 			<div class='header'>
 				<h2 class='leek-farmer-div'>{#farmed_by, leek.farmer.id, leek.farmer.name}</h2>
 				<div class='right'>
-					<div class='button flat hat-button'>
-						<img src='{{static}}image/hat.png'>
-					</div>
+					@if (my_leek)
+						<div class='button flat hat-button'>
+							<img src='{{static}}image/hat.png'>
+						</div>
+					@end
 				</div>
 			</div>
 			<div class='content'>
