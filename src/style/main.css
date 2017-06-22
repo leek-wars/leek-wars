@@ -21,7 +21,7 @@ body {
 	color: #111;
 
 	background-attachment: fixed;
-	background-image: url('image/background.png');
+	background-image: url('image/background.jpg');
 }
 
 #background {
@@ -1402,7 +1402,7 @@ body.connected #header-signin {
 
 .panel > .header {
 	height: 36px;
-	background-image: url('image/background.png');
+	background-image: url('image/background.jpg');
 	position: relative;
 	text-align: left;
 
@@ -1914,7 +1914,7 @@ body.app #dark {
 }
 
 .popup > .title {
-	background-image: url('image/background.png');
+	background-image: url('image/background.jpg');
 	color: #eee;
 	font-weight: 300;
 	padding: 0 10px;
