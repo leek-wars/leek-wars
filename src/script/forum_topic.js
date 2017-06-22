@@ -42,8 +42,9 @@ LW.pages.forum_topic.init = function(params, $scope, $page) {
 }
 
 LW.pages.forum_topic.resize = function() {
-
-	$('#forum_topic-page code pre').css('max-width', $('#page').width() - 230)
+	if (!_.is_mobile()) {
+		$('#forum_topic-page code pre').css('max-width', $('#page').width() - 245)
+	}
 }
 
 LW.pages.forum_topic.edit = function() {
