@@ -344,7 +344,7 @@ _.is_mobile = function() {
  */
 
 _.format.number = function(number) {
-	return ('' + number).replace(/\B(?=(\d{3})+(?!\d))/g, "&nbsp;")
+	return ('' + number).replace(/\B(?=(\d{3})+(?!\d))/g, " ")
 }
 
 _.format.numberPrecision = function(number, precision) {
