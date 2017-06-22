@@ -172,7 +172,7 @@
 }
 
 #forum_topic-page #response {
-	width: 100%;
+	width: calc(100% - 15px);
 	height: 170px;
 	max-width: 100%;
 	margin-top: 5px;
@@ -180,7 +180,6 @@
 	font-size: 15px;
 	font-family: "Roboto", sans-serif;
 	color: #555;
-
 	border-radius: 2px;
 	border: 1px solid #CECECE;
 }
