@@ -17,7 +17,7 @@ self.addEventListener("install", function(event) {
 })
 
 self.addEventListener('fetch', function(event) {
-	if (event.request.method !== 'GET') {
+	if (event.request.method !== 'GET' || event.request.url.indexOf('leekwars.min.') == -1) {
 		return
 	}
     event.respondWith(
