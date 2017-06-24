@@ -64,7 +64,7 @@ var LW = {
  * Start service worker
  */
 if ('serviceWorker' in navigator && !localStorage['disable_sw']) {
-	navigator.serviceWorker.register('/service-worker.js?' + LW.subVersion, {scope: '/'}).then(function(registration) {
+	navigator.serviceWorker.register('/service-worker.js?v=' + LW.subVersion, {scope: '/'}).then(function(registration) {
 		LW.service_worker = registration
 		if (LW.updated) {
 			LW.service_worker.update()
