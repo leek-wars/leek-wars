@@ -17,48 +17,50 @@ self.addEventListener("install", function(event) {
 })
 
 self.addEventListener('fetch', function(event) {
-  event.respondWith(
-    caches.match(event.request)
-      .then(function(response) {
-        // Cache hit - return response
-        if (response) {
-          return response;
-        }
+	if (event.request.method !== 'GET') {
+		return
+	}
+    event.respondWith(
+      caches
+        .match(event.request)
+        .then(function(cached) {
+          var networked = fetch(event.request)
+            .then(fetchedFromNetwork, unableToResolve)
+            .catch(unableToResolve);
 
-        // IMPORTANT: Clone the request. A request is a stream and
-        // can only be consumed once. Since we are consuming this
-        // once by cache and once by the browser for fetch, we need
-        // to clone the response.
-        var fetchRequest = event.request.clone();
+          return cached || networked;
 
-        return fetch(fetchRequest).then(
-          function(response) {
-            // Check if we received a valid response
-            if(!response || response.status !== 200 || response.type !== 'basic') {
-              return response;
-            }
-
-            // IMPORTANT: Clone the response. A response is a stream
-            // and because we want the browser to consume the response
-            // as well as the cache consuming the response, we need
-            // to clone it so we have two streams.
-            var responseToCache = response.clone();
-
-            caches.open(CACHE_NAME)
-              .then(function(cache) {
-                cache.put(event.request, responseToCache);
+          function fetchedFromNetwork(response) {
+			/*
+            var cacheCopy = response.clone();
+            caches
+              // We open a cache to store the response for this request.
+              .open(version + 'pages')
+              .then(function add(cache) {
+                cache.put(event.request, cacheCopy);
+              })
+              .then(function() {
+                //console.log('WORKER: fetch response stored in cache.', event.request.url);
               });
-
+			*/
+            // Return the response so that the promise is settled in fulfillment.
             return response;
           }
-        );
-      })
+
+          function unableToResolve () {
+            return new Response('<h1>Service Unavailable</h1>', {
+              status: 503,
+              statusText: 'Service Unavailable',
+              headers: new Headers({
+                'Content-Type': 'text/html'
+              })
+            });
+          }
+        })
     );
 });
 
 self.addEventListener('push', event => {
-
-	console.log("Push event", event)
 
 	var icon = null
 	var title = "Notification de Leek Wars"
@@ -84,7 +86,6 @@ self.addEventListener('push', event => {
 });
 
 self.addEventListener('notificationclick', function(event) {
-    console.log('Notification click', event.notification);
     event.notification.close();
 	var url = 'https://leekwars.com';
 	if (event.notification.data) {
