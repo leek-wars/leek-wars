@@ -13,6 +13,8 @@ class LWHandler(SimpleHTTPRequestHandler):
 	def do_GET(self):
 		if self.path.endswith('?0'):
 			self.path = self.path.replace('?0', '')
+		if self.path.endswith('?v=0'):
+			self.path = self.path.replace('?v=0', '')
 		if self.path != '/' and os.access('.' + os.sep + self.path, os.R_OK):
 			super().do_GET();
 		else:
