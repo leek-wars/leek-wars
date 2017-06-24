@@ -1,22 +1,20 @@
 'use strict';
 
-var CACHE_NAME = 'my-site-cache-v1';
-var urlsToCache = [
-	'/static/leekwars.min.js',
-	'/static/leekwars.min.css'
-];
-
-self.addEventListener('install', function(event) {
-	// Perform install steps
+self.addEventListener("install", function(event) {
+	var pathToJson = new URL(location).searchParams.get('v')
 	event.waitUntil(
-		caches.open(CACHE_NAME).then(function(cache) {
-			console.log('Opened cache');
-			return cache.addAll(urlsToCache);
-		}).then(function() {
+		caches.open(pathToJson + 'fundamentals')
+		.then(function(cache) {
+			return cache.addAll([
+				'/static/leekwars.min.js',
+				'/static/leekwars.min.css'
+			]);
+		})
+		.then(function() {
 			self.skipWaiting()
 		})
-	);
-});
+	)
+})
 
 self.addEventListener('fetch', function(event) {
   event.respondWith(
