@@ -41,6 +41,7 @@ LW.pages.settings.init = function(params, $scope, $page) {
 		LW.pages.settings.advanced()
 		LW.pages.settings.clearLocalStorage()
 		LW.pages.settings.mails(mails)
+		LW.pages.settings.two_factor_auth()
 
 		$('#register-push').click(function() {
 
@@ -253,5 +254,54 @@ LW.pages.settings.mails = function(mails) {
 		updateCategory($(this).attr('category'))
 
 		_.post('settings/update-setting', {setting: $(this).attr('setting'), value: '' + checked}, function(data) {})
+	})
+}
+
+LW.pages.settings.two_factor_auth = function() {
+	var enter_step = function(step) {
+		if (step == 3) {
+			$('#two-factor-code').val('').focus()
+		}
+	}
+	var previous_step = function() {
+		var i = $('#two-factor .step:visible').hide().prev().show().index()
+		enter_step(i)
+	}
+	var next_step = function() {
+		var i = $('#two-factor .step:visible').hide().next().show().index()
+		enter_step(i)
+	}
+	$('#two-factor .next').click(next_step)
+	$('#two-factor .back').click(previous_step)
+	$('#two-factor .step').hide()
+	$('#two-factor .step').first().show()
+
+	var popup = new _.popup.new('settings.two_factor_confirm_popup')
+	popup.ondismiss = function() {
+		_.log("dismiss")
+		_.toast('Two factor authentication is still enabled')
+	}
+
+	$('#two-factor-button').click(function(e) {
+		next_step()
+	})
+	$('#two-factor-generate').click(function() {
+		_.post('farmer/enable-two-factor-authentication', {}, function(data) {
+			$('#two-factor-qrcode').attr('src', data.qrcode)
+			$('#two-factor-secret').text(data.secret)
+		})
+	})
+
+	$('#two-factor-code').keydown(function(e) {
+		if (e.keyCode == 13) {
+			var code = $(this).val()
+			_.post('farmer/confirm-enable-two-factor-authentication', {code: code}, function(data) {
+				if (data.success) {
+					next_step()
+				} else {
+					_.toast('Wrong code!')
+				}
+			})
+		}
 	})
 }
