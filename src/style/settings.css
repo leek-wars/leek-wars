@@ -82,3 +82,43 @@
 #settings-page #notifications .category.off {
 	opacity: 0.6;
 }
+
+#settings-page #two-factor .title {
+	margin-bottom: 15px;
+}
+
+#settings-page #two-factor .buttons {
+	display: flex;
+	padding: 0;
+	margin-bottom: -15px;
+	margin-left: -15px;
+	margin-right: -15px;
+	margin-top: 10px;
+}
+#settings-page #two-factor .buttons div {
+	flex: 1;
+	cursor: pointer;
+	padding: 8px 0;
+	text-transform: uppercase;
+	font-weight: bold;
+}
+#settings-page #two-factor .buttons div:hover {
+	background: white;
+}
+
+#settings-page .step .title {
+	background: #5FAD1B;
+	color: white;
+	font-weight: bold;
+	padding: 5px 10px;
+	display: inline-block;
+}
+
+#settings-page #two-factor-code {
+	font-size: 26px;
+	padding: 5px 10px;
+	max-width: 120px;
+}
+#settings-page #two-factor-code::-webkit-input-placeholder {
+	color: #ddd;
+}

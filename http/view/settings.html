@@ -137,6 +137,70 @@
 				<div id='delete-button' class='button'>{#delete_account}</div>
 			</div>
 		</div>
+
+	</div><div class='column6'>
+
+		<div class='panel'>
+
+			<div class='header'>
+				<h2>Two factor authentication</h2>
+			</div>
+			<div class='content' id='two-factor'>
+
+				<div class='step'>
+					<div class='button' id='two-factor-button'>Activate two factor authentication</div>
+				</div>
+
+				<div class='step'>
+					<div class='title'>Step 1 / 3</div>
+					<br>
+					Download <b>Google Authenticator</b> app
+					<br>
+					<img width='100' src='{{static}}image/google_auth.png'>
+					<br>
+					<a href='https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2' target='_blank'>Android</a>
+					or <a href='https://itunes.apple.com/fr/app/google-authenticator/id388497605' target='_blank'>iOS</a>
+
+					<div class='buttons'>
+						<div class='back'>Back</div>
+						<div class='next' id='two-factor-generate'>Next</div>
+					</div>
+				</div>
+				<div class='step'>
+					<div class='title'>Step 2 / 3</div>
+					<br>
+					Scan this <b>QR Code</b> from Google Authenticator app
+					<br>
+					<img id='two-factor-qrcode'>
+					<br>
+					Or enter this <b>secret key</b> in the app:
+					<br>
+					<span id='two-factor-secret'/>
+					<br>
+					(don't give it to anyone!)
+					<div class='buttons'>
+						<div class='back'>Back</div>
+						<div class='next' id='two-factor-generate'>Next</div>
+					</div>
+				</div>
+				<div class='step'>
+					<div class='title'>Step 3 / 3</div>
+					<br>
+					Test a code to finish the activation:
+					<br><br>
+					<input type='text' autocomplete="off" autocorrect="off" autocapitalize="off" id='two-factor-code' placeholder="XXX XXX">
+
+					<div class='buttons'>
+						<div class='back'>Back</div>
+					</div>
+				</div>
+				<div class='step final'>
+					Two factor authentication enabled! Congratulations!
+					<br><br>
+					<div class='button' id='two-factor-disable'>Disable</div>
+				</div>
+			</div>
+		</div>
 	</div>
 </div>
 
@@ -217,5 +281,18 @@
 
 	<div class='actions'>
 		<div class='action dismiss'>{#delete_ok}</div></center>
+	</div>
+@endview
+
+@view (two_factor_confirm_popup)
+
+	<div class='title'>Enter your password to validate</div>
+
+	<div class='content'>Password : <input type='password' id='two-factor-confirm-password'></input>
+	</div>
+
+	<div class='actions'>
+		<div class='action dismiss'>Cancel</div>
+		<div id='two-factor-validate' class='action green'>Validate</div>
 	</div>
 @endview
