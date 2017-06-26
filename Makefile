@@ -31,8 +31,12 @@ CSS_SRC_FILES :=  $(subst src/,,$(CSS_FILES))
 JS_LIB_MIN := $(patsubst %.js,build/third_party/%.min.js, $(JS_LIB_SRC_FILES))
 CSS_MIN := $(patsubst %.css,build/%.min.css, $(CSS_SRC_FILES))
 
-all: build_dir build/leekwars.min.js build/leekwars.min.css
+all: http/leekwars.min.js http/leekwars.min.css
+
+http/leekwars.min.js: build/leekwars.min.js
 	@cp build/leekwars.min.js http/leekwars.min.js
+
+http/leekwars.min.css: build/leekwars.min.css
 	@cp build/leekwars.min.css http/leekwars.min.css
 
 build/leekwars.min.js: $(JS_LIB_MIN) build/sources.min.js
@@ -55,15 +59,6 @@ build/%.min.css: src/%.css
 test:
 	uglifyjs $(JS_FILES) -o all.min.js -c -m
 
-http/leekwars.min.css: $(CSS_FILES)
-	@echo "Minify CSS..."
-	@echo "============="
-	cat $(CSS_FILES) | csso -o bundle -o http/leekwars.min.css --stat
-
-build_dir:
-	@mkdir -p build/third_party
-	@mkdir -p build/script
-	@mkdir -p build/style
 
 serve: all
 	python3 leekwars.py
