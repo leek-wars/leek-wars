@@ -31,6 +31,8 @@ CSS_SRC_FILES :=  $(subst src/,,$(CSS_FILES))
 JS_LIB_MIN := $(patsubst %.js,build/third_party/%.min.js, $(JS_LIB_SRC_FILES))
 CSS_MIN := $(patsubst %.css,build/%.min.css, $(CSS_SRC_FILES))
 
+MAKEFLAGS += --jobs=2
+
 all: http/leekwars.min.js http/leekwars.min.css
 
 http/leekwars.min.js: build/leekwars.min.js
@@ -59,9 +61,19 @@ build/%.min.css: src/%.css
 test:
 	uglifyjs $(JS_FILES) -o all.min.js -c -m
 
+watch:
+	@echo "Start watchers..."
+	@echo "================="
+	@+inotifywait -mqr src -e create -e moved_to -e close_write | \
+	while read path action file; do \
+		echo "File [\033[1;34m$$path$$file\033[0m] modified, generate..."; \
+		make > /dev/null & \
+	done
 
-serve: all
-	python3 leekwars.py
+server: all
+	@+fuser -k 8012/tcp > /dev/null; python3 leekwars.py
+
+serve: watch server
 
 clean:
 	@echo "Clean project..."
