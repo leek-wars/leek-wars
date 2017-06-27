@@ -28,11 +28,11 @@
 	font-size: 18px;
 	font-weight: 300;
 	padding: 10px;
-}	
+}
 
 #page .desc b {
 	font-weight: 400;
-}	
+}
 
 #leek-rect {
 	text-align: center;
@@ -95,7 +95,7 @@
 
 /* Erreur */
 #signup-form input.error, #signup-form input.error:focus {
-	
+
 	border: 2px solid red;
 }
 
@@ -106,7 +106,7 @@
 
 /* Good */
 #signup-form input.good, #signup-form input.good:focus {
-	
+
 	border: 2px solid #5FAD1B;
 }
 
@@ -125,7 +125,7 @@
 
 #screenshots img {
 	width: 100%;
-	cursor: -webkit-zoom-in; 
+	cursor: -webkit-zoom-in;
 	cursor: -moz-zoom-in;
 	border-radius: 4px;
 }
@@ -155,7 +155,7 @@
 #bigscreen img {
 	max-width: 1000px;
 	box-shadow: 0px 0px 80px black;
-	cursor: -webkit-zoom-out; 
+	cursor: -webkit-zoom-out;
 	cursor: -moz-zoom-out;
 }
 
