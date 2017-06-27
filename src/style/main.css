@@ -2632,18 +2632,18 @@ body.sfw #xp-bar, body.sfw .switch-active .switch-switch {
 body.sfw .switch-active .switch-switch:before {
 	border-color: #CAF0CA transparent transparent #CAF0CA;
 }
-
 body.sfw #big-leeks {
 	display: none;
 }
-
 body.sfw .pagination a.current {
 	background: none repeat scroll 0% 0% transparent;
 	color: grey;
 }
-
 body.sfw #forum .message-wrapper {
 	background: none repeat scroll 0% 0% transparent;
+}
+body.sfw #app-bar {
+	background: #ddd;
 }
 
 /*
