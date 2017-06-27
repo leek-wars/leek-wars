@@ -3,6 +3,10 @@
 	padding: 10px;
 	text-align: center;
 }
+body.app #admin-wrapper {
+	margin: 0;
+	padding: 0;
+}
 
 #admin-wrapper .section {
 	display: inline-block;
@@ -12,6 +16,10 @@
 	width: 170px;
 	height: 130px;
 	vertical-align: bottom;
+}
+body.app #admin-wrapper .section {
+	margin: 8px;
+	width: 150px;
 }
 
 #admin-wrapper .section img {
