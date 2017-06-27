@@ -17,11 +17,14 @@ body {
 	width: 100%;
 	height: 100%;
 	margin: 0;
-
 	color: #111;
-
 	background-attachment: fixed;
 	background-image: url('image/background.jpg');
+}
+body.app {
+	background-attachment: scroll;
+	background-image: none;
+	background: #333;
 }
 
 #background {
@@ -36,6 +39,9 @@ body {
 	background: radial-gradient(#aaa, transparent);
 	background-repeat: no-repeat;
 	background-attachment: fixed;
+}
+body.app #background {
+	display: none;
 }
 
 @media screen and (max-width: 900px) {
@@ -1055,6 +1061,9 @@ body.menu-collapsed #footer {
 	bottom: 0;
 	height: 100px;
 }
+body.app #big-leeks {
+	display: none;
+}
 
 #big-leeks .wrapper {
 	position: relative;
@@ -1376,6 +1385,9 @@ body.app #page-wrapper {
 	margin-right: -15px;
 	padding-bottom: 5px;
 }
+body.app #page {
+	margin-right: 0;
+}
 
 #page .page-bar {
 	padding-right: 15px;
@@ -1406,6 +1418,9 @@ body.app #page-wrapper {
 
 	margin-right: 15px;
 	margin-bottom: 15px;
+}
+body.app .panel {
+	margin-right: 0;
 }
 
 .panel.first {
