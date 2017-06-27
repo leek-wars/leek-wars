@@ -74,11 +74,9 @@ LW.pages.signup.init = function(params, $scope, $page) {
 	})
 
 	$('#screenshots img').click(function(e) {
-
-		$('#dark').show()
+		LW.dark.show()
 		$('#bigscreen').show()
 		$('#bigscreen img').attr('src', $(this).attr('src').replace('_small', ''))
-
 		$('#biglegend').text($(this).parent().find('.legend').text())
 	})
 
@@ -87,6 +85,7 @@ LW.pages.signup.init = function(params, $scope, $page) {
 	})
 
 	$('html').click(function() {
+		LW.dark.hide()
 		$('#dark').hide()
 		$('#bigscreen').hide()
 	})
