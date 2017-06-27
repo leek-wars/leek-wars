@@ -170,7 +170,7 @@ body.app #forum_topic-page .panel .content {
 	display: none;
 }
 
-#editor {
+#forum_topic-page #editor {
 	margin-left: 140px;
 	padding: 10px;
 }
