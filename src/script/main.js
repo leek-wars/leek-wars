@@ -516,6 +516,11 @@ $(document).ready(function() {
 			resizePanel()
 
 			LW.dark.dark = $('#dark')
+			$('#dark').on('click, pointerdown', function(e) {
+				e.stopPropagation()
+				e.preventDefault()
+				return false
+			})
 
 			$('#social-panel .panel').each(function() {
 				var key = 'main/' + $(this).attr('panel') + '-collapsed'
@@ -571,16 +576,8 @@ $(document).ready(function() {
 				localStorage['main/menu-collapsed'] = $('body').hasClass('menu-collapsed')
 			})
 
-			$('#app-bar .menu').click(function(e) {
-				if (LW.app.split_back) {
-					if ('back' in LW.pages[LW.currentPage]) LW.pages[LW.currentPage].back()
-					LW.app.split_show_list()
-				} else {
-					$('body.app').toggleClass('menu-expanded')
-					LW.dark.toggle()
-				}
-				e.stopPropagation()
-			})
+			LW.app.slide_menu()
+
 			$('#app-bar .action.settings').click(function() {
 				LW.page('/settings')
 			})
@@ -4324,6 +4321,82 @@ LW.app.split_show_content = function() {
 	$('#app-bar .menu').addClass('back')
 	$('#app-bar').removeClass('list').addClass('content')
 	LW.app.split_back = true
+}
+
+LW.app.slide_menu = function() {
+	$('#app-bar .menu').click(function(e) {
+		if (LW.app.split_back) {
+			if ('back' in LW.pages[LW.currentPage]) LW.pages[LW.currentPage].back()
+			LW.app.split_show_list()
+		} else {
+			$('body.app').toggleClass('menu-expanded')
+			LW.dark.toggle()
+		}
+		e.stopPropagation()
+	})
+	var W = 250
+	var down = false
+	var downX, downY
+	var lastX
+	var menu_visible = false
+	var enabled = false
+	var window_width = $(window).width()
+	var aborted
+	var menu_element = $('#menu')
+	var center_element = $('#center')
+	var d = 0
+
+	$('html, #dark').on('pointerdown', function(e) {
+		downX = e.clientX
+		downY = e.clientY
+		down = true
+		aborted = false
+		menu_visible = $('body').hasClass('menu-expanded')
+	})
+	$('html').on('touchmove', function(e) {
+		if (!down) return ;
+		var x = e.touches[0].clientX
+		var y = e.touches[0].clientY
+		if (!enabled && Math.abs(downY - y) > 20) aborted = true
+		if (Math.abs(downX - x) > 40 && menu_visible == x < downX) {
+			menu_element.css('transition', 'none')
+			center_element.css('transition', 'none')
+			enabled = true
+		}
+		if (enabled && !aborted) {
+			if (menu_visible) {
+				d = W - Math.max(0, Math.min(W, downX - x))
+			} else {
+				d = Math.max(0, Math.min(W, x - downX))
+			}
+			menu_element.css('transform', 'translateX(' + (-W + d) + 'px)')
+			center_element.css('transform', 'translateX(' + d + 'px)')
+			LW.dark.dark.show().css('opacity', 0.6 * (d / W))
+			lastX = x
+		}
+	}).on('touchend', function(e) {
+		if (!down || !enabled || aborted) return ;
+		var transition = 'transform ease 200ms'
+		menu_element.css('transition', transition).css('transform', '')
+		center_element.css('transition', transition).css('transform', '')
+		LW.dark.dark.css('opacity', '')
+		if (menu_visible) {
+			if (d < W / 2) {
+				$('body').removeClass('menu-expanded')
+				LW.dark.hide()
+			}
+		} else {
+			if (d > W / 2) {
+				$('body').addClass('menu-expanded')
+				LW.dark.dark.addClass('visible')
+			} else {
+				LW.dark.hide()
+			}
+		}
+		down = false
+		enabled = false
+		aborted = false
+	})
 }
 
 LW.dark = {
