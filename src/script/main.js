@@ -4350,6 +4350,7 @@ LW.app.slide_menu = function() {
 	var menu_element = $('#menu')
 	var center_element = $('#center')
 	var d = 0
+	var lastT = 0
 
 	$('html, #dark').on('pointerdown', function(e) {
 		downX = e.clientX
@@ -4363,11 +4364,13 @@ LW.app.slide_menu = function() {
 		var x = e.touches[0].clientX
 		var y = e.touches[0].clientY
 		if (!enabled && Math.abs(downY - y) > 20) aborted = true
-		if (Math.abs(downX - x) > 40 && menu_visible == x < downX) {
-			menu_element.css('transition', 'none')
-			center_element.css('transition', 'none')
+		if (!enabled && Math.abs(downX - x) > 40 && menu_visible == x < downX) {
+			menu_element.css('transition', 'transform ease 100ms')
+			center_element.css('transition', 'transform ease 100ms')
 			enabled = true
 		}
+		if (Date.now() - lastT < 50) return ;
+		lastT = Date.now()
 		if (enabled && !aborted) {
 			if (menu_visible) {
 				d = W - Math.max(0, Math.min(W, downX - x))
