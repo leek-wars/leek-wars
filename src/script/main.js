@@ -4324,7 +4324,7 @@ LW.app.split_show_content = function() {
 }
 
 LW.app.slide_menu = function() {
-	$('#app-bar .menu').click(function(e) {
+	$('#app-bar .menu, #app-bar .title-wrapper').click(function(e) {
 		if ($('body').hasClass('menu-expanded')) {
 			$('body').removeClass('menu-expanded')
 			LW.dark.hide()
