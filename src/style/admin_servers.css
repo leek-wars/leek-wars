@@ -3,12 +3,16 @@
 	text-align: center;
 }
 
-.column {
+#servers .column {
 	display: inline-block;
 	width: 33.33%;
 	margin: 0;
 	vertical-align: top;
 	margin-right: -4px;
+}
+
+body.app #servers .column {
+	width: auto;
 }
 
 #servers .server {
@@ -91,6 +95,6 @@
 .server red {
 	color: red;
 }
-.server green { 
+.server green {
 	color: green;
 }
