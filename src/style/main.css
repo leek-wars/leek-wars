@@ -359,6 +359,9 @@ body.menu-collapsed #menu-button .icon {
 	padding: 1px 5px;
 	line-height: normal;
 }
+body.app .menu .section[label]:not([label='']):after {
+	right: 8px;
+}
 
 body.menu-collapsed .menu .section {
 	height: 46px;
