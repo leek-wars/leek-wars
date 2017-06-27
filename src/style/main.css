@@ -1410,7 +1410,7 @@ body.connected #header-signin {
 	-moz-border-radius-topleft: 0px;
 	border-top-left-radius: 0px;
 }
-body.app .panel:last-child {
+body.app .panel.last {
 	margin-bottom: 0;
 }
 

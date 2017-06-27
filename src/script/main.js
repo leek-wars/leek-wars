@@ -1651,6 +1651,7 @@ LW.setPageContent = function(page, content) {
 	$('#page').html("<div id='" + page + "-page'>" + content + "</div>")
 
 	$('#page .panel').first().addClass('first')
+	$('#page .panel').last().addClass('last')
 
 	LW.handleHTML('#page', 'page')
 }
