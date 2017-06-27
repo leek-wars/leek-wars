@@ -4325,12 +4325,15 @@ LW.app.split_show_content = function() {
 
 LW.app.slide_menu = function() {
 	$('#app-bar .menu').click(function(e) {
-		if (LW.app.split_back) {
+		if ($('body').hasClass('menu-expanded')) {
+			$('body').removeClass('menu-expanded')
+			LW.dark.hide()
+		} else if (LW.app.split_back) {
 			if ('back' in LW.pages[LW.currentPage]) LW.pages[LW.currentPage].back()
 			LW.app.split_show_list()
 		} else {
-			$('body.app').toggleClass('menu-expanded')
-			LW.dark.toggle()
+			$('body').addClass('menu-expanded')
+			LW.dark.show()
 		}
 		e.stopPropagation()
 	})
