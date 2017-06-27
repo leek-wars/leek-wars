@@ -89,6 +89,9 @@ body.app #editor-page .page-bar .info {
 #ai-list .item .label {
 	padding: 5px 10px;
 }
+body.app #ai-list .item .label {
+	padding: 8px 10px;
+}
 #ai-list .item.ai .label:before {
 	content: "✔";
 	font-weight: bold;
