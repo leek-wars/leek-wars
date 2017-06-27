@@ -515,6 +515,8 @@ $(document).ready(function() {
 
 			resizePanel()
 
+			LW.dark.dark = $('#dark')
+
 			$('#social-panel .panel').each(function() {
 				var key = 'main/' + $(this).attr('panel') + '-collapsed'
 				if (key in localStorage && localStorage[key] === 'true') {
@@ -4325,37 +4327,27 @@ LW.app.split_show_content = function() {
 }
 
 LW.dark = {
+	dark: null,
 	timeout: null
 }
 LW.dark.toggle = function() {
-	var dark = $('#dark')
-	if (dark.hasClass('visible')) {
-		dark.removeClass('visible')
-		clearTimeout(LW.dark.timeout)
-		LW.dark.timeout = setTimeout(function() {
-			dark.hide()
-		}, 200)
+	if (LW.dark.dark.hasClass('visible')) {
+		LW.dark.hide()
 	} else {
-		dark.show()
-		clearTimeout(LW.dark.timeout)
-		LW.dark.timeout = setTimeout(function() {
-			dark.addClass('visible')
-		}, 100)
+		LW.dark.show()
 	}
 }
 LW.dark.show = function() {
-	var dark = $('#dark')
-	dark.show()
+	LW.dark.dark.show()
 	clearTimeout(LW.dark.timeout)
 	LW.dark.timeout = setTimeout(function() {
-		dark.addClass('visible')
+		LW.dark.dark.addClass('visible')
 	}, 100)
 }
 LW.dark.hide = function() {
-	var dark = $('#dark')
-	dark.removeClass('visible')
+	LW.dark.dark.removeClass('visible')
 	clearTimeout(LW.dark.timeout)
 	LW.dark.timeout = setTimeout(function() {
-		dark.hide()
+		LW.dark.dark.hide()
 	}, 200)
 }
