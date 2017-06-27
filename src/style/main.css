@@ -585,7 +585,7 @@ body.app #menu {
 	bottom: 0;
 	background: rgba(0, 0, 0, 0.5);
 	z-index: 1000;
-	transition: transform ease 200ms, background ease 200ms;
+	transition: transform ease 200ms;
 	padding: 0;
 	width: auto;
 }
