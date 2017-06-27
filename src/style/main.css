@@ -1368,6 +1368,9 @@ body.connected #header-signin {
 	padding: 20px;
 	padding-bottom: 0;
 }
+body.app #page-wrapper {
+	background: none;
+}
 
 #page {
 	margin-right: -15px;
