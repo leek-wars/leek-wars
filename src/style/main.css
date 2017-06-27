@@ -208,6 +208,9 @@ textarea {
 	box-shadow: 0px 0px 10px rgba(0,0,0,.5);
 	border-radius: 5px;
 }
+body.app #notifications-popup, body.app #messages-popup {
+	position: fixed;
+}
 
 #notifs-menu, #messages-menu {
 	position: relative;
