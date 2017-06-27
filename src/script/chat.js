@@ -21,7 +21,7 @@ LW.pages.chat.init = function(params, $scope, $page) {
 
 LW.pages.chat.resize = function() {
 	if (_.is_mobile()) {
-		$('#chat .chat-messages').height($(window).height() - 155)
+		$('#chat .chat-messages').height($(window).height() - 142)
 	} else {
 		$('#chat .chat-messages').height($(window).height() - $('#header').height() - 170)
 	}

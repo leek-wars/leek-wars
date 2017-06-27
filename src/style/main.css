@@ -1410,6 +1410,9 @@ body.connected #header-signin {
 	-moz-border-radius-topleft: 0px;
 	border-top-left-radius: 0px;
 }
+body.app .panel:last-child {
+	margin-bottom: 0;
+}
 
 .panel.auto {
 	padding: 20px;
