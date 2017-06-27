@@ -64,7 +64,7 @@ LW.pages.leek.init = function(params, $scope, $page) {
 
 		$page.render()
 
-		LW.setTitle(leek.name)
+		LW.setTitle(leek.name, _.lang.get('leek', 'level_n', leek.level))
 		LW.setMenuTab('leek-' + leek.id)
 
 		LW.pages.leek.updateImage()
