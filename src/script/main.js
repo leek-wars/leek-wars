@@ -1012,7 +1012,7 @@ LW.resize_notifs_popups = function() {
 	if (_.is_mobile()) {
 		width = window_width
 		offset_x = 209
-		offset_y = 56
+		offset_y = 56 - $(window).scrollTop()
 	}
 
 	// Messages popup
