@@ -478,6 +478,15 @@ body.app #app-bar .menu.back .bar:nth-child(2) {
 body.app #app-bar .menu.back .bar:last-child {
 	transform: rotate(38deg);
 }
+body.app.menu-expanded #app-bar .menu .bar:first-child {
+	transform: translateY(7px) rotate(45deg);
+}
+body.app.menu-expanded #app-bar .menu .bar:nth-child(2) {
+	opacity: 0;
+}
+body.app.menu-expanded #app-bar .menu .bar:last-child {
+	transform: translateY(-7px) rotate(-45deg);
+}
 
 body.app #app-bar .title-wrapper {
 	flex: 1;
