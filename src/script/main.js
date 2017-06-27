@@ -4335,6 +4335,7 @@ LW.app.slide_menu = function() {
 			$('body').addClass('menu-expanded')
 			LW.dark.show()
 		}
+		$('#notifications-popup, #messages-popup').hide()
 		e.stopPropagation()
 	})
 	var W = 250
