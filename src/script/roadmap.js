@@ -6,7 +6,7 @@ LW.pages.roadmap.init = function(params, $scope, $page) {
 			changes: [
 				{text: "Visualiser les anciens combats", ok: true},
 				{text: "Dossiers dans l'éditeur", ok: true},
-				{text: "Mail recap de toutes les mises à jour (mi-janvier)", ok: false},
+				{text: "Mail recap de toutes les mises à jour", ok: false},
 				{text: "Fusion des compteurs de combats en un seul", ok: true}
 			]
 		},
@@ -24,42 +24,47 @@ LW.pages.roadmap.init = function(params, $scope, $page) {
 			changes: [
 				{text: "Historiques de combat détaillés", ok: true},
 				{text: "Codes LeekScript V2 dans l'éditeur + console LeekScript", ok: true},
-				{text: "[secret][secondaire] lié à la page combat", ok: false},
-				{text: "[secret][important] lié aux trophées", ok: false}
+				{text: "Outil de recherche d'aide globale", ok: false},
+				{text: "Meilleure recherche dans le forum", ok: false}
 			]
 		},
 		{
 			title: "Avril 1.97",
 			changes: [
-				{text: "Outil de recherche d'aide globale", ok: false},
-				{text: "Meilleure recherche dans le forum", ok: false},
-				{text: "[secret][important] lié au gameplay", ok: false}
+				{text: "Rééquilibrage et système d'érosion", ok: true},
+				{text: "Application mobile", ok: true},
+				{text: "Refonte graphique du site et de l'affichage des combats", ok: false}
 			]
 		},
 		{
 			title: "Mai 1.98",
 			changes: [
-				{text: "LeekScript V2 Bêta", ok: false},
-				{text: "Refonte graphique légère (mobile en particulier)", ok: false},
-				{text: "[secret][important] lié aux combats de team", ok: false}
+				{text: "Notifications push", ok: true},
+				{text: "Authenfication en deux étapes", ok: false},
+				{text: "[secret][important] lié au gameplay", ok: false}
 			]
 		},
 		{
 			title: "Juin 1.99",
 			changes: [
-				{text: "1er boss", ok: false}
+				{text: "LeekScript V2 Bêta", ok: false},
+				{text: "[secret][important] lié aux trophées", ok: false}
 			]
 		},
 		{
 			title: "Juillet 2.00",
 			changes: [
-				{text: "Sortie finale du LeekScript V2", ok: false}
+				{text: "Sortie finale du LeekScript V2", ok: false},
+				{text: "Support de Gravatar", ok: false},
+				{text: "[secret][important] lié aux combats de team", ok: false},
 			]
 		},
 		{
 			title: "Août 2.01",
 			changes: [
-				{text: "[secret][important] lié au gameplay", ok: false}
+				{text: "1er boss", ok: false},
+				{text: "[secret][important] lié au gameplay", ok: false},
+				{text: "[secret][secondaire] lié à la page combat", ok: false}
 			]
 		},
 		{
