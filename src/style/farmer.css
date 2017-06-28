@@ -292,6 +292,9 @@ body.app #farmer-page #send-message {
 #farmer-page .trophies-container {
 	display: inline-block;
 }
+body.app #farmer-page .trophies-container {
+	text-align: center;
+}
 
 #farmer-page .trophy {
 	display: inline-block;
@@ -299,6 +302,9 @@ body.app #farmer-page #send-message {
 	padding: 4px;
 	border: 1px solid transparent;
 	vertical-align: bottom;
+}
+body.app #farmer-page .trophy {
+	padding: 2px;
 }
 #farmer-page .trophy img {
 	width: 38px;

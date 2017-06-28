@@ -490,18 +490,21 @@
 
 			<h4 class='trophies-bonus'>{#bonus_trophies}</h4>
 
-			@foreach (trophy in bonus_trophies)
-				<div class='trophy' id='trophy-{trophy.id}' >
-					<img src='{{static}}image/trophy/{trophy.code}.png'></img>
-				</div>
-				<div class='tooltip trophy-tt' id='tt_trophy-{trophy.id}'>
-					<b>{trophy.name}</b>
-					@if (my_farmer)
-						<br>{trophy.description}
-					@end
-					<br><span class='date'>{LW.util.formatDuration(trophy.date)}</span>
-				</div>
-			@end
+			<div class='trophies-container'>
+
+				@foreach (trophy in bonus_trophies)
+					<div class='trophy' id='trophy-{trophy.id}' >
+						<img src='{{static}}image/trophy/{trophy.code}.png'></img>
+					</div>
+					<div class='tooltip trophy-tt' id='tt_trophy-{trophy.id}'>
+						<b>{trophy.name}</b>
+						@if (my_farmer)
+							<br>{trophy.description}
+						@end
+						<br><span class='date'>{LW.util.formatDuration(trophy.date)}</span>
+					</div>
+				@end
+			<div>
 		@end
 
 	@else
