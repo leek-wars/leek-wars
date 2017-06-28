@@ -20,6 +20,7 @@ LW.pages.garden.init = function(params, $scope, $page) {
 				$scope.challenge_fights = data.challenges
 
 				$page.render()
+				LW.setTitle(_.lang.get('garden', 'title'))
 
 				var leeks = []
 				for (var l in LW.farmer.leeks) leeks[LW.farmer.leeks[l].id] = LW.farmer.leeks[l]
@@ -64,6 +65,8 @@ LW.pages.garden.init = function(params, $scope, $page) {
 				$scope.challenge_type = 'farmer'
 				$scope.challenge_fights = data.challenges
 				$page.render()
+
+				LW.setTitle(_.lang.get('garden', 'title'))
 
 				$(".farmer.enemy").click(function() {
 
