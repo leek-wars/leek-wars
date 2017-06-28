@@ -24,7 +24,7 @@ LW.pages.forum_topic.init = function(params, $scope, $page) {
 
 		$page.render()
 
-		LW.setTitle(_topic.name)
+		LW.setTitle(_topic.name, _.lang.get('forum_topic', 'n_messages', data.total))
 		LW.setMenuTab('forum')
 
 		LW.pages.forum_topic.edit()
