@@ -636,6 +636,11 @@ body.app #menu .menu-top a {
 }
 body.app #menu .top {
 	display: flex;
+	height: 68px;
+}
+body.app #menu .menu-top .section {
+	height: auto;
+	width: 100%;
 }
 body.app #menu .menu-top .text {
 	padding-left: 10px;
@@ -644,29 +649,47 @@ body.app #menu .menu-top .text.farmer-name {
 	padding-left: 10px;
 	line-height: 45px;
 }
+body.app #menu .menu-top .right {
+	display: inline-block;
+	width: calc(100% - 68px);
+}
 body.app #menu .menu-top .moneys {
 	display: flex;
 	font-size: 12px;
-	justify-content: space-between;
-	padding: 0 6px;
-	padding-bottom: 8px;
+	padding: 0 10px;
+	padding-bottom: 4px;
 	align-items: baseline;
-	padding-top: 3px;
+	height: auto;
+	line-height: normal;
+	overflow: visible;
+	width: calc(100% - 20px);
+	margin-top: -2px;
+}
+body.app #menu .menu-top .moneys div {
+	overflow: visible;
 }
 body.app #menu .menu-top .moneys img {
 	width: 18px;
 	vertical-align: bottom;
 }
+body.app #menu .menu-top .moneys .crystals {
+	padding-left: 10px;
+}
+body.app #menu .menu-top .moneys .hab {
+	padding-left: 0;
+	margin-right: 4px;
+}
 body.app #menu .menu-top .moneys .crystal {
 	width: 4px;
 	margin-bottom: -6px;
+	margin-right: 4px;
 	height: 29px;
 	background-size: cover;
 }
 body.app #menu .menu-top .farmer-avatar {
 	margin: 0;
-	width: 45px;
-	height: 45px;
+	width: 68px;
+	height: 68px;
 }
 body.app .menu-top .moneys img {
 	width: 20px;
