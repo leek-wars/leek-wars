@@ -30,7 +30,7 @@ LW.pages.ranking.init = function(params, $scope, $page) {
 
 			$page.render()
 
-			LW.setTitle(_.lang.get('ranking', 'title'))
+			LW.setTitle(_.lang.get('ranking', 'title'), _.lang.get('ranking', 'fun'))
 			LW.setMenuTab('ranking')
 
 			LW.pages.ranking.search()
@@ -79,7 +79,7 @@ LW.pages.ranking.init = function(params, $scope, $page) {
 			$scope.pagination = _.pagination.create(page, data.pages, '/ranking/' + category + '/' + order)
 			$page.render()
 
-			LW.setTitle(_.lang.get('ranking', 'title'))
+			LW.setTitle(_.lang.get('ranking', 'title'), _.lang.get('ranking', category + 's'))
 			LW.setMenuTab('ranking')
 
 			LW.pages.ranking.search()
