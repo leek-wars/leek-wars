@@ -305,11 +305,14 @@ var Hud = function() {
 	}
 
 	this.addActionInternal = function(actionDiv) {
-
-		$("#actions").append(actionDiv)
-
-		var margin = Math.min(0, $('#layers').height() - $("#actions").height() - 120)
-		$('#actions').css('margin-top', margin)
+		var actions = $("#actions")
+		actions.append(actionDiv)
+		
+		if (actions.height() > $('#left-part').height()) {
+			actions.children().first().remove()
+		}
+		var margin = Math.min(0, $('#layers').height() - actions.height() - 120)
+		actions.css('margin-top', margin)
 	}
 
 	this.refresh = function() {
