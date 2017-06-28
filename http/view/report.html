@@ -314,7 +314,7 @@
 				<div id='team-bar{id}' class='bar'>
 					<span class='current_xp' style='width:{current_bar}%'></span><span class='new_xp team' style='width:{new_bar}%'></span>
 				</div>
-				<div class='tooltip fluid' id='tt_team-bar{id}'>{%prev_xp} / {%next_xp}</div>
+				<div class='tooltip fluid' id='tt_team-bar{id}'>{%cur_xp} / {%next_xp}</div>
 				<span>{%xp}</span>
 			</td>
 			<td class='talent'>
@@ -346,7 +346,7 @@
 			<div id='bar{leek.id}' class='bar'>
 				<span class='current_xp' style='width:{leek.current_bar}%'></span><span class='new_xp' style='width:{leek.new_bar}%'></span>
 			</div>
-			<div class='tooltip fluid' id='tt_bar{leek.id}'>{%leek.prev_xp} / {%leek.next_xp}</div>
+			<div class='tooltip fluid' id='tt_bar{leek.id}'>{%leek.cur_xp} / {%leek.next_xp}</div>
 			<span>{%leek.xp}</span>
 			@if (leek.bonus > 1)
 				<span class='bonus'>x{leek.bonus}</span>
