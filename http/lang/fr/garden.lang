@@ -12,6 +12,7 @@ garden_battle_royale		Potager Battle Royale
 leek_ai_invalid				L'IA du poireau n'est pas valide !
 leek_have_no_ai				Le poireau n'a pas d'IA équipée !
 level_n						Niveau %s
+n_challenges				%s défis
 n_leeks						%s poireaux
 n_remaining_fights			%s combats restants
 n_fights					%s combats

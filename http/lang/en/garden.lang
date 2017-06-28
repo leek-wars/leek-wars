@@ -12,6 +12,7 @@ garden_battle_royale	Battle Royale garden
 leek_ai_invalid			Leek's AI is not valid!
 leek_have_no_ai			Leek has no AI equipped!
 level_n					Level %s
+n_challenges			%s challenges
 n_leeks					%s leeks
 n_remaining_fights		%s remaining fights
 n_fights				%s fights
