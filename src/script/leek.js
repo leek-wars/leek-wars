@@ -245,7 +245,7 @@ LW.pages.leek.potion = function() {
 		})
 	})
 
-	$('#use-potion').click(function(e) {
+	$('#leek-page #use-potion, #app-bar .use-potion-button').click(function(e) {
 		popup.show(e)
 	})
 }
