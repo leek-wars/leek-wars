@@ -107,7 +107,9 @@ LW.pages.market.init = function(params, $scope, $page) {
 }
 
 LW.pages.market.resize = function() {
-	$('#preview-panel').css('width', $('#preview-panel').parent('.column4').width() - 15)
+	var width = $('#preview-panel').parent('.column4').width()
+	if (!_.is_mobile()) width -= 15
+	$('#preview-panel').css('width', width)
 }
 
 LW.pages.market.scroll = function(scroll) {
