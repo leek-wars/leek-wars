@@ -374,6 +374,23 @@ body.menu-collapsed #menu-button .icon {
 body.app .menu .section[label]:not([label='']):after {
 	right: 8px;
 }
+.menu .text .right {
+	font-size: 14px;
+	line-height: 46px;
+	position: absolute;
+	top: 0;
+	right: 8px;
+	display: none;
+}
+body.app .menu .text .right {
+	display: block;
+}
+.menu .text .right img {
+	width: 18px;
+	height: 18px;
+	margin: 14px 0;
+	margin-right: 4px;
+}
 
 body.menu-collapsed .menu .section {
 	height: 46px;
