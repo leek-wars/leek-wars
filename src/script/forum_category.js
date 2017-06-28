@@ -16,7 +16,7 @@ LW.pages.forum_category.init = function(params, $scope, $page) {
 
 		$page.render()
 
-		LW.setTitle(_category.name)
+		LW.setTitle(_category.name, _.lang.get('forum_category', 'n_topic_n_messages', data.total_topics, data.total_messages))
 		LW.setMenuTab('forum')
 
 		LW.pages.forum_category.create()
