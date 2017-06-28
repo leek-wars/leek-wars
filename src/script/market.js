@@ -40,6 +40,10 @@ LW.pages.market.init = function(params, $scope, $page) {
 				hats.push(LW.hats[item.id])
 				previews[item.id] = LW.createHatPreview(LW.hats[item.id])
 			}
+			item.leek_objs = []
+			for (var l in item.leeks)
+				if (item.leeks[l] in LW.farmer.leeks)
+					item.leek_objs.push(LW.farmer.leeks[item.leeks[l]])
 		}
 
 		var fights = [100, 200, 500, 1000]

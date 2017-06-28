@@ -140,6 +140,15 @@
 								</div>
 							@end
 						</div>
+
+						@if (items[id].leek_objs.length)
+							<div><b>{#equipped_on}</b></div>
+							<div class='leeks'>
+								@foreach (leek in items[id].leek_objs)
+									<a href='/leek/{leek.id}'><span class='leek'>{leek.name}</span></a>
+								@end
+							</div>
+						@end
 					</div>
 				@end
 			</div>
