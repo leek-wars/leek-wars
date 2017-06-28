@@ -38,3 +38,6 @@ total_level			Total level
 trophies			Trophies
 trophies_title			Most trophies
 statistics		Statistics
+n_leeks			%s leeks
+n_farmers		%s farmers
+n_teams			%s teams

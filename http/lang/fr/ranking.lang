@@ -38,3 +38,6 @@ total_level			Niveau total
 trophies			Trophées
 trophies_title			Le plus de trophées
 statistics		Statistiques
+n_leeks			%s poireaux
+n_farmers		%s éleveurs
+n_teams			%s équipes
