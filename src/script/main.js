@@ -4360,11 +4360,11 @@ LW.app.slide_menu = function() {
 		menu_visible = $('body').hasClass('menu-expanded')
 	})
 	$('html').on('touchmove', function(e) {
-		if (!down) return ;
+		if (!down || aborted) return ;
 		var x = e.touches[0].clientX
 		var y = e.touches[0].clientY
-		if (!enabled && Math.abs(downY - y) > 20) aborted = true
-		if (!enabled && Math.abs(downX - x) > 40 && menu_visible == x < downX) {
+		if (!enabled && Math.abs(downY - y) > 5) aborted = true
+		if (!enabled && Math.abs(downX - x) > 10 && menu_visible == x < downX) {
 			menu_element.css('transition', 'transform ease 100ms')
 			center_element.css('transition', 'transform ease 100ms')
 			enabled = true
