@@ -4,7 +4,17 @@ LW.pages.documentation.init = function(params, $scope, $page) {
 
 	var urlItem = 'item' in params ? params.item : null
 
-	_.get('function/get-categories', function(data) {
+	var get_categories = function(callback) {
+		if (localStorage['data/function_categories']) {
+			callback({categories: JSON.parse(localStorage['data/function_categories'])})
+		} else {
+			_.get('function/get-categories', function(data) {
+				localStorage['data/function_categories'] = JSON.stringify(data.categories)
+				callback(data)
+			})
+		}
+	}
+	get_categories(function(data) {
 
 		var categories = data.categories
 		var items = {}
