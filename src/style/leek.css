@@ -64,6 +64,9 @@
 	font-size: 13px;
 }
 
+body.app #use-potion {
+	display: none;
+}
 
 
 /*
