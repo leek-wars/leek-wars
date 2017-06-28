@@ -21,6 +21,19 @@
 	padding: 0px;
 }
 
+#preview .leeks {
+	padding: 6px 0;
+}
+
+#preview .leek {
+	background: #5fad1b;
+	color: white;
+	padding: 4px 8px;
+	border-radius: 3px;
+	margin: 3px 1px;
+	display: inline-block;
+}
+
 /*
  * Items
  */
