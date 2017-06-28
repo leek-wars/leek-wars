@@ -189,7 +189,8 @@ LW.pages.fight.resize = function() {
 
 			$('#controls').removeClass('large')
 
-			game.width = $('#fight-page').width() - 15
+			game.width = $('#fight-page').width()
+			if (!_.is_mobile()) game.width -= 15
 			game.height = Math.ceil(game.width / RATIO)
 
 			$("#fight").css("height", game.height)
