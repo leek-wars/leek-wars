@@ -479,7 +479,7 @@ $(document).ready(function() {
 	)
 	// Set body classes as soon as possible
 	if (_.is_mobile()) {
-		$('body').addClass('app')
+		$('body, html').addClass('app')
 	}
 	LW.sfw.init()
 	if (localStorage['connected'] == 'true') {
