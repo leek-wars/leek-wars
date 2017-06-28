@@ -207,8 +207,8 @@
 	background: white;
 }
 
-#statistics-table .summon .name {
-	padding-left: 30px;
+#statistics-table .summon .name .text {
+	padding-left: 20px;
 }
 
 #statistics-table .best {
