@@ -20,7 +20,12 @@ LW.pages.garden.init = function(params, $scope, $page) {
 				$scope.challenge_fights = data.challenges
 
 				$page.render()
-				LW.setTitle(_.lang.get('garden', 'title'))
+				LW.setTitle(_.lang.get('garden', 'title'), _.lang.get('garden', 'n_challenges', data.challenges))
+
+				if (_.is_mobile()) {
+					$('#garden-page .column3').hide()
+					$('#garden-page .column9').show()
+				}
 
 				var leeks = []
 				for (var l in LW.farmer.leeks) leeks[LW.farmer.leeks[l].id] = LW.farmer.leeks[l]
@@ -66,7 +71,12 @@ LW.pages.garden.init = function(params, $scope, $page) {
 				$scope.challenge_fights = data.challenges
 				$page.render()
 
-				LW.setTitle(_.lang.get('garden', 'title'))
+				LW.setTitle(_.lang.get('garden', 'title'), _.lang.get('garden', 'n_challenges', data.challenges))
+
+				if (_.is_mobile()) {
+					$('#garden-page .column3').hide()
+					$('#garden-page .column9').show()
+				}
 
 				$(".farmer.enemy").click(function() {
 
