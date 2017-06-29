@@ -86,6 +86,7 @@ clean:
 	@echo "Clean project..."
 	@echo "================"
 	rm -rf build
+	rm -f http/*.min.*
 
 # Line couning with cloc.
 # `apt-get install cloc`
