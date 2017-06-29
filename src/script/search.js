@@ -40,8 +40,8 @@ LW.pages.search.init = function(params, $scope, $page) {
 			// link
 			var f = "<a href='/farmer/" + results[r].fid + "'>" + results[r].formatted_farmer + "</a>"
 			var date = "<dark>" + _.format.date(results[r].date) + "</dark>"
-			var category = "<a href='/forum/category-" + results[r].cid + "'>" + _.lang.get('forum', 'category_' + results[r].cname) + "</a>"
-			results[r].link = _.lang.get('search', 'post_by_x_the_x_in_x', f, date, category)
+			var cat = "<a href='/forum/category-" + results[r].cid + "'>" + _.lang.get('forum', 'category_' + results[r].cname) + "</a>"
+			results[r].link = _.lang.get('search', 'post_by_x_the_x_in_x', f, date, cat)
 		}
 
 		$scope.query = query
