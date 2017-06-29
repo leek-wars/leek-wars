@@ -56,10 +56,9 @@ LW.pages.forum_category.create = function() {
 LW.pages.forum_category.search = function() {
 
 	var search = function() {
-		var query = $('#query').val().replace(' ', '+');
-		document.location.href = "/search/" + query;
+		var query = $('#query').val().replace(' ', '+')
+		LW.page('/search/' + query + '/-/' + _category.id)
 	}
-
 	$('#search-box #query').keyup(function(e) {
 		if (e.keyCode == 13) {
 			search()
@@ -67,5 +66,5 @@ LW.pages.forum_category.search = function() {
 	})
 	$('#search-box img').click(function() {
 		search()
-	});
+	})
 }
