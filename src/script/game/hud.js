@@ -206,7 +206,7 @@ var Hud = function() {
 
 		$('.entity[entity=' + entity.id + ']').mouseenter(function() {
 			_hoverEntity = entity.id
-			$('.entity-details[entity=' + entity.id + ']').css('margin-left', $(this).offset().left - 330).show()
+			$('.entity-details[entity=' + entity.id + ']').css('margin-left', $(this).offset().left - $('#game').offset().left - 125).show()
 		})
 		.mouseleave(function() {
 			_hoverEntity = null
@@ -307,7 +307,7 @@ var Hud = function() {
 	this.addActionInternal = function(actionDiv) {
 		var actions = $("#actions")
 		actions.append(actionDiv)
-		
+
 		if (actions.height() > $('#left-part').height()) {
 			actions.children().first().remove()
 		}
