@@ -599,6 +599,7 @@ LW.pages.report.statistics = function(fight) {
 
 			case ACTION_RESURRECTION:
 				leeks[action[2]].resurrection++
+				leeks[action[2]].life = action[4]
 				break
 
 			case ACTION_BUG:
