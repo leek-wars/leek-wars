@@ -3,6 +3,7 @@ add_leek			New leek
 admin			Admin
 all_notifications			All notifications
 all_private_messages			All privates messages
+app				Mobile app
 bank			Bank
 br_started_message		Battle royale started!
 changelog			Changelog
