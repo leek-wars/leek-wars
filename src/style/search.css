@@ -10,11 +10,16 @@ body.app #search-page #search {
 	width: 90px;
 	display: inline-block;
 	text-align: right;
+	margin-right: 6px;
 }
 
-#search-page #search-box img {
-	vertical-align: middle;
-	cursor: pointer;
+#search-page #search-button {
+	margin-left: 100px;
+}
+
+#search-page #search-button img {
+	vertical-align: bottom;
+	margin-right: 6px;
 }
 
 #search-page #query:focus {
@@ -23,6 +28,11 @@ body.app #search-page #search {
 #farmer-query:focus {
 	border: 1px solid #5FAD1B;
 }
+
+#search-page #search-category {
+	height: 28px;
+}
+
 #search h2 {
 	margin-top: 20px;
 }

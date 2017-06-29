@@ -1,8 +1,11 @@
+all_categories	Toutes les catégories
 author			Auteur
+category		Catégorie
 no_results_found			Aucun résultat trouvé...
 post_by_x_the_x_in_x			Posté par %1$s le %2$s dans %3$s
 query			Recherche
 results			Résultats de la recherche
+search			Rechercher
 title			Recherche
 too_few_params			Pas assez de paramètres...
 too_short			Recherche trop courte...

@@ -10,13 +10,22 @@
 
 			<div id='search-box'>
 				<div class='label'>{#query}</div>
-				<input type='text' id='query' value='{query}'></input> <img src='{{static}}image/search_black.png'></img>
+				<input type='text' id='query' value='{query}'></input>
 			</div>
 			<br>
 			<div id='search-box-farmer'>
 				<div class='label'>{#author}</div>
 				<input type='text' id='farmer-query' value='{farmer_query}'></input>
 			</div>
+			<br>
+			<div>
+				<div class='label'>{#category}</div>
+				<select id='search-category'>
+					<option value='-1'>{#all_categories}</option>
+				</select>
+			</div>
+			<br>
+			<div id='search-button' class='button green'><img src='{{static}}image/search.png'><span>{#search}</span></div>
 
 			<div class='results-wrapper'>
 				<br>

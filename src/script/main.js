@@ -1390,7 +1390,11 @@ page('/search/:query/:farmer', function(ctx) {
 	LW.loadPage('search', ctx.params)
 })
 
-page('/search/:query/:farmer/page-:page', function(ctx) {
+page('/search/:query/:farmer/:category', function(ctx) {
+	LW.loadPage('search', ctx.params)
+})
+
+page('/search/:query/:farmer/:category/page-:page', function(ctx) {
 	LW.loadPage('search', ctx.params)
 })
 

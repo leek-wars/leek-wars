@@ -5,8 +5,19 @@ LW.pages.search.init = function(params, $scope, $page) {
 	var farmer = 'farmer' in params ? params.farmer : ''
 	if (farmer == '-') farmer = ''
 	var page = 'page' in params ? params.page : 1
+	var category = 'category' in params ? params.category : -1
+	if (category == '-') category = -1
 
-	_.get('forum/search/' + query + '/' + farmer + '/' + page + '/' + LW.token(), function(data) {
+	var language = 'forum/language' in localStorage ? localStorage['forum/language'] : _.lang.current
+	_.get('forum/get-categories/' + language + '/' + LW.token(), function(data) {
+		for (var c in data.categories) {
+			var name = data.categories[c].type == 'team' ? data.categories[c].name : _.lang.get('forum', 'category_' + data.categories[c].name)
+			$('#search-category').append('<option value="' + data.categories[c].id + '">' + name + '</option>')
+		}
+		$('#search-category option[value=' + category + ']').prop('selected', true)
+	})
+
+	_.get('forum/search/' + query + '/' + farmer + '/' + category + '/' + page + '/' + LW.token(), function(data) {
 
 		var results = data.results
 		for (var r in results) {
@@ -39,7 +50,8 @@ LW.pages.search.init = function(params, $scope, $page) {
 
 		var urlQuery = query == '' ? '-' : query
 		var farmerQuery = farmer == '' ? '-' : farmer
-		$scope.pagination = _.pagination.create(page, data.pages, '/search/' + urlQuery + '/' + farmerQuery)
+		var categoryQuery = category == -1 ? '-' : category
+		$scope.pagination = _.pagination.create(page, data.pages, '/search/' + urlQuery + '/' + farmerQuery + '/' + categoryQuery)
 
 		$page.render()
 
@@ -50,21 +62,12 @@ LW.pages.search.init = function(params, $scope, $page) {
 		}
 
 		// Recherche
-		$('#search-box #query').keyup(function(e) {
+		$('#search-box #query, #search-box-farmer #farmer-query').keyup(function(e) {
 			if (e.keyCode == 13) {
 				LW.pages.search.search()
 			}
 		})
-		$('#search-box img').click(function() {
-			LW.pages.search.search()
-		})
-
-		$('#search-box-farmer #farmer-query').keyup(function(e) {
-			if (e.keyCode == 13) {
-				LW.pages.search.search()
-			}
-		})
-		$('#search-box-farmer img').click(function() {
+		$('#search-button').click(function() {
 			LW.pages.search.search()
 		})
 	})
@@ -74,12 +77,17 @@ LW.pages.search.search = function() {
 
 	var query = $('#query').val().replace(/ /g, '+')
 	if (query == "") query = "-";
-
 	var farmer = $('#farmer-query').val().replace(/ /g, '+')
+	var category = $('#search-category').val()
 
+	var url = "/search/" + query
 	if (farmer != "") {
-		LW.page("/search/" + query + "/" + farmer)
-	} else {
-		LW.page("/search/" + query)
+		url += '/' + farmer
+	} else if (category != -1) {
+		url += '/-'
 	}
+	if (category != -1) {
+		url += '/' + category
+	}
+	LW.page(url)
 }
