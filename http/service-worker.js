@@ -7,7 +7,7 @@ self.addEventListener("install", function(event) {
 		.then(function(cache) {
 			return cache.addAll([
 				'/static/libs.min.js',
-				'/static/libs.min.css'
+				'/static/libs.min.css',
 				'/static/leekwars.min.js',
 				'/static/leekwars.min.css'
 			]);
