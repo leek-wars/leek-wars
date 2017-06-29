@@ -14,10 +14,10 @@ JS_LIB_FILES := src/third_party/jquery.js \
 JS_FILES :=	src/script/main.js \
 			src/third_party/codemirror/leekscript.js \
 			src/third_party/codemirror/runmode.js \
-			$(wildcard src/script/*.js) \
+			$(subst src/script/main.js,,$(wildcard src/script/*.js)) \
 			src/script/game/entity.js \
 			$(wildcard src/script/game/map/*.js) \
-			$(wildcard src/script/game/*.js)
+			$(subst src/script/game/entity.js,,$(wildcard src/script/game/*.js))
 
 JS_LIB_SRC_FILES :=  $(subst src/third_party/,,$(JS_LIB_FILES))
 
@@ -37,29 +37,25 @@ MAKEFLAGS += --jobs=2
 
 all: http/libs.min.js http/leekwars.min.js http/libs.min.css http/leekwars.min.css
 
-http/libs.min.js: build/libs.min.js
-	@cp build/libs.min.js http/libs.min.js
+quick: http/libs.min.js http/leekwars-quick.min.js http/libs.min.css http/leekwars-quick.min.css
 
-http/leekwars.min.js: build/leekwars.min.js
-	@cp build/leekwars.min.js http/leekwars.min.js
+http/libs.min.js: $(JS_LIB_MIN)
+	cat $(JS_LIB_MIN) > $@
 
-http/libs.min.css: build/libs.min.css
-	@cp build/libs.min.css http/libs.min.css
-
-http/leekwars.min.css: build/leekwars.min.css
-	@cp build/leekwars.min.css http/leekwars.min.css
-
-build/libs.min.js: $(JS_LIB_MIN)
-	cat $(JS_LIB_MIN) > build/libs.min.js
-
-build/leekwars.min.js: $(JS_FILES)
+http/leekwars.min.js: $(JS_FILES)
 	uglifyjs $(JS_FILES) -o $@ -c -m --source-map root="http://leekwars.com/",url=$@.map
 
-build/libs.min.css: $(CSS_LIB_MIN)
-	cat $(CSS_LIB_MIN) > build/libs.min.css
+http/leekwars-quick.min.js: $(JS_FILES)
+	awk 1 $(JS_FILES) > $@
 
-build/leekwars.min.css: $(CSS_MIN)
-	cat $(CSS_MIN) > build/leekwars.min.css
+http/libs.min.css: $(CSS_LIB_MIN)
+	cat $(CSS_LIB_MIN) > $@
+
+http/leekwars.min.css: $(CSS_MIN)
+	cat $(CSS_MIN) > $@
+
+http/leekwars-quick.min.css: $(CSS_FILES)
+	cat $(CSS_FILES) > $@
 
 build/third_party/%.min.js: src/third_party/%.js
 	@mkdir -p $(@D)
@@ -77,11 +73,11 @@ watch:
 	@echo "================="
 	@+inotifywait -mqr src -e create -e moved_to -e close_write | \
 	while read path action file; do \
-		echo "File [\033[1;34m$$path$$file\033[0m] modified, generate..."; \
-		make > /dev/null & \
+		echo -n "File [\033[1;34m$$path$$file\033[0m] modified, generate... "; \
+		make quick > /dev/null && echo "done!" & \
 	done
 
-server: all
+server: quick
 	@+fuser -k 8012/tcp > /dev/null; python3 leekwars.py
 
 serve: watch server
