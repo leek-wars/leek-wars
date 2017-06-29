@@ -6,6 +6,8 @@ self.addEventListener("install", function(event) {
 		caches.open(pathToJson + 'fundamentals')
 		.then(function(cache) {
 			return cache.addAll([
+				'/static/libs.min.js',
+				'/static/libs.min.css'
 				'/static/leekwars.min.js',
 				'/static/leekwars.min.css'
 			]);
