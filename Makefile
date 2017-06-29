@@ -51,8 +51,8 @@ http/leekwars-quick.min.js: $(JS_FILES)
 http/libs.min.css: $(CSS_LIB_MIN)
 	cat $(CSS_LIB_MIN) > $@
 
-http/leekwars.min.css: $(CSS_MIN)
-	cat $(CSS_MIN) > $@
+http/leekwars.min.css: $(CSS_FILES)
+	cat $(CSS_FILES) | csso -o $@
 
 http/leekwars-quick.min.css: $(CSS_FILES)
 	cat $(CSS_FILES) > $@
