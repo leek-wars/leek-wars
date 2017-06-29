@@ -25,6 +25,10 @@ LW.pages.settings.init = function(params, $scope, $page) {
 			id: 'chat-first-switch',
 			checked: localStorage['options/chat-first'] == 'true'
 		}
+		$scope.push_notifs_switch = {
+			id: 'push-notifs-switch',
+			checked: localStorage['options/push-notifs'] == 'true'
+		}
 		$scope.mails = mails
 		$scope.settings = data.settings
 		$page.render()
@@ -42,21 +46,7 @@ LW.pages.settings.init = function(params, $scope, $page) {
 		LW.pages.settings.clearLocalStorage()
 		LW.pages.settings.mails(mails)
 		LW.pages.settings.two_factor_auth()
-
-		$('#register-push').click(function() {
-
-			if ('serviceWorker' in navigator) {
-
-				navigator.serviceWorker.ready.then(function(reg) {
-					reg.pushManager.subscribe({
-						applicationServerKey: vapid_key,
-						userVisibleOnly: true
-					}).then(function(subscription) {
-						_.post('push-endpoint/register', {subscription: JSON.stringify(subscription), token: LW.token()})
-					});
-				})
-			}
-		})
+		LW.pages.settings.push_notifications()
 	})
 }
 
@@ -254,6 +244,37 @@ LW.pages.settings.mails = function(mails) {
 		updateCategory($(this).attr('category'))
 
 		_.post('settings/update-setting', {setting: $(this).attr('setting'), value: '' + checked}, function(data) {})
+	})
+}
+
+LW.pages.settings.push_notifications = function() {
+
+	if (!LW.service_worker) return ; // nothing to do without a service worker
+
+	// Check the push notifs switch if we have a valid subscription
+	LW.service_worker.pushManager.getSubscription().then(function(subscription) {
+		if (subscription) {
+			$('#push-notifs-switch').prop('checked', true)
+		}
+	})
+
+	$('#push-notifs-button').click(function() {
+		var checked = $('#push-notifs-switch').is(':checked')
+		if (checked) {
+			LW.service_worker.pushManager.getSubscription().then(function(subscription) {
+				if (subscription) {
+					subscription.unsubscribe()
+				}
+			})
+		} else {
+			LW.service_worker.pushManager.subscribe({
+				applicationServerKey: vapid_key,
+				userVisibleOnly: true
+			}).then(function(subscription) {
+				_.post('push-endpoint/register', {subscription: JSON.stringify(subscription), token: LW.token()})
+			})
+		}
+		$('#push-notifs-switch').prop('checked', !checked)
 	})
 }
 

@@ -25,5 +25,6 @@ notifs_results					Résultats des combats dans les notifications
 old_password					Ancien mot de passe
 misc_options					Options diverses
 password_changed				Mot de passe changé !
+push_notifications				Notifications push
 title							Paramètres
 chat_first						Affichage la page Chat en premier

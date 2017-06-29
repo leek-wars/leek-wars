@@ -61,6 +61,18 @@
 	display: none;
 }
 
+#push-notifs-button {
+	display: inline-block;
+	margin-top: 8px;
+	margin-right: 12px;
+	cursor: pointer;
+}
+#push-notifs-button > span {
+	vertical-align: bottom;
+	padding-bottom: 6px;
+	display: inline-block;
+}
+
 #settings-page #notifications {
 	text-align: left;
 }
