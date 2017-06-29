@@ -69,12 +69,15 @@
 }
 #push-notifs-button > span {
 	vertical-align: bottom;
-	padding-bottom: 6px;
+	padding-bottom: 5px;
 	display: inline-block;
 }
 
 #settings-page #notifications {
 	text-align: left;
+}
+#settings-page #notifications table {
+	width: 100%;
 }
 
 #settings-page #notifications .category {
