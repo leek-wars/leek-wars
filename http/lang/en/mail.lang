@@ -21,21 +21,23 @@ mail_tournament_farmer_round_finished_text			Your %s fight is over!
 mail_tournament_solo_round_finished_html			<b>%s</b> has finished his <b>%s</b> fight!
 mail_tournament_solo_round_finished_subject			%s has finished his %s fight!
 mail_tournament_solo_round_finished_text			%s has finished his %s fight!
-notif_changelog			Updates
-notif_changelog_changelog			Mail when an update comes out
-notif_fight			Fight
-notif_fight_farmer			Mail for a farmer aggression
-notif_fight_farmer_challenge			Mail for a farmer challenge
-notif_fight_solo			Mail for a solo agression
-notif_fight_solo_challenge			Mail for a solo challenge
-notif_fight_team			Mail for a team aggression
-notif_forum			Forum
-notif_forum_response			Mail when someone answers in a topic you follow
-notif_tournament			Tournament
-notif_tournament_farmer_round_finished			Mail when a farmer tournament round is finished
-notif_tournament_solo_round_finished			Mail when a solo tournament round is finished
-notif_private_message		Private messages
-notif_private_message_private_message		Notification on receiving a private message
+
+notif_changelog							Updates
+notif_changelog_changelog				When an update comes out
+notif_fight								Fight
+notif_fight_farmer						For a farmer aggression
+notif_fight_farmer_challenge			For a farmer challenge
+notif_fight_solo						For a solo agression
+notif_fight_solo_challenge				For a solo challenge
+notif_fight_team						For a team aggression
+notif_forum								Forum
+notif_forum_response					When someone answers in a topic you follow
+notif_tournament						Tournament
+notif_tournament_farmer_round_finished	When a farmer tournament round is finished
+notif_tournament_solo_round_finished	When a solo tournament round is finished
+notif_private_message					Private messages
+notif_private_message_private_message	When receiving a private message
+
 register_mail			Congratulation %s, you are now registered on Leek Wars.
 
 Go to this page to validate your account : %s.

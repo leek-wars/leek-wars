@@ -21,38 +21,40 @@ mail_tournament_farmer_round_finished_text			Votre match de %s est terminé !
 mail_tournament_solo_round_finished_html			<b>%s</b> a terminé son combat de <b>%s</b> !
 mail_tournament_solo_round_finished_subject			%s a terminé son combat de %s !
 mail_tournament_solo_round_finished_text			%s a terminé son combat de %s !
-notif_changelog			Mises à jour
-notif_changelog_changelog			Mail lors d'une mise à jour
-notif_fight			Combat
-notif_fight_farmer			Mail lors d'une agression éleveur
-notif_fight_farmer_challenge			Mail lors d'un défi éleveur
-notif_fight_solo			Mail lors d'une agression solo
-notif_fight_solo_challenge			Mail lors d'un défi solo
-notif_fight_team			Mail lors d'une agression équipe
-notif_forum			Forum
-notif_forum_response			Mail lorsque quelqu'un répond sur un sujet que vous suivez
-notif_tournament			Tournoi
-notif_tournament_farmer_round_finished			Mail lorsqu'un match de tournoi éleveur est terminé
-notif_tournament_solo_round_finished			Mail lorsqu'un match de tournoi solo est terminé
-notif_private_message		Messages privés
-notif_private_message_private_message		Notification lors de la réception d'un message privé
+notif_changelog							Mises à jour
+notif_changelog_changelog				Lors d'une mise à jour
+notif_fight								Combat
+notif_fight_farmer						Lors d'une agression éleveur
+notif_fight_farmer_challenge			Lors d'un défi éleveur
+notif_fight_solo						Lors d'une agression solo
+notif_fight_solo_challenge				Lors d'un défi solo
+notif_fight_team						Lors d'une agression équipe
+notif_forum								Forum
+notif_forum_response					Lorsque quelqu'un répond sur un sujet que vous suivez
+notif_tournament						Tournoi
+notif_tournament_farmer_round_finished	Lorsqu'un match de tournoi éleveur est terminé
+notif_tournament_solo_round_finished	Lorsqu'un match de tournoi solo est terminé
+notif_private_message					Messages privés
+notif_private_message_private_message	Lors de la réception d'un message privé
+
 register_mail			Félicitations %s, tu es inscrit sur Leek Wars.
 
-Pour valider ton compte, rends toi sur cette page : %s
-register_mail_html			Félicitations <b>%s</b>, tu es inscrit sur Leek Wars !<br/><br/>Pour valider ton compte, <a href='%s'>Clique ici</a>
-register_mail_subject			Leek Wars : Inscription
-reset_mail			Bonjour <b>%s</b> !
+						Pour valider ton compte, rends toi sur cette page : %s
 
-Votre demande de réinitialisation du mot de passe a bien été enregistrée. 
+register_mail_html		Félicitations <b>%s</b>, tu es inscrit sur Leek Wars !<br/><br/>Pour valider ton compte, <a href='%s'>Clique ici</a>
+register_mail_subject	Leek Wars : Inscription
+reset_mail				Bonjour <b>%s</b> !
 
-Pour pour changer votre mot de passe cliquez sur ce lien : %s.
+						Votre demande de réinitialisation du mot de passe a bien été enregistrée. 
+
+						Pour pour changer votre mot de passe cliquez sur ce lien : %s.
 reset_mail_html			Bonjour <b>%s</b> !
-<br><br>
-Votre demande de réinitialisation du mot de passe a bien été enregistrée.
-<br><br>
+						<br><br>
+						Votre demande de réinitialisation du mot de passe a bien été enregistrée.
+						<br><br>
 						Pour pour changer votre mot de passe, cliquez sur <a href='%s'>ce lien</a>.
-<br><br>
-À bientôt sur Leek Wars !
-reset_mail_subject			Leek Wars : Réinitialisation du mot de passe
+						<br><br>
+						À bientôt sur Leek Wars !
+reset_mail_subject		Leek Wars : Réinitialisation du mot de passe
 see_the_fight			Voir le combat
 see_the_message			Voir le message
