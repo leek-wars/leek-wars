@@ -3,9 +3,10 @@ add_leek			Nouveau poireau
 admin			Admin
 all_notifications			Toutes les notifications
 all_private_messages			Tous les messages privés
+app				Appli mobile
 bank			Banque
 br_started_message		Battle royale lancée !
-changelog			Historique des modifications
+changelog			Changelog
 chat_the_mdy_at_hm			Le %1$s/%2$s/%3$s à %4$s:%5$s
 chat_placeholder	Entrez votre message...
 commands       Commandes
