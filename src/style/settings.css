@@ -84,6 +84,9 @@
 #settings-page #notifications .item {
 	padding-left: 18px;
 }
+#settings-page #notifications .push label, #settings-page #notifications .mail label {
+	cursor: pointer;
+}
 #settings-page #notifications .push {
 	padding-right: 5px;
 	padding-left: 5px;
