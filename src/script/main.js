@@ -443,6 +443,7 @@ LW.pages = {
 	api: {},
 	statistics: {},
 	history: {},
+	app: {},
 
 	moderation: {
 		moderator: true
@@ -1424,6 +1425,10 @@ page('/translation/:file', function(ctx) {
 
 page('/statistics', function(ctx) {
 	LW.loadPage('statistics')
+})
+
+page('/app', function(ctx) {
+	LW.loadPage('app')
 })
 
 page('/moderation', function() {

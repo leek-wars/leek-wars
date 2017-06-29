@@ -1,0 +1,20 @@
+app_installation	Installation de l'application sur mobile
+app_info			En suivant ces instructions, vous allez pouvoir installer l'application web Leek Wars (<a href='https://en.wikipedia.org/wiki/Progressive_web_app'>PWA</a>)
+					sur votre mobile.
+					Cette fonctionnalité est gérée plus ou moins bien selon les OS et les navigateurs, et le mode d'installation peut varier de l'un à l'autre.
+					Le navigateur utilisé dans les instructions est <b>Chrome</b> sur <b>Android</b>, qui semble être celui qui gère le mieux les applications web.
+app_preview			Aperçu de l'application
+title				Application mobile
+step_n				Étape %s
+step1				Aller sur leekwars.com
+step2				Appuyer sur "Ajouter à l'écran d'accueil"
+step3				Appuyer sur "Ajouter"
+step4				Le raccourci vers l'application apparaît sur le bureau
+preview1			Page poireau
+preview2			Menu latéral
+preview3			Page du marché
+preview4			Détail d'une arme sur le marché
+preview5			Page des trophées
+preview6			Affichage d'un combat
+preview7			Édition d'une IA
+preview8			Notification push
