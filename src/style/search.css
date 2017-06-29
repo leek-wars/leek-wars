@@ -39,6 +39,7 @@ body.app #search-page #search {
 
 #search .results-wrapper {
 	display: none;
+	margin-top: 30px;
 }
 
 #search .result {
