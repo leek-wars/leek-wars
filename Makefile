@@ -21,34 +21,45 @@ JS_FILES :=	src/script/main.js \
 
 JS_LIB_SRC_FILES :=  $(subst src/third_party/,,$(JS_LIB_FILES))
 
-CSS_FILES := src/third_party/codemirror/codemirror.css \
+CSS_LIB_FILES := src/third_party/codemirror/codemirror.css \
 			 src/third_party/chartist/chartist.css \
-			 src/third_party/katex/katex.min.css \
-			 $(wildcard src/style/*.css)
+			 src/third_party/katex/katex.min.css
+CSS_FILES := $(wildcard src/style/*.css)
 
+CSS_LIB_SRC_FILES :=  $(subst src/,,$(CSS_LIB_FILES))
 CSS_SRC_FILES :=  $(subst src/,,$(CSS_FILES))
 
 JS_LIB_MIN := $(patsubst %.js,build/third_party/%.min.js, $(JS_LIB_SRC_FILES))
 CSS_MIN := $(patsubst %.css,build/%.min.css, $(CSS_SRC_FILES))
+CSS_LIB_MIN := $(patsubst %.css,build/%.min.css, $(CSS_LIB_SRC_FILES))
 
 MAKEFLAGS += --jobs=2
 
-all: http/leekwars.min.js http/leekwars.min.css
+all: http/libs.min.js http/leekwars.min.js http/libs.min.css http/leekwars.min.css
+
+http/libs.min.js: build/libs.min.js
+	@cp build/libs.min.js http/libs.min.js
 
 http/leekwars.min.js: build/leekwars.min.js
 	@cp build/leekwars.min.js http/leekwars.min.js
 
+http/libs.min.css: build/libs.min.css
+	@cp build/libs.min.css http/libs.min.css
+
 http/leekwars.min.css: build/leekwars.min.css
 	@cp build/leekwars.min.css http/leekwars.min.css
 
-build/leekwars.min.js: $(JS_LIB_MIN) build/sources.min.js
-	cat $(JS_LIB_MIN) build/sources.min.js > build/leekwars.min.js
+build/libs.min.js: $(JS_LIB_MIN)
+	cat $(JS_LIB_MIN) > build/libs.min.js
+
+build/leekwars.min.js: $(JS_FILES)
+	uglifyjs $(JS_FILES) -o $@ -c -m --source-map root="http://leekwars.com/",url=$@.map
+
+build/libs.min.css: $(CSS_LIB_MIN)
+	cat $(CSS_LIB_MIN) > build/libs.min.css
 
 build/leekwars.min.css: $(CSS_MIN)
 	cat $(CSS_MIN) > build/leekwars.min.css
-
-build/sources.min.js: $(JS_FILES)
-	uglifyjs $(JS_FILES) -o $@ -c -m --source-map root="http://leekwars.com/",url=$@.map
 
 build/third_party/%.min.js: src/third_party/%.js
 	@mkdir -p $(@D)
