@@ -8,15 +8,6 @@ LW.pages.search.init = function(params, $scope, $page) {
 	var category = 'category' in params ? params.category : -1
 	if (category == '-') category = -1
 
-	var language = 'forum/language' in localStorage ? localStorage['forum/language'] : _.lang.current
-	_.get('forum/get-categories/' + language + '/' + LW.token(), function(data) {
-		for (var c in data.categories) {
-			var name = data.categories[c].type == 'team' ? data.categories[c].name : _.lang.get('forum', 'category_' + data.categories[c].name)
-			$('#search-category').append('<option value="' + data.categories[c].id + '">' + name + '</option>')
-		}
-		$('#search-category option[value=' + category + ']').prop('selected', true)
-	})
-
 	_.get('forum/search/' + query + '/' + farmer + '/' + category + '/' + page + '/' + LW.token(), function(data) {
 
 		var results = data.results
@@ -56,6 +47,15 @@ LW.pages.search.init = function(params, $scope, $page) {
 		$page.render()
 
 		LW.setTitle(_.lang.get('search', 'title'))
+
+		var language = 'forum/language' in localStorage ? localStorage['forum/language'] : _.lang.current
+		_.get('forum/get-categories/' + language + '/' + LW.token(), function(data) {
+			for (var c in data.categories) {
+				var name = data.categories[c].type == 'team' ? data.categories[c].name : _.lang.get('forum', 'category_' + data.categories[c].name)
+				$('#search-category').append('<option value="' + data.categories[c].id + '">' + name + '</option>')
+			}
+			$('#search-category option[value=' + category + ']').prop('selected', true)
+		})
 
 		if (query != '' || farmer != '') {
 			$('#search-page .results-wrapper').show()
