@@ -46,7 +46,7 @@ LW.pages.settings.init = function(params, $scope, $page) {
 		LW.pages.settings.clearLocalStorage()
 		LW.pages.settings.mails(mails)
 		LW.pages.settings.two_factor_auth()
-		LW.pages.settings.push_notifications()
+		LW.pages.settings.push_notifications(data.push_endpoints)
 	})
 }
 
@@ -247,14 +247,19 @@ LW.pages.settings.mails = function(mails) {
 	})
 }
 
-LW.pages.settings.push_notifications = function() {
+LW.pages.settings.push_notifications = function(endpoints) {
 
 	if (!LW.service_worker) return ; // nothing to do without a service worker
 
 	// Check the push notifs switch if we have a valid subscription
 	LW.service_worker.pushManager.getSubscription().then(function(subscription) {
 		if (subscription) {
-			$('#push-notifs-switch').prop('checked', true)
+			for (var e in endpoints) {
+				if (subscription.endpoint == endpoints[e]) {
+					$('#push-notifs-switch').prop('checked', true)
+					break
+				}
+			}
 		}
 	})
 
