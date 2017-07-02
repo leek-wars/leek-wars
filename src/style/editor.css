@@ -615,11 +615,10 @@ body.app #ai-stats {
 
 .popup.test_popup .map-wrapper {
 	transform: scale(1, 0.5) rotate(-45.5deg);
-	margin-top: -280px;
+	margin-top: -300px;
 	margin-left: -110px;
 }
 .popup.test_popup .map .line {
-	margin-bottom: -5px;
 	white-space: nowrap;
 }
 .popup.test_popup .map .cell {
