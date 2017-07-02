@@ -56,6 +56,10 @@
 	background: #76d820;
 	padding: 3px 0;
 }
+.cm-highlight-error {
+	background: #FF9E9E;
+	padding: 3px 0;
+}
 .CodeMirror-matchingbracket {
     color: #00F;
 	font-weight: bold;
