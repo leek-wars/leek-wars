@@ -142,7 +142,7 @@ var Game = function() {
 		Bulb
 	];
 
-	this.inited = false
+	this.initialized = false
 	this.paused = false
 	this.requestPause = false
 	this.speed = 1
@@ -236,9 +236,9 @@ var Game = function() {
      */
 	this.init = function(fight) {
 
-		//if (game.inited) return false;
+		_.log("Init fight...")
 
-		game.inited = true;
+		//if (game.inited) return false;
 
 		game.data = fight;
 
@@ -419,6 +419,8 @@ var Game = function() {
 
 		if (R.loadedData == R.numData) {
 			game.launch() // Start game if all resources are loaded
+		} else {
+			_.log('Wait for the resources...')
 		}
 	}
 
@@ -431,6 +433,8 @@ var Game = function() {
 	 * Ressources chargées, on peut y aller
 	 */
 	this.launch = function() {
+
+		_.log("Starting fight...")
 
 		// Atmosphere sound
 		if (game.atmosphere != null && game.sound) {

@@ -342,10 +342,10 @@ function Sound(src, volume) {
 		// _.log("Error loading (abort) : " + src);
 		resourceLoaded(src);
 	}, true);
-	this.sound.addEventListener("stalled", function() {
+	// this.sound.addEventListener("stalled", function() {
 		// _.log("Error loading (stalled) : " + src);
-		resourceLoaded(src);
-	}, true);
+		// resourceLoaded(src);
+	// }, true);
 	// this.sound.addEventListener("suspend", function() {
 		// _.log("Suspend : " + src);
 	// }, true);

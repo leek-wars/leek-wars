@@ -262,7 +262,6 @@ function getFight() {
 
 		if (data.fight.status >= 1) {
 
-			_.log("init fight", data.fight)
 			game.init(data.fight)
 
 		} else {
@@ -278,7 +277,7 @@ function getFight() {
 			if (!_load) return false
 
 			setTimeout(function() {
-				if (!game.inited && !_error) {
+				if (!game.initialized && !_error) {
 					getFight();
 				}
 			}, _getDelay);
