@@ -33,7 +33,7 @@ var Ground = function() {
 
 	this.resize = function(width, height, fullscreen, quality) {
 
-		if (!game.inited) return null
+		if (!game.initialized) return null
 		if (this.width == width && this.height == height) return null
 
 		this.width = width
