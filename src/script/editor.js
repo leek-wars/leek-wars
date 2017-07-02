@@ -1537,7 +1537,15 @@ LW.pages.editor.test_popup = function(ais) {
 	 */
 	_testPopup.view.find("#launch").click(function() {
 		var scenario_data = JSON.stringify(_current_scenario.data)
-		_.post('ai/test-new', {data: scenario_data}, function(data) {
+		var v2 = false
+		for (var i in _current_scenario.data.ais) {
+			if (i != -1 && _current_scenario.data.ais[i].id in editors && editors[_current_scenario.data.ais[i].id].v2) {
+				v2 = true
+				break
+			}
+		}
+		var service = v2 ? 'ai/test-v2' : 'ai/test-new'
+		_.post(service, {data: scenario_data}, function(data) {
 			if (data.success) {
 				localStorage['editor/last-scenario-data'] = scenario_data
 				_testPopup.dismiss()
