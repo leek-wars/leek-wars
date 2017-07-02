@@ -1539,7 +1539,7 @@ LW.pages.editor.test_popup = function(ais) {
 		var scenario_data = JSON.stringify(_current_scenario.data)
 		var v2 = false
 		for (var i in _current_scenario.data.ais) {
-			if (i != -1 && _current_scenario.data.ais[i].id in editors && editors[_current_scenario.data.ais[i].id].v2) {
+			if (i != -1 && _current_scenario.data.ais[i] && _current_scenario.data.ais[i].id in editors && editors[_current_scenario.data.ais[i].id].v2) {
 				v2 = true
 				break
 			}
