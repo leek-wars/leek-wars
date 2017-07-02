@@ -217,64 +217,105 @@ var Editor = function(id, name, valid, code, folder, level) {
 			$('#results').empty().show()
 			$('#compiling').hide()
 
-			if (editor.v2 == false)
-			if (!data.success || data.result.length == 0) {
+			if (editor.v2) {
 
-				$('#results').append("<div class='error'>× <i>" + _.lang.get('editor', 'server_error') + "</i></div>")
-				return
-			}
-
-			if (editor.v2 == false)
-			for (var r in data.result) {
-
-				var res = data.result[r]
-				var code = res[0]
-				var ia = res[1]
-
-				var iaEditor = editors[ia]
-				if (!iaEditor) continue
-				var iaName = iaEditor.name
-
-				if (code == 2) {
-
-					$('#results').append("<div class='good'>✓ " + _.lang.get('editor', 'valid_ai', _.protect(iaName)) + "</div><br>")
+				var errors = data.result
+				if (editor.editor.error_overlay) {
+					editor.editor.removeOverlay(editor.editor.error_overlay)
+				}
+				if (errors.length == 0) {
+					$('#results').append("<div class='good'>✓ " + _.lang.get('editor', 'valid_ai', _.protect(editor.name)) + "</div><br>")
 					$('#results .good').last().delay(800).fadeOut(function() {
 						$('#results').hide()
 					})
-
-					iaEditor.error = false
-					iaEditor.tabDiv.removeClass("error")
-					$('.line-error').removeClass("line-error")
-
-				} else if (code == 1) {
-
-					var info = res[2]
-
-					$('#results').append("<div class='error'>× <b>" + _.protect(iaName) + "</b>&nbsp; ▶ " + info + "</div><br>")
-					iaEditor.tabDiv.removeClass("error").addClass("error")
-					iaEditor.error = true
-
-				} else if (code == 0) {
-
-					var line = res[3]
-					var pos = res[4]
-					var info = res[5]
-
-					if (res.length == 8) {
-						info = _.lang.get('java_compilation', res[6], res[7])
-					} else {
-						info = _.lang.get('java_compilation', res[6])
+					editor.error = false
+					editor.tabDiv.removeClass("error")
+				} else {
+					var lines = []
+					for (var e in errors) {
+						var error = errors[e]
+						lines.push(error[0] - 1)
 					}
-					info = '(' + res[5] + ') ' + info
+					var overlay = {token: function(stream, state, lineNo) {
+						var i = lines.indexOf(lineNo)
+						if (i == -1) {
+							stream.skipToEnd()
+						} else if (stream.start == errors[i][1]) {
+							var len = Math.max(1, errors[i][3] - errors[i][1] - 1)
+							stream.eatWhile(function() {
+								return len-- > 0
+							})
+							return "highlight-error"
+						} else {
+							stream.next()
+						}
+					}}
+					editor.editor.error_overlay = overlay
+					editor.editor.addOverlay(overlay)
 
-					$('#results').append("<div class='error'>× " + _.lang.get('editor', 'ai_error', _.protect(iaName), line) + "&nbsp; ▶ " + info + "</div><br>")
+					editor.error = true
+					editor.tabDiv.addClass("error")
+				}
 
-					iaEditor.tabDiv.removeClass("error").addClass("error")
+			} else {
 
-					iaEditor.error = true
-					iaEditor.errorLine = line
+				if (!data.success || data.result.length == 0) {
 
-					iaEditor.showErrors()
+					$('#results').append("<div class='error'>× <i>" + _.lang.get('editor', 'server_error') + "</i></div>")
+					return
+				}
+
+				for (var r in data.result) {
+
+					var res = data.result[r]
+					var code = res[0]
+					var ia = res[1]
+
+					var iaEditor = editors[ia]
+					if (!iaEditor) continue
+					var iaName = iaEditor.name
+
+					if (code == 2) {
+
+						$('#results').append("<div class='good'>✓ " + _.lang.get('editor', 'valid_ai', _.protect(iaName)) + "</div><br>")
+						$('#results .good').last().delay(800).fadeOut(function() {
+							$('#results').hide()
+						})
+
+						iaEditor.error = false
+						iaEditor.tabDiv.removeClass("error")
+						$('.line-error').removeClass("line-error")
+
+					} else if (code == 1) {
+
+						var info = res[2]
+
+						$('#results').append("<div class='error'>× <b>" + _.protect(iaName) + "</b>&nbsp; ▶ " + info + "</div><br>")
+						iaEditor.tabDiv.removeClass("error").addClass("error")
+						iaEditor.error = true
+
+					} else if (code == 0) {
+
+						var line = res[3]
+						var pos = res[4]
+						var info = res[5]
+
+						if (res.length == 8) {
+							info = _.lang.get('java_compilation', res[6], res[7])
+						} else {
+							info = _.lang.get('java_compilation', res[6])
+						}
+						info = '(' + res[5] + ') ' + info
+
+						$('#results').append("<div class='error'>× " + _.lang.get('editor', 'ai_error', _.protect(iaName), line) + "&nbsp; ▶ " + info + "</div><br>")
+
+						iaEditor.tabDiv.removeClass("error").addClass("error")
+
+						iaEditor.error = true
+						iaEditor.errorLine = line
+
+						iaEditor.showErrors()
+					}
 				}
 			}
 
