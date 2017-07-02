@@ -27,6 +27,7 @@ class LWHandler(SimpleHTTPRequestHandler):
 				'sub_version': '0',
 				'fight_data': 'null',
 				'start_script': 'leekwars-quick.min.js',
+				'start_style': 'leekwars-quick.min.css',
 				'starpasscode': 'null'
 			}
 			if self.path.startswith('/fight/local'):
