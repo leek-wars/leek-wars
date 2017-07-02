@@ -663,3 +663,21 @@ changelog_198	# Le talent d'équipe est désormais le talent de la meilleure com
 				# Corrections et améliorations sur les BR : synchronisation entre onglets et autres petits bugs.
 				# Accélération du chargement des classements fun.
 				# Correction du calcul des dégâts du poison dans les rapports de combat (merci à Pump).
+changelog_199	# Bêta LeekScript V2 lancée ! Possibilité de faire des combats de test avec des IA v2.
+				# Amélioration des files d'attente de combat : moins de blocages lorsqu'un joueur lance beaucoup de combats.
+				# Refonte de l'interface de la version mobile du site : menu latéral, style material design, combats détaillés, etc.
+				# Intégration des notifications push, sur desktop et mobile.
+				# Ajout d'une page pour expliquer l'installation de l'app mobile : <a href='https://leekwars.com/app'>https://leekwars.com/app</a>.
+				# Modification potager éleveur : les 3 premiers adversaires ont un talent équivalent, au lieu d'un talent inférieur.
+				# Seulement un pack de 100 combat est achetable par jour en Habs (pas de limite avec les cristaux).
+				# Érosion augmentée de 10% en cas de coup critique.
+				# Mise à jour de la roadmap.
+				# Ajout de la possibilité de rechercher dans une catégorie précise sur le forum.
+				# Correction de la fonction édition d'un topic sur le forum.
+				# Correction des trophées légende et mythique (enfin !).
+				# Correction des résultats de combat dans l'historique éleveur.
+				# Ajout d'une popup de confirmation lors de la suppression d'une composition.
+				# Correction des barres d'XP trop grandes dans les rapports de combat.
+				# Amélioration des performances de l'affichage des actions et logs en combats (merci à Amal).
+				# Affichage des poireaux sur lesquels l'item est équipé dans le marché (merci à toufalk).
+				# Correction du graphique du rapport de combat lors d'une résurrection (merci à Pump).
