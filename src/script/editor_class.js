@@ -314,23 +314,11 @@ var Editor = function(id, name, valid, code, folder, level) {
 			return
 		}
 
-		if (!this.v2) {
-			// Sauvegardé et erreur, on teste pas ça !
-			if (this.error) {
-				return
-			}
-			LW.pages.editor.test(_testEvent)
-		} else {
-			var content = this.editor.getValue()
-			_.post('leekscript/execute', {code: content}, function(data) {
-				if (data.success) {
-					var result = JSON.parse(data.result)
-					_.toast(result.res)
-				} else {
-					_.toast(data.error)
-				}
-			})
+		// Sauvegardé et erreur, on teste pas ça !
+		if (this.error && !this.v2) {
+			return
 		}
+		LW.pages.editor.test(_testEvent)
 	}
 
 	this.cursorChange = function() {
