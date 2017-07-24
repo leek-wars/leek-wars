@@ -25,7 +25,7 @@ LW.pages.roadmap.init = function(params, $scope, $page) {
 				{text: "Historiques de combat détaillés", ok: true},
 				{text: "Codes LeekScript V2 dans l'éditeur + console LeekScript", ok: true},
 				{text: "Outil de recherche d'aide globale", ok: false},
-				{text: "Meilleure recherche dans le forum", ok: false}
+				{text: "Meilleure recherche dans le forum", ok: true}
 			]
 		},
 		{
@@ -47,7 +47,7 @@ LW.pages.roadmap.init = function(params, $scope, $page) {
 		{
 			title: "Juin 1.99",
 			changes: [
-				{text: "LeekScript V2 Bêta", ok: false},
+				{text: "LeekScript V2 Bêta", ok: true},
 				{text: "[secret][important] lié aux trophées", ok: false}
 			]
 		},
