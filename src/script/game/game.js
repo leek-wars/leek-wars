@@ -1547,6 +1547,7 @@ var Game = function() {
 			var xy = this.ground.xyToXYPixels(pos.x, pos.y);
 			var x = xy.x * this.ground.scale;
 			var y = xy.y * this.ground.scale;
+			if (color.length == 8) color = color.substr(2)
 			this.markers[cells[c]] = {owner: owner, color: '#' + color, duration: duration, x: x, y: y};
 		}
 	}
