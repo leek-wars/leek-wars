@@ -834,9 +834,13 @@ body.app #ai-stats {
 #error-tooltip {
 	position: absolute;
 	display: none;
-	color: white;
-	background: #FF6C71;
+	color: #AB0000;
+	background: white;
+	border: 1px solid #FF6C71;
 	z-index: 10;
-	padding: 2px 4px;
-	border-radius: 3px;
+	padding: 4px 6px;
+	border-top-right-radius: 3px;
+	border-bottom-right-radius: 3px;
+	border-bottom-left-radius: 3px;
+	font-size: 16px;
 }
