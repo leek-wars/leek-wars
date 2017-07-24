@@ -237,23 +237,29 @@ var Editor = function(id, name, valid, code, folder, level) {
 						var error = errors[e]
 						lines.push(error[0] - 1)
 					}
+					var start = 0
 					var overlay = {token: function(stream, state, lineNo) {
-						var i = lines.indexOf(lineNo)
+						var i = lines.indexOf(lineNo, start)
 						if (i == -1) {
 							stream.skipToEnd()
-						} else if (stream.start == errors[i][1]) {
-							var len = Math.max(1, errors[i][3] - errors[i][1] - 1)
-							stream.eatWhile(function() {
-								return len-- > 0
-							})
-							return "highlight-error"
 						} else {
-							stream.next()
+							while (i < errors.length - 1 && stream.start > errors[i][1]) {
+								i++
+							}
+							start = i
+							if (stream.start == errors[i][1]) {
+								var len = Math.max(1, errors[i][3] - errors[i][1] - 1)
+								stream.eatWhile(function() {
+									return len-- > 0
+								})
+								return "highlight-error"
+							} else {
+								stream.next()
+							}
 						}
 					}}
 					editor.editor.error_overlay = overlay
 					editor.editor.addOverlay(overlay)
-
 					editor.error = true
 					editor.tabDiv.addClass("error")
 				}
@@ -261,7 +267,6 @@ var Editor = function(id, name, valid, code, folder, level) {
 			} else {
 
 				if (!data.success || data.result.length == 0) {
-
 					$('#results').append("<div class='error'>× <i>" + _.lang.get('editor', 'server_error') + "</i></div>")
 					return
 				}
