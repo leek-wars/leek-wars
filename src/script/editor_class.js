@@ -220,6 +220,7 @@ var Editor = function(id, name, valid, code, folder, level) {
 			if (editor.v2) {
 
 				var errors = data.result
+				editor.errors = errors;
 				if (editor.editor.error_overlay) {
 					editor.editor.removeOverlay(editor.editor.error_overlay)
 				}
@@ -645,6 +646,24 @@ var Editor = function(id, name, valid, code, folder, level) {
 		}
 
 		var editorPos = editor.editor.coordsChar(pos, "page")
+
+		// Display error?
+		var tooltip = $('#error-tooltip')
+		var shown = false
+		for (var er in this.errors) {
+			var error = this.errors[er]
+			if (error[0] == editorPos.line + 1 && error[1] <= editorPos.ch && error[3] > editorPos.ch) {
+				var pos = editor.editor.cursorCoords({line: editorPos.line, ch: error[1]})
+				tooltip.text(error[4])
+				tooltip.css('top', pos.bottom)
+				tooltip.css('left', pos.left)
+				tooltip.show()
+				shown = true
+				break;
+			}
+		}
+		if (!shown) tooltip.hide()
+
 		var tokenString = editor.editor.getTokenAtString(editorPos)
 
 		if (tokenString != this.hoverToken) {

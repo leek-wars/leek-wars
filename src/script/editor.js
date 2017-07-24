@@ -43,6 +43,8 @@ LW.pages.editor.init = function(params, $scope, $page) {
 		LW.setTitle(_.lang.get('editor', 'title'), _.lang.get('editor', 'n_ais', _.objectSize(data.ais)))
 		LW.setMenuTab('editor')
 
+		$('#error-tooltip').appendTo('body')
+
 		var ais = data.ais
 		var folders = data.folders
 		var items = []

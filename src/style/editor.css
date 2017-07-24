@@ -830,3 +830,13 @@ body.app #ai-stats {
 #ai-list .folder.empty .triangle {
 	opacity: 0;
 }
+
+#error-tooltip {
+	position: absolute;
+	display: none;
+	color: white;
+	background: #FF6C71;
+	z-index: 10;
+	padding: 2px 4px;
+	border-radius: 3px;
+}
