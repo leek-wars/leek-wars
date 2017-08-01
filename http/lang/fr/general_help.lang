@@ -35,7 +35,7 @@ farmer_1			Dans Leek Wars, vous incarnez un éleveur de poireau. Lors de votre i
 					langage LeekScript.
 farmer_2			Ces combats permettent ainsi de gagner de l'expérience afin de monter de
 					niveau. Ces niveaux vous permettent d'accéder à un arsenal d'armes et de
-					puces plus important. Vous gagnez aussi 5 points de capital par niveau (50 aux niveaux 100, 200, 300 et 100 au niveau 301) 
+					puces plus important. Vous gagnez aussi 5 points de capital par niveau (50 aux niveaux 100, 200, 300 et 100 au niveau 301)
 					que vous pouvez dépenser pour améliorer les caractéristiques de votre poireau.
 farmer_3			Par la suite vous pourrez obtenir jusqu’à 4 poireaux, aux conditions
 					suivantes :
@@ -82,7 +82,7 @@ fights_15			Les combats d'équipe opposent les poireaux d'une composition advers
 fights_16			Ces combats en équipe ne sont pas comptabilisés dans votre nombre de
 					victoires, nuls et défaites (ratio).
 fights_17			Les battle royales
-fights_18			Les battle royales opposent votre poireau à 9 autres de niveau proche. Vous pouvez faire autant de battle royales que vous le souhaitez, mais une battle royale n'est lancée 
+fights_18			Les battle royales opposent votre poireau à 9 autres de niveau proche. Vous pouvez faire autant de battle royales que vous le souhaitez, mais une battle royale n'est lancée
 					que lorsque 10 poireaux sont inscrits. Les battle royales sont disponibles à partir du niveau 50.
 fights_19			Ces battle royales ne font gagner aucune expérience ni aucun Habs et n'entrent pas
 					en compte avec le nombre de victoires, nuls et défaites (ratio).
@@ -125,8 +125,7 @@ leeks_26			Fréquence
 leeks_27			Plus votre fréquence est élevée, plus vous aurez de chance de commencer en
 					premier durant le combat avec votre adversaire.
 leeks_28			Science
-leeks_29			La science augmente les effets des puces de boost et réduit les effet des puces 
-				d'entraves qui vous ciblent:
+leeks_29			La science augmente les effets des puces de boost:
 leeks_3				Votre poireau peut aussi sortir du potager pour éviter les agressions d'autres
 					poireaux lorsque l'on part en vacances par exemple. Pour cela, il suffit de
 					modifier l'indicateur de statut "Potager" de Oui à Non sur la page du poireau
@@ -141,14 +140,12 @@ leeks_35			Les boucliers réduisent les dégâts directs, de la manière suivant
 leeks_36			La résistance augmente les boucliers.
 leeks_37			Boost = (Boost de base) × (1 + Science / 100)
 leeks_38			Entrave = (Entrave de base) × (1 + Magie / 100)
-leeks_39			Les entraves sont réduites par la science de la manière suivante :
 leeks_4				Un poireau a aussi de nombreuses caractéristiques :
-leeks_40			Entrave finale = Entrave × (1 + (Magie lanceur - Science cible) / 100)
 leeks_41			Dégâts poison = (Dégâts de base) × (1 + Magie / 100)
 leeks_5				La vie
 leeks_6				À chaque niveau gagné, votre poireau gagne automatiquement 3 points de vie.
 leeks_7				La sagesse
-leeks_8				La sagesse augmente l'efficacité des puces de soin, et vous permet de voler de 
+leeks_8				La sagesse augmente l'efficacité des puces de soin, et vous permet de voler de
 				la vie lorsque vous infligez des dégats:
 leeks_9				Soin final = (Soin de base) × (1 + Sagesse / 100)
 market				Le marché

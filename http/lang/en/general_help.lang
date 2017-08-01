@@ -41,7 +41,7 @@ fights_14			Team Fights
 fights_15			All the leeks inside a composition of your team fight together all the leeks of a composition of another team. Each of your leek is allowed to do <b>10</b> team fights with its composition, apart from your daily fights. A composition is allowed to fight only if all its leeks have at least 1 team fight left.
 fights_16			Team fights do not add up to the total of your wins, draws and losses (ratio).
 fights_17			Battle Royale
-fights_18			One of your leeks is fighting 9 other leeks. You can do as much batlle royales as you want, but they start only when 10 leeks are registered. Battle Royales 
+fights_18			One of your leeks is fighting 9 other leeks. You can do as much batlle royales as you want, but they start only when 10 leeks are registered. Battle Royales
 				are available at the level 50.
 fights_19			Battle royales reward no Experience point nor Hab. Battle royales do not add up to the total of your wins, draws and losses (ratio).
 habs			Habs
@@ -69,7 +69,7 @@ leeks_25			Turn Points is the maximum of action points your leek is allowed to s
 leeks_26			Frequency
 leeks_27			The higher the Frequency, the luckier you are to play first during the fight.
 leeks_28			Science
-leeks_29			Science increases boosts and reduces shackles:
+leeks_29			Science increases boosts:
 leeks_3			You may decide to remove your leek from the Garden to avoid any attack from other leeks for when you are on leave for example.
 To do so, turn the Garden status switch from Yes to No on the leek page. Consequently your leek will never be presented to other leeks willing to fight "in the Garden".
 leeks_30			Magic
@@ -81,9 +81,7 @@ leeks_35			Shields reduces directs attacks following the formula :
 leeks_36			Resistance increases shields.
 leeks_37			Boost = (Initial boost) × (1 + Science / 100)
 leeks_38			Shackle = (Initial shackle) × (1 + Magic / 100)
-leeks_39			Shackles are reduced by science following the formula:
 leeks_4			A leek has several Attributes:
-leeks_40			Finale shackle = Shackle × (1 + (Caster magic - Target science) / 100)
 leeks_41			Poison damage = (Initial damage) × (1 + Magic / 100)
 leeks_5			Life / Health Points
 leeks_6			When the level of your leek increases, the life of this leek is increased by 5.
