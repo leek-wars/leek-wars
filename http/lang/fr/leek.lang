@@ -99,7 +99,7 @@ reset							Réinitialiser
 resistance						Résistance
 resistance_description			La résistance augmente les boucliers
 science							Science
-science_description				La science augmente les boosts et contre les entraves
+science_description				La science augmente les boosts
 see_tournament					Voir le tournoi
 select_a_hat					Sélectionner un chapeau
 show_registers					Afficher les registres
