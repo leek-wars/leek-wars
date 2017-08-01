@@ -252,19 +252,19 @@ LW.pages.report.generateActions = function(data, callback) {
 				break;
 
 			case LW.EFFECT.SHACKLE_TP:
-				data = _.lang.get('fight', 'leek_loose_x', getLeekName(leek), colorText(_.lang.get('fight', 'n_tp', -value), TP_COLOR));
+				data = _.lang.get('fight', 'leek_loose_x', getLeekName(leek), colorText(_.lang.get('fight', 'n_tp', value), TP_COLOR));
 				break;
 
 			case LW.EFFECT.SHACKLE_MP:
-				data = _.lang.get('fight', 'leek_loose_x', getLeekName(leek), colorText(_.lang.get('fight', 'n_mp', -value), MP_COLOR));
+				data = _.lang.get('fight', 'leek_loose_x', getLeekName(leek), colorText(_.lang.get('fight', 'n_mp', value), MP_COLOR));
 				break;
 
 			case LW.EFFECT.SHACKLE_STRENGTH:
-				data = _.lang.get('fight', 'leek_loose_x', getLeekName(leek), colorText(_.lang.get('fight', 'n_strength', -value), STRENGTH_COLOR));
+				data = _.lang.get('fight', 'leek_loose_x', getLeekName(leek), colorText(_.lang.get('fight', 'n_strength', value), STRENGTH_COLOR));
 				break;
 
 			case LW.EFFECT.SHACKLE_MAGIC:
-				data = _.lang.get('fight', 'leek_loose_x', getLeekName(leek), colorText(_.lang.get('fight', 'n_magic', -value), MAGIC_COLOR));
+				data = _.lang.get('fight', 'leek_loose_x', getLeekName(leek), colorText(_.lang.get('fight', 'n_magic', value), MAGIC_COLOR));
 				break;
 
 			case LW.EFFECT.DAMAGE_RETURN:
