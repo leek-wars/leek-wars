@@ -99,7 +99,7 @@ reset							Reset
 resistance						Resistance
 resistance_description			Resistance increases shields
 science							Science
-science_description				Science increases boosts and prevents shackles
+science_description				Science increases boosts
 see_tournament					See the tournament
 select_a_hat					Select a hat
 show_registers					Show registers
