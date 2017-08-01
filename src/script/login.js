@@ -6,7 +6,13 @@ LW.pages.login.init = function(params, $scope, $page) {
 	$('#login-form').submit(function() {
 
 		var url = LW.dev ? 'farmer/login-token' : 'farmer/login'
-		_.post(url, $('#login-form').serialize(), function(data) {
+		var data = $('#login-form').serializeArray()
+		if (data.length >= 3) {
+			data[2].value = data[2].value === 'on'
+		} else {
+			data[2] = {name: 'keep_connected', value: false}
+		}
+		_.post(url, data, function(data) {
 			if (data.success) {
 				if (LW.dev) {
 					localStorage['token'] = data.token
