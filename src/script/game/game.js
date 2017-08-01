@@ -1301,11 +1301,11 @@ var Game = function() {
 				if (!this.jumping) {
 					this.log(_.lang.get('fight', 'leek_loose_x',
 						this.colorText(leek.name, this.getLeekColor(target)),
-						this.colorText(_.lang.get('fight', 'n_mp', -value), MP_COLOR)
+						this.colorText(_.lang.get('fight', 'n_mp', value), MP_COLOR)
 					))
 				}
 
-				leek.looseMP(-value, this.jumping)
+				leek.looseMP(value, this.jumping)
 				break;
 
 			case LW.EFFECT.SHACKLE_TP:
@@ -1313,11 +1313,11 @@ var Game = function() {
 				if (!this.jumping) {
 					this.log(_.lang.get('fight', 'leek_loose_x',
 						this.colorText(leek.name, this.getLeekColor(target)),
-						this.colorText(_.lang.get('fight', 'n_tp', -value), TP_COLOR)
+						this.colorText(_.lang.get('fight', 'n_tp', value), TP_COLOR)
 					))
 				}
 
-				leek.looseTP(-value, this.jumping)
+				leek.looseTP(value, this.jumping)
 				break
 
 			case LW.EFFECT.SHACKLE_STRENGTH:
@@ -1325,11 +1325,11 @@ var Game = function() {
 				if (!this.jumping) {
 					this.log(_.lang.get('fight', 'leek_loose_x',
 						this.colorText(leek.name, this.getLeekColor(target)),
-						this.colorText(_.lang.get('fight', 'n_strength', -value), STRENGTH_COLOR)
+						this.colorText(_.lang.get('fight', 'n_strength', value), STRENGTH_COLOR)
 					))
 				}
 
-				leek.looseStrength(-value, this.jumping)
+				leek.looseStrength(value, this.jumping)
 				break
 
 			case LW.EFFECT.SHACKLE_MAGIC:
@@ -1337,11 +1337,11 @@ var Game = function() {
 				if (!this.jumping) {
 					this.log(_.lang.get('fight', 'leek_loose_x',
 						this.colorText(leek.name, this.getLeekColor(target)),
-						this.colorText(_.lang.get('fight', 'n_magic', -value), MAGIC_COLOR)
+						this.colorText(_.lang.get('fight', 'n_magic', value), MAGIC_COLOR)
 					))
 				}
 
-				leek.looseMagic(-value, this.jumping)
+				leek.looseMagic(value, this.jumping)
 				break
 
 			case LW.EFFECT.DAMAGE_RETURN:
