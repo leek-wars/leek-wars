@@ -26,8 +26,11 @@
 .item-preview .image {
 	height: 90px;
 	position: relative;
+}
+.item-preview[type='weapon'] .image, .item-preview[type='chip'] .image {
 	cursor: help;
 }
+
 .item-preview .image img {
 	position: absolute;
 	top:0;
