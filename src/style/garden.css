@@ -63,7 +63,7 @@
 }
 
 #garden-page .leek:hover,
-#garden-page .compo:hover,
+#garden-page .compo-wrapper:hover,
 #garden-page .opponents .farmer:hover  {
 	background-color: white;
 	cursor: pointer;
