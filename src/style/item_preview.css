@@ -26,6 +26,7 @@
 .item-preview .image {
 	height: 90px;
 	position: relative;
+	cursor: help;
 }
 .item-preview .image img {
 	position: absolute;

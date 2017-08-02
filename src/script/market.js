@@ -86,6 +86,7 @@ LW.pages.market.init = function(params, $scope, $page) {
 		LW.pages.market.updateItems()
 		LW.pages.market.buy()
 		LW.pages.market.chips()
+		LW.pages.market.sounds()
 
 		// Sell buttons
 		$("#market-page .item").each(function() {
@@ -416,5 +417,32 @@ LW.pages.market.chips = function(sort_method) {
 			sort_mode = 'type'
 		}
 		update(sort_mode)
+	})
+}
+
+LW.pages.market.sounds = function() {
+	var play_sounds = function(sounds) {
+		if (sounds.length == 0) return ;
+		var sound = sounds[0]
+		var audio = new Audio(LW.staticURL + 'sound/' + sound + '.mp3')
+		audio.volume = 0.5
+		audio.play()
+		if (sounds.length > 1) {
+			setTimeout(function() {
+				play_sounds(sounds.slice(2))
+			}, parseFloat(sounds[1]) * 1000)
+		}
+	}
+	$('#preview-panel .item-preview[type=weapon]').each(function() {
+		var weapon = parseInt($(this).attr('weapon'))
+		$(this).find('.image').click(function() {
+			play_sounds(LW.weaponSound(weapon))
+		})
+	})
+	$('#preview-panel .item-preview[type=chip]').each(function() {
+		var chip = parseInt($(this).attr('chip'))
+		$(this).find('.image').click(function() {
+			play_sounds(LW.chipSound(chip))
+		})
 	})
 }
