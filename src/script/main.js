@@ -3128,18 +3128,15 @@ LW.orderChips = function(chips) {
 	for(var i in chips) {
 		var chip = chips[i]
 		var type = chip.effects[0].type
-
-		if(chipsByType[type] === undefined) chipsByType[type] = []
+		if (chipsByType[type] === undefined) chipsByType[type] = []
 		chipsByType[type].push(chip)
 	}
-
 	// Order chips by level and associates each chips with his position
 	var orderedChips = {}
 	var position = 0
-	for(var i in LW.EFFECT_TYPES) {
+	for (var i in LW.EFFECT_TYPES) {
 		var type = LW.EFFECT_TYPES[i]
-		if(chipsByType[type] !== undefined) {
-
+		if (chipsByType[type] !== undefined) {
 			chipsByType[type]
 				.sort(function(chipA, chipB) {
 					return chipA.level - chipB.level
@@ -3157,10 +3154,9 @@ LW.orderWeapons = function(weapons) {
 	// Order weapons by level
 	var orderedWeapons = {}
 	var position = 0
-	for(var i in weapons) {
+	for (var i in weapons) {
 		orderedWeapons[weapons[i].id] = position++
 	}
-
 	return orderedWeapons
 }
 
