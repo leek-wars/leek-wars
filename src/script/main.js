@@ -3122,6 +3122,101 @@ LW.getChipIDByName = function(name) {
 	return null
 }
 
+LW.weaponSound = function(id) {
+	return {
+		1: ['double_gun'],
+		2: ['machine_gun'],
+		3: ['double_gun'],
+		4: ['shotgun'],
+		5: ['double_gun'],
+		6: ['laser'],
+		7: ['grenade_shoot', 0.7, 'explosion'],
+		8: ['flame_thrower'],
+		9: ['double_gun'],
+		10: ['gazor'],
+		11: ['electrisor'],
+		12: ['laser'],
+		13: ['laser'],
+		14: ['sword'],
+		15: ['sword'],
+		16: ['sword']
+	}[id]
+}
+LW.chipSound = function(id) {
+	return {
+		1: ['heal'],
+		2: ['heal'],
+		3: ['heal'],
+		4: ['heal'],
+		5: ['heal'],
+		6: ['lightning'],
+		7: ['lightning'],
+		8: ['lightning'],
+		9: ['fire'],
+		10: ['fire'],
+		11: ['meteorite', 1.8, 'explosion', 0.3, 'explosion', 0.3, 'explosion'],
+		12: ['rock'],
+		13: ['rock'],
+		14: ['rockfall'],
+		15: ['ice'],
+		16: ['ice'],
+		17: ['ice'],
+		18: ['shield'],
+		19: ['shield'],
+		20: ['shield'],
+		21: ['shield'],
+		22: ['shield'],
+		23: ['shield'],
+		24: ['shield'],
+		25: ['buff'],
+		26: ['buff'],
+		27: ['buff'],
+		28: ['buff'],
+		29: ['buff'],
+		30: ['buff'],
+		31: ['buff'],
+		32: ['buff'],
+		33: ['buff'],
+		34: ['buff'],
+		35: ['buff'],
+		36: ['liberation'],
+		37: ['teleportation'],
+		38: ['heal'],
+		39: ['teleportation'],
+		40: ['bulb'],
+		41: ['bulb'],
+		42: ['bulb'],
+		43: ['bulb'],
+		44: ['bulb'],
+		45: ['bulb'],
+		46: ['bulb'],
+		47: ['heal'],
+		48: ['shield'],
+		49: ['heal'],
+		50: ['fire', 0, 'rock', 0.25, 'rock', 0.2, 'rock', 0.3, 'rock', 0.2, 'rock'],
+		51: ['buff'],
+		52: ['heal'],
+		53: ['heal'],
+		54: ['buff'],
+		55: ['debuff'],
+		56: ['debuff'],
+		57: ['debuff'],
+		58: ['debuff'],
+		59: ['debuff'],
+		60: ['buff'],
+		61: ['poison'],
+		62: ['poison'],
+		63: ['poison'],
+		64: ['buff'],
+		65: ['buff'],
+		66: ['buff'],
+		67: ['buff'],
+		68: ['buff'],
+		69: ['fire'],
+		70: ['liberation']
+	}[id]
+}
+
 LW.orderChips = function(chips) {
 	// Regroup chips by effects type
 	var chipsByType = {}
@@ -3162,7 +3257,7 @@ LW.orderWeapons = function(weapons) {
 
 LW.createWeaponPreview = function(template) {
 
-	var preview = "<div class='item-preview'>"
+	var preview = "<div class='item-preview' type='weapon' weapon='" + template.template + "'>"
 
 	preview += "<div class='header'>"
 	preview += "<h2 class='name'>" + _.lang.get('weapon', template.name) + "</h2>"
@@ -3208,7 +3303,7 @@ LW.createChipPreview = function(template) {
 
 	var id = template.id
 
-	var preview = "<div class='item-preview'>"
+	var preview = "<div class='item-preview' type='chip' chip='" + template.template + "'>"
 	preview += "<div class='header'>"
 
 	preview += "<h2 class='name'>" + _.lang.get('chip', template.name) + "</h2>"
