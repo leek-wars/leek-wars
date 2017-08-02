@@ -391,7 +391,6 @@ var Hud = function() {
 	}
 
 	this.addEntityEffect = function(effect, image) {
-
 		$('#details .entity-details[entity=' + effect.target + ']').find('.effects').append("<img id='effect-" + effect.id + "' src='" + image + "'></img>");
 	}
 
