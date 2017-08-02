@@ -289,6 +289,8 @@ var DevilStrike = function() {
 		game.particles.addImage(this.x, this.y, 0, 0, 0, 0, 0, T.red_circle, 120, 0.6, true)
 
 		game.particles.addImage(this.x, this.y, 50, 0, 0, 1.2, 0, T.daemon_shadow, 100, 0.9)
+
+		S.fire.play()
 	}
 	
 	this.update = function(dt) {
@@ -302,6 +304,7 @@ var DevilStrike = function() {
 			var x = Math.random() * 250 - 125
 			var y = Math.random() * 125 - 62.5
 			game.particles.addLaser(this.x + x, this.y + y, 230, Math.PI/2, 500, T.m_laser_bullet, null, null)
+			S.rock.play()
 		}
 		
 		if (this.duration <= 0) {
