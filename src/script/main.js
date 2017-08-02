@@ -2329,12 +2329,19 @@ LW.util.formatDuration = function(timestamp, capital) {
 		} else {
 			text = _.lang.get("main", "time_x_days_ago", days)
 		}
-	} else { // au dessus d'un mois
+	} else if (seconds < 12 * 30 * 24 * 3600) { // en dessous d'un an
 		var months = Math.floor(seconds / (30 * 24 * 3600))
 		if (months == 1) {
 			text = _.lang.get("main", "time_1_month_ago")
 		} else {
 			text = _.lang.get("main", "time_x_months_ago", months)
+		}
+	} else { // au dessus d'un an
+		var years = Math.floor(seconds / (12 * 30 * 24 * 3600))
+		if (years == 1) {
+			text = _.lang.get("main", "time_1_year_ago")
+		} else {
+			text = _.lang.get("main", "time_x_years_ago", years)
 		}
 	}
 

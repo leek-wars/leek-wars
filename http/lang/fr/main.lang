@@ -71,6 +71,7 @@ time_1_day_ago			il y a un jour
 time_1_hour_ago			il y a une heure
 time_1_minute_ago			il y a 1 minute
 time_1_month_ago			il y a un mois
+time_1_year_ago			il y a un an
 time_format			d/m/Y à H:i:s
 time_format_hhmm			H:i
 time_in_1_hour			Dans une heure
@@ -85,6 +86,7 @@ time_x_days_ago			il y a %s jours
 time_x_hours_ago			il y a %s heures
 time_x_minutes_ago			il y a %s minutes
 time_x_months_ago			il y a %s mois
+time_x_years_ago			il y a %s ans
 tournament			Tournoi
 trophies			Trophées
 tutorial			Tutoriel
