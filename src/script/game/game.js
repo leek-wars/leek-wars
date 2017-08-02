@@ -134,7 +134,8 @@ var Game = function() {
 		Ferocity, // 66
 		Collar, // 67
 		Bark, // 68
-		Burning // 69
+		Burning, // 69
+		Antidote // 70
 	];
 
 	this.entitiesTypes = [

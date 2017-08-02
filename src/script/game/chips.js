@@ -2168,3 +2168,38 @@ var Burning = function() {
 		}
 	}
 }
+
+var Antidote = function() {
+
+	this.done = false
+	this.sound = S.liberation
+	this.num = 0
+	this.cell
+	this.delay = 2
+	this.targets
+	this.duration = 60
+
+	this.launch = function(launchCell, targetCell, targets) {
+		this.cell = targetCell
+		this.targets = targets
+		this.sound.play()
+	}
+
+	this.update = function(dt) {
+		this.duration -= dt
+		if (this.duration <= 0) {
+			this.done = true
+		}
+		if (Math.random() > 0.5) {
+			var t = this.targets[0]
+			var angle = Math.random() * Math.PI * 2
+			var dx = Math.cos(angle) * 2
+			var dy = Math.sin(angle)
+			angle = Math.atan2(dy, dx)
+			var x = t.ox + dx * 10
+			var y = t.oy + dy * 10
+			var z = 50
+			game.particles.addImage(x, y, z, dx, dy, 0, angle, T.liberation_halo, 60)
+		}
+	}
+}
