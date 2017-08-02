@@ -2,65 +2,65 @@
  * Fonctions utiles pour les sorts
  */
 function createChipAureol(targets, texture) {
-	
+
 	for (var target in targets) {
-		
+
 		var t = targets[target];
 		var x = t.ox;
 		var y = t.oy;
 		var z = t.getHeight() + 20;
-		
+
 		game.particles.addImage(x, y, z, 0, 0, -0.6, 0, texture, 60);
 	}
 }
 
 function createChipImage(targets, texture) {
-	
+
 	for (var target in targets) {
-		
+
 		var t = targets[target];
 		var x = t.ox;
-		var y = t.oy; 
+		var y = t.oy;
 		var z = t.getHeight() + 40;
-		
+
 		game.particles.addImage(x, y, z, 0, 0, 0.2, 0, texture, 70);
 	}
 }
- 
+
 function createChipHalo(targets) {
-	
+
 	for (var target in targets) {
-		
-		var t = targets[target]; 
+
+		var t = targets[target];
 		var dx = Math.random() * 100 - 50;
 		var x = t.ox + dx;
-		var y = t.oy + Math.random() * 30 - 15;  
+		var y = t.oy + Math.random() * 30 - 15;
 		var z = Math.random() * 10;
-		var speed = 1.5 + (50 - Math.abs(dx))/50; 
+		var speed = 1.5 + (50 - Math.abs(dx))/50;
 		var life = 80 - Math.abs(dx);
-		
+
 		game.particles.addImage(x, y, z, 0, 0, speed, 0, T.halo, life);
 	}
 }
 
 function createChipHeal(targets) {
-	
+
 	for (var target in targets) {
-		
-		var t = targets[target]; 
+
+		var t = targets[target];
 		var dx = Math.random() * 100 - 50;
 		var x = t.ox + dx;
-		var y = t.oy + Math.random() * 30 - 15;  
+		var y = t.oy + Math.random() * 30 - 15;
 		var z = Math.random() * 10;
-		var speed = 1.5 + (50 - Math.abs(dx))/50; 
+		var speed = 1.5 + (50 - Math.abs(dx))/50;
 		var life = 80 - Math.abs(dx);
-		
+
 		game.particles.addImage(x, y, z, 0, 0, speed, 0, T.heal_cross, life);
 	}
 }
 
 var Adrenaline = function() {
-	
+
 	this.done = false;
 	this.sound = S.buff;
 	this.num = 0;
@@ -68,28 +68,28 @@ var Adrenaline = function() {
 	this.delay = 2;
 	this.targets;
 	this.duration = 60;
-	
+
 	this.launch = function(launchCell, targetCell, targets) {
-		
+
 		this.cell = targetCell;
 		this.targets = targets;
-		
+
 		createChipImage(targets, T.chip_adrenaline);
 		createChipAureol(targets, T.buff_aureol);
-		
+
 		game.setEffectArea(targetCell.x, targetCell.y, AREA_CIRCLE1, 'blue');
-		
+
 		this.sound.play();
 	}
-	
+
 	this.update = function(dt) {
-		
+
 		this.delay -= dt;
 		if (this.delay <= 0) {
 			createChipHalo(this.targets);
 			this.delay = 2;
 		}
-		
+
 		this.duration -= dt;
 		if (this.duration <= 0) {
 			this.done = true;
@@ -98,7 +98,7 @@ var Adrenaline = function() {
 }
 
 var Armor = function() {
-	
+
 	this.done = false;
 	this.sound = S.shield;
 	this.num = 0;
@@ -106,20 +106,20 @@ var Armor = function() {
 	this.delay = 2;
 	this.targets;
 	this.duration = 60;
-	
+
 	this.launch = function(launchCell, targetCell, targets) {
-		
+
 		this.cell = targetCell;
 		this.targets = targets;
-		
+
 		createChipImage(targets, T.chip_armor);
 		createChipAureol(targets, T.shield_aureol);
-		
+
 		this.sound.play();
 	}
-	
+
 	this.update = function(dt) {
-		
+
 		this.duration -= dt;
 		if (this.duration <= 0) {
 			this.done = true;
@@ -128,7 +128,7 @@ var Armor = function() {
 }
 
 var Armoring = function() {
-	
+
 	this.done = false;
 	this.sound = S.heal;
 	this.num = 0;
@@ -136,26 +136,26 @@ var Armoring = function() {
 	this.delay = 2;
 	this.targets;
 	this.duration = 45;
-	 
+
 	this.launch = function(launchCell, targetCell, targets) {
-		
-		this.cell = targetCell; 
+
+		this.cell = targetCell;
 		this.targets = targets;
-		
+
 		createChipImage(targets, T.chip_armoring);
 		createChipAureol(targets, T.cure_aureol);
-		
+
 		this.sound.play();
 	}
-	
+
 	this.update = function(dt) {
-		
+
 		this.delay -= dt;
 		if (this.delay <= 0) {
 			createChipHeal(this.targets);
 			this.delay = 2;
 		}
-		
+
 		this.duration -= dt;
 		if (this.duration <= 0) {
 			this.done = true;
@@ -164,7 +164,7 @@ var Armoring = function() {
 }
 
 var Bandage = function() {
-	
+
 	this.done = false;
 	this.sound = S.heal;
 	this.num = 0;
@@ -172,26 +172,26 @@ var Bandage = function() {
 	this.delay = 2;
 	this.targets;
 	this.duration = 45;
-	 
+
 	this.launch = function(launchCell, targetCell, targets) {
-		
-		this.cell = targetCell; 
+
+		this.cell = targetCell;
 		this.targets = targets;
-		
+
 		createChipImage(targets, T.chip_bandage);
 		createChipAureol(targets, T.cure_aureol);
-		
+
 		this.sound.play();
 	}
-	
+
 	this.update = function(dt) {
-		
+
 		this.delay -= dt;
 		if (this.delay <= 0) {
 			createChipHeal(this.targets);
 			this.delay = 2;
 		}
-		
+
 		this.duration -= dt;
 		if (this.duration <= 0) {
 			this.done = true;
@@ -200,7 +200,7 @@ var Bandage = function() {
 }
 
 var Carapace = function() {
-	
+
 	this.done = false;
 	this.sound = S.shield;
 	this.num = 0;
@@ -208,18 +208,18 @@ var Carapace = function() {
 	this.delay = 2;
 	this.targets;
 	this.duration = 60;
-	
+
 	this.launch = function(launchCell, targetCell, targets) {
-		
+
 		this.cell = targetCell;
 		this.targets = targets;
-		
+
 		createChipImage(targets, T.chip_carapace);
 		createChipAureol(targets, T.shield_aureol);
 	}
-	
+
 	this.update = function(dt) {
-		
+
 		this.duration -= dt;
 		if (this.duration <= 0) {
 			this.done = true;
@@ -229,7 +229,7 @@ var Carapace = function() {
 
 
 var Cure = function() {
-	
+
 	this.done = false;
 	this.sound = S.heal;
 	this.num = 0;
@@ -237,26 +237,26 @@ var Cure = function() {
 	this.delay = 2;
 	this.targets;
 	this.duration = 45;
-	 
+
 	this.launch = function(launchCell, targetCell, targets) {
-		
-		this.cell = targetCell; 
+
+		this.cell = targetCell;
 		this.targets = targets;
 
 		createChipImage(targets, T.chip_cure);
 		createChipAureol(targets, T.cure_aureol);
-		
-		this.sound.play();		
+
+		this.sound.play();
 	}
-	
+
 	this.update = function(dt) {
-		
+
 		this.delay -= dt;
 		if (this.delay <= 0) {
 			createChipHeal(this.targets);
 			this.delay = 2;
 		}
-		
+
 		this.duration -= dt;
 		if (this.duration <= 0) {
 			this.done = true;
@@ -265,25 +265,25 @@ var Cure = function() {
 }
 
 var DevilStrike = function() {
-	
+
 	this.done = false;
 	//NEED SOUND
 	this.duration = 100;
 	this.willFinish = false;
 	this.delay = 0;
-	
+
 	this.x;
 	this.y;
 	this.targets;
 	this.vx;
-	
+
 	this.launch = function(launchCell, targetCell, targets) {
-		
+
 		this.x = targetCell.x;
 		this.y = targetCell.y;
 		this.targets = targets;
 		this.vx = (500 + Math.random() * 300) * ((Math.random() > 0.5) ? 1 : -1);
-		
+
 		game.setEffectArea(this.x, this.y, AREA_CIRCLE3, 'red', 180);
 
 		game.particles.addImage(this.x, this.y, 0, 0, 0, 0, 0, T.red_circle, 120, 0.6, true)
@@ -292,9 +292,9 @@ var DevilStrike = function() {
 
 		S.fire.play()
 	}
-	
+
 	this.update = function(dt) {
-		
+
 		this.duration -= dt
 
 		this.delay -= dt
@@ -306,7 +306,7 @@ var DevilStrike = function() {
 			game.particles.addLaser(this.x + x, this.y + y, 230, Math.PI/2, 500, T.m_laser_bullet, null, null)
 			S.rock.play()
 		}
-		
+
 		if (this.duration <= 0) {
 			this.done = true
 		}
@@ -314,7 +314,7 @@ var DevilStrike = function() {
 }
 
 var Doping = function() {
-	
+
 	this.done = false;
 	this.sound = S.buff;
 	this.num = 0;
@@ -322,26 +322,26 @@ var Doping = function() {
 	this.delay = 2;
 	this.targets;
 	this.duration = 60;
-	
+
 	this.launch = function(launchCell, targetCell, targets) {
-		
+
 		this.cell = targetCell;
 		this.targets = targets;
-		
+
 		createChipImage(targets, T.chip_doping);
 		createChipAureol(targets, T.buff_aureol);
-		
+
 		this.sound.play();
 	}
-	
+
 	this.update = function(dt) {
-		
+
 		this.delay -= dt;
 		if (this.delay <= 0) {
 			createChipHalo(this.targets);
 			this.delay = 2;
 		}
-		
+
 		this.duration -= dt;
 		if (this.duration <= 0) {
 			this.done = true;
@@ -350,7 +350,7 @@ var Doping = function() {
 }
 
 var Drip = function() {
-	
+
 	this.done = false;
 	this.sound = S.heal;
 	this.num = 0;
@@ -358,28 +358,28 @@ var Drip = function() {
 	this.delay = 2;
 	this.targets;
 	this.duration = 45;
-	 
+
 	this.launch = function(launchCell, targetCell, targets) {
-		
-		this.cell = targetCell; 
+
+		this.cell = targetCell;
 		this.targets = targets;
-		
+
 		createChipImage(targets, T.chip_drip);
 		createChipAureol(targets, T.cure_aureol);
-		
+
 		game.setEffectArea(targetCell.x, targetCell.y, AREA_CIRCLE2, 'green');
-		
+
 		this.sound.play();
 	}
-	
+
 	this.update = function(dt) {
-		
+
 		this.delay -= dt;
 		if (this.delay <= 0) {
 			createChipHeal(this.targets);
 			this.delay = 2;
 		}
-		
+
 		this.duration -= dt;
 		if (this.duration <= 0) {
 			this.done = true;
@@ -388,46 +388,46 @@ var Drip = function() {
 }
 
 var Flame = function() {
-	
+
 	this.done = false;
 	this.sound = S.fire;
 	this.num = 0;
-	this.cell; 
+	this.cell;
 	this.delay = 2;
 	this.targets;
 	this.duration = 70;
-	
+
 	this.launch = function(launchCell, targetCell, targets) {
-		 
+
 		this.cell = targetCell;
 		this.targets = targets;
-		
+
 		for (var t in targets) {
 			targets[t].burnAnim(100);
 		}
 		this.sound.play();
 	}
-	
+
 	this.update = function(dt) {
-		
+
 		this.delay -= dt;
-		
+
 		if (this.delay <= 0) {
-			
+
 			this.delay = 12;
-		
+
 			for (var t in this.targets) {
-				
+
 				var z = 20 + Math.random() * 30;
 				var dx = Math.random() * 8 - 4;
 				var dy = Math.random() * 8 - 4;
 				var x = Math.random() * 40 - 20;
 				var y = Math.random() * 40 - 20;
-				
+
 				this.targets[t].hurt(this.targets[t].ox + x,this.targets[t].oy + y,z, dx,dy,0);
 			}
 		}
-		
+
 		this.duration -= dt;
 		if (this.duration <= 0) {
 			this.done = true;
@@ -436,7 +436,7 @@ var Flame = function() {
 }
 
 var Flash = function() {
-	
+
 	this.done = false;
 	this.sound = S.lightning;
 	this.num = 0;
@@ -444,41 +444,41 @@ var Flash = function() {
 	this.delay = 1;
 	this.targets;
 	this.duration = 70;
-	
+
 	this.launch = function(launchCell, targetCell, targets) {
-		
-		this.cell = targetCell; 
+
+		this.cell = targetCell;
 		this.targets = targets;
-		
+
 		game.particles.addImage(this.cell.x - 50, this.cell.y, 220, 0.5, 0, 0, 0, T.grey_cloud, 80);
-		game.particles.addImage(this.cell.x + 50, this.cell.y, 220, -0.5, 0, 0, 0, T.grey_cloud, 80); 
+		game.particles.addImage(this.cell.x + 50, this.cell.y, 220, -0.5, 0, 0, 0, T.grey_cloud, 80);
 		game.particles.addImage(this.cell.x + 10, this.cell.y, 230, 0.2, 0, 0, 0, T.grey_cloud, 80);
 		game.particles.addImage(this.cell.x - 10, this.cell.y, 230, -0.2, 0, 0, 0, T.grey_cloud, 80);
-		
+
 		game.setEffectArea(targetCell.x, targetCell.y, AREA_CIRCLE1, 'red');
-		
+
 		this.sound.play();
 	}
-	
-	this.update = function(dt) { 
-		
+
+	this.update = function(dt) {
+
 		this.delay -= dt;
-		
+
 		if (this.delay <= 0) {
-			
+
 			this.delay = 1;
-		
+
 			var da = Math.random() * Math.PI/20 - Math.PI/40;
-			
+
 			var dx = Math.random() * 60 - 30;
 			var dy = Math.random() * 4 - 2;
-			
+
 			game.particles.addLightning(this.cell.x + dx, this.cell.y - 200 + dy, 0, Math.PI/2 + da, this.cell, null, T.purple_lightning);
-			
+
 			for (var t in this.targets) {
 				this.targets[t].electrify();
 			}
-			
+
 			this.duration -= dt;
 			if (this.duration <= 0) {
 				this.done = true;
@@ -488,7 +488,7 @@ var Flash = function() {
 }
 
 var Fortress = function() {
-	
+
 	this.done = false;
 	this.sound = S.shield;
 	this.num = 0;
@@ -496,20 +496,20 @@ var Fortress = function() {
 	this.delay = 2;
 	this.targets;
 	this.duration = 60;
-	
+
 	this.launch = function(launchCell, targetCell, targets) {
-		
+
 		this.cell = targetCell;
 		this.targets = targets;
-		
+
 		createChipImage(targets, T.chip_fortress);
 		createChipAureol(targets, T.shield_aureol);
-		
+
 		this.sound.play();
 	}
-	
+
 	this.update = function(dt) {
-		
+
 		this.duration -= dt;
 		if (this.duration <= 0) {
 			this.done = true;
@@ -518,7 +518,7 @@ var Fortress = function() {
 }
 
 var Helmet = function() {
-	
+
 	this.done = false;
 	this.sound = S.shield;
 	this.num = 0;
@@ -526,20 +526,20 @@ var Helmet = function() {
 	this.delay = 2;
 	this.targets;
 	this.duration = 60;
-	
+
 	this.launch = function(launchCell, targetCell, targets) {
-		
+
 		this.cell = targetCell;
-		this.targets = targets; 
-		
+		this.targets = targets;
+
 		createChipImage(targets, T.chip_helmet);
 		createChipAureol(targets, T.shield_aureol);
-		
+
 		this.sound.play();
 	}
-	
+
 	this.update = function(dt) {
-		
+
 		this.duration -= dt;
 		if (this.duration <= 0) {
 			this.done = true;
@@ -548,20 +548,20 @@ var Helmet = function() {
 }
 
 var Ice = function() {
-	
+
 	this.done = false;
 	this.sound = S.ice;
 	this.duration = 30;
-	
+
 	this.launch = function(launchCell, targetCell, targets) {
-		
+
 		game.particles.addGarbage(targetCell.x, targetCell.y, 100, 0, 0, 1.5, T.ice_small, 1, 0);
-		
+
 		this.sound.play();
 	}
-	
+
 	this.update = function(dt) {
-		
+
 		this.duration -= dt;
 		if (this.duration <= 0) {
 			this.done = true;
@@ -570,22 +570,22 @@ var Ice = function() {
 }
 
 var Iceberg = function() {
-	
+
 	this.done = false;
 	this.sound = S.ice;
 	this.duration = 40;
-	
+
 	this.launch = function(launchCell, targetCell, targets) {
-		
+
 		game.particles.addGarbage(targetCell.x, targetCell.y, 180, 0, 0, 3, T.iceberg, 1, 0);
-		
+
 		game.setEffectArea(targetCell.x, targetCell.y, AREA_CIRCLE2, 'red');
-		
+
 		this.sound.play();
 	}
-	
+
 	this.update = function(dt) {
-		
+
 		this.duration -= dt;
 		if (this.duration <= 0) {
 			this.done = true;
@@ -594,24 +594,24 @@ var Iceberg = function() {
 }
 
 var Inversion = function() {
-	
+
 	this.done = false;
 	this.sound = S.teleportation;
 	this.inverted = false;
-	
+
 	this.cell;
 	this.target;
 	this.duration = 120;
-	 
+
 	this.launch = function(launchCell, targetPos, targets, targetCell, launcher) {
-		
-		this.launcher = launcher; 
+
+		this.launcher = launcher;
 		this.target = targets[0];
 
 		this.launchPos = {x: launchCell[0], y: launchCell[1]};
 		this.targetPos = targetPos;
 	}
-	
+
 	this.update = function(dt) {
 
 		this.duration -= dt;
@@ -645,7 +645,7 @@ var Inversion = function() {
 			var cell = this.launcher.cell;
 			this.launcher.setCell(this.target.cell);
 			this.target.setCell(cell);
-			
+
 			this.inverted = true;
 		}
 
@@ -656,7 +656,7 @@ var Inversion = function() {
 }
 
 var LeatherBoots = function() {
-	
+
 	this.done = false;
 	this.sound = S.buff;
 	this.num = 0;
@@ -664,26 +664,26 @@ var LeatherBoots = function() {
 	this.delay = 2;
 	this.targets;
 	this.duration = 60;
-	
+
 	this.launch = function(launchCell, targetCell, targets) {
-		
+
 		this.cell = targetCell;
 		this.targets = targets;
-		
+
 		createChipImage(targets, T.chip_leather_boots);
 		createChipAureol(targets, T.buff_aureol);
-		
+
 		this.sound.play();
 	}
-	
+
 	this.update = function(dt) {
-		
+
 		this.delay -= dt;
 		if (this.delay <= 0) {
 			createChipHalo(this.targets);
 			this.delay = 2;
 		}
-		
+
 		this.duration -= dt;
 		if (this.duration <= 0) {
 			this.done = true;
@@ -692,7 +692,7 @@ var LeatherBoots = function() {
 }
 
 var Liberation = function() {
-	
+
 	this.done = false;
 	this.sound = S.liberation;
 	this.num = 0;
@@ -700,25 +700,25 @@ var Liberation = function() {
 	this.delay = 2;
 	this.targets;
 	this.duration = 60;
-	
+
 	this.launch = function(launchCell, targetCell, targets) {
-		
+
 		this.cell = targetCell;
 		this.targets = targets;
-		
+
 		this.sound.play();
-	
+
 	}
-	
+
 	this.update = function(dt) {
-		
+
 		this.duration -= dt;
 		if (this.duration <= 0) {
 			this.done = true;
 		}
 
 		if (Math.random() > 0.5) {
-			var t = this.targets[0]; 
+			var t = this.targets[0];
 
 			var angle = Math.random() * Math.PI * 2;
 
@@ -728,60 +728,60 @@ var Liberation = function() {
 			angle = Math.atan2(dy, dx);
 
 			var x = t.ox + dx * 10;
-			var y = t.oy + dy * 10;  
+			var y = t.oy + dy * 10;
 			var z = 50;
-			
+
 			game.particles.addImage(x, y, z, dx, dy, 0, angle, T.liberation_halo, 60);
 		}
 	}
 }
 
 var Lightning = function() {
-	
-	this.done = false;	
+
+	this.done = false;
 	this.sound = S.lightning;
-	
+
 	this.num = 0;
 	this.cell;
 	this.delay = 1;
 	this.duration = 80;
 	this.targets;
-	
+
 	this.launch = function(launchCell, targetCell, targets) {
-		
+
 		this.cell = targetCell;
 		this.targets = targets;
-		
+
 		game.particles.addImage(this.cell.x - 50, this.cell.y, 230, 0.5, 0, 0, 0, T.black_cloud, 90);
 		game.particles.addImage(this.cell.x + 50, this.cell.y, 230, -0.5, 0, 0, 0, T.black_cloud, 90);
 		game.particles.addImage(this.cell.x + 10, this.cell.y, 240, 0.2, 0, 0, 0, T.black_cloud, 90);
 		game.particles.addImage(this.cell.x - 10, this.cell.y, 240, -0.2, 0, 0, 0, T.black_cloud, 90);
-		
+
 		game.setEffectArea(targetCell.x, targetCell.y, AREA_CIRCLE2, 'red');
-		
+
 		this.sound.play();
-		
+
 	}
-	
+
 	this.update = function(dt) {
-		
+
 		this.delay -= dt;
-		
+
 		if (this.delay <= 0) {
-			
+
 			this.delay = 1;
-		
+
 			var da = Math.random() * Math.PI/20 - Math.PI/40;
-			
+
 			var dx = Math.random() * 80 - 40;
 			var dy = Math.random() * 4 - 2;
-			
+
 			game.particles.addLightning(this.cell.x + dx, this.cell.y - 200 + dy, 0, Math.PI/2 + da, this.cell, null, T.red_lightning);
-			
+
 			for (var t in this.targets) {
 				this.targets[t].electrify();
 			}
-			
+
 			this.duration -= dt;
 			if (this.duration <= 0) {
 				this.done = true;
@@ -791,60 +791,60 @@ var Lightning = function() {
 }
 
 var Meteorite = function() {
-	
+
 	this.done = false;
 	this.sound = S.meteorite;
 	this.willFinish = false;
-	
+
 	this.count = 6;
 	this.delay = 0;
-	
+
 	this.x;
 	this.y;
 	this.targets;
 	this.vx;
-	
+
 	this.launch = function(launchCell, targetCell, targets) {
-		
+
 		this.x = targetCell.x;
 		this.y = targetCell.y;
 		this.targets = targets;
 		this.vx = (500 + Math.random() * 300) * ((Math.random() > 0.5) ? 1 : -1);
-		
+
 		game.setEffectArea(this.x, this.y, AREA_CIRCLE2, 'red', 180);
-		
+
 		this.sound.play();
 	}
-	
+
 	this.update = function(dt) {
-		
+
 		this.delay -= dt;
-		
+
 		if (this.delay < 0) {
-			
+
 			this.delay = 5 + Math.random() * 15;
-			
+
 			this.count--;
-			
+
 			if (this.count > 0) {
-				
+
 				var targets = this.count == 1 ? this.targets : null;
-				
+
 				var y = this.y;
 				var z = this.y + 200;
 				var x = this.x + this.vx;
 				var angle = Math.atan2(this.vx, z) + Math.PI/2;
-				
+
 				var ox = Math.random() * 120 - 60;
 				var oy = Math.random() * 120 - 60;
-				
+
 				var size = 0.7 + Math.random() * 0.5;
-				
+
 				game.particles.addMeteorite(x + ox, y + oy, z, angle, size, targets);
-				
+
 			} else {
 				this.willFinish = true;
-				
+
 				if (this.targets.length == 0) {
 					this.done = true;
 				}
@@ -854,7 +854,7 @@ var Meteorite = function() {
 }
 
 var Motivation = function() {
-	
+
 	this.done = false;
 	this.sound = S.buff;
 	this.num = 0;
@@ -862,26 +862,26 @@ var Motivation = function() {
 	this.delay = 2;
 	this.targets;
 	this.duration = 60;
-	
+
 	this.launch = function(launchCell, targetCell, targets) {
-		
+
 		this.cell = targetCell;
 		this.targets = targets;
-		
+
 		createChipImage(targets, T.chip_motivation);
 		createChipAureol(targets, T.buff_aureol);
-		
+
 		this.sound.play();
 	}
-	
+
 	this.update = function(dt) {
-		
+
 		this.delay -= dt;
 		if (this.delay <= 0) {
 			createChipHalo(this.targets);
 			this.delay = 2;
 		}
-		
+
 		this.duration -= dt;
 		if (this.duration <= 0) {
 			this.done = true;
@@ -890,20 +890,20 @@ var Motivation = function() {
 }
 
 var Pebble = function() {
-	
+
 	this.done = false;
 	this.sound = S.rock;
 	this.duration = 30;
-	
+
 	this.launch = function(launchCell, targetCell, targets) {
-		
+
 		game.particles.addGarbage(targetCell.x, targetCell.y, 100, 0, 0, 2, T.pebble_small, 1, 0);
-		
+
 		this.sound.play();
 	}
-	
+
 	this.update = function(dt) {
-		
+
 		this.duration -= dt;
 		if (this.duration <= 0) {
 			this.done = true;
@@ -912,7 +912,7 @@ var Pebble = function() {
 }
 
 var Protein = function() {
-	
+
 	this.done = false;
 	this.sound = S.buff;
 	this.num = 0;
@@ -920,26 +920,26 @@ var Protein = function() {
 	this.delay = 2;
 	this.targets;
 	this.duration = 60;
-	
+
 	this.launch = function(launchCell, targetCell, targets) {
-		
+
 		this.cell = targetCell;
 		this.targets = targets;
-		
+
 		createChipImage(targets, T.chip_protein);
 		createChipAureol(targets, T.buff_aureol);
-		
+
 		this.sound.play();
 	}
-	
+
 	this.update = function(dt) {
-		
+
 		this.delay -= dt;
 		if (this.delay <= 0) {
 			createChipHalo(this.targets);
 			this.delay = 2;
 		}
-		
+
 		this.duration -= dt;
 		if (this.duration <= 0) {
 			this.done = true;
@@ -948,7 +948,7 @@ var Protein = function() {
 }
 
 var Rage = function() {
-	
+
 	this.done = false;
 	this.sound = S.buff;
 	this.num = 0;
@@ -956,26 +956,26 @@ var Rage = function() {
 	this.delay = 2;
 	this.targets;
 	this.duration = 60;
-	
+
 	this.launch = function(launchCell, targetCell, targets) {
-		
+
 		this.cell = targetCell;
 		this.targets = targets;
-		
+
 		createChipImage(targets, T.chip_rage);
 		createChipAureol(targets, T.buff_aureol);
-		
+
 		this.sound.play();
 	}
-	
+
 	this.update = function(dt) {
-		
+
 		this.delay -= dt;
 		if (this.delay <= 0) {
 			createChipHalo(this.targets);
 			this.delay = 2;
 		}
-		
+
 		this.duration -= dt;
 		if (this.duration <= 0) {
 			this.done = true;
@@ -984,7 +984,7 @@ var Rage = function() {
 }
 
 var Rampart = function() {
-	
+
 	this.done = false;
 	this.sound = S.shield;
 	this.num = 0;
@@ -992,20 +992,20 @@ var Rampart = function() {
 	this.delay = 2;
 	this.targets;
 	this.duration = 60;
-	
+
 	this.launch = function(launchCell, targetCell, targets) {
-		
+
 		this.cell = targetCell;
 		this.targets = targets;
-		
+
 		createChipImage(targets, T.chip_rampart);
 		createChipAureol(targets, T.shield_aureol);
-		
+
 		this.sound.play();
 	}
-	
+
 	this.update = function(dt) {
-		
+
 		this.duration -= dt;
 		if (this.duration <= 0) {
 			this.done = true;
@@ -1014,7 +1014,7 @@ var Rampart = function() {
 }
 
 var Reflexes = function() {
-	
+
 	this.done = false;
 	this.sound = S.buff;
 	this.num = 0;
@@ -1022,26 +1022,26 @@ var Reflexes = function() {
 	this.delay = 2;
 	this.targets;
 	this.duration = 60;
-	
+
 	this.launch = function(launchCell, targetCell, targets) {
-		
+
 		this.cell = targetCell;
 		this.targets = targets;
-		
+
 		createChipImage(targets, T.chip_reflexes);
 		createChipAureol(targets, T.buff_aureol);
-		
+
 		this.sound.play();
 	}
-	
+
 	this.update = function(dt) {
-		
+
 		this.delay -= dt;
 		if (this.delay <= 0) {
 			createChipHalo(this.targets);
 			this.delay = 2;
 		}
-		
+
 		this.duration -= dt;
 		if (this.duration <= 0) {
 			this.done = true;
@@ -1050,7 +1050,7 @@ var Reflexes = function() {
 }
 
 var Regeneration = function() {
-	
+
 	this.done = false;
 	this.sound = S.heal;
 	this.num = 0;
@@ -1058,26 +1058,26 @@ var Regeneration = function() {
 	this.delay = 2;
 	this.targets;
 	this.duration = 45;
-	 
+
 	this.launch = function(launchCell, targetCell, targets) {
-		
-		this.cell = targetCell; 
+
+		this.cell = targetCell;
 		this.targets = targets;
-		
+
 		createChipImage(targets, T.chip_regeneration);
 		createChipAureol(targets, T.cure_aureol);
-		
+
 		this.sound.play();
 	}
-	
+
 	this.update = function(dt) {
-		
+
 		this.delay -= dt;
 		if (this.delay <= 0) {
 			createChipHeal(this.targets);
 			this.delay = 2;
 		}
-		
+
 		this.duration -= dt;
 		if (this.duration <= 0) {
 			this.done = true;
@@ -1086,7 +1086,7 @@ var Regeneration = function() {
 }
 
 var Remission = function() {
-	
+
 	this.done = false;
 	this.sound = S.heal;
 	this.num = 0;
@@ -1094,26 +1094,26 @@ var Remission = function() {
 	this.delay = 2;
 	this.targets;
 	this.duration = 45;
-	 
+
 	this.launch = function(launchCell, targetCell, targets) {
-		
-		this.cell = targetCell; 
+
+		this.cell = targetCell;
 		this.targets = targets;
-		
+
 		createChipImage(targets, T.chip_remission);
 		createChipAureol(targets, T.cure_aureol);
-		
+
 		this.sound.play();
 	}
-	
+
 	this.update = function(dt) {
-		
+
 		this.delay -= dt;
 		if (this.delay <= 0) {
 			createChipHeal(this.targets);
 			this.delay = 2;
 		}
-		
+
 		this.duration -= dt;
 		if (this.duration <= 0) {
 			this.done = true;
@@ -1122,20 +1122,20 @@ var Remission = function() {
 }
 
 var Rock = function() {
-	
+
 	this.done = false;
 	this.sound = S.rock;
 	this.duration = 40;
-	
+
 	this.launch = function(launchCell, targetCell, targets) {
-		
+
 		game.particles.addGarbage(targetCell.x, targetCell.y, 150, 0, 0, 2, T.rock, 1, 0);
-		
+
 		this.sound.play();
 	}
-	
+
 	this.update = function(dt) {
-		
+
 		this.duration -= dt;
 		if (this.duration <= 0) {
 			this.done = true;
@@ -1144,29 +1144,29 @@ var Rock = function() {
 }
 
 var Rockfall = function() {
-	
+
 	this.done = false;
 	this.sound = S.rockfall;
 	this.duration = 70;
-	
+
 	this.delay = 0;
 	this.targetCell;
-	
+
 	this.launch = function(launchCell, targetCell, targets) {
 		this.targetCell = targetCell;
-		
+
 		game.setEffectArea(targetCell.x, targetCell.y, AREA_CIRCLE2, 'red');
-		
+
 		this.sound.play();
 	}
-	
+
 	this.update = function(dt) {
-		
+
 		this.delay -= dt;
-		
+
 		if (this.delay <= 0) {
 			this.delay = 10;
-			
+
 			//~ var rot = Math.random() * 0.1 - 0.05;
 			var rot = 0;
 			var x = Math.random() * 100 - 50;
@@ -1174,10 +1174,10 @@ var Rockfall = function() {
 			var z = 120 + Math.random() * 100;
 			var dz = -1 - Math.random() * 3;
 			var scale = 0.3 + Math.random() * 0.5;
-			
+
 			game.particles.addGarbage(this.targetCell.x + x, this.targetCell.y + y, z, 0, 0, dz, T.rock, 1, rot, scale);
 		}
-		
+
 		this.duration -= dt;
 		if (this.duration <= 0) {
 			this.done = true;
@@ -1186,7 +1186,7 @@ var Rockfall = function() {
 }
 
 var SevenLeagueBoots = function() {
-	
+
 	this.done = false;
 	this.sound = S.buff;
 	this.num = 0;
@@ -1194,20 +1194,20 @@ var SevenLeagueBoots = function() {
 	this.delay = 2;
 	this.targets;
 	this.duration = 60;
-	
+
 	this.launch = function(launchCell, targetCell, targets) {
-		
+
 		this.cell = targetCell;
 		this.targets = targets;
-		
+
 		createChipImage(targets, T.chip_seven_league_boots);
 		createChipAureol(targets, T.buff_aureol);
-		
+
 		this.sound.play();
 	}
-	
+
 	this.update = function(dt) {
-		
+
 		this.duration -= dt;
 		if (this.duration <= 0) {
 			this.done = true;
@@ -1216,7 +1216,7 @@ var SevenLeagueBoots = function() {
 }
 
 var Shield = function() {
-	
+
 	this.done = false;
 	this.sound = S.shield;
 	this.num = 0;
@@ -1224,20 +1224,20 @@ var Shield = function() {
 	this.delay = 2;
 	this.targets;
 	this.duration = 60;
-	
+
 	this.launch = function(launchCell, targetCell, targets) {
-		
+
 		this.cell = targetCell;
 		this.targets = targets;
-		
+
 		createChipImage(targets, T.chip_shield);
 		createChipAureol(targets, T.shield_aureol);
-		
+
 		this.sound.play();
 	}
-	
+
 	this.update = function(dt) {
-		
+
 		this.duration -= dt;
 		if (this.duration <= 0) {
 			this.done = true;
@@ -1246,48 +1246,48 @@ var Shield = function() {
 }
 
 var Shock = function() {
-	
+
 	this.done = false;
 	this.sound = S.lightning;
 	this.num = 0;
-	this.cell; 
+	this.cell;
 	this.delay = 2;
 	this.targets;
 	this.duration = 60;
-	
+
 	this.launch = function(launchCell, targetCell, targets) {
-		 
+
 		this.cell = targetCell;
 		this.targets = targets;
-		
+
 		game.particles.addImage(this.cell.x - 50, this.cell.y, 220, 0.5, 0, 0, 0, T.cloud, 70);
 		game.particles.addImage(this.cell.x + 50, this.cell.y, 220, -0.5, 0, 0, 0, T.cloud, 70);
 		game.particles.addImage(this.cell.x + 10, this.cell.y, 230, 0.2, 0, 0, 0, T.cloud, 70);
 		game.particles.addImage(this.cell.x - 10, this.cell.y, 230, -0.2, 0, 0, 0, T.cloud, 70);
-		
+
 		this.sound.play();
 	}
-	
+
 	this.update = function(dt) {
-		
+
 		this.delay -= dt;
-		
+
 		if (this.delay <= 0) {
-			
+
 			this.delay = 2;
-		
+
 			var da = Math.random() * Math.PI/20 - Math.PI/40;
-			
+
 			var dx = Math.random() * 60 - 30;
 			var dy = Math.random() * 4 - 2;
-			
+
 			game.particles.addLightning(this.cell.x + dx, this.cell.y - 200 + dy, 0, Math.PI/2 + da, this.cell, null, T.lightning);
-			
+
 			for (var t in this.targets) {
 				this.targets[t].electrify();
 			}
 		}
-		
+
 		this.duration -= dt;
 		if (this.duration <= 0) {
 			this.done = true;
@@ -1296,28 +1296,28 @@ var Shock = function() {
 }
 
 var Spark = function() {
-	
+
 	this.done = false;
 	this.sound = S.fire;
 	this.num = 0;
-	this.cell; 
+	this.cell;
 	this.delay = 2;
 	this.targets;
 	this.duration = 40;
-	
+
 	this.launch = function(launchCell, targetCell, targets) {
-		 
+
 		this.cell = targetCell;
 		this.targets = targets;
-		
+
 		for (var t in targets) {
 			targets[t].burnAnim(50);
 		}
 		this.sound.play();
 	}
-	
+
 	this.update = function(dt) {
-		
+
 		this.duration -= dt;
 		if (this.duration <= 0) {
 			this.done = true;
@@ -1326,19 +1326,19 @@ var Spark = function() {
 }
 
 var Stalactite = function() {
-	
+
 	this.done = false;
 	this.sound = S.ice;
 	this.duration = 40;
-	
+
 	this.launch = function(launchCell, targetCell, targets) {
-		
+
 		game.particles.addGarbage(targetCell.x, targetCell.y, 180, 0, 0, 3, T.stalactite, 1, 0);
 		this.sound.play();
 	}
-	
+
 	this.update = function(dt) {
-		
+
 		this.duration -= dt;
 		if (this.duration <= 0) {
 			this.done = true;
@@ -1347,7 +1347,7 @@ var Stalactite = function() {
 }
 
 var Steroid = function() {
-	
+
 	this.done = false;
 	this.sound = S.buff;
 	this.num = 0;
@@ -1355,26 +1355,26 @@ var Steroid = function() {
 	this.delay = 2;
 	this.targets;
 	this.duration = 60;
-	
+
 	this.launch = function(launchCell, targetCell, targets) {
-		
+
 		this.cell = targetCell;
 		this.targets = targets;
-		
+
 		createChipImage(targets, T.chip_steroid);
 		createChipAureol(targets, T.buff_aureol);
-		
+
 		this.sound.play();
 	}
-	
+
 	this.update = function(dt) {
-		
+
 		this.delay -= dt;
 		if (this.delay <= 0) {
 			createChipHalo(this.targets);
 			this.delay = 2;
 		}
-		
+
 		this.duration -= dt;
 		if (this.duration <= 0) {
 			this.done = true;
@@ -1383,7 +1383,7 @@ var Steroid = function() {
 }
 
 var Stretching = function() {
-	
+
 	this.done = false;
 	this.sound = S.buff;
 	this.num = 0;
@@ -1391,26 +1391,26 @@ var Stretching = function() {
 	this.delay = 2;
 	this.targets;
 	this.duration = 60;
-	
+
 	this.launch = function(launchCell, targetCell, targets) {
-		
+
 		this.cell = targetCell;
 		this.targets = targets;
-		
+
 		createChipImage(targets, T.chip_stretching);
 		createChipAureol(targets, T.buff_aureol);
-		
+
 		this.sound.play();
 	}
-	
+
 	this.update = function(dt) {
-		
+
 		this.delay -= dt;
 		if (this.delay <= 0) {
 			createChipHalo(this.targets);
 			this.delay = 2;
 		}
-		
+
 		this.duration -= dt;
 		if (this.duration <= 0) {
 			this.done = true;
@@ -1419,26 +1419,26 @@ var Stretching = function() {
 }
 
 var Teleportation = function() {
-	
+
 	this.done = false;
 	this.sound = S.teleportation;
 	this.teleported = false;
-	
+
 	this.cell;
 	this.target;
 	this.duration = 140;
-	 
+
 	this.launch = function(launchCell, targetPos, targets, targetCell) {
-		
-		this.cell = targetCell; 
+
+		this.cell = targetCell;
 		this.target = targets[0];
 
 		this.launchPos = {x: launchCell[0], y: launchCell[1]};
 		this.targetPos = targetPos;
-		
+
 		this.sound.play();
 	}
-	
+
 	this.update = function(dt) {
 
 		this.duration -= dt;
@@ -1486,7 +1486,7 @@ var Teleportation = function() {
 }
 
 var Vaccine = function() {
-	
+
 	this.done = false;
 	this.sound = S.heal;
 	this.num = 0;
@@ -1494,26 +1494,26 @@ var Vaccine = function() {
 	this.delay = 2;
 	this.targets;
 	this.duration = 45;
-	 
+
 	this.launch = function(launchCell, targetCell, targets) {
-		
-		this.cell = targetCell; 
+
+		this.cell = targetCell;
 		this.targets = targets;
-		
+
 		createChipImage(targets, T.chip_vaccine);
 		createChipAureol(targets, T.cure_aureol);
-		
+
 		this.sound.play();
 	}
-	
+
 	this.update = function(dt) {
-		
+
 		this.delay -= dt;
 		if (this.delay <= 0) {
 			createChipHeal(this.targets);
 			this.delay = 2;
 		}
-		
+
 		this.duration -= dt;
 		if (this.duration <= 0) {
 			this.done = true;
@@ -1522,7 +1522,7 @@ var Vaccine = function() {
 }
 
 var Wall = function() {
-	
+
 	this.done = false;
 	this.sound = S.shield;
 	this.num = 0;
@@ -1530,20 +1530,20 @@ var Wall = function() {
 	this.delay = 2;
 	this.targets;
 	this.duration = 60;
-	
+
 	this.launch = function(launchCell, targetCell, targets) {
-		
+
 		this.cell = targetCell;
 		this.targets = targets;
-		
+
 		createChipImage(targets, T.chip_wall);
 		createChipAureol(targets, T.shield_aureol);
-		
+
 		this.sound.play();
 	}
-	
+
 	this.update = function(dt) {
-		
+
 		this.duration -= dt;
 		if (this.duration <= 0) {
 			this.done = true;
@@ -1552,7 +1552,7 @@ var Wall = function() {
 }
 
 var WarmUp = function() {
-	
+
 	this.done = false;
 	this.sound = S.buff;
 	this.num = 0;
@@ -1560,26 +1560,26 @@ var WarmUp = function() {
 	this.delay = 2;
 	this.targets;
 	this.duration = 60;
-	
+
 	this.launch = function(launchCell, targetCell, targets) {
-		
+
 		this.cell = targetCell;
 		this.targets = targets;
-		
+
 		createChipImage(targets, T.chip_warm_up);
 		createChipAureol(targets, T.buff_aureol);
-		
+
 		this.sound.play();
 	}
-	
+
 	this.update = function(dt) {
-		
+
 		this.delay -= dt;
 		if (this.delay <= 0) {
 			createChipHalo(this.targets);
 			this.delay = 2;
 		}
-		
+
 		this.duration -= dt;
 		if (this.duration <= 0) {
 			this.done = true;
@@ -1588,7 +1588,7 @@ var WarmUp = function() {
 }
 
 var WingedBoots = function() {
-	
+
 	this.done = false;
 	this.sound = S.buff;
 	this.num = 0;
@@ -1596,28 +1596,28 @@ var WingedBoots = function() {
 	this.delay = 2;
 	this.targets;
 	this.duration = 60;
-	
+
 	this.launch = function(launchCell, targetCell, targets) {
-		
+
 		this.cell = targetCell;
 		this.targets = targets;
-		
+
 		createChipImage(targets, T.chip_winged_boots);
 		createChipAureol(targets, T.buff_aureol);
-		
+
 		game.setEffectArea(targetCell.x, targetCell.y, AREA_CIRCLE1, 'blue');
-		
+
 		this.sound.play();
 	}
-	
+
 	this.update = function(dt) {
-		
+
 		this.delay -= dt;
 		if (this.delay <= 0) {
 			createChipHalo(this.targets);
 			this.delay = 2;
 		}
-		
+
 		this.duration -= dt;
 		if (this.duration <= 0) {
 			this.done = true;
@@ -1627,7 +1627,7 @@ var WingedBoots = function() {
 
 
 var Whip = function() {
-	
+
 	this.done = false;
 	this.sound = S.buff;
 	this.num = 0;
@@ -1635,26 +1635,26 @@ var Whip = function() {
 	this.delay = 2;
 	this.targets;
 	this.duration = 60;
-	
+
 	this.launch = function(launchCell, targetCell, targets) {
-		
+
 		this.cell = targetCell;
 		this.targets = targets;
-		
+
 		createChipImage(targets, T.chip_whip);
 		createChipAureol(targets, T.buff_aureol);
-		
+
 		this.sound.play();
 	}
-	
+
 	this.update = function(dt) {
-		
+
 		this.delay -= dt;
 		if (this.delay <= 0) {
 			createChipHalo(this.targets);
 			this.delay = 2;
 		}
-		
+
 		this.duration -= dt;
 		if (this.duration <= 0) {
 			this.done = true;
@@ -1663,7 +1663,7 @@ var Whip = function() {
 }
 
 var Acceleration = function() {
-	
+
 	this.done = false;
 	this.sound = S.buff;
 	this.num = 0;
@@ -1671,26 +1671,26 @@ var Acceleration = function() {
 	this.delay = 2;
 	this.targets;
 	this.duration = 60;
-	
+
 	this.launch = function(launchCell, targetCell, targets) {
-		
+
 		this.cell = targetCell;
 		this.targets = targets;
-		
+
 		createChipImage(targets, T.chip_acceleration);
 		createChipAureol(targets, T.buff_aureol);
-		
+
 		this.sound.play();
 	}
-	
+
 	this.update = function(dt) {
-		
+
 		this.delay -= dt;
 		if (this.delay <= 0) {
 			createChipHalo(this.targets);
 			this.delay = 2;
 		}
-		
+
 		this.duration -= dt;
 		if (this.duration <= 0) {
 			this.done = true;
@@ -1699,7 +1699,7 @@ var Acceleration = function() {
 }
 
 var Loam = function() {
-	
+
 	this.done = false;
 	this.sound = S.heal;
 	this.num = 0;
@@ -1707,26 +1707,26 @@ var Loam = function() {
 	this.delay = 2;
 	this.targets;
 	this.duration = 45;
-	 
+
 	this.launch = function(launchCell, targetCell, targets) {
-		
-		this.cell = targetCell; 
+
+		this.cell = targetCell;
 		this.targets = targets;
-		
+
 		createChipImage(targets, T.chip_loam);
 		createChipAureol(targets, T.cure_aureol);
-		
+
 		this.sound.play();
 	}
-	
+
 	this.update = function(dt) {
-		
+
 		this.delay -= dt;
 		if (this.delay <= 0) {
 			createChipHeal(this.targets);
 			this.delay = 2;
 		}
-		
+
 		this.duration -= dt;
 		if (this.duration <= 0) {
 			this.done = true;
@@ -1735,7 +1735,7 @@ var Loam = function() {
 }
 
 var Fertilizer = function() {
-	
+
 	this.done = false;
 	this.sound = S.heal;
 	this.num = 0;
@@ -1743,26 +1743,26 @@ var Fertilizer = function() {
 	this.delay = 2;
 	this.targets;
 	this.duration = 45;
-	 
+
 	this.launch = function(launchCell, targetCell, targets) {
-		
-		this.cell = targetCell; 
+
+		this.cell = targetCell;
 		this.targets = targets;
-		
+
 		createChipImage(targets, T.chip_fertilizer);
 		createChipAureol(targets, T.cure_aureol);
-		
+
 		this.sound.play();
 	}
-	
+
 	this.update = function(dt) {
-		
+
 		this.delay -= dt;
 		if (this.delay <= 0) {
 			createChipHeal(this.targets);
 			this.delay = 2;
 		}
-		
+
 		this.duration -= dt;
 		if (this.duration <= 0) {
 			this.done = true;
@@ -1771,19 +1771,19 @@ var Fertilizer = function() {
 }
 
 var SlowDown = function() {
-	
+
 	this.done = false;
 	this.sound = S.debuff;
 	this.duration = 60;
-	
+
 	this.launch = function(launchCell, targetCell, targets) {
-		
+
 		createChipImage(targets, T.chip_slow_down);
 		createChipAureol(targets, T.shackle_aureol);
-		
+
 		this.sound.play();
 	}
-	
+
 	this.update = function(dt) {
 
 		this.duration -= dt;
@@ -1794,19 +1794,19 @@ var SlowDown = function() {
 }
 
 var BallAndChain = function() {
-	
+
 	this.done = false;
 	this.sound = S.debuff;
 	this.duration = 60;
-	
+
 	this.launch = function(launchCell, targetCell, targets) {
-		
+
 		createChipImage(targets, T.chip_ball_and_chain);
 		createChipAureol(targets, T.shackle_aureol);
-		
+
 		this.sound.play();
 	}
-	
+
 	this.update = function(dt) {
 
 		this.duration -= dt;
@@ -1817,21 +1817,21 @@ var BallAndChain = function() {
 }
 
 var Tranquilizer = function() {
-	
+
 	this.done = false;
 	this.sound = S.debuff;
 	this.duration = 60;
-	
+
 	this.launch = function(launchCell, targetCell, targets) {
-		
+
 		createChipImage(targets, T.chip_tranquilizer);
 		createChipAureol(targets, T.shackle_aureol);
-		
+
 		this.sound.play();
 	}
-	
+
 	this.update = function(dt) {
-		
+
 		this.duration -= dt;
 		if (this.duration <= 0) {
 			this.done = true;
@@ -1840,21 +1840,21 @@ var Tranquilizer = function() {
 }
 
 var Soporific = function() {
-	
+
 	this.done = false;
 	this.sound = S.debuff;
 	this.duration = 60;
-	
+
 	this.launch = function(launchCell, targetCell, targets) {
-		
+
 		createChipImage(targets, T.chip_soporific);
 		createChipAureol(targets, T.shackle_aureol);
-		
+
 		this.sound.play();
 	}
-	
+
 	this.update = function(dt) {
-	
+
 		this.duration -= dt;
 		if (this.duration <= 0) {
 			this.done = true;
@@ -1863,21 +1863,21 @@ var Soporific = function() {
 }
 
 var Fracture = function() {
-	
+
 	this.done = false;
 	this.sound = S.debuff;
 	this.duration = 60;
-	
+
 	this.launch = function(launchCell, targetCell, targets) {
-		
+
 		createChipImage(targets, T.chip_fracture);
 		createChipAureol(targets, T.shackle_aureol);
-		
+
 		this.sound.play();
 	}
-	
+
 	this.update = function(dt) {
-		
+
 		this.duration -= dt;
 		if (this.duration <= 0) {
 			this.done = true;
@@ -1886,7 +1886,7 @@ var Fracture = function() {
 }
 
 var Solidification = function() {
-	
+
 	this.done = false;
 	this.sound = S.buff;
 	this.num = 0;
@@ -1894,26 +1894,26 @@ var Solidification = function() {
 	this.delay = 2;
 	this.targets;
 	this.duration = 60;
-	
+
 	this.launch = function(launchCell, targetCell, targets) {
-		
+
 		this.cell = targetCell;
 		this.targets = targets;
-		
+
 		createChipImage(targets, T.chip_solidification);
 		createChipAureol(targets, T.buff_aureol);
-		
+
 		this.sound.play();
 	}
-	
+
 	this.update = function(dt) {
-		
+
 		this.delay -= dt;
 		if (this.delay <= 0) {
 			createChipHalo(this.targets);
 			this.delay = 2;
 		}
-		
+
 		this.duration -= dt;
 		if (this.duration <= 0) {
 			this.done = true;
@@ -1922,21 +1922,21 @@ var Solidification = function() {
 }
 
 var Venom = function() {
-	
+
 	this.done = false;
 	this.sound = S.poison;
 	this.duration = 60;
-	
+
 	this.launch = function(launchCell, targetCell, targets) {
-		
+
 		createChipImage(targets, T.chip_venom);
 		createChipAureol(targets, T.poison_aureol);
-		
+
 		this.sound.play();
 	}
-	
+
 	this.update = function(dt) {
-		
+
 		this.duration -= dt;
 		if (this.duration <= 0) {
 			this.done = true;
@@ -1945,24 +1945,24 @@ var Venom = function() {
 }
 
 var Toxin = function() {
-	
+
 	this.done = false;
 	this.sound = S.poison;
 	this.duration = 60;
-	
+
 	this.launch = function(launchCell, targetCell, targets) {
-	
+
 		this.cell = targetCell;
 		this.targets = targets;
-		
+
 		createChipImage(targets, T.chip_toxin);
 		createChipAureol(targets, T.poison_aureol);
-		
+
 		this.sound.play();
 	}
-	
+
 	this.update = function(dt) {
-		
+
 		this.duration -= dt;
 		if (this.duration <= 0) {
 			this.done = true;
@@ -1971,21 +1971,21 @@ var Toxin = function() {
 }
 
 var Plague = function() {
-	
+
 	this.done = false;
 	this.sound = S.poison;
 	this.duration = 60;
-	
+
 	this.launch = function(launchCell, targetCell, targets) {
-		
+
 		createChipImage(targets, T.chip_plague);
 		createChipAureol(targets, T.poison_aureol);
-		
+
 		this.sound.play();
 	}
-	
+
 	this.update = function(dt) {
-		
+
 		this.duration -= dt;
 		if (this.duration <= 0) {
 			this.done = true;
@@ -1994,19 +1994,19 @@ var Plague = function() {
 }
 
 var Thorn = function() {
-	
+
 	this.done = false
 	this.sound = S.buff;
 	this.duration = 60
-	
+
 	this.launch = function(launchCell, targetCell, targets) {
-		
+
 		createChipImage(targets, T.chip_thorn)
 		createChipAureol(targets, T.damage_return_aureol)
-		
+
 		this.sound.play();
 	}
-	
+
 	this.update = function(dt) {
 
 		this.duration -= dt
@@ -2017,19 +2017,19 @@ var Thorn = function() {
 }
 
 var Mirror = function() {
-	
+
 	this.done = false
 	this.sound = S.buff;
 	this.duration = 60
-	
+
 	this.launch = function(launchCell, targetCell, targets) {
-		
+
 		createChipImage(targets, T.chip_mirror)
 		createChipAureol(targets, T.damage_return_aureol)
-		
+
 		this.sound.play();
 	}
-	
+
 	this.update = function(dt) {
 
 		this.duration -= dt
@@ -2040,7 +2040,7 @@ var Mirror = function() {
 }
 
 var Ferocity = function() {
-	
+
 	this.done = false;
 	this.sound = S.buff;
 	this.num = 0;
@@ -2048,26 +2048,26 @@ var Ferocity = function() {
 	this.delay = 2;
 	this.targets;
 	this.duration = 60;
-	
+
 	this.launch = function(launchCell, targetCell, targets) {
-		
+
 		this.cell = targetCell;
 		this.targets = targets;
-		
+
 		createChipImage(targets, T.chip_ferocity);
 		createChipAureol(targets, T.buff_aureol);
-		
+
 		this.sound.play();
 	}
-	
+
 	this.update = function(dt) {
-		
+
 		this.delay -= dt;
 		if (this.delay <= 0) {
 			createChipHalo(this.targets);
 			this.delay = 2;
 		}
-		
+
 		this.duration -= dt;
 		if (this.duration <= 0) {
 			this.done = true;
@@ -2076,7 +2076,7 @@ var Ferocity = function() {
 }
 
 var Collar = function() {
-	
+
 	this.done = false;
 	this.sound = S.buff;
 	this.num = 0;
@@ -2084,26 +2084,26 @@ var Collar = function() {
 	this.delay = 2;
 	this.targets;
 	this.duration = 60;
-	
+
 	this.launch = function(launchCell, targetCell, targets) {
-		
+
 		this.cell = targetCell;
 		this.targets = targets;
-		
+
 		createChipImage(targets, T.chip_collar);
 		createChipAureol(targets, T.buff_aureol);
-		
+
 		this.sound.play();
 	}
-	
+
 	this.update = function(dt) {
-		
+
 		this.delay -= dt;
 		if (this.delay <= 0) {
 			createChipHalo(this.targets);
 			this.delay = 2;
 		}
-		
+
 		this.duration -= dt;
 		if (this.duration <= 0) {
 			this.done = true;
@@ -2112,7 +2112,7 @@ var Collar = function() {
 }
 
 var Bark = function() {
-	
+
 	this.done = false;
 	this.sound = S.buff;
 	this.num = 0;
@@ -2120,26 +2120,26 @@ var Bark = function() {
 	this.delay = 2;
 	this.targets;
 	this.duration = 60;
-	
+
 	this.launch = function(launchCell, targetCell, targets) {
-		
+
 		this.cell = targetCell;
 		this.targets = targets;
-		
+
 		createChipImage(targets, T.chip_bark);
 		createChipAureol(targets, T.buff_aureol);
-		
+
 		this.sound.play();
 	}
-	
+
 	this.update = function(dt) {
-		
+
 		this.delay -= dt;
 		if (this.delay <= 0) {
 			createChipHalo(this.targets);
 			this.delay = 2;
 		}
-		
+
 		this.duration -= dt;
 		if (this.duration <= 0) {
 			this.done = true;
@@ -2148,20 +2148,20 @@ var Bark = function() {
 }
 
 var Burning = function() {
-	
+
 	this.done = false;
 	this.sound = S.fire;
 	this.duration = 60;
-	
+
 	this.launch = function(launchCell, targetCell, targets) {
-		
+
 		createChipImage(targets, T.chip_burning);
-		
+
 		this.sound.play();
 	}
-	
+
 	this.update = function(dt) {
-		
+
 		this.duration -= dt;
 		if (this.duration <= 0) {
 			this.done = true;
