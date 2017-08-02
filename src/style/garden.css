@@ -89,10 +89,10 @@
 }
 
 #garden-page .avatar,
-#garden-page .emblem
-{
+#garden-page .emblem {
 	width: 120px;
 	height: 120px;
+	border-radius: 2px;
 }
 
 .myleek:not(.selected), #my-compos .compo:not(.selected) {
