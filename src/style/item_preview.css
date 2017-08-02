@@ -7,9 +7,9 @@
 	background-color: #ddd;
 	padding: 2px 5px;
 	height: 25px;
-	
-} 
-.item-preview .name { 
+
+}
+.item-preview .name {
 	float: left;
 	font-size: 19px;
 	color: black;
@@ -19,7 +19,7 @@
 .item-preview .level {
 	float: right;
 	margin-top: 4px;
-	font-size: 16px; 
+	font-size: 16px;
 	color: #777;
 }
 
@@ -32,7 +32,7 @@
 	position: absolute;
 	top:0;
 	bottom:0;
-	left: 0; right: 0; 
+	left: 0; right: 0;
 	margin: auto;
 	max-height: 80px;
 }
@@ -44,7 +44,7 @@
 	padding: 5px;
 }
 
-.item-preview .stats div { 
+.item-preview .stats div {
 	padding: 4px;
 }
 .item-preview .stats div img {
@@ -55,9 +55,9 @@
 	background-color: white;
 }
 
-.item-preview .ennemies, 
-.item-preview .allies, 
-.item-preview .player, 
+.item-preview .ennemies,
+.item-preview .allies,
+.item-preview .player,
 .item-preview .not-player,
 .item-preview .summons,
 .item-preview .not-summons
@@ -71,13 +71,13 @@
 }
 .item-preview .ennemies {
 	background-color: red;
-}	
+}
 .item-preview .allies {
 	background-color: blue;
 }
 .item-preview .player {
 	background-color: black;
-} 
+}
 .item-preview .not-player {
 	background-color: white;
 	border: 2px solid #555;
@@ -97,7 +97,7 @@
 .item-preview .constant {
 	text-align: left;
 	color: #555;
-	font-size: 13px; 
+	font-size: 13px;
 	padding: 4px;
 }
 
