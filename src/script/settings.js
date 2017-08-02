@@ -123,7 +123,10 @@ LW.pages.settings.changePassword = function() {
 		_.post('farmer/change-password', {password: password, new_password: newPassword1}, function(data) {
 
 			if (data.success == true) {
-				_.toast(_.lang.get('settings', 'password_changed'), _.reload)
+				LW.disconnect()
+				_.toast(_.lang.get('settings', 'password_changed'), function() {
+					LW.page('/login')
+				})
 			} else {
 				_.toast(_.lang.get('farmer', 'error_' + data.error, data.params))
 			}
