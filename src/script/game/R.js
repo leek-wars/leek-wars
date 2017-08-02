@@ -286,40 +286,40 @@ var VOL_OTHER_SOUND = 0.1; // setWeapon, move
 
 var Sounds = function() {
 	// weapons
-	this.machine_gun = new Sound(LW.staticURL + "sound/weapons/machine_gun.mp3", VOL_OFFENSIVE_SOUND);
-	this.laser = new Sound(LW.staticURL + "sound/weapons/laser.mp3", VOL_OFFENSIVE_SOUND);
-	this.electrisor = new Sound(LW.staticURL + "sound/weapons/electrisor.mp3", VOL_OFFENSIVE_SOUND);
-	this.double_gun = new Sound(LW.staticURL + "sound/weapons/double_gun.mp3", VOL_OFFENSIVE_SOUND);
-	this.shotgun = new Sound(LW.staticURL + "sound/weapons/shotgun.mp3", VOL_OFFENSIVE_SOUND);
-	this.grenade_shoot = new Sound(LW.staticURL + "sound/weapons/grenade_shoot.mp3", VOL_OFFENSIVE_SOUND);
-	this.explosion = new Sound(LW.staticURL + "sound/weapons/explosion.mp3", VOL_OFFENSIVE_SOUND);
-	this.sword = new Sound(LW.staticURL + "sound/weapons/sword.mp3", VOL_OFFENSIVE_SOUND);
-	this.flame_thrower = new Sound(LW.staticURL + "sound/weapons/flame_thrower.mp3", VOL_OFFENSIVE_SOUND);
-	this.gazor = new Sound(LW.staticURL + "sound/weapons/gazor.mp3", VOL_OFFENSIVE_SOUND);
+	this.machine_gun = new Sound(LW.staticURL + "sound/machine_gun.mp3", VOL_OFFENSIVE_SOUND);
+	this.laser = new Sound(LW.staticURL + "sound/laser.mp3", VOL_OFFENSIVE_SOUND);
+	this.electrisor = new Sound(LW.staticURL + "sound/electrisor.mp3", VOL_OFFENSIVE_SOUND);
+	this.double_gun = new Sound(LW.staticURL + "sound/double_gun.mp3", VOL_OFFENSIVE_SOUND);
+	this.shotgun = new Sound(LW.staticURL + "sound/shotgun.mp3", VOL_OFFENSIVE_SOUND);
+	this.grenade_shoot = new Sound(LW.staticURL + "sound/grenade_shoot.mp3", VOL_OFFENSIVE_SOUND);
+	this.explosion = new Sound(LW.staticURL + "sound/explosion.mp3", VOL_OFFENSIVE_SOUND);
+	this.sword = new Sound(LW.staticURL + "sound/sword.mp3", VOL_OFFENSIVE_SOUND);
+	this.flame_thrower = new Sound(LW.staticURL + "sound/flame_thrower.mp3", VOL_OFFENSIVE_SOUND);
+	this.gazor = new Sound(LW.staticURL + "sound/gazor.mp3", VOL_OFFENSIVE_SOUND);
 	// chips
-	this.heal = new Sound(LW.staticURL + "sound/chips/heal.mp3", VOL_DEFFENSIVE_SOUND);
-	this.buff = new Sound(LW.staticURL + "sound/chips/buff.mp3", VOL_DEFFENSIVE_SOUND);
-	this.shield = new Sound(LW.staticURL + "sound/chips/shield.mp3", VOL_DEFFENSIVE_SOUND);
-	this.poison = new Sound(LW.staticURL + "sound/chips/poison.mp3", VOL_OFFENSIVE_SOUND);
-	this.lightning = new Sound(LW.staticURL + "sound/chips/lightning.mp3", VOL_OFFENSIVE_SOUND);
-	this.fire = new Sound(LW.staticURL + "sound/chips/fire.mp3", VOL_OFFENSIVE_SOUND);
-	this.rock = new Sound(LW.staticURL + "sound/chips/rock.mp3", VOL_OFFENSIVE_SOUND);
-	this.rockfall = new Sound(LW.staticURL + "sound/chips/rockfall.mp3", VOL_OFFENSIVE_SOUND);
-	this.ice = new Sound(LW.staticURL + "sound/chips/ice.mp3", VOL_OFFENSIVE_SOUND);
-	this.meteorite = new Sound(LW.staticURL + "sound/chips/meteorite.mp3", VOL_OFFENSIVE_SOUND);
-	this.liberation = new Sound(LW.staticURL + "sound/chips/liberation.mp3", VOL_SPECIAL_SOUND);
-	this.teleportation = new Sound(LW.staticURL + "sound/chips/teleportation.mp3", VOL_SPECIAL_SOUND);
-	this.debuff = new Sound(LW.staticURL + "sound/chips/debuff.mp3", VOL_OFFENSIVE_SOUND);
+	this.heal = new Sound(LW.staticURL + "sound/heal.mp3", VOL_DEFFENSIVE_SOUND);
+	this.buff = new Sound(LW.staticURL + "sound/buff.mp3", VOL_DEFFENSIVE_SOUND);
+	this.shield = new Sound(LW.staticURL + "sound/shield.mp3", VOL_DEFFENSIVE_SOUND);
+	this.poison = new Sound(LW.staticURL + "sound/poison.mp3", VOL_OFFENSIVE_SOUND);
+	this.lightning = new Sound(LW.staticURL + "sound/lightning.mp3", VOL_OFFENSIVE_SOUND);
+	this.fire = new Sound(LW.staticURL + "sound/fire.mp3", VOL_OFFENSIVE_SOUND);
+	this.rock = new Sound(LW.staticURL + "sound/rock.mp3", VOL_OFFENSIVE_SOUND);
+	this.rockfall = new Sound(LW.staticURL + "sound/rockfall.mp3", VOL_OFFENSIVE_SOUND);
+	this.ice = new Sound(LW.staticURL + "sound/ice.mp3", VOL_OFFENSIVE_SOUND);
+	this.meteorite = new Sound(LW.staticURL + "sound/meteorite.mp3", VOL_OFFENSIVE_SOUND);
+	this.liberation = new Sound(LW.staticURL + "sound/liberation.mp3", VOL_SPECIAL_SOUND);
+	this.teleportation = new Sound(LW.staticURL + "sound/teleportation.mp3", VOL_SPECIAL_SOUND);
+	this.debuff = new Sound(LW.staticURL + "sound/debuff.mp3", VOL_OFFENSIVE_SOUND);
 	// other
-	this.move = new Sound(LW.staticURL + "sound/others/move.mp3", VOL_OTHER_SOUND);
-	this.lama = new Sound(LW.staticURL + "sound/others/lama.mp3", VOL_OTHER_SOUND);
-	this.bulb = new Sound(LW.staticURL + "sound/others/bulb.mp3", VOL_SPECIAL_SOUND);
-	this.map_forest = new Sound(LW.staticURL + "sound/others/map_forest.mp3", VOL_MAP_SOUND);
-	this.map_beach = new Sound(LW.staticURL + "sound/others/map_beach.mp3", VOL_MAP_SOUND);
-	this.map_desert = new Sound(LW.staticURL + "sound/others/map_desert.mp3", VOL_MAP_SOUND);
-	this.map_factory = new Sound(LW.staticURL + "sound/others/map_factory.mp3", VOL_MAP_SOUND);
-	this.map_glacier = new Sound(LW.staticURL + "sound/others/map_glacier.mp3", VOL_MAP_SOUND);
-	this.map_nexus = new Sound(LW.staticURL + "sound/others/map_nexus.mp3", VOL_MAP_SOUND)
+	this.move = new Sound(LW.staticURL + "sound/move.mp3", VOL_OTHER_SOUND);
+	this.lama = new Sound(LW.staticURL + "sound/lama.mp3", VOL_OTHER_SOUND);
+	this.bulb = new Sound(LW.staticURL + "sound/bulb.mp3", VOL_SPECIAL_SOUND);
+	this.map_forest = new Sound(LW.staticURL + "sound/map_forest.mp3", VOL_MAP_SOUND);
+	this.map_beach = new Sound(LW.staticURL + "sound/map_beach.mp3", VOL_MAP_SOUND);
+	this.map_desert = new Sound(LW.staticURL + "sound/map_desert.mp3", VOL_MAP_SOUND);
+	this.map_factory = new Sound(LW.staticURL + "sound/map_factory.mp3", VOL_MAP_SOUND);
+	this.map_glacier = new Sound(LW.staticURL + "sound/map_glacier.mp3", VOL_MAP_SOUND);
+	this.map_nexus = new Sound(LW.staticURL + "sound/map_nexus.mp3", VOL_MAP_SOUND)
 }
 
 function Sound(src, volume) {
