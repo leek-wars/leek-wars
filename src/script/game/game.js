@@ -1095,6 +1095,12 @@ var Game = function() {
 				break
 			}
 
+			case ACTION_UPDATE_EFFECT : {
+				this.updateEffect(action[1], action[2])
+				this.actionDone()
+				break
+			}
+
 			case ACTION_BUG:
 
 				if (!this.jumping) {
@@ -1440,6 +1446,55 @@ var Game = function() {
 		}
 
 		delete this.effects[id];
+	}
+
+	this.updateEffect = function(id, new_value) {
+
+		var effect = this.effects[id]
+		if (!effect) return ;
+
+		var effectID = effect.effect
+		var leek = this.leeks[effect.target]
+		var delta = new_value - effect.value
+
+		switch (effectID) {
+			case LW.EFFECT.SHACKLE_MP:
+				leek.mp += delta;
+				break;
+			case LW.EFFECT.SHACKLE_TP:
+				leek.tp += delta;
+				break;
+			case LW.EFFECT.SHACKLE_STRENGTH:
+				leek.strength += delta;
+				break;
+			case LW.EFFECT.SHACKLE_MAGIC:
+				leek.magic += delta;
+				break;
+			case LW.EFFECT.ABSOLUTE_SHIELD:
+				leek.absoluteShield += delta;
+				break;
+			case LW.EFFECT.RELATIVE_SHIELD:
+				leek.relativeShield += delta;
+				break;
+			case LW.EFFECT.VULNERABILITY:
+				leek.relativeShield += delta;
+				break;
+			case LW.EFFECT.BUFF_AGILITY:
+				leek.agility += delta;
+				break;
+			case LW.EFFECT.BUFF_STRENGTH:
+				leek.strength += delta;
+				break;
+			case LW.EFFECT.BUFF_WISDOM:
+				leek.wisdom += delta;
+				break;
+			case LW.EFFECT.BUFF_RESISTANCE:
+				leek.resistance += delta;
+				break;
+			case LW.EFFECT.DAMAGE_RETURN:
+				leek.damageReturn += delta;
+				break;
+		}
 	}
 
 	this.readLogs = function() {

@@ -385,6 +385,8 @@ LW.pages.report.generateActions = function(data, callback) {
 
 			} else if (type == ACTION_REMOVE_EFFECT) {
 
+			} else if (type == ACTION_UPDATE_EFFECT) {
+
 			} else if (type == ACTION_SAY) {
 
 				leek = leeks[action[1]]
