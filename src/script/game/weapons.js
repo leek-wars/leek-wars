@@ -1211,7 +1211,7 @@ function Pistol() {
 
 	// Textures de l'arme
 	this.texture = T.pistol;
-	this.cartTexture= T.cart_pistol;
+	this.cartTexture = T.cart_pistol;
 
     // Son de l'arme
     this.sound = S.double_gun;
