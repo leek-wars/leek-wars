@@ -1893,27 +1893,15 @@ var Game = function() {
 
 		ctx.translate(-game.ground.startX, -game.ground.startY);
 
-		if (this.discretePause) {
+		ctx.globalAlpha = 0.2;
+		ctx.fillStyle = 'black';
+		ctx.fillRect(0, 0, game.width, game.height);
 
-			ctx.globalAlpha = 0.2;
-			ctx.fillStyle = 'black';
-			ctx.fillRect(0, 0, game.width, game.height);
-
-		} else {
-
-			ctx.globalAlpha = 0.4;
-			ctx.fillStyle = 'black';
-			ctx.fillRect(0, 0, game.width, game.height);
-
-			ctx.fillStyle = 'white';
-			ctx.font = "60pt Roboto";
-			ctx.textAlign = "center";
-			ctx.globalAlpha = 1;
-			ctx.fillText("Pause", game.width / 2, game.height / 2 - 25);
-
-			ctx.font = "30pt Roboto";
-			ctx.fillText(_.lang.get('fight', 'pause_message'), game.width / 2, game.height / 2 + 25);
-		}
+		ctx.fillStyle = 'white';
+		ctx.font = "30pt Roboto";
+		ctx.textAlign = "center";
+		ctx.globalAlpha = 1;
+		ctx.fillText("Pause", game.width / 2, 60);
 
 		ctx.restore();
 	}
