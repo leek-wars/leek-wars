@@ -1547,7 +1547,7 @@ var Game = function() {
 
 	this.setupMouseMove = function() {
 
-		var mouseOrigin = _.findPos($('#game')[0]);
+		var mouseOrigin = $('#game').offset()
 
 		mouseOrigin.x += Math.round(this.ground.startX);
 		mouseOrigin.y += Math.round(this.ground.startY);
