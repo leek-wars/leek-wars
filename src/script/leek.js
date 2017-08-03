@@ -259,9 +259,9 @@ LW.pages.leek.capital = function() {
 
 	$('#menu .section[leek=' + leek.id + ']').attr('label', leek.capital == 0 ? '' : leek.capital)
 
-	$('#capital').click(function(e) {
+	var popup = new _.popup.new('leek.capital_popup', {leek: leek}, 800)
 
-		var popup = new _.popup.new('leek.capital_popup', {leek: leek}, 800)
+	$('#capital').click(function(e) {
 
 		var costs = {
 			life : [
@@ -410,7 +410,7 @@ LW.pages.leek.capital = function() {
 					buttonBonus += bonus
 				}
 
-				$('#tt_' + $(this).attr('id')).text(buttonCost + ' capital ⇔ ' + buttonBonus + ' ' + _.lang.get('leek', $(this).attr('stat')).toLowerCase())
+				$('#tooltips #tt_' + $(this).attr('id')).text(buttonCost + ' capital ⇔ ' + buttonBonus + ' ' + _.lang.get('leek', $(this).attr('stat')).toLowerCase())
 			})
 
 			$('#capital').toggle(capital > 0)
