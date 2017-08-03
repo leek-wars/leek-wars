@@ -12,6 +12,7 @@ discrete_pause			Suspend quiet mode
 display_cell_numbers			Show cell numbers
 display_debug			Show debug informations
 display_life_bars			Show health meters
+display_shadows			Display shadows
 end_of_fight			End of fight!
 enlarge_fight			Enlarge fight screen
 error_generating_fight			An error occured during fight generation
@@ -57,10 +58,6 @@ n_vulnerability		a %s vulnerability
 pause			Pause
 pause_message			Click or press 'P' to resume
 position_in_queue			Position in queue : %1$s / %2$s
-quality			Display quality
-quality_high			High
-quality_low			Low
-quality_medium			Medium
 quit			Quit (Q)
 resume			Resume
 see_report			See report

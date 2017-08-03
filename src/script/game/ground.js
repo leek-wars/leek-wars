@@ -26,12 +26,12 @@ var Ground = function() {
 	this.texture = null;
 	this.textureCtx = null;
 
-	this.quality;
+	this.shadows;
 	this.fullscreen = false;
 
 	this.obstacles = new Array();
 
-	this.resize = function(width, height, fullscreen, quality) {
+	this.resize = function(width, height, fullscreen, shadows) {
 
 		if (!game.initialized) return null
 
@@ -39,7 +39,7 @@ var Ground = function() {
 		this.height = height
 
 		this.fullscreen = fullscreen;
-		this.quality = quality;
+		this.shadows = shadows;
 
 		// Taille de la grille centrale
 		this.gridHeight = Math.round(height - GROUND_PADDING_TOP - GROUND_PADDING_BOTTOM);

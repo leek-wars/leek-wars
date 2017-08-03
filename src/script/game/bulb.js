@@ -91,7 +91,7 @@ var Bulb = Entity.extend({}, function() {
 		this.drawNormal()
 		
 		// Draw shadow
-		if (game.quality == 'high' && !this.dead) {
+		if (game.shadows && !this.dead) {
 			this.drawShadow()
 		}
 
