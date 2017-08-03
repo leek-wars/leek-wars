@@ -599,6 +599,8 @@ Entity = Class.extend(Entity, function() {
 
 	this.draw = function() {
 
+		if (this.dead) return ;
+
 		ctx.save();
 		ctx.scale(game.ground.scale, game.ground.scale);
 		ctx.translate(this.ox, this.oy);
@@ -636,7 +638,7 @@ Entity = Class.extend(Entity, function() {
 	}
 
 	this.endDraw = function() {
-
+		if (this.dead) return ;
 		ctx.restore()
 	}
 
