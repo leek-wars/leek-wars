@@ -438,7 +438,7 @@ _.linkify = function(html) {
 		if (html[i] == '/') {
 			while (i < html.length) {
 				var c = html[i]
-				if (c === ' ') break
+				if (c === ' ' || c === '\n') break
 				if (c === '(') par++
 				if (c === '[') square++
 				if (c === '{') curly++
