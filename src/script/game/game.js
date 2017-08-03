@@ -1135,7 +1135,6 @@ var Game = function() {
 	}
 
 	this.addEffect = function(action, object) {
-
 		var objectID = action[1];
 		var id = action[2];
 		var caster = action[3];
@@ -1147,55 +1146,37 @@ var Game = function() {
 		// Ajout de l'effet
 		this.effects[id] = {id: id, object: objectID, objectType: object, caster: caster, target: target, effect: effect, value: value};
 
-		if (!this.jumping) {
-			// Ajout de l'image sur le hud
-			var image;
-			if (object == 'chip') {
+		// Ajout de l'image sur le hud
+		var image;
+		if (object == 'chip') {
 
-				if (objectID in LW.chips) {
-					image = LW.staticURL + "image/chip/small/" + LW.chips[objectID].name + ".png";
-				}
+			if (objectID in LW.chips) {
+				image = LW.staticURL + "image/chip/small/" + LW.chips[objectID].name + ".png";
+			}
 
-			} else if (object == 'weapon') {
+		} else if (object == 'weapon') {
 
-				if (objectID in LW.weapons) {
+			if (objectID in LW.weapons) {
 
-					/*var WEAPONS = [
-						Pistol, // 1
-						MachineGun, // 2
-						DoubleGun, // 3
-						Shotgun,  // 4
-						Magnum, // 5
-						Laser, // 6
-						GrenadeLauncher, // 7
-						FlameThrower, // 8
-						Destroyer, // 9
-						Gazor, // 10
-						Electrisor, // 11
-						MLaser, // 12
-						BLaser, // 13
-						Katana, // 14
-						Broadsword, // 15
-						Axe // 16
-					];*/
+				var template = LW.weapons[objectID].template
+				var img = ["1", "2", "3", "4", "5", "6", "7", "flamme", "destroyer", "gaz_icon", "11", "12", "13", "katana", "broadswoard", "axe"][template - 1];
+				image = LW.staticURL + "image/weapon/" + img + ".png";
 
-					var template = LW.weapons[objectID].template
-					var img = ["1", "2", "3", "4", "5", "6", "7", "flamme", "destroyer", "gaz_icon", "11", "12", "13", "katana", "broadswoard", "axe"][template - 1];
-					image = LW.staticURL + "image/weapon/" + img + ".png";
-
-					// Gestion des états du poireau
-					if (template == 8) {
-						leek.burn()
-					} else if (template == 10) {
-						leek.gaz()
-					}
+				// Gestion des états du poireau
+				if (template == 8) {
+					leek.burn()
+				} else if (template == 10) {
+					leek.gaz()
 				}
 			}
-			this.hud.addEntityEffect(this.effects[id], image)
 		}
+		this.effects[id].image = image
+		this.effects[id].texture = new Image()
+		this.effects[id].texture.src = image
+		this.hud.addEntityEffect(this.effects[id], image)
+		leek.effects[id] = this.effects[id]
 
 		// Action !
-
 		switch (effect) {
 
 			case LW.EFFECT.ABSOLUTE_SHIELD:
@@ -1206,7 +1187,6 @@ var Game = function() {
 						this.colorText(_.lang.get('fight', 'n_absolute_shield', value), SHIELD_COLOR)
 					))
 				}
-
 				leek.buffAbsoluteShield(value, this.jumping)
 				break;
 
@@ -1218,7 +1198,6 @@ var Game = function() {
 						this.colorText(_.lang.get('fight', 'n_relative_shield', value + '%'), SHIELD_COLOR)
 					))
 				}
-
 				leek.buffRelativeShield(value, this.jumping)
 				break;
 
@@ -1241,7 +1220,6 @@ var Game = function() {
 						this.colorText(_.lang.get('fight', 'n_agility', value), AGILITY_COLOR)
 					))
 				}
-
 				leek.buffAgility(value, this.jumping)
 				break;
 
@@ -1253,7 +1231,6 @@ var Game = function() {
 						this.colorText(_.lang.get('fight', 'n_strength', value), STRENGTH_COLOR)
 					))
 				}
-
 				leek.buffStrength(value, this.jumping)
 				break;
 
@@ -1265,7 +1242,6 @@ var Game = function() {
 						this.colorText(_.lang.get('fight', 'n_tp', value), TP_COLOR)
 					))
 				}
-
 				leek.buffTP(value, this.jumping);
 				break;
 
@@ -1277,7 +1253,6 @@ var Game = function() {
 						this.colorText(_.lang.get('fight', 'n_mp', value), MP_COLOR)
 					))
 				}
-
 				leek.buffMP(value, this.jumping)
 				break;
 
@@ -1289,7 +1264,6 @@ var Game = function() {
 						this.colorText(_.lang.get('fight', 'n_wisdom', value), WISDOM_COLOR)
 					))
 				}
-
 				leek.buffWisdom(value, this.jumping)
 				break;
 
@@ -1301,7 +1275,6 @@ var Game = function() {
 						this.colorText(_.lang.get('fight', 'n_resistance', value), RESISTANCE_COLOR)
 					))
 				}
-
 				leek.buffResistance(value, this.jumping)
 				break;
 
@@ -1313,7 +1286,6 @@ var Game = function() {
 						this.colorText(_.lang.get('fight', 'n_mp', value), MP_COLOR)
 					))
 				}
-
 				leek.looseMP(value, this.jumping)
 				break;
 
@@ -1325,7 +1297,6 @@ var Game = function() {
 						this.colorText(_.lang.get('fight', 'n_tp', value), TP_COLOR)
 					))
 				}
-
 				leek.looseTP(value, this.jumping)
 				break
 
@@ -1337,7 +1308,6 @@ var Game = function() {
 						this.colorText(_.lang.get('fight', 'n_strength', value), STRENGTH_COLOR)
 					))
 				}
-
 				leek.looseStrength(value, this.jumping)
 				break
 
@@ -1349,7 +1319,6 @@ var Game = function() {
 						this.colorText(_.lang.get('fight', 'n_magic', value), MAGIC_COLOR)
 					))
 				}
-
 				leek.looseMagic(value, this.jumping)
 				break
 
@@ -1361,19 +1330,16 @@ var Game = function() {
 						this.colorText(_.lang.get('fight', 'n_damage_return', value + '%'), 'black')
 					))
 				}
-
 				leek.buffDamageReturn(value, this.jumping)
 				break
 
 			case LW.EFFECT.POISON:
-
 				// rien
 				break;
 		}
 	}
 
 	this.removeEffect = function(id) {
-
 		var effect = this.effects[id];
 
 		if (!effect) return;
@@ -1383,7 +1349,6 @@ var Game = function() {
 		var value = effect.value;
 
 		switch (effectID) {
-
 			case LW.EFFECT.SHACKLE_MP:
 				leek.mp -= value;
 				break;
@@ -1433,21 +1398,20 @@ var Game = function() {
 				break;
 		}
 
+		this.hud.removeLeekEffect(id)
+
 		if (!this.jumping) {
-
-			this.hud.removeLeekEffect(id)
-
 			// Gestion des états du poireau
 			if (effect.objectType == 'weapon') {
 				if (effect.object == 46) {
-					leek.stopBurn();
+					leek.stopBurn()
 				} else if (effect.object == 48) {
-					leek.stopGaz();
+					leek.stopGaz()
 				}
 			}
 		}
-
-		delete this.effects[id];
+		delete leek.effects[id]
+		delete this.effects[id]
 	}
 
 	this.updateEffect = function(id, new_value) {
@@ -1966,6 +1930,12 @@ var Game = function() {
             this.leeks[i].path = []
 		}
 
+		// Clear entity effects
+		for (var e in this.leeks) {
+			var entity = this.leeks[e]
+			entity.effects = {}
+		}
+
 		// Cleaning
         $("#actions .action").remove()
         $("#logs .log").remove()
@@ -2004,7 +1974,6 @@ var Game = function() {
 		this.currentAction = action
 
 		for (var e in this.leeks) {
-
 			var entity = this.leeks[e]
 			entity.setCell(entity.cell)
 		}

@@ -102,14 +102,16 @@ Entity = Class.extend(Entity, function() {
 	this.oscillation = 1;
 	this.frame;
 
+	// Effects
+	this.effects
 
 	this.__construct = function() {
 
 		this.bubble = new Bubble();
 		this.infoText = new Array();
 		this.path = new Array();
-
 		this.frame = Math.random() * 100
+		this.effects = {}
 	}
 
 	this.isDead = function() {
@@ -736,6 +738,13 @@ Entity = Class.extend(Entity, function() {
 		var barWidth = life * width;
 		ctx.fillRect(-width/2 + 2, height + 2, barWidth - 4, barHeight - 4);
 
+		// Effects
+		var count = _.objectSize(this.effects)
+		var x = -count * 28 / 2
+		for (var e in this.effects) {
+			ctx.drawImage(this.effects[e].texture, x, 33, 28, 28)
+			x += 28
+		}
 		ctx.restore();
 	}
 

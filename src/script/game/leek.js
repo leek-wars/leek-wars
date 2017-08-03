@@ -39,7 +39,6 @@ Leek = Entity.extend(Leek, function() {
 	// Weapon
 	this.weapon = null;
 
-
 	this.__construct = function() {
 
 		Entity.prototype.__construct.call(this)
