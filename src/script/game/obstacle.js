@@ -88,9 +88,6 @@ var Obstacle = function(type, size, cell) {
 			
 			ctx.restore();
 			
-			ctx.globalAlpha = 0.2;
-			ctx.drawImage(this.texture, this.realX, this.realY);
-			ctx.globalAlpha = 1;
 			
 		} else {
 	
@@ -99,7 +96,10 @@ var Obstacle = function(type, size, cell) {
 	}
 	
 	this.drawShadow = function(ctx) {
+
 		
+		if (game.tactic) return ;
+
 		if (texture.shadow != null) {
 			
 			var offsetY = size * game.ground.tileSizeY * 1.5;

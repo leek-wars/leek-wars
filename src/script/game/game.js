@@ -578,6 +578,7 @@ var Game = function() {
 		localStorage['fight/tactic'] = this.tactic
 
 		this.requestPause = this.paused;
+		LW.pages.fight.resize()
 		this.draw(); // redraw
 	}
 
