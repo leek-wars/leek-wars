@@ -1552,48 +1552,41 @@ var Game = function() {
 		mouseOrigin.left += Math.round(this.ground.startX / game.ratio)
 		mouseOrigin.top += Math.round(this.ground.startY / game.ratio)
 
-		$(canvas).off('mousemove');
+		$(canvas).off('mousemove')
 		$(canvas).mousemove(function(e) {
 			game.mouseX = (e.pageX - mouseOrigin.left) * game.ratio
 			game.mouseY = (e.pageY - mouseOrigin.top) * game.ratio
 
+			var x = (game.mouseX / game.ground.tileSizeX) * 2 - 0.5
+			var y = (game.mouseY / game.ground.tileSizeY) * 2 - 0.5
 
-			var x = (game.mouseX / game.ground.tileSizeX) * 2 - 0.5;
-			var y = (game.mouseY / game.ground.tileSizeY) * 2 - 0.5;
+			var cx = Math.floor(x)
+			var cy = Math.floor(y)
 
-			var cx = Math.floor(x);
-			var cy = Math.floor(y);
-
-			var ox = x - cx - 0.5;
-			var oy = y - cy - 0.5;
+			var ox = x - cx - 0.5
+			var oy = y - cy - 0.5
 
 			if ((cx + cy) % 2 == 1) {
-
 				if (-oy > Math.abs(ox)) { // en haut
-					cy--;
+					cy--
 				} else if (oy > Math.abs(ox)) { // en bas
-					cy++;
+					cy++
 				} else if (ox > Math.abs(oy)) { // à droite
-					cx++;
+					cx++
 				} else { // forcément à gauche
-					cx--;
+					cx--
 				}
 			}
-
 			if (cx >= 0 && cy >= 0 && cx < game.ground.tilesX * 2 - 1 && cy < game.ground.tilesY * 2 - 1) {
-
-				game.mouseTileX = cx;
-				game.mouseTileY = cy;
-
-				game.mouseCell = game.ground.xyToCell(cx, cy);
-
+				game.mouseTileX = cx
+				game.mouseTileY = cy
+				game.mouseCell = game.ground.xyToCell(cx, cy)
 			} else {
-
-				game.mouseTileX = undefined;
-				game.mouseTileY = undefined;
-				game.mouseCell = undefined;
+				game.mouseTileX = undefined
+				game.mouseTileY = undefined
+				game.mouseCell = undefined
 			}
-		});
+		})
 	}
 
 	this.addMarker = function(owner, cells, color, duration) {
