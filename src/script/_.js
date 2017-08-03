@@ -567,7 +567,7 @@ _.popup.new = function(view, data, width, direct, options) {
 	this.wrapper = $("<div class='popup-wrapper box'></div>")
 	this.view = $("<div class='popup " + name + "'>" + _.view.render(view, data) + "</div>")
 	this.wrapper.append(this.view)
-
+	this.name = name
 	this.height = $(window).height() - 200
 
 	this.options = typeof(options) === 'undefined' ? {
@@ -641,7 +641,10 @@ _.popup.new = function(view, data, width, direct, options) {
 			popup.appear()
 		} else {
 			//this.view.appendTo('body')
-			this.wrapper.appendTo('#popups')
+			if (!$.contains(document.documentElement, this.wrapper[0])) {
+				this.wrapper.appendTo('#popups')
+				LW.handleHTML('.popup.' + name, 'popup_' + name)
+			}
 			//this.view.hide()
 			//if (_.popup.queue.length == 0) {
 				$('#popups').addClass('box')
@@ -693,12 +696,12 @@ _.popup.new = function(view, data, width, direct, options) {
 			popup.minimize()
 		})
 		_.popup.current = popup
-
-		LW.handleHTML('.popup.' + name, 'page')
 	}
 
 	this.remove = function() {
 		this.wrapper.remove()
+		// Remove tooltips
+		$('#tooltips .tooltip[location="popup_' + popup.name + '"]').remove()
 	}
 
 	this.move = function(x, y) {
