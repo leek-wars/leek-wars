@@ -210,7 +210,7 @@ var Game = function() {
 	this.large = true;
 	this.debug = false;
 	this.tactic = false;
-	this.quality = 'high';
+	this.shadows = true;
 	this.discretePause = false;
 
 	// Init drawable elements array
@@ -222,11 +222,12 @@ var Game = function() {
 	// Settings
 	if (localStorage['fight/large'] == undefined) localStorage['fight/large'] = true;
 	if (localStorage['fight/sound'] == undefined) localStorage['fight/sound'] = true;
+	if (localStorage['fight/shadows'] == undefined) localStorage['fight/shadows'] = true;
 
 	this.large = localStorage['fight/large'] === 'true';
 	this.debug = localStorage['fight/debug'] === 'true';
 	this.tactic = localStorage['fight/tactic'] === 'true';
-	this.quality = QUALITIES.indexOf(localStorage['fight/quality']) != -1 ? localStorage['fight/quality'] : 'high';
+	this.shadows = localStorage['fight/shadows'] === 'true';
 	this.showCells = localStorage['fight/cells'] === 'true';
 	this.showLifes = localStorage['fight/lifes'] === 'true';
 	this.sound = localStorage['fight/sound'] === 'true';
@@ -598,9 +599,9 @@ var Game = function() {
 		this.draw(); // redraw
 	}
 
-	this.changeQuality = function(quality) {
-		this.quality = QUALITIES.indexOf(quality) != -1 ? quality : 'high';
-		localStorage['fight/quality'] = this.quality
+	this.toggleShadows = function() {
+		this.shadows = !this.shadows
+		localStorage['fight/shadows'] = this.shadows
 	}
 
 	this.toggleSound = function() {

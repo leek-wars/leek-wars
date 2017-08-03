@@ -12,6 +12,7 @@ discrete_pause			Pause discrète
 display_cell_numbers	Afficher numéros cases
 display_debug			Afficher infos debug
 display_life_bars		Afficher barres de vie
+display_shadows			Afficher les ombres
 end_of_fight			Fin du combat !
 enlarge_fight			Agrandir le combat
 error_generating_fight	Une erreur s'est produite à la génération du combat
@@ -58,10 +59,6 @@ n_vulnerability			une vulnérabilité de %s
 pause					Pause
 pause_message			Cliquer ou appuyez sur 'P' pour reprendre
 position_in_queue		Position dans la file : %1$s / %2$s
-quality					Qualité
-quality_high			Haute
-quality_low				Faible
-quality_medium			Moyenne
 quit					Quitter (Q)
 resume					Reprendre
 see_report				Voir le rapport

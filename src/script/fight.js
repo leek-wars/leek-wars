@@ -218,7 +218,7 @@ LW.pages.fight.resize = function() {
 		$('#bg-canvas').css('width', oldWidth).css('height', oldHeight)
 		$("#layers").css("height", oldHeight)
 
-		game.ground.resize(game.width, game.height, _fullscreen, game.quality)
+		game.ground.resize(game.width, game.height, _fullscreen, game.shadows)
 		game.setupMouseMove()
 
 		game.requestPause = game.paused

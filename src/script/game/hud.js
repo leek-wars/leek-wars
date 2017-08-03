@@ -54,7 +54,7 @@ var Hud = function() {
 		game.toggleDiscretePause()
 	})
 	$('#fight-quality').change(function() {
-		game.changeQuality($('#fight-quality').val())
+		game.toggleShadows()
 	})
 
 	var updateSoundSetting = function() {
@@ -162,7 +162,7 @@ var Hud = function() {
 		$('#fight-cells').prop('checked', game.showCells);
 		$('#fight-lifes').prop('checked', game.showLifes);
 		$('#fight-discrete-pause').prop('checked', game.discretePause);
-		$('#fight-quality').val(game.quality);
+		$('#fight-quality').prop('checked', game.shadows);
 		$('#progress-bar-turn').hide()
 
 		updateSoundSetting();
