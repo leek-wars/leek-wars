@@ -1,7 +1,7 @@
 var Bulb = Entity.extend({}, function() {
 	this.skin
 	this.bulbName
-	
+
 	// Textures
 	this.bodyTexFront
 	this.bodyTexBack
@@ -23,7 +23,7 @@ var Bulb = Entity.extend({}, function() {
 
 		this.bulbName = LW.summonTemplates[skin].name
 		this.skin = skin
-		
+
 		if (skin == 1) {
 			this.bodyTexFront = T.bulb_front
 			this.bodyTexBack = T.bulb_back
@@ -63,7 +63,7 @@ var Bulb = Entity.extend({}, function() {
 	}
 
 	this.hurt = function(x, y, z, dx, dy, dz) {
-		
+
 		// Blood
 		var dir = Math.random();
 		dx *= dir / 10;
@@ -72,24 +72,24 @@ var Bulb = Entity.extend({}, function() {
 		var by = this.oy + dy *  (40 + Math.random(60));
 		game.particles.addBlood(x, y, z, dx, dy, dz, this.bloodTex);
 		game.particles.addBloodOnGround(bx, by, this.bloodTex);
-		
+
 		dx = -dx
 		dy = -dy
 		bx = this.ox + dx * (40 + Math.random(60));
 		by = this.oy + dy * (40 + Math.random(60));
 		game.particles.addBlood(x, y, z, dx, dy, dz, this.bloodTex);
 		game.particles.addBloodOnGround(bx, by, this.bloodTex);
-		
+
 		this.flash = 5;
 	}
-	 
+
 	this.draw = function() {
-		
+
 		Entity.prototype.draw.call(this)
-		
+
 		// Draw normal
 		this.drawNormal()
-		
+
 		// Draw shadow
 		if (game.shadows && !this.dead) {
 			this.drawShadow()
@@ -99,18 +99,18 @@ var Bulb = Entity.extend({}, function() {
 	}
 
 	this.drawNormal = function() {
-		
+
 		var texture = this.front ? this.bodyTexFront : this.bodyTexBack;
 
 		if (!this.dead) {
-		
+
 			this.drawBody(texture);
-			
+
 		} else if (heightAnim > 0) {
-			
+
 			ctx.save();
 
-			ctx.scale(this.direction, 1); 
+			ctx.scale(this.direction, 1);
 			var realHeight = this.getHeight() * 0.7;
 			var heightAnim = Math.min(1, this.deadAnim * 1.5);
 			var cropHeight = realHeight * heightAnim
@@ -121,30 +121,30 @@ var Bulb = Entity.extend({}, function() {
 	}
 
 	this.drawShadow = function() {
-		
+
 		var texture = this.front ? this.bodyTexBack : this.bodyTexFront;
 
 		ctx.save();
 		ctx.scale(1, -SHADOW_SCALE);
 		ctx.globalAlpha = SHADOW_ALPHA;
-		
+
 		ctx.translate(0, - this.z);
-		
+
 		this.drawBody(texture.shadow);
-		
+
 		ctx.restore();
 	}
 
 	this.drawBody = function(texture) {
-		
+
 		if (texture == null) return;
-		
+
 		ctx.save();
-		
+
 		if (this.flash > 0 && (Math.random() > 0.5 || this.flash < 2)) {
 			ctx.globalCompositeOperation = 'lighter';
 		}
-		
+
 		ctx.scale(this.direction, this.oscillation);
 
 		// Body
