@@ -391,7 +391,11 @@ var Hud = function() {
 	}
 
 	this.addEntityEffect = function(effect, image) {
-		$('#details .entity-details[entity=' + effect.target + ']').find('.effects').append("<img id='effect-" + effect.id + "' src='" + image + "'></img>");
+		var value = effect.value
+		if (effect.effect == LW.EFFECT.RELATIVE_SHIELD || effect.effecct == LW.EFFECT.DAMAGE_RETURN || effect.effect == LW.EFFECT.VULNERABILITY) {
+			value = value + '%'
+		}
+		$('#details .entity-details[entity=' + effect.target + ']').find('.effects').append("<span class='effect' id='effect-" + effect.id + "' value='" + value + "'><img src='" + image + "'></img></div>");
 	}
 
 	this.removeLeekEffect = function(id) {

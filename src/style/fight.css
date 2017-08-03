@@ -653,11 +653,26 @@ body.app #fight-page .page-bar .info {
 .entity-details .effects {
 	padding-top: 4px;
 }
-
-.entity-details .effects img {
+.entity-details .effects .effect {
+	position: relative;
+}
+.entity-details .effects .effect img {
 	width: 40px;
 	margin-right: 4px;
 	margin-bottom: 4px;
+}
+.entity-details .effects .effect:after {
+	position: absolute;
+	bottom: 7px;
+	left: 0;
+	padding: 1px 3px;
+	content: attr(value);
+	color: white;
+	font-weight: bold;
+	background: rgba(0,0,0,0.5);
+	border-top-right-radius: 7px;
+	border-bottom-left-radius: 10px;
+	font-size: 14px;
 }
 
 /*
