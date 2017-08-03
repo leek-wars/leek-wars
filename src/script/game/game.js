@@ -1549,14 +1549,14 @@ var Game = function() {
 
 		var mouseOrigin = $('#game').offset()
 
-		mouseOrigin.x += Math.round(this.ground.startX);
-		mouseOrigin.y += Math.round(this.ground.startY);
+		mouseOrigin.left += Math.round(this.ground.startX / game.ratio)
+		mouseOrigin.top += Math.round(this.ground.startY / game.ratio)
 
 		$(canvas).off('mousemove');
 		$(canvas).mousemove(function(e) {
+			game.mouseX = (e.pageX - mouseOrigin.left) * game.ratio
+			game.mouseY = (e.pageY - mouseOrigin.top) * game.ratio
 
-			game.mouseX = e.pageX - mouseOrigin.x;
-			game.mouseY = e.pageY - mouseOrigin.y;
 
 			var x = (game.mouseX / game.ground.tileSizeX) * 2 - 0.5;
 			var y = (game.mouseY / game.ground.tileSizeY) * 2 - 0.5;
