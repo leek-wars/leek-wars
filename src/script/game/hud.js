@@ -423,23 +423,15 @@ var Hud = function() {
 		document.body.style.cursor = ''
 
 		if (game.going_to_report) return null
-		if (game.showLifes) {
-			for (var i in game.leeks) {
-				var leek = game.leeks[i];
-				if (leek.isDead() || !leek.active) continue;
+
+		for (var i in game.leeks) {
+			var leek = game.leeks[i];
+			if (leek.isDead() || !leek.active) continue;
+			if (game.showLifes) {
 				leek.drawName();
-				if (game.mouseCell == leek.cell || game.mouseCell == leek.cell - 35 || game.mouseCell == leek.cell - 17 || game.mouseCell == leek.cell - 18) {
-					document.body.style.cursor = 'pointer';
-				}
-			}
-		} else {
-			for (var i in game.leeks) {
-				var leek = game.leeks[i];
-				if (leek.isDead() || !leek.active) continue;
-				if (leek.id == _hoverEntity || (game.mouseCell == leek.cell || game.mouseCell == leek.cell - 35 || game.mouseCell == leek.cell - 17 || game.mouseCell == leek.cell - 18)) {
-					leek.drawName();
-					document.body.style.cursor = 'pointer';
-				}
+			} else if (game.mouseCell == leek.cell || game.mouseCell == leek.cell - 35 || game.mouseCell == leek.cell - 17 || game.mouseCell == leek.cell - 18) {
+				leek.drawName();
+				document.body.style.cursor = 'pointer';
 			}
 		}
 	}
