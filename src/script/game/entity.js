@@ -492,18 +492,20 @@ Entity = Class.extend(Entity, function() {
 		}
 
 		// Update states
-		if (this.flash > 0) {
-			this.flash -= dt;
-		}
-		if (this.burning > 0 || this.burningAnim > 0) {
-			this.burningAnim -= dt;
-			for (var i = 0; i < Math.round(dt) / 2.5; i++)
-				game.particles.addFire(this.ox + Math.random() * 40 - 20, this.oy + Math.random() * 40 - 20, 10, -Math.PI/2, null);
-		}
-		if (this.gazing > 0) {
-			if (Math.random() > 0.8)
-				for (var i = 0; i < Math.round(dt); i++)
-					game.particles.addGaz(this.ox + Math.random() * 40 - 20, this.oy + Math.random() * 40 - 20, 10, -Math.PI/2, null);
+		if (!this.dead) {
+			if (this.flash > 0) {
+				this.flash -= dt;
+			}
+			if (this.burning > 0 || this.burningAnim > 0) {
+				this.burningAnim -= dt;
+				for (var i = 0; i < Math.round(dt) / 2.5; i++)
+					game.particles.addFire(this.ox + Math.random() * 40 - 20, this.oy + Math.random() * 40 - 20, 10, -Math.PI/2, null);
+			}
+			if (this.gazing > 0) {
+				if (Math.random() > 0.8)
+					for (var i = 0; i < Math.round(dt); i++)
+						game.particles.addGaz(this.ox + Math.random() * 40 - 20, this.oy + Math.random() * 40 - 20, 10, -Math.PI/2, null);
+			}
 		}
 	}
 
