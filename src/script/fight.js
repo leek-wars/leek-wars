@@ -214,6 +214,7 @@ LW.pages.fight.resize = function() {
 		canvas.style.height = oldHeight + 'px'
 		game.width = canvas.width
 		game.height = canvas.height
+		game.ratio = ratio
 		$('#bg-canvas').css('width', oldWidth).css('height', oldHeight)
 		$("#layers").css("height", oldHeight)
 
