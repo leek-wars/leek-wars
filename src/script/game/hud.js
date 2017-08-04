@@ -203,7 +203,7 @@ var Hud = function() {
 		$('#details [entity=' + entity.id + ']').remove()
 		$('#details').append(this.createLeekDetails(entity))
 
-		$('.entity[entity=' + entity.id + ']').mouseenter(function() {
+		$('#timeline .entity[entity=' + entity.id + ']').mouseenter(function() {
 			$('.entity-details[entity=' + entity.id + ']').css('margin-left', $(this).offset().left - $('#game').offset().left - 125).show()
 		})
 		.mouseleave(function() {
