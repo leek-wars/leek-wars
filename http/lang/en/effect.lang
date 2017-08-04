@@ -60,7 +60,7 @@ type_7					Increases MP by <b>%d</b> to <b>%d</b>
 type_7_fixed			Increases MP by <b>%d</b>
 type_8					Increases TP by <b>%d</b> to <b>%d</b>
 type_8_fixed			Increases TP by <b>%d</b>
-type_9_fixed			Removes all spells
+type_9_fixed			Decrease all effects by 50%
 effect_type_1			Attacks
 effect_type_2			Heals
 effect_type_3			Boosts
