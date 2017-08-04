@@ -14,47 +14,47 @@ smileys.list = [
 		"name": "classic",
 		"list": [{
 			"name": ":O",
-			"image": "/image/smileys/open_mouth.png",
+			"image": "open_mouth",
 			"custom": true
 		}, {
 			"name": ":D",
-			"image": "/image/smileys/smile.png",
+			"image": "smile",
 			"custom": true
 		}, {
 			"name": "<3",
-			"image": "/image/smileys/heart.png",
+			"image": "heart",
 			"custom": true
 		}, {
 			"name": ":)",
-			"image": "/image/smileys/smiley.png",
+			"image": "smile",
 			"custom": true
 		}, {
 			"name": ":/",
-			"image": "/image/smileys/confused.png",
+			"image": "confused",
 			"custom": true
 		}, {
 			"name": ";)",
-			"image": "/image/smileys/wink.png",
+			"image": "wink",
 			"custom": true
 		}, {
 			"name": ":(",
-			"image": "/image/smileys/frowning.png",
+			"image": "frowning",
 			"custom": true
 		}, {
 			"name": ":P",
-			"image": "/image/smileys/stuck_out_tongue.png",
+			"image": "stuck_out_tongue",
 			"custom": true
 		}, {
 			"name": "(lama)",
-			"image": "/image/smileys/lama.png",
+			"image": "lama",
 			"custom": true
 		}, {
 			"name": ":B",
-			"image": "/image/smileys/grimacing.png",
+			"image": "grimacing",
 			"custom": true
 		}, {
 			"name": "(lucky)",
-			"image": "/image/smileys/clover.png",
+			"image": "clover",
 			"custom": true
 		}]
 	}, {
@@ -4798,46 +4798,46 @@ smileys.shorcuts = {
 smileys.custom = {
 	":O": {
 		"name": ":O",
-		"image": "/image/smileys/open_mouth.png"
+		"image": "open_mouth"
 	},
 	":D": {
 		"name": ":D",
-		"image": "/image/smileys/smile.png"
+		"image": "grinning"
 	},
 	"<3": {
 		"name": "<3",
-		"image": "/image/smileys/heart.png"
+		"image": "heart"
 	},
 	":)": {
 		"name": ":)",
-		"image": "/image/smileys/smiley.png"
+		"image": "smile"
 	},
 	":/": {
 		"name": ":/",
-		"image": "/image/smileys/confused.png"
+		"image": "confused"
 	},
 	";)": {
 		"name": ";)",
-		"image": "/image/smileys/wink.png"
+		"image": "wink"
 	},
 	":(": {
 		"name": ":(",
-		"image": "/image/smileys/frowning.png"
+		"image": "frowning"
 	},
 	":P": {
 		"name": ":P",
-		"image": "/image/smileys/stuck_out_tongue.png"
+		"image": "stuck_out_tongue"
 	},
 	"(lama)": {
 		"name": "(lama)",
-		"image": "/image/smileys/lama.png"
+		"image": "lama"
 	},
 	":B": {
 		"name": ":B",
-		"image": "/image/smileys/grimacing.png"
+		"image": "grimacing"
 	},
 	"(lucky)": {
 		"name": "(lucky)",
-		"image": "/image/smileys/clover.png"
+		"image": "clover"
 	}
 }
