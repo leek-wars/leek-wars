@@ -681,3 +681,29 @@ changelog_199	# Bêta LeekScript V2 lancée ! Possibilité de faire des combats 
 				# Amélioration des performances de l'affichage des actions et logs en combats (merci à Amal).
 				# Affichage des poireaux sur lesquels l'item est équipé dans le marché (merci à toufalk).
 				# Correction du graphique du rapport de combat lors d'une résurrection (merci à Pump).
+changelog_200	# Grandes avancées dans le LeekScript et le générateur de combats V2 : toujours en bêta !
+				# Potager éleveur : écart de niveau maximum augmenté pour éviter les potagers vides.
+				# Potager éleveur : éleveurs plus aléatoires dans la plage de talent donnée.
+				# Bouton "Rester connecté" corrigé, et le cookie est renouvelé au cours du temps.
+				# Possiblité de jouer les sons des puces et des armes en cliquant sur leur image dans le marché.
+				# Poireaux plus petits dans l'affichage du combat.
+				# Les valeurs des effets d'entraves (PT, PM, force, magie et vulnérabilité) sont désormais positives.
+				# Les entraves ne sont plus diminuées par la science.
+				# Amélioration de l'actualisation des effets dans l'affichage du combat.
+				# La puce libération ne supprime plus tous les effets mais réduit leur valeur de 50%.
+				# Le cooldown de libération passe de 6 à 5 tours.
+				# Mode tactique plus lisible, sans obstacles transparents.
+				# Pause en combat discrète dans tous les cas, suppression de l'option.
+				# Correction du survol des entités en combat avec la souris lorsque la page est zoomée.
+				# Correction des animations de feu et de gaz qui restaient après la mort d'une entité.
+				# L'option 'qualité du combat' change en 'afficher les ombres'.
+				# Les détails d'une entité sont affichés en passant la souris dessus en combat.
+				# Les effets de vulnérabilité sont désormais cumulables (merci à Pump).
+				# Les dégâts de Machine Gun passent de 20-24 à 30-35.
+				# Affichage des effets sous la barre de vie de chaque entité en combat.
+				# Affichage des valeurs des effets en combat dans la popup de détails de l'entité.
+				# Affichage des durées en années si supérieure à 12 mois.
+				# Ajout de la liste des armes et des puces des entités dans le rapport de combat (for Pump).
+				# Lors d'un changement de mot de passe, toutes les sessions de l'éleveur sont terminées (merci à Rominou).
+				# Correction des regex de liens multilignes.
+				# Correction d'un bug de plein écran avec F11 ou Échap (merci à HorsSujet).
