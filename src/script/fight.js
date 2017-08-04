@@ -80,7 +80,14 @@ LW.pages.fight.init = function(params, $scope, $page) {
 
 		$('#fullscreen-button').click(function() {
 			LW.pages.fight.fullscreen()
-		});
+		})
+
+		$(document).on("webkitfullscreenchange mozfullscreenchange fullscreenchange MSFullscreenChange", function () {
+			var fullscreenElement = document.fullscreenElement || document.mozFullScreenElement || document.webkitFullscreenElement
+			if (!fullscreenElement && _fullscreen) { // Press on ESC or F11
+				LW.pages.fight.fullscreen()
+			}
+		})
 
 		// Commenatires
 		var controller = new ChatController($('#comments-wrapper'), function(comment) {
@@ -121,7 +128,7 @@ LW.pages.fight.init = function(params, $scope, $page) {
 			year: 2016,
 			data: __FIGHT_DATA
 		}
-		_.log("Local fight: ", local_fight);
+		_.log("Local fight: ", local_fight)
 		callback({success: true, fight: local_fight})
 	} else {
 		_.get('fight/get/' + id, callback)
@@ -134,6 +141,10 @@ LW.pages.fight.pause = function() {
 		clearTimeout(game.reportTimer)
 	}
 	_load = false
+}
+
+LW.pages.fight.leave = function() {
+	$(document).off("webkitfullscreenchange mozfullscreenchange fullscreenchange MSFullscreenChange")
 }
 
 LW.pages.fight.keydown = function(event) {
@@ -230,7 +241,7 @@ LW.pages.fight.fullscreen = function() {
 	if (_fullscreen) {
 		_fullscreen = false
 		_.fullscreen.exit()
-		setTimeout(LW.pages.fight.resize, 100)
+		LW.pages.fight.resize()
 	} else {
 		_fullscreen = true
 		_.fullscreen.enter($('#game')[0], function() {
@@ -279,12 +290,12 @@ function getFight() {
 
 			setTimeout(function() {
 				if (!game.initialized && !_error) {
-					getFight();
+					getFight()
 				}
-			}, _getDelay);
+			}, _getDelay)
 
-			_getDelay += 500;
-			_getDelay = Math.min(4000, _getDelay);
+			_getDelay += 500
+			_getDelay = Math.min(4000, _getDelay)
 		}
 	})
 }
@@ -292,12 +303,12 @@ function getFight() {
 function showQueueMessage(position, queue) {
 	if (position == -1) {
 
-		$('.queue-position').show().text(LW.lang.get('fight', 'generating'));
+		$('.queue-position').show().text(LW.lang.get('fight', 'generating'))
 
 	} else {
-		var message = LW.lang.get('fight', 'position_in_queue', parseInt(position) + 1, queue);
+		var message = LW.lang.get('fight', 'position_in_queue', parseInt(position) + 1, queue)
 
-		$('.queue-position').show().text(message);
+		$('.queue-position').show().text(message)
 	}
 }
 
@@ -305,8 +316,8 @@ LW.pages.fight.file_input = function() {
 	$('#fight-page #file-input').on('change', function() {
 		var file = this.files[0]
 		if (file) {
-		    var reader = new FileReader();
-		    reader.readAsText(file, "UTF-8");
+		    var reader = new FileReader()
+		    reader.readAsText(file, "UTF-8")
 		    reader.onload = function (evt) {
 		    	var json = evt.target.result
 		    	_.log(json)
