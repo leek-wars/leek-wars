@@ -446,8 +446,8 @@ function Electrisor() {
 	this.mz2 = 34;
 
 	// Position du tir
-	this.sx = 105;
-	this.sz = -18;
+	this.sx = 90;
+	this.sz = -10;
 
 	// Longueur de recul
 	this.recoil = 0;
