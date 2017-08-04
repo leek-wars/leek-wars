@@ -1461,6 +1461,7 @@ var Game = function() {
 				leek.damageReturn += delta;
 				break;
 		}
+		this.hud.updateEntityEffect(id, new_value)
 	}
 
 	this.readLogs = function() {
