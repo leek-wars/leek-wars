@@ -701,7 +701,7 @@ _.popup.new = function(view, data, width, direct, options) {
 	this.remove = function() {
 		this.wrapper.remove()
 		// Remove tooltips
-		$('#tooltips .tooltip[location="popup_' + popup.name + '"]').remove()
+		$('#tooltips .tooltip[location="popup_' + this.name + '"]').remove()
 	}
 
 	this.move = function(x, y) {
