@@ -590,6 +590,7 @@ body.app #fight-page .page-bar .info {
 	left: 0;
 	right: 0;
 	z-index: 100;
+	pointer-events: none;
 }
 
 .entity-details {
