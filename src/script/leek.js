@@ -147,7 +147,7 @@ LW.pages.leek.chart = function() {
 }
 
 LW.pages.leek.updateImage = function() {
-	LW.createLeekImage(this.scope.leek.id, 0.9, this.scope.leek.level, this.scope.leek.skin, this.scope.leek.hat, function(id, data) {
+	LW.createLeekImage(this.scope.leek.id, 1.05, this.scope.leek.level, this.scope.leek.skin, this.scope.leek.hat, function(id, data) {
 		$('#page #leek-image').html(data)
 		LW.pages.leek.resize()
 	})
