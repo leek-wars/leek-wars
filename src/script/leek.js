@@ -109,7 +109,7 @@ LW.pages.leek.chart = function() {
 	var labels = []
 	var time = LW.time.get()
 	for (var i = 0; i < 7; ++i) {
-		labels.push(_.format.dayMonthShort(time - i * 24 * 3600))
+		labels.push(_.format.dayMonthShort(time - i * 24 * 3600).replace(' ', '&nbsp;'))
 	}
 	var data = {
 		labels: labels.reverse(),
