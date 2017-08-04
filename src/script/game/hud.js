@@ -1,5 +1,4 @@
 var _settings = false
-var _hoverEntity = null
 
 var Hud = function() {
 
@@ -205,11 +204,9 @@ var Hud = function() {
 		$('#details').append(this.createLeekDetails(entity))
 
 		$('.entity[entity=' + entity.id + ']').mouseenter(function() {
-			_hoverEntity = entity.id
 			$('.entity-details[entity=' + entity.id + ']').css('margin-left', $(this).offset().left - $('#game').offset().left - 125).show()
 		})
 		.mouseleave(function() {
-			_hoverEntity = null
 			$('.entity-details[entity=' + entity.id + ']').hide()
 		})
 	}
