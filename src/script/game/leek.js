@@ -210,7 +210,7 @@ Leek = Entity.extend(Leek, function() {
 		ctx.translate((this.weapon.cx + (this.front ? 0 : -this.weapon.ocx)) * this.direction, - this.weapon.cz - this.handPos + (this.front ? 5 : -5));
 
 		// Inverse
-		ctx.scale(this.direction * 0.8, 0.8);
+		ctx.scale(this.direction * 0.6, 0.6);
 
 		// Rotate
 		if (shadow) {
