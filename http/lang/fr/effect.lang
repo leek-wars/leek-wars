@@ -60,7 +60,7 @@ type_7					Booste les PM de <b>%d</b> à <b>%d</b>
 type_7_fixed			Booste les PM de <b>%d</b>
 type_8					Booste les PT de <b>%d</b> à <b>%d</b>
 type_8_fixed			Booste les PT de <b>%d</b>
-type_9_fixed			Enlève tous les envoûtements
+type_9_fixed			Diminue tous les envoûtements de 50%
 effect_type_1			Attaques
 effect_type_2			Soins
 effect_type_3			Boosts
