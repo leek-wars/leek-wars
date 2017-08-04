@@ -428,14 +428,30 @@ var Hud = function() {
 
 		if (game.going_to_report) return null
 
+		var selected_entity = null
+		document.body.style.cursor = 'default'
 		for (var i in game.leeks) {
 			var leek = game.leeks[i];
 			if (leek.isDead() || !leek.active) continue;
 			if (game.showLifes) {
-				leek.drawName();
-			} else if (game.mouseCell == leek.cell || game.mouseCell == leek.cell - 35 || game.mouseCell == leek.cell - 17 || game.mouseCell == leek.cell - 18) {
-				leek.drawName();
+				leek.drawName()
+			}
+			if (game.mouseCell == leek.cell || game.mouseCell == leek.cell - 35 || game.mouseCell == leek.cell - 17 || game.mouseCell == leek.cell - 18) {
+				if (!game.showLifes) {
+					leek.drawName()
+				}
 				document.body.style.cursor = 'pointer';
+			}
+			if (game.mouseCell == leek.cell) {
+				selected_entity = leek.id
+			}
+		}
+		if (this.selected_entity != selected_entity) {
+			this.selected_entity = selected_entity
+			$('#details .entity-details').hide()
+			if (selected_entity !== null) {
+				var p = $('#timeline .entity[entity=' + selected_entity + ']').offset()
+				$('#details .entity-details[entity=' + selected_entity + ']').css('margin-left', p.left - $('#game').offset().left - 125).show()
 			}
 		}
 	}
