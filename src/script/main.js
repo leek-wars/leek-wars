@@ -900,8 +900,9 @@ LW.connect = function(farmer, callback) {
 		}, 59 * 1000)
 
 		// Popup changelog
-		if (LW.updated) {
+		if (localStorage['changelog_version'] != localStorage['version']) {
 			LW.changelogPopup()
+			localStorage['changelog_version'] = localStorage['version']
 		}
 		callback()
 	})
