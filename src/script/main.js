@@ -4091,7 +4091,9 @@ var ChatController = function(chat_element, send_callback, enable_moderation) {
 		if (result.message.text() == '' && result.message.find('.smiley').length == 1) {
 			var smiley = result.message.find('.smiley')
 			smiley.addClass('large')
-			smiley.attr('src', LW.staticURL + 'image/smiley/large/' + smiley.attr('image') + '.png')
+			if (smiley.attr('image')) {
+				smiley.attr('src', LW.staticURL + 'image/smiley/large/' + smiley.attr('image') + '.png')
+			}
  		}
 	}
 
