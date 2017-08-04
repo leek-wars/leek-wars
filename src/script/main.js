@@ -2025,7 +2025,7 @@ LW.smiley = function(data) {
 	// Custom smileys
 	for (var i in smileys.custom) {
 		var smiley = smileys.custom[i];
-		data = data.replace(new RegExp("(^|\\s|\>)" + escapeRegExp(i) + "(?![^\\s<>])", "g"), '$1<img class="smiley" alt="' + smiley.name + '" title="' + smiley.name + '" src="' + LW.staticURL + smiley.image + '">')
+		data = data.replace(new RegExp("(^|\\s|\>)" + escapeRegExp(i) + "(?![^\\s<>])", "g"), '$1<img class="smiley" image="' + smiley.image + '" alt="' + smiley.name + '" title="' + smiley.name + '" src="' + LW.staticURL + 'image/smiley/' + smiley.image + '.png">')
 	}
 
 	// Emoji to image
@@ -4089,8 +4089,10 @@ var ChatController = function(chat_element, send_callback, enable_moderation) {
 		}
 		// Bigger emoji if single emoji
 		if (result.message.text() == '' && result.message.find('.smiley').length == 1) {
-			result.message.find('.smiley').addClass('large')
-		}
+			var smiley = result.message.find('.smiley')
+			smiley.addClass('large')
+			smiley.attr('src', LW.staticURL + 'image/smiley/large/' + smiley.attr('image') + '.png')
+ 		}
 	}
 
 	ChatController.prototype.insert_message = function(message_html, data) {
