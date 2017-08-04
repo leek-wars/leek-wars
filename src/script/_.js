@@ -940,7 +940,7 @@ _.lang.load = function(file, private_file, callback) {
 			_.lang.langs[_.lang.current][file] = parsed
 			localStorage[key] = JSON.stringify(parsed)
 			print_time()
-			callback(parsed)
+			if (callback) callback(parsed)
 		})
 	}
 }
