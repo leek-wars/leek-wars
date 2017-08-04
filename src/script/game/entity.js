@@ -712,13 +712,13 @@ Entity = Class.extend(Entity, function() {
 			ctx.translate(this.ox, this.oy - this.bodyTexFront.height * 0.85)
 		}
 
-		ctx.font = "12pt Roboto";
+		ctx.font = "11pt Roboto";
 
 		var text = this.name + " (" + this.life + ")";
 		var y = this.bodyTexFront.height * 0.85;
-		var width = Math.max(140, ctx.measureText(text).width + 20);
-		var height = 22;
-		var barHeight = 12;
+		var width = Math.max(140, ctx.measureText(text).width + 14);
+		var height = 18;
+		var barHeight = 9;
 
 		// Fond
 		ctx.globalAlpha = 0.4;
@@ -730,7 +730,7 @@ Entity = Class.extend(Entity, function() {
 		ctx.fillStyle = 'white';
 		ctx.textBaseline = "middle";
 		ctx.textAlign = "center";
-		ctx.fillText(text, 0, 12);
+		ctx.fillText(text, 0, 10);
 
 		// Barre de vie
 		var life = this.life / this.maxLife;
@@ -742,7 +742,7 @@ Entity = Class.extend(Entity, function() {
 		var count = _.objectSize(this.effects)
 		var x = -count * 28 / 2
 		for (var e in this.effects) {
-			ctx.drawImage(this.effects[e].texture, x, 33, 28, 28)
+			ctx.drawImage(this.effects[e].texture, x, 26, 28, 28)
 			x += 28
 		}
 		ctx.restore();
