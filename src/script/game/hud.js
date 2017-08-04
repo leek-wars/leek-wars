@@ -395,6 +395,10 @@ var Hud = function() {
 		$('#details .entity-details[entity=' + effect.target + ']').find('.effects').append("<span class='effect' id='effect-" + effect.id + "' value='" + value + "'><img src='" + image + "'></img></div>");
 	}
 
+	this.updateEntityEffect = function(id, new_value) {
+		$('#effect-' + id).attr('value', new_value)
+	}
+
 	this.removeLeekEffect = function(id) {
 		$('#effect-' + id).remove();
 	}
