@@ -4359,7 +4359,7 @@ LW.battle_royale.update = function(data) {
 		var html_popup = _.view.render('main.leek_popup', {leek: leeks[l]})
 		LW.battle_royale.popup.find('.leeks').html(LW.battle_royale.popup.find('.leeks').html() + html_popup)
 
-		LW.createLeekImage(leeks[l].id, 0.3, leeks[l].level, leeks[l].skin, leeks[l].hat, function(id, data) {
+		LW.createLeekImage(leeks[l].id, 0.4, leeks[l].level, leeks[l].skin, leeks[l].hat, function(id, data) {
 			LW.battle_royale.popup.find('.leek[leek=' + id + '] .image').html(data)
 		})
 	}
