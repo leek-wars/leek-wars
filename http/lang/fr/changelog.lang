@@ -689,6 +689,7 @@ changelog_200	# Grandes avancées dans le LeekScript et le générateur de comba
 				# Poireaux plus petits dans l'affichage du combat.
 				# Les valeurs des effets d'entraves (PT, PM, force, magie et vulnérabilité) sont désormais positives.
 				# Les entraves ne sont plus diminuées par la science.
+				# Ajout d'un booléen dans les effets renvoyés par getChip/WeaponEffects pour savoir si l'effet est cumulable.
 				# Amélioration de l'actualisation des effets dans l'affichage du combat.
 				# La puce libération ne supprime plus tous les effets mais réduit leur valeur de 50%.
 				# Le cooldown de libération passe de 6 à 5 tours.
