@@ -33,7 +33,7 @@ LW.pages.roadmap.init = function(params, $scope, $page) {
 			changes: [
 				{text: "Rééquilibrage et système d'érosion", ok: true},
 				{text: "Application mobile", ok: true},
-				{text: "Refonte graphique du site et de l'affichage des combats", ok: false}
+				{text: "Amélioration de l'affichage des combats", ok: true}
 			]
 		},
 		{
