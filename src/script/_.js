@@ -1421,6 +1421,7 @@ _.view.buildTree = function(template) {
  */
 _.pagination.create = function(current, count, page) {
 
+	page = _.protect(page)
 	var center = Math.max(5, Math.min(count - 4, current))
 	var start = center - 4
 	var end = Math.min(count, center + 4)
