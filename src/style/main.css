@@ -3339,7 +3339,7 @@ body.app #loader {
 	color: #fe7700;
 }
 .color-frequency {
-	color: black;
+	color: #000000 !important;
 }
 .color-science {
 	color: #0000a2;
