@@ -876,7 +876,6 @@ _.lang.init = function(languages, defaultLang) {
 		}
 	}
 	_.lang.current = lang
-	localStorage['lang'] = lang
 }
 
 _.lang.isValid = function(language) {
