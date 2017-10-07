@@ -178,11 +178,11 @@
 
 /* Classements */
 
-#page .ranking {
+#signup-page .ranking {
 	margin: 0 auto;
 }
 
-#page .ranking td {
+#signup-page .ranking td {
 	border-bottom: 1px solid #ddd;
 	border-right: 1px solid #ddd;
 	text-align: center;
@@ -190,16 +190,16 @@
 	background: white;
 }
 
-#page .ranking td:last-child {
+#signup-page .ranking td:last-child {
 	border-right: none;
 }
 
-#page .ranking tr.header {
+#signup-page .ranking tr.header {
 	background: #e5e5e5;
 	text-align: center;
 }
 
-#page .ranking th {
+#signup-page .ranking th {
 	padding: 5px 12px;
 	font-weight: normal;
 	color: #222;
@@ -208,19 +208,19 @@
 	border-right: 1px solid #fff;
 }
 
-#page .ranking th:last-child {
+#signup-page .ranking th:last-child {
 	border-right: none;
 }
 
-.ranking .first a {
+#signup-page .ranking .first a {
 	color: #FFA900;
 	font-weight: bold;
 }
-.ranking .second a {
+#signup-page .ranking .second a {
 	color: #9C9C9C;
 	font-weight: bold;
 }
-.ranking .third a {
+#signup-page .ranking .third a {
 	color: #AE4E00;
 	font-weight: bold;
 }
