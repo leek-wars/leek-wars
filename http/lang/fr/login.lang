@@ -5,7 +5,7 @@ error_invalid			Les identifiants sont incorrects.
 forgot_password			Mot de passe oublié ?
 incorrect_login			Login ou mot de passe incorrect.
 keep_connected			Rester connecté
-login					Login
+login					Identifiant
 password				Mot de passe
 success					Vous êtes connecté
 title					Connexion
