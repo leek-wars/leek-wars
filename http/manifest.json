@@ -13,7 +13,6 @@
   ],
   "start_url": "/",
   "display": "standalone",
-  "orientation": "any",
   "permissions": [
 	  "notifications"
   ],
