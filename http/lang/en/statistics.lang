@@ -32,24 +32,24 @@ lw_code_javascript	JavaScript
 lw_code_css			CSS
 lw_code_html		HTML
 lw_code_all			Total
-damage				Damages
+damage				Damage
 heal				Heal
 distance			Cases traveled
 kills				Kills
-bullets				Fired bullets
+bullets				Bullets fired
 chips				Used chips
 stack_overflows		Stack overflows
 crashes				Crashes
 summons				Summons
 resurrects			Resurrects
-damage_poison		Poison damages
-damage_return		Return damages
+damage_poison		Poison damage
+damage_return		Return damage
 critical_hits		Critical Hits
 tp_used				Used TP
 mp_used				Used MP
 operations			Operations
 says				Says
-says_length			Says's lenght
+says_length			Says's length
 crystals_spent		Crystals spent
 habs_spent			Habs spent
 clovers			Clovers Hits
