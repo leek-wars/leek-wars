@@ -373,7 +373,8 @@ var Game = function() {
 				// Skin
 				var skin = typeof(entities[i].skin) === 'undefined' ? 1 : entities[i].skin
 				var hat = typeof(entities[i].hat) === 'undefined' ? null : entities[i].hat
-				entity.setSkin(entities[i].appearence, skin, hat)
+				var appearence = LW.getLeekAppearence(entity.level)
+				entity.setSkin(appearence, skin, hat)
 
 				entity.active = true;
 
