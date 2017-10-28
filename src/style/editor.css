@@ -844,3 +844,12 @@ body.app #ai-stats {
 	border-bottom-left-radius: 3px;
 	font-size: 16px;
 }
+
+#editor-page .label-beta {
+	background: #FF54E3;
+	color: white;
+	padding: 1px 4px;
+	border-radius: 5px;
+	font-size: 15px;
+	display: inline-block;
+}
