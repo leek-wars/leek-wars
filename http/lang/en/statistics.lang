@@ -1,1 +1,84 @@
 title	Statistics
+
+category_1			General
+category_2			Fight
+category_3			Code
+category_4			Money
+category_5			Social
+category_6			Leek Wars Project
+
+farmers				Farmers
+leeks				Leeks
+teams				Teams
+ai_day				AI 24h
+fight_day			Fights 24h
+fights				Fights
+banned_farmers		Banned farmers
+deleted_farmers		Unsubscribes
+forum_messages		Forum messages
+forum_topics		Forum topics
+forum_votes			Forum votes
+ais					AI
+ai_characters		AI characters
+ai_lines			AI lines
+trophies			Trophies
+connected_farmers	Connected
+registered_day		Registered 24h
+comments			Comments
+lw_code_cpp			C++
+lw_code_java		Java
+lw_code_php			PHP
+lw_code_javascript	JavaScript
+lw_code_css			CSS
+lw_code_html		HTML
+lw_code_all			Total
+damage				Damages
+heal				Heal
+distance			Cases traveled
+kills				Kills
+bullets				Fired bullets
+chips				Used chips
+stack_overflows		Stack overflows
+crashes				Crashes
+summons				Summons
+resurrects			Resurrects
+damage_poison		Poison damages
+damage_return		Return damages
+critical_hits		Critical Hits
+tp_used				Used TP
+mp_used				Used MP
+operations			Operations
+says				Says
+says_length			Says's lenght
+crystals_spent		Crystals spent
+habs_spent			Habs spent
+clovers			Clovers Hits
+potions 			Drank potions
+avatars				Avatars uploaded
+mails				Mails sent
+habs				Outstanding Habs
+private_messages	Private messages
+translation_words	Words translated
+godsons				Godsons
+moderators			Moderators
+contributors		Contributors
+forum_views			Topics seen
+fight_solo			Solo
+fight_farmer		Farmer
+fight_team			Team
+fight_garden		Garden
+fight_test			Test
+fight_challenge		Challenge
+fight_tournament	Tournament
+tournaments			Tournaments
+used_chips			Used chips
+
+chart_damage_direct Direct
+chart_damage_poison	Poison
+chart_damage_return	Return
+
+pause				Pause
+play				Play
+
+total				total
+today				today
