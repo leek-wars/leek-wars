@@ -131,8 +131,8 @@ body.app #ai-list .item .label {
 	padding: 0 5px;
 }
 #ai-list .item.selected > .label {
-	background: #aaa;
-	color: white;
+	background: #cacaca;
+	color: black;
 }
 #ai-list .item.selected > .label:before {
 	color: white;
