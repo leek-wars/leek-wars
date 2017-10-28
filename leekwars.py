@@ -28,7 +28,8 @@ class LWHandler(SimpleHTTPRequestHandler):
 				'fight_data': 'null',
 				'start_script': 'leekwars-quick.min.js',
 				'start_style': 'leekwars-quick.min.css',
-				'starpasscode': 'null'
+				'starpasscode': 'null',
+				'lang': 'fr'
 			}
 			if self.path.startswith('/fight/local'):
 				with open('../../../leek-wars-generator/fight.json', 'r') as file:
