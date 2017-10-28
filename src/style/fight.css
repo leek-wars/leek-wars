@@ -741,8 +741,10 @@ body.app #fight-page .page-bar .info {
 	display: none;
 }
 
-#fight-settings .fight-setting {
+#fight-settings .fight-setting label {
+	display: block;
 	padding: 6px;
+	cursor: pointer;
 }
 
 #fight-settings .fight-setting:hover {
