@@ -122,7 +122,7 @@ LW.pages.editor.init = function(params, $scope, $page) {
 			folder.removeClass('empty')
 			update_padding_element(element, parseInt(folder.attr('level')) + 1)
 			var e = $(elements[0])
-			while (e.length) {
+			while (e && e.length) {
 				if ((name < e.text().toLowerCase()) || (is_folder && e.hasClass('ai'))) {
 					if (is_folder || e.hasClass('ai')) {
 						element.insertBefore(e)
@@ -201,7 +201,7 @@ LW.pages.editor.init = function(params, $scope, $page) {
 					}
 					var style = 'padding-left:' + (-5 + level * 15) + 'px'
 					var html = $("<div id='" + folder.id + "' class='item folder " + (opened ? 'expanded' : '') + "' folder='" + folder_id + "' draggable='true' level='" + level + "'><div class='label' style='" + style + "'><div class='triangle'/><span class='icon'></span><span class='text'>" + folder.name + "</span><div class='edit'/></div></div>")
-					if (tree.content.length == 0) {
+					if (tree.content && tree.content.length == 0) {
 						html.addClass('empty')
 					}
 					leaf.content.push({id: folders[i].id, contents: tree.content})
@@ -251,7 +251,7 @@ LW.pages.editor.init = function(params, $scope, $page) {
 				text.attr('contenteditable', false)
 				var name = text.text()
 				if (name == initialName) return
-				if (name.length == 0) {
+				if (!name || name.length == 0) {
 					text.text(initialName)
 					return;
 				}
