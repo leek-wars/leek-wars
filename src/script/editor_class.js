@@ -224,7 +224,7 @@ var Editor = function(id, name, valid, code, folder, level) {
 				if (editor.editor.error_overlay) {
 					editor.editor.removeOverlay(editor.editor.error_overlay)
 				}
-				if (errors.length == 0) {
+				if (!errors || errors.length == 0) {
 					$('#results').append("<div class='good'>✓ " + _.lang.get('editor', 'valid_ai', _.protect(editor.name)) + "</div><br>")
 					$('#results .good').last().delay(800).fadeOut(function() {
 						$('#results').hide()
