@@ -266,7 +266,7 @@ var Editor = function(id, name, valid, code, folder, level) {
 
 			} else {
 
-				if (!data.success || data.result.length == 0) {
+				if (!data.success || !data.result || data.result.length == 0) {
 					$('#results').append("<div class='error'>× <i>" + _.lang.get('editor', 'server_error') + "</i></div>")
 					return
 				}
