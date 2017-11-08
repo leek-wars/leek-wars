@@ -6,7 +6,7 @@ var Obstacle = function(type, size, cell) {
 	// Get original texture
 	var textureType = size == 2 ? game.map.obstaclesBig : game.map.obstaclesSmall;
 	var texture = textureType[type];
-	if (Math.random() > 0.7) texture = T.pumpkin
+	// if (Math.random() > 0.7) texture = T.pumpkin
 
 	// Caractéristiques
 	this.size = size;
