@@ -47,4 +47,4 @@ I gladly accept pull requests to Leek Wars. Before starting work on a feature, s
 
 ## License
 
-Distributed under the GPL3 license. Copyright (c) 2016, Pierre Lauprêtre
+Distributed under the GPL3 license. Copyright (c) 2016-2017, Pierre Lauprêtre
