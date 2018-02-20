@@ -214,6 +214,7 @@ var URL_WIKI = "http://leekwarswiki.net"
 var URL_WIKI_PAGE = "http://leekwarswiki.net/index.php?title="
 var URL_DOC = "/help/documentation"
 var URL_MARKET = "/market"
+var URL_TUTO = "/help/tutorial"
 
 // Effets
 LW.EFFECT = {
