@@ -19,6 +19,13 @@ chat_commands.list = [
             description: "Ajoute un lien vers la documentation au message"
         }]
     }, {
+        command: "tuto",
+        regex: /(^| )\/tuto(?=$|\s)/gi,
+        replacement: function(authorName) {
+                return " " + _.toChatLink("/help/tutorial", "tuto", "target='_blank' rel='nofollow'") + " "
+            },
+        description: "Ajoute un lien vers le tutorial au message"
+    }, {
         command: "fliptable",
         regex: /(^| )\/fliptable(?=$|\s)/gi,
         replacement: function(authorName) {
