@@ -8,3 +8,4 @@ http/*.min.js
 http/*.map
 .idea/
 build/
+/.project
