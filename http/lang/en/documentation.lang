@@ -41,7 +41,7 @@ const_TYPE_NULL			<b>null</b> type.
 const_TYPE_NUMBER			<b>number</b> type.
 const_TYPE_STRING			<b>string</b> type.
 const_USE_RESURRECT_INVALID_ENTITY			Return value of the function #resurrect when the specified entity does not exist or is not dead yet.
-const_USE_TOO_MANY_SUMMONS			Error thrown by #summon when you already have <b>4</b> alive summons.
+const_USE_TOO_MANY_SUMMONS			Error thrown by #summon when you already have <b>6</b> alive summons.
 const_WEAPON_AXE
 const_WEAPON_BROADSWORD
 const_WEAPON_KATANA

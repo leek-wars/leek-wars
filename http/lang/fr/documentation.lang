@@ -40,7 +40,7 @@ const_TYPE_NULL						Type de valeur <b>null</b>
 const_TYPE_NUMBER					Type de valeur <b>nombre</b>
 const_TYPE_STRING					Type de valeur <b>chaîne de caractères</b>
 const_USE_RESURRECT_INVALID_ENTITY	Valeur renvoyée par la fonction #resurrect lorsque l'entité spécifiée n'existe pas ou n'est pas encore morte.
-const_USE_TOO_MANY_SUMMONS			Erreur renvoyée par #summon lorsque vous avez déjà <b>4</b> invocations vivantes.
+const_USE_TOO_MANY_SUMMONS			Erreur renvoyée par #summon lorsque vous avez déjà <b>6</b> invocations vivantes.
 
 func_abs			Renvoie la valeur absolue du nombre <b>number</b>.
 func_abs_arg_1		Le nombre dont la valeur absolue sera calculée.
