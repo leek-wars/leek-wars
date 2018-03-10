@@ -62,6 +62,10 @@ chat_commands.list = [
         },
         description: "Ajoute votre pseudo avec une emphase au message"
     }, {
+        command: "ping",
+        regex: /(^| )\/ping(?=$|\s)/gi,
+        description: "Envoie un message ping au serveur"
+    }, {
         command: "replacetable",
         regex: /(^| )\/replacetable(?=$|\s)/gi,
         replacement: function(authorName) {
@@ -76,9 +80,20 @@ chat_commands.list = [
         },
         description: "Ajoute ¯\\_(ツ)_/¯ au message"
     }, {
-        command: "ping",
-        regex: /(^| )\/ping(?=$|\s)/gi,
-        description: "Envoie un message ping au serveur"
+        command: "tuto",
+        regex: /(^| )\/tuto(?=$|\s)/gi,
+        replacement: function(authorName) {
+                return " " + _.toChatLink(URL_TUTO, "tuto", "target='_blank' rel='nofollow'") + " "
+            },
+        description: "Ajoute un lien vers le tutorial au message",
+	options: [{
+            command: "tuto!",
+            regex: /(^| )\/doc!(?=$|\s)/gi,
+            replacement: function(authorName) {
+                return " " + _.toChatLink(URL_TUTO, "LE TUTOOOOO", "target='_blank' rel='nofollow'") + " "
+            },
+            description: "Ajoute un lien vers le tutorial au message"
+        }]
     }, {
         command: "wiki",
         regex: /(?:^|(\s))\/wiki([!]?)(?::([^\s#]+)(?:#([^\s]+))?)?(?=\s|$)/gi,
