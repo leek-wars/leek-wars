@@ -81,14 +81,14 @@ chat_commands.list = [
         description: "Ajoute ¯\\_(ツ)_/¯ au message"
     }, {
         command: "tuto",
-        regex: /(^| )\/tuto(?=$|\s)/gi,
+        regex: /(^| )\/tuto([!]?)(?=$|\s)/gi,
         replacement: function(authorName) {
                 return " " + _.toChatLink(URL_TUTO, "tuto", "target='_blank' rel='nofollow'") + " "
             },
         description: "Ajoute un lien vers le tutorial au message",
 	options: [{
             command: "tuto!",
-            regex: /(^| )\/doc!(?=$|\s)/gi,
+            regex: /(^| )\/tuto!(?=$|\s)/gi,
             replacement: function(authorName) {
                 return " " + _.toChatLink(URL_TUTO, "LE TUTOOOOO", "target='_blank' rel='nofollow'") + " "
             },
