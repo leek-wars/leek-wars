@@ -40,7 +40,7 @@ const_TYPE_NULL						Type de valeur <b>null</b>
 const_TYPE_NUMBER					Type de valeur <b>nombre</b>
 const_TYPE_STRING					Type de valeur <b>chaîne de caractères</b>
 const_USE_RESURRECT_INVALID_ENTITY	Valeur renvoyée par la fonction #resurrect lorsque l'entité spécifiée n'existe pas ou n'est pas encore morte.
-const_USE_TOO_MANY_SUMMONS			Erreur renvoyée par #summon lorsque vous avez déjà <b>4</b> invocations vivantes.
+const_USE_TOO_MANY_SUMMONS			Erreur renvoyée par #summon lorsque vous avez déjà <b>6</b> invocations vivantes.
 
 func_abs			Renvoie la valeur absolue du nombre <b>number</b>.
 func_abs_arg_1		Le nombre dont la valeur absolue sera calculée.
@@ -831,8 +831,8 @@ func_isOnSameLine_arg_2			La deuxième cellule.
 func_isOnSameLine_return			<i>vrai</i> si les deux cellules sont sur la même ligne, <i>faux</i> sinon.
 func_isSummon			Renvoie si vous êtes une invocation ou non.
 func_isSummon_2			Renvoie si l'entité <b>entity</b> est une invocation ou non.
-func_isSummon_2_arg_1			<i>true</i> si <b>entity</b> est une invocation, <i>false</i> sinon.
-func_isSummon_2_return			L'id de l'entité à tester.
+func_isSummon_2_arg_1			L'id de l'entité à tester.
+func_isSummon_2_return			<i>true</i> si <b>entity</b> est une invocation, <i>false</i> sinon.
 func_isSummon_return			<i>true</i> si vous êtes une invocation, <i>false</i> sinon.
 func_isWeapon			Détermine si une valeur est une constante représentant une arme.<br><br>isWeapon(WEAPON_LASER) = true;<br>isWeapon(CHIP_TELEPORTATION) = false.
 func_isWeapon_arg_1			Le nombre à déterminer.

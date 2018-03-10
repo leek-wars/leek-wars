@@ -19,7 +19,7 @@ advanced_include_7			// does not work :
 							include("IA_" + 5);
 advanced_include_8			// does not work :
 							var ia = 'IA_1';
-							include('IA_1');
+							include(ia);
 advanced_include_9			// does not work :
 							if (foo > 12) {
 								include('IA_1');
