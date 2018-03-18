@@ -756,7 +756,7 @@ func_getWeaponEffects_return		Array containing given's weapon effects. An effect
 											if (targets & EFFECT_TARGET_CASTER) debug('Always affects caster');
 											if (targets & EFFECT_TARGET_NOT_CASTER) debug('Cannot affect caster');
 											if (targets & EFFECT_TARGET_SUMMONS) debug("Affects summons");
-											if (targets & EFFECT_TARGET_SUMMONS) debug("Affects leeks");</code>
+											if (targets & EFFECT_TARGET_NON_SUMMONS) debug("Affects leeks");</code>
 										</li>
 									</ul>
 func_getWeaponFailure			Returns a <b>weapon</b>'s failure rate.
