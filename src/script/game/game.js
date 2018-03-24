@@ -1463,6 +1463,7 @@ var Game = function() {
 				break;
 		}
 		this.hud.updateEntityEffect(id, new_value)
+		effect.value = new_value // Updating the effect's value to properly remove it with `removeEffect`
 	}
 
 	this.readLogs = function() {
