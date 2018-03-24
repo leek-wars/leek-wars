@@ -722,14 +722,16 @@ func_getWeaponEffects_return		Un tableau contenant les effets de l'arme <b>weapo
 											<li> #EFFECT_TARGET_ENEMIES : Affecte les ennemis</li>
 											<li> #EFFECT_TARGET_CASTER : Affecte toujours le lanceur</li>
 											<li> #EFFECT_TARGET_NOT_CASTER : N'affecte jamais le lanceur</li>
-											<li> #EFFECT_TARGET_SUMMONS : Affecte les invocations du lanceur</li>
+											<li> #EFFECT_TARGET_SUMMONS : Affecte les invocations</li>
+											<li> #EFFECT_TARGET_NON_SUMMONS : Affecte les entités non invoquées</li>
 										</ul>
 										On peut lire cette valeur de la manière suivante :<br>
 										<code>if (targets & EFFECT_TARGET_ALLIES) debug('Affecte les alliés');
 										if (targets & EFFECT_TARGET_ENEMIES) debug('Affecte les ennemis');
 										if (targets & EFFECT_TARGET_CASTER) debug('Affecte toujours le lanceur');
 										if (targets & EFFECT_TARGET_NOT_CASTER) debug('N'affecte jamais le lanceur');
-										if (targets & EFFECT_TARGET_SUMMONS) debug('Affecte les invocations');</code>
+										if (targets & EFFECT_TARGET_SUMMONS) debug('Affecte les invocations');
+										if (targets & EFFECT_TARGET_NON_SUMMONS) debug('Affecte les poireaux');</code>
 										</li>
 									</ul>
 func_getWeaponFailure			Renvoie le pourcentage de risque d'échec de l'arme <b>weapon</b>.
