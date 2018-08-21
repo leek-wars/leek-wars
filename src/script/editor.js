@@ -1391,7 +1391,7 @@ LW.pages.editor.test_popup = function(ais) {
 		if (data.success) {
 			_maps = data.maps
 			for (var m in data.maps) {
-				var e = $("<div class='item map' map='" +  data.maps[m].id + "'>" + data.maps[m].name + "<div class='delete'/></div>")
+				var e = $("<div class='item map' map='" +  data.maps[m].id + "'>" + _.protect(data.maps[m].name) + "<div class='delete'/></div>")
 				_testPopup.find('.maps').append(e)
 				add_map_events(e)
 			}
@@ -1407,7 +1407,7 @@ LW.pages.editor.test_popup = function(ais) {
 		var name = add_map_popup.find('input').val()
 		_.post('test-map/new', {name: name}, function(data) {
 			if (data.success) {
-				var e = $("<div class='item map' map='" +  data.id + "'>" + name + "</div>")
+				var e = $("<div class='item map' map='" +  data.id + "'>" + _.protect(name) + "</div>")
 				_testPopup.find('.maps').append(e)
 				_maps[data.id] = ({name: name, id: data.id, data: {obstacles: {}, team1: [], team2: []}})
 				add_map_events(e)
