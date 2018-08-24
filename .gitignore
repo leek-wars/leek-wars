@@ -9,3 +9,5 @@ http/*.map
 .idea/
 build/
 /.project
+package-lock.json
+node_modules
