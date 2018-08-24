@@ -52,7 +52,7 @@ http/libs.min.css: $(CSS_LIB_MIN)
 	cat $(CSS_LIB_MIN) > $@
 
 http/leekwars.min.css: $(CSS_FILES)
-	cat $(CSS_FILES) | csso -o $@
+	cat $(CSS_FILES) | node_modules/csso-cli/bin/csso -o $@
 
 http/leekwars-quick.min.css: $(CSS_FILES)
 	cat $(CSS_FILES) > $@
@@ -63,7 +63,7 @@ build/third_party/%.min.js: src/third_party/%.js
 
 build/%.min.css: src/%.css
 	@mkdir -p $(@D)
-	csso $? -o $@
+	node_modules/csso-cli/bin/csso $? -o $@
 
 test:
 	uglifyjs $(JS_FILES) -o all.min.js -c -m
