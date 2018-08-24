@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/leek-wars/leek-wars-client/issues"
   },
-  "homepage": "https://github.com/leek-wars/leek-wars-client#readme"
+  "homepage": "https://github.com/leek-wars/leek-wars-client#readme",
+  "devDependencies": {
+    "csso-cli": "^1.1.0"
+  }
 }
