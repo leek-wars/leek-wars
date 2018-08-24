@@ -1,0 +1,19 @@
+{
+  "name": "leek-wars-client",
+  "version": "1.0.0",
+  "description": "Leek Wars game client website",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://5pilow@github.com/leek-wars/leek-wars-client.git"
+  },
+  "author": "Pilow",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/leek-wars/leek-wars-client/issues"
+  },
+  "homepage": "https://github.com/leek-wars/leek-wars-client#readme"
+}
