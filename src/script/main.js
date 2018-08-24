@@ -437,7 +437,6 @@ LW.pages = {
 	notifications: {},
 	legal: {},
 	conditions: {},
-	roadmap: {},
 	search: {
 		langs: ['forum']
 	},
@@ -1233,10 +1232,6 @@ page('/ranking/:category/:order', function(ctx) {
 
 page('/ranking/:category/:order/page-:page', function(ctx) {
 	LW.loadPage('ranking', ctx.params)
-})
-
-page('/roadmap', function() {
-	LW.loadPage('roadmap')
 })
 
 page('/help', function() {
