@@ -1,0 +1,87 @@
+.theme-monokai .CodeMirror {
+	background: #272822;
+	color: #F8F8F2;
+}
+.theme-monokai .CodeMirror-gutters {
+	background: #303029;
+	border-right: 1px solid #444;
+}
+.theme-monokai .cm-number {
+	color: #AE81FF;
+}
+.theme-monokai .cm-string {
+	color: #E6DB74;
+}
+.theme-monokai .cm-variable-declaration,
+.theme-monokai .cm-function-declaration
+{
+	color: #66D9EF;
+	font-weight: normal;
+	font-style: italic;
+}
+.theme-monokai .cm-keyword {
+	color: #F92672;
+	font-weight: normal;
+}
+.theme-monokai .cm-atom {
+	color: #AE81FF;
+	font-weight: normal;
+}
+.theme-monokai .cm-comment {
+	color: #75715E;
+}
+.theme-monokai .cm-def {
+	color: #F8F8F2;
+}
+.theme-monokai .cm-variable {
+	color: #F8F8F2;
+}
+.theme-monokai .cm-variable-2 {
+	color: #F8F8F2;
+}
+.theme-monokai .CodeMirror-lines .activeline {
+	background: #222;
+}
+.theme-monokai .cm-operator {
+	color: #F92672;
+}
+.theme-monokai .cm-function {
+	color: #A6E22E;
+}
+.theme-monokai .cm-def {
+	color: #FD971F;
+}
+.theme-monokai .cm-lsconst {
+	color: white;
+	font-weight: bold;
+}
+.theme-monokai .cm-lsfunc {
+	color: white;
+	font-style: italic;
+}
+.theme-monokai .cm-lsfunc-deprec {
+	color: white;
+}
+.theme-monokai .cm-matchhighlight {
+	border: 1px solid #aaa;
+	border-radius: 2px;
+	margin: -1px;
+}
+.theme-monokai .cm-matchhighlight-green {
+	background: #5FAD1B;
+}
+.theme-monokai .CodeMirror-selected,
+.theme-monokai .CodeMirror-focused .CodeMirror-selected {
+	background: #555;
+}
+.theme-monokai .CodeMirror-matchingbracket {
+	color: #F8F8F2;
+	border-bottom: 1px solid #F8F8F2;
+}
+.theme-monokai .CodeMirror-nonmatchingbracket {
+	color: #F00;
+	font-weight: bold;
+}
+.theme-monokai .CodeMirror div.CodeMirror-cursor {
+	border-left: 1px solid #eee;
+}

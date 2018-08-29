@@ -1,0 +1,32 @@
+{
+    "extends": [
+		"tslint:recommended",
+		"tslint-config-prettier"
+	],
+    "rules": {
+		"semicolon": [true, "never"],
+		"indent": [true, "tabs"],
+		"ban-types": [true, ["String", "Use 'string' instead."], ["Object"]],
+		"forin": false,
+		"align": false,
+		"quotemark": false,
+		"no-reference": false,
+		"max-line-length": false,
+		"max-classes-per-file": false,
+		"no-console": false,
+		"variable-name": false,
+		"member-access": false,
+		"trailing-comma": false,
+		"object-literal-sort-keys": false,
+		"no-bitwise": false,
+		"one-variable-per-declaration": false,
+		"no-conditional-assignment": false,
+		"jsdoc-format": false
+	},
+    "defaultSeverity": "error",
+	"rulesDirectory": [],
+	"linterOptions": {
+		"exclude": "src/**/*.json"
+	},
+    "jsRules": {}
+}

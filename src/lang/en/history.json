@@ -1,0 +1,14 @@
+{
+	"title": "History of {0}",
+	"title_html": "History of {0}",
+	"24h": "24h",
+	"today": "Today",
+	"2days": "2 days",
+	"1week": "1 week",
+	"n_fights": "{0} fights",
+	"victories": "victories",
+	"draws": "draws",
+	"defeats": "defeats",
+	"ratio": "ratio",
+	"not_found_id": "Leek with id %s not found"
+}

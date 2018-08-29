@@ -1,0 +1,394 @@
+<template lang="html">
+	<div class="menu">
+		
+		<div v-if="!LeekWars.mobile" class="menu-button">
+			<i class="icon material-icons">navigate_before</i>
+		</div>
+
+		<div class="menu-wrapper">
+
+			<div v-if="LeekWars.mobile" class="menu-top">
+				<div class="top">
+					<div class="section">
+						<router-link to="/farmer" @click.native="clickItem">
+							<avatar :farmer="$store.state.farmer" class="farmer-avatar" />
+						</router-link>
+						<div class="right">
+							<router-link to="/farmer" @click.native="clickItem">
+								<div class="text farmer-name">{{ $store.state.farmer.name }}</div>
+							</router-link>
+							<div class="moneys">
+								<div>
+									<router-link to="/market" @click.native="clickItem"><div>
+										<span class="hab text"></span><span class="farmer-habs">{{ $store.state.farmer.habs | number }}</span>
+									</div></router-link>
+								</div>
+								<div class="crystals">
+									<router-link to="/bank" @click.native="clickItem"><div>
+										<span class="crystal text"></span><span class="farmer-crystals">{{ $store.state.farmer.crystals | number }}</span>
+									</div></router-link>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<span v-if="$store.state.farmer && $store.state.farmer.leeks" class="leeks">
+				<router-link v-ripple v-for="leek in $store.state.farmer.leeks" :key="leek.id" :to="{ name: 'leek', params: { id: leek.id }}" class="section" :label="leek.capital || null">
+					<div :leek="leek.id" :tab="'leek-' + leek.id" @click="clickItem">
+						<img src="/image/icon/house.png">
+						<div class="text">{{ leek.name }}</div>
+					</div>
+				</router-link>
+				<router-link v-ripple v-if="Object.keys($store.state.farmer.leeks).length < 4" to="/new-leek">
+					<div class="section">
+						<img src="/image/icon/add.png">
+						<div class="text">{#main.add_leek}</div>
+					</div>
+				</router-link>
+			</span>
+
+			<div v-if="$store.state.farmer && $store.state.farmer.leeks && Object.keys($store.state.farmer.leeks).length > 1" class="separator"></div>
+
+			<router-link v-ripple to="/editor" class="section" @click.native="clickItem">
+				<i class="material-icons">code</i>
+				<div class="text">{{ $t("main.editor") }}</div>
+			</router-link>
+
+			<!-- <router-link to='/console'>
+				<img src='/image/console.png'>
+				<div class='text'>{{ $t("main.console") }}</div>
+			</router-link> -->
+
+			<router-link v-ripple to="/garden" class="section" @click.native="clickItem">
+				<img src="/image/icon/garden.png">
+				<div class="text">{{ $t("main.garden") }}
+					<span class="right">
+						<img src="/image/icon/garden.png">
+						<span class="farmer-fights">{{ $store.state.farmer.fights }}</span>
+					</span>
+				</div>
+			</router-link>
+
+			<router-link v-ripple to="/market" class="section" @click.native="clickItem">
+				<img src="/image/icon/market.png">
+				<div class="text">{{ $t("main.market") }}</div>
+			</router-link>
+		
+			<router-link v-ripple v-if="$store.state.farmer.team" to="/team" class="section" @click.native="clickItem">
+				<img src="/image/icon/team.png">
+				<div class="text">{{ $t('main.team') }}</div>
+			</router-link>
+
+			<router-link v-ripple to="/trophies" class="section" @click.native="clickItem">
+				<img src="/image/icon/trophy.png">
+				<div class="text">{{ $t("main.trophies") }}</div>
+			</router-link>
+
+			<router-link v-ripple to="/ranking" class="section" @click.native="clickItem">
+				<img src="/image/icon/ranking.png">
+				<div class="text">{{ $t("main.ranking") }}</div>
+			</router-link>
+
+			<router-link v-ripple to="/help" class="section" @click.native="clickItem">
+				<i class="material-icons">help_outline</i>
+				<div class="text">{{ $t("main.help") }}</div>
+			</router-link>
+
+			<router-link v-ripple to="/forum" class="section" @click.native="clickItem">
+				<img src="/image/icon/forum.png">
+				<div class="text">{{ $t("main.forum") }}</div>
+			</router-link>
+
+			<router-link v-ripple v-if="$store.state.farmer.admin" :label="$store.state.farmer.reportings" to="/moderation" class="section" tab="moderation" @click.native="clickItem">
+				<i class="material-icons">gavel</i>
+				<div class="text">{{ $t('main.moderation') }}</div>
+			</router-link>
+
+			<router-link v-ripple v-if="$store.state.farmer.admin" to="/admin" class="section" tab="admin" @click.native="clickItem">
+				<i class="material-icons">security</i>
+				<div class="text">{{ $t('main.admin') }}</div>
+			</router-link>
+		</div>
+	</div>
+</template>
+
+<script lang="ts">
+	import { LeekWars } from '@/model/leekwars'
+	import { Component, Vue } from 'vue-property-decorator'
+	@Component({
+		name: 'lw-menu'
+	})
+	export default class Menu extends Vue {
+		mounted() {
+			setTimeout(() => {
+				const W = 250
+				let down = false
+				let downX = 0, downY = 0
+				let menu_visible = false
+				let enabled = false
+				let aborted = false
+				const menu_element = document.querySelector('.menu') as HTMLElement
+				const center_element = document.getElementById('center') as HTMLElement
+				let d = 0
+				let lastT = 0
+				window.addEventListener('pointerdown', (e) => {
+					downX = e.clientX
+					downY = e.clientY
+					down = true
+					aborted = false
+					menu_visible = LeekWars.menuExpanded
+				})
+				window.addEventListener('touchmove', (e) => {
+					if (!down || aborted) { return }
+					const x = e.touches[0].clientX
+					const y = e.touches[0].clientY
+					if (!enabled && Math.abs(downY - y) > 5) {
+						aborted = true
+					}
+					if (!enabled && Math.abs(downX - x) > 10 && menu_visible === x < downX) {
+						menu_element.style.transition = 'transform ease 100ms'
+						center_element.style.transition = 'transform ease 100ms'
+						enabled = true
+					}
+					if (Date.now() - lastT < 50) { return }
+					lastT = Date.now()
+					if (enabled && !aborted) {
+						if (menu_visible) {
+							d = W - Math.max(0, Math.min(W, downX - x))
+						} else {
+							d = Math.max(0, Math.min(W, x - downX))
+						}
+						menu_element.style.transform = 'translateX(' + (-W + d) + 'px)'
+						center_element.style.transform = 'translateX(' + d + 'px)'
+						LeekWars.dark = 0.6 * (d / W)
+					}
+				})
+				document.addEventListener('touchend', (e) => {
+					if (!down || !enabled || aborted) { return }
+					const transition = 'transform ease 200ms'
+					menu_element.style.transition = transition
+					menu_element.style.transform = ''
+					center_element.style.transition = transition
+					center_element.style.transform = ''
+					if (menu_visible) {
+						if (d < W / 2) {
+							LeekWars.menuExpanded = false
+							LeekWars.dark = 0
+						}
+					} else {
+						if (d > W / 2) {
+							LeekWars.menuExpanded = true
+							LeekWars.dark = 0.6
+						} else {
+							LeekWars.dark = 0
+						}
+					}
+					down = false
+					enabled = false
+					aborted = false
+				})
+			}, 800)
+		}
+		clickItem() {
+			LeekWars.menuExpanded = false
+			LeekWars.dark = 0
+		}
+	}
+</script>
+
+<style lang="scss" scoped>
+	.menu {
+		width: 170px;
+		position: fixed;
+		top: 0;
+		bottom: 0;
+		padding-top: 46px;
+	}
+	#app.app .menu {
+		position: fixed;
+		top: 56px;
+		left: 0;
+		transform: translateX(-250px);
+		width: 250px;
+		bottom: 0;
+		background: rgba(0, 0, 0, 0.5);
+		z-index: 5;
+		transition: transform ease 200ms;
+		padding: 0;
+		width: auto;
+	}
+	.menu-wrapper {
+		background: rgba(80, 80, 80, 0.6);
+		padding: 12px;
+		padding-left: 0;
+	}
+	#app.connected .menu {
+		display: block;
+	}
+	#app.menu-collapsed .menu {
+		width: 68px;
+	}
+	.menu-button {
+		background: rgba(80, 80, 80, 0.6);
+		width: 30px;
+		height: 30px;
+		margin-bottom: 4px;
+		cursor: pointer;
+	}
+	.menu-button .icon {
+		color: white;
+		font-size: 30px;
+	}
+	.menu .section {
+		height: 40px;
+		line-height: 40px;
+		margin-bottom: 1px;
+		position: relative;
+		background: #222;
+		font-weight: 400;
+		font-size: 17px;
+		color: #eee;
+		white-space: nowrap;
+		display: block;
+	}
+	.menu a div {
+		overflow: hidden;
+	}
+	.menu .section[label]:not([label='']):after {
+		position: absolute;
+		background: #5FAD1B;
+		right: -10px;
+		top: 50%;
+		margin-top: -13.5px;
+		content: attr(label);
+		color: white;
+		border-radius: 5px;
+		padding: 1px 5px;
+		line-height: normal;
+	}
+	#app.app .menu .section[label]:not([label='']):after {
+		right: 8px;
+	}
+	.menu .text .right {
+		font-size: 14px;
+		line-height: 46px;
+		position: absolute;
+		top: 0;
+		right: 8px;
+		display: none;
+	}
+	#app.app .menu .text .right {
+		display: block;
+	}
+	.menu .text .right img {
+		width: 18px;
+		height: 18px;
+		margin: 14px 0;
+		margin-right: 4px;
+	}
+	body.menu-collapsed .menu a {
+		height: 46px;
+	}
+	.menu a:not(.router-link-active):hover {
+		background-image: linear-gradient(to bottom, rgba(150, 150, 150, 0.5) 0%, rgba(150, 150, 150, 0.7) 50%, rgba(150, 150, 150, 0.5) 100%);
+	}
+	.menu a.router-link-active {
+		background-image: linear-gradient(to bottom, rgba(110, 201, 31, 0.7) 0%, rgba(110, 201, 31, 0.9) 50%, rgba(110, 201, 31, 0.7) 100%);
+	}
+	.menu a.router-link-active:active {
+		background-image: linear-gradient(to bottom, rgba(110, 201, 31, 0.9) 0%, rgba(110, 201, 31, 1) 50%, rgba(110, 201, 31, 0.9) 100%);
+	}
+	body.menu-collapsed .menu a .text {
+		display: none;
+	}
+	.menu a img {
+		height: 24px;
+		width: 24px;
+		float: left;
+		margin: 8px;
+	}
+	.menu a i {
+		float: left;
+		margin: 6px;
+		font-size: 28px;
+	}
+	body.menu-collapsed .menu a img {
+		height: 30px;
+		width: 30px;
+	}
+	.menu .separator {
+		height: 12px;
+	}
+	.menu-top {
+		background: #333;
+		color: #eee;
+	}
+	.menu-top a {
+		color: #eee;
+	}
+	#app.app .menu .top {
+		display: flex;
+		height: 68px;
+	}
+	.menu-top .section {
+		height: auto;
+		width: 100%;
+	}
+	.menu .menu-top .text {
+		padding-left: 10px;
+	}
+	.menu .menu-top .text.farmer-name {
+		padding-left: 5px;
+		line-height: 45px;
+	}
+	.menu .menu-top .right {
+		display: inline-block;
+		width: calc(100% - 68px);
+	}
+	#app.app .menu .menu-top .moneys {
+		display: flex;
+		font-size: 12px;
+		padding: 0 5px;
+		padding-bottom: 4px;
+		align-items: baseline;
+		height: auto;
+		line-height: normal;
+		overflow: visible;
+		width: calc(100% - 20px);
+		margin-top: -2px;
+	}
+	.menu-top .moneys div {
+		overflow: visible;
+	}
+	.menu-top .moneys img {
+		width: 18px;
+		vertical-align: bottom;
+	}
+	.menu-top .moneys .crystals {
+		padding-left: 10px;
+	}
+	.menu-top .moneys .hab {
+		padding-left: 0;
+		margin-right: 4px;
+	}
+	.menu-top .moneys .crystal {
+		width: 4px;
+		margin-bottom: -6px;
+		margin-right: 4px;
+		height: 29px;
+		background-size: cover;
+	}
+	.menu-top .farmer-avatar {
+		margin: 4px;
+		width: 60px;
+		height: 60px;
+	}
+	.menu-top .moneys img {
+		width: 20px;
+	}
+	.menu-top .section {
+		background: transparent;
+	}
+</style>

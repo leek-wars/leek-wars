@@ -1,0 +1,20 @@
+{
+	"name": "Leek Wars",
+	"short_name": "Leek Wars",
+	"icons": [
+		{
+			"src": "/image/favicon.png",
+			"sizes": "64x64"
+		},
+		{
+			"src": "/image/web_hi_res_512.png",
+			"sizes": "512x512"
+		}
+	],
+	"start_url": "/",
+	"display": "standalone",
+	"permissions": [
+		"notifications"
+	],
+	"theme_color": "#4b9e06"
+}
