@@ -1,0 +1,13 @@
+{
+	"by_x_the_d": "By {farmer} the {date}",
+	"cancel": "Cancel",
+	"create_new_topic": "Create a topic",
+	"create_topic": "Create topic",
+	"n_topic_n_messages": "{0} topics / {1} messages",
+	"last": "Last",
+	"last_by": "by",
+	"messages": "Messages",
+	"new_topic_message": "Topic message",
+	"new_topic_title": "Topic title",
+	"topic": "Subject"
+}

@@ -1,22 +1,143 @@
 {
-  "name": "leek-wars-client",
-  "version": "1.0.0",
-  "description": "Leek Wars game client website",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://5pilow@github.com/leek-wars/leek-wars-client.git"
-  },
-  "author": "Pilow",
-  "license": "GPL-3.0",
-  "bugs": {
-    "url": "https://github.com/leek-wars/leek-wars-client/issues"
-  },
-  "homepage": "https://github.com/leek-wars/leek-wars-client#readme",
-  "devDependencies": {
-    "csso-cli": "^1.1.0"
-  }
+	"name": "leek-wars-client",
+	"version": "1.0.0",
+	"scripts": {
+		"serve": "vue-cli-service serve",
+		"build": "vue-cli-service build",
+		"lint": "vue-cli-service lint"
+	},
+	"dependencies": {
+		"@types/codemirror": "0.0.60",
+		"@types/qs": "^6.5.1",
+		"axios": "^0.18.0",
+		"class-transformer": "^0.1.9",
+		"codemirror": "^5.40.0",
+		"es6-promise": "^4.2.4",
+		"js-beautify": "^1.8.6",
+		"katex": "^0.10.0-rc.1",
+		"qs": "^6.5.2",
+		"reflect-metadata": "^0.1.12",
+		"register-service-worker": "^1.0.0",
+		"twemoji": "^11.0.1",
+		"vue": "^2.5.17",
+		"vue-chartist": "^2.1.2",
+		"vue-class-component": "^6.0.0",
+		"vue-github-buttons": "^2.1.1",
+		"vue-i18n": "^8.0.0",
+		"vue-property-decorator": "^7.0.0",
+		"vue-router": "^3.0.1",
+		"vuetify": "^1.2.1",
+		"vuex": "^3.0.1"
+	},
+	"devDependencies": {
+		"@fimbul/valtyr": "^0.14.0",
+		"@fimbul/ve": "^0.13.0",
+		"@fimbul/wotan": "^0.14.0",
+		"@kazupon/vue-i18n-loader": "^0.3.0",
+		"@types/google.analytics": "0.0.39",
+		"@vue/cli-plugin-eslint": "^3.0.1",
+		"@vue/cli-plugin-pwa": "^3.0.1",
+		"@vue/cli-plugin-typescript": "^3.0.1",
+		"@vue/cli-service": "^3.0.1",
+		"@vue/eslint-config-airbnb": "^3.0.1",
+		"@vue/eslint-config-prettier": "^3.0.1",
+		"@vue/eslint-config-standard": "^3.0.1",
+		"@vue/eslint-config-typescript": "^3.0.1",
+		"babel-plugin-transform-imports": "^1.4.1",
+		"eslint": "^5.5.0",
+		"json-loader": "^0.5.7",
+		"node-sass": "^4.9.0",
+		"prettier": "1.14.2",
+		"request": "^2.88.0",
+		"request-promise": "^4.2.2",
+		"sass-loader": "^7.0.1",
+		"stylus": "^0.54.5",
+		"stylus-loader": "^3.0.2",
+		"tslint": "^5.11.0",
+		"tslint-config-prettier": "^1.15.0",
+		"tslint-config-standard": "^8.0.1",
+		"typescript": "^3.0.0",
+		"vue-cli-plugin-vuetify": "^0.1.6",
+		"vue-template-compiler": "^2.5.17",
+		"webpack-bundle-analyzer": "^3.0.2"
+	},
+	"eslintConfig": {
+		"root": true,
+		"env": {
+			"node": true
+		},
+		"extends": [
+			"plugin:vue/essential",
+			"@vue/typescript"
+		],
+		"parserOptions": {
+			"parser": "typescript-eslint-parser"
+		},
+		"rules": {
+			"vue/attribute-hyphenation": "error",
+			"vue/html-end-tags": "error",
+			"vue/mustache-interpolation-spacing": "error",
+			"vue/name-property-casing": "error",
+			"vue/no-multi-spaces": "error",
+			"vue/require-default-prop": "error",
+			"vue/require-prop-types": "error",
+			"vue/v-bind-style": "error",
+			"vue/v-on-style": "error",
+			"vue/attributes-order": "error",
+			"vue/html-quotes": "error",
+			"vue/html-indent": [
+				"error",
+				"tab",
+				{
+					"attribute": 1,
+					"closeBracket": 0,
+					"alignAttributesVertically": true
+				}
+			],
+			"vue/html-self-closing": [
+				"error",
+				{
+					"html": {
+						"normal": "never",
+						"component": "always"
+					},
+					"svg": "always"
+				}
+			],
+			"vue/this-in-template": [
+				"error",
+				"never"
+			],
+			"vue/html-closing-bracket-spacing": [
+				"error",
+				{
+					"startTag": "never",
+					"endTag": "never",
+					"selfClosingTag": "always"
+				}
+			],
+			"vue/no-confusing-v-for-v-if": "error"
+		}
+	},
+	"postcss": {
+		"plugins": {
+			"autoprefixer": {}
+		}
+	},
+	"browserslist": [
+		"> 1%",
+		"last 2 versions",
+		"not ie <= 8"
+	],
+	"license": "GPL-3.0",
+	"author": "Pilow",
+	"description": "Leek Wars game client website",
+	"repository": {
+		"type": "git",
+		"url": "git+https://5pilow@github.com/leek-wars/leek-wars-client.git"
+	},
+	"bugs": {
+		"url": "https://github.com/leek-wars/leek-wars-client/issues"
+	},
+	"homepage": "https://github.com/leek-wars/leek-wars-client#readme"
 }

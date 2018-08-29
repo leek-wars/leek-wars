@@ -1,0 +1,19 @@
+{
+	"app_installation": "Application installation on mobile",
+	"app_info": "By following these instructions, you will be able to install the Leek Wars web application (<a href='https://en.wikipedia.org/wiki/Progressive_web_app'>PWA</a>)\non your mobile phone.\nThis functionality is managed more or less well depending on OS and browsers, and the installation steps may vary from one to the other.\nThe browser used in the following instructions is <b>Chrome</b> on <b>Android</b>, which seems to be the best to support web applications.",
+	"app_preview": "Application preview",
+	"title": "Mobile application",
+	"step_n": "Step {0}",
+	"step1": "Visit leekwars.com",
+	"step2": "Tap on \"Add to home screen\"",
+	"step3": "Tap on \"Add\"",
+	"step4": "The shortcut will be added to your home screen",
+	"preview1": "Leek page",
+	"preview2": "Lateral menu",
+	"preview3": "Market page",
+	"preview4": "Weapon details in the market",
+	"preview5": "Trophies page",
+	"preview6": "Fight display",
+	"preview7": "AI edition",
+	"preview8": "Push notification"
+}
