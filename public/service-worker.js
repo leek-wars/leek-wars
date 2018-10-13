@@ -1,10 +1,8 @@
 self.addEventListener('push', event => {
-
 	var icon = null
 	var title = "Notification de Leek Wars"
 	var message = "Cliquer pour voir la notification"
 	var data = null
-
 	if (event.data) {
 		var data = event.data.json()
 		icon = data.image
@@ -12,7 +10,6 @@ self.addEventListener('push', event => {
 		message = data.message
 		data = data
 	}
-
 	event.waitUntil(
 		self.registration.showNotification(title, {
 			body: message,
