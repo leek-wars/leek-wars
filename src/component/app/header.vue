@@ -28,7 +28,7 @@
 						{{ $i18n.locale }}
 					</div>
 				</div> -->
-				<div v-if="!LeekWars.beta" class="button-wrapper">
+				<div class="button-wrapper">
 					<router-link to="/bank">
 						<div class="header-button">
 							<span class="farmer-crystals text">{{ $store.state.farmer.crystals }}</span>
@@ -52,7 +52,7 @@
 						</div>
 					</router-link>
 				</div>
-				<div v-if="!LeekWars.beta" class="button-wrapper">
+				<div class="button-wrapper">
 					<div class="header-button messages-button">
 						<i class="material-icons">email</i>
 						<span v-show="$store.state.unreadMessages > 0" class="counter">{{ $store.state.unreadMessages }}</span>
