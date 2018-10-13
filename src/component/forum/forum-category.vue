@@ -135,7 +135,7 @@
 						this.$router.push("/forum/category-" + this.category.id + "/topic-" + data.data.topic_id)
 					}
 				} else {
-					// _.toast(data.error); TODO
+					LeekWars.toast(data.data.error)
 				}
 			})
 		}
