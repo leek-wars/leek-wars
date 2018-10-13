@@ -1,15 +1,17 @@
 <template lang="html">
-	<router-link :to="'/editor/' + folder.id" :class="{empty: !folder.items.length, 'dragover': dragOver > 0, expanded: folder.expanded, root: level === 0}" class="item folder" draggable="true" @dragenter="dragenter" @dragleave="dragleave" @dragover="dragover" @drop="drop" @dragstart="dragstart">
-		<div v-if="level != 0" :style="{'padding-left': ((level - 1) * 20 + 10) + 'px'}" class="label" @click="toggle(folder)">
-			<div class="triangle"></div>
-			<span class="icon"></span>
-			<span ref="name" :contenteditable="editing" class="text" @keydown.enter="enter" @blur="blur">{{ folder.name }}</span>
-			<div class="edit" @click="edit"></div>
-		</div>
-		<div v-if="folder.expanded" class="content">
-			<div v-for="(item, i) in folder.items" :key="i">
-				<editor-folder v-if="item.folder" :folder="item" :level="level + 1" />
-				<editor-ai v-else :item="item" :level="level" />
+	<router-link :to="'/editor/' + folder.id">
+		<div :class="{empty: !folder.items.length, 'dragover': dragOver > 0, expanded: folder.expanded, root: level === 0}" class="item folder" draggable="true" @dragenter="dragenter" @dragleave="dragleave" @dragover="dragover" @drop="drop" @dragstart="dragstart">
+			<div v-if="level != 0" :style="{'padding-left': ((level - 1) * 20 + 10) + 'px'}" class="label" @click="toggle(folder)">
+				<div class="triangle"></div>
+				<span class="icon"></span>
+				<span ref="name" :contenteditable="editing" class="text" @keydown.enter="enter" @blur="blur">{{ folder.name }}</span>
+				<div class="edit" @click="edit"></div>
+			</div>
+			<div v-if="folder.expanded" class="content">
+				<template v-for="(item, i) in folder.items">
+					<editor-folder v-if="item.folder" :key="i" :folder="item" :level="level + 1" />
+					<editor-ai v-else :item="item" :key="i" :level="level" />
+				</template>
 			</div>
 		</div>
 	</router-link>
@@ -130,12 +132,8 @@
 		height: 10px;
 		margin-right: 5px;
 	}
-	.item.router-link-active.folder > .label > .icon {
+	.router-link-active > .item > .label > .icon {
 		background-image: url('/image/folder_white.png');
-	}
-	.item .label:hover {
-		background: white;
-		color: black;
 	}
 	.label:hover .edit {
 		display: inline-block;
@@ -145,11 +143,11 @@
 		color: black;
 		padding: 0 5px;
 	}
-	.item.router-link-active > .label {
+	.router-link-active > .item > .label {
 		background: #cacaca;
 		color: black;
 	}
-	.item.router-link-active > .label:before {
+	.router-link-active > .item > .label:before {
 		color: white;
 	}
 	.triangle {
@@ -163,7 +161,7 @@
 		margin-right: 5px;
 		margin-top: 1px;
 	}
-	.folder.router-link-active > .label > .triangle {
+	.router-link-active > .item > .label > .triangle {
 		border-left: 6px solid white;
 	}
 	.folder.expanded > .label > .triangle {
