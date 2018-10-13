@@ -1,6 +1,6 @@
 <template lang="html">
 	<div id="player" :style="{width: width + 'px', height: height + 'px'}">
-		<div id="loading">
+		<div id="loading" v-if="!loaded">
 			<!-- <template v-if='fight.type == FightType.BATTLE_ROYALE'>
 				@foreach (i : leek in fight.leeks1)
 					<div class='leek' leek='{leek.id}'>
@@ -28,9 +28,7 @@
 						@if (i == 1 && fight.leeks1.length < 5) <br> @end
 					@end
 				</td>
-
 				<td><span class='vs'>VS</span></td>
-
 				<td class='team-td'>
 					@foreach (i : leek in fight.leeks2)
 						<div class='leek' leek='{leek.id}'>
@@ -43,39 +41,37 @@
 					@end
 				</td>
 			</tr></table>
-
-			<img class='loader' src='/image/gearing_small.png'><br>
-			<div class='loading-fight'>{{ $t('loading_fight') }}</div>
-			<div class='queue-position'></div> -->
+			-->
+			<div class='loading-fight'>
+				<loader />
+				{{ $t('fight.loading_fight') }}
+				<div class='queue-position' v-if="queue">
+					<span v-if="queue.position == -1 || queue.position == 0">{{ $t('fight.generating') }}</span>
+					<span v-else>{{ $t('fight.position_in_queue', [queue.position + 1, queue.total]) }}</span>
+				</div>
+			</div>
 		</div>
 
 		<div v-if="error" id="error">
-
-			<h2>{{ $t('error_generating_fight') }}</h2>
+			<h2>{{ $t('fight.error_generating_fight') }}</h2>
 			<br>
 			<img src="/image/notgood.png">
+			<br><br>
+			<h4><i>{{ $t('fight.no_data_received') }}</i></h4>
 			<br>
-			<br>
-			<h4><i>{{ $t('no_data_received') }}</i></h4>
-
-			<br>
-			<a href="/report/{fight.id}">
-				<div class="button">{{ $t('see_report') }}</div>
-			</a>
-			<br>
-			<br>
+			<router-link :to="'/report/' + fight.id">
+				<div class="button">{{ $t('fight.see_report') }}</div>
+			</router-link>
+			<br><br>
 		</div>
 
 		<div v-if="noHTML5" id="browser">
-
 			<h2>{{ $t('browser_cannot_display') }}</h2>
 			<br>
 			<img src="image/notgood.png">
-			<br>
-			<br>
+			<br><br>
 			<h4><i>{{ $t('update_browser') }}</i></h4>
 			<br>
-
 			<div id="browser-list">
 				<div class="browser">
 					<a target="blank" href="https://www.google.com/intl/fr_fr/chrome/browser/">
@@ -108,14 +104,13 @@
 					</a>
 				</div>
 			</div>
-
 			<br>
-			<a href="/report/{fight.id}">
+			<router-link :to="'/report/' + fight.id">
 				<div class="button">{{ $t('see_report') }}</div>
-			</a>
+			</router-link>
 		</div>
 
-		<div id="game">
+		<div id="game" v-show="loaded">
 			<div id="layers" :style="{height: height - 36 + 'px'}">
 				<canvas id="bg-canvas"></canvas>
 				<canvas id="game-canvas"></canvas>
@@ -196,7 +191,7 @@
 		canvas: any
 		noHTML5: boolean = false
 		game: Game = new Game()
-		queue: any
+		queue: any = null
 		getDelay: number = 1000
 		loaded: boolean = false
 		error: boolean = false
@@ -227,8 +222,6 @@
 		}
 
 		mounted() {
-			console.log("player mounted")
-
 			this.canvas = document.getElementById('game-canvas')
 			// Check the element is in the DOM and the browser supports canvas
 			if (!this.canvas.getContext) {
@@ -237,13 +230,6 @@
 				return
 			}
 			this.game.ctx = this.canvas.getContext('2d')
-
-			// if (this.fight.status == 1) {
-			// 	this.game.init(this.fight)
-			// } else {
-			// 	this.loaded = true
-			// 	this.getFight()
-			// }
 		}
 
 		// if ($("#fight-page .chat-input-content").is(":focus")) return null
@@ -275,13 +261,6 @@
 		// 	event.preventDefault()
 		// }
 
-		fightLoaded(fight: Fight) {
-			console.log("Fight loaded")
-			this.$emit('fight', fight)
-			this.game.init(fight.data)
-			this.resize()
-		}
-
 		beforeDestroy() {
 			console.log("Destroy player")
 			this.game.pause()
@@ -293,23 +272,17 @@
 					// this.game.error()
 					return
 				}
-				if (data.data.fight.status >= 1) {
-					this.fightLoaded(data.data.fight)
+				const fight = data.data.fight
+				this.$emit('fight', fight)
+				if (fight.status >= 1) {
+					this.game.init(fight.data)
+					this.loaded = true
+					this.resize()
 				} else {
-					this.queue = data.data.fight.queue
-					// if (queue.position == -1 || queue.position == 0) {
-					// $('.queue-position').show().text(_.lang.get('fight', 'generating'))
-					// } else {
-					// var message = _.lang.get('fight', 'position_in_queue', queue.position + 1, queue.total)
-					// $('.queue-position').show().text(message)
-					// }
-					if (!this.loaded) {
-						return
-					}
+					this.queue = fight.queue
+					if (this.loaded) { return }
 					setTimeout(() => {
-						if (!this.game.initialized && !this.error) {
-							this.getFight()
-						}
+						this.getFight()
 					}, this.getDelay)
 					this.getDelay += 500
 					this.getDelay = Math.min(4000, this.getDelay)
@@ -345,7 +318,6 @@
 
 <style lang="scss" scoped>
 	#game {
-		// display: none;
 		width: 100%;
 	}
 	#layers {
@@ -404,5 +376,22 @@
 	}
 	#controls.large > div {
 		line-height: 50px;
+	}
+	#loading {
+		height: 100%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+	.loading-fight {
+		padding: 10px;
+		padding-bottom: 20px;
+		font-size: 18px;
+		text-align: center;
+	}
+	.queue-position {
+		padding: 6px;
+		font-size: 18px;
+		color: #aaa;
 	}
 </style>
