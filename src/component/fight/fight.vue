@@ -192,21 +192,12 @@
 	#app.app #fight-page .page-bar .info {
 		display: none;
 	}
-	#fight-page #loading {
-		text-align: center;
-	}
 	#fight-page #loading table {
 		width: 100%;
 		height: 400px;
 	}
 	#fight-page #loading table td {
 		text-align: center;
-	}
-	#fight-page #loading .loader {
-		vertical-align: middle;
-		margin-right: 5px;
-		width: 40px;
-		animation: rotation 2s infinite linear;
 	}
 	@keyframes rotation {
 		from {transform: rotate(0deg);}
@@ -247,17 +238,6 @@
 	}
 	#fight-page .vs {
 		font-size: 30px;
-	}
-	#fight-page .loading-fight {
-		padding: 10px;
-		padding-bottom: 20px;
-		font-size: 18px;
-	}
-	#fight-page .queue-position {
-		display: none;
-		padding: 6px;
-		font-size: 18px;
-		color: #aaa;
 	}
 	#fight-page .leek .name {
 		font-size: 18px;
