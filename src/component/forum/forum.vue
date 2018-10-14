@@ -167,11 +167,8 @@
 </script>
 
 <style lang="scss" scoped>
-	.panel:nth-of-type(n + 3) {
-		margin-top: 12px;
-	}
 	.panel:last-child {
-		margin-bottom: 7px;
+		margin-bottom: 0;
 	}
 	#forum-language {
 		display: inline-block;
@@ -288,9 +285,6 @@
 		margin-left: 4px;
 		margin-right: -10px;
 		margin-top: -2px;
-	}
-	#chat .languages {
-		padding: 0 5px;
 	}
 	.flag {
 		height: 28px;
