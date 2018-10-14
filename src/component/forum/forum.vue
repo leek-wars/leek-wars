@@ -36,21 +36,19 @@
 			<div class="content">
 				<loader v-if="!categories" />
 				<template v-else>
-					<table class="header category">
-						<tr>
-							<td class="seen"></td>
-							<td>{{ $t('category') }}</td>
-							<td class="num-topics">{{ $t('topics') }}</td>
-							<td class="num-messages">{{ $t('messages') }}</td>
-						</tr>
-					</table>
+					<div v-if="!LeekWars.mobile" class="header category">
+						<div class="seen"></div>
+						<div class="text">{{ $t('category') }}</div>
+						<div class="num-topics">{{ $t('topics') }}</div>
+						<div class="num-messages">{{ $t('messages') }}</div>
+					</div>
 					<router-link v-for="category in categories" :key="category.id" :to="'/forum/category-' + category.id">
-						<table v-ripple class="category"><tr>
-							<td class="seen">
+						<div v-ripple class="category">
+							<div class="seen">
 								<img v-if="category.seen" src="/image/forum_seen.png">
 								<img v-else src="/image/forum_unseen.png">
-							</td>
-							<td>
+							</div>
+							<div class="text">
 								<template v-if="category.type == 'normal'">
 									<div class="title">{{ $t('category_' + category.name) }}</div>
 									<div class="description">{{ $t('category_' + category.name + '_desc') }}</div>
@@ -59,10 +57,14 @@
 									<div class="title">{{ category.name }}</div>
 									<div class="description">{{ $t('team_forum_description') }}</div>
 								</div>
-							</td>
-							<td class="num-topics">{{ category.topics | number }}</td>
-							<td class="num-messages">{{ category.messages | number }}</td>
-						</tr></table>
+								<div class="mobile-info" v-if="LeekWars.mobile">
+									<span>{{ $t('n_topics', [LeekWars.formatNumber(category.topics)]) }} &nbsp;</span>
+									<span>{{ $t('n_messages', [LeekWars.formatNumber(category.messages)]) }}</span>
+								</div>
+							</div>
+							<div v-if="!LeekWars.mobile" class="num-topics">{{ category.topics | number }}</div>
+							<div v-if="!LeekWars.mobile" class="num-messages">{{ category.messages | number }}</div>
+						</div>
 					</router-link>
 				</template>
 			</div>
@@ -204,8 +206,10 @@
 	.category {
 		width: 100%;
 		margin-bottom: 5px;
+		display: flex;
+		align-items: center;
 	}
-	.category td {
+	.category > div {
 		padding: 10px;
 	}
 	.category:not(.header) {
@@ -224,6 +228,9 @@
 	.category .seen img {
 		height: 40px;
 	}
+	.category .text {
+		flex: 1;
+	}
 	.category .title {
 		font-weight: 300;
 		font-size: 19px;
@@ -234,18 +241,18 @@
 		color: #999;
 		font-size: 14px;
 	}
+	.category .mobile-info {
+		margin-top: 5px;
+		color: #777;
+		font-size: 14px;
+	}
 	.category .num-topics {
-		width: 80px;
+		flex: 0 0 80px;
 		color: #777;
 		text-align: center;
 	}
 	.category .num-messages {
-		width: 80px;
-		color: #777;
-		text-align: center;
-	}
-	.category .last-message {
-		width: 80px;
+		flex: 0 0 80px;
 		color: #777;
 		text-align: center;
 	}
