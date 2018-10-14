@@ -61,7 +61,7 @@
 			<div class="column4">
 				<div class="panel">
 					<div class="content">
-						<h2>{{ $t('level_n', [team.level]) }}</h2>
+						<h4 class="level">{{ $t('level_n', [team.level]) }}</h4>
 						<v-tooltip :open-delay="0" :close-delay="0" bottom>
 							<div id="bar" slot="activator">
 								<span id="xp-bar" :class="{blue: max_level}" :style="{width: xp_bar_width + '%'}" class="striked"></span>
@@ -793,6 +793,9 @@
 </script>
 
 <style lang="scss" scoped>
+	.level {
+		font-size: 20px;
+	}
 	#opened-button td {
 		vertical-align: top;
 	}
