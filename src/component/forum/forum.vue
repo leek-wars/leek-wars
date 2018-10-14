@@ -3,8 +3,8 @@
 		<div class="page-header page-bar">
 			<div>
 				<h1>{{ $t('title') }}</h1>
-				<v-menu id="forum-language" offset-y>
-					<div slot="activator" class="info">
+				<v-menu id="forum-language" offset-y class="info">
+					<div slot="activator">
 						<img :src="forumLanguage.flag" class="flag">
 						<img width="10" src="/image/selector.png">
 					</div>
