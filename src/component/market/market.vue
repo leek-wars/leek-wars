@@ -309,7 +309,7 @@
 				this.$router.push('/market')
 			})
 		}
-		@Watch('$route.params.item')
+		@Watch('$route.params.item', {immediate: true})
 		update() {
 			const item = this.$route.params.item
 			if (item) {
@@ -318,9 +318,10 @@
 				LeekWars.splitShowContent()
 			} else {
 				this.selectedItem = null
-				LeekWars.setTitle(this.$t("title"))
+				LeekWars.setTitle(this.$t('market.title'))
 				LeekWars.splitShowList()
 			}
+			LeekWars.setActions([{icon: 'account_balance', click: () => this.$router.push('/bank')}])
 		}
 		openBuyHabs() {
 			if (this.selectedItem && this.selectedItem.price_habs < this.$store.state.farmer.habs) {
