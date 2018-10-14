@@ -41,6 +41,8 @@
 	"loading_chat": "Loading chat...",
 	"lock": "Lock",
 	"messages": "Messages",
+	"n_topics": "{0} topics",
+	"n_messages": "{0} messages",
 	"pin": "Pin",
 	"send": "Send",
 	"solved": "Solved",

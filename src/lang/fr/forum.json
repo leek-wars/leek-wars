@@ -41,6 +41,8 @@
 	"loading_chat": "Chargement du chat...",
 	"lock": "Verrouiller",
 	"messages": "Messages",
+	"n_topics": "{0} sujets",
+	"n_messages": "{0} messages",
 	"pin": "Accrocher",
 	"send": "Envoyer",
 	"solved": "Résolu",
