@@ -22,7 +22,7 @@
 
 		<lw-bar v-if="LeekWars.mobile" />
 		
-		<div id="big-leeks" v-if="!LeekWars.mobile">
+		<div v-if="!LeekWars.mobile" id="big-leeks">
 			<div class="wrapper">
 				<img id="big-leek-1" src="/image/big_leek_1_white.png">
 				<img id="big-leek-2" src="/image/big_leek_2_white.png">
