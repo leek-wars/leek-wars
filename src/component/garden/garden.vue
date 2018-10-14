@@ -1,9 +1,7 @@
 <template lang="html">
-	<div id="garden-page">
+	<div>
 		<div class="page-header page-bar">
-
 			<h1>{{ $t('title') }}</h1>
-
 			<div v-if="garden" class="tabs">
 				<v-tooltip :open-delay="0" :close-delay="0" bottom>
 					<div slot="activator" class="tab action hidden">
@@ -16,20 +14,15 @@
 				</v-tooltip>
 			</div>
 		</div>
-
 		<div v-show="!LeekWars.mobile || !LeekWars.splitBack" class="column3">
-
-			<div id="garden-left" class="panel">
-
+			<div class="panel garden-left">
 				<div class="content">
-
 					<template v-if="category === 'challenge'">
-						<div id="tab-solo" class="tab active enabled router-link-active">
+						<div class="tab active enabled router-link-active">
 							<h2>{{ $t('challenge') }}</h2>
 							<span class="fights"><img src="/image/icon/grey/garden.png"> {{ challengeFights }}</span>
 						</div>
 					</template>
-
 					<div v-else>
 						<router-link v-ripple to="/garden/solo" class="tab enabled">
 							<h2>{{ $t('category_solo_fight') }}</h2>
@@ -37,7 +30,6 @@
 							<img class="sword" src="/image/icon/grey/garden.png">
 							<img class="player" src="/image/player.png">
 						</router-link>
-
 						<v-tooltip :open-delay="0" :close-delay="0" :disabled="farmerEnabled" bottom>
 							<router-link v-ripple slot="activator" :class="{ enabled: farmerEnabled }" to="/garden/farmer" class="tab">
 								<h2>{{ $t('category_farmer_fight') }}</h2>
@@ -71,42 +63,38 @@
 		</div>
 	
 		<div v-show="!LeekWars.mobile || LeekWars.splitBack" class="column9">
-			<div id="garden-right" class="panel">
+			<div class="panel garden-right">
 				<div class="content">
-
 					<loader v-if="!garden" />
 					<template v-else>
 						<div v-if="category === 'challenge'">
-							<div id="garden-challenge">
-								<template v-if="challengeType == 'leek'">
-									<router-link v-for="leek in $store.state.farmer.leeks" :key="leek.id" :to="'/garden/challenge/leek/' + challengeTarget + '/' + leek.id" class="my-leek">
-										<garden-leek :leek="leek" />
-									</router-link>
-									<div class="versus">VS</div>
-									<div id="enemies">
-										<garden-leek :leek="challengeLeekTarget" @click.native="startLeekChallenge" />
-									</div>
-									<template v-if="challengeFights == 0">
-										<br>
-										<img src="/image/notgood.png"><br>
-										<h3>{{ $t('no_more_fights') }}</h3>
-									</template>
+							<template v-if="challengeType == 'leek'">
+								<router-link v-for="leek in $store.state.farmer.leeks" :key="leek.id" :to="'/garden/challenge/leek/' + challengeTarget + '/' + leek.id" class="my-leek">
+									<garden-leek :leek="leek" />
+								</router-link>
+								<div class="versus">VS</div>
+								<div class="enemies">
+									<garden-leek :leek="challengeLeekTarget" @click.native="startLeekChallenge" />
+								</div>
+								<template v-if="challengeFights == 0">
+									<br>
+									<img src="/image/notgood.png"><br>
+									<h3>{{ $t('no_more_fights') }}</h3>
 								</template>
-								<template v-else>
-									<garden-farmer :farmer="$store.state.farmer" />
-									<div class="versus">VS</div>
-									<div class="enemies">
-										<loader v-if="!challengeFarmerTarget" />
-										<div v-else class="opponents">
-											<garden-farmer :farmer="challengeFarmerTarget" @click.native="startFarmerChallenge" />
-										</div>
-										<!-- <div class='no-opponents'>@include('no_opponents')</div> -->
-										<!-- <div class='no-more-fights'>@include('no_more_fights')</div> -->
+							</template>
+							<template v-else>
+								<garden-farmer :farmer="$store.state.farmer" />
+								<div class="versus">VS</div>
+								<div class="enemies">
+									<loader v-if="!challengeFarmerTarget" />
+									<div v-else class="opponents">
+										<garden-farmer :farmer="challengeFarmerTarget" @click.native="startFarmerChallenge" />
 									</div>
-								</template>
-							</div>
+									<!-- <div class='no-opponents'>@include('no_opponents')</div> -->
+									<!-- <div class='no-more-fights'>@include('no_more_fights')</div> -->
+								</div>
+							</template>
 						</div>
-
 						<div v-else>
 							<div v-if="category == 'solo'">
 								<router-link v-for="leek in $store.state.farmer.leeks" :key="leek.id" :to="'/garden/solo/' + leek.id" class="my-leek">
@@ -122,7 +110,6 @@
 								<!-- <div class='no-more-fights'>@include('no_more_fights')</div> -->
 								</div>
 							</div>
-
 							<div v-if="category == 'farmer'">
 								<garden-farmer :farmer="$store.state.farmer" class="my-farmer" />
 								<div class="versus">VS</div>
@@ -135,7 +122,6 @@
 								<!-- <div class='no-more-fights'>@include('no_more_fights')</div> -->
 								</div>
 							</div>
-
 							<div v-if="category == 'team'">
 								<router-link v-for="composition in garden.my_compositions" :key="composition.id" :to="'/garden/team/' + composition.id" class="composition-wrapper my-composition">
 									<garden-compo :compo="composition" />
@@ -153,7 +139,6 @@
 								<!-- <div class='no-more-fights'>@include('no_more_fights')</div> -->
 								</div>
 							</div>
-
 							<div v-if="category == 'battle-royale'">
 								<div v-if="!LeekWars.battleRoyale.enabled">
 									<v-tooltip v-for="leek in $store.state.farmer.leeks" :key="leek.id" :open-delay="0" :close-delay="0" :disabled="leek.level >= 50" bottom>
@@ -203,7 +188,6 @@
 	<h4>{{ $t('leek_ai_invalid') }}</h4>
 	@endview
 	-->
-
 </template>
 
 <script lang="ts">
@@ -472,39 +456,41 @@
 </script>
 
 <style lang="scss" scoped>
-	#garden-left .content {
-		padding: 5px;
-	}
-	#garden-left .tab {
-		cursor: pointer;
-		text-align: center;
-		margin: 10px;
-		padding: 10px;
-		display: block;
-		border: 1px solid #ddd;
-		border-radius: 2px;
-	}
-	#garden-left .tab.router-link-active {
-		background: white;
-		box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
-	}
-	#garden-left .tab:not(.enabled) {
-		opacity: 0.5;
-	}
-	#garden-left .tab h2 {
-		margin: 0;
-		margin-bottom: 5px;
-		font-size: 20px;
+	.garden-left {
+		.content {
+			padding: 5px;
+		}
+		.tab {
+			cursor: pointer;
+			text-align: center;
+			margin: 10px;
+			padding: 10px;
+			display: block;
+			border: 1px solid #ddd;
+			border-radius: 2px;
+		}
+		.tab.router-link-active {
+			background: white;
+			box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
+		}
+		.tab:not(.enabled) {
+			opacity: 0.5;
+		}
+		.tab h2 {
+			margin: 0;
+			margin-bottom: 5px;
+			font-size: 20px;
+		}
 	}
 	.fights {
 		font-size: 20px;
 		color: #444;
-	}
-	.fights img {
-		vertical-align: middle;
-		margin-right: 3px;
-		margin-bottom: 4px;
-		width: 24px;
+		img {
+			vertical-align: middle;
+			margin-right: 3px;
+			margin-bottom: 4px;
+			width: 24px;
+		}
 	}
 	.player-count {
 		font-size: 20px;
@@ -521,7 +507,7 @@
 		vertical-align: middle;
 		margin-bottom: 7px;
 	}
-	#garden-right {
+	.garden-right {
 		vertical-align: top;
 		text-align: center;
 	}
@@ -538,29 +524,17 @@
 		padding: 10px 0;
 		border: 1px solid rgba(0, 0, 0, 0.1);
 	}
-
-	.leek:hover,
-	.my-farmer,
-	.composition-wrapper:hover,
-	.opponents .farmer:hover {
+	.leek:hover, .my-farmer, .composition-wrapper:hover, .opponents .farmer:hover {
 		background-color: white;
 		box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
 	}
 	a.my-leek:not(.router-link-active) {
 		opacity: 0.5;
 	}
-	a.my-leek.router-link-active .leek,
-	a.my-composition.router-link-active,
-	{
+	a.my-leek.router-link-active .leek, a.my-composition.router-link-active {
 		background-color: white;
 		box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
 	}
-
-	.level {
-		color: #aaa;
-		margin-bottom: 6px;
-	}
-
 	>>> .talent {
 		font-size: 22px;
 		color: #555;
@@ -568,25 +542,12 @@
 		font-weight: 300;
 		margin: 3px;
 	}
-
-	.myleek:not(.selected), #my-compos .compo:not(.selected) {
-		opacity: 0.4;
-	}
-
-	.title {
-		margin-bottom: 10px;
-	}
-	#app.app .title {
-		display: none;
-	}
-
 	.versus {
 		font-size: 25px;
 		font-weight: bold;
 		margin: 10px;
 		color: #666;
 	}
-
 	.enemies .opponents {
 		min-height: 250px;
 	}
