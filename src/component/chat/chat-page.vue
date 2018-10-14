@@ -47,8 +47,14 @@
 </script>
 
 <style lang="scss" scoped>
+	.panel {
+		margin-bottom: 0px;
+	}
 	.chat {
-		height: 700px;
+		height: calc(100vh - 128px);
+	}
+	#app.app .chat {
+		height: calc(100vh - 56px);
 	}
 	h1 .language-button {
 		height: 28px;
