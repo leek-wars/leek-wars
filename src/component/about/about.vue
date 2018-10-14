@@ -17,15 +17,11 @@
 				<br>
 				<h2 class="title">Leek Wars</h2>
 				<h4>{{ $t('version_n', [version]) }}</h4>
-		
 				<br>
-		
-				<a href="https://www.facebook.com/LeekWars"><img height="28" src="image/about/facebook_like.png"></a>
-		
-				<!-- <a href="https://twitter.com/LeekWars" class="twitter-follow-button" data-show-count="false" data-size="large">Follow @LeekWars</a> -->
-
+				<a href="https://www.facebook.com/LeekWars">
+					<img height="28" src="image/about/facebook_like.png">
+				</a>
 				<gh-btns-star slug="leek-wars/leek-wars-client" show-count />
-
 				<iframe class="twitter-button" allowtransparency="true" frameborder="0" scrolling="no" src="//platform.twitter.com/widgets/follow_button.html?screen_name=LeekWars&size=l" width="250" height="28"></iframe>
 			</div>
 		</div>
@@ -132,7 +128,7 @@
 			</div>
 			<div class="content">
 				<p>{{ $t('tools_list') }}</p>
-				<div id="langages">
+				<div class="languages">
 					<a href="http://www.java.com/fr/about/" target="_blank">
 						<div class="item">
 							<img src="/image/about/java.png">
@@ -237,17 +233,17 @@
 		width: 100%;
 		max-width: 400px;
 	}
-	#langages {
+	.languages {
 		display: flex;
 		justify-content: center;
 		flex-wrap: wrap;
 	}
-	#langages .item {
+	.languages .item {
 		display: inline-block;
 		margin: 7px;
 		text-align: center;
 	}
-	#langages .item img {
+	.languages .item img {
 		width: 85px;
 	}
 	p {
