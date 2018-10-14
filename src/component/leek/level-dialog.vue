@@ -1,8 +1,8 @@
 <template>
 	<v-dialog :max-width="900">
-		<div class='title'>{#level_popup_title, leek.name, popup.level}</div>
+		<div class="title">{#level_popup_title, leek.name, popup.level}</div>
 
-		<div class='content level-popup'>
+		<div class="content level-popup">
 
 			<div v-if="leek.level == 301">
 				<h2>{{ $t('popup_level_301_title') }}</h2>
@@ -10,25 +10,25 @@
 				<div>{{ $t('popup_level_301_message') }}</div>
 				<br>
 				<center>
-					<img id='popup-potion' width='100' src='/image/potion/skin_gold.png'>
+					<img id="popup-potion" width="100" src="/image/potion/skin_gold.png">
 					&nbsp;&nbsp;&nbsp;&nbsp;
-					<img id='popup-crown' src='/image/hat/crown.png'>
+					<img id="popup-crown" src="/image/hat/crown.png">
 
-					<div id='tt_popup-crown' class='tooltip'><b>{#hat.crown}</b></div>
-					<div id='tt_popup-potion' class='tooltip'><b>{#potion.skin_gold}</b></div>
+					<div id="tt_popup-crown" class="tooltip"><b>{#hat.crown}</b></div>
+					<div id="tt_popup-potion" class="tooltip"><b>{#potion.skin_gold}</b></div>
 				</center>
 			</div>
 
-			<table class='gains-table'>
+			<table class="gains-table">
 				<tr>
-					<td class='leek-image'></td>
+					<td class="leek-image"></td>
 					<td>
-						<div class='gains'>
-							<div class='life'>
-								<img src='/image/icon_life.png'><span class='name'>{{ $t('life') }}</span> <b>+ {popup.gains.life}</b>
+						<div class="gains">
+							<div class="life">
+								<img src="/image/icon_life.png"><span class="name">{{ $t('life') }}</span> <b>+ {popup.gains.life}</b>
 							</div>
-							<div class='capital'>
-								<img src='/image/add.png'><span class='name'>{{ $t('capital') }}</span> <b>+ {popup.gains.capital}</b>
+							<div class="capital">
+								<img src="/image/add.png"><span class="name">{{ $t('capital') }}</span> <b>+ {popup.gains.capital}</b>
 							</div>
 						</div>
 					</td>
@@ -36,39 +36,39 @@
 			</table>
 			<br><br>
 
-			<div v-if='popup.weapons.length + popup.chips.length + popup.functions.length == 0'>
+			<div v-if="popup.weapons.length + popup.chips.length + popup.functions.length == 0">
 				<center>{{ $t('level_popup_no_news') }}</center>
 			</div>
 			<div v-else>
-				<template v-if='popup.weapons.length > 0'>
+				<template v-if="popup.weapons.length > 0">
 					<h2>{{ $t('new_weapons') }}</h2>
-					<div class='available-market'>{{ $t('available_on_market') }}</div>
+					<div class="available-market">{{ $t('available_on_market') }}</div>
 					@foreach (weapon in popup.weapons)
-						<div class='weapon'>
-							<img src='/image/weapon/{weapon}.png'><br>
-							<div class='name'>{_.lang.get('weapon', weapon)}</div>
-						</div>
+					<div class="weapon">
+						<img src="/image/weapon/{weapon}.png"><br>
+						<div class="name">{_.lang.get('weapon', weapon)}</div>
+					</div>
 					@end
 				</template>
-				<template v-if='popup.chips.length > 0'>
+				<template v-if="popup.chips.length > 0">
 					<h2>{{ $t('new_chips') }}</h2>
-					<div class='available-market'>{{ $t('available_on_market') }}</div>
+					<div class="available-market">{{ $t('available_on_market') }}</div>
 					@foreach (chip in popup.chips)
-						<div class='weapon'>
-							<img src='/image/chip/small/{chip}.png'><br>
-							<div class='name'>{_.lang.get('chip', chip)}</div>
-						</div>
+					<div class="weapon">
+						<img src="/image/chip/small/{chip}.png"><br>
+						<div class="name">{_.lang.get('chip', chip)}</div>
+					</div>
 					@end
 				</template>
-				<template v-if='popup.functions.length > 0'>
+				<template v-if="popup.functions.length > 0">
 					<h2>{{ $t('new_functions') }}</h2>
 					<br>
-					<div v-for="fun in data.functions" :key="fun.name" class='function'>{{ fun.name }}</div>
+					<div v-for="fun in data.functions" :key="fun.name" class="function">{{ fun.name }}</div>
 				</template>
 			</div>
 		</div>
-		<div class='actions'>
-			<div class='action dismiss'>{{ $t('ok') }}</div>
+		<div class="actions">
+			<div class="action dismiss">{{ $t('ok') }}</div>
 		</div>
 	</v-dialog>
 </template>

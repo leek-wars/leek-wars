@@ -35,7 +35,7 @@
 			</div>
 
 			<span v-if="$store.state.farmer && $store.state.farmer.leeks" class="leeks">
-				<router-link v-ripple v-for="leek in $store.state.farmer.leeks" :key="leek.id" :to="{ name: 'leek', params: { id: leek.id }}" class="section" :label="leek.capital || null">
+				<router-link v-ripple v-for="leek in $store.state.farmer.leeks" :key="leek.id" :to="{ name: 'leek', params: { id: leek.id }}" :label="leek.capital || null" class="section">
 					<div :leek="leek.id" :tab="'leek-' + leek.id" @click="clickItem">
 						<img src="/image/icon/house.png">
 						<div class="text">{{ leek.name }}</div>

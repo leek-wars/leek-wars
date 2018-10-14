@@ -1,41 +1,41 @@
 <template>
 	<v-dialog>
-		<div class='title'>Ajouter des points de capital</div>
+		<div class="title">Ajouter des points de capital</div>
 
-		<div class='content'>
+		<div class="content">
 
-			<center><div class='capital rounded4'></div></center>
+			<center><div class="capital rounded4"></div></center>
 
 			<div v-for="c in ['life', 'science', 'strength', 'magic', 'wisdom', 'frequency', 'agility', 'mp', 'resistance', 'tp']" :key="c" class="charac">
 				
-				<v-tooltip bottom :open-delay="0" :close-delay="0">
+				<v-tooltip :open-delay="0" :close-delay="0" bottom>
 					<img slot="activator" :src="'/image/charac/' + c + '.png'">
-					<b>{{ $t('leek.' + c) }}</b><br />
+					<b>{{ $t('leek.' + c) }}</b><br>
 					{{ $t('leek.' + c + '_description') }}
 				</v-tooltip>
 				<span :class="'stat color-' + c">{{ leek[c] }}</span>
-				<span class='sup'></span>
+				<span class="sup"></span>
 
-				<div class='add-wrapper'>
-					<v-tooltip bottom :open-delay="0" :close-delay="0">
-						<span slot="activator" class='add' q='1'></span>
+				<div class="add-wrapper">
+					<v-tooltip :open-delay="0" :close-delay="0" bottom>
+						<span slot="activator" class="add" q="1"></span>
 						{{ $t('leek.' + c + '_cost') }}
 					</v-tooltip>
-					<v-tooltip bottom :open-delay="0" :close-delay="0">
-						<span slot="activator" class='add' q='10'></span>
+					<v-tooltip :open-delay="0" :close-delay="0" bottom>
+						<span slot="activator" class="add" q="10"></span>
 						{{ $t('leek.' + c + '_cost_10') }}
 					</v-tooltip>
-					<v-tooltip bottom :open-delay="0" :close-delay="0">
-						<span slot="activator" class='add' q='100'></span>
+					<v-tooltip :open-delay="0" :close-delay="0" bottom>
+						<span slot="activator" class="add" q="100"></span>
 						{{ $t('leek.' + c + '_cost_100') }}
 					</v-tooltip>
 				</div>
 			</div>
 		</div>
-		<div class='actions'>
-			<div class='action dismiss'>{{ $t('cancel') }}</div>
-			<div class='action reset'>{{ $t('reset') }}</div>
-			<div class='action validate green'>{{ $t('validate') }}</div>
+		<div class="actions">
+			<div class="action dismiss">{{ $t('cancel') }}</div>
+			<div class="action reset">{{ $t('reset') }}</div>
+			<div class="action validate green">{{ $t('validate') }}</div>
 		</div>
 	</v-dialog>
 </template>
