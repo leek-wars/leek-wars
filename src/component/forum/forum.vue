@@ -144,6 +144,10 @@
 				LeekWars.setSubTitle(this.$t('forum.connected_farmers_subtitle', [data.data.count]))
 			})
 			LeekWars.setTitle(this.$t('forum.title'))
+			LeekWars.setActions([
+				{icon: 'chat_bubble', click: () => this.$router.push('/chat')},
+				{icon: 'search', click: () => this.$router.push('/search')}
+			])
 		}
 		setForumLanguage(language: Language) {
 			this.forumLanguage = language
