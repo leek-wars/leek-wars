@@ -3,7 +3,7 @@
 		<loader v-if="channel && !$store.state.chat[channel]" />
 		<div v-autostopscroll v-else-if="channel && $store.state.chat[channel].messages.length" ref="messages" class="messages">
 			<div v-for="(message, m) in $store.state.chat[channel].messages" :key="m" class="message">
-				<router-link :to="'/farmer/' + message.author.id">
+				<router-link :to="'/farmer/' + message.author.id" class="avatar-wrapper">
 					<avatar :farmer="message.author" />
 				</router-link>
 				<div class="bubble">
@@ -218,6 +218,10 @@
 	}
 	.message a {
 		color: #aaa;
+	}
+	.avatar-wrapper {
+		position: sticky;
+		top: 8px;
 	}
 	.avatar {
 		width: 42px;
