@@ -80,7 +80,7 @@
 		queryLower: string = ''
 		farmer: string = ''
 		page: number = 1
-		pages: number = 1
+		pages: number = 0
 		category: number = -1
 		results: any[] | null = null
 		categories: any[] = []
@@ -95,7 +95,7 @@
 
 		@Watch('$route.params', {immediate: true})
 		update() {
-			this.query = this.$route.params.query
+			this.query = this.$route.params.query || ''
 			this.queryLower = this.query.toLowerCase()
 			if (this.query === '-') { this.query = '' }
 			this.farmer = this.$route.params.farmer || ''
@@ -105,10 +105,15 @@
 			this.category = (category === '-' || !category) ? -1 : parseInt(category, 10)
 
 			this.results = null
-			LeekWars.get<any>('forum/search/' + this.query + '/' + this.farmer + '/' + this.category + '/' + this.page + '/' + this.$store.state.token).then((data) => {
-				this.results = data.data.results
-				this.pages = data.data.pages
-			})
+			if (this.query) {
+				LeekWars.get<any>('forum/search/' + this.query + '/' + this.farmer + '/' + this.category + '/' + this.page + '/' + this.$store.state.token).then((data) => {
+					this.results = data.data.results
+					this.pages = data.data.pages
+				})
+			} else {
+				this.results = []
+				this.pages = 0
+			}
 		}
 		highlight(text: string, query: string) {
 			const pos = text.toLowerCase().indexOf(query)
