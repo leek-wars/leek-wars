@@ -131,6 +131,7 @@
 				let aborted = false
 				const menu_element = document.querySelector('.menu') as HTMLElement
 				const center_element = document.getElementById('center') as HTMLElement
+				const dark_element = document.getElementById('dark') as HTMLElement
 				let d = 0
 				let lastT = 0
 				window.addEventListener('pointerdown', (e) => {
@@ -150,6 +151,7 @@
 					if (!enabled && Math.abs(downX - x) > 10 && menu_visible === x < downX) {
 						menu_element.style.transition = 'transform ease 100ms'
 						center_element.style.transition = 'transform ease 100ms'
+						LeekWars.dark = 0.001
 						enabled = true
 					}
 					if (Date.now() - lastT < 50) { return }
@@ -162,7 +164,7 @@
 						}
 						menu_element.style.transform = 'translateX(' + (-W + d) + 'px)'
 						center_element.style.transform = 'translateX(' + d + 'px)'
-						LeekWars.dark = 0.6 * (d / W)
+						dark_element.style.opacity = '' + (0.6 * (d / W))
 					}
 				})
 				document.addEventListener('touchend', (e) => {

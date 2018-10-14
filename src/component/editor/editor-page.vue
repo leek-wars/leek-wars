@@ -948,6 +948,9 @@
 	#editor-left {
 		height: calc(100vh - 140px);
 	}
+	#app.app #editor-left {
+		height: calc(100vh - 56px);
+	}
 	#editor-left .content {
 		height: 100%;
 		display: flex;
@@ -958,6 +961,9 @@
 	}
 	.column9 .content {
 		height: calc(100vh - 140px);
+	}
+	#app.app .column9 .content {
+		height: calc(100vh - 56px);
 	}
 	#editor-page .editor-loader {
 		position: absolute;

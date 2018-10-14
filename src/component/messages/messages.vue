@@ -25,7 +25,7 @@
 			</div>
 		</div>
 		<div v-show="!LeekWars.mobile || LeekWars.splitBack" class="column8">
-			<div class="panel last">
+			<div class="panel">
 				<div classs="content">
 					<chat v-if="currentConversation && currentConversation.id !== 0" :channel="'pm-' + currentConversation.id" @send="sendMessage" />
 					<chat v-else @send="sendMessage" />
@@ -174,10 +174,13 @@
 </script>
 
 <style lang="scss" scoped>
+	.panel {
+		margin-bottom: 0;
+	}
 	.conversations {
 		overflow-y: auto;
 		overflow-x: hidden;
-		height: calc(100vh - 138px);
+		height: calc(100vh - 128px);
 	}
 	#app.app .conversations {
 		height: calc(100vh - 56px);

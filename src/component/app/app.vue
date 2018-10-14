@@ -240,7 +240,7 @@
 		margin: 0;
 		font-family: "Roboto", sans-serif;
 		font-size: 15px;
-		overflow-y: scroll;
+		overflow-y: auto;
 		overflow-x: hidden;
 		color: #111;
 		background: #333;
@@ -457,11 +457,6 @@
 		display: block;
 	}
 
-	#app.app .column3, #app.app .column9,
-	#app.app .split-list, #app.app .split-content {
-		overflow-y: auto;
-	}
-
 	#center {
 		padding: 0 20px;
 	}
@@ -471,8 +466,8 @@
 		margin-left: 170px;
 	}
 
-	#app.menu-collapsed #center,
-	#app.menu-collapsed #footer {
+	#app.menu-collapsed:not(.app) #center,
+	#app.menu-collapsed:not(.app) #footer {
 		margin-left: 68px;
 	}
 
@@ -1441,8 +1436,8 @@
 	}
 
 	@media screen and (min-width: 1600px) {
-		#app.connected:not(.social-collapsed) #center,
-		#app.connected:not(.social-collapsed) #footer
+		#app.connected:not(.social-collapsed):not(.app) #center,
+		#app.connected:not(.social-collapsed):not(.app) #footer
 		{
 			margin-right: 400px;
 		}
@@ -1483,7 +1478,7 @@
 	#app.app #center {
 		margin: 0;
 		padding: 0;
-		overflow-y: scroll;
+		overflow-y: auto;
 	}
 
 	@media screen and (max-width: 999px) {
@@ -1499,14 +1494,6 @@
 		}
 		#header-left {
 			padding: 0;
-		}
-		#social-panel {
-			display: none;
-		}
-		#app.connected #center,
-		#app.connected #footer
-		{
-			margin-left: 68px;
 		}
 		.menu {
 			width: 68px;
@@ -1650,9 +1637,9 @@
 		font-family: monospace;
 		white-space: pre;
 	}
-	#app.app pre {
+	#app.app pre.code {
 		margin-left: -15px;
-		margin-left: -20px;
+		margin-right: -20px;
 	}
 	pre.code {
 		overflow: auto;
