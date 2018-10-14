@@ -236,7 +236,6 @@
 					this.rankings = data.data.rankings
 					this.ranking = []
 					// LW.setTitle(_.lang.get('ranking', 'title'), _.lang.get('ranking', 'fun'))
-					// LW.pages.ranking.search()
 				})
 			} else {
 				this.order = 'order' in this.$route.params ? this.$route.params.order : 'talent'
@@ -271,7 +270,8 @@
 					this.fun = false
 					this.pages = data.data.pages
 					this.ranking = ranking
-					// LW.setTitle(_.lang.get('ranking', 'title'), _.lang.get('ranking', 'n_' + category + 's', data.total))
+					LeekWars.setActions([{icon: 'search', click: () => this.openSearch()}])
+					LeekWars.setTitle(this.$t('ranking.title'), this.$t('ranking.n_' + this.category + 's', [data.data.total]))
 				})
 			}
 		}
