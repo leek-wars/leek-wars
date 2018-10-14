@@ -129,9 +129,10 @@
 			<div class="title">{{ $t('settings') }}</div>
 			<div class="content settings-dialog">
 				<div class="title">{{ $t('display') }}</div>
-
-				<v-switch v-model="enlargeWindow" :label="$t('enlarge_window')" hide-details />
-				<br><br>
+				<template v-if="!LeekWars.mobile">
+					<v-switch v-model="enlargeWindow" :label="$t('enlarge_window')" hide-details />
+					<br><br>
+				</template>
 				{{ $t('font_size') }} : <input v-model="fontSize" type="number" min="6" max="30">
 				<br>
 				{{ $t('line_height') }} : <input v-model="lineHeight" type="number" min="10" max="50">
