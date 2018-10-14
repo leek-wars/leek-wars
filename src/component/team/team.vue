@@ -850,14 +850,16 @@
 		margin-top: 5px;
 		background: white;
 		border: 1px solid #ddd;
-		position:relative;
+		position: relative;
+		border-radius: 5px;
 	}
 	#xp-bar {
 		height: 10px;
 		background: #30BB00;
 		display: inline-block;
 		vertical-align: top;
-		position:absolute;
+		position: absolute;
+		border-radius: 5px;
 	}
 	#xp-bar.blue {
 		background: #008FBB;
