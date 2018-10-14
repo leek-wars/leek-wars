@@ -22,7 +22,7 @@
 
 		<lw-bar v-if="LeekWars.mobile" />
 		
-		<div id="big-leeks">
+		<div id="big-leeks" v-if="!LeekWars.mobile">
 			<div class="wrapper">
 				<img id="big-leek-1" src="/image/big_leek_1_white.png">
 				<img id="big-leek-2" src="/image/big_leek_2_white.png">
@@ -31,9 +31,7 @@
 		
 		<div id="center">
 			<div id="wrapper">
-				
 				<lw-header />
-		
 				<div id="page-wrapper">
 					<div id="page">
 						<router-view />
@@ -387,21 +385,15 @@
 	#app.app #console {
 		display: none;
 	}
-
+	
 	#app.app #page {
 		padding-bottom: 0;
 	}
 	#app.app.connected #header {
 		display: none;
 	}
-	#app.app.connected #center {
-		margin-left: auto;
-	}
 	#app.app #page-wrapper {
 		padding: 0;
-	}
-	#app.connected.app #page-wrapper {
-		padding-top: 56px;
 	}
 	#app.app .panel {
 		border-radius: 0;
@@ -497,9 +489,6 @@
 		bottom: 0;
 		height: 100px;
 	}
-	#app.app #big-leeks {
-		display: none;
-	}
 	#big-leeks .wrapper {
 		position: relative;
 		max-width: 1000px;
@@ -570,9 +559,6 @@
 	}
 	.panel.first {
 		border-top-left-radius: 0px;
-	}
-	#app.app .panel.last {
-		margin-bottom: 0;
 	}
 	.panel.auto {
 		padding: 20px;
@@ -1488,10 +1474,16 @@
 			display: none;
 		}
 	}
-
+	#app.app {
+		display: flex;
+		flex-direction: column;
+		height: 100vh;
+		overflow-x: hidden;
+	}
 	#app.app #center {
 		margin: 0;
 		padding: 0;
+		overflow-y: scroll;
 	}
 
 	@media screen and (max-width: 999px) {

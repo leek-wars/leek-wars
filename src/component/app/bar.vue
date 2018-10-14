@@ -67,13 +67,8 @@
 <style lang="scss" scoped>
 	#app-bar {
 		display: block;
-		position: fixed;
-		height: 56px;
-		top: 0;
-		left: 0;
-		right: 0;
+		flex: 0 0 56px;
 		background: #4b9e06;
-		z-index: 100;
 		color: white;
 		line-height: 55px;
 		font-size: 18px;
