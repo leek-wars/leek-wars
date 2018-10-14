@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div v-show="!LeekWars.mobile">
 		<div v-if="$store.getters.connected" class="social-button" @click="toggleSocial">
 			<i v-if="LeekWars.socialCollapsed" class="icon material-icons">navigate_before</i>
 			<i v-else class="icon material-icons">navigate_next</i>

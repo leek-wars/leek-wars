@@ -141,10 +141,10 @@ const vueMain = new Vue({
 				event.preventDefault()
 			}
 		})
-		LeekWars.mobile = window.innerWidth < 600
+		LeekWars.mobile = window.innerWidth < 1000
 		window.addEventListener('resize', () => {
 			this.$emit('resize')
-			LeekWars.mobile = window.innerWidth < 600
+			LeekWars.mobile = window.innerWidth < 1000
 		})
 		window.addEventListener('focus', () => {
 			this.$emit('focus')
