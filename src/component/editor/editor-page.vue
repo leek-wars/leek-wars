@@ -3,7 +3,7 @@
 		<div class="page-header page-bar">
 			<div>
 				<h1>{{ $t('title') }}</h1>
-				<div class="info" v-if="currentAI">{{ currentAI.name }}</div>
+				<div v-if="currentAI" class="info">{{ currentAI.name }}</div>
 			</div>
 			<div class="tabs">
 				<div ref="addButton" :title="$t('new_desc')" class="action list tab" icon="add">
@@ -152,14 +152,14 @@
 		</v-dialog>
 
 		<v-dialog v-model="deleteDialog" :max-width="500">
-			<div v-if="currentType === 'ai' && currentAI" class='title'>{{ $t('delete_ai', [currentAI.name]) }}</div>
-			<div v-else-if="currentFolder" class='title'>{{ $t('delete_folder', [currentFolder.name]) }}</div>
+			<div v-if="currentType === 'ai' && currentAI" class="title">{{ $t('delete_ai', [currentAI.name]) }}</div>
+			<div v-else-if="currentFolder" class="title">{{ $t('delete_folder', [currentFolder.name]) }}</div>
 			<div class="content">
 				{{ $t('delete_warning') }}
 			</div>
 			<div class="actions">
 				<div @click="deleteDialog = false">{{ $t('delete_cancel') }}</div>
-				<div @click="deleteItem" class="red">{{ $t('delete_validate') }}</div>
+				<div class="red" @click="deleteItem">{{ $t('delete_validate') }}</div>
 			</div>
 		</v-dialog>
 	</div>

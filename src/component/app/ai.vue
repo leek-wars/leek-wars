@@ -1,5 +1,5 @@
 <template lang="html">
-	<div draggable='true' class='ai'>{{ ai.name }}</div>
+	<div draggable="true" class="ai">{{ ai.name }}</div>
 </template>
 
 <script lang="ts">

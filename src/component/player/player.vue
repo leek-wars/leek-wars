@@ -1,6 +1,6 @@
 <template lang="html">
 	<div id="player" :style="{width: width + 'px', height: height + 'px'}">
-		<div id="loading" v-if="!loaded">
+		<div v-if="!loaded" id="loading">
 			<!-- <template v-if='fight.type == FightType.BATTLE_ROYALE'>
 				@foreach (i : leek in fight.leeks1)
 					<div class='leek' leek='{leek.id}'>
@@ -42,10 +42,10 @@
 				</td>
 			</tr></table>
 			-->
-			<div class='loading-fight'>
+			<div class="loading-fight">
 				<loader />
 				{{ $t('fight.loading_fight') }}
-				<div class='queue-position' v-if="queue">
+				<div v-if="queue" class="queue-position">
 					<span v-if="queue.position == -1 || queue.position == 0">{{ $t('fight.generating') }}</span>
 					<span v-else>{{ $t('fight.position_in_queue', [queue.position + 1, queue.total]) }}</span>
 				</div>
@@ -110,7 +110,7 @@
 			</router-link>
 		</div>
 
-		<div id="game" v-show="loaded">
+		<div v-show="loaded" id="game">
 			<div id="layers" :style="{height: height - 36 + 'px'}">
 				<canvas id="bg-canvas"></canvas>
 				<canvas id="game-canvas"></canvas>
