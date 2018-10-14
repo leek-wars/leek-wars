@@ -13,11 +13,11 @@
 		</div>
 		<div class="actions-wrapper">
 			<div class="static-actions">
-				<div v-show="LeekWars.menuExpanded || $store.state.unreadMessages > 0" class="action header-button mobile messages-button" v-ripple @click="$router.push('/messages'); LeekWars.toggleMenu()">
+				<div v-ripple v-show="LeekWars.menuExpanded || $store.state.unreadMessages > 0" class="action header-button mobile messages-button" @click="$router.push('/messages'); LeekWars.toggleMenu()">
 					<i class="icon material-icons">chat</i>
 					<span v-show="$store.state.unreadMessages > 0" class="counter messages-counter">{{ $store.state.unreadMessages }}</span>
 				</div>
-				<div v-show="LeekWars.menuExpanded || $store.state.unreadNotifications > 0" class="action header-button mobile notifications-button" v-ripple>
+				<div v-ripple v-show="LeekWars.menuExpanded || $store.state.unreadNotifications > 0" class="action header-button mobile notifications-button">
 					<v-menu :close-on-content-click="false" :nudge-bottom="5" :min-width="400" :max-width="400" :max-height="400" bottom offset-y>
 						<div slot="activator" class="header-button notifications-button">
 							<i class="icon material-icons">info</i>

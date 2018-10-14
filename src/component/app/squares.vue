@@ -1,5 +1,5 @@
 <template>
-	<div class="squares" v-show="LeekWars.squares.squares.length">
+	<div v-show="LeekWars.squares.squares.length" class="squares">
 		<router-link v-for="square in LeekWars.squares.squares" :key="square.id" :to="square.link" class="square card">
 			<img :class="{padding: square.padding}" :src="square.image" class="image">
 			<div class="wrapper">
