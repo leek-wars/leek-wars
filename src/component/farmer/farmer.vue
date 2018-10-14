@@ -3,7 +3,7 @@
 		<div class="page-header page-bar">
 			<div>
 				<h1>{{ farmer ? farmer.name : '...' }}</h1>
-				<div id="state" class="info">
+				<div class="info state">
 					<span v-if="farmer && farmer.connected"><img src="/image/connected.png">{{ $t('connected') }}</span>
 					<span v-else><img src="/image/disconnected.png">{{ $t('disconnected') }}</span>
 				</div>
@@ -52,10 +52,10 @@
 		<div class="flex-container">
 			<div class="column4">
 				<div class="panel">
-					<div v-if="farmer" id="avatar-td" class="content">
+					<div v-if="farmer" class="content avatar-td">
 						<div v-if="myFarmer">
 							<v-tooltip :open-delay="0" :close-delay="0" bottom>
-								<div id="avatar-input" slot="activator">
+								<div slot="activator" class="avatar-input">
 									<input ref="avatarInput" type="file" @change="changeAvatar">
 									<avatar ref="avatar" :farmer="farmer" @click.native="$refs.avatarInput.click()" />
 								</div>
@@ -97,8 +97,8 @@
 			
 			<div class="column4">
 				<div class="panel">
-					<div v-if="farmer" id="stats" class="content">
-						<div v-if="farmer" class="talent-wrapper">
+					<div v-if="farmer" class="content stats">
+						<div class="talent-wrapper">
 							<v-tooltip bottom open-delay="0" close-delay="0">
 								<talent slot="activator" :talent="farmer.talent" />
 								<div>{{ $t('talent') }}</div>
@@ -113,7 +113,7 @@
 						</div>
 						
 						<v-tooltip bottom open-delay="0" close-delay="0">
-							<table id="fights" slot="activator">
+							<table slot="activator">
 								<tr>
 									<td class="big">{{ farmer.victories | number }}</td>
 									<td class="big">{{ farmer.draws | number }}</td>
@@ -138,19 +138,11 @@
 						</table>
 		
 						<div class="log-time grey">
-							<span v-if="$store.getters.connected && $store.state.farmer.moderator">
-								{{ $t('registered_the', [LeekWars.formatDateTime(farmer.register_date)]) }}
-							</span>
-							<span v-else>
-								{{ $t('registered_the', [LeekWars.formatDate(farmer.register_date)]) }}
-							</span>
+							<span v-if="$store.getters.connected && $store.state.farmer.moderator">{{ $t('registered_the', [LeekWars.formatDateTime(farmer.register_date)]) }}</span>
+							<span v-else>{{ $t('registered_the', [LeekWars.formatDate(farmer.register_date)]) }}</span>
 							<br>
-							<span v-if="farmer.connected">
-								{{ $t('connected') }}
-							</span>
-							<span v-else>
-								{{ $t('last_connection', [LeekWars.formatDuration(farmer.last_connection)]) }}
-							</span>
+							<span v-if="farmer.connected">{{ $t('connected') }}</span>
+							<span v-else>{{ $t('last_connection', [LeekWars.formatDuration(farmer.last_connection)]) }}</span>
 						</div>
 						<div class="grades">
 							<div v-if="farmer.admin" class="grade admin">{{ $t('admin') }}</div>
@@ -179,7 +171,7 @@
 			</div>
 			<div class="column4">
 				<div class="panel">
-					<div v-if="farmer" id="team" class="content center">
+					<div v-if="farmer" class="content team center">
 						<div v-if="farmer.team">
 							<router-link :to="'/team/' + farmer.team.id">
 								<emblem :team="farmer.team" />
@@ -190,7 +182,7 @@
 						</div>
 						<div v-else>
 							<div v-if="myFarmer">
-								<div id="create-team-button" class="button">{{ $t('create_team') }}</div>
+								<div class="button" @click="createTeamDialog = true">{{ $t('create_team') }}</div>
 								<div v-if="farmer.candidacy">
 									<br><br><br>
 									<a>{{ $t('candidacy_for_team', [farmer.candidacy.team_id, farmer.candidacy.team_name]) }}</a>
@@ -219,7 +211,7 @@
 						<img :src="'/image/' + (trophiesMode === 'grid' ? 'list' : 'grid') + '.png'" class="trophies-mode-button" @click="trophiesModeButton">
 					</div>
 				</div>
-				<div id="trophies" class="content">
+				<div class="content trophies">
 					<loader v-if="!trophies_list" />
 					<div v-if="farmer.trophies > 0 && trophies_list && trophies_grid">
 						<div v-show="trophiesMode == 'list'" class="list trophies-container">
@@ -231,7 +223,7 @@
 								<span v-if="myFarmer">
 									<br>{{ trophy.description }}
 								</span>
-								<br><span class="date">{{ LeekWars.formatDuration(trophy.date) }}</span>
+								<br><span class="trophy-date">{{ LeekWars.formatDuration(trophy.date) }}</span>
 							</v-tooltip>
 						</div>
 						<div v-show="trophiesMode == 'grid'" class="grid trophies-container">
@@ -278,7 +270,7 @@
 				<div class="header">
 					<h2>{{ $t('leeks') }}</h2>
 				</div>
-				<div v-if="farmer" id="leeks" class="content">
+				<div v-if="farmer" class="content">
 					<router-link v-for="leek in farmer.leeks" :key="leek.id" :to="'/leek/' + leek.id" class="leek">
 						<leek-image :leek="leek" :scale="0.9" />
 						<br>
@@ -292,7 +284,7 @@
 		</div>
 		<div v-if="farmer" class="flex-container">
 			<div class="column6">
-				<div v-if="farmer && farmer.fight_history.length > 0" id="history" class="panel">
+				<div v-if="farmer && farmer.fight_history.length > 0" class="panel">
 					<div class="header">
 						<h2>{{ $t('fights') }}</h2>
 						<div class="right">
@@ -309,11 +301,11 @@
 				</div>
 			</div>
 			<div class="column6">
-				<div v-if="farmer.tournaments.length > 0" id="tournament-history" class="panel">
+				<div v-if="farmer.tournaments.length > 0" class="panel">
 					<div class="header">
 						<h2>{{ $t('tournaments') }}</h2>
 					</div>
-					<div class="content tournament-history">
+					<div class="content history">
 						<div v-for="tournament in farmer.tournaments" :key="tournament.id" class="tournament-wrapper">
 							<tournament-history :tournament="tournament" />
 						</div>
@@ -325,7 +317,7 @@
 			<div class="header">
 				<h2>{{ $t('warnings') }}</h2>
 			</div>
-			<div id="warnings" class="content">
+			<div class="content warnings">
 				<h4 v-if="myFarmer" class="warning-title">{{ $tc('you_have_n_warnings', farmer.warnings.length, [farmer.warnings.length]) }}</h4>
 				<h4 v-else class="warning-title">{{ $tc('farmer_have_n_warnings', farmer.warnings.length, [farmer.warnings.length]) }}</h4>
 				<div v-for="(warning, w) in farmer.warnings" :key="w" class="warning card">
@@ -342,7 +334,7 @@
 		
 		<div class="page-footer page-bar">
 			<div class="tabs">
-				<div v-if="farmer && $store.getters.connected && !myFarmer && !farmer.admin" id="report-button-container">
+				<div v-if="farmer && $store.getters.connected && !myFarmer && !farmer.admin">
 					<div class="report-button tab" @click="reportDialog = true">
 						<img src="/image/icon/flag.png">
 						<span>{{ $t('report') }}</span>
@@ -628,7 +620,7 @@
 </script>
 
 <style lang="scss" scoped>
-	#state img {
+	.state img {
 		margin-right: 6px;
 		width: 20px;
 		margin-bottom: -3.5px;
@@ -640,14 +632,7 @@
 	#app.app .panel.first .content {
 		padding-top: 0;
 	}
-	#farmer-table {
-		width: 100%;
-		margin-top: 20px;
-	}
-	#farmer-table tr > td:nth-child(n+2) {
-		border-left: 2px solid #ddd;
-	}
-	#avatar-td {
+	.avatar-td {
 		text-align: center;
 		vertical-align: top;
 	}
@@ -655,12 +640,12 @@
 		width: 200px;
 		height: 200px;
 	}
-	#avatar-input {
+	.avatar-input {
 		cursor: pointer;
 		text-align: center;
-	}
-	#avatar-input input {
-		display: none;
+		input {
+			display: none;
+		}
 	}
 	.country.no {
 		font-style: italic;
@@ -731,16 +716,10 @@
 	.website-dialog input, .github-dialog input {
 		width: calc(100% - 10px);
 	}
-	#team img {
+	.team img {
 		width: 150px;
 		height: 150px;
 		border-radius: 2px;
-	}
-	#send-message {
-		margin-top: 10px;
-	}
-	#app.app #send-message {
-		display: none;
 	}
 	.talent-wrapper {
 		text-align: center;
@@ -754,101 +733,93 @@
 		margin-left: 5px;
 		color: #888;
 	}
-	#stats {
+	.stats {
 		vertical-align: top;
-	}
-	#stats .tournaments td {
-		padding: 0 10px;
-	}
-	#stats .small {
-		font-size: 13px;
-		vertical-align: top;
-	}
-	#stats table {
-		margin: 10px auto;
-	}
-	#stats tr > td:nth-child(n+2) {
-		border-left: 2px solid #ddd;
-	}
-	#stats td {
-		padding: 0 20px;
-		text-align: center;
-	}
-	#stats .big {
-		font-size: 22px;
-		font-weight: 300;
-		color: #555;
-	}
-	.grey {
-		color: #999;
-	}
-	#stats .log-time, #stats .godfather {
-		margin-top: 10px;
-		padding: 0 20px;
-		font-size: 13px;
-	}
-	#stats .log-time {
-		margin-top: 20px;
-	}
-	.grades {
-		margin-left: 20px;
-	}
-	#stats .grade {
-		border-radius: 5px;
-		color: white;
-		display: inline-block;
-		padding: 3px 6px;
-		margin-top: 5px;
-		font-weight: normal;
-		font-size: 14px;
-	}
-	#stats .grade.admin {
-		background: #FF3333;
-	}
-	#stats .grade.moderator {
-		background: #FFA900;
-	}
-	#stats .grade.contributor {
-		background: #009c1d;
-	}
-	#leeks-ais {
-		width: 100%;
-		margin-top: 30px;
-	}
-	#leeks-ais td {
-		width: 50%;
-		vertical-align: top;
+		.tournaments td {
+			padding: 0 10px;
+		}
+		.small {
+			font-size: 13px;
+			vertical-align: top;
+		}
+		table {
+			margin: 10px auto;
+		}
+		tr > td:nth-child(n+2) {
+			border-left: 2px solid #ddd;
+		}
+		td {
+			padding: 0 20px;
+			text-align: center;
+		}
+		.big {
+			font-size: 22px;
+			font-weight: 300;
+			color: #555;
+		}
+		.grey {
+			color: #999;
+		}
+		.log-time, .godfather {
+			margin-top: 10px;
+			padding: 0 20px;
+			font-size: 13px;
+		}
+		.log-time {
+			margin-top: 20px;
+		}
+		.grades {
+			margin-left: 20px;
+		}
+		.grade {
+			border-radius: 5px;
+			color: white;
+			display: inline-block;
+			padding: 3px 6px;
+			margin-top: 5px;
+			font-weight: normal;
+			font-size: 14px;
+		}
+		.grade.admin {
+			background: #FF3333;
+		}
+		.grade.moderator {
+			background: #FFA900;
+		}
+		.grade.contributor {
+			background: #009c1d;
+		}
 	}
 	.leek {
 		text-align: center;
 		display: inline-block;
 		padding: 5px;
+		.name {
+			font-size: 20px;
+			font-weight: 500;
+			padding: 0 5px;
+			padding-top: 4px;
+			text-overflow: ellipsis;
+			overflow: hidden;
+			white-space: nowrap;
+		}
+		.talent {
+			margin: 5px 0;
+		}
+		.level {
+			font-size: 17px;
+			color: #555;
+			font-weight: 500;
+		}
+		img {
+			margin-bottom: 5px;
+		}
 	}
 	.leek:hover {
 		background: white;
 		box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
 	}
-	.leek .name {
-		font-size: 20px;
-		font-weight: 500;
-		padding: 0 5px;
-		padding-top: 4px;
-		text-overflow: ellipsis;
-		overflow: hidden;
-		white-space: nowrap;
-	}
-	.leek .talent {
-		margin: 5px 0;
-	}
-	.leek .level {
-		font-size: 17px;
-		color: #555;
-		font-weight: 500;
-	}
-	.leek img {
-		margin-bottom: 5px;
-	}
-	#trophies {
+	.trophies {
 		text-align: left;
 	}
 	.trophies-mode-button {
@@ -876,52 +847,49 @@
 		height: 38px;
 		vertical-align: bottom;
 	}
-	.trophy-tt .date {
+	.trophy-date {
 		padding-top: 4px;
 		font-size: 13px;
 		font-style: italic;
 		color: #ddd;
 	}
-	#trophies.grid .trophy {
+	.trophies.grid .trophy {
 		background: white;
 		border: 1px solid #ddd;
 	}
 	.trophies-bonus {
 		margin: 5px 0;
 	}
-	#history .content {
+	.history {
 		padding: 10px;
 	}
-	#tournament-history .content {
-		padding: 10px;
-	}
-	#warnings {
+	.warnings {
 		text-align: center;
 		padding-bottom: 20px;
-	}
-	.warning-title {
-		color: red;
-		margin-bottom: 15px;
-	}
-	#warnings .warning {
-		padding: 5px;
-		background: white;
-		border-radius: 2px;
-		width: 250px;
-		display: inline-block;
-		margin: 6px;
-		vertical-align: top;
-	}
-	#warnings .warning .reason {
-		font-size: 15px;
-	}
-	#warnings .warning .date {
-		font-size: 12px;
-		color: #666;
-	}
-	#warnings .warning .author {
-		font-size: 12px;
-		color: #666;
+		.warning-title {
+			color: red;
+			margin-bottom: 15px;
+		}
+		.warning {
+			padding: 5px;
+			background: white;
+			border-radius: 2px;
+			width: 250px;
+			display: inline-block;
+			margin: 6px;
+			vertical-align: top;
+			.reason {
+				font-size: 15px;
+			}
+			.date {
+				font-size: 12px;
+				color: #666;
+			}
+			.author {
+				font-size: 12px;
+				color: #666;
+			}
+		}
 	}
 	.godfather-link {
 		cursor: pointer;
