@@ -534,6 +534,7 @@
 	}
 	.farmer, .composition-wrapper, .leek {
 		width: calc(20% - 2px);
+		min-width: 150px;
 		padding: 10px 0;
 		border: 1px solid rgba(0, 0, 0, 0.1);
 	}
