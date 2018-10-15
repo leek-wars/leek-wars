@@ -46,10 +46,10 @@
 	.step {
 		flex: 1;
 		text-align: center;
-	}
-	.step img {
-		padding: 5px;
-		width: calc(100% - 10px);
+		img {
+			padding: 5px;
+			width: calc(100% - 10px);
+		}
 	}
 	.legend {
 		font-style: italic;
@@ -62,9 +62,9 @@
 		flex: 1 0 25%;
 		text-align: center;
 		margin-bottom: 20px;
-	}
-	.preview img {
-		padding: 5px;
-		width: calc(100% - 10px);
+		img {
+			padding: 5px;
+			width: calc(100% - 10px);
+		}
 	}
 </style>
