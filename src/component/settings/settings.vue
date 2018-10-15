@@ -15,13 +15,11 @@
 					<div class="header">
 						<h2>{{ $t('language') }}</h2>
 					</div>
-					<div class="content">
-						<div id="languages">
-							<div v-ripple v-for="language in LeekWars.languages" :key="language.code" :class="{selected: language.code == $i18n.locale}" :lang="language.code" class="language" @click="LeekWars.setLocale(language.code)">
-								<img :src="language.flag">
-								<br>
-								{{ language.name }} ({{ language.code }})
-							</div>
+					<div class="content languages">
+						<div v-ripple v-for="language in LeekWars.languages" :key="language.code" :class="{selected: language.code == $i18n.locale}" :lang="language.code" class="language" @click="LeekWars.setLocale(language.code)">
+							<img :src="language.flag">
+							<br>
+							{{ language.name }} ({{ language.code }})
 						</div>
 					</div>
 				</div>
@@ -55,7 +53,7 @@
 						<h2>{{ $t('change_password') }}</h2>
 					</div>
 					<div class="content">
-						<form id="change-password" @submit="changePassword">
+						<form class="change-password" @submit="changePassword">
 							<h4>{{ $t('old_password') }}</h4>
 							<input v-model="password" name="password" type="password" required> <br>
 							<h4>{{ $t('new_password') }}</h4>
@@ -72,13 +70,13 @@
 					<div class="header">
 						<h2>Notifications</h2>
 						<div class="right">
-							<span id="push-notifs-button" @click="updatePushNotifications">
+							<span class="push-notifs-button" @click="updatePushNotifications">
 								<span>{{ $t('push_notifications') }}</span>
 								<v-switch :input-value="pushNotifications" hide-details />
 							</span>
 						</div>
 					</div>
-					<div id="notifications" class="content">
+					<div class="content notifications">
 						<table>
 							<template v-for="(notifications, category) in mails">
 								<tr :key="category + 1">
@@ -125,6 +123,7 @@
 			</div>
 		</div>
 
+		<!-- TODO Translation -->
 		<center>
 			<div class="advanced-button" @click="advanced = !advanced">
 				Avancé
@@ -133,6 +132,7 @@
 			</div>
 		</center>
 
+		<!-- TODO Translation -->
 		<div v-if="advanced" class="flex-container">
 			<div class="column6">
 				<div class="panel">
@@ -342,10 +342,7 @@
 </script>
 
 <style lang="scss" scoped>
-	#change-password {
-		display: inline-block;
-	}
-	#languages .language {
+	.languages .language {
 		display: inline-block;
 		padding: 8px;
 		text-align: center;
@@ -355,7 +352,7 @@
 		border: 1px solid #ddd;
 		border-radius: 2px;
 	}
-	#languages .language.selected {
+	.languages .language.selected {
 		background: white;
 		box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
 	}
@@ -364,22 +361,23 @@
 	}
 	.misc-settings {
 		width: 100%;
+		td {
+			text-align: left;
+			padding: 2px;
+		}
 	}
-	.misc-settings td {
+	.change-password {
 		text-align: left;
-		padding: 2px;
-	}
-	#change-password {
-		text-align: left;
-	}
-	#change-password .title {
-		font-size: 18px;
-		font-weight: bold;
-		color: #777;
-	}
-	#change-password input {
-		margin-top: 3px;
-		margin-bottom: 8px;
+		display: inline-block;
+		.title {
+			font-size: 18px;
+			font-weight: bold;
+			color: #777;
+		}
+		input {
+			margin-top: 3px;
+			margin-bottom: 8px;
+		}
 	}
 	.advanced-button {
 		color: white;
@@ -389,49 +387,49 @@
 		margin: 15px 0;
 		line-height: 26px;
 		cursor: pointer;
+		i {
+			vertical-align: bottom;
+		}
 	}
-	.advanced-button i {
-		vertical-align: bottom;
-	}
-	#push-notifs-button {
+	.push-notifs-button {
 		display: inline-block;
 		margin-top: 8px;
 		cursor: pointer;
+		> span {
+			vertical-align: bottom;
+			padding-bottom: 5px;
+			display: inline-block;
+			color: white;
+		}
 	}
-	#push-notifs-button > span {
-		vertical-align: bottom;
-		padding-bottom: 5px;
-		display: inline-block;
-		color: white;
-	}
-	#notifications {
+	.notifications {
 		text-align: left;
-	}
-	#notifications table {
-		width: 100%;
-	}
-	#notifications .category {
-		color: #888;
-		font-size: 16px;
-	}
-	#notifications .item {
-		padding-left: 18px;
-	}
-	.mail {
-		width: 80px;
-	}
-	#notifications .push label, #notifications .mail label {
-		cursor: pointer;
-	}
-	#notifications .push {
-		padding-right: 5px;
-		padding-left: 5px;
-	}
-	#notifications .separator {
-		height: 7px;
-	}
-	#notifications .category.off {
-		opacity: 0.6;
+		table {
+			width: 100%;
+		}
+		.category {
+			color: #888;
+			font-size: 16px;
+		}
+		.item {
+			padding-left: 18px;
+		}
+		.mail {
+			width: 80px;
+		}
+		.push label, .mail label {
+			cursor: pointer;
+		}
+		.push {
+			padding-right: 5px;
+			padding-left: 5px;
+		}
+		.separator {
+			height: 7px;
+		}
+		.category.off {
+			opacity: 0.6;
+		}
 	}
 	.v-input--switch {
 		margin-left: 8px;
