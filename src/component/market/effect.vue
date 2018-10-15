@@ -36,7 +36,7 @@
 <script lang="ts">
 	import { Effect } from '@/model/effect'
 	import { Component, Prop, Vue } from 'vue-property-decorator'
-@Component({ name: 'effect-view' })
+	@Component({ name: 'effect-view' })
 	export default class EffectView extends Vue {
 		@Prop() effect!: Effect
 		get enemies() { return this.effect.targets & 1 }

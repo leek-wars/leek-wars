@@ -35,7 +35,7 @@
 
 <script lang="ts">
 	import { Component, Prop, Vue } from 'vue-property-decorator'
-@Component({ name: 'summon-view' })
+	@Component({ name: 'summon-view' })
 	export default class SummonView extends Vue {
 		@Prop() summon!: any
 	}

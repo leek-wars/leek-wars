@@ -17,10 +17,9 @@
 	import RangeView from '@/component/market/range-view.vue'
 	import { Area } from '@/model/area'
 	import { Component, Prop, Vue } from 'vue-property-decorator'
-
-@Component({
-	name: 'area-view',
-	components: { 'range-view': RangeView }
+	@Component({
+		name: 'area-view',
+		components: { 'range-view': RangeView }
 	})
 	export default class AreaView extends Vue {
 		@Prop() area!: Area
@@ -31,7 +30,6 @@
 			} else if (this.area === Area.CIRCLE2) {
 				return 2
 			}
-			/* else if (this.area === Area.CIRCLE3) */
 			return 3
 		}
 	}

@@ -1,110 +1,110 @@
 .item-preview {
 	margin: auto;
 	text-align: center;
-}
-.item-preview .header {
-	background-color: #ddd;
-	padding: 2px 5px;
-	height: 25px;
-}
-.item-preview .name {
-	float: left;
-	font-size: 19px;
-	color: black;
-	margin: 0;
-}
-.item-preview .level {
-	float: right;
-	margin-top: 4px;
-	font-size: 16px;
-	color: #777;
-}
-.item-preview .image {
-	height: 90px;
-	position: relative;
-}
-.item-preview .image.sound img {
-	cursor: help;
-}
-.item-preview .image img {
-	position: absolute;
-	top:0;
-	bottom:0;
-	left: 0; right: 0;
-	margin: auto;
-	max-height: 80px;
-}
-.item-preview .desc {
-	text-align: justify;
-	font-size: 14px;
-	color: #777;
-	padding: 5px;
-}
-.item-preview .stats div {
-	padding: 4px;
-}
-.item-preview .stats div img {
-	vertical-align: bottom;
-}
-.item-preview .stats div:nth-child(2n+1) {
-	background-color: white;
-}
-.item-preview .ennemies,
-.item-preview .allies,
-.item-preview .player,
-.item-preview .not-player,
-.item-preview .summons,
-.item-preview .not-summons {
-	width: 14px;
-	height: 14px;
-	display: inline-block;
-	vertical-align: middle;
-	margin-left: 10px;
-	border-radius: 2px;
-}
-.item-preview .ennemies {
-	background-color: red;
-}
-.item-preview .allies {
-	background-color: blue;
-}
-.item-preview .player {
-	background-color: black;
-}
-.item-preview .not-player {
-	background-color: white;
-	border: 2px solid #555;
-	width: 10px;
-	height: 10px;
-}
-.item-preview .summons {
-	background-color: #00dfff;
-}
-.item-preview .not-summons {
-	background-color: white;
-	border: 2px solid #00dfff;
-	width: 10px;
-	height: 10px;
-}
-.item-preview .constant {
-	text-align: left;
-	color: #555;
-	font-size: 13px;
-	padding: 4px;
-}
-.item-preview .area {
-	border-collapse: separate;
-	border-spacing: 1px;
-	margin: 3px auto;
-}
-.item-preview .area td {
-	width: 6px;
-	height: 6px;
-	background: #eee;
-}
-.item-preview .area td.full {
-	background: #999;
-}
-.item-preview .stats .leek-preview {
-	padding: 10px;
+	.header {
+		background-color: #ddd;
+		padding: 2px 5px;
+		height: 25px;
+	}
+	.name {
+		float: left;
+		font-size: 19px;
+		color: black;
+		margin: 0;
+	}
+	.level {
+		float: right;
+		margin-top: 4px;
+		font-size: 16px;
+		color: #777;
+	}
+	.image {
+		height: 90px;
+		position: relative;
+	}
+	.image.sound img {
+		cursor: help;
+	}
+	.image img {
+		position: absolute;
+		top:0;
+		bottom:0;
+		left: 0; right: 0;
+		margin: auto;
+		max-height: 80px;
+	}
+	.desc {
+		text-align: justify;
+		font-size: 14px;
+		color: #777;
+		padding: 5px;
+	}
+	.stats div {
+		padding: 4px;
+	}
+	.stats div img {
+		vertical-align: bottom;
+	}
+	.stats div:nth-child(2n+1) {
+		background-color: white;
+	}
+	.ennemies,
+	.allies,
+	.player,
+	.not-player,
+	.summons,
+	.not-summons {
+		width: 14px;
+		height: 14px;
+		display: inline-block;
+		vertical-align: middle;
+		margin-left: 10px;
+		border-radius: 2px;
+	}
+	.ennemies {
+		background-color: red;
+	}
+	.allies {
+		background-color: blue;
+	}
+	.player {
+		background-color: black;
+	}
+	.not-player {
+		background-color: white;
+		border: 2px solid #555;
+		width: 10px;
+		height: 10px;
+	}
+	.summons {
+		background-color: #00dfff;
+	}
+	.not-summons {
+		background-color: white;
+		border: 2px solid #00dfff;
+		width: 10px;
+		height: 10px;
+	}
+	.constant {
+		text-align: left;
+		color: #555;
+		font-size: 13px;
+		padding: 4px;
+	}
+	.area {
+		border-collapse: separate;
+		border-spacing: 1px;
+		margin: 3px auto;
+	}
+	.area td {
+		width: 6px;
+		height: 6px;
+		background: #eee;
+	}
+	.area td.full {
+		background: #999;
+	}
+	.stats .leek-preview {
+		padding: 10px;
+	}
 }

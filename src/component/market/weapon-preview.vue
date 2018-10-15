@@ -44,9 +44,8 @@
 	import { Area } from '@/model/area'
 	import { WeaponTemplate } from '@/model/weapon'
 	import { Component, Prop, Vue } from 'vue-property-decorator'
-
-@Component({
-	components: { 'range-view': RangeView, 'effect-view': EffectView, 'area-view': AreaView }
+	@Component({
+		components: { 'range-view': RangeView, 'effect-view': EffectView, 'area-view': AreaView }
 	})
 	export default class WeaponPreview extends Vue {
 		@Prop() weapon!: WeaponTemplate
