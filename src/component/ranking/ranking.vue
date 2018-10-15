@@ -2,7 +2,8 @@
 	<div>
 		<div class="page-header page-bar">
 			<h1>{{ $t('title') }}</h1>
-			<div id="tabs" class="tabs">
+			<div class="tabs">
+				<!-- TODO tabs active classes -->
 				<router-link to="/ranking"><div class="tab {$leek_tab_class}">{{ $t('leeks') }}</div></router-link>
 				<router-link to="/ranking/farmer"><div class="tab {$farmer_tab_class}">{{ $t('farmers') }}</div></router-link>
 				<router-link to="/ranking/team"><div class="tab {$team_tab_class}">{{ $t('teams') }}</div></router-link>
@@ -15,7 +16,7 @@
 		</div>
 		<div class="panel">
 			<div class="content">
-				<div v-if="category === 'fun'" id="fun-rankings">
+				<div v-if="category === 'fun'" class="fun-rankings">
 					<loader v-if="!rankings" />
 					<div v-for="funRanking in rankings" :key="funRanking.title" class="fun-ranking">
 						<h4>{{ $t(funRanking.title + '_title') }}</h4>
@@ -56,7 +57,7 @@
 					<div class="scroll-x">
 						<table v-if="category === 'leek'" class="ranking large">
 							<tr class="header">
-								<th id="ranking-column">{{ $t('place') }}</th>
+								<th class="ranking-column">{{ $t('place') }}</th>
 								<th>
 									<router-link :to="'/ranking/leek/name/page-' + page">
 										<span>{{ $t('leek') }}</span>
@@ -83,7 +84,7 @@
 						</table>
 						<table v-else-if="category == 'farmer'" class="ranking large">
 							<tr class="header">
-								<th id="ranking-column">{{ $t('place') }}</th>
+								<th class="ranking-column">{{ $t('place') }}</th>
 								<th>
 									<router-link :to="'/ranking/farmer/name/page-' + page">
 										<span>{{ $t('farmer') }}</span>
@@ -110,7 +111,7 @@
 						</table>
 						<table v-else class="ranking large">
 							<tr class="header">
-								<th id="ranking-column">{{ $t('place') }}</th>
+								<th class="ranking-column">{{ $t('place') }}</th>
 								<th>
 									<router-link :to="'/ranking/team/name/page-' + page">
 										<span>{{ $t('leek') }}</span>
@@ -172,9 +173,7 @@
 				<loader v-if="!searchResults && searchQuery.length" />
 				<h4 v-if="searchResults">{{ $t('results') }}</h4>
 				<div v-if="searchResults && searchResults.length === 0" class="center">{{ $t('no_results') }}</div>
-				<div id="search-results">
-					<ranking-search-result v-for="result in searchResults" :key="result.id" :result="result" />
-				</div>
+				<ranking-search-result v-for="result in searchResults" :key="result.id" :result="result" />
 			</div>
 		</v-dialog>
 	</div>
@@ -208,10 +207,7 @@
 		searchQuery: string = ''
 		searchResults: any[] | null = null
 
-		created() {
-			this.update()
-		}
-		@Watch('$route.params')
+		@Watch('$route.params', {immediate: true})
 		update() {
 			this.category = 'category' in this.$route.params ? this.$route.params.category : 'leek'
 			if (this.ranking) {
@@ -235,7 +231,7 @@
 					this.fun = true
 					this.rankings = data.data.rankings
 					this.ranking = []
-					// LW.setTitle(_.lang.get('ranking', 'title'), _.lang.get('ranking', 'fun'))
+					LeekWars.setTitle(this.$t('ranking.title'), this.$t('ranking.fun'))
 				})
 			} else {
 				this.order = 'order' in this.$route.params ? this.$route.params.order : 'talent'
@@ -275,7 +271,6 @@
 				})
 			}
 		}
-
 		goToMyRanking(param: number = 0) {
 			let url = ''
 			if (this.category === 'leek') {
@@ -292,7 +287,6 @@
 				}
 			})
 		}
-
 		openSearch() {
 			this.searchDialog = true
 			this.searchQuery = ''
@@ -327,122 +321,120 @@
 			margin: 0 3px;
 		}
 	}
-	#page .ranking.large {
+	.ranking.large {
 		width: 100%;
 	}
 	h4 {
 		text-align: left;
 		margin: 8px 5px;
 	}
-	.ranking /deep/ td {
-		border-bottom: 1px solid #ddd;
-		border-right: 1px solid #ddd;
-		text-align: center;
-		padding: 4px 7px;
-		background: white;
-	}
-	.ranking /deep/ td:last-child {
-		border-right: none;
-	}
-	.ranking tr.header {
-		background: #e5e5e5;
-		height: 38px;
-		text-align: center;
-	}
-	.ranking tr.header a {
-		display: flex;
-		align-items: center;
-		justify-content: center;
-	}
-	.ranking tr.header i {
-		margin-bottom: -1px;
-	}
-	.ranking tr:first-child th:last-child {
-		border-top-right-radius: 3px;
-	}
-	.ranking th {
-		padding: 0 5px;
-		font-weight: normal;
-		color: #222;
-		font-size: 18px;
-		border-bottom: 1px solid #fff;
-		border-right: 1px solid #fff;
-	}
-	.ranking th:last-child {
-		border-right: none;
-	}
-	.ranking th a {
-		color: #222;
+	.ranking {
+		/deep/ td {
+			border-bottom: 1px solid #ddd;
+			border-right: 1px solid #ddd;
+			text-align: center;
+			padding: 4px 7px;
+			background: white;
+		}
+		/deep/ td:last-child {
+			border-right: none;
+		}
+		tr.header {
+			background: #e5e5e5;
+			height: 38px;
+			text-align: center;
+			a {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+			}
+			i {
+				margin-bottom: -1px;
+			}
+		}
+		tr:first-child th:last-child {
+			border-top-right-radius: 3px;
+		}
+		th {
+			padding: 0 5px;
+			font-weight: normal;
+			color: #222;
+			font-size: 18px;
+			border-bottom: 1px solid #fff;
+			border-right: 1px solid #fff;
+		}
+		th:last-child {
+			border-right: none;
+		}
+		th a {
+			color: #222;
+		}
+		/deep/ .first a {
+			color: #FFA900;
+			font-weight: bold;
+		}
+		/deep/ .second a {
+			color: #9C9C9C;
+			font-weight: bold;
+		}
+		/deep/ .third a {
+			color: #AE4E00;
+			font-weight: bold;
+		}
+		tr.me {
+			font-weight: bold;
+			/deep/ td {
+				background: #eee;
+			}
+		}
+		/deep/ .country-wrapper {
+			height: 20px;
+			img {
+				margin-top: -2px;
+				width: 24px;
+			}
+		}
 	}
 	.ranking-column {
 		width: 80px;
 	}
-	.ranking /deep/ .first a {
-		color: #FFA900;
-		font-weight: bold;
-	}
-	.ranking /deep/ .second a {
-		color: #9C9C9C;
-		font-weight: bold;
-	}
-	.ranking /deep/ .third a {
-		color: #AE4E00;
-		font-weight: bold;
-	}
 	.column-team, .column-farmer {
 		width: 140px;
-	}
-	.column-team div, .column-farmer div {
-		width: 140px;
-		white-space: nowrap;
-		overflow: hidden;
-		text-overflow: ellipsis;
-	}
-	.ranking tr.me {
-		font-weight: bold;
-		/deep/ td {
-			background: #eee;
+		div {
+			width: 140px;
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
 		}
 	}
-	#ranking-search {
-		vertical-align: middle;
-		cursor: pointer;
-	}
-	.ranking /deep/ .country-wrapper {
-		height: 20px;
-	}
-	.ranking /deep/ .country-wrapper img {
-		margin-top: -2px;
-		width: 24px;
-	}
-	#fun-rankings {
+	.fun-rankings {
 		margin: 0 0px;
 		text-align: center;
+		h2 {
+			text-align: left;
+		}
+		.fun-ranking {
+			display: inline-block;
+			margin: 8px 3px;
+		}
+		table {
+			margin: 4px;
+			width: 320px;
+		}
+		.ranking tr td:first-child {
+			width: 45px;
+		}
+		.ranking tr td:last-child {
+			width: 120px;
+		}
 	}
-	#fun-rankings h2 {
-		text-align: left;
-	}
-	#fun-rankings .fun-ranking {
-		display: inline-block;
-		margin: 8px 3px;
-	}
-	#app.app #fun-rankings .fun-ranking {
+	#app.app .fun-rankings .fun-ranking {
 		width: 100%;
 		margin: 0px;
-	}
-	#fun-rankings .fun-ranking table {
-		margin: 4px;
-		width: 320px;
-	}
-	#app.app #fun-rankings .fun-ranking table {
-		width: 100%;
-		margin: 6px 0;
-	}
-	#fun-rankings .ranking tr td:first-child {
-		width: 45px;
-	}
-	#fun-rankings .ranking tr td:last-child {
-		width: 120px;
+		table {
+			width: 100%;
+			margin: 6px 0;
+		}
 	}
 	.query {
 		width: calc(100% - 15px);
