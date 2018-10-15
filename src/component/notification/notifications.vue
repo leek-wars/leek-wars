@@ -39,5 +39,7 @@
 </script>
 
 <style lang="scss" scoped>
-
+	#app.app .content {
+		padding: 0;
+	}
 </style>
