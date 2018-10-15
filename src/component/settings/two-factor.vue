@@ -1,8 +1,9 @@
 <template>
+	<!-- TODO Translation -->
 	<div>
-		<div id="two-factor" class="content">
+		<div class="content">
 			<div class="step">
-				<div v-if="step === 0" id="two-factor-button" class="button" @click="nextStep">Activate two factor authentication</div>
+				<div v-if="step === 0" class="button" @click="nextStep">Activate two factor authentication</div>
 			</div>
 			<div v-if="step === 1" class="step">
 				<div class="title">Step 1 / 3</div>
@@ -40,7 +41,7 @@
 				Test a code to finish the activation:
 				<br><br>
 				<loader v-if="validating" :size="40" />
-				<input v-else id="two-factor-code" v-model="code" type="text" autocomplete="off" autocorrect="off" autocapitalize="off" placeholder="XXX XXX" @keydown.enter="validateCode">
+				<input v-else class="code" v-model="code" type="text" autocomplete="off" autocorrect="off" autocapitalize="off" placeholder="XXX XXX" @keydown.enter="validateCode">
 			
 				<div class="buttons">
 					<div class="back" @click="previousStep">Back</div>
@@ -50,7 +51,7 @@
 			<div v-if="step === 4" class="step final">
 				Two factor authentication enabled! Congratulations!
 				<br><br>
-				<div id="two-factor-disable" class="button">Disable</div>
+				<div class="button">Disable</div>
 			</div>
 		</div>
 
@@ -59,7 +60,7 @@
 			<div class="content">Password : <input id="two-factor-confirm-password" type="password"></div>
 			<div class="actions">
 				<div class="action dismiss">Cancel</div>
-				<div id="two-factor-validate" class="action green">Validate</div>
+				<div class="action green">Validate</div>
 			</div>
 		</v-dialog>
 	</div>
@@ -97,7 +98,7 @@
 				if (data.data.success) {
 					this.nextStep()
 				} else {
-					// _.toast('Wrong code!')
+					LeekWars.toast('Wrong code!')
 				}
 			})
 		}
@@ -105,26 +106,26 @@
 </script>
 
 <style lang="scss" scoped>
-	#two-factor .title {
+	.title {
 		margin-bottom: 15px;
 	}
-	#two-factor .buttons {
+	.buttons {
 		display: flex;
 		padding: 0;
 		margin-bottom: -15px;
 		margin-left: -15px;
 		margin-right: -15px;
 		margin-top: 10px;
-	}
-	#two-factor .buttons div {
-		flex: 1;
-		cursor: pointer;
-		padding: 8px 0;
-		text-transform: uppercase;
-		font-weight: bold;
-	}
-	#two-factor .buttons div:hover {
-		background: white;
+		div {
+			flex: 1;
+			cursor: pointer;
+			padding: 8px 0;
+			text-transform: uppercase;
+			font-weight: bold;
+		}
+		div:hover {
+			background: white;
+		}
 	}
 	.step .title {
 		background: #5FAD1B;
@@ -133,12 +134,12 @@
 		padding: 5px 10px;
 		display: inline-block;
 	}
-	#two-factor-code {
+	.code {
 		font-size: 26px;
 		padding: 5px 10px;
 		max-width: 120px;
 	}
-	#two-factor-code::-webkit-input-placeholder {
+	.code::-webkit-input-placeholder {
 		color: #ddd;
 	}
 	.secret {
