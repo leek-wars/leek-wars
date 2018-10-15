@@ -1,5 +1,5 @@
 <template lang="html">
-	<div id="login-page">
+	<div>
 		<h1>{{ $t('title') }}</h1>
 		<div class="panel">
 			<div class="content">
@@ -15,9 +15,9 @@
 					<br><br>
 					<center><input :value="$t('connection')" type="submit" class="button green large"></center>
 					<br>
-					<div v-if="error">{{ $t('incorrect_login') }}</div>
+					<div v-if="error" class="error">{{ $t('incorrect_login') }}</div>
 					<br>
-					<router-link id="forgot-password" to="/forgot-password">{{ $t('forgot_password') }}</router-link>
+					<router-link class="forgot-password" to="/forgot-password">{{ $t('forgot_password') }}</router-link>
 				</form>
 			</div>
 		</div>
@@ -61,16 +61,16 @@
 		width: 100%;
 		margin-top: 5px;
 	}
-	#error {
+	.error {
 		color: red;
 		text-align: center;
 	}
-	#forgot-password {
+	.forgot-password {
 		color: #0a0;
 		text-align: center;
 		display: block;
 	}
-	#forgot-password:hover {
+	.forgot-password:hover {
 		text-decoration: underline;
 	}
 </style>
