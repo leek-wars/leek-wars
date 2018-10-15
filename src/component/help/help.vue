@@ -3,7 +3,7 @@
 		<div class="page-bar page-header">
 			<h1>{{ $t('title') }}</h1>
 			<div class="tabs">
-				<div id="show-didactitiel" class="tab" @click="didactitiel = true">▶&nbsp; {{ $t('rewatch_didactitiel') }}</div>
+				<div class="tab" @click="didactitiel = true">▶&nbsp; {{ $t('rewatch_didactitiel') }}</div>
 			</div>
 		</div>
 		<div class="flex-container">
@@ -145,9 +145,9 @@
 		margin: 15px;
 		line-height: 26px;
 		cursor: pointer;
-	}
-	.advanced-button img {
-		width: 16px;
-		margin-left: 6px;
+		img {
+			width: 16px;
+			margin-left: 6px;
+		}
 	}
 </style>
