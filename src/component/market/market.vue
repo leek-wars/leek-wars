@@ -1,5 +1,5 @@
 <template lang="html">
-	<div id="market-page">
+	<div>
 		<div class="page-header page-bar">
 			<h1>{{ $t('title') }}</h1>
 			<div class="tabs">
@@ -19,8 +19,8 @@
 					</div>
 					<div class="content items">
 						<loader v-if="!fight_packs.length" />
-						<div id="weapons">
-							<router-link v-ripple v-for="pack in fight_packs" :key="pack.id" :to="'/market/' + pack.name" :name="pack.name" type="fights" class="item fights" farmer-count="0" leek-count="0" @click="selectItem(pack)">
+						<div class="center">
+							<router-link v-ripple v-for="pack in fight_packs" :key="pack.id" :to="'/market/' + pack.name" class="item fights" :farmer-count="0" :leek-count="0" @click="selectItem(pack)">
 								<img src="/image/market/fights.png">
 								<div>{{ pack.title }}</div>
 							</router-link>
@@ -33,8 +33,8 @@
 					</div>
 					<div class="content items">
 						<loader v-if="!weapons.length" />
-						<div id="weapons">
-							<router-link v-ripple v-for="weapon in weapons" id="item-{weapon.id}" :key="weapon.id" :to="'/market/' + weapon.name" :farmer-count="items[weapon.id].farmer_count" :leek-count="items[weapon.id].leek_count" class="item weapon">
+						<div class="center">
+							<router-link v-ripple v-for="weapon in weapons" :key="weapon.id" :to="'/market/' + weapon.name" :farmer-count="items[weapon.id].farmer_count" :leek-count="items[weapon.id].leek_count" class="item weapon">
 								<img :src="'/image/weapon/' + weapon.name + '.png'">
 							</router-link>
 						</div>
@@ -53,12 +53,12 @@
 					<div v-if="!chips.length" class="content items">
 						<loader />
 					</div>
-					<div v-else-if="chipMode === 'level'" id="chips" class="content items">
+					<div v-else-if="chipMode === 'level'" class="content items chips">
 						<router-link v-ripple v-for="chip in chips" :key="chip.id" :to="'/market/' + chip.name" :farmer-count="items[chip.id].farmer_count" :leek-count="items[chip.id].leek_count" class="item chip">
 							<img :src="'/image/chip/small/' + chip.name + '.png'">
 						</router-link>
 					</div>
-					<div v-else id="chips" class="content items noflex">
+					<div v-else class="content chips items noflex">
 						<div v-for="type in EffectTypeMarket" v-if="!isNaN(type)" :key="type">
 							<h3>{{ $t('effect.effect_type_' + type) }}</h3>
 							<br>
@@ -99,7 +99,7 @@
 					<div v-if="!selectedItem">
 						<loader />
 					</div>
-					<div v-else id="preview" class="content">
+					<div v-else class="content preview">
 						<weapon-preview v-if="selectedItem.type == ItemType.WEAPON" :weapon="LeekWars.weapons[selectedItem.id]" />
 						<chip-preview v-else-if="selectedItem.type == ItemType.CHIP" :chip="LeekWars.chips[selectedItem.id]" />
 						<potion-preview v-else-if="selectedItem.type == ItemType.POTION" :potion="LeekWars.potions[selectedItem.id]" />
@@ -406,10 +406,8 @@
 		position: sticky;
 		top: 15px;
 	}
-	#preview {
+	.preview.content {
 		text-align: center;
-	}
-	#preview.content {
 		padding: 0;
 	}
 	.content.items {
@@ -420,10 +418,10 @@
 	.content.items.noflex {
 		display: block;
 	}
-	#preview .leeks {
+	.preview .leeks {
 		padding: 6px 0;
 	}
-	#preview .leek {
+	.preview .leek {
 		background: #5fad1b;
 		color: white;
 		padding: 4px 8px;
@@ -495,10 +493,7 @@
 	.fights img {
 		width: 60px;
 	}
-	#weapons {
-		text-align: center;
-	}
-	#weapons .weapon {
+	.weapons .weapon {
 		padding: 10px;
 		width: 178px;
 		height: 50px;
@@ -509,11 +504,11 @@
 		vertical-align: bottom;
 		margin: 8px;
 	}
-	#app.app #weapons .weapon {
+	#app.app .weapons .weapon {
 		width: 150px;
 		margin: 5px;
 	}
-	#weapons .weapon img {
+	.weapons .weapon img {
 		max-height: 52px;
 		max-width: 160px;
 		position: absolute;
@@ -523,13 +518,13 @@
 		right: 0;
 		margin: auto;
 	}
-	#chips {
+	.chips {
 		padding: 0 10px;
 	}
-	#chips[sort-mode='level'] {
+	.chips[sort-mode='level'] {
 		text-align: center;
 	}
-	#chips .chip {
+	.chips .chip {
 		width: 73px;
 		padding: 6px;
 		display: inline-block;
@@ -538,18 +533,18 @@
 		text-align: center;
 		margin: 6px;
 	}
-	#app.app #chips .chip {
+	#app.app .chips .chip {
 		width: 50px;
 		margin: 3px;
 	}
-	#chips .chip img {
+	.chips .chip img {
 		height: 68px;
 		vertical-align: bottom;
 	}
-	#app.app #chips .chip img {
+	#app.app .chips .chip img {
 		height: 50px;
 	}
-	#chips h3 {
+	.chips h3 {
 		margin: 0;
 		margin-top: 8px;
 		margin-left: -10px;

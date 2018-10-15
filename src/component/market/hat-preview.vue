@@ -19,7 +19,7 @@
 <script lang="ts">
 	import { HatTemplate } from '@/model/hat'
 	import { Component, Prop, Vue } from 'vue-property-decorator'
-@Component({})
+	@Component({})
 	export default class HatPreview extends Vue {
 		@Prop() hat!: HatTemplate
 	}
