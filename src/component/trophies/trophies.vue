@@ -106,38 +106,38 @@
 	.content:not(.first) {
 		padding: 8px;
 	}
-	#global-percent {
+	.global-percent {
 		font-size: 40px;
 	}
-	#global-count {
+	.global-count {
 		font-size: 30px;
 		color: #888;
 		float: right;
 		line-height: 55px;
 	}
-	#global-bar {
+	.global-bar {
 		height: 12px;
 		position: relative;
 		background: white;
 		border-radius: 3px;
 		margin: 5px;
-	}
-	#global-bar .bar {
-		height: 12px;
-		background: #008FBB;
-		position: absolute;
-		border-radius: 3px;
+		.bar {
+			height: 12px;
+			background: #008FBB;
+			position: absolute;
+			border-radius: 3px;
+		}
 	}
 	.category-bar-wrapper {
 		width: 70%;
 		text-align: right;
 		white-space: nowrap;
-	}
-	.category-bar-wrapper .stats {
-		display: inline-block;
-		color: white;
-		font-size: 16px;
-		margin: 0 10px;
+		.stats {
+			display: inline-block;
+			color: white;
+			font-size: 16px;
+			margin: 0 10px;
+		}
 	}
 	.category-bar {
 		display: inline-block;
@@ -149,12 +149,12 @@
 		max-width: 300px;
 		margin-left: auto;
 		margin-top: 12px;
-	}
-	.category-bar .bar {
-		height: 12px;
-		background: #30BB00;
-		position: absolute;
-		border-radius: 3px;
+		.bar {
+			height: 12px;
+			background: #30BB00;
+			position: absolute;
+			border-radius: 3px;
+		}
 	}
 	#app.app .content:nth-child(2) {
 		padding: 4px;
@@ -166,10 +166,44 @@
 		vertical-align: top;
 		border-radius: 3px;
 		padding: 5px 8px;
+		.image {
+			width: 55px;
+			height: 55px;
+			float: left;
+			margin-right: 12px;
+		}
+		.name {
+			font-size: 16px;
+			margin-bottom: 2px;
+		}
+		.description {
+			color: #888;
+			font-size: 14px;
+		}
+		.trophy-bar {
+			height: 6px;
+			position: relative;
+			background: white;
+			width: 150px;
+			margin-left: 67px;
+			margin-top: 6px;
+			.bar {
+				height: 6px;
+				position: absolute;
+				background: #30BB00;
+			}
+		}
 	}
 	#app.app .trophy {
 		width: calc(50% - 25px);
 		margin: 3px;
+		.image {
+			width: 38px;
+			height: 38px;
+		}
+		.trophy-bar {
+			margin-left: 0;
+		}
 	}
 	.trophy.unlocked {
 		background: white;
@@ -178,42 +212,8 @@
 	.trophy.locked {
 		border-bottom: 3px solid transparent;
 		opacity: 0.7;
-	}
-	.trophy .image {
-		width: 55px;
-		height: 55px;
-		float: left;
-		margin-right: 12px;
-	}
-	#app.app .trophy .image {
-		width: 38px;
-		height: 38px;
-	}
-	.trophy.locked .image {
-		opacity: 0.4;
-	}
-	.trophy .name {
-		font-size: 16px;
-		margin-bottom: 2px;
-	}
-	.trophy .description {
-		color: #888;
-		font-size: 14px;
-	}
-	.trophy .trophy-bar {
-		height: 6px;
-		position: relative;
-		background: white;
-		width: 150px;
-		margin-left: 67px;
-		margin-top: 6px;
-	}
-	#app.app .trophy .trophy-bar {
-		margin-left: 0;
-	}
-	.trophy .trophy-bar .bar {
-		height: 6px;
-		position: absolute;
-		background: #30BB00;
+		.image {
+			opacity: 0.4;
+		}
 	}
 </style>
