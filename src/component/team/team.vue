@@ -2,9 +2,9 @@
 	<div v-if="team">
 		<div class="page-header page-bar">
 
-			<h1 id="team-name">{{ team.name }}</h1>
+			<h1>{{ team.name }}</h1>
 
-			<div v-if="member" id="tabs" class="tabs">
+			<div v-if="member" class="tabs">
 				<router-link :to="'/forum/category-' + team.forum">
 					<div :link="'/forum/category-' + team.forum" class="tab action" icon="question_answer">
 						<img src="/image/icon/forum.png">
@@ -23,11 +23,11 @@
 
 		<div class="flex-container">
 			<div class="column4">
-				<div id="team-emblem" class="panel">
+				<div class="panel team-emblem">
 					<div class="content">
 						<template v-if="member">
 							<v-tooltip :open-delay="0" :close-delay="0" bottom>
-								<div id="emblem-input" slot="activator">
+								<div class="emblem-input" slot="activator">
 									<input ref="emblemInput" type="file" @change="changeEmblem">
 									<emblem ref="emblem" :team="team" @click.native="$refs.emblemInput.click()" />
 								</div>
@@ -40,12 +40,12 @@
 			</div>
 			
 			<div class="column4">
-				<div id="description" class="panel">
+				<div class="panel description">
 					<div class="content">
 						<div>
 							<span class="guillemet">«</span>
-							<span v-if="owner" id="team-status" ref="descriptionElement" :class="{empty: !team.description && !editingDescription}" class="text" contenteditable @click="startEditingDescription" @blur="saveDescription" @keydown.enter.prevent="saveDescription">{{ team.description }}</span>
-							<span v-else id="team-status" class="text">{{ team.description }}</span>
+							<span v-if="owner" ref="descriptionElement" :class="{empty: !team.description && !editingDescription}" class="team-status text" contenteditable @click="startEditingDescription" @blur="saveDescription" @keydown.enter.prevent="saveDescription">{{ team.description }}</span>
+							<span v-else class="text team-status">{{ team.description }}</span>
 							<span class="guillemet">»</span>
 							<span class="edit-pen"></span>
 						</div>
@@ -63,8 +63,8 @@
 					<div class="content">
 						<h4 class="level">{{ $t('level_n', [team.level]) }}</h4>
 						<v-tooltip :open-delay="0" :close-delay="0" bottom>
-							<div id="bar" slot="activator">
-								<span id="xp-bar" :class="{blue: max_level}" :style="{width: xp_bar_width + '%'}" class="striked"></span>
+							<div class="bar" slot="activator">
+								<span :class="{blue: max_level}" :style="{width: xp_bar_width + '%'}" class="xp-bar striked"></span>
 							</div>
 							<template v-if="max_level">
 								<b>{{ $t('max_level') }}</b>
@@ -88,7 +88,7 @@
 
 						<br>
 						<v-tooltip :open-delay="0" :close-delay="0" bottom>
-							<table id="fights" slot="activator">
+							<table class="fights" slot="activator">
 								<tr>
 									<td class="big">{{ team.victories | number }}</td>
 									<td class="big">{{ team.draws | number }}</td>
@@ -107,7 +107,7 @@
 			</div>
 		</div>
 
-		<div v-if="member" id="team-chat" class="panel">
+		<div v-if="member" class="panel team-chat">
 			<div class="header">
 				<h2>{{ $t('chat') }}</h2>
 				<div class="right">
@@ -126,26 +126,22 @@
 			<div class="header">
 				<h2>{{ $t('candidacies') }} ({{ team.candidacies.length }})</h2>
 			</div>
-			<div class="content">
-				<div id="candidacies">
-					<div v-for="candidacy in team.candidacies" :key="candidacy.id" class="farmer">
-						<router-link to="'/farmer/' + candidacy.farmer.id">
-							<avatar :farmer="candidacy.farmer" />
-							<div class="name">{{ candidacy.farmer.name }}</div>
-						</router-link>
-						<span class="accept" @click="acceptCandidacy(candidacy)">{{ $t('candidacy_accept') }}</span>
-						<span class="reject" @click="rejectCandidacy(candidacy)">{{ $t('candidacy_refuse') }}</span>
-					</div>
+			<div class="content candidacies">
+				<div v-for="candidacy in team.candidacies" :key="candidacy.id" class="farmer">
+					<router-link to="'/farmer/' + candidacy.farmer.id">
+						<avatar :farmer="candidacy.farmer" />
+						<div class="name">{{ candidacy.farmer.name }}</div>
+					</router-link>
+					<span class="accept" @click="acceptCandidacy(candidacy)">{{ $t('candidacy_accept') }}</span>
+					<span class="reject" @click="rejectCandidacy(candidacy)">{{ $t('candidacy_refuse') }}</span>
 				</div>
 			</div>
 		</div>
 
-		<div id="farmers" class="panel">
-
+		<div class="panel">
 			<div class="header">
 				<h2>{{ $t('farmers', [team.member_count]) }}</h2>
 			</div>
-
 			<div class="content">
 				<div v-for="member in team.members" :key="member.id" class="farmer">
 					<router-link :to="'/farmer/' + member.id">
@@ -276,11 +272,11 @@
 
 		<div class="container">
 			<div class="column6">
-				<div id="history" class="panel">
+				<div class="panel">
 					<div class="header">
 						<h2>{{ $t('history') }}</h2>
 					</div>
-					<div class="content fight-history">
+					<div class="content history">
 						<div v-for="fight in team.fights" :key="fight.id" class="fight-wrapper">
 							<fight-history :fight="fight" />
 						</div>
@@ -289,11 +285,11 @@
 			</div>
 			
 			<div class="column6">
-				<div id="tournament-history" class="panel">
+				<div class="panel">
 					<div class="header">
 						<h2>{{ $t('tournaments') }}</h2>
 					</div>
-					<div class="content tournament-history">
+					<div class="content history">
 						<div v-for="(tournament, t) in team.tournaments" :key="t" class="tournament-wrapper">
 							<tournament-history :tournament="tournament" />
 						</div>
@@ -307,7 +303,7 @@
 				<div v-if="member" class="tab" @click="quitTeamStart">{{ $t('quit_team') }}</div>
 				<div v-if="owner" class="tab" @click="changeOwnerStart">{{ $t('change_owner') }}</div>
 				<div v-if="owner" class="tab" @click="dissolveDialog = true">{{ $t('disolve_team') }}</div>
-				<div v-if="!member && $store.getters.connected" id="report-button-container">
+				<div v-if="!member && $store.getters.connected">
 					<div class="report-button tab" @click="reportDialog = true">
 						<img src="/image/icon/flag.png">
 						<span>{{ $t('report') }}</span>
@@ -796,35 +792,29 @@
 	.level {
 		font-size: 20px;
 	}
-	#opened-button td {
-		vertical-align: top;
-	}
 	.v-input--switch {
 		margin-left: 8px;
 	}
-	#team-emblem {
+	.team-emblem {
 		text-align: center;
 	}
 	.emblem {
 		width: 200px;
 		height: 200px;
 	}
-	#emblem-input {
+	.emblem-input {
 		cursor: pointer;
+		input {
+			display: none;
+		}
 	}
-	#emblem-input input {
-		display: none;
-	}
-	#stats-table {
-		width: 100%;
-	}
-	#description {
+	.description {
 		vertical-align: bottom;
-	}
-	#description .text {
-		font-size: 20px;
-		color: #555;
-		font-weight: 300;
+		.text {
+			font-size: 20px;
+			color: #555;
+			font-weight: 300;
+		}
 	}
 	.guillemet {
 		font-size: 34px;
@@ -833,21 +823,14 @@
 		color: #bbb;
 		font-weight: 300;
 	}
-	#team-status {
+	.team-status {
 		padding: 0 5px;
 	}
-	#team-status.empty {
+	.team-status.empty {
 		font-style: italic;
 		color: #999;
 	}
-	#talent {
-		font-size: 25px;
-		color: #555;
-		display: inline-block;
-		font-weight: 300;
-		margin-top: 10px;
-	}
-	#bar {
+	.bar {
 		width: 100%;
 		height: 10px;
 		margin-top: 5px;
@@ -856,7 +839,7 @@
 		position: relative;
 		border-radius: 5px;
 	}
-	#xp-bar {
+	.xp-bar {
 		height: 10px;
 		background: #30BB00;
 		display: inline-block;
@@ -864,66 +847,69 @@
 		position: absolute;
 		border-radius: 5px;
 	}
-	#xp-bar.blue {
+	.xp-bar.blue {
 		background: #008FBB;
 	}
-	#fights {
+	.fights {
 		width: 100%;
 		border-collapse: collapse;
 		text-align: center;
+		.big {
+			font-size: 22px;
+			font-weight: 300;
+			color: #555;
+		}
+		.grey {
+			color: #999;
+		}
 	}
-	#fights .big {
-		font-size: 22px;
-		font-weight: 300;
-		color: #555;
-	}
-	#fights .grey {
-		color: #999;
-	}
-	#specs td {
-		border: none;
-	}
-	#candidacies .farmer {
+	.candidacies .farmer {
 		text-align: center;
 		display: inline-block;
+		.avatar {
+			width: 100px;
+			height: 100px;
+		}
+		.accept {
+			color: green;
+			cursor: pointer;
+			margin: 5px;
+		}
+		.reject {
+			color: red;
+			cursor: pointer;
+			margin: 5px;
+		}	.accept {
+			color: green;
+			cursor: pointer;
+			margin: 5px;
+		}
+		.reject {
+			color: red;
+			cursor: pointer;
+			margin: 5px;
+		}
 	}
-	#candidacies .farmer img {
-		width: 100px;
-		height: 100px;
-	}
-	.accept {
-		color: green;
-		cursor: pointer;
-		margin: 5px;
-	}
-	.reject {
-		color: red;
-		cursor: pointer;
-		margin: 5px;
-	}
-	#team-chat .content {
+	.team-chat .content {
 		padding: 0px;
 	}
 	.chat {
 		height: 250px;
 	}
-	.farmer,
-	.popup.change_owner_popup .farmer {
+	.farmer, .popup.change_owner_popup .farmer {
 		display: inline-block;
 		text-align: center;
 		vertical-align: top;
 		margin-top: 6px;
 		margin-bottom: 6px;
 	}
-	.farmer .avatar,
-	.popup.change_owner_popup .farmer .avatar {
+	.farmer .avatar, .popup.change_owner_popup .farmer .avatar {
 		width: 100px;
 		height: 100px;
 		margin-left: 6px;
 		margin-right: 6px;
 	}
-	.farmer .name,
-	.popup.change_owner_popup .farmer .name {
+	.farmer .name, .popup.change_owner_popup .farmer .name {
 		font-weight: 300;
 		font-size: 17px;
 		text-align: center;
@@ -982,26 +968,26 @@
 		text-align: center;
 		transition: transform 0.4s;
 		transform: scale(1);
-	}
-	.leek .name {
-		font-size: 16px;
-		text-align: center;
-		color: #555;
-		display: inline-block;
-	}
-	.leek .fights {
-		display: inline-block;
-		margin-top: 3px;
-	}
-	.leek .fights img {
-		width: 18px;
-		height: 18px;
-		margin-right: 2px;
-		vertical-align: top;
-	}
-	.leek .fights span {
-		vertical-align: top;
-		font-size: 17px;
+		.name {
+			font-size: 16px;
+			text-align: center;
+			color: #555;
+			display: inline-block;
+		}
+		.fights {
+			display: inline-block;
+			margin-top: 3px;
+			img {
+				width: 18px;
+				height: 18px;
+				margin-right: 2px;
+				vertical-align: top;
+			}
+			span {
+				vertical-align: top;
+				font-size: 17px;
+			}
+		}
 	}
 	.leek.dragging {
 		opacity: 0.2;
@@ -1042,13 +1028,7 @@
 	.compo .leeks.dashed {
 		border: 4px dashed #aaa;
 	}
-	#create-compo-wrapper {
-		text-align: center;
-	}
-	#history .content {
-		padding: 10px;
-	}
-	#tournament-history .content {
+	.history {
 		padding: 10px;
 	}
 </style>
