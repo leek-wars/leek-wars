@@ -1,5 +1,5 @@
 <template lang="html">
-	<div id="signup-page">
+	<div>
 		<div class="page-header page-bar">
 			<h1>{{ $t('title') }}</h1>
 		</div>
@@ -7,9 +7,9 @@
 			<div class="column6">
 				<div class="panel">
 					<div class="content">
-						<div id="introduction" class="desc" v-html="$t('intro')"></div>
-						<div id="leek-rect">
-							<img id="illustration" src="/image/signup_illustration.png">
+						<div class="desc introduction" v-html="$t('intro')"></div>
+						<div class="leek-rect">
+							<img src="/image/signup_illustration.png">
 							<div v-if="leek_count" class="desc" v-html="$t('n_leeks_already', [leek_count])"></div>
 						</div>
 					</div>
@@ -20,7 +20,7 @@
 						<h2>Inscription</h2>
 					</div>
 					<div class="content">
-						<form id="signup-form" method="post" @submit="submit">
+						<form class="signup-form" method="post" @submit="submit">
 							<table>
 								<tr>
 									<td class="align-right">{{ $t('your_farmer_name') }}</td>
@@ -74,7 +74,7 @@
 
 							<br>
 
-							<i18n id="cgu" tag="div" path="conditions">
+							<i18n class="cgu" tag="div" path="conditions">
 								<router-link place="link" to="/conditions">{{ $t('conditions_name') }}</router-link>
 							</i18n>
 							<br>
@@ -93,7 +93,7 @@
 
 				<div class="container">
 					<div class="column6">
-						<div id="leek-ranking" class="ranking">
+						<div class="ranking">
 							<h4>{{ $t('leek') }}</h4>
 							<table class="ranking">
 								<tr class="header">
@@ -114,7 +114,7 @@
 						</div>
 					</div>
 					<div class="column6">
-						<div id="farmer-ranking" class="ranking">
+						<div class="ranking">
 							<h4>{{ $t('farmer') }}</h4>
 							<table class="ranking">
 								<tr class="header">
@@ -140,7 +140,7 @@
 
 		<h1>{{ $t('screenshots') }}</h1>
 
-		<div id="screenshots" class="panel first">
+		<div class="panel first screenshots">
 			<div class="content">
 				<div class="container">
 					<div v-for="image of images" :key="image[0]" class="column6">
@@ -152,9 +152,9 @@
 				</div>
 			</div>
 		</div>
-		<div v-if="bigImage" id="bigscreen" @click="bigImage = null">
+		<div v-if="bigImage" class="bigscreen" @click="bigImage = null">
 			<img :src="'/image/signup/' + bigImage">
-			<div id="biglegend">{{ $t(bigImageLegend) }}</div>
+			<div class="biglegend">{{ $t(bigImageLegend) }}</div>
 		</div>
 
 		<v-dialog v-model="successDialog" :max-width="600">
@@ -275,47 +275,38 @@
 </script>
 
 <style lang="scss" scoped>
-	#page .top .panel {
+	.top .panel {
 		margin-right: 15px;
 	}
 	@media screen and (max-width: 900px) {
-		#page .top .column6:nth-child(2) .panel {
+		.top .column6:nth-child(2) .panel {
 			margin-top: 15px;
 		}
 	}
 	@media screen and (min-width: 900px) {
-		#page .top {
+		.top {
 			display: flex;
 		}
-		#page .top .column6 .panel {
+		.top .column6 .panel {
 			width: 100%;
 		}
-		#page .top .column6 {
+		.top .column6 {
 			display: flex;
 		}
 	}
-	#introduction {
+	.introduction {
 		text-align: justify;
 	}
-	#page .desc {
+	.desc {
 		font-size: 18px;
 		font-weight: 300;
 		padding: 10px;
+		b {
+			font-weight: 400;
+		}
 	}
-	#page .desc b {
-		font-weight: 400;
-	}
-	#leek-rect {
+	.leek-rect {
 		text-align: center;
-	}
-	#signup, #login {
-		vertical-align: top;
-	}
-	#signup {
-		width: 60%;
-	}
-	#login {
-		width: 40%;
 	}
 	.align-right {
 		text-align: right;
@@ -326,7 +317,7 @@
 		text-align: left;
 		width: 50%;
 	}
-	#signup-form {
+	.signup-form {
 		width: 100%;
 		margin: 0 auto;
 	}
@@ -359,24 +350,23 @@
 	.signup-message {
 		padding: 20px;
 	}
-	#screenshots .screenshot {
-		padding: 10px;
+	.screenshots {
+		.screenshot {
+			padding: 10px;
+		}
+		img {
+			width: 100%;
+			cursor: zoom-in;
+			border-radius: 4px;
+		}
+		.legend {
+			text-align: center;
+			font-size: 18px;
+			font-weight: 300;
+			color: #333;
+		}
 	}
-	#screenshots img {
-		width: 100%;
-		cursor: zoom-in;
-		border-radius: 4px;
-	}
-	#screenshots .legend {
-		text-align: center;
-		font-size: 18px;
-		font-weight: 300;
-		color: #333;
-	}
-	#signup-page #dark {
-		opacity: 0.8;
-	}
-	#bigscreen {
+	.bigscreen {
 		z-index: 1000;
 		position: fixed;
 		top: 0;
@@ -386,67 +376,67 @@
 		padding: 100px 0;
 		text-align: center;
 		background: rgba(0,0,0,0.7);
+		img {
+			max-width: 1000px;
+			box-shadow: 0px 0px 80px black;
+			cursor: zoom-out;
+			border-radius: 10px;
+			border: 10px solid white;
+		}
 	}
-	#bigscreen img {
-		max-width: 1000px;
-		box-shadow: 0px 0px 80px black;
-		cursor: zoom-out;
-		border-radius: 10px;
-    	border: 10px solid white;
-	}
-	#biglegend {
+	.biglegend {
 		padding-top: 10px;
 		color: white;
 		font-size: 20px;
 		text-shadow: 0px 0px 20px black;
 	}
-	#cgu {
+	.cgu {
 		font-size: 11px;
 		text-align: center;
-	}
-	#cgu a {
-		color: #5FAD1B;
+		a {
+			color: #5FAD1B;
+		}
 	}
 	.ranking {
 		margin: 0 auto;
 		width: calc(100% - 20px);
-	}
-	#signup-page .ranking td {
-		border-bottom: 1px solid #ddd;
-		border-right: 1px solid #ddd;
-		text-align: center;
-		padding: 4px 12px;
-		background: white;
-	}
-	#signup-page .ranking td:last-child {
-		border-right: none;
-	}
-	#signup-page .ranking tr.header {
-		background: #e5e5e5;
-		text-align: center;
-	}
-	#signup-page .ranking th {
-		padding: 5px 12px;
-		font-weight: normal;
-		color: #222;
-		font-size: 16px;
-		border-bottom: 1px solid #fff;
-		border-right: 1px solid #fff;
-	}
-	#signup-page .ranking th:last-child {
-		border-right: none;
-	}
-	#signup-page .ranking .first a {
-		color: #FFA900;
-		font-weight: bold;
-	}
-	#signup-page .ranking .second a {
-		color: #9C9C9C;
-		font-weight: bold;
-	}
-	#signup-page .ranking .third a {
-		color: #AE4E00;
-		font-weight: bold;
+		td {
+			border-bottom: 1px solid #ddd;
+			border-right: 1px solid #ddd;
+			text-align: center;
+			padding: 4px 12px;
+			background: white;
+		}
+		td:last-child {
+			border-right: none;
+		}
+		tr.header {
+			background: #e5e5e5;
+			text-align: center;
+		}
+		th {
+			padding: 5px 12px;
+			font-weight: normal;
+			color: #222;
+			font-size: 16px;
+			border-bottom: 1px solid #fff;
+			border-right: 1px solid #fff;
+		}
+		th:last-child {
+			border-right: none;
+		}
+		.first a {
+			color: #FFA900;
+			font-weight: bold;
+		}
+		.second a {
+			color: #9C9C9C;
+			font-weight: bold;
+		}
+		.third a {
+			color: #AE4E00;
+			font-weight: bold;
+		}
 	}
 	h4 {
 		margin: 10px;
