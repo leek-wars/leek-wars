@@ -129,6 +129,7 @@ Vue.directive('large-emojis', {
 
 const vueMain = new Vue({
 	router, i18n, store,
+	data: { savedPosition: 0 },
 	render: (h) => {
 		if (location.pathname === '/console') {
 			return h(Console)
@@ -156,6 +157,15 @@ const vueMain = new Vue({
 		setInterval(() => {
 			LeekWars.time = (Date.now() / 1000) | 0 - LeekWars.timeDelta
 		}, 1000)
+
+		this.$on('loaded', () => {
+			if (this.$data.savedPosition > 0) {
+				setTimeout(() => {
+					window.scrollTo(0, this.$data.savedPosition)
+					this.$data.savedPosition = 0
+				}, 100)
+			}
+		})
 
 		LeekWars.sfwInit()
 		LeekWars.setFavicon()

@@ -51,6 +51,7 @@ import { store } from '@/model/store'
 import Vue from 'vue'
 import { Component } from 'vue-property-decorator'
 import Router from 'vue-router'
+import { vueMain } from '@/model/vue';
 
 @Component({
 	components: { signup: Signup, leek: LeekPage, chat: ChatPage },
@@ -70,15 +71,6 @@ Vue.use(Router)
 const router = new Router({
 	mode: 'history',
 	base: process.env.BASE_URL,
-	scrollBehavior(to, from, savedPosition) {
-		if (savedPosition) {
-			return new Promise((resolve, reject) => {
-				setTimeout(() => resolve(savedPosition), 500)
-			})
-		} else {
-			return { x: 0, y: 0 }
-		}
-	},
 	routes: [
 		{ path: '/', component: Home },
 		{ path: '/godfather', component: Home },
@@ -131,8 +123,8 @@ const router = new Router({
 		{ path: '/login', component: Login },
 		{ path: '/leek/:id', name: 'leek', component: LeekPage },
 		{ path: '/leek/:id/history', component: History, props: {type: 'leek'} },
-		{ path: '/market', name: 'market', component: Market },
-		{ path: '/market/:item', component: Market },
+		{ path: '/market', name: 'market', component: Market, meta: {noscroll: true} },
+		{ path: '/market/:item', component: Market, meta: {noscroll: true} },
 		{ path: '/messages', component: Messages },
 		{ path: '/messages/conversation/:id', component: Messages },
 		{ path: '/messages/new/:id/:name/:avatar_changed', component: Messages },
@@ -140,7 +132,6 @@ const router = new Router({
 		{ path: '/moderation/fault/:id', component: Moderation },
 		{ path: '/new-leek', component: NewLeek },
 		{ path: '/notifications', component: Notifications },
-		{ path: '/ranking', component: RankingPage },
 		{ path: '/ranking', component: RankingPage },
 		{ path: '/ranking/:category', component: RankingPage },
 		{ path: '/ranking/:category/page-:page', component: RankingPage },
@@ -162,11 +153,29 @@ const router = new Router({
 		{ path: '/trophies', component: Trophies },
 		{ path: '/trophies/:id', component: Trophies },
 	],
+	scrollBehavior(to, from, savedPosition) {
+		vueMain.$data.savedPosition = 0
+		if (savedPosition && !from.hash) {
+			vueMain.$data.savedPosition = savedPosition.y
+		} else if (!to.meta.noscroll) {
+			return { x: 0, y: 0 }
+		}
+	},
 })
 
 router.afterEach((to) => {
 	ga('set', 'page', to.path)
 	ga('send', 'pageview')
+	if (to.hash) {
+		vueMain.$once('loaded', () => {
+			setTimeout(() => {
+				const element = document.querySelector(to.hash)
+				if (element) {
+					window.scrollTo(0, element.getBoundingClientRect().top + window.scrollY)
+				}
+			})
+		})
+	}
 })
 
 router.beforeEach((to, from, next) => {

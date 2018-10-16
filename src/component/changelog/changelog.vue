@@ -50,6 +50,7 @@
 				}
 				this.changelog = data.data.changelog
 				LeekWars.setTitle(this.$t('title'))
+				this.$root.$emit('loaded')
 			})
 		}
 	}

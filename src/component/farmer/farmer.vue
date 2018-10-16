@@ -429,11 +429,7 @@
 		get talent_gains() {
 			return this.farmer ? Math.round(this.farmer.talent_more / 3) : 0
 		}
-		
-		created() {
-			this.update()
-		}
-		@Watch('$route.params')
+		@Watch('$route.params', {immediate: true})
 		update() {
 			const id = this.$route.params.id
 			if (this.farmer) {
@@ -467,6 +463,7 @@
 			this.warnings()
 			this.newWebsite = this.farmer.website
 			this.newGitHub = this.farmer.github
+			this.$root.$emit('loaded')
 		}
 		logout() {
 			this.$store.commit('disconnect')

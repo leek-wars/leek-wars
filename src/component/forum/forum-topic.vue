@@ -45,9 +45,10 @@
 							</div>
 						</div>
 
-						<div :id="message.id" class="message card">
+						<div class="message card">
 							<div class="wrapper">
-								<a v-if="message.id != -1" :href="'#' + message.id" class="link">#</a>
+								<a v-if="message.id != -1" :href="'#message-' + message.id" class="link">#</a>
+								<router-link v-else to="" class="link">#</router-link>
 								
 								<textarea v-if="message.editing" v-model="message.message" :style="{height: message.height + 'px'}" class="original"></textarea>
 								<div v-emojis v-code v-else class="text" v-html="message.html"></div>
@@ -107,6 +108,8 @@
 					</div>
 				</div>
 
+				<pagination v-if="topic" :current="page" :total="pages" :url="'/forum/category-' + category.id + '/topic-' + topic.id" />
+
 				<div v-if="topic && !topic.locked" class="editor">
 					<h4>{{ $t('answer') }}</h4>
 					<textarea v-model="newMessage" class="response card" @keyup="updateDraft"></textarea>
@@ -114,10 +117,8 @@
 						<div class="button green" @click="send">{{ $t('send') }}</div>
 					</center>
 					<formatting-rules />
+					<br>
 				</div>
-
-				<br>
-				<pagination v-if="topic" :current="page" :total="pages" :url="'/forum/category-' + category.id + '/topic-' + topic.id" />
 
 				<h2 v-if="topic">
 					<router-link to="/forum">{{ $t('forum.title') }}</router-link>
@@ -171,13 +172,15 @@
 		mounted() {
 			LeekWars.contenteditable_paste_protect(this.$refs.topicTitle as HTMLElement)
 		}
-		created() {
-			this.update()
-		}
-		@Watch("$route.params")
+		@Watch("$route.params", {immediate: true})
 		update() {
-			const topic = this.$route.params.topic
-			this.page = 'page' in this.$route.params ? parseInt(this.$route.params.page, 10) : 1
+			const topic = parseInt(this.$route.params.topic, 10)
+			const page = 'page' in this.$route.params ? parseInt(this.$route.params.page, 10) : 1
+			if (this.topic && this.topic.id === topic && this.page === page) {
+				this.$root.$emit('loaded')
+				return
+			}
+			this.page = page
 
 			if (this.topic) { this.topic.messages = null }
 			LeekWars.get<any>('forum/get-messages/' + topic + '/' + this.page + '/' + this.$store.state.token).then((data) => {
@@ -201,9 +204,8 @@
 					this.category.name = this.category.team > 0 ? this.category.name : this.$t('forum.category_' + this.category.name) as string
 				}
 				this.pages = data.data.pages
-
 				LeekWars.setTitle(this.topic.name, this.$t('forum_topic.n_messages', [data.data.total]))
-
+				this.$root.$emit('loaded')
 				this.newMessage = localStorage.getItem('forum/draft') as string
 			})
 		}
