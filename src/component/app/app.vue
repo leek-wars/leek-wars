@@ -506,6 +506,7 @@
 		vertical-align: top;
 		font-size: 16px;
 		line-height: 36px;
+		white-space: nowrap;
 	}
 	#app.app .page-bar .info {
 		display: none;
