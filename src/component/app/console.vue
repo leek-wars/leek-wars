@@ -1,5 +1,5 @@
 <template lang="html">
-	<div v-autostopscroll ref="scroll" class="leekscript-console">
+	<div v-autostopscroll ref="scroll" class="console">
 		<div class="lines">
 			<div v-for="(line, l) in lines" :key="l" class="line">
 				<div v-if="line.type === 'code'">
@@ -68,7 +68,7 @@
 </script>
 
 <style lang="scss" scoped>
-	.leekscript-console {
+	.console {
 		height: 300px;
 		background: rgba(45, 45, 45, 0.9);
 		color: #ccc;
@@ -78,36 +78,36 @@
 		overflow-x: hidden;
 		padding: 5px;
 	}
-	.leekscript-console.fullscreen {
+	.console.fullscreen {
 		width: calc(100% - 10px);
 		height: calc(100% - 10px);
 	}
-	.leekscript-console .lines .line {
+	.line {
 		padding: 2px 4px;
 		word-wrap: break-word;
+		span {
+			vertical-align: top;
+		}
 	}
-	.leekscript-onsole .line .line span {
-		vertical-align: top;
-	}
-	.leekscript-console .lines .line.result {
+	.line.result {
 		color: white;
 		font-weight: bold;
 		font-size: 16px;
 		margin-bottom: 2px;
+		.time {
+			font-size: 13px;
+			margin-left: 10px;
+			font-weight: normal;
+			color: #888;
+		}
 	}
-	.leekscript-console .lines .line.result.error {
+	.line.result.error {
 		color: red;
 	}
-	.leekscript-console .lines .line.result .time {
-		font-size: 13px;
-		margin-left: 10px;
-		font-weight: normal;
-		color: #888;
-	}
-	.leekscript-console .input {
+	.input {
 		padding: 2px 4px;
 	}
-	.leekscript-console input {
+	input {
 		border: none;
 		background: transparent;
 		color: white;
@@ -118,7 +118,7 @@
 		min-height: 0;
 		width: calc(100% - 18px);
 	}
-	.leekscript-console .arrow {
+	.arrow {
 		width: 18px;
 		margin-right: 6px;
 		color: white;
