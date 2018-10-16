@@ -31,7 +31,7 @@
 					<div class="header">
 						<h2>{{ $t('weapons') }}</h2>
 					</div>
-					<div class="content items">
+					<div class="content items weapons">
 						<loader v-if="!weapons.length" />
 						<div class="center">
 							<router-link v-ripple v-for="weapon in weapons" :key="weapon.id" :to="'/market/' + weapon.name" :farmer-count="items[weapon.id].farmer_count" :leek-count="items[weapon.id].leek_count" class="item weapon">
