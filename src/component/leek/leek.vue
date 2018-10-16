@@ -1091,9 +1091,8 @@
 		min-height: 80px;
 	}
 	.weapon {
-		display: inline-block;
 		vertical-align: bottom;
-		margin: 5px;
+		margin: 2px;
 	}
 	.weapons-popup .weapon {
 		cursor: move;
@@ -1104,6 +1103,7 @@
 		display: inline-flex;
 		align-items: center;
 		justify-content: center;
+		margin: 5px;
 	}
 	.weapons-popup .weapon img {
 		max-width: 170px;
