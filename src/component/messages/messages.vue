@@ -189,7 +189,7 @@
 		padding: 0;
 	}
 	.chat {
-		height: calc(100vh - 138px);
+		height: calc(100vh - 128px);
 	}
 	#app.app .chat {
 		height: calc(100vh - 56px);
