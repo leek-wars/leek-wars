@@ -32,7 +32,7 @@
 			<div class="content">
 
 				<div class="wrapper">
-					<div id="tuto-menu">
+					<div class="tuto-menu">
 						<a href="#presentation">
 							<div class="menu-item">
 								<img src="/image/help/presentation.png"><br>
@@ -1003,7 +1003,7 @@
 </script>
 
 <style lang="scss" scoped>
-	#tuto-menu {
+	.tuto-menu {
 		text-align: center;
 	}
 	.menu-item {

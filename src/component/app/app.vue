@@ -235,7 +235,6 @@
 	.material-icons {
 		font-size: 26px;
 	}
-
 	body {
 		margin: 0;
 		font-family: "Roboto", sans-serif;
@@ -245,12 +244,10 @@
 		color: #111;
 		background: #333;
 	}
-
 	::selection {
 		background: #61B01C;
 		color: white;
 	}
-
 	table {
 		border-collapse: collapse;
 	}
@@ -260,13 +257,11 @@
 	img {
 		border-width: 0;
 	}
-
 	h1, h2, h3, h4 {
 		font-weight: 400;
 		margin: 0;
 		color: #777;
 	}
-
 	h1 {
 		font-size: 25px;
 		line-height: 34px;
@@ -276,18 +271,14 @@
 		color: white;
 		position: relative;
 		background: #5FAD1B;
-		text-shadow: 0px 2px 3px rgba(0,0,0,0.2),
-				0px 1px 3px rgba(0,0,0,0.1),
-				0px 3px 6px rgba(0,0,0,0.1);
+		text-shadow: 0px 2px 3px rgba(0,0,0,0.2), 0px 1px 3px rgba(0,0,0,0.1), 0px 3px 6px rgba(0,0,0,0.1);
 		border-top-left-radius: 3px;
 		white-space: nowrap;
 		text-overflow: ellipsis;
 	}
-
 	h1 a, h1 a:visited {
 		color: white;
 	}
-
 	h1::after {
 		content: "";
 		position: absolute;
@@ -299,11 +290,9 @@
 		border-width: 36px 0 0 19px;
 		border-color: transparent transparent transparent #5FAD1B;
 	}
-
 	h2 {
 		font-size: 25px;
 	}
-
 	h3 {
 		margin-top: 10px;
 		margin-bottom: 10px;
@@ -316,7 +305,6 @@
 		position: relative;
 		height: 22px;
 	}
-
 	h3::before {
 		content: "";
 		position: absolute;
@@ -326,7 +314,6 @@
 		height: 32px;
 		background: #559C18;
 	}
-
 	h3::after {
 		content: "";
 		position: absolute;
@@ -338,54 +325,45 @@
 		border-width: 32px 0 0 12px;
 		border-color: transparent transparent transparent #5FAD1B;
 	}
-
 	h4 {
 		font-size: 18px;
 		color: #666;
 		font-weight: bold
 	}
-
 	a {
 		color: #111;
 		text-decoration: none;
 	}
-
 	a:visited {
 		color: #111;
 	}
-
 	textarea {
 		font-family: "Roboto";
 		font-size: 15px;
 	}
-
 	[draggable] {
 		user-select: none;
 	}
-
-	/* Console button */
 	#console {
 		position: fixed;
 		top: 46px;
 		left: 38px;
 		cursor: pointer;
 		display: none;
-	}
-	#console img {
-		width: 30px;
-		opacity: 0.3;
+		img {
+			width: 30px;
+			opacity: 0.3;
+		}
 	}
 	#console:hover img {
 		opacity: 0.6;
 	}
-
 	#app.connected #console {
 		display: block;
 	}
 	#app.app #console {
 		display: none;
 	}
-	
 	#app.app #page {
 		padding-bottom: 0;
 	}
@@ -401,12 +379,8 @@
 	#app.app.connected #page .page-bar h1 {
 		display: none;
 	}
-	#header-mobile, #menu-mobile {
+	#menu-mobile {
 		display: none;
-	}
-	#app.app #header-mobile .header-button {
-		line-height: 56px;
-		color: #eee;
 	}
 	#app.app .notifications-button img, #app.app .messages-button img {
 		margin: 0;
@@ -436,7 +410,6 @@
 	#app.app .menu .section.console {
 		display: block;
 	}
-	
 	#app.app .menu .separator {
 		display: none;
 	}
@@ -456,26 +429,21 @@
 	#app.app .menu .section.about {
 		display: block;
 	}
-
 	#center {
 		padding: 0 20px;
 	}
-
 	#app.connected #center,
 	#app.connected #footer {
 		margin-left: 170px;
 	}
-
 	#app.menu-collapsed:not(.app) #center,
 	#app.menu-collapsed:not(.app) #footer {
 		margin-left: 68px;
 	}
-
 	#wrapper {
 		max-width: 1100px;
 		margin: 0 auto;
 	}
-
 	#big-leeks {
 		z-index: -10;
 		position: fixed;
@@ -483,12 +451,12 @@
 		right: 0;
 		bottom: 0;
 		height: 100px;
-	}
-	#big-leeks .wrapper {
-		position: relative;
-		max-width: 1000px;
-		margin: 0 auto;
-		height: 100px;
+		.wrapper {
+			position: relative;
+			max-width: 1000px;
+			margin: 0 auto;
+			height: 100px;
+		}
 	}
 	#app.connected #big-leeks {
 		left: 190px;
@@ -776,7 +744,6 @@
 		border-width: 0 20px 36px 0;
 		border-color: transparent rgba(110, 201, 31, 0.8) transparent   transparent ;
 	}
-
 	.page-bar .tab:first-child.selected::after {
 		content: "";
 		position: absolute;
@@ -788,11 +755,9 @@
 		border-width: 36px 0 0 20px;
 		border-color: transparent  transparent   transparent rgba(110, 201, 31, 0.8);
 	}
-
 	.page-bar .tab span {
 		vertical-align: top;
 	}
-
 	.page-bar .tab img {
 		width: 22px;
 		margin-right: 8px;
@@ -802,7 +767,6 @@
 		margin-top: -3px;
 		margin-right: 5px;
 	}
-
 	.page-bar .tab input[type='text'],
 	.page-bar .tab input[type='number']
 	{
@@ -812,11 +776,6 @@
 		color: white;
 		border: none;
 	}
-
-	.page-bar .switch {
-		margin-top: -1px;
-	}
-
 	.page-bar .tab.green {
 		background-color: rgba(95,173,27,0.7);
 		color: white;
@@ -836,11 +795,9 @@
 	.page-bar .tab.green:not(.disabled):hover:after {
 		border-color: transparent transparent transparent rgba(95,173,27,0.9);
 	}
-
 	.page-footer .tab:first-child:before {
 		border: none;
 	}
-
 	.hab {
 		width: 18px;
 		height: 18px;
@@ -850,7 +807,6 @@
 		background-repeat: no-repeat;
 		background-position: center;
 	}
-
 	.crystal {
 		width: 18px;
 		height: 40px;
@@ -862,19 +818,6 @@
 		background-repeat: no-repeat;
 		background-position: center;
 	}
-
-	/* Dialog Info */
-
-	#info-dialog {
-		display: none;
-	}
-
-	.box {
-		display: flex;
-		align-items: center;
-		justify-content: center;
-	}
-
 	/* Popups */
 	#dark {
 		display: none;
@@ -989,7 +932,6 @@
 	.v-dialog .actions div.green:hover {
 		background: #73D120;
 	}
-
 	/* Inputs */
 	input {
 		font-family: "Roboto";
@@ -1007,10 +949,7 @@
 	input:active, input:focus {
 		outline: none;
 	}
-
-	/*
-	* Toasts
-	*/
+	/* Toasts */
 	#toasts {
 		position: fixed;
 		left: 0;
@@ -1046,20 +985,16 @@
 		top: 0;
 		height: 36px;
 	}
-
 	.link {
 		cursor: pointer;
 		color: #555;
 	}
-
 	.link:hover {
 		color: #111;
 	}
-
 	.small {
 		font-size: 12px;
 	}
-
 	.smiley {
 		display: inline-block;
 		vertical-align: middle;
@@ -1068,7 +1003,6 @@
 		height: 16px;
 		float: none;
 	}
-
 	.smiley.large {
 		width: 30px;
 		height: 30px;
@@ -1086,20 +1020,9 @@
 		margin-left: 10px;
 		font-size: 16px;
 	}
-
-	#header-mobile .dev-label,
-	#header-mobile .beta-label,
-	#header-mobile .local-label
-	{
-		line-height: 42px;
-		vertical-align: bottom;
-		margin-left: 2px;
-	}
-
 	.dev-label {
 		background: red;
 	}
-
 	.beta-label {
 		background: #b0b;
 	}
@@ -1408,22 +1331,6 @@
 		body:not(.connected) #header #logo-wrapper {
 			padding-left: 20px;
 			padding-right: 20px;
-		}
-		#app.connected #header-mobile {
-			display: flex;
-			justify-content: space-between;
-			align-items: flex-center;
-		}
-		#app.connected #header-mobile #logo {
-			height: 30px;
-			padding: 5px 10px;
-		}
-		#app.connected #header-mobile .header-button {
-			display: inline-block;
-			margin: 8px 10px;
-		}
-		#app.connected #header-mobile a:last-child .header-button {
-			margin-right: 0;
 		}
 		#center, #footer {
 			padding: 0;

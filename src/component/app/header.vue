@@ -183,17 +183,11 @@
 	#header-signin .button-wrapper:last-child .header-button {
 		padding-right: 12px;
 	}
-	#header .header-button .text,
-	#header-mobile .header-button .text {
+	#header .header-button .text {
 		line-height: 42px;
 		height: 42px;
 		display: inline-block;
 		vertical-align: top;
-	}
-	#header-mobile .header-button .text {
-		font-size: 16px;
-		line-height: 50px;
-		height: 50px;
 	}
 	#header .header-button .crystal {
 		vertical-align: bottom;
