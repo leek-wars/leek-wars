@@ -293,11 +293,7 @@
 							</router-link>
 						</div>
 					</div>
-					<div class="content fight-history">
-						<div v-for="fight in farmer.fight_history" :key="fight.id" class="fight-wrapper">
-							<fight-history :fight="fight" />
-						</div>
-					</div>
+					<fights-history class="content" :fights="farmer.fight_history" />
 				</div>
 			</div>
 			<div class="column6">
@@ -305,11 +301,7 @@
 					<div class="header">
 						<h2>{{ $t('tournaments') }}</h2>
 					</div>
-					<div class="content history">
-						<div v-for="tournament in farmer.tournaments" :key="tournament.id" class="tournament-wrapper">
-							<tournament-history :tournament="tournament" />
-						</div>
-					</div>
+					<tournaments-history class="content" :tournaments="farmer.tournaments" />
 				</div>
 			</div>
 		</div>
@@ -859,9 +851,6 @@
 	}
 	.trophies-bonus {
 		margin: 5px 0;
-	}
-	.history {
-		padding: 10px;
 	}
 	.warnings {
 		text-align: center;

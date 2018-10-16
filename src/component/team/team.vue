@@ -276,11 +276,7 @@
 					<div class="header">
 						<h2>{{ $t('history') }}</h2>
 					</div>
-					<div class="content history">
-						<div v-for="fight in team.fights" :key="fight.id" class="fight-wrapper">
-							<fight-history :fight="fight" />
-						</div>
-					</div>
+					<fights-history class="content" :fights="team.fights" />
 				</div>
 			</div>
 			
@@ -289,11 +285,7 @@
 					<div class="header">
 						<h2>{{ $t('tournaments') }}</h2>
 					</div>
-					<div class="content history">
-						<div v-for="(tournament, t) in team.tournaments" :key="t" class="tournament-wrapper">
-							<tournament-history :tournament="tournament" />
-						</div>
-					</div>
+					<tournaments-history class="content" :tournaments="team.tournaments" />
 				</div>
 			</div>
 		</div>
@@ -413,7 +405,6 @@
 </template>
 
 <script lang="ts">
-	import FightHistory from '@/component/history/fight-history.vue'
 	import { Farmer } from '@/model/farmer'
 	import { Leek } from '@/model/leek'
 	import { LeekWars } from '@/model/leekwars'
@@ -422,10 +413,7 @@
 	import { Composition, Team, TeamMember } from '@/model/team'
 	import { Component, Vue, Watch } from 'vue-property-decorator'
 
-	@Component({
-		name: 'team', i18n: {},
-		components: { FightHistory }
-	})
+	@Component({ name: 'team', i18n: {} })
 	export default class TeamPage extends Vue {
 		team: Team | null = null
 		member: boolean = false
@@ -1027,8 +1015,5 @@
 	}
 	.compo .leeks.dashed {
 		border: 4px dashed #aaa;
-	}
-	.history {
-		padding: 10px;
 	}
 </style>
