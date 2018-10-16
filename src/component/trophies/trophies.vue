@@ -5,10 +5,10 @@
 		</div>
 		<div class="panel">
 			<div class="content first">
-				<span id="global-percent">{{ Math.floor(100 * count / total) }}%</span>
-				<span id="global-count">{{ count }} / {{ total }}</span>  
+				<span class="global-percent">{{ Math.floor(100 * count / total) }}%</span>
+				<span class="global-count">{{ count }} / {{ total }}</span>  
 				<br>
-				<div id="global-bar">
+				<div class="global-bar">
 					<div class="bar striked" style="width: {Math.floor(100 * count / total)}%"></div>
 				</div>
 			</div>
