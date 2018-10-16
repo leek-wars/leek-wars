@@ -37,7 +37,7 @@
 </template>
 
 <script lang="ts">
-	import { Action } from '@/component/player/game/action'
+	import { Action } from '@/model/action'
 	import { EffectType } from '@/model/effect'
 	import { Component, Prop, Vue } from 'vue-property-decorator'
 	import ReportStatisticsEntity from './report-statistics-entity.vue'

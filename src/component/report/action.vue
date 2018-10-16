@@ -3,7 +3,7 @@
 		{{ $t('fight.turn_n', [turn]) }}
 	</div>
 	<div v-else-if="type === Action.USE_WEAPON">
-		<i18n path="fight.leek_hit">
+		<i18n path="fight.leek_shoot">
 			<leek :leek="leek" place="leek" />
 		</i18n>
 		<span v-if="action[4] === 2">... {{ $t('effect.critical') }}</span>
@@ -133,7 +133,7 @@
 </template>
 
 <script lang="ts">
-	import { Action } from '@/component/player/game/action'
+	import { Action } from '@/model/action'
 	import { EffectType } from '@/model/effect'
 	import { Component, Prop, Vue } from 'vue-property-decorator'
 	import ActionLeekElement from './action-leek.vue'

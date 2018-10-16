@@ -45,7 +45,7 @@
 						<img src="/image/charac/small/mp.png">
 						<div class="stat mp color-mp">{{ entity.mp }}</div>
 						<img src="/image/charac/small/frequency.png">
-						<div class="stat frequency color-frequency">{{ entity.frequency }}</div>"
+						<div class="stat frequency color-frequency">{{ entity.frequency }}</div>
 						<br>
 						<img src="/image/charac/small/strength.png">
 						<div class="stat strength color-strength">{{ entity.strength }}</div>
@@ -79,9 +79,9 @@
 </template>
 
 <script lang="ts">
+	import ActionElement from '@/component/report/action.vue'
 	import { Effect, EffectType } from '@/model/effect'
 	import { Component, Prop, Vue } from 'vue-property-decorator'
-	import ActionElement from './action.vue'
 	import { Game } from './game/game'
 
 	@Component({ name: 'hud', components: {ActionElement} })

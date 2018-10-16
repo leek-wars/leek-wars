@@ -6,9 +6,8 @@
 </template>
 
 <script lang="ts">
-	import ActionElement from '@/component/player/action.vue'
-	import { Action } from '@/component/player/game/action'
-	import { FightLeek } from '@/component/player/game/fight'
+	import ActionElement from '@/component/report/action.vue'
+	import { Action } from '@/model/action'
 	import { LeekWars } from '@/model/leekwars'
 	import { Component, Prop, Vue } from 'vue-property-decorator'
 
