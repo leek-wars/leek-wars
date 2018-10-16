@@ -95,6 +95,7 @@
 		}
 		scrollBottom() {
 			const messages = this.$refs.messages as HTMLElement
+			if (!messages) { return true }
 			return messages && messages.scrollTop + messages.offsetHeight === messages.scrollHeight
 		}
 		mounted() {
