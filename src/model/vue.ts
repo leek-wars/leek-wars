@@ -8,7 +8,9 @@ import Comments from '@/component/comment/comments.vue'
 import Emblem from '@/component/emblem.vue'
 import FormattingRules from '@/component/forum/formatting-rules.vue'
 import FightHistory from '@/component/history/fight-history.vue'
+import FightsHistory from '@/component/history/fights-history.vue'
 import TournamentHistory from '@/component/history/tournament-history.vue'
+import TournamentsHistory from '@/component/history/tournaments-history.vue'
 import LeekImage from '@/component/leek-image.vue'
 import Loader from '@/component/loader.vue'
 import ConversationElement from '@/component/messages/conversation.vue'
@@ -81,7 +83,9 @@ Vue.component('report-dialog', ReportDialog)
 Vue.component('pagination', Pagination)
 Vue.component('formatting-rules', FormattingRules)
 Vue.component('fight-history', FightHistory)
+Vue.component('fights-history', FightsHistory)
 Vue.component('tournament-history', TournamentHistory)
+Vue.component('tournaments-history', TournamentsHistory)
 Vue.component('notification', NotificationElement)
 Vue.component('lw-code', Code)
 Vue.component('conversation', ConversationElement)

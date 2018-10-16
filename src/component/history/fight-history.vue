@@ -36,14 +36,13 @@
 				<div class="fighter">[{{ fight.team2_name }}]</div>
 			</router-link>
 		</div>
-		<div class="fight-time">{{ LeekWars.formatDuration(fight.date) }}</div>
+		<div class="time">{{ LeekWars.formatDuration(fight.date) }}</div>
 	</div>
 </template>
 
 <script lang="ts">
 	import { Fight, FightContext, FightType } from '@/model/fight'
 	import { Component, Prop, Vue } from 'vue-property-decorator'
-
 	@Component({ name: 'fight-history' })
 	export default class FightHistory extends Vue {
 		@Prop() fight!: Fight
@@ -51,3 +50,64 @@
 		FightContext = FightContext
 	}
 </script>
+
+<style lang="scss" scoped>
+	.fight {
+		margin: 5px;
+		color: #333;
+		text-align: center;
+		border-radius: 3px;
+		font-size: 15px;
+		height: 42px;
+		white-space: nowrap;
+		background: white;
+		.center {
+			display: inline-block;
+			background: #555;
+			width: 36px;
+			height: 42px;
+			margin-left: -4px;
+			img {
+				width: 22px;
+				height: 22px;
+				margin: 10px 6px;
+			}
+		}
+		.fighters {
+			height: 42px;
+			margin: 0 auto;
+		}
+		.fighter {
+			padding: 4px 6px;
+			width: 98px;
+			vertical-align: top;
+			display: inline-block;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			height: 30px;
+			line-height: 30px;
+		}
+		.fighter:last-child {
+			margin-left: -4px;
+		}
+		.time {
+			color: #888;
+			font-size: 11px;
+			margin-right: 5px;
+			text-align: right;
+			margin-top: -15px;
+		}
+	}
+	.win {
+		background-color: #B6F182;
+	}
+	.draw {
+		background-color: #DCDCDC;
+	}
+	.defeat {
+		background-color: #FFB3AE;
+	}
+	.generating {
+		background-color: white;
+	}
+</style>

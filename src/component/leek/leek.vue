@@ -285,11 +285,7 @@
 								</router-link>
 							</div>
 						</div>
-						<div v-if="leek" class="content history">
-							<div v-for="fight in leek.fights" :key="fight.id" class="fight-wrapper">
-								<fight-history :fight="fight" />
-							</div>
-						</div>
+						<fights-history class="content" :fights="leek.fights" />
 					</div>
 				</template>
 			</div>
@@ -300,11 +296,7 @@
 						<div class="header">
 							<h2>{{ $t('tournaments') }}</h2>
 						</div>
-						<div class="content history">
-							<div v-for="tournament in leek.tournaments" :key="tournament.id" class="tournament-wrapper">
-								<tournament-history :tournament="tournament" />
-							</div>
-						</div>
+						<tournaments-history class="content" :tournaments="leek.tournaments" />
 					</div>
 				</template>
 			</div>
@@ -1159,9 +1151,6 @@
 	}
 	.ai_popup .ai {
 		cursor: pointer;
-	}
-	.history {
-		padding: 10px;
 	}
 	.farmer-potions {
 		.potion {
