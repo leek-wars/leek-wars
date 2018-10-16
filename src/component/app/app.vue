@@ -589,6 +589,7 @@
 		height: 36px;
 		right: 0;
 		display: flex;
+		justify-content: flex-end;
 	}
 	.panel > .header .right .button {
 		height: 36px;
@@ -1272,6 +1273,9 @@
 		}
 		#header .button-wrapper:first-child .header-button:before {
 			display: none;
+		}
+		.column4, .column8 {
+			width: 50%;
 		}
 	}
 	#app.app {
