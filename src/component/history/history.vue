@@ -47,11 +47,7 @@
 				<br>
 				<div class="n-fights">{{ $t('n_fights', [filteredFights.length]) }}</div>
 
-				<div class="fight-history">
-					<div v-for="fight in filteredFights" :key="fight.id" class="fight-wrapper">
-						<fight-history :fight="fight" />
-					</div>
-				</div>
+				<fights-history :fights="filteredFights" />
 			</div>
 		</div>
 	</div>
@@ -192,12 +188,12 @@
 		font-weight: 300;
 		color: #555;
 	}
-	.fight-history {
+	.history {
 		text-align: center;
 		display: flex;
 	}
-	.fight-wrapper {
-		min-width: 25%;
+	.history /deep/ .wrapper {
+		min-width: 25% !important;
 	}
 	.grey {
 		color: #aaa;
