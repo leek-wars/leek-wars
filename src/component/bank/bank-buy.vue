@@ -16,7 +16,7 @@
 					<br>
 					<h4>{{ $t('paypal_message') }}</h4>
 					<br>
-					<img v-if="!loading" class="paypal-button" src="/image/paypal_buy.gif" @click="clickPayPal">
+					<img v-if="!loading" class="paypal-button" src="/image/bank/paypal_buy.gif" @click="clickPayPal">
 					<loader v-if="loading" />
 				</div>
 			</div>
