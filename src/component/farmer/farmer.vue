@@ -11,7 +11,7 @@
 			<div v-if="farmer" class="tabs">
 				<div v-if="myFarmer">
 					<template v-if="farmer.tournament && farmer.tournament.current">
-						<router-link :to="{path: '/tournament', params: {id: farmer.tournament.current}}">
+						<router-link :to="'/tournament/' + farmer.tournament.current">
 							<div class="tab green">{{ $t('see_tournament') }}</div>
 						</router-link>
 					</template>
