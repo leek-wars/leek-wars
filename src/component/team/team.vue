@@ -480,10 +480,12 @@
 				this.owner = teamMember && this.team.membersById[this.$store.state.farmer.id].grade === 'owner'
 
 				this.team.compositionsById = {}
-				for (const composition of this.team.compositions) {
-					this.team.compositionsById[composition.id] = composition
-					for (const leek of composition.leeks) {
-						Vue.set(leek, 'dragging', false)
+				if (this.team.compositions) {
+					for (const composition of this.team.compositions) {
+						this.team.compositionsById[composition.id] = composition
+						for (const leek of composition.leeks) {
+							Vue.set(leek, 'dragging', false)
+						}
 					}
 				}
 				this.member = teamMember
