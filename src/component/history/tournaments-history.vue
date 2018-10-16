@@ -1,6 +1,6 @@
 <template lang="html">
 	<div class="history">
-		<div v-for="tournament in tournaments" :key="tournament.id" class="wrapper">
+		<div v-for="(tournament, t) in tournaments" :key="t" class="wrapper">
 			<tournament-history :tournament="tournament" />
 		</div>
 	</div>
