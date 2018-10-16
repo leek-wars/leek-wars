@@ -239,7 +239,7 @@
 		margin: 0;
 		font-family: "Roboto", sans-serif;
 		font-size: 15px;
-		overflow-y: auto;
+		overflow-y: scroll;
 		overflow-x: hidden;
 		color: #111;
 		background: #333;
