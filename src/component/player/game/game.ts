@@ -9,13 +9,13 @@ import { Obstacle } from '@/component/player/game/obstacle'
 import { Particles } from '@/component/player/game/particles'
 import { Sounds } from '@/component/player/game/sound'
 import { Textures } from '@/component/player/game/texture'
-import { Axe, BLaser, Broadsword, Destroyer, DoubleGun, Electrisor, FlameThrower, Gazor, GrenadeLauncher, Katana, Laser, MachineGun, Magnum, MLaser, Pistol, Shotgun, WhiteWeaponAnimation } from '@/component/player/game/weapons'
+import { Axe, BLaser, Broadsword, Destroyer, DoubleGun, Electrisor, FlameThrower, Gazor, GrenadeLauncher, Katana, Laser, MachineGun, Magnum, MLaser, Pistol, Shotgun } from '@/component/player/game/weapons'
+import { Action } from '@/model/action'
 import { Area } from '@/model/area'
 import { EffectType } from '@/model/effect'
+import { FightData, TEAM_COLORS } from '@/model/fight'
 import { i18n } from '@/model/i18n'
 import { LeekWars } from '@/model/leekwars'
-import { Action } from './action'
-import { FightData } from './fight'
 
 enum Colors {
 	MP_COLOR = "#08D900",
@@ -28,21 +28,6 @@ enum Colors {
 	RESISTANCE_COLOR = "#fe7700",
 	MAGIC_COLOR = "#b800b6",
 }
-
-const TEAM_COLORS = [
-	"#0000AB", // blue
-	"#DC0000", // red
-	"#4FBF1C", // green
-	"#FDED00", // yellow
-	"#B02D20", // brown
-	"#A2A2A2", // grey
-	"#9800AE", // purple
-	"#FF7D00", // orange
-	"#14D7E4", // cyan
-	"#E414C9", // pink
-	"#000000", // black
-	"#ffffff", // white
-]
 
 // Params
 const FPS = 60
@@ -685,14 +670,11 @@ class Game {
 							const action = this.actions[this.currentAction]
 
 							if (action === undefined) {
-
 								// this.log(i18n.t('fight.end_of_fight') as string)
 								this.fightEnd = true
-
 								this.reportTimer = setTimeout(this.showReport, 2500)
 								return
 							}
-
 							this.doAction(action)
 						}
 					}
@@ -801,7 +783,6 @@ class Game {
 			this.leeks[action[1]].mp = action[3]
 			if (action.length > 4) { this.leeks[action[1]].strength = action[4] }
 			if (action.length > 5) { this.leeks[action[1]].magic = action[5] }
-
 			this.actionDone()
 			break
 		}
@@ -821,25 +802,19 @@ class Game {
 		}
 		case Action.CARE: {
 			this.leeks[action[1]].care(action[2], this.jumping)
-			if (!this.jumping) {
-				this.log(action)
-			}
+			this.log(action)
 			this.actionDone()
 			break
 		}
 		case Action.BOOST_VITA: {
 			this.leeks[action[1]].boostVita(action[2], this.jumping)
-			if (!this.jumping) {
-				this.log(action)
-			}
+			this.log(action)
 			this.actionDone()
 			break
 		}
 		case Action.SET_WEAPON: {
 			(this.leeks[action[1]] as Leek).setWeapon(new WEAPONS[action[2] - 1](this))
-			if (!this.jumping) {
-				this.log(action)
-			}
+			this.log(action)
 			this.actionDone()
 			break
 		}
@@ -848,7 +823,6 @@ class Game {
 			const launcher = action[1]
 			const cell = action[2]
 			const chip = action[3]
-			const result = action[4]
 			const leeksID = action[5]
 
 			if (this.jumping) {
@@ -864,76 +838,46 @@ class Game {
 				this.actionDone()
 				break
 			}
-
-			let log = i18n.t('fight.leek_cast', [
-				this.colorText(this.leeks[action[1]].name, this.getLeekColor(action[1])),
-				i18n.t('chip.' + LeekWars.chips[LeekWars.chipTemplates[chip].item].name),
-			]) as string
-
-			if (result > 0) { // Success!
-				if (result === 2) {
-					log += "... " + i18n.t('effect.critical')
+			if (CHIPS[action[3] - 1] !== null) {
+				const chipAnimation: any = new CHIPS[action[3] - 1](this)
+				const leeks = []
+				for (const leek of leeksID) {
+					leeks.push(this.leeks[leek])
 				}
-				if (CHIPS[action[3] - 1] !== null) {
-					const chipAnimation: any = new CHIPS[action[3] - 1](this)
-					const leeks = []
-					for (const leek of leeksID) {
-						leeks.push(this.leeks[leek])
-					}
-					this.leeks[action[1]].useChip(chipAnimation, cell, leeks)
-					this.chips.push(chipAnimation)
-				} else {
-					this.actionDone()
-				}
+				this.leeks[action[1]].useChip(chipAnimation, cell, leeks)
+				this.chips.push(chipAnimation)
 			} else {
-				// log += "... " + i18n.t('fight.fail');
 				this.actionDone()
 			}
-			this.log(log)
-
+			this.log(action)
 			break
 		}
 		case Action.USE_WEAPON: {
-
 			if (this.jumping) {
 				this.actionDone()
 				break
 			}
 			const launcher = action[1]
 			const cell = action[2]
-			const result = action[4]
 			const leeksID = action[5]
 
-			const gesture = (this.leeks[action[1]] as Leek).weapon instanceof WhiteWeaponAnimation ? 'leek_hit' : 'leek_shoot'
-			let log = i18n.t('fight.' + gesture, [this.colorText(this.leeks[action[1]].name, this.getLeekColor(action[1]))]) as string
-
-			if (result > 0) { // Success!
-				if (result === 2) {
-					log += "... " + i18n.t('fight.critical')
-				}
-				const leeks = new Array()
-				for (const leek of leeksID) {
-					leeks.push(this.leeks[leek])
-				}
-				(this.leeks[launcher] as Leek).useWeapon(cell, leeks)
-				// Pas de cibles workaround
-				if (leeksID.length === 0) {
-					this.actionDone()
-				}
+			const leeks = new Array()
+			for (const leek of leeksID) {
+				leeks.push(this.leeks[leek])
 			}
-			this.log(log)
+			(this.leeks[launcher] as Leek).useWeapon(cell, leeks)
+			// Pas de cibles workaround
+			if (leeksID.length === 0) {
+				this.actionDone()
+			}
+			this.log(action)
 			break
 		}
 		case Action.LIFE_LOST: {
-
 			const erosion = action.length > 3 ? action[3] : 0
 			this.leeks[action[1]].looseLife(action[2], erosion, this.jumping)
-
 			if (!this.jumping) {
-				this.log(i18n.t('fight.leek_loose_x', [
-					this.colorText(this.leeks[action[1]].name, this.getLeekColor(action[1])),
-					this.colorText(i18n.t('fight.n_life', [action[2]]) as string, Colors.LIFE_COLOR),
-				]) as string)
+				this.log(action)
 				this.leeks[action[1]].randomHurt()
 			}
 			this.actionDone()
@@ -951,7 +895,7 @@ class Game {
 				this.removeDrawableElement(entity.drawID, entity.dy)
 				this.actionDone()
 			} else {
-				this.log(i18n.t('fight.leek_is_dead', this.colorText(this.leeks[action[1]].name, this.getLeekColor(action[1]))) as string)
+				this.log(action)
 				entity.kill() // Animation
 			}
 			break
@@ -976,18 +920,12 @@ class Game {
 			const summonID = action[2]
 			const cell = action[3]
 			const summon = this.leeks[summonID]
-
 			summon.setCell(cell)
 			summon.summoner = this.leeks[caster]
 			summon.active = true
-
 			summon.drawID = this.addDrawableElement(summon, summon.y)
-
 			if (!this.jumping) {
-				this.log(i18n.t('fight.summon', [
-					this.colorText(this.leeks[action[1]].name, this.getLeekColor(action[1])),
-					this.colorText(summon.name, this.getLeekColor(summon.id)),
-				]) as string)
+				this.log(action)
 				this.S.bulb.play()
 			}
 			this.actionDone()
@@ -1007,12 +945,7 @@ class Game {
 			entity.reborn()
 
 			entity.drawID = this.addDrawableElement(entity, entity.y)
-			if (!this.jumping) {
-				this.log(i18n.t('fight.leek_resurrect', [
-					this.colorText(this.leeks[action[1]].name, this.getLeekColor(action[1])),
-					this.colorText(this.leeks[action[2]].name, this.getLeekColor(action[2])),
-				]) as string)
-			}
+			this.log(action)
 			this.actionDone()
 			break
 		}
@@ -1028,7 +961,7 @@ class Game {
 			this.showCellX = xy.x * this.ground.scale
 			this.showCellY = xy.y * this.ground.scale
 			this.showCellTime = 50
-			this.log(i18n.t('fight.leek_show_cell', this.colorText(this.leeks[action[1]].name, this.getLeekColor(action[1])), action[2]) as string)
+			this.log(action)
 			break
 		}
 		case Action.ADD_WEAPON_EFFECT : {
@@ -1111,153 +1044,53 @@ class Game {
 		this.effects[id].texture = new Image()
 		this.effects[id].texture.src = image
 		leek.effects[id] = this.effects[id]
+		
+		this.log(action)
 
-		// Action !
 		switch (effect) {
-
 		case EffectType.ABSOLUTE_SHIELD:
-			if (!this.jumping) {
-				this.log(i18n.t('fight.leek_win_x', [
-					this.colorText(leek.name, this.getLeekColor(target)),
-					this.colorText(i18n.t('fight.n_absolute_shield', value) as string, Colors.SHIELD_COLOR),
-				]) as string)
-			}
 			leek.buffAbsoluteShield(value, this.jumping)
 			break
-
 		case EffectType.RELATIVE_SHIELD:
-			if (!this.jumping) {
-				this.log(i18n.t('fight.leek_win_x', [
-					this.colorText(leek.name, this.getLeekColor(target)),
-					this.colorText(i18n.t('fight.n_relative_shield', value + '%') as string, Colors.SHIELD_COLOR),
-				]) as string)
-			}
 			leek.buffRelativeShield(value, this.jumping)
 			break
-
 		case EffectType.VULNERABILITY:
-			if (!this.jumping) {
-				this.log(i18n.t('fight.leek_receives_x', [
-					this.colorText(leek.name, this.getLeekColor(target)),
-					this.colorText(i18n.t('fight.n_vulnerability', value + '%') as string, Colors.SHIELD_COLOR),
-				]) as string)
-			}
 			leek.buffRelativeShield(-value, this.jumping)
 			break
-
 		case EffectType.BUFF_AGILITY:
-			if (!this.jumping) {
-				this.log(i18n.t('fight.leek_win_x', [
-					this.colorText(leek.name, this.getLeekColor(target)),
-					this.colorText(i18n.t('fight.n_agility', value) as string, Colors.AGILITY_COLOR),
-				]) as string)
-			}
 			leek.buffAgility(value, this.jumping)
 			break
-
 		case EffectType.BUFF_STRENGTH:
-
-			if (!this.jumping) {
-				this.log(i18n.t('fight.leek_win_x', [
-					this.colorText(leek.name, this.getLeekColor(target)),
-					this.colorText(i18n.t('fight.n_strength', value) as string, Colors.STRENGTH_COLOR),
-				]) as string)
-			}
 			leek.buffStrength(value, this.jumping)
 			break
-
 		case EffectType.BUFF_TP:
-			if (!this.jumping) {
-				this.log(i18n.t('fight.leek_win_x', [
-					this.colorText(leek.name, this.getLeekColor(target)),
-					this.colorText(i18n.t('fight.n_tp', value) as string, Colors.TP_COLOR),
-				]) as string)
-			}
 			leek.buffTP(value, this.jumping)
 			break
-
 		case EffectType.BUFF_MP:
-			if (!this.jumping) {
-				this.log(i18n.t('fight.leek_win_x', [
-					this.colorText(leek.name, this.getLeekColor(target)),
-					this.colorText(i18n.t('fight.n_mp', value) as string, Colors.MP_COLOR),
-				]) as string)
-			}
 			leek.buffMP(value, this.jumping)
 			break
-
 		case EffectType.BUFF_WISDOM:
-			if (!this.jumping) {
-				this.log(i18n.t('fight.leek_win_x', [
-					this.colorText(leek.name, this.getLeekColor(target)),
-					this.colorText(i18n.t('fight.n_wisdom', [value]) as string, Colors.WISDOM_COLOR),
-				]) as string)
-			}
 			leek.buffWisdom(value, this.jumping)
 			break
-
 		case EffectType.BUFF_RESISTANCE:
-			if (!this.jumping) {
-				this.log(i18n.t('fight.leek_win_x', [
-					this.colorText(leek.name, this.getLeekColor(target)),
-					this.colorText(i18n.t('fight.n_resistance', value) as string, Colors.RESISTANCE_COLOR),
-				]) as string)
-			}
 			leek.buffResistance(value, this.jumping)
 			break
-
 		case EffectType.SHACKLE_MP:
-			if (!this.jumping) {
-				this.log(i18n.t('fight.leek_loose_x', [
-					this.colorText(leek.name, this.getLeekColor(target)),
-					this.colorText(i18n.t('fight.n_mp', value) as string, Colors.MP_COLOR),
-				]) as string)
-			}
 			leek.looseMP(value, this.jumping)
 			break
-
 		case EffectType.SHACKLE_TP:
-			if (!this.jumping) {
-				this.log(i18n.t('fight.leek_loose_x', [
-					this.colorText(leek.name, this.getLeekColor(target)),
-					this.colorText(i18n.t('fight.n_tp', value) as string, Colors.TP_COLOR),
-				]) as string)
-			}
 			leek.looseTP(value, this.jumping)
 			break
-
 		case EffectType.SHACKLE_STRENGTH:
-			if (!this.jumping) {
-				this.log(i18n.t('fight.leek_loose_x', [
-					this.colorText(leek.name, this.getLeekColor(target)),
-					this.colorText(i18n.t('fight.n_strength', value) as string, Colors.STRENGTH_COLOR),
-				]) as string)
-			}
 			leek.looseStrength(value, this.jumping)
 			break
-
 		case EffectType.SHACKLE_MAGIC:
-			if (!this.jumping) {
-				this.log(i18n.t('fight.leek_loose_x', [
-					this.colorText(leek.name, this.getLeekColor(target)),
-					this.colorText(i18n.t('fight.n_magic', value) as string, Colors.MAGIC_COLOR),
-				]) as string)
-			}
 			leek.looseMagic(value, this.jumping)
 			break
-
 		case EffectType.DAMAGE_RETURN:
-			if (!this.jumping) {
-				this.log(i18n.t('fight.leek_win_x', [
-					this.colorText(leek.name, this.getLeekColor(target)),
-					this.colorText(i18n.t('fight.n_damage_return', value + '%') as string, 'black'),
-				]) as string)
-			}
 			leek.buffDamageReturn(value, this.jumping)
 			break
-
 		case EffectType.POISON:
-			// rien
 			break
 		}
 	}
@@ -1413,7 +1246,9 @@ class Game {
 	}
 
 	public log(action: any) {
-		this.currentActions.push({id: this.currentAction, action})
+		if (!this.jumping) {
+			this.currentActions.push({id: this.currentAction, action})
+		}
 	}
 
 	public setupMouseMove() {
@@ -1786,10 +1621,8 @@ class Game {
 				this.leeks[i].relativeShield = 0
 				this.leeks[i].damageReturn = 0
 				this.leeks[i].cell = this.states[i].cell
-
 				this.leeks[i].dead = false
 				this.leeks[i].bubble = new Bubble(this)
-				// $('#entity-info-' + this.leeks[i].id).removeClass('dead')
 
 				; (this.leeks[i] as Leek).weapon = null
 

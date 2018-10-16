@@ -133,8 +133,7 @@
 </template>
 
 <script lang="ts">
-	import { FightLeek } from '@/component/player/game/fight'
-	import { Fight, FightContext, FightType, Report, ReportLeek } from '@/model/fight'
+	import { Fight, FightContext, FightLeek, FightType, Report, ReportLeek } from '@/model/fight'
 	import { LeekWars } from '@/model/leekwars'
 	import { Component, Vue } from 'vue-property-decorator'
 	import ActionsElement from './report-actions.vue'
