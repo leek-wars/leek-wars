@@ -1113,7 +1113,7 @@
 		opacity: 0.3;
 		cursor: default;
 	}
-	.chips {
+	.panel .chips {
 		text-align: center;
 		padding: 20px 0;
 	}
