@@ -494,6 +494,7 @@
 				if (teamMember && !this.$store.state.chat.team) {
 					LeekWars.socket.send([SocketMessage.TEAM_CHAT_ENABLE])
 				}
+				this.$root.$emit('loaded')
 			})
 		}
 

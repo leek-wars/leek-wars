@@ -140,6 +140,7 @@
 			this.chatLanguage = LeekWars.languages[this.$i18n.locale]
 			LeekWars.get<any>('forum/get-categories/' + this.forumLanguage.code + '/' + this.$store.state.token).then((data) => {
 				this.categories = data.data.categories
+				this.$root.$emit('loaded')
 			})
 			LeekWars.get<any>('farmer/get-connected').then((data: any) => {
 				this.connected_farmers = data.data.farmers

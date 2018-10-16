@@ -232,6 +232,7 @@
 					this.rankings = data.data.rankings
 					this.ranking = []
 					LeekWars.setTitle(this.$t('ranking.title'), this.$t('ranking.fun'))
+					this.$root.$emit('loaded')
 				})
 			} else {
 				this.order = 'order' in this.$route.params ? this.$route.params.order : 'talent'
@@ -268,6 +269,7 @@
 					this.ranking = ranking
 					LeekWars.setActions([{icon: 'search', click: () => this.openSearch()}])
 					LeekWars.setTitle(this.$t('ranking.title'), this.$t('ranking.n_' + this.category + 's', [data.data.total]))
+					this.$root.$emit('loaded')
 				})
 			}
 		}

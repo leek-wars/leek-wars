@@ -59,6 +59,7 @@
 				// LW.pages.statistics.fight_categories()
 				// LW.pages.statistics.interpolate_button(data.data.statistics)
 				// LW.pages.statistics.statistic_click()
+				this.$root.$emit('loaded')
 			})
 		}
 		beforeDestroy() {

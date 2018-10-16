@@ -636,6 +636,7 @@
 					for (const ai of this.$store.state.farmer.ais) {
 						Vue.set(ai, 'dragging', false)
 					}
+					this.$root.$emit('loaded')
 				}
 			})
 		}

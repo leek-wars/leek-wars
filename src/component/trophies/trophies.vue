@@ -97,6 +97,7 @@
 				} else {
 					LeekWars.setTitle(this.$t('title_text', data.data.farmer_name), subtitle)
 				}
+				this.$root.$emit('loaded')
 			})
 		}
 	}
