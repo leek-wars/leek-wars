@@ -136,7 +136,7 @@
 			display: inline-block;
 			color: white;
 			font-size: 16px;
-			margin: 0 10px;
+			margin: 9px 10px;
 		}
 	}
 	.category-bar {
@@ -147,7 +147,6 @@
 		border-radius: 3px;
 		width: calc(80% - 100px);
 		max-width: 300px;
-		margin-left: auto;
 		margin-top: 12px;
 		.bar {
 			height: 12px;
