@@ -41,7 +41,7 @@ const COMMANDS = [
 		name: "lama",
 		description: "Ajoute #LamaSwag avec une emphase au message",
 		regex: /(^| )\/lama(?=$|\s)/gi,
-		replacement: () => "$1<i>#LamaSwag</i>"
+		replacement: (_: string, space: string) => space + "<i>#LamaSwag</i>"
 	}, {
 		name: "lenny",
 		description: "Ajoute ( ͡° ͜ʖ ͡° ) au message",
@@ -75,12 +75,12 @@ const COMMANDS = [
 		name: "replacetable",
 		description: "Ajoute ┬─┬﻿ ノ( ゜-゜ノ) au message",
 		regex: /(^| )\/replacetable(?=$|\s)/gi,
-		replacement: () => "$1┬─┬﻿ ノ( ゜-゜ノ)"
+		replacement: (_: string, space: string) => space + "┬─┬﻿ ノ( ゜-゜ノ)"
 	}, {
 		name: "shrug",
 		description: "Ajoute ¯\\_(ツ)_/¯ au message",
 		regex: /(^| )\/shrug(?=$|\s)/gi,
-		replacement: () => "$1¯\\_(ツ)_/¯"
+		replacement: (_: string, space: string) => space + "¯\\_(ツ)_/¯"
 	}, {
 		name: "tuto",
 		description: "Ajoute un lien vers le tutorial au message",
