@@ -1132,8 +1132,6 @@
 	}
 	.column-scenario .team {
 		width: 810px;
-	}
-	.column-scenario .team {
 		text-align: center;
 	}
 	.column-scenario .leeks {
@@ -1185,6 +1183,19 @@
 	.column-scenario .leek .ai {
 		display: inline-block;
 		vertical-align: top;
+		background-image: url('/image/ai.png');
+		background-size: cover;
+		width: 55px;
+		height: 65px;
+		margin-top: 10px;
+		margin-left: -30px;
+		padding: 6px;
+		word-wrap: break-word;
+		color: #888;
+		font-size: 12px;
+		padding-top: 20px;
+		font-weight: bold;
+		cursor: pointer;
 	}
 
 	.popup.editor_ai_popup .content {
@@ -1216,21 +1227,6 @@
 		position: absolute;
 		top: -5px;
 		left: -10px;
-		cursor: pointer;
-	}
-	.column-scenario .leek .ai {
-		background-image: url('/image/ai.png');
-		background-size: cover;
-		width: 55px;
-		height: 65px;
-		margin-top: 10px;
-		margin-left: -30px;
-		padding: 6px;
-		word-wrap: break-word;
-		color: #888;
-		font-size: 12px;
-		padding-top: 20px;
-		font-weight: bold;
 		cursor: pointer;
 	}
 	.popup.editor_leek_popup .leek {
@@ -1285,12 +1281,10 @@
 		display: inline-block;
 		vertical-align: top;
 		margin-left: 10px;
+		text-align: center;
 	}
 	.leek-column .stats tr:nth-child(even) {
 		background: white;
-	}
-	.leek-column .stats {
-		text-align: center;
 	}
 	.leek-column .stats .stat {
 		width: 160px;

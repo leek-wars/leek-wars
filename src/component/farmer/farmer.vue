@@ -691,7 +691,6 @@
 	.infos .info .edit {
 		background-image: url('/image/edit_pen.png');
 		background-size: cover;
-		display: inline-block;
 		cursor: pointer;
 		width: 12px;
 		height: 12px;

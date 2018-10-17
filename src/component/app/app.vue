@@ -366,15 +366,14 @@
 	}
 	#app.app #page {
 		padding-bottom: 0;
+		margin-right: 0;
 	}
 	#app.app.connected #header {
 		display: none;
 	}
-	#app.app #page-wrapper {
-		padding: 0;
-	}
 	#app.app .panel {
 		border-radius: 0;
+		margin-right: 0;
 	}
 	#app.app.connected #page .page-bar h1 {
 		display: none;
@@ -390,6 +389,9 @@
 	}
 	#app.app #center {
 		transition: transform ease 200ms;
+		margin: 0;
+		padding: 0;
+		overflow-y: auto;
 	}
 	#app.app.menu-expanded #center {
 		transform: translateX(250px);
@@ -485,13 +487,11 @@
 	}
 	#app.app #page-wrapper {
 		background: none;
+		padding: 0;
 	}
 	#page {
 		margin-right: -12px;
 		min-height: calc(100vh - 244px);
-	}
-	#app.app #page {
-		margin-right: 0;
 	}
 	#page .page-bar {
 		padding-right: 15px;
@@ -517,9 +517,6 @@
 		box-shadow: 0px 10px 11px -11px rgba(0,0,0,0.75);
 		margin-right: 12px;
 		margin-bottom: 12px;
-	}
-	#app.app .panel {
-		margin-right: 0;
 	}
 	.panel.first {
 		border-top-left-radius: 0px;
@@ -675,7 +672,7 @@
 	}
 	.button:not(.flat) i {
 		vertical-align: top;
-    	margin-top: -3px;
+		margin-top: -3px;
 	}
 	.center {
 		text-align: center;
@@ -1284,11 +1281,6 @@
 		height: 100vh;
 		overflow-x: hidden;
 	}
-	#app.app #center {
-		margin: 0;
-		padding: 0;
-		overflow-y: auto;
-	}
 
 	@media screen and (max-width: 999px) {
 		#header .header-button {
@@ -1356,9 +1348,7 @@
 		bottom: 0;
 		right: 0;
 		z-index: 1;
-		background-image: -webkit-gradient(linear, 0 0, 100% 100%, color-stop(.25, rgba(255, 255, 255, .25)),
-			color-stop(.25, transparent), color-stop(.5, transparent), color-stop(.5, rgba(255, 255, 255, .25)),
-			color-stop(.75, rgba(255, 255, 255, .25)), color-stop(.75, transparent), to(transparent) );
+		background-image: -webkit-gradient(linear, 0 0, 100% 100%, color-stop(.25, rgba(255, 255, 255, .25)), color-stop(.25, transparent), color-stop(.5, transparent), color-stop(.5, rgba(255, 255, 255, .25)), color-stop(.75, rgba(255, 255, 255, .25)), color-stop(.75, transparent), to(transparent) );
 		background-size: 50px 50px;
 		border-top-left-radius: 20px;
 		border-bottom-left-radius: 20px;

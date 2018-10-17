@@ -870,15 +870,6 @@
 			color: red;
 			cursor: pointer;
 			margin: 5px;
-		}	.accept {
-			color: green;
-			cursor: pointer;
-			margin: 5px;
-		}
-		.reject {
-			color: red;
-			cursor: pointer;
-			margin: 5px;
 		}
 	}
 	.team-chat .content {

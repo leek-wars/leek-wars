@@ -203,7 +203,7 @@
 <style lang="scss" scoped>
 	.column3 {
 		position: sticky;
-    	top: 12px;
+		top: 12px;
 	}
 	.panel > .content {
 		padding: 0;

@@ -640,13 +640,11 @@
 	@media screen and (max-width: 599px) {
 		.message-wrapper {
 			flex-wrap: wrap;
+			margin-bottom: 10px;
 		}
 		.profile img {
 			width: 80px;
 			height: 80px;
-		}
-		.message-wrapper {
-			margin-bottom: 10px;
 		}
 		.message {
 			margin-left: 0;

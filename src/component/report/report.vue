@@ -440,7 +440,6 @@
 		font-family: monospace;
 		color: #555;
 		margin: 0;
-		font-family: monospace;
 		word-break: break-all;
 		white-space: pre-wrap;
 	}
@@ -480,7 +479,7 @@
 		fill-opacity: 0.2;
 	}
 	#chart .ct-label.ct-horizontal {
-	text-align: center;
+		text-align: center;
 	}
 	#chart .tooltip {
 		pointer-events: none;

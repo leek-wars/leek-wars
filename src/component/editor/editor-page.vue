@@ -836,6 +836,8 @@
 	#compiling {
 		padding: 5px 10px;
 		border-radius: 2px;
+		color: black;
+		background: #f2f2f2;
 	}
 	#compiling .loader {
 		display: inline-block;
@@ -858,10 +860,6 @@
 	#results .error {
 		color: white;
 		background: #FF6C71;
-	}
-	#compiling {
-		color: black;
-		background: #f2f2f2;
 	}
 	#compiling img {
 		vertical-align: middle;

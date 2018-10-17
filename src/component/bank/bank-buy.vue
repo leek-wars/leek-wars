@@ -99,7 +99,7 @@
 	.paypal-button {
 		cursor: pointer;
 	}
-	.content h3 {
+	.content h3 {
 		color: red;
 	}
 	#sk-kit h3:before {
