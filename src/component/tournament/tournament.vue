@@ -11,7 +11,7 @@
 			<div ref="sizer" :class="{zoomed: zoomed}" class="content tournament">
 				
 				<loader v-if="!tournament" />
-				<svg v-else class="tournament" :class="{zoomed: zoomed}" :style="{height: zoomed ? height : 'auto'}" viewBox="-485 -400 970 800">
+				<svg v-else :class="{zoomed: zoomed}" :style="{height: zoomed ? height : 'auto'}" class="tournament" viewBox="-485 -400 970 800">
 
 					<tournament-block :item="sixteenths[0].contestants[0]" :x="-470" :y="-350" :size="50" />
 					<tournament-fight :fight="sixteenths[0].fight" :x="-420" :y="-340" />

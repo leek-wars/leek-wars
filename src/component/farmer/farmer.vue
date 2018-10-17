@@ -293,7 +293,7 @@
 							</router-link>
 						</div>
 					</div>
-					<fights-history class="content" :fights="farmer.fight_history" />
+					<fights-history :fights="farmer.fight_history" class="content" />
 				</div>
 			</div>
 			<div class="column6">
@@ -301,7 +301,7 @@
 					<div class="header">
 						<h2>{{ $t('tournaments') }}</h2>
 					</div>
-					<tournaments-history class="content" :tournaments="farmer.tournaments" />
+					<tournaments-history :tournaments="farmer.tournaments" class="content" />
 				</div>
 			</div>
 		</div>

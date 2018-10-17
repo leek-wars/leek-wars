@@ -27,7 +27,7 @@
 					<div class="content">
 						<template v-if="member">
 							<v-tooltip :open-delay="0" :close-delay="0" bottom>
-								<div class="emblem-input" slot="activator">
+								<div slot="activator" class="emblem-input">
 									<input ref="emblemInput" type="file" @change="changeEmblem">
 									<emblem ref="emblem" :team="team" @click.native="$refs.emblemInput.click()" />
 								</div>
@@ -63,7 +63,7 @@
 					<div class="content">
 						<h4 class="level">{{ $t('level_n', [team.level]) }}</h4>
 						<v-tooltip :open-delay="0" :close-delay="0" bottom>
-							<div class="bar" slot="activator">
+							<div slot="activator" class="bar">
 								<span :class="{blue: max_level}" :style="{width: xp_bar_width + '%'}" class="xp-bar striked"></span>
 							</div>
 							<template v-if="max_level">
@@ -88,7 +88,7 @@
 
 						<br>
 						<v-tooltip :open-delay="0" :close-delay="0" bottom>
-							<table class="fights" slot="activator">
+							<table slot="activator" class="fights">
 								<tr>
 									<td class="big">{{ team.victories | number }}</td>
 									<td class="big">{{ team.draws | number }}</td>
@@ -276,7 +276,7 @@
 					<div class="header">
 						<h2>{{ $t('history') }}</h2>
 					</div>
-					<fights-history class="content" :fights="team.fights" />
+					<fights-history :fights="team.fights" class="content" />
 				</div>
 			</div>
 			
@@ -285,7 +285,7 @@
 					<div class="header">
 						<h2>{{ $t('tournaments') }}</h2>
 					</div>
-					<tournaments-history class="content" :tournaments="team.tournaments" />
+					<tournaments-history :tournaments="team.tournaments" class="content" />
 				</div>
 			</div>
 		</div>
