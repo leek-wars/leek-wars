@@ -41,7 +41,7 @@
 				Test a code to finish the activation:
 				<br><br>
 				<loader v-if="validating" :size="40" />
-				<input v-else class="code" v-model="code" type="text" autocomplete="off" autocorrect="off" autocapitalize="off" placeholder="XXX XXX" @keydown.enter="validateCode">
+				<input v-else v-model="code" class="code" type="text" autocomplete="off" autocorrect="off" autocapitalize="off" placeholder="XXX XXX" @keydown.enter="validateCode">
 			
 				<div class="buttons">
 					<div class="back" @click="previousStep">Back</div>

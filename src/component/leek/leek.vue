@@ -285,7 +285,7 @@
 								</router-link>
 							</div>
 						</div>
-						<fights-history class="content" :fights="leek.fights" />
+						<fights-history :fights="leek.fights" class="content" />
 					</div>
 				</template>
 			</div>
@@ -296,7 +296,7 @@
 						<div class="header">
 							<h2>{{ $t('tournaments') }}</h2>
 						</div>
-						<tournaments-history class="content" :tournaments="leek.tournaments" />
+						<tournaments-history :tournaments="leek.tournaments" class="content" />
 					</div>
 				</template>
 			</div>

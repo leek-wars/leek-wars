@@ -20,7 +20,7 @@
 					<div class="content items">
 						<loader v-if="!fight_packs.length" />
 						<div class="center">
-							<router-link v-ripple v-for="pack in fight_packs" :key="pack.id" :to="'/market/' + pack.name" class="item fights" :farmer-count="0" :leek-count="0" @click="selectItem(pack)">
+							<router-link v-ripple v-for="pack in fight_packs" :key="pack.id" :to="'/market/' + pack.name" :farmer-count="0" :leek-count="0" class="item fights" @click="selectItem(pack)">
 								<img src="/image/market/fights.png">
 								<div>{{ pack.title }}</div>
 							</router-link>

@@ -48,10 +48,10 @@ import Trophies from '@/component/trophies/trophies.vue'
 import Tutorial from '@/component/tutorial/tutorial.vue'
 import { LeekWars } from '@/model/leekwars'
 import { store } from '@/model/store'
+import { vueMain } from '@/model/vue'
 import Vue from 'vue'
 import { Component } from 'vue-property-decorator'
 import Router from 'vue-router'
-import { vueMain } from '@/model/vue';
 
 @Component({
 	components: { signup: Signup, leek: LeekPage, chat: ChatPage },
