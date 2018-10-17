@@ -1,0 +1,10 @@
+{
+	"processors": ["stylelint-processor-html"],
+	"extends": "stylelint-config-standard",
+	"rules": {
+		"indentation": { "size": "tab" },
+		"rule-empty-line-before": false,
+		"no-empty-source": false,
+		"selector-list-comma-newline-after": false
+	}
+}
