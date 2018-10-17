@@ -1,10 +1,11 @@
 {
+	"ignoreFiles": "**/*.ts",
 	"processors": ["stylelint-processor-html"],
 	"extends": "stylelint-config-standard",
 	"rules": {
-		"indentation": { "size": "tab" },
-		"rule-empty-line-before": false,
-		"no-empty-source": false,
-		"selector-list-comma-newline-after": false
+		"indentation": "tab",
+		"rule-empty-line-before": null,
+		"no-empty-source": null,
+		"selector-list-comma-newline-after": null
 	}
 }
