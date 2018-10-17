@@ -26,23 +26,17 @@
 }
 .cm-lsconst {
 	color: black;
+	font-weight: bold;
 }
 .cm-lsfunc {
 	color: black;
+	font-style: italic;
 }
 .cm-lsfunc-deprec {
 	color: black;
 	font-style: italic;
 	text-decoration: line-through;
 	opacity: 0.6;
-}
-.cm-lsconst {
-	color: black;
-	font-weight: bold;
-}
-.cm-lsfunc {
-	color: black;
-	font-style: italic;
 }
 .cm-matchhighlight {
 	border: 1px solid #444;
@@ -58,7 +52,7 @@
 	padding: 3px 0;
 }
 .CodeMirror-matchingbracket {
-    color: #00F;
+	color: #00F;
 	font-weight: bold;
 }
 .CodeMirror-nonmatchingbracket {

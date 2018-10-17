@@ -118,7 +118,6 @@
 	.item .edit {
 		background-image: url('/image/edit_pen.png');
 		background-size: cover;
-		display: inline-block;
 		width: 12px;
 		height: 12px;
 		margin-left: 5px;

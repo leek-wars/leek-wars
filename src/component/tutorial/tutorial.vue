@@ -134,13 +134,13 @@
 
 					<p>{{ $t('editor_1') }}</p>
 
-					<screen src="/image/tuto/editor.jpg">{{ $t('editor_image_1') }}</screen>
+					<div class="screen" src="/image/tuto/editor.jpg">{{ $t('editor_image_1') }}</div>
 
 					<p>{{ $t('editor_2') }}</p>
 					<p>{{ $t('editor_3') }}</p>
 					<p>{{ $t('editor_4') }}</p>
 
-					<screen src="/image/tuto/editor_ia.jpg">{{ $t('editor_image_2') }}</screen>
+					<div class="screen" src="/image/tuto/editor_ia.jpg">{{ $t('editor_image_2') }}</div>
 
 					<p>{{ $t('editor_5') }}</p>
 
@@ -174,7 +174,7 @@
 						{{ $t('editor_10') }}
 					</p>
 
-					<screen src="/image/tuto/editor_autocomplete.jpg">{{ $t('automatic_completion') }}</screen>
+					<div class="screen" src="/image/tuto/editor_autocomplete.jpg">{{ $t('automatic_completion') }}</div>
 
 					<br>
 					<h3>{{ $t('do_a_test_fight') }}</h3>
@@ -183,7 +183,7 @@
 
 					<p>{{ $t('editor_12') }}</p>
 
-					<screen src="/image/tuto/editor_test.jpg">{{ $t('test_config') }}</screen>
+					<div class="screen" src="/image/tuto/editor_test.jpg">{{ $t('test_config') }}</div>
 
 					<p>{{ $t('editor_13') }}
 						<ul>
@@ -201,7 +201,7 @@
 
 					<p>{{ $t('doc1') }}</p>
 
-					<screen src="/image/tuto/documentation.jpg">{{ $t('the_documentation') }}</screen>
+					<div class="screen" src="/image/tuto/documentation.jpg">{{ $t('the_documentation') }}</div>
 
 					<p>{{ $t('doc_2') }}
 						<ul>
@@ -343,7 +343,7 @@
 
 					<p>{{ $t('var_48') }}</p>
 
-					<screen src="/image/tuto/debug.jpg">{{ $t('var_49') }}</screen>
+					<div class="screen" src="/image/tuto/debug.jpg">{{ $t('var_49') }}</div>
 
 					<p>{{ $t('var_50') }}</p>
 
@@ -692,7 +692,7 @@
 
 					<p>{{ $t('fight_ground_1') }}</p>
 
-					<screen src="/image/tuto/grid_cells.jpg">{{ $t('fight_ground_2') }}</screen>
+					<div class="screen" src="/image/tuto/grid_cells.jpg">{{ $t('fight_ground_2') }}</div>
 
 					<p>{{ $t('fight_ground_3') }}</p>
 
@@ -1052,24 +1052,24 @@
 	li {
 		margin-left: 20px; 
 	}
-	screen {
+	.screen {
 		margin-bottom: 20px;
 	}
-	screen:hover .legend {
+	.screen:hover .legend {
 		color: black; 
 	}
-	screen img {
+	.screen img {
 		cursor: zoom-in; 
 		display: block;
 		width: 65%; 
 		margin: 0 auto;
 		border-radius: 2px;
 	}
-	screen img.big {
+	.screen img.big {
 		cursor: zoom-out; 
 		width: 100%;
 	}
-	screen .legend {
+	.screen .legend {
 		text-align: center;
 		font-size: 18px;
 		font-weight: 300;

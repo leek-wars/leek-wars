@@ -213,7 +213,6 @@
 		top: 56px;
 		left: 0;
 		transform: translateX(-250px);
-		width: 250px;
 		bottom: 0;
 		background: rgba(0, 0, 0, 0.5);
 		z-index: 5;
@@ -337,6 +336,7 @@
 	.menu-top .section {
 		height: auto;
 		width: 100%;
+		background: transparent;
 	}
 	.menu .menu-top .text {
 		padding-left: 10px;
@@ -365,7 +365,7 @@
 		overflow: visible;
 	}
 	.menu-top .moneys img {
-		width: 18px;
+		width: 20px;
 		vertical-align: bottom;
 	}
 	.menu-top .moneys .crystals {
@@ -386,11 +386,5 @@
 		margin: 4px;
 		width: 60px;
 		height: 60px;
-	}
-	.menu-top .moneys img {
-		width: 20px;
-	}
-	.menu-top .section {
-		background: transparent;
 	}
 </style>

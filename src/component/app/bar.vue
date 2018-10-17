@@ -66,7 +66,6 @@
 
 <style lang="scss" scoped>
 	#app-bar {
-		display: block;
 		flex: 0 0 56px;
 		background: #4b9e06;
 		color: white;

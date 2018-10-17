@@ -166,7 +166,6 @@
 		line-height: 42px;
 		font-size: 17px;
 		height: 42px;
-		vertical-align: top;
 		margin-left: 25px;
 		color: #eee;
 		position: relative;

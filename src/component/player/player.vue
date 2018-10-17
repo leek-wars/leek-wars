@@ -371,7 +371,6 @@
 		color: white;
 		display: inline-block;
 		vertical-align: top;
-		padding-top: 2px;
 		padding: 0 8px;
 	}
 	#controls.large > div {

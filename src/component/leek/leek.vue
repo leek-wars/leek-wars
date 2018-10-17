@@ -968,7 +968,7 @@
 		display: flex;
 		justify-content: center;
 		align-items: center;
-    	height: calc(100% - 66px);
+		height: calc(100% - 66px);
 	}
 	.characteristics {
 		padding: 15px 0;
@@ -1012,15 +1012,15 @@
 	}
 	.xp-bar {
 		height: 10px;
-		background: #30BB00;
+		background: #30bb00;
 		display: inline-block;
 		vertical-align: top;
 		position: absolute;
 		border-radius: 5px;
-		transition: all ease 0.3s
+		transition: all ease 0.3s;
 	}
 	.xp-bar.blue {
-		background: #008FBB;
+		background: #008fbb;
 	}
 	.talent-more {
 		font-size: 18px;
@@ -1054,15 +1054,15 @@
 		margin-bottom: -16px;
 		position: relative;
 		/deep/ .ct-line {
-			stroke: rgba(95,173,27,0.7);
+			stroke: rgba(95, 173, 27, 0.7);
 			stroke-width: 2px;
 		}
 		/deep/ .ct-point {
-			stroke: #5FAD1B;
+			stroke: #5fad1b;
 		}
 		/deep/ .ct-area {
-			fill: rgba(95,173,27,1);
-			fill-opacity: .2;
+			fill: rgba(95, 173, 27, 1);
+			fill-opacity: 0.2;
 		}
 		/deep/ .ct-label.ct-horizontal {
 			text-align: center;
@@ -1122,10 +1122,10 @@
 		display: inline-block;
 		vertical-align: bottom;
 		margin: 2px;
-	}
-	.chip img {
-		width: 62px;
-		vertical-align: bottom;
+		img {
+			width: 62px;
+			vertical-align: bottom;
+		}
 	}
 	.chips-dialog .chip {
 		display: inline-block;
@@ -1162,10 +1162,10 @@
 				width: 80px;
 			}
 		}
-		.potion:after {
+		&::after {
 			position: absolute;
-			bottom: 0px;
-			right: 0px;
+			bottom: 0;
+			right: 0;
 			padding-top: 1px;
 			height: 19px;
 			padding-left: 4px;
@@ -1218,7 +1218,7 @@
 			font-weight: bold;
 		}
 		td {
-			background: #F8F8F8;
+			background: #f8f8f8;
 		}
 		td, th {
 			vertical-align: top;
@@ -1241,9 +1241,9 @@
 	.farmer-weapons .weapon, .farmer-chips .chip, .hat-dialog .hat {
 		position: relative;
 	}
-	.farmer-weapons .weapon:not([quantity='1']):before,
-	.farmer-chips .chip:not([quantity='1']):before,
-	.hat-dialog .hat:not([quantity='1']):before {
+	.farmer-weapons .weapon:not([quantity='1'])::before,
+	.farmer-chips .chip:not([quantity='1'])::before,
+	.hat-dialog .hat:not([quantity='1'])::before {
 		position: absolute;
 		bottom: -5px;
 		right: -5px;

@@ -143,8 +143,6 @@
 		width: 6px;
 		border-top-left-radius: 3px;
 		border: 1px solid black;
-	}
-	.timeline .entity .bar {
 		left: 0;
 	}
 	.timeline .entity .image {

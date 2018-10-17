@@ -193,7 +193,7 @@
 <style lang="scss" scoped>
 	.column5 {
 		position: sticky;
-    	top: 15px;
+		top: 15px;
 	}
 	#app.app #moderation-page .panel.first .header {
 		display: none;
@@ -252,7 +252,7 @@
 	}
 	#warning-message {
 		width: 100%;
-    	max-width: 100%;
+		max-width: 100%;
 	}
 	#thugs {
 		padding: 10px;
