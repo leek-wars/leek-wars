@@ -138,7 +138,6 @@ const vueMain = new Vue({
 	},
 	created() {
 		loadLanguageAsync(this, 'fr')
-		LeekWars.socket.init()
 
 		window.addEventListener('keydown', (event) => {
 			if (event.ctrlKey && event.keyCode === 83) {
@@ -165,6 +164,10 @@ const vueMain = new Vue({
 					this.$data.savedPosition = 0
 				}, 100)
 			}
+		})
+
+		this.$on('connected', () => {
+			LeekWars.socket.init()
 		})
 
 		LeekWars.sfwInit()
