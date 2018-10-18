@@ -92,10 +92,4 @@
 	.content h3 {
 		color: red;
 	}
-	#sk-kit h3:before {
-		width: 0;
-	}
-	#sk-kit h3:after, #sk-kit h1:after {
-		border: none;
-	}
 </style>
