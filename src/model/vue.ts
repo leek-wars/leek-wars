@@ -167,7 +167,7 @@ const vueMain = new Vue({
 		})
 
 		this.$on('connected', () => {
-			LeekWars.socket.init()
+			LeekWars.socket.connect()
 		})
 
 		LeekWars.sfwInit()
