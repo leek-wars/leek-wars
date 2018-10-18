@@ -445,7 +445,7 @@
 	.items .item {
 		position: relative;
 	}
-	.items .item:not([leek-count='0']):before {
+	.items .item:not([leek-count="0"]):before {
 		position: absolute;
 		bottom: -5px;
 		right: -5px;
@@ -458,7 +458,7 @@
 		background-color: #5fad1b;
 		font-weight: bold;
 	}
-	.items .item:not([farmer-count='0']):after {
+	.items .item:not([farmer-count="0"]):after {
 		position: absolute;
 		bottom: -5px;
 		right: -5px;
@@ -471,11 +471,11 @@
 		font-weight: bold;
 		background-color: #777;
 	}
-	.items .item:not([farmer-count='0']):not([leek-count='0']):before {
+	.items .item:not([farmer-count="0"]):not([leek-count="0"]):before {
 		border-radius: 20px 0 0 20px;
 		right: 16px;
 	}
-	.items .item:not([farmer-count='0']):not([leek-count='0']):after {
+	.items .item:not([farmer-count="0"]):not([leek-count="0"]):after {
 		border-radius: 0 20px 20px 0;
 	}
 	.items .item.too-expensive img {
@@ -520,9 +520,6 @@
 	}
 	.chips {
 		padding: 0 10px;
-	}
-	.chips[sort-mode='level'] {
-		text-align: center;
 	}
 	.chips .chip {
 		width: 73px;

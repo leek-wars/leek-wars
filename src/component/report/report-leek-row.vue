@@ -96,7 +96,7 @@
 		margin-left: 27px;
 	}
 	.dead {
-		background-image: url('/image/cross.png');
+		background-image: url("/image/cross.png");
 		width: 15px;
 		height: 20px;
 		display: inline-block;
@@ -111,13 +111,13 @@
 		min-width: 100px;
 	}
 	.current_xp {
-		background-color: #BDBDBD;
+		background-color: #bdbdbd;
 	}
 	.new_xp {
-		background-color: #5FAD1B;
+		background-color: #5fad1b;
 	}
 	.bonus {
-		background-color: #0075DF;
+		background-color: #0075df;
 		color: white;
 		font-weight: bold;
 		padding: 0 4px;

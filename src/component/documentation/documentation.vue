@@ -1,5 +1,5 @@
 <template lang="html">
-	<div id="documentation-page">
+	<div>
 		<div class="page-header page-bar">
 			<h1>{{ $t('documentation.title') }}</h1>
 		</div>
@@ -10,7 +10,7 @@
 						<img src="/image/search_black.png">
 						<input v-model="query" type="text" @input="changeQuery">
 					</div>
-					<div v-autostopscroll="'bottom'" id="items-list">
+					<div v-autostopscroll="'bottom'" class="items-list">
 						<div v-for="category in categories" :key="category.id">
 							<h2>{{ $t('documentation.function_category_' + category.name) }}</h2>
 							<router-link v-for="(item, i) in items_by_category[category.id]" v-if="item.name === item.real_name" :key="i" :to="'/help/documentation/' + item.name" :item="item.name" class="item">
@@ -24,12 +24,10 @@
 		
 		<div class="column9">
 			<div class="panel">
-				<div class="content">
-					<div id="items">
-						<div v-for="(item, i) in items" :key="i" :item="item.name" :class="{deprecated: item.deprecated}" class="item">
-							<documentation-function v-if="'return_type' in item" :fun="item" />
-							<documentation-constant v-else :constant="item" />
-						</div>
+				<div class="content items">
+					<div v-for="(item, i) in items" :key="i" :item="item.name" :class="{deprecated: item.deprecated}" class="item">
+						<documentation-function v-if="'return_type' in item" :fun="item" />
+						<documentation-constant v-else :constant="item" />
 					</div>
 				</div>
 			</div>
@@ -97,7 +95,7 @@
 
 				// Liens
 				setTimeout(() => {
-					document.querySelectorAll('#items .item').forEach((item) => {
+					document.querySelectorAll('.items .item').forEach((item) => {
 						let text: any = item.innerHTML
 						let changed = false
 						let pos = 0
@@ -159,7 +157,7 @@
 
 		selectItem(item: string) {
 			setTimeout(() => {
-				const element: any = document.querySelector('#items .item[item=' + item + ']')
+				const element: any = document.querySelector('.items .item[item=' + item + ']')
 				if (element) {
 					window.scrollTo(0, element.offsetTop - 10)
 				}
@@ -167,11 +165,11 @@
 		}
 
 		changeQuery() {
-			const items = document.querySelectorAll("#items .item")
+			const items = document.querySelectorAll(".items .item")
 			if (this.query.length) {
 				items.forEach((item: any) => {
 					const fields = item.querySelectorAll('.searchable')
-					const menuItem: any = document.querySelector('#items-list .item[item=' + item.getAttribute('item') + ']')
+					const menuItem: any = document.querySelector('.items-list .item[item=' + item.getAttribute('item') + ']')
 					for (const field of fields) {
 						if (('' + field.textContent).toLowerCase().indexOf(this.query) !== -1) {
 							item.style.display = 'block'
@@ -185,7 +183,7 @@
 			} else {
 				items.forEach((item: any) => {
 					item.style.display = 'block'
-					const menuItem: any = document.querySelector('#items-list .item[item=' + item.getAttribute('item') + ']')
+					const menuItem: any = document.querySelector('.items-list .item[item=' + item.getAttribute('item') + ']')
 					menuItem.style.display = 'block'
 				})
 			}
@@ -208,13 +206,13 @@
 	.panel > .content {
 		padding: 0;
 	}
-	#items-list {
+	.items-list {
 		overflow-y: auto;
 		overflow-x: hidden;
 		position: relative;
 		max-height: 800px;
 	}
-	#items-list h2 {
+	.items-list h2 {
 		font-size: 13px;
 		font-weight: bold;
 		color: #888;
@@ -225,45 +223,45 @@
 		background: white;
 		box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
 	}
-	#items-list .item {
+	.items-list .item {
 		cursor: pointer;
 		padding: 3px 10px;
 		display: block;
 	}
-	#items-list .item:hover, .item.router-link-active {
+	.items-list .item:hover, .item.router-link-active {
 		font-weight: bold;
 		background: white;
 		box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
 	}
-	#items {
+	.items.content {
 		padding: 10px;
 		overflow-y: auto;
 	}
-	#items .item {
+	.items .item {
 		margin-bottom: 20px;
 		position: relative;
 		padding-bottom: 20px;
 		max-height: 999999px;
 	}
-	#items .item:last-child {
+	.items .item:last-child {
 		border-bottom: none;
 		margin-bottom: 0;
 	}
-	#items .item /deep/ .content {
+	.items .item /deep/ .content {
 		padding-right: 100px;
 		padding-left: 10px;
 	}
-	#items .item /deep/ a {
-		color: #5FAD1B;
+	.items .item /deep/ a {
+		color: #5fad1b;
 	}
-	#items .item /deep/ h2 {
+	.items .item /deep/ h2 {
 		margin-bottom: 10px;
 		font-size: 20px;
 	}
-	#items .item /deep/ ul {
+	.items .item /deep/ ul {
 		margin: 5px 0;
 	}
-	#items .function-name {
+	.items .function-name {
 		color: black;
 	}
 	.item /deep/ h4 {
@@ -272,16 +270,13 @@
 		color: #666;
 		margin-top: 8px;
 	}
-	#items /deep/ .item.deprecated {
+	.items /deep/ .item.deprecated {
 		opacity: 0.6;
 	}
-	#items /deep/ .item .deprecated-message {
+	.items /deep/ .item .deprecated-message {
 		color: #ff7f00;
 		font-weight: bold;
 		margin: 10px;
-	}
-	#tabs #min-level, #tabs #max-level {
-		width: 50px;
 	}
 	pre {
 		max-width: 500px;

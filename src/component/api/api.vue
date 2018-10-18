@@ -47,7 +47,7 @@
 		color: #aaa;
 	}
 	.module {
-		color: #009AFF;
+		color: #009aff;
 	}
 	.function {
 		color: #111;

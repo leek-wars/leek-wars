@@ -4,8 +4,7 @@
 			<h1><router-link to="/admin">Administration</router-link> > Gestionnaire d'erreur</h1>
 		</div>
 		<div class="panel">
-			<div id="errors" class="content">
-			
+			<div class="errors content">
 				<loader v-if="!errors" />
 				<div v-else>
 					<h2 v-if="errors.length === 0">Aucune erreur !</h2>
@@ -92,14 +91,14 @@
 		margin: 8px 0;
 		display: block;
 	}
-	#errors td a {
+	.errors td a {
 		color: #0a0;
 	}
-	#codes {
+	.codes {
 		font-size: 12px;
 		background: white;
 	}
-	#codes th {
+	.codes th {
 		border: 2px solid #ddd;
 		padding: 5px;
 		background: white;
@@ -107,14 +106,14 @@
 		color: #777;
 		font-size: 18px;
 	}
-	#codes td {
+	.codes td {
 		width: 50%;
 		border: 2px solid #ddd;
 		padding: 0;
 		font-size: 12px;
 		vertical-align: top;
 	}
-	#codes td pre {
+	.codes td pre {
 		margin: 0;
 	}
 	.button {

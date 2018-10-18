@@ -59,7 +59,7 @@
 	}
 	p {
 		margin-bottom: 10px;
-		margin-left: 20px; 
+		margin-left: 20px;
 		margin-right: 20px;
 		text-align: justify;
 		height: 100%;

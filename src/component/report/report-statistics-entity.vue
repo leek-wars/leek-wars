@@ -45,7 +45,7 @@
 		margin-left: 27px;
 	}
 	.dead {
-		background-image: url('/image/cross.png');
+		background-image: url("/image/cross.png");
 		width: 15px;
 		height: 20px;
 		display: inline-block;

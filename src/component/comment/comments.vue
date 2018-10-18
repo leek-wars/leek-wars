@@ -68,7 +68,7 @@
 		padding-left: 5px;
 	}
 	.comment .author a {
-		color: #5FAD1B;
+		color: #5fad1b;
 	}
 	.comment .date {
 		font-size: 12px;

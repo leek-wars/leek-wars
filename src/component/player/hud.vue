@@ -1,6 +1,5 @@
 <template>
-	<div id="hud">
-		<div id="details"></div>
+	<div class="hud">
 		<div class="life-bar">
 			<div class="wrapper">
 				<template v-for="team in game.teams">
@@ -11,15 +10,15 @@
 				</template>
 			</div>
 		</div>
-		<div v-if="debug" id="debug">
+		<div v-if="debug" class="debug">
 			<div>Particles : {{ game.particles.particles.length }}</div>
 			<div>Mouse : ({{ game.mouseX }}, {{ game.mouseY }})</div>
 			<div>Mouse tile : ({{ game.mouseTileX }}, {{ game.mouseTileY }})</div>
 			<div>Mouse cell : {{ game.mouseCell }}</div>
 			<div>FPS : {{ game.fps }}, avg: {{ game.avgFPS }}</div>
 		</div>
-		<div id="left-part">
-			<div id="actions">
+		<div class="left-part">
+			<div class="actions">
 				<action-element v-for="action of game.currentActions" :key="action.id" :action="action.action" :leeks="game.leeks" turn="1" class="action" />
 			</div>
 		</div>
@@ -102,7 +101,7 @@
 </script>
 
 <style lang="scss" scoped>
-	#hud {
+	.hud {
 		z-index: 3;
 		position: absolute;
 		top: 0;
@@ -278,7 +277,7 @@
 	.life-bar .v-tooltip:last-child .bar {
 		border-bottom-right-radius: 10px;
 	}
-	#actions {
+	.actions {
 		text-align: left;
 		padding: 6px;
 		width: 190px;
@@ -286,23 +285,46 @@
 		background-color: rgba(255,255,255, 0.2);
 		transition: margin-top 0.5s ease;
 	}
-	#actions:hover {
+	.actions:hover {
 		width: 500px;
 		background-color: rgba(255,255,255, 0.6);
 	}
-	#actions .action {
+	.actions .action {
 		padding: 1px 0;
 		font-size: 14px;
 		width: 500px;
 	}
-	#actions .action.log {
+	.actions .action.log {
 		padding: 2px 0;
 		font-size: 11px;
 	}
-	#actions .action.log pre {
+	.actions .action.log pre {
 		margin: 0;
 		font-family: monospace;
 		word-break: break-all;
 		white-space: pre-wrap;
+	}
+	.debug {
+		position: absolute;
+		top: 0;	left: 150px;
+		text-align: left;
+		display: none;
+	}
+	.left-part {
+		position: absolute;
+		top: 0; left: 0; bottom: 0;
+		text-align: left;
+		overflow: hidden;
+	}
+	@media screen and (max-width: 799px) {
+		.timeline {
+			display: none;
+		}
+		.life-bar {
+			display: none;
+		}
+		.left-part {
+			display: none;
+		}
 	}
 </style>

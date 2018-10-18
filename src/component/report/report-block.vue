@@ -139,7 +139,7 @@
 		margin: 0 auto;
 		border-collapse: collapse;
 		margin-bottom: 10px;
-		background: #F8F8F8;
+		background: #f8f8f8;
 	}
 	th {
 		border: 1px solid #ddd;
@@ -173,7 +173,7 @@
 		min-width: 180px;
 	}
 	.current_xp {
-		background-color: #BDBDBD;
+		background-color: #bdbdbd;
 	}
 	.bar {
 		width: 60%;
@@ -190,7 +190,7 @@
 		vertical-align: top;
 	}
 	.new_xp.team {
-		background-color: #00AAA8;
+		background-color: #00aaa8;
 	}
 	.gain {
 		width: 110px;

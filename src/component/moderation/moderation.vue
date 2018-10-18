@@ -8,7 +8,7 @@
 				<div class="header">
 					<h2>Derniers signalements ({{ faults.length }})</h2>
 				</div>
-				<div id="faults" class="content">
+				<div class="faults content">
 					<div v-if="faults.length == 0">Aucun signalement !</div>
 					<router-link v-for="fault in faults" :key="fault.id" :to="'/moderation/fault/' + fault.id" class="fault" target="{fault.target.id}" reason="{fault.reason}" parameter="{fault.parameter}" data="{fault.data}">
 
@@ -35,10 +35,10 @@
 					<h2>Donner un avertissement</h2>
 				</div>
 				<div class="content">
-					<div id="warning">
-						<router-link id="warning-target-link" :to="'/farmer/' + selectedFault.target.id">
+					<div class="warning">
+						<router-link :to="'/farmer/' + selectedFault.target.id">
 							<avatar :farmer="selectedFault.target" class="warning-avatar" />
-							<h2 id="warning-target">{{ selectedFault.target.name }}</h2>
+							<h2>{{ selectedFault.target.name }}</h2>
 						</router-link>
 						<h4 class="reason">Motif : {{ $t('reason_' + selectedFault.reason_text) }}</h4>
 						<div class="details">
@@ -54,13 +54,13 @@
 						</div>
 					</div>
 					<h4>Gravité</h4>
-					<input id="warning-severity" type="number" min="1" max="10" value="1"> (entre 1 et 10)<br>
+					<input type="number" min="1" max="10" value="1"> (entre 1 et 10)<br>
 					<h4>Message (facultatif)</h4>
-					<textarea id="warning-message"></textarea>
+					<textarea class="warning-message"></textarea>
 					<br><br>
 					<center>
-						<div id="archive-reporting" class="button green">Supprimer le signalement</div>
-						<div id="give-warning" class="button red">Donner avertissement</div>
+						<div class="button green">Supprimer le signalement</div>
+						<div class="button red">Donner avertissement</div>
 					</center>
 				</div>
 			</div>
@@ -68,7 +68,7 @@
 				<div class="header">
 					<h2>Top Voyous</h2>
 				</div>
-				<div id="thugs" class="content">
+				<div class="thugs content">
 					<div v-for="thug in thugs" :key="thug.id" class="thug">
 						<avatar :farmer="thug" />
 						<router-link :to="'/farmer/' + thug.id">{{ thug.name }}</router-link> ({{ thug.warnings }})
@@ -90,7 +90,7 @@
 			</div>
 			<div class="actions">
 				<div class="dismiss">Annuler</div>
-				<div id="send-warning" class="red">Envoyer</div>
+				<div class="red">Envoyer</div>
 			</div>
 		</v-dialog>
 	</div>
@@ -195,10 +195,10 @@
 		position: sticky;
 		top: 15px;
 	}
-	#app.app #moderation-page .panel.first .header {
+	#app.app .panel.first .header {
 		display: none;
 	}
-	#faults {
+	.faults {
 		padding: 10px;
 	}
 	.fault {
@@ -210,32 +210,32 @@
 		background: white;
 		box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
 	}
-	#app.app #faults .fault {
+	#app.app .faults .fault {
 		margin: 0;
 		margin-bottom: 10px;
 	}
-	#faults .fault.selected {
+	.faults .fault.selected {
 		border: 2px solid #ddd;
 		opacity: 1;
 	}
-	#faults .fault img {
+	.faults .fault img {
 		width: 80px;
 		float: left;
 		margin-right: 10px;
 		margin-bottom: 4px;
 	}
-	#faults .fault .target-name {
+	.faults .fault .target-name {
 		font-weight: 300;
 		font-size: 20px;
 		margin-bottom: 5px;
 	}
-	#faults .fault .reporting-count {
+	.faults .fault .reporting-count {
 		margin-bottom: 9px;
 	}
-	#faults .fault .reporting {
+	.faults .fault .reporting {
 		margin-bottom: 5px;
 	}
-	#faults .fault .reporter {
+	.faults .fault .reporter {
 		color: #666;
 		font-size: 14px;
 	}
@@ -243,25 +243,25 @@
 		width: 140px;
 		height: 140px;
 	}
-	#warning {
+	.warning {
 		text-align: center;
 		padding: 10px;
 	}
-	#warning .details a {
-		color: #5FAD1B;
+	.warning .details a {
+		color: #5fad1b;
 	}
-	#warning-message {
+	.warning-message {
 		width: 100%;
 		max-width: 100%;
 	}
-	#thugs {
+	.thugs {
 		padding: 10px;
 	}
-	#thugs .thug {
+	.thugs .thug {
 		margin: 3px;
 		vertical-align: top;
 	}
-	#thugs .thug a, #thugs {
+	.thugs .thug a, .thugs {
 		vertical-align: top;
 	}
 	.thug .button {
@@ -270,12 +270,12 @@
 		margin-top: -3px;
 		float: right;
 	}
-	#thugs .thug img {
+	.thugs .thug img {
 		margin-right: 5px;
 		width: 25px;
 		height: 25px;
 	}
-	#thug .thug .ban {
+	.thug .thug .ban {
 		float: right;
 	}
 </style>

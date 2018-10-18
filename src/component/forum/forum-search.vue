@@ -5,26 +5,26 @@
 		</div>
 		<div class="panel">
 			<div class="content">
-				<div id="search">
-					<div id="search-box">
+				<div class="search">
+					<div class="search-box">
 						<div class="label">{{ $t('query') }}</div>
-						<input id="query" v-model="query" type="text" @keydown.enter="search">
+						<input class="query" v-model="query" type="text" @keydown.enter="search">
 					</div>
 					<br>
-					<div id="search-box-farmer">
+					<div class="search-box-farmer">
 						<div class="label">{{ $t('author') }}</div>
-						<input id="farmer-query" v-model="farmer" type="text" @keydown.enter="search">
+						<input class="farmer-query" v-model="farmer" type="text" @keydown.enter="search">
 					</div>
 					<br>
 					<div>
 						<div class="label">{{ $t('category') }}</div>
-						<select id="search-category" v-model="category" @change="search">
+						<select class="search-category" v-model="category" @change="search">
 							<option value="-1">{{ $t('all_categories') }}</option>
 							<option v-for="c in categories" :key="c.id" :value="c.id">{{ c.type == 'team' ? c.name : $i18n.t('forum.category_' + c.name) }}</option>
 						</select>
 					</div>
 					<br>
-					<div id="search-button" class="button green" @click="search">
+					<div class="button green search-button" @click="search">
 						<img src="/image/search.png"><span>{{ $t('search') }}</span>
 					</div>
 
@@ -57,7 +57,7 @@
 								</router-link>
 							</div>
 						</div>
-						<div v-if="results.length === 0" id="no-results">
+						<div v-if="results.length === 0" class="no-results">
 							<img src="/image/notgood.png">
 							<div>{{ $t('no_results_found') }}</div>
 						</div>
@@ -139,10 +139,10 @@
 </script>
 
 <style lang="scss" scoped>
-	#search {
+	.search {
 		padding: 20px;
 	}
-	#app.app #search {
+	#app.app .search {
 		padding: 0;
 		padding-top: 10px;
 	}
@@ -152,63 +152,63 @@
 		text-align: right;
 		margin-right: 6px;
 	}
-	#search-button {
+	.search-button {
 		margin-left: 100px;
+		img {
+			vertical-align: bottom;
+			margin-right: 6px;
+		}
 	}
-	#search-button img {
-		vertical-align: bottom;
-		margin-right: 6px;
+	.query:focus {
+		border: 1px solid #5fad1b;
 	}
-	#query:focus {
-		border: 1px solid #5FAD1B;
+	.farmer-query:focus {
+		border: 1px solid #5fad1b;
 	}
-	#farmer-query:focus {
-		border: 1px solid #5FAD1B;
-	}
-	#search-category {
+	.search-category {
 		height: 28px;
 	}
-	#search h2 {
+	h2 {
 		margin-top: 20px;
 	}
-	#search .result {
-		background: #FAFAFA;
+	.result {
+		background: #fafafa;
 		padding: 10px;
 		margin: 8px 0;
 	}
-	#search .result:hover {
+	.result:hover {
 		background: white;
 	}
-	#search .result .title {
+	.result .title {
 		font-weight: 300;
 		font-size: 22px;
 		margin-bottom: 5px;
 		color: black;
 	}
-	#search .result .headline {
+	.result .headline {
 		color: #777;
 		font-size: 14px;
 	}
-	#search .result /deep/ b {
-		color: #5FAD1B;
+	.result /deep/ b {
+		color: #5fad1b;
 		font-weight: bold;
 	}
-	#search .info {
+	.info {
 		color: #aaa;
 		margin-bottom: 10px;
 	}
-	#search .result .dark {
+	.result .dark {
 		color: #555;
 	}
 	.pagination {
 		text-align: center;
 	}
-	#no-results {
+	.no-results {
 		text-align: center;
 		padding: 10px;
 		color: #999;
-	}
-	#no-results img {
-		margin-bottom: 8px;
+		img {
+			margin-bottom: 8px;
+		}
 	}
 </style>

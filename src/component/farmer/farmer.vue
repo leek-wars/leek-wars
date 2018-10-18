@@ -689,7 +689,7 @@
 		font-weight: bold;
 	}
 	.infos .info .edit {
-		background-image: url('/image/edit_pen.png');
+		background-image: url("/image/edit_pen.png");
 		background-size: cover;
 		cursor: pointer;
 		width: 12px;
@@ -769,10 +769,10 @@
 			font-size: 14px;
 		}
 		.grade.admin {
-			background: #FF3333;
+			background: #ff3333;
 		}
 		.grade.moderator {
-			background: #FFA900;
+			background: #ffa900;
 		}
 		.grade.contributor {
 			background: #009c1d;
@@ -822,7 +822,7 @@
 	}
 	.trophy {
 		display: inline-block;
-		margin: 2.1px 2.1px;
+		margin: 2.1px;
 		padding: 4px;
 		border: 1px solid transparent;
 		vertical-align: bottom;

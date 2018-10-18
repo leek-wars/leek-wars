@@ -4,7 +4,8 @@
 	"scripts": {
 		"serve": "vue-cli-service serve",
 		"build": "vue-cli-service build",
-		"lint": "vue-cli-service lint"
+		"lint": "vue-cli-service lint",
+		"stylelint": "stylelint src/**/*.{vue,css,scss}"
 	},
 	"dependencies": {
 		"@types/codemirror": "0.0.60",
@@ -53,8 +54,10 @@
 		"request-promise": "^4.2.2",
 		"sass-loader": "^7.0.1",
 		"stylelint": "^9.6.0",
+		"stylelint-config-prettier": "^4.0.0",
 		"stylelint-config-recommended": "^2.1.0",
 		"stylelint-processor-html": "^1.0.0",
+		"stylelint-scss": "^3.3.1",
 		"stylus": "^0.54.5",
 		"stylus-loader": "^3.0.2",
 		"tslint": "^5.11.0",

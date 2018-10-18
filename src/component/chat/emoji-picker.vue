@@ -47,7 +47,7 @@
 		height: 20px;
 	}
 	.indicator {
-		background: #5FAD1B;
+		background: #5fad1b;
 	}
 	.tabs {
 		height: 268px;

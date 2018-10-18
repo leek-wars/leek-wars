@@ -12,7 +12,7 @@
 					<i class="material-icons">add</i>
 					<span>{{ $t('create_new_topic') }}</span>
 				</div>
-				<div id="search-box" class="tab action disabled" icon="search">
+				<div class="tab action disabled search-box" icon="search">
 					<img src="/image/search.png" @click="search">
 					<input v-model="query" type="text" @keyup.enter="search">
 				</div>
@@ -24,7 +24,7 @@
 
 				<pagination v-if="category" :current="page" :total="pages" :url="'/forum/category-' + category.id" />
 
-				<table id="forum-header" class="topic header"><tr>
+				<table class="topic header forum-header"><tr>
 					<td class="seen"></td>
 					<td>{{ $t('topic') }}</td>
 					<td class="num-messages">{{ $t('messages') }}</td>
@@ -149,16 +149,13 @@
 </script>
 
 <style lang="scss" scoped>
-	#forum {
-		padding: 10px 20px;
-	}
-	#forum-header {
+	.forum-header {
 		font-size: 20px;
 		font-weight: 300;
 		background: none;
 		margin: 0;
 	}
-	#app.app #forum_category-page .panel .content {
+	#app.app .panel .content {
 		padding: 0;
 	}
 	.topic {
@@ -178,7 +175,7 @@
 		vertical-align: bottom;
 	}
 	i.attr.resolved {
-		color: #5FAD1B;
+		color: #5fad1b;
 	}
 	i.attr {
 		color: #666;
@@ -246,7 +243,7 @@
 		font-size: 15px;
 		font-family: "Roboto", sans-serif;
 	}
-	#search-box img {
+	.search-box img {
 		cursor: pointer;
 	}
 </style>

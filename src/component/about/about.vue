@@ -285,13 +285,13 @@
 		display: inline-block;
 	}
 	.links a {
-		color: #5FAD1B;
+		color: #5fad1b;
 	}
 	.green {
-		color: #5FAD1B;
+		color: #5fad1b;
 	}
 	a.green:visited {
-		color: #5FAD1B;
+		color: #5fad1b;
 	}
 	.social {
 		display: flex;

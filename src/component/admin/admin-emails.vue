@@ -66,7 +66,7 @@
 		background: white;
 	}
 	table th {
-		padding: 0 5px; 
+		padding: 0 5px;
 		font-weight: normal;
 		color: #222;
 		font-size: 18px;

@@ -1,6 +1,6 @@
 <template lang="html">
-	<div id="footer-wrapper">
-		<div id="footer">
+	<div class="footer-wrapper">
+		<div class="footer">
 			<table><tr>
 				<td width="50%">
 					<router-link to="/"><h4>Leek Wars {{ LeekWars.version / 100 }}</h4></router-link>
@@ -40,19 +40,25 @@
 </script>
 
 <style lang="scss" scoped>
-	#footer-wrapper {
+	.footer-wrapper {
 		background: rgba(0,0,0,0.4);
 		border-top: 2px solid #333;
 		height: 150px;
 	}
-	#app.app #footer-wrapper {
+	#app.app .footer-wrapper {
 		display: none;
 	}
-	#footer-wrapper.connected {
+	.footer-wrapper.connected {
 		padding-left: 170px;
 	}
-	#footer {
+	.footer {
 		padding: 0 20px;
+	}
+	#app.menu-collapsed:not(.app) .footer {
+		margin-left: 68px;
+	}
+	#app.connected .footer {
+		margin-left: 170px;
 	}
 	table {
 		border-collapse: collapse;
@@ -60,10 +66,10 @@
 		margin: 0 auto;
 		color: #666;
 	}
-	#footer a {
+	.footer a {
 		color: #888;
 	}
-	#footer a:hover {
+	.footer a:hover {
 		color: #aaa;
 	}
 	h3 {
@@ -102,5 +108,21 @@
 	.social img:hover {
 		opacity: 1;
 		filter: none;
+	}
+	@media screen and (min-width: 1600px) {
+		#app.connected:not(.social-collapsed):not(.app) .footer {
+			margin-right: 400px;
+		}
+		#app.connected.social-collapsed .footer {
+			margin-right: 30px;
+		}
+	}
+	@media screen and (max-width: 599px) {
+		#app.connected .footer {
+			margin-left: 0;
+		}
+		.footer {
+			padding: 0;
+		}
 	}
 </style>

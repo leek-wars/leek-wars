@@ -426,10 +426,10 @@
 		font-size: 13px;
 	}
 	.grade.admin {
-		background: #FF3333;
+		background: #ff3333;
 	}
 	.grade.moderator {
-		background: #FFA900;
+		background: #ffa900;
 	}
 	.grade.contributor {
 		background: #009c1d;
@@ -489,7 +489,7 @@
 		word-break: break-word;
 	}
 	.message .text /deep/ a {
-		color: #5FAD1B;
+		color: #5fad1b;
 	}
 	.message .original {
 		padding: 4px;
@@ -535,7 +535,7 @@
 		border: none;
 		margin-bottom: 10px;
 	}
-	#page .page-bar .attrs.info {
+	.page-bar .attrs.info {
 		display: inline-flex;
 		height: 36px;
 		align-items: center;
@@ -572,7 +572,7 @@
 		font-weight: bold;
 	}
 	.vote.up, .vote.up.zero:hover {
-		color: #5FAD1B;
+		color: #5fad1b;
 	}
 	.vote.up.zero, .vote.down.zero {
 		color: #555;
@@ -583,7 +583,7 @@
 	}
 	.vote.up.active {
 		color: white;
-		background: #5FAD1B;
+		background: #5fad1b;
 	}
 	.vote.down.active {
 		color: white;

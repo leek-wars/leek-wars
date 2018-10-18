@@ -77,11 +77,11 @@
 	.item.ai .label:before {
 		content: "✔";
 		font-weight: bold;
-		color: #5FAD1B;
+		color: #5fad1b;
 		padding-right: 5px;
 	}
 	.item .edit {
-		background-image: url('/image/edit_pen.png');
+		background-image: url("/image/edit_pen.png");
 		background-size: cover;
 		width: 12px;
 		height: 12px;
@@ -119,7 +119,7 @@
 	.item.v2 .label:after {
 		content: "V2";
 		font-weight: bold;
-		color: #00AAE2;
+		color: #00aae2;
 		padding-left: 5px;
 		display: inline-block;
 	}

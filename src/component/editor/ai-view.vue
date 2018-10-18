@@ -819,7 +819,7 @@
 	.loader {
 		position: absolute;
 		top: calc(50% - 35px);
-    	left: calc(50% - 35px);
+		left: calc(50% - 35px);
 	}
 	.line-error {
 		position: relative;
@@ -855,7 +855,7 @@
 		border: 1px solid silver;
 	}
 	.hint-dialog .hint.active {
-		background: #5FAD1B;
+		background: #5fad1b;
 		color: white;
 	}
 	.hint-dialog .hint {

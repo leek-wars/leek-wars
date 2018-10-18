@@ -1,5 +1,5 @@
 <template lang="html">
-	<div id="changelog-page">
+	<div class="changelog-page">
 		<div class="page-header page-bar">
 			<h1>{{ $t('title') }}</h1>
 		</div>
@@ -57,7 +57,7 @@
 </script>
 
 <style lang="scss" scoped>
-	#changelog-page {
+	.changelog-page {
 		font-size: 16px;
 	}
 	.change {
@@ -73,7 +73,7 @@
 		background: #f2f2f2;
 		padding: 15px;
 	}
-	#changelog-page /deep/ a {
+	.changelog-page /deep/ a {
 		color: green;
 	}
 </style>

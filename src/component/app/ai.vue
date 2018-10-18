@@ -15,12 +15,12 @@
 	.ai {
 		display: inline-block;
 		vertical-align: bottom;
-		background-image: url('/image/ai.png');
+		background-image: url("/image/ai.png");
 		background-size: 100% 100%;
 		padding: 0 14px;
 		padding-top: 45px;
 		width: 75px;
-		height:  90px;
+		height: 90px;
 		position: relative;
 		word-wrap: break-word;
 		color: #888;

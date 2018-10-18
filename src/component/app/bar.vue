@@ -1,5 +1,5 @@
 <template>
-	<div id="app-bar" :class="{subtitle: LeekWars.subtitle}">
+	<div class="app-bar" :class="{subtitle: LeekWars.subtitle}">
 		<div v-ripple :class="{back: LeekWars.splitBack}" class="menu-button" @click="mainButton">
 			<div>
 				<div class="bar"></div>
@@ -65,7 +65,7 @@
 </script>
 
 <style lang="scss" scoped>
-	#app-bar {
+	.app-bar {
 		flex: 0 0 56px;
 		background: #4b9e06;
 		color: white;
@@ -78,16 +78,16 @@
 		display: flex;
 		box-shadow: 0 2px 2px 0 rgba(0,0,0,.07);
 	}
-	#app:not(.connected) #app-bar {
+	#app:not(.connected) .app-bar {
 		display: none;
 	}
-	#app-bar .menu-button {
+	.app-bar .menu-button {
 		width: 27px;
 		padding: 14px 20px;
 		padding-right: 14px;
 		margin-right: 4px;
 	}
-	#app-bar .menu-button .bar {
+	.app-bar .menu-button .bar {
 		width: 20px;
 		height: 2px;
 		border-radius: 2px;
@@ -95,55 +95,55 @@
 		background: white;
 		transition: all ease 400ms;
 	}
-	#app-bar .menu-button.back .bar:first-child {
+	.app-bar .menu-button.back .bar:first-child {
 		transform: translateY(2px) rotate(-38deg);
 	}
-	#app-bar .menu-button.back .bar:nth-child(2) {
+	.app-bar .menu-button.back .bar:nth-child(2) {
 		opacity: 0;
 	}
-	#app-bar .menu-button.back .bar:last-child {
+	.app-bar .menu-button.back .bar:last-child {
 		transform: rotate(38deg);
 	}
-	#app.app.menu-expanded #app-bar .menu-button .bar:first-child {
+	#app.app.menu-expanded .app-bar .menu-button .bar:first-child {
 		transform: translateY(7px) rotate(45deg);
 	}
-	#app.app.menu-expanded #app-bar .menu-button .bar:nth-child(2) {
+	#app.app.menu-expanded .app-bar .menu-button .bar:nth-child(2) {
 		opacity: 0;
 	}
-	#app.app.menu-expanded #app-bar .menu-button .bar:last-child {
+	#app.app.menu-expanded .app-bar .menu-button .bar:last-child {
 		transform: translateY(-7px) rotate(-45deg);
 	}
-	#app-bar .title-wrapper {
+	.app-bar .title-wrapper {
 		flex: 1;
 		text-overflow: ellipsis;
 		overflow-x: hidden;
 	}
-	#app-bar .title {
+	.app-bar .title {
 		text-overflow: ellipsis;
 		overflow-x: hidden;
 	}
-	#app-bar.subtitle .title {
+	.app-bar.subtitle .title {
 		line-height: 25px;
 		padding-top: 7px;
 		font-weight: bold;
 	}
-	#app-bar .subtitle {
+	.app-bar .subtitle {
 		text-overflow: ellipsis;
 		overflow-x: hidden;
 		line-height: 15px;
 		font-size: 12px;
 		display: none;
 	}
-	#app-bar.subtitle .subtitle {
+	.app-bar.subtitle .subtitle {
 		display: block;
 	}
-	#app-bar .actions-wrapper {
+	.app-bar .actions-wrapper {
 		padding-right: 4px;
 	}
-	#app-bar .actions, #app-bar .static-actions {
+	.app-bar .actions, .app-bar .static-actions {
 		display: inline-block;
 	}
-	#app.app.menu-expanded #app-bar .static-actions .action {
+	#app.app.menu-expanded .app-bar .static-actions .action {
 		display: inline-block;
 	}
 	.action {
@@ -161,12 +161,12 @@
 		opacity: 1;
 		padding: 15px 14px;
 	}
-	#app-bar.content .action.list:not(.content),
-	#app-bar.list .action.content:not(.list),
-	#app-bar .action.hidden {
+	.app-bar.content .action.list:not(.content),
+	.app-bar.list .action.content:not(.list),
+	.app-bar .action.hidden {
 		display: none;
 	}
-	#app-bar .action.visible {
+	.app-bar .action.visible {
 		display: inline-block;
 	}
 	.counter {

@@ -42,7 +42,7 @@
 
 <style lang="scss" scoped>
 	.argument {
-		color: #5FAD1B;
+		color: #5fad1b;
 	}
 	.min-stats {
 		position: absolute;

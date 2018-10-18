@@ -220,6 +220,9 @@
 		padding: 0;
 		width: auto;
 	}
+	#app.app.menu-expanded .menu {
+		transform: translateX(0px);
+	}
 	.menu-wrapper {
 		background: rgba(80, 80, 80, 0.6);
 		padding: 12px;
@@ -237,6 +240,9 @@
 		height: 30px;
 		margin-bottom: 4px;
 		cursor: pointer;
+	}
+	#app.app .menu-button {
+		display: none;
 	}
 	.menu-button .icon {
 		color: white;
@@ -257,9 +263,9 @@
 	.menu a div {
 		overflow: hidden;
 	}
-	.menu .section[label]:not([label='']):after {
+	.menu .section[label]:not([label=""]):after {
 		position: absolute;
-		background: #5FAD1B;
+		background: #5fad1b;
 		right: -10px;
 		top: 50%;
 		margin-top: -13.5px;
@@ -269,7 +275,7 @@
 		padding: 1px 5px;
 		line-height: normal;
 	}
-	#app.app .menu .section[label]:not([label='']):after {
+	#app.app .menu .section[label]:not([label=""]):after {
 		right: 8px;
 	}
 	.menu .text .right {
@@ -386,5 +392,45 @@
 		margin: 4px;
 		width: 60px;
 		height: 60px;
+	}
+	#app.app .menu .menu-wrapper {
+		padding: 0;
+		background: #222;
+		width: 250px;
+		overflow-y: auto;
+		height: 100%;
+	}
+	.menu .section.console {
+		display: none;
+	}
+	#app.app .menu .section.console {
+		display: block;
+	}
+	#app.app .menu .separator {
+		display: none;
+	}
+	.menu [tab="farmer"] {
+		display: none;
+	}
+	#app.app .menu [tab="farmer"] {
+		display: block;
+	}
+	#app.app .menu .section {
+		line-height: 42px;
+		background: transparent;
+	}
+	.menu .section.about {
+		display: none;
+	}
+	#app.app .menu .section.about {
+		display: block;
+	}
+	@media screen and (max-width: 999px) {
+		.menu-button {
+			opacity: 0;
+		}
+		.menu {
+			width: 58px;
+		}
 	}
 </style>

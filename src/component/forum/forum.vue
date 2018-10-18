@@ -1,9 +1,9 @@
 <template lang="html">
-	<div id="forum-page">
+	<div>
 		<div class="page-header page-bar">
 			<div>
 				<h1>{{ $t('title') }}</h1>
-				<v-menu id="forum-language" offset-y class="info">
+				<v-menu offset-y class="forum-language info">
 					<div slot="activator">
 						<img :src="forumLanguage.flag" class="flag">
 						<img width="10" src="/image/selector.png">
@@ -96,7 +96,7 @@
 			</div>
 		</div>
 
-		<div id="chat" class="panel">
+		<div class="panel chat-panel">
 			<div class="header">
 				<h2>
 					<router-link to="/chat">{{ $t('chat') }}</router-link>
@@ -171,29 +171,24 @@
 	.panel:last-child {
 		margin-bottom: 0;
 	}
-	#forum-language {
+	.forum-language {
 		display: inline-block;
 		padding: 0 4px;
 		border-radius: 2px;
 		cursor: pointer;
 		vertical-align: bottom;
-	}
-	#forum-language img.flag {
-		vertical-align: top;
-		height: 32px;
-	}
-	#forum-language img:not(.flag) {
-		vertical-align: middle;
-		margin-bottom: 3px;
-		margin-left: 6px;
+		img.flag {
+			vertical-align: top;
+			height: 32px;
+		}
+		img:not(.flag) {
+			vertical-align: middle;
+			margin-bottom: 3px;
+			margin-left: 6px;
+		}
 	}
 	.search-icon {
 		cursor: pointer;
-	}
-	#team-forum {
-		float: right;
-		margin-right: 55px;
-		margin-top: -30px
 	}
 	.header.category {
 		font-size: 17px;
@@ -275,10 +270,10 @@
 	.chat {
 		height: 400px;
 	}
-	#chat .content {
+	.chat-panel .content {
 		padding: 0;
 	}
-	#chat .language-button {
+	.chat-panel .language-button {
 		height: 28px;
 		max-height: 28px;
 		max-width: none;

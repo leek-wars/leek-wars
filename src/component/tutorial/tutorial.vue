@@ -1026,17 +1026,17 @@
 		filter: grayscale(100%);
 	}
 	.menu-item:hover {
-		border: 2px solid #5FAD1B;
-		color: #5FAD1B;
+		border: 2px solid #5fad1b;
+		color: #5fad1b;
 	}
 	.menu-item:hover img {
 		filter: grayscale(0%);
 	}
-	.panel .content { 
+	.panel .content {
 		background: rgba(100,100,100,0.1);
 		padding: 0;
 	}
-	.panel .wrapper { 
+	.panel .wrapper {
 		max-width: 800px;
 		margin: 0 auto;
 		background: #f2f2f2;
@@ -1044,36 +1044,36 @@
 	}
 	p {
 		margin-bottom: 10px;
-		margin-left: 20px; 
+		margin-left: 20px;
 		margin-right: 20px;
 		text-align: justify;
 		font-size: 16px;
 	}
 	li {
-		margin-left: 20px; 
+		margin-left: 20px;
 	}
 	.screen {
 		margin-bottom: 20px;
 	}
 	.screen:hover .legend {
-		color: black; 
+		color: black;
 	}
 	.screen img {
-		cursor: zoom-in; 
+		cursor: zoom-in;
 		display: block;
-		width: 65%; 
+		width: 65%;
 		margin: 0 auto;
 		border-radius: 2px;
 	}
 	.screen img.big {
-		cursor: zoom-out; 
+		cursor: zoom-out;
 		width: 100%;
 	}
 	.screen .legend {
 		text-align: center;
 		font-size: 18px;
 		font-weight: 300;
-		color: #555; 
+		color: #555;
 		font-style: italic;
 	}
 	code .CodeMirror {
@@ -1084,13 +1084,13 @@
 		margin: 10px auto;
 		background: white;
 	}
-	table td, #tutorial table th {
+	table td {
 		border: 1px solid #aaa;
 		padding: 3px 10px;
 		text-align: center;
 	}
 	a {
-		color: #5FAD1B;
+		color: #5fad1b;
 	}
 	.sign-table {
 		table-layout: fixed;
@@ -1125,6 +1125,6 @@
 		width: 82%;
 		height: 82%;
 		margin: 10%;
-		background: #5FAD1B;
+		background: #5fad1b;
 	}
 </style>

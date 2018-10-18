@@ -128,7 +128,7 @@
 		}
 	}
 	.step .title {
-		background: #5FAD1B;
+		background: #5fad1b;
 		color: white;
 		font-weight: bold;
 		padding: 5px 10px;

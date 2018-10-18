@@ -6,7 +6,7 @@
 
 		<div class="panel">
 			<div class="content">
-				<div id="admin-wrapper">
+				<div class="admin-wrapper">
 					<router-link to="/admin/services">
 						<div v-ripple class="section card">
 							<img src="/image/admin/services.png">
@@ -80,14 +80,14 @@
 </script>
 
 <style lang="scss" scoped>
-	#admin-wrapper {
+	.admin-wrapper {
 		text-align: center;
 	}
-	#app.app #admin-wrapper {
+	#app.app .admin-wrapper {
 		margin: 0;
 		padding: 0;
 	}
-	#admin-wrapper .section {
+	.admin-wrapper .section {
 		display: inline-block;
 		padding: 10px 5px;
 		margin: 10px;
@@ -95,22 +95,22 @@
 		width: 170px;
 		vertical-align: bottom;
 	}
-	#app.app #admin-wrapper .section {
+	#app.app .admin-wrapper .section {
 		margin: 8px;
 		width: 150px;
 	}
-	#admin-wrapper .section img {
+	.admin-wrapper .section img {
 		margin: 10px 0;
 		max-height: 70px;
 	}
-	#admin-wrapper .section h2 {
+	.admin-wrapper .section h2 {
 		font-size: 18px;
 		margin: 0;
 		display: flex;
 		justify-content: center;
 		align-items: flex-end;
 	}
-	#admin-wrapper .section h2 i {
+	.admin-wrapper .section h2 i {
 		margin-left: 5px;
 		font-size: 20px;
 	}
