@@ -39,19 +39,17 @@ enum SocketMessage {
 class Socket {
 	public socket!: WebSocket
 	public queue: any[] = []
-	public init() {
-		// if (LW.socket.connecting() || LW.socket.connected()) {
-		// 	_.logW("WebSocket already connected!")
-		// 	return
-		// }
 
+	public connect() {
+		if (!store.getters.connected || this.connecting() || this.connected()) {
+			return
+		}
 		const url = 'wss://leekwars.com/ws'
 		// if (LW.local) url = 'ws://localhost:1213/'
 		this.socket = new WebSocket(url)
 
 		this.socket.onopen = () => {
 			store.commit('wsconnected')
-
 			for (const p of this.queue) {
 				this.send(p)
 			}
@@ -61,11 +59,10 @@ class Socket {
 		}
 		this.socket.onclose = () => {
 			store.commit('wsclose')
-			// Try to reconnect
-			// setTimeout(() => this.init(), 2000)
+			setTimeout(() => this.connect(), 2000)
 		}
 		this.socket.onerror = () => {
-			// setTimeout(() => this.init(), 2000)
+			setTimeout(() => this.connect(), 2000)
 		}
 
 		this.socket.onmessage = (msg: any) => {
@@ -164,6 +161,12 @@ class Socket {
 	}
 	public disconnect() {
 		this.socket.close()
+	}
+	public connected() {
+		return this.socket && this.socket.readyState == WebSocket.OPEN
+	}
+	public connecting() {
+		return this.socket && this.socket.readyState == WebSocket.CONNECTING
 	}
 }
 export { Socket, SocketMessage }
