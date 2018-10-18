@@ -153,7 +153,7 @@ class Socket {
 		}
 	}
 	public send(message: any) {
-		if (this.socket.readyState === WebSocket.OPEN) {
+		if (this.socket && this.socket.readyState === WebSocket.OPEN) {
 			this.socket.send(JSON.stringify(message))
 		} else {
 			this.queue.push(message)
