@@ -13,25 +13,25 @@
 							<h2>Services</h2>
 						</div>
 					</router-link>
-					<router-link to="admin/errors">
+					<router-link to="/admin/errors">
 						<div v-ripple class="section card">
 							<img src="/image/admin/error_manager.png">
 							<h2>Gestionnaire d'erreur</h2>
 						</div>
 					</router-link>
-					<router-link to="admin/emails">
+					<router-link to="/admin/emails">
 						<div v-ripple class="section card">
 							<img src="/image/admin/mails.png">
 							<h2>Mails d'activation</h2>
 						</div>
 					</router-link>
-					<router-link to="admin/servers">
+					<router-link to="/admin/servers">
 						<div v-ripple class="section card">
 							<img src="/image/admin/server.png">
 							<h2>État des serveurs</h2>
 						</div>
 					</router-link>
-					<router-link to="admin/trophies">
+					<router-link to="/admin/trophies">
 						<div v-ripple class="section card">
 							<img src="/image/admin/trophies.png">
 							<h2>Trophées</h2>
