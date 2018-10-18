@@ -1,5 +1,5 @@
 <template lang="html">
-	<div id="editor-page" :class="'theme-' + theme">
+	<div :class="'theme-' + theme">
 		<div class="page-header page-bar">
 			<div>
 				<h1>{{ $t('title') }}</h1>
@@ -51,18 +51,18 @@
 
 		<div class="container">
 			<div v-show="!LeekWars.mobile || !LeekWars.splitBack" class="column3">
-				<div id="editor-left" class="panel">
+				<div class="editor-left panel">
 
 					<div class="content">
 
 						<loader v-if="!rootFolder" />
 
-						<div v-autostopscroll id="ai-list">
+						<div v-autostopscroll class="ai-list">
 							<editor-folder v-if="rootFolder" :folder="rootFolder" :level="0" />
 						</div>
-						<div v-if="currentEditor && currentEditor.loaded" id="ai-stats">
-							<div id="line-count-wrapper">{{ $t('n_lines', [currentEditor.lines]) }}</div>
-							<div id="char-count-wrapper">{{ $t('n_characters', [currentEditor.characters]) }}</div>
+						<div v-if="currentEditor && currentEditor.loaded" class="ai-stats">
+							<div class="line-count-wrapper">{{ $t('n_lines', [currentEditor.lines]) }}</div>
+							<div class="char-count-wrapper">{{ $t('n_characters', [currentEditor.characters]) }}</div>
 						</div>
 						<br>
 						<!--
@@ -76,11 +76,9 @@
 			<div v-show="!LeekWars.mobile || LeekWars.splitBack" class="column9">
 				<div class="panel">
 					<div class="content">
-
-						<div id="editors" :style="{'font-size': fontSize + 'px', 'line-height': lineHeight + 'px'}">
+						<div class="editors" :style="{'font-size': fontSize + 'px', 'line-height': lineHeight + 'px'}">
 							<ai-view v-for="ai in activeAIs" :key="ai.id" :ai="ai" :visible="currentAI === ai" />
 						</div>
-
 						<div class="search-panel">
 							<img src="/image/search.png">
 							<input type="text" class="query" autocomplete="off">
@@ -91,7 +89,7 @@
 					</div>
 				</div>
 
-				<div v-if="currentEditor" id="compilation">
+				<div v-if="currentEditor" class="compilation">
 					<span v-if="currentEditor.saving" id="compiling">
 						<loader :size="15" /> {{ $t('saving') }}
 					</span>
@@ -105,7 +103,7 @@
 				</div>
 			</div>
 		</div>
-		<div id="error-tooltip"></div>
+		<div class="error-tooltip"></div>
 
 		<v-dialog v-model="infoDialog" :max-width="500">
 			<div class="title">{{ $t('shortcuts') }}</div>
@@ -616,14 +614,14 @@
 			// 	var query = current in editors ? editors[current].editor.getSelection() : ''
 			// 	_searchEnabled = true
 			// 	LW.pages.editor.resize()
-			// 	$('#editor-page .search-panel').css('display', 'flex')
-			// 	$('#editor-page .search-panel input').val(query).focus()
+			// 	$('.search-panel').css('display', 'flex')
+			// 	$('.search-panel input').val(query).focus()
 			// } else {
 			// 	_searchEnabled = false
 			// 	if (editors[current].editor.overlay) {
 			// 		editors[current].editor.removeOverlay(editors[current].editor.overlay)
 			// 	}
-			// 	$('#editor-page .search-panel').hide()
+			// 	$('.search-panel').hide()
 			// 	LW.pages.editor.resize()
 			// }
 		}
@@ -725,19 +723,19 @@
 	.v-menu {
 		display: none;
 	}
-	#app.app #editor-page .panel {
+	#app.app .panel {
 		margin-bottom: 0;
 	}
-	#editor-page .search-panel {
+	.search-panel {
 		display: none;
 		height: 40px;
 	}
-	#editor-page .search-panel img {
+	.search-panel img {
 		width: 20px;
 		height: 20px;
 		margin: 10px;
 	}
-	#editor-page .search-panel .arrow {
+	.search-panel .arrow {
 		width: 20px;
 		height: 12px;
 		margin: 0;
@@ -745,11 +743,11 @@
 		opacity: 0.3;
 		cursor: pointer;
 	}
-	#editor-page .search-panel .arrow:hover {
+	.search-panel .arrow:hover {
 		opacity: 1;
 		background: rgba(127,127,127,0.5);
 	}
-	#editor-page .search-panel input {
+	.search-panel input {
 		width: 100%;
 		height: 26px;
 		margin: 7px 0;
@@ -757,37 +755,20 @@
 		border: none;
 		background: #eee;
 	}
-	#editor-page .search-panel .results {
+	.search-panel .results {
 		color: #777;
 		margin-right: 13px;
 		line-height: 40px;
 		white-space: nowrap;
 	}
-	#editor-page .panel .content {
+	.panel .content {
 		padding: 0;
 	}
-	#editor-settings-button img {
-		width: 20px;
-	}
-	#setting-font-size {
-		width: 50px;
-	}
-	#editor-settings-popup h2 {
-		margin-left: 0;
-		margin-bottom: 20px;
-		margin-top: 30px;
-	}
-	#editor-settings-popup h2:first-child {
-		margin-top: 0;
-	}
-	#ai-name {
-		white-space: nowrap;
-	}
-	#ai-list {
+	.ai-list {
 		overflow-y: auto;
 		height: 100%;
 	}
-	#ai-stats {
+	.ai-stats {
 		padding: 8px;
 		margin: 10px;
 		background-color: white;
@@ -795,35 +776,17 @@
 		margin-bottom: -6px;
 		box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
 	}
-	#app.app #ai-stats {
+	#app.app .ai-stats {
 		display: none;
 	}
-	#comp-level, #line-count, #char-count {
-		font-weight: bold;
-	}
-	#line-count-wrapper, #char-count-wrapper {
+	.line-count-wrapper, .char-count-wrapper {
 		font-size: 13px;
 	}
 	.editor {
 		font-family: "Roboto";
 		font-size: 25px;
 	}
-	#page .buttons {
-		padding-right: 25px;
-		padding-left: 10px;
-	}
-	#top {
-		width: 100%;
-	}
-	#top-left {
-		padding-left: 30px;
-		padding-top: 5px;
-	}
-	#buttons {
-		text-align: right;
-		padding-right: 30px;
-	}
-	#compilation {
+	.compilation {
 		position: fixed;
 		bottom: 150px;
 		right: 50%;
@@ -833,35 +796,35 @@
 		text-align: center;
 		z-index: 1000;
 	}
-	#compiling {
+	.compiling {
 		padding: 5px 10px;
 		border-radius: 2px;
 		color: black;
 		background: #f2f2f2;
 	}
-	#compiling .loader {
+	.compiling .loader {
 		display: inline-block;
 		padding: 0;
 		padding-right: 5px;
 	}
-	#results .good, #results .error {
+	.results .good, .results .error {
 		padding: 5px 10px;
 		border-radius: 2px;
 		display: inline-block;
 		margin: 4px;
 	}
-	#results {
+	.results {
 		cursor: pointer;
 	}
-	#results .good {
+	.results .good {
 		color: white;
-		background: #2CDC20;
+		background: #2cdc20;
 	}
-	#results .error {
+	.results .error {
 		color: white;
-		background: #FF6C71;
+		background: #ff6c71;
 	}
-	#compiling img {
+	.compiling img {
 		vertical-align: middle;
 	}
 	.CodeMirror {
@@ -874,36 +837,33 @@
 		min-height: 700px;
 		padding: 5px;
 	}
-	#editors {
+	.editors {
 		height: 100%;
 	}
-	.popup.input_popup input {
+	.popup.input_popup input {
 		width: 90%;
 	}
-	#editor-page.theme-monokai .panel {
+	.theme-monokai .panel {
 		background: #272822;
 	}
-	#editor-page.theme-monokai .button {
+	.theme-monokai .button {
 		background: #444;
 		color: #eee;
 		box-shadow: 0px 3px 0px black;
 	}
-	.theme-monokai #ai-name {
+	.theme-monokai .ai-list .item:not(.modified) .label {
 		color: #eee;
 	}
-	.theme-monokai #ai-list .item:not(.modified) .label {
-		color: #eee;
-	}
-	.theme-monokai #ai-list .item.selected > .label {
+	.theme-monokai .ai-list .item.selected > .label {
 		background: #555;
 	}
-	.theme-monokai #ai-list .item > .label:hover {
+	.theme-monokai .ai-list .item > .label:hover {
 		background: #444;
 	}
-	.theme-monokai #ai-list .folder.dragover {
+	.theme-monokai .ai-list .folder.dragover {
 		background: #333;
 	}
-	.theme-monokai #ai-stats {
+	.theme-monokai .ai-stats {
 		background: #444;
 		color: #eee;
 	}
@@ -920,12 +880,12 @@
 	.folder-content img {
 		width: 80px;
 	}
-	#error-tooltip {
+	.error-tooltip {
 		position: absolute;
 		display: none;
-		color: #AB0000;
+		color: #ab0000;
 		background: white;
-		border: 1px solid #FF6C71;
+		border: 1px solid #ff6c71;
 		z-index: 10;
 		padding: 4px 6px;
 		border-top-right-radius: 3px;
@@ -934,23 +894,23 @@
 		font-size: 16px;
 	}
 	.label-beta {
-		background: #FF54E3;
+		background: #ff54e3;
 		color: white;
 		padding: 0px 4px;
 		border-radius: 5px;
 		font-size: 15px;
 		display: inline-block;
 	}
-	#editor-page /deep/ .CodeMirror {
+	/deep/ .CodeMirror {
 		height: 100%;
 	}
-	#editor-left {
+	.editor-left {
 		height: calc(100vh - 140px);
 	}
-	#app.app #editor-left {
+	#app.app .editor-left {
 		height: calc(100vh - 56px);
 	}
-	#editor-left .content {
+	.editor-left .content {
 		height: 100%;
 		display: flex;
 		flex-direction: column;
@@ -964,7 +924,7 @@
 	#app.app .column9 .content {
 		height: calc(100vh - 56px);
 	}
-	#editor-page .editor-loader {
+	.editor-loader {
 		position: absolute;
 		top: calc(50% - 35px);
 		left: 0;
@@ -979,7 +939,7 @@
 			margin-top: 0;
 		}
 		.title {
-			color: #5FAD1B;
+			color: #5fad1b;
 			font-size: 18px;
 			font-weight: 500;
 			margin-top: 15px;

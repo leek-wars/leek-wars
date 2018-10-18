@@ -3,7 +3,7 @@
 		<div class="page-header page-bar">
 			<h1><router-link to="/admin">Administration</router-link> > Serveurs</h1>
 		</div>
-		<div id="servers" class="panel">
+		<div class="servers panel">
 			<div class="content">
 				<loader v-if="LeekWars.objectSize(servers) == 0" />
 				<div v-else>
@@ -118,7 +118,7 @@
 		vertical-align: top;
 		width: 300px;
 	}
-	#servers .server .load {
+	.server .load {
 		position: absolute;
 		top: 5px;
 		left: 5px;
@@ -128,26 +128,26 @@
 		overflow: hidden;
 		border: 2px solid #eee;
 	}
-	#servers .server .load div {
+	.server .load div {
 		height: 100%;
 		width: 11px;
-		background: #5FAD1B;
+		background: #5fad1b;
 		transition: margin-top 0.4s ease;
 	}
-	#servers .name {
+	.servers .name {
 		font-size: 22px;
 		font-weight: 300;
 		margin: 5px;
 	}
-	#servers .name img {
+	.servers .name img {
 		vertical-align: middle;
 		margin-left: 8px;
 		width: 16px;
 	}
-	#servers .server .total-wrapper {
+	.server .total-wrapper {
 		color: #777;
 	}
-	#servers .threads {
+	.threads {
 		text-align: left;
 		color: #555;
 		border-top: 3px solid #f2f2f2;

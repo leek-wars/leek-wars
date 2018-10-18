@@ -92,7 +92,7 @@
 	h1 {
 		margin: 0;
 	}
-	.weapon, #level-popup .chip {
+	.weapon, .level-popup .chip {
 		display: inline-block;
 		text-align: center;
 		padding: 8px;

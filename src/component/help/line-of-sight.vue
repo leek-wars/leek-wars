@@ -109,7 +109,7 @@
 		background: black;
 	}
 	.cell.los {
-		background: #5FAD1B;
+		background: #5fad1b;
 	}
 	.cell.red {
 		background: red;

@@ -372,15 +372,15 @@
 			color: #222;
 		}
 		/deep/ .first a {
-			color: #FFA900;
+			color: #ffa900;
 			font-weight: bold;
 		}
 		/deep/ .second a {
-			color: #9C9C9C;
+			color: #9c9c9c;
 			font-weight: bold;
 		}
 		/deep/ .third a {
-			color: #AE4E00;
+			color: #ae4e00;
 			font-weight: bold;
 		}
 		tr.me {

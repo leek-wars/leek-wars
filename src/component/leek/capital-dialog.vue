@@ -304,11 +304,11 @@
 	.capital {
 		color: white;
 		font-size: 18px;
-		background: #5FAD1B;
+		background: #5fad1b;
 		display: inline-block;
 		padding: 5px 10px;
 	}
-	.capital[v='0'] {
+	.capital[v="0"] {
 		background: #888;
 	}
 	.sup {
@@ -323,18 +323,18 @@
 		vertical-align: top;
 		width: 20px;
 		height: 27px;
-		background-image: url('/image/add.png');
+		background-image: url("/image/add.png");
 		cursor: pointer;
 		opacity: 0.5;
 		user-select: none;
 	}
-	.add[q='10'] {
+	.add[q="10"] {
 		width: 25px;
-		background-image: url('/image/add10.png');
+		background-image: url("/image/add10.png");
 	}
-	.add[q='100'] {
+	.add[q="100"] {
 		width: 30px;
-		background-image: url('/image/add100.png');
+		background-image: url("/image/add100.png");
 	}
 	.add.locked {
 		cursor: auto;

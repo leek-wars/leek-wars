@@ -345,7 +345,7 @@
 		margin: 5px 0;
 	}
 	input[status=valid], input[status=valid]:focus {
-		border: 2px solid #5FAD1B;
+		border: 2px solid #5fad1b;
 	}
 	.signup-message {
 		padding: 20px;
@@ -394,7 +394,7 @@
 		font-size: 11px;
 		text-align: center;
 		a {
-			color: #5FAD1B;
+			color: #5fad1b;
 		}
 	}
 	.ranking {
@@ -426,15 +426,15 @@
 			border-right: none;
 		}
 		.first a {
-			color: #FFA900;
+			color: #ffa900;
 			font-weight: bold;
 		}
 		.second a {
-			color: #9C9C9C;
+			color: #9c9c9c;
 			font-weight: bold;
 		}
 		.third a {
-			color: #AE4E00;
+			color: #ae4e00;
 			font-weight: bold;
 		}
 	}

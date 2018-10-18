@@ -1,19 +1,19 @@
 .cm-number {
-	color: #007F00;
+	color: #007f00;
 }
 .cm-string {
-	color: #FF901E;
+	color: #ff901e;
 }
 .cm-keyword, .cm-variable-declaration, .cm-function-declaration {
 	color: #00007f;
 	font-weight: bold;
 }
 .cm-atom {
-	color: #0086BC;
+	color: #0086bc;
 	font-weight: bold;
 }
 .cm-comment {
-	color: #CE1400;
+	color: #ce1400;
 }
 .cm-def {
 	color: black;
@@ -48,14 +48,14 @@
 	padding: 3px 0;
 }
 .cm-highlight-error {
-	background: #FF9E9E;
+	background: #ff9e9e;
 	padding: 3px 0;
 }
 .CodeMirror-matchingbracket {
-	color: #00F;
+	color: #00f;
 	font-weight: bold;
 }
 .CodeMirror-nonmatchingbracket {
-	color: #F00;
+	color: #f00;
 	font-weight: bold;
 }

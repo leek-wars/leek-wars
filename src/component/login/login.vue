@@ -57,7 +57,7 @@
 		width: 200px;
 		margin: 0 auto;
 	}
-	input[type='text'], input[type='password'] {
+	input[type="text"], input[type="password"] {
 		width: 100%;
 		margin-top: 5px;
 	}

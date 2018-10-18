@@ -1,8 +1,8 @@
 <template lang="html">
-	<div id="header">
-		<div id="header-left">
+	<div class="header">
+		<div class="header-left">
 			<router-link to="/">
-				<div id="logo-wrapper">
+				<div class="logo-wrapper">
 					<img class="logo" src="/image/logo.png">
 					<span v-if="LeekWars.local" class="local-label">local</span>
 					<span v-if="LeekWars.dev" class="dev-label">dev</span>
@@ -10,19 +10,19 @@
 				</div>
 			</router-link>
 		</div>
-		<div id="header-right">
-			<div v-if="!$store.getters.connected" id="header-signin" class="buttons">
+		<div class="header-right">
+			<div v-if="!$store.getters.connected" class="header-signin buttons">
 				<div class="button-wrapper">
 					<router-link to="/login">
-						<div id="login-button" class="header-button">{{ $t('main.connection') }}</div>
+						<div class="header-button">{{ $t('main.connection') }}</div>
 					</router-link>
 				</div><div class="button-wrapper">
 					<router-link to="/">
-						<div id="signup-button" class="header-button">{{ $t('main.signup') }}</div>
+						<div class="signup-button header-button">{{ $t('main.signup') }}</div>
 					</router-link>
 				</div>
 			</div>
-			<div v-if="$store.getters.connected" id="header-farmer" class="buttons">
+			<div v-if="$store.getters.connected" class="header-farmer buttons">
 				<!-- <div class="button-wrapper">
 					<div class="header-button" @click="LeekWars.setLocale($i18n.locale == 'fr' ? 'en' : 'fr')">
 						{{ $i18n.locale }}
@@ -74,7 +74,7 @@
 				</div>
 				<div class="button-wrapper">
 					<router-link to="/settings">
-						<div id="settings-button" class="header-button">
+						<div class="settings-button header-button">
 							<i class="material-icons">settings</i>
 						</div>
 					</router-link>
@@ -129,36 +129,39 @@
 	.header-button i {
 		line-height: 42px;
 	}
-	#header {
+	.header {
 		display: flex;
 		justify-content: space-between;
 		align-items: flex-end;
 		height: 80px;
 	}
-	#header .fights-button img {
+	#app.app.connected .header {
+		display: none;
+	}
+	.header .fights-button img {
 		height: 20px;
 		width: 20px;
 		margin: -4px 0;
 		opacity: 0.8;
 	}
-	#header-left {
+	.header-left {
 		padding-right: 20px;
 	}
-	#logo-wrapper {
+	.logo-wrapper {
 		white-space: nowrap;
 	}
-	#header .buttons {
+	.header .buttons {
 		padding-bottom: 4px;
 		display: flex;
 	}
-	#header .button-wrapper {
+	.header .button-wrapper {
 		flex-grow: 1;
 	}
-	#header .header-signin {
+	.header .header-signin {
 		padding-bottom: 5px;
 		text-align: right;
 	}
-	#header .header-button {
+	.header .header-button {
 		display: inline-block;
 		cursor: pointer;
 		text-align: center;
@@ -173,26 +176,26 @@
 		vertical-align: bottom;
 		white-space: nowrap;
 	}
-	#header .button-wrapper:first-child .header-button {
+	.header .button-wrapper:first-child .header-button {
 		margin-left: 0;
 	}
-	#header-farmer .button-wrapper:first-child .header-button {
+	.header-farmer .button-wrapper:first-child .header-button {
 		padding-left: 10px;
 	}
-	#header-signin .button-wrapper:last-child .header-button {
+	.header-signin .button-wrapper:last-child .header-button {
 		padding-right: 12px;
 	}
-	#header .header-button .text {
+	.header .header-button .text {
 		line-height: 42px;
 		height: 42px;
 		display: inline-block;
 		vertical-align: top;
 	}
-	#header .header-button .crystal {
+	.header .header-button .crystal {
 		vertical-align: bottom;
 		margin-bottom: -1px;
 	}
-	#signup-button {
+	.signup-button {
 		padding-right: 20px;
 	}
 	.header-button:not(.mobile):before {
@@ -218,16 +221,16 @@
 		border-width: 42px 20px 0 0;
 		border-color: rgba(80, 80, 80, 0.6) transparent transparent transparent;
 	}
-	#header .button-wrapper:last-child .header-button:after {
+	.header .button-wrapper:last-child .header-button:after {
 		border: none;
 	}
-	#header .header-button:hover {
+	.header .header-button:hover {
 		background: rgba(200, 200, 200, 0.4);
 	}
-	#header .header-button:hover:before {
+	.header .header-button:hover:before {
 		border-color: transparent transparent rgba(200, 200, 200, 0.4) transparent;
 	}
-	#header .header-button:hover:after {
+	.header .header-button:hover:after {
 		border-color: rgba(200, 200, 200, 0.4) transparent transparent transparent;
 	}
 	.farmer-avatar {
@@ -236,7 +239,7 @@
 		margin-left: 8px;
 		margin-right: -4px;
 	}
-	#settings-button img, .notifications-button img, .messages-button img {
+	.settings-button img, .notifications-button img, .messages-button img {
 		height: 26px;
 		width: 26px;
 		margin: 8px 0;
@@ -250,7 +253,7 @@
 		position: absolute;
 		top: -2px;
 		right: -6px;
-		background: #5FAD1B;
+		background: #5fad1b;
 		padding: 4px 5px;
 		color: white;
 		border-radius: 5px;
@@ -272,5 +275,42 @@
 	}
 	.see-all:hover {
 		background: white;
+	}
+
+	@media screen and (min-width: 1600px) {
+		#app.connected:not(.social-collapsed) .header-farmer .notifications-button,
+		#app.connected:not(.social-collapsed) .header-farmer .messages-button {
+			display: none;
+		}
+	}
+	@media screen and (max-width: 1199px) {
+		.header {
+			height: auto;
+			display: block;
+		}
+		.header .button-wrapper div {
+			width: auto;
+			display: block;
+		}
+		.header .button-wrapper:first-child .header-button:before {
+			display: none;
+		}
+	}
+	@media screen and (max-width: 999px) {
+		.header .header-button {
+			padding: 0;
+		}
+		.header-left {
+			padding: 0;
+		}
+	}
+	@media screen and (max-width: 599px) {
+		#app.connected .header {
+			display: none;
+		}
+		#app:not(.connected) .header .logo-wrapper {
+			padding-left: 20px;
+			padding-right: 20px;
+		}
 	}
 </style>

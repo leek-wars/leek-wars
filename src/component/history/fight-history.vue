@@ -99,13 +99,13 @@
 		}
 	}
 	.win {
-		background-color: #B6F182;
+		background-color: #b6f182;
 	}
 	.draw {
-		background-color: #DCDCDC;
+		background-color: #dcdcdc;
 	}
 	.defeat {
-		background-color: #FFB3AE;
+		background-color: #ffb3ae;
 	}
 	.generating {
 		background-color: white;

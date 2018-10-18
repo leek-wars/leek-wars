@@ -1,0 +1,64 @@
+#app.sfw {
+	background: #eee;
+}
+#app.sfw .page-wrapper, #app.sfw .social-panel .content {
+	background: rgba(255,255,255, 0.4);
+}
+#app.sfw h1 {
+	background: white;
+	color: #777;
+	text-shadow: none;
+}
+#app.sfw h1:after {
+	border-color: transparent transparent transparent white;
+}
+#app.sfw .panel .header {
+	background: white;
+}
+#app.sfw .panel .header h2 {
+	background: white;
+	color: #777;
+}
+#app.sfw .panel .header h2 a {
+	color: #777;
+}
+#app.sfw .panel .header h2:before {
+	border-color: transparent transparent transparent white;
+}
+#app.sfw .panel .header .right .button {
+	background: white;
+	color: #777;
+}
+#app.sfw .panel .header .right .button:hover {
+	color: black;
+}
+#app.sfw img, #app.sfw svg {
+	opacity: 0.1;
+}
+#app.sfw .smiley, #app.sfw .hab, #app.sfw .crystal {
+	opacity: 0.15;
+}
+#app.sfw .menu {
+	background: rgba(255,255,255,0.4);
+}
+#app.sfw .menu .menu-wrapper {
+	background: rgba(255,255,255,0.4);
+}
+#app.sfw .menu .section {
+	background: white;
+	color: #777;
+}
+#app.sfw .menu .menu-top {
+	background: white;
+	color: #777;
+}
+#app.sfw .xp-bar, #app.sfw .switch-active .switch-switch {
+	background: #caf0ca;
+}
+#app.sfw .switch-active .switch-switch:before {
+	border-color: #caf0ca transparent transparent #caf0ca;
+}
+#app.sfw .pagination a.current {
+	background: none repeat scroll 0% 0% transparent;
+	color: grey;
+}

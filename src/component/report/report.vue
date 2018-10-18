@@ -12,10 +12,10 @@
 
 		<div class="panel">
 			<div class="content">
-				<div v-if="fight.too_long" id="too-long">
+				<div v-if="fight.too_long" class="too-long">
 					{{ $t('generation_too_long') }}
 				</div>
-				<div id="report-general">
+				<div class="report-general">
 					<div v-if="fight.type === FightType.BATTLE_ROYALE">
 						<h3>Poireaux</h3>
 						<table class="report">
@@ -84,7 +84,7 @@
 				</div>
 			</div>
 			<div id="chart-panel" class="content">
-				<div id="chart">
+				<div class="chart">
 					<div class="ct-chart"></div>
 				</div>
 			</div>
@@ -104,7 +104,7 @@
 			</div>
 		</div>
 
-		<div v-if="errors.length > 0 || warnings.length > 0" id="warnings-errors" class="panel" name="warnings-errors">
+		<div v-if="errors.length > 0 || warnings.length > 0" class="warnings-error panel" name="warnings-errors">
 			<div class="header">
 				<h2>Erreurs et avertissements ({{ errors.length + warnings.length }})</h2>
 				<div class="right">
@@ -126,7 +126,7 @@
 				<h2>Actions</h2>
 			</div>
 			<div class="content">
-				<actions id="actions" :actions="actions" :leeks="leeks" />
+				<actions class="actions" :actions="actions" :leeks="leeks" />
 			</div>
 		</div>
 	</div>
@@ -415,19 +415,19 @@
 </script>
 
 <style lang="scss" scoped>
-	#page h3 {
+	h3 {
 		text-align: left;
 		margin-left: 30px;
 		margin-bottom: 10px;
 	}
-	#report-general .flags {
+	.report-general .flags {
 		margin: 0 auto;
 		padding-bottom: 4px;
 	}
-	#report-general .flags img {
+	.report-general .flags img {
 		width: 26px;
 	}
-	#actions {
+	.actions {
 		padding: 0 30px;
 	}
 	.turn {
@@ -453,38 +453,38 @@
 		color: #999;
 	}
 	.warning {
-		color: #FF5F00;
+		color: #ff5f00;
 	}
 	.error {
-		color: #FF1900;
+		color: #ff1900;
 	}
-	#too-long {
+	.too-long {
 		padding: 10px;
 		margin: 20px 100px;
-		background: #FFB6B6;
+		background: #ffb6b6;
 		border-radius: 2px;
 	}
-	#chart {
+	.chart {
 		margin-left: -10px;
 		margin-right: -4px;
 		margin-bottom: -16px;
 		position: relative;
+		.ct-line {
+			stroke: rgba(95,173,27,0.7);
+			stroke-width: 3px;
+		}
+		.ct-area {
+			fill: rgba(95,173,27,1);
+			fill-opacity: 0.2;
+		}
+		.ct-label.ct-horizontal {
+			text-align: center;
+		}
+		.tooltip {
+			pointer-events: none;
+		}
 	}
-	#chart .ct-line {
-		stroke: rgba(95,173,27,0.7);
-		stroke-width: 3px;
-	}
-	#chart .ct-area {
-		fill: rgba(95,173,27,1);
-		fill-opacity: 0.2;
-	}
-	#chart .ct-label.ct-horizontal {
-		text-align: center;
-	}
-	#chart .tooltip {
-		pointer-events: none;
-	}
-	#warnings-errors .title {
+	.warnings-errors .title {
 		font-size: 18px;
 		margin-bottom: 5px;
 	}

@@ -45,11 +45,11 @@
 		stroke: #bbb;
 		stroke-width: 2;
 	}
-	.entry[me='true'] {
-		stroke: #5FAD1B;
-		fill: #C8FFC7;
+	.entry[me="true"] {
+		stroke: #5fad1b;
+		fill: #c8ffc7;
 	}
-	image[win='false'] {
+	image[win="false"] {
 		opacity: 0.4;
 		fill: #f5f5f5;
 	}

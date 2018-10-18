@@ -1,0 +1,29 @@
+{
+	"ignoreFiles": "**/*.ts",
+	"processors": ["stylelint-processor-html"],
+	"extends": "stylelint-config-recommended",
+	"rules": {
+		"indentation": "tab",
+		"color-hex-case": "lower",
+		"no-descending-specificity": null,
+		"no-empty-source": null,
+		"font-family-no-missing-generic-family-keyword": null,
+		"selector-max-empty-lines": 0,
+		"rule-empty-line-before": "never",
+		"string-quotes": "double",
+		"selector-max-id": 1,
+		"selector-id-pattern": "^app",
+		"property-case": "lower",
+		"selector-type-case": "lower",
+		"value-keyword-case": "lower",
+		"block-opening-brace-space-before": "always",
+		"declaration-colon-space-after": "always",
+		"declaration-colon-space-before": "never",
+		"block-closing-brace-newline-after": "always",
+		"no-eol-whitespace": true,
+		"selector-combinator-space-after": "always",
+		"selector-combinator-space-before": "always",
+		"selector-descendant-combinator-no-non-space": true,
+		"shorthand-property-no-redundant-values": true
+	}
+}

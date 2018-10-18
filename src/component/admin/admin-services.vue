@@ -52,7 +52,7 @@
 		margin-bottom: 10px
 	}
 	.service .module {
-		color: #5FAD1B;
+		color: #5fad1b;
 	}
 	.service .function, .service .returns {
 		color: black;
@@ -75,9 +75,9 @@
 		background: red;
 	}
 	.service .implemented {
-		background: #5FAD1B;
+		background: #5fad1b;
 	}
 	.service .admin {
-		background: #009AFF;
+		background: #009aff;
 	}
 </style>

@@ -1,6 +1,6 @@
 <template lang="html">
-	<div id="player" :style="{width: width + 'px', height: height + 'px'}">
-		<div v-if="!loaded" id="loading">
+	<div :style="{width: width + 'px', height: height + 'px'}">
+		<div v-if="!loaded" class="loading">
 			<!-- <template v-if='fight.type == FightType.BATTLE_ROYALE'>
 				@foreach (i : leek in fight.leeks1)
 					<div class='leek' leek='{leek.id}'>
@@ -52,7 +52,7 @@
 			</div>
 		</div>
 
-		<div v-if="error" id="error">
+		<div v-if="error" class="error">
 			<h2>{{ $t('fight.error_generating_fight') }}</h2>
 			<br>
 			<img src="/image/notgood.png">
@@ -65,14 +65,14 @@
 			<br><br>
 		</div>
 
-		<div v-if="noHTML5" id="browser">
+		<div v-if="noHTML5" class="browsers">
 			<h2>{{ $t('browser_cannot_display') }}</h2>
 			<br>
 			<img src="image/notgood.png">
 			<br><br>
 			<h4><i>{{ $t('update_browser') }}</i></h4>
 			<br>
-			<div id="browser-list">
+			<div class="browser-list">
 				<div class="browser">
 					<a target="blank" href="https://www.google.com/intl/fr_fr/chrome/browser/">
 						<img src="image/chrome.png">
@@ -110,21 +110,21 @@
 			</router-link>
 		</div>
 
-		<div v-show="loaded" id="game">
-			<div id="layers" :style="{height: height - 36 + 'px'}">
-				<canvas id="bg-canvas"></canvas>
-				<canvas id="game-canvas"></canvas>
-				<div id="progress-bar-wrapper">
-					<div id="progress-bar-turn" class="tooltip fixed top"><span class="content"></span></div>
-					<div id="progress-bar">
+		<div v-show="loaded" class="game">
+			<div class="layers" :style="{height: height - 36 + 'px'}">
+				<canvas class="bg-canvas"></canvas>
+				<canvas class="game-canvas"></canvas>
+				<div class="progress-bar-wrapper">
+					<div class="progress-bar-turn tooltip fixed top"><span class="content"></span></div>
+					<div class="progress-bar">
 						<div class="bar"></div><div class="circle"></div>
 					</div>
 				</div>
 				<hud :game="game" />
 			</div>
 
-			<div id="controls">
-				<div id="turn">{{ $t('fight.turn_n', [game.turn]) }}</div>
+			<div class="controls">
+				<div class="turn">{{ $t('fight.turn_n', [game.turn]) }}</div>
 				<v-tooltip :open-delay="0" :close-delay="0" top content-class="top">
 					<i v-ripple slot="activator" class="material-icons control" @click="pause">{{ game.paused ? 'play_arrow' : 'pause' }}</i>
 					{{ $t('fight.pause') }} (P)
@@ -222,7 +222,7 @@
 		}
 
 		mounted() {
-			this.canvas = document.getElementById('game-canvas')
+			this.canvas = document.querySelector('.game-canvas')
 			// Check the element is in the DOM and the browser supports canvas
 			if (!this.canvas.getContext) {
 				// $('#browser-list .browser').shuffle()
@@ -317,70 +317,77 @@
 </script>
 
 <style lang="scss" scoped>
-	#game {
+	.game {
 		width: 100%;
 	}
-	#layers {
+	.layers {
 		position: relative;
 	}
-	#bg-canvas {
+	.bg-canvas {
 		position: absolute;
 		top: 0; bottom: 0;
 		left: 0; right: 0;
 	}
-	#bg-canvas:full-screen {
+	.bg-canvas:fullscreen {
 		max-height: 100%;
 	}
-	#game-canvas {
+	.game-canvas {
 		position: absolute;
 		top: 0; bottom: 0;
 		left: 0; right: 0;
 	}
-	#game-canvas:full-screen {
+	.game-canvas:fullscreen {
 		max-height: 100%;
 	}
-	#turn {
+	.turn {
 		font-weight: bold;
 	}
-	#controls {
+	.controls {
 		text-align: center;
 		line-height: 36px;
 		height: 36px;
 		background: #2a2a2a;
 		user-select: none;
 	}
-	#controls.large {
+	.controls.large {
 		line-height: 50px;
 		height: 50px;
 	}
-	#controls .control {
+	.controls .control {
 		padding: 6px 12px;
 		cursor: pointer;
 	}
-	#controls .control:hover {
+	.controls .control:hover {
 		background: rgba(255,255,255, 0.2);
 	}
-	#controls .v-menu {
+	.controls .v-menu {
 		vertical-align: top;
 	}
-	#controls i {
+	.controls i {
 		color: white;
 	}
-	#controls > div {
+	.controls > div {
 		line-height: 36px;
 		color: white;
 		display: inline-block;
 		vertical-align: top;
 		padding: 0 8px;
 	}
-	#controls.large > div {
+	.controls.large > div {
 		line-height: 50px;
 	}
-	#loading {
+	.loading {
 		height: 100%;
 		display: flex;
 		align-items: center;
 		justify-content: center;
+	}
+	.loading table {
+		width: 100%;
+		height: 400px;
+	}
+	.loading table td {
+		text-align: center;
 	}
 	.loading-fight {
 		padding: 10px;
@@ -392,5 +399,50 @@
 		padding: 6px;
 		font-size: 18px;
 		color: #aaa;
+	}
+	.browsers {
+		display: none;
+		padding-top: 70px;
+		text-align: center;
+		padding-bottom: 30px;
+	}
+	.browser-list {
+		padding: 20px;
+	}
+	.browser {
+		width: 160px;
+		display: inline-block;
+		text-align: center;
+	}
+	.error {
+		display: none;
+		padding-top: 70px;
+		text-align: center;
+	}
+	.progress-bar-wrapper:hover .progress-bar {
+		height: 12px;
+	}
+	.progress-bar .bar {
+		height: 100%;
+		background-color: #5fad1b;
+		transition: all 0.3s;
+		display: inline-block;
+		vertical-align: top;
+	}
+	.progress-bar .circle {
+		width: 8px;
+		height: 8px;
+		margin-top: -4px;
+		margin-left: -7px;
+		display: inline-block;
+		border-radius: 50%;
+		background: #ccc;
+		vertical-align: top;
+		border: 4px solid #f2f2f2;
+		transition: all 0.2s;
+	}
+	.progress-bar-wrapper:hover .circle {
+		width: 14px;
+		height: 14px;
 	}
 </style>

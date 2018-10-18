@@ -14,7 +14,7 @@
 
 					<p>{{ $t('intro') }}</p>
 
-					<div id="help-menu">
+					<div class="help-menu">
 						<a href="#farmer"><div class="item">{{ $t('farmer') }}</div></a>
 						<a href="#habs"><div class="item">{{ $t('habs') }}</div></a>
 						<a href="#leeks"><div class="item">{{ $t('leeks') }}</div></a>
@@ -375,7 +375,7 @@
 	}
 	p {
 		margin-bottom: 10px;
-		margin-left: 20px; 
+		margin-left: 20px;
 		margin-right: 20px;
 		text-align: justify;
 		font-size: 16px;
@@ -384,13 +384,13 @@
 		font-size: 16px;
 	}
 	a {
-		color: #5FAD1B;
+		color: #5fad1b;
 	}
-	#help-menu {
+	.help-menu {
 		margin-top: 20px;
 		text-align: center;
 	}
-	#help-menu .item {
+	.help-menu .item {
 		display: inline-block;
 		vertical-align: bottom;
 		margin: 10px;
@@ -404,9 +404,9 @@
 		font-size: 18px;
 		cursor: pointer;
 	}
-	#help-menu .item:hover {
-		border: 2px solid #5FAD1B;
-		color: #5FAD1B;
+	.help-menu .item:hover {
+		border: 2px solid #5fad1b;
+		color: #5fad1b;
 	}
 	.formula {
 		background: white;
@@ -422,11 +422,11 @@
 		color: #999;
 		font-style: italic;
 	}
-	.panel .content { 
+	.panel .content {
 		background: rgba(100,100,100,0.1);
 		padding: 0;
 	}
-	.panel .wrapper { 
+	.panel .wrapper {
 		max-width: 800px;
 		margin: 0 auto;
 		background: #f2f2f2;

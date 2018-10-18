@@ -25,7 +25,7 @@
 		text-align: center;
 		color: #333;
 		border-radius: 3px;
-		background-color: #DCDCDC;
+		background-color: #dcdcdc;
 		.date {
 			font-size: 10px;
 			text-align: right;

@@ -402,7 +402,7 @@
 			color: white;
 		}
 	}
-	.notifications {
+	.notifications.content {
 		text-align: left;
 		table {
 			width: 100%;

@@ -5,7 +5,7 @@
 		</div>
 		<div class="panel">
 			<div class="content">
-				<div id="bank-description" class="center" v-html="$t('description')"></div>
+				<div class="bank-description center" v-html="$t('description')"></div>
 
 				<loader v-if="!packs" />
 				<template v-else>
@@ -44,22 +44,12 @@
 </script>
 
 <style lang="scss" scoped>
-	#bank-description {
+	.bank-description {
 		padding: 20px;
 		font-size: 17px;
 	}
-	#app.app #bank-description {
+	#app.app .bank-description {
 		padding: 5px 0;
-	}
-	#habs-info {
-		display: inline-block;
-		background: white;
-		border-bottom: 3px solid #ddd;
-		border-radius: 2px;
-		padding: 20px;
-		padding-bottom: 15px;
-		margin: 10px;
-		font-size: 16px;
 	}
 	.pack {
 		padding: 10px;

@@ -1,52 +1,51 @@
 .theme-monokai .CodeMirror {
 	background: #272822;
-	color: #F8F8F2;
+	color: #f8f8f2;
 }
 .theme-monokai .CodeMirror-gutters {
 	background: #303029;
 	border-right: 1px solid #444;
 }
 .theme-monokai .cm-number {
-	color: #AE81FF;
+	color: #ae81ff;
 }
 .theme-monokai .cm-string {
-	color: #E6DB74;
+	color: #e6db74;
 }
 .theme-monokai .cm-variable-declaration,
-.theme-monokai .cm-function-declaration
-{
-	color: #66D9EF;
+.theme-monokai .cm-function-declaration {
+	color: #66d9ef;
 	font-weight: normal;
 	font-style: italic;
 }
 .theme-monokai .cm-keyword {
-	color: #F92672;
+	color: #f92672;
 	font-weight: normal;
 }
 .theme-monokai .cm-atom {
-	color: #AE81FF;
+	color: #ae81ff;
 	font-weight: normal;
 }
 .theme-monokai .cm-comment {
-	color: #75715E;
+	color: #75715e;
 }
 .theme-monokai .cm-variable {
-	color: #F8F8F2;
+	color: #f8f8f2;
 }
 .theme-monokai .cm-variable-2 {
-	color: #F8F8F2;
+	color: #f8f8f2;
 }
 .theme-monokai .CodeMirror-lines .activeline {
 	background: #222;
 }
 .theme-monokai .cm-operator {
-	color: #F92672;
+	color: #f92672;
 }
 .theme-monokai .cm-function {
-	color: #A6E22E;
+	color: #a6e22e;
 }
 .theme-monokai .cm-def {
-	color: #FD971F;
+	color: #fd971f;
 }
 .theme-monokai .cm-lsconst {
 	color: white;
@@ -65,18 +64,18 @@
 	margin: -1px;
 }
 .theme-monokai .cm-matchhighlight-green {
-	background: #5FAD1B;
+	background: #5fad1b;
 }
 .theme-monokai .CodeMirror-selected,
 .theme-monokai .CodeMirror-focused .CodeMirror-selected {
 	background: #555;
 }
 .theme-monokai .CodeMirror-matchingbracket {
-	color: #F8F8F2;
-	border-bottom: 1px solid #F8F8F2;
+	color: #f8f8f2;
+	border-bottom: 1px solid #f8f8f2;
 }
 .theme-monokai .CodeMirror-nonmatchingbracket {
-	color: #F00;
+	color: #f00;
 	font-weight: bold;
 }
 .theme-monokai .CodeMirror div.CodeMirror-cursor {

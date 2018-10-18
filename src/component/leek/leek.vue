@@ -127,7 +127,7 @@
 					<div class="header">
 						<h2>{{ $t('characteristics') }}</h2>
 					</div>
-					<div class="content characteristics">
+					<div class="characteristics">
 						<div v-for="c in ['life', 'science', 'strength', 'magic', 'wisdom', 'frequency', 'agility', 'mp', 'resistance', 'tp']" :key="c" class="characteristic">
 							<v-tooltip bottom open-delay="0" close-delay="0">
 								<div slot="activator">
@@ -285,7 +285,7 @@
 								</router-link>
 							</div>
 						</div>
-						<fights-history :fights="leek.fights" class="content" />
+						<fights-history :fights="leek.fights" />
 					</div>
 				</template>
 			</div>
@@ -296,7 +296,7 @@
 						<div class="header">
 							<h2>{{ $t('tournaments') }}</h2>
 						</div>
-						<tournaments-history :tournaments="leek.tournaments" class="content" />
+						<tournaments-history :tournaments="leek.tournaments" />
 					</div>
 				</template>
 			</div>
@@ -1241,9 +1241,9 @@
 	.farmer-weapons .weapon, .farmer-chips .chip, .hat-dialog .hat {
 		position: relative;
 	}
-	.farmer-weapons .weapon:not([quantity='1'])::before,
-	.farmer-chips .chip:not([quantity='1'])::before,
-	.hat-dialog .hat:not([quantity='1'])::before {
+	.farmer-weapons .weapon:not([quantity="1"])::before,
+	.farmer-chips .chip:not([quantity="1"])::before,
+	.hat-dialog .hat:not([quantity="1"])::before {
 		position: absolute;
 		bottom: -5px;
 		right: -5px;

@@ -88,7 +88,7 @@ class Ground {
 		// Create grid texture
 		if (GROUND_TEXTURE) {
 
-			this.texture = document.getElementById('bg-canvas') as HTMLCanvasElement
+			this.texture = document.querySelector('.bg-canvas') as HTMLCanvasElement
 			this.texture.width = width
 			this.texture.height = height
 			this.textureCtx = this.texture.getContext('2d')

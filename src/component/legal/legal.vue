@@ -40,6 +40,6 @@
 
 <style lang="scss" scoped>
 	a {
-		color: #5FAD1B;
+		color: #5fad1b;
 	}
 </style>

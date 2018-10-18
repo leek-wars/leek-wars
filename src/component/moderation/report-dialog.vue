@@ -68,4 +68,10 @@
 	h3 {
 		margin-top: 0;
 	}
+	.report-popup .report-message {
+		width: calc(100% - 10px);
+		max-width: calc(100% - 10px);
+		margin-top: 6px;
+		min-height: 70px;
+	}
 </style>

@@ -195,7 +195,7 @@
 		cursor: col-resize;
 	}
 	.header .label {
-		background: #5FAD1B;
+		background: #5fad1b;
 		color: white;
 		border-radius: 5px;
 		margin-left: 8px;

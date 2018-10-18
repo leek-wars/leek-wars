@@ -230,6 +230,6 @@
 		width: 50px;
 	}
 	.text /deep/ a {
-		color: #5FAD1B;
+		color: #5fad1b;
 	}
 </style>

@@ -32,7 +32,7 @@
 		margin-right: 6px;
 	}
 	.formating b {
-		color: #5FAD1B;
+		color: #5fad1b;
 		font-size: 16px;
 	}
 </style>

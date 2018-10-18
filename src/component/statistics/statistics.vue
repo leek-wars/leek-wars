@@ -343,7 +343,7 @@
 		text-align: center;
 	}
 	h2 {
-		font-family: 'Fjalla One', sans-serif;
+		font-family: "Fjalla One", sans-serif;
 		text-align: center;
 		font-size: 28px;
 	}
@@ -363,19 +363,19 @@
 		margin-left: 10px;
 	}
 	h2.blue {
-		color: #0079DE;
+		color: #0079de;
 	}
 	h2.green {
 		color: #0a0;
 	}
 	h2.red {
-		color: #DC0006;
+		color: #dc0006;
 	}
 	h2.orange {
-		color: #FF7600;
+		color: #ff7600;
 	}
 	h2.pink {
-		color: #FF00A4;
+		color: #ff00a4;
 	}
 	.stats {
 		padding-top: 10px;
@@ -429,7 +429,7 @@
 	}
 	.value.today {
 		display: none;
-		color: #00C0E5;
+		color: #00c0e5;
 	}
 	.label {
 		text-align: left;
@@ -459,22 +459,22 @@
 		stroke-width: 48px;
 	}
 	.chart .ct-series-a path {
-		stroke: #55E055;
+		stroke: #55e055;
 	}
 	.chart .ct-series-b path {
-		stroke: #FFD45D;
+		stroke: #ffd45d;
 	}
 	.chart .ct-series-c path {
-		stroke: #FF5C5C;
+		stroke: #ff5c5c;
 	}
 	.chart .ct-series-d path {
-		stroke:	#FF61C6;
+		stroke: #ff61c6;
 	}
 	.chart .ct-series-e path {
-		stroke: #6179FF;
+		stroke: #6179ff;
 	}
 	.chart .ct-series-f path {
-		stroke: #65E5FF;
+		stroke: #65e5ff;
 	}
 	.category[category="6"] {
 		max-width: 650px;

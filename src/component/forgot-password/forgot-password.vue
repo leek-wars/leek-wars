@@ -106,7 +106,7 @@
 		width: 300px;
 		margin: 0 auto;
 	}
-	form input[type='text'], form input[type='password'] {
+	form input[type="text"], form input[type="password"] {
 		width: 100%;
 		margin-top: 5px;
 	}

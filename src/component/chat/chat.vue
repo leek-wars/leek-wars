@@ -273,7 +273,7 @@
 	}
 	.chat-br-notification {
 		padding: 4px 7px;
-		background: #5FAD1B;
+		background: #5fad1b;
 		border-radius: 4px;
 		color: white;
 		display: inline-block;

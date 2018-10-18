@@ -124,7 +124,7 @@
 		margin: 5px;
 		.bar {
 			height: 12px;
-			background: #008FBB;
+			background: #008fbb;
 			position: absolute;
 			border-radius: 3px;
 		}
@@ -151,7 +151,7 @@
 		margin-top: 12px;
 		.bar {
 			height: 12px;
-			background: #30BB00;
+			background: #30bb00;
 			position: absolute;
 			border-radius: 3px;
 		}
@@ -190,7 +190,7 @@
 			.bar {
 				height: 6px;
 				position: absolute;
-				background: #30BB00;
+				background: #30bb00;
 			}
 		}
 	}

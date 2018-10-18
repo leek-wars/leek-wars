@@ -832,14 +832,14 @@
 	}
 	.xp-bar {
 		height: 10px;
-		background: #30BB00;
+		background: #30bb00;
 		display: inline-block;
 		vertical-align: top;
 		position: absolute;
 		border-radius: 5px;
 	}
 	.xp-bar.blue {
-		background: #008FBB;
+		background: #008fbb;
 	}
 	.fights {
 		width: 100%;
@@ -912,7 +912,7 @@
 		cursor: pointer;
 	}
 	.popup.change_owner_popup .farmer.selected {
-		background: #5FAD1B;
+		background: #5fad1b;
 	}
 	.popup.change_owner_popup .farmer.selected .name {
 		color: white;

@@ -1021,9 +1021,6 @@
 	h4 {
 		display: inline-block;
 	}
-	#test-ais {
-		font-size: 16px;
-	}
 	.leek-column .leek {
 		width: 165px;
 		text-align: center;
@@ -1104,7 +1101,7 @@
 		background: #222;
 	}
 	.item.selected {
-		background: #5FAD1B;
+		background: #5fad1b;
 		color: white;
 	}
 	.lateral-column .add {
@@ -1183,7 +1180,7 @@
 	.column-scenario .leek .ai {
 		display: inline-block;
 		vertical-align: top;
-		background-image: url('/image/ai.png');
+		background-image: url("/image/ai.png");
 		background-size: cover;
 		width: 55px;
 		height: 65px;
@@ -1197,7 +1194,6 @@
 		font-weight: bold;
 		cursor: pointer;
 	}
-
 	.popup.editor_ai_popup .content {
 		height: 400px;
 	}
@@ -1208,9 +1204,8 @@
 	}
 	.popup.editor_ai_popup .ai:hover {
 		background: white;
-		color: #5FAD1B;
+		color: #5fad1b;
 	}
-
 	.column-scenario .leek svg {
 		height: 100px;
 		width: 80px;

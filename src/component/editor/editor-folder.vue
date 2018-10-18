@@ -112,11 +112,11 @@
 	.item.ai .label:before {
 		content: "✔";
 		font-weight: bold;
-		color: #5FAD1B;
+		color: #5fad1b;
 		padding-right: 5px;
 	}
 	.item .edit {
-		background-image: url('/image/edit_pen.png');
+		background-image: url("/image/edit_pen.png");
 		background-size: cover;
 		width: 12px;
 		height: 12px;
@@ -125,14 +125,14 @@
 	}
 	.item.folder .icon {
 		display: inline-block;
-		background-image: url('/image/folder.png');
+		background-image: url("/image/folder.png");
 		background-size: cover;
 		width: 13px;
 		height: 10px;
 		margin-right: 5px;
 	}
 	.router-link-active > .item > .label > .icon {
-		background-image: url('/image/folder_white.png');
+		background-image: url("/image/folder_white.png");
 	}
 	.label:hover .edit {
 		display: inline-block;
