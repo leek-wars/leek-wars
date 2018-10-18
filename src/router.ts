@@ -73,6 +73,13 @@ const connected = (to: Route, from: Route, next: any) => {
 		next()
 	}
 }
+const disconnected = (to: Route, from: Route, next: any) => {
+	if (store.getters.connected) {
+		next('/')
+	} else {
+		next()
+	}
+}
 
 Vue.use(Router)
 
@@ -128,7 +135,7 @@ const router = new Router({
 		{ path: '/help/general', component: GeneralHelp },
 		{ path: '/help/tutorial', component: Tutorial },
 		{ path: '/legal', component: Legal },
-		{ path: '/login', component: Login },
+		{ path: '/login', component: Login, beforeEnter: disconnected },
 		{ path: '/leek/:id', name: 'leek', component: LeekPage },
 		{ path: '/leek/:id/history', component: History, props: {type: 'leek'} },
 		{ path: '/market', name: 'market', component: Market, meta: {noscroll: true}, beforeEnter: connected },
