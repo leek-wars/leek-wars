@@ -9,7 +9,7 @@
 				<span class="global-count">{{ count }} / {{ total }}</span>  
 				<br>
 				<div class="global-bar">
-					<div class="bar striked" style="width: {Math.floor(100 * count / total)}%"></div>
+					<div class="bar striked" :style="{width: Math.floor(100 * count / total) + '%'}"></div>
 				</div>
 			</div>
 		</div>
@@ -27,7 +27,7 @@
 				</div>
 			</div>
 			<div class="content">
-				<div v-for="trophy in trophies[category.id]" v-if="category.id != 6 || trophy.unlocked" :key="trophy.id" :class="{unlocked: trophy.unlocked, locked: !trophy.unlocked}" class="trophy">
+				<div v-for="trophy in trophies[category.id]" v-if="category.id != 6 || trophy.unlocked" :key="trophy.id" :class="{unlocked: trophy.unlocked, locked: !trophy.unlocked, card: trophy.unlocked}" class="trophy">
 					<img :src="'/image/trophy/big/' + trophy.code + '.png'" class="image">
 					<div class="name">{{ trophy.name }}</div>
 					<div class="description">{{ trophy.description }}</div>
@@ -120,13 +120,14 @@
 		height: 12px;
 		position: relative;
 		background: white;
-		border-radius: 3px;
-		margin: 5px;
+		border-radius: 6px;
+		margin: 5px 0;
+		border: 1px solid #ddd;
 		.bar {
 			height: 12px;
 			background: #008fbb;
 			position: absolute;
-			border-radius: 3px;
+			border-radius: 6px;
 		}
 	}
 	.category-bar-wrapper {
@@ -145,7 +146,7 @@
 		height: 12px;
 		position: relative;
 		background: white;
-		border-radius: 3px;
+		border-radius: 6px;
 		width: calc(80% - 100px);
 		max-width: 300px;
 		margin-top: 12px;
@@ -153,7 +154,7 @@
 			height: 12px;
 			background: #30bb00;
 			position: absolute;
-			border-radius: 3px;
+			border-radius: 6px;
 		}
 	}
 	#app.app .content:nth-child(2) {
@@ -164,7 +165,6 @@
 		margin: 5px;
 		width: 239px;
 		vertical-align: top;
-		border-radius: 3px;
 		padding: 5px 8px;
 		.image {
 			width: 55px;
@@ -205,12 +205,7 @@
 			margin-left: 0;
 		}
 	}
-	.trophy.unlocked {
-		background: white;
-		border-bottom: 3px solid #eee;
-	}
 	.trophy.locked {
-		border-bottom: 3px solid transparent;
 		opacity: 0.7;
 		.image {
 			opacity: 0.4;
