@@ -214,7 +214,7 @@
 		overflow-x: hidden;
 	}
 	.chat {
-		height: 250px;
+		height: 300px;
 	}
 	.social-chat .content {
 		padding: 0;
