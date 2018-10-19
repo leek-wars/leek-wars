@@ -214,7 +214,7 @@
 	.message {
 		display: flex;
 		align-items: flex-start;
-		margin: 8px;
+		margin: 6px 8px;
 		color: #aaa;
 	}
 	.message a {
@@ -231,7 +231,7 @@
 	}
 	.bubble {
 		margin-left: 8px;
-		padding: 4px 8px;
+		padding: 3px 7px;
 		border-radius: 4px;
 		background: white;
 		position: relative;
