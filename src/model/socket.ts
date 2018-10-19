@@ -160,13 +160,13 @@ class Socket {
 		this.send([ENABLE_CHAT, channel])
 	}
 	public disconnect() {
-		this.socket && this.socket.close()
+		if (this.socket) { this.socket.close() }
 	}
 	public connected() {
-		return this.socket && this.socket.readyState == WebSocket.OPEN
+		return this.socket && this.socket.readyState === WebSocket.OPEN
 	}
 	public connecting() {
-		return this.socket && this.socket.readyState == WebSocket.CONNECTING
+		return this.socket && this.socket.readyState === WebSocket.CONNECTING
 	}
 }
 export { Socket, SocketMessage }
