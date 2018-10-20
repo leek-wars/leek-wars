@@ -377,7 +377,7 @@
 				} else {
 					let error = data.data.error
 					if (data.data.error === 'already_bought_fights_with_habs') {
-						error = this.$t('market.' + data.data.error)
+						error = this.$t('market.' + error)
 					}
 					LeekWars.toast(error)
 				}
