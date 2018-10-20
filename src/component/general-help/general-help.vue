@@ -55,6 +55,9 @@
 							<li>{{ $t('farmer_7') }}</li>
 						</ul>
 					</p>
+					<i18n path="farmer_8" tag="p">
+						<router-link place="documentation" to="/help/documentation">{{ $t('farmer_doc') }}</router-link>
+					</i18n>
 				</div>
 			</div>
 		</div>
