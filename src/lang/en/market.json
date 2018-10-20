@@ -1,7 +1,7 @@
 {
 	"already_bought_fights_with_habs": "You can only buy one fight pack in Habs per day",
-	"are_you_sure_you_want_to_buy": "Are you sure you want to purchase <b>{0}</b>?",
-	"are_you_sure_you_want_to_sell": "Are you sure you want to sell <b>{0}</b>?",
+	"are_you_sure_you_want_to_buy": "Are you sure you want to purchase {item}?",
+	"are_you_sure_you_want_to_sell": "Are you sure you want to sell {item}?",
 	"buy": "Purchase",
 	"buying": "Buying...",
 	"cancel": "Cancel",

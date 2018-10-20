@@ -137,8 +137,10 @@
 		<v-dialog v-model="buyDialog" max-width="600">
 			<div class="title">{{ $t('confirm_purchase') }}</div>
 			<div v-if="selectedItem" class="content">
-				{{ $t('are_you_sure_you_want_to_buy', [selectedItem.name]) }}
-				<br><br>
+				<i18n tag="div" path="are_you_sure_you_want_to_buy">
+					<b place="item">{{ translateName(selectedItem) }}</b>
+				</i18n>
+				<br>
 				<b>{{ $t('price') }}</b> : {{ selectedItem.price_habs | number }} <span class="hab"></span>
 				<br>
 				<b>{{ $t('habs_before_purchase') }}</b> : {{ $store.state.farmer.habs | number }} <span class="hab"></span>
@@ -154,8 +156,10 @@
 		<v-dialog v-model="buyCrystalsDialog" max-width="600">
 			<div class="title">{{ $t('confirm_purchase') }}</div>
 			<div v-if="selectedItem" class="content">
-				{{ $t('are_you_sure_you_want_to_buy', [selectedItem.name]) }}
-				<br><br>
+				<i18n tag="div" path="are_you_sure_you_want_to_buy">
+					<b place="item">{{ translateName(selectedItem) }}</b>
+				</i18n>
+				<br>
 				<b>{{ $t('price') }}</b> : {{ selectedItem.price_crystals }}} <span class="crystal"></span>
 				<br>
 				<b>{{ $t('crystals_before_purchase') }}</b> : {{ $store.state.farmer.crystals | number }} <span class="crystal"></span>
@@ -171,8 +175,10 @@
 		<v-dialog v-model="sellDialog" max-width="600">
 			<div class="title">{{ $t('confirm_sell') }}</div>
 			<div v-if="selectedItem" class="content">
-				{{ $t('are_you_sure_you_want_to_sell', [selectedItem.name]) }}
-				<br><br>
+				<i18n tag="div" path="are_you_sure_you_want_to_sell">
+					<b place="item">{{ translateName(selectedItem) }}</b>
+				</i18n>
+				<br>
 				<b>{{ $t('price') }}</b> : {{ selectedItem.price | number }} <span class="hab"></span>
 				<br>
 				<b>{{ $t('habs_before_sell') }}</b> : {{ $store.state.farmer.habs | number }} <span class="hab"></span>
@@ -314,7 +320,7 @@
 			const item = this.$route.params.item
 			if (item) {
 				this.selectedItem = this.items_by_name[item]
-				LeekWars.setTitle(this.selectedItem.name)
+				LeekWars.setTitle(this.translateName(this.selectedItem))
 				LeekWars.splitShowContent()
 			} else {
 				this.selectedItem = null
@@ -322,6 +328,13 @@
 				LeekWars.splitShowList()
 			}
 			LeekWars.setActions([{icon: 'account_balance', click: () => this.$router.push('/bank')}])
+		}
+		translateName(item: ItemTemplate) {
+			if (item.type === ItemType.FIGHT_PACK) {
+				return this.$t('n_fights', [item.id - 1000000])
+			}
+			const type = ['weapon', 'chip', 'potion', 'hat'][item.type - 1]
+			return this.$t(type + '.' + item.name.replace(type + '_', ''))
 		}
 		openBuyHabs() {
 			if (this.selectedItem && this.selectedItem.price_habs < this.$store.state.farmer.habs) {
