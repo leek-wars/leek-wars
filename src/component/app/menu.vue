@@ -130,8 +130,8 @@
 				let enabled = false
 				let aborted = false
 				const menu_element = document.querySelector('.menu') as HTMLElement
-				const center_element = document.getElementById('center') as HTMLElement
-				const dark_element = document.getElementById('dark') as HTMLElement
+				const center_element = document.querySelector('.app-center') as HTMLElement
+				const dark_element = document.querySelector('#app .dark') as HTMLElement
 				let d = 0
 				let lastT = 0
 				window.addEventListener('pointerdown', (e) => {
