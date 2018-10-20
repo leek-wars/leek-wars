@@ -148,7 +148,7 @@
 				<b>{{ $t('habs_after_purchase') }}</b> : {{ $store.state.farmer.habs - selectedItem.price_habs | number }} <span class="hab"></span>
 			</div>
 			<div class="actions">
-				<div class="dismiss" @click="buyDialog = false">{{ $t('cancel') }}</div>
+				<div @click="buyDialog = false">{{ $t('cancel') }}</div>
 				<div class="buy green" @click="buy('habs')">{{ $t('buy') }}</div>
 			</div>
 		</v-dialog>
@@ -167,7 +167,7 @@
 				<b>{{ $t('crystals_after_purchase') }}</b> : {{ $store.state.farmer.crystals - selectedItem.price_crystals | number }} <span class="crystal"></span>
 			</div>
 			<div class="actions">
-				<div class="dismiss">{{ $t('cancel') }}</div>
+				<div @click="buyCrystalsDialog = false">{{ $t('cancel') }}</div>
 				<div class="buy green" @click="buy('crystals')">{{ $t('buy') }}</div>
 			</div>
 		</v-dialog>
@@ -186,7 +186,7 @@
 				<b>{{ $t('habs_after_sell') }}</b> : {{ $store.state.farmer.habs + selectedItem.sell_price | number }} <span class="hab"></span>
 			</div>
 			<div class="actions">
-				<div class="dismiss" @click="sellDialog = false">{{ $t('cancel') }}</div>
+				<div @click="sellDialog = false">{{ $t('cancel') }}</div>
 				<div class="sell green" @click="sell">{{ $t('sell') }}</div>
 			</div>
 		</v-dialog>
