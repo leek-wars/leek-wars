@@ -362,7 +362,7 @@ const LeekWars = {
 		const toast = document.createElement("div")
 		toast.innerHTML = "<div class='toast'>" + LeekWars.protect(message) + "</div>"
 		toast.classList.add("toast-wrapper")
-		const toasts = document.getElementById('toasts')
+		const toasts = document.querySelector('#app .toasts')
 		if (toasts) { toasts.appendChild(toast) }
 
 		setTimeout(() => {
