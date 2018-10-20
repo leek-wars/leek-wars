@@ -160,7 +160,7 @@
 					<b place="item">{{ translateName(selectedItem) }}</b>
 				</i18n>
 				<br>
-				<b>{{ $t('price') }}</b> : {{ selectedItem.price_crystals }}} <span class="crystal"></span>
+				<b>{{ $t('price') }}</b> : {{ selectedItem.price_crystals }} <span class="crystal"></span>
 				<br>
 				<b>{{ $t('crystals_before_purchase') }}</b> : {{ $store.state.farmer.crystals | number }} <span class="crystal"></span>
 				<br>
