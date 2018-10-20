@@ -438,7 +438,7 @@
 				<center>({{ $t('click_to_put_hat') }})</center>
 			</div>
 			<div class="actions">
-				<div class="action dismiss">{{ $t('cancel') }}</div>
+				<div class="action" @click="hatDialog = false">{{ $t('cancel') }}</div>
 			</div>
 		</v-dialog>
 
