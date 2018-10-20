@@ -306,7 +306,7 @@
 				}
 				const itemName = this.$route.params.item
 				if (itemName) {
-					this.selectedItem = this.items_by_name[itemName]
+					this.update()
 				} else {
 					this.selectedItem = this.items_by_name.pistol
 				}
@@ -315,7 +315,7 @@
 				this.$router.push('/market')
 			})
 		}
-		@Watch('$route.params.item', {immediate: true})
+		@Watch('$route.params.item')
 		update() {
 			const item = this.$route.params.item
 			if (item) {
