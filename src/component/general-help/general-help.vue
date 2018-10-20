@@ -12,7 +12,9 @@
 						<h2>{{ $t('welcome') }}</h2>
 					</center>
 
-					<p>{{ $t('intro') }}</p>
+					<i18n tag="p" path="intro">
+						<router-link place="tutorial" to="/help/tutorial">{{ $t('intro_tuto') }}</router-link>
+					</i18n>
 
 					<div class="help-menu">
 						<a href="#farmer"><div class="item">{{ $t('farmer') }}</div></a>
@@ -58,16 +60,14 @@
 		</div>
 
 		<div class="panel">
-
 			<div class="header">
 				<h2 id="habs">{{ $t('habs') }}</h2>
 			</div>
-
 			<div class="content">
-
 				<div class="wrapper">
-
-					<p>{{ $t('habs_1') }}</p>
+					<i18n tag="p" path="habs_1">
+						<span place="icon" class='hab'></span>
+					</i18n>
 				</div>
 			</div>
 		</div>
@@ -83,7 +83,7 @@
 				<div class="wrapper">
 
 					<!-- intro -->
-					<p>{{ $t('leeks_1') }}</p>
+					<p v-html="$t('leeks_1')"></p>
 					<p>{{ $t('leeks_2') }}</p>
 					<p>{{ $t('leeks_3') }}</p>
 					<p>{{ $t('leeks_4') }}</p>
@@ -209,7 +209,7 @@
 
 					<p>{{ $t('teams_1') }}</p>
 
-					<p>{{ $t('teams_2') }}</p>
+					<p v-html="$t('teams_2')"></p>
 
 					<h3>{{ $t('teams_3') }}</h3>
 					<p>{{ $t('teams_4') }}</p>
@@ -237,24 +237,19 @@
 						<li>{{ $t('fights_4') }}</li>
 						<li>{{ $t('fights_5') }}</li>
 					</ul>
-
-					<p>{{ $t('fights_6') }}</p>
+					<p v-html="$t('fights_6')"></p>
 					<p>{{ $t('fights_7') }}</p>
 
 					<h3>{{ $t('fights_8') }}</h3>
-
-					<p>{{ $t('fights_9') }}</p>
-
+					<p v-html="$t('fights_9')"></p>
 					<p>{{ $t('fights_10') }}</p>
 
-
 					<h3>{{ $t('fights_11') }}</h3>
-
 					<p>{{ $t('fights_12') }}</p>
 					<p>{{ $t('fights_13') }}</p>
 
 					<h3>{{ $t('fights_14') }}</h3>
-					<p>{{ $t('fights_15') }}</p>
+					<p v-html="$t('fights_15')"></p>
 					<p>{{ $t('fights_16') }}</p>
 
 					<h3>{{ $t('fights_17') }}</h3>
@@ -265,16 +260,12 @@
 		</div>
 
 		<div class="panel">
-
 			<div class="header">
 				<h2 id="challenges">{{ $t('challenges') }}</h2>
 			</div>
-
 			<div class="content">
-
 				<div class="wrapper">
-
-					<p>{{ $t('challenges_1') }}</p>
+					<p v-html="$t('challenges_1')"></p>
 					<p>{{ $t('challenges_2') }}</p>
 				</div>
 			</div>
@@ -317,18 +308,13 @@
 
 
 		<div class="panel">
-
 			<div class="header">
 				<h2 id="trophies">{{ $t('trophies') }}</h2>
 			</div>
-
 			<div class="content">
-
 				<div class="wrapper">
-
 					<p>{{ $t('trophies_1') }}</p>
 					<p>{{ $t('trophies_2') }}</p>
-
 				</div>
 			</div>
 		</div>
@@ -340,8 +326,10 @@
 			<div class="content">
 				<div class="wrapper">
 					<p>{{ $t('editor_1') }}</p>
-					<p>{{ $t('editor_2') }}</p>
-					<p>{{ $t('editor_3') }}</p>
+					<p v-html="$t('editor_2')"></p>
+					<i18n tag="p" path="editor_3">
+						<router-link place="tutorial" to="/help/tutorial">{{ $t('editor_tuto') }}</router-link>
+					</i18n>
 				</div>
 			</div>
 		</div>
@@ -383,7 +371,7 @@
 	ul {
 		font-size: 16px;
 	}
-	a {
+	.panel a {
 		color: #5fad1b;
 	}
 	.help-menu {
