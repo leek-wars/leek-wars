@@ -267,41 +267,6 @@
 		display: block;
 		opacity: 0.6;
 	}
-	.toasts {
-		position: fixed;
-		left: 0;
-		right: 0;
-		z-index: 1000;
-		bottom: 100px;
-		text-align: center;
-		pointer-events: none;
-		transition: all 0.6s;
-	}
-	.toast-wrapper {
-		position: relative;
-		perspective: 350px;
-		transition: all 0.6s;
-		transform: scale(0.5,0.5) rotateX(90deg);
-		opacity: 0;
-		height: 0;
-		top: 40px;
-	}
-	.toast {
-		padding: 4px 8px;
-		border-radius: 2px;
-		font-weight: 300;
-		font-size: 18px;
-		font-family: "Roboto", sans-serif;
-		background: rgba(0,0,0, 0.7);
-		color: white;
-		display: inline-block;
-	}
-	.toast-wrapper.visible {
-		transform: scale(1,1) rotateX(0deg);
-		opacity: 1;
-		top: 0;
-		height: 36px;
-	}
 	.clover {
 		position: fixed;
 		z-index: 1000;
