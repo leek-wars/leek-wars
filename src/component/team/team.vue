@@ -276,7 +276,7 @@
 					<div class="header">
 						<h2>{{ $t('history') }}</h2>
 					</div>
-					<fights-history :fights="team.fights" class="content" />
+					<fights-history :fights="team.fights" />
 				</div>
 			</div>
 			
@@ -285,7 +285,7 @@
 					<div class="header">
 						<h2>{{ $t('tournaments') }}</h2>
 					</div>
-					<tournaments-history :tournaments="team.tournaments" class="content" />
+					<tournaments-history :tournaments="team.tournaments" />
 				</div>
 			</div>
 		</div>
