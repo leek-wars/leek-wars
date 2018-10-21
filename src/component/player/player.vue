@@ -1,47 +1,45 @@
 <template lang="html">
 	<div :style="{width: width + 'px', height: height + 'px'}">
 		<div v-if="!loaded" class="loading">
-			<!-- <template v-if='fight.type == FightType.BATTLE_ROYALE'>
-				@foreach (i : leek in fight.leeks1)
-					<div class='leek' leek='{leek.id}'>
-						<div class='image'></div>
-						<span class='name'>{leek.name}</span>
-						<br>
-						<span class='level'>{#leek_level, leek.level}</span>
-					</div>
-					@if (i == 1 && fight.leeks1.length < 5) <br> @end
-					@if (i < fight.leeks1.length - 1)
-						<span class='vs'>VS</span>
-					@end
-				@end
-				<br><br>
-			</template>
-			<table v-else><tr>
-				<td class='team-td'>
-					@foreach (i : leek in fight.leeks1)
-						<div class='leek' leek='{leek.id}'>
-							<div class='image'></div>
-							<span class='name'>{leek.name}</span>
-							<br>
-							<span class='level'>{#leek_level, leek.level}</span>
+			<div v-if="fight">
+				<template v-if='fight.type === FightType.BATTLE_ROYALE'>
+					<template v-for="(leek, i) in fight.leeks1">
+						<div class='leek' :key="leek.id">
+							<leek-image :leek="leek" :scale="0.6" />
+							<div class='name'>{{ leek.name }}</div>
+							<span class='level'>{{ $t('leek_level', [leek.level]) }}</span>
 						</div>
-						@if (i == 1 && fight.leeks1.length < 5) <br> @end
-					@end
-				</td>
-				<td><span class='vs'>VS</span></td>
-				<td class='team-td'>
-					@foreach (i : leek in fight.leeks2)
-						<div class='leek' leek='{leek.id}'>
-							<div class='image'></div>
-							<span class='name'>{leek.name}</span>
-							<br>
-							<span class='level'>{#leek_level, leek.level}</span>
-						</div>
-						@if (i == 1 && fight.leeks2.length < 5) <br> @end
-					@end
-				</td>
-			</tr></table>
-			-->
+						<br v-if="i == 1 && fight.leeks1.length < 5">
+						<span v-if="i < fight.leeks1.length - 1" class='vs'>VS</span>
+					</template>
+					<br><br>
+				</template>
+				<table v-else>
+					<tr>
+						<td class='team-td'>
+							<span v-for="(leek, i) in fight.leeks1" :key="leek.id">
+								<div class='leek'>
+									<leek-image :leek="leek" :scale="0.6" />
+									<div class='name'>{{ leek.name }}</div>
+									<span class='level'>{{ $t('leek.level_n', [leek.level]) }}</span>
+								</div>
+								<br v-if="i == 1 && fight.leeks1.length < 5">
+							</span>
+						</td>
+						<td><span class='vs'>VS</span></td>
+						<td class='team-td'>
+							<span v-for="(leek, i) in fight.leeks2" :key="leek.id">
+								<div class='leek'>
+									<leek-image :leek="leek" :scale="0.6" />
+									<div class='name'>{{ leek.name }}</div>
+									<span class='level'>{{ $t('leek.level_n', [leek.level]) }}</span>
+								</div>
+								<br v-if="i == 1 && fight.leeks2.length < 5">
+							</span>
+						</td>
+					</tr>
+				</table>
+			</div>
 			<div class="loading-fight">
 				<loader />
 				{{ $t('fight.loading_fight') }}
@@ -170,7 +168,7 @@
 </template>
 
 <script lang="ts">
-	import { Fight } from '@/model/fight'
+	import { Fight, FightType } from '@/model/fight'
 	import { LeekWars } from '@/model/leekwars'
 	import { AxiosResponse } from 'axios'
 	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
@@ -187,7 +185,8 @@
 		@Prop() fightId!: number
 		@Prop() requiredWidth!: number
 		@Prop() requiredHeight!: number
-		fight!: Fight
+		FightType = FightType
+		fight: Fight | null = null
 		canvas: any
 		noHTML5: boolean = false
 		game: Game = new Game()
@@ -273,6 +272,7 @@
 					return
 				}
 				const fight = data.data.fight
+				this.fight = fight
 				this.$emit('fight', fight)
 				if (fight.status >= 1) {
 					this.game.init(fight.data)
@@ -379,18 +379,17 @@
 	.loading {
 		height: 100%;
 		display: flex;
-		align-items: center;
+		flex-direction: column;
 		justify-content: center;
 	}
 	.loading table {
 		width: 100%;
-		height: 400px;
+		height: 390px;
 	}
 	.loading table td {
 		text-align: center;
 	}
 	.loading-fight {
-		padding: 10px;
 		padding-bottom: 20px;
 		font-size: 18px;
 		text-align: center;
@@ -444,5 +443,32 @@
 	.progress-bar-wrapper:hover .circle {
 		width: 14px;
 		height: 14px;
+	}
+	.team-td {
+		width: 470px;
+	}
+	.leek {
+		display: inline-block;
+		margin: 6px;
+		width: 140px;
+	}
+	.leek img {
+		max-width: 90%;
+	}
+	.vs {
+		font-size: 25px;
+		font-weight: bold;
+		margin: 10px;
+		color: #666;
+	}
+	.leek .name {
+		padding: 2px 0;
+		font-size: 20px;
+		font-weight: 500;
+	}
+	.level {
+		font-size: 17px;
+		color: #555;
+		font-weight: 500;
 	}
 </style>

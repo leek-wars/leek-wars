@@ -192,26 +192,6 @@
 	#app.app .page-bar .info {
 		display: none;
 	}
-	.team-td {
-		width: 470px;
-	}
-	.leek {
-		display: inline-block;
-		margin: 6px;
-		width: 140px;
-	}
-	.leek img {
-		max-width: 90%;
-	}
-	.vs {
-		font-size: 30px;
-	}
-	.leek .name {
-		font-size: 18px;
-	}
-	.level {
-		color: #555;
-	}
 	.game:fullscreen {
 		max-height: 100%;
 	}
