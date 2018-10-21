@@ -41,15 +41,13 @@
 						<div class="text">{{ leek.name }}</div>
 					</div>
 				</router-link>
-				<router-link v-ripple v-if="Object.keys($store.state.farmer.leeks).length < 4" to="/new-leek">
-					<div class="section">
-						<img src="/image/icon/add.png">
-						<div class="text">{#main.add_leek}</div>
-					</div>
+				<router-link v-ripple v-if="Object.keys($store.state.farmer.leeks).length < 4" to="/new-leek" class="section">
+					<i class="material-icons">add</i>
+					<div class="text">{{ $t('main.add_leek') }}</div>
 				</router-link>
 			</span>
 
-			<div v-if="$store.state.farmer && $store.state.farmer.leeks && Object.keys($store.state.farmer.leeks).length > 1" class="separator"></div>
+			<div v-if="$store.state.farmer && $store.state.farmer.leeks" class="separator"></div>
 
 			<router-link v-ripple to="/editor" class="section" @click.native="clickItem">
 				<i class="material-icons">code</i>
