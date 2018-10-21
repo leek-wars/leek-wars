@@ -6,17 +6,21 @@
 				<img src="/image/leek/leek1_front_green.png">
 				<br>
 				<br>
-				<template v-if="leekCount < 4">
-					{{ $t('name') }} <input v-model="leekName" type="text">
-					<br>
-					<br>
-					{{ $t('price') }} : {{ LeekWars.formatNumber(price) }} <span class="hab"></span>
-					<br><br>
-					<div v-if="error" class="error">{{ error }}</div>
-					<div class="button green" @click="createLeek">{{ $t('create') }}</div>  
-				</template>
+				<loader v-if="loading" />
 				<template v-else>
-					<h2>{{ $t('4_leeks_only') }}</h2>
+					<template v-if="leekCount < 4">
+						{{ $t('name') }} <input v-model="leekName" type="text">
+						<br><br>
+						{{ $t('price') }} : {{ LeekWars.formatNumber(price) }} <span class="hab"></span>
+						<br>
+						<br v-if="error">
+						<div v-if="error" class="error">{{ error }}</div>
+						<br>
+						<div class="button green" @click="createLeek">{{ $t('create') }}</div>  
+					</template>
+					<template v-else>
+						<h2>{{ $t('4_leeks_only') }}</h2>
+					</template>
 				</template>
 			</div>
 		</div>
@@ -33,11 +37,13 @@
 		leekCount: number | null = null
 		leekName: string = ''
 		error: string | null = null
+		loading: boolean = true
 		created() {
 			LeekWars.get<any>('leek/get-next-price/' + this.$store.state.token).then((data) => {
 				this.price = data.data.price
 				this.leekCount = LeekWars.objectSize(this.$store.state.farmer.leeks)
 				LeekWars.setTitle(this.$t('title'))
+				this.loading = false
 			})
 		}
 		createLeek() {
@@ -45,7 +51,7 @@
 				if (data.data.success) {
 					this.$router.push('/leek/' + data.data.id)
 				} else {
-					this.error = this.$t('error_' + data.data.error, data.data.params) as string
+					this.error = this.$t(data.data.error, data.data.params) as string
 				}
 			})
 		}
@@ -55,7 +61,6 @@
 <style lang="scss" scoped>
 	.error {
 		color: red;
-		padding: 15px;
 	}
 	.content {
 		text-align: center;
