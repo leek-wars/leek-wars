@@ -195,7 +195,7 @@
 					</div>
 
 					<div class="right">
-						<router-link v-if="composition.tournament.current" :to="'/tournament/' + compo.tournament.current" class="view-tournament">
+						<router-link v-if="composition.tournament.current" :to="'/tournament/' + composition.tournament.current" class="view-tournament">
 							<div class="button flat">
 								{{ $t('see_tournament') }}
 							</div>
