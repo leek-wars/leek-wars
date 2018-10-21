@@ -93,7 +93,7 @@
 									<span v-html="$t('report.talent_difference', [leek.name, leek.talent_more, leek.talentGains + '%'])"></span>
 								</template>
 								<template v-else>
-									{{ $t('report.talent_difference_no_gains', [leek.name]) }}
+									<span v-html="$t('report.talent_difference_no_gains', [leek.name])"></span>
 								</template>
 							</v-tooltip>
 						</div>
