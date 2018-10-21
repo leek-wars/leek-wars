@@ -134,13 +134,13 @@
 
 					<p>{{ $t('editor_1') }}</p>
 
-					<div class="screen" src="/image/tuto/editor.jpg">{{ $t('editor_image_1') }}</div>
+					<screen src="/image/tuto/editor.jpg" :legend="$t('editor_image_1')"></screen>
 
 					<p>{{ $t('editor_2') }}</p>
 					<p>{{ $t('editor_3') }}</p>
 					<p>{{ $t('editor_4') }}</p>
 
-					<div class="screen" src="/image/tuto/editor_ia.jpg">{{ $t('editor_image_2') }}</div>
+					<screen src="/image/tuto/editor_ia.jpg" :legend="$t('editor_image_2')"></screen>
 
 					<p>{{ $t('editor_5') }}</p>
 
@@ -174,7 +174,7 @@
 						{{ $t('editor_10') }}
 					</p>
 
-					<div class="screen" src="/image/tuto/editor_autocomplete.jpg">{{ $t('automatic_completion') }}</div>
+					<screen src="/image/tuto/editor_autocomplete.jpg" :legend="$t('automatic_completion')"></screen>
 
 					<br>
 					<h3>{{ $t('do_a_test_fight') }}</h3>
@@ -183,7 +183,7 @@
 
 					<p>{{ $t('editor_12') }}</p>
 
-					<div class="screen" src="/image/tuto/editor_test.jpg">{{ $t('test_config') }}</div>
+					<screen src="/image/tuto/editor_test.jpg" :legend="$t('test_config')"></screen>
 
 					<p>{{ $t('editor_13') }}
 						<ul>
@@ -201,7 +201,7 @@
 
 					<p>{{ $t('doc1') }}</p>
 
-					<div class="screen" src="/image/tuto/documentation.jpg">{{ $t('the_documentation') }}</div>
+					<screen src="/image/tuto/documentation.jpg" :legend="$t('the_documentation')"></screen>
 
 					<p>{{ $t('doc_2') }}
 						<ul>
@@ -343,7 +343,7 @@
 
 					<p>{{ $t('var_48') }}</p>
 
-					<div class="screen" src="/image/tuto/debug.jpg">{{ $t('var_49') }}</div>
+					<screen src="/image/tuto/debug.jpg" :legend="$t('var_49')"></screen>
 
 					<p>{{ $t('var_50') }}</p>
 
@@ -692,7 +692,7 @@
 
 					<p>{{ $t('fight_ground_1') }}</p>
 
-					<div class="screen" src="/image/tuto/grid_cells.jpg">{{ $t('fight_ground_2') }}</div>
+					<screen src="/image/tuto/grid_cells.jpg" :legend="$t('fight_ground_2')"></screen>
 
 					<p>{{ $t('fight_ground_3') }}</p>
 
@@ -946,8 +946,9 @@
 <script lang="ts">
 	import { LeekWars } from '@/model/leekwars'
 	import { Component, Vue } from 'vue-property-decorator'
+	import Screen from './screen.vue'
 	
-	@Component({ name: 'tutorial', i18n: {} })
+	@Component({ name: 'tutorial', i18n: {}, components: { Screen } })
 	export default class Tutorial extends Vue {
 		values = ['false', 'true', '0', '1', '12', '" "', '"0"', '"1"', '"12"', '"lama"',
 					'"true"', '"false"', '[]', '[0]', '[1]', '[12]', '[1,2,3]', 'null']
@@ -974,22 +975,6 @@
 		created() {
 			LeekWars.setTitle(this.$t('title'))
 		}
-
-		// TODO
-		// $('#tutorial-page screen').each(function() {
-		// 	var content = $(this).html();
-		// 	var newHtml = "<img src='" + $(this).attr('src') + "'></img>";
-		// 	newHtml += "<div class='legend'>" + content + "</div>";
-		// 	$(this).html(newHtml);
-		// 	$(this).find('img').click(function() {
-		// 		if ($(this).hasClass('big')) {
-		// 			$(this).removeClass('big');
-		// 		} else {
-		// 			$(this).removeClass('big').addClass('big');
-		// 		}
-		// 	});
-		// });
-
 		// TODO
 		// LW.pages.tutorial.scroll = function(scroll) {
 		// 	if (scroll > ($(document).height() - $(window).height()) - 300) {
@@ -1051,30 +1036,6 @@
 	}
 	li {
 		margin-left: 20px;
-	}
-	.screen {
-		margin-bottom: 20px;
-	}
-	.screen:hover .legend {
-		color: black;
-	}
-	.screen img {
-		cursor: zoom-in;
-		display: block;
-		width: 65%;
-		margin: 0 auto;
-		border-radius: 2px;
-	}
-	.screen img.big {
-		cursor: zoom-out;
-		width: 100%;
-	}
-	.screen .legend {
-		text-align: center;
-		font-size: 18px;
-		font-weight: 300;
-		color: #555;
-		font-style: italic;
 	}
 	code .CodeMirror {
 		width: 90%;
