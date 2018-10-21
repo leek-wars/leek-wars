@@ -1,10 +1,12 @@
 {
 	"4_leeks_only": "Vous avez déjà 4 poireaux !",
 	"create": "Créer",
-	"error_under_required_level_1": "Votre premier poireau doit être niveau %s au minimum",
-	"error_under_required_level_2": "Votre second poireau doit être niveau %s au minimum",
-	"error_under_required_level_3": "Votre 3ème poireau doit être niveau %s au minimum",
+	"error_under_required_level_1": "Votre premier poireau doit être niveau {0} au minimum",
+	"error_under_required_level_2": "Votre second poireau doit être niveau {0} au minimum",
+	"error_under_required_level_3": "Votre 3ème poireau doit être niveau {0} au minimum",
 	"name": "Nom",
+	"name_length": "Le nom du poireau doit contenir entre {0} et {1} caractères",
+	"name_format": "Les caractères spéciaux sont interdits dans le nom",
 	"not_enough_money": "Vous n'avez pas assez d'argent",
 	"price": "Prix",
 	"title": "Nouveau poireau"
