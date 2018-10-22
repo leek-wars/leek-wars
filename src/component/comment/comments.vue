@@ -57,6 +57,7 @@
 	}
 	.comment {
 		margin-bottom: 10px;
+		display: flex;
 	}
 	.comment .avatar {
 		width: 50px;
@@ -65,10 +66,7 @@
 	.comment .content {
 		display: inline-block;
 		vertical-align: top;
-		padding-left: 5px;
-	}
-	.comment .author a {
-		color: #5fad1b;
+		padding-left: 10px;
 	}
 	.comment .date {
 		font-size: 12px;
