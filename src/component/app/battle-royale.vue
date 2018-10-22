@@ -16,7 +16,9 @@
 				<loader v-if="LeekWars.battleRoyale.progress == 0" />
 				<div v-for="leek in LeekWars.battleRoyale.leeks" :key="leek.id" class="leek">
 					<leek-image :leek="leek" :scale="0.4" /><br>
-					{{ leek.name }}
+					<div>{{ leek.name }}</div>
+					<talent :talent="leek.talent" />
+					<div class="level">{{ $t('leek.level_n', [leek.level]) }}</div>
 				</div>
 			</div>
 		</div>
@@ -55,5 +57,8 @@
 		font-size: 15px;
 		font-weight: 500;
 		margin: 0 3px;
+	}
+	.talent {
+		margin: 2px 0;
 	}
 </style>
