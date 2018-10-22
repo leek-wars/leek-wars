@@ -12,14 +12,12 @@
 			</div>
 		</div>
 		<div v-if="expanded" class="content">
-			<div class="leeks">
-				<loader v-if="LeekWars.battleRoyale.progress == 0" />
-				<div v-for="leek in LeekWars.battleRoyale.leeks" :key="leek.id" class="leek">
-					<leek-image :leek="leek" :scale="0.4" /><br>
-					<div>{{ leek.name }}</div>
-					<talent :talent="leek.talent" />
-					<div class="level">{{ $t('leek.level_n', [leek.level]) }}</div>
-				</div>
+			<loader v-if="LeekWars.battleRoyale.progress == 0" />
+			<div v-for="leek in LeekWars.battleRoyale.leeks" :key="leek.id" class="leek">
+				<leek-image :leek="leek" :scale="0.4" /><br>
+				<div>{{ leek.name }}</div>
+				<talent :talent="leek.talent" />
+				<div class="level">{{ $t('leek.level_n', [leek.level]) }}</div>
 			</div>
 		</div>
 	</div>
