@@ -13,7 +13,7 @@ The project is very easy to install and deploy in 10s:
 git clone https://github.com/leek-wars/leek-wars-client.git
 cd leek-wars-client
 npm i
-npm serve
+npm run serve
 ```
 Then go to `localhost:8080` in your browser.
 
@@ -26,6 +26,7 @@ I gladly accept pull requests to Leek Wars. Before starting work on a feature, s
 ## Libraries used
 
 - Vue.js https://github.com/vuejs/vue
+- Vuex https://github.com/vuejs/vuex
 - Axios https://github.com/axios/axios
 - CodeMirror https://github.com/codemirror/codemirror
 - Chartist https://github.com/gionkunz/chartist-js
