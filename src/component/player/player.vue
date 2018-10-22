@@ -7,7 +7,7 @@
 						<div class='leek' :key="leek.id">
 							<leek-image :leek="leek" :scale="0.6" />
 							<div class='name'>{{ leek.name }}</div>
-							<span class='level'>{{ $t('leek_level', [leek.level]) }}</span>
+							<span class='level'>{{ $t('leek.level_n', [leek.level]) }}</span>
 						</div>
 						<br v-if="i == 1 && fight.leeks1.length < 5">
 						<span v-if="i < fight.leeks1.length - 1" class='vs'>VS</span>
@@ -381,6 +381,7 @@
 		display: flex;
 		flex-direction: column;
 		justify-content: center;
+		text-align: center;
 	}
 	.loading table {
 		width: 100%;
@@ -449,6 +450,7 @@
 	}
 	.leek {
 		display: inline-block;
+		text-align: center;
 		margin: 6px;
 		width: 140px;
 	}
@@ -465,6 +467,8 @@
 		padding: 2px 0;
 		font-size: 20px;
 		font-weight: 500;
+		text-overflow: ellipsis;
+		overflow: hidden;
 	}
 	.level {
 		font-size: 17px;
