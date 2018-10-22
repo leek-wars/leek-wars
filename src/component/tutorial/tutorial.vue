@@ -961,18 +961,22 @@
 			' X        X     X ', // [1,2,3]
 			'                 X', // null
 		]
+		trophy: boolean = false
 		created() {
 			LeekWars.setTitle(this.$t('title'))
+			window.addEventListener('scroll', this.scroll)
 		}
-		// TODO
-		// LW.pages.tutorial.scroll = function(scroll) {
-		// 	if (scroll > ($(document).height() - $(window).height()) - 300) {
-		// 		if (_trophy == false) {
-		// 			_.post('trophy/unlock', {trophy_id: 46}) // Trophée Instruit
-		// 			_trophy = true
-		// 		}
-		// 	}
-		// }
+		scroll(e: UIEvent) {
+			if (window.scrollY + window.innerHeight + 300 > document.body.clientHeight) {
+				if (!this.trophy) {
+					LeekWars.post('trophy/unlock', {trophy_id: 46}) // Trophée Instruit
+					this.trophy = true
+				}
+			}
+		}
+		destroyed() {
+			window.removeEventListener('scroll', this.scroll)
+		}
 	}
 </script>
 
