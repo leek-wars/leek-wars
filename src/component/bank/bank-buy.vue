@@ -58,8 +58,7 @@
 							this.data = obj
 							setTimeout(() => this.createStarPass())
 						} else {
-							// TODO
-							// LeekWars.error()
+							LeekWars.toast(data.data.error)
 						}
 					})
 				} else {
