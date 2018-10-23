@@ -5,7 +5,7 @@
 	
 		<lw-menu v-if="$store.getters.connected" />
 
-		<div class="console" @click="leekscriptConsole">
+		<div class="console-button" @click="leekscriptConsole">
 			<img src="/image/console.png">
 		</div>
 		<div v-if="console" :style="{top: consoleY + 'px', left: consoleX + 'px'}" class="console v-dialog draggable">
@@ -13,8 +13,8 @@
 				Console LeekScript V2
 				<div class="options">
 					<div class="option" @click="consoleRandom"><img src="/image/icon/dice.png"></div>
-					<div class="option" @click="consolePopup"><img src="/image/icon/open_new_window.png"></div>
-					<div class="option" @click="consoleClose"><img src="/image/icon/quit.png"></div>
+					<div class="option" @click="consolePopup"><i class="material-icons">open_in_new</i></div>
+					<div class="option" @click="consoleClose"><i class="material-icons">clear</i></div>
 				</div>
 			</div>
 			<console ref="console" />
@@ -148,7 +148,7 @@
 </script>
 
 <style lang="scss" scoped>
-	.console {
+	.console-button {
 		position: fixed;
 		top: 46px;
 		left: 38px;
@@ -159,13 +159,13 @@
 			opacity: 0.3;
 		}
 	}
-	.console:hover img {
+	.console-button:hover img {
 		opacity: 0.6;
 	}
-	#app.connected .console {
+	#app.connected .console-button {
 		display: block;
 	}
-	#app.app .console {
+	#app.app .console-button {
 		display: none;
 	}
 	.v-dialog.console {
