@@ -77,7 +77,7 @@
 				<div class="panel">
 					<div class="content">
 						<div class="editors" :style="{'font-size': fontSize + 'px', 'line-height': lineHeight + 'px'}">
-							<ai-view v-for="ai in activeAIs" :key="ai.id" :ai="ai" :visible="currentAI === ai" />
+							<ai-view v-for="ai in activeAIs" ref="editors" :key="ai.id" :ai="ai" :visible="currentAI === ai" />
 						</div>
 						<div class="search-panel">
 							<img src="/image/search.png">
@@ -90,11 +90,11 @@
 				</div>
 
 				<div v-if="currentEditor" class="compilation">
-					<span v-if="currentEditor.saving" id="compiling">
+					<div v-if="currentEditor.saving" class="compiling">
 						<loader :size="15" /> {{ $t('saving') }}
-					</span>
-					<div id="results">
-						<div v-show="good" class="good" v-html="'✓' + $t('valid_ai', [currentEditor.ai.name])"></div>
+					</div>
+					<div class="results">
+						<div v-show="good" class="good" v-html="'✓ ' + $t('valid_ai', [currentEditor.ai.name])"></div>
 						<div v-if="currentEditor.serverError" class="error">× <i>{{ $t('server_error') }}</i></div>
 						<div v-for="(error, e) in errors" :key="e" class="error">
 							× <b>{{ error.ai }}</b>&nbsp; ▶ {{ error.message }}
@@ -279,11 +279,6 @@
 			// 	editors[current].test()
 			// 	e.preventDefault()
 			// }
-			// // Ctrl-S : save
-			// if (e.ctrlKey && e.keyCode == 83) {
-			// 	editors[current].save()
-			// 	e.preventDefault()
-			// }
 			// // Ctrl-F : search
 			// if (e.ctrlKey && e.keyCode == 70 && !e.shiftKey) {
 			// 	LW.pages.editor.search(true)
@@ -336,6 +331,9 @@
 					if (!(id in this.activeAIs)) {
 						Vue.set(this.$data.activeAIs, ai.id, this.currentAI)
 					}
+					Vue.nextTick(() => {
+						this.currentEditor = (this.$refs.editors as AIView[]).find(editor => editor.ai === ai) || null
+					})
 					LeekWars.splitShowContent()
 					LeekWars.setActions(this.actions_content)
 				} else {
@@ -801,6 +799,8 @@
 		border-radius: 2px;
 		color: black;
 		background: #f2f2f2;
+		margin: 4px;
+		display: inline-block;
 	}
 	.compiling .loader {
 		display: inline-block;
