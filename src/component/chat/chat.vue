@@ -2,25 +2,38 @@
 	<div class="chat">
 		<loader v-if="channel && !$store.state.chat[channel]" />
 		<div v-autostopscroll v-else-if="channel && $store.state.chat[channel].messages.length" ref="messages" class="messages">
-			<div v-for="(message, m) in $store.state.chat[channel].messages" :key="m" class="message">
-				<router-link :to="'/farmer/' + message.author.id" class="avatar-wrapper">
-					<avatar :farmer="message.author" />
-				</router-link>
-				<div class="bubble">
-					<div class="author-wrapper">
-						<router-link :to="'/farmer/' + message.author.id">
-							<span :class="message.author.grade" class="author">{{ message.author.name }}</span>
-						</router-link>
-						<span v-if="!privateMessages">
-							<span class="report" @click="report(message)"> • report</span>
-							<span v-if="$store.state.farmer && $store.state.farmer.moderator && !message.author.muted" class="mute" @click="mute(message.author)"> • mute</span>
-							<span v-if="$store.state.farmer && $store.state.farmer.moderator && message.author.muted" class="unmute" @click="unmute(message.author)"> • unmute</span>
-						</span>
-					</div>
-					<div v-large-emojis v-for="(text, i) in message.texts" :key="i" class="text" v-html="text"></div>
-					<div :title="LeekWars.formatDateTime(message.time)" class="time">{{ LeekWars.formatTime(message.time) }}</div>
+			<template v-for="(message, m) in $store.state.chat[channel].messages">
+				<div v-if="message.author.id === 0" :key="m" class="message">
+					<img class="avatar" src="/image/favicon.png">
+					<router-link :to="'/fight/' + message.texts[1]">
+						<div class='bubble br-notification'>
+							<div class="author-wrapper">
+								<span class="author">Leek Wars</span>
+							</div>
+							{{ message.texts[0] }}
+						</div>
+					</router-link>
 				</div>
-			</div>
+				<div v-else :key="m" class="message">
+					<router-link :to="'/farmer/' + message.author.id" :event="null" class="avatar-wrapper">
+						<avatar :farmer="message.author" />
+					</router-link>
+					<div class="bubble">
+						<div class="author-wrapper">
+							<router-link :to="'/farmer/' + message.author.id">
+								<span :class="message.author.grade" class="author">{{ message.author.name }}</span>
+							</router-link>
+							<span v-if="!privateMessages">
+								<span class="report" @click="report(message)"> • report</span>
+								<span v-if="$store.state.farmer && $store.state.farmer.moderator && !message.author.muted" class="mute" @click="mute(message.author)"> • mute</span>
+								<span v-if="$store.state.farmer && $store.state.farmer.moderator && message.author.muted" class="unmute" @click="unmute(message.author)"> • unmute</span>
+							</span>
+						</div>
+						<div v-large-emojis v-for="(text, i) in message.texts" :key="i" class="text" v-html="text"></div>
+						<div :title="LeekWars.formatDateTime(message.time)" class="time">{{ LeekWars.formatTime(message.time) }}</div>
+					</div>
+				</div>
+			</template>
 			<div v-show="unread" class="chat-new-messages" @click="updateScroll(true)">{{ $t('main.unread_messages') }}</div>
 		</div>
 		<div v-autostopscroll v-else ref="messages" class="messages">
@@ -168,18 +181,6 @@
 		get privateMessages() {
 			return this.channel.startsWith('pm-')
 		}
-		// ChatController.prototype.receive_br_notif = function(data) {
-		// 	if (data.length < 3) return ;
-		// 	var fight_id = data[1]
-		// 	var html = "<a href='/fight/" + fight_id + "'>" +
-		// 		"<div class='chat-br-notification'>" + _.lang.get('main', 'br_started_message') + "</div></a>"
-		// 	this.insert_message(html, {
-		// 		lang: data[0],
-		// 		date: data[2],
-		// 		farmer_id: 0,
-		// 		farmer_name: "Leek Wars"
-		// 	})
-		// }
 		// ChatController.prototype.receive_pong = function(data) {
 		// 	var message = "pong ! " + data[2] + "ms"
 		// 	this.insert_message(message, {
@@ -271,13 +272,10 @@
 	.text /deep/ a {
 		color: #5fad1b;
 	}
-	.chat-br-notification {
-		padding: 4px 7px;
+	.br-notification {
 		background: #5fad1b;
-		border-radius: 4px;
 		color: white;
 		display: inline-block;
-		margin: 2px;
 	}
 	.no-messages {
 		height: calc(100% - 60px);

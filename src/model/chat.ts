@@ -2,6 +2,9 @@ import { Commands } from '@/model/commands'
 import { Farmer } from '@/model/farmer'
 import { Latex } from '@/model/latex'
 import { LeekWars } from '@/model/leekwars'
+import { i18n } from '@/model/i18n';
+
+enum ChatType { GLOBAL, TEAM, PM }
 
 class ChatMessage {
 	author!: Farmer
@@ -11,10 +14,12 @@ class ChatMessage {
 
 class Chat {
 	name: string
+	type: ChatType
 	messages: ChatMessage[] = []
 
-	constructor(name: string) {
+	constructor(name: string, type: ChatType) {
 		this.name = name
+		this.type = type
 	}
 	add(authorID: number, authorName: string, authorAvatarChanged: number, authorGrade: string, messageRaw: string, time: number) {
 		const message = this.formatMessage(messageRaw, authorName)
@@ -26,10 +31,18 @@ class Chat {
 			}
 		}
 		this.messages.push({
-			author: { id: authorID,	name: authorName, avatar_changed: authorAvatarChanged, grade: authorGrade },
+			author: { id: authorID, name: authorName, avatar_changed: authorAvatarChanged, grade: authorGrade },
 			texts: [message],
 			time
 		} as ChatMessage)
+	}
+
+	battleRoyale(fightID: number, time: number) {
+		this.messages.push({
+			author: { id: 0, name: "Leek Wars" } as Farmer,
+			texts: [i18n.t('main.br_started_message') as string, '' + fightID],
+			time
+		})
 	}
 
 	formatMessage(messageRaw: string, authorName: string): string {
@@ -43,4 +56,4 @@ class Chat {
 	}
 }
 
-export { Chat, ChatMessage }
+export { Chat, ChatType, ChatMessage }
