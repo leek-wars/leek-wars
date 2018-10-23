@@ -216,7 +216,7 @@
 	"fight_sys": "Le système de combat",
 	"fight_sys_1": "Il faut tout d'abord parler du système de combat de <b>Leek Wars</b>. Les combats sont des matchs à mort par équipe,\npour remporter la victoire, chaque poireau de l'équipe adverse doit être éliminé (vie à zéro).",
 	"fight_sys_10": "La fonction <b><a href='documentation/getNearestEnemy'>getNearestEnemy()</a></b> elle, renvoie l'id du poireau le plus proche de vous. Récupérer l'id d'un poireau ennemi va\nservir à l'attaquer principalement.",
-	"fight_sys_11": "var enemy = getNearestEnemy(); // On récupère l'id de l'enemi le plus proche useWeapon(enemy); // On lui tire dessus",
+	"fight_sys_11": "var enemy = getNearestEnemy(); // On récupère l'id de l'enemi le plus proche\nuseWeapon(enemy); // On lui tire dessus",
 	"fight_sys_12": "La fonction <b><a href='documentation/getEnemies'>getEnemies()</a></b> renvoie elle les poireaux ennemis (vivants ou morts) dans\nle combat.",
 	"fight_sys_13": "var enemies = getEnemies(); // On récupère un tableau des ids des ennemis\nvar n = 0;\nfor (var enemy in enemies) { // On parcourt tous les ennemis\n\tif (getLife(enemy) > 1000) { // getLife(enemy) renvoie la vie du poireau\n\t\tn++;\n\t}\n}\ndebug(n + \" ennemis ont plus de 1000 PV\");",
 	"fight_sys_2": "Ordre de jeu",
