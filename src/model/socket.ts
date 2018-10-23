@@ -131,7 +131,7 @@ class Socket {
 					break
 				}
 				case SocketMessage.BATTLE_ROYALE_CHAT_NOTIF: {
-					// LW.chat.receive_br_notif(data)
+					store.commit('br', data)
 					break
 				}
 				case SocketMessage.BATTLE_ROYALE_UPDATE: {

@@ -1,4 +1,4 @@
-import { Chat } from '@/model/chat'
+import { Chat, ChatType } from '@/model/chat'
 import { Conversation } from '@/model/conversation'
 import { Farmer } from '@/model/farmer'
 import { i18n } from '@/model/i18n'
@@ -94,24 +94,31 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 		'chat-receive'(state, data: any) {
 			const channel = data.message[0]
 			if (!state.chat[channel]) {
-				Vue.set(state.chat, channel, new Chat(channel))
+				Vue.set(state.chat, channel, new Chat(channel, ChatType.GLOBAL))
 			}
 			state.chat[channel].add(data.message[1], data.message[2], data.message[6], data.message[5], data.message[3], data.message[4])
 			vueMain.$emit('chat', [channel])
 		},
 		'chat-team-receive'(state, data: any) {
 			if (!state.chat.team) {
-				Vue.set(state.chat, 'team', new Chat("team"))
+				Vue.set(state.chat, 'team', new Chat("team", ChatType.TEAM))
 			}
 			state.chat.team.add(data.message[0], data.message[1], data.message[5], data.message[4], data.message[2], data.message[3])
 			vueMain.$emit('chat', ['team'])
+		},
+		'br'(state, data: any) {
+			const channel = data[0]
+			if (!state.chat[channel]) {
+				Vue.set(state.chat, channel, new Chat(channel, ChatType.GLOBAL))
+			}
+			state.chat[channel].battleRoyale(data[1], data[2])
 		},
 		'pm-receive'(state, data: any) {
 			const conversationID = data.message[0]
 			const channel = 'pm-' + conversationID
 			const isNew = !data.message[7]
 			if (!state.chat[channel]) {
-				Vue.set(state.chat, channel, new Chat(channel))
+				Vue.set(state.chat, channel, new Chat(channel, ChatType.PM))
 			}
 			const date = data.message[7] || LeekWars.time
 			state.chat[channel].add(data.message[1], data.message[2], data.message[6], data.message[5], data.message[3], date)
