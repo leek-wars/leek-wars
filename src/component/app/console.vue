@@ -107,7 +107,7 @@
 	.input {
 		padding: 2px 4px;
 	}
-	input {
+	.input input {
 		border: none;
 		background: transparent;
 		color: white;
