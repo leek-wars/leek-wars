@@ -834,7 +834,7 @@ pre.code {
 	background: white;
 	line-height: 25px;
 }
-pre.code /deep/ .line-number {
+pre.code .line-number {
 	color: #666;
 	display: block;
 	user-select: none;
@@ -847,11 +847,11 @@ pre.code /deep/ .line-number {
 	margin-left: -6px;
 	margin-right: 6px;
 }
-pre.code /deep/ .line-number span {
+pre.code .line-number span {
 	display: block;
 	padding: 0px 6px;
 }
-pre.code /deep/ .cl {
+pre.code .cl {
 	display: block;
 	clear: both;
 }
