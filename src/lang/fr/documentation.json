@@ -542,7 +542,7 @@
 	"func_getOperations": "Renvoie le nombre d'opérations consommées par votre poireau depuis le début de son tour. Ce nombre doit rester inférieur à #OPERATIONS_LIMIT pour ne pas que le poireau plante.",
 	"func_getOperations_return": "Nombre d'opérations consommées par votre poireau depuis le début de son tour.",
 	"func_getPath": "Renvoie le chemin en évitant les obstacles entre deux cellules <b>cell1</b> et <b>cell2</b>, si celui-ci existe.",
-	"func_getPath_2": "Renvoie le chemin en évitant les obstacles entre deux cellules <b>cell1</b> et <b>cell2</b>, si celui-ci existe, en ignorant les cellules contenues dans le tableau <b>ignoredCells</b>. Si un joueur ce situe sur une cellule ignorée, le chemin peut passer sur lui.",
+	"func_getPath_2": "Renvoie le chemin en évitant les obstacles entre deux cellules <b>cell1</b> et <b>cell2</b>, si celui-ci existe, en ignorant les cellules contenues dans le tableau <b>ignoredCells</b>. Si un joueur se situe sur une cellule ignorée, le chemin peut passer sur lui.",
 	"func_getPath_2_arg_1": "La cellule de départ.",
 	"func_getPath_2_arg_2": "La cellule d'arrivée.",
 	"func_getPath_2_arg_3": "Le tableau des cellules à ignorer.",
