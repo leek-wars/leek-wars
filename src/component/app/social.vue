@@ -149,7 +149,7 @@
 		top: 80px;
 		bottom: 0;
 		right: 0;
-		z-index: 300;
+		z-index: 10;
 	}
 	#app:not(.connected) .social-panel {
 		display: none;
