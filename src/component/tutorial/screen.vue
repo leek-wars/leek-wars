@@ -1,5 +1,5 @@
 <template>
-	<div class="screen" :class="{extended: extended}" @click="extended = !extended">
+	<div :class="{extended: extended}" class="screen" @click="extended = !extended">
 		<img :src="src">
 		<div class="legend">{{ legend }}</div>
 	</div>

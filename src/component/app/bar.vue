@@ -1,5 +1,5 @@
 <template>
-	<div class="app-bar" :class="{subtitle: LeekWars.subtitle}">
+	<div :class="{subtitle: LeekWars.subtitle}" class="app-bar">
 		<div v-ripple :class="{back: LeekWars.splitBack}" class="menu-button" @click="mainButton">
 			<div>
 				<div class="bar"></div>

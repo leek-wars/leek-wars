@@ -126,7 +126,7 @@
 				<h2>Actions</h2>
 			</div>
 			<div class="content">
-				<actions class="actions" :actions="actions" :leeks="leeks" />
+				<actions :actions="actions" :leeks="leeks" class="actions" />
 			</div>
 		</div>
 	</div>

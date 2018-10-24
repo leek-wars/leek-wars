@@ -8,17 +8,17 @@
 				<div class="search">
 					<div class="search-box">
 						<div class="label">{{ $t('query') }}</div>
-						<input class="query" v-model="query" type="text" @keydown.enter="search">
+						<input v-model="query" class="query" type="text" @keydown.enter="search">
 					</div>
 					<br>
 					<div class="search-box-farmer">
 						<div class="label">{{ $t('author') }}</div>
-						<input class="farmer-query" v-model="farmer" type="text" @keydown.enter="search">
+						<input v-model="farmer" class="farmer-query" type="text" @keydown.enter="search">
 					</div>
 					<br>
 					<div>
 						<div class="label">{{ $t('category') }}</div>
-						<select class="search-category" v-model="category" @change="search">
+						<select v-model="category" class="search-category" @change="search">
 							<option value="-1">{{ $t('all_categories') }}</option>
 							<option v-for="c in categories" :key="c.id" :value="c.id">{{ c.type == 'team' ? c.name : $i18n.t('forum.category_' + c.name) }}</option>
 						</select>

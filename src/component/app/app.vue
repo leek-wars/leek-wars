@@ -1,7 +1,7 @@
 <template>
 	<div id="app" :class="{ connected: $store.getters.connected, app: LeekWars.mobile, 'social-collapsed': LeekWars.socialCollapsed, 'menu-expanded': LeekWars.menuExpanded, sfw: LeekWars.sfw }" data-app="true" @mousemove="consoleMouseMove" @mouseup="consoleMouseUp">
 	
-		<div class="dark" :class="{visible: LeekWars.dark > 0}" :style="{opacity: LeekWars.dark}" @click="darkClick"></div>
+		<div :class="{visible: LeekWars.dark > 0}" :style="{opacity: LeekWars.dark}" class="dark" @click="darkClick"></div>
 	
 		<lw-menu v-if="$store.getters.connected" />
 

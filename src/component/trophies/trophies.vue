@@ -9,7 +9,7 @@
 				<span class="global-count">{{ count }} / {{ total }}</span>  
 				<br>
 				<div class="global-bar">
-					<div class="bar striked" :style="{width: Math.floor(100 * count / total) + '%'}"></div>
+					<div :style="{width: Math.floor(100 * count / total) + '%'}" class="bar striked"></div>
 				</div>
 			</div>
 		</div>
