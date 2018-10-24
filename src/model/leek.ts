@@ -44,6 +44,8 @@ class Leek {
 	public registers!: Register[]
 	public max_weapons!: number
 	public max_chips!: number
+	public real!: boolean
+	public bot!: boolean
 
 	get baseLife() {
 		return 100 + (this.level - 1) * 3
