@@ -1,8 +1,8 @@
 import { Commands } from '@/model/commands'
 import { Farmer } from '@/model/farmer'
+import { i18n } from '@/model/i18n'
 import { Latex } from '@/model/latex'
 import { LeekWars } from '@/model/leekwars'
-import { i18n } from '@/model/i18n'
 
 enum ChatType { GLOBAL, TEAM, PM }
 
