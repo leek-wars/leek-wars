@@ -9,8 +9,8 @@
 							<div class="name">{{ leek.name }}</div>
 							<span class="level">{{ $t('leek.level_n', [leek.level]) }}</span>
 						</div>
-						<br v-if="i == 1 && fight.leeks1.length < 5">
-						<span v-if="i < fight.leeks1.length - 1" class="vs">VS</span>
+						<br v-if="i == 1 && fight.leeks1.length < 5" :key="leek.id + 'br'">
+						<span v-if="i < fight.leeks1.length - 1" :key="leek.id + 'vs'" class="vs">VS</span>
 					</template>
 					<br><br>
 				</template>
