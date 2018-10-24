@@ -11,7 +11,7 @@
 					<div class="column lateral-column">
 						<h4>Scénarios</h4>
 						<div class="items scenarios">
-							<div v-for="scenario of scenarios" :key="scenario.id" :class="{selected: scenario === currentScenario}" class="item scenario" @click="selectScenario(scenario)">
+							<div v-for="scenario of allScenarios" :key="scenario.id" :class="{selected: scenario === currentScenario}" class="item scenario" @click="selectScenario(scenario)">
 								{{ scenario.name }}
 								<span v-if="scenario.base" class="base">base</span>
 								<div v-else class="delete" @click.stop="deleteScenario(scenario)"></div>
@@ -294,8 +294,43 @@
 			tp: {min: 0, max: 100},
 			mp: {min: 0, max: 50}
 		}
+		get allScenarios() {
+			const all: {[key: string]: TestScenario} = {...this.scenarios}
+			for (const l in this.$store.state.farmer.leeks) {
+				const leek = this.$store.state.farmer.leeks[l] as Leek
+				if (!(leek.id in this.leekAis)) { continue }
+				const ai = this.ais[this.leekAis[leek.id]]
+				if (!ai) { continue }
+				all["solo" + l] = {
+					id: "solo" + l,	name: "Solo " + leek.name, base: true, type: 'solo',
+					data: {
+						map: -1, ais: {[l]: ai}, team1: {[l]: leek}, team2: {"-1": this.domingo}
+					}
+				}
+			}
+			const team2 = {} as any
+			const leek_count = LeekWars.objectSize(this.$store.state.farmer.leeks)
+			for (let i = 0; i < leek_count; ++i) {
+				team2[this.bots[i].id] = this.bots[i]
+			}
+			const ais = {} as any
+			for (const l in this.$store.state.farmer.leeks) {
+				const leek = this.$store.state.farmer.leeks[l]
+				if (!(leek.id in this.leekAis)) { continue }
+				const ai = this.ais[this.leekAis[leek.id]]
+				if (!ai) { continue }
+				ais[l] = {id: ai.id, name: ai.name}
+			}
+			all.farmer = {
+				name: "Éleveur", id: "farmer", base: true, type: 'farmer',
+				data: {
+					map: -1, team2, ais,
+					team1: LeekWars.clone(this.$store.state.farmer.leeks)
+				}
+			}
+			return all
+		}
 
-		// @Watch("value")
 		created() {
 			if (this.initialized) { return }
 			for (const l in this.$store.state.farmer.leeks) {
@@ -305,7 +340,6 @@
 				if (data.data.success) {
 					this.initialized = true
 					this.scenarios = data.data.scenarios
-					this.generateDefaultScenarios()
 					const startScenarioID = localStorage.getItem('editor/scenario')
 					if (startScenarioID && startScenarioID in this.scenarios) {
 						this.selectScenario(this.scenarios[startScenarioID])
@@ -343,50 +377,6 @@
 		}
 		mounted() {
 			this.initMap()
-		}
-		generateDefaultScenarios() {
-			for (const l in this.$store.state.farmer.leeks) {
-				const leek = this.$store.state.farmer.leeks[l] as Leek
-				if (!(leek.id in this.leekAis)) { continue }
-				const ai = this.ais[this.leekAis[leek.id]]
-				if (!ai) { continue }
-				Vue.set(this.$data.scenarios, "solo" + l, {
-					id: "solo" + l,
-					name: "Solo " + leek.name,
-					base: true,
-					type: 'solo',
-					data: {
-						map: -1,
-						ais: {[l]: ai},
-						team1: {[l]: leek},
-						team2: {"-1": this.domingo}
-					}
-				})
-			}
-			const team2 = {} as any
-			const leek_count = LeekWars.objectSize(this.$store.state.farmer.leeks)
-			for (let i = 0; i < leek_count; ++i) {
-				team2[this.bots[i].id] = this.bots[i]
-			}
-			const ais = {} as any
-			for (const l in this.$store.state.farmer.leeks) {
-				const leek = this.$store.state.farmer.leeks[l]
-				if (!(leek.id in this.leekAis)) { continue }
-				const ai = this.ais[this.leekAis[leek.id]]
-				if (!ai) { continue }
-				ais[l] = {id: ai.id, name: ai.name}
-			}
-			Vue.set(this.scenarios, 'farmer', {
-				name: "Éleveur",
-				id: "farmer",
-				base: true,
-				type: 'farmer',
-				data: {
-					map: -1,
-					team1: LeekWars.clone(this.$store.state.farmer.leeks),
-					team2, ais
-				}
-			})
 		}
 		generateBots() {
 			for (const bot of this.bots) {
