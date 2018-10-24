@@ -37,7 +37,7 @@
 				<div :title="$t('delete_desc')" class="action list content tab" icon="delete" @click="deleteDialog = true">
 					<i class="material-icons">delete</i> <span>{{ $t('delete') }}</span>
 				</div>
-				<div id="test-button" :title="$t('test_desc')" class="action content tab" icon="play_arrow">
+				<div :title="$t('test_desc')" class="action content tab" icon="play_arrow" @click="test">
 					<i class="material-icons">play_arrow</i> <span>{{ $t('test') }}</span>
 				</div>
 				<div class="tab action" icon="settings" @click="settingsDialog = true">
@@ -76,7 +76,7 @@
 			<div v-show="!LeekWars.mobile || LeekWars.splitBack" class="column9">
 				<div class="panel">
 					<div class="content">
-						<div class="editors" :style="{'font-size': fontSize + 'px', 'line-height': lineHeight + 'px'}">
+						<div :style="{'font-size': fontSize + 'px', 'line-height': lineHeight + 'px'}" class="editors">
 							<ai-view v-for="ai in activeAIs" ref="editors" :key="ai.id" :ai="ai" :visible="currentAI === ai" />
 						</div>
 						<div class="search-panel">
@@ -161,6 +161,8 @@
 				<div class="red" @click="deleteItem">{{ $t('delete_validate') }}</div>
 			</div>
 		</v-dialog>
+
+		<editor-test v-model="testDialog" :ais="ais" :leek-ais="leekAIs" />
 	</div>
 </template>
 
@@ -171,6 +173,7 @@
 	import AIView from './ai-view.vue'
 	import EditorFolder from './editor-folder.vue'
 	import { AIItem, Folder, Item } from './editor-item'
+	import EditorTest from './editor-test.vue'
 	import { generateKeywords } from './keywords'
 	import './leekscript-monokai.css'
 	import './leekscript.css'
@@ -181,11 +184,12 @@
 
 	@Component({
 		name: 'editor', i18n: {},
-		components: { 'editor-folder': EditorFolder, 'ai-view': AIView }
+		components: { 'editor-folder': EditorFolder, 'ai-view': AIView, 'editor-test': EditorTest }
 	})
 	export default class EditorPage extends Vue {
 		ais: {[key: number]: AI} = {}
 		folderById: {[key: number]: Folder} = {}
+		items: {[key: string]: AI | Folder} = {}
 		rootFolder: Folder | null = null
 		activeAIs: {[key: number]: AI} = {}
 		currentAI: AI | null = null
@@ -207,6 +211,8 @@
 		fontSize: number = DEFAULT_FONT_SIZE
 		lineHeight: number = DEFAULT_LINE_HEIGHT
 		dragging: Item | null = null
+		testDialog: boolean = false
+		leekAIs: any = {}
 		actions_list = [
 			{icon: 'add', click: (e: any) => this.add(e)},
 			{icon: 'delete', click: () => this.deleteDialog = true},
@@ -239,10 +245,13 @@
 				const folders: {[key: number]: any} = {}
 				for (const folder of data.data.folders) {
 					folders[folder.id] = folder
+					this.items[folder.name] = folder
 				}
 				for (const ai of data.data.ais) {
-					this.ais[ai.id] = ai
+					Vue.set(this.ais, ai.id, ai)
+					this.items[ai.name] = ai
 				}
+				this.leekAIs = data.data.leek_ais
 				const buildFolder = (id: number, parent: Folder): Folder => {
 					const folder = new Folder(id, id in folders ? folders[id].name : '<root>', parent)
 					if (id === 0) {
@@ -261,6 +270,9 @@
 					return folder
 				}
 				this.rootFolder = buildFolder(0, this.rootFolder as Folder)
+				for (const ai of data.data.ais) {
+					ai.path = this.getAIFullPath(ai)
+				}
 				this.update()
 
 				LeekWars.setTitle(this.$t('editor.title'), this.$t('editor.n_ais', [LeekWars.objectSize(data.data.ais)]))
@@ -353,6 +365,19 @@
 				LeekWars.splitShowList()
 				LeekWars.setActions(this.actions_list)
 			}
+		}
+
+		getAIFullPath(ai: AI) {
+			if (ai.folder > 0) {
+				return this.getFolderPath(this.folderById[ai.folder]) + ai.name
+			}
+			return ai.name
+		}
+		getFolderPath(folder: Folder): string {
+			if (folder.parent && folder.parent.id !== 0) {
+				return this.getFolderPath(folder.parent) + folder.name + '/'
+			}
+			return folder.name + '/'
 		}
 
 		// $('#editors').mousemove(function(e) {
@@ -553,7 +578,7 @@
 			})
 		}
 		test() {
-			// TODO
+			this.testDialog = true
 		}
 		help() {
 			this.infoDialog = true

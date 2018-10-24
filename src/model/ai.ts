@@ -7,5 +7,6 @@ class AI {
 	public modified: boolean = false
 	public dragging: boolean = false
 	public folder!: number
+	public path!: string
 }
 export { AI }
