@@ -69,7 +69,7 @@
 			<div class="content">
 				<div class="wrapper">
 					<i18n tag="p" path="habs_1">
-						<span place="icon" class='hab'></span>
+						<span place="icon" class="hab"></span>
 					</i18n>
 				</div>
 			</div>

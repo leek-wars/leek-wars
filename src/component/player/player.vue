@@ -2,37 +2,37 @@
 	<div :style="{width: width + 'px', height: height + 'px'}">
 		<div v-if="!loaded" class="loading">
 			<div v-if="fight">
-				<template v-if='fight.type === FightType.BATTLE_ROYALE'>
+				<template v-if="fight.type === FightType.BATTLE_ROYALE">
 					<template v-for="(leek, i) in fight.leeks1">
-						<div class='leek' :key="leek.id">
+						<div :key="leek.id" class="leek">
 							<leek-image :leek="leek" :scale="0.6" />
-							<div class='name'>{{ leek.name }}</div>
-							<span class='level'>{{ $t('leek.level_n', [leek.level]) }}</span>
+							<div class="name">{{ leek.name }}</div>
+							<span class="level">{{ $t('leek.level_n', [leek.level]) }}</span>
 						</div>
 						<br v-if="i == 1 && fight.leeks1.length < 5">
-						<span v-if="i < fight.leeks1.length - 1" class='vs'>VS</span>
+						<span v-if="i < fight.leeks1.length - 1" class="vs">VS</span>
 					</template>
 					<br><br>
 				</template>
 				<table v-else>
 					<tr>
-						<td class='team-td'>
+						<td class="team-td">
 							<span v-for="(leek, i) in fight.leeks1" :key="leek.id">
-								<div class='leek'>
+								<div class="leek">
 									<leek-image :leek="leek" :scale="0.6" />
-									<div class='name'>{{ leek.name }}</div>
-									<span class='level'>{{ $t('leek.level_n', [leek.level]) }}</span>
+									<div class="name">{{ leek.name }}</div>
+									<span class="level">{{ $t('leek.level_n', [leek.level]) }}</span>
 								</div>
 								<br v-if="i == 1 && fight.leeks1.length < 5">
 							</span>
 						</td>
-						<td><span class='vs'>VS</span></td>
-						<td class='team-td'>
+						<td><span class="vs">VS</span></td>
+						<td class="team-td">
 							<span v-for="(leek, i) in fight.leeks2" :key="leek.id">
-								<div class='leek'>
+								<div class="leek">
 									<leek-image :leek="leek" :scale="0.6" />
-									<div class='name'>{{ leek.name }}</div>
-									<span class='level'>{{ $t('leek.level_n', [leek.level]) }}</span>
+									<div class="name">{{ leek.name }}</div>
+									<span class="level">{{ $t('leek.level_n', [leek.level]) }}</span>
 								</div>
 								<br v-if="i == 1 && fight.leeks2.length < 5">
 							</span>
@@ -109,7 +109,7 @@
 		</div>
 
 		<div v-show="loaded" class="game">
-			<div class="layers" :style="{height: height - 36 + 'px'}">
+			<div :style="{height: height - 36 + 'px'}" class="layers">
 				<canvas class="bg-canvas"></canvas>
 				<canvas class="game-canvas"></canvas>
 				<div class="progress-bar-wrapper">

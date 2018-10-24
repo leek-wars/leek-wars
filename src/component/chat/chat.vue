@@ -6,7 +6,7 @@
 				<div v-if="message.author.id === 0" :key="m" class="message">
 					<img class="avatar" src="/image/favicon.png">
 					<router-link :to="'/fight/' + message.texts[1]">
-						<div class='bubble br-notification'>
+						<div class="bubble br-notification">
 							<div class="author-wrapper">
 								<span class="author">Leek Wars</span>
 							</div>

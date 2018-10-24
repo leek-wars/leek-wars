@@ -131,13 +131,13 @@
 
 					<p v-html="$t('editor_1')"></p>
 
-					<screen src="/image/tuto/editor.jpg" :legend="$t('editor_image_1')"></screen>
+					<screen :legend="$t('editor_image_1')" src="/image/tuto/editor.jpg" />
 
 					<p>{{ $t('editor_2') }}</p>
 					<p>{{ $t('editor_3') }}</p>
 					<p>{{ $t('editor_4') }}</p>
 
-					<screen src="/image/tuto/editor_ia.jpg" :legend="$t('editor_image_2')"></screen>
+					<screen :legend="$t('editor_image_2')" src="/image/tuto/editor_ia.jpg" />
 
 					<p v-html="$t('editor_5')"></p>
 
@@ -172,7 +172,7 @@
 						{{ $t('editor_10') }}
 					</p>
 
-					<screen src="/image/tuto/editor_autocomplete.jpg" :legend="$t('automatic_completion')"></screen>
+					<screen :legend="$t('automatic_completion')" src="/image/tuto/editor_autocomplete.jpg" />
 
 					<br>
 					<h3>{{ $t('do_a_test_fight') }}</h3>
@@ -181,7 +181,7 @@
 
 					<p>{{ $t('editor_12') }}</p>
 
-					<screen src="/image/tuto/editor_test.jpg" :legend="$t('test_config')"></screen>
+					<screen :legend="$t('test_config')" src="/image/tuto/editor_test.jpg" />
 
 					<p>{{ $t('editor_13') }}
 						<ul>
@@ -199,7 +199,7 @@
 
 					<p v-html="$t('doc_1')"></p>
 
-					<screen src="/image/tuto/documentation.jpg" :legend="$t('the_documentation')"></screen>
+					<screen :legend="$t('the_documentation')" src="/image/tuto/documentation.jpg" />
 
 					<p>{{ $t('doc_2') }}
 						<ul>
@@ -341,7 +341,7 @@
 
 					<p>{{ $t('var_48') }}</p>
 
-					<screen src="/image/tuto/debug.jpg" :legend="$t('var_49')"></screen>
+					<screen :legend="$t('var_49')" src="/image/tuto/debug.jpg" />
 
 					<p>{{ $t('var_50') }}</p>
 
@@ -685,7 +685,7 @@
 
 					<p v-html="$t('fight_ground_1')"></p>
 
-					<screen src="/image/tuto/grid_cells.jpg" :legend="$t('fight_ground_2')"></screen>
+					<screen :legend="$t('fight_ground_2')" src="/image/tuto/grid_cells.jpg" />
 
 					<p v-html="$t('fight_ground_3')"></p>
 
