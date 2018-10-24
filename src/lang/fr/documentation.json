@@ -550,7 +550,7 @@
 	"func_getPath_arg_1": "La cellule de départ.",
 	"func_getPath_arg_2": "La cellule d'arrivée.",
 	"func_getPathLength": "Renvoie la longueur du chemin entre deux cellules <b>cell1</b> et <b>cell2</b>, en esquivant les obstacles. Cette fonction équivaut à <i>count(getPath(<b>cell1</b>, <b>cell2</b>))</i>.<br /><br />\nPour obtenir la distance à vol d'oiseau, utilisez #getDistance, et pour obtenir la distance entre deux cellules sans tenir compte des obstacles, utilisez #getCellDistance.",
-	"func_getPathLength_2": "Renvoie la longueur du chemin entre deux cellules <b>cell1</b> et <b>cell2</b>, en esquivant les obstacles, en ignorant les cellules contenues dans le tableau <b>ignoredCells</b>.\nSi un joueur ce situe sur une cellule ignorée, le chemin peut passer sur lui.",
+	"func_getPathLength_2": "Renvoie la longueur du chemin entre deux cellules <b>cell1</b> et <b>cell2</b>, en esquivant les obstacles, en ignorant les cellules contenues dans le tableau <b>ignoredCells</b>.\nSi un joueur se situe sur une cellule ignorée, le chemin peut passer sur lui.",
 	"func_getPathLength_2_arg_1": "La cellule de départ.",
 	"func_getPathLength_2_arg_2": "La cellule d'arrivée.",
 	"func_getPathLength_2_arg_3": "Le tableau des cellules à ignorer.",
