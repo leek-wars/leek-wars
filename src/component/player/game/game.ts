@@ -663,7 +663,6 @@ class Game {
 						}
 					}
 				}
-
 				this.drawArea -= dt
 
 				// Show cell
@@ -673,12 +672,10 @@ class Game {
 						this.actionDone()
 					}
 				}
-
 				// Leeks
 				for (const i in this.leeks) {
 					if (this.leeks[i].active) { this.leeks[i].update(dt) }
 				}
-
 				// Chips
 				for (let c = 0; c < this.chips.length; ++c) {
 					const chip = this.chips[c]
@@ -693,11 +690,9 @@ class Game {
 						c--
 					}
 				}
-
 				// Particles
 				this.particles.update(dt)
 			}
-
 			/// Draw
 			if (this.focus) {
 				this.draw()
