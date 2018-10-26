@@ -305,10 +305,12 @@
 			padding: 10px;
 		}
 	}
-	@media screen and (max-width: 599px) {
+	@media screen and (max-width: 850px) {
 		#app.connected .app-center {
 			margin-left: 0;
 		}
+	}
+	@media screen and (max-width: 599px) {
 		.app-center {
 			padding: 0;
 		}
