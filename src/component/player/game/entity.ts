@@ -74,7 +74,7 @@ class Entity {
 	public moveDelay = 0
 	public jumpHeight = 35
 	// Drawing
-	public drawID: any = null
+	public drawID: number | null = null
 	// States
 	public dead = false
 	public flash = 0
@@ -201,8 +201,9 @@ class Entity {
 		}
 
 		// Update line
-		this.game.moveDrawableElement(this, this.drawID, this.ry, this.dy)
-
+		if (this.drawID) {
+			this.game.moveDrawableElement(this, this.drawID, this.ry, this.dy)
+		}
 		this.path.shift() // Supprime la première case
 	}
 
@@ -368,7 +369,9 @@ class Entity {
 				this.deadAnim -= 0.04 * dt
 
 				if (this.deadAnim <= 0) {
-					this.game.removeDrawableElement(this.drawID, this.dy)
+					if (this.drawID) {
+						this.game.removeDrawableElement(this.drawID, this.dy)
+					}
 					this.game.actionDone()
 				}
 			}
