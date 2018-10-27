@@ -1592,6 +1592,8 @@ class Game {
 			leek.damageReturn = 0
 			leek.cell = this.states[i].cell
 			leek.dead = false
+			leek.burning = 0
+			leek.gazing = 0
 			leek.bubble = new Bubble(this)
 			leek.weapon = null
 
