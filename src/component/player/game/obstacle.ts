@@ -105,7 +105,7 @@ class Obstacle {
 
 	public drawShadow(ctx: CanvasRenderingContext2D) {
 
-		if (this.game.tactic) { return  }
+		if (this.game.tactic) { return }
 
 		if (this.baseTexture.shadow != null) {
 
