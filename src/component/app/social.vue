@@ -93,9 +93,7 @@
 		created() {
 			this.chatLanguage = LeekWars.languages[this.$i18n.locale]
 			for (const panel in this.panels) {
-				if (this.panels.hasOwnProperty(panel)) {
-					this.panels[panel].opened = localStorage.getItem('main/' + panel + '-collapsed') !== 'true'
-				}
+				this.panels[panel].opened = localStorage.getItem('main/' + panel + '-collapsed') !== 'true'
 			}
 			if (localStorage.getItem('main/social-collapsed') === 'true') {
 				LeekWars.socialCollapsed = true

@@ -80,9 +80,7 @@ class Ground {
 
 		// Set obstacles sizes
 		for (const o in this.obstacles) {
-			if (this.obstacles.hasOwnProperty(o)) {
-				this.obstacles[o].resize()
-			}
+			this.obstacles[o].resize()
 		}
 
 		// Create grid texture
@@ -117,9 +115,7 @@ class Ground {
 
 			// Obstacles shadows
 			for (const o in this.obstacles) {
-				if (this.obstacles.hasOwnProperty(o)) {
-					this.obstacles[o].drawShadow(this.textureCtx)
-				}
+				this.obstacles[o].drawShadow(this.textureCtx)
 			}
 			this.textureCtx.scale(this.scale, this.scale)
 		}

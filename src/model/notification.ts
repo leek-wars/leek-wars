@@ -38,9 +38,7 @@ class Notification {
 		const leeks = []
 		if (store.state.farmer && store.state.farmer.leeks) {
 			for (const l in store.state.farmer.leeks) {
-				if (store.state.farmer.leeks.hasOwnProperty(l)) {
-					leeks[store.state.farmer.leeks[l].id] = store.state.farmer.leeks[l]
-				}
+				leeks[store.state.farmer.leeks[l].id] = store.state.farmer.leeks[l]
 			}
 		}
 		if (type === NotificationType.UP_LEVEL) {

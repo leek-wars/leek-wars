@@ -555,17 +555,15 @@
 			vars[this.id] = token.state.globalVars
 			const globalVars = this.getGlobalVars(vars)
 			for (const i in globalVars) {
-				if (globalVars.hasOwnProperty(i)) {
 				const file = vars[parseInt(i, 10)]
-					for (let v = file; v; v = v.next) {
-						if (v.name.toLowerCase().indexOf(start.toLowerCase()) === 0) {
-							// var information = this.getTokenInformation(v.name)
-							// if (!information) {
-							// 	var text = "Variable <b>" + v.name + "</b>"
-							// 	if (i != this.id) text += "<br><br>" + _.lang.get('editor', 'variable_defined_in_ai', editors[i].name)
-							// 	completions.push({text: v.name, name: v.name, details: text, type: 'keyword'})
-							// }
-						}
+				for (let v = file; v; v = v.next) {
+					if (v.name.toLowerCase().indexOf(start.toLowerCase()) === 0) {
+						// var information = this.getTokenInformation(v.name)
+						// if (!information) {
+						// 	var text = "Variable <b>" + v.name + "</b>"
+						// 	if (i != this.id) text += "<br><br>" + _.lang.get('editor', 'variable_defined_in_ai', editors[i].name)
+						// 	completions.push({text: v.name, name: v.name, details: text, type: 'keyword'})
+						// }
 					}
 				}
 			}

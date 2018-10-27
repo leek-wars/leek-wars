@@ -40,7 +40,7 @@ class Hud {
 	// 	var pos = (e.pageX - $(this).offset().left) / $(this).width()
 
 	// 	for (var i in game.turnPosition) {
-	// 		if (game.turnPosition.hasOwnProperty(i) && pos >= game.turnPosition[i]) {
+	// 		if (pos >= game.turnPosition[i]) {
 	// 			turn = i
 	// 		}
 	// 	}

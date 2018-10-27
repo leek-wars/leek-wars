@@ -572,9 +572,7 @@
 			}
 			const weapons = []
 			for (const w in groupedFarmerWeapons) {
-				if (groupedFarmerWeapons.hasOwnProperty(w)) {
-					weapons.push(groupedFarmerWeapons[w])
-				}
+				weapons.push(groupedFarmerWeapons[w])
 			}
 			return weapons.sort((weaponA, weaponB) => {
 				return LeekWars.weapons[weaponA.template].level - LeekWars.weapons[weaponB.template].level
@@ -591,9 +589,7 @@
 			}
 			const chips = []
 			for (const c in groupedFarmerChips) {
-				if (groupedFarmerChips.hasOwnProperty(c)) {
-					chips.push(groupedFarmerChips[c])
-				}
+				chips.push(groupedFarmerChips[c])
 			}
 			return chips.sort((chipA, chipB) => {
 				return LeekWars.orderedChips[chipA.template] - LeekWars.orderedChips[chipB.template]

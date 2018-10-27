@@ -223,24 +223,22 @@
 		challenge() {
 			if (!this.$store.getters.connected || !this.fight) { return }
 			for (const ml in this.$store.state.farmer.leeks) {
-				if (this.$store.state.farmer.leeks.hasOwnProperty(ml)) {
-					if (this.searchMyLeek(this.$store.state.farmer.leeks[ml], this.fight.report.leeks1)) {
-						this.myFight = true
-						this.iWin = this.fight.report.win === 1
-						if (this.fight.type === FightType.SOLO) {
-							this.enemy = this.fight.report.leeks2[0].id
-						} else if (this.fight.type === FightType.FARMER) {
-							this.enemy = this.fight.farmer2
-						}
+				if (this.searchMyLeek(this.$store.state.farmer.leeks[ml], this.fight.report.leeks1)) {
+					this.myFight = true
+					this.iWin = this.fight.report.win === 1
+					if (this.fight.type === FightType.SOLO) {
+						this.enemy = this.fight.report.leeks2[0].id
+					} else if (this.fight.type === FightType.FARMER) {
+						this.enemy = this.fight.farmer2
 					}
-					if (this.searchMyLeek(this.$store.state.farmer.leeks[ml], this.fight.report.leeks2)) {
-						this.myFight = true
-						this.iWin = this.fight.report.win === 2
-						if (this.fight.type === FightType.SOLO) {
-							this.enemy = this.fight.report.leeks1[0].id
-						} else if (this.fight.type === FightType.FARMER) {
-							this.enemy = this.fight.farmer1
-						}
+				}
+				if (this.searchMyLeek(this.$store.state.farmer.leeks[ml], this.fight.report.leeks2)) {
+					this.myFight = true
+					this.iWin = this.fight.report.win === 2
+					if (this.fight.type === FightType.SOLO) {
+						this.enemy = this.fight.report.leeks1[0].id
+					} else if (this.fight.type === FightType.FARMER) {
+						this.enemy = this.fight.farmer1
 					}
 				}
 			}

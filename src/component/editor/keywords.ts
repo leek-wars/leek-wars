@@ -20,11 +20,9 @@ function generateKeywords() {
 
 		let i = 0
 		for (const a in fun.arguments_names) {
-			if (fun.arguments_names.hasOwnProperty(a)) {
-				name += fun.arguments_names[a]
-				if (i++ < fun.arguments_names.length - 1) {
-					name += ", "
-				}
+			name += fun.arguments_names[a]
+			if (i++ < fun.arguments_names.length - 1) {
+				name += ", "
 			}
 		}
 		name += ')'
@@ -51,9 +49,7 @@ function generateKeywords() {
 			details += "<br><b>" + i18n.t('editor', 'parameters') + "</b>"
 			details += "<ul>"
 			for (const a in fun.arguments_names) {
-				if (fun.arguments_names.hasOwnProperty(a)) {
-					details += "<li>" + fun.arguments_names[a] + " : " + i18n.t("documentation', 'func_" + functionName + "_arg_" + (a + 1)) + "</span></li>"
-				}
+				details += "<li>" + fun.arguments_names[a] + " : " + i18n.t("documentation', 'func_" + functionName + "_arg_" + (a + 1)) + "</span></li>"
 			}
 			details += "</ul>"
 		} else {

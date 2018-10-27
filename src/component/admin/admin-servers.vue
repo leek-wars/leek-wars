@@ -96,10 +96,8 @@
 			let total = 0
 			let load = 0
 			for (const t in server.threads) {
-				if (server.threads.hasOwnProperty(t)) {
-					total += server.threads[t].generated
-					load += server.threads[t].task ? 1 : 0
-				}
+				total += server.threads[t].generated
+				load += server.threads[t].task ? 1 : 0
 			}
 			server.generated = total
 			server.load = 1 - (load / LeekWars.objectSize(server.threads))

@@ -65,9 +65,7 @@
 			get_categories((data: any) => {
 				this.categories = data.categories
 				for (const category in this.categories) {
-					if (this.categories.hasOwnProperty(category)) {
-						this.items_by_category[category] = []
-					}
+					this.items_by_category[category] = []
 				}
 				let last: any
 				let index = 1

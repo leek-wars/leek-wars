@@ -218,10 +218,8 @@
 		created() {
 			this.settings = {}
 			for (const category in this.mails) {
-				if (this.mails.hasOwnProperty(category)) {
-					for (const mail of this.mails[category]) {
-						this.settings['push_' + category + '_' + mail] = false
-					}
+				for (const mail of this.mails[category]) {
+					this.settings['push_' + category + '_' + mail] = false
 				}
 			}
 			this.pushNotifications = localStorage.getItem('options/push-notifs') === 'true'
