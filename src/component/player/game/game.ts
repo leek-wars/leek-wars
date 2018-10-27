@@ -1578,43 +1578,40 @@ class Game {
 	}
 
 	public jump(jumpAction: any) {
-
 		// Return to initial state
-		for (const i of this.states) {
-			if (this.states.hasOwnProperty(i)) {
-				this.leeks[i].active = this.states[i].active
-				this.leeks[i].life = this.states[i].life
-				this.leeks[i].maxLife = this.states[i].max_life
-				this.leeks[i].tp = this.states[i].tp
-				this.leeks[i].mp = this.states[i].mp
-				this.leeks[i].agility = this.states[i].agility
-				this.leeks[i].strength = this.states[i].strength
-				this.leeks[i].wisdom = this.states[i].wisdom
-				this.leeks[i].resistance = this.states[i].resistance
-				this.leeks[i].science = this.states[i].science
-				this.leeks[i].magic = this.states[i].magic
-				this.leeks[i].absoluteShield = 0
-				this.leeks[i].relativeShield = 0
-				this.leeks[i].damageReturn = 0
-				this.leeks[i].cell = this.states[i].cell
-				this.leeks[i].dead = false
-				this.leeks[i].bubble = new Bubble(this)
+		for (const i in this.states) {
+			const leek = this.leeks[i] as Leek
+			leek.active = this.states[i].active
+			leek.life = this.states[i].life
+			leek.maxLife = this.states[i].max_life
+			leek.tp = this.states[i].tp
+			leek.mp = this.states[i].mp
+			leek.agility = this.states[i].agility
+			leek.strength = this.states[i].strength
+			leek.wisdom = this.states[i].wisdom
+			leek.resistance = this.states[i].resistance
+			leek.science = this.states[i].science
+			leek.magic = this.states[i].magic
+			leek.absoluteShield = 0
+			leek.relativeShield = 0
+			leek.damageReturn = 0
+			leek.cell = this.states[i].cell
+			leek.dead = false
+			leek.bubble = new Bubble(this)
+			leek.weapon = null
 
-				; (this.leeks[i] as Leek).weapon = null
-
-				if (!this.leeks[i].active) {
-					if (this.leeks[i].drawID) {
-						this.removeDrawableElement(this.leeks[i].drawID, this.leeks[i].y)
-						this.leeks[i].drawID = null
-					}
-				} else {
-					if (this.leeks[i].drawID === null && this.leeks[i].life) {
-						this.leeks[i].drawID = this.addDrawableElement(this.leeks[i], this.leeks[i].y)
-					}
+			if (!leek.active) {
+				if (leek.drawID) {
+					this.removeDrawableElement(leek.drawID, leek.y)
+					leek.drawID = null
 				}
-				this.leeks[i].moveDelay = 0
-				this.leeks[i].path = []
+			} else {
+				if (leek.drawID === null && leek.life) {
+					leek.drawID = this.addDrawableElement(leek, leek.y)
+				}
 			}
+			leek.moveDelay = 0
+			leek.path = []
 		}
 
 		// Clear entity effects
@@ -1623,10 +1620,7 @@ class Game {
 			entity.effects = {}
 		}
 
-		// Cleaning
 		this.currentActions = []
-		// $("#logs .log").remove()
-
 		this.effects = []
 
 		for (let i = 0; i < this.particles.particles.length; i++) {
