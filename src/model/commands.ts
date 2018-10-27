@@ -148,28 +148,20 @@ const Commands = {
 		if (!marketCommand) { return }
 		marketCommand.options = []
 		for (const w in LeekWars.weapons) {
-			if (LeekWars.weapons.hasOwnProperty(w)) {
-				const weapon = LeekWars.weapons[w]
-				marketCommand.options.push({name: weapon.name, description: "Ajoute un lien vers l'arme \"" + weapon.name + "\" du marché au message"})
-			}
+			const weapon = LeekWars.weapons[w]
+			marketCommand.options.push({name: weapon.name, description: "Ajoute un lien vers l'arme \"" + weapon.name + "\" du marché au message"})
 		}
 		for (const c in LeekWars.chips) {
-			if (LeekWars.chips.hasOwnProperty(c)) {
-				const chip = LeekWars.chips[c]
-				marketCommand.options.push({name: chip.name, description: "Ajoute un lien vers la puce \"" + chip.name + "\" du marché au message"})
-			}
+			const chip = LeekWars.chips[c]
+			marketCommand.options.push({name: chip.name, description: "Ajoute un lien vers la puce \"" + chip.name + "\" du marché au message"})
 		}
 		for (const key in LeekWars.potions) {
-			if (LeekWars.potions.hasOwnProperty(key)) {
-				const potion = LeekWars.potions[key]
-				marketCommand.options.push({name: potion.name, description: "Ajoute un lien vers la potion \""  + potion.name + "\" du marché au message"})
-			}
+			const potion = LeekWars.potions[key]
+			marketCommand.options.push({name: potion.name, description: "Ajoute un lien vers la potion \""  + potion.name + "\" du marché au message"})
 		}
 		for (const key in LeekWars.hats) {
-			if (LeekWars.hats.hasOwnProperty(key)) {
-				const hat = LeekWars.hats[key]
-				marketCommand.options.push({name: hat.name, description: "Ajoute un lien vers le chapeau \"" + hat.name + "\" du marché au message"})
-			}
+			const hat = LeekWars.hats[key]
+			marketCommand.options.push({name: hat.name, description: "Ajoute un lien vers le chapeau \"" + hat.name + "\" du marché au message"})
 		}
 	}
 }

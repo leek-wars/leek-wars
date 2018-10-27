@@ -244,37 +244,35 @@
 				}
 				const items = res.data.items as ItemTemplate[]
 				for (const i in items) {
-					if (items.hasOwnProperty(i)) {
-						const item = items[i]
-						this.items[item.id] = item
-						if (item.type === ItemType.WEAPON) {
-							this.weapons.push(LeekWars.weapons[item.id])
-							this.items_by_name[LeekWars.weapons[item.id].name] = item
-						} else if (item.type === ItemType.CHIP) {
-							const chip = LeekWars.chips[item.id]
-							this.chips.push(chip)
-							this.items_by_name[LeekWars.chips[item.id].name] = item
-							// Place the chip in the categories which correspond to its effects
-							for (const effect of chip.effects) {
-								if (this.chipsByType[effect.type] === undefined) {
-									this.chipsByType[effect.type] = []
-								}
-								this.chipsByType[effect.type].push(chip)
-								break
+					const item = items[i]
+					this.items[item.id] = item
+					if (item.type === ItemType.WEAPON) {
+						this.weapons.push(LeekWars.weapons[item.id])
+						this.items_by_name[LeekWars.weapons[item.id].name] = item
+					} else if (item.type === ItemType.CHIP) {
+						const chip = LeekWars.chips[item.id]
+						this.chips.push(chip)
+						this.items_by_name[LeekWars.chips[item.id].name] = item
+						// Place the chip in the categories which correspond to its effects
+						for (const effect of chip.effects) {
+							if (this.chipsByType[effect.type] === undefined) {
+								this.chipsByType[effect.type] = []
 							}
-						} else if (item.type === ItemType.POTION) {
-							this.potions.push(LeekWars.potions[item.id])
-							this.items_by_name[LeekWars.potions[item.id].name] = item
-						} else if (item.type === ItemType.HAT) {
-							this.hats.push(LeekWars.hats[item.id])
-							this.items_by_name[LeekWars.hats[item.id].name] = item
+							this.chipsByType[effect.type].push(chip)
+							break
 						}
-						item.leek_objs = []
-						if (this.$store.getters.connected) {
-							for (const leek of item.leeks) {
-								if (leek in this.$store.state.farmer.leeks) {
-									item.leek_objs.push(this.$store.state.farmer.leeks[leek])
-								}
+					} else if (item.type === ItemType.POTION) {
+						this.potions.push(LeekWars.potions[item.id])
+						this.items_by_name[LeekWars.potions[item.id].name] = item
+					} else if (item.type === ItemType.HAT) {
+						this.hats.push(LeekWars.hats[item.id])
+						this.items_by_name[LeekWars.hats[item.id].name] = item
+					}
+					item.leek_objs = []
+					if (this.$store.getters.connected) {
+						for (const leek of item.leeks) {
+							if (leek in this.$store.state.farmer.leeks) {
+								item.leek_objs.push(this.$store.state.farmer.leeks[leek])
 							}
 						}
 					}
@@ -282,27 +280,25 @@
 				const fights = [100, 200, 500, 1000]
 				const costs = [1, 1.8, 4, 7]
 				for (const p in fights) {
-					if (fights.hasOwnProperty(p)) {
-						const count = fights[p]
-						const pack: ItemTemplate = {
-							id: 1000000 + fights[p],
-							name: count + '-fights',
-							title: this.$t('n_fights', [count]),
-							price_habs: p === '0' ? costs[p] * 1000000 : 0,
-							price_crystals: costs[p] * 100,
-							sellable: false,
-							type: ItemType.FIGHT_PACK,
-							description: this.$t('n_fights_desc', [count]),
-							leeks: [],
-							leek_objs: [],
-							leek_count: 0,
-							farmer_count: 0,
-							sell_price: 0
-						} as ItemTemplate
-						this.fight_packs.push(pack)
-						this.items[pack.id] = pack
-						this.items_by_name[pack.name] = pack
-					}
+					const count = fights[p]
+					const pack: ItemTemplate = {
+						id: 1000000 + fights[p],
+						name: count + '-fights',
+						title: this.$t('n_fights', [count]),
+						price_habs: p === '0' ? costs[p] * 1000000 : 0,
+						price_crystals: costs[p] * 100,
+						sellable: false,
+						type: ItemType.FIGHT_PACK,
+						description: this.$t('n_fights_desc', [count]),
+						leeks: [],
+						leek_objs: [],
+						leek_count: 0,
+						farmer_count: 0,
+						sell_price: 0
+					} as ItemTemplate
+					this.fight_packs.push(pack)
+					this.items[pack.id] = pack
+					this.items_by_name[pack.name] = pack
 				}
 				const itemName = this.$route.params.item
 				if (itemName) {

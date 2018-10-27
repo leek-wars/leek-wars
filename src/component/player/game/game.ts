@@ -459,15 +459,13 @@ class Game {
 
 		// Obstacles
 		for (const i in this.obstacles) {
-			if (this.obstacles.hasOwnProperty(i)) {
-				const o = this.obstacles[i]
-				const type = o[0]
-				const size = o[1]
-				if (size !== -1) {
-					const obstacle = new Obstacle(this, type, size, parseInt(i, 10))
-					obstacle.resize()
-					this.ground.addObstacle(obstacle)
-				}
+			const o = this.obstacles[i]
+			const type = o[0]
+			const size = o[1]
+			if (size !== -1) {
+				const obstacle = new Obstacle(this, type, size, parseInt(i, 10))
+				obstacle.resize()
+				this.ground.addObstacle(obstacle)
 			}
 		}
 
@@ -749,13 +747,11 @@ class Game {
 			if (!this.jumping) {
 				// Update markers
 				for (const m in this.markers) {
-					if (this.markers.hasOwnProperty(m)) {
-						const marker = this.markers[m]
-						if (marker.owner === this.currentPlayer) {
-							marker.duration--
-							if (marker.duration === 0) {
-								delete this.markers[m]
-							}
+					const marker = this.markers[m]
+					if (marker.owner === this.currentPlayer) {
+						marker.duration--
+						if (marker.duration === 0) {
+							delete this.markers[m]
 						}
 					}
 				}
@@ -1519,18 +1515,14 @@ class Game {
 
 		// Draw markers
 		for (const m in this.markers) {
-			if (this.markers.hasOwnProperty(m)) {
-				const marker = this.markers[m]
-				this.drawMarker(marker.x, marker.y, marker.color)
-			}
+			const marker = this.markers[m]
+			this.drawMarker(marker.x, marker.y, marker.color)
 		}
 
 		// Draw elements
 		for (const line of this.drawableElements) {
 			for (const j in line) {
-				if (this.drawableElements.hasOwnProperty(j)) {
-					line[j].draw(this.ctx)
-				}
+				line[j].draw(this.ctx)
 			}
 		}
 
@@ -1625,10 +1617,8 @@ class Game {
 
 		// Clear entity effects
 		for (const e in this.leeks) {
-			if (this.leeks.hasOwnProperty(e)) {
-				const entity = this.leeks[e]
-				entity.effects = {}
-			}
+			const entity = this.leeks[e]
+			entity.effects = {}
 		}
 
 		// Cleaning
@@ -1665,10 +1655,8 @@ class Game {
 		this.currentAction = action
 
 		for (const e in this.leeks) {
-			if (this.leeks.hasOwnProperty(e)) {
-				const entity = this.leeks[e]
-				entity.setCell(entity.cell)
-			}
+			const entity = this.leeks[e]
+			entity.setCell(entity.cell)
 		}
 		this.requestPause = this.paused
 		this.draw()

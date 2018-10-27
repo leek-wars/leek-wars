@@ -64,9 +64,7 @@ const ORDERED_CHIPS = orderChips(CHIPS)
 const ORDERED_WEAPONS = orderWeapons(WEAPONS)
 
 for (const emoji in Emojis.emojis) {
-	if (Emojis.emojis.hasOwnProperty(emoji)) {
-		Emojis.textToEmoji[Emojis.emojis[emoji].text] = emoji
-	}
+	Emojis.textToEmoji[Emojis.emojis[emoji].text] = emoji
 }
 Emojis.categories_formatted = Emojis.categories.map(category => {
 	return {icon: Emojis.url + category.icon + '.svg', emojis: category.emojis.map(emoji => {
@@ -433,12 +431,10 @@ function orderChips(chips: { [key: number]: ChipTemplate }): { [key: number]: nu
 	// Regroup chips by effects type
 	const chipsByType: { [key: number]: ChipTemplate[] } = {}
 	for (const i in chips) {
-		if (chips.hasOwnProperty(i)) {
-			const chip = chips[i]
-			const type = chip.effects[0].type
-			if (chipsByType[type] === undefined) { chipsByType[type] = [] }
-			chipsByType[type].push(chip)
-		}
+		const chip = chips[i]
+		const type = chip.effects[0].type
+		if (chipsByType[type] === undefined) { chipsByType[type] = [] }
+		chipsByType[type].push(chip)
 	}
 	// Order chips by level and associates each chips with his position
 	const orderedChips: { [key: number]: number } = {}
@@ -462,9 +458,7 @@ function orderWeapons(weapons: { [key: number]: WeaponTemplate }) {
 	const result: { [key: number]: number } = {}
 	let position = 0
 	for (const w in weapons) {
-		if (weapons.hasOwnProperty(w)) {
-			result[weapons[w].id] = position++
-		}
+		result[weapons[w].id] = position++
 	}
 	return result
 }
@@ -590,9 +584,7 @@ function formatEmojis(data: any, useShortcuts: boolean = true) {
 	if (!data || typeof(data) !== 'string') { return data }
 	if (useShortcuts) {
 		for (const i in Emojis.shorcuts) {
-			if (Emojis.shorcuts.hasOwnProperty(i)) {
-				data = data.replace(new RegExp("(^|\\s|\>)" + escapeRegExp(i) + "(?![^\\s<>])", "g"), '$1' + Emojis.shorcuts[i])
-			}
+			data = data.replace(new RegExp("(^|\\s|\>)" + escapeRegExp(i) + "(?![^\\s<>])", "g"), '$1' + Emojis.shorcuts[i])
 		}
 		data = data.replace(/:(\w+):/gi, (_: any, text: any) => {
 			if (text in Emojis.textToEmoji) {
@@ -603,10 +595,8 @@ function formatEmojis(data: any, useShortcuts: boolean = true) {
 	}
 	// Custom smileys
 	for (const i in Emojis.custom) {
-		if (Emojis.custom.hasOwnProperty(i)) {
-			const smiley = Emojis.custom[i]
-			data = data.replace(new RegExp("(^|\\s|\>)" + escapeRegExp(i) + "(?![^\\s<>])", "g"), '$1<img class="smiley" image="' + smiley + '" alt="' + i + '" title="' + i + '" src="/image/emoji/' + smiley + '.png">')
-		}
+		const smiley = Emojis.custom[i]
+		data = data.replace(new RegExp("(^|\\s|\>)" + escapeRegExp(i) + "(?![^\\s<>])", "g"), '$1<img class="smiley" image="' + smiley + '" alt="' + i + '" title="' + i + '" src="/image/emoji/' + smiley + '.png">')
 	}
 	// Emoji to image
 	return twemoji.parse(data, {

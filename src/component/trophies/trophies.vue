@@ -66,21 +66,17 @@
 					this.totals[c.id] = 0
 				})
 				for (const t in data.data.trophies) {
-					if (data.data.trophies.hasOwnProperty(t)) {
-						const trophy = data.data.trophies[t]
-						this.trophies[trophy.category].push(trophy)
-						this.totals[trophy.category]++
-						if (trophy.unlocked) {
-							this.progressions[trophy.category]++
-						}
+					const trophy = data.data.trophies[t]
+					this.trophies[trophy.category].push(trophy)
+					this.totals[trophy.category]++
+					if (trophy.unlocked) {
+						this.progressions[trophy.category]++
 					}
 				}
 				for (const category in this.trophies) {
-					if (this.trophies.hasOwnProperty(category)) {
-						this.trophies[category].sort((a: any, b: any) => {
-							return a.index - b.index
-						})
-					}
+					this.trophies[category].sort((a: any, b: any) => {
+						return a.index - b.index
+					})
 				}
 				this.categories = LeekWars.trophyCategories
 				this.count = data.data.count
