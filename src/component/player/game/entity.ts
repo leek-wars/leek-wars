@@ -677,10 +677,8 @@ class Entity {
 		const count = LeekWars.objectSize(this.effects)
 		let x = -count * 28 / 2
 		for (const e in this.effects) {
-			if (this.effects.hasOwnProperty(e)) {
-				ctx.drawImage(this.effects[e].texture, x, 26, 28, 28)
-				x += 28
-			}
+			ctx.drawImage(this.effects[e].texture, x, 26, 28, 28)
+			x += 28
 		}
 		ctx.restore()
 	}
