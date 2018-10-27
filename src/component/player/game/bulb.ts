@@ -15,10 +15,8 @@ class Bulb extends Entity {
 	}
 
 	public setSkin(skin: number) {
-
 		this.bulbName = LeekWars.summonTemplates[skin].name
 		this.skin = skin
-
 		if (skin === 1) {
 			this.bodyTexFront = this.game.T.bulb_front
 			this.bodyTexBack = this.game.T.bulb_back
@@ -58,7 +56,6 @@ class Bulb extends Entity {
 	}
 
 	public hurt(x: number, y: number, z: number, dx: number, dy: number, dz: number) {
-
 		// Blood
 		const dir = Math.random()
 		dx *= dir / 10
@@ -67,14 +64,12 @@ class Bulb extends Entity {
 		let by = this.oy + dy *  (40 + Math.random() * 60)
 		this.game.particles.addBlood(x, y, z, dx, dy, dz, this.bloodTex)
 		this.game.particles.addBloodOnGround(bx, by, this.bloodTex)
-
 		dx = -dx
 		dy = -dy
 		bx = this.ox + dx * (40 + Math.random() * 60)
 		by = this.oy + dy * (40 + Math.random() * 60)
 		this.game.particles.addBlood(x, y, z, dx, dy, dz, this.bloodTex)
 		this.game.particles.addBloodOnGround(bx, by, this.bloodTex)
-
 		this.flash = 5
 	}
 
@@ -90,15 +85,10 @@ class Bulb extends Entity {
 	}
 
 	public drawNormal(ctx: CanvasRenderingContext2D) {
-
 		const texture = this.front ? this.bodyTexFront : this.bodyTexBack
-
 		if (!this.dead) {
-
 			this.drawBody(ctx, texture.texture)
-
 		} else if (this.heightAnim > 0) {
-
 			ctx.save()
 			ctx.scale(this.direction, 1)
 			const realHeight = this.getHeight() * 0.7
@@ -121,17 +111,12 @@ class Bulb extends Entity {
 	}
 
 	public drawBody(ctx: CanvasRenderingContext2D, texture: HTMLImageElement | HTMLCanvasElement) {
-
 		if (texture == null) { return }
-
 		ctx.save()
-
 		if (this.flash > 0 && (Math.random() > 0.5 || this.flash < 2)) {
 			ctx.globalCompositeOperation = 'lighter'
 		}
-
 		ctx.scale(this.direction, this.oscillation)
-
 		// Body
 		const realHeight = this.getHeight() * 0.7
 		ctx.drawImage(texture, -this.bodyTexFront.texture.width * 0.7 / 1.5 / 2, -realHeight, this.bodyTexFront.texture.width * 0.7 / 1.5, realHeight)
