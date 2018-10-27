@@ -178,7 +178,7 @@ const router = new Router({
 	},
 })
 
-router.afterEach((to) => {
+router.afterEach((to: Route) => {
 	ga('set', 'page', to.path)
 	ga('send', 'pageview')
 	if (to.hash) {
@@ -193,7 +193,7 @@ router.afterEach((to) => {
 	}
 })
 
-router.beforeEach((to, from, next) => {
+router.beforeEach((to: Route, from: Route, next: any) => {
 
 	LeekWars.splitShowList()
 	LeekWars.actions = []
