@@ -15,7 +15,7 @@
 					</router-link>
 				</div>
 				<div v-else :key="m" class="message">
-					<router-link :to="'/farmer/' + message.author.id" :event="null" class="avatar-wrapper">
+					<router-link :to="'/farmer/' + message.author.id" class="avatar-wrapper">
 						<avatar :farmer="message.author" />
 					</router-link>
 					<div class="bubble">
