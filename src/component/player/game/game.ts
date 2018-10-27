@@ -874,7 +874,9 @@ class Game {
 			const entity = this.leeks[action[1]]
 			if (this.jumping) {
 				entity.dead = true
-				this.removeDrawableElement(entity.drawID, entity.dy)
+				if (entity.drawID) {
+					this.removeDrawableElement(entity.drawID, entity.dy)
+				}
 				this.actionDone()
 			} else {
 				this.log(action)
@@ -1288,7 +1290,7 @@ class Game {
 		}
 	}
 
-	public addDrawableElement(element: any, line: number) {
+	public addDrawableElement(element: any, line: number): number {
 		this.drawableElementCurrentId++
 		this.drawableElements[line][this.drawableElementCurrentId] = element
 		return this.drawableElementCurrentId
