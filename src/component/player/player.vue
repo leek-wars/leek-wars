@@ -114,8 +114,8 @@
 				<canvas class="game-canvas"></canvas>
 				<div class="progress-bar-wrapper">
 					<div class="progress-bar-turn tooltip fixed top"><span class="content"></span></div>
-					<div class="progress-bar">
-						<div class="bar"></div><div class="circle"></div>
+					<div class="progress-bar" ref="progressBar" @click="progressBarClick">
+						<div class="bar" :style="{width: progressBarWidth + '%'}"></div><div class="circle"></div>
 					</div>
 				</div>
 				<hud :game="game" />
@@ -211,6 +211,9 @@
 		get height() {
 			if (this.fullscreen) { return window.innerHeight }
 			else { return this.requiredHeight }
+		}
+		get progressBarWidth() {
+			return this.game && this.game.actions ? 100 * this.game.currentAction / this.game.actions.length : 0
 		}
 
 		resize() {
@@ -312,6 +315,11 @@
 		}
 		quit() {
 			this.$router.push('/report/' + this.fightId)
+		}
+		progressBarClick(e: MouseEvent) {
+			const bar = this.$refs.progressBar as HTMLElement
+			const action = Math.round(this.game.actions.length * (e.pageX - bar.getBoundingClientRect().left) / bar.offsetWidth)
+			this.game.jump(action)
 		}
 	}
 </script>
@@ -418,6 +426,26 @@
 		display: none;
 		padding-top: 70px;
 		text-align: center;
+	}
+	.progress-bar-wrapper {
+		height: 20px;
+		position: absolute;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		z-index: 10;
+	}
+	.progress-bar {
+		height: 6px;
+		position: absolute;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		z-index: 10;
+		cursor: pointer;
+		background: #eee;
+		transition: all 0.2s;
+		white-space: nowrap;
 	}
 	.progress-bar-wrapper:hover .progress-bar {
 		height: 12px;
