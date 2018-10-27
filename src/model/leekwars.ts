@@ -15,6 +15,7 @@ import qs from 'qs'
 import twemoji from 'twemoji'
 import { TranslateResult } from 'vue-i18n'
 import { i18n, loadLanguageAsync } from './i18n'
+import packageJson from '../../package.json'
 
 const MONTHS: { [key: string]: string[] } = {
 	fr: ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'],
@@ -81,7 +82,7 @@ class Language {
 }
 
 const LeekWars = {
-	version: 1212,
+	version: packageJson.version,
 	local: false,
 	beta: location.host.indexOf("beta.leekwars.com") === 0,
 	dev: location.host.indexOf("localhost") === 0,

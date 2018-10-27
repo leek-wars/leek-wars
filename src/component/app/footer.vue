@@ -3,7 +3,7 @@
 		<div class="footer">
 			<table><tr>
 				<td width="50%">
-					<router-link to="/"><h4>Leek Wars {{ LeekWars.version / 100 }}</h4></router-link>
+					<router-link to="/"><h4>Leek Wars {{ LeekWars.version }}</h4></router-link>
 					<br>
 					<router-link to="/about">{{ $t('main.about') }}</router-link> - <router-link to="/statistics">{{ $t('main.statistics') }}</router-link> - <router-link to="/changelog">{{ $t('main.changelog') }}</router-link> - <router-link to="/app">{{ $t('main.app') }}</router-link>
 					<div class="social">

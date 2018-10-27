@@ -1,10 +1,10 @@
 {
 	"forum_topic": "Sujet forum",
 	"popup_ok": "OK :)",
-	"see_all_changes": "Retrouvez la liste complète des changements sur la page <a href='/changelog'>leekwars.com/changelog</a>.",
+	"see_all_changes": "Retrouvez la liste complète des changements sur la page {changelog}.",
 	"title": "Historique des modifications",
 	"version_n": "Version {0}",
-	"version_online": "Version <b>%s</b> en ligne !\n",
+	"version_online": "Version {version} en ligne !\n",
 	"changelog_100": "# Version 1.0 en ligne, fin de la version bêta !\n# Tous les joueurs inscrits avant le 6 juin reçoivent le trophée Bêta Testeur.",
 	"changelog_101": "# Ajout de la vente d'arme => redonne 80% du prix initial de l'arme.\n# Possibilité de changer le grade des membres d'une équipe.\n# Introduction du système de parrains\n# Ajout de la page changelog\n# Ajout de trophées",
 	"changelog_102": "# Amélioration de l'éditeur, concernant la création, le changement de nom, et la suppression des IA.  Pour les créateurs d'extensions => ça risque de causer des soucis.\n# Ajout de trophées",
