@@ -111,7 +111,7 @@
 		<div v-show="loaded" class="game">
 			<div :style="{height: height - 36 + 'px'}" class="layers">
 				<canvas class="bg-canvas"></canvas>
-				<canvas class="game-canvas"></canvas>
+				<canvas class="game-canvas" @click="canvasClick"></canvas>
 				<div class="progress-bar-wrapper">
 					<div class="progress-bar-turn tooltip fixed top"><span class="content"></span></div>
 					<div class="progress-bar" ref="progressBar" @click="progressBarClick">
@@ -361,6 +361,11 @@
 		}
 		@Watch("game.showLifes") toggleLifes() {
 			localStorage.setItem('fight/lifes', '' + this.game.showLifes)
+		}
+		canvasClick() {
+			if (this.game.paused) {
+				this.game.resume()
+			}
 		}
 	}
 </script>

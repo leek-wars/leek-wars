@@ -234,6 +234,7 @@ class Game {
 	public showCellCell: any
 	public reportTimer: any
 	public progressBarWidth: number = 0
+
 	public maps: Map[] = [
 		new Nexus(this),
 		new Factory(this),
@@ -247,13 +248,6 @@ class Game {
 		for (let i = 0; i < this.ground.tilesY * 2; i++) {
 			this.drawableElements[i] = {}
 		}
-
-		// Click
-		// $(canvas).click(function() {
-		// 	if (game.paused) {
-		// 		game.resume();
-		// 	}
-		// });
 	}
 
 	public init(fightData: FightData) {
@@ -506,8 +500,6 @@ class Game {
 	}
 
 	public setError() {
-		// $('#loading').hide();
-		// $('#error').show();
 		this.error = true
 	}
 
