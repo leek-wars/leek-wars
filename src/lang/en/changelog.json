@@ -1,10 +1,10 @@
 {
 	"forum_topic": "Forum topic",
 	"popup_ok": "OK :)",
-	"see_all_changes": "See all changes at <a href='/changelog'>leekwars.com/changelog</a>",
+	"see_all_changes": "See all changes at {changelog}.",
 	"title": "Changelog",
 	"version_n": "Version {0}",
-	"version_online": "Version <b>%s</b> available!",
+	"version_online": "Version {version} available!",
 	"changelog_100": "# Version 1.0 available, end of the beta!\n# All the players registered before the 6 of June receive the Beta Tester trophy.",
 	"changelog_101": "# Sale of weapon added => give back 80% of the initial price.\n# Possibility to change ranks of team members.\n# Introduction of a sponsorship system\n# Changelog page added\n# Trophies added",
 	"changelog_102": "# Improvement of the editor, concerning the creation, name modification and removal of the AI. For extension creator => it may cause problems.\n# Trophies added ",

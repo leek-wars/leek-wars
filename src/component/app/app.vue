@@ -61,6 +61,22 @@
 				<div class="leave red">{#leave}</div>
 			</div>
 		</v-dialog>
+
+		<v-dialog v-model="changelogDialog" :max-width="800">
+			<i18n tag="div" path="changelog.version_online" class='title'>
+				<b place="version" v-if="changelog">{{ changelog.version_name }}</b>
+			</i18n>
+			<div class='content changelog-dialog' v-if="changelog">
+				<div v-for="change in changelogFormat($t('changelog.' + changelog.data))" :key="change" class='change'>➤ {{ change }}</div>
+				<br>
+				<i18n path="changelog.see_all_changes">
+					<router-link place="changelog" to="/changelog">changelog</router-link>
+				</i18n>
+			</div>
+			<div class='actions'>
+				<div @click="changelogDialog = false">{{ $t('changelog.popup_ok') }}</div>
+			</div>
+		</v-dialog>
 	</div>
 </template>
 
@@ -92,6 +108,8 @@
 		consoleStarty: number = 0
 		consoleDragx: number = 0
 		consoleDragy: number = 0
+		changelog: any = null
+		changelogDialog: boolean = false
 
 		created() {
 			this.$root.$on('connected', () => {
@@ -100,6 +118,15 @@
 					this.$store.commit('didactitiel-seen')
 				}
 			})
+			if (localStorage.getItem('changelog_version') !== LeekWars.version) {
+				LeekWars.get<any>('changelog/get-last/' + this.$i18n.locale).then((data) => {
+					if (data.data.success) {
+						this.changelog = data.data.changelog
+						this.changelogDialog = true
+						localStorage.setItem('changelog_version', LeekWars.version)
+					}
+				})
+			}
 		}
 
 		darkClick() {
@@ -143,6 +170,9 @@
 		consolePopup() {
 			LeekWars.popupWindow("/console", "title", 600, 320)
 			this.console = false
+		}
+		changelogFormat(data: string) {
+			return data.split("\n").filter((c) => c.length > 0).map((c) => c.replace('# ', ''))
 		}
 	}
 </script>
@@ -276,7 +306,7 @@
 		margin-top: 4px;
 		font-size: 10px;
 	}
-	.changelog_popup.popup a {
+	.changelog-dialog a {
 		color: #5fad1b;
 	}
 	@media screen and (min-width: 1600px) {

@@ -1,6 +1,6 @@
 {
 	"name": "leek-wars-client",
-	"version": "1.0.0",
+	"version": "2.01",
 	"scripts": {
 		"serve": "vue-cli-service serve",
 		"build": "vue-cli-service build",
