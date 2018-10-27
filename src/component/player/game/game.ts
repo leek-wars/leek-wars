@@ -181,9 +181,9 @@ class Game {
 	public states = new Array()
 	// Actions
 	public data!: FightData
-	public actions!: any[][]
+	public actions: any[][] = []
 	public currentActions: any[] = []
-	public currentAction = -1
+	public currentAction: number = -1
 	public actionToDo = true
 	public actionDelay = 0
 	public fightEnd = false
@@ -233,6 +233,7 @@ class Game {
 	public showCellColor: any
 	public showCellCell: any
 	public reportTimer: any
+	public progressBarWidth: number = 0
 	public maps: Map[] = [
 		new Nexus(this),
 		new Factory(this),
@@ -509,12 +510,6 @@ class Game {
 				effects: [],
 			}
 		}
-
-		// $('#progress-bar').click(function(e) {
-		// 	var action = Math.round(game.actions.length * (e.pageX - $(this).offset().left) / $(this).width())
-		// 	game.jump(action)
-		// })
-
 		/*
 		 *  Launch!
 		 */
@@ -663,9 +658,7 @@ class Game {
 
 							this.actionDelay = 0
 							this.actionToDo = false
-
 							this.currentAction++
-							this.updateBar()
 
 							const action = this.actions[this.currentAction]
 
@@ -996,7 +989,7 @@ class Game {
 			break
 		}
 		default: {
-			console.warn("Error : unknown action type (" + type + ")")
+			console.warn("Error : unknown action", action)
 			this.actionDone()
 		}
 		}
@@ -1597,10 +1590,6 @@ class Game {
 		document.body.style.cursor = ''
 	}
 
-	public updateBar() {
-		// $('#progress-bar .bar').css('width', (100 * this.currentAction / this.actions.length) + '%');
-	}
-
 	public jump(jumpAction: any) {
 
 		// Return to initial state
@@ -1650,10 +1639,8 @@ class Game {
 		}
 
 		// Cleaning
-		// $("#actions .action").remove()
+		this.currentActions = []
 		// $("#logs .log").remove()
-		// $("[id^=effect]").remove()
-		// $('#turn').text("")
 
 		this.effects = []
 
@@ -1674,8 +1661,7 @@ class Game {
 
 		// Do actions
 		this.jumping = true
-		let action = 0
-
+		let action = 1
 		while (action < jumpAction) {
 			this.doAction(this.actions[action])
 			action++
@@ -1691,7 +1677,6 @@ class Game {
 				entity.setCell(entity.cell)
 			}
 		}
-		this.updateBar()
 		this.requestPause = this.paused
 		this.draw()
 	}
