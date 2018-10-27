@@ -1,26 +1,4 @@
 class Hud {
-	// $('#fight-size').change(function() {
-	// 	game.toggleSize()
-	// 	hud.updateSettings()
-	// })
-	// $('#fight-debug').change(function() {
-	// 	game.toggleDebug()
-	// })
-	// $('#fight-tactic').change(function() {
-	// 	game.toggleTactic()
-	// })
-	// $('#fight-cells').change(function() {
-	// 	game.toggleCells()
-	// })
-	// $('#fight-lifes').change(function() {
-	// 	game.toggleLifes()
-	// })
-	// $('#fight-discrete-pause').change(function() {
-	// 	game.toggleDiscretePause()
-	// })
-	// $('#fight-quality').change(function() {
-	// 	game.toggleShadows()
-	// })
 	// $('#progress-bar').mousemove(function(e) {
 	// 	var tooltip = $('#progress-bar-turn')
 	// 	var turn = 0
