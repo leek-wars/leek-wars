@@ -212,8 +212,8 @@ class Game {
 	public tactic = false
 	public shadows = true
 	public discretePause = false
-	public showCells: boolean
-	public showLifes: boolean
+	public showCells: boolean = false
+	public showLifes: boolean = false
 	public sound: boolean = false
 	public atmosphere: any
 	public obstacles!: {[key: number]: number[]}
@@ -244,20 +244,9 @@ class Game {
 	]
 
 	constructor() {
-		// Init drawable elements array
 		for (let i = 0; i < this.ground.tilesY * 2; i++) {
 			this.drawableElements[i] = {}
 		}
-		// Settings
-		if (localStorage.getItem('fight/large') === undefined) { localStorage.setItem('fight/large', 'true') }
-		if (localStorage.getItem('fight/shadows') === undefined) { localStorage.setItem('fight/shadows', 'true') }
-		this.large = localStorage.getItem('fight/large') === 'true'
-		this.debug = localStorage.getItem('fight/debug') === 'true'
-		this.tactic = localStorage.getItem('fight/tactic') === 'true'
-		this.shadows = localStorage.getItem('fight/shadows') === 'true'
-		this.showCells = localStorage.getItem('fight/cells') === 'true'
-		this.showLifes = localStorage.getItem('fight/lifes') === 'true'
-		this.discretePause = localStorage.getItem('fight/discrete_pause') === 'true'
 
 		// Click
 		// $(canvas).click(function() {
@@ -469,7 +458,7 @@ class Game {
 		// Mouse move
 		this.setupMouseMove()
 
-		// if (game.large)	LW.enlarge()
+		// if (game.large) LW.enlarge()
 		// LW.pages.fight.resize()
 
 		for (const l in this.leeks) {
@@ -566,42 +555,6 @@ class Game {
 			// LW.enlarge()
 		}
 		localStorage.setItem('fight/large', '' + this.large)
-	}
-
-	public toggleDebug() {
-		this.debug = !this.debug
-		localStorage.setItem('fight/debug', '' + this.debug)
-		// if (this.debug) $('#debug').show(); else $('#debug').hide();
-	}
-
-	public toggleTactic() {
-		this.tactic = !this.tactic
-		localStorage.setItem('fight/tactic', '' + this.tactic)
-
-		this.requestPause = this.paused
-		// LW.pages.fight.resize()
-		this.draw() // redraw
-	}
-
-	public toggleCells() {
-		this.showCells = !this.showCells
-		localStorage.setItem('fight/cells', '' + this.showCells)
-
-		this.requestPause = this.paused
-		this.draw() // redraw
-	}
-
-	public toggleLife() {
-		this.showLifes = !this.showLifes
-		localStorage.setItem('fight/lifes', '' + this.showLifes)
-
-		this.requestPause = this.paused
-		this.draw() // redraw
-	}
-
-	public toggleShadows() {
-		this.shadows = !this.shadows
-		localStorage.setItem('fight/shadows', '' + this.shadows)
 	}
 
 	public toggleSound() {
@@ -1485,6 +1438,11 @@ class Game {
 		this.ctx.restore()
 
 		this.ctx.globalAlpha = 1
+	}
+
+	public redraw() {
+		this.requestPause = this.paused
+		this.draw()
 	}
 
 	public draw() {
