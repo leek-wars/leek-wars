@@ -130,6 +130,18 @@ Vue.directive('large-emojis', {
 const vueMain = new Vue({
 	router, i18n, store,
 	data: { savedPosition: 0 },
+	methods: {
+		onLanguageLoaded: () => {
+			const style = "color: black; font-size: 13px; font-weight: bold;"
+			const styleRed = "color: red; font-size: 14px; font-weight: bold;"
+			console.log("%c" + i18n.t('main.console_alert_1'), style)
+			console.log("%c" + i18n.t('main.console_alert_2'), styleRed)
+			console.log("%c" + i18n.t('main.console_alert_3'), style)
+			console.log("")
+			console.log("%c✔️ " + i18n.t('main.console_github'), style)
+			console.log("")
+		}
+	},
 	render: (h) => {
 		if (location.pathname === '/console') {
 			return h(Console)
@@ -172,19 +184,6 @@ const vueMain = new Vue({
 
 		LeekWars.sfwInit()
 		LeekWars.setFavicon()
-
-		// TODO
-		if (false) {
-			const style = "color: black; font-size: 13px; font-weight: bold;"
-			const styleRed = "color: red; font-size: 14px; font-weight: bold;"
-			// var styleBlue = "color: blue; font-size: 14px;"
-			console.log("%c" + i18n.t('main.console_alert_1'), style)
-			console.log("%c" + i18n.t('main.console_alert_2'), styleRed)
-			console.log("%c" + i18n.t('main.console_alert_3'), style)
-			console.log("")
-			console.log("%c✔️ " + i18n.t('main.console_github'), style)
-			console.log("")
-		}
 
 		// Konami code
 		// $(window).keyup(function(e) {
