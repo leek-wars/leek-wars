@@ -264,7 +264,6 @@
 		// }
 
 		beforeDestroy() {
-			console.log("Destroy player")
 			this.game.pause()
 		}
 

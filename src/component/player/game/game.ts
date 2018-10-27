@@ -271,7 +271,6 @@ class Game {
 	}
 
 	public init(fightData: FightData) {
-		console.log("Init fight...")
 		this.data = fightData
 
 		// Check data
@@ -441,8 +440,6 @@ class Game {
 
 		if (this.loadedData === this.numData) {
 			this.launch() // Start game if all resources are loaded
-		} else {
-			console.log('Wait for the resources...')
 		}
 	}
 
@@ -454,7 +451,6 @@ class Game {
 	 * Ressources chargées, on peut y aller
 	 */
 	public launch() {
-		console.log("Starting fight...")
 
 		// Atmosphere sound
 		if (this.atmosphere != null && this.sound) {
@@ -474,8 +470,6 @@ class Game {
 				}
 			}
 		}
-		// $('#loading').hide();
-		// $('#game').show();
 
 		// Mouse move
 		this.setupMouseMove()
@@ -517,7 +511,6 @@ class Game {
 	}
 
 	public resize(width: number, height: number) {
-		console.log("Resize game [" + width + " × " + height + "]")
 		this.ground.resize(width, height, false, true)
 	}
 

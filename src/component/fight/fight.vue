@@ -98,7 +98,6 @@
 
 		@Watch('$route.params.id')
 		update() {
-			console.log("update", this.$route.params.id)
 			const id = this.$route.params.id
 			this.fight_id = parseInt(id, 10)
 
@@ -129,7 +128,6 @@
 			const RATIO = 1.7
 			const fight = document.querySelector('.fight') as HTMLElement
 			if (fight) {
-				console.log(fight.offsetWidth)
 				this.playerWidth = Math.round(fight.offsetWidth)
 				this.playerHeight = Math.round(this.playerWidth / RATIO)
 			}
