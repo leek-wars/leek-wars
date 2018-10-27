@@ -5,12 +5,6 @@
 				<h1>{{ fight.title }}</h1>
 				<div class="info">{{ fight.date | date }}</div>
 			</div>
-			<div class="tabs">
-				<div class="tab action" icon="volume_up" @click="toggleSound">
-					<i class="material-icons">volume_up</i>
-					<span>{{ $t('sound_activated') }}</span>
-				</div>
-			</div>
 		</div>
 	
 		<div class="panel">
@@ -150,9 +144,6 @@
 				leeks[leek.id] = leek
 			}
 		}
-		toggleSound() {
-			console.log("toggle sound")
-		}
 		comment(comment: Comment) {
 			if (this.fight) {
 				LeekWars.post('fight/comment', {fight_id: this.fight.id, comment: comment.comment}).then((data) => {
@@ -162,7 +153,6 @@
 				})
 			}
 		}
-		
 		fileInput() {
 			// $('#file-input').on('change', function() {
 			// 	var file = this.files[0]

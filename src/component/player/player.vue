@@ -140,7 +140,14 @@
 						<i v-ripple slot="activator" class="material-icons control">settings</i>
 						<v-list :dense="true" dark>
 							<v-list-tile v-ripple>
-								<v-switch :label="$t('fight.enlarge_fight')" />
+								<v-switch v-model="game.sound">
+									<div slot="label" class="flex-center" v-if="game.sound">
+										<i class="material-icons">volume_up</i> <span>&nbsp;{{ $t('fight.sound_activated') }}</span>
+									</div>
+									<div slot="label" class="flex-center" v-else>
+										<i class="material-icons">volume_mute</i> <span>&nbsp;{{ $t('fight.sound_disactivated') }}</span>
+									</div>
+								</v-switch>
 							</v-list-tile>
 							<v-list-tile v-ripple>
 								<v-switch v-model="game.showLifes" :label="$t('fight.display_life_bars')" />
@@ -197,6 +204,8 @@
 		fullscreen: boolean = false
 
 		created() {
+			if (localStorage.getItem('fight/sound') === null) { localStorage.setItem('fight/sound', 'true') }
+			this.game.sound = localStorage.getItem('fight/sound') === 'true'
 			this.getFight()
 		}
 		@Watch('requiredWidth')
@@ -319,6 +328,10 @@
 			const bar = this.$refs.progressBar as HTMLElement
 			const action = Math.round(this.game.actions.length * (e.pageX - bar.getBoundingClientRect().left) / bar.offsetWidth)
 			this.game.jump(action)
+		}
+		@Watch("game.sound") toggleSound() {
+			localStorage.setItem('fight/sound', '' + this.game.sound)
+			this.game.toggleSound()
 		}
 	}
 </script>

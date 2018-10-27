@@ -21,19 +21,6 @@ class Hud {
 	// $('#fight-quality').change(function() {
 	// 	game.toggleShadows()
 	// })
-
-	// var updateSoundSetting = function() {
-	// 	if (game.sound) {
-	// 		$('#sound-setting img').attr('src', LW.staticURL + 'image/icon/sound.png')
-	// 		$('#sound-setting .icon').text('volume_up')
-	// 		$('#sound-setting span').text(_.lang.get('fight', 'sound_activated'))
-	// 	} else {
-	// 		$('#sound-setting img').attr('src', LW.staticURL + 'image/icon/no_sound.png')
-	// 		$('#sound-setting .icon').text('volume_mute')
-	// 		$('#sound-setting span').text(_.lang.get('fight', 'sound_disactivated'))
-	// 	}
-	// }
-
 	// $('#progress-bar').mousemove(function(e) {
 	// 	var tooltip = $('#progress-bar-turn')
 	// 	var turn = 0

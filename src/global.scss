@@ -691,6 +691,10 @@ input:active, input:focus {
 	display: flex;
 	justify-content: space-between;
 }
+.flex-center {
+	display: flex;
+	align-items: center;
+}
 .flex-container {
 	display: flex;
 	flex-wrap: wrap;

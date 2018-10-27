@@ -250,7 +250,6 @@ class Game {
 		}
 		// Settings
 		if (localStorage.getItem('fight/large') === undefined) { localStorage.setItem('fight/large', 'true') }
-		if (localStorage.getItem('fight/sound') === undefined) { localStorage.setItem('fight/sound', 'true') }
 		if (localStorage.getItem('fight/shadows') === undefined) { localStorage.setItem('fight/shadows', 'true') }
 		this.large = localStorage.getItem('fight/large') === 'true'
 		this.debug = localStorage.getItem('fight/debug') === 'true'
@@ -258,8 +257,6 @@ class Game {
 		this.shadows = localStorage.getItem('fight/shadows') === 'true'
 		this.showCells = localStorage.getItem('fight/cells') === 'true'
 		this.showLifes = localStorage.getItem('fight/lifes') === 'true'
-		this.sound = localStorage.getItem('fight/sound') === 'true'
-		this.sound = false
 		this.discretePause = localStorage.getItem('fight/discrete_pause') === 'true'
 
 		// Click
@@ -608,7 +605,6 @@ class Game {
 	}
 
 	public toggleSound() {
-		this.sound = !this.sound
 		if (this.atmosphere != null) {
 			if (this.sound) {
 				this.atmosphere.loop()
@@ -616,7 +612,6 @@ class Game {
 				this.atmosphere.stop()
 			}
 		}
-		localStorage.setItem('fight/sound', '' + this.sound)
 	}
 
 	public toggleDiscretePause() {
