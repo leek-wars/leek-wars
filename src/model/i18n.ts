@@ -30,6 +30,7 @@ function loadLanguageAsync(vue: any, locale: string) {
 			// console.log("Global messages", messages)
 			i18n.setLocaleMessage(locale, messages)
 			loadedLanguages.push(locale)
+			vue.onLanguageLoaded()
 			return setI18nLanguage(locale)
 		})
 	}
