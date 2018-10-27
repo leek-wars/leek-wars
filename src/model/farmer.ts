@@ -31,5 +31,6 @@ class Farmer {
 	public fights!: number
 	public chips!: Chip[]
 	public didactitiel_seen!: boolean
+	public last_connection!: number
 }
 export { Farmer }
