@@ -101,14 +101,6 @@
 </script>
 
 <style lang="scss" scoped>
-	.hud {
-		z-index: 3;
-		position: absolute;
-		top: 0;
-		left: 0;
-		right: 0;
-		bottom: 0;
-	}
 	.timeline {
 		position: absolute;
 		bottom: 5px;
