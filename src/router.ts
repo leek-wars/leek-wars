@@ -8,6 +8,7 @@ import AdminServices from '@/component/admin/admin-services.vue'
 import AdminTrophies from '@/component/admin/admin-trophies.vue'
 import Admin from '@/component/admin/admin.vue'
 import Api from '@/component/api/api.vue'
+import NotFound from '@/component/app/not-found.vue'
 import BankBuy from '@/component/bank/bank-buy.vue'
 import BankValidate from '@/component/bank/bank-validate.vue'
 import Bank from '@/component/bank/bank.vue'
@@ -167,6 +168,7 @@ const router = new Router({
 		{ path: '/tournament/:id', component: TournamentPage },
 		{ path: '/trophies', component: Trophies, beforeEnter: connected },
 		{ path: '/trophies/:id', component: Trophies },
+		{ path: '*', component: NotFound },
 	],
 	scrollBehavior(to, from, savedPosition) {
 		vueMain.$data.savedPosition = 0
