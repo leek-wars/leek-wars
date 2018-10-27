@@ -304,6 +304,10 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 		'remove-chip'(state, chip) {
 			if (!state.farmer) { return }
 			state.farmer.chips.splice(state.farmer.chips.findIndex((c) => c.id === chip.id), 1)
+		},
+		'last-connection'(state: LeekWarsState, time: number) {
+			if (!state.farmer) { return }
+			state.farmer.last_connection = time
 		}
 	},
 })

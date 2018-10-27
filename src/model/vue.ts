@@ -185,6 +185,7 @@ const vueMain = new Vue({
 			console.log("%c✔️ " + i18n.t('main.console_github'), style)
 			console.log("")
 		}
+
 		// Konami code
 		// $(window).keyup(function(e) {
 		// 	if (e.keyCode == 37) LW.konami += "l"
@@ -201,10 +202,10 @@ const vueMain = new Vue({
 		// })
 		
 		// Keep connected
-		// setInterval(function() {
-		// 	LW.farmer.last_connection = LW.time
-		// 	_.post('farmer/update')
-		// }, 59 * 1000)
+		setInterval(() => {
+			store.commit('last-connection', LeekWars.time)
+			LeekWars.post('farmer/update')
+		}, 59 * 1000)
 
 		// var message = LW.trigger('leave')
 		// if (message) {
