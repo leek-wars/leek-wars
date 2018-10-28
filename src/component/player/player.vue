@@ -241,6 +241,7 @@
 			this.canvas.width = this.width * aspectRatio
 			this.canvas.height = (this.height - BAR_HEIGHT) * aspectRatio
 			this.game.resize(this.canvas.width, this.canvas.height)
+			this.game.redraw()
 		}
 
 		mounted() {
