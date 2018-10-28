@@ -122,7 +122,7 @@
 					this.category.topics = data.data.topics
 					this.pages = data.data.pages
 
-					LeekWars.setTitle(this.category.name, this.$t('forum_category.n_topic_n_messages', data.data.total_topics, data.data.total_messages))
+					LeekWars.setTitle(this.category.name, this.$t('forum_category.n_topic_n_messages', [data.data.total_topics, data.data.total_messages]))
 					this.$root.$emit('loaded')
 				}
 			})
