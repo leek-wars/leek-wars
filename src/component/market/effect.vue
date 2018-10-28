@@ -3,8 +3,10 @@
 		<span v-if="effect.id == 14">{{ $t('effect.type_14_fixed', [$t('effect.summon_' + effect.value1)]) }}</span>
 		<span v-else-if="effect.value2 == 0" v-html="$t('effect.type_' + effect.id + '_fixed', [effect.value1])"></span>
 		<span v-else v-html="$t('effect.type_' + effect.id, [effect.value1, format(effect.value1 + effect.value2)])"></span>
-
-		<span v-if="effect.turns > 0" v-html="' ' + $t('effect.on_n_turns', {turns: effect.turns})"></span>
+		
+		<i18n v-if="effect.turns > 0" path="effect.on_n_turns">
+			<b place="turns">{{ effect.turns }}</b>
+		</i18n>
 
 		<v-tooltip bottom open-delay="0" close-delay="0">
 			<span v-if="enemies && !allies" slot="activator" class="ennemies"></span>
