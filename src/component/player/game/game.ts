@@ -489,6 +489,8 @@ class Game {
 	}
 
 	public resize(width: number, height: number) {
+		this.width = width
+		this.height = height
 		this.ground.resize(width, height, false, true)
 	}
 
