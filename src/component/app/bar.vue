@@ -18,7 +18,7 @@
 					<span v-show="$store.state.unreadMessages > 0" class="counter messages-counter">{{ $store.state.unreadMessages }}</span>
 				</div>
 				<div v-ripple v-show="LeekWars.menuExpanded || $store.state.unreadNotifications > 0" class="action header-button mobile notifications-button">
-					<v-menu :close-on-content-click="false" :nudge-bottom="5" :min-width="400" :max-width="400" :max-height="400" bottom offset-y>
+					<v-menu :close-on-content-click="false" :nudge-bottom="5" :min-width="400" :max-width="400" :max-height="400" bottom offset-y @input="readNotifications">
 						<div slot="activator" class="header-button notifications-button">
 							<i class="icon material-icons">info</i>
 							<span v-show="$store.state.unreadNotifications > 0" class="counter notifications-counter">{{ $store.state.unreadNotifications }}</span>
@@ -60,6 +60,12 @@
 		closeMenu() {
 			LeekWars.menuExpanded = false
 			LeekWars.dark = 0
+		}
+		readNotifications(e: any) {
+			if (e === false && this.$store.state.unreadNotifications) {
+				LeekWars.post('notification/read-all')
+				this.$store.commit('read-notifications')
+			}
 		}
 	}
 </script>
