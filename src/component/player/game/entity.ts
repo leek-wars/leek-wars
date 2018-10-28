@@ -137,6 +137,8 @@ class Entity {
 		this.dy = y
 		this.ry = y
 
+		this.z = 0
+
 		this.computeOrginPos()
 
 		if (oldY !== y && this.drawID != null) {
