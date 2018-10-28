@@ -16,7 +16,7 @@
 				<img class="illustration" src="/image/about/illustration.png">
 				<br>
 				<h2 class="title">Leek Wars</h2>
-				<h4>{{ $t('version_n', [version]) }}</h4>
+				<h4>{{ $t('version_n', [LeekWars.version]) }}</h4>
 				<br>
 				<a href="https://www.facebook.com/LeekWars">
 					<img height="28" src="image/about/facebook_like.png">
@@ -219,9 +219,6 @@
 			["Game Side Story", "http://www.gamesidestory.com/2014/09/02/gametest-leekwars-navigateur/"],
 			['MacAttac', "http://www.macattac.fr/2014/09/28/test-du-jeu-leek-wars/"]
 		]
-		get version() {
-			return LeekWars.version / 100
-		}
 	}
 </script>
 
