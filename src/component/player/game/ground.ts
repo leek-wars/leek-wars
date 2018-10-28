@@ -1,10 +1,11 @@
 import { Game, GROUND_TEXTURE } from "@/component/player/game/game"
 import { Obstacle } from '@/component/player/game/obstacle'
+import { LeekWars } from '@/model/leekwars';
 
-const GROUND_PADDING_LEFT = 210
-const GROUND_PADDING_RIGHT = 20
-const GROUND_PADDING_TOP = 70
-const GROUND_PADDING_BOTTOM = 100
+let GROUND_PADDING_LEFT = 210
+let GROUND_PADDING_RIGHT = 20
+let GROUND_PADDING_TOP = 70
+let GROUND_PADDING_BOTTOM = 100
 
 class Ground {
 	public width: number = 0
@@ -32,12 +33,12 @@ class Ground {
 
 	constructor(game: Game) {
 		this.game = game
-		// if ($(window).width() < 800) {
-		// 	GROUND_PADDING_LEFT = 10;
-		// 	GROUND_PADDING_RIGHT = 10;
-		// 	GROUND_PADDING_TOP = 10;
-		// 	GROUND_PADDING_BOTTOM = 20;
-		// }
+		if (LeekWars.mobile) {
+			GROUND_PADDING_LEFT = 10
+			GROUND_PADDING_RIGHT = 10
+			GROUND_PADDING_TOP = 10
+			GROUND_PADDING_BOTTOM = 20
+		}
 	}
 
 	public resize(width: number, height: number, fullscreen: boolean, shadows: boolean) {

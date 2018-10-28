@@ -110,8 +110,8 @@
 
 		<div v-show="loaded" class="game">
 			<div :style="{height: height - 36 + 'px'}" class="layers">
-				<canvas class="bg-canvas"></canvas>
-				<canvas class="game-canvas" @click="canvasClick"></canvas>
+				<canvas class="bg-canvas" :style="{width: width + 'px', height: height - 36 + 'px'}"></canvas>
+				<canvas class="game-canvas" :style="{width: width + 'px', height: height - 36 + 'px'}" @click="canvasClick"></canvas>
 				<div class="progress-bar-wrapper">
 					<div class="progress-bar-turn tooltip fixed top"><span class="content"></span></div>
 					<div ref="progressBar" class="progress-bar" @click="progressBarClick">
