@@ -99,12 +99,12 @@
 				<div class="text">{{ $t("main.forum") }}</div>
 			</router-link>
 
-			<router-link v-ripple v-if="$store.state.farmer.admin" :label="$store.state.farmer.reportings" to="/moderation" class="section" tab="moderation" @click.native="clickItem">
+			<router-link v-ripple v-if="$store.getters.admin" :label="$store.state.farmer.reportings" to="/moderation" class="section" tab="moderation" @click.native="clickItem">
 				<i class="material-icons">gavel</i>
 				<div class="text">{{ $t('main.moderation') }}</div>
 			</router-link>
 
-			<router-link v-ripple v-if="$store.state.farmer.admin" to="/admin" class="section" tab="admin" @click.native="clickItem">
+			<router-link v-ripple v-if="$store.getters.admin" to="/admin" class="section" tab="admin" @click.native="clickItem">
 				<i class="material-icons">security</i>
 				<div class="text">{{ $t('main.admin') }}</div>
 			</router-link>

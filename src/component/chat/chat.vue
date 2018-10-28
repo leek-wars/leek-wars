@@ -25,8 +25,8 @@
 							</router-link>
 							<span v-if="!privateMessages">
 								<span class="report" @click="report(message)"> • report</span>
-								<span v-if="$store.state.farmer && $store.state.farmer.moderator && !message.author.muted" class="mute" @click="mute(message.author)"> • mute</span>
-								<span v-if="$store.state.farmer && $store.state.farmer.moderator && message.author.muted" class="unmute" @click="unmute(message.author)"> • unmute</span>
+								<span v-if="$store.getters.moderator && !message.author.muted" class="mute" @click="mute(message.author)"> • mute</span>
+								<span v-if="$store.getters.moderator && message.author.muted" class="unmute" @click="unmute(message.author)"> • unmute</span>
 							</span>
 						</div>
 						<div v-large-emojis v-for="(text, i) in message.texts" :key="i" class="text" v-html="text"></div>
