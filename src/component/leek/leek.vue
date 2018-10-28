@@ -1157,21 +1157,21 @@
 			img {
 				width: 80px;
 			}
-		}
-		&::after {
-			position: absolute;
-			bottom: 0;
-			right: 0;
-			padding-top: 1px;
-			height: 19px;
-			padding-left: 4px;
-			padding-right: 4px;
-			content: attr(quantity);
-			text-align: center;
-			color: #eee;
-			border-radius: 20px;
-			font-weight: bold;
-			background-color: #777;
+			&::after {
+				position: absolute;
+				bottom: 0;
+				right: 0;
+				padding-top: 1px;
+				height: 19px;
+				padding-left: 4px;
+				padding-right: 4px;
+				content: attr(quantity);
+				text-align: center;
+				color: #eee;
+				border-radius: 20px;
+				font-weight: bold;
+				background-color: #777;
+			}
 		}
 	}
 	.hat-dialog .hat {
