@@ -114,8 +114,8 @@
 				<canvas class="game-canvas" @click="canvasClick"></canvas>
 				<div class="progress-bar-wrapper">
 					<div class="progress-bar-turn tooltip fixed top"><span class="content"></span></div>
-					<div class="progress-bar" ref="progressBar" @click="progressBarClick">
-						<div class="bar" :style="{width: progressBarWidth + '%'}"></div><div class="circle"></div>
+					<div ref="progressBar" class="progress-bar" @click="progressBarClick">
+						<div :style="{width: progressBarWidth + '%'}" class="bar"></div><div class="circle"></div>
 					</div>
 				</div>
 				<hud :game="game" />
@@ -141,10 +141,10 @@
 						<v-list :dense="true" dark>
 							<v-list-tile v-ripple>
 								<v-switch v-model="game.sound">
-									<div slot="label" class="flex-center" v-if="game.sound">
+									<div v-if="game.sound" slot="label" class="flex-center">
 										<i class="material-icons">volume_up</i> <span>&nbsp;{{ $t('fight.sound_activated') }}</span>
 									</div>
-									<div slot="label" class="flex-center" v-else>
+									<div v-else slot="label" class="flex-center">
 										<i class="material-icons">volume_mute</i> <span>&nbsp;{{ $t('fight.sound_disactivated') }}</span>
 									</div>
 								</v-switch>
