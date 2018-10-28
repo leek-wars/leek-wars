@@ -458,7 +458,7 @@
 				// LeekWars.error(_.lang.get('farmer', 'deleted'), _.lang.get('farmer', 'deleted_message'))
 				return
 			}
-			LeekWars.setTitle(farmer.name, this.$t('n_trophies', [farmer.trophies]) as string)
+			LeekWars.setTitle(farmer.name, this.$t('farmer.n_trophies', [farmer.trophies]) as string)
 			if (this.myFarmer) {
 				LeekWars.setActions([
 					{icon: 'power_settings_new', click: () => this.logout()}
