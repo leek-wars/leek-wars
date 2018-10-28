@@ -25,7 +25,7 @@
 								<th>{{ $t('xp') }}</th>
 								<th class="gain">{{ $t('money') }}</th>
 								<th v-if="fight.type === FightType.SOLO" class="gain">{{ $t('talent') }}</th>
-								<th v-if="$store.state.farmer.admin" class="gain">Time</th>
+								<th v-if="$store.getters.admin" class="gain">Time</th>
 							</tr>
 							<report-leek-row v-for="leek in leeks" :key="leek.id" :leek="leek" />
 						</table>
@@ -169,7 +169,7 @@
 
 		created() {
 			const id = this.$route.params.id
-			const url = this.$store.state.farmer.admin ? 'fight/get-private/' + id + '/' + this.$store.state.token : 'fight/get/' + id
+			const url = this.$store.getters.admin ? 'fight/get-private/' + id + '/' + this.$store.state.token : 'fight/get/' + id
 			LeekWars.get<FightResponse>(url).then((data) => {
 				this.fight = data.data.fight
 				this.report = this.fight.report
@@ -181,7 +181,7 @@
 						leek.name = this.$i18n.t('entity.' + leek.name) as string
 					}
 				}
-				if (this.$store.state.farmer.admin) {
+				if (this.$store.getters.admin) {
 					for (const l in this.report.leeks1) {
 						this.report.leeks1[l].aiTime = Math.round(this.report.ai_times[l].time / 1000) / 1000
 					}

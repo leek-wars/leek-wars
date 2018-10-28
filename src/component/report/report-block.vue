@@ -69,7 +69,7 @@
 					<th>{{ $t('report.xp') }}</th>
 					<th class="gain">{{ $t('report.money') }}</th>
 					<th v-if="fight.type === FightType.SOLO && fight.context != FightContext.TEST && fight.context != FightContext.CHALLENGE" class="gain">{{ $t('report.talent') }}</th>
-					<th v-if="$store.state.farmer.admin" class="gain">Time</th>
+					<th v-if="$store.getters.admin" class="gain">Time</th>
 				</tr>
 				<report-leek-row v-for="leek in leeks" :key="leek.id" :leek="leek" />
 				<tr v-if="fight.type !== FightType.SOLO" class="total">
@@ -79,7 +79,7 @@
 					<td class="money">
 						<span>{{ totalMoney | number }} <span class="hab"></span></span>
 					</td>
-					<td v-if="$store.state.farmer.admin" class="money">
+					<td v-if="$store.getters.admin" class="money">
 						<span>{{ totalTime }} ms</span>
 					</td>
 				</tr>

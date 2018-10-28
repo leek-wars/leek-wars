@@ -138,7 +138,7 @@
 						</table>
 		
 						<div class="log-time grey">
-							<span v-if="$store.getters.connected && $store.state.farmer.moderator">{{ $t('registered_the', [LeekWars.formatDateTime(farmer.register_date)]) }}</span>
+							<span v-if="$store.getters.moderator">{{ $t('registered_the', [LeekWars.formatDateTime(farmer.register_date)]) }}</span>
 							<span v-else>{{ $t('registered_the', [LeekWars.formatDate(farmer.register_date)]) }}</span>
 							<br>
 							<span v-if="farmer.connected">{{ $t('connected') }}</span>
@@ -315,7 +315,7 @@
 				<div v-for="(warning, w) in farmer.warnings" :key="w" class="warning card">
 					<div class="reason">{{ $t('moderation.reason_' + warning.reason) }} ({{ $t('warning_severity_s', [ warning.severity]) }})</div>
 					<div class="message">&nbsp;<i>{{ warning.message }}</i></div>
-					<i18n v-if="$store.state.moderator" class="date" path="moderation.given_by_x_the_d">
+					<i18n v-if="$store.getters.moderator" class="date" path="moderation.given_by_x_the_d">
 						<router-link :to="'/farmer/' + warning.author_id" place="farmer">{{ warning.author_name }}</router-link>
 						<span place="date">{{ warning.date | date }}</span>
 					</i18n>

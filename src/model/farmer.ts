@@ -32,5 +32,7 @@ class Farmer {
 	public chips!: Chip[]
 	public didactitiel_seen!: boolean
 	public last_connection!: number
+	public moderator!: boolean
+	public admin!: boolean
 }
 export { Farmer }
