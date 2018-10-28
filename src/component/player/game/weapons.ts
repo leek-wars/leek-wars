@@ -341,7 +341,7 @@ class GrenadeLauncher extends Firegun {
 }
 class Katana extends WhiteWeaponAnimation {
 	constructor(game: Game) {
-		super(game, game.T.axe, 5, 40, 10, 15, -15, 30, 12, 42, 12)
+		super(game, game.T.katana, 5, 40, 10, 15, -15, 30, 12, 42, 12)
 	}
 }
 class Laser extends LaserWeapon {
