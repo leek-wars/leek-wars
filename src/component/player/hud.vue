@@ -17,7 +17,7 @@
 			<div>Mouse cell : {{ game.mouseCell }}</div>
 			<div>FPS : {{ game.fps }}, avg: {{ game.avgFPS }}</div>
 		</div>
-		<div class="left-part">
+		<div class="left-part" v-if="!LeekWars.mobile">
 			<div class="actions">
 				<action-element v-for="action of game.currentActions" :key="action.id" :action="action.action" :leeks="game.leeks" turn="1" class="action" />
 			</div>
@@ -313,9 +313,6 @@
 			display: none;
 		}
 		.life-bar {
-			display: none;
-		}
-		.left-part {
 			display: none;
 		}
 	}

@@ -33,17 +33,23 @@ class Ground {
 
 	constructor(game: Game) {
 		this.game = game
-		if (LeekWars.mobile) {
-			GROUND_PADDING_LEFT = 10
-			GROUND_PADDING_RIGHT = 10
-			GROUND_PADDING_TOP = 10
-			GROUND_PADDING_BOTTOM = 20
-		}
 	}
 
 	public resize(width: number, height: number, fullscreen: boolean, shadows: boolean) {
 
 		if (!this.game.initialized) { return  }
+
+		if (LeekWars.mobile) {
+			GROUND_PADDING_LEFT = 10
+			GROUND_PADDING_RIGHT = 10
+			GROUND_PADDING_TOP = 10
+			GROUND_PADDING_BOTTOM = 20
+		} else {
+			GROUND_PADDING_LEFT = 210
+			GROUND_PADDING_RIGHT = 20
+			GROUND_PADDING_TOP = 70
+			GROUND_PADDING_BOTTOM = 100
+		}
 
 		this.width = width
 		this.height = height
