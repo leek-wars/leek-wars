@@ -4,7 +4,7 @@
 	"delete": "Supprimer",
 	"do_you_want_to_delete_message": "Voulez-vous vraiment supprimer ce message ?",
 	"do_you_want_to_delete_topic": "Voulez-vous vraiment supprimer ce sujet ?",
-	"n_messages": "%s messages",
+	"n_messages": "{0} messages",
 	"send": "Envoyer",
 	"subscribe": "S'abonner au sujet",
 	"undoable_action": "Cette action est irréversible.",
