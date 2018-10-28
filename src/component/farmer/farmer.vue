@@ -459,6 +459,16 @@
 				return
 			}
 			LeekWars.setTitle(farmer.name, this.$t('n_trophies', [farmer.trophies]) as string)
+			if (this.myFarmer) {
+				LeekWars.setActions([
+					{icon: 'power_settings_new', click: () => this.logout()}
+				])
+			} else {
+				LeekWars.setActions([
+					{image: 'icon/garden.png', click: () => this.$router.push('/garden/challenge/farmer/' + farmer.id)},
+					{icon: 'question_answer', click: () => this.$router.push('/messages/new/' + farmer.id + '/' + farmer.name + '/'+ farmer.avatar_changed)}
+				])
+			}
 			this.trophies()
 			this.warnings()
 			this.newWebsite = this.farmer.website
