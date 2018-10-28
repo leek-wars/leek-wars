@@ -221,7 +221,7 @@ class Game {
 	public fps: number = 0
 	public avgFPS: number = 0
 	public showCellTime: number = 0
-	public currentPlayer: any
+	public currentPlayer: number | null = null
 	public jumping: any
 	public currentTurn: number = 0
 	public ratio: number = 1
