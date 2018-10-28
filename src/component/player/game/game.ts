@@ -173,7 +173,7 @@ class Game {
 	public particles = new Particles(this)
 	public ground = new Ground(this)
 	public drawableElements: Array<{[key: number]: any}> = []
-	public drawableElementCurrentId: number = -1
+	public drawableElementCurrentId: number = 0
 	// Players
 	public teams = new Array()
 	public leeks: Entity[] = []
@@ -1541,40 +1541,34 @@ class Game {
 			leek.absoluteShield = 0
 			leek.relativeShield = 0
 			leek.damageReturn = 0
-			leek.cell = this.states[i].cell
 			leek.dead = false
 			leek.burning = 0
 			leek.gazing = 0
 			leek.bubble = new Bubble(this)
 			leek.weapon = null
 
+			if (leek.drawID) {
+				this.removeDrawableElement(leek.drawID, leek.dy)
+				leek.drawID = null
+			}
+			leek.setCell(this.states[i].cell)
+
 			if (!leek.active) {
-				if (leek.drawID) {
-					if (leek.summon) {
-						const index = this.entityOrder.indexOf(leek)
-						if (index !== -1) { this.entityOrder.splice(index, 1) }
-					}
-					this.removeDrawableElement(leek.drawID, leek.y)
-					leek.drawID = null
+				if (leek.summon) {
+					const index = this.entityOrder.indexOf(leek)
+					if (index !== -1) { this.entityOrder.splice(index, 1) }
 				}
 			} else {
-				if (leek.drawID === null && leek.life) {
-					if (leek.summon) {
-						this.entityOrder.splice(this.entityOrder.indexOf(leek.summoner) + 1, 0, leek)
-					}
-					leek.drawID = this.addDrawableElement(leek, leek.y)
-				}
+				leek.drawID = this.addDrawableElement(leek, leek.dy)
 			}
 			leek.moveDelay = 0
 			leek.path = []
 		}
 
 		// Clear entity effects
-		for (const e in this.leeks) {
-			const entity = this.leeks[e]
+		for (const entity of this.leeks) {
 			entity.effects = {}
 		}
-
 		this.currentActions = []
 		this.effects = []
 
