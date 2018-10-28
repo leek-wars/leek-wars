@@ -291,6 +291,7 @@
 		.header .button-wrapper div {
 			width: auto;
 			display: block;
+			flex: 1;
 		}
 		.header .button-wrapper:first-child .header-button:before {
 			display: none;
