@@ -731,6 +731,11 @@ class Entity {
 		const y = this.oy + Math.random() * 40 - 20
 		this.hurt(x, y, z, dx, dy, dz)
 	}
+	get color() {
+		const color = TEAM_COLORS[this.team - 1]
+		const rgb = LeekWars.hexToRgb(color)
+		return 'rgba(' + rgb[0] + ',' + rgb[1] + ',' + rgb[2] + ',0.6)'
+	}
 	get gradient() {
 		const color = TEAM_COLORS[this.team - 1]
 		const rgb = LeekWars.hexToRgb(color)

@@ -361,8 +361,7 @@ class Game {
 			entity.setCell(e.cellPos)
 
 			this.leeks[entity.id] = entity
-			this.entityOrder.push(entity)
-
+			
 			// entity
 			if (entity instanceof Leek) {
 
@@ -370,6 +369,7 @@ class Game {
 					this.teams[entity.team - 1] = []
 				}
 				this.teams[entity.team - 1].push(entity)
+				this.entityOrder.push(entity)
 
 				// Skin
 				const skin = typeof(e.skin) === 'undefined' ? 1 : e.skin
@@ -809,6 +809,9 @@ class Game {
 		}
 		case Action.PLAYER_DEAD: {
 			const entity = this.leeks[action[1]]
+			if (entity.summon) {
+				this.entityOrder.splice(this.entityOrder.indexOf(entity), 1)
+			}
 			if (this.jumping) {
 				entity.dead = true
 				if (entity.drawID) {
@@ -845,6 +848,7 @@ class Game {
 			summon.summoner = this.leeks[caster]
 			summon.active = true
 			summon.drawID = this.addDrawableElement(summon, summon.y)
+			this.entityOrder.splice(this.entityOrder.findIndex((e) => e.id === caster) + 1, 0, summon)
 			if (!this.jumping) {
 				this.log(action)
 				this.S.bulb.play()
@@ -1546,11 +1550,18 @@ class Game {
 
 			if (!leek.active) {
 				if (leek.drawID) {
+					if (leek.summon) {
+						const index = this.entityOrder.indexOf(leek)
+						if (index !== -1) { this.entityOrder.splice(index, 1) }
+					}
 					this.removeDrawableElement(leek.drawID, leek.y)
 					leek.drawID = null
 				}
 			} else {
 				if (leek.drawID === null && leek.life) {
+					if (leek.summon) {
+						this.entityOrder.splice(this.entityOrder.indexOf(leek.summoner) + 1, 0, leek)
+					}
 					leek.drawID = this.addDrawableElement(leek, leek.y)
 				}
 			}
