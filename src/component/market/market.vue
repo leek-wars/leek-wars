@@ -234,9 +234,10 @@
 		sellDialog: boolean = false
 		chipMode: string = localStorage.getItem('market/sort_mode') === 'type' ? 'type' : 'level'
 		EffectTypeMarket = EffectTypeMarket
+		actions: any
 
 		created() {
-
+			this.actions = [{icon: 'account_balance', click: () => this.$router.push('/bank')}]
 			LeekWars.get<any>('market/get-item-templates/' + this.$store.state.token).then((res) => {
 				if (!res.data.success) {
 					// LW.error()
@@ -310,6 +311,7 @@
 			this.$root.$on('back', () => {
 				this.$router.push('/market')
 			})
+			LeekWars.setActions(this.actions)
 		}
 		@Watch('$route.params.item')
 		update() {
@@ -323,7 +325,7 @@
 				LeekWars.setTitle(this.$t('market.title'))
 				LeekWars.splitShowList()
 			}
-			LeekWars.setActions([{icon: 'account_balance', click: () => this.$router.push('/bank')}])
+			LeekWars.setActions(this.actions)
 		}
 		translateName(item: ItemTemplate) {
 			if (item.type === ItemType.FIGHT_PACK) {
