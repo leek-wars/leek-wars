@@ -92,7 +92,7 @@ class Notification {
 			return new Notification(data, "/farmer", "tournament_fail")
 		} else if (type === NotificationType.TROPHY_UNLOCKED) {
 			const trophyID = parseInt(params[0], 10)
-			const trophyName = i18n.t('trophy', LeekWars.trophies[trophyID - 1].code) as string
+			const trophyName = i18n.t('trophy.' + LeekWars.trophies[trophyID - 1].code) as string
 			return new Notification(data, "/farmer", "trophy_unlocked", [trophyName])
 		} else if (type === NotificationType.FIGHT_COMMENT) {
 			const farmerName = params[0]
