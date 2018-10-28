@@ -2,7 +2,7 @@
 	<div>
 		<span v-if="effect.id == 14">{{ $t('effect.type_14_fixed', [$t('effect.summon_' + effect.value1)]) }}</span>
 		<span v-else-if="effect.value2 == 0" v-html="$t('effect.type_' + effect.id + '_fixed', [effect.value1])"></span>
-		<span v-else v-html="$t('effect.type_' + effect.id, [effect.value1, effect.value1 + effect.value2])"></span>
+		<span v-else v-html="$t('effect.type_' + effect.id, [effect.value1, format(effect.value1 + effect.value2)])"></span>
 
 		<span v-if="effect.turns > 0" v-html="' ' + $t('effect.on_n_turns', {turns: effect.turns})"></span>
 
@@ -44,5 +44,11 @@
 		get caster(): boolean { return (this.effect.targets & (1 << 2)) !== 0 }
 		get nonSummons(): boolean { return (this.effect.targets & (1 << 3)) !== 0 }
 		get summons(): boolean { return (this.effect.targets & (1 << 4)) !== 0 }
+		format(n: number) {
+			if (Math.floor(n) != n) {
+				return n.toPrecision(1)
+			}
+			return n
+		}
 	}
 </script>
