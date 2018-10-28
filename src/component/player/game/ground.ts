@@ -1,6 +1,6 @@
 import { Game, GROUND_TEXTURE } from "@/component/player/game/game"
 import { Obstacle } from '@/component/player/game/obstacle'
-import { LeekWars } from '@/model/leekwars';
+import { LeekWars } from '@/model/leekwars'
 
 let GROUND_PADDING_LEFT = 210
 let GROUND_PADDING_RIGHT = 20

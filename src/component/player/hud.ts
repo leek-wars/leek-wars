@@ -8,7 +8,6 @@ class Hud {
 			div += "<span style='color: " + color + ";'>" + text + "</span>"
 		}
 		div += "</div>"
-		this.addActionInternal(div)
 	}
 
 	public addPersonalLog(log: any) {
@@ -21,11 +20,6 @@ class Hud {
 	// 	var div = "<div class='action log'>"
 	//     div += "<pre style='color: " + color + ";'>" + "[" + leek.name + "] " + message + "</pre>";
 	// 	div += "</div>"
-
-	// 	this.addActionInternal(div)
-	}
-
-	public addActionInternal(actionDiv: any) {
 	}
 
 	public draw() {
