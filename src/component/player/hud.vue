@@ -23,7 +23,7 @@
 			</div>
 		</div>
 		<div class="timeline">
-			<div v-for="entity in game.entityOrder" :class="{summon: entity.summon, current: entity.id === game.currentPlayer, dead: entity.dead}" :key="entity.id" :style="{background: entity.gradient}" class="entity">
+			<div v-for="entity in game.entityOrder" :class="{summon: entity.summon, current: entity.id === game.currentPlayer, dead: entity.dead}" :key="entity.id" :style="{background: entity.gradient, 'border-color': entity.color}" class="entity">
 				<div v-if="!entity.dead" :style="{top: ((1 - entity.life / entity.maxLife) * 100) + '%', background: entity.getLifeColor(), 'border-color': entity.getLifeBarBorderColor()}" class="bar"></div>
 				<div class="image">
 					<img v-if="entity.summon" :src="'/image/bulb/' + entity.bulbName + '_front.png'">
@@ -122,6 +122,7 @@
 	}
 	.timeline .entity {
 		display: inline-block;
+		vertical-align: bottom;
 		width: 50px;
 		height: 70px;
 		margin: 0 3px;
