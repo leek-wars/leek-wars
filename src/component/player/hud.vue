@@ -17,8 +17,8 @@
 			<div>Mouse cell : {{ game.mouseCell }}</div>
 			<div>FPS : {{ game.fps }}, avg: {{ game.avgFPS }}</div>
 		</div>
-		<div class="left-part" v-if="!LeekWars.mobile">
-			<div class="actions">
+		<div class="left-part" ref="leftPart" v-if="!LeekWars.mobile">
+			<div class="actions" ref="actions" :style="{'margin-top': actionsMargin + 'px'}">
 				<action-element v-for="action of game.currentActions" :key="action.id" :action="action.action" :leeks="game.leeks" turn="1" class="action" />
 			</div>
 		</div>
@@ -80,13 +80,14 @@
 <script lang="ts">
 	import ActionElement from '@/component/report/action.vue'
 	import { Effect, EffectType } from '@/model/effect'
-	import { Component, Prop, Vue } from 'vue-property-decorator'
+	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 	import { Game } from './game/game'
 
 	@Component({ name: 'hud', components: {ActionElement} })
 	export default class Hud extends Vue {
 		@Prop({required: true}) game!: Game
 		debug: boolean = false
+		actionsMargin: number = 0
 
 		get totalLife() {
 			return this.game.leeks.reduce((total, e) => total + (!e.summon ? e.life : 0), 0)
@@ -96,6 +97,17 @@
 				return effect.value + '%'
 			}
 			return effect.value
+		}
+		@Watch("game.currentActions")
+		updateActions() {
+			Vue.nextTick(() => {
+				const actions = this.$refs.actions as HTMLElement
+				const leftPart = this.$refs.leftPart as HTMLElement
+				if (actions.offsetHeight > leftPart.offsetHeight) {
+					this.game.currentActions.shift()
+				}
+				this.actionsMargin = Math.min(0, leftPart.offsetHeight - actions.offsetHeight - 100)
+			})
 		}
 	}
 </script>
