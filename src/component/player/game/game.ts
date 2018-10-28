@@ -598,7 +598,7 @@ class Game {
 							if (action === undefined) {
 								// this.log(i18n.t('fight.end_of_fight') as string)
 								this.fightEnd = true
-								this.reportTimer = setTimeout(this.showReport, 2500)
+								this.reportTimer = setTimeout(() => this.showReport(), 2500)
 								return
 							}
 							this.doAction(action)
