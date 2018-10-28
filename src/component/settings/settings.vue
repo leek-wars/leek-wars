@@ -223,6 +223,9 @@
 				}
 			}
 			this.pushNotifications = localStorage.getItem('options/push-notifs') === 'true'
+			LeekWars.setActions([
+				{icon: 'power_settings_new', click: () => this.logout()}
+			])
 
 			LeekWars.get<any>('settings/get-settings/' + this.$store.state.token).then((data) => {
 				this.sfwMode = localStorage.getItem('sfw') === 'true'
