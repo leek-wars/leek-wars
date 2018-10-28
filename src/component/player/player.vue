@@ -113,8 +113,10 @@
 				<canvas class="bg-canvas" :style="{width: width + 'px', height: height - 36 + 'px'}"></canvas>
 				<canvas class="game-canvas" :style="{width: width + 'px', height: height - 36 + 'px'}" @click="canvasClick"></canvas>
 				<div class="progress-bar-wrapper">
-					<div class="progress-bar-turn tooltip fixed top"><span class="content"></span></div>
-					<div ref="progressBar" class="progress-bar" @click="progressBarClick">
+					<div ref="progressBarTooltip" class="progress-bar-turn v-tooltip__content top" :style="{'margin-left': progressBarTooltipMargin + 'px'}">
+						<span class="content">{{ $t('fight.turn_n', [progressBarTurn]) }}</span>
+					</div>
+					<div ref="progressBar" class="progress-bar" @click="progressBarClick" @mousemove="progressBarMove">
 						<div :style="{width: progressBarWidth + '%'}" class="bar"></div><div class="circle"></div>
 					</div>
 				</div>
@@ -205,6 +207,8 @@
 		loaded: boolean = false
 		error: boolean = false
 		fullscreen: boolean = false
+		progressBarTurn: any = 0
+		progressBarTooltipMargin: number = 0
 
 		created() {
 			if (localStorage.getItem('fight/shadows') === null) { localStorage.setItem('fight/shadows', 'true') }
@@ -340,6 +344,20 @@
 			const bar = this.$refs.progressBar as HTMLElement
 			const action = Math.round(this.game.actions.length * (e.pageX - bar.getBoundingClientRect().left) / bar.offsetWidth)
 			this.game.jump(action)
+		}
+		progressBarMove(e: MouseEvent) {
+			const bar = this.$refs.progressBar as HTMLElement
+			const tooltip = this.$refs.progressBarTooltip as HTMLElement
+			const barOffset = bar.getBoundingClientRect().left
+			let turn: any = 0
+			const pos = (e.pageX - barOffset) / bar.clientWidth
+			for (const i in this.game.turnPosition) {
+				if (pos >= this.game.turnPosition[i]) {
+					turn = i
+				}
+			}
+			this.progressBarTurn = turn
+			this.progressBarTooltipMargin = Math.min(Math.max((e.pageX - barOffset) - (tooltip.clientWidth / 2), 0), bar.clientWidth - tooltip.clientWidth)
 		}
 		@Watch("game.sound") toggleSound() {
 			localStorage.setItem('fight/sound', '' + this.game.sound)
@@ -519,6 +537,15 @@
 	.progress-bar-wrapper:hover .circle {
 		width: 14px;
 		height: 14px;
+	}
+	.progress-bar-turn {
+		position: absolute;
+		display: none;
+		margin-top: -30px;
+		white-space: nowrap;
+	}
+	.progress-bar-wrapper:hover .progress-bar-turn {
+		display: inline-block;
 	}
 	.team-td {
 		width: 470px;
