@@ -386,6 +386,12 @@
 				this.game.resume()
 			}
 		}
+		@Watch("game.going_to_report")
+		endOfFight() {
+			if (this.game.going_to_report) {
+				this.$router.push("/report/" + this.fightId)
+			}
+		}
 	}
 </script>
 
