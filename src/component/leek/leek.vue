@@ -525,10 +525,6 @@
 		chartTooltipY: number = 0
 		reportDialog: boolean = false
 		reasons = [Warning.INCORRECT_LEEK_NAME, Warning.INCORRECT_AI_NAME]
-		actions = [
-			{image: 'icon/hat.png', click: () => this.hat()},
-			{image: 'icon/potion.png', click: () => this.potion()},
-		]
 		levelPopup: boolean = false
 		levelPopupData: any = null
 		aiDialog: boolean = false
@@ -623,7 +619,16 @@
 				this.$data.leek = plainToClass(Leek, data.data.leek)
 				if (this.leek) {
 					LeekWars.setTitle(this.leek.name, this.$t('level_n', [this.leek.level]))
-					LeekWars.setActions(this.actions)
+					if (this.my_leek) {
+						LeekWars.setActions([
+							{image: 'icon/hat.png', click: () => this.hat()},
+							{image: 'icon/potion.png', click: () => this.potion()},
+						])
+					} else {
+						LeekWars.setActions([
+							{image: 'icon/garden.png', click: () => this.$router.push('/garden/challenge/leek/' + this.id)}
+						])
+					}
 					this.renameName = this.leek.name
 					this.chart()
 					if (this.leek.level_seen < this.leek.level) {
