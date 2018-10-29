@@ -353,7 +353,6 @@
 
 						this.document.replaceRange(add[pos], start, end)
 						this.document.setSelection(end, end)
-						// this.editor.matchBrackets()
 						// this.mergeLastTwoOperations()
 					}
 				} else if (changes.text[0] === "" && changes.from.ch - changes.to.ch === -1 && changes.removed) { // Delete
@@ -370,16 +369,13 @@
 						this.document.setSelection(start, end)
 						this.document.replaceSelection("")
 						this.document.setSelection(start, start)
-						// editor.matchBrackets()
 					}
-					// editor.matchBrackets()
 				}
 			}
 		}
 
 		formatCode() {
 			this.editor.setValue(js_beautify(this.editor.getValue(), {indent_size: 1, indent_char: '\t'}))
-			// this.editor.matchBrackets()
 		}
 
 		commentCode() {
@@ -406,7 +402,6 @@
 					}
 				}
 			}
-			// this.editor.matchBrackets()
 		}
 
 		public getLineIndentation(lineNo: number) {
@@ -431,7 +426,6 @@
 					this.editor.indentLine(start + i, "subtract")
 				}
 			}
-			// this.document.matchBrackets()
 		}
 
 		public removeLine() {
@@ -456,7 +450,6 @@
 				const line = this.document.getLine(start)
 				this.document.replaceRange(line + "\n" + line, {line: start, ch: 0}, {line: start, ch: line.length})
 			}
-			// this.editor.matchBrackets()
 		}
 
 		getTokenInformation(token: string, pos: CodeMirror.Position) {
