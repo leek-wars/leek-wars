@@ -46,10 +46,10 @@ function generateKeywords() {
 		details += i18n.t('documentation.func_' + functionName) + "<br>"
 
 		if (fun.arguments_names.length > 0) {
-			details += "<br><b>" + i18n.t('editor', 'parameters') + "</b>"
+			details += "<br><b>" + i18n.t('editor.parameters') + "</b>"
 			details += "<ul>"
 			for (const a in fun.arguments_names) {
-				details += "<li>" + fun.arguments_names[a] + " : " + i18n.t("documentation', 'func_" + functionName + "_arg_" + (a + 1)) + "</span></li>"
+				details += "<li>" + fun.arguments_names[a] + " : " + i18n.t("documentation.func_" + functionName + "_arg_" + (parseInt(a, 10) + 1)) + "</span></li>"
 			}
 			details += "</ul>"
 		} else {
@@ -57,19 +57,31 @@ function generateKeywords() {
 		}
 		if (fun.return_type !== 0) {
 			details += "<b>" + i18n.t('editor', 'return') + "</b><br>"
-			details += "<ul><li>" + fun.return_name + " : " + i18n.t('documentation', 'func_' + functionName + '_return') + "</li></ul>"
+			details += "<ul><li>" + fun.return_name + " : " + i18n.t('documentation.func_' + functionName + '_return') + "</li></ul>"
 		}
 		keywords.push([text, name, details, 'function', fun.arguments_names.length])
 		last = fun.name
 	}
 
 	// Constantes
+	const getWeaponByName = (name: string) => {
+		for (var w in LeekWars.weapons) {
+			if (LeekWars.weapons[w].name === name) { return LeekWars.weapons[w] }
+		}
+		return null
+	}
+	const getChipByName = (name: string) => {
+		for (var c in LeekWars.chips) {
+			if (LeekWars.chips[c].name === name) { return LeekWars.chips[c] }
+		}
+		return null
+	}
 	for (const constant of LeekWars.constants) {
-		let details = ""
+		let details: any = ""
 		if (constant.name.substring(0, 5) === 'CHIP_') {
-			// var name = constant.name.substring(5).toLowerCase()
+			details = {type: 'chip', chip: getChipByName(constant.name.substring(5).toLowerCase())}
 		} else if (constant.name.substring(0, 7) === 'WEAPON_') {
-			// var weapon = LW.weapons[LeekWars.getWeaponIDByName(constant.name.substring(7).toLowerCase())]
+			details = {type: 'weapon', weapon: getWeaponByName(constant.name.substring(7).toLowerCase())}
 		} else {
 			details = "<h4>" + i18n.t('editor.constant', [constant.name]) + "</h4><br>"
 			details += i18n.t('documentation.const_' + constant.name)

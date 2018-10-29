@@ -1087,7 +1087,7 @@
 	"min_cores": "Min cores",
 	"min_level": "Min level",
 	"n_cores": "Cores: %s",
-	"n_operations": "<b>%s</b> operations",
+	"n_operations": "<b>{0}</b> operations",
 	"parameters": "Parameters",
 	"return": "Return",
 	"title": "Documentation",

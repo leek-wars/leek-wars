@@ -281,6 +281,11 @@
 			this.$root.$on('ctrlS', () => {
 				this.save()
 			})
+			this.$root.$on('htmlclick', () => {
+				if (this.currentEditor) {
+					this.currentEditor.close()
+				}
+			})
 			// Escape
 			// if (e.keyCode == 27) {
 			// 	LW.pages.editor.search(false)
@@ -400,6 +405,7 @@
 
 		beforeDestroy() {
 			this.$root.$off('ctrlS')
+			this.$root.$off('htmlclick')
 			// Unsaved AIs confirmation
 			// TODO
 			// var num = 0
@@ -849,11 +855,6 @@
 	.theme-monokai .ai-stats {
 		background: #444;
 		color: #eee;
-	}
-	.deprecated-message {
-		color: #ff7f00;
-		font-weight: bold;
-		margin: 10px 0;
 	}
 	.folder-content {
 		display: none;
