@@ -1,22 +1,27 @@
 <template>
-	<div v-show="visible" class="ai">
+	<div v-show="visible" class="ai" @mousemove="mousemove" @mouseleave="mouseleave">
 		<div v-show="!loading" ref="codemirror" :style="{'font-size': fontSize + 'px', 'line-height': lineHeight + 'px'}" class="codemirror"></div>
 		<div v-show="hintDialog" ref="hintDialog" :style="{left: hintDialogLeft + 'px', top: hintDialogTop + 'px'}" class="hint-dialog">
 			<div ref="hints" class="hints">
-				<div v-for="(hint, index) of hints" :key="hint.name" :class="{active: selectedCompletion === index}" class="hint" @click="clickHint($event, index)">{{ hint.name }}</div>
+				<div v-for="(hint, index) of hints" :key="hint.fullName" :class="{active: selectedCompletion === index}" class="hint" @click="clickHint($event, index)">{{ hint.fullName }}</div>
 			</div>
-			<div v-if="selectedCompletion in hints" class="details">
-				<span v-if="typeof(hints[selectedCompletion].details) === 'string'" v-html="hints[selectedCompletion].details"></span>
-				<weapon-preview v-else-if="hints[selectedCompletion].details.type === 'weapon'" :weapon="hints[selectedCompletion].details.weapon" />
-				<chip-preview v-else-if="hints[selectedCompletion].details.type === 'chip'" :chip="hints[selectedCompletion].details.chip" />
+			<div v-if="selectedHint" class="details">
+				<span v-if="typeof(selectedHint.details) === 'string'" v-html="selectedHint.details"></span>
+				<weapon-preview v-if="selectedHint.details.type === 'weapon'" :weapon="selectedHint.details.weapon" />
+				<chip-preview v-else-if="selectedHint.details.type === 'chip'" :chip="selectedHint.details.chip" />
 			</div>
 		</div>
-		<div ref="detailDialog" class="detail-dialog"></div>
+		<div v-show="detailDialog" ref="detailDialog" class="detail-dialog" :style="{left: detailDialogLeft + 'px', top: detailDialogTop + 'px'}" v-if="detailDialogContent">
+			<span v-if="typeof(detailDialogContent.details) === 'string'" v-html="detailDialogContent.details"></span>
+			<weapon-preview v-if="detailDialogContent.details.type === 'weapon'" :weapon="detailDialogContent.details.weapon" />
+			<chip-preview v-else-if="detailDialogContent.details.type === 'chip'" :chip="detailDialogContent.details.chip" />
+		</div>
 		<loader v-if="loading" />
 	</div>
 </template>
 
 <script lang="ts">
+	import { Keyword } from '@/component/editor/keywords'
 	import ChipPreview from '@/component/market/chip-preview.vue'
 	import WeaponPreview from '@/component/market/weapon-preview.vue'
 	import { AI } from '@/model/ai'
@@ -33,10 +38,10 @@
 
 	const AUTO_SHORTCUTS = [
 		["lama", "#LamaSwag", "", "Le pouvoir du lama"],
-		["for", "for (var i = 0; i < ", "; i++) {\n\t\n}", "<h3>Boucle for</h3><br>for (var i = 0; i < ... ; i++) { ... }"],
-		["while", "while (", ") {\n\t\n}", "<h3>Boucle while</h3><br>while ( ... ) { ... }"],
-		["do", "do {\n\t\n} while (", ");", "<h3>Boucle do while</h3><br>do { ... } while( ... );"],
-		["if", 'if (', ') {\n\t\n}', "<h3>Condition if</h3><br>if ( ... ) { ... }"]
+		["for", "for (var i = 0; i < ", "; i++) {\n\t\n}", "<h4>Boucle for</h4><br>for (var i = 0; i < ... ; i++) { ... }"],
+		["while", "while (", ") {\n\t\n}", "<h4>Boucle while</h4><br>while ( ... ) { ... }"],
+		["do", "do {\n\t\n} while (", ");", "<h4>Boucle do while</h4><br>do { ... } while( ... );"],
+		["if", 'if (', ') {\n\t\n}', "<h4>Condition if</h4><br>if ( ... ) { ... }"]
 	]
 
 	@Component({ name: 'ai-view', components: {
@@ -45,6 +50,7 @@
 	}})
 	export default class AIView extends Vue {
 		@Prop({required: true}) ai!: AI
+		@Prop({required: true}) ais!: AI[]
 		@Prop() visible!: boolean
 		@Prop() fontSize!: number
 		@Prop() lineHeight!: number
@@ -64,12 +70,10 @@
 		public completionSelected: any
 		public completionFrom: any
 		public completionTo: any
-		public hoverToken: any
+		public hoverToken!: string
 		public detailTimer: any
-		public functions: any[] = []
 		public serverError: boolean = false
 		public autoClosing: boolean = true
-		public includes: any
 		public selectedCompletion: number = 0
 		public completions: any[] = []
 		public dialogKeyMap: CodeMirror.KeyMap = {
@@ -86,9 +90,13 @@
 		public hintDialog: boolean = false
 		public hintDialogTop: number = 0
 		public hintDialogLeft: number = 0
-		public hints: string[] = []
+		public hints: Keyword[] = []
+		public selectedHint: Keyword | null = null
 		public details: string[] = []
 		public detailDialog: boolean = false
+		public detailDialogContent: any = null
+		public detailDialogTop: number = 0
+		public detailDialogLeft: number = 0
 		public overlay: any = null
 
 		created() {
@@ -140,10 +148,7 @@
 					}
 				})
 			}
-
-			// this.editor.on("mousedown", function(cm, e) {
-			// 	
-			// })
+			this.editor.on("mousedown", this.editorMousedown as any)
 		}
 
 		@Watch('visible')
@@ -153,16 +158,15 @@
 			}
 		}
 
-		public editorMousedown(e: MouseEvent) {
+		public editorMousedown(editor: CodeMirror.Editor, e: MouseEvent) {
 			if (e.ctrlKey) {
-				const pos = {left: e.pageX, top: e.pageY }
-				const editorPos = this.editor.coordsChar(pos, "page")
-				// var token = this.document.getTokenAtString(editorPos)
-				// var information = this.getTokenInformation(token, editorPos)
-				// if (information && information[3] === 'user-function') {
-				// 	this.detailDialog = false
-					// LW.pages.editor.jumpTo(information[6], information[7])
-				// }
+				const pos = this.editor.coordsChar({left: e.pageX, top: e.pageY }, "page")
+				const token = this.editor.getTokenAt(pos)
+				const keyword = this.getTokenInformation(token.string, pos)
+				if (keyword && keyword.type === 'user-function') {
+					this.detailDialog = false
+					this.$emit('jump', keyword.ai, keyword.line)
+				}
 				e.preventDefault()
 			}
 		}
@@ -182,42 +186,17 @@
 					this.editor.setValue(this.ai.code)
 					this.editor.getDoc().clearHistory()
 					this.editor.refresh()
+					this.updateIncludes()
+					this.updateFunctions()
 					this.loaded = true
 					this.loading = false
 					setTimeout(() => this.editor.refresh())
 					this.lines = this.editor.getDoc().lineCount()
 					this.characters = this.editor.getDoc().getValue().length
-					// 	LW.setSubTitle(_.lang.get('editor', 'n_lines', lines))
+					LeekWars.setSubTitle(this.$i18n.t('editor.n_lines', [this.lines]))
+					localStorage.setItem("editor/last_code", '' + this.id)
 				})
 			}
-
-			// 	if (!this.loaded && this.id > 0) {
-
-			// 		this.load(true);
-			// 		$('#select-msg').hide()
-			// 		LW.loader.show()
-			// 		$('#top').hide()
-
-			// 	} else {
-
-			// 		LW.loader.hide()
-			// 		$('#top').show()
-			// 		$('#ai-name').text(this.name)
-			// 		$('#select-msg').hide()
-
-			// 		$('#editors .editor').hide()
-			// 		$('#editors .folder-content').hide()
-			// 		this.editorDiv.show()
-
-			// 		// if (!_BASIC) {
-			// 			//this.editor.focus();
-			// 			this.editor.refresh()
-			// 		// }
-			// 		if (this.error) {
-			// 			this.showErrors()
-			// 		}
-			// 		localStorage["editor/last_code"] = this.id
-			// 	}
 		}
 
 		public showError(line: number) {
@@ -252,7 +231,7 @@
 			if (!this.pos) {
 				this.pos = cursor
 			} else if (this.pos.line !== cursor.line) {
-				// this.close()
+				this.close()
 				this.pos = cursor
 			}
 			if (this.activeLine) { this.editor.removeLineClass(this.activeLine, "background", "activeline") }
@@ -305,13 +284,13 @@
 				this.hasBeenModified()
 			}
 
-			if (changes.origin === "+input" || (/*this.hintDialog.is(":visible") &&*/ changes.origin === "+delete")) {
+			if (changes.origin === "+input" || (this.hintDialog && changes.origin === "+delete")) {
 				this.autocomplete()
 			}
 
 			this.lines = this.editor.getDoc().lineCount()
 			this.characters = this.editor.getDoc().getValue().length
-			// LW.setSubTitle(_.lang.get('editor', 'n_lines', lines))
+			LeekWars.setSubTitle(this.$i18n.t('editor.n_lines', [this.lines]))
 
 			if (userChange && this.autoClosing) {
 
@@ -452,10 +431,10 @@
 			}
 		}
 
-		getTokenInformation(token: string, pos: CodeMirror.Position) {
+		getTokenInformation(token: string, pos: CodeMirror.Position | null = null) {
 			for (const keyword of LeekWars.keywords) {
-				if (keyword[0] === token) {
-					if (keyword[3] === 'function') {
+				if (keyword.name === token) {
+					if (keyword.type === 'function' && pos) {
 						const line = this.document.getLine(pos.line)
 						let start = 0
 						let par = 0
@@ -467,7 +446,7 @@
 						}
 						const capture = line.substring(start, j)
 						const argCount = capture.trim() === '' ? 0 : (capture.match(/\,/g) || []).length + 1
-						if (argCount === keyword[4]) {
+						if (argCount === keyword.argumentCount) {
 							return keyword
 						}
 					} else {
@@ -475,95 +454,78 @@
 					}
 				}
 			}
-			for (const fun of this.functions) {
-				if (token === fun[0]) {
+			for (const fun of this.ai.functions) {
+				if (token === fun.name) {
 					return fun
 				}
 			}
-			// TODO access other editors
-			// for (var i in this.includes) {
-			// 	var functions = editors[this.includes[i]].functions
-			// 	for (var f in functions) {
-			// 		if (token === functions[f][0]) {
-			// 			return functions[f]
-			// 		}
-			// 	}
-			// }
+			for (const include of this.ai.includes) {
+				if (include.functions) {
+					for (const fun of include.functions) {
+						if (token === fun.name) {
+							return fun
+						}
+					}
+				}
+			}
 		}
 
-		// this.mousemove = function(e) {
+		mousemove(e: MouseEvent) {
+			// TODO option popups
+			// if (!_popups) { return null }
+			if (this.hintDialog) { return null }
 
-		// 	if (!_popups) return null
+			var pos = {left: e.pageX, top: e.pageY }
+			const codemirror = this.$refs.codemirror as HTMLElement
+			if (pos.left < codemirror.getBoundingClientRect().left || pos.top < codemirror.getBoundingClientRect().top) {
+				clearTimeout(this.detailTimer)
+				this.detailDialog = false
+				return
+			}
+			const editorPos = this.editor.coordsChar(pos, "page")
 
-		// 	if (this.hintDialog.is(':visible')) return null
+			// Display error?
+			// var tooltip = $('#error-tooltip')
+			// var shown = false
+			// for (var er in this.errors) {
+			// 	var error = this.errors[er]
+			// 	if (error[0] === editorPos.line + 1 && error[1] <= editorPos.ch && error[3] > editorPos.ch) {
+			// 		var pos = editor.editor.cursorCoords({line: editorPos.line, ch: error[1]})
+			// 		tooltip.text(error[4])
+			// 		tooltip.css('top', pos.bottom)
+			// 		tooltip.css('left', pos.left)
+			// 		tooltip.show()
+			// 		shown = true
+			// 		break;
+			// 	}
+			// }
+			// if (!shown) tooltip.hide()
+			var tokenString = this.editor.getTokenAt(editorPos).string
 
-		// 	var pos = {left: e.pageX, top: e.pageY }
-
-		// 	if (pos.left < editor.editorDiv.offset().left || pos.top < editor.editorDiv.offset().top) {
-		// 		clearTimeout(editor.detailTimer)
-		// 		editor.detailDialog.hide()
-		// 		return
-		// 	}
-
-		// 	var editorPos = editor.editor.coordsChar(pos, "page")
-
-		// 	// Display error?
-		// 	var tooltip = $('#error-tooltip')
-		// 	var shown = false
-		// 	for (var er in this.errors) {
-		// 		var error = this.errors[er]
-		// 		if (error[0] === editorPos.line + 1 && error[1] <= editorPos.ch && error[3] > editorPos.ch) {
-		// 			var pos = editor.editor.cursorCoords({line: editorPos.line, ch: error[1]})
-		// 			tooltip.text(error[4])
-		// 			tooltip.css('top', pos.bottom)
-		// 			tooltip.css('left', pos.left)
-		// 			tooltip.show()
-		// 			shown = true
-		// 			break;
-		// 		}
-		// 	}
-		// 	if (!shown) tooltip.hide()
-
-		// 	var tokenString = editor.editor.getTokenAtString(editorPos)
-
-		// 	if (tokenString != this.hoverToken) {
-
-		// 		this.hoverToken = tokenString
-
-		// 		var information = this.getTokenInformation(tokenString, editorPos)
-
-		// 		if (information != null) {
-
-		// 			clearTimeout(editor.detailTimer)
-		// 			this.detailTimer = setTimeout(function() {
-
-		// 				if (current != id) {
-		// 					editor.detailDialog.hide()
-		// 					return
-		// 				}
-
-		// 				editor.detailDialog.html(information[2])
-
-		// 				var pos = editor.editor.cursorCoords(editorPos)
-		// 				var top = pos.bottom
-
-		// 				editor.detailDialog.css('top', top)
-		// 				editor.detailDialog.css('left', e.pageX)
-		// 				editor.detailDialog.show()
-
-		// 			}, 400)
-
-		// 		} else {
-		// 			clearTimeout(editor.detailTimer)
-		// 			editor.detailDialog.hide()
-		// 		}
-		// 	}
-		// }
-
-		// this.mouseleave = function() {
-		// 	clearTimeout(editor.detailTimer)
-		// 	editor.detailDialog.hide()
-		// }
+			if (tokenString !== this.hoverToken) {
+				this.hoverToken = tokenString
+				const keyword = this.getTokenInformation(tokenString, editorPos)
+				if (keyword !== null) {
+					clearTimeout(this.detailTimer)
+					this.detailTimer = setTimeout(() => {
+						this.detailDialogContent = keyword
+						const codemirror = this.$refs.codemirror as HTMLElement
+						var pos = this.editor.cursorCoords(editorPos)
+						var top = pos.bottom
+						this.detailDialogTop = top - codemirror.getBoundingClientRect().top
+						this.detailDialogLeft = e.pageX - codemirror.getBoundingClientRect().left
+						this.detailDialog = true
+					}, 400)
+				} else {
+					clearTimeout(this.detailTimer)
+					this.detailDialog = false
+				}
+			}
+		}
+		mouseleave() {
+			clearTimeout(this.detailTimer)
+			this.detailDialog = false
+		}
 
 		autocomplete(force: boolean = false) {
 
@@ -586,24 +548,24 @@
 			// TODO
 			// token.state = CodeMirror.innerMode(this.editor.getMode(), token.state).state
 
-			const completions = new Array()
+			const completions: Keyword[] = []
 			const start = token.string
 
-			function maybeAdd(data: string | any[]) {
+			function maybeAdd(data: string | Keyword) {
 				if (typeof data === 'string') {
 					if (data.toLowerCase().indexOf(start.toLowerCase()) === 0) {
-						completions.push({text: data, details: i18n.t('editor.keyword', [data]), type: 'keyword'})
+						completions.push({name: data, fullName: data, details: i18n.t('editor.keyword', [data]) as string, type: 'keyword'})
 					}
 				} else {
-					if (data[0].toLowerCase().indexOf(start.toLowerCase()) === 0) {
-						completions.push({text: data[0], name: data[1], details: data[2], type: data[3]})
+					if (data.name.toLowerCase().indexOf(start.toLowerCase()) === 0) {
+						completions.push(data)
 					}
 				}
 			}
 			// Ajout des variables locales du code
 			for (let v = token.state.localVars; v; v = v.next) {
 				if (v.name.toLowerCase().indexOf(start.toLowerCase()) === 0) {
-					completions.push({text: v.name, name: v.name, details: i18n.t('editor.variable', [v.name]), type: 'keyword'})
+					completions.push({name: v.name, fullName: v.name, details: i18n.t('editor.variable', [v.name]) as string, type: 'keyword'})
 				}
 			}
 			// Variables globales
@@ -614,36 +576,38 @@
 				const file = vars[parseInt(i, 10)]
 				for (let v = file; v; v = v.next) {
 					if (v.name.toLowerCase().indexOf(start.toLowerCase()) === 0) {
-						// var information = this.getTokenInformation(v.name)
-						// if (!information) {
-						// 	var text = "Variable <b>" + v.name + "</b>"
-						// 	if (i != this.id) text += "<br><br>" + _.lang.get('editor', 'variable_defined_in_ai', editors[i].name)
-						// 	completions.push({text: v.name, name: v.name, details: text, type: 'keyword'})
-						// }
+						const keyword = this.getTokenInformation(v.name)
+						if (keyword) {
+							let text = "Variable <b>" + v.name + "</b>"
+							if (parseInt(i) !== this.id) { text += "<br><br>" + this.$i18n.t('editor.variable_defined_in_ai', [this.ais[parseInt(i)].name]) }
+							completions.push(keyword)
+						}
 					}
 				}
 			}
 			// File functions
-			for (const fun of this.functions) {
-				if (fun[0].toLowerCase().indexOf(start.toLowerCase()) === 0) {
-					completions.push({text: fun[0], name: fun[1], details: fun[2], type: fun[3]})
+			for (const fun of this.ai.functions) {
+				if (fun.name.toLowerCase().indexOf(start.toLowerCase()) === 0) {
+					completions.push(fun)
 				}
 			}
 			// Include functions
-			// for (const i in this.includes) {
-				// var functions = editors[this.includes[i]].functions
-				// for (var f in functions) {
-				// 	if (functions[f][0].toLowerCase().indexOf(start.toLowerCase()) === 0) {
-				// 		completions.push({text: functions[f][0], name: functions[f][1], details: functions[f][2], type: functions[f][3]})
-				// 	}
-				// }
-			// }
+			for (const include of this.ai.includes) {
+				const functions = this.ais[include.id].functions
+				if (functions) {
+					for (const fun of functions) {
+						if (fun.name.toLowerCase().indexOf(start.toLowerCase()) === 0) {
+							completions.push(fun)
+						}
+					}
+				}
+			}
 			// Ajout des fonctions
 			LeekWars.keywords.forEach(maybeAdd)
 			// Raccourcis
 			for (const r in AUTO_SHORTCUTS) {
 				if (AUTO_SHORTCUTS[r][0].indexOf(start.toLowerCase()) === 0) {
-					completions.push({text: AUTO_SHORTCUTS[r][0], name: AUTO_SHORTCUTS[r][0], details: AUTO_SHORTCUTS[r][3], type: 'shortcut', shortcut: r})
+					completions.push({name: AUTO_SHORTCUTS[r][0], fullName: AUTO_SHORTCUTS[r][0], details: AUTO_SHORTCUTS[r][3], type: 'shortcut', shortcut: r})
 				}
 			}
 			this.completions = completions
@@ -695,6 +659,7 @@
 		}
 		selectHint(index: number) {
 			this.selectedCompletion = index
+			this.selectedHint = this.hints[index]
 			Vue.nextTick(() => {
 				const hints = this.$refs.hints as HTMLElement
 				const hintList = (this.$refs.hintDialog as HTMLElement).querySelectorAll('.hint') as any
@@ -757,31 +722,33 @@
 			this.editor.removeKeyMap(this.dialogKeyMap)
 		}
 
+		public scrollToLine(line: number) {
+			this.document.setCursor({line: line, ch: 0})
+			const height = this.editor.getScrollInfo().clientHeight
+			const coords = this.editor.charCoords({line: line, ch: 0}, "local")
+			this.editor.scrollTo(null, (coords.top + coords.bottom - height) / 2)
+		}
+
 		public updateIncludes() {
-
-			this.includes = []
-
-			// this.div.querySelectorAll('.cm-lsfunc').forEach((item: any) => {
-
-				// if (item.innerText === 'include' && item.next().attr('class') === "cm-string") {
-
-				// 	var string = $(this).next().text();
-				// 	var ai = string.substring(1, string.length-1);
-
-				// 	$('#ai-list .ai').each(function() {
-				// 		if ($(this).text() === ai && ai != editor.name) {
-				// 			var id = parseInt($(this).attr('id'))
-				// 			editor.includes.push(id)
-				// 			if (!editors[id].loaded) editors[id].load()
-				// 		}
-				// 	})
-				// }
-			// })
+			this.ai.includes = []
+			const code = this.document.getValue()
+			const regex = /include\s*\(\s*"(.*?)"\s*\)/gm
+			let m;
+			while (m = regex.exec(code)) {
+				for (const id in this.ais) {
+					// TODO Search the AI correctly : by name, full path, relative path etc. from the including AI
+					if (this.ais[id].name === m[1]) {
+						this.ai.includes.push(this.ais[id])
+						this.$emit("load", this.ais[id])
+						break
+					}
+				}
+			}
 		}
 
 		public updateFunctions() {
 			const code = this.editor.getValue()
-			this.functions = []
+			this.ai.functions = []
 			let match
 			const regex = /function\s+(\w+)\s*\(\s*([\s\S]*?)\s*\)/g
 
@@ -797,7 +764,7 @@
 				let description = "<h4>" + i18n.t('editor.function_f', [fullName]) + "</h4><br>"
 				description += i18n.t('editor.defined_in', [this.ai.name, line])
 
-				this.functions.push([match[1], fullName, description, 'user-function', args.length, args, this.id, line])
+				this.ai.functions.push({name: match[1], fullName, details: description, type: 'user-function', argumentCount: args.length, arguments: args, ai: this.ai, line})
 			}
 		}
 
@@ -807,16 +774,15 @@
 				const lines = this.editor.getDoc().lineCount()
 				const pos = {line: lines - 1, ch: this.document.getLine(lines - 1).length}
 				const token = this.editor.getTokenAt(pos)
-				vars[this.id] = token.state.globalVars // variables du code lui-même
+				vars[this.id] = token.state.globalVars
 			}
-			// variables des includes
 			this.updateIncludes()
-
-			for (const include of this.includes) {
-				if (!(include in vars)) {
-					// var vars2 = editors[include].getGlobalVars(vars)
+			for (const include of this.ai.includes) {
+				if (!(include.id in vars)) {
+					// TODO
+					// var vars2 = this.ais[include].getGlobalVars(vars)
 					// for (var v in vars2) {
-					// vars[v] = vars2[v]
+					// 	vars[v] = vars2[v]
 					// }
 				}
 			}
@@ -896,7 +862,6 @@
 		box-shadow: 2px 3px 5px rgba(0,0,0,.2);
 	}
 	.detail-dialog {
-		display: none;
 		position: absolute;
 		padding: 8px;
 		background: #f2f2f2;

@@ -1,3 +1,5 @@
+import { Keyword } from '@/component/editor/keywords'
+
 class AI {
 	public id!: number
 	public name!: string
@@ -8,5 +10,7 @@ class AI {
 	public dragging: boolean = false
 	public folder!: number
 	public path!: string
+	public includes: AI[] = []
+	public functions: Keyword[] = []
 }
 export { AI }
