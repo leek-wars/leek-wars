@@ -110,10 +110,10 @@
 
 		<div v-show="loaded" class="game">
 			<div :style="{height: height - 36 + 'px'}" class="layers">
-				<canvas class="bg-canvas" :style="{width: width + 'px', height: height - 36 + 'px'}"></canvas>
-				<canvas class="game-canvas" :style="{width: width + 'px', height: height - 36 + 'px'}" @click="canvasClick"></canvas>
+				<canvas :style="{width: width + 'px', height: height - 36 + 'px'}" class="bg-canvas"></canvas>
+				<canvas :style="{width: width + 'px', height: height - 36 + 'px'}" class="game-canvas" @click="canvasClick"></canvas>
 				<div class="progress-bar-wrapper">
-					<div ref="progressBarTooltip" class="progress-bar-turn v-tooltip__content top" :style="{'margin-left': progressBarTooltipMargin + 'px'}">
+					<div ref="progressBarTooltip" :style="{'margin-left': progressBarTooltipMargin + 'px'}" class="progress-bar-turn v-tooltip__content top">
 						<span class="content">{{ $t('fight.turn_n', [progressBarTurn]) }}</span>
 					</div>
 					<div ref="progressBar" class="progress-bar" @click="progressBarClick" @mousemove="progressBarMove">

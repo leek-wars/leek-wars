@@ -65,13 +65,13 @@ function generateKeywords() {
 
 	// Constantes
 	const getWeaponByName = (name: string) => {
-		for (var w in LeekWars.weapons) {
+		for (const w in LeekWars.weapons) {
 			if (LeekWars.weapons[w].name === name) { return LeekWars.weapons[w] }
 		}
 		return null
 	}
 	const getChipByName = (name: string) => {
-		for (var c in LeekWars.chips) {
+		for (const c in LeekWars.chips) {
 			if (LeekWars.chips[c].name === name) { return LeekWars.chips[c] }
 		}
 		return null

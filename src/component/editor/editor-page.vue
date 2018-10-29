@@ -57,7 +57,7 @@
 
 						<loader v-if="!rootFolder" />
 
-						<div v-if="rootFolder" v-autostopscroll class="ai-list">
+						<div v-autostopscroll v-if="rootFolder" class="ai-list">
 							<editor-folder :folder="rootFolder" :level="0" />
 						</div>
 						<div v-if="currentEditor && currentEditor.loaded" class="ai-stats">
@@ -77,7 +77,7 @@
 				<div class="panel">
 					<div class="content">
 						<div class="editors">
-							<ai-view v-for="ai in activeAIs" ref="editors" :key="ai.id" :ai="ai" :visible="currentAI === ai" :fontSize="fontSize" :lineHeight="lineHeight" />
+							<ai-view v-for="ai in activeAIs" ref="editors" :key="ai.id" :ai="ai" :visible="currentAI === ai" :font-size="fontSize" :line-height="lineHeight" />
 						</div>
 						<div class="search-panel">
 							<img src="/image/search.png">

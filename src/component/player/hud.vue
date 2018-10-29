@@ -17,8 +17,8 @@
 			<div>Mouse cell : {{ game.mouseCell }}</div>
 			<div>FPS : {{ game.fps }}, avg: {{ game.avgFPS }}</div>
 		</div>
-		<div class="left-part" ref="leftPart" v-if="!LeekWars.mobile">
-			<div class="actions" ref="actions" :style="{'margin-top': actionsMargin + 'px'}">
+		<div v-if="!LeekWars.mobile" ref="leftPart" class="left-part">
+			<div ref="actions" :style="{'margin-top': actionsMargin + 'px'}" class="actions">
 				<action-element v-for="action of game.currentActions" :key="action.id" :action="action.action" :leeks="game.leeks" turn="1" class="action" />
 			</div>
 		</div>

@@ -1,11 +1,11 @@
 <template>
 	<div v-show="visible" class="ai">
-		<div v-show="!loading" ref="codemirror" class="codemirror" :style="{'font-size': fontSize + 'px', 'line-height': lineHeight + 'px'}" ></div>
-		<div v-show="hintDialog" ref="hintDialog" class="hint-dialog" :style="{left: hintDialogLeft + 'px', top: hintDialogTop + 'px'}">
-			<div class="hints" ref="hints">
-				<div v-for="(hint, index) of hints" :key="hint.name" @click="clickHint($event, index)" class="hint" :class="{active: selectedCompletion === index}">{{ hint.name }}</div>
+		<div v-show="!loading" ref="codemirror" :style="{'font-size': fontSize + 'px', 'line-height': lineHeight + 'px'}" class="codemirror"></div>
+		<div v-show="hintDialog" ref="hintDialog" :style="{left: hintDialogLeft + 'px', top: hintDialogTop + 'px'}" class="hint-dialog">
+			<div ref="hints" class="hints">
+				<div v-for="(hint, index) of hints" :key="hint.name" :class="{active: selectedCompletion === index}" class="hint" @click="clickHint($event, index)">{{ hint.name }}</div>
 			</div>
-			<div class="details" v-if="selectedCompletion in hints">
+			<div v-if="selectedCompletion in hints" class="details">
 				<span v-if="typeof(hints[selectedCompletion].details) === 'string'" v-html="hints[selectedCompletion].details"></span>
 				<weapon-preview v-else-if="hints[selectedCompletion].details.type === 'weapon'" :weapon="hints[selectedCompletion].details.weapon" />
 				<chip-preview v-else-if="hints[selectedCompletion].details.type === 'chip'" :chip="hints[selectedCompletion].details.chip" />
@@ -28,8 +28,8 @@
 	import js_beautify from 'js-beautify'
 	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 	import './codemirror/leekscript-mode'
-	import './codemirror/matchbrackets'
 	import './codemirror/match-highlighter'
+	import './codemirror/matchbrackets'
 
 	const AUTO_SHORTCUTS = [
 		["lama", "#LamaSwag", "", "Le pouvoir du lama"],
