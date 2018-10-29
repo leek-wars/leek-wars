@@ -46,7 +46,7 @@
 		public loading: boolean = false
 		public error!: boolean
 		public needTest = false
-		public hlLine = null
+		public activeLine: CodeMirror.LineHandle | null = null
 		public pos: any
 		public completionSelected: any
 		public completionFrom: any
@@ -224,8 +224,8 @@
 				// this.close()
 				this.pos = cursor
 			}
-			if (this.hlLine) { this.editor.removeLineClass(this.hlLine, "background", "activeline") }
-			// this.hlLine = this.editor.addLineClass(cursor.line, "background", "activeline")
+			if (this.activeLine) { this.editor.removeLineClass(this.activeLine, "background", "activeline") }
+			this.activeLine = this.editor.addLineClass(cursor.line, "background", "activeline")
 		}
 
 		public addErrorOverlay(errors: any) {
