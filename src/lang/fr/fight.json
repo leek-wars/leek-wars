@@ -58,7 +58,7 @@
 	"n_vulnerability": "une vulnérabilité de {0}",
 	"pause": "Pause",
 	"pause_message": "Cliquer ou appuyez sur 'P' pour reprendre",
-	"position_in_queue": "Position dans la file : %1$s / %2$s",
+	"position_in_queue": "Position dans la file : {0} / {1}",
 	"quit": "Quitter (Q)",
 	"resume": "Reprendre",
 	"see_report": "Voir le rapport",

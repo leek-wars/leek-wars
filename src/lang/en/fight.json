@@ -58,7 +58,7 @@
 	"n_vulnerability": "a {0} vulnerability",
 	"pause": "Pause (P)",
 	"pause_message": "Click or press 'P' to resume",
-	"position_in_queue": "Position in queue : %1$s / %2$s",
+	"position_in_queue": "Position in queue : {0} / {1}",
 	"quit": "Quit (Q)",
 	"resume": "Resume",
 	"see_report": "See report",
