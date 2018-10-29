@@ -1,7 +1,6 @@
 import { Commands } from '@/model/commands'
 import { Farmer } from '@/model/farmer'
 import { i18n } from '@/model/i18n'
-import { Latex } from '@/model/latex'
 import { LeekWars } from '@/model/leekwars'
 
 enum ChatType { GLOBAL, TEAM, PM }
@@ -49,7 +48,6 @@ class Chat {
 		let message = LeekWars.protect(messageRaw)
 		message = LeekWars.linkify(message)
 		message = LeekWars.formatEmojis(message)
-		message = Latex.latexify(message)
 		message = Commands.execute(message, authorName)
 		message = message.replace(/\n/g, '<br>')
 		return message

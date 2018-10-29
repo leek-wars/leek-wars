@@ -43,6 +43,7 @@ import VTabs from 'vuetify/es5/components/VTabs'
 import VTooltip from 'vuetify/es5/components/VTooltip'
 import Vuetify from 'vuetify/es5/components/Vuetify'
 import * as directives from 'vuetify/es5/directives'
+import { Latex } from './latex'
 
 Vue.use(VueGitHubButtons)
 Vue.use(Chartist)
@@ -123,6 +124,15 @@ Vue.directive('large-emojis', {
 			if (el.textContent === '' && el.querySelectorAll('.smiley').length === 1) {
 				el.classList.add('large-emojis')
 			}
+		}
+	}
+})
+Vue.directive('latex', {
+	inserted: (el) => {
+		if (/\$(.*?)\$/.test(el.innerHTML)) {
+			Latex.latexify(el.innerHTML).then((result: any) => {
+				el.innerHTML = result
+			})
 		}
 	}
 })

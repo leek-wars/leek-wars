@@ -29,7 +29,7 @@
 								<span v-if="$store.getters.moderator && message.author.muted" class="unmute" @click="unmute(message.author)"> • unmute</span>
 							</span>
 						</div>
-						<div v-large-emojis v-for="(text, i) in message.texts" :key="i" class="text" v-html="text"></div>
+						<div v-large-emojis v-latex v-for="(text, i) in message.texts" :key="i" class="text" v-html="text"></div>
 						<div :title="LeekWars.formatDateTime(message.time)" class="time">{{ LeekWars.formatTime(message.time) }}</div>
 					</div>
 				</div>
