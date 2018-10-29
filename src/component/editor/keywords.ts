@@ -1,10 +1,23 @@
+import { AI } from '@/model/ai'
 import { i18n } from '@/model/i18n'
 import { LeekWars } from "@/model/leekwars"
+
+class Keyword {
+	name!: string
+	fullName!: string
+	type!: string
+	details!: any
+	argumentCount?: number
+	arguments?: string[]
+	ai?: AI
+	line?: number
+	shortcut?: string
+}
 
 function generateKeywords() {
 	let last = ""
 	let overloading = 0
-	const keywords = []
+	const keywords: Keyword[] = []
 
 	for (const fun of LeekWars.functions) {
 		let functionName = fun.name
@@ -59,7 +72,7 @@ function generateKeywords() {
 			details += "<b>" + i18n.t('editor', 'return') + "</b><br>"
 			details += "<ul><li>" + fun.return_name + " : " + i18n.t('documentation.func_' + functionName + '_return') + "</li></ul>"
 		}
-		keywords.push([text, name, details, 'function', fun.arguments_names.length])
+		keywords.push({name: text, fullName: name, details, type: 'function', argumentCount: fun.arguments_names.length})
 		last = fun.name
 	}
 
@@ -86,9 +99,9 @@ function generateKeywords() {
 			details = "<h4>" + i18n.t('editor.constant', [constant.name]) + "</h4><br>"
 			details += i18n.t('documentation.const_' + constant.name)
 		}
-		keywords.push([constant.name, constant.name, details, 'constant'])
+		keywords.push({name: constant.name, fullName: constant.name, details, type: 'constant'})
 	}
 	return keywords
 }
 
-export { generateKeywords }
+export { generateKeywords, Keyword }

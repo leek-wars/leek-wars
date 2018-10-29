@@ -77,7 +77,7 @@
 				<div class="panel">
 					<div class="content">
 						<div class="editors">
-							<ai-view v-for="ai in activeAIs" ref="editors" :key="ai.id" :ai="ai" :visible="currentAI === ai" :font-size="fontSize" :line-height="lineHeight" />
+							<ai-view v-for="ai in activeAIs" ref="editors" :key="ai.id" :ai="ai" :ais="ais" :visible="currentAI === ai" :font-size="fontSize" :line-height="lineHeight" @jump="jump" @load="load" />
 						</div>
 						<div class="search-panel">
 							<img src="/image/search.png">
@@ -564,15 +564,19 @@
 			localStorage.setItem('editor/large', '' + this.enlargeWindow)
 		}
 
-		jumpTo(ai: any, line: number) {
-			// if (ai != current) {
-			// 	LW.page('/editor/' + ai)
-			// }
-			// line--
-			// editors[current].editor.setCursor({line: line, ch: 0})
-			// var myHeight = editors[current].editor.getScrollInfo().clientHeight
-			// var coords = editors[current].editor.charCoords({line: line, ch: 0}, "local")
-			// editors[current].editor.scrollTo(null, (coords.top + coords.bottom - myHeight) / 2)
+		jump(ai: AI, line: number) {
+			if (ai !== this.currentAI) {
+				this.$router.push('/editor/' + ai.id)
+			}
+			Vue.nextTick(() => {
+				const editor = (this.$refs.editors as AIView[]).find(editor => editor.ai === ai)
+				if (editor) { editor.scrollToLine(line - 1) }
+			})
+		}
+		load(ai: AI) {
+			if (!(ai.id in this.activeAIs)) {
+				Vue.set(this.$data.activeAIs, ai.id, ai)
+			}
 		}
 
 		search(activate: boolean) {

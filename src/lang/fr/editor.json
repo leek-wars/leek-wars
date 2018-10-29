@@ -8,7 +8,7 @@
 	"cancel": "Annuler",
 	"child": "Enfant",
 	"constant": "Constante {0}",
-	"defined_in": "Définie dans <b>%1$s</b> à la ligne <b>%2$s</b>",
+	"defined_in": "Définie dans <b>{0}</b> à la ligne <b>{1}</b>",
 	"delete": "Supprimer",
 	"delete_ai": "Supprimer l'IA \"{0}\" ?",
 	"delete_folder": "Supprimer le dossier \"{0}\" ?",

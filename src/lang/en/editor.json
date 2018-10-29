@@ -8,7 +8,7 @@
 	"cancel-test": "Cancel",
 	"child": "Child",
 	"constant": "Constant {0}",
-	"defined_in": "Defined in <b>%1$s</b> at line <b>%2$s</b>",
+	"defined_in": "Defined in <b>{0}</b> at line <b>{1}</b>",
 	"delete": "Delete",
 	"delete_ai": "Delete the AI \"{0}\"?",
 	"delete_folder": "Delete folder \"{0}\"?",

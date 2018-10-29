@@ -1,5 +1,6 @@
 import packageJson from '@/../package.json'
 import '@/component/editor/codemirror/runmode.js'
+import { Keyword } from '@/component/editor/keywords'
 import { BattleRoyale } from '@/model/battle-royale'
 import { ChipTemplate } from '@/model/chip'
 import { Commands } from '@/model/commands'
@@ -383,7 +384,7 @@ const LeekWars = {
 	linkify, toChatLink,
 	EFFECT_TYPES,
 	socket: new Socket(),
-	constants: CONSTANTS, hats: HATS, weapons: WEAPONS, chips: CHIPS, trophies: TROPHIES, chipTemplates: CHIP_TEMPLATES, trophyCategories: TROPHY_CATEGORIES, weaponTemplates: WEAPON_TEMPLATES, functions: FUNCTIONS, summonTemplates: SUMMON_TEMPLATES, potions: POTIONS, hatTemplates: HAT_TEMPLATES, orderedChips: ORDERED_CHIPS, orderedWeapons: ORDERED_WEAPONS, keywords: [] as any[]
+	constants: CONSTANTS, hats: HATS, weapons: WEAPONS, chips: CHIPS, trophies: TROPHIES, chipTemplates: CHIP_TEMPLATES, trophyCategories: TROPHY_CATEGORIES, weaponTemplates: WEAPON_TEMPLATES, functions: FUNCTIONS, summonTemplates: SUMMON_TEMPLATES, potions: POTIONS, hatTemplates: HAT_TEMPLATES, orderedChips: ORDERED_CHIPS, orderedWeapons: ORDERED_WEAPONS, keywords: [] as Keyword[]
 }
 
 function setTitle(title: string | TranslateResult | null, subtitle: string | TranslateResult | null = null) {
