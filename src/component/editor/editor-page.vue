@@ -57,8 +57,8 @@
 
 						<loader v-if="!rootFolder" />
 
-						<div v-autostopscroll class="ai-list">
-							<editor-folder v-if="rootFolder" :folder="rootFolder" :level="0" />
+						<div v-if="rootFolder" v-autostopscroll class="ai-list">
+							<editor-folder :folder="rootFolder" :level="0" />
 						</div>
 						<div v-if="currentEditor && currentEditor.loaded" class="ai-stats">
 							<div class="line-count-wrapper">{{ $t('n_lines', [currentEditor.lines]) }}</div>
