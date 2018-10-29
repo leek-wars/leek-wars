@@ -424,55 +424,22 @@
 			const saveID = this.currentEditor.id > 0 ? this.currentEditor.id : 0
 			const content = this.currentEditor.editor.getValue()
 
-			LeekWars.post('ai/save/', {ai_id: saveID, code: content}).then((data: any) => {
+			LeekWars.post('ai/save', {ai_id: saveID, code: content}).then((data: any) => {
 				if (this.currentEditor === null) { return }
 				this.currentEditor.saving = false
-
 				if (this.currentEditor.ai.v2) {
-					// 			var errors = data.result
-					// 			editor.errors = errors;
-					// 			if (editor.editor.error_overlay) {
-					// 				editor.editor.removeOverlay(editor.editor.error_overlay)
-					// 			}
-					// 			if (!errors || errors.length == 0) {
-					// 				$('#results').append("<div class='good'>✓ " + _.lang.get('editor', 'valid_ai', _.protect(editor.name)) + "</div><br>")
-					// 				$('#results .good').last().delay(800).fadeOut(function() {
-					// 					$('#results').hide()
-					// 				})
-					// 				editor.error = false
-					// 				editor.tabDiv.removeClass("error")
-					// 			} else {
-					// 				var lines = []
-					// 				for (var e in errors) {
-					// 					var error = errors[e]
-					// 					lines.push(error[0] - 1)
-					// 				}
-					// 				var start = 0
-					// 				var overlay = {token: function(stream, state, lineNo) {
-					// 					var i = lines.indexOf(lineNo, start)
-					// 					if (i == -1) {
-					// 						stream.skipToEnd()
-					// 					} else {
-					// 						while (i < errors.length - 1 && stream.start > errors[i][1]) {
-					// 							i++
-					// 						}
-					// 						start = i
-					// 						if (stream.start == errors[i][1]) {
-					// 							var len = Math.max(1, errors[i][3] - errors[i][1] - 1)
-					// 							stream.eatWhile(function() {
-					// 								return len-- > 0
-					// 							})
-					// 							return "highlight-error"
-					// 						} else {
-					// 							stream.next()
-					// 						}
-					// 					}
-					// 				}}
-					// 				editor.editor.error_overlay = overlay
-					// 				editor.editor.addOverlay(overlay)
-					// 				editor.error = true
-					// 				editor.tabDiv.addClass("error")
-					// 			}
+					const errors = data.data.result
+					if (this.currentEditor.overlay) {
+						this.currentEditor.editor.removeOverlay(this.currentEditor.overlay)
+					}
+					if (!errors || errors.length === 0) {
+						this.good = true
+						setTimeout(() => this.good = false, 800)
+						this.currentEditor.ai.valid = true
+						this.currentEditor.error = false
+					} else {
+						this.currentEditor.addErrorOverlay(errors)
+					}
 				} else {
 					if (!data.data.success || !data.data.result || data.data.result.length === 0) {
 						this.currentEditor.serverError = true
@@ -481,25 +448,18 @@
 					this.errors = []
 					for (const res of data.data.result) {
 						const code = res[0]
-						const ia = res[1]
-						const editor = this.activeAIs[ia]
-						if (!editor) {
-							continue
-						}
+						const ai = this.activeAIs[res[1]]
+						const editor = (this.$refs.editors as AIView[]).find(e => e.ai === ai)
+						if (!ai || !editor) { continue }
 						if (code === 2) {
-
 							this.good = true
 							setTimeout(() => this.good = false, 800)
-							// editor.ai.valid = true
-							// editor.removeErrors()
-
+							ai.valid = true
+							editor.removeErrors()
 						} else if (code === 1) {
-
-							// this.errors.push({ai: editor.ai.name, error: res[2]})
-							// editor.ai.valid = false
-
+							this.errors.push({ai: ai.name, error: res[2]})
+							ai.valid = false
 						} else if (code === 0) {
-
 							const line = res[3]
 							let info = res[5]
 							if (res.length === 8) {
@@ -508,15 +468,13 @@
 								info = this.$t('leekscript.' + res[6])
 							}
 							info = '(' + res[5] + ') ' + info
-							// this.errors.push({ai: editor.ai.name, message: info})
-							// editor.ai.valid = false
-							// editor.errorLine = line
-							// editor.showErrors()
+							this.errors.push({ai: ai.name, message: info})
+							ai.valid = false
+							editor.showError(line)
 						}
 					}
 				}
 				this.currentEditor.updateFunctions()
-
 				if (this.currentEditor.needTest) {
 					this.currentEditor.needTest = false
 					this.currentEditor.test()

@@ -43,7 +43,6 @@
 		public loaded = false
 		public loading: boolean = false
 		public error!: boolean
-		public errorLine: any
 		public needTest = false
 		public hlLine = null
 		public pos: any
@@ -61,6 +60,7 @@
 		public keyMap!: CodeMirror.KeyMap
 		public hintDialog: boolean = false
 		public detailDialog: boolean = false
+		public overlay: any = null
 
 		created() {
 			this.id = this.ai.id
@@ -187,17 +187,17 @@
 			// 	}
 		}
 
-		public showErrors() {
-			console.log("show error")
-			// TODO
-			// const line = this.div.querySelectorAll('.CodeMirror-lines .CodeMirror-code > div')[this.errorLine - 1].querySelector('pre')
-			// line.classList.add('line-error')
+		public showError(line: number) {
+			const codemirror = this.$refs.codemirror as HTMLElement
+			const l = codemirror.querySelectorAll('.CodeMirror-lines .CodeMirror-code > div')[line - 1].querySelector('pre')
+			if (l) { l.classList.add('line-error') }
 		}
 
 		public removeErrors() {
-			// this.div.querySelectorAll('.line-error').forEach((line: any) => {
-				// line.classList.remove('line-error')
-			// })
+			const codemirror = this.$refs.codemirror as HTMLElement
+			codemirror.querySelectorAll('.line-error').forEach((line: any) => {
+				line.classList.remove('line-error')
+			})
 		}
 
 		public test() {
@@ -224,6 +224,36 @@
 			}
 			if (this.hlLine) { this.editor.removeLineClass(this.hlLine, "background", "activeline") }
 			// this.hlLine = this.editor.addLineClass(cursor.line, "background", "activeline")
+		}
+
+		public addErrorOverlay(errors: any) {
+			const lines: any = []
+			for (const error of errors) {
+				lines.push(error[0] - 1)
+			}
+			let start = 0
+			const overlay = {token: (stream: any) => {
+				const lineNo = stream.lineOracle.line
+				let i = lines.indexOf(lineNo, start)
+				if (i === -1) {
+					stream.skipToEnd()
+				} else {
+					while (i < errors.length - 1 && stream.start > errors[i][1]) {
+						i++
+					}
+					start = i
+					if (stream.start === errors[i][1]) {
+						let len = Math.max(1, errors[i][3] - errors[i][1] - 1)
+						stream.eatWhile(() => len-- > 0)
+						return "highlight-error"
+					} else {
+						stream.next()
+					}
+				}
+			}}
+			this.overlay = overlay
+			this.editor.addOverlay(overlay)
+			this.error = true
 		}
 
 		// // Not used
@@ -819,10 +849,10 @@
 		top: calc(50% - 35px);
 		left: calc(50% - 35px);
 	}
-	.line-error {
+	.codemirror /deep/ .line-error {
 		position: relative;
 	}
-	.line-error:after {
+	.codemirror /deep/ .line-error:after {
 		position: absolute;
 		top: 6px;
 		left: 0;
