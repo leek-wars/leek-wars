@@ -1086,7 +1086,7 @@
 	"min_cores": "Coeurs min",
 	"min_level": "Level min",
 	"n_cores": "Coeurs : %s",
-	"n_operations": "<b>%s</b> opérations",
+	"n_operations": "<b>{0}</b> opérations",
 	"parameters": "Paramètres",
 	"return": "Retour",
 	"title": "Documentation",

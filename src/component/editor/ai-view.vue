@@ -1,9 +1,15 @@
 <template>
 	<div v-show="visible" class="ai">
 		<div v-show="!loading" ref="codemirror" class="codemirror"></div>
-		<div ref="hintDialog" class="hint-dialog">
-			<div class="hints"></div>
-			<div class="details"></div>
+		<div v-show="hintDialog" ref="hintDialog" class="hint-dialog" :style="{left: hintDialogLeft + 'px', top: hintDialogTop + 'px'}">
+			<div class="hints" ref="hints">
+				<div v-for="(hint, index) of hints" :key="hint.name" @click="clickHint($event, index)" class="hint" :class="{active: selectedCompletion === index}">{{ hint.name }}</div>
+			</div>
+			<div class="details" v-if="selectedCompletion in hints">
+				<span v-if="typeof(hints[selectedCompletion].details) === 'string'" v-html="hints[selectedCompletion].details"></span>
+				<weapon-preview v-else-if="hints[selectedCompletion].details.type === 'weapon'" :weapon="hints[selectedCompletion].details.weapon" />
+				<chip-preview v-else-if="hints[selectedCompletion].details.type === 'chip'" :chip="hints[selectedCompletion].details.chip" />
+			</div>
 		</div>
 		<div ref="detailDialog" class="detail-dialog"></div>
 		<loader v-if="loading" />
@@ -11,6 +17,8 @@
 </template>
 
 <script lang="ts">
+	import ChipPreview from '@/component/market/chip-preview.vue'
+	import WeaponPreview from '@/component/market/weapon-preview.vue'
 	import { AI } from '@/model/ai'
 	import { i18n } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
@@ -31,7 +39,10 @@
 		["if", 'if (', ') {\n\t\n}', "<h3>Condition if</h3><br>if ( ... ) { ... }"]
 	]
 
-	@Component({ name: 'ai-vue' })
+	@Component({ name: 'ai-view', components: {
+		'weapon-preview': WeaponPreview,
+		'chip-preview': ChipPreview
+	}})
 	export default class AIView extends Vue {
 		@Prop({required: true}) ai!: AI
 		@Prop() visible!: boolean
@@ -57,10 +68,24 @@
 		public serverError: boolean = false
 		public autoClosing: boolean = true
 		public includes: any
-		public selectedCompletion!: number
+		public selectedCompletion: number = 0
 		public completions: any[] = []
-		public keyMap!: CodeMirror.KeyMap
+		public dialogKeyMap: CodeMirror.KeyMap = {
+			Up: this.up,
+			Down: this.down,
+			PageUp: this.up,
+			PageDown: this.down,
+			Home: this.top,
+			End: this.bottom,
+			Enter: this.pick,
+			Tab: this.pick,
+			Esc: this.close
+		}
 		public hintDialog: boolean = false
+		public hintDialogTop: number = 0
+		public hintDialogLeft: number = 0
+		public hints: string[] = []
+		public details: string[] = []
 		public detailDialog: boolean = false
 		public overlay: any = null
 
@@ -70,7 +95,7 @@
 		}
 			
 		mounted() {
-			const codeMirrorElement = this.$refs.codemirror as HTMLElement
+			const codeMirrorElement = this.$refs.codemirror as any
 			this.editor = CodeMirror(codeMirrorElement, {
 				value: "",
 				mode: "leekscript",
@@ -92,7 +117,7 @@
 					"Ctrl-E": () => this.commentCode(),
 					"Ctrl-K": () => this.removeLine()
 				},
-			})
+			} as any)
 			this.document = this.editor.getDoc()
 
 			this.editor.on('change', (_, changes) => this.change(changes))
@@ -619,9 +644,7 @@
 			// Raccourcis
 			for (const r in AUTO_SHORTCUTS) {
 				if (AUTO_SHORTCUTS[r][0].indexOf(start.toLowerCase()) === 0) {
-					completions.push(
-						{text: AUTO_SHORTCUTS[r][0], name: AUTO_SHORTCUTS[r][0], details: AUTO_SHORTCUTS[r][3], type: 'shortcut', shortcut: r}
-					)
+					completions.push({text: AUTO_SHORTCUTS[r][0], name: AUTO_SHORTCUTS[r][0], details: AUTO_SHORTCUTS[r][3], type: 'shortcut', shortcut: r})
 				}
 			}
 			this.completions = completions
@@ -636,67 +659,52 @@
 
 				const pos = this.editor.cursorCoords({line: cur.line, ch: cur.ch - token.string.length})
 				const left = pos.left, top = pos.bottom
+				const offset = (this.$refs.codemirror as HTMLElement).getBoundingClientRect()
 
-				// this.hintDialog.css('top', top)
-				// this.hintDialog.css('left', left)
+				this.hintDialogTop = top - offset.top
+				this.hintDialogLeft = left - offset.left
 
-				// this.hintDialog.find('.hints').text("")
-				// this.hintDialog.find('.details').text("")
-				// for (const i in completions) {
-					// this.hintDialog.find('.hints').append("<div class='hint'>" + completions[i].name + "</div>")
-					// this.hintDialog.find('.details').append("<div class='detail'>" + completions[i].details + "</div>")
-				// }
-
+				this.hints = completions
 				this.selectHint(0)
 
-				// var thisEditor = this
-				// this.hintDialog.find('.hint').click(function(e) {
-
-				// 	if ($(this).index() === thisEditor.selectedCompletion) {
-				// 		thisEditor.pick()
-				// 	} else {
-				// 		thisEditor.selectHint($(this).index())
-				// 	}
-				// 	thisEditor.editor.focus()
-
-				// 	e.stopPropagation()
-				// 	e.preventDefault()
-				// 	return false
-				// })
-
-				// $('html').click(function() {
-				// 	thisEditor.close()
-				// })
-				this.keyMap = {
-					Up: this.up,
-					Down: this.down,
-					PageUp: this.up,
-					PageDown: this.down,
-					Home: this.top,
-					End: this.bottom,
-					Enter: this.pick,
-					Tab: this.pick,
-					Esc: this.close
-				}
-				this.editor.removeKeyMap(this.keyMap)
-				this.editor.addKeyMap(this.keyMap)
+				this.editor.removeKeyMap(this.dialogKeyMap)
+				this.editor.addKeyMap(this.dialogKeyMap)
 			}
 		}
+		clickHint(e: Event, index: number) {
+			if (index === this.selectedCompletion) {
+				this.pick()
+			} else {
+				this.selectHint(index)
+			}
+			this.editor.focus()
+			e.stopPropagation()
+			e.preventDefault()
+			return false
+		}
 		up() {
-			// var index = this.selectedCompletion === 0 ? (this.hintDialog.find('.hint').length - 1) : this.selectedCompletion - 1
-			// this.selectHint(index)
+			this.selectHint(this.selectedCompletion === 0 ? (this.hints.length - 1) : this.selectedCompletion - 1)
 		}
 		down() {
-			// var index = (this.selectedCompletion + 1) % this.hintDialog.find('.hint').length
-			// this.selectHint(index)
+			this.selectHint((this.selectedCompletion + 1) % this.hints.length)
 		}
 		top() {
 			this.selectHint(0)
 		}
 		bottom() {
-			// this.selectHint(this.hintDialog.find('.hint').length)
+			this.selectHint(this.hints.length - 1)
 		}
-
+		selectHint(index: number) {
+			this.selectedCompletion = index
+			Vue.nextTick(() => {
+				const hints = this.$refs.hints as HTMLElement
+				const hintList = (this.$refs.hintDialog as HTMLElement).querySelectorAll('.hint') as any
+				const posIndex = Math.max(0, Math.round(index - (hints.offsetHeight / hintList[index].offsetHeight) / 2 + 1))
+				if (hintList[posIndex]) {
+					hints.scrollTo(0, -2 + hintList[posIndex].offsetTop)
+				}
+			})
+		}
 		pick() {
 			const completion = this.completions[this.selectedCompletion]
 
@@ -745,28 +753,9 @@
 			}
 			this.close()
 		}
-
 		close() {
-			// this.hintDialog.hide()
-			this.editor.removeKeyMap(this.keyMap)
-			this.editor.off("blur", this.onBlur)
-		}
-		selectHint(hint: number) {
-			this.selectedCompletion = hint
-
-			// this.hintDialog.find('.hint').removeClass('active')
-			// var elem = $(this.hintDialog.find('.hint')[hint])
-			// elem.addClass('active')
-
-			// this.hintDialog.find('.details').children().hide()
-			// $(this.hintDialog.find('.details').children()[hint]).show()
-
-			// var posIndex = Math.round(hint - (this.hintDialog.find('.hints').height() / elem.height()) / 2 + 1)
-			// posIndex = Math.max(posIndex, 0)
-			// this.hintDialog.find('.hints').scrollTop(-2 + this.hintDialog.find('.hints').scrollTop() + $(this.hintDialog.find('.hint')[posIndex]).position().top)
-		}
-		onBlur() {
-			this.close()
+			this.hintDialog = false
+			this.editor.removeKeyMap(this.dialogKeyMap)
 		}
 
 		public updateIncludes() {
@@ -869,15 +858,15 @@
 	.hint-dialog {
 		position: absolute;
 		z-index: 100;
-		display: none;
 		margin: 0;
+		display: flex;
 	}
 	.hint-dialog .hints {
-		display: inline-block;
 		width: 400px;
 		background: white;
 		font-family: monospace;
 		overflow-y: auto;
+		overflow-x: hidden;
 		vertical-align: top;
 		height: 260px;
 		padding: 2px;
@@ -895,15 +884,15 @@
 		color: black;
 		cursor: pointer;
 		user-select: none;
+		font-size: 14px;
+		line-height: 20px;
 	}
 	.hint-dialog .details {
-		display: inline-block;
 		width: 400px;
 		overflow-y: auto;
 		background: #f2f2f2;
 		max-height: 600px;
 		padding: 5px;
-		vertical-align: top;
 		border: 1px solid silver;
 		box-shadow: 2px 3px 5px rgba(0,0,0,.2);
 	}
@@ -916,5 +905,10 @@
 		box-shadow: 2px 3px 5px rgba(0,0,0,.2);
 		border: 1px solid silver;
 		z-index: 100;
+	}
+	.details /deep/ .deprecated-message {
+		color: #ff7f00;
+		font-weight: bold;
+		margin: 10px 0;
 	}
 </style>

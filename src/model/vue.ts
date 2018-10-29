@@ -167,6 +167,9 @@ const vueMain = new Vue({
 		window.addEventListener('focus', () => {
 			this.$emit('focus')
 		})
+		window.addEventListener('click', () => {
+			this.$emit('htmlclick')
+		})
 		setInterval(() => {
 			LeekWars.time = (Date.now() / 1000) | 0 - LeekWars.timeDelta
 		}, 1000)
