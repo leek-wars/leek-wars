@@ -432,6 +432,7 @@
 		}
 
 		getTokenInformation(token: string, pos: CodeMirror.Position | null = null) {
+			if (token.startsWith('@')) { token = token.substring(1) }
 			for (const keyword of LeekWars.keywords) {
 				if (keyword.name === token) {
 					if (keyword.type === 'function' && pos) {
@@ -454,16 +455,20 @@
 					}
 				}
 			}
-			for (const fun of this.ai.functions) {
-				if (token === fun.name) {
-					return fun
+			if (this.ai.functions) {
+				for (const fun of this.ai.functions) {
+					if (token === fun.name) {
+						return fun
+					}
 				}
 			}
-			for (const include of this.ai.includes) {
-				if (include.functions) {
-					for (const fun of include.functions) {
-						if (token === fun.name) {
-							return fun
+			if (this.ai.includes) {
+				for (const include of this.ai.includes) {
+					if (include.functions) {
+						for (const fun of include.functions) {
+							if (token === fun.name) {
+								return fun
+							}
 						}
 					}
 				}
@@ -505,7 +510,7 @@
 			if (tokenString !== this.hoverToken) {
 				this.hoverToken = tokenString
 				const keyword = this.getTokenInformation(tokenString, editorPos)
-				if (keyword !== null) {
+				if (keyword) {
 					clearTimeout(this.detailTimer)
 					this.detailTimer = setTimeout(() => {
 						this.detailDialogContent = keyword
@@ -551,7 +556,7 @@
 			const completions: Keyword[] = []
 			const start = token.string
 
-			function maybeAdd(data: string | Keyword) {
+			const maybeAdd = (data: string | Keyword) => {
 				if (typeof data === 'string') {
 					if (data.toLowerCase().indexOf(start.toLowerCase()) === 0) {
 						completions.push({name: data, fullName: data, details: i18n.t('editor.keyword', [data]) as string, type: 'keyword'})
