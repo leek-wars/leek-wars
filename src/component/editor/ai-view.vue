@@ -1,6 +1,6 @@
 <template>
 	<div v-show="visible" class="ai">
-		<div v-show="!loading" ref="codemirror" class="codemirror"></div>
+		<div v-show="!loading" ref="codemirror" class="codemirror" :style="{'font-size': fontSize + 'px', 'line-height': lineHeight + 'px'}" ></div>
 		<div v-show="hintDialog" ref="hintDialog" class="hint-dialog" :style="{left: hintDialogLeft + 'px', top: hintDialogTop + 'px'}">
 			<div class="hints" ref="hints">
 				<div v-for="(hint, index) of hints" :key="hint.name" @click="clickHint($event, index)" class="hint" :class="{active: selectedCompletion === index}">{{ hint.name }}</div>
@@ -46,6 +46,8 @@
 	export default class AIView extends Vue {
 		@Prop({required: true}) ai!: AI
 		@Prop() visible!: boolean
+		@Prop() fontSize!: number
+		@Prop() lineHeight!: number
 
 		public id!: number
 		public editor!: CodeMirror.Editor

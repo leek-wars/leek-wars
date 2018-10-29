@@ -76,8 +76,8 @@
 			<div v-show="!LeekWars.mobile || LeekWars.splitBack" class="column9">
 				<div class="panel">
 					<div class="content">
-						<div :style="{'font-size': fontSize + 'px', 'line-height': lineHeight + 'px'}" class="editors">
-							<ai-view v-for="ai in activeAIs" ref="editors" :key="ai.id" :ai="ai" :visible="currentAI === ai" />
+						<div class="editors">
+							<ai-view v-for="ai in activeAIs" ref="editors" :key="ai.id" :ai="ai" :visible="currentAI === ai" :fontSize="fontSize" :lineHeight="lineHeight" />
 						</div>
 						<div class="search-panel">
 							<img src="/image/search.png">
