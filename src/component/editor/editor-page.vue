@@ -575,12 +575,6 @@
 			// editors[current].editor.scrollTo(null, (coords.top + coords.bottom - myHeight) / 2)
 		}
 
-		onCursorChange(editor: any) {
-			// editors[current].cursorChange()
-		}
-		onEditorChange(editor: any, changes: any) {
-			// editors[current].change(changes)
-		}
 		search(activate: boolean) {
 			// if (activate) {
 			// 	var query = current in editors ? editors[current].editor.getSelection() : ''
