@@ -1,4 +1,5 @@
 import CodeMirror from 'codemirror'
+import { LeekWars } from '@/model/leekwars'
 
 CodeMirror.defineMode('leekscript', (config, modeOptions) => {
 	var indentUnit = config.indentUnit;
@@ -17,23 +18,18 @@ CodeMirror.defineMode('leekscript', (config, modeOptions) => {
 			"if": kw('if'), "while": A, "else": B, "do": B,
 			"return": C, "break": C, "continue": C, "and": kw('and'), "or": kw('or'), "xor": kw('xor'), "not": kw('not'), "is": kw('is'),
 			"for": kw('for'), "in": kw('operator'),
-
 			"var": variableDeclaration, "global": variableDeclaration, "function": functionDeclaration,
-    
 			"true": atom, "false": atom, "null": atom
 		};
-
-		// for (var c in LW.constants) {
-		//  jsKeywords[LW.constants[c].name] = {type: "variable", style: "lsconst"};
-		// }
-
-		// for (var f in LW.functions) {
-		//   var style = LW.functions[f].deprecated ? 'lsfunc-deprec' : 'lsfunc'
-		//   jsKeywords[LW.functions[f].name] = {type: "variable", style: style};
-		// }
-
-		return jsKeywords;
-	}();
+		for (const constant of LeekWars.constants) {
+			jsKeywords[constant.name] = {type: "variable", style: "lsconst"}
+		}
+		for (const fun of LeekWars.functions) {
+			var style = fun.deprecated ? 'lsfunc-deprec' : 'lsfunc'
+			jsKeywords[fun.name] = {type: "variable", style: style}
+		}
+		return jsKeywords
+	}()
 
 	var isOperatorChar = /[+\-*&%=<>!?|~^]/;
 
