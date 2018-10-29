@@ -132,14 +132,16 @@ const vueMain = new Vue({
 	data: { savedPosition: 0 },
 	methods: {
 		onLanguageLoaded: () => {
-			const style = "color: black; font-size: 13px; font-weight: bold;"
-			const styleRed = "color: red; font-size: 14px; font-weight: bold;"
-			console.log("%c" + i18n.t('main.console_alert_1'), style)
-			console.log("%c" + i18n.t('main.console_alert_2'), styleRed)
-			console.log("%c" + i18n.t('main.console_alert_3'), style)
-			console.log("")
-			console.log("%c✔️ " + i18n.t('main.console_github'), style)
-			console.log("")
+			if (!LeekWars.dev) {
+				const style = "color: black; font-size: 13px; font-weight: bold;"
+				const styleRed = "color: red; font-size: 14px; font-weight: bold;"
+				console.log("%c" + i18n.t('main.console_alert_1'), style)
+				console.log("%c" + i18n.t('main.console_alert_2'), styleRed)
+				console.log("%c" + i18n.t('main.console_alert_3'), style)
+				console.log("")
+				console.log("%c✔️ " + i18n.t('main.console_github'), style)
+				console.log("")
+			}
 		}
 	},
 	render: (h) => {
