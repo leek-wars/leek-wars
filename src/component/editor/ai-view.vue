@@ -20,6 +20,7 @@
 	import js_beautify from 'js-beautify'
 	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 	import './codemirror/leekscript-mode'
+	import './codemirror/matchbrackets'
 
 	const AUTO_SHORTCUTS = [
 		["lama", "#LamaSwag", "", "Le pouvoir du lama"],
@@ -77,7 +78,7 @@
 				indentUnit: 4,
 				indentWithTabs: true,
 				// highlightSelectionMatches: true,
-				// matchBrackets: true,
+				matchBrackets: true,
 				lineNumbers: true,
 				lineWrapping: true,
 				undoDepth: 200,

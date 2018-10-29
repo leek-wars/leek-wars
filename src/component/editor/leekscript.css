@@ -52,10 +52,10 @@
 	padding: 3px 0;
 }
 .CodeMirror-matchingbracket {
-	color: #00f;
+	color: #00f !important;
 	font-weight: bold;
 }
 .CodeMirror-nonmatchingbracket {
-	color: #f00;
+	color: #f00 !important;
 	font-weight: bold;
 }
