@@ -21,6 +21,7 @@
 	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 	import './codemirror/leekscript-mode'
 	import './codemirror/matchbrackets'
+	import './codemirror/match-highlighter'
 
 	const AUTO_SHORTCUTS = [
 		["lama", "#LamaSwag", "", "Le pouvoir du lama"],
@@ -77,7 +78,7 @@
 				tabSize: 4,
 				indentUnit: 4,
 				indentWithTabs: true,
-				// highlightSelectionMatches: true,
+				highlightSelectionMatches: true,
 				matchBrackets: true,
 				lineNumbers: true,
 				lineWrapping: true,
