@@ -23,6 +23,7 @@ import { LeekWars } from '@/model/leekwars'
 import '@/model/serviceworker'
 import { store } from "@/model/store"
 import router from '@/router'
+import 'chartist/dist/scss/chartist.scss'
 import Vue from 'vue'
 import Chartist from 'vue-chartist'
 import VueGitHubButtons from 'vue-github-buttons'
@@ -47,7 +48,6 @@ import { Latex } from './latex'
 
 Vue.use(VueGitHubButtons)
 Vue.use(Chartist)
-import 'chartist/dist/scss/chartist.scss'
 Vue.use(Vuetify, {
 	components: { VApp, VBtn, VTooltip, VMenu, VList, VIcon, VTabs, VRadioGroup,
 		VSnackbar, VCheckbox, VSwitch, VProgressCircular, VDialog, transitions },
@@ -62,7 +62,6 @@ Vue.mixin({
 		return { LeekWars }
 	},
 	beforeCreate() {
-		// console.log("Before create", this)
 		loadInstanceTranslations(i18n.locale, this as any)
 	}
 })
