@@ -301,21 +301,6 @@
 			// 	LW.pages.editor.search(true)
 			// 	e.preventDefault()
 			// }
-			// // Ctrl + '/' or Ctrl + ':' : comment
-			// if (e.ctrlKey && e.keyCode == 191) {
-			// 	editors[current].commentCode()
-			// 	e.preventDefault()
-			// }
-			// // Ctrl-Space : autocompletion
-			// if (e.ctrlKey && e.keyCode == 32) {
-			// 	editors[current].autocomplete(true)
-			// 	e.preventDefault()
-			// }
-			// // Ctrl-Shift-F : format code
-			// if (e.shiftKey && e.ctrlKey && e.keyCode == 70) {
-			// 	editors[current].formatCode()
-			// 	e.preventDefault()
-			// }
 
 			this.$root.$on('back', () => {
 				this.$router.push('/editor')

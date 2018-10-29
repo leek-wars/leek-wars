@@ -117,7 +117,11 @@
 					"Shift-Tab": () => this.unindentCode(),
 					"Ctrl-D": () => this.duplicateLine(),
 					"Ctrl-E": () => this.commentCode(),
-					"Ctrl-K": () => this.removeLine()
+					"Shift-/": () => this.commentCode(),
+					"Shift-Ctrl-/": () => this.commentCode(),
+					"Ctrl-K": () => this.removeLine(),
+					"Ctrl-Space": () => this.autocomplete(true),
+					"Shift-Ctrl-F": () => this.formatCode()
 				},
 			} as any)
 			this.document = this.editor.getDoc()
