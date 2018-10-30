@@ -857,19 +857,6 @@
 	.folder-content img {
 		width: 80px;
 	}
-	.error-tooltip {
-		position: absolute;
-		display: none;
-		color: #ab0000;
-		background: white;
-		border: 1px solid #ff6c71;
-		z-index: 10;
-		padding: 4px 6px;
-		border-top-right-radius: 3px;
-		border-bottom-right-radius: 3px;
-		border-bottom-left-radius: 3px;
-		font-size: 16px;
-	}
 	.label-beta {
 		background: #ff54e3;
 		color: white;
