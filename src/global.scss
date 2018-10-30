@@ -378,6 +378,7 @@ textarea {
 	position: relative;
 	background: rgba(150, 150, 150, 0.2);
 	margin-left: 2px;
+	user-select: none;
 }
 .page-bar .tab:not(.disabled) {
 	cursor: pointer;
