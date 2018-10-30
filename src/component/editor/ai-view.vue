@@ -463,7 +463,7 @@
 			if (!this.popups) { return null }
 			if (this.hintDialog) { return null }
 
-			var pos = {left: e.pageX, top: e.pageY }
+			const pos = {left: e.pageX, top: e.pageY}
 			const codemirror = this.$refs.codemirror as HTMLElement
 			if (pos.left < codemirror.getBoundingClientRect().left || pos.top < codemirror.getBoundingClientRect().top) {
 				clearTimeout(this.detailTimer)
@@ -478,18 +478,17 @@
 			for (const er in this.errors) {
 				const error = this.errors[er]
 				if (error[0] === editorPos.line + 1 && error[1] <= editorPos.ch && error[3] > editorPos.ch) {
-					const pos = this.editor.cursorCoords({line: editorPos.line, ch: error[1]})
-					const codemirror = this.$refs.codemirror as HTMLElement
+					const p = this.editor.cursorCoords({line: editorPos.line, ch: error[1]})
 					this.errorTooltipText = error[4]
-					this.errorTooltipTop = pos.bottom - codemirror.getBoundingClientRect().top - 3
-					this.errorTooltipLeft = pos.left - codemirror.getBoundingClientRect().left - 2
+					this.errorTooltipTop = p.bottom - codemirror.getBoundingClientRect().top - 3
+					this.errorTooltipLeft = p.left - codemirror.getBoundingClientRect().left - 2
 					this.errorTooltip = true
 					shown = true
 					break
 				}
 			}
 			if (!shown) { this.errorTooltip = false }
-			var tokenString = this.editor.getTokenAt(editorPos).string
+			const tokenString = this.editor.getTokenAt(editorPos).string
 
 			if (tokenString !== this.hoverToken) {
 				this.hoverToken = tokenString
@@ -498,10 +497,8 @@
 					clearTimeout(this.detailTimer)
 					this.detailTimer = setTimeout(() => {
 						this.detailDialogContent = keyword
-						const codemirror = this.$refs.codemirror as HTMLElement
-						var pos = this.editor.cursorCoords(editorPos)
-						var top = pos.bottom
-						this.detailDialogTop = top - codemirror.getBoundingClientRect().top
+						const p = this.editor.cursorCoords(editorPos)
+						this.detailDialogTop = p.bottom - codemirror.getBoundingClientRect().top
 						this.detailDialogLeft = e.pageX - codemirror.getBoundingClientRect().left
 						this.detailDialog = true
 					}, 400)
@@ -563,7 +560,7 @@
 						const keyword = this.getTokenInformation(v.name)
 						if (!keyword) {
 							let text = "Variable <b>" + v.name + "</b>"
-							if (parseInt(i) !== this.id) { text += "<br><br>" + this.$i18n.t('editor.variable_defined_in_ai', [this.ais[parseInt(i)].name]) }
+							if (parseInt(i, 10) !== this.id) { text += "<br><br>" + this.$i18n.t('editor.variable_defined_in_ai', [this.ais[parseInt(i, 10)].name]) }
 							completions.push({name: v.name, fullName: v.name, details: text, type: 'variable'})
 						}
 					}
@@ -703,16 +700,16 @@
 			this.editor.removeKeyMap(this.dialogKeyMap)
 		}
 		public scrollToLine(line: number) {
-			this.document.setCursor({line: line, ch: 0})
+			this.document.setCursor({line, ch: 0})
 			const height = this.editor.getScrollInfo().clientHeight
-			const coords = this.editor.charCoords({line: line, ch: 0}, "local")
+			const coords = this.editor.charCoords({line, ch: 0}, "local")
 			this.editor.scrollTo(null, (coords.top + coords.bottom - height) / 2)
 		}
 		public updateIncludes() {
 			this.ai.includes = []
 			const code = this.document.getValue()
 			const regex = /include\s*\(\s*"(.*?)"\s*\)/gm
-			let m;
+			let m
 			while (m = regex.exec(code)) {
 				for (const id in this.ais) {
 					// TODO Search the AI correctly : by name, full path, relative path etc. from the including AI
@@ -790,9 +787,9 @@
 			this.searchCurrent = 0
 			this.searchLines = []
 			if (query.length > 0) {
-				for (var l = 0; l < this.document.lineCount(); ++l) {
-					var line = this.document.getLine(l)
-					var index = -1
+				for (let l = 0; l < this.document.lineCount(); ++l) {
+					const line = this.document.getLine(l)
+					let index = -1
 					while ((index = line.toLowerCase().indexOf(query, index + 1)) > -1) {
 						this.searchLines.push([l, index])
 					}
@@ -836,7 +833,7 @@
 			this.editor.addOverlay(overlay)
 			if (this.searchLines.length > 0) {
 				const line = this.searchLines[this.searchCurrent][0]
-				const t = this.editor.charCoords({line: line, ch: 0}, "local").top
+				const t = this.editor.charCoords({line, ch: 0}, "local").top
 				const middleHeight = this.editor.getScrollerElement().offsetHeight / 2
 				this.editor.scrollTo(0, t - middleHeight - 5)
 			}

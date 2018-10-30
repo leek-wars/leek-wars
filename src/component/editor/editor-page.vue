@@ -543,7 +543,7 @@
 				this.$router.push('/editor/' + ai.id)
 			}
 			Vue.nextTick(() => {
-				const editor = (this.$refs.editors as AIView[]).find(editor => editor.ai === ai)
+				const editor = (this.$refs.editors as AIView[]).find(e => e.ai === ai)
 				if (editor) { editor.scrollToLine(line - 1) }
 			})
 		}
