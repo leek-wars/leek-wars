@@ -817,6 +817,10 @@
 	.popup.input_popup input {
 		width: 90%;
 	}
+	.ai-list /deep/ .router-link-active > .item > .label {
+		background: #cacaca;
+		color: black;
+	}
 	.theme-monokai .panel {
 		background: #272822;
 	}
@@ -825,16 +829,19 @@
 		color: #eee;
 		box-shadow: 0px 3px 0px black;
 	}
-	.theme-monokai .ai-list .item:not(.modified) .label {
+	.theme-monokai .ai-list /deep/ .item:not(.modified) .label {
 		color: #eee;
 	}
-	.theme-monokai .ai-list .item.selected > .label {
+	.theme-monokai .ai-list /deep/ .router-link-active > .item > .label {
 		background: #555;
 	}
-	.theme-monokai .ai-list .item > .label:hover {
+	.theme-monokai .ai-list /deep/ .item.router-link-active > .label {
+		background: #555;
+	}
+	.theme-monokai .ai-list /deep/ .item > .label:hover {
 		background: #444;
 	}
-	.theme-monokai .ai-list .folder.dragover {
+	.theme-monokai .ai-list /deep/ .folder.dragover {
 		background: #333;
 	}
 	.theme-monokai .ai-stats {
