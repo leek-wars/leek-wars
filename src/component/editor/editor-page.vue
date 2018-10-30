@@ -391,6 +391,7 @@
 		beforeDestroy() {
 			this.$root.$off('ctrlS')
 			this.$root.$off('htmlclick')
+			LeekWars.large = false
 			// Unsaved AIs confirmation
 			// TODO
 			// var num = 0
@@ -561,6 +562,7 @@
 			localStorage.setItem('editor/popups', '' + this.popups)
 		}
 		@Watch('enlargeWindow') enlargeWindowChange() {
+			LeekWars.large = this.enlargeWindow
 			localStorage.setItem('editor/large', '' + this.enlargeWindow)
 		}
 
