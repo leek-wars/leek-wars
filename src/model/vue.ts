@@ -167,6 +167,10 @@ const vueMain = new Vue({
 				this.$emit('ctrlS')
 				event.preventDefault()
 			}
+			if (event.ctrlKey && event.keyCode === 81) {
+				this.$emit('ctrlQ')
+				event.preventDefault()
+			}
 		})
 		LeekWars.mobile = window.innerWidth < 850
 		window.addEventListener('resize', () => {

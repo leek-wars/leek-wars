@@ -281,6 +281,9 @@
 			this.$root.$on('ctrlS', () => {
 				this.save()
 			})
+			this.$root.$on('ctrlQ', () => {
+				this.testDialog = true
+			})
 			this.$root.$on('htmlclick', () => {
 				if (this.currentEditor) {
 					this.currentEditor.close()
@@ -289,12 +292,6 @@
 			// Escape
 			// if (e.keyCode == 27) {
 			// 	LW.pages.editor.search(false)
-			// }
-			// // Ctrl-Q : test
-			// if (e.ctrlKey && e.keyCode == 81) {
-			// 	_testEvent = e
-			// 	editors[current].test()
-			// 	e.preventDefault()
 			// }
 			// // Ctrl-F : search
 			// if (e.ctrlKey && e.keyCode == 70 && !e.shiftKey) {
@@ -391,6 +388,7 @@
 
 		beforeDestroy() {
 			this.$root.$off('ctrlS')
+			this.$root.$off('ctrlQ')
 			this.$root.$off('htmlclick')
 			LeekWars.large = false
 			// Unsaved AIs confirmation
