@@ -54,6 +54,7 @@
 		@Prop() visible!: boolean
 		@Prop() fontSize!: number
 		@Prop() lineHeight!: number
+		@Prop() popups!: boolean
 
 		public id!: number
 		public editor!: CodeMirror.Editor
@@ -476,8 +477,7 @@
 		}
 
 		mousemove(e: MouseEvent) {
-			// TODO option popups
-			// if (!_popups) { return null }
+			if (!this.popups) { return null }
 			if (this.hintDialog) { return null }
 
 			var pos = {left: e.pageX, top: e.pageY }
