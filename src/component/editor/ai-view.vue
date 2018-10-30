@@ -1,6 +1,13 @@
 <template>
 	<div v-show="visible" class="ai" @mousemove="mousemove" @mouseleave="mouseleave">
-		<div v-show="!loading" ref="codemirror" :style="{'font-size': fontSize + 'px', 'line-height': lineHeight + 'px'}" class="codemirror"></div>
+		<div v-show="!loading" ref="codemirror" :style="{'font-size': fontSize + 'px', 'line-height': lineHeight + 'px'}" class="codemirror" :class="{search: searchEnabled}"></div>
+		<div class="search-panel" v-if="searchEnabled">
+			<i class="material-icons">search</i>
+			<input ref="searchInput" type="text" v-model="searchQuery" class="query" autocomplete="off" @keyup.enter="$event.shiftKey ? searchPrevious() : searchNext()">
+			<span class="results" v-if="searchLines.length">{{ searchCurrent + 1 }} / {{ searchLines.length }}</span>
+			<i class="material-icons arrow" @click="searchPrevious">expand_less</i>
+			<i class="material-icons arrow" @click="searchNext">expand_more</i>
+		</div>
 		<div v-show="hintDialog" ref="hintDialog" :style="{left: hintDialogLeft + 'px', top: hintDialogTop + 'px'}" class="hint-dialog">
 			<div ref="hints" class="hints">
 				<div v-for="(hint, index) of hints" :key="hint.fullName" :class="{active: selectedCompletion === index}" class="hint" @click="clickHint($event, index)">{{ hint.fullName }}</div>
@@ -107,6 +114,10 @@
 		public errorTooltipText: string = ''
 		public errorTooltipTop: number = 0
 		public errorTooltipLeft: number = 0
+		public searchEnabled: boolean = false
+		public searchCurrent: number = 0
+		public searchQuery: string = ''
+		public searchLines: any = []
 
 		created() {
 			this.id = this.ai.id
@@ -756,6 +767,89 @@
 			}
 			return vars
 		}
+		public search() {
+			if (!this.searchEnabled) {
+				this.searchEnabled = true
+				this.searchUpdate()
+				Vue.nextTick(() => {
+					(this.$refs.searchInput as HTMLElement).focus()
+				})
+			} else {
+				this.closeSearch()
+			}
+		}
+		public closeSearch() {
+			this.searchEnabled = false
+			if (this.overlay) {
+				this.editor.removeOverlay(this.overlay)
+			}
+		}
+		@Watch('searchQuery')
+		public searchUpdate() {
+			const query = this.searchQuery.toLowerCase()
+			this.searchCurrent = 0
+			this.searchLines = []
+			if (query.length > 0) {
+				for (var l = 0; l < this.document.lineCount(); ++l) {
+					var line = this.document.getLine(l)
+					var index = -1
+					while ((index = line.toLowerCase().indexOf(query, index + 1)) > -1) {
+						this.searchLines.push([l, index])
+					}
+				}
+				this.searchRefresh()
+			} else {
+				if (this.overlay) {
+					this.editor.removeOverlay(this.overlay)
+				}
+			}
+		}
+		public searchRefresh() {
+			const query = this.searchQuery.toLowerCase()
+			// TODO improve this overlay speed
+			const overlay = {token: (stream: any) => {
+				const lineNo = stream.lineOracle.line
+				if (stream.match(query, true, true)) {
+					let index: any = -1
+					for (let l = 0; l < this.searchLines.length; ++l) {
+						if (this.searchLines[l][0] === lineNo && this.searchLines[l][1] === stream.start) {
+							index = l
+							break
+						}
+					}
+					if (index === this.searchCurrent) {
+						return "matchhighlight-green"
+					}
+					return "matchhighlight"
+				}
+				stream.next()
+				const il = stream.string.indexOf(query.charAt(0), stream.pos)
+				const iu = stream.string.indexOf(query.charAt(0).toUpperCase(), stream.pos)
+				if (il === -1 && iu === -1) { stream.skipToEnd() }
+				else if (iu === -1 || il < iu) { stream.skipTo(query.charAt(0)) }
+				else { stream.skipTo(query.charAt(0).toUpperCase()) }
+			}}
+			if (this.overlay) {
+				this.editor.removeOverlay(this.overlay)
+			}
+			this.overlay = overlay
+			this.editor.addOverlay(overlay)
+			if (this.searchLines.length > 0) {
+				const line = this.searchLines[this.searchCurrent][0]
+				const t = this.editor.charCoords({line: line, ch: 0}, "local").top
+				const middleHeight = this.editor.getScrollerElement().offsetHeight / 2
+				this.editor.scrollTo(0, t - middleHeight - 5)
+			}
+		}
+		public searchPrevious() {
+			this.searchCurrent--
+			if (this.searchCurrent < 0) { this.searchCurrent = this.searchLines.length - 1 }
+			this.searchRefresh()
+		}
+		public searchNext() {
+			this.searchCurrent = (this.searchCurrent + 1) % this.searchLines.length
+			this.searchRefresh()
+		}
 	}
 </script>
 
@@ -763,9 +857,14 @@
 	.ai {
 		position: relative;
 		height: 100%;
+		display: flex;
+		flex-direction: column;
 	}
 	.codemirror {
 		height: 100%;
+	}
+	.codemirror.search {
+		height: calc(100% - 40px);
 	}
 	.loader {
 		position: absolute;
@@ -853,5 +952,37 @@
 		border-bottom-right-radius: 3px;
 		border-bottom-left-radius: 3px;
 		font-size: 16px;
+	}
+	.search-panel {
+		height: 40px;
+		background: #eee;
+		display: flex;
+	}
+	.search-panel i {
+		width: 24px;
+		height: 24px;
+		padding: 8px;
+	}
+	.search-panel .arrow {
+		opacity: 0.3;
+		cursor: pointer;
+	}
+	.search-panel .arrow:hover {
+		opacity: 1;
+		background: rgba(127,127,127,0.5);
+	}
+	.search-panel input {
+		width: 100%;
+		height: 26px;
+		margin: 7px 0;
+		margin-right: 7px;
+		border: none;
+		background: #eee;
+	}
+	.search-panel .results {
+		color: #777;
+		margin-right: 13px;
+		line-height: 40px;
+		white-space: nowrap;
 	}
 </style>

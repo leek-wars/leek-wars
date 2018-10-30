@@ -79,13 +79,6 @@
 						<div class="editors">
 							<ai-view v-for="ai in activeAIs" ref="editors" :key="ai.id" :ai="ai" :ais="ais" :editors="$refs.editors" :visible="currentAI === ai" :font-size="fontSize" :line-height="lineHeight" :popups="popups" :autoClosing="autoClosing" :autocompleteOption="autocomplete" @jump="jump" @load="load" />
 						</div>
-						<div class="search-panel">
-							<img src="/image/search.png">
-							<input type="text" class="query" autocomplete="off">
-							<span class="results"></span>
-							<img class="previous arrow" src="/image/icon/grey/collapse.png">
-							<img class="next arrow" src="/image/icon/grey/expand.png">
-						</div>
 					</div>
 				</div>
 
@@ -277,15 +270,6 @@
 				this.update()
 				LeekWars.setTitle(this.$t('editor.title'), this.$t('editor.n_ais', [LeekWars.objectSize(data.data.ais)]))
 			})
-			// Escape
-			// if (e.keyCode == 27) {
-			// 	LW.pages.editor.search(false)
-			// }
-			// // Ctrl-F : search
-			// if (e.ctrlKey && e.keyCode == 70 && !e.shiftKey) {
-			// 	LW.pages.editor.search(true)
-			// 	e.preventDefault()
-			// }
 		}
 		mounted() {
 			this.$root.$on('ctrlS', () => {
@@ -293,6 +277,17 @@
 			})
 			this.$root.$on('ctrlQ', () => {
 				this.testDialog = true
+			})
+			this.$root.$on('ctrlF', (event: Event) => {
+				if (this.currentEditor) {
+					this.currentEditor.search()
+					event.preventDefault()
+				}
+			})
+			this.$root.$on('escape', () => {
+				if (this.currentEditor) {
+					this.currentEditor.closeSearch()
+				}
 			})
 			this.$root.$on('htmlclick', () => {
 				if (this.currentEditor) {
@@ -368,6 +363,8 @@
 		destroyed() {
 			this.$root.$off('ctrlS')
 			this.$root.$off('ctrlQ')
+			this.$root.$off('ctrlF')
+			this.$root.$off('escape')
 			this.$root.$off('htmlclick')
 			LeekWars.large = false
 			// Unsaved AIs confirmation
@@ -382,7 +379,6 @@
 			// 	return _.lang.get('editor', 'n_ais_unsaved', num)
 			// }
 		}
-
 		save() {
 			if (!this.currentEditor) { return }
 			if (this.currentEditor.saving || !this.currentEditor.loaded) { return }
@@ -556,109 +552,6 @@
 				Vue.set(this.$data.activeAIs, ai.id, ai)
 			}
 		}
-		search(activate: boolean) {
-			// if (activate) {
-			// 	var query = current in editors ? editors[current].editor.getSelection() : ''
-			// 	_searchEnabled = true
-			// 	LW.pages.editor.resize()
-			// 	$('.search-panel').css('display', 'flex')
-			// 	$('.search-panel input').val(query).focus()
-			// } else {
-			// 	_searchEnabled = false
-			// 	if (editors[current].editor.overlay) {
-			// 		editors[current].editor.removeOverlay(editors[current].editor.overlay)
-			// 	}
-			// 	$('.search-panel').hide()
-			// 	LW.pages.editor.resize()
-			// }
-		}
-
-		// var searchQuery = null
-		// var searchIndex = 0
-		// var searchElement = null
-		// var searchLines = []
-		// var searchFirstLine = null
-
-		// var search_next = function() {
-		// 	searchIndex = (searchIndex + 1) % searchLines.length
-		// 	searchUpdate()
-		// }
-		// var search_previous = function() {
-		// 	searchIndex--
-		// 	if (searchIndex < 0) searchIndex = searchLines.length - 1
-		// 	searchUpdate()
-		// }
-
-		// $('.search-panel .query').keyup(function(e) {
-		// 	if (e.keyCode == 16) return ; // ignore shift key
-		// 	if (e.keyCode == 13) {
-		// 		if (e.shiftKey) {
-		// 			search_previous()
-		// 		} else {
-		// 			search_next()
-		// 		}
-		// 	} else {
-		// 		searchQuery = $(this).val().toLowerCase()
-		// 		searchIndex = 0
-		// 		searchElement = null
-		// 		searchFirstLine = null
-
-		// 		if (searchQuery.length > 0) {
-		// 			searchLines = []
-		// 			for (var l = 0; l < editors[current].editor.lineCount(); ++l) {
-		// 				var line = editors[current].editor.getLine(l)
-		// 				var index = -1
-		// 				while ((index = line.toLowerCase().indexOf(searchQuery, index + 1)) > -1) {
-		// 					searchLines.push([l, index])
-		// 				}
-		// 			}
-		// 			searchUpdate()
-		// 		} else {
-		// 			$('.search-panel .results').text("")
-		// 			if (editors[current].editor.overlay) {
-		// 				editors[current].editor.removeOverlay(editors[current].editor.overlay)
-		// 			}
-		// 		}
-		// 	}
-		// })
-		// var searchUpdate = function() {
-		// 	var overlay = {token: function(stream, state, lineNo) {
-		// 		if (stream.match(searchQuery, true, true)) {
-		// 			var index = -1
-		// 			for (var l in searchLines) {
-		// 				if (searchLines[l][0] == lineNo && searchLines[l][1] == stream.start) {
-		// 					index = l
-		// 					break
-		// 				}
-		// 			}
-		// 			if (index == searchIndex) {
-		// 				return "matchhighlight-green"
-		// 			}
-		// 			return "matchhighlight"
-		// 		}
-		// 		stream.next()
-		// 		stream.skipTo(searchQuery.charAt(0), true) || stream.skipToEnd()
-		// 	}}
-
-		// 	if (editors[current].editor.overlay) {
-		// 		editors[current].editor.removeOverlay(editors[current].editor.overlay)
-		// 	}
-		// 	editors[current].editor.overlay = overlay
-		// 	editors[current].editor.addOverlay(overlay)
-
-		// 	$('.search-panel .results').text((searchIndex + 1) + " / " + searchLines.length)
-
-		// 	if (searchLines.length > 0) {
-
-		// 		var line = searchLines[searchIndex][0]
-		// 		var t = editors[current].editor.charCoords({line: line, ch: 0}, "local").top;
-		// 		var middleHeight = editors[current].editor.getScrollerElement().offsetHeight / 2;
-
-		// 		editors[current].editor.scrollTo(0, t - middleHeight - 5);
-		// 	}
-		// }
-		// $('.search-panel .next').click(search_next)
-		// $('.search-panel .previous').click(search_previous)
 	}
 </script>
 
@@ -671,41 +564,6 @@
 	}
 	#app.app .panel {
 		margin-bottom: 0;
-	}
-	.search-panel {
-		display: none;
-		height: 40px;
-	}
-	.search-panel img {
-		width: 20px;
-		height: 20px;
-		margin: 10px;
-	}
-	.search-panel .arrow {
-		width: 20px;
-		height: 12px;
-		margin: 0;
-		padding: 14px 10px;
-		opacity: 0.3;
-		cursor: pointer;
-	}
-	.search-panel .arrow:hover {
-		opacity: 1;
-		background: rgba(127,127,127,0.5);
-	}
-	.search-panel input {
-		width: 100%;
-		height: 26px;
-		margin: 7px 0;
-		margin-right: 7px;
-		border: none;
-		background: #eee;
-	}
-	.search-panel .results {
-		color: #777;
-		margin-right: 13px;
-		line-height: 40px;
-		white-space: nowrap;
 	}
 	.panel .content {
 		padding: 0;
