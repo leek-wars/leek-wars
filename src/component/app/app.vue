@@ -30,7 +30,7 @@
 		</div>
 		
 		<div class="app-center">
-			<div class="app-wrapper">
+			<div class="app-wrapper" :class="{large: LeekWars.large}">
 				<lw-header />
 				<div class="page-wrapper">
 					<div class="page">
@@ -234,6 +234,9 @@
 	.app-wrapper {
 		max-width: 1100px;
 		margin: 0 auto;
+	}
+	.app-wrapper.large {
+		max-width: none;
 	}
 	.big-leeks {
 		z-index: -10;

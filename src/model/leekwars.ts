@@ -110,6 +110,7 @@ const LeekWars = {
 	} as { [key: string]: Language },
 	timeDelta: 0, // (Date.now() / 1000 | 0) - __SERVER_TIME,
 	time: 0,
+	large: false,
 	setLocale(locale: string) {
 		loadLanguageAsync(vueMain, locale)
 	},
