@@ -366,25 +366,6 @@
 			}
 			return folder.name + '/'
 		}
-
-		// $('#editors').mousemove(function(e) {
-		// 	if (current != null && currentType == 'ai')
-		// 		editors[current].mousemove(e)
-		// })
-		// $('#editors').mouseleave(function(e) {
-		// 	if (current != null && currentType == 'ai')
-		// 		editors[current].mouseleave(e)
-		// })
-		// settingsPopup.find('#setting-size').change(function() {
-		// 	_large = settingsPopup.find('#setting-size').is(':checked')
-		// 	localStorage['editor/large'] = _large
-		// 	if (_large) {
-		// 		LW.enlarge()
-		// 	} else {
-		// 		LW.shrink()
-		// 	}
-		// })
-
 		beforeDestroy() {
 			this.$root.$off('ctrlS')
 			this.$root.$off('ctrlQ')
