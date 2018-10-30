@@ -16,6 +16,7 @@
 			<weapon-preview v-if="detailDialogContent.details.type === 'weapon'" :weapon="detailDialogContent.details.weapon" />
 			<chip-preview v-else-if="detailDialogContent.details.type === 'chip'" :chip="detailDialogContent.details.chip" />
 		</div>
+		<div ref="tooltip" class="error-tooltip" v-show="errorTooltip" :style="{left: errorTooltipLeft + 'px', top: errorTooltipTop + 'px'}">{{ errorTooltipText }}</div>
 		<loader v-if="loading" />
 	</div>
 </template>
@@ -101,6 +102,11 @@
 		public detailDialogTop: number = 0
 		public detailDialogLeft: number = 0
 		public overlay: any = null
+		public errors!: any[]
+		public errorTooltip: boolean = false
+		public errorTooltipText: string = ''
+		public errorTooltipTop: number = 0
+		public errorTooltipLeft: number = 0
 
 		created() {
 			this.id = this.ai.id
@@ -242,24 +248,23 @@
 		}
 
 		public addErrorOverlay(errors: any) {
-			const lines: any = []
-			for (const error of errors) {
-				lines.push(error[0] - 1)
-			}
-			let start = 0
+			this.errors = errors
+			let current = 0
+			let error = errors[0]
 			const overlay = {token: (stream: any) => {
-				const lineNo = stream.lineOracle.line
-				let i = lines.indexOf(lineNo, start)
-				if (i === -1) {
+				const lineNo = stream.lineOracle.line + 1
+				while (error[0] < lineNo && current < this.errors.length - 1) {
+					error = this.errors[++current]
+				}
+				if (error[0] !== lineNo) {
 					stream.skipToEnd()
 				} else {
-					while (i < errors.length - 1 && stream.start > errors[i][1]) {
-						i++
-					}
-					start = i
-					if (stream.start === errors[i][1]) {
-						let len = Math.max(1, errors[i][3] - errors[i][1] - 1)
+					if (stream.start === error[1]) {
+						let len = Math.max(1, error[3] - error[1] - 1)
 						stream.eatWhile(() => len-- > 0)
+						while (error[0] === lineNo && error[1] <= stream.start && current < this.errors.length - 1) {
+							error = this.errors[++current]
+						}
 						return "highlight-error"
 					} else {
 						stream.next()
@@ -492,21 +497,22 @@
 			const editorPos = this.editor.coordsChar(pos, "page")
 
 			// Display error?
-			// var tooltip = $('#error-tooltip')
-			// var shown = false
-			// for (var er in this.errors) {
-			// 	var error = this.errors[er]
-			// 	if (error[0] === editorPos.line + 1 && error[1] <= editorPos.ch && error[3] > editorPos.ch) {
-			// 		var pos = editor.editor.cursorCoords({line: editorPos.line, ch: error[1]})
-			// 		tooltip.text(error[4])
-			// 		tooltip.css('top', pos.bottom)
-			// 		tooltip.css('left', pos.left)
-			// 		tooltip.show()
-			// 		shown = true
-			// 		break;
-			// 	}
-			// }
-			// if (!shown) tooltip.hide()
+			const tooltip = this.$refs.tooltip
+			let shown = false
+			for (const er in this.errors) {
+				const error = this.errors[er]
+				if (error[0] === editorPos.line + 1 && error[1] <= editorPos.ch && error[3] > editorPos.ch) {
+					const pos = this.editor.cursorCoords({line: editorPos.line, ch: error[1]})
+					const codemirror = this.$refs.codemirror as HTMLElement
+					this.errorTooltipText = error[4]
+					this.errorTooltipTop = pos.bottom - codemirror.getBoundingClientRect().top - 3
+					this.errorTooltipLeft = pos.left - codemirror.getBoundingClientRect().left - 2
+					this.errorTooltip = true
+					shown = true
+					break
+				}
+			}
+			if (!shown) { this.errorTooltip = false }
 			var tokenString = this.editor.getTokenAt(editorPos).string
 
 			if (tokenString !== this.hoverToken) {
@@ -876,5 +882,17 @@
 		color: #ff7f00;
 		font-weight: bold;
 		margin: 10px 0;
+	}
+	.error-tooltip {
+		position: absolute;
+		color: #ab0000;
+		background: white;
+		border: 1px solid #ff6c71;
+		z-index: 10;
+		padding: 4px 6px;
+		border-top-right-radius: 3px;
+		border-bottom-right-radius: 3px;
+		border-bottom-left-radius: 3px;
+		font-size: 16px;
 	}
 </style>
