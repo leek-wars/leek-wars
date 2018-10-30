@@ -1,4 +1,5 @@
 import './class-component-hooks'
+
 import '@/model/vue'
 import axios from 'axios'
 import 'es6-promise/auto'
