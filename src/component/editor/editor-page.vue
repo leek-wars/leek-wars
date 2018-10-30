@@ -163,6 +163,7 @@
 	import { AI } from '@/model/ai'
 	import { LeekWars } from '@/model/leekwars'
 	import { Component, Vue, Watch } from 'vue-property-decorator'
+	import { Route } from 'vue-router'
 	import AIView from './ai-view.vue'
 	import EditorFolder from './editor-folder.vue'
 	import { AIItem, Folder, Item } from './editor-item'
@@ -367,17 +368,17 @@
 			this.$root.$off('escape')
 			this.$root.$off('htmlclick')
 			LeekWars.large = false
-			// Unsaved AIs confirmation
-			// TODO
-			// var num = 0
-			// for (var i in editors) {
-			// 	if (editors[i].modified) {
-			// 		num++
-			// 	}
-			// }
-			// if (num > 0) {
-			// 	return _.lang.get('editor', 'n_ais_unsaved', num)
-			// }
+		}
+		beforeRouteLeave(to: Route, from: Route, next: Function) {
+			let num = 0
+			for (const i in this.ais) {
+				if (this.ais[i].modified) { num++ }
+			}
+			if (num > 0 && !window.confirm(this.$i18n.t('editor.n_ais_unsaved', [num]) as string)) {
+				next(false)
+			} else {
+				next()
+			}
 		}
 		save() {
 			if (!this.currentEditor) { return }
