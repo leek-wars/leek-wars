@@ -112,7 +112,6 @@
 			this.id = this.ai.id
 			this.error = !this.ai.valid
 		}
-			
 		mounted() {
 			const codeMirrorElement = this.$refs.codemirror as any
 			this.editor = CodeMirror(codeMirrorElement, {
@@ -159,14 +158,12 @@
 			}
 			this.editor.on("mousedown", this.editorMousedown as any)
 		}
-
 		@Watch('visible')
 		visibilityChanged() {
 			if (this.visible) {
 				setTimeout(() => this.editor.refresh())
 			}
 		}
-
 		public editorMousedown(editor: CodeMirror.Editor, e: MouseEvent) {
 			if (e.ctrlKey) {
 				const pos = this.editor.coordsChar({left: e.pageX, top: e.pageY }, "page")
@@ -179,12 +176,10 @@
 				e.preventDefault()
 			}
 		}
-
 		public hasBeenModified() {
 			this.ai.modified = true
 			this.removeErrors()
 		}
-
 		public show() {
 			if (this.loaded) {
 				this.editor.refresh()
@@ -207,20 +202,17 @@
 				})
 			}
 		}
-
 		public showError(line: number) {
 			const codemirror = this.$refs.codemirror as HTMLElement
 			const l = codemirror.querySelectorAll('.CodeMirror-lines .CodeMirror-code > div')[line - 1].querySelector('pre')
 			if (l) { l.classList.add('line-error') }
 		}
-
 		public removeErrors() {
 			const codemirror = this.$refs.codemirror as HTMLElement
 			codemirror.querySelectorAll('.line-error').forEach((line: any) => {
 				line.classList.remove('line-error')
 			})
 		}
-
 		public test() {
 			// Save before
 			if (this.ai.modified) {
@@ -234,7 +226,6 @@
 			}
 			// LeekWars.pages.editor.test(_testEvent)
 		}
-
 		public cursorChange() {
 			const cursor = this.document.getCursor()
 			if (!this.pos) {
@@ -246,7 +237,6 @@
 			if (this.activeLine) { this.editor.removeLineClass(this.activeLine, "background", "activeline") }
 			this.activeLine = this.editor.addLineClass(cursor.line, "background", "activeline")
 		}
-
 		public addErrorOverlay(errors: any) {
 			this.errors = errors
 			let current = 0
@@ -275,15 +265,6 @@
 			this.editor.addOverlay(overlay)
 			this.error = true
 		}
-
-		// // Not used
-		// this.mergeLastTwoOperations = function() {
-		// 	var history = this.editor.getDoc().getHistory()
-		// 	var last = history.done.pop()
-		// 	history.done[history.done.length - 1].changes.push(last.changes[0])
-		// 	this.editor.getDoc().setHistory(history)
-		// }
-
 		public change(changes: CodeMirror.EditorChange) {
 
 			const userChange = changes.origin === "+input" || changes.origin === "+delete"
@@ -360,12 +341,10 @@
 				}
 			}
 		}
-
-		formatCode() {
+		public formatCode() {
 			this.editor.setValue(js_beautify(this.editor.getValue(), {indent_size: 1, indent_char: '\t'}))
 		}
-
-		commentCode() {
+		public commentCode() {
 			const start = this.document.getCursor('from').line
 			const end = this.document.getCursor('to').line
 			for (let i = 0; i < end - start + 1; i++) {
@@ -390,7 +369,6 @@
 				}
 			}
 		}
-
 		public getLineIndentation(lineNo: number) {
 			const line = this.document.getLine(lineNo)
 			let indent = ""
@@ -403,7 +381,6 @@
 			}
 			return indent
 		}
-
 		public unindentCode() {
 			const start = this.document.getCursor("start").line
 			const end = this.document.getCursor("end").line
@@ -414,7 +391,6 @@
 				}
 			}
 		}
-
 		public removeLine() {
 			const line = this.document.getCursor("start").line
 			if (this.document.somethingSelected()) {
@@ -424,7 +400,6 @@
 			}
 			this.document.setCursor(line)
 		}
-
 		public duplicateLine() {
 			if (this.document.somethingSelected()) {
 				const start = this.document.getCursor("start")
@@ -438,8 +413,7 @@
 				this.document.replaceRange(line + "\n" + line, {line: start, ch: 0}, {line: start, ch: line.length})
 			}
 		}
-
-		getTokenInformation(token: string, pos: CodeMirror.Position | null = null) {
+		public getTokenInformation(token: string, pos: CodeMirror.Position | null = null) {
 			if (token.startsWith('@')) { token = token.substring(1) }
 			for (const keyword of LeekWars.keywords) {
 				if (keyword.name === token) {
@@ -473,17 +447,12 @@
 			if (this.ai.includes) {
 				for (const include of this.ai.includes) {
 					if (include.functions) {
-						for (const fun of include.functions) {
-							if (token === fun.name) {
-								return fun
-							}
-						}
+						return include.functions.find(f => token === f.name)
 					}
 				}
 			}
 		}
-
-		mousemove(e: MouseEvent) {
+		public mousemove(e: MouseEvent) {
 			if (!this.popups) { return null }
 			if (this.hintDialog) { return null }
 
@@ -535,12 +504,11 @@
 				}
 			}
 		}
-		mouseleave() {
+		public mouseleave() {
 			clearTimeout(this.detailTimer)
 			this.detailDialog = false
 		}
-
-		autocomplete(force: boolean = false) {
+		public autocomplete(force: boolean = false) {
 			if (!this.autocompleteOption) { return }
 
 			this.updateIncludes()
@@ -643,7 +611,7 @@
 				this.editor.addKeyMap(this.dialogKeyMap)
 			}
 		}
-		clickHint(e: Event, index: number) {
+		public clickHint(e: Event, index: number) {
 			if (index === this.selectedCompletion) {
 				this.pick()
 			} else {
@@ -654,19 +622,19 @@
 			e.preventDefault()
 			return false
 		}
-		up() {
+		public up() {
 			this.selectHint(this.selectedCompletion === 0 ? (this.hints.length - 1) : this.selectedCompletion - 1)
 		}
-		down() {
+		public down() {
 			this.selectHint((this.selectedCompletion + 1) % this.hints.length)
 		}
-		top() {
+		public top() {
 			this.selectHint(0)
 		}
-		bottom() {
+		public bottom() {
 			this.selectHint(this.hints.length - 1)
 		}
-		selectHint(index: number) {
+		public selectHint(index: number) {
 			this.selectedCompletion = index
 			this.selectedHint = this.hints[index]
 			Vue.nextTick(() => {
@@ -678,7 +646,7 @@
 				}
 			})
 		}
-		pick() {
+		public pick() {
 			const completion = this.completions[this.selectedCompletion]
 
 			if (completion.type === 'function' || completion.type === 'user-function') {
@@ -723,18 +691,16 @@
 			}
 			this.close()
 		}
-		close() {
+		public close() {
 			this.hintDialog = false
 			this.editor.removeKeyMap(this.dialogKeyMap)
 		}
-
 		public scrollToLine(line: number) {
 			this.document.setCursor({line: line, ch: 0})
 			const height = this.editor.getScrollInfo().clientHeight
 			const coords = this.editor.charCoords({line: line, ch: 0}, "local")
 			this.editor.scrollTo(null, (coords.top + coords.bottom - height) / 2)
 		}
-
 		public updateIncludes() {
 			this.ai.includes = []
 			const code = this.document.getValue()
@@ -751,7 +717,6 @@
 				}
 			}
 		}
-
 		public updateFunctions() {
 			const code = this.editor.getValue()
 			this.ai.functions = []
@@ -773,7 +738,6 @@
 				this.ai.functions.push({name: match[1], fullName, details: description, type: 'user-function', argumentCount: args.length, arguments: args, ai: this.ai, line})
 			}
 		}
-
 		public getGlobalVars(vars: any) {
 			vars = vars || []
 			if (!(this.id in vars)) {
