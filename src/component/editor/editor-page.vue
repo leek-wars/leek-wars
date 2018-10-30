@@ -336,6 +336,7 @@
 					Vue.nextTick(() => {
 						this.currentEditor = (this.$refs.editors as AIView[]).find(editor => editor.ai === ai) || null
 					})
+					LeekWars.setTitle(this.currentAI.name)
 					LeekWars.splitShowContent()
 					LeekWars.setActions(this.actions_content)
 				} else {
