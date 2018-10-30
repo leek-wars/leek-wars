@@ -266,17 +266,13 @@
 			this.error = true
 		}
 		public change(changes: CodeMirror.EditorChange) {
-
 			const userChange = changes.origin === "+input" || changes.origin === "+delete"
-
 			if (changes.origin !== "setValue") {
 				this.hasBeenModified()
 			}
-
 			if (changes.origin === "+input" || (this.hintDialog && changes.origin === "+delete")) {
 				this.autocomplete()
 			}
-
 			this.lines = this.editor.getDoc().lineCount()
 			this.characters = this.editor.getDoc().getValue().length
 			LeekWars.setSubTitle(this.$i18n.t('editor.n_lines', [this.lines]))
@@ -762,7 +758,6 @@
 		}
 	}
 </script>
-
 
 <style lang="scss" scoped>
 	.ai {

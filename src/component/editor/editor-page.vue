@@ -277,6 +277,17 @@
 				this.update()
 				LeekWars.setTitle(this.$t('editor.title'), this.$t('editor.n_ais', [LeekWars.objectSize(data.data.ais)]))
 			})
+			// Escape
+			// if (e.keyCode == 27) {
+			// 	LW.pages.editor.search(false)
+			// }
+			// // Ctrl-F : search
+			// if (e.ctrlKey && e.keyCode == 70 && !e.shiftKey) {
+			// 	LW.pages.editor.search(true)
+			// 	e.preventDefault()
+			// }
+		}
+		mounted() {
 			this.$root.$on('ctrlS', () => {
 				this.save()
 			})
@@ -288,16 +299,6 @@
 					this.currentEditor.close()
 				}
 			})
-			// Escape
-			// if (e.keyCode == 27) {
-			// 	LW.pages.editor.search(false)
-			// }
-			// // Ctrl-F : search
-			// if (e.ctrlKey && e.keyCode == 70 && !e.shiftKey) {
-			// 	LW.pages.editor.search(true)
-			// 	e.preventDefault()
-			// }
-
 			this.$root.$on('back', () => {
 				this.$router.push('/editor')
 			})
@@ -315,7 +316,6 @@
 				this.dragging = null
 			})
 		}
-
 		@Watch('$route.params.id')
 		update() {
 			if (this.$route.params.id) {
@@ -353,7 +353,6 @@
 				LeekWars.setActions(this.actions_list)
 			}
 		}
-
 		getAIFullPath(ai: AI) {
 			if (ai.folder > 0) {
 				return this.getFolderPath(this.folderById[ai.folder]) + ai.name
@@ -366,7 +365,7 @@
 			}
 			return folder.name + '/'
 		}
-		beforeDestroy() {
+		destroyed() {
 			this.$root.$off('ctrlS')
 			this.$root.$off('ctrlQ')
 			this.$root.$off('htmlclick')
@@ -521,7 +520,6 @@
 				this.addMenuActivator = event.target
 			}
 		}
-
 		@Watch('theme') themeChange() {
 			localStorage.setItem('editor/theme', this.theme)
 		}
@@ -544,7 +542,6 @@
 			LeekWars.large = this.enlargeWindow
 			localStorage.setItem('editor/large', '' + this.enlargeWindow)
 		}
-
 		jump(ai: AI, line: number) {
 			if (ai !== this.currentAI) {
 				this.$router.push('/editor/' + ai.id)
@@ -559,7 +556,6 @@
 				Vue.set(this.$data.activeAIs, ai.id, ai)
 			}
 		}
-
 		search(activate: boolean) {
 			// if (activate) {
 			// 	var query = current in editors ? editors[current].editor.getSelection() : ''
@@ -625,7 +621,6 @@
 		// 		}
 		// 	}
 		// })
-
 		// var searchUpdate = function() {
 		// 	var overlay = {token: function(stream, state, lineNo) {
 		// 		if (stream.match(searchQuery, true, true)) {
