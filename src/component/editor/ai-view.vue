@@ -54,6 +54,8 @@
 		@Prop() visible!: boolean
 		@Prop() fontSize!: number
 		@Prop() lineHeight!: number
+		@Prop() autoClosing!: boolean
+		@Prop() autocompleteOption!: boolean
 		@Prop() popups!: boolean
 
 		public id!: number
@@ -74,7 +76,6 @@
 		public hoverToken!: string
 		public detailTimer: any
 		public serverError: boolean = false
-		public autoClosing: boolean = true
 		public selectedCompletion: number = 0
 		public completions: any[] = []
 		public dialogKeyMap: CodeMirror.KeyMap = {
@@ -533,6 +534,7 @@
 		}
 
 		autocomplete(force: boolean = false) {
+			if (!this.autocompleteOption) { return }
 
 			// Mise à jour des includes avant
 			this.updateIncludes()
