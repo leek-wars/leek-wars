@@ -166,10 +166,12 @@ const vueMain = new Vue({
 			if (event.ctrlKey && event.keyCode === 83) {
 				this.$emit('ctrlS')
 				event.preventDefault()
-			}
-			if (event.ctrlKey && event.keyCode === 81) {
+			} else if (event.ctrlKey && event.keyCode === 81) {
 				this.$emit('ctrlQ')
-				event.preventDefault()
+			} else if (event.ctrlKey && event.keyCode === 70 && !event.shiftKey) {
+				this.$emit('ctrlF', event)
+			} else if (event.keyCode === 27) {
+				this.$emit('escape')
 			}
 		})
 		LeekWars.mobile = window.innerWidth < 850
