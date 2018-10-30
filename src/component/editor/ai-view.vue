@@ -57,6 +57,7 @@
 		@Prop() autoClosing!: boolean
 		@Prop() autocompleteOption!: boolean
 		@Prop() popups!: boolean
+		@Prop() editors!: AIView[]
 
 		public id!: number
 		public editor!: CodeMirror.Editor
@@ -536,14 +537,12 @@
 		autocomplete(force: boolean = false) {
 			if (!this.autocompleteOption) { return }
 
-			// Mise à jour des includes avant
 			this.updateIncludes()
 
 			const cur = this.document.getCursor()
 			const token = this.editor.getTokenAt(cur)
 			let startPos = token.start
 
-			// Trim token
 			const previousLength = token.string.length
 			token.string = token.string.trim()
 			startPos += previousLength - token.string.length
@@ -552,9 +551,7 @@
 				this.close()
 				return
 			}
-			// TODO
-			// token.state = CodeMirror.innerMode(this.editor.getMode(), token.state).state
-
+			token.state = CodeMirror.innerMode(this.document.getMode(), token.state).state
 			const completions: Keyword[] = []
 			const start = token.string
 
@@ -576,18 +573,17 @@
 				}
 			}
 			// Variables globales
-			const vars = []
-			vars[this.id] = token.state.globalVars
+			const vars = {[this.id]: token.state.globalVars}
 			const globalVars = this.getGlobalVars(vars)
 			for (const i in globalVars) {
 				const file = vars[parseInt(i, 10)]
 				for (let v = file; v; v = v.next) {
 					if (v.name.toLowerCase().indexOf(start.toLowerCase()) === 0) {
 						const keyword = this.getTokenInformation(v.name)
-						if (keyword) {
+						if (!keyword) {
 							let text = "Variable <b>" + v.name + "</b>"
 							if (parseInt(i) !== this.id) { text += "<br><br>" + this.$i18n.t('editor.variable_defined_in_ai', [this.ais[parseInt(i)].name]) }
-							completions.push(keyword)
+							completions.push({name: v.name, fullName: v.name, details: text, type: 'variable'})
 						}
 					}
 				}
@@ -680,12 +676,10 @@
 			const completion = this.completions[this.selectedCompletion]
 
 			if (completion.type === 'function' || completion.type === 'user-function') {
-
 				let name = completion.name
 				if (name.indexOf(':') > -1) {
 					name = name.substring(0, name.indexOf(':') - 1)
 				}
-
 				this.document.replaceRange(name, this.completionFrom, this.completionTo)
 				const pos = this.document.getCursor()
 				let argCount = name.split(',').length
@@ -698,7 +692,6 @@
 				} else {
 					this.document.setCursor({line: pos.line, ch: this.completionFrom.ch + name.length})
 				}
-
 			} else if (completion.type === 'shortcut') {
 
 				// Dirty : modify the history to avoid having the word selected after an undo.
@@ -786,11 +779,13 @@
 			this.updateIncludes()
 			for (const include of this.ai.includes) {
 				if (!(include.id in vars)) {
-					// TODO
-					// var vars2 = this.ais[include].getGlobalVars(vars)
-					// for (var v in vars2) {
-					// 	vars[v] = vars2[v]
-					// }
+					const editor = this.editors.find(e => e.id === include.id)
+					if (editor) {
+						const vars2 = editor.getGlobalVars(vars)
+						for (const v in vars2) {
+							vars[v] = vars2[v]
+						}
+					}
 				}
 			}
 			return vars
