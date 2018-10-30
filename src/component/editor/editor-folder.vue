@@ -142,10 +142,6 @@
 		color: black;
 		padding: 0 5px;
 	}
-	.router-link-active > .item > .label {
-		background: #cacaca;
-		color: black;
-	}
 	.router-link-active > .item > .label:before {
 		color: white;
 	}
