@@ -249,6 +249,7 @@
 				}
 				for (const ai of data.data.ais) {
 					Vue.set(this.ais, ai.id, ai)
+					Vue.set(ai, 'modified', false)
 					this.items[ai.name] = ai
 				}
 				this.leekAIs = data.data.leek_ais
@@ -274,10 +275,8 @@
 					ai.path = this.getAIFullPath(ai)
 				}
 				this.update()
-
 				LeekWars.setTitle(this.$t('editor.title'), this.$t('editor.n_ais', [LeekWars.objectSize(data.data.ais)]))
 			})
-
 			this.$root.$on('ctrlS', () => {
 				this.save()
 			})
@@ -828,7 +827,7 @@
 		color: #eee;
 		box-shadow: 0px 3px 0px black;
 	}
-	.theme-monokai .ai-list /deep/ .item:not(.modified) .label {
+	.theme-monokai .ai-list /deep/ .item:not(.modified) > .label {
 		color: #eee;
 	}
 	.theme-monokai .ai-list /deep/ .router-link-active > .item > .label {
