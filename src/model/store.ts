@@ -157,6 +157,9 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 		'update-crystals'(state: LeekWarsState, crystals: number) {
 			if (state.farmer) { state.farmer.crystals += crystals }
 		},
+		'set-habs'(state: LeekWarsState, habs: number) {
+			if (state.farmer) { state.farmer.habs = habs }
+		},
 		'update-habs'(state: LeekWarsState, habs: number) {
 			if (state.farmer) { state.farmer.habs += habs }
 		},
