@@ -1,10 +1,10 @@
 <template>
-	<div v-if="team">
+	<div>
 		<div class="page-header page-bar">
 
-			<h1>{{ team.name }}</h1>
+			<h1>{{ team ? team.name : '...' }}</h1>
 
-			<div v-if="member" class="tabs">
+			<div v-if="member && team" class="tabs">
 				<router-link :to="'/forum/category-' + team.forum">
 					<div :link="'/forum/category-' + team.forum" class="tab action" icon="question_answer">
 						<img src="/image/icon/forum.png">
@@ -24,7 +24,7 @@
 		<div class="flex-container">
 			<div class="column4">
 				<div class="panel team-emblem">
-					<div class="content">
+					<div class="content" v-if="team">
 						<template v-if="member">
 							<v-tooltip :open-delay="0" :close-delay="0" bottom>
 								<div slot="activator" class="emblem-input">
@@ -41,7 +41,7 @@
 			
 			<div class="column4">
 				<div class="panel description">
-					<div class="content">
+					<div class="content" v-if="team">
 						<div>
 							<span class="guillemet">«</span>
 							<span v-if="owner" ref="descriptionElement" :class="{empty: !team.description && !editingDescription}" class="team-status text" contenteditable @click="startEditingDescription" @blur="saveDescription" @keydown.enter.prevent="saveDescription">{{ team.description }}</span>
@@ -61,8 +61,8 @@
 			<div class="column4">
 				<div class="panel">
 					<div class="content">
-						<h4 class="level">{{ $t('level_n', [team.level]) }}</h4>
-						<v-tooltip :open-delay="0" :close-delay="0" bottom>
+						<h4 class="level">{{ $t('level_n', [team ? team.level : '...']) }}</h4>
+						<v-tooltip :open-delay="0" :close-delay="0" bottom v-if="team">
 							<div slot="activator" class="bar">
 								<span :class="{blue: max_level}" :style="{width: xp_bar_width + '%'}" class="xp-bar striked"></span>
 							</div>
@@ -81,13 +81,13 @@
 						<center>
 							<br>
 							<v-tooltip :open-delay="0" :close-delay="0" bottom>
-								<talent slot="activator" :talent="team.talent" />
+								<talent slot="activator" :talent="team ? team.talent : '...'" />
 								{{ $t('talent') }}
 							</v-tooltip>
 						</center>
 
 						<br>
-						<v-tooltip :open-delay="0" :close-delay="0" bottom>
+						<v-tooltip :open-delay="0" :close-delay="0" bottom v-if="team">
 							<table slot="activator" class="fights">
 								<tr>
 									<td class="big">{{ team.victories | number }}</td>
@@ -122,7 +122,7 @@
 			</div>
 		</div>
 
-		<div v-if="member && team.candidacies && team.candidacies.length > 0" class="panel">
+		<div v-if="team && member && team.candidacies && team.candidacies.length > 0" class="panel">
 			<div class="header">
 				<h2>{{ $t('candidacies') }} ({{ team.candidacies.length }})</h2>
 			</div>
@@ -140,10 +140,11 @@
 
 		<div class="panel">
 			<div class="header">
-				<h2>{{ $t('farmers', [team.member_count]) }}</h2>
+				<h2 v-if="team">{{ $t('farmers', [team.member_count]) }}</h2>
 			</div>
 			<div class="content">
-				<div v-for="member in team.members" :key="member.id" class="farmer">
+				<loader v-if="!team" />
+				<div v-else v-for="member in team.members" :key="member.id" class="farmer">
 					<router-link :to="'/farmer/' + member.id">
 						<avatar :farmer="member" />
 						<div class="name">
@@ -182,9 +183,9 @@
 			</div>
 		</div>
 
-		<div v-if="member && team.compositions && team.compositions.length == 0" class="no-compos">{{ $t('no_compositions') }}</div>
+		<div v-if="member && team && team.compositions && team.compositions.length == 0" class="no-compos">{{ $t('no_compositions') }}</div>
 
-		<div v-if="member && team.compositions" class="compos">
+		<div v-if="member && team && team.compositions" class="compos">
 			<div v-for="composition in team.compositions" :key="composition.id" :class="{'in-tournament': composition.tournament.registered}" class="panel compo">
 				<div class="header">
 					<h2>{{ composition.name }}</h2>
@@ -233,7 +234,7 @@
 			</div>
 		</div>
 
-		<div v-if="member && team.unengaged_leeks" class="panel compo" compo="-1">
+		<div v-if="member && team && team.unengaged_leeks" class="panel compo" compo="-1">
 
 			<div class="header">
 				<h2 class="compo-title" compo="-1">{{ $t('unsorted_leeks') }}</h2>
@@ -258,10 +259,11 @@
 
 		<div v-else class="panel">
 			<div class="header">
-				<h2>{{ $t('leeks', [team.leek_count]) }}</h2>
+				<h2 v-if="team">{{ $t('leeks', [team.leek_count]) }}</h2>
 			</div>
 			<div class="content">
-				<router-link v-for="leek in team.leeks" :key="leek.id" :to="'/leek/' + leek.id" :leek="leek.id" class="leek">
+				<loader v-if="!team" />
+				<router-link v-else v-for="leek in team.leeks" :key="leek.id" :to="'/leek/' + leek.id" :leek="leek.id" class="leek">
 					<leek-image :leek="leek" :scale="0.6" />
 					<br>
 					<div class="name">{{ leek.name }}</div>
@@ -276,7 +278,7 @@
 					<div class="header">
 						<h2>{{ $t('history') }}</h2>
 					</div>
-					<fights-history :fights="team.fights" />
+					<fights-history v-if="team" :fights="team.fights" />
 				</div>
 			</div>
 			
@@ -285,7 +287,7 @@
 					<div class="header">
 						<h2>{{ $t('tournaments') }}</h2>
 					</div>
-					<tournaments-history :tournaments="team.tournaments" />
+					<tournaments-history v-if="team" :tournaments="team.tournaments" />
 				</div>
 			</div>
 		</div>
@@ -362,7 +364,7 @@
 			</div>
 		</v-dialog>
 
-		<v-dialog v-model="changeOwnerDialog" :max-width="500">
+		<v-dialog v-if="team" v-model="changeOwnerDialog" :max-width="500">
 			<div class="title">{{ $t('change_owner_confirm_title') }}</div>
 			<div class="content">
 				{{ $t('change_owner_select') }}
@@ -416,7 +418,6 @@
 	@Component({ name: 'team', i18n: {} })
 	export default class TeamPage extends Vue {
 		team: Team | null = null
-		member: boolean = false
 		captain: boolean = false
 		owner: boolean = false
 		reportDialog: boolean = false
@@ -440,6 +441,7 @@
 
 		get max_level() { return this.team && this.team.level === 100 }
 		get xp_bar_width() { return this.team ? this.team.level === 100 ? 100 : Math.floor(100 * (this.team.xp - this.team.down_xp) / (this.team.up_xp - this.team.down_xp)) : 0 }
+		get member() { return !this.$route.params.id || (this.team && this.$store.getters.connected && this.$store.state.farmer.team !== null && this.team.id === this.$store.state.farmer.team.id) }
 		
 		created() {
 			this.update()
@@ -473,11 +475,9 @@
 				for (const member of this.team.members) {
 					this.team.membersById[member.id] = member
 				}
-				const teamMember = this.$store.getters.connected && this.$store.state.farmer.team !== null && this.team.id === this.$store.state.farmer.team.id
-				const teamCaptain = teamMember && ['captain', 'owner'].indexOf(this.team.membersById[this.$store.state.farmer.id].grade) !== -1
-				this.member = teamMember
+				const teamCaptain = this.member && ['captain', 'owner'].indexOf(this.team.membersById[this.$store.state.farmer.id].grade) !== -1
 				this.captain = teamCaptain
-				this.owner = teamMember && this.team.membersById[this.$store.state.farmer.id].grade === 'owner'
+				this.owner = this.member && this.team.membersById[this.$store.state.farmer.id].grade === 'owner'
 
 				this.team.compositionsById = {}
 				if (this.team.compositions) {
@@ -488,12 +488,11 @@
 						}
 					}
 				}
-				this.member = teamMember
 				this.captain = teamCaptain
 
 				LeekWars.setTitle(this.team.name)
 
-				if (teamMember && !this.$store.state.chat.team) {
+				if (this.member && !this.$store.state.chat.team) {
 					LeekWars.socket.send([SocketMessage.TEAM_CHAT_ENABLE])
 				}
 				this.$root.$emit('loaded')
