@@ -41,7 +41,7 @@
 	"loading_fight": "Chargement du combat...",
 	"n_absolute_shield": "{0} bouclier absolu",
 	"n_agility": "{0} agilité",
-	"n_damage_return": "<b>{0} renvoi dommages</b>",
+	"n_damage_return": "{0} renvoi dommages",
 	"n_life": "{0} PV",
 	"n_magic": "{0} magie",
 	"n_mp": "{0} PM",
