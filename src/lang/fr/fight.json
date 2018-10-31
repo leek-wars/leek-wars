@@ -2,7 +2,6 @@
 	"accelerate": "Accélérer",
 	"accelerate_again": "Accélérer encore",
 	"battle_royale": "Battle royale",
-	"browser_cannot_display": "Votre navigateur ne peut pas afficher le combat",
 	"comments": "Commentaires",
 	"date_format": "Le {0}",
 	"decelerate": "Décélérer",
@@ -71,6 +70,5 @@
 	"tactic_mode": "Mode tactique",
 	"title": "Combat",
 	"turn_n": "Tour {0}",
-	"turn_of_leek": "Tour de {leek}",
-	"update_browser": "Mettez à jour votre navigateur dès maintenant !"
+	"turn_of_leek": "Tour de {leek}"
 }

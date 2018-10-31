@@ -2,7 +2,6 @@
 	"accelerate": "Speed up",
 	"accelerate_again": "Speed up (x2)",
 	"battle_royale": "Battle royale",
-	"browser_cannot_display": "Your browser is unable to display the fight",
 	"comments": "Comments",
 	"date_format": "{0}",
 	"decelerate": "Slow down",
@@ -71,6 +70,5 @@
 	"tactic_mode": "Tactical mode",
 	"title": "Fight",
 	"turn_n": "Turn {0}",
-	"turn_of_leek": "{leek}'s turn",
-	"update_browser": "Please update your browser as soon as possible!"
+	"turn_of_leek": "{leek}'s turn"
 }
