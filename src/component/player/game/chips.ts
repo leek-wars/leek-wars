@@ -338,7 +338,7 @@ class Inversion extends ChipAnimation {
 		this.launchPos = launchPos
 	}
 	public update(dt: number) {
-		this.update(dt)
+		super.update(dt)
 		if (Math.random() > 0.8 && this.duration > 40) {
 			const xx = Math.random() * 60 - 30
 			const x1 = this.launchPos.x + xx
