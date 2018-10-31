@@ -29,7 +29,7 @@
 					<img v-if="entity.summon" :src="'/image/bulb/' + entity.bulbName + '_front.png'">
 					<leek-image v-else :leek="entity" :scale="1" />
 				</div>
-				<div class="details">
+				<div class="details" :class="{visible: game.selectedEntity === entity}">
 					<avatar :farmer="entity.farmer" class="farmer-avatar" />
 					<h2 class="name">{{ entity.name }}</h2>
 					<div class="level">{{ $t('fight.leek_level', [entity.level]) }}</div>
@@ -165,7 +165,7 @@
 		max-width: 30px;
 		max-height: 50px;
 	}
-	.timeline .entity:hover .details {
+	.timeline .entity:hover .details, .details.visible {
 		display: block;
 	}
 	.details {

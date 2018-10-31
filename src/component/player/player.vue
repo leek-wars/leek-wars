@@ -65,7 +65,7 @@
 		<div v-show="loaded" class="game">
 			<div :style="{height: height - 36 + 'px'}" class="layers">
 				<canvas :style="{width: width + 'px', height: height - 36 + 'px'}" class="bg-canvas"></canvas>
-				<canvas :style="{width: width + 'px', height: height - 36 + 'px'}" class="game-canvas" @click="canvasClick"></canvas>
+				<canvas :style="{width: width + 'px', height: height - 36 + 'px'}" class="game-canvas" @click="canvasClick" @mousemove="mousemove"></canvas>
 				<div class="progress-bar-wrapper">
 					<div ref="progressBarTooltip" :style="{'margin-left': progressBarTooltipMargin + 'px'}" class="progress-bar-turn v-tooltip__content top">
 						<span class="content">{{ $t('fight.turn_n', [progressBarTurn]) }}</span>
@@ -199,8 +199,13 @@
 			const aspectRatio = window.devicePixelRatio || 1
 			this.canvas.width = this.width * aspectRatio
 			this.canvas.height = (this.height - BAR_HEIGHT) * aspectRatio
-			this.game.resize(this.canvas.width, this.canvas.height)
-			this.game.redraw()
+			Vue.nextTick(() => {
+				this.game.resize(this.canvas.width, this.canvas.height, this.canvas)
+				this.game.redraw()
+			})
+		}
+		mousemove(e: MouseEvent) {
+			this.game.mousemove(e)
 		}
 
 		mounted() {
