@@ -433,12 +433,10 @@ class Game {
 	 * Ressources chargées, on peut y aller
 	 */
 	public launch() {
-
 		// Atmosphere sound
 		if (this.atmosphere != null && this.sound) {
 			this.atmosphere.loop()
 		}
-
 		// Obstacles
 		for (const i in this.obstacles) {
 			const o = this.obstacles[i]
@@ -450,16 +448,9 @@ class Game {
 				this.ground.addObstacle(obstacle)
 			}
 		}
-
-		// if (game.large) LW.enlarge()
-		// LW.pages.fight.resize()
-
 		for (const l in this.leeks) {
 			if (this.leeks[l].active) { this.leeks[l].computeOrginPos() }
 		}
-
-		// this.log(i18n.t('fight.start_of_fight'))
-
 		for (const leek of this.leeks) {
 			this.states[leek.id] = {
 				absolute_shield: 0,
@@ -481,9 +472,7 @@ class Game {
 				effects: [],
 			}
 		}
-		/*
-		 *  Launch!
-		 */
+		/* Launch! */
 		this.updateFrame()
 	}
 
@@ -540,18 +529,6 @@ class Game {
 			// $('#speed-button').css('opacity', '');
 		}
 	}
-
-	public toggleSize() {
-		if (this.large) {
-			this.large = false
-			// LW.shrink()
-		} else {
-			this.large = true
-			// LW.enlarge()
-		}
-		localStorage.setItem('fight/large', '' + this.large)
-	}
-
 	public toggleSound() {
 		if (this.atmosphere != null) {
 			if (this.sound) {
