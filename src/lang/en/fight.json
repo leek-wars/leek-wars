@@ -41,7 +41,7 @@
 	"loading_fight": "Loading fight...",
 	"n_absolute_shield": "{0} absolute shield",
 	"n_agility": "{0} agility",
-	"n_damage_return": "<b>{0} damage return</b>",
+	"n_damage_return": "{0} damage return",
 	"n_life": "{0} HP",
 	"n_magic": "{0} magic",
 	"n_mp": "{0} MP",
