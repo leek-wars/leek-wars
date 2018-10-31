@@ -330,6 +330,7 @@
 		}
 		@Watch("game.shadows") toggleShadows() {
 			localStorage.setItem('fight/shadows', '' + this.game.shadows)
+			this.game.toggleShadows()
 			this.game.redraw()
 		}
 		@Watch("game.tactic") toggleTactic() {
