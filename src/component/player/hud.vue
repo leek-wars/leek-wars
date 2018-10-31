@@ -19,7 +19,7 @@
 		</div>
 		<div v-if="!LeekWars.mobile" ref="leftPart" class="left-part">
 			<div ref="actions" :style="{'margin-top': actionsMargin + 'px'}" class="actions">
-				<action-element v-for="action of game.currentActions" :key="action.id" :action="action.action" :leeks="game.leeks" turn="1" class="action" />
+				<action-element v-for="action of game.currentActions" :key="action.id" :action="action.action" :logs="action.logs" :leeks="game.leeks" turn="1" class="action" />
 			</div>
 		</div>
 		<div class="timeline">
@@ -298,16 +298,6 @@
 		padding: 1px 0;
 		font-size: 14px;
 		width: 500px;
-	}
-	.actions .action.log {
-		padding: 2px 0;
-		font-size: 11px;
-	}
-	.actions .action.log pre {
-		margin: 0;
-		font-family: monospace;
-		word-break: break-all;
-		white-space: pre-wrap;
 	}
 	.debug {
 		position: absolute;

@@ -1,4 +1,4 @@
-enum Action {
+enum ActionType {
 	START_FIGHT = 0,
 	USE_WEAPON = 1,
 	USE_CHIP = 2,
@@ -25,4 +25,13 @@ enum Action {
 	UPDATE_EFFECT = 304,
 	BUG = 1002,
 }
-export { Action }
+type ActionLog = any[]
+class Action {
+	params!: any[]
+	logs: ActionLog[] = []
+	get type() { return this.params[0] }
+	constructor(params: any[]) {
+		this.params = params
+	}	
+}
+export { Action, ActionLog, ActionType }

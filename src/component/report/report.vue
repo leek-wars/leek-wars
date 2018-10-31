@@ -115,10 +115,10 @@
 			</div>
 			<div class="content">
 				<div class="title"><b>{{ errors.length }}</b> erreurs</div>
-				<pre v-for="e in report.errors" :key="e" class="log error">[{{ e.entity }}] {{ e.data }}</pre>
+				<pre v-for="(e, i) in errors" :key="i" class="log error">[{{ e.entity }}] {{ e.data }}</pre>
 				<br>
 				<div class="title"><b>{{ warnings.length }}</b> avertissements</div>
-				<pre v-for="(w, i) in warnings" :key="i" class="log warning">[{{ w.entity }}] {{ w.data }}</pre>
+				<pre v-for="(w, i) in warnings" :key="errors.length + i" class="log warning">[{{ w.entity }}] {{ w.data }}</pre>
 			</div>
 		</div>
 		<div class="panel">
@@ -133,6 +133,7 @@
 </template>
 
 <script lang="ts">
+	import { Action, ActionType } from '@/model/action'
 	import { Fight, FightContext, FightLeek, FightType, Report, ReportLeek } from '@/model/fight'
 	import { LeekWars } from '@/model/leekwars'
 	import { Component, Vue } from 'vue-property-decorator'
@@ -147,9 +148,9 @@
 	export default class ReportPage extends Vue {
 		fight: Fight | null = null
 		report: Report | null = null
-		actions: number[][] | null = null
+		actions: Action[] | null = null
 		leeks: {[key: number]: ReportLeek} = {}
-		logs: any[] = []
+		logs: {[key: number]: any[][]} = {}
 		FightType = FightType
 		FightContext = FightContext
 		errors: any[] = []
@@ -173,7 +174,7 @@
 			LeekWars.get<FightResponse>(url).then((data) => {
 				this.fight = data.data.fight
 				this.report = this.fight.report
-				this.actions = this.fight.data.actions
+				this.actions = this.fight.data.actions.map(a => new Action(a))
 
 				for (const leek of this.fight.data.leeks) {
 					this.leeks[leek.id] = leek as any
@@ -191,17 +192,27 @@
 				}
 				LeekWars.get<any>('fight/get-logs/' + id + '/' + this.$store.state.token).then((d) => {
 					this.logs = d.data.logs
-					this.warningsErrors(this.logs)
+					this.processLogs()
+					this.warningsErrors()
 				})
 				LeekWars.setTitle(this.$i18n.t('report.title') + " - " + this.fight.team1_name + " vs " + this.fight.team2_name)
 				this.$root.$emit('loaded')
 			})
 		}
-
-		warningsErrors(logs: any[]) {
+		processLogs() {
+			if (!this.actions || !this.logs) { return }
+			for (const a in this.actions) {
+				const i = parseInt(a, 10) + 1
+				if (i in this.logs) {
+					this.actions[a].logs.push(...this.logs[i].filter(l => l[1] !== 4))
+				}
+			}
+		}
+		warningsErrors() {
 			this.errors = []
 			this.warnings = []
-			for (const action of logs) {
+			for (const a in this.logs) {
+				const action = this.logs[a]
 				for (const log of action) {
 					const leek = log[0]
 					const type = log[1]
@@ -434,21 +445,9 @@
 		margin-left: -20px;
 	}
 	.log {
-		font-size: 13px;
-		font-family: monospace;
-		color: #555;
+		padding: 2px 0;
+		font-size: 11px;
 		margin: 0;
-		word-break: break-all;
-		white-space: pre-wrap;
-	}
-	.log.first {
-		margin-top: 3px;
-	}
-	.log.last {
-		margin-bottom: 5px;
-	}
-	.log.pause {
-		color: #999;
 	}
 	.warning {
 		color: #ff5f00;

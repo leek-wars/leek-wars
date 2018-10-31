@@ -37,7 +37,7 @@
 </template>
 
 <script lang="ts">
-	import { Action } from '@/model/action'
+	import { Action, ActionType } from '@/model/action'
 	import { EffectType } from '@/model/effect'
 	import { Component, Prop, Vue } from 'vue-property-decorator'
 	import ReportStatisticsEntity from './report-statistics-entity.vue'
@@ -89,23 +89,23 @@
 			for (const action of this.fight.data.actions) {
 				const type = action[0]
 				switch (type) {
-					case Action.NEW_TURN:
+					case ActionType.NEW_TURN:
 						life[action[1] - 1] = {}
 						for (const j in leeks) {
 							life[action[1] - 1][j] = leeks[j].life
 						}
 						currentTurn = action[1]
 						break
-					case Action.LEEK_TURN:
+					case ActionType.LEEK_TURN:
 						leeks[action[1]].roundsPlayed++
 						currentPlayer = action[1]
 						leeks[currentPlayer].ph_queue = leeks[currentPlayer].next_ph_queue
 						leeks[currentPlayer].next_ph_queue = []
 					break
-					case Action.MP_LOST:
+					case ActionType.MP_LOST:
 						leeks[action[1]].usedPM += action[2]
 						break
-					case Action.CARE:
+					case ActionType.CARE:
 						leeks[action[1]].heal_in += action[2]
 						if (leeks[currentPlayer].ph_queue.length === 0) {
 							leeks[currentPlayer].heal_out += action[2]
@@ -116,12 +116,12 @@
 						}
 						leeks[action[1]].life += action[2]
 						break
-					case Action.BOOST_VITA:
+					case ActionType.BOOST_VITA:
 						leeks[action[1]].heal_in += action[2]
 						leeks[currentPlayer].heal_out += action[2]
 						leeks[action[1]].life += action[2]
 						break
-					case Action.LIFE_LOST:
+					case ActionType.LIFE_LOST:
 						leeks[action[1]].dmg_in += action[2]
 						if (leeks[currentPlayer].ph_queue.length === 0) {
 							leeks[currentPlayer].dmg_out += action[2]
@@ -132,39 +132,39 @@
 						}
 						leeks[action[1]].life -= action[2]
 						break
-					case Action.TP_LOST:
+					case ActionType.TP_LOST:
 						leeks[action[1]].usedPT += action[2]
 						break
-					case Action.PLAYER_DEAD:
+					case ActionType.PLAYER_DEAD:
 						leeks[action[1]].alive = false
 						const killer = action.length > 2 ? action[2] : currentPlayer
 						if (killer in leeks) { leeks[killer].kills++ }
 						leeks[action[1]].life = 0
 						break
-					case Action.USE_WEAPON:
+					case ActionType.USE_WEAPON:
 						leeks[action[1]].actionsWeapon++
 						if (action[4] === 2) { // CC
 							leeks[action[1]].critical++
 						}
 						break
-					case Action.USE_CHIP:
+					case ActionType.USE_CHIP:
 						leeks[action[1]].actionsChip++
 						if (action[4] === 2) { // CC
 							leeks[action[1]].critical++
 						}
 						break
-					case Action.SUMMON:
+					case ActionType.SUMMON:
 						leeks[action[1]].invocation++
 						break
-					case Action.RESURRECTION:
+					case ActionType.RESURRECTION:
 						leeks[action[2]].resurrection++
 						leeks[action[2]].life = action[4]
 						break
-					case Action.BUG:
+					case ActionType.BUG:
 						leeks[action[1]].crashes++
 						break
-					case Action.ADD_WEAPON_EFFECT:
-					case Action.ADD_CHIP_EFFECT:
+					case ActionType.ADD_WEAPON_EFFECT:
+					case ActionType.ADD_CHIP_EFFECT:
 						// These actions are of the form
 						// [actionType, itemID, effectID, caster, target, effect, value, turns]
 						// The effectID is unique and allows us to keep track of it easily
@@ -172,7 +172,7 @@
 							leeks[action[4]].next_ph_queue.push({id : action[2], caster : action[3]})
 						}
 						break
-					case Action.REMOVE_EFFECT:
+					case ActionType.REMOVE_EFFECT:
 						// This action is of the form [actionType, effectID]
 						// Wether through Antidote, Liberation, or end of lifetime
 						// we have to remove vaccine or poison from our queues.
