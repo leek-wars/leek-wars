@@ -203,9 +203,9 @@ class Game {
 	// Mouse
 	public mouseX = 0
 	public mouseY = 0
-	public mouseTileX = 0
-	public mouseTileY = 0
-	public mouseCell = 0
+	public mouseTileX: number | undefined = 0
+	public mouseTileY: number | undefined = 0
+	public mouseCell: number | undefined = 0
 	// Settings
 	public large = true
 	public debug = false
@@ -234,6 +234,8 @@ class Game {
 	public showCellCell: any
 	public reportTimer: any
 	public progressBarWidth: number = 0
+	public mouseOrigin: any
+	public selectedEntity: Entity | null = null
 
 	public maps: Map[] = [
 		new Nexus(this),
@@ -449,9 +451,6 @@ class Game {
 			}
 		}
 
-		// Mouse move
-		this.setupMouseMove()
-
 		// if (game.large) LW.enlarge()
 		// LW.pages.fight.resize()
 
@@ -488,10 +487,12 @@ class Game {
 		this.updateFrame()
 	}
 
-	public resize(width: number, height: number) {
+	public resize(width: number, height: number, canvas: HTMLElement) {
 		this.width = width
 		this.height = height
 		this.ground.resize(width, height, false, true)
+		const o = canvas.getBoundingClientRect()
+		this.mouseOrigin = {left: o.left + Math.round(this.ground.startX / this.ratio), top: o.top + Math.round(this.ground.startY / this.ratio)}
 	}
 
 	public updateFrame() {
@@ -1176,48 +1177,35 @@ class Game {
 		}
 	}
 
-	public setupMouseMove() {
-
-		// var mouseOrigin = $('#game').offset()
-
-		// mouseOrigin.left += Math.round(this.ground.startX / this.ratio)
-		// mouseOrigin.top += Math.round(this.ground.startY / this.ratio)
-
-		// $(this.canvas).off('mousemove')
-		// $(this.canvas).mousemove((e) => {
-		// 	this.mouseX = (e.pageX - mouseOrigin.left) * this.ratio
-		// 	this.mouseY = (e.pageY - mouseOrigin.top) * this.ratio
-
-		// 	var x = (this.mouseX / this.ground.tileSizeX) * 2 - 0.5
-		// 	var y = (this.mouseY / this.ground.tileSizeY) * 2 - 0.5
-
-		// 	var cx = Math.floor(x)
-		// 	var cy = Math.floor(y)
-
-		// 	var ox = x - cx - 0.5
-		// 	var oy = y - cy - 0.5
-
-		// 	if ((cx + cy) % 2 == 1) {
-		// 		if (-oy > Math.abs(ox)) { // en haut
-		// 			cy--
-		// 		} else if (oy > Math.abs(ox)) { // en bas
-		// 			cy++
-		// 		} else if (ox > Math.abs(oy)) { // à droite
-		// 			cx++
-		// 		} else { // forcément à gauche
-		// 			cx--
-		// 		}
-		// 	}
-		// 	if (cx >= 0 && cy >= 0 && cx < this.ground.tilesX * 2 - 1 && cy < this.ground.tilesY * 2 - 1) {
-		// 		this.mouseTileX = cx
-		// 		this.mouseTileY = cy
-		// 		this.mouseCell = this.ground.xyToCell(cx, cy)
-		// 	} else {
-		// 		this.mouseTileX = undefined
-		// 		this.mouseTileY = undefined
-		// 		this.mouseCell = undefined
-		// 	}
-		// })
+	public mousemove(e: MouseEvent) {
+		this.mouseX = (e.pageX - this.mouseOrigin.left) * this.ratio
+		this.mouseY = (e.pageY - this.mouseOrigin.top) * this.ratio
+		var x = (this.mouseX / this.ground.tileSizeX) * 2 - 0.5
+		var y = (this.mouseY / this.ground.tileSizeY) * 2 - 0.5
+		var cx = Math.floor(x)
+		var cy = Math.floor(y)
+		var ox = x - cx - 0.5
+		var oy = y - cy - 0.5
+		if ((cx + cy) % 2 == 1) {
+			if (-oy > Math.abs(ox)) { // en haut
+				cy--
+			} else if (oy > Math.abs(ox)) { // en bas
+				cy++
+			} else if (ox > Math.abs(oy)) { // à droite
+				cx++
+			} else { // forcément à gauche
+				cx--
+			}
+		}
+		if (cx >= 0 && cy >= 0 && cx < this.ground.tilesX * 2 - 1 && cy < this.ground.tilesY * 2 - 1) {
+			this.mouseTileX = cx
+			this.mouseTileY = cy
+			this.mouseCell = this.ground.xyToCell(cx, cy)
+		} else {
+			this.mouseTileX = undefined
+			this.mouseTileY = undefined
+			this.mouseCell = undefined
+		}
 	}
 
 	public addMarker(owner: number, cells: number[], color: string, duration: number) {
@@ -1481,6 +1469,21 @@ class Game {
 
 		// Draw air particles
 		this.particles.drawAir(this.ctx)
+
+		// Life bars
+		let selected_entity: Entity | null = null
+		for (const entity of this.leeks) {
+			if (entity.isDead() || !entity.active) { continue }
+			if (this.showLifes || this.mouseCell === entity.cell || this.mouseCell === entity.cell - 35 || this.mouseCell === entity.cell - 17 || this.mouseCell === entity.cell - 18) {
+				entity.drawName(this.ctx)
+			}
+			if (this.mouseCell === entity.cell) {
+				selected_entity = entity
+			}
+		}
+		if (this.selectedEntity !== selected_entity) {
+			this.selectedEntity = selected_entity
+		}
 
 		if (this.requestPause) {
 			this.paused = true
