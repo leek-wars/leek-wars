@@ -197,10 +197,16 @@ const vueMain = new Vue({
 				}, 100)
 			}
 		})
-
 		this.$on('connected', () => {
 			LeekWars.socket.connect()
 		})
+		window.onbeforeunload = () => {
+			const component = router.currentRoute.matched[0].instances.default
+			const beforeRouteLeave = (component.$options as any).beforeRouteLeave
+			if (beforeRouteLeave) {
+				if (!beforeRouteLeave[0].bind(component)()) { return "Confirm" }
+			}
+		}
 
 		LeekWars.sfwInit()
 		LeekWars.setFavicon()

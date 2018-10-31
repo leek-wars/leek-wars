@@ -374,6 +374,7 @@
 			for (const i in this.ais) {
 				if (this.ais[i].modified) { num++ }
 			}
+			if (!next) { return num === 0 }
 			if (num > 0 && !window.confirm(this.$i18n.t('editor.n_ais_unsaved', [num]) as string)) {
 				next(false)
 			} else {
