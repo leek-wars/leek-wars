@@ -301,11 +301,9 @@
 					const prevChar = prevLine[prevLine.length - 1]
 
 					if (prevChar === '{' && nextChar === '}') {
-
 						const indent = this.getLineIndentation(cursor.line)
 						this.document.replaceSelection("\t\n" + indent)
 						this.document.setCursor({line: cursor.line, ch: cursor.ch + 1})
-						// this.mergeLastTwoOperations();
 					}
 				}
 
@@ -327,7 +325,6 @@
 
 						this.document.replaceRange(add[pos], start, end)
 						this.document.setSelection(end, end)
-						// this.mergeLastTwoOperations()
 					}
 				} else if (changes.text[0] === "" && changes.from.ch - changes.to.ch === -1 && changes.removed) { // Delete
 
