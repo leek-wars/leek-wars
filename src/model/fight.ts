@@ -128,7 +128,7 @@ class FightLeek {
 }
 
 class FightData {
-	public actions!: number[][]
+	public actions!: any[][]
 	public map!: FightMap
 	public leeks!: FightLeek[]
 	public team1!: number[]

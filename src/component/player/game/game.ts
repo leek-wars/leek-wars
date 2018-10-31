@@ -10,7 +10,7 @@ import { Particles } from '@/component/player/game/particles'
 import { Sounds } from '@/component/player/game/sound'
 import { Textures } from '@/component/player/game/texture'
 import { Axe, BLaser, Broadsword, Destroyer, DoubleGun, Electrisor, FlameThrower, Gazor, GrenadeLauncher, Katana, Laser, MachineGun, Magnum, MLaser, Pistol, Shotgun } from '@/component/player/game/weapons'
-import { Action } from '@/model/action'
+import { Action, ActionType } from '@/model/action'
 import { Area } from '@/model/area'
 import { EffectType } from '@/model/effect'
 import { FightData, TEAM_COLORS } from '@/model/fight'
@@ -181,7 +181,7 @@ class Game {
 	public states = new Array()
 	// Actions
 	public data!: FightData
-	public actions: any[][] = []
+	public actions: Action[] = []
 	public currentActions: any[] = []
 	public currentAction: number = -1
 	public actionToDo = true
@@ -388,11 +388,11 @@ class Game {
 		}
 
 		// Actions
-		this.actions = this.data.actions
+		this.actions = this.data.actions.map(a => new Action(a))
 		this.currentAction = 0
 
 		// Check first action
-		if (this.actions.length === 0 || this.actions[this.currentAction][0] !== Action.START_FIGHT) {
+		if (this.actions.length === 0 || this.actions[this.currentAction].type !== ActionType.START_FIGHT) {
 			console.warn("Error ! no action START_FIGHT")
 			this.setError()
 			return
@@ -401,21 +401,10 @@ class Game {
 		// Get the relative position of the turns in the actions
 		this.turnPosition = {1: 0}
 		for (let i = 0; i < this.actions.length; ++i) {
-			if (this.actions[i][0] === Action.NEW_TURN) {
-				this.turnPosition[this.actions[i][1]] = i / this.actions.length
+			if (this.actions[i].type === ActionType.NEW_TURN) {
+				this.turnPosition[this.actions[i].params[1]] = i / this.actions.length
 			}
 		}
-
-		// Chargement des logs
-		// if (.connected) {
-		// 	_.post('fight/get-logs', {fight_id: _id}, function(data) {
-		// 		if (data.success) {
-		// 			game.setLogs(data.logs)
-		// 			LW.setHabs(data.habs)
-		// 		}
-		// 	})
-		// }
-
 		// On a chargé tout le jeu, on peut charger les ressources
 		// le jeu démarrera quand toutes les ressources seront ok
 		this.initialized = true
@@ -538,7 +527,6 @@ class Game {
 			}
 		}
 	}
-
 	public toggleDiscretePause() {
 		this.discretePause = !this.discretePause
 		localStorage.setItem('fight/discrete_pause', '' + this.discretePause)
@@ -558,13 +546,9 @@ class Game {
 
 			// Actions
 			if (!needPause) {
-
 				if (!this.fightEnd) {
-
 					if (this.actionToDo) {
-
 						this.actionDelay -= dt
-
 						if (this.actionDelay <= 0) {
 
 							this.actionDelay = 0
@@ -639,24 +623,20 @@ class Game {
 		}
 	}
 
-	public doAction(action: any) {
-
-		const type: number = action[0]
-
-		switch (type) {
-
-		case Action.NEW_TURN: {
-			this.turn = action[1]
+	public doAction(action: Action) {
+		switch (action.type) {
+		case ActionType.NEW_TURN: {
+			this.turn = action.params[1]
 			this.actionDone()
 			break
 		}
-		case Action.LEEK_TURN: {
+		case ActionType.LEEK_TURN: {
+			this.log(action)
+			this.currentPlayer = action.params[1]
 
-			this.currentPlayer = action[1]
-
-			if (typeof(action[2]) !== 'undefined' && typeof(action[3]) !== 'undefined') {
-				this.leeks[action[1]].tp = action[2]
-				this.leeks[action[1]].mp = action[3]
+			if (typeof(action.params[2]) !== 'undefined' && typeof(action.params[3]) !== 'undefined') {
+				this.leeks[action.params[1]].tp = action.params[2]
+				this.leeks[action.params[1]].mp = action.params[3]
 			}
 
 			if (!this.jumping) {
@@ -674,53 +654,53 @@ class Game {
 			this.actionDone()
 			break
 		}
-		case Action.END_TURN: {
+		case ActionType.END_TURN: {
 			// Reinitialisation of characteristics
-			this.leeks[action[1]].tp = action[2]
-			this.leeks[action[1]].mp = action[3]
-			if (action.length > 4) { this.leeks[action[1]].strength = action[4] }
-			if (action.length > 5) { this.leeks[action[1]].magic = action[5] }
+			this.leeks[action.params[1]].tp = action.params[2]
+			this.leeks[action.params[1]].mp = action.params[3]
+			if (action.params.length > 4) { this.leeks[action.params[1]].strength = action.params[4] }
+			if (action.params.length > 5) { this.leeks[action.params[1]].magic = action.params[5] }
 			this.actionDone()
 			break
 		}
-		case Action.MOVE_TO: {
+		case ActionType.MOVE_TO: {
 			if (this.jumping) {
-				this.leeks[action[1]].cell = action[2]
+				this.leeks[action.params[1]].cell = action.params[2]
 				this.actionDone()
 			} else {
-				this.leeks[action[1]].move(action[3])
+				this.leeks[action.params[1]].move(action.params[3])
 			}
 			break
 		}
-		case Action.MP_LOST: {
-			this.leeks[action[1]].looseMP(action[2], this.jumping)
+		case ActionType.MP_LOST: {
+			this.leeks[action.params[1]].looseMP(action.params[2], this.jumping)
 			this.actionDone()
 			break
 		}
-		case Action.CARE: {
-			this.leeks[action[1]].care(action[2], this.jumping)
+		case ActionType.CARE: {
+			this.leeks[action.params[1]].care(action.params[2], this.jumping)
 			this.log(action)
 			this.actionDone()
 			break
 		}
-		case Action.BOOST_VITA: {
-			this.leeks[action[1]].boostVita(action[2], this.jumping)
+		case ActionType.BOOST_VITA: {
+			this.leeks[action.params[1]].boostVita(action.params[2], this.jumping)
 			this.log(action)
 			this.actionDone()
 			break
 		}
-		case Action.SET_WEAPON: {
-			(this.leeks[action[1]] as Leek).setWeapon(new WEAPONS[action[2] - 1](this))
+		case ActionType.SET_WEAPON: {
+			(this.leeks[action.params[1]] as Leek).setWeapon(new WEAPONS[action.params[2] - 1](this))
 			this.log(action)
 			this.actionDone()
 			break
 		}
-		case Action.USE_CHIP: {
+		case ActionType.USE_CHIP: {
 
-			const launcher = action[1]
-			const cell = action[2]
-			const chip = action[3]
-			const leeksID = action[5]
+			const launcher = action.params[1]
+			const cell = action.params[2]
+			const chip = action.params[3]
+			const leeksID = action.params[5]
 
 			if (this.jumping) {
 				// Update leek cell after teleportation
@@ -735,13 +715,13 @@ class Game {
 				this.actionDone()
 				break
 			}
-			if (CHIPS[action[3] - 1] !== null) {
-				const chipAnimation: any = new CHIPS[action[3] - 1](this)
+			if (CHIPS[action.params[3] - 1] !== null) {
+				const chipAnimation: any = new CHIPS[action.params[3] - 1](this)
 				const leeks = []
 				for (const leek of leeksID) {
 					leeks.push(this.leeks[leek])
 				}
-				this.leeks[action[1]].useChip(chipAnimation, cell, leeks)
+				this.leeks[action.params[1]].useChip(chipAnimation, cell, leeks)
 				this.chips.push(chipAnimation)
 			} else {
 				this.actionDone()
@@ -749,14 +729,14 @@ class Game {
 			this.log(action)
 			break
 		}
-		case Action.USE_WEAPON: {
+		case ActionType.USE_WEAPON: {
 			if (this.jumping) {
 				this.actionDone()
 				break
 			}
-			const launcher = action[1]
-			const cell = action[2]
-			const leeksID = action[5]
+			const launcher = action.params[1]
+			const cell = action.params[2]
+			const leeksID = action.params[5]
 
 			const leeks = new Array()
 			for (const leek of leeksID) {
@@ -770,23 +750,23 @@ class Game {
 			this.log(action)
 			break
 		}
-		case Action.LIFE_LOST: {
-			const erosion = action.length > 3 ? action[3] : 0
-			this.leeks[action[1]].looseLife(action[2], erosion, this.jumping)
+		case ActionType.LIFE_LOST: {
+			const erosion = action.params.length > 3 ? action.params[3] : 0
+			this.leeks[action.params[1]].looseLife(action.params[2], erosion, this.jumping)
 			if (!this.jumping) {
 				this.log(action)
-				this.leeks[action[1]].randomHurt()
+				this.leeks[action.params[1]].randomHurt()
 			}
 			this.actionDone()
 			break
 		}
-		case Action.TP_LOST: {
-			this.leeks[action[1]].looseTP(action[2], this.jumping)
+		case ActionType.TP_LOST: {
+			this.leeks[action.params[1]].looseTP(action.params[2], this.jumping)
 			this.actionDone()
 			break
 		}
-		case Action.PLAYER_DEAD: {
-			const entity = this.leeks[action[1]]
+		case ActionType.PLAYER_DEAD: {
+			const entity = this.leeks[action.params[1]]
 			if (entity.summon) {
 				this.entityOrder.splice(this.entityOrder.indexOf(entity), 1)
 			}
@@ -802,25 +782,25 @@ class Game {
 			}
 			break
 		}
-		case Action.SAY: {
+		case ActionType.SAY: {
 			if (!this.jumping) {
 				this.log(action)
-				this.leeks[action[1]].say(this.ctx, action[2])
+				this.leeks[action.params[1]].say(this.ctx, action.params[2])
 			}
 			this.actionDone()
 			break
 		}
-		case Action.LAMA: {
+		case ActionType.LAMA: {
 			if (!this.jumping) {
-				this.leeks[action[1]].sayLama()
+				this.leeks[action.params[1]].sayLama()
 			}
 			this.actionDone()
 			break
 		}
-		case Action.SUMMON: {
-			const caster = action[1]
-			const summonID = action[2]
-			const cell = action[3]
+		case ActionType.SUMMON: {
+			const caster = action.params[1]
+			const summonID = action.params[2]
+			const cell = action.params[3]
 			const summon = this.leeks[summonID]
 			summon.setCell(cell)
 			summon.summoner = this.leeks[caster]
@@ -834,11 +814,11 @@ class Game {
 			this.actionDone()
 			break
 		}
-		case Action.RESURRECTION: {
-			const target = action[2]
-			const cell = action[3]
-			const life = action[4]
-			const maxLife = action[5]
+		case ActionType.RESURRECTION: {
+			const target = action.params[2]
+			const cell = action.params[3]
+			const life = action.params[4]
+			const maxLife = action.params[5]
 			const entity = this.leeks[target]
 
 			entity.setCell(cell)
@@ -852,13 +832,13 @@ class Game {
 			this.actionDone()
 			break
 		}
-		case Action.SHOW: {
+		case ActionType.SHOW: {
 			if (this.jumping) {
 				this.actionDone()
 				break
 			}
-			this.showCellCell = action[2]
-			this.showCellColor = '#' + action[3]
+			this.showCellCell = action.params[2]
+			this.showCellColor = '#' + action.params[3]
 			const pos = this.ground.cellToXY(this.showCellCell)
 			const xy = this.ground.xyToXYPixels(pos.x, pos.y)
 			this.showCellX = xy.x * this.ground.scale
@@ -867,34 +847,34 @@ class Game {
 			this.log(action)
 			break
 		}
-		case Action.ADD_WEAPON_EFFECT : {
+		case ActionType.ADD_WEAPON_EFFECT : {
 			this.addEffect(action, 'weapon')
 			this.actionDone()
 			break
 		}
-		case Action.ADD_CHIP_EFFECT : {
+		case ActionType.ADD_CHIP_EFFECT : {
 			this.addEffect(action, 'chip')
 			this.actionDone()
 			break
 		}
-		case Action.REMOVE_EFFECT : {
-			this.removeEffect(action[1])
+		case ActionType.REMOVE_EFFECT : {
+			this.removeEffect(action.params[1])
 			this.actionDone()
 			break
 		}
-		case Action.UPDATE_EFFECT : {
-			this.updateEffect(action[1], action[2])
+		case ActionType.UPDATE_EFFECT : {
+			this.updateEffect(action.params[1], action.params[2])
 			this.actionDone()
 			break
 		}
-		case Action.BUG: {
+		case ActionType.BUG: {
 			if (!this.jumping) {
-				this.leeks[action[1]].bug()
+				this.leeks[action.params[1]].bug()
 			}
 			this.actionDone()
 			break
 		}
-		case Action.END_FIGHT: {
+		case ActionType.END_FIGHT: {
 			this.fightEnd = true
 			break
 		}
@@ -909,13 +889,13 @@ class Game {
 		}
 	}
 
-	public addEffect(action: any, object: any) {
-		const objectID = action[1]
-		const id = action[2]
-		const caster = action[3]
-		const target = action[4]
-		const effect = action[5]
-		const value = action[6]
+	public addEffect(action: Action, object: any) {
+		const objectID = action.params[1]
+		const id = action.params[2]
+		const caster = action.params[3]
+		const target = action.params[4]
+		const effect = action.params[5]
+		const value = action.params[6]
 		const leek = this.leeks[target]
 
 		// Ajout de l'effet
@@ -1045,7 +1025,6 @@ class Game {
 			leek.damageReturn -= value
 			break
 		}
-
 		if (!this.jumping) {
 			// Gestion des états du poireau
 			if (effect.objectType === 'weapon') {
@@ -1063,7 +1042,7 @@ class Game {
 	public updateEffect(id: number, new_value: number) {
 
 		const effect = this.effects[id]
-		if (!effect) { return  }
+		if (!effect) { return }
 
 		const effectID = effect.effect
 		const leek = this.leeks[effect.target]
@@ -1109,61 +1088,45 @@ class Game {
 		}
 		effect.value = new_value // Updating the effect's value to properly remove it with `removeEffect`
 	}
-
 	public readLogs() {
-
-		// Logs personnels
 		if (this.logs == null) { return }
 		if (!(this.currentAction in this.logs)) { return }
-
 		for (let l = this.currentLog; l < this.logs[this.currentAction].length; ++l) {
-
 			this.currentLog++
-
 			const log = this.logs[this.currentAction][l]
 			const type = log[1]
-
 			if (type === 5) {
 				this.pause()
+				this.actions[this.currentAction - 1].logs.push(log)
 				return true
 			} else if (type === 4) {
 				this.addMarker(log[0], log[2], log[3], log[4])
 			} else {
-				// this.hud.addPersonalLog(log)
+				this.actions[this.currentAction - 1].logs.push(log)
 			}
 		}
 		return false
 	}
-
 	public actionDone() {
 		this.actionToDo = true
 		this.actionDelay = 6
 	}
-
-	public getLeekColor(leek: number) {
-		return TEAM_COLORS[this.leeks[leek].team - 1]
-	}
-
-	public colorText(text: string, color: string): string {
-		return "<span style='color: " + color + ";'>" + text + "</span>"
-	}
-
 	public log(action: any) {
 		if (!this.jumping) {
-			this.currentActions.push({id: this.currentAction, action})
+			this.currentActions.push({id: this.currentAction, action, logs: []})
 		}
 	}
 
 	public mousemove(e: MouseEvent) {
 		this.mouseX = (e.pageX - this.mouseOrigin.left) * this.ratio
 		this.mouseY = (e.pageY - this.mouseOrigin.top) * this.ratio
-		var x = (this.mouseX / this.ground.tileSizeX) * 2 - 0.5
-		var y = (this.mouseY / this.ground.tileSizeY) * 2 - 0.5
-		var cx = Math.floor(x)
-		var cy = Math.floor(y)
-		var ox = x - cx - 0.5
-		var oy = y - cy - 0.5
-		if ((cx + cy) % 2 == 1) {
+		const x = (this.mouseX / this.ground.tileSizeX) * 2 - 0.5
+		const y = (this.mouseY / this.ground.tileSizeY) * 2 - 0.5
+		let cx = Math.floor(x)
+		let cy = Math.floor(y)
+		const ox = x - cx - 0.5
+		const oy = y - cy - 0.5
+		if ((cx + cy) % 2 === 1) {
 			if (-oy > Math.abs(ox)) { // en haut
 				cy--
 			} else if (oy > Math.abs(ox)) { // en bas
@@ -1503,7 +1466,7 @@ class Game {
 		document.body.style.cursor = ''
 	}
 
-	public jump(jumpAction: any) {
+	public jump(jumpAction: number) {
 		// Return to initial state
 		for (const i in this.states) {
 			const leek = this.leeks[i] as Leek
