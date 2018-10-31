@@ -62,52 +62,6 @@
 			</router-link>
 			<br><br>
 		</div>
-
-		<div v-if="noHTML5" class="browsers">
-			<h2>{{ $t('browser_cannot_display') }}</h2>
-			<br>
-			<img src="image/notgood.png">
-			<br><br>
-			<h4><i>{{ $t('update_browser') }}</i></h4>
-			<br>
-			<div class="browser-list">
-				<div class="browser">
-					<a target="blank" href="https://www.google.com/intl/fr_fr/chrome/browser/">
-						<img src="image/chrome.png">
-						<h4>Chrome</h4>
-					</a>
-				</div>
-				<div class="browser">
-					<a target="blank" href="http://www.opera.com/fr">
-						<img src="image/opera.png">
-						<h4>Opera</h4>
-					</a>
-				</div>
-				<div class="browser">
-					<a target="blank" href="http://windows.microsoft.com/fr-fr/internet-explorer/download-ie">
-						<img src="image/ie.png">
-						<h4>Internet Explorer</h4>
-					</a>
-				</div>
-				<div class="browser">
-					<a target="blank" href="http://www.mozilla.org/fr/firefox/new/">
-						<img src="image/firefox.png">
-						<h4>Firefox</h4>
-					</a>
-				</div>
-				<div class="browser">
-					<a target="blank" href="http://www.apple.com/fr/safari/">
-						<img src="image/safari.png">
-						<h4>Safari</h4>
-					</a>
-				</div>
-			</div>
-			<br>
-			<router-link :to="'/report/' + fight.id">
-				<div class="button">{{ $t('see_report') }}</div>
-			</router-link>
-		</div>
-
 		<div v-show="loaded" class="game">
 			<div :style="{height: height - 36 + 'px'}" class="layers">
 				<canvas :style="{width: width + 'px', height: height - 36 + 'px'}" class="bg-canvas"></canvas>
@@ -200,7 +154,6 @@
 		FightType = FightType
 		fight: Fight | null = null
 		canvas: any
-		noHTML5: boolean = false
 		game: Game = new Game()
 		queue: any = null
 		getDelay: number = 1000
@@ -252,12 +205,6 @@
 
 		mounted() {
 			this.canvas = document.querySelector('.game-canvas')
-			// Check the element is in the DOM and the browser supports canvas
-			if (!this.canvas.getContext) {
-				// $('#browser-list .browser').shuffle()
-				this.noHTML5 = true
-				return
-			}
 			this.game.ctx = this.canvas.getContext('2d')
 		}
 
@@ -482,20 +429,6 @@
 		padding: 6px;
 		font-size: 18px;
 		color: #aaa;
-	}
-	.browsers {
-		display: none;
-		padding-top: 70px;
-		text-align: center;
-		padding-bottom: 30px;
-	}
-	.browser-list {
-		padding: 20px;
-	}
-	.browser {
-		width: 160px;
-		display: inline-block;
-		text-align: center;
 	}
 	.error {
 		display: none;
