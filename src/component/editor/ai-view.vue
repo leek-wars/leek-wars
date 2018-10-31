@@ -209,7 +209,6 @@
 					this.lines = this.editor.getDoc().lineCount()
 					this.characters = this.editor.getDoc().getValue().length
 					LeekWars.setSubTitle(this.$i18n.t('editor.n_lines', [this.lines]))
-					localStorage.setItem("editor/last_code", '' + this.id)
 				})
 			}
 		}
