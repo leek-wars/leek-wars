@@ -62,7 +62,6 @@
 							<router-link to="/messages" class="see-all">{{ $t('main.all_private_messages') }}</router-link>
 						</div>
 					</v-menu>
-					
 				</div>
 				<div class="button-wrapper">
 					<v-menu :nudge-bottom="5" :min-width="400" :max-width="400" :max-height="400" bottom offset-y @input="readNotifications">

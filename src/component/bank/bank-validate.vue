@@ -67,9 +67,7 @@
 					this.$router.replace('/bank/validate/failed/PayPal/cancelled')
 				}
 			} else {
-				// TODO
-				const STARPASS_CODE = ''
-				LeekWars.post('bank/execute-starpass-payment', {code: STARPASS_CODE}).then((data) => {
+				LeekWars.post('bank/execute-starpass-payment', {code: (window as any).__STARPASS_CODE}).then((data) => {
 					if (data.data.success) {
 						this.$store.commit('update-crystals', data.data.crystals)
 						this.$router.replace('/bank/validate/success/' + data.data.crystals + '/StarPass')
