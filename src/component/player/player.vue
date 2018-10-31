@@ -222,6 +222,8 @@
 			this.game.sound = localStorage.getItem('fight/sound') === 'true'
 			this.game.discretePause = localStorage.getItem('fight/discrete_pause') === 'true'
 			this.getFight()
+			LeekWars.large = this.game.large
+			this.$emit('resize')
 		}
 		@Watch('requiredWidth')
 		requiredWidthChange() {
@@ -372,7 +374,9 @@
 			this.game.redraw()
 		}
 		@Watch("game.large") toggleLarge() {
+			LeekWars.large = this.game.large
 			localStorage.setItem('fight/large', '' + this.game.large)
+			this.$emit('resize')
 		}
 		@Watch("game.showCells") toggleCells() {
 			localStorage.setItem('fight/cells', '' + this.game.showCells)

@@ -9,7 +9,7 @@
 	
 		<div class="panel">
 			<div class="fight content">
-				<player :fight-id="fight_id" :required-width="playerWidth" :required-height="playerHeight" @fight="fightLoaded" />
+				<player :fight-id="fight_id" :required-width="playerWidth" :required-height="playerHeight" @fight="fightLoaded" @resize="resize" />
 			</div>
 		</div>
 	
@@ -119,12 +119,18 @@
 		}
 
 		resize() {
-			const RATIO = 1.7
-			const fight = document.querySelector('.fight') as HTMLElement
-			if (fight) {
-				this.playerWidth = Math.round(fight.offsetWidth)
-				this.playerHeight = Math.round(this.playerWidth / RATIO)
-			}
+			Vue.nextTick(() => {
+				const RATIO = 1.7
+				const fight = document.querySelector('.fight') as HTMLElement
+				if (fight) {
+					this.playerWidth = Math.round(fight.offsetWidth)
+					this.playerHeight = Math.round(this.playerWidth / RATIO)
+				}
+			})
+		}
+
+		destroyed() {
+			LeekWars.large = false
 		}
 
 		fightLoaded(fight: Fight) {
