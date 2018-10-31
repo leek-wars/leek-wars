@@ -532,6 +532,7 @@ class Shock extends ChipAnimation {
 		this.game.particles.addImage(this.position.x - 10, this.position.y, 230, -0.2, 0, 0, 0, this.game.T.cloud, 70)
 	}
 	public update(dt: number) {
+		super.update(dt)
 		this.delay -= dt
 		if (this.delay <= 0) {
 			this.delay = 2
