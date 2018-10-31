@@ -23,11 +23,6 @@
 				</div>
 			</div>
 			<div v-if="$store.getters.connected" class="header-farmer buttons">
-				<!-- <div class="button-wrapper">
-					<div class="header-button" @click="LeekWars.setLocale($i18n.locale == 'fr' ? 'en' : 'fr')">
-						{{ $i18n.locale }}
-					</div>
-				</div> -->
 				<div class="button-wrapper">
 					<router-link to="/bank">
 						<div class="header-button">
@@ -53,13 +48,24 @@
 					</router-link>
 				</div>
 				<div class="button-wrapper">
-					<div class="header-button messages-button">
-						<i class="material-icons">email</i>
-						<span v-show="$store.state.unreadMessages > 0" class="counter">{{ $store.state.unreadMessages }}</span>
-					</div>
+					<v-menu :nudge-bottom="5" :min-width="400" :max-width="400" :max-height="400" bottom offset-y @input="readNotifications">
+						<div slot="activator" class="header-button messages-button">
+							<i class="material-icons">email</i>
+							<span v-show="$store.state.unreadMessages > 0" class="counter">{{ $store.state.unreadMessages }}</span>
+						</div>
+						<div class="dialog">
+							<div class="dialog-items">
+								<router-link v-for="conversation in $store.state.conversationsList" :key="conversation.id" :to="'/messages/conversation/' + conversation.id">
+									<conversation :conversation="conversation" />
+								</router-link>
+							</div>
+							<router-link to="/messages" class="see-all">{{ $t('main.all_private_messages') }}</router-link>
+						</div>
+					</v-menu>
+					
 				</div>
 				<div class="button-wrapper">
-					<v-menu :close-on-content-click="false" :nudge-bottom="5" :min-width="400" :max-width="400" :max-height="400" bottom offset-y @input="readNotifications">
+					<v-menu :nudge-bottom="5" :min-width="400" :max-width="400" :max-height="400" bottom offset-y @input="readNotifications">
 						<div slot="activator" class="header-button notifications-button">
 							<i class="material-icons">notifications</i>
 							<span v-show="$store.state.unreadNotifications > 0" class="counter">{{ $store.state.unreadNotifications }}</span>
@@ -175,6 +181,7 @@
 		background: rgba(80, 80, 80, 0.6);
 		vertical-align: bottom;
 		white-space: nowrap;
+		user-select: none;
 	}
 	.header .button-wrapper:first-child .header-button {
 		margin-left: 0;
@@ -266,6 +273,7 @@
 	.dialog-items {
 		max-height: 350px;
 		overflow-y: auto;
+		overflow-x: hidden;
 	}
 	.see-all {
 		padding: 8px;
