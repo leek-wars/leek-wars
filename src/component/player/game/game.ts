@@ -437,6 +437,7 @@ class Game {
 				this.ground.addObstacle(obstacle)
 			}
 		}
+		this.ground.resize(this.width, this.height, this.shadows)
 		for (const l in this.leeks) {
 			if (this.leeks[l].active) { this.leeks[l].computeOrginPos() }
 		}
@@ -468,7 +469,7 @@ class Game {
 	public resize(width: number, height: number, canvas: HTMLElement) {
 		this.width = width
 		this.height = height
-		this.ground.resize(width, height, false, true)
+		this.ground.resize(width, height, this.shadows)
 		const o = canvas.getBoundingClientRect()
 		this.mouseOrigin = {left: o.left + Math.round(this.ground.startX / this.ratio), top: o.top + Math.round(this.ground.startY / this.ratio)}
 	}
@@ -517,6 +518,9 @@ class Game {
 			// LW.setTooltipContent($('#tt_speed-button'), i18n.t('fight.accelerate') + ' (S)');
 			// $('#speed-button').css('opacity', '');
 		}
+	}
+	public toggleShadows() {
+		this.ground.resize(this.width, this.height, this.shadows)
 	}
 	public toggleSound() {
 		if (this.atmosphere != null) {

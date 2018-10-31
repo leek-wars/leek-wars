@@ -17,8 +17,6 @@ class Ground {
 	public startY: number = 0
 	public texture!: HTMLCanvasElement | null
 	public textureCtx!: CanvasRenderingContext2D | null
-	public shadows: boolean = true
-	public fullscreen = false
 	public obstacles: Obstacle[] = []
 	public game: Game
 	public gridHeight: number = 0
@@ -35,7 +33,7 @@ class Ground {
 		this.game = game
 	}
 
-	public resize(width: number, height: number, fullscreen: boolean, shadows: boolean) {
+	public resize(width: number, height: number, shadows: boolean) {
 
 		if (!this.game.initialized) { return  }
 
@@ -50,12 +48,8 @@ class Ground {
 			GROUND_PADDING_TOP = 70
 			GROUND_PADDING_BOTTOM = 100
 		}
-
 		this.width = width
 		this.height = height
-
-		this.fullscreen = fullscreen
-		this.shadows = shadows
 
 		// Taille de la grille centrale
 		this.gridHeight = Math.round(height - GROUND_PADDING_TOP - GROUND_PADDING_BOTTOM)
@@ -97,7 +91,7 @@ class Ground {
 			this.texture.width = width
 			this.texture.height = height
 			this.textureCtx = this.texture.getContext('2d')
-			if (!this.textureCtx) { return  }
+			if (!this.textureCtx) { return }
 
 			// Fill color
 			this.textureCtx.fillStyle = this.game.map.groundColor
@@ -121,8 +115,10 @@ class Ground {
 			this.drawGrid(this.textureCtx)
 
 			// Obstacles shadows
-			for (const o in this.obstacles) {
-				this.obstacles[o].drawShadow(this.textureCtx)
+			if (shadows) {
+				for (const obstacle of this.obstacles) {
+					obstacle.drawShadow(this.textureCtx)
+				}
 			}
 			this.textureCtx.scale(this.scale, this.scale)
 		}
