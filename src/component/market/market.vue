@@ -301,12 +301,7 @@
 					this.items[pack.id] = pack
 					this.items_by_name[pack.name] = pack
 				}
-				const itemName = this.$route.params.item
-				if (itemName) {
-					this.update()
-				} else {
-					this.selectedItem = this.items_by_name.pistol
-				}
+				this.update()
 			})
 			this.$root.$on('back', () => {
 				this.$router.push('/market')
@@ -320,6 +315,8 @@
 				this.selectedItem = this.items_by_name[item]
 				LeekWars.setTitle(this.translateName(this.selectedItem))
 				LeekWars.splitShowContent()
+			} else if (!LeekWars.mobile) {
+				this.$router.replace('/market/pistol')
 			} else {
 				this.selectedItem = null
 				LeekWars.setTitle(this.$t('market.title'))
