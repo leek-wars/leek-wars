@@ -200,6 +200,7 @@
 		@Watch('LeekWars.menuCollapsed')
 		update() {
 			localStorage.setItem('main/menu-collapsed', '' + LeekWars.menuCollapsed)
+			this.$root.$emit('resize')
 		}
 	}
 </script>

@@ -110,6 +110,7 @@
 		toggleSocial() {
 			LeekWars.socialCollapsed = !LeekWars.socialCollapsed
 			localStorage.setItem('main/social-collapsed', '' + LeekWars.socialCollapsed)
+			this.$root.$emit('resize')
 		}
 		resizerMousedown(e: MouseEvent) {
 			const startWidth = this.panelWidth
@@ -163,6 +164,7 @@
 		width: 30px;
 		height: 30px;
 		cursor: pointer;
+		user-select: none;
 		.icon {
 			width: 30px;
 			height: 30px;
