@@ -112,6 +112,7 @@
 		didactitiel: boolean = false
 		created() {
 			LeekWars.setTitle(this.$t('help.title'))
+			LeekWars.setActions([{icon: 'contact_support', click: () => this.$router.push('/about')}])
 		}
 	}
 </script>
