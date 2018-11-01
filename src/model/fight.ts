@@ -50,6 +50,7 @@ class Report {
 	public farmer2!: ReportFarmer
 	public team1!: ReportTeam
 	public team2!: ReportTeam
+	public duration!: number
 }
 
 class Fight {
@@ -72,6 +73,7 @@ class Fight {
 	public comments!: Comment[]
 	public result!: string
 	public report!: Report
+	public winner!: number
 }
 
 const TEAM_COLORS = [
