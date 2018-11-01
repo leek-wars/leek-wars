@@ -1,8 +1,9 @@
 <template lang="html">
 	<div class="menu">
 		
-		<div v-if="!LeekWars.mobile" class="menu-button">
-			<i class="icon material-icons">navigate_before</i>
+		<div v-if="!LeekWars.mobile" class="menu-button" @click="LeekWars.menuCollapsed = !LeekWars.menuCollapsed">
+			<i v-if="LeekWars.menuCollapsed" class="icon material-icons">navigate_next</i>
+			<i v-else class="icon material-icons">navigate_before</i>
 		</div>
 
 		<div class="menu-wrapper">
@@ -114,12 +115,13 @@
 
 <script lang="ts">
 	import { LeekWars } from '@/model/leekwars'
-	import { Component, Vue } from 'vue-property-decorator'
+	import { Component, Vue, Watch } from 'vue-property-decorator'
 	@Component({
 		name: 'lw-menu'
 	})
 	export default class Menu extends Vue {
 		mounted() {
+			LeekWars.menuCollapsed = localStorage.getItem('main/menu-collapsed') === 'true'
 			setTimeout(() => {
 				const W = 250
 				let down = false
@@ -195,6 +197,10 @@
 			LeekWars.menuExpanded = false
 			LeekWars.dark = 0
 		}
+		@Watch('LeekWars.menuCollapsed')
+		update() {
+			localStorage.setItem('main/menu-collapsed', '' + LeekWars.menuCollapsed)
+		}
 	}
 </script>
 
@@ -230,7 +236,7 @@
 		display: block;
 	}
 	#app.menu-collapsed .menu {
-		width: 68px;
+		width: 64px;
 	}
 	.menu-button {
 		background: rgba(80, 80, 80, 0.6);
@@ -238,6 +244,10 @@
 		height: 30px;
 		margin-bottom: 4px;
 		cursor: pointer;
+		user-select: none;
+	}
+	.menu-button:hover {
+		background: rgba(200, 200, 200, 0.4);
 	}
 	#app.app .menu-button {
 		display: none;
@@ -293,7 +303,7 @@
 		margin: 14px 0;
 		margin-right: 4px;
 	}
-	body.menu-collapsed .menu a {
+	#app.menu-collapsed .menu a {
 		height: 46px;
 	}
 	.menu a:not(.router-link-active):hover {
@@ -305,7 +315,7 @@
 	.menu a.router-link-active:active {
 		background-image: linear-gradient(to bottom, rgba(110, 201, 31, 0.9) 0%, rgba(110, 201, 31, 1) 50%, rgba(110, 201, 31, 0.9) 100%);
 	}
-	body.menu-collapsed .menu a .text {
+	#app.menu-collapsed .menu a .text {
 		display: none;
 	}
 	.menu a img {
@@ -319,9 +329,14 @@
 		margin: 6px;
 		font-size: 28px;
 	}
-	body.menu-collapsed .menu a img {
+	#app.menu-collapsed .menu a img {
 		height: 30px;
 		width: 30px;
+		margin-left: 10px;
+	}
+	#app.menu-collapsed .menu a i {
+		font-size: 34px;
+		margin-left: 10px;
 	}
 	.menu .separator {
 		height: 12px;
@@ -422,13 +437,5 @@
 	}
 	#app.app .menu .section.about {
 		display: block;
-	}
-	@media screen and (max-width: 999px) {
-		.menu-button {
-			opacity: 0;
-		}
-		.menu {
-			width: 58px;
-		}
 	}
 </style>

@@ -1,5 +1,5 @@
 <template>
-	<div id="app" :class="{ connected: $store.getters.connected, app: LeekWars.mobile, 'social-collapsed': LeekWars.socialCollapsed, 'menu-expanded': LeekWars.menuExpanded, sfw: LeekWars.sfw }" data-app="true" @mousemove="consoleMouseMove" @mouseup="consoleMouseUp">
+	<div id="app" :class="{ connected: $store.getters.connected, app: LeekWars.mobile, 'social-collapsed': LeekWars.socialCollapsed, 'menu-expanded': LeekWars.menuExpanded, sfw: LeekWars.sfw, 'menu-collapsed': LeekWars.menuCollapsed }" data-app="true" @mousemove="consoleMouseMove" @mouseup="consoleMouseUp">
 	
 		<div :class="{visible: LeekWars.dark > 0}" :style="{opacity: LeekWars.dark}" class="dark" @click="darkClick"></div>
 	
@@ -181,7 +181,7 @@
 	.console-button {
 		position: fixed;
 		top: 46px;
-		left: 38px;
+		left: 34px;
 		cursor: pointer;
 		display: none;
 		img {
@@ -229,7 +229,7 @@
 		margin-left: 170px;
 	}
 	#app.menu-collapsed:not(.app) .app-center {
-		margin-left: 68px;
+		margin-left: 64px;
 	}
 	.app-wrapper {
 		max-width: 1100px;

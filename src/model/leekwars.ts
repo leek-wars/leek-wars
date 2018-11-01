@@ -92,6 +92,7 @@ const LeekWars = {
 	cgu_version: 1,
 	mobile: false,
 	socialCollapsed: false,
+	menuCollapsed: false,
 	menuExpanded: false,
 	splitBack: false,
 	actions: [],
