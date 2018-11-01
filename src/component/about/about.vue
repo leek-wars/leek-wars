@@ -219,6 +219,9 @@
 			["Game Side Story", "http://www.gamesidestory.com/2014/09/02/gametest-leekwars-navigateur/"],
 			['MacAttac', "http://www.macattac.fr/2014/09/28/test-du-jeu-leek-wars/"]
 		]
+		created() {
+			LeekWars.setTitle(this.$i18n.t('about.title'))
+		}
 	}
 </script>
 
