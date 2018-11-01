@@ -28,7 +28,7 @@
 			<span v-else>-{{ -leek.talent_gain }}</span>
 		</td>
 		<td v-if="$store.getters.admin" class="gain">
-			{{ leek.aiTime | number }} ms
+			{{ leek.aiTime | number }}&nbsp;ms
 		</td>
 	</tr>
 </template>
