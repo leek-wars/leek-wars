@@ -75,18 +75,18 @@
 			<div class="header">
 				<h2>Évolution des points de vie</h2>
 				<div class="right">
-					<div id="graph-type-button" class="button flat">
-						<img src="/image/icon/graph_smooth.png">
+					<div @click="toggleSmooth" class="button flat">
+						<img v-if="smooth" src="/image/icon/graph_angular.png">
+						<img v-else src="/image/icon/graph_smooth.png">
 					</div>
 					<div class="button flat expand">
 						<i class="material-icons">expand_more</i>
 					</div>
 				</div>
 			</div>
-			<div id="chart-panel" class="content">
-				<div class="chart">
-					<div class="ct-chart"></div>
-				</div>
+			<div class="content chart-panel" ref="chartPanel" @mouseleave="chartMouseLeave" @mousemove="chartMouseMove">
+				<chartist ref="chart" :data="chartData" :options="chartOptions" :event-handlers="chartEvents" class="chart" type="Line" />
+				<div v-show="chartTooltipValue" ref="chartTooltip" :style="{top: chartTooltipY + 'px', left: chartTooltipX + 'px'}" class="chart-tooltip v-tooltip__content top" v-html="chartTooltipValue"></div>
 			</div>
 		</div>
 
@@ -95,12 +95,12 @@
 				<h2>Statistiques</h2>
 				<div class="right">
 					<div class="button flat expand">
-						<img src="/image/icon/collapse.png">
+						<i class="material-icons">expand_more</i>
 					</div>
 				</div>
 			</div>
 			<div class="content scroll-x">
-				<report-statistics :fight="fight" />
+				<report-statistics :fight="fight" :statistics="statistics" />
 			</div>
 		</div>
 
@@ -134,12 +134,13 @@
 
 <script lang="ts">
 	import { Action, ActionType } from '@/model/action'
-	import { Fight, FightContext, FightLeek, FightType, Report, ReportLeek } from '@/model/fight'
+	import { Fight, FightContext, FightLeek, FightType, Report, ReportLeek, TEAM_COLORS } from '@/model/fight'
 	import { LeekWars } from '@/model/leekwars'
 	import { Component, Vue } from 'vue-property-decorator'
 	import ActionsElement from './report-actions.vue'
 	import ReportBlock from './report-block.vue'
 	import ReportStatistics from './report-statistics.vue'
+	import { Statistics } from './statistics'
 
 	class FightResponse {
 		fight!: Fight
@@ -158,6 +159,16 @@
 		myFight: boolean = false
 		iWin: boolean = false
 		enemy: any = null
+		smooth: boolean = false
+		statistics: any = null
+		chartData: any = null
+		chartOptions: any = null
+		chartEvents: any = []
+		chartSeries: any = null
+		chartTooltipValue: any = null
+		chartTooltipX: number = 0
+		chartTooltipY: number = 0
+		chartTooltipLeek: number | null = null
 
 		get team1Title() {
 			if (!this.fight) { return '' }
@@ -169,12 +180,14 @@
 		}
 
 		created() {
+			this.smooth = localStorage.getItem('report/graph-type') === 'smooth'
 			const id = this.$route.params.id
 			const url = this.$store.getters.admin ? 'fight/get-private/' + id + '/' + this.$store.state.token : 'fight/get/' + id
 			LeekWars.get<FightResponse>(url).then((data) => {
 				this.fight = data.data.fight
 				this.report = this.fight.report
 				this.actions = this.fight.data.actions.map(a => new Action(a))
+				this.statistics = Statistics.generate(this.fight)
 
 				for (const leek of this.fight.data.leeks) {
 					this.leeks[leek.id] = leek as any
@@ -195,6 +208,7 @@
 					this.processLogs()
 					this.warningsErrors()
 				})
+				this.updateChart()
 				LeekWars.setTitle(this.$i18n.t('report.title') + " - " + this.fight.team1_name + " vs " + this.fight.team2_name)
 				this.$root.$emit('loaded')
 			})
@@ -267,131 +281,101 @@
 				})
 			}
 		}
-
-		graph() {
-			// function getY(line, x) {
-
-			// 	var path = $('#chart .ct-chart .ct-series path')[line]
-
-			// 	x = Math.max(path.getPointAtLength(0).x, x)
-			// 	x = Math.min(path.getPointAtLength(path.getTotalLength()).x, x)
-
-			// 	var pos
-			// 	var p1 = 0
-			// 	var p2 = path.getTotalLength()
-			// 	var c
-			// 	var sec = 1000
-			// 	while (sec-- > 0) {
-			// 		c = (p1 + p2) / 2
-			// 		pos = path.getPointAtLength(c)
-			// 		if (Math.abs(x - pos.x) < 1) break
-			// 		if (pos.x > x) p2 = c
-			// 		else p1 = c
-			// 	}
-			// 	return pos.y
-			// }
-
-			// var update = function() {
-
-			// 	var series = []
-			// 	var data = []
-
-			// 	for (var i in statistics.leeks) {
-			// 		var leek = statistics.leeks[i]
-			// 		if (!leek.leek.summon) {
-			// 			data = []
-			// 			var thisTurn = 0
-			// 			for (var j = 0; j <= fight.report.duration; j++) {
-			// 				data.push(statistics.life[j][i])
-			// 			}
-			// 			series.push(data)
-			// 		}
-			// 	}
-
-			// 	var data = {
-			// 		labels: series[0].map(function(i, j) { return (j + 1) }),
-			// 		series: series
-			// 	}
-
-			// 	var smooth = localStorage['report/graph-type'] === 'smooth'
-
-			// 	var chart = new Chartist.Line('#chart .ct-chart', data, {
-			// 		showPoint: false,
-			// 		lineSmooth: smooth,
-			// 		height: 350,
-			// 		fullWidth: true,
-			// 		fullHeight: true
-			// 	})
-
-			// 	chart.on('draw', function(context) {
-			// 		if (context.type === 'line') {
-			// 			context.element.attr({
-			// 				style: 'stroke: ' + (LW.TEAM_COLORS[statistics.leeks[context.index].leek.team - 1])
-			// 			})
-			// 		}
-			// 	})
-
-			// 	var selected = null
-			// 	var tooltipLeek = -1
-			// 	var toolTip = $('#chart .ct-chart')
-			// 		.append('<div class="tooltip top"><div class="content"></div><div class="arrow"></div></div>')
-			// 		.find('.tooltip').hide()
-
-			// 	$('#chart .ct-chart').off('mouseenter', '.ct-line').on('mouseenter', '.ct-line', function() {
-			// 		$('#chart .ct-line').css('stroke-opacity', '0.3')
-			// 		$(this).css('stroke-opacity', '1').css('stroke-width', '4px')
-			// 		tooltipLeek = $(this).parent().index()
-			// 		toolTip.show()
-			// 		selected = $(this).parent().index()
-			// 	})
-
-			// 	$('#chart-panel').off('mouseleave').on('mouseleave', function() {
-			// 		$('#chart .ct-line').css('stroke-opacity', '1').css('stroke-width', '3px')
-			// 		toolTip.hide()
-			// 	})
-
-			// 	$('#chart-panel').off('mousemove').on('mousemove', function(event) {
-
-			// 		if (tooltipLeek == -1) return ;
-
-			// 		var x = event.clientX - $('#chart-panel').offset().left
-
-			// 		var index = Math.floor(series[tooltipLeek].length * x / $('#chart').width())
-			// 		if (typeof series[tooltipLeek][index] === 'undefined') return ;
-
-			// 		var top = getY(tooltipLeek, x) - 55
-
-			// 		toolTip.css({
-			// 			left: x - toolTip.width() / 2 - 5,
-			// 			top: top
-			// 		})
-
-			// 		toolTip.find('.content').html(statistics.leeks[tooltipLeek].leek.name + '<br>' + series[tooltipLeek][index] + ' PV')
-			// 	})
-			// }
-
-			// var smooth = localStorage['report/graph-type'] === 'smooth'
-
-			// var updateSmooth = function() {
-
-			// 	if (smooth) {
-			// 		localStorage['report/graph-type'] = 'smooth'
-			// 		$('#graph-type-button img').attr('src', LW.staticURL + 'image/icon/graph_angular.png')
-			// 	} else {
-			// 		localStorage['report/graph-type'] = 'angular'
-			// 		$('#graph-type-button img').attr('src', LW.staticURL + 'image/icon/graph_smooth.png')
-			// 	}
-			// }
-
-			// $('#graph-type-button').click(function() {
-			// 	smooth = !smooth
-			// 	updateSmooth()
-			// 	update()
-			// })
-			// updateSmooth()
-			// update()
+		toggleSmooth() {
+			if (this.smooth) {
+				localStorage.setItem('report/graph-type', 'angular')
+			} else {
+				localStorage.setItem('report/graph-type', 'smooth')
+			}
+			this.smooth = !this.smooth
+			this.updateChart()
 		}
-		
+		chartGetY(line: number, x: number) {
+			const path = (this.$refs.chart as Vue).$el.querySelectorAll('.ct-series path')[line] as any
+			x = Math.max(path.getPointAtLength(0).x, x)
+			x = Math.min(path.getPointAtLength(path.getTotalLength()).x, x)
+			let pos
+			let p1 = 0
+			let p2 = path.getTotalLength()
+			let c
+			let sec = 1000
+			while (sec-- > 0) {
+				c = (p1 + p2) / 2
+				pos = path.getPointAtLength(c)
+				if (Math.abs(x - pos.x) < 1) { break }
+				if (pos.x > x) { p2 = c }
+				else { p1 = c }
+			}
+			return pos.y
+		}
+		updateChart() {
+			if (!this.fight) { return }
+			this.chartSeries = []
+			for (const i in this.statistics.leeks) {
+				const leek = this.statistics.leeks[i]
+				if (!leek.leek.summon) {
+					const data = []
+					for (let j = 0; j <= this.fight.report.duration; j++) {
+						data.push(this.statistics.life[j][i])
+					}
+					this.chartSeries.push(data)
+				}
+			}
+			this.chartData = {
+				labels: this.chartSeries[0].map((i: number, j: number) => j + 1),
+				series: this.chartSeries
+			}
+			this.chartOptions = {
+				showPoint: false,
+				lineSmooth: this.smooth,
+				height: 350,
+				fullWidth: true,
+				fullHeight: true
+			}
+			this.chartEvents = [{
+				event: 'draw', fn: (context: any) => {
+					if (context.type === 'line') {
+						context.element.attr({
+							style: 'stroke: ' + (TEAM_COLORS[this.statistics.leeks[context.index].leek.team - 1])
+						})
+					}
+				}
+			}]
+			setTimeout(() => {
+				const chart = (this.$refs.chart as Vue).$el
+				chart.querySelectorAll('.ct-line').forEach((e, i) => {
+					e.addEventListener('mouseenter', () => {
+						chart.querySelectorAll('.ct-line').forEach((el) => (el as HTMLElement).style.strokeOpacity = '0.3')
+						;(e as HTMLElement).style.strokeOpacity = '1'
+						;(e as HTMLElement).style.strokeWidth = '4px'
+						this.chartTooltipLeek = i
+					})
+				})
+			}, 500)
+		}
+		chartMouseLeave() {
+			const chart = (this.$refs.chart as Vue).$el
+			chart.querySelectorAll('.ct-line').forEach((e) => {
+				(e as HTMLElement).style.strokeOpacity = '1'
+				;(e as HTMLElement).style.strokeWidth = '3px'
+			})
+			this.chartTooltipLeek = null
+			this.chartTooltipValue = null
+		}
+		chartMouseMove(e: MouseEvent) {
+			const chart = (this.$refs.chart as Vue).$el
+			const chartPanel = this.$refs.chartPanel as HTMLElement
+			const tooltip = this.$refs.chartTooltip as HTMLElement
+			if (this.chartTooltipLeek === null) { return }
+			const x = e.clientX - chartPanel.getBoundingClientRect().left
+			const index = Math.floor(this.chartSeries[this.chartTooltipLeek].length * x / chart.offsetWidth)
+			if (typeof this.chartSeries[this.chartTooltipLeek][index] === 'undefined') { return }
+			const top = this.chartGetY(this.chartTooltipLeek, x) - 40
+			this.chartTooltipX = x - tooltip.offsetWidth / 2 - 5,
+			this.chartTooltipY = top
+			this.chartTooltipValue = this.statistics.leeks[this.chartTooltipLeek].leek.name + '<br>' + this.chartSeries[this.chartTooltipLeek][index] + ' PV'
+		}
+
 		expandTabs() {
 			// var update = function(panel) {
 			// 	var name = $(panel).attr('name')
@@ -461,11 +445,13 @@
 		background: #ffb6b6;
 		border-radius: 2px;
 	}
+	.chart-panel {
+		position: relative;
+	}
 	.chart {
 		margin-left: -10px;
 		margin-right: -4px;
 		margin-bottom: -16px;
-		position: relative;
 		.ct-line {
 			stroke: rgba(95,173,27,0.7);
 			stroke-width: 3px;
@@ -484,8 +470,5 @@
 	.warnings-errors .title {
 		font-size: 18px;
 		margin-bottom: 5px;
-	}
-	.button {
-		margin: 0 2px;
 	}
 </style>
