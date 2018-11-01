@@ -80,7 +80,7 @@
 						<span>{{ totalMoney | number }} <span class="hab"></span></span>
 					</td>
 					<td v-if="$store.getters.admin" class="money">
-						<span>{{ totalTime }} ms</span>
+						<span>{{ totalTime }}&nbsp;ms</span>
 					</td>
 				</tr>
 			</table>
