@@ -172,9 +172,6 @@
 	}
 	.social-button:hover {
 		background: rgba(200, 200, 200, 0.4);
-		.icon {
-			opacity: 1.0;
-		}
 	}
 	.social-panel > .content {
 		background: rgba(80, 80, 80, 0.6);
