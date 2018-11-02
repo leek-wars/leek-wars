@@ -130,8 +130,8 @@
 		create() {
 			if (!this.category) { return }
 			LeekWars.post('forum/create-topic', {category_id: this.category.id,	title: this.createTitle, message: this.createMessage}).then((data) => {
-				this.createDialog = false
 				if (data.data.success) {
+					this.createDialog = false
 					if (this.category) {
 						this.$router.push("/forum/category-" + this.category.id + "/topic-" + data.data.topic_id)
 					}
