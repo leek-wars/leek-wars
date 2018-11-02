@@ -2,7 +2,6 @@
 	"leekscript": "Leekscript",
 	"ls_function_definitions": "The function \"%s\" have %d definitions.",
 	"ls_function_information": "Informations about function \"%s\".",
-	"ls_return": "return %s",
 	"ls_return_nothing": "return nothing",
 	"lstype_boolean": "boolean",
 	"lstype_float": "float",
