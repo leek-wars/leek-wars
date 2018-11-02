@@ -1,15 +1,15 @@
 {
 	"comments": "Commentaires",
 	"eighth_final": "8ème de finale",
-	"farmer": "Tournoi d'éleveur du %s",
+	"farmer": "Tournoi d'éleveur du {0}",
 	"few_seconds": "quelques secondes",
 	"final": "Finale",
 	"next_round_in": "Prochain round dans {0}",
-	"not_found": "Tournoi d'id <b>%s</b> introuvable :(",
+	"not_found": "Tournoi d'id {0} introuvable :(",
 	"quarter_final": "Quart de finale",
 	"semi_final": "Demi finale",
 	"send": "Envoyer",
 	"sixteenth_final": "16ème de finale",
-	"solo": "Tournoi solo du %s",
-	"team": "Tournoi d'équipe du %s"
+	"solo": "Tournoi solo du {0}",
+	"team": "Tournoi d'équipe du {0}"
 }

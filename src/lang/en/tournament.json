@@ -1,15 +1,15 @@
 {
 	"comments": "Comments",
 	"eighth_final": "8th-finals",
-	"farmer": "%s farmer tournament",
+	"farmer": "{0} farmer tournament",
 	"few_seconds": "few seconds",
 	"final": "Finals",
-	"next_round_in": "Next round in %s",
-	"not_found": "Tournament id <b>%s</b> not found :(",
+	"next_round_in": "Next round in {0}",
+	"not_found": "Tournament id {0} not found :(",
 	"quarter_final": "Quarter-finals",
 	"semi_final": "Semi-finals",
 	"send": "Send",
 	"sixteenth_final": "16th-finals",
-	"solo": "%s solo tournament",
-	"team": "%s team tournament"
+	"solo": "{0} solo tournament",
+	"team": "{0} team tournament"
 }

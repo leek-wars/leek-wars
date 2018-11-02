@@ -238,7 +238,7 @@
 					this.semifinals = this.tournament.rounds.semifinals
 					this.finals = this.tournament.rounds.finals
 
-					this.title = this.$t('tournament.' + this.tournament.type, LeekWars.formatDate(this.tournament.date)) as string
+					this.title = this.$t('tournament.' + this.tournament.type, [LeekWars.formatDate(this.tournament.date)]) as string
 					LeekWars.setTitle(this.title)
 					this.setupTimer()
 				}
