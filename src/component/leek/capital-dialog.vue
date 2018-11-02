@@ -1,296 +1,204 @@
 <template>
-	<v-dialog>
+	<v-dialog :value="value" :max-width="800" @input="$emit('input', $event)">
 		<div class="title">Ajouter des points de capital</div>
 
 		<div class="content">
 
-			<center><div class="capital rounded4"></div></center>
+			<center><div class="capital rounded4">{{ $t('leek.n_capital', [capital]) }}</div></center>
 
-			<div v-for="c in ['life', 'science', 'strength', 'magic', 'wisdom', 'frequency', 'agility', 'mp', 'resistance', 'tp']" :key="c" class="charac">
-				
+			<div v-for="c in ['life', 'strength', 'wisdom', 'agility', 'resistance', 'science', 'magic', 'frequency', 'mp', 'tp']" :key="c" class="charac">
 				<v-tooltip :open-delay="0" :close-delay="0" bottom>
 					<img slot="activator" :src="'/image/charac/' + c + '.png'">
 					<b>{{ $t('leek.' + c) }}</b><br>
 					{{ $t('leek.' + c + '_description') }}
 				</v-tooltip>
-				<span :class="'stat color-' + c">{{ leek[c] }}</span>
-				<span class="sup"></span>
-
-				<div class="add-wrapper">
-					<v-tooltip :open-delay="0" :close-delay="0" bottom>
-						<span slot="activator" class="add" q="1"></span>
-						{{ $t('leek.' + c + '_cost') }}
-					</v-tooltip>
-					<v-tooltip :open-delay="0" :close-delay="0" bottom>
-						<span slot="activator" class="add" q="10"></span>
-						{{ $t('leek.' + c + '_cost_10') }}
-					</v-tooltip>
-					<v-tooltip :open-delay="0" :close-delay="0" bottom>
-						<span slot="activator" class="add" q="100"></span>
-						{{ $t('leek.' + c + '_cost_100') }}
-					</v-tooltip>
+				<div>
+					<span :class="'stat color-' + c">{{ leek[c] + bonuses[c] }}</span>
+					<span class="sup" v-if="bonuses[c]">&nbsp;(+{{ bonuses[c] }})</span>
+					<div class="add-wrapper">
+						<v-tooltip v-for="cost in [1, 10, 100]" :key="cost" :open-delay="0" :close-delay="0" bottom>
+							<span slot="activator" class="add" :q="cost" :class="{locked: costs[c + cost].cost > capital}" @click="add(c, cost)"></span>
+							{{ costs[c + cost].cost + ' capital ⇔ ' + costs[c + cost].bonus + ' ' + $t('leek.' + c) }}
+						</v-tooltip>
+					</div>
 				</div>
 			</div>
 		</div>
 		<div class="actions">
-			<div class="action dismiss">{{ $t('cancel') }}</div>
-			<div class="action reset">{{ $t('reset') }}</div>
-			<div class="action validate green">{{ $t('validate') }}</div>
+			<div class="action" @click="close">
+				<i class="material-icons">clear</i>
+				<span>{{ $t('leek.cancel') }}</span>
+			</div>
+			<div class="action" @click="reset">
+				<i class="material-icons">refresh</i>
+				<span>{{ $t('leek.reset') }}</span>
+			</div>
+			<div class="action green" @click="validate">
+				<i class="material-icons">check</i>
+				<span>{{ $t('leek.validate') }}</span>
+			</div>
 		</div>
 	</v-dialog>
 </template>
 
 <script lang="ts">
 	import { Leek } from '@/model/leek'
+	import { LeekWars } from '@/model/leekwars'
 	import { Component, Prop, Vue } from 'vue-property-decorator'
+
+	const COSTS: {[key: string]: any} = {
+		life : [
+			{step : 0, capital : 1, sup : 4},
+			{step : 1000, capital : 1, sup : 3},
+			{step : 2000, capital : 1, sup : 2},
+		],
+		strength : [
+			{step : 0, capital : 1, sup : 2},
+			{step : 200, capital : 1, sup : 1},
+			{step : 400, capital : 2, sup : 1},
+			{step : 600, capital : 3, sup : 1},
+		],
+		wisdom : [
+			{step : 0, capital : 1, sup : 2},
+			{step : 200, capital : 1, sup : 1},
+			{step : 400, capital : 2, sup : 1},
+			{step : 600, capital : 3, sup : 1},
+		],
+		agility : [
+			{step : 0, capital : 1, sup : 2},
+			{step : 200, capital : 1, sup : 1},
+			{step : 400, capital : 2, sup : 1},
+			{step : 600, capital : 3, sup : 1},
+		],
+		resistance : [
+			{step : 0, capital : 1, sup : 2},
+			{step : 200, capital : 1, sup : 1},
+			{step : 400, capital : 2, sup : 1},
+			{step : 600, capital : 3, sup : 1},
+		],
+		science : [
+			{step : 0, capital : 1, sup : 2},
+			{step : 200, capital : 1, sup : 1},
+			{step : 400, capital : 2, sup : 1},
+			{step : 600, capital : 3, sup : 1},
+		],
+		magic : [
+			{step : 0, capital : 1, sup : 2},
+			{step : 200, capital : 1, sup : 1},
+			{step : 400, capital : 2, sup : 1},
+			{step : 600, capital : 3, sup : 1},
+		],
+		frequency : [
+			{step : 0, capital : 1, sup : 1}
+		],
+		tp : [
+			{step : 0, capital : 30, sup : 1}, {step : 1, capital : 35, sup : 1},
+			{step : 2, capital : 40, sup : 1}, {step : 3, capital : 45, sup : 1},
+			{step : 4, capital : 50, sup : 1}, {step : 5, capital : 55, sup : 1},
+			{step : 6, capital : 60, sup : 1}, {step : 7, capital : 65, sup : 1},
+			{step : 8, capital : 70, sup : 1}, {step : 9, capital : 75, sup : 1},
+			{step : 10, capital : 80, sup : 1}, {step : 11, capital : 85, sup : 1},
+			{step : 12, capital : 90, sup : 1}, {step : 13, capital : 95, sup : 1},
+			{step : 14, capital : 100, sup : 1}
+		],
+		mp : [
+			{step : 0, capital : 20, sup : 1},
+			{step : 1, capital : 30, sup : 1},
+			{step : 2, capital : 40, sup : 1},
+			{step : 3, capital : 50, sup : 1},
+			{step : 4, capital : 60, sup : 1},
+			{step : 5, capital : 70, sup : 1},
+			{step : 6, capital : 80, sup : 1},
+			{step : 7, capital : 90, sup : 1},
+			{step : 8, capital : 100, sup : 1}
+		]
+	}
 
 	@Component({ name: 'capital-dialog' })
 	export default class CapitalDialog extends Vue {
-		@Prop() leek!: Leek
+		@Prop() value!: boolean
+		@Prop({required: true}) leek!: Leek
+		COSTS = COSTS
+		bonuses: {[key: string]: any} = {}
+		base: {[key: string]: any} = {}
+		costs: {[key: string]: any} = {}
+		capital: number = 0
 
-		capital() {
-
-			// $('#capital').toggle(leek.capital > 0)
-			// if (leek.capital > 0) $('#capital').addClass('green')
-
-			// $('#menu .section[leek=' + leek.id + ']').attr('label', leek.capital == 0 ? '' : leek.capital)
-
-			// var popup = new _.popup.new('leek.capital_popup', {leek: leek}, 800)
-
-			// $('#capital').click(function(e) {
-
-			// 	var costs = {
-			// 		life : [
-			// 			{step : 0, capital : 1, sup : 4},
-			// 			{step : 1000, capital : 1, sup : 3},
-			// 			{step : 2000, capital : 1, sup : 2},
-			// 		],
-			// 		strength : [
-			// 			{step : 0, capital : 1, sup : 2},
-			// 			{step : 200, capital : 1, sup : 1},
-			// 			{step : 400, capital : 2, sup : 1},
-			// 			{step : 600, capital : 3, sup : 1},
-			// 		],
-			// 		wisdom : [
-			// 			{step : 0, capital : 1, sup : 2},
-			// 			{step : 200, capital : 1, sup : 1},
-			// 			{step : 400, capital : 2, sup : 1},
-			// 			{step : 600, capital : 3, sup : 1},
-			// 		],
-			// 		agility : [
-			// 			{step : 0, capital : 1, sup : 2},
-			// 			{step : 200, capital : 1, sup : 1},
-			// 			{step : 400, capital : 2, sup : 1},
-			// 			{step : 600, capital : 3, sup : 1},
-			// 		],
-			// 		resistance : [
-			// 			{step : 0, capital : 1, sup : 2},
-			// 			{step : 200, capital : 1, sup : 1},
-			// 			{step : 400, capital : 2, sup : 1},
-			// 			{step : 600, capital : 3, sup : 1},
-			// 		],
-			// 		science : [
-			// 			{step : 0, capital : 1, sup : 2},
-			// 			{step : 200, capital : 1, sup : 1},
-			// 			{step : 400, capital : 2, sup : 1},
-			// 			{step : 600, capital : 3, sup : 1},
-			// 		],
-			// 		magic : [
-			// 			{step : 0, capital : 1, sup : 2},
-			// 			{step : 200, capital : 1, sup : 1},
-			// 			{step : 400, capital : 2, sup : 1},
-			// 			{step : 600, capital : 3, sup : 1},
-			// 		],
-			// 		frequency : [
-			// 			{step : 0, capital : 1, sup : 1}
-			// 		],
-			// 		tp : [
-			// 			{step : 0, capital : 30, sup : 1}, {step : 1, capital : 35, sup : 1},
-			// 			{step : 2, capital : 40, sup : 1}, {step : 3, capital : 45, sup : 1},
-			// 			{step : 4, capital : 50, sup : 1}, {step : 5, capital : 55, sup : 1},
-			// 			{step : 6, capital : 60, sup : 1}, {step : 7, capital : 65, sup : 1},
-			// 			{step : 8, capital : 70, sup : 1}, {step : 9, capital : 75, sup : 1},
-			// 			{step : 10, capital : 80, sup : 1}, {step : 11, capital : 85, sup : 1},
-			// 			{step : 12, capital : 90, sup : 1}, {step : 13, capital : 95, sup : 1},
-			// 			{step : 14, capital : 100, sup : 1}
-			// 		],
-			// 		mp : [
-			// 			{step : 0, capital : 20, sup : 1},
-			// 			{step : 1, capital : 30, sup : 1},
-			// 			{step : 2, capital : 40, sup : 1},
-			// 			{step : 3, capital : 50, sup : 1},
-			// 			{step : 4, capital : 60, sup : 1},
-			// 			{step : 5, capital : 70, sup : 1},
-			// 			{step : 6, capital : 80, sup : 1},
-			// 			{step : 7, capital : 90, sup : 1},
-			// 			{step : 8, capital : 100, sup : 1}
-			// 		]
-			// 	}
-
-			// 	var bonuses
-			// 	var capital
-			// 	var base
-
-			// 	var reset = function() {
-
-			// 		bonuses = {
-			// 			life: 0, strength: 0, wisdom: 0, agility: 0, resistance: 0,
-			// 			frequency: 0, science: 0, magic: 0, tp: 0, mp: 0
-			// 		}
-
-			// 		base = {
-			// 			life: leek.life - 100 - (leek.level - 1) * 3,
-			// 			strength: leek.strength,
-			// 			wisdom: leek.wisdom,
-			// 			agility: leek.agility,
-			// 			resistance: leek.resistance,
-			// 			science: leek.science,
-			// 			magic: leek.magic,
-			// 			frequency: leek.frequency - 100,
-			// 			tp: leek.tp - 10,
-			// 			mp: leek.mp - 3
-			// 		}
-
-			// 		capital = leek.capital
-
-			// 		popup.view.find('.sup').text('')
-			// 		popup.view.find('.stat').each(function() {
-			// 			$(this).text(leek[$(this).attr('stat')])
-			// 		})
-
-			// 		update()
-			// 	}
-
-			// 	var update = function() {
-
-			// 		popup.view.find('.capital')
-			// 			.html(_.lang.get('leek', 'n_capital', capital))
-			// 			.attr('v', capital)
-
-			// 		popup.view.find('.add').each(function() {
-
-			// 			$(this).removeClass('locked')
-
-			// 			var tmpCapital = capital
-			// 			var tmpBonuses = _.clone(bonuses)
-
-			// 			var charac = $(this).attr('stat')
-			// 			var q = parseInt($(this).attr('q'))
-
-			// 			var buttonCost = 0
-			// 			var buttonBonus = 0
-
-			// 			while (q > 0) {
-
-			// 				var total = base[charac] + tmpBonuses[charac]
-			// 				var step = 0
-
-			// 				for (; step < costs[charac].length; ++step) {
-			// 					if (costs[charac][step].step > total) break
-			// 				}
-			// 				step--
-
-			// 				var cost = costs[charac][step].capital
-			// 				var bonus = costs[charac][step].sup
-
-			// 				if (cost > tmpCapital) {
-			// 					$(this).addClass('locked')
-			// 					$('#tt_' + $(this).attr('id')).text('')
-			// 					break
-			// 				}
-
-			// 				q -= bonus
-			// 				tmpBonuses[charac] += bonus
-			// 				tmpCapital -= cost
-			// 				buttonCost += cost
-			// 				buttonBonus += bonus
-			// 			}
-
-			// 			$('#tooltips #tt_' + $(this).attr('id')).text(buttonCost + ' capital ⇔ ' + buttonBonus + ' ' + _.lang.get('leek', $(this).attr('stat')).toLowerCase())
-			// 		})
-
-			// 		$('#capital').toggle(capital > 0)
-			// 		$('#menu .section[leek=' + leek.id + ']').attr('label', capital == 0 ? '' : capital)
-			// 		$('#stats #capital').find('#capital-count').text(capital)
-			// 	}
-
-			// 	popup.view.find('.add').click(function() {
-
-			// 		if ($(this).hasClass('locked')) {
-			// 			return
-			// 		}
-
-			// 		var charac = $(this).attr('stat')
-			// 		var q = parseInt($(this).attr('q'))
-
-			// 		while (q > 0) {
-
-			// 			// Get the step for the characteristic
-			// 			var total = base[charac] + bonuses[charac]
-			// 			var step = 0
-
-			// 			for (; step < costs[charac].length; ++step) {
-			// 				if (costs[charac][step].step > total) {
-			// 					break
-			// 				}
-			// 			}
-			// 			step--
-
-			// 			var bonus = costs[charac][step].sup
-			// 			var cost = costs[charac][step].capital
-
-			// 			if (cost > capital) {
-			// 				break
-			// 			}
-
-			// 			bonuses[charac] += bonus
-			// 			q -= bonus
-			// 			capital -= cost
-			// 		}
-
-			// 		popup.view.find('.stat[stat=' + charac + ']').next('.sup').text('(+' + bonuses[charac] + ')')
-			// 		popup.view.find('.stat[stat=' + charac + ']').text(leek[$(this).attr('stat')] + bonuses[charac])
-
-			// 		update()
-			// 	})
-
-			// 	popup.view.find('.reset, .dismiss').click(function() {
-			// 		reset()
-			// 	})
-			// 	popup.ondismiss = function() {
-			// 		reset()
-			// 	}
-
-			// 	popup.view.find('.validate').click(function() {
-
-			// 		_.post('leek/spend-capital', {leek: leek.id, characteristics: JSON.stringify(bonuses)}, function(data) {
-
-			// 			if (data.success) {
-
-			// 				// Update leek characs
-			// 				for (var stat in bonuses) {
-			// 					leek[stat] += bonuses[stat]
-			// 					$('#stats').find('[stat=' + stat + ']').text(leek[stat])
-			// 				}
-
-			// 				// Update capital
-			// 				leek.capital = capital
-			// 				$('#stats #capital').find('#capital-count').text(capital)
-			// 				if (capital == 0) $('#stats #capital').hide()
-
-			// 				popup.dismiss()
-
-
-			// 			} else {
-			// 				_.toast(data.error)
-			// 			}
-			// 		})
-			// 	})
-
-			// 	popup.show(e)
-
-			// 	reset()
-			// })
+		created() {
+			this.reset()
+		}
+		reset() {
+			this.capital = this.leek.capital
+			this.base = {
+				life: this.leek.life - 100 - (this.leek.level - 1) * 3,
+				strength: this.leek.strength,
+				wisdom: this.leek.wisdom,
+				agility: this.leek.agility,
+				resistance: this.leek.resistance,
+				science: this.leek.science,
+				magic: this.leek.magic,
+				frequency: this.leek.frequency - 100,
+				tp: this.leek.tp - 10,
+				mp: this.leek.mp - 3
+			}
+			this.bonuses = {
+				life: 0, strength: 0, wisdom: 0, agility: 0, resistance: 0,
+				frequency: 0, science: 0, magic: 0, tp: 0, mp: 0
+			}
+			this.update()
+		}
+		buttonCost(capital: number, charac: string) {
+			let tmpCapital = this.capital
+			let tmpBonus = this.bonuses[charac]
+			Vue.set(this.costs, charac + capital, {cost: 0, bonus: 0})
+			let q = capital
+			while (q > 0) {
+				const total = this.base[charac] + tmpBonus
+				let step = 0
+				for (; step < COSTS[charac].length; ++step) {
+					if (COSTS[charac][step].step > total) { break }
+				}
+				step--
+				const cost = COSTS[charac][step].capital
+				const bonus = COSTS[charac][step].sup
+				q -= bonus
+				tmpBonus += bonus
+				tmpCapital -= cost
+				this.costs[charac + capital].cost += cost
+				this.costs[charac + capital].bonus += bonus
+			}
+		}
+		update() {
+			for (const charac in this.bonuses) {
+				for (const q of [1, 10, 100]) {
+					this.buttonCost(q, charac)
+				}
+			}
+		}
+		add(charac: string, q: number) {
+			const cost = this.costs[charac + q]
+			if (this.capital >= cost.cost) {
+				this.capital -= cost.cost
+				this.bonuses[charac] += cost.bonus
+			}
+			this.update()
+		}
+		validate() {
+			LeekWars.post('leek/spend-capital', {leek: this.leek.id, characteristics: JSON.stringify(this.bonuses)}).then((data) => {
+				if (data.data.success) {
+					for (const stat in this.bonuses) {
+						(this.leek as any)[stat] += this.bonuses[stat]
+					}
+					this.leek.capital = this.capital
+					this.close()
+				} else {
+					LeekWars.toast(data.data.error)
+				}
+			})
+		}
+		close() {
+			this.reset()
+			this.$emit('input', false)
 		}
 	}
 </script>
@@ -299,7 +207,7 @@
 	.content .charac {
 		padding: 10px 0;
 		width: 187px;
-		display: inline-block;
+		display: inline-flex;
 	}
 	.capital {
 		color: white;
@@ -315,7 +223,6 @@
 		color: #555;
 	}
 	.content img {
-		float: left;
 		width: 40px;
 		margin-right: 10px;
 	}

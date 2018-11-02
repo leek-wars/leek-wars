@@ -571,7 +571,9 @@ textarea {
 }
 .v-dialog .actions div {
 	cursor: pointer;
-	display: inline-block;
+	display: inline-flex;
+	justify-content: center;
+	align-items: center;
 	background: #555;
 	color: #eee;
 	width: 100%;
@@ -579,6 +581,9 @@ textarea {
 	text-align: center;
 	line-height: 40px;
 	font-size: 20px;
+}
+.v-dialog .actions div i {
+	margin-right: 4px;
 }
 .v-dialog .actions div:not(:last-child) {
 	border-right: 1px solid #777;
