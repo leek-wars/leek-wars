@@ -157,13 +157,15 @@
 			<div class="biglegend">{{ $t(bigImageLegend) }}</div>
 		</div>
 
-		<v-dialog v-model="successDialog" :max-width="600">
+		<v-dialog v-model="successDialog" :max-width="700">
 			<div class="title">
 				{{ $t('signup_validated') }}
 			</div>
 			<div class="content">
 				<center><img src="/image/map/nexus_block.png"></center>
-				<h2 class="signup-message">{{ $t('signup_validated_message', [login]) }}</h2>
+				<i18n tag="h2" class="signup-message" path="signup_validated_message">
+					<b place="farmer">{{ login }}</b>
+				</i18n>
 			</div>
 			<div class="actions">
 				<div class="action" @click="successConfirm">OK</div>

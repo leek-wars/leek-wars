@@ -26,7 +26,7 @@
 	"signup_done": "Inscription terminée !",
 	"signup_done_message": "Ton compte est maintenant activé ! Connecte-toi et commence à combattre",
 	"signup_validated": "Inscription validée !",
-	"signup_validated_message": "Félicitations <b>%s</b>, tu n'as plus qu'a consulter ta boîte mail et cliquer sur le lien d'activation à l'intérieur pour finaliser ton inscription !",
+	"signup_validated_message": "Félicitations {farmer}, tu n'as plus qu'a consulter ta boîte mail et cliquer sur le lien d'activation à l'intérieur pour finaliser ton inscription !",
 	"talent": "Talent",
 	"title": "Créer votre poireau",
 	"total_level": "Niveau total",
