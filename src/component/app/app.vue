@@ -49,6 +49,8 @@
 		
 		<div class="toasts"></div>
 
+		<img class='clover' v-if="LeekWars.clover" :style="{top: LeekWars.cloverTop + 'px', left: LeekWars.cloverLeft + 'px'}" src="/image/clover.png" @click="clickClover">
+
 		<didactitiel v-model="didactitiel" />
 
 		<v-dialog v-model="quitConfirmDialog" :max-width="600">
@@ -91,6 +93,7 @@
 	import Squares from '@/component/app/squares.vue'
 	import Didactitiel from '@/component/help/didactitiel.vue'
 	import { LeekWars } from '@/model/leekwars'
+	import { SocketMessage } from '@/model/socket'
 	import { setTimeout } from 'timers'
 	import { Component, Vue } from 'vue-property-decorator'
 
@@ -173,6 +176,10 @@
 		}
 		changelogFormat(data: string) {
 			return data.split("\n").filter((c) => c.length > 0).map((c) => c.replace('# ', ''))
+		}
+		clickClover() {
+			LeekWars.socket.send([SocketMessage.GET_LUCKY])
+			LeekWars.clover = false
 		}
 	}
 </script>
@@ -304,10 +311,6 @@
 		position: fixed;
 		z-index: 1000;
 		cursor: pointer;
-	}
-	.clover-t {
-		margin-top: 4px;
-		font-size: 10px;
 	}
 	.changelog-dialog a {
 		color: #5fad1b;

@@ -127,7 +127,7 @@ class Socket {
 					break
 				}
 				case SocketMessage.LUCKY: {
-					// LW.lucky()
+					LeekWars.lucky()
 					break
 				}
 				case SocketMessage.BATTLE_ROYALE_CHAT_NOTIF: {
