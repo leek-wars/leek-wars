@@ -382,6 +382,7 @@ const LeekWars = {
 	formatDate, formatDateTime, formatDuration, formatTime, formatTimeSeconds, formatDayMonthShort, formatEmojis,
 	setTitle, setSubTitle, setTitleCounter, setTitleTag,
 	createCodeArea,
+	clover: false, cloverTop: 0, cloverLeft: 0, lucky,
 	playSound, setFavicon,
 	linkify, toChatLink,
 	EFFECT_TYPES,
@@ -727,24 +728,10 @@ function linkify(html: string) {
 }
 
 function lucky() {
-	// TODO
-	// $('#clover').remove(); // Delete previous clover?
-	// var top = 20 + Math.random() * 50
-	// var left = 20 + Math.random() * ($(window).width() - 80)
-	// $('body').append("<img id='clover' style='top: " + top +
-	// "px; left: " + left + "px' src='/static/image/clover.png'>");
-	// var clover = $('#clover')
-	// clover.click(function() {
-	// 	LW.socket.send([GET_LUCKY])
-	// 	clover.fadeOut(function() {
-	// 		clover.remove()
-	// 	})
-	// })
-	// setTimeout(function() {
-	// 	clover.fadeOut(function() {
-	// 		clover.remove()
-	// 	})
-	// }, 5000)
+	LeekWars.clover = true
+	LeekWars.cloverTop = 20 + Math.random() * 200
+	LeekWars.cloverLeft = 20 + Math.random() * (window.innerWidth - 80)
+	setTimeout(() => LeekWars.clover = false, 5000)
 }
 
 Commands.addDocumentationCommands()
