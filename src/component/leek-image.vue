@@ -29,7 +29,7 @@
 			return this.leek.hat ? LeekWars.hats[LeekWars.hatTemplates[this.leek.hat].item] : null
 		}
 		get hatWidth() { return this.hatTemplate ? this.leekWidth * this.hatTemplate.width : 0 }
-		get hatHeight() { return this.hatWidth * (this.hatSize.height / this.hatSize.width) }
+		get hatHeight() { return this.hatSize ? this.hatWidth * (this.hatSize.height / this.hatSize.width) : 0 }
 		get hasHat(): boolean { return this.leek.hat !== null }
 		get leekWidth(): number { return this.leekSize ? this.leekSize.width * this.scale : 0 }
 		get leekHeight(): number { return this.leekSize ? this.leekSize.height * this.scale : 0 }
