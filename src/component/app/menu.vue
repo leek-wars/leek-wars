@@ -137,9 +137,11 @@
 				window.addEventListener('pointerdown', (e) => {
 					downX = e.clientX
 					downY = e.clientY
-					down = true
-					aborted = false
-					menu_visible = LeekWars.menuExpanded
+					if (LeekWars.menuExpanded || downX < window.innerWidth / 2) {
+						down = true
+						aborted = false
+						menu_visible = LeekWars.menuExpanded
+					}
 				})
 				window.addEventListener('touchmove', (e) => {
 					if (!down || aborted) { return }
@@ -149,12 +151,12 @@
 						aborted = true
 					}
 					if (!enabled && Math.abs(downX - x) > 10 && menu_visible === x < downX) {
-						menu_element.style.transition = 'transform ease 100ms'
-						center_element.style.transition = 'transform ease 100ms'
-						LeekWars.dark = 0.001
+						menu_element.style.transition = 'transform ease 50ms'
+						center_element.style.transition = 'transform ease 50ms'
+						LeekWars.dark = LeekWars.menuExpanded ? 0.6 : 0.001
 						enabled = true
 					}
-					if (Date.now() - lastT < 50) { return }
+					if (Date.now() - lastT < 25) { return }
 					lastT = Date.now()
 					if (enabled && !aborted) {
 						if (menu_visible) {
