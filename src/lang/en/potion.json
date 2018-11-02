@@ -1,6 +1,6 @@
 {
 	"effect_1": "Resets the leek's capital points",
-	"effect_2": "Makes your leek <b>%s</b>",
+	"effect_2": "Makes your leek <b>{0}</b>",
 	"restat": "Reset potion",
 	"restat_admin": "Reset potion",
 	"restat_admin_desc": "A new life! Offered by your favorite admins!",

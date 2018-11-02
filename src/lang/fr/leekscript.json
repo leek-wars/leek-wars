@@ -2,7 +2,6 @@
 	"leekscript": "Leekscript",
 	"ls_function_definitions": "La fonction \"%s\" propose %d définitions.",
 	"ls_function_information": "Informations sur la fonction \"%s\".",
-	"ls_return": "retourne %s",
 	"ls_return_nothing": "ne retourne rien",
 	"lstype_boolean": "boolean",
 	"lstype_float": "flotant",

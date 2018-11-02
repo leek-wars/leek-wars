@@ -10,5 +10,5 @@
 	"draws": "égalités",
 	"defeats": "défaites",
 	"ratio": "ratio",
-	"not_found_id": "Poireau d'id %s introuvable"
+	"not_found_id": "Poireau d'id {0} introuvable"
 }

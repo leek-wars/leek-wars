@@ -4,7 +4,7 @@
 	"payment_cancelled": "Vous avez annulé le paiement",
 	"payment_no_code": "Pas de code",
 	"payment_wrong_code": "Code non valide",
-	"paypal_description": "Achat de {0} cristaux pour %s €",
+	"paypal_description": "Achat de {0} cristaux pour {1} €",
 	"title": "Banque des cristaux",
 	"paypal_message": "Cliquer sur le bouton pour commencer l'achat",
 	"purshase_title": "Achat de <b>{0}</b> cristaux avec <i>{1}</i>",
