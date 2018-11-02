@@ -395,7 +395,7 @@
 		<v-snackbar v-model="renameSuccess" :timeout="2000" color="success">{{ $t('rename_done') }}</v-snackbar>
 		<v-snackbar v-if="renameError" v-model="renameFailed" :timeout="5000" color="error">{{ $t(renameError.error, renameError.error_params) }}</v-snackbar>
 
-		<v-dialog v-if="leek" v-model="potionDialog" max-width="750">
+		<v-dialog v-if="leek && my_leek" v-model="potionDialog" max-width="750">
 			<div class="title">{{ $t("use_a_potion", [leek.name]) }}</div>
 			<div class="content farmer-potions">
 				<v-tooltip v-for="(potion, id) in $store.state.farmer.potions" :key="id" :open-delay="0" :close-delay="0" bottom>
@@ -444,7 +444,7 @@
 
 		<level-dialog v-if="leek && levelPopupData" :leek="leek" :data="levelPopupData" />
 
-		<v-dialog v-if="leek" v-model="aiDialog" :max-width="870">
+		<v-dialog v-if="leek && my_leek" v-model="aiDialog" :max-width="870">
 			<div class="title">{{ $t('ai_of', [leek.name]) }}</div>
 			<div class="content ai_popup">
 				<div :class="{dashed: draggedAI && (!leek.ai || draggedAI.id !== leek.ai.id)}" class="leek-ai" @dragover="dragOver" @drop="aiDrop('leek', $event)">
@@ -459,7 +459,7 @@
 			</div>
 		</v-dialog>
 
-		<v-dialog v-if="leek" v-model="chipsDialog" :max-width="800">
+		<v-dialog v-if="leek && my_leek" v-model="chipsDialog" :max-width="800">
 			<div class="title">{{ $t('chips_of', [leek.name]) }} <span class="chip-count">[{{ leek.chips.length }}/{{ leek.max_chips }}]</span></div>
 			<div class="content chips-dialog">
 				<div :class="{dashed: draggedChip && draggedChipLocation === 'farmer'}" class="leek-chips" @dragover="dragOver" @drop="chipsDrop('leek', $event)">
@@ -541,8 +541,10 @@
 		}
 		get my_leek(): boolean {
 			if (!this.$route.params.id) { return true }
-			for (const id in this.$store.state.farmer.leeks) {
-				if (parseInt(id, 10) === this.id) { return true }
+			if (this.$store.getters.connected) {
+				for (const id in this.$store.state.farmer.leeks) {
+					if (parseInt(id, 10) === this.id) { return true }
+				}
 			}
 			return false
 		}
@@ -637,8 +639,10 @@
 					if (this.leek.level_seen < this.leek.level) {
 						this.showLevelPopup()
 					}
-					for (const ai of this.$store.state.farmer.ais) {
-						Vue.set(ai, 'dragging', false)
+					if (this.$store.getters.connected) {
+						for (const ai of this.$store.state.farmer.ais) {
+							Vue.set(ai, 'dragging', false)
+						}
 					}
 					this.$root.$emit('loaded')
 				}
