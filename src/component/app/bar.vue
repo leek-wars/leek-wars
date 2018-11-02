@@ -51,10 +51,10 @@
 	@Component({ name: 'lw-bar' })
 	export default class Bar extends Vue {
 		mainButton() {
-			if (LeekWars.splitBack) {
-				this.$root.$emit('back')
-			} else {
+			if (LeekWars.menuExpanded || !LeekWars.splitBack) {
 				LeekWars.toggleMenu()
+			} else {
+				this.$root.$emit('back')
 			}
 		}
 		closeMenu() {
