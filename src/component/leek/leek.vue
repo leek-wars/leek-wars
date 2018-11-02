@@ -178,7 +178,7 @@
 						</div>
 						<center v-if="leek && my_leek">
 							<br>
-							<div v-if="leek.capital > 0" class="button green">{{ $t('n_capital', [leek.capital]) }}</div>&nbsp;
+							<div v-if="leek.capital > 0" class="button green" @click="capitalDialog = true">{{ $t('n_capital', [leek.capital]) }}</div>&nbsp;
 							<div class="button" @click="potionDialog = true">{{ $t('potion') }}</div>
 						</center>
 					</div>
@@ -485,6 +485,7 @@
 				</div>
 			</div>
 		</v-dialog>
+		<capital-dialog v-if="leek" v-model="capitalDialog" :leek="leek" />
 	</div>
 </template>
 	
@@ -500,8 +501,9 @@
 	import { Weapon } from '@/model/weapon'
 	import { plainToClass } from "class-transformer"
 	import { Component, Vue, Watch } from 'vue-property-decorator'
+	import CapitalDialog from './capital-dialog.vue'
 
-	@Component({ name: "leek", i18n: {} })
+	@Component({ name: "leek", i18n: {}, components: { CapitalDialog } })
 	export default class LeekPage extends Vue {
 		leek: Leek | null = null
 		weaponsDialog: boolean = false
@@ -532,6 +534,7 @@
 		chipsDialog: boolean = false
 		draggedChip: Chip | null = null
 		draggedChipLocation: string | null = null
+		capitalDialog: boolean = false
 		
 		get id(): number {
 			return parseInt(this.$route.params.id, 10) || LeekWars.first(this.$store.state.farmer.leeks).id
@@ -688,9 +691,10 @@
 		usePotion(potion: Potion) {
 			const template = LeekWars.potions[potion.template]
 			if (this.leek) {
+				let update = false
 				for (const effect of template.effects) {
 					if (effect.type === 1) { // Restat
-						this.update()
+						update = true
 					} else if (effect.type === 2) { // Skin
 						const skin = effect.params[0]
 						this.leek.skin = skin
@@ -699,8 +703,8 @@
 				}
 				this.potionDialog = false
 				LeekWars.post('leek/use-potion', {leek_id: this.leek.id, potion_id: potion.id}).then((data) => {
-					if (!data.data.success) {
-						// TODO
+					if (data.data.success) {
+						if (update) { this.update() }
 					}
 				})
 			}

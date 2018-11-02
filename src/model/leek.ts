@@ -46,6 +46,17 @@ class Leek {
 	public max_chips!: number
 	public real!: boolean
 	public bot!: boolean
+	public capital!: number
+	public life!: number
+	public strength!: number
+	public wisdom!: number
+	public agility!: number
+	public resistance!: number
+	public frequency!: number
+	public science!: number
+	public magic!: number
+	public tp!: number
+	public mp!: number
 
 	get baseLife() {
 		return 100 + (this.level - 1) * 3
