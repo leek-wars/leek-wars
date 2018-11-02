@@ -173,10 +173,10 @@
 			LeekWars.contenteditable_paste_protect(this.$refs.topicTitle as HTMLElement)
 		}
 		@Watch("$route.params", {immediate: true})
-		update() {
+		update(force: boolean = false) {
 			const topic = parseInt(this.$route.params.topic, 10)
 			const page = 'page' in this.$route.params ? parseInt(this.$route.params.page, 10) : 1
-			if (this.topic && this.topic.id === topic && this.page === page) {
+			if (!force && this.topic && this.topic.id === topic && this.page === page) {
 				this.$root.$emit('loaded')
 				return
 			}
@@ -292,7 +292,7 @@
 				if (data.data.success && this.toDeleteMessage) {
 					this.toDeleteMessage = null
 					this.deleteMessageDialog = false
-					this.update()
+					this.update(true)
 				}
 			})
 		}
@@ -314,7 +314,7 @@
 				if (data.data.success) {
 					localStorage.setItem('forum/draft', '')
 					this.newMessage = ''
-					this.update()
+					this.update(true)
 				}
 			})
 		}
