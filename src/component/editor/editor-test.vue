@@ -137,8 +137,14 @@
 			</v-tabs>
 		</div>
 		<div class="actions">
-			<div @click="$emit('input', false)">❌ {{ $t('editor.test_cancel') }}</div>
-			<div class="green" @click="launchTest">▶ {{ $t('editor.test_validate') }}</div>
+			<div @click="$emit('input', false)">
+				<i class="material-icons">clear</i>
+				<span>{{ $t('editor.test_cancel') }}</span>
+			</div>
+			<div class="green" @click="launchTest">
+				<i class="material-icons">play_arrow</i>
+				<span>{{ $t('editor.test_validate') }}</span>
+			</div>
 		</div>
 
 		<v-dialog v-model="newScenarioDialog" :max-width="500">
