@@ -166,6 +166,8 @@ class Game {
 	public paused: boolean = false
 	public requestPause = false
 	public speed = 1
+	public speedButtonFrame: number = 0
+	public speedButtonVisible: boolean = true
 	public focus = true
 	public going_to_report = false
 	public width: number = 0
@@ -604,6 +606,16 @@ class Game {
 			/// Draw
 			if (this.focus) {
 				this.draw()
+			}
+			// Speed button
+			if (this.speed > 1 && !this.paused) {
+				this.speedButtonFrame += dt
+				if (this.speedButtonFrame > 50) {
+					this.speedButtonFrame = 0
+					this.speedButtonVisible = !this.speedButtonVisible
+				}
+			} else {
+				this.speedButtonVisible = true
 			}
 		}
 	}

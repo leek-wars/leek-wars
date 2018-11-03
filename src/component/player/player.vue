@@ -84,7 +84,9 @@
 					{{ $t('fight.pause') }} (P)
 				</v-tooltip>
 				<v-tooltip :open-delay="0" :close-delay="0" top content-class="top">
-					<i v-ripple slot="activator" class="material-icons control" @click="speedUp">fast_forward</i>
+					<i v-ripple slot="activator" class="material-icons control" @click="game.speedUp()" >
+						<span :style="{opacity: game.speedButtonVisible ? 1 : 0}">fast_forward</span>
+					</i>
 					{{ $t('fight.accelerate') }}
 				</v-tooltip>
 				<v-tooltip :open-delay="0" :close-delay="0" top content-class="top">
@@ -178,12 +180,12 @@
 			this.getLogs()
 			LeekWars.large = this.game.large
 			this.$emit('resize')
+			this.$root.$on('keyup', (e: KeyboardEvent) => this.keyup(e))
 		}
 		@Watch('requiredWidth')
 		requiredWidthChange() {
 			this.resize()
 		}
-
 		get width() {
 			if (this.fullscreen) { return window.innerWidth }
 			else { return this.requiredWidth }
@@ -195,7 +197,6 @@
 		get progressBarWidth() {
 			return this.game && this.game.actions ? 100 * this.game.currentAction / this.game.actions.length : 0
 		}
-
 		resize() {
 			const aspectRatio = window.devicePixelRatio || 1
 			this.canvas.width = this.width * aspectRatio
@@ -208,45 +209,36 @@
 		mousemove(e: MouseEvent) {
 			this.game.mousemove(e)
 		}
-
 		mounted() {
 			this.canvas = document.querySelector('.game-canvas')
 			this.game.ctx = this.canvas.getContext('2d')
 		}
-
-		// if ($("#fight-page .chat-input-content").is(":focus")) return null
-
-		// if (event.keyCode == 81) { // Q
-		// 	if (_fullscreen) {
-		// 		LW.pages.fight.fullscreen()
-		// 	}
-		// 	game.showReport()
-		// 	event.preventDefault()
-		// }
-
-		// if (event.keyCode == 80) { // P
-		// 	if (game.paused) {
-		// 		game.resume()
-		// 	} else {
-		// 		game.pause()
-		// 	}
-		// 	event.preventDefault()
-		// }
-
-		// if (event.keyCode == 83) { // S
-		// 	game.speedUp()
-		// 	event.preventDefault()
-		// }
-
-		// if (event.keyCode == 70) { // F
-		// 	LW.pages.fight.fullscreen()
-		// 	event.preventDefault()
-		// }
-
+		keyup(e: KeyboardEvent) {
+			if (e.keyCode === 81) { // Q
+				if (this.fullscreen) {
+					this.toggleFullscreen()
+				}
+				this.game.showReport()
+				e.preventDefault()
+			} else if (e.keyCode === 80) { // P
+				if (this.game.paused) {
+					this.game.resume()
+				} else {
+					this.game.pause()
+				}
+				e.preventDefault()
+			} else if (e.keyCode === 83) { // S
+				this.game.speedUp()
+				e.preventDefault()
+			} else if (e.keyCode === 70) { // F
+				this.toggleFullscreen()
+				e.preventDefault()
+			}
+		}
 		beforeDestroy() {
 			this.game.pause()
+			this.$off('keyup')
 		}
-
 		getFight() {
 			LeekWars.get('fight/get/' + this.fightId).then((data: AxiosResponse) => {
 				if (!data.data.success) {
@@ -281,7 +273,6 @@
 				})
 			}
 		}
-
 		pause() {
 			if (this.game.paused) {
 				this.game.resume()
@@ -289,12 +280,10 @@
 				this.game.pause()
 			}
 		}
-		speedUp() {
-			this.game.speedUp()
-		}
 		toggleFullscreen() {
 			if (this.fullscreen) {
 				LeekWars.fullscreenExit()
+				this.fullscreen = false
 			} else {
 				LeekWars.fullscreenEnter(this.$el, (fullscreen: boolean) => {
 					this.fullscreen = fullscreen
@@ -335,6 +324,7 @@
 		}
 		@Watch("game.tactic") toggleTactic() {
 			localStorage.setItem('fight/tactic', '' + this.game.tactic)
+			this.game.toggleShadows()
 			this.game.redraw()
 		}
 		@Watch("game.large") toggleLarge() {
@@ -401,7 +391,7 @@
 		height: 50px;
 	}
 	.controls .control {
-		padding: 6px 12px;
+		padding: 5px 12px;
 		cursor: pointer;
 	}
 	.controls .control:hover {
