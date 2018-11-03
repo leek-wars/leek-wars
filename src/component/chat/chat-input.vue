@@ -69,6 +69,7 @@
 				input.textContent = ''
 				this.commandsEnabled = false
 			}
+			e.stopPropagation()
 		}
 		addEmoji(emoji: string) {
 			const input = this.$refs.input as HTMLElement

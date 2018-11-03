@@ -174,6 +174,9 @@ const vueMain = new Vue({
 				this.$emit('escape')
 			}
 		})
+		window.addEventListener('keyup', (event) => {
+			this.$emit('keyup', event)
+		})
 		LeekWars.mobile = window.innerWidth < 850
 		window.addEventListener('resize', () => {
 			this.$emit('resize')
