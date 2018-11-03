@@ -113,6 +113,7 @@
 		consoleDragy: number = 0
 		changelog: any = null
 		changelogDialog: boolean = false
+		konami: string = ''
 
 		created() {
 			this.$root.$on('connected', () => {
@@ -130,8 +131,21 @@
 					}
 				})
 			}
+			this.$root.$on('keyup', (event: KeyboardEvent) => {
+				// Konami code
+				if (event.keyCode == 37) { this.konami += "l" }
+				else if (event.keyCode == 38) { this.konami += "u" }
+				else if (event.keyCode == 39) { this.konami += "r" }
+				else if (event.keyCode == 40) { this.konami += "d" }
+				else if (event.keyCode == 65) { this.konami += "a" }
+				else if (event.keyCode == 66) { this.konami += "b" }
+				if (/uuddlrlrba$/.test(this.konami)) {
+					LeekWars.post('trophy/unlock', {trophy_id: 113})
+					this.konami = ""
+				}
+				if (this.konami.length > 12) { this.konami = this.konami.substring(1) }
+			})
 		}
-
 		darkClick() {
 			LeekWars.menuExpanded = false
 			LeekWars.dark = 0
