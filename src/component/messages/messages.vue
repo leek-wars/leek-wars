@@ -15,8 +15,7 @@
 					<router-link v-if="newConversation && !newConversationSent" :to="'/messages/new/' + newFarmer.id + '/' + newFarmer.name + '/' + newFarmer.avatar_changed">
 						<conversation :conversation="newConversation" />
 					</router-link>
-					<loader v-if="!$store.state.conversationsList.length" />
-					<div v-else class="content">
+					<div class="content">
 						<router-link v-for="conversation in $store.state.conversationsList" :key="conversation.id" :to="'/messages/conversation/' + conversation.id">
 							<conversation :conversation="conversation" />
 						</router-link>
@@ -113,7 +112,7 @@
 				} else {
 					if (LeekWars.mobile) {
 						LeekWars.splitShowList()
-					} else {
+					} else if (this.$store.state.conversationsList.length) {
 						this.$router.replace('/messages/conversation/' + this.$store.state.conversationsList[0].id)
 					}
 				}
@@ -160,10 +159,14 @@
 		}
 		quitConversation() {
 			if (!this.currentConversation) { return }
-			this.$store.commit('quit-conversation', this.currentConversation.id)
-			this.$router.replace('/messages/conversation/' + this.$store.state.conversationsList[0].id)
-			this.quitDialog = false
 			LeekWars.post('message/quit-conversation', {conversation_id: this.currentConversation.id})
+			this.$store.commit('quit-conversation', this.currentConversation.id)
+			if (this.$store.state.conversationsList.length) {
+				this.$router.replace('/messages/conversation/' + this.$store.state.conversationsList[0].id)
+			} else {
+				this.$router.replace('/messages')
+			}
+			this.quitDialog = false
 		}
 		conversationRead() {
 			if (this.currentConversation) {
