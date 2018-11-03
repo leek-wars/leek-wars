@@ -963,7 +963,7 @@
 		]
 		trophy: boolean = false
 		created() {
-			LeekWars.setTitle(this.$t('title'))
+			LeekWars.setTitle(this.$t('tutorial.title'))
 			window.addEventListener('scroll', this.scroll)
 		}
 		scroll(e: UIEvent) {
