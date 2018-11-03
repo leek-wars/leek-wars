@@ -227,9 +227,9 @@
 		get teamEnabled() { return this.garden && this.garden.team_enabled }
 		get battleRoyaleEnabled() { return this.garden && this.garden.battle_royale_enabled }
 		get remainingTime() {
-			const midnignt = new Date(LeekWars.time * 1000)
+			const midnignt = new Date(LeekWars.timeSeconds * 1000)
 			midnignt.setUTCHours(23, 0, 0, 0)
-			return LeekWars.formatTimeSeconds(Math.round(midnignt.getTime() / 1000 - LeekWars.time))
+			return LeekWars.formatTimeSeconds(Math.round(midnignt.getTime() / 1000 - LeekWars.timeSeconds))
 		}
 
 		mounted() {

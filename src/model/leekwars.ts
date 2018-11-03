@@ -110,7 +110,7 @@ const LeekWars = {
 		en: { code: 'en', name: 'English', flag: '/image/flag/gb.png' } as Language,
 	} as { [key: string]: Language },
 	timeDelta: 0, // (Date.now() / 1000 | 0) - __SERVER_TIME,
-	time: 0,
+	time: 0, timeSeconds: 0,
 	large: false,
 	setLocale(locale: string) {
 		loadLanguageAsync(vueMain, locale)
