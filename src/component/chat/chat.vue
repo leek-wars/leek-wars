@@ -145,6 +145,9 @@
 			LeekWars.socket.enableChannel(this.channel)
 		}
 		sendMessage(message: any) {
+			if (message.startsWith('/ping')) {
+				this.$store.commit('last-ping', Date.now())
+			}
 			if (this.channel === 'team') {
 				LeekWars.socket.send([SocketMessage.TEAM_CHAT_SEND, message])
 			} else if (!this.channel || this.privateMessages) {
@@ -181,15 +184,7 @@
 		get privateMessages() {
 			return this.channel.startsWith('pm-')
 		}
-		// ChatController.prototype.receive_pong = function(data) {
-		// 	var message = "pong ! " + data[2] + "ms"
-		// 	this.insert_message(message, {
-		// 		lang: data[0],
-		// 		date: data[1],
-		// 		farmer_id: LW.farmer.id,
-		// 		farmer_name: LW.farmer.name
-		// 	})
-		// }
+		// TODO
 		// ChatController.prototype.mute_user = function(data) {
 		// 	var moderator_name = data[2]
 		// 	var muted = data[3]

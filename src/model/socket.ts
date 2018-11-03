@@ -85,8 +85,7 @@ class Socket {
 					break
 				}
 				case SocketMessage.PONG: {
-					// data[2] = Date.now() - LW.chat.last_ping
-					// LW.chat.receive_pong(data)
+					store.commit('receive-pong', data)
 					break
 				}
 				case SocketMessage.CHAT_MUTE_USER : {
