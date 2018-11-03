@@ -259,7 +259,8 @@
 			const params = this.$route.params
 			this.category = params.category
 			if (!LeekWars.mobile && !this.category) {
-				const defaultCategory = localStorage.getItem('garden/category') || 'solo'
+				let defaultCategory = localStorage.getItem('garden/category') || 'solo'
+				if (defaultCategory === 'challenge') { defaultCategory = 'solo' }
 				this.$router.replace('/garden/' + defaultCategory)
 				return
 			}
@@ -289,17 +290,13 @@
 
 				if (this.category === 'solo') {
 					this.loadLeek(this.$store.state.farmer.leeks[item])
-				}
-				if (this.category === 'farmer') {
+				} else if (this.category === 'farmer') {
 					this.selectFarmer()
-				}
-				if (this.category === 'team') {
+				} else if (this.category === 'team') {
 					this.selectComposition(this.compositions_by_id[item])
-				}
-				if (this.category === 'battle-royale') {
+				} else if (this.category === 'battle-royale') {
 					this.selectBattleRoyale()
-				}
-				if (this.category === 'challenge') {
+				} else if (this.category === 'challenge') {
 					this.selectChallenge()
 				}
 			} else {
