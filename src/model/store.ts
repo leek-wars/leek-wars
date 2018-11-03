@@ -21,6 +21,7 @@ class LeekWarsState {
 	public notifications: Notification[] = []
 	public conversations: {[key: number]: Conversation} = {}
 	public conversationsList: Conversation[] = []
+	public last_ping: number = 0
 }
 
 function updateTitle(state: LeekWarsState) {
@@ -310,6 +311,17 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 		'last-connection'(state: LeekWarsState, time: number) {
 			if (!state.farmer) { return }
 			state.farmer.last_connection = time
+		},
+		'last-ping'(state: LeekWarsState, time: number) {
+			state.last_ping = time
+		},
+		'receive-pong'(state: LeekWarsState, data: any) {
+			const channel = data[0]
+			if (!state.chat[channel]) {
+				Vue.set(state.chat, channel, new Chat(channel, ChatType.GLOBAL))
+			}
+			state.chat[channel].add(state.farmer!.id, state.farmer!.name, state.farmer!.avatar_changed, state.farmer!.grade, "pong ! " + (Date.now() - state.last_ping) + "ms", Date.now() / 1000)
+			vueMain.$emit('chat', [channel])
 		}
 	},
 })
