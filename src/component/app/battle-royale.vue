@@ -1,23 +1,25 @@
 <template>
-	<div v-if="LeekWars.battleRoyale.enabled" class="br popup v-dialog">
-		<div class="title">
-			{{ $t('garden.category_battle_royale') }}&nbsp;
-			<b class="progress">{{ LeekWars.battleRoyale.progress }} / 10</b>
-			<div class="options">
-				<div class="option minimize" @click="expanded = !expanded">
-					<i v-if="expanded" class="material-icons">expand_more</i>
-					<i v-else class="material-icons">expand_less</i>
+	<div v-if="LeekWars.battleRoyale.enabled" class="br-wrapper">
+		<div class="br popup v-dialog">
+			<div class="title">
+				{{ $t('garden.category_battle_royale') }}&nbsp;
+				<b class="progress">{{ LeekWars.battleRoyale.progress }} / 10</b>
+				<div class="options">
+					<div class="option minimize" @click="expanded = !expanded">
+						<i v-if="expanded" class="material-icons">expand_more</i>
+						<i v-else class="material-icons">expand_less</i>
+					</div>
+					<div class="option dismiss" @click="quit"><i class="material-icons">clear</i></div>
 				</div>
-				<div class="option dismiss" @click="quit"><i class="material-icons">clear</i></div>
 			</div>
-		</div>
-		<div v-if="expanded" class="content">
-			<loader v-if="LeekWars.battleRoyale.progress == 0" />
-			<div v-for="leek in LeekWars.battleRoyale.leeks" :key="leek.id" class="leek">
-				<leek-image :leek="leek" :scale="0.4" /><br>
-				<div>{{ leek.name }}</div>
-				<talent :talent="leek.talent" />
-				<div class="level">{{ $t('leek.level_n', [leek.level]) }}</div>
+			<div v-if="expanded" class="content">
+				<loader v-if="LeekWars.battleRoyale.progress == 0" />
+				<div v-for="leek in LeekWars.battleRoyale.leeks" :key="leek.id" class="leek">
+					<leek-image :leek="leek" :scale="0.4" /><br>
+					<div>{{ leek.name }}</div>
+					<talent :talent="leek.talent" />
+					<div class="level">{{ $t('leek.level_n', [leek.level]) }}</div>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -36,15 +38,20 @@
 </script>
 
 <style lang="scss" scoped>
-	.br {
+	.br-wrapper {
 		position: fixed;
 		bottom: 0;
-		right: 50%;
-		left: calc(50% - 300px);
-		width: 600px;
+		left: 0;
+		right: 0;
+		width: 100%;
 		z-index: 100;
+		text-align: center;
+	}
+	.br {
+		width: auto;
+		max-width: 600px;
 		display: block;
-		margin: 0 !important;
+		margin: 0 auto !important;
 	}
 	.content {
 		padding: 10px;
