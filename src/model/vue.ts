@@ -189,8 +189,11 @@ const vueMain = new Vue({
 			this.$emit('htmlclick')
 		})
 		setInterval(() => {
-			LeekWars.time = (Date.now() / 1000) | 0 - LeekWars.timeDelta
+			LeekWars.timeSeconds = (Date.now() / 1000) | 0 - LeekWars.timeDelta
 		}, 1000)
+		setInterval(() => {
+			LeekWars.time = (Date.now() / 1000) | 0 - LeekWars.timeDelta
+		}, 1000 * 60)
 
 		this.$on('loaded', () => {
 			if (this.$data.savedPosition > 0) {
