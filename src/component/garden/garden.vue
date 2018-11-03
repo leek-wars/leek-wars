@@ -73,25 +73,26 @@
 									<garden-leek :leek="leek" />
 								</router-link>
 								<div class="versus">VS</div>
-								<div class="enemies">
+								<div v-if="challengeFights" class="enemies">
 									<garden-leek :leek="challengeLeekTarget" @click.native="startLeekChallenge" />
 								</div>
-								<template v-if="challengeFights == 0">
-									<br>
-									<img src="/image/notgood.png"><br>
-									<h3>{{ $t('no_more_fights') }}</h3>
-								</template>
+								<div v-else>
+									<img src="/image/notgood.png">
+									<h4>{{ $t('no_more_fights') }}</h4>
+								</div>
 							</template>
 							<template v-else>
 								<garden-farmer :farmer="$store.state.farmer" />
 								<div class="versus">VS</div>
-								<div class="enemies">
+								<div v-if="challengeFights" class="enemies">
 									<loader v-if="!challengeFarmerTarget" />
 									<div v-else class="opponents">
 										<garden-farmer :farmer="challengeFarmerTarget" @click.native="startFarmerChallenge" />
 									</div>
-									<!-- <div class='no-opponents'>@include('no_opponents')</div> -->
-									<!-- <div class='no-more-fights'>@include('no_more_fights')</div> -->
+								</div>
+								<div v-else>
+									<img src="/image/notgood.png"><br>
+									<h4>{{ $t('no_more_fights') }}</h4>
 								</div>
 							</template>
 						</div>
@@ -101,25 +102,41 @@
 									<garden-leek :leek="leek" />
 								</router-link>
 								<div class="versus">VS</div>
-								<div v-if="selectedLeek">
-									<loader v-if="!leekOpponents[selectedLeek.id]" />
-									<div v-else class="opponents">
+								<div v-if="selectedLeek && garden.fights">
+									<loader v-if="!leekOpponents[selectedLeek.id] && !leekErrors[selectedLeek.id]" />
+									<div v-else-if="leekOpponents[selectedLeek.id]" class="opponents">
 										<garden-leek v-for="leek in leekOpponents[selectedLeek.id]" :key="leek.id" :leek="leek" @click.native="clickSoloOpponent(leek)" />
+										<div v-if="!leekOpponents[selectedLeek.id].length">
+											<img src="/image/notgood.png">
+											<h4>{{ $t('no_opponent_of_your_size') }}</h4>
+										</div>
 									</div>
-								<!-- <div class='no-opponents'>@include('no_opponents')</div> -->
-								<!-- <div class='no-more-fights'>@include('no_more_fights')</div> -->
+									<div v-else-if="leekErrors[selectedLeek.id]">
+										<img src="/image/notgood.png">
+										<h4>{{ $t(leekErrors[selectedLeek.id]) }}</h4>
+									</div>
+								</div>
+								<div v-else>
+									<img src="/image/notgood.png"><br>
+									<h4>{{ $t('no_more_fights') }}</h4>
 								</div>
 							</div>
 							<div v-if="category == 'farmer'">
 								<garden-farmer :farmer="$store.state.farmer" class="my-farmer" />
 								<div class="versus">VS</div>
-								<div class="enemies">
+								<div v-if="garden.fights" class="enemies">
 									<loader v-if="!farmerOpponents" />
 									<div v-else class="opponents">
 										<garden-farmer v-for="farmer in farmerOpponents" :key="farmer.id" :farmer="farmer" @click.native="clickFarmerOpponent(farmer)" />
+										<div v-if="!farmerOpponents.length">
+											<img src="/image/notgood.png">
+											<h4>{{ $t('no_opponent_of_your_size') }}</h4>
+										</div>
 									</div>
-								<!-- <div class='no-opponents'>@include('no_opponents')</div> -->
-								<!-- <div class='no-more-fights'>@include('no_more_fights')</div> -->
+								</div>
+								<div v-else>
+									<img src="/image/notgood.png"><br>
+									<h4>{{ $t('no_more_fights') }}</h4>
 								</div>
 							</div>
 							<div v-if="category == 'team'">
@@ -132,11 +149,17 @@
 								<div class="versus">VS</div>
 								<div v-if="selectedComposition">
 									<loader v-if="!teamOpponents[selectedComposition.id]" />
-									<div v-else class="opponents">
+									<div v-else-if="selectedComposition.fights" class="opponents">
 										<garden-compo v-for="compo in teamOpponents[selectedComposition.id]" :key="compo.id" :compo="compo" class="composition-wrapper" @click.native="clickCompositionOpponent(compo)" />
+										<div v-if="!teamOpponents[selectedComposition.id].length">
+											<img src="/image/notgood.png">
+											<h4>{{ $t('no_opponent_of_your_size') }}</h4>
+										</div>
 									</div>
-								<!-- <div class='no-opponents'>@include('no_opponents')</div> -->
-								<!-- <div class='no-more-fights'>@include('no_more_fights')</div> -->
+									<div v-else>
+										<img src="/image/notgood.png"><br>
+										<h4>{{ $t('no_more_fights') }}</h4>
+									</div>
 								</div>
 							</div>
 							<div v-if="category == 'battle-royale'">
@@ -167,27 +190,6 @@
 			</div>
 		</div>
 	</div>
-	<!--
-	@view(no_opponents)
-	<img src="/notgood.png&quot;"><br>
-	<h4>{{ $t('no_opponent_of_your_size') }}</h4>
-	@endview
-
-	@view(no_more_fights)
-	<img src="/notgood.png&quot;"><br>
-	<h4>{{ $t('no_more_fights') }}</h4>
-	@endview
-
-	@view(no_ai_equipped)
-	<img src="/notgood.png&quot;"><br>
-	<h4>{{ $t('leek_have_no_ai') }}</h4>
-	@endview
-
-	@view(ai_invalid)
-	<img src="/notgood.png&quot;"><br>
-	<h4>{{ $t('leek_ai_invalid') }}</h4>
-	@endview
-	-->
 </template>
 
 <script lang="ts">
@@ -214,6 +216,7 @@
 		selectedLeek: Leek | null = null
 		selectedComposition: any = null
 		leekOpponents: {[key: number]: Leek[]} = {}
+		leekErrors: {[key: number]: string} = {}
 		farmerOpponents: Farmer[] | null = null
 		teamOpponents: {[key: number]: Composition[]} = {}
 		compositions_by_id: {[key: number]: Composition} = {}
@@ -301,7 +304,6 @@
 				LeekWars.splitShowList()
 			}
 		}
-
 		loadLeek(leek: Leek) {
 			this.selectedLeek = leek
 			if (this.garden.fights === 0 || this.$data.leekOpponents[leek.id]) {
@@ -311,21 +313,10 @@
 				if (data.data.success) {
 					Vue.set(this.$data.leekOpponents, leek.id, data.data.opponents)
 				} else {
-					// $('#garden-solo .enemies[of=' + leek_id + '] .ai-invalid').hide()
-					// if (data.error == 'invalid_ai') {
-					// 	$('#garden-solo .enemies[of=' + leek_id + '] .ai-invalid').show()
-					// 	return null
-					// }
-					// $('#garden-solo .enemies[of=' + leek_id + '] .no-ai-equipped').hide()
-					// if (data.error == 'no_ai_equipped') {
-					// 	$('#garden-solo .enemies[of=' + leek_id + '] .no-ai-equipped').show()
-					// 	return null
-					// }
-					LeekWars.toast(data.data.error)
+					Vue.set(this.$data.leekErrors, leek.id, data.data.error)
 				}
 			})
 		}
-
 		selectFarmer() {
 			if (this.garden.fights === 0 || this.farmerOpponents) {
 				return
@@ -338,7 +329,6 @@
 				}
 			})
 		}
-
 		selectComposition(composition: Composition) {
 			this.selectedComposition = composition
 			if (composition.fights === 0 || this.teamOpponents[composition.id]) {
