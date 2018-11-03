@@ -88,7 +88,7 @@
 					this.items_by_category[item.category].push(item)
 				}
 
-				// LW.setTitle(_.lang.get('documentation', 'title'))
+				LeekWars.setTitle(this.$i18n.t('documentation.title'))
 				this.update()
 
 				// Liens

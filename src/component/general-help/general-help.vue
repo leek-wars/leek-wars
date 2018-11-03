@@ -354,7 +354,7 @@
 	@Component({ name: "general_help", i18n: {} })
 	export default class GeneralHelp extends Vue {
 		created() {
-			LeekWars.setTitle(this.$t('title'))
+			LeekWars.setTitle(this.$t('general_help.title'))
 		}
 	}
 </script>

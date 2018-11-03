@@ -233,7 +233,7 @@
 		}
 
 		mounted() {
-			LeekWars.setTitle(this.$t('title'))
+			LeekWars.setTitle(this.$t('garden.title'))
 
 			LeekWars.get('garden/get/' + this.$store.state.token).then((r: any) => {
 				this.garden = r.data.garden
