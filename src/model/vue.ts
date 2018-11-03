@@ -213,21 +213,6 @@ const vueMain = new Vue({
 
 		LeekWars.sfwInit()
 		LeekWars.setFavicon()
-
-		// Konami code
-		// $(window).keyup(function(e) {
-		// 	if (e.keyCode == 37) LW.konami += "l"
-		// 	else if (e.keyCode == 38) LW.konami += "u"
-		// 	else if (e.keyCode == 39) LW.konami += "r"
-		// 	else if (e.keyCode == 40) LW.konami += "d"
-		// 	else if (e.keyCode == 65) LW.konami += "a"
-		// 	else if (e.keyCode == 66) LW.konami += "b"
-		// 	if (/uuddlrlrba$/.test(LW.konami)) {
-		// 		_.post('trophy/unlock', {trophy_id: 113})
-		// 		LW.konami = ""
-		// 	}
-		// 	if (LW.konami.length > 12) LW.konami = LW.konami.substring(1)
-		// })
 		
 		// Keep connected
 		setInterval(() => {
