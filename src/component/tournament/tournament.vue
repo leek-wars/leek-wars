@@ -2,9 +2,8 @@
 	<div class="tournament-page">
 		<div class="page-header page-bar">
 			<h1>{{ tournament ? title : '...' }}</h1>
-			<div class="tabs">
+			<div class="tabs" v-if="!LeekWars.mobile">
 				<div v-if="tournament && !tournament.finished" class="tab disabled">{{ timerText }}</div>
-				<div class="tab action zoom" icon="zoom_in" @click="zoom"></div>
 			</div>
 		</div>
 		<div class="panel">
@@ -225,6 +224,7 @@
 		height: number = 0
 		timerText: string = ''
 		timer: any
+		actions = [{icon: 'zoom_in', click: () => this.zoom()}]
 
 		created() {
 			LeekWars.get<any>('tournament/get/' + this.$route.params.id + '/' + this.$store.state.token).then((data) => {
@@ -240,6 +240,7 @@
 
 					this.title = this.$t('tournament.' + this.tournament.type, [LeekWars.formatDate(this.tournament.date)]) as string
 					LeekWars.setTitle(this.title)
+					LeekWars.setActions(this.actions)
 					this.setupTimer()
 				}
 			})
@@ -271,16 +272,18 @@
 		zoom() {
 			if (this.zoomed) {
 				this.zoomed = false
+				this.actions[0].icon = 'zoom_in'
 			} else {
 				this.zoomed = true
-				this.height = window.innerWidth - 100
+				this.height = window.innerHeight - 86
+				this.actions[0].icon = 'zoom_out'
 			}
 		}
 		setupTimer() {
 			if (!this.tournament) { return }
 			const update = () => {
 				if (!this.tournament) { return }
-				const time = this.tournament.next_round - LeekWars.time
+				const time = this.tournament.next_round - LeekWars.timeSeconds
 				if (time < 0) {
 					this.timerText = this.$t('tournament.next_round_in', [this.$t('tournament.few_seconds')]) as string
 					LeekWars.setSubTitle(this.timerText)
@@ -306,9 +309,6 @@
 	}
 	.tournament.zoomed {
 		overflow-x: auto;
-	}
-	.tournament {
-		width: 100%;
 	}
 	#app.app .tournament.zoomed {
 		width: auto;
