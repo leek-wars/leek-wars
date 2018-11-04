@@ -3,11 +3,15 @@
 	"short_name": "Leek Wars",
 	"icons": [
 		{
-			"src": "/image/favicon.png",
+			"src": "/image/icon64.png",
 			"sizes": "64x64"
 		},
 		{
-			"src": "/image/web_hi_res_512.png",
+			"src": "/image/icon192.png",
+			"sizes": "192x192"
+		},
+		{
+			"src": "/image/icon512.png",
 			"sizes": "512x512"
 		}
 	],
