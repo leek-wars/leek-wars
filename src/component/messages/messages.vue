@@ -96,7 +96,6 @@
 					if (conversation.id === 0) { continue }
 					for (const farmer of conversation.farmers) {
 						if (farmer.id === this.newFarmer.id) {
-							// this.conversations.shift()
 							this.$router.replace('/messages/conversation/' + conversation.id)
 							found = true
 							break
@@ -112,6 +111,7 @@
 				} else {
 					if (LeekWars.mobile) {
 						LeekWars.splitShowList()
+						LeekWars.setTitle(this.$i18n.t('messages.title'))
 					} else if (this.$store.state.conversationsList.length) {
 						this.$router.replace('/messages/conversation/' + this.$store.state.conversationsList[0].id)
 					}
@@ -123,6 +123,17 @@
 			this.currentID = id
 			LeekWars.splitShowContent()
 			LeekWars.setActions(this.actions)
+			if (id === 0) {
+				LeekWars.setTitle(this.$i18n.t('messages.new_message'))
+			} else if (this.currentID in this.$store.state.conversations) {
+				for (const farmer of this.$store.state.conversations[this.currentID].farmers) {
+					if (!this.$store.state.farmer || farmer.id !== this.$store.state.farmer.id) {
+						LeekWars.setTitle(farmer.name)
+					}
+				}
+			} else {
+				LeekWars.setTitle(this.$i18n.t('messages.title'))
+			}
 			if (!this.$store.state.chat['pm-' + id]) {
 				if (id === 0) {
 					return
