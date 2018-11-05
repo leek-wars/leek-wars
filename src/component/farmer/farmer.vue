@@ -208,7 +208,9 @@
 								<img src="/image/icon/trophy.png"> {{ $t('see_all_trophies') }}
 							</div>
 						</router-link>
-						<img :src="'/image/' + (trophiesMode === 'grid' ? 'list' : 'grid') + '.png'" class="trophies-mode-button" @click="trophiesModeButton">
+						<div class="button flat">
+							<i class="material-icons" @click="trophiesModeButton">{{ (trophiesMode === 'grid' ? 'list' : 'view_module') }}</i>
+						</div>
 					</div>
 				</div>
 				<div class="content trophies">
