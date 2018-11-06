@@ -1,5 +1,5 @@
 <template>
-	<div class="hud">
+	<div class="hud" v-if="!LeekWars.mobile">
 		<div class="life-bar">
 			<div class="wrapper">
 				<template v-for="team in game.teams">
@@ -17,7 +17,7 @@
 			<div>Mouse cell : {{ game.mouseCell }}</div>
 			<div>FPS : {{ game.fps }}, avg: {{ game.avgFPS }}</div>
 		</div>
-		<div v-if="!LeekWars.mobile" ref="leftPart" class="left-part">
+		<div ref="leftPart" class="left-part">
 			<div ref="actions" :style="{'margin-top': actionsMargin + 'px'}" class="actions">
 				<action-element v-for="action of game.currentActions" :key="action.id" :action="action.action" :logs="action.logs" :leeks="game.leeks" turn="1" class="action" />
 			</div>
@@ -312,13 +312,5 @@
 		top: 0; left: 0; bottom: 0;
 		text-align: left;
 		overflow: hidden;
-	}
-	@media screen and (max-width: 799px) {
-		.timeline {
-			display: none;
-		}
-		.life-bar {
-			display: none;
-		}
 	}
 </style>
