@@ -2,7 +2,7 @@
 	<div class="tournament-page">
 		<div class="page-header page-bar">
 			<h1>{{ tournament ? title : '...' }}</h1>
-			<div class="tabs" v-if="!LeekWars.mobile">
+			<div v-if="!LeekWars.mobile" class="tabs">
 				<div v-if="tournament && !tournament.finished" class="tab disabled">{{ timerText }}</div>
 			</div>
 		</div>

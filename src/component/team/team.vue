@@ -24,7 +24,7 @@
 		<div class="flex-container">
 			<div class="column4">
 				<div class="panel team-emblem">
-					<div class="content" v-if="team">
+					<div v-if="team" class="content">
 						<template v-if="member">
 							<v-tooltip :open-delay="0" :close-delay="0" bottom>
 								<div slot="activator" class="emblem-input">
@@ -41,7 +41,7 @@
 			
 			<div class="column4">
 				<div class="panel description">
-					<div class="content" v-if="team">
+					<div v-if="team" class="content">
 						<div>
 							<span class="guillemet">«</span>
 							<span v-if="owner" ref="descriptionElement" :class="{empty: !team.description && !editingDescription}" class="team-status text" contenteditable @click="startEditingDescription" @blur="saveDescription" @keydown.enter.prevent="saveDescription">{{ team.description }}</span>
@@ -62,7 +62,7 @@
 				<div class="panel">
 					<div class="content">
 						<h4 class="level">{{ $t('level_n', [team ? team.level : '...']) }}</h4>
-						<v-tooltip :open-delay="0" :close-delay="0" bottom v-if="team">
+						<v-tooltip v-if="team" :open-delay="0" :close-delay="0" bottom>
 							<div slot="activator" class="bar">
 								<span :class="{blue: max_level}" :style="{width: xp_bar_width + '%'}" class="xp-bar striked"></span>
 							</div>
@@ -87,7 +87,7 @@
 						</center>
 
 						<br>
-						<v-tooltip :open-delay="0" :close-delay="0" bottom v-if="team">
+						<v-tooltip v-if="team" :open-delay="0" :close-delay="0" bottom>
 							<table slot="activator" class="fights">
 								<tr>
 									<td class="big">{{ team.victories | number }}</td>
@@ -144,7 +144,7 @@
 			</div>
 			<div class="content">
 				<loader v-if="!team" />
-				<div v-else v-for="member in team.members" :key="member.id" class="farmer">
+				<div v-for="member in team.members" v-else :key="member.id" class="farmer">
 					<router-link :to="'/farmer/' + member.id">
 						<avatar :farmer="member" />
 						<div class="name">
@@ -263,7 +263,7 @@
 			</div>
 			<div class="content">
 				<loader v-if="!team" />
-				<router-link v-else v-for="leek in team.leeks" :key="leek.id" :to="'/leek/' + leek.id" :leek="leek.id" class="leek">
+				<router-link v-for="leek in team.leeks" v-else :key="leek.id" :to="'/leek/' + leek.id" :leek="leek.id" class="leek">
 					<leek-image :leek="leek" :scale="0.6" />
 					<br>
 					<div class="name">{{ leek.name }}</div>
