@@ -317,12 +317,14 @@ const LeekWars = {
 		if (element.requestFullscreen) {
 			document.onfullscreenchange = () => {
 				LeekWars.fullscreen = !LeekWars.fullscreen
+				vueMain.$emit('resize')
 				callback(LeekWars.fullscreen)
 			}
 			element.requestFullscreen()
 		} else if (element.webkitRequestFullScreen) {
 			document.onwebkitfullscreenchange = () => {
 				LeekWars.fullscreen = !LeekWars.fullscreen
+				vueMain.$emit('resize')
 				callback(LeekWars.fullscreen)
 			}
 			element.webkitRequestFullScreen()
