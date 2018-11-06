@@ -1,5 +1,5 @@
 <template lang="html">
-	<div :style="{width: width + 'px', height: height + 'px'}">
+	<div :style="{width: width + 'px', height: height + 36 + 'px'}">
 		<div v-if="!loaded" class="loading">
 			<div v-if="fight">
 				<template v-if="fight.type === FightType.BATTLE_ROYALE">
@@ -49,7 +49,6 @@
 				</div>
 			</div>
 		</div>
-
 		<div v-if="error" class="error">
 			<h2>{{ $t('fight.error_generating_fight') }}</h2>
 			<br>
@@ -63,9 +62,9 @@
 			<br><br>
 		</div>
 		<div v-show="loaded" class="game">
-			<div :style="{height: height - 36 + 'px'}" class="layers">
-				<canvas :style="{width: width + 'px', height: height - 36 + 'px'}" class="bg-canvas"></canvas>
-				<canvas :style="{width: width + 'px', height: height - 36 + 'px'}" class="game-canvas" @click="canvasClick" @mousemove="mousemove"></canvas>
+			<div :style="{height: height + 'px'}" class="layers">
+				<canvas :style="{width: width + 'px'}" class="bg-canvas"></canvas>
+				<canvas :style="{width: width + 'px'}" class="game-canvas" @click="canvasClick" @mousemove="mousemove"></canvas>
 				<div class="progress-bar-wrapper">
 					<div ref="progressBarTooltip" :style="{'margin-left': progressBarTooltipMargin + 'px'}" class="progress-bar-turn v-tooltip__content top">
 						<span class="content">{{ $t('fight.turn_n', [progressBarTurn]) }}</span>
@@ -76,7 +75,6 @@
 				</div>
 				<hud :game="game" />
 			</div>
-
 			<div class="controls">
 				<div class="turn">{{ $t('fight.turn_n', [game.turn]) }}</div>
 				<v-tooltip :open-delay="0" :close-delay="0" top content-class="top">
@@ -164,6 +162,8 @@
 		fullscreen: boolean = false
 		progressBarTurn: any = 0
 		progressBarTooltipMargin: number = 0
+		width: number = 0
+		height: number = 0
 
 		created() {
 			if (localStorage.getItem('fight/shadows') === null) { localStorage.setItem('fight/shadows', 'true') }
@@ -179,18 +179,22 @@
 			this.getFight()
 			this.getLogs()
 			LeekWars.large = this.game.large
+			this.resize()
 			this.$emit('resize')
+			this.$root.$on('resize', () => {
+				this.resize()
+			})
 			this.$root.$on('keyup', this.keyup)
 		}
 		@Watch('requiredWidth')
 		requiredWidthChange() {
 			this.resize()
 		}
-		get width() {
+		getWidth() {
 			if (this.fullscreen) { return window.innerWidth }
 			else { return this.requiredWidth }
 		}
-		get height() {
+		getHeight() {
 			if (this.fullscreen) { return window.innerHeight }
 			else { return this.requiredHeight }
 		}
@@ -198,10 +202,15 @@
 			return this.game && this.game.actions ? 100 * this.game.currentAction / this.game.actions.length : 0
 		}
 		resize() {
-			const aspectRatio = window.devicePixelRatio || 1
-			this.canvas.width = this.width * aspectRatio
-			this.canvas.height = (this.height - BAR_HEIGHT) * aspectRatio
 			Vue.nextTick(() => {
+				const newWidth = this.getWidth()
+				const newHeight = this.getHeight()
+				if (newWidth === this.width && newHeight === this.height) { return }
+				const aspectRatio = window.devicePixelRatio || 1
+				this.width = newWidth
+				this.height = newHeight - BAR_HEIGHT
+				this.canvas.width = this.width * aspectRatio
+				this.canvas.height = this.height * aspectRatio
 				this.game.resize(this.canvas.width, this.canvas.height, this.canvas)
 				this.game.redraw()
 			})
@@ -238,6 +247,7 @@
 		beforeDestroy() {
 			this.game.pause()
 			this.$root.$off('keyup', this.keyup)
+			this.$root.$off('resize')
 		}
 		getFight() {
 			LeekWars.get('fight/get/' + this.fightId).then((data: AxiosResponse) => {
@@ -287,7 +297,6 @@
 			} else {
 				LeekWars.fullscreenEnter(this.$el, (fullscreen: boolean) => {
 					this.fullscreen = fullscreen
-					this.resize()
 				})
 			}
 		}
