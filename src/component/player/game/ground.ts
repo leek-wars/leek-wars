@@ -45,8 +45,8 @@ class Ground {
 		} else {
 			GROUND_PADDING_LEFT = 210
 			GROUND_PADDING_RIGHT = 20
-			GROUND_PADDING_TOP = 70
-			GROUND_PADDING_BOTTOM = 100
+			GROUND_PADDING_TOP = 100
+			GROUND_PADDING_BOTTOM = 50
 		}
 		this.width = width
 		this.height = height
@@ -63,7 +63,7 @@ class Ground {
 
 		// Calculate start position
 		this.startX = Math.round(width - this.gridWidth - GROUND_PADDING_RIGHT)
-		this.startY = Math.round(height - this.gridHeight - GROUND_PADDING_BOTTOM)
+		this.startY = Math.round(height - this.gridHeight - GROUND_PADDING_BOTTOM) / 2
 
 		// Taille des cases
 		this.tileSizeX = this.gridWidth / this.tilesX
