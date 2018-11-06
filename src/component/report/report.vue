@@ -209,6 +209,7 @@
 					this.warningsErrors()
 				})
 				this.updateChart()
+				LeekWars.setActions([{icon: 'undo', click: () => this.$router.push('/fight/' + id)}])
 				LeekWars.setTitle(this.$i18n.t('report.title') + " - " + this.fight.team1_name + " vs " + this.fight.team2_name)
 				this.$root.$emit('loaded')
 			})
