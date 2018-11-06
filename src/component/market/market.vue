@@ -404,6 +404,10 @@
 </script>
 
 <style lang="scss" scoped>
+	#app.app .column8 {
+		height: calc(100vh - 56px);
+		overflow-y: auto;
+	}
 	.loader {
 		padding: 20px 0;
 	}
