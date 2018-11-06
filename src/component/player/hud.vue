@@ -102,11 +102,13 @@
 		updateActions() {
 			Vue.nextTick(() => {
 				const actions = this.$refs.actions as HTMLElement
-				const leftPart = this.$refs.leftPart as HTMLElement
-				if (actions.offsetHeight > leftPart.offsetHeight) {
-					this.game.currentActions.shift()
+				if (actions) {
+					const leftPart = this.$refs.leftPart as HTMLElement
+					if (actions.offsetHeight > leftPart.offsetHeight) {
+						this.game.currentActions.shift()
+					}
+					this.actionsMargin = Math.min(0, leftPart.offsetHeight - actions.offsetHeight - 100)
 				}
-				this.actionsMargin = Math.min(0, leftPart.offsetHeight - actions.offsetHeight - 100)
 			})
 		}
 	}
