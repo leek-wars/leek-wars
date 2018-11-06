@@ -84,7 +84,7 @@
 					{{ $t('fight.pause') }} (P)
 				</v-tooltip>
 				<v-tooltip :open-delay="0" :close-delay="0" top content-class="top">
-					<i v-ripple slot="activator" class="material-icons control" @click="game.speedUp()" >
+					<i v-ripple slot="activator" class="material-icons control" @click="game.speedUp()">
 						<span :style="{opacity: game.speedButtonVisible ? 1 : 0}">fast_forward</span>
 					</i>
 					{{ $t('fight.accelerate') }}

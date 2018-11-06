@@ -30,7 +30,7 @@
 		</div>
 		
 		<div class="app-center">
-			<div class="app-wrapper" :class="{large: LeekWars.large}">
+			<div :class="{large: LeekWars.large}" class="app-wrapper">
 				<lw-header />
 				<div class="page-wrapper">
 					<div class="page">
@@ -49,7 +49,7 @@
 		
 		<div class="toasts"></div>
 
-		<img class='clover' v-if="LeekWars.clover" :style="{top: LeekWars.cloverTop + 'px', left: LeekWars.cloverLeft + 'px'}" src="/image/clover.png" @click="clickClover">
+		<img v-if="LeekWars.clover" :style="{top: LeekWars.cloverTop + 'px', left: LeekWars.cloverLeft + 'px'}" class="clover" src="/image/clover.png" @click="clickClover">
 
 		<didactitiel v-model="didactitiel" />
 

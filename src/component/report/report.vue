@@ -75,7 +75,7 @@
 			<div class="header">
 				<h2>Évolution des points de vie</h2>
 				<div class="right">
-					<div @click="toggleSmooth" class="button flat">
+					<div class="button flat" @click="toggleSmooth">
 						<img v-if="smooth" src="/image/icon/graph_angular.png">
 						<img v-else src="/image/icon/graph_smooth.png">
 					</div>
@@ -84,7 +84,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="content chart-panel" ref="chartPanel" @mouseleave="chartMouseLeave" @mousemove="chartMouseMove">
+			<div ref="chartPanel" class="content chart-panel" @mouseleave="chartMouseLeave" @mousemove="chartMouseMove">
 				<chartist ref="chart" :data="chartData" :options="chartOptions" :event-handlers="chartEvents" class="chart" type="Line" />
 				<div v-show="chartTooltipValue" ref="chartTooltip" :style="{top: chartTooltipY + 'px', left: chartTooltipX + 'px'}" class="chart-tooltip v-tooltip__content top" v-html="chartTooltipValue"></div>
 			</div>

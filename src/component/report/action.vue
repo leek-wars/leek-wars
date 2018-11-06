@@ -129,8 +129,8 @@
 			<leek :leek="leek" place="leek" />
 			<leek :leek="leeks[action.params[2]]" place="target" />
 		</i18n>
-		<div class="logs" v-if="action.logs.length">
-			<pre class="log" v-for="(log, l) in action.logs" :key="l" :class="logClass(log)" :style="{color: logColor(log)}">[<leek :leek="leeks[log[0]]" />] {{ logText(log) }}</pre>
+		<div v-if="action.logs.length" class="logs">
+			<pre v-for="(log, l) in action.logs" :key="l" :class="logClass(log)" :style="{color: logColor(log)}" class="log">[<leek :leek="leeks[log[0]]" />] {{ logText(log) }}</pre>
 		</div>
 	</div>
 </template>

@@ -5,7 +5,7 @@
 				<h1>{{ $t('title') }}</h1>
 			</div>
 			<div class="tabs">
-				<div @click="playing = !playing" class="tab">
+				<div class="tab" @click="playing = !playing">
 					<i class="material-icons">{{ playing ? 'pause' : 'play_arrow' }}</i>
 					<span>{{ $t(playing ? 'pause' : 'play') }}</span>
 				</div>
@@ -16,20 +16,20 @@
 		</div>
 		<div v-for="(category, category_id) in statistics" v-else :key="category_id" class="panel">
 			<h2>{{ $t('category_' + category_id) }}</h2>
-			<div class="category" :class="{ai: category_id == 3, code: category_id == 6}">
-				<chartist v-if="category_id == 2" class="chart left" :data="chartFightType" :options="chartOptions" type="Pie" />
-				<chartist v-if="category_id == 2" class="chart left" :data="chartFightContext" :options="chartOptions" type="Pie" />
-				<chartist v-if="category_id == 3" class="chart left" :data="chartAI" :options="chartOptions" type="Pie" />
-				<chartist v-if="category_id == 6" class="chart left" :data="chartLanguages" :options="chartOptions" type="Pie" ref="languageChart" />
+			<div :class="{ai: category_id == 3, code: category_id == 6}" class="category">
+				<chartist v-if="category_id == 2" :data="chartFightType" :options="chartOptions" class="chart left" type="Pie" />
+				<chartist v-if="category_id == 2" :data="chartFightContext" :options="chartOptions" class="chart left" type="Pie" />
+				<chartist v-if="category_id == 3" :data="chartAI" :options="chartOptions" class="chart left" type="Pie" />
+				<chartist v-if="category_id == 6" ref="languageChart" :data="chartLanguages" :options="chartOptions" class="chart left" type="Pie" />
 				<template v-for="(statistic, name, i) in category" v-if="statistic.visible">
 					<div :key="name" :class="{private: statistic.private, show_today: statistic.show_today}" class="statistic" @click="statistic.today_state = statistic.show_today && !statistic.today_state" @mouseenter="category_id == 6 && hoverLanguage(i)" @mouseleave="category_id == 6 && hoverLeave()">
 						<div class="label">{{ $t(name) }}</div>
-						<div v-if="!statistic.today_state" class="value total" :style="{color: category_id == 6 && selectedLanguage === i ? selectedLanguageColor : null}">{{ Math.floor(statistic.value).toLocaleString('fr-FR') }}</div>
+						<div v-if="!statistic.today_state" :style="{color: category_id == 6 && selectedLanguage === i ? selectedLanguageColor : null}" class="value total">{{ Math.floor(statistic.value).toLocaleString('fr-FR') }}</div>
 						<div v-else class="value today">{{ Math.floor(statistic.today).toLocaleString('fr-FR') }}</div>
 						<div class="type">{{ $t(statistic.today_state ? 'today' : 'total') }}</div>
 					</div>
-					<br :key="name + '1'" v-if="name === 'resurrects' || name === 'ai_characters'">
-					<chartist :key="name + '2'" v-if="name === 'resurrects'" class="chart right" :data="chartDamage" :options="chartOptions" type="Pie" />
+					<br v-if="name === 'resurrects' || name === 'ai_characters'" :key="name + '1'">
+					<chartist v-if="name === 'resurrects'" :key="name + '2'" :data="chartDamage" :options="chartOptions" class="chart right" type="Pie" />
 				</template>
 			</div>
 		</div>

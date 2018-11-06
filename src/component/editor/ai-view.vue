@@ -1,10 +1,10 @@
 <template>
 	<div v-show="visible" class="ai" @mousemove="mousemove" @mouseleave="mouseleave">
-		<div v-show="!loading" ref="codemirror" :style="{'font-size': fontSize + 'px', 'line-height': lineHeight + 'px'}" class="codemirror" :class="{search: searchEnabled}"></div>
-		<div class="search-panel" v-if="searchEnabled">
+		<div v-show="!loading" ref="codemirror" :style="{'font-size': fontSize + 'px', 'line-height': lineHeight + 'px'}" :class="{search: searchEnabled}" class="codemirror"></div>
+		<div v-if="searchEnabled" class="search-panel">
 			<i class="material-icons">search</i>
-			<input ref="searchInput" type="text" v-model="searchQuery" class="query" autocomplete="off" @keyup.enter="$event.shiftKey ? searchPrevious() : searchNext()">
-			<span class="results" v-if="searchLines.length">{{ searchCurrent + 1 }} / {{ searchLines.length }}</span>
+			<input ref="searchInput" v-model="searchQuery" type="text" class="query" autocomplete="off" @keyup.enter="$event.shiftKey ? searchPrevious() : searchNext()">
+			<span v-if="searchLines.length" class="results">{{ searchCurrent + 1 }} / {{ searchLines.length }}</span>
 			<i class="material-icons arrow" @click="searchPrevious">expand_less</i>
 			<i class="material-icons arrow" @click="searchNext">expand_more</i>
 		</div>
@@ -18,12 +18,12 @@
 				<chip-preview v-else-if="selectedHint.details.type === 'chip'" :chip="selectedHint.details.chip" />
 			</div>
 		</div>
-		<div v-show="detailDialog" ref="detailDialog" class="detail-dialog" :style="{left: detailDialogLeft + 'px', top: detailDialogTop + 'px'}" v-if="detailDialogContent">
+		<div v-show="detailDialog" v-if="detailDialogContent" ref="detailDialog" :style="{left: detailDialogLeft + 'px', top: detailDialogTop + 'px'}" class="detail-dialog">
 			<span v-if="typeof(detailDialogContent.details) === 'string'" v-html="detailDialogContent.details"></span>
 			<weapon-preview v-if="detailDialogContent.details.type === 'weapon'" :weapon="detailDialogContent.details.weapon" />
 			<chip-preview v-else-if="detailDialogContent.details.type === 'chip'" :chip="detailDialogContent.details.chip" />
 		</div>
-		<div ref="tooltip" class="error-tooltip" v-show="errorTooltip" :style="{left: errorTooltipLeft + 'px', top: errorTooltipTop + 'px'}">{{ errorTooltipText }}</div>
+		<div v-show="errorTooltip" ref="tooltip" :style="{left: errorTooltipLeft + 'px', top: errorTooltipTop + 'px'}" class="error-tooltip">{{ errorTooltipText }}</div>
 		<loader v-if="loading" />
 	</div>
 </template>

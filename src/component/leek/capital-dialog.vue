@@ -14,10 +14,10 @@
 				</v-tooltip>
 				<div>
 					<span :class="'stat color-' + c">{{ leek[c] + bonuses[c] }}</span>
-					<span class="sup" v-if="bonuses[c]">&nbsp;(+{{ bonuses[c] }})</span>
+					<span v-if="bonuses[c]" class="sup">&nbsp;(+{{ bonuses[c] }})</span>
 					<div class="add-wrapper">
 						<v-tooltip v-for="cost in [1, 10, 100]" :key="cost" :open-delay="0" :close-delay="0" bottom>
-							<span slot="activator" class="add" :q="cost" :class="{locked: costs[c + cost].cost > capital}" @click="add(c, cost)"></span>
+							<span slot="activator" :q="cost" :class="{locked: costs[c + cost].cost > capital}" class="add" @click="add(c, cost)"></span>
 							{{ costs[c + cost].cost + ' capital ⇔ ' + costs[c + cost].bonus + ' ' + $t('leek.' + c) }}
 						</v-tooltip>
 					</div>
