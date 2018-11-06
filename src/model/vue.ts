@@ -222,21 +222,6 @@ const vueMain = new Vue({
 			store.commit('last-connection', LeekWars.time)
 			LeekWars.post('farmer/update')
 		}, 59 * 1000)
-
-		// var message = LW.trigger('leave')
-		// if (message) {
-		// 	var popup = new _.popup.new('main.quit_confirm_popup', {message: message}, 600, true)
-		// 	popup.setDismissable(false)
-		// 	popup.show()
-		// 	popup.find('.stay').click(function() {
-		// 		popup.dismiss()
-		// 		// next page is not loaded
-		// 	})
-		// 	popup.find('.leave').click(function() {
-		// 		popup.dismiss()
-		// 		// load next page
-		// 		next()
-		// 	})
 	}
 }).$mount('#app')
 
