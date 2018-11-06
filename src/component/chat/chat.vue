@@ -1,7 +1,7 @@
 <template lang="html">
 	<div class="chat">
-		<loader v-if="channel && !$store.state.chat[channel]" />
-		<div v-autostopscroll v-else-if="channel && $store.state.chat[channel].messages.length" ref="messages" class="messages">
+		<loader v-show="channel && !$store.state.chat[channel]" />
+		<div v-autostopscroll v-if="channel && $store.state.chat[channel] && $store.state.chat[channel].messages.length" ref="messages" class="messages">
 			<template v-for="(message, m) in $store.state.chat[channel].messages">
 				<div v-if="message.author.id === 0" :key="m" class="message">
 					<img class="avatar" src="/image/favicon.png">
@@ -204,7 +204,7 @@
 		justify-content: center;
 	}
 	.messages {
-		height: calc(100% - 39px);
+		height: calc(100% - 40px);
 		overflow-y: scroll;
 	}
 	.message {
