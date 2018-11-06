@@ -180,7 +180,7 @@
 			this.getLogs()
 			LeekWars.large = this.game.large
 			this.$emit('resize')
-			this.$root.$on('keyup', (e: KeyboardEvent) => this.keyup(e))
+			this.$root.$on('keyup', this.keyup)
 		}
 		@Watch('requiredWidth')
 		requiredWidthChange() {
@@ -237,7 +237,7 @@
 		}
 		beforeDestroy() {
 			this.game.pause()
-			this.$off('keyup')
+			this.$root.$off('keyup', this.keyup)
 		}
 		getFight() {
 			LeekWars.get('fight/get/' + this.fightId).then((data: AxiosResponse) => {
