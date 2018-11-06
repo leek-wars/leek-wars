@@ -227,6 +227,12 @@
 		z-index: 600;
 		transition: none;
 	}
+	#app.app {
+		overflow: hidden;
+	}
+	#app.app.connected {
+		padding-top: 56px;
+	}
 	#app.app .page {
 		padding-bottom: 0;
 		margin-right: 0;
@@ -238,7 +244,6 @@
 		transition: transform ease 200ms;
 		margin: 0;
 		padding: 0;
-		overflow-y: auto;
 	}
 	#app.app.menu-expanded .app-center {
 		transform: translateX(250px);
@@ -339,12 +344,6 @@
 		#app.connected:not(.social-collapsed) .big-leeks {
 			right: 420px;
 		}
-	}
-	#app.app {
-		display: flex;
-		flex-direction: column;
-		height: 100vh;
-		overflow-x: hidden;
 	}
 	@media screen and (max-width: 999px) {
 		.page-wrapper {

@@ -75,7 +75,12 @@
 
 <style lang="scss" scoped>
 	.app-bar {
-		flex: 0 0 56px;
+		position: fixed;
+		top: 0;
+		right: 0;
+		left: 0;
+		height: 56px;
+		z-index: 10;
 		background: #4b9e06;
 		color: white;
 		line-height: 55px;
