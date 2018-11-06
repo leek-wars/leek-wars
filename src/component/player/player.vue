@@ -1,7 +1,19 @@
 <template lang="html">
 	<div :style="{width: width + 'px', height: height + 36 + 'px'}">
-		<div v-if="!loaded" class="loading">
-			<div v-if="fight">
+		<div v-if="error" class="error">
+			<h2>{{ $t('fight.error_generating_fight') }}</h2>
+			<br>
+			<img src="/image/notgood.png">
+			<br><br>
+			<h4><i>{{ $t('fight.no_data_received') }}</i></h4>
+			<br>
+			<router-link v-if="fight" :to="'/report/' + fight.id">
+				<div class="button">{{ $t('fight.see_report') }}</div>
+			</router-link>
+			<br><br>
+		</div>
+		<div v-else-if="!loaded" class="loading">
+			<div v-if="fight && !LeekWars.mobile">
 				<template v-if="fight.type === FightType.BATTLE_ROYALE">
 					<template v-for="(leek, i) in fight.leeks1">
 						<div :key="leek.id" class="leek">
@@ -48,18 +60,6 @@
 					<span v-else>{{ $t('fight.position_in_queue', [queue.position + 1, queue.total]) }}</span>
 				</div>
 			</div>
-		</div>
-		<div v-if="error" class="error">
-			<h2>{{ $t('fight.error_generating_fight') }}</h2>
-			<br>
-			<img src="/image/notgood.png">
-			<br><br>
-			<h4><i>{{ $t('fight.no_data_received') }}</i></h4>
-			<br>
-			<router-link :to="'/report/' + fight.id">
-				<div class="button">{{ $t('fight.see_report') }}</div>
-			</router-link>
-			<br><br>
 		</div>
 		<div v-show="loaded" class="game">
 			<div :style="{height: height + 'px'}" class="layers">
@@ -251,13 +251,13 @@
 		}
 		getFight() {
 			LeekWars.get('fight/get/' + this.fightId).then((data: AxiosResponse) => {
-				if (!data.data.success) {
-					// this.game.error()
-					return
-				}
 				const fight = data.data.fight
 				this.fight = fight
 				this.$emit('fight', fight)
+				if (!data.data.success) {
+					this.error = true
+					return null
+				}
 				if (fight.status >= 1) {
 					this.game.init(fight.data)
 					this.loaded = true
