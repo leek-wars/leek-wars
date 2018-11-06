@@ -80,7 +80,7 @@
 		right: 0;
 		left: 0;
 		height: 56px;
-		z-index: 10;
+		z-index: 3;
 		background: #4b9e06;
 		color: white;
 		line-height: 55px;
