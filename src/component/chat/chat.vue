@@ -36,7 +36,7 @@
 			</template>
 			<div v-show="unread" class="chat-new-messages" @click="updateScroll(true)">{{ $t('main.unread_messages') }}</div>
 		</div>
-		<div v-autostopscroll v-else ref="messages" class="messages">
+		<div v-autostopscroll v-else-if="channel && $store.state.chat[channel]" ref="messages" class="messages">
 			<div class="no-messages">No messages yet</div>
 		</div>
 		<div class="chat-disconnected">{{ $t('main.disconnected') }}</div>
