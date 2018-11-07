@@ -26,7 +26,7 @@
 					</template>
 				</div>
 			</div>
-			<div class="content">
+			<div class="trophies">
 				<div v-for="trophy in trophies[category.id]" v-if="category.id != 6 || trophy.unlocked" :key="trophy.id" :class="{unlocked: trophy.unlocked, locked: !trophy.unlocked, card: trophy.unlocked}" class="trophy">
 					<img :src="'/image/trophy/big/' + trophy.code + '.png'" class="image">
 					<div class="name">{{ trophy.name }}</div>
@@ -153,52 +153,57 @@
 			border-radius: 6px;
 		}
 	}
-	#app.app .content:nth-child(2) {
-		padding: 4px;
+	.trophies {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+		grid-gap: 10px;
+		padding: 10px;
+	}
+	#app.app .trophies {
+		grid-template-columns: repeat(auto-fill, minmax(165px, 1fr));
 	}
 	.trophy {
-		display: inline-block;
-		margin: 5px;
-		width: 239px;
-		vertical-align: top;
 		padding: 5px 8px;
 		.image {
-			width: 55px;
-			height: 55px;
+			width: 50px;
+			height: 50px;
 			float: left;
-			margin-right: 12px;
+			margin-right: 8px;
+			margin-bottom: 2px;
 		}
 		.name {
 			font-size: 16px;
-			margin-bottom: 2px;
+			margin-bottom: 5px;
 		}
 		.description {
 			color: #888;
 			font-size: 14px;
 		}
 		.trophy-bar {
-			height: 6px;
+			height: 8px;
 			position: relative;
 			background: white;
-			width: 150px;
-			margin-left: 67px;
+			width: calc(100% - 58px);
+			border-radius: 6px;
+			margin-left: 58px;
 			margin-top: 6px;
+			border: 1px solid #ddd;
 			.bar {
-				height: 6px;
+				height: 8px;
+				border-radius: 6px;
 				position: absolute;
 				background: #30bb00;
 			}
 		}
 	}
 	#app.app .trophy {
-		width: calc(50% - 25px);
-		margin: 3px;
 		.image {
 			width: 38px;
 			height: 38px;
 		}
 		.trophy-bar {
 			margin-left: 0;
+			width: 100%;
 		}
 	}
 	.trophy.locked {
