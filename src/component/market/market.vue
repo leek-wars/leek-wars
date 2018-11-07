@@ -17,27 +17,23 @@
 					<div class="header">
 						<h2>{{ $t('fights') }}</h2>
 					</div>
-					<div class="content items">
-						<loader v-if="!fight_packs.length" />
-						<div class="center">
-							<router-link v-ripple v-for="pack in fight_packs" :key="pack.id" :to="'/market/' + pack.name" :farmer-count="0" :leek-count="0" class="item fights" @click="selectItem(pack)">
-								<img src="/image/market/fights.png">
-								<div>{{ pack.title }}</div>
-							</router-link>
-						</div>
+					<loader v-if="!fight_packs.length" />
+					<div v-else class="items fights">
+						<router-link v-ripple v-for="pack in fight_packs" :key="pack.id" :to="'/market/' + pack.name" :farmer-count="0" :leek-count="0" class="item fight-pack" @click="selectItem(pack)">
+							<img src="/image/market/fights.png">
+							<div>{{ pack.title }}</div>
+						</router-link>
 					</div>
 				</div>
 				<div class="panel">
 					<div class="header">
 						<h2>{{ $t('weapons') }}</h2>
 					</div>
-					<div class="content items weapons">
-						<loader v-if="!weapons.length" />
-						<div class="center">
-							<router-link v-ripple v-for="weapon in weapons" :key="weapon.id" :to="'/market/' + weapon.name" :farmer-count="items[weapon.id].farmer_count" :leek-count="items[weapon.id].leek_count" class="item weapon">
-								<img :src="'/image/weapon/' + weapon.name + '.png'">
-							</router-link>
-						</div>
+					<loader v-if="!weapons.length" />
+					<div v-else class="items weapons">
+						<router-link v-ripple v-for="weapon in weapons" :key="weapon.id" :to="'/market/' + weapon.name" :farmer-count="items[weapon.id].farmer_count" :leek-count="items[weapon.id].leek_count" class="item weapon">
+							<img :src="'/image/weapon/' + weapon.name + '.png'">
+						</router-link>
 					</div>
 				</div>
 				<div class="panel">
@@ -50,21 +46,20 @@
 							</div>
 						</div>
 					</div>
-					<div v-if="!chips.length" class="content items">
-						<loader />
-					</div>
-					<div v-else-if="chipMode === 'level'" class="content items chips">
+					<loader v-if="!chips.length" />
+					<div v-else-if="chipMode === 'level'" class="items chips">
 						<router-link v-ripple v-for="chip in chips" :key="chip.id" :to="'/market/' + chip.name" :farmer-count="items[chip.id].farmer_count" :leek-count="items[chip.id].leek_count" class="item chip">
 							<img :src="'/image/chip/small/' + chip.name + '.png'">
 						</router-link>
 					</div>
-					<div v-else class="content chips items noflex">
+					<div v-else>
 						<div v-for="type in EffectTypeMarket" v-if="!isNaN(type)" :key="type">
 							<h3>{{ $t('effect.effect_type_' + type) }}</h3>
-							<br>
-							<router-link v-ripple v-for="chip in chipsByType[type]" :key="chip.id" :to="'/market/' + chip.name" :farmer-count="items[chip.id].farmer_count" :leek-count="items[chip.id].leek_count" class="item chip">
-								<img :src="'/image/chip/small/' + chip.name + '.png'">
-							</router-link>
+							<div class="items chips">
+								<router-link v-ripple v-for="chip in chipsByType[type]" :key="chip.id" :to="'/market/' + chip.name" :farmer-count="items[chip.id].farmer_count" :leek-count="items[chip.id].leek_count" class="item chip">
+									<img :src="'/image/chip/small/' + chip.name + '.png'">
+								</router-link>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -72,8 +67,8 @@
 					<div class="header">
 						<h2>{{ $t('potions') }}</h2>
 					</div>
-					<div class="content items">
-						<loader v-if="!potions.length" />
+					<loader v-if="!potions.length" />
+					<div v-else class="items potions">
 						<router-link v-ripple v-for="potion in potions" :key="potion.id" :to="'/market/' + potion.name" :farmer-count="items[potion.id].farmer_count" :leek-count="items[potion.id].leek_count" class="item potion">
 							<img :src="'/image/potion/' + potion.name + '.png'">
 						</router-link>
@@ -83,8 +78,8 @@
 					<div class="header">
 						<h2>{{ $t('hats') }}</h2>
 					</div>
-					<div class="content items">
-						<loader v-if="!hats.length" />
+					<loader v-if="!hats.length" />
+					<div v-else class="items hats">
 						<router-link v-ripple v-for="hat in hats" :key="hat.id" :to="'/market/' + hat.name" :farmer-count="items[hat.id].farmer_count" :leek-count="items[hat.id].leek_count" class="item hat">
 							<img :src="'/image/hat/' + hat.name + '.png'">
 						</router-link>
@@ -408,7 +403,7 @@
 		height: calc(100vh - 56px);
 		overflow-y: auto;
 	}
-	.loader {
+	.panel .loader {
 		padding: 20px 0;
 	}
 	.preview-panel .loader {
@@ -422,14 +417,6 @@
 		text-align: center;
 		padding: 0;
 	}
-	.content.items {
-		padding: 0px;
-		display: flex;
-		flex-wrap: wrap;
-	}
-	.content.items.noflex {
-		display: block;
-	}
 	.preview .leeks {
 		padding: 6px 0;
 	}
@@ -442,10 +429,30 @@
 		display: inline-block;
 	}
 	.items {
-		padding-bottom: 50px;
+		display: grid;
+		grid-gap: 10px;
+		padding: 10px;
+	}
+	.items.potions {
+		grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+	}
+	.items.chips {
+		grid-template-columns: repeat(auto-fill, minmax(76px, 1fr));
+	}
+	.items.weapons {
+		grid-template-columns: repeat(auto-fill, minmax(165px, 1fr));
+	}
+	.items.fights {
+		grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+	}
+	.items.hats {
+		grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
 	}
 	.item {
 		border: 1px solid #ddd;
+		cursor: pointer;
+		position: relative;
+		text-align: center;
 	}
 	.item.router-link-active {
 		background: white;
@@ -453,9 +460,6 @@
 	}
 	.buy-label {
 		display: inline-block;
-	}
-	.items .item {
-		position: relative;
 	}
 	.items .item:not([leek-count="0"]):before {
 		position: absolute;
@@ -493,36 +497,21 @@
 	.items .item.too-expensive img {
 		opacity: 0.4;
 	}
-	.fights {
-		width: 140px;
-		display: inline-block;
-		margin: 10px 5px;
+	.fight-pack {
 		padding: 10px;
 		font-size: 18px;
 		color: #777;
-		cursor: pointer;
 	}
 	.fights img {
 		width: 60px;
 	}
 	.weapons .weapon {
 		padding: 10px;
-		width: 178px;
 		height: 50px;
-		display: inline-block;
-		position: relative;
-		cursor: pointer;
-		text-align: center;
-		vertical-align: bottom;
-		margin: 8px;
-	}
-	#app.app .weapons .weapon {
-		width: 150px;
-		margin: 5px;
 	}
 	.weapons .weapon img {
 		max-height: 52px;
-		max-width: 160px;
+		max-width: 150px;
 		position: absolute;
 		top: 0;
 		bottom: 0;
@@ -530,62 +519,30 @@
 		right: 0;
 		margin: auto;
 	}
-	.chips {
-		padding: 0 10px;
-	}
 	.chips .chip {
-		width: 73px;
 		padding: 6px;
-		display: inline-block;
-		position: relative;
-		cursor: pointer;
-		text-align: center;
-		margin: 6px;
-	}
-	#app.app .chips .chip {
-		width: 50px;
-		margin: 3px;
 	}
 	.chips .chip img {
-		height: 68px;
+		width: 62px;
 		vertical-align: bottom;
 	}
-	#app.app .chips .chip img {
-		height: 50px;
-	}
-	.chips h3 {
+	.panel h3 {
 		margin: 0;
 		margin-top: 8px;
-		margin-left: -10px;
+		margin-bottom: 0;
 	}
 	.potion {
-		width: 90px;
-		padding: 5px 3px;
-		display: inline-block;
-		position: relative;
-		cursor: pointer;
-		text-align: center;
-		margin: 8px;
+		padding: 6px 0;
 	}
 	.potion img {
-		width: 90px;
+		width: 80px;
 	}
 	.hat {
-		width: 110px;
-		height: 80px;
-		padding: 5px 3px;
-		display: inline-block;
-		position: relative;
-		cursor: pointer;
-		text-align: center;
-		vertical-align: bottom;
-		margin: 8px;
-	}
-	#app.app .hat {
-		margin: 4px;
+		height: 70px;
+		padding: 6px;
 	}
 	.hat img {
-		max-width: 100px;
+		max-width: 92px;
 		max-height: 70px;
 		position: absolute;
 		top: 0;
