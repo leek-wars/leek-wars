@@ -5,6 +5,7 @@
 	"create_topic": "Créer le sujet",
 	"n_topic_n_messages": "{0} sujets / {1} messages",
 	"last": "Dernier",
+	"last_message": "Dernier {date} par {farmer}",
 	"last_by": "par",
 	"messages": "Messages",
 	"new_topic_message": "Message du topic",
