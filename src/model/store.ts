@@ -171,6 +171,11 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 				state.farmer.leeks[data.leek].name = data.name
 			}
 		},
+		'update-capital'(state: LeekWarsState, data: any) {
+			if (state.farmer) {
+				state.farmer.leeks[data.leek].capital = data.capital
+			}
+		},
 		'change-skin'(state: LeekWarsState, data: any) {
 			if (state.farmer) {
 				state.farmer.leeks[data.leek].skin = data.skin

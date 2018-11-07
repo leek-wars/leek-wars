@@ -644,6 +644,9 @@
 							Vue.set(ai, 'dragging', false)
 						}
 					}
+					if (this.my_leek) {
+						this.$store.commit('update-capital', {leek: this.leek.id, capital: this.leek.capital})
+					}
 					this.$root.$emit('loaded')
 				}
 			})

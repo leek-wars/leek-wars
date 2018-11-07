@@ -190,6 +190,7 @@
 						(this.leek as any)[stat] += this.bonuses[stat]
 					}
 					this.leek.capital = this.capital
+					this.$store.commit('update-capital', {leek: this.leek.id, capital: this.capital})
 					this.close()
 				} else {
 					LeekWars.toast(data.data.error)
