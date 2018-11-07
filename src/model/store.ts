@@ -135,7 +135,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 					const index = state.conversationsList.findIndex((c) => c.id === conversationID)
 					state.conversationsList.splice(index, 1)
 					state.conversationsList.unshift(conversation)
-					if (!conversation.unread) {
+					if (!conversation.unread && conversation.last_farmer_id !== state.farmer!.id) {
 						conversation.unread = true
 						state.unreadMessages++
 						updateTitle(state)
@@ -144,8 +144,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			}
 			conversation.last_message = data.message[3]
 			conversation.last_farmer_id = data.message[1]
-
-			if (isNew && state.farmer && conversation.last_farmer_id !== state.farmer.id) {
+			if (isNew && conversation.last_farmer_id !== state.farmer!.id) {
 				LeekWars.squares.add({
 					image: LeekWars.getAvatar(conversation.last_farmer_id, data.message[6]),
 					title: data.message[2],
