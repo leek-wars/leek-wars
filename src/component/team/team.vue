@@ -142,9 +142,9 @@
 			<div class="header">
 				<h2 v-if="team">{{ $t('farmers', [team.member_count]) }}</h2>
 			</div>
-			<div class="content">
-				<loader v-if="!team" />
-				<div v-for="member in team.members" v-else :key="member.id" class="farmer">
+			<loader v-if="!team" />
+			<div v-else class="members">
+				<div v-for="member in team.members" :key="member.id" class="farmer">
 					<router-link :to="'/farmer/' + member.id">
 						<avatar :farmer="member" />
 						<div class="name">
@@ -261,9 +261,9 @@
 			<div class="header">
 				<h2 v-if="team">{{ $t('leeks', [team.leek_count]) }}</h2>
 			</div>
-			<div class="content">
-				<loader v-if="!team" />
-				<router-link v-for="leek in team.leeks" v-else :key="leek.id" :to="'/leek/' + leek.id" :leek="leek.id" class="leek">
+			<loader v-if="!team" />
+			<div v-else class="leeks">
+				<router-link v-for="leek in team.leeks" :key="leek.id" :to="'/leek/' + leek.id" :leek="leek.id" class="leek">
 					<leek-image :leek="leek" :scale="0.6" />
 					<br>
 					<div class="name">{{ leek.name }}</div>
@@ -871,6 +871,12 @@
 			margin: 5px;
 		}
 	}
+	.members {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(105px, 1fr));
+		grid-gap: 10px;
+		padding: 10px;
+	}
 	.team-chat .content {
 		padding: 0px;
 	}
@@ -881,8 +887,6 @@
 		display: inline-block;
 		text-align: center;
 		vertical-align: top;
-		margin-top: 6px;
-		margin-bottom: 6px;
 	}
 	.farmer .avatar, .popup.change_owner_popup .farmer .avatar {
 		width: 100px;
@@ -943,9 +947,15 @@
 		position: relative;
 		border: 4px solid transparent;
 	}
+	.leeks {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
+		grid-gap: 10px;
+		padding: 10px;
+		align-items: baseline;
+
+	}
 	.leek {
-		display: inline-block;
-		padding: 7px;
 		text-align: center;
 		transition: transform 0.4s;
 		transform: scale(1);
@@ -954,6 +964,9 @@
 			text-align: center;
 			color: #555;
 			display: inline-block;
+			text-overflow: ellipsis;
+			overflow: hidden;
+			width: 100%;
 		}
 		.fights {
 			display: inline-block;
