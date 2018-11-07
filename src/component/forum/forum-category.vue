@@ -6,13 +6,12 @@
 				> 
 				<span>{{ category ? category.name : '...' }}</span>
 			</h1>
-
 			<div class="tabs">
-				<div class="tab action" icon="edit" @click="createDialog = true">
+				<div class="tab" @click="createDialog = true">
 					<i class="material-icons">add</i>
 					<span>{{ $t('create_new_topic') }}</span>
 				</div>
-				<div class="tab action disabled search-box" icon="search">
+				<div class="tab disabled search-box">
 					<img src="/image/search.png" @click="search">
 					<input v-model="query" type="text" @keyup.enter="search">
 				</div>
@@ -106,14 +105,14 @@
 		createMessage: string = ''
 		query: string = ''
 
-		created() {
-			this.update()
-		}
-		@Watch("$route.params")
+		@Watch("$route.params", {immediate: true})
 		update() {
 			const category = this.$route.params.category
 			this.page = 'page' in this.$route.params ? parseInt(this.$route.params.page, 10) : 1
-			
+			LeekWars.setActions([
+				{icon: 'add', click: () => this.createDialog = true},
+				{icon: 'search', click: () => this.$router.push('/search/-/-/' + category) }
+			])
 			if (this.category) { this.category.topics = null }
 			LeekWars.get<any>('forum/get-topics/' + category + '/' + this.page + '/' + this.$store.state.token).then((data) => {
 				this.category = data.data.category
