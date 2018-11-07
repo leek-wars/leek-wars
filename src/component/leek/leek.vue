@@ -492,6 +492,7 @@
 <script lang="ts">
 	import { AI } from '@/model/ai'
 	import { Chip } from '@/model/chip'
+	import { ItemType } from '@/model/item'
 	import { Hat } from '@/model/hat'
 	import { Leek, Register } from '@/model/leek'
 	import { LeekWars } from '@/model/leekwars'
@@ -711,6 +712,9 @@
 				this.potionDialog = false
 				LeekWars.post('leek/use-potion', {leek_id: this.leek.id, potion_id: potion.id}).then((data) => {
 					if (data.data.success) {
+						if (template.consumable) {
+							this.$store.commit('remove-inventory', {type: ItemType.POTION, item_template: potion.template})
+						}
 						if (update) { this.update() }
 					}
 				})
