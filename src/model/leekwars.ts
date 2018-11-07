@@ -70,7 +70,7 @@ for (const emoji in Emojis.emojis) {
 Emojis.categories_formatted = Emojis.categories.map(category => {
 	return {icon: Emojis.url + category.icon + '.svg', emojis: category.emojis.map(emoji => {
 		const e = Emojis.emojis[emoji]
-		return {emoji, text: e.image ? (':' + e.text + ':') : emoji, image: e.image ? Emojis.url + e.image + '.svg' : '/image/emoji/' + e.text + '.png'}
+		return {emoji, text: e.image ? (':' + e.text + ':') : emoji, image: e.image ? Emojis.url + e.image + '.svg' : '/image/emoji/' + e.text + '.png', classic: !e.image}
 	})}
 })
 
