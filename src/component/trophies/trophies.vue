@@ -1,15 +1,15 @@
 <template>
 	<div>
 		<div class="page-bar page-header">
-			<h1>{{ title }}</h1>
+			<h1>{{ loaded ? title : '...' }}</h1>
 		</div>
 		<div class="panel">
 			<div class="content first">
-				<span class="global-percent">{{ Math.floor(100 * count / total) }}%</span>
+				<span class="global-percent">{{ loaded ? Math.floor(100 * count / total) : 0 }}%</span>
 				<span class="global-count">{{ count }} / {{ total }}</span>  
 				<br>
 				<div class="global-bar">
-					<div :style="{width: Math.floor(100 * count / total) + '%'}" class="bar striked"></div>
+					<div :style="{width: (loaded ? Math.floor(100 * count / total) : 0) + '%'}" class="bar striked"></div>
 				</div>
 			</div>
 		</div>
@@ -20,13 +20,14 @@
 					<template v-if="category.id != 6">
 						<div class="stats">{{ progressions[category.id] }} / {{ totals[category.id] }}</div>
 						<div class="category-bar">
-							<div :style="{width: Math.floor(100 * progressions[category.id] / totals[category.id])+ '%'}" class="bar striked"></div>
+							<div :style="{width: (loaded ? Math.floor(100 * progressions[category.id] / totals[category.id]) : 0) + '%'}" class="bar striked"></div>
 						</div>
-						<div class="stats">{{ Math.floor(100 * progressions[category.id] / totals[category.id]) }}%</div>
+						<div class="stats">{{ loaded ? Math.floor(100 * progressions[category.id] / totals[category.id]) : 0 }}%</div>
 					</template>
 				</div>
 			</div>
-			<div class="trophies">
+			<loader v-show="!loaded" />
+			<div v-if="loaded" class="trophies">
 				<div v-for="trophy in trophies[category.id]" v-if="category.id != 6 || trophy.unlocked" :key="trophy.id" :class="{unlocked: trophy.unlocked, locked: !trophy.unlocked, card: trophy.unlocked}" class="trophy">
 					<img :src="'/image/trophy/big/' + trophy.code + '.png'" class="image">
 					<div class="name">{{ trophy.name }}</div>
@@ -45,26 +46,32 @@
 
 <script lang="ts">
 	import { LeekWars } from '@/model/leekwars'
-	import { Component, Vue } from 'vue-property-decorator'
+	import { Component, Vue, Watch } from 'vue-property-decorator'
 
 	@Component({ name: 'trophies', i18n: {} })
 	export default class Trophies extends Vue {
 		trophies: {[key: number]: any} = {}
 		progressions: {[key: number]: number} = {}
 		totals: {[key: number]: number} = {}
-		categories: any = null
+		categories = LeekWars.trophyCategories
 		count: number = 0
 		total: number = 0
 		title: any = null
+		loaded: boolean = false
 
-		created() {
+		@Watch('$route.params', {immediate: true})
+		update() {
+			this.loaded = false
+			this.count = 0
+			this.total = 0
+			this.title = null
 			const farmerID = this.$route.params.id || this.$store.state.farmer.id
+			LeekWars.trophyCategories.forEach((c) => {
+				this.trophies[c.id] = []
+				this.progressions[c.id] = 0
+				this.totals[c.id] = 0
+			})
 			LeekWars.get<any>('trophy/get-farmer-trophies/' + farmerID + '/' + this.$i18n.locale + '/' + this.$store.state.token).then((data) => {
-				LeekWars.trophyCategories.forEach((c) => {
-					this.trophies[c.id] = []
-					this.progressions[c.id] = 0
-					this.totals[c.id] = 0
-				})
 				for (const t in data.data.trophies) {
 					const trophy = data.data.trophies[t]
 					this.trophies[trophy.category].push(trophy)
@@ -78,10 +85,8 @@
 						return a.index - b.index
 					})
 				}
-				this.categories = LeekWars.trophyCategories
 				this.count = data.data.count
 				this.total = data.data.total
-
 				if (farmerID === this.$store.state.farmer.id) {
 					this.title = this.$t('title_me')
 				} else {
@@ -94,12 +99,19 @@
 					LeekWars.setTitle(this.$t('title_text', [data.data.farmer_name]), subtitle)
 				}
 				this.$root.$emit('loaded')
+				this.loaded = true
 			})
 		}
 	}
 </script>
 
 <style lang="scss" scoped>
+	.panel .loader {
+		padding: 20px;
+	}
+	.panel:last-child {
+		margin-bottom: 0px;
+	}
 	.content:not(.first) {
 		padding: 8px;
 	}
@@ -121,6 +133,7 @@
 		border: 1px solid #ddd;
 		.bar {
 			height: 12px;
+			width: 0;
 			background: #008fbb;
 			position: absolute;
 			border-radius: 6px;
@@ -148,10 +161,14 @@
 		margin-top: 12px;
 		.bar {
 			height: 12px;
+			width: 0;
 			background: #30bb00;
 			position: absolute;
 			border-radius: 6px;
 		}
+	}
+	.bar {
+		transition: all ease 0.3s;
 	}
 	.trophies {
 		display: grid;
