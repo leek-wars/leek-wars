@@ -3,31 +3,32 @@
 		<div class="page-header page-bar">
 			<h1>{{ $t('documentation.title') }}</h1>
 		</div>
-		<div class="column3">
-			<div class="panel">
-				<div class="content">
-					<div class="search-box">
-						<img src="/image/search_black.png">
-						<input v-model="query" type="text" @input="changeQuery">
-					</div>
-					<div v-autostopscroll="'bottom'" class="items-list">
-						<div v-for="category in categories" :key="category.id">
-							<h2>{{ $t('documentation.function_category_' + category.name) }}</h2>
-							<router-link v-for="(item, i) in items_by_category[category.id]" v-if="item.name === item.real_name" :key="i" :to="'/help/documentation/' + item.name" :item="item.name" class="item">
-								{{ item.name }}
-							</router-link>
+		<div class="documentation">
+			<div v-show="!LeekWars.mobile || !LeekWars.splitBack" class="column3">
+				<div class="panel first">
+					<div class="content">
+						<div class="search-box">
+							<img src="/image/search_black.png">
+							<input v-model="query" type="text" @input="changeQuery">
+						</div>
+						<div v-autostopscroll="'bottom'" class="items-list">
+							<div v-for="category in categories" :key="category.id">
+								<h2>{{ $t('documentation.function_category_' + category.name) }}</h2>
+								<router-link v-for="(item, i) in items_by_category[category.id]" v-if="item.name === item.real_name" :key="i" :to="'/help/documentation/' + item.name" :item="item.name" class="item">
+									{{ item.name }}
+								</router-link>
+							</div>
 						</div>
 					</div>
 				</div>
 			</div>
-		</div>
-		
-		<div class="column9">
-			<div class="panel">
-				<div class="content items">
-					<div v-for="(item, i) in items" :key="i" :item="item.name" :class="{deprecated: item.deprecated}" class="item">
-						<documentation-function v-if="'return_type' in item" :fun="item" />
-						<documentation-constant v-else :constant="item" />
+			<div v-show="!LeekWars.mobile || LeekWars.splitBack" class="column9">
+				<div class="panel">
+					<div class="content items" v-autostopscroll="'bottom'" ref="elements">
+						<div v-for="(item, i) in items" :key="i" :item="item.name" :class="{deprecated: item.deprecated}" class="item">
+							<documentation-function v-if="'return_type' in item" :fun="item" />
+							<documentation-constant v-else :constant="item" />
+						</div>
 					</div>
 				</div>
 			</div>
@@ -91,7 +92,6 @@
 				LeekWars.setTitle(this.$i18n.t('documentation.title'))
 				this.update()
 
-				// Liens
 				setTimeout(() => {
 					document.querySelectorAll('.items .item').forEach((item) => {
 						let text: any = item.innerHTML
@@ -130,46 +130,49 @@
 							})
 						}
 					})
-					document.querySelectorAll('#documentation-page code').forEach((item) => {
+					document.querySelectorAll('.documentation code').forEach((item) => {
 						const content = '' + item.textContent
 						LeekWars.createCodeArea(content, item as HTMLElement)
 					})
 				}, 100)
 			})
+			this.$root.$on('back', () => {
+				this.$router.push('/help/documentation')
+			})
 		}
 		isNameChar(char: string) {
 			return /[a-zA-Z0-9_]/.test(char)
 		}
-
 		@Watch('$route.params')
 		update() {
 			if (this.$route.params && 'item' in this.$route.params) {
-				// LW.app.split_show_content()
+				LeekWars.splitShowContent()
 				this.selectItem(this.$route.params.item)
-				// LW.setTitle(params.item)
+				LeekWars.setTitle(this.$route.params.item)
 			} else {
-				// LW.app.split_show_list()
-				// LW.setTitle(_.lang.get('documentation', 'title'))
+				LeekWars.splitShowList()
+				LeekWars.setTitle(this.$i18n.t('documentation.title'))
 			}
 		}
-
 		selectItem(item: string) {
 			setTimeout(() => {
 				const element: any = document.querySelector('.items .item[item=' + item + ']')
+				const elements = this.$refs.elements as HTMLElement
 				if (element) {
-					window.scrollTo(0, element.offsetTop - 10)
+					const offset = LeekWars.mobile ? 70 : 140
+					elements.scrollTo(0, element.offsetTop - offset)
 				}
 			}, 100)
 		}
-
 		changeQuery() {
 			const items = document.querySelectorAll(".items .item")
 			if (this.query.length) {
+				const query = this.query.toLowerCase()
 				items.forEach((item: any) => {
 					const fields = item.querySelectorAll('.searchable')
 					const menuItem: any = document.querySelector('.items-list .item[item=' + item.getAttribute('item') + ']')
 					for (const field of fields) {
-						if (('' + field.textContent).toLowerCase().indexOf(this.query) !== -1) {
+						if (('' + field.textContent).toLowerCase().indexOf(query) !== -1) {
 							item.style.display = 'block'
 							menuItem.style.display = 'block'
 							return
@@ -197,18 +200,34 @@
 </script>
 
 <style lang="scss" scoped>
+	.documentation {
+		height: calc(100vh - 140px);
+		padding-bottom: 12px;
+	}
+	#app.app .documentation {
+		height: calc(100vh - 56px);
+		padding-bottom: 0;
+	}
 	.column3 {
 		position: sticky;
 		top: 12px;
+		height: 100%;
+	}
+	.column9 {
+		height: 100%;
+	}
+	.panel {
+		height: 100%;
 	}
 	.panel > .content {
 		padding: 0;
+		height: 100%;
 	}
 	.items-list {
 		overflow-y: auto;
 		overflow-x: hidden;
 		position: relative;
-		max-height: 800px;
+		height: calc(100% - 46px);
 	}
 	.items-list h2 {
 		font-size: 13px;
@@ -234,6 +253,8 @@
 	.items.content {
 		padding: 10px;
 		overflow-y: auto;
+		overflow-x: hidden;
+		height: calc(100% - 20px);
 	}
 	.items .item {
 		margin-bottom: 20px;
@@ -251,6 +272,7 @@
 	}
 	.items .item /deep/ a {
 		color: #5fad1b;
+		text-decoration: underline;
 	}
 	.items .item /deep/ h2 {
 		margin-bottom: 10px;
@@ -286,5 +308,8 @@
 	}
 	.search-box img {
 		margin: 4px;
+	}
+	input {
+		width: 100%;
 	}
 </style>

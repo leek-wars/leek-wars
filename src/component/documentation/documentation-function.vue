@@ -13,7 +13,7 @@
 		<template v-if="fun.arguments_names.length > 0">
 			<h4>{{ $t('documentation.parameters') }}</h4>
 			<ul>
-				<li v-for="(arg, i) in fun.arguments_names" :key="i">{{ arg }} : <span class="searchable">{{ $t('documentation.func_' + fun.real_name + '_arg_' + (parseInt(i) + 1)) }}</span></li>
+				<li v-for="(arg, i) in fun.arguments_names" :key="i">{{ arg }} : <span class="searchable" v-html="$t('documentation.func_' + fun.real_name + '_arg_' + (parseInt(i) + 1))"></span></li>
 			</ul>
 		</template>
 
