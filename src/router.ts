@@ -188,7 +188,8 @@ router.afterEach((to: Route) => {
 			setTimeout(() => {
 				const element = document.querySelector(to.hash)
 				if (element) {
-					window.scrollTo(0, element.getBoundingClientRect().top + window.scrollY)
+					const offset = LeekWars.mobile ? 56 : 0
+					window.scrollTo(0, element.getBoundingClientRect().top + window.scrollY - offset)
 				}
 			})
 		})
