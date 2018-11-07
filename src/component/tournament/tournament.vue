@@ -202,7 +202,7 @@
 	import { Comment } from '@/model/comment'
 	import { LeekWars } from '@/model/leekwars'
 	import { Tournament } from '@/model/tournament'
-	import { Component, Vue } from 'vue-property-decorator'
+	import { Component, Vue, Watch } from 'vue-property-decorator'
 
 	@Component({ name: 'tournament', i18n: {}, components: { 
 		'tournament-block': TournamentBlock,
@@ -226,7 +226,9 @@
 		timer: any
 		actions = [{icon: 'zoom_in', click: () => this.zoom()}]
 
-		created() {
+		@Watch('$route.params', {immediate: true})
+		update() {
+			this.tournament = null
 			LeekWars.get<any>('tournament/get/' + this.$route.params.id + '/' + this.$store.state.token).then((data) => {
 				if (data.data.success) {
 					this.tournament = data.data.tournament
