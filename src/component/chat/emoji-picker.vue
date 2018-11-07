@@ -9,7 +9,10 @@
 				<img :src="category.icon">
 			</v-tab>
 			<v-tab-item v-for="(category, c) in categories" :id="'tab-' + c" :key="c" class="content">
-				<img v-for="(emoji, e) in category.emojis" :key="e" :src="emoji.image" :title="emoji.text" class="emoji" @click="$emit('pick', emoji.emoji)">
+				<template v-for="(emoji, e) in category.emojis">
+					<img v-if="!LeekWars.mobile || emoji.classic" :key="e" :src="emoji.image" :title="emoji.text" class="emoji" @click="$emit('pick', emoji.emoji)">
+					<div v-else :key="e" class="emoji" @click="$emit('pick', emoji.emoji)">{{ emoji.emoji }}</div>
+				</template>
 			</v-tab-item>
 		</v-tabs>
 	</v-menu>
@@ -74,6 +77,9 @@
 		width: 25px;
 		height: 25px;
 		padding: 4px;
+		vertical-align: middle;
+		font-size: 22px;
+		line-height: 25px;
 	}
 	.emoji:hover {
 		background: #ccc;

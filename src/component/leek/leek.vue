@@ -492,8 +492,8 @@
 <script lang="ts">
 	import { AI } from '@/model/ai'
 	import { Chip } from '@/model/chip'
-	import { ItemType } from '@/model/item'
 	import { Hat } from '@/model/hat'
+	import { ItemType } from '@/model/item'
 	import { Leek, Register } from '@/model/leek'
 	import { LeekWars } from '@/model/leekwars'
 	import { Warning } from '@/model/moderation'
