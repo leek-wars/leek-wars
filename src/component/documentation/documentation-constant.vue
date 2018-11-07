@@ -2,7 +2,7 @@
 	<div v-if="constant">
 		<h2 class="searchable">{{ constant.name }}</h2>
 		<div v-if="constant.deprecated" class="deprecated-message">Cette constante est dépréciée.</div>
-		<div class="content searchable">{{ $t('documentation.const_' + constant.name) }}</div>
+		<div class="content searchable" v-html="$t('documentation.const_' + constant.name)"></div>
 		<h4>{{ $t('documentation.value') }}</h4>
 		<ul>
 			<li>{{ constant.name }} = {{ constant.value }}</li>
