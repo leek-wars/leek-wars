@@ -213,9 +213,9 @@
 						</div>
 					</div>
 				</div>
-				<div class="content trophies">
+				<div class="trophies">
 					<loader v-if="!trophies_list" />
-					<div v-if="farmer.trophies > 0 && trophies_list && trophies_grid">
+					<template v-if="farmer.trophies > 0 && trophies_list && trophies_grid">
 						<div v-show="trophiesMode == 'list'" class="list trophies-container">
 							<v-tooltip v-for="(trophy, t) in trophies_list" v-if="trophy != null" :key="t" :open-delay="0" :close-delay="0" bottom>
 								<div slot="activator" class="trophy">
@@ -262,7 +262,7 @@
 								</v-tooltip>
 							</div>
 						</div>
-					</div>
+					</template>
 					<div v-else-if="farmer.trophies == 0" class="grey">{{ $t('no_trophies_yet') }}</div>
 				</div>
 			</div>
@@ -827,20 +827,15 @@
 		cursor: pointer;
 	}
 	.trophies-container {
-		display: inline-block;
-	}
-	#app.app .trophies-container {
-		text-align: center;
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(48px, 1fr));
+		grid-gap: 5px;
+		padding: 5px;
 	}
 	.trophy {
-		display: inline-block;
-		margin: 2.1px;
 		padding: 4px;
 		border: 1px solid transparent;
-		vertical-align: bottom;
-	}
-	#app.app .trophy {
-		padding: 2px;
+		text-align: center;
 	}
 	.trophy img {
 		width: 38px;
@@ -858,7 +853,7 @@
 		border: 1px solid #ddd;
 	}
 	.trophies-bonus {
-		margin: 5px 0;
+		margin: 5px;
 	}
 	.warnings {
 		text-align: center;
