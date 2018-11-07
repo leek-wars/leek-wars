@@ -209,13 +209,12 @@
 		leekAIs: any = {}
 		actions_list = [
 			{icon: 'add', click: (e: any) => this.add(e)},
-			{icon: 'delete', click: () => this.deleteDialog = true},
+			{icon: 'settings', click: () => this.settings() }
 		]
 		actions_content = [
 			{icon: 'save_alt', click: () => this.save()},
-			{icon: 'delete', click: () => this.deleteDialog = true},
+			{icon: 'delete', click: () => this.startDelete()},
 			{icon: 'play_arrow', click: () => this.test()},
-			{icon: 'settings', click: () => this.settings() }
 		]
 		get currentID() {
 			if (this.currentType === 'ai' && this.currentAI) { return this.currentAI.id }
@@ -473,6 +472,9 @@
 					this.currentFolder.items.push(folder)
 				}
 			})
+		}
+		startDelete() {
+			this.deleteDialog = true
 		}
 		deleteItem() {
 			const url = this.currentType === 'folder' ? 'ai-folder/delete' : 'ai/delete'
