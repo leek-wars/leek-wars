@@ -27,16 +27,16 @@
 				<loader v-if="!topic || !topic.messages" />
 				<div v-else>
 					<div v-for="message in topic.messages" :key="message.id" :id="'message-' + message.id" class="message-wrapper">
-						<div class="profile-td">
-							<div class="profile">
-								<router-link :to="'/farmer/' + message.writer.id" class="">
-									<avatar :farmer="message.writer" />
-									<div class="pseudo">
-										{{ message.writer.name }}
-										<img v-if="message.writer.connected" class="status" src="/image/connected.png">
-										<img v-else class="status" src="/image/disconnected.png">
-									</div>
-								</router-link>
+						<div class="profile">
+							<router-link :to="'/farmer/' + message.writer.id" class="">
+								<avatar :farmer="message.writer" />
+							</router-link>
+							<div class="info">
+								<div class="pseudo">
+									{{ message.writer.name }}
+									<img v-if="message.writer.connected" class="status" src="/image/connected.png">
+									<img v-else class="status" src="/image/disconnected.png">
+								</div>
 								<div v-if="message.writer.color == 'admin'" class="grade admin">{{ $t('admin') }}</div>
 								<div v-else-if="message.writer.color == 'moderator'" class="grade moderator">{{ $t('moderator') }}</div>
 								<div v-else-if="message.writer.color == 'contributor'" class="grade contributor">{{ $t('contributor') }}</div>
@@ -44,7 +44,6 @@
 								<div class="trophy-count"><b>{{ message.writer.trophies }}</b> trophées</div>
 							</div>
 						</div>
-
 						<div class="message card">
 							<div class="wrapper">
 								<a v-if="message.id != -1" :href="'#message-' + message.id" class="link">#</a>
@@ -389,19 +388,33 @@
 		flex-wrap: nowrap;
 		display: flex;
 	}
-	.profile-td {
+	#app.app .message-wrapper {
+		flex-direction: column;
+		margin-bottom: 5px;
+	}
+	.profile {
 		width: 130px;
 		vertical-align: top;
 		display: flex;
+		flex-direction: column;
 		position: sticky;
 		top: 15px;
 		align-self: flex-start;
-	}
-	.profile {
 		text-align: center;
 		margin-right: 8px;
 		padding-bottom: 8px;
 		height: 100%;
+	}
+	#app.app .profile {
+		width: auto;
+		flex-direction: row;
+		align-items: center;
+		margin-left: 10px;
+		text-align: left;
+		padding-top: 10px;
+	}
+	.profile .info {
+		margin-left: 10px;
 	}
 	.profile .pseudo {
 		font-size: 15px;
@@ -412,9 +425,17 @@
 		text-overflow: ellipsis;
 		overflow: hidden;
 	}
-	.profile img {
+	#app.app .profile .pseudo {
+		padding: 0;
+		max-width: none;
+	}
+	.profile .avatar {
 		width: 130px;
 		height: 130px;
+	}
+	#app.app .profile .avatar {
+		width: 80px;
+		height: 80px;
 	}
 	.grade {
 		border-radius: 5px;
@@ -456,6 +477,10 @@
 		position: relative;
 		display: flex;
 		margin-left: 10px;
+	}
+	#app.app .message {
+		width: calc(100% - 30px);
+		padding: 5px;
 	}
 	.message .deleted {
 		font-style: italic;
@@ -522,6 +547,10 @@
 	.editor {
 		margin-left: 140px;
 		margin-top: 20px;
+	}
+	#app.app .editor {
+		margin-left: 10px;
+		margin-right: 10px;
 	}
 	.response {
 		width: calc(100% - 20px);
@@ -636,24 +665,5 @@
 	.message /deep/ code {
 		display: block;
 		width: 100%;
-	}
-	@media screen and (max-width: 599px) {
-		.message-wrapper {
-			flex-wrap: wrap;
-			margin-bottom: 10px;
-		}
-		.profile img {
-			width: 80px;
-			height: 80px;
-		}
-		.message {
-			margin-left: 0;
-		}
-		.profile {
-			padding: 0 10px;
-		}
-		.editor {
-			margin-left: 0;
-		}
 	}
 </style>
