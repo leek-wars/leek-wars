@@ -6,7 +6,7 @@
 				> 
 				<span>{{ category ? category.name : '...' }}</span>
 			</h1>
-			<div class="tabs">
+			<div class="tabs" v-if="!LeekWars.mobile">
 				<div class="tab" @click="createDialog = true">
 					<i class="material-icons">add</i>
 					<span>{{ $t('create_new_topic') }}</span>
@@ -18,55 +18,60 @@
 			</div>
 		</div>
 
-		<div class="panel">
+		<div class="panel first last">
 			<div class="content">
 
 				<pagination v-if="category" :current="page" :total="pages" :url="'/forum/category-' + category.id" />
 
-				<table class="topic header forum-header"><tr>
-					<td class="seen"></td>
-					<td>{{ $t('topic') }}</td>
-					<td class="num-messages">{{ $t('messages') }}</td>
-					<td class="last-message">{{ $t('last') }}</td>
-				</tr></table>
+				<div v-if="!LeekWars.mobile" class="topic header forum-header">
+					<div class="seen"></div>
+					<div>{{ $t('topic') }}</div>
+					<div class="num-messages">{{ $t('messages') }}</div>
+					<div class="last-message">{{ $t('last') }}</div>
+				</div>
 
 				<loader v-if="!category || !category.topics" />
-				<div v-else>
-
-					<table v-ripple v-for="topic in category.topics" :key="topic.id" :class="{pinned: topic.pinned}" class="topic">
-						<tr>
-							<td class="seen">
-								<img v-if="topic.seen" src="/image/forum_seen.png">
-								<img v-else src="/image/forum_unseen.png">
-							</td>
-							<td>
-								<span class="title">
-									<i v-if="topic.resolved" :title="$t('topic_resolved')" class="attr material-icons resolved">check_circle</i>
-									<i v-if="topic.closed" :title="$t('topic_locked')" class="attr material-icons">lock</i>
-									<img v-if="topic.pinned" :title="$t('topic_pinned')" class="attr" src="/image/pin.png">
-									<router-link :to="'/forum/category-' + category.id + '/topic-' + topic.id">{{ topic.title }}</router-link>
-								</span>
-								<div class="description">
-									<i18n path="by_x_the_d">
-										<router-link :to="'/farmer/' + topic.author.id" place="farmer">{{ topic.author.name }}</router-link>
-										<span place="date">{{ topic.date | date }}</span>
-									</i18n>
-								</div>
-							</td>
-							<td class="num-messages">{{ topic.messages }}</td>
-							<td class="last-message">
-								<div>
-									<span>{{ LeekWars.formatDuration(topic.last_message_date) }}</span><br> {{ $t('last_by') }}
-									<router-link :to="'/forum/category-' + category.id + '/topic-' + topic.id + '/page-' + topic.last_message_page + '#message-' + topic.last_message_id">
-										<div class="last-message-wrapper">{{ topic.last_message_writer }}</div>
-										<span>►</span>
+				<div v-else class="topics">
+					<div v-ripple v-for="topic in category.topics" :key="topic.id" :class="{pinned: topic.pinned}" class="topic">
+						<div class="seen">
+							<img v-if="topic.seen" src="/image/forum_seen.png">
+							<img v-else src="/image/forum_unseen.png">
+						</div>
+						<div>
+							<span class="title">
+								<i v-if="topic.resolved" :title="$t('topic_resolved')" class="attr material-icons resolved">check_circle</i>
+								<i v-if="topic.closed" :title="$t('topic_locked')" class="attr material-icons">lock</i>
+								<img v-if="topic.pinned" :title="$t('topic_pinned')" class="attr" src="/image/pin.png">
+								<router-link :to="'/forum/category-' + category.id + '/topic-' + topic.id">{{ topic.title }}</router-link>
+							</span>
+							<div class="description grey">
+								<i18n path="by_x_the_d">
+									<router-link :to="'/farmer/' + topic.author.id" place="farmer">{{ topic.author.name }}</router-link>
+									<span place="date">{{ topic.date | date }}</span>
+								</i18n>
+							</div>
+							<div class="description grey" v-if="LeekWars.mobile">
+								<span class="messages"><i class="material-icons">chat_bubble_outline</i> {{ topic.messages }} • </span>
+								<i18n tag="span" v-if="LeekWars.mobile" path="last_message">
+									<span place="date">{{ LeekWars.formatDuration(topic.last_message_date) }}</span>
+									<router-link :to="'/forum/category-' + category.id + '/topic-' + topic.id + '/page-' + topic.last_message_page + '#message-' + topic.last_message_id" place="farmer">
+										{{ topic.last_message_writer }} ►
 									</router-link>
-								</div>
-							</td>
-						</tr>
-					</table>
+								</i18n>
+							</div>
+						</div>
+						<div v-if="!LeekWars.mobile" class="num-messages">{{ topic.messages }}</div>
+						<div v-if="!LeekWars.mobile" class="last-message grey">
+							<div>
+								<span>{{ LeekWars.formatDuration(topic.last_message_date) }}</span><br> {{ $t('last_by') }}
+								<router-link :to="'/forum/category-' + category.id + '/topic-' + topic.id + '/page-' + topic.last_message_page + '#message-' + topic.last_message_id">
+									<div class="last-message-wrapper">{{ topic.last_message_writer }}</div>
+									<span>►</span>
+								</router-link>
+							</div>
+						</div>
+					</div>
 				</div>
-				<br>
 				<pagination v-if="category" :current="page" :total="pages" :url="'/forum/category-' + category.id" />
 			</div>
 		</div>
@@ -110,7 +115,7 @@
 			const category = this.$route.params.category
 			this.page = 'page' in this.$route.params ? parseInt(this.$route.params.page, 10) : 1
 			LeekWars.setActions([
-				{icon: 'add', click: () => this.createDialog = true},
+				{icon: 'edit', click: () => this.createDialog = true},
 				{icon: 'search', click: () => this.$router.push('/search/-/-/' + category) }
 			])
 			if (this.category) { this.category.topics = null }
@@ -157,9 +162,13 @@
 	#app.app .panel .content {
 		padding: 0;
 	}
+	.topics {
+		padding: 0 5px;
+	}
 	.topic {
 		margin-bottom: 5px;
-		width: 100%;
+		display: flex;
+		align-items: center;
 	}
 	.topic:not(.header) {
 		border: 1px solid #ddd;
@@ -180,15 +189,16 @@
 		color: #666;
 		font-size: 19px;
 	}
-	.topic td {
-		padding: 5px 10px;
+	.topic > div {
+		padding: 8px;
+		flex: 1;
 	}
-	.topic:hover {
+	.topic:not(.header):hover {
 		background-color: white;
 		box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
 	}
 	.topic .seen {
-		width: 40px;
+		flex: 0 0 40px;
 		padding-top: 10px;
 		padding-bottom: 10px;
 		padding-right: 5px;
@@ -203,17 +213,19 @@
 		color: #333;
 	}
 	.topic .description {
-		color: #999;
 		font-size: 14px;
+		margin-top: 4px;
+	}
+	.topic .description i {
+		font-size: 14px;
+		vertical-align: bottom;
 	}
 	.topic .num-messages {
-		width: 100px;
-		color: #777;
+		flex: 0 0 100px;
 		text-align: center;
 	}
 	.topic .last-message {
-		width: 160px;
-		color: #777;
+		flex: 0 0 160px;
 		text-align: center;
 		vertical-align: top;
 	}
@@ -224,6 +236,9 @@
 		text-overflow: ellipsis;
 		overflow-x: hidden;
 		margin-bottom: -4px;
+	}
+	.topic .messages {
+		color: black;
 	}
 	.create-popup .topic-name {
 		width: calc(100% - 20px);
@@ -244,5 +259,8 @@
 	}
 	.search-box img {
 		cursor: pointer;
+	}
+	.grey {
+		color: #888;
 	}
 </style>

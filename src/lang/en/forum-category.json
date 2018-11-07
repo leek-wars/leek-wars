@@ -5,6 +5,7 @@
 	"create_topic": "Create topic",
 	"n_topic_n_messages": "{0} topics / {1} messages",
 	"last": "Last",
+	"last_message": "Last {date} by {farmer}",
 	"last_by": "by",
 	"messages": "Messages",
 	"new_topic_message": "Topic message",
