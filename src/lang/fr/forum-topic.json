@@ -5,6 +5,8 @@
 	"do_you_want_to_delete_message": "Voulez-vous vraiment supprimer ce message ?",
 	"do_you_want_to_delete_topic": "Voulez-vous vraiment supprimer ce sujet ?",
 	"n_messages": "{0} messages",
+	"notifications_on": "Notifications activées",
+	"notifications_off": "Notifications désactivées",
 	"send": "Envoyer",
 	"subscribe": "S'abonner au sujet",
 	"undoable_action": "Cette action est irréversible.",

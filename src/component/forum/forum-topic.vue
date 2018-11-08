@@ -15,7 +15,7 @@
 					<img v-if="topic.pinned" :title="$t('topic_pinned')" class="attr" src="/image/pin_white.png">
 				</div>
 			</div>
-			<div class="tabs">
+			<div class="tabs" v-if="!LeekWars.mobile">
 				<div v-if="topic && topic.subscribed" class="tab" @click="unsubscribe">{{ $t('unsubscribe') }}</div>
 				<div v-else class="tab" @click="subscribe">{{ $t('subscribe') }}</div>
 			</div>
@@ -167,6 +167,7 @@
 		toDeleteMessage: ForumMessage | null = null
 		newMessage: string = ''
 		topicEditing: boolean = false
+		action = {icon: 'notifications_off', click: () => this.toggleSubscribe()}
 
 		get categoryName() {
 			return this.category ? this.category.team > 0 ? this.category.name : this.$t('forum.category_' + this.category.name) : ''
@@ -205,6 +206,8 @@
 				}
 				this.pages = data.data.pages
 				LeekWars.setTitle(this.topic.name, this.$t('forum_topic.n_messages', [data.data.total]))
+				LeekWars.setActions([this.action])
+				if (this.topic.subscribed) { this.action.icon = 'notifications_active' }
 				this.$root.$emit('loaded')
 				this.newMessage = localStorage.getItem('forum/draft') as string
 			})
@@ -318,15 +321,23 @@
 				}
 			})
 		}
+		toggleSubscribe() {
+			if (!this.topic) { return }
+			this.topic.subscribed ? this.unsubscribe() : this.subscribe()
+		}
 		subscribe() {
 			if (!this.topic) { return }
 			LeekWars.post('forum/subscribe-topic', {topic_id: this.topic.id})
 			this.topic.subscribed = true
+			this.action.icon = 'notifications_active'
+			LeekWars.toast(this.$t('notifications_on'))
 		}
 		unsubscribe() {
 			if (!this.topic) { return }
 			LeekWars.post('forum/unsubscribe-topic', {topic_id: this.topic.id})
 			this.topic.subscribed = false
+			this.action.icon = 'notifications_off'
+			LeekWars.toast(this.$t('notifications_off'))
 		}
 		edit(message: ForumMessage) {
 			message.editing = true
