@@ -1,7 +1,7 @@
 <template>
 	<div v-show="visible" class="ai" @mousemove="mousemove" @mouseleave="mouseleave">
 		<div v-show="!loading" ref="codemirror" :style="{'font-size': fontSize + 'px', 'line-height': lineHeight + 'px'}" :class="{search: searchEnabled}" class="codemirror"></div>
-		<div v-if="searchEnabled" class="search-panel">
+		<div v-show="searchEnabled" class="search-panel">
 			<i class="material-icons">search</i>
 			<input ref="searchInput" v-model="searchQuery" type="text" class="query" autocomplete="off" @keyup.enter="$event.shiftKey ? searchPrevious() : searchNext()">
 			<span v-if="searchLines.length" class="results">{{ searchCurrent + 1 }} / {{ searchLines.length }}</span>
@@ -761,8 +761,10 @@
 			return vars
 		}
 		public search() {
-			if (!this.searchEnabled) {
+			const selection = this.document.getSelection()
+			if (!this.searchEnabled || selection) {
 				this.searchEnabled = true
+				this.searchQuery = selection
 				this.searchUpdate()
 				Vue.nextTick(() => {
 					(this.$refs.searchInput as HTMLElement).focus()
