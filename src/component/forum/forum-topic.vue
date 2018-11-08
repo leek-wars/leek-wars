@@ -5,7 +5,7 @@
 				<h1>
 					<router-link to="/forum">{{ $t('forum.title') }}</router-link>
 					>
-					<router-link v-if="topic" :to="'/forum/category-' + category.id">{{ category.name }}</router-link>
+					<router-link v-if="topic" :to="'/forum/category-' + category.id">{{ categoryName }}</router-link>
 					>
 					<span ref="topicTitle" :contenteditable="topicEditing" class="topic-title">{{ topic ? topic.name : '...' }}</span>
 				</h1>
@@ -122,7 +122,7 @@
 				<h2 v-if="topic">
 					<router-link to="/forum">{{ $t('forum.title') }}</router-link>
 					>
-					<router-link :to="'/forum/category-' + category.id">{{ category.name }}</router-link>
+					<router-link :to="'/forum/category-' + category.id">{{ categoryName }}</router-link>
 					>
 					{{ topic.name }}
 				</h2>
@@ -168,6 +168,10 @@
 		newMessage: string = ''
 		topicEditing: boolean = false
 
+		get categoryName() {
+			return this.category ? this.category.team > 0 ? this.category.name : this.$t('forum.category_' + this.category.name) : ''
+		}
+
 		mounted() {
 			LeekWars.contenteditable_paste_protect(this.$refs.topicTitle as HTMLElement)
 		}
@@ -198,9 +202,6 @@
 							Vue.set(message, 'height', 100)
 						}
 					}
-				}
-				if (this.category) {
-					this.category.name = this.category.team > 0 ? this.category.name : this.$t('forum.category_' + this.category.name) as string
 				}
 				this.pages = data.data.pages
 				LeekWars.setTitle(this.topic.name, this.$t('forum_topic.n_messages', [data.data.total]))
