@@ -1,7 +1,7 @@
 <template>
 	<div>
-		<!-- {{ resetCounter() }} -->
-		<action v-for="(action, a) in actions" :key="a" :action="action" :logs="[]" :leeks="leeks" :turn="turn" class="action" />
+		{{ resetCounter() }}
+		<action v-for="(action, a) in actions" :key="a" :action="action" :logs="[]" :leeks="leeks" :turn="turnCounter(action)" class="action" />
 	</div>
 </template>
 
@@ -11,16 +11,18 @@
 	import { LeekWars } from '@/model/leekwars'
 	import { Component, Prop, Vue } from 'vue-property-decorator'
 
+	let turn = 1
+
 	@Component({ name: "actions", components: { action: ActionElement } })
 	export default class ActionsElement extends Vue {
 		@Prop({required: true}) actions!: number[][]
 		@Prop({required: true}) leeks!: {[key: number]: any}
-		turn: number = 1
 		resetCounter() {
-			this.turn = 1
+			turn = 1
 		}
-		turnCounter(action: any) {
-			if (action[0] === ActionType.NEW_TURN) { this.turn++ }
+		turnCounter(action: Action) {
+			if (action.params[0] === ActionType.NEW_TURN) { turn++ }
+			return turn
 		}
 	}
 </script>
