@@ -3,7 +3,7 @@
 		<div class="page-header page-bar">
 			<h1>{{ $t('title') }}</h1>
 		</div>
-		<div class="panel">
+		<div class="panel first">
 			<div class="content">
 				<div class="wrapper">
 
@@ -337,7 +337,7 @@
 			</div>
 		</div>
 
-		<div class="panel">
+		<div class="panel last">
 			<div class="content">
 				<div class="wrapper">
 					<div class="credits" v-html="$t('credits')"></div>
@@ -365,12 +365,20 @@
 		margin-top: 10px;
 		margin-bottom: 5px;
 	}
+	#app.app h3 {
+		margin-left: 0;
+	}
 	p {
 		margin-bottom: 10px;
 		margin-left: 20px;
 		margin-right: 20px;
 		text-align: justify;
 		font-size: 16px;
+	}
+	#app.app p {
+		margin-left: 10px;
+		margin-right: 10px;
+		margin-top: 10px;
 	}
 	ul {
 		font-size: 16px;
@@ -408,6 +416,9 @@
 		display: block;
 		border-bottom: 2px solid #ddd;
 	}
+	#app.app .formula {
+		margin: 5px 0;
+	}
 	.credits {
 		text-align: right;
 		color: #999;
@@ -422,5 +433,8 @@
 		margin: 0 auto;
 		background: #f2f2f2;
 		padding: 15px;
+	}
+	#app.app .panel .wrapper {
+		padding: 8px 0;
 	}
 </style>
