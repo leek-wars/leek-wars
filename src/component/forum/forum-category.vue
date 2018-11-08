@@ -6,7 +6,7 @@
 				> 
 				<span>{{ category ? category.name : '...' }}</span>
 			</h1>
-			<div class="tabs" v-if="!LeekWars.mobile">
+			<div v-if="!LeekWars.mobile" class="tabs">
 				<div class="tab" @click="createDialog = true">
 					<i class="material-icons">add</i>
 					<span>{{ $t('create_new_topic') }}</span>
@@ -50,9 +50,9 @@
 									<span place="date">{{ topic.date | date }}</span>
 								</i18n>
 							</div>
-							<div class="description grey" v-if="LeekWars.mobile">
+							<div v-if="LeekWars.mobile" class="description grey">
 								<span class="messages"><i class="material-icons">chat_bubble_outline</i> {{ topic.messages }} • </span>
-								<i18n tag="span" v-if="LeekWars.mobile" path="last_message">
+								<i18n v-if="LeekWars.mobile" tag="span" path="last_message">
 									<span place="date">{{ LeekWars.formatDuration(topic.last_message_date) }}</span>
 									<router-link :to="'/forum/category-' + category.id + '/topic-' + topic.id + '/page-' + topic.last_message_page + '#message-' + topic.last_message_id" place="farmer">
 										{{ topic.last_message_writer }} ►

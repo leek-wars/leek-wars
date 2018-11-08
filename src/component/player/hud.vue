@@ -1,5 +1,5 @@
 <template>
-	<div class="hud" v-if="!LeekWars.mobile">
+	<div v-if="!LeekWars.mobile" class="hud">
 		<div class="life-bar">
 			<div class="wrapper">
 				<template v-for="team in game.teams">

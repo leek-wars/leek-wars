@@ -15,7 +15,7 @@
 					<img v-if="topic.pinned" :title="$t('topic_pinned')" class="attr" src="/image/pin_white.png">
 				</div>
 			</div>
-			<div class="tabs" v-if="!LeekWars.mobile">
+			<div v-if="!LeekWars.mobile" class="tabs">
 				<div v-if="topic && topic.subscribed" class="tab" @click="unsubscribe">{{ $t('unsubscribe') }}</div>
 				<div v-else class="tab" @click="subscribe">{{ $t('subscribe') }}</div>
 			</div>
