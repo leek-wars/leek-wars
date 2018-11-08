@@ -3,7 +3,7 @@
 		<div class="page-header page-bar">
 			<h1>{{ $t('title') }}</h1>
 		</div>
-		<div class="panel">
+		<div class="panel first last">
 			<div class="content">
 				<h3>{{ $t('app_installation') }}</h3>
 				<br>
@@ -33,7 +33,7 @@
 	@Component({ name: 'mobile_app', i18n: {} })
 	export default class MobileApp extends Vue {
 		created() {
-			LeekWars.setTitle(this.$t('title'))
+			LeekWars.setTitle(this.$t('mobile_app.title'))
 		}
 	}
 </script>

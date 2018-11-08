@@ -3,7 +3,7 @@
 		<div class="page-header page-bar">
 			<h1>{{ $t('title') }}</h1>
 		</div>
-		<div class="panel">
+		<div class="panel first last">
 			<div class="content">
 				<div class="bank-description center" v-html="$t('description')"></div>
 

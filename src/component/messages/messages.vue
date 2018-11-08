@@ -10,7 +10,7 @@
 			</div>
 		</div>
 		<div v-show="!LeekWars.mobile || !LeekWars.splitBack" class="column4">
-			<div v-autostopscroll="'bottom'" class="panel conversations last">
+			<div v-autostopscroll="'bottom'" class="panel conversations last first">
 				<div class="content">
 					<router-link v-if="newConversation && !newConversationSent" :to="'/messages/new/' + newFarmer.id + '/' + newFarmer.name + '/' + newFarmer.avatar_changed">
 						<conversation :conversation="newConversation" />

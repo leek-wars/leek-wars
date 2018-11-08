@@ -23,7 +23,7 @@
 
 		<div class="flex-container">
 			<div class="column4">
-				<div class="panel team-emblem">
+				<div class="panel team-emblem first">
 					<div v-if="team" class="content">
 						<template v-if="member">
 							<v-tooltip :open-delay="0" :close-delay="0" bottom>

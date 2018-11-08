@@ -11,7 +11,7 @@
 			</div>
 		</div>
 		
-		<div class="panel">
+		<div class="panel first">
 			<div class="content center">
 				<img class="illustration" src="/image/about/illustration.png">
 				<br>
@@ -186,7 +186,7 @@
 			</div>
 		</div>
 		
-		<div class="panel">
+		<div class="panel last">
 			<div class="header">
 				<h2>{{ $t('links') }}</h2>
 			</div>

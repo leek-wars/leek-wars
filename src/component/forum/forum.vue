@@ -32,7 +32,7 @@
 			</div>
 		</div>
 
-		<div class="panel">
+		<div class="panel first">
 			<div class="content">
 				<loader v-if="!categories" />
 				<template v-else>

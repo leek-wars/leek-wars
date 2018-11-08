@@ -10,7 +10,7 @@
 			</div>
 		</div>
 
-		<div class="panel">
+		<div class="panel first">
 			<div class="content">
 				<div v-if="fight.too_long" class="too-long">
 					{{ $t('generation_too_long') }}
@@ -121,7 +121,7 @@
 				<pre v-for="(w, i) in warnings" :key="errors.length + i" class="log warning">[{{ w.entity }}] {{ w.data }}</pre>
 			</div>
 		</div>
-		<div class="panel">
+		<div class="panel last">
 			<div class="header">
 				<h2>Actions</h2>
 			</div>

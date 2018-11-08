@@ -3,7 +3,7 @@
 		<div class="page-bar page-header">
 			<h1>{{ loaded ? title : '...' }}</h1>
 		</div>
-		<div class="panel">
+		<div class="panel first">
 			<div class="content first">
 				<span class="global-percent">{{ loaded ? Math.floor(100 * count / total) : 0 }}%</span>
 				<span class="global-count">{{ count }} / {{ total }}</span>  

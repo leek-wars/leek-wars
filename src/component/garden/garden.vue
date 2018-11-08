@@ -15,7 +15,7 @@
 			</div>
 		</div>
 		<div v-show="!LeekWars.mobile || !LeekWars.splitBack" class="column3">
-			<div class="panel garden-left">
+			<div class="panel garden-left first">
 				<div class="content">
 					<template v-if="category === 'challenge'">
 						<div class="tab active enabled router-link-active">

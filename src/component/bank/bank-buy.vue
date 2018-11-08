@@ -6,7 +6,7 @@
 				<span v-html="$t('purshase_title', [data.crystalCount, data.vendor])"></span>
 			</h1>
 		</div>
-		<div class="panel">
+		<div class="panel first last">
 			<div class="content">
 				<div v-if="data.vendor === 'StarPass'">
 					<br>

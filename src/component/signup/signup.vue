@@ -5,7 +5,7 @@
 		</div>
 		<div class="top">
 			<div class="column6">
-				<div class="panel">
+				<div class="panel first">
 					<div class="content">
 						<div class="desc introduction" v-html="$t('intro')"></div>
 						<div class="leek-rect">
@@ -140,7 +140,7 @@
 
 		<h1>{{ $t('screenshots') }}</h1>
 
-		<div class="panel first screenshots">
+		<div class="panel first last screenshots">
 			<div class="content">
 				<div class="container">
 					<div v-for="image of images" :key="image[0]" class="column6">
