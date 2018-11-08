@@ -11,7 +11,7 @@ class Keyword {
 	arguments?: string[]
 	ai?: AI
 	line?: number
-	shortcut?: string
+	shortcut?: number
 }
 
 function generateKeywords() {
