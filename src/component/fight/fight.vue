@@ -9,7 +9,7 @@
 	
 		<div class="panel">
 			<div class="fight content">
-				<player :fight-id="fight_id" :required-width="playerWidth" :required-height="playerHeight" @fight="fightLoaded" @resize="resize" />
+				<player :fight-id="fight_id" :key="fight_id" :required-width="playerWidth" :required-height="playerHeight" @fight="fightLoaded" @resize="resize" />
 			</div>
 		</div>
 	
