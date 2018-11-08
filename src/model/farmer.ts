@@ -34,5 +34,6 @@ class Farmer {
 	public last_connection!: number
 	public moderator!: boolean
 	public admin!: boolean
+	public talent!: number
 }
 export { Farmer }

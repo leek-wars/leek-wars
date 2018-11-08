@@ -57,6 +57,7 @@ class Leek {
 	public magic!: number
 	public tp!: number
 	public mp!: number
+	public talent!: number
 
 	get baseLife() {
 		return 100 + (this.level - 1) * 3
