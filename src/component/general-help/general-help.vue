@@ -17,17 +17,17 @@
 					</i18n>
 
 					<div class="help-menu">
-						<a href="#farmer"><div class="item">{{ $t('farmer') }}</div></a>
-						<a href="#habs"><div class="item">{{ $t('habs') }}</div></a>
-						<a href="#leeks"><div class="item">{{ $t('leeks') }}</div></a>
-						<a href="#weapons"><div class="item">{{ $t('weapons') }}</div></a>
-						<a href="#chips"><div class="item">{{ $t('chips') }}</div></a>
-						<a href="#teams"><div class="item">{{ $t('teams') }}</div></a>
-						<a href="#fights"><div class="item">{{ $t('fights') }}</div></a>
-						<a href="#challenges"><div class="item">{{ $t('challenges') }}</div></a>
-						<a href="#tournaments"><div class="item">{{ $t('tournaments') }}</div></a>
-						<a href="#trophies"><div class="item">{{ $t('trophies') }}</div></a>
-						<a href="#editor"><div class="item">{{ $t('editor') }}</div></a>
+						<a href="#farmer"><div class="item card">{{ $t('farmer') }}</div></a>
+						<a href="#habs"><div class="item card">{{ $t('habs') }}</div></a>
+						<a href="#leeks"><div class="item card">{{ $t('leeks') }}</div></a>
+						<a href="#weapons"><div class="item card">{{ $t('weapons') }}</div></a>
+						<a href="#chips"><div class="item card">{{ $t('chips') }}</div></a>
+						<a href="#teams"><div class="item card">{{ $t('teams') }}</div></a>
+						<a href="#fights"><div class="item card">{{ $t('fights') }}</div></a>
+						<a href="#challenges"><div class="item card">{{ $t('challenges') }}</div></a>
+						<a href="#tournaments"><div class="item card">{{ $t('tournaments') }}</div></a>
+						<a href="#trophies"><div class="item card">{{ $t('trophies') }}</div></a>
+						<a href="#editor"><div class="item card">{{ $t('editor') }}</div></a>
 					</div>
 				</div>
 			</div>
@@ -384,12 +384,11 @@
 	.help-menu .item {
 		display: inline-block;
 		vertical-align: bottom;
-		margin: 10px;
+		margin: 6px;
 		padding: 10px;
 		text-align: center;
 		width: 130px;
-		border: 2px solid #ddd;
-		background: white;
+		border: 2px solid #0000;
 		font-weight: 300;
 		color: #555;
 		font-size: 18px;
