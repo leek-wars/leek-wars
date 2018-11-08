@@ -144,6 +144,7 @@
 				setTimeout(() => {
 					if (messages) {
 						messages.scrollTop = messages.scrollHeight + 1000
+						this.unread = false
 					}
 				}, 60)
 			}
