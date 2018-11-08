@@ -355,6 +355,7 @@
 	export default class GeneralHelp extends Vue {
 		created() {
 			LeekWars.setTitle(this.$t('general_help.title'))
+			this.$root.$emit('loaded')
 		}
 	}
 </script>
