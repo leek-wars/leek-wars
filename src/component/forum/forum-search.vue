@@ -105,7 +105,7 @@
 			this.category = (category === '-' || !category) ? -1 : parseInt(category, 10)
 
 			this.results = null
-			if (this.query) {
+			if (this.query || this.farmer) {
 				LeekWars.get<any>('forum/search/' + this.query + '/' + this.farmer + '/' + this.category + '/' + this.page + '/' + this.$store.state.token).then((data) => {
 					this.results = data.data.results
 					this.pages = data.data.pages
