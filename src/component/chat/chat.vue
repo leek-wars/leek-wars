@@ -83,7 +83,7 @@
 		reportDialog: boolean = false
 		reportFarmer: Farmer | null = null
 		reportContent: string = ''
-		scrollUp: boolean = false
+		userScroll: boolean = false
 		unread: boolean = false
 		messagesMounted: boolean = false
 		reasons = [
@@ -101,6 +101,7 @@
 					if (!this.scrollBottom()) { this.unread = true }
 					if (!this.messagesMounted) {
 						setTimeout(() => this.mountMessages(), 50)
+						this.messagesMounted = true
 					}
 				}
 			})
@@ -119,19 +120,26 @@
 			if (!messages) { return }
 			messages.addEventListener('scroll', () => {
 				if (this.scrollBottom()) {
-					this.scrollUp = false
+					this.userScroll = false
 					this.unread = false
 				}
 			})
-			messages.addEventListener('mousewheel', (e: MouseWheelEvent) => {
-				if (e.deltaY < 0) { this.scrollUp = true }
+			messages.addEventListener('wheel', (e: MouseWheelEvent) => {
+				if (!this.scrollBottom()) {
+					this.userScroll = true
+				}
+			})
+			messages.addEventListener('touchmove', (e: TouchEvent) => {
+				if (!this.scrollBottom()) {
+					this.userScroll = true
+				}
 			})
 		}
 		updated() {
 			this.updateScroll()
 		}
 		updateScroll(force: boolean = false) {
-			if (!this.scrollUp || force) {
+			if (!this.userScroll || force) {
 				const messages = this.$refs.messages as HTMLElement
 				setTimeout(() => {
 					if (messages) {
