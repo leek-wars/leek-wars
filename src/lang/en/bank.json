@@ -8,6 +8,7 @@
 	"title": "Crystal bank",
 	"paypal_message": "Click on the button to start the purchase",
 	"purshase_title": "Purchase of <b>{0}</b> crystals with <i>{1}</i>",
+	"purshase_title_text": "Purchase of {0} crystals with {1}",
 	"back_to_bank": "Back to bank",
 	"payment_fail": "<b>{0}</b> payment failed.",
 	"payment_fail_reason": "Payment has failed: {0}",
