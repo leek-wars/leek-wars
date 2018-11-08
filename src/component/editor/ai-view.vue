@@ -86,7 +86,7 @@
 		public detailTimer: any
 		public serverError: boolean = false
 		public selectedCompletion: number = 0
-		public completions: any[] = []
+		public completions: Keyword[] = []
 		public dialogKeyMap: CodeMirror.KeyMap = {
 			Up: this.up,
 			Down: this.down,
@@ -584,7 +584,7 @@
 			// Raccourcis
 			for (const r in AUTO_SHORTCUTS) {
 				if (AUTO_SHORTCUTS[r][0].indexOf(start.toLowerCase()) === 0) {
-					completions.push({name: AUTO_SHORTCUTS[r][0], fullName: AUTO_SHORTCUTS[r][0], details: AUTO_SHORTCUTS[r][3], type: 'shortcut', shortcut: r})
+					completions.push({name: AUTO_SHORTCUTS[r][0], fullName: AUTO_SHORTCUTS[r][0], details: AUTO_SHORTCUTS[r][3], type: 'shortcut', shortcut: parseInt(r, 10)})
 				}
 			}
 			this.completions = completions
@@ -650,7 +650,7 @@
 			const completion = this.completions[this.selectedCompletion]
 
 			if (completion.type === 'function' || completion.type === 'user-function') {
-				let name = completion.name
+				let name = completion.fullName
 				if (name.indexOf(':') > -1) {
 					name = name.substring(0, name.indexOf(':') - 1)
 				}
@@ -662,7 +662,7 @@
 				}
 				if (argCount > 0) {
 					const firstArgLength = (argCount > 1 ? name.indexOf(',') : name.indexOf(')')) - name.indexOf('(') - 1
-					this.document.setSelection({line: pos.line, ch: this.completionFrom.ch + completion.text.length + 1}, {line: pos.line, ch: this.completionFrom.ch + completion.text.length + 1 + firstArgLength})
+					this.document.setSelection({line: pos.line, ch: this.completionFrom.ch + completion.name.length + 1}, {line: pos.line, ch: this.completionFrom.ch + completion.name.length + 1 + firstArgLength})
 				} else {
 					this.document.setCursor({line: pos.line, ch: this.completionFrom.ch + name.length})
 				}
@@ -673,8 +673,7 @@
 				const history = this.document.getHistory()
 				history.done[history.done.length - 1].ranges[0].head.ch = history.done[history.done.length - 1].ranges[0].anchor.ch
 				this.document.setHistory(history)
-
-				const shortcut = AUTO_SHORTCUTS[completion.shortcut]
+				const shortcut = AUTO_SHORTCUTS[completion.shortcut!]
 				let pos = this.document.getCursor()
 				const iniLine = pos.line
 				const indent = this.getLineIndentation(iniLine)
@@ -687,7 +686,7 @@
 				pos.ch = shortcut[1].length - shortcut[1].lastIndexOf("\n") - 1 + indent.length
 				this.document.setCursor(pos)
 			} else {
-				this.document.replaceRange(completion.text, this.completionFrom, this.completionTo)
+				this.document.replaceRange(completion.name, this.completionFrom, this.completionTo)
 			}
 			this.close()
 		}
