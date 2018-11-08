@@ -167,7 +167,7 @@
 		position: relative;
 	}
 	.action i {
-		padding: 15px 14px;
+		padding: 15px 12px;
 		color: white;
 	}
 	.action img {
