@@ -172,6 +172,16 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 		'update-fights'(state: LeekWarsState, fights: number) {
 			if (state.farmer) { state.farmer.fights += fights }
 		},
+		'set-talent'(state: LeekWarsState, talent: number) {
+			if (state.farmer) { state.farmer.talent = talent }
+		},
+		'set-leek-talents'(state: LeekWarsState, talents: any) {
+			if (state.farmer) {
+				for (const i in talents) {
+					state.farmer.leeks[parseInt(i, 10)].talent = talents[i]
+				}
+			}
+		},
 		'rename-leek'(state: LeekWarsState, data: any) {
 			if (state.farmer) {
 				state.farmer.leeks[data.leek].name = data.name

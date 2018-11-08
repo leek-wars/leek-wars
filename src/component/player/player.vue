@@ -177,7 +177,6 @@
 			this.game.sound = localStorage.getItem('fight/sound') === 'true'
 			this.game.discretePause = localStorage.getItem('fight/discrete_pause') === 'true'
 			this.getFight()
-			this.getLogs()
 			LeekWars.large = this.game.large
 			this.resize()
 			this.$emit('resize')
@@ -259,6 +258,7 @@
 					return null
 				}
 				if (fight.status >= 1) {
+					this.getLogs()
 					this.game.init(fight.data)
 					this.loaded = true
 					this.resize()
@@ -279,6 +279,8 @@
 					if (data.data.success) {
 						this.game.setLogs(data.data.logs)
 						this.$store.commit('set-habs', data.data.habs)
+						this.$store.commit('set-talent', data.data.talent)
+						this.$store.commit('set-leek-talents', data.data.leek_talents)
 					}
 				})
 			}
