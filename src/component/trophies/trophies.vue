@@ -96,7 +96,7 @@
 				if (farmerID === this.$store.state.farmer.id) {
 					LeekWars.setTitle(this.$t('title_me'), subtitle)
 				} else {
-					LeekWars.setTitle(this.$t('title_text', [data.data.farmer_name]), subtitle)
+					LeekWars.setTitle(this.$t('title', [data.data.farmer_name]), subtitle)
 				}
 				this.$root.$emit('loaded')
 				this.loaded = true
