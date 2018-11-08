@@ -65,7 +65,7 @@
 		<div v-show="!LeekWars.mobile || LeekWars.splitBack" class="column9">
 			<div class="panel garden-right">
 				<div class="content">
-					<loader v-if="!garden" />
+					<loader v-if="!garden || !$store.state.farmer" />
 					<template v-else>
 						<div v-if="category === 'challenge'">
 							<template v-if="challengeType == 'leek'">
@@ -255,6 +255,7 @@
 		}
 
 		@Watch('$route.params')
+		@Watch('$store.state.farmer')
 		update() {
 			const params = this.$route.params
 			this.category = params.category
@@ -280,14 +281,12 @@
 			const item = parseInt(params.item, 10)
 			localStorage.setItem("garden/category", this.category)
 
-			if (!this.garden) {
+			if (!this.garden || !this.$store.state.farmer) {
 				return
 			}
 			if (this.category) {
 				const category_underscore = this.category.replace('-', '_')
-				if (this.$store.state.farmer) {
-					LeekWars.setTitle(this.$t('garden.garden_' + category_underscore), this.$t('garden.n_fights', [this.$store.state.farmer.fights]))
-				}
+				LeekWars.setTitle(this.$t('garden.garden_' + category_underscore), this.$t('garden.n_fights', [this.$store.state.farmer.fights]))
 				LeekWars.splitShowContent()
 
 				if (this.category === 'solo') {
