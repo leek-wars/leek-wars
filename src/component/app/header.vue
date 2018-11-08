@@ -48,7 +48,7 @@
 					</router-link>
 				</div>
 				<div class="button-wrapper">
-					<v-menu :nudge-bottom="5" :min-width="400" :max-width="400" :max-height="400" bottom offset-y @input="readNotifications">
+					<v-menu :nudge-bottom="3" :min-width="400" :max-width="400" :max-height="400" bottom offset-y @input="readNotifications">
 						<div slot="activator" class="header-button messages-button">
 							<i class="material-icons">email</i>
 							<span v-show="$store.state.unreadMessages > 0" class="counter">{{ $store.state.unreadMessages }}</span>
@@ -64,7 +64,7 @@
 					</v-menu>
 				</div>
 				<div class="button-wrapper">
-					<v-menu :nudge-bottom="5" :min-width="400" :max-width="400" :max-height="400" bottom offset-y @input="readNotifications">
+					<v-menu :nudge-bottom="3" :min-width="400" :max-width="400" :max-height="400" bottom offset-y @input="readNotifications">
 						<div slot="activator" class="header-button notifications-button">
 							<i class="material-icons">notifications</i>
 							<span v-show="$store.state.unreadNotifications > 0" class="counter">{{ $store.state.unreadNotifications }}</span>
