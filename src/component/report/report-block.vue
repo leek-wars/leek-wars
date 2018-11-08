@@ -6,14 +6,14 @@
 			<tr>
 				<th>{{ $t('report.farmer') }}</th>
 				<th></th>
-				<th class="gain" v-if="fight.context !== FightContext.CHALLENGE">{{ $t('report.talent') }}</th>
+				<th v-if="fight.context !== FightContext.CHALLENGE" class="gain">{{ $t('report.talent') }}</th>
 			</tr>
 			<tr>
 				<td class="name">
 					<span class="alive"><router-link :to="'/farmer/' + farmer.id">{{ farmer.name }}</router-link></span>
 				</td>
 				<td></td>
-				<td class="talent" v-if="fight.context !== FightContext.CHALLENGE">
+				<td v-if="fight.context !== FightContext.CHALLENGE" class="talent">
 					<img src="/image/talent.png">
 					{{ farmer.talent }}
 					<span v-if="farmer.talent_gain >= 0">+ {{ farmer.talent_gain }}</span>
@@ -27,7 +27,7 @@
 				<th>{{ $t('report.team') }}</th>
 				<th>{{ $t('report.level') }}</th>
 				<th>{{ $t('report.xp') }}</th>
-				<th class="gain" v-if="fight.context !== FightContext.CHALLENGE">{{ $t('report.talent') }}</th>
+				<th v-if="fight.context !== FightContext.CHALLENGE" class="gain">{{ $t('report.talent') }}</th>
 			</tr>
 			<tr>
 				<td class="name">
@@ -45,7 +45,7 @@
 					</v-tooltip>
 					<span>{{ team.xp | number }}</span>
 				</td>
-				<td class="talent" v-if="fight.context !== FightContext.CHALLENGE">
+				<td v-if="fight.context !== FightContext.CHALLENGE" class="talent">
 					<img src="/image/talent.png">
 					{{ team.talent }}
 					<span v-if="team.talent_gain >= 0">+ {{ team.talent_gain }}</span>

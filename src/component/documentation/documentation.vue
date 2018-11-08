@@ -24,7 +24,7 @@
 			</div>
 			<div v-show="!LeekWars.mobile || LeekWars.splitBack" class="column9">
 				<div class="panel">
-					<div class="content items" v-autostopscroll="'bottom'" ref="elements">
+					<div v-autostopscroll="'bottom'" ref="elements" class="content items">
 						<div v-for="(item, i) in items" :key="i" :item="item.name" :class="{deprecated: item.deprecated}" class="item">
 							<documentation-function v-if="'return_type' in item" :fun="item" />
 							<documentation-constant v-else :constant="item" />

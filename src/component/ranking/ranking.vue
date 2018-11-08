@@ -46,7 +46,7 @@
 				<div v-else>
 					<div class="center">
 						<pagination :current="page" :total="pages" :url="'/ranking/' + category + '/' + order" />
-						<div class="me-buttons center" v-if="$store.state.farmer">
+						<div v-if="$store.state.farmer" class="me-buttons center">
 							<div v-if="category === 'leek'">
 								<div v-for="leek in $store.state.farmer.leeks" :key="leek.id" class="button" @click="goToMyRanking(leek.id)">{{ leek.name }}</div>
 							</div>

@@ -4,7 +4,7 @@
 			<div>
 				<h1>{{ $t('title') }}</h1>
 			</div>
-			<div class="tabs" v-if="!LeekWars.mobile">
+			<div v-if="!LeekWars.mobile" class="tabs">
 				<div class="tab" @click="playing = !playing">
 					<i class="material-icons">{{ playing ? 'pause' : 'play_arrow' }}</i>
 					<span>{{ $t(playing ? 'pause' : 'play') }}</span>
