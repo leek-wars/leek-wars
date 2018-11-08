@@ -221,6 +221,7 @@
 		]
 		created() {
 			LeekWars.setTitle(this.$i18n.t('about.title'))
+			LeekWars.setActions([{image: 'github_white.png', click: () => window.open('https://github.com/leek-wars/leek-wars-client', '_newtab')}])
 		}
 	}
 </script>
