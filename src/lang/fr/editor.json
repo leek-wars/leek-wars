@@ -1,6 +1,6 @@
 {
 	"1_core": "1 coeur",
-	"ai_error": "<b>%1$s</b> ligne <b>%2$s</b>",
+	"ai_error": "<b>{0}</b> ligne <b>{1}</b>",
 	"ai_to_test": "IA à tester",
 	"ai_renamed": "IA renommée en {0}",
 	"auto_closing": "Fermeture automatique des parenthèses, crochets, accolades et guillemets",

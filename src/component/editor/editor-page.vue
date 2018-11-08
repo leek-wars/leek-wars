@@ -89,8 +89,8 @@
 					<div class="results">
 						<div v-show="good" class="good" v-html="'✓ ' + $t('valid_ai', [currentEditor.ai.name])"></div>
 						<div v-if="currentEditor.serverError" class="error">× <i>{{ $t('server_error') }}</i></div>
-						<div v-for="(error, e) in errors" :key="e" class="error">
-							× <b>{{ error.ai }}</b>&nbsp; ▶ {{ error.message }}
+						<div v-for="(error, e) in errors" :key="e" class="error" @click="errors.splice(e, 1)">
+							× <span v-html="$t('ai_error', [error.ai, error.line])"></span>&nbsp; ▶ {{ error.message }}
 						</div>
 					</div>
 				</div>
@@ -424,7 +424,7 @@
 							ai.valid = true
 							editor.removeErrors()
 						} else if (code === 1) {
-							this.errors.push({ai: ai.name, error: res[2]})
+							this.errors.push({ai: ai.name, error: res[2], line: res[3]})
 							ai.valid = false
 						} else if (code === 0) {
 							const line = res[3]
@@ -435,7 +435,7 @@
 								info = this.$t('leekscript.' + res[6])
 							}
 							info = '(' + res[5] + ') ' + info
-							this.errors.push({ai: ai.name, message: info})
+							this.errors.push({ai: ai.name, message: info, line})
 							ai.valid = false
 							editor.showError(line)
 						}
