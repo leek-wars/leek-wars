@@ -4,7 +4,7 @@
 			<h1>{{ $t('title') }}</h1>
 		</div>
 
-		<div class="panel">
+		<div class="panel first">
 
 			<div class="content">
 
@@ -13,9 +13,9 @@
 						<img src="/image/map/nexus_block.png">
 					</center>
 
-					<center><h2>{{ $t('welcome') }}</h2></center>
+					<p><center><h2>{{ $t('welcome') }}</h2></center></p>
 					<br>
-					<span class="justify" v-html="$t('intro')"></span>
+					<p v-html="$t('intro')"></p>
 				</div>
 			</div>
 		</div>
@@ -31,49 +31,49 @@
 				<div class="wrapper">
 					<div class="tuto-menu">
 						<a href="#presentation">
-							<div class="menu-item">
+							<div class="menu-item card">
 								<img src="/image/help/presentation.png"><br>
 								{{ $t('presentation') }}
 							</div>
 						</a>
 						<a href="#interface">
-							<div class="menu-item">
+							<div class="menu-item card">
 								<img src="/image/help/interface.png"><br>
 								{{ $t('interface') }}
 							</div>
 						</a>
 						<a href="#variables">
-							<div class="menu-item">
+							<div class="menu-item card">
 								<img src="/image/help/variables.png"><br>
 								{{ $t('variables') }}
 							</div>
 						</a>
 						<a href="#conditions">
-							<div class="menu-item">
+							<div class="menu-item card">
 								<img src="/image/help/conditions.png"><br>
 								{{ $t('conditions') }}
 							</div>
 						</a>
 						<a href="#loops">
-							<div class="menu-item">
+							<div class="menu-item card">
 								<img src="/image/help/loops.png"><br>
 								{{ $t('loops') }}
 							</div>
 						</a>
 						<a href="#functions">
-							<div class="menu-item">
+							<div class="menu-item card">
 								<img src="/image/help/functions.png"><br>
 								{{ $t('functions') }}
 							</div>
 						</a>
 						<a href="#fight">
-							<div class="menu-item">
+							<div class="menu-item card">
 								<img src="/image/help/fight_tuto.png"><br>
 								{{ $t('fight') }}
 							</div>
 						</a>
 						<a href="#advanced">
-							<div class="menu-item">
+							<div class="menu-item card">
 								<img src="/image/help/advanced.png"><br>
 								{{ $t('advanced') }}
 							</div>
@@ -82,7 +82,6 @@
 				</div>
 			</div>
 		</div>
-
 
 		<div class="panel">
 
@@ -193,8 +192,8 @@
 						</ul>
 					</p>
 
-					{{ $t('editor_15') }}
-
+					<p>{{ $t('editor_15') }}</p>
+					<br>
 					<h3>{{ $t('documentation') }}</h3>
 
 					<p v-html="$t('doc_1')"></p>
@@ -796,7 +795,7 @@
 		</div>
 
 
-		<div class="panel">
+		<div class="panel last">
 
 			<div class="header">
 				<h2 id="advanced">{{ $t('advanced') }}</h2>
@@ -981,19 +980,20 @@
 </script>
 
 <style lang="scss" scoped>
+	#app.app h3 {
+		margin-left: 0;
+	}
 	.tuto-menu {
-		text-align: center;
+		display: grid;
+		grid-gap: 10px;
+		padding: 10px;
+		grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
 	}
 	.menu-item {
-		display: inline-block;
-		vertical-align: bottom;
-		margin: 10px;
 		padding: 10px;
 		text-align: center;
-		width: 130px;
-		height: 110px;
-		border: 2px solid #ddd;
-		background: white;
+		height: 100px;
+		border: 2px solid #0000;
 		font-weight: 300;
 		color: #555;
 		font-size: 18px;
@@ -1020,12 +1020,20 @@
 		background: #f2f2f2;
 		padding: 15px;
 	}
+	#app.app .wrapper {
+		padding: 8px 0;
+	}
 	p {
 		margin-bottom: 10px;
 		margin-left: 20px;
 		margin-right: 20px;
 		text-align: justify;
 		font-size: 16px;
+	}
+	#app.app p {
+		margin-left: 10px;
+		margin-right: 10px;
+		margin-top: 10px;
 	}
 	li {
 		margin-left: 20px;
