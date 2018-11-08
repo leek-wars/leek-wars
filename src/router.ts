@@ -63,19 +63,19 @@ class Home extends Vue {
 		return LeekWars.mobile && localStorage.getItem('options/chat-first') === 'true'
 	}
 	public render(h: any) {
-		return this.$store.getters.connected ? (this.chatFirst ? h('chat') : h('leek')) : h('signup')
+		return this.$store.state.connected ? (this.chatFirst ? h('chat') : h('leek')) : h('signup')
 	}
 }
 
 const connected = (to: Route, from: Route, next: any) => {
-	if (!store.getters.connected) {
+	if (!store.state.connected) {
 		next('/')
 	} else {
 		next()
 	}
 }
 const disconnected = (to: Route, from: Route, next: any) => {
-	if (store.getters.connected) {
+	if (store.state.connected) {
 		next('/')
 	} else {
 		next()
@@ -201,20 +201,19 @@ router.beforeEach((to: Route, from: Route, next: any) => {
 	LeekWars.splitShowList()
 	LeekWars.actions = []
 
-	if (!store.getters.connected && localStorage.getItem('connected') === 'true') {
+	if (!store.state.connected && localStorage.getItem('connected') === 'true') {
 		const token = localStorage.getItem('token')
+		store.commit('connected', token)
 		LeekWars.get('farmer/get-from-token/' + token).then((data: any) => {
 			if (data.data.success) {
 				store.commit('connect', {farmer: data.data.farmer, token})
-				next()
 			} else {
 				store.commit('disconnect')
 				router.push('/')
 			}
 		})
-	} else {
-		next()
 	}
+	next()
 })
 
 export default router

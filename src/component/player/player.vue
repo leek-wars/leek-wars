@@ -274,7 +274,7 @@
 			})
 		}
 		getLogs() {
-			if (this.$store.getters.connected) {
+			if (this.$store.state.farmer) {
 				LeekWars.post('fight/get-logs', {fight_id: this.fightId}).then((data) => {
 					if (data.data.success) {
 						this.game.setLogs(data.data.logs)

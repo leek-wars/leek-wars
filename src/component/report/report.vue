@@ -45,7 +45,7 @@
 					<router-link :to="'/fight/' + fight.id">
 						<div class="button">{{ $t('rewatch_fight') }}</div>
 					</router-link>
-					<span v-if="$store.getters.connected">
+					<span v-if="$store.state.connected">
 						<router-link v-if="fight.context === FightContext.GARDEN" to="/garden">
 							<div class="button">{{ $t('back_to_garden') }}</div>
 						</router-link>
@@ -248,7 +248,7 @@
 		}
 
 		challenge() {
-			if (!this.$store.getters.connected || !this.fight) { return }
+			if (!this.$store.state.farmer || !this.fight) { return }
 			for (const ml in this.$store.state.farmer.leeks) {
 				if (this.searchMyLeek(this.$store.state.farmer.leeks[ml], this.fight.report.leeks1)) {
 					this.myFight = true

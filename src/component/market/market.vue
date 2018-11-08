@@ -103,11 +103,11 @@
 						<div class="buy-buttons">
 							<template v-if="selectedItem.price_habs > 0">
 								<h4 class="buy-label">{{ $t('buy') }}</h4>&nbsp;
-								<div :class="{disabled: $store.state.farmer.habs < selectedItem.price_habs}" class="button buy-button" @click="openBuyHabs">{{ selectedItem.price_habs | number }}<img src="/image/hab.png"></div>
+								<div :class="{disabled: $store.state.farmer && $store.state.farmer.habs < selectedItem.price_habs}" class="button buy-button" @click="openBuyHabs">{{ selectedItem.price_habs | number }}<img src="/image/hab.png"></div>
 							</template>
 							<div v-if="selectedItem.price_crystals > 0">
 								<h4 class="buy-label">{{ $t('buy') }}</h4>&nbsp;
-								<div :class="{disabled: $store.state.farmer.crystals < selectedItem.price_crystals}" class="button buy-crystals-button" @click="openBuyCrystals">{{ selectedItem.price_crystals | number }}<img src="/image/crystal.png"></div>
+								<div :class="{disabled: $store.state.farmer && $store.state.farmer.crystals < selectedItem.price_crystals}" class="button buy-crystals-button" @click="openBuyCrystals">{{ selectedItem.price_crystals | number }}<img src="/image/crystal.png"></div>
 							</div>
 							<template v-if="selectedItem.sellable && selectedItem.farmer_count > 0">
 								<div class="sell">
@@ -131,7 +131,7 @@
 
 		<v-dialog v-model="buyDialog" max-width="600">
 			<div class="title">{{ $t('confirm_purchase') }}</div>
-			<div v-if="selectedItem" class="content">
+			<div v-if="selectedItem && $store.state.farmer" class="content">
 				<i18n tag="div" path="are_you_sure_you_want_to_buy">
 					<b place="item">{{ translateName(selectedItem) }}</b>
 				</i18n>
@@ -150,7 +150,7 @@
 
 		<v-dialog v-model="buyCrystalsDialog" max-width="600">
 			<div class="title">{{ $t('confirm_purchase') }}</div>
-			<div v-if="selectedItem" class="content">
+			<div v-if="selectedItem && $store.state.farmer" class="content">
 				<i18n tag="div" path="are_you_sure_you_want_to_buy">
 					<b place="item">{{ translateName(selectedItem) }}</b>
 				</i18n>
@@ -169,7 +169,7 @@
 		
 		<v-dialog v-model="sellDialog" max-width="600">
 			<div class="title">{{ $t('confirm_sell') }}</div>
-			<div v-if="selectedItem" class="content">
+			<div v-if="selectedItem && $store.state.farmer" class="content">
 				<i18n tag="div" path="are_you_sure_you_want_to_sell">
 					<b place="item">{{ translateName(selectedItem) }}</b>
 				</i18n>
@@ -265,7 +265,7 @@
 						this.items_by_name[LeekWars.hats[item.id].name] = item
 					}
 					item.leek_objs = []
-					if (this.$store.getters.connected) {
+					if (this.$store.state.farmer) {
 						for (const leek of item.leeks) {
 							if (leek in this.$store.state.farmer.leeks) {
 								item.leek_objs.push(this.$store.state.farmer.leeks[leek])

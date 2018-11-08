@@ -84,12 +84,12 @@
 										</v-tooltip>
 									</div>
 								
-									<template v-if="$store.getters.connected && (message.writer.id == $store.state.farmer.id || category.moderator)">
+									<template v-if="$store.state.farmer && (message.writer.id == $store.state.farmer.id || category.moderator)">
 										<span class="edit" @click="edit(message)">{{ $t('forum.edit') }}</span>
 										&nbsp;&nbsp;-&nbsp;&nbsp;
 										<span class="delete" @click="deleteGeneric(message)">{{ $t('delete') }}</span>
 									</template>
-									<template v-if="message.id == -1 && $store.getters.connected && category.moderator">
+									<template v-if="message.id == -1 && $store.state.connected && category.moderator">
 										&nbsp;&nbsp;-&nbsp;&nbsp;
 										<span class="lock" @click="lock">{{ topic.locked ? $t('forum.unlock') : $t('forum.lock') }}</span>
 										&nbsp;&nbsp;-&nbsp;&nbsp;

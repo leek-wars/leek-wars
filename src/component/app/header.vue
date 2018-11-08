@@ -11,7 +11,7 @@
 			</router-link>
 		</div>
 		<div class="header-right">
-			<div v-if="!$store.getters.connected" class="header-signin buttons">
+			<div v-if="!$store.state.connected" class="header-signin buttons">
 				<div class="button-wrapper">
 					<router-link to="/login">
 						<div class="header-button">{{ $t('main.connection') }}</div>
@@ -22,11 +22,11 @@
 					</router-link>
 				</div>
 			</div>
-			<div v-if="$store.getters.connected" class="header-farmer buttons">
+			<div v-if="$store.state.connected" class="header-farmer buttons">
 				<div class="button-wrapper">
 					<router-link to="/bank">
 						<div class="header-button">
-							<span class="farmer-crystals text">{{ $store.state.farmer.crystals }}</span>
+							<span class="farmer-crystals text" v-if="$store.state.farmer">{{ $store.state.farmer.crystals }}</span>
 							&nbsp;<span class="crystal text"></span>
 						</div>
 					</router-link>
@@ -34,7 +34,7 @@
 				<div class="button-wrapper">
 					<router-link to="/market">
 						<div class="header-button">
-							<span class="farmer-habs text">{{ $store.state.farmer.habs | number }}</span>
+							<span class="farmer-habs text" v-if="$store.state.farmer">{{ $store.state.farmer.habs | number }}</span>
 							&nbsp;<span class="hab text"></span>
 						</div>
 					</router-link>
@@ -42,7 +42,7 @@
 				<div class="button-wrapper">
 					<router-link to="/garden">
 						<div class="header-button fights-button">
-							<span class="farmer-fights text">{{ $store.state.farmer.fights | number }}</span>
+							<span class="farmer-fights text" v-if="$store.state.farmer">{{ $store.state.farmer.fights | number }}</span>
 							&nbsp;<img src="/image/icon/garden.png">
 						</div>
 					</router-link>
@@ -87,7 +87,7 @@
 				<div class="button-wrapper">
 					<router-link to="/farmer">
 						<div class="header-button">
-							<span class="farmer-name text">{{ $store.state.farmer.name }}</span>
+							<span class="farmer-name text" v-if="$store.state.farmer">{{ $store.state.farmer.name }}</span>
 							<avatar :farmer="$store.state.farmer" />
 						</div>
 					</router-link>

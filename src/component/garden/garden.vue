@@ -82,7 +82,7 @@
 								</div>
 							</template>
 							<template v-else>
-								<garden-farmer :farmer="$store.state.farmer" />
+								<garden-farmer v-if="$store.state.farmer" :farmer="$store.state.farmer" />
 								<div class="versus">VS</div>
 								<div v-if="challengeFights" class="enemies">
 									<loader v-if="!challengeFarmerTarget" />
@@ -122,7 +122,7 @@
 								</div>
 							</div>
 							<div v-if="category == 'farmer'">
-								<garden-farmer :farmer="$store.state.farmer" class="my-farmer" />
+								<garden-farmer v-if="$store.state.farmer" :farmer="$store.state.farmer" class="my-farmer" />
 								<div class="versus">VS</div>
 								<div v-if="garden.fights" class="enemies">
 									<loader v-if="!farmerOpponents" />
@@ -285,7 +285,9 @@
 			}
 			if (this.category) {
 				const category_underscore = this.category.replace('-', '_')
-				LeekWars.setTitle(this.$t('garden.garden_' + category_underscore), this.$t('garden.n_fights', [this.$store.state.farmer.fights]))
+				if (this.$store.state.farmer) {
+					LeekWars.setTitle(this.$t('garden.garden_' + category_underscore), this.$t('garden.n_fights', [this.$store.state.farmer.fights]))
+				}
 				LeekWars.splitShowContent()
 
 				if (this.category === 'solo') {

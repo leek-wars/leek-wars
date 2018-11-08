@@ -41,7 +41,7 @@ class Socket {
 	public queue: any[] = []
 
 	public connect() {
-		if (!store.getters.connected || this.connecting() || this.connected()) {
+		if (!store.state.farmer || this.connecting() || this.connected()) {
 			return
 		}
 		const url = 'wss://leekwars.com/ws'

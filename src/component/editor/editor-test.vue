@@ -302,6 +302,7 @@
 		}
 		get allScenarios() {
 			const all: {[key: string]: TestScenario} = {...this.scenarios}
+			if (!this.$store.state.farmer) { return all }
 			for (const l in this.$store.state.farmer.leeks) {
 				const leek = this.$store.state.farmer.leeks[l] as Leek
 				if (!(leek.id in this.leekAis)) { continue }
@@ -339,8 +340,10 @@
 
 		created() {
 			if (this.initialized) { return }
-			for (const l in this.$store.state.farmer.leeks) {
-				Vue.set(this.$store.state.farmer.leeks[l], 'real', true)
+			if (this.$store.state.farmer) {
+				for (const l in this.$store.state.farmer.leeks) {
+					Vue.set(this.$store.state.farmer.leeks[l], 'real', true)
+				}
 			}
 			LeekWars.get<any>('test-scenario/get-all/' + this.$store.state.token).then((data) => {
 				if (data.data.success) {

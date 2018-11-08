@@ -49,7 +49,7 @@
 							<span class="guillemet">»</span>
 							<span class="edit-pen"></span>
 						</div>
-						<center v-if="$store.getters.connected && !member && $store.state.farmer.team == null">
+						<center v-if="$store.state.farmer && !member && $store.state.farmer.team == null">
 							<div v-if="team.opened" class="button" @click="sendCandidacy">{{ $t('join_team') }}</div>
 							<div v-if="team.opened" class="button" @click="cancelCandidacy">{{ $t('cancel_candidacy') }}</div>
 							<i v-else>{{ $t('closed_team') }}</i>
@@ -297,7 +297,7 @@
 				<div v-if="member" class="tab" @click="quitTeamStart">{{ $t('quit_team') }}</div>
 				<div v-if="owner" class="tab" @click="changeOwnerStart">{{ $t('change_owner') }}</div>
 				<div v-if="owner" class="tab" @click="dissolveDialog = true">{{ $t('disolve_team') }}</div>
-				<div v-if="!member && $store.getters.connected">
+				<div v-if="!member && $store.state.connected">
 					<div class="report-button tab" @click="reportDialog = true">
 						<img src="/image/icon/flag.png">
 						<span>{{ $t('report') }}</span>
@@ -441,7 +441,7 @@
 
 		get max_level() { return this.team && this.team.level === 100 }
 		get xp_bar_width() { return this.team ? this.team.level === 100 ? 100 : Math.floor(100 * (this.team.xp - this.team.down_xp) / (this.team.up_xp - this.team.down_xp)) : 0 }
-		get member() { return !this.$route.params.id || (this.team && this.$store.getters.connected && this.$store.state.farmer.team !== null && this.team.id === this.$store.state.farmer.team.id) }
+		get member() { return !this.$route.params.id || (this.team && this.$store.state.farmer && this.$store.state.farmer.team !== null && this.team.id === this.$store.state.farmer.team.id) }
 		
 		created() {
 			this.update()
@@ -449,13 +449,13 @@
 		update() {
 			this.chatExpanded = localStorage.getItem('team/chat-expanded') === 'true'
 
-			const id = 'id' in this.$route.params ? parseInt(this.$route.params.id, 10) : (this.$store.getters.connected && this.$store.state.farmer.team !== null ? this.$store.state.farmer.team.id : null)
+			const id = 'id' in this.$route.params ? parseInt(this.$route.params.id, 10) : (this.$store.state.farmer && this.$store.state.farmer.team !== null ? this.$store.state.farmer.team.id : null)
 			if (id == null) {
 				this.$router.push('/')
 				return
 			}
 			let request = 'team/get/' + id
-			if (this.$store.getters.connected) {
+			if (this.$store.state.farmer) {
 				if (this.$store.state.farmer.team !== null && this.$store.state.farmer.team.id === id) {
 					request = 'team/get-private/' + id + '/' + this.$store.state.token
 				} else {

@@ -33,7 +33,7 @@
 								<td v-else-if="funRanking.value_type == 'money'">{{ farmer.value | number }} <span class="hab"></span></td>
 								<td v-else-if="funRanking.value_type == 'distance'">{{ farmer.value | number }}m</td>
 							</tr>
-							<tr v-if="$store.getters.connected && funRanking.ranking.farmer_rank > 10" class="me">
+							<tr v-if="$store.state.farmer && funRanking.ranking.farmer_rank > 10" class="me">
 								<td>{{ funRanking.ranking.farmer_rank }}</td>
 								<td>{{ $store.state.farmer.name }}</td>
 								<td v-if="funRanking.value_type == 'number'">{{ funRanking.ranking.farmer_value | number }}</td>
@@ -46,7 +46,7 @@
 				<div v-else>
 					<div class="center">
 						<pagination :current="page" :total="pages" :url="'/ranking/' + category + '/' + order" />
-						<div class="me-buttons center">
+						<div class="me-buttons center" v-if="$store.state.farmer">
 							<div v-if="category === 'leek'">
 								<div v-for="leek in $store.state.farmer.leeks" :key="leek.id" class="button" @click="goToMyRanking(leek.id)">{{ leek.name }}</div>
 							</div>
@@ -251,7 +251,7 @@
 					}
 					for (const row of ranking) {
 						if (this.category === 'leek') {
-							if (row.id in this.$store.state.farmer.leeks) {
+							if (this.$store.state.farmer && row.id in this.$store.state.farmer.leeks) {
 								row.me = 'me'
 							}
 						} else if (this.category === 'farmer') {

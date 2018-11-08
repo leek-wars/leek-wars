@@ -27,7 +27,7 @@
 						{{ $t('authorize_agressions') }}
 					</v-tooltip>
 				</template>
-				<template v-else-if="$store.getters.connected">
+				<template v-else-if="$store.state.connected">
 					<router-link v-if="leek" :to="'/garden/challenge/leek/' + leek.id">
 						<div :link="'/garden/challenge/' + leek.id" class="tab action">
 							<img src="/image/icon/garden.png"><span>{{ $t('challenge') }}</span>
@@ -330,7 +330,7 @@
 
 		<div class="page-footer page-bar">
 			<div class="tabs">
-				<template v-if="$store.getters.connected && !my_leek">
+				<template v-if="$store.state.connected && !my_leek">
 					<div class="tab" @click="reportDialog = true">
 						<img src="/image/icon/flag.png">
 						<span class="report-button">{{ $t('report') }}</span>
@@ -538,11 +538,11 @@
 		capitalDialog: boolean = false
 		
 		get id(): number {
-			return parseInt(this.$route.params.id, 10) || LeekWars.first(this.$store.state.farmer.leeks).id
+			return parseInt(this.$route.params.id, 10) || (this.$store.state.farmer && LeekWars.first(this.$store.state.farmer.leeks).id)
 		}
 		get my_leek(): boolean {
 			if (!this.$route.params.id) { return true }
-			if (this.$store.getters.connected) {
+			if (this.$store.state.farmer) {
 				for (const id in this.$store.state.farmer.leeks) {
 					if (parseInt(id, 10) === this.id) { return true }
 				}
@@ -611,15 +611,14 @@
 			return groupedFarmerHats
 		}
 
-		@Watch('$route.params.id') change() {
-			this.update()
-		}
 		created() {
 			this.showRegisters = localStorage.getItem('leek/show_registers') === 'true'
 			this.update()
 		}
+		@Watch('id')
 		update() {
 			this.leek = null
+			if (!this.id) { return }
 			const method = this.my_leek ? 'leek/get-private/' + this.id + '/' + this.$store.state.token : 'leek/get/' + this.id
 			LeekWars.get(method).then((data: any) => {
 				this.$data.leek = plainToClass(Leek, data.data.leek)
@@ -640,7 +639,7 @@
 					if (this.leek.level_seen < this.leek.level) {
 						this.showLevelPopup()
 					}
-					if (this.$store.getters.connected) {
+					if (this.$store.state.farmer) {
 						for (const ai of this.$store.state.farmer.ais) {
 							Vue.set(ai, 'dragging', false)
 						}

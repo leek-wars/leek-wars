@@ -33,13 +33,13 @@
 					</div>
 				</div>
 				<div v-else>
-					<router-link v-if="$store.getters.connected" :to="'/messages/new/' + farmer.id + '/' + farmer.name + '/' + farmer.avatar_changed">
+					<router-link v-if="$store.state.connected" :to="'/messages/new/' + farmer.id + '/' + farmer.name + '/' + farmer.avatar_changed">
 						<div :link="'/messages/new/' + farmer.id + '/' + farmer.name + '/' + farmer.avatar_changed" class="tab action">
 							<i class="material-icons">email</i>
 							<span>{{ $t('send_private_message') }}</span>
 						</div>
 					</router-link>
-					<router-link v-if="$store.getters.connected" :to="'/garden/challenge/farmer/' + farmer.id">
+					<router-link v-if="$store.state.connected" :to="'/garden/challenge/farmer/' + farmer.id">
 						<div :link="'/garden/challenge/farmer/' + farmer.id" class="tab action">
 							<img src="/image/icon/garden.png">
 							<span>{{ $t('challenge') }}</span>
@@ -328,7 +328,7 @@
 		
 		<div class="page-footer page-bar">
 			<div class="tabs">
-				<div v-if="farmer && $store.getters.connected && !myFarmer && !farmer.admin">
+				<div v-if="farmer && $store.state.connected && !myFarmer && !farmer.admin">
 					<div class="report-button tab" @click="reportDialog = true">
 						<img src="/image/icon/flag.png">
 						<span>{{ $t('report') }}</span>
@@ -426,7 +426,7 @@
 		githubDialog: boolean = false
 		newGitHub: string = ''
 		get myFarmer() {
-			return this.$store.getters.connected && this.farmer && this.farmer.id === this.$store.state.farmer.id
+			return this.$store.state.farmer && this.farmer && this.farmer.id === this.$store.state.farmer.id
 		}
 		get talent_gains() {
 			return this.farmer ? Math.round(this.farmer.talent_more / 3) : 0
@@ -437,7 +437,7 @@
 			if (this.farmer) {
 				this.farmer = null
 			}
-			if (this.$store.getters.connected && (!id || id === this.$store.state.farmer.id)) {
+			if (this.$store.state.farmer && (!id || id === this.$store.state.farmer.id)) {
 				this.init(this.$store.state.farmer)
 			} else {
 				LeekWars.get<any>('farmer/get/' + id).then((data) => {
