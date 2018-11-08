@@ -1,9 +1,11 @@
 <template lang="html">
 	<div>
-		<h1>
-			<router-link to="/bank">{{ $t('title') }}</router-link> > 
-			<span v-html="$t('purshase_title', [data.crystalCount, data.vendor])"></span>
-		</h1>
+		<div class="page-header page-bar">
+			<h1>
+				<router-link to="/bank">{{ $t('title') }}</router-link> > 
+				<span v-html="$t('purshase_title', [data.crystalCount, data.vendor])"></span>
+			</h1>
+		</div>
 		<div class="panel">
 			<div class="content">
 				<div v-if="data.vendor === 'StarPass'">
@@ -64,6 +66,7 @@
 				} else {
 					this.data = obj
 				}
+				LeekWars.setTitle(this.$t('bank.title'), this.$t('bank.purshase_title_text', [crystalCount, vendor]))
 			})
 		}
 		createStarPass() {
