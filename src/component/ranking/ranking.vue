@@ -14,7 +14,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="panel">
+		<div class="panel first last">
 			<div class="content">
 				<div v-if="category === 'fun'" class="fun-rankings">
 					<loader v-if="!rankings" />

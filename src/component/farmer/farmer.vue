@@ -51,7 +51,7 @@
 		</div>
 		<div class="flex-container">
 			<div class="column4">
-				<div class="panel">
+				<div class="panel first">
 					<div v-if="farmer" class="content avatar-td">
 						<div v-if="myFarmer">
 							<v-tooltip :open-delay="0" :close-delay="0" bottom>

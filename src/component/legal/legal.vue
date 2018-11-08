@@ -3,7 +3,7 @@
 		<div class="page-bar page-header">
 			<h1>{{ $t('title') }}</h1>
 		</div>
-		<div class="panel">
+		<div class="panel first last">
 			<div class="content">
 				<h2>{{ $t('host') }}</h2>
 				<p>
@@ -33,7 +33,7 @@
 	@Component({ name: 'legal', i18n: {} })
 	export default class Legal extends Vue {
 		created() {
-			LeekWars.setTitle(this.$t('title'))
+			LeekWars.setTitle(this.$t('legal.title'))
 		}
 	}
 </script>

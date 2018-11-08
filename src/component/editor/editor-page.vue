@@ -51,7 +51,7 @@
 
 		<div class="container">
 			<div v-show="!LeekWars.mobile || !LeekWars.splitBack" class="column3">
-				<div class="editor-left panel">
+				<div class="editor-left panel first">
 
 					<div class="content">
 

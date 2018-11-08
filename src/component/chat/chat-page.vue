@@ -26,7 +26,7 @@
 				</router-link>
 			</div>
 		</div>
-		<div class="panel">
+		<div class="panel first last">
 			<chat :chat="$store.state.chat[chatLanguage.code]" :channel="chatLanguage.code" />
 		</div>
 	</div>

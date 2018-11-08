@@ -8,7 +8,7 @@
 		</div>
 		<div class="flex-container">
 			<div class="column6">
-				<div class="panel">
+				<div class="panel first">
 					<div class="content">
 						<router-link to="/help/general">	
 							<h2>Leek Wars</h2>

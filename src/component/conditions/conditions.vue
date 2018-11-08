@@ -3,7 +3,7 @@
 		<div class="page-bar page-header">
 			<h1>{{ $t('title') }}</h1>
 		</div>
-		<div class="panel">
+		<div class="panel first last">
 			<div class="content">
 				<center>
 					<h4>{{ $t('version_n', [LeekWars.cgu_version]) }}</h4>
@@ -46,7 +46,7 @@
 	@Component({ name: "conditions", i18n: {} })
 	export default class Conditions extends Vue {
 		created() {
-			LeekWars.setTitle(this.$t('title'))
+			LeekWars.setTitle(this.$t('conditions.title'))
 		}
 	}
 </script>
@@ -57,11 +57,18 @@
 		margin-bottom: 15px;
 		margin-left: 20px;
 	}
+	#app.app h2 {
+		margin-left: 0;
+	}
 	p {
 		margin-bottom: 10px;
 		margin-left: 20px;
 		margin-right: 20px;
 		text-align: justify;
 		height: 100%;
+	}
+	#app.app p {
+		margin-left: 0;
+		margin-right: 0;
 	}
 </style>
