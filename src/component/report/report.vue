@@ -41,7 +41,7 @@
 						</div>
 					</div>
 				</div>
-				<center>
+				<center class="buttons">
 					<router-link :to="'/fight/' + fight.id">
 						<div class="button">{{ $t('rewatch_fight') }}</div>
 					</router-link>
@@ -63,7 +63,7 @@
 						<span v-else-if="fight.context == FightContext.CHALLENGE">
 							<router-link v-if="myFight" :to="'/garden/challenge/' + ['leek', 'farmer'][fight.type] + '/' + enemy">
 								<div v-if="iWin" class="button">{{ $t('refight') }}</div>
-								<div v-else class="button">{{ $t('take_revenge') }}</div>
+								<div v-else class="button" v-html="$t('take_revenge')"></div>
 							</router-link>
 						</span>
 					</span>
@@ -209,6 +209,7 @@
 					this.warningsErrors()
 				})
 				this.updateChart()
+				this.challenge()
 				LeekWars.setActions([{icon: 'undo', click: () => this.$router.push('/fight/' + id)}])
 				LeekWars.setTitle(this.$i18n.t('report.title') + " - " + this.fight.team1_name + " vs " + this.fight.team2_name)
 				this.$root.$emit('loaded')
@@ -472,5 +473,8 @@
 	.warnings-errors .title {
 		font-size: 18px;
 		margin-bottom: 5px;
+	}
+	.buttons .button {
+		margin: 0 4px;
 	}
 </style>
