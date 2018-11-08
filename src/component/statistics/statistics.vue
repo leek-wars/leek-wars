@@ -4,7 +4,7 @@
 			<div>
 				<h1>{{ $t('title') }}</h1>
 			</div>
-			<div class="tabs">
+			<div class="tabs" v-if="!LeekWars.mobile">
 				<div class="tab" @click="playing = !playing">
 					<i class="material-icons">{{ playing ? 'pause' : 'play_arrow' }}</i>
 					<span>{{ $t(playing ? 'pause' : 'play') }}</span>
@@ -71,6 +71,7 @@
 			startAngle: 90,
 			showLabel: true
 		}
+		actions = [{icon: 'play_arrow', click: () => this.toggleAction()}]
 		get chartFightType() {
 			const statistics = this.statistics[FIGHT_CATEGORY]
 			if (!statistics) { return {} }
@@ -121,6 +122,7 @@
 		created() {
 			LeekWars.get<any>('statistic/get-all').then((data) => {
 				LeekWars.setTitle(this.$i18n.t('statistics.title'))
+				LeekWars.setActions(this.actions)
 				this.statistics = data.data.statistics
 				this.statistics[3].operations.value *= 1000000
 				this.statistics[3].operations.speed *= 1000000
@@ -171,12 +173,16 @@
 				})
 			}, 500)
 		}
+		toggleAction() {
+			this.playing = !this.playing
+		}
 		@Watch('playing')
 		toggle() {
 			localStorage.setItem('statistics/play', '' + this.playing)
 			this.playing ? this.play() : this.pause()
 		}
 		play() {
+			this.actions[0].icon = 'pause'
 			this.interval = setInterval(() => {
 				for (const statistic of this.interpolated) {
 					statistic.value += statistic.speed
@@ -185,6 +191,7 @@
 			}, DELAY)
 		}
 		pause() {
+			this.actions[0].icon = 'play_arrow'
 			if (this.interval) { clearInterval(this.interval) }
 		}
 		getChartDamage() {
