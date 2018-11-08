@@ -16,17 +16,17 @@
 						</router-link>
 						<div class="right">
 							<router-link to="/farmer" @click.native="clickItem">
-								<div class="text farmer-name">{{ $store.state.farmer.name }}</div>
+								<div class="text farmer-name" v-if="$store.state.farmer">{{ $store.state.farmer.name }}</div>
 							</router-link>
 							<div class="moneys">
 								<div>
 									<router-link to="/market" @click.native="clickItem"><div>
-										<span class="hab text"></span><span class="farmer-habs">{{ $store.state.farmer.habs | number }}</span>
+										<span class="hab text"></span><span class="farmer-habs" v-if="$store.state.farmer">{{ $store.state.farmer.habs | number }}</span>
 									</div></router-link>
 								</div>
 								<div class="crystals">
 									<router-link to="/bank" @click.native="clickItem"><div>
-										<span class="crystal text"></span><span class="farmer-crystals">{{ $store.state.farmer.crystals | number }}</span>
+										<span class="crystal text"></span><span class="farmer-crystals" v-if="$store.state.farmer">{{ $store.state.farmer.crystals | number }}</span>
 									</div></router-link>
 								</div>
 							</div>
@@ -65,7 +65,7 @@
 				<div class="text">{{ $t("main.garden") }}
 					<span class="right">
 						<img src="/image/icon/garden.png">
-						<span class="farmer-fights">{{ $store.state.farmer.fights }}</span>
+						<span class="farmer-fights" v-if="$store.state.farmer">{{ $store.state.farmer.fights }}</span>
 					</span>
 				</div>
 			</router-link>
@@ -75,7 +75,7 @@
 				<div class="text">{{ $t("main.market") }}</div>
 			</router-link>
 		
-			<router-link v-ripple v-if="$store.state.farmer.team" to="/team" class="section" @click.native="clickItem">
+			<router-link v-ripple v-if="$store.state.farmer && $store.state.farmer.team" to="/team" class="section" @click.native="clickItem">
 				<img src="/image/icon/team.png">
 				<div class="text">{{ $t('main.team') }}</div>
 			</router-link>

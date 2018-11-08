@@ -12,6 +12,7 @@ import { vueMain } from './vue'
 class LeekWarsState {
 	public dev: boolean = true
 	public token: string | null = null
+	public connected: boolean = false
 	public farmer: Farmer | null = null
 	public chat: {[key: string]: Chat} = {}
 	public wsconnected: boolean = false
@@ -54,14 +55,18 @@ Vue.use(Vuex)
 const store: Store<LeekWarsState> = new Vuex.Store({
 	state: new LeekWarsState(),
 	getters: {
-		connected: (state: LeekWarsState) => state.farmer !== null,
 		moderator: (state: LeekWarsState) => state.farmer && state.farmer.moderator,
 		admin: (state: LeekWarsState) => state.farmer && state.farmer.admin,
 	},
 	mutations: {
+		"connected"(state: LeekWarsState, token: string) {
+			state.connected = true
+			state.token = token
+		},
 		"connect"(state: LeekWarsState, data: {farmer: Farmer, token: string}) {
 			state.farmer = data.farmer
 			state.token = data.token
+			state.connected = true
 			localStorage.setItem('connected', 'true')
 			localStorage.setItem('token', data.token)
 			loadNotifications(state)
@@ -70,6 +75,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 		},
 		"disconnect"(state: LeekWarsState) {
 			LeekWars.post('farmer/disconnect')
+			state.connected = false
 			localStorage.removeItem('connected')
 			localStorage.removeItem('token')
 			state.token = null
