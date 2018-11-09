@@ -16,6 +16,7 @@ import Loader from '@/component/loader.vue'
 import ConversationElement from '@/component/messages/conversation.vue'
 import ReportDialog from '@/component/moderation/report-dialog.vue'
 import NotificationElement from '@/component/notification/notification.vue'
+import NotFound from '@/component/app/not-found.vue'
 import Pagination from '@/component/pagination.vue'
 import Talent from '@/component/talent.vue'
 import { i18n, loadInstanceTranslations, loadLanguageAsync } from '@/model/i18n'
@@ -87,6 +88,7 @@ Vue.component('notification', NotificationElement)
 Vue.component('lw-code', Code)
 Vue.component('conversation', ConversationElement)
 Vue.component('ai', AIElement)
+Vue.component('not-found', NotFound)
 
 Vue.directive('autostopscroll', {
 	inserted: (el, binding) => {
