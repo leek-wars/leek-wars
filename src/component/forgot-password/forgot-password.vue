@@ -75,7 +75,7 @@
 		submitForm() {
 			LeekWars.post('farmer/forgot-password', {email: this.email}).then((data) => {
 				if (data.success) {
-					LeekWars.toast(this.$i18n.t('forgot_password.mail_sent', [this.email]))
+					LeekWars.toast(this.$i18n.t('forgot_password.mail_sent', {email: this.email}))
 					this.$router.push('/forgot-password/email-sent/' + this.email)
 				} else {
 					LeekWars.toast(data.error)
