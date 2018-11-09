@@ -758,6 +758,7 @@
 
 			setTimeout(() => {
 				const chartElement = this.$refs.chart
+				if (!chartElement) { return }
 				const chartTooltip = this.$refs.chartTooltip as HTMLElement
 				;(chartElement as any).$el.querySelectorAll('.ct-point').forEach((point: any) => {
 					point.addEventListener('mouseenter', (e: Event) => {
