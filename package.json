@@ -24,7 +24,6 @@
 		"vue": "2.5.15",
 		"vue-chartist": "^2.1.2",
 		"vue-class-component": "^6.0.0",
-		"vue-github-buttons": "^2.1.1",
 		"vue-i18n": "^8.0.0",
 		"vue-property-decorator": "^7.0.0",
 		"vue-router": "^3.0.1",

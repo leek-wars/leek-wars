@@ -5,10 +5,6 @@ declare module '*.vue' {
 
 declare var ga: Function;
 
-declare module 'vue-github-buttons' {
-	var VueGitHubButtons: any
-	export = VueGitHubButtons
-}
 declare module 'vue-chartist' {
 	var Chartist: any
 	export = Chartist
