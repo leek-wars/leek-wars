@@ -1,5 +1,8 @@
 <template lang="html">
-	<div>
+	<not-found v-if="notfound" title="Unknown farmer" />
+	<not-found v-else-if="farmer && farmer.banned" :title="$t('banned')" :message="$t('banned_message')" />
+	<not-found v-else-if="farmer && farmer.deleted" :title="$t('deleted')" :message="$t('deleted_message')" />
+	<div v-else>
 		<div class="page-header page-bar">
 			<div>
 				<h1>{{ farmer ? farmer.name : '...' }}</h1>
@@ -425,6 +428,7 @@
 		newWebsite: string = ''
 		githubDialog: boolean = false
 		newGitHub: string = ''
+		notfound: boolean = false
 		get myFarmer() {
 			return this.$store.state.farmer && this.farmer && this.farmer.id === this.$store.state.farmer.id
 		}
@@ -434,9 +438,8 @@
 		@Watch('$route.params', {immediate: true})
 		update() {
 			const id = this.$route.params.id
-			if (this.farmer) {
-				this.farmer = null
-			}
+			this.farmer = null
+			this.notfound = false
 			if (this.$store.state.farmer && (!id || id === this.$store.state.farmer.id)) {
 				this.init(this.$store.state.farmer)
 			} else {
@@ -444,20 +447,14 @@
 					if (data.success) {
 						this.init(data.farmer)
 					} else {
-						// LeekWars.error('Unknown farmer!')
-						return
+						this.notfound = true
 					}
 				})
 			}
 		}
 		init(farmer: Farmer) {
 			this.farmer = farmer
-			if (this.farmer.banned) {
-				// LeekWars.error(_.lang.get('farmer', 'banned'), _.lang.get('farmer', 'banned_message'))
-				return
-			}
-			if (this.farmer.deleted) {
-				// LeekWars.error(_.lang.get('farmer', 'deleted'), _.lang.get('farmer', 'deleted_message'))
+			if (this.farmer.banned || this.farmer.deleted) {
 				return
 			}
 			LeekWars.setTitle(farmer.name, this.$t('farmer.n_trophies', [farmer.trophies]) as string)
