@@ -441,8 +441,8 @@
 				this.init(this.$store.state.farmer)
 			} else {
 				LeekWars.get<any>('farmer/get/' + id).then((data) => {
-					if (data.data.success) {
-						this.init(data.data.farmer)
+					if (data.success) {
+						this.init(data.farmer)
 					} else {
 						// LeekWars.error('Unknown farmer!')
 						return
@@ -502,21 +502,21 @@
 			LeekWars.get<any>('trophy/get-farmer-trophies/' + this.farmer.id + '/' + this.$i18n.locale + '/' + this.$store.state.token).then((data) => {
 				const list: any[] = []
 				const bonus: any[] = []
-				for (const t in data.data.trophies) {
-					if (data.data.trophies[t] != null && data.data.trophies[t].unlocked) {
-						if (data.data.trophies[t].category === 6) {
-							bonus.push(data.data.trophies[t])
-							data.data.trophies[t] = null
+				for (const t in data.trophies) {
+					if (data.trophies[t] != null && data.trophies[t].unlocked) {
+						if (data.trophies[t].category === 6) {
+							bonus.push(data.trophies[t])
+							data.trophies[t] = null
 						} else {
-							list.push(data.data.trophies[t])
+							list.push(data.trophies[t])
 						}
 					} else {
-						data.data.trophies[t] = null
+						data.trophies[t] = null
 					}
 				}
 				list.sort((t1, t2) => t1.date - t2.date)
 				this.trophies_list = list
-				this.trophies_grid = data.data.trophies
+				this.trophies_grid = data.trophies
 				this.bonus_trophies = bonus
 			})
 		}
@@ -564,44 +564,44 @@
 			LeekWars.toast(this.$t('farmer.uploading_avatar') as string)
 
 			LeekWars.post('farmer/set-avatar', formdata).then((data) => {
-				if (data.data.success) {
+				if (data.success) {
 					if (this.farmer) {
 						LeekWars.toast(this.$t('farmer.upload_success') as string)
-						this.farmer.avatar_changed = data.data.avatar_changed
+						this.farmer.avatar_changed = data.avatar_changed
 					}
 				} else {
-					LeekWars.toast(this.$t('farmer.upload_failed', [data.data.error]) as string)
+					LeekWars.toast(this.$t('farmer.upload_failed', [data.error]) as string)
 				}
 			})
 		}
 		warnings() {
 			if (!this.farmer) { return }
 			LeekWars.get<any>('moderation/get-warnings/' + this.farmer.id + '/' + store.state.token).then((data) => {
-				if (data.data.success && this.farmer) {
-					this.farmer.warnings = data.data.warnings
+				if (data.success && this.farmer) {
+					this.farmer.warnings = data.warnings
 				}
 			})
 		}
 		createTeam() {
 			LeekWars.post('team/create', {team_name: this.createTeamName}).then((data) => {
-				if (data.data.success) {
+				if (data.success) {
 					LeekWars.toast(this.$i18n.t('farmer.team_created'))
 					// TODO reload
 					this.createTeamDialog = false
 				} else {
-					LeekWars.toast(this.$i18n.t('farmer.' + data.data.error))
+					LeekWars.toast(this.$i18n.t('farmer.' + data.error))
 				}
 			})
 		}
 		cancelCandidacy() {
 			LeekWars.post('team/cancel-candidacy', {}).then((data) => {
-				if (data.data.success) {
+				if (data.success) {
 					if (this.farmer) {
 						LeekWars.toast(this.$i18n.t('farmer.candidacy_canceled'))
 						this.farmer.candidacy = null
 					}
 				} else {
-					LeekWars.toast(data.data.error)
+					LeekWars.toast(data.error)
 				}
 			})
 		}

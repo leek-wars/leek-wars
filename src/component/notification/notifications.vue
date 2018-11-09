@@ -27,7 +27,7 @@
 		created() {
 			LeekWars.get<any>('notification/get-latest/500/' + this.$store.state.token).then((data) => {
 				this.notifications = []
-				for (const notification of data.data.notifications) {
+				for (const notification of data.notifications) {
 					this.notifications.push(Notification.build(notification))
 				}
 				LeekWars.setTitle(this.$t('title'))

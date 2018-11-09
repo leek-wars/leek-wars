@@ -42,7 +42,7 @@
 			this.pack = parseInt(this.$route.params.pack, 10)
 			this.offer = parseInt(this.$route.params.offer, 10)
 			LeekWars.get('bank/get-packs').then((data: any) => {
-				const pack = data.data.packs[this.pack]
+				const pack = data.packs[this.pack]
 				const offer = pack.offers[this.offer]
 				const vendor = offer.vendor
 				const crystalCount = pack.crystals
@@ -56,11 +56,11 @@
 				if (vendor === 'StarPass') {
 					obj.id = LeekWars.local ? offer.id[1] : offer.id[0]
 					LeekWars.post('bank/begin-starpass-payment', {pack_id: this.pack, offer_id: this.offer}).then(() => {
-						if (data.data.success) {
+						if (data.success) {
 							this.data = obj
 							setTimeout(() => this.createStarPass())
 						} else {
-							LeekWars.toast(data.data.error)
+							LeekWars.toast(data.error)
 						}
 					})
 				} else {
@@ -82,8 +82,8 @@
 		clickPayPal() {
 			this.loading = true
 			LeekWars.post('bank/begin-paypal-payment', {pack_id: this.pack, offer_id: this.offer}).then((data: any) => {
-				if (data.data.success) {
-					window.location.href = data.data.url
+				if (data.success) {
+					window.location.href = data.url
 				}
 			})
 		}

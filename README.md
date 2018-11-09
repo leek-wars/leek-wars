@@ -27,7 +27,6 @@ I gladly accept pull requests to Leek Wars. Before starting work on a feature, s
 
 - Vue.js https://github.com/vuejs/vue
 - Vuex https://github.com/vuejs/vuex
-- Axios https://github.com/axios/axios
 - CodeMirror https://github.com/codemirror/codemirror
 - Chartist https://github.com/gionkunz/chartist-js
 - Twemoji https://github.com/twitter/twemoji

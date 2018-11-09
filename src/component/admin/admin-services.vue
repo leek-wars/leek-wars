@@ -37,7 +37,7 @@
 		created() {
 			LeekWars.setTitle("Services")
 			LeekWars.get<any>('service/get-all-admin/' + this.$store.state.token + '/' + encodeURI(this.$store.state.supertoken)).then((data) => {
-				this.services = data.data.services
+				this.services = data.services
 			})
 		}
 	}

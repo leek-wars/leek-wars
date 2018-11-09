@@ -139,12 +139,12 @@
 			this.forumLanguage = LeekWars.languages[lang]
 			this.chatLanguage = LeekWars.languages[this.$i18n.locale]
 			LeekWars.get<any>('forum/get-categories/' + this.forumLanguage.code + '/' + this.$store.state.token).then((data) => {
-				this.categories = data.data.categories
+				this.categories = data.categories
 				this.$root.$emit('loaded')
 			})
 			LeekWars.get<any>('farmer/get-connected').then((data: any) => {
-				this.connected_farmers = data.data.farmers
-				LeekWars.setSubTitle(this.$t('forum.connected_farmers_subtitle', [data.data.count]))
+				this.connected_farmers = data.farmers
+				LeekWars.setSubTitle(this.$t('forum.connected_farmers_subtitle', [data.count]))
 			})
 			LeekWars.setTitle(this.$t('forum.title'))
 			LeekWars.setActions([
@@ -157,7 +157,7 @@
 			this.categories = null
 			localStorage.setItem('forum/language', language.code)
 			LeekWars.get<any>('forum/get-categories/' + language.code + '/' + this.$store.state.token).then((data) => {
-				this.categories = data.data.categories
+				this.categories = data.categories
 			})
 		}
 		search() {

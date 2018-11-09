@@ -121,12 +121,12 @@
 
 		created() {
 			LeekWars.get<ModerationRequest>('moderation/get-reportings/' + this.$store.state.token).then((data) => {
-				this.faults = data.data.faults
-				this.thugs = data.data.thugs
+				this.faults = data.faults
+				this.thugs = data.thugs
 				for (const fault of this.faults) {
 					this.faultsById[fault.id] = fault
 				}
-				LeekWars.setTitle(this.$t('moderation.title'), data.data.faults.length + ' signalements')
+				LeekWars.setTitle(this.$t('moderation.title'), data.faults.length + ' signalements')
 				this.update()
 			})
 			this.$root.$on('back', () => {
@@ -165,10 +165,10 @@
 		archiveReporting() {
 			if (!this.selectedFault) { return }
 			LeekWars.post('moderation/archive', {target: this.selectedFault.target, reason: this.selectedFault.reason, parameter: this.selectedFault.parameter}).then((data) => {
-				if (data.data.success) {
+				if (data.success) {
 					LeekWars.toast(this.$t('moderation.reporting_deleted') as string)
 				} else {
-					LeekWars.toast(data.data.error)
+					LeekWars.toast(data.error)
 				}
 			})
 		}
@@ -177,13 +177,13 @@
 			// var severity = parseInt($('#warning-severity').val())
 			// var message = $('#warning-message').val()
 			LeekWars.post('moderation/warn', {target: this.selectedFault.target, reason: this.selectedFault.reason, message: this.message, severity: this.severity, parameter: this.selectedFault.parameter}).then((data) => {
-				if (data.data.success) {
+				if (data.success) {
 					LeekWars.toast(i18n.t('moderation.warning_sent') as string)
 					// $('.fault.selected').remove()
 					// $('.fault').first().click()
 					// popup.dismiss()
 				} else {
-					LeekWars.toast(data.data.error)
+					LeekWars.toast(data.error)
 				}
 			})
 		}

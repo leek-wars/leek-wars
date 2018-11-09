@@ -40,7 +40,7 @@
 		loading: boolean = true
 		created() {
 			LeekWars.get<any>('leek/get-next-price/' + this.$store.state.token).then((data) => {
-				this.price = data.data.price
+				this.price = data.price
 				this.leekCount = LeekWars.objectSize(this.$store.state.farmer.leeks)
 				LeekWars.setTitle(this.$t('title'))
 				this.loading = false
@@ -48,10 +48,10 @@
 		}
 		createLeek() {
 			LeekWars.post('leek/create', {name: this.leekName}).then((data) => {
-				if (data.data.success) {
-					this.$router.push('/leek/' + data.data.id)
+				if (data.success) {
+					this.$router.push('/leek/' + data.id)
 				} else {
-					this.error = this.$t(data.data.error, data.data.params) as string
+					this.error = this.$t(data.error, data.params) as string
 				}
 			})
 		}

@@ -114,7 +114,7 @@
 			// 	console.log("Local fight: ", local_fight)
 			// 	callback({success: true, fight: local_fight})
 			// } else {
-			// 	LeekWars.get('fight/get/' + id).then(data => callback(data.data))
+			// 	LeekWars.get('fight/get/' + id).then(data => callback(data))
 			// }
 		}
 
@@ -153,7 +153,7 @@
 		comment(comment: Comment) {
 			if (this.fight) {
 				LeekWars.post('fight/comment', {fight_id: this.fight.id, comment: comment.comment}).then((data) => {
-					if (data.data.success && this.fight) {
+					if (data.success && this.fight) {
 						this.fight.comments.push(comment)
 					}
 				})

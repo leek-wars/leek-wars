@@ -31,18 +31,18 @@
 		enter() {
 			const code = this.code
 			LeekWars.post('leekscript/execute', {code}).then((data) => {
-				if (data.data.success) {
+				if (data.success) {
 					this.lines.push({type: 'code', code})
-					if (!data.data.result) {
+					if (!data.result) {
 						this.lines.push({type: 'error'})
 					} else {
-						const json = JSON.parse(data.data.result)
+						const json = JSON.parse(data.result)
 						const time = json.ops + ' op' + (json.ops > 1 ? 's' : '') + ' | ' + Math.round(json.time / 1000) / 1000 + 'ms'
 						this.lines.push({type: 'result', result: json.res, time})
 					}
 					this.scrollDown()
 				} else {
-					LeekWars.toast(data.data.error)
+					LeekWars.toast(data.error)
 				}
 				this.code = ''
 			})
@@ -57,10 +57,10 @@
 		}
 		random() {
 			LeekWars.get<any>('leekscript/random').then((data) => {
-				if (data.data.success) {
-					this.code = data.data.code
+				if (data.success) {
+					this.code = data.code
 				} else {
-					LeekWars.toast(data.data.error)
+					LeekWars.toast(data.error)
 				}
 			})
 		}

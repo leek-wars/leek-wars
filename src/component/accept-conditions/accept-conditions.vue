@@ -25,10 +25,10 @@
 	export default class AcceptConditions extends Vue {
 		accept() {
 			LeekWars.post('farmer/accept-terms', {}).then((data: any) => {
-				if (data.data.success) {
+				if (data.success) {
 					this.$router.push('/')
 				} else {
-					LeekWars.toast("Error: " + data.data.error)
+					LeekWars.toast("Error: " + data.error)
 				}
 			})
 		}

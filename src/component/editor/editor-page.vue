@@ -236,16 +236,16 @@
 			
 			LeekWars.get('ai/get-farmer-ais/' + this.$store.state.token).then((data: any) => {
 				const folders: {[key: number]: any} = {}
-				for (const folder of data.data.folders) {
+				for (const folder of data.folders) {
 					folders[folder.id] = folder
 					this.items[folder.name] = folder
 				}
-				for (const ai of data.data.ais) {
+				for (const ai of data.ais) {
 					Vue.set(this.ais, ai.id, ai)
 					Vue.set(ai, 'modified', false)
 					this.items[ai.name] = ai
 				}
-				this.leekAIs = data.data.leek_ais
+				this.leekAIs = data.leek_ais
 				const buildFolder = (id: number, parent: Folder): Folder => {
 					const folder = new Folder(id, id in folders ? folders[id].name : '<root>', parent)
 					if (id === 0) {
@@ -253,10 +253,10 @@
 					} else {
 						folder.expanded = localStorage.getItem('editor/folder/' + id) === 'true'
 					}
-					folder.items = data.data.folders
+					folder.items = data.folders
 						.filter((f: any) => f.folder === id)
 						.map((f: any) => buildFolder(f.id, folder))
-					folder.items.push(...(data.data.ais
+					folder.items.push(...(data.ais
 						.filter((ai: any) => ai.folder === id)
 						.map((ai: any) => new AIItem(ai, folder))
 					))
@@ -264,11 +264,11 @@
 					return folder
 				}
 				this.rootFolder = buildFolder(0, this.rootFolder as Folder)
-				for (const ai of data.data.ais) {
+				for (const ai of data.ais) {
 					ai.path = this.getAIFullPath(ai)
 				}
 				this.update()
-				LeekWars.setTitle(this.$t('editor.title'), this.$t('editor.n_ais', [LeekWars.objectSize(data.data.ais)]))
+				LeekWars.setTitle(this.$t('editor.title'), this.$t('editor.n_ais', [LeekWars.objectSize(data.ais)]))
 			})
 		}
 		mounted() {
@@ -395,7 +395,7 @@
 				if (this.currentEditor === null) { return }
 				this.currentEditor.saving = false
 				if (this.currentEditor.ai.v2) {
-					const errors = data.data.result
+					const errors = data.result
 					if (this.currentEditor.overlay) {
 						this.currentEditor.editor.removeOverlay(this.currentEditor.overlay)
 					}
@@ -408,12 +408,12 @@
 						this.currentEditor.addErrorOverlay(errors)
 					}
 				} else {
-					if (!data.data.success || !data.data.result || data.data.result.length === 0) {
+					if (!data.success || !data.result || data.result.length === 0) {
 						this.currentEditor.serverError = true
 						return
 					}
 					this.errors = []
-					for (const res of data.data.result) {
+					for (const res of data.result) {
 						const code = res[0]
 						const ai = this.activeAIs[res[1]]
 						const editor = (this.$refs.editors as AIView[]).find(e => e.ai === ai)
@@ -451,8 +451,8 @@
 		newAI(v2: boolean) {
 			if (!this.currentFolder) { return }
 			LeekWars.post('ai/new', {folder_id: this.currentFolder.id, v2}).then((data) => {
-				if (data.data.success && this.currentFolder) {
-					const ai = data.data.ai
+				if (data.success && this.currentFolder) {
+					const ai = data.ai
 					ai.valid = true
 					ai.v2 = v2
 					this.currentFolder.items.push(new AIItem(ai, this.currentFolder))
@@ -465,8 +465,8 @@
 		newFolder() {
 			if (!this.currentFolder) { return }
 			LeekWars.post('ai-folder/new', {folder_id: this.currentFolder.id}).then((data) => {
-				if (data.data.success && this.currentFolder) {
-					const folder = new Folder(data.data.id, this.$t('editor.new_folder') as string, this.currentFolder)
+				if (data.success && this.currentFolder) {
+					const folder = new Folder(data.id, this.$t('editor.new_folder') as string, this.currentFolder)
 					folder.items = []
 					this.folderById[folder.id] = folder
 					this.currentFolder.items.push(folder)
@@ -480,7 +480,7 @@
 			const url = this.currentType === 'folder' ? 'ai-folder/delete' : 'ai/delete'
 			const args = this.currentType === 'folder' ? {folder_id: this.currentID} : {ai_id: this.currentID}
 			LeekWars.post(url, args).then((data) => {
-				if (data.data.success) {
+				if (data.success) {
 					let ai_deleted = false
 					if (this.currentType === 'ai' && this.currentAI) {
 						const folder = this.folderById[this.currentAI.folder]
@@ -501,7 +501,7 @@
 					}
 					this.deleteDialog = false
 				} else {
-					LeekWars.toast(data.data.error)
+					LeekWars.toast(data.error)
 				}
 			})
 		}

@@ -36,7 +36,7 @@
 		farmers: any = null
 		created() {
 			LeekWars.get<any>('farmer/get-waiting-farmers/' + this.$store.state.token + '/' + encodeURI(this.$store.state.supertoken)).then((data) => {
-				this.farmers = data.data.farmers
+				this.farmers = data.farmers
 			})
 			LeekWars.setTitle("Admin activation mails")
 		}

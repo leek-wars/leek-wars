@@ -216,12 +216,12 @@
 			if (this.category === 'fun') {
 				this.rankings = null
 				LeekWars.get<any>('ranking/fun/' + this.$store.state.token).then((data) => {
-					for (const row of data.data.rankings) {
+					for (const row of data.rankings) {
 						row.ranking.ranking[0].style = 'first'
 						row.ranking.ranking[1].style = 'second'
 						row.ranking.ranking[2].style = 'third'
 					}
-					for (const category of data.data.rankings) {
+					for (const category of data.rankings) {
 						for (const row of category.ranking.ranking as Ranking) {
 							if (row.id === this.$store.state.farmer.id) {
 								row.me = 'me'
@@ -229,7 +229,7 @@
 						}
 					}
 					this.fun = true
-					this.rankings = data.data.rankings
+					this.rankings = data.rankings
 					this.ranking = []
 					LeekWars.setTitle(this.$t('ranking.title'), this.$t('ranking.fun'))
 					this.$root.$emit('loaded')
@@ -239,11 +239,11 @@
 				this.page = 'page' in this.$route.params ? parseInt(this.$route.params.page, 10) : 1
 
 				LeekWars.get<any>('ranking/get/' + this.category + '/' + this.order + '/' + this.page).then((data) => {
-					if (!data.data.success) {
+					if (!data.success) {
 						// LW.error()
 						return
 					}
-					const ranking = data.data.ranking as Ranking
+					const ranking = data.ranking as Ranking
 					if (this.page === 1) {
 						ranking[0].style = 'first'
 						ranking[1].style = 'second'
@@ -265,10 +265,10 @@
 						}
 					}
 					this.fun = false
-					this.pages = data.data.pages
+					this.pages = data.pages
 					this.ranking = ranking
 					LeekWars.setActions([{icon: 'search', click: () => this.openSearch()}])
-					LeekWars.setTitle(this.$t('ranking.title'), this.$t('ranking.n_' + this.category + 's', [data.data.total]))
+					LeekWars.setTitle(this.$t('ranking.title'), this.$t('ranking.n_' + this.category + 's', [data.total]))
 					this.$root.$emit('loaded')
 				})
 			}
@@ -283,8 +283,8 @@
 				url = 'ranking/get-team-rank/' + this.$store.state.farmer.team.id + '/' + this.order
 			}
 			LeekWars.get<any>(url).then((data) => {
-				if (data.data.success) {
-					const page = 1 + Math.floor((data.data.rank - 1) / 50)
+				if (data.success) {
+					const page = 1 + Math.floor((data.rank - 1) / 50)
 					this.$router.push('/ranking/' + this.category + '/' + this.order + '/page-' + page)
 				}
 			})
@@ -301,7 +301,7 @@
 				this.searchResults = []
 			} else {
 				LeekWars.post('ranking/search', {query: this.searchQuery, search_leeks: this.searchLeeks, search_farmers: this.searchFarmers, search_teams: this.searchTeams}).then((data) => {
-					this.searchResults = data.data.results
+					this.searchResults = data.results
 				})
 			}
 		}

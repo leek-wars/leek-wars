@@ -11,9 +11,7 @@ import { Squares } from '@/model/squares'
 import { store } from '@/model/store'
 import { vueMain } from '@/model/vue'
 import { WeaponTemplate } from '@/model/weapon'
-import axios from 'axios'
 import CodeMirror from 'codemirror'
-import qs from 'qs'
 import twemoji from 'twemoji'
 import { TranslateResult } from 'vue-i18n'
 import { i18n, loadLanguageAsync } from './i18n'
@@ -32,17 +30,30 @@ function ucfirst(str: any) {
 	return f + str.substr(1)
 }
 
+function request<T = any>(method: string, url: string, params?: any) {
+	return new Promise<T>((resolve, reject) => {
+		const xhr = new XMLHttpRequest()
+		xhr.open(method, url)
+		xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8')
+		xhr.onload = (e: any) => resolve(JSON.parse(e.target.response))
+		xhr.onerror = reject
+		xhr.send(params)
+	})
+}
+
 function post(url: any, form: any = {}) {
 	if (form instanceof FormData) {
 		form.append('token', store.state.token as string)
 	} else {
 		if (!form.token) { form.token = store.state.token }
-		form = qs.stringify(form)
+		const f = []
+		for (const k in form) { f.push(k + '=' + encodeURIComponent(form[k])) }
+		form = f.join('&')
 	}
-	return axios.post('https://leekwars.com/api/' + url, form)
+	return request('POST', 'https://leekwars.com/api/' + url, form)
 }
 function get<T>(url: any) {
-	return axios.get<T>('https://leekwars.com/api/' + url)
+	return request<T>('GET', 'https://leekwars.com/api/' + url)
 }
 
 enum EFFECT_TYPES {
@@ -132,9 +143,9 @@ const LeekWars = {
 			return callback({ width: parseInt(data[0], 10), height: parseInt(data[1], 10) })
 		}
 		this.post('util/get-image-size', { image }).then((data: any) => {
-			if (data.data.success) {
-				localStorage.setItem('imagesize/' + image, data.data.width + ',' + data.data.height)
-				callback({ width: data.data.width, height: data.data.height })
+			if (data.success) {
+				localStorage.setItem('imagesize/' + image, data.width + ',' + data.height)
+				callback({ width: data.width, height: data.height })
 			} else {
 				callback(null)
 			}
@@ -271,7 +282,7 @@ const LeekWars = {
 		if (LeekWars._countries === null) {
 			LeekWars._countries = []
 			get<any>('country/get-all').then((data) => {
-				LeekWars._countries = data.data.countries
+				LeekWars._countries = data.countries
 			})
 		}
 		return LeekWars._countries

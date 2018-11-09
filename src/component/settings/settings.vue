@@ -232,7 +232,7 @@
 				this.notifsResults = localStorage.getItem('options/notifs-results') === 'true'
 				this.chatFirst = localStorage.getItem('options/chat-first') === 'true'
 				
-				this.settings = data.data.settings
+				this.settings = data.settings
 
 				LeekWars.setTitle(this.$t('title'), this.$store.state.farmer.name)
 
@@ -241,9 +241,9 @@
 					// Check the push notifs switch if we have a valid subscription
 					LeekWars.service_worker.pushManager.getSubscription().then((subscription: PushSubscription) => {
 						if (subscription) {
-							// console.log(subscription, data.data.endpoints)
-							for (const e in data.data.endpoints) {
-								if (subscription.endpoint === data.data.endpoints[e]) {
+							// console.log(subscription, data.endpoints)
+							for (const e in data.endpoints) {
+								if (subscription.endpoint === data.endpoints[e]) {
 									this.pushNotifications = true
 									break
 								}
@@ -308,12 +308,12 @@
 				return false
 			}
 			LeekWars.post('farmer/change-password', {password: this.password, new_password: this.newPassword1}).then((data) => {
-				if (data.data.success) {
+				if (data.success) {
 					this.$store.commit('disconnect')
 					LeekWars.toast(this.$i18n.t('settings.password_changed'))
 					this.$router.push('/login')
 				} else {
-					LeekWars.toast(this.$i18n.t('farmer.error_' + data.data.error, data.data.params))
+					LeekWars.toast(this.$i18n.t('farmer.error_' + data.error, data.params))
 				}
 			})
 			return false
@@ -326,7 +326,7 @@
 		deleteAccountFinal() {
 			LeekWars.post('farmer/unregister', {password: this.deleteConfirmPassword, delete_forum_messages: this.deleteForumMessages}).then((data) => {
 				this.deleteConfirmDialog = false
-				if (data.data.success) {
+				if (data.success) {
 					this.deleteSuccessDialog = true
 					setTimeout(() => {
 						this.$store.commit('disconnect')
@@ -335,7 +335,7 @@
 					}, 3000)
 				} else {
 					this.deleteFailedDialog = true
-					this.deleteFailedError = data.data.error
+					this.deleteFailedError = data.error
 				}
 			})
 		}

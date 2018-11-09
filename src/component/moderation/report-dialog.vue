@@ -47,11 +47,11 @@
 			const target = (this.target instanceof Function) ? this.target(this.selectedReason) : this.target
 			const parameter = this.parameter || ''
 			LeekWars.post('moderation/report', {target, reason: this.selectedReason, message: this.additionalMessage, parameter}).then((data) => {
-				if (data.data.success) {
+				if (data.success) {
 					LeekWars.toast(i18n.t('moderation.thank_you_for_reporting') as string)
 					this.close()
 				} else {
-					LeekWars.toast(data.data.error)
+					LeekWars.toast(data.error)
 				}
 			})
 		}

@@ -76,16 +76,16 @@
 		created() {
 			const id = this.$route.params.id
 			LeekWars.get<any>('history/get-' + this.type + '-history/' + id).then((data) => {
-				if (data.data.success === false) {
+				if (data.success === false) {
 					// LW.error(
 					// 	_.lang.get('history', 'not_found_id', [id]),
 					// 	_.lang.get('history', 'not_found_id', [id])
 					// )
 					return
 				}
-				this.fights = data.data.fights
-				this.entity = data.data.entity
-				LeekWars.setTitle(this.$t('history.title', [data.data.entity.name]))
+				this.fights = data.fights
+				this.entity = data.entity
+				LeekWars.setTitle(this.$t('history.title', [data.entity.name]))
 				this.select_period('1week')
 			})
 		}
