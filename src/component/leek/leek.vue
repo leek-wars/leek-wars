@@ -1,5 +1,6 @@
 <template lang="html">
-	<div>
+	<not-found v-if="error" :title="$t('not_found')" :message="$t('not_found_id', [id])" />
+	<div v-else>
 		<div class="page-header page-bar">
 			<h1 v-if="leek">{{ leek.name }}</h1>
 			<h1 v-else>...</h1>
@@ -10,7 +11,7 @@
 							<div class="tab green">{{ $t('see_tournament') }}</div>
 						</router-link>
 					</template>
-					<v-tooltip :open-delay="0" :close-delay="0" bottom>
+					<v-tooltip :open-delay="0" :close-delay="0" bottom v-if="leek.tournament">
 						<div slot="activator" class="tab" @click="registerTournament">
 							<img src="/image/icon/trophy.png">
 							<span v-if="!leek.tournament.registered" class="register">{{ $t('register_to_tournament') }}</span>
@@ -507,6 +508,7 @@
 	@Component({ name: "leek", i18n: {}, components: { CapitalDialog, LevelDialog } })
 	export default class LeekPage extends Vue {
 		leek: Leek | null = null
+		error: boolean = false
 		weaponsDialog: boolean = false
 		draggedWeapon: Weapon | null = null
 		draggedWeaponLocation: string | null = null
@@ -618,36 +620,41 @@
 		@Watch('id')
 		update() {
 			this.leek = null
+			this.error = false
 			if (!this.id) { return }
 			const method = this.my_leek ? 'leek/get-private/' + this.id + '/' + this.$store.state.token : 'leek/get/' + this.id
 			LeekWars.get(method).then((data: any) => {
-				this.$data.leek = new Leek(data.leek)
-				if (this.leek) {
-					LeekWars.setTitle(this.leek.name, this.$t('level_n', [this.leek.level]))
-					if (this.my_leek) {
-						LeekWars.setActions([
-							{image: 'icon/hat.png', click: () => this.hat()},
-							{image: 'icon/potion.png', click: () => this.potion()},
-						])
-					} else {
-						LeekWars.setActions([
-							{image: 'icon/garden.png', click: () => this.$router.push('/garden/challenge/leek/' + this.id)}
-						])
-					}
-					this.renameName = this.leek.name
-					this.chart()
-					if (this.leek.level_seen < this.leek.level) {
-						this.showLevelPopup()
-					}
-					if (this.$store.state.farmer) {
-						for (const ai of this.$store.state.farmer.ais) {
-							Vue.set(ai, 'dragging', false)
+				if (data.success) {
+					this.$data.leek = new Leek(data.leek)
+					if (this.leek) {
+						LeekWars.setTitle(this.leek.name, this.$t('level_n', [this.leek.level]))
+						if (this.my_leek) {
+							LeekWars.setActions([
+								{image: 'icon/hat.png', click: () => this.hat()},
+								{image: 'icon/potion.png', click: () => this.potion()},
+							])
+						} else {
+							LeekWars.setActions([
+								{image: 'icon/garden.png', click: () => this.$router.push('/garden/challenge/leek/' + this.id)}
+							])
 						}
+						this.renameName = this.leek.name
+						this.chart()
+						if (this.leek.level_seen < this.leek.level) {
+							this.showLevelPopup()
+						}
+						if (this.$store.state.farmer) {
+							for (const ai of this.$store.state.farmer.ais) {
+								Vue.set(ai, 'dragging', false)
+							}
+						}
+						if (this.my_leek) {
+							this.$store.commit('update-capital', {leek: this.leek.id, capital: this.leek.capital})
+						}
+						this.$root.$emit('loaded')
 					}
-					if (this.my_leek) {
-						this.$store.commit('update-capital', {leek: this.leek.id, capital: this.leek.capital})
-					}
-					this.$root.$emit('loaded')
+				} else {
+					this.error = true
 				}
 			})
 		}
