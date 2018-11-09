@@ -168,6 +168,7 @@
 		newMessage: string = ''
 		topicEditing: boolean = false
 		action = {icon: 'notifications_off', click: () => this.toggleSubscribe()}
+		sendingMessage: boolean = false
 
 		get categoryName() {
 			return this.category ? this.category.team > 0 ? this.category.name : this.$t('forum.category_' + this.category.name) : ''
@@ -312,12 +313,14 @@
 			localStorage.setItem('forum/draft', this.newMessage)
 		}
 		send() {
-			if (!this.topic) { return }
+			if (!this.topic || this.sendingMessage) { return }
+			this.sendingMessage = true
 			LeekWars.post("forum/post-message", {topic_id: this.topic.id, message: this.newMessage}).then((data) => {
 				if (data.success) {
 					localStorage.setItem('forum/draft', '')
 					this.newMessage = ''
 					this.update(true)
+					this.sendingMessage = false
 				}
 			})
 		}
