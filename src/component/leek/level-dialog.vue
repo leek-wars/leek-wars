@@ -1,90 +1,88 @@
 <template>
-	<v-dialog :max-width="900">
-		<div class="title">{#level_popup_title, leek.name, popup.level}</div>
+	<v-dialog :value="value" :max-width="700" @input="$emit('input', $event)">
+		<div class="title" v-html="$t('leek.level_popup_title', [leek.name, data.level])"></div>
 
 		<div class="content level-popup">
-
 			<div v-if="leek.level == 301">
-				<h2>{{ $t('popup_level_301_title') }}</h2>
+				<h2>{{ $t('leek.popup_level_301_title') }}</h2>
 				<br>
-				<div>{{ $t('popup_level_301_message') }}</div>
+				<div v-html="$t('leek.popup_level_301_message')"></div>
 				<br>
 				<center>
-					<img id="popup-potion" width="100" src="/image/potion/skin_gold.png">
+					<v-tooltip bottom :open-delay="0" :close-delay="0">
+						<img slot="activator" width="100" src="/image/potion/skin_gold.png">
+						<b>{{ $t('potion.skin_gold') }}</b>
+					</v-tooltip>
 					&nbsp;&nbsp;&nbsp;&nbsp;
-					<img id="popup-crown" src="/image/hat/crown.png">
-
-					<div id="tt_popup-crown" class="tooltip"><b>{#hat.crown}</b></div>
-					<div id="tt_popup-potion" class="tooltip"><b>{#potion.skin_gold}</b></div>
+					<v-tooltip bottom :open-delay="0" :close-delay="0">
+						<img slot="activator" width="100" src="/image/hat/crown.png">
+						<b>{{ $t('hat.crown') }}</b>
+					</v-tooltip>
 				</center>
 			</div>
 
 			<table class="gains-table">
 				<tr>
-					<td class="leek-image"></td>
+					<td class="leek-image">
+						<leek-image :leek="leek" :scale="0.8" />
+					</td>
 					<td>
 						<div class="gains">
 							<div class="life">
-								<img src="/image/icon_life.png"><span class="name">{{ $t('life') }}</span> <b>+ {popup.gains.life}</b>
+								<img src="/image/charac/small/life.png"><span class="name">{{ $t('leek.life') }}</span> &nbsp;<b>+ {{ data.gains.life }}</b>
 							</div>
 							<div class="capital">
-								<img src="/image/add.png"><span class="name">{{ $t('capital') }}</span> <b>+ {popup.gains.capital}</b>
+								<img src="/image/add.png"><span class="name">{{ $t('leek.capital') }}</span> &nbsp;<b>+ {{ data.gains.capital }}</b>
 							</div>
 						</div>
 					</td>
 				</tr>
 			</table>
-			<br><br>
+			<br>
 
-			<div v-if="popup.weapons.length + popup.chips.length + popup.functions.length == 0">
-				<center>{{ $t('level_popup_no_news') }}</center>
+			<div v-if="data.weapons.length + data.chips.length == 0">
+				<center>{{ $t('leek.level_popup_no_news') }}</center>
 			</div>
 			<div v-else>
-				<template v-if="popup.weapons.length > 0">
-					<h2>{{ $t('new_weapons') }}</h2>
-					<div class="available-market">{{ $t('available_on_market') }}</div>
-					@foreach (weapon in popup.weapons)
-					<div class="weapon">
-						<img src="/image/weapon/{weapon}.png"><br>
-						<div class="name">{_.lang.get('weapon', weapon)}</div>
+				<template v-if="data.weapons.length > 0">
+					<h2>{{ $t('leek.new_weapons') }}</h2>
+					<div class="available-market">{{ $t('leek.available_on_market') }}</div>
+					<div v-for="weapon of data.weapons" :key="weapon" class="weapon">
+						<img :src="'/image/weapon/' + weapon + '.png'"><br>
+						<div class="name">{{ $t('weapon.' + weapon) }}</div>
 					</div>
-					@end
 				</template>
-				<template v-if="popup.chips.length > 0">
-					<h2>{{ $t('new_chips') }}</h2>
-					<div class="available-market">{{ $t('available_on_market') }}</div>
-					@foreach (chip in popup.chips)
-					<div class="weapon">
-						<img src="/image/chip/small/{chip}.png"><br>
-						<div class="name">{_.lang.get('chip', chip)}</div>
+				<template v-if="data.chips.length > 0">
+					<h2>{{ $t('leek.new_chips') }}</h2>
+					<div class="available-market">{{ $t('leek.available_on_market') }}</div>
+					<div v-for="chip of data.chips" :key="chip" class="weapon">
+						<img :src="'/image/chip/small/' + chip + '.png'"><br>
+						<div class="name">{{ $t('chip.' + chip) }}</div>
 					</div>
-					@end
-				</template>
-				<template v-if="popup.functions.length > 0">
-					<h2>{{ $t('new_functions') }}</h2>
-					<br>
-					<div v-for="fun in data.functions" :key="fun.name" class="function">{{ fun.name }}</div>
 				</template>
 			</div>
 		</div>
 		<div class="actions">
-			<div class="action dismiss">{{ $t('ok') }}</div>
+			<div class="action" @click="$emit('input', false)">{{ $t('leek.ok') }}</div>
 		</div>
 	</v-dialog>
 </template>
 
 <script lang="ts">
 	import { Leek } from '@/model/leek'
-	import { Component, Prop, Vue } from 'vue-property-decorator'
+	import { LeekWars } from '@/model/leekwars'
+	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 
 	@Component({ name: 'level-dialog' })
 	export default class CapitalDialog extends Vue {
+		@Prop() value!: boolean
 		@Prop() leek!: Leek
 		@Prop() data!: any
 
-		// popup.setOnDismiss(function() {
-			// _.post('leek/set-popup-level-seen', {leek_id: leek.id})
-		// })
+		@Watch('value')
+		close() {
+			LeekWars.post('leek/set-popup-level-seen', {leek_id: this.leek.id})
+		}
 	}
 </script>
 
@@ -92,16 +90,13 @@
 	h1 {
 		margin: 0;
 	}
-	.weapon, .level-popup .chip {
+	.weapon, .chip {
 		display: inline-block;
 		text-align: center;
 		padding: 8px;
 	}
 	.chip img {
 		width: 80px;
-	}
-	.function {
-		padding: 4px;
 	}
 	.available-market {
 		color: #777;

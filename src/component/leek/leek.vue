@@ -442,7 +442,7 @@
 			</div>
 		</v-dialog>
 
-		<level-dialog v-if="leek && levelPopupData" :leek="leek" :data="levelPopupData" />
+		<level-dialog v-if="leek && levelPopupData" v-model="levelPopup" :leek="leek" :data="levelPopupData" />
 
 		<v-dialog v-if="leek && my_leek" v-model="aiDialog" :max-width="870">
 			<div class="title">{{ $t('ai_of', [leek.name]) }}</div>
@@ -502,8 +502,9 @@
 	import { Weapon } from '@/model/weapon'
 	import { Component, Vue, Watch } from 'vue-property-decorator'
 	import CapitalDialog from './capital-dialog.vue'
+	import LevelDialog from './level-dialog.vue'
 
-	@Component({ name: "leek", i18n: {}, components: { CapitalDialog } })
+	@Component({ name: "leek", i18n: {}, components: { CapitalDialog, LevelDialog } })
 	export default class LeekPage extends Vue {
 		leek: Leek | null = null
 		weaponsDialog: boolean = false

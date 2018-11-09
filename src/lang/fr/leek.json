@@ -54,7 +54,7 @@
 	"history": "Historique",
 	"level_n": "Niveau {0}",
 	"level_popup_no_news": "Pas de nouvel item pour ce niveau.",
-	"level_popup_title": "<b>%1$s</b> passe niveau <b>%2$s</b> !",
+	"level_popup_title": "<b>{0}</b> passe niveau <b>{1}</b> !",
 	"life": "Points de vie",
 	"life_cost": "1 capital ⇔ 3 vies",
 	"life_cost_10": "10 capital ⇔ 30 vies",
