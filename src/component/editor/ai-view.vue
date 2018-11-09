@@ -161,7 +161,7 @@
 			// Lock scroll down
 			const codeMirrorScroll = codeMirrorElement.querySelector('.CodeMirror-scroll') as HTMLElement
 			if (codeMirrorScroll) {
-				codeMirrorScroll.addEventListener('mousewheel', (e) => {
+				codeMirrorScroll.addEventListener('wheel', (e: WheelEvent) => {
 					if (e.deltaY > 0 && Math.abs(codeMirrorScroll.scrollTop - (codeMirrorScroll.scrollHeight - codeMirrorScroll.offsetHeight + 15)) < 1) {
 						e.preventDefault()
 					}

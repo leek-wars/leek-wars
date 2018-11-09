@@ -53,7 +53,7 @@
 			}
 		}
 		dragstart(e: DragEvent) {
-			e.dataTransfer.setData('text/plain', 'drag !!!')
+			e.dataTransfer!.setData('text/plain', 'drag !!!')
 			this.$root.$emit('editor-drag', this.item)
 			e.stopPropagation()
 		}
