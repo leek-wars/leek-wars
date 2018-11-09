@@ -10,4 +10,17 @@ declare global {
 			[elem: string]: any
 		}
 	}
+	interface Document {
+		onwebkitfullscreenchange: (event: Event) => void;
+		onmozfullscreenchange: (event: Event) => void;
+		MSFullscreenChange: (event: Event) => void;
+		webkitExitFullscreen: () => void;
+		mozCancelFullScreen: () => void;
+		msExitFullscreen: () => void;	
+	}
+	interface HTMLElement {
+		webkitRequestFullscreen: () => void;
+		mozRequestFullScreen: () => void;
+		msRequestFullscreen: () => void;
+	}
 }

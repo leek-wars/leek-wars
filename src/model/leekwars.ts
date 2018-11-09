@@ -325,21 +325,24 @@ const LeekWars = {
 		}
 	},
 	fullscreen: false,
-	fullscreenEnter(element: HTMLElement, callback: any) {
+	fullscreenEnter(element: HTMLElement, callback: (f: boolean) => void) {
+		const fullscreenCallback = () => {
+			LeekWars.fullscreen = !LeekWars.fullscreen
+			vueMain.$emit('resize')
+			callback(LeekWars.fullscreen)
+		}
 		if (element.requestFullscreen) {
-			document.onfullscreenchange = () => {
-				LeekWars.fullscreen = !LeekWars.fullscreen
-				vueMain.$emit('resize')
-				callback(LeekWars.fullscreen)
-			}
+			document.onfullscreenchange = fullscreenCallback
 			element.requestFullscreen()
-		} else if (element.webkitRequestFullScreen) {
-			document.onwebkitfullscreenchange = () => {
-				LeekWars.fullscreen = !LeekWars.fullscreen
-				vueMain.$emit('resize')
-				callback(LeekWars.fullscreen)
-			}
-			element.webkitRequestFullScreen()
+		} else if (element.webkitRequestFullscreen) {
+			document.onwebkitfullscreenchange = fullscreenCallback
+			element.webkitRequestFullscreen()
+		} else if (element.mozRequestFullScreen) {
+			document.onmozfullscreenchange = fullscreenCallback
+			element.mozRequestFullScreen()
+		} else if (element.msRequestFullscreen) {
+			document.MSFullscreenChange = fullscreenCallback
+			element.msRequestFullscreen()
 		}
 	},
 	fullscreenExit() {
@@ -347,10 +350,10 @@ const LeekWars = {
 			document.exitFullscreen()
 		} else if (document.webkitExitFullscreen) {
 			document.webkitExitFullscreen()
-		// } else if (document.mozCancelFullScreen) {
-		//     document.mozCancelFullScreen();
-		// } else if (document.msExitFullscreen) {
-		//     document.msExitFullscreen();
+		} else if (document.mozCancelFullScreen) {
+			document.mozCancelFullScreen()
+		} else if (document.msExitFullscreen) {
+			document.msExitFullscreen()
 		}
 	},
 	sfw: false,
