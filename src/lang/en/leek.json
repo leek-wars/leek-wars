@@ -54,7 +54,7 @@
 	"history": "History",
 	"level_n": "Level {0}",
 	"level_popup_no_news": "No new item for this level.",
-	"level_popup_title": "<b>%1$s</b> reaches level <b>%2$s</b>!",
+	"level_popup_title": "<b>{0}</b> reaches level <b>{1}</b>!",
 	"life": "Life points",
 	"life_cost": "1 capital ⇔ 3 life points",
 	"life_cost_10": "10 capital ⇔ 30 life points",
