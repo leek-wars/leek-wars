@@ -342,7 +342,7 @@
 			const method = currency === 'habs' ? 'market/buy-habs' : 'market/buy-crystals'
 			const id = item.type === ItemType.FIGHT_PACK ? (item.id - 1000000) + 'fights' : item.id
 			LeekWars.post(method, {item_id: id}).then((data) => {
-				if (data.data.success) {
+				if (data.success) {
 					this.buyDialog = false
 					this.buyCrystalsDialog = false
 					// _.toast([
@@ -361,12 +361,12 @@
 						this.$store.commit('update-crystals', -item.price_crystals)
 					}
 					if (item.type === ItemType.FIGHT_PACK) {
-						this.$store.commit('update-fights', data.data.fights)
+						this.$store.commit('update-fights', data.fights)
 					}
-					this.$store.commit('add-inventory', {type: item.type, item_id: data.data.item, item_template: id})
+					this.$store.commit('add-inventory', {type: item.type, item_id: data.item, item_template: id})
 				} else {
-					let error = data.data.error
-					if (data.data.error === 'already_bought_fights_with_habs') {
+					let error = data.error
+					if (data.error === 'already_bought_fights_with_habs') {
 						error = this.$t('market.' + error)
 					}
 					LeekWars.toast(error)
@@ -377,7 +377,7 @@
 			if (!this.selectedItem) { return }
 			const item = this.selectedItem
 			LeekWars.post('market/sell-habs', {item_id: item.id}).then((data) => {
-				if (data.data.success) {
+				if (data.success) {
 					this.sellDialog = false
 					// _.toast([
 					// 	_.lang.get('market', 'weapon_selled'),
@@ -387,7 +387,7 @@
 					// ][type - 1])
 					item.farmer_count--
 					this.$store.commit('update-habs', item.sell_price)
-					this.$store.commit('remove-inventory', {type: item.type, item_template: data.data.item})
+					this.$store.commit('remove-inventory', {type: item.type, item_template: data.item})
 				}
 			})
 		}

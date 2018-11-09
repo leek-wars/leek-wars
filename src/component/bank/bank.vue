@@ -37,7 +37,7 @@
 		packs: any = null
 		created() {
 			LeekWars.get('bank/get-packs').then((data: any) => {
-				this.packs = data.data.packs
+				this.packs = data.packs
 				LeekWars.setTitle(this.$i18n.t('bank.title'))
 			})
 		}

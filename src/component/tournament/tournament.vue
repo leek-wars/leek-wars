@@ -230,8 +230,8 @@
 		update() {
 			this.tournament = null
 			LeekWars.get<any>('tournament/get/' + this.$route.params.id + '/' + this.$store.state.token).then((data) => {
-				if (data.data.success) {
-					this.tournament = data.data.tournament
+				if (data.success) {
+					this.tournament = data.tournament
 					if (!this.tournament) { return }
 
 					this.sixteenths = this.tournament.rounds.sixteenths
@@ -266,7 +266,7 @@
 		comment(comment: Comment) {
 			if (!this.tournament) { return }
 			LeekWars.post('tournament/comment', {tournament_id: this.tournament.id, comment: comment.comment}).then((data) => {
-				if (data.data.success && this.tournament) {
+				if (data.success && this.tournament) {
 					this.tournament.comments.push(comment)
 				}
 			})

@@ -88,7 +88,7 @@
 		created() {
 			const language = localStorage.getItem('forum/language') || i18n.locale
 			LeekWars.get<any>('forum/get-categories/' + language + '/' + this.$store.state.token).then((data) => {
-				this.categories = data.data.categories
+				this.categories = data.categories
 			})
 			LeekWars.setTitle(i18n.t('search.title'))
 		}
@@ -107,8 +107,8 @@
 			this.results = null
 			if (this.query || this.farmer) {
 				LeekWars.get<any>('forum/search/' + this.query + '/' + this.farmer + '/' + this.category + '/' + this.page + '/' + this.$store.state.token).then((data) => {
-					this.results = data.data.results
-					this.pages = data.data.pages
+					this.results = data.results
+					this.pages = data.pages
 				})
 			} else {
 				this.results = []

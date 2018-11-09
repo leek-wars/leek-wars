@@ -124,8 +124,8 @@
 			})
 			if (localStorage.getItem('changelog_version') !== LeekWars.version) {
 				LeekWars.get<any>('changelog/get-last/' + this.$i18n.locale).then((data) => {
-					if (data.data.success) {
-						this.changelog = data.data.changelog
+					if (data.success) {
+						this.changelog = data.changelog
 						this.changelogDialog = true
 						localStorage.setItem('changelog_version', LeekWars.version)
 					}

@@ -12,7 +12,6 @@ const i18n = new VueI18n({
 const loadedLanguages: string[] = []
 function setI18nLanguage(lang: string) {
 	i18n.locale = lang
-	// axios.defaults.headers.common['Accept-Language'] = lang
 	const html = document.querySelector('html')
 	if (html) {
 		html.setAttribute('lang', lang)

@@ -120,13 +120,13 @@
 			])
 			if (this.category) { this.category.topics = null }
 			LeekWars.get<any>('forum/get-topics/' + category + '/' + this.page + '/' + this.$store.state.token).then((data) => {
-				this.category = data.data.category
+				this.category = data.category
 				if (this.category) {
 					this.category.name = this.category.team > 0 ? this.category.name : this.$t('forum.category_' + this.category.name) as string
-					this.category.topics = data.data.topics
-					this.pages = data.data.pages
+					this.category.topics = data.topics
+					this.pages = data.pages
 
-					LeekWars.setTitle(this.category.name, this.$t('forum_category.n_topic_n_messages', [data.data.total_topics, data.data.total_messages]))
+					LeekWars.setTitle(this.category.name, this.$t('forum_category.n_topic_n_messages', [data.total_topics, data.total_messages]))
 					this.$root.$emit('loaded')
 				}
 			})
@@ -134,13 +134,13 @@
 		create() {
 			if (!this.category) { return }
 			LeekWars.post('forum/create-topic', {category_id: this.category.id,	title: this.createTitle, message: this.createMessage}).then((data) => {
-				if (data.data.success) {
+				if (data.success) {
 					this.createDialog = false
 					if (this.category) {
-						this.$router.push("/forum/category-" + this.category.id + "/topic-" + data.data.topic_id)
+						this.$router.push("/forum/category-" + this.category.id + "/topic-" + data.topic_id)
 					}
 				} else {
-					LeekWars.toast(data.data.error)
+					LeekWars.toast(data.error)
 				}
 			})
 		}

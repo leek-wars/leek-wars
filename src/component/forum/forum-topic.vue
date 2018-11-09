@@ -188,15 +188,15 @@
 
 			if (this.topic) { this.topic.messages = null }
 			LeekWars.get<any>('forum/get-messages/' + topic + '/' + this.page + '/' + this.$store.state.token).then((data) => {
-				if (!data.data.success) {
+				if (!data.success) {
 					// LW.error()
 					return
 				}
-				this.topic = data.data.topic
+				this.topic = data.topic
 				if (!this.topic) { return }
-				this.category = data.data.category
+				this.category = data.category
 				if (this.topic) {
-					Vue.set(this.topic, 'messages', data.data.messages)
+					Vue.set(this.topic, 'messages', data.messages)
 					if (this.topic.messages) {
 						for (const message of this.topic.messages) {
 							Vue.set(message, 'editing', false)
@@ -204,8 +204,8 @@
 						}
 					}
 				}
-				this.pages = data.data.pages
-				LeekWars.setTitle(this.topic.name, this.$t('forum_topic.n_messages', [data.data.total]))
+				this.pages = data.pages
+				LeekWars.setTitle(this.topic.name, this.$t('forum_topic.n_messages', [data.total]))
 				LeekWars.setActions([this.action])
 				if (this.topic.subscribed) { this.action.icon = 'notifications_active' }
 				this.$root.$emit('loaded')
@@ -271,14 +271,14 @@
 			if (!this.topic || this.votes_up_names[message.id] !== undefined) { return }
 			Vue.set(this.$data.votes_up_names, message.id, null)
 			LeekWars.post('forum/get-message-up-votes-names', {topic_id: this.topic.id, message_id: message.id}).then((data) => {
-				Vue.set(this.$data.votes_up_names, message.id, data.data.farmers.map((f: any) => f[1]))
+				Vue.set(this.$data.votes_up_names, message.id, data.farmers.map((f: any) => f[1]))
 			})
 		}
 		loadVotesDown(message: ForumMessage) {
 			if (!this.topic || this.votes_down_names[message.id] !== undefined) { return }
 			Vue.set(this.$data.votes_down_names, message.id, null)
 			LeekWars.post('forum/get-message-down-votes-names', {topic_id: this.topic.id, message_id: message.id}).then((data) => {
-				Vue.set(this.$data.votes_down_names, message.id, data.data.farmers.map((f: any) => f[1]))
+				Vue.set(this.$data.votes_down_names, message.id, data.farmers.map((f: any) => f[1]))
 			})
 		}
 		deleteGeneric(message: ForumMessage) {
@@ -292,7 +292,7 @@
 		deleteMessage() {
 			if (!this.toDeleteMessage) { return }
 			LeekWars.post("forum/delete-message", {message_id: this.toDeleteMessage.id}).then((data) => {
-				if (data.data.success && this.toDeleteMessage) {
+				if (data.success && this.toDeleteMessage) {
 					this.toDeleteMessage = null
 					this.deleteMessageDialog = false
 					this.update(true)
@@ -302,7 +302,7 @@
 		deleteTopic() {
 			if (!this.topic) { return }
 			LeekWars.post("forum/delete-topic", {topic_id: this.topic.id}).then((data) => {
-				if (data.data.success && this.category) {
+				if (data.success && this.category) {
 					this.deleteTopicDialog = false
 					this.$router.push("/forum/category-" + this.category.id)
 				}
@@ -314,7 +314,7 @@
 		send() {
 			if (!this.topic) { return }
 			LeekWars.post("forum/post-message", {topic_id: this.topic.id, message: this.newMessage}).then((data) => {
-				if (data.data.success) {
+				if (data.success) {
 					localStorage.setItem('forum/draft', '')
 					this.newMessage = ''
 					this.update(true)
@@ -358,8 +358,8 @@
 		confirmEdit(message: ForumMessage) {
 			if (!this.topic) { return }
 			const callback = (data: any) => {
-				if (data.data.success) {
-					message.html = data.data.html
+				if (data.success) {
+					message.html = data.html
 					message.editing = false
 					message.edition_date = LeekWars.time
 					if (message.id === -1) {

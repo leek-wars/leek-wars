@@ -34,7 +34,7 @@
 		services: any = null
 		created() {
 			LeekWars.get<any>('service/get-all/' + this.$store.state.token).then((data) => {
-				this.services = data.data.services
+				this.services = data.services
 				LeekWars.setTitle('API')
 			})
 		}

@@ -48,7 +48,7 @@
 		errors: any = null
 		created() {
 			LeekWars.get<any>('error/get-latest/' + this.$store.state.token + '/' + encodeURI(this.$store.state.supertoken)).then((data) => {
-				this.errors = data.data.errors
+				this.errors = data.errors
 				LeekWars.setTitle("Gestionnaire d'erreur")
 
 				// $('#errors .error code').each(function() {

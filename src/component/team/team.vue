@@ -463,11 +463,11 @@
 				}
 			}
 			LeekWars.get<any>(request).then((data) => {
-				if (!data.data.success) {
+				if (!data.success) {
 					// LW.error('Pas de team', 'Team introuvable !')
 					return
 				}
-				this.team = data.data.team
+				this.team = data.team
 				if (!this.team) {
 					return
 				}
@@ -516,25 +516,25 @@
 			LeekWars.toast(this.$t('team.uploading_emblem') as string)
 
 			LeekWars.post('team/set-emblem', formdata).then((data) => {
-				if (data.data.success) {
+				if (data.success) {
 					if (this.team) {
 						LeekWars.toast(this.$t('team.upload_success') as string)
 						this.team.emblem_changed = LeekWars.time
 					}
 				} else {
-					LeekWars.toast(this.$t('team.upload_failed', [data.data.error]) as string)
+					LeekWars.toast(this.$t('team.upload_failed', [data.error]) as string)
 				}
 			})
 		}
 
 		createComposition() {
 			LeekWars.post('team/create-composition', {composition_name: this.createCompoName}).then((data) => {
-				if (data.data.success && this.team) {
-					if (!data.data.id) {
-						data.data.id = Math.floor(Math.random() * 100000)
+				if (data.success && this.team) {
+					if (!data.id) {
+						data.id = Math.floor(Math.random() * 100000)
 					}
 					const compo = {
-						id: data.data.id,
+						id: data.id,
 						name: this.createCompoName,
 						leeks: [],
 						talent: 1000,
@@ -547,7 +547,7 @@
 					this.team.compositionsById[compo.id] = compo
 					this.createCompoDialog = false
 				} else {
-					LeekWars.toast(data.data.error)
+					LeekWars.toast(data.error)
 				}
 			})
 		}
@@ -559,7 +559,7 @@
 
 		deleteComposition(composition: Composition) {
 			LeekWars.post('team/delete-composition', {composition_id: composition.id}).then((data) => {
-				if (data.data.success && this.team) {
+				if (data.success && this.team) {
 					LeekWars.toast(this.$i18n.t('team.compo_deleted', composition.name))
 					// On transfère tous les leeks dans les leeks non engagés
 					for (const leek of composition.leeks) {
@@ -568,7 +568,7 @@
 					this.team.compositions.splice(this.team.compositions.indexOf(composition))
 					this.deleteCompoDialog = false
 				} else {
-					LeekWars.toast(data.data.error)
+					LeekWars.toast(data.error)
 				}
 			})
 		}
@@ -583,11 +583,11 @@
 
 		quitTeam () {
 			LeekWars.post('team/quit').then((data) => {
-				if (data.data.success) {
+				if (data.success) {
 					LeekWars.toast(this.$i18n.t('team', 'you_left_team'))
 					this.$router.push('/farmer')
 				} else {
-					LeekWars.toast(data.data.error)
+					LeekWars.toast(data.error)
 				}
 				this.quitTeamDialog = false
 			})
@@ -595,12 +595,12 @@
 
 		dissolveTeam() {
 			LeekWars.post('team/dissolve').then((data) => {
-				if (data.data.success) {
+				if (data.success) {
 					this.dissolveDialog = false
 					LeekWars.toast(this.$i18n.t('team.team_have_been_disolved'))
 					this.$router.push('/farmer')
 				} else {
-					LeekWars.toast(this.$i18n.t('team.' + data.data.error))
+					LeekWars.toast(this.$i18n.t('team.' + data.error))
 				}
 			})
 		}
@@ -625,11 +625,11 @@
 		}
 		banMember() {
 			LeekWars.post('team/ban', {farmer_id: this.banMemberTarget}).then((data) => {
-				if (data.data.success) {
+				if (data.success) {
 					LeekWars.toast(this.$i18n.t('team.farmer_banned'))
 					this.banDialog = false
 				} else {
-					LeekWars.toast(data.data.error)
+					LeekWars.toast(data.error)
 				}
 			})
 		}
@@ -662,41 +662,41 @@
 
 		acceptCandidacy(candidacy: any) {
 			LeekWars.post('team/accept-candidacy', {candidacy_id: candidacy.id}).then((data) => {
-				if (data.data.success) {
+				if (data.success) {
 					LeekWars.toast(this.$i18n.t('team.farmer_accepted'))
 				} else {
-					LeekWars.toast(data.data.error)
+					LeekWars.toast(data.error)
 				}
 			})
 		}
 		rejectCandidacy(candidacy: any) {
 			LeekWars.post('team/reject-candidacy', {candidacy_id: candidacy.id}).then((data) => {
-				if (data.data.success) {
+				if (data.success) {
 					LeekWars.toast(this.$i18n.t('team.farmer_refused'))
 				} else {
-					LeekWars.toast(data.data.error)
+					LeekWars.toast(data.error)
 				}
 			})
 		}
 		sendCandidacy() {
 			if (!this.team) { return }
 			LeekWars.post('team/send-candidacy', {team_id: this.team.id}).then((data) => {
-				if (data.data.success && this.team) {
+				if (data.success && this.team) {
 					LeekWars.toast(this.$i18n.t('team.candidacy_sent'))
 					this.team.candidacy = true
 				} else {
-					LeekWars.toast(data.data.error)
+					LeekWars.toast(data.error)
 				}
 			})
 		}
 		cancelCandidacy() {
 			if (!this.team) { return }
 			LeekWars.post('team/cancel-candidacy-for-team', {team_id: this.team.id}).then((data) => {
-				if (data.data.success && this.team) {
+				if (data.success && this.team) {
 					LeekWars.toast(this.$i18n.t('team.candidacy_cancelled'))
 					this.team.candidacy = false
 				} else {
-					LeekWars.toast(data.data.error)
+					LeekWars.toast(data.error)
 				}
 			})
 		}
@@ -716,12 +716,12 @@
 		changeOwner(newOwner: TeamMember) {
 			if (!this.team) { return }
 			LeekWars.post('team/change-owner', {new_owner: newOwner.id, password: this.changeOwnerPassword}).then((data) => {
-				if (data.data.success) {
+				if (data.success) {
 					LeekWars.toast(this.$i18n.t('team.owner_has_been_changed'))
 					this.changeOwnerConfirmDialog = false
 					this.update()
 				} else {
-					LeekWars.toast(data.data.error)
+					LeekWars.toast(data.error)
 				}
 			})
 		}
@@ -739,14 +739,14 @@
 			}
 			const newCompositionID = newCompo ? newCompo.id : -1
 			LeekWars.post('team/move-leek', {leek_id: leek.id, to: newCompositionID}).then((data) => {
-				if (!data.data.success) {
-					LeekWars.toast(data.data.error)
+				if (!data.success) {
+					LeekWars.toast(data.error)
 				}
 			})
 		}
 		leeksDragstart(composition: Composition, leek: Leek, e: DragEvent) {
 			if (composition && composition.tournament.registered) { return false }
-			e.dataTransfer.setData('text/plain', 'drag !!!')
+			e.dataTransfer!.setData('text/plain', 'drag !!!')
 			this.draggedLeek = leek
 			this.draggedLeekComposition = composition
 			leek.dragging = true

@@ -677,7 +677,7 @@
 			if (!this.leek) { return }
 			const method = currency === 'habs' ? 'leek/rename-habs' : 'leek/rename-crystals'
 			LeekWars.post(method, {leek_id: this.leek.id, new_name: this.renameName}).then((data) => {
-				if (data.data.success) {
+				if (data.success) {
 					if (this.leek) {
 						this.leek.name = this.renameName
 						store.commit('rename-leek', {leek: this.leek.id, name: this.renameName})
@@ -691,7 +691,7 @@
 					}
 				} else {
 					this.renameFailed = true
-					this.renameError = data.data
+					this.renameError = data
 				}
 			})
 		}
@@ -710,7 +710,7 @@
 				}
 				this.potionDialog = false
 				LeekWars.post('leek/use-potion', {leek_id: this.leek.id, potion_id: potion.id}).then((data) => {
-					if (data.data.success) {
+					if (data.success) {
 						if (template.consumable) {
 							this.$store.commit('remove-inventory', {type: ItemType.POTION, item_template: potion.template})
 						}
@@ -775,10 +775,10 @@
 			if (hat === null) {
 				this.leek.hat = null
 				LeekWars.post('leek/remove-hat', {leek_id: this.leek.id}).then((data) => {
-					if (data.data.success && this.leek) {
+					if (data.success && this.leek) {
 						store.commit('change-hat', {leek: this.leek.id, hat: null})
 					} else {
-						LeekWars.toast(data.data.error)
+						LeekWars.toast(data.error)
 					}
 				})
 			} else {
@@ -788,10 +788,10 @@
 				}
 				this.leek.hat = hat.hat_template
 				LeekWars.post('leek/set-hat', {leek_id: this.leek.id, hat_id: hat.template}).then((data) => {
-					if (data.data.success && this.leek) {
+					if (data.success && this.leek) {
 						store.commit('change-hat', {leek: this.leek.id, hat: hat.hat_template})
 					} else {
-						LeekWars.toast(data.data.error)
+						LeekWars.toast(data.error)
 					}
 				})
 			}
@@ -804,7 +804,7 @@
 			if (!this.leek) { return }
 			LeekWars.get<any>('leek/get-level-popup/' + this.leek.id + '/' + this.$store.state.token).then((data) => {
 				this.levelPopup = true
-				this.levelPopupData = data.data.popup
+				this.levelPopupData = data.popup
 			})
 		}
 
@@ -858,7 +858,7 @@
 			if (register.value !== value) {
 				register.value = value
 				LeekWars.post('leek/set-register', {leek_id: this.leek.id, key: register.key, value}).then((data) => {
-					if (data.data.success) {
+					if (data.success) {
 						LeekWars.toast("Register saved")
 					}
 				})
@@ -868,7 +868,7 @@
 			if (!this.leek) { return }
 			this.leek.registers.splice(this.leek.registers.indexOf(register), 1)
 			LeekWars.post('leek/delete-register', {leek_id: this.leek.id, key: register.key}).then((data) => {
-				if (data.data.success) {
+				if (data.success) {
 					LeekWars.toast("Register deleted")
 				}
 			})
@@ -895,11 +895,11 @@
 				return LeekWars.toast(this.$i18n.t('leek.error_weapon_already_equipped', [this.leek.name]))
 			}
 			LeekWars.post('leek/add-weapon', {leek_id: this.leek.id, weapon_id: weapon.id}).then((data) => {
-				if (data.data.success && this.leek) {
-					this.leek.weapons.push({id: data.data.id, template: weapon.template})
+				if (data.success && this.leek) {
+					this.leek.weapons.push({id: data.id, template: weapon.template})
 					this.$store.commit('remove-weapon', weapon)
 				} else {
-					LeekWars.toast(data.data.error)
+					LeekWars.toast(data.error)
 				}
 			})
 		}
@@ -908,8 +908,8 @@
 			this.leek.weapons.splice(this.leek.weapons.indexOf(weapon), 1)
 			this.$store.commit('add-weapon', weapon)
 			LeekWars.post('leek/remove-weapon', {weapon_id: weapon.id}).then((data) => {
-				if (!data.data.success) {
-					LeekWars.toast(data.data.error)
+				if (!data.success) {
+					LeekWars.toast(data.error)
 				}
 			})
 		}
@@ -946,11 +946,11 @@
 				return LeekWars.toast(this.$i18n.t('leek.error_chip_already_equipped', [this.leek.name]))
 			}
 			LeekWars.post('leek/add-chip', {leek_id: this.leek.id, chip_id: chip.id}).then((data) => {
-				if (data.data.success && this.leek) {
-					this.leek.chips.push({id: data.data.id, template: chip.template})
+				if (data.success && this.leek) {
+					this.leek.chips.push({id: data.id, template: chip.template})
 					this.$store.commit('remove-chip', chip)
 				} else {
-					LeekWars.toast(data.data.error)
+					LeekWars.toast(data.error)
 				}
 			})
 		}
@@ -959,8 +959,8 @@
 			this.leek.chips.splice(this.leek.chips.indexOf(chip), 1)
 			this.$store.commit('add-chip', chip)
 			LeekWars.post('leek/remove-chip', {chip_id: chip.id}).then((data) => {
-				if (!data.data.success) {
-					LeekWars.toast(data.data.error)
+				if (!data.success) {
+					LeekWars.toast(data.error)
 				}
 			})
 		}

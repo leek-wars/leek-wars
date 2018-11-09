@@ -37,7 +37,7 @@
 		changelog: any = null
 		created() {
 			LeekWars.get<any>('changelog/get/' + this.$i18n.locale).then((data) => {
-				for (const d of data.data.changelog) {
+				for (const d of data.changelog) {
 					const changes_data = this.$t(d.data) as string
 					d.changes = []
 					const changes_array = changes_data.split("\n")
@@ -48,7 +48,7 @@
 						}
 					}
 				}
-				this.changelog = data.data.changelog
+				this.changelog = data.changelog
 				LeekWars.setTitle(this.$t('title'))
 				this.$root.$emit('loaded')
 			})

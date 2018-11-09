@@ -30,10 +30,10 @@ function updateTitle(state: LeekWarsState) {
 }
 function loadNotifications(state: LeekWarsState) {
 	LeekWars.get<any>('notification/get-latest/20/' + state.token).then((data) => {
-		if (data.data.success) {
-			state.unreadNotifications = data.data.unread
+		if (data.success) {
+			state.unreadNotifications = data.unread
 			updateTitle(state)
-			for (const notification of data.data.notifications.reverse()) {
+			for (const notification of data.notifications.reverse()) {
 				store.commit('notification', notification)
 			}
 		}
@@ -41,10 +41,10 @@ function loadNotifications(state: LeekWarsState) {
 }
 function loadMessages(state: LeekWarsState) {
 	LeekWars.get<any>('message/get-latest-conversations/20/' + state.token).then((data) => {
-		if (data.data.success) {
-			state.unreadMessages = data.data.unread
+		if (data.success) {
+			state.unreadMessages = data.unread
 			updateTitle(state)
-			for (const conversation of data.data.conversations) {
+			for (const conversation of data.conversations) {
 				store.commit('new-conversation', conversation)
 			}
 		}

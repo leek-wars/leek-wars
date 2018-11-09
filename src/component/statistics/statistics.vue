@@ -123,7 +123,7 @@
 			LeekWars.get<any>('statistic/get-all').then((data) => {
 				LeekWars.setTitle(this.$i18n.t('statistics.title'))
 				LeekWars.setActions(this.actions)
-				this.statistics = data.data.statistics
+				this.statistics = data.statistics
 				this.statistics[3].operations.value *= 1000000
 				this.statistics[3].operations.speed *= 1000000
 				this.statistics[3].operations.today *= 1000000

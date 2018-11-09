@@ -197,7 +197,7 @@
 			} else {
 				this.loading = true
 				LeekWars.get('ai/get/' + this.id + '/' + store.state.token).then((data: any) => {
-					this.ai.code = data.data.ai.code
+					this.ai.code = data.ai.code
 					this.editor.setValue(this.ai.code)
 					this.editor.getDoc().clearHistory()
 					this.editor.refresh()

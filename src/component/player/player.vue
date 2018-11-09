@@ -136,7 +136,6 @@
 <script lang="ts">
 	import { Fight, FightType } from '@/model/fight'
 	import { LeekWars } from '@/model/leekwars'
-	import { AxiosResponse } from 'axios'
 	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 	import { Game } from './game/game'
 	import Hud from './hud.vue'
@@ -249,11 +248,11 @@
 			this.$root.$off('resize')
 		}
 		getFight() {
-			LeekWars.get('fight/get/' + this.fightId).then((data: AxiosResponse) => {
-				const fight = data.data.fight
+			LeekWars.get('fight/get/' + this.fightId).then((data: any) => {
+				const fight = data.fight
 				this.fight = fight
 				this.$emit('fight', fight)
-				if (!data.data.success) {
+				if (!data.success) {
 					this.error = true
 					return null
 				}
@@ -276,11 +275,11 @@
 		getLogs() {
 			if (this.$store.state.farmer) {
 				LeekWars.post('fight/get-logs', {fight_id: this.fightId}).then((data) => {
-					if (data.data.success) {
-						this.game.setLogs(data.data.logs)
-						this.$store.commit('set-habs', data.data.habs)
-						this.$store.commit('set-talent', data.data.talent)
-						this.$store.commit('set-leek-talents', data.data.leek_talents)
+					if (data.success) {
+						this.game.setLogs(data.logs)
+						this.$store.commit('set-habs', data.habs)
+						this.$store.commit('set-talent', data.talent)
+						this.$store.commit('set-leek-talents', data.leek_talents)
 					}
 				})
 			}

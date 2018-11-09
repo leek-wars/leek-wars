@@ -139,8 +139,8 @@
 					return
 				}
 				LeekWars.get<any>('message/get-messages/' + id + '/' + 50 + '/' + 1 + '/' + this.$store.state.token).then((data) => {
-					if (data.data.success) {
-						for (const message of data.data.messages.reverse()) {
+					if (data.success) {
+						for (const message of data.messages.reverse()) {
 							this.$store.commit('pm-receive', {message: [id, message.farmer_id, message.farmer_name, message.content, false, message.farmer_color, message.avatar_changed, message.date]})
 						}
 						this.conversationRead()
@@ -152,12 +152,12 @@
 			if (!this.currentConversation) { return }
 			if (this.currentConversation.id === 0) {
 				LeekWars.post('message/create-conversation', {farmer_id: this.newFarmer.id, message}).then((data) => {
-					if (data.data.success) {
+					if (data.success) {
 						if (this._newConversation) {
-							this._newConversation.id = data.data.conversation_id
+							this._newConversation.id = data.conversation_id
 							this.$store.commit('new-conversation', this._newConversation)
 						}
-						this.$router.replace('/messages/conversation/' + data.data.conversation_id)
+						this.$router.replace('/messages/conversation/' + data.conversation_id)
 						this.newConversationSent = true
 					}
 				})
