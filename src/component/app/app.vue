@@ -122,7 +122,7 @@
 					this.$store.commit('didactitiel-seen')
 				}
 			})
-			if (localStorage.getItem('changelog_version') !== LeekWars.version) {
+			if (this.$store.state.connected && localStorage.getItem('changelog_version') !== LeekWars.version) {
 				LeekWars.get<any>('changelog/get-last/' + this.$i18n.locale).then((data) => {
 					if (data.success) {
 						this.changelog = data.changelog
