@@ -8,18 +8,14 @@
 		"stylelint": "stylelint src/**/*.{vue,css,scss}"
 	},
 	"dependencies": {
-		"@types/codemirror": "0.0.60",
 		"codemirror": "^5.40.0",
 		"es6-promise": "^4.2.4",
 		"js-beautify": "^1.8.6",
 		"katex": "^0.10.0-rc.1",
-		"reflect-metadata": "^0.1.12",
 		"register-service-worker": "^1.0.0",
-		"stylelint-config-sass-guidelines": "^5.2.0",
 		"twemoji": "^11.0.1",
 		"vue": "2.5.15",
 		"vue-chartist": "^2.1.2",
-		"vue-class-component": "^6.0.0",
 		"vue-i18n": "^8.0.0",
 		"vue-property-decorator": "^7.0.0",
 		"vue-router": "^3.0.1",
@@ -32,6 +28,7 @@
 		"@fimbul/wotan": "^0.14.0",
 		"@kazupon/vue-i18n-loader": "^0.3.0",
 		"@types/google.analytics": "0.0.39",
+		"@types/codemirror": "0.0.60",
 		"@vue/cli-plugin-eslint": "^3.0.1",
 		"@vue/cli-plugin-pwa": "^3.0.1",
 		"@vue/cli-plugin-typescript": "^3.0.1",
@@ -128,8 +125,7 @@
 	},
 	"browserslist": [
 		"> 1%",
-		"last 2 versions",
-		"not ie <= 8"
+		"last 2 versions"
 	],
 	"license": "GPL-3.0",
 	"author": "Pilow",
