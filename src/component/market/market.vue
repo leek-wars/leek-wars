@@ -234,11 +234,11 @@
 		created() {
 			this.actions = [{icon: 'account_balance', click: () => this.$router.push('/bank')}]
 			LeekWars.get<any>('market/get-item-templates/' + this.$store.state.token).then((res) => {
-				if (!res.data.success) {
+				if (!res.success) {
 					// LW.error()
 					return
 				}
-				const items = res.data.items as ItemTemplate[]
+				const items = res.items as ItemTemplate[]
 				for (const i in items) {
 					const item = items[i]
 					this.items[item.id] = item
