@@ -500,7 +500,6 @@
 	import { Potion } from '@/model/potion'
 	import { store } from '@/model/store'
 	import { Weapon } from '@/model/weapon'
-	import { plainToClass } from "class-transformer"
 	import { Component, Vue, Watch } from 'vue-property-decorator'
 	import CapitalDialog from './capital-dialog.vue'
 
@@ -621,7 +620,7 @@
 			if (!this.id) { return }
 			const method = this.my_leek ? 'leek/get-private/' + this.id + '/' + this.$store.state.token : 'leek/get/' + this.id
 			LeekWars.get(method).then((data: any) => {
-				this.$data.leek = plainToClass(Leek, data.data.leek)
+				this.$data.leek = new Leek(data.leek)
 				if (this.leek) {
 					LeekWars.setTitle(this.leek.name, this.$t('level_n', [this.leek.level]))
 					if (this.my_leek) {

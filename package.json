@@ -9,7 +9,6 @@
 	},
 	"dependencies": {
 		"@types/codemirror": "0.0.60",
-		"class-transformer": "^0.1.9",
 		"codemirror": "^5.40.0",
 		"es6-promise": "^4.2.4",
 		"js-beautify": "^1.8.6",

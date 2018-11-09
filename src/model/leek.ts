@@ -59,6 +59,9 @@ class Leek {
 	public mp!: number
 	public talent!: number
 
+	constructor(data: any) {
+		Object.assign(this, data)
+	}
 	get baseLife() {
 		return 100 + (this.level - 1) * 3
 	}
