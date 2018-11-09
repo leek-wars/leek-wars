@@ -819,7 +819,7 @@
 			LeekWars.post('leek/set-ai', {leek_id: this.leek.id, ai_id: ai.id})
 		}
 		aiDragStart(ai: AI, e: DragEvent) {
-			e.dataTransfer.setData('text/plain', 'drag !!!')
+			e.dataTransfer!.setData('text/plain', 'drag !!!')
 			this.draggedAI = ai
 			ai.dragging = true
 			return true

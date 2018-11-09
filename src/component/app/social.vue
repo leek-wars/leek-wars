@@ -120,11 +120,11 @@
 				localStorage.setItem('main/social-width', '' + this.panelWidth)
 			}
 			const mouseup: any = (ev: MouseEvent) => {
-				document.documentElement.removeEventListener('mousemove', mousemove)
-				document.documentElement.removeEventListener('mouseup', mouseup)
+				document.documentElement!.removeEventListener('mousemove', mousemove)
+				document.documentElement!.removeEventListener('mouseup', mouseup)
 			}
-			document.documentElement.addEventListener('mousemove', mousemove, false)
-			document.documentElement.addEventListener('mouseup', mouseup, false)
+			document.documentElement!.addEventListener('mousemove', mousemove, false)
+			document.documentElement!.addEventListener('mouseup', mouseup, false)
 			e.preventDefault()
 		}
 		readNotification(notification: Notification) {

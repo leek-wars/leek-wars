@@ -48,7 +48,7 @@
 			if (this.success !== undefined) {
 				return
 			}
-			const url = document.location.search
+			const url = document.location!.search
 			if (url.length) {
 				const match = url.match(/\?paymentId=(.*?)&token=(.*?)&PayerID=(.*?)$/)
 				if (match) {
