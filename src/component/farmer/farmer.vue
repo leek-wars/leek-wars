@@ -55,7 +55,7 @@
 		<div class="flex-container">
 			<div class="column4">
 				<div class="panel first">
-					<div v-if="farmer" class="content avatar-td">
+					<div class="content avatar-td">
 						<div v-if="myFarmer">
 							<v-tooltip :open-delay="0" :close-delay="0" bottom>
 								<div slot="activator" class="avatar-input">
@@ -68,7 +68,7 @@
 						<div v-else>
 							<avatar :farmer="farmer" />
 						</div>
-						<div class="infos">
+						<div v-if="farmer" class="infos">
 							<router-link v-if="farmer.forum_messages" :to="'/search/-/' + farmer.name">
 								<div class="info">
 									<img class="flag" src="/image/forum.png"><span class="label">{{ $t('forum_messages', [farmer.forum_messages]) }}</span>
@@ -100,13 +100,13 @@
 			
 			<div class="column4">
 				<div class="panel">
-					<div v-if="farmer" class="content stats">
+					<div class="content stats">
 						<div class="talent-wrapper">
 							<v-tooltip bottom open-delay="0" close-delay="0">
-								<talent slot="activator" :talent="farmer.talent" />
+								<talent slot="activator" :talent="farmer ? farmer.talent : '...'" />
 								<div>{{ $t('talent') }}</div>
 							</v-tooltip>
-							<v-tooltip bottom open-delay="0" close-delay="0">
+							<v-tooltip v-if="farmer" bottom open-delay="0" close-delay="0">
 								<div slot="activator" class="talent-more">({{ farmer.talent_more >= 0 ? '+' + farmer.talent_more : farmer.talent_more }})</div>
 								<template v-if="farmer.talent_more > 0">
 									<span v-html="$t('report.talent_difference_farmer', [farmer.name, farmer.talent_more, talent_gains + '%'])"></span>
@@ -115,7 +115,7 @@
 							</v-tooltip>
 						</div>
 						
-						<v-tooltip bottom open-delay="0" close-delay="0">
+						<v-tooltip v-if="farmer" bottom open-delay="0" close-delay="0">
 							<table slot="activator">
 								<tr>
 									<td class="big">{{ farmer.victories | number }}</td>
@@ -131,7 +131,7 @@
 							{{ $t('ratio') }} : {{ farmer.ratio }}
 						</v-tooltip>
 		
-						<table v-if="farmer.won_solo_tournaments + farmer.won_farmer_tournaments + farmer.won_team_tournaments > 0" class="tournaments">
+						<table v-if="farmer && farmer.won_solo_tournaments + farmer.won_farmer_tournaments + farmer.won_team_tournaments > 0" class="tournaments">
 							<tr>
 								<td class="grey">Tournois</td>
 								<td width="25%"><span class="big">{{ farmer.won_solo_tournaments }}</span><br><span class="small grey">solo</span></td>
@@ -140,19 +140,19 @@
 							</tr>
 						</table>
 		
-						<div class="log-time grey">
+						<div v-if="farmer" class="log-time grey">
 							<span v-if="$store.getters.moderator">{{ $t('registered_the', [LeekWars.formatDateTime(farmer.register_date)]) }}</span>
 							<span v-else>{{ $t('registered_the', [LeekWars.formatDate(farmer.register_date)]) }}</span>
 							<br>
 							<span v-if="farmer.connected">{{ $t('connected') }}</span>
 							<span v-else>{{ $t('last_connection', [LeekWars.formatDuration(farmer.last_connection)]) }}</span>
 						</div>
-						<div class="grades">
+						<div v-if="farmer" class="grades">
 							<div v-if="farmer.admin" class="grade admin">{{ $t('admin') }}</div>
 							<div v-else-if="farmer.moderator" class="grade moderator">{{ $t('moderator') }}</div>
 							<div v-else-if="farmer.contributor" class="grade contributor">{{ $t('contributor') }}</div>
 						</div>
-						<div class="godfather grey">
+						<div v-if="farmer" class="godfather grey">
 							<div v-if="farmer.godfather">
 								<i18n path="godson_of" tag="div">
 									<router-link :to="'/farmer/' + farmer.godfather.id" place="farmer">{{ farmer.godfather.name }}</router-link>
@@ -174,8 +174,9 @@
 			</div>
 			<div class="column4">
 				<div class="panel">
-					<div v-if="farmer" class="content team center">
-						<div v-if="farmer.team">
+					<div class="content team center">
+						<loader v-if="!farmer" />
+						<div v-else-if="farmer.team">
 							<router-link :to="'/team/' + farmer.team.id">
 								<emblem :team="farmer.team" />
 								<br>
@@ -202,11 +203,11 @@
 			</div>
 		</div>
 		<div class="column12">
-			<div v-if="farmer" class="panel">
-				<div v-if="farmer" class="header">
-					<h2>{{ $t('trophies') }} ({{ farmer.trophies }})</h2>
+			<div class="panel">
+				<div class="header">
+					<h2>{{ $t('trophies') }} <span v-if="farmer">({{ farmer.trophies }})</span></h2>
 					<div class="right">
-						<router-link :to="'/trophies/' + farmer.id">
+						<router-link :to="'/trophies/' + id">
 							<div class="button flat">
 								<img src="/image/icon/trophy.png"> {{ $t('see_all_trophies') }}
 							</div>
@@ -217,8 +218,8 @@
 					</div>
 				</div>
 				<div class="trophies">
-					<loader v-if="!trophies_list" />
-					<template v-if="farmer.trophies > 0 && trophies_list && trophies_grid">
+					<loader v-if="!farmer || !trophies" />
+					<template v-else-if="farmer.trophies > 0 && trophies_list && trophies_grid">
 						<div v-show="trophiesMode == 'list'" class="list trophies-container">
 							<v-tooltip v-for="(trophy, t) in trophies_list" v-if="trophy != null" :key="t" :open-delay="0" :close-delay="0" bottom>
 								<div slot="activator" class="trophy">
@@ -275,7 +276,8 @@
 				<div class="header">
 					<h2>{{ $t('leeks') }}</h2>
 				</div>
-				<div v-if="farmer" class="content">
+				<loader v-if="!farmer" />
+				<div v-else class="content">
 					<router-link v-for="leek in farmer.leeks" :key="leek.id" :to="'/leek/' + leek.id" class="leek">
 						<leek-image :leek="leek" :scale="0.9" />
 						<br>
@@ -287,26 +289,28 @@
 				</div>
 			</div>
 		</div>
-		<div v-if="farmer" class="flex-container">
+		<div class="flex-container">
 			<div class="column6">
-				<div v-if="farmer && farmer.fight_history.length > 0" class="panel">
+				<div v-if="!farmer || farmer.fight_history.length > 0" class="panel">
 					<div class="header">
 						<h2>{{ $t('fights') }}</h2>
 						<div class="right">
-							<router-link :to="'/farmer/' + farmer.id + '/history'">
+							<router-link :to="'/farmer/' + id + '/history'">
 								<div class="button flat">{{ $t('history') }}</div>
 							</router-link>
 						</div>
 					</div>
-					<fights-history :fights="farmer.fight_history" />
+					<loader v-if="!farmer" />
+					<fights-history v-else :fights="farmer.fight_history" />
 				</div>
 			</div>
 			<div class="column6">
-				<div v-if="farmer.tournaments.length > 0" class="panel">
+				<div v-if="!farmer || farmer.tournaments.length > 0" class="panel">
 					<div class="header">
 						<h2>{{ $t('tournaments') }}</h2>
 					</div>
-					<tournaments-history :tournaments="farmer.tournaments" />
+					<loader v-if="!farmer" />
+					<tournaments-history v-else :tournaments="farmer.tournaments" />
 				</div>
 			</div>
 		</div>
@@ -414,9 +418,7 @@
 	@Component({ name: "farmer", i18n: {} })
 	export default class FarmerPage extends Vue {
 		farmer: Farmer | null = null
-		trophies_list: any[] | null = null
-		trophies_grid: any[] | null = null
-		bonus_trophies: any[] | null = null
+		trophies: any = null
 		trophiesMode: string = 'list'
 		godfatherDialog: boolean = false
 		countryDialog: boolean = false
@@ -429,21 +431,53 @@
 		githubDialog: boolean = false
 		newGitHub: string = ''
 		notfound: boolean = false
+
+		get id(): any {
+			return this.$route.params.id ? parseInt(this.$route.params.id, 10) : (this.$store.state.farmer ? this.$store.state.farmer.id : null)
+		}
 		get myFarmer() {
-			return this.$store.state.farmer && this.farmer && this.farmer.id === this.$store.state.farmer.id
+			return this.$store.state.farmer && this.id === this.$store.state.farmer.id
 		}
 		get talent_gains() {
 			return this.farmer ? Math.round(this.farmer.talent_more / 3) : 0
 		}
-		@Watch('$route.params', {immediate: true})
+		get trophies_list() {
+			const list: any[] = []
+			for (const t in this.trophies) {
+				if (this.trophies[t].unlocked && this.trophies[t].category !== 6) {
+					list.push(this.trophies[t])
+				}
+			}
+			list.sort((t1, t2) => t1.date - t2.date)
+			return list
+		}
+		get trophies_grid() {
+			const grid: {[key: string]: any} = {}
+			for (const t in this.trophies) {
+				grid[t] = this.trophies[t].unlocked ? this.trophies[t] : null
+			}
+			return grid
+		}
+		get bonus_trophies() {
+			const bonus: any[] = []
+			for (const t in this.trophies) {
+				if (this.trophies[t].unlocked && this.trophies[t].category === 6) {
+					bonus.push(this.trophies[t])
+				}
+			}
+			return bonus
+		}
+
+		@Watch('id', {immediate: true})
 		update() {
-			const id = this.$route.params.id
 			this.farmer = null
+			this.trophies = null
 			this.notfound = false
-			if (this.$store.state.farmer && (!id || id === this.$store.state.farmer.id)) {
-				this.init(this.$store.state.farmer)
+			if (this.id === null) { return }
+			if (this.myFarmer) {
+				this.init(store.state.farmer!)
 			} else {
-				LeekWars.get<any>('farmer/get/' + id).then((data) => {
+				LeekWars.get<any>('farmer/get/' + this.id).then((data) => {
 					if (data.success) {
 						this.init(data.farmer)
 					} else {
@@ -468,7 +502,7 @@
 					{icon: 'question_answer', click: () => this.$router.push('/messages/new/' + farmer.id + '/' + farmer.name + '/'+ farmer.avatar_changed)}
 				])
 			}
-			this.trophies()
+			this.getTrophies()
 			this.warnings()
 			this.newWebsite = this.farmer.website
 			this.newGitHub = this.farmer.github
@@ -487,34 +521,14 @@
 				localStorage.setItem('farmer/trophies-mode', 'list')
 			}
 		}
-		trophies() {
-			if (!this.farmer) {
-				return
-			}
+		getTrophies() {
+			if (!this.farmer) {	return }
 			if (!('farmer/trophies-mode' in localStorage)) {
 				localStorage.setItem('farmer/trophies-mode', 'list')
 			}
 			this.trophiesMode = localStorage.getItem('farmer/trophies-mode') || 'list'
-
 			LeekWars.get<any>('trophy/get-farmer-trophies/' + this.farmer.id + '/' + this.$i18n.locale + '/' + this.$store.state.token).then((data) => {
-				const list: any[] = []
-				const bonus: any[] = []
-				for (const t in data.trophies) {
-					if (data.trophies[t] != null && data.trophies[t].unlocked) {
-						if (data.trophies[t].category === 6) {
-							bonus.push(data.trophies[t])
-							data.trophies[t] = null
-						} else {
-							list.push(data.trophies[t])
-						}
-					} else {
-						data.trophies[t] = null
-					}
-				}
-				list.sort((t1, t2) => t1.date - t2.date)
-				this.trophies_list = list
-				this.trophies_grid = data.trophies
-				this.bonus_trophies = bonus
+				this.trophies = data.trophies
 			})
 		}
 		registerTournament() {
@@ -618,6 +632,9 @@
 </script>
 
 <style lang="scss" scoped>
+	.panel .loader {
+		padding: 30px;
+	}
 	.state img {
 		margin-right: 6px;
 		width: 20px;
