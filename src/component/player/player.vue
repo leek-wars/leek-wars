@@ -96,7 +96,7 @@
 						<i v-ripple slot="activator" class="material-icons control">settings</i>
 						<v-list :dense="true" dark>
 							<v-list-tile v-ripple>
-								<v-switch v-model="game.sound">
+								<v-switch v-model="game.sound" hide-details>
 									<div v-if="game.sound" slot="label" class="flex-center">
 										<i class="material-icons">volume_up</i> <span>&nbsp;{{ $t('fight.sound_activated') }}</span>
 									</div>
@@ -106,19 +106,19 @@
 								</v-switch>
 							</v-list-tile>
 							<v-list-tile v-ripple>
-								<v-switch v-model="game.large" :label="$t('fight.enlarge_fight')" />
+								<v-switch v-model="game.large" hide-details :label="$t('fight.enlarge_fight')" />
 							</v-list-tile>
 							<v-list-tile v-ripple>
-								<v-switch v-model="game.showLifes" :label="$t('fight.display_life_bars')" />
+								<v-switch v-model="game.showLifes" hide-details :label="$t('fight.display_life_bars')" />
 							</v-list-tile>
 							<v-list-tile v-ripple>
-								<v-switch v-model="game.tactic" :label="$t('fight.tactic_mode')" />
+								<v-switch v-model="game.tactic" hide-details :label="$t('fight.tactic_mode')" />
 							</v-list-tile>
 							<v-list-tile v-ripple>
-								<v-switch v-model="game.showCells" :label="$t('fight.display_cell_numbers')" />
+								<v-switch v-model="game.showCells" hide-details :label="$t('fight.display_cell_numbers')" />
 							</v-list-tile>
 							<v-list-tile v-ripple>
-								<v-switch v-model="game.shadows" :label="$t('fight.display_shadows')" />
+								<v-switch v-model="game.shadows" hide-details :label="$t('fight.display_shadows')" />
 							</v-list-tile>
 						</v-list>
 					</v-menu>
