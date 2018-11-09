@@ -21,7 +21,8 @@
 				<a href="https://www.facebook.com/LeekWars">
 					<img height="28" src="image/about/facebook_like.png">
 				</a>
-				<gh-btns-star slug="leek-wars/leek-wars-client" show-count />
+				<span ref="github"></span>
+				<span class="github-button"><a class="github-button" href="https://github.com/leek-wars/leek-wars-client" data-icon="octicon-star" data-size="large" data-show-count="true" aria-label="Star Leek Wars on GitHub">Star</a></span>
 				<iframe class="twitter-button" allowtransparency="true" frameborder="0" scrolling="no" src="//platform.twitter.com/widgets/follow_button.html?screen_name=LeekWars&size=l" width="250" height="28"></iframe>
 			</div>
 		</div>
@@ -223,6 +224,13 @@
 			LeekWars.setTitle(this.$i18n.t('about.title'))
 			LeekWars.setActions([{image: 'github_white.png', click: () => window.open('https://github.com/leek-wars/leek-wars-client', '_newtab')}])
 		}
+		mounted() {
+			const github = document.createElement('script')
+			github.src = 'https://buttons.github.io/buttons.js'
+			github.async = true
+			const block = this.$refs.github as HTMLElement
+			if (block) { block.appendChild(github) }
+		}
 	}
 </script>
 
@@ -309,7 +317,7 @@
 	.fb-like {
 		vertical-align: top;
 	}
-	.gh-button-container {
-		float: none;
+	.github-button {
+		padding: 0 10px;
 	}
 </style>

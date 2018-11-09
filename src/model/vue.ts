@@ -26,8 +26,6 @@ import router from '@/router'
 import 'chartist/dist/scss/chartist.scss'
 import Vue from 'vue'
 import Chartist from 'vue-chartist'
-import VueGitHubButtons from 'vue-github-buttons'
-import 'vue-github-buttons/dist/vue-github-buttons.css'
 import transitions from 'vuetify/es5/components/transitions'
 import VApp from 'vuetify/es5/components/VApp'
 import VBtn from 'vuetify/es5/components/VBtn'
@@ -46,7 +44,6 @@ import Vuetify from 'vuetify/es5/components/Vuetify'
 import * as directives from 'vuetify/es5/directives'
 import { Latex } from './latex'
 
-Vue.use(VueGitHubButtons)
 Vue.use(Chartist)
 Vue.use(Vuetify, {
 	components: { VApp, VBtn, VTooltip, VMenu, VList, VIcon, VTabs, VRadioGroup,

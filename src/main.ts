@@ -4,7 +4,6 @@ import '@/model/vue'
 import axios from 'axios'
 import 'es6-promise/auto'
 import 'katex/dist/katex.min.css'
-import 'vue-github-buttons/dist/vue-github-buttons.css'
 import './global.scss'
 import './sfw.scss'
 
