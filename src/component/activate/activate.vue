@@ -8,7 +8,7 @@
 					<template v-if="success">
 						<img src="/image/leek/leek1_front_green.png">
 						<h2 class="signup-message">{{ $t('signup.signup_done_message') }}</h2>
-						<router-link :to="login">
+						<router-link to="/login">
 							<div class="button">{{ $t('signup.login') }}</div>
 						</router-link>
 					</template>
