@@ -19,7 +19,7 @@ import ReportDialog from '@/component/moderation/report-dialog.vue'
 import NotificationElement from '@/component/notification/notification.vue'
 import Pagination from '@/component/pagination.vue'
 import Talent from '@/component/talent.vue'
-import { i18n, loadInstanceTranslations, loadLanguageAsync } from '@/model/i18n'
+import { i18n, loadInstanceTranslations } from '@/model/i18n'
 import { LeekWars } from '@/model/leekwars'
 import '@/model/serviceworker'
 import { store } from "@/model/store"
@@ -159,8 +159,6 @@ const vueMain = new Vue({
 		return h(App)
 	},
 	created() {
-		loadLanguageAsync(this, 'fr')
-
 		window.addEventListener('keydown', (event) => {
 			if (event.ctrlKey && event.keyCode === 83) {
 				this.$emit('ctrlS')

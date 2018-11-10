@@ -47,4 +47,9 @@ import trophy from "@/lang/fr/trophy.json"
 import tutorial from "@/lang/fr/tutorial.json"
 import weapon from '@/lang/fr/weapon.json'
 
-export { garden, trophies, changelog, farmer, market, main, documentation, general_help, about, conditions, chip, weapon, potion, effect, bank, country, entity, hat, leekscript, mail, notifications, leek, forum, tournament, statistics, settings, team, help, ranking, editor, forum_topic, forum_category, accept_conditions, forgot_password, fight, history, legal, login, messages, mobile_app, moderation, report, search, signup, trophy, new_leek, tutorial, didactitiel }
+const translations = { garden, trophies, changelog, farmer, market, main, documentation, general_help, about, conditions, chip, weapon, potion, effect, bank, country, entity, hat, leekscript, mail, notifications, leek, forum, tournament, statistics, settings, team, help, ranking, editor, forum_topic, forum_category, accept_conditions, forgot_password, fight, history, legal, login, messages, mobile_app, moderation, report, search, signup, trophy, new_leek, tutorial, didactitiel }
+
+import { setTranslations } from "@/locale"
+setTranslations("fr", translations)
+
+export { translations }
