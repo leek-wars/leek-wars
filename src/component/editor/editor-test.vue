@@ -352,8 +352,8 @@
 					const startScenarioID = localStorage.getItem('editor/scenario')
 					if (startScenarioID && startScenarioID in this.scenarios) {
 						this.selectScenario(this.scenarios[startScenarioID])
-					} else {
-						this.selectScenario(LeekWars.first(this.scenarios))
+					} else if (LeekWars.objectSize(this.allScenarios)) {
+						this.selectScenario(LeekWars.first(this.allScenarios))
 					}
 				} else {
 					LeekWars.toast(data.error)
@@ -556,7 +556,7 @@
 				}
 			})
 			Vue.delete(this.scenarios, scenario.id)
-			this.selectScenario(LeekWars.first(this.scenarios))
+			this.selectScenario(LeekWars.first(this.allScenarios))
 		}
 		createScenario() {
 			LeekWars.post('test-scenario/new', {name: this.newScenarioName}).then((data) => {
@@ -665,7 +665,13 @@
 		}
 		launchTest() {
 			if (!this.currentScenario) { return }
-			const scenario_data = JSON.stringify(this.currentScenario.data)
+			const scenario = Object.assign({}, this.currentScenario.data)
+			for (const i in scenario.ais) {
+				scenario.ais[i] = Object.assign({}, scenario.ais[i])
+				scenario.ais[i].includes = null
+				scenario.ais[i].functions = null
+			}
+			const scenario_data = JSON.stringify(scenario)
 			let v2 = false
 			for (const i in this.currentScenario.data.ais) {
 				if (i !== '-1' && this.currentScenario.data.ais[i] && this.currentScenario.data.ais[i].id in this.ais && this.ais[this.currentScenario.data.ais[i].id].v2) {

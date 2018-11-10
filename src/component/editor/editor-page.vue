@@ -234,16 +234,11 @@
 			this.fontSize = parseInt(localStorage.getItem('editor/font_size') || '', 10) || DEFAULT_FONT_SIZE
 			this.lineHeight = parseInt(localStorage.getItem('editor/line_height') || '', 10) || DEFAULT_LINE_HEIGHT
 			
-			LeekWars.get('ai/get-farmer-ais/' + this.$store.state.token).then((data: any) => {
+			LeekWars.get<{ais: AI[], folders: any[], leek_ais: {[key: number]: number}}>('ai/get-farmer-ais/' + this.$store.state.token).then(data => {
 				const folders: {[key: number]: any} = {}
 				for (const folder of data.folders) {
 					folders[folder.id] = folder
 					this.items[folder.name] = folder
-				}
-				for (const ai of data.ais) {
-					Vue.set(this.ais, ai.id, ai)
-					Vue.set(ai, 'modified', false)
-					this.items[ai.name] = ai
 				}
 				this.leekAIs = data.leek_ais
 				const buildFolder = (id: number, parent: Folder): Folder => {
@@ -266,6 +261,9 @@
 				this.rootFolder = buildFolder(0, this.rootFolder as Folder)
 				for (const ai of data.ais) {
 					ai.path = this.getAIFullPath(ai)
+					ai.modified = false
+					Vue.set(this.ais, '' + ai.id, ai)
+					this.items[ai.name] = ai
 				}
 				this.update()
 				LeekWars.setTitle(this.$t('editor.title'), this.$t('editor.n_ais', [LeekWars.objectSize(data.ais)]))
@@ -349,7 +347,7 @@
 			}
 		}
 		getAIFullPath(ai: AI) {
-			if (ai.folder > 0) {
+			if (ai.folder > 0 && ai.folder in this.folderById) {
 				return this.getFolderPath(this.folderById[ai.folder]) + ai.name
 			}
 			return ai.name
