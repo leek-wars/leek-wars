@@ -9,12 +9,12 @@
 				<div v-html="$t('leek.popup_level_301_message')"></div>
 				<br>
 				<center>
-					<v-tooltip bottom :open-delay="0" :close-delay="0">
+					<v-tooltip :open-delay="0" :close-delay="0" bottom>
 						<img slot="activator" width="100" src="/image/potion/skin_gold.png">
 						<b>{{ $t('potion.skin_gold') }}</b>
 					</v-tooltip>
 					&nbsp;&nbsp;&nbsp;&nbsp;
-					<v-tooltip bottom :open-delay="0" :close-delay="0">
+					<v-tooltip :open-delay="0" :close-delay="0" bottom>
 						<img slot="activator" width="100" src="/image/hat/crown.png">
 						<b>{{ $t('hat.crown') }}</b>
 					</v-tooltip>
