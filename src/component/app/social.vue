@@ -206,7 +206,7 @@
 	}
 	.notifications .content, .messages .content {
 		padding: 0;
-		height: 200px;
+		max-height: 200px;
 		overflow-y: auto;
 		overflow-x: hidden;
 	}
