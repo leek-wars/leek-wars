@@ -11,7 +11,7 @@
 							<div class="tab green">{{ $t('see_tournament') }}</div>
 						</router-link>
 					</template>
-					<v-tooltip :open-delay="0" :close-delay="0" bottom v-if="leek.tournament">
+					<v-tooltip v-if="leek.tournament" :open-delay="0" :close-delay="0" bottom>
 						<div slot="activator" class="tab" @click="registerTournament">
 							<img src="/image/icon/trophy.png">
 							<span v-if="!leek.tournament.registered" class="register">{{ $t('register_to_tournament') }}</span>
