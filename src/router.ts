@@ -92,7 +92,7 @@ const router = new Router({
 		{ path: '/godfather', component: Home },
 		{ path: '/godfather/:godfather', component: Home },
 		{ path: '/accept-conditions', component: AcceptConditions, beforeEnter: connected },
-		{ path: '/activate', component: Activate },
+		{ path: '/activate/:id/:code', component: Activate },
 		{ path: '/admin', component: Admin, beforeEnter: connected },
 		{ path: '/admin/services', component: AdminServices, beforeEnter: connected },
 		{ path: '/admin/emails', component: AdminEmails, beforeEnter: connected },
