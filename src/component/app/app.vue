@@ -123,13 +123,7 @@
 				}
 			})
 			if (this.$store.state.connected && localStorage.getItem('changelog_version') !== LeekWars.version) {
-				LeekWars.get<any>('changelog/get-last/' + this.$i18n.locale).then((data) => {
-					if (data.success) {
-						this.changelog = data.changelog
-						this.changelogDialog = true
-						localStorage.setItem('changelog_version', LeekWars.version)
-					}
-				})
+				this.changelogShow()
 			}
 			this.$root.$on('keyup', (event: KeyboardEvent) => {
 				// Konami code
@@ -144,6 +138,15 @@
 					this.konami = ""
 				}
 				if (this.konami.length > 12) { this.konami = this.konami.substring(1) }
+			})
+		}
+		changelogShow() {
+			LeekWars.get<any>('changelog/get-last/' + this.$i18n.locale).then((data) => {
+				if (data.success) {
+					this.changelog = data.changelog
+					this.changelogDialog = true
+					localStorage.setItem('changelog_version', LeekWars.version)
+				}
 			})
 		}
 		darkClick() {
