@@ -59,19 +59,22 @@
 		title: any = null
 		loaded: boolean = false
 
-		@Watch('$route.params', {immediate: true})
+		get id() {
+			return this.$route.params.id || (this.$store.state.farmer ? this.$store.state.farmer.id : null)
+		}
+		@Watch('id', {immediate: true})
 		update() {
 			this.loaded = false
 			this.count = 0
 			this.total = 0
 			this.title = null
-			const farmerID = this.$route.params.id || this.$store.state.farmer.id
+			if (!this.id) { return }
 			LeekWars.trophyCategories.forEach((c) => {
 				this.trophies[c.id] = []
 				this.progressions[c.id] = 0
 				this.totals[c.id] = 0
 			})
-			LeekWars.get<any>('trophy/get-farmer-trophies/' + farmerID + '/' + this.$i18n.locale + '/' + this.$store.state.token).then((data) => {
+			LeekWars.get<any>('trophy/get-farmer-trophies/' + this.id + '/' + this.$i18n.locale + '/' + this.$store.state.token).then((data) => {
 				for (const t in data.trophies) {
 					const trophy = data.trophies[t]
 					this.trophies[trophy.category].push(trophy)
@@ -87,13 +90,13 @@
 				}
 				this.count = data.count
 				this.total = data.total
-				if (farmerID === this.$store.state.farmer.id) {
+				if (this.id === this.$store.state.farmer.id) {
 					this.title = this.$t('title_me')
 				} else {
 					this.title = this.$t('title', [data.farmer_name])
 				}
 				const subtitle = this.count + ' / ' + this.total + ' - ' + Math.floor(100 * this.count / this.total) + '%'
-				if (farmerID === this.$store.state.farmer.id) {
+				if (this.id === this.$store.state.farmer.id) {
 					LeekWars.setTitle(this.$t('title_me'), subtitle)
 				} else {
 					LeekWars.setTitle(this.$t('title', [data.farmer_name]), subtitle)
