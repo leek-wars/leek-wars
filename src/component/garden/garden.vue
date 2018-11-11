@@ -148,17 +148,17 @@
 								</router-link>
 								<div class="versus">VS</div>
 								<div v-if="selectedComposition">
-									<loader v-if="!teamOpponents[selectedComposition.id]" />
-									<div v-else-if="selectedComposition.fights" class="opponents">
+									<div v-if="selectedComposition.fights === 0">
+										<img src="/image/notgood.png"><br>
+										<h4>{{ $t('no_more_fights') }}</h4>
+									</div>
+									<loader v-else-if="!teamOpponents[selectedComposition.id]" />
+									<div v-else class="opponents">
 										<garden-compo v-for="compo in teamOpponents[selectedComposition.id]" :key="compo.id" :compo="compo" class="composition-wrapper" @click.native="clickCompositionOpponent(compo)" />
 										<div v-if="!teamOpponents[selectedComposition.id].length">
 											<img src="/image/notgood.png">
 											<h4>{{ $t('no_opponent_of_your_size') }}</h4>
 										</div>
-									</div>
-									<div v-else>
-										<img src="/image/notgood.png"><br>
-										<h4>{{ $t('no_more_fights') }}</h4>
 									</div>
 								</div>
 							</div>
