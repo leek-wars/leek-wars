@@ -1,5 +1,5 @@
 <template lang="html">
-	<div :class="{generating: fight.status == 0, win: fight.result == 'win', defeat: fight.result == 'defeat'}" class="fight">
+	<div :class="{generating: fight.status == 0, win: fight.result == 'win', defeat: fight.result == 'defeat', draw: fight.result == 'draw'}" class="fight">
 		<div v-if="fight.type == FightType.BATTLE_ROYALE" class="fighters">
 			<div class="center">
 				<router-link :to="'/fight/' + id">
