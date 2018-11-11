@@ -144,7 +144,6 @@
 					"Shift-Tab": () => this.unindentCode(),
 					"Ctrl-D": () => this.duplicateLine(),
 					"Ctrl-E": () => this.commentCode(),
-					"Shift-/": () => this.commentCode(),
 					"Shift-Ctrl-/": () => this.commentCode(),
 					"Ctrl-K": () => this.removeLine(),
 					"Ctrl-Space": () => this.autocomplete(true),
