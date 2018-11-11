@@ -125,6 +125,7 @@ const LeekWars = {
 	timeSeconds: (Date.now() / 1000) | 0,
 	large: false,
 	setLocale(locale: string) {
+		document.cookie = "lang=" + locale
 		loadLanguageAsync(vueMain, locale)
 	},
 	getLeekAppearence: (level: number): number => {
