@@ -109,9 +109,6 @@
 </script>
 
 <style lang="scss" scoped>
-	.panel .loader {
-		padding: 20px;
-	}
 	.panel:last-child {
 		margin-bottom: 0px;
 	}

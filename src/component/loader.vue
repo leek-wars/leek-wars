@@ -16,7 +16,7 @@
 
 <style lang="scss" scoped>
 	.loader {
-		padding: 10px;
+		padding: 30px;
 		margin: auto;
 		text-align: center;
 	}

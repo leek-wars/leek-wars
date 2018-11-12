@@ -403,9 +403,6 @@
 		height: calc(100vh - 56px);
 		overflow-y: auto;
 	}
-	.panel .loader {
-		padding: 20px 0;
-	}
 	.preview-panel .loader {
 		padding: 80px 0;
 	}
