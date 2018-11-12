@@ -632,9 +632,6 @@
 </script>
 
 <style lang="scss" scoped>
-	.panel .loader {
-		padding: 30px;
-	}
 	.state img {
 		margin-right: 6px;
 		width: 20px;
