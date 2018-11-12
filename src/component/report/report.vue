@@ -1,17 +1,17 @@
 <template>
-	<div v-if="fight">
+	<div>
 		<div class="page-header page-bar">
 			<h1>{{ $t('title') }}</h1>
 			<div class="tabs">
-				<div class="tab disabled">
+				<div class="tab disabled" v-if="report">
 					{{ $t('duration', [report.duration]) }}
 				</div>
-				<div class="action" link="/fight/{fight.id}" icon="undo"></div>
 			</div>
 		</div>
 
 		<div class="panel first">
-			<div class="content">
+			<loader v-if="!report" />
+			<div v-else class="content">
 				<div v-if="fight.too_long" class="too-long">
 					{{ $t('generation_too_long') }}
 				</div>
@@ -84,7 +84,8 @@
 					</div>
 				</div>
 			</div>
-			<div ref="chartPanel" class="content chart-panel" @mouseleave="chartMouseLeave" @mousemove="chartMouseMove">
+			<loader v-if="!report" />
+			<div v-else ref="chartPanel" class="content chart-panel" @mouseleave="chartMouseLeave" @mousemove="chartMouseMove">
 				<chartist ref="chart" :data="chartData" :options="chartOptions" :event-handlers="chartEvents" class="chart" type="Line" />
 				<div v-show="chartTooltipValue" ref="chartTooltip" :style="{top: chartTooltipY + 'px', left: chartTooltipX + 'px'}" class="chart-tooltip v-tooltip__content top" v-html="chartTooltipValue"></div>
 			</div>
@@ -99,7 +100,8 @@
 					</div>
 				</div>
 			</div>
-			<div class="content scroll-x">
+			<loader v-if="!report" />
+			<div v-else class="content scroll-x">
 				<report-statistics :fight="fight" :statistics="statistics" />
 			</div>
 		</div>
@@ -125,7 +127,8 @@
 			<div class="header">
 				<h2>Actions</h2>
 			</div>
-			<div class="content">
+			<loader v-if="!report" />
+			<div v-else class="content">
 				<actions :actions="actions" :leeks="leeks" class="actions" />
 			</div>
 		</div>
