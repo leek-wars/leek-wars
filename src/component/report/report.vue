@@ -342,8 +342,7 @@
 						})
 					}
 				}
-			}]
-			setTimeout(() => {
+			}, { event: 'created', fn: () => {
 				const chart = (this.$refs.chart as Vue).$el
 				chart.querySelectorAll('.ct-line').forEach((e, i) => {
 					e.addEventListener('mouseenter', () => {
@@ -353,7 +352,7 @@
 						this.chartTooltipLeek = i
 					})
 				})
-			}, 500)
+			}}]
 		}
 		chartMouseLeave() {
 			const chart = (this.$refs.chart as Vue).$el
