@@ -226,6 +226,9 @@
 			if (!LeekWars.keywords.length) {
 				LeekWars.keywords = generateKeywords()
 			}
+			if (localStorage.getItem('editor/autocomplete') === null) { localStorage.setItem('editor/autocomplete', 'true') }
+			if (localStorage.getItem('editor/auto_closing') === null) { localStorage.setItem('editor/auto_closing', 'true') }
+			if (localStorage.getItem('editor/popups') === null) { localStorage.setItem('editor/popups', 'true') }
 			this.enlargeWindow = localStorage.getItem('editor/large') === 'true'
 			this.theme = localStorage.getItem('editor/theme') || DEFAULT_THEME
 			this.autoClosing = localStorage.getItem('editor/auto_closing') === 'true'
