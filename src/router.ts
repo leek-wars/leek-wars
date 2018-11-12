@@ -17,6 +17,7 @@ import ChatPage from '@/component/chat/chat-page.vue'
 import Conditions from '@/component/conditions/conditions.vue'
 import Documentation from '@/component/documentation/documentation.vue'
 import EditorPage from '@/component/editor/editor-page.vue'
+import Encyclopedia from '@/component/encyclopedia/encyclopedia.vue'
 import FarmerPage from '@/component/farmer/farmer.vue'
 import FightPage from '@/component/fight/fight.vue'
 import ForgotPassword from '@/component/forgot-password/forgot-password.vue'
@@ -109,6 +110,7 @@ const router = new Router({
 		{ path: '/conditions', component: Conditions },
 		{ path: '/changelog', component: Changelog },
 		{ path: '/chat', component: ChatPage, beforeEnter: connected },
+		{ path: '/encyclopedia/:page', component: Encyclopedia },
 		{ path: '/editor', component: EditorPage, beforeEnter: connected },
 		{ path: '/editor/:id', component: EditorPage, beforeEnter: connected },
 		{ path: '/farmer', component: FarmerPage, beforeEnter: connected },

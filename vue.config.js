@@ -1,4 +1,5 @@
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
+const path = require('path')
 
 module.exports = {
 	configureWebpack: {
@@ -12,6 +13,12 @@ module.exports = {
 		'app-en': {entry: 'src/main-en'}
 	},
     chainWebpack: config => {
+		config.module
+			.rule('wiki')
+			.test(/\.wiki$/)
+			.use('wiki')
+				.loader(path.resolve('./src/wiki-loader.js'))
+				.end()
 		config.module
 			.rule('images')
 			.use('url-loader')
