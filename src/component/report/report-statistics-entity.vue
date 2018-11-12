@@ -6,7 +6,9 @@
 			<span class="text">{{ entity.leek.summon ? $t('entity.' + entity.name) : entity.name }}</span>
 		</td>
 		<td>{{ entity.level }}</td>
-		<td v-for="stat in stats" :key="stat" :class="{best: best[stat] === entity.leek.id}">{{ entity[stat] | number }}</td>
+		<td v-for="stat in stats" :key="stat" :class="{best: best[stat] === entity.leek.id}">
+			<template v-if="entity[stat]">{{ entity[stat] | number }}</template>
+		</td>
 	</tr>
 </template>
 
