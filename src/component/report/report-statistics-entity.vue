@@ -3,7 +3,7 @@
 		<td class="name">
 			<span v-if="entity.alive" class="alive"></span>
 			<span v-else class="dead"></span>
-			<span class="text">{{ entity.name }}</span>
+			<span class="text">{{ entity.leek.summon ? $t('entity.' + entity.name) : entity.name }}</span>
 		</td>
 		<td>{{ entity.level }}</td>
 		<td v-for="stat in stats" :key="stat" :class="{best: best[stat] === entity.leek.id}">{{ entity[stat] | number }}</td>

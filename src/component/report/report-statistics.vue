@@ -20,14 +20,14 @@
 			<th>Bugs</th>
 		</tr>
 		<tr>
-			<td colspan="17" class="header"><b>{{ $t('team1') }}</b></td>
+			<td colspan="17" class="header"><b>{{ $t('report.team1') }}</b></td>
 		</tr>
 		<template v-for="entity in statistics.team1">
 			<report-statistics-entity :key="entity.leek.id" :entity="entity" :stats="stats" :best="best" />
 			<report-statistics-entity v-for="summon in entity.summons" :key="entity.leek.id + '-' + summon.leek.id" :entity="summon" :stats="stats" :best="best" />
 		</template>
 		<tr>
-			<td colspan="17" class="header"><b>{{ $t('team2') }}</b></td>
+			<td colspan="17" class="header"><b>{{ $t('report.team2') }}</b></td>
 		</tr>
 		<template v-for="entity in statistics.team2">
 			<report-statistics-entity :key="entity.leek.id" :entity="entity" :stats="stats" :best="best" />
