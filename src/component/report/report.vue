@@ -195,7 +195,7 @@
 						leek.name = this.$i18n.t('entity.' + leek.name) as string
 					}
 				}
-				if (this.$store.getters.admin) {
+				if (this.$store.getters.admin && this.report.ai_times) {
 					for (const l in this.report.leeks1) {
 						this.report.leeks1[l].aiTime = Math.round(this.report.ai_times[l].time / 1000) / 1000
 					}
