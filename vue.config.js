@@ -29,9 +29,6 @@ module.exports = {
 		if (process.env.VUE_MODE === 'build') {
 			config.entryPoints.delete('index')
 		}
-		config.plugin('copy').tap(options => {
-			options[0].from = './src/wiki/image'
-		})
 	},
     pwa: {
 		name: 'Leek Wars',
