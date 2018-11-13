@@ -34,7 +34,9 @@ function request<T = any>(method: string, url: string, params?: any) {
 	return new Promise<T>((resolve, reject) => {
 		const xhr = new XMLHttpRequest()
 		xhr.open(method, url)
-		xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8')
+		if (!(params instanceof FormData)) {
+			xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8')
+		}
 		xhr.onload = (e: any) => resolve(JSON.parse(e.target.response))
 		xhr.onerror = reject
 		xhr.send(params)
