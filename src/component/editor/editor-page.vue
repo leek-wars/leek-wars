@@ -264,7 +264,7 @@
 				this.rootFolder = buildFolder(0, this.rootFolder as Folder)
 				for (const ai of data.ais) {
 					ai.path = this.getAIFullPath(ai)
-					ai.modified = false
+					Vue.set(ai, 'modified', false)
 					Vue.set(this.ais, '' + ai.id, ai)
 					this.items[ai.name] = ai
 				}
