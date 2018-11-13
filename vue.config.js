@@ -1,10 +1,12 @@
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
+const CopyWebpackPlugin = require('copy-webpack-plugin')
 const path = require('path')
 
 module.exports = {
 	configureWebpack: {
 		plugins: [
 			// new BundleAnalyzerPlugin()
+			new CopyWebpackPlugin([{ from: 'src/wiki/image/', to: 'wiki' }])
 		]
 	},
 	pages: {
@@ -27,6 +29,9 @@ module.exports = {
 		if (process.env.VUE_MODE === 'build') {
 			config.entryPoints.delete('index')
 		}
+		config.plugin('copy').tap(options => {
+			options[0].from = './src/wiki/image'
+		})
 	},
     pwa: {
 		name: 'Leek Wars',

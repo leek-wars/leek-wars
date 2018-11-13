@@ -21,3 +21,7 @@ declare module 'js-beautify' {
 	var js_beautify: any
 	export = js_beautify
 }
+declare module 'markdown-it' {
+	var markdown: any
+	export = markdown
+}

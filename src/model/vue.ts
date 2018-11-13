@@ -7,6 +7,7 @@ import Avatar from '@/component/avatar.vue'
 import ChatElement from '@/component/chat/chat.vue'
 import Comments from '@/component/comment/comments.vue'
 import Emblem from '@/component/emblem.vue'
+import Markdown from '@/component/encyclopedia/markdown.vue'
 import FormattingRules from '@/component/forum/formatting-rules.vue'
 import FightHistory from '@/component/history/fight-history.vue'
 import FightsHistory from '@/component/history/fights-history.vue'
@@ -89,6 +90,7 @@ Vue.component('lw-code', Code)
 Vue.component('conversation', ConversationElement)
 Vue.component('ai', AIElement)
 Vue.component('not-found', NotFound)
+Vue.component('markdown', Markdown)
 
 Vue.directive('autostopscroll', {
 	inserted: (el, binding) => {
