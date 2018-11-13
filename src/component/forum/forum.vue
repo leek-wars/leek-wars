@@ -83,9 +83,9 @@
 			<div class="content">
 				<loader v-if="!connected_farmers.length" />
 				<div v-else :class="{expanded: expandFarmers}" class="connected-farmers">
-					<router-link v-for="(farmer, f) in connected_farmers" :key="farmer.id" :to="'/farmer/' + farmer.id" :class="farmer.class">
+					<router-link v-for="(farmer, f) in connected_farmers" :key="farmer.id" :to="'/farmer/' + farmer.id">
 						<span v-if="f > 0">, </span>
-						<span>{{ farmer.name }}</span>
+						<span :class="farmer.class">{{ farmer.name }}</span>
 					</router-link>
 				</div>
 				<div class="grades-legend">
