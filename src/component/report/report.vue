@@ -3,7 +3,7 @@
 		<div class="page-header page-bar">
 			<h1>{{ $t('title') }}</h1>
 			<div class="tabs">
-				<div class="tab disabled" v-if="report">
+				<div v-if="report" class="tab disabled">
 					{{ $t('duration', [report.duration]) }}
 				</div>
 			</div>

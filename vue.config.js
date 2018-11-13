@@ -7,7 +7,10 @@ module.exports = {
 		plugins: [
 			// new BundleAnalyzerPlugin()
 			new CopyWebpackPlugin([{ from: 'src/wiki/image/', to: 'wiki' }])
-		]
+		],
+		performance: {
+			hints: false
+		}
 	},
 	pages: {
 		index: {entry: 'src/main-fr'},
@@ -37,5 +40,5 @@ module.exports = {
 		workboxOptions: {
 			swSrc: 'public/service-worker.js'
 		}
-    }
+	}
 }
