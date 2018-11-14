@@ -41,6 +41,9 @@
 								<i v-if="topic.resolved" :title="$t('topic_resolved')" class="attr material-icons resolved">check_circle</i>
 								<i v-if="topic.closed" :title="$t('topic_locked')" class="attr material-icons">lock</i>
 								<img v-if="topic.pinned" :title="$t('topic_pinned')" class="attr" src="/image/pin.png">
+								<a v-if="topic.issue" :href="'https://github.com/leek-wars/leek-wars-client/issues/' + topic.issue" class="attr issue" target="_blank">
+									#{{ topic.issue }}
+								</a>
 								<router-link :to="'/forum/category-' + category.id + '/topic-' + topic.id">{{ topic.title }}</router-link>
 							</span>
 							<div class="description grey">
@@ -132,7 +135,7 @@
 		}
 		create() {
 			if (!this.category) { return }
-			LeekWars.post('forum/create-topic', {category_id: this.category.id,	title: this.createTitle, message: this.createMessage}).then((data) => {
+			LeekWars.post('forum/create-topic', {category_id: this.category.id,	title: this.createTitle, message: this.createMessage, issue: 0}).then((data) => {
 				if (data.success) {
 					this.createDialog = false
 					if (this.category) {
@@ -187,6 +190,17 @@
 	i.attr {
 		color: #666;
 		font-size: 19px;
+	}
+	.topic .issue {
+		background: #0366d6;
+		color: white;
+		border-radius: 5px;
+		font-size: 15px;
+		font-weight: 500;
+		padding: 0 4px;
+		display: inline-block;
+		margin-bottom: 2px;
+		height: auto;
 	}
 	.topic > div {
 		padding: 8px;

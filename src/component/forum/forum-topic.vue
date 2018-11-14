@@ -13,6 +13,9 @@
 					<i v-if="topic.resolved" :title="$t('topic_resolved')" class="attr material-icons">check_circle</i>
 					<i v-if="topic.locked" :title="$t('topic_locked')" class="attr material-icons">lock</i>
 					<img v-if="topic.pinned" :title="$t('topic_pinned')" class="attr" src="/image/pin_white.png">
+					<a v-if="topic.issue" :href="'https://github.com/leek-wars/leek-wars-client/issues/' + topic.issue" class="attr issue" target="_blank">
+						<img src="/image/github_white.png"><span>#{{ topic.issue }}</span>
+					</a>
 				</div>
 			</div>
 			<div v-if="!LeekWars.mobile" class="tabs">
@@ -101,6 +104,9 @@
 								<div v-else class="edit-buttons">
 									<span class="button green confirm-edit" @click="confirmEdit(message)">{{ $t('send') }}</span>&nbsp;
 									<span class="button cancel-edit" @click="endEdit(message)">{{ $t('cancel') }}</span>
+									<span v-if="message.id == -1">
+										&nbsp;GitHub Issue <input v-model.number="topic.issue" type="number">
+									</span>
 								</div>
 							</div>
 						</div>
@@ -375,7 +381,7 @@
 			} else {
 				const input = this.$refs.topicTitle as HTMLElement
 				const title = input.innerText
-				LeekWars.post("forum/edit-topic", {topic_id: this.topic.id, title, message: message.message}).then(callback)
+				LeekWars.post("forum/edit-topic", {topic_id: this.topic.id, title, message: message.message, issue: this.topic.issue}).then(callback)
 			}
 		}
 	}
@@ -591,6 +597,23 @@
 	i.attr {
 		font-size: 22px;
 		margin: 0 6px;
+	}
+	.issue {
+		background: #0366d6;
+		color: white;
+		border-radius: 5px;
+		font-size: 15px;
+		font-weight: 500;
+		padding: 0 4px;
+		display: inline-flex;
+		align-items: center;
+		height: 25px;
+		line-height: auto;
+		img {
+			height: 20px;
+			margin: 2px;
+			margin-right: 5px;
+		}
 	}
 	.votes {
 		display: inline-block;
