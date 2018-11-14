@@ -6,8 +6,8 @@
 				<div v-if="tournament && !tournament.finished" class="tab disabled">{{ timerText }}</div>
 			</div>
 		</div>
-		<div class="panel">
-			<div ref="sizer" :class="{zoomed: zoomed}" class="content tournament">
+		<panel class="first">
+			<div slot="content" ref="sizer" :class="{zoomed: zoomed}" class="content tournament">
 				
 				<loader v-if="!tournament" />
 				<svg v-else :class="{zoomed: zoomed}" :style="{height: zoomed ? height : 'auto'}" class="tournament" viewBox="-485 -400 970 800">
@@ -181,18 +181,13 @@
 					<tournament-block :item="tournament.winner.name ? tournament.winner : null" :x="-60" :y="-395" :size="120" />
 				</svg>
 			</div>
-		</div>
+		</panel>
 
 		<div v-show="tooltip" :style="{left: tooltipX + 'px', top: tooltipY + 'px'}" class="tooltip v-tooltip__content">{{ tooltipText }}</div>
 
-		<div class="panel">
-			<div class="header">
-				<h2>{{ $t('comments') }}</h2>
-			</div>
-			<div class="content">
-				<comments :comments="tournament ? tournament.comments : null" @comment="comment" />
-			</div>
-		</div>
+		<panel :title="$t('comments')">
+			<comments slot="content" :comments="tournament ? tournament.comments : null" @comment="comment" />
+		</panel>
 	</div>
 </template>
 
@@ -246,11 +241,13 @@
 					this.setupTimer()
 				}
 			})
-			this.$on('tooltip', this.tooltipOpen)
-			this.$on('tooltip-close', this.tooltipClose)
+			this.$root.$on('tooltip', this.tooltipOpen)
+			this.$root.$on('tooltip-close', this.tooltipClose)
 		}
 		beforeDestroy() {
 			clearTimeout(this.timer)
+			this.$root.$off('tooltip', this.tooltipOpen)
+			this.$root.$off('tooltip-close', this.tooltipClose)
 		}
 		tooltipOpen(x: number, y: number, text: string) {
 			this.tooltip = true

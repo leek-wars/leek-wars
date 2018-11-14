@@ -13,46 +13,35 @@
 		</div>
 		<div class="container">
 			<div v-show="!LeekWars.mobile || !LeekWars.splitBack" class="column8">
-				<div class="panel">
-					<div class="header">
-						<h2>{{ $t('fights') }}</h2>
-					</div>
-					<loader v-if="!fight_packs.length" />
-					<div v-else class="items fights">
+				<panel :title="$t('fights')">
+					<loader v-if="!fight_packs.length" slot="content" />
+					<div v-else slot="content" class="items fights">
 						<router-link v-ripple v-for="pack in fight_packs" :key="pack.id" :to="'/market/' + pack.name" :farmer-count="0" :leek-count="0" class="item fight-pack" @click="selectItem(pack)">
 							<img src="/image/market/fights.png">
 							<div>{{ pack.title }}</div>
 						</router-link>
 					</div>
-				</div>
-				<div class="panel">
-					<div class="header">
-						<h2>{{ $t('weapons') }}</h2>
-					</div>
-					<loader v-if="!weapons.length" />
-					<div v-else class="items weapons">
+				</panel>
+				<panel :title="$t('weapons')">
+					<loader v-if="!weapons.length" slot="content" />
+					<div v-else slot="content" class="items weapons">
 						<router-link v-ripple v-for="weapon in weapons" :key="weapon.id" :to="'/market/' + weapon.name" :farmer-count="items[weapon.id].farmer_count" :leek-count="items[weapon.id].leek_count" class="item weapon">
 							<img :src="'/image/weapon/' + weapon.name + '.png'">
 						</router-link>
 					</div>
-				</div>
-				<div class="panel">
-					<div class="header">
-						<h2>{{ $t('chips') }}</h2>
-						<div class="right">
-							<div class="button flat" @click="updateChipMode">
-								<i v-if="chipMode === 'type'" class="material-icons">view_module</i>
-								<i v-else class="material-icons">sort</i>
-							</div>
-						</div>
+				</panel>
+				<panel :title="$t('chips')">
+					<div slot="actions" class="button flat" @click="updateChipMode">
+						<i v-if="chipMode === 'type'" class="material-icons">view_module</i>
+						<i v-else class="material-icons">sort</i>
 					</div>
-					<loader v-if="!chips.length" />
-					<div v-else-if="chipMode === 'level'" class="items chips">
+					<loader v-if="!chips.length" slot="content" />
+					<div v-else-if="chipMode === 'level'" slot="content" class="items chips">
 						<router-link v-ripple v-for="chip in chips" :key="chip.id" :to="'/market/' + chip.name" :farmer-count="items[chip.id].farmer_count" :leek-count="items[chip.id].leek_count" class="item chip">
 							<img :src="'/image/chip/small/' + chip.name + '.png'">
 						</router-link>
 					</div>
-					<div v-else>
+					<div v-else slot="content">
 						<div v-for="type in EffectTypeMarket" v-if="!isNaN(type)" :key="type">
 							<h3>{{ $t('effect.effect_type_' + type) }}</h3>
 							<div class="items chips">
@@ -62,49 +51,38 @@
 							</div>
 						</div>
 					</div>
-				</div>
-				<div class="panel">
-					<div class="header">
-						<h2>{{ $t('potions') }}</h2>
-					</div>
-					<loader v-if="!potions.length" />
-					<div v-else class="items potions">
+				</panel>
+				<panel :title="$t('potions')">
+					<loader v-if="!potions.length" slot="content" />
+					<div v-else slot="content" class="items potions">
 						<router-link v-ripple v-for="potion in potions" :key="potion.id" :to="'/market/' + potion.name" :farmer-count="items[potion.id].farmer_count" :leek-count="items[potion.id].leek_count" class="item potion">
 							<img :src="'/image/potion/' + potion.name + '.png'">
 						</router-link>
 					</div>
-				</div>
-				<div class="panel">
-					<div class="header">
-						<h2>{{ $t('hats') }}</h2>
-					</div>
-					<loader v-if="!hats.length" />
-					<div v-else class="items hats">
+				</panel>
+				<panel :title="$t('hats')">
+					<loader v-if="!hats.length" slot="content" />
+					<div v-else slot="content" class="items hats">
 						<router-link v-ripple v-for="hat in hats" :key="hat.id" :to="'/market/' + hat.name" :farmer-count="items[hat.id].farmer_count" :leek-count="items[hat.id].leek_count" class="item hat">
 							<img :src="'/image/hat/' + hat.name + '.png'">
 						</router-link>
 					</div>
-				</div>
+				</panel>
 			</div>
 			<div v-show="!LeekWars.mobile || LeekWars.splitBack" class="column4">
-				<div class="panel preview-panel">
-					<div class="header">
-						<h2>{{ $t('characteristics') }}</h2>
-					</div>
-					<div v-if="!selectedItem">
-						<loader />
-					</div>
-					<div v-else class="content preview">
+				<panel :title="$t('characteristics')" class="panel preview-panel">
+					<loader v-if="!selectedItem" slot="content" />
+					<div v-else slot="content" class="preview center">
 						<weapon-preview v-if="selectedItem.type == ItemType.WEAPON" :weapon="LeekWars.weapons[selectedItem.id]" />
 						<chip-preview v-else-if="selectedItem.type == ItemType.CHIP" :chip="LeekWars.chips[selectedItem.id]" />
 						<potion-preview v-else-if="selectedItem.type == ItemType.POTION" :potion="LeekWars.potions[selectedItem.id]" />
 						<fight-pack-preview v-else-if="selectedItem.type == ItemType.FIGHT_PACK" :pack="selectedItem" />
 						<hat-preview v-else-if="selectedItem.type == ItemType.HAT" :hat="LeekWars.hats[selectedItem.id]" />
 						<div class="buy-buttons">
-							<template v-if="selectedItem.price_habs > 0">
+							<div v-if="selectedItem.price_habs > 0">
 								<h4 class="buy-label">{{ $t('buy') }}</h4>&nbsp;
 								<div :class="{disabled: $store.state.farmer && $store.state.farmer.habs < selectedItem.price_habs}" class="button buy-button" @click="openBuyHabs">{{ selectedItem.price_habs | number }}<img src="/image/hab.png"></div>
-							</template>
+							</div>
 							<div v-if="selectedItem.price_crystals > 0">
 								<h4 class="buy-label">{{ $t('buy') }}</h4>&nbsp;
 								<div :class="{disabled: $store.state.farmer && $store.state.farmer.crystals < selectedItem.price_crystals}" class="button buy-crystals-button" @click="openBuyCrystals">{{ selectedItem.price_crystals | number }}<img src="/image/crystal.png"></div>
@@ -125,7 +103,7 @@
 							</div>
 						</template>
 					</div>
-				</div>
+				</panel>
 			</div>
 		</div>
 

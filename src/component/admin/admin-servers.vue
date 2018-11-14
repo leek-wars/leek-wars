@@ -3,39 +3,36 @@
 		<div class="page-header page-bar">
 			<h1><router-link to="/admin">Administration</router-link> > Serveurs</h1>
 		</div>
-		<div class="servers panel">
-			<div class="content">
-				<loader v-if="LeekWars.objectSize(servers) == 0" />
-				<div v-else>
-					<div v-for="(server, s) in servers" :key="s" class="server card">
-						<div class="load">
-							<div :style="{'margin-top': (server.load * 136) + 'px'}"></div>
-						</div>
-						<img src="/image/admin/server.png">
-						<br>
-						<div class="name">
-							{{ server.name }}<img src="/image/connected.png">
-						</div>
-						<div class="total-wrapper">Total : {{ server.generated | number }}</div>
-						<div class="threads">
-
-							<div v-for="(thread, t) in server.threads" :key="t" class="thread">
-								<div class="th-name">
-									<img v-if="thread.connected" src="/image/connected.png">
-									<img v-else src="/image/disconnected.png">
-									&nbsp;&nbsp;
-									<b>{{ thread.name }}</b>
-								</div>
-								<span class="green">✔ <span class="generated">{{ thread.generated | number }}</span></span>&nbsp;
-								<span class="red">✘ <span class="error">{{ thread.errors | number }}</span></span>
-								<br>
-								► <span class="task">{{ thread.task }}</span>
+		<panel class="servers">
+			<loader v-if="LeekWars.objectSize(servers) == 0" />
+			<div v-else>
+				<div v-for="(server, s) in servers" :key="s" class="server card">
+					<div class="load">
+						<div :style="{'margin-top': (server.load * 136) + 'px'}"></div>
+					</div>
+					<img src="/image/admin/server.png">
+					<br>
+					<div class="name">
+						{{ server.name }}<img src="/image/connected.png">
+					</div>
+					<div class="total-wrapper">Total : {{ server.generated | number }}</div>
+					<div class="threads">
+						<div v-for="(thread, t) in server.threads" :key="t" class="thread">
+							<div class="th-name">
+								<img v-if="thread.connected" src="/image/connected.png">
+								<img v-else src="/image/disconnected.png">
+								&nbsp;&nbsp;
+								<b>{{ thread.name }}</b>
 							</div>
+							<span class="green">✔ <span class="generated">{{ thread.generated | number }}</span></span>&nbsp;
+							<span class="red">✘ <span class="error">{{ thread.errors | number }}</span></span>
+							<br>
+							► <span class="task">{{ thread.task }}</span>
 						</div>
 					</div>
 				</div>
 			</div>
-		</div>
+		</panel>
 	</div>
 </template>
 

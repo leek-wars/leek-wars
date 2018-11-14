@@ -11,72 +11,52 @@
 		</div>
 		<div class="flex-container">
 			<div class="column6">
-				<div class="panel">
-					<div class="header">
-						<h2>{{ $t('language') }}</h2>
+				<panel :title="$t('language')" class="languages">
+					<div v-ripple v-for="language in LeekWars.languages" :key="language.code" :class="{selected: language.code == $i18n.locale}" :lang="language.code" class="language" @click="LeekWars.setLocale(language.code)">
+						<img :src="language.flag">
+						<br>
+						{{ language.name }} ({{ language.code }})
 					</div>
-					<div class="content languages">
-						<div v-ripple v-for="language in LeekWars.languages" :key="language.code" :class="{selected: language.code == $i18n.locale}" :lang="language.code" class="language" @click="LeekWars.setLocale(language.code)">
-							<img :src="language.flag">
-							<br>
-							{{ language.name }} ({{ language.code }})
-						</div>
-					</div>
-				</div>
+				</panel>
 			</div>
 			<div class="column6">
-				<div class="panel">
-					<div class="header">
-						<h2>{{ $t('misc_options') }}</h2>
-					</div>
-					<div class="content">
-						<table class="misc-settings">
-							<tr id="sfw-button">
-								<td><h4>{{ $t('activate_discrete_mode') }}</h4></td>
-								<td><v-switch v-model="sfwMode" hide-details /></td>
-							</tr>
-							<tr id="notifs-results-button">
-								<td><h4>{{ $t('notifs_results') }}</h4></td>
-								<td><v-switch v-model="notifsResults" hide-details /></td>
-							</tr>
-							<tr v-if="LeekWars.mobile" id="chat-first-button">
-								<td><h4>{{ $t('chat_first') }}</h4></td>
-								<td><v-switch v-model="chatFirst" hide-details /></td>
-							</tr>
-						</table>
-					</div>
-				</div>
+				<panel :title="$t('misc_options')">
+					<table class="misc-settings">
+						<tr id="sfw-button">
+							<td><h4>{{ $t('activate_discrete_mode') }}</h4></td>
+							<td><v-switch v-model="sfwMode" hide-details /></td>
+						</tr>
+						<tr id="notifs-results-button">
+							<td><h4>{{ $t('notifs_results') }}</h4></td>
+							<td><v-switch v-model="notifsResults" hide-details /></td>
+						</tr>
+						<tr v-if="LeekWars.mobile" id="chat-first-button">
+							<td><h4>{{ $t('chat_first') }}</h4></td>
+							<td><v-switch v-model="chatFirst" hide-details /></td>
+						</tr>
+					</table>
+				</panel>
 			</div>
 			<div class="column6">
-				<div class="panel">
-					<div class="header">
-						<h2>{{ $t('change_password') }}</h2>
-					</div>
-					<div class="content">
-						<form class="change-password" @submit="changePassword">
-							<h4>{{ $t('old_password') }}</h4>
-							<input v-model="password" name="password" type="password" required> <br>
-							<h4>{{ $t('new_password') }}</h4>
-							<input v-model="newPassword1" name="new_password1" type="password" required> <br>
-							<h4>{{ $t('confirm_password') }}</h4>
-							<input v-model="newPassword2" name="new_password2" type="password" required> <br>
-							<center><input :value="$t('change')" type="submit" class="button"></center>
-						</form>
-					</div>
-				</div>
+				<panel :title="$t('change_password')">
+					<form class="change-password" @submit="changePassword">
+						<h4>{{ $t('old_password') }}</h4>
+						<input v-model="password" name="password" type="password" required> <br>
+						<h4>{{ $t('new_password') }}</h4>
+						<input v-model="newPassword1" name="new_password1" type="password" required> <br>
+						<h4>{{ $t('confirm_password') }}</h4>
+						<input v-model="newPassword2" name="new_password2" type="password" required> <br>
+						<center><input :value="$t('change')" type="submit" class="button"></center>
+					</form>
+				</panel>
 			</div>
 			<div class="column6">
-				<div class="panel">
-					<div class="header">
-						<h2>Notifications</h2>
-						<div class="right">
-							<span class="push-notifs-button" @click="updatePushNotifications">
-								<span>{{ $t('push_notifications') }}</span>
-								<v-switch :input-value="pushNotifications" hide-details />
-							</span>
-						</div>
-					</div>
-					<div class="content notifications">
+				<panel title="Notifications">
+					<span slot="actions" class="push-notifs-button" @click="updatePushNotifications">
+						<span>{{ $t('push_notifications') }}</span>
+						<v-switch :input-value="pushNotifications" hide-details />
+					</span>
+					<div slot="content" class="content notifications">
 						<table>
 							<template v-for="(notifications, category) in mails">
 								<tr :key="category + 1">
@@ -99,27 +79,17 @@
 							</template>
 						</table>
 					</div>
-				</div>
+				</panel>
 			</div>
 			<div class="column6">
-				<div class="panel">
-					<div class="header">
-						<h2>{{ $t('delete_account') }}</h2>
-					</div>
-					<div class="content">
-						<div class="button" @click="deleteDialog = true">{{ $t('delete_account') }}</div>
-					</div>
-				</div>
+				<panel :title="$t('delete_account')">
+					<div class="button" @click="deleteDialog = true">{{ $t('delete_account') }}</div>
+				</panel>
 			</div>
 			<div class="column6">
-				<div class="panel">
-					<div class="header">
-						<h2>Two factor authentication</h2>
-					</div>
-					<div class="content">
-						<two-factor />
-					</div>
-				</div>
+				<panel title="Two factor authentication">
+					<two-factor />
+				</panel>
 			</div>
 		</div>
 
@@ -135,14 +105,9 @@
 		<!-- TODO Translation -->
 		<div v-if="advanced" class="flex-container">
 			<div class="column6">
-				<div class="panel">
-					<div class="header">
-						<h2>Vider le localStorage</h2>
-					</div>
-					<div class="content">
-						<div class="clear-localstorage button" @click="clearLocalStorage">Vider</div>
-					</div>
-				</div>
+				<panel title="Vider le localStorage">
+					<div class="clear-localstorage button" @click="clearLocalStorage">Vider</div>
+				</panel>
 			</div>
 			<div class="column6"></div>
 		</div>
@@ -357,7 +322,7 @@
 		background: white;
 		box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
 	}
-	.panel .content {
+	.panel {
 		text-align: center;
 	}
 	.misc-settings {

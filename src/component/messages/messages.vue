@@ -10,26 +10,24 @@
 			</div>
 		</div>
 		<div v-show="!LeekWars.mobile || !LeekWars.splitBack" class="column4">
-			<div v-autostopscroll="'bottom'" class="panel conversations last first">
-				<div class="content">
-					<router-link v-if="newConversation && !newConversationSent" :to="'/messages/new/' + newFarmer.id + '/' + newFarmer.name + '/' + newFarmer.avatar_changed">
-						<conversation :conversation="newConversation" />
+			<panel v-autostopscroll="'bottom'" class="conversations last first">
+				<router-link v-if="newConversation && !newConversationSent" :to="'/messages/new/' + newFarmer.id + '/' + newFarmer.name + '/' + newFarmer.avatar_changed">
+					<conversation :conversation="newConversation" />
+				</router-link>
+				<div slot="content">
+					<router-link v-for="conversation in $store.state.conversationsList" :key="conversation.id" :to="'/messages/conversation/' + conversation.id">
+						<conversation :conversation="conversation" />
 					</router-link>
-					<div class="content">
-						<router-link v-for="conversation in $store.state.conversationsList" :key="conversation.id" :to="'/messages/conversation/' + conversation.id">
-							<conversation :conversation="conversation" />
-						</router-link>
-					</div>
 				</div>
-			</div>
+			</panel>
 		</div>
 		<div v-show="!LeekWars.mobile || LeekWars.splitBack" class="column8">
-			<div class="panel">
-				<div classs="content">
+			<panel>
+				<div slot="content">
 					<chat v-if="currentConversation && currentConversation.id !== 0" :channel="'pm-' + currentConversation.id" @send="sendMessage" />
 					<chat v-else @send="sendMessage" />
 				</div>
-			</div>
+			</panel>
 		</div>
 		<v-dialog v-model="quitDialog" :max-width="500">
 			<div class="title">{{ $t('quit_conversation') }}</div>

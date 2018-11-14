@@ -18,9 +18,8 @@
 			</div>
 		</div>
 
-		<div class="panel first last">
-			<div class="content">
-
+		<panel class="first last">
+			<div slot="content" class="content">
 				<pagination v-if="category" :current="page" :total="pages" :url="'/forum/category-' + category.id" />
 
 				<div v-if="!LeekWars.mobile" class="topic header forum-header">
@@ -74,7 +73,7 @@
 				</div>
 				<pagination v-if="category" :current="page" :total="pages" :url="'/forum/category-' + category.id" />
 			</div>
-		</div>
+		</panel>
 
 		<v-dialog v-model="createDialog" :max-width="800">
 			<div class="title">

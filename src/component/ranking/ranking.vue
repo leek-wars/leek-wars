@@ -14,151 +14,149 @@
 				</div>
 			</div>
 		</div>
-		<div class="panel first last">
-			<div class="content">
-				<div v-if="category === 'fun'" class="fun-rankings">
-					<loader v-if="!rankings" />
-					<div v-for="funRanking in rankings" :key="funRanking.title" class="fun-ranking">
-						<h4>{{ $t(funRanking.title + '_title') }}</h4>
-						<table class="ranking">
-							<tr class="header">
-								<th>{{ $t('place') }}</th>
-								<th>{{ $t('farmer') }}</th>
-								<th>{{ $t('ranking.' + funRanking.value) }}</th>
-							</tr>
-							<tr v-for="(farmer, i) in funRanking.ranking.ranking" :key="i" :class="farmer.me">
-								<td>{{ parseInt(i) + 1 }}</td>
-								<td :class="farmer.style"><router-link :to="'/farmer/' + farmer.id">{{ farmer.name }}</router-link></td>
-								<td v-if="funRanking.value_type == 'number'">{{ farmer.value | number }}</td>
-								<td v-else-if="funRanking.value_type == 'money'">{{ farmer.value | number }} <span class="hab"></span></td>
-								<td v-else-if="funRanking.value_type == 'distance'">{{ farmer.value | number }}m</td>
-							</tr>
-							<tr v-if="$store.state.farmer && funRanking.ranking.farmer_rank > 10" class="me">
-								<td>{{ funRanking.ranking.farmer_rank }}</td>
-								<td>{{ $store.state.farmer.name }}</td>
-								<td v-if="funRanking.value_type == 'number'">{{ funRanking.ranking.farmer_value | number }}</td>
-								<td v-if="funRanking.value_type == 'money'">{{ funRanking.ranking.farmer_value | number }} <span class="hab"></span></td>
-								<td v-if="funRanking.value_type == 'distance'">{{ funRanking.ranking.farmer_value | number }}m</td>
-							</tr>
-						</table>
-					</div>
-				</div>
-				<div v-else>
-					<div class="center">
-						<pagination :current="page" :total="pages" :url="'/ranking/' + category + '/' + order" />
-						<div v-if="$store.state.farmer" class="me-buttons center">
-							<div v-if="category === 'leek'">
-								<div v-for="leek in $store.state.farmer.leeks" :key="leek.id" class="button" @click="goToMyRanking(leek.id)">{{ leek.name }}</div>
-							</div>
-							<div v-else-if="category === 'farmer'" class="button me-button" @click="goToMyRanking">{{ $t('my_farmer') }}</div>
-							<div v-else-if="category === 'team' && $store.state.farmer.team" class="button me-button" @click="goToMyRanking">{{ $t('my_team') }}</div>
-						</div>
-					</div>
-					<div class="scroll-x">
-						<table v-if="category === 'leek'" class="ranking large">
-							<tr class="header">
-								<th class="ranking-column">{{ $t('place') }}</th>
-								<th>
-									<router-link :to="'/ranking/leek/name/page-' + page">
-										<span>{{ $t('leek') }}</span>
-										<i v-if="order === 'name'" class="material-icons">expand_less</i>
-									</router-link>
-								</th>
-								<th>
-									<router-link :to="'/ranking/leek/page-' + page">
-										<span>{{ $t('talent') }}</span>
-										<i v-if="order === 'talent'" class="material-icons">expand_less</i>
-									</router-link>
-								</th>
-								<th>
-									<router-link :to="'/ranking/leek/level/page-' + page">
-										<span>{{ $t('level') }}</span>
-										<i v-if="order === 'level'" class="material-icons">expand_less</i>
-									</router-link>
-								</th>
-								<th class="column-farmer">{{ $t('farmer') }}</th>
-								<th>{{ $t('country') }}</th>
-								<th class="column-team">{{ $t('team') }}</th>
-							</tr>
-							<ranking-leek-row v-for="row in ranking" :key="row.id" :row="row" />
-						</table>
-						<table v-else-if="category == 'farmer'" class="ranking large">
-							<tr class="header">
-								<th class="ranking-column">{{ $t('place') }}</th>
-								<th>
-									<router-link :to="'/ranking/farmer/name/page-' + page">
-										<span>{{ $t('farmer') }}</span>
-										<i v-if="order === 'name'" class="material-icons">expand_less</i>
-									</router-link>
-								</th>
-								<th>
-									<router-link :to="'/ranking/farmer/talent/page-' + page">
-										<span>{{ $t('talent') }}</span>
-										<i v-if="order === 'talent'" class="material-icons">expand_less</i>
-									</router-link>
-								</th>
-								<th>
-									<router-link :to="'/ranking/farmer/total-level/page-' + page">
-										<span>{{ $t('total_level') }}</span>
-										<i v-if="order === 'total-level'" class="material-icons">expand_less</i>
-									</router-link>
-								</th>
-								<th>{{ $t('leeks') }}</th>
-								<th>{{ $t('country') }}</th>
-								<th>{{ $t('team') }}</th>
-							</tr>
-							<ranking-farmer-row v-for="row in ranking" :key="row.id" :row="row" />
-						</table>
-						<table v-else class="ranking large">
-							<tr class="header">
-								<th class="ranking-column">{{ $t('place') }}</th>
-								<th>
-									<router-link :to="'/ranking/team/name/page-' + page">
-										<span>{{ $t('leek') }}</span>
-										<i v-if="order === 'name'" class="material-icons">expand_less</i>
-									</router-link>
-								</th>
-								<th>
-									<router-link :to="'/ranking/team/page-' + page">
-										<span>{{ $t('talent') }}</span>
-										<i v-if="order === 'talent'" class="material-icons">expand_less</i>
-									</router-link>
-								</th>
-								<th>
-									<router-link :to="'/ranking/team/level/page-' + page">
-										<span>{{ $t('level') }}</span>
-										<i v-if="order === 'level'" class="material-icons">expand_less</i>
-									</router-link>
-								</th>
-								<th>
-									<router-link :to="'/ranking/team/total-level/page-' + page">
-										<span>{{ $t('total_level') }}</span>
-										<i v-if="order === 'total-level'" class="material-icons">expand_less</i>
-									</router-link>
-								</th>
-								<th>
-									<router-link :to="'/ranking/team/farmers/page-' + page">
-										<span>{{ $t('farmers') }}</span>
-										<i v-if="order === 'farmers'" class="material-icons">expand_less</i>
-									</router-link>
-								</th>
-								<th>
-									<router-link :to="'/ranking/team/leeks/page-' + page">
-										<span>{{ $t('leeks') }}</span>
-										<i v-if="order === 'leeks'" class="material-icons">expand_less</i>
-									</router-link>
-								</th>
-							</tr>
-							<ranking-team-row v-for="row in ranking" :key="row.id" :row="row" />
-						</table>
-						<loader v-if="!ranking" />
-					</div>
-					<div class="center">
-						<pagination :current="page" :total="pages" :url="'/ranking/' + category + '/' + order" />
-					</div>
+		<panel class="first last">
+			<div v-if="category === 'fun'" slot="content" class="fun-rankings">
+				<loader v-if="!rankings" />
+				<div v-for="funRanking in rankings" :key="funRanking.title" class="fun-ranking">
+					<h4>{{ $t(funRanking.title + '_title') }}</h4>
+					<table class="ranking">
+						<tr class="header">
+							<th>{{ $t('place') }}</th>
+							<th>{{ $t('farmer') }}</th>
+							<th>{{ $t('ranking.' + funRanking.value) }}</th>
+						</tr>
+						<tr v-for="(farmer, i) in funRanking.ranking.ranking" :key="i" :class="farmer.me">
+							<td>{{ parseInt(i) + 1 }}</td>
+							<td :class="farmer.style"><router-link :to="'/farmer/' + farmer.id">{{ farmer.name }}</router-link></td>
+							<td v-if="funRanking.value_type == 'number'">{{ farmer.value | number }}</td>
+							<td v-else-if="funRanking.value_type == 'money'">{{ farmer.value | number }} <span class="hab"></span></td>
+							<td v-else-if="funRanking.value_type == 'distance'">{{ farmer.value | number }}m</td>
+						</tr>
+						<tr v-if="$store.state.farmer && funRanking.ranking.farmer_rank > 10" class="me">
+							<td>{{ funRanking.ranking.farmer_rank }}</td>
+							<td>{{ $store.state.farmer.name }}</td>
+							<td v-if="funRanking.value_type == 'number'">{{ funRanking.ranking.farmer_value | number }}</td>
+							<td v-if="funRanking.value_type == 'money'">{{ funRanking.ranking.farmer_value | number }} <span class="hab"></span></td>
+							<td v-if="funRanking.value_type == 'distance'">{{ funRanking.ranking.farmer_value | number }}m</td>
+						</tr>
+					</table>
 				</div>
 			</div>
-		</div>
+			<div v-else slot="content">
+				<div class="center">
+					<pagination :current="page" :total="pages" :url="'/ranking/' + category + '/' + order" />
+					<div v-if="$store.state.farmer" class="me-buttons center">
+						<div v-if="category === 'leek'">
+							<div v-for="leek in $store.state.farmer.leeks" :key="leek.id" class="button" @click="goToMyRanking(leek.id)">{{ leek.name }}</div>
+						</div>
+						<div v-else-if="category === 'farmer'" class="button me-button" @click="goToMyRanking">{{ $t('my_farmer') }}</div>
+						<div v-else-if="category === 'team' && $store.state.farmer.team" class="button me-button" @click="goToMyRanking">{{ $t('my_team') }}</div>
+					</div>
+				</div>
+				<div class="scroll-x">
+					<table v-if="category === 'leek'" class="ranking large">
+						<tr class="header">
+							<th class="ranking-column">{{ $t('place') }}</th>
+							<th>
+								<router-link :to="'/ranking/leek/name/page-' + page">
+									<span>{{ $t('leek') }}</span>
+									<i v-if="order === 'name'" class="material-icons">expand_less</i>
+								</router-link>
+							</th>
+							<th>
+								<router-link :to="'/ranking/leek/page-' + page">
+									<span>{{ $t('talent') }}</span>
+									<i v-if="order === 'talent'" class="material-icons">expand_less</i>
+								</router-link>
+							</th>
+							<th>
+								<router-link :to="'/ranking/leek/level/page-' + page">
+									<span>{{ $t('level') }}</span>
+									<i v-if="order === 'level'" class="material-icons">expand_less</i>
+								</router-link>
+							</th>
+							<th class="column-farmer">{{ $t('farmer') }}</th>
+							<th>{{ $t('country') }}</th>
+							<th class="column-team">{{ $t('team') }}</th>
+						</tr>
+						<ranking-leek-row v-for="row in ranking" :key="row.id" :row="row" />
+					</table>
+					<table v-else-if="category == 'farmer'" class="ranking large">
+						<tr class="header">
+							<th class="ranking-column">{{ $t('place') }}</th>
+							<th>
+								<router-link :to="'/ranking/farmer/name/page-' + page">
+									<span>{{ $t('farmer') }}</span>
+									<i v-if="order === 'name'" class="material-icons">expand_less</i>
+								</router-link>
+							</th>
+							<th>
+								<router-link :to="'/ranking/farmer/talent/page-' + page">
+									<span>{{ $t('talent') }}</span>
+									<i v-if="order === 'talent'" class="material-icons">expand_less</i>
+								</router-link>
+							</th>
+							<th>
+								<router-link :to="'/ranking/farmer/total-level/page-' + page">
+									<span>{{ $t('total_level') }}</span>
+									<i v-if="order === 'total-level'" class="material-icons">expand_less</i>
+								</router-link>
+							</th>
+							<th>{{ $t('leeks') }}</th>
+							<th>{{ $t('country') }}</th>
+							<th>{{ $t('team') }}</th>
+						</tr>
+						<ranking-farmer-row v-for="row in ranking" :key="row.id" :row="row" />
+					</table>
+					<table v-else class="ranking large">
+						<tr class="header">
+							<th class="ranking-column">{{ $t('place') }}</th>
+							<th>
+								<router-link :to="'/ranking/team/name/page-' + page">
+									<span>{{ $t('leek') }}</span>
+									<i v-if="order === 'name'" class="material-icons">expand_less</i>
+								</router-link>
+							</th>
+							<th>
+								<router-link :to="'/ranking/team/page-' + page">
+									<span>{{ $t('talent') }}</span>
+									<i v-if="order === 'talent'" class="material-icons">expand_less</i>
+								</router-link>
+							</th>
+							<th>
+								<router-link :to="'/ranking/team/level/page-' + page">
+									<span>{{ $t('level') }}</span>
+									<i v-if="order === 'level'" class="material-icons">expand_less</i>
+								</router-link>
+							</th>
+							<th>
+								<router-link :to="'/ranking/team/total-level/page-' + page">
+									<span>{{ $t('total_level') }}</span>
+									<i v-if="order === 'total-level'" class="material-icons">expand_less</i>
+								</router-link>
+							</th>
+							<th>
+								<router-link :to="'/ranking/team/farmers/page-' + page">
+									<span>{{ $t('farmers') }}</span>
+									<i v-if="order === 'farmers'" class="material-icons">expand_less</i>
+								</router-link>
+							</th>
+							<th>
+								<router-link :to="'/ranking/team/leeks/page-' + page">
+									<span>{{ $t('leeks') }}</span>
+									<i v-if="order === 'leeks'" class="material-icons">expand_less</i>
+								</router-link>
+							</th>
+						</tr>
+						<ranking-team-row v-for="row in ranking" :key="row.id" :row="row" />
+					</table>
+					<loader v-if="!ranking" />
+				</div>
+				<div class="center">
+					<pagination :current="page" :total="pages" :url="'/ranking/' + category + '/' + order" />
+				</div>
+			</div>
+		</panel>
 
 		<v-dialog v-model="searchDialog" :max-width="500">
 			<div class="title">{{ $t('search_in_ranking') }}</div>

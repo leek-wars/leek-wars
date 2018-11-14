@@ -1,15 +1,15 @@
 <template lang="html">
 	<div>
-		<h1>Line of Sight</h1>
-		<div class="panel">
-			<div class="content">
-				<div class="map">
-					<div v-for="(row, i) in map" :key="i" class="row">
-						<div v-for="(cell, j) in row" :key="j" :class="{obstacle: cell === 1, los: cell === 2, red: cell === 3}" class="cell" @click="clickCell(j, i)"></div>
-					</div>
+		<div class="page-bar page-header">
+			<h1>Line of Sight</h1>
+		</div>
+		<panel>
+			<div class="map">
+				<div v-for="(row, i) in map" :key="i" class="row">
+					<div v-for="(cell, j) in row" :key="j" :class="{obstacle: cell === 1, los: cell === 2, red: cell === 3}" class="cell" @click="clickCell(j, i)"></div>
 				</div>
 			</div>
-		</div>
+		</panel>
 	</div>
 </template>
 

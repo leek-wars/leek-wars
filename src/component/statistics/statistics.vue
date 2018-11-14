@@ -11,10 +11,10 @@
 				</div>
 			</div>
 		</div>
-		<div v-if="!loaded" class="panel">
+		<panel v-if="!loaded">
 			<loader />
-		</div>
-		<div v-for="(category, category_id) in statistics" v-else :key="category_id" class="panel">
+		</panel>
+		<panel v-for="(category, category_id) in statistics" v-else :key="category_id">
 			<h2>{{ $t('category_' + category_id) }}</h2>
 			<div :class="{ai: category_id == 3, code: category_id == 6}" class="category">
 				<chartist v-if="category_id == 2" :data="chartFightType" :options="chartOptions" class="chart left" type="Pie" />
@@ -32,7 +32,7 @@
 					<chartist v-if="name === 'resurrects'" :key="name + '2'" :data="chartDamage" :options="chartOptions" class="chart right" type="Pie" />
 				</template>
 			</div>
-		</div>
+		</panel>
 	</div>
 </template>
 

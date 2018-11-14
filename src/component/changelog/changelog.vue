@@ -3,27 +3,21 @@
 		<div class="page-header page-bar">
 			<h1>{{ $t('title') }}</h1>
 		</div>
-		<div v-if="!changelog" class="panel">
-			<div class="content">
-				<loader />
-			</div>
-		</div>
+		<panel v-if="!changelog" class="first">
+			<loader />
+		</panel>
 		<template v-else>
-			<div v-for="version in changelog" :key="version.version" class="panel">
-				<div class="header">
-					<h2>{{ $t('version_n', [version.version_name]) }} ({{ version.date }})</h2>
-					<div v-if="version.forum_topic" class="right">
-						<router-link :to="'/forum/category-' + version.forum_category + '/topic-' + version.forum_topic">
-							<div class="button flat">➤ {{ $t('forum_topic') }}</div>
-						</router-link>
-					</div>
+			<panel v-for="version in changelog" :key="version.version">
+				<h2 slot="title">{{ $t('version_n', [version.version_name]) }} ({{ version.date }})</h2>
+				<div slot="actions">
+					<router-link v-if="version.forum_topic" :to="'/forum/category-' + version.forum_category + '/topic-' + version.forum_topic" class="button flat">➤ {{ $t('forum_topic') }}</router-link>
 				</div>
-				<div class="content">
-					<div class="wrapper">
+				<div slot="content" class="wrapper">
+					<div class="content">
 						<div v-for="(change, c) in version.changes" :key="c" class="change" v-html="'➤ ' + change"></div>
 					</div>
 				</div>
-			</div>
+			</panel>
 		</template>
 	</div>
 </template>
@@ -63,11 +57,10 @@
 	.change {
 		padding: 0 10px;
 	}
-	.panel .content {
-		background: rgba(100,100,100,0.1);
-		padding: 0;
-	}
 	.wrapper {
+		background: rgba(100,100,100,0.1);
+	}
+	.content {
 		max-width: 800px;
 		margin: 0 auto;
 		background: #f2f2f2;

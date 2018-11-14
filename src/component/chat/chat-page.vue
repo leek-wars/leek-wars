@@ -26,9 +26,9 @@
 				</router-link>
 			</div>
 		</div>
-		<div class="panel first last">
-			<chat :chat="$store.state.chat[chatLanguage.code]" :channel="chatLanguage.code" />
-		</div>
+		<panel class="first last">
+			<chat slot="content" :chat="$store.state.chat[chatLanguage.code]" :channel="chatLanguage.code" />
+		</panel>
 	</div>
 </template>
 

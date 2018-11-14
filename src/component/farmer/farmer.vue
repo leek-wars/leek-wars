@@ -54,8 +54,8 @@
 		</div>
 		<div class="flex-container">
 			<div class="column4">
-				<div class="panel first">
-					<div class="content avatar-td">
+				<panel class="first">
+					<div slot="content" class="content avatar-td">
 						<div v-if="myFarmer">
 							<v-tooltip :open-delay="0" :close-delay="0" bottom>
 								<div slot="activator" class="avatar-input">
@@ -95,12 +95,12 @@
 							<div v-else-if="myFarmer" class="add add-github" @click="githubDialog = true">{{ $t('add_github') }}</div>
 						</div>
 					</div>
-				</div>
+				</panel>
 			</div>
 			
 			<div class="column4">
-				<div class="panel">
-					<div class="content stats">
+				<panel>
+					<div slot="content" class="content stats">
 						<div class="talent-wrapper">
 							<v-tooltip bottom open-delay="0" close-delay="0">
 								<talent slot="activator" :talent="farmer ? farmer.talent : '...'" />
@@ -170,11 +170,11 @@
 							<div v-if="myFarmer" class="godfather-link" @click="openGodfatherDialog"><br>{{ $t('godfather_link') }}</div>
 						</div>
 					</div>
-				</div>
+				</panel>
 			</div>
 			<div class="column4">
-				<div class="panel">
-					<div class="content team center">
+				<panel>
+					<div slot="content" class="content team center">
 						<loader v-if="!farmer" />
 						<div v-else-if="farmer.team">
 							<router-link :to="'/team/' + farmer.team.id">
@@ -199,25 +199,21 @@
 							</div>
 						</div>
 					</div>
-				</div>
+				</panel>
 			</div>
 		</div>
 		<div class="column12">
-			<div class="panel">
-				<div class="header">
-					<h2>{{ $t('trophies') }} <span v-if="farmer">({{ farmer.trophies }})</span></h2>
-					<div class="right">
-						<router-link :to="'/trophies/' + id">
-							<div class="button flat">
-								<img src="/image/icon/trophy.png"> {{ $t('see_all_trophies') }}
-							</div>
-						</router-link>
-						<div class="button flat">
-							<i class="material-icons" @click="trophiesModeButton">{{ (trophiesMode === 'grid' ? 'list' : 'view_module') }}</i>
-						</div>
+			<panel>
+				<h2 slot="title">{{ $t('trophies') }} <span v-if="farmer">({{ farmer.trophies }})</span></h2>
+				<template slot="actions">
+					<router-link :to="'/trophies/' + id" class="button flat">
+						<img src="/image/icon/trophy.png"> {{ $t('see_all_trophies') }}
+					</router-link>
+					<div class="button flat">
+						<i class="material-icons" @click="trophiesModeButton">{{ (trophiesMode === 'grid' ? 'list' : 'view_module') }}</i>
 					</div>
-				</div>
-				<div class="trophies">
+				</template>
+				<div slot="content" class="trophies">
 					<loader v-if="!farmer || !trophies" />
 					<template v-else-if="farmer.trophies > 0 && trophies_list && trophies_grid">
 						<div v-show="trophiesMode == 'list'" class="list trophies-container">
@@ -269,15 +265,12 @@
 					</template>
 					<div v-else-if="farmer.trophies == 0" class="grey">{{ $t('no_trophies_yet') }}</div>
 				</div>
-			</div>
+			</panel>
 		</div>
 		<div class="column12">
-			<div class="panel">
-				<div class="header">
-					<h2>{{ $t('leeks') }}</h2>
-				</div>
+			<panel :title="$t('leeks')">
 				<loader v-if="!farmer" />
-				<div v-else class="content">
+				<div v-else>
 					<router-link v-for="leek in farmer.leeks" :key="leek.id" :to="'/leek/' + leek.id" class="leek">
 						<leek-image :leek="leek" :scale="0.9" />
 						<br>
@@ -287,38 +280,27 @@
 						<span class="level">{{ $t('leek_level_n', [leek.level]) }}</span>
 					</router-link>
 				</div>
-			</div>
+			</panel>
 		</div>
 		<div class="flex-container">
 			<div class="column6">
-				<div v-if="!farmer || farmer.fight_history.length > 0" class="panel">
-					<div class="header">
-						<h2>{{ $t('fights') }}</h2>
-						<div class="right">
-							<router-link :to="'/farmer/' + id + '/history'">
-								<div class="button flat">{{ $t('history') }}</div>
-							</router-link>
-						</div>
-					</div>
+				<panel v-if="!farmer || farmer.fight_history.length > 0" :title="$t('fights')">
+					<template slot="actions">
+						<router-link :to="'/farmer/' + id + '/history'" class="button flat">{{ $t('history') }}</router-link>
+					</template>
 					<loader v-if="!farmer" />
-					<fights-history v-else :fights="farmer.fight_history" />
-				</div>
+					<fights-history v-else slot="content" :fights="farmer.fight_history" />
+				</panel>
 			</div>
 			<div class="column6">
-				<div v-if="!farmer || farmer.tournaments.length > 0" class="panel">
-					<div class="header">
-						<h2>{{ $t('tournaments') }}</h2>
-					</div>
+				<panel v-if="!farmer || farmer.tournaments.length > 0" :title="$t('tournaments')">
 					<loader v-if="!farmer" />
-					<tournaments-history v-else :tournaments="farmer.tournaments" />
-				</div>
+					<tournaments-history v-else slot="content" :tournaments="farmer.tournaments" />
+				</panel>
 			</div>
 		</div>
-		<div v-if="farmer && farmer.warnings && farmer.warnings.length" class="panel">
-			<div class="header">
-				<h2>{{ $t('warnings') }}</h2>
-			</div>
-			<div class="content warnings">
+		<panel v-if="farmer && farmer.warnings && farmer.warnings.length" :title="$t('warnings')">
+			<div slot="content" class="warnings">
 				<h4 v-if="myFarmer" class="warning-title">{{ $tc('you_have_n_warnings', farmer.warnings.length, [farmer.warnings.length]) }}</h4>
 				<h4 v-else class="warning-title">{{ $tc('farmer_have_n_warnings', farmer.warnings.length, [farmer.warnings.length]) }}</h4>
 				<div v-for="(warning, w) in farmer.warnings" :key="w" class="warning card">
@@ -331,7 +313,7 @@
 					<div v-else class="date">{{ warning.date | date }}</div>
 				</div>
 			</div>
-		</div>
+		</panel>
 		
 		<div class="page-footer page-bar">
 			<div class="tabs">
@@ -829,9 +811,6 @@
 	.leek:hover {
 		background: white;
 		box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
-	}
-	.trophies {
-		text-align: left;
 	}
 	.trophies-mode-button {
 		padding: 8px 10px;

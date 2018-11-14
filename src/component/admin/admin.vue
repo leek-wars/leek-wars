@@ -3,8 +3,8 @@
 		<div class="page-header page-bar">
 			<h1>Administration</h1>
 		</div>
-		<div class="panel first last">
-			<div class="admin">
+		<panel class="first last">
+			<div slot="content" class="admin">
 				<router-link to="/admin/services">
 					<div v-ripple class="section card">
 						<img src="/image/admin/services.png">
@@ -60,7 +60,7 @@
 					</div>
 				</a>
 			</div>
-		</div>
+		</panel>
 	</div>
 </template>
 

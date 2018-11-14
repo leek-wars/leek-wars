@@ -4,11 +4,9 @@
 			<h1>{{ $t('title') }}</h1>
 		</div>
 		<div v-show="!LeekWars.mobile || !LeekWars.splitBack" class="column7 split-list">
-			<div class="panel">
-				<div class="header">
-					<h2>Derniers signalements ({{ faults.length }})</h2>
-				</div>
-				<div class="faults content">
+			<panel>
+				<h2 slot="title">Derniers signalements ({{ faults.length }})</h2> 
+				<div slot="content" class="faults">
 					<div v-if="faults.length == 0">Aucun signalement !</div>
 					<router-link v-for="fault in faults" :key="fault.id" :to="'/moderation/fault/' + fault.id" class="fault" target="{fault.target.id}" reason="{fault.reason}" parameter="{fault.parameter}" data="{fault.data}">
 
@@ -27,55 +25,47 @@
 						</div>
 					</router-link>
 				</div>
-			</div>
+			</panel>
 		</div>
 		<div v-show="!LeekWars.mobile || LeekWars.splitBack" class="column5 split-content">
-			<div v-if="selectedFault" class="panel">
-				<div class="header">
-					<h2>Donner un avertissement</h2>
-				</div>
-				<div class="content">
-					<div class="warning">
-						<router-link :to="'/farmer/' + selectedFault.target.id">
-							<avatar :farmer="selectedFault.target" class="warning-avatar" />
-							<h2>{{ selectedFault.target.name }}</h2>
-						</router-link>
-						<h4 class="reason">Motif : {{ $t('reason_' + selectedFault.reason_text) }}</h4>
-						<div class="details">
-							<div v-if="selectedFault.reason === Warning.INCORRECT_LEEK_NAME">
-								Poireau : <router-link :to="'/leek/' + selectedFault.parameter">{{ selectedFault.data }}</router-link>
-							</div>
-							<div v-else-if="selectedFault.reason === Warning.INCORRECT_AI_NAME">
-								AI : {{ selectedFault.parameter }} : {{ selectedFault.data }}
-							</div>
-							<div v-else-if="selectedFault.reason === Warning.FLOOD_CHAT || selectedFault.reason === Warning.RUDE_CHAT">
-								Message : {{ selectedFault.parameter }}
-							</div>
+			<panel v-if="selectedFault" title="Donner un avertissement">
+				<div class="warning">
+					<router-link :to="'/farmer/' + selectedFault.target.id">
+						<avatar :farmer="selectedFault.target" class="warning-avatar" />
+						<h2>{{ selectedFault.target.name }}</h2>
+					</router-link>
+					<h4 class="reason">Motif : {{ $t('reason_' + selectedFault.reason_text) }}</h4>
+					<div class="details">
+						<div v-if="selectedFault.reason === Warning.INCORRECT_LEEK_NAME">
+							Poireau : <router-link :to="'/leek/' + selectedFault.parameter">{{ selectedFault.data }}</router-link>
+						</div>
+						<div v-else-if="selectedFault.reason === Warning.INCORRECT_AI_NAME">
+							AI : {{ selectedFault.parameter }} : {{ selectedFault.data }}
+						</div>
+						<div v-else-if="selectedFault.reason === Warning.FLOOD_CHAT || selectedFault.reason === Warning.RUDE_CHAT">
+							Message : {{ selectedFault.parameter }}
 						</div>
 					</div>
-					<h4>Gravité</h4>
-					<input type="number" min="1" max="10" value="1"> (entre 1 et 10)<br>
-					<h4>Message (facultatif)</h4>
-					<textarea class="warning-message"></textarea>
-					<br><br>
-					<center>
-						<div class="button green">Supprimer le signalement</div>
-						<div class="button red">Donner avertissement</div>
-					</center>
 				</div>
-			</div>
-			<div class="panel">
-				<div class="header">
-					<h2>Top Voyous</h2>
-				</div>
-				<div class="thugs content">
+				<h4>Gravité</h4>
+				<input type="number" min="1" max="10" value="1"> (entre 1 et 10)<br>
+				<h4>Message (facultatif)</h4>
+				<textarea class="warning-message"></textarea>
+				<br><br>
+				<center>
+					<div class="button green">Supprimer le signalement</div>
+					<div class="button red">Donner avertissement</div>
+				</center>
+			</panel>
+			<panel title="Top Voyous">
+				<div slot="content" class="thugs">
 					<div v-for="thug in thugs" :key="thug.id" class="thug">
 						<avatar :farmer="thug" />
 						<router-link :to="'/farmer/' + thug.id">{{ thug.name }}</router-link> ({{ thug.warnings }})
 						<div :target="thug.id" class="button ban">Bannir</div>
 					</div>
 				</div>
-			</div>
+			</panel>
 		</div>
 
 		<v-dialog v-model="warningConfirmDialog" :max-width="800">

@@ -28,12 +28,12 @@
 				const attributes = (e.target as any).attributes
 				const x = parseInt(attributes.x.nodeValue, 10) + parseInt(attributes.width.nodeValue, 10) / 2
 				const y = parseInt(attributes.y.nodeValue, 10) + parseInt(attributes.height.nodeValue, 10)
-				this.$parent.$emit('tooltip', x, y, this.item.name)
+				this.$root.$emit('tooltip', x, y, this.item.name)
 			}
 		}
 		mouseleave(e: Event) {
 			if (this.item) {
-				this.$parent.$emit('tooltip-close')
+				this.$root.$emit('tooltip-close')
 			}
 		}
 	}

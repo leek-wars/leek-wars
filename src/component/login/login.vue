@@ -1,26 +1,24 @@
 <template lang="html">
 	<div>
 		<h1>{{ $t('title') }}</h1>
-		<div class="panel">
-			<div class="content">
-				<form @submit.prevent="login">
-					<br>
-					<h2>{{ $t('login') }}</h2>
-					<input v-model="form.login" type="text" name="login">
-					<br><br>
-					<h2>{{ $t('password') }}</h2>
-					<input v-model="form.password" type="password" name="password">
-					<br><br>
-					<v-checkbox v-model="form.keep_connected" :label="$t('keep_connected')" hide-details />
-					<br><br>
-					<center><input :value="$t('connection')" type="submit" class="button green large"></center>
-					<br>
-					<div v-if="error" class="error">{{ $t('incorrect_login') }}</div>
-					<br>
-					<router-link class="forgot-password" to="/forgot-password">{{ $t('forgot_password') }}</router-link>
-				</form>
-			</div>
-		</div>
+		<panel class="first last">
+			<form @submit.prevent="login">
+				<br>
+				<h2>{{ $t('login') }}</h2>
+				<input v-model="form.login" type="text" name="login">
+				<br><br>
+				<h2>{{ $t('password') }}</h2>
+				<input v-model="form.password" type="password" name="password">
+				<br><br>
+				<v-checkbox v-model="form.keep_connected" :label="$t('keep_connected')" hide-details />
+				<br><br>
+				<center><input :value="$t('connection')" type="submit" class="button green large"></center>
+				<br>
+				<div v-if="error" class="error">{{ $t('incorrect_login') }}</div>
+				<br>
+				<router-link class="forgot-password" to="/forgot-password">{{ $t('forgot_password') }}</router-link>
+			</form>
+		</panel>
 	</div>
 	
 </template>

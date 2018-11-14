@@ -32,92 +32,82 @@
 			</div>
 		</div>
 
-		<div class="panel first">
-			<div class="content">
-				<loader v-if="!categories" />
-				<template v-else>
-					<div v-if="!LeekWars.mobile" class="header category">
-						<div class="seen"></div>
-						<div class="text">{{ $t('category') }}</div>
-						<div class="num-topics">{{ $t('topics') }}</div>
-						<div class="num-messages">{{ $t('messages') }}</div>
+		<panel class="first">
+			<loader v-if="!categories" />
+			<template v-else>
+				<div v-if="!LeekWars.mobile" class="header category">
+					<div class="seen"></div>
+					<div class="text">{{ $t('category') }}</div>
+					<div class="num-topics">{{ $t('topics') }}</div>
+					<div class="num-messages">{{ $t('messages') }}</div>
+				</div>
+				<router-link v-ripple v-for="category in categories" :key="category.id" :to="'/forum/category-' + category.id" class="category">
+					<div class="seen">
+						<img v-if="category.seen" src="/image/forum_seen.png">
+						<img v-else src="/image/forum_unseen.png">
 					</div>
-					<router-link v-for="category in categories" :key="category.id" :to="'/forum/category-' + category.id">
-						<div v-ripple class="category">
-							<div class="seen">
-								<img v-if="category.seen" src="/image/forum_seen.png">
-								<img v-else src="/image/forum_unseen.png">
-							</div>
-							<div class="text">
-								<template v-if="category.type == 'normal'">
-									<div class="title">{{ $t('category_' + category.name) }}</div>
-									<div class="description">{{ $t('category_' + category.name + '_desc') }}</div>
-								</template>
-								<div v-else-if="category.type == 'team'">
-									<div class="title">{{ category.name }}</div>
-									<div class="description">{{ $t('team_forum_description') }}</div>
-								</div>
-								<div v-if="LeekWars.mobile" class="mobile-info">
-									<span>{{ $t('n_topics', [LeekWars.formatNumber(category.topics)]) }} &nbsp;</span>
-									<span>{{ $t('n_messages', [LeekWars.formatNumber(category.messages)]) }}</span>
-								</div>
-							</div>
-							<div v-if="!LeekWars.mobile" class="num-topics">{{ category.topics | number }}</div>
-							<div v-if="!LeekWars.mobile" class="num-messages">{{ category.messages | number }}</div>
+					<div class="text">
+						<template v-if="category.type == 'normal'">
+							<div class="title">{{ $t('category_' + category.name) }}</div>
+							<div class="description">{{ $t('category_' + category.name + '_desc') }}</div>
+						</template>
+						<div v-else-if="category.type == 'team'">
+							<div class="title">{{ category.name }}</div>
+							<div class="description">{{ $t('team_forum_description') }}</div>
 						</div>
-					</router-link>
-				</template>
-			</div>
-		</div>
-
-		<div class="panel">
-			<div class="header">
-				<h2 v-if="connected_farmers.length">{{ $t('connected_farmers', [connected_farmers.length]) }}</h2>
-				<div class="right">
-					<div class="button flat">
-						<i v-if="expandFarmers" class="material-icons expand-connected-farmers" @click="expandFarmers = !expandFarmers">expand_more</i>
-						<i v-else class="material-icons expand-connected-farmers" @click="expandFarmers = !expandFarmers">expand_less</i>
+						<div v-if="LeekWars.mobile" class="mobile-info">
+							<span>{{ $t('n_topics', [LeekWars.formatNumber(category.topics)]) }} &nbsp;</span>
+							<span>{{ $t('n_messages', [LeekWars.formatNumber(category.messages)]) }}</span>
+						</div>
 					</div>
-				</div>
-			</div>
-			<div class="content">
-				<loader v-if="!connected_farmers.length" />
-				<div v-else :class="{expanded: expandFarmers}" class="connected-farmers">
-					<router-link v-for="(farmer, f) in connected_farmers" :key="farmer.id" :to="'/farmer/' + farmer.id">
-						<span v-if="f > 0">, </span>
-						<span :class="farmer.class">{{ farmer.name }}</span>
-					</router-link>
-				</div>
-				<div class="grades-legend">
-					{{ $t('legend') }} : <span class="admin">{{ $t('main.grade_admin') }}</span>,
-					<span class="moderator">{{ $t('main.grade_moderator') }}</span>,
-					<span class="contributor">{{ $t('main.grade_contributor') }}</span>,
-					<span>{{ $t('main.grade_member') }}</span>
-				</div>
-			</div>
-		</div>
+					<div v-if="!LeekWars.mobile" class="num-topics">{{ category.topics | number }}</div>
+					<div v-if="!LeekWars.mobile" class="num-messages">{{ category.messages | number }}</div>
+				</router-link>
+			</template>
+		</panel>
 
-		<div class="panel chat-panel">
-			<div class="header">
-				<h2>
-					<router-link to="/chat">{{ $t('chat') }}</router-link>
-					<v-menu offset-y>
-						<img slot="activator" :src="chatLanguage.flag" class="language-button">
-						<v-list :dense="true">
-							<v-list-tile v-for="(language, i) in LeekWars.languages" :key="i" @click="chatLanguage = language">
-								<v-list-tile-title class="language">
-									<img :src="language.flag" class="flag">
-									<span class="name">{{ language.name }}</span>
-								</v-list-tile-title>
-							</v-list-tile>
-						</v-list>
-					</v-menu>
-				</h2>
+		<panel>
+			<h2 slot="title">
+				<span v-if="connected_farmers.length">{{ $t('connected_farmers', [connected_farmers.length]) }}</span>
+			</h2>
+			<div slot="actions">
+				<div class="button flat">
+					<i v-if="expandFarmers" class="material-icons expand-connected-farmers" @click="expandFarmers = !expandFarmers">expand_more</i>
+					<i v-else class="material-icons expand-connected-farmers" @click="expandFarmers = !expandFarmers">expand_less</i>
+				</div>
 			</div>
-			<div class="content">
-				<chat :channel="chatLanguage.code" />
+			<loader v-if="!connected_farmers.length" />
+			<div v-else :class="{expanded: expandFarmers}" class="connected-farmers">
+				<router-link v-for="(farmer, f) in connected_farmers" :key="farmer.id" :to="'/farmer/' + farmer.id">
+					<span v-if="f > 0">, </span>
+					<span :class="farmer.class">{{ farmer.name }}</span>
+				</router-link>
 			</div>
-		</div>
+			<div class="grades-legend">
+				{{ $t('legend') }} : <span class="admin">{{ $t('main.grade_admin') }}</span>,
+				<span class="moderator">{{ $t('main.grade_moderator') }}</span>,
+				<span class="contributor">{{ $t('main.grade_contributor') }}</span>,
+				<span>{{ $t('main.grade_member') }}</span>
+			</div>
+		</panel>
+
+		<panel class="last">
+			<h2 slot="title">
+				<router-link to="/chat">{{ $t('chat') }}</router-link>
+				<v-menu offset-y>
+					<img slot="activator" :src="chatLanguage.flag" class="language-button">
+					<v-list :dense="true">
+						<v-list-tile v-for="(language, i) in LeekWars.languages" :key="i" @click="chatLanguage = language">
+							<v-list-tile-title class="language">
+								<img :src="language.flag" class="flag">
+								<span class="name">{{ language.name }}</span>
+							</v-list-tile-title>
+						</v-list-tile>
+					</v-list>
+				</v-menu>
+			</h2>
+			<chat slot="content" :channel="chatLanguage.code" />
+		</panel>
 	</div>
 </template>
 
@@ -169,9 +159,6 @@
 </script>
 
 <style lang="scss" scoped>
-	.panel:last-child {
-		margin-bottom: 0;
-	}
 	.forum-language {
 		display: inline-block;
 		padding: 0 4px;
@@ -198,7 +185,6 @@
 		margin: 0;
 	}
 	.category {
-		width: 100%;
 		margin-bottom: 5px;
 		display: flex;
 		align-items: center;
@@ -271,10 +257,7 @@
 	.chat {
 		height: 400px;
 	}
-	.chat-panel .content {
-		padding: 0;
-	}
-	.chat-panel .language-button {
+	.panel .language-button {
 		height: 28px;
 		max-height: 28px;
 		max-width: none;

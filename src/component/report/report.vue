@@ -9,9 +9,9 @@
 			</div>
 		</div>
 
-		<div class="panel first">
-			<loader v-if="!report" />
-			<div v-else class="content">
+		<panel class="first">
+			<loader v-if="!report" slot="content" />
+			<div v-else slot="content" class="content">
 				<div v-if="fight.too_long" class="too-long">
 					{{ $t('generation_too_long') }}
 				</div>
@@ -69,7 +69,7 @@
 					</span>
 				</center>
 			</div>
-		</div>
+		</panel>
 
 		<panel title="Évolution des points de vie" toggle="report/graph">
 			<div slot="actions">
@@ -101,15 +101,12 @@
 			<pre v-for="(w, i) in warnings" :key="errors.length + i" class="log warning">[{{ w.entity }}] {{ w.data }}</pre>
 		</panel>
 
-		<div class="panel last">
-			<div class="header">
-				<h2>Actions</h2>
-			</div>
+		<panel class="last" title="Actions">
 			<loader v-if="!report" />
-			<div v-else class="content">
+			<div v-else>
 				<actions :actions="actions" :leeks="leeks" class="actions" />
 			</div>
-		</div>
+		</panel>
 	</div>
 </template>
 

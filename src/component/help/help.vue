@@ -8,54 +8,46 @@
 		</div>
 		<div class="flex-container">
 			<div class="column6">
-				<div class="panel first">
-					<div class="content">
-						<router-link to="/help/general">	
-							<h2>Leek Wars</h2>
-							<img src="/image/help/help_general.png">
-							<br>
-							<span class="description">{{ $t('general_help') }}</span>
-						</router-link>
-					</div>
-				</div>
+				<panel class="first">
+					<router-link to="/help/general">	
+						<h2>Leek Wars</h2>
+						<img src="/image/help/help_general.png">
+						<br>
+						<span class="description">{{ $t('general_help') }}</span>
+					</router-link>
+				</panel>
 			</div>
 			<div class="column6">
-				<div class="panel">
-					<div class="content">
-						<a href="http://leekwarswiki.net/" target="_blank">
-							<h2>{{ $t('wiki') }} <i class="material-icons">launch</i></h2>
-							<img src="/image/help/wiki.png">
-							<br>
-							<span class="description">{{ $t('wiki_desc') }}</span>
-						</a>
-					</div>
-				</div>
+				<panel>
+					<a href="http://leekwarswiki.net/" target="_blank">
+						<h2>{{ $t('wiki') }} <i class="material-icons">launch</i></h2>
+						<img src="/image/help/wiki.png">
+						<br>
+						<span class="description">{{ $t('wiki_desc') }}</span>
+					</a>
+				</panel>
 			</div>
 		</div>
 		<div class="flex-container">
 			<div class="column6">
-				<div class="panel">
-					<div class="content">
-						<router-link to="/help/tutorial">
-							<h2>{{ $t('tutorial') }}</h2>
-							<img src="/image/help/interface.png">
-							<br>
-							<span class="description" v-html="$t('tutorial_desc')"></span>
-						</router-link>
-					</div>
-				</div>
+				<panel>
+					<router-link to="/help/tutorial">
+						<h2>{{ $t('tutorial') }}</h2>
+						<img src="/image/help/interface.png">
+						<br>
+						<span class="description" v-html="$t('tutorial_desc')"></span>
+					</router-link>
+				</panel>
 			</div>
 			<div class="column6">
-				<div class="panel">
-					<div class="content">
-						<router-link to="/help/documentation">
-							<h2>{{ $t('documentation') }}</h2>
-							<img src="/image/help/presentation.png">
-							<br>
-							<span class="description" v-html="$t('documentation_desc')"></span>
-						</router-link>
-					</div>
-				</div>
+				<panel>
+					<router-link to="/help/documentation">
+						<h2>{{ $t('documentation') }}</h2>
+						<img src="/image/help/presentation.png">
+						<br>
+						<span class="description" v-html="$t('documentation_desc')"></span>
+					</router-link>
+				</panel>
 			</div>
 		</div>
 		<center>
@@ -67,34 +59,24 @@
 		</center>
 		<div v-if="advanced" class="flex-container advanced">
 			<div class="column6">
-				<div class="panel">
-					<div class="header">			
-						<h2>Leek Wars API</h2>
-					</div>
-					<div class="content">
-						<router-link to="/help/api">
-							<h2>API documentation</h2>
-							<img src="/image/help/advanced.png">
-							<br>
-							<span class="description">Complete API services documentation</span>
-						</router-link>
-					</div>
-				</div>
+				<panel title="Leek Wars API">
+					<router-link to="/help/api">
+						<h2>API documentation</h2>
+						<img src="/image/help/advanced.png">
+						<br>
+						<span class="description">Complete API services documentation</span>
+					</router-link>
+				</panel>
 			</div>
 			<div class="column6">
-				<div class="panel">
-					<div class="header">			
+				<panel title="Line Of Sight">
+					<router-link to="/help/line-of-sight">
 						<h2>Line Of Sight</h2>
-					</div>
-					<div class="content">
-						<router-link to="/help/line-of-sight">
-							<h2>Line Of Sight</h2>
-							<i class="bigicon material-icons">grid_on</i>
-							<br>
-							<span class="description">Little demo for line of sight function</span>
-						</router-link>
-					</div>
-				</div>
+						<i class="bigicon material-icons">grid_on</i>
+						<br>
+						<span class="description">Little demo for line of sight function</span>
+					</router-link>
+				</panel>
 			</div>
 		</div>
 		<didactitiel v-model="didactitiel" />
@@ -118,9 +100,8 @@
 </script>
 
 <style lang="scss" scoped>
-	.content {
+	.panel {
 		text-align: center;
-		padding: 25px;
 	}
 	.description {
 		font-size: 15px;

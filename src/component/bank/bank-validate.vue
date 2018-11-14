@@ -1,26 +1,26 @@
 <template lang="html">
 	<div>
 		<template v-if="success">
-			<h1 v-html="$t('payment_success', [vendor])"></h1>
-			<div class="panel">
-				<div class="content center">
-					<br>
-					<h4 v-html="$t('you_earn_n_crystals', [crystals])"></h4>
-					<br>
-				</div>
+			<div class="page-header page-bar">
+				<h1 v-html="$t('payment_success', [vendor])"></h1>
 			</div>
+			<panel class="center">
+				<br>
+				<h4 v-html="$t('you_earn_n_crystals', [crystals])"></h4>
+				<br>
+			</panel>
 		</template>
 		<div v-else>
-			<h1 v-html="$t('payment_fail', [vendor])"></h1>
-			<div class="panel">
-				<div class="content center">
-					<br>
-					<img src="/image/notgood.png"><br><br>
-					<h4>{{ $t('payment_fail_reason', [reason]) }}</h4> 
-					<br>
-					<a href="/bank"><div class="button">{{ $t('back_to_bank') }}</div></a>
-				</div>
+			<div class="page-header page-bar">
+				<h1 v-html="$t('payment_fail', [vendor])"></h1>
 			</div>
+			<panel class="center">
+				<br>
+				<img src="/image/notgood.png"><br><br>
+				<h4>{{ $t('payment_fail_reason', [reason]) }}</h4> 
+				<br>
+				<router-link to="/bank"><div class="button">{{ $t('back_to_bank') }}</div></router-link>
+			</panel>
 		</div>
 	</div>
 </template>
@@ -45,6 +45,7 @@
 			this.reason = 'reason' in this.$route.params ? this.$route.params.reason : ''
 			this.crystals = 'crystals' in this.$route.params ? parseInt(this.$route.params.crystals, 10) : 0
 			this.vendor = 'vendor' in this.$route.params ? this.$route.params.vendor : ''
+			LeekWars.setTitle(this.success ? this.$t('payment_success', [this.vendor]) : this.$t('payment_fail', [this.vendor]))
 			if (this.success !== undefined) {
 				return
 			}
@@ -81,9 +82,6 @@
 </script>
 
 <style lang="scss" scoped>
-	.content {
-		text-align: center;
-	}
 	.paypal-button {
 		cursor: pointer;
 	}

@@ -3,69 +3,67 @@
 		<div class="page-bar">
 			<h1>{{ $t('title') }}</h1>
 		</div>
-		<div class="panel">
-			<div class="content">
-				<div class="search">
-					<div class="search-box">
-						<div class="label">{{ $t('query') }}</div>
-						<input v-model="query" class="query" type="text" @keydown.enter="search">
-					</div>
-					<br>
-					<div class="search-box-farmer">
-						<div class="label">{{ $t('author') }}</div>
-						<input v-model="farmer" class="farmer-query" type="text" @keydown.enter="search">
-					</div>
-					<br>
-					<div>
-						<div class="label">{{ $t('category') }}</div>
-						<select v-model="category" class="search-category" @change="search">
-							<option value="-1">{{ $t('all_categories') }}</option>
-							<option v-for="c in categories" :key="c.id" :value="c.id">{{ c.type == 'team' ? c.name : $i18n.t('forum.category_' + c.name) }}</option>
-						</select>
-					</div>
-					<br>
-					<div class="button green search-button" @click="search">
-						<img src="/image/search.png"><span>{{ $t('search') }}</span>
-					</div>
-
-					<br><br>
-					<h4>{{ $t('results') }}</h4>
-
-					<pagination :current="page" :total="pages" :url="url" />
-
-					<loader v-if="!results" />
-
-					<div v-else class="results-wrapper">
-						<div v-if="results.length" class="results">
-							<div v-for="(result, r) in results" :key="r" class="result card">
-								<router-link :to="'/forum/category-' + result.cid + '/topic-' + result.tid">
-									<div v-if="query !== '' && result.title.toLowerCase().indexOf(queryLower) !== -1" class="title" v-html="highlight(result.title, queryLower)"></div>
-									<div v-else class="title">{{ result.title }}</div>
-								</router-link>
-								<i18n tag="div" class="info" path="post_by_x_the_x_in_x">
-									<router-link :to="'/farmer/' + result.fid" place="farmer">
-										<template v-if="farmer === ''">{{ result.fname }}</template>
-										<span v-else><b>{{ result.fname }}</b></span>
-									</router-link>
-									<span place="date" class="dark">{{ result.date | date }}</span>
-									<router-link :to="'/forum/category-' + result.cid" place="topic">
-										{{ $i18n.t('forum.category_' + result.cname) }}
-									</router-link>
-								</i18n>
-								<router-link :to="'/forum/category-' + result.cid + '/topic-' + result.tid">
-									<div class="headline" v-html="result.message"></div>
-								</router-link>
-							</div>
-						</div>
-						<div v-if="results.length === 0" class="no-results">
-							<img src="/image/notgood.png">
-							<div>{{ $t('no_results_found') }}</div>
-						</div>
-					</div>
-					<pagination :current="page" :total="pages" :url="url" />
+		<panel>
+			<div class="search">
+				<div class="search-box">
+					<div class="label">{{ $t('query') }}</div>
+					<input v-model="query" class="query" type="text" @keydown.enter="search">
 				</div>
+				<br>
+				<div class="search-box-farmer">
+					<div class="label">{{ $t('author') }}</div>
+					<input v-model="farmer" class="farmer-query" type="text" @keydown.enter="search">
+				</div>
+				<br>
+				<div>
+					<div class="label">{{ $t('category') }}</div>
+					<select v-model="category" class="search-category" @change="search">
+						<option value="-1">{{ $t('all_categories') }}</option>
+						<option v-for="c in categories" :key="c.id" :value="c.id">{{ c.type == 'team' ? c.name : $i18n.t('forum.category_' + c.name) }}</option>
+					</select>
+				</div>
+				<br>
+				<div class="button green search-button" @click="search">
+					<img src="/image/search.png"><span>{{ $t('search') }}</span>
+				</div>
+
+				<br><br>
+				<h4>{{ $t('results') }}</h4>
+
+				<pagination :current="page" :total="pages" :url="url" />
+
+				<loader v-if="!results" />
+
+				<div v-else class="results-wrapper">
+					<div v-if="results.length" class="results">
+						<div v-for="(result, r) in results" :key="r" class="result card">
+							<router-link :to="'/forum/category-' + result.cid + '/topic-' + result.tid">
+								<div v-if="query !== '' && result.title.toLowerCase().indexOf(queryLower) !== -1" class="title" v-html="highlight(result.title, queryLower)"></div>
+								<div v-else class="title">{{ result.title }}</div>
+							</router-link>
+							<i18n tag="div" class="info" path="post_by_x_the_x_in_x">
+								<router-link :to="'/farmer/' + result.fid" place="farmer">
+									<template v-if="farmer === ''">{{ result.fname }}</template>
+									<span v-else><b>{{ result.fname }}</b></span>
+								</router-link>
+								<span place="date" class="dark">{{ result.date | date }}</span>
+								<router-link :to="'/forum/category-' + result.cid" place="topic">
+									{{ $i18n.t('forum.category_' + result.cname) }}
+								</router-link>
+							</i18n>
+							<router-link :to="'/forum/category-' + result.cid + '/topic-' + result.tid">
+								<div class="headline" v-html="result.message"></div>
+							</router-link>
+						</div>
+					</div>
+					<div v-if="results.length === 0" class="no-results">
+						<img src="/image/notgood.png">
+						<div>{{ $t('no_results_found') }}</div>
+					</div>
+				</div>
+				<pagination :current="page" :total="pages" :url="url" />
 			</div>
-		</div>
+		</panel>
 	</div>
 </template>
 
