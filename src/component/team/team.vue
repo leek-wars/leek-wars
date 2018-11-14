@@ -397,29 +397,25 @@
 		draggedLeek: Leek | null = null
 		draggedLeekComposition: Composition | null = null
 
+		get id() { return 'id' in this.$route.params ? parseInt(this.$route.params.id, 10) : (this.$store.state.farmer && this.$store.state.farmer.team !== null ? this.$store.state.farmer.team.id : null) }
 		get max_level() { return this.team && this.team.level === 100 }
 		get xp_bar_width() { return this.team ? this.team.level === 100 ? 100 : Math.floor(100 * (this.team.xp - this.team.down_xp) / (this.team.up_xp - this.team.down_xp)) : 0 }
 		get member() { return !this.$route.params.id || (this.team && this.$store.state.farmer && this.$store.state.farmer.team !== null && this.team.id === this.$store.state.farmer.team.id) }
 		
-		created() {
-			this.update()
-		}
+		@Watch('id', {immediate: true})
 		update() {
-			const id = 'id' in this.$route.params ? parseInt(this.$route.params.id, 10) : (this.$store.state.farmer && this.$store.state.farmer.team !== null ? this.$store.state.farmer.team.id : null)
-			if (id == null) {
-				this.$router.push('/')
-				return
-			}
-			let request = 'team/get/' + id
+			if (this.id === null) { return }
+			let request = 'team/get/' + this.id
 			if (this.$store.state.farmer) {
-				if (this.$store.state.farmer.team !== null && this.$store.state.farmer.team.id === id) {
-					request = 'team/get-private/' + id + '/' + this.$store.state.token
+				if (this.$store.state.farmer.team !== null && this.$store.state.farmer.team.id === this.id) {
+					request = 'team/get-private/' + this.id + '/' + this.$store.state.token
 				} else {
-					request = 'team/get-connected/' + id + '/' + this.$store.state.token
+					request = 'team/get-connected/' + this.id + '/' + this.$store.state.token
 				}
 			}
 			LeekWars.get<any>(request).then((data) => {
 				if (!data.success) {
+					// TODO
 					// LW.error('Pas de team', 'Team introuvable !')
 					return
 				}
