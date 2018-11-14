@@ -163,6 +163,8 @@
 		progressBarTooltipMargin: number = 0
 		width: number = 0
 		height: number = 0
+		timeout: any = null
+		request: any = null
 
 		created() {
 			if (localStorage.getItem('fight/shadows') === null) { localStorage.setItem('fight/shadows', 'true') }
@@ -246,9 +248,12 @@
 			this.game.pause()
 			this.$root.$off('keyup', this.keyup)
 			this.$root.$off('resize')
+			if (this.timeout) { clearTimeout(this.timeout) }
+			if (this.request) { this.request.abort() }
 		}
 		getFight() {
-			LeekWars.get('fight/get/' + this.fightId).then((data: any) => {
+			this.request = LeekWars.get('fight/get/' + this.fightId)
+			this.request.then((data: any) => {
 				const fight = data.fight
 				this.fight = fight
 				this.$emit('fight', fight)
@@ -264,7 +269,7 @@
 				} else {
 					this.queue = fight.queue
 					if (this.loaded) { return }
-					setTimeout(() => {
+					this.timeout = setTimeout(() => {
 						this.getFight()
 					}, this.getDelay)
 					this.getDelay += 500
