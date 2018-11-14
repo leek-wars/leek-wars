@@ -71,58 +71,35 @@
 			</div>
 		</div>
 
-		<div class="panel" name="graph">
-			<div class="header">
-				<h2>Évolution des points de vie</h2>
-				<div class="right">
-					<div class="button flat" @click="toggleSmooth">
-						<img v-if="smooth" src="/image/icon/graph_angular.png">
-						<img v-else src="/image/icon/graph_smooth.png">
-					</div>
-					<div class="button flat expand">
-						<i class="material-icons">expand_more</i>
-					</div>
+		<panel title="Évolution des points de vie" toggle="report/graph">
+			<div slot="actions">
+				<div class="button flat" @click="toggleSmooth">
+					<img v-if="smooth" src="/image/icon/graph_angular.png">
+					<img v-else src="/image/icon/graph_smooth.png">
 				</div>
 			</div>
 			<loader v-if="!report" />
-			<div v-else ref="chartPanel" class="content chart-panel" @mouseleave="chartMouseLeave" @mousemove="chartMouseMove">
+			<div v-else ref="chartPanel" class="chart-panel" @mouseleave="chartMouseLeave" @mousemove="chartMouseMove">
 				<chartist ref="chart" :data="chartData" :options="chartOptions" :event-handlers="chartEvents" class="chart" type="Line" />
 				<div v-show="chartTooltipValue" ref="chartTooltip" :style="{top: chartTooltipY + 'px', left: chartTooltipX + 'px'}" class="chart-tooltip v-tooltip__content top" v-html="chartTooltipValue"></div>
 			</div>
-		</div>
+		</panel>
 
-		<div class="panel" name="statistics">
-			<div class="header">
-				<h2>Statistiques</h2>
-				<div class="right">
-					<div class="button flat expand">
-						<i class="material-icons">expand_more</i>
-					</div>
-				</div>
-			</div>
+		<panel title="Statistics" toggle="report/statistics">
 			<loader v-if="!report" />
-			<div v-else class="content scroll-x">
+			<div v-else class="scroll-x">
 				<report-statistics :fight="fight" :statistics="statistics" />
 			</div>
-		</div>
+		</panel>
 
-		<div v-if="errors.length > 0 || warnings.length > 0" class="warnings-error panel" name="warnings-errors">
-			<div class="header">
-				<h2>Erreurs et avertissements ({{ errors.length + warnings.length }})</h2>
-				<div class="right">
-					<div class="button flat expand">
-						<img src="/image/icon/collapse.png">
-					</div>
-				</div>
-			</div>
-			<div class="content">
-				<div class="title"><b>{{ errors.length }}</b> erreurs</div>
-				<pre v-for="(e, i) in errors" :key="i" class="log error">[{{ e.entity }}] {{ e.data }}</pre>
-				<br>
-				<div class="title"><b>{{ warnings.length }}</b> avertissements</div>
-				<pre v-for="(w, i) in warnings" :key="errors.length + i" class="log warning">[{{ w.entity }}] {{ w.data }}</pre>
-			</div>
-		</div>
+		<panel v-if="errors.length > 0 || warnings.length > 0" :title="'Erreurs et avertissements (' + errors.length + warnings.length + ')'"  class="warnings-error" toggle="report/warnings-errors">
+			<div class="title"><b>{{ errors.length }}</b> erreurs</div>
+			<pre v-for="(e, i) in errors" :key="i" class="log error">[{{ e.entity }}] {{ e.data }}</pre>
+			<br>
+			<div class="title"><b>{{ warnings.length }}</b> avertissements</div>
+			<pre v-for="(w, i) in warnings" :key="errors.length + i" class="log warning">[{{ w.entity }}] {{ w.data }}</pre>
+		</panel>
+		
 		<div class="panel last">
 			<div class="header">
 				<h2>Actions</h2>
