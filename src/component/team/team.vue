@@ -228,7 +228,7 @@
 		<panel v-else>
 			<h2 v-if="team" slot="title">{{ $t('leeks', [team.leek_count]) }}</h2>
 			<loader v-if="!team" slot="content" />
-			<div v-else slot="content" class="all-leeks">
+			<div v-else slot="content" class="leeks">
 				<router-link v-for="leek in team.leeks" :key="leek.id" :to="'/leek/' + leek.id" :leek="leek.id" class="leek">
 					<leek-image :leek="leek" :scale="0.6" />
 					<br>
