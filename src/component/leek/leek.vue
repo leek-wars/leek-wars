@@ -116,7 +116,7 @@
 						</v-tooltip>
 
 						<template v-if="leek && leek.level >= 100">
-							<chartist ref="chart" :data="chartData" :options="chartOptions" class="talent-history" type="Line" />
+							<chartist ref="chart" :data="chartData" :options="chartOptions" :events="chartEvents" class="talent-history" type="Line" />
 							<div v-show="chartTooltipValue" ref="chartTooltip" :style="{top: chartTooltipY + 'px', left: chartTooltipX + 'px'}" class="chart-tooltip v-tooltip__content top">{{ chartTooltipValue }}</div>
 						</template>
 					</div>
@@ -528,6 +528,7 @@
 		chartTooltipValue: any = null
 		chartTooltipX: number = 0
 		chartTooltipY: number = 0
+		chartEvents: any = null
 		reportDialog: boolean = false
 		reasons = [Warning.INCORRECT_LEEK_NAME, Warning.INCORRECT_AI_NAME]
 		levelPopup: boolean = false
@@ -755,24 +756,25 @@
 				series: [this.leek.talent_history]
 			}
 			this.chartOptions = {height: 120, showArea: true, fullWidth: true, fullHeight: true}
-
-			setTimeout(() => {
-				const chartElement = this.$refs.chart
-				if (!chartElement) { return }
-				const chartTooltip = this.$refs.chartTooltip as HTMLElement
-				;(chartElement as any).$el.querySelectorAll('.ct-point').forEach((point: any) => {
-					point.addEventListener('mouseenter', (e: Event) => {
-						this.chartTooltipValue = (e.target as any).getAttribute('ct:value')
+			this.chartEvents = [{
+				event: 'created', fn: () => {
+					const chartElement = this.$refs.chart
+					if (!chartElement) { return }
+					const chartTooltip = this.$refs.chartTooltip as HTMLElement
+					;(chartElement as any).$el.querySelectorAll('.ct-point').forEach((point: any) => {
+						point.addEventListener('mouseenter', (e: Event) => {
+							this.chartTooltipValue = (e.target as any).getAttribute('ct:value')
+						})
+						point.addEventListener('mouseleave', (e: Event) => {
+							this.chartTooltipValue = null
+						})
+						point.addEventListener('mousemove', (e: MouseEvent) => {
+							this.chartTooltipX = e.pageX - chartTooltip.offsetWidth / 2,
+							this.chartTooltipY = e.pageY - chartTooltip.offsetHeight - 15
+						})
 					})
-					point.addEventListener('mouseleave', (e: Event) => {
-						this.chartTooltipValue = null
-					})
-					point.addEventListener('mousemove', (e: MouseEvent) => {
-						this.chartTooltipX = e.pageX - chartTooltip.offsetWidth / 2,
-						this.chartTooltipY = e.pageY - chartTooltip.offsetHeight - 15
-					})
-				})
-			}, 400)
+				}
+			}]
 		}
 		hat() {
 			this.hatDialog = true
