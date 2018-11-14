@@ -3,53 +3,50 @@
 		<div class="page-bar">
 			<h1>{{ $t('title_html', [entity ? entity.name : '...']) }}</h1>
 		</div>
-		<div class="panel">
-			<div v-if="entity" class="content">
-				<div class="summary">
-				
-					<div class="periods">
-						<div v-ripple :class="{selected: period === 'today'}" class="period card" @click="select_period('today')">{{ $t('today') }}</div>
-						<div v-ripple :class="{selected: period === '24h'}" class="period card" @click="select_period('24h')">{{ $t('24h') }}</div>
-						<div v-ripple :class="{selected: period === '2days'}" class="period card" @click="select_period('2days')">{{ $t('2days') }}</div>
-						<div v-ripple :class="{selected: period === '1week'}" class="period card" @click="select_period('1week')">{{ $t('1week') }}</div>
-					</div>
-
-					<div v-if="type === 'farmer'" class="image">
-						<avatar :farmer="entity" />
-					</div>
-					<div v-if="type === 'leek'" class="image">
-						<leek-image :leek="entity" :scale="0.8" />
-					</div>
-
-					<div class="stats">
-						<center>
-							<talent :talent="entity.talent" />
-							<div class="talent-more">
-								({{ entity.talent_more >= 0 ? '+' + entity.talent_more : entity.talent_more }})
-							</div>
-						</center>
-						<table>
-							<tr>
-								<td class="big">{{ victories }}</td>
-								<td class="big">{{ draws }}</td>
-								<td class="big">{{ defeats }}</td>
-								<td class="big">{{ ratio }}</td>
-							</tr>
-							<tr>
-								<td class="grey">{{ $t('victories') }}</td>
-								<td class="grey">{{ $t('draws') }}</td>
-								<td class="grey">{{ $t('defeats') }}</td>
-								<td class="grey">{{ $t('ratio') }}</td>
-							</tr>
-						</table>
-					</div>
+		<panel v-if="entity" class="first last">
+			<div class="summary">
+				<div class="periods">
+					<div v-ripple :class="{selected: period === 'today'}" class="period card" @click="select_period('today')">{{ $t('today') }}</div>
+					<div v-ripple :class="{selected: period === '24h'}" class="period card" @click="select_period('24h')">{{ $t('24h') }}</div>
+					<div v-ripple :class="{selected: period === '2days'}" class="period card" @click="select_period('2days')">{{ $t('2days') }}</div>
+					<div v-ripple :class="{selected: period === '1week'}" class="period card" @click="select_period('1week')">{{ $t('1week') }}</div>
 				</div>
-				<br>
-				<div class="n-fights">{{ $t('n_fights', [filteredFights.length]) }}</div>
 
-				<fights-history :fights="filteredFights" />
+				<div v-if="type === 'farmer'" class="image">
+					<avatar :farmer="entity" />
+				</div>
+				<div v-if="type === 'leek'" class="image">
+					<leek-image :leek="entity" :scale="0.8" />
+				</div>
+
+				<div class="stats">
+					<center>
+						<talent :talent="entity.talent" />
+						<div class="talent-more">
+							({{ entity.talent_more >= 0 ? '+' + entity.talent_more : entity.talent_more }})
+						</div>
+					</center>
+					<table>
+						<tr>
+							<td class="big">{{ victories }}</td>
+							<td class="big">{{ draws }}</td>
+							<td class="big">{{ defeats }}</td>
+							<td class="big">{{ ratio }}</td>
+						</tr>
+						<tr>
+							<td class="grey">{{ $t('victories') }}</td>
+							<td class="grey">{{ $t('draws') }}</td>
+							<td class="grey">{{ $t('defeats') }}</td>
+							<td class="grey">{{ $t('ratio') }}</td>
+						</tr>
+					</table>
+				</div>
 			</div>
-		</div>
+			<br>
+			<div class="n-fights">{{ $t('n_fights', [filteredFights.length]) }}</div>
+
+			<fights-history :fights="filteredFights" />
+		</panel>
 	</div>
 </template>
 

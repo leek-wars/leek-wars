@@ -23,8 +23,8 @@
 
 		<div class="flex-container">
 			<div class="column4">
-				<div class="panel team-emblem first">
-					<div v-if="team" class="content">
+				<panel class="team-emblem first">
+					<div v-if="team" slot="content" class="content">
 						<template v-if="member">
 							<v-tooltip :open-delay="0" :close-delay="0" bottom>
 								<div slot="activator" class="emblem-input">
@@ -36,12 +36,12 @@
 						</template>
 						<emblem v-else :team="team" />
 					</div>
-				</div>
+				</panel>
 			</div>
 			
 			<div class="column4">
-				<div class="panel description">
-					<div v-if="team" class="content">
+				<panel class="description">
+					<div v-if="team" slot="content" class="content">
 						<div>
 							<span class="guillemet">«</span>
 							<span v-if="owner" ref="descriptionElement" :class="{empty: !team.description && !editingDescription}" class="team-status text" contenteditable @click="startEditingDescription" @blur="saveDescription" @keydown.enter.prevent="saveDescription">{{ team.description }}</span>
@@ -55,55 +55,53 @@
 							<i v-else>{{ $t('closed_team') }}</i>
 						</center>
 					</div>
-				</div>
+				</panel>
 			</div>
 			
 			<div class="column4">
-				<div class="panel">
-					<div class="content">
-						<h4 class="level">{{ $t('level_n', [team ? team.level : '...']) }}</h4>
-						<v-tooltip v-if="team" :open-delay="0" :close-delay="0" bottom>
-							<div slot="activator" class="bar">
-								<span :class="{blue: max_level}" :style="{width: xp_bar_width + '%'}" class="xp-bar striked"></span>
-							</div>
-							<template v-if="max_level">
-								<b>{{ $t('max_level') }}</b>
-								<br>
-								{{ $t('xp', [LeekWars.formatNumber(team.xp)]) }}
-							</template>
-							<template v-else>
-								<b>{{ $t('remaining_xp', [LeekWars.formatNumber(team.remaining_xp)]) }}</b>
-								<br>
-								{{ $t('xp', [LeekWars.formatNumber(team.xp) + " / " + LeekWars.formatNumber(team.up_xp)]) }}
-							</template>
-						</v-tooltip>
-
-						<center>
+				<panel>
+					<h4 class="team-level">{{ $t('level_n', [team ? team.level : '...']) }}</h4>
+					<v-tooltip v-if="team" :open-delay="0" :close-delay="0" bottom>
+						<div slot="activator" class="bar">
+							<span :class="{blue: max_level}" :style="{width: xp_bar_width + '%'}" class="xp-bar striked"></span>
+						</div>
+						<template v-if="max_level">
+							<b>{{ $t('max_level') }}</b>
 							<br>
-							<v-tooltip :open-delay="0" :close-delay="0" bottom>
-								<talent slot="activator" :talent="team ? team.talent : '...'" />
-								{{ $t('talent') }}
-							</v-tooltip>
-						</center>
+							{{ $t('xp', [LeekWars.formatNumber(team.xp)]) }}
+						</template>
+						<template v-else>
+							<b>{{ $t('remaining_xp', [LeekWars.formatNumber(team.remaining_xp)]) }}</b>
+							<br>
+							{{ $t('xp', [LeekWars.formatNumber(team.xp) + " / " + LeekWars.formatNumber(team.up_xp)]) }}
+						</template>
+					</v-tooltip>
 
+					<center>
 						<br>
-						<v-tooltip v-if="team" :open-delay="0" :close-delay="0" bottom>
-							<table slot="activator" class="fights">
-								<tr>
-									<td class="big">{{ team.victories | number }}</td>
-									<td class="big">{{ team.draws | number }}</td>
-									<td class="big">{{ team.defeats | number }}</td>
-								</tr>
-								<tr>
-									<td class="grey">{{ $t('victories') }}</td>
-									<td class="grey">{{ $t('draws') }}</td>
-									<td class="grey">{{ $t('defeats') }}</td>
-								</tr>
-							</table>
-							{{ $t('ratio', [team.ratio]) }}
+						<v-tooltip :open-delay="0" :close-delay="0" bottom>
+							<talent slot="activator" :talent="team ? team.talent : '...'" />
+							{{ $t('talent') }}
 						</v-tooltip>
-					</div>
-				</div>
+					</center>
+
+					<br>
+					<v-tooltip v-if="team" :open-delay="0" :close-delay="0" bottom>
+						<table slot="activator" class="fights">
+							<tr>
+								<td class="big">{{ team.victories | number }}</td>
+								<td class="big">{{ team.draws | number }}</td>
+								<td class="big">{{ team.defeats | number }}</td>
+							</tr>
+							<tr>
+								<td class="grey">{{ $t('victories') }}</td>
+								<td class="grey">{{ $t('draws') }}</td>
+								<td class="grey">{{ $t('defeats') }}</td>
+							</tr>
+						</table>
+						{{ $t('ratio', [team.ratio]) }}
+					</v-tooltip>
+				</panel>
 			</div>
 		</div>
 
@@ -111,11 +109,9 @@
 			<chat slot="content" channel="team" />
 		</panel>
 
-		<div v-if="team && member && team.candidacies && team.candidacies.length > 0" class="panel">
-			<div class="header">
-				<h2>{{ $t('candidacies') }} ({{ team.candidacies.length }})</h2>
-			</div>
-			<div class="content candidacies">
+		<panel v-if="team && member && team.candidacies && team.candidacies.length > 0">
+			<h2 slot="title">{{ $t('candidacies') }} ({{ team.candidacies.length }})</h2>
+			<div slot="content" class="content candidacies">
 				<div v-for="candidacy in team.candidacies" :key="candidacy.id" class="farmer">
 					<router-link to="'/farmer/' + candidacy.farmer.id">
 						<avatar :farmer="candidacy.farmer" />
@@ -125,14 +121,12 @@
 					<span class="reject" @click="rejectCandidacy(candidacy)">{{ $t('candidacy_refuse') }}</span>
 				</div>
 			</div>
-		</div>
+		</panel>
 
-		<div class="panel">
-			<div class="header">
-				<h2 v-if="team">{{ $t('farmers', [team.member_count]) }}</h2>
-			</div>
-			<loader v-if="!team" />
-			<div v-else class="members">
+		<panel>
+			<h2 slot="title"><span v-if="team">{{ $t('farmers', [team.member_count]) }}</span></h2>
+			<loader v-if="!team" slot="content" />
+			<div v-else slot="content" class="members">
 				<div v-for="member in team.members" :key="member.id" class="farmer">
 					<router-link :to="'/farmer/' + member.id">
 						<avatar :farmer="member" />
@@ -161,50 +155,39 @@
 					</template>
 				</div>
 			</div>
-		</div>
+		</panel>
 
-		<div v-if="member" class="panel">
-			<div class="header">
-				<h2>{{ $t('compositions') }}</h2>
-				<div v-if="captain" class="right">
-					<div class="button flat" @click="createCompoDialog = true">{{ $t('create_composition') }}</div>
-				</div>
-			</div>
-		</div>
+		<panel v-if="member" :title="$t('compositions')">
+			<template v-if="captain" slot="actions">
+				<div class="button flat" @click="createCompoDialog = true">{{ $t('create_composition') }}</div>
+			</template>
+			<div slot="content"></div>
+		</panel>
 
 		<div v-if="member && team && team.compositions && team.compositions.length == 0" class="no-compos">{{ $t('no_compositions') }}</div>
 
 		<div v-if="member && team && team.compositions" class="compos">
-			<div v-for="composition in team.compositions" :key="composition.id" :class="{'in-tournament': composition.tournament.registered}" class="panel compo">
-				<div class="header">
-					<h2>{{ composition.name }}</h2>
-
+			<panel v-for="composition in team.compositions" :key="composition.id" :class="{'in-tournament': composition.tournament.registered}" class="compo">
+				<h2 slot="title">{{ composition.name }}</h2>
+				<template slot="actions">
 					<div class="level-talent">
 						<span class="level">{{ $t('level_n', [composition.total_level]) }}</span>
 						<talent :talent="composition.talent" />
 					</div>
-
-					<div class="right">
-						<router-link v-if="composition.tournament.current" :to="'/tournament/' + composition.tournament.current" class="view-tournament">
-							<div class="button flat">
-								{{ $t('see_tournament') }}
-							</div>
-						</router-link>
-						<v-tooltip v-if="captain" :open-delay="0" :close-delay="0" bottom>
-							<div slot="activator" class="button flat" @click="registerTournament(composition)">
-								<img src="/image/icon/trophy.png">
-								<span v-if="!composition.tournament.registered" class="register-tournament">{{ $t('register_tournament') }}</span>
-								<span v-else class="unregister-tournament">{{ $t('unregister') }}</span>
-							</div>
-							{{ $t('tournament_time') }}
-						</v-tooltip>
-						<div v-if="captain" class="delete-compo button flat" @click="compositionToDelete = composition; deleteCompoDialog = true">
-							<i class="material-icons">clear</i>
+					<router-link v-if="composition.tournament.current" :to="'/tournament/' + composition.tournament.current" class="view-tournament button flat">{{ $t('see_tournament') }}</router-link>
+					<v-tooltip v-if="captain" :open-delay="0" :close-delay="0" bottom class="button flat">
+						<div slot="activator" @click="registerTournament(composition)">
+							<img src="/image/icon/trophy.png">
+							<span v-if="!composition.tournament.registered" class="register-tournament">{{ $t('register_tournament') }}</span>
+							<span v-else class="unregister-tournament">{{ $t('unregister') }}</span>
 						</div>
+						{{ $t('tournament_time') }}
+					</v-tooltip>
+					<div v-if="captain" class="delete-compo button flat" @click="compositionToDelete = composition; deleteCompoDialog = true">
+						<i class="material-icons">clear</i>
 					</div>
-				</div>
-
-				<div :class="{dashed: draggedLeek != null && canDrop(composition)}" class="content leeks" @dragover="leeksDragover" @drop="leeksDrop(composition, $event)">
+				</template>
+				<div slot="content" :class="{dashed: draggedLeek != null && canDrop(composition)}" class="leeks" @dragover="leeksDragover" @drop="leeksDrop(composition, $event)">
 
 					<div v-if="composition.leeks.length == 0" class="empty">{{ $t('empty_compo') }}</div>
 
@@ -220,16 +203,13 @@
 						</div>
 					</router-link>
 				</div>
-			</div>
+			</panel>
 		</div>
 
-		<div v-if="member && team && team.unengaged_leeks" class="panel compo" compo="-1">
+		<panel v-if="member && team && team.unengaged_leeks" class="compo" compo="-1">
+			<h2 slot="title" class="compo-title" compo="-1">{{ $t('unsorted_leeks') }}</h2>
 
-			<div class="header">
-				<h2 class="compo-title" compo="-1">{{ $t('unsorted_leeks') }}</h2>
-			</div>
-
-			<div :class="{dashed: draggedLeek != null}" class="content leeks" @dragover="leeksDragover" @drop="leeksDrop(null, $event)">
+			<div slot="content" :class="{dashed: draggedLeek != null}" class="leeks" @dragover="leeksDragover" @drop="leeksDrop(null, $event)">
 				<div v-if="team.unengaged_leeks.length == 0" class="empty">{{ $t('empty_compo') }}</div>
 
 				<router-link v-for="leek in team.unengaged_leeks" :key="leek.id" :to="'/leek/' + leek.id">
@@ -244,14 +224,11 @@
 					</div>
 				</router-link>
 			</div>
-		</div>
-
-		<div v-else class="panel">
-			<div class="header">
-				<h2 v-if="team">{{ $t('leeks', [team.leek_count]) }}</h2>
-			</div>
-			<loader v-if="!team" />
-			<div v-else class="leeks">
+		</panel>
+		<panel v-else>
+			<h2 v-if="team" slot="title">{{ $t('leeks', [team.leek_count]) }}</h2>
+			<loader v-if="!team" slot="content" />
+			<div v-else slot="content" class="all-leeks">
 				<router-link v-for="leek in team.leeks" :key="leek.id" :to="'/leek/' + leek.id" :leek="leek.id" class="leek">
 					<leek-image :leek="leek" :scale="0.6" />
 					<br>
@@ -259,25 +236,18 @@
 					<div>{{ $t('main.level_n', [leek.level]) }}</div>
 				</router-link>
 			</div>
-		</div>
+		</panel>
 
 		<div class="container">
 			<div class="column6">
-				<div class="panel">
-					<div class="header">
-						<h2>{{ $t('history') }}</h2>
-					</div>
-					<fights-history v-if="team" :fights="team.fights" />
-				</div>
+				<panel :title="$t('history')">
+					<fights-history v-if="team" slot="content" :fights="team.fights" />
+				</panel>
 			</div>
-			
 			<div class="column6">
-				<div class="panel">
-					<div class="header">
-						<h2>{{ $t('tournaments') }}</h2>
-					</div>
-					<tournaments-history v-if="team" :tournaments="team.tournaments" />
-				</div>
+				<panel :title="$t('tournaments')">
+					<tournaments-history v-if="team" slot="content" :tournaments="team.tournaments" />
+				</panel>
 			</div>
 		</div>
 
@@ -760,7 +730,7 @@
 </script>
 
 <style lang="scss" scoped>
-	.level {
+	.team-level {
 		font-size: 20px;
 	}
 	.v-input--switch {
@@ -919,19 +889,15 @@
 		margin-right: 10px;
 		vertical-align: bottom;
 	}
-	.content.leeks {
-		padding: 0px;
+	.leeks {
 		min-height: 80px;
 		position: relative;
 		border: 4px solid transparent;
-	}
-	.leeks {
 		display: grid;
 		grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
 		grid-gap: 10px;
-		padding: 10px;
+		padding: 5px;
 		align-items: baseline;
-
 	}
 	.leek {
 		text-align: center;

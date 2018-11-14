@@ -3,28 +3,25 @@
 		<div class="page-header page-bar">
 			<h1>{{ $t('title') }}</h1>
 		</div>
-		<div class="panel first last">
-			<div class="content">
-				<div class="bank-description center" v-html="$t('description')"></div>
-
-				<loader v-if="!packs" />
-				<template v-else>
-					<div v-for="(pack, p) in packs" :key="pack.crystals" class="pack card">
-						<img src="/image/bank/crystal_big.png">
-						<h2 v-html="$t('pack_of_n_crystals', [pack.crystals])"></h2>
-						<br>
-						<div class="buy">
-							<router-link v-for="(offer, o) in pack.offers" :key="offer.type" :to="'/bank/buy/' + p + '/' + o">
-								<div>
-									<span class="price">{{ offer.price }}€</span>
-									<img :src="'/image/bank/' + offer.type + '.png'">
-								</div>
-							</router-link>
-						</div>
+		<panel class="first last">
+			<div class="bank-description center" v-html="$t('description')"></div>
+			<loader v-if="!packs" />
+			<template v-else>
+				<div v-for="(pack, p) in packs" :key="pack.crystals" class="pack card">
+					<img src="/image/bank/crystal_big.png">
+					<h2 v-html="$t('pack_of_n_crystals', [pack.crystals])"></h2>
+					<br>
+					<div class="buy">
+						<router-link v-for="(offer, o) in pack.offers" :key="offer.type" :to="'/bank/buy/' + p + '/' + o">
+							<div>
+								<span class="price">{{ offer.price }}€</span>
+								<img :src="'/image/bank/' + offer.type + '.png'">
+							</div>
+						</router-link>
 					</div>
-				</template>
-			</div>
-		</div>
+				</div>
+			</template>
+		</panel>
 	</div>
 </template>
 

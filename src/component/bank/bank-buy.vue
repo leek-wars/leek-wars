@@ -6,24 +6,21 @@
 				<span v-html="$t('purshase_title', [data.crystalCount, data.vendor])"></span>
 			</h1>
 		</div>
-		<div class="panel first last">
-			<div class="content">
-				<div v-if="data.vendor === 'StarPass'">
-					<br>
-					<loader v-if="starPassLoading" />
-					<div :id="'starpass_' + data.id" @DOMNodeInserted="starPassLoading = false"></div>
-					<div ref="starpass"></div>
-				</div>
-				<div v-else-if="data.vendor === 'PayPal'">
-					<br>
-					<br>
-					<h4>{{ $t('paypal_message') }}</h4>
-					<br>
-					<img v-if="!loading" class="paypal-button" src="/image/bank/paypal_buy.gif" @click="clickPayPal">
-					<loader v-if="loading" />
-				</div>
+		<panel class="first last center">
+			<div v-if="data.vendor === 'StarPass'">
+				<br>
+				<loader v-if="starPassLoading" />
+				<div :id="'starpass_' + data.id" @DOMNodeInserted="starPassLoading = false"></div>
+				<div ref="starpass"></div>
 			</div>
-		</div>
+			<div v-else-if="data.vendor === 'PayPal'">
+				<br>
+				<h4>{{ $t('paypal_message') }}</h4>
+				<br>
+				<img v-if="!loading" class="paypal-button" src="/image/bank/paypal_buy.gif" @click="clickPayPal">
+				<loader v-if="loading" />
+			</div>
+		</panel>
 	</div>
 </template>
 
@@ -91,20 +88,17 @@
 </script>
 
 <style lang="scss" scoped>
-	.content {
-		text-align: center;
-	}
 	.paypal-button {
 		cursor: pointer;
 	}
-	.content h3 {
+	.panel h3 {
 		color: red;
 	}
-	.content /deep/ .sk-main-content h3:before {
+	.panel /deep/ .sk-main-content h3:before {
 		width: 0;
 	}
-	.content /deep/ .sk-main-content h3:after,
-	.content /deep/ .sk-kit-header h1:after {
+	.panel /deep/ .sk-main-content h3:after,
+	.panel /deep/ .sk-kit-header h1:after {
 		border: none;
 	}
 </style>

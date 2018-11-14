@@ -7,11 +7,11 @@
 			</div>
 		</div>
 	
-		<div class="panel">
-			<div class="fight content">
+		<panel>
+			<div slot="content" class="fight">
 				<player :fight-id="fight_id" :key="fight_id" :required-width="playerWidth" :required-height="playerHeight" @fight="fightLoaded" @resize="resize" />
 			</div>
-		</div>
+		</panel>
 	
 		<div v-if="fight" class="fight-info">
 			<center v-if="fight.type === FightType.BATTLE_ROYALE">
@@ -48,19 +48,12 @@
 			</table>
 		</div>
 	
-		<div v-if="fight" class="panel">
-			<div class="header">
-				<h2>{{ $t('comments') }}</h2>
-				<div class="right">
-					<div class="views-counter">
-						{{ $t('n_views', [fight.views]) }}
-					</div>
-				</div>
+		<panel v-if="fight" :title="$t('comments')">
+			<div slot="actions" class="views-counter">
+				{{ $t('n_views', [fight.views]) }}
 			</div>
-			<div class="content">
-				<comments :comments="fight.comments" @comment="comment" />
-			</div>
-		</div>
+			<comments :comments="fight.comments" @comment="comment" />
+		</panel>
 	</div>
 </template>
 
@@ -180,9 +173,6 @@
 </script>
 
 <style lang="scss" scoped>
-	.fight.content {
-		padding: 0;
-	}
 	#app.app .page-bar .info {
 		display: none;
 	}

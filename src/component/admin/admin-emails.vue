@@ -1,29 +1,29 @@
 <template>
 	<div>
-		<h1><router-link to="/admin">Administration</router-link> > Mails d'activation</h1>
-		<div class="panel">
-			<div class="content">
-				<loader v-if="!farmers" />
-				<table v-else>
-					<tr class="header">
-						<th>#</th>
-						<th>Nom</th>
-						<th>Nom du poireau</th>
-						<th>Email</th>
-						<th>Code</th>
-						<th></th>
-					</tr>
-					<tr v-for="farmer in farmers" :key="farmer.id" class="farmer">
-						<td>{{ farmer.id }}</td>
-						<td>{{ farmer.name }}</td>
-						<td>{{ farmer.leek_name }}</td>
-						<td>{{ farmer.email }}</td>
-						<td>{{ farmer.code }}</td>
-						<td><div :class="{disabled: farmer.disabled}" class="button send" @click="send(farmer)">Renvoyer mail</div></td>
-					</tr>
-				</table>
-			</div>
+		<div class="page-header page-bar">
+			<h1><router-link to="/admin">Administration</router-link> > Mails d'activation</h1>
 		</div>
+		<panel>
+			<loader v-if="!farmers" />
+			<table v-else>
+				<tr class="header">
+					<th>#</th>
+					<th>Nom</th>
+					<th>Nom du poireau</th>
+					<th>Email</th>
+					<th>Code</th>
+					<th></th>
+				</tr>
+				<tr v-for="farmer in farmers" :key="farmer.id" class="farmer">
+					<td>{{ farmer.id }}</td>
+					<td>{{ farmer.name }}</td>
+					<td>{{ farmer.leek_name }}</td>
+					<td>{{ farmer.email }}</td>
+					<td>{{ farmer.code }}</td>
+					<td><div :class="{disabled: farmer.disabled}" class="button send" @click="send(farmer)">Renvoyer mail</div></td>
+				</tr>
+			</table>
+		</panel>
 	</div>
 </template>
 

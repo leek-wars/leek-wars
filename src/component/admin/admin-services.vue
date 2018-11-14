@@ -6,24 +6,22 @@
 				<div class="tab disabled">{{ services ? services.length : '...' }} services</div>
 			</div>
 		</div>
-		<div class="panel">
-			<div class="content">
-				<loader v-if="!services" />
-				<div v-else id="services">
-					<div v-for="(service, s) of services" :key="s" class="service card">
-						<span class="module">{{ service.module }}</span>/<span class="function">{{ service.function }}</span>
-						<template v-for="(parameter, p) in service.parameters"><span :key="p + '_'">/</span><span :key="p" class="parameter">&lt;{{ parameter }} <span class="parameter-type">{{ service.parameters_types[p] }}</span>&gt;</span>
-						</template>
-						<template v-if="service.returns.length > 0">&nbsp;→ <span class="returns">{{ service.returns.join(", ") }}</span></template>
-						<br>
-						<span class="label">{{ service.method }}</span>
-						<span v-if="service.admin" class="label admin">Admin</span>
-						<span v-if="!service.implemented" class="label not-implemented">Non implémenté</span>
-						<span v-else class="label implemented">Implémenté</span>
-					</div>
+		<panel class="first">
+			<loader v-if="!services" />
+			<div v-else id="services">
+				<div v-for="(service, s) of services" :key="s" class="service card">
+					<span class="module">{{ service.module }}</span>/<span class="function">{{ service.function }}</span>
+					<template v-for="(parameter, p) in service.parameters"><span :key="p + '_'">/</span><span :key="p" class="parameter">&lt;{{ parameter }} <span class="parameter-type">{{ service.parameters_types[p] }}</span>&gt;</span>
+					</template>
+					<template v-if="service.returns.length > 0">&nbsp;→ <span class="returns">{{ service.returns.join(", ") }}</span></template>
+					<br>
+					<span class="label">{{ service.method }}</span>
+					<span v-if="service.admin" class="label admin">Admin</span>
+					<span v-if="!service.implemented" class="label not-implemented">Non implémenté</span>
+					<span v-else class="label implemented">Implémenté</span>
 				</div>
 			</div>
-		</div>
+		</panel>
 	</div>
 </template>
 

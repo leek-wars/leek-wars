@@ -21,8 +21,8 @@
 			</div>
 		</div>
 
-		<div class="panel">
-			<div class="content">
+		<panel class="first last">
+			<div slot="content" class="content">
 				<pagination v-if="topic" :current="page" :total="pages" :url="'/forum/category-' + category.id + '/topic-' + topic.id" />
 				<loader v-if="!topic || !topic.messages" />
 				<div v-else>
@@ -127,7 +127,7 @@
 					{{ topic.name }}
 				</h2>
 			</div>
-		</div>
+		</panel>
 
 		<v-dialog v-model="deleteMessageDialog" :max-width="600">
 			<div class="title">{{ $t('do_you_want_to_delete_message') }}</div>

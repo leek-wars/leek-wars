@@ -3,31 +3,26 @@
 		<div class="page-bar page-header">
 			<h1>{{ loaded ? title : '...' }}</h1>
 		</div>
-		<div class="panel first">
-			<div class="content first">
-				<span class="global-percent">{{ loaded ? Math.floor(100 * count / total) : 0 }}%</span>
-				<span class="global-count">{{ count }} / {{ total }}</span>  
-				<br>
-				<div class="global-bar">
-					<div :style="{width: (loaded ? Math.floor(100 * count / total) : 0) + '%'}" class="bar striked"></div>
-				</div>
+		<panel class="first">
+			<span class="global-percent">{{ loaded ? Math.floor(100 * count / total) : 0 }}%</span>
+			<span class="global-count">{{ count }} / {{ total }}</span>  
+			<br>
+			<div class="global-bar">
+				<div :style="{width: (loaded ? Math.floor(100 * count / total) : 0) + '%'}" class="bar striked"></div>
 			</div>
-		</div>
-		<div v-for="category in categories" v-if="category.id != 6 || progressions[6] != 0" :key="category.id" class="panel">
-			<div class="header">
-				<h2>{{ $t('category_' + category.name) }}</h2> 
-				<div class="right category-bar-wrapper">
-					<template v-if="category.id != 6">
-						<div class="stats">{{ progressions[category.id] }} / {{ totals[category.id] }}</div>
-						<div class="category-bar">
-							<div :style="{width: (loaded ? Math.floor(100 * progressions[category.id] / totals[category.id]) : 0) + '%'}" class="bar striked"></div>
-						</div>
-						<div class="stats">{{ loaded ? Math.floor(100 * progressions[category.id] / totals[category.id]) : 0 }}%</div>
-					</template>
+		</panel>
+		<panel v-for="category in categories" v-if="category.id != 6 || progressions[6] != 0" :key="category.id">
+			<h2 slot="title">{{ $t('category_' + category.name) }}</h2> 
+
+			<template v-if="category.id != 6" slot="actions" class="category-bar-wrapper">
+				<div class="stats">{{ progressions[category.id] }} / {{ totals[category.id] }}</div>
+				<div class="category-bar">
+					<div :style="{width: (loaded ? Math.floor(100 * progressions[category.id] / totals[category.id]) : 0) + '%'}" class="bar striked"></div>
 				</div>
-			</div>
-			<loader v-show="!loaded" />
-			<div v-if="loaded" class="trophies">
+				<div class="stats">{{ loaded ? Math.floor(100 * progressions[category.id] / totals[category.id]) : 0 }}%</div>
+			</template>
+			<loader v-show="!loaded" slot="content" />
+			<div v-if="loaded" slot="content" class="trophies">
 				<div v-for="trophy in trophies[category.id]" v-if="category.id != 6 || trophy.unlocked" :key="trophy.id" :class="{unlocked: trophy.unlocked, locked: !trophy.unlocked, card: trophy.unlocked}" class="trophy">
 					<img :src="'/image/trophy/big/' + trophy.code + '.png'" class="image">
 					<div class="name">{{ trophy.name }}</div>
@@ -40,7 +35,7 @@
 					</v-tooltip>
 				</div>
 			</div>
-		</div>
+		</panel>
 	</div>
 </template>
 

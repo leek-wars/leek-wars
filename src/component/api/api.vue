@@ -3,25 +3,23 @@
 		<div class="page-header page-bar">
 			<h1>API</h1>
 		</div>
-		<div v-for="(service, s) in services" :key="s" class="panel service">
-			<div class="content">
-				<div class="title">
-					<span class="module">{{ service.module }}</span>/<span class="function">{{ service.function }}</span>
-					<template v-for="(parameter, p) in service.parameters">
-						<span :key="p + '-'">/</span>
-						<span :key="p" class="parameter">{{ parameter }}</span>
-					</template>
-					<template v-if="service.returns.length">&nbsp;→ <span class="returns">{{ service.returns.join(", ") }}</span></template>
-				</div>
-				<div class="label">{{ service.method }}</div>
-
-				<div class="description">{{ $t('api.' + service.module + '_' + service.function) }}</div>
-
-				<div class="parameters">
-					<div v-for="(parameter, p) in service.parameters" :key="p" class="parameter">{{ parameter }} : {{ service.parameters_types[p] }}</div>
-				</div>
+		<panel v-for="(service, s) in services" :key="s" class="service">
+			<div class="title">
+				<span class="module">{{ service.module }}</span>/<span class="function">{{ service.function }}</span>
+				<template v-for="(parameter, p) in service.parameters">
+					<span :key="p + '-'">/</span>
+					<span :key="p" class="parameter">{{ parameter }}</span>
+				</template>
+				<template v-if="service.returns.length">&nbsp;→ <span class="returns">{{ service.returns.join(", ") }}</span></template>
 			</div>
-		</div>
+			<div class="label">{{ service.method }}</div>
+
+			<div class="description">{{ $t('api.' + service.module + '_' + service.function) }}</div>
+
+			<div class="parameters">
+				<div v-for="(parameter, p) in service.parameters" :key="p" class="parameter">{{ parameter }} : {{ service.parameters_types[p] }}</div>
+			</div>
+		</panel>
 	</div>
 </template>
 

@@ -8,11 +8,9 @@
 				</router-link>
 			</div>
 		</div>
-		<div class="first last panel">
-			<div class="content encyclopedia">
-				<markdown :content="content" :wiki-pages="wiki" />
-			</div>
-		</div>
+		<panel class="first last encyclopedia">
+			<markdown :content="content" :wiki-pages="wiki" />
+		</panel>
 	</div>
 </template>
 

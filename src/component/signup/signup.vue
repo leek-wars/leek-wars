@@ -5,153 +5,139 @@
 		</div>
 		<div class="top">
 			<div class="column6">
-				<div class="panel first">
-					<div class="content">
-						<div class="desc introduction" v-html="$t('intro')"></div>
-						<div class="leek-rect">
-							<img src="/image/signup_illustration.png">
-							<div v-if="leek_count" class="desc" v-html="$t('n_leeks_already', [leek_count])"></div>
-						</div>
+				<panel class="first">
+					<div class="desc introduction" v-html="$t('intro')"></div>
+					<div class="leek-rect">
+						<img src="/image/signup_illustration.png">
+						<div v-if="leek_count" class="desc" v-html="$t('n_leeks_already', [leek_count])"></div>
 					</div>
-				</div>
-			</div><div class="column6">
-				<div class="panel">
-					<div class="header">
-						<h2>Inscription</h2>
-					</div>
-					<div class="content">
-						<form class="signup-form" method="post" @submit="submit">
-							<table>
-								<tr>
-									<td class="align-right">{{ $t('your_farmer_name') }}</td>
-									<td class="align-left">
-										<input v-model="login" :status="status('login')" name="login" type="text" required>
-										<div v-for="e in errors.login" :key="e" class="error-msg">{{ e }}</div>
-									</td>
-								</tr>
-								<tr>
-									<td class="align-right">{{ $t('your_leek_name') }}</td>
-									<td class="align-left">
-										<input v-model="leek" :status="status('leek')" name="leek" type="text" required>
-										<div v-for="e in errors.leek" :key="e" class="error-msg">{{ e }}</div>
-									</td>
-								</tr>
-								<tr>
-									<td><br></td>
-								</tr>
-								<tr>
-									<td class="align-right">{{ $t('your_email') }}</td>
-									<td class="align-left">
-										<input v-model="email" :status="status('email')" name="email" type="text" required>
-										<div v-for="e in errors.email" :key="e" class="error-msg">{{ e }}</div>
-									</td>
-								</tr>
-								<tr>
-									<td class="align-right">{{ $t('password') }}</td>
-									<td class="align-left">
-										<input v-model="password1" :status="status('password1')" name="password" type="password" required>
-										<div v-for="e in errors.password1" :key="e" class="error-msg">{{ e }}</div>
-									</td>
-								</tr>
-								<tr>
-									<td class="align-right">{{ $t('confirm_password') }}</td>
-									<td class="align-left">
-										<input v-model="password2" :status="status('password2')" type="password" required>
-										<div v-for="e in errors.password2" :key="e" class="error-msg">{{ e }}</div>
-									</td>
-								</tr>
-								<tr>
-									<td><br></td>
-								</tr>
-								<tr>
-									<td class="align-right"><i>{{ $t('godfather') }}</i></td>
-									<td class="align-left">
-										<input v-model="godfather" :status="status('godfather')" type="text">
-										<div v-for="e in errors.godfather" :key="e" class="error-msg">{{ e }}</div>
-									</td>
-								</tr>
-							</table>
-
-							<br>
-
-							<i18n class="cgu" tag="div" path="conditions">
-								<router-link place="link" to="/conditions">{{ $t('conditions_name') }}</router-link>
-							</i18n>
-							<br>
-							<center><input :value="$t('signup')" class="button green large" type="submit"></center>
-						</form>
-					</div>
-				</div>
+				</panel>
+			</div>
+			<div class="column6">
+				<panel title="Inscription">
+					<form class="signup-form" method="post" @submit="submit">
+						<table>
+							<tr>
+								<td class="align-right">{{ $t('your_farmer_name') }}</td>
+								<td class="align-left">
+									<input v-model="login" :status="status('login')" name="login" type="text" required>
+									<div v-for="e in errors.login" :key="e" class="error-msg">{{ e }}</div>
+								</td>
+							</tr>
+							<tr>
+								<td class="align-right">{{ $t('your_leek_name') }}</td>
+								<td class="align-left">
+									<input v-model="leek" :status="status('leek')" name="leek" type="text" required>
+									<div v-for="e in errors.leek" :key="e" class="error-msg">{{ e }}</div>
+								</td>
+							</tr>
+							<tr>
+								<td><br></td>
+							</tr>
+							<tr>
+								<td class="align-right">{{ $t('your_email') }}</td>
+								<td class="align-left">
+									<input v-model="email" :status="status('email')" name="email" type="text" required>
+									<div v-for="e in errors.email" :key="e" class="error-msg">{{ e }}</div>
+								</td>
+							</tr>
+							<tr>
+								<td class="align-right">{{ $t('password') }}</td>
+								<td class="align-left">
+									<input v-model="password1" :status="status('password1')" name="password" type="password" required>
+									<div v-for="e in errors.password1" :key="e" class="error-msg">{{ e }}</div>
+								</td>
+							</tr>
+							<tr>
+								<td class="align-right">{{ $t('confirm_password') }}</td>
+								<td class="align-left">
+									<input v-model="password2" :status="status('password2')" type="password" required>
+									<div v-for="e in errors.password2" :key="e" class="error-msg">{{ e }}</div>
+								</td>
+							</tr>
+							<tr>
+								<td><br></td>
+							</tr>
+							<tr>
+								<td class="align-right"><i>{{ $t('godfather') }}</i></td>
+								<td class="align-left">
+									<input v-model="godfather" :status="status('godfather')" type="text">
+									<div v-for="e in errors.godfather" :key="e" class="error-msg">{{ e }}</div>
+								</td>
+							</tr>
+						</table>
+						<br>
+						<i18n class="cgu" tag="div" path="conditions">
+							<router-link place="link" to="/conditions">{{ $t('conditions_name') }}</router-link>
+						</i18n>
+						<br>
+						<center><input :value="$t('signup')" class="button green large" type="submit"></center>
+					</form>
+				</panel>
 			</div>
 		</div>
 
 		<h1>{{ $t('ranking') }}</h1>
 
-		<div class="panel first">
-
-			<div class="content">
-
-				<div class="container">
-					<div class="column6">
-						<div class="ranking">
-							<h4>{{ $t('leek') }}</h4>
-							<table class="ranking">
-								<tr class="header">
-									<th>{{ $t('place') }}</th>
-									<th>{{ $t('leek') }}</th>
-									<th>{{ $t('talent') }}</th>
-									<th>{{ $t('level') }}</th>
-								</tr>
-								<tr v-for="(leek, i) in leek_ranking" :key="i" :class="leek.style">
-									<td>{{ parseInt(i) + 1 }}</td>
-									<td :class="leek.class">
-										<router-link :to="'/leek/' + leek.id">{{ leek.name }}</router-link>
-									</td>
-									<td>{{ leek.talent }}</td>
-									<td>{{ leek.level }}</td>
-								</tr>
-							</table>
-						</div>
+		<panel class="first">
+			<div class="container">
+				<div class="column6">
+					<div class="ranking">
+						<h4>{{ $t('leek') }}</h4>
+						<table class="ranking">
+							<tr class="header">
+								<th>{{ $t('place') }}</th>
+								<th>{{ $t('leek') }}</th>
+								<th>{{ $t('talent') }}</th>
+								<th>{{ $t('level') }}</th>
+							</tr>
+							<tr v-for="(leek, i) in leek_ranking" :key="i" :class="leek.style">
+								<td>{{ parseInt(i) + 1 }}</td>
+								<td :class="leek.class">
+									<router-link :to="'/leek/' + leek.id">{{ leek.name }}</router-link>
+								</td>
+								<td>{{ leek.talent }}</td>
+								<td>{{ leek.level }}</td>
+							</tr>
+						</table>
 					</div>
-					<div class="column6">
-						<div class="ranking">
-							<h4>{{ $t('farmer') }}</h4>
-							<table class="ranking">
-								<tr class="header">
-									<th>{{ $t('place') }}</th>
-									<th>{{ $t('farmer') }}</th>
-									<th>{{ $t('talent') }}</th>
-									<th>{{ $t('total_level') }}</th>
-								</tr>
-								<tr v-for="(farmer, i) in farmer_ranking" :key="i" :class="farmer.style">
-									<td>{{ parseInt(i) + 1 }}</td>
-									<td :class="farmer.class">
-										<router-link :to="'/farmer/' + farmer.id">{{ farmer.name }}</router-link>
-									</td>
-									<td>{{ farmer.talent }}</td>
-									<td>{{ farmer.total_level }}</td>
-								</tr>
-							</table>
-						</div>
+				</div>
+				<div class="column6">
+					<div class="ranking">
+						<h4>{{ $t('farmer') }}</h4>
+						<table class="ranking">
+							<tr class="header">
+								<th>{{ $t('place') }}</th>
+								<th>{{ $t('farmer') }}</th>
+								<th>{{ $t('talent') }}</th>
+								<th>{{ $t('total_level') }}</th>
+							</tr>
+							<tr v-for="(farmer, i) in farmer_ranking" :key="i" :class="farmer.style">
+								<td>{{ parseInt(i) + 1 }}</td>
+								<td :class="farmer.class">
+									<router-link :to="'/farmer/' + farmer.id">{{ farmer.name }}</router-link>
+								</td>
+								<td>{{ farmer.talent }}</td>
+								<td>{{ farmer.total_level }}</td>
+							</tr>
+						</table>
 					</div>
 				</div>
 			</div>
-		</div>
+		</panel>
 
 		<h1>{{ $t('screenshots') }}</h1>
 
-		<div class="panel first last screenshots">
-			<div class="content">
-				<div class="container">
-					<div v-for="image of images" :key="image[0]" class="column6">
-						<div class="screenshot">
-							<img :src="'/image/signup/' + image[0]" @click="enlarge(image)">
-							<div class="legend">{{ $t(image[1]) }}</div>
-						</div>
+		<panel class="first last screenshots">
+			<div class="container">
+				<div v-for="image of images" :key="image[0]" class="column6">
+					<div class="screenshot">
+						<img :src="'/image/signup/' + image[0]" @click="enlarge(image)">
+						<div class="legend">{{ $t(image[1]) }}</div>
 					</div>
 				</div>
 			</div>
-		</div>
+		</panel>
 		<div v-if="bigImage" class="bigscreen" @click="bigImage = null">
 			<img :src="'/image/signup/' + bigImage">
 			<div class="biglegend">{{ $t(bigImageLegend) }}</div>

@@ -1,63 +1,59 @@
 <template lang="html">
 	<div>
 		<h1>{{ $t('title') }}</h1>
-
-		<div class="panel">
-			<div class="content">
-
-				<template v-if="state == 'change_password'">
-					<div>
-						{{ $t('enter_a_new_password') }}
-					</div>
-					<form @submit.prevent="submitResetForm">
-						<br>
-						<h4>{{ $t('new_password') }}</h4>
-						<input v-model="password" name="password" type="password">
-						
-						<h4>{{ $t('confirm') }}</h4>
-						<input v-model="password2" name="password2" type="password">
-						
-						<input name="login" value="{login}" type="hidden">
-						<input name="code" value="{code}" type="hidden">
-						<br>
-						<br>
-						<center>
-							<input :value="$t('change_password')" type="submit" class="button">
-						</center>
-						<br>
-						<div class="error"></div>
-					</form>
-				</template>
-
-				<template v-else-if="state == 'email_sent'">
+		<panel>
+			<template v-if="state == 'change_password'">
+				<div>
+					{{ $t('enter_a_new_password') }}
+				</div>
+				<form @submit.prevent="submitResetForm">
+					<br>
+					<h4>{{ $t('new_password') }}</h4>
+					<input v-model="password" name="password" type="password">
+					
+					<h4>{{ $t('confirm') }}</h4>
+					<input v-model="password2" name="password2" type="password">
+					
+					<input name="login" value="{login}" type="hidden">
+					<input name="code" value="{code}" type="hidden">
+					<br>
+					<br>
 					<center>
-						<img src="/image/map/nexus_block.png">
-						<br>
-						<br>
-						<i18n path="mail_sent">
-							<b place="email">{{ $route.params.email }}</b>
-						</i18n>
-						<br>
-						<br>
+						<input :value="$t('change_password')" type="submit" class="button">
 					</center>
-				</template>
+					<br>
+					<div class="error"></div>
+				</form>
+			</template>
 
-				<template v-else>
-					<div>{{ $t('email_will_be_sent') }}</div>
-					<form @submit.prevent="submitForm">
-						<br>
-						<h2>{{ $t('email_address') }}</h2>
-						<input v-model="email" type="text" name="email">
-						<br><br>
-						<center>
-							<input :value="$t('ask_new_password')" type="submit" class="button">
-						</center>
-						<br>
-						<div class="error"></div>
-					</form>
-				</template>
-			</div>
-		</div>
+			<template v-else-if="state == 'email_sent'">
+				<center>
+					<img src="/image/map/nexus_block.png">
+					<br>
+					<br>
+					<i18n path="mail_sent">
+						<b place="email">{{ $route.params.email }}</b>
+					</i18n>
+					<br>
+					<br>
+				</center>
+			</template>
+
+			<template v-else>
+				<div>{{ $t('email_will_be_sent') }}</div>
+				<form @submit.prevent="submitForm">
+					<br>
+					<h2>{{ $t('email_address') }}</h2>
+					<input v-model="email" type="text" name="email">
+					<br><br>
+					<center>
+						<input :value="$t('ask_new_password')" type="submit" class="button">
+					</center>
+					<br>
+					<div class="error"></div>
+				</form>
+			</template>
+		</panel>
 	</div>
 </template>
 

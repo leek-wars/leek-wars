@@ -51,10 +51,8 @@
 
 		<div class="container">
 			<div v-show="!LeekWars.mobile || !LeekWars.splitBack" class="column3">
-				<div class="editor-left panel first">
-
-					<div class="content">
-
+				<panel class="editor-left first">
+					<div slot="content" class="full">
 						<loader v-if="!rootFolder" />
 
 						<div v-autostopscroll v-if="rootFolder" class="ai-list">
@@ -70,30 +68,29 @@
 						<div id='import-button' class="button" title="{import_desc}">▲ {{ $t('import') }}</div>
 						-->
 					</div>
-				</div>
+				</panel>
 			</div>
 		
 			<div v-show="!LeekWars.mobile || LeekWars.splitBack" class="column9">
-				<div class="panel">
-					<div class="content">
+				<panel>
+					<div slot="content" class="full">
 						<div class="editors">
 							<ai-view v-for="ai in activeAIs" ref="editors" :key="ai.id" :ai="ai" :ais="ais" :editors="$refs.editors" :visible="currentAI === ai" :font-size="fontSize" :line-height="lineHeight" :popups="popups" :auto-closing="autoClosing" :autocomplete-option="autocomplete" @jump="jump" @load="load" />
 						</div>
-					</div>
-				</div>
-
-				<div v-if="currentEditor" class="compilation">
-					<div v-if="currentEditor.saving" class="compiling">
-						<loader :size="15" /> {{ $t('saving') }}
-					</div>
-					<div class="results">
-						<div v-show="good" class="good" v-html="'✓ ' + $t('valid_ai', [currentEditor.ai.name])"></div>
-						<div v-if="currentEditor.serverError" class="error">× <i>{{ $t('server_error') }}</i></div>
-						<div v-for="(error, e) in errors" :key="e" class="error" @click="errors.splice(e, 1)">
-							× <span v-html="$t('ai_error', [error.ai, error.line])"></span>&nbsp; ▶ {{ error.message }}
+						<div v-if="currentEditor" class="compilation">
+							<div v-if="currentEditor.saving" class="compiling">
+								<loader :size="15" /> {{ $t('saving') }}
+							</div>
+							<div class="results">
+								<div v-show="good" class="good" v-html="'✓ ' + $t('valid_ai', [currentEditor.ai.name])"></div>
+								<div v-if="currentEditor.serverError" class="error">× <i>{{ $t('server_error') }}</i></div>
+								<div v-for="(error, e) in errors" :key="e" class="error" @click="errors.splice(e, 1)">
+									× <span v-html="$t('ai_error', [error.ai, error.line])"></span>&nbsp; ▶ {{ error.message }}
+								</div>
+							</div>
 						</div>
 					</div>
-				</div>
+				</panel>
 			</div>
 		</div>
 		<div class="error-tooltip"></div>
@@ -570,8 +567,11 @@
 	#app.app .panel {
 		margin-bottom: 0;
 	}
-	.panel .content {
+	.editor-left > .full {
 		padding: 0;
+		display: flex;
+		flex-direction: column;
+		height: 100%;
 	}
 	.ai-list {
 		overflow-y: auto;
@@ -641,15 +641,9 @@
 	.CodeMirror {
 		font-size: 14px;
 	}
-	.editor textarea {
-		border: none;
-		height: auto;
-		font-size: 14px;
-		min-height: 700px;
-		padding: 5px;
-	}
 	.editors {
-		height: 100%;
+		height: calc(100vh - 140px);
+		padding: 0;
 	}
 	.popup.input_popup input {
 		width: 90%;
@@ -710,16 +704,8 @@
 	#app.app .editor-left {
 		height: calc(100vh - 56px);
 	}
-	.editor-left .content {
-		height: 100%;
-		display: flex;
-		flex-direction: column;
-	}
 	.column9 {
 		position: relative;
-	}
-	.column9 .content {
-		height: calc(100vh - 140px);
 	}
 	#app.app .column9 .content {
 		height: calc(100vh - 56px);

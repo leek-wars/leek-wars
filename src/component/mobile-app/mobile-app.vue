@@ -3,26 +3,24 @@
 		<div class="page-header page-bar">
 			<h1>{{ $t('title') }}</h1>
 		</div>
-		<div class="panel first last">
-			<div class="content">
-				<h3>{{ $t('app_installation') }}</h3>
-				<br>
-				<div v-html="$t('app_info')"></div>
-				<div class="steps">
-					<div v-for="n in [1, 2, 3, 4]" :key="n" class="step">
-						<img :src="'/image/app/step' + n + '.jpg'">
-						<div class="legend"><b>{{ $t('step_n', [n]) }}</b> - {{ $t('step' + n) }}</div>
-					</div>
-				</div>
-				<h3>{{ $t('app_preview') }}</h3>
-				<div class="previews">
-					<div v-for="n in [1, 2, 3, 4, 5, 6, 7, 8]" :key="n" class="preview">
-						<img :src="'/image/app/preview' + n + '.jpg'">
-						<div class="legend">{{ $t('preview' + n) }}</div>
-					</div>
+		<panel class="first last">
+			<h3>{{ $t('app_installation') }}</h3>
+			<br>
+			<div v-html="$t('app_info')"></div>
+			<div class="steps">
+				<div v-for="n in [1, 2, 3, 4]" :key="n" class="step">
+					<img :src="'/image/app/step' + n + '.jpg'">
+					<div class="legend"><b>{{ $t('step_n', [n]) }}</b> - {{ $t('step' + n) }}</div>
 				</div>
 			</div>
-		</div>
+			<h3>{{ $t('app_preview') }}</h3>
+			<div class="previews">
+				<div v-for="n in [1, 2, 3, 4, 5, 6, 7, 8]" :key="n" class="preview">
+					<img :src="'/image/app/preview' + n + '.jpg'">
+					<div class="legend">{{ $t('preview' + n) }}</div>
+				</div>
+			</div>
+		</panel>
 	</div>
 </template>
 

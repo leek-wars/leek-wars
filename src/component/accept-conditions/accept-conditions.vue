@@ -3,17 +3,14 @@
 		<div class="page-header page-bar">
 			<h1>{{ $t('title') }}</h1>
 		</div>
-		<div class="panel">
-			<div class="content">
-				<br>
-				<div>{{ $t('accept_1') }}</div>
-				<br>
-				<i18n path="accept_2" tag="div">
-					<router-link place="cgu" to="/conditions">{{ $t('cgu') }}</router-link>
-				</i18n>
-				<div class="button green" @click="accept">{{ $t('i_accept') }}</div>
-			</div>
-		</div>
+		<panel class="first">
+			<div>{{ $t('accept_1') }}</div>
+			<br>
+			<i18n path="accept_2" tag="div">
+				<router-link place="cgu" to="/conditions">{{ $t('cgu') }}</router-link>
+			</i18n>
+			<div class="button green" @click="accept">{{ $t('i_accept') }}</div>
+		</panel>
 	</div>
 </template>
 
@@ -38,6 +35,7 @@
 <style lang="scss" scoped>
 	.panel {
 		text-align: center;
+		padding-top: 15px;
 	}
 	a {
 		color: green;

@@ -3,31 +3,29 @@
 		<div class="page-header page-bar">
 			<h1><router-link to="/admin">Administration</router-link> > Trophées</h1>
 		</div>
-		<div class="panel">
-			<div class="content">
-				<loader v-if="!trophies" />
-				<table v-else class="trophies">
-					<tr>
-						<th>ID</th>
-						<th>Icône</th>
-						<th>Nom</th>
-						<th>Description</th>
-						<th>Nombre</th>
-						<th>%</th>
-						<th>Dernier</th>
-					</tr>
-					<tr v-for="(trophy, t) in trophies" :key="t">
-						<td>{{ trophy.id }}</td>
-						<td><img :src="'/image/trophy/' + trophy.code + '.png'"></td>
-						<td>{{ trophy.name }}</td>
-						<td class="description">{{ trophy.description }}</td>
-						<td>{{ trophy.unlocked | number }}</td>
-						<td>{{ trophy.unlocked_percent }}%</td>
-						<td>{{ LeekWars.formatDuration(trophy.last) }}</td>
-					</tr>
-				</table>
-			</div>
-		</div>
+		<panel>
+			<loader v-if="!trophies" />
+			<table v-else class="trophies">
+				<tr>
+					<th>ID</th>
+					<th>Icône</th>
+					<th>Nom</th>
+					<th>Description</th>
+					<th>Nombre</th>
+					<th>%</th>
+					<th>Dernier</th>
+				</tr>
+				<tr v-for="(trophy, t) in trophies" :key="t">
+					<td>{{ trophy.id }}</td>
+					<td><img :src="'/image/trophy/' + trophy.code + '.png'"></td>
+					<td>{{ trophy.name }}</td>
+					<td class="description">{{ trophy.description }}</td>
+					<td>{{ trophy.unlocked | number }}</td>
+					<td>{{ trophy.unlocked_percent }}%</td>
+					<td>{{ LeekWars.formatDuration(trophy.last) }}</td>
+				</tr>
+			</table>
+		</panel>
 	</div>
 </template>
 

@@ -5,8 +5,8 @@
 		</div>
 		<div class="documentation">
 			<div v-show="!LeekWars.mobile || !LeekWars.splitBack" class="column3">
-				<div class="panel first">
-					<div class="content">
+				<panel class="first">
+					<div slot="content">
 						<div class="search-box">
 							<img src="/image/search_black.png">
 							<input v-model="query" type="text" @input="changeQuery">
@@ -20,17 +20,17 @@
 							</div>
 						</div>
 					</div>
-				</div>
+				</panel>
 			</div>
 			<div v-show="!LeekWars.mobile || LeekWars.splitBack" class="column9">
-				<div class="panel">
-					<div v-autostopscroll="'bottom'" ref="elements" class="content items">
+				<panel>
+					<div v-autostopscroll="'bottom'" slot="content" ref="elements" class="items">
 						<div v-for="(item, i) in items" :key="i" :item="item.name" :class="{deprecated: item.deprecated}" class="item">
 							<documentation-function v-if="'return_type' in item" :fun="item" />
 							<documentation-constant v-else :constant="item" />
 						</div>
 					</div>
-				</div>
+				</panel>
 			</div>
 		</div>
 	</div>
@@ -219,7 +219,7 @@
 	.panel {
 		height: 100%;
 	}
-	.panel > .content {
+	.column3 .panel > div {
 		padding: 0;
 		height: 100%;
 	}
@@ -250,7 +250,7 @@
 		background: white;
 		box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
 	}
-	.items.content {
+	.items {
 		padding: 10px;
 		overflow-y: auto;
 		overflow-x: hidden;
