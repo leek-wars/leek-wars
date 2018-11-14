@@ -31,6 +31,7 @@ module.exports = {
 			.tap(options => Object.assign(options, { limit: -1 }))
 		if (process.env.VUE_MODE === 'build') {
 			config.entryPoints.delete('index')
+			config.plugins.delete('html-index')
 		}
 	},
     pwa: {
