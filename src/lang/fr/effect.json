@@ -37,7 +37,7 @@
 	"type_19": "Retire <b>{0}</b> à <b>{1}</b> force",
 	"type_19_fixed": "Retire <b>{0}</b> force",
 	"type_1_fixed": "Dégats de <b>{0}</b>",
-	"type_2": "Soigne de <b>{0}</b> à <b>{0}</b>",
+	"type_2": "Soigne de <b>{0}</b> à <b>{1}</b>",
 	"type_20": "Renvoie <b>{0}%</b> à <b>{1}%</b> dommages",
 	"type_21": "Augmente la résistance de <b>{0}</b> à <b>{1}</b>",
 	"type_22": "Augmente la sagesse de <b>{0}</b> à <b>{1}</b>",
