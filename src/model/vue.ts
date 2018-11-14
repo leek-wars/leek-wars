@@ -3,6 +3,7 @@ import App from '@/component/app/app.vue'
 import Code from '@/component/app/code.vue'
 import Console from '@/component/app/console.vue'
 import NotFound from '@/component/app/not-found.vue'
+import Panel from '@/component/app/panel.vue'
 import Avatar from '@/component/avatar.vue'
 import ChatElement from '@/component/chat/chat.vue'
 import Comments from '@/component/comment/comments.vue'
@@ -91,6 +92,7 @@ Vue.component('conversation', ConversationElement)
 Vue.component('ai', AIElement)
 Vue.component('not-found', NotFound)
 Vue.component('markdown', Markdown)
+Vue.component('panel', Panel)
 
 Vue.directive('autostopscroll', {
 	inserted: (el, binding) => {
