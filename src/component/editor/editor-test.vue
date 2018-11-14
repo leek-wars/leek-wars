@@ -113,7 +113,7 @@
 								<div class="delete" @click="deleteMap(map)"></div>
 							</div>
 						</div>
-						<div class="item add">✚ Ajouter</div>
+						<div class="item add" @click="newMapDialog = true">✚ Ajouter</div>
 					</div>
 					<div v-if="currentMap" class="column map-column">
 						<div class="title name"></div>
@@ -589,9 +589,11 @@
 				if (l in this.currentScenario.data.team1 || l in this.currentScenario.data.team2) { continue }
 				available_leeks[l] = this.leeks[l]
 			}
-			for (const l in this.$store.state.farmer.leeks) {
-				if (l in this.currentScenario.data.team1 || l in this.currentScenario.data.team2) { continue }
-				available_leeks[l] = this.$store.state.farmer.leeks[l]
+			if (this.$store.state.farmer) {
+				for (const l in this.$store.state.farmer.leeks) {
+					if (l in this.currentScenario.data.team1 || l in this.currentScenario.data.team2) { continue }
+					available_leeks[l] = this.$store.state.farmer.leeks[l]
+				}
 			}
 			return available_leeks
 		}
