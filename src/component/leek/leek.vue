@@ -303,31 +303,21 @@
 			</div>
 		</div>
 
-		<template v-if="leek && my_leek && leek.registers && leek.registers.length > 0">
-			<div class="panel">
-				<div class="header">
-					<h2>{{ $t('registers') }} <span class="register-count">[{{ leek.registers.length }}/100]</span></h2>
-					<div class="right">
-						<div v-if="showRegisters" class="button flat" @click="showRegisters = false">{{ $t('hide_registers') }}</div>
-						<div v-else class="button flat" @click="showRegisters = true">{{ $t('show_registers') }}</div>
-					</div>
-				</div>
-				<div v-if="showRegisters" class="content">
-					<table class="registers">
-						<tr>
-							<th>{{ $t('register_key') }}</th>
-							<th>{{ $t('register_value') }}</th>
-							<th></th>
-						</tr>
-						<tr v-for="register in leek.registers" :key="register.key" class="register">
-							<td class="key">{{ register.key }}</td>
-							<td class="value" contenteditable @focusout="registerFocusout(register, $event)"><div>{{ register.value }}</div></td>
-							<td class="delete" @click="registerDelete(register)"><i class="material-icons">clear</i></td>
-						</tr>
-					</table>
-				</div>
-			</div>
-		</template>
+		<panel v-if="leek && my_leek && leek.registers && leek.registers.length > 0" toggle="leek/registers">
+			<h2 slot="title">{{ $t('registers') }} <span class="register-count">[{{ leek.registers.length }}/100]</span></h2>
+			<table class="registers">
+				<tr>
+					<th>{{ $t('register_key') }}</th>
+					<th>{{ $t('register_value') }}</th>
+					<th></th>
+				</tr>
+				<tr v-for="register in leek.registers" :key="register.key" class="register">
+					<td class="key">{{ register.key }}</td>
+					<td class="value" contenteditable @focusout="registerFocusout(register, $event)"><div>{{ register.value }}</div></td>
+					<td class="delete" @click="registerDelete(register)"><i class="material-icons">clear</i></td>
+				</tr>
+			</table>
+		</panel>
 
 		<div class="page-footer page-bar">
 			<div class="tabs">
@@ -513,7 +503,6 @@
 		draggedWeapon: Weapon | null = null
 		draggedWeaponLocation: string | null = null
 		xp_bar: number = 0
-		showRegisters: boolean = false
 		renameDialog: boolean = false
 		rename_price_habs: number = 2000000
 		rename_price_crystals: number = 200
@@ -614,11 +603,7 @@
 			return groupedFarmerHats
 		}
 
-		created() {
-			this.showRegisters = localStorage.getItem('leek/show_registers') === 'true'
-			this.update()
-		}
-		@Watch('id')
+		@Watch('id', {immediate: true})
 		update() {
 			this.leek = null
 			this.error = false
@@ -855,11 +840,6 @@
 		}
 		dragOver(e: DragEvent) {
 			e.preventDefault()
-		}
-
-		@Watch('showRegisters')
-		updateShowRegisters() {
-			localStorage.setItem('leek/show_registers', '' + this.showRegisters)
 		}
 		
 		registerFocusout(register: Register, e: Event) {

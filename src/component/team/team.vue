@@ -107,20 +107,9 @@
 			</div>
 		</div>
 
-		<div v-if="member" class="panel team-chat">
-			<div class="header">
-				<h2>{{ $t('chat') }}</h2>
-				<div class="right">
-					<div class="button flat expand" @click="chatExpanded = !chatExpanded">
-						<i v-if="chatExpanded" class="material-icons">expand_less</i>
-						<i v-else class="material-icons">expand_more</i>
-					</div>
-				</div>
-			</div>
-			<div v-show="chatExpanded" class="content">
-				<chat channel="team" />
-			</div>
-		</div>
+		<panel v-if="member" :title="$t('chat')" toggle="team/chat">
+			<chat slot="content" channel="team" />
+		</panel>
 
 		<div v-if="team && member && team.candidacies && team.candidacies.length > 0" class="panel">
 			<div class="header">
@@ -422,7 +411,6 @@
 		owner: boolean = false
 		reportDialog: boolean = false
 		reasons = [Warning.INCORRECT_EMBLEM, Warning.INCORRECT_TEAM_NAME]
-		chatExpanded: boolean = true
 		createCompoDialog: boolean = false
 		createCompoName: string = ''
 		deleteCompoDialog: boolean = false
@@ -447,8 +435,6 @@
 			this.update()
 		}
 		update() {
-			this.chatExpanded = localStorage.getItem('team/chat-expanded') === 'true'
-
 			const id = 'id' in this.$route.params ? parseInt(this.$route.params.id, 10) : (this.$store.state.farmer && this.$store.state.farmer.team !== null ? this.$store.state.farmer.team.id : null)
 			if (id == null) {
 				this.$router.push('/')
@@ -550,11 +536,6 @@
 					LeekWars.toast(data.error)
 				}
 			})
-		}
-
-		@Watch('chatExpanded')
-		chatExpandedChanged() {
-			localStorage.setItem('team/chat-expanded', '' + this.chatExpanded)
 		}
 
 		deleteComposition(composition: Composition) {
@@ -876,9 +857,6 @@
 		grid-template-columns: repeat(auto-fill, minmax(105px, 1fr));
 		grid-gap: 10px;
 		padding: 10px;
-	}
-	.team-chat .content {
-		padding: 0px;
 	}
 	.chat {
 		height: 250px;

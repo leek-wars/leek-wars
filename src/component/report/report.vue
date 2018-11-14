@@ -92,14 +92,15 @@
 			</div>
 		</panel>
 
-		<panel v-if="errors.length > 0 || warnings.length > 0" :title="'Erreurs et avertissements (' + errors.length + warnings.length + ')'"  class="warnings-error" toggle="report/warnings-errors">
+		<panel v-if="errors.length > 0 || warnings.length > 0" class="warnings-error" toggle="report/warnings-errors">
+			<h2 slot="title">Erreurs et avertissements ({{ errors.length + warnings.length }})</h2>
 			<div class="title"><b>{{ errors.length }}</b> erreurs</div>
 			<pre v-for="(e, i) in errors" :key="i" class="log error">[{{ e.entity }}] {{ e.data }}</pre>
 			<br>
 			<div class="title"><b>{{ warnings.length }}</b> avertissements</div>
 			<pre v-for="(w, i) in warnings" :key="errors.length + i" class="log warning">[{{ w.entity }}] {{ w.data }}</pre>
 		</panel>
-		
+
 		<div class="panel last">
 			<div class="header">
 				<h2>Actions</h2>

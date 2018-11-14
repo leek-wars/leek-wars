@@ -1,18 +1,22 @@
 <template>
 	<div class="panel">
 		<div class="header">
-			<h2>{{ title }}</h2>
+			<slot name="title">
+				<h2>{{ title }}</h2>
+			</slot>
 			<div class="right">
 				<slot name="actions"></slot>
 				<div v-if="toggle" class="button flat expand" @click="expanded = !expanded">
-					<i v-if="expanded" class="material-icons">expand_more</i>
-					<i v-else class="material-icons">expand_less</i>
+					<i v-if="expanded" class="material-icons">expand_less</i>
+					<i v-else class="material-icons">expand_more</i>
 				</div>
 			</div>
 		</div>
-		<div class="content" v-show="expanded">
-			<slot></slot>
-		</div>
+		<slot v-if="expanded" name="content">
+			<div v-if="expanded" class="content">
+				<slot></slot>
+			</div>
+		</slot>
 	</div>
 </template>
 
@@ -22,7 +26,7 @@
 
 	@Component({ name: 'panel' })
 	export default class Panel extends Vue {
-		@Prop({required: true}) title!: string
+		@Prop() title!: string
 		@Prop() toggle!: string
 		expanded: boolean = true
 
