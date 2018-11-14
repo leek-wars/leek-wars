@@ -10,71 +10,45 @@
 		
 				<div class="resizer" @mousedown="resizerMousedown"></div>
 		
-				<div :class="{collapsed: !panels.notifications.opened}" class="panel notifications">
-					<div class="header">
-						<h2>
-							<router-link to="/notifications">{{ $t('main.notifications') }}</router-link>
-							<span v-show="$store.state.unreadNotifications" class="label">{{ $store.state.unreadNotifications }}</span>
-						</h2>
-						<div class="right">
-							<div class="button flat expand" @click="togglePanel('notifications')">
-								<i v-if="panels.notifications.opened" class="material-icons">expand_more</i>
-								<i v-else class="material-icons">expand_less</i>
-							</div>
-						</div>
-					</div>
-					<div v-autostopscroll class="content">
+				<panel toggle="social/notifications">
+					<h2 slot="title">
+						<router-link to="/notifications">{{ $t('main.notifications') }}</router-link>
+						<span v-show="$store.state.unreadNotifications" class="label">{{ $store.state.unreadNotifications }}</span>
+					</h2>
+					<div v-autostopscroll slot="content" class="content-limit">
 						<notification v-for="notification in $store.state.notifications" :key="notification.id" :notification="notification" @click.native="readNotification(notification)" />
 					</div>
-				</div>
+				</panel>
 		
-				<div :class="{collapsed: !panels.messages.opened}" class="panel expanded messages">
-					<div class="header">
-						<h2>
-							<router-link to="/messages">{{ $t('main.messages') }}</router-link>
-							<span v-show="$store.state.unreadMessages" class="label">{{ $store.state.unreadMessages }}</span>
-						</h2>
-						<div class="right">
-							<div class="button flat expand" @click="togglePanel('messages')">
-								<i v-if="panels.messages.opened" class="material-icons">expand_more</i>
-								<i v-else class="material-icons">expand_less</i>
-							</div>
-						</div>
-					</div>
-					<div v-autostopscroll class="content">
+				<panel toggle="social/messages">
+					<h2 slot="title">
+						<router-link to="/messages">{{ $t('main.messages') }}</router-link>
+						<span v-show="$store.state.unreadMessages" class="label">{{ $store.state.unreadMessages }}</span>
+					</h2>
+					<div v-autostopscroll slot="content" class="content-limit">
 						<router-link v-for="conversation in $store.state.conversationsList" :key="conversation.id" :to="'/messages/conversation/' + conversation.id">
 							<conversation :conversation="conversation" />
 						</router-link>
 					</div>
-				</div>
+				</panel>
 
-				<div :class="{collapsed: !panels.chat.opened}" class="social-chat panel expanded" panel="chat">
-					<div class="header">
-						<h2>
-							<router-link to="/chat">Chat</router-link>
-							<v-menu offset-y>
-								<img slot="activator" :src="chatLanguage.flag" class="language-button">
-								<v-list :dense="true">
-									<v-list-tile v-for="(language, i) in LeekWars.languages" :key="i" @click="chatLanguage = language">
-										<v-list-tile-title class="language">
-											<img :src="language.flag" class="flag">
-											<span class="name">{{ language.name }}</span>
-										</v-list-tile-title>
-									</v-list-tile>
-								</v-list>
-							</v-menu>
-						</h2>
-						<div class="right">
-							<div class="button flat expand" @click="togglePanel('chat')">
-								<i v-if="panels.chat.opened" class="material-icons">expand_more</i>
-								<i v-else class="material-icons">expand_less</i>
-							</div>
-						</div>
-					</div>
-					<div class="content">
-						<chat :channel="chatLanguage.code" />
-					</div>
-				</div>
+				<panel class="social-chat" toggle="social/chat">
+					<h2 slot="title">
+						<router-link to="/chat">Chat</router-link>
+						<v-menu offset-y>
+							<img slot="activator" :src="chatLanguage.flag" class="language-button">
+							<v-list :dense="true">
+								<v-list-tile v-for="(language, i) in LeekWars.languages" :key="i" @click="chatLanguage = language">
+									<v-list-tile-title class="language">
+										<img :src="language.flag" class="flag">
+										<span class="name">{{ language.name }}</span>
+									</v-list-tile-title>
+								</v-list-tile>
+							</v-list>
+						</v-menu>
+					</h2>
+					<chat slot="content" :channel="chatLanguage.code" />
+				</panel>
 			</div>
 		</div>
 	</div>
@@ -88,13 +62,9 @@
 	@Component({ name: 'lw-social' })
 	export default class Social extends Vue {
 		chatLanguage: Language | null = null
-		panels: {[key: string]: any} = {notifications: {opened: true}, messages: {opened: true}, chat: {opened: true}}
 		panelWidth: number = 400
 		created() {
 			this.chatLanguage = LeekWars.languages[this.$i18n.locale]
-			for (const panel in this.panels) {
-				this.panels[panel].opened = localStorage.getItem('main/' + panel + '-collapsed') !== 'true'
-			}
 			if (localStorage.getItem('main/social-collapsed') === 'true') {
 				LeekWars.socialCollapsed = true
 			}
@@ -102,10 +72,6 @@
 			if (width) {
 				this.panelWidth = parseInt(width, 10)
 			}
-		}
-		togglePanel(panel: string) {
-			this.panels[panel].opened = !this.panels[panel].opened
-			localStorage.setItem('main/' + panel + '-collapsed', '' + !this.panels[panel].opened)
 		}
 		toggleSocial() {
 			LeekWars.socialCollapsed = !LeekWars.socialCollapsed
@@ -204,7 +170,7 @@
 		z-index: 1000;
 		vertical-align: middle;
 	}
-	.notifications .content, .messages .content {
+	.content-limit {
 		padding: 0;
 		max-height: 200px;
 		overflow-y: auto;
