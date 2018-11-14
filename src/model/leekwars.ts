@@ -31,8 +31,8 @@ function ucfirst(str: any) {
 }
 
 function request<T = any>(method: string, url: string, params?: any) {
-	return new Promise<T>((resolve, reject) => {
-		const xhr = new XMLHttpRequest()
+	const xhr = new XMLHttpRequest()
+	const promise = new Promise<T>((resolve, reject) => {
 		xhr.open(method, url)
 		if (!(params instanceof FormData)) {
 			xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8')
@@ -41,6 +41,10 @@ function request<T = any>(method: string, url: string, params?: any) {
 		xhr.onerror = reject
 		xhr.send(params)
 	})
+	return {
+		abort: () => xhr.abort(),
+		then: promise.then.bind(promise) as (p: (p: T) => void) => void
+	}
 }
 
 function post(url: any, form: any = {}) {
