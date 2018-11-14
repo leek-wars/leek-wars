@@ -13,6 +13,7 @@ class ForumTopic {
 	public locked!: boolean
 	public pinned!: boolean
 	public subscribed!: boolean
+	public issue!: number
 }
 
 class ForumMessage {
