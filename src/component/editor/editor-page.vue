@@ -431,7 +431,7 @@
 							const line = res[3]
 							let info = res[5]
 							if (res.length === 8) {
-								info = this.$t('leekscript.' + res[6], [res[7]])
+								info = this.$t('leekscript.' + res[6], res[7])
 							} else {
 								info = this.$t('leekscript.' + res[6])
 							}
