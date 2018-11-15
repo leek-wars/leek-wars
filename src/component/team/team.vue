@@ -50,9 +50,10 @@
 							<span class="edit-pen"></span>
 						</div>
 						<center v-if="$store.state.farmer && !member && $store.state.farmer.team == null">
-							<div v-if="team.opened" class="button" @click="sendCandidacy">{{ $t('join_team') }}</div>
-							<div v-if="team.opened" class="button" @click="cancelCandidacy">{{ $t('cancel_candidacy') }}</div>
-							<i v-else>{{ $t('closed_team') }}</i>
+							<br>
+							<div v-if="team.candidacy" class="button" @click="cancelCandidacy">{{ $t('cancel_candidacy') }}</div>
+							<div v-if="team.opened && !team.candidacy" class="button" @click="sendCandidacy">{{ $t('join_team') }}</div>
+							<i v-else-if="!team.opened">{{ $t('closed_team') }}</i>
 						</center>
 					</div>
 				</panel>
@@ -206,8 +207,8 @@
 			</panel>
 		</div>
 
-		<panel v-if="member && team && team.unengaged_leeks" class="compo" compo="-1">
-			<h2 slot="title" class="compo-title" compo="-1">{{ $t('unsorted_leeks') }}</h2>
+		<panel v-if="member && team && team.unengaged_leeks" class="compo">
+			<h2 slot="title" class="compo-title">{{ $t('unsorted_leeks') }}</h2>
 
 			<div slot="content" :class="{dashed: draggedLeek != null}" class="leeks" @dragover="leeksDragover" @drop="leeksDrop(null, $event)">
 				<div v-if="team.unengaged_leeks.length == 0" class="empty">{{ $t('empty_compo') }}</div>
@@ -531,7 +532,7 @@
 		quitTeam () {
 			LeekWars.post('team/quit').then((data) => {
 				if (data.success) {
-					LeekWars.toast(this.$i18n.t('team', 'you_left_team'))
+					LeekWars.toast(this.$i18n.t('team.you_left_team'))
 					this.$router.push('/farmer')
 				} else {
 					LeekWars.toast(data.error)
