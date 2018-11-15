@@ -20,5 +20,6 @@
 	"permissions": [
 		"notifications"
 	],
-	"theme_color": "#4b9e06"
+	"theme_color": "#4b9e06",
+	"background_color": "#333333"
 }

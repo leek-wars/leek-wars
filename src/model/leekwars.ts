@@ -715,7 +715,7 @@ function linkify(html: string) {
 		return (url.indexOf("http://www.leekwars.com") !== 0
 			&& url.indexOf("http://leekwars.com") !== 0
 			&& url.indexOf("https://leekwars.com") !== 0
-			&& url.indexOf("https://www.leekwars.com") !== 0) ? "target='_blank' rel='nofollow'" : ""
+			&& url.indexOf("https://www.leekwars.com") !== 0) ? "target='_blank' rel='nofollow' rel='noopener'" : ""
 	}
 	const email_pattern = /\w+@[a-zA-Z_]+?(?:\.[a-zA-Z]{2,6})+/gim
 	const url_regex = /((?:https?):\/\/[\w-]+\.[\w-]+(?:\.\w+)*)|((?:www\.)?leekwars\.com)/gim
