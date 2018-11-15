@@ -8,12 +8,12 @@
 				<h2 slot="title">Derniers signalements ({{ faults.length }})</h2> 
 				<div slot="content" class="faults">
 					<div v-if="faults.length == 0">Aucun signalement !</div>
-					<router-link v-for="fault in faults" :key="fault.id" :to="'/moderation/fault/' + fault.id" class="fault" target="{fault.target.id}" reason="{fault.reason}" parameter="{fault.parameter}" data="{fault.data}">
+					<router-link v-for="fault in faults" :key="fault.id" :to="'/moderation/fault/' + fault.id" class="fault">
 
 						<avatar :farmer="fault.target" />
 
 						<div class="target-name">{{ fault.target.name }}</div>
-						<div>Motif : <span class="reason">{{ $t('reason_' + fault.reason_text) }}</span></div>
+						<div>Motif : <b class="reason">{{ $t('reason_' + fault.reason_text) }}</b></div>
 
 						<div class="reporting-count"><b>{{ fault.reportings.length }}</b> rapports</div>
 
@@ -48,39 +48,39 @@
 					</div>
 				</div>
 				<h4>Gravité</h4>
-				<input type="number" min="1" max="10" value="1"> (entre 1 et 10)<br>
+				<input type="number" min="1" max="10" value="1" v-model="severity"> (entre 1 et 10)<br><br>
 				<h4>Message (facultatif)</h4>
-				<textarea class="warning-message"></textarea>
+				<textarea class="warning-message" v-model="message"></textarea>
 				<br><br>
-				<center>
-					<div class="button green">Supprimer le signalement</div>
-					<div class="button red">Donner avertissement</div>
+				<center class="buttons">
+					<div class="button green" @click="archiveReporting">Archiver</div>
+					<div class="button red" @click="warningConfirmDialog = true">Donner avertissement</div>
 				</center>
 			</panel>
 			<panel title="Top Voyous">
 				<div slot="content" class="thugs">
 					<div v-for="thug in thugs" :key="thug.id" class="thug">
 						<avatar :farmer="thug" />
-						<router-link :to="'/farmer/' + thug.id">{{ thug.name }}</router-link> ({{ thug.warnings }})
-						<div :target="thug.id" class="button ban">Bannir</div>
+						<router-link :to="'/farmer/' + thug.id" class="text">{{ thug.name }} ({{ thug.warnings }})</router-link> 
+						<div class="button" @click="ban(thug)">Bannir</div>
 					</div>
 				</div>
 			</panel>
 		</div>
 
-		<v-dialog v-model="warningConfirmDialog" :max-width="800">
+		<v-dialog v-if="selectedFault" v-model="warningConfirmDialog" :max-width="700">
 			<div class="title">Envoyer un avertissement</div>
 			<div class="content">
 				<h2>Confirmez l'envoi de l'avertissement :</h2>
 				<br>
-				Éleveur : <b><span class="target"></span></b> <br>
-				Motif : <b><span class="reason"></span></b> <br>
-				Gravité : <b><span class="severity"></span></b> <br>
-				Message : " <span class="message"></span> " <br>
+				Éleveur : <b>{{ selectedFault.target.name }}</b> <br>
+				Motif : <b>{{ $t('reason_' + selectedFault.reason_text) }}</b> <br>
+				Gravité : <b>{{ severity }}</b> <br>
+				<span v-if="message">Message : "{{ message }}"</span>
 			</div>
 			<div class="actions">
-				<div class="dismiss">Annuler</div>
-				<div class="red">Envoyer</div>
+				<div class="dismiss" @click="warningConfirmDialog = false">Annuler</div>
+				<div class="red" @click="sendWarning">Envoyer</div>
 			</div>
 		</v-dialog>
 	</div>
@@ -100,7 +100,7 @@
 
 	@Component({ name: "moderation", i18n: {} })
 	export default class Moderation extends Vue {
-		faults: Fault[] | null = null
+		faults: Fault[] = []
 		faultsById: {[key: number]: Fault} = {}
 		thugs: any = null
 		selectedFault: Fault | null = null
@@ -127,36 +127,38 @@
 		@Watch('$route.params')
 		update() {
 			const faultID = parseInt(this.$route.params.id, 10)
-			if (!faultID) {
-				if (!LeekWars.mobile && this.faults) {
-					this.$router.push('/moderation/fault/' + this.faults[0].id)
-				} else {
-					LeekWars.splitShowList()
-				}
-			} else if (faultID in this.faultsById) {
+			if (faultID in this.faultsById) {
 				this.selectedFault = this.faultsById[faultID]
+				this.message = ''
+				this.severity = 1
 				LeekWars.splitShowContent()
+			} else if (!LeekWars.mobile && this.faults.length) {
+				this.$router.push('/moderation/fault/' + this.faults[0].id)
+			} else {
+				LeekWars.splitShowList()
 			}
 		}
-
-		// $('.ban').click(function() {
-		// 	_.post('moderation/ban', {target: $(this).attr('target')}, function(data) {
-		// 		if (data.success) {
-		// 			_.toast("Éleveur banni")
-		// 		} else {
-		// 			_.toast(data.error)
-		// 		}
-		// 	})
-		// })
-
+		ban(farmer: Farmer) {
+			LeekWars.post('moderation/ban', {target: farmer.id}).then((data) => {
+				if (data.success) {
+					LeekWars.toast("Éleveur banni")
+				} else {
+					LeekWars.toast(data.error)
+				}
+			})
+		}
 		giveWarning() {
 			this.warningConfirmDialog = true
 		}
 		archiveReporting() {
 			if (!this.selectedFault) { return }
-			LeekWars.post('moderation/archive', {target: this.selectedFault.target, reason: this.selectedFault.reason, parameter: this.selectedFault.parameter}).then((data) => {
+			const fault = this.selectedFault
+			LeekWars.post('moderation/archive', {target: fault.target.id, reason: fault.reason, parameter: fault.parameter}).then((data) => {
 				if (data.success) {
 					LeekWars.toast(this.$t('moderation.reporting_deleted') as string)
+					this.faults.splice(this.faults.indexOf(fault), 1)
+					Vue.delete(this.faultsById, '' + fault.id)
+					this.$router.push('/moderation')
 				} else {
 					LeekWars.toast(data.error)
 				}
@@ -164,14 +166,14 @@
 		}
 		sendWarning() {
 			if (!this.selectedFault) { return }
-			// var severity = parseInt($('#warning-severity').val())
-			// var message = $('#warning-message').val()
-			LeekWars.post('moderation/warn', {target: this.selectedFault.target, reason: this.selectedFault.reason, message: this.message, severity: this.severity, parameter: this.selectedFault.parameter}).then((data) => {
+			const fault = this.selectedFault
+			LeekWars.post('moderation/warn', {target: fault.target.id, reason: fault.reason, message: this.message, severity: this.severity, parameter: this.selectedFault.parameter}).then((data) => {
 				if (data.success) {
 					LeekWars.toast(i18n.t('moderation.warning_sent') as string)
-					// $('.fault.selected').remove()
-					// $('.fault').first().click()
-					// popup.dismiss()
+					this.faults.splice(this.faults.indexOf(fault), 1)
+					Vue.delete(this.faultsById, '' + fault.id)
+					this.warningConfirmDialog = false
+					this.$router.push('/moderation')
 				} else {
 					LeekWars.toast(data.error)
 				}
@@ -194,7 +196,10 @@
 	.fault {
 		display: block;
 		padding: 8px;
+		padding-bottom: 4px;
+		border: 1px solid #ddd;
 		border-radius: 2px;
+		margin-bottom: 10px;
 	}
 	.fault.router-link-active {
 		background: white;
@@ -241,15 +246,18 @@
 		color: #5fad1b;
 	}
 	.warning-message {
-		width: 100%;
-		max-width: 100%;
+		width: calc(100% - 14px);
+		max-width: calc(100% - 14px);
+		margin: 2px 0;
+		padding: 3px 6px;
 	}
 	.thugs {
 		padding: 10px;
 	}
 	.thugs .thug {
 		margin: 3px;
-		vertical-align: top;
+		display: flex;
+		align-items: center;
 	}
 	.thugs .thug a, .thugs {
 		vertical-align: top;
@@ -265,7 +273,14 @@
 		width: 25px;
 		height: 25px;
 	}
-	.thug .thug .ban {
-		float: right;
+	.thug .text {
+		flex: 1;
+	}
+	.buttons {
+		display: flex;
+	}
+	.buttons .button {
+		flex: 1;
+		white-space: nowrap;
 	}
 </style>
