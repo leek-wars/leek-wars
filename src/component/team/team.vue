@@ -218,7 +218,7 @@
 						<br>
 						<div class="name">{{ leek.name }} ({{ leek.level }})</div><br>
 						<div class="fights">
-							<img src="image/icon/grey/garden.png">
+							<img src="/image/icon/grey/garden.png">
 							<span>{{ leek.team_fights }}</span>
 						</div>
 					</div>
