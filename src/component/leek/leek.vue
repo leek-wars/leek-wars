@@ -181,7 +181,7 @@
 							<i class="material-icons">edit</i>
 						</div>
 					</template>
-					<div slot="content" class="center">
+					<div slot="content" class="content center">
 						<loader v-if="!leek" />
 						<template v-else>
 							<v-tooltip v-for="weapon in leek.orderedWeapons" :key="weapon.id" :open-delay="0" :close-delay="0" bottom>
