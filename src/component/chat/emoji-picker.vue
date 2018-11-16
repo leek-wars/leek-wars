@@ -8,7 +8,7 @@
 			<v-tab v-for="(category, c) in categories" :key="c" :href="'#tab-' + c" class="tab">
 				<img :src="category.icon">
 			</v-tab>
-			<v-tab-item v-for="(category, c) in categories" :id="'tab-' + c" :key="c" class="content">
+			<v-tab-item v-for="(category, c) in categories" :value="'tab-' + c" :key="c" class="content">
 				<template v-for="(emoji, e) in category.emojis">
 					<img v-if="!LeekWars.mobile || emoji.classic" :key="e" :src="emoji.image" :title="emoji.text" class="emoji" @click="$emit('pick', emoji.emoji)">
 					<div v-else :key="e" class="emoji" @click="$emit('pick', emoji.emoji)">{{ emoji.emoji }}</div>
