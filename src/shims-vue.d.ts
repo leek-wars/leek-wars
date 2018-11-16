@@ -3,7 +3,7 @@ declare module '*.vue' {
 	export default Vue
 }
 
-declare var ga: Function;
+declare var ga: Function
 
 declare module 'vue-chartist' {
 	var Chartist: any
