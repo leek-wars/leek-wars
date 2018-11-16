@@ -29,7 +29,7 @@
 	"type_12_fixed": "Augmente la vie maximum de <b>{0}</b>",
 	"type_13": "Empoisonne de <b>{0}</b> à <b>{1}</b>",
 	"type_13_fixed": "Empoisonne de <b>{0}</b>",
-	"type_14_fixed": "Invoque un <b>{0}</b>",
+	"type_14_fixed": "Invoque un {summon}",
 	"type_15_fixed": "Fait revivre une entité",
 	"type_16_fixed": "Tue les cibles",
 	"type_17": "Retire <b>{0}</b> à <b>{1}</b> PM",
