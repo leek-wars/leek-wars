@@ -739,11 +739,11 @@ function linkify(html: string) {
 				i++
 			}
 			let last = html[i - 1]
-			while (/[\.,!?:\$]/.test(last)) {
+			while (/[\.,!?:]/.test(last)) {
 				last = html[--i - 1]
 			}
 		}
-		const url = html.substring(match.index, i)
+		const url = html.substring(match.index, i).replace(/\$/g, '%24')
 		const real_url = (url.indexOf('http') === -1) ? 'http://' + url : url
 		const blank = make_blank(real_url)
 
