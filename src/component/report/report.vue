@@ -226,7 +226,6 @@
 		}
 
 		searchMyLeek(myLeek: any, leeks: ReportLeek[]) {
-			console.log("leeks", leeks)
 			for (const l in leeks) {
 				if (leeks[l].id === myLeek.id) { return true }
 			}
