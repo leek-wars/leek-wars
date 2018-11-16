@@ -379,7 +379,7 @@ const LeekWars = {
 	},
 	sfwOff() {
 		LeekWars.sfw = false
-		LeekWars.setFavicon()
+		LeekWars.setFavicon(true)
 	},
 	toast(message: string | TranslateResult, durationOrCallback: number | Function = 1800) {
 		const d = typeof(durationOrCallback) === "number" ? durationOrCallback : 1800
@@ -445,13 +445,15 @@ function updateTitle() {
 	}
 	document.title = title
 }
-function setFavicon() {
+function setFavicon(reset: boolean = false) {
 	if (LeekWars.dev) {
 		LeekWars.favicon('/image/favicon_dev.png')
 	} else if (LeekWars.local) {
 		LeekWars.favicon('/image/favicon_local.png')
 	} else if (LeekWars.beta) {
 		LeekWars.favicon('/image/favicon_beta.png')
+	} else if (reset) {
+		LeekWars.favicon('/image/favicon.png')
 	}
 }
 
