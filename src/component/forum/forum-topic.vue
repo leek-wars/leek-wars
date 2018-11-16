@@ -89,8 +89,10 @@
 								
 									<template v-if="$store.state.farmer && (message.writer.id == $store.state.farmer.id || category.moderator)">
 										<span class="edit" @click="edit(message)">{{ $t('forum.edit') }}</span>
-										&nbsp;&nbsp;-&nbsp;&nbsp;
-										<span class="delete" @click="deleteGeneric(message)">{{ $t('delete') }}</span>
+										&nbsp;&nbsp;
+										<template v-if="$store.getters.moderator">-&nbsp;&nbsp;
+											<span class="delete" @click="deleteGeneric(message)">{{ $t('delete') }}</span>
+										</template>
 									</template>
 									<template v-if="message.id == -1 && $store.state.connected && category.moderator">
 										&nbsp;&nbsp;-&nbsp;&nbsp;
