@@ -136,8 +136,6 @@
 <style lang="scss" scoped>
 	.report {
 		width: 100%;
-		margin: 0 auto;
-		border-collapse: collapse;
 		margin-bottom: 10px;
 		background: #f8f8f8;
 	}
