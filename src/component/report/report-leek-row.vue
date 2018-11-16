@@ -15,11 +15,11 @@
 				</div>
 				{{ leek.cur_xp | number }} / {{ leek.next_xp | number }}
 			</v-tooltip>
-			<span>{{ leek.xp | number }}</span>
+			<span>{{ (leek.xp || 0) | number }}</span>
 			<span v-if="leek.bonus > 1" class="bonus">x{{ leek.bonus }}</span>
 		</td>
 		<td class="money">
-			<span>{{ leek.money | number }} <span class="hab"></span></span>
+			<span>{{ (leek.money || 0) | number }} <span class="hab"></span></span>
 		</td>
 		<td v-if="leek.talent" class="talent">
 			<img src="/image/talent.png">
@@ -43,7 +43,7 @@
 		get currentBar() {
 			const totalXP = this.leek.next_xp - this.leek.prev_xp
 			const newLevel = this.leek.cur_xp - this.leek.xp < this.leek.prev_xp
-			const oldXP = newLevel ? 0 : this.leek.cur_xp - this.leek.xp - this.leek.prev_xp
+			const oldXP = newLevel ? 0 : this.leek.cur_xp - (this.leek.xp || 0) - this.leek.prev_xp
 			return Math.floor(100 * oldXP / totalXP)
 		}
 		get newBar() {
