@@ -8,16 +8,16 @@
 					<router-link to="/about">{{ $t('main.about') }}</router-link> - <router-link to="/statistics">{{ $t('main.statistics') }}</router-link> - <router-link to="/changelog">{{ $t('main.changelog') }}</router-link> - <router-link to="/app">{{ $t('main.app') }}</router-link>
 					<div class="social">
 
-						<a target="_blank" href="https://www.facebook.com/LeekWars" title="Facebook">
+						<a target="_blank" rel="noopener" href="https://www.facebook.com/LeekWars" title="Facebook">
 							<img src="/image/footer/facebook.png">
 						</a>
-						<a target="_blank" href="https://twitter.com/LeekWars">
+						<a target="_blank" rel="noopener" href="https://twitter.com/LeekWars">
 							<img src="/image/footer/twitter.png" title="Twitter">
 						</a>
-						<a target="_blank" href="https://plus.google.com/100933820796987863661" rel="publisher" title="Google+">
+						<a target="_blank" rel="noopener publisher" href="https://plus.google.com/100933820796987863661" title="Google+">
 							<img src="/image/footer/googleplus.png">
 						</a>
-						<a target="_blank" href="https://github.com/leek-wars" title="GitHub">
+						<a target="_blank" rel="noopener" href="https://github.com/leek-wars" title="GitHub">
 							<img src="/image/footer/github.png">
 						</a>
 					</div>

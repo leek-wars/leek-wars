@@ -4,7 +4,7 @@
 			<h1>{{ $t('about') }}</h1>
 			<div class="tabs">
 				<div class="tab action">
-					<a href="https://github.com/leek-wars/leek-wars-client" target="_blank" rel="noreferrer">
+					<a href="https://github.com/leek-wars/leek-wars-client" target="_blank" rel="noopener">
 						<img src="image/github_white.png">
 					</a>
 				</div>
@@ -62,7 +62,7 @@
 			<div class="links">
 				<div v-for="(link, l) in links" :key="l">
 					<h4>{{ link[0] }}</h4>
-					<a :href="link[1]" target="_blank">{{ link[1] }}</a>
+					<a :href="link[1]" target="_blank" rel="noopener">{{ link[1] }}</a>
 					<br>
 				</div>
 			</div>
@@ -71,25 +71,25 @@
 		<panel :title="$t('social_networks')">
 			<p>{{ $t('follow_on_social_networks') }}</p>
 			<div class="social">
-				<a href="https://twitter.com/LeekWars" target="_blank">
+				<a href="https://twitter.com/LeekWars" target="_blank" rel="noopener">
 					<div class="item">
 						<img src="/image/about/twitter.png">
 						<h4>Twitter</h4>
 					</div>
 				</a>
-				<a href="https://www.facebook.com/LeekWars" target="_blank">
+				<a href="https://www.facebook.com/LeekWars" target="_blank" rel="noopener">
 					<div class="item">
 						<img src="/image/about/facebook.png">
 						<h4>Facebook</h4>
 					</div>
 				</a>
-				<a href="https://plus.google.com/+LeekwarsGame" target="_blank">
+				<a href="https://plus.google.com/+LeekwarsGame" target="_blank" rel="noopener">
 					<div class="item">
 						<img src="/image/about/googleplus.png">
 						<h4>Google+</h4>
 					</div>
 				</a>
-				<a href="https://github.com/leek-wars/leek-wars-client" target="_blank">
+				<a href="https://github.com/leek-wars/leek-wars-client" target="_blank" rel="noopener">
 					<div class="item">
 						<img src="image/about/github.png">
 						<h4>GitHub</h4>
@@ -101,43 +101,43 @@
 		<panel :title="$t('languages_libraries_tools')">
 			<p>{{ $t('tools_list') }}</p>
 			<div class="languages">
-				<a href="http://www.java.com/fr/about/" target="_blank">
+				<a href="http://www.java.com/fr/about/" target="_blank" rel="noopener">
 					<div class="item">
 						<img src="/image/about/java.png">
 						<h4>Java</h4>
 					</div>
 				</a>
-				<a href="http://www.php.net/" target="_blank">
+				<a href="http://www.php.net/" target="_blank" rel="noopener">
 					<div class="item">
 						<img src="/image/about/php.png">
 						<h4>PHP</h4>
 					</div>
 				</a>
-				<a href="http://www.w3schools.com/html/html5_intro.asp" target="_blank">
+				<a href="http://www.w3schools.com/html/html5_intro.asp" target="_blank" rel="noopener">
 					<div class="item">
 						<img src="/image/about/html5.png">
 						<h4>HTML 5</h4>
 					</div>
 				</a>
-				<a href="http://www.w3schools.com/css/css3_intro.asp" target="_blank">
+				<a href="http://www.w3schools.com/css/css3_intro.asp" target="_blank" rel="noopener">
 					<div class="item">
 						<img src="/image/about/css3.png">
 						<h4>CSS 3</h4>
 					</div>
 				</a>
-				<a href="http://www.w3schools.com/js/DEFAULT.asp" target="_blank">
+				<a href="http://www.w3schools.com/js/DEFAULT.asp" target="_blank" rel="noopener">
 					<div class="item">
 						<img src="/image/about/javascript.png">
 						<h4>JavaScript</h4>
 					</div>
 				</a>
-				<a href="http://codemirror.net/" target="_blank">
+				<a href="http://codemirror.net/" target="_blank" rel="noopener">
 					<div class="item">
 						<img src="/image/about/codemirror.png">
 						<h4>Code Mirror</h4>
 					</div>
 				</a>
-				<a href="http://git-scm.com/" target="_blank">
+				<a href="http://git-scm.com/" target="_blank" rel="noopener">
 					<div class="item">
 						<img src="/image/about/git.png">
 						<h4>git</h4>
@@ -148,7 +148,7 @@
 		
 		<panel :title="$t('contact')">
 			<i18n path="contact_text" tag="p">
-				<a place="contact" class="green" target="_blank" href="mailto:contact@leekwars.com">contact@leekwars.com</a>
+				<a place="contact" class="green" target="_blank" rel="noopener" href="mailto:contact@leekwars.com">contact@leekwars.com</a>
 			</i18n>
 		</panel>
 		

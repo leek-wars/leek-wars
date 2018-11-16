@@ -715,7 +715,7 @@ function linkify(html: string) {
 		return (url.indexOf("http://www.leekwars.com") !== 0
 			&& url.indexOf("http://leekwars.com") !== 0
 			&& url.indexOf("https://leekwars.com") !== 0
-			&& url.indexOf("https://www.leekwars.com") !== 0) ? "target='_blank' rel='nofollow' rel='noopener'" : ""
+			&& url.indexOf("https://www.leekwars.com") !== 0) ? "target='_blank' rel='noopener'" : ""
 	}
 	const email_pattern = /\w+@[a-zA-Z_]+?(?:\.[a-zA-Z]{2,6})+/gim
 	const url_regex = /((?:https?):\/\/[\w-]+\.[\w-]+(?:\.\w+)*)|((?:www\.)?leekwars\.com)/gim
@@ -748,7 +748,7 @@ function linkify(html: string) {
 		html = html.substring(0, match.index) + toChatLink(real_url, url, blank) + html.substring(i)
 		url_regex.lastIndex += real_url.length + blank.length + '<a href=""  ></a>'.length
 	}
-	return html.replace(email_pattern, '<a target="_blank" rel="nofollow" href="mailto:$&">$&</a>')
+	return html.replace(email_pattern, '<a target="_blank" rel="noopener" href="mailto:$&">$&</a>')
 }
 
 function lucky() {
