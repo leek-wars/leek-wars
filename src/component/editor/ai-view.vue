@@ -164,7 +164,7 @@
 					if (e.deltaY > 0 && Math.abs(codeMirrorScroll.scrollTop - (codeMirrorScroll.scrollHeight - codeMirrorScroll.offsetHeight + 15)) < 1) {
 						e.preventDefault()
 					}
-				})
+				}, {passive: true})
 			}
 			this.editor.on("mousedown", this.editorMousedown as any)
 		}

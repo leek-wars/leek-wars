@@ -128,12 +128,12 @@
 				if (!this.scrollBottom()) {
 					this.userScroll = true
 				}
-			})
+			}, {passive: true})
 			messages.addEventListener('touchmove', (e: TouchEvent) => {
 				if (!this.scrollBottom()) {
 					this.userScroll = true
 				}
-			})
+			}, {passive: true})
 		}
 		updated() {
 			this.updateScroll()

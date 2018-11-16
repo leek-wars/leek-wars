@@ -102,7 +102,7 @@ Vue.directive('autostopscroll', {
 			if ((top && e.deltaY < 0 && el.scrollTop === 0) || (bottom && e.deltaY > 0 && Math.abs(el.scrollTop - (el.scrollHeight - el.offsetHeight)) < 1)) {
 				e.preventDefault()
 			}
-		})
+		}, {passive: true})
 	}
 })
 Vue.directive('emojis', {
