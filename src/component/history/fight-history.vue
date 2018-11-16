@@ -2,14 +2,14 @@
 	<div :class="{generating: fight.status == 0, win: fight.result == 'win', defeat: fight.result == 'defeat', draw: fight.result == 'draw'}" class="fight">
 		<div v-if="fight.type == FightType.BATTLE_ROYALE" class="fighters">
 			<div class="center">
-				<router-link :to="'/fight/' + id">
+				<router-link :to="'/fight/' + fight.id">
 					<img v-if="fight.status == 0" src="/image/icon/gearing.png">
 					<img v-else src="/image/icon/garden.png">
 				</router-link>
 			</div>
 			<div class="fighter">Battle royale</div>
 		</div>
-		<div class="fighters">
+		<div v-else class="fighters">
 			<router-link v-if="fight.type == FightType.SOLO" :to="'/leek/' + fight.leeks1[0].id">
 				<div class="fighter">{{ fight.leeks1[0].name }}</div>
 			</router-link>
