@@ -207,7 +207,7 @@
 		position: relative;
 	}
 	.loader {
-		height: calc(100% - 60px);
+		height: calc(100% - 100px);
 		display: flex;
 		align-items: center;
 		justify-content: center;
