@@ -48,9 +48,9 @@
 					</div>
 				</div>
 				<h4>Gravité</h4>
-				<input type="number" min="1" max="10" value="1" v-model="severity"> (entre 1 et 10)<br><br>
+				<input v-model="severity" type="number" min="1" max="10" value="1"> (entre 1 et 10)<br><br>
 				<h4>Message (facultatif)</h4>
-				<textarea class="warning-message" v-model="message"></textarea>
+				<textarea v-model="message" class="warning-message"></textarea>
 				<br><br>
 				<center class="buttons">
 					<div class="button green" @click="archiveReporting">Archiver</div>
