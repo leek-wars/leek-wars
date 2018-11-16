@@ -51,11 +51,11 @@
 	background: #ff9e9e;
 	padding: 3px 0;
 }
-.CodeMirror-matchingbracket {
-	color: #00f !important;
+div.CodeMirror span.CodeMirror-matchingbracket {
+	color: #00f;
 	font-weight: bold;
 }
-.CodeMirror-nonmatchingbracket {
-	color: #f00 !important;
+div.CodeMirror span.CodeMirror-nonmatchingbracket {
+	color: #f00;
 	font-weight: bold;
 }
