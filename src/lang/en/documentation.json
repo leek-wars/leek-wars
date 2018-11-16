@@ -66,7 +66,7 @@
 	"func_arrayFoldLeft_arg_2": "Reducing function.",
 	"func_arrayFoldLeft_arg_3": "Starting value.",
 	"func_arrayFoldLeft_return": "Array reduced to final result.",
-	"func_arrayFoldRight": "Reduces given <b>array</b> [v1, v2, ..., vn]\nfrom the right and starting with <b>v0</b>, through\nsuccessive application of <b>f</b> function. Is equivalent\nto:\n<code>f(v0, f(v1, f(v2), ...))).</code>",
+	"func_arrayFoldRight": "Reduces given <b>array</b> [v1, v2, ..., vn]\nfrom the right and starting with <b>v0</b>, through\nsuccessive application of <b>f</b> function. Is equivalent\nto:\n<code>f(v1, f(v2, ..., f(vn, v0)))</code>.",
 	"func_arrayFoldRight_arg_1": "Source array.",
 	"func_arrayFoldRight_arg_2": "Reducing function.",
 	"func_arrayFoldRight_arg_3": "Starting value.",
