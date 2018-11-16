@@ -66,7 +66,7 @@
 	"func_arrayFoldLeft_arg_2": "Fonction à appliquer.",
 	"func_arrayFoldLeft_arg_3": "Valeur de départ.",
 	"func_arrayFoldLeft_return": "Tableau réduit.",
-	"func_arrayFoldRight": "Réduit le tableau <b>array</b> [v1, v2, ..., vn] par la droite en partant de la valeur <b>v0</b> et en appliquant la fonction <b>f</b>. Équivaut à :\n<code>f(v0, f(v1, f(v2, ...))).</code>",
+	"func_arrayFoldRight": "Réduit le tableau <b>array</b> [v1, v2, ..., vn] par la droite en partant de la valeur <b>v0</b> et en appliquant la fonction <b>f</b>. Équivaut à :\n<code>f(v1, f(v2, ..., f(vn, v0)))</code>.",
 	"func_arrayFoldRight_arg_1": "Tableau d'origine.",
 	"func_arrayFoldRight_arg_2": "Fonction à appliquer.",
 	"func_arrayFoldRight_arg_3": "Valeur de départ.",
