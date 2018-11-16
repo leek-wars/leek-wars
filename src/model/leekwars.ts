@@ -739,7 +739,7 @@ function linkify(html: string) {
 				i++
 			}
 			let last = html[i - 1]
-			while (/[\.,!?:]/.test(last)) {
+			while (/[\.,!?:\$]/.test(last)) {
 				last = html[--i - 1]
 			}
 		}
