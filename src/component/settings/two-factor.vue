@@ -12,8 +12,8 @@
 				<br>
 				<img width="100" src="/image/google_auth.png">
 				<br>
-				<a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2" target="_blank">Android</a>
-				or <a href="https://itunes.apple.com/fr/app/google-authenticator/id388497605" target="_blank">iOS</a>
+				<a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2" target="_blank" rel="noopener">Android</a>
+				or <a href="https://itunes.apple.com/fr/app/google-authenticator/id388497605" target="_blank" rel="noopener">iOS</a>
 
 				<div class="buttons">
 					<div class="back" @click="previousStep">Back</div>

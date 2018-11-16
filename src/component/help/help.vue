@@ -19,7 +19,7 @@
 			</div>
 			<div class="column6">
 				<panel>
-					<a href="http://leekwarswiki.net/" target="_blank">
+					<a href="http://leekwarswiki.net/" target="_blank" rel="noopener">
 						<h2>{{ $t('wiki') }} <i class="material-icons">launch</i></h2>
 						<img src="/image/help/wiki.png">
 						<br>

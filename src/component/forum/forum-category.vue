@@ -41,7 +41,7 @@
 								<i v-if="topic.resolved" :title="$t('topic_resolved')" class="attr material-icons resolved">check_circle</i>
 								<i v-if="topic.closed" :title="$t('topic_locked')" class="attr material-icons">lock</i>
 								<img v-if="topic.pinned" :title="$t('topic_pinned')" class="attr" src="/image/pin.png">
-								<a v-if="topic.issue" :href="'https://github.com/leek-wars/leek-wars-client/issues/' + topic.issue" class="attr issue" target="_blank">
+								<a v-if="topic.issue" :href="'https://github.com/leek-wars/leek-wars-client/issues/' + topic.issue" class="attr issue" target="_blank" rel="noopener">
 									#{{ topic.issue }}
 								</a>
 								<router-link :to="'/forum/category-' + category.id + '/topic-' + topic.id">{{ topic.title }}</router-link>

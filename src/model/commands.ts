@@ -23,14 +23,14 @@ const COMMANDS = [
 		replacement: (a: any, b: any, item: string) => {
 			const link = item ? URL_DOC + "/" + item : URL_DOC
 			const name = item ? item : "Doc"
-			return " " + LeekWars.toChatLink(link, name, "target='_blank' rel='nofollow'") + " "
+			return " " + LeekWars.toChatLink(link, name, "target='_blank' rel='noopener'") + " "
 		}
 	}, {
 		name: "doc!",
 		description: "Ajoute un lien vers la documentation au message",
 		regex: /(?:^|(\s))\/doc!(?=\s|$)/gi,
 		replacement: () => {
-			return " " + LeekWars.toChatLink(URL_DOC, "LA DOOOOOC", "target='_blank' rel='nofollow'") + " "
+			return " " + LeekWars.toChatLink(URL_DOC, "LA DOOOOOC", "target='_blank' rel='noopener'") + " "
 		}
 	}, {
 		name: "fliptable",
@@ -54,13 +54,13 @@ const COMMANDS = [
 		replacement: (a: any, b: any, item: string) => {
 			const link = item ? URL_MARKET + "/" + item : URL_MARKET
 			const name = item ? item : "Marché"
-			return " " + LeekWars.toChatLink(link, name, "target='_blank' rel='nofollow'") + " "
+			return " " + LeekWars.toChatLink(link, name, "target='_blank' rel='noopener'") + " "
 		}
 	}, {
 		name: "market!",
 		regex: /(?:^|(\s))\/market!(?=\s|$)/gi,
 		description: "Ajoute un lien vers un item du marché au message",
-		replacement: () => " " + LeekWars.toChatLink(URL_MARKET, "LE MARCHÉÉÉÉÉ", "target='_blank' rel='nofollow'") + " "
+		replacement: () => " " + LeekWars.toChatLink(URL_MARKET, "LE MARCHÉÉÉÉÉ", "target='_blank' rel='noopener'") + " "
 	}, {
 		name: "me",
 		description: "Ajoute votre pseudo avec une emphase au message",
@@ -85,12 +85,12 @@ const COMMANDS = [
 		name: "tuto",
 		description: "Ajoute un lien vers le tutorial au message",
 		regex: /(^| )\/tuto(?=$|\s)/gi,
-		replacement: () => " " + LeekWars.toChatLink(URL_TUTO, "tuto", "target='_blank' rel='nofollow'") + " "
+		replacement: () => " " + LeekWars.toChatLink(URL_TUTO, "tuto", "target='_blank' rel='noopener'") + " "
 	}, {
 		name: "tuto!",
 		description: "Ajoute un lien vers le tutorial au message",
 		regex: /(^| )\/tuto([!]?)(?=$|\s)/gi,
-		replacement: () => " " + LeekWars.toChatLink(URL_TUTO, "LE TUTOOOOO", "target='_blank' rel='nofollow'") + " "
+		replacement: () => " " + LeekWars.toChatLink(URL_TUTO, "LE TUTOOOOO", "target='_blank' rel='noopener'") + " "
 	}, {
 		name: "wiki",
 		description: "Ajoute un lien vers le wiki au message (avec une page et une ancre)",
@@ -98,14 +98,14 @@ const COMMANDS = [
 		replacement: (a: any, b: any, page: string, anchor: string) => {
 			const name = page ? page + (anchor ? '#' + anchor : '') : "Wiki"
 			const link = page ? URL_WIKI_PAGE + page + (anchor ? '#' + anchor : '') : URL_WIKI
-			return  " " + LeekWars.toChatLink(link, name, "target='_blank' rel='nofollow'") + " "
+			return  " " + LeekWars.toChatLink(link, name, "target='_blank' rel='noopener'") + " "
 		},
 		options: []
 	}, {
 		name: "wiki!",
 		description: "Ajoute un lien vers le wiki au message (avec une page et une ancre)",
 		regex: /(?:^|(\s))\/wiki!(?=\s|$)/gi,
-		replacement: () => " " + LeekWars.toChatLink(URL_WIKI, "LE WIKIIIII", "target='_blank' rel='nofollow'") + " "
+		replacement: () => " " + LeekWars.toChatLink(URL_WIKI, "LE WIKIIIII", "target='_blank' rel='noopener'") + " "
 	}
 ] as Command[]
 

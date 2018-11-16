@@ -35,25 +35,25 @@
 						<h2>Trophées</h2>
 					</div>
 				</router-link>
-				<a href="http://admin.leekwars.com/memcached/index.php" target="_blank">
+				<a href="http://admin.leekwars.com/memcached/index.php" target="_blank" rel="noopener">
 					<div v-ripple class="section card">
 						<img src="/image/admin/cache.png">
 						<h2>Memcached <i class="material-icons">launch</i></h2>
 					</div>
 				</a>
-				<a target="_blank" href="http://mx.leekwars.com/mail">
+				<a target="_blank" rel="noopener" href="http://mx.leekwars.com/mail">
 					<div v-ripple class="section card">
 						<img src="/image/admin/webmail.png">
 						<h2>Webmail <i class="material-icons">launch</i></h2>
 					</div>
 				</a>
-				<a target="_blank" href="https://www.paypal.com/webapps/business/">
+				<a target="_blank" rel="noopener" href="https://www.paypal.com/webapps/business/">
 					<div v-ripple class="section card">
 						<img src="/image/admin/paypal.png">
 						<h2>PayPal <i class="material-icons">launch</i></h2>
 					</div>
 				</a>
-				<a target="_blank" href="https://membres.starpass.fr/">
+				<a target="_blank" rel="noopener" href="https://membres.starpass.fr/">
 					<div v-ripple class="section card">
 						<img src="/image/admin/starpass.png">
 						<h2>StarPass <i class="material-icons">launch</i></h2>
