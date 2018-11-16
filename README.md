@@ -1,5 +1,7 @@
 # Leek Wars client
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/5e418e53905e486c95a57df49c047cee)](https://app.codacy.com/app/5pilow/leek-wars-client?utm_source=github.com&utm_medium=referral&utm_content=leek-wars/leek-wars-client&utm_campaign=Badge_Grade_Dashboard)
+
 The Leek Wars website frontend, in Vue.js + TypeScript.
 
 Related projects: [LeekScript](https://github.com/leek-wars/leekscript) and [Leek Wars fight generator](https://github.com/leek-wars/leek-wars-generator).
