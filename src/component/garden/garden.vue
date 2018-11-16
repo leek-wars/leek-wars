@@ -248,6 +248,7 @@
 				this.update()
 			})
 			this.$root.$on('back', () => {
+				localStorage.removeItem('garden/category')
 				this.$router.push('/garden')
 			})
 		}
@@ -257,13 +258,16 @@
 		update() {
 			const params = this.$route.params
 			this.category = params.category
-			if (!LeekWars.mobile && !this.category) {
-				let defaultCategory = localStorage.getItem('garden/category') || 'solo'
-				if (defaultCategory === 'challenge') { defaultCategory = 'solo' }
-				this.$router.replace('/garden/' + defaultCategory)
-				return
+			if (!this.category) {
+				const savedCategory = localStorage.getItem('garden/category')
+				if (savedCategory || !LeekWars.mobile) {
+					let defaultCategory = savedCategory || 'solo'
+					if (defaultCategory === 'challenge') { defaultCategory = 'solo' }
+					this.$router.replace('/garden/' + defaultCategory)
+					return
+				}
 			}
-			if (!LeekWars.mobile && this.category === 'solo' && !params.item) {
+			if (this.category === 'solo' && !params.item) {
 				const defaultLeek = localStorage.getItem('garden/leek') || LeekWars.first(this.$store.state.farmer.leeks).id
 				this.$router.replace('/garden/solo/' + defaultLeek)
 				return
@@ -277,7 +281,6 @@
 				return
 			}
 			const item = parseInt(params.item, 10)
-			localStorage.setItem("garden/category", this.category)
 
 			if (!this.garden || !this.$store.state.farmer) {
 				return
@@ -426,7 +429,7 @@
 		}
 		@Watch('category')
 		updateCategory() {
-			if (this.category !== 'challenge') {
+			if (this.category && this.category !== 'challenge') {
 				localStorage.setItem('garden/category', this.category)
 			}
 		}
