@@ -168,7 +168,7 @@
 						center_element.style.transform = 'translateX(' + d + 'px)'
 						dark_element.style.opacity = '' + (0.6 * (d / W))
 					}
-				})
+				}, {passive: true})
 				document.addEventListener('touchend', (e) => {
 					if (!down || !enabled || aborted) { return }
 					const transition = 'transform ease 200ms'
@@ -192,7 +192,7 @@
 					down = false
 					enabled = false
 					aborted = false
-				})
+				}, {passive: true})
 			}, 800)
 		}
 		clickItem() {
