@@ -44,6 +44,7 @@ class Report {
 	public win!: number
 	public bonus!: number
 	public ai_times!: any[]
+	public leeks!: ReportLeek[]
 	public leeks1!: ReportLeek[]
 	public leeks2!: ReportLeek[]
 	public farmer1!: ReportFarmer

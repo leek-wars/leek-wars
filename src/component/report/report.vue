@@ -27,7 +27,7 @@
 								<th v-if="fight.type === FightType.SOLO" class="gain">{{ $t('talent') }}</th>
 								<th v-if="$store.getters.admin" class="gain">Time</th>
 							</tr>
-							<report-leek-row v-for="leek in leeks" :key="leek.id" :leek="leek" />
+							<report-leek-row v-for="leek in report.leeks" v-if="!leek.summon" :key="leek.id" :leek="leek" />
 						</table>
 					</div>
 					<div v-else>
@@ -117,13 +117,14 @@
 	import { Component, Vue } from 'vue-property-decorator'
 	import ActionsElement from './report-actions.vue'
 	import ReportBlock from './report-block.vue'
+	import ReportLeekRow from './report-leek-row.vue'
 	import ReportStatistics from './report-statistics.vue'
 	import { Statistics } from './statistics'
 
 	class FightResponse {
 		fight!: Fight
 	}
-	@Component({ name: 'report', i18n: {}, components: { actions: ActionsElement, ReportBlock, ReportStatistics} })
+	@Component({ name: 'report', i18n: {}, components: { actions: ActionsElement, ReportLeekRow, ReportBlock, ReportStatistics} })
 	export default class ReportPage extends Vue {
 		fight: Fight | null = null
 		report: Report | null = null
@@ -174,6 +175,9 @@
 					}
 				}
 				if (this.$store.getters.admin && this.report.ai_times) {
+					for (const l in this.report.leeks) {
+						this.report.leeks[l].aiTime = Math.round(this.report.ai_times[l].time / 1000) / 1000
+					}
 					for (const l in this.report.leeks1) {
 						this.report.leeks1[l].aiTime = Math.round(this.report.ai_times[l].time / 1000) / 1000
 					}
@@ -187,7 +191,9 @@
 					this.warningsErrors()
 				})
 				this.updateChart()
-				this.challenge()
+				if (this.fight.context === FightContext.CHALLENGE) {
+					this.challenge()
+				}
 				LeekWars.setActions([{icon: 'undo', click: () => this.$router.push('/fight/' + id)}])
 				LeekWars.setTitle(this.$i18n.t('report.title') + " - " + this.fight.team1_name + " vs " + this.fight.team2_name)
 				this.$root.$emit('loaded')
@@ -220,8 +226,9 @@
 		}
 
 		searchMyLeek(myLeek: any, leeks: ReportLeek[]) {
-			for (const leek of leeks) {
-				if (leek.id === myLeek.id) { return true }
+			console.log("leeks", leeks)
+			for (const l in leeks) {
+				if (leeks[l].id === myLeek.id) { return true }
 			}
 		}
 
@@ -321,6 +328,7 @@
 					}
 				}
 			}, { event: 'created', fn: () => {
+				if (!this.$refs.chart) { return }
 				const chart = (this.$refs.chart as Vue).$el
 				chart.querySelectorAll('.ct-line').forEach((e, i) => {
 					e.addEventListener('mouseenter', () => {
@@ -387,17 +395,24 @@
 </script>
 
 <style lang="scss" scoped>
-	h3 {
-		text-align: left;
-		margin-left: 30px;
-		margin-bottom: 10px;
-	}
 	.report-general .flags {
 		margin: 0 auto;
 		padding-bottom: 4px;
 	}
 	.report-general .flags img {
 		width: 26px;
+	}
+	.report {
+		width: 100%;
+		margin-bottom: 10px;
+		background: #f8f8f8;
+	}
+	.report th {
+		border: 1px solid #ddd;
+		padding: 8px;
+		background: white;
+		font-weight: normal;
+		color: #777;
 	}
 	.actions {
 		padding: 0 30px;
