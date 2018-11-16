@@ -192,17 +192,15 @@
 
 					<div v-if="composition.leeks.length == 0" class="empty">{{ $t('empty_compo') }}</div>
 
-					<router-link v-for="leek in composition.leeks" :key="leek.id" :to="'/leek/' + leek.id">
-						<div :class="{dragging: leek.dragging}" class="leek" draggable="true" @dragstart="leeksDragstart(composition, leek, $event)" @dragend="leeksDragend(leek, $event)">
-							<leek-image :leek="leek" :scale="0.6" />
-							<br>
-							<div class="name">{{ leek.name }} ({{ leek.level }})</div><br>
-							<div class="fights">
-								<img src="/image/icon/grey/garden.png">
-								<span>{{ leek.team_fights }}</span>
-							</div>
+					<div v-for="leek in composition.leeks" :key="leek.id" :class="{dragging: leek.dragging}" class="leek" draggable="true" @click="$router.push('/leek/' + leek.id)" @dragstart="leeksDragstart(composition, leek, $event)" @dragend="leeksDragend(leek, $event)">
+						<leek-image :leek="leek" :scale="0.6" />
+						<br>
+						<div class="name">{{ leek.name }} ({{ leek.level }})</div><br>
+						<div class="fights">
+							<img src="/image/icon/grey/garden.png">
+							<span>{{ leek.team_fights }}</span>
 						</div>
-					</router-link>
+					</div>
 				</div>
 			</panel>
 		</div>
@@ -900,6 +898,7 @@
 		text-align: center;
 		transition: transform 0.4s;
 		transform: scale(1);
+		cursor: pointer;
 		.name {
 			font-size: 16px;
 			text-align: center;
