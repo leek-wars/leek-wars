@@ -121,43 +121,51 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 		},
 		'pm-receive'(state: LeekWarsState, data: any) {
 			const conversationID = data.message[0]
+			const senderID = data.message[1]
+			const senderName = data.message[2]
 			const channel = 'pm-' + conversationID
-			const isNew = !data.message[7]
+			const isNewMessage = !data.message[7]
+			const date = data.message[7] || LeekWars.time
 			if (!state.chat[channel]) {
 				Vue.set(state.chat, channel, new Chat(channel, ChatType.PM))
 			}
-			const date = data.message[7] || LeekWars.time
-			state.chat[channel].add(data.message[1], data.message[2], data.message[6], data.message[5], data.message[3], date)
+			state.chat[channel].add(senderID, senderName, data.message[6], data.message[5], data.message[3], date)
 			vueMain.$emit('chat', [channel])
 			let conversation = state.conversations[conversationID]
 			if (!conversation) {
-				conversation = new Conversation()
-				conversation.id = conversationID
-				conversation.farmers.push({id: data.message[1], name: data.message[2], avatar_changed: data.message[6]} as Farmer)
-				state.conversations[conversationID] = conversation
+				conversation = {id: conversationID,	farmers: [], unread: false} as any
+				Vue.set(state.conversations, conversationID, conversation)
 				state.conversationsList.unshift(conversation)
-			} else {
-				if (isNew) {
-					const index = state.conversationsList.findIndex((c) => c.id === conversationID)
-					state.conversationsList.splice(index, 1)
-					state.conversationsList.unshift(conversation)
-					if (!conversation.unread && conversation.last_farmer_id !== state.farmer!.id) {
-						conversation.unread = true
-						state.unreadMessages++
-						updateTitle(state)
-					}
+			} else if (isNewMessage) {
+				const index = state.conversationsList.findIndex((c) => c.id === conversationID)
+				state.conversationsList.splice(index, 1)
+				state.conversationsList.unshift(conversation)
+				if (!conversation.unread && senderID !== state.farmer!.id) {
+					conversation.unread = true
+					state.unreadMessages++
+					updateTitle(state)
 				}
 			}
 			conversation.last_message = data.message[3]
-			conversation.last_farmer_id = data.message[1]
-			if (isNew && conversation.last_farmer_id !== state.farmer!.id) {
+			conversation.last_farmer_id = senderID
+			conversation.last_farmer_name = senderName
+			if (!conversation.farmers.find(f => f.id === senderID)) {
+				conversation.farmers.push({id: senderID, name: senderName, avatar_changed: data.message[6]} as Farmer)
+			}
+			if (isNewMessage && conversation.last_farmer_id !== state.farmer!.id) {
 				LeekWars.squares.add({
 					image: LeekWars.getAvatar(conversation.last_farmer_id, data.message[6]),
-					title: data.message[2],
+					title: senderName,
 					message: "► " + conversation.last_message,
 					link: "/messages/conversation/" + conversationID,
 					padding: false
 				})
+			}
+		},
+		'add-conversation-participant'(state: LeekWarsState, data: {id: number, farmer: Farmer}) {
+			const conversation = state.conversations[data.id]
+			if (conversation && !conversation.farmers.find(f => f.id === data.farmer.id)) {
+				conversation.farmers.push(data.farmer)
 			}
 		},
 		'update-crystals'(state: LeekWarsState, crystals: number) {

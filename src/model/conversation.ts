@@ -5,12 +5,8 @@ class Conversation {
 	farmers!: Farmer[]
 	last_message!: string
 	last_farmer_id!: number
+	last_farmer_name!: string
 	unread!: boolean
-	constructor() {
-		this.id = 0
-		this.farmers = []
-		this.last_message = ''
-	}
 }
 
 export { Conversation }
