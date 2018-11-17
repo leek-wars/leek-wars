@@ -211,17 +211,15 @@
 			<div slot="content" :class="{dashed: draggedLeek != null}" class="leeks" @dragover="leeksDragover" @drop="leeksDrop(null, $event)">
 				<div v-if="team.unengaged_leeks.length == 0" class="empty">{{ $t('empty_compo') }}</div>
 
-				<router-link v-for="leek in team.unengaged_leeks" :key="leek.id" :to="'/leek/' + leek.id">
-					<div :class="{dragging: leek.dragging}" class="leek" leek="{leek.id}" draggable="true" @dragstart="leeksDragstart(null, leek, $event)" @dragend="leeksDragend(leek, $event)">
-						<leek-image :leek="leek" :scale="0.6" />
-						<br>
-						<div class="name">{{ leek.name }} ({{ leek.level }})</div><br>
-						<div class="fights">
-							<img src="/image/icon/grey/garden.png">
-							<span>{{ leek.team_fights }}</span>
-						</div>
+				<div v-for="leek in team.unengaged_leeks" :key="leek.id" :class="{dragging: leek.dragging}" class="leek" draggable="true" @click="$router.push('/leek/' + leek.id)" @dragstart="leeksDragstart(null, leek, $event)" @dragend="leeksDragend(leek, $event)">
+					<leek-image :leek="leek" :scale="0.6" />
+					<br>
+					<div class="name">{{ leek.name }} ({{ leek.level }})</div><br>
+					<div class="fights">
+						<img src="/image/icon/grey/garden.png">
+						<span>{{ leek.team_fights }}</span>
 					</div>
-				</router-link>
+				</div>
 			</div>
 		</panel>
 		<panel v-else>
@@ -437,6 +435,9 @@
 						for (const leek of composition.leeks) {
 							Vue.set(leek, 'dragging', false)
 						}
+					}
+					for (const leek of this.team.unengaged_leeks) {
+						Vue.set(leek, 'dragging', false)
 					}
 				}
 				this.captain = teamCaptain
