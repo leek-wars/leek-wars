@@ -116,7 +116,7 @@ Vue.directive('code', {
 			smiley.outerHTML = smiley.getAttribute('title') || ''
 		})
 		el.querySelectorAll('code').forEach((c) => {
-			LeekWars.createCodeArea(c.innerHTML, c)
+			LeekWars.createCodeArea(c.innerText, c)
 		})
 	}
 })
