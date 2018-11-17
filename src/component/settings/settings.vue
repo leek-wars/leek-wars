@@ -201,14 +201,12 @@
 
 				LeekWars.setTitle(this.$t('title'), this.$store.state.farmer.name)
 
-				// console.log("sw", LeekWars.service_worker)
 				if (LeekWars.service_worker) {
 					// Check the push notifs switch if we have a valid subscription
 					LeekWars.service_worker.pushManager.getSubscription().then((subscription: PushSubscription) => {
 						if (subscription) {
-							// console.log(subscription, data.endpoints)
-							for (const e in data.endpoints) {
-								if (subscription.endpoint === data.endpoints[e]) {
+							for (const endpoint of data.push_endpoints) {
+								if (subscription.endpoint === endpoint) {
 									this.pushNotifications = true
 									break
 								}
@@ -219,10 +217,7 @@
 			})
 		}
 		updatePushNotifications(e: Event) {
-			this.pushNotifications = !this.pushNotifications
-			// console.log("sw", LeekWars.service_worker)
 			if (!LeekWars.service_worker) { return }
-			
 			if (this.pushNotifications) {
 				LeekWars.service_worker.pushManager.getSubscription().then((subscription: PushSubscription) => {
 					if (subscription) {
@@ -237,6 +232,7 @@
 					LeekWars.post('push-endpoint/register', {subscription: JSON.stringify(subscription)})
 				})
 			}
+			this.pushNotifications = !this.pushNotifications
 		}
 		logout() {
 			this.$store.commit('disconnect')
