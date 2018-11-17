@@ -12,8 +12,14 @@ if (process.env.NODE_ENV === 'production') {
 		cached(registration) {
 			LeekWars.service_worker = registration
 		},
-		updated() {},
-		offline() {},
-		error(error) {},
+		updated() {
+			// updated
+		},
+		offline() {
+			// offline
+		},
+		error(error) {
+			console.error("Service worker error", error)
+		},
 	})
 }
