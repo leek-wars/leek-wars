@@ -4,7 +4,7 @@
 			<img :class="{padding: square.padding}" :src="square.image" class="image">
 			<div class="wrapper">
 				<div class="title" v-html="square.title"></div>
-				<div v-emojis class="message">{{ square.message }}</div>
+				<div v-emojis class="message" v-text="square.message"></div>
 			</div>
 		</router-link>
 	</div>

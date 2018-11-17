@@ -10,7 +10,7 @@
 					<div class="author">
 						<router-link :to="'/farmer/' + comment.farmer.id"><b>{{ comment.farmer.name }}</b></router-link>
 					</div>
-					<div v-emojis class="text">{{ comment.comment }}</div>
+					<div v-emojis class="text" v-text="comment.comment"></div>
 					<div class="date">{{ comment.date | date }}</div>
 				</div>
 			</div>
