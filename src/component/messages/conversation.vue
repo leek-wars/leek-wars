@@ -5,7 +5,7 @@
 			<div v-if="farmer" class="name">{{ farmer.name }}</div>
 			<div class="last-message">
 				<b v-if="$store.state.farmer && conversation.last_farmer_id === $store.state.farmer.id">{{ $t('messages.me') }} ►</b>
-				<span v-emojis>{{ conversation.last_message }}</span>
+				<span v-emojis v-text="conversation.last_message"></span>
 			</div>
 			<div class="date">{{ LeekWars.formatDuration(conversation.last_date) }}</div>
 		</div>

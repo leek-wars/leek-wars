@@ -105,10 +105,8 @@ Vue.directive('autostopscroll', {
 		})
 	}
 })
-Vue.directive('emojis', {
-	inserted: (el) => {
-		el.innerHTML = LeekWars.formatEmojis(el.innerHTML)
-	}
+Vue.directive('emojis', (el) => {
+	el.innerHTML = LeekWars.formatEmojis(el.innerHTML)
 })
 Vue.directive('code', {
 	inserted: (el) => {
