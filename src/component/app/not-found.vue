@@ -8,9 +8,11 @@
 			<br><br>
 			{{ _message }}
 			<br><br>
-			<router-link to="/">
-				<div class="button green large">{{ $t('main.back_to_home') }}</div>
-			</router-link>
+			<slot name="button">
+				<router-link to="/">
+					<div class="button green large">{{ $t('main.back_to_home') }}</div>
+				</router-link>
+			</slot>
 		</panel>
 	</div>
 </template>
