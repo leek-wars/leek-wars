@@ -192,9 +192,10 @@ textarea {
 	font-size: 15px;
 }
 .button {
-	display: inline-block;
+	display: inline-flex;
 	position: relative;
-	text-align: center;
+	align-items: center;
+	justify-content: center;
 	padding: 6px 10px;
 	font-size: 17px;
 	cursor: pointer;

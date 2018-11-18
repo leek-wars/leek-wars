@@ -1,5 +1,11 @@
 <template>
-	<div>
+	<not-found v-if="error" :title="$t('title')" :message="$t('not_found')" />
+	<not-found v-else-if="generating" :title="$t('title')" :message="$t('not_generated_yet')">
+		<div slot="button" class="button green large" @click="update">
+			<i class="material-icons">refresh</i>&nbsp;<span>{{ $t('refresh') }}</span>
+		</div>
+	</not-found>
+	<div v-else>
 		<div class="page-header page-bar">
 			<h1>{{ $t('title') }}</h1>
 			<div class="tabs">
@@ -114,7 +120,7 @@
 	import { Action, ActionType } from '@/model/action'
 	import { Fight, FightContext, FightLeek, FightType, Report, ReportLeek, TEAM_COLORS } from '@/model/fight'
 	import { LeekWars } from '@/model/leekwars'
-	import { Component, Vue } from 'vue-property-decorator'
+	import { Component, Vue, Watch } from 'vue-property-decorator'
 	import ActionsElement from './report-actions.vue'
 	import ReportBlock from './report-block.vue'
 	import ReportLeekRow from './report-leek-row.vue'
@@ -122,6 +128,7 @@
 	import { Statistics } from './statistics'
 
 	class FightResponse {
+		success!: boolean
 		fight!: Fight
 	}
 	@Component({ name: 'report', i18n: {}, components: { actions: ActionsElement, ReportLeekRow, ReportBlock, ReportStatistics} })
@@ -148,6 +155,8 @@
 		chartTooltipX: number = 0
 		chartTooltipY: number = 0
 		chartTooltipLeek: number | null = null
+		generating: boolean = false
+		error: boolean = false
 
 		get team1Title() {
 			if (!this.fight) { return '' }
@@ -158,11 +167,25 @@
 			return this.fight.report.win === 0 ? this.$i18n.t('report.team2') : this.$i18n.t('report.loosers')
 		}
 
-		created() {
+		@Watch('$route.params', {immediate: true})
+		update() {
+			this.generating = false
+			this.error = false
+			this.fight = null
+			this.report = null
+			this.actions = null
 			this.smooth = localStorage.getItem('report/graph-type') === 'smooth'
 			const id = this.$route.params.id
 			const url = this.$store.getters.admin ? 'fight/get-private/' + id + '/' + this.$store.state.token : 'fight/get/' + id
 			LeekWars.get<FightResponse>(url).then((data) => {
+				if (!data.success) {
+					this.error = true
+					return
+				}
+				if (data.fight.status === 0) {
+					this.generating = true
+					return
+				}
 				this.fight = data.fight
 				this.report = this.fight.report
 				this.actions = this.fight.data.actions.map(a => new Action(a))
