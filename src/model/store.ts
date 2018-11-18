@@ -10,7 +10,6 @@ import Vuex, { Store } from 'vuex'
 import { vueMain } from './vue'
 
 class LeekWarsState {
-	public dev: boolean = true
 	public token: string | null = null
 	public connected: boolean = false
 	public farmer: Farmer | null = null
@@ -68,7 +67,9 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			state.token = data.token
 			state.connected = true
 			localStorage.setItem('connected', 'true')
-			localStorage.setItem('token', data.token)
+			if (LeekWars.dev) {
+				localStorage.setItem('token', data.token)
+			}
 			loadNotifications(state)
 			loadMessages(state)
 			vueMain.$emit('connected')
