@@ -204,7 +204,7 @@ router.beforeEach((to: Route, from: Route, next: any) => {
 	LeekWars.actions = []
 
 	if (!store.state.connected && localStorage.getItem('connected') === 'true') {
-		const token = localStorage.getItem('token')
+		const token = LeekWars.dev ? localStorage.getItem('token') : '$'
 		store.commit('connected', token)
 		LeekWars.get('farmer/get-from-token/' + token).then((data: any) => {
 			if (data.success) {
