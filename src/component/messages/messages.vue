@@ -22,7 +22,7 @@
 			</panel>
 		</div>
 		<div v-show="!LeekWars.mobile || LeekWars.splitBack" class="column8">
-			<panel>
+			<panel class="last">
 				<div slot="content">
 					<chat v-if="currentConversation && currentConversation.id !== 0" :channel="'pm-' + currentConversation.id" @send="sendMessage" />
 					<chat v-else @send="sendMessage" />
