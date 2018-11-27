@@ -1,10 +1,10 @@
 <template lang="html">
-	<router-link :class="{error: !ai.valid, modified: ai.modified}" :to="'/editor/' + ai.id" class="item ai">
+	<div :class="{error: !ai.valid, modified: ai.modified}" @click="click" class="item ai">
 		<div :style="{'padding-left': (level * 20 + 17) + 'px'}" class="label" draggable="true" @dragstart="dragstart">
 			<span ref="name" :contenteditable="editing" class="text" @keydown.enter="enter" @blur="blur">{{ ai.name }}</span>
 			<div class="edit" @click="edit"></div>
 		</div>
-	</router-link>
+	</div>
 </template>
 
 <script lang="ts">
@@ -55,6 +55,10 @@
 		dragstart(e: DragEvent) {
 			e.dataTransfer!.setData('text/plain', 'drag !!!')
 			this.$root.$emit('editor-drag', this.item)
+			e.stopPropagation()
+		}
+		click(e: Event) {
+			this.$router.push('/editor/' + this.ai.id)
 			e.stopPropagation()
 		}
 	}
