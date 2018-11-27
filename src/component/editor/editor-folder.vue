@@ -1,13 +1,13 @@
 <template lang="html">
 	<div @click="click" :class="{root: level === 0}">
-		<div :class="{empty: !folder.items.length, 'dragover': dragOver > 0, expanded: folder.expanded, root: level === 0}" class="item folder" draggable="true" @dragenter="dragenter" @dragleave="dragleave" @dragover="dragover" @drop="drop" @dragstart="dragstart">
+		<div :class="{empty: !folder.items.length, 'dragover': dragOver > 0, expanded: folder.expanded, root: level === 0}" class="item folder" :draggable="level > 0" @dragenter="dragenter" @dragleave="dragleave" @dragover="dragover" @drop="drop" @dragstart="dragstart" @dragend="dragend">
 			<div v-if="level != 0" :style="{'padding-left': ((level - 1) * 20 + 10) + 'px'}" class="label" @click="toggle(folder)">
 				<div class="triangle"></div>
 				<span class="icon"></span>
 				<span ref="name" :contenteditable="editing" class="text" @keydown.enter="enter" @blur="blur">{{ folder.name }}</span>
 				<div class="edit" @click="edit"></div>
 			</div>
-			<div v-if="folder.expanded" class="content">
+			<div v-if="folder.expanded" class="content" :class="{dragging: dragging}">
 				<template v-for="(item, i) in folder.items">
 					<editor-folder v-if="item.folder" :key="i" :folder="item" :level="level + 1" />
 					<editor-ai v-else :item="item" :key="i" :level="level" />
@@ -31,6 +31,7 @@
 		editing: boolean = false
 		initialName: string = ''
 		dragOver: number = 0
+		dragging: boolean = false
 
 		toggle(folder: Folder) {
 			folder.expanded = !folder.expanded
@@ -72,6 +73,7 @@
 			e.preventDefault()
 			e.stopPropagation()
 			this.dragOver = 0
+			this.dragging = false
 			return false
 		}
 		dragenter(e: DragEvent) {
@@ -88,8 +90,12 @@
 		}
 		dragstart(e: DragEvent) {
 			e.dataTransfer!.setData('text/plain', 'drag !!!')
+			this.dragging = true
 			this.$root.$emit('editor-drag', this.folder)
 			e.stopPropagation()
+		}
+		dragend() {
+			this.dragging = false
 		}
 		click(e: Event) {
 			this.$router.push('/editor/' + this.folder.id)
@@ -165,6 +171,9 @@
 	}
 	.folder.expanded > .label > .triangle {
 		transform: rotate(90deg);
+	}
+	.dragging {
+		pointer-events: none;
 	}
 	.folder.dragover {
 		border: 1px dashed #777;

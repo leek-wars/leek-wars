@@ -301,6 +301,7 @@
 			this.$root.$on('editor-drop', (folder: Folder) => {
 				if (!this.dragging) { return }
 				if (this.dragging.parent === folder || this.dragging === folder) { return }
+				if (this.dragging instanceof Folder && this.isChild(folder, this.dragging)) { return }
 				this.dragging.parent.items.splice(this.dragging.parent.items.indexOf(this.dragging), 1)
 				folder.items.push(this.dragging)
 				this.dragging.parent = folder
@@ -308,6 +309,14 @@
 				LeekWars.post(this.dragging.folder ? 'ai-folder/change-folder' : 'ai/change-folder', this.dragging.folder ? {folder_id: (this.dragging as Folder).id, dest_folder_id: folder.id} : {ai_id: (this.dragging as AIItem).ai.id, folder_id: folder.id})
 				this.dragging = null
 			})
+		}
+		isChild(folder: Folder, parent: Folder): boolean {
+			let current = folder
+			while (current.id !== 0) {
+				if (current.id === parent.id) { return true }
+				current = current.parent
+			}
+			return false
 		}
 		@Watch('$route.params.id')
 		update() {
