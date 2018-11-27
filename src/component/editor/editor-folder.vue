@@ -1,5 +1,5 @@
 <template lang="html">
-	<router-link :to="'/editor/' + folder.id">
+	<div @click="click" :class="{root: level === 0}">
 		<div :class="{empty: !folder.items.length, 'dragover': dragOver > 0, expanded: folder.expanded, root: level === 0}" class="item folder" draggable="true" @dragenter="dragenter" @dragleave="dragleave" @dragover="dragover" @drop="drop" @dragstart="dragstart">
 			<div v-if="level != 0" :style="{'padding-left': ((level - 1) * 20 + 10) + 'px'}" class="label" @click="toggle(folder)">
 				<div class="triangle"></div>
@@ -14,7 +14,7 @@
 				</template>
 			</div>
 		</div>
-	</router-link>
+	</div>
 </template>
 
 <script lang="ts">
@@ -89,6 +89,10 @@
 		dragstart(e: DragEvent) {
 			e.dataTransfer!.setData('text/plain', 'drag !!!')
 			this.$root.$emit('editor-drag', this.folder)
+			e.stopPropagation()
+		}
+		click(e: Event) {
+			this.$router.push('/editor/' + this.folder.id)
 			e.stopPropagation()
 		}
 	}
