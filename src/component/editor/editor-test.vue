@@ -305,6 +305,7 @@
 			if (!this.$store.state.farmer) { return all }
 			for (const l in this.$store.state.farmer.leeks) {
 				const leek = this.$store.state.farmer.leeks[l] as Leek
+				Vue.set(this.$store.state.farmer.leeks[l], 'real', true)
 				if (!(leek.id in this.leekAis)) { continue }
 				const ai = this.ais[this.leekAis[leek.id]]
 				if (!ai) { continue }
@@ -340,15 +341,11 @@
 
 		created() {
 			if (this.initialized) { return }
-			if (this.$store.state.farmer) {
-				for (const l in this.$store.state.farmer.leeks) {
-					Vue.set(this.$store.state.farmer.leeks[l], 'real', true)
-				}
-			}
 			LeekWars.get<any>('test-scenario/get-all/' + this.$store.state.token).then((data) => {
 				if (data.success) {
 					this.initialized = true
 					this.scenarios = data.scenarios
+					this.initScenarios()
 					const startScenarioID = localStorage.getItem('editor/scenario')
 					if (startScenarioID && startScenarioID in this.scenarios) {
 						this.selectScenario(this.scenarios[startScenarioID])
@@ -383,6 +380,28 @@
 					LeekWars.toast(data.error)
 				}
 			})
+		}
+		initScenarios() {
+			// Add 'real' attribute on farmer's leeks
+			for (const s in this.scenarios) {
+				const scenario = this.scenarios[s]
+				for (const l in scenario.data.team1) {
+					if (scenario.data.team1[l].id in this.$store.state.farmer.leeks) {
+						Vue.set(scenario.data.team1[l], 'real', true)
+					}
+					if (scenario.data.team1[l].id < 0) {
+						Vue.set(scenario.data.team1[l], 'bot', true)
+					}
+				}
+				for (const l in scenario.data.team2) {
+					if (scenario.data.team2[l].id in this.$store.state.farmer.leeks) {
+						Vue.set(scenario.data.team2[l], 'real', true)
+					}
+					if (scenario.data.team2[l].id < 0) {
+						Vue.set(scenario.data.team2[l], 'bot', true)
+					}
+				}
+			}
 		}
 		mounted() {
 			this.initMap()
