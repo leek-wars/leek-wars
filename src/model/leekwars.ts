@@ -402,6 +402,12 @@ const LeekWars = {
 			}, d + 600)
 		}, 100)
 	},
+	getHatTemplate: (item: number) => {
+		for (const t in LeekWars.hatTemplates) {
+			if (item === LeekWars.hatTemplates[t].item) { return parseInt(t, 10) }
+		}
+		return 0
+	},
 	get_cursor_position, set_cursor_position,
 	formatDate, formatDateTime, formatDuration, formatTime, formatTimeSeconds, formatDayMonthShort, formatEmojis,
 	setTitle, setSubTitle, setTitleCounter, setTitleTag,

@@ -282,6 +282,9 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 				state.farmer.weapons.push({id: data.item_id, template: data.item_template})
 			} else if (data.type === ItemType.CHIP) {
 				state.farmer.chips.push({id: data.item_id, template: data.item_template})
+			} else if (data.type === ItemType.HAT) {
+				const hat_template = LeekWars.getHatTemplate(data.item_template)
+				state.farmer.hats.push({id: data.item_id, template: data.item_template, hat_template})
 			} else if (data.type === ItemType.POTION) {
 				const potion = LeekWars.selectWhere(state.farmer.potions, 'id', data.item_id)
 				if (potion !== null) {
