@@ -68,7 +68,7 @@
 		}
 		createStarPass() {
 			const starpass = document.createElement('script')
-			starpass.src = 'https://script.starpass.fr/script.php?idd=' + this.data.id + '&amp;verif_en_php=1&amp;datas='
+			starpass.src = 'https://script.starpass.fr/script.php?idd=' + this.data.id + '&verif_en_php=1&datas='
 			starpass.async = true
 			const block = this.$refs.starpass as HTMLElement
 			if (block) {

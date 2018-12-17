@@ -50,23 +50,19 @@
 				return
 			}
 			const url = document.location!.search
-			if (url.length) {
-				const match = url.match(/\?paymentId=(.*?)&token=(.*?)&PayerID=(.*?)$/)
-				if (match) {
-					const payment_id = match[1]
-					const token = match[2]
-					const payer_id = match[3]
-					LeekWars.post('bank/execute-paypal-payment', {payment_id, paypal_token: token, payer_id}).then((data) => {
-						if (data.success) {
-							this.$store.commit('update-crystals', data.crystals)
-							this.$router.replace('/bank/validate/success/' + data.crystals + '/PayPal')
-						} else {
-							this.$router.replace('/bank/validate/failed/PayPal/' + data.error)
-						}
-					})
-				} else {
-					this.$router.replace('/bank/validate/failed/PayPal/cancelled')
-				}
+			const match = url.match(/\?paymentId=(.*?)&token=(.*?)&PayerID=(.*?)$/)
+			if (match) {
+				const payment_id = match[1]
+				const token = match[2]
+				const payer_id = match[3]
+				LeekWars.post('bank/execute-paypal-payment', {payment_id, paypal_token: token, payer_id}).then((data) => {
+					if (data.success) {
+						this.$store.commit('update-crystals', data.crystals)
+						this.$router.replace('/bank/validate/success/' + data.crystals + '/PayPal')
+					} else {
+						this.$router.replace('/bank/validate/failed/PayPal/' + data.error)
+					}
+				})
 			} else {
 				LeekWars.post('bank/execute-starpass-payment', {code: (window as any).__STARPASS_CODE}).then((data) => {
 					if (data.success) {
