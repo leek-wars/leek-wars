@@ -305,12 +305,12 @@
 			return this.$t(type + '.' + item.name.replace(type + '_', ''))
 		}
 		openBuyHabs() {
-			if (this.selectedItem && this.selectedItem.price_habs < this.$store.state.farmer.habs) {
+			if (this.selectedItem && this.selectedItem.price_habs <= this.$store.state.farmer.habs) {
 				this.buyDialog = true
 			}
 		}
 		openBuyCrystals() {
-			if (this.selectedItem && this.selectedItem.price_crystals < this.$store.state.farmer.crystals) {
+			if (this.selectedItem && this.selectedItem.price_crystals <= this.$store.state.farmer.crystals) {
 				this.buyCrystalsDialog = true
 			}
 		}
