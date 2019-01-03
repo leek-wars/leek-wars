@@ -23,7 +23,7 @@
 	"generating": "In progress...",
 	"js_error": "A JavaScript error occured",
 	"js_error_message": "Try to reload page (F5 or Ctrl + F5). <br>If the problem persists you can notify it in the forum with the following fight number : {0}</br>.",
-	"leek_bug": "{0} <b>has crashed</b>",
+	"leek_bug": "{0} has crashed",
 	"leek_cast": "{leek} uses {chip}",
 	"leek_hit": "{leek} hits",
 	"leek_is_dead": "{leek} is dead!",
