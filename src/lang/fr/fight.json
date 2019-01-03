@@ -23,7 +23,7 @@
 	"generating": "Génération en cours...",
 	"js_error": "Une erreur JavaScript s'est produite",
 	"js_error_message": "Essayez d'actualiser la page (F5 voire Ctrl + F5). <br> Si le problème persiste, vous pouvez le signaler\ndans le forum, en précisant le numéro du combat : {0}.",
-	"leek_bug": "{leek} <b>a planté !</b>",
+	"leek_bug": "{leek} a planté !",
 	"leek_cast": "{leek} lance {chip}",
 	"leek_hit": "{leek} frappe",
 	"leek_is_dead": "{leek} est mort !",
