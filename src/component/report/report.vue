@@ -69,7 +69,9 @@
 						<span v-else-if="fight.context == FightContext.CHALLENGE">
 							<router-link v-if="myFight" :to="'/garden/challenge/' + ['leek', 'farmer'][fight.type] + '/' + enemy">
 								<div v-if="iWin" class="button">{{ $t('refight') }}</div>
-								<div v-else class="button" v-html="$t('take_revenge')"></div>
+								<div v-else class="button">
+									<span v-html="$t('take_revenge')"></span>
+								</div>
 							</router-link>
 						</span>
 					</span>
