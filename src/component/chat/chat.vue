@@ -7,9 +7,7 @@
 					<img class="avatar" src="/image/favicon.png">
 					<router-link :to="'/fight/' + message.texts[1]">
 						<div class="bubble br-notification">
-							<div class="author-wrapper">
-								<span class="author">Leek Wars</span>
-							</div>
+							<div class="author">Leek Wars</div>
 							{{ message.texts[0] }}
 						</div>
 					</router-link>
@@ -19,18 +17,32 @@
 						<avatar :farmer="message.author" />
 					</router-link>
 					<div class="bubble">
-						<div class="author-wrapper">
-							<router-link :to="'/farmer/' + message.author.id">
-								<span :class="message.author.grade" class="author">{{ message.author.name }}</span>
-							</router-link>
-							<span v-if="!privateMessages">
-								<span class="report" @click="report(message)"> • report</span>
-								<span v-if="$store.getters.moderator && !message.author.muted" class="mute" @click="mute(message.author)"> • mute</span>
-								<span v-if="$store.getters.moderator && message.author.muted" class="unmute" @click="unmute(message.author)"> • unmute</span>
-							</span>
-						</div>
+						<router-link :to="'/farmer/' + message.author.id" class="author">
+							<span :class="message.author.grade">{{ message.author.name }}</span>
+						</router-link>
 						<div v-large-emojis v-latex v-for="(text, i) in message.texts" :key="i" class="text" v-html="text"></div>
-						<div :title="LeekWars.formatDateTime(message.time)" class="time">{{ LeekWars.formatTime(message.time) }}</div>
+						<div :title="LeekWars.formatDateTime(message.time)" class="time">
+							{{ LeekWars.formatTime(message.time) }}
+							<v-menu v-if="!privateMessages" offset-y>
+								<v-btn slot="activator" flat small icon color="grey">
+									<v-icon>more_vert</v-icon>
+								</v-btn>
+								<v-list :dense="true" class="message-actions">
+									<v-list-tile v-ripple @click="report(message)">
+										<v-icon>flag</v-icon>
+										<span>Signaler</span>
+									</v-list-tile>
+									<v-list-tile v-ripple v-if="$store.getters.moderator && !message.author.muted" @click="mute(message.author)">
+										<v-icon>volume_off</v-icon>
+										<span>Mute</span>
+									</v-list-tile>
+									<v-list-tile v-ripple v-if="$store.getters.moderator && message.author.muted" @click="unmute(message.author)">
+										<v-icon>volume_up</v-icon>
+										<span>Unmute</span>
+									</v-list-tile>
+								</v-list>
+							</v-menu>
+						</div>
 					</div>
 				</div>
 			</template>
@@ -253,10 +265,8 @@
 	}
 	.author {
 		font-weight: 500;
-	}
-	.author-wrapper {
 		padding-bottom: 2px;
-		padding-right: 40px;
+		padding-right: 60px;
 	}
 	.text {
 		word-break: break-word;
@@ -270,8 +280,22 @@
 	.time {
 		font-size: 13px;
 		position: absolute;
-		top: 8px;
-		right: 6px;
+		top: 1px;
+		right: 0;
+		.v-btn {
+			margin: 0;
+			margin-top: -1px;
+			margin-left: -3px;
+			height: 24px;
+			width: 24px;
+		}
+		i.v-icon {
+			font-size: 18px;
+			color: #aaa;
+		}
+	}
+	.message-actions .v-icon {
+		margin-right: 4px;
 	}
 	.text /deep/ a {
 		color: #5fad1b;
