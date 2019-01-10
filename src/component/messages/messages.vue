@@ -124,11 +124,7 @@
 			if (id === 0) {
 				LeekWars.setTitle(this.$i18n.t('messages.new_message'))
 			} else if (this.currentID in this.$store.state.conversations) {
-				for (const farmer of this.$store.state.conversations[this.currentID].farmers) {
-					if (!this.$store.state.farmer || farmer.id !== this.$store.state.farmer.id) {
-						LeekWars.setTitle(farmer.name)
-					}
-				}
+				LeekWars.setTitle(this.getConversationName())
 			} else {
 				LeekWars.setTitle(this.$i18n.t('messages.title'))
 			}
@@ -145,6 +141,14 @@
 						this.conversationRead()
 					}
 				})
+			}
+		}
+		getConversationName() {
+			if (!this.currentID) { return }
+			for (const farmer of this.$store.state.conversations[this.currentID].farmers) {
+				if (!this.$store.state.farmer || farmer.id !== this.$store.state.farmer.id) {
+					return farmer.name
+				}
 			}
 		}
 		sendMessage(message: string) {
