@@ -1,7 +1,7 @@
 <template lang="html">
 	<div>
 		<h1>{{ $t('title') }}</h1>
-		<panel>
+		<panel class="first last">
 			<template v-if="state == 'change_password'">
 				<div>
 					{{ $t('enter_a_new_password') }}
