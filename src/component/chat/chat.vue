@@ -122,7 +122,7 @@
 		scrollBottom() {
 			const messages = this.$refs.messages as HTMLElement
 			if (!messages) { return true }
-			return messages && messages.scrollTop + messages.offsetHeight === messages.scrollHeight
+			return messages && Math.abs((messages.scrollTop + messages.offsetHeight) - messages.scrollHeight) < 3
 		}
 		mounted() {
 			this.updateScroll()
