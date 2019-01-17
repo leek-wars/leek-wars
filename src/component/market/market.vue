@@ -60,7 +60,7 @@
 						</router-link>
 					</div>
 				</panel>
-				<panel :title="$t('hats')">
+				<panel :title="$t('hats')" class="last">
 					<loader v-if="!hats.length" slot="content" />
 					<div v-else slot="content" class="items hats">
 						<router-link v-ripple v-for="hat in hats" :key="hat.id" :to="'/market/' + hat.name" :farmer-count="items[hat.id].farmer_count" :leek-count="items[hat.id].leek_count" class="item hat">
