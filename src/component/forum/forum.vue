@@ -189,6 +189,9 @@
 	.search-icon {
 		cursor: pointer;
 	}
+	.panel.first /deep/ .content {
+		padding: 5px;
+	}
 	.header.category {
 		font-size: 17px;
 		font-weight: 300;
@@ -199,6 +202,9 @@
 		margin-bottom: 5px;
 		display: flex;
 		align-items: center;
+	}
+	.category:last-child {
+		margin-bottom: 0;
 	}
 	.category > div {
 		padding: 10px;
