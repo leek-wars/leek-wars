@@ -16,7 +16,7 @@
 						</router-link>
 						<div class="right">
 							<router-link to="/farmer" @click.native="clickItem">
-								<div v-if="$store.state.farmer" class="text farmer-name" v-ripple>{{ $store.state.farmer.name }}</div>
+								<div v-ripple v-if="$store.state.farmer" class="text farmer-name">{{ $store.state.farmer.name }}</div>
 							</router-link>
 							<div class="moneys">
 								<router-link v-ripple to="/market" @click.native="clickItem">
