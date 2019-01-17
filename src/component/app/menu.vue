@@ -290,7 +290,7 @@
 		padding: 1px 5px;
 		line-height: normal;
 	}
-	#app.app .menu .section[label]:not([label=""]):after {
+	#app.app .menu .section[label]:after {
 		right: 8px;
 	}
 	.menu .text .right {
