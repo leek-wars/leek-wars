@@ -81,3 +81,9 @@
 .theme-monokai .CodeMirror div.CodeMirror-cursor {
 	border-left: 1px solid #eee;
 }
+.theme-monokai ::-webkit-scrollbar-thumb {
+	background: #555;
+}
+.theme-monokai ::-webkit-scrollbar-thumb:hover {
+	background: #666;
+}
