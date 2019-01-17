@@ -16,99 +16,97 @@
 						</router-link>
 						<div class="right">
 							<router-link to="/farmer" @click.native="clickItem">
-								<div v-if="$store.state.farmer" class="text farmer-name">{{ $store.state.farmer.name }}</div>
+								<div v-if="$store.state.farmer" class="text farmer-name" v-ripple>{{ $store.state.farmer.name }}</div>
 							</router-link>
 							<div class="moneys">
-								<div>
-									<router-link to="/market" @click.native="clickItem"><div>
-										<span class="hab text"></span><span v-if="$store.state.farmer" class="farmer-habs">{{ $store.state.farmer.habs | number }}</span>
-									</div></router-link>
-								</div>
-								<div class="crystals">
-									<router-link to="/bank" @click.native="clickItem"><div>
-										<span class="crystal text"></span><span v-if="$store.state.farmer" class="farmer-crystals">{{ $store.state.farmer.crystals | number }}</span>
-									</div></router-link>
-								</div>
+								<router-link v-ripple to="/market" @click.native="clickItem">
+									<span class="hab text"></span><span v-if="$store.state.farmer" class="farmer-habs">{{ $store.state.farmer.habs | number }}</span>
+								</router-link>
+								<router-link v-ripple class="crystals" to="/bank" @click.native="clickItem">
+									<span class="crystal text"></span><span v-if="$store.state.farmer" class="farmer-crystals">{{ $store.state.farmer.crystals | number }}</span>
+								</router-link>
 							</div>
 						</div>
 					</div>
 				</div>
 			</div>
 
-			<span v-if="$store.state.farmer && $store.state.farmer.leeks" class="leeks">
-				<router-link v-ripple v-for="(leek, key, i) in $store.state.farmer.leeks" :key="leek.id" :to="{ name: 'leek', params: { id: leek.id }}" :label="leek.capital || null" :class="{'router-link-active': i == 0 && isHomePage}" class="section">
-					<div :leek="leek.id" :tab="'leek-' + leek.id" @click="clickItem">
-						<img src="/image/icon/house.png">
-						<div class="text">{{ leek.name }}</div>
+			<div class="menu-center">
+				<span v-if="$store.state.farmer && $store.state.farmer.leeks" class="leeks">
+					<router-link v-ripple v-for="(leek, key, i) in $store.state.farmer.leeks" :key="leek.id" :to="{ name: 'leek', params: { id: leek.id }}" :label="leek.capital || null" :class="{'router-link-active': i == 0 && isHomePage}" class="section">
+						<div :leek="leek.id" :tab="'leek-' + leek.id" @click="clickItem">
+							<img src="/image/icon/house.png">
+							<div class="text">{{ leek.name }}</div>
+						</div>
+					</router-link>
+					<router-link v-ripple v-if="Object.keys($store.state.farmer.leeks).length < 4" to="/new-leek" class="section">
+						<i class="material-icons">add</i>
+						<div class="text">{{ $t('main.add_leek') }}</div>
+					</router-link>
+				</span>
+
+				<div v-if="$store.state.farmer && $store.state.farmer.leeks" class="separator"></div>
+
+				<router-link v-ripple to="/editor" class="section" @click.native="clickItem">
+					<i class="material-icons">code</i>
+					<div class="text">{{ $t("main.editor") }}</div>
+				</router-link>
+
+				<!-- <router-link to='/console'>
+					<img src='/image/console.png'>
+					<div class='text'>{{ $t("main.console") }}</div>
+				</router-link> -->
+
+				<router-link v-ripple to="/garden" class="section" @click.native="clickItem">
+					<img src="/image/icon/garden.png">
+					<div class="text">{{ $t("main.garden") }}
+						<span class="right">
+							<img src="/image/icon/garden.png">
+							<span v-if="$store.state.farmer" class="farmer-fights">{{ $store.state.farmer.fights }}</span>
+						</span>
 					</div>
 				</router-link>
-				<router-link v-ripple v-if="Object.keys($store.state.farmer.leeks).length < 4" to="/new-leek" class="section">
-					<i class="material-icons">add</i>
-					<div class="text">{{ $t('main.add_leek') }}</div>
+
+				<router-link v-ripple to="/market" class="section" @click.native="clickItem">
+					<img src="/image/icon/market.png">
+					<div class="text">{{ $t("main.market") }}</div>
 				</router-link>
-			</span>
+			
+				<router-link v-ripple v-if="$store.state.farmer && $store.state.farmer.team" to="/team" class="section" @click.native="clickItem">
+					<img src="/image/icon/team.png">
+					<div class="text">{{ $t('main.team') }}</div>
+				</router-link>
 
-			<div v-if="$store.state.farmer && $store.state.farmer.leeks" class="separator"></div>
+				<router-link v-ripple to="/trophies" class="section" @click.native="clickItem">
+					<img src="/image/icon/trophy.png">
+					<div class="text">{{ $t("main.trophies") }}</div>
+				</router-link>
 
-			<router-link v-ripple to="/editor" class="section" @click.native="clickItem">
-				<i class="material-icons">code</i>
-				<div class="text">{{ $t("main.editor") }}</div>
-			</router-link>
+				<router-link v-ripple :to="rankingURL" class="section" @click.native="clickItem">
+					<img src="/image/icon/ranking.png">
+					<div class="text">{{ $t("main.ranking") }}</div>
+				</router-link>
 
-			<!-- <router-link to='/console'>
-				<img src='/image/console.png'>
-				<div class='text'>{{ $t("main.console") }}</div>
-			</router-link> -->
+				<router-link v-ripple to="/help" class="section" @click.native="clickItem">
+					<i class="material-icons">help_outline</i>
+					<div class="text">{{ $t("main.help") }}</div>
+				</router-link>
 
-			<router-link v-ripple to="/garden" class="section" @click.native="clickItem">
-				<img src="/image/icon/garden.png">
-				<div class="text">{{ $t("main.garden") }}
-					<span class="right">
-						<img src="/image/icon/garden.png">
-						<span v-if="$store.state.farmer" class="farmer-fights">{{ $store.state.farmer.fights }}</span>
-					</span>
-				</div>
-			</router-link>
+				<router-link v-ripple to="/forum" class="section" @click.native="clickItem">
+					<img src="/image/icon/forum.png">
+					<div class="text">{{ $t("main.forum") }}</div>
+				</router-link>
 
-			<router-link v-ripple to="/market" class="section" @click.native="clickItem">
-				<img src="/image/icon/market.png">
-				<div class="text">{{ $t("main.market") }}</div>
-			</router-link>
-		
-			<router-link v-ripple v-if="$store.state.farmer && $store.state.farmer.team" to="/team" class="section" @click.native="clickItem">
-				<img src="/image/icon/team.png">
-				<div class="text">{{ $t('main.team') }}</div>
-			</router-link>
+				<router-link v-ripple v-if="$store.getters.moderator" :label="$store.state.farmer.reportings" to="/moderation" class="section" tab="moderation" @click.native="clickItem">
+					<i class="material-icons">gavel</i>
+					<div class="text">{{ $t('main.moderation') }}</div>
+				</router-link>
 
-			<router-link v-ripple to="/trophies" class="section" @click.native="clickItem">
-				<img src="/image/icon/trophy.png">
-				<div class="text">{{ $t("main.trophies") }}</div>
-			</router-link>
-
-			<router-link v-ripple :to="rankingURL" class="section" @click.native="clickItem">
-				<img src="/image/icon/ranking.png">
-				<div class="text">{{ $t("main.ranking") }}</div>
-			</router-link>
-
-			<router-link v-ripple to="/help" class="section" @click.native="clickItem">
-				<i class="material-icons">help_outline</i>
-				<div class="text">{{ $t("main.help") }}</div>
-			</router-link>
-
-			<router-link v-ripple to="/forum" class="section" @click.native="clickItem">
-				<img src="/image/icon/forum.png">
-				<div class="text">{{ $t("main.forum") }}</div>
-			</router-link>
-
-			<router-link v-ripple v-if="$store.getters.moderator" :label="$store.state.farmer.reportings" to="/moderation" class="section" tab="moderation" @click.native="clickItem">
-				<i class="material-icons">gavel</i>
-				<div class="text">{{ $t('main.moderation') }}</div>
-			</router-link>
-
-			<router-link v-ripple v-if="$store.getters.admin" to="/admin" class="section" tab="admin" @click.native="clickItem">
-				<i class="material-icons">security</i>
-				<div class="text">{{ $t('main.admin') }}</div>
-			</router-link>
+				<router-link v-ripple v-if="$store.getters.admin" to="/admin" class="section" tab="admin" @click.native="clickItem">
+					<i class="material-icons">security</i>
+					<div class="text">{{ $t('main.admin') }}</div>
+				</router-link>
+			</div>
 		</div>
 	</div>
 </template>
@@ -315,35 +313,35 @@
 	#app.menu-collapsed .menu a {
 		height: 46px;
 	}
-	.menu a:not(.router-link-active):hover {
+	.menu-center a:not(.router-link-active):hover {
 		background-image: linear-gradient(to bottom, rgba(150, 150, 150, 0.5) 0%, rgba(150, 150, 150, 0.7) 50%, rgba(150, 150, 150, 0.5) 100%);
 	}
-	.menu a.router-link-active {
+	.menu-center a.router-link-active {
 		background-image: linear-gradient(to bottom, rgba(110, 201, 31, 0.7) 0%, rgba(110, 201, 31, 0.9) 50%, rgba(110, 201, 31, 0.7) 100%);
 	}
-	.menu a.router-link-active:active {
+	.menu-center a.router-link-active:active {
 		background-image: linear-gradient(to bottom, rgba(110, 201, 31, 0.9) 0%, rgba(110, 201, 31, 1) 50%, rgba(110, 201, 31, 0.9) 100%);
 	}
-	#app.menu-collapsed .menu a .text {
+	#app.menu-collapsed .menu-center a .text {
 		display: none;
 	}
-	.menu a img {
+	.menu-center a img {
 		height: 24px;
 		width: 24px;
 		float: left;
 		margin: 8px;
 	}
-	.menu a i {
+	.menu-center a i {
 		float: left;
 		margin: 6px;
 		font-size: 28px;
 	}
-	#app.menu-collapsed .menu a img {
+	#app.menu-collapsed .menu-center a img {
 		height: 30px;
 		width: 30px;
 		margin-left: 10px;
 	}
-	#app.menu-collapsed .menu a i {
+	#app.menu-collapsed .menu-center a i {
 		font-size: 34px;
 		margin-left: 10px;
 	}
@@ -371,23 +369,26 @@
 	}
 	.menu .menu-top .text.farmer-name {
 		padding-left: 5px;
-		line-height: 45px;
+		line-height: 39px;
 	}
 	.menu .menu-top .right {
 		display: inline-block;
 		width: calc(100% - 68px);
+		vertical-align: top;
 	}
 	#app.app .menu .menu-top .moneys {
 		display: flex;
 		font-size: 12px;
-		padding: 0 5px;
-		padding-bottom: 4px;
-		align-items: baseline;
 		height: auto;
 		line-height: normal;
 		overflow: visible;
-		width: calc(100% - 20px);
-		margin-top: -2px;
+		margin-top: -4px;
+	}
+	.menu-top .moneys > * {
+		padding: 7px 5px;
+		flex: 1;
+		display: flex;
+		align-items: flex-end;
 	}
 	.menu-top .moneys div {
 		overflow: visible;
