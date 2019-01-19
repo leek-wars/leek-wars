@@ -107,7 +107,7 @@
 					</v-tooltip>
 
 					<template v-if="leek && leek.level >= 100">
-						<chartist ref="chart" :data="chartData" :options="chartOptions" :events="chartEvents" class="talent-history" type="Line" />
+						<chartist ref="chart" :data="chartData" :options="chartOptions" :events="chartEvents" ratio="ct-major-eleventh" class="talent-history" type="Line" />
 						<div v-show="chartTooltipValue" ref="chartTooltip" :style="{top: chartTooltipY + 'px', left: chartTooltipX + 'px'}" class="chart-tooltip v-tooltip__content top">{{ chartTooltipValue }}</div>
 					</template>
 				</panel>
@@ -701,7 +701,7 @@
 				labels: labels.reverse(),
 				series: [this.leek.talent_history]
 			}
-			this.chartOptions = {height: 120, showArea: true, fullWidth: true, fullHeight: true}
+			this.chartOptions = {showArea: true, fullWidth: true, fullHeight: true}
 			this.chartEvents = [{
 				event: 'created', fn: () => {
 					const chartElement = this.$refs.chart
