@@ -115,5 +115,17 @@ class Nexus extends Map {
 		game.T.nexus_block_small.offset = 1.15
 	}
 }
+class Arena extends Map {
+	constructor(game: Game) {
+		super(game, game.S.map_desert, "#aca28b", game.T.arena,
+			[game.T.grass, game.T.pillar, game.T.small_cube],
+			[game.T.pyramid, game.T.cube, game.T.square])
+		game.T.grass.offset = 1.5
+		game.T.pillar.offset = 1.3
+		game.T.cube.offset = 1.0
+		game.T.small_cube.offset = 0.9
+		game.T.square.offset = 1.1
+	}
+}
 
-export { Map, Beach, Desert, Factory, Forest, Glacier, Nexus }
+export { Map, Beach, Desert, Factory, Forest, Glacier, Nexus, Arena }
