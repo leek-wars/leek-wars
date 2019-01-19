@@ -301,7 +301,7 @@
 				LeekWars.fullscreenExit()
 				this.fullscreen = false
 			} else {
-				LeekWars.fullscreenEnter(this.$el, (fullscreen: boolean) => {
+				LeekWars.fullscreenEnter(this.$el as HTMLElement, (fullscreen: boolean) => {
 					this.fullscreen = fullscreen
 				})
 			}
