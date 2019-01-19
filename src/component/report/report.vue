@@ -88,7 +88,7 @@
 			</div>
 			<loader v-if="!report" />
 			<div v-else ref="chartPanel" class="chart-panel" @mouseleave="chartMouseLeave" @mousemove="chartMouseMove">
-				<chartist ref="chart" :data="chartData" :options="chartOptions" :event-handlers="chartEvents" class="chart" type="Line" />
+				<chartist ref="chart" :data="chartData" :options="chartOptions" :event-handlers="chartEvents" ratio="ct-major-eleventh" class="chart" type="Line" />
 				<div v-show="chartTooltipValue" ref="chartTooltip" :style="{top: chartTooltipY + 'px', left: chartTooltipX + 'px'}" class="chart-tooltip v-tooltip__content top" v-html="chartTooltipValue"></div>
 			</div>
 		</panel>
@@ -339,7 +339,6 @@
 			this.chartOptions = {
 				showPoint: false,
 				lineSmooth: this.smooth,
-				height: 350,
 				fullWidth: true,
 				fullHeight: true
 			}
