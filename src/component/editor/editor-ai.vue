@@ -1,5 +1,5 @@
 <template lang="html">
-	<div :class="{error: !ai.valid, modified: ai.modified}" @click="click" class="item ai">
+	<div :class="{error: !ai.valid, modified: ai.modified}" class="item ai" @click="click">
 		<div :style="{'padding-left': (level * 20 + 17) + 'px'}" class="label" draggable="true" @dragstart="dragstart">
 			<span ref="name" :contenteditable="editing" class="text" @keydown.enter="enter" @blur="blur">{{ ai.name }}</span>
 			<div class="edit" @click="edit"></div>

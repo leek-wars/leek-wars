@@ -1,13 +1,13 @@
 <template lang="html">
-	<div @click="click" :class="{root: level === 0}">
-		<div :class="{empty: !folder.items.length, 'dragover': dragOver > 0, expanded: folder.expanded, root: level === 0}" class="item folder" :draggable="level > 0" @dragenter="dragenter" @dragleave="dragleave" @dragover="dragover" @drop="drop" @dragstart="dragstart" @dragend="dragend">
+	<div :class="{root: level === 0}" @click="click">
+		<div :class="{empty: !folder.items.length, 'dragover': dragOver > 0, expanded: folder.expanded, root: level === 0}" :draggable="level > 0" class="item folder" @dragenter="dragenter" @dragleave="dragleave" @dragover="dragover" @drop="drop" @dragstart="dragstart" @dragend="dragend">
 			<div v-if="level != 0" :style="{'padding-left': ((level - 1) * 20 + 10) + 'px'}" class="label" @click="toggle(folder)">
 				<div class="triangle"></div>
 				<span class="icon"></span>
 				<span ref="name" :contenteditable="editing" class="text" @keydown.enter="enter" @blur="blur">{{ folder.name }}</span>
 				<div class="edit" @click="edit"></div>
 			</div>
-			<div v-if="folder.expanded" class="content" :class="{dragging: dragging}">
+			<div v-if="folder.expanded" :class="{dragging: dragging}" class="content">
 				<template v-for="(item, i) in folder.items">
 					<editor-folder v-if="item.folder" :key="i" :folder="item" :level="level + 1" />
 					<editor-ai v-else :item="item" :key="i" :level="level" />
