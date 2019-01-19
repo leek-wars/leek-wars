@@ -43,7 +43,7 @@ function request<T = any>(method: string, url: string, params?: any) {
 	})
 	return {
 		abort: () => xhr.abort(),
-		then: promise.then.bind(promise) as (p: (p: T) => void) => void
+		then: promise.then.bind(promise) as (p: (p: T) => any) => void
 	}
 }
 
