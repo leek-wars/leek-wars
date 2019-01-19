@@ -374,7 +374,7 @@
 			this.chartTooltipValue = null
 		}
 		chartMouseMove(e: MouseEvent) {
-			const chart = (this.$refs.chart as Vue).$el
+			const chart = (this.$refs.chart as Vue).$el as HTMLElement
 			const chartPanel = this.$refs.chartPanel as HTMLElement
 			const tooltip = this.$refs.chartTooltip as HTMLElement
 			if (this.chartTooltipLeek === null) { return }

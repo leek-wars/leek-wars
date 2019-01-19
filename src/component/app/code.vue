@@ -11,7 +11,7 @@
 		@Watch('code', {immediate: true})
 		update() {
 			this.$nextTick(() => {
-				LeekWars.createCodeArea(this.code, this.$el)
+				LeekWars.createCodeArea(this.code, this.$el as HTMLElement)
 			})
 		}
 	}
