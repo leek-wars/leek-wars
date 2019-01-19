@@ -165,6 +165,13 @@ class Textures {
 	public lightning_bulb_back: Texture
 	public metallic_bulb_front: Texture
 	public metallic_bulb_back: Texture
+	public arena: Texture
+	public pyramid: Texture
+	public grass: Texture
+	public pillar: Texture
+	public cube: Texture
+	public small_cube: Texture
+	public square: Texture
 
 	constructor(game: Game) {
 		this.leek_hand = new Texture(game, LeekWars.staticURL + "image/fight/leek_hand.png", true, SHADOW_QUALITY)
@@ -263,6 +270,13 @@ class Textures {
 		this.pumpkin = new Texture(game, LeekWars.staticURL + 'image/map/pumpkin.png', true, 1, true)
 		this.red_circle = new Texture(game, LeekWars.staticURL + 'image/fight/red_circle.png')
 		this.daemon_shadow = new Texture(game, LeekWars.staticURL + 'image/fight/daemon_shadow.png')
+		this.arena = new Texture(game, LeekWars.staticURL + 'image/map/arena.png')
+		this.pyramid = new Texture(game, LeekWars.staticURL + 'image/map/pyramid.png', true, 1)
+		this.grass = new Texture(game, LeekWars.staticURL + 'image/map/grass.png', true, 1)
+		this.pillar = new Texture(game, LeekWars.staticURL + 'image/map/pillar.png', true, 1)
+		this.cube = new Texture(game, LeekWars.staticURL + 'image/map/cube.png', true, 1)
+		this.small_cube = new Texture(game, LeekWars.staticURL + 'image/map/small_cube.png', true, 1)
+		this.square = new Texture(game, LeekWars.staticURL + 'image/map/square.png', true, 1)
 
 		// Chips
 		this.cure_aureol = new Texture(game, LeekWars.staticURL + 'image/fight/cure_aureol.png')

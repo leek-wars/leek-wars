@@ -4,7 +4,7 @@ import { Acceleration, Adrenaline, Antidote, Armor, Armoring, BallAndChain, Band
 import { Entity, EntityType } from '@/component/player/game/entity'
 import { Ground } from '@/component/player/game/ground'
 import { Leek } from '@/component/player/game/leek'
-import { Beach, Desert, Factory, Forest, Glacier, Map, Nexus } from '@/component/player/game/maps'
+import { Arena, Beach, Desert, Factory, Forest, Glacier, Map, Nexus } from '@/component/player/game/maps'
 import { Obstacle } from '@/component/player/game/obstacle'
 import { Particles } from '@/component/player/game/particles'
 import { Sounds } from '@/component/player/game/sound'
@@ -246,6 +246,7 @@ class Game {
 		new Forest(this),
 		new Glacier(this),
 		new Beach(this),
+		new Arena(this)
 	]
 
 	constructor() {
