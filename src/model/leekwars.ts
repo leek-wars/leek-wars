@@ -56,10 +56,10 @@ function post(url: any, form: any = {}) {
 		for (const k in form) { f.push(k + '=' + encodeURIComponent(form[k])) }
 		form = f.join('&')
 	}
-	return request('POST', 'https://leekwars.com/api/' + url, form)
+	return request('POST', LeekWars.api + url, form)
 }
 function get<T>(url: any) {
-	return request<T>('GET', 'https://leekwars.com/api/' + url)
+	return request<T>('GET', LeekWars.api + url)
 }
 
 enum EFFECT_TYPES {
@@ -102,6 +102,8 @@ const LeekWars = {
 	local: false,
 	beta: location.host.indexOf("beta.leekwars.com") === 0,
 	dev: location.host.indexOf("localhost") === 0,
+	api: 'https://leekwars.com/api/',
+	// api: 'http://localhost/api/',
 	staticURL: '/',
 	avatar: 'https://leekwars.com/static/image/',
 	post,
