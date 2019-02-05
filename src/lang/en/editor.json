@@ -4,7 +4,7 @@
 	"ai_to_test": "AI to test",
 	"ai_renamed": "AI renamed to {0}",
 	"auto_closing": "Automatic closing of parentheses, brackets and quotation marks.",
-	"autocompletion": "Code completion (propose current variables and leekscript functions)",
+	"autocompletion": "Code completion (suggest variables and leekscript functions)",
 	"cancel-test": "Cancel",
 	"child": "Child",
 	"constant": "Constant {0}",
