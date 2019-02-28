@@ -395,6 +395,7 @@
 	import { LeekWars } from '@/model/leekwars'
 	import { Warning } from '@/model/moderation'
 	import { store } from '@/model/store'
+	import { Team } from '@/model/team'
 	import { Component, Vue, Watch } from 'vue-property-decorator'
 
 	@Component({ name: "farmer", i18n: {} })
@@ -579,8 +580,14 @@
 			LeekWars.post('team/create', {team_name: this.createTeamName}).then((data) => {
 				if (data.success) {
 					LeekWars.toast(this.$i18n.t('farmer.team_created'))
-					// TODO reload
 					this.createTeamDialog = false
+					const team = new Team()
+					team.id = data.id
+					team.name = this.createTeamName
+					team.level = 1
+					team.talent = 1000
+					team.opened = true
+					store.commit('create-team', team)
 				} else {
 					LeekWars.toast(this.$i18n.t('farmer.' + data.error))
 				}
