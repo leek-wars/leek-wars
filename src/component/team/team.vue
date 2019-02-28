@@ -617,6 +617,7 @@
 			LeekWars.post('team/accept-candidacy', {candidacy_id: candidacy.id}).then((data) => {
 				if (data.success) {
 					LeekWars.toast(this.$i18n.t('team.farmer_accepted'))
+					this.update()
 				} else {
 					LeekWars.toast(data.error)
 				}
@@ -626,6 +627,7 @@
 			LeekWars.post('team/reject-candidacy', {candidacy_id: candidacy.id}).then((data) => {
 				if (data.success) {
 					LeekWars.toast(this.$i18n.t('team.farmer_refused'))
+					this.update()
 				} else {
 					LeekWars.toast(data.error)
 				}
