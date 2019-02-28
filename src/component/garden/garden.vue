@@ -139,7 +139,7 @@
 							</div>
 						</div>
 						<div v-if="category == 'team'">
-							<router-link v-for="composition in garden.my_compositions" :key="composition.id" :to="'/garden/team/' + composition.id" class="composition-wrapper my-composition">
+							<router-link v-ripple v-for="composition in garden.my_compositions" :key="composition.id" :to="'/garden/team/' + composition.id" class="composition-wrapper my-composition">
 								<garden-compo :compo="composition" />
 								<span class="fights">
 									<img src="/image/fight.png">{{ composition.fights }}
@@ -153,7 +153,7 @@
 								</div>
 								<loader v-else-if="!teamOpponents[selectedComposition.id]" />
 								<div v-else class="opponents">
-									<garden-compo v-for="compo in teamOpponents[selectedComposition.id]" :key="compo.id" :compo="compo" class="composition-wrapper" @click.native="clickCompositionOpponent(compo)" />
+									<garden-compo v-ripple v-for="compo in teamOpponents[selectedComposition.id]" :key="compo.id" :compo="compo" class="composition-wrapper" @click.native="clickCompositionOpponent(compo)" />
 									<div v-if="!teamOpponents[selectedComposition.id].length">
 										<img src="/image/notgood.png">
 										<h4>{{ $t('no_opponent_of_your_size') }}</h4>

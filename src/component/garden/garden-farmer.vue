@@ -1,5 +1,5 @@
 <template lang="html">
-	<div class="farmer">
+	<div v-ripple class="farmer">
 		<avatar :farmer="farmer" />
 		<div class="name">{{ farmer.name }}</div>
 		<talent :talent="farmer.talent" />
