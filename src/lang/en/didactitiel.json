@@ -3,7 +3,7 @@
 	"ai_1": "The Artificial Intelligence (or AI) is the program that defines your leek's behaviour during a fight.",
 	"You": "will be able to program your leek's AI from the page <a href='/editor' target='_blank' rel='noopener'>Editor</a>.",
 	"ai_2": "In Leek Wars, the language used for the coding of AIs is the <b>Leek Script</b>.",
-	"ai_3": "If you are a beginner in programming, you should first read the <a href='/tutorial' target='_blank' rel='noopener'>LeekScript Tutorial</a>.",
+	"ai_3": "If you are a beginner in programming, you should first read the <a href='/help/tutorial' target='_blank' rel='noopener'>LeekScript Tutorial</a>.",
 	"ai_4": "You will then be able to consult the <a href='/documentation' target='_blank' rel='noopener'>Documentation</a> of the language to improve your AI.",
 	"dismiss": "Skip",
 	"end": "That's it!",
