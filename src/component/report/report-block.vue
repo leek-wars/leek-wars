@@ -71,7 +71,7 @@
 					<th v-if="fight.type === FightType.SOLO && fight.context != FightContext.TEST && fight.context != FightContext.CHALLENGE" class="gain">{{ $t('report.talent') }}</th>
 					<th v-if="$store.getters.admin" class="gain">Time</th>
 				</tr>
-				<report-leek-row v-for="leek in leeks" :key="leek.id" :leek="leek" />
+				<report-leek-row v-for="leek in leeks" :key="leek.id" :leek="leek" :fight="fight" />
 				<tr v-if="fight.type !== FightType.SOLO" class="total">
 					<td class="name"><span class="alive">{{ $t('report.total') }}</span></td>
 					<td class="level">{{ totalLevel }}</td>
