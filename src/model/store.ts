@@ -5,6 +5,7 @@ import { i18n } from '@/model/i18n'
 import { ItemType } from '@/model/item'
 import { LeekWars } from '@/model/leekwars'
 import { Notification } from '@/model/notification'
+import { Team } from '@/model/team'
 import Vue from 'vue'
 import Vuex, { Store } from 'vuex'
 import { vueMain } from './vue'
@@ -354,6 +355,11 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			}
 			state.chat[channel].add(state.farmer!.id, state.farmer!.name, state.farmer!.avatar_changed, state.farmer!.grade, "pong ! " + (Date.now() - state.last_ping) + "ms", Date.now() / 1000)
 			vueMain.$emit('chat', [channel])
+		},
+		'create-team'(state: LeekWarsState, team: Team) {
+			if (state.farmer) {
+				state.farmer.team = team
+			}
 		}
 	},
 })

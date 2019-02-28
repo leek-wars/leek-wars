@@ -2,6 +2,7 @@ import { Chip } from '@/model/chip'
 import { Hat } from '@/model/hat'
 import { Leek } from '@/model/leek'
 import { Potion } from '@/model/potion'
+import { Team } from '@/model/team'
 import { Weapon } from '@/model/weapon'
 
 class Farmer {
@@ -35,5 +36,6 @@ class Farmer {
 	public moderator!: boolean
 	public admin!: boolean
 	public talent!: number
+	public team!: Team | null
 }
 export { Farmer }

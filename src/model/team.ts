@@ -18,6 +18,7 @@ class Team {
 	public opened!: boolean
 	public description!: string
 	public candidacy!: boolean
+	public talent!: number
 }
 
 class TeamMember extends Farmer {
