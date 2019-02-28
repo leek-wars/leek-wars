@@ -360,6 +360,11 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			if (state.farmer) {
 				state.farmer.team = team
 			}
+		},
+		'dissolve-team'(state: LeekWarsState) {
+			if (state.farmer) {
+				state.farmer.team = null
+			}
 		}
 	},
 })
