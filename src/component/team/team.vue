@@ -445,6 +445,7 @@
 				LeekWars.setTitle(this.team.name)
 
 				if (this.member && !this.$store.state.chat.team) {
+					this.$store.commit('init-team-chat')
 					LeekWars.socket.send([SocketMessage.TEAM_CHAT_ENABLE])
 				}
 				this.$root.$emit('loaded')
