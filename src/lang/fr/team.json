@@ -21,7 +21,7 @@
 	"change_owner": "Changer propriétaire",
 	"change_owner_cancel": "Annuler",
 	"change_owner_change": "Changer le propriétaire",
-	"change_owner_confirm": "Voulez-vous vraiment désigner <b>{0}</b> comme propriétaire de l'équipe ?",
+	"change_owner_confirm": "Voulez-vous vraiment désigner {farmer} comme propriétaire de l'équipe ?",
 	"change_owner_confirm_title": "Changer le propriétaire de l'équipe",
 	"change_owner_select": "Sélectionnez un nouveau propriétaire de l'équipe",
 	"chat": "Chat",
