@@ -320,10 +320,11 @@
 			</div>
 		</v-dialog>
 
-		<v-dialog v-if="team" v-model="changeOwnerDialog" :max-width="500">
+		<v-dialog v-if="team" v-model="changeOwnerDialog" :max-width="650">
 			<div class="title">{{ $t('change_owner_confirm_title') }}</div>
-			<div class="content">
+			<div class="content change_owner_popup">
 				{{ $t('change_owner_select') }}
+				<br>
 				<div v-for="member in team.members" :key="member.id" :class="{selected: member === changeOwnerSelected}" class="farmer" @click="changeOwnerSelected = member">
 					<avatar :farmer="member" />
 					<div class="name">
@@ -348,7 +349,9 @@
 		<v-dialog v-if="changeOwnerSelected" v-model="changeOwnerConfirmDialog" :max-width="500">
 			<div class="title">{{ $t('change_owner_confirm_title') }}</div>
 			<div class="content">
-				{{ $t('change_owner_confirm', [changeOwnerSelected.name]) }}
+				<i18n path='change_owner_confirm'>
+					<b place="farmer">{{ changeOwnerSelected.name }}</b>
+				</i18n>
 				<br><br>
 				{{ $t('enter_password_to_confirm') }}
 				<br><br>
@@ -663,12 +666,13 @@
 			if (!this.team) { return }
 			this.changeOwnerConfirmDialog = true
 		}
-		changeOwner(newOwner: TeamMember) {
-			if (!this.team) { return }
-			LeekWars.post('team/change-owner', {new_owner: newOwner.id, password: this.changeOwnerPassword}).then((data) => {
+		changeOwner() {
+			if (!this.team || !this.changeOwnerSelected) { return }
+			LeekWars.post('team/change-owner', {new_owner: this.changeOwnerSelected.id, password: this.changeOwnerPassword}).then((data) => {
 				if (data.success) {
 					LeekWars.toast(this.$i18n.t('team.owner_has_been_changed'))
 					this.changeOwnerConfirmDialog = false
+					this.changeOwnerDialog = false
 					this.update()
 				} else {
 					LeekWars.toast(data.error)
@@ -855,16 +859,16 @@
 		width: 15px;
 		vertical-align: middle;
 	}
-	.popup.change_owner_popup .farmer {
+	.change_owner_popup .farmer {
 		padding: 4px;
 		padding-top: 10px;
 		border-radius: 4px;
 		cursor: pointer;
 	}
-	.popup.change_owner_popup .farmer.selected {
+	.change_owner_popup .farmer.selected {
 		background: #5fad1b;
 	}
-	.popup.change_owner_popup .farmer.selected .name {
+	.change_owner_popup .farmer.selected .name {
 		color: white;
 	}
 	.no-compos {
