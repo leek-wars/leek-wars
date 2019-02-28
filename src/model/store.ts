@@ -99,6 +99,11 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 		"wsclose"(state: LeekWarsState) {
 			state.wsconnected = false
 		},
+		'init-team-chat'(state: LeekWarsState) {
+			if (!state.chat.team) {
+				Vue.set(state.chat, 'team', new Chat('team', ChatType.TEAM))
+			}
+		},
 		'chat-receive'(state: LeekWarsState, data: any) {
 			const channel = data.message[0]
 			if (!state.chat[channel]) {
