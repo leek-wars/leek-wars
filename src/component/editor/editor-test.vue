@@ -120,7 +120,7 @@
 						<div class="map" oncontextmenu="return false;">
 							<div class="map-wrapper">
 								<div v-for="(line, l) of map" :key="l" class="line">
-									<span v-for="(cell, c) of line" :key="c" :class="{disabled: !cell.enabled, obstacle: cell.cell in currentMap.data.obstacles}" class="cell" @mousedown="cellMouseDown($event, cell)" @mouseenter="cellMouseEnter($event, cell)" @mouseup="cellMouseUp" @dragstart="cellDragStart"></span>
+									<span v-for="(cell, c) of line" :key="c" :class="{disabled: !cell.enabled, obstacle: cell.cell in currentMap.data.obstacles, team1: currentMap.data.team1.indexOf(cell.cell) !== -1, team2: currentMap.data.team2.indexOf(cell.cell) !== -1}" class="cell" @mousedown="cellMouseDown($event, cell)" @mouseenter="cellMouseEnter($event, cell)" @mouseup="cellMouseUp" @dragstart="cellDragStart"></span>
 								</div>
 							</div>
 						</div>
@@ -250,7 +250,6 @@
 	class TestMapCell {
 		cell!: number
 		team!: number
-		start!: boolean
 	}
 	@Component({})
 	export default class EditorTest extends Vue {
@@ -465,20 +464,19 @@
 					const enabled = Math.abs(x) + Math.abs(y) <= size / 2
 					const team = j < (size * (5 / 6) - i) ? 1 : (j > (size * (7 / 6) - i) ? 2 : 0)
 					const cell = 306 + 18 * y - 17 * x
-					line.push({enabled, cell, team, start: false})
+					line.push({enabled, cell, team})
 				}
 				this.map.push(line)
 			}
 		}
 		cellRightClick(e: Event, cell: TestMapCell) {
 			if (cell.team !== 0 && this.currentMap) {
-				cell.start = !cell.start
 				const team_array = cell.team === 1 ? this.currentMap.data.team1 : this.currentMap.data.team2
-				const index = team_array.indexOf(cell)
+				const index = team_array.indexOf(cell.cell)
 				if (index !== -1) {
 					team_array.splice(index, 1)
 				} else {
-					team_array.push(cell)
+					team_array.push(cell.cell)
 				}
 				this.resetSaveTimeout()
 			}
@@ -494,6 +492,8 @@
 					Vue.delete(this.currentMap.data.obstacles, cell.cell)
 				}
 				this.resetSaveTimeout()
+			} else if (e.button === 2) {
+				this.cellRightClick(e, cell)
 			}
 		}
 		cellMouseEnter(e: Event, cell: TestMapCell) {
