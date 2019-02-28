@@ -21,7 +21,7 @@
 		<td class="money">
 			<span>{{ (leek.money || 0) | number }} <span class="hab"></span></span>
 		</td>
-		<td v-if="leek.talent" class="talent">
+		<td v-if="fight.context !== FightContext.CHALLENGE" class="talent">
 			<img src="/image/talent.png">
 			{{ leek.talent }}
 			<span v-if="leek.talent_gain >= 0">+{{ leek.talent_gain }}</span>
@@ -34,11 +34,13 @@
 </template>
 
 <script lang="ts">
-	import { ReportLeek } from '@/model/fight'
+	import { Fight, FightContext, ReportLeek } from '@/model/fight'
 	import { Component, Prop, Vue } from 'vue-property-decorator'
 	@Component({})
 	export default class ReportLeekRow extends Vue {
 		@Prop({required: true}) leek!: ReportLeek
+		@Prop({required: true}) fight!: Fight
+		FightContext = FightContext
 
 		get currentBar() {
 			const totalXP = this.leek.next_xp - this.leek.prev_xp

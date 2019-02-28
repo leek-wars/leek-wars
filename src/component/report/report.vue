@@ -33,7 +33,7 @@
 								<th v-if="fight.type === FightType.SOLO" class="gain">{{ $t('talent') }}</th>
 								<th v-if="$store.getters.admin" class="gain">Time</th>
 							</tr>
-							<report-leek-row v-for="leek in report.leeks" v-if="!leek.summon" :key="leek.id" :leek="leek" />
+							<report-leek-row v-for="leek in report.leeks" v-if="!leek.summon" :key="leek.id" :leek="leek" :fight="fight" />
 						</table>
 					</div>
 					<div v-else>
