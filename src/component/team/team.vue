@@ -114,7 +114,7 @@
 			<h2 slot="title">{{ $t('candidacies') }} ({{ team.candidacies.length }})</h2>
 			<div slot="content" class="content candidacies">
 				<div v-for="candidacy in team.candidacies" :key="candidacy.id" class="farmer">
-					<router-link to="'/farmer/' + candidacy.farmer.id">
+					<router-link :to="'/farmer/' + candidacy.farmer.id">
 						<avatar :farmer="candidacy.farmer" />
 						<div class="name">{{ candidacy.farmer.name }}</div>
 					</router-link>
