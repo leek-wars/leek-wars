@@ -1,5 +1,5 @@
 <template lang="html">
-	<div v-if="leek" :leek="leek.id" class="leek">
+	<div v-ripple v-if="leek" :leek="leek.id" class="leek">
 		<div class="image">
 			<leek-image :leek="leek" :scale="0.70" />
 		</div>

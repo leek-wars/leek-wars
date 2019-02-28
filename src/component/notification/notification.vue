@@ -1,5 +1,5 @@
 <template>
-	<router-link v-if="notification" :to="link" :notif="notification.id" :type="notification.type" class="notification">
+	<router-link v-ripple v-if="notification" :to="link" :notif="notification.id" :type="notification.type" class="notification">
 		<img :src="'/image/notif/' + notification.image + '.png'" class="avatar">
 		<div class="title" v-html="$t('notifications.title_' + notification.type, notification.title)"></div>
 		<div class="message">{{ $t('notifications.message_' + notification.type, notification.message) }}</div>

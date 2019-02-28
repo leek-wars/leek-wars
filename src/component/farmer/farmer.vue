@@ -271,7 +271,7 @@
 			<panel :title="$t('leeks')">
 				<loader v-if="!farmer" />
 				<div v-else>
-					<router-link v-for="leek in farmer.leeks" :key="leek.id" :to="'/leek/' + leek.id" class="leek">
+					<router-link v-ripple v-for="leek in farmer.leeks" :key="leek.id" :to="'/leek/' + leek.id" class="leek">
 						<leek-image :leek="leek" :scale="0.9" />
 						<br>
 						<div class="name">{{ leek.name }}</div>

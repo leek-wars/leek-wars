@@ -349,7 +349,7 @@
 		<v-dialog v-if="changeOwnerSelected" v-model="changeOwnerConfirmDialog" :max-width="500">
 			<div class="title">{{ $t('change_owner_confirm_title') }}</div>
 			<div class="content">
-				<i18n path='change_owner_confirm'>
+				<i18n path="change_owner_confirm">
 					<b place="farmer">{{ changeOwnerSelected.name }}</b>
 				</i18n>
 				<br><br>

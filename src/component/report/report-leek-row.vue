@@ -21,7 +21,7 @@
 		<td class="money">
 			<span>{{ (leek.money || 0) | number }} <span class="hab"></span></span>
 		</td>
-		<td v-if="fight.context !== FightContext.CHALLENGE" class="talent">
+		<td v-if="fight.context !== FightContext.CHALLENGE && leek.talent !== undefined" class="talent">
 			<img src="/image/talent.png">
 			{{ leek.talent }}
 			<span v-if="leek.talent_gain >= 0">+{{ leek.talent_gain }}</span>
