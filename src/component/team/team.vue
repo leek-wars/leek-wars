@@ -571,6 +571,7 @@
 			this.banDialog = true
 		}
 		banMember() {
+			if (this.banMemberTarget == null) { return }
 			LeekWars.post('team/ban', {farmer_id: this.banMemberTarget.id}).then((data) => {
 				if (data.success) {
 					LeekWars.toast(this.$i18n.t('team.farmer_banned'))
