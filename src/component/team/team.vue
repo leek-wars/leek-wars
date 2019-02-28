@@ -545,6 +545,7 @@
 				if (data.success) {
 					this.dissolveDialog = false
 					LeekWars.toast(this.$i18n.t('team.team_have_been_disolved'))
+					this.$store.commit('dissolve-team')
 					this.$router.push('/farmer')
 				} else {
 					LeekWars.toast(this.$i18n.t('team.' + data.error))
