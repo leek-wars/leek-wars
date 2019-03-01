@@ -3,7 +3,7 @@
 	<div>
 		<div class="content">
 			<div class="step">
-				<div v-if="step === 0" class="button" @click="nextStep">Activate two factor authentication</div>
+				<v-btn v-if="step === 0" @click="nextStep">Activate two factor authentication</v-btn>
 			</div>
 			<div v-if="step === 1" class="step">
 				<div class="title">Step 1 / 3</div>
@@ -51,7 +51,7 @@
 			<div v-if="step === 4" class="step final">
 				Two factor authentication enabled! Congratulations!
 				<br><br>
-				<div class="button">Disable</div>
+				<v-btn>Disable</v-btn>
 			</div>
 		</div>
 

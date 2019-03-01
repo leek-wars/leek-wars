@@ -71,7 +71,7 @@
 							<router-link place="link" to="/conditions">{{ $t('conditions_name') }}</router-link>
 						</i18n>
 						<br>
-						<center><input :value="$t('signup')" class="button green large" type="submit"></center>
+						<center><v-btn large color="primary" type="submit">{{ $t('signup') }}</v-btn></center>
 					</form>
 				</panel>
 			</div>

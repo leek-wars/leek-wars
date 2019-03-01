@@ -9,7 +9,7 @@
 			<i18n path="accept_2" tag="div">
 				<router-link place="cgu" to="/conditions">{{ $t('cgu') }}</router-link>
 			</i18n>
-			<div class="button green" @click="accept">{{ $t('i_accept') }}</div>
+			<v-btn color="primary" @click="accept">{{ $t('i_accept') }}</v-btn>
 		</panel>
 	</div>
 </template>
@@ -40,7 +40,7 @@
 	a {
 		color: green;
 	}
-	.button {
+	button {
 		margin-top: 30px;
 	}
 </style>

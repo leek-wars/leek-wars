@@ -125,8 +125,8 @@
 							</div>
 						</div>
 						<div class="buttons">
-							<div class="button" @click="clearMap">❌ Clear</div>
-							<div class="button" @click="randomMap">❓ Random</div>
+							<v-btn @click="clearMap">❌ Clear</v-btn>
+							<v-btn @click="randomMap">❓ Random</v-btn>
 						</div>
 						<div class="instructions">
 							<div class="instruction">✔ Clic gauche pour ajouter ou retirer des obstacles</div>

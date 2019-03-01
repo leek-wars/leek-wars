@@ -8,7 +8,7 @@
 			<h4><i>{{ $t('fight.no_data_received') }}</i></h4>
 			<br>
 			<router-link v-if="fight" :to="'/report/' + fight.id">
-				<div class="button">{{ $t('fight.see_report') }}</div>
+				<v-btn>{{ $t('fight.see_report') }}</v-btn>
 			</router-link>
 			<br><br>
 		</div>

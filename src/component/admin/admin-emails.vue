@@ -20,7 +20,7 @@
 					<td>{{ farmer.leek_name }}</td>
 					<td>{{ farmer.email }}</td>
 					<td>{{ farmer.code }}</td>
-					<td><div :class="{disabled: farmer.disabled}" class="button send" @click="send(farmer)">Renvoyer mail</div></td>
+					<td><v-btn :disabled="farmer.disabled" @click="send(farmer)">Renvoyer mail</v-btn></td>
 				</tr>
 			</table>
 		</panel>

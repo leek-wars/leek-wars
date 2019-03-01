@@ -12,7 +12,7 @@
 				<br><br>
 				<v-checkbox v-model="form.keep_connected" :label="$t('keep_connected')" hide-details />
 				<br><br>
-				<center><input :value="$t('connection')" type="submit" class="button green large"></center>
+				<center><v-btn large color="primary" type="submit">{{ $t('connection') }}</v-btn></center>
 				<br>
 				<div v-if="error" class="error">{{ $t('incorrect_login') }}</div>
 				<br>

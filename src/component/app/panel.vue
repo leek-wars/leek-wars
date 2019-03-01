@@ -136,10 +136,10 @@
 	.header > .actions .button {
 		height: 36px;
 		line-height: 36px;
-		padding-top: 0px;
-		padding-bottom: 0px;
 		color: white;
 		background: rgba(0, 0, 0, 0.4);
+		padding: 0 10px;
+		cursor: pointer;
 	}
 	.header > .actions > div:last-child.button,
 	.header > .actions > a:last-child .button,

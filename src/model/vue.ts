@@ -49,9 +49,8 @@ import { Latex } from './latex'
 
 Vue.use(Chartist)
 Vue.use(Vuetify, {
-	components: { VApp, VBtn, VTooltip, VMenu, VList, VIcon, VTabs, VRadioGroup,
-		VSnackbar, VCheckbox, VSwitch, VProgressCircular, VDialog, transitions },
-	directives,
+	components: { VApp, VBtn, VTooltip, VMenu, VList, VIcon, VTabs, VRadioGroup, VSnackbar, VCheckbox, VSwitch, VProgressCircular, VDialog, transitions },
+	directives
 })
 // import 'vuetify/src/stylus/app.styl'
 

@@ -19,7 +19,7 @@
 					<br>
 					<br>
 					<center>
-						<input :value="$t('change_password')" type="submit" class="button">
+						<v-btn type="submit">{{ $t('change_password') }}</v-btn>
 					</center>
 					<br>
 					<div class="error"></div>
@@ -47,7 +47,7 @@
 					<input v-model="email" type="text" name="email">
 					<br><br>
 					<center>
-						<input :value="$t('ask_new_password')" type="submit" class="button">
+						<v-btn type="submit">{{ $t('ask_new_password') }}</v-btn>
 					</center>
 					<br>
 					<div class="error"></div>

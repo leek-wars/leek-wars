@@ -53,8 +53,8 @@
 				<textarea v-model="message" class="warning-message"></textarea>
 				<br><br>
 				<center class="buttons">
-					<div class="button green" @click="archiveReporting">Archiver</div>
-					<div class="button red" @click="warningConfirmDialog = true">Donner avertissement</div>
+					<v-btn color="primary" @click="archiveReporting">Archiver</v-btn>
+					<v-btn color="error" @click="warningConfirmDialog = true">Donner avertissement</v-btn>
 				</center>
 			</panel>
 			<panel title="Top Voyous">
@@ -62,7 +62,7 @@
 					<div v-for="thug in thugs" :key="thug.id" class="thug">
 						<avatar :farmer="thug" />
 						<router-link :to="'/farmer/' + thug.id" class="text">{{ thug.name }} ({{ thug.warnings }})</router-link> 
-						<div class="button" @click="ban(thug)">Bannir</div>
+						<v-btn @click="ban(thug)">Bannir</v-btn>
 					</div>
 				</div>
 			</panel>
@@ -279,7 +279,7 @@
 	.buttons {
 		display: flex;
 	}
-	.buttons .button {
+	.buttons button {
 		flex: 1;
 		white-space: nowrap;
 	}

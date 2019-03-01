@@ -167,7 +167,7 @@
 						<center v-if="leek && my_leek">
 							<br>
 							<div v-if="leek.capital > 0" class="button green" @click="capitalDialog = true">{{ $t('n_capital', [leek.capital]) }}</div>&nbsp;
-							<div class="button" @click="potionDialog = true">{{ $t('potion') }}</div>
+							<v-btn @click="potionDialog = true">{{ $t('potions') }}</v-btn>
 						</center>
 					</div>
 				</panel>
@@ -334,9 +334,9 @@
 				<br>
 				<br>
 				<center>
-					<div class="button" @click="rename('habs')">{{ $t('rename_pay_habs') }} : <b>{{ rename_price_habs }}</b> <span class="hab"></span></div>
+					<v-btn @click="rename('habs')">{{ $t('rename_pay_habs') }} : <b>{{ rename_price_habs }}</b> <span class="hab"></span></v-btn>
 					&nbsp;
-					<div class="button" @click="rename('crystals')">{{ $t('rename_pay_crystals') }} : <b>{{ rename_price_crystals }}</b> <span class="crystal"></span></div>
+					<v-btn @click="rename('crystals')">{{ $t('rename_pay_crystals') }} : <b>{{ rename_price_crystals }}</b> <span class="crystal"></span></v-btn>
 				</center>
 			</div>
 			<div class="actions">

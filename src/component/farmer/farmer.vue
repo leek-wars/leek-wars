@@ -186,12 +186,12 @@
 						</div>
 						<div v-else>
 							<div v-if="myFarmer">
-								<div class="button" @click="createTeamDialog = true">{{ $t('create_team') }}</div>
+								<v-btn @click="createTeamDialog = true">{{ $t('create_team') }}</v-btn>
 								<div v-if="farmer.candidacy">
 									<br><br><br>
 									<a>{{ $t('candidacy_for_team', [farmer.candidacy.team_id, farmer.candidacy.team_name]) }}</a>
 									<br><br>
-									<div class="button" @click="cancelCandidacy">{{ $t('cancel_candidacy') }}</div>
+									<v-btn @click="cancelCandidacy">{{ $t('cancel_candidacy') }}</v-btn>
 								</div>
 							</div>
 							<div v-else>
