@@ -252,7 +252,10 @@
 			<div class="column6">
 				<panel v-if="leek && leek.fights && leek.fights.length > 0" :title="$t('fights')">
 					<template v-if="leek" slot="actions">
-						<router-link :to="'/leek/' + leek.id + '/history'" class="button flat">{{ $t('history') }}</router-link>
+						<router-link :to="'/leek/' + leek.id + '/history'" class="button flat">
+							<i class="material-icons">history</i>
+							<span>{{ $t('history') }}</span>
+						</router-link>
 					</template>
 					<fights-history slot="content" :fights="leek.fights" />
 				</panel>
