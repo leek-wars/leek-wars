@@ -17,7 +17,7 @@
 					<br v-if="error">
 					<div v-if="error" class="error">{{ error }}</div>
 					<br>
-					<div class="button green" @click="createLeek">{{ $t('create') }}</div>  
+					<v-btn color="primary" @click="createLeek">{{ $t('create') }}</v-btn>  
 				</template>
 				<template v-else>
 					<h2>{{ $t('4_leeks_only') }}</h2>

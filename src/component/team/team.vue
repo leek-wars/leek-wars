@@ -51,8 +51,8 @@
 						</div>
 						<center v-if="$store.state.farmer && !member && $store.state.farmer.team == null">
 							<br>
-							<div v-if="team.candidacy" class="button" @click="cancelCandidacy">{{ $t('cancel_candidacy') }}</div>
-							<div v-if="team.opened && !team.candidacy" class="button" @click="sendCandidacy">{{ $t('join_team') }}</div>
+							<v-btn v-if="team.candidacy" @click="cancelCandidacy">{{ $t('cancel_candidacy') }}</v-btn>
+							<v-btn v-if="team.opened && !team.candidacy" @click="sendCandidacy">{{ $t('join_team') }}</v-btn>
 							<i v-else-if="!team.opened">{{ $t('closed_team') }}</i>
 						</center>
 					</div>

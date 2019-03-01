@@ -46,7 +46,7 @@
 						<input v-model="newPassword1" name="new_password1" type="password" required> <br>
 						<h4>{{ $t('confirm_password') }}</h4>
 						<input v-model="newPassword2" name="new_password2" type="password" required> <br>
-						<center><input :value="$t('change')" type="submit" class="button"></center>
+						<center><v-btn type="submit">{{ $t('change') }}</v-btn></center>
 					</form>
 				</panel>
 			</div>
@@ -83,7 +83,7 @@
 			</div>
 			<div class="column6">
 				<panel :title="$t('delete_account')">
-					<div class="button" @click="deleteDialog = true">{{ $t('delete_account') }}</div>
+					<v-btn @click="deleteDialog = true">{{ $t('delete_account') }}</v-btn>
 				</panel>
 			</div>
 			<div class="column6">

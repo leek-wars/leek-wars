@@ -82,6 +82,32 @@
 	position: absolute;
 	transform: translate(100%, 0);
 }
+.primary {
+    background-color: #5fad1b !important;
+    border-color: #5fad1b !important;
+}
+button {
+	border-style: none;
+	cursor: pointer;
+}
+.v-btn {
+	text-transform: none;
+	font-size: 17px;
+	margin: 0 3px;
+	color: #333;
+}
+.v-btn--large {
+	font-size: 18px;
+	height: 40px;
+}
+.theme--light.v-btn:not(.v-btn--icon):not(.v-btn--flat) {
+	background-color: white;
+}
+.v-btn.error {
+    background-color: #ca0000 !important;
+    border-color: #ca0000 !important;
+}
+
 .material-icons {
 	font-size: 26px;
 }
@@ -190,58 +216,6 @@ a:visited {
 textarea {
 	font-family: "Roboto";
 	font-size: 15px;
-}
-.button {
-	display: inline-flex;
-	position: relative;
-	align-items: center;
-	justify-content: center;
-	padding: 6px 10px;
-	font-size: 17px;
-	cursor: pointer;
-	border: none;
-	color: #333;
-	background: white;
-	user-select: none;
-}
-.button:not(.flat) {
-	border-radius: 4px;
-	border-bottom: 3px solid #ccc;
-}
-.button.large {
-	padding: 6px 26px;
-	font-size: 20px;
-}
-.button:not(.disabled):not(.flat):active {
-	top: 3px;
-	border-bottom: none;
-	margin-bottom: 3px;
-}
-.button.disabled {
-	background: #777;
-	color: white;
-	cursor: auto;
-}
-.button.green {
-	background: #5fad1b;
-	color: white;
-	border-bottom: 3px solid #468014;
-}
-.button:not(.disabled).green:hover {
-	background-image: linear-gradient(to bottom, rgba(110, 201, 31, 0.7) 0%, rgba(110, 201, 31, 0.9) 50%, rgba(110, 201, 31, 0.7) 100%);
-}
-.button.red {
-	background: #ca0000;
-	color: white;
-	border-bottom: 3px solid #9e0000;
-}
-.button.red:hover {
-	background: #dd0000;
-	border-bottom: 3px solid #9e0000;
-}
-.button:not(.flat) i {
-	vertical-align: top;
-	margin-top: -3px;
 }
 .center {
 	text-align: center;

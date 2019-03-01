@@ -17,7 +17,7 @@
 							<br>
 							File {{ error.file }} line {{ error.line }}
 							<br>
-							<div v-if="error.ai" class="button code green" @click="seeAI(error.ai)">See AI code</div>
+							<v-btn v-if="error.ai" color="primary" @click="seeAI(error.ai)">See AI code</v-btn>
 						</div>
 					</div>
 				</div>
@@ -116,7 +116,7 @@
 	.codes td pre {
 		margin: 0;
 	}
-	.button {
+	button {
 		margin-top: 10px;
 	}
 </style>

@@ -47,10 +47,10 @@
 					<pagination :current="page" :total="pages" :url="'/ranking/' + category + '/' + order" />
 					<div v-if="$store.state.farmer" class="me-buttons center">
 						<div v-if="category === 'leek'">
-							<div v-for="leek in $store.state.farmer.leeks" :key="leek.id" class="button" @click="goToMyRanking(leek.id)">{{ leek.name }}</div>
+							<v-btn v-for="leek in $store.state.farmer.leeks" :key="leek.id" @click="goToMyRanking(leek.id)">{{ leek.name }}</v-btn>
 						</div>
-						<div v-else-if="category === 'farmer'" class="button me-button" @click="goToMyRanking">{{ $t('my_farmer') }}</div>
-						<div v-else-if="category === 'team' && $store.state.farmer.team" class="button me-button" @click="goToMyRanking">{{ $t('my_team') }}</div>
+						<v-btn v-else-if="category === 'farmer'" @click="goToMyRanking">{{ $t('my_farmer') }}</v-btn>
+						<v-btn v-else-if="category === 'team' && $store.state.farmer.team" @click="goToMyRanking">{{ $t('my_team') }}</v-btn>
 					</div>
 				</div>
 				<div class="scroll-x">

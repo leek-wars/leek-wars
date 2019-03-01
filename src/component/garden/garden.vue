@@ -184,7 +184,7 @@
 								<br>
 								<div class="leek-count">{{ LeekWars.battleRoyale.progress }} / 10</div>
 								<br>
-								<div class="button" @click="battleRoyaleLeave"><i class="material-icons">keyboard_backspace</i> Quitter</div>
+								<v-btn @click="battleRoyaleLeave"><i class="material-icons">keyboard_backspace</i> Quitter</v-btn>
 							</div>
 						</div>
 					</div>

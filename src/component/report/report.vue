@@ -1,9 +1,9 @@
 <template>
 	<not-found v-if="error" :title="$t('title')" :message="$t('not_found')" />
 	<not-found v-else-if="generating" :title="$t('title')" :message="$t('not_generated_yet')">
-		<div slot="button" class="button green large" @click="update">
+		<v-btn slot="button" large color="primary" @click="update">
 			<i class="material-icons">refresh</i>&nbsp;<span>{{ $t('refresh') }}</span>
-		</div>
+		</v-btn>
 	</not-found>
 	<div v-else>
 		<div class="page-header page-bar">
@@ -49,29 +49,29 @@
 				</div>
 				<center class="buttons">
 					<router-link :to="'/fight/' + fight.id">
-						<div class="button">{{ $t('rewatch_fight') }}</div>
+						<v-btn>{{ $t('rewatch_fight') }}</v-btn>
 					</router-link>
 					<span v-if="$store.state.connected">
 						<router-link v-if="fight.context === FightContext.GARDEN" to="/garden">
-							<div class="button">{{ $t('back_to_garden') }}</div>
+							<v-btn>{{ $t('back_to_garden') }}</v-btn>
 						</router-link>
 						<span v-else-if="fight.context == FightContext.TEST">
 							<router-link to="/editor">
-								<div class="button">{{ $t('back_to_editor') }}</div>
+								<v-btn>{{ $t('back_to_editor') }}</v-btn>
 							</router-link>
-							<div class="button" @click="refight">{{ $t('refight') }}</div>
+							<v-btn @click="refight">{{ $t('refight') }}</v-btn>
 						</span>
 						<span v-else-if="fight.context == FightContext.TOURNAMENT">
 							<router-link :to="'/tournament/' + fight.tournament">
-								<div class="button">{{ $t('back_to_tournament') }}</div>
+								<v-btn>{{ $t('back_to_tournament') }}</v-btn>
 							</router-link>
 						</span>
 						<span v-else-if="fight.context == FightContext.CHALLENGE">
 							<router-link v-if="myFight" :to="'/garden/challenge/' + ['leek', 'farmer'][fight.type] + '/' + enemy">
-								<div v-if="iWin" class="button">{{ $t('refight') }}</div>
-								<div v-else class="button">
+								<v-btn v-if="iWin">{{ $t('refight') }}</v-btn>
+								<v-btn v-else>
 									<span v-html="$t('take_revenge')"></span>
-								</div>
+								</v-btn>
 							</router-link>
 						</span>
 					</span>
