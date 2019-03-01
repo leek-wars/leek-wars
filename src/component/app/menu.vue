@@ -36,7 +36,7 @@
 			</div>
 
 			<span v-if="$store.state.farmer && $store.state.farmer.leeks" class="leeks">
-				<router-link v-ripple v-for="leek in $store.state.farmer.leeks" :key="leek.id" :to="{ name: 'leek', params: { id: leek.id }}" :label="leek.capital || null" class="section">
+				<router-link v-ripple v-for="(leek, key, i) in $store.state.farmer.leeks" :key="leek.id" :to="{ name: 'leek', params: { id: leek.id }}" :label="leek.capital || null" :class="{'router-link-active': i == 0 && isHomePage}" class="section">
 					<div :leek="leek.id" :tab="'leek-' + leek.id" @click="clickItem">
 						<img src="/image/icon/house.png">
 						<div class="text">{{ leek.name }}</div>
@@ -120,6 +120,9 @@
 		name: 'lw-menu'
 	})
 	export default class Menu extends Vue {
+		get isHomePage() {
+			return this.$route.path === '/'
+		}
 		mounted() {
 			LeekWars.menuCollapsed = localStorage.getItem('main/menu-collapsed') === 'true'
 			setTimeout(() => {
