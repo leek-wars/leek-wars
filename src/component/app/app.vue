@@ -53,17 +53,6 @@
 
 		<didactitiel v-model="didactitiel" />
 
-		<v-dialog v-model="quitConfirmDialog" :max-width="600">
-			<div class="title">{#quit_confirm}</div>
-			<div class="content">
-				{message}
-			</div>
-			<div class="actions">
-				<div class="stay">{#stay}</div>
-				<div class="leave red">{#leave}</div>
-			</div>
-		</v-dialog>
-
 		<v-dialog v-model="changelogDialog" :max-width="800">
 			<i18n tag="div" path="changelog.version_online" class="title">
 				<b v-if="changelog" place="version">{{ changelog.version_name }}</b>
@@ -102,7 +91,6 @@
 	})
 	export default class App extends Vue {
 		didactitiel: boolean = false
-		quitConfirmDialog: boolean = false
 		console: boolean = false
 		consoleDown: boolean = false
 		consoleX: number = 0
