@@ -77,7 +77,7 @@
 	"not_found": "Poireau introuvable",
 	"not_found_id": "Poireau d'id {0} introuvable",
 	"ok": "OK",
-	"potion": "Potion",
+	"potions": "Potions",
 	"popup_level_301_title": "Félicitations !",
 	"popup_level_301_message": "Vous avez atteint le plus haut niveau dans Leek Wars, votre poireau est arrivé au stade ultime de son évolution !<br> Vous obtenez une <b>potion dorée</b> ainsi qu'<b>une couronne</b> en récompense.",
 	"ratio": "Ratio : {0}",
