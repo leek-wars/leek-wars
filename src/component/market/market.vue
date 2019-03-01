@@ -81,16 +81,16 @@
 						<div class="buy-buttons">
 							<div v-if="selectedItem.price_habs > 0">
 								<h4 class="buy-label">{{ $t('buy') }}</h4>&nbsp;
-								<div :class="{disabled: $store.state.farmer && $store.state.farmer.habs < selectedItem.price_habs}" class="button buy-button" @click="openBuyHabs">{{ selectedItem.price_habs | number }}<img src="/image/hab.png"></div>
+								<v-btn :class="{disabled: $store.state.farmer && $store.state.farmer.habs < selectedItem.price_habs}" class="buy-button" @click="openBuyHabs">{{ selectedItem.price_habs | number }}<img src="/image/hab.png"></v-btn>
 							</div>
 							<div v-if="selectedItem.price_crystals > 0">
 								<h4 class="buy-label">{{ $t('buy') }}</h4>&nbsp;
-								<div :class="{disabled: $store.state.farmer && $store.state.farmer.crystals < selectedItem.price_crystals}" class="button buy-crystals-button" @click="openBuyCrystals">{{ selectedItem.price_crystals | number }}<img src="/image/crystal.png"></div>
+								<v-btn :class="{disabled: $store.state.farmer && $store.state.farmer.crystals < selectedItem.price_crystals}" class="buy-crystals-button" @click="openBuyCrystals">{{ selectedItem.price_crystals | number }}<img src="/image/crystal.png"></v-btn>
 							</div>
 							<template v-if="selectedItem.sellable && selectedItem.farmer_count > 0">
 								<div class="sell">
 									<h4 class="buy-label">{{ $t('resell') }}</h4>&nbsp;
-									<div class="button sell-button" @click="sellDialog = true">{{ selectedItem.sell_price | number }} <span class="hab"></span></div>
+									<v-btn class="sell-button" @click="sellDialog = true">{{ selectedItem.sell_price | number }} <img src="/image/hab.png"></v-btn>
 								</div>
 							</template>
 						</div>
@@ -529,11 +529,13 @@
 	.buy-buttons {
 		padding-top: 10px;
 		padding-bottom: 10px;
-	}
-	.buy-button img {
-		vertical-align: top;
-		margin-top: 1px;
-		margin-left: 5px;
+		button {
+			margin-bottom: 5px;
+			img {
+				vertical-align: top;
+				margin-left: 5px;
+			}
+		}
 	}
 	.buy-crystals-button img {
 		vertical-align: middle;
