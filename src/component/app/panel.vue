@@ -140,6 +140,7 @@
 		background: rgba(0, 0, 0, 0.4);
 		padding: 0 10px;
 		cursor: pointer;
+		display: inline-flex;
 	}
 	.header > .actions > div:last-child.button,
 	.header > .actions > a:last-child .button,
@@ -151,12 +152,17 @@
 		width: 22px;
 		padding: 7px 3px;
 		opacity: 0.9;
-		vertical-align: top;
+    	vertical-align: top;
+		margin-right: 6px;
 	}
-	.header > .actions .button i {
+	.header > .actions .button /deep/ i {
 		padding: 4px 0;
 		opacity: 0.9;
 		font-size: 28px;
+		margin-right: 6px;
+	}
+	.header > .actions .button :last-child {
+		margin-right: 0;
 	}
 	.header > .actions .button:hover {
 		background-image: linear-gradient(to bottom, rgba(110, 201, 31, 0.7) 0%, rgba(110, 201, 31, 0.9) 50%, rgba(110, 201, 31, 0.7) 100%);

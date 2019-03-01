@@ -207,7 +207,8 @@
 				<h2 slot="title">{{ $t('trophies') }} <span v-if="farmer">({{ farmer.trophies }})</span></h2>
 				<template slot="actions">
 					<router-link :to="'/trophies/' + id" class="button flat">
-						<img src="/image/icon/trophy.png"> {{ $t('see_all_trophies') }}
+						<img src="/image/icon/trophy.png">
+						<span>{{ $t('see_all_trophies') }}</span>
 					</router-link>
 					<div class="button flat">
 						<i class="material-icons" @click="trophiesModeButton">{{ (trophiesMode === 'grid' ? 'list' : 'view_module') }}</i>
@@ -286,7 +287,10 @@
 			<div class="column6">
 				<panel v-if="!farmer || farmer.fight_history.length > 0" :title="$t('fights')">
 					<template slot="actions">
-						<router-link :to="'/farmer/' + id + '/history'" class="button flat">{{ $t('history') }}</router-link>
+						<router-link :to="'/farmer/' + id + '/history'" class="button flat">
+							<i class="material-icons">history</i>
+							<span>{{ $t('history') }}</span>
+						</router-link>
 					</template>
 					<loader v-if="!farmer" />
 					<fights-history v-else slot="content" :fights="farmer.fight_history" />
