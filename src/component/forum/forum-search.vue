@@ -23,9 +23,9 @@
 					</select>
 				</div>
 				<br>
-				<div class="button green search-button" @click="search">
+				<v-btn color="primary" class="search-button" @click="search">
 					<img src="/image/search.png"><span>{{ $t('search') }}</span>
-				</div>
+				</v-btn>
 
 				<br><br>
 				<h4>{{ $t('results') }}</h4>
