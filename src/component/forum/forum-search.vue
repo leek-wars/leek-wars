@@ -115,7 +115,7 @@
 		}
 		highlight(text: string, query: string) {
 			const pos = text.toLowerCase().indexOf(query)
-			return text.substring(0, pos) + "<b>" + text.substring(pos, pos + query.length) + "</b>" + text.substring(pos + query.length)
+			return LeekWars.protect(text.substring(0, pos)) + "<b>" + LeekWars.protect(text.substring(pos, pos + query.length)) + "</b>" + LeekWars.protect(text.substring(pos + query.length))
 		}
 		createURL(query: string, farmer: string, category: number) {
 			let url = "/search/" + (query || '-').replace(/ /g, '+')
