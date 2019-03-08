@@ -170,7 +170,7 @@
 									Level &lt; 50
 								</v-tooltip>
 								<br><br>
-								<div v-if="garden.fights" class="button green" @click="battleRoyaleRegister">Sélectionner</div>
+								<v-btn v-if="garden.fights" color="primary" @click="battleRoyaleRegister">Sélectionner</v-btn>
 								<div v-else>
 									<img src="/image/notgood.png"><br>
 									<h4>{{ $t('no_more_fights') }}</h4>
@@ -184,7 +184,7 @@
 								<br>
 								<div class="leek-count">{{ LeekWars.battleRoyale.progress }} / 10</div>
 								<br>
-								<v-btn @click="battleRoyaleLeave"><i class="material-icons">keyboard_backspace</i> Quitter</v-btn>
+								<v-btn @click="battleRoyaleLeave"><i class="material-icons">keyboard_backspace</i>&nbsp;Quitter</v-btn>
 							</div>
 						</div>
 					</div>
