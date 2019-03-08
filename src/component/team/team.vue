@@ -152,7 +152,7 @@
 							<option value="member">{{ $t('member') }}</option>
 						</select>
 						<br>
-						<div class="ban button" @click="banMemberStart(member)">{{ $t('ban') }}</div>
+						<v-btn class="ban" small @click="banMemberStart(member)">{{ $t('ban') }}</v-btn>
 					</template>
 				</div>
 			</div>

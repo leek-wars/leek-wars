@@ -106,7 +106,7 @@
 		<div v-if="advanced" class="flex-container">
 			<div class="column6">
 				<panel title="Vider le localStorage">
-					<div class="clear-localstorage button" @click="clearLocalStorage">Vider</div>
+					<v-btn class="clear-localstorage" @click="clearLocalStorage">Vider</v-btn>
 				</panel>
 			</div>
 			<div class="column6"></div>
