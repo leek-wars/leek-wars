@@ -166,7 +166,7 @@
 						</div>
 						<center v-if="leek && my_leek">
 							<br>
-							<div v-if="leek.capital > 0" class="button green" @click="capitalDialog = true">{{ $t('n_capital', [leek.capital]) }}</div>&nbsp;
+							<v-btn v-if="leek.capital > 0" color="primary" @click="capitalDialog = true">{{ $t('n_capital', [leek.capital]) }}</v-btn>&nbsp;
 							<v-btn @click="potionDialog = true">{{ $t('potions') }}</v-btn>
 						</center>
 					</div>
