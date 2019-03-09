@@ -104,8 +104,8 @@
 									</template>
 								</div>
 								<div v-else class="edit-buttons">
-									<span class="button green confirm-edit" @click="confirmEdit(message)">{{ $t('send') }}</span>&nbsp;
-									<span class="button cancel-edit" @click="endEdit(message)">{{ $t('cancel') }}</span>
+									<v-btn color="primary" class="confirm-edit" @click="confirmEdit(message)">{{ $t('send') }}</v-btn>
+									<v-btn class="cancel-edit" @click="endEdit(message)">{{ $t('cancel') }}</v-btn>
 									<span v-if="message.id == -1">
 										&nbsp;GitHub Issue <input v-model.number="topic.issue" type="number">
 									</span>
@@ -121,7 +121,7 @@
 					<h4>{{ $t('answer') }}</h4>
 					<textarea v-model="newMessage" class="response card" @keyup="updateDraft"></textarea>
 					<center>
-						<div class="button green" @click="send">{{ $t('send') }}</div>
+						<v-btn color="primary" @click="send">{{ $t('send') }}</v-btn>
 					</center>
 					<formatting-rules />
 					<br>
