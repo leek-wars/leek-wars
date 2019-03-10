@@ -134,7 +134,8 @@
 </template>
 
 <script lang="ts">
-	import { Fight, FightType } from '@/model/fight'
+	import { Farmer } from '@/model/farmer'
+	import { Fight, FightType, Report } from '@/model/fight'
 	import { LeekWars } from '@/model/leekwars'
 	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 	import { Game } from './game/game'
@@ -147,7 +148,7 @@
 		components: { Hud }
 	})
 	export default class Player extends Vue {
-		@Prop() fightId!: number
+		@Prop() fightId!: string
 		@Prop() requiredWidth!: number
 		@Prop() requiredHeight!: number
 		FightType = FightType
@@ -252,15 +253,9 @@
 			if (this.request) { this.request.abort() }
 		}
 		getFight() {
-			this.request = LeekWars.get('fight/get/' + this.fightId)
-			this.request.then((data: any) => {
-				const fight = data.fight
+			const fightLoaded = (fight: Fight) => {
 				this.fight = fight
 				this.$emit('fight', fight)
-				if (!data.success) {
-					this.error = true
-					return null
-				}
 				if (fight.status >= 1) {
 					this.getLogs()
 					this.game.init(fight.data)
@@ -275,7 +270,37 @@
 					this.getDelay += 500
 					this.getDelay = Math.min(4000, this.getDelay)
 				}
-			})
+			}
+			if (this.fightId === 'local') {
+				import(`@/report.json`).then(report => {
+					const local_fight = {
+						title: 'Fight', context: 3,	date: 0,
+						farmers1: [{id: 1, name: 'Pilow'} as Farmer],
+						id: 0,
+						farmer1: 1, farmer2: 1,
+						leeks1: [],	leeks2: [],
+						team1: 1, team2: 1,
+						report: {} as Report,
+						status: 1,
+						team1_name: "A", team2_name: "B",
+						tournament: 0, type: 0, winner: 1, year: 2019,
+						data: report.default.fight as any,
+						comments: [],
+						result: 'win', queue: 0
+					} as Fight
+					fightLoaded(local_fight)
+					this.game.setLogs(report.default.logs[this.$store.state.farmer.id])
+				})
+			} else {
+				this.request = LeekWars.get('fight/get/' + this.fightId)
+				this.request.then((data: any) => {
+					if (!data.success) {
+						this.error = true
+						return null
+					}
+					fightLoaded(data.fight)
+				})
+			}
 		}
 		getLogs() {
 			if (this.$store.state.farmer) {

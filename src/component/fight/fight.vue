@@ -59,14 +59,15 @@
 
 <script lang="ts">
 	import { Comment } from '@/model/comment'
-	import { Fight, FightType } from '@/model/fight'
+	import { Farmer } from '@/model/farmer'
+	import { Fight, FightType, Report } from '@/model/fight'
 	import { Leek } from '@/model/leek'
 	import { LeekWars } from '@/model/leekwars'
 	import { Component, Vue, Watch } from 'vue-property-decorator'
 
 	@Component({ name: "fight", i18n: {} })
 	export default class FightPage extends Vue {
-		fight_id: number | null = null
+		fight_id: string | null = null
 		fight: Fight | null = null
 		loaded: boolean = false
 		first_farmer!: number
@@ -85,30 +86,7 @@
 
 		@Watch('$route.params.id')
 		update() {
-			const id = this.$route.params.id
-			this.fight_id = parseInt(id, 10)
-
-			// if (id == 'local') {
-			// 	var local_fight = {
-			// 		context: 3,
-			// 		date: 0,
-			// 		farmers1: {1: {id: 1}},	farmers2: {1: {id: 1}},
-			// 		id: 0,
-			// 		leeks1: [],	leeks2: [],
-			// 		report: null,
-			// 		status: 1,
-			// 		team1_name: "A", team2_name: "B",
-			// 		tournament: 0,
-			// 		type: 0,
-			// 		winner: 1,
-			// 		year: 2016,
-			// 		// data: window['__FIGHT_DATA']
-			// 	}
-			// 	console.log("Local fight: ", local_fight)
-			// 	callback({success: true, fight: local_fight})
-			// } else {
-			// 	LeekWars.get('fight/get/' + id).then(data => callback(data))
-			// }
+			this.fight_id = this.$route.params.id
 		}
 
 		resize() {
