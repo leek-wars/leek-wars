@@ -75,6 +75,7 @@ class Fight {
 	public result!: string
 	public report!: Report
 	public winner!: number
+	public queue!: number
 }
 
 const TEAM_COLORS = [
