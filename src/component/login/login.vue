@@ -25,7 +25,7 @@
 
 <script lang="ts">
 	import { LeekWars } from '@/model/leekwars'
-	import { Component, Vue } from 'vue-property-decorator'
+	import { Component, Vue, Watch } from 'vue-property-decorator'
 
 	@Component({ name: 'login', i18n: {} })
 	export default class Login extends Vue {
@@ -34,6 +34,9 @@
 			login: '',
 			password: '',
 			keep_connected: false
+		}
+		created() {
+			this.form.keep_connected = localStorage.getItem("keep_connected") === 'true'
 		}
 		login() {
 			const url = LeekWars.dev ? 'farmer/login-token' : 'farmer/login'
@@ -46,6 +49,10 @@
 					this.error = true
 				}
 			})
+		}
+		@Watch('form.keep_connected')
+		changeKeepConnected() {
+			localStorage.setItem("keep_connected", this.form.keep_connected ? "true" : "false")
 		}
 	}
 </script>
