@@ -8,7 +8,7 @@
 				<h2 slot="title">Derniers signalements ({{ faults.length }})</h2> 
 				<div slot="content" class="faults">
 					<div v-if="faults.length == 0">Aucun signalement !</div>
-					<router-link v-for="fault in faults" :key="fault.id" :to="'/moderation/fault/' + fault.id" class="fault">
+					<router-link v-ripple v-for="fault in faults" :key="fault.id" :to="'/moderation/fault/' + fault.id" class="fault">
 
 						<avatar :farmer="fault.target" />
 
