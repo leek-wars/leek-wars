@@ -55,6 +55,8 @@
 		box-shadow: 0px 10px 11px -11px rgba(0,0,0,0.75);
 		margin-right: 12px;
 		margin-bottom: 12px;
+		display: flex;
+		flex-direction: column;
 	}
 	#app.app .panel {
 		border-radius: 0;

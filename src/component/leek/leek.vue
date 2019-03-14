@@ -1109,7 +1109,11 @@
 		min-height: 80px;
 	}
 	.leek-ai {
-		text-align: center;
+		flex: 1;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		padding: 10px;
 	}
 	.ai_popup .leek-ai {
 		text-align: center;
