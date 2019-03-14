@@ -28,7 +28,7 @@
 						<div v-else class="value today">{{ Math.floor(statistic.today).toLocaleString('fr-FR') }}</div>
 						<div class="type">{{ $t(statistic.today_state ? 'today' : 'total') }}</div>
 					</div>
-					<br v-if="name === 'resurrects' || name === 'ai_characters'" :key="name + '1'">
+					<div v-if="name === 'resurrects' || name === 'ai_characters'" :key="name + '1'" class="delimiter"></div>
 					<chartist v-if="name === 'resurrects'" :key="name + '2'" :data="chartDamage" :options="chartOptions" class="chart right" type="Pie" />
 				</template>
 			</div>
@@ -296,7 +296,7 @@
 		margin-top: -3px;
 	}
 	.value {
-		font-size: 24px;
+		font-size: 21px;
 		display: block;
 		color: #888;
 		text-align: right;
@@ -371,5 +371,8 @@
 		max-width: 800px;
 		display: inline-block;
 		vertical-align: top;
+	}
+	.delimiter {
+		margin: 20px;
 	}
 </style>
