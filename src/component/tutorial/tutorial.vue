@@ -932,6 +932,7 @@
 	}
 	.panel .wrapper {
 		max-width: 800px;
+		width: 100%;
 		margin: 0 auto;
 		background: #f2f2f2;
 		padding: 15px;
