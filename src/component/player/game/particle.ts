@@ -377,7 +377,7 @@ class Garbage extends FallingParticle {
 		this.dy = dy
 		this.dz = dz
 		this.scale = scale || 1
-		this.rotation = rotation || Math.random() * 0.1 - 0.05
+		this.rotation = rotation
 	}
 	public update(dt: number): boolean {
 		// Stalactite ou iceberg
