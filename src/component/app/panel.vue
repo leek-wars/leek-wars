@@ -78,6 +78,7 @@
 		text-align: left;
 		border-top-left-radius: 3px;
 		border-top-right-radius: 3px;
+		display: flex;
 	}
 	#app.app .panel > .header {
 		border-radius: 0;
@@ -128,12 +129,10 @@
 		opacity: 0.9;
 	}
 	.header > .actions {
-		position: absolute;
-		top: 0;
 		height: 36px;
-		right: 0;
 		display: flex;
 		justify-content: flex-end;
+		flex: 1;
 	}
 	.header > .actions .button {
 		height: 36px;

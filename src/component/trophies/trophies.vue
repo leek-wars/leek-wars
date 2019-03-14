@@ -14,12 +14,14 @@
 		<panel v-for="category in categories" v-if="category.id != 6 || progressions[6] != 0" :key="category.id">
 			<h2 slot="title">{{ $t('category_' + category.name) }}</h2> 
 
-			<template v-if="category.id != 6" slot="actions" class="category-bar-wrapper">
-				<div class="stats">{{ progressions[category.id] }} / {{ totals[category.id] }}</div>
-				<div class="category-bar">
-					<div :style="{width: (loaded ? Math.floor(100 * progressions[category.id] / totals[category.id]) : 0) + '%'}" class="bar striked"></div>
+			<template v-if="category.id != 6" slot="actions">
+				<div class="category-bar-wrapper">
+					<div class="stats">{{ progressions[category.id] }} / {{ totals[category.id] }}</div>
+					<div class="category-bar">
+						<div :style="{width: (loaded ? Math.floor(100 * progressions[category.id] / totals[category.id]) : 0) + '%'}" class="bar striked"></div>
+					</div>
+					<div class="stats">{{ loaded ? Math.floor(100 * progressions[category.id] / totals[category.id]) : 0 }}%</div>
 				</div>
-				<div class="stats">{{ loaded ? Math.floor(100 * progressions[category.id] / totals[category.id]) : 0 }}%</div>
 			</template>
 			<loader v-show="!loaded" slot="content" />
 			<div v-if="loaded" slot="content" class="trophies">
