@@ -289,7 +289,7 @@
 						result: 'win', queue: 0
 					} as Fight
 					fightLoaded(local_fight)
-					this.game.setLogs(report.default.logs[this.$store.state.farmer.id])
+					this.game.setLogs((report.default as any).logs[this.$store.state.farmer.id])
 				})
 			} else {
 				this.request = LeekWars.get('fight/get/' + this.fightId)
