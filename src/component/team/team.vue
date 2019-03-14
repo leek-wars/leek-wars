@@ -380,7 +380,7 @@
 		captain: boolean = false
 		owner: boolean = false
 		reportDialog: boolean = false
-		reasons = [Warning.INCORRECT_EMBLEM, Warning.INCORRECT_TEAM_NAME]
+		reasons = [Warning.INCORRECT_EMBLEM, Warning.INCORRECT_TEAM_NAME, Warning.INCORRECT_TEAM_DESCRIPTION]
 		createCompoDialog: boolean = false
 		createCompoName: string = ''
 		deleteCompoDialog: boolean = false
