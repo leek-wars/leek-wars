@@ -106,7 +106,7 @@
 								</v-switch>
 							</v-list-tile>
 							<v-list-tile v-ripple>
-								<v-switch v-model="game.large" :label="$t('fight.enlarge_fight')" hide-details />
+								<v-switch v-model="LeekWars.flex" :label="$t('fight.enlarge_fight')" hide-details />
 							</v-list-tile>
 							<v-list-tile v-ripple>
 								<v-switch v-model="game.showLifes" :label="$t('fight.display_life_bars')" hide-details />
@@ -169,17 +169,14 @@
 
 		created() {
 			if (localStorage.getItem('fight/shadows') === null) { localStorage.setItem('fight/shadows', 'true') }
-			if (localStorage.getItem('fight/large') === null) { localStorage.setItem('fight/large', 'true') }
 			if (localStorage.getItem('fight/sound') === null) { localStorage.setItem('fight/sound', 'true') }
 			this.game.shadows = localStorage.getItem('fight/shadows') === 'true'
-			this.game.large = localStorage.getItem('fight/large') === 'true'
 			this.game.tactic = localStorage.getItem('fight/tactic') === 'true'
 			this.game.showCells = localStorage.getItem('fight/cells') === 'true'
 			this.game.showLifes = localStorage.getItem('fight/lifes') === 'true'
 			this.game.sound = localStorage.getItem('fight/sound') === 'true'
 			this.game.discretePause = localStorage.getItem('fight/discrete_pause') === 'true'
 			this.getFight()
-			LeekWars.large = this.game.large
 			this.resize()
 			this.$emit('resize')
 			this.$root.$on('resize', () => {
@@ -367,9 +364,8 @@
 			this.game.toggleShadows()
 			this.game.redraw()
 		}
-		@Watch("game.large") toggleLarge() {
-			LeekWars.large = this.game.large
-			localStorage.setItem('fight/large', '' + this.game.large)
+		@Watch("LeekWars.flex") toggleLarge() {
+			localStorage.setItem('fight/large', '' + LeekWars.flex)
 			this.$emit('resize')
 		}
 		@Watch("game.showCells") toggleCells() {

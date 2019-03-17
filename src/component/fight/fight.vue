@@ -77,6 +77,7 @@
 		playerWidth: number = 0
 		playerHeight: number = 0
 		FightType = FightType
+		large: boolean = false
 
 		created() {
 			this.update()
@@ -87,21 +88,25 @@
 		@Watch('$route.params.id')
 		update() {
 			this.fight_id = this.$route.params.id
+			if (localStorage.getItem('fight/large') === null) { localStorage.setItem('fight/large', 'true') }
+			LeekWars.flex = localStorage.getItem('fight/large') === 'true'
 		}
 
 		resize() {
 			Vue.nextTick(() => {
 				const RATIO = 1.7
-				const fight = document.querySelector('.fight') as HTMLElement
-				if (fight) {
-					this.playerWidth = Math.round(fight.offsetWidth)
-					this.playerHeight = Math.round(this.playerWidth / RATIO)
+				const reference = document.querySelector(LeekWars.flex ? '.app-center' : '.app-wrapper') as HTMLElement
+				const offset = LeekWars.flex ? 40 + 24 : 24
+				if (reference) {
+					const height = Math.min(window.innerHeight - 292, Math.round((reference.offsetWidth - offset) / RATIO))
+					this.playerWidth = Math.round(height * RATIO)
+					this.playerHeight = height
 				}
 			})
 		}
 
 		destroyed() {
-			LeekWars.large = false
+			LeekWars.flex = false
 		}
 
 		fightLoaded(fight: Fight) {

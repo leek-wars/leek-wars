@@ -132,6 +132,7 @@ const LeekWars = {
 	time: (Date.now() / 1000) | 0, 
 	timeSeconds: (Date.now() / 1000) | 0,
 	large: false,
+	flex: false,
 	setLocale(locale: string) {
 		document.cookie = "lang=" + locale
 		loadLanguageAsync(vueMain, locale)
