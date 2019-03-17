@@ -39,7 +39,7 @@
 		trophies: any = null
 		created() {
 			LeekWars.setTitle("Admin Trophies")
-			LeekWars.get<any>('trophy/get-admin/' + i18n.locale + '/' + this.$store.state.token + '/' + encodeURI(this.$store.state.supertoken)).then((data) => {
+			LeekWars.get<any>('trophy/get-admin/' + i18n.locale + '/' + this.$store.state.token).then((data) => {
 				this.trophies = data.trophies
 			})
 		}
