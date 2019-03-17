@@ -2,8 +2,6 @@ import { LeekWars } from '@/model/leekwars'
 import { vueMain } from '@/model/vue'
 import { store } from './store'
 
-const ENABLE_CHAT = 7
-
 enum SocketMessage {
 	TEAM_CHAT_SEND = 1,
 	TEAM_CHAT_RECEIVE = 2,
@@ -156,7 +154,7 @@ class Socket {
 		}
 	}
 	public enableChannel(channel: string) {
-		this.send([ENABLE_CHAT, channel])
+		this.send([SocketMessage.FORUM_CHAT_ENABLE, channel])
 	}
 	public disconnect() {
 		if (this.socket) { this.socket.close() }
