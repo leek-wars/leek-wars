@@ -128,9 +128,10 @@ class Bullet extends CollideParticle {
 class Laser extends Particle {
 	public width = 0
 	public texture: HTMLImageElement
-	constructor(game: Game, texture: Texture, x: number, y: number, z: number, angle: number, width: number) {
+	constructor(game: Game, texture: Texture, x: number, y: number, z: number, width: number, angle: number) {
 		super(game, x, y, z, LASER_LIFE)
 		this.texture = texture.texture
+		this.angle = angle
 		this.width = width
 	}
 	public draw(ctx: CanvasRenderingContext2D) {
