@@ -441,7 +441,9 @@
 		get trophies_grid() {
 			const grid: {[key: string]: any} = {}
 			for (const t in this.trophies) {
-				grid[t] = this.trophies[t].unlocked ? this.trophies[t] : null
+				if (this.trophies[t].category !== 6) {
+					grid[t] = this.trophies[t].unlocked ? this.trophies[t] : null
+				}
 			}
 			return grid
 		}
