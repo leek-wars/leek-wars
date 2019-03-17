@@ -135,12 +135,12 @@ const Commands = {
 		for (const fun of LeekWars.functions) {
 			const name = fun.name
 			if (!doneFunc[name]) {
-				docCommand.options.push({name: fun.name, description: "Ajoute un lien vers la fonction \"" + fun.name + "\" de la documentation au message"})
+				docCommand.options.push({name: fun.name, nameLower: fun.name.toLowerCase(), description: "Ajoute un lien vers la fonction \"" + fun.name + "\" de la documentation au message"})
 				doneFunc[name] = true
 			}
 		}
 		for (const constant of LeekWars.constants) {
-			docCommand.options.push({name: constant.name, description: "Ajoute un lien vers la constante \"" + constant.name + "\" de la documentation au message"})
+			docCommand.options.push({name: constant.name, nameLower: constant.name.toLowerCase(), description: "Ajoute un lien vers la constante \"" + constant.name + "\" de la documentation au message"})
 		}
 	},
 	addMarketCommands: () => {
@@ -149,19 +149,19 @@ const Commands = {
 		marketCommand.options = []
 		for (const w in LeekWars.weapons) {
 			const weapon = LeekWars.weapons[w]
-			marketCommand.options.push({name: weapon.name, description: "Ajoute un lien vers l'arme \"" + weapon.name + "\" du marché au message"})
+			marketCommand.options.push({name: weapon.name, nameLower: weapon.name.toLowerCase(), description: "Ajoute un lien vers l'arme \"" + weapon.name + "\" du marché au message"})
 		}
 		for (const c in LeekWars.chips) {
 			const chip = LeekWars.chips[c]
-			marketCommand.options.push({name: chip.name, description: "Ajoute un lien vers la puce \"" + chip.name + "\" du marché au message"})
+			marketCommand.options.push({name: chip.name, nameLower: chip.name.toLowerCase(), description: "Ajoute un lien vers la puce \"" + chip.name + "\" du marché au message"})
 		}
 		for (const key in LeekWars.potions) {
 			const potion = LeekWars.potions[key]
-			marketCommand.options.push({name: potion.name, description: "Ajoute un lien vers la potion \""  + potion.name + "\" du marché au message"})
+			marketCommand.options.push({name: potion.name, nameLower: potion.name.toLowerCase(), description: "Ajoute un lien vers la potion \""  + potion.name + "\" du marché au message"})
 		}
 		for (const key in LeekWars.hats) {
 			const hat = LeekWars.hats[key]
-			marketCommand.options.push({name: hat.name, description: "Ajoute un lien vers le chapeau \"" + hat.name + "\" du marché au message"})
+			marketCommand.options.push({name: hat.name, nameLower: hat.name.toLowerCase(), description: "Ajoute un lien vers le chapeau \"" + hat.name + "\" du marché au message"})
 		}
 	}
 }

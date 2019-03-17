@@ -30,7 +30,7 @@
 
 		@Watch('filter')
 		update() {
-			const parts = this.filter.split(':')
+			const parts = this.filter.toLowerCase().split(':')
 			const filterCommand = parts[0]
 			this.filterOptions = parts.length > 1 ? parts[1] : null
 			this.options = []
@@ -43,7 +43,7 @@
 					if (this.filterOptions === null) {
 						this.options = command.options
 					} else {
-						this.options = command.options.filter(option => option.name.indexOf(this.filterOptions || '') === 0)
+						this.options = command.options.filter(option => option.nameLower.indexOf(this.filterOptions || '') === 0)
 					}
 				}
 			}
