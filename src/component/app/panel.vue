@@ -142,6 +142,7 @@
 		padding: 0 10px;
 		cursor: pointer;
 		display: inline-flex;
+		user-select: none;
 	}
 	.header > .actions > div:last-child.button,
 	.header > .actions > a:last-child .button,
