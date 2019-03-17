@@ -112,7 +112,7 @@ const COMMANDS = [
 const Commands = {
 	commands: COMMANDS,
 	isCommand: (text: string) => {
-		const match = /\/(\w*(!|(:\w*))?)$/gi.exec(text)
+		const match = /(?:^|\s)\/(\w*(!|(:\w*))?)$/gi.exec(text)
 		if (match) {
 			const c = match[1].toLowerCase()
 			for (const command of COMMANDS) {
