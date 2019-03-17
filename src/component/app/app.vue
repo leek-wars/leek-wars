@@ -40,7 +40,7 @@
 			</div>
 		</div>
 		
-		<lw-social />
+		<lw-social v-if="$store.state.connected" />
 		
 		<lw-footer />
 
