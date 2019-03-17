@@ -30,7 +30,7 @@
 		</div>
 		
 		<div class="app-center">
-			<div :class="{large: LeekWars.large}" class="app-wrapper">
+			<div :class="{large: LeekWars.large || LeekWars.flex, flex: LeekWars.flex}" class="app-wrapper">
 				<lw-header />
 				<div class="page-wrapper">
 					<div class="page">
@@ -241,6 +241,7 @@
 	}
 	.app-center {
 		padding: 0 20px;
+		display: flex;
 	}
 	#app.connected .app-center {
 		margin-left: 170px;
@@ -251,9 +252,14 @@
 	.app-wrapper {
 		max-width: 1100px;
 		margin: 0 auto;
+		flex: 1;
 	}
 	.app-wrapper.large {
 		max-width: none;
+	}
+	.app-wrapper.flex {
+		display: inline-block;
+		flex: 0;
 	}
 	.big-leeks {
 		z-index: -10;
