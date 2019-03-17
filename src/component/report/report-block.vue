@@ -116,7 +116,7 @@
 			return this.leeks.reduce((sum: number, leek: any) => sum + leek.money, 0)
 		}
 		get totalTime() {
-			return this.leeks.reduce((sum: number, leek: any) => sum + leek.aiTime, 0)
+			return this.leeks.reduce((sum: number, leek: any) => sum + leek.aiTime, 0).toFixed(3)
 		}
 		get currentBar() {
 			const totalXP = this.team.next_xp - this.team.prev_xp
