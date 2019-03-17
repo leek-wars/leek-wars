@@ -3,7 +3,7 @@
 		<div class="page-header page-bar">
 			<h1><router-link to="/admin">Administration</router-link> > Mails d'activation</h1>
 		</div>
-		<panel>
+		<panel class="first last">
 			<loader v-if="!farmers" />
 			<table v-else>
 				<tr class="header">

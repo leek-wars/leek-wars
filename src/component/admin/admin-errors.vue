@@ -3,7 +3,7 @@
 		<div class="page-header page-bar">
 			<h1><router-link to="/admin">Administration</router-link> > Gestionnaire d'erreur</h1>
 		</div>
-		<panel>
+		<panel class="first last">
 			<div class="errors content">
 				<loader v-if="!errors" />
 				<div v-else>
@@ -23,7 +23,7 @@
 				</div>
 			</div>
 		</panel>
-
+		<!--
 		@view (ai_popup)
 		<div class="title">
 			AI <b>{ai.name}</b> #{ai.id}
@@ -36,6 +36,7 @@
 			<div class="action dismiss">OK</div>
 		</div>
 		@endview
+		-->
 	</div>
 </template>
 
