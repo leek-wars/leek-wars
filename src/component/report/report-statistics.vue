@@ -1,23 +1,23 @@
 <template>
 	<table v-if="statistics" id="statistics-table" class="report">
 		<tr>
-			<th>Poireau</th>
-			<th>Niveau</th>
-			<th>Dégats reçus</th>
-			<th>Dégats infligés</th>
-			<th>Soins reçus</th>
-			<th>Soins lancés</th>
-			<th>Kills</th>
-			<th>PT utilisés</th>
-			<th>PT/tour utilisés</th>
-			<th>PM utilisés</th>
-			<th>Tours joués</th>
-			<th>Tirs</th>
-			<th>Puces utilisées</th>
-			<th>Invoc.</th>
-			<th>Retours à la vie</th>
-			<th>CC</th>
-			<th>Bugs</th>
+			<th>{{ $t('report.leek') }}</th>
+			<th>{{ $t('report.level') }}</th>
+			<th>{{ $t('report.damage_received') }}</th>
+			<th>{{ $t('report.damage_inflicted') }}</th>
+			<th>{{ $t('report.heal_received') }}</th>
+			<th>{{ $t('report.heal_casted') }}</th>
+			<th>{{ $t('report.kills') }}</th>
+			<th>{{ $t('report.tp_used') }}</th>
+			<th>{{ $t('report.tp_per_turn') }}</th>
+			<th>{{ $t('report.mp_used') }}</th>
+			<th>{{ $t('report.turns_played') }}</th>
+			<th>{{ $t('report.shootings') }}</th>
+			<th>{{ $t('report.chips_used') }}</th>
+			<th>{{ $t('report.summons') }}</th>
+			<th>{{ $t('report.resurrections') }}</th>
+			<th>{{ $t('report.criticals') }}</th>
+			<th>{{ $t('report.bugs') }}</th>
 		</tr>
 		<tr>
 			<td colspan="17" class="header"><b>{{ $t('report.team1') }}</b></td>
