@@ -51,7 +51,7 @@
 				if (data.success) {
 					this.$router.push('/leek/' + data.id)
 				} else {
-					this.error = this.$t(data.error, data.params) as string
+					this.error = this.$t('leek.error_' + data.error, data.params) as string
 				}
 			})
 		}
