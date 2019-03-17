@@ -51,6 +51,7 @@
 		margin: 0 auto;
 		padding: 15px;
 		max-width: 700px;
+		width: 100%;
 	}
 	.comments {
 		padding: 3px;
