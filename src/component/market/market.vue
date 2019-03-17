@@ -81,11 +81,11 @@
 						<div class="buy-buttons">
 							<div v-if="selectedItem.price_habs > 0">
 								<h4 class="buy-label">{{ $t('buy') }}</h4>&nbsp;
-								<v-btn :class="{disabled: $store.state.farmer && $store.state.farmer.habs < selectedItem.price_habs}" class="buy-button" @click="openBuyHabs">{{ selectedItem.price_habs | number }}<img src="/image/hab.png"></v-btn>
+								<v-btn :disabled="$store.state.farmer && $store.state.farmer.habs < selectedItem.price_habs" class="buy-button" @click="openBuyHabs">{{ selectedItem.price_habs | number }}<img src="/image/hab.png"></v-btn>
 							</div>
 							<div v-if="selectedItem.price_crystals > 0">
 								<h4 class="buy-label">{{ $t('buy') }}</h4>&nbsp;
-								<v-btn :class="{disabled: $store.state.farmer && $store.state.farmer.crystals < selectedItem.price_crystals}" class="buy-crystals-button" @click="openBuyCrystals">{{ selectedItem.price_crystals | number }}<img src="/image/crystal.png"></v-btn>
+								<v-btn :disabled="$store.state.farmer && $store.state.farmer.crystals < selectedItem.price_crystals" class="buy-crystals-button" @click="openBuyCrystals">{{ selectedItem.price_crystals | number }}<img src="/image/crystal.png"></v-btn>
 							</div>
 							<template v-if="selectedItem.sellable && selectedItem.farmer_count > 0">
 								<div class="sell">
