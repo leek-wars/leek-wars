@@ -49,27 +49,46 @@
 				</div>
 				<center class="buttons">
 					<router-link :to="'/fight/' + fight.id">
-						<v-btn>{{ $t('rewatch_fight') }}</v-btn>
+						<v-btn>
+							<i class="material-icons">replay</i>&nbsp;
+							{{ $t('rewatch_fight') }}
+						</v-btn>
 					</router-link>
 					<span v-if="$store.state.connected">
 						<router-link v-if="fight.context === FightContext.GARDEN" to="/garden">
-							<v-btn>{{ $t('back_to_garden') }}</v-btn>
+							<v-btn>
+								<i class="material-icons">undo</i>&nbsp;
+								{{ $t('back_to_garden') }}
+							</v-btn>
 						</router-link>
 						<span v-else-if="fight.context == FightContext.TEST">
 							<router-link to="/editor">
-								<v-btn>{{ $t('back_to_editor') }}</v-btn>
+								<v-btn>
+									<i class="material-icons">undo</i>&nbsp;
+									{{ $t('back_to_editor') }}
+								</v-btn>
 							</router-link>
-							<v-btn @click="refight">{{ $t('refight') }}</v-btn>
+							<v-btn @click="refight">
+								<i class="material-icons">undo</i>&nbsp;
+								{{ $t('refight') }}
+							</v-btn>
 						</span>
 						<span v-else-if="fight.context == FightContext.TOURNAMENT">
 							<router-link :to="'/tournament/' + fight.tournament">
-								<v-btn>{{ $t('back_to_tournament') }}</v-btn>
+								<v-btn>
+									<i class="material-icons">undo</i>&nbsp;
+									{{ $t('back_to_tournament') }}
+								</v-btn>
 							</router-link>
 						</span>
 						<span v-else-if="fight.context == FightContext.CHALLENGE">
 							<router-link v-if="myFight" :to="'/garden/challenge/' + ['leek', 'farmer'][fight.type] + '/' + enemy">
-								<v-btn v-if="iWin">{{ $t('refight') }}</v-btn>
+								<v-btn v-if="iWin">
+									<i class="material-icons">undo</i>&nbsp;
+									{{ $t('refight') }}
+								</v-btn>
 								<v-btn v-else>
+									<i class="material-icons">undo</i>&nbsp;
 									<span v-html="$t('take_revenge')"></span>
 								</v-btn>
 							</router-link>
