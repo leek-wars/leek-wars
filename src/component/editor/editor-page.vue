@@ -431,9 +431,11 @@
 							ai.valid = true
 							editor.removeErrors()
 						} else if (code === 1) {
+							this.testDialog = false
 							this.errors.push({ai: ai.name, error: res[2], line: res[3]})
 							ai.valid = false
 						} else if (code === 0) {
+							this.testDialog = false
 							const line = res[3]
 							let info = res[5]
 							if (res.length === 8) {
@@ -513,6 +515,8 @@
 			})
 		}
 		test() {
+			// Save the current ai and open the testDialogBox. Close it if ai doesn't compile
+			this.save()
 			this.testDialog = true
 		}
 		help() {
