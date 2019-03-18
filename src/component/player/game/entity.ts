@@ -339,7 +339,9 @@ class Entity {
 
 	public buffRelativeShield(relativeShield: number, jump: boolean) {
 		this.relativeShield += relativeShield
-		if (!jump) { this.newInfoText("+" + relativeShield + '%', Colors.SHIELD_COLOR) }
+		if (!jump) {
+			this.newInfoText((relativeShield >= 0 ? "+" : "") + relativeShield + '%', Colors.SHIELD_COLOR)
+		}
 	}
 
 	public buffAbsoluteShield(absoluteShield: number, jump: boolean) {
