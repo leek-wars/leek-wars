@@ -2,6 +2,12 @@
 	<div>
 		<div class="page-bar page-header">
 			<h1>{{ loaded ? title : '...' }}</h1>
+			<div class="tabs">
+				<div class="tab" @click="hide_unlocked = !hide_unlocked">
+					<span>{{ $t('hide_unlocked') }}</span>
+					<v-switch :input-value="hide_unlocked" hide-details />
+				</div>
+			</div>
 		</div>
 		<panel class="first">
 			<span class="global-percent">{{ loaded ? Math.floor(100 * count / total) : 0 }}%</span>
@@ -11,7 +17,7 @@
 				<div :style="{width: (loaded ? Math.floor(100 * count / total) : 0) + '%'}" class="bar striked"></div>
 			</div>
 		</panel>
-		<panel v-for="category in categories" v-if="category.id != 6 || progressions[6] != 0" :key="category.id">
+		<panel v-for="category in categories" :key="category.id">
 			<h2 slot="title">{{ $t('category_' + category.name) }}</h2> 
 
 			<template v-if="category.id != 6" slot="actions">
@@ -25,7 +31,7 @@
 			</template>
 			<loader v-show="!loaded" slot="content" />
 			<div v-if="loaded" slot="content" class="trophies">
-				<div v-for="trophy in trophies[category.id]" v-if="category.id != 6 || trophy.unlocked" :key="trophy.id" :class="{unlocked: trophy.unlocked, locked: !trophy.unlocked, card: trophy.unlocked}" class="trophy">
+				<div v-for="trophy in trophies[category.id]" :key="trophy.id" :class="{unlocked: trophy.unlocked, locked: !trophy.unlocked, card: trophy.unlocked}" class="trophy">
 					<img :src="'/image/trophy/big/' + trophy.code + '.png'" class="image">
 					<div class="name">{{ trophy.name }}</div>
 					<div class="description">{{ trophy.description }}</div>
@@ -47,17 +53,28 @@
 
 	@Component({ name: 'trophies', i18n: {} })
 	export default class Trophies extends Vue {
-		trophies: {[key: number]: any} = {}
+		raw_trophies: {[key: number]: any} = {}
 		progressions: {[key: number]: number} = {}
 		totals: {[key: number]: number} = {}
-		categories = LeekWars.trophyCategories
+		raw_categories = LeekWars.trophyCategories
 		count: number = 0
 		total: number = 0
 		title: any = null
 		loaded: boolean = false
+		hide_unlocked: boolean = localStorage.getItem('options/hide-unlocked-trophies') === 'true'
 
 		get id() {
 			return this.$route.params.id || (this.$store.state.farmer ? this.$store.state.farmer.id : null)
+		}
+		get categories() {
+			return this.raw_categories.filter(c => (c.id != 6 || this.progressions[6] != 0) && (!this.loaded || this.trophies[c.id].length))
+		}
+		get trophies() {
+			const result: {[key: number]: any} = {}
+			for (const category in this.raw_trophies) {
+				result[category] = this.raw_trophies[category].filter((t: any) => (category !== '6' || t.unlocked) && (!this.hide_unlocked || !t.unlocked))
+			}
+			return result
 		}
 		@Watch('id', {immediate: true})
 		update() {
@@ -67,21 +84,21 @@
 			this.title = null
 			if (!this.id) { return }
 			LeekWars.trophyCategories.forEach((c) => {
-				this.trophies[c.id] = []
+				Vue.set(this.raw_trophies, c.id, [])
 				this.progressions[c.id] = 0
 				this.totals[c.id] = 0
 			})
 			LeekWars.get('trophy/get-farmer-trophies/' + this.id + '/' + this.$i18n.locale).then(data => {
 				for (const t in data.trophies) {
 					const trophy = data.trophies[t]
-					this.trophies[trophy.category].push(trophy)
+					this.raw_trophies[trophy.category].push(trophy)
 					this.totals[trophy.category]++
 					if (trophy.unlocked) {
 						this.progressions[trophy.category]++
 					}
 				}
-				for (const category in this.trophies) {
-					this.trophies[category].sort((a: any, b: any) => {
+				for (const category in this.raw_trophies) {
+					this.raw_trophies[category].sort((a: any, b: any) => {
 						return a.index - b.index
 					})
 				}
@@ -102,6 +119,10 @@
 				this.loaded = true
 			})
 		}
+		@Watch('hide_unlocked')
+		public updateHideUnlocked() {
+			localStorage.setItem('options/hide-unlocked-trophies', this.hide_unlocked ? 'true' : 'false')
+		}
 	}
 </script>
 
@@ -111,6 +132,10 @@
 	}
 	.content:not(.first) {
 		padding: 8px;
+	}
+	.v-input--switch {
+		margin-left: 8px;
+		margin-right: -12px;
 	}
 	.global-percent {
 		font-size: 40px;
