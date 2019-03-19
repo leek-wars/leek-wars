@@ -238,19 +238,6 @@
 				line.classList.remove('line-error')
 			})
 		}
-		public test() {
-			// Save before
-			if (this.ai.modified) {
-				this.needTest = true
-				// this.save()
-				return
-			}
-			// Sauvegardé et erreur, on teste pas ça !
-			if (this.error && !this.ai.v2) {
-				return
-			}
-			// LeekWars.pages.editor.test(_testEvent)
-		}
 		public cursorChange() {
 			const cursor = this.document.getCursor()
 			if (!this.pos) {
