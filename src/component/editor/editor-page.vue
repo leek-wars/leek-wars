@@ -451,7 +451,9 @@
 				this.currentEditor.updateFunctions()
 				if (this.currentEditor.needTest) {
 					this.currentEditor.needTest = false
-					this.currentEditor.test()
+					if (this.currentEditor.ai.valid) {
+						this.test()
+					}
 				}
 			}).error(() => {
 				if (this.currentEditor === null) { return }
@@ -514,6 +516,12 @@
 			})
 		}
 		test() {
+			if (!this.currentAI || !this.currentEditor) { return }
+			if (this.currentAI.modified) {
+				this.currentEditor.needTest = true
+				this.save()
+				return
+			}
 			this.testDialog = true
 		}
 		help() {
