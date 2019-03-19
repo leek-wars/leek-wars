@@ -250,8 +250,11 @@
 			})
 			this.$root.$on('back', () => {
 				localStorage.removeItem('garden/category')
-				this.$router.push('/garden')
+				this.$router.back()
 			})
+		}
+		beforeDestroy() {
+			this.$root.$off('back')
 		}
 
 		@Watch('$route.params')
