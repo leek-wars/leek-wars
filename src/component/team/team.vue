@@ -476,6 +476,7 @@
 					if (this.team) {
 						LeekWars.toast(this.$t('team.upload_success') as string)
 						this.team.emblem_changed = LeekWars.time
+						this.$store.commit('update-emblem')
 					}
 				} else {
 					LeekWars.toast(this.$t('team.upload_failed', [data.error]) as string)
