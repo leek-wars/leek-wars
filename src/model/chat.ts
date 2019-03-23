@@ -11,6 +11,13 @@ class ChatMessage {
 	time!: number
 }
 
+class ChatWindow {
+	name!: string
+	type!: ChatType
+	title!: string
+	expanded: boolean = true
+}
+
 class Chat {
 	name: string
 	type: ChatType
@@ -54,4 +61,4 @@ class Chat {
 	}
 }
 
-export { Chat, ChatType, ChatMessage }
+export { Chat, ChatType, ChatMessage, ChatWindow }

@@ -163,7 +163,30 @@
 		}
 		@Watch('channel')
 		update() {
-			LeekWars.socket.enableChannel(this.channel)
+			if (this.channel === 'team') {
+				if (!this.$store.state.chat.team) {
+					this.$store.commit('init-team-chat')
+					LeekWars.socket.send([SocketMessage.TEAM_CHAT_ENABLE])
+				}
+			} else if (this.channel.startsWith('pm-')) {
+				const id = parseInt(this.channel.replace('pm-', ''), 10)
+				if (!this.$store.state.chat['pm-' + id]) {
+					if (id === 0) { return }
+					LeekWars.get<any>('message/get-messages/' + id + '/' + 50 + '/' + 1 + '/' + this.$store.state.token).then((data) => {
+						if (data.success) {
+							for (const message of data.messages.reverse()) {
+								this.$store.commit('pm-receive', {message: [id, message.farmer_id, message.farmer_name, message.content, false, message.farmer_color, message.avatar_changed, message.date]})
+							}
+							for (const farmer of data.farmers) {
+								this.$store.commit('add-conversation-participant', {id, farmer})
+							}
+							// this.conversationRead()
+						}
+					})
+				}
+			} else {
+				LeekWars.socket.enableChannel(this.channel)
+			}
 		}
 		sendMessage(message: any) {
 			if (message.startsWith('/ping')) {
