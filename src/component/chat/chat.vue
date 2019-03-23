@@ -21,9 +21,9 @@
 							<span :class="message.author.grade">{{ message.author.name }}</span>
 						</router-link>
 						<div v-large-emojis v-latex v-for="(text, i) in message.texts" :key="i" class="text" v-html="text"></div>
-						<div :title="LeekWars.formatDateTime(message.time)" class="time">
-							{{ LeekWars.formatTime(message.time) }}
-							<v-menu v-if="!privateMessages" offset-y>
+						<div class="right">
+							<span :title="LeekWars.formatDateTime(message.time)" class="time">{{ LeekWars.formatTime(message.time) }}</span>
+							<v-menu v-if="!privateMessages" offset-y lazy>
 								<v-btn slot="activator" flat small icon color="grey">
 									<v-icon>more_vert</v-icon>
 								</v-btn>
@@ -290,6 +290,7 @@
 	}
 	.author {
 		font-weight: 500;
+		display: block;
 		padding-bottom: 2px;
 		padding-right: 60px;
 	}
@@ -302,15 +303,18 @@
 		height: 30px;
 		margin: 3px 0;
 	}
-	.time {
+	.right {
 		font-size: 13px;
 		position: absolute;
-		top: 1px;
+		top: 3px;
 		right: 0;
+		.time {
+			padding-right: 4px;
+		}
 		.v-btn {
 			margin: 0;
-			margin-top: -1px;
-			margin-left: -3px;
+			margin-top: -3px;
+			margin-left: -5px;
 			height: 24px;
 			width: 24px;
 		}
