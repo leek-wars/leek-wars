@@ -47,6 +47,11 @@
 							</v-list>
 						</v-menu>
 					</h2>
+					<div slot="actions">
+						<div class="button flat">
+							<i class="material-icons" @click="LeekWars.addChat(chatLanguage.code, ChatType.GLOBAL, 'Chat ' + chatLanguage.code.toUpperCase())">picture_in_picture_alt</i>
+						</div>
+					</div>
 					<chat slot="content" :channel="chatLanguage.code" />
 				</panel>
 			</div>
@@ -55,12 +60,14 @@
 </template>
 
 <script lang='ts'>
+	import { ChatType } from '@/model/chat'
 	import { Language, LeekWars } from '@/model/leekwars'
 	import { Notification } from '@/model/notification'
 	import { Component, Vue } from 'vue-property-decorator'
 
 	@Component({ name: 'lw-social' })
 	export default class Social extends Vue {
+		ChatType = ChatType
 		chatLanguage: Language | null = null
 		panelWidth: number = 400
 		created() {

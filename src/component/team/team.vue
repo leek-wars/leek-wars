@@ -107,6 +107,11 @@
 		</div>
 
 		<panel v-if="member" :title="$t('chat')" toggle="team/chat">
+			<div slot="actions">
+				<div class="button flat">
+					<i class="material-icons" @click="LeekWars.addChat('team', ChatType.TEAM, team.name)">picture_in_picture_alt</i>
+				</div>
+			</div>
 			<chat slot="content" channel="team" />
 		</panel>
 
@@ -366,6 +371,7 @@
 </template>
 
 <script lang="ts">
+	import { ChatType } from '@/model/chat'
 	import { Farmer } from '@/model/farmer'
 	import { Leek } from '@/model/leek'
 	import { LeekWars } from '@/model/leekwars'
@@ -376,6 +382,7 @@
 
 	@Component({ name: 'team', i18n: {} })
 	export default class TeamPage extends Vue {
+		ChatType = ChatType
 		team: Team | null = null
 		captain: boolean = false
 		owner: boolean = false
@@ -444,13 +451,7 @@
 					}
 				}
 				this.captain = teamCaptain
-
 				LeekWars.setTitle(this.team.name)
-
-				if (this.member && !this.$store.state.chat.team) {
-					this.$store.commit('init-team-chat')
-					LeekWars.socket.send([SocketMessage.TEAM_CHAT_ENABLE])
-				}
 				this.$root.$emit('loaded')
 			})
 		}

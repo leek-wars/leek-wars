@@ -44,7 +44,7 @@
 		
 		<lw-footer />
 
-		<battle-royale />
+		<chats />
 		<squares />
 		
 		<div class="toasts"></div>
@@ -73,7 +73,7 @@
 
 <script lang='ts'>
 	import Bar from '@/component/app/bar.vue'
-	import BattleRoyale from '@/component/app/battle-royale.vue'
+	import Chats from '@/component/app/chats.vue'
 	import Console from '@/component/app/console.vue'
 	import Footer from '@/component/app/footer.vue'
 	import Header from '@/component/app/header.vue'
@@ -87,7 +87,7 @@
 	import { Component, Vue } from 'vue-property-decorator'
 
 	@Component({
-		components: {'lw-bar': Bar, 'lw-footer': Footer, 'lw-header': Header, 'lw-menu': Menu, 'lw-social': Social, Console, BattleRoyale, Squares, Didactitiel}
+		components: {'lw-bar': Bar, 'lw-footer': Footer, 'lw-header': Header, 'lw-menu': Menu, 'lw-social': Social, Console, Squares, Didactitiel, Chats}
 	})
 	export default class App extends Vue {
 		didactitiel: boolean = false
@@ -334,6 +334,9 @@
 	@media screen and (min-width: 1600px) {
 		#app.connected:not(.social-collapsed):not(.app) .app-center {
 			margin-right: 400px;
+		}
+		#app.connected:not(.social-collapsed):not(.app) .chats {
+			padding-right: 400px;
 		}
 		#app.connected.social-collapsed .app-center {
 			margin-right: 30px;

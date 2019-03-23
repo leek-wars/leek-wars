@@ -3,6 +3,9 @@
 		<div class="page-header page-bar">
 			<h1>{{ $t('title') }}</h1>
 			<div class="tabs">
+				<div class="tab action content" icon="delete" @click="LeekWars.addChat('pm-' + currentID, ChatType.PM, getConversationName())">
+					<i class="material-icons">picture_in_picture_alt</i>
+				</div>
 				<div class="tab action content" icon="delete" @click="quitDialog = true">
 					<i class="material-icons">delete</i>
 					<span>{{ $t('quit') }}</span>
@@ -41,7 +44,7 @@
 </template>
 
 <script lang="ts">
-	import { Chat } from '@/model/chat'
+	import { Chat, ChatType } from '@/model/chat'
 	import { Conversation } from '@/model/conversation'
 	import { Farmer } from '@/model/farmer'
 	import { LeekWars } from '@/model/leekwars'
@@ -50,6 +53,7 @@
 
 	@Component({ name: 'messages', i18n: {} })
 	export default class Messages extends Vue {
+		ChatType = ChatType
 		_newConversation: Conversation | null = null
 		_newFarmer: any = null
 		newConversationSent: boolean = false
@@ -127,20 +131,6 @@
 				LeekWars.setTitle(this.getConversationName())
 			} else {
 				LeekWars.setTitle(this.$i18n.t('messages.title'))
-			}
-			if (!this.$store.state.chat['pm-' + id]) {
-				if (id === 0) { return }
-				LeekWars.get<any>('message/get-messages/' + id + '/' + 50 + '/' + 1 + '/' + this.$store.state.token).then((data) => {
-					if (data.success) {
-						for (const message of data.messages.reverse()) {
-							this.$store.commit('pm-receive', {message: [id, message.farmer_id, message.farmer_name, message.content, false, message.farmer_color, message.avatar_changed, message.date]})
-						}
-						for (const farmer of data.farmers) {
-							this.$store.commit('add-conversation-participant', {id, farmer})
-						}
-						this.conversationRead()
-					}
-				})
 			}
 		}
 		getConversationName() {

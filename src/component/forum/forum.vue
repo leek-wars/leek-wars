@@ -106,18 +106,25 @@
 					</v-list>
 				</v-menu>
 			</h2>
+			<div slot="actions">
+				<div class="button flat">
+					<i class="material-icons" @click="LeekWars.addChat(chatLanguage.code, ChatType.GLOBAL, 'Chat ' + chatLanguage.code.toUpperCase())">picture_in_picture_alt</i>
+				</div>
+			</div>
 			<chat slot="content" :channel="chatLanguage.code" />
 		</panel>
 	</div>
 </template>
 
 <script lang="ts">
+	import { ChatType } from '@/model/chat'
 	import { Farmer } from '@/model/farmer'
 	import { Language, LeekWars } from '@/model/leekwars'
 	import { Component, Vue } from 'vue-property-decorator'
 	
 	@Component({ name: 'forum', i18n: {} })
 	export default class Forum extends Vue {
+		ChatType = ChatType
 		categories: any = null
 		connected_farmers: Farmer[] = []
 		chatLanguage: Language | null = null

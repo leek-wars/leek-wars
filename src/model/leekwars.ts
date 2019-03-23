@@ -14,6 +14,7 @@ import { WeaponTemplate } from '@/model/weapon'
 import CodeMirror from 'codemirror'
 import twemoji from 'twemoji'
 import { TranslateResult } from 'vue-i18n'
+import { ChatType, ChatWindow } from './chat'
 import { i18n, loadLanguageAsync } from './i18n'
 
 const MONTHS: { [key: string]: string[] } = {
@@ -410,6 +411,22 @@ const LeekWars = {
 			if (item === LeekWars.hatTemplates[t].item) { return parseInt(t, 10) }
 		}
 		return 0
+	},
+	chatWindows: [] as ChatWindow[],
+	initChats() {
+		LeekWars.chatWindows = JSON.parse(localStorage.getItem('chats') || '[]')
+	},
+	addChat(name: string, type: ChatType, title: string) {
+		for (const window of LeekWars.chatWindows) {
+			if (window.name === name) {
+				window.expanded = true
+				return
+			}
+		}
+		LeekWars.chatWindows.push({name, type, title, expanded: true})
+	},
+	removeChat(i: number) {
+		LeekWars.chatWindows.splice(i, 1)
 	},
 	get_cursor_position, set_cursor_position,
 	formatDate, formatDateTime, formatDuration, formatTime, formatTimeSeconds, formatDayMonthShort, formatEmojis,

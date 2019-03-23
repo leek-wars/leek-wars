@@ -215,6 +215,7 @@ const vueMain = new Vue({
 
 		LeekWars.sfwInit()
 		LeekWars.setFavicon()
+		LeekWars.initChats()
 		
 		// Keep connected
 		setInterval(() => {
