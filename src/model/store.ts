@@ -370,6 +370,11 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			if (state.farmer) {
 				state.farmer.team = null
 			}
+		},
+		'update-emblem'(state: LeekWarsState) {
+			if (state.farmer && state.farmer.team) {
+				state.farmer.team.emblem_changed = Date.now() / 1000
+			}
 		}
 	},
 })
