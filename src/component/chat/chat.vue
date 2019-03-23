@@ -217,6 +217,8 @@
 <style lang="scss" scoped>
 	.chat {
 		position: relative;
+		display: flex;
+		flex-direction: column;
 	}
 	.loader {
 		height: calc(100% - 100px);
