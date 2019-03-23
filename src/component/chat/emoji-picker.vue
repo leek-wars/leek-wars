@@ -1,5 +1,5 @@
 <template>
-	<v-menu :close-on-content-click="false" :nudge-width="width" :left="true" :nudge-top="0" :min-width="width" :max-width="width" top offset-y @input="open">
+	<v-menu :close-on-content-click="false" :nudge-width="width" :left="true" :nudge-top="0" :min-width="width" :max-width="width" top offset-y lazy @input="open">
 		<div v-ripple slot="activator" class="chat-input-emoji">
 			<img src="https://twemoji.maxcdn.com/2/svg/1f603.svg">
 		</div>

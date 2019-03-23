@@ -3,7 +3,7 @@
 		<div class="page-header page-bar">
 			<div>
 				<h1>{{ $t('title') }}</h1>
-				<v-menu offset-y class="forum-language info">
+				<v-menu offset-y lazy class="forum-language info">
 					<div slot="activator">
 						<img :src="forumLanguage.flag" class="flag">
 						<img width="10" src="/image/selector.png">
@@ -94,7 +94,7 @@
 		<panel class="last">
 			<h2 slot="title">
 				<router-link to="/chat">{{ $t('chat') }}</router-link>
-				<v-menu offset-y>
+				<v-menu offset-y lazy>
 					<img slot="activator" :src="chatLanguage.flag" class="language-button">
 					<v-list :dense="true">
 						<v-list-tile v-for="(language, i) in LeekWars.languages" :key="i" @click="chatLanguage = language">
