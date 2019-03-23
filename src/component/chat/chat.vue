@@ -44,19 +44,19 @@
 
 		<report-dialog v-if="reportFarmer" v-model="reportDialog" :name="reportFarmer.name" :target="reportFarmer.id" :reasons="reasons" :parameter="reportContent" />
 
-		<v-dialog v-if="muteFarmer" v-model="muteDialog" :max-width="600">
+		<v-dialog v-model="muteDialog" :max-width="600">
 			<div class="title">{{ $t('moderation.mute') }}</div>
-			<div class="content">{{ $t('moderation.mute_popup', [muteFarmer.name]) }}</div>
+			<div v-if="muteFarmer" class="content">{{ $t('moderation.mute_popup', [muteFarmer.name]) }}</div>
 			<div class="actions">
-				<div class="dismiss">{{ $t('moderation.cancel') }}</div>
+				<div @click="muteDialog = false">{{ $t('moderation.cancel') }}</div>
 				<div class="mute red" @click="muteConfirm">{{ $t('moderation.confirm') }}</div>
 			</div>
 		</v-dialog>
-		<v-dialog v-if="muteFarmer" v-model="unmuteDialog" :max-width="600">
+		<v-dialog v-model="unmuteDialog" :max-width="600">
 			<div class="title">{{ $t('moderation.unmute') }}</div>
-			<div class="content">{{ $t('moderation.unmute_popup', [muteFarmer.name]) }}</div>
+			<div v-if="muteFarmer" class="content">{{ $t('moderation.unmute_popup', [muteFarmer.name]) }}</div>
 			<div class="actions">
-				<div class="dismiss">{{ $t('moderation.cancel') }}</div>
+				<div @click="unmuteDialog = false">{{ $t('moderation.cancel') }}</div>
 				<div class="unmute red" @click="unmuteConfirm">{{ $t('moderation.confirm') }}</div>
 			</div>
 		</v-dialog>
