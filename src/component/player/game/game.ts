@@ -13,7 +13,7 @@ import { Axe, BLaser, Broadsword, Destroyer, DoubleGun, Electrisor, FlameThrower
 import { Action, ActionType } from '@/model/action'
 import { Area } from '@/model/area'
 import { EffectType } from '@/model/effect'
-import { FightData, TEAM_COLORS } from '@/model/fight'
+import { Fight, FightData, TEAM_COLORS } from '@/model/fight'
 import { i18n } from '@/model/i18n'
 import { LeekWars } from '@/model/leekwars'
 
@@ -255,8 +255,8 @@ class Game {
 		}
 	}
 
-	public init(fightData: FightData) {
-		this.data = fightData
+	public init(fight: Fight) {
+		this.data = fight.data
 
 		// Check data
 		if (this.data == null) {
@@ -294,9 +294,9 @@ class Game {
 				entity.name = i18n.t('entity.' + entity.name) as string
 			}
 
-			entity.farmer = 0
+			entity.farmer = null
 			if (typeof(e.farmer) !== 'undefined') {
-				entity.farmer = e.farmer
+				entity.farmer = (entity.team === 1 ? fight.farmers1 : fight.farmers2)[e.farmer]
 			}
 
 			////// Stats
