@@ -52,7 +52,7 @@
 						<v-btn v-else-if="category === 'farmer'" @click="goToMyRanking">{{ $t('my_farmer') }}</v-btn>
 						<v-btn v-else-if="category === 'team' && $store.state.farmer.team" @click="goToMyRanking">{{ $t('my_team') }}</v-btn>
 					</div>
-					<v-switch class="inactives" v-model="activeSwitch" label="Masquer inactifs" @change="toggleInactives" />
+					<v-switch v-model="activeSwitch" class="inactives" label="Masquer inactifs" @change="toggleInactives" />
 				</div>
 				<div class="scroll-x">
 					<table v-if="category === 'leek'" class="ranking large">
