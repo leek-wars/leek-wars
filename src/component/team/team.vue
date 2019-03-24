@@ -108,7 +108,7 @@
 
 		<panel v-if="member" :title="$t('chat')" toggle="team/chat">
 			<div slot="actions">
-				<div class="button flat">
+				<div v-if="!LeekWars.mobile" class="button flat">
 					<i class="material-icons" @click="LeekWars.addChat('team', ChatType.TEAM, team.name)">picture_in_picture_alt</i>
 				</div>
 			</div>
