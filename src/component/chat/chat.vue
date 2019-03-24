@@ -180,7 +180,7 @@
 							for (const farmer of data.farmers) {
 								this.$store.commit('add-conversation-participant', {id, farmer})
 							}
-							// this.conversationRead()
+							LeekWars.socket.send([SocketMessage.MP_READ, id])
 						}
 					})
 				}
