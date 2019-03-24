@@ -163,6 +163,7 @@
 		}
 		@Watch('channel')
 		update() {
+			if (!this.channel) { return }
 			if (this.channel === 'team') {
 				if (!this.$store.state.chat.team) {
 					this.$store.commit('init-team-chat')
