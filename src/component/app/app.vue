@@ -75,11 +75,11 @@
 <script lang='ts'>
 	import Bar from '@/component/app/bar.vue'
 	import Chats from '@/component/app/chats.vue'
-	import MobileBR from '@/component/app/mobile-br.vue'
 	import Console from '@/component/app/console.vue'
 	import Footer from '@/component/app/footer.vue'
 	import Header from '@/component/app/header.vue'
 	import Menu from '@/component/app/menu.vue'
+	import MobileBR from '@/component/app/mobile-br.vue'
 	import Social from '@/component/app/social.vue'
 	import Squares from '@/component/app/squares.vue'
 	import Didactitiel from '@/component/help/didactitiel.vue'
