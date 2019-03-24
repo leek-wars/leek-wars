@@ -107,8 +107,8 @@
 				</v-menu>
 			</h2>
 			<div slot="actions">
-				<div v-if="!LeekWars.mobile" class="button flat">
-					<i class="material-icons" @click="LeekWars.addChat(chatLanguage.code, ChatType.GLOBAL, 'Chat ' + chatLanguage.code.toUpperCase())">picture_in_picture_alt</i>
+				<div v-if="!LeekWars.mobile" class="button flat" @click="LeekWars.addChat(chatLanguage.code, ChatType.GLOBAL, 'Chat ' + chatLanguage.code.toUpperCase())">
+					<i class="material-icons">picture_in_picture_alt</i>
 				</div>
 			</div>
 			<chat slot="content" :channel="chatLanguage.code" />
