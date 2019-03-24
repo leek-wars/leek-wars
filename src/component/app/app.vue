@@ -1,5 +1,5 @@
 <template>
-	<div id="app" :class="{ connected: $store.state.connected, app: LeekWars.mobile, 'social-collapsed': LeekWars.socialCollapsed, 'menu-expanded': LeekWars.menuExpanded, sfw: LeekWars.sfw, 'menu-collapsed': LeekWars.menuCollapsed }" data-app="true" @mousemove="consoleMouseMove" @mouseup="consoleMouseUp">
+	<div id="app" :class="{ connected: $store.state.connected, app: LeekWars.mobile, 'social-collapsed': LeekWars.socialCollapsed, 'menu-expanded': LeekWars.menuExpanded, sfw: LeekWars.sfw, 'menu-collapsed': !LeekWars.mobile && LeekWars.menuCollapsed }" data-app="true" @mousemove="consoleMouseMove" @mouseup="consoleMouseUp">
 	
 		<div :class="{visible: LeekWars.dark > 0}" :style="{opacity: LeekWars.dark}" class="dark" @click="darkClick"></div>
 	
