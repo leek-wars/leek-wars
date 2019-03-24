@@ -94,14 +94,14 @@
 								</div>
 							</template>
 						</div>
-						<template v-if="selectedItem.leek_objs.length">
+						<div v-if="selectedItem.leek_objs.length">
 							<div><b>{{ $t('equipped_on') }}</b></div>
 							<div class="leeks">
 								<router-link v-for="leek in selectedItem.leek_objs" :key="leek.id" :to="'/leek/' + leek.id">
 									<span class="leek">{{ leek.name }}</span>
 								</router-link>
 							</div>
-						</template>
+						</div>
 					</div>
 				</panel>
 			</div>
