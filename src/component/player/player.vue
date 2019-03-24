@@ -105,7 +105,7 @@
 									</div>
 								</v-switch>
 							</v-list-tile>
-							<v-list-tile v-ripple>
+							<v-list-tile v-ripple v-if="!LeekWars.mobile">
 								<v-switch v-model="LeekWars.flex" :label="$t('fight.enlarge_fight')" hide-details />
 							</v-list-tile>
 							<v-list-tile v-ripple>
