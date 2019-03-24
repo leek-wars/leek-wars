@@ -280,7 +280,7 @@
 	.menu a div {
 		overflow: hidden;
 	}
-	.menu .section[label]:not([label=""]):after {
+	.menu .section[label]:after {
 		position: absolute;
 		background: #5fad1b;
 		right: -10px;
