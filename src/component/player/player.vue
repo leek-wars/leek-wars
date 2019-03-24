@@ -272,7 +272,8 @@
 				import(`@/report.json`).then(report => {
 					const local_fight = {
 						title: 'Fight', context: 3,	date: 0,
-						farmers1: [{id: 1, name: 'Pilow'} as Farmer],
+						farmers1: {1: {id: 1, name: 'Pilow'} as Farmer},
+						farmers2: {1: {id: 1, name: 'Pilow'} as Farmer},
 						id: 0,
 						farmer1: 1, farmer2: 1,
 						leeks1: [],	leeks2: [],
