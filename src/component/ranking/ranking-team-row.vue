@@ -1,5 +1,5 @@
 <template>
-	<tr :class="{me: row.me}">
+	<tr :class="{me: row.me, inactive: !row.active}">
 		<td>{{ row.rank }}</td>
 		<td :class="row.style">
 			<router-link :to="'/team/' + row.id">{{ row.name }}</router-link>

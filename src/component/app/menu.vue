@@ -85,7 +85,7 @@
 				<div class="text">{{ $t("main.trophies") }}</div>
 			</router-link>
 
-			<router-link v-ripple to="/ranking" class="section" @click.native="clickItem">
+			<router-link v-ripple :to="rankingURL" class="section" @click.native="clickItem">
 				<img src="/image/icon/ranking.png">
 				<div class="text">{{ $t("main.ranking") }}</div>
 			</router-link>
@@ -122,6 +122,9 @@
 	export default class Menu extends Vue {
 		get isHomePage() {
 			return this.$route.path === '/'
+		}
+		get rankingURL() {
+			return '/ranking' + (LeekWars.rankingActive ? '/active' : '')
 		}
 		mounted() {
 			LeekWars.menuCollapsed = localStorage.getItem('main/menu-collapsed') === 'true'

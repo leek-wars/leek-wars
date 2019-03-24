@@ -4,9 +4,9 @@
 			<h1>{{ $t('title') }}</h1>
 			<div class="tabs">
 				<!-- TODO tabs active classes -->
-				<router-link to="/ranking"><div class="tab {$leek_tab_class}">{{ $t('leeks') }}</div></router-link>
-				<router-link to="/ranking/farmer"><div class="tab {$farmer_tab_class}">{{ $t('farmers') }}</div></router-link>
-				<router-link to="/ranking/team"><div class="tab {$team_tab_class}">{{ $t('teams') }}</div></router-link>
+				<router-link :to="rankingLeekURL"><div class="tab {$leek_tab_class}">{{ $t('leeks') }}</div></router-link>
+				<router-link :to="rankingFarmerURL"><div class="tab {$farmer_tab_class}">{{ $t('farmers') }}</div></router-link>
+				<router-link :to="rankingTeamURL"><div class="tab {$team_tab_class}">{{ $t('teams') }}</div></router-link>
 				<router-link to="/ranking/fun"><div class="tab {$fun_tab_class}">{{ $t('fun') }}</div></router-link>
 				<router-link to="/statistics"><div class="tab">{{ $t('statistics') }}</div></router-link>
 				<div class="tab action" icon="search" @click="openSearch">
@@ -44,14 +44,15 @@
 			</div>
 			<div v-else slot="content">
 				<div class="center">
-					<pagination :current="page" :total="pages" :url="'/ranking/' + category + '/' + order" />
-					<div v-if="$store.state.farmer" class="me-buttons center">
+					<pagination :current="page" :total="pages" :url="url" />
+					<div v-if="$store.state.farmer" class="me-buttons">
 						<div v-if="category === 'leek'">
 							<v-btn v-for="leek in $store.state.farmer.leeks" :key="leek.id" @click="goToMyRanking(leek.id)">{{ leek.name }}</v-btn>
 						</div>
 						<v-btn v-else-if="category === 'farmer'" @click="goToMyRanking">{{ $t('my_farmer') }}</v-btn>
 						<v-btn v-else-if="category === 'team' && $store.state.farmer.team" @click="goToMyRanking">{{ $t('my_team') }}</v-btn>
 					</div>
+					<v-switch class="inactives" v-model="activeSwitch" label="Masquer inactifs" @change="toggleInactives" />
 				</div>
 				<div class="scroll-x">
 					<table v-if="category === 'leek'" class="ranking large">
@@ -184,7 +185,7 @@
 	import RankingTeamRowElement from '@/component/ranking/ranking-team-row.vue'
 	import { LeekWars } from '@/model/leekwars'
 	import { Ranking } from '@/model/ranking'
-	import { Component, Vue, Watch } from 'vue-property-decorator'
+	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 
 	@Component({
 		name: 'ranking', i18n: {},
@@ -204,10 +205,26 @@
 		searchTeams: boolean = true
 		searchQuery: string = ''
 		searchResults: any[] | null = null
+		@Prop() active!: boolean
+		activeSwitch: boolean = false
+
+		get url() {
+			return '/ranking' + (this.category !== 'leek' ? '/' + this.category : '') + (this.order !== 'talent' ? '/' + this.order : '') + (this.activeSwitch ? '/active' : '')
+		}
+		get rankingLeekURL() {
+			return '/ranking' + (LeekWars.rankingActive ? '/active' : '')
+		}
+		get rankingFarmerURL() {
+			return '/ranking/farmer' + (LeekWars.rankingActive ? '/active' : '')
+		}
+		get rankingTeamURL() {
+			return '/ranking/team' + (LeekWars.rankingActive ? '/active' : '')
+		}
 
 		@Watch('$route.params', {immediate: true})
 		update() {
 			this.category = 'category' in this.$route.params ? this.$route.params.category : 'leek'
+			this.activeSwitch = this.active
 			if (this.ranking) {
 				this.ranking = null
 			}
@@ -235,8 +252,8 @@
 			} else {
 				this.order = 'order' in this.$route.params ? this.$route.params.order : 'talent'
 				this.page = 'page' in this.$route.params ? parseInt(this.$route.params.page, 10) : 1
-
-				LeekWars.get<any>('ranking/get/' + this.category + '/' + this.order + '/' + this.page).then((data) => {
+				const service = this.active ? 'get-active' : 'get'
+				LeekWars.get<any>('ranking/' + service + '/' + this.category + '/' + this.order + '/' + this.page).then((data) => {
 					if (!data.success) {
 						// LW.error()
 						return
@@ -303,6 +320,11 @@
 				})
 			}
 		}
+		toggleInactives() {
+			LeekWars.rankingActive = this.activeSwitch
+			localStorage.setItem('options/ranking-active', '' + LeekWars.rankingActive)
+			this.$router.push(this.url)
+		}
 	}
 </script>
 
@@ -320,6 +342,11 @@
 		.button {
 			margin: 0 3px;
 		}
+	}
+	.inactives {
+		padding-left: 8px;
+		margin-bottom: -10px;
+		vertical-align: bottom;
 	}
 	.ranking.large {
 		width: 100%;
@@ -385,6 +412,12 @@
 			font-weight: bold;
 			/deep/ td {
 				background: #eee;
+			}
+		}
+		tr.inactive {
+			/deep/ td, /deep/ a {
+				color: #777;
+				font-style: italic;
 			}
 		}
 		/deep/ .country-wrapper {
