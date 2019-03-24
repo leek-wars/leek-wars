@@ -67,7 +67,8 @@ class Fight {
 	public team1!: number
 	public team2!: number
 	public title!: string
-	public farmers1!: Farmer[]
+	public farmers1!: {[key: number]: Farmer}
+	public farmers2!: {[key: number]: Farmer}
 	public team1_name!: string
 	public team2_name!: string
 	public data!: FightData
