@@ -46,6 +46,7 @@
 
 		<chats v-if="!LeekWars.mobile" />
 		<squares />
+		<mobile-br v-if="LeekWars.mobile" />
 		
 		<div class="toasts"></div>
 
@@ -74,6 +75,7 @@
 <script lang='ts'>
 	import Bar from '@/component/app/bar.vue'
 	import Chats from '@/component/app/chats.vue'
+	import MobileBR from '@/component/app/mobile-br.vue'
 	import Console from '@/component/app/console.vue'
 	import Footer from '@/component/app/footer.vue'
 	import Header from '@/component/app/header.vue'
@@ -87,7 +89,7 @@
 	import { Component, Vue } from 'vue-property-decorator'
 
 	@Component({
-		components: {'lw-bar': Bar, 'lw-footer': Footer, 'lw-header': Header, 'lw-menu': Menu, 'lw-social': Social, Console, Squares, Didactitiel, Chats}
+		components: {'lw-bar': Bar, 'lw-footer': Footer, 'lw-header': Header, 'lw-menu': Menu, 'lw-social': Social, Console, Squares, Didactitiel, Chats, 'mobile-br': MobileBR }
 	})
 	export default class App extends Vue {
 		didactitiel: boolean = false
