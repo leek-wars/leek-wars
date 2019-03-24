@@ -255,7 +255,7 @@
 				this.$emit('fight', fight)
 				if (fight.status >= 1) {
 					this.getLogs()
-					this.game.init(fight.data)
+					this.game.init(fight)
 					this.loaded = true
 					this.resize()
 				} else {

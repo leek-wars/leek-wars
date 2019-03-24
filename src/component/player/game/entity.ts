@@ -3,6 +3,7 @@ import { ChipAnimation } from '@/component/player/game/chips'
 import { Colors, Game, TEAM_COLORS } from '@/component/player/game/game'
 import { InfoText } from '@/component/player/game/infotext'
 import { Texture } from '@/component/player/game/texture'
+import { Farmer } from '@/model/farmer'
 import { i18n } from '@/model/i18n'
 import { LeekWars } from '@/model/leekwars'
 
@@ -25,7 +26,7 @@ class Entity {
 	public id!: number
 	public level = 1
 	public team!: number
-	public farmer!: number
+	public farmer!: Farmer | null
 	public type: EntityType
 	public summon = false
 	public summoner!: Entity
