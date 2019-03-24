@@ -44,7 +44,7 @@
 		
 		<lw-footer />
 
-		<chats />
+		<chats v-if="!LeekWars.mobile" />
 		<squares />
 		
 		<div class="toasts"></div>
