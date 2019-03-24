@@ -242,12 +242,12 @@
 
 		<div class="container">
 			<div class="column6">
-				<panel :title="$t('history')">
+				<panel v-if="team && team.fights.length > 0" :title="$t('history')">
 					<fights-history v-if="team" slot="content" :fights="team.fights" />
 				</panel>
 			</div>
 			<div class="column6">
-				<panel :title="$t('tournaments')">
+				<panel v-if="team && team.tournaments.length > 0" :title="$t('tournaments')">
 					<tournaments-history v-if="team" slot="content" :tournaments="team.tournaments" />
 				</panel>
 			</div>
