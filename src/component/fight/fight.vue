@@ -98,9 +98,14 @@
 				const reference = document.querySelector(LeekWars.flex ? '.app-center' : '.app-wrapper') as HTMLElement
 				const offset = LeekWars.flex ? 40 + 24 : 24
 				if (reference) {
-					const height = Math.min(window.innerHeight - 292, Math.round((reference.offsetWidth - offset) / RATIO))
-					this.playerWidth = Math.round(height * RATIO)
-					this.playerHeight = height
+					if (!LeekWars.mobile) {
+						const height = Math.min(window.innerHeight - 292, Math.round((reference.offsetWidth - offset) / RATIO))
+						this.playerWidth = Math.round(height * RATIO)
+						this.playerHeight = height
+					} else {
+						this.playerWidth = window.innerWidth
+						this.playerHeight = this.playerWidth / RATIO
+					}
 				}
 			})
 		}
