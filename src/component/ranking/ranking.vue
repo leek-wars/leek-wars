@@ -154,7 +154,7 @@
 					<loader v-if="!ranking" />
 				</div>
 				<div class="center">
-					<pagination :current="page" :total="pages" :url="'/ranking/' + category + '/' + order" />
+					<pagination :current="page" :total="pages" :url="url" />
 				</div>
 			</div>
 		</panel>
