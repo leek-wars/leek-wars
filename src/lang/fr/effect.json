@@ -59,7 +59,7 @@
 	"type_7_fixed": "Booste les PM de <b>{0}</b>",
 	"type_8": "Booste les PT de <b>{0}</b> à <b>{1}</b>",
 	"type_8_fixed": "Booste les PT de <b>{0}</b>",
-	"type_9_fixed": "Diminue tous les envoûtements de 50%",
+	"type_9_fixed": "Diminue tous les envoûtements de {0}%",
 	"effect_type_1": "Attaques",
 	"effect_type_2": "Soins",
 	"effect_type_3": "Boosts",

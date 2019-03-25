@@ -59,7 +59,7 @@
 	"type_7_fixed": "Increases MP by <b>{0}</b>",
 	"type_8": "Increases TP by <b>{0}</b> to <b>{1}</b>",
 	"type_8_fixed": "Increases TP by <b>{0}</b>",
-	"type_9_fixed": "Decrease all effects by 50%",
+	"type_9_fixed": "Decrease all effects by {0}%",
 	"effect_type_1": "Attacks",
 	"effect_type_2": "Heals",
 	"effect_type_3": "Boosts",
