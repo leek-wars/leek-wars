@@ -34,13 +34,13 @@ for (const value of values) {
 }
 Promise.all(promises).then((result) => {
 	let data = `/** This file is auto-generated from script/generate_data.js **/
-import { WeaponTemplate } from '@/model/weapon'
 import { ChipTemplate } from '@/model/chip'
-import { PotionTemplate } from '@/model/potion'
-import { HatTemplate } from '@/model/hat'
-import { SummonTemplate } from '@/model/summon'
-import { Function } from '@/model/function'
 import { Constant } from '@/model/constant'
+import { Function } from '@/model/function'
+import { HatTemplate } from '@/model/hat'
+import { PotionTemplate } from '@/model/potion'
+import { SummonTemplate } from '@/model/summon'
+import { WeaponTemplate } from '@/model/weapon'
 \n`
 	for (const v of result) {
 		data += v + "\n\n"
