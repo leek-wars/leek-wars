@@ -73,7 +73,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			}
 			loadNotifications(state)
 			loadMessages(state)
-			vueMain.$emit('connected')
+			vueMain.$emit('connected', state.farmer)
 		},
 		"disconnect"(state: LeekWarsState) {
 			LeekWars.post('farmer/disconnect')
