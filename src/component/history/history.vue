@@ -83,7 +83,8 @@
 				this.fights = data.fights
 				this.entity = data.entity
 				LeekWars.setTitle(this.$t('history.title', [data.entity.name]))
-				this.select_period('1week')
+				const period = localStorage.getItem('options/history-period') || '1week'
+				this.select_period(period)
 			})
 		}
 
@@ -100,6 +101,7 @@
 				return now - 7 * day
 			})()
 			this.filter_fights(start_date)
+			localStorage.setItem('options/history-period', period)
 		}
 
 		filter_fights(start_date: number) {
