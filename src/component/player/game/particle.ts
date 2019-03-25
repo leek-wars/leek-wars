@@ -265,7 +265,8 @@ class Meteorite extends Particle {
 	public size: number
 	public originalAngle: number
 	public targets: Entity[]
-	constructor(game: Game, x: number, y: number, z: number, size: number, angle: number, targets: Entity[]) {
+	public actionDoneAfterDie: boolean
+	constructor(game: Game, x: number, y: number, z: number, size: number, angle: number, targets: Entity[] = [], actionDoneAfterDie: boolean = false) {
 		super(game, x, y, z, 1000)
 		this.size = size
 		this.dx = Math.cos(angle) * 8
@@ -275,6 +276,7 @@ class Meteorite extends Particle {
 		this.life = 1000
 		this.rotation = 0
 		this.targets = targets
+		this.actionDoneAfterDie = actionDoneAfterDie
 	}
 	public update(dt: number): boolean {
 		// Fire
@@ -288,7 +290,9 @@ class Meteorite extends Particle {
 			for (const target of this.targets) {
 				target.hurt(this.x, this.y, this.z, this.dx, this.dy, this.dz)
 			}
-			this.game.actionDone()
+			if (this.actionDoneAfterDie) {
+				this.game.actionDone()
+			}
 			return true
 		}
 		return super.update(dt)

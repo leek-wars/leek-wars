@@ -450,9 +450,7 @@ class Meteorite extends ChipAnimation {
 				const ox = Math.random() * 120 - 60
 				const oy = Math.random() * 120 - 60
 				const size = 0.7 + Math.random() * 0.5
-				if (this.targets) {
-					this.game.particles.addMeteorite(x + ox, y + oy, z, angle, size, this.targets)
-				}
+				this.game.particles.addMeteorite(x + ox, y + oy, z, angle, size, this.targets, this.count === 1)
 			} else {
 				this.willFinish = true
 			}
