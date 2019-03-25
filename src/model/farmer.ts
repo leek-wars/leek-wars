@@ -37,5 +37,6 @@ class Farmer {
 	public admin!: boolean
 	public talent!: number
 	public team!: Team | null
+	public total_level!: number
 }
 export { Farmer }

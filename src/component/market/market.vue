@@ -169,10 +169,12 @@
 <script lang="ts">
 	import { ChipTemplate } from '@/model/chip'
 	import { EffectTypeMarket } from '@/model/effect'
+	import { Farmer } from '@/model/farmer'
 	import { HatTemplate } from '@/model/hat'
 	import { ItemTemplate, ItemType } from '@/model/item'
 	import { LeekWars } from '@/model/leekwars'
 	import { PotionTemplate } from '@/model/potion'
+	import { store } from '@/model/store'
 	import { WeaponTemplate } from '@/model/weapon'
 	import { Component, Vue, Watch } from 'vue-property-decorator'
 	import ChipPreview from './chip-preview.vue'
@@ -251,29 +253,9 @@
 						}
 					}
 				}
-				const fights = [100, 200, 500, 1000]
-				const costs = [1, 1.8, 4, 7]
-				for (const p in fights) {
-					const count = fights[p]
-					const pack: ItemTemplate = {
-						id: 1000000 + fights[p],
-						name: count + '-fights',
-						title: this.$t('market.n_fights', [count]),
-						price_habs: p === '0' ? costs[p] * 1000000 : 0,
-						price_crystals: costs[p] * 100,
-						sellable: false,
-						type: ItemType.FIGHT_PACK,
-						description: this.$t('market.n_fights_desc', [count]),
-						leeks: [],
-						leek_objs: [],
-						leek_count: 0,
-						farmer_count: 0,
-						sell_price: 0
-					} as ItemTemplate
-					this.fight_packs.push(pack)
-					this.items[pack.id] = pack
-					this.items_by_name[pack.name] = pack
-				}
+				this.createFightPacks()
+				if (store.state.farmer) { this.setFightPackPrice(store.state.farmer) }
+				else { this.$root.$on('connected', (farmer: Farmer) => this.setFightPackPrice(farmer)) }
 				this.update()
 			})
 			this.$root.$on('back', () => {
@@ -372,6 +354,36 @@
 		updateChipMode() {
 			this.chipMode = this.chipMode === 'level' ? 'type' : 'level'
 			localStorage.setItem('market/sort_mode', this.chipMode)
+		}
+		createFightPacks() {
+			const fights = [100, 200, 500, 1000]
+			const costs = [1, 1.8, 4, 7]
+			for (const p in fights) {
+				const count = fights[p]
+				const pack: ItemTemplate = {
+					id: 1000000 + fights[p],
+					name: count + '-fights',
+					title: this.$t('market.n_fights', [count]),
+					price_habs: p === '0' ? 100000 : 0,
+					price_crystals: costs[p] * 100,
+					sellable: false,
+					type: ItemType.FIGHT_PACK,
+					description: this.$t('market.n_fights_desc', [count]),
+					leeks: [],
+					leek_objs: [],
+					leek_count: 0,
+					farmer_count: 0,
+					sell_price: 0
+				} as ItemTemplate
+				this.fight_packs.push(pack)
+				this.items[pack.id] = pack
+				this.items_by_name[pack.name] = pack
+			}
+		}
+		setFightPackPrice(farmer: Farmer) {
+			const ratio = store.state.farmer!.total_level / 1204
+			const priceHabs = Math.round(100000 + Math.pow(ratio, 3) * 4900000)
+			this.items_by_name['100-fights'].price_habs = priceHabs
 		}
 	}
 </script>
