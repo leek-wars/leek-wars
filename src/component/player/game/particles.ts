@@ -62,8 +62,8 @@ class Particles {
 	public addCollideGaz(x: number, y: number, z: number, angle: number, targets: Entity[]) {
 		this.add(new CollideGaz(this.game, x, y, z, targets, angle))
 	}
-	public addMeteorite(x: number, y: number, z: number, angle: number, size: number, targets: Entity[]) {
-		this.add(new Meteorite(this.game, x, y, z, size, angle, targets))
+	public addMeteorite(x: number, y: number, z: number, angle: number, size: number, targets: Entity[] | undefined, actionDoneAfterDie: boolean) {
+		this.add(new Meteorite(this.game, x, y, z, size, angle, targets, actionDoneAfterDie))
 	}
 	public addGrenade(x: number, y: number, z: number, angle: number, cell: Cell, targets: Entity[]) {
 		this.add(new Grenade(this.game, x, y, z, angle, cell, targets))
