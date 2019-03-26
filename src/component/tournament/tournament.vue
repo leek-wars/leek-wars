@@ -224,7 +224,7 @@
 		@Watch('$route.params', {immediate: true})
 		update() {
 			this.tournament = null
-			LeekWars.get<any>('tournament/get/' + this.$route.params.id + '/' + this.$store.state.token).then((data) => {
+			LeekWars.get<any>('tournament/get/' + this.$route.params.id).then((data) => {
 				if (data.success) {
 					this.tournament = data.tournament
 					if (!this.tournament) { return }

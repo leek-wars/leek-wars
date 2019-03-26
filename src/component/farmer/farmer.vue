@@ -516,7 +516,7 @@
 				localStorage.setItem('farmer/trophies-mode', 'list')
 			}
 			this.trophiesMode = localStorage.getItem('farmer/trophies-mode') || 'list'
-			LeekWars.get<any>('trophy/get-farmer-trophies/' + this.farmer.id + '/' + this.$i18n.locale + '/' + this.$store.state.token).then((data) => {
+			LeekWars.get<any>('trophy/get-farmer-trophies/' + this.farmer.id + '/' + this.$i18n.locale).then((data) => {
 				this.trophies = data.trophies
 			})
 		}
@@ -576,7 +576,7 @@
 		}
 		warnings() {
 			if (!this.farmer) { return }
-			LeekWars.get<any>('moderation/get-warnings/' + this.farmer.id + '/' + store.state.token).then((data) => {
+			LeekWars.get<any>('moderation/get-warnings/' + this.farmer.id).then((data) => {
 				if (data.success && this.farmer) {
 					this.farmer.warnings = data.warnings
 				}

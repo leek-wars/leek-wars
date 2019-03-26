@@ -25,7 +25,7 @@
 	export default class Notifications extends Vue {
 		notifications: any = null
 		created() {
-			LeekWars.get<any>('notification/get-latest/500/' + this.$store.state.token).then((data) => {
+			LeekWars.get<any>('notification/get-latest/500').then((data) => {
 				this.notifications = []
 				for (const notification of data.notifications) {
 					this.notifications.push(Notification.build(notification))

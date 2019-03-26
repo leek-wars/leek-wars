@@ -572,7 +572,7 @@
 			this.leek = null
 			this.error = false
 			if (!this.id) { return }
-			const method = this.my_leek ? 'leek/get-private/' + this.id + '/' + this.$store.state.token : 'leek/get/' + this.id
+			const method = this.my_leek ? 'leek/get-private/' + this.id : 'leek/get/' + this.id
 			LeekWars.get(method).then((data: any) => {
 				if (data.success) {
 					this.$data.leek = new Leek(data.leek)
@@ -761,7 +761,7 @@
 
 		showLevelPopup() {
 			if (!this.leek) { return }
-			LeekWars.get<any>('leek/get-level-popup/' + this.leek.id + '/' + this.$store.state.token).then((data) => {
+			LeekWars.get<any>('leek/get-level-popup/' + this.leek.id).then((data) => {
 				this.levelPopup = true
 				this.levelPopupData = data.popup
 			})

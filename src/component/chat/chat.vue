@@ -173,7 +173,7 @@
 				const id = parseInt(this.channel.replace('pm-', ''), 10)
 				if (!this.$store.state.chat['pm-' + id]) {
 					if (id === 0) { return }
-					LeekWars.get<any>('message/get-messages/' + id + '/' + 50 + '/' + 1 + '/' + this.$store.state.token).then((data) => {
+					LeekWars.get<any>('message/get-messages/' + id + '/' + 50 + '/' + 1).then((data) => {
 						if (data.success) {
 							for (const message of data.messages.reverse()) {
 								this.$store.commit('pm-receive', {message: [id, message.farmer_id, message.farmer_name, message.content, false, message.farmer_color, message.avatar_changed, message.date]})

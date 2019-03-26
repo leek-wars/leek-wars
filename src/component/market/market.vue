@@ -213,7 +213,7 @@
 
 		created() {
 			this.actions = [{icon: 'account_balance', click: () => this.$router.push('/bank')}]
-			LeekWars.get<any>('market/get-item-templates/' + this.$store.state.token).then((res) => {
+			LeekWars.get<any>('market/get-item-templates').then((res) => {
 				if (!res.success) {
 					// LW.error()
 					return

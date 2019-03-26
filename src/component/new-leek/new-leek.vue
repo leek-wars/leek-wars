@@ -39,7 +39,7 @@
 		error: string | null = null
 		loading: boolean = true
 		created() {
-			LeekWars.get<any>('leek/get-next-price/' + this.$store.state.token).then((data) => {
+			LeekWars.get<any>('leek/get-next-price').then((data) => {
 				this.price = data.price
 				this.leekCount = LeekWars.objectSize(this.$store.state.farmer.leeks)
 				LeekWars.setTitle(this.$t('title'))

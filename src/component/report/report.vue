@@ -197,7 +197,7 @@
 			this.actions = null
 			this.smooth = localStorage.getItem('report/graph-type') === 'smooth'
 			const id = this.$route.params.id
-			const url = this.$store.getters.admin ? 'fight/get-private/' + id + '/' + this.$store.state.token : 'fight/get/' + id
+			const url = this.$store.getters.admin ? 'fight/get-private/' + id : 'fight/get/' + id
 			LeekWars.get<FightResponse>(url).then((data) => {
 				if (!data.success) {
 					this.error = true
@@ -229,7 +229,7 @@
 						this.report.leeks2[l].aiTime = Math.round(this.report.ai_times[l].time / 1000) / 1000
 					}
 				}
-				LeekWars.get<any>('fight/get-logs/' + id + '/' + this.$store.state.token).then((d) => {
+				LeekWars.get<any>('fight/get-logs/' + id).then((d) => {
 					this.logs = d.logs
 					this.processLogs()
 					this.warningsErrors()

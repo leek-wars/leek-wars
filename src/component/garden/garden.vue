@@ -240,7 +240,7 @@
 		mounted() {
 			LeekWars.setTitle(this.$t('garden.title'))
 
-			LeekWars.get('garden/get/' + this.$store.state.token).then((r: any) => {
+			LeekWars.get('garden/get').then((r: any) => {
 				this.garden = r.garden
 				for (const composition of this.garden.my_compositions) {
 					this.compositions_by_id[composition.id] = composition
@@ -312,7 +312,7 @@
 			if (this.garden.fights === 0 || this.$data.leekOpponents[leek.id]) {
 				return
 			}
-			LeekWars.get('garden/get-leek-opponents/' + leek.id + '/' + this.$store.state.token).then((data: any) => {
+			LeekWars.get('garden/get-leek-opponents/' + leek.id).then((data: any) => {
 				if (data.success) {
 					Vue.set(this.$data.leekOpponents, leek.id, data.opponents)
 				} else {
@@ -324,7 +324,7 @@
 			if (this.garden.fights === 0 || this.farmerOpponents) {
 				return
 			}
-			LeekWars.get('garden/get-farmer-opponents/' + this.$store.state.token).then((data: any) => {
+			LeekWars.get('garden/get-farmer-opponents').then((data: any) => {
 				if (data.success) {
 					this.farmerOpponents = data.opponents
 				} else {
@@ -337,7 +337,7 @@
 			if (composition.fights === 0 || this.teamOpponents[composition.id]) {
 				return
 			}
-			LeekWars.get('garden/get-composition-opponents/' + composition.id + '/' + this.$store.state.token).then((data: any) => {
+			LeekWars.get('garden/get-composition-opponents/' + composition.id).then((data: any) => {
 				if (data.success) {
 					Vue.set(this.$data.teamOpponents, composition.id, data.opponents)
 				} else {
@@ -396,14 +396,14 @@
 			}
 			this.selectedLeek = this.$store.state.farmer.leeks[this.$route.params.item]
 			if (this.challengeType === 'leek') {
-				LeekWars.get<any>('garden/get-solo-challenge/' + this.challengeTarget + '/' + this.$store.state.token).then((data) => {
+				LeekWars.get<any>('garden/get-solo-challenge/' + this.challengeTarget).then((data) => {
 					if (data.challenges) {
 						this.challengeFights = data.challenges
 						this.challengeLeekTarget = data.leek
 					}
 				})
 			} else {
-				LeekWars.get<any>('garden/get-farmer-challenge/' + this.challengeTarget + '/' + this.$store.state.token).then((data) => {
+				LeekWars.get<any>('garden/get-farmer-challenge/' + this.challengeTarget).then((data) => {
 					if (data.challenges) {
 						this.challengeFights = data.challenges
 						this.challengeFarmerTarget = data.farmer

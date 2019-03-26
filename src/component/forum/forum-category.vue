@@ -121,7 +121,7 @@
 				{icon: 'search', click: () => this.$router.push('/search/-/-/' + category) }
 			])
 			if (this.category) { this.category.topics = null }
-			LeekWars.get<any>('forum/get-topics/' + category + '/' + this.page + '/' + this.$store.state.token).then((data) => {
+			LeekWars.get<any>('forum/get-topics/' + category + '/' + this.page).then((data) => {
 				this.category = data.category
 				if (this.category) {
 					this.category.name = this.category.team > 0 ? this.category.name : this.$t('forum.category_' + this.category.name) as string

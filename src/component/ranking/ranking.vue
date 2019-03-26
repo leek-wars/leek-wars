@@ -230,7 +230,7 @@
 			}
 			if (this.category === 'fun') {
 				this.rankings = null
-				LeekWars.get<any>('ranking/fun/' + this.$store.state.token).then((data) => {
+				LeekWars.get<any>('ranking/fun').then((data) => {
 					for (const row of data.rankings) {
 						row.ranking.ranking[0].style = 'first'
 						row.ranking.ranking[1].style = 'second'
