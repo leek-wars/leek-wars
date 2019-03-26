@@ -340,7 +340,7 @@
 
 		created() {
 			if (this.initialized) { return }
-			LeekWars.get<any>('test-scenario/get-all/' + this.$store.state.token).then((data) => {
+			LeekWars.get<any>('test-scenario/get-all').then((data) => {
 				if (data.success) {
 					this.initialized = true
 					this.scenarios = data.scenarios
@@ -355,7 +355,7 @@
 					LeekWars.toast(data.error)
 				}
 			})
-			LeekWars.get<any>('test-leek/get-all/' + this.$store.state.token).then((data) => {
+			LeekWars.get<any>('test-leek/get-all').then((data) => {
 				if (data.success) {
 					this.leeks = data.leeks
 					this.generateBots()
@@ -369,7 +369,7 @@
 					LeekWars.toast(data.error)
 				}
 			})
-			LeekWars.get<any>('test-map/get-all/' + this.$store.state.token).then((data) => {
+			LeekWars.get<any>('test-map/get-all').then((data) => {
 				if (data.success) {
 					this.maps = data.maps
 					if (!LeekWars.isEmptyObj(this.maps)) {

@@ -136,7 +136,7 @@
 			const lang = localStorage.getItem('forum/language') as string || this.$i18n.locale
 			this.forumLanguage = LeekWars.languages[lang]
 			this.chatLanguage = LeekWars.languages[this.$i18n.locale]
-			LeekWars.get<any>('forum/get-categories/' + this.forumLanguage.code + '/' + this.$store.state.token).then((data) => {
+			LeekWars.get<any>('forum/get-categories/' + this.forumLanguage.code).then((data) => {
 				this.categories = data.categories
 				this.$root.$emit('loaded')
 			})
@@ -154,7 +154,7 @@
 			this.forumLanguage = language
 			this.categories = null
 			localStorage.setItem('forum/language', language.code)
-			LeekWars.get<any>('forum/get-categories/' + language.code + '/' + this.$store.state.token).then((data) => {
+			LeekWars.get<any>('forum/get-categories/' + language.code).then((data) => {
 				this.categories = data.categories
 			})
 		}

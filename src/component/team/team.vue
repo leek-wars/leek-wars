@@ -415,9 +415,9 @@
 			let request = 'team/get/' + this.id
 			if (this.$store.state.farmer) {
 				if (this.$store.state.farmer.team !== null && this.$store.state.farmer.team.id === this.id) {
-					request = 'team/get-private/' + this.id + '/' + this.$store.state.token
+					request = 'team/get-private/' + this.id
 				} else {
-					request = 'team/get-connected/' + this.id + '/' + this.$store.state.token
+					request = 'team/get-connected/' + this.id
 				}
 			}
 			LeekWars.get<any>(request).then((data) => {

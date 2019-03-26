@@ -196,7 +196,7 @@
 			this.page = page
 
 			if (this.topic) { this.topic.messages = null }
-			LeekWars.get<any>('forum/get-messages/' + topic + '/' + this.page + '/' + this.$store.state.token).then((data) => {
+			LeekWars.get<any>('forum/get-messages/' + topic + '/' + this.page).then((data) => {
 				if (!data.success) {
 					// LW.error()
 					return

@@ -35,10 +35,14 @@ function request<T = any>(method: string, url: string, params?: any) {
 	const xhr = new XMLHttpRequest()
 	const promise = new Promise<T>((resolve, reject) => {
 		xhr.open(method, url)
+		xhr.responseType = 'json'
+		if (store.state.connected) {
+			xhr.setRequestHeader('Authorization', 'Bearer: ' + store.state.token)
+		}
 		if (!(params instanceof FormData)) {
 			xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8')
 		}
-		xhr.onload = (e: any) => resolve(JSON.parse(e.target.response))
+		xhr.onload = (e: any) => resolve(e.target.response)
 		xhr.onerror = reject
 		xhr.send(params)
 	})
@@ -49,10 +53,7 @@ function request<T = any>(method: string, url: string, params?: any) {
 }
 
 function post(url: any, form: any = {}) {
-	if (form instanceof FormData) {
-		form.append('token', store.state.token as string)
-	} else {
-		if (!form.token) { form.token = store.state.token }
+	if (!(form instanceof FormData)) {
 		const f = []
 		for (const k in form) { f.push(k + '=' + encodeURIComponent(form[k])) }
 		form = f.join('&')

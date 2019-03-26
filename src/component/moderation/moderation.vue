@@ -110,7 +110,7 @@
 		severity: number = 0
 
 		created() {
-			LeekWars.get<ModerationRequest>('moderation/get-reportings/' + this.$store.state.token).then((data) => {
+			LeekWars.get<ModerationRequest>('moderation/get-reportings').then((data) => {
 				this.faults = data.faults
 				this.thugs = data.thugs
 				for (const fault of this.faults) {

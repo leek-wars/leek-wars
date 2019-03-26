@@ -192,7 +192,7 @@
 				{icon: 'power_settings_new', click: () => this.logout()}
 			])
 
-			LeekWars.get<any>('settings/get-settings/' + this.$store.state.token).then((data) => {
+			LeekWars.get<any>('settings/get-settings').then((data) => {
 				this.sfwMode = localStorage.getItem('sfw') === 'true'
 				this.notifsResults = localStorage.getItem('options/notifs-results') === 'true'
 				this.chatFirst = localStorage.getItem('options/chat-first') === 'true'

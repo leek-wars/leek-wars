@@ -35,14 +35,14 @@
 	export default class AdminEmails extends Vue {
 		farmers: any = null
 		created() {
-			LeekWars.get<any>('farmer/get-waiting-farmers/' + this.$store.state.token + '/' + encodeURI(this.$store.state.supertoken)).then((data) => {
+			LeekWars.get<any>('farmer/get-waiting-farmers').then((data) => {
 				this.farmers = data.farmers
 			})
 			LeekWars.setTitle("Admin activation mails")
 		}
 		send(farmer: any) {
 			if (!farmer.disabled) {
-				LeekWars.post('farmer/resend-activation-mail', {farmer_id: farmer.id, supertoken: this.$store.state.supertoken})
+				LeekWars.post('farmer/resend-activation-mail', {farmer_id: farmer.id})
 				Vue.set(farmer, 'disabled', true)
 			}
 		}
