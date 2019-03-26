@@ -99,7 +99,7 @@
 				const offset = LeekWars.flex ? 40 + 24 : 24
 				if (reference) {
 					if (!LeekWars.mobile) {
-						const height = Math.min(window.innerHeight - 292, Math.round((reference.offsetWidth - offset) / RATIO))
+						const height = Math.min(window.innerHeight - 128, Math.round((reference.offsetWidth - offset) / RATIO))
 						this.playerWidth = Math.round(height * RATIO)
 						this.playerHeight = height
 					} else {
