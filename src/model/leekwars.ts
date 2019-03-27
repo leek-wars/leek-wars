@@ -37,7 +37,7 @@ function request<T = any>(method: string, url: string, params?: any) {
 		xhr.open(method, url)
 		xhr.responseType = 'json'
 		if (store.state.connected) {
-			xhr.setRequestHeader('Authorization', 'Bearer: ' + store.state.token)
+			xhr.setRequestHeader('Authorization', 'Bearer ' + store.state.token)
 		}
 		if (!(params instanceof FormData)) {
 			xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8')
