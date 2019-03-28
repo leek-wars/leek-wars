@@ -42,25 +42,35 @@ function request<T = any>(method: string, url: string, params?: any) {
 		if (!(params instanceof FormData)) {
 			xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8')
 		}
-		xhr.onload = (e: any) => resolve(e.target.response)
+		xhr.onload = (e: any) => {
+			if (e.target.status === 200) {
+				resolve(e.target.response)
+			} else {
+				reject(e.target.response)
+			}
+		}
 		xhr.onerror = reject
 		xhr.send(params)
 	})
 	return {
 		abort: () => xhr.abort(),
-		then: promise.then.bind(promise) as (p: (p: T) => any) => void
+		error: (e: (e: T) => void) => promise.catch(e),
+		then: (p: (p: T) => void) => {
+			promise.then(p)
+			return { error: (e: (e: T) => void) => promise.catch(e) }
+		}
 	}
 }
 
-function post(url: any, form: any = {}) {
+function post<T = any>(url: any, form: any = {}) {
 	if (!(form instanceof FormData)) {
 		const f = []
 		for (const k in form) { f.push(k + '=' + encodeURIComponent(form[k])) }
 		form = f.join('&')
 	}
-	return request('POST', LeekWars.api + url, form)
+	return request<T>('POST', LeekWars.api + url, form)
 }
-function get<T>(url: any) {
+function get<T = any>(url: any) {
 	return request<T>('GET', LeekWars.api + url)
 }
 
@@ -155,13 +165,9 @@ const LeekWars = {
 			const data = cached.split(',')
 			return callback({ width: parseInt(data[0], 10), height: parseInt(data[1], 10) })
 		}
-		this.post('util/get-image-size', { image }).then((data: any) => {
-			if (data.success) {
-				localStorage.setItem('imagesize/' + image, data.width + ',' + data.height)
-				callback({ width: data.width, height: data.height })
-			} else {
-				callback(null)
-			}
+		this.post('util/get-image-size', { image }).then(data => {
+			localStorage.setItem('imagesize/' + image, data.width + ',' + data.height)
+			callback({ width: data.width, height: data.height })
 		})
 	},
 	objectSize(obj: object): number {

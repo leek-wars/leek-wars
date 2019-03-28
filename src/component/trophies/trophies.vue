@@ -71,7 +71,7 @@
 				this.progressions[c.id] = 0
 				this.totals[c.id] = 0
 			})
-			LeekWars.get<any>('trophy/get-farmer-trophies/' + this.id + '/' + this.$i18n.locale).then((data) => {
+			LeekWars.get('trophy/get-farmer-trophies/' + this.id + '/' + this.$i18n.locale).then(data => {
 				for (const t in data.trophies) {
 					const trophy = data.trophies[t]
 					this.trophies[trophy.category].push(trophy)

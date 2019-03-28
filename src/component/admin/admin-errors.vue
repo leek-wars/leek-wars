@@ -48,7 +48,7 @@
 	export default class AdminErrors extends Vue {
 		errors: any = null
 		created() {
-			LeekWars.get<any>('error/get-latest').then((data) => {
+			LeekWars.get('error/get-latest').then(data => {
 				this.errors = data.errors
 				LeekWars.setTitle("Gestionnaire d'erreur")
 

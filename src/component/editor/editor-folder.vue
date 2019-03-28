@@ -57,14 +57,12 @@
 			this.editing = false
 			const name = (this.$refs.name as HTMLElement).textContent || ''
 			if (name !== this.folder.name) {
-				LeekWars.post('ai-folder/rename', {folder_id: this.folder.id, new_name: name}).then((data) => {
-					if (data.success) {
-						LeekWars.toast(i18n.t('editor.ai_renamed', [name]) as string)
-						this.folder.name = name
-					} else {
-						(this.$refs.name as HTMLElement).textContent = this.initialName
-						LeekWars.toast(data.error)
-					}
+				LeekWars.post('ai-folder/rename', {folder_id: this.folder.id, new_name: name}).then(data => {
+					LeekWars.toast(i18n.t('editor.ai_renamed', [name]) as string)
+					this.folder.name = name
+				}).error(error => {
+					(this.$refs.name as HTMLElement).textContent = this.initialName
+					LeekWars.toast(error)
 				})
 			}
 		}

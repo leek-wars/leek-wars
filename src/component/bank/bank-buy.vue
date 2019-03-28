@@ -38,7 +38,7 @@
 		created() {			
 			this.pack = parseInt(this.$route.params.pack, 10)
 			this.offer = parseInt(this.$route.params.offer, 10)
-			LeekWars.get('bank/get-packs').then((data: any) => {
+			LeekWars.get('bank/get-packs').then(data => {
 				const pack = data.packs[this.pack]
 				const offer = pack.offers[this.offer]
 				const vendor = offer.vendor
@@ -53,12 +53,10 @@
 				if (vendor === 'StarPass') {
 					obj.id = LeekWars.local ? offer.id[1] : offer.id[0]
 					LeekWars.post('bank/begin-starpass-payment', {pack_id: this.pack, offer_id: this.offer}).then(() => {
-						if (data.success) {
-							this.data = obj
-							setTimeout(() => this.createStarPass())
-						} else {
-							LeekWars.toast(data.error)
-						}
+						this.data = obj
+						setTimeout(() => this.createStarPass())
+					}).error(error => {
+						LeekWars.toast(error)
 					})
 				} else {
 					this.data = obj
@@ -78,10 +76,8 @@
 		}
 		clickPayPal() {
 			this.loading = true
-			LeekWars.post('bank/begin-paypal-payment', {pack_id: this.pack, offer_id: this.offer}).then((data: any) => {
-				if (data.success) {
-					window.location.href = data.url
-				}
+			LeekWars.post('bank/begin-paypal-payment', {pack_id: this.pack, offer_id: this.offer}).then(data => {
+				window.location.href = data.url
 			})
 		}
 	}

@@ -35,9 +35,7 @@
 	export default class AdminEmails extends Vue {
 		farmers: any = null
 		created() {
-			LeekWars.get<any>('farmer/get-waiting-farmers').then((data) => {
-				this.farmers = data.farmers
-			})
+			LeekWars.get('farmer/get-waiting-farmers').then(data => this.farmers = data.farmers)
 			LeekWars.setTitle("Admin activation mails")
 		}
 		send(farmer: any) {

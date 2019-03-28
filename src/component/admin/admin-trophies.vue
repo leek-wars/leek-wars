@@ -39,7 +39,7 @@
 		trophies: any = null
 		created() {
 			LeekWars.setTitle("Admin Trophies")
-			LeekWars.get<any>('trophy/get-admin/' + i18n.locale).then((data) => {
+			LeekWars.get('trophy/get-admin/' + i18n.locale).then(data => {
 				this.trophies = data.trophies
 			})
 		}

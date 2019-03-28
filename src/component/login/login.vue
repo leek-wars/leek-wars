@@ -40,14 +40,12 @@
 		}
 		login() {
 			const url = LeekWars.dev ? 'farmer/login-token' : 'farmer/login'
-			LeekWars.post(url, this.form).then((data: any) => {
-				if (data.success) {
-					const token = LeekWars.dev ? data.token : '$'
-					this.$store.commit('connect', {farmer: data.farmer, token})
-					this.$router.push('/')
-				} else {
-					this.error = true
-				}
+			LeekWars.post(url, this.form).then(data => {
+				const token = LeekWars.dev ? data.token : '$'
+				this.$store.commit('connect', {farmer: data.farmer, token})
+				this.$router.push('/')
+			}).error(error => {
+				this.error = true
 			})
 		}
 		@Watch('form.keep_connected')

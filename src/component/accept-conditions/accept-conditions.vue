@@ -21,13 +21,9 @@
 	@Component({ name: 'accept_conditions', i18n: {} })
 	export default class AcceptConditions extends Vue {
 		accept() {
-			LeekWars.post('farmer/accept-terms', {}).then((data: any) => {
-				if (data.success) {
-					this.$router.push('/')
-				} else {
-					LeekWars.toast("Error: " + data.error)
-				}
-			})
+			LeekWars.post('farmer/accept-terms')
+				.then(() => this.$router.push('/'))
+				.error(error => LeekWars.toast("Error: " + error))
 		}
 	}
 </script>

@@ -292,23 +292,17 @@
 			} else {
 				this.request = LeekWars.get('fight/get/' + this.fightId)
 				this.request.then((data: any) => {
-					if (!data.success) {
-						this.error = true
-						return null
-					}
 					fightLoaded(data.fight)
-				})
+				}).error(() => this.error = true)
 			}
 		}
 		getLogs() {
 			if (this.$store.state.farmer) {
-				LeekWars.post('fight/get-logs', {fight_id: this.fightId}).then((data) => {
-					if (data.success) {
-						this.game.setLogs(data.logs)
-						this.$store.commit('set-habs', data.habs)
-						this.$store.commit('set-talent', data.talent)
-						this.$store.commit('set-leek-talents', data.leek_talents)
-					}
+				LeekWars.post('fight/get-logs', {fight_id: this.fightId}).then(data => {
+					this.game.setLogs(data.logs)
+					this.$store.commit('set-habs', data.habs)
+					this.$store.commit('set-talent', data.talent)
+					this.$store.commit('set-leek-talents', data.leek_talents)
 				})
 			}
 		}

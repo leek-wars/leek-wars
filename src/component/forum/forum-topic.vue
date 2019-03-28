@@ -196,11 +196,7 @@
 			this.page = page
 
 			if (this.topic) { this.topic.messages = null }
-			LeekWars.get<any>('forum/get-messages/' + topic + '/' + this.page).then((data) => {
-				if (!data.success) {
-					// LW.error()
-					return
-				}
+			LeekWars.get('forum/get-messages/' + topic + '/' + this.page).then(data => {
 				this.topic = data.topic
 				if (!this.topic) { return }
 				this.category = data.category
@@ -279,14 +275,14 @@
 		loadVotesUp(message: ForumMessage) {
 			if (!this.topic || this.votes_up_names[message.id] !== undefined) { return }
 			Vue.set(this.$data.votes_up_names, message.id, null)
-			LeekWars.post('forum/get-message-up-votes-names', {topic_id: this.topic.id, message_id: message.id}).then((data) => {
+			LeekWars.post('forum/get-message-up-votes-names', {topic_id: this.topic.id, message_id: message.id}).then(data => {
 				Vue.set(this.$data.votes_up_names, message.id, data.farmers.map((f: any) => f[1]))
 			})
 		}
 		loadVotesDown(message: ForumMessage) {
 			if (!this.topic || this.votes_down_names[message.id] !== undefined) { return }
 			Vue.set(this.$data.votes_down_names, message.id, null)
-			LeekWars.post('forum/get-message-down-votes-names', {topic_id: this.topic.id, message_id: message.id}).then((data) => {
+			LeekWars.post('forum/get-message-down-votes-names', {topic_id: this.topic.id, message_id: message.id}).then(data => {
 				Vue.set(this.$data.votes_down_names, message.id, data.farmers.map((f: any) => f[1]))
 			})
 		}
@@ -300,8 +296,8 @@
 		}
 		deleteMessage() {
 			if (!this.toDeleteMessage) { return }
-			LeekWars.post("forum/delete-message", {message_id: this.toDeleteMessage.id}).then((data) => {
-				if (data.success && this.toDeleteMessage) {
+			LeekWars.post("forum/delete-message", {message_id: this.toDeleteMessage.id}).then(data => {
+				if (this.toDeleteMessage) {
 					this.toDeleteMessage = null
 					this.deleteMessageDialog = false
 					this.update(true)
@@ -310,8 +306,8 @@
 		}
 		deleteTopic() {
 			if (!this.topic) { return }
-			LeekWars.post("forum/delete-topic", {topic_id: this.topic.id}).then((data) => {
-				if (data.success && this.category) {
+			LeekWars.post("forum/delete-topic", {topic_id: this.topic.id}).then(data => {
+				if (this.category) {
 					this.deleteTopicDialog = false
 					this.$router.push("/forum/category-" + this.category.id)
 				}
@@ -323,13 +319,11 @@
 		send() {
 			if (!this.topic || this.sendingMessage) { return }
 			this.sendingMessage = true
-			LeekWars.post("forum/post-message", {topic_id: this.topic.id, message: this.newMessage}).then((data) => {
-				if (data.success) {
-					localStorage.setItem('forum/draft', '')
-					this.newMessage = ''
-					this.update(true)
-					this.sendingMessage = false
-				}
+			LeekWars.post("forum/post-message", {topic_id: this.topic.id, message: this.newMessage}).then(data => {
+				localStorage.setItem('forum/draft', '')
+				this.newMessage = ''
+				this.update(true)
+				this.sendingMessage = false
 			})
 		}
 		toggleSubscribe() {
@@ -369,13 +363,11 @@
 		confirmEdit(message: ForumMessage) {
 			if (!this.topic) { return }
 			const callback = (data: any) => {
-				if (data.success) {
-					message.html = data.html
-					message.editing = false
-					message.edition_date = LeekWars.time
-					if (message.id === -1) {
-						this.topicEditing = false
-					}
+				message.html = data.html
+				message.editing = false
+				message.edition_date = LeekWars.time
+				if (message.id === -1) {
+					this.topicEditing = false
 				}
 			}
 			if (message.id !== -1) {

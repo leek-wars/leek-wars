@@ -340,44 +340,38 @@
 
 		created() {
 			if (this.initialized) { return }
-			LeekWars.get<any>('test-scenario/get-all').then((data) => {
-				if (data.success) {
-					this.initialized = true
-					this.scenarios = data.scenarios
-					this.initScenarios()
-					const startScenarioID = localStorage.getItem('editor/scenario')
-					if (startScenarioID && startScenarioID in this.scenarios) {
-						this.selectScenario(this.scenarios[startScenarioID])
-					} else if (LeekWars.objectSize(this.allScenarios)) {
-						this.selectScenario(LeekWars.first(this.allScenarios))
-					}
-				} else {
-					LeekWars.toast(data.error)
+			LeekWars.get('test-scenario/get-all').then(data => {
+				this.initialized = true
+				this.scenarios = data.scenarios
+				this.initScenarios()
+				const startScenarioID = localStorage.getItem('editor/scenario')
+				if (startScenarioID && startScenarioID in this.scenarios) {
+					this.selectScenario(this.scenarios[startScenarioID])
+				} else if (LeekWars.objectSize(this.allScenarios)) {
+					this.selectScenario(LeekWars.first(this.allScenarios))
 				}
+			}).error(error => {
+				LeekWars.toast(error)
 			})
-			LeekWars.get<any>('test-leek/get-all').then((data) => {
-				if (data.success) {
-					this.leeks = data.leeks
-					this.generateBots()
-					for (const l in this.leeks) {
-						const leek = this.leeks[l]
-						if (!leek.chips) { leek.chips = [] }
-						if (!leek.weapons) { leek.weapons = [] }
-					}
-					this.currentLeek = LeekWars.first(this.leeks)
-				} else {
-					LeekWars.toast(data.error)
+			LeekWars.get('test-leek/get-all').then(data => {
+				this.leeks = data.leeks
+				this.generateBots()
+				for (const l in this.leeks) {
+					const leek = this.leeks[l]
+					if (!leek.chips) { leek.chips = [] }
+					if (!leek.weapons) { leek.weapons = [] }
 				}
+				this.currentLeek = LeekWars.first(this.leeks)
+			}).error(error => {
+				LeekWars.toast(error)
 			})
-			LeekWars.get<any>('test-map/get-all').then((data) => {
-				if (data.success) {
-					this.maps = data.maps
-					if (!LeekWars.isEmptyObj(this.maps)) {
-						this.currentMap = LeekWars.first(this.maps)
-					}
-				} else {
-					LeekWars.toast(data.error)
+			LeekWars.get('test-map/get-all').then(data => {
+				this.maps = data.maps
+				if (!LeekWars.isEmptyObj(this.maps)) {
+					this.currentMap = LeekWars.first(this.maps)
 				}
+			}).error(error => {
+				LeekWars.toast(error)
 			})
 		}
 		initScenarios() {
@@ -422,27 +416,18 @@
 		}
 		saveScenario() {
 			if (!this.currentScenario || this.currentScenario.base) { return }
-			LeekWars.post('test-scenario/update', {id: this.currentScenario.id, data: JSON.stringify(this.currentScenario.data)}).then((data) => {
-				if (!data.success) {
-					LeekWars.toast(data.error)
-				}
-			})
+			LeekWars.post('test-scenario/update', {id: this.currentScenario.id, data: JSON.stringify(this.currentScenario.data)})
+				.error(error => LeekWars.toast(error))
 		}
 		saveLeek() {
 			if (!this.currentLeek) { return }
-			LeekWars.post('test-leek/update', {id: this.currentLeek.id, data: JSON.stringify(this.currentLeek)}).then((data) => {
-				if (!data.success) {
-					LeekWars.toast(data.error)
-				}
-			})
+			LeekWars.post('test-leek/update', {id: this.currentLeek.id, data: JSON.stringify(this.currentLeek)})
+				.error(error => LeekWars.toast(error))
 		}
 		saveMap() {
 			if (!this.currentMap) { return }
-			LeekWars.post('test-map/update', {id: this.currentMap.id, data: JSON.stringify(this.currentMap.data)}).then((data) => {
-				if (!data.success) {
-					LeekWars.toast(data.error)
-				}
-			})
+			LeekWars.post('test-map/update', {id: this.currentMap.id, data: JSON.stringify(this.currentMap.data)})
+				.error(error => LeekWars.toast(error))
 		}
 		selectMap(map: TestMap) {
 			if (this.currentMap && this.timeout) {
@@ -526,11 +511,7 @@
 			}, 2000)
 		}
 		deleteMap(map: TestMap) {
-			LeekWars.post('test-map/delete', {id: map.id}).then((data) => {
-				if (!data.success) {
-					LeekWars.toast(data.error)
-				}
-			})
+			LeekWars.post('test-map/delete', {id: map.id}).error(error => LeekWars.toast(error))
 			Vue.delete(this.$data.maps, map.id)
 			if (!LeekWars.isEmptyObj(this.maps)) {
 				this.selectMap(LeekWars.first(this.maps))
@@ -569,25 +550,18 @@
 		}
 		deleteScenario(scenario: TestScenario) {
 			if (scenario.base) { return }
-			LeekWars.post('test-scenario/delete', {id: scenario.id}).then((data) => {
-				if (data.error) {
-					LeekWars.toast(data.error)
-				}
-			})
+			LeekWars.post('test-scenario/delete', {id: scenario.id}).error(error => LeekWars.toast(error))
 			Vue.delete(this.scenarios, scenario.id)
 			this.selectScenario(LeekWars.first(this.allScenarios))
 		}
 		createScenario() {
-			LeekWars.post('test-scenario/new', {name: this.newScenarioName}).then((data) => {
-				if (data.success) {
-					Vue.set(this.scenarios, data.id, {name: this.newScenarioName, id: data.id, data: data.data})
-					this.newScenarioName = ''
-					this.newScenarioDialog = false
-					this.selectScenario(this.scenarios[data.id])
-				} else {
-					LeekWars.toast(data.error)
-				}
+			LeekWars.post('test-scenario/new', {name: this.newScenarioName}).then(data => {
+				Vue.set(this.scenarios, data.id, {name: this.newScenarioName, id: data.id, data: data.data})
+				this.newScenarioName = ''
+				this.newScenarioDialog = false
+				this.selectScenario(this.scenarios[data.id])
 			})
+			.error(error => LeekWars.toast(error))
 		}
 		addScenarioLeek(leek: Leek) {
 			if (!this.currentScenario || !this.addLeekTeam) { return }
@@ -645,31 +619,25 @@
 			this.saveLeek()
 		}
 		createLeek() {
-			LeekWars.post('test-leek/new', {name: this.newLeekName}).then((data) => {
-				if (data.success) {
-					Vue.set(this.leeks, data.id, {name: this.newLeekName, id: data.id})
-					for (const k in data.data) {
-						Vue.set(this.leeks[data.id], k, data.data[k])
-					}
-					this.newLeekDialog = false
-					this.newLeekName = ''
-					this.currentLeek = this.leeks[data.id]
-				} else {
-					LeekWars.toast(data.error)
+			LeekWars.post('test-leek/new', {name: this.newLeekName}).then(data => {
+				Vue.set(this.leeks, data.id, {name: this.newLeekName, id: data.id})
+				for (const k in data.data) {
+					Vue.set(this.leeks[data.id], k, data.data[k])
 				}
+				this.newLeekDialog = false
+				this.newLeekName = ''
+				this.currentLeek = this.leeks[data.id]
 			})
+			.error((error) => LeekWars.toast(error))
 		}
 		createMap() {
-			LeekWars.post('test-map/new', {name: this.newMapName}).then((data) => {
-				if (data.success) {
-					Vue.set(this.maps, data.id, {name: this.newMapName, id: data.id, data: {obstacles: {}, team1: [], team2: []}})
-					this.newMapDialog = false
-					this.newMapName = ''
-					this.selectMap(this.maps[data.id])
-				} else {
-					LeekWars.toast(data.error)
-				}
+			LeekWars.post('test-map/new', {name: this.newMapName}).then(data => {
+				Vue.set(this.maps, data.id, {name: this.newMapName, id: data.id, data: {obstacles: {}, team1: [], team2: []}})
+				this.newMapDialog = false
+				this.newMapName = ''
+				this.selectMap(this.maps[data.id])
 			})
+			.error(error => LeekWars.toast(error))
 		}
 		characteristicFocusout(characteristic: string, event: FocusEvent) {
 			if (!this.currentLeek || this.currentLeek.bot || !event.target) { return }
@@ -701,14 +669,11 @@
 				}
 			}
 			const service = v2 ? 'ai/test-v2' : 'ai/test-new'
-			LeekWars.post(service, {data: scenario_data}).then((data) => {
-				if (data.success) {
-					localStorage.setItem('editor/last-scenario-data', scenario_data)
-					this.$router.push('/fight/' + data.fight)
-				} else {
-					LeekWars.toast("Erreur : " + data.error)
-				}
+			LeekWars.post(service, {data: scenario_data}).then(data => {
+				localStorage.setItem('editor/last-scenario-data', scenario_data)
+				this.$router.push('/fight/' + data.fight)
 			})
+			.error(error => LeekWars.toast(error))
 		}
 	}
 </script>

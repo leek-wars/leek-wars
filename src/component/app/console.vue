@@ -30,20 +30,19 @@
 
 		enter() {
 			const code = this.code
-			LeekWars.post('leekscript/execute', {code}).then((data) => {
-				if (data.success) {
-					this.lines.push({type: 'code', code})
-					if (!data.result) {
-						this.lines.push({type: 'error'})
-					} else {
-						const json = JSON.parse(data.result)
-						const time = json.ops + ' op' + (json.ops > 1 ? 's' : '') + ' | ' + Math.round(json.time / 1000) / 1000 + 'ms'
-						this.lines.push({type: 'result', result: json.res, time})
-					}
-					this.scrollDown()
+			LeekWars.post('leekscript/execute', {code}).then(data => {
+				this.lines.push({type: 'code', code})
+				if (!data.result) {
+					this.lines.push({type: 'error'})
 				} else {
-					LeekWars.toast(data.error)
+					const json = JSON.parse(data.result)
+					const time = json.ops + ' op' + (json.ops > 1 ? 's' : '') + ' | ' + Math.round(json.time / 1000) / 1000 + 'ms'
+					this.lines.push({type: 'result', result: json.res, time})
 				}
+				this.scrollDown()
+				this.code = ''
+			}).error(error => {
+				LeekWars.toast(error)
 				this.code = ''
 			})
 		}
@@ -56,12 +55,10 @@
 			(this.$refs.input as HTMLElement).focus()
 		}
 		random() {
-			LeekWars.get<any>('leekscript/random').then((data) => {
-				if (data.success) {
-					this.code = data.code
-				} else {
-					LeekWars.toast(data.error)
-				}
+			LeekWars.get('leekscript/random').then(data => {
+				this.code = data.code
+			}).error(error => {
+				LeekWars.toast(error)
 			})
 		}
 	}

@@ -121,7 +121,7 @@
 				{icon: 'search', click: () => this.$router.push('/search/-/-/' + category) }
 			])
 			if (this.category) { this.category.topics = null }
-			LeekWars.get<any>('forum/get-topics/' + category + '/' + this.page).then((data) => {
+			LeekWars.get('forum/get-topics/' + category + '/' + this.page).then(data => {
 				this.category = data.category
 				if (this.category) {
 					this.category.name = this.category.team > 0 ? this.category.name : this.$t('forum.category_' + this.category.name) as string
@@ -135,15 +135,13 @@
 		}
 		create() {
 			if (!this.category) { return }
-			LeekWars.post('forum/create-topic', {category_id: this.category.id,	title: this.createTitle, message: this.createMessage, issue: 0}).then((data) => {
-				if (data.success) {
-					this.createDialog = false
-					if (this.category) {
-						this.$router.push("/forum/category-" + this.category.id + "/topic-" + data.topic_id)
-					}
-				} else {
-					LeekWars.toast(data.error)
+			LeekWars.post('forum/create-topic', {category_id: this.category.id,	title: this.createTitle, message: this.createMessage, issue: 0}).then(data => {
+				this.createDialog = false
+				if (this.category) {
+					this.$router.push("/forum/category-" + this.category.id + "/topic-" + data.topic_id)
 				}
+			}).error(error => {
+				LeekWars.toast(error)
 			})
 		}
 		search() {

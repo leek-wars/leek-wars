@@ -110,7 +110,7 @@
 		severity: number = 0
 
 		created() {
-			LeekWars.get<ModerationRequest>('moderation/get-reportings').then((data) => {
+			LeekWars.get<ModerationRequest>('moderation/get-reportings').then(data => {
 				this.faults = data.faults
 				this.thugs = data.thugs
 				for (const fault of this.faults) {
@@ -139,12 +139,10 @@
 			}
 		}
 		ban(farmer: Farmer) {
-			LeekWars.post('moderation/ban', {target: farmer.id}).then((data) => {
-				if (data.success) {
-					LeekWars.toast("Éleveur banni")
-				} else {
-					LeekWars.toast(data.error)
-				}
+			LeekWars.post('moderation/ban', {target: farmer.id}).then(data => {
+				LeekWars.toast("Éleveur banni")
+			}).error(error => {
+				LeekWars.toast(error)
 			})
 		}
 		giveWarning() {
@@ -153,30 +151,26 @@
 		archiveReporting() {
 			if (!this.selectedFault) { return }
 			const fault = this.selectedFault
-			LeekWars.post('moderation/archive', {target: fault.target.id, reason: fault.reason, parameter: fault.parameter}).then((data) => {
-				if (data.success) {
-					LeekWars.toast(this.$t('moderation.reporting_deleted') as string)
-					this.faults.splice(this.faults.indexOf(fault), 1)
-					Vue.delete(this.faultsById, '' + fault.id)
-					this.$router.push('/moderation')
-				} else {
-					LeekWars.toast(data.error)
-				}
+			LeekWars.post('moderation/archive', {target: fault.target.id, reason: fault.reason, parameter: fault.parameter}).then(data => {
+				LeekWars.toast(this.$t('moderation.reporting_deleted') as string)
+				this.faults.splice(this.faults.indexOf(fault), 1)
+				Vue.delete(this.faultsById, '' + fault.id)
+				this.$router.push('/moderation')
+			}).error(error => {
+				LeekWars.toast(error)
 			})
 		}
 		sendWarning() {
 			if (!this.selectedFault) { return }
 			const fault = this.selectedFault
-			LeekWars.post('moderation/warn', {target: fault.target.id, reason: fault.reason, message: this.message, severity: this.severity, parameter: this.selectedFault.parameter}).then((data) => {
-				if (data.success) {
-					LeekWars.toast(i18n.t('moderation.warning_sent') as string)
-					this.faults.splice(this.faults.indexOf(fault), 1)
-					Vue.delete(this.faultsById, '' + fault.id)
-					this.warningConfirmDialog = false
-					this.$router.push('/moderation')
-				} else {
-					LeekWars.toast(data.error)
-				}
+			LeekWars.post('moderation/warn', {target: fault.target.id, reason: fault.reason, message: this.message, severity: this.severity, parameter: this.selectedFault.parameter}).then(data => {
+				LeekWars.toast(i18n.t('moderation.warning_sent') as string)
+				this.faults.splice(this.faults.indexOf(fault), 1)
+				Vue.delete(this.faultsById, '' + fault.id)
+				this.warningConfirmDialog = false
+				this.$router.push('/moderation')
+			}).error(error => {
+				LeekWars.toast(error)
 			})
 		}
 	}

@@ -398,7 +398,7 @@
 			const saveID = this.currentEditor.id > 0 ? this.currentEditor.id : 0
 			const content = this.currentEditor.editor.getValue()
 
-			LeekWars.post('ai/save', {ai_id: saveID, code: content}).then((data: any) => {
+			LeekWars.post('ai/save', {ai_id: saveID, code: content}).then(data => {
 				if (this.currentEditor === null) { return }
 				this.currentEditor.saving = false
 				if (this.currentEditor.ai.v2) {
@@ -415,7 +415,7 @@
 						this.currentEditor.addErrorOverlay(errors)
 					}
 				} else {
-					if (!data.success || !data.result || data.result.length === 0) {
+					if (!data.result || data.result.length === 0) {
 						this.currentEditor.serverError = true
 						return
 					}
@@ -453,12 +453,15 @@
 					this.currentEditor.needTest = false
 					this.currentEditor.test()
 				}
+			}).error(() => {
+				if (this.currentEditor === null) { return }
+				this.currentEditor.serverError = true
 			})
 		}
 		newAI(v2: boolean) {
 			if (!this.currentFolder) { return }
-			LeekWars.post('ai/new', {folder_id: this.currentFolder.id, v2}).then((data) => {
-				if (data.success && this.currentFolder) {
+			LeekWars.post('ai/new', {folder_id: this.currentFolder.id, v2}).then(data => {
+				if (this.currentFolder) {
 					const ai = data.ai
 					ai.valid = true
 					ai.v2 = v2
@@ -471,8 +474,8 @@
 		}
 		newFolder() {
 			if (!this.currentFolder) { return }
-			LeekWars.post('ai-folder/new', {folder_id: this.currentFolder.id}).then((data) => {
-				if (data.success && this.currentFolder) {
+			LeekWars.post('ai-folder/new', {folder_id: this.currentFolder.id}).then(data => {
+				if (this.currentFolder) {
 					const folder = new Folder(data.id, this.$t('editor.new_folder') as string, this.currentFolder)
 					folder.items = []
 					this.folderById[folder.id] = folder
@@ -486,30 +489,28 @@
 		deleteItem() {
 			const url = this.currentType === 'folder' ? 'ai-folder/delete' : 'ai/delete'
 			const args = this.currentType === 'folder' ? {folder_id: this.currentID} : {ai_id: this.currentID}
-			LeekWars.post(url, args).then((data) => {
-				if (data.success) {
-					let ai_deleted = false
-					if (this.currentType === 'ai' && this.currentAI) {
-						const folder = this.folderById[this.currentAI.folder]
-						folder.items.splice(folder.items.findIndex((i) => !i.folder && (i as AIItem).ai === this.currentAI), 1)
-						Vue.delete(this.$data.ais, '' + this.currentID)
-						Vue.delete(this.$data.activeAIs, '' + this.currentID)
-						ai_deleted = true
-					} else if (this.currentFolder) {
-						const folder = this.currentFolder.parent
-						folder.items.splice(folder.items.indexOf(this.currentFolder), 1)
-					}
-					if (ai_deleted) {
-						if (!LeekWars.isEmptyObj(this.ais)) {
-							this.$router.replace('/editor/' + LeekWars.firstKey(this.ais))
-						} else {
-							this.$router.replace('/editor')
-						}
-					}
-					this.deleteDialog = false
-				} else {
-					LeekWars.toast(data.error)
+			LeekWars.post(url, args).then(data => {
+				let ai_deleted = false
+				if (this.currentType === 'ai' && this.currentAI) {
+					const folder = this.folderById[this.currentAI.folder]
+					folder.items.splice(folder.items.findIndex((i) => !i.folder && (i as AIItem).ai === this.currentAI), 1)
+					Vue.delete(this.$data.ais, '' + this.currentID)
+					Vue.delete(this.$data.activeAIs, '' + this.currentID)
+					ai_deleted = true
+				} else if (this.currentFolder) {
+					const folder = this.currentFolder.parent
+					folder.items.splice(folder.items.indexOf(this.currentFolder), 1)
 				}
+				if (ai_deleted) {
+					if (!LeekWars.isEmptyObj(this.ais)) {
+						this.$router.replace('/editor/' + LeekWars.firstKey(this.ais))
+					} else {
+						this.$router.replace('/editor')
+					}
+				}
+				this.deleteDialog = false
+			}).error(error => {
+				LeekWars.toast(error)
 			})
 		}
 		test() {

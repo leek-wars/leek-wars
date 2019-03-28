@@ -192,7 +192,7 @@
 				{icon: 'power_settings_new', click: () => this.logout()}
 			])
 
-			LeekWars.get<any>('settings/get-settings').then((data) => {
+			LeekWars.get('settings/get-settings').then(data => {
 				this.sfwMode = localStorage.getItem('sfw') === 'true'
 				this.notifsResults = localStorage.getItem('options/notifs-results') === 'true'
 				this.chatFirst = localStorage.getItem('options/chat-first') === 'true'
@@ -268,14 +268,12 @@
 				LeekWars.toast(this.$i18n.t('farmer.error_not_same_password'))
 				return false
 			}
-			LeekWars.post('farmer/change-password', {password: this.password, new_password: this.newPassword1}).then((data) => {
-				if (data.success) {
-					this.$store.commit('disconnect')
-					LeekWars.toast(this.$i18n.t('settings.password_changed'))
-					this.$router.push('/login')
-				} else {
-					LeekWars.toast(this.$i18n.t('farmer.error_' + data.error, data.params))
-				}
+			LeekWars.post('farmer/change-password', {password: this.password, new_password: this.newPassword1}).then(data => {
+				this.$store.commit('disconnect')
+				LeekWars.toast(this.$i18n.t('settings.password_changed'))
+				this.$router.push('/login')
+			}).error(error => {
+				LeekWars.toast(this.$i18n.t('farmer.error_' + error.error, error.params))
 			})
 			return false
 		}
@@ -285,19 +283,18 @@
 			this.deleteConfirmDialog = true
 		}
 		deleteAccountFinal() {
-			LeekWars.post('farmer/unregister', {password: this.deleteConfirmPassword, delete_forum_messages: this.deleteForumMessages}).then((data) => {
+			LeekWars.post('farmer/unregister', {password: this.deleteConfirmPassword, delete_forum_messages: this.deleteForumMessages}).then(data => {
 				this.deleteConfirmDialog = false
-				if (data.success) {
-					this.deleteSuccessDialog = true
-					setTimeout(() => {
-						this.$store.commit('disconnect')
-						this.deleteSuccessDialog = false
-						this.$router.push('/')
-					}, 3000)
-				} else {
-					this.deleteFailedDialog = true
-					this.deleteFailedError = data.error
-				}
+				this.deleteSuccessDialog = true
+				setTimeout(() => {
+					this.$store.commit('disconnect')
+					this.deleteSuccessDialog = false
+					this.$router.push('/')
+				}, 3000)
+			}).error(error => {
+				this.deleteConfirmDialog = false
+				this.deleteFailedDialog = true
+				this.deleteFailedError = error
 			})
 		}
 	}
