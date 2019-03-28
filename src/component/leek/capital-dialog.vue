@@ -184,17 +184,15 @@
 			this.update()
 		}
 		validate() {
-			LeekWars.post('leek/spend-capital', {leek: this.leek.id, characteristics: JSON.stringify(this.bonuses)}).then((data) => {
-				if (data.success) {
-					for (const stat in this.bonuses) {
-						(this.leek as any)[stat] += this.bonuses[stat]
-					}
-					this.leek.capital = this.capital
-					this.$store.commit('update-capital', {leek: this.leek.id, capital: this.capital})
-					this.close()
-				} else {
-					LeekWars.toast(data.error)
+			LeekWars.post('leek/spend-capital', {leek: this.leek.id, characteristics: JSON.stringify(this.bonuses)}).then(data => {
+				for (const stat in this.bonuses) {
+					(this.leek as any)[stat] += this.bonuses[stat]
 				}
+				this.leek.capital = this.capital
+				this.$store.commit('update-capital', {leek: this.leek.id, capital: this.capital})
+				this.close()
+			}).error((error) => {
+				LeekWars.toast(error)
 			})
 		}
 		close() {

@@ -196,12 +196,10 @@
 		created() {
 			LeekWars.setTitle(null)
 			this.godfather = 'godfather' in this.$route.params ? this.$route.params.godfather : ''
-			LeekWars.get<any>('leek/get-count').then((data) => {
-				if (data.success) {
-					this.leek_count = data.leeks
-				}
+			LeekWars.get('leek/get-count').then(data => {
+				this.leek_count = data.leeks
 			})
-			LeekWars.get<any>('ranking/get-home-ranking').then((data) => {
+			LeekWars.get('ranking/get-home-ranking').then(data => {
 				data.leeks[0].style = data.farmers[0].style = 'first'
 				data.leeks[1].style = data.farmers[1].style = 'second'
 				data.leeks[2].style = data.farmers[2].style = 'third'
@@ -223,14 +221,12 @@
 				email: this.email,
 				leek_name: this.leek,
 				godfather: this.godfather
-			}).then((data) => {
-				if (data.success) {
-					this.successDialog = true
-				} else {
-					for (const error of data.errors) {
-						const form = ['login', 'leek', 'email', 'password1', 'password2', 'godfather'][error[0]]
-						this.addError(form, i18n.t('farmer.error_' + error[1], error[2]) as string)
-					}
+			}).then(data => {
+				this.successDialog = true
+			}).error(errors => {
+				for (const error of errors) {
+					const form = ['login', 'leek', 'email', 'password1', 'password2', 'godfather'][error[0]]
+					this.addError(form, i18n.t('farmer.error_' + error[1], error[2]) as string)
 				}
 			})
 			return false

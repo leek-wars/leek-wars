@@ -57,7 +57,7 @@
 				if (localStorage.getItem('data/function_categories')) {
 					callback({categories: JSON.parse(localStorage.getItem('data/function_categories') || '[]')})
 				} else {
-					LeekWars.get<any>('function/get-categories').then((data) => {
+					LeekWars.get('function/get-categories').then(data => {
 						localStorage.setItem('data/function_categories', JSON.stringify(data.categories))
 						callback(data)
 					})

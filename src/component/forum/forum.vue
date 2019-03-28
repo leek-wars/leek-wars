@@ -136,11 +136,11 @@
 			const lang = localStorage.getItem('forum/language') as string || this.$i18n.locale
 			this.forumLanguage = LeekWars.languages[lang]
 			this.chatLanguage = LeekWars.languages[this.$i18n.locale]
-			LeekWars.get<any>('forum/get-categories/' + this.forumLanguage.code).then((data) => {
+			LeekWars.get('forum/get-categories/' + this.forumLanguage.code).then(data => {
 				this.categories = data.categories
 				this.$root.$emit('loaded')
 			})
-			LeekWars.get<any>('farmer/get-connected').then((data: any) => {
+			LeekWars.get('farmer/get-connected').then(data => {
 				this.connected_farmers = data.farmers
 				LeekWars.setSubTitle(this.$t('forum.connected_farmers_subtitle', [data.count]))
 			})
@@ -154,7 +154,7 @@
 			this.forumLanguage = language
 			this.categories = null
 			localStorage.setItem('forum/language', language.code)
-			LeekWars.get<any>('forum/get-categories/' + language.code).then((data) => {
+			LeekWars.get('forum/get-categories/' + language.code).then(data => {
 				this.categories = data.categories
 			})
 		}

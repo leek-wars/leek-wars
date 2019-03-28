@@ -30,7 +30,7 @@
 	export default class Changelog extends Vue {
 		changelog: any = null
 		created() {
-			LeekWars.get<any>('changelog/get/' + this.$i18n.locale).then((data) => {
+			LeekWars.get('changelog/get/' + this.$i18n.locale).then(data => {
 				for (const d of data.changelog) {
 					const changes_data = this.$t(d.data) as string
 					d.changes = []

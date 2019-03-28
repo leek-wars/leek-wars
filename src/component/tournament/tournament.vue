@@ -224,22 +224,20 @@
 		@Watch('$route.params', {immediate: true})
 		update() {
 			this.tournament = null
-			LeekWars.get<any>('tournament/get/' + this.$route.params.id).then((data) => {
-				if (data.success) {
-					this.tournament = data.tournament
-					if (!this.tournament) { return }
+			LeekWars.get('tournament/get/' + this.$route.params.id).then(data => {
+				this.tournament = data.tournament
+				if (!this.tournament) { return }
 
-					this.sixteenths = this.tournament.rounds.sixteenths
-					this.eighths = this.tournament.rounds.eighths
-					this.quarters = this.tournament.rounds.quarters
-					this.semifinals = this.tournament.rounds.semifinals
-					this.finals = this.tournament.rounds.finals
+				this.sixteenths = this.tournament.rounds.sixteenths
+				this.eighths = this.tournament.rounds.eighths
+				this.quarters = this.tournament.rounds.quarters
+				this.semifinals = this.tournament.rounds.semifinals
+				this.finals = this.tournament.rounds.finals
 
-					this.title = this.$t('tournament.' + this.tournament.type, [LeekWars.formatDate(this.tournament.date)]) as string
-					LeekWars.setTitle(this.title)
-					LeekWars.setActions(this.actions)
-					this.setupTimer()
-				}
+				this.title = this.$t('tournament.' + this.tournament.type, [LeekWars.formatDate(this.tournament.date)]) as string
+				LeekWars.setTitle(this.title)
+				LeekWars.setActions(this.actions)
+				this.setupTimer()
 			})
 			this.$root.$on('tooltip', this.tooltipOpen)
 			this.$root.$on('tooltip-close', this.tooltipClose)
@@ -262,8 +260,8 @@
 		}
 		comment(comment: Comment) {
 			if (!this.tournament) { return }
-			LeekWars.post('tournament/comment', {tournament_id: this.tournament.id, comment: comment.comment}).then((data) => {
-				if (data.success && this.tournament) {
+			LeekWars.post('tournament/comment', {tournament_id: this.tournament.id, comment: comment.comment}).then(data => {
+				if (this.tournament) {
 					this.tournament.comments.push(comment)
 				}
 			})

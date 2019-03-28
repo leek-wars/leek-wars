@@ -29,24 +29,20 @@ function updateTitle(state: LeekWarsState) {
 	LeekWars.setTitleCounter(state.unreadNotifications + state.unreadMessages)
 }
 function loadNotifications(state: LeekWarsState) {
-	LeekWars.get<any>('notification/get-latest/20').then((data: any) => {
-		if (data.success) {
-			state.unreadNotifications = data.unread
-			updateTitle(state)
-			for (const notification of data.notifications.reverse()) {
-				store.commit('notification', notification)
-			}
+	LeekWars.get('notification/get-latest/20').then(data => {
+		state.unreadNotifications = data.unread
+		updateTitle(state)
+		for (const notification of data.notifications.reverse()) {
+			store.commit('notification', notification)
 		}
 	})
 }
 function loadMessages(state: LeekWarsState) {
-	LeekWars.get<any>('message/get-latest-conversations/20').then((data: any) => {
-		if (data.success) {
-			state.unreadMessages = data.unread
-			updateTitle(state)
-			for (const conversation of data.conversations) {
-				store.commit('new-conversation', conversation)
-			}
+	LeekWars.get('message/get-latest-conversations/20').then(data => {
+		state.unreadMessages = data.unread
+		updateTitle(state)
+		for (const conversation of data.conversations) {
+			store.commit('new-conversation', conversation)
 		}
 	})
 }

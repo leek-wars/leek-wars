@@ -213,11 +213,7 @@
 
 		created() {
 			this.actions = [{icon: 'account_balance', click: () => this.$router.push('/bank')}]
-			LeekWars.get<any>('market/get-item-templates').then((res) => {
-				if (!res.success) {
-					// LW.error()
-					return
-				}
+			LeekWars.get('market/get-item-templates').then(res => {
 				const items = res.items as ItemTemplate[]
 				for (const i in items) {
 					const item = items[i]
@@ -301,54 +297,50 @@
 			const item = this.selectedItem
 			const method = currency === 'habs' ? 'market/buy-habs' : 'market/buy-crystals'
 			const id = item.type === ItemType.FIGHT_PACK ? (item.id - 1000000) + 'fights' : item.id
-			LeekWars.post(method, {item_id: id}).then((data) => {
-				if (data.success) {
-					this.buyDialog = false
-					this.buyCrystalsDialog = false
-					// _.toast([
-					// 	_.lang.get('market', 'weapon_bought'),
-					// 	_.lang.get('market', 'chip_bought'),
-					// 	_.lang.get('market', 'potion_bought'),
-					// 	_.lang.get('market', 'hat_bought'),
-					// 	_.lang.get('market', 'fights_bought')
-					// ][type - 1])
-					if (item.type !== ItemType.FIGHT_PACK) {
-						item.farmer_count++
-					}
-					if (currency === 'habs') {
-						this.$store.commit('update-habs', -item.price_habs)
-					} else {
-						this.$store.commit('update-crystals', -item.price_crystals)
-					}
-					if (item.type === ItemType.FIGHT_PACK) {
-						this.$store.commit('update-fights', data.fights)
-					}
-					this.$store.commit('add-inventory', {type: item.type, item_id: data.item, item_template: id})
-				} else {
-					let error = data.error
-					if (data.error === 'already_bought_fights_with_habs') {
-						error = this.$t('market.' + error)
-					}
-					LeekWars.toast(error)
+			LeekWars.post(method, {item_id: id}).then(data => {
+				this.buyDialog = false
+				this.buyCrystalsDialog = false
+				// _.toast([
+				// 	_.lang.get('market', 'weapon_bought'),
+				// 	_.lang.get('market', 'chip_bought'),
+				// 	_.lang.get('market', 'potion_bought'),
+				// 	_.lang.get('market', 'hat_bought'),
+				// 	_.lang.get('market', 'fights_bought')
+				// ][type - 1])
+				if (item.type !== ItemType.FIGHT_PACK) {
+					item.farmer_count++
 				}
+				if (currency === 'habs') {
+					this.$store.commit('update-habs', -item.price_habs)
+				} else {
+					this.$store.commit('update-crystals', -item.price_crystals)
+				}
+				if (item.type === ItemType.FIGHT_PACK) {
+					this.$store.commit('update-fights', data.fights)
+				}
+				this.$store.commit('add-inventory', {type: item.type, item_id: data.item, item_template: id})
+			}).error(error => {
+				let e = error
+				if (error === 'already_bought_fights_with_habs') {
+					e = this.$t('market.' + error)
+				}
+				LeekWars.toast(e)
 			})
 		}
 		sell() {
 			if (!this.selectedItem) { return }
 			const item = this.selectedItem
-			LeekWars.post('market/sell-habs', {item_id: item.id}).then((data) => {
-				if (data.success) {
-					this.sellDialog = false
-					// _.toast([
-					// 	_.lang.get('market', 'weapon_selled'),
-					// 	_.lang.get('market', 'chip_selled'),
-					// 	_.lang.get('market', 'potion_selled'),
-					// 	_.lang.get('market', 'hat_selled')
-					// ][type - 1])
-					item.farmer_count--
-					this.$store.commit('update-habs', item.sell_price)
-					this.$store.commit('remove-inventory', {type: item.type, item_template: data.item})
-				}
+			LeekWars.post('market/sell-habs', {item_id: item.id}).then(data => {
+				this.sellDialog = false
+				// _.toast([
+				// 	_.lang.get('market', 'weapon_selled'),
+				// 	_.lang.get('market', 'chip_selled'),
+				// 	_.lang.get('market', 'potion_selled'),
+				// 	_.lang.get('market', 'hat_selled')
+				// ][type - 1])
+				item.farmer_count--
+				this.$store.commit('update-habs', item.sell_price)
+				this.$store.commit('remove-inventory', {type: item.type, item_template: data.item})
 			})
 		}
 		updateChipMode() {

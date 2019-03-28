@@ -198,11 +198,7 @@
 			this.smooth = localStorage.getItem('report/graph-type') === 'smooth'
 			const id = this.$route.params.id
 			const url = this.$store.getters.admin ? 'fight/get-private/' + id : 'fight/get/' + id
-			LeekWars.get<FightResponse>(url).then((data) => {
-				if (!data.success) {
-					this.error = true
-					return
-				}
+			LeekWars.get<FightResponse>(url).then(data => {
 				if (data.fight.status === 0) {
 					this.generating = true
 					return
@@ -229,7 +225,7 @@
 						this.report.leeks2[l].aiTime = Math.round(this.report.ai_times[l].time / 1000) / 1000
 					}
 				}
-				LeekWars.get<any>('fight/get-logs/' + id).then((d) => {
+				LeekWars.get('fight/get-logs/' + id).then(d => {
 					this.logs = d.logs
 					this.processLogs()
 					this.warningsErrors()
@@ -242,6 +238,7 @@
 				LeekWars.setTitle(this.$i18n.t('report.title') + " - " + this.fight.team1_name + " vs " + this.fight.team2_name)
 				this.$root.$emit('loaded')
 			})
+			.error(error => this.error = true)
 		}
 		processLogs() {
 			if (!this.actions || !this.logs) { return }
@@ -302,12 +299,10 @@
 		refight() {
 			if (this.fight && this.fight.context === FightContext.TEST) {
 				const last = localStorage.getItem('editor/last-scenario-data')
-				LeekWars.post('ai/test-new', {data: last}).then((data) => {
-					if (data.success) {
-						this.$router.push('/fight/' + data.fight)
-					} else {
-						LeekWars.toast("Erreur : " + data.error)
-					}
+				LeekWars.post('ai/test-new', {data: last}).then(data => {
+					this.$router.push('/fight/' + data.fight)
+				}).error(error => {
+					LeekWars.toast("Erreur : " + error)
 				})
 			}
 		}

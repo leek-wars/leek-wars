@@ -27,10 +27,9 @@
 		success: any = null
 		error: any = null
 		created() {
-			LeekWars.post('farmer/activate', {farmer_id: this.$route.params.id, code: this.$route.params.code}).then((data) => {
-				this.success = data.success
-				this.error = data.error
-			})
+			LeekWars.post('farmer/activate', {farmer_id: this.$route.params.id, code: this.$route.params.code})
+				.then(() => this.success = true)
+				.error(error => this.error = error)
 		}
 	}
 </script>

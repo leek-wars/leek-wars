@@ -230,7 +230,7 @@
 			}
 			if (this.category === 'fun') {
 				this.rankings = null
-				LeekWars.get<any>('ranking/fun').then((data) => {
+				LeekWars.get('ranking/fun').then(data => {
 					for (const row of data.rankings) {
 						row.ranking.ranking[0].style = 'first'
 						row.ranking.ranking[1].style = 'second'
@@ -253,11 +253,7 @@
 				this.order = 'order' in this.$route.params ? this.$route.params.order : 'talent'
 				this.page = 'page' in this.$route.params ? parseInt(this.$route.params.page, 10) : 1
 				const service = this.active ? 'get-active' : 'get'
-				LeekWars.get<any>('ranking/' + service + '/' + this.category + '/' + this.order + '/' + this.page).then((data) => {
-					if (!data.success) {
-						// LW.error()
-						return
-					}
+				LeekWars.get('ranking/' + service + '/' + this.category + '/' + this.order + '/' + this.page).then(data => {
 					const ranking = data.ranking as Ranking
 					if (this.page === 1) {
 						ranking[0].style = 'first'
@@ -297,11 +293,9 @@
 			} else if (this.category === 'team' && this.$store.state.farmer.team !== null) {
 				url = 'ranking/get-team-rank/' + this.$store.state.farmer.team.id + '/' + this.order
 			}
-			LeekWars.get<any>(url).then((data) => {
-				if (data.success) {
-					const page = 1 + Math.floor((data.rank - 1) / 50)
-					this.$router.push('/ranking/' + this.category + '/' + this.order + '/page-' + page)
-				}
+			LeekWars.get(url).then(data => {
+				const page = 1 + Math.floor((data.rank - 1) / 50)
+				this.$router.push('/ranking/' + this.category + '/' + this.order + '/page-' + page)
 			})
 		}
 		openSearch() {
@@ -315,7 +309,7 @@
 			if (!this.searchQuery.length) {
 				this.searchResults = []
 			} else {
-				LeekWars.post('ranking/search', {query: this.searchQuery, search_leeks: this.searchLeeks, search_farmers: this.searchFarmers, search_teams: this.searchTeams}).then((data) => {
+				LeekWars.post('ranking/search', {query: this.searchQuery, search_leeks: this.searchLeeks, search_farmers: this.searchFarmers, search_teams: this.searchTeams}).then(data => {
 					this.searchResults = data.results
 				})
 			}

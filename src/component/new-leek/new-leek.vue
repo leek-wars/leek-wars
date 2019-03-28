@@ -39,7 +39,7 @@
 		error: string | null = null
 		loading: boolean = true
 		created() {
-			LeekWars.get<any>('leek/get-next-price').then((data) => {
+			LeekWars.get('leek/get-next-price').then(data => {
 				this.price = data.price
 				this.leekCount = LeekWars.objectSize(this.$store.state.farmer.leeks)
 				LeekWars.setTitle(this.$t('title'))
@@ -47,12 +47,10 @@
 			})
 		}
 		createLeek() {
-			LeekWars.post('leek/create', {name: this.leekName}).then((data) => {
-				if (data.success) {
-					this.$router.push('/leek/' + data.id)
-				} else {
-					this.error = this.$t('leek.error_' + data.error, data.params) as string
-				}
+			LeekWars.post('leek/create', {name: this.leekName}).then(data => {
+				this.$router.push('/leek/' + data.id)
+			}).error(error => {
+				this.error = this.$t('leek.error_' + error.error, error.params) as string
 			})
 		}
 	}

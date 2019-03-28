@@ -420,12 +420,7 @@
 					request = 'team/get-connected/' + this.id
 				}
 			}
-			LeekWars.get<any>(request).then((data) => {
-				if (!data.success) {
-					// TODO
-					// LW.error('Pas de team', 'Team introuvable !')
-					return
-				}
+			LeekWars.get(request).then(data => {
 				this.team = data.team
 				if (!this.team) {
 					return
@@ -472,22 +467,20 @@
 
 			LeekWars.toast(this.$t('team.uploading_emblem') as string)
 
-			LeekWars.post('team/set-emblem', formdata).then((data) => {
-				if (data.success) {
-					if (this.team) {
-						LeekWars.toast(this.$t('team.upload_success') as string)
-						this.team.emblem_changed = LeekWars.time
-						this.$store.commit('update-emblem')
-					}
-				} else {
-					LeekWars.toast(this.$t('team.upload_failed', [data.error]) as string)
+			LeekWars.post('team/set-emblem', formdata).then(data => {
+				if (this.team) {
+					LeekWars.toast(this.$t('team.upload_success') as string)
+					this.team.emblem_changed = LeekWars.time
+					this.$store.commit('update-emblem')
 				}
+			}).error(error => {
+				LeekWars.toast(this.$t('team.upload_failed', [error.error]) as string)
 			})
 		}
 
 		createComposition() {
-			LeekWars.post('team/create-composition', {composition_name: this.createCompoName}).then((data) => {
-				if (data.success && this.team) {
+			LeekWars.post('team/create-composition', {composition_name: this.createCompoName}).then(data => {
+				if (this.team) {
 					if (!data.id) {
 						data.id = Math.floor(Math.random() * 100000)
 					}
@@ -504,15 +497,15 @@
 					this.team.compositions.push(compo)
 					this.team.compositionsById[compo.id] = compo
 					this.createCompoDialog = false
-				} else {
-					LeekWars.toast(data.error)
 				}
+			}).error(error => {
+				LeekWars.toast(error)
 			})
 		}
 
 		deleteComposition(composition: Composition) {
-			LeekWars.post('team/delete-composition', {composition_id: composition.id}).then((data) => {
-				if (data.success && this.team) {
+			LeekWars.post('team/delete-composition', {composition_id: composition.id}).then(data => {
+				if (this.team) {
 					LeekWars.toast(this.$i18n.t('team.compo_deleted', composition.name))
 					// On transfère tous les leeks dans les leeks non engagés
 					for (const leek of composition.leeks) {
@@ -520,9 +513,9 @@
 					}
 					this.team.compositions.splice(this.team.compositions.indexOf(composition))
 					this.deleteCompoDialog = false
-				} else {
-					LeekWars.toast(data.error)
 				}
+			}).error(error => {
+				LeekWars.toast(error)
 			})
 		}
 				
@@ -535,27 +528,24 @@
 		}
 
 		quitTeam () {
-			LeekWars.post('team/quit').then((data) => {
-				if (data.success) {
-					LeekWars.toast(this.$i18n.t('team.you_left_team'))
-					this.$router.push('/farmer')
-				} else {
-					LeekWars.toast(data.error)
-				}
+			LeekWars.post('team/quit').then(data => {
 				this.quitTeamDialog = false
+				LeekWars.toast(this.$i18n.t('team.you_left_team'))
+				this.$router.push('/farmer')
+			}).error(error => {
+				this.quitTeamDialog = false
+				LeekWars.toast(error)
 			})
 		}
 
 		dissolveTeam() {
-			LeekWars.post('team/dissolve').then((data) => {
-				if (data.success) {
-					this.dissolveDialog = false
-					LeekWars.toast(this.$i18n.t('team.team_have_been_disolved'))
-					this.$store.commit('dissolve-team')
-					this.$router.push('/farmer')
-				} else {
-					LeekWars.toast(this.$i18n.t('team.' + data.error))
-				}
+			LeekWars.post('team/dissolve').then(data => {
+				this.dissolveDialog = false
+				LeekWars.toast(this.$i18n.t('team.team_have_been_disolved'))
+				this.$store.commit('dissolve-team')
+				this.$router.push('/farmer')
+			}).error(error => {
+				LeekWars.toast(this.$i18n.t('team.' + error.error))
 			})
 		}
 
@@ -579,13 +569,11 @@
 		}
 		banMember() {
 			if (this.banMemberTarget == null) { return }
-			LeekWars.post('team/ban', {farmer_id: this.banMemberTarget.id}).then((data) => {
-				if (data.success) {
-					LeekWars.toast(this.$i18n.t('team.farmer_banned'))
-					this.banDialog = false
-				} else {
-					LeekWars.toast(data.error)
-				}
+			LeekWars.post('team/ban', {farmer_id: this.banMemberTarget.id}).then(data => {
+				LeekWars.toast(this.$i18n.t('team.farmer_banned'))
+				this.banDialog = false
+			}).error(error => {
+				LeekWars.toast(error)
 			})
 		}
 
@@ -616,45 +604,41 @@
 		}
 
 		acceptCandidacy(candidacy: any) {
-			LeekWars.post('team/accept-candidacy', {candidacy_id: candidacy.id}).then((data) => {
-				if (data.success) {
-					LeekWars.toast(this.$i18n.t('team.farmer_accepted'))
-					this.update()
-				} else {
-					LeekWars.toast(data.error)
-				}
+			LeekWars.post('team/accept-candidacy', {candidacy_id: candidacy.id}).then(data => {
+				LeekWars.toast(this.$i18n.t('team.farmer_accepted'))
+				this.update()
+			}).error(error => {
+				LeekWars.toast(error)
 			})
 		}
 		rejectCandidacy(candidacy: any) {
-			LeekWars.post('team/reject-candidacy', {candidacy_id: candidacy.id}).then((data) => {
-				if (data.success) {
-					LeekWars.toast(this.$i18n.t('team.farmer_refused'))
-					this.update()
-				} else {
-					LeekWars.toast(data.error)
-				}
+			LeekWars.post('team/reject-candidacy', {candidacy_id: candidacy.id}).then(data => {
+				LeekWars.toast(this.$i18n.t('team.farmer_refused'))
+				this.update()
+			}).error(error => {
+				LeekWars.toast(error)
 			})
 		}
 		sendCandidacy() {
 			if (!this.team) { return }
-			LeekWars.post('team/send-candidacy', {team_id: this.team.id}).then((data) => {
-				if (data.success && this.team) {
+			LeekWars.post('team/send-candidacy', {team_id: this.team.id}).then(data => {
+				if (this.team) {
 					LeekWars.toast(this.$i18n.t('team.candidacy_sent'))
 					this.team.candidacy = true
-				} else {
-					LeekWars.toast(data.error)
 				}
+			}).error(error => {
+				LeekWars.toast(error)
 			})
 		}
 		cancelCandidacy() {
 			if (!this.team) { return }
-			LeekWars.post('team/cancel-candidacy-for-team', {team_id: this.team.id}).then((data) => {
-				if (data.success && this.team) {
+			LeekWars.post('team/cancel-candidacy-for-team', {team_id: this.team.id}).then(data => {
+				if (this.team) {
 					LeekWars.toast(this.$i18n.t('team.candidacy_cancelled'))
 					this.team.candidacy = false
-				} else {
-					LeekWars.toast(data.error)
 				}
+			}).error(error => {
+				LeekWars.toast(error)
 			})
 		}
 		changeLevel(member: TeamMember) {
@@ -672,15 +656,13 @@
 		}
 		changeOwner() {
 			if (!this.team || !this.changeOwnerSelected) { return }
-			LeekWars.post('team/change-owner', {new_owner: this.changeOwnerSelected.id, password: this.changeOwnerPassword}).then((data) => {
-				if (data.success) {
-					LeekWars.toast(this.$i18n.t('team.owner_has_been_changed'))
-					this.changeOwnerConfirmDialog = false
-					this.changeOwnerDialog = false
-					this.update()
-				} else {
-					LeekWars.toast(data.error)
-				}
+			LeekWars.post('team/change-owner', {new_owner: this.changeOwnerSelected.id, password: this.changeOwnerPassword}).then(data => {
+				LeekWars.toast(this.$i18n.t('team.owner_has_been_changed'))
+				this.changeOwnerConfirmDialog = false
+				this.changeOwnerDialog = false
+				this.update()
+			}).error(error => {
+				LeekWars.toast(error)
 			})
 		}
 		moveLeek(leek: Leek, oldCompo: Composition | null, newCompo: Composition) {
@@ -696,11 +678,7 @@
 				this.team.unengaged_leeks.push(leek)
 			}
 			const newCompositionID = newCompo ? newCompo.id : -1
-			LeekWars.post('team/move-leek', {leek_id: leek.id, to: newCompositionID}).then((data) => {
-				if (!data.success) {
-					LeekWars.toast(data.error)
-				}
-			})
+			LeekWars.post('team/move-leek', {leek_id: leek.id, to: newCompositionID}).error(error => LeekWars.toast(error))
 		}
 		leeksDragstart(composition: Composition, leek: Leek, e: DragEvent) {
 			if (composition && composition.tournament.registered) { return false }

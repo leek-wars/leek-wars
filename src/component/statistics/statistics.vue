@@ -120,7 +120,7 @@
 			return {labels: names, series: Object.values(stats)}
 		}
 		created() {
-			LeekWars.get<any>('statistic/get-all').then((data) => {
+			LeekWars.get('statistic/get-all').then(data => {
 				LeekWars.setTitle(this.$i18n.t('statistics.title'))
 				LeekWars.setActions(this.actions)
 				this.statistics = data.statistics

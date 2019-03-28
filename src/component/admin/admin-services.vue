@@ -34,7 +34,7 @@
 		services: any = null
 		created() {
 			LeekWars.setTitle("Services")
-			LeekWars.get<any>('service/get-all-admin').then((data) => {
+			LeekWars.get('service/get-all-admin').then(data => {
 				this.services = data.services
 			})
 		}

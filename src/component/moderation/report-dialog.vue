@@ -46,13 +46,11 @@
 			}
 			const target = (this.target instanceof Function) ? this.target(this.selectedReason) : this.target
 			const parameter = this.parameter || ''
-			LeekWars.post('moderation/report', {target, reason: this.selectedReason, message: this.additionalMessage, parameter}).then((data) => {
-				if (data.success) {
-					LeekWars.toast(i18n.t('moderation.thank_you_for_reporting') as string)
-					this.close()
-				} else {
-					LeekWars.toast(data.error)
-				}
+			LeekWars.post('moderation/report', {target, reason: this.selectedReason, message: this.additionalMessage, parameter}).then(data => {
+				LeekWars.toast(i18n.t('moderation.thank_you_for_reporting') as string)
+				this.close()
+			}).error(error => {
+				LeekWars.toast(error)
 			})
 		}
 		close() {

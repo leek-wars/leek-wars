@@ -133,8 +133,8 @@
 		}
 		comment(comment: Comment) {
 			if (this.fight) {
-				LeekWars.post('fight/comment', {fight_id: this.fight.id, comment: comment.comment}).then((data) => {
-					if (data.success && this.fight) {
+				LeekWars.post('fight/comment', {fight_id: this.fight.id, comment: comment.comment}).then(data => {
+					if (this.fight) {
 						this.fight.comments.push(comment)
 					}
 				})

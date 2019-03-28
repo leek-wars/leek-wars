@@ -31,7 +31,7 @@
 	export default class Api extends Vue {
 		services: any = null
 		created() {
-			LeekWars.get<any>('service/get-all').then((data) => {
+			LeekWars.get('service/get-all').then(data => {
 				this.services = data.services
 				LeekWars.setTitle('API')
 			})

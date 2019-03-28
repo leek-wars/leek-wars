@@ -131,12 +131,10 @@
 			})
 		}
 		changelogShow() {
-			LeekWars.get<any>('changelog/get-last/' + this.$i18n.locale).then((data) => {
-				if (data.success) {
-					this.changelog = data.changelog
-					this.changelogDialog = true
-					localStorage.setItem('changelog_version', LeekWars.version)
-				}
+			LeekWars.get('changelog/get-last/' + this.$i18n.locale).then(data => {
+				this.changelog = data.changelog
+				this.changelogDialog = true
+				localStorage.setItem('changelog_version', LeekWars.version)
 			})
 		}
 		darkClick() {

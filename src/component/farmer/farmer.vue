@@ -466,12 +466,10 @@
 			if (this.myFarmer) {
 				this.init(store.state.farmer!)
 			} else {
-				LeekWars.get<any>('farmer/get/' + this.id).then((data) => {
-					if (data.success) {
-						this.init(data.farmer)
-					} else {
-						this.notfound = true
-					}
+				LeekWars.get('farmer/get/' + this.id).then(data => {
+					this.init(data.farmer)
+				}).error(error => {
+					this.notfound = true
 				})
 			}
 		}
@@ -516,7 +514,7 @@
 				localStorage.setItem('farmer/trophies-mode', 'list')
 			}
 			this.trophiesMode = localStorage.getItem('farmer/trophies-mode') || 'list'
-			LeekWars.get<any>('trophy/get-farmer-trophies/' + this.farmer.id + '/' + this.$i18n.locale).then((data) => {
+			LeekWars.get('trophy/get-farmer-trophies/' + this.farmer.id + '/' + this.$i18n.locale).then(data => {
 				this.trophies = data.trophies
 			})
 		}
@@ -524,10 +522,10 @@
 			if (this.farmer) {
 				if (this.farmer.tournament.registered) {
 					this.farmer.tournament.registered = false
-					LeekWars.post('farmer/unregister-tournament', {})
+					LeekWars.post('farmer/unregister-tournament')
 				} else {
 					this.farmer.tournament.registered = true
-					LeekWars.post('farmer/register-tournament', {})
+					LeekWars.post('farmer/register-tournament')
 				}
 			}
 		}
@@ -563,52 +561,46 @@
 
 			LeekWars.toast(this.$t('farmer.uploading_avatar') as string)
 
-			LeekWars.post('farmer/set-avatar', formdata).then((data) => {
-				if (data.success) {
-					if (this.farmer) {
-						LeekWars.toast(this.$t('farmer.upload_success') as string)
-						this.farmer.avatar_changed = data.avatar_changed
-					}
-				} else {
-					LeekWars.toast(this.$t('farmer.upload_failed', [data.error]) as string)
+			LeekWars.post('farmer/set-avatar', formdata).then(data => {
+				if (this.farmer) {
+					LeekWars.toast(this.$t('farmer.upload_success') as string)
+					this.farmer.avatar_changed = data.avatar_changed
 				}
+			}).error(error => {
+				LeekWars.toast(this.$t('farmer.upload_failed', [error]) as string)
 			})
 		}
 		warnings() {
 			if (!this.farmer) { return }
-			LeekWars.get<any>('moderation/get-warnings/' + this.farmer.id).then((data) => {
-				if (data.success && this.farmer) {
+			LeekWars.get('moderation/get-warnings/' + this.farmer.id).then(data => {
+				if (this.farmer) {
 					this.farmer.warnings = data.warnings
 				}
 			})
 		}
 		createTeam() {
-			LeekWars.post('team/create', {team_name: this.createTeamName}).then((data) => {
-				if (data.success) {
-					LeekWars.toast(this.$i18n.t('farmer.team_created'))
-					this.createTeamDialog = false
-					const team = new Team()
-					team.id = data.id
-					team.name = this.createTeamName
-					team.level = 1
-					team.talent = 1000
-					team.opened = true
-					store.commit('create-team', team)
-				} else {
-					LeekWars.toast(this.$i18n.t('farmer.' + data.error))
-				}
+			LeekWars.post('team/create', {team_name: this.createTeamName}).then(data => {
+				LeekWars.toast(this.$i18n.t('farmer.team_created'))
+				this.createTeamDialog = false
+				const team = new Team()
+				team.id = data.id
+				team.name = this.createTeamName
+				team.level = 1
+				team.talent = 1000
+				team.opened = true
+				store.commit('create-team', team)
+			}).error(error => {
+				LeekWars.toast(this.$i18n.t('farmer.' + error))
 			})
 		}
 		cancelCandidacy() {
-			LeekWars.post('team/cancel-candidacy', {}).then((data) => {
-				if (data.success) {
-					if (this.farmer) {
-						LeekWars.toast(this.$i18n.t('farmer.candidacy_canceled'))
-						this.farmer.candidacy = null
-					}
-				} else {
-					LeekWars.toast(data.error)
+			LeekWars.post('team/cancel-candidacy').then(data => {
+				if (this.farmer) {
+					LeekWars.toast(this.$i18n.t('farmer.candidacy_canceled'))
+					this.farmer.candidacy = null
 				}
+			}).error(error => {
+				LeekWars.toast(error)
 			})
 		}
 		changeWebsite() {

@@ -41,14 +41,12 @@
 			this.editing = false
 			const name = (this.$refs.name as HTMLElement).textContent || ''
 			if (name !== this.ai.name) {
-				LeekWars.post('ai/rename', {ai_id: this.ai.id, new_name: name}).then((data) => {
-					if (data.success) {
-						LeekWars.toast(i18n.t('editor.ai_renamed', [name]) as string)
-						this.ai.name = name
-					} else {
-						(this.$refs.name as HTMLElement).textContent = this.initialName
-						LeekWars.toast(data.error)
-					}
+				LeekWars.post('ai/rename', {ai_id: this.ai.id, new_name: name}).then(data => {
+					LeekWars.toast(i18n.t('editor.ai_renamed', [name]) as string)
+					this.ai.name = name
+				}).error(error => {
+					(this.$refs.name as HTMLElement).textContent = this.initialName
+					LeekWars.toast(error)
 				})
 			}
 		}

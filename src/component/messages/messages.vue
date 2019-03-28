@@ -144,15 +144,13 @@
 		sendMessage(message: string) {
 			if (!this.currentConversation) { return }
 			if (this.currentConversation.id === 0) {
-				LeekWars.post('message/create-conversation', {farmer_id: this.newFarmer.id, message}).then((data) => {
-					if (data.success) {
-						if (this._newConversation) {
-							this._newConversation.id = data.conversation_id
-							this.$store.commit('new-conversation', this._newConversation)
-						}
-						this.$router.replace('/messages/conversation/' + data.conversation_id)
-						this.newConversationSent = true
+				LeekWars.post('message/create-conversation', {farmer_id: this.newFarmer.id, message}).then(data => {
+					if (this._newConversation) {
+						this._newConversation.id = data.conversation_id
+						this.$store.commit('new-conversation', this._newConversation)
 					}
+					this.$router.replace('/messages/conversation/' + data.conversation_id)
+					this.newConversationSent = true
 				})
 			} else {
 				LeekWars.post('message/send-message', {conversation_id: this.currentConversation.id, message})

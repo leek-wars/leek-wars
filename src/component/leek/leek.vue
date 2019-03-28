@@ -573,39 +573,37 @@
 			this.error = false
 			if (!this.id) { return }
 			const method = this.my_leek ? 'leek/get-private/' + this.id : 'leek/get/' + this.id
-			LeekWars.get(method).then((data: any) => {
-				if (data.success) {
-					this.$data.leek = new Leek(data.leek)
-					if (this.leek) {
-						LeekWars.setTitle(this.leek.name, this.$t('level_n', [this.leek.level]))
-						if (this.my_leek) {
-							LeekWars.setActions([
-								{image: 'icon/hat.png', click: () => this.hat()},
-								{image: 'icon/potion.png', click: () => this.potion()},
-							])
-						} else {
-							LeekWars.setActions([
-								{image: 'icon/garden.png', click: () => this.$router.push('/garden/challenge/leek/' + this.id)}
-							])
-						}
-						this.renameName = this.leek.name
-						this.chart()
-						if (this.leek.level_seen < this.leek.level) {
-							this.showLevelPopup()
-						}
-						if (this.$store.state.farmer) {
-							for (const ai of this.$store.state.farmer.ais) {
-								Vue.set(ai, 'dragging', false)
-							}
-						}
-						if (this.my_leek) {
-							this.$store.commit('update-capital', {leek: this.leek.id, capital: this.leek.capital})
-						}
-						this.$root.$emit('loaded')
+			LeekWars.get(method).then(data => {
+				this.$data.leek = new Leek(data.leek)
+				if (this.leek) {
+					LeekWars.setTitle(this.leek.name, this.$t('level_n', [this.leek.level]))
+					if (this.my_leek) {
+						LeekWars.setActions([
+							{image: 'icon/hat.png', click: () => this.hat()},
+							{image: 'icon/potion.png', click: () => this.potion()},
+						])
+					} else {
+						LeekWars.setActions([
+							{image: 'icon/garden.png', click: () => this.$router.push('/garden/challenge/leek/' + this.id)}
+						])
 					}
-				} else {
-					this.error = true
+					this.renameName = this.leek.name
+					this.chart()
+					if (this.leek.level_seen < this.leek.level) {
+						this.showLevelPopup()
+					}
+					if (this.$store.state.farmer) {
+						for (const ai of this.$store.state.farmer.ais) {
+							Vue.set(ai, 'dragging', false)
+						}
+					}
+					if (this.my_leek) {
+						this.$store.commit('update-capital', {leek: this.leek.id, capital: this.leek.capital})
+					}
+					this.$root.$emit('loaded')
 				}
+			}).error(error => {
+				this.error = true
 			})
 		}
 		capitalSpent(characteristic: string, amount: number, level: number) {
@@ -633,23 +631,21 @@
 		rename(currency: string) {
 			if (!this.leek) { return }
 			const method = currency === 'habs' ? 'leek/rename-habs' : 'leek/rename-crystals'
-			LeekWars.post(method, {leek_id: this.leek.id, new_name: this.renameName}).then((data) => {
-				if (data.success) {
-					if (this.leek) {
-						this.leek.name = this.renameName
-						store.commit('rename-leek', {leek: this.leek.id, name: this.renameName})
-						if (currency === 'habs') {
-							store.commit('update-habs', -this.rename_price_habs)
-						} else {
-							store.commit('update-crystals', -this.rename_price_crystals)
-						}
-						this.renameDialog = false
-						this.renameSuccess = true
+			LeekWars.post(method, {leek_id: this.leek.id, new_name: this.renameName}).then(data => {
+				if (this.leek) {
+					this.leek.name = this.renameName
+					store.commit('rename-leek', {leek: this.leek.id, name: this.renameName})
+					if (currency === 'habs') {
+						store.commit('update-habs', -this.rename_price_habs)
+					} else {
+						store.commit('update-crystals', -this.rename_price_crystals)
 					}
-				} else {
-					this.renameFailed = true
-					this.renameError = data
+					this.renameDialog = false
+					this.renameSuccess = true
 				}
+			}).error(error => {
+				this.renameFailed = true
+				this.renameError = error
 			})
 		}
 		usePotion(potion: Potion) {
@@ -666,13 +662,11 @@
 					}
 				}
 				this.potionDialog = false
-				LeekWars.post('leek/use-potion', {leek_id: this.leek.id, potion_id: potion.id}).then((data) => {
-					if (data.success) {
-						if (template.consumable) {
-							this.$store.commit('remove-inventory', {type: ItemType.POTION, item_template: potion.template})
-						}
-						if (update) { this.update() }
+				LeekWars.post('leek/use-potion', {leek_id: this.leek.id, potion_id: potion.id}).then(data => {
+					if (template.consumable) {
+						this.$store.commit('remove-inventory', {type: ItemType.POTION, item_template: potion.template})
 					}
+					if (update) { this.update() }
 				})
 			}
 		}
@@ -733,12 +727,12 @@
 			this.hatDialog = false
 			if (hat === null) {
 				this.leek.hat = null
-				LeekWars.post('leek/remove-hat', {leek_id: this.leek.id}).then((data) => {
-					if (data.success && this.leek) {
+				LeekWars.post('leek/remove-hat', {leek_id: this.leek.id}).then(data => {
+					if (this.leek) {
 						store.commit('change-hat', {leek: this.leek.id, hat: null})
-					} else {
-						LeekWars.toast(data.error)
 					}
+				}).error(error => {
+					LeekWars.toast(error)
 				})
 			} else {
 				if (this.leek.hat === hat.hat_template) {
@@ -746,12 +740,12 @@
 					return
 				}
 				this.leek.hat = hat.hat_template
-				LeekWars.post('leek/set-hat', {leek_id: this.leek.id, hat_id: hat.template}).then((data) => {
-					if (data.success && this.leek) {
+				LeekWars.post('leek/set-hat', {leek_id: this.leek.id, hat_id: hat.template}).then(data => {
+					if (this.leek) {
 						store.commit('change-hat', {leek: this.leek.id, hat: hat.hat_template})
-					} else {
-						LeekWars.toast(data.error)
 					}
+				}).error(error => {
+					LeekWars.toast(error)
 				})
 			}
 		}
@@ -761,7 +755,7 @@
 
 		showLevelPopup() {
 			if (!this.leek) { return }
-			LeekWars.get<any>('leek/get-level-popup/' + this.leek.id).then((data) => {
+			LeekWars.get('leek/get-level-popup/' + this.leek.id).then(data => {
 				this.levelPopup = true
 				this.levelPopupData = data.popup
 			})
@@ -811,20 +805,16 @@
 			const value = (e.target as HTMLElement).textContent || ''
 			if (register.value !== value) {
 				register.value = value
-				LeekWars.post('leek/set-register', {leek_id: this.leek.id, key: register.key, value}).then((data) => {
-					if (data.success) {
-						LeekWars.toast("Register saved")
-					}
+				LeekWars.post('leek/set-register', {leek_id: this.leek.id, key: register.key, value}).then(data => {
+					LeekWars.toast("Register saved")
 				})
 			}
 		}
 		registerDelete(register: Register) {
 			if (!this.leek) { return }
 			this.leek.registers.splice(this.leek.registers.indexOf(register), 1)
-			LeekWars.post('leek/delete-register', {leek_id: this.leek.id, key: register.key}).then((data) => {
-				if (data.success) {
-					LeekWars.toast("Register deleted")
-				}
+			LeekWars.post('leek/delete-register', {leek_id: this.leek.id, key: register.key}).then(data => {
+				LeekWars.toast("Register deleted")
 			})
 		}
 
@@ -848,24 +838,20 @@
 			if (this.leek.weapons.some((w) => w.template === template.id)) {
 				return LeekWars.toast(this.$i18n.t('leek.error_weapon_already_equipped', [this.leek.name]))
 			}
-			LeekWars.post('leek/add-weapon', {leek_id: this.leek.id, weapon_id: weapon.id}).then((data) => {
-				if (data.success && this.leek) {
+			LeekWars.post('leek/add-weapon', {leek_id: this.leek.id, weapon_id: weapon.id}).then(data => {
+				if (this.leek) {
 					this.leek.weapons.push({id: data.id, template: weapon.template})
 					this.$store.commit('remove-weapon', weapon)
-				} else {
-					LeekWars.toast(data.error)
 				}
+			}).error(error => {
+				LeekWars.toast(error)
 			})
 		}
 		removeWeapon(weapon: Weapon) {
 			if (!this.leek) { return }
 			this.leek.weapons.splice(this.leek.weapons.indexOf(weapon), 1)
 			this.$store.commit('add-weapon', weapon)
-			LeekWars.post('leek/remove-weapon', {weapon_id: weapon.id}).then((data) => {
-				if (!data.success) {
-					LeekWars.toast(data.error)
-				}
-			})
+			LeekWars.post('leek/remove-weapon', {weapon_id: weapon.id}).error((error) => LeekWars.toast(error))
 		}
 		weaponsDrop(location: string, e: DragEvent) {
 			if (!this.draggedWeapon) { return }
@@ -899,24 +885,20 @@
 			if (this.leek.chips.some((c) => c.template === template.id)) {
 				return LeekWars.toast(this.$i18n.t('leek.error_chip_already_equipped', [this.leek.name]))
 			}
-			LeekWars.post('leek/add-chip', {leek_id: this.leek.id, chip_id: chip.id}).then((data) => {
-				if (data.success && this.leek) {
+			LeekWars.post('leek/add-chip', {leek_id: this.leek.id, chip_id: chip.id}).then(data => {
+				if (this.leek) {
 					this.leek.chips.push({id: data.id, template: chip.template})
 					this.$store.commit('remove-chip', chip)
-				} else {
-					LeekWars.toast(data.error)
 				}
+			}).error(error => {
+				LeekWars.toast(error)
 			})
 		}
 		removeChip(chip: Chip) {
 			if (!this.leek) { return }
 			this.leek.chips.splice(this.leek.chips.indexOf(chip), 1)
 			this.$store.commit('add-chip', chip)
-			LeekWars.post('leek/remove-chip', {chip_id: chip.id}).then((data) => {
-				if (!data.success) {
-					LeekWars.toast(data.error)
-				}
-			})
+			LeekWars.post('leek/remove-chip', {chip_id: chip.id}).error((error) => LeekWars.toast(error))
 		}
 		chipsDrop(location: string, e: DragEvent) {
 			if (!this.draggedChip) { return }

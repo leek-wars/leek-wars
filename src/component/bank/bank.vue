@@ -33,7 +33,7 @@
 	export default class Bank extends Vue {
 		packs: any = null
 		created() {
-			LeekWars.get('bank/get-packs').then((data: any) => {
+			LeekWars.get('bank/get-packs').then(data => {
 				this.packs = data.packs
 				LeekWars.setTitle(this.$i18n.t('bank.title'))
 			})

@@ -240,7 +240,7 @@
 		mounted() {
 			LeekWars.setTitle(this.$t('garden.title'))
 
-			LeekWars.get('garden/get').then((r: any) => {
+			LeekWars.get('garden/get').then(r => {
 				this.garden = r.garden
 				for (const composition of this.garden.my_compositions) {
 					this.compositions_by_id[composition.id] = composition
@@ -312,24 +312,20 @@
 			if (this.garden.fights === 0 || this.$data.leekOpponents[leek.id]) {
 				return
 			}
-			LeekWars.get('garden/get-leek-opponents/' + leek.id).then((data: any) => {
-				if (data.success) {
-					Vue.set(this.$data.leekOpponents, leek.id, data.opponents)
-				} else {
-					Vue.set(this.$data.leekErrors, leek.id, data.error)
-				}
+			LeekWars.get('garden/get-leek-opponents/' + leek.id).then(data => {
+				Vue.set(this.$data.leekOpponents, leek.id, data.opponents)
+			}).error(error => {
+				Vue.set(this.$data.leekErrors, leek.id, error.error)
 			})
 		}
 		selectFarmer() {
 			if (this.garden.fights === 0 || this.farmerOpponents) {
 				return
 			}
-			LeekWars.get('garden/get-farmer-opponents').then((data: any) => {
-				if (data.success) {
-					this.farmerOpponents = data.opponents
-				} else {
-					LeekWars.toast(data.error)
-				}
+			LeekWars.get('garden/get-farmer-opponents').then(data => {
+				this.farmerOpponents = data.opponents
+			}).error(error => {
+				LeekWars.toast(error.error)
 			})
 		}
 		selectComposition(composition: Composition) {
@@ -337,12 +333,10 @@
 			if (composition.fights === 0 || this.teamOpponents[composition.id]) {
 				return
 			}
-			LeekWars.get('garden/get-composition-opponents/' + composition.id).then((data: any) => {
-				if (data.success) {
-					Vue.set(this.$data.teamOpponents, composition.id, data.opponents)
-				} else {
-					LeekWars.toast(data.error)
-				}
+			LeekWars.get('garden/get-composition-opponents/' + composition.id).then(data => {
+				Vue.set(this.$data.teamOpponents, composition.id, data.opponents)
+			}).error(error => {
+				LeekWars.toast(error)
 			})
 		}
 		selectBattleRoyale() {
@@ -361,29 +355,22 @@
 		}
 		clickSoloOpponent(leek: Leek) {
 			if (this.selectedLeek) {
-				LeekWars.post('garden/start-solo-fight', {leek_id: this.selectedLeek.id, target_id: leek.id}).then((data) => {
-					if (data.success) {
-						this.$router.push('/fight/' + data.fight)
-						this.$store.commit('update-fights', -1)
-					}
+				LeekWars.post('garden/start-solo-fight', {leek_id: this.selectedLeek.id, target_id: leek.id}).then(data => {
+					this.$router.push('/fight/' + data.fight)
+					this.$store.commit('update-fights', -1)
 				})
 			}
 		}
 		clickFarmerOpponent(farmer: Farmer) {
-			LeekWars.post('garden/start-farmer-fight', {target_id: farmer.id}).then((data) => {
-				if (data.success) {
-					this.$router.push('/fight/' + data.fight)
-					this.$store.commit('update-fights', -1)
-				}
+			LeekWars.post('garden/start-farmer-fight', {target_id: farmer.id}).then(data => {
+				this.$router.push('/fight/' + data.fight)
+				this.$store.commit('update-fights', -1)
 			})
 		}
 		clickCompositionOpponent(composition: Composition) {
 			if (this.selectedComposition) {
-				LeekWars.post('garden/start-team-fight', {composition_id: this.selectedComposition.id, target_id: composition.id
-				}).then((data) => {
-					if (data.success) {
-						this.$router.push('/fight/' + data.fight)
-					}
+				LeekWars.post('garden/start-team-fight', {composition_id: this.selectedComposition.id, target_id: composition.id}).then(data => {
+					this.$router.push('/fight/' + data.fight)
 				})
 			}
 		}
@@ -396,14 +383,14 @@
 			}
 			this.selectedLeek = this.$store.state.farmer.leeks[this.$route.params.item]
 			if (this.challengeType === 'leek') {
-				LeekWars.get<any>('garden/get-solo-challenge/' + this.challengeTarget).then((data) => {
+				LeekWars.get('garden/get-solo-challenge/' + this.challengeTarget).then(data => {
 					if (data.challenges) {
 						this.challengeFights = data.challenges
 						this.challengeLeekTarget = data.leek
 					}
 				})
 			} else {
-				LeekWars.get<any>('garden/get-farmer-challenge/' + this.challengeTarget).then((data) => {
+				LeekWars.get('garden/get-farmer-challenge/' + this.challengeTarget).then(data => {
 					if (data.challenges) {
 						this.challengeFights = data.challenges
 						this.challengeFarmerTarget = data.farmer
@@ -413,18 +400,14 @@
 		}
 		startFarmerChallenge() {
 			if (!this.challengeFarmerTarget) { return }
-			LeekWars.post('garden/start-farmer-challenge', {target_id: this.challengeFarmerTarget.id}).then((data) => {
-				if (data.success) {
-					this.$router.push('/fight/' + data.fight)
-				}
+			LeekWars.post('garden/start-farmer-challenge', {target_id: this.challengeFarmerTarget.id}).then(data => {
+				this.$router.push('/fight/' + data.fight)
 			})
 		}
 		startLeekChallenge() {
 			if (!this.challengeLeekTarget || !this.selectedLeek) { return }
-			LeekWars.post('garden/start-solo-challenge', {leek_id: this.selectedLeek.id, target_id: this.challengeLeekTarget.id}).then((data) => {
-				if (data.success) {
-					this.$router.push('/fight/' + data.fight)
-				}
+			LeekWars.post('garden/start-solo-challenge', {leek_id: this.selectedLeek.id, target_id: this.challengeLeekTarget.id}).then(data => {
+				this.$router.push('/fight/' + data.fight)
 			})
 		}
 		@Watch('category')

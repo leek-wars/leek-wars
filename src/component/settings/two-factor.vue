@@ -82,7 +82,7 @@
 		nextStep() {
 			this.step++
 			if (this.step === 1) {
-				LeekWars.post('farmer/enable-two-factor-authentication', {}).then((data) => {
+				LeekWars.post('farmer/enable-two-factor-authentication', {}).then(data => {
 					this.QRCode = data.qrcode
 					this.secret = data.secret
 				})
@@ -93,13 +93,12 @@
 		}
 		validateCode() {
 			this.validating = true
-			LeekWars.post('farmer/confirm-enable-two-factor-authentication', {code: this.code}).then((data) => {
+			LeekWars.post('farmer/confirm-enable-two-factor-authentication', {code: this.code}).then(data => {
 				this.validating = false
-				if (data.success) {
-					this.nextStep()
-				} else {
-					LeekWars.toast('Wrong code!')
-				}
+				this.nextStep()
+			}).error(error => {
+				this.validating = false
+				LeekWars.toast('Wrong code!')
 			})
 		}
 	}
