@@ -420,8 +420,8 @@
 					request = 'team/get-connected/' + this.id
 				}
 			}
-			LeekWars.get(request).then(data => {
-				this.team = data.team
+			LeekWars.get(request).then(team => {
+				this.team = team
 				if (!this.team) {
 					return
 				}
