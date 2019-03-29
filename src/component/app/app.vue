@@ -358,6 +358,9 @@
 		#app.connected .app-center {
 			margin-left: 0;
 		}
+		.app-wrapper {
+			width: 100%;
+		}
 	}
 	@media screen and (max-width: 599px) {
 		.app-center {
