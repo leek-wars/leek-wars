@@ -597,7 +597,7 @@
 			this.editingDescription = false
 			;(this.$refs.descriptionElement as HTMLElement).blur()
 			this.team.description = '' + (this.$refs.descriptionElement as HTMLElement).textContent
-			LeekWars.post('team/change-description', {team_id: this.team.id, description: this.team.description})
+			LeekWars.put('team/change-description', {team_id: this.team.id, description: this.team.description})
 			if (!this.team.description) {
 				(this.$refs.descriptionElement as HTMLElement).innerText = this.$i18n.t('team.no_description') as string
 			}
