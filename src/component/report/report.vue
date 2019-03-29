@@ -503,7 +503,7 @@
 		font-size: 18px;
 		margin-bottom: 5px;
 	}
-	.buttons .button {
-		margin: 0 4px;
+	.buttons button {
+		margin: 4px;
 	}
 </style>
