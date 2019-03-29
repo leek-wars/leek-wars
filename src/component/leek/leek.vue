@@ -727,7 +727,7 @@
 			this.hatDialog = false
 			if (hat === null) {
 				this.leek.hat = null
-				LeekWars.post('leek/remove-hat', {leek_id: this.leek.id}).then(data => {
+				LeekWars.delete('leek/remove-hat', {leek_id: this.leek.id}).then(data => {
 					if (this.leek) {
 						store.commit('change-hat', {leek: this.leek.id, hat: null})
 					}
@@ -764,7 +764,7 @@
 		removeAI() {
 			if (!this.leek) { return }
 			this.leek.ai = null
-			LeekWars.post('leek/remove-ai', {leek_id: this.leek.id})
+			LeekWars.delete('leek/remove-ai', {leek_id: this.leek.id})
 		}
 		selectAI(ai: AI) {
 			if (!this.leek) { return }
@@ -851,7 +851,7 @@
 			if (!this.leek) { return }
 			this.leek.weapons.splice(this.leek.weapons.indexOf(weapon), 1)
 			this.$store.commit('add-weapon', weapon)
-			LeekWars.post('leek/remove-weapon', {weapon_id: weapon.id}).error((error) => LeekWars.toast(error))
+			LeekWars.delete('leek/remove-weapon', {weapon_id: weapon.id}).error((error) => LeekWars.toast(error))
 		}
 		weaponsDrop(location: string, e: DragEvent) {
 			if (!this.draggedWeapon) { return }
@@ -898,7 +898,7 @@
 			if (!this.leek) { return }
 			this.leek.chips.splice(this.leek.chips.indexOf(chip), 1)
 			this.$store.commit('add-chip', chip)
-			LeekWars.post('leek/remove-chip', {chip_id: chip.id}).error((error) => LeekWars.toast(error))
+			LeekWars.delete('leek/remove-chip', {chip_id: chip.id}).error((error) => LeekWars.toast(error))
 		}
 		chipsDrop(location: string, e: DragEvent) {
 			if (!this.draggedChip) { return }
