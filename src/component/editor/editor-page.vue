@@ -489,7 +489,7 @@
 		deleteItem() {
 			const url = this.currentType === 'folder' ? 'ai-folder/delete' : 'ai/delete'
 			const args = this.currentType === 'folder' ? {folder_id: this.currentID} : {ai_id: this.currentID}
-			LeekWars.post(url, args).then(data => {
+			LeekWars.delete(url, args).then(data => {
 				let ai_deleted = false
 				if (this.currentType === 'ai' && this.currentAI) {
 					const folder = this.folderById[this.currentAI.folder]

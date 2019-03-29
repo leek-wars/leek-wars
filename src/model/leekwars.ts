@@ -78,6 +78,14 @@ function put<T = any>(url: any, form: any = {}) {
 	}
 	return request<T>('PUT', LeekWars.api + url, form)
 }
+function del<T = any>(url: any, form: any = {}) {
+	if (!(form instanceof FormData)) {
+		const f = []
+		for (const k in form) { f.push(k + '=' + encodeURIComponent(form[k])) }
+		form = f.join('&')
+	}
+	return request<T>('DELETE', LeekWars.api + url, form)
+}
 function get<T = any>(url: any) {
 	return request<T>('GET', LeekWars.api + url)
 }
@@ -129,6 +137,7 @@ const LeekWars = {
 	post,
 	get,
 	put,
+	delete: del,
 	cgu_version: 1,
 	mobile: false,
 	socialCollapsed: false,
