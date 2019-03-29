@@ -70,6 +70,14 @@ function post<T = any>(url: any, form: any = {}) {
 	}
 	return request<T>('POST', LeekWars.api + url, form)
 }
+function put<T = any>(url: any, form: any = {}) {
+	if (!(form instanceof FormData)) {
+		const f = []
+		for (const k in form) { f.push(k + '=' + encodeURIComponent(form[k])) }
+		form = f.join('&')
+	}
+	return request<T>('PUT', LeekWars.api + url, form)
+}
 function get<T = any>(url: any) {
 	return request<T>('GET', LeekWars.api + url)
 }
@@ -120,6 +128,7 @@ const LeekWars = {
 	avatar: 'https://leekwars.com/static/image/',
 	post,
 	get,
+	put,
 	cgu_version: 1,
 	mobile: false,
 	socialCollapsed: false,
