@@ -573,8 +573,8 @@
 			this.error = false
 			if (!this.id) { return }
 			const method = this.my_leek ? 'leek/get-private/' + this.id : 'leek/get/' + this.id
-			LeekWars.get(method).then(data => {
-				this.$data.leek = new Leek(data.leek)
+			LeekWars.get(method).then(leek => {
+				this.leek = new Leek(leek)
 				if (this.leek) {
 					LeekWars.setTitle(this.leek.name, this.$t('level_n', [this.leek.level]))
 					if (this.my_leek) {
