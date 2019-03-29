@@ -320,9 +320,9 @@
 				}
 				this.$store.commit('add-inventory', {type: item.type, item_id: data.item, item_template: id})
 			}).error(error => {
-				let e = error
-				if (error === 'already_bought_fights_with_habs') {
-					e = this.$t('market.' + error)
+				let e = error.error
+				if (error.error === 'already_bought_fights_with_habs') {
+					e = this.$t('market.' + error.error)
 				}
 				LeekWars.toast(e)
 			})
