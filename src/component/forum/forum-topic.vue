@@ -296,7 +296,7 @@
 		}
 		deleteMessage() {
 			if (!this.toDeleteMessage) { return }
-			LeekWars.post("forum/delete-message", {message_id: this.toDeleteMessage.id}).then(data => {
+			LeekWars.delete("forum/delete-message", {message_id: this.toDeleteMessage.id}).then(data => {
 				if (this.toDeleteMessage) {
 					this.toDeleteMessage = null
 					this.deleteMessageDialog = false
@@ -306,7 +306,7 @@
 		}
 		deleteTopic() {
 			if (!this.topic) { return }
-			LeekWars.post("forum/delete-topic", {topic_id: this.topic.id}).then(data => {
+			LeekWars.delete("forum/delete-topic", {topic_id: this.topic.id}).then(data => {
 				if (this.category) {
 					this.deleteTopicDialog = false
 					this.$router.push("/forum/category-" + this.category.id)
