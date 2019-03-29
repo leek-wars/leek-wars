@@ -813,7 +813,7 @@
 		registerDelete(register: Register) {
 			if (!this.leek) { return }
 			this.leek.registers.splice(this.leek.registers.indexOf(register), 1)
-			LeekWars.post('leek/delete-register', {leek_id: this.leek.id, key: register.key}).then(data => {
+			LeekWars.delete('leek/delete-register', {leek_id: this.leek.id, key: register.key}).then(data => {
 				LeekWars.toast("Register deleted")
 			})
 		}

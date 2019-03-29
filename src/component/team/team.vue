@@ -504,7 +504,7 @@
 		}
 
 		deleteComposition(composition: Composition) {
-			LeekWars.post('team/delete-composition', {composition_id: composition.id}).then(data => {
+			LeekWars.delete('team/delete-composition', {composition_id: composition.id}).then(data => {
 				if (this.team) {
 					LeekWars.toast(this.$i18n.t('team.compo_deleted', composition.name))
 					// On transfère tous les leeks dans les leeks non engagés
