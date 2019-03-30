@@ -37,6 +37,7 @@
 		font-size: 18px;
 		display: inline-block;
 		border-radius: 20px;
+		margin: 0 2px;
 	}
 	a.current {
 		padding: 5px 10px;
