@@ -160,7 +160,11 @@
 		}
 		search() {
 			const query = this.searchQuery.replace(/ /g, '+')
-			this.$router.push('/search/' + query)
+			if (query) {
+				this.$router.push('/search?query=' + query)
+			} else {
+				this.$router.push('/search')
+			}
 		}
 	}
 </script>
