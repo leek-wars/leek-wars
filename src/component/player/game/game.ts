@@ -929,7 +929,7 @@ class Game {
 			if (objectID in LeekWars.weapons) {
 
 				const template = LeekWars.weapons[objectID].template
-				const img = ["1", "2", "3", "4", "5", "6", "7", "flamme", "destroyer", "gaz_icon", "11", "12", "13", "katana", "broadswoard", "axe"][template - 1]
+				const img = ["1", "2", "3", "4", "5", "6", "7", "flamme", "destroyer", "gaz_icon", "11", "12", "13", "katana", "broadsword", "axe"][template - 1]
 				image = LeekWars.staticURL + "image/weapon/" + img + ".png"
 
 				// Gestion des états du poireau
