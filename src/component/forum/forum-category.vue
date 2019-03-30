@@ -146,9 +146,10 @@
 		}
 		search() {
 			if (!this.category) { return }
-			let query = this.query.replace(' ', '+')
-			if (query === '') { query = '-' }
-			this.$router.push('/search/' + query + '/-/' + this.category.id)
+			let options = []
+			if (this.query) { options.push('query=' + this.query.replace(' ', '+')) }
+			options.push('category=' + this.category.id)
+			this.$router.push('/search?' + options.join('&'))
 		}
 	}
 </script>
