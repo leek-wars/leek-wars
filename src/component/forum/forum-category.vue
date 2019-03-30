@@ -146,7 +146,8 @@
 		}
 		search() {
 			if (!this.category) { return }
-			const query = this.query.replace(' ', '+')
+			let query = this.query.replace(' ', '+')
+			if (query === '') query = '-'
 			this.$router.push('/search/' + query + '/-/' + this.category.id)
 		}
 	}
