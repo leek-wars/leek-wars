@@ -39,8 +39,7 @@
 				<div v-if="results.length" class="results">
 					<div v-for="(result, r) in results" :key="r" class="result card">
 						<router-link :to="'/forum/category-' + result.cid + '/topic-' + result.tid">
-							<div v-if="query !== '' && result.title.toLowerCase().indexOf(queryLower) !== -1" class="title" v-html="highlight(result.title, queryLower)"></div>
-							<div v-else class="title">{{ result.title }}</div>
+							<div class="title" v-html="result.title"></div>
 						</router-link>
 						<i18n tag="div" class="info" path="post_by_x_the_x_in_x">
 							<router-link :to="'/farmer/' + result.fid" place="farmer">
@@ -112,10 +111,6 @@
 				this.results = []
 				this.pages = 0
 			}
-		}
-		highlight(text: string, query: string) {
-			const pos = text.toLowerCase().indexOf(query)
-			return LeekWars.protect(text.substring(0, pos)) + "<b>" + LeekWars.protect(text.substring(pos, pos + query.length)) + "</b>" + LeekWars.protect(text.substring(pos + query.length))
 		}
 		createURL(query: string, farmer: string, category: number) {
 			let url = "/search/" + (query || '-').replace(/ /g, '+')
