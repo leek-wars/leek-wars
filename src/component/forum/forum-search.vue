@@ -154,7 +154,7 @@
 		get urlPagination() {
 			let url = "/search"
 			let options = Object.keys(this.options)
-				.filter(option => this.options[option] !== null && this.options[option] !== this.defaultOptions[option] && option !== 'page')
+				.filter(option => this.options[option] !== null && this.options[option] != this.defaultOptions[option] && option !== 'page')
 				.map(option => option + '=' + this.options[option])
 				.join('&')
 			return url + '?' + options
