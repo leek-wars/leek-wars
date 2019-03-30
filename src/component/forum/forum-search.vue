@@ -7,61 +7,71 @@
 			<div class="search">
 				<div class="search-box">
 					<div class="label">{{ $t('query') }}</div>
-					<input v-model="query" class="query card" type="text" @keydown.enter="search">
+					<input v-model="options.query" class="query card" type="text" @keydown.enter="search">
 				</div>
 				<div class="search-box-farmer">
 					<div class="label">{{ $t('author') }}</div>
-					<input v-model="farmer" class="query card" type="text" @keydown.enter="search">
+					<input v-model="options.farmer" class="query card" type="text" @keydown.enter="search">
 				</div>
+				<v-switch v-model="options.moderator" :label="$t('moderator')" @change="search" class="switch" hide-details />
+				<v-switch v-model="options.admin" :label="$t('admin')" @change="search" class="switch" hide-details />
 				<div>
 					<div class="label">{{ $t('category') }}</div>
-					<select v-model="category" class="search-category" @change="search">
+					<select v-model="options.category" class="search-category" @change="search">
 						<option value="-1">{{ $t('all_categories') }}</option>
 						<option v-for="c in categories" :key="c.id" :value="c.id">{{ c.type == 'team' ? c.name : $i18n.t('forum.category_' + c.name) }}</option>
 					</select>
 				</div>
-				<br>
+				<div>
+					<div class="label">{{ $t('sort_by') }}</div>
+					<select v-model="options.order" @change="search">
+						<option value="pertinence">{{ $t('sort_pertinence') }}</option>
+						<option value="date">{{ $t('sort_date') }}</option>
+					</select>
+				</div>
+
 				<div class="center">
-					<v-btn color="primary" class="search-button" @click="search">
+					<v-btn color="primary" class="search-button" @click="searchButton">
 						<img src="/image/search.png"><span>{{ $t('search') }}</span>
 					</v-btn>
 				</div>
 			</div>
 
-			<br><br>
-			<h4>{{ $t('results') }}</h4>
+			<div v-if="searchStarted">
+				<h4>{{ $t('results') }} <span v-if="results">({{ count }})</span></h4>
 
-			<pagination :current="page" :total="pages" :url="url" />
+				<pagination :current="options.page" :total="pages" :url="urlPagination" :query="true" />
+				
+				<loader v-if="!results" />
 
-			<loader v-if="!results" />
-
-			<div v-else class="results-wrapper">
-				<div v-if="results.length" class="results">
-					<div v-for="(result, r) in results" :key="r" class="result card">
-						<router-link :to="'/forum/category-' + result.cid + '/topic-' + result.tid">
-							<div class="title" v-html="result.title"></div>
-						</router-link>
-						<i18n tag="div" class="info" path="post_by_x_the_x_in_x">
-							<router-link :to="'/farmer/' + result.fid" place="farmer">
-								<template v-if="farmer === ''">{{ result.fname }}</template>
-								<span v-else><b>{{ result.fname }}</b></span>
+				<div v-else class="results-wrapper">
+					<div v-if="results.length" class="results">
+						<div v-for="(result, r) in results" :key="r" class="result card">
+							<router-link :to="'/forum/category-' + result.cid + '/topic-' + result.tid">
+								<div class="title" v-html="result.title"></div>
 							</router-link>
-							<span place="date" class="dark">{{ result.date | date }}</span>
-							<router-link :to="'/forum/category-' + result.cid" place="topic">
-								{{ $i18n.t('forum.category_' + result.cname) }}
+							<i18n tag="div" class="info" path="post_by_x_the_x_in_x">
+								<router-link :to="'/farmer/' + result.fid" place="farmer">
+									<template v-if="options.farmer === ''">{{ result.fname }}</template>
+									<span v-else><b>{{ result.fname }}</b></span>
+								</router-link>
+								<span place="date" class="dark">{{ result.date | date }}</span>
+								<router-link :to="'/forum/category-' + result.cid" place="topic">
+									{{ $i18n.t('forum.category_' + result.cname) }}
+								</router-link>
+							</i18n>
+							<router-link :to="'/forum/category-' + result.cid + '/topic-' + result.tid">
+								<div class="headline" v-html="result.message"></div>
 							</router-link>
-						</i18n>
-						<router-link :to="'/forum/category-' + result.cid + '/topic-' + result.tid">
-							<div class="headline" v-html="result.message"></div>
-						</router-link>
+						</div>
+					</div>
+					<div v-if="results.length === 0" class="no-results">
+						<img src="/image/notgood.png">
+						<div>{{ $t('no_results_found') }}</div>
 					</div>
 				</div>
-				<div v-if="results.length === 0" class="no-results">
-					<img src="/image/notgood.png">
-					<div>{{ $t('no_results_found') }}</div>
-				</div>
+				<pagination :current="options.page" :total="pages" :url="urlPagination" :query="true" />
 			</div>
-			<pagination :current="page" :total="pages" :url="url" />
 		</panel>
 	</div>
 </template>
@@ -73,15 +83,34 @@
 
 	@Component({ name: 'search', i18n: {} })
 	export default class Search extends Vue {
-		query: string = ''
+		options = {
+			query: '',
+			farmer: '',
+			page: 1,
+			category: -1,
+			admin: false,
+			moderator: false,
+			order: 'pertinence'
+		} as {[key: string]: any}
+		defaultOptions = {
+			query: '',
+			farmer: '',
+			page: 1,
+			category: -1,
+			admin: false,
+			moderator: false,
+			order: 'pertinence'
+		} as {[key: string]: any}
 		queryLower: string = ''
-		farmer: string = ''
-		page: number = 1
 		pages: number = 0
-		category: number = -1
 		results: any[] | null = null
 		categories: any[] = []
+		searchStarted: boolean = false
+		count: number = 0
 
+		get canSearch() {
+			return this.options.query || this.options.farmer || this.options.admin
+		}
 		created() {
 			const language = localStorage.getItem('forum/language') || i18n.locale
 			LeekWars.get('forum/get-categories/' + language).then(data => {
@@ -90,43 +119,55 @@
 			LeekWars.setTitle(i18n.t('search.title'))
 		}
 
-		@Watch('$route.params', {immediate: true})
+		@Watch('$route.query', {immediate: true})
 		update() {
-			this.query = this.$route.params.query || ''
-			this.queryLower = this.query.toLowerCase()
-			if (this.query === '-') { this.query = '' }
-			this.farmer = this.$route.params.farmer || ''
-			if (this.farmer === '-') { this.farmer = '' }
-			this.page = parseInt(this.$route.params.page, 10) || 1
-			const category = this.$route.params.category
-			this.category = (category === '-' || !category) ? -1 : parseInt(category, 10)
+			this.options.query = (this.$route.query.query as string || '').replace(/\+/g, ' ')
+			this.queryLower = this.options.query.toLowerCase()
+			if (this.options.query === '-') { this.options.query = '' }
+			this.options.farmer = this.$route.query.farmer || ''
+			if (this.options.farmer === '-') { this.options.farmer = '' }
+			this.options.page = parseInt(this.$route.query.page as string, 10) || 1
+			const category = this.$route.query.category as string
+			this.options.category = (category === '-' || !category) ? -1 : parseInt(category, 10)
+			this.options.order = this.$route.query.order || 'pertinence'
+			this.options.admin = this.$route.query.admin || false
+			this.options.moderator = this.$route.query.moderator || false
 
+			this.searchStarted = false
 			this.results = null
-			if (this.query || this.farmer) {
-				LeekWars.get('forum/search/' + this.query + '/' + this.farmer + '/' + this.category + '/' + this.page).then(data => {
+			if (this.canSearch) {
+				this.searchStarted = true
+				LeekWars.get('forum/search2/' + this.options.query.replace(/ /g, '+') + '/' + this.options.farmer + '/' + this.options.category + '/' + this.options.page + '/' + (this.options.order || 'pertinence') + '/' + (this.options.admin || false) + '/' + (this.options.moderator || false)).then(data => {
 					this.results = data.results
 					this.pages = data.pages
+					this.count = data.count
+				}).error(error => {
+					this.results = []
+					this.count = 0
+					LeekWars.toast(error.error)
 				})
-			} else {
-				this.results = []
-				this.pages = 0
 			}
-		}
-		createURL(query: string, farmer: string, category: number) {
-			let url = "/search/" + (query || '-').replace(/ /g, '+')
-			if (farmer !== "") {
-				url += '/' + farmer
-			} else if (category !== -1) {
-				url += '/-'
-			}
-			if (category !== -1) { url += '/' + category }
-			return url
 		}
 		get url() {
-			return this.createURL(this.query, this.farmer, this.category)
+			return this.urlPagination + (this.options.page > 1 ? '&page=' + this.options.page : '')
+		}
+		get urlPagination() {
+			let url = "/search"
+			let options = Object.keys(this.options)
+				.filter(option => this.options[option] !== null && this.options[option] !== this.defaultOptions[option] && option !== 'page')
+				.map(option => option + '=' + this.options[option])
+				.join('&')
+			return url + '?' + options
 		}
 		search() {
-			this.$router.push(this.createURL(this.query, this.farmer, this.category))
+			this.$router.push(this.url)
+		}
+		searchButton() {
+			if (!this.canSearch) {
+				LeekWars.toast(this.$t('not_enough_parameters'))
+			} else {
+				this.search()
+			}
 		}
 	}
 </script>
@@ -145,14 +186,15 @@
 		margin-bottom: 5px;
 	}
 	.search-button {
-		margin: 0 auto;
+		margin: 8px auto;
+		margin-bottom: 20px;
 		img {
 			vertical-align: bottom;
 			margin-right: 6px;
 		}
 	}
 	.query {
-		height: 40px;
+		height: 36px;
 		padding: 0 8px;
 		width: calc(100% - 16px);
 		margin-bottom: 10px;
@@ -160,10 +202,15 @@
 	.query:focus {
 		border: 1px solid #5fad1b;
 	}
-	.search-category {
-		height: 40px;
+	.switch {
+		margin-bottom: 15px;
+		margin-right: 15px;
+	}
+	select {
+		height: 36px;
 		width: 100%;
 		font-size: 16px;
+		margin-bottom: 10px;
 	}
 	h2 {
 		margin-top: 20px;
