@@ -269,7 +269,10 @@
 				}
 			}
 			if (this.category === 'solo' && !params.item) {
-				const defaultLeek = localStorage.getItem('garden/leek') || LeekWars.first(this.$store.state.farmer.leeks).id
+				let defaultLeek = parseInt(localStorage.getItem('garden/leek') || '0', 10)
+				if (!(defaultLeek in store.state.farmer!.leeks)) {
+					defaultLeek = LeekWars.first(store.state.farmer!.leeks)!.id
+				}
 				this.$router.replace('/garden/solo/' + defaultLeek)
 				return
 			}
@@ -277,7 +280,10 @@
 				if (!this.garden) {
 					return
 				}
-				const defaultComposition = localStorage.getItem('garden/compo') || (this.garden.my_compositions.length === 0 ? 0 : this.garden.my_compositions[0].id)
+				let defaultComposition = parseInt(localStorage.getItem('garden/compo') || '0', 10)
+				if (!(defaultComposition in this.compositions_by_id)) {
+					defaultComposition = this.garden.my_compositions.length === 0 ? 0 : this.garden.my_compositions[0].id
+				}
 				this.$router.replace('/garden/team/' + defaultComposition)
 				return
 			}
