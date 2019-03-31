@@ -69,7 +69,7 @@
 							<avatar :farmer="farmer" />
 						</div>
 						<div v-if="farmer" class="infos">
-							<router-link v-if="farmer.forum_messages" :to="'/search/-/' + farmer.name">
+							<router-link v-if="farmer.forum_messages" :to="'/search?farmer=' + farmer.name + '&order=date'">
 								<div class="info">
 									<img class="flag" src="/image/forum.png"><span class="label">{{ $t('forum_messages', [farmer.forum_messages]) }}</span>
 								</div>
