@@ -6,7 +6,7 @@
 		<router-link v-for="i in (end - start + 1)" :key="i" :to="url + (start + i === 2 ? '' : page + (start + i - 1))" :class="{current: i + start - 1 === current}">{{ start + i - 1 }}</router-link>	
 
 		<span v-if="end < total">...</span>
-		<router-link v-if="end < total" :to="url + '/page-' + total">{{ total }}</router-link>
+		<router-link v-if="end < total" :to="url + page + total">{{ total }}</router-link>
 	</div>
 </template>
 
