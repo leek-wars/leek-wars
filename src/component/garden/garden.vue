@@ -199,6 +199,7 @@
 	import { Leek } from '@/model/leek'
 	import { LeekWars } from '@/model/leekwars'
 	import { Composition } from '@/model/team'
+	import { store } from '@/model/store'
 	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 	import GardenCompo from './garden-compo.vue'
 	import GardenFarmer from './garden-farmer.vue'
@@ -282,16 +283,16 @@
 			}
 			const item = parseInt(params.item, 10)
 
-			if (!this.garden || !this.$store.state.farmer) {
+			if (!this.garden || !store.state.farmer) {
 				return
 			}
 			if (this.category) {
 				const category_underscore = this.category.replace('-', '_')
-				LeekWars.setTitle(this.$t('garden.garden_' + category_underscore), this.$t('garden.n_fights', [this.$store.state.farmer.fights]))
+				LeekWars.setTitle(this.$t('garden.garden_' + category_underscore), this.$t('garden.n_fights', [store.state.farmer.fights]))
 				LeekWars.splitShowContent()
 
 				if (this.category === 'solo') {
-					this.loadLeek(this.$store.state.farmer.leeks[item])
+					this.loadLeek(store.state.farmer.leeks[item])
 				} else if (this.category === 'farmer') {
 					this.selectFarmer()
 				} else if (this.category === 'team') {
@@ -309,7 +310,7 @@
 		}
 		loadLeek(leek: Leek) {
 			this.selectedLeek = leek
-			if (this.garden.fights === 0 || this.$data.leekOpponents[leek.id]) {
+			if (this.garden.fights === 0 || this.leekOpponents[leek.id]) {
 				return
 			}
 			LeekWars.get('garden/get-leek-opponents/' + leek.id).then(data => {
@@ -341,10 +342,10 @@
 		}
 		selectBattleRoyale() {
 			if (!this.$route.params.item) {
-				this.$router.replace('/garden/battle-royale/' + LeekWars.first(this.$store.state.farmer.leeks).id)
+				this.$router.replace('/garden/battle-royale/' + LeekWars.first(store.state.farmer!.leeks)!.id)
 				return
 			}
-			this.selectedLeek = this.$store.state.farmer.leeks[parseInt(this.$route.params.item, 10)]
+			this.selectedLeek = store.state.farmer!.leeks[parseInt(this.$route.params.item, 10)]
 		}
 		battleRoyaleRegister() {
 			if (!this.selectedLeek) { return }
@@ -357,14 +358,14 @@
 			if (this.selectedLeek) {
 				LeekWars.post('garden/start-solo-fight', {leek_id: this.selectedLeek.id, target_id: leek.id}).then(data => {
 					this.$router.push('/fight/' + data.fight)
-					this.$store.commit('update-fights', -1)
+					store.commit('update-fights', -1)
 				})
 			}
 		}
 		clickFarmerOpponent(farmer: Farmer) {
 			LeekWars.post('garden/start-farmer-fight', {target_id: farmer.id}).then(data => {
 				this.$router.push('/fight/' + data.fight)
-				this.$store.commit('update-fights', -1)
+				store.commit('update-fights', -1)
 			})
 		}
 		clickCompositionOpponent(composition: Composition) {
@@ -378,10 +379,10 @@
 			this.challengeTarget = parseInt(this.$route.params.target, 10)
 			this.challengeType = this.$route.params.type
 			if (!this.$route.params.item) {
-				this.$router.replace('/garden/challenge/' + this.challengeType + '/' + this.challengeTarget + '/' + LeekWars.first(this.$store.state.farmer.leeks).id)
+				this.$router.replace('/garden/challenge/' + this.challengeType + '/' + this.challengeTarget + '/' + LeekWars.first(store.state.farmer!.leeks)!.id)
 				return
 			}
-			this.selectedLeek = this.$store.state.farmer.leeks[this.$route.params.item]
+			this.selectedLeek = store.state.farmer!.leeks[parseInt(this.$route.params.item, 10)]!
 			if (this.challengeType === 'leek') {
 				LeekWars.get('garden/get-solo-challenge/' + this.challengeTarget).then(data => {
 					if (data.challenges) {
