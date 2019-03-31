@@ -65,13 +65,13 @@
 								</router-link>
 							</th>
 							<th>
-								<router-link :to="'/ranking/leek/page-' + page">
+								<router-link :to="'/ranking/leek' + (active ? '/active' : '') + '/page-' + page">
 									<span>{{ $t('talent') }}</span>
 									<i v-if="order === 'talent'" class="material-icons">expand_less</i>
 								</router-link>
 							</th>
 							<th>
-								<router-link :to="'/ranking/leek/level/page-' + page">
+								<router-link :to="'/ranking/leek/level' + (active ? '/active' : '') + '/page-' + page">
 									<span>{{ $t('level') }}</span>
 									<i v-if="order === 'level'" class="material-icons">expand_less</i>
 								</router-link>
@@ -86,19 +86,19 @@
 						<tr class="header">
 							<th class="ranking-column">{{ $t('place') }}</th>
 							<th>
-								<router-link :to="'/ranking/farmer/name/page-' + page">
+								<router-link :to="'/ranking/farmer/name' + (active ? '/active' : '') + '/page-' + page">
 									<span>{{ $t('farmer') }}</span>
 									<i v-if="order === 'name'" class="material-icons">expand_less</i>
 								</router-link>
 							</th>
 							<th>
-								<router-link :to="'/ranking/farmer/talent/page-' + page">
+								<router-link :to="'/ranking/farmer/talent' + (active ? '/active' : '') + '/page-' + page">
 									<span>{{ $t('talent') }}</span>
 									<i v-if="order === 'talent'" class="material-icons">expand_less</i>
 								</router-link>
 							</th>
 							<th>
-								<router-link :to="'/ranking/farmer/total-level/page-' + page">
+								<router-link :to="'/ranking/farmer/total-level' + (active ? '/active' : '') + '/page-' + page">
 									<span>{{ $t('total_level') }}</span>
 									<i v-if="order === 'total-level'" class="material-icons">expand_less</i>
 								</router-link>
@@ -113,25 +113,25 @@
 						<tr class="header">
 							<th class="ranking-column">{{ $t('place') }}</th>
 							<th>
-								<router-link :to="'/ranking/team/name/page-' + page">
+								<router-link :to="'/ranking/team/name' + (active ? '/active' : '') + '/page-' + page">
 									<span>{{ $t('leek') }}</span>
 									<i v-if="order === 'name'" class="material-icons">expand_less</i>
 								</router-link>
 							</th>
 							<th>
-								<router-link :to="'/ranking/team/page-' + page">
+								<router-link :to="'/ranking/team' + (active ? '/active' : '') + '/page-' + page">
 									<span>{{ $t('talent') }}</span>
 									<i v-if="order === 'talent'" class="material-icons">expand_less</i>
 								</router-link>
 							</th>
 							<th>
-								<router-link :to="'/ranking/team/level/page-' + page">
+								<router-link :to="'/ranking/team/level' + (active ? '/active' : '') + '/page-' + page">
 									<span>{{ $t('level') }}</span>
 									<i v-if="order === 'level'" class="material-icons">expand_less</i>
 								</router-link>
 							</th>
 							<th>
-								<router-link :to="'/ranking/team/total-level/page-' + page">
+								<router-link :to="'/ranking/team/total-level' + (active ? '/active' : '') + '/page-' + page">
 									<span>{{ $t('total_level') }}</span>
 									<i v-if="order === 'total-level'" class="material-icons">expand_less</i>
 								</router-link>
@@ -211,7 +211,7 @@
 		searchResultType: string | null = null
 
 		get url() {
-			return '/ranking' + (this.category !== 'leek' ? '/' + this.category : '') + (this.order !== 'talent' ? '/' + this.order : '') + (this.activeSwitch ? '/active' : '')
+			return '/ranking' + (this.category !== 'leek' || this.order !== 'talent' || this.active ? '/' + this.category : '') + (this.order !== 'talent' || this.active ? '/' + this.order : '') + (this.activeSwitch ? '/active' : '')
 		}
 		get rankingLeekURL() {
 			return '/ranking' + (LeekWars.rankingActive ? '/active' : '')
