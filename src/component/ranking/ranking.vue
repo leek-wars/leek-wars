@@ -47,10 +47,10 @@
 					<pagination :current="page" :total="pages" :url="url" />
 					<div v-if="$store.state.farmer" class="me-buttons">
 						<div v-if="category === 'leek'">
-							<v-btn v-for="leek in $store.state.farmer.leeks" :key="leek.id" @click="goToMyRanking(leek.id)">{{ leek.name }}</v-btn>
+							<v-btn v-for="leek in $store.state.farmer.leeks" :key="leek.id" @click="goToRanking('leek', leek.id)">{{ leek.name }}</v-btn>
 						</div>
-						<v-btn v-else-if="category === 'farmer'" @click="goToMyRanking">{{ $t('my_farmer') }}</v-btn>
-						<v-btn v-else-if="category === 'team' && $store.state.farmer.team" @click="goToMyRanking">{{ $t('my_team') }}</v-btn>
+						<v-btn v-else-if="category === 'farmer'" @click="goToRanking('farmer', $store.state.farmer.id)">{{ $t('my_farmer') }}</v-btn>
+						<v-btn v-else-if="category === 'team' && $store.state.farmer.team" @click="goToRanking('team', $store.state.farmer.team.id)">{{ $t('my_team') }}</v-btn>
 					</div>
 					<v-switch v-model="activeSwitch" :label="$t('hide_inactives')" class="inactives" @change="toggleInactives" />
 				</div>
@@ -80,7 +80,7 @@
 							<th>{{ $t('country') }}</th>
 							<th class="column-team">{{ $t('team') }}</th>
 						</tr>
-						<ranking-leek-row v-for="row in ranking" :key="row.id" :row="row" />
+						<ranking-leek-row v-for="row in ranking" :key="row.id" :row="row" :class="{highlight: searchResult == row.id}" />
 					</table>
 					<table v-else-if="category == 'farmer'" class="ranking large">
 						<tr class="header">
@@ -107,7 +107,7 @@
 							<th>{{ $t('country') }}</th>
 							<th>{{ $t('team') }}</th>
 						</tr>
-						<ranking-farmer-row v-for="row in ranking" :key="row.id" :row="row" />
+						<ranking-farmer-row v-for="row in ranking" :key="row.id" :row="row" :class="{highlight: searchResult == row.id}" />
 					</table>
 					<table v-else class="ranking large">
 						<tr class="header">
@@ -149,7 +149,7 @@
 								</router-link>
 							</th>
 						</tr>
-						<ranking-team-row v-for="row in ranking" :key="row.id" :row="row" />
+						<ranking-team-row v-for="row in ranking" :key="row.id" :row="row" :class="{highlight: searchResult == row.id}" />
 					</table>
 					<loader v-if="!ranking" />
 				</div>
@@ -172,7 +172,7 @@
 				<loader v-if="!searchResults && searchQuery.length" />
 				<h4 v-if="searchResults">{{ $t('results') }}</h4>
 				<div v-if="searchResults && searchResults.length === 0" class="center">{{ $t('no_results') }}</div>
-				<ranking-search-result v-for="result in searchResults" :key="result.id" :result="result" />
+				<ranking-search-result v-for="result in searchResults" :key="result.id" :result="result" @gotoresult="goToRanking($event.type, $event.id)" />
 			</div>
 		</v-dialog>
 	</div>
@@ -207,6 +207,8 @@
 		searchResults: any[] | null = null
 		@Prop() active!: boolean
 		activeSwitch: boolean = false
+		searchResult: number = -1
+		searchResultType: string | null = null
 
 		get url() {
 			return '/ranking' + (this.category !== 'leek' ? '/' + this.category : '') + (this.order !== 'talent' ? '/' + this.order : '') + (this.activeSwitch ? '/active' : '')
@@ -224,6 +226,9 @@
 		@Watch('$route.params', {immediate: true})
 		update() {
 			this.category = 'category' in this.$route.params ? this.$route.params.category : 'leek'
+			if (this.category !== this.searchResultType) {
+				this.searchResult = 0
+			}
 			this.activeSwitch = this.active
 			if (this.ranking) {
 				this.ranking = null
@@ -284,18 +289,23 @@
 				})
 			}
 		}
-		goToMyRanking(param: number = 0) {
+		goToRanking(type: string, param: number = 0) {
+			this.searchDialog = false
 			let url = ''
-			if (this.category === 'leek') {
+			if (type === 'leek') {
 				url = 'ranking/get-leek-rank/' + param + '/' + this.order
-			} else if (this.category === 'farmer') {
-				url = 'ranking/get-farmer-rank/' + this.$store.state.farmer.id + '/' + this.order
-			} else if (this.category === 'team' && this.$store.state.farmer.team !== null) {
-				url = 'ranking/get-team-rank/' + this.$store.state.farmer.team.id + '/' + this.order
+			} else if (type === 'farmer') {
+				url = 'ranking/get-farmer-rank/' + param + '/' + this.order
+			} else if (type === 'team' && this.$store.state.farmer.team !== null) {
+				url = 'ranking/get-team-rank/' + param + '/' + this.order
 			}
+			this.searchResult = param
+			this.searchResultType = type
 			LeekWars.get(url).then(data => {
 				const page = 1 + Math.floor((data.rank - 1) / 50)
-				this.$router.push('/ranking/' + this.category + '/' + this.order + '/page-' + page)
+				if (page !== this.page || type !== this.category) {
+					this.$router.push('/ranking/' + type + '/' + this.order + '/page-' + page)
+				}
 			})
 		}
 		openSearch() {
@@ -406,6 +416,11 @@
 			font-weight: bold;
 			/deep/ td {
 				background: #eee;
+			}
+		}
+		tr.highlight {
+			/deep/ td {
+				background: #b5ee84;
 			}
 		}
 		tr.inactive {
