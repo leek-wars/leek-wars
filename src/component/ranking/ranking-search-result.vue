@@ -2,7 +2,9 @@
 	<div class="result card">
 		<div @click="$emit('gotoresult', result)" class="main" v-ripple>
 			<div class="image">
-				<img :src="result.image">
+				<leek-image v-if="result.type === 'leek'" :leek="result" :scale="1" width="40" height="40"></leek-image>
+				<avatar v-else-if="result.type === 'farmer'" :farmer="result"></avatar>
+				<emblem v-else-if="result.type === 'team'" :team="result"></emblem>
 			</div>
 			<div class="name">{{ result.name }}</div>
 			<div class="level">{{ description }}</div>
@@ -36,8 +38,8 @@
 <style lang="scss" scoped>
 	.result {
 		height: 44px;
-		margin-bottom: 6px;
 		display: flex;
+		margin-top: 6px;
 	}
 	.result .main {
 		flex: 1;
@@ -48,6 +50,9 @@
 	.result img {
 		max-width: 40px;
 		max-height: 40px;
+	}
+	.result .name {
+		margin: 2px 0;
 	}
 	.result .image {
 		width: 40px;
