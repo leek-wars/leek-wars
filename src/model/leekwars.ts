@@ -193,12 +193,13 @@ const LeekWars = {
 		for (key in obj) { if (obj.hasOwnProperty(key)) { size++ } }
 		return size
 	},
-	first(obj: any) {
+	first<T>(obj: T) {
 		for (const e in obj) {
 			if (obj.hasOwnProperty(e)) {
 				return obj[e]
 			}
 		}
+		return null
 	},
 	firstKey(obj: any) {
 		for (const e in obj) {
