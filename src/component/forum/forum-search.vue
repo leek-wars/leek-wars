@@ -27,6 +27,7 @@
 					<select v-model="options.order" @change="search">
 						<option value="pertinence">{{ $t('sort_pertinence') }}</option>
 						<option value="date">{{ $t('sort_date') }}</option>
+						<option value="votes">{{ $t('sort_votes') }}</option>
 					</select>
 				</div>
 
@@ -60,9 +61,19 @@
 									{{ $i18n.t('forum.category_' + result.cname) }}
 								</router-link>
 							</i18n>
-							<router-link :to="'/forum/category-' + result.cid + '/topic-' + result.tid">
+							<router-link :to="'/forum/category-' + result.cid + '/topic-' + result.tid + '/page-' + (floor(result.pos / 20) + 1) + (result.mid !== -1 ? '#message-' + result.mid : '')">
 								<div class="headline" v-html="result.message"></div>
 							</router-link>
+							<div class="votes" v-if="result.vu !== 0 || result.vd !== 0">
+								<div :class="{zero: result.vu === 0}" class="vote up">
+									<i class="material-icons">thumb_up</i>&nbsp;
+									<span class="counter">{{ result.vu }}</span>
+								</div>
+								<div :class="{zero: !result.vd}" class="vote down">
+									<i class="material-icons">thumb_down</i>&nbsp;
+									<span class="counter">{{ result.vd }}</span>
+								</div>
+							</div>
 						</div>
 					</div>
 					<div v-if="results.length === 0" class="no-results">
@@ -107,6 +118,7 @@
 		categories: any[] = []
 		searchStarted: boolean = false
 		count: number = 0
+		floor = Math.floor
 
 		get canSearch() {
 			return this.options.query || this.options.farmer || this.options.admin
@@ -254,5 +266,35 @@
 		img {
 			margin-bottom: 8px;
 		}
+	}
+	.votes {
+		margin-top: 10px;
+		display: inline-block;
+	}
+	.vote {
+		display: inline-block;
+		font-size: 16px;
+		margin-right: 12px;
+		border-radius: 6px;
+	}
+	.vote i {
+		vertical-align: bottom;
+		font-size: 20px;
+	}
+	.vote.zero {
+		opacity: 0.3;
+	}
+	.vote.active {
+		font-weight: bold;
+	}
+	.vote.up {
+		color: #5fad1b;
+	}
+	.vote.up.zero, .vote.down.zero {
+		color: #555;
+	}
+	.vote.down {
+		color: red;
+		margin-right: 20px;
 	}
 </style>
