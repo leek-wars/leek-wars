@@ -394,7 +394,7 @@
 			const x = e.clientX - chartPanel.getBoundingClientRect().left
 			const index = Math.floor(this.chartSeries[this.chartTooltipLeek].length * x / chart.offsetWidth)
 			if (typeof this.chartSeries[this.chartTooltipLeek][index] === 'undefined') { return }
-			const top = this.chartGetY(this.chartTooltipLeek, x) - 40
+			const top = this.chartGetY(this.chartTooltipLeek, x) - 52
 			this.chartTooltipX = x - tooltip.offsetWidth / 2 - 5,
 			this.chartTooltipY = top
 			this.chartTooltipValue = this.statistics.leeks[this.chartTooltipLeek].leek.name + '<br>' + this.chartSeries[this.chartTooltipLeek][index] + ' PV'
