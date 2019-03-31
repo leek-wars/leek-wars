@@ -1,13 +1,18 @@
 <template>
-	<router-link :to="'/' + result.type + '/' + result.id">
-		<div class="result">
+	<div class="result card">
+		<div @click="$emit('gotoresult', result)" class="main" v-ripple>
 			<div class="image">
 				<img :src="result.image">
 			</div>
 			<div class="name">{{ result.name }}</div>
 			<div class="level">{{ description }}</div>
 		</div>
-	</router-link>
+		<router-link :to="'/' + result.type + '/' + result.id">
+			<v-btn flat icon color="grey">
+				<v-icon>perm_identity</v-icon>
+			</v-btn>
+		</router-link>
+	</div>
 </template>
 
 <script lang="ts">
@@ -30,12 +35,15 @@
 
 <style lang="scss" scoped>
 	.result {
-		height: 40px;
-		margin-bottom: 4px;
+		height: 44px;
+		margin-bottom: 6px;
+		display: flex;
 	}
-	.result:hover {
-		background: white;
-		box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
+	.result .main {
+		flex: 1;
+		padding: 2px;
+		border-radius: 3px;
+		cursor: pointer;
 	}
 	.result img {
 		max-width: 40px;
@@ -51,5 +59,8 @@
 	.result .level {
 		color: #aaa;
 		font-size: 13px;
+	}
+	button {
+		margin: 4px;
 	}
 </style>
