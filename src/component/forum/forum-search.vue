@@ -13,8 +13,8 @@
 					<div class="label">{{ $t('author') }}</div>
 					<input v-model="options.farmer" class="query card" type="text" @keydown.enter="search">
 				</div>
-				<v-switch v-model="options.moderator" :label="$t('moderator')" @change="search" class="switch" hide-details />
-				<v-switch v-model="options.admin" :label="$t('admin')" @change="search" class="switch" hide-details />
+				<v-switch v-model="options.moderator" :label="$t('moderator')" class="switch" hide-details @change="search" />
+				<v-switch v-model="options.admin" :label="$t('admin')" class="switch" hide-details @change="search" />
 				<div>
 					<div class="label">{{ $t('category') }}</div>
 					<select v-model="options.category" class="search-category" @change="search">
@@ -47,7 +47,7 @@
 
 				<div v-else class="results-wrapper">
 					<div v-if="results.length" class="results">
-						<div v-for="(result, r) in results" :key="r" v-ripple class="result card">
+						<div v-ripple v-for="(result, r) in results" :key="r" class="result card">
 							<router-link :to="'/forum/category-' + result.cid + '/topic-' + result.tid">
 								<div class="title" v-html="result.title"></div>
 							</router-link>
@@ -64,7 +64,7 @@
 							<router-link :to="'/forum/category-' + result.cid + '/topic-' + result.tid + '/page-' + (floor(result.pos / 20) + 1) + (result.mid !== -1 ? '#message-' + result.mid : '')">
 								<div class="headline" v-html="result.message"></div>
 							</router-link>
-							<div class="votes" v-if="result.vu !== 0 || result.vd !== 0">
+							<div v-if="result.vu !== 0 || result.vd !== 0" class="votes">
 								<div :class="{zero: result.vu === 0}" class="vote up">
 									<i class="material-icons">thumb_up</i>&nbsp;
 									<span class="counter">{{ result.vu }}</span>

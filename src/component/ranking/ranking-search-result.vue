@@ -1,10 +1,10 @@
 <template>
 	<div class="result card">
-		<div @click="$emit('gotoresult', result)" class="main" v-ripple>
+		<div v-ripple class="main" @click="$emit('gotoresult', result)">
 			<div class="image">
-				<leek-image v-if="result.type === 'leek'" :leek="result" :scale="1" width="40" height="40"></leek-image>
-				<avatar v-else-if="result.type === 'farmer'" :farmer="result"></avatar>
-				<emblem v-else-if="result.type === 'team'" :team="result"></emblem>
+				<leek-image v-if="result.type === 'leek'" :leek="result" :scale="1" width="40" height="40" />
+				<avatar v-else-if="result.type === 'farmer'" :farmer="result" />
+				<emblem v-else-if="result.type === 'team'" :team="result" />
 			</div>
 			<div class="name">{{ result.name }}</div>
 			<div class="level">{{ description }}</div>
