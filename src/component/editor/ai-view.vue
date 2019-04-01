@@ -1,5 +1,5 @@
 <template>
-	<div v-show="visible" class="ai" @mousemove="mousemove" @mouseleave="mouseleave">
+	<div v-show="visible" class="ai" @mousemove="mousemove" @mouseleave="mouseleave" @keyup="editorKeyUp" @keydown="editorKeyDown">
 		<div v-show="!loading" ref="codemirror" :style="{'font-size': fontSize + 'px', 'line-height': lineHeight + 'px'}" :class="{search: searchEnabled}" class="codemirror"></div>
 		<div v-show="searchEnabled" class="search-panel">
 			<i class="material-icons">search</i>
@@ -119,6 +119,9 @@
 		public searchQuery: string = ''
 		public searchLines: any = []
 		public underlineMarker: CodeMirror.TextMarker | null = null
+		public mouseX: number = -1
+		public mouseY: number = -1
+		public ctrl: boolean = false
 
 		created() {
 			this.id = this.ai.id
@@ -185,6 +188,18 @@
 					this.$emit('jump', keyword.ai, keyword.line)
 				}
 				e.preventDefault()
+			}
+		}
+		public editorKeyDown(e: KeyboardEvent) {
+			if (e.keyCode === 17) {
+				this.ctrl = true
+				this.updateMouseAndCtrl()
+			}
+		}
+		public editorKeyUp(e: KeyboardEvent) {
+			if (e.keyCode === 17) {
+				this.ctrl = false
+				this.updateMouseAndCtrl()
 			}
 		}
 		public hasBeenModified() {
@@ -457,16 +472,20 @@
 				}
 			}
 		}
-		public mousemove(e: MouseEvent) {
+		public mousemove(e: any) {
+			this.mouseX = e.pageX
+			this.mouseY = e.pageY
+			this.updateMouseAndCtrl()
+		}
+		public updateMouseAndCtrl() {
 			if (!this.popups) { return null }
 			if (this.hintDialog) { return null }
 
-			if (!e.ctrlKey && this.underlineMarker) {
-				this.underlineMarker.clear()
-				this.underlineMarker = null
+			if (!this.ctrl && this.underlineMarker) {
+				this.removeUnderlineMarker()
 			}
 
-			const pos = {left: e.pageX, top: e.pageY}
+			const pos = {left: this.mouseX, top: this.mouseY}
 			const codemirror = this.$refs.codemirror as HTMLElement
 			if (pos.left < codemirror.getBoundingClientRect().left || pos.top < codemirror.getBoundingClientRect().top) {
 				clearTimeout(this.detailTimer)
@@ -494,29 +513,40 @@
 			const token = this.editor.getTokenAt(editorPos)
 			const tokenString = token.string
 
-			if (tokenString !== this.hoverToken) {
+			if (tokenString !== this.hoverToken || this.ctrl !== !!this.underlineMarker) {
 				this.hoverToken = tokenString
 				const keyword = this.getTokenInformation(tokenString, editorPos)
 				if (keyword) {
-					if (e.ctrlKey) {
+					if (this.ctrl) {
 						if (this.underlineMarker) { this.underlineMarker.clear() }
 						this.underlineMarker = this.editor.getDoc().markText({line: editorPos.line, ch: token.start}, {line: editorPos.line, ch: token.end}, {className: 'cm-underlined'})
-						console.log(this.editor.getDoc().getAllMarks())
+						this.togglePointerCursor(true)
 					}
 					clearTimeout(this.detailTimer)
 					this.detailTimer = setTimeout(() => {
 						this.detailDialogContent = keyword
 						const p = this.editor.cursorCoords(editorPos)
 						this.detailDialogTop = p.bottom - codemirror.getBoundingClientRect().top
-						this.detailDialogLeft = e.pageX - codemirror.getBoundingClientRect().left
+						this.detailDialogLeft = this.mouseX - codemirror.getBoundingClientRect().left
 						this.detailDialog = true
 					}, 400)
 				} else {
-					if (this.underlineMarker) { this.underlineMarker.clear() }
+					this.removeUnderlineMarker()
 					clearTimeout(this.detailTimer)
 					this.detailDialog = false
 				}
 			}
+		}
+		public removeUnderlineMarker() {
+			if (this.underlineMarker) {
+				this.underlineMarker.clear()
+				this.underlineMarker = null
+				this.togglePointerCursor(false)
+			}
+		}
+		public togglePointerCursor(enabled: boolean) {
+			const lines = (this.$refs.codemirror as HTMLElement).querySelector('.CodeMirror-lines') as HTMLElement
+			if (lines) { lines.style.cursor = enabled ? "pointer" : "text" }
 		}
 		public mouseleave() {
 			clearTimeout(this.detailTimer)
