@@ -348,7 +348,7 @@
 				if (startScenarioID && startScenarioID in this.scenarios) {
 					this.selectScenario(this.scenarios[startScenarioID])
 				} else if (LeekWars.objectSize(this.allScenarios)) {
-					this.selectScenario(LeekWars.first(this.allScenarios))
+					this.selectScenario(LeekWars.first(this.allScenarios)!)
 				}
 			}).error(error => {
 				LeekWars.toast(error)
@@ -514,7 +514,7 @@
 			LeekWars.delete('test-map/delete', {id: map.id}).error(error => LeekWars.toast(error))
 			Vue.delete(this.$data.maps, map.id)
 			if (!LeekWars.isEmptyObj(this.maps)) {
-				this.selectMap(LeekWars.first(this.maps))
+				this.selectMap(LeekWars.first(this.maps)!)
 			}
 		}
 		clearMap() {
@@ -552,7 +552,7 @@
 			if (scenario.base) { return }
 			LeekWars.delete('test-scenario/delete', {id: scenario.id}).error(error => LeekWars.toast(error))
 			Vue.delete(this.scenarios, scenario.id)
-			this.selectScenario(LeekWars.first(this.allScenarios))
+			this.selectScenario(LeekWars.first(this.allScenarios)!)
 		}
 		createScenario() {
 			LeekWars.post('test-scenario/new', {name: this.newScenarioName}).then(data => {
