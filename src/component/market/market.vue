@@ -70,7 +70,7 @@
 				</panel>
 			</div>
 			<div v-show="!LeekWars.mobile || LeekWars.splitBack" class="column4">
-				<panel :title="$t('characteristics')" class="panel preview-panel">
+				<panel :title="$t('characteristics')" class="last preview-panel">
 					<loader v-if="!selectedItem" slot="content" />
 					<div v-else slot="content" class="preview center">
 						<weapon-preview v-if="selectedItem.type == ItemType.WEAPON" :weapon="LeekWars.weapons[selectedItem.id]" />
