@@ -425,13 +425,15 @@
 						let start = 0
 						let par = 0
 						let j = pos.ch
+						let argCount = 0
 						for (; j < line.length; ++j) {
 							const c = line[j]
 							if (c === '(') { if (par++ === 0) { start = j + 1 } }
 							if (c === ')') { if (--par === 0) { break } }
+							if (c === ',' && par === 1) { argCount++ }
 						}
 						const capture = line.substring(start, j)
-						const argCount = capture.trim() === '' ? 0 : (capture.match(/\,/g) || []).length + 1
+						argCount = capture.trim() === '' ? 0 : argCount + 1
 						if (argCount === keyword.argumentCount) {
 							return keyword
 						}
