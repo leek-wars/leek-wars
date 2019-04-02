@@ -118,6 +118,7 @@
 		public searchCurrent: number = 0
 		public searchQuery: string = ''
 		public searchLines: any = []
+		public underlineMarker: CodeMirror.TextMarker | null = null
 
 		created() {
 			this.id = this.ai.id
@@ -458,6 +459,11 @@
 			if (!this.popups) { return null }
 			if (this.hintDialog) { return null }
 
+			if (!e.ctrlKey && this.underlineMarker) {
+				this.underlineMarker.clear()
+				this.underlineMarker = null
+			}
+
 			const pos = {left: e.pageX, top: e.pageY}
 			const codemirror = this.$refs.codemirror as HTMLElement
 			if (pos.left < codemirror.getBoundingClientRect().left || pos.top < codemirror.getBoundingClientRect().top) {
@@ -483,12 +489,18 @@
 				}
 			}
 			if (!shown) { this.errorTooltip = false }
-			const tokenString = this.editor.getTokenAt(editorPos).string
+			const token = this.editor.getTokenAt(editorPos)
+			const tokenString = token.string
 
 			if (tokenString !== this.hoverToken) {
 				this.hoverToken = tokenString
 				const keyword = this.getTokenInformation(tokenString, editorPos)
 				if (keyword) {
+					if (e.ctrlKey) {
+						if (this.underlineMarker) { this.underlineMarker.clear() }
+						this.underlineMarker = this.editor.getDoc().markText({line: editorPos.line, ch: token.start}, {line: editorPos.line, ch: token.end}, {className: 'cm-underlined'})
+						console.log(this.editor.getDoc().getAllMarks())
+					}
 					clearTimeout(this.detailTimer)
 					this.detailTimer = setTimeout(() => {
 						this.detailDialogContent = keyword
@@ -498,6 +510,7 @@
 						this.detailDialog = true
 					}, 400)
 				} else {
+					if (this.underlineMarker) { this.underlineMarker.clear() }
 					clearTimeout(this.detailTimer)
 					this.detailDialog = false
 				}
