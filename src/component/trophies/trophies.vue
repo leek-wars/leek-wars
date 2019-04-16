@@ -67,7 +67,7 @@
 			return this.$route.params.id || (this.$store.state.farmer ? this.$store.state.farmer.id : null)
 		}
 		get categories() {
-			return this.raw_categories.filter(c => (c.id != 6 || this.progressions[6] != 0) && (!this.loaded || this.trophies[c.id].length))
+			return this.raw_categories.filter(c => (c.id !== 6 || this.progressions[6] !== 0) && (!this.loaded || this.trophies[c.id].length))
 		}
 		get trophies() {
 			const result: {[key: number]: any} = {}
