@@ -6,7 +6,8 @@
 		"serve": "vue-cli-service serve",
 		"build": "VUE_MODE=build vue-cli-service build",
 		"lint": "vue-cli-service lint",
-		"stylelint": "stylelint src/**/*.{vue,css,scss}"
+		"stylelint": "stylelint src/**/*.{vue,css,scss}",
+		"test": "bundlesize"
 	},
 	"dependencies": {
 		"codemirror": "^5.44.0",
@@ -41,6 +42,7 @@
 		"@vue/eslint-config-standard": "^3.0.1",
 		"@vue/eslint-config-typescript": "^3.2.1",
 		"babel-plugin-transform-imports": "^1.4.1",
+		"bundlesize": "^0.17.1",
 		"eslint": "^5.14.1",
 		"json-loader": "^0.5.7",
 		"node-sass": "^4.11.0",
@@ -140,5 +142,11 @@
 	"bugs": {
 		"url": "https://github.com/leek-wars/leek-wars-client/issues"
 	},
-	"homepage": "https://github.com/leek-wars/leek-wars-client#readme"
+	"homepage": "https://github.com/leek-wars/leek-wars-client#readme",
+	"bundlesize": [
+		{
+			"path": "./dist/js/*.js",
+			"maxSize": "250kB"
+		}
+	]
 }
