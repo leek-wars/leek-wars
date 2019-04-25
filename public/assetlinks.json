@@ -1,0 +1,9 @@
+[{
+	"relation": ["delegate_permission/common.handle_all_urls"],
+	"target": {
+		"namespace": "android_app",
+		"package_name": "com.leekwars.app",
+		"sha256_cert_fingerprints": ["AC:BA:89:FF:90:30:22:C2:4D:80:F7:B6:C1:79:9A:3D:65:47:5B:BD:D9:77:44:FF:6D:F1:79:23:17:B6:84:54", 
+		"C3:87:72:22:00:F3:B4:51:CA:BE:86:CF:4B:7B:0E:C8:75:70:33:AA:6F:00:4B:80:D1:2A:24:5D:62:7D:75:0E"]
+	}
+}]
