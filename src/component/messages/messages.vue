@@ -14,10 +14,10 @@
 		</div>
 		<div v-show="!LeekWars.mobile || !LeekWars.splitBack" class="column4">
 			<panel v-autostopscroll="'bottom'" class="conversations last first">
-				<router-link v-if="newConversation && !newConversationSent" :to="'/messages/new/' + newFarmer.id + '/' + newFarmer.name + '/' + newFarmer.avatar_changed">
-					<conversation :conversation="newConversation" />
-				</router-link>
 				<div slot="content">
+					<router-link v-if="newConversation && !newConversationSent" :to="'/messages/new/' + newFarmer.id + '/' + newFarmer.name + '/' + newFarmer.avatar_changed">
+						<conversation :conversation="newConversation" />
+					</router-link>
 					<router-link v-for="conversation in $store.state.conversationsList" :key="conversation.id" :to="'/messages/conversation/' + conversation.id">
 						<conversation :conversation="conversation" />
 					</router-link>
