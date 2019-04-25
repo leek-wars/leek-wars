@@ -1,7 +1,10 @@
 <template lang="html">
 	<div class="chat">
-		<loader v-show="channel && !$store.state.chat[channel]" />
-		<div v-autostopscroll v-if="channel && $store.state.chat[channel] && $store.state.chat[channel].messages.length" ref="messages" class="messages">
+		<loader v-show="loading" />
+		<div v-autostopscroll v-if="!loading && (!chat || !chat.messages.length)" ref="messages" class="messages">
+			<div class="no-messages">No messages yet</div>
+		</div>
+		<div v-autostopscroll v-if="chat && chat.messages.length" ref="messages" class="messages">
 			<template v-for="(message, m) in $store.state.chat[channel].messages">
 				<div v-if="message.author.id === 0" :key="m" class="message">
 					<img class="avatar" src="/image/favicon.png">
@@ -48,9 +51,6 @@
 			</template>
 			<div v-show="unread" class="chat-new-messages" @click="updateScroll(true)">{{ $t('main.unread_messages') }}</div>
 		</div>
-		<div v-autostopscroll v-else-if="channel && $store.state.chat[channel]" ref="messages" class="messages">
-			<div class="no-messages">No messages yet</div>
-		</div>
 		<div class="chat-disconnected">{{ $t('main.disconnected') }}</div>
 		<chat-input @message="sendMessage" />
 
@@ -81,6 +81,7 @@
 	import { LeekWars } from '@/model/leekwars'
 	import { Warning } from '@/model/moderation'
 	import { SocketMessage } from '@/model/socket'
+	import { store } from '@/model/store'
 	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 	import ChatInput from './chat-input.vue'
 	
@@ -105,6 +106,12 @@
 			Warning.RUDE_CHAT,
 			Warning.PROMO_CHAT
 		]
+		get loading() {
+			return !!this.channel && !store.state.chat[this.channel]
+		}
+		get chat() {
+			return this.channel ? store.state.chat[this.channel] : null
+		}
 		created() {
 			this.update()
 			this.$root.$on('chat', (e: any) => {
@@ -225,7 +232,7 @@
 			this.unmuteDialog = false
 		}
 		get privateMessages() {
-			return this.channel.startsWith('pm-')
+			return this.channel && this.channel.startsWith('pm-')
 		}
 		// TODO
 		// ChatController.prototype.mute_user = function(data) {
