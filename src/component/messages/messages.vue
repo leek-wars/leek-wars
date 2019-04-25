@@ -54,8 +54,8 @@
 	@Component({ name: 'messages', i18n: {} })
 	export default class Messages extends Vue {
 		ChatType = ChatType
-		_newConversation: Conversation | null = null
-		_newFarmer: any = null
+		newConversation_: Conversation | null = null
+		newFarmer_: any = null
 		newConversationSent: boolean = false
 		currentID: number | null = null
 		quitDialog: boolean = false
@@ -78,16 +78,16 @@
 			return 'name' in this.$route.params
 		}	
 		get newConversation(): Conversation | null {
-			if (!this._newConversation && 'name' in this.$route.params) {
-				this._newConversation = {id: 0, last_message: this.$t('messages.new_message') as string, farmers: [this.newFarmer]} as Conversation
+			if (!this.newConversation_ && 'name' in this.$route.params) {
+				this.newConversation_ = {id: 0, last_message: this.$t('messages.new_message') as string, farmers: [this.newFarmer]} as Conversation
 			}
-			return this._newConversation
+			return this.newConversation_
 		}
 		get newFarmer(): any {
-			if (!this._newFarmer && 'name' in this.$route.params) {
-				this._newFarmer = {id: parseInt(this.$route.params.id, 10), name: this.$route.params.name, avatar_changed: this.$route.params.avatar_changed}
+			if (!this.newFarmer_ && 'name' in this.$route.params) {
+				this.newFarmer_ = {id: parseInt(this.$route.params.id, 10), name: this.$route.params.name, avatar_changed: this.$route.params.avatar_changed}
 			}
-			return this._newFarmer
+			return this.newFarmer_
 		}
 		@Watch('$route.params')
 		update() {
@@ -120,7 +120,6 @@
 				}
 			}
 		}
-
 		selectConversation(id: number) {
 			this.currentID = id
 			LeekWars.splitShowContent()
@@ -145,9 +144,9 @@
 			if (!this.currentConversation) { return }
 			if (this.currentConversation.id === 0) {
 				LeekWars.post('message/create-conversation', {farmer_id: this.newFarmer.id, message}).then(data => {
-					if (this._newConversation) {
-						this._newConversation.id = data.conversation_id
-						this.$store.commit('new-conversation', this._newConversation)
+					if (this.newConversation_) {
+						this.newConversation_.id = data.conversation_id
+						this.$store.commit('new-conversation', this.newConversation_)
 					}
 					this.$router.replace('/messages/conversation/' + data.conversation_id)
 					this.newConversationSent = true
