@@ -72,7 +72,7 @@
 			})
 		}
 		get currentConversation() {
-			return (this.currentID === 0) ? this.newConversation : (this.currentID ?this.$store.state.conversations[this.currentID] : null)
+			return (this.currentID === 0) ? this.newConversation : (this.currentID ? this.$store.state.conversations[this.currentID] : null)
 		}
 		isNewConversation(): boolean {
 			return 'name' in this.$route.params
