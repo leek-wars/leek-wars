@@ -36,12 +36,10 @@
 					</div>
 				</div>
 				<div v-else>
-					<router-link v-if="$store.state.connected" :to="'/messages/new/' + farmer.id + '/' + farmer.name + '/' + farmer.avatar_changed">
-						<div :link="'/messages/new/' + farmer.id + '/' + farmer.name + '/' + farmer.avatar_changed" class="tab action">
-							<i class="material-icons">email</i>
-							<span>{{ $t('send_private_message') }}</span>
-						</div>
-					</router-link>
+					<div class="tab action" @click="sendMessage">
+						<i class="material-icons">email</i>
+						<span>{{ $t('send_private_message') }}</span>
+					</div>
 					<router-link v-if="$store.state.connected" :to="'/garden/challenge/farmer/' + farmer.id">
 						<div :link="'/garden/challenge/farmer/' + farmer.id" class="tab action">
 							<img src="/image/icon/garden.png">
@@ -614,6 +612,16 @@
 			this.farmer.github = this.newGitHub
 			LeekWars.post('farmer/set-github', {github: this.newGitHub})
 			this.githubDialog = false
+		}
+		sendMessage() {
+			if (!this.farmer) { return }
+			LeekWars.get('message/find-conversation/' + this.farmer.id).then(conversation => {
+				store.commit('new-conversation', conversation)
+				this.$router.push('/messages/conversation/' + conversation.id)
+			}).error(() => {
+				if (!this.farmer) { return }
+				this.$router.push('/messages/new/' + this.farmer.id + '/' + this.farmer.name + '/' + this.farmer.avatar_changed)
+			})
 		}
 	}
 </script>
