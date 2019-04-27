@@ -379,8 +379,8 @@ class Game {
 				// Skin
 				const skin = typeof(e.skin) === 'undefined' ? 1 : e.skin
 				const hat = typeof(e.hat) === 'undefined' ? null : e.hat
-				const appearence = LeekWars.getLeekAppearence(entity.level)
-				entity.setSkin(skin, appearence, hat)
+				const appearance = LeekWars.getLeekAppearance(entity.level)
+				entity.setSkin(skin, appearance, hat)
 				entity.active = true
 				entity.drawID = this.addDrawableElement(entity, entity.y)
 
