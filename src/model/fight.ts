@@ -103,7 +103,6 @@ class FightMap {
 
 class FightLeek {
 	public agility!: number
-	public appearence!: number
 	public cellPos!: number
 	public chips!: number[]
 	public farmer!: number
