@@ -18,7 +18,7 @@
 		leekSize: any = null
 		hatSize: any = null
 		get leekImage(): string {
-			return 'leek/leek' + LeekWars.getLeekAppearence(this.leek.level) + '_front_' + LeekWars.getLeekSkinName(this.leek.skin) + '.png'
+			return 'leek/leek' + LeekWars.getLeekAppearance(this.leek.level) + '_front_' + LeekWars.getLeekSkinName(this.leek.skin) + '.png'
 		}
 		get hatImage(): string {
 			if (!this.leek.hat) { return '' }

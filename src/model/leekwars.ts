@@ -168,7 +168,7 @@ const LeekWars = {
 		document.cookie = "lang=" + locale
 		loadLanguageAsync(vueMain, locale)
 	},
-	getLeekAppearence: (level: number): number => {
+	getLeekAppearance: (level: number): number => {
 		if (level < 10) { return 1 } else if (level < 20) { return 2 } else if (level < 50) { return 3 } else if (level < 80) { return 4 } else if (level < 100) { return 5 } else if (level < 150) { return 6 } else if (level < 200) { return 7 } else if (level < 250) { return 8 } else if (level < 300) { return 9 } else if (level < 301) { return 10 }
 		return 11
 	},

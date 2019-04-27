@@ -51,13 +51,13 @@ class Leek extends Entity {
 		this.z = this.baseZ
 	}
 
-	public setSkin(skin: number, appearence: number, hat: number | null = null) {
+	public setSkin(skin: number, appearance: number, hat: number | null = null) {
 
 		if (typeof SKINS[skin - 1] === 'undefined') { skin = 1 }
 
 		this.skin = skin
-		this.bodyTexFront = new Texture(this.game, LeekWars.staticURL + "image/leek/leek" + appearence + "_front_" + SKINS[skin - 1] + ".png", true, SHADOW_QUALITY)
-		this.bodyTexBack = new Texture(this.game, LeekWars.staticURL + "image/leek/leek" + appearence + "_back_" + SKINS[skin - 1] + ".png", true, SHADOW_QUALITY)
+		this.bodyTexFront = new Texture(this.game, LeekWars.staticURL + "image/leek/leek" + appearance + "_front_" + SKINS[skin - 1] + ".png", true, SHADOW_QUALITY)
+		this.bodyTexBack = new Texture(this.game, LeekWars.staticURL + "image/leek/leek" + appearance + "_back_" + SKINS[skin - 1] + ".png", true, SHADOW_QUALITY)
 
 		if (hat) {
 			this.hat = hat
