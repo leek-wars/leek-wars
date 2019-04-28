@@ -126,7 +126,6 @@ class FightLeek {
 	public tp!: number
 	public pt!: number
 	public type!: number
-	public valid_ai!: boolean
 	public weapons!: number[]
 	public wisdom!: number
 }
