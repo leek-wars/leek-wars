@@ -148,7 +148,7 @@
 						<div v-if="farmer" class="grades">
 							<div v-if="farmer.admin" class="grade admin">{{ $t('admin') }}</div>
 							<div v-else-if="farmer.moderator" class="grade moderator">{{ $t('moderator') }}</div>
-							<div v-else-if="farmer.contributor" class="grade contributor">{{ $t('contributor') }}</div>
+							<div v-if="farmer.contributor" class="grade contributor">{{ $t('contributor') }}</div>
 						</div>
 						<div v-if="farmer" class="godfather grey">
 							<div v-if="farmer.godfather">
