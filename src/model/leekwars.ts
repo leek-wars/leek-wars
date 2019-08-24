@@ -125,13 +125,14 @@ class Language {
 	public flag!: string
 }
 
+const LOCAL = false
+
 const LeekWars = {
 	version: packageJson.version,
-	local: false,
+	local: LOCAL,
 	beta: location.host.indexOf("beta.leekwars.com") === 0,
-	dev: location.host.indexOf("localhost") === 0,
-	api: 'https://leekwars.com/api/',
-	// api: 'http://localhost/api/',
+	dev: !LOCAL && location.host.indexOf("localhost") === 0,
+	api: LOCAL ? '/api/' : 'https://leekwars.com/api/',
 	staticURL: '/',
 	avatar: 'https://leekwars.com/static/image/',
 	post,
