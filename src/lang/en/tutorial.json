@@ -284,7 +284,7 @@
 	"fun_6": "var a = 3;\nvar b = 4;\nvar c = sqrt(a * a + b * b);\na = sqrt(b * b + c * c) + sqrt(c * c + 4 * 4);\nb = sqrt(a * a + c * c);",
 	"fun_7": "We can notice that it is tiresome to copy incessantly the formula, and it makes your code much more complicated.<br />\nWe will then create a function <i>hypot</i> which will calculate directly the hypotenuse. This function is defined by the following code:",
 	"fun_8": "function hypot(x, y) {\n\treturn sqrt(x * x + y * y);\n}",
-	"fun_9": "Let's analyse this code. In order to declare a function, we use the key-word <b>function</b>, we then note the function name, here <i>hypot</i>. We then write between parenthesis the list of the required parameters, split by comas, here \"x\" and \"y\".\nThe block of instructions is then between curly brackets.",
+	"fun_9": "Let's analyze this code. In order to declare a function, we use the key-word <b>function</b>, we then note the function name, here <i>hypot</i>. We then write between parenthesis the list of the required parameters, split by comas, here \"x\" and \"y\".\nThe block of instructions is then between curly brackets.",
 	"functions": "Functions",
 	"interface": "Interface",
 	"intro": "<b>LeekScript</b> is the programming language dedicated to the creation of your leek's artificial intelligence. The syntax is really close to Javascript and should not disturb C, Java or even PHP enthusiast. If you're a total beginner or just want to know some subtleties of <b>LeekScript</b>, this tutorial is just right for you :)",
