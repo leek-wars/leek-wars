@@ -881,7 +881,7 @@
 			LeekWars.setTitle(this.$t('tutorial.title'))
 			window.addEventListener('scroll', this.scroll)
 		}
-		scroll(e: UIEvent) {
+		scroll(e: Event) {
 			if (window.scrollY + window.innerHeight + 300 > document.body.clientHeight) {
 				if (!this.trophy) {
 					LeekWars.post('trophy/unlock', {trophy_id: 46}) // Trophée Instruit

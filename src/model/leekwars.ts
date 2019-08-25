@@ -194,7 +194,7 @@ const LeekWars = {
 		for (key in obj) { if (obj.hasOwnProperty(key)) { size++ } }
 		return size
 	},
-	first<T>(obj: T) {
+	first<T extends object>(obj: T) {
 		for (const e in obj) {
 			if (obj.hasOwnProperty(e)) {
 				return obj[e]
@@ -239,12 +239,12 @@ const LeekWars = {
 		if (window.getSelection) {
 			const range = document.createRange()
 			range.selectNode(element)
-			window.getSelection().addRange(range)
+			window.getSelection()!.addRange(range)
 		}
 	},
 	removeTextSelections() {
 		if (window.getSelection) {
-			window.getSelection().removeAllRanges()
+			window.getSelection()!.removeAllRanges()
 		}
 	},
 	colorToHex(color: number) {
@@ -701,7 +701,7 @@ function formatEmojis(data: any, useShortcuts: boolean = true) {
 function get_cursor_position(editableDiv: any) {
 	if (window.getSelection) {
 		const sel = window.getSelection()
-		if (sel.rangeCount) {
+		if (sel && sel.rangeCount) {
 			const range = sel.getRangeAt(0)
 			if (range.commonAncestorContainer.parentNode === editableDiv) {
 				return range.endOffset
@@ -716,8 +716,10 @@ function set_cursor_position(el: any, pos: number) {
 	const sel = window.getSelection()
 	range.setStart(el.firstChild, pos)
 	range.collapse(true)
-	sel.removeAllRanges()
-	sel.addRange(range)
+	if (sel) {
+		sel.removeAllRanges()
+		sel.addRange(range)
+	}
 }
 
 function weaponSound(id: number) {
