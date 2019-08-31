@@ -1119,7 +1119,8 @@ class Game {
 			} else if (type === 4) {
 				this.addMarker(log[0], log[2], log[3], log[4])
 			} else {
-				this.actions[this.currentAction - 1].logs.push(log)
+				const action = Math.max(1, this.currentAction - 1)
+				this.actions[action].logs.push(log)
 			}
 		}
 		return false
