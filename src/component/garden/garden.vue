@@ -522,7 +522,6 @@
 	>>> .talent {
 		font-size: 22px;
 		color: #555;
-		display: inline-block;
 		font-weight: 300;
 		margin: 3px;
 	}
