@@ -13,5 +13,8 @@
 	"payment_fail": "Paiement {0} échoué.",
 	"payment_fail_reason": "Le paiement a échoué : {0}",
 	"payment_success": "Paiement {0} validé",
-	"you_earn_n_crystals": "Vous avez obtenu <b>{0}</b> cristaux."
+	"you_earn_n_crystals": "Vous avez obtenu <b>{0}</b> cristaux.",
+	"no_running_payment": "pas de paiement en cours",
+	"failed_to_execute_payment_wrong_code": "le code que vous avez entré n'est pas valide",
+	"failed_to_execute_payment": "le paiement n'a pas fonctionné ou a été annulé"
 }
