@@ -142,7 +142,7 @@
 							<router-link v-ripple v-for="composition in garden.my_compositions" :key="composition.id" :to="'/garden/team/' + composition.id" class="composition-wrapper my-composition">
 								<garden-compo :compo="composition" />
 								<span class="fights">
-									<img src="/image/fight.png">{{ composition.fights }}
+									<img class="sword" src="/image/icon/grey/garden.png">{{ composition.fights }}
 								</span>
 							</router-link>
 							<div class="versus">VS</div>
