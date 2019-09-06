@@ -17,7 +17,8 @@
 
 <style lang="scss" scoped>
 	.history {
-		display: flex;
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
 		flex-wrap: wrap;
 		padding: 5px;
 		.wrapper {
