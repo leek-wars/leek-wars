@@ -69,7 +69,7 @@
 				</panel>
 			</div>
 			<div class="column6">
-				<panel title="Line Of Sight">
+				<panel title="Line Of Sight" class="last">
 					<router-link to="/help/line-of-sight">
 						<h2>Line Of Sight</h2>
 						<i class="bigicon material-icons">grid_on</i>
