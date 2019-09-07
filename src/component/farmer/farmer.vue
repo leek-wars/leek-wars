@@ -187,7 +187,9 @@
 								<v-btn @click="createTeamDialog = true">{{ $t('create_team') }}</v-btn>
 								<div v-if="farmer.candidacy">
 									<br><br><br>
-									<a>{{ $t('candidacy_for_team', [farmer.candidacy.team_id, farmer.candidacy.team_name]) }}</a>
+									<i18n path="candidacy_for_team" class="candidacy">
+										<a slot="team" :href="'/team/' + farmer.candidacy.team_id">{{ farmer.candidacy.team_name }}</a>
+									</i18n>
 									<br><br>
 									<v-btn @click="cancelCandidacy">{{ $t('cancel_candidacy') }}</v-btn>
 								</div>
@@ -894,5 +896,8 @@
 		font-family: monospace;
 		text-align: center;
 		word-break: break-all;
+	}
+	.candidacy {
+		color: #999;
 	}
 </style>
