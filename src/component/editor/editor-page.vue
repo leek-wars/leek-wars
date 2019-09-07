@@ -202,6 +202,7 @@
 		fontSize: number = DEFAULT_FONT_SIZE
 		lineHeight: number = DEFAULT_LINE_HEIGHT
 		dragging: Item | null = null
+		selected: any = null
 		testDialog: boolean = false
 		leekAIs: any = {}
 		actions_list = [
@@ -294,6 +295,10 @@
 			})
 			this.$root.$on('back', () => {
 				this.$router.push('/editor')
+			})
+			this.$root.$on('editor-select', (item: any) => {
+				if (this.selected) this.selected.selected = false
+				this.selected = item
 			})
 			this.$root.$on('editor-drag', (item: any) => {
 				this.dragging = item
