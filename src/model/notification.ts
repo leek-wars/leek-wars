@@ -32,7 +32,7 @@ enum NotificationType {
 }
 
 class Notification {
-	public static build(data: any) {
+	public static build(data: any, isNew: boolean = false) {
 		const type = data.type
 		const params = data.parameters as string[]
 		const leeks = []
@@ -45,6 +45,9 @@ class Notification {
 			const leekId = parseInt(params[0], 10)
 			const leekName = leeks[leekId].name
 			const level = params[1]
+			if (isNew) {
+				store.commit('level-up', {leek: leekId, level})
+			}
 			return new Notification(data, "/leek/" + leekId, "level_up", [leekName, level], [leekName])
 		} else if (type === NotificationType.FIGHT_REPORT) {
 			let leekName = "?"

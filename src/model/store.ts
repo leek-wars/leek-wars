@@ -238,7 +238,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 				state.unreadNotifications = data.unread
 				updateTitle(state)
 			}
-			const notification = Notification.build(data)
+			const notification = Notification.build(data, true)
 			state.notifications.unshift(notification)
 			if (data.unread) {
 				LeekWars.squares.add({
@@ -370,6 +370,11 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 		'update-emblem'(state: LeekWarsState) {
 			if (state.farmer && state.farmer.team) {
 				state.farmer.team.emblem_changed = Date.now() / 1000
+			}
+		},
+		'level-up'(state: LeekWarsState, data: any) {
+			if (state.farmer) {
+				state.farmer.leeks[data.leek].level = data.level
 			}
 		}
 	},
