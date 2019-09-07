@@ -31,7 +31,7 @@
 							<img class="player" src="/image/player.png">
 						</router-link>
 						<v-tooltip :open-delay="0" :close-delay="0" :disabled="farmerEnabled" bottom>
-							<router-link v-ripple slot="activator" :class="{ enabled: farmerEnabled }" to="/garden/farmer" class="tab">
+							<router-link v-ripple slot="activator" :class="{ enabled: farmerEnabled }" :event="farmerEnabled ? 'click' : ''" to="/garden/farmer" class="tab">
 								<h2>{{ $t('category_farmer_fight') }}</h2>
 								<span class="player-count">4</span>&nbsp;<img class="player" src="/image/player.png">
 								<img class="sword" src="/image/icon/grey/garden.png">
@@ -41,7 +41,7 @@
 						</v-tooltip>
 
 						<v-tooltip :open-delay="0" :close-delay="0" :disabled="teamEnabled" bottom>
-							<router-link v-ripple slot="activator" :class="{ enabled: teamEnabled }" to="/garden/team" class="tab">
+							<router-link v-ripple slot="activator" :class="{ enabled: teamEnabled }" :event="teamEnabled ? 'click' : ''" to="/garden/team" class="tab">
 								<h2>{{ $t('category_team_fight') }}</h2>
 								<span class="player-count">6</span>&nbsp;<img class="player" src="/image/player.png">
 								<img class="sword" src="/image/icon/grey/garden.png">
@@ -51,7 +51,7 @@
 						</v-tooltip>
 
 						<v-tooltip :open-delay="0" :close-delay="0" :disabled="battleRoyaleEnabled" bottom>
-							<router-link v-ripple slot="activator" :class="{ enabled: battleRoyaleEnabled }" to="/garden/battle-royale" class="tab">
+							<router-link v-ripple slot="activator" :class="{ enabled: battleRoyaleEnabled }" :event="battleRoyaleEnabled ? 'click' : ''" to="/garden/battle-royale" class="tab">
 								<h2>{{ $t('category_battle_royale') }}</h2>
 								<span class="player-count">10</span>&nbsp;<img class="player" src="/image/player.png">
 							</router-link>
