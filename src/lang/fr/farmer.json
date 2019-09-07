@@ -10,7 +10,7 @@
 	"cancel": "Annuler",
 	"cancel_candidacy": "Annuler la demande",
 	"candidacy_canceled": "Candidature annulée",
-	"candidacy_for_team": "Demande pour l'équipe <a href='/team/%1$s'>%2$s</a>",
+	"candidacy_for_team": "Demande pour l'équipe {team}",
 	"challenge": "Défier",
 	"click_to_change_avatar": "Cliquer pour changer",
 	"click_to_change_country": "Cliquer pour changer",

@@ -10,7 +10,7 @@
 	"cancel": "Cancel",
 	"cancel_candidacy": "Cancel request",
 	"candidacy_canceled": "Candidature canceled",
-	"candidacy_for_team": "Request for team <a href='/team/%1$s'>%2$s</a>",
+	"candidacy_for_team": "Request for team {team}",
 	"challenge": "Challenge",
 	"click_to_change_avatar": "Click to change",
 	"click_to_change_country": "Click to change",
