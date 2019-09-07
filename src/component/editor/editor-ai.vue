@@ -1,5 +1,5 @@
 <template lang="html">
-	<div :class="{error: !ai.valid, modified: ai.modified}" class="item ai" @click="click">
+	<div :class="{error: !ai.valid, modified: ai.modified, selected: selected}" class="item ai" @click="click">
 		<div :style="{'padding-left': (level * 20 + 17) + 'px'}" class="label" draggable="true" @dragstart="dragstart">
 			<span ref="name" :contenteditable="editing" class="text" @keydown.enter="enter" @blur="blur">{{ ai.name }}</span>
 			<div class="edit" @click="edit"></div>
@@ -19,6 +19,7 @@
 		@Prop({required: true}) level!: number
 		editing: boolean = false
 		initialName: string = ''
+		selected: boolean = false
 		get ai() { return this.item.ai }
 
 		edit(e: Event) {
@@ -57,6 +58,8 @@
 		}
 		click(e: Event) {
 			this.$router.push('/editor/' + this.ai.id)
+			this.$root.$emit('editor-select', this)
+			this.selected = true
 			e.stopPropagation()
 		}
 	}
@@ -102,11 +105,11 @@
 		color: black;
 		padding: 0 5px;
 	}
-	.item.router-link-active > .label {
+	.item.selected > .label {
 		background: #cacaca;
 		color: black;
 	}
-	.item.router-link-active > .label:before {
+	.item.selected > .label:before {
 		color: white;
 	}
 	.item.modified .label {
@@ -125,7 +128,7 @@
 		padding-left: 5px;
 		display: inline-block;
 	}
-	.item.v2.router-link-active > .label:after {
+	.item.v2.selected > .label:after {
 		color: white;
 	}
 </style>

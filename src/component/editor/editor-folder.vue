@@ -1,6 +1,6 @@
 <template lang="html">
 	<div :class="{root: level === 0}" @click="click">
-		<div :class="{empty: !folder.items.length, 'dragover': dragOver > 0, expanded: folder.expanded, root: level === 0}" :draggable="level > 0" class="item folder" @dragenter="dragenter" @dragleave="dragleave" @dragover="dragover" @drop="drop" @dragstart="dragstart" @dragend="dragend">
+		<div :class="{empty: !folder.items.length, 'dragover': dragOver > 0, expanded: folder.expanded, root: level === 0, selected: selected}" :draggable="level > 0" class="item folder" @dragenter="dragenter" @dragleave="dragleave" @dragover="dragover" @drop="drop" @dragstart="dragstart" @dragend="dragend">
 			<div v-if="level != 0" :style="{'padding-left': ((level - 1) * 20 + 10) + 'px'}" class="label" @click="toggle(folder)">
 				<div class="triangle"></div>
 				<span class="icon"></span>
@@ -32,6 +32,7 @@
 		initialName: string = ''
 		dragOver: number = 0
 		dragging: boolean = false
+		selected: boolean = false
 
 		toggle(folder: Folder) {
 			folder.expanded = !folder.expanded
@@ -97,6 +98,8 @@
 		}
 		click(e: Event) {
 			this.$router.push('/editor/' + this.folder.id)
+			this.$root.$emit('editor-select', this)
+			this.selected = true
 			e.stopPropagation()
 		}
 	}
@@ -113,6 +116,10 @@
 	}
 	.item .label {
 		padding: 5px 10px;
+	}
+	.item.selected > .label {
+		background: #cacaca;
+		color: black;
 	}
 	#app.app .item .label {
 		padding: 8px 10px;
@@ -139,7 +146,7 @@
 		height: 10px;
 		margin-right: 5px;
 	}
-	.router-link-active > .item > .label > .icon {
+	.item.selected > .label > .icon {
 		background-image: url("/image/folder_white.png");
 	}
 	.label:hover .edit {
@@ -150,7 +157,7 @@
 		color: black;
 		padding: 0 5px;
 	}
-	.router-link-active > .item > .label:before {
+	.item.selected > .label:before {
 		color: white;
 	}
 	.triangle {
@@ -164,7 +171,7 @@
 		margin-right: 5px;
 		margin-top: 1px;
 	}
-	.router-link-active > .item > .label > .triangle {
+	.item.selected > .label > .triangle {
 		border-left: 6px solid white;
 	}
 	.folder.expanded > .label > .triangle {
