@@ -779,7 +779,7 @@ pre.code .cl {
 	top: 0;
 	height: 36px;
 }
-body {
+body #app:not(.app) {
 	::-webkit-scrollbar {
 		width: 10px;
 	}
