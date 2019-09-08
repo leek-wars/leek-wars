@@ -7,6 +7,8 @@
 	"autocompletion": "Code completion (suggest variables and leekscript functions)",
 	"cancel-test": "Cancel",
 	"child": "Child",
+	"close": "Close",
+	"close_others": "Close others",
 	"constant": "Constant {0}",
 	"defined_in": "Defined in <b>{0}</b> at line <b>{1}</b>",
 	"delete": "Delete",

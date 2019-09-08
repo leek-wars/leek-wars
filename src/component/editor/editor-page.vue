@@ -74,7 +74,8 @@
 			<div v-show="!LeekWars.mobile || LeekWars.splitBack" class="column9">
 				<panel>
 					<div slot="content" class="full">
-						<div class="editors">
+						<editor-tabs ref="tabs" v-if="!LeekWars.mobile" :current="currentID" />
+						<div class="editors" :class="{tabs: $refs.tabs && $refs.tabs.tabs.length > 1}">
 							<ai-view v-for="ai in activeAIs" ref="editors" :key="ai.id" :ai="ai" :ais="ais" :editors="$refs.editors" :visible="currentAI === ai" :font-size="fontSize" :line-height="lineHeight" :popups="popups" :auto-closing="autoClosing" :autocomplete-option="autocomplete" @jump="jump" @load="load" />
 						</div>
 						<div v-if="currentEditor" class="compilation">
@@ -165,6 +166,7 @@
 	import EditorFolder from './editor-folder.vue'
 	import { AIItem, Folder, Item } from './editor-item'
 	import EditorTest from './editor-test.vue'
+	import EditorTabs from './editor-tabs.vue';
 	import { generateKeywords } from './keywords'
 	import './leekscript-monokai.css'
 	import './leekscript.css'
@@ -175,7 +177,7 @@
 
 	@Component({
 		name: 'editor', i18n: {},
-		components: { 'editor-folder': EditorFolder, 'ai-view': AIView, 'editor-test': EditorTest }
+		components: { 'editor-folder': EditorFolder, 'ai-view': AIView, 'editor-test': EditorTest, 'editor-tabs': EditorTabs }
 	})
 	export default class EditorPage extends Vue {
 		ais: {[key: number]: AI} = {}
@@ -205,6 +207,7 @@
 		selected: any = null
 		testDialog: boolean = false
 		leekAIs: any = {}
+		tabs: AI[] = []
 		actions_list = [
 			{icon: 'add', click: (e: any) => this.add(e)},
 			{icon: 'settings', click: () => this.settings() }
@@ -339,6 +342,9 @@
 					Vue.nextTick(() => {
 						this.currentEditor = (this.$refs.editors as AIView[]).find(editor => editor.ai === ai) || null
 					})
+					if (this.$refs.tabs) {
+						(this.$refs.tabs as EditorTabs).add(this.currentAI)
+					}
 					LeekWars.setTitle(this.currentAI.name)
 					LeekWars.splitShowContent()
 					LeekWars.setActions(this.actions_content)
@@ -667,6 +673,12 @@
 	.editors {
 		height: calc(100vh - 140px);
 		padding: 0;
+	}
+	.editors.tabs {
+		height: calc(100vh - 170px);
+	}
+	#app.app .editors {
+		height: calc(100vh - 56px);
 	}
 	.popup.input_popup input {
 		width: 90%;
