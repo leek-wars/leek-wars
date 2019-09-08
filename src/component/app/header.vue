@@ -14,11 +14,17 @@
 			<div v-if="!$store.state.connected" class="header-signin buttons">
 				<div class="button-wrapper">
 					<router-link to="/login">
-						<div class="header-button">{{ $t('main.connection') }}</div>
+						<div class="header-button">
+							<i class="material-icons">power_settings_new</i>&nbsp;
+							<span>{{ $t('main.connection') }}</span>
+						</div>
 					</router-link>
 				</div><div class="button-wrapper">
 					<router-link to="/">
-						<div class="signup-button header-button">{{ $t('main.signup') }}</div>
+						<div class="signup-button header-button">
+							<i class="material-icons">how_to_reg</i>&nbsp;
+							<span>{{ $t('main.signup') }}</span>
+						</div>
 					</router-link>
 				</div>
 			</div>
@@ -131,9 +137,6 @@
 		margin-left: 8px;
 		margin-right: -4px;
 	}
-	.header-button i {
-		line-height: 42px;
-	}
 	.header {
 		display: flex;
 		justify-content: space-between;
@@ -167,7 +170,7 @@
 		text-align: right;
 	}
 	.header .header-button {
-		display: inline-block;
+		display: inline-flex;
 		cursor: pointer;
 		text-align: center;
 		padding: 0 4px;
@@ -181,6 +184,10 @@
 		vertical-align: bottom;
 		white-space: nowrap;
 		user-select: none;
+		align-items: center;
+	}
+	.header-button i {
+		line-height: 42px;
 	}
 	.header .button-wrapper:first-child .header-button {
 		margin-left: 0;
@@ -199,7 +206,7 @@
 	}
 	.header .header-button .crystal {
 		vertical-align: bottom;
-		margin-bottom: -1px;
+		margin-bottom: -13px;
 	}
 	.signup-button {
 		padding-right: 20px;
