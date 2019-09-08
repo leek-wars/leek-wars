@@ -1,14 +1,14 @@
 <template lang="html">
 	<div class="tabs-wrapper" v-show="tabs.length > 1">
 		<div class="tabs">
-			<div v-for="(ai, i) in tabs" ref="tabs" class="tab" :class="{selected: current == ai.id, modified: ai.modified}" @click="click($event, ai)" @contextmenu.prevent="openMenu(i)" @mouseup.middle="close(i)" :title="ai.path" v-ripple>
+			<div v-for="(ai, i) in tabs" ref="tabs" class="tab" :class="{selected: current == ai.id, modified: ai.modified}" @click="click($event, ai)" @contextmenu.prevent="openMenu(i)" @mouseup.middle="close(i)" :title="ai.path">
 				<div class="name">
 					{{ ai.name }}
 				</div>
-				<!-- <i @click.stop="close(i)" class="material-icons">
+				<i @click.stop="close(i)" class="material-icons">
 					<span class="modified">fiber_manual_record</span>
 					<span class="close">close</span>
-				</i> -->
+				</i>
 			</div>
 		</div>
 		<v-menu ref="menu" :activator="activator" v-model="menu" offset-y @input="menuChange()">
@@ -112,13 +112,15 @@
 		text-overflow: ellipsis;
 		overflow: hidden;
 		white-space: nowrap;
-		margin: 0 8px;
+		margin-left: 10px;
+		margin-right: 3px;
 	}
 	.tab.selected .name {
 		color: black;
 	}
 	.tab i {
 		font-size: 20px;
+		margin-right: 6px;
 	}
 	.tab .close {
 		opacity: 0;
