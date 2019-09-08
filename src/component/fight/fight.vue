@@ -167,6 +167,9 @@
 	.game:fullscreen {
 		max-height: 100%;
 	}
+	.fight-info {
+		margin-right: 12px;
+	}
 	.fight-info table {
 		width: 100%;
 	}
