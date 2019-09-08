@@ -31,9 +31,9 @@
 </template>
 
 <script lang="ts">
+	import { AI } from '@/model/ai'
 	import { i18n } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
-	import { AI } from '@/model/ai'
 	import { Component, Prop, Vue } from 'vue-property-decorator'
 
 	@Component({ name: 'editor-tabs' })
@@ -43,15 +43,15 @@
 		menu: boolean = false
 		activator: any = null
 		currentI: number = 0
-		currentAI: AI = null
+		currentAI: AI | null = null
 		mounted() {
 			const tabs = JSON.parse(localStorage.getItem('editor/tabs') || '[]')
-			for (var t of tabs) {
+			for (const t of tabs) {
 				this.tabs.push(t)
 			}
 		}
 		add(ai: AI) {
-			if (this.tabs.findIndex(t => t.id == ai.id) != -1) {
+			if (this.tabs.findIndex(t => t.id === ai.id) !== -1) {
 				return
 			}
 			this.tabs.push(ai)
@@ -64,7 +64,7 @@
 			this.currentI = i
 			this.currentAI = this.tabs[i]
 			this.$nextTick(() => {
-				this.activator = this.$refs.tabs[i]
+				this.activator = (this.$refs.tabs as Vue[])[i]
 				this.$nextTick(() => {
 					this.menu = true
 				})
@@ -88,7 +88,7 @@
 			this.$router.push('/editor/' + ai.id)
 		}
 		save() {
-			localStorage.setItem('editor/tabs', JSON.stringify(this.tabs.map(ai => { return {id: ai.id, name: ai.name} })))
+			localStorage.setItem('editor/tabs', JSON.stringify(this.tabs.map(ai => ({id: ai.id, name: ai.name}))))
 		}
 	}
 </script>
