@@ -75,10 +75,10 @@
 				</div>
 				<hud :game="game" />
 				<transition name="fade">
-					<i class="play-pause material-icons" v-if="game.paused">pause</i>
+					<i v-if="game.paused" class="play-pause material-icons">pause</i>
 				</transition>
 				<transition name="fade">
-					<i class="play-pause material-icons" v-if="!game.paused">play_arrow</i>
+					<i v-if="!game.paused" class="play-pause material-icons">play_arrow</i>
 				</transition>
 			</div>
 			<div class="controls">
@@ -98,7 +98,7 @@
 				</v-tooltip>
 				<div class="turn">{{ $t('fight.turn_n', [game.turn]) }}</div>
 				<div class="filler"></div>
-				<v-tooltip :open-delay="0" :close-delay="0" top content-class="top" v-if="!LeekWars.mobile">
+				<v-tooltip v-if="!LeekWars.mobile" :open-delay="0" :close-delay="0" top content-class="top">
 					<i v-ripple slot="activator" class="material-icons control" @click="LeekWars.flex = !LeekWars.flex">crop_5_4</i>
 					{{ $t('fight.enlarge_fight') }}
 				</v-tooltip>
@@ -569,16 +569,16 @@
 	}
 	.play-pause {
 		position: absolute;
-		width: 70px;
-		height: 70px;
-		top: calc(50% - 30px);
-		left: calc(50% - 30px);
-		font-size: 40px;
+		width: 100px;
+		height: 100px;
+		top: calc(50% - 50px);
+		left: calc(50% - 50px);
+		font-size: 50px;
 		color: white;
 		background: rgba(0, 0, 0, 0.5);
 		border-radius: 50%;
 		text-align: center;
-		line-height: 72px;
+		line-height: 102px;
 		opacity: 0;
 		transition: all ease-in 0.5s;
 		pointer-events: none;
@@ -589,6 +589,6 @@
 	}
 	.fade-enter-to {
 		opacity: 0;
-		transform: scale(1.7);
+		transform: scale(1.5);
 	}
 </style>
