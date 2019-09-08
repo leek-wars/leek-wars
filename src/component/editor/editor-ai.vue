@@ -109,9 +109,6 @@
 		background: #cacaca;
 		color: black;
 	}
-	.item.selected > .label:before {
-		color: white;
-	}
 	.item.modified .label {
 		color: red;
 	}

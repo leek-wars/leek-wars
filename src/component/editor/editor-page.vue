@@ -165,8 +165,8 @@
 	import AIView from './ai-view.vue'
 	import EditorFolder from './editor-folder.vue'
 	import { AIItem, Folder, Item } from './editor-item'
+	import EditorTabs from './editor-tabs.vue'
 	import EditorTest from './editor-test.vue'
-	import EditorTabs from './editor-tabs.vue';
 	import { generateKeywords } from './keywords'
 	import './leekscript-monokai.css'
 	import './leekscript.css'
@@ -300,7 +300,9 @@
 				this.$router.push('/editor')
 			})
 			this.$root.$on('editor-select', (item: any) => {
-				if (this.selected) this.selected.selected = false
+				if (this.selected) {
+					this.selected.selected = false
+				}
 				this.selected = item
 			})
 			this.$root.$on('editor-drag', (item: any) => {
