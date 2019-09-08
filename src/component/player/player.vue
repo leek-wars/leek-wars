@@ -76,7 +76,6 @@
 				<hud :game="game" />
 			</div>
 			<div class="controls">
-				<div class="turn">{{ $t('fight.turn_n', [game.turn]) }}</div>
 				<v-tooltip :open-delay="0" :close-delay="0" top content-class="top">
 					<i v-ripple slot="activator" class="material-icons control" @click="pause">{{ game.paused ? 'play_arrow' : 'pause' }}</i>
 					{{ $t('fight.pause') }} (P)
@@ -85,7 +84,17 @@
 					<i v-ripple slot="activator" class="material-icons control" @click="game.speedUp()">
 						<span :style="{opacity: game.speedButtonVisible ? 1 : 0}">fast_forward</span>
 					</i>
-					{{ $t('fight.accelerate') }}
+					{{ $t('fight.accelerate') }} (S)
+				</v-tooltip>
+				<v-tooltip :open-delay="0" :close-delay="0" top content-class="top">
+					<i v-ripple slot="activator" class="material-icons control" @click="game.sound = !game.sound">{{ game.sound ? 'volume_up' : 'volume_mute' }}</i>
+					{{ $t(game.sound ? 'fight.sound_activated' : 'fight.sound_disactivated') }} (V)
+				</v-tooltip>
+				<div class="turn">{{ $t('fight.turn_n', [game.turn]) }}</div>
+				<div class="filler"></div>
+				<v-tooltip :open-delay="0" :close-delay="0" top content-class="top" v-if="!LeekWars.mobile">
+					<i v-ripple slot="activator" class="material-icons control" @click="LeekWars.flex = !LeekWars.flex">crop_5_4</i>
+					{{ $t('fight.enlarge_fight') }}
 				</v-tooltip>
 				<v-tooltip :open-delay="0" :close-delay="0" top content-class="top">
 					<i v-ripple slot="activator" class="material-icons control" @click="toggleFullscreen">aspect_ratio</i>
@@ -95,19 +104,6 @@
 					<v-menu slot="activator" :close-on-content-click="false" top offset-y>
 						<i v-ripple slot="activator" class="material-icons control">settings</i>
 						<v-list :dense="true" dark>
-							<v-list-tile v-ripple>
-								<v-switch v-model="game.sound" hide-details>
-									<div v-if="game.sound" slot="label" class="flex-center">
-										<i class="material-icons">volume_up</i> <span>&nbsp;{{ $t('fight.sound_activated') }}</span>
-									</div>
-									<div v-else slot="label" class="flex-center">
-										<i class="material-icons">volume_mute</i> <span>&nbsp;{{ $t('fight.sound_disactivated') }}</span>
-									</div>
-								</v-switch>
-							</v-list-tile>
-							<v-list-tile v-ripple v-if="!LeekWars.mobile">
-								<v-switch v-model="LeekWars.flex" :label="$t('fight.enlarge_fight')" hide-details />
-							</v-list-tile>
 							<v-list-tile v-ripple>
 								<v-switch v-model="game.showLifes" :label="$t('fight.display_life_bars')" hide-details />
 							</v-list-tile>
@@ -411,11 +407,11 @@
 		font-weight: bold;
 	}
 	.controls {
-		text-align: center;
 		line-height: 36px;
 		height: 36px;
 		background: #2a2a2a;
 		user-select: none;
+		display: flex;
 	}
 	.controls.large {
 		line-height: 50px;
@@ -443,6 +439,9 @@
 	}
 	.controls.large > div {
 		line-height: 50px;
+	}
+	.controls .filler {
+		flex: 1;
 	}
 	.loading {
 		height: 100%;
