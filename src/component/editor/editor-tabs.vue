@@ -1,11 +1,11 @@
 <template lang="html">
-	<div class="tabs-wrapper" v-show="tabs.length > 1">
+	<div v-show="tabs.length > 1" class="tabs-wrapper">
 		<div class="tabs">
-			<div v-for="(ai, i) in tabs" ref="tabs" class="tab" :class="{selected: current == ai.id, modified: ai.modified}" @click="click($event, ai)" @contextmenu.prevent="openMenu(i)" @mouseup.middle="close(i)" :title="ai.path">
+			<div v-for="(ai, i) in tabs" ref="tabs" :key="ai.id" :class="{selected: current == ai.id, modified: ai.modified}" :title="ai.path" class="tab" @click="click($event, ai)" @contextmenu.prevent="openMenu(i)" @mouseup.middle="close(i)">
 				<div class="name">
 					{{ ai.name }}
 				</div>
-				<i @click.stop="close(i)" class="material-icons">
+				<i class="material-icons" @click.stop="close(i)">
 					<span class="modified">fiber_manual_record</span>
 					<span class="close">close</span>
 				</i>
@@ -44,12 +44,18 @@
 		activator: any = null
 		currentI: number = 0
 		currentAI: AI = null
-
+		mounted() {
+			const tabs = JSON.parse(localStorage.getItem('editor/tabs') || '[]')
+			for (var t of tabs) {
+				this.tabs.push(t)
+			}
+		}
 		add(ai: AI) {
-			if (this.tabs.indexOf(ai) != -1) {
+			if (this.tabs.findIndex(t => t.id == ai.id) != -1) {
 				return
 			}
 			this.tabs.push(ai)
+			this.save()
 		}
 		click(e: MouseEvent, ai: AI) {
 			this.$router.push('/editor/' + ai.id)
@@ -69,10 +75,20 @@
 		}
 		close(i: number) {
 			this.tabs.splice(i, 1)
+			this.save()
+			this.openOther(i)
 		}
 		closeOthers(ai: AI) {
 			this.tabs = []
 			this.tabs.push(ai)
+			this.save()
+		}
+		openOther(i: number) {
+			const ai = this.tabs[Math.max(0, i - 1)]
+			this.$router.push('/editor/' + ai.id)
+		}
+		save() {
+			localStorage.setItem('editor/tabs', JSON.stringify(this.tabs.map(ai => { return {id: ai.id, name: ai.name} })))
 		}
 	}
 </script>
