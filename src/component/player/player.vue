@@ -236,6 +236,9 @@
 			} else if (e.keyCode === 70) { // F
 				this.toggleFullscreen()
 				e.preventDefault()
+			} else if (e.keyCode === 86) { // V
+				this.game.sound = !this.game.sound
+				e.preventDefault()
 			}
 		}
 		beforeDestroy() {
