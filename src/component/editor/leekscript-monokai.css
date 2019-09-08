@@ -90,3 +90,13 @@
 .theme-monokai .item.selected > .label {
 	background: #666;
 }
+.theme-monokai .tab {
+	background: #555;
+	color: #eee;
+}
+.theme-monokai .tab.selected {
+	background: #272822;
+}
+.theme-monokai .tab.selected .name {
+	color: white;
+}
