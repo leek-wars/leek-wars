@@ -787,6 +787,7 @@
 			margin-top: 5px;
 			font-weight: normal;
 			font-size: 14px;
+			margin-right: 5px;
 		}
 		.grade.admin {
 			background: #ff3333;
