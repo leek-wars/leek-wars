@@ -171,7 +171,6 @@
 			this.game.showCells = localStorage.getItem('fight/cells') === 'true'
 			this.game.showLifes = localStorage.getItem('fight/lifes') === 'true'
 			this.game.sound = localStorage.getItem('fight/sound') === 'true'
-			this.game.discretePause = localStorage.getItem('fight/discrete_pause') === 'true'
 			this.getFight()
 			this.resize()
 			this.$emit('resize')
