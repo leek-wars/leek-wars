@@ -213,7 +213,6 @@ class Game {
 	public debug = false
 	public tactic = false
 	public shadows = true
-	public discretePause = false
 	public showCells: boolean = false
 	public showLifes: boolean = false
 	public sound: boolean = false
@@ -533,13 +532,6 @@ class Game {
 				this.atmosphere.stop()
 			}
 		}
-	}
-	public toggleDiscretePause() {
-		this.discretePause = !this.discretePause
-		localStorage.setItem('fight/discrete_pause', '' + this.discretePause)
-
-		this.requestPause = this.paused
-		this.draw() // redraw
 	}
 
 	public update() {
