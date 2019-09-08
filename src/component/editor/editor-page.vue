@@ -50,7 +50,7 @@
 		</div>
 
 		<div class="container">
-			<div v-show="!LeekWars.mobile || !LeekWars.splitBack" class="column3">
+			<div v-show="!LeekWars.mobile || !LeekWars.splitBack" class="column3" :style="{width: LeekWars.mobile ? '100%' : panelWidth + 'px'}">
 				<panel class="editor-left first">
 					<div slot="content" class="full">
 						<loader v-if="!rootFolder" />
@@ -69,9 +69,10 @@
 						-->
 					</div>
 				</panel>
+				<div class="resizer" @mousedown="resizerMousedown"></div>
 			</div>
 		
-			<div v-show="!LeekWars.mobile || LeekWars.splitBack" class="column9">
+			<div v-show="!LeekWars.mobile || LeekWars.splitBack" class="column9" :style="{width: 'calc(100% - ' + (LeekWars.mobile ? 0 : panelWidth) + 'px)'}">
 				<panel>
 					<div slot="content" class="full">
 						<editor-tabs v-if="!LeekWars.mobile" ref="tabs" :current="currentID" />
@@ -208,6 +209,7 @@
 		testDialog: boolean = false
 		leekAIs: any = {}
 		tabs: AI[] = []
+		panelWidth: number = 200
 		actions_list = [
 			{icon: 'add', click: (e: any) => this.add(e)},
 			{icon: 'settings', click: () => this.settings() }
@@ -237,6 +239,10 @@
 			this.popups = localStorage.getItem('editor/popups') === 'true'
 			this.fontSize = parseInt(localStorage.getItem('editor/font_size') || '', 10) || DEFAULT_FONT_SIZE
 			this.lineHeight = parseInt(localStorage.getItem('editor/line_height') || '', 10) || DEFAULT_LINE_HEIGHT
+			const width = localStorage.getItem('editor/panel-width')
+			if (width) {
+				this.panelWidth = parseInt(width, 10)
+			}
 			
 			LeekWars.get<{ais: AI[], folders: any[], leek_ais: {[key: number]: number}}>('ai/get-farmer-ais').then(data => {
 				const folders: {[key: number]: any} = {}
@@ -585,6 +591,26 @@
 				Vue.set(this.$data.activeAIs, ai.id, ai)
 			}
 		}
+
+		resizerMousedown(e: MouseEvent) {
+			const startWidth = this.panelWidth
+			const startX = e.clientX
+			const mousemove: any = (ev: MouseEvent) => {
+				let panelWidth = Math.max(0, Math.min(400, startWidth + ev.clientX - startX))
+				if (panelWidth < 120) {
+					panelWidth = 0
+				}
+				this.panelWidth = panelWidth
+				localStorage.setItem('editor/panel-width', '' + this.panelWidth)
+			}
+			const mouseup: any = (ev: MouseEvent) => {
+				document.documentElement!.removeEventListener('mousemove', mousemove)
+				document.documentElement!.removeEventListener('mouseup', mouseup)
+			}
+			document.documentElement!.addEventListener('mousemove', mousemove, false)
+			document.documentElement!.addEventListener('mouseup', mouseup, false)
+			e.preventDefault()
+		}
 	}
 </script>
 
@@ -771,5 +797,16 @@
 		.title:first-child {
 			margin-top: 0;
 		}
+	}
+	.column3 {
+		position: relative;
+	}
+	.resizer {
+		position: absolute;
+		right: 0;
+		top: 0;
+		bottom: 10px;
+		cursor: ew-resize;
+		width: 15px;
 	}
 </style>
