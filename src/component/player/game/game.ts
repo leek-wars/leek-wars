@@ -1438,9 +1438,6 @@ class Game {
 		if (this.requestPause) {
 			this.paused = true
 			this.requestPause = false
-			if (!this.going_to_report) {
-				this.drawPause()
-			}
 		}
 		// Bubbles
 		for (const i in this.leeks) {
@@ -1451,24 +1448,6 @@ class Game {
 			if (this.leeks[i].active) { this.leeks[i].drawTexts(this.ctx) }
 		}
 		this.ground.endDraw(this.ctx)
-	}
-
-	public drawPause() {
-		this.ctx.save()
-
-		this.ctx.translate(-this.ground.startX, -this.ground.startY)
-
-		this.ctx.globalAlpha = 0.2
-		this.ctx.fillStyle = 'black'
-		this.ctx.fillRect(0, 0, this.width, this.height)
-
-		this.ctx.fillStyle = 'white'
-		this.ctx.font = "30pt Roboto"
-		this.ctx.textAlign = "center"
-		this.ctx.globalAlpha = 1
-		this.ctx.fillText("Pause", this.width / 2, 60)
-
-		this.ctx.restore()
 	}
 
 	public showReport() {

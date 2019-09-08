@@ -74,6 +74,12 @@
 					</div>
 				</div>
 				<hud :game="game" />
+				<transition name="fade">
+					<i class="play-pause material-icons" v-if="game.paused">pause</i>
+				</transition>
+				<transition name="fade">
+					<i class="play-pause material-icons" v-if="!game.paused">play_arrow</i>
+				</transition>
 			</div>
 			<div class="controls">
 				<v-tooltip :open-delay="0" :close-delay="0" top content-class="top">
@@ -371,6 +377,8 @@
 		canvasClick() {
 			if (this.game.paused) {
 				this.game.resume()
+			} else {
+				this.game.pause()
 			}
 		}
 		@Watch("game.going_to_report")
@@ -558,5 +566,29 @@
 		font-size: 17px;
 		color: #555;
 		font-weight: 500;
+	}
+	.play-pause {
+		position: absolute;
+		width: 70px;
+		height: 70px;
+		top: calc(50% - 30px);
+		left: calc(50% - 30px);
+		font-size: 40px;
+		color: white;
+		background: rgba(0, 0, 0, 0.5);
+		border-radius: 50%;
+		text-align: center;
+		line-height: 72px;
+		opacity: 0;
+		transition: all ease-in 0.5s;
+		pointer-events: none;
+	}
+	.fade-enter-active {
+		opacity: 1;
+		transform: scale(1);
+	}
+	.fade-enter-to {
+		opacity: 0;
+		transform: scale(1.7);
 	}
 </style>
