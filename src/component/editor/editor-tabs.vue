@@ -95,6 +95,7 @@
 		max-width: 200px;
 		background: #ddd;
 		min-width: 0;
+		flex-basis: 150px;
 	}
 	.tab:not(:last-child) {
 		margin-right: 1px;
@@ -114,6 +115,7 @@
 		white-space: nowrap;
 		margin-left: 10px;
 		margin-right: 3px;
+		width: 100%;
 	}
 	.tab.selected .name {
 		color: black;
