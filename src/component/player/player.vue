@@ -107,19 +107,23 @@
 					{{ $t('fight.fullscreen') }}
 				</v-tooltip>
 				<v-tooltip :open-delay="0" :close-delay="0" top content-class="top">
-					<v-menu slot="activator" :close-on-content-click="false" top offset-y>
+					<v-menu slot="activator" :close-on-content-click="false" top offset-y left>
 						<i v-ripple slot="activator" class="material-icons control">settings</i>
-						<v-list :dense="true" dark>
+						<v-list :dense="true" dark class="settings-menu">
 							<v-list-tile v-ripple>
+								<i class="material-icons">favorite_border</i>
 								<v-switch v-model="game.showLifes" :label="$t('fight.display_life_bars')" hide-details />
 							</v-list-tile>
 							<v-list-tile v-ripple>
+								<i class="material-icons">view_comfy</i>
 								<v-switch v-model="game.tactic" :label="$t('fight.tactic_mode')" hide-details />
 							</v-list-tile>
 							<v-list-tile v-ripple>
+								<i class="material-icons">looks_one</i>
 								<v-switch v-model="game.showCells" :label="$t('fight.display_cell_numbers')" hide-details />
 							</v-list-tile>
 							<v-list-tile v-ripple>
+								<i class="material-icons">flip_to_front</i>
 								<v-switch v-model="game.shadows" :label="$t('fight.display_shadows')" hide-details />
 							</v-list-tile>
 						</v-list>
@@ -590,5 +594,9 @@
 	.fade-enter-to {
 		opacity: 0;
 		transform: scale(1.5);
+	}
+	.settings-menu i {
+		padding-right: 10px;
+		color: #eee;
 	}
 </style>
