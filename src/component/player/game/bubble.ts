@@ -34,7 +34,7 @@ class Bubble {
 
 		// Measure text and compute bubble width
 		ctx.font = font
-		const metrics =  ctx.measureText(this.message)
+		const metrics = ctx.measureText(this.message)
 		this.rx = metrics.width / 2 + padding
 		this.ry = 22
 	}

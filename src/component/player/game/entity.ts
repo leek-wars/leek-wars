@@ -3,6 +3,7 @@ import { ChipAnimation } from '@/component/player/game/chips'
 import { Colors, Game, TEAM_COLORS } from '@/component/player/game/game'
 import { InfoText } from '@/component/player/game/infotext'
 import { Texture } from '@/component/player/game/texture'
+import { EffectType } from '@/model/effect'
 import { Farmer } from '@/model/farmer'
 import { i18n } from '@/model/i18n'
 import { LeekWars } from '@/model/leekwars'
@@ -681,8 +682,22 @@ class Entity {
 		// Effects
 		const count = LeekWars.objectSize(this.effects)
 		let x = -count * 28 / 2
+		ctx.font = "bold 8pt Roboto"
+		ctx.textAlign = "left"
 		for (const e in this.effects) {
-			ctx.drawImage(this.effects[e].texture, x, 26, 28, 28)
+			const effect = this.effects[e]
+			ctx.drawImage(effect.texture, x, 26, 28, 28)
+			let effect_message = '' + effect.value
+			if (effect.effect === EffectType.RELATIVE_SHIELD || effect.effect === EffectType.DAMAGE_RETURN || effect.effect === EffectType.VULNERABILITY) {
+				effect_message = effect_message + '%'
+			}
+			let w = ctx.measureText(effect_message).width
+			ctx.globalAlpha = 0.5
+			ctx.fillStyle = 'black'
+			ctx.fillRect(x + 1, 26 + 17, w + 2, 10)
+			ctx.globalAlpha = 1
+			ctx.fillStyle = 'white'
+			ctx.fillText(effect_message, x + 2, 26 + 23)
 			x += 28
 		}
 		ctx.restore()
