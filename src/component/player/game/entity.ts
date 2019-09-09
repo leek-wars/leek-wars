@@ -691,7 +691,7 @@ class Entity {
 			if (effect.effect === EffectType.RELATIVE_SHIELD || effect.effect === EffectType.DAMAGE_RETURN || effect.effect === EffectType.VULNERABILITY) {
 				effect_message = effect_message + '%'
 			}
-			let w = ctx.measureText(effect_message).width
+			const w = ctx.measureText(effect_message).width
 			ctx.globalAlpha = 0.5
 			ctx.fillStyle = 'black'
 			ctx.fillRect(x + 1, 26 + 17, w + 2, 10)
