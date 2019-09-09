@@ -147,7 +147,6 @@ abstract class RangeWeapon extends WeaponAnimation {
 		this.recoil = this.recoilForce
 		// Play sound
 		this.sound.play()
-		this.game.actionDone()
 	}
 	public update(dt: number) {
 		if (this.recoil > 0) {
