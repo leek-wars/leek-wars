@@ -25,7 +25,7 @@
 										<span slot="activator" class="label-beta">bêta <i class="material-icons">info</i></span>
 										{{ $t('editor.v2_beta_message') }}
 									</v-tooltip>
-									</v-list-tile-title>
+								</v-list-tile-title>
 							</v-list-tile-content>
 						</v-list-tile>
 						<v-list-tile v-ripple @click="newFolder">
@@ -55,7 +55,7 @@
 		</div>
 
 		<div class="container">
-			<div v-show="!LeekWars.mobile || !LeekWars.splitBack" class="column3" :style="{width: LeekWars.mobile ? '100%' : panelWidth + 'px'}">
+			<div v-show="!LeekWars.mobile || !LeekWars.splitBack" :style="{width: LeekWars.mobile ? '100%' : panelWidth + 'px'}" class="column3">
 				<panel class="editor-left first">
 					<div slot="content" class="full">
 						<loader v-if="!rootFolder" />
@@ -77,7 +77,7 @@
 				<div class="resizer" @mousedown="resizerMousedown"></div>
 			</div>
 		
-			<div v-show="!LeekWars.mobile || LeekWars.splitBack" class="column9" :style="{width: 'calc(100% - ' + (LeekWars.mobile ? 0 : panelWidth) + 'px)'}">
+			<div v-show="!LeekWars.mobile || LeekWars.splitBack" :style="{width: 'calc(100% - ' + (LeekWars.mobile ? 0 : panelWidth) + 'px)'}" class="column9">
 				<panel>
 					<div slot="content" class="full">
 						<editor-tabs v-if="!LeekWars.mobile" ref="tabs" :current="currentID" />

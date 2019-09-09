@@ -2,7 +2,7 @@
 	<div :class="{error: !ai.valid, modified: ai.modified, selected: selected}" class="item ai" @click="click">
 		<div :style="{'padding-left': (level * 20 + 17) + 'px'}" class="label" draggable="true" @dragstart="dragstart">
 			<span ref="name" :contenteditable="editing" class="text" @keydown.enter="enter" @blur="blur">{{ ai.name }}</span>
-			<v-tooltip :open-delay="0" :close-delay="0" bottom v-if="ai.v2">
+			<v-tooltip v-if="ai.v2" :open-delay="0" :close-delay="0" bottom>
 				<span slot="activator" class="v2">V2</span>
 				{{ $t('editor.v2_beta_message') }}
 			</v-tooltip>
