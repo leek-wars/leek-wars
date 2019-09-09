@@ -109,6 +109,7 @@ abstract class FallingParticle extends Particle {
 				return true
 			}
 			this.dx *= 0.5
+			this.dy *= 0.5
 		}
 		return super.update(dt)
 	}
