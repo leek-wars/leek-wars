@@ -114,7 +114,7 @@
 	"trophies_1": "Les trophées sont des récompenses que peuvent débloquer les éleveurs en\nréalisant certaines actions sur Leek Wars. Sur la page d'un joueur, vous avez\nla possibilité de classer ses trophées à l'aide du bouton situé en haut à\ndroite de la liste des trophées par ordre d'obtention ou par numéro du\ntrophée.",
 	"trophies_2": "À vous de les découvrir !",
 	"weapons": "Les armes",
-	"weapons_1": "Les armes sont utiles pour attaquer d'autres poireaux durant un combat. Un\npoireau ne peut avoir dans ses mains qu’une seule arme à la fois, mais peut en\nporter jusqu’à 3 sur lui.",
+	"weapons_1": "Les armes sont utiles pour attaquer d'autres poireaux durant un combat. Un\npoireau ne peut avoir dans ses mains qu’une seule arme à la fois, mais peut en\nporter de 2 jusqu’à 4 sur lui.",
 	"weapons_2": "Chaque arme requiert un certain niveau pour pouvoir être utilisée et a un coût\nen points de tour. Elle comporte également une\nportée spécifique. Ces armes peuvent être achetées en plusieurs exemplaires\npour permettre à plusieurs de vos poireaux d'utiliser la même arme en même\ntemps. Par contre, il n'est pas possible d'attaquer avec deux armes en même\ntemps.",
 	"weapons_3": "Certaines armes ont une zone d'effet comme pour l'arme \"Lance-grenades\". Le\ncalcul pour les dégâts de zone est linéaire : 100% pour la case centrale et\njusqu'à 50% pour les cases aux extrémités.",
 	"welcome": "Bienvenue sur Leek Wars !"
