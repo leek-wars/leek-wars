@@ -396,6 +396,7 @@ const LeekWars = {
 		}
 	},
 	sfw: false,
+	sfwTitle: "#3735931646 Documentation index",
 	sfwInit() {
 		if (localStorage.getItem('sfw') === 'true') {
 			LeekWars.sfwOn()
@@ -469,7 +470,11 @@ const LeekWars = {
 }
 
 function setTitle(title: string | TranslateResult | null, subtitle: string | TranslateResult | null = null) {
-	LeekWars.title = title as string
+	if (LeekWars.sfw) {
+		LeekWars.title = LeekWars.sfwTitle
+	} else {
+		LeekWars.title = title as string
+	}
 	updateTitle()
 	setSubTitle(subtitle)
 }
@@ -486,10 +491,12 @@ function setSubTitle(subtitle: any) {
 }
 function updateTitle() {
 	let title = LeekWars.title
-	if (!title) {
-		title = 'Leek Wars'
-	} else {
-		title = title + ' - Leek Wars'
+	if (!LeekWars.sfw) {
+		if (!title) {
+			title = 'Leek Wars'
+		} else {
+			title = title + ' - Leek Wars'
+		}
 	}
 	if (LeekWars.titleCounter > 0) {
 		title = '(' + LeekWars.titleCounter + ') ' + title
