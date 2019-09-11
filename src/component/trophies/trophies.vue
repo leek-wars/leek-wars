@@ -181,6 +181,7 @@
 		width: calc(80% - 100px);
 		max-width: 300px;
 		margin-top: 12px;
+		border: 1px solid #ddd;
 		.bar {
 			height: 12px;
 			width: 0;
