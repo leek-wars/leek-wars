@@ -20,11 +20,19 @@
 			<div class="column6">
 				<panel>
 					<a href="http://leekwarswiki.net/" target="_blank" rel="noopener">
-						<h2>{{ $t('wiki') }} <i class="material-icons">launch</i></h2>
-						<img src="/image/help/wiki.png">
-						<br>
-						<span class="description">{{ $t('wiki_desc') }}</span>
+						<div v-ripple class="card">
+							<h2>{{ $t('wiki') }} <i class="material-icons">launch</i></h2>
+							<img src="/image/help/wiki.png">
+						</div>
 					</a>
+					<router-link to="/encyclopedia/Guide_du_débutant">
+						<div v-ripple class="card">
+							<h2>{{ $t('wiki') }} <span class="label-beta">bêta <i class="material-icons">info</i></span></h2>
+							<img src="/image/help/wiki.png">
+						</div>
+					</router-link>
+					<br>
+					<span class="description">{{ $t('wiki_desc') }}</span>
 				</panel>
 			</div>
 		</div>
@@ -131,5 +139,17 @@
 			width: 16px;
 			margin-left: 6px;
 		}
+	}
+	.card {
+		display: inline-block;
+		padding: 5px;
+		padding-bottom: 0;
+		margin: 0 10px;
+		margin-bottom: 10px;
+		width: 150px;
+	}
+	.label-beta {
+		margin-bottom: 2px;
+		vertical-align: middle;
 	}
 </style>
