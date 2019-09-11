@@ -755,20 +755,6 @@
 	.folder-content img {
 		width: 80px;
 	}
-	.label-beta {
-		background: #00aae2;
-		color: white;
-		padding: 0px 4px;
-		border-radius: 5px;
-		font-size: 15px;
-		display: inline-block;
-		margin-left: 4px;
-		i {
-			font-size: 17px;
-			vertical-align: middle;
-			margin-bottom: 2px;
-		}
-	}
 	/deep/ .CodeMirror {
 		height: 100%;
 	}
