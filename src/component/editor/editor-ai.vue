@@ -2,6 +2,10 @@
 	<div :class="{error: !ai.valid, modified: ai.modified, selected: selected}" class="item ai" @click="click">
 		<div :style="{'padding-left': (level * 20 + 17) + 'px'}" class="label" draggable="true" @dragstart="dragstart">
 			<span ref="name" :contenteditable="editing" class="text" @keydown.enter="enter" @blur="blur">{{ ai.name }}</span>
+			<v-tooltip :open-delay="0" :close-delay="0" bottom v-if="ai.v2">
+				<span slot="activator" class="v2">V2</span>
+				{{ $t('editor.v2_beta_message') }}
+			</v-tooltip>
 			<div class="edit" @click="edit"></div>
 		</div>
 	</div>
@@ -118,14 +122,10 @@
 		color: red;
 		padding-right: 5px;
 	}
-	.item.v2 .label:after {
-		content: "V2";
+	.item .v2 {
 		font-weight: bold;
 		color: #00aae2;
 		padding-left: 5px;
 		display: inline-block;
-	}
-	.item.v2.selected > .label:after {
-		color: white;
 	}
 </style>

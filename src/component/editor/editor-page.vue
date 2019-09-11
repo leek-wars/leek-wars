@@ -20,7 +20,12 @@
 						<v-list-tile v-ripple @click="newAI(true)">
 							<i class="material-icons">insert_drive_file</i>
 							<v-list-tile-content class="language">
-								<v-list-tile-title>{{ $t('new_v2') }} <span class="label-beta">bêta</span></v-list-tile-title>
+								<v-list-tile-title>{{ $t('new_v2') }}
+									<v-tooltip :open-delay="0" :close-delay="0" bottom>
+										<span slot="activator" class="label-beta">bêta <i class="material-icons">info</i></span>
+										{{ $t('editor.v2_beta_message') }}
+									</v-tooltip>
+									</v-list-tile-title>
 							</v-list-tile-content>
 						</v-list-tile>
 						<v-list-tile v-ripple @click="newFolder">
@@ -751,12 +756,18 @@
 		width: 80px;
 	}
 	.label-beta {
-		background: #ff54e3;
+		background: #00aae2;
 		color: white;
 		padding: 0px 4px;
 		border-radius: 5px;
 		font-size: 15px;
 		display: inline-block;
+		margin-left: 4px;
+		i {
+			font-size: 17px;
+			vertical-align: middle;
+			margin-bottom: 2px;
+		}
 	}
 	/deep/ .CodeMirror {
 		height: 100%;
