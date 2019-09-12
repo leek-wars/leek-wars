@@ -1,5 +1,6 @@
 {
 	"cancel": "Annuler",
+	"confirm_mute": "Sourdine",
 	"given_by_x_the_d": "Donné par {farmer} le {date}",
 	"reason_1": "Nom d'éleveur incorrect",
 	"reason_10": "Comportement incorrect envers un administrateur",
