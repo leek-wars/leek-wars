@@ -36,7 +36,7 @@
 	"you_have_been_unmuted_by_x": "{0} allowed you to speak again on the chat.",
 	"you_must_choose_reason": "You must choose a reason!",
 	"mute": "Mute",
-	"mute_popup": "Are you sure to mute <b>{0}</b> ?",
+	"mute_popup": "Are you sure to mute {farmer} ?",
 	"unmute": "Unmute",
-	"unmute_popup": "Are you sure to unmute <b>{0}</b> ?"
+	"unmute_popup": "Are you sure to unmute {farmer} ?"
 }

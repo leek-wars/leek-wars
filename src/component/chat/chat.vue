@@ -58,7 +58,11 @@
 
 		<v-dialog v-model="muteDialog" :max-width="600">
 			<div class="title">{{ $t('moderation.mute') }}</div>
-			<div v-if="muteFarmer" class="content">{{ $t('moderation.mute_popup', [muteFarmer.name]) }}</div>
+			<div v-if="muteFarmer" class="content">
+				<i18n path="moderation.mute_popup">
+					<b slot="farmer">{{ muteFarmer.name }}</b>
+				</i18n>
+			</div>
 			<div class="actions">
 				<div @click="muteDialog = false">{{ $t('moderation.cancel') }}</div>
 				<div class="mute red" @click="muteConfirm">{{ $t('moderation.confirm_mute') }}</div>
@@ -66,7 +70,11 @@
 		</v-dialog>
 		<v-dialog v-model="unmuteDialog" :max-width="600">
 			<div class="title">{{ $t('moderation.unmute') }}</div>
-			<div v-if="muteFarmer" class="content">{{ $t('moderation.unmute_popup', [muteFarmer.name]) }}</div>
+			<div v-if="muteFarmer" class="content">
+				<i18n path="moderation.unmute_popup">
+					<b slot="farmer">{{ muteFarmer.name }}</b>
+				</i18n>
+			</div>
 			<div class="actions">
 				<div @click="unmuteDialog = false">{{ $t('moderation.cancel') }}</div>
 				<div class="unmute red" @click="unmuteConfirm">{{ $t('moderation.unmute') }}</div>

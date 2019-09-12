@@ -36,7 +36,7 @@
 	"you_have_been_unmuted_by_x": "{0} vous autorise à nouveau à parler sur le chat.",
 	"you_must_choose_reason": "Vous devez choisir un motif !",
 	"mute": "Mettre en sourdine",
-	"mute_popup": "Etes-vous sûr de vouloir mettre <b>{0}</b> en sourdine ?",
+	"mute_popup": "Etes-vous sûr de vouloir mettre {farmer} en sourdine ?",
 	"unmute": "Rendre la parole",
-	"unmute_popup": "Etes-vous sûr de vouloir rendre la parole à <b>{0}</b> ?"
+	"unmute_popup": "Etes-vous sûr de vouloir rendre la parole à {farmer} ?"
 }
