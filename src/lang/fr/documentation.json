@@ -700,7 +700,7 @@
 	"func_inArray_arg_1": "Le tableau de recherche.",
 	"func_inArray_arg_2": "L'élément à rechercher.",
 	"func_inArray_return": "<i>vrai</i> si l'élément est dans le tableau, <i>faux</i> sinon.",
-	"func_include": "Inclut l'IA de nom <b>ai</b> dans l'IA courante. <br><br><b>Attention</b>, la fonction include doit être appelée uniquement dans le bloc principal, et son paramètre doit être une chaîne écrite directement\ndans le code. Pour plus d'informations, voir la section dans le tutoriel : <a href='http://leekwars.com/tutorial#includes'>http://leekwars.com/tutorial#includes</a>.",
+	"func_include": "Inclut l'IA de nom <b>ai</b> dans l'IA courante. <br><br><b>Attention</b>, la fonction include doit être appelée uniquement dans le bloc principal, et son paramètre doit être une chaîne écrite directement\ndans le code. Pour plus d'informations, voir la section dans le tutoriel : <a href='http://leekwars.com/help/tutorial#includes'>http://leekwars.com/help/tutorial#includes</a>.",
 	"func_include_arg_1": "Le nom de l'IA à inclure.",
 	"func_indexOf": "Détermine la position de la première occurrence de la chaîne <b>search</b> dans la chaîne <b>string</b>.",
 	"func_indexOf_2": "Détermine la position de la première occurrence de la chaîne <b>search</b> dans la chaîne <b>string</b>, à partir de la position <b>start</b>.",

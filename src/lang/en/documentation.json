@@ -701,7 +701,7 @@
 	"func_inArray_arg_1": "Array in which search is performed.",
 	"func_inArray_arg_2": "Element to look for.",
 	"func_inArray_return": "<i>true</i> if given <b>element</b> is contained in <b>array</b>, <i>false</i> otherwise.",
-	"func_include": "Icludes the AI named <b>ai</b> inside current AI.<br/><br/>Warning: the <b>include</b> function shall only be called inside the main AI block, and its parameter shall NOT be a variable. More information in the tutorial: <a href='http://leekwars.com/tutorial#includes'>http://leekwars.com/tutorial#includes</a>.",
+	"func_include": "Icludes the AI named <b>ai</b> inside current AI.<br/><br/>Warning: the <b>include</b> function shall only be called inside the main AI block, and its parameter shall NOT be a variable. More information in the tutorial: <a href='http://leekwars.com/help/tutorial#includes'>http://leekwars.com/help/tutorial#includes</a>.",
 	"func_include_arg_1": "AI's name (hard-coded string only)",
 	"func_indexOf": "Finds the first occurrence of <b>search</b> string within given <b>string</b>.",
 	"func_indexOf_2": "Finds the first occurrence of <b>search</b> string within given <b>string</b>, starting at given <b>position</b>.",
