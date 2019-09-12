@@ -43,6 +43,10 @@
 	import './codemirror/leekscript-mode'
 	import './codemirror/match-highlighter'
 	import './codemirror/matchbrackets'
+	import './codemirror/foldcode'
+	import './codemirror/foldgutter'
+	import './codemirror/bracefold'
+	import './codemirror/commentfold'
 
 	const AUTO_SHORTCUTS = [
 		["lama", "#LamaSwag", "", "Le pouvoir du lama"],
@@ -144,6 +148,8 @@
 				autofocus: true,
 				smartIndent: false,
 				cursorHeight: 1,
+				foldGutter: true,
+				gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"],
 				extraKeys: {
 					"Shift-Tab": () => this.unindentCode(),
 					"Ctrl-D": () => this.duplicateLine(),
