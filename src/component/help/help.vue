@@ -9,11 +9,13 @@
 		<div class="flex-container">
 			<div class="column6">
 				<panel class="first">
-					<router-link to="/help/general">	
-						<h2>Leek Wars</h2>
-						<img src="/image/help/help_general.png">
-						<br>
-						<span class="description">{{ $t('general_help') }}</span>
+					<router-link to="/help/general">
+						<div>
+							<h2>Leek Wars</h2>
+							<img src="/image/help/help_general.png">
+							<br>
+							<span class="description">{{ $t('general_help') }}</span>
+						</div>
 					</router-link>
 				</panel>
 			</div>
@@ -40,20 +42,24 @@
 			<div class="column6">
 				<panel>
 					<router-link to="/help/tutorial">
-						<h2>{{ $t('tutorial') }}</h2>
-						<img src="/image/help/interface.png">
-						<br>
-						<span class="description" v-html="$t('tutorial_desc')"></span>
+						<div>
+							<h2>{{ $t('tutorial') }}</h2>
+							<img src="/image/help/interface.png">
+							<br>
+							<span class="description" v-html="$t('tutorial_desc')"></span>
+						</div>
 					</router-link>
 				</panel>
 			</div>
 			<div class="column6">
 				<panel>
 					<router-link to="/help/documentation">
-						<h2>{{ $t('documentation') }}</h2>
-						<img src="/image/help/presentation.png">
-						<br>
-						<span class="description" v-html="$t('documentation_desc')"></span>
+						<div>
+							<h2>{{ $t('documentation') }}</h2>
+							<img src="/image/help/presentation.png">
+							<br>
+							<span class="description" v-html="$t('documentation_desc')"></span>
+						</div>
 					</router-link>
 				</panel>
 			</div>
@@ -110,6 +116,9 @@
 <style lang="scss" scoped>
 	.panel {
 		text-align: center;
+		.content {
+			height: 100%;
+		}
 	}
 	.description {
 		font-size: 15px;
