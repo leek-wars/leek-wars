@@ -739,7 +739,7 @@
 	"func_isInlineChip": "Détermine si la puce <b>chip</b> peut être utlisée uniquement en ligne.",
 	"func_isInlineChip_arg_1": "L'id de la puce à tester.",
 	"func_isInlineChip_return": "<i>vrai</i> si la puce est utilisable uniquement en ligne, <i>faux</i> sinon.",
-	"func_isInlineWeapon": "Détermine si l'arme <b>weapon</b> peut être utlisée uniquement en ligne.",
+	"func_isInlineWeapon": "Détermine si l'arme <b>weapon</b> peut être utilisée uniquement en ligne.",
 	"func_isInlineWeapon_arg_1": "L'id de l'arme à tester.",
 	"func_isInlineWeapon_return": "<i>vrai</i> si l'arme est utilisable uniquement en ligne, <i>faux</i> sinon.",
 	"func_isLeek": "Détermine si le contenu de la cellule <b>cell</b> est un poireau.",
