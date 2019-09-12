@@ -1,5 +1,6 @@
 {
 	"cancel": "Cancel",
+	"confirm_mute": "Mute",
 	"given_by_x_the_d": "Given by {farmer} the {date}",
 	"reason_1": "Incorrect farmer name",
 	"reason_10": "Misconduct against an administrator",
