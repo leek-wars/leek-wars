@@ -40,13 +40,13 @@
 	import 'codemirror/lib/codemirror.css'
 	import js_beautify from 'js-beautify'
 	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
+	import './codemirror/bracefold'
+	import './codemirror/commentfold'
+	import './codemirror/foldcode'
+	import './codemirror/foldgutter'
 	import './codemirror/leekscript-mode'
 	import './codemirror/match-highlighter'
 	import './codemirror/matchbrackets'
-	import './codemirror/foldcode'
-	import './codemirror/foldgutter'
-	import './codemirror/bracefold'
-	import './codemirror/commentfold'
 
 	const AUTO_SHORTCUTS = [
 		["lama", "#LamaSwag", "", "Le pouvoir du lama"],
