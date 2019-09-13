@@ -1034,14 +1034,12 @@ class Game {
 			leek.damageReturn -= value
 			break
 		}
-		if (!this.jumping) {
-			// Gestion des états du poireau
-			if (effect.objectType === 'weapon') {
-				if (effect.object === 46) {
-					leek.stopBurn()
-				} else if (effect.object === 48) {
-					leek.stopGaz()
-				}
+		// Gestion des états du poireau
+		if (effect.objectType === 'weapon') {
+			if (effect.object === 46) {
+				leek.stopBurn()
+			} else if (effect.object === 48) {
+				leek.stopGaz()
 			}
 		}
 		delete leek.effects[id]
