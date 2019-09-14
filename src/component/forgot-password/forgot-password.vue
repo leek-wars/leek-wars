@@ -32,7 +32,7 @@
 					<br>
 					<br>
 					<i18n path="mail_sent">
-						<b place="email">{{ $route.params.email }}</b>
+						<b slot="email">{{ $route.params.email }}</b>
 					</i18n>
 					<br>
 					<br>

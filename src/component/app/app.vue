@@ -56,13 +56,13 @@
 
 		<v-dialog v-model="changelogDialog" :max-width="800">
 			<i18n tag="div" path="changelog.version_online" class="title">
-				<b v-if="changelog" place="version">{{ changelog.version_name }}</b>
+				<b v-if="changelog" slot="version">{{ changelog.version_name }}</b>
 			</i18n>
 			<div v-if="changelog" class="content changelog-dialog">
 				<div v-for="change in changelogFormat($t('changelog.' + changelog.data))" :key="change" class="change">➤ {{ change }}</div>
 				<br>
 				<i18n path="changelog.see_all_changes">
-					<router-link place="changelog" to="/changelog">changelog</router-link>
+					<router-link slot="changelog" to="/changelog">changelog</router-link>
 				</i18n>
 			</div>
 			<div class="actions">

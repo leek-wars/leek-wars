@@ -18,7 +18,7 @@
 			<br>
 			<div v-html="$t('editor_message')"></div>
 			<i18n path="contact">
-				<a place="email" href="mailto:contact@leekwars.com">contact@leekwars.com</a>
+				<a slot="email" href="mailto:contact@leekwars.com">contact@leekwars.com</a>
 			</i18n>
 		</panel>
 	</div>

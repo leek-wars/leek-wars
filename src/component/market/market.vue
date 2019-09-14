@@ -111,7 +111,7 @@
 			<div class="title">{{ $t('confirm_purchase') }}</div>
 			<div v-if="selectedItem && $store.state.farmer" class="content">
 				<i18n tag="div" path="are_you_sure_you_want_to_buy">
-					<b place="item">{{ translateName(selectedItem) }}</b>
+					<b slot="item">{{ translateName(selectedItem) }}</b>
 				</i18n>
 				<br>
 				<b>{{ $t('price') }}</b> : {{ selectedItem.price_habs | number }} <span class="hab"></span>
@@ -130,7 +130,7 @@
 			<div class="title">{{ $t('confirm_purchase') }}</div>
 			<div v-if="selectedItem && $store.state.farmer" class="content">
 				<i18n tag="div" path="are_you_sure_you_want_to_buy">
-					<b place="item">{{ translateName(selectedItem) }}</b>
+					<b slot="item">{{ translateName(selectedItem) }}</b>
 				</i18n>
 				<br>
 				<b>{{ $t('price') }}</b> : {{ selectedItem.price_crystals }} <span class="crystal"></span>
@@ -149,7 +149,7 @@
 			<div class="title">{{ $t('confirm_sell') }}</div>
 			<div v-if="selectedItem && $store.state.farmer" class="content">
 				<i18n tag="div" path="are_you_sure_you_want_to_sell">
-					<b place="item">{{ translateName(selectedItem) }}</b>
+					<b slot="item">{{ translateName(selectedItem) }}</b>
 				</i18n>
 				<br>
 				<b>{{ $t('price') }}</b> : {{ selectedItem.price | number }} <span class="hab"></span>

@@ -11,7 +11,7 @@
 				</center>
 
 				<i18n tag="p" path="intro">
-					<router-link place="tutorial" to="/help/tutorial">{{ $t('intro_tuto') }}</router-link>
+					<router-link slot="tutorial" to="/help/tutorial">{{ $t('intro_tuto') }}</router-link>
 				</i18n>
 
 				<div class="help-menu">
@@ -45,7 +45,7 @@
 					</ul>
 				</p>
 				<i18n path="farmer_8" tag="p">
-					<router-link place="documentation" to="/help/documentation">{{ $t('farmer_doc') }}</router-link>
+					<router-link slot="documentation" to="/help/documentation">{{ $t('farmer_doc') }}</router-link>
 				</i18n>
 			</div>
 		</panel>
@@ -53,7 +53,7 @@
 		<panel id="habs" :title="$t('habs')">
 			<div slot="content" class="wrapper">
 				<i18n tag="p" path="habs_1">
-					<span place="icon" class="hab"></span>
+					<span slot="icon" class="hab"></span>
 				</i18n>
 			</div>
 		</panel>
@@ -245,7 +245,7 @@
 				<p>{{ $t('editor_1') }}</p>
 				<p v-html="$t('editor_2')"></p>
 				<i18n tag="p" path="editor_3">
-					<router-link place="tutorial" to="/help/tutorial">{{ $t('editor_tuto') }}</router-link>
+					<router-link slot="tutorial" to="/help/tutorial">{{ $t('editor_tuto') }}</router-link>
 				</i18n>
 			</div>
 		</panel>

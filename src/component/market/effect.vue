@@ -1,13 +1,13 @@
 <template lang="html">
 	<div>
 		<i18n v-if="effect.id == 14" path="effect.type_14_fixed">
-			<b place="summon">{{ $t('effect.summon_' + effect.value1) }}</b>
+			<b slot="summon">{{ $t('effect.summon_' + effect.value1) }}</b>
 		</i18n>
 		<span v-else-if="effect.value2 == 0" v-html="$t('effect.type_' + effect.id + '_fixed', [effect.value1])"></span>
 		<span v-else v-html="$t('effect.type_' + effect.id, [effect.value1, format(effect.value1 + effect.value2)])"></span>
 		
 		<i18n v-if="effect.turns > 0" path="effect.on_n_turns">
-			<b place="turns">{{ effect.turns }}</b>
+			<b slot="turns">{{ effect.turns }}</b>
 		</i18n>
 
 		<v-tooltip bottom open-delay="0" close-delay="0">

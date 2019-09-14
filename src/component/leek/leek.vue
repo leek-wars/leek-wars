@@ -42,7 +42,7 @@
 			<div class="column4">
 				<panel>
 					<i18n slot="title" path="farmed_by" tag="h2">
-						<router-link :to="'/farmer/' + (leek ? leek.farmer.id : 0)" place="farmer">{{ leek ? leek.farmer.name : '...' }}</router-link>
+						<router-link :to="'/farmer/' + (leek ? leek.farmer.id : 0)" slot="farmer">{{ leek ? leek.farmer.name : '...' }}</router-link>
 					</i18n>
 					<template v-if="my_leek" slot="actions">
 						<div class="button flat hat-button" @click="hat">

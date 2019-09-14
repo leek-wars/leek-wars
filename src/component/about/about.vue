@@ -148,7 +148,7 @@
 		
 		<panel :title="$t('contact')">
 			<i18n path="contact_text" tag="p">
-				<a place="contact" class="green" target="_blank" rel="noopener" href="mailto:contact@leekwars.com">contact@leekwars.com</a>
+				<a slot="contact" class="green" target="_blank" rel="noopener" href="mailto:contact@leekwars.com">contact@leekwars.com</a>
 			</i18n>
 		</panel>
 		

@@ -355,7 +355,7 @@
 			<div class="title">{{ $t('change_owner_confirm_title') }}</div>
 			<div class="content">
 				<i18n path="change_owner_confirm">
-					<b place="farmer">{{ changeOwnerSelected.name }}</b>
+					<b slot="farmer">{{ changeOwnerSelected.name }}</b>
 				</i18n>
 				<br><br>
 				{{ $t('enter_password_to_confirm') }}
