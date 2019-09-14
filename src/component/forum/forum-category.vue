@@ -48,15 +48,15 @@
 							</span>
 							<div class="description grey">
 								<i18n path="by_x_the_d">
-									<router-link :to="'/farmer/' + topic.author.id" place="farmer">{{ topic.author.name }}</router-link>
-									<span place="date">{{ topic.date | date }}</span>
+									<router-link :to="'/farmer/' + topic.author.id" slot="farmer">{{ topic.author.name }}</router-link>
+									<span slot="date">{{ topic.date | date }}</span>
 								</i18n>
 							</div>
 							<div v-if="LeekWars.mobile" class="description grey">
 								<span class="messages"><i class="material-icons">chat_bubble_outline</i> {{ topic.messages }} • </span>
 								<i18n v-if="LeekWars.mobile" tag="span" path="last_message">
-									<span place="date">{{ LeekWars.formatDuration(topic.last_message_date) }}</span>
-									<router-link :to="'/forum/category-' + category.id + '/topic-' + topic.id + '/page-' + topic.last_message_page + '#message-' + topic.last_message_id" place="farmer">
+									<span slot="date">{{ LeekWars.formatDuration(topic.last_message_date) }}</span>
+									<router-link :to="'/forum/category-' + category.id + '/topic-' + topic.id + '/page-' + topic.last_message_page + '#message-' + topic.last_message_id" slot="farmer">
 										{{ topic.last_message_writer }} ►
 									</router-link>
 								</i18n>

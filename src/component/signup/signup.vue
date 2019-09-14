@@ -68,7 +68,7 @@
 						</table>
 						<br>
 						<i18n class="cgu" tag="div" path="conditions">
-							<router-link place="link" to="/conditions">{{ $t('conditions_name') }}</router-link>
+							<router-link slot="link" to="/conditions">{{ $t('conditions_name') }}</router-link>
 						</i18n>
 						<br>
 						<center><v-btn large color="primary" type="submit">{{ $t('signup') }}</v-btn></center>
@@ -150,7 +150,7 @@
 			<div class="content">
 				<center><img src="/image/map/nexus_block.png"></center>
 				<i18n tag="h2" class="signup-message" path="signup_validated_message">
-					<b place="farmer">{{ login }}</b>
+					<b slot="farmer">{{ login }}</b>
 				</i18n>
 			</div>
 			<div class="actions">

@@ -52,12 +52,12 @@
 								<div class="title" v-html="result.title"></div>
 							</router-link>
 							<i18n tag="div" class="info" path="post_by_x_the_x_in_x">
-								<router-link :to="'/farmer/' + result.fid" place="farmer">
+								<router-link :to="'/farmer/' + result.fid" slot="farmer">
 									<template v-if="options.farmer === ''">{{ result.fname }}</template>
 									<span v-else><b>{{ result.fname }}</b></span>
 								</router-link>
-								<span place="date" class="dark">{{ result.date | date }}</span>
-								<router-link :to="'/forum/category-' + result.cid" place="topic">
+								<span slot="date" class="dark">{{ result.date | date }}</span>
+								<router-link :to="'/forum/category-' + result.cid" slot="topic">
 									{{ $i18n.t('forum.category_' + result.cname) }}
 								</router-link>
 							</i18n>
