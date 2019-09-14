@@ -14,6 +14,7 @@
 				</div>
 				<div slot="content" class="wrapper">
 					<div class="content">
+						<img v-if="version.image" :src="'/image/mail/mail_' + version.version + '.png'" class="image">
 						<div v-for="(change, c) in version.changes" :key="c" class="change" v-html="'➤ ' + change"></div>
 					</div>
 				</div>
@@ -68,5 +69,12 @@
 	}
 	.changelog-page /deep/ a {
 		color: green;
+	}
+	.image {
+		width: calc(100% + 30px);
+		margin-left: -15px;
+		margin-right: -15px;
+		margin-bottom: 10px;
+		margin-top: -15px;
 	}
 </style>
