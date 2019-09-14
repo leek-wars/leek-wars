@@ -15,7 +15,7 @@ The project is very easy to install and deploy in 10s:
 git clone https://github.com/leek-wars/leek-wars-client.git
 cd leek-wars-client
 npm i
-npm run start
+npm start
 ```
 Then go to `localhost:8080` in your browser.
 
