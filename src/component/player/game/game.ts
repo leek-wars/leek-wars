@@ -237,6 +237,7 @@ class Game {
 	public progressBarWidth: number = 0
 	public mouseOrigin: any
 	public selectedEntity: Entity | null = null
+	public launched: boolean = false
 	public cancelled: boolean = false
 
 	public maps: Map[] = [
@@ -466,6 +467,7 @@ class Game {
 			}
 		}
 		/* Launch! */
+		this.launched = true
 		this.updateFrame()
 	}
 
@@ -1376,6 +1378,7 @@ class Game {
 	}
 
 	public redraw() {
+		if (!this.launched) { return }
 		this.requestPause = this.paused
 		this.draw()
 	}
