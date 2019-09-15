@@ -260,6 +260,7 @@
 	.app-wrapper.flex {
 		display: inline-block;
 		flex: 0;
+		flex-basis: 1100px;
 	}
 	.big-leeks {
 		z-index: -10;
