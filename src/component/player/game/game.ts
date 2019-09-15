@@ -236,7 +236,8 @@ class Game {
 	public showCellCell: any
 	public reportTimer: any
 	public progressBarWidth: number = 0
-	public mouseOrigin: any
+	public mouseOriginX: number = 0
+	public mouseOriginY: number = 0
 	public selectedEntity: Entity | null = null
 	public launched: boolean = false
 	public cancelled: boolean = false
@@ -474,12 +475,14 @@ class Game {
 		this.updateFrame()
 	}
 
-	public resize(width: number, height: number, canvas: HTMLElement) {
+	public resize(width: number, height: number) {
 		this.width = width
 		this.height = height
 		this.ground.resize(width, height, this.shadows)
-		const o = canvas.getBoundingClientRect()
-		this.mouseOrigin = {left: o.left + Math.round(this.ground.startX / this.ratio), top: o.top + Math.round(this.ground.startY / this.ratio)}
+	}
+	public setOrigin(originX: number, originY: number) {
+		this.mouseOriginX = originX + Math.round(this.ground.startX / this.ratio)
+		this.mouseOriginY = originY + Math.round(this.ground.startY / this.ratio)
 	}
 
 	public updateFrame() {
@@ -1132,8 +1135,8 @@ class Game {
 	}
 
 	public mousemove(e: MouseEvent) {
-		this.mouseX = (e.pageX - this.mouseOrigin.left) * this.ratio
-		this.mouseY = (e.pageY - this.mouseOrigin.top) * this.ratio
+		this.mouseX = (e.pageX - this.mouseOriginX) * this.ratio
+		this.mouseY = (e.pageY - this.mouseOriginY) * this.ratio
 		const x = (this.mouseX / this.ground.tileSizeX) * 2 - 0.5
 		const y = (this.mouseY / this.ground.tileSizeY) * 2 - 0.5
 		let cx = Math.floor(x)

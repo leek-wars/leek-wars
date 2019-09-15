@@ -191,6 +191,7 @@
 			this.$root.$on('keyup', this.keyup)
 			this.$on('game-launched', () => {
 				this.loaded = true
+				this.setOrigin()
 			})
 		}
 		@Watch('requiredWidth')
@@ -218,9 +219,16 @@
 				this.height = newHeight - BAR_HEIGHT
 				this.canvas.width = this.width * aspectRatio
 				this.canvas.height = this.height * aspectRatio
-				this.game.resize(this.canvas.width, this.canvas.height, this.canvas)
+				this.game.resize(this.canvas.width, this.canvas.height)
 				this.game.redraw()
+				this.setOrigin()
 			})
+		}
+		setOrigin() {
+			setTimeout(() => {
+				const p = this.$el.getBoundingClientRect()
+				this.game.setOrigin(p.left, p.top)
+			}, 50)
 		}
 		mousemove(e: MouseEvent) {
 			this.game.mousemove(e)
