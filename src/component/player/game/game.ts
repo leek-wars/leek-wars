@@ -1,3 +1,4 @@
+import Player from '@/component/player.vue'
 import { Bubble } from '@/component/player/game/bubble'
 import { Bulb } from '@/component/player/game/bulb'
 import { Acceleration, Adrenaline, Antidote, Armor, Armoring, BallAndChain, Bandage, Bark, Burning, Carapace, Collar, Cure, DevilStrike, Doping, Drip, Ferocity, Fertilizer, Flame, Flash, Fortress, Fracture, Helmet, Ice, Iceberg, Inversion, LeatherBoots, Liberation, Lightning, Loam, Meteorite, Mirror, Motivation, Pebble, Plague, Protein, Rage, Rampart, Reflexes, Regeneration, Remission, Rock, Rockfall, SevenLeagueBoots, Shield, Shock, SlowDown, Solidification, Soporific, Spark, Stalactite, Steroid, Stretching, Teleportation, Thorn, Toxin, Tranquilizer, Vaccine, Venom, Wall, WarmUp, Whip, WingedBoots } from '@/component/player/game/chips'
@@ -239,6 +240,7 @@ class Game {
 	public selectedEntity: Entity | null = null
 	public launched: boolean = false
 	public cancelled: boolean = false
+	public player!: Player
 
 	public maps: Map[] = [
 		new Nexus(this),
@@ -468,6 +470,7 @@ class Game {
 		}
 		/* Launch! */
 		this.launched = true
+		this.player.$emit('game-launched')
 		this.updateFrame()
 	}
 
