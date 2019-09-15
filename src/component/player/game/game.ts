@@ -209,6 +209,8 @@ class Game {
 	public mouseTileX: number | undefined = 0
 	public mouseTileY: number | undefined = 0
 	public mouseCell: number | undefined = 0
+	public mouseCellX: number = 0
+	public mouseCellY: number = 0
 	// Settings
 	public large = true
 	public debug = false
@@ -1158,6 +1160,10 @@ class Game {
 			this.mouseTileX = cx
 			this.mouseTileY = cy
 			this.mouseCell = this.ground.xyToCell(cx, cy)
+			const cell = this.ground.cellToXY(this.mouseCell)
+			const pos = this.ground.xyToXYPixels(cell.x, cell.y)
+			this.mouseCellX = pos.x * this.ground.scale
+			this.mouseCellY = pos.y * this.ground.scale
 		} else {
 			this.mouseTileX = undefined
 			this.mouseTileY = undefined
@@ -1412,6 +1418,8 @@ class Game {
 			const marker = this.markers[m]
 			this.drawMarker(marker.x, marker.y, marker.color)
 		}
+		// Show pointer cell
+		this.drawPointerCell()
 
 		// Draw elements
 		for (const line of this.drawableElements) {
@@ -1456,6 +1464,31 @@ class Game {
 			if (this.leeks[i].active) { this.leeks[i].drawTexts(this.ctx) }
 		}
 		this.ground.endDraw(this.ctx)
+	}
+
+	public drawPointerCell() {
+		if (this.mouseCell === undefined) { return }
+		this.ctx.save()
+
+		this.ctx.beginPath()
+		const dx = this.ground.tileSizeX
+		const dy = this.ground.tileSizeY
+		const x = this.mouseCellX!
+		const y = this.mouseCellY!
+		this.ctx.moveTo(x, y - dy / 2)
+		this.ctx.lineTo(x + dx / 2, y)
+		this.ctx.lineTo(x, y + dy / 2)
+		this.ctx.lineTo(x - dx / 2, y)
+		this.ctx.closePath()
+
+		this.ctx.strokeStyle = 'black'
+		this.ctx.lineCap = 'round'
+		this.ctx.lineJoin = 'round'
+		this.ctx.lineWidth = 2
+		this.ctx.stroke()
+
+		this.ctx.globalAlpha = 1
+		this.ctx.restore()
 	}
 
 	public showReport() {
