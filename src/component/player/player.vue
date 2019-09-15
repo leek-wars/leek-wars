@@ -181,6 +181,7 @@
 			this.game.showCells = localStorage.getItem('fight/cells') === 'true'
 			this.game.showLifes = localStorage.getItem('fight/lifes') === 'true'
 			this.game.sound = localStorage.getItem('fight/sound') === 'true'
+			this.game.player = this
 			this.getFight()
 			this.resize()
 			this.$emit('resize')
@@ -188,6 +189,9 @@
 				this.resize()
 			})
 			this.$root.$on('keyup', this.keyup)
+			this.$on('game-launched', () => {
+				this.loaded = true
+			})
 		}
 		@Watch('requiredWidth')
 		requiredWidthChange() {
@@ -265,8 +269,6 @@
 				if (fight.status >= 1) {
 					this.getLogs()
 					this.game.init(fight)
-					this.loaded = true
-					this.resize()
 				} else {
 					this.queue = fight.queue
 					if (this.loaded) { return }
