@@ -1,6 +1,7 @@
 import about from "@/lang/en/about.json"
 import accept_conditions from "@/lang/en/accept-conditions.json"
 import bank from "@/lang/en/bank.json"
+import change_email from "@/lang/en/change-email.json"
 import changelog from "@/lang/en/changelog.json"
 import chip from "@/lang/en/chip.json"
 import conditions from "@/lang/en/conditions.json"
@@ -47,7 +48,7 @@ import trophy from "@/lang/en/trophy.json"
 import tutorial from "@/lang/en/tutorial.json"
 import weapon from '@/lang/en/weapon.json'
 
-const translations = { garden, trophies, changelog, market, main, documentation, general_help, about, farmer, conditions, chip, weapon, potion, effect, bank, country, entity, hat, leekscript, mail, notifications, leek, forum, tournament, statistics, settings, team, help, ranking, editor, forum_topic, forum_category, accept_conditions, fight, forgot_password, history, legal, login, messages, mobile_app, moderation, report, search, signup, trophy, new_leek, tutorial, didactitiel }
+const translations = { garden, trophies, changelog, change_email, market, main, documentation, general_help, about, farmer, conditions, chip, weapon, potion, effect, bank, country, entity, hat, leekscript, mail, notifications, leek, forum, tournament, statistics, settings, team, help, ranking, editor, forum_topic, forum_category, accept_conditions, fight, forgot_password, history, legal, login, messages, mobile_app, moderation, report, search, signup, trophy, new_leek, tutorial, didactitiel }
 
 import { setTranslations } from "@/locale"
 import wiki from '@/wiki/fr.wiki'
