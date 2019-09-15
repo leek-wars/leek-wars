@@ -1,0 +1,11 @@
+{
+	"title": "Change email",
+	"send_confirmation": "Send confirmation",
+	"enter_a_new_email": "Enter a new email address",
+	"new_email": "New email address",
+	"confirm": "Confirmation",
+	"email_sent": "Confirmation email sent to {email}",
+	"email_changed_success": "Email address changed with success.",
+	"back_home": "Come back home",
+	"error_not_same_email": "The input addresses are not the same"
+}

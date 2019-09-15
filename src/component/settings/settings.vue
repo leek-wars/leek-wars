@@ -53,6 +53,14 @@
 						<input v-model="newPassword2" name="new_password2" type="password" required> <br>
 						<center><v-btn type="submit">{{ $t('change') }}</v-btn></center>
 					</form>
+
+					<div v-ripple class="list-item card" @click="viewChangeEmail = !viewChangeEmail">
+						<i class="material-icons">email</i>
+						<span class="label">{{ $t('change_email') }}</span>
+						<i class="material-icons">{{ viewChangeEmail ? 'arrow_drop_down' : 'arrow_right' }}</i>
+					</div>
+					<v-btn v-if="viewChangeEmail" :disabled="changeEmailSent" @click="sendChangeEmail()">{{ $t('change_email_send') }}</v-btn>
+
 					<div v-ripple class="list-item card" @click="view2FA = !view2FA">
 						<i class="material-icons">security</i>
 						<span class="label">Two factor authentication</span>
@@ -188,8 +196,10 @@
 		newPassword1: string = ''
 		newPassword2: string = ''
 		viewChangePassword: boolean = false
+		viewChangeEmail: boolean = false
 		viewDeleteAccount: boolean = false
 		view2FA: boolean = false
+		changeEmailSent: boolean = false
 
 		created() {
 			this.settings = {}
@@ -307,6 +317,12 @@
 				this.deleteFailedDialog = true
 				this.deleteFailedError = error
 			})
+		}
+		sendChangeEmail() {
+			LeekWars.post('farmer/change-email1').then(data => {
+				LeekWars.toast(this.$i18n.t('change_email_sent'))
+			})
+			this.changeEmailSent = true
 		}
 	}
 </script>

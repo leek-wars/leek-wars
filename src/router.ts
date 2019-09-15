@@ -12,6 +12,7 @@ import NotFound from '@/component/app/not-found.vue'
 import BankBuy from '@/component/bank/bank-buy.vue'
 import BankValidate from '@/component/bank/bank-validate.vue'
 import Bank from '@/component/bank/bank.vue'
+import ChangeEmail from '@/component/change-email/change-email.vue'
 import Changelog from '@/component/changelog/changelog.vue'
 import ChatPage from '@/component/chat/chat-page.vue'
 import Conditions from '@/component/conditions/conditions.vue'
@@ -109,6 +110,7 @@ const router = new Router({
 		{ path: '/bank/validate/failed/:vendor/:reason', component: BankValidate, props: {success: false}, beforeEnter: connected },
 		{ path: '/conditions', component: Conditions },
 		{ path: '/changelog', component: Changelog },
+		{ path: '/change-email/:state/:token', component: ChangeEmail },
 		{ path: '/chat', component: ChatPage, beforeEnter: connected },
 		{ path: '/encyclopedia/:page', component: Encyclopedia },
 		{ path: '/editor', component: EditorPage, beforeEnter: connected },
