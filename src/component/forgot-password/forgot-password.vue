@@ -14,8 +14,6 @@
 					<h4>{{ $t('confirm') }}</h4>
 					<input v-model="password2" name="password2" type="password">
 					
-					<input name="login" value="{login}" type="hidden">
-					<input name="code" value="{code}" type="hidden">
 					<br>
 					<br>
 					<center>
