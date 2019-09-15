@@ -153,7 +153,7 @@
 						<div v-if="farmer" class="godfather grey">
 							<div v-if="farmer.godfather">
 								<i18n path="godson_of" tag="div">
-									<router-link :to="'/farmer/' + farmer.godfather.id" slot="farmer">{{ farmer.godfather.name }}</router-link>
+									<router-link slot="farmer" :to="'/farmer/' + farmer.godfather.id">{{ farmer.godfather.name }}</router-link>
 								</i18n>
 							</div>
 							<div v-if="farmer.godsons.length">
@@ -311,7 +311,7 @@
 					<div class="reason">{{ $t('moderation.reason_' + warning.reason) }} ({{ $t('warning_severity_s', [ warning.severity]) }})</div>
 					<div class="message">&nbsp;<i>{{ warning.message }}</i></div>
 					<i18n v-if="$store.getters.moderator" class="date" path="moderation.given_by_x_the_d">
-						<router-link :to="'/farmer/' + warning.author_id" slot="farmer">{{ warning.author_name }}</router-link>
+						<router-link slot="farmer" :to="'/farmer/' + warning.author_id">{{ warning.author_name }}</router-link>
 						<span slot="date">{{ warning.date | date }}</span>
 					</i18n>
 					<div v-else class="date">{{ warning.date | date }}</div>

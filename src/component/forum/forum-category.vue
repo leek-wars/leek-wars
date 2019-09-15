@@ -48,7 +48,7 @@
 							</span>
 							<div class="description grey">
 								<i18n path="by_x_the_d">
-									<router-link :to="'/farmer/' + topic.author.id" slot="farmer">{{ topic.author.name }}</router-link>
+									<router-link slot="farmer" :to="'/farmer/' + topic.author.id">{{ topic.author.name }}</router-link>
 									<span slot="date">{{ topic.date | date }}</span>
 								</i18n>
 							</div>
@@ -56,7 +56,7 @@
 								<span class="messages"><i class="material-icons">chat_bubble_outline</i> {{ topic.messages }} • </span>
 								<i18n v-if="LeekWars.mobile" tag="span" path="last_message">
 									<span slot="date">{{ LeekWars.formatDuration(topic.last_message_date) }}</span>
-									<router-link :to="'/forum/category-' + category.id + '/topic-' + topic.id + '/page-' + topic.last_message_page + '#message-' + topic.last_message_id" slot="farmer">
+									<router-link slot="farmer" :to="'/forum/category-' + category.id + '/topic-' + topic.id + '/page-' + topic.last_message_page + '#message-' + topic.last_message_id">
 										{{ topic.last_message_writer }} ►
 									</router-link>
 								</i18n>
