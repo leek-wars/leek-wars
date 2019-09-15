@@ -38,8 +38,13 @@
 				</panel>
 			</div>
 			<div class="column6">
-				<panel :title="$t('change_password')">
-					<form class="change-password" @submit="changePassword">
+				<panel :title="$t('account')">
+					<div v-ripple class="list-item card" @click="viewChangePassword = !viewChangePassword">
+						<i class="material-icons">lock_open</i>
+						<span class="label">{{ $t('change_password') }}</span>
+						<i class="material-icons">{{ viewChangePassword ? 'arrow_drop_down' : 'arrow_right' }}</i>
+					</div>
+					<form v-if="viewChangePassword" class="change-password" @submit="changePassword">
 						<h4>{{ $t('old_password') }}</h4>
 						<input v-model="password" name="password" type="password" required> <br>
 						<h4>{{ $t('new_password') }}</h4>
@@ -48,6 +53,19 @@
 						<input v-model="newPassword2" name="new_password2" type="password" required> <br>
 						<center><v-btn type="submit">{{ $t('change') }}</v-btn></center>
 					</form>
+					<div v-ripple class="list-item card" @click="view2FA = !view2FA">
+						<i class="material-icons">security</i>
+						<span class="label">Two factor authentication</span>
+						<i class="material-icons">{{ view2FA ? 'arrow_drop_down' : 'arrow_right' }}</i>
+					</div>
+					<two-factor v-if="view2FA" />
+
+					<div v-ripple class="list-item card" @click="viewDeleteAccount = !viewDeleteAccount">
+						<i class="material-icons">delete_forever</i>
+						<span class="label">{{ $t('delete_account') }}</span>
+						<i class="material-icons">{{ viewDeleteAccount ? 'arrow_drop_down' : 'arrow_right' }}</i>
+					</div>
+					<v-btn v-if="viewDeleteAccount" @click="deleteDialog = true">{{ $t('delete_account') }}</v-btn>
 				</panel>
 			</div>
 			<div class="column6">
@@ -79,16 +97,6 @@
 							</template>
 						</table>
 					</div>
-				</panel>
-			</div>
-			<div class="column6">
-				<panel :title="$t('delete_account')">
-					<v-btn @click="deleteDialog = true">{{ $t('delete_account') }}</v-btn>
-				</panel>
-			</div>
-			<div class="column6">
-				<panel title="Two factor authentication">
-					<two-factor />
 				</panel>
 			</div>
 		</div>
@@ -179,6 +187,9 @@
 		password: string = ''
 		newPassword1: string = ''
 		newPassword2: string = ''
+		viewChangePassword: boolean = false
+		viewDeleteAccount: boolean = false
+		view2FA: boolean = false
 
 		created() {
 			this.settings = {}
@@ -324,6 +335,30 @@
 			text-align: left;
 			padding: 2px;
 		}
+	}
+	.list-item {
+		text-align: left;
+		padding: 8px;
+		cursor: pointer;
+		background: white;
+		font-size: 16px;
+		margin-bottom: 10px;
+		display: flex;
+		align-items: center;
+		color: #555;
+		user-select: none;
+	}
+	.list-item:not(:first-child) {
+		margin-top: 10px;
+	}
+	.list-item:last-child {
+		margin-bottom: 0;
+	}
+	.list-item .label {
+		flex: 1;
+	}
+	.list-item i:first-child {
+		margin-right: 5px;
 	}
 	.change-password {
 		text-align: left;
