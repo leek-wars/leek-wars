@@ -252,6 +252,7 @@
 		}
 		beforeDestroy() {
 			this.game.pause()
+			this.game.cancelled = true
 			this.$root.$off('keyup', this.keyup)
 			this.$root.$off('resize')
 			if (this.timeout) { clearTimeout(this.timeout) }

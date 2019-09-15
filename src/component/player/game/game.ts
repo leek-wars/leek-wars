@@ -237,6 +237,7 @@ class Game {
 	public progressBarWidth: number = 0
 	public mouseOrigin: any
 	public selectedEntity: Entity | null = null
+	public cancelled: boolean = false
 
 	public maps: Map[] = [
 		new Nexus(this),
@@ -1539,6 +1540,7 @@ class Game {
 
 	public resourceLoaded(res: string) {
 		this.loadedData++
+		if (this.cancelled) { return }
 		// console.log("Resource loaded : " + res + " (" + this.loadedData + "/" + this.numData + ")")
 		if (this.loadedData === this.numData && this.initialized === true) {
 			this.launch() // Start game if all resources are loaded
