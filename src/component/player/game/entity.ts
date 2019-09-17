@@ -96,6 +96,7 @@ class Entity {
 	public frame: number
 	// Effects
 	public effects: {[key: number]: any} = {}
+	public launched_effects: {[key: number]: any} = {}
 	public jumpForce: number = 0
 	public bodyTexFront!: Texture
 	public bodyTexBack!: Texture
@@ -691,13 +692,17 @@ class Entity {
 			if (effect.effect === EffectType.RELATIVE_SHIELD || effect.effect === EffectType.DAMAGE_RETURN || effect.effect === EffectType.VULNERABILITY) {
 				effect_message = effect_message + '%'
 			}
+			let effect_duration = '' + effect.turns
 			const w = ctx.measureText(effect_message).width
+			const w2 = ctx.measureText(effect_duration).width
 			ctx.globalAlpha = 0.5
 			ctx.fillStyle = 'black'
 			ctx.fillRect(x + 1, 26 + 17, w + 2, 10)
+			ctx.fillRect(x + 19, 27.5, w2 + 2, 11)
 			ctx.globalAlpha = 1
 			ctx.fillStyle = 'white'
 			ctx.fillText(effect_message, x + 2, 26 + 23)
+			ctx.fillText(effect_duration, x + 20, 33)
 			x += 28
 		}
 		ctx.restore()

@@ -653,10 +653,20 @@ class Game {
 		case ActionType.LEEK_TURN: {
 			this.log(action)
 			this.currentPlayer = action.params[1]
+			const entity = this.leeks[action.params[1]]
 
 			if (typeof(action.params[2]) !== 'undefined' && typeof(action.params[3]) !== 'undefined') {
-				this.leeks[action.params[1]].tp = action.params[2]
-				this.leeks[action.params[1]].mp = action.params[3]
+				entity.tp = action.params[2]
+				entity.mp = action.params[3]
+			}
+
+			for (const effect_id in entity.launched_effects) {
+				const effect = entity.launched_effects[effect_id]
+				if (effect.turns === 1) {
+					delete entity.launched_effects[effect_id]
+				} else {
+					effect.turns--
+				}
 			}
 
 			if (!this.jumping) {
@@ -790,6 +800,7 @@ class Game {
 			if (entity.summon) {
 				this.entityOrder.splice(this.entityOrder.indexOf(entity), 1)
 			}
+			entity.launched_effects = {}
 			if (this.jumping) {
 				entity.dead = true
 				if (entity.drawID) {
@@ -912,14 +923,16 @@ class Game {
 	public addEffect(action: Action, object: any) {
 		const objectID = action.params[1]
 		const id = action.params[2]
-		const caster = action.params[3]
+		const caster_id = action.params[3]
 		const target = action.params[4]
 		const effect = action.params[5]
 		const value = action.params[6]
+		const turns = action.params[7]
+		const caster = this.leeks[caster_id]
 		const leek = this.leeks[target]
 
 		// Ajout de l'effet
-		this.effects[id] = {id, object: objectID, objectType: object, caster, target, effect, value}
+		this.effects[id] = {id, object: objectID, objectType: object, caster: caster_id, target, effect, value, turns}
 
 		// Ajout de l'image sur le hud
 		let image: string = ''
@@ -947,6 +960,7 @@ class Game {
 		this.effects[id].texture = new Image()
 		this.effects[id].texture.src = image
 		leek.effects[id] = this.effects[id]
+		caster.launched_effects[id] = this.effects[id]
 		
 		this.log(action)
 
