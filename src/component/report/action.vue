@@ -53,61 +53,75 @@
 			<b slot="value" class="color-life">{{ $t('fight.n_vita', [action.params[2]]) }}</b>
 		</i18n>
 		<template v-else-if="type === ActionType.ADD_CHIP_EFFECT || type === ActionType.ADD_WEAPON_EFFECT">
-			<i18n v-if="effect === EffectType.ABSOLUTE_SHIELD" path="fight.leek_win_x">
+			<i18n v-if="effect === EffectType.ABSOLUTE_SHIELD" path="fight.leek_win_x_turns">
 				<leek slot="leek" :leek="target" />
 				<b slot="value" class="color-resistance">{{ $t('fight.n_absolute_shield', [value]) }}</b>
+				<b slot="turns">{{ turns }}</b>
 			</i18n>
-			<i18n v-else-if="effect === EffectType.RELATIVE_SHIELD" path="fight.leek_win_x">
+			<i18n v-else-if="effect === EffectType.RELATIVE_SHIELD" path="fight.leek_win_x_turns">
 				<leek slot="leek" :leek="target" />
 				<b slot="value" class="color-resistance">{{ $t('fight.n_relative_shield', [value + '%']) }}</b>
+				<b slot="turns">{{ turns }}</b>
 			</i18n>
 			<i18n v-else-if="effect === EffectType.VULNERABILITY" path="fight.leek_receives_x">
 				<leek slot="leek" :leek="target" />
 				<b slot="value" class="color-resistance">{{ $t('fight.n_vulnerability', [value + '%']) }}</b>
+				<b slot="turns">{{ turns }}</b>
 			</i18n>
-			<i18n v-else-if="effect === EffectType.BUFF_AGILITY" path="fight.leek_win_x">
+			<i18n v-else-if="effect === EffectType.BUFF_AGILITY" path="fight.leek_win_x_turns">
 				<leek slot="leek" :leek="target" />
 				<b slot="value" class="color-agility">{{ $t('fight.n_agility', [value]) }}</b>
+				<b slot="turns">{{ turns }}</b>
 			</i18n>
-			<i18n v-else-if="effect === EffectType.BUFF_STRENGTH" path="fight.leek_win_x">
+			<i18n v-else-if="effect === EffectType.BUFF_STRENGTH" path="fight.leek_win_x_turns">
 				<leek slot="leek" :leek="target" />
 				<b slot="value" class="color-strength">{{ $t('fight.n_strength', [value]) }}</b>
+				<b slot="turns">{{ turns }}</b>
 			</i18n>
-			<i18n v-else-if="effect === EffectType.BUFF_RESISTANCE" path="fight.leek_win_x">
+			<i18n v-else-if="effect === EffectType.BUFF_RESISTANCE" path="fight.leek_win_x_turns">
 				<leek slot="leek" :leek="target" />
 				<b slot="value" class="color-resistance">{{ $t('fight.n_resistance', [value]) }}</b>
+				<b slot="turns">{{ turns }}</b>
 			</i18n>
-			<i18n v-else-if="effect === EffectType.BUFF_WISDOM" path="fight.leek_win_x">
+			<i18n v-else-if="effect === EffectType.BUFF_WISDOM" path="fight.leek_win_x_turns">
 				<leek slot="leek" :leek="target" />
 				<b slot="value" class="color-wisdom">{{ $t('fight.n_wisdom', [value]) }}</b>
+				<b slot="turns">{{ turns }}</b>
 			</i18n>
-			<i18n v-else-if="effect === EffectType.BUFF_MP" path="fight.leek_win_x">
+			<i18n v-else-if="effect === EffectType.BUFF_MP" path="fight.leek_win_x_turns">
 				<leek slot="leek" :leek="target" />
 				<b slot="value" class="color-mp">{{ $t('fight.n_mp', [value]) }}</b>
+				<b slot="turns">{{ turns }}</b>
 			</i18n>
-			<i18n v-else-if="effect === EffectType.BUFF_TP" path="fight.leek_win_x">
+			<i18n v-else-if="effect === EffectType.BUFF_TP" path="fight.leek_win_x_turns">
 				<leek slot="leek" :leek="target" />
 				<b slot="value" class="color-tp">{{ $t('fight.n_tp', [value]) }}</b>
+				<b slot="turns">{{ turns }}</b>
 			</i18n>
-			<i18n v-else-if="effect === EffectType.SHACKLE_TP" path="fight.leek_loose_x">
+			<i18n v-else-if="effect === EffectType.SHACKLE_TP" path="fight.leek_loose_x_turns">
 				<leek slot="leek" :leek="target" />
 				<b slot="value" class="color-tp">{{ $t('fight.n_tp', [value]) }}</b>
+				<b slot="turns">{{ turns }}</b>
 			</i18n>
-			<i18n v-else-if="effect === EffectType.SHACKLE_MP" path="fight.leek_loose_x">
+			<i18n v-else-if="effect === EffectType.SHACKLE_MP" path="fight.leek_loose_x_turns">
 				<leek slot="leek" :leek="target" />
 				<b slot="value" class="color-mp">{{ $t('fight.n_mp', [value]) }}</b>
+				<b slot="turns">{{ turns }}</b>
 			</i18n>
 			<i18n v-else-if="effect === EffectType.SHACKLE_STRENGTH" path="fight.leek_loose_x">
 				<leek slot="leek" :leek="target" />
 				<b slot="value" class="color-strength">{{ $t('fight.n_strength', [value]) }}</b>
+				<b slot="turns">{{ turns }}</b>
 			</i18n>
 			<i18n v-else-if="effect === EffectType.SHACKLE_MAGIC" path="fight.leek_loose_x">
 				<leek slot="leek" :leek="target" />
 				<b slot="value" class="color-magic">{{ $t('fight.n_magic', [value]) }}</b>
+				<b slot="turns">{{ turns }}</b>
 			</i18n>
-			<i18n v-else-if="effect === EffectType.DAMAGE_RETURN" path="fight.leek_win_x">
+			<i18n v-else-if="effect === EffectType.DAMAGE_RETURN" path="fight.leek_win_x_turns">
 				<leek slot="leek" :leek="target" />
 				<b slot="value">{{ $t('fight.n_damage_return', [value + '%']) }}</b>
+				<b slot="turns">{{ turns }}</b>
 			</i18n>
 		</template>
 		<i18n v-else-if="type === ActionType.SAY" tag="div" path="fight.leek_speak">
@@ -154,6 +168,7 @@
 		get target() { return this.leeks[this.action.params[4]] }
 		get effect() { return this.action.params[5] }
 		get value() { return this.action.params[6] }
+		get turns() { return this.action.params[7] }
 		logClass(log: any[]) {
 			if (log[1] === 2) { return "warning" }
 			else if (log[1] === 3) { return "error" }
