@@ -269,65 +269,57 @@
 
 		<report-dialog v-if="team" v-model="reportDialog" :name="team.name" :target="0" :reasons="reasons" :parameter="team.id" />
 
-		<v-dialog v-model="createCompoDialog" :max-width="500">
-			<div class="title">{{ $t('create_composition') }}</div>
-			<div class="content">
-				<h4>{{ $t('compo_name') }}</h4>
-				<input v-model="createCompoName" type="text" @keyup.enter="createComposition">
-			</div>
-			<div class="actions">
+		<popup v-model="createCompoDialog" :width="500">
+			<span slot="title">{{ $t('create_composition') }}</span>
+			<h4>{{ $t('compo_name') }}</h4>
+			<input v-model="createCompoName" type="text" @keyup.enter="createComposition">
+			<div slot="actions">
 				<div @click="createCompoDialog = false">{{ $t('compo_cancel') }}</div>
 				<div class="green" @click="createComposition">{{ $t('compo_create') }}</div>
 			</div>
-		</v-dialog>
+		</popup>
 
-		<v-dialog v-if="team" v-model="deleteCompoDialog" :max-width="600">
-			<div v-if="compositionToDelete" class="title">{{ $t('delete_compo_confirm_title', [compositionToDelete.name]) }}</div>
-			<div v-if="compositionToDelete" class="content">
+		<popup v-if="team" v-model="deleteCompoDialog" :width="600">
+			<span v-if="compositionToDelete" slot="title">{{ $t('delete_compo_confirm_title', [compositionToDelete.name]) }}</span>
+			<div v-if="compositionToDelete">
 				{{ $t('delete_compo_confirm', [compositionToDelete.name]) }}
 			</div>
-			<div class="actions">
+			<div slot="actions">
 				<div @click="deleteCompoDialog = false">{{ $t('delete_cancel') }}</div>
 				<div class="red" @click="deleteComposition(compositionToDelete)">{{ $t('delete_confirm') }}</div>
 			</div>
-		</v-dialog>
+		</popup>
 
-		<v-dialog v-if="team" v-model="quitTeamDialog" :max-width="500">
-			<div class="title">{{ $t('quit_team_confirm_title', [team.name]) }}</div>
-			<div class="content">
-				{{ $t('quit_team_confirm') }}
-			</div>
-			<div class="actions">
+		<popup v-if="team" v-model="quitTeamDialog" :width="500">
+			<span slot="title">{{ $t('quit_team_confirm_title', [team.name]) }}</span>
+			{{ $t('quit_team_confirm') }}
+			<div slot="actions">
 				<div @click="quitTeamDialog = false">{{ $t('quit_cancel') }}</div>
 				<div class="red" @click="quitTeam">{{ $t('quit_confirm') }}</div>
 			</div>
-		</v-dialog>
+		</popup>
 
-		<v-dialog v-if="team" v-model="dissolveDialog" :max-width="500">
-			<div class="title">{{ $t('disolve_confirm_title', [team.name]) }}</div>
-			<div class="content">
-				{{ $t('disolve_confirm') }}
-			</div>
-			<div class="actions">
+		<popup v-if="team" v-model="dissolveDialog" :width="500">
+			<span slot="title">{{ $t('disolve_confirm_title', [team.name]) }}</span>
+			{{ $t('disolve_confirm') }}
+			<div slot="actions">
 				<div @click="dissolveDialog = false">{{ $t('disolve_cancel') }}</div>
 				<div class="red" @click="dissolveTeam">{{ $t('disolve_disolve') }}</div>
 			</div>
-		</v-dialog>
+		</popup>
 
-		<v-dialog v-if="banMemberTarget" v-model="banDialog" :max-width="500">
-			<div class="title">{{ $t('ban_confirm_title', [banMemberTarget.name]) }}</div>
-			<div class="content">
-				{{ $t('ban_confirm', [banMemberTarget.name]) }}
-			</div>
-			<div class="actions">
+		<popup v-if="banMemberTarget" v-model="banDialog" :width="500">
+			<span slot="title">{{ $t('ban_confirm_title', [banMemberTarget.name]) }}</span>
+			{{ $t('ban_confirm', [banMemberTarget.name]) }}
+			<div slot="actions">
 				<div @click="banDialog = false">{{ $t('ban_cancel') }}</div>
 				<div class="red" @click="banMember">{{ $t('ban_ban') }}</div>
 			</div>
-		</v-dialog>
+		</popup>
 
-		<v-dialog v-if="team" v-model="changeOwnerDialog" :max-width="650">
-			<div class="title">{{ $t('change_owner_confirm_title') }}</div>
-			<div class="content change_owner_popup">
+		<popup v-if="team" v-model="changeOwnerDialog" :width="650">
+			<span slot="title">{{ $t('change_owner_confirm_title') }}</span>
+			<div class="change_owner_popup">
 				{{ $t('change_owner_select') }}
 				<br>
 				<div v-for="member in team.members" :key="member.id" :class="{selected: member === changeOwnerSelected}" class="farmer" @click="changeOwnerSelected = member">
@@ -345,28 +337,26 @@
 					</div>
 				</div>
 			</div>
-			<div class="actions">
+			<div slot="actions">
 				<div @click="changeOwnerDialog = false">{{ $t('change_owner_cancel') }}</div>
 				<div class="green" @click="changeOwnerSelect(changeOwnerSelected)">{{ $t('change_owner_change') }}</div>
 			</div>
-		</v-dialog>
+		</popup>
 
-		<v-dialog v-if="changeOwnerSelected" v-model="changeOwnerConfirmDialog" :max-width="500">
-			<div class="title">{{ $t('change_owner_confirm_title') }}</div>
-			<div class="content">
-				<i18n path="change_owner_confirm">
-					<b slot="farmer">{{ changeOwnerSelected.name }}</b>
-				</i18n>
-				<br><br>
-				{{ $t('enter_password_to_confirm') }}
-				<br><br>
-				<input v-model="changeOwnerPassword" type="password">
-			</div>
-			<div class="actions">
+		<popup v-if="changeOwnerSelected" v-model="changeOwnerConfirmDialog" :width="500">
+			<span slot="title">{{ $t('change_owner_confirm_title') }}</span>
+			<i18n path="change_owner_confirm">
+				<b slot="farmer">{{ changeOwnerSelected.name }}</b>
+			</i18n>
+			<br><br>
+			{{ $t('enter_password_to_confirm') }}
+			<br><br>
+			<input v-model="changeOwnerPassword" type="password">
+			<div slot="actions">
 				<div @click="changeOwnerConfirmDialog = false">{{ $t('change_owner_cancel') }}</div>
 				<div class="green" @click="changeOwner">{{ $t('change_owner_change') }}</div>
 			</div>
-		</v-dialog>
+		</popup>
 	</div>
 </template>
 

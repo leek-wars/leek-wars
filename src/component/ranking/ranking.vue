@@ -159,22 +159,20 @@
 			</div>
 		</panel>
 
-		<v-dialog v-model="searchDialog" :max-width="500">
-			<div class="title">{{ $t('search_in_ranking') }}</div>
-			<div class="content">
-				<input ref="search" :placeholder="$t('search_name')" v-model="searchQuery" class="query" type="text">
-				<div class="flex">
-					<v-checkbox :label="$t('leeks')" v-model="searchLeeks" hide-details />
-					<v-checkbox :label="$t('farmers')" v-model="searchFarmers" hide-details />
-					<v-checkbox :label="$t('teams')" v-model="searchTeams" hide-details />
-				</div>
-				<br>
-				<loader v-if="!searchResults && searchQuery.length" />
-				<h4 v-if="searchResults">{{ $t('results') }}</h4>
-				<div v-if="searchResults && searchResults.length === 0" class="center">{{ $t('no_results') }}</div>
-				<ranking-search-result v-for="result in searchResults" :key="result.id" :result="result" @gotoresult="goToRanking($event.type, $event.id)" />
+		<popup v-model="searchDialog" :width="500">
+			<span slot="title">{{ $t('search_in_ranking') }}</span>
+			<input ref="search" :placeholder="$t('search_name')" v-model="searchQuery" class="query" type="text">
+			<div class="flex">
+				<v-checkbox :label="$t('leeks')" v-model="searchLeeks" hide-details />
+				<v-checkbox :label="$t('farmers')" v-model="searchFarmers" hide-details />
+				<v-checkbox :label="$t('teams')" v-model="searchTeams" hide-details />
 			</div>
-		</v-dialog>
+			<br>
+			<loader v-if="!searchResults && searchQuery.length" />
+			<h4 v-if="searchResults">{{ $t('results') }}</h4>
+			<div v-if="searchResults && searchResults.length === 0" class="center">{{ $t('no_results') }}</div>
+			<ranking-search-result v-for="result in searchResults" :key="result.id" :result="result" @gotoresult="goToRanking($event.type, $event.id)" />
+		</popup>
 	</div>
 </template>
 

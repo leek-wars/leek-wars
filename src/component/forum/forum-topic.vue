@@ -137,23 +137,23 @@
 			</div>
 		</panel>
 
-		<v-dialog v-model="deleteMessageDialog" :max-width="600">
-			<div class="title">{{ $t('do_you_want_to_delete_message') }}</div>
-			<div class="content">{{ $t('undoable_action') }}</div>
-			<div class="actions">
+		<popup v-model="deleteMessageDialog" :width="600">
+			<span slot="title">{{ $t('do_you_want_to_delete_message') }}</span>
+			{{ $t('undoable_action') }}
+			<div slot="actions">
 				<div @click="deleteMessageDialog = false">{{ $t('cancel') }}</div>
 				<div class="red" @click="deleteMessage">{{ $t('delete') }}</div>
 			</div>
-		</v-dialog>
+		</popup>
 
-		<v-dialog v-model="deleteTopicDialog" :max-width="600">
-			<div class="title">{{ $t('do_you_want_to_delete_topic') }}</div>
-			<div class="content">{{ $t('undoable_action') }}</div>
-			<div class="actions">
+		<popup v-model="deleteTopicDialog" :width="600">
+			<span slot="title">{{ $t('do_you_want_to_delete_topic') }}</span>
+			{{ $t('undoable_action') }}
+			<div slot="actions">
 				<div @click="deleteTopicDialog = false">{{ $t('cancel') }}</div>
 				<div class="red" @click="deleteTopic">{{ $t('delete') }}</div>
 			</div>
-		</v-dialog>
+		</popup>
 	</div>
 </template>
 

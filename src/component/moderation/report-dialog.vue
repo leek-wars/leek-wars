@@ -1,7 +1,7 @@
 <template>
-	<v-dialog :value="value" :max-width="500" @input="$emit('input', $event)">
-		<div class="title">{{ title }}</div>
-		<div class="content report-popup">
+	<popup :value="value" :width="500" @input="$emit('input', $event)">
+		<span slot="title">{{ title }}</span>
+		<div class="report-popup">
 			<h3>{{ message }}</h3>
 			<br>
 			<v-radio-group v-model="selectedReason" :mandatory="false">
@@ -11,11 +11,11 @@
 			<br>
 			<textarea v-model="additionalMessage" class="report-message"></textarea>
 		</div>
-		<div class="actions">
+		<div slot="actions">
 			<div class="dismiss" @click="close">{{ $t('moderation.cancel') }}</div>
 			<div class="report-validate red" @click="report">{{ $t('moderation.report') }}</div>
 		</div>
-	</v-dialog>
+	</popup>
 </template>
 
 <script lang="ts">

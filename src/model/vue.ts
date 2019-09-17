@@ -20,6 +20,7 @@ import ConversationElement from '@/component/messages/conversation.vue'
 import ReportDialog from '@/component/moderation/report-dialog.vue'
 import NotificationElement from '@/component/notification/notification.vue'
 import Pagination from '@/component/pagination.vue'
+import Popup from '@/component/popup.vue'
 import Talent from '@/component/talent.vue'
 import { i18n, loadInstanceTranslations } from '@/model/i18n'
 import { LeekWars } from '@/model/leekwars'
@@ -92,6 +93,7 @@ Vue.component('ai', AIElement)
 Vue.component('not-found', NotFound)
 Vue.component('markdown', Markdown)
 Vue.component('panel', Panel)
+Vue.component('popup', Popup)
 
 Vue.directive('autostopscroll', {
 	inserted: (el, binding) => {

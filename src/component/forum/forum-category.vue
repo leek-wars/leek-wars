@@ -78,22 +78,20 @@
 			</div>
 		</panel>
 
-		<v-dialog v-model="createDialog" :max-width="800">
-			<div class="title">
-				{{ $t('create_topic') }}
-			</div>
-			<div class="content create-popup">
+		<popup v-model="createDialog" :width="800">
+			<span slot="title">{{ $t('create_topic') }}</span>
+			<div class="create-popup">
 				<h3>{{ $t('new_topic_title') }}</h3>
 				<input v-model="createTitle" class="topic-name card" type="text">
 				<h3>{{ $t('new_topic_message') }}</h3>
 				<textarea v-model="createMessage" class="topic-message card"></textarea>
 				<formatting-rules />
 			</div>
-			<div class="actions">
+			<div slot="actions">
 				<div class="action" @click="createDialog = false">{{ $t('cancel') }}</div>
 				<div class="action green" @click="create">{{ $t('create_topic') }}</div>
 			</div>
-		</v-dialog>
+		</popup>
 	</div>
 </template>
 

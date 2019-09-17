@@ -55,14 +55,14 @@
 			</div>
 		</div>
 
-		<v-dialog v-model="twoFactorConfirmDialog" max-width="750">
-			<div class="title">Enter your password to validate</div>
-			<div class="content">Password : <input id="two-factor-confirm-password" type="password"></div>
-			<div class="actions">
+		<popup v-model="twoFactorConfirmDialog" :width="750">
+			<span slot="title">Enter your password to validate</span>
+			Password : <input id="two-factor-confirm-password" type="password">
+			<div slot="actions">
 				<div class="action dismiss">Cancel</div>
 				<div class="action green">Validate</div>
 			</div>
-		</v-dialog>
+		</popup>
 	</div>
 </template>
 

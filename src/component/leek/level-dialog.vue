@@ -1,8 +1,8 @@
 <template>
-	<v-dialog :value="value" :max-width="700" @input="$emit('input', $event)">
-		<div class="title" v-html="$t('leek.level_popup_title', [leek.name, data.level])"></div>
+	<popup :value="value" :width="700" @input="$emit('input', $event)">
+		<span slot="title" v-html="$t('leek.level_popup_title', [leek.name, data.level])"></span>
 
-		<div class="content level-popup">
+		<div class="level-popup">
 			<div v-if="leek.level == 301">
 				<h2>{{ $t('leek.popup_level_301_title') }}</h2>
 				<br>
@@ -62,10 +62,10 @@
 				</template>
 			</div>
 		</div>
-		<div class="actions">
+		<div slot="actions">
 			<div class="action" @click="$emit('input', false)">{{ $t('leek.ok') }}</div>
 		</div>
-	</v-dialog>
+	</popup>
 </template>
 
 <script lang="ts">

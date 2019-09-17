@@ -107,9 +107,9 @@
 			</div>
 		</div>
 
-		<v-dialog v-model="buyDialog" max-width="600">
-			<div class="title">{{ $t('confirm_purchase') }}</div>
-			<div v-if="selectedItem && $store.state.farmer" class="content">
+		<popup v-model="buyDialog" :width="600">
+			<span slot="title">{{ $t('confirm_purchase') }}</span>
+			<div v-if="selectedItem && $store.state.farmer">
 				<i18n tag="div" path="are_you_sure_you_want_to_buy">
 					<b slot="item">{{ translateName(selectedItem) }}</b>
 				</i18n>
@@ -120,15 +120,15 @@
 				<br>
 				<b>{{ $t('habs_after_purchase') }}</b> : {{ $store.state.farmer.habs - selectedItem.price_habs | number }} <span class="hab"></span>
 			</div>
-			<div class="actions">
+			<div slot="actions">
 				<div @click="buyDialog = false">{{ $t('cancel') }}</div>
 				<div class="buy green" @click="buy('habs')">{{ $t('buy') }}</div>
 			</div>
-		</v-dialog>
+		</popup>
 
-		<v-dialog v-model="buyCrystalsDialog" max-width="600">
-			<div class="title">{{ $t('confirm_purchase') }}</div>
-			<div v-if="selectedItem && $store.state.farmer" class="content">
+		<popup v-model="buyCrystalsDialog" :width="600">
+			<span slot="title">{{ $t('confirm_purchase') }}</span>
+			<div v-if="selectedItem && $store.state.farmer">
 				<i18n tag="div" path="are_you_sure_you_want_to_buy">
 					<b slot="item">{{ translateName(selectedItem) }}</b>
 				</i18n>
@@ -139,15 +139,15 @@
 				<br>
 				<b>{{ $t('crystals_after_purchase') }}</b> : {{ $store.state.farmer.crystals - selectedItem.price_crystals | number }} <span class="crystal"></span>
 			</div>
-			<div class="actions">
+			<div slot="actions">
 				<div @click="buyCrystalsDialog = false">{{ $t('cancel') }}</div>
 				<div class="buy green" @click="buy('crystals')">{{ $t('buy') }}</div>
 			</div>
-		</v-dialog>
+		</popup>
 		
-		<v-dialog v-model="sellDialog" max-width="600">
-			<div class="title">{{ $t('confirm_sell') }}</div>
-			<div v-if="selectedItem && $store.state.farmer" class="content">
+		<popup v-model="sellDialog" :width="600">
+			<span slot="title">{{ $t('confirm_sell') }}</span>
+			<div v-if="selectedItem && $store.state.farmer">
 				<i18n tag="div" path="are_you_sure_you_want_to_sell">
 					<b slot="item">{{ translateName(selectedItem) }}</b>
 				</i18n>
@@ -158,11 +158,11 @@
 				<br>
 				<b>{{ $t('habs_after_sell') }}</b> : {{ $store.state.farmer.habs + selectedItem.sell_price | number }} <span class="hab"></span>
 			</div>
-			<div class="actions">
+			<div slot="actions">
 				<div @click="sellDialog = false">{{ $t('cancel') }}</div>
 				<div class="sell green" @click="sell">{{ $t('sell') }}</div>
 			</div>
-		</v-dialog>
+		</popup>
 	</div>
 </template>
 

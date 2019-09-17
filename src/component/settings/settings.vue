@@ -128,39 +128,36 @@
 			<div class="column6"></div>
 		</div>
 
-		<v-dialog v-model="deleteDialog" max-width="600">
-			<div class="title">{{ $t('delete_account') }}</div>
-			<div class="content">
-				<div v-html="$t('delete_message')"></div>
-				<br>
-				<v-switch v-model="deleteForumMessages" :label="$t('delete_forum_messages')" hide-details />
-			</div>
-			<div class="actions">
+		<popup v-model="deleteDialog" :width="600">
+			<span slot="title">{{ $t('delete_account') }}</span>
+			<div v-html="$t('delete_message')"></div>
+			<br>
+			<v-switch v-model="deleteForumMessages" :label="$t('delete_forum_messages')" hide-details />
+			<div slot="actions">
 				<div class="action dismiss" @click="deleteDialog = false">{{ $t('delete_cancel') }}</div>
 				<div class="action red" @click="deleteAccountConfirm">{{ $t('delete_confirm') }}</div>
 			</div>
-		</v-dialog>
+		</popup>
 
-		<v-dialog v-model="deleteConfirmDialog" max-width="600">
-			<div class="title">{{ $t('delete_confirmation') }}</div>
-			<div class="content">{{ $t('delete_confirmation_password') }} : <br><br>
-				{{ $t('delete_password') }} : <input v-model="deleteConfirmPassword" type="password">
-			</div>
-			<div class="actions">
+		<popup v-model="deleteConfirmDialog" :width="600">
+			<span slot="title">{{ $t('delete_confirmation') }}</span>
+			{{ $t('delete_confirmation_password') }} : <br><br>
+			{{ $t('delete_password') }} : <input v-model="deleteConfirmPassword" type="password">
+			<div slot="actions">
 				<div class="action dismiss" @click="deleteConfirmDialog = false">{{ $t('delete_cancel') }}</div>
 				<div class="action red" @click="deleteAccountFinal">{{ $t('delete_finalize') }}</div>
 			</div>
-		</v-dialog>
+		</popup>
 
-		<v-dialog v-model="deleteSuccessDialog" max-width="600">
-			<div class="title">{{ $t('delete_success') }}</div>
-			<div class="content">{{ $t('delete_success_message') }}</div>
-		</v-dialog>
+		<popup v-model="deleteSuccessDialog" :width="600">
+			<span slot="title">{{ $t('delete_success') }}</span>
+			{{ $t('delete_success_message') }}
+		</popup>
 
-		<v-dialog v-model="deleteFailedDialog" max-width="600">
-			<div class="title">{{ $t('delete_failed') }}</div>
-			<div class="content">{{ $t('farmer.' + deleteFailedError) }}</div>
-		</v-dialog>
+		<popup v-model="deleteFailedDialog" :width="600">
+			<span slot="title">{{ $t('delete_failed') }}</span>
+			{{ $t('farmer.' + deleteFailedError) }}
+		</popup>
 	</div>
 </template>
 

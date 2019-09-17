@@ -54,21 +54,21 @@
 
 		<didactitiel v-model="didactitiel" />
 
-		<v-dialog v-model="changelogDialog" :max-width="800">
-			<i18n tag="div" path="changelog.version_online" class="title">
+		<popup v-model="changelogDialog" :width="800">
+			<i18n slot="title" path="changelog.version_online">
 				<b v-if="changelog" slot="version">{{ changelog.version_name }}</b>
 			</i18n>
-			<div v-if="changelog" class="content changelog-dialog">
+			<div v-if="changelog" class="changelog-dialog">
 				<div v-for="change in changelogFormat($t('changelog.' + changelog.data))" :key="change" class="change">➤ {{ change }}</div>
 				<br>
 				<i18n path="changelog.see_all_changes">
 					<router-link slot="changelog" to="/changelog">changelog</router-link>
 				</i18n>
 			</div>
-			<div class="actions">
+			<div slot="actions">
 				<div @click="changelogDialog = false">{{ $t('changelog.popup_ok') }}</div>
 			</div>
-		</v-dialog>
+		</popup>
 	</div>
 </template>
 
