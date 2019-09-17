@@ -717,6 +717,12 @@
 	.website-dialog input, .github-dialog input {
 		width: calc(100% - 10px);
 	}
+	.team {
+		height: 100%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
 	.team img {
 		width: 150px;
 		height: 150px;
