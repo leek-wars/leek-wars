@@ -44,7 +44,7 @@
 	"n_life": "{0} HP",
 	"n_magic": "{0} magic",
 	"n_mp": "{0} MP",
-	"n_views": "{0} views",
+	"n_views": "no view | 1 view | {n} views",
 	"no_data_received": "No data received",
 	"not_found": "Fight not found :(",
 	"not_found_id": "Fight with id <b>{0}</b> not found :(",
