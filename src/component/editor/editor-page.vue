@@ -364,8 +364,10 @@
 				const lastCode = localStorage.getItem('editor/last_code')
 				if (lastCode && lastCode in this.ais) {
 					this.$router.replace('/editor/' + localStorage.getItem('editor/last_code'))
-				} else {
+				} else if (LeekWars.objectSize(this.ais) > 0) {
 					this.$router.replace('/editor/' + LeekWars.firstKey(this.ais))
+				} else {
+					this.$router.replace('/editor/0') // Go to root folder to be able to create a new AI
 				}
 			} else {
 				LeekWars.splitShowList()
