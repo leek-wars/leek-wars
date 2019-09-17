@@ -1,5 +1,5 @@
 <template>
-	<popup :value="value" :width="1024" @input="$emit('input', $event)" :full="true">
+	<popup :value="value" :width="1024" :full="true" @input="$emit('input', $event)">
 		<span slot="title">{{ $t('editor.run_test') }}</span>
 		<v-tabs :key="value" class="tabs" grow>
 			<v-tabs-slider class="indicator" />
