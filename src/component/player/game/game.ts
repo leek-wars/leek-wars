@@ -211,6 +211,8 @@ class Game {
 	public mouseCell: number | undefined = 0
 	public mouseCellX: number = 0
 	public mouseCellY: number = 0
+	public mouseRealX: number = 0
+	public mouseRealY: number = 0
 	// Settings
 	public large = true
 	public debug = false
@@ -1175,9 +1177,11 @@ class Game {
 			this.mouseTileY = cy
 			this.mouseCell = this.ground.xyToCell(cx, cy)
 			const cell = this.ground.cellToXY(this.mouseCell)
+			this.mouseCellX = cell.x
+			this.mouseCellY = cell.y
 			const pos = this.ground.xyToXYPixels(cell.x, cell.y)
-			this.mouseCellX = pos.x * this.ground.scale
-			this.mouseCellY = pos.y * this.ground.scale
+			this.mouseRealX = pos.x * this.ground.scale
+			this.mouseRealY = pos.y * this.ground.scale
 		} else {
 			this.mouseTileX = undefined
 			this.mouseTileY = undefined
@@ -1452,13 +1456,17 @@ class Game {
 
 		// Life bars
 		let selected_entity: Entity | null = null
+		if (this.mouseCell !== undefined) {
+			for (const entity of this.leeks) {
+				if (entity.cell === this.mouseCell) {
+					selected_entity = entity
+				}
+			}
+		}
 		for (const entity of this.leeks) {
 			if (entity.isDead() || !entity.active) { continue }
-			if (this.showLifes || this.mouseCell === entity.cell || this.mouseCell === entity.cell - 35 || this.mouseCell === entity.cell - 17 || this.mouseCell === entity.cell - 18) {
+			if ((this.showLifes && (selected_entity == null || this.distance2(entity.x, entity.y, this.mouseTileX!, this.mouseTileY!) > 8)) || this.mouseCell === entity.cell) {
 				entity.drawName(this.ctx)
-			}
-			if (this.mouseCell === entity.cell) {
-				selected_entity = entity
 			}
 		}
 		if (this.selectedEntity !== selected_entity) {
@@ -1480,6 +1488,10 @@ class Game {
 		this.ground.endDraw(this.ctx)
 	}
 
+	public distance2(x1: number, y1: number, x2: number, y2: number) {
+		return Math.abs(x1 - x2) + Math.abs(y1 - y2)
+	}
+
 	public drawPointerCell() {
 		if (this.mouseCell === undefined) { return }
 		this.ctx.save()
@@ -1487,8 +1499,8 @@ class Game {
 		this.ctx.beginPath()
 		const dx = this.ground.tileSizeX
 		const dy = this.ground.tileSizeY
-		const x = this.mouseCellX!
-		const y = this.mouseCellY!
+		const x = this.mouseRealX!
+		const y = this.mouseRealY!
 		this.ctx.moveTo(x, y - dy / 2)
 		this.ctx.lineTo(x + dx / 2, y)
 		this.ctx.lineTo(x, y + dy / 2)
