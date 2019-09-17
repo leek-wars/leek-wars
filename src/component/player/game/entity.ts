@@ -692,7 +692,7 @@ class Entity {
 			if (effect.effect === EffectType.RELATIVE_SHIELD || effect.effect === EffectType.DAMAGE_RETURN || effect.effect === EffectType.VULNERABILITY) {
 				effect_message = effect_message + '%'
 			}
-			let effect_duration = '' + effect.turns
+			const effect_duration = '' + effect.turns
 			const w = ctx.measureText(effect_message).width
 			const w2 = ctx.measureText(effect_duration).width
 			ctx.globalAlpha = 0.5
