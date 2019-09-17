@@ -1,5 +1,5 @@
 <template>
-	<popup :value="value" :width="800" persistent @input="$emit('input', $event)" :full="true">
+	<popup :value="value" :width="800" :full="true" persistent @input="$emit('input', $event)">
 		<span slot="title">{{ $t("title") }}</span>
 
 		<div ref="content" :style="{height: height + 'px'}" class="content">

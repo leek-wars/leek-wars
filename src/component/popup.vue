@@ -1,5 +1,5 @@
 <template lang="html">
-	<v-dialog :value="value" :max-width="width" @input="$emit('input', $event)" :persistent="persistent">
+	<v-dialog :value="value" :max-width="width" :persistent="persistent" @input="$emit('input', $event)">
 		<div class="title">
 			<slot name="title"></slot>
 			<div class="options">
@@ -8,7 +8,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="content" :class="{full: full}">
+		<div :class="{full: full}" class="content">
 			<slot></slot>
 		</div>
 		<div v-if="!!$slots['actions']" class="actions">
