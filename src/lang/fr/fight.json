@@ -44,7 +44,7 @@
 	"n_life": "{0} PV",
 	"n_magic": "{0} magie",
 	"n_mp": "{0} PM",
-	"n_views": "{0} vues",
+	"n_views": "pas de vue | 1 vue | {n} vues",
 	"no_data_received": "Aucune donnée reçue",
 	"not_found": "Combat introuvable :(",
 	"not_found_id": "Combat d'id <b>{0}</b> introuvable :(",

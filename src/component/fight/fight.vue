@@ -50,7 +50,7 @@
 	
 		<panel v-if="fight" :title="$t('comments')">
 			<div slot="actions" class="views-counter">
-				{{ $t('n_views', [fight.views]) }}
+				{{ $tc('n_views', fight.views) }}
 			</div>
 			<comments :comments="fight.comments" @comment="comment" />
 		</panel>
