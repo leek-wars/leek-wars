@@ -144,7 +144,7 @@
 
 		<popup v-model="deleteDialog" :width="500">
 			<span v-if="currentType === 'ai' && currentAI" slot="title">{{ $t('delete_ai', [currentAI.name]) }}</span>
-			<span v-else-if="currentFolder" class="title">{{ $t('delete_folder', [currentFolder.name]) }}</span>
+			<span v-else-if="currentFolder" slot="title">{{ $t('delete_folder', [currentFolder.name]) }}</span>
 			{{ $t('delete_warning') }}
 			<div slot="actions">
 				<div @click="deleteDialog = false">{{ $t('delete_cancel') }}</div>
