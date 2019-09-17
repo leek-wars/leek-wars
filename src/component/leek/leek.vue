@@ -297,12 +297,12 @@
 			</div>
 		</div>
 
-		<v-dialog v-if="leek" v-model="weaponsDialog" max-width="800">
-			<div class="title">
+		<popup v-if="leek" v-model="weaponsDialog" :width="800">
+			<template slot="title">
 				{{ $t('weapons_of', [leek.name]) }}
 				<span class="weapon-count">[{{ leek.weapons.length }}/{{ leek.max_weapons }}]</span>
-			</div>
-			<div class="content weapons-popup">
+			</template>
+			<div class="weapons-popup">
 				<div :class="{dashed: draggedWeapon && draggedWeaponLocation === 'farmer'}" class="leek-weapons" @dragover="dragOver" @drop="weaponsDrop('leek', $event)">
 					<v-tooltip v-for="(weapon, i) in leek.orderedWeapons" :key="i" :open-delay="0" :close-delay="0" bottom>
 						<div slot="activator" :class="{dragging: draggedWeapon && draggedWeapon.template === weapon.template && draggedWeaponLocation === 'leek'}" class="weapon" draggable="true" @dragstart="weaponDragStart('leek', weapon, $event)" @dragend="weaponDragEnd(weapon)" @click="removeWeapon(weapon)">
@@ -325,34 +325,29 @@
 					</v-tooltip>
 				</div>
 			</div>
-		</v-dialog>
+		</popup>
 
-		<v-dialog v-if="leek" v-model="renameDialog" max-width="600">
-			<div class="title">{{ $t('rename_leek') }}</div>
-			<div class="content">
-				{{ $t('rename_description') }}
-				<br>
-				<br>
-				{{ $t('rename_new_name') }} : <input v-model="renameName" type="text">
-				<br>
-				<br>
-				<center>
-					<v-btn @click="rename('habs')">{{ $t('rename_pay_habs') }} :&nbsp;<b>{{ rename_price_habs }}</b> &nbsp;<img src="/image/hab.png"></v-btn>
-					&nbsp;
-					<v-btn @click="rename('crystals')">{{ $t('rename_pay_crystals') }} :&nbsp;<b>{{ rename_price_crystals }}</b> &nbsp;<img src="/image/crystal.png"></v-btn>
-				</center>
-			</div>
-			<div class="actions">
-				<div class="action" @click="renameDialog = false">{{ $t('cancel') }}</div>
-			</div>
-		</v-dialog>
+		<popup v-if="leek" v-model="renameDialog" :width="600">
+			<template slot="title">{{ $t('rename_leek') }}</template>
+			{{ $t('rename_description') }}
+			<br>
+			<br>
+			{{ $t('rename_new_name') }} : <input v-model="renameName" type="text">
+			<br>
+			<br>
+			<center>
+				<v-btn @click="rename('habs')">{{ $t('rename_pay_habs') }} :&nbsp;<b>{{ rename_price_habs }}</b> &nbsp;<img src="/image/hab.png"></v-btn>
+				&nbsp;
+				<v-btn @click="rename('crystals')">{{ $t('rename_pay_crystals') }} :&nbsp;<b>{{ rename_price_crystals }}</b> &nbsp;<img src="/image/crystal.png"></v-btn>
+			</center>
+		</popup>
 
 		<v-snackbar v-model="renameSuccess" :timeout="2000" color="success">{{ $t('rename_done') }}</v-snackbar>
 		<v-snackbar v-if="renameError" v-model="renameFailed" :timeout="5000" color="error">{{ $t(renameError.error, renameError.error_params) }}</v-snackbar>
 
-		<v-dialog v-if="leek && my_leek" v-model="potionDialog" max-width="750">
-			<div class="title">{{ $t("use_a_potion", [leek.name]) }}</div>
-			<div class="content farmer-potions">
+		<popup v-if="leek && my_leek" v-model="potionDialog" :width="750">
+			<span slot="title">{{ $t("use_a_potion", [leek.name]) }}</span>
+			<div class="farmer-potions">
 				<v-tooltip v-for="(potion, id) in $store.state.farmer.potions" :key="id" :open-delay="0" :close-delay="0" bottom>
 					<div slot="activator" :quantity="potion.quantity" class="potion" @click="usePotion(potion)">
 						<img :src="'/image/potion/' + LeekWars.potions[potion.template].name + '.png'">
@@ -364,17 +359,13 @@
 				<br><br>
 				<center>({{ $t('click_to_use') }})</center>
 			</div>
-			<div class="actions">
-				<div class="action" @click="potionDialog = false">{{ $t('cancel') }}</div>
-			</div>
-		</v-dialog>
+		</popup>
 
 		<report-dialog v-if="leek" v-model="reportDialog" :name="leek.farmer.name" :target="leek.farmer.id" :reasons="reasons" :parameter="leek.id" />
 
-		<v-dialog v-model="hatDialog" :max-width="700">
-			<div class="title">{{ $t('select_a_hat') }}</div>
-
-			<div class="content hat-dialog">
+		<popup v-model="hatDialog" :width="700">
+			<span slot="title">{{ $t('select_a_hat') }}</span>
+			<div slot="content" class="hat-dialog">
 				<v-tooltip :open-delay="0" :close-delay="0" bottom>
 					<div slot="activator" :quantity="1" class="hat" @click="selectHat(null)">
 						<img src="/image/hat/no_hat.png">
@@ -392,16 +383,13 @@
 				<br><br>
 				<center>({{ $t('click_to_put_hat') }})</center>
 			</div>
-			<div class="actions">
-				<div class="action" @click="hatDialog = false">{{ $t('cancel') }}</div>
-			</div>
-		</v-dialog>
+		</popup>
 
 		<level-dialog v-if="leek && levelPopupData" v-model="levelPopup" :leek="leek" :data="levelPopupData" />
 
-		<v-dialog v-if="leek && my_leek" v-model="aiDialog" :max-width="870">
-			<div class="title">{{ $t('ai_of', [leek.name]) }}</div>
-			<div class="content ai_popup">
+		<popup v-if="leek && my_leek" v-model="aiDialog" :width="870">
+			<span slot="title">{{ $t('ai_of', [leek.name]) }}</span>
+			<div slot="content" class="ai_popup">
 				<div :class="{dashed: draggedAI && (!leek.ai || draggedAI.id !== leek.ai.id)}" class="leek-ai" @dragover="dragOver" @drop="aiDrop('leek', $event)">
 					<ai v-if="leek.ai" :ai="leek.ai" @click.native="removeAI()" @dragstart.native="aiDragStart(leek.ai, $event)" @dragend.native="aiDragEnd(leek.ai, $event)" />
 				</div>
@@ -412,11 +400,11 @@
 					<ai v-for="ai in $store.state.farmer.ais" v-if="!leek.ai || ai.id !== leek.ai.id" :key="ai.id" :ai="ai" @click.native="selectAI(ai)" @dragstart.native="aiDragStart(ai, $event)" @dragend.native="aiDragEnd(ai, $event)" />
 				</div>
 			</div>
-		</v-dialog>
+		</popup>
 
-		<v-dialog v-if="leek && my_leek" v-model="chipsDialog" :max-width="800">
-			<div class="title">{{ $t('chips_of', [leek.name]) }} <span class="chip-count">[{{ leek.chips.length }}/{{ leek.max_chips }}]</span></div>
-			<div class="content chips-dialog">
+		<popup v-if="leek && my_leek" v-model="chipsDialog" :width="800">
+			<template slot="title">{{ $t('chips_of', [leek.name]) }} <span class="chip-count">[{{ leek.chips.length }}/{{ leek.max_chips }}]</span></template>
+			<div class="chips-dialog">
 				<div :class="{dashed: draggedChip && draggedChipLocation === 'farmer'}" class="leek-chips" @dragover="dragOver" @drop="chipsDrop('leek', $event)">
 					<v-tooltip v-for="chip in leek.orderedChips" :key="chip.id" :open-delay="0" :close-delay="0" bottom>
 						<div slot="activator" :class="{dragging: draggedChip && draggedChip.template === chip.template && draggedChipLocation === 'leek'}" class="chip" draggable="true" @dragstart="chipDragStart('leek', chip, $event)" @dragend="chipDragEnd(chip)" @click="removeChip(chip)">
@@ -439,7 +427,7 @@
 					</v-tooltip>
 				</div>
 			</div>
-		</v-dialog>
+		</popup>
 		<capital-dialog v-if="leek" v-model="capitalDialog" :leek="leek" />
 	</div>
 </template>

@@ -1,13 +1,6 @@
 <template>
-	<v-dialog :value="value" :max-width="800" persistent @input="$emit('input', $event)">
-		<div class="title">
-			{{ $t("title") }}
-			<div class="options">
-				<div class="option">
-					<i class="material-icons" @click="close">clear</i>
-				</div>
-			</div>
-		</div>
+	<popup :value="value" :width="800" persistent @input="$emit('input', $event)" :full="true">
+		<span slot="title">{{ $t("title") }}</span>
 
 		<div ref="content" :style="{height: height + 'px'}" class="content">
 			<div ref="page1" :class="getClass(1)" class="page">
@@ -114,7 +107,7 @@
 			<div class="pagination">{{ page }} / 8</div>
 		</div>
 
-		<div class="actions">
+		<div slot="actions">
 			<div class="skip-previous" @click="previous">
 				<span v-if="page === 1">❌&nbsp; {{ $t("dismiss") }}</span>
 				<span v-else>◄ {{ $t("previous") }}</span>
@@ -124,7 +117,7 @@
 				<span v-else>{{ $t("play") }}</span>
 			</div>
 		</div>
-	</v-dialog>
+	</popup>
 </template>
 
 <script lang="ts">

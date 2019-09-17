@@ -102,27 +102,22 @@
 		</div>
 		<div class="error-tooltip"></div>
 
-		<v-dialog v-model="infoDialog" :max-width="500">
-			<div class="title">{{ $t('shortcuts') }}</div>
-			<div class="content">
-				<ul>
-					<li v-html="$t('shortcut_1')"></li>
-					<li v-html="$t('shortcut_2')"></li>
-					<li v-html="$t('shortcut_3')"></li>
-					<li v-html="$t('shortcut_4')"></li>
-					<li v-html="$t('shortcut_5')"></li>
-					<li v-html="$t('shortcut_6')"></li>
-					<li v-html="$t('shortcut_7')"></li>
-				</ul>
-			</div>
-			<div class="actions">
-				<div v-ripple @click="infoDialog = false">{{ $t('shortcuts_ok') }}</div>
-			</div>
-		</v-dialog>
+		<popup v-model="infoDialog" :width="500">
+			<span slot="title">{{ $t('shortcuts') }}</span>
+			<ul>
+				<li v-html="$t('shortcut_1')"></li>
+				<li v-html="$t('shortcut_2')"></li>
+				<li v-html="$t('shortcut_3')"></li>
+				<li v-html="$t('shortcut_4')"></li>
+				<li v-html="$t('shortcut_5')"></li>
+				<li v-html="$t('shortcut_6')"></li>
+				<li v-html="$t('shortcut_7')"></li>
+			</ul>
+		</popup>
 		
-		<v-dialog v-model="settingsDialog" :max-width="620">
-			<div class="title">{{ $t('settings') }}</div>
-			<div class="content settings-dialog">
+		<popup v-model="settingsDialog" :width="620">
+			<span slot="title">{{ $t('settings') }}</span>
+			<div class="settings-dialog">
 				<div class="title">{{ $t('display') }}</div>
 				<template v-if="!LeekWars.mobile">
 					<v-switch v-model="enlargeWindow" :label="$t('enlarge_window')" hide-details />
@@ -145,19 +140,17 @@
 				<v-checkbox :label="$t('autocompletion')" v-model="autocomplete" hide-details />
 				<v-checkbox :label="$t('popups')" v-model="popups" hide-details />
 			</div>
-		</v-dialog>
+		</popup>
 
-		<v-dialog v-model="deleteDialog" :max-width="500">
-			<div v-if="currentType === 'ai' && currentAI" class="title">{{ $t('delete_ai', [currentAI.name]) }}</div>
-			<div v-else-if="currentFolder" class="title">{{ $t('delete_folder', [currentFolder.name]) }}</div>
-			<div class="content">
-				{{ $t('delete_warning') }}
-			</div>
-			<div class="actions">
+		<popup v-model="deleteDialog" :width="500">
+			<span v-if="currentType === 'ai' && currentAI" slot="title">{{ $t('delete_ai', [currentAI.name]) }}</span>
+			<span v-else-if="currentFolder" class="title">{{ $t('delete_folder', [currentFolder.name]) }}</span>
+			{{ $t('delete_warning') }}
+			<div slot="actions">
 				<div @click="deleteDialog = false">{{ $t('delete_cancel') }}</div>
 				<div class="red" @click="deleteItem">{{ $t('delete_validate') }}</div>
 			</div>
-		</v-dialog>
+		</popup>
 
 		<editor-test v-model="testDialog" :ais="ais" :leek-ais="leekAIs" />
 	</div>

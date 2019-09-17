@@ -68,21 +68,19 @@
 			</panel>
 		</div>
 
-		<v-dialog v-if="selectedFault" v-model="warningConfirmDialog" :max-width="700">
-			<div class="title">Envoyer un avertissement</div>
-			<div class="content">
-				<h2>Confirmez l'envoi de l'avertissement :</h2>
-				<br>
-				Éleveur : <b>{{ selectedFault.target.name }}</b> <br>
-				Motif : <b>{{ $t('reason_' + selectedFault.reason_text) }}</b> <br>
-				Gravité : <b>{{ severity }}</b> <br>
-				<span v-if="message">Message : "{{ message }}"</span>
-			</div>
-			<div class="actions">
+		<popup v-if="selectedFault" v-model="warningConfirmDialog" :width="700">
+			<span slot="title">Envoyer un avertissement</span>
+			<h2>Confirmez l'envoi de l'avertissement :</h2>
+			<br>
+			Éleveur : <b>{{ selectedFault.target.name }}</b> <br>
+			Motif : <b>{{ $t('reason_' + selectedFault.reason_text) }}</b> <br>
+			Gravité : <b>{{ severity }}</b> <br>
+			<span v-if="message">Message : "{{ message }}"</span>
+			<div slot="actions">
 				<div class="dismiss" @click="warningConfirmDialog = false">Annuler</div>
 				<div class="red" @click="sendWarning">Envoyer</div>
 			</div>
-		</v-dialog>
+		</popup>
 	</div>
 </template>
 

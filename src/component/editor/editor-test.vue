@@ -1,156 +1,154 @@
 <template>
-	<v-dialog :value="value" :max-width="1024" @input="$emit('input', $event)">
-		<div class="title">{{ $t('editor.run_test') }}</div>
-		<div class="content">
-			<v-tabs :key="value" class="tabs" grow>
-				<v-tabs-slider class="indicator" />
-				<v-tab class="tab">{{ $t('editor.test_scenario') }}</v-tab>
-				<v-tab class="tab">{{ $t('editor.test_leeks') }}</v-tab>
-				<v-tab class="tab">{{ $t('editor.test_map') }}</v-tab>
-				<v-tab-item class="tab-content">
-					<div class="column lateral-column">
-						<h4>Scénarios</h4>
-						<div class="items scenarios">
-							<div v-for="scenario of allScenarios" :key="scenario.id" :class="{selected: scenario === currentScenario}" class="item scenario" @click="selectScenario(scenario)">
-								{{ scenario.name }}
-								<span v-if="scenario.base" class="base">base</span>
-								<div v-else class="delete" @click.stop="deleteScenario(scenario)"></div>
-							</div>
+	<popup :value="value" :width="1024" @input="$emit('input', $event)" :full="true">
+		<span slot="title">{{ $t('editor.run_test') }}</span>
+		<v-tabs :key="value" class="tabs" grow>
+			<v-tabs-slider class="indicator" />
+			<v-tab class="tab">{{ $t('editor.test_scenario') }}</v-tab>
+			<v-tab class="tab">{{ $t('editor.test_leeks') }}</v-tab>
+			<v-tab class="tab">{{ $t('editor.test_map') }}</v-tab>
+			<v-tab-item class="tab-content">
+				<div class="column lateral-column">
+					<h4>Scénarios</h4>
+					<div class="items scenarios">
+						<div v-for="scenario of allScenarios" :key="scenario.id" :class="{selected: scenario === currentScenario}" class="item scenario" @click="selectScenario(scenario)">
+							{{ scenario.name }}
+							<span v-if="scenario.base" class="base">base</span>
+							<div v-else class="delete" @click.stop="deleteScenario(scenario)"></div>
 						</div>
-						<div class="item add" @click="newScenarioDialog = true">✚ Ajouter</div>
 					</div>
-					<div v-if="currentScenario" class="column column-scenario">
-						<div class="title">Poireaux</div>
-						<div class="team team1">
-							<div class="leeks">
-								<div v-for="leek of currentScenario.data.team1" :key="leek.id" class="leek">
-									<div v-if="!currentScenario.base" class="delete" @click="deleteLeek(leek, 1)">×</div>
-									<div class="card">
-										<leek-image :leek="leek" :scale="0.4" />
-										<div>{{ leek.name }}</div>
-									</div>
-									<div class="ai" @click="clickLeekAI(leek)">{{ currentScenario.data.ais[leek.id] ? currentScenario.data.ais[leek.id].name : '?' }}</div>
+					<div class="item add" @click="newScenarioDialog = true">✚ Ajouter</div>
+				</div>
+				<div v-if="currentScenario" class="column column-scenario">
+					<div class="title">Poireaux</div>
+					<div class="team team1">
+						<div class="leeks">
+							<div v-for="leek of currentScenario.data.team1" :key="leek.id" class="leek">
+								<div v-if="!currentScenario.base" class="delete" @click="deleteLeek(leek, 1)">×</div>
+								<div class="card">
+									<leek-image :leek="leek" :scale="0.4" />
+									<div>{{ leek.name }}</div>
 								</div>
+								<div class="ai" @click="clickLeekAI(leek)">{{ currentScenario.data.ais[leek.id] ? currentScenario.data.ais[leek.id].name : '?' }}</div>
 							</div>
-							<div v-if="!currentScenario.base && LeekWars.objectSize(currentScenario.data.team1) < 6" class="add" @click="addLeekTeam = currentScenario.data.team1; leekDialog = true">+</div>
 						</div>
-						<div class="vs">VS</div>
-						<div class="team team2">
-							<div class="leeks">
-								<div v-for="leek of currentScenario.data.team2" :key="leek.id" class="leek">
-									<div v-if="!currentScenario.base" class="delete" @click="deleteLeek(leek, 2)">×</div>
-									<div class="card">
-										<leek-image :leek="leek" :scale="0.4" />
-										<div>{{ leek.name }}</div>
-									</div>
-									<div class="ai" @click="clickLeekAI(leek)">{{ currentScenario.data.ais[leek.id] ? currentScenario.data.ais[leek.id].name : '?' }}</div>
+						<div v-if="!currentScenario.base && LeekWars.objectSize(currentScenario.data.team1) < 6" class="add" @click="addLeekTeam = currentScenario.data.team1; leekDialog = true">+</div>
+					</div>
+					<div class="vs">VS</div>
+					<div class="team team2">
+						<div class="leeks">
+							<div v-for="leek of currentScenario.data.team2" :key="leek.id" class="leek">
+								<div v-if="!currentScenario.base" class="delete" @click="deleteLeek(leek, 2)">×</div>
+								<div class="card">
+									<leek-image :leek="leek" :scale="0.4" />
+									<div>{{ leek.name }}</div>
 								</div>
+								<div class="ai" @click="clickLeekAI(leek)">{{ currentScenario.data.ais[leek.id] ? currentScenario.data.ais[leek.id].name : '?' }}</div>
 							</div>
-							<div v-if="!currentScenario.base && LeekWars.objectSize(currentScenario.data.team2) < 6" class="add" @click="addLeekTeam = currentScenario.data.team2; leekDialog = true">+</div>
 						</div>
-						<br>
-						<div class="title">Map</div>
-						<div class="map-container">
-							<div v-if="(currentScenario.data.map && currentScenario.data.map !== -1)" class="map card" @click="mapDialog = true">
-								<img src="/image/map_icon.png">
-								<div class="name">{{ currentScenario.data.map.name }}</div>
-							</div>
-							<div v-else class="map card" @click="mapDialog = true">
-								<img src="/image/map_icon_random.png">
-								<div class="name">Random</div>
+						<div v-if="!currentScenario.base && LeekWars.objectSize(currentScenario.data.team2) < 6" class="add" @click="addLeekTeam = currentScenario.data.team2; leekDialog = true">+</div>
+					</div>
+					<br>
+					<div class="title">Map</div>
+					<div class="map-container">
+						<div v-if="(currentScenario.data.map && currentScenario.data.map !== -1)" class="map card" @click="mapDialog = true">
+							<img src="/image/map_icon.png">
+							<div class="name">{{ currentScenario.data.map.name }}</div>
+						</div>
+						<div v-else class="map card" @click="mapDialog = true">
+							<img src="/image/map_icon_random.png">
+							<div class="name">Random</div>
+						</div>
+					</div>
+				</div>
+			</v-tab-item>
+			<v-tab-item class="tab-content">
+				<div class="column lateral-column">
+					<h4>Poireaux</h4>
+					<div class="items leeks">
+						<div v-for="leek of leeks" :key="leek.id" :class="{selected: leek === currentLeek}" class="item leek" @click="currentLeek = leek">
+							{{ leek.name }}
+							<span v-if="leek.bot" class="bot">bot</span>
+							<div v-else class="delete"></div>
+						</div>
+					</div>
+					<div class="item add" @click="newLeekDialog = true">✚ Ajouter</div>
+				</div>
+				<div v-if="currentLeek" class="column leek-column">
+					<div class="title name">{{ currentLeek.name }}</div>
+					<div class="flex">
+						<div class="image card">
+							<leek-image :leek="currentLeek" :scale="1" />
+						</div>
+						<div class="characteristics">
+							<div v-for="c in ['life', 'science', 'strength', 'magic', 'wisdom', 'frequency', 'agility', 'mp', 'resistance', 'tp']" :key="c" class="characteristic">
+								<img :src="'/image/charac/' + c + '.png'">
+								<span :contenteditable="!currentLeek.bot" :class="'color-' + c" @focusout="characteristicFocusout(c, $event)" v-html="currentLeek[c]"></span>
 							</div>
 						</div>
 					</div>
-				</v-tab-item>
-				<v-tab-item class="tab-content">
-					<div class="column lateral-column">
-						<h4>Poireaux</h4>
-						<div class="items leeks">
-							<div v-for="leek of leeks" :key="leek.id" :class="{selected: leek === currentLeek}" class="item leek" @click="currentLeek = leek">
-								{{ leek.name }}
-								<span v-if="leek.bot" class="bot">bot</span>
-								<div v-else class="delete"></div>
-							</div>
+					<div class="title">Puces</div>
+					<div class="chips">
+						<div class="container">
+							<v-tooltip v-for="chip in currentLeek.chips" :key="chip" :open-delay="0" :close-delay="0" bottom>
+								<img slot="activator" :src="'/image/chip/small/' + LeekWars.chips[chip].name + '.png'" class="chip" @click="removeLeekChip(chip)">
+								<b>{{ $t('chip.' + LeekWars.chips[chip].name) }}</b>
+								<br>
+								{{ $t('leek.chip_level_n', [LeekWars.chips[chip].level]) }}
+								<br>
+								<small>{{ 'CHIP_' + LeekWars.chips[chip].name.toUpperCase() }}</small>
+							</v-tooltip>
 						</div>
-						<div class="item add" @click="newLeekDialog = true">✚ Ajouter</div>
+						<div v-if="currentLeek.chips.length < 12" class="add" @click="chipsDialog = true">+</div>
 					</div>
-					<div v-if="currentLeek" class="column leek-column">
-						<div class="title name">{{ currentLeek.name }}</div>
-						<div class="flex">
-							<div class="image card">
-								<leek-image :leek="currentLeek" :scale="1" />
-							</div>
-							<div class="characteristics">
-								<div v-for="c in ['life', 'science', 'strength', 'magic', 'wisdom', 'frequency', 'agility', 'mp', 'resistance', 'tp']" :key="c" class="characteristic">
-									<img :src="'/image/charac/' + c + '.png'">
-									<span :contenteditable="!currentLeek.bot" :class="'color-' + c" @focusout="characteristicFocusout(c, $event)" v-html="currentLeek[c]"></span>
-								</div>
-							</div>
+					<br>
+					<div class="title">Armes</div>
+					<div class="weapons">
+						<div class="container">
+							<v-tooltip v-for="weapon of currentLeek.weapons" :key="weapon" :open-delay="0" :close-delay="0" bottom>
+								<img slot="activator" :src="'/image/weapon/' + LeekWars.weapons[weapon].name + '.png'" class="weapon" @click="removeLeekWeapon(weapon)">
+								<b>{{ $t('weapon.' + LeekWars.weapons[weapon].name) }}</b>
+								<br>
+								{{ $t('leek.weapon_level_n', [LeekWars.weapons[weapon].level]) }}
+								<br>
+								<small>{{ 'WEAPON_' + LeekWars.weapons[weapon].name.toUpperCase() }}</small>
+							</v-tooltip>
 						</div>
-						<div class="title">Puces</div>
-						<div class="chips">
-							<div class="container">
-								<v-tooltip v-for="chip in currentLeek.chips" :key="chip" :open-delay="0" :close-delay="0" bottom>
-									<img slot="activator" :src="'/image/chip/small/' + LeekWars.chips[chip].name + '.png'" class="chip" @click="removeLeekChip(chip)">
-									<b>{{ $t('chip.' + LeekWars.chips[chip].name) }}</b>
-									<br>
-									{{ $t('leek.chip_level_n', [LeekWars.chips[chip].level]) }}
-									<br>
-									<small>{{ 'CHIP_' + LeekWars.chips[chip].name.toUpperCase() }}</small>
-								</v-tooltip>
-							</div>
-							<div v-if="currentLeek.chips.length < 12" class="add" @click="chipsDialog = true">+</div>
-						</div>
-						<br>
-						<div class="title">Armes</div>
-						<div class="weapons">
-							<div class="container">
-								<v-tooltip v-for="weapon of currentLeek.weapons" :key="weapon" :open-delay="0" :close-delay="0" bottom>
-									<img slot="activator" :src="'/image/weapon/' + LeekWars.weapons[weapon].name + '.png'" class="weapon" @click="removeLeekWeapon(weapon)">
-									<b>{{ $t('weapon.' + LeekWars.weapons[weapon].name) }}</b>
-									<br>
-									{{ $t('leek.weapon_level_n', [LeekWars.weapons[weapon].level]) }}
-									<br>
-									<small>{{ 'WEAPON_' + LeekWars.weapons[weapon].name.toUpperCase() }}</small>
-								</v-tooltip>
-							</div>
-							<div v-if="currentLeek.weapons.length < 4" class="add" @click="weaponsDialog = true">+</div>
+						<div v-if="currentLeek.weapons.length < 4" class="add" @click="weaponsDialog = true">+</div>
+					</div>
+				</div>
+			</v-tab-item>
+			<v-tab-item class="tab-content">
+				<div class="column lateral-column">
+					<h4>Maps</h4>
+					<div class="items maps">
+						<div v-for="map of maps" :key="map.id" :class="{selected: currentMap === map}" class="item map" @click="selectMap(map)">
+							{{ map.name }}
+							<div class="delete" @click="deleteMap(map)"></div>
 						</div>
 					</div>
-				</v-tab-item>
-				<v-tab-item class="tab-content">
-					<div class="column lateral-column">
-						<h4>Maps</h4>
-						<div class="items maps">
-							<div v-for="map of maps" :key="map.id" :class="{selected: currentMap === map}" class="item map" @click="selectMap(map)">
-								{{ map.name }}
-								<div class="delete" @click="deleteMap(map)"></div>
+					<div class="item add" @click="newMapDialog = true">✚ Ajouter</div>
+				</div>
+				<div v-if="currentMap" class="column map-column">
+					<div class="title name"></div>
+					<div class="map" oncontextmenu="return false;">
+						<div class="map-wrapper">
+							<div v-for="(line, l) of map" :key="l" class="line">
+								<span v-for="(cell, c) of line" :key="c" :class="{disabled: !cell.enabled, obstacle: cell.cell in currentMap.data.obstacles, team1: currentMap.data.team1.indexOf(cell.cell) !== -1, team2: currentMap.data.team2.indexOf(cell.cell) !== -1}" class="cell" @mousedown="cellMouseDown($event, cell)" @mouseenter="cellMouseEnter($event, cell)" @mouseup="cellMouseUp" @dragstart="cellDragStart"></span>
 							</div>
 						</div>
-						<div class="item add" @click="newMapDialog = true">✚ Ajouter</div>
 					</div>
-					<div v-if="currentMap" class="column map-column">
-						<div class="title name"></div>
-						<div class="map" oncontextmenu="return false;">
-							<div class="map-wrapper">
-								<div v-for="(line, l) of map" :key="l" class="line">
-									<span v-for="(cell, c) of line" :key="c" :class="{disabled: !cell.enabled, obstacle: cell.cell in currentMap.data.obstacles, team1: currentMap.data.team1.indexOf(cell.cell) !== -1, team2: currentMap.data.team2.indexOf(cell.cell) !== -1}" class="cell" @mousedown="cellMouseDown($event, cell)" @mouseenter="cellMouseEnter($event, cell)" @mouseup="cellMouseUp" @dragstart="cellDragStart"></span>
-								</div>
-							</div>
-						</div>
-						<div class="buttons">
-							<v-btn @click="clearMap">❌ Clear</v-btn>
-							<v-btn @click="randomMap">❓ Random</v-btn>
-						</div>
-						<div class="instructions">
-							<div class="instruction">✔ Clic gauche pour ajouter ou retirer des obstacles</div>
-							<div class="instruction">✔ Clic droit pour sélectionner les cellules de départ</div>
-						</div>
+					<div class="buttons">
+						<v-btn @click="clearMap">❌ Clear</v-btn>
+						<v-btn @click="randomMap">❓ Random</v-btn>
 					</div>
-				</v-tab-item>
-			</v-tabs>
-		</div>
-		<div class="actions">
+					<div class="instructions">
+						<div class="instruction">✔ Clic gauche pour ajouter ou retirer des obstacles</div>
+						<div class="instruction">✔ Clic droit pour sélectionner les cellules de départ</div>
+					</div>
+				</div>
+			</v-tab-item>
+		</v-tabs>
+		<div slot="actions">
 			<div @click="$emit('input', false)">
 				<i class="material-icons">clear</i>
 				<span>{{ $t('editor.test_cancel') }}</span>
@@ -161,42 +159,42 @@
 			</div>
 		</div>
 
-		<v-dialog v-model="newScenarioDialog" :max-width="500">
-			<div class="title">Create new scenario</div>
-			<div class="content padding">
+		<popup v-model="newScenarioDialog" :width="500">
+			<span slot="title">Create new scenario</span>
+			<div class="padding">
 				<input v-model="newScenarioName" type="text" class="input" placeholder="Scenario name">
 			</div>
-			<div class="actions">
+			<div slot="actions">
 				<div @click="newScenarioDialog = false">{{ $t('editor.cancel') }}</div>
 				<div class="green" @click="createScenario">Create</div>
 			</div>
-		</v-dialog>
+		</popup>
 
-		<v-dialog v-model="newLeekDialog" :max-width="500">
-			<div class="title">Create new leek</div>
-			<div class="content padding">
+		<popup v-model="newLeekDialog" :width="500">
+			<span slot="title">Create new leek</span>
+			<div class="padding">
 				<input v-model="newLeekName" type="text" class="input" placeholder="Leek name">
 			</div>
-			<div class="actions">
+			<div slot="actions">
 				<div @click="newLeekDialog = false">{{ $t('editor.cancel') }}</div>
 				<div class="green" @click="createLeek">Create</div>
 			</div>
-		</v-dialog>
+		</popup>
 
-		<v-dialog v-model="newMapDialog" :max-width="500">
-			<div class="title">Create new map</div>
-			<div class="content padding">
+		<popup v-model="newMapDialog" :width="500">
+			<span slot="title">Create new map</span>
+			<div class="padding">
 				<input v-model="newMapName" type="text" class="input" placeholder="Map name">
 			</div>
-			<div class="actions">
+			<div slot="actions">
 				<div @click="newMapDialog = false">{{ $t('editor.cancel') }}</div>
 				<div class="green" @click="createMap">Create</div>
 			</div>
-		</v-dialog>
+		</popup>
 
-		<v-dialog v-model="mapDialog" :max-width="700">
-			<div class="title">Select map</div>
-			<div class="content padding map-dialog">
+		<popup v-model="mapDialog" :width="700">
+			<span slot="title">Select map</span>
+			<div class="padding map-dialog">
 				<div class="map card" @click="selectScenarioMap(null)">
 					<img src="/image/map_icon_random.png">
 					<div class="name">Random</div>
@@ -206,31 +204,31 @@
 					<div class="name">{{ map.name }}</div>
 				</div>
 			</div>
-		</v-dialog>
+		</popup>
 
-		<v-dialog v-model="leekDialog" :max-width="700">
-			<div class="title">Select a leek</div>
-			<div class="content leek-dialog padding">
+		<popup v-model="leekDialog" :width="700">
+			<span slot="title">Select a leek</span>
+			<div class="leek-dialog padding">
 				<div v-for="leek of availableLeeks" :key="leek.id" class="leek card" @click="addScenarioLeek(leek)">
 					<leek-image :leek="leek" :scale="0.5" />
 					<div class="name">{{ leek.name }}</div>
 				</div>
 			</div>
-		</v-dialog>
+		</popup>
 
-		<v-dialog v-model="aiDialog" :max-width="800">
-			<div class="title">Sélectionnez une IA</div>
-			<div class="content ai-dialog">
+		<popup v-model="aiDialog" :width="800">
+			<span slot="title">Sélectionnez une IA</span>
+			<div class="ai-dialog">
 				<div v-for="ai of sortedAis" :key="ai.id" class="ai" @click="clickDialogAI(ai)">
 					<div class="image"></div>
 					<div class="name">{{ ai.path }}</div>
 				</div>
 			</div>
-		</v-dialog>
+		</popup>
 
-		<v-dialog v-model="chipsDialog" :max-width="767">
-			<div class="title">Select a chip</div>
-			<div v-if="currentLeek" class="content padding chips-dialog">
+		<popup v-model="chipsDialog" :width="767">
+			<span slot="title">Select a chip</span>
+			<div v-if="currentLeek" class="padding chips-dialog">
 				<v-tooltip v-for="chip of LeekWars.chips" v-if="currentLeek.chips.indexOf(chip.id) === -1" :key="chip.id" :open-delay="0" :close-delay="0" bottom>
 					<img slot="activator" :src="'/image/chip/small/' + chip.name + '.png'" class="chip" @click="addLeekChip(chip.id)">
 					<b>{{ $t('chip.' + LeekWars.chips[chip.id].name) }}</b>
@@ -240,11 +238,11 @@
 					<small>{{ 'CHIP_' + LeekWars.chips[chip.id].name.toUpperCase() }}</small>
 				</v-tooltip>
 			</div>
-		</v-dialog>
+		</popup>
 
-		<v-dialog v-model="weaponsDialog" :max-width="800">
-			<div class="title">Select a weapon</div>
-			<div v-if="currentLeek" class="content padding weapons-dialog">
+		<popup v-model="weaponsDialog" :width="800">
+			<span slot="title">Select a weapon</span>
+			<div v-if="currentLeek" class="padding weapons-dialog">
 				<v-tooltip v-for="weapon of LeekWars.weapons" v-if="currentLeek.weapons.indexOf(weapon.id) === -1" :key="weapon.id" :open-delay="0" :close-delay="0" bottom>
 					<img slot="activator" :src="'/image/weapon/' + weapon.name + '.png'" class="weapon" @click="addLeekWeapon(weapon.id)">
 					<b>{{ $t('weapon.' + LeekWars.weapons[weapon.id].name) }}</b>
@@ -254,8 +252,8 @@
 					<small>{{ 'WEAPON_' + LeekWars.weapons[weapon.id].name.toUpperCase() }}</small>
 				</v-tooltip>
 			</div>
-		</v-dialog>
-	</v-dialog>
+		</popup>
+	</popup>
 </template>
 
 <script lang="ts">

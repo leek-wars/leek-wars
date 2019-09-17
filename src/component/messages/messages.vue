@@ -32,14 +32,14 @@
 				</div>
 			</panel>
 		</div>
-		<v-dialog v-model="quitDialog" :max-width="500">
-			<div class="title">{{ $t('quit_conversation') }}</div>
-			<div class="content">{{ $t('quit_confirm') }}</div>
-			<div class="actions">
+		<popup v-model="quitDialog" :width="500">
+			<span slot="title">{{ $t('quit_conversation') }}</span>
+			{{ $t('quit_confirm') }}
+			<div slot="actions">
 				<div @click="quitDialog = false">{{ $t('cancel') }}</div>
 				<div class="red" @click="quitConversation">{{ $t('quit') }}</div>
 			</div>
-		</v-dialog>
+		</popup>
 	</div>
 </template>
 

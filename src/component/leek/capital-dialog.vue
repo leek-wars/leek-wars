@@ -1,30 +1,27 @@
 <template>
-	<v-dialog :value="value" :max-width="800" @input="$emit('input', $event)">
-		<div class="title">Ajouter des points de capital</div>
+	<popup :value="value" :width="800" @input="$emit('input', $event)">
+		<span slot="title">Ajouter des points de capital</span>
 
-		<div class="content">
+		<center><div class="capital rounded4">{{ $t('leek.n_capital', [capital]) }}</div></center>
 
-			<center><div class="capital rounded4">{{ $t('leek.n_capital', [capital]) }}</div></center>
-
-			<div v-for="c in ['life', 'strength', 'wisdom', 'agility', 'resistance', 'science', 'magic', 'frequency', 'mp', 'tp']" :key="c" class="charac">
-				<v-tooltip :open-delay="0" :close-delay="0" bottom>
-					<img slot="activator" :src="'/image/charac/' + c + '.png'">
-					<b>{{ $t('leek.' + c) }}</b><br>
-					{{ $t('leek.' + c + '_description') }}
-				</v-tooltip>
-				<div>
-					<span :class="'stat color-' + c">{{ leek[c] + bonuses[c] }}</span>
-					<span v-if="bonuses[c]" class="sup">&nbsp;(+{{ bonuses[c] }})</span>
-					<div class="add-wrapper">
-						<v-tooltip v-for="cost in [1, 10, 100]" :key="cost" :open-delay="0" :close-delay="0" bottom>
-							<span slot="activator" :q="cost" :class="{locked: costs[c + cost].cost > capital}" class="add" @click="add(c, cost)"></span>
-							{{ costs[c + cost].cost + ' capital ⇔ ' + costs[c + cost].bonus + ' ' + $t('leek.' + c) }}
-						</v-tooltip>
-					</div>
+		<div v-for="c in ['life', 'strength', 'wisdom', 'agility', 'resistance', 'science', 'magic', 'frequency', 'mp', 'tp']" :key="c" class="charac">
+			<v-tooltip :open-delay="0" :close-delay="0" bottom>
+				<img slot="activator" :src="'/image/charac/' + c + '.png'">
+				<b>{{ $t('leek.' + c) }}</b><br>
+				{{ $t('leek.' + c + '_description') }}
+			</v-tooltip>
+			<div>
+				<span :class="'stat color-' + c">{{ leek[c] + bonuses[c] }}</span>
+				<span v-if="bonuses[c]" class="sup">&nbsp;(+{{ bonuses[c] }})</span>
+				<div class="add-wrapper">
+					<v-tooltip v-for="cost in [1, 10, 100]" :key="cost" :open-delay="0" :close-delay="0" bottom>
+						<span slot="activator" :q="cost" :class="{locked: costs[c + cost].cost > capital}" class="add" @click="add(c, cost)"></span>
+						{{ costs[c + cost].cost + ' capital ⇔ ' + costs[c + cost].bonus + ' ' + $t('leek.' + c) }}
+					</v-tooltip>
 				</div>
 			</div>
 		</div>
-		<div class="actions">
+		<div slot="actions">
 			<div class="action" @click="close">
 				<i class="material-icons">clear</i>
 				<span>{{ $t('leek.cancel') }}</span>
@@ -38,7 +35,7 @@
 				<span>{{ $t('leek.validate') }}</span>
 			</div>
 		</div>
-	</v-dialog>
+	</popup>
 </template>
 
 <script lang="ts">

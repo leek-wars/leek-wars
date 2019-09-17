@@ -330,33 +330,26 @@
 			</div>
 		</div>
 
-		<v-dialog v-model="createTeamDialog" max-width="500">
-			<div class="title">{{ $t('create_team') }}</div>
-			<div class="content">
-				{{ $t('team_name') }} <input v-model="createTeamName" type="text">
-			</div>
-			<div class="actions">
+		<popup v-model="createTeamDialog" :width="500">
+			<span slot="title">{{ $t('create_team') }}</span>
+			{{ $t('team_name') }} <input v-model="createTeamName" type="text">
+			<div slot="actions">
 				<div class="dismiss">{{ $t('cancel') }}</div>
 				<div @click="createTeam">{{ $t('create') }}</div>
 			</div>
-		</v-dialog>
+		</popup>
 
-		<v-dialog v-if="farmer" v-model="godfatherDialog" max-width="600">
-			<div class="title">{{ $t('godfather_link') }}</div>
-			<div class="content">
-				{{ $t('godfather_link_description') }} :
-				<br>
-				<br>
-				<div ref="godfatherLink" class="godfather-url">https://leekwars.com/godfather/{{ farmer.name }}</div>
-			</div>
-			<div class="actions">
-				<div @click="godfatherDialog = false">{{ $t('godfather_link_ok') }}</div>
-			</div>
-		</v-dialog>
+		<popup v-if="farmer" v-model="godfatherDialog" :width="600">
+			<span slot="title">{{ $t('godfather_link') }}</span>
+			{{ $t('godfather_link_description') }} :
+			<br>
+			<br>
+			<div ref="godfatherLink" class="godfather-url">https://leekwars.com/godfather/{{ farmer.name }}</div>
+		</popup>
 
-		<v-dialog v-if="farmer" v-model="countryDialog" max-width="800">
-			<div class="title">{{ $t('country_selection') }}</div>
-			<div class="content country-dialog">
+		<popup v-if="farmer" v-model="countryDialog" :width="800">
+			<span slot="title">{{ $t('country_selection') }}</span>
+			<div class="country-dialog">
 				<div class="country" code="null" @click="selectCountry(null)">
 					<img src="/image/flag/_.png">
 					<h4>{{ $t('no_country') }}</h4>
@@ -366,31 +359,31 @@
 					<h4>{{ $t('country.' + country.code) }}</h4>
 				</div>
 			</div>
-		</v-dialog>
+		</popup>
 		
 		<report-dialog v-if="farmer" v-model="reportDialog" :name="farmer.name" :target="farmer.id" :reasons="reasons" />
 		
-		<v-dialog v-if="farmer" v-model="websiteDialog" max-width="500">
-			<div class="title">{{ $t('add_website') }}</div>
-			<div class="content website-dialog">
+		<popup v-if="farmer" v-model="websiteDialog" :width="500">
+			<span slot="title">{{ $t('add_website') }}</span>
+			<div class="website-dialog">
 				<input v-model="newWebsite" type="text" class="input">
 			</div>
-			<div class="actions">
+			<div slot="actions">
 				<div @click="websiteDialog = false">{{ $t('cancel') }}</div>
 				<div class="green" @click="changeWebsite">{{ $t('validate') }}</div>
 			</div>
-		</v-dialog>
+		</popup>
 		
-		<v-dialog v-if="farmer" v-model="githubDialog" max-width="500">
-			<div class="title">{{ $t('add_github') }}</div>
-			<div class="content github-dialog">
+		<popup v-if="farmer" v-model="githubDialog" :width="500">
+			<span slot="title">{{ $t('add_github') }}</span>
+			<div class="github-dialog">
 				<input v-model="newGitHub" type="text" class="input">
 			</div>
-			<div class="actions">
+			<div slot="actions">
 				<div @click="githubDialog = false">{{ $t('cancel') }}</div>
 				<div class="green" @click="changeGithub">{{ $t('validate') }}</div>
 			</div>
-		</v-dialog>
+		</popup>
 	</div>
 </template>
 
