@@ -365,7 +365,7 @@
 
 		<popup v-model="hatDialog" :width="700">
 			<span slot="title">{{ $t('select_a_hat') }}</span>
-			<div slot="content" class="hat-dialog">
+			<div class="hat-dialog">
 				<v-tooltip :open-delay="0" :close-delay="0" bottom>
 					<div slot="activator" :quantity="1" class="hat" @click="selectHat(null)">
 						<img src="/image/hat/no_hat.png">
@@ -389,7 +389,7 @@
 
 		<popup v-if="leek && my_leek" v-model="aiDialog" :width="870">
 			<span slot="title">{{ $t('ai_of', [leek.name]) }}</span>
-			<div slot="content" class="ai_popup">
+			<div class="ai_popup">
 				<div :class="{dashed: draggedAI && (!leek.ai || draggedAI.id !== leek.ai.id)}" class="leek-ai" @dragover="dragOver" @drop="aiDrop('leek', $event)">
 					<ai v-if="leek.ai" :ai="leek.ai" @click.native="removeAI()" @dragstart.native="aiDragStart(leek.ai, $event)" @dragend.native="aiDragEnd(leek.ai, $event)" />
 				</div>
