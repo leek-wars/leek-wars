@@ -290,19 +290,21 @@
 		goToRanking(type: string, param: number = 0) {
 			this.searchDialog = false
 			let url = ''
+			const active = this.active ? '-active' : ''
 			if (type === 'leek') {
-				url = 'ranking/get-leek-rank/' + param + '/' + this.order
+				url = 'ranking/get-leek-rank' + active + '/' + param + '/' + this.order
 			} else if (type === 'farmer') {
-				url = 'ranking/get-farmer-rank/' + param + '/' + this.order
+				url = 'ranking/get-farmer-rank' + active + '/' + param + '/' + this.order
 			} else if (type === 'team' && this.$store.state.farmer.team !== null) {
-				url = 'ranking/get-team-rank/' + param + '/' + this.order
+				url = 'ranking/get-team-rank' + active + '/' + param + '/' + this.order
 			}
 			this.searchResult = param
 			this.searchResultType = type
 			LeekWars.get(url).then(data => {
 				const page = 1 + Math.floor((data.rank - 1) / 50)
 				if (page !== this.page || type !== this.category) {
-					this.$router.push('/ranking/' + type + '/' + this.order + '/page-' + page)
+					const active_url = this.active ? '/active' : ''
+					this.$router.push('/ranking/' + type + '/' + this.order + active_url + '/page-' + page)
 				}
 			})
 		}
