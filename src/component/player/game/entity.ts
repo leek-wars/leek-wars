@@ -434,7 +434,7 @@ class Entity {
 			this.computeOrginPos()
 
 			// Is on top ?
-			this.isTop = this.y <= 3
+			this.isTop = this.y <= 4
 
 			// Start new path
 			if (pathNext) { this.pathNext() }
