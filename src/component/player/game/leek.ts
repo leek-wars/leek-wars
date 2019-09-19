@@ -37,6 +37,7 @@ class Leek extends Entity {
 	public handPos = 0
 	// Weapon
 	public weapon: WeaponAnimation | null = null
+	public weapon_name: string | null = null
 	public skin: any
 	public hatTemplate!: HatTemplate
 	public hatX: number = 0

@@ -29,6 +29,7 @@ type ActionLog = any[]
 class Action {
 	params!: any[]
 	logs: ActionLog[] = []
+	weapon: string | null = null
 	get type() { return this.params[0] }
 	constructor(params: any[]) {
 		this.params = params
