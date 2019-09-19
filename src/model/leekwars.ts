@@ -156,10 +156,10 @@ const LeekWars = {
 	service_worker: null as any,
 	battleRoyale: new BattleRoyale(),
 	squares: new Squares(),
-	languages: {
+	languages: Object.freeze({
 		fr: { code: 'fr', name: 'Français', flag: '/image/flag/fr.png' } as Language,
 		en: { code: 'en', name: 'English', flag: '/image/flag/gb.png' } as Language,
-	} as { [key: string]: Language },
+	} as { [key: string]: Language }),
 	timeDelta: 0, // (Date.now() / 1000 | 0) - __SERVER_TIME,
 	time: (Date.now() / 1000) | 0, 
 	timeSeconds: (Date.now() / 1000) | 0,
@@ -173,7 +173,7 @@ const LeekWars = {
 		if (level < 10) { return 1 } else if (level < 20) { return 2 } else if (level < 50) { return 3 } else if (level < 80) { return 4 } else if (level < 100) { return 5 } else if (level < 150) { return 6 } else if (level < 200) { return 7 } else if (level < 250) { return 8 } else if (level < 300) { return 9 } else if (level < 301) { return 10 }
 		return 11
 	},
-	skins: SKINS,
+	skins: Object.freeze(SKINS),
 	getLeekSkinName: (skin: number) => {
 		if (!(skin in SKINS)) { return SKINS[1] }
 		return SKINS[skin]
@@ -321,7 +321,7 @@ const LeekWars = {
 		if (LeekWars._countries === null) {
 			LeekWars._countries = []
 			get<any>('country/get-all').then((data) => {
-				LeekWars._countries = data.countries
+				LeekWars._countries = Object.freeze(data.countries)
 			})
 		}
 		return LeekWars._countries
@@ -464,9 +464,23 @@ const LeekWars = {
 	clover: false, cloverTop: 0, cloverLeft: 0, lucky,
 	playSound, setFavicon,
 	linkify, toChatLink,
-	EFFECT_TYPES,
 	socket: new Socket(),
-	constants: CONSTANTS, hats: HATS, weapons: WEAPONS, chips: CHIPS, trophies: TROPHIES, chipTemplates: CHIP_TEMPLATES, trophyCategories: TROPHY_CATEGORIES, weaponTemplates: WEAPON_TEMPLATES, functions: FUNCTIONS, summonTemplates: SUMMON_TEMPLATES, potions: POTIONS, hatTemplates: HAT_TEMPLATES, orderedChips: ORDERED_CHIPS, orderedWeapons: ORDERED_WEAPONS, keywords: [] as Keyword[]
+	EFFECT_TYPES: Object.freeze(EFFECT_TYPES),
+	constants: Object.freeze(CONSTANTS),
+	hats: Object.freeze(HATS),
+	weapons: Object.freeze(WEAPONS),
+	chips: Object.freeze(CHIPS),
+	trophies: Object.freeze(TROPHIES),
+	chipTemplates: Object.freeze(CHIP_TEMPLATES),
+	trophyCategories: Object.freeze(TROPHY_CATEGORIES),
+	weaponTemplates: Object.freeze(WEAPON_TEMPLATES),
+	functions: Object.freeze(FUNCTIONS),
+	summonTemplates: Object.freeze(SUMMON_TEMPLATES),
+	potions: Object.freeze(POTIONS),
+	hatTemplates: Object.freeze(HAT_TEMPLATES),
+	orderedChips: Object.freeze(ORDERED_CHIPS),
+	orderedWeapons: Object.freeze(ORDERED_WEAPONS),
+	keywords: [] as Keyword[]
 }
 
 function setTitle(title: string | TranslateResult | null, subtitle: string | TranslateResult | null = null) {
