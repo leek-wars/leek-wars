@@ -32,7 +32,7 @@
 	"leek_loose_x_turns": "{leek} perd {value} ({turns} tours)",
 	"leek_resurrect": "{leek} ressucite {target}",
 	"leek_move": "{leek} se déplace",
-	"leek_shoot": "{leek} tire",
+	"leek_shoot": "{leek} attaque avec {weapon}",
 	"leek_show_cell": "{leek} montre la cellule {cell}",
 	"leek_speak": "{leek} dit : ''{text}''",
 	"leek_take_weapon": "{leek} prend l'arme {weapon}",

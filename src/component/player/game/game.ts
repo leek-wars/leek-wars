@@ -722,7 +722,9 @@ class Game {
 			break
 		}
 		case ActionType.SET_WEAPON: {
-			(this.leeks[action.params[1]] as Leek).setWeapon(new WEAPONS[action.params[2] - 1](this))
+			const leek = this.leeks[action.params[1]] as Leek
+			leek.setWeapon(new WEAPONS[action.params[2] - 1](this))
+			leek.weapon_name = LeekWars.weapons[LeekWars.weaponTemplates[action.params[2]].item].name
 			this.log(action)
 			this.actionDone()
 			break
@@ -769,6 +771,7 @@ class Game {
 			const launcher = action.params[1]
 			const cell = action.params[2]
 			const leeksID = action.params[5]
+			action.weapon = (this.leeks[launcher] as Leek).weapon_name
 
 			const leeks = new Array()
 			for (const leek of leeksID) {

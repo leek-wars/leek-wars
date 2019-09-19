@@ -26,6 +26,7 @@ class ReportLeek {
 	next_xp!: number
 	prev_xp!: number
 	aiTime!: number
+	weapon_name!: string
 }
 
 class ReportFarmer {

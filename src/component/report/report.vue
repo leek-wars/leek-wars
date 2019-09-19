@@ -214,6 +214,13 @@
 						leek.name = this.$i18n.t('entity.' + leek.name) as string
 					}
 				}
+				for (const action of this.actions) {
+					if (action.params[0] === ActionType.SET_WEAPON) {
+						this.leeks[action.params[1]].weapon_name = LeekWars.weapons[LeekWars.weaponTemplates[action.params[2]].item].name
+					} else if (action.params[0] === ActionType.USE_WEAPON) {
+						action.weapon = this.leeks[action.params[1]].weapon_name
+					}
+				}
 				if (this.$store.getters.admin && this.report.ai_times) {
 					for (const l in this.report.leeks) {
 						this.report.leeks[l].aiTime = Math.round(this.report.ai_times[l].time / 1000) / 1000

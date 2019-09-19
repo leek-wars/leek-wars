@@ -6,6 +6,7 @@
 		<div v-else-if="type === ActionType.USE_WEAPON">
 			<i18n path="fight.leek_shoot">
 				<leek slot="leek" :leek="leek" />
+				<b slot="weapon">{{ $t('weapon.' + action.weapon) }}</b>
 			</i18n>
 			<span v-if="action.params[4] === 2">... {{ $t('effect.critical') }}</span>
 		</div>
