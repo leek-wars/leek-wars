@@ -3,11 +3,7 @@
 		<div class="page-header page-bar">
 			<div>
 				<h1>
-					<router-link to="/forum">{{ $t('forum.title') }}</router-link>
-					>
-					<router-link v-if="topic" :to="'/forum/category-' + category.id">{{ categoryName }}</router-link>
-					>
-					<span ref="topicTitle" :contenteditable="topicEditing" class="topic-title">{{ topic ? topic.name : '...' }}</span>
+					<breadcrumb :items="breadcrumb_items" :raw="true"></breadcrumb>
 				</h1>
 				<div v-if="topic" class="info attrs">
 					<i v-if="topic.resolved" :title="$t('topic_resolved')" class="attr material-icons">check_circle</i>
@@ -26,6 +22,7 @@
 
 		<panel class="first last">
 			<div slot="content" class="content">
+				<breadcrumb v-if="LeekWars.mobile" :items="breadcrumb_items"></breadcrumb>
 				<pagination v-if="topic" :current="page" :total="pages" :url="'/forum/category-' + category.id + '/topic-' + topic.id" />
 				<loader v-if="!topic || !topic.messages" />
 				<div v-else>
@@ -127,13 +124,7 @@
 					<br>
 				</div>
 
-				<h2 v-if="topic">
-					<router-link to="/forum">{{ $t('forum.title') }}</router-link>
-					>
-					<router-link :to="'/forum/category-' + category.id">{{ categoryName }}</router-link>
-					>
-					{{ topic.name }}
-				</h2>
+				<breadcrumb :items="breadcrumb_items"></breadcrumb>
 			</div>
 		</panel>
 
@@ -161,8 +152,9 @@
 	import { ForumCategory, ForumMessage, ForumTopic } from '@/model/forum'
 	import { LeekWars } from '@/model/leekwars'
 	import { Component, Vue, Watch } from 'vue-property-decorator'
+	import Breadcrumb from './breadcrumb.vue'
 
-	@Component({ name: 'forum_topic', i18n: {} })
+	@Component({ name: 'forum_topic', i18n: {}, components: { Breadcrumb } })
 	export default class ForumTopicPage extends Vue {
 		topic: ForumTopic | null = null
 		category: ForumCategory | null = null
@@ -180,6 +172,13 @@
 
 		get categoryName() {
 			return this.category ? this.category.team > 0 ? this.category.name : this.$t('forum.category_' + this.category.name) : ''
+		}
+		get breadcrumb_items() {
+			return [
+				{name: this.$t('forum.title'), link: '/forum'},
+				{name: this.categoryName, link: '/forum/category-' + (this.topic ? this.category.id : 0)},
+				{name: this.topic ? this.topic.name : '...', link: '/forum-category-' + (this.topic ? this.category.id : 0) + '/topic-' + (this.topic ? this.topic.id : 0)}
+			]
 		}
 
 		mounted() {

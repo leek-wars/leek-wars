@@ -2,9 +2,7 @@
 	<div>
 		<div class="page-header page-bar">
 			<h1>
-				<router-link to="/forum">{{ $t('forum.title') }}</router-link> 
-				> 
-				<span>{{ category ? category.name : '...' }}</span>
+				<breadcrumb :items="breadcrumb_items" :raw="true"></breadcrumb>
 			</h1>
 			<div v-if="!LeekWars.mobile" class="tabs">
 				<div class="tab" @click="createDialog = true">
@@ -20,6 +18,8 @@
 
 		<panel class="first last">
 			<div slot="content" class="content">
+				<breadcrumb v-if="LeekWars.mobile" :items="breadcrumb_items"></breadcrumb>
+
 				<pagination v-if="category" :current="page" :total="pages" :url="'/forum/category-' + category.id" />
 
 				<div v-if="!LeekWars.mobile" class="topic header forum-header">
@@ -75,6 +75,7 @@
 					</div>
 				</div>
 				<pagination v-if="category" :current="page" :total="pages" :url="'/forum/category-' + category.id" />
+				<breadcrumb :items="breadcrumb_items"></breadcrumb>
 			</div>
 		</panel>
 
@@ -99,8 +100,9 @@
 	import { ForumCategory } from '@/model/forum'
 	import { LeekWars } from '@/model/leekwars'
 	import { Component, Vue, Watch } from 'vue-property-decorator'
+	import Breadcrumb from './breadcrumb.vue'
 	
-	@Component({ name: 'forum_category', i18n: {} })
+	@Component({ name: 'forum_category', i18n: {}, components: { Breadcrumb } })
 	export default class ForumCategoryPage extends Vue {
 		category: ForumCategory | null = null
 		page: number = 0
@@ -109,6 +111,13 @@
 		createTitle: string = ''
 		createMessage: string = ''
 		query: string = ''
+
+		get breadcrumb_items() {
+			return [
+				{name: this.$t('forum.title'), link: '/forum'},
+				{name: this.category ? this.category.name : '...', link: '/forum/category-' + (this.category ? this.category.id : 0)}
+			]
+		}
 
 		@Watch("$route.params", {immediate: true})
 		update() {
