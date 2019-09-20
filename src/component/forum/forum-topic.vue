@@ -3,7 +3,7 @@
 		<div class="page-header page-bar">
 			<div>
 				<h1>
-					<breadcrumb :items="breadcrumb_items" :raw="true"></breadcrumb>
+					<breadcrumb :items="breadcrumb_items" :raw="true" />
 				</h1>
 				<div v-if="topic" class="info attrs">
 					<i v-if="topic.resolved" :title="$t('topic_resolved')" class="attr material-icons">check_circle</i>
@@ -22,7 +22,7 @@
 
 		<panel class="first last">
 			<div slot="content" class="content">
-				<breadcrumb v-if="LeekWars.mobile" :items="breadcrumb_items"></breadcrumb>
+				<breadcrumb v-if="LeekWars.mobile" :items="breadcrumb_items" />
 				<pagination v-if="topic" :current="page" :total="pages" :url="'/forum/category-' + category.id + '/topic-' + topic.id" />
 				<loader v-if="!topic || !topic.messages" />
 				<div v-else>
@@ -124,7 +124,7 @@
 					<br>
 				</div>
 
-				<breadcrumb :items="breadcrumb_items"></breadcrumb>
+				<breadcrumb :items="breadcrumb_items" />
 			</div>
 		</panel>
 
@@ -176,8 +176,8 @@
 		get breadcrumb_items() {
 			return [
 				{name: this.$t('forum.title'), link: '/forum'},
-				{name: this.categoryName, link: '/forum/category-' + (this.topic ? this.category.id : 0)},
-				{name: this.topic ? this.topic.name : '...', link: '/forum-category-' + (this.topic ? this.category.id : 0) + '/topic-' + (this.topic ? this.topic.id : 0)}
+				{name: this.categoryName, link: '/forum/category-' + (this.category ? this.category.id : 0)},
+				{name: this.topic ? this.topic.name : '...', link: '/forum-category-' + (this.category ? this.category.id : 0) + '/topic-' + (this.topic ? this.topic.id : 0)}
 			]
 		}
 
