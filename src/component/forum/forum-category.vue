@@ -2,7 +2,7 @@
 	<div>
 		<div class="page-header page-bar">
 			<h1>
-				<breadcrumb :items="breadcrumb_items" :raw="true"></breadcrumb>
+				<breadcrumb :items="breadcrumb_items" :raw="true" />
 			</h1>
 			<div v-if="!LeekWars.mobile" class="tabs">
 				<div class="tab" @click="createDialog = true">
@@ -18,7 +18,7 @@
 
 		<panel class="first last">
 			<div slot="content" class="content">
-				<breadcrumb v-if="LeekWars.mobile" :items="breadcrumb_items"></breadcrumb>
+				<breadcrumb v-if="LeekWars.mobile" :items="breadcrumb_items" />
 
 				<pagination v-if="category" :current="page" :total="pages" :url="'/forum/category-' + category.id" />
 
@@ -75,7 +75,7 @@
 					</div>
 				</div>
 				<pagination v-if="category" :current="page" :total="pages" :url="'/forum/category-' + category.id" />
-				<breadcrumb :items="breadcrumb_items"></breadcrumb>
+				<breadcrumb :items="breadcrumb_items" />
 			</div>
 		</panel>
 
