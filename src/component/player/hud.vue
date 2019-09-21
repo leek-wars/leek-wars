@@ -3,10 +3,10 @@
 		<div class="life-bar">
 			<div class="wrapper">
 				<template v-for="team in game.teams">
-					<v-tooltip v-for="entity in team" v-if="!entity.dead" :key="entity.id" :open-delay="0" :close-delay="0" bottom>
+					<tooltip v-for="entity in team" v-if="!entity.dead" :key="entity.id">
 						<div slot="activator" :style="{background: entity.lifeBarGadient, width: Math.max(1, 500 * (entity.life / totalLife) - 3) + 'px'}" class="bar"></div>
 						{{ entity.name }} ({{ entity.life }})
-					</v-tooltip>
+					</tooltip>
 				</template>
 			</div>
 		</div>

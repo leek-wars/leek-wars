@@ -36,13 +36,13 @@
 				</td>
 				<td class="level">{{ team.level }}</td>
 				<td class="xp">
-					<v-tooltip :open-delay="0" :close-delay="0" bottom>
+					<tooltip>
 						<div slot="activator" class="bar">
 							<span :style="{width: currentBar + '%'}" class="current_xp"></span>
 							<span :style="{width: newBar + '%'}" class="new_xp team"></span>
 						</div>
 						{{ team.cur_xp | number }} / {{ team.next_xp | number }}
-					</v-tooltip>
+					</tooltip>
 					<span>{{ team.xp | number }}</span>
 				</td>
 				<td v-if="fight.context !== FightContext.CHALLENGE" class="talent">
@@ -55,10 +55,10 @@
 		</table>
 
 		<div class="flags">
-			<v-tooltip v-for="flag in flags" :key="flag" :open-delay="0" :close-delay="0" bottom>
+			<tooltip v-for="flag in flags" :key="flag">
 				<img :src="'/image/fight_flag/' + flag + '.png'">
 				{{ $t('fight.flag_' + flag) }}
-			</v-tooltip>
+			</tooltip>
 		</div>
 
 		<div class="scroll-x">

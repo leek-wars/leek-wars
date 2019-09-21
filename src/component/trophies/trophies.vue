@@ -35,12 +35,12 @@
 					<img :src="'/image/trophy/big/' + trophy.code + '.png'" class="image">
 					<div class="name">{{ trophy.name }}</div>
 					<div class="description">{{ trophy.description }}</div>
-					<v-tooltip v-if="!trophy.unlocked && trophy.progression != null" :open-delay="0" :close-delay="0" bottom>
+					<tooltip v-if="!trophy.unlocked && trophy.progression != null">
 						<div slot="activator" class="trophy-bar">
 							<div :style="{width: Math.floor(100 * trophy.progression / trophy.threshold) + '%'}" class="bar striked"></div>
 						</div>
 						{{ trophy.progression }} / {{ trophy.threshold }}
-					</v-tooltip>
+					</tooltip>
 				</div>
 			</div>
 		</panel>

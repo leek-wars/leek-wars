@@ -11,13 +11,13 @@
 						<span>{{ $t('forum') }}</span>
 					</div>
 				</router-link>
-				<v-tooltip :open-delay="0" :close-delay="0" bottom>
+				<tooltip>
 					<div slot="activator" class="tab" @click="updateOpened">
 						<span>{{ $t('opened') }}</span>
 						<v-switch v-model="team.opened" hide-details />
 					</div>
 					{{ $t('recrutment_mode') }}
-				</v-tooltip>
+				</tooltip>
 			</div>
 		</div>
 
@@ -26,13 +26,13 @@
 				<panel class="team-emblem first">
 					<div v-if="team" slot="content" class="content">
 						<template v-if="member">
-							<v-tooltip :open-delay="0" :close-delay="0" bottom>
+							<tooltip>
 								<div slot="activator" class="emblem-input">
 									<input ref="emblemInput" type="file" @change="changeEmblem">
 									<emblem ref="emblem" :team="team" @click.native="$refs.emblemInput.click()" />
 								</div>
 								{{ $t('change_emblem') }}
-							</v-tooltip>
+							</tooltip>
 						</template>
 						<emblem v-else :team="team" />
 					</div>
@@ -62,7 +62,7 @@
 			<div class="column4">
 				<panel>
 					<h4 class="team-level">{{ $t('level_n', [team ? team.level : '...']) }}</h4>
-					<v-tooltip v-if="team" :open-delay="0" :close-delay="0" bottom>
+					<tooltip v-if="team">
 						<div slot="activator" class="bar">
 							<span :class="{blue: max_level}" :style="{width: xp_bar_width + '%'}" class="xp-bar striked"></span>
 						</div>
@@ -76,18 +76,18 @@
 							<br>
 							{{ $t('xp', [LeekWars.formatNumber(team.xp) + " / " + LeekWars.formatNumber(team.up_xp)]) }}
 						</template>
-					</v-tooltip>
+					</tooltip>
 
 					<center>
 						<br>
-						<v-tooltip :open-delay="0" :close-delay="0" bottom>
+						<tooltip>
 							<talent slot="activator" :talent="team ? team.talent : '...'" />
 							{{ $t('talent') }}
-						</v-tooltip>
+						</tooltip>
 					</center>
 
 					<br>
-					<v-tooltip v-if="team" :open-delay="0" :close-delay="0" bottom>
+					<tooltip v-if="team">
 						<table slot="activator" class="fights">
 							<tr>
 								<td class="big">{{ team.victories | number }}</td>
@@ -101,7 +101,7 @@
 							</tr>
 						</table>
 						{{ $t('ratio', [team.ratio]) }}
-					</v-tooltip>
+					</tooltip>
 				</panel>
 			</div>
 		</div>
@@ -137,14 +137,14 @@
 					<router-link :to="'/farmer/' + member.id">
 						<avatar :farmer="member" />
 						<div class="name">
-							<v-tooltip v-if="member.grade == 'owner'" :open-delay="0" :close-delay="0" bottom>
+							<tooltip v-if="member.grade == 'owner'">
 								<span slot="activator">★</span>
 								{{ $t('owner') }}
-							</v-tooltip>
-							<v-tooltip v-else-if="member.grade == 'captain'" :open-delay="0" :close-delay="0" bottom>
+							</tooltip>
+							<tooltip v-else-if="member.grade == 'captain'">
 								<span slot="activator">☆</span>
 								{{ $t('captain') }}
-							</v-tooltip>
+							</tooltip>
 							{{ member.name }}
 							<img v-if="member.connected" class="status" src="/image/connected.png">
 							<img v-else class="status" src="/image/disconnected.png">
@@ -181,14 +181,14 @@
 						<talent :talent="composition.talent" />
 					</div>
 					<router-link v-if="composition.tournament.current" :to="'/tournament/' + composition.tournament.current" class="view-tournament button flat">{{ $t('see_tournament') }}</router-link>
-					<v-tooltip v-if="captain" :open-delay="0" :close-delay="0" bottom class="button flat">
+					<tooltip v-if="captain" class="button flat">
 						<div slot="activator" @click="registerTournament(composition)">
 							<img src="/image/icon/trophy.png">
 							<span v-if="!composition.tournament.registered" class="register-tournament">{{ $t('register_tournament') }}</span>
 							<span v-else class="unregister-tournament">{{ $t('unregister') }}</span>
 						</div>
 						{{ $t('tournament_time') }}
-					</v-tooltip>
+					</tooltip>
 					<div v-if="captain" class="delete-compo button flat" @click="compositionToDelete = composition; deleteCompoDialog = true">
 						<i class="material-icons">clear</i>
 					</div>
@@ -325,14 +325,14 @@
 				<div v-for="member in team.members" :key="member.id" :class="{selected: member === changeOwnerSelected}" class="farmer" @click="changeOwnerSelected = member">
 					<avatar :farmer="member" />
 					<div class="name">
-						<v-tooltip v-if="member.grade === 'owner'" :open-delay="0" :close-delay="0" bottom>
+						<tooltip v-if="member.grade === 'owner'">
 							<span slot="activator">★</span>
 							{{ $t('owner') }}
-						</v-tooltip>
-						<v-tooltip v-else-if="member.grade === 'captain'" :open-delay="0" :close-delay="0" bottom>
+						</tooltip>
+						<tooltip v-else-if="member.grade === 'captain'">
 							<span slot="activator">☆</span>
 							{{ $t('captain') }}
-						</v-tooltip>
+						</tooltip>
 						{{ member.name }}
 					</div>
 				</div>

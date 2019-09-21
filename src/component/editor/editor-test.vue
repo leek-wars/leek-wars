@@ -89,14 +89,14 @@
 					<div class="title">Puces</div>
 					<div class="chips">
 						<div class="container">
-							<v-tooltip v-for="chip in currentLeek.chips" :key="chip" :open-delay="0" :close-delay="0" bottom>
+							<tooltip v-for="chip in currentLeek.chips" :key="chip">
 								<img slot="activator" :src="'/image/chip/small/' + LeekWars.chips[chip].name + '.png'" class="chip" @click="removeLeekChip(chip)">
 								<b>{{ $t('chip.' + LeekWars.chips[chip].name) }}</b>
 								<br>
 								{{ $t('leek.chip_level_n', [LeekWars.chips[chip].level]) }}
 								<br>
 								<small>{{ 'CHIP_' + LeekWars.chips[chip].name.toUpperCase() }}</small>
-							</v-tooltip>
+							</tooltip>
 						</div>
 						<div v-if="currentLeek.chips.length < 12" class="add" @click="chipsDialog = true">+</div>
 					</div>
@@ -104,14 +104,14 @@
 					<div class="title">Armes</div>
 					<div class="weapons">
 						<div class="container">
-							<v-tooltip v-for="weapon of currentLeek.weapons" :key="weapon" :open-delay="0" :close-delay="0" bottom>
+							<tooltip v-for="weapon of currentLeek.weapons" :key="weapon">
 								<img slot="activator" :src="'/image/weapon/' + LeekWars.weapons[weapon].name + '.png'" class="weapon" @click="removeLeekWeapon(weapon)">
 								<b>{{ $t('weapon.' + LeekWars.weapons[weapon].name) }}</b>
 								<br>
 								{{ $t('leek.weapon_level_n', [LeekWars.weapons[weapon].level]) }}
 								<br>
 								<small>{{ 'WEAPON_' + LeekWars.weapons[weapon].name.toUpperCase() }}</small>
-							</v-tooltip>
+							</tooltip>
 						</div>
 						<div v-if="currentLeek.weapons.length < 4" class="add" @click="weaponsDialog = true">+</div>
 					</div>
@@ -229,28 +229,28 @@
 		<popup v-model="chipsDialog" :width="767">
 			<span slot="title">Select a chip</span>
 			<div v-if="currentLeek" class="padding chips-dialog">
-				<v-tooltip v-for="chip of LeekWars.chips" v-if="currentLeek.chips.indexOf(chip.id) === -1" :key="chip.id" :open-delay="0" :close-delay="0" bottom>
+				<tooltip v-for="chip of LeekWars.chips" v-if="currentLeek.chips.indexOf(chip.id) === -1" :key="chip.id">
 					<img slot="activator" :src="'/image/chip/small/' + chip.name + '.png'" class="chip" @click="addLeekChip(chip.id)">
 					<b>{{ $t('chip.' + LeekWars.chips[chip.id].name) }}</b>
 					<br>
 					{{ $t('leek.chip_level_n', [LeekWars.chips[chip.id].level]) }}
 					<br>
 					<small>{{ 'CHIP_' + LeekWars.chips[chip.id].name.toUpperCase() }}</small>
-				</v-tooltip>
+				</tooltip>
 			</div>
 		</popup>
 
 		<popup v-model="weaponsDialog" :width="800">
 			<span slot="title">Select a weapon</span>
 			<div v-if="currentLeek" class="padding weapons-dialog">
-				<v-tooltip v-for="weapon of LeekWars.weapons" v-if="currentLeek.weapons.indexOf(weapon.id) === -1" :key="weapon.id" :open-delay="0" :close-delay="0" bottom>
+				<tooltip v-for="weapon of LeekWars.weapons" v-if="currentLeek.weapons.indexOf(weapon.id) === -1" :key="weapon.id">
 					<img slot="activator" :src="'/image/weapon/' + weapon.name + '.png'" class="weapon" @click="addLeekWeapon(weapon.id)">
 					<b>{{ $t('weapon.' + LeekWars.weapons[weapon.id].name) }}</b>
 					<br>
 					{{ $t('leek.weapon_level_n', [LeekWars.weapons[weapon.id].level]) }}
 					<br>
 					<small>{{ 'WEAPON_' + LeekWars.weapons[weapon.id].name.toUpperCase() }}</small>
-				</v-tooltip>
+				</tooltip>
 			</div>
 		</popup>
 	</popup>

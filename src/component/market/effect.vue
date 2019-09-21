@@ -10,30 +10,30 @@
 			<b slot="turns">{{ effect.turns }}</b>
 		</i18n>
 
-		<v-tooltip bottom open-delay="0" close-delay="0">
+		<tooltip>
 			<span v-if="enemies && !allies" slot="activator" class="ennemies"></span>
 			<span>{{ $t('effect.target_enemies') }}</span>
-		</v-tooltip>
+		</tooltip>
 
-		<v-tooltip bottom open-delay="0" close-delay="0">
+		<tooltip>
 			<span v-if="allies && !enemies" slot="activator" class="allies"></span>
 			<span>{{ $t('effect.target_allies') }}</span>
-		</v-tooltip>
+		</tooltip>
 
-		<v-tooltip bottom open-delay="0" close-delay="0">
+		<tooltip>
 			<span v-if="!caster" slot="activator" class="not-player"></span>
 			<span>{{ $t('effect.target_not_player') }}</span>
-		</v-tooltip>
+		</tooltip>
 
-		<v-tooltip bottom open-delay="0" close-delay="0">
+		<tooltip>
 			<span v-if="!nonSummons" slot="activator" class="summons"></span>
 			<span>{{ $t('effect.target_summons') }}</span>
-		</v-tooltip>
+		</tooltip>
 
-		<v-tooltip bottom open-delay="0" close-delay="0">
+		<tooltip>
 			<span v-if="!summons" slot="activator" class="not-summons"></span>
 			<span>{{ $t('effect.target_not_summons') }}</span>
-		</v-tooltip>
+		</tooltip>
 	</div>
 </template>
 

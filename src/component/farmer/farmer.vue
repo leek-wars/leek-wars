@@ -18,14 +18,14 @@
 							<div class="tab green">{{ $t('see_tournament') }}</div>
 						</router-link>
 					</template>
-					<v-tooltip :open-delay="0" :close-delay="0" bottom>
+					<tooltip>
 						<div slot="activator" class="tab">
 							<img src="/image/icon/trophy.png">
 							<span v-if="farmer.tournament && !farmer.tournament.registered" class="register" @click="registerTournament">{{ $t('register_to_tournament') }}</span>
 							<span v-else class="unregister" @click="registerTournament">{{ $t('unregister') }}</span>
 						</div>
 						{{ $t('tournament_time') }}
-					</v-tooltip>
+					</tooltip>
 					<div class="tab" @click="updateGarden">
 						<span>{{ $t('garden') }}</span>
 						<v-switch :input-value="farmer.in_garden" hide-details />
@@ -55,13 +55,13 @@
 				<panel class="first">
 					<div slot="content" class="content avatar-td">
 						<div v-if="myFarmer">
-							<v-tooltip :open-delay="0" :close-delay="0" bottom>
+							<tooltip>
 								<div slot="activator" class="avatar-input">
 									<input ref="avatarInput" type="file" @change="changeAvatar">
 									<avatar ref="avatar" :farmer="farmer" @click.native="$refs.avatarInput.click()" />
 								</div>
 								{{ $t('click_to_change_avatar') }}
-							</v-tooltip>
+							</tooltip>
 						</div>
 						<div v-else>
 							<avatar :farmer="farmer" />
@@ -100,20 +100,19 @@
 				<panel>
 					<div slot="content" class="content stats">
 						<div class="talent-wrapper">
-							<v-tooltip bottom open-delay="0" close-delay="0">
+							<tooltip>
 								<talent slot="activator" :talent="farmer ? farmer.talent : '...'" />
 								<div>{{ $t('talent') }}</div>
-							</v-tooltip>
-							<v-tooltip v-if="farmer" bottom open-delay="0" close-delay="0">
+							</tooltip>
+							<tooltip v-if="farmer">
 								<div slot="activator" class="talent-more">({{ farmer.talent_more >= 0 ? '+' + farmer.talent_more : farmer.talent_more }})</div>
 								<template v-if="farmer.talent_more > 0">
 									<span v-html="$t('report.talent_difference_farmer', [farmer.name, farmer.talent_more, talent_gains + '%'])"></span>
 								</template>
 								<div v-else v-html="$t('report.talent_difference_farmer_no_gains', [farmer.name])"></div>
-							</v-tooltip>
+							</tooltip>
 						</div>
-						
-						<v-tooltip v-if="farmer" bottom open-delay="0" close-delay="0">
+						<tooltip v-if="farmer">
 							<table slot="activator">
 								<tr>
 									<td class="big">{{ farmer.victories | number }}</td>
@@ -127,7 +126,7 @@
 								</tr>
 							</table>
 							{{ $t('ratio') }} : {{ farmer.ratio }}
-						</v-tooltip>
+						</tooltip>
 		
 						<table v-if="farmer && farmer.won_solo_tournaments + farmer.won_farmer_tournaments + farmer.won_team_tournaments > 0" class="tournaments">
 							<tr>
@@ -218,7 +217,7 @@
 					<loader v-if="!farmer || !trophies" />
 					<template v-else-if="farmer.trophies > 0 && trophies_list && trophies_grid">
 						<div v-show="trophiesMode == 'list'" class="list trophies-container">
-							<v-tooltip v-for="(trophy, t) in trophies_list" v-if="trophy != null" :key="t" :open-delay="0" :close-delay="0" bottom>
+							<tooltip v-for="(trophy, t) in trophies_list" v-if="trophy != null" :key="t">
 								<div slot="activator" class="trophy">
 									<img :src="'/image/trophy/' + trophy.code + '.png'">
 								</div>
@@ -227,10 +226,10 @@
 									<br>{{ trophy.description }}
 								</span>
 								<br><span class="trophy-date">{{ LeekWars.formatDuration(trophy.date) }}</span>
-							</v-tooltip>
+							</tooltip>
 						</div>
 						<div v-show="trophiesMode == 'grid'" class="grid trophies-container">
-							<v-tooltip v-for="(trophy, t) in trophies_grid" :key="t" :open-delay="0" :close-delay="0" :disabled="!trophy" bottom>
+							<tooltip v-for="(trophy, t) in trophies_grid" :key="t" :disabled="!trophy">
 								<span slot="activator">
 									<div v-if="trophy != null" class="trophy card">
 										<img :src="'/image/trophy/' + trophy.code + '.png'">
@@ -246,12 +245,12 @@
 									</span>
 									<br><span class="date">{{ LeekWars.formatDuration(trophy.date) }}</span>
 								</span>
-							</v-tooltip>
+							</tooltip>
 						</div>
 						<div v-if="bonus_trophies && bonus_trophies.length > 0">
 							<h4 class="trophies-bonus">{{ $t('bonus_trophies') }}</h4>
 							<div class="trophies-container">
-								<v-tooltip v-for="trophy in bonus_trophies" :key="trophy.id" :open-delay="0" :close-delay="0" bottom>
+								<tooltip v-for="trophy in bonus_trophies" :key="trophy.id">
 									<div slot="activator" :class="{card: trophiesMode == 'grid'}" class="trophy">
 										<img :src="'/image/trophy/' + trophy.code + '.png'">
 									</div>
@@ -260,7 +259,7 @@
 										<br>{{ trophy.description }}
 									</span>
 									<br><span class="date">{{ LeekWars.formatDuration(trophy.date) }}</span>
-								</v-tooltip>
+								</tooltip>
 							</div>
 						</div>
 					</template>

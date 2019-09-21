@@ -3,7 +3,7 @@
 		<div class="page-header page-bar">
 			<h1>{{ $t('title') }}</h1>
 			<div v-if="garden" class="tabs">
-				<v-tooltip :open-delay="0" :close-delay="0" bottom>
+				<tooltip>
 					<div slot="activator" class="tab action hidden">
 						<img src="/image/icon/garden.png">
 						<span v-if="garden.fights > 0">{{ garden.fights }}</span>
@@ -11,7 +11,7 @@
 					</div>
 					<span v-if="garden.fights > 0">{{ $t('n_remaining_fights', [garden.fights]) }}</span>
 					<span v-else>{{ $t('next_fight_in', [remainingTime]) }}</span>
-				</v-tooltip>
+				</tooltip>
 			</div>
 		</div>
 		<div v-show="!LeekWars.mobile || !LeekWars.splitBack" class="column3">
@@ -30,7 +30,7 @@
 							<img class="sword" src="/image/icon/grey/garden.png">
 							<img class="player" src="/image/player.png">
 						</router-link>
-						<v-tooltip :open-delay="0" :close-delay="0" :disabled="farmerEnabled" bottom>
+						<tooltip :disabled="farmerEnabled">
 							<router-link v-ripple slot="activator" :class="{ enabled: farmerEnabled }" :event="farmerEnabled ? 'click' : ''" to="/garden/farmer" class="tab">
 								<h2>{{ $t('category_farmer_fight') }}</h2>
 								<span class="player-count">4</span>&nbsp;<img class="player" src="/image/player.png">
@@ -38,9 +38,9 @@
 								<span class="player-count">4</span>&nbsp;<img class="player" src="/image/player.png">
 							</router-link>
 							{{ $t('you_must_have_2_leeks') }}
-						</v-tooltip>
+						</tooltip>
 
-						<v-tooltip :open-delay="0" :close-delay="0" :disabled="teamEnabled" bottom>
+						<tooltip :disabled="teamEnabled">
 							<router-link v-ripple slot="activator" :class="{ enabled: teamEnabled }" :event="teamEnabled ? 'click' : ''" to="/garden/team" class="tab">
 								<h2>{{ $t('category_team_fight') }}</h2>
 								<span class="player-count">6</span>&nbsp;<img class="player" src="/image/player.png">
@@ -48,15 +48,15 @@
 								<span class="player-count">6</span>&nbsp;<img class="player" src="/image/player.png">
 							</router-link>
 							{{ $t('you_must_have_a_team') }}
-						</v-tooltip>
+						</tooltip>
 
-						<v-tooltip :open-delay="0" :close-delay="0" :disabled="battleRoyaleEnabled" bottom>
+						<tooltip :disabled="battleRoyaleEnabled">
 							<router-link v-ripple slot="activator" :class="{ enabled: battleRoyaleEnabled }" :event="battleRoyaleEnabled ? 'click' : ''" to="/garden/battle-royale" class="tab">
 								<h2>{{ $t('category_battle_royale') }}</h2>
 								<span class="player-count">10</span>&nbsp;<img class="player" src="/image/player.png">
 							</router-link>
 							{{ $t('you_must_be_level_50') }}
-						</v-tooltip>
+						</tooltip>
 					</div>
 				</div>
 			</panel>
@@ -163,12 +163,12 @@
 						</div>
 						<div v-if="category == 'battle-royale'">
 							<div v-if="!LeekWars.battleRoyale.enabled">
-								<v-tooltip v-for="leek in $store.state.farmer.leeks" :key="leek.id" :open-delay="0" :close-delay="0" :disabled="leek.level >= 50" bottom>
+								<tooltip v-for="leek in $store.state.farmer.leeks" :key="leek.id" :disabled="leek.level >= 50">
 									<router-link slot="activator" :to="'/garden/battle-royale/' + leek.id" :class="{disabled: leek.level < 50}" :event="leek.level < 50 ? null : 'click'" class="my-leek">
 										<garden-leek :leek="leek" />
 									</router-link>
 									Level &lt; 50
-								</v-tooltip>
+								</tooltip>
 								<br><br>
 								<v-btn v-if="garden.fights" color="primary" @click="battleRoyaleRegister">Sélectionner</v-btn>
 								<div v-else>
