@@ -3,7 +3,11 @@
 		<div class="page-header page-bar">
 			<div>
 				<h1>
-					<breadcrumb :items="breadcrumb_items" :raw="true" />
+					<router-link to="/forum">{{ $t('forum.title') }}</router-link>
+					<i class="material-icons">chevron_right</i>
+					<router-link v-if="topic" :to="'/forum/category-' + category.id">{{ categoryName }}</router-link>
+					<i class="material-icons">chevron_right</i>
+					<span ref="topicTitle" :contenteditable="topicEditing" class="topic-title">{{ topic ? topic.name : '...' }}</span>
 				</h1>
 				<div v-if="topic" class="info attrs">
 					<i v-if="topic.resolved" :title="$t('topic_resolved')" class="attr material-icons">check_circle</i>
@@ -384,6 +388,8 @@
 	h1 {
 		font-size: 22px;
 		line-height: 35px;
+		display: inline-flex;
+		align-items: center;
 	}
 	#app.app .panel .content {
 		padding: 0;
