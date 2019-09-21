@@ -859,6 +859,11 @@
 	.trophies-bonus {
 		margin: 5px;
 	}
+	.trophies .grey {
+		color: #777;
+		text-align: center;
+		padding: 15px;
+	}
 	.warnings {
 		text-align: center;
 		padding-bottom: 20px;
