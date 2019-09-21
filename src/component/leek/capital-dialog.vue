@@ -5,19 +5,19 @@
 		<center><div class="capital rounded4">{{ $t('leek.n_capital', [capital]) }}</div></center>
 
 		<div v-for="c in ['life', 'strength', 'wisdom', 'agility', 'resistance', 'science', 'magic', 'frequency', 'mp', 'tp']" :key="c" class="charac">
-			<v-tooltip :open-delay="0" :close-delay="0" bottom>
+			<tooltip>
 				<img slot="activator" :src="'/image/charac/' + c + '.png'">
 				<b>{{ $t('leek.' + c) }}</b><br>
 				{{ $t('leek.' + c + '_description') }}
-			</v-tooltip>
+			</tooltip>
 			<div>
 				<span :class="'stat color-' + c">{{ leek[c] + bonuses[c] }}</span>
 				<span v-if="bonuses[c]" class="sup">&nbsp;(+{{ bonuses[c] }})</span>
 				<div class="add-wrapper">
-					<v-tooltip v-for="cost in [1, 10, 100]" :key="cost" :open-delay="0" :close-delay="0" bottom>
+					<tooltip v-for="cost in [1, 10, 100]" :key="cost">
 						<span slot="activator" :q="cost" :class="{locked: costs[c + cost].cost > capital}" class="add" @click="add(c, cost)"></span>
 						{{ costs[c + cost].cost + ' capital ⇔ ' + costs[c + cost].bonus + ' ' + $t('leek.' + c) }}
-					</v-tooltip>
+					</tooltip>
 				</div>
 			</div>
 		</div>

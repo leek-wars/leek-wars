@@ -6,7 +6,7 @@
 				<img :src="'/image/bulb/' + summon.name + '_front.png'" width="width">
 			</div>
 			<div>
-				<v-tooltip v-for="c in ['life', 'science', 'wisdom', 'magic', 'strength', 'frequency', 'agility', 'mp', 'resistance', 'tp']" :open-delay="0" :close-delay="0" :key="c" bottom class="characteristic">
+				<tooltip v-for="c in ['life', 'science', 'wisdom', 'magic', 'strength', 'frequency', 'agility', 'mp', 'resistance', 'tp']" :key="c" class="characteristic">
 					<div slot="activator">
 						<img :src="'/image/charac/' + c + '.png'">
 						<span :class="'color-' + c">
@@ -20,15 +20,15 @@
 						</span>
 					</div>
 					<b>{{ $t('leek.' + c) }}</b>
-				</v-tooltip>
+				</tooltip>
 			</div>
 		</div>
 		<h4>{{ $t('market.summon_available_chips') }}</h4>
 		<div class="chips">
-			<v-tooltip v-for="chip of summon.chips" :key="chip.id" :open-delay="0" :close-delay="0" bottom>
+			<tooltip v-for="chip of summon.chips" :key="chip.id">
 				<img slot="activator" :src="'/image/chip/small/' + LeekWars.chips[chip].name + '.png'" class="chip">
 				{{ $t('chip.' + LeekWars.chips[chip].name) }}
-			</v-tooltip>
+			</tooltip>
 		</div>
 	</div>
 </template>

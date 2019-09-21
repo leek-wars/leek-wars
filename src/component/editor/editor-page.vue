@@ -21,10 +21,10 @@
 							<i class="material-icons">insert_drive_file</i>
 							<v-list-tile-content class="language">
 								<v-list-tile-title>{{ $t('new_v2') }}
-									<v-tooltip :open-delay="0" :close-delay="0" bottom>
+									<tooltip>
 										<span slot="activator" class="label-beta">bêta <i class="material-icons">info</i></span>
 										{{ $t('editor.v2_beta_message') }}
-									</v-tooltip>
+									</tooltip>
 								</v-list-tile-title>
 							</v-list-tile-content>
 						</v-list-tile>

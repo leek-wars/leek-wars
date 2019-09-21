@@ -22,6 +22,7 @@ import NotificationElement from '@/component/notification/notification.vue'
 import Pagination from '@/component/pagination.vue'
 import Popup from '@/component/popup.vue'
 import Talent from '@/component/talent.vue'
+import Tooltip from '@/component/tooltip.vue'
 import { i18n, loadInstanceTranslations } from '@/model/i18n'
 import { LeekWars } from '@/model/leekwars'
 import '@/model/serviceworker'
@@ -94,6 +95,7 @@ Vue.component('not-found', NotFound)
 Vue.component('markdown', Markdown)
 Vue.component('panel', Panel)
 Vue.component('popup', Popup)
+Vue.component('tooltip', Tooltip)
 
 Vue.directive('autostopscroll', {
 	inserted: (el, binding) => {

@@ -11,22 +11,21 @@
 							<div class="tab green">{{ $t('see_tournament') }}</div>
 						</router-link>
 					</template>
-					<v-tooltip v-if="leek.tournament" :open-delay="0" :close-delay="0" bottom>
+					<tooltip v-if="leek.tournament">
 						<div slot="activator" class="tab" @click="registerTournament">
 							<img src="/image/icon/trophy.png">
 							<span v-if="!leek.tournament.registered" class="register">{{ $t('register_to_tournament') }}</span>
 							<span v-else class="unregister">{{ $t('unregister') }}</span>
 						</div>
 						{{ $t('tournament_time') }}
-					</v-tooltip>
-
-					<v-tooltip :open-delay="0" :close-delay="0" bottom>
+					</tooltip>
+					<tooltip>
 						<div slot="activator" class="tab" @click="updateGarden">
 							<span>{{ $t('garden') }}</span>
 							<v-switch :input-value="leek.in_garden" hide-details />
 						</div>
 						{{ $t('authorize_agressions') }}
-					</v-tooltip>
+					</tooltip>
 				</template>
 				<template v-else-if="$store.state.connected">
 					<router-link v-if="leek" :to="'/garden/challenge/leek/' + leek.id">
@@ -59,7 +58,7 @@
 				<panel :title="$t('statistics')">
 					<h4 class="level">{{ $t('level_n', [leek ? leek.level : '...']) }}</h4>
 
-					<v-tooltip bottom open-delay="0" close-delay="0">
+					<tooltip>
 						<div slot="activator" class="bar">
 							<span :class="{ blue: blue_xp_bar }" :style="{width: xp_bar_width + '%'}" class="xp-bar striked"></span>
 						</div>
@@ -72,14 +71,14 @@
 							<br>
 							{{ $t('xp', [LeekWars.formatNumber(leek.xp) + " / " + LeekWars.formatNumber(leek.up_xp)]) }}
 						</template>
-					</v-tooltip>
+					</tooltip>
 
 					<div class="talent-wrapper">
-						<v-tooltip bottom open-delay="0" close-delay="0">
+						<tooltip>
 							<talent slot="activator" :talent="leek ? leek.talent : '...'" />
 							<div>{{ $t('talent') }}</div>
-						</v-tooltip>
-						<v-tooltip v-if="leek" bottom open-delay="0" close-delay="0">
+						</tooltip>
+						<tooltip v-if="leek">
 							<div slot="activator" class="talent-more">({{ leek.talent_more >= 0 ? '+' + leek.talent_more : leek.talent_more }})</div>
 							<template v-if="leek.talent_more > 0">
 								<span v-html="$t('report.talent_difference', [leek.name, leek.talent_more, leek.talentGains + '%'])"></span>
@@ -87,10 +86,10 @@
 							<template v-else>
 								<span v-html="$t('report.talent_difference_no_gains', [leek.name])"></span>
 							</template>
-						</v-tooltip>
+						</tooltip>
 					</div>
 
-					<v-tooltip :disabled="!leek" bottom open-delay="0" close-delay="0">
+					<tooltip v-if="leek">
 						<table slot="activator" class="fights">
 							<tr>
 								<td class="big">{{ (leek ? leek.victories : '...') | number }}</td>
@@ -104,7 +103,7 @@
 							</tr>
 						</table>
 						{{ $t('ratio', [leek ? leek.ratio : 0]) }}
-					</v-tooltip>
+					</tooltip>
 
 					<template v-if="leek && leek.level >= 100">
 						<chartist ref="chart" :data="chartData" :options="chartOptions" :events="chartEvents" ratio="ct-major-eleventh" class="talent-history" type="Line" />
@@ -117,7 +116,7 @@
 				<panel :title="$t('characteristics')">
 					<div slot="content" class="characteristics">
 						<div v-for="c in ['life', 'science', 'strength', 'magic', 'wisdom', 'frequency', 'agility', 'mp', 'resistance', 'tp']" :key="c" class="characteristic">
-							<v-tooltip bottom open-delay="0" close-delay="0">
+							<tooltip bottom>
 								<div slot="activator">
 									<img :src="'/image/charac/' + c + '.png'">
 									<span :class="'color-' + c">{{ leek ? leek[c] : '...' }}</span>
@@ -162,7 +161,7 @@
 										</template>
 									</template>
 								</div>
-							</v-tooltip>
+							</tooltip>
 						</div>
 						<center v-if="leek && my_leek">
 							<br>
@@ -184,7 +183,7 @@
 					<div slot="content" class="content center">
 						<loader v-if="!leek" />
 						<template v-else>
-							<v-tooltip v-for="weapon in leek.orderedWeapons" :key="weapon.id" :open-delay="0" :close-delay="0" bottom>
+							<tooltip v-for="weapon in leek.orderedWeapons" :key="weapon.id">
 								<div slot="activator" class="weapon">
 									<img :src="'/image/weapon/' + LeekWars.weapons[weapon.template].name + '.png'">
 								</div>
@@ -193,7 +192,7 @@
 								{{ $t('weapon_level_n', [LeekWars.weapons[weapon.template].level]) }}
 								<br>
 								<small>{{ 'WEAPON_' + LeekWars.weapons[weapon.template].name.toUpperCase() }}</small>
-							</v-tooltip>
+							</tooltip>
 						</template>
 					</div>
 				</panel>
@@ -210,7 +209,7 @@
 					<div slot="content" class="chips">
 						<loader v-if="!leek" />
 						<template v-else>
-							<v-tooltip v-for="chip in leek.orderedChips" :key="chip.id" :open-delay="0" :close-delay="0" bottom>
+							<tooltip v-for="chip in leek.orderedChips" :key="chip.id">
 								<div slot="activator" class="chip">
 									<img :src="'/image/chip/small/' + LeekWars.chips[chip.template].name + '.png'">
 								</div>
@@ -219,7 +218,7 @@
 								{{ $t('chip_level_n', [LeekWars.chips[chip.template].level]) }}
 								<br>
 								<small>{{ 'CHIP_' + LeekWars.chips[chip.template].name.toUpperCase() }}</small>
-							</v-tooltip>
+							</tooltip>
 						</template>
 					</div>
 				</panel>
@@ -304,25 +303,25 @@
 			</template>
 			<div class="weapons-popup">
 				<div :class="{dashed: draggedWeapon && draggedWeaponLocation === 'farmer'}" class="leek-weapons" @dragover="dragOver" @drop="weaponsDrop('leek', $event)">
-					<v-tooltip v-for="(weapon, i) in leek.orderedWeapons" :key="i" :open-delay="0" :close-delay="0" bottom>
+					<tooltip v-for="(weapon, i) in leek.orderedWeapons" :key="i">
 						<div slot="activator" :class="{dragging: draggedWeapon && draggedWeapon.template === weapon.template && draggedWeaponLocation === 'leek'}" class="weapon" draggable="true" @dragstart="weaponDragStart('leek', weapon, $event)" @dragend="weaponDragEnd(weapon)" @click="removeWeapon(weapon)">
 							<img :src="'/image/weapon/' + LeekWars.weapons[weapon.template].name + '.png'" draggable="false">
 						</div>
 						<b>{{ $t("weapon." + LeekWars.weapons[weapon.template].name) }}</b><br>
 						{{ $t('level_n', [LeekWars.weapons[weapon.template].level]) }}
-					</v-tooltip>
+					</tooltip>
 				</div>
 				<br>
 				<h2>{{ $t('all_my_weapons') }}</h2>
 				<br>
 				<div :class="{dashed: draggedWeapon && draggedWeaponLocation === 'leek'}" class="farmer-weapons" @dragover="dragOver" @drop="weaponsDrop('farmer', $event)">
-					<v-tooltip v-for="(weapon, i) in farmer_weapons" :key="i" :open-delay="0" :close-delay="0" bottom>
+					<tooltip v-for="(weapon, i) in farmer_weapons" :key="i">
 						<div slot="activator" :quantity="weapon.quantity" :class="{dragging: draggedWeapon && draggedWeapon.template === weapon.template && draggedWeaponLocation === 'farmer', locked: LeekWars.weapons[weapon.template].level > leek.level}" :draggable="LeekWars.weapons[weapon.template].level <= leek.level" class="weapon" @dragstart="weaponDragStart('farmer', weapon, $event)" @dragend="weaponDragEnd(weapon)" @click="addWeapon(weapon)">
 							<img :src="'/image/weapon/' + LeekWars.weapons[weapon.template].name + '.png'" draggable="false">
 						</div>
 						<b>{{ $t('weapon.' + LeekWars.weapons[weapon.template].name) }}</b><br>
 						{{ $t('level_n', [LeekWars.weapons[weapon.template].level]) }}
-					</v-tooltip>
+					</tooltip>
 				</div>
 			</div>
 		</popup>
@@ -348,14 +347,14 @@
 		<popup v-if="leek && my_leek" v-model="potionDialog" :width="750">
 			<span slot="title">{{ $t("use_a_potion", [leek.name]) }}</span>
 			<div class="farmer-potions">
-				<v-tooltip v-for="(potion, id) in $store.state.farmer.potions" :key="id" :open-delay="0" :close-delay="0" bottom>
+				<tooltip v-for="(potion, id) in $store.state.farmer.potions" :key="id">
 					<div slot="activator" :quantity="potion.quantity" class="potion" @click="usePotion(potion)">
 						<img :src="'/image/potion/' + LeekWars.potions[potion.template].name + '.png'">
 					</div>
 					<b>{{ $t('potion.' + LeekWars.potions[potion.template].name) }}</b>
 					<br>
 					{{ $t('level_n', [LeekWars.potions[potion.template].level]) }}
-				</v-tooltip>
+				</tooltip>
 				<br><br>
 				<center>({{ $t('click_to_use') }})</center>
 			</div>
@@ -366,20 +365,20 @@
 		<popup v-model="hatDialog" :width="700">
 			<span slot="title">{{ $t('select_a_hat') }}</span>
 			<div class="hat-dialog">
-				<v-tooltip :open-delay="0" :close-delay="0" bottom>
+				<tooltip>
 					<div slot="activator" :quantity="1" class="hat" @click="selectHat(null)">
 						<img src="/image/hat/no_hat.png">
 					</div>
 					<b>{{ $t('no_hat') }}</b>
-				</v-tooltip>
-				<v-tooltip v-for="hat in farmer_hats" :key="hat.id" :open-delay="0" :close-delay="0" bottom>
+				</tooltip>
+				<tooltip v-for="hat in farmer_hats" :key="hat.id">
 					<div slot="activator" :quantity="hat.quantity" class="hat" @click="selectHat(hat)">
 						<img :src="'/image/hat/' + hat.name + '.png'">
 					</div>
 					<b>{{ $t('hat.' + hat.name) }}</b>
 					<br>
 					{{ $t('level_n', [hat.level]) }}
-				</v-tooltip>
+				</tooltip>
 				<br><br>
 				<center>({{ $t('click_to_put_hat') }})</center>
 			</div>
@@ -406,25 +405,25 @@
 			<template slot="title">{{ $t('chips_of', [leek.name]) }} <span class="chip-count">[{{ leek.chips.length }}/{{ leek.max_chips }}]</span></template>
 			<div class="chips-dialog">
 				<div :class="{dashed: draggedChip && draggedChipLocation === 'farmer'}" class="leek-chips" @dragover="dragOver" @drop="chipsDrop('leek', $event)">
-					<v-tooltip v-for="chip in leek.orderedChips" :key="chip.id" :open-delay="0" :close-delay="0" bottom>
+					<tooltip v-for="chip in leek.orderedChips" :key="chip.id">
 						<div slot="activator" :class="{dragging: draggedChip && draggedChip.template === chip.template && draggedChipLocation === 'leek'}" class="chip" draggable="true" @dragstart="chipDragStart('leek', chip, $event)" @dragend="chipDragEnd(chip)" @click="removeChip(chip)">
 							<img :src="'/image/chip/small/' + LeekWars.chips[chip.template].name + '.png'" draggable="false">
 						</div>
 						<b>{{ $t("chip." + LeekWars.chips[chip.template].name) }}</b><br>
 						{{ $t('level_n', [LeekWars.chips[chip.template].level]) }}
-					</v-tooltip>
+					</tooltip>
 				</div>
 				<br>
 				<h2>{{ $t('all_my_chips') }}</h2>
 				<br>
 				<div :class="{dashed: draggedChip && draggedChipLocation === 'leek'}" class="farmer-chips" @dragover="dragOver" @drop="chipsDrop('farmer', $event)">
-					<v-tooltip v-for="chip in farmer_chips" :key="chip.id" :open-delay="0" :close-delay="0" bottom>
+					<tooltip v-for="chip in farmer_chips" :key="chip.id">
 						<div slot="activator" :quantity="chip.quantity" :class="{dragging: draggedChip && draggedChip.template === chip.template && draggedChipLocation === 'farmer', locked: LeekWars.chips[chip.template].level > leek.level}" :draggable="LeekWars.chips[chip.template].level <= leek.level" class="chip" @dragstart="chipDragStart('farmer', chip, $event)" @dragend="chipDragEnd(chip)" @click="addChip(chip)">
 							<img :src="'/image/chip/small/' + LeekWars.chips[chip.template].name + '.png'" draggable="false">
 						</div>
 						<b>{{ $t('chip.' + LeekWars.chips[chip.template].name) }}</b><br>
 						{{ $t('level_n', [LeekWars.chips[chip.template].level]) }}
-					</v-tooltip>
+					</tooltip>
 				</div>
 			</div>
 		</popup>
