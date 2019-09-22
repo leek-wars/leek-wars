@@ -4,7 +4,7 @@
 
 		<center><div class="capital rounded4">{{ $t('leek.n_capital', [capital]) }}</div></center>
 
-		<div v-for="c in ['life', 'strength', 'wisdom', 'agility', 'resistance', 'science', 'magic', 'frequency', 'mp', 'tp']" :key="c" class="charac">
+		<div v-for="c in LeekWars.characteristics" :key="c" class="charac">
 			<tooltip>
 				<img slot="activator" :src="'/image/charac/' + c + '.png'">
 				<b>{{ $t('leek.' + c) }}</b><br>

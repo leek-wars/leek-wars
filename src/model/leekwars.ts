@@ -480,7 +480,8 @@ const LeekWars = {
 	hatTemplates: Object.freeze(HAT_TEMPLATES),
 	orderedChips: Object.freeze(ORDERED_CHIPS),
 	orderedWeapons: Object.freeze(ORDERED_WEAPONS),
-	keywords: [] as Keyword[]
+	keywords: [] as Keyword[],
+	characteristics: Object.freeze(['life', 'strength', 'wisdom', 'agility', 'resistance', 'science', 'magic', 'frequency', 'mp', 'tp'])
 }
 
 function setTitle(title: string | TranslateResult | null, subtitle: string | TranslateResult | null = null) {
