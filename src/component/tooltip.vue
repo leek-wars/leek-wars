@@ -1,6 +1,6 @@
 <template lang="html">
-	<v-tooltip :open-delay="0" :close-delay="0" bottom :disabled="disabled" @input="open()">
-		<slot name="activator" slot="activator"></slot>
+	<v-tooltip :open-delay="0" :close-delay="0" :disabled="disabled" lazy bottom @input="open()">
+		<slot slot="activator" name="activator"></slot>
 		<slot v-if="content_created"></slot>
 	</v-tooltip>
 </template>
