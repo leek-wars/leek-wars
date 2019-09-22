@@ -33,12 +33,13 @@
 		</div>
 		<entity-details v-if="hover_entity" :entity="hover_entity" />
 		<entity-details v-else-if="selected_entity" :entity="selected_entity" />
+		<entity-details v-else :entity="game.leeks[game.currentPlayer]" />
 	</div>
 </template>
 
 <script lang="ts">
-	import ActionElement from '@/component/report/action.vue'
 	import EntityDetails from '@/component/player/entity-details.vue'
+	import ActionElement from '@/component/report/action.vue'
 	import { Effect, EffectType } from '@/model/effect'
 	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 	import { Game } from './game/game'

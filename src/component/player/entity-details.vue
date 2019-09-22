@@ -85,8 +85,8 @@
 <script lang="ts">
 	import { Effect, EffectType } from '@/model/effect'
 	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
-	import { Game } from './game/game'
 	import { Entity } from './game/entity'
+	import { Game } from './game/game'
 
 	@Component({ name: 'entity-details' })
 	export default class EntityDetails extends Vue {
