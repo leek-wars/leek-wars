@@ -4,7 +4,7 @@
 			<div>
 				<h1>
 					{{ $t('main.chat') }}
-					<v-menu offset-y>
+					<v-menu offset-y lazy>
 						<img slot="activator" :src="chatLanguage.flag" class="language-button">
 						<v-list :dense="true">
 							<v-list-tile v-for="(language, i) in LeekWars.languages" :key="i" @click="chatLanguage = language">

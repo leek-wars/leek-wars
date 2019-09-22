@@ -11,7 +11,7 @@
 				</i>
 			</div>
 		</div>
-		<v-menu ref="menu" :activator="activator" v-model="menu" offset-y @input="menuChange()">
+		<v-menu ref="menu" :activator="activator" v-model="menu" offset-y lazy @input="menuChange()">
 			<v-list :dense="true">
 				<v-list-tile v-ripple @click="close(currentI)">
 					<i class="material-icons">close</i>
