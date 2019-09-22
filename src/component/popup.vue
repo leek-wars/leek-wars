@@ -30,6 +30,9 @@
 		@Prop() persistent!: Boolean
 		content_created: boolean = false
 		created() {
+			if (this.value) {
+				this.content_created = true // Content created direclty from creation
+			}
 			this.$watch('value', (new_value, old_value) => {
 				if (new_value === true) {
 					this.content_created = true
