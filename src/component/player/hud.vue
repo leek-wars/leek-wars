@@ -24,7 +24,7 @@
 		</div>
 		<div class="timeline">
 			<div v-for="entity in game.entityOrder" :class="{summon: entity.summon, current: entity.id === game.currentPlayer, dead: entity.dead}" :key="entity.id" :style="{background: entity.gradient, 'border-color': entity.color}" class="entity">
-				<div v-if="!entity.dead" :style="{top: ((1 - entity.life / entity.maxLife) * 100) + '%', background: entity.getLifeColor(), 'border-color': entity.getLifeBarBorderColor()}" class="bar"></div>
+				<div v-if="!entity.dead" :style="{height: 'calc(4px + ' + ((entity.life / entity.maxLife) * 100) + '%)', background: entity.getLifeColor(), 'border-color': entity.getLifeBarBorderColor()}" class="bar"></div>
 				<div class="image">
 					<img v-if="entity.summon" :src="'/image/bulb/' + entity.bulbName + '_front.png'">
 					<leek-image v-else :leek="entity" :scale="1" />
@@ -123,16 +123,16 @@
 		white-space: nowrap;
 	}
 	.timeline .entity {
-		display: inline-block;
+		display: inline-flex;
 		vertical-align: bottom;
-		width: 50px;
+		width: 55px;
 		height: 70px;
 		margin: 0 3px;
 		padding: 3px;
-		padding-left: 9px;
 		position: relative;
 		border-top-left-radius: 3px;
 		border-top-right-radius: 3px;
+		align-items: flex-end;
 	}
 	.timeline .entity.current {
 		border-top: 5px solid black;
@@ -144,12 +144,13 @@
 		opacity: 0.3;
 	}
 	.timeline .entity .bar {
-		position: absolute;
-		bottom: 0;
-		width: 6px;
+		flex: 5px 0 0;
 		border-top-left-radius: 3px;
 		border: 1px solid black;
-		left: 0;
+		margin-right: 2px;
+		margin-left: -3px;
+		margin-top: -3px;
+		margin-bottom: -3px;
 	}
 	.timeline .entity .image {
 		max-width: 100%;
@@ -160,8 +161,11 @@
 		max-height: 70px;
 	}
 	.timeline .entity.summon {
-		width: 30px;
+		width: 35px;
 		height: 50px;
+	}
+	.timeline .entity.summon .bar {
+		margin-right: 4px;
 	}
 	.timeline .entity.summon img {
 		max-width: 30px;
