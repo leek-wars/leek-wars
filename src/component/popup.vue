@@ -1,5 +1,5 @@
 <template lang="html">
-	<v-dialog :value="value" :max-width="width" :persistent="persistent" @input="$emit('input', $event)">
+	<v-dialog :value="value" :max-width="width" :persistent="persistent" lazy @input="$emit('input', $event)">
 		<template v-if="content_created">
 			<div class="title">
 				<slot name="title"></slot>
