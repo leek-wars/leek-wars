@@ -1,5 +1,5 @@
 <template>
-	<v-menu :close-on-content-click="false" :nudge-width="expand_leeks ? 500 : 200" :nudge-top="bottom ? 0 : 6" :open-delay="_open_delay" :close-delay="_close_delay" :top="!bottom" :bottom="bottom" open-on-hover offset-y lazy @input="open($event)">
+	<v-menu :close-on-content-click="false" :disabled="disabled" :nudge-width="expand_leeks ? 500 : 200" :nudge-top="bottom ? 0 : 6" :open-delay="_open_delay" :close-delay="_close_delay" :top="!bottom" :bottom="bottom" open-on-hover offset-y lazy @input="open($event)">
 		<slot slot="activator"></slot>
 		<div v-if="content_created" class="card">
 			<loader v-if="!farmer" :size="30" />
@@ -66,6 +66,7 @@
 	@Component({})
 	export default class RichTooltipFarmer extends Vue {
 		@Prop({required: true}) id!: number
+		@Prop() disabled!: boolean
 		@Prop() bottom!: boolean
 		@Prop() instant!: boolean
 		content_created: boolean = false
