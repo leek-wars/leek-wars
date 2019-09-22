@@ -121,7 +121,6 @@
 		top: 80px;
 		bottom: 0;
 		right: 0;
-		z-index: 10;
 		padding-right: 3px;
 	}
 	#app:not(.connected) .social-panel {
