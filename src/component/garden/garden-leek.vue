@@ -20,6 +20,9 @@
 </script>
 
 <style lang="scss" scoped>
+	.leek {
+		padding: 10px 0;
+	}
 	.name {
 		font-size: 20px;
 		font-weight: 500;

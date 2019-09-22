@@ -119,10 +119,12 @@
 			<h2 slot="title">{{ $t('candidacies') }} ({{ team.candidacies.length }})</h2>
 			<div slot="content" class="content candidacies">
 				<div v-for="candidacy in team.candidacies" :key="candidacy.id" class="farmer">
-					<router-link :to="'/farmer/' + candidacy.farmer.id">
-						<avatar :farmer="candidacy.farmer" />
-						<div class="name">{{ candidacy.farmer.name }}</div>
-					</router-link>
+					<rich-tooltip-farmer :id="candidacy.farmer.id">
+						<router-link :to="'/farmer/' + candidacy.farmer.id">
+							<avatar :farmer="candidacy.farmer" />
+							<div class="name">{{ candidacy.farmer.name }}</div>
+						</router-link>
+					</rich-tooltip-farmer>
 					<span class="accept" @click="acceptCandidacy(candidacy)">{{ $t('candidacy_accept') }}</span>
 					<span class="reject" @click="rejectCandidacy(candidacy)">{{ $t('candidacy_refuse') }}</span>
 				</div>
@@ -134,22 +136,24 @@
 			<loader v-if="!team" slot="content" />
 			<div v-else slot="content" class="members">
 				<div v-for="member in team.members" :key="member.id" class="farmer">
-					<router-link :to="'/farmer/' + member.id">
-						<avatar :farmer="member" />
-						<div class="name">
-							<tooltip v-if="member.grade == 'owner'">
-								<span slot="activator">★</span>
-								{{ $t('owner') }}
-							</tooltip>
-							<tooltip v-else-if="member.grade == 'captain'">
-								<span slot="activator">☆</span>
-								{{ $t('captain') }}
-							</tooltip>
-							{{ member.name }}
-							<img v-if="member.connected" class="status" src="/image/connected.png">
-							<img v-else class="status" src="/image/disconnected.png">
-						</div>
-					</router-link>
+					<rich-tooltip-farmer :id="member.id">
+						<router-link :to="'/farmer/' + member.id">
+							<avatar :farmer="member" />
+							<div class="name">
+								<tooltip v-if="member.grade == 'owner'">
+									<span slot="activator">★</span>
+									{{ $t('owner') }}
+								</tooltip>
+								<tooltip v-else-if="member.grade == 'captain'">
+									<span slot="activator">☆</span>
+									{{ $t('captain') }}
+								</tooltip>
+								{{ member.name }}
+								<img v-if="member.connected" class="status" src="/image/connected.png">
+								<img v-else class="status" src="/image/disconnected.png">
+							</div>
+						</router-link>
+					</rich-tooltip-farmer>
 					<template v-if="owner">
 						<i v-if="member.grade == 'owner'">{{ $t('owner') }}</i>
 						<select v-else v-model="member.grade" class="level" @change="changeLevel(member, $event)">
@@ -322,20 +326,22 @@
 			<div class="change_owner_popup">
 				{{ $t('change_owner_select') }}
 				<br>
-				<div v-for="member in team.members" :key="member.id" :class="{selected: member === changeOwnerSelected}" class="farmer" @click="changeOwnerSelected = member">
-					<avatar :farmer="member" />
-					<div class="name">
-						<tooltip v-if="member.grade === 'owner'">
-							<span slot="activator">★</span>
-							{{ $t('owner') }}
-						</tooltip>
-						<tooltip v-else-if="member.grade === 'captain'">
-							<span slot="activator">☆</span>
-							{{ $t('captain') }}
-						</tooltip>
-						{{ member.name }}
+				<rich-tooltip-farmer v-for="member in team.members" :key="member.id" :id="member.id">
+					<div :class="{selected: member === changeOwnerSelected}" class="farmer" @click="changeOwnerSelected = member">
+						<avatar :farmer="member" />
+						<div class="name">
+							<tooltip v-if="member.grade === 'owner'">
+								<span slot="activator">★</span>
+								{{ $t('owner') }}
+							</tooltip>
+							<tooltip v-else-if="member.grade === 'captain'">
+								<span slot="activator">☆</span>
+								{{ $t('captain') }}
+							</tooltip>
+							{{ member.name }}
+						</div>
 					</div>
-				</div>
+				</rich-tooltip-farmer>
 			</div>
 			<div slot="actions">
 				<div @click="changeOwnerDialog = false">{{ $t('change_owner_cancel') }}</div>

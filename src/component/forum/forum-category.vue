@@ -48,7 +48,11 @@
 							</span>
 							<div class="description grey">
 								<i18n path="by_x_the_d">
-									<router-link slot="farmer" :to="'/farmer/' + topic.author.id">{{ topic.author.name }}</router-link>
+									<router-link slot="farmer" :to="'/farmer/' + topic.author.id">
+										<rich-tooltip-farmer :id="topic.author.id">
+											{{ topic.author.name }}
+										</rich-tooltip-farmer>
+									</router-link>
 									<span slot="date">{{ topic.date | date }}</span>
 								</i18n>
 							</div>
@@ -65,11 +69,14 @@
 						<div v-if="!LeekWars.mobile" class="num-messages">{{ topic.messages }}</div>
 						<div v-if="!LeekWars.mobile" class="last-message grey">
 							<div>
-								<span>{{ LeekWars.formatDuration(topic.last_message_date) }}</span><br> {{ $t('last_by') }}
-								<router-link :to="'/forum/category-' + category.id + '/topic-' + topic.id + '/page-' + topic.last_message_page + '#message-' + topic.last_message_id">
-									<div class="last-message-wrapper">{{ topic.last_message_writer }}</div>
-									<span>►</span>
-								</router-link>
+								<span>{{ LeekWars.formatDuration(topic.last_message_date) }}</span>
+								<i18n tag="div" path="last_by_x">
+									<router-link slot="author" :to="'/forum/category-' + category.id + '/topic-' + topic.id + '/page-' + topic.last_message_page + '#message-' + topic.last_message_id">
+										<rich-tooltip-farmer :id="topic.last_message_writer_id">
+											{{ topic.last_message_writer }} ►
+										</rich-tooltip-farmer>
+									</router-link>
+								</i18n>
 							</div>
 						</div>
 					</div>

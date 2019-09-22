@@ -502,7 +502,6 @@
 		border-radius: 2px;
 		width: calc(20% - 2px);
 		min-width: 150px;
-		padding: 10px 0;
 		border: 1px solid rgba(0, 0, 0, 0.1);
 	}
 	.leek, .composition, .composition-wrapper, .opponents .farmer {

@@ -14,7 +14,9 @@
 				<div class="fighter">{{ fight.leeks1[0].name }}</div>
 			</router-link>
 			<router-link v-else-if="fight.type == FightType.FARMER" :to="'/farmer/' + fight.farmer1">
-				<div class="fighter">({{ fight.farmer1_name }})</div>
+				<div class="fighter">
+					<rich-tooltip-farmer :id="fight.farmer1">({{ fight.farmer1_name }})</rich-tooltip-farmer>
+				</div>
 			</router-link>
 			<router-link v-else-if="fight.type == FightType.TEAM" :to="'/team/' + fight.team1">
 				<div class="fighter">[{{ fight.team1_name }}]</div>
@@ -30,7 +32,9 @@
 				<div class="fighter">{{ fight.leeks2[0].name }}</div>
 			</router-link>
 			<router-link v-else-if="fight.type == FightType.FARMER" :to="'/farmer/' + fight.farmer2">
-				<div class="fighter">({{ fight.farmer2_name }})</div>
+				<div class="fighter">
+					<rich-tooltip-farmer :id="fight.farmer2">({{ fight.farmer2_name }})</rich-tooltip-farmer>
+				</div>
 			</router-link>
 			<router-link v-else-if="fight.type == FightType.TEAM" :to="'/team/' + fight.team2">
 				<div class="fighter">[{{ fight.team2_name }}]</div>

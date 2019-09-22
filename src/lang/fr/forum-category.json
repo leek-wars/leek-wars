@@ -6,7 +6,7 @@
 	"n_topic_n_messages": "{0} sujets / {1} messages",
 	"last": "Dernier",
 	"last_message": "Dernier {date} par {farmer}",
-	"last_by": "par",
+	"last_by_x": "par {author}",
 	"messages": "Messages",
 	"new_topic_message": "Message du topic",
 	"new_topic_title": "Titre du topic",

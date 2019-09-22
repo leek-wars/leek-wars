@@ -18,10 +18,12 @@
 				<span v-for="(farmer, f, i) in fight.farmers1" :key="f">
 					<span v-if="i !== 0" class="br-versus">VS</span>
 					<router-link :to="'/farmer/' + farmer.id">
-						<div class="farmer">
-							<avatar :farmer="farmer" /><br>
-							<span class="name">{{ farmer.name }}</span>
-						</div>
+						<rich-tooltip-farmer :id="farmer.id">
+							<div class="farmer">
+								<avatar :farmer="farmer" /><br>
+								<span class="name">{{ farmer.name }}</span>
+							</div>
+						</rich-tooltip-farmer>
 					</router-link>
 				</span>
 			</center>
@@ -29,19 +31,23 @@
 				<tr>
 					<td>
 						<router-link v-for="farmer in fight.farmers1" :key="farmer.id" :to="'/farmer/' + farmer.id">
-							<div class="farmer">
-								<avatar :farmer="farmer" /><br>
-								<span class="name">{{ farmer.name }}</span>
-							</div>
+							<rich-tooltip-farmer :id="farmer.id">
+								<div class="farmer">
+									<avatar :farmer="farmer" /><br>
+									<span class="name">{{ farmer.name }}</span>
+								</div>
+							</rich-tooltip-farmer>
 						</router-link>
 					</td>
 					<td class="versus">VS</td>
 					<td>
 						<router-link v-for="farmer in fight.farmers2" :key="farmer.id" :to="'/farmer/' + farmer.id">
-							<div class="farmer">
-								<avatar :farmer="farmer" /><br>
-								<span class="name">{{ farmer.name }}</span>
-							</div>
+							<rich-tooltip-farmer :id="farmer.id">
+								<div class="farmer">
+									<avatar :farmer="farmer" /><br>
+									<span class="name">{{ farmer.name }}</span>
+								</div>
+							</rich-tooltip-farmer>
 						</router-link>
 					</td>
 				</tr>

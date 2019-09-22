@@ -17,11 +17,15 @@
 				</div>
 				<div v-else :key="m" class="message">
 					<router-link :to="'/farmer/' + message.author.id" class="avatar-wrapper">
-						<avatar :farmer="message.author" />
+						<rich-tooltip-farmer :id="message.author.id">
+							<avatar :farmer="message.author" />
+						</rich-tooltip-farmer>
 					</router-link>
 					<div class="bubble">
 						<router-link :to="'/farmer/' + message.author.id" class="author">
-							<span :class="message.author.grade">{{ message.author.name }}</span>
+							<span :class="message.author.grade">
+								<rich-tooltip-farmer :id="message.author.id">{{ message.author.name }}</rich-tooltip-farmer>
+							</span>
 						</router-link>
 						<div v-large-emojis v-latex v-for="(text, i) in message.texts" :key="i" class="text" v-html="text"></div>
 						<div class="right">

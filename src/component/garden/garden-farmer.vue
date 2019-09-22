@@ -1,15 +1,17 @@
 <template lang="html">
-	<div v-ripple class="farmer">
-		<avatar :farmer="farmer" />
-		<div class="name">{{ farmer.name }}</div>
-		<talent :talent="farmer.talent" />
-		<br>
-		<span class="level">
-			{{ $t('garden.n_leeks', [farmer.leek_count]) }}
-		</span>
-		<br>
-		<span class="level">{{ $t('main.total_level_n', [farmer.total_level]) }}</span>
-	</div>
+	<rich-tooltip-farmer v-ripple :id="farmer.id" :bottom="true" :instant="true" class="farmer">
+		<div class="elem">
+			<avatar :farmer="farmer" />
+			<div class="name">{{ farmer.name }}</div>
+			<talent :talent="farmer.talent" />
+			<br>
+			<span class="level">
+				{{ $t('garden.n_leeks', [farmer.leek_count]) }}
+			</span>
+			<br>
+			<span class="level">{{ $t('main.total_level_n', [farmer.total_level]) }}</span>
+		</div>
+	</rich-tooltip-farmer>
 </template>
 
 <script lang="ts">
@@ -24,6 +26,10 @@
 </script>
 
 <style lang="scss" scoped>
+	.elem {
+		width: 100%;
+		padding: 10px 0;
+	}
 	.avatar {
 		width: 120px;
 		height: 120px;
