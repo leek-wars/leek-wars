@@ -13,7 +13,7 @@
 			if (this.team.emblem_changed > 0) {
 				return LeekWars.avatar + 'emblem/' + this.team.id + '.png?' + this.team.emblem_changed
 			}
-			return '/image/no_avatar.png'
+			return '/image/no_emblem.png'
 		}
 	}
 </script>
