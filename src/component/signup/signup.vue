@@ -115,7 +115,9 @@
 							<tr v-for="(farmer, i) in farmer_ranking" :key="i" :class="farmer.style">
 								<td>{{ parseInt(i) + 1 }}</td>
 								<td :class="farmer.class">
-									<router-link :to="'/farmer/' + farmer.id">{{ farmer.name }}</router-link>
+									<rich-tooltip-farmer :id="farmer.id">
+										<router-link :to="'/farmer/' + farmer.id">{{ farmer.name }}</router-link>
+									</rich-tooltip-farmer>
 								</td>
 								<td>{{ farmer.talent }}</td>
 								<td>{{ farmer.total_level }}</td>

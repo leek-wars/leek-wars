@@ -41,7 +41,9 @@
 			<div class="column4">
 				<panel>
 					<i18n slot="title" path="farmed_by" tag="h2">
-						<router-link slot="farmer" :to="'/farmer/' + (leek ? leek.farmer.id : 0)">{{ leek ? leek.farmer.name : '...' }}</router-link>
+						<router-link slot="farmer" :to="'/farmer/' + (leek ? leek.farmer.id : 0)">
+							<rich-tooltip-farmer :id="(leek ? leek.farmer.id : 0)">{{ leek ? leek.farmer.name : '...' }}</rich-tooltip-farmer>
+						</router-link>
 					</i18n>
 					<template v-if="my_leek" slot="actions">
 						<div class="button flat hat-button" @click="hat">

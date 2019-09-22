@@ -31,23 +31,25 @@
 				<loader v-if="!topic || !topic.messages" />
 				<div v-else>
 					<div v-for="message in topic.messages" :key="message.id" :id="'message-' + message.id" class="message-wrapper">
-						<div class="profile">
-							<router-link :to="'/farmer/' + message.writer.id" class="">
-								<avatar :farmer="message.writer" />
-							</router-link>
-							<div class="info">
-								<div class="pseudo">
-									{{ message.writer.name }}
-									<img v-if="message.writer.connected" class="status" src="/image/connected.png">
-									<img v-else class="status" src="/image/disconnected.png">
+						<rich-tooltip-farmer :id="message.writer.id">
+							<div class="profile">
+								<router-link :to="'/farmer/' + message.writer.id" class="">
+									<avatar :farmer="message.writer" />
+								</router-link>
+								<div class="info">
+									<div class="pseudo">
+										{{ message.writer.name }}
+										<img v-if="message.writer.connected" class="status" src="/image/connected.png">
+										<img v-else class="status" src="/image/disconnected.png">
+									</div>
+									<div v-if="message.writer.color == 'admin'" class="grade admin">{{ $t('admin') }}</div>
+									<div v-else-if="message.writer.color == 'moderator'" class="grade moderator">{{ $t('moderator') }}</div>
+									<div v-else-if="message.writer.color == 'contributor'" class="grade contributor">{{ $t('contributor') }}</div>
+									<div class="messages-count"><b>{{ message.writer.messages }}</b> messages</div>
+									<div class="trophy-count"><b>{{ message.writer.trophies }}</b> trophées</div>
 								</div>
-								<div v-if="message.writer.color == 'admin'" class="grade admin">{{ $t('admin') }}</div>
-								<div v-else-if="message.writer.color == 'moderator'" class="grade moderator">{{ $t('moderator') }}</div>
-								<div v-else-if="message.writer.color == 'contributor'" class="grade contributor">{{ $t('contributor') }}</div>
-								<div class="messages-count"><b>{{ message.writer.messages }}</b> messages</div>
-								<div class="trophy-count"><b>{{ message.writer.trophies }}</b> trophées</div>
 							</div>
-						</div>
+						</rich-tooltip-farmer>
 						<div class="message card">
 							<div class="wrapper">
 								<a v-if="message.id != -1" :href="'#message-' + message.id" class="link">#</a>

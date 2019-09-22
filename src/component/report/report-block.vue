@@ -10,7 +10,13 @@
 			</tr>
 			<tr>
 				<td class="name">
-					<span class="alive"><router-link :to="'/farmer/' + farmer.id">{{ farmer.name }}</router-link></span>
+					<span class="alive">
+						<router-link :to="'/farmer/' + farmer.id">
+							<rich-tooltip-farmer :id="farmer.id">
+								{{ farmer.name }}
+							</rich-tooltip-farmer>
+						</router-link>
+					</span>
 				</td>
 				<td></td>
 				<td v-if="fight.context !== FightContext.CHALLENGE" class="talent">

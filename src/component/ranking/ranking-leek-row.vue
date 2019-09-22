@@ -7,7 +7,9 @@
 		<td>{{ row.talent }}</td>
 		<td>{{ row.level }}</td>
 		<td>
-			<router-link :to="'/farmer/' + row.farmer_id">{{ row.farmer }}</router-link>
+			<router-link :to="'/farmer/' + row.farmer_id">
+				<rich-tooltip-farmer :id="row.farmer_id">{{ row.farmer }}</rich-tooltip-farmer>
+			</router-link>
 		</td>
 		<td>
 			<div class="country-wrapper">

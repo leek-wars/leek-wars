@@ -1,8 +1,12 @@
 <template>
 	<div v-ripple v-if="conversation" class="conversation">
-		<avatar v-if="farmer" :farmer="farmer" />
+		<rich-tooltip-farmer :id="farmer.id">
+			<avatar v-if="farmer" :farmer="farmer" />
+		</rich-tooltip-farmer>
 		<div class="content">
-			<div v-if="farmer" class="name">{{ farmer.name }}</div>
+			<div v-if="farmer" class="name">
+				<rich-tooltip-farmer :id="farmer.id">{{ farmer.name }}</rich-tooltip-farmer>
+			</div>
 			<div class="last-message">
 				<b v-if="$store.state.farmer && conversation.last_farmer_id === $store.state.farmer.id">{{ $t('messages.me') }} ►</b>
 				<span v-emojis v-text="conversation.last_message"></span>

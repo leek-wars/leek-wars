@@ -27,7 +27,11 @@
 						</tr>
 						<tr v-for="(farmer, i) in funRanking.ranking.ranking" :key="i" :class="farmer.me">
 							<td>{{ parseInt(i) + 1 }}</td>
-							<td :class="farmer.style"><router-link :to="'/farmer/' + farmer.id">{{ farmer.name }}</router-link></td>
+							<td :class="farmer.style">
+								<router-link :to="'/farmer/' + farmer.id">
+									<rich-tooltip-farmer :id="farmer.id">{{ farmer.name }}</rich-tooltip-farmer>
+								</router-link>
+							</td>
 							<td v-if="funRanking.value_type == 'number'">{{ farmer.value | number }}</td>
 							<td v-else-if="funRanking.value_type == 'money'">{{ farmer.value | number }} <span class="hab"></span></td>
 							<td v-else-if="funRanking.value_type == 'distance'">{{ farmer.value | number }}m</td>

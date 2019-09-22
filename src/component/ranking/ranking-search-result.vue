@@ -3,10 +3,17 @@
 		<div v-ripple class="main" @click="$emit('gotoresult', result)">
 			<div class="image">
 				<leek-image v-if="result.type === 'leek'" :leek="result" :scale="1" width="40" height="40" />
-				<avatar v-else-if="result.type === 'farmer'" :farmer="result" />
+				<rich-tooltip-farmer v-else-if="result.type === 'farmer'" :id="result.id">
+					<avatar :farmer="result" />
+				</rich-tooltip-farmer>
 				<emblem v-else-if="result.type === 'team'" :team="result" />
 			</div>
-			<div class="name">{{ result.name }}</div>
+			<div class="name">
+				<rich-tooltip-farmer v-if="result.type === 'farmer'" :id="result.id">
+					{{ result.name }}
+				</rich-tooltip-farmer>
+				<span v-else>{{ result.name }}</span>
+			</div>
 			<div class="level">{{ description }}</div>
 		</div>
 		<router-link :to="'/' + result.type + '/' + result.id">

@@ -80,7 +80,9 @@
 			<div v-else :class="{expanded: expandFarmers}" class="connected-farmers">
 				<router-link v-for="(farmer, f) in connected_farmers" :key="farmer.id" :to="'/farmer/' + farmer.id">
 					<span v-if="f > 0">, </span>
-					<span :class="farmer.class">{{ farmer.name }}</span>
+					<span :class="farmer.class">
+						<rich-tooltip-farmer :id="farmer.id">{{ farmer.name }}</rich-tooltip-farmer>
+					</span>
 				</router-link>
 			</div>
 			<div class="grades-legend">

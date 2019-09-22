@@ -21,6 +21,7 @@ import ReportDialog from '@/component/moderation/report-dialog.vue'
 import NotificationElement from '@/component/notification/notification.vue'
 import Pagination from '@/component/pagination.vue'
 import Popup from '@/component/popup.vue'
+import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 import Talent from '@/component/talent.vue'
 import Tooltip from '@/component/tooltip.vue'
 import { i18n, loadInstanceTranslations } from '@/model/i18n'
@@ -96,6 +97,7 @@ Vue.component('markdown', Markdown)
 Vue.component('panel', Panel)
 Vue.component('popup', Popup)
 Vue.component('tooltip', Tooltip)
+Vue.component('rich-tooltip-farmer', RichTooltipFarmer)
 
 Vue.directive('autostopscroll', {
 	inserted: (el, binding) => {
