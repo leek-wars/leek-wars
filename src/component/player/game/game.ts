@@ -208,7 +208,7 @@ class Game {
 	public mouseY = 0
 	public mouseTileX: number | undefined = 0
 	public mouseTileY: number | undefined = 0
-	public mouseCell: number | undefined = 0
+	public mouseCell: number | undefined = undefined
 	public mouseCellX: number = 0
 	public mouseCellY: number = 0
 	public mouseRealX: number = 0
