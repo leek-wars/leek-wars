@@ -73,7 +73,7 @@
 						<div :style="{width: progressBarWidth + '%'}" class="bar"></div><div class="circle"></div>
 					</div>
 				</div>
-				<hud :game="game" />
+				<hud ref="hud" :game="game" />
 				<transition name="fade">
 					<i v-if="game.paused" class="play-pause material-icons">pause</i>
 				</transition>
@@ -233,9 +233,11 @@
 		}
 		mousemove(e: MouseEvent) {
 			this.game.mousemove(e)
+			;(this.$refs.hud as Hud).hover_entity = this.game.mouseEntity
 		}
 		mounted() {
 			this.canvas = document.querySelector('.game-canvas')
+			this.game.canvas = this.canvas
 			this.game.ctx = this.canvas.getContext('2d')
 		}
 		keydown(e: KeyboardEvent) {
@@ -404,11 +406,7 @@
 			localStorage.setItem('fight/lifes', '' + this.game.showLifes)
 		}
 		canvasClick() {
-			if (this.game.paused) {
-				this.game.resume()
-			} else {
-				this.game.pause()
-			}
+			(this.$refs.hud as Hud).selected_entity = this.game.click()
 		}
 		@Watch("game.going_to_report")
 		endOfFight() {
