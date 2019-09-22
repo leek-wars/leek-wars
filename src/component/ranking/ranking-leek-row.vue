@@ -2,7 +2,9 @@
 	<tr :class="{me: row.me, inactive: !row.active}">
 		<td>{{ row.rank }}</td>
 		<td :class="row.style">
-			<router-link :to="'/leek/' + row.id">{{ row.name }}</router-link>
+			<router-link :to="'/leek/' + row.id">
+				<rich-tooltip-leek :id="row.id">{{ row.name }}</rich-tooltip-leek>
+			</router-link>
 		</td>
 		<td>{{ row.talent }}</td>
 		<td>{{ row.level }}</td>

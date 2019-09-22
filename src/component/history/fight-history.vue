@@ -11,7 +11,9 @@
 		</div>
 		<div v-else class="fighters">
 			<router-link v-if="fight.type == FightType.SOLO" :to="'/leek/' + fight.leeks1[0].id">
-				<div class="fighter">{{ fight.leeks1[0].name }}</div>
+				<div class="fighter">
+					<rich-tooltip-leek :id="fight.leeks1[0].id">{{ fight.leeks1[0].name }}</rich-tooltip-leek>
+				</div>
 			</router-link>
 			<router-link v-else-if="fight.type == FightType.FARMER" :to="'/farmer/' + fight.farmer1">
 				<div class="fighter">
@@ -29,7 +31,9 @@
 				</router-link>
 			</div>
 			<router-link v-if="fight.type == FightType.SOLO" :to="'/leek/' + fight.leeks2[0].id">
-				<div class="fighter">{{ fight.leeks2[0].name }}</div>
+				<div class="fighter">
+					<rich-tooltip-leek :id="fight.leeks2[0].id">{{ fight.leeks2[0].name }}</rich-tooltip-leek>
+				</div>
 			</router-link>
 			<router-link v-else-if="fight.type == FightType.FARMER" :to="'/farmer/' + fight.farmer2">
 				<div class="fighter">

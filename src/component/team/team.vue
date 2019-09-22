@@ -201,15 +201,17 @@
 
 					<div v-if="composition.leeks.length == 0" class="empty">{{ $t('empty_compo') }}</div>
 
-					<div v-for="leek in composition.leeks" :key="leek.id" :class="{dragging: leek.dragging}" class="leek" draggable="true" @click="$router.push('/leek/' + leek.id)" @dragstart="leeksDragstart(composition, leek, $event)" @dragend="leeksDragend(leek, $event)">
-						<leek-image :leek="leek" :scale="0.6" />
-						<br>
-						<div class="name">{{ leek.name }} ({{ leek.level }})</div><br>
-						<div class="fights">
-							<img src="/image/icon/grey/garden.png">
-							<span>{{ leek.team_fights }}</span>
+					<rich-tooltip-leek v-for="leek in composition.leeks" :key="leek.id" :id="leek.id">
+						<div :class="{dragging: leek.dragging}" class="leek" draggable="true" @click="$router.push('/leek/' + leek.id)" @dragstart="leeksDragstart(composition, leek, $event)" @dragend="leeksDragend(leek, $event)">
+							<leek-image :leek="leek" :scale="0.6" />
+							<br>
+							<div class="name">{{ leek.name }} ({{ leek.level }})</div><br>
+							<div class="fights">
+								<img src="/image/icon/grey/garden.png">
+								<span>{{ leek.team_fights }}</span>
+							</div>
 						</div>
-					</div>
+					</rich-tooltip-leek>
 				</div>
 			</panel>
 		</div>
@@ -220,27 +222,31 @@
 			<div slot="content" :class="{dashed: draggedLeek != null}" class="leeks" @dragover="leeksDragover" @drop="leeksDrop(null, $event)">
 				<div v-if="team.unengaged_leeks.length == 0" class="empty">{{ $t('empty_compo') }}</div>
 
-				<div v-for="leek in team.unengaged_leeks" :key="leek.id" :class="{dragging: leek.dragging}" class="leek" draggable="true" @click="$router.push('/leek/' + leek.id)" @dragstart="leeksDragstart(null, leek, $event)" @dragend="leeksDragend(leek, $event)">
-					<leek-image :leek="leek" :scale="0.6" />
-					<br>
-					<div class="name">{{ leek.name }} ({{ leek.level }})</div><br>
-					<div class="fights">
-						<img src="/image/icon/grey/garden.png">
-						<span>{{ leek.team_fights }}</span>
+				<rich-tooltip-leek v-for="leek in team.unengaged_leeks" :key="leek.id" :id="leek.id">
+					<div :class="{dragging: leek.dragging}" class="leek" draggable="true" @click="$router.push('/leek/' + leek.id)" @dragstart="leeksDragstart(null, leek, $event)" @dragend="leeksDragend(leek, $event)">
+						<leek-image :leek="leek" :scale="0.6" />
+						<br>
+						<div class="name">{{ leek.name }} ({{ leek.level }})</div><br>
+						<div class="fights">
+							<img src="/image/icon/grey/garden.png">
+							<span>{{ leek.team_fights }}</span>
+						</div>
 					</div>
-				</div>
+				</rich-tooltip-leek>
 			</div>
 		</panel>
 		<panel v-else>
 			<h2 v-if="team" slot="title">{{ $t('leeks', [team.leek_count]) }}</h2>
 			<loader v-if="!team" slot="content" />
 			<div v-else slot="content" class="leeks">
-				<router-link v-for="leek in team.leeks" :key="leek.id" :to="'/leek/' + leek.id" :leek="leek.id" class="leek">
-					<leek-image :leek="leek" :scale="0.6" />
-					<br>
-					<div class="name">{{ leek.name }}</div>
-					<div>{{ $t('main.level_n', [leek.level]) }}</div>
-				</router-link>
+				<rich-tooltip-leek v-for="leek in team.leeks" :key="leek.id" :id="leek.id">
+					<router-link :to="'/leek/' + leek.id" :leek="leek.id" class="leek">
+						<leek-image :leek="leek" :scale="0.6" />
+						<br>
+						<div class="name">{{ leek.name }}</div>
+						<div>{{ $t('main.level_n', [leek.level]) }}</div>
+					</router-link>
+				</rich-tooltip-leek>
 			</div>
 		</panel>
 
@@ -885,6 +891,7 @@
 		transition: transform 0.4s;
 		transform: scale(1);
 		cursor: pointer;
+		width: 100%;
 		.name {
 			font-size: 16px;
 			text-align: center;

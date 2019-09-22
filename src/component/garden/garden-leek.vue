@@ -1,13 +1,15 @@
 <template lang="html">
-	<div v-ripple v-if="leek" :leek="leek.id" class="leek">
-		<div class="image">
-			<leek-image :leek="leek" :scale="0.70" />
+	<rich-tooltip-leek v-ripple :id="leek.id" :bottom="true" :instant="true" :leek="leek.id" class="leek">
+		<div v-if="leek" class="elem">
+			<div class="image">
+				<leek-image :leek="leek" :scale="0.70" />
+			</div>
+			<div class="name">{{ leek.name }}</div>
+			<talent :talent="leek.talent" />
+			<br>
+			<span class="level">{{ $t('main.level_n', [leek.level]) }}</span>
 		</div>
-		<div class="name">{{ leek.name }}</div>
-		<talent :talent="leek.talent" />
-		<br>
-		<span class="level">{{ $t('main.level_n', [leek.level]) }}</span>
-	</div>
+	</rich-tooltip-leek>
 </template>
 
 <script lang="ts">
@@ -20,7 +22,8 @@
 </script>
 
 <style lang="scss" scoped>
-	.leek {
+	.elem {
+		width: 100%;
 		padding: 10px 0;
 	}
 	.name {
