@@ -189,6 +189,7 @@
 				this.resize()
 			})
 			this.$root.$on('keyup', this.keyup)
+			this.$root.$on('keydown', this.keydown)
 			this.$on('game-launched', () => {
 				this.loaded = true
 				this.setOrigin()
@@ -237,6 +238,18 @@
 			this.canvas = document.querySelector('.game-canvas')
 			this.game.ctx = this.canvas.getContext('2d')
 		}
+		keydown(e: KeyboardEvent) {
+			if (e.keyCode === 32) {
+				console.log("keydown space")
+				if (this.game.paused) {
+					this.game.resume()
+				} else {
+					this.game.pause()
+				}
+				e.preventDefault()
+				return false
+			}
+		}
 		keyup(e: KeyboardEvent) {
 			if (e.keyCode === 81) { // Q
 				if (this.fullscreen) {
@@ -266,6 +279,7 @@
 			this.game.pause()
 			this.game.cancelled = true
 			this.$root.$off('keyup', this.keyup)
+			this.$root.$off('keydown', this.keydown)
 			this.$root.$off('resize')
 			if (this.timeout) { clearTimeout(this.timeout) }
 			if (this.request) { this.request.abort() }
