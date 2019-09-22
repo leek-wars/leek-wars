@@ -9,7 +9,7 @@
 				<div ref="addButton" :title="$t('new_desc')" class="action list tab" icon="add">
 					<i class="material-icons">add</i> <span>{{ $t('new') }}</span>
 				</div>
-				<v-menu v-model="addMenu" :activator="LeekWars.mobile ? addMenuActivator : $refs.addButton" offset-y>
+				<v-menu v-model="addMenu" :activator="LeekWars.mobile ? addMenuActivator : $refs.addButton" offset-y lazy>
 					<v-list>
 						<v-list-tile v-ripple @click="newAI(false)">
 							<i class="material-icons">insert_drive_file</i>

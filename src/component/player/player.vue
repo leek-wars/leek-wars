@@ -107,7 +107,7 @@
 					{{ $t('fight.fullscreen') }}
 				</v-tooltip>
 				<v-tooltip :open-delay="0" :close-delay="0" top content-class="top">
-					<v-menu slot="activator" :close-on-content-click="false" top offset-y left>
+					<v-menu slot="activator" :close-on-content-click="false" top offset-y left lazy>
 						<i v-ripple slot="activator" class="material-icons control">settings</i>
 						<v-list :dense="true" dark class="settings-menu">
 							<v-list-tile v-ripple>
