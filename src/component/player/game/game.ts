@@ -159,6 +159,7 @@ const CHIPS: any[] = [
 ]
 
 class Game {
+	public canvas!: HTMLCanvasElement
 	public loadedData: number = 0
 	public numData: number = 0
 	public T = new Textures(this)
@@ -213,6 +214,7 @@ class Game {
 	public mouseCellY: number = 0
 	public mouseRealX: number = 0
 	public mouseRealY: number = 0
+	public mouseEntity: Entity | null = null
 	// Settings
 	public large = true
 	public debug = false
@@ -242,7 +244,6 @@ class Game {
 	public progressBarWidth: number = 0
 	public mouseOriginX: number = 0
 	public mouseOriginY: number = 0
-	public selectedEntity: Entity | null = null
 	public launched: boolean = false
 	public cancelled: boolean = false
 	public player!: Player
@@ -589,9 +590,17 @@ class Game {
 					}
 				}
 				// Leeks
-				for (const i in this.leeks) {
-					if (this.leeks[i].active) { this.leeks[i].update(dt) }
+				let hover_entity = null
+				for (const entity of this.leeks) {
+					if (entity.active) {
+						entity.update(dt)
+						if (entity.cell === this.mouseCell) {
+							hover_entity = entity
+						}
+					}
 				}
+				this.mouseEntity = hover_entity
+				
 				// Chips
 				for (let c = 0; c < this.chips.length; ++c) {
 					const chip = this.chips[c]
@@ -1185,11 +1194,31 @@ class Game {
 			const pos = this.ground.xyToXYPixels(cell.x, cell.y)
 			this.mouseRealX = pos.x * this.ground.scale
 			this.mouseRealY = pos.y * this.ground.scale
+			let hover_entity = null
+			for (const entity of this.leeks) {
+				if (entity.cell === this.mouseCell && entity.active) {
+					hover_entity = entity
+					break
+				}
+			}
+			if (!this.mouseEntity && hover_entity) {
+				this.canvas.style.cursor = "pointer"
+			}
+			if (this.mouseEntity && !hover_entity) {
+				this.canvas.style.cursor = "auto"
+			}
+			this.mouseEntity = hover_entity
 		} else {
 			this.mouseTileX = undefined
 			this.mouseTileY = undefined
 			this.mouseCell = undefined
+			this.mouseEntity = null
+			this.canvas.style.cursor = "auto"
 		}
+	}
+
+	public click() {
+		return this.mouseEntity
 	}
 
 	public addMarker(owner: number, cells: number[], color: string, duration: number) {
@@ -1458,22 +1487,11 @@ class Game {
 		this.particles.drawAir(this.ctx)
 
 		// Life bars
-		let selected_entity: Entity | null = null
-		if (this.mouseCell !== undefined) {
-			for (const entity of this.leeks) {
-				if (entity.cell === this.mouseCell) {
-					selected_entity = entity
-				}
-			}
-		}
 		for (const entity of this.leeks) {
 			if (entity.isDead() || !entity.active) { continue }
-			if ((this.showLifes && (selected_entity == null || this.distance2(entity.x, entity.y, this.mouseTileX!, this.mouseTileY!) > 8)) || this.mouseCell === entity.cell) {
+			if ((this.showLifes && (this.mouseEntity == null || this.distance2(entity.x, entity.y, this.mouseTileX!, this.mouseTileY!) > 8)) || this.mouseCell === entity.cell) {
 				entity.drawName(this.ctx)
 			}
-		}
-		if (this.selectedEntity !== selected_entity) {
-			this.selectedEntity = selected_entity
 		}
 
 		if (this.requestPause) {
