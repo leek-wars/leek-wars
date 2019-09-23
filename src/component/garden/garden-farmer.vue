@@ -1,6 +1,6 @@
 <template lang="html">
-	<rich-tooltip-farmer v-ripple :id="farmer.id" :bottom="true" :instant="true" :disabled="farmer.id === $store.state.farmer.id" class="farmer">
-		<div class="elem">
+	<rich-tooltip-farmer :id="farmer.id" :bottom="true" :instant="true" :disabled="farmer.id === $store.state.farmer.id" class="farmer">
+		<div class="elem" v-ripple>
 			<avatar :farmer="farmer" />
 			<div class="name">{{ farmer.name }}</div>
 			<talent :talent="farmer.talent" />
