@@ -12,6 +12,7 @@
 	"chat": "Chat",
 	"chat_the_mdy_at_hm": "Le %1$s/%2$s/%3$s à %4$s:%5$s",
 	"chat_placeholder": "Entrez votre message...",
+	"chat_too_long": "Message trop long, merci de limiter vos discussions à 1000 caractères",
 	"commands": "Commandes",
 	"conditions": "Conditions d'utilisation",
 	"connection": "Connexion",
