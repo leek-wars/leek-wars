@@ -12,6 +12,7 @@
 	"chat": "Chat",
 	"chat_the_mdy_at_hm": "The %2$s/%1$s/%3$s at %4$s:%5$s",
 	"chat_placeholder": "Enter your message...",
+	"chat_too_long": "Message too long, please limit your chatter to 1000 signs",
 	"commands": "Commands",
 	"conditions": "Terms of use",
 	"connection": "Log in",

@@ -59,7 +59,7 @@
 					return
 				}
 				if (this.message.length > 1000) {
-					LeekWars.toast(i18n.t('chat.too_long') as string)
+					LeekWars.toast(i18n.t('main.chat_too_long') as string)
 					return
 				}
 				if (this.message === '/ping') {
