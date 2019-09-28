@@ -4,7 +4,10 @@
 	"scripts": {
 		"start": "vue-cli-service serve",
 		"serve": "vue-cli-service serve",
+		"beta": "vue-cli-service serve --mode _beta_",
+		"local": "vue-cli-service serve --mode _local_",
 		"build": "VUE_MODE=build vue-cli-service build",
+		"build-beta": "VUE_MODE=build NODE_ENV = production vue-cli-service build --mode _beta_",
 		"lint": "vue-cli-service lint",
 		"stylelint": "stylelint src/**/*.{vue,css,scss}",
 		"test": "bundlesize"
@@ -57,10 +60,12 @@
 		"stylelint-scss": "^3.9.4",
 		"stylus": "^0.54.7",
 		"stylus-loader": "^3.0.2",
+		"terser-webpack-plugin": "^2.1.1",
 		"tslint": "^5.19.0",
 		"tslint-config-prettier": "^1.18.0",
 		"tslint-config-standard": "^8.0.1",
 		"typescript": "^3.5.3",
+		"uglifyjs-webpack-plugin": "^2.2.0",
 		"vue-cli-plugin-vuetify": "^0.1.6",
 		"vue-template-compiler": "^2.6.10",
 		"webpack-bundle-analyzer": "^3.4.1"

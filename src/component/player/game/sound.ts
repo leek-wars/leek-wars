@@ -1,5 +1,5 @@
 import { Game } from '@/component/player/game/game'
-import { LeekWars } from "@/model/leekwars"
+import { env } from '@/env'
 
 // var _iOS = navigator.userAgent.match(/(iPad|iPhone|iPod)/g) ? true : false;
 
@@ -46,40 +46,40 @@ class Sounds {
 
 	constructor(game: Game) {
 		// weapons
-		this.machine_gun = new Sound(game, LeekWars.staticURL + "sound/machine_gun.mp3", VOL_OFFENSIVE_SOUND)
-		this.laser = new Sound(game, LeekWars.staticURL + "sound/laser.mp3", VOL_OFFENSIVE_SOUND)
-		this.electrisor = new Sound(game, LeekWars.staticURL + "sound/electrisor.mp3", VOL_OFFENSIVE_SOUND)
-		this.double_gun = new Sound(game, LeekWars.staticURL + "sound/double_gun.mp3", VOL_OFFENSIVE_SOUND)
-		this.shotgun = new Sound(game, LeekWars.staticURL + "sound/shotgun.mp3", VOL_OFFENSIVE_SOUND)
-		this.grenade_shoot = new Sound(game, LeekWars.staticURL + "sound/grenade_shoot.mp3", VOL_OFFENSIVE_SOUND)
-		this.explosion = new Sound(game, LeekWars.staticURL + "sound/explosion.mp3", VOL_OFFENSIVE_SOUND)
-		this.sword = new Sound(game, LeekWars.staticURL + "sound/sword.mp3", VOL_OFFENSIVE_SOUND)
-		this.flame_thrower = new Sound(game, LeekWars.staticURL + "sound/flame_thrower.mp3", VOL_OFFENSIVE_SOUND)
-		this.gazor = new Sound(game, LeekWars.staticURL + "sound/gazor.mp3", VOL_OFFENSIVE_SOUND)
+		this.machine_gun = new Sound(game, env.STATIC + "sound/machine_gun.mp3", VOL_OFFENSIVE_SOUND)
+		this.laser = new Sound(game, env.STATIC + "sound/laser.mp3", VOL_OFFENSIVE_SOUND)
+		this.electrisor = new Sound(game, env.STATIC + "sound/electrisor.mp3", VOL_OFFENSIVE_SOUND)
+		this.double_gun = new Sound(game, env.STATIC + "sound/double_gun.mp3", VOL_OFFENSIVE_SOUND)
+		this.shotgun = new Sound(game, env.STATIC + "sound/shotgun.mp3", VOL_OFFENSIVE_SOUND)
+		this.grenade_shoot = new Sound(game, env.STATIC + "sound/grenade_shoot.mp3", VOL_OFFENSIVE_SOUND)
+		this.explosion = new Sound(game, env.STATIC + "sound/explosion.mp3", VOL_OFFENSIVE_SOUND)
+		this.sword = new Sound(game, env.STATIC + "sound/sword.mp3", VOL_OFFENSIVE_SOUND)
+		this.flame_thrower = new Sound(game, env.STATIC + "sound/flame_thrower.mp3", VOL_OFFENSIVE_SOUND)
+		this.gazor = new Sound(game, env.STATIC + "sound/gazor.mp3", VOL_OFFENSIVE_SOUND)
 		// chips
-		this.heal = new Sound(game, LeekWars.staticURL + "sound/heal.mp3", VOL_DEFFENSIVE_SOUND)
-		this.buff = new Sound(game, LeekWars.staticURL + "sound/buff.mp3", VOL_DEFFENSIVE_SOUND)
-		this.shield = new Sound(game, LeekWars.staticURL + "sound/shield.mp3", VOL_DEFFENSIVE_SOUND)
-		this.poison = new Sound(game, LeekWars.staticURL + "sound/poison.mp3", VOL_OFFENSIVE_SOUND)
-		this.lightning = new Sound(game, LeekWars.staticURL + "sound/lightning.mp3", VOL_OFFENSIVE_SOUND)
-		this.fire = new Sound(game, LeekWars.staticURL + "sound/fire.mp3", VOL_OFFENSIVE_SOUND)
-		this.rock = new Sound(game, LeekWars.staticURL + "sound/rock.mp3", VOL_OFFENSIVE_SOUND)
-		this.rockfall = new Sound(game, LeekWars.staticURL + "sound/rockfall.mp3", VOL_OFFENSIVE_SOUND)
-		this.ice = new Sound(game, LeekWars.staticURL + "sound/ice.mp3", VOL_OFFENSIVE_SOUND)
-		this.meteorite = new Sound(game, LeekWars.staticURL + "sound/meteorite.mp3", VOL_OFFENSIVE_SOUND)
-		this.liberation = new Sound(game, LeekWars.staticURL + "sound/liberation.mp3", VOL_SPECIAL_SOUND)
-		this.teleportation = new Sound(game, LeekWars.staticURL + "sound/teleportation.mp3", VOL_SPECIAL_SOUND)
-		this.debuff = new Sound(game, LeekWars.staticURL + "sound/debuff.mp3", VOL_OFFENSIVE_SOUND)
+		this.heal = new Sound(game, env.STATIC + "sound/heal.mp3", VOL_DEFFENSIVE_SOUND)
+		this.buff = new Sound(game, env.STATIC + "sound/buff.mp3", VOL_DEFFENSIVE_SOUND)
+		this.shield = new Sound(game, env.STATIC + "sound/shield.mp3", VOL_DEFFENSIVE_SOUND)
+		this.poison = new Sound(game, env.STATIC + "sound/poison.mp3", VOL_OFFENSIVE_SOUND)
+		this.lightning = new Sound(game, env.STATIC + "sound/lightning.mp3", VOL_OFFENSIVE_SOUND)
+		this.fire = new Sound(game, env.STATIC + "sound/fire.mp3", VOL_OFFENSIVE_SOUND)
+		this.rock = new Sound(game, env.STATIC + "sound/rock.mp3", VOL_OFFENSIVE_SOUND)
+		this.rockfall = new Sound(game, env.STATIC + "sound/rockfall.mp3", VOL_OFFENSIVE_SOUND)
+		this.ice = new Sound(game, env.STATIC + "sound/ice.mp3", VOL_OFFENSIVE_SOUND)
+		this.meteorite = new Sound(game, env.STATIC + "sound/meteorite.mp3", VOL_OFFENSIVE_SOUND)
+		this.liberation = new Sound(game, env.STATIC + "sound/liberation.mp3", VOL_SPECIAL_SOUND)
+		this.teleportation = new Sound(game, env.STATIC + "sound/teleportation.mp3", VOL_SPECIAL_SOUND)
+		this.debuff = new Sound(game, env.STATIC + "sound/debuff.mp3", VOL_OFFENSIVE_SOUND)
 		// other
-		this.move = new Sound(game, LeekWars.staticURL + "sound/move.mp3", VOL_OTHER_SOUND)
-		this.lama = new Sound(game, LeekWars.staticURL + "sound/lama.mp3", VOL_OTHER_SOUND)
-		this.bulb = new Sound(game, LeekWars.staticURL + "sound/bulb.mp3", VOL_SPECIAL_SOUND)
-		this.map_forest = new Sound(game, LeekWars.staticURL + "sound/map_forest.mp3", VOL_MAP_SOUND)
-		this.map_beach = new Sound(game, LeekWars.staticURL + "sound/map_beach.mp3", VOL_MAP_SOUND)
-		this.map_desert = new Sound(game, LeekWars.staticURL + "sound/map_desert.mp3", VOL_MAP_SOUND)
-		this.map_factory = new Sound(game, LeekWars.staticURL + "sound/map_factory.mp3", VOL_MAP_SOUND)
-		this.map_glacier = new Sound(game, LeekWars.staticURL + "sound/map_glacier.mp3", VOL_MAP_SOUND)
-		this.map_nexus = new Sound(game, LeekWars.staticURL + "sound/map_nexus.mp3", VOL_MAP_SOUND)
+		this.move = new Sound(game, env.STATIC + "sound/move.mp3", VOL_OTHER_SOUND)
+		this.lama = new Sound(game, env.STATIC + "sound/lama.mp3", VOL_OTHER_SOUND)
+		this.bulb = new Sound(game, env.STATIC + "sound/bulb.mp3", VOL_SPECIAL_SOUND)
+		this.map_forest = new Sound(game, env.STATIC + "sound/map_forest.mp3", VOL_MAP_SOUND)
+		this.map_beach = new Sound(game, env.STATIC + "sound/map_beach.mp3", VOL_MAP_SOUND)
+		this.map_desert = new Sound(game, env.STATIC + "sound/map_desert.mp3", VOL_MAP_SOUND)
+		this.map_factory = new Sound(game, env.STATIC + "sound/map_factory.mp3", VOL_MAP_SOUND)
+		this.map_glacier = new Sound(game, env.STATIC + "sound/map_glacier.mp3", VOL_MAP_SOUND)
+		this.map_nexus = new Sound(game, env.STATIC + "sound/map_nexus.mp3", VOL_MAP_SOUND)
 	}
 }
 

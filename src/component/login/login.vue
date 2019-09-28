@@ -24,6 +24,7 @@
 </template>
 
 <script lang="ts">
+	import { env } from '@/env'
 	import { LeekWars } from '@/model/leekwars'
 	import { Component, Vue, Watch } from 'vue-property-decorator'
 
@@ -39,9 +40,9 @@
 			this.form.keep_connected = localStorage.getItem("keep_connected") === 'true'
 		}
 		login() {
-			const url = LeekWars.dev ? 'farmer/login-token' : 'farmer/login'
+			const url = env.DEV ? 'farmer/login-token' : 'farmer/login'
 			LeekWars.post(url, this.form).then(data => {
-				const token = LeekWars.dev ? data.token : '$'
+				const token = env.DEV ? data.token : '$'
 				this.$store.commit('connect', {farmer: data.farmer, token})
 				this.$router.push('/')
 			}).error(error => {

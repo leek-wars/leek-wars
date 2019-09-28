@@ -4,9 +4,9 @@
 			<router-link to="/">
 				<div class="logo-wrapper">
 					<img class="logo" src="/image/logo.png">
-					<span v-if="LeekWars.local" class="local-label">local</span>
-					<span v-if="LeekWars.dev" class="dev-label">dev</span>
-					<span v-if="LeekWars.beta" class="beta-label">Bêta</span>
+					<span v-if="env.LOCAL" class="local-label">local</span>
+					<span v-if="env.DEV" class="dev-label">dev</span>
+					<span v-if="env.BETA" class="beta-label">Bêta</span>
 				</div>
 			</router-link>
 		</div>
@@ -54,7 +54,7 @@
 					</router-link>
 				</div>
 				<div class="button-wrapper">
-					<v-menu :nudge-bottom="3" :min-width="400" :max-width="400" :max-height="400" bottom offset-y @input="readNotifications">
+					<v-menu v-if="env.SOCIAL" :nudge-bottom="3" :min-width="400" :max-width="400" :max-height="400" bottom offset-y @input="readNotifications">
 						<div slot="activator" class="header-button messages-button">
 							<i class="material-icons">email</i>
 							<span v-show="$store.state.unreadMessages > 0" class="counter">{{ $store.state.unreadMessages }}</span>

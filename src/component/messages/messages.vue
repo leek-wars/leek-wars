@@ -62,6 +62,10 @@
 		actions = [{icon: 'delete', click: () => this.showQuitDialog()}]
 
 		created() {
+			if (!this.env.SOCIAL) {
+				this.$router.push('/')
+				return
+			}
 			LeekWars.setTitle(this.$t('messages.title'))
 			this.update()
 			this.$root.$on('back', () => {

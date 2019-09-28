@@ -3,6 +3,7 @@
 </template>
 
 <script lang="ts">
+	import { env } from '@/env'
 	import { Farmer } from '@/model/farmer'
 	import { LeekWars } from '@/model/leekwars'
 	import { Component, Prop, Vue } from 'vue-property-decorator'
@@ -12,7 +13,7 @@
 		@Prop() farmer!: Farmer
 		get url() {
 			if (this.farmer && this.farmer.id && this.farmer.avatar_changed > 0) {
-				return LeekWars.avatar + 'avatar/' + this.farmer.id + '.png?' + this.farmer.avatar_changed
+				return env.AVATAR + 'avatar/' + this.farmer.id + '.png?' + this.farmer.avatar_changed
 			}
 			return '/image/no_avatar.png'
 		}

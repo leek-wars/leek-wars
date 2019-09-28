@@ -5,7 +5,7 @@ const path = require('path')
 module.exports = {
 	configureWebpack: {
 		plugins: [
-			// new BundleAnalyzerPlugin()
+			// new BundleAnalyzerPlugin(),
 			new CopyWebpackPlugin([{ from: 'src/wiki/image/', to: 'wiki' }])
 		],
 		performance: {

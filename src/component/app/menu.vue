@@ -92,7 +92,7 @@
 					<div class="text">{{ $t("main.help") }}</div>
 				</router-link>
 
-				<router-link v-ripple to="/forum" class="section" @click.native="clickItem">
+				<router-link v-ripple v-if="env.SOCIAL" to="/forum" class="section" @click.native="clickItem">
 					<img src="/image/icon/forum.png">
 					<div class="text">{{ $t("main.forum") }}</div>
 				</router-link>

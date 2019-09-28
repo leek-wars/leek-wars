@@ -1,3 +1,4 @@
+import { env } from '@/env'
 import { Chat, ChatType } from '@/model/chat'
 import { Conversation } from '@/model/conversation'
 import { Farmer } from '@/model/farmer'
@@ -64,7 +65,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			state.token = data.token
 			state.connected = true
 			localStorage.setItem('connected', 'true')
-			if (LeekWars.dev) {
+			if (env.DEV) {
 				localStorage.setItem('token', data.token)
 			}
 			loadNotifications(state)
