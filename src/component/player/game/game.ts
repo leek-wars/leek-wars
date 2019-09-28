@@ -11,6 +11,7 @@ import { Particles } from '@/component/player/game/particles'
 import { Sounds } from '@/component/player/game/sound'
 import { Textures } from '@/component/player/game/texture'
 import { Axe, BLaser, Broadsword, Destroyer, DoubleGun, Electrisor, FlameThrower, Gazor, GrenadeLauncher, Katana, Laser, MachineGun, Magnum, MLaser, Pistol, Shotgun } from '@/component/player/game/weapons'
+import { env } from '@/env'
 import { Action, ActionType } from '@/model/action'
 import { Area } from '@/model/area'
 import { EffectType } from '@/model/effect'
@@ -952,7 +953,7 @@ class Game {
 		let image: string = ''
 		if (object === 'chip') {
 			if (objectID in LeekWars.chips) {
-				image = LeekWars.staticURL + "image/chip/small/" + LeekWars.chips[objectID].name + ".png"
+				image = env.STATIC + "image/chip/small/" + LeekWars.chips[objectID].name + ".png"
 			}
 		} else /* if (object == 'weapon') */ {
 
@@ -960,7 +961,7 @@ class Game {
 
 				const template = LeekWars.weapons[objectID].template
 				const img = ["1", "2", "3", "4", "5", "6", "7", "flamme", "destroyer", "gaz_icon", "11", "12", "13", "katana", "broadsword", "axe"][template - 1]
-				image = LeekWars.staticURL + "image/weapon/" + img + ".png"
+				image = env.STATIC + "image/weapon/" + img + ".png"
 
 				// Gestion des états du poireau
 				if (template === 8) {

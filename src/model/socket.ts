@@ -1,3 +1,4 @@
+import { env } from '@/env'
 import { LeekWars } from '@/model/leekwars'
 import { vueMain } from '@/model/vue'
 import { store } from './store'
@@ -42,8 +43,7 @@ class Socket {
 		if (!store.state.farmer || this.connecting() || this.connected()) {
 			return
 		}
-		const url = LeekWars.local ? 'ws://localhost:1213/' : 'wss://leekwars.com/ws'
-		this.socket = new WebSocket(url)
+		this.socket = new WebSocket(env.WEBSOCKET)
 
 		this.socket.onopen = () => {
 			store.commit('wsconnected')

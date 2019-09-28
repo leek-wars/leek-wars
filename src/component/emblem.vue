@@ -3,6 +3,7 @@
 </template>
 
 <script lang="ts">
+	import { env } from '@/env'
 	import { LeekWars } from '@/model/leekwars'
 	import { Team } from '@/model/team'
 	import { Component, Prop, Vue } from 'vue-property-decorator'
@@ -11,7 +12,7 @@
 		@Prop() team!: Team
 		get url() {
 			if (this.team.emblem_changed > 0) {
-				return LeekWars.avatar + 'emblem/' + this.team.id + '.png?' + this.team.emblem_changed
+				return env.AVATAR + 'emblem/' + this.team.id + '.png?' + this.team.emblem_changed
 			}
 			return '/image/no_emblem.png'
 		}

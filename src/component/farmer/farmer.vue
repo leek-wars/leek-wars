@@ -36,7 +36,7 @@
 					</div>
 				</div>
 				<div v-else>
-					<div class="tab action" @click="sendMessage">
+					<div v-if="env.SOCIAL" class="tab action" @click="sendMessage">
 						<i class="material-icons">email</i>
 						<span>{{ $t('send_private_message') }}</span>
 					</div>

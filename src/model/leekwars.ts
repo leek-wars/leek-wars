@@ -1,6 +1,7 @@
 import packageJson from '@/../package.json'
 import '@/component/editor/codemirror/runmode.js'
 import { Keyword } from '@/component/editor/keywords'
+import { env } from '@/env'
 import { BattleRoyale } from '@/model/battle-royale'
 import { ChipTemplate } from '@/model/chip'
 import { Commands } from '@/model/commands'
@@ -68,7 +69,7 @@ function post<T = any>(url: any, form: any = {}) {
 		for (const k in form) { f.push(k + '=' + encodeURIComponent(form[k])) }
 		form = f.join('&')
 	}
-	return request<T>('POST', LeekWars.api + url, form)
+	return request<T>('POST', env.API + url, form)
 }
 function put<T = any>(url: any, form: any = {}) {
 	if (!(form instanceof FormData)) {
@@ -76,7 +77,7 @@ function put<T = any>(url: any, form: any = {}) {
 		for (const k in form) { f.push(k + '=' + encodeURIComponent(form[k])) }
 		form = f.join('&')
 	}
-	return request<T>('PUT', LeekWars.api + url, form)
+	return request<T>('PUT', env.API + url, form)
 }
 function del<T = any>(url: any, form: any = {}) {
 	if (!(form instanceof FormData)) {
@@ -84,10 +85,10 @@ function del<T = any>(url: any, form: any = {}) {
 		for (const k in form) { f.push(k + '=' + encodeURIComponent(form[k])) }
 		form = f.join('&')
 	}
-	return request<T>('DELETE', LeekWars.api + url, form)
+	return request<T>('DELETE', env.API + url, form)
 }
 function get<T = any>(url: any) {
-	return request<T>('GET', LeekWars.api + url)
+	return request<T>('GET', env.API + url)
 }
 
 enum EFFECT_TYPES {
@@ -125,16 +126,8 @@ class Language {
 	public flag!: string
 }
 
-const LOCAL = false
-
 const LeekWars = {
 	version: packageJson.version,
-	local: LOCAL,
-	beta: location.host.indexOf("beta.leekwars.com") === 0,
-	dev: !LOCAL && location.host.indexOf("localhost") === 0,
-	api: LOCAL ? '/api/' : 'https://leekwars.com/api/',
-	staticURL: '/',
-	avatar: 'https://leekwars.com/static/image/',
 	post,
 	get,
 	put,
@@ -314,7 +307,7 @@ const LeekWars = {
 		LeekWars.actions = actions
 	},
 	getAvatar(farmerID: number, avatarChanged: number) {
-		return avatarChanged === 0 ? '/image/no_avatar.png' : LeekWars.avatar + 'avatar/' + farmerID + '.png'
+		return avatarChanged === 0 ? '/image/no_avatar.png' : env.AVATAR + 'avatar/' + farmerID + '.png'
 	},
 	_countries: null as any,
 	get countries() {
@@ -522,12 +515,12 @@ function updateTitle() {
 	document.title = title
 }
 function setFavicon(reset: boolean = false) {
-	if (LeekWars.dev) {
-		LeekWars.favicon('/image/favicon_dev.png')
-	} else if (LeekWars.local) {
-		LeekWars.favicon('/image/favicon_local.png')
-	} else if (LeekWars.beta) {
+	if (env.BETA) {
 		LeekWars.favicon('/image/favicon_beta.png')
+	} else if (env.DEV) {
+		LeekWars.favicon('/image/favicon_dev.png')
+	} else if (env.LOCAL) {
+		LeekWars.favicon('/image/favicon_local.png')
 	} else if (reset) {
 		LeekWars.favicon('/image/favicon.png')
 	}

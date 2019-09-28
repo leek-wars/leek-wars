@@ -25,6 +25,7 @@
 </template>
 
 <script lang="ts">
+	import { env } from '@/env'
 	import { LeekWars } from '@/model/leekwars'
 	import { Component, Vue } from 'vue-property-decorator'
 
@@ -51,7 +52,7 @@
 					offerID: this.offer
 				}
 				if (vendor === 'StarPass') {
-					obj.id = LeekWars.local ? offer.id[1] : offer.id[0]
+					obj.id = env.LOCAL ? offer.id[1] : offer.id[0]
 					LeekWars.post('bank/begin-starpass-payment', {pack_id: this.pack, offer_id: this.offer}).then(() => {
 						this.data = obj
 						setTimeout(() => this.createStarPass())

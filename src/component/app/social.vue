@@ -20,7 +20,7 @@
 					</div>
 				</panel>
 		
-				<panel toggle="social/messages">
+				<panel v-if="env.SOCIAL" toggle="social/messages">
 					<h2 slot="title">
 						<router-link to="/messages">{{ $t('main.messages') }}</router-link>
 						<span v-show="$store.state.unreadMessages" class="label">{{ $store.state.unreadMessages }}</span>

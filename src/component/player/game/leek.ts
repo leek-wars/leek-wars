@@ -2,6 +2,7 @@ import { Entity, EntityDirection, EntityType } from "@/component/player/game/ent
 import { Game, SHADOW_ALPHA, SHADOW_SCALE } from '@/component/player/game/game'
 import { SHADOW_QUALITY, Texture } from '@/component/player/game/texture'
 import { WeaponAnimation, WhiteWeaponAnimation } from '@/component/player/game/weapons'
+import { env } from '@/env'
 import { HatTemplate } from '@/model/hat'
 import { LeekWars } from '@/model/leekwars'
 
@@ -57,15 +58,15 @@ class Leek extends Entity {
 		if (typeof SKINS[skin - 1] === 'undefined') { skin = 1 }
 
 		this.skin = skin
-		this.bodyTexFront = new Texture(this.game, LeekWars.staticURL + "image/leek/leek" + appearance + "_front_" + SKINS[skin - 1] + ".png", true, SHADOW_QUALITY)
-		this.bodyTexBack = new Texture(this.game, LeekWars.staticURL + "image/leek/leek" + appearance + "_back_" + SKINS[skin - 1] + ".png", true, SHADOW_QUALITY)
+		this.bodyTexFront = new Texture(this.game, env.STATIC + "image/leek/leek" + appearance + "_front_" + SKINS[skin - 1] + ".png", true, SHADOW_QUALITY)
+		this.bodyTexBack = new Texture(this.game, env.STATIC + "image/leek/leek" + appearance + "_back_" + SKINS[skin - 1] + ".png", true, SHADOW_QUALITY)
 
 		if (hat) {
 			this.hat = hat
 			this.hatTemplate = LeekWars.hats[LeekWars.hatTemplates[hat].item]
 			this.hatName = this.hatTemplate.name
-			this.hatFront = new Texture(this.game, LeekWars.staticURL + "image/hat/" + this.hatName + ".png", true, SHADOW_QUALITY)
-			this.hatBack = new Texture(this.game, LeekWars.staticURL + "image/hat/" +  this.hatName + "_back.png", true, SHADOW_QUALITY)
+			this.hatFront = new Texture(this.game, env.STATIC + "image/hat/" + this.hatName + ".png", true, SHADOW_QUALITY)
+			this.hatBack = new Texture(this.game, env.STATIC + "image/hat/" +  this.hatName + "_back.png", true, SHADOW_QUALITY)
 			this.hatX = 0
 		}
 		this.handTex = this.game.T.leek_hand
