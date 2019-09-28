@@ -229,7 +229,6 @@
 		top: 0;
 		width: 0;
 		height: 0;
-		z-index: -1;
 		border-style: solid;
 		border-width: 42px 20px 0 0;
 		border-color: rgba(80, 80, 80, 0.6) transparent transparent transparent;
