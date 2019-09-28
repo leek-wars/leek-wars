@@ -32,7 +32,7 @@
 					</div>
 				</panel>
 
-				<panel class="social-chat" toggle="social/chat">
+				<panel v-if="env.SOCIAL" class="social-chat" toggle="social/chat">
 					<h2 slot="title">
 						<router-link to="/chat">Chat</router-link>
 						<v-menu offset-y>
