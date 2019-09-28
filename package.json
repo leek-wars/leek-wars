@@ -7,7 +7,7 @@
 		"beta": "vue-cli-service serve --mode _beta_",
 		"local": "vue-cli-service serve --mode _local_",
 		"build": "VUE_MODE=build vue-cli-service build",
-		"build-beta": "VUE_MODE=build NODE_ENV = production vue-cli-service build --mode _beta_",
+		"build-beta": "VUE_MODE=build NODE_ENV=production vue-cli-service build --mode _beta_",
 		"lint": "vue-cli-service lint",
 		"stylelint": "stylelint src/**/*.{vue,css,scss}",
 		"test": "bundlesize"
