@@ -109,7 +109,6 @@ const routes = [
 	{ path: '/conditions', component: Conditions },
 	{ path: '/changelog', component: Changelog },
 	{ path: '/change-email/:state/:token', component: ChangeEmail },
-	{ path: '/chat', component: ChatPage, beforeEnter: connected },
 	{ path: '/encyclopedia/:page', component: Encyclopedia },
 	{ path: '/editor', component: EditorPage, beforeEnter: connected },
 	{ path: '/editor/:id', component: EditorPage, beforeEnter: connected },
@@ -176,6 +175,7 @@ if (process.env.VUE_APP_SOCIAL === 'true') {
 		{ path: '/forum/category-:category/topic-:topic', component: ForumTopicPage, beforeEnter: connected },
 		{ path: '/forum/category-:category/topic-:topic/page-:page', component: ForumTopicPage, beforeEnter: connected },
 		{ path: '/search', component: Search, beforeEnter: connected },
+		{ path: '/chat', component: ChatPage, beforeEnter: connected },
 	)
 }
 
