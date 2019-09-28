@@ -101,11 +101,6 @@ const routes = [
 	{ path: '/admin/trophies', component: AdminTrophies, beforeEnter: connected },
 	{ path: '/about', component: About },
 	{ path: '/app', component: AppPage },
-	{ path: '/bank', component: Bank, beforeEnter: connected },
-	{ path: '/bank/buy/:pack/:offer', component: BankBuy, beforeEnter: connected },
-	{ path: '/bank/validate/', component: BankValidate, beforeEnter: connected },
-	{ path: '/bank/validate/success/:crystals/:vendor', component: BankValidate, props: {success: true}, beforeEnter: connected },
-	{ path: '/bank/validate/failed/:vendor/:reason', component: BankValidate, props: {success: false}, beforeEnter: connected },
 	{ path: '/conditions', component: Conditions },
 	{ path: '/changelog', component: Changelog },
 	{ path: '/change-email/:state/:token', component: ChangeEmail },
@@ -176,6 +171,15 @@ if (process.env.VUE_APP_SOCIAL === 'true') {
 		{ path: '/forum/category-:category/topic-:topic/page-:page', component: ForumTopicPage, beforeEnter: connected },
 		{ path: '/search', component: Search, beforeEnter: connected },
 		{ path: '/chat', component: ChatPage, beforeEnter: connected },
+	)
+}
+if (process.env.VUE_APP_BANK === 'true') {
+	routes.push(
+		{ path: '/bank', component: Bank, beforeEnter: connected },
+		{ path: '/bank/buy/:pack/:offer', component: BankBuy, beforeEnter: connected },
+		{ path: '/bank/validate/', component: BankValidate, beforeEnter: connected },
+		{ path: '/bank/validate/success/:crystals/:vendor', component: BankValidate, props: {success: true}, beforeEnter: connected },
+		{ path: '/bank/validate/failed/:vendor/:reason', component: BankValidate, props: {success: false}, beforeEnter: connected },
 	)
 }
 
