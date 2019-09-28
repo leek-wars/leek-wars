@@ -3,7 +3,7 @@
 		<div class="page-header page-bar">
 			<h1>{{ $t('title') }}</h1>
 			<div class="tabs">
-				<router-link to="/bank">
+				<router-link v-if="env.BANK" to="/bank">
 					<div class="tab action" icon="account_balance" link="/bank">
 						<i class="material-icons">account_balance</i>
 						<span>{{ $t('main.bank') }}</span>
@@ -83,7 +83,7 @@
 								<h4 class="buy-label">{{ $t('buy') }}</h4>&nbsp;
 								<v-btn :disabled="$store.state.farmer && $store.state.farmer.habs < selectedItem.price_habs" class="buy-button" @click="openBuyHabs">{{ selectedItem.price_habs | number }}<img src="/image/hab.png"></v-btn>
 							</div>
-							<div v-if="selectedItem.price_crystals > 0">
+							<div v-if="env.BANK && selectedItem.price_crystals > 0">
 								<h4 class="buy-label">{{ $t('buy') }}</h4>&nbsp;
 								<v-btn :disabled="$store.state.farmer && $store.state.farmer.crystals < selectedItem.price_crystals" class="buy-crystals-button" @click="openBuyCrystals">{{ selectedItem.price_crystals | number }}<img src="/image/crystal.png"></v-btn>
 							</div>
