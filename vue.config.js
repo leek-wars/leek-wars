@@ -2,6 +2,10 @@ const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPl
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const path = require('path')
 
+const match = process.env.npm_lifecycle_script.match(/--mode\ (.*)/)
+const mode = match ? '.' + match[1] : ''
+require('dotenv').config({ path: path.resolve(process.cwd(), 'src', 'env', '.env' + mode) })
+
 module.exports = {
 	configureWebpack: {
 		plugins: [

@@ -4,16 +4,17 @@
 	"scripts": {
 		"start": "vue-cli-service serve",
 		"serve": "vue-cli-service serve",
-		"beta": "vue-cli-service serve --mode _beta_",
-		"local": "vue-cli-service serve --mode _local_",
+		"beta": "vue-cli-service serve --mode beta",
+		"local": "vue-cli-service serve --mode local",
 		"build": "VUE_MODE=build vue-cli-service build",
-		"build-beta": "VUE_MODE=build NODE_ENV=production vue-cli-service build --mode _beta_",
+		"build-beta": "VUE_MODE=build NODE_ENV=production vue-cli-service build --mode beta",
 		"lint": "vue-cli-service lint",
 		"stylelint": "stylelint src/**/*.{vue,css,scss}",
 		"test": "bundlesize"
 	},
 	"dependencies": {
 		"codemirror": "^5.48.4",
+		"dotenv": "^8.1.0",
 		"es6-promise": "^4.2.8",
 		"js-beautify": "^1.10.2",
 		"katex": "^0.10.2",
