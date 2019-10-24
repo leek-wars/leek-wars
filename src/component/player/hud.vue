@@ -33,7 +33,7 @@
 		</div>
 		<entity-details v-if="hover_entity" :entity="hover_entity" />
 		<entity-details v-else-if="selected_entity" :entity="selected_entity" />
-		<entity-details v-else :entity="game.leeks[game.currentPlayer]" />
+		<entity-details v-else-if="game.currentPlayer in game.leeks" :entity="game.leeks[game.currentPlayer]" />
 	</div>
 </template>
 
