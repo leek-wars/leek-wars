@@ -214,6 +214,9 @@ a {
 a:visited {
 	color: #111;
 }
+a:focus {
+    outline: 0;
+}
 textarea {
 	font-family: "Roboto";
 	font-size: 15px;
