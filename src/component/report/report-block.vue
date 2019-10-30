@@ -62,7 +62,7 @@
 
 		<div class="flags">
 			<tooltip v-for="flag in flags" :key="flag">
-				<img :src="'/image/fight_flag/' + flag + '.png'">
+				<img slot="activator" :src="'/image/fight_flag/' + flag + '.png'">
 				{{ $t('fight.flag_' + flag) }}
 			</tooltip>
 		</div>
