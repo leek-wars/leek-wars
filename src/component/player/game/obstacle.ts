@@ -24,7 +24,9 @@ class Obstacle {
 		// Get original texture
 		const textureType = size === 2 ? game.map.obstaclesBig : game.map.obstaclesSmall
 		this.baseTexture = textureType[type]
-		// if (Math.random() > 0.7) texture = T.pumpkin
+		if (game.halloween) {
+			if (Math.random() > 0.7) { this.baseTexture = this.game.T.pumpkin }
+		}
 		// Caractéristiques
 		this.size = size
 		this.type = type

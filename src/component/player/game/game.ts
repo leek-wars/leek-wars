@@ -248,6 +248,7 @@ class Game {
 	public launched: boolean = false
 	public cancelled: boolean = false
 	public player!: Player
+	public halloween: boolean = false
 
 	public maps: Map[] = [
 		new Nexus(this),
@@ -263,6 +264,16 @@ class Game {
 		for (let i = 0; i < this.ground.tilesY * 2; i++) {
 			this.drawableElements[i] = {}
 		}
+		const halloweenStart = new Date()
+		halloweenStart.setDate(30)
+		halloweenStart.setMonth(9) // October
+		halloweenStart.setHours(0, 0, 0, 0)
+		const halloweenEnd = new Date()
+		halloweenEnd.setDate(1)
+		halloweenEnd.setMonth(10) // November
+		halloweenEnd.setHours(0, 0, 0, 0)
+		const now = new Date()
+		this.halloween = now >= halloweenStart && now < halloweenEnd
 	}
 
 	public init(fight: Fight) {
