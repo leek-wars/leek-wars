@@ -398,8 +398,10 @@ class Game {
 				this.entityOrder.push(entity)
 
 				// Skin
-				const skin = typeof(e.skin) === 'undefined' ? 1 : e.skin
-				const hat = typeof(e.hat) === 'undefined' ? null : e.hat
+				const index = this.teams[entity.team - 1].length - 1
+				const fightLeek = entity.team === 1 ? fight.leeks1[index] : fight.leeks2[index]
+				const skin = typeof(fightLeek.skin) === 'undefined' ? 1 : fightLeek.skin
+				const hat = typeof(fightLeek.hat) === 'undefined' ? null : fightLeek.hat
 				const appearance = LeekWars.getLeekAppearance(entity.level)
 				entity.setSkin(skin, appearance, hat)
 				entity.active = true
