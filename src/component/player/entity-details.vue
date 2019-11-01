@@ -106,7 +106,7 @@
 	position: absolute;
 	bottom: 6px;
 	left: 0;
-	width: 470px;
+	width: 480px;
 }
 .details {
 	width: 100%;
