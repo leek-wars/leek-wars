@@ -45,6 +45,7 @@
 	import './codemirror/foldcode'
 	import './codemirror/foldgutter'
 	import './codemirror/leekscript-mode'
+	import './codemirror/leekscript-v2-mode'
 	import './codemirror/match-highlighter'
 	import './codemirror/matchbrackets'
 
@@ -135,7 +136,7 @@
 			const codeMirrorElement = this.$refs.codemirror as any
 			this.editor = CodeMirror(codeMirrorElement, {
 				value: "",
-				mode: "leekscript",
+				mode: this.ai.v2 ? "leekscript-v2" : "leekscript",
 				theme: "leekwars",
 				tabSize: 4,
 				indentUnit: 4,
