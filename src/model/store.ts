@@ -77,6 +77,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			state.connected = false
 			localStorage.removeItem('connected')
 			localStorage.removeItem('token')
+			localStorage.removeItem('editor/tabs')
 			state.token = null
 			state.farmer = null
 			LeekWars.socket.disconnect()
