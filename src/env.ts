@@ -3,6 +3,7 @@ const env = Object.freeze({
 	BETA: process.env.VUE_APP_BETA === 'true',
 	LOCAL: process.env.VUE_APP_LOCAL === 'true',
 	SOCIAL: process.env.VUE_APP_SOCIAL === 'true',
+	BANK: process.env.VUE_APP_BANK === 'true',
 	API: process.env.VUE_APP_API,
 	AVATAR: process.env.VUE_APP_AVATAR,
 	STATIC: process.env.VUE_APP_STATIC,
