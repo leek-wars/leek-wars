@@ -54,6 +54,10 @@ module.exports = {
 		workboxPluginMode: 'InjectManifest',
 		workboxOptions: {
 			swSrc: 'public/service-worker.js'
+		},
+		iconPaths: {
+			favicon32: 'image/favicon.png',
+			favicon16: 'image/favicon.png'
 		}
 	}
 }
