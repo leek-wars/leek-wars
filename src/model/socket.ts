@@ -40,6 +40,8 @@ enum SocketMessage {
 class Socket {
 	public socket!: WebSocket
 	public queue: any[] = []
+	public retry_count: number = 10
+	public retry_delay: number = 1000
 
 	public connect() {
 		if (!store.state.farmer || this.connecting() || this.connected()) {
@@ -49,6 +51,8 @@ class Socket {
 
 		this.socket.onopen = () => {
 			store.commit('wsconnected')
+			this.retry_count = 10
+			this.retry_delay = 1000
 			for (const p of this.queue) {
 				this.send(p)
 			}
@@ -58,12 +62,8 @@ class Socket {
 		}
 		this.socket.onclose = () => {
 			store.commit('wsclose')
-			setTimeout(() => this.connect(), 2000)
+			this.retry()
 		}
-		this.socket.onerror = () => {
-			setTimeout(() => this.connect(), 2000)
-		}
-
 		this.socket.onmessage = (msg: any) => {
 			const json = JSON.parse(msg.data)
 			const id = json[0]
@@ -151,6 +151,14 @@ class Socket {
 			}
 		}
 	}
+	public retry() {
+		if (this.retry_count > 0) {
+			this.retry_count--
+			setTimeout(() => this.connect(), this.retry_delay)
+			this.retry_delay += 500
+		}
+	}
+
 	public send(message: any) {
 		if (this.socket && this.socket.readyState === WebSocket.OPEN) {
 			this.socket.send(JSON.stringify(message))

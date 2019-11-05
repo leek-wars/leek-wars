@@ -93,9 +93,13 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 		},
 		"wsconnected"(state: LeekWarsState) {
 			state.wsconnected = true
+			vueMain.$emit('wsconnected')
 		},
 		"wsclose"(state: LeekWarsState) {
 			state.wsconnected = false
+		},
+		'clear-chat'(state: LeekWarsState, chat: string) {
+			Vue.delete(state.chat, chat)
 		},
 		'init-team-chat'(state: LeekWarsState) {
 			if (!state.chat.team) {

@@ -55,7 +55,7 @@
 			</template>
 			<div v-show="unread" class="chat-new-messages" @click="updateScroll(true)">{{ $t('main.unread_messages') }}</div>
 		</div>
-		<div class="chat-disconnected">{{ $t('main.disconnected') }}</div>
+		<div v-if="!$store.state.wsconnected" class="chat-disconnected">{{ $t('main.disconnected') }}</div>
 		<chat-input @message="sendMessage" />
 
 		<report-dialog v-if="reportFarmer" v-model="reportDialog" :name="reportFarmer.name" :target="reportFarmer.id" :reasons="reasons" :parameter="reportContent" />
@@ -125,7 +125,6 @@
 			return this.channel ? store.state.chat[this.channel] : null
 		}
 		created() {
-			this.update()
 			this.$root.$on('chat', (e: any) => {
 				if (e[0] === this.channel) {
 					this.updateScroll()
@@ -137,6 +136,7 @@
 				}
 			})
 			this.$root.$on('resize', () => this.updateScroll())
+			this.$root.$on('wsconnected', () => this.update())
 		}
 		scrollBottom() {
 			const messages = this.$refs.messages as HTMLElement
@@ -203,6 +203,7 @@
 					})
 				}
 			} else {
+				this.$store.commit('clear-chat', this.channel)
 				LeekWars.socket.enableChannel(this.channel)
 			}
 		}
@@ -371,11 +372,14 @@
 		cursor: pointer;
 	}
 	.chat-disconnected {
-		height: 0px;
+		height: 30px;
 		line-height: 30px;
 		background-color: #d3324d;
 		color: white;
 		text-align: center;
-		transition: height ease 0.5s
+		transition: height ease 0.5s;
+		position: absolute;
+		top: 0;
+		width: 100%;
 	}
 </style>
