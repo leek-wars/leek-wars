@@ -33,6 +33,8 @@ enum SocketMessage {
 	BATTLE_ROYALE_LEAVE = 31,
 	BATTLE_ROYALE_CHAT_NOTIF = 32,
 	PONG = 33,
+	CHAT_ENABLE_FAST = 34,
+	CHAT_RECEIVE_PACK = 35
 }
 
 class Socket {
@@ -75,6 +77,10 @@ class Socket {
 				}
 				case SocketMessage.FORUM_CHAT_RECEIVE : {
 					store.commit('chat-receive', {message: data})
+					break
+				}
+				case SocketMessage.CHAT_RECEIVE_PACK : {
+					store.commit('chat-receive-pack', data)
 					break
 				}
 				case SocketMessage.TEAM_CHAT_RECEIVE : {
@@ -153,7 +159,7 @@ class Socket {
 		}
 	}
 	public enableChannel(channel: string) {
-		this.send([SocketMessage.FORUM_CHAT_ENABLE, channel])
+		this.send([SocketMessage.CHAT_ENABLE_FAST, channel])
 	}
 	public disconnect() {
 		if (this.socket) { this.socket.close() }
