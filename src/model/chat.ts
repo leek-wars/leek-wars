@@ -43,6 +43,26 @@ class Chat {
 		} as ChatMessage)
 	}
 
+	set_messages(messages: any[]) {
+		const prepared_messages: any[] = []
+		for (const raw_message of messages) {
+			const message = this.formatMessage(raw_message[3], raw_message[2])
+			if (prepared_messages.length) {
+				const lastMessage = prepared_messages[prepared_messages.length - 1]
+				if (lastMessage.author.id === raw_message[1] && raw_message[4] - lastMessage.time < 120) {
+					lastMessage.texts.push(message)
+					continue
+				}
+			}
+			prepared_messages.push({
+				author: { id: raw_message[1], name: raw_message[2], avatar_changed: raw_message[6], grade: raw_message[5] },
+				texts: [message],
+				time: raw_message[4]
+			} as ChatMessage)
+		}
+		this.messages = prepared_messages
+	}
+
 	battleRoyale(fightID: number, time: number) {
 		this.messages.push({
 			author: { id: 0, name: "Leek Wars" } as Farmer,

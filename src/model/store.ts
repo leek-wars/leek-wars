@@ -110,6 +110,15 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			state.chat[channel].add(data.message[1], data.message[2], data.message[6], data.message[5], data.message[3], data.message[4])
 			vueMain.$emit('chat', [channel])
 		},
+		'chat-receive-pack'(state: LeekWarsState, pack: any) {
+			if (!pack.length) { return }
+			const channel = pack[0][0]
+			if (!state.chat[channel]) {
+				Vue.set(state.chat, channel, new Chat(channel, ChatType.GLOBAL))
+			}
+			state.chat[channel].set_messages(pack)
+			vueMain.$emit('chat', [channel])
+		},
 		'chat-team-receive'(state: LeekWarsState, data: any) {
 			if (!state.chat.team) {
 				Vue.set(state.chat, 'team', new Chat("team", ChatType.TEAM))
