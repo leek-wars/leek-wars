@@ -453,14 +453,14 @@
 							this.errors.push({ai: ai.name, error: res[2], line: res[3]})
 							ai.valid = false
 						} else if (code === 0) {
-							const line = res[3]
-							let info = res[5]
-							if (res.length === 8) {
-								info = this.$t('leekscript.' + res[6], res[7])
+							const line = res[2]
+							let info = res[4]
+							if (res.length === 7) {
+								info = this.$t('leekscript.' + res[5], res[6])
 							} else {
-								info = this.$t('leekscript.' + res[6])
+								info = this.$t('leekscript.' + res[5])
 							}
-							info = '(' + res[5] + ') ' + info
+							info = '(' + res[4] + ') ' + info
 							this.errors.push({ai: ai.name, message: info, line})
 							ai.valid = false
 							editor.showError(line)
