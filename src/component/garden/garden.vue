@@ -504,6 +504,9 @@
 		min-width: 150px;
 		border: 1px solid rgba(0, 0, 0, 0.1);
 	}
+	.composition-wrapper {
+		padding: 10px 0;
+	}
 	.leek, .composition, .composition-wrapper, .opponents .farmer {
 		cursor: pointer;
 	}
