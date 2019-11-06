@@ -31,6 +31,15 @@
 						</div>
 					</div>
 				</div>
+				<div class="queue">
+					<h4>➤ Queue ({{ queue.length }})</h4>
+					<div class="farmers">
+						<div v-for="(fight, f) in queue" :key="f" class="card farmer">
+							{{ fight[0] }}
+							<div class="fight"><router-link :to="'/fight/' + fight[1]">{{ fight[1] }}</router-link></div>
+						</div>
+					</div>
+				</div>
 			</div>
 		</panel>
 	</div>
@@ -44,11 +53,13 @@
 	const STATS_NEW_THREAD = 16
 	const STAT_UPDATE_THREAD = 17
 	const STAT_UPDATE_TASK = 18
+	const ADMIN_QUEUE = 36
 
 	@Component({})
 	export default class AdminServers extends Vue {
 		servers: {[key: string]: any} = {}
 		threads: {[key: string]: any} = {}
+		queue: any = []
 
 		created() {
 			LeekWars.socket.send([LISTEN_DATA])
@@ -66,6 +77,9 @@
 			if (type === STAT_UPDATE_TASK) {
 				const t = data[0]
 				this.updateThreadTask(t.name, t.task, t.task_start, t.generated, t.errors)
+			}
+			if (type === ADMIN_QUEUE) {
+				this.queue = data
 			}
 		}
 		updateThread(serverName: any, threadName: any, connected: any, task: any, task_start: any, generated: number, errors: number) {
@@ -111,7 +125,7 @@
 		display: inline-block;
 		text-align: center;
 		vertical-align: top;
-		width: 300px;
+		width: 420px;
 	}
 	.server .load {
 		position: absolute;
@@ -172,5 +186,25 @@
 	}
 	.server .green {
 		color: green;
+	}
+	h4 {
+		margin: 6px 0;
+	}
+	.queue .farmer {
+		display: inline-block;
+		width: 60px;
+		text-align: center;
+		padding: 3px 4px;
+		margin-right: 6px;
+		margin-bottom: 6px;
+		.fight {
+			font-size: 13px;
+			a {
+				color: #777;
+			}
+		}
+	}
+	.queue .farmers {
+		min-height: 60px;
 	}
 </style>
