@@ -1002,6 +1002,9 @@ class Game {
 		case EffectType.VULNERABILITY:
 			leek.buffRelativeShield(-value, this.jumping)
 			break
+		case EffectType.ABSOLUTE_VULNERABILITY:
+			leek.buffAbsoluteShield(-value, this.jumping)
+			break
 		case EffectType.BUFF_AGILITY:
 			leek.buffAgility(value, this.jumping)
 			break
@@ -1071,6 +1074,9 @@ class Game {
 		case EffectType.VULNERABILITY:
 			leek.relativeShield += value
 			break
+		case EffectType.ABSOLUTE_VULNERABILITY:
+			leek.absoluteShield += value
+			break
 		case EffectType.BUFF_AGILITY:
 			leek.agility -= value
 			break
@@ -1129,6 +1135,9 @@ class Game {
 			break
 		case EffectType.VULNERABILITY:
 			leek.relativeShield += delta
+			break
+		case EffectType.ABSOLUTE_VULNERABILITY:
+			leek.absoluteShield += delta
 			break
 		case EffectType.BUFF_AGILITY:
 			leek.agility += delta
