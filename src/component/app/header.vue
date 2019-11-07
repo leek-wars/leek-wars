@@ -19,7 +19,7 @@
 							<span>{{ $t('main.connection') }}</span>
 						</div>
 					</router-link>
-				</div><div class="button-wrapper">
+				</div><div v-if="env.SIGN_UP" class="button-wrapper">
 					<router-link to="/">
 						<div class="signup-button header-button">
 							<i class="material-icons">how_to_reg</i>&nbsp;
