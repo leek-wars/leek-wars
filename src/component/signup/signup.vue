@@ -4,7 +4,7 @@
 			<h1>{{ $t('title') }}</h1>
 		</div>
 		<div class="top">
-			<div class="column6">
+			<div :class="env.SIGN_UP ? 'column6' : 'column12'">
 				<panel class="first">
 					<div class="desc introduction" v-html="$t('intro')"></div>
 					<div class="leek-rect">
@@ -13,7 +13,7 @@
 					</div>
 				</panel>
 			</div>
-			<div class="column6">
+			<div v-if="env.SIGN_UP" class="column6">
 				<panel title="Inscription">
 					<form class="signup-form" method="post" @submit="submit">
 						<table>
