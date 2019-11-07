@@ -34,7 +34,10 @@
 							<rich-tooltip-farmer :id="farmer.id">
 								<div class="farmer">
 									<avatar :farmer="farmer" /><br>
-									<span class="name">{{ farmer.name }}</span>
+									<span class="name">
+										<span v-if="farmer.id === fight.starter" class="arrow">▶</span>
+										{{ farmer.name }}
+									</span>
 								</div>
 							</rich-tooltip-farmer>
 						</router-link>
@@ -45,7 +48,10 @@
 							<rich-tooltip-farmer :id="farmer.id">
 								<div class="farmer">
 									<avatar :farmer="farmer" /><br>
-									<span class="name">{{ farmer.name }}</span>
+									<span class="name">
+										<span v-if="farmer.id === fight.starter" class="arrow">▶</span>
+										{{ farmer.name }}
+									</span>
 								</div>
 							</rich-tooltip-farmer>
 						</router-link>
@@ -207,6 +213,13 @@
 		overflow: hidden;
 		text-overflow: ellipsis;
 		font-size: 12px;
+		white-space: nowrap;
+	}
+	.fight-info .farmer .arrow {
+		display: inline-block;
+		margin-top: -1px;
+		vertical-align: top;
+		margin-right: 2px;
 	}
 	.fight-info .farmer img {
 		width: 75px;
