@@ -69,6 +69,11 @@
 				<b slot="value" class="color-resistance">{{ $t('fight.n_vulnerability', [value + '%']) }}</b>
 				<b slot="turns">{{ turns }}</b>
 			</i18n>
+			<i18n v-else-if="effect === EffectType.ABSOLUTE_VULNERABILITY" path="fight.leek_receives_x">
+				<leek slot="leek" :leek="target" />
+				<b slot="value" class="color-resistance">{{ $t('fight.n_vulnerability', [value]) }}</b>
+				<b slot="turns">{{ turns }}</b>
+			</i18n>
 			<i18n v-else-if="effect === EffectType.BUFF_AGILITY" path="fight.leek_win_x_turns">
 				<leek slot="leek" :leek="target" />
 				<b slot="value" class="color-agility">{{ $t('fight.n_agility', [value]) }}</b>

@@ -19,6 +19,7 @@ enum EffectType {
 	SHACKLE_MAGIC = 24,
 	AFTEREFFECT = 25,
 	VULNERABILITY = 26,
+	ABSOLUTE_VULNERABILITY = 27
 }
 
 enum EffectTypeMarket {
