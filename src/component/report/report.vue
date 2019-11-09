@@ -112,7 +112,7 @@
 			</div>
 		</panel>
 
-		<panel title="Statistics" toggle="report/statistics">
+		<panel :title="$t('statistics')" toggle="report/statistics">
 			<loader v-if="!report" />
 			<div v-else class="scroll-x">
 				<report-statistics :fight="fight" :statistics="statistics" />
