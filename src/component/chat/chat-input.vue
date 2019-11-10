@@ -43,6 +43,7 @@
 			} else if (e.which === 13 && !e.shiftKey) {
 				e.preventDefault()
 			}
+			e.stopPropagation()
 		}
 		keyUp(e: KeyboardEvent) {
 			this.updateCursor()
