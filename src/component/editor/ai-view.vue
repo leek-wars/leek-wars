@@ -38,7 +38,6 @@
 	import { store } from '@/model/store'
 	import CodeMirror from 'codemirror'
 	import 'codemirror/lib/codemirror.css'
-	import js_beautify from 'js-beautify'
 	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 	import './codemirror/bracefold'
 	import './codemirror/commentfold'
@@ -354,7 +353,10 @@
 			}
 		}
 		public formatCode() {
-			this.editor.setValue(js_beautify(this.editor.getValue(), {indent_size: 1, indent_char: '\t'}))
+			import(/* webpackChunkName: "editor" */ "js-beautify").then(js_beautify => {
+				console.log(js_beautify)
+				this.editor.setValue(js_beautify.js_beautify(this.editor.getValue(), {indent_size: 1, indent_char: '\t'}))
+			})
 		}
 		public commentCode() {
 			const start = this.document.getCursor('from').line
