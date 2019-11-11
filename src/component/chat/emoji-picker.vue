@@ -12,7 +12,7 @@
 				<div class="grid">
 					<template v-for="(emoji, e) in category.emojis">
 						<img v-if="c == 0 && e < 11" :key="e" :src="'/image/emoji/' + Emojis.custom[emoji] + '.png'" :title="emoji" class="emoji classic" @click="$emit('pick', emoji)">
-						<div v-else :key="e" class="emoji" :class="{'emoji-font': !LeekWars.nativeEmojis}" @click="$emit('pick', emoji)">{{ emoji }}</div>
+						<div v-else :key="e" :class="{'emoji-font': !LeekWars.nativeEmojis}" class="emoji" @click="$emit('pick', emoji)">{{ emoji }}</div>
 					</template>
 				</div>
 			</v-tab-item>
