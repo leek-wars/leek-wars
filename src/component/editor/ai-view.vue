@@ -36,17 +36,7 @@
 	import { i18n } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import { store } from '@/model/store'
-	import CodeMirror from 'codemirror'
-	import 'codemirror/lib/codemirror.css'
 	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
-	import './codemirror/bracefold'
-	import './codemirror/commentfold'
-	import './codemirror/foldcode'
-	import './codemirror/foldgutter'
-	import './codemirror/leekscript-mode'
-	import './codemirror/leekscript-v2-mode'
-	import './codemirror/match-highlighter'
-	import './codemirror/matchbrackets'
 
 	const AUTO_SHORTCUTS = [
 		["lama", "#LamaSwag", "", "Le pouvoir du lama"],
@@ -133,50 +123,53 @@
 		}
 		mounted() {
 			const codeMirrorElement = this.$refs.codemirror as any
-			this.editor = CodeMirror(codeMirrorElement, {
-				value: "",
-				mode: this.ai.v2 ? "leekscript-v2" : "leekscript",
-				theme: "leekwars",
-				tabSize: 4,
-				indentUnit: 4,
-				indentWithTabs: true,
-				highlightSelectionMatches: true,
-				matchBrackets: true,
-				lineNumbers: true,
-				lineWrapping: true,
-				undoDepth: 200,
-				autofocus: true,
-				smartIndent: false,
-				cursorHeight: 1,
-				foldGutter: true,
-				gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"],
-				extraKeys: {
-					"Shift-Tab": () => this.unindentCode(),
-					"Ctrl-D": () => this.duplicateLine(),
-					"Ctrl-E": () => this.commentCode(),
-					"Shift-Ctrl-/": () => this.commentCode(),
-					"Ctrl-K": () => this.removeLine(),
-					"Ctrl-Space": () => this.autocomplete(true),
-					"Shift-Ctrl-F": () => this.formatCode()
-				},
-			} as any)
-			this.document = this.editor.getDoc()
+			import(/* webpackChunkName: "codemirror" */ "@/codemirror-wrapper").then(wrapper => {
+				this.editor = wrapper.CodeMirror(codeMirrorElement, {
+					value: "",
+					mode: this.ai.v2 ? "leekscript-v2" : "leekscript",
+					theme: "leekwars",
+					tabSize: 4,
+					indentUnit: 4,
+					indentWithTabs: true,
+					highlightSelectionMatches: true,
+					matchBrackets: true,
+					lineNumbers: true,
+					lineWrapping: true,
+					undoDepth: 200,
+					autofocus: true,
+					smartIndent: false,
+					cursorHeight: 1,
+					foldGutter: true,
+					gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"],
+					extraKeys: {
+						"Shift-Tab": () => this.unindentCode(),
+						"Ctrl-D": () => this.duplicateLine(),
+						"Ctrl-E": () => this.commentCode(),
+						"Shift-Ctrl-/": () => this.commentCode(),
+						"Ctrl-K": () => this.removeLine(),
+						"Ctrl-Space": () => this.autocomplete(wrapper.CodeMirror, true),
+						"Shift-Ctrl-F": () => this.formatCode()
+					},
+				} as any)
 
-			this.editor.on('change', (_, changes) => this.change(changes))
-			this.editor.on('cursorActivity', (_) => this.cursorChange())
+				this.document = this.editor.getDoc()
 
-			this.show()
-			
-			// Lock scroll down
-			const codeMirrorScroll = codeMirrorElement.querySelector('.CodeMirror-scroll') as HTMLElement
-			if (codeMirrorScroll) {
-				codeMirrorScroll.addEventListener('wheel', (e: WheelEvent) => {
-					if (e.deltaY > 0 && Math.abs(codeMirrorScroll.scrollTop - (codeMirrorScroll.scrollHeight - codeMirrorScroll.offsetHeight + 15)) < 1) {
-						e.preventDefault()
-					}
-				})
-			}
-			this.editor.on("mousedown", this.editorMousedown as any)
+				this.editor.on('change', (_, changes) => this.change(wrapper.CodeMirror, changes))
+				this.editor.on('cursorActivity', (_) => this.cursorChange())
+
+				this.show()
+				
+				// Lock scroll down
+				const codeMirrorScroll = codeMirrorElement.querySelector('.CodeMirror-scroll') as HTMLElement
+				if (codeMirrorScroll) {
+					codeMirrorScroll.addEventListener('wheel', (e: WheelEvent) => {
+						if (e.deltaY > 0 && Math.abs(codeMirrorScroll.scrollTop - (codeMirrorScroll.scrollHeight - codeMirrorScroll.offsetHeight + 15)) < 1) {
+							e.preventDefault()
+						}
+					})
+				}
+				this.editor.on("mousedown", this.editorMousedown as any)
+			})
 		}
 		@Watch('visible')
 		visibilityChanged() {
@@ -283,13 +276,13 @@
 			this.editor.addOverlay(overlay)
 			this.error = true
 		}
-		public change(changes: CodeMirror.EditorChange) {
+		public change(CodeMirror: any, changes: CodeMirror.EditorChange) {
 			const userChange = changes.origin === "+input" || changes.origin === "+delete"
 			if (changes.origin !== "setValue") {
 				this.hasBeenModified()
 			}
 			if (changes.origin === "+input" || (this.hintDialog && changes.origin === "+delete")) {
-				this.autocomplete()
+				this.autocomplete(CodeMirror)
 			}
 			this.lines = this.editor.getDoc().lineCount()
 			this.characters = this.editor.getDoc().getValue().length
@@ -548,7 +541,7 @@
 			clearTimeout(this.detailTimer)
 			this.detailDialog = false
 		}
-		public autocomplete(force: boolean = false) {
+		public autocomplete(CodeMirror: any, force: boolean = false) {
 			if (!this.autocompleteOption) { return }
 
 			this.updateIncludes()

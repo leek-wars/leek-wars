@@ -1,5 +1,4 @@
 import packageJson from '@/../package.json'
-import '@/component/editor/codemirror/runmode.js'
 import { Keyword } from '@/component/editor/keywords'
 import { env } from '@/env'
 import { BattleRoyale } from '@/model/battle-royale'
@@ -12,7 +11,6 @@ import { Squares } from '@/model/squares'
 import { store } from '@/model/store'
 import { vueMain } from '@/model/vue'
 import { WeaponTemplate } from '@/model/weapon'
-import CodeMirror from 'codemirror'
 import { TranslateResult } from 'vue-i18n'
 import { ChatType, ChatWindow } from './chat'
 import { i18n, loadLanguageAsync } from './i18n'
@@ -656,13 +654,15 @@ function formatTime(time: number) {
 }
 
 function createCodeArea(code: string, element: HTMLElement) {
-	CodeMirror.runMode(code, "leekscript", element)
-	element.innerHTML = '<pre class="code"><span class="line-number"></span>' + element.innerHTML + '<span class="cl"></span></pre>'
-	const num = element.innerHTML.split(/\n/).length
-	for (let j = 0; j < num; j++) {
-		const line_num = element.getElementsByTagName('span')[0]
-		line_num.innerHTML += '<span>' + (j + 1) + '</span>'
-	}
+	import(/* webpackChunkName: "codemirror" */ "@/codemirror-wrapper").then(wrapper => {
+		wrapper.CodeMirror.runMode(code, "leekscript", element)
+		element.innerHTML = '<pre class="code"><span class="line-number"></span>' + element.innerHTML + '<span class="cl"></span></pre>'
+		const num = element.innerHTML.split(/\n/).length
+		for (let j = 0; j < num; j++) {
+			const line_num = element.getElementsByTagName('span')[0]
+			line_num.innerHTML += '<span>' + (j + 1) + '</span>'
+		}
+	})
 }
 
 function escapeRegExp(str: string) {
