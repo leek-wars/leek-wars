@@ -119,6 +119,7 @@ Vue.directive('autostopscroll', {
 	}
 })
 Vue.directive('emojis', (el, binding, vnode) => {
+	if (LeekWars.nativeEmojis) { return }
 	const text = vnode.data && vnode.data.domProps && vnode.data.domProps.textContent ? vnode.data.domProps.textContent : el.innerHTML
 	el.innerHTML = LeekWars.formatEmojis(text)
 })
@@ -135,7 +136,7 @@ Vue.directive('code', {
 Vue.directive('large-emojis', {
 	inserted: (el) => {
 		if (!el.classList.contains('large-emojis')) {
-			if (el.textContent === '' && el.querySelectorAll('.smiley').length === 1) {
+			if (el.querySelectorAll('.emoji').length === 1) {
 				el.classList.add('large-emojis')
 			}
 		}

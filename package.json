@@ -20,7 +20,6 @@
 		"katex": "^0.10.2",
 		"markdown-it": "^8.4.2",
 		"register-service-worker": "^1.6.2",
-		"twemoji": "^11.3.0",
 		"typescript-estree": "^18.1.0",
 		"vue": "^2.6.10",
 		"vue-chartist": "^2.2.1",

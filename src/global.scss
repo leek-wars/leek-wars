@@ -1,3 +1,7 @@
+@font-face {
+	font-family: 'Noto Color Emoji';
+	src: url("/NotoColorEmoji.ttf");
+}
 .v-tooltip__content {
 	background: #333 !important;
 	font-size: 14px !important;
@@ -492,18 +496,23 @@ input:active, input:focus {
 .small {
 	font-size: 12px;
 }
-.smiley {
+img.emoji {
+	width: 16px;
+	height: 16px;
+	line-height: 15px;
 	display: inline-block;
 	vertical-align: middle;
 	margin-top: -2px;
-	width: 16px;
-	height: 16px;
 	float: none;
 }
-.smiley.large {
+.emoji.large {
 	width: 30px;
 	height: 30px;
 	margin-top: 4px;
+}
+.emoji-font {
+	font-family: "Noto Color Emoji";
+	font-size: 16px;
 }
 .dev-label, .beta-label, .local-label {
 	color: white;

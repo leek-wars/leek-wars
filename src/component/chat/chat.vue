@@ -317,10 +317,9 @@
 		word-break: break-word;
 		color: #333;
 	}
-	.text.large-emojis /deep/ .smiley {
-		width: 30px;
-		height: 30px;
-		margin: 3px 0;
+	.text.large-emojis /deep/ .emoji {
+		font-size: 28px;
+		line-height: 34px;
 	}
 	.right {
 		font-size: 13px;
