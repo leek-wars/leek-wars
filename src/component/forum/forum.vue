@@ -211,6 +211,9 @@
 	.category > div {
 		padding: 10px;
 	}
+	#app.app .category > div {
+		padding: 4px 6px;
+	}
 	.category:not(.header) {
 		border: 1px solid #ddd;
 	}
