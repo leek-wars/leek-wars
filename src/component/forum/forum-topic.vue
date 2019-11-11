@@ -52,11 +52,14 @@
 						</rich-tooltip-farmer>
 						<div class="message card">
 							<div class="wrapper">
-								<a v-if="message.id != -1" :href="'#message-' + message.id" class="link">#</a>
-								<router-link v-else to="" class="link">#</router-link>
+								<template v-if="!message.editing">
+									<a v-if="message.id != -1" :href="'#message-' + message.id" class="link">#</a>
+									<router-link v-else to="" class="link">#</router-link>
+								</template>
 								
-								<textarea v-if="message.editing" v-model="message.message" :style="{height: message.height + 'px'}" class="original"></textarea>
+								<textarea v-if="message.editing" ref="textarea" v-model="message.message" :style="{height: message.height + 'px'}" class="original"></textarea>
 								<div v-emojis v-code v-else class="text" v-html="message.html"></div>
+								<emoji-picker v-if="message.editing" class="emoji-picker" @pick="addEmoji(message, $event, $refs.textarea[0])" />
 
 								<div class="date">
 									{{ LeekWars.formatDateTime(message.date) }}
@@ -158,9 +161,10 @@
 	import { ForumCategory, ForumMessage, ForumTopic } from '@/model/forum'
 	import { LeekWars } from '@/model/leekwars'
 	import { Component, Vue, Watch } from 'vue-property-decorator'
+	import EmojiPicker from '../chat/emoji-picker.vue'
 	import Breadcrumb from './breadcrumb.vue'
 
-	@Component({ name: 'forum_topic', i18n: {}, components: { Breadcrumb } })
+	@Component({ name: 'forum_topic', i18n: {}, components: { Breadcrumb, EmojiPicker } })
 	export default class ForumTopicPage extends Vue {
 		topic: ForumTopic | null = null
 		category: ForumCategory | null = null
@@ -382,6 +386,10 @@
 				const title = input.innerText
 				LeekWars.post("forum/edit-topic", {topic_id: this.topic.id, title, message: message.message, issue: this.topic.issue}).then(callback)
 			}
+		}
+		addEmoji(message: ForumMessage, emoji: string, textarea: any) {
+			const index = textarea.selectionStart
+			message.message = message.message.slice(0, index) + emoji + message.message.slice(index, message.message.length)
 		}
 	}
 </script>
@@ -704,5 +712,10 @@
 	.message /deep/ code {
 		display: block;
 		width: 100%;
+	}
+	.emoji-picker /deep/ .chat-input-emoji {
+		position: absolute;
+		right: 10px;
+		top: 10px;
 	}
 </style>
