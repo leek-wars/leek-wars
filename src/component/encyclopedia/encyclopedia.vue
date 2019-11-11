@@ -15,11 +15,12 @@
 </template>
 
 <script lang="ts">
+	import Markdown from '@/component/encyclopedia/markdown.vue'
 	import { defaultWiki } from '@/locale'
 	import { LeekWars } from '@/model/leekwars'
 	import { Component, Vue, Watch } from 'vue-property-decorator'
 	
-	@Component({ name: 'encyclopedia', i18n: {} })
+	@Component({ name: 'encyclopedia', i18n: {}, components: { Markdown } })
 	export default class Encyclopedia extends Vue {
 		wiki = defaultWiki
 		content: string = ''
