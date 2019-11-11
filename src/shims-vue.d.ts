@@ -9,10 +9,6 @@ declare module 'vue-chartist' {
 	const Chartist: any
 	export = Chartist
 }
-declare module 'twemoji' {
-	const twemoji: any
-	export = twemoji
-}
 declare module 'katex' {
 	const katex: any
 	export = katex

@@ -31,7 +31,6 @@ I gladly accept pull requests to Leek Wars. Before starting work on a feature, s
 - Vuex https://github.com/vuejs/vuex
 - CodeMirror https://github.com/codemirror/codemirror
 - Chartist https://github.com/gionkunz/chartist-js
-- Twemoji https://github.com/twitter/twemoji
 - Katex https://github.com/Khan/KaTeX
 
 ## License

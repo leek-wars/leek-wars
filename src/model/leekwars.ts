@@ -13,7 +13,6 @@ import { store } from '@/model/store'
 import { vueMain } from '@/model/vue'
 import { WeaponTemplate } from '@/model/weapon'
 import CodeMirror from 'codemirror'
-import twemoji from 'twemoji'
 import { TranslateResult } from 'vue-i18n'
 import { ChatType, ChatWindow } from './chat'
 import { i18n, loadLanguageAsync } from './i18n'
@@ -110,16 +109,6 @@ const SKINS: { [key: number]: string } = {
 const ORDERED_CHIPS = orderChips(CHIPS)
 const ORDERED_WEAPONS = orderWeapons(WEAPONS)
 
-for (const emoji in Emojis.emojis) {
-	Emojis.textToEmoji[Emojis.emojis[emoji].text] = emoji
-}
-Emojis.categories_formatted = Emojis.categories.map(category => {
-	return {icon: Emojis.url + category.icon + '.svg', emojis: category.emojis.map(emoji => {
-		const e = Emojis.emojis[emoji]
-		return {emoji, text: e.image ? (':' + e.text + ':') : emoji, image: e.image ? Emojis.url + e.image + '.svg' : '/image/emoji/' + e.text + '.png', classic: !e.image}
-	})}
-})
-
 class Language {
 	public code!: string
 	public name!: string
@@ -158,6 +147,7 @@ const LeekWars = {
 	timeSeconds: (Date.now() / 1000) | 0,
 	large: false,
 	flex: false,
+	nativeEmojis: detectNativeEmojis(),
 	setLocale(locale: string) {
 		document.cookie = "lang=" + locale
 		loadLanguageAsync(vueMain, locale)
@@ -679,38 +669,20 @@ function escapeRegExp(str: string) {
 	return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&")
 }
 
-function formatEmojis(data: any, useShortcuts: boolean = true) {
+function formatEmojis(data: any) {
 	if (!data || typeof(data) !== 'string') { return data }
-	if (useShortcuts) {
-		for (const i in Emojis.shorcuts) {
-			data = data.replace(new RegExp("(^|\\s|\>)" + escapeRegExp(i) + "(?![^\\s<>])", "g"), '$1' + Emojis.shorcuts[i])
-		}
-		data = data.replace(/:(\w+):/gi, (_: any, text: any) => {
-			if (text in Emojis.textToEmoji) {
-				return Emojis.textToEmoji[text]
-			}
-			return _
-		})
-	}
 	// Custom smileys
 	for (const i in Emojis.custom) {
 		const smiley = Emojis.custom[i]
-		data = data.replace(new RegExp("(^|\\s|\>)" + escapeRegExp(i) + "(?![^\\s<>])", "g"), '$1<img class="smiley" image="' + smiley + '" alt="' + i + '" title="' + i + '" src="/image/emoji/' + smiley + '.png">')
+		data = data.replace(new RegExp("(^|\\s|\>)" + escapeRegExp(i) + "(?![^\\s<>])", "gi"), '$1<img class="emoji" image="' + smiley + '" alt="' + i + '" title="' + i + '" src="/image/emoji/' + smiley + '.png">')
 	}
-	// Emoji to image
-	return twemoji.parse(data, {
-		callback: (icon: string, options: any) => {
-			return Emojis.url + icon + '.svg'
-		},
-		attributes: (rawText: string, iconId: string) => {
-			if (rawText in Emojis.emojis) {
-				return { title: ':' + Emojis.emojis[rawText].text + ':' }
-			} else {
-				return {}
-			}
-		},
-		className: 'smiley'
-	})
+	if (LeekWars.nativeEmojis) {
+		return data // nothing more to do
+	} else {
+		// Parse emojis
+		const emoji_regex = /(\u00a9|[1-9]\u20E3|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])/g
+		return data.replace(emoji_regex, "<span class='emoji emoji-font'>$&</span>")
+	}
 }
 
 function get_cursor_position(editableDiv: any) {
@@ -829,6 +801,15 @@ function lucky() {
 	LeekWars.cloverTop = 20 + Math.random() * 200
 	LeekWars.cloverLeft = 20 + Math.random() * (window.innerWidth - 80)
 	setTimeout(() => LeekWars.clover = false, 5000)
+}
+
+function detectNativeEmojis() {
+	const ctx = document.createElement("canvas").getContext("2d")
+	if (ctx) {
+		ctx.fillText("😗", -2, 4)
+		return ctx.getImageData(0, 0, 1, 1).data[0] > 0
+	}
+	return false
 }
 
 Commands.addDocumentationCommands()
