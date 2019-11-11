@@ -346,7 +346,7 @@
 			}
 		}
 		public formatCode() {
-			import(/* webpackChunkName: "editor" */ "js-beautify").then(js_beautify => {
+			import(/* webpackChunkName: "js-beautify" */ "js-beautify").then(js_beautify => {
 				console.log(js_beautify)
 				this.editor.setValue(js_beautify.js_beautify(this.editor.getValue(), {indent_size: 1, indent_char: '\t'}))
 			})
