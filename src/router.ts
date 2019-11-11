@@ -18,7 +18,7 @@ import ChatPage from '@/component/chat/chat-page.vue'
 import Conditions from '@/component/conditions/conditions.vue'
 import Documentation from '@/component/documentation/documentation.vue'
 import EditorPage from '@/component/editor/editor-page.vue'
-import Encyclopedia from '@/component/encyclopedia/encyclopedia.vue'
+const Encyclopedia = () => import(/* webpackChunkName: "encyclopedia" */ '@/component/encyclopedia/encyclopedia.vue')
 import FarmerPage from '@/component/farmer/farmer.vue'
 import FightPage from '@/component/fight/fight.vue'
 import ForgotPassword from '@/component/forgot-password/forgot-password.vue'
