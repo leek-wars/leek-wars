@@ -185,9 +185,10 @@
 		white-space: nowrap;
 		user-select: none;
 		align-items: center;
+		line-height: 42px;
 	}
 	.header-button i {
-		line-height: 42px;
+		vertical-align: text-bottom;
 	}
 	.header .button-wrapper:first-child .header-button {
 		margin-left: 0;
