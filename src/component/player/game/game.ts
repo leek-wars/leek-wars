@@ -1054,16 +1054,16 @@ class Game {
 
 		switch (effectID) {
 		case EffectType.SHACKLE_MP:
-			leek.mp -= value
+			leek.mp += value
 			break
 		case EffectType.SHACKLE_TP:
-			leek.tp -= value
+			leek.tp += value
 			break
 		case EffectType.SHACKLE_STRENGTH:
-			leek.strength -= value
+			leek.strength += value
 			break
 		case EffectType.SHACKLE_MAGIC:
-			leek.magic -= value
+			leek.magic += value
 			break
 		case EffectType.ABSOLUTE_SHIELD:
 			leek.absoluteShield -= value
@@ -1116,16 +1116,16 @@ class Game {
 
 		switch (effectID) {
 		case EffectType.SHACKLE_MP:
-			leek.mp += delta
+			leek.mp -= delta
 			break
 		case EffectType.SHACKLE_TP:
-			leek.tp += delta
+			leek.tp -= delta
 			break
 		case EffectType.SHACKLE_STRENGTH:
-			leek.strength += delta
+			leek.strength -= delta
 			break
 		case EffectType.SHACKLE_MAGIC:
-			leek.magic += delta
+			leek.magic -= delta
 			break
 		case EffectType.ABSOLUTE_SHIELD:
 			leek.absoluteShield += delta
@@ -1134,10 +1134,10 @@ class Game {
 			leek.relativeShield += delta
 			break
 		case EffectType.VULNERABILITY:
-			leek.relativeShield += delta
+			leek.relativeShield -= delta
 			break
 		case EffectType.ABSOLUTE_VULNERABILITY:
-			leek.absoluteShield += delta
+			leek.absoluteShield -= delta
 			break
 		case EffectType.BUFF_AGILITY:
 			leek.agility += delta
