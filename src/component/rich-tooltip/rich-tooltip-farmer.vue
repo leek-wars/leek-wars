@@ -1,5 +1,5 @@
 <template>
-	<v-menu :close-on-content-click="false" :disabled="disabled" :nudge-width="expand_leeks ? 500 : 200" :nudge-top="bottom ? 0 : 6" :open-delay="_open_delay" :close-delay="_close_delay" :top="!bottom" :bottom="bottom" open-on-hover offset-y lazy @input="open($event)">
+	<v-menu :close-on-content-click="false" :disabled="disabled" :nudge-width="expand_leeks ? 500 : 200" :nudge-top="bottom ? 0 : 6" :open-delay="_open_delay" :close-delay="_close_delay" :top="!bottom" :bottom="bottom" open-on-hover offset-y @input="open($event)" :key="key">
 		<slot slot="activator"></slot>
 		<div v-if="content_created" class="card">
 			<loader v-if="!farmer" :size="30" />
@@ -46,7 +46,11 @@
 						<th v-for="c in LeekWars.characteristics" :key="c" class="c"><img :src="'/image/charac/small/' + c + '.png'" :class="{zero: sums[c] === 0}"></th>
 					</tr>
 					<tr v-for="leek in farmer.leeks" :key="leek.id">
-						<td class="leek-name"><router-link :to="'/leek/' + leek.id">{{ leek.name }}</router-link></td>
+						<td class="leek-name">
+							<rich-tooltip-leek :id="leek.id" :bottom="true">
+								<router-link :to="'/leek/' + leek.id">{{ leek.name }}</router-link>
+							</rich-tooltip-leek>
+						</td>
 						<td>{{ leek.level }}</td>
 						<td><b>{{ leek.talent }}</b></td>
 						<td v-for="c in LeekWars.characteristics" :key="c" :class="['color-' + c, leek[c] === 0 ? 'zero' : '']" class="c">{{ leek[c] }}</td>
@@ -62,7 +66,7 @@
 	import { Leek } from '@/model/leek'
 	import { LeekWars } from '@/model/leekwars'
 	import { store } from '@/model/store'
-	import { Component, Prop, Vue } from 'vue-property-decorator'
+	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 	@Component({})
 	export default class RichTooltipFarmer extends Vue {
 		@Prop({required: true}) id!: number
@@ -73,6 +77,7 @@
 		farmer: Farmer | null = null
 		expand_leeks: boolean = false
 		sums: {[key: string]: number} = {}
+		key: number = 0
 
 		get _open_delay() {
 			return this.instant ? 0 : 200
@@ -81,15 +86,16 @@
 			return this.instant ? 0 : 200
 		}
 		open(v: boolean) {
-			if (!v) {
-				this.expand_leeks = false
-			}
+			this.expand_leeks = localStorage.getItem('richtooltipfarmer/expanded') === 'true'
 			this.content_created = true
 			if (this.id > 0 && !this.farmer) {
 				LeekWars.get<Farmer>('farmer/rich-tooltip/' + this.id).then(farmer => {
 					this.farmer = farmer
 					for (const c of LeekWars.characteristics) {
 						Vue.set(this.sums, c, Object.values(this.farmer.leeks).reduce((sum: number, leek: any) => sum + leek[c], 0))
+					}
+					if (this.expand_leeks) {
+						this.key++
 					}
 				})
 			}
@@ -103,6 +109,10 @@
 				if (!this.farmer) { return }
 				this.$router.push('/messages/new/' + this.farmer.id + '/' + this.farmer.name + '/' + this.farmer.avatar_changed)
 			})
+		}
+		@Watch('expand_leeks')
+		updateExpand() {
+			localStorage.setItem('richtooltipfarmer/expanded', this.expand_leeks ? 'true' : 'false')
 		}
 	}
 </script>
