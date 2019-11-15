@@ -27,6 +27,7 @@
 				<router-link :to="'/fight/' + fight.id">
 					<img v-if="fight.status == 0" src="/image/icon/gearing.png">
 					<img v-else-if="fight.context == FightContext.CHALLENGE" src="/image/icon/flag.png">
+					<img v-else-if="fight.context == FightContext.TOURNAMENT" src="/image/icon/trophy.png">
 					<img v-else src="/image/icon/garden.png">
 				</router-link>
 			</div>
