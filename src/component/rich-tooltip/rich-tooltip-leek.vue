@@ -1,5 +1,5 @@
 <template>
-	<v-menu :close-on-content-click="false" :disabled="disabled" :max-width="expand_items ? 600 : 360" :nudge-top="bottom ? 0 : 6" :open-delay="_open_delay" :close-delay="_close_delay" :top="!bottom" :bottom="bottom" open-on-hover offset-y lazy @input="open($event)">
+	<v-menu :close-on-content-click="false" :disabled="disabled" :max-width="expand_items ? 600 : 360" :nudge-top="bottom ? 0 : 6" :open-delay="_open_delay" :close-delay="_close_delay" :top="!bottom" :bottom="bottom" open-on-hover offset-y lazy @input="open($event)" :key="key">
 		<slot slot="activator"></slot>
 		<div v-if="content_created" :class="{expanded: expand_items}" class="card">
 			<loader v-if="!leek" :size="30" />
@@ -76,7 +76,7 @@
 	import { Leek } from '@/model/leek'
 	import { LeekWars } from '@/model/leekwars'
 	import { store } from '@/model/store'
-	import { Component, Prop, Vue } from 'vue-property-decorator'
+	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 	@Component({})
 	export default class RichTooltipLeek extends Vue {
 		@Prop({required: true}) id!: number
@@ -86,6 +86,7 @@
 		content_created: boolean = false
 		leek: Leek | null = null
 		expand_items: boolean = false
+		key: number = 0
 
 		get _open_delay() {
 			return this.instant ? 0 : 200
@@ -94,15 +95,20 @@
 			return this.instant ? 0 : 200
 		}
 		open(v: boolean) {
-			if (!v) {
-				this.expand_items = false
-			}
+			this.expand_items = localStorage.getItem('richtooltipleek/expanded') === 'true'
 			this.content_created = true
 			if (this.id > 0 && !this.leek) {
 				LeekWars.get<Leek>('leek/rich-tooltip/' + this.id).then(leek => {
 					this.leek = new Leek(leek)
+					if (this.expand_items) {
+						this.key++
+					}
 				})
 			}
+		}
+		@Watch('expand_items')
+		updateExpand() {
+			localStorage.setItem('richtooltipleek/expanded', this.expand_items ? 'true' : 'false')
 		}
 	}
 </script>
