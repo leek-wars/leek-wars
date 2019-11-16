@@ -203,7 +203,9 @@
 					})
 				}
 			} else {
-				this.$store.commit('clear-chat', this.channel)
+				if (this.channel in this.$store.state.chat && this.$store.state.chat[this.channel].invalidated) {
+					this.$store.commit('clear-chat', this.channel)
+				}
 				LeekWars.socket.enableChannel(this.channel)
 			}
 		}

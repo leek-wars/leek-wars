@@ -22,6 +22,7 @@ class Chat {
 	name: string
 	type: ChatType
 	messages: ChatMessage[] = []
+	invalidated: boolean = false
 
 	constructor(name: string, type: ChatType) {
 		this.name = name
