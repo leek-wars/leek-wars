@@ -11,7 +11,7 @@
 					<router-link :to="'/fight/' + message.texts[1]">
 						<div class="bubble br-notification">
 							<div class="author">Leek Wars</div>
-							{{ message.texts[0] }}
+							{{ $t(message.texts[0].split('|')[0], message.texts[0].split('|')[1]) }}
 						</div>
 					</router-link>
 				</div>
