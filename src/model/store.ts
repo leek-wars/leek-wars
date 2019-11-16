@@ -96,6 +96,9 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			vueMain.$emit('wsconnected')
 		},
 		"wsclose"(state: LeekWarsState) {
+			for (let chat in state.chat) {
+				state.chat[chat].invalidated = true
+			}
 			state.wsconnected = false
 		},
 		'clear-chat'(state: LeekWarsState, chat: string) {
