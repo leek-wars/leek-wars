@@ -180,7 +180,7 @@
 				}, 60)
 			}
 		}
-		@Watch('channel')
+		@Watch('channel', {immediate: true})
 		update() {
 			if (!this.channel) { return }
 			if (this.channel === 'team') {
