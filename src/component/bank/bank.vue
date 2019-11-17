@@ -6,21 +6,20 @@
 		<panel class="first last">
 			<div class="bank-description center" v-html="$t('description')"></div>
 			<loader v-if="!packs" />
-			<template v-else>
+			<div v-else class="packs">
 				<div v-for="(pack, p) in packs" :key="pack.crystals" class="pack card">
 					<img src="/image/bank/crystal_big.png">
 					<h2 v-html="$t('pack_of_n_crystals', [pack.crystals])"></h2>
-					<br>
 					<div class="buy">
 						<router-link v-for="(offer, o) in pack.offers" :key="offer.type" :to="'/bank/buy/' + p + '/' + o">
-							<div>
+							<div v-ripple>
 								<span class="price">{{ offer.price }}€</span>
 								<img :src="'/image/bank/' + offer.type + '.png'">
 							</div>
 						</router-link>
 					</div>
 				</div>
-			</template>
+			</div>
 		</panel>
 	</div>
 </template>
@@ -45,33 +44,45 @@
 	.bank-description {
 		padding: 20px;
 		font-size: 17px;
+		text-align: justify;
 	}
 	#app.app .bank-description {
 		padding: 5px 0;
 	}
+	.packs {
+		display: grid;
+		grid-gap: 10px;
+		padding: 10px;
+		grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+	}
+	#app.app .packs {
+		padding: 0;
+		padding-top: 10px;
+		grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+	}
 	.pack {
 		padding: 10px;
-		margin: 10px;
 		min-height: 90px;
-	}
-	#app.app .pack {
-		margin: 10px 0;
+		h2 {
+			margin-bottom: 8px;
+			font-size: 22px;
+		}
 	}
 	.pack > img {
 		float: left;
 		margin-right: 20px;
 		margin-left: 10px;
-		height: 70px;
+		height: 65px;
 		margin-top: 15px;
-	}
-	.pack .buy {
-		margin-bottom: 10px;
 	}
 	.pack .buy div {
 		border-radius: 2px;
-		padding: 5px 15px;
+		padding: 5px 10px;
+		margin: 5px 0;
 		margin-right: 15px;
 		display: inline-block;
+		border: 1px solid #aaa;
+		border-radius: 4px;
 	}
 	.pack .buy div:hover {
 		background: #eee;
@@ -85,5 +96,6 @@
 		margin-left: 5px;
 		vertical-align: middle;
 		margin-top: -10px;
+		height: 30px;
 	}
 </style>
