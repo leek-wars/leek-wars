@@ -12,8 +12,14 @@
 	export default class Avatar extends Vue {
 		@Prop() farmer!: Farmer
 		get url() {
-			if (this.farmer && this.farmer.id && this.farmer.avatar_changed > 0) {
-				return env.AVATAR + 'avatar/' + this.farmer.id + '.png?' + this.farmer.avatar_changed
+			if (this.farmer) {
+				if (this.farmer.id > 0) {
+					if (this.farmer.avatar_changed > 0) {
+						return env.AVATAR + 'avatar/' + this.farmer.id + '.png?' + this.farmer.avatar_changed
+					}
+				} else {
+					return '/image/lw_avatar.png'
+				}
 			}
 			return '/image/no_avatar.png'
 		}
