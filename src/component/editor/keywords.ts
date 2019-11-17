@@ -69,7 +69,7 @@ function generateKeywords() {
 			details += "<br>"
 		}
 		if (fun.return_type !== 0) {
-			details += "<b>" + i18n.t('editor', 'return') + "</b><br>"
+			details += "<b>" + i18n.t('editor.return') + "</b><br>"
 			details += "<ul><li>" + fun.return_name + " : " + i18n.t('documentation.func_' + functionName + '_return') + "</li></ul>"
 		}
 		keywords.push({name: text, fullName: name, details, type: 'function', argumentCount: fun.arguments_names.length})
