@@ -21,3 +21,7 @@ declare module 'markdown-it' {
 	const markdown: any
 	export = markdown
 }
+declare module 'vue-awesome-swiper' {
+	const VueAwesomeSwiper: any
+	export = VueAwesomeSwiper
+}

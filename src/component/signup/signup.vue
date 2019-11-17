@@ -8,7 +8,7 @@
 				<panel class="first">
 					<div class="desc introduction" v-html="$t('intro')"></div>
 					<div class="leek-rect">
-						<img src="/image/signup_illustration.png">
+						<img class="leeks" src="/image/signup_illustration.png">
 						<div v-if="leek_count" class="desc" v-html="$t('n_leeks_already', [leek_count])"></div>
 					</div>
 				</panel>
@@ -32,7 +32,7 @@
 								</td>
 							</tr>
 							<tr>
-								<td><br></td>
+								<td><div class="space"></div></td>
 							</tr>
 							<tr>
 								<td class="align-right">{{ $t('your_email') }}</td>
@@ -49,14 +49,7 @@
 								</td>
 							</tr>
 							<tr>
-								<td class="align-right">{{ $t('confirm_password') }}</td>
-								<td class="align-left">
-									<input v-model="password2" :status="status('password2')" type="password" required>
-									<div v-for="e in errors.password2" :key="e" class="error-msg">{{ e }}</div>
-								</td>
-							</tr>
-							<tr>
-								<td><br></td>
+								<td><div class="space"></div></td>
 							</tr>
 							<tr>
 								<td class="align-right"><i>{{ $t('godfather') }}</i></td>
@@ -81,67 +74,115 @@
 
 		<panel class="first">
 			<div class="container">
-				<div class="column6">
-					<div class="ranking">
-						<h4>{{ $t('leek') }}</h4>
-						<table class="ranking">
-							<tr class="header">
-								<th>{{ $t('place') }}</th>
-								<th>{{ $t('leek') }}</th>
-								<th>{{ $t('talent') }}</th>
-								<th>{{ $t('level') }}</th>
-							</tr>
-							<tr v-for="(leek, i) in leek_ranking" :key="i" :class="leek.style">
-								<td>{{ parseInt(i) + 1 }}</td>
-								<td :class="leek.class">
+				<div class="column4">
+					<h4>{{ $t('leek') }}</h4>
+					<table class="ranking">
+						<tr class="header">
+							<th class="p15">{{ $t('place') }}</th>
+							<th class="p35">{{ $t('leek') }}</th>
+							<th class="p25">{{ $t('talent') }}</th>
+						</tr>
+						<tr v-for="(leek, i) in leek_ranking" :key="i" :class="leek ? leek.style : ''">
+							<td>{{ parseInt(i) + 1 }}</td>
+							<td :class="leek ? leek.class : ''">
+								<rich-tooltip-leek v-if="leek" :id="leek.id">
 									<router-link :to="'/leek/' + leek.id">{{ leek.name }}</router-link>
-								</td>
-								<td>{{ leek.talent }}</td>
-								<td>{{ leek.level }}</td>
-							</tr>
-						</table>
-					</div>
+								</rich-tooltip-leek>
+							</td>
+							<td>{{ leek ? leek.talent : '' }}</td>
+						</tr>
+					</table>
 				</div>
-				<div class="column6">
-					<div class="ranking">
-						<h4>{{ $t('farmer') }}</h4>
-						<table class="ranking">
-							<tr class="header">
-								<th>{{ $t('place') }}</th>
-								<th>{{ $t('farmer') }}</th>
-								<th>{{ $t('talent') }}</th>
-								<th>{{ $t('total_level') }}</th>
-							</tr>
-							<tr v-for="(farmer, i) in farmer_ranking" :key="i" :class="farmer.style">
-								<td>{{ parseInt(i) + 1 }}</td>
-								<td :class="farmer.class">
-									<rich-tooltip-farmer :id="farmer.id">
-										<router-link :to="'/farmer/' + farmer.id">{{ farmer.name }}</router-link>
-									</rich-tooltip-farmer>
-								</td>
-								<td>{{ farmer.talent }}</td>
-								<td>{{ farmer.total_level }}</td>
-							</tr>
-						</table>
-					</div>
+				<div class="column4">
+					<h4>{{ $t('farmer') }}</h4>
+					<table class="ranking">
+						<tr class="header">
+							<th class="p15">{{ $t('place') }}</th>
+							<th class="p35">{{ $t('farmer') }}</th>
+							<th class="p20">{{ $t('talent') }}</th>
+							<th class="p5">{{ $t('country') }}</th>
+						</tr>
+						<tr v-for="(farmer, i) in farmer_ranking" :key="i" :class="farmer ? farmer.style : ''">
+							<td>{{ parseInt(i) + 1 }}</td>
+							<td :class="farmer ? farmer.class : ''">
+								<rich-tooltip-farmer v-if="farmer" :id="farmer.id">
+									<router-link :to="'/farmer/' + farmer.id">{{ farmer.name }}</router-link>
+								</rich-tooltip-farmer>
+							</td>
+							<td>{{ farmer ? farmer.talent : '' }}</td>
+							<td>
+								<div v-if="farmer" class="country-wrapper">
+									<img v-if="farmer.country" :title="$t('country.' + farmer.country)" :src="'/image/flag/' + farmer.country + '.png'">
+								</div>
+							</td>
+						</tr>
+					</table>
+				</div>
+				<div class="column4">
+					<h4>{{ $t('main.team') }}</h4>
+					<table class="ranking">
+						<tr class="header">
+							<th class="p20">{{ $t('place') }}</th>
+							<th class="p50">{{ $t('team') }}</th>
+							<th class="p30">{{ $t('talent') }}</th>
+						</tr>
+						<tr v-for="(team, i) in team_ranking" :key="i" :class="team ? team.style : ''">
+							<td>{{ parseInt(i) + 1 }}</td>
+							<td :class="team ? team.class : ''">
+								<router-link v-if="team" :to="'/team/' + team.id">{{ team.name }}</router-link>
+							</td>
+							<td>{{ team ? team.talent : '' }}</td>
+						</tr>
+					</table>
 				</div>
 			</div>
 		</panel>
+
+		<div class="tiles">
+			<a href="https://play.google.com/store/apps/details?id=com.leekwars.app" target="_blank">
+				<panel class="android" v-ripple>
+					<div slot="content">
+						<img src="/image/android.png"> {{ $t('android_app') }}
+					</div>
+				</panel>
+			</a>
+			<a href="https://github.com/leek-wars" target="_blank">
+				<panel class="github" v-ripple>
+					<div slot="content">
+						<img src="/image/github_black.png"> GitHub
+					</div>
+				</panel>
+			</a>
+			<router-link to="/help">
+				<panel class="help" v-ripple>
+					<div slot="content">
+						<i class="material-icons">help_outline</i> Aide, tutoriel, doc
+					</div>
+				</panel>
+			</router-link>
+			<a href="http://leekwarswiki.net/index.php?title=Accueil" target="_blank">
+				<panel class="github" v-ripple>
+					<div slot="content">
+						<img src="/image/wiki.png"> Leek Wars Wiki
+					</div>
+				</panel>
+			</a>
+		</div>
 
 		<h1>{{ $t('screenshots') }}</h1>
 
 		<panel class="first last screenshots">
-			<div class="container">
-				<div v-for="image of images" :key="image[0]" class="column6">
-					<div class="screenshot">
-						<img :src="'/image/signup/' + image[0]" @click="enlarge(image)">
+			<div class="carousel" slot="content">
+				<swiper :options="swiperOption" ref="swiper">
+					<swiper-slide class="slide" v-for="(image, i) of images" :key="i">
+						<img :src="'/image/' + image[0]" @click="enlarge(image)">
 						<div class="legend">{{ $t(image[1]) }}</div>
-					</div>
-				</div>
+					</swiper-slide>
+				</swiper>
 			</div>
 		</panel>
 		<div v-if="bigImage" class="bigscreen" @click="bigImage = null">
-			<img :src="'/image/signup/' + bigImage">
+			<img :src="'/image/' + bigImage">
 			<div class="biglegend">{{ $t(bigImageLegend) }}</div>
 		</div>
 
@@ -167,32 +208,51 @@
 	export default class Signup extends Vue {
 		godfather: string = ''
 		leek_count: number = 0
-		farmer_ranking: any = null
-		leek_ranking: any = null
+		farmer_ranking: any = new Array(10)
+		leek_ranking: any = new Array(10)
+		team_ranking: any = new Array(10)
 		login: string = ''
 		leek: string = ''
 		email: string = ''
 		password1: string = ''
-		password2: string = ''
 		successDialog: boolean = false
 		errors: {[key: string]: string[]} = {}
 		bigImage: string | null = null
 		bigImageLegend: string = ''
 		images = [
-			["factory_small.jpg", "fight_factory"],
-			["leek_small.jpg", "leek_page"],
-			["editor_small.jpg", "editor"],
-			["desert_small.jpg", "fight_desert"],
-			["ice_small.jpg", "fight_ice"],
-			["market_small.jpg", "market"],
-			["ranking_small.jpg", "ranking"],
-			["forest_small.jpg", "fight_forest"],
-			["beach_small.jpg", "fight_beach"],
-			["nexus_small.jpg", "fight_test"]
+			["signup/new/fight_factory_small.jpg", "fight_factory"],
+			["signup/new/leek_small.jpg", "leek_page"],
+			["signup/new/br_small.jpg", "fight_ice"],
+			["signup/new/editor_small.jpg", "editor"],
+			["signup/new/forest.jpg", "fight_forest"],
+			["signup/new/market_small.jpg", "market"],
+			["signup/new/desert.jpg", "fight_desert"],
+			["signup/new/ranking_small.jpg", "ranking"],
+			["signup/new/trophies_small.jpg", "trophies"],
+			["signup/new/tournament_small.jpg", ""],
+			["app/preview1.jpg", ""],
+			["app/preview3.jpg", ""],
+			["app/preview5.jpg", ""],
+			["app/preview6.jpg", ""],
+			["app/preview7.jpg", ""],
+			["signup/new/mona.jpg", "fight_forest"],
 		]
+		swiperOption = {
+			slidesPerView: 'auto',
+			spaceBetween: 15,
+			freeMode: true,
+			loop: true,
+			autoplay: {
+				delay: 3000,
+				disableOnInteraction: true
+			}
+		}
+		mounted() {
+			// this.$refs.swiper.swiper.slideTo(0, 0);
+		}
 
 		created() {
-			LeekWars.setTitle(null)
+			LeekWars.setTitle("Leek Wars : online leek programming game")
 			this.godfather = 'godfather' in this.$route.params ? this.$route.params.godfather : ''
 			LeekWars.get('leek/get-count').then(data => {
 				this.leek_count = data.leeks
@@ -203,16 +263,13 @@
 				data.leeks[2].style = data.farmers[2].style = 'third'
 				this.farmer_ranking = data.farmers
 				this.leek_ranking = data.leeks
+				this.team_ranking = data.teams
 			})
 		}
 
 		submit(e: Event) {
 			e.preventDefault()
 			this.errors = {}
-			if (this.password1 !== this.password2) {
-				this.addError('password2', i18n.t('farmer.error_not_same_password') as string)
-				return false
-			}
 			LeekWars.post('farmer/register', {
 				login: this.login,
 				password: this.password1,
@@ -250,6 +307,7 @@
 			}
 		}
 		enlarge(image: any) {
+			if (LeekWars.mobile) { return }
 			this.bigImage = image[0].replace('_small', '')
 			this.bigImageLegend = image[1]
 		}
@@ -258,11 +316,11 @@
 
 <style lang="scss" scoped>
 	.top .panel {
-		margin-right: 15px;
+		margin-right: 12px;
 	}
 	@media screen and (max-width: 900px) {
 		.top .column6:nth-child(2) .panel {
-			margin-top: 15px;
+			margin-top: 12px;
 		}
 	}
 	@media screen and (min-width: 900px) {
@@ -282,10 +340,13 @@
 	.desc {
 		font-size: 18px;
 		font-weight: 300;
-		padding: 10px;
+		padding: 5px;
 		b {
 			font-weight: 400;
 		}
+	}
+	.leeks {
+		height: 154px;
 	}
 	.leek-rect {
 		text-align: center;
@@ -312,7 +373,6 @@
 	input[type=text], input[type=password] {
 		width: 170px;
 		padding: 0 7px;
-		border: 2px solid #ddd;
 		background: white;
 	}
 	input[type=text]:focus, input[type=password]:focus {
@@ -329,15 +389,22 @@
 	input[status=valid], input[status=valid]:focus {
 		border: 2px solid #5fad1b;
 	}
+	.space {
+		height: 8px;
+	}
 	.signup-message {
 		padding: 20px;
 	}
+	.carousel {
+		padding-top: 15px;
+		padding-bottom: 10px;
+	}
 	.screenshots {
 		.screenshot {
-			padding: 10px;
+			margin-right: 15px;
 		}
 		img {
-			width: 100%;
+			height: 400px;
 			cursor: zoom-in;
 			border-radius: 4px;
 		}
@@ -346,6 +413,7 @@
 			font-size: 18px;
 			font-weight: 300;
 			color: #333;
+			margin-top: 5px;
 		}
 	}
 	.bigscreen {
@@ -359,11 +427,12 @@
 		text-align: center;
 		background: rgba(0,0,0,0.7);
 		img {
-			max-width: 1000px;
+			max-width: calc(100% - 150px);
+			max-height: calc(100% - 150px);
 			box-shadow: 0px 0px 80px black;
 			cursor: zoom-out;
 			border-radius: 10px;
-			border: 10px solid white;
+			border: 6px solid white;
 		}
 	}
 	.biglegend {
@@ -382,11 +451,12 @@
 	.ranking {
 		margin: 0 auto;
 		width: calc(100% - 20px);
+		height: 300px;
 		td {
 			border-bottom: 1px solid #ddd;
 			border-right: 1px solid #ddd;
 			text-align: center;
-			padding: 4px 12px;
+			padding: 3px 12px;
 			background: white;
 		}
 		td:last-child {
@@ -419,8 +489,80 @@
 			color: #ae4e00;
 			font-weight: bold;
 		}
+		.p15 {
+			width: 15%;
+		}
+		.p25 {
+			width: 25%;
+		}
+		.p35 {
+			width: 35%;
+		}
+		.p50 {
+			width: 50%;
+		}
+	}
+	#app.app .ranking {
+		width: 100%;
 	}
 	h4 {
 		margin: 10px;
+		margin-top: 0;
+	}
+	.tiles {
+		display: grid;
+		grid-gap: 12px;
+		width: calc(100% - 12px);
+		grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+		margin-bottom: 12px;
+		line-height: 44px;
+		font-size: 19px;
+		font-weight: 300;
+		.panel {
+			margin: 0;
+		}
+		.text {
+			text-align: center;
+		}
+	}
+	#app.app .tiles {
+		width: 100%;
+	}
+	.android {
+		img {
+			height: 30px;
+			margin-top: 10px;
+			margin-left: 6px;
+			margin-right: 8px;
+			vertical-align: bottom;
+		}
+	}
+	.github {
+		img {
+			height: 40px;
+			margin: 2px;
+			margin-left: 12px;
+			margin-right: 12px;
+			vertical-align: bottom;
+		}
+	}
+	.help {
+		i {
+			font-size: 42px;
+			vertical-align: bottom;
+			margin-bottom: 1px;
+			margin-left: 12px;
+			margin-right: 10px;
+		}
+	}
+	.slide {
+		width: auto;
+	}
+	.country-wrapper {
+		height: 20px;
+		img {
+			margin-top: -2px;
+			width: 24px;
+		}
 	}
 </style>

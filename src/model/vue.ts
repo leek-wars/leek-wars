@@ -36,6 +36,7 @@ import Chartist from 'vue-chartist'
 import transitions from 'vuetify/es5/components/transitions'
 import VApp from 'vuetify/es5/components/VApp'
 import VBtn from 'vuetify/es5/components/VBtn'
+import VCarousel from 'vuetify/es5/components/VCarousel'
 import VCheckbox from 'vuetify/es5/components/VCheckbox'
 import VDialog from 'vuetify/es5/components/VDialog'
 import VIcon from 'vuetify/es5/components/VIcon'
@@ -53,10 +54,15 @@ import { Latex } from './latex'
 
 Vue.use(Chartist)
 Vue.use(Vuetify, {
-	components: { VApp, VBtn, VTooltip, VMenu, VList, VIcon, VTabs, VRadioGroup, VSnackbar, VCheckbox, VSwitch, VProgressCircular, VDialog, transitions },
+	components: { VApp, VBtn, VTooltip, VMenu, VList, VIcon, VTabs, VRadioGroup, VSnackbar, VCheckbox, VSwitch, VProgressCircular, VDialog, VCarousel, transitions },
 	directives
 })
 // import 'vuetify/src/stylus/app.styl'
+
+// require styles
+import 'swiper/dist/css/swiper.css'
+import VueAwesomeSwiper from 'vue-awesome-swiper'
+Vue.use(VueAwesomeSwiper, /* { default global options } */)
 
 Vue.config.productionTip = false
 
