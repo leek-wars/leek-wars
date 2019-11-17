@@ -1,5 +1,5 @@
 <template>
-	<v-menu :close-on-content-click="false" :disabled="disabled" :nudge-width="expand_leeks ? 500 : 200" :nudge-top="bottom ? 0 : 6" :open-delay="_open_delay" :close-delay="_close_delay" :top="!bottom" :bottom="bottom" :key="key" open-on-hover offset-y @input="open($event)">
+	<v-menu :close-on-content-click="false" :disabled="disabled || id <= 0" :nudge-width="expand_leeks ? 500 : 200" :nudge-top="bottom ? 0 : 6" :open-delay="_open_delay" :close-delay="_close_delay" :top="!bottom" :bottom="bottom" :key="key" open-on-hover offset-y @input="open($event)">
 		<slot slot="activator"></slot>
 		<div v-if="content_created" class="card">
 			<loader v-if="!farmer" :size="30" />
