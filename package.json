@@ -2,8 +2,8 @@
 	"name": "leek-wars-client",
 	"version": "2.0.5",
 	"scripts": {
-		"start": "vue-cli-service serve",
-		"serve": "vue-cli-service serve",
+		"start": "vue-cli-service serve --mode dev",
+		"serve": "vue-cli-service serve --mode dev",
 		"beta": "vue-cli-service serve --mode beta",
 		"local": "vue-cli-service serve --mode local",
 		"build": "VUE_MODE=build vue-cli-service build",
