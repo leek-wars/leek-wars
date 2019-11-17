@@ -30,7 +30,7 @@
 			<table v-else>
 				<tr>
 					<td>
-						<router-link v-for="farmer in fight.farmers1" :key="farmer.id" :to="'/farmer/' + farmer.id">
+						<router-link v-for="farmer in fight.farmers1" :key="farmer.id" :disabled="farmer.id > 0" :to="'/farmer/' + farmer.id">
 							<rich-tooltip-farmer :id="farmer.id">
 								<div class="farmer">
 									<avatar :farmer="farmer" /><br>
@@ -44,7 +44,7 @@
 					</td>
 					<td class="versus">VS</td>
 					<td>
-						<router-link v-for="farmer in fight.farmers2" :key="farmer.id" :to="'/farmer/' + farmer.id">
+						<router-link v-for="farmer in fight.farmers2" :key="farmer.id" :event="farmer.id > 0 ? 'click' : ''" :to="'/farmer/' + farmer.id">
 							<rich-tooltip-farmer :id="farmer.id">
 								<div class="farmer">
 									<avatar :farmer="farmer" /><br>
