@@ -18,7 +18,7 @@
 				{{ leek.cur_xp | number }} / {{ leek.next_xp | number }}
 			</tooltip>
 			<span>{{ (leek.xp || 0) | number }}</span>
-			<span v-if="leek.bonus > 1" class="bonus">x{{ leek.bonus }}</span>
+			<span v-if="fight.report.bonus > 1" class="bonus">x{{ fight.report.bonus }}</span>
 		</td>
 		<td class="money">
 			<span>{{ (leek.money || 0) | number }} <span class="hab"></span></span>
