@@ -6,8 +6,22 @@
 			</div>
 			<panel class="first center">
 				<br>
-				<h4 v-html="$t('you_earn_n_crystals', [crystals])"></h4>
-				<br>
+				<div class="thank-you">{{ $t('thank_you') }}</div>
+				<div class="thank-you-2">{{ $t('for_your_support') }}</div>
+				<br><br>
+				<h4>
+					<i18n path="you_earn_n_crystals">
+						<div slot="crystals" class="crystals card">
+							{{ crystals }}
+							<span class='crystal'></span>
+						</div>
+					</i18n>
+				</h4>
+				<br><br><br>
+				<router-link to="/bank">
+					<v-btn color="primary"><i class="material-icons">undo</i>&nbsp;{{ $t('back_to_bank') }}</v-btn>
+				</router-link>
+				<br><br>
 			</panel>
 		</template>
 		<div v-else-if="error">
@@ -77,10 +91,22 @@
 </script>
 
 <style lang="scss" scoped>
-	.paypal-button {
-		cursor: pointer;
-	}
 	.content h3 {
 		color: red;
+	}
+	.crystals {
+		display: inline-block;
+		padding: 4px 8px;
+		margin: 0 2px;
+		color: black;
+	}
+	.thank-you {
+		font-size: 30px;
+		font-weight: 300;
+		margin-bottom: 10px;
+	}
+	.thank-you-2 {
+		font-size: 20px;
+		color: #777;
 	}
 </style>
