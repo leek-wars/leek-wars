@@ -140,28 +140,28 @@
 
 		<div class="tiles">
 			<a href="https://play.google.com/store/apps/details?id=com.leekwars.app" target="_blank">
-				<panel class="android" v-ripple>
+				<panel v-ripple class="android">
 					<div slot="content">
 						<img src="/image/android.png"> {{ $t('android_app') }}
 					</div>
 				</panel>
 			</a>
 			<a href="https://github.com/leek-wars" target="_blank">
-				<panel class="github" v-ripple>
+				<panel v-ripple class="github">
 					<div slot="content">
 						<img src="/image/github_black.png"> GitHub
 					</div>
 				</panel>
 			</a>
 			<router-link to="/help">
-				<panel class="help" v-ripple>
+				<panel v-ripple class="help">
 					<div slot="content">
 						<i class="material-icons">help_outline</i> Aide, tutoriel, doc
 					</div>
 				</panel>
 			</router-link>
 			<a href="http://leekwarswiki.net/index.php?title=Accueil" target="_blank">
-				<panel class="github" v-ripple>
+				<panel v-ripple class="github">
 					<div slot="content">
 						<img src="/image/wiki.png"> Leek Wars Wiki
 					</div>
@@ -172,9 +172,9 @@
 		<h1>{{ $t('screenshots') }}</h1>
 
 		<panel class="first last screenshots">
-			<div class="carousel" slot="content">
-				<swiper :options="swiperOption" ref="swiper">
-					<swiper-slide class="slide" v-for="(image, i) of images" :key="i">
+			<div slot="content" class="carousel">
+				<swiper ref="swiper" :options="swiperOption">
+					<swiper-slide v-for="(image, i) of images" :key="i" class="slide">
 						<img :src="'/image/' + image[0]" @click="enlarge(image)">
 						<div class="legend">{{ $t(image[1]) }}</div>
 					</swiper-slide>

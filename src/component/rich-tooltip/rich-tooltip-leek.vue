@@ -1,5 +1,5 @@
 <template>
-	<v-menu :close-on-content-click="false" :disabled="disabled" :max-width="expand_items ? 600 : 360" :nudge-top="bottom ? 0 : 6" :open-delay="_open_delay" :close-delay="_close_delay" :top="!bottom" :bottom="bottom" open-on-hover offset-y lazy @input="open($event)" :key="key">
+	<v-menu :close-on-content-click="false" :disabled="disabled" :max-width="expand_items ? 600 : 360" :nudge-top="bottom ? 0 : 6" :open-delay="_open_delay" :close-delay="_close_delay" :top="!bottom" :bottom="bottom" :key="key" open-on-hover offset-y lazy @input="open($event)">
 		<slot slot="activator"></slot>
 		<div v-if="content_created" :class="{expanded: expand_items}" class="card">
 			<loader v-if="!leek" :size="30" />
