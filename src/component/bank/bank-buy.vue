@@ -17,7 +17,10 @@
 				<br>
 				<h4>{{ $t('paypal_message') }}</h4>
 				<br>
-				<img v-if="!loading" class="paypal-button" src="/image/bank/paypal_buy.gif" @click="clickPayPal">
+				<div v-if="!loading" class="paypal-button" @click="clickPayPal" v-ripple>
+					{{ $t('buy_with') }}
+					<img src="/image/bank/paypal.png">
+				</div>
 				<loader v-if="loading" />
 			</div>
 		</panel>
@@ -86,7 +89,20 @@
 
 <style lang="scss" scoped>
 	.paypal-button {
+		display: inline-flex;
+		align-items: center;
 		cursor: pointer;
+		background: #ffc700;
+		color: #00315b;
+		padding: 12px 50px;
+		border-radius: 2px;
+		border: 1px solid #ff9500;
+		user-select: none;
+		margin: 15px 0;
+		img {
+			height: 22px;
+			margin-left: 4px;
+		}
 	}
 	.panel h3 {
 		color: red;
