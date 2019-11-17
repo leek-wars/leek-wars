@@ -8,10 +8,10 @@
 			<template v-for="(message, m) in $store.state.chat[channel].messages">
 				<div v-if="message.author.id === 0" :key="m" class="message">
 					<img class="avatar" src="/image/favicon.png">
-					<router-link :to="'/fight/' + message.texts[1]">
+					<router-link :to="'/fight/' + message.texts[0].split('|')[1]">
 						<div class="bubble br-notification">
 							<div class="author">Leek Wars</div>
-							{{ $t(message.texts[0].split('|')[0], message.texts[0].split('|')[1]) }}
+							{{ $t(message.texts[0].split('|')[0]) }}
 						</div>
 					</router-link>
 				</div>
