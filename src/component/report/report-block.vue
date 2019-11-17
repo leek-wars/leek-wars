@@ -1,6 +1,14 @@
 <template>
 	<div>
 		<h3>{{ title }}</h3>
+		<div class="flags">
+			<tooltip v-for="flag in flags" :key="flag">
+				<div slot="activator" class="flag card">
+					<img slot="activator" :src="'/image/fight_flag/' + flag + '.png'">
+				</div>
+				{{ $t('fight.flag_' + flag) }}
+			</tooltip>
+		</div>
 
 		<table v-if="fight.type === FightType.FARMER" class="report">
 			<tr>
@@ -59,13 +67,6 @@
 				</td>
 			</tr>
 		</table>
-
-		<div class="flags">
-			<tooltip v-for="flag in flags" :key="flag">
-				<img slot="activator" :src="'/image/fight_flag/' + flag + '.png'">
-				{{ $t('fight.flag_' + flag) }}
-			</tooltip>
-		</div>
 
 		<div class="scroll-x">
 			<table class="report">
@@ -201,5 +202,22 @@
 	}
 	.alive {
 		margin-left: 27px;
+	}
+	.flags {
+		display: inline-block;
+		padding-left: 15px;
+	}
+	.flag {
+		display: inline-block;
+		background: white;
+		border-radius: 50%;
+		padding: 7px;
+		margin-bottom: 8px;
+		margin-right: 6px;
+		height: 22px;
+		img {
+			width: 22px;
+			vertical-align: bottom;
+		}
 	}
 </style>
