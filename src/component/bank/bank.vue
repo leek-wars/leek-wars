@@ -8,7 +8,7 @@
 			<loader v-if="!packs" />
 			<div v-else class="packs">
 				<div v-for="(pack, p) in packs" :key="pack.crystals" class="pack card">
-					<img src="/image/bank/crystal_big.png">
+					<img :src="'/image/bank/crystals_' + p + '.png'">
 					<h2 v-html="$t('pack_of_n_crystals', [pack.crystals])"></h2>
 					<div class="buy">
 						<router-link v-for="(offer, o) in pack.offers" :key="offer.type" :to="'/bank/buy/' + p + '/' + o">
@@ -70,16 +70,18 @@
 	}
 	.pack > img {
 		float: left;
-		margin-right: 20px;
-		margin-left: 10px;
-		height: 65px;
-		margin-top: 15px;
+		margin-right: 15px;
+		margin-left: 3px;
+		height: 80px;
+		width: 85px;
+		margin-top: 5px;
+		object-fit: contain;
 	}
 	.pack .buy div {
 		border-radius: 2px;
 		padding: 5px 10px;
 		margin: 5px 0;
-		margin-right: 15px;
+		margin-right: 10px;
 		display: inline-block;
 		border: 1px solid #aaa;
 		border-radius: 4px;
@@ -89,7 +91,7 @@
 	}
 	.pack .price {
 		font-weight: 400;
-		font-size: 27px;
+		font-size: 25px;
 		color: #777;
 	}
 	.pack .buy img {
