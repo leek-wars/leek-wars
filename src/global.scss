@@ -358,7 +358,7 @@ textarea {
 	background-position: center;
 }
 .crystal {
-	width: 18px;
+	width: 17px;
 	height: 40px;
 	vertical-align: bottom;
 	margin-top: -15px;
@@ -367,6 +367,7 @@ textarea {
 	background-image: url("/image/crystal.png");
 	background-repeat: no-repeat;
 	background-position: center;
+	background-size: contain;
 }
 .popup {
 	display: none;
