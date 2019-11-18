@@ -546,5 +546,6 @@
 		margin-top: -15px;
 		margin-bottom: -15px;
 		margin-left: 5px;
+		height: 40px;
 	}
 </style>
