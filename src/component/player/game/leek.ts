@@ -103,7 +103,7 @@ class Leek extends Entity {
 
 			const cellPixels = this.game.ground.xyToXYPixels(x, y)
 
-			this.weapon.shoot(this.ox, this.oy, this.handPos + this.z, this.angle, this.direction, cellPixels, targets)
+			this.weapon.shoot(this.ox, this.oy, this.handPos + this.z, this.angle, this.direction, cellPixels, targets, this)
 
 			if (this.weapon instanceof WhiteWeaponAnimation) {
 				this.jump()

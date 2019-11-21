@@ -148,6 +148,7 @@ class Lightning extends Particle {
 	constructor(game: Game, texture: Texture, x: number, y: number, z: number, angle: number, position: Position) {
 		super(game, x, y, z, LIGHTNING_LIFE)
 		this.texture = texture.texture
+		angle += (Math.random() * 0.3 - 0.15)
 		// Création de l'éclair
 		const dx = Math.cos(angle)
 		const dy = Math.sin(angle)

@@ -4,6 +4,7 @@ import { Game } from "@/component/player/game/game"
 import { Sound } from '@/component/player/game/sound'
 import { Texture } from '@/component/player/game/texture'
 import { Area } from '@/model/area'
+import { Leek } from './leek'
 
 abstract class WeaponAnimation {
 	public game: Game
@@ -34,7 +35,7 @@ abstract class WeaponAnimation {
 		this.mx2 = mx2
 		this.mz2 = mz2
 	}
-	public abstract shoot(leekX: number, leekY: number, handPos: number, angle: number, orientation: number, cell: Cell, targets: Entity[]): void
+	public abstract shoot(leekX: number, leekY: number, handPos: number, angle: number, orientation: number, cell: Cell, targets: Entity[], caster: Entity): void
 	public abstract update(dt: number): void
 }
 
@@ -217,16 +218,17 @@ class Electrisor extends WeaponAnimation {
 	public lightningZ: number = 0
 	public lightningAngle: number = 0
 	public lightningCell!: Cell
-	public sx: number = 90
-	public sz: number = -10
+	public sx: number = 89
+	public sz: number = -15
+	public caster!: Leek
 	constructor(game: Game) {
 		super(game, game.T.electrisor, 5, 52, 0, -30, 0, 42, 31, 72, 34)
 	}
-	public shoot(leekX: number, leekY: number, handPos: number, angle: number, orientation: number, cell: Cell, targets: Entity[]) {
+	public shoot(leekX: number, leekY: number, handPos: number, angle: number, orientation: number, cell: Cell, targets: Entity[], caster: Leek) {
 		const cos = Math.cos(angle)
 		const sin = Math.sin(angle)
 		const x = this.x + this.sx
-		const z = this.cz + this.z + this.sz + handPos
+		const z = this.cz + this.z + this.sz - (caster.front ? 5 : -5)
 		this.lightningX = leekX + (this.cx + x * cos) * orientation
 		this.lightningY = leekY + x * sin
 		this.lightningZ = z
@@ -235,13 +237,14 @@ class Electrisor extends WeaponAnimation {
 		this.shoots = 40
 		this.game.setEffectArea(cell.x, cell.y, Area.CIRCLE1, 'red')
 		this.game.S.electrisor.play()
+		this.caster = caster
 	}
 	public update(dt: number) {
 		if (this.shoots > 0) {
 			this.currentDelay -= dt
 			if (this.currentDelay <= 0) {
 				this.currentDelay = this.delay
-				this.game.particles.addLightning(this.lightningX, this.lightningY, this.lightningZ, this.lightningAngle, this.lightningCell, this.game.T.lightning)
+				this.game.particles.addLightning(this.lightningX, this.lightningY, this.lightningZ + this.caster.handPos, this.lightningAngle, this.lightningCell, this.game.T.lightning)
 				this.shoots--
 				if (this.shoots === 0) {
 					this.game.actionDone()
