@@ -65,7 +65,8 @@
 		min-height: 90px;
 		h2 {
 			margin-bottom: 8px;
-			font-size: 22px;
+			margin-top: 3px;
+			font-size: 20px;
 		}
 	}
 	.pack > img {
