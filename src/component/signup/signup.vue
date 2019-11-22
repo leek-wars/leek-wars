@@ -156,7 +156,7 @@
 			<router-link to="/help">
 				<panel v-ripple class="help">
 					<div slot="content">
-						<i class="material-icons">help_outline</i> Aide, tutoriel, doc
+						<i class="material-icons">help_outline</i> {{ $t('help_tutorial_doc') }}
 					</div>
 				</panel>
 			</router-link>
@@ -229,13 +229,13 @@
 			["signup/new/desert.jpg", "fight_desert"],
 			["signup/new/ranking_small.jpg", "ranking"],
 			["signup/new/trophies_small.jpg", "trophies"],
-			["signup/new/tournament_small.jpg", ""],
-			["app/preview1.jpg", ""],
-			["app/preview3.jpg", ""],
-			["app/preview5.jpg", ""],
-			["app/preview6.jpg", ""],
-			["app/preview7.jpg", ""],
-			["signup/new/mona.jpg", "fight_forest"],
+			["signup/new/tournament_small.jpg", "tournament"],
+			["app/preview1.jpg", "android_app"],
+			["app/preview3.jpg", "android_app"],
+			["app/preview5.jpg", "android_app"],
+			["app/preview6.jpg", "android_app"],
+			["app/preview7.jpg", "android_app"],
+			["signup/new/mona.jpg", "pixel_art"],
 		]
 		swiperOption = {
 			slidesPerView: 'auto',
