@@ -82,7 +82,7 @@
 		border-radius: 2px;
 		padding: 5px 10px;
 		margin: 5px 0;
-		margin-right: 10px;
+		margin-right: 8px;
 		display: inline-block;
 		border: 1px solid #aaa;
 		border-radius: 4px;
