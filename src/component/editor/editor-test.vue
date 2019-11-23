@@ -79,7 +79,7 @@
 						<div class="image card">
 							<leek-image :leek="currentLeek" :scale="1" />
 						</div>
-						<div class="characteristics">
+						<div class="card characteristics">
 							<div v-for="c in ['life', 'science', 'strength', 'magic', 'wisdom', 'frequency', 'agility', 'mp', 'resistance', 'tp']" :key="c" class="characteristic">
 								<characteristic-tooltip :characteristic="c" :value="currentLeek[c]" :leek="currentLeek" :test="true">
 									<img :src="'/image/charac/' + c + '.png'">
@@ -974,8 +974,8 @@
 		width: 190px;
 	}
 	.characteristics {
-		padding: 15px;
 		margin-right: 130px;
+		margin-left: 15px;
 		.characteristic {
 			width: calc(50% - 40px);
 			padding: 5px 20px;
@@ -996,7 +996,7 @@
 		.characteristic:nth-child(4n),
 		.characteristic:nth-child(3),
 		.characteristic:nth-child(7) {
-			background: white;
+			background: #eee;
 		}
 	}
 	.leek-column .chips .container, .leek-column .weapons .container {
