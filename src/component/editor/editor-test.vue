@@ -623,8 +623,10 @@
 			this.mapDialog = false
 		}
 		updateLeekLevel(leek: any) {
-			console.log(leek.weapons)
-			leek.level = Math.max(leek.weapons.reduce((m, e) => Math.max(m, LeekWars.weapons[e].level), 0), leek.chips.reduce((m, e) => Math.max(m, LeekWars.chips[e].level), 0))
+			leek.level = Math.max(
+				leek.weapons.reduce((m: number, e: any) => Math.max(m, LeekWars.weapons[e].level), 1), 
+				leek.chips.reduce((m: number, e: any) => Math.max(m, LeekWars.chips[e].level), 1)
+			)
 		}
 		removeLeekChip(chip: any) {
 			if (!this.currentLeek) { return }
