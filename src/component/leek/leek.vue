@@ -118,52 +118,10 @@
 				<panel :title="$t('characteristics')">
 					<div slot="content" class="characteristics">
 						<div v-for="c in ['life', 'science', 'strength', 'magic', 'wisdom', 'frequency', 'agility', 'mp', 'resistance', 'tp']" :key="c" class="characteristic">
-							<tooltip bottom>
-								<div slot="activator">
-									<img :src="'/image/charac/' + c + '.png'">
-									<span :class="'color-' + c">{{ leek ? leek[c] : '...' }}</span>
-								</div>
-								<div v-if="leek" class="tooltip">
-									<b>{{ $t(c) }}</b>
-									<br>
-									{{ $t(c + '_description') }}
-									<template v-if="leek[c] > 0 && (c != 'frequency' || leek[c] > 100)">
-										<br>
-										<template v-if="c == 'life'">
-											<b v-if="c == 'life'" class="effect">{{ $t('base_life') }} : <span class="amount">{{ leek.baseLife }}</span></b>
-											<br>
-											<b v-if="c == 'life'" class="effect">{{ $t('added_life') }} : <span class="amount">{{ leek.life - leek.baseLife }}</span></b>
-											<br>
-										</template>
-										<b class="capital">{{ $t('invested_capital') }} : <span class="amount">{{ capitalSpent(c, leek[c], leek.level) }}</span></b>
-									
-										<template v-if="c == 'strength'">
-											<br><b class="effect">{{ $t('damage_effect') }} : × <span class="damage">{{ 1 + leek[c] / 100 }}</span></b>
-										</template>
-										<template v-else-if="c == 'agility'">
-											<br>
-											<b class="effect">{{ $t('return_damage_effect') }} : × <span class="damage-return">{{ 1 + leek.agility / 100 }}</span></b>
-											<br>
-											<b class="effect">{{ $t('critical_effect') }} : <span class="critical">{{ leek.agility / 10 }}%</span></b>
-										</template>
-										<template v-else-if="c == 'science'">
-											<br><b class="effect">{{ $t('boost_effect') }} : × <span class="damage">{{ 1 + leek[c] / 100 }}</span></b>
-										</template>
-										<template v-else-if="c == 'wisdom'">
-											<br>
-											<b class="effect">{{ $t('heal_effect') }} : × <span class="heal">{{ 1 + leek.wisdom / 100 }}</span></b>
-											<br>
-											<b class="effect">{{ $t('life_steal_effect') }} : <span class="life-steal">{{ Math.round(leek.wisdom / 10) }}%</span></b>
-										</template>
-										<template v-else-if="c == 'magic'">
-											<br><b class="effect">{{ $t('shackle_poison_effect') }} : × <span class="damage">{{ 1 + leek.magic / 100 }}</span></b>
-										</template>
-										<template v-else-if="c == 'resistance'">
-											<br><b class="effect">{{ $t('shield_effect') }} : × <span class="damage">{{ 1 + leek.resistance / 100 }}</span></b>
-										</template>
-									</template>
-								</div>
-							</tooltip>
+							<characteristic-tooltip :characteristic="c" :value="leek ? leek[c] : 0" :leek="leek" :test="false">
+								<img :src="'/image/charac/' + c + '.png'">
+								<span :class="'color-' + c">{{ leek ? leek[c] : '...' }}</span>
+							</characteristic-tooltip>
 						</div>
 						<center v-if="leek && my_leek">
 							<br>
@@ -446,9 +404,10 @@
 	import { Weapon } from '@/model/weapon'
 	import { Component, Vue, Watch } from 'vue-property-decorator'
 	import CapitalDialog from './capital-dialog.vue'
+	import CharacteristicTooltip from './characteristic-tooltip.vue'
 	import LevelDialog from './level-dialog.vue'
 
-	@Component({ name: "leek", i18n: {}, components: { CapitalDialog, LevelDialog } })
+	@Component({ name: "leek", i18n: {}, components: { CapitalDialog, LevelDialog, CharacteristicTooltip } })
 	export default class LeekPage extends Vue {
 		leek: Leek | null = null
 		error: boolean = false
@@ -594,28 +553,6 @@
 			}).error(error => {
 				this.error = true
 			})
-		}
-		capitalSpent(characteristic: string, amount: number, level: number) {
-			switch (characteristic) {
-			case 'life':
-				return Math.min(amount - (100 + (level - 1) * 3), 1000) * 1 / 4 + Math.min(Math.max(0, amount - (1100 + (level - 1) * 3)), 999) * 1 / 3 + Math.max(0, amount - (2100 + (level - 1) * 3)) * 1 / 2
-			case 'tp': {
-				const added = amount - 10
-				const progression = added <= 14 ? added : 14
-				const leftover = added > 14 ? added - 14 : 0
-				return added > 0 ? 25 * progression + progression * (progression + 1) * 5 / 2 + leftover * 100 : 0
-			}
-			case 'mp': {
-				const added = amount - 3
-				const progression = added <= 8 ? added : 8
-				const leftover = added > 8 ? added - 8 : 0
-				return added > 0 ? 10 * progression + progression * (progression + 1) * 10 / 2 + leftover * 100 : 0
-			}
-			case 'frequency':
-				return amount - 100
-			default:
-				return Math.min(amount, 200) / 2 + Math.min(Math.max(0, amount - 200), 200) + Math.min(Math.max(0, amount - 400), 200) * 2 + Math.max(0, amount - 600) * 3
-			}
 		}
 		rename(currency: string) {
 			if (!this.leek) { return }

@@ -81,8 +81,10 @@
 						</div>
 						<div class="characteristics">
 							<div v-for="c in ['life', 'science', 'strength', 'magic', 'wisdom', 'frequency', 'agility', 'mp', 'resistance', 'tp']" :key="c" class="characteristic">
-								<img :src="'/image/charac/' + c + '.png'">
-								<span :contenteditable="!currentLeek.bot" :class="'color-' + c" @focusout="characteristicFocusout(c, $event)" v-html="currentLeek[c]"></span>
+								<characteristic-tooltip :characteristic="c" :value="currentLeek[c]" :leek="currentLeek" :test="true">
+									<img :src="'/image/charac/' + c + '.png'">
+									<span :contenteditable="!currentLeek.bot" :class="'color-' + c" @focusout="characteristicFocusout(c, $event)" v-html="currentLeek[c]"></span>
+								</characteristic-tooltip>
 							</div>
 						</div>
 					</div>
@@ -261,6 +263,7 @@
 	import { Leek } from '@/model/leek'
 	import { LeekWars } from '@/model/leekwars'
 	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
+	import CharacteristicTooltip from '../leek/characteristic-tooltip.vue'
 
 	class TestScenario {
 		id!: any
@@ -277,7 +280,7 @@
 		cell!: number
 		team!: number
 	}
-	@Component({})
+	@Component({ components: { CharacteristicTooltip }})
 	export default class EditorTest extends Vue {
 		@Prop() value!: boolean
 		@Prop() ais!: {[key: number]: AI}
