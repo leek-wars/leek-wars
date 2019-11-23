@@ -74,7 +74,7 @@
 					<div class="item add" @click="newLeekDialog = true">✚ Ajouter</div>
 				</div>
 				<div v-if="currentLeek" class="column leek-column">
-					<div class="title name">{{ currentLeek.name }}</div>
+					<div class="title name">{{ currentLeek.name }} - {{ $t('main.level_n', [currentLeek.level]) }}</div>
 					<div class="flex">
 						<div class="image card">
 							<leek-image :leek="currentLeek" :scale="1" />
