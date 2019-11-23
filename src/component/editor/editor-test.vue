@@ -3,9 +3,9 @@
 		<span slot="title">{{ $t('editor.run_test') }}</span>
 		<v-tabs :key="value" class="tabs" grow>
 			<v-tabs-slider class="indicator" />
-			<v-tab class="tab">{{ $t('editor.test_scenario') }}</v-tab>
-			<v-tab class="tab">{{ $t('editor.test_leeks') }}</v-tab>
-			<v-tab class="tab">{{ $t('editor.test_map') }}</v-tab>
+			<v-tab class="tab">{{ $t('editor.test_scenario') }} ({{ LeekWars.objectSize(allScenarios) }})</v-tab>
+			<v-tab class="tab">{{ $t('editor.test_leeks') }} ({{ LeekWars.objectSize(leeks) }})</v-tab>
+			<v-tab class="tab">{{ $t('editor.test_map') }} ({{ LeekWars.objectSize(maps) }})</v-tab>
 			<v-tab-item class="tab-content">
 				<div class="column lateral-column">
 					<h4>Scénarios</h4>
