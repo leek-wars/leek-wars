@@ -622,26 +622,34 @@
 			this.saveScenario()
 			this.mapDialog = false
 		}
+		updateLeekLevel(leek: any) {
+			console.log(leek.weapons)
+			leek.level = Math.max(leek.weapons.reduce((m, e) => Math.max(m, LeekWars.weapons[e].level), 0), leek.chips.reduce((m, e) => Math.max(m, LeekWars.chips[e].level), 0))
+		}
 		removeLeekChip(chip: any) {
 			if (!this.currentLeek) { return }
 			this.currentLeek.chips.splice(this.currentLeek.chips.indexOf(chip), 1)
+			this.updateLeekLevel(this.currentLeek)
 			this.saveLeek()
 		}
 		removeLeekWeapon(weapon: any) {
 			if (!this.currentLeek) { return }
 			this.currentLeek.weapons.splice(this.currentLeek.weapons.indexOf(weapon), 1)
+			this.updateLeekLevel(this.currentLeek)
 			this.saveLeek()
 		}
 		addLeekChip(chip: any) {
 			if (!this.currentLeek) { return }
 			this.currentLeek.chips.push(chip)
 			this.chipsDialog = false
+			this.updateLeekLevel(this.currentLeek)
 			this.saveLeek()
 		}
 		addLeekWeapon(weapon: any) {
 			if (!this.currentLeek) { return }
 			this.currentLeek.weapons.push(weapon)
 			this.weaponsDialog = false
+			this.updateLeekLevel(this.currentLeek)
 			this.saveLeek()
 		}
 		createLeek() {
@@ -958,6 +966,7 @@
 		text-align: center;
 		margin-left: 130px;
 		padding: 7px;
+		width: 190px;
 	}
 	.characteristics {
 		padding: 15px;
