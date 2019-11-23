@@ -86,7 +86,6 @@
 							</div>
 						</div>
 					</div>
-					<div class="title">Puces</div>
 					<div class="chips">
 						<div class="container">
 							<tooltip v-for="chip in currentLeek.chips" :key="chip">
@@ -101,7 +100,7 @@
 						<div v-if="currentLeek.chips.length < 12" class="add" @click="chipsDialog = true">+</div>
 					</div>
 					<br>
-					<div class="title">Armes</div>
+					<div class="title">{{ $t('leek.weapons') }} [{{ currentLeek.weapons.length }}]</div>
 					<div class="weapons">
 						<div class="container">
 							<tooltip v-for="weapon of currentLeek.weapons" :key="weapon">
@@ -115,6 +114,7 @@
 						</div>
 						<div v-if="currentLeek.weapons.length < 4" class="add" @click="weaponsDialog = true">+</div>
 					</div>
+					<div class="title">{{ $t('leek.chips') }} [{{ currentLeek.chips.length }}]</div>
 				</div>
 			</v-tab-item>
 			<v-tab-item class="tab-content">
