@@ -164,7 +164,7 @@
 		<popup v-model="newScenarioDialog" :width="500">
 			<span slot="title">{{ $t('editor.create_new_scenario') }}</span>
 			<div class="padding">
-				<input v-model="newScenarioName" type="text" class="input" :placeholder="$t('editor.scenario_name')">
+				<input v-model="newScenarioName" type="text" class="input" :placeholder="$t('editor.scenario_name')" @keyup.enter="createScenario">
 			</div>
 			<div slot="actions">
 				<div @click="newScenarioDialog = false">{{ $t('editor.cancel') }}</div>
@@ -175,7 +175,7 @@
 		<popup v-model="newLeekDialog" :width="500">
 			<span slot="title">{{ $t('editor.create_new_leek') }}</span>
 			<div class="padding">
-				<input v-model="newLeekName" type="text" class="input" :placeholder="$t('editor.leek_name')">
+				<input v-model="newLeekName" type="text" class="input" :placeholder="$t('editor.leek_name')" @keyup.enter="createLeek">
 			</div>
 			<div slot="actions">
 				<div @click="newLeekDialog = false">{{ $t('editor.cancel') }}</div>
@@ -186,7 +186,7 @@
 		<popup v-model="newMapDialog" :width="500">
 			<span slot="title">{{ $t('editor.create_new_map') }}</span>
 			<div class="padding">
-				<input v-model="newMapName" type="text" class="input" :placeholder="$t('editor.map_name')">
+				<input v-model="newMapName" type="text" class="input" :placeholder="$t('editor.map_name')" @keyup.enter="createMap">
 			</div>
 			<div slot="actions">
 				<div @click="newMapDialog = false">{{ $t('editor.cancel') }}</div>
