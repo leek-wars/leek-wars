@@ -1000,7 +1000,8 @@
 		}
 	}
 	.leek-column .chips .container, .leek-column .weapons .container {
-		display: inline-block;
+		display: inline-flex;
+		align-items: center;
 	}
 	.leek-column .chip, .chips-dialog .chip {
 		width: 63px;
