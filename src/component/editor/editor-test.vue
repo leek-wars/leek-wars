@@ -65,7 +65,7 @@
 				<div class="column lateral-column">
 					<h4>{{ $t('editor.test_leeks') }}</h4>
 					<div class="items leeks">
-						<div v-for="leek of leeks" :key="leek.id" :class="{selected: leek === currentLeek}" class="item leek" @click="currentLeek = leek">
+						<div v-for="leek of leeks" :key="leek.id" :class="{selected: leek === currentLeek}" class="item leek" @click="selectLeek(leek)">
 							{{ leek.name }}
 							<span v-if="leek.bot" class="bot">bot</span>
 							<div v-else class="delete"></div>
@@ -390,7 +390,12 @@
 					if (!leek.chips) { leek.chips = [] }
 					if (!leek.weapons) { leek.weapons = [] }
 				}
-				this.currentLeek = LeekWars.first(this.leeks)
+				const startLeekID = localStorage.getItem('editor/leek')
+				if (startLeekID && startLeekID in this.leeks) {
+					this.selectLeek(this.leeks[startLeekID])
+				} else if (LeekWars.objectSize(this.leeks)) {
+					this.selectLeek(LeekWars.first(this.leeks)!)
+				}
 			}).error(error => {
 				LeekWars.toast(error)
 			})
@@ -436,6 +441,10 @@
 		selectScenario(scenario: TestScenario) {
 			this.currentScenario = scenario
 			localStorage.setItem('editor/scenario', '' + scenario.id)
+		}
+		selectLeek(leek: any) {
+			this.currentLeek = leek
+			localStorage.setItem('editor/leek', '' + leek.id)
 		}
 		deleteLeek(leek: Leek, teamID: number) {
 			if (!this.currentScenario) { return }
