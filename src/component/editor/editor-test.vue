@@ -145,7 +145,7 @@
 					</div>
 					<div class="instructions">
 						<div class="instruction">✔ {{ $t('editor.map_click_left') }}</div>
-						<div class="instruction">✔ Clic droit pour sélectionner les cellules de départ</div>
+						<div class="instruction">✔ {{ $t('editor.map_click_right') }}</div>
 					</div>
 				</div>
 			</v-tab-item>
