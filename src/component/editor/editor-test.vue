@@ -16,19 +16,19 @@
 							<div v-else class="delete" @click.stop="deleteScenario(scenario)"></div>
 						</div>
 					</div>
-					<div class="item add" @click="newScenarioDialog = true" v-ripple>✚ {{ $t('main.add') }}</div>
+					<div v-ripple class="item add" @click="newScenarioDialog = true">✚ {{ $t('main.add') }}</div>
 				</div>
 				<div v-if="currentScenario" class="column column-scenario">
 					<div class="title">{{ $t('editor.test_leeks') }}</div>
 					<div class="team team1">
 						<div class="leeks">
 							<div v-for="leek of currentScenario.data.team1" :key="leek.id" class="leek">
-								<div v-if="!currentScenario.base" v-ripple class="delete" @click="deleteLeek(leek, 1)">×</div>
+								<div v-ripple v-if="!currentScenario.base" class="delete" @click="deleteLeek(leek, 1)">×</div>
 								<div class="card">
 									<leek-image :leek="leek" :scale="0.4" />
 									<div>{{ leek.name }}</div>
 								</div>
-								<div class="ai" v-ripple @click="clickLeekAI(leek)">{{ currentScenario.data.ais[leek.id] ? currentScenario.data.ais[leek.id].name : '?' }}</div>
+								<div v-ripple class="ai" @click="clickLeekAI(leek)">{{ currentScenario.data.ais[leek.id] ? currentScenario.data.ais[leek.id].name : '?' }}</div>
 							</div>
 						</div>
 						<div v-if="!currentScenario.base && LeekWars.objectSize(currentScenario.data.team1) < 6" class="add" @click="addLeekTeam = currentScenario.data.team1; leekDialog = true">+</div>
@@ -37,12 +37,12 @@
 					<div class="team team2">
 						<div class="leeks">
 							<div v-for="leek of currentScenario.data.team2" :key="leek.id" class="leek">
-								<div v-if="!currentScenario.base" v-ripple class="delete" @click="deleteLeek(leek, 2)">×</div>
+								<div v-ripple v-if="!currentScenario.base" class="delete" @click="deleteLeek(leek, 2)">×</div>
 								<div class="card">
 									<leek-image :leek="leek" :scale="0.4" />
 									<div>{{ leek.name }}</div>
 								</div>
-								<div class="ai" v-ripple @click="clickLeekAI(leek)">{{ currentScenario.data.ais[leek.id] ? currentScenario.data.ais[leek.id].name : '?' }}</div>
+								<div v-ripple class="ai" @click="clickLeekAI(leek)">{{ currentScenario.data.ais[leek.id] ? currentScenario.data.ais[leek.id].name : '?' }}</div>
 							</div>
 						</div>
 						<div v-if="!currentScenario.base && LeekWars.objectSize(currentScenario.data.team2) < 6" class="add" @click="addLeekTeam = currentScenario.data.team2; leekDialog = true">+</div>
@@ -50,11 +50,11 @@
 					<br>
 					<div class="title">{{ $t('editor.test_map') }}</div>
 					<div class="map-container">
-						<div v-if="(currentScenario.data.map && currentScenario.data.map !== -1)" class="map card" @click="mapDialog = true" v-ripple>
+						<div v-ripple v-if="(currentScenario.data.map && currentScenario.data.map !== -1)" class="map card" @click="mapDialog = true">
 							<img src="/image/map_icon.png">
 							<div class="name">{{ currentScenario.data.map.name }}</div>
 						</div>
-						<div v-else class="map card" @click="mapDialog = true" v-ripple>
+						<div v-ripple v-else class="map card" @click="mapDialog = true">
 							<img src="/image/map_icon_random.png">
 							<div class="name">{{ $t('main.random') }}</div>
 						</div>
@@ -71,7 +71,7 @@
 							<div v-else class="delete"></div>
 						</div>
 					</div>
-					<div class="item add" @click="newLeekDialog = true" v-ripple>✚ {{ $t('main.add') }}</div>
+					<div v-ripple class="item add" @click="newLeekDialog = true">✚ {{ $t('main.add') }}</div>
 				</div>
 				<div v-if="currentLeek" class="column leek-column">
 					<div class="title name">{{ currentLeek.name }} - {{ $t('main.level_n', [currentLeek.level]) }}</div>
@@ -128,7 +128,7 @@
 							<div class="delete" @click="deleteMap(map)"></div>
 						</div>
 					</div>
-					<div class="item add" @click="newMapDialog = true" v-ripple>✚ {{ $t('main.add') }}</div>
+					<div v-ripple class="item add" @click="newMapDialog = true">✚ {{ $t('main.add') }}</div>
 				</div>
 				<div v-if="currentMap" class="column map-column">
 					<div class="title name"></div>
@@ -164,7 +164,7 @@
 		<popup v-model="newScenarioDialog" :width="500">
 			<span slot="title">{{ $t('editor.create_new_scenario') }}</span>
 			<div class="padding">
-				<input v-model="newScenarioName" type="text" class="input" :placeholder="$t('editor.scenario_name')" @keyup.enter="createScenario">
+				<input v-model="newScenarioName" :placeholder="$t('editor.scenario_name')" type="text" class="input" @keyup.enter="createScenario">
 			</div>
 			<div slot="actions">
 				<div @click="newScenarioDialog = false">{{ $t('editor.cancel') }}</div>
@@ -175,7 +175,7 @@
 		<popup v-model="newLeekDialog" :width="500">
 			<span slot="title">{{ $t('editor.create_new_leek') }}</span>
 			<div class="padding">
-				<input v-model="newLeekName" type="text" class="input" :placeholder="$t('editor.leek_name')" @keyup.enter="createLeek">
+				<input v-model="newLeekName" :placeholder="$t('editor.leek_name')" type="text" class="input" @keyup.enter="createLeek">
 			</div>
 			<div slot="actions">
 				<div @click="newLeekDialog = false">{{ $t('editor.cancel') }}</div>
@@ -186,7 +186,7 @@
 		<popup v-model="newMapDialog" :width="500">
 			<span slot="title">{{ $t('editor.create_new_map') }}</span>
 			<div class="padding">
-				<input v-model="newMapName" type="text" class="input" :placeholder="$t('editor.map_name')" @keyup.enter="createMap">
+				<input v-model="newMapName" :placeholder="$t('editor.map_name')" type="text" class="input" @keyup.enter="createMap">
 			</div>
 			<div slot="actions">
 				<div @click="newMapDialog = false">{{ $t('editor.cancel') }}</div>
@@ -197,11 +197,11 @@
 		<popup v-model="mapDialog" :width="700">
 			<span slot="title">{{ $t('editor.select_map') }}</span>
 			<div class="padding map-dialog">
-				<div class="map card" @click="selectScenarioMap(null)" v-ripple>
+				<div v-ripple class="map card" @click="selectScenarioMap(null)">
 					<img src="/image/map_icon_random.png">
 					<div class="name">{{ $t('main.random') }}</div>
 				</div>
-				<div v-for="map of maps" :key="map.id" class="map card" @click="selectScenarioMap(map)" v-ripple>
+				<div v-ripple v-for="map of maps" :key="map.id" class="map card" @click="selectScenarioMap(map)">
 					<img src="/image/map_icon.png">
 					<div class="name">{{ map.name }}</div>
 				</div>
@@ -211,7 +211,7 @@
 		<popup v-model="leekDialog" :width="700">
 			<span slot="title">{{ $t('editor.select_leek') }}</span>
 			<div class="leek-dialog padding">
-				<div v-for="leek of availableLeeks" :key="leek.id" class="leek card" @click="addScenarioLeek(leek)" v-ripple>
+				<div v-ripple v-for="leek of availableLeeks" :key="leek.id" class="leek card" @click="addScenarioLeek(leek)">
 					<leek-image :leek="leek" :scale="0.5" />
 					<div class="name">{{ leek.name }}</div>
 				</div>

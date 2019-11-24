@@ -13,7 +13,7 @@
 					<i18n path="you_earn_n_crystals">
 						<div slot="crystals" class="crystals card">
 							{{ crystals }}
-							<span class='crystal'></span>
+							<span class="crystal"></span>
 						</div>
 					</i18n>
 				</h4>
