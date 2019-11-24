@@ -17,7 +17,7 @@
 				<br>
 				<h4>{{ $t('paypal_message') }}</h4>
 				<br>
-				<div v-if="!loading" class="paypal-button" @click="clickPayPal" v-ripple>
+				<div v-ripple v-if="!loading" class="paypal-button" @click="clickPayPal">
 					{{ $t('buy_with') }}
 					<img src="/image/bank/paypal.png">
 				</div>
