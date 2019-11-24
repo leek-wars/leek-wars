@@ -209,7 +209,7 @@
 		</popup>
 
 		<popup v-model="leekDialog" :width="700">
-			<span slot="title">Select a leek</span>
+			<span slot="title">{{ $t('editor.select_leek') }}</span>
 			<div class="leek-dialog padding">
 				<div v-for="leek of availableLeeks" :key="leek.id" class="leek card" @click="addScenarioLeek(leek)" v-ripple>
 					<leek-image :leek="leek" :scale="0.5" />
