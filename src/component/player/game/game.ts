@@ -18,6 +18,7 @@ import { EffectType } from '@/model/effect'
 import { Fight, FightData, TEAM_COLORS } from '@/model/fight'
 import { i18n } from '@/model/i18n'
 import { LeekWars } from '@/model/leekwars'
+import { Turret } from './turret'
 
 enum Colors {
 	MP_COLOR = "#08D900",
@@ -66,6 +67,12 @@ const lastFPS = new Array()
 // 		document_hidden = document[hidden];
 // 	}
 // });
+
+const ENTITY_CLASSES = [
+	Leek,
+	Bulb,
+	Turret
+]
 
 const WEAPONS = [
 	Pistol, // 1
@@ -299,7 +306,7 @@ class Game {
 
 			const type = typeof(e.type) === 'undefined' ? EntityType.LEEK : e.type
 
-			const entity = type === EntityType.LEEK ? new Leek(this) : new Bulb(this)
+			const entity = new ENTITY_CLASSES[type](this, e.team, e.level)
 
 			// Infos vitales
 			entity.id = e.id
@@ -412,6 +419,21 @@ class Game {
 				entity.setSkin(e.skin)
 			}
 		}
+		
+		// for (var id = 0; id < 11; ++id) {
+		// 	const level = Math.max(1, id * 10)
+		// 	const turret = new Turret(this, (id + 1) % 2, level)
+		// 	turret.id = id + 5
+		// 	turret.team = 2
+		// 	turret.level = level
+		// 	turret.name = "Tourelle lvl " + turret.level
+		// 	turret.life = turret.level * 10
+		// 	turret.maxLife = turret.life
+		// 	turret.setCell(420 + id * 19)
+		// 	turret.active = true
+		// 	this.leeks[id + 5] = turret
+		// 	turret.drawID = this.addDrawableElement(turret, turret.y)
+		// }
 
 		// Actions
 		this.actions = this.data.actions.map(a => new Action(a))
@@ -467,6 +489,7 @@ class Game {
 		for (const l in this.leeks) {
 			if (this.leeks[l].active) { this.leeks[l].computeOrginPos() }
 		}
+		// console.log(this.leeks)
 		for (const leek of this.leeks) {
 			this.states[leek.id] = {
 				absolute_shield: 0,

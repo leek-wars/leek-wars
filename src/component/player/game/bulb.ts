@@ -7,7 +7,7 @@ class Bulb extends Entity {
 	public bulbName!: string
 	public heightAnim!: number
 
-	constructor(game: Game) {
+	constructor(game: Game, team: number, level: number) {
 		super(game, EntityType.BULB)
 		this.baseZ = -6
 		this.z = this.baseZ

@@ -172,6 +172,8 @@ class Textures {
 	public cube: Texture
 	public small_cube: Texture
 	public square: Texture
+	public turret_base_blue: Texture
+	public turret_core_blue: Texture
 
 	constructor(game: Game) {
 		this.leek_hand = new Texture(game, env.STATIC + "image/fight/leek_hand.png", true, SHADOW_QUALITY)
