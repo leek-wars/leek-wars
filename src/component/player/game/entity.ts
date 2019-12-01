@@ -11,6 +11,7 @@ import { LeekWars } from '@/model/leekwars'
 enum EntityType {
 	LEEK = 0,
 	BULB = 1,
+	TURRET = 2
 }
 enum EntityDirection {
 	NORTH = 0,
