@@ -68,6 +68,7 @@
 	"sound_activated": "Son activé",
 	"sound_disactivated": "Son coupé",
 	"start_of_fight": "Début du combat !",
+	"starter": "Lanceur du combat",
 	"summon": "{leek} invoque {summon}",
 	"tactic_mode": "Mode tactique",
 	"title": "Combat",

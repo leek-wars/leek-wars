@@ -68,6 +68,7 @@
 	"sound_activated": "Sound is on",
 	"sound_disactivated": "Sound is off",
 	"start_of_fight": "Starting fight!",
+	"starter": "Fight launcher",
 	"summon": "{leek} summons {summon}",
 	"tactic_mode": "Tactical mode",
 	"title": "Fight",
