@@ -35,7 +35,10 @@
 								<div class="farmer">
 									<avatar :farmer="farmer" /><br>
 									<span class="name">
-										<span v-if="farmer.id === fight.starter" class="arrow">▶</span>
+										<tooltip>
+											<span slot="activator" v-if="farmer.id === fight.starter" class="arrow">▶</span>
+											{{ $t('starter') }}
+										</tooltip>
 										{{ farmer.name }}
 									</span>
 								</div>
@@ -49,7 +52,10 @@
 								<div class="farmer">
 									<avatar :farmer="farmer" /><br>
 									<span class="name">
-										<span v-if="farmer.id === fight.starter" class="arrow">▶</span>
+										<tooltip>
+											<span slot="activator" v-if="farmer.id === fight.starter" class="arrow">▶</span>
+											{{ $t('starter') }}
+										</tooltip>
 										{{ farmer.name }}
 									</span>
 								</div>
