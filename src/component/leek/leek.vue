@@ -1092,6 +1092,9 @@
 		width: 100%;
 		.register {
 			font-family: monospace;
+			div {
+				word-break: break-all;
+			}
 		}
 		th {
 			background: white;
