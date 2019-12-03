@@ -31,13 +31,13 @@
 
 				<loader v-if="!category || !category.topics" />
 				<div v-else class="topics">
-					<div v-ripple v-for="topic in category.topics" :key="topic.id" :class="{pinned: topic.pinned}" class="topic">
+					<div v-for="topic in category.topics" :key="topic.id" :class="{pinned: topic.pinned}" class="topic">
 						<div class="seen">
 							<img v-if="topic.seen" src="/image/forum_seen.png">
 							<img v-else src="/image/forum_unseen.png">
 						</div>
 						<div>
-							<span class="title">
+							<span v-ripple class="title">
 								<i v-if="topic.resolved" :title="$t('topic_resolved')" class="attr material-icons resolved">check_circle</i>
 								<i v-if="topic.closed" :title="$t('topic_locked')" class="attr material-icons">lock</i>
 								<img v-if="topic.pinned" :title="$t('topic_pinned')" class="attr" src="/image/pin.png">
@@ -238,6 +238,7 @@
 		font-size: 19px;
 		margin-bottom: 5px;
 		color: #333;
+		display: inline-block;
 	}
 	.topic .description {
 		font-size: 14px;
