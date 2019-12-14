@@ -1,6 +1,7 @@
 {
 	"1_core": "1 coeur",
 	"ai_error": "<b>{0}</b> ligne <b>{1}</b>",
+	"ai_name": "Nom de l'IA",
 	"ai_to_test": "IA à tester",
 	"ai_renamed": "IA renommée en {0}",
 	"auto_closing": "Fermeture automatique des parenthèses, crochets, accolades et guillemets",
