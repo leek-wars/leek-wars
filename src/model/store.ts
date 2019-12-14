@@ -394,6 +394,11 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			if (state.farmer) {
 				state.farmer.leeks[data.leek].level = data.level
 			}
+		},
+		'add-ai'(state: LeekWarsState, ai: any) {
+			if (state.farmer) {
+				state.farmer.ais.push({id: ai.id, name: ai.name})
+			}
 		}
 	},
 })

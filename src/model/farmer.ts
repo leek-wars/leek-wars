@@ -1,3 +1,4 @@
+import { AI } from '@/model/ai'
 import { Chip } from '@/model/chip'
 import { Hat } from '@/model/hat'
 import { Leek } from '@/model/leek'
@@ -38,5 +39,6 @@ class Farmer {
 	public talent!: number
 	public team!: Team | null
 	public total_level!: number
+	public ais!: AI[]
 }
 export { Farmer }
