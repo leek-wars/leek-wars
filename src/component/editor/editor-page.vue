@@ -562,6 +562,10 @@
 					folder.items.splice(folder.items.findIndex((i) => !i.folder && (i as AIItem).ai === this.currentAI), 1)
 					Vue.delete(this.$data.ais, '' + this.currentID)
 					Vue.delete(this.$data.activeAIs, '' + this.currentID)
+					this.$store.commit('delete-ai', this.currentID)
+					if (this.$refs.tabs) {
+						(this.$refs.tabs as EditorTabs).closeById(this.currentID)
+					}
 					ai_deleted = true
 				} else if (this.currentFolder) {
 					const folder = this.currentFolder.parent
