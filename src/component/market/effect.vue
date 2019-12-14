@@ -50,7 +50,7 @@
 		get summons(): boolean { return (this.effect.targets & (1 << 4)) !== 0 }
 		format(n: number) {
 			if (Math.floor(n) !== n) {
-				return n.toPrecision(1)
+				return n.toFixed(2)
 			}
 			return n
 		}
