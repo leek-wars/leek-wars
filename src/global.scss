@@ -395,6 +395,10 @@ textarea {
 	text-align: left;
 	border-top-left-radius: 2px;
 	border-top-right-radius: 2px;
+	display: flex;
+}
+.v-dialog > .title .main {
+	flex: 1;
 }
 .v-dialog .title .options {
 	display: flex;
