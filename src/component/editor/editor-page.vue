@@ -11,13 +11,13 @@
 				</div>
 				<v-menu v-model="addMenu" :activator="LeekWars.mobile ? addMenuActivator : $refs.addButton" offset-y lazy>
 					<v-list>
-						<v-list-tile v-ripple @click="newAI(false)">
+						<v-list-tile v-ripple @click="openNewAI(false)">
 							<i class="material-icons">insert_drive_file</i>
 							<v-list-tile-content class="language">
 								<v-list-tile-title>{{ $t('new_ai') }}</v-list-tile-title>
 							</v-list-tile-content>
 						</v-list-tile>
-						<v-list-tile v-ripple @click="newAI(true)">
+						<v-list-tile v-ripple @click="openNewAI(true)">
 							<i class="material-icons">insert_drive_file</i>
 							<v-list-tile-content class="language">
 								<v-list-tile-title>{{ $t('new_v2') }}
@@ -153,6 +153,28 @@
 		</popup>
 
 		<editor-test v-model="testDialog" :ais="ais" :leek-ais="leekAIs" />
+
+		<popup v-model="newAIDialog" :width="500">
+			<span slot="title">{{ $t('editor.new_desc') }}</span>
+			<div class="padding">
+				<input v-model="newAIName" ref="newAIInput" :placeholder="$t('editor.ai_name')" type="text" class="input dialog-input" @keyup.enter="newAI(false, newAIName)">
+			</div>
+			<div slot="actions">
+				<div @click="newAIDialog = false">{{ $t('editor.cancel') }}</div>
+				<div class="green" @click="newAI(false, newAIName)">{{ $t('main.create') }}</div>
+			</div>
+		</popup>
+
+		<popup v-model="newAIv2Dialog" :width="500">
+			<span slot="title">{{ $t('editor.new_desc') }}</span>
+			<div class="padding">
+				<input v-model="newAIName" ref="newAIInputv2" :placeholder="$t('editor.ai_name')" type="text" class="input dialog-input" @keyup.enter="newAI(true, newAIName)">
+			</div>
+			<div slot="actions">
+				<div @click="newAIv2Dialog = false">{{ $t('editor.cancel') }}</div>
+				<div class="green" @click="newAI(true, newAIName)">{{ $t('main.create') }}</div>
+			</div>
+		</popup>
 	</div>
 </template>
 
@@ -208,6 +230,9 @@
 		leekAIs: any = {}
 		tabs: AI[] = []
 		panelWidth: number = 200
+		newAIDialog: boolean = false
+		newAIv2Dialog: boolean = false
+		newAIName: string = ''
 		actions_list = [
 			{icon: 'add', click: (e: any) => this.add(e)},
 			{icon: 'settings', click: () => this.settings() }
@@ -479,17 +504,36 @@
 				this.currentEditor.serverError = true
 			})
 		}
-		newAI(v2: boolean) {
+		openNewAI(v2: boolean) {
+			this.newAIName = ''
+			if (v2) {
+				this.newAIv2Dialog = true
+				Vue.nextTick(() => {
+					this.$refs.newAIInputv2.focus()
+				})
+			} else {
+				this.newAIDialog = true
+				Vue.nextTick(() => {
+					console.log(this.$refs)
+					this.$refs.newAIInput.focus()
+				})
+			}
+		}
+		newAI(v2: boolean, name: string) {
 			if (!this.currentFolder) { return }
-			LeekWars.post('ai/new', {folder_id: this.currentFolder.id, v2}).then(data => {
+			LeekWars.post('ai/new-name', {folder_id: this.currentFolder.id, v2, name}).then(data => {
 				if (this.currentFolder) {
 					const ai = data.ai
 					ai.valid = true
 					ai.v2 = v2
+					ai.name = name
 					this.currentFolder.items.push(new AIItem(ai, this.currentFolder))
 					this.currentFolder.expanded = true
 					this.ais[ai.id] = ai
 					this.$router.push('/editor/' + ai.id)
+					this.newAIDialog = false
+					this.newAIv2Dialog = false
+					this.newAIName = ''
 				}
 			})
 		}
@@ -800,5 +844,9 @@
 		bottom: 10px;
 		cursor: ew-resize;
 		width: 15px;
+	}
+	.dialog-input {
+		width: calc(100% - 10px);
+		padding: 5px;
 	}
 </style>
