@@ -514,7 +514,6 @@
 			} else {
 				this.newAIDialog = true
 				Vue.nextTick(() => {
-					console.log(this.$refs)
 					this.$refs.newAIInput.focus()
 				})
 			}
@@ -527,9 +526,11 @@
 					ai.valid = true
 					ai.v2 = v2
 					ai.name = name
+					ai.path = this.getAIFullPath(ai)
 					this.currentFolder.items.push(new AIItem(ai, this.currentFolder))
 					this.currentFolder.expanded = true
-					this.ais[ai.id] = ai
+					Vue.set(this.ais, ai.id, ai)
+					this.$store.commit('add-ai', ai)
 					this.$router.push('/editor/' + ai.id)
 					this.newAIDialog = false
 					this.newAIv2Dialog = false
