@@ -116,6 +116,11 @@
 			
 			<div class="column4">
 				<panel :title="$t('characteristics')">
+					<template v-if="leek && my_leek && leek.capital == 0" slot="actions">
+						<div class="button flat" @click="capitalDialog = true">
+							<i class="material-icons">visibility</i>
+						</div>
+					</template>
 					<div slot="content" class="characteristics">
 						<div v-for="c in ['life', 'science', 'strength', 'magic', 'wisdom', 'frequency', 'agility', 'mp', 'resistance', 'tp']" :key="c" class="characteristic">
 							<characteristic-tooltip :characteristic="c" :value="leek ? leek[c] : 0" :leek="leek" :test="false">
@@ -387,7 +392,7 @@
 				</div>
 			</div>
 		</popup>
-		<capital-dialog v-if="leek" v-model="capitalDialog" :leek="leek" />
+		<capital-dialog v-if="leek" v-model="capitalDialog" :leek="leek" :totalCapital="leek.capital" />
 	</div>
 </template>
 	

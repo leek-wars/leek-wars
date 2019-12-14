@@ -1,8 +1,8 @@
 <template>
 	<popup :value="value" :width="800" @input="$emit('input', $event)">
-		<span slot="title">Ajouter des points de capital</span>
+		<span slot="title">Ajouter des points de capital ({{ totalCapital }})</span>
 
-		<center><div class="capital rounded4">{{ $t('leek.n_capital', [capital]) }}</div></center>
+		<center><div v-if="totalCapital" class="capital rounded4" :class="{zero: capital == 0}">{{ $t('leek.n_capital', [capital]) }}</div></center>
 
 		<div v-for="c in LeekWars.characteristics" :key="c" class="charac">
 			<tooltip>
@@ -21,11 +21,7 @@
 				</div>
 			</div>
 		</div>
-		<div slot="actions">
-			<div class="action" @click="close">
-				<i class="material-icons">clear</i>
-				<span>{{ $t('leek.cancel') }}</span>
-			</div>
+		<div v-if="totalCapital" slot="actions">
 			<div class="action" @click="reset">
 				<i class="material-icons">refresh</i>
 				<span>{{ $t('leek.reset') }}</span>
@@ -115,6 +111,7 @@
 	export default class CapitalDialog extends Vue {
 		@Prop() value!: boolean
 		@Prop({required: true}) leek!: Leek
+		@Prop({required: true}) totalCapital!: number
 		COSTS = COSTS
 		bonuses: {[key: string]: any} = {}
 		base: {[key: string]: any} = {}
@@ -212,7 +209,7 @@
 		display: inline-block;
 		padding: 5px 10px;
 	}
-	.capital[v="0"] {
+	.capital.zero {
 		background: #888;
 	}
 	.sup {
