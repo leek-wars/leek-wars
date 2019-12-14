@@ -312,15 +312,16 @@
 		<popup v-if="leek && my_leek" v-model="potionDialog" :width="750">
 			<span slot="title">{{ $t("use_a_potion", [leek.name]) }}</span>
 			<div class="farmer-potions">
-				<tooltip v-for="(potion, id) in $store.state.farmer.potions" :key="id">
-					<div slot="activator" :quantity="potion.quantity" class="potion" @click="usePotion(potion)">
-						<img :src="'/image/potion/' + LeekWars.potions[potion.template].name + '.png'">
-					</div>
-					<b>{{ $t('potion.' + LeekWars.potions[potion.template].name) }}</b>
-					<br>
-					{{ $t('level_n', [LeekWars.potions[potion.template].level]) }}
-				</tooltip>
-				<br><br>
+				<div class="potions-grid">
+					<tooltip v-for="(potion, id) in $store.state.farmer.potions" :key="id">
+						<div slot="activator" :quantity="potion.quantity" class="potion" @click="usePotion(potion)">
+							<img :src="'/image/potion/' + LeekWars.potions[potion.template].name + '.png'">
+						</div>
+						<b>{{ $t('potion.' + LeekWars.potions[potion.template].name) }}</b>
+						<br>
+						{{ $t('level_n', [LeekWars.potions[potion.template].level]) }}
+					</tooltip>
+				</div>
 				<center>({{ $t('click_to_use') }})</center>
 			</div>
 		</popup>
@@ -1040,12 +1041,20 @@
 		cursor: pointer;
 	}
 	.farmer-potions {
+		.potions-grid {
+			display: grid;
+			grid-template-columns: repeat(auto-fill, minmax(75px, 1fr));
+			grid-gap: 10px;
+			margin-bottom: 15px;
+		}
 		.potion {
 			display: inline-block;
 			cursor: pointer;
 			position: relative;
+			border: 1px solid#ddd;
+			padding: 5px 0;
 			img {
-				width: 80px;
+				width: 100%;
 			}
 			&::after {
 				position: absolute;
@@ -1063,6 +1072,9 @@
 				background-color: #777;
 			}
 		}
+	}
+	#app.app .farmer-potions .potions-grid {
+		grid-template-columns: repeat(auto-fill, minmax(65px, 1fr));
 	}
 	.hat-dialog .hat {
 		display: inline-block;
