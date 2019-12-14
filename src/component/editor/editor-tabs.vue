@@ -83,6 +83,10 @@
 			this.tabs.push(ai)
 			this.save()
 		}
+		closeById(id: number) {
+			this.tabs = this.tabs.filter(ai => ai.id !== id)
+			this.save()
+		}
 		openOther(i: number) {
 			const ai = this.tabs[Math.max(0, i - 1)]
 			this.$router.push('/editor/' + ai.id)

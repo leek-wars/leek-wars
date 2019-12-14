@@ -10,6 +10,7 @@ import { Team } from '@/model/team'
 import Vue from 'vue'
 import Vuex, { Store } from 'vuex'
 import { vueMain } from './vue'
+import { AI } from './ai'
 
 class LeekWarsState {
 	public token: string | null = null
@@ -395,9 +396,14 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 				state.farmer.leeks[data.leek].level = data.level
 			}
 		},
-		'add-ai'(state: LeekWarsState, ai: any) {
+		'add-ai'(state: LeekWarsState, ai: AI) {
 			if (state.farmer) {
-				state.farmer.ais.push({id: ai.id, name: ai.name})
+				state.farmer.ais.push(ai)
+			}
+		},
+		'delete-ai'(state: LeekWarsState, id: number) {
+			if (state.farmer) {
+				state.farmer.ais = state.farmer.ais.filter(ai => ai.id !== id)
 			}
 		}
 	},
