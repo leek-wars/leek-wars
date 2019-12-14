@@ -2,7 +2,9 @@
 	<v-dialog :value="value" :max-width="width" :persistent="persistent" lazy @input="$emit('input', $event)">
 		<template v-if="content_created">
 			<div class="title">
-				<slot name="title"></slot>
+				<div class="main">
+					<slot name="title"></slot>
+				</div>
 				<div class="options">
 					<div class="option" @click="close">
 						<i class="material-icons">clear</i>
