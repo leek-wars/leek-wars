@@ -45,7 +45,7 @@
 		get leekY() { return this.height - this.leekHeight }
 		get hatX() { return this.leek.hat !== null ? this.width / 2 - this.hatWidth / 2 - (this.leekWidth / 25) : 0 }
 
-		@Watch('leek', {immediate: true, deep: true})
+		@Watch('leek.level', {immediate: true})
 		update() {
 			LeekWars.getImageSize(this.leekImage, (leekSize: any) => this.leekSize = leekSize)
 		}
