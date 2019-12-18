@@ -36,7 +36,7 @@
 									<avatar :farmer="farmer" /><br>
 									<span class="name">
 										<tooltip>
-											<span slot="activator" v-if="farmer.id === fight.starter" class="arrow">▶</span>
+											<span v-if="farmer.id === fight.starter" slot="activator" class="arrow">▶</span>
 											{{ $t('starter') }}
 										</tooltip>
 										{{ farmer.name }}
@@ -53,7 +53,7 @@
 									<avatar :farmer="farmer" /><br>
 									<span class="name">
 										<tooltip>
-											<span slot="activator" v-if="farmer.id === fight.starter" class="arrow">▶</span>
+											<span v-if="farmer.id === fight.starter" slot="activator" class="arrow">▶</span>
 											{{ $t('starter') }}
 										</tooltip>
 										{{ farmer.name }}

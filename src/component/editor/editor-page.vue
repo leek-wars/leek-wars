@@ -157,7 +157,7 @@
 		<popup v-model="newAIDialog" :width="500">
 			<span slot="title">{{ $t('editor.new_desc') }}</span>
 			<div class="padding">
-				<input v-model="newAIName" ref="newAIInput" :placeholder="$t('editor.ai_name')" type="text" class="input dialog-input" @keyup.enter="newAI(false, newAIName)">
+				<input ref="newAIInput" v-model="newAIName" :placeholder="$t('editor.ai_name')" type="text" class="input dialog-input" @keyup.enter="newAI(false, newAIName)">
 			</div>
 			<div slot="actions">
 				<div @click="newAIDialog = false">{{ $t('editor.cancel') }}</div>
@@ -168,7 +168,7 @@
 		<popup v-model="newAIv2Dialog" :width="500">
 			<span slot="title">{{ $t('editor.new_desc') }}</span>
 			<div class="padding">
-				<input v-model="newAIName" ref="newAIInputv2" :placeholder="$t('editor.ai_name')" type="text" class="input dialog-input" @keyup.enter="newAI(true, newAIName)">
+				<input ref="newAIInputv2" v-model="newAIName" :placeholder="$t('editor.ai_name')" type="text" class="input dialog-input" @keyup.enter="newAI(true, newAIName)">
 			</div>
 			<div slot="actions">
 				<div @click="newAIv2Dialog = false">{{ $t('editor.cancel') }}</div>
