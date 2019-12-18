@@ -995,9 +995,8 @@ class Game {
 			if (objectID in LeekWars.weapons) {
 
 				const template = LeekWars.weapons[objectID].template
-				const img = ["1", "2", "3", "4", "5", "6", "7", "flamme", "destroyer", "gaz_icon", "11", "12", "13", "katana", "broadsword", "axe"][template - 1]
+				const img = ["pistol", "machine_gun", "double_gun", "shotgun", "magnum", "laser", "grenade_launcher", "flamme", "destroyer", "gaz_icon", "electrisor", "m_laser", "b_laser", "katana", "broadsword", "axe"][template - 1]
 				image = env.STATIC + "image/weapon/" + img + ".png"
-
 				// Gestion des états du poireau
 				if (template === 8) {
 					leek.burn()
