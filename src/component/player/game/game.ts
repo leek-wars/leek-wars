@@ -319,9 +319,6 @@ class Game {
 			if (entity.team === 2) {
 				entity.orientation = -1
 			}
-			if (entity.summon) {
-				entity.name = i18n.t('entity.' + entity.name) as string
-			}
 
 			entity.farmer = null
 			if (typeof(e.farmer) !== 'undefined') {
@@ -415,24 +412,23 @@ class Game {
 
 			} else if (entity instanceof Bulb) {
 
+				entity.name = i18n.t('entity.' + entity.name) as string
 				entity.setSkin(e.skin)
+
+			} else if (entity instanceof Turret) {
+
+				entity.name = i18n.t('fight.turret') as string
+				
+				if (this.teams[entity.team - 1] === undefined) {
+					this.teams[entity.team - 1] = []
+				}
+				this.teams[entity.team - 1].push(entity)
+				this.entityOrder.push(entity)
+
+				entity.active = true
+				entity.drawID = this.addDrawableElement(entity, entity.y)
 			}
 		}
-		
-		// for (var id = 0; id < 11; ++id) {
-		// 	const level = Math.max(1, id * 10)
-		// 	const turret = new Turret(this, (id + 1) % 2, level)
-		// 	turret.id = id + 5
-		// 	turret.team = 2
-		// 	turret.level = level
-		// 	turret.name = "Tourelle lvl " + turret.level
-		// 	turret.life = turret.level * 10
-		// 	turret.maxLife = turret.life
-		// 	turret.setCell(420 + id * 19)
-		// 	turret.active = true
-		// 	this.leeks[id + 5] = turret
-		// 	turret.drawID = this.addDrawableElement(turret, turret.y)
-		// }
 
 		// Actions
 		this.actions = this.data.actions.map(a => new Action(a))
@@ -493,7 +489,7 @@ class Game {
 			this.states[leek.id] = {
 				absolute_shield: 0,
 				relative_shield: 0,
-				active: leek.type === 0,
+				active: !leek.summon,
 				life: leek.life,
 				max_life: leek.life,
 				tp: leek.tp,

@@ -73,5 +73,6 @@
 	"tactic_mode": "Tactical mode",
 	"title": "Fight",
 	"turn_n": "Turn {0}",
-	"turn_of_leek": "{leek}'s turn"
+	"turn_of_leek": "{leek}'s turn",
+	"turret": "Turret"
 }

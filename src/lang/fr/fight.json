@@ -73,5 +73,6 @@
 	"tactic_mode": "Mode tactique",
 	"title": "Combat",
 	"turn_n": "Tour {0}",
-	"turn_of_leek": "Tour de {leek}"
+	"turn_of_leek": "Tour de {leek}",
+	"turret": "Tourelle"
 }
