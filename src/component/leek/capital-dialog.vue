@@ -2,7 +2,7 @@
 	<popup :value="value" :width="800" @input="$emit('input', $event)">
 		<span slot="title">Ajouter des points de capital ({{ totalCapital }})</span>
 
-		<center><div v-if="totalCapital" class="capital rounded4" :class="{zero: capital == 0}">{{ $t('leek.n_capital', [capital]) }}</div></center>
+		<center><div v-if="totalCapital" :class="{zero: capital == 0}" class="capital rounded4">{{ $t('leek.n_capital', [capital]) }}</div></center>
 
 		<div v-for="c in LeekWars.characteristics" :key="c" class="charac">
 			<tooltip>
