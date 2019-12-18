@@ -21,18 +21,23 @@
 		</tooltip>
 
 		<tooltip>
-			<span v-if="!caster" slot="activator" class="not-player"></span>
+			<span v-if="!caster && !always_caster" slot="activator" class="not-player"></span>
 			<span>{{ $t('effect.target_not_player') }}</span>
 		</tooltip>
 
 		<tooltip>
-			<span v-if="!nonSummons" slot="activator" class="summons"></span>
+			<span v-if="!nonSummons && !always_caster" slot="activator" class="summons"></span>
 			<span>{{ $t('effect.target_summons') }}</span>
 		</tooltip>
 
 		<tooltip>
-			<span v-if="!summons" slot="activator" class="not-summons"></span>
+			<span v-if="!summons && !always_caster" slot="activator" class="not-summons"></span>
 			<span>{{ $t('effect.target_not_summons') }}</span>
+		</tooltip>
+
+		<tooltip>
+			<span v-if="always_caster" slot="activator" class="always-caster"></span>
+			<span>{{ $t('effect.target_always_caster') }}</span>
 		</tooltip>
 	</div>
 </template>
@@ -48,6 +53,7 @@
 		get caster(): boolean { return (this.effect.targets & (1 << 2)) !== 0 }
 		get nonSummons(): boolean { return (this.effect.targets & (1 << 3)) !== 0 }
 		get summons(): boolean { return (this.effect.targets & (1 << 4)) !== 0 }
+		get always_caster(): boolean { return (this.effect.targets & (1 << 5)) !== 0 }
 		format(n: number) {
 			if (Math.floor(n) !== n) {
 				return n.toFixed(2)
