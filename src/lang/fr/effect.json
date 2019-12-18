@@ -48,6 +48,7 @@
 	"type_25_fixed": "Inflige des séquelles de <b>{0}</b>",
 	"type_26_fixed": "Applique une vulnérabilité de <b>{0}%</b>",
 	"type_27_fixed": "Applique une vulnérabilité absolue de <b>{0}</b>",
+	"type_28_fixed": "Inflige <b>{0}%</b> de la vie du lanceur en dégâts",
 	"type_2_fixed": "Soigne de <b>{0}</b>",
 	"type_3": "Booste la force de <b>{0}</b> à <b>{1}</b>",
 	"type_3_fixed": "Booste la force de <b>{0}</b>",
