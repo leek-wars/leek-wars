@@ -15,6 +15,7 @@
 	"summon_6": "Bulbe foudroyant",
 	"summon_7": "Bulbe métallique",
 	"target_allies": "Affecte uniquement les alliés",
+	"target_always_caster": "Affecte toujours le lanceur",
 	"target_enemies": "Affecte uniquement les ennemis",
 	"target_not_player": "N'affecte jamais le lanceur",
 	"target_not_summons": "N'affecte pas les invocations",

@@ -14,6 +14,7 @@
 	"summon_5": "Iced bulb",
 	"summon_6": "Lightning bulb",
 	"summon_7": "Metallic bulb",
+	"target_always_caster": "Always affects the caster",
 	"target_allies": "Only affects allies",
 	"target_enemies": "Only affects enemies",
 	"target_not_player": "Never affects the caster",
