@@ -393,7 +393,7 @@
 				</div>
 			</div>
 		</popup>
-		<capital-dialog v-if="leek" v-model="capitalDialog" :leek="leek" :totalCapital="leek.capital" />
+		<capital-dialog v-if="leek" v-model="capitalDialog" :leek="leek" :total-capital="leek.capital" />
 	</div>
 </template>
 	
