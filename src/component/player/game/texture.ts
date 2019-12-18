@@ -172,8 +172,6 @@ class Textures {
 	public cube: Texture
 	public small_cube: Texture
 	public square: Texture
-	public turret_base_blue: Texture
-	public turret_core_blue: Texture
 	public spike1: Texture
 	public spike2: Texture
 
