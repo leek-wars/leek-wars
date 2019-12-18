@@ -27,6 +27,7 @@
 				<div v-if="!entity.dead" :style="{height: 'calc(4px + ' + ((entity.life / entity.maxLife) * 100) + '%)', background: entity.getLifeColor(), 'border-color': entity.getLifeBarBorderColor()}" class="bar"></div>
 				<div class="image">
 					<img v-if="entity.summon" :src="'/image/bulb/' + entity.bulbName + '_front.png'">
+					<turret-image v-else-if="(entity instanceof Turret)" :level="entity.level" :skin="entity.team" :scale="1" />
 					<leek-image v-else :leek="entity" :scale="1" />
 				</div>
 			</div>
@@ -43,6 +44,7 @@
 	import { Effect, EffectType } from '@/model/effect'
 	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 	import { Game } from './game/game'
+	import { Turret } from './game/turret'
 
 	@Component({ name: 'hud', components: { ActionElement, EntityDetails } })
 	export default class Hud extends Vue {
@@ -51,6 +53,7 @@
 		actionsMargin: number = 0
 		hover_entity: any | null = null
 		selected_entity: any | null = null
+		Turret = Turret
 		get totalLife() {
 			return this.game.leeks.reduce((total, e) => total + (!e.summon ? e.life : 0), 0)
 		}
