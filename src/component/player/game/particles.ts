@@ -1,7 +1,7 @@
 import { Cell, Position } from '@/component/player/game/cell'
 import { Entity } from '@/component/player/game/entity'
 import { Game } from "@/component/player/game/game"
-import { Blood, Bullet, Cartridge, CollideFire, CollideGaz, Explosion, Fire, Garbage, Gaz, Grenade, ImageParticle, Laser, Lightning, Meteorite, NUM_BLOOD_SPRITES, Particle, Rectangle, Shot, SimpleFire } from '@/component/player/game/particle'
+import { Blood, Bullet, Cartridge, CollideFire, CollideGaz, Explosion, Fire, Garbage, Gaz, Grenade, ImageParticle, Laser, Lightning, Meteorite, NUM_BLOOD_SPRITES, Particle, Rectangle, Shot, SimpleFire, SpikeParticle } from '@/component/player/game/particle'
 import { Texture } from '@/component/player/game/texture'
 
 class Particles {
@@ -83,6 +83,9 @@ class Particles {
 	}
 	public addImage(x: number, y: number, z: number, dx: number, dy: number, dz: number, angle: number, texture: Texture, life: number, alpha: number = 1, onground: boolean = false) {
 		this.add(new ImageParticle(this.game, x, y, z, dx, dy, dz, angle, texture, life, alpha), onground)
+	}
+	public addSpike(x: number, y: number, z: number, dx: number, dy: number, texture: Texture, life: number, flip: boolean) {
+		this.add(new SpikeParticle(this.game, x, y, z, dx, dy, texture, life, flip))
 	}
 	public addRectangle(x: number, y: number, z: number, dx: number, dy: number, dz: number, angle: number, sx: number, sy: number, dsx: number, dsy: number, color: string, alpha: number, life: number) {
 		this.add(new Rectangle(this.game, x, y, z, dx, dy, dz, angle, sx, sy, dsx, dsy, color, alpha, life))

@@ -428,6 +428,49 @@ class ImageParticle extends Particle {
 		ctx.globalAlpha = 1
 	}
 }
+class SpikeParticle extends Particle {
+	public totalLife: any
+	public flip: boolean
+	public ix: number
+	public iy: number
+	public texture: HTMLImageElement
+	constructor(game: Game, x: number, y: number, z: number, dx: number, dy: number, texture: Texture, life: number, flip: boolean) {
+		super(game, x, y, z, life)
+		this.texture = texture.texture
+		this.ix = x
+		this.iy = y
+		this.dx = dx
+		this.dy = dy
+		this.dz = 0
+		this.angle = 0
+		this.rotation = 0
+		this.totalLife = life
+		this.flip = flip
+	}
+	public update(dt: number): boolean {
+		const r = 1 - Math.max(0, (this.life - 5) / this.totalLife)
+		const x = r < 0.66 ? Math.sqrt(r) : 1 - (r - 0.66) * 4.5
+		this.x = this.ix - this.dx * x
+		this.y = this.iy - this.dy * x
+		// Life
+		this.life -= dt
+		if (this.life <= 0) {
+			this.onDie()
+			return true
+		}
+		return false
+	}
+	public draw(ctx: CanvasRenderingContext2D) {
+		if (this.flip) {
+			ctx.save()
+			ctx.scale(-1, 1)
+		}
+		ctx.drawImage(this.texture, -this.texture.width / 2 , -this.texture.height / 2)
+		if (this.flip) {
+			ctx.restore()
+		}
+	}
+}
 class Rectangle extends Particle {
 	public totalLife: number
 	public sx: number
@@ -483,4 +526,4 @@ class Blood extends Particle {
 	}
 }
 
-export { Particle, Bullet, Laser, Lightning, Fire, CollideFire, SimpleFire, Gaz, CollideGaz, Meteorite, Grenade, Shot, Explosion, Cartridge, Garbage, ImageParticle, Rectangle, Blood, NUM_BLOOD_SPRITES }
+export { Particle, Bullet, Laser, Lightning, Fire, CollideFire, SimpleFire, Gaz, CollideGaz, Meteorite, Grenade, Shot, Explosion, Cartridge, Garbage, ImageParticle, Rectangle, Blood, SpikeParticle, NUM_BLOOD_SPRITES }

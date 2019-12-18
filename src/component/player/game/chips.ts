@@ -9,13 +9,13 @@ import { Position } from './cell'
 abstract class ChipAnimation {
 	public game: Game
 	public done: boolean = false
-	public sound: Sound
+	public sound: Sound | null
 	public cell!: number | null
 	public targets: Entity[] | undefined
 	public duration: number
 	public position!: Position
 	public launcher!: Entity | undefined
-	constructor(game: Game, sound: Sound, duration: number) {
+	constructor(game: Game, sound: Sound | null, duration: number) {
 		this.game = game
 		this.sound = sound
 		this.duration = duration
@@ -25,7 +25,9 @@ abstract class ChipAnimation {
 		this.targets = targets
 		this.position = position
 		this.launcher = launcher
-		this.sound.play()
+		if (this.sound) {
+			this.sound.play()
+		}
 	}
 	public update(dt: number) {
 		this.duration -= dt
@@ -710,5 +712,29 @@ class Antidote extends ChipAnimation {
 		}
 	}
 }
+class Punishment extends ChipAnimation {
+	public soundPlayed = false
+	constructor(game: Game) {
+		super(game, null, 35)
+	}
+	public launch(launchPos: Position, position: Position, targets: Entity[]) {
+		super.launch(launchPos, position, targets)
+		this.targets = targets
+		const s = 40
+		const d = 60
+		const l = 40
+		this.game.particles.addSpike(this.position.x - d, this.position.y + d / 2, 40,  s, -s / 2, this.game.T.spike1, l, false)
+		this.game.particles.addSpike(this.position.x - d, this.position.y - d / 2, 46,  s,  s / 2, this.game.T.spike2, l, false)
+		this.game.particles.addSpike(this.position.x + d, this.position.y + d / 2, 40, -s, -s / 2, this.game.T.spike1, l, true)
+		this.game.particles.addSpike(this.position.x + d, this.position.y - d / 2, 46, -s,  s / 2, this.game.T.spike2, l, true)
+	}
+	public update(dt: number) {
+		super.update(dt)
+		if (this.duration < 7 && !this.soundPlayed) {
+			this.game.S.sword.play()
+			this.soundPlayed = true
+		}
+	}
+}
 
-export { ChipAnimation, Adrenaline, Armor, Acceleration, Antidote, Armoring, BallAndChain, Bandage, Bark, Burning, Carapace, Collar, Cure, DevilStrike, Doping, Drip, Ferocity, Fertilizer, Flame, Flash, Fortress, Fracture, Helmet, Ice, Iceberg, Inversion, LeatherBoots, Liberation, Lightning, Loam, Meteorite, Mirror, Motivation, Pebble, Plague, Protein, Rage, Rampart, Reflexes, Regeneration, Remission, Rock, Rockfall, SevenLeagueBoots, Shield, Shock, SlowDown, Solidification, Soporific, Spark, Stalactite, Steroid, Stretching, Teleportation, Thorn, Toxin, Tranquilizer, Vaccine, Venom, Wall, WarmUp, Whip, WingedBoots }
+export { ChipAnimation, Adrenaline, Armor, Acceleration, Antidote, Armoring, BallAndChain, Bandage, Bark, Burning, Carapace, Collar, Cure, DevilStrike, Doping, Drip, Ferocity, Fertilizer, Flame, Flash, Fortress, Fracture, Helmet, Ice, Iceberg, Inversion, LeatherBoots, Liberation, Lightning, Loam, Meteorite, Mirror, Motivation, Pebble, Plague, Protein, Punishment, Rage, Rampart, Reflexes, Regeneration, Remission, Rock, Rockfall, SevenLeagueBoots, Shield, Shock, SlowDown, Solidification, Soporific, Spark, Stalactite, Steroid, Stretching, Teleportation, Thorn, Toxin, Tranquilizer, Vaccine, Venom, Wall, WarmUp, Whip, WingedBoots }
