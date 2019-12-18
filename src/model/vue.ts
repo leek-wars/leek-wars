@@ -24,6 +24,7 @@ import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 import RichTooltipLeek from '@/component/rich-tooltip/rich-tooltip-leek.vue'
 import Talent from '@/component/talent.vue'
 import Tooltip from '@/component/tooltip.vue'
+import TurretImage from '@/component/turret-image.vue'
 import { env } from '@/env'
 import { i18n, loadInstanceTranslations } from '@/model/i18n'
 import { LeekWars } from '@/model/leekwars'
@@ -84,6 +85,7 @@ Vue.filter('emojis', LeekWars.formatEmojis)
 Vue.filter('duration', LeekWars.formatDuration)
 
 Vue.component('leek-image', LeekImage)
+Vue.component('turret-image', TurretImage)
 Vue.component('avatar', Avatar)
 Vue.component('emblem', Emblem)
 Vue.component('talent', Talent)
