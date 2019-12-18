@@ -8,6 +8,7 @@
 		<div :class="{dead: entity.dead}" class="details">
 			<div class="image">
 				<img v-if="entity.summon" :src="'/image/bulb/' + entity.bulbName + '_front.png'">
+				<turret-image v-else-if="(entity instanceof Turret)" :level="entity.level" :skin="entity.team" :scale="0.15" />
 				<leek-image v-else :leek="entity" :scale="0.3" />
 			</div>
 			<div>
@@ -81,16 +82,17 @@
 	</div>
 </template>
 
-
 <script lang="ts">
 	import { Effect, EffectType } from '@/model/effect'
 	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 	import { Entity } from './game/entity'
 	import { Game } from './game/game'
+	import { Turret } from './game/turret'
 
 	@Component({ name: 'entity-details' })
 	export default class EntityDetails extends Vue {
 		@Prop({required: true}) entity!: Entity
+		Turret = Turret
 
 		effectText(effect: any) {
 			if (effect.effect === EffectType.RELATIVE_SHIELD || effect.effect === EffectType.DAMAGE_RETURN || effect.effect === EffectType.VULNERABILITY) {
@@ -116,6 +118,7 @@
 	box-shadow: 0px 2px 4px -1px rgba(0,0,0,0.2), 0px 4px 5px 0px rgba(0,0,0,0.14), 0px 1px 10px 0px rgba(0,0,0,0.12);
 	border-radius: 3px;
 	display: flex;
+	align-items: center;
 }
 .details.dead {
 	background: rgba(255,255,255,0.3);
