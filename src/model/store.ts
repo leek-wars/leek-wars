@@ -9,8 +9,8 @@ import { Notification } from '@/model/notification'
 import { Team } from '@/model/team'
 import Vue from 'vue'
 import Vuex, { Store } from 'vuex'
-import { vueMain } from './vue'
 import { AI } from './ai'
+import { vueMain } from './vue'
 
 class LeekWarsState {
 	public token: string | null = null
