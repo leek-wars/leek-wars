@@ -152,7 +152,7 @@
 			</div>
 		</popup>
 
-		<editor-test v-model="testDialog" :ais="ais" :leek-ais="leekAIs" />
+		<editor-test ref="editorTest" v-model="testDialog" :ais="ais" :leek-ais="leekAIs" />
 
 		<popup v-model="newAIDialog" :width="500">
 			<span slot="title">{{ $t('editor.new_desc') }}</span>
@@ -588,6 +588,7 @@
 					if (this.$refs.tabs) {
 						(this.$refs.tabs as EditorTabs).closeById(this.currentID)
 					}
+					(this.$refs.editorTest as EditorTest).onAIDeleted(this.currentID)
 					ai_deleted = true
 				} else if (this.currentFolder) {
 					const folder = this.currentFolder.parent
