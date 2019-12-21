@@ -63,6 +63,7 @@
 	"max_level": "Maximum level",
 	"member": "Member",
 	"name_already_exists": "This team name already exists",
+	"no_ai": "Click to set AI",
 	"no_compositions": "No compositions",
 	"no_description": "no description",
 	"not_found_id": "Team of ID <b>{0}</b> can not be found :(",

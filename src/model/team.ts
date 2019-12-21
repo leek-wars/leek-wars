@@ -19,6 +19,7 @@ class Team {
 	public description!: string
 	public candidacy!: boolean
 	public talent!: number
+	public turret_ai!: any
 }
 
 class TeamMember extends Farmer {
