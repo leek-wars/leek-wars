@@ -522,12 +522,12 @@
 			if (v2) {
 				this.newAIv2Dialog = true
 				Vue.nextTick(() => {
-					this.$refs.newAIInputv2.focus()
+					(this.$refs.newAIInputv2 as HTMLElement).focus()
 				})
 			} else {
 				this.newAIDialog = true
 				Vue.nextTick(() => {
-					this.$refs.newAIInput.focus()
+					(this.$refs.newAIInput as HTMLElement).focus()
 				})
 			}
 		}
