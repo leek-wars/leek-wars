@@ -34,6 +34,7 @@ for (const value of values) {
 }
 Promise.all(promises).then((result) => {
 	let data = `/** This file is auto-generated from script/generate_data.js **/
+/* tslint:disable */
 import { ChipTemplate } from '@/model/chip'
 import { Constant } from '@/model/constant'
 import { Function } from '@/model/function'
