@@ -28,7 +28,7 @@
 								</v-list-tile-title>
 							</v-list-tile-content>
 						</v-list-tile>
-						<v-list-tile v-ripple @click="newFolder">
+						<v-list-tile v-ripple @click="openNewFolder()">
 							<i class="material-icons">folder_open</i>
 							<v-list-tile-content class="language">
 								<v-list-tile-title>{{ $t('new_folder') }}</v-list-tile-title>
@@ -175,6 +175,17 @@
 				<div class="green" @click="newAI(true, newAIName)">{{ $t('main.create') }}</div>
 			</div>
 		</popup>
+
+		<popup v-model="newFolderDialog" :width="500">
+			<span slot="title">{{ $t('editor.new_folder') }}</span>
+			<div class="padding">
+				<input ref="newFolderInput" v-model="newFolderName" :placeholder="$t('editor.folder_name')" type="text" class="input dialog-input" @keyup.enter="newFolder(newFolderName)">
+			</div>
+			<div slot="actions">
+				<div @click="newFolderDialog = false">{{ $t('editor.cancel') }}</div>
+				<div class="green" @click="newFolder(newFolderName)">{{ $t('main.create') }}</div>
+			</div>
+		</popup>
 	</div>
 </template>
 
@@ -233,6 +244,8 @@
 		newAIDialog: boolean = false
 		newAIv2Dialog: boolean = false
 		newAIName: string = ''
+		newFolderDialog: boolean = false
+		newFolderName: string = ''
 		actions_list = [
 			{icon: 'add', click: (e: any) => this.add(e)},
 			{icon: 'settings', click: () => this.settings() }
@@ -518,6 +531,13 @@
 				})
 			}
 		}
+		openNewFolder() {
+			this.newFolderName = ''
+			this.newFolderDialog = true
+			Vue.nextTick(() => {
+				(this.$refs.newFolderInput as HTMLElement).focus()
+			})
+		}
 		newAI(v2: boolean, name: string) {
 			if (!this.currentFolder) { return }
 			LeekWars.post('ai/new-name', {folder_id: this.currentFolder.id, v2, name}).then(data => {
@@ -538,14 +558,16 @@
 				}
 			})
 		}
-		newFolder() {
+		newFolder(name: string) {
 			if (!this.currentFolder) { return }
-			LeekWars.post('ai-folder/new', {folder_id: this.currentFolder.id}).then(data => {
+			LeekWars.post('ai-folder/new-name', {folder_id: this.currentFolder.id, name}).then(data => {
 				if (this.currentFolder) {
-					const folder = new Folder(data.id, this.$t('editor.new_folder') as string, this.currentFolder)
+					const folder = new Folder(data.id, name, this.currentFolder)
 					folder.items = []
 					this.folderById[folder.id] = folder
 					this.currentFolder.items.push(folder)
+					this.newFolderDialog = false
+					this.newFolderName = ''
 				}
 			})
 		}
