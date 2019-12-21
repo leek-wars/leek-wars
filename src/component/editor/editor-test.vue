@@ -3,14 +3,14 @@
 		<span slot="title">{{ $t('editor.run_test') }}</span>
 		<v-tabs :key="value" class="tabs" grow>
 			<v-tabs-slider class="indicator" />
-			<v-tab class="tab">{{ $t('editor.scenarios') }} ({{ LeekWars.objectSize(allScenarios) }})</v-tab>
+			<v-tab class="tab">{{ $t('editor.scenarios') }} ({{ LeekWars.objectSize(scenarios) }})</v-tab>
 			<v-tab class="tab">{{ $t('editor.test_leeks') }} ({{ LeekWars.objectSize(leeks) }})</v-tab>
 			<v-tab class="tab">{{ $t('editor.test_maps') }} ({{ LeekWars.objectSize(maps) }})</v-tab>
 			<v-tab-item class="tab-content">
 				<div class="column lateral-column">
 					<h4>{{ $t('editor.test_scenario') }}</h4>
 					<div class="items scenarios">
-						<div v-for="scenario of allScenarios" :key="scenario.id" :class="{selected: scenario === currentScenario}" class="item scenario" @click="selectScenario(scenario)">
+						<div v-for="scenario of scenarios" :key="scenario.id" :class="{selected: scenario === currentScenario}" class="item scenario" @click="selectScenario(scenario)">
 							{{ scenario.name }}
 							<span v-if="scenario.base" class="base">{{ $t('editor.base') }}</span>
 							<div v-else class="delete" @click.stop="deleteScenario(scenario)"></div>
@@ -19,40 +19,51 @@
 					<div v-ripple class="item add" @click="newScenarioDialog = true">✚ {{ $t('main.add') }}</div>
 				</div>
 				<div v-if="currentScenario" class="column column-scenario">
-					<div class="title">{{ $t('editor.test_leeks') }}</div>
+					<div class="title flex-title">
+						{{ $t('editor.test_leeks') }}
+						<div class="spacer"></div>
+						<select v-model="currentScenario.type" class="type-select" @change="changeType">
+							<option :value="-1">{{ $t('editor.type_free') }}</option>
+							<option :value="0">{{ $t('editor.type_solo') }} - {{ $t('editor.limit', [1]) }}</option>
+							<option :value="1">{{ $t('editor.type_farmer') }} - {{ $t('editor.limit', [4]) }}</option>
+							<option :value="2">{{ $t('editor.type_team') }} - {{ $t('editor.limit', [6]) }}</option>
+							<option :value="3">{{ $t('fight.battle_royale') }} - {{ $t('editor.limit', [10]) }}</option>
+						</select>
+					</div>
+					<br>
 					<div class="team team1">
 						<div class="leeks">
-							<div v-for="leek of currentScenario.data.team1" :key="leek.id" class="leek">
-								<div v-ripple v-if="!currentScenario.base" class="delete" @click="deleteLeek(leek, 1)">×</div>
-								<div class="card">
-									<leek-image :leek="leek" :scale="0.4" />
-									<div>{{ leek.name }}</div>
+							<div v-for="leek of currentScenario.team1" :key="leek.id" class="leek">
+								<div v-ripple v-if="!currentScenario.base" class="delete" @click="deleteLeek(leek, 0)">×</div>
+								<div v-if="leek.id in allLeeks" class="card">
+									<leek-image :leek="allLeeks[leek.id]" :scale="0.4" />
+									<div>{{ allLeeks[leek.id].name }}</div>
 								</div>
-								<div v-ripple class="ai" @click="clickLeekAI(leek)">{{ currentScenario.data.ais[leek.id] ? currentScenario.data.ais[leek.id].name : '?' }}</div>
+								<div v-ripple class="ai" @click="clickLeekAI(leek)">{{ leek.ai && leek.ai in allAis ? allAis[leek.ai].path : '?' }}</div>
 							</div>
+							<div v-if="!currentScenario.base && LeekWars.objectSize(currentScenario.team1) < getLimit(currentScenario.type)" class="add" @click="addLeekTeam = currentScenario.team1; leekDialog = true">+</div>
 						</div>
-						<div v-if="!currentScenario.base && LeekWars.objectSize(currentScenario.data.team1) < 6" class="add" @click="addLeekTeam = currentScenario.data.team1; leekDialog = true">+</div>
 					</div>
-					<div class="vs">VS</div>
-					<div class="team team2">
+					<div v-if="currentScenario.type !== FightType.BATTLE_ROYALE" class="vs">VS</div>
+					<div v-if="currentScenario.type !== FightType.BATTLE_ROYALE" class="team team2">
 						<div class="leeks">
-							<div v-for="leek of currentScenario.data.team2" :key="leek.id" class="leek">
-								<div v-ripple v-if="!currentScenario.base" class="delete" @click="deleteLeek(leek, 2)">×</div>
-								<div class="card">
-									<leek-image :leek="leek" :scale="0.4" />
-									<div>{{ leek.name }}</div>
+							<div v-for="leek of currentScenario.team2" :key="leek.id" class="leek">
+								<div v-ripple v-if="!currentScenario.base" class="delete" @click="deleteLeek(leek, 1)">×</div>
+								<div v-if="leek.id in allLeeks" class="card">
+									<leek-image :leek="allLeeks[leek.id]" :scale="0.4" />
+									<div>{{ allLeeks[leek.id].name }}</div>
 								</div>
-								<div v-ripple class="ai" @click="clickLeekAI(leek)">{{ currentScenario.data.ais[leek.id] ? currentScenario.data.ais[leek.id].name : '?' }}</div>
+								<div v-ripple class="ai" @click="clickLeekAI(leek)">{{ leek.ai && leek.ai in allAis ? allAis[leek.ai].path : '?' }}</div>
 							</div>
+							<div v-if="!currentScenario.base && LeekWars.objectSize(currentScenario.team2) < getLimit(currentScenario.type)" class="add" @click="addLeekTeam = currentScenario.team2; leekDialog = true">+</div>
 						</div>
-						<div v-if="!currentScenario.base && LeekWars.objectSize(currentScenario.data.team2) < 6" class="add" @click="addLeekTeam = currentScenario.data.team2; leekDialog = true">+</div>
 					</div>
 					<br>
 					<div class="title">{{ $t('editor.test_map') }}</div>
 					<div class="map-container">
-						<div v-ripple v-if="(currentScenario.data.map && currentScenario.data.map !== -1)" class="map card" @click="mapDialog = true">
+						<div v-ripple v-if="(currentScenario.map && currentScenario.map !== -1)" class="map card" @click="mapDialog = true">
 							<img src="/image/map_icon.png">
-							<div class="name">{{ currentScenario.data.map.name }}</div>
+							<div v-if="currentScenario.map in maps" class="name">{{ maps[currentScenario.map].name }}</div>
 						</div>
 						<div v-ripple v-else class="map card" @click="mapDialog = true">
 							<img src="/image/map_icon_random.png">
@@ -68,7 +79,7 @@
 						<div v-for="leek of leeks" :key="leek.id" :class="{selected: leek === currentLeek}" class="item leek" @click="selectLeek(leek)">
 							{{ leek.name }}
 							<span v-if="leek.bot" class="bot">bot</span>
-							<div v-else class="delete"></div>
+							<div v-else class="delete" @click.stop="deleteTestLeek(leek)"></div>
 						</div>
 					</div>
 					<div v-ripple class="item add" @click="newLeekDialog = true">✚ {{ $t('main.add') }}</div>
@@ -125,7 +136,7 @@
 					<div class="items maps">
 						<div v-for="map of maps" :key="map.id" :class="{selected: currentMap === map}" class="item map" @click="selectMap(map)">
 							{{ map.name }}
-							<div class="delete" @click="deleteMap(map)"></div>
+							<div class="delete" @click.stop="deleteMap(map)"></div>
 						</div>
 					</div>
 					<div v-ripple class="item add" @click="newMapDialog = true">✚ {{ $t('main.add') }}</div>
@@ -161,10 +172,33 @@
 			</div>
 		</div>
 
-		<popup v-model="newScenarioDialog" :width="500">
+		<popup v-model="newScenarioDialog" :width="800">
 			<span slot="title">{{ $t('editor.create_new_scenario') }}</span>
 			<div class="padding">
 				<input v-model="newScenarioName" :placeholder="$t('editor.scenario_name')" type="text" class="input" @keyup.enter="createScenario">
+				<br><br>
+				<div class="title">Modèles</div>
+				<div class="templates">
+					<div v-ripple v-for="(template, t) of templates" :key="t" :class="{selected: selectedTemplate === t}" class="template card" @click="selectedTemplate = t; newScenarioName = template.name">
+						<div v-if="template.category == 'free'">
+							<i class="material-icons">build</i>
+						</div>
+						<div v-else-if="template.category == 'solo'">
+							<leek-image :leek="allLeeks[template.team1[0].id]" :scale="0.27" />
+						</div>
+						<div v-else-if="template.category == 'farmer'">
+							<leek-image v-for="leek of template.team1" :key="leek.id" :leek="allLeeks[leek.id]" :scale="0.23" />
+						</div>
+						<div v-else-if="template.category == 'team'">
+							<leek-image v-for="leek of template.team1" :key="leek.id" :leek="leek" :scale="0.18" />
+						</div>
+						<div v-else-if="template.category == 'br'">
+							<img src="/image/footer_leek.png">
+							<span class="count">10</span>
+						</div>
+						<div class="name">{{ template.name }}</div>
+					</div>
+				</div>
 			</div>
 			<div slot="actions">
 				<div @click="newScenarioDialog = false">{{ $t('editor.cancel') }}</div>
@@ -259,18 +293,23 @@
 </template>
 
 <script lang="ts">
+	import CharacteristicTooltip from '@/component/leek/characteristic-tooltip.vue'
 	import { AI } from '@/model/ai'
+	import { FightType } from '@/model/fight'
 	import { Leek } from '@/model/leek'
 	import { LeekWars } from '@/model/leekwars'
+	import { store } from '@/model/store'
 	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
-	import CharacteristicTooltip from '../leek/characteristic-tooltip.vue'
 
 	class TestScenario {
 		id!: any
-		data!: any
+		team1!: any[]
+		team2!: any[]
+		map!: number | null
 		base!: boolean
 		name!: string
-		type!: string
+		type!: number
+		br!: boolean
 	}
 	class TestMap {
 		id!: number
@@ -285,10 +324,11 @@
 		@Prop() value!: boolean
 		@Prop() ais!: {[key: number]: AI}
 		@Prop() leekAis!: {[key: number]: number}
+		FightType = FightType
 		initialized: boolean = false
 		scenarios: {[key: string]: TestScenario} = {}
-		leeks: {[key: string]: Leek} = {}
-		maps: {[key: string]: TestMap} = {}
+		leeks: {[key: number]: Leek} = {}
+		maps: {[key: number]: TestMap} = {}
 		currentScenario: TestScenario | null = null
 		currentLeek: Leek | null = null
 		currentMap: TestMap | null = null
@@ -328,56 +368,88 @@
 			tp: {min: 0, max: 100},
 			mp: {min: 0, max: 50}
 		}
-		get allScenarios() {
-			const all: {[key: string]: TestScenario} = {...this.scenarios}
-			if (!this.$store.state.farmer) { return all }
+		selectedTemplate: number = 0
+		compositionTemplates: any[] = []
+		allies: {[key: number]: Leek} = {}
+		alliesAIs: {[key: number]: AI} = {}
+		get templates() {
+			const templates = [
+				{name: "Libre", category: "free", team1: [], team2: [], map: null, type: -1}
+			] as any[]
+			if (!store.state.farmer) { return templates }
+
+			// Scénarios solo
 			for (const l in this.$store.state.farmer.leeks) {
 				const leek = this.$store.state.farmer.leeks[l] as Leek
-				Vue.set(this.$store.state.farmer.leeks[l], 'real', true)
 				if (!(leek.id in this.leekAis)) { continue }
-				const ai = this.ais[this.leekAis[leek.id]]
+				const ai = this.leekAis[leek.id]
 				if (!ai) { continue }
-				all["solo" + l] = {
-					id: "solo" + l,	name: "Solo " + leek.name, base: true, type: 'solo',
-					data: {
-						map: -1, ais: {[l]: ai}, team1: {[l]: leek}, team2: {"-1": this.domingo}
-					}
-				}
+				templates.push({
+					name: "Solo " + leek.name, category: "solo", map: null, type: 0,
+					team1: [{id: leek.id, ai}], team2: [{id: -1, ai: null}]
+				})
 			}
-			const team2 = {} as any
+			const generate_bots = (count: number) => {
+				const result = []
+				for (let i = 0; i < count; ++i) {
+					result.push({id: -i - 1, ai: null})
+				}
+				return result
+			}
 			const leek_count = LeekWars.objectSize(this.$store.state.farmer.leeks)
-			for (let i = 0; i < leek_count; ++i) {
-				team2[this.bots[i].id] = this.bots[i]
+			const team2 = generate_bots(leek_count)
+			const team1 = []
+			for (const leek in store.state.farmer.leeks) {
+				team1.push({id: leek, ai: store.state.farmer.leeks[leek].ai})
 			}
-			const ais = {} as any
-			for (const l in this.$store.state.farmer.leeks) {
-				const leek = this.$store.state.farmer.leeks[l]
-				if (!(leek.id in this.leekAis)) { continue }
-				const ai = this.ais[this.leekAis[leek.id]]
-				if (!ai) { continue }
-				ais[l] = {id: ai.id, name: ai.name}
+			if (LeekWars.objectSize(store.state.farmer.leeks) > 1) {
+				templates.push({
+					name: "Éleveur", category: "farmer", map: null, team1, team2, type: 1
+				})
 			}
-			all.farmer = {
-				name: "Éleveur", id: "farmer", base: true, type: 'farmer',
-				data: {
-					map: -1, team2, ais,
-					team1: LeekWars.clone(this.$store.state.farmer.leeks)
+			templates.push({
+				name: "Battle Royale", category: "br", map: null, team1, team2: [], type: 3
+			})
+			for (const c in this.compositionTemplates) {
+				const compo = this.compositionTemplates[c]
+				templates.push({
+					name: compo.name, category: "team", map: null, team1: compo.leeks, team2: generate_bots(compo.leeks.length), type: 2
+				})
+			}
+			return templates
+		}
+		get allLeeks() {
+			const leeks: {[key: number]: Leek} = {}
+			for (const l in this.leeks) {
+				leeks[l] = this.leeks[l]
+			}
+			if (store.state.farmer) {
+				for (const l in store.state.farmer.leeks) {
+					leeks[l] = store.state.farmer.leeks[l]
 				}
 			}
-			return all
+			for (const l in this.allies) {
+				leeks[l] = this.allies[l]
+			}
+			return leeks
 		}
-
+		get allAis() {
+			const ais = {...this.ais}
+			for (const ai in this.alliesAIs) {
+				ais[ai] = this.alliesAIs[ai]
+			}
+			return ais
+		}
 		created() {
 			if (this.initialized) { return }
 			LeekWars.get('test-scenario/get-all').then(data => {
 				this.initialized = true
 				this.scenarios = data.scenarios
-				this.initScenarios()
 				const startScenarioID = localStorage.getItem('editor/scenario')
 				if (startScenarioID && startScenarioID in this.scenarios) {
 					this.selectScenario(this.scenarios[startScenarioID])
-				} else if (LeekWars.objectSize(this.allScenarios)) {
-					this.selectScenario(LeekWars.first(this.allScenarios)!)
+				} else if (LeekWars.objectSize(this.scenarios)) {
+					this.selectScenario(LeekWars.first(this.scenarios)!)
 				}
 			}).error(error => {
 				LeekWars.toast(error)
@@ -390,7 +462,7 @@
 					if (!leek.chips) { leek.chips = [] }
 					if (!leek.weapons) { leek.weapons = [] }
 				}
-				const startLeekID = localStorage.getItem('editor/leek')
+				const startLeekID = parseInt(localStorage.getItem('editor/leek') || '', 10)
 				if (startLeekID && startLeekID in this.leeks) {
 					this.selectLeek(this.leeks[startLeekID])
 				} else if (LeekWars.objectSize(this.leeks)) {
@@ -408,30 +480,12 @@
 				LeekWars.toast(error)
 			})
 		}
-		initScenarios() {
-			// Add 'real' attribute on farmer's leeks
-			for (const s in this.scenarios) {
-				const scenario = this.scenarios[s]
-				for (const l in scenario.data.team1) {
-					if (scenario.data.team1[l].id in this.$store.state.farmer.leeks) {
-						Vue.set(scenario.data.team1[l], 'real', true)
-					}
-					if (scenario.data.team1[l].id < 0) {
-						Vue.set(scenario.data.team1[l], 'bot', true)
-					}
-				}
-				for (const l in scenario.data.team2) {
-					if (scenario.data.team2[l].id in this.$store.state.farmer.leeks) {
-						Vue.set(scenario.data.team2[l], 'real', true)
-					}
-					if (scenario.data.team2[l].id < 0) {
-						Vue.set(scenario.data.team2[l], 'bot', true)
-					}
-				}
-			}
-		}
 		mounted() {
 			this.initMap()
+		}
+		@Watch('value')
+		update() {
+			this.loadCompositions()
 		}
 		generateBots() {
 			for (const bot of this.bots) {
@@ -448,14 +502,9 @@
 		}
 		deleteLeek(leek: Leek, teamID: number) {
 			if (!this.currentScenario) { return }
-			const team = teamID === 1 ? this.currentScenario.data.team1 : this.currentScenario.data.team2
-			Vue.delete(team, leek.id)
-			this.saveScenario()
-		}
-		saveScenario() {
-			if (!this.currentScenario || this.currentScenario.base) { return }
-			LeekWars.post('test-scenario/update', {id: this.currentScenario.id, data: JSON.stringify(this.currentScenario.data)})
-				.error(error => LeekWars.toast(error))
+			const team = teamID === 0 ? this.currentScenario.team1 : this.currentScenario.team2
+			team.splice(team.findIndex(l => l.id === leek.id), 1)
+			LeekWars.post('test-scenario/delete-leek', {scenario: this.currentScenario.id, leek: leek.id})
 		}
 		saveLeek() {
 			if (!this.currentLeek) { return }
@@ -551,6 +600,10 @@
 		deleteMap(map: TestMap) {
 			LeekWars.delete('test-map/delete', {id: map.id}).error(error => LeekWars.toast(error))
 			Vue.delete(this.$data.maps, map.id)
+			// Delete from scenarios
+			for (const s in this.scenarios) {
+				if (this.scenarios[s].map === map.id) { this.scenarios[s].map = null }
+			}
 			if (!LeekWars.isEmptyObj(this.maps)) {
 				this.selectMap(LeekWars.first(this.maps)!)
 			}
@@ -579,22 +632,36 @@
 		}
 		clickDialogAI(ai: AI) {
 			if (!this.currentScenario || !this.aiLeek) { return }
-			if (!this.currentScenario.data.ais) {
-				this.currentScenario.data.ais = {}
-			}
-			this.currentScenario.data.ais[this.aiLeek.id] = {id: ai.id, name: ai.path}
-			this.saveScenario()
+			this.aiLeek.ai = ai.id as any
+			LeekWars.post('test-scenario/add-leek', {scenario: this.currentScenario.id, leek: this.aiLeek.id, team: -1, ai: ai.id})
 			this.aiDialog = false
 		}
 		deleteScenario(scenario: TestScenario) {
 			if (scenario.base) { return }
 			LeekWars.delete('test-scenario/delete', {id: scenario.id}).error(error => LeekWars.toast(error))
 			Vue.delete(this.scenarios, scenario.id)
-			this.selectScenario(LeekWars.first(this.allScenarios)!)
+			this.selectScenario(LeekWars.first(this.scenarios)!)
 		}
 		createScenario() {
 			LeekWars.post('test-scenario/new', {name: this.newScenarioName}).then(data => {
-				Vue.set(this.scenarios, data.id, {name: this.newScenarioName, id: data.id, data: data.data})
+				const template = this.templates[this.selectedTemplate]
+				const team1 = template.team1
+				const team2 = template.team2
+				Vue.set(this.scenarios, data.id, {
+					name: this.newScenarioName, 
+					id: data.id, 
+					team1,
+					team2,
+					map: null,
+					type: template.type
+				})
+				LeekWars.post('test-scenario/update', {id: data.id, data: JSON.stringify({type: template.type})})
+				for (const leek of team1) {
+					LeekWars.post('test-scenario/add-leek', {scenario: data.id, leek: leek.id, team: 0, ai: leek.ai ? leek.ai : null})
+				}
+				for (const leek of team2) {
+					LeekWars.post('test-scenario/add-leek', {scenario: data.id, leek: leek.id, team: 1, ai: leek.ai ? leek.ai : null})
+				}
 				this.newScenarioName = ''
 				this.newScenarioDialog = false
 				this.selectScenario(this.scenarios[data.id])
@@ -603,35 +670,24 @@
 		}
 		addScenarioLeek(leek: Leek) {
 			if (!this.currentScenario || !this.addLeekTeam) { return }
-			Vue.set(this.addLeekTeam, leek.id, leek)
-			let ai = null
-			if (leek.real) {
-				const real_ai = this.ais[this.leekAis[leek.id]]
-				ai = {id: real_ai.id, name: real_ai.path}
-			}
-			this.currentScenario.data.ais[leek.id] = ai
-			this.saveScenario()
+			this.addLeekTeam.push({id: leek.id, ai: leek.ai})
+			const teamID = this.addLeekTeam === this.currentScenario.team1 ? 0 : 1
+			LeekWars.post('test-scenario/add-leek', {scenario: this.currentScenario.id, leek: leek.id, team: teamID, ai: leek.ai ? leek.ai : null})
 			this.leekDialog = false
 		}
 		get availableLeeks() {
 			if (!this.currentScenario) { return {} }
 			const available_leeks: {[key: string]: Leek} = {}
-			for (const l in this.leeks) {
-				if (l in this.currentScenario.data.team1 || l in this.currentScenario.data.team2) { continue }
-				available_leeks[l] = this.leeks[l]
-			}
-			if (this.$store.state.farmer) {
-				for (const l in this.$store.state.farmer.leeks) {
-					if (l in this.currentScenario.data.team1 || l in this.currentScenario.data.team2) { continue }
-					available_leeks[l] = this.$store.state.farmer.leeks[l]
-				}
+			for (const l in this.allLeeks) {
+				if (this.currentScenario.team1.find(le => le.id === l) || this.currentScenario.team2.find(le => le.id === l)) { continue }
+				available_leeks[l] = this.allLeeks[l]
 			}
 			return available_leeks
 		}
 		selectScenarioMap(map: TestMap) {
 			if (!this.currentScenario) { return }
-			this.currentScenario.data.map = map
-			this.saveScenario()
+			this.currentScenario.map = map ? map.id : null
+			LeekWars.post('test-scenario/update', {id: this.currentScenario.id, data: JSON.stringify({map: this.currentScenario.map})})
 			this.mapDialog = false
 		}
 		updateLeekLevel(leek: any) {
@@ -700,28 +756,89 @@
 			Vue.set(this.currentLeek, characteristic, value)
 			this.saveLeek()
 		}
+		deleteTestLeek(leek: Leek) {
+			LeekWars.post('test-leek/delete', {id: leek.id})
+			Vue.delete(this.$data.leeks, leek.id)
+			// Delete in scenarios
+			for (const s in this.scenarios) {
+				this.scenarios[s].team1 = this.scenarios[s].team1.filter(l => l.id !== leek.id)
+				this.scenarios[s].team2 = this.scenarios[s].team2.filter(l => l.id !== leek.id)
+			}
+			if (!LeekWars.isEmptyObj(this.leeks)) {
+				this.selectLeek(LeekWars.first(this.leeks)!)
+			}
+		}
 		launchTest() {
 			if (!this.currentScenario) { return }
-			const scenario = Object.assign({}, this.currentScenario.data)
-			for (const i in scenario.ais) {
-				scenario.ais[i] = Object.assign({}, scenario.ais[i])
-				scenario.ais[i].includes = null
-				scenario.ais[i].functions = null
-			}
-			const scenario_data = JSON.stringify(scenario)
-			let v2 = false
-			for (const i in this.currentScenario.data.ais) {
-				if (i !== '-1' && this.currentScenario.data.ais[i] && this.currentScenario.data.ais[i].id in this.ais && this.ais[this.currentScenario.data.ais[i].id].v2) {
-					v2 = true
-					break
-				}
-			}
-			const service = v2 ? 'ai/test-v2' : 'ai/test-new'
-			LeekWars.post(service, {data: scenario_data}).then(data => {
-				localStorage.setItem('editor/last-scenario-data', scenario_data)
+			LeekWars.post('ai/test-scenario', {scenario_id: this.currentScenario.id}).then(data => {
+				localStorage.setItem('editor/last-scenario', this.currentScenario!.id)
 				this.$router.push('/fight/' + data.fight)
 			})
 			.error(error => LeekWars.toast(error))
+		}
+		onAIDeleted(id: number) {
+			for (const s in this.scenarios) {
+				for (const leek of this.scenarios[s].team1) {
+					if (leek.ai === id) { leek.ai = null }
+				}
+				for (const leek of this.scenarios[s].team2) {
+					if (leek.ai === id) { leek.ai = null }
+				}
+			}
+		}
+		changeType() {
+			if (!this.currentScenario) { return }
+			if (this.currentScenario.type === FightType.FREE || this.currentScenario.type === FightType.SOLO || this.currentScenario.type === FightType.FARMER || this.currentScenario.type === FightType.TEAM) {
+				const limit = this.getLimit(this.currentScenario.type)
+				if (this.currentScenario.team1.length > limit) {
+					for (let i = limit; i < this.currentScenario.team1.length; ++i) {
+						LeekWars.post('test-scenario/delete-leek', {scenario: this.currentScenario.id, leek: this.currentScenario.team1[i].id})
+					}
+					this.currentScenario.team1.length = limit
+				}
+				if (this.currentScenario.team2.length > limit) {
+					for (let i = limit; i < this.currentScenario.team2.length; ++i) {
+						LeekWars.post('test-scenario/delete-leek', {scenario: this.currentScenario.id, leek: this.currentScenario.team2[i].id})
+					}
+					this.currentScenario.team2.length = limit
+				}
+			} else {
+				// BR, clear team2
+				for (const leek of this.currentScenario.team2) {
+					LeekWars.post('test-scenario/delete-leek', {scenario: this.currentScenario.id, leek: leek.id})
+				}
+				this.currentScenario.team2.length = 0
+			}
+			LeekWars.post('test-scenario/update', {id: this.currentScenario.id, data: JSON.stringify({type: this.currentScenario.type})})
+		}
+		getLimit(type: FightType) {
+			if (type === FightType.FREE) { return 6 }
+			else if (type === FightType.SOLO) { return 1 }
+			else if (type === FightType.FARMER) { return 4 }
+			else if (type === FightType.TEAM) { return 6 }
+			else if (type === FightType.BATTLE_ROYALE) { return 10 }
+			return 6
+		}
+		loadCompositions() {
+			if (this.compositionTemplates.length) { return }
+			LeekWars.get('team-composition/get-farmer-compositions').then(compositions => {
+				this.compositionTemplates = compositions
+				for (const c in compositions) {
+					const compo = compositions[c]
+					for (const leek of compo.leeks) {
+						if (!(leek.id in store.state.farmer!.leeks)) {
+							Vue.set(this.allies, leek.id, leek)
+						}
+						if (!(leek.ai in this.ais)) {
+							Vue.set(this.alliesAIs, leek.ai, {
+								id: leek.ai,
+								name: leek.ai_name,
+								path: leek.ai_name	
+							})
+						}
+					}
+				}
+			}).error(error => LeekWars.toast(error))
 		}
 	}
 </script>
@@ -815,7 +932,7 @@
 	.lateral-column .item .delete:hover {
 		opacity: 1.0;
 	}
-	.column .title {
+	.title {
 		font-size: 16px;
 		font-weight: bold;
 		text-transform: uppercase;
@@ -829,6 +946,7 @@
 	.column-scenario .leeks {
 		text-align: center;
 		display: inline-block;
+		margin-top: -15px;
 	}
 	.column-scenario .add, .leek-column .add {
 		background: white;
@@ -846,7 +964,6 @@
 	}
 	.column-scenario .add {
 		margin-top: 46px;
-		margin-bottom: 46px;
 		margin-left: 20px;
 		margin-right: 20px;
 	}
@@ -857,7 +974,7 @@
 	.column-scenario .vs {
 		font-size: 22px;
 		font-weight: 300;
-		padding: 5px 30px;
+		padding: 10px 30px;
 		text-align: center;
 	}
 	.column-scenario .leek {
@@ -865,6 +982,7 @@
 		margin: 0 3px;
 		font-size: 16px;
 		position: relative;
+		margin-top: 15px;
 	}
 	.column-scenario .leek .card {
 		display: inline-block;
@@ -1084,5 +1202,56 @@
 		width: calc(100% - 8px);
 		padding-top: 3px;
 		padding-bottom: 3px;
+	}
+	.templates {
+		display: grid;
+		grid-gap: 10px;
+		grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+		.template {
+			padding: 10px 4px;
+			cursor: pointer;
+			text-align: center;
+			border: 3px solid transparent;
+			background: #f7f7f7;
+			font-size: 17px;
+			display: flex;
+			flex-direction: column;
+			justify-content: flex-end;
+			min-height: 80px;
+			.name {
+				padding-top: 3px;
+			}
+			img {
+				width: 30px;
+				padding: 3px;
+			}
+			.count {
+				font-size: 20px;
+				color: #555;
+				vertical-align: top;
+				padding-top: 10px;
+				display: inline-block;
+				font-weight: bold;
+			}
+			i {
+				color: #555;
+				font-size: 42px;
+			}
+			&.selected {
+				border: 3px solid #5fad1b;
+				background: white;
+			}
+		}
+	}
+	.flex-title {
+		display: flex;
+		align-items: center;
+		.spacer {
+			flex: 1;
+		}
+		.type-select {
+			flex: 0 0 170px;
+			height: 30px;
+		}
 	}
 </style>
