@@ -305,8 +305,8 @@
 
 		refight() {
 			if (this.fight && this.fight.context === FightContext.TEST) {
-				const last = localStorage.getItem('editor/last-scenario-data')
-				LeekWars.post('ai/test-new', {data: last}).then(data => {
+				const last = localStorage.getItem('editor/last-scenario')
+				LeekWars.post('ai/test-scenario', {scenario_id: last}).then(data => {
 					this.$router.push('/fight/' + data.fight)
 				}).error(error => {
 					LeekWars.toast("Erreur : " + error)
