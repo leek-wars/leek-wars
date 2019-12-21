@@ -35,26 +35,13 @@
 							</tooltip>
 						</template>
 						<emblem v-else :team="team" />
-					</div>
-				</panel>
-			</div>
-			
-			<div class="column4">
-				<panel class="description">
-					<div v-if="team" slot="content" class="content">
-						<div>
+						<div class="description">
 							<span class="guillemet">«</span>
 							<span v-if="owner" ref="descriptionElement" :class="{empty: !team.description && !editingDescription}" class="team-status text" contenteditable @click="startEditingDescription" @blur="saveDescription" @keydown.enter.prevent="saveDescription">{{ team.description }}</span>
 							<span v-else class="text team-status">{{ team.description }}</span>
 							<span class="guillemet">»</span>
 							<span class="edit-pen"></span>
 						</div>
-						<center v-if="$store.state.farmer && !member && $store.state.farmer.team == null">
-							<br>
-							<v-btn v-if="team.candidacy" @click="cancelCandidacy">{{ $t('cancel_candidacy') }}</v-btn>
-							<v-btn v-if="team.opened && !team.candidacy" @click="sendCandidacy">{{ $t('join_team') }}</v-btn>
-							<i v-else-if="!team.opened">{{ $t('closed_team') }}</i>
-						</center>
 					</div>
 				</panel>
 			</div>
@@ -102,6 +89,31 @@
 						</table>
 						{{ $t('ratio', [team.ratio]) }}
 					</tooltip>
+
+					<center v-if="$store.state.farmer && !member && $store.state.farmer.team == null">
+						<br>
+						<v-btn v-if="team.candidacy" @click="cancelCandidacy">{{ $t('cancel_candidacy') }}</v-btn>
+						<v-btn v-if="team.opened && !team.candidacy" @click="sendCandidacy">{{ $t('join_team') }}</v-btn>
+						<i v-else-if="!team.opened">{{ $t('closed_team') }}</i>
+					</center>
+				</panel>
+			</div>
+				
+			<div class="column4">
+				<panel class="description">
+					<div v-if="team" slot="content" class="turret-wrapper">
+						<div class="turret">
+							<turret-image :level="team.level" :skin="1" :scale="0.32" @click.native="turretDialog = true" />
+
+							<div class="infos">
+								<h4>{{ $t('fight.turret') }}</h4>
+								<div class="level">{{ $t('level_n', [team.level]) }}</div>
+
+								<ai v-if="team.turret_ai" :ai="team.turret_ai" :class="{active: member}" @click.native="turretAiDialog = true" />
+								<div v-else-if="member" class="no-ai" @click="turretAiDialog = true">{{ $t('no_ai') }}</div>
+							</div>
+						</div>
+					</div>
 				</panel>
 			</div>
 		</div>
@@ -369,10 +381,53 @@
 				<div class="green" @click="changeOwner">{{ $t('change_owner_change') }}</div>
 			</div>
 		</popup>
+
+		<popup v-if="team" v-model="turretDialog" :width="600">
+			<span slot="title">{{ $t('fight.turret') }} [{{ $t('level_n', [team.level]) }}]</span>
+			<div class="turret-dialog">
+				<turret-image :level="team.level" :skin="1" :scale="0.32" />
+				<div class="infos">
+					<h4>{{ $t('leek.characteristics') }}</h4>
+					<div class="card characteristics">
+						<div v-for="c in ['life', 'science', 'strength', 'magic', 'wisdom', 'frequency', 'agility', 'mp', 'resistance', 'tp']" :key="c" class="characteristic">
+							<characteristic-tooltip :characteristic="c" :value="turret[c]" :leek="turret" :test="true">
+								<img :src="'/image/charac/' + c + '.png'">
+								<span :class="'color-' + c">{{ turret[c] }}</span>
+							</characteristic-tooltip>
+						</div>
+					</div>
+					<br>
+
+					<h4>{{ $t('leek.chips') }}</h4>
+					<div class="chips">
+						<tooltip v-for="chip of [4, 23, 20, 1, 15, 92, 97, 100]" :key="chip">
+							<span slot="activator">
+								<img :src="'/image/chip/small/' + LeekWars.chips[chip].name + '.png'" class="chip">
+							</span>
+							<b>{{ $t('chip.' + LeekWars.chips[chip].name) }}</b>
+							<br>
+							{{ $t('leek.chip_level_n', [LeekWars.chips[chip].level]) }}
+							<br>
+							<small>{{ 'CHIP_' + LeekWars.chips[chip].name.toUpperCase() }}</small>
+						</tooltip>
+					</div>
+				</div>
+			</div>
+		</popup>
+
+		<popup v-if="team && member" v-model="turretAiDialog" :width="870">
+			<span slot="title">{{ $t('fight.turret') }} [{{ $t('level_n', [team.level]) }}]</span>
+			<div class="turret-ai-dialog">
+				<div class="farmer-ais">
+					<ai v-for="ai in $store.state.farmer.ais" v-if="!team.turret_ai || ai.id !== team.turret_ai.id" :key="ai.id" :ai="ai" @click.native="selectAI(ai)" />
+				</div>
+			</div>
+		</popup>
 	</div>
 </template>
 
 <script lang="ts">
+	import CharacteristicTooltip from '@/component/leek/characteristic-tooltip.vue'
 	import { ChatType } from '@/model/chat'
 	import { Farmer } from '@/model/farmer'
 	import { Leek } from '@/model/leek'
@@ -382,7 +437,7 @@
 	import { Composition, Team, TeamMember } from '@/model/team'
 	import { Component, Vue, Watch } from 'vue-property-decorator'
 
-	@Component({ name: 'team', i18n: {} })
+	@Component({ name: 'team', i18n: {}, components: { CharacteristicTooltip }})
 	export default class TeamPage extends Vue {
 		ChatType = ChatType
 		team: Team | null = null
@@ -405,12 +460,35 @@
 		editingDescription: boolean = false
 		draggedLeek: Leek | null = null
 		draggedLeekComposition: Composition | null = null
+		turretDialog: boolean = false
+		turretAiDialog: boolean = false
 
 		get id() { return 'id' in this.$route.params ? parseInt(this.$route.params.id, 10) : (this.$store.state.farmer && this.$store.state.farmer.team !== null ? this.$store.state.farmer.team.id : null) }
 		get max_level() { return this.team && this.team.level === 100 }
 		get xp_bar_width() { return this.team ? this.team.level === 100 ? 100 : Math.floor(100 * (this.team.xp - this.team.down_xp) / (this.team.up_xp - this.team.down_xp)) : 0 }
 		get member() { return !this.$route.params.id || (this.team && this.$store.state.farmer && this.$store.state.farmer.team !== null && this.team.id === this.$store.state.farmer.team.id) }
 		
+		get turret() {
+			if (!this.team) { return {} }
+			const team_ratio = 1 + (this.team.level / 100)
+			const max_life = Math.round(10000 * team_ratio)
+			const characteristics_base_1000 = Math.round(1000 * team_ratio)
+			const characteristics_base_2000 = Math.round(2000 * team_ratio)
+			const characteristics_base_500 = Math.round(500 * team_ratio)
+			return {
+				life: 0 + " à " + max_life,
+				strength: 0 + " à " + characteristics_base_2000,
+				agility: 0 + " à " + characteristics_base_500,
+				resistance: 0 + " à " + characteristics_base_500,
+				science: 0 + " à " + characteristics_base_500,
+				wisdom: 0 + " à " + characteristics_base_1000,
+				magic: 0 + " à " + characteristics_base_1000,
+				frequency: 111,
+				tp: Math.floor(12 * team_ratio),
+				mp: 0
+			}
+		}
+
 		@Watch('id', {immediate: true})
 		update() {
 			if (this.id === null) { return }
@@ -713,6 +791,12 @@
 		canDrop(composition: Composition) {
 			return !composition.tournament.registered && composition.leeks.length < 6 && this.draggedLeekComposition !== composition
 		}
+		selectAI(ai: any) {
+			LeekWars.post('team/set-turret-ai', {ai: ai.id}).then(r => {
+				this.team!.turret_ai = ai
+			}).error(error => LeekWars.toast(error))
+			this.turretAiDialog = false
+		}
 	}
 </script>
 
@@ -738,6 +822,7 @@
 	}
 	.description {
 		vertical-align: bottom;
+		padding-top: 8px;
 		.text {
 			font-size: 20px;
 			color: #555;
@@ -954,5 +1039,92 @@
 	}
 	.compo .leeks.dashed {
 		border: 4px dashed #aaa;
+	}
+	.panel /deep/ .turret-wrapper {
+		display: flex;
+		align-items: flex-end;
+		height: 100%;
+		.turret {
+			display: flex;
+			justify-content: center;
+			padding: 15px;
+			width: 100%;
+			svg {
+				padding-right: 20px;
+				align-self: flex-end;
+				cursor: pointer;
+			}
+			.infos {
+				padding-right: 20px;
+			}
+			.level {
+				font-weight: 300;
+				color: #555;
+				padding-bottom: 5px;
+			}
+			.ai {
+				margin-left: -5px;
+				&.active {
+					cursor: pointer;
+				}
+			}
+			.no-ai {
+				color: #5fad1b;
+				font-weight: bold;
+				text-decoration: underline;
+				cursor: pointer;
+			}
+		}
+	}
+	.turret-dialog {
+		display: flex;
+		align-items: center;
+		svg {
+			padding-left: 10px;
+			padding-right: 30px;
+		}
+		.infos {
+			max-width: 440px;
+		}
+		.chips {
+			padding-top: 5px;
+		}
+		.chip {
+			width: 50px;
+			padding-right: 4px;
+			padding-bottom: 4px;
+		}
+		.characteristics {
+			margin-top: 8px;
+			.characteristic {
+				width: calc(50% - 40px);
+				padding: 5px 20px;
+				display: inline-block;
+				img {
+					vertical-align: top;
+					margin-right: 7px;
+					width: 25px;
+				}
+				span {
+					font-size: 18px;
+					vertical-align: top;
+					display: inline-block;
+					margin-top: 3px;
+					font-weight: bold;
+				}
+			}
+			.characteristic:nth-child(4n),
+			.characteristic:nth-child(3),
+			.characteristic:nth-child(7) {
+				background: #eee;
+			}
+		}
+	}
+	.turret-ai-dialog .farmer-ais {
+		min-height: 80px;
+		max-height: 400px;
+		.ai {
+			cursor: pointer;
+		}
 	}
 </style>
