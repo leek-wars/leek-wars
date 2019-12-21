@@ -3,6 +3,7 @@ import { Comment } from './comment'
 import { Leek } from './leek'
 
 enum FightType {
+	FREE = -1,
 	SOLO = 0,
 	FARMER = 1,
 	TEAM = 2,
