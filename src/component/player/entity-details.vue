@@ -25,7 +25,7 @@
 				<div class="stats">
 					<div :class="{zero: entity.life === 0}" class="stat life">
 						<img src="/image/charac/small/life.png">
-						<div class="color-life">{{ entity.life + ' / ' + entity.maxLife }}</div>
+						<div :class="{small: entity.maxLife > 9999}" class="color-life">{{ entity.life + ' / ' + entity.maxLife }}</div>
 					</div>
 					<div :class="{zero: entity.tp === 0}" class="stat">
 						<img src="/image/charac/small/tp.png">
@@ -187,6 +187,10 @@
 }
 .zero {
 	opacity: 0.25;
+}
+.small {
+	font-size: 14px;
+	padding-bottom: 2px;
 }
 .effects {
 	padding: 4px;
