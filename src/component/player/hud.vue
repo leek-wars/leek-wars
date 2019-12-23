@@ -19,7 +19,10 @@
 		</div>
 		<div ref="leftPart" class="left-part">
 			<div ref="actions" :style="{'margin-top': actionsMargin + 'px'}" class="actions">
-				<action-element v-for="action of game.currentActions" :key="action.id" :action="action.action" :logs="action.logs" :leeks="game.leeks" turn="1" class="action" />
+				<template v-for="line of game.consoleLines">
+					<action-element v-if="line.action" :key="line.id" :action="line.action" :leeks="game.leeks" turn="1" class="action" />
+					<pre v-else :key="line.id" :class="logClass(line.log)" :style="{color: logColor(line.log)}" class="log">[<leek :leek="game.leeks[line.log[0]]" />] {{ logText(line.log) }}</pre>
+				</template>
 			</div>
 		</div>
 		<div class="timeline">
@@ -40,13 +43,15 @@
 
 <script lang="ts">
 	import EntityDetails from '@/component/player/entity-details.vue'
+	import ActionLeekElement from '@/component/report/action-leek.vue'
 	import ActionElement from '@/component/report/action.vue'
 	import { Effect, EffectType } from '@/model/effect'
+	import { LeekWars } from '@/model/leekwars'
 	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 	import { Game } from './game/game'
 	import { Turret } from './game/turret'
 
-	@Component({ name: 'hud', components: { ActionElement, EntityDetails } })
+	@Component({ name: 'hud', components: { ActionElement, EntityDetails, leek: ActionLeekElement } })
 	export default class Hud extends Vue {
 		@Prop({required: true}) game!: Game
 		debug: boolean = false
@@ -57,15 +62,12 @@
 		get totalLife() {
 			return this.game.leeks.reduce((total, e) => total + (!e.summon ? e.life : 0), 0)
 		}
-		@Watch("game.currentActions")
+		@Watch("game.consoleLines")
 		updateActions() {
 			Vue.nextTick(() => {
 				const actions = this.$refs.actions as HTMLElement
 				if (actions) {
 					const leftPart = this.$refs.leftPart as HTMLElement
-					if (actions.offsetHeight > leftPart.offsetHeight) {
-						this.game.currentActions.shift()
-					}
 					this.actionsMargin = Math.min(0, leftPart.offsetHeight - actions.offsetHeight - 135)
 				}
 			})
@@ -78,6 +80,19 @@
 		}
 		entity_click(entity: any) {
 			this.selected_entity = entity
+		}
+
+		logClass(log: any[]) {
+			if (log[1] === 2) { return "warning" }
+			else if (log[1] === 3) { return "error" }
+			else if (log[1] === 5) { return "pause" }
+		}
+		logColor(log: any[]) {
+			return log.length > 3 ? LeekWars.colorToHex(log[3]) : ''
+		}
+		logText(log: any[]) {
+			if (log[1] === 5) {	return "pause()" }
+			return log[2]
 		}
 	}
 </script>
@@ -178,16 +193,15 @@
 		width: 190px;
 		overflow: hidden;
 		background-color: rgba(255,255,255, 0.2);
-		transition: margin-top 0.5s ease;
 	}
 	.actions:hover {
-		width: 500px;
-		background-color: rgba(255,255,255, 0.6);
+		width: 600px;
+		background-color: rgba(255,255,255, 1);
 	}
 	.actions .action {
 		padding: 1px 0;
 		font-size: 14px;
-		width: 500px;
+		width: 600px;
 	}
 	.debug {
 		position: absolute;
@@ -200,5 +214,23 @@
 		top: 0; left: 0; bottom: 0;
 		text-align: left;
 		overflow: hidden;
+	}
+	.log {
+		padding: 2px 0;
+		font-size: 11px;
+		margin: 0;
+		font-family: monospace;
+		word-break: break-all;
+		white-space: pre-wrap;
+		width: 600px;
+	}
+	.pause {
+		color: #999;
+	}
+	.warning {
+		color: #ff5f00;
+	}
+	.error {
+		color: #ff1900;
 	}
 </style>

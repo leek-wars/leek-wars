@@ -195,7 +195,7 @@ class Game {
 	// Actions
 	public data!: FightData
 	public actions: Action[] = []
-	public currentActions: any[] = []
+	public consoleLines: any[] = []
 	public currentAction: number = -1
 	public actionToDo = true
 	public actionDelay = 0
@@ -1183,13 +1183,12 @@ class Game {
 			const type = log[1]
 			if (type === 5) {
 				this.pause()
-				this.actions[this.currentAction - 1].logs.push(log)
+				this.addConsoleLine({id: 'l' + this.currentAction + '-' + this.currentLog, log})
 				return true
 			} else if (type === 4) {
 				this.addMarker(log[0], log[2], log[3], log[4])
 			} else {
-				const action = Math.max(1, this.currentAction - 1)
-				this.actions[action].logs.push(log)
+				this.addConsoleLine({id: 'l' + this.currentAction + '-' + this.currentLog, log})
 			}
 		}
 		return false
@@ -1200,7 +1199,13 @@ class Game {
 	}
 	public log(action: any) {
 		if (!this.jumping) {
-			this.currentActions.push({id: this.currentAction, action, logs: []})
+			this.addConsoleLine({id: 'a' + this.currentAction, action})
+		}
+	}
+	public addConsoleLine(line: any) {
+		this.consoleLines.push(line)
+		if (this.consoleLines.length > 55) {
+			this.consoleLines.shift()
 		}
 	}
 
@@ -1629,7 +1634,7 @@ class Game {
 		for (const entity of this.leeks) {
 			entity.effects = {}
 		}
-		this.currentActions = []
+		this.consoleLines = []
 		this.effects = []
 
 		for (let i = 0; i < this.particles.particles.length; i++) {
