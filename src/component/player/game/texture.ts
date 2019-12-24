@@ -101,6 +101,7 @@ class Textures {
 	public halo: Texture
 	public heal_cross: Texture
 	public liberation_halo: Texture
+	public antidote_halo: Texture
 	public poison_aureol: Texture
 	public shackle_aureol: Texture
 	public damage_return_aureol: Texture
@@ -289,6 +290,7 @@ class Textures {
 		this.halo = new Texture(game, env.STATIC + 'image/fight/halo.png')
 		this.heal_cross = new Texture(game, env.STATIC + 'image/fight/heal_cross.png')
 		this.liberation_halo = new Texture(game, env.STATIC + 'image/fight/liberation.png')
+		this.antidote_halo = new Texture(game, env.STATIC + 'image/fight/antidote.png')
 		this.poison_aureol = new Texture(game, env.STATIC + 'image/fight/poison_aureol.png')
 		this.shackle_aureol = new Texture(game, env.STATIC + 'image/fight/shackle_aureol.png')
 		this.damage_return_aureol = new Texture(game, env.STATIC + 'image/fight/damage_return_aureol.png')
