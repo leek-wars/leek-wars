@@ -708,7 +708,7 @@ class Antidote extends ChipAnimation {
 			const x = t.ox + dx * 10
 			const y = t.oy + dy * 10
 			const z = 50
-			this.game.particles.addImage(x, y, z, dx, dy, 0, angle, this.game.T.liberation_halo, 60)
+			this.game.particles.addImage(x, y, z, dx, dy, 0, angle, this.game.T.antidote_halo, 60)
 		}
 	}
 }
