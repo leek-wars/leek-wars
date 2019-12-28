@@ -690,6 +690,9 @@ class Entity {
 			const effect = this.effects[e]
 			ctx.drawImage(effect.texture, x, 26, 28, 28)
 			let effect_message = '' + effect.value
+			if (effect.effect === EffectType.SHACKLE_MAGIC || effect.effect === EffectType.SHACKLE_MP || effect.effect === EffectType.SHACKLE_TP || effect.effect === EffectType.SHACKLE_STRENGTH || effect.effect === EffectType.VULNERABILITY || effect.effect === EffectType.ABSOLUTE_VULNERABILITY) {
+				effect_message = '-' + effect_message
+			}
 			if (effect.effect === EffectType.RELATIVE_SHIELD || effect.effect === EffectType.DAMAGE_RETURN || effect.effect === EffectType.VULNERABILITY) {
 				effect_message = effect_message + '%'
 			}
