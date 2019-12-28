@@ -654,7 +654,7 @@ class Tranquilizer extends ChipDebuffAnimation {
 	constructor(game: Game) { super(game, game.T.chip_tranquilizer) }
 }
 class Soporific extends ChipDebuffAnimation {
-	constructor(game: Game) { super(game, game.T.chip_soporific, Area.CIRCLE2) }
+	constructor(game: Game) { super(game, game.T.chip_soporific, Area.CIRCLE3) }
 }
 class Fracture extends ChipDebuffAnimation {
 	constructor(game: Game) { super(game, game.T.chip_fracture) }
