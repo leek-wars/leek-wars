@@ -1300,6 +1300,20 @@ class Game {
 		}
 	}
 
+	public setEffectAreaCells(cells: number[], color: string, duration: number = 80) {
+
+		this.drawArea = duration
+		this.areaColor = color
+
+		this.area = []
+		for (const cell of cells) {
+			if (cell === -1) { continue }
+			const xy = this.ground.cellToXY(cell)
+			const real = this.ground.xyToXYPixels(xy.x, xy.y)
+			this.area.push([real.x * this.ground.scale, real.y * this.ground.scale])
+		}
+	}
+
 	public setEffectArea(x: number, y: number, area: number, color: string, duration: number = 80) {
 
 		x *= this.ground.scale

@@ -120,7 +120,7 @@ abstract class RangeWeapon extends WeaponAnimation {
 		this.cartAngle = cartAngle
 		this.recoilForce = recoilForce
 	}
-	public shoot(leekX: number, leekY: number, handPos: number, angle: number, orientation: number, cell: Cell, targets: Entity[]) {
+	public shoot(leekX: number, leekY: number, handPos: number, angle: number, orientation: number, cell: Cell, targets: Entity[], caster: Entity) {
 		const cos = Math.cos(angle)
 		const sin = Math.sin(angle)
 		// Coordonnées sans rotation (par rapport au centre)
@@ -131,7 +131,7 @@ abstract class RangeWeapon extends WeaponAnimation {
 		const X = leekX + (this.cx + x * cos - y * sin) * orientation
 		const Y = leekY + (y * cos + x * sin)
 		const realAngle = (angle + Math.PI / 2) * orientation - Math.PI / 2
-		this.throwBullet(X, Y, z, realAngle, cell, targets)
+		this.throwBullet(X, Y, z, realAngle, cell, targets, caster)
 		// Cartridges
 		if (this.cartTexture) {
 			const cx = this.x + this.cartX - this.recoil
@@ -155,7 +155,7 @@ abstract class RangeWeapon extends WeaponAnimation {
 			if (this.recoil < 0) { this.recoil = 0 }
 		}
 	}
-	public abstract throwBullet(X: number, Y: number, z: number, angle: number, cell: Cell, targets: Entity[]): void
+	public abstract throwBullet(X: number, Y: number, z: number, angle: number, cell: Cell, targets: Entity[], caster: Entity): void
 }
 
 class Firegun extends RangeWeapon {
@@ -170,13 +170,36 @@ class Firegun extends RangeWeapon {
 
 class LaserWeapon extends RangeWeapon {
 	public laserTexture: Texture
-	constructor(game: Game, texture: Texture, laserTexture: Texture, cartTexture: Texture, sound: Sound, cx: number, cz: number, ocx: number, x: number, z: number, mx1: number, mz1: number, mx2: number, mz2: number, sx: number, sz: number, cartX: number, cartZ: number, cartAngle: number, recoilForce: number) {
+	public range: number
+	public min_range: number
+	constructor(game: Game, texture: Texture, laserTexture: Texture, cartTexture: Texture, sound: Sound, cx: number, cz: number, ocx: number, x: number, z: number, mx1: number, mz1: number, mx2: number, mz2: number, sx: number, sz: number, cartX: number, cartZ: number, cartAngle: number, recoilForce: number, range: number, min_range: number) {
 		super(game, texture, cartTexture, sound, cx, cz, ocx, x, z, mx1, mz1, mx2, mz2, sx, sz, cartX, cartZ, cartAngle, recoilForce)
 		this.laserTexture = laserTexture
+		this.range = range
+		this.min_range = min_range
 	}
-	public throwBullet(X: number, Y: number, z: number, angle: number, cell: Cell, targets: Entity[]) {
-		const width = 1600
-		this.game.particles.addLaser(X, Y, z, angle, width, this.laserTexture, targets)
+	public throwBullet(X: number, Y: number, z: number, angle: number, cell: Cell, targets: Entity[], caster: Entity) {
+		const target = cell.getXY(this.game)
+		const dx = Math.sign(target.x - caster.x)
+		const dy = Math.sign(target.y - caster.y)
+		let current_cell = caster.cell
+		for (let r = 0; r < this.min_range; ++r) {
+			current_cell = this.game.ground.next_cell(current_cell, dx, dy)
+		}
+		let length = this.min_range - 1
+		const cells = []
+		for (let r = 0; r < this.range; ++r) {
+			length++
+			cells.push(current_cell)
+			current_cell = this.game.ground.next_cell(current_cell, dx, dy)
+			if (this.game.ground.map[current_cell]) { break }
+		}
+		const width = (length + 0.5) * this.game.ground.realTileLength - this.sx - this.x
+		const deltaX = Math.cos(angle) * width / 2
+		const deltaY = Math.sin(angle) * width / 2
+		this.game.particles.addLaser(X + deltaX, Y + deltaY, z, angle, width, this.laserTexture, targets)
+
+		this.game.setEffectAreaCells(cells, "red")
 	}
 }
 
@@ -187,7 +210,7 @@ class Axe extends WhiteWeaponAnimation {
 }
 class BLaser extends LaserWeapon {
 	constructor(game: Game) {
-		super(game, game.T.b_laser, game.T.b_laser_bullet, game.T.cart_b_laser, game.S.laser, 15, 38, 0, -70, -20, 33, 33, 80, 33, 960, 25, 60, 20, Math.PI / 2, 18)
+		super(game, game.T.b_laser, game.T.b_laser_bullet, game.T.cart_b_laser, game.S.laser, 15, 38, 0, -70, -20, 33, 33, 80, 33, 123, 25, 60, 20, Math.PI / 2, 18, 7, 2)
 	}
 }
 class Broadsword extends WhiteWeaponAnimation {
@@ -348,12 +371,12 @@ class Katana extends WhiteWeaponAnimation {
 }
 class Laser extends LaserWeapon {
 	constructor(game: Game) {
-		super(game, game.T.laser, game.T.laser_bullet, game.T.cart_laser, game.S.laser, 15, 42, 0, -50, -15, 30, 34, 79, 39, 400, 15, 60, 20, Math.PI / 2, 18)
+		super(game, game.T.laser, game.T.laser_bullet, game.T.cart_laser, game.S.laser, 15, 42, 0, -50, -15, 30, 34, 79, 39, 106, 15, 60, 20, Math.PI / 2, 18, 8, 2)
 	}
 }
 class MLaser extends LaserWeapon {
 	constructor(game: Game) {
-		super(game, game.T.m_laser, game.T.m_laser_bullet, game.T.cart_m_laser, game.S.laser, 15, 38, 0, -70, -20, 69, 33, 114, 33, 960, 25, 60, 20, Math.PI / 2, 18)
+		super(game, game.T.m_laser, game.T.m_laser_bullet, game.T.cart_m_laser, game.S.laser, 15, 38, 0, -70, -20, 69, 33, 114, 33, 126, 25, 60, 20, Math.PI / 2, 18, 8, 5)
 	}
 }
 class MachineGun extends Firegun {
