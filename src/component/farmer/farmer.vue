@@ -252,7 +252,10 @@
 									<span v-if="trophy.description">
 										<br>{{ trophy.description }}
 									</span>
-									<br><span class="date">{{ LeekWars.formatDuration(trophy.date) }}</span>
+									<br>
+									<i18n tag="span" class="trophy-date" path="unlocked_the">
+										<span slot="date">{{ trophy.date | date }}</span>
+									</i18n>
 								</span>
 							</tooltip>
 						</div>
