@@ -41,6 +41,14 @@
 						</div>
 						{{ trophy.progression }} / {{ trophy.threshold }}
 					</tooltip>
+					<template v-if="trophy.unlocked">
+						<i18n v-if="trophy.fight" tag="div" class="date" path="farmer.unlocked_the">
+							<router-link slot="date" :to="'/fight/' + trophy.fight" class="fight">{{ trophy.date | date }}</router-link>
+						</i18n>
+						<i18n v-else tag="div" class="date" path="farmer.unlocked_the">
+							<span slot="date">{{ trophy.date | date }}</span>
+						</i18n>
+					</template>
 				</div>
 			</div>
 		</panel>
@@ -233,6 +241,15 @@
 				border-radius: 6px;
 				position: absolute;
 				background: #30bb00;
+			}
+		}
+		.date {
+			color: #888;
+			padding-top: 4px;
+			font-size: 13px;
+			font-style: italic;
+			.fight {
+				color: black;
 			}
 		}
 	}

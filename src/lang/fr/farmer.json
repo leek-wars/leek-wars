@@ -88,6 +88,7 @@
 	"unregister": "Se désinscrire",
 	"impossible_to_unregister_moderator": "Impossible de supprimer un modérateur.",
 	"impossible_to_unregister_team": "Vous êtes le propriétaire d'une équipe, vous devez d'abord la dissoudre avant de supprimer votre compte.",
+	"unlocked_the": "Débloqué le {date}",
 	"unregister_wrong_password": "Le mot de passe est incorrect",
 	"upload_failed": "Une erreur s'est produite : {0}",
 	"uploading_avatar": "Envoi de l'avatar...",
