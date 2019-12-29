@@ -1,6 +1,7 @@
 import { Game, GROUND_TEXTURE } from "@/component/player/game/game"
 import { Obstacle } from '@/component/player/game/obstacle'
 import { LeekWars } from '@/model/leekwars'
+import { Cell } from './cell'
 
 let GROUND_PADDING_LEFT = 210
 let GROUND_PADDING_RIGHT = 20
@@ -25,9 +26,11 @@ class Ground {
 	public tileSizeY: number = 0
 	public realTileSizeX: number = 0
 	public realTileSizeY: number = 0
+	public realTileLength: number = 0
 	public scale: number = 0
 	public realGridWidth: number = 0
 	public realGridHeight: number = 0
+	public map: {[key: number]: boolean} = {}
 
 	constructor(game: Game) {
 		this.game = game
@@ -72,6 +75,7 @@ class Ground {
 		// Taille "réelle" des cases
 		this.realTileSizeX = 70
 		this.realTileSizeY = 35
+		this.realTileLength = Math.hypot(this.realTileSizeX / 2, this.realTileSizeY / 2)
 
 		this.scale = this.tileSizeX / this.realTileSizeX
 
@@ -156,6 +160,13 @@ class Ground {
 	public addObstacle(obstacle: Obstacle) {
 		this.obstacles.push(obstacle)
 		this.game.addDrawableElement(obstacle, obstacle.y + obstacle.size - 1)
+
+		this.map[obstacle.cell] = true
+		if (obstacle.size === 2) {
+			this.map[obstacle.cell + 17] = true
+			this.map[obstacle.cell + 18] = true
+			this.map[obstacle.cell + 35] = true
+		}
 	}
 
 	public drawTexture(image: HTMLImageElement, x: number, y: number, angle: number) {
@@ -263,15 +274,35 @@ class Ground {
 	}
 
 	public xyToXYPixels(x: number, y: number) {
-		const pixels = {
-			x: x * this.realTileSizeX / 2 + this.realTileSizeX / 2,
-			y: y * this.realTileSizeY / 2 + this.realTileSizeY / 2,
-		}
-		return pixels
+		return new Cell(
+			x * this.realTileSizeX / 2 + this.realTileSizeX / 2,
+			y * this.realTileSizeY / 2 + this.realTileSizeY / 2,
+		)
 	}
 
 	public getNumCells() {
 		return (this.tilesX * 2 - 1) * this.tilesY - this.tilesX - 1
+	}
+
+	public next_cell(cell: number, dx: number, dy: number) {
+		if (cell === -1) { return -1 }
+		const right = cell % 35 === 17
+		const left = cell % 35 === 0
+		const top = cell >= 0 && cell <= 17
+		const bottom = cell >= 595 && cell <= 612
+		if (dx === 1 && dy === 1) {
+			if (right || bottom) { return -1 }
+			return cell + 18
+		} else if (dx === 1 && dy === -1) {
+			if (right || top) { return -1 }
+			return cell - 17
+		} else if (dx === -1 && dy === 1) {
+			if (left || bottom) { return -1 }
+			return cell + 17
+		} else {
+			if (left || top) { return -1 }
+			return cell - 18
+		}
 	}
 }
 

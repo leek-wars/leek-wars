@@ -18,6 +18,7 @@ class Obstacle {
 	public cellX: number = 0
 	public realY: number = 0
 	public cellY: number = 0
+	public cell: number
 
 	constructor(game: Game, type: number, size: number, cell: number) {
 		this.game = game
@@ -40,6 +41,7 @@ class Obstacle {
 		if (this.baseTexture.offset) {
 			this.offset = this.baseTexture.offset
 		}
+		this.cell = cell
 	}
 
 	public resize() {
