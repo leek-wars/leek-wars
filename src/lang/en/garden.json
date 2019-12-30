@@ -5,6 +5,7 @@
 	"category_solo_fight": "Solo",
 	"category_team_fight": "Team",
 	"challenge": "Challenge",
+	"error_fight_not_enough_leeks": "Not enough leeks in the team",
 	"farmer_fight": "Farmer fight",
 	"garden_solo": "Solo garden",
 	"garden_farmer": "Farmer garden",
