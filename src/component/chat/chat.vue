@@ -27,7 +27,7 @@
 								<rich-tooltip-farmer :id="message.author.id">{{ message.author.name }}</rich-tooltip-farmer>
 							</span>
 						</router-link>
-						<div v-large-emojis v-latex v-for="(text, i) in message.texts" :key="i" class="text" v-html="text"></div>
+						<div v-large-emojis v-chat-code-latex v-for="(text, i) in message.texts" :key="i" class="text" v-html="text"></div>
 						<div class="right">
 							<span :title="LeekWars.formatDateTime(message.time)" class="time">{{ LeekWars.formatTime(message.time) }}</span>
 							<v-menu v-if="!privateMessages" offset-y lazy>
@@ -299,9 +299,16 @@
 		background: white;
 		position: relative;
 		box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
+		min-width: 0;
 		.report, .mute, .unmute {
 			display: none;
 			cursor: pointer;
+		}
+		/deep/ code:not(.ml) {
+			display: inline-block;
+			border: 1px solid #ccc;
+			padding: 1px 4px;
+			border-radius: 3px;
 		}
 	}
 	.bubble:hover {

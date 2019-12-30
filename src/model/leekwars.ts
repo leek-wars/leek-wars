@@ -441,7 +441,7 @@ const LeekWars = {
 	get_cursor_position, set_cursor_position,
 	formatDate, formatDateTime, formatDuration, formatTime, formatTimeSeconds, formatDayMonthShort, formatEmojis,
 	setTitle, setSubTitle, setTitleCounter, setTitleTag,
-	createCodeArea,
+	createCodeArea, createCodeAreaSimple,
 	clover: false, cloverTop: 0, cloverLeft: 0, lucky,
 	playSound, setFavicon,
 	linkify, toChatLink,
@@ -662,6 +662,11 @@ function createCodeArea(code: string, element: HTMLElement) {
 			const line_num = element.getElementsByTagName('span')[0]
 			line_num.innerHTML += '<span>' + (j + 1) + '</span>'
 		}
+	})
+}
+function createCodeAreaSimple(code: string, element: HTMLElement) {
+	import(/* webpackChunkName: "codemirror" */ "@/codemirror-wrapper").then(wrapper => {
+		wrapper.CodeMirror.runMode(code, "leekscript", element)
 	})
 }
 
