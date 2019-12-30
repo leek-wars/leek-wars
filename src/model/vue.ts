@@ -63,6 +63,7 @@ Vue.use(Vuetify, {
 // require styles
 import 'swiper/dist/css/swiper.css'
 import VueAwesomeSwiper from 'vue-awesome-swiper'
+import CodeMirror from 'codemirror'
 Vue.use(VueAwesomeSwiper, /* { default global options } */)
 
 Vue.config.productionTip = false
@@ -150,11 +151,40 @@ Vue.directive('large-emojis', {
 })
 Vue.directive('latex', {
 	inserted: (el) => {
-		if (/\$(.*?)\$/.test(el.innerHTML)) {
-			Latex.latexify(el.innerHTML).then((result: any) => {
-				el.innerHTML = result
+		el.innerHTML = el.innerHTML.replace(/\$(.*?)\$/, (str: string) => {
+			return "<latex>" + str + "</latex>"
+		})
+		el.querySelectorAll('latex').forEach((c) => {
+			Latex.latexify(c.innerHTML).then((result: any) => {
+				c.innerHTML = result
 			})
-		}
+		})
+	}
+})
+Vue.directive('chat-code-latex', {
+	inserted: (el) => {
+		el.innerHTML = el.innerHTML.replace(/\$(.*?)\$/, (str: string) => {
+			return "<latex>" + str.replace(/`/g, "") + "</latex>"
+		})
+		el.innerHTML = el.innerHTML.replace(/```(.*?)```/, (str: string, code: string) => {
+			return "<code>" + code + "</code>"
+		})
+		el.innerHTML = el.innerHTML.replace(/`(.*?)`/, (str: string, code: string) => {
+			return "<code>" + code + "</code>"
+		})
+		el.querySelectorAll('code').forEach((c) => {
+			if (c.innerHTML.indexOf("<br>") !== -1) {
+				c.classList.add('ml')
+				LeekWars.createCodeArea(c.innerText.trim(), c)
+			} else {
+				LeekWars.createCodeAreaSimple(c.innerText, c)
+			}
+		})
+		el.querySelectorAll('latex').forEach((c) => {
+			Latex.latexify(c.innerHTML).then((result: any) => {
+				c.innerHTML = result
+			})
+		})
 	}
 })
 
