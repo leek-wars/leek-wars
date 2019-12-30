@@ -973,6 +973,12 @@
 	}
 	.leek-weapons, .farmer-weapons {
 		min-height: 80px;
+		display: grid;
+		grid-gap: 5px;
+		grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+	}
+	#app.app .leek-weapons, #app.app .farmer-weapons {
+		grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
 	}
 	.weapon {
 		vertical-align: bottom;
@@ -980,17 +986,17 @@
 	}
 	.weapons-popup .weapon {
 		cursor: move;
-		width: 180px;
 		border: 1px solid #ddd;
 		vertical-align: bottom;
 		height: 66px;
-		display: inline-flex;
+		display: flex;
 		align-items: center;
 		justify-content: center;
-		margin: 5px;
+		text-align: center;
+		padding: 3px 0;
 	}
 	.weapons-popup .weapon img {
-		max-width: 170px;
+		max-width: calc(100% - 20px);
 		max-height: 60px;
 	}
 	.locked {
