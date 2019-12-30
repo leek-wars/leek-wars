@@ -2,7 +2,7 @@ import Player from '@/component/player.vue'
 import { Bubble } from '@/component/player/game/bubble'
 import { Bulb } from '@/component/player/game/bulb'
 import { Acceleration, Adrenaline, Antidote, Armor, Armoring, BallAndChain, Bandage, Bark, Burning, Carapace, Collar, Cure, DevilStrike, Doping, Drip, Ferocity, Fertilizer, Flame, Flash, Fortress, Fracture, Helmet, Ice, Iceberg, Inversion, LeatherBoots, Liberation, Lightning, Loam, Meteorite, Mirror, Motivation, Pebble, Plague, Protein, Punishment, Rage, Rampart, Reflexes, Regeneration, Remission, Rock, Rockfall, SevenLeagueBoots, Shield, Shock, SlowDown, Solidification, Soporific, Spark, Stalactite, Steroid, Stretching, Teleportation, Thorn, Toxin, Tranquilizer, Vaccine, Venom, Wall, WarmUp, Whip, WingedBoots } from '@/component/player/game/chips'
-import { Entity, EntityType } from '@/component/player/game/entity'
+import { Entity, EntityType, EntityDirection } from '@/component/player/game/entity'
 import { Ground } from '@/component/player/game/ground'
 import { Leek } from '@/component/player/game/leek'
 import { Arena, Beach, Desert, Factory, Forest, Glacier, Map, Nexus } from '@/component/player/game/maps'
@@ -390,6 +390,7 @@ class Game {
 			entity.maxMP = entity.mp
 
 			entity.setCell(e.cellPos)
+			entity.setOrientation(this.getInitialOrientation(entity.cell))
 
 			this.leeks[entity.id] = entity
 			
@@ -1692,6 +1693,21 @@ class Game {
 		// console.log("Resource loaded : " + res + " (" + this.loadedData + "/" + this.numData + ")")
 		if (this.loadedData === this.numData && this.initialized === true) {
 			this.launch() // Start game if all resources are loaded
+		}
+	}
+
+	public getInitialOrientation(cell: number) {
+		const top = cell <= 314
+		const mod = this.ground.tilesX * 2 - 1
+		const left = ((cell % mod) * 2) % mod < this.ground.tilesX / 2
+		if (top && left) {
+			return EntityDirection.SOUTH
+		} else if (top && !left) {
+			return EntityDirection.WEST
+		} else if (!top && left) {
+			return EntityDirection.EAST
+		} else {
+			return EntityDirection.NORTH
 		}
 	}
 }
