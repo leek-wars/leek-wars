@@ -19,7 +19,7 @@
 				</h4>
 				<br><br><br>
 				<router-link to="/bank">
-					<v-btn color="primary"><i class="material-icons">undo</i>&nbsp;{{ $t('back_to_bank') }}</v-btn>
+					<v-btn color="primary"><i class="material-icons">undo</i> {{ $t('back_to_bank') }}</v-btn>
 				</router-link>
 				<br><br>
 			</panel>
@@ -108,5 +108,8 @@
 	.thank-you-2 {
 		font-size: 20px;
 		color: #777;
+	}
+	i {
+		padding-right: 5px;
 	}
 </style>

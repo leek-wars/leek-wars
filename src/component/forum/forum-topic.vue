@@ -73,7 +73,7 @@
 									<div class="votes">
 										<v-tooltip :open-delay="0" :close-delay="0" :disabled="message.votes_up === 0" :key="votes_up_names[message.id] ? message.id * 101 + votes_up_names[message.id].length : message.id * 101" bottom @input="loadVotesUp(message)">
 											<div slot="activator" :class="{active: message.my_vote == 1, zero: message.votes_up === 0}" class="vote up" @click="voteUp(message)">
-												<i class="material-icons">thumb_up</i>&nbsp;
+												<i class="material-icons">thumb_up</i>
 												<span class="counter">{{ message.votes_up }}</span>
 											</div>
 											<loader v-if="!votes_up_names[message.id]" :size="30" />
@@ -83,7 +83,7 @@
 										</v-tooltip>
 										<v-tooltip :open-delay="0" :close-delay="0" :disabled="message.votes_down === 0" :key="votes_down_names[message.id] ? message.id * 100 + votes_down_names[message.id].length : message.id" bottom @input="loadVotesDown(message)">
 											<div slot="activator" :class="{active: message.my_vote == -1, zero: !message.votes_down}" class="vote down" @click="voteDown(message)">
-												<i class="material-icons">thumb_down</i>&nbsp;
+												<i class="material-icons">thumb_down</i>
 												<span class="counter">{{ message.votes_down }}</span>
 											</div>
 											<loader v-if="!votes_down_names[message.id]" :size="30" />
@@ -637,6 +637,7 @@
 	.vote i {
 		vertical-align: bottom;
 		font-size: 20px;
+		padding-right: 4px;
 	}
 	.vote.zero {
 		opacity: 0.3;

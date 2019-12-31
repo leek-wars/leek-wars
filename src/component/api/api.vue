@@ -10,7 +10,7 @@
 					<span :key="p + '-'">/</span>
 					<span :key="p" class="parameter">{{ parameter }}</span>
 				</template>
-				<template v-if="service.returns.length">&nbsp;→ <span class="returns">{{ service.returns.join(", ") }}</span></template>
+				<template v-if="service.returns.length"> → <span class="returns">{{ service.returns.join(", ") }}</span></template>
 			</div>
 			<div class="label">{{ service.method }}</div>
 

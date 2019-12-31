@@ -3,7 +3,7 @@
 		<div class="br">
 			<div class="header">
 				<div v-ripple class="title" @click="expanded = !expanded">
-					{{ $t('garden.category_battle_royale') }}&nbsp;
+					{{ $t('garden.category_battle_royale') }}
 					<b class="progress">{{ LeekWars.battleRoyale.progress }} / 10</b>
 				</div>
 				<i v-ripple class="material-icons" @click="quit">clear</i>
@@ -47,6 +47,9 @@
 	.content {
 		padding: 10px;
 		background: #f2f2f2;
+	}
+	.progress {
+		padding-left: 3px;
 	}
 	.leek {
 		display: inline-block;

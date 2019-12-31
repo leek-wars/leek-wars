@@ -92,7 +92,7 @@
 								<div v-show="good" class="good" v-html="'✓ ' + $t('valid_ai', [currentEditor.ai.name])"></div>
 								<div v-if="currentEditor.serverError" class="error">× <i>{{ $t('server_error') }}</i></div>
 								<div v-for="(error, e) in errors" :key="e" class="error" @click="errors.splice(e, 1)">
-									× <span v-html="$t('ai_error', [error.ai, error.line])"></span>&nbsp; ▶ {{ error.message }}
+									× <span v-html="$t('ai_error', [error.ai, error.line])"></span> ▶ {{ error.message }}
 								</div>
 							</div>
 						</div>

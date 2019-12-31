@@ -24,7 +24,7 @@
 								&nbsp;&nbsp;
 								<b>{{ thread.name }}</b>
 							</div>
-							<span class="green">✔ <span class="generated">{{ thread.generated | number }}</span></span>&nbsp;
+							<span class="green">✔ <span class="generated">{{ thread.generated | number }}</span></span>&nbsp;&nbsp;
 							<span class="red">✘ <span class="error">{{ thread.errors | number }}</span></span>
 							<br>
 							► <span class="task">{{ thread.task }}</span>

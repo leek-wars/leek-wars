@@ -15,14 +15,14 @@
 				<div class="button-wrapper">
 					<router-link to="/login">
 						<div class="header-button">
-							<i class="material-icons">power_settings_new</i>&nbsp;
+							<i class="material-icons">power_settings_new</i>
 							<span>{{ $t('main.connection') }}</span>
 						</div>
 					</router-link>
 				</div><div v-if="env.SIGN_UP" class="button-wrapper">
 					<router-link to="/">
 						<div class="signup-button header-button">
-							<i class="material-icons">how_to_reg</i>&nbsp;
+							<i class="material-icons">how_to_reg</i>
 							<span>{{ $t('main.signup') }}</span>
 						</div>
 					</router-link>
@@ -189,6 +189,7 @@
 	}
 	.header-button i {
 		vertical-align: text-bottom;
+		padding-right: 3px;
 	}
 	.header .button-wrapper:first-child .header-button {
 		margin-left: 0;
@@ -204,6 +205,7 @@
 		height: 42px;
 		display: inline-block;
 		vertical-align: top;
+		padding-right: 3px;
 	}
 	.header .header-button .crystal {
 		vertical-align: bottom;
@@ -226,6 +228,7 @@
 	.header-button:not(.mobile):after {
 		content: "";
 		position: absolute;
+		z-index: -1;
 		right: -20px;
 		top: 0;
 		width: 0;
