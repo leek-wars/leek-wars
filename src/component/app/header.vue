@@ -33,7 +33,7 @@
 					<router-link to="/bank">
 						<div class="header-button">
 							<span v-if="$store.state.farmer" class="farmer-crystals text">{{ $store.state.farmer.crystals }}</span>
-							&nbsp;<span class="crystal text"></span>
+							<span class="crystal text"></span>
 						</div>
 					</router-link>
 				</div>
@@ -41,7 +41,7 @@
 					<router-link to="/market">
 						<div class="header-button">
 							<span v-if="$store.state.farmer" class="farmer-habs text">{{ $store.state.farmer.habs | number }}</span>
-							&nbsp;<span class="hab text"></span>
+							<span class="hab text"></span>
 						</div>
 					</router-link>
 				</div>
@@ -49,7 +49,7 @@
 					<router-link to="/garden">
 						<div class="header-button fights-button">
 							<span v-if="$store.state.farmer" class="farmer-fights text">{{ $store.state.farmer.fights | number }}</span>
-							&nbsp;<img src="/image/icon/garden.png">
+							<img src="/image/icon/garden.png">
 						</div>
 					</router-link>
 				</div>
