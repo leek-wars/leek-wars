@@ -42,7 +42,7 @@
 			if (farmer) {
 				const comment = new Comment
 				comment.comment = message
-				comment.farmer = {name: farmer.name, avatar_changed: farmer.avatar_changed} as Farmer
+				comment.farmer = {id: farmer.id, name: farmer.name, avatar_changed: farmer.avatar_changed} as Farmer
 				comment.date = LeekWars.time
 				this.$emit('comment', comment)
 			}
@@ -53,7 +53,6 @@
 <style lang="scss" scoped>
 	.wrapper {
 		margin: 0 auto;
-		padding: 15px;
 		max-width: 700px;
 		width: 100%;
 	}

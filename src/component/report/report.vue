@@ -98,6 +98,10 @@
 			</div>
 		</panel>
 
+		<panel v-if="fight" :title="$t('fight.comments') + ' (' + fight.comments.length + ')'">
+			<comments :comments="fight.comments" @comment="comment" />
+		</panel>
+
 		<panel title="Évolution des points de vie" toggle="report/graph">
 			<div slot="actions">
 				<div class="button flat" @click="toggleSmooth">
@@ -405,6 +409,16 @@
 			this.chartTooltipX = x - tooltip.offsetWidth / 2 - 5,
 			this.chartTooltipY = top
 			this.chartTooltipValue = this.statistics.leeks[this.chartTooltipLeek].leek.name + '<br>' + this.chartSeries[this.chartTooltipLeek][index] + ' PV'
+		}
+
+		comment(comment: Comment) {
+			if (this.fight) {
+				LeekWars.post('fight/comment', {fight_id: this.fight.id, comment: comment.comment}).then(data => {
+					if (this.fight) {
+						this.fight.comments.push(comment)
+					}
+				})
+			}
 		}
 
 		expandTabs() {

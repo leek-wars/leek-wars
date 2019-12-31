@@ -66,7 +66,7 @@
 			</table>
 		</div>
 	
-		<panel v-if="fight" :title="$t('comments')">
+		<panel v-if="fight" :title="$t('comments') + ' (' + fight.comments.length + ')'">
 			<div slot="actions" class="views-counter">
 				{{ $tc('n_views', fight.views) }}
 			</div>
