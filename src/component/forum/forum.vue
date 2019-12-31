@@ -56,7 +56,7 @@
 							<div class="description">{{ $t('team_forum_description') }}</div>
 						</div>
 						<div v-if="LeekWars.mobile" class="mobile-info">
-							<span>{{ $t('n_topics', [LeekWars.formatNumber(category.topics)]) }} &nbsp;</span>
+							<span>{{ $t('n_topics', [LeekWars.formatNumber(category.topics)]) }}</span>
 							<span>{{ $t('n_messages', [LeekWars.formatNumber(category.messages)]) }}</span>
 						</div>
 					</div>

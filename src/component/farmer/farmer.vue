@@ -322,7 +322,7 @@
 				<h4 v-else class="warning-title">{{ $tc('farmer_have_n_warnings', farmer.warnings.length, [farmer.warnings.length]) }}</h4>
 				<div v-for="(warning, w) in farmer.warnings" :key="w" class="warning card">
 					<div class="reason">{{ $t('moderation.reason_' + warning.reason) }} ({{ $t('warning_severity_s', [ warning.severity]) }})</div>
-					<div class="message">&nbsp;<i>{{ warning.message }}</i></div>
+					<div class="message"><i>{{ warning.message }}</i></div>
 					<i18n v-if="$store.getters.moderator" class="date" path="moderation.given_by_x_the_d">
 						<router-link slot="farmer" :to="'/farmer/' + warning.author_id">{{ warning.author_name }}</router-link>
 						<span slot="date">{{ warning.date | date }}</span>
