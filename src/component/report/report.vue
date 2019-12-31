@@ -143,6 +143,7 @@
 
 <script lang="ts">
 	import { Action, ActionType } from '@/model/action'
+	import { Comment } from '@/model/comment'
 	import { Fight, FightContext, FightLeek, FightType, Report, ReportLeek, TEAM_COLORS } from '@/model/fight'
 	import { LeekWars } from '@/model/leekwars'
 	import { Component, Vue, Watch } from 'vue-property-decorator'
