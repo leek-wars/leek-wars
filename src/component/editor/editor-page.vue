@@ -837,12 +837,6 @@
 	#app.app .column9 .content {
 		height: calc(100vh - 56px);
 	}
-	.editor-loader {
-		position: absolute;
-		top: calc(50% - 35px);
-		left: 0;
-		width: calc(100% - 40px);
-	}
 	.settings-dialog {
 		h3 {
 			margin-top: 15px;
