@@ -216,6 +216,7 @@
 				const newHeight = this.getHeight()
 				if (newWidth === this.width && newHeight === this.height) { return }
 				const aspectRatio = window.devicePixelRatio || 1
+				this.game.ratio = aspectRatio
 				this.width = newWidth
 				this.height = newHeight - BAR_HEIGHT
 				this.canvas.width = this.width * aspectRatio
