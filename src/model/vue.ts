@@ -2,6 +2,7 @@ import AIElement from '@/component/app/ai.vue'
 import App from '@/component/app/app.vue'
 import Code from '@/component/app/code.vue'
 import Console from '@/component/app/console.vue'
+import LWLoader from '@/component/app/loader.vue'
 import NotFound from '@/component/app/not-found.vue'
 import Panel from '@/component/app/panel.vue'
 import Avatar from '@/component/avatar.vue'
@@ -14,7 +15,6 @@ import FightsHistory from '@/component/history/fights-history.vue'
 import TournamentHistory from '@/component/history/tournament-history.vue'
 import TournamentsHistory from '@/component/history/tournaments-history.vue'
 import LeekImage from '@/component/leek-image.vue'
-import Loader from '@/component/loader.vue'
 import ConversationElement from '@/component/messages/conversation.vue'
 import ReportDialog from '@/component/moderation/report-dialog.vue'
 import NotificationElement from '@/component/notification/notification.vue'
@@ -90,7 +90,6 @@ Vue.component('avatar', Avatar)
 Vue.component('emblem', Emblem)
 Vue.component('talent', Talent)
 Vue.component('chat', ChatElement)
-Vue.component('loader', Loader)
 Vue.component('player', () => import(/* webpackChunkName: "player" */ "@/component/player/player.vue"))
 Vue.component('comments', Comments)
 Vue.component('report-dialog', ReportDialog)
@@ -112,6 +111,7 @@ Vue.component('popup', Popup)
 Vue.component('tooltip', Tooltip)
 Vue.component('rich-tooltip-farmer', RichTooltipFarmer)
 Vue.component('rich-tooltip-leek', RichTooltipLeek)
+Vue.component('loader', LWLoader)
 
 Vue.directive('autostopscroll', {
 	inserted: (el, binding) => {
