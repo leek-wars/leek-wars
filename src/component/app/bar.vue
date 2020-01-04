@@ -13,7 +13,7 @@
 		</div>
 		<div class="actions-wrapper">
 			<div class="static-actions">
-				<div v-ripple v-show="LeekWars.menuExpanded || $store.state.unreadMessages > 0" class="action header-button mobile messages-button" @click="$router.push('/messages'); LeekWars.toggleMenu()">
+				<div v-ripple v-show="LeekWars.menuExpanded || $store.state.unreadMessages > 0" class="action header-button mobile messages-button" @click="$router.push('/messages'); LeekWars.closeMenu()">
 					<i class="icon material-icons">chat</i>
 					<span v-show="$store.state.unreadMessages > 0" class="counter messages-counter">{{ $store.state.unreadMessages }}</span>
 				</div>
