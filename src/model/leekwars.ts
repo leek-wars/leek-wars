@@ -283,6 +283,12 @@ const LeekWars = {
 			LeekWars.dark = 0.6
 		}
 	},
+	closeMenu() {
+		if (LeekWars.menuExpanded) {
+			LeekWars.menuExpanded = false
+			LeekWars.dark = 0
+		}
+	},
 	splitShowList() {
 		if (!LeekWars.isMobile()) { return }
 		LeekWars.splitBack = false
