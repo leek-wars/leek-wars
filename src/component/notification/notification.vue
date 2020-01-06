@@ -1,5 +1,5 @@
 <template>
-	<router-link v-ripple v-if="notification" :to="link" :notif="notification.id" :type="notification.type" class="notification">
+	<router-link v-ripple v-if="notification" :to="link" :notif="notification.id" :type="notification.type" :class="{unread: !notification.read}" class="notification">
 		<img :src="'/image/notif/' + notification.image + '.png'" class="avatar">
 		<div class="title" v-html="$t('notifications.title_' + notification.type, notification.title)"></div>
 		<div class="message">{{ $t('notifications.message_' + notification.type, notification.message) }}</div>
@@ -29,10 +29,17 @@
 		height: 50px;
 		position: relative;
 		display: block;
+		&.unread {
+			background-color: rgba(95, 173, 27, 0.15);
+		}
+		margin-bottom: 1px;
 	}
 	.notification:hover {
 		background-color: white;
 		box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
+		&.unread {
+			background-color: rgba(95, 173, 27, 0.2);
+		}
 	}
 	.title {
 		font-size: 14px;
@@ -66,7 +73,7 @@
 		color: red;
 	}
 	.message {
-		color: #777;
+		color: #555;
 		font-size: 12px;
 		margin-top: 5px;
 		text-overflow: ellipsis;
@@ -75,7 +82,7 @@
 	}
 	.date {
 		float: right;
-		color: #777;
+		color: #555;
 		font-size: 12px;
 		margin-top: -16px;
 		padding-right: 8px;
