@@ -1,5 +1,5 @@
 <template>
-	<router-link v-ripple v-if="notification" :to="link" :notif="notification.id" :type="notification.type" :class="{unread: !notification.read}" class="notification">
+	<router-link v-ripple v-if="notification" :to="link" :notif="notification.id" :type="notification.type" :class="{unread: !notification.read}" class="notification" @click.native="click">
 		<img :src="'/image/notif/' + notification.image + '.png'" class="avatar">
 		<div class="title" v-html="$t('notifications.title_' + notification.type, notification.title)"></div>
 		<div class="message">{{ $t('notifications.message_' + notification.type, notification.message) }}</div>
@@ -12,6 +12,7 @@
 
 <script lang="ts">
 	import { Notification } from '@/model/notification'
+	import { LeekWars } from '@/model/leekwars'
 	import { Component, Prop, Vue } from 'vue-property-decorator'
 
 	@Component({ name: 'notification' })
@@ -20,6 +21,10 @@
 		get link() { return this.notification.link ? this.notification.link : '' }
 		get resultIcon() {
 			return this.notification.result === null ? '' : this.notification.result === 1 ? 'done' : this.notification.result === 0 ? 'drag_handle' : 'clear'
+		}
+		click() {
+			LeekWars.post('notification/read', {notification_id: this.notification.id})
+			this.$store.commit('read-notification', this.notification.id)
 		}
 	}
 </script>
