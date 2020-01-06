@@ -293,6 +293,14 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			state.unreadNotifications = 0
 			updateTitle(state)
 		},
+		'read-notification'(state: LeekWarsState, id: number) {
+			for (const notification of state.notifications) {
+				if (notification.id === id) {
+					notification.read = true
+					break
+				}
+			}
+		},
 		'unread-notifications'(state: LeekWarsState, unread: number) {
 			state.unreadNotifications = unread
 			updateTitle(state)
