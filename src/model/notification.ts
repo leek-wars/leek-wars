@@ -174,6 +174,7 @@ class Notification {
 	public title!: string[]
 	public message!: string[]
 	public result!: number | null
+	public read!: boolean
 
 	constructor(data: any, link: string | null, image: string | null, title: string[] = [], message: string[] = [], result: number | null = null) {
 		this.id = data.id
@@ -184,6 +185,7 @@ class Notification {
 		this.title = title.map(LeekWars.protect)
 		this.message = message.map(LeekWars.protect)
 		this.result = result
+		this.read = data.read
 	}
 }
 
