@@ -11,8 +11,8 @@
 </template>
 
 <script lang="ts">
-	import { Notification } from '@/model/notification'
 	import { LeekWars } from '@/model/leekwars'
+	import { Notification } from '@/model/notification'
 	import { Component, Prop, Vue } from 'vue-property-decorator'
 
 	@Component({ name: 'notification' })
