@@ -113,7 +113,7 @@ class Socket {
 					break
 				}
 				case SocketMessage.NOTIFICATION_RECEIVE : {
-					store.commit('notification', {unread: data[0], type: data[1], date: LeekWars.time, parameters: data[2]})
+					store.commit('notification', {id: data[0], unread: data[1], type: data[2], date: LeekWars.time, parameters: data[3]})
 					break
 				}
 				case SocketMessage.UPDATE_NOTIFICATIONS : {
