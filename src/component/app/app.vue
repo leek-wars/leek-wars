@@ -59,7 +59,7 @@
 				<b v-if="changelog" slot="version">{{ changelog.version_name }}</b>
 			</i18n>
 			<div v-if="changelog" class="changelog-dialog">
-				<div v-for="change in changelogFormat($t('changelog.' + changelog.data))" :key="change" class="change">➤ {{ change }}</div>
+				<changelog-version :version="changelog" />
 				<br>
 				<i18n path="changelog.see_all_changes">
 					<router-link slot="changelog" to="/changelog">changelog</router-link>
@@ -82,6 +82,7 @@
 	import MobileBR from '@/component/app/mobile-br.vue'
 	import Social from '@/component/app/social.vue'
 	import Squares from '@/component/app/squares.vue'
+	import ChangelogVersion from '@/component/changelog/changelog-version.vue'
 	import Didactitiel from '@/component/help/didactitiel.vue'
 	import { LeekWars } from '@/model/leekwars'
 	import { SocketMessage } from '@/model/socket'
@@ -89,7 +90,7 @@
 	import { Component, Vue } from 'vue-property-decorator'
 
 	@Component({
-		components: {'lw-bar': Bar, 'lw-footer': Footer, 'lw-header': Header, 'lw-menu': Menu, 'lw-social': Social, Console, Squares, Didactitiel, Chats, 'mobile-br': MobileBR }
+		components: {'lw-bar': Bar, 'lw-footer': Footer, 'lw-header': Header, 'lw-menu': Menu, 'lw-social': Social, Console, Squares, Didactitiel, Chats, 'mobile-br': MobileBR, ChangelogVersion }
 	})
 	export default class App extends Vue {
 		didactitiel: boolean = false
@@ -135,6 +136,7 @@
 				this.changelog = data.changelog
 				this.changelogDialog = true
 				localStorage.setItem('changelog_version', LeekWars.version)
+				localStorage.setItem('changelog_forum_topic', data.changelog.forum_topic)
 			})
 		}
 		darkClick() {
@@ -178,9 +180,6 @@
 		consolePopup() {
 			LeekWars.popupWindow("/console", "title", 600, 320)
 			this.console = false
-		}
-		changelogFormat(data: string) {
-			return data.split("\n").filter((c) => c.length > 0).map((c) => c.replace('# ', ''))
 		}
 		clickClover() {
 			LeekWars.socket.send([SocketMessage.GET_LUCKY])
@@ -332,8 +331,15 @@
 		z-index: 1000;
 		cursor: pointer;
 	}
-	.changelog-dialog a {
-		color: #5fad1b;
+	.changelog-dialog {
+		a {
+			color: #5fad1b;
+		}
+		.image {
+			width: calc(100% + 30px);
+			margin: -15px;
+			margin-bottom: 10px;
+		}
 	}
 	@media screen and (min-width: 1600px) {
 		#app.connected:not(.social-collapsed):not(.app) .app-center {
