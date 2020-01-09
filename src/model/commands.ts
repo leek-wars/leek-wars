@@ -6,6 +6,9 @@ const URL_WIKI_PAGE = "http://leekwarswiki.net/index.php?title="
 const URL_DOC = "/help/documentation"
 const URL_MARKET = "/market"
 const URL_TUTO = "/help/tutorial"
+const URL_UPDATE = "/forum/category-6/topic-"
+const URL_PR = "https://github.com/leek-wars/leek-wars-client/pulls"
+const URL_ISSUE = "https://github.com/leek-wars/leek-wars-client/issues/new"
 
 class Command {
 	name!: string
@@ -18,7 +21,7 @@ class Command {
 const COMMANDS = [
 	{
 		name: "doc",
-		description: "Ajoute un lien vers la documentation au message",
+		description: "Lien vers la documentation",
 		regex: /(?:^|(\s))\/doc(?::([^\s#]+))?(?=\s|$)/gi,
 		replacement: (a: any, b: any, item: string) => {
 			const link = item ? URL_DOC + "/" + item : URL_DOC
@@ -27,30 +30,44 @@ const COMMANDS = [
 		}
 	}, {
 		name: "doc!",
-		description: "Ajoute un lien vers la documentation au message",
+		description: "Lien vers la documentation",
 		regex: /(?:^|(\s))\/doc!(?=\s|$)/gi,
 		replacement: () => {
 			return " " + LeekWars.toChatLink(URL_DOC, "LA DOOOOOC", "target='_blank' rel='noopener'") + " "
 		}
 	}, {
 		name: "fliptable",
-		description: "Ajoute (╯°□°）╯︵ ┻━┻ au message",
+		description: "(╯°□°）╯︵ ┻━┻",
 		regex: /(^| )\/fliptable(?=$|\s)/gi,
 		replacement: (a: any, b: string) => b + "(╯°□°）╯︵ ┻━┻"
 	}, {
+		name: "issue",
+		description: "Lien vers les Issues sur GitHub",
+		regex: /(^| )\/issue(?=$|\s)/gi,
+		replacement: () => {
+			return " " + LeekWars.toChatLink(URL_ISSUE, "Issue", "target='_blank' rel='noopener'") + " "
+		}
+	}, {
+		name: "issue!",
+		description: "Lien vers les Issues sur GitHub, de manière appuyée",
+		regex: /(^| )\/issue!(?=$|\s)/gi,
+		replacement: () => {
+			return " " + LeekWars.toChatLink(URL_ISSUE, "ISSUEEEEE", "target='_blank' rel='noopener'") + " "
+		}
+	}, {
 		name: "lama",
-		description: "Ajoute #LamaSwag avec une emphase au message",
+		description: "#LamaSwag avec une emphase",
 		regex: /(^| )\/lama(?=$|\s)/gi,
 		replacement: (_: string, space: string) => space + "<i>#LamaSwag</i>"
 	}, {
 		name: "lenny",
-		description: "Ajoute ( ͡° ͜ʖ ͡° ) au message",
+		description: "( ͡° ͜ʖ ͡° )",
 		regex: /(^| )\/lenny(?=$|\s)/gi,
 		replacement: (a: any, b: string) => b + "( ͡° ͜ʖ ͡° )"
 	}, {
 		name: "market",
 		regex: /(?:^|(\s))\/market(?::([^\s#]+))?(?=\s|$)/gi,
-		description: "Ajoute un lien vers un item du marché au message",
+		description: "Lien vers un item du marché",
 		replacement: (a: any, b: any, item: string) => {
 			const link = item ? URL_MARKET + "/" + item : URL_MARKET
 			const name = item ? item : "Marché"
@@ -59,11 +76,11 @@ const COMMANDS = [
 	}, {
 		name: "market!",
 		regex: /(?:^|(\s))\/market!(?=\s|$)/gi,
-		description: "Ajoute un lien vers un item du marché au message",
+		description: "Lien vers le marché, de manière appuyée",
 		replacement: () => " " + LeekWars.toChatLink(URL_MARKET, "LE MARCHÉÉÉÉÉ", "target='_blank' rel='noopener'") + " "
 	}, {
 		name: "me",
-		description: "Ajoute votre pseudo avec une emphase au message",
+		description: "Votre pseudo avec une emphase",
 		regex: /(^| )\/me(?=$|\s)/gi,
 		replacement: (authorName: string, space: string) => space + "<i>" + authorName + "</i>"
 	}, {
@@ -72,28 +89,56 @@ const COMMANDS = [
 		regex: /(^| )\/ping(?=$|\s)/gi,
 		replacement: () => ''
 	}, {
+		name: "pr",
+		description: "Lien vers les Pull Request sur GitHub",
+		regex: /(^| )\/pr(?=$|\s)/gi,
+		replacement: () => {
+			return " " + LeekWars.toChatLink(URL_PR, "Pull Request", "target='_blank' rel='noopener'") + " "
+		}
+	}, {
+		name: "pr!",
+		description: "Lien vers les PR sur GitHub de manière appuyée",
+		regex: /(^| )\/pr!(?=$|\s)/gi,
+		replacement: () => {
+			return " " + LeekWars.toChatLink(URL_PR, "PULL REQUESTTTTT", "target='_blank' rel='noopener'") + " "
+		}
+	}, {
 		name: "replacetable",
-		description: "Ajoute ┬─┬﻿ ノ( ゜-゜ノ) au message",
+		description: "┬─┬﻿ ノ( ゜-゜ノ)",
 		regex: /(^| )\/replacetable(?=$|\s)/gi,
 		replacement: (_: string, space: string) => space + "┬─┬﻿ ノ( ゜-゜ノ)"
 	}, {
 		name: "shrug",
-		description: "Ajoute ¯\\_(ツ)_/¯ au message",
+		description: "¯\\_(ツ)_/¯",
 		regex: /(^| )\/shrug(?=$|\s)/gi,
 		replacement: (_: string, space: string) => space + "¯\\_(ツ)_/¯"
 	}, {
 		name: "tuto",
-		description: "Ajoute un lien vers le tutorial au message",
+		description: "Lien vers le tutorial",
 		regex: /(^| )\/tuto(?=$|\s)/gi,
 		replacement: () => " " + LeekWars.toChatLink(URL_TUTO, "tuto", "target='_blank' rel='noopener'") + " "
 	}, {
 		name: "tuto!",
-		description: "Ajoute un lien vers le tutorial au message",
+		description: "Lien vers le tutorial, de manière appuyée",
 		regex: /(^| )\/tuto([!]?)(?=$|\s)/gi,
 		replacement: () => " " + LeekWars.toChatLink(URL_TUTO, "LE TUTOOOOO", "target='_blank' rel='noopener'") + " "
 	}, {
+		name: "update",
+		description: "Lien vers le sujet de la dernière mise à jour",
+		regex: /(^| )\/update(?=$|\s)/gi,
+		replacement: () => {
+			return " " + LeekWars.toChatLink(URL_UPDATE + localStorage.getItem('changelog_forum_topic'), "la màj", "target='_blank' rel='noopener'") + " "
+		}
+	}, {
+		name: "update!",
+		description: "Lien vers le sujet de la dernière mise à jour, de manière appuyée",
+		regex: /(^| )\/update!(?=$|\s)/gi,
+		replacement: () => {
+			return " " + LeekWars.toChatLink(URL_UPDATE + localStorage.getItem('changelog_forum_topic'), "LA MÀJJJJJ", "target='_blank' rel='noopener'") + " "
+		}
+	}, {
 		name: "wiki",
-		description: "Ajoute un lien vers le wiki au message (avec une page et une ancre)",
+		description: "Lien vers le wiki (avec une page et une ancre)",
 		regex: /(?:^|(\s))\/wiki(?::([^\s#]+)(?:#([^\s]+))?)?(?=\s|$)/gi,
 		replacement: (a: any, b: any, page: string, anchor: string) => {
 			const name = page ? page + (anchor ? '#' + anchor : '') : "Wiki"
@@ -103,7 +148,7 @@ const COMMANDS = [
 		options: []
 	}, {
 		name: "wiki!",
-		description: "Ajoute un lien vers le wiki au message (avec une page et une ancre)",
+		description: "Lien vers le wiki, de manière appuyée",
 		regex: /(?:^|(\s))\/wiki!(?=\s|$)/gi,
 		replacement: () => " " + LeekWars.toChatLink(URL_WIKI, "LE WIKIIIII", "target='_blank' rel='noopener'") + " "
 	}
