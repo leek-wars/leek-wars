@@ -14,9 +14,6 @@
 						<a target="_blank" rel="noopener" href="https://twitter.com/LeekWars">
 							<img src="/image/footer/twitter.png" title="Twitter">
 						</a>
-						<a target="_blank" rel="noopener publisher" href="https://plus.google.com/100933820796987863661" title="Google+">
-							<img src="/image/footer/googleplus.png">
-						</a>
 						<a target="_blank" rel="noopener" href="https://github.com/leek-wars" title="GitHub">
 							<img src="/image/footer/github.png">
 						</a>
