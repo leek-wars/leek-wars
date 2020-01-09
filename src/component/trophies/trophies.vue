@@ -32,23 +32,30 @@
 			<loader v-show="!loaded" slot="content" />
 			<div v-if="loaded" slot="content" class="trophies">
 				<div v-for="trophy in trophies[category.id]" :key="trophy.id" :class="{unlocked: trophy.unlocked, locked: !trophy.unlocked, card: trophy.unlocked}" class="trophy">
-					<img :src="'/image/trophy/big/' + trophy.code + '.png'" class="image">
-					<div class="name">{{ trophy.name }}</div>
-					<div class="description">{{ trophy.description }}</div>
-					<tooltip v-if="!trophy.unlocked && trophy.progression != null">
-						<div slot="activator" class="trophy-bar">
-							<div :style="{width: Math.floor(100 * trophy.progression / trophy.threshold) + '%'}" class="bar striked"></div>
+					<div class="flex">
+						<img :src="'/image/trophy/big/' + trophy.code + '.png'" class="image">
+						<div class="info">
+							<div class="name">{{ trophy.name }}</div>
+							<div class="description">{{ trophy.description }}</div>
+							<tooltip v-if="!trophy.unlocked && trophy.progression != null">
+								<div slot="activator" class="trophy-bar">
+									<div :style="{width: Math.floor(100 * trophy.progression / trophy.threshold) + '%'}" class="bar striked"></div>
+								</div>
+								{{ trophy.progression }} / {{ trophy.threshold }}
+							</tooltip>
 						</div>
-						{{ trophy.progression }} / {{ trophy.threshold }}
-					</tooltip>
-					<template v-if="trophy.unlocked">
-						<i18n v-if="trophy.fight" tag="div" class="date" path="farmer.unlocked_the">
-							<router-link slot="date" :to="'/fight/' + trophy.fight" class="fight">{{ trophy.date | date }}</router-link>
-						</i18n>
-						<i18n v-else tag="div" class="date" path="farmer.unlocked_the">
-							<span slot="date">{{ trophy.date | date }}</span>
-						</i18n>
-					</template>
+					</div>
+					<div class="unlock">
+						<img v-if="trophy.in_fight" class="fight-icon" src="/image/trophy/winner.png" title="Déblocable en combat">
+						<template v-if="trophy.unlocked">
+							<i18n v-if="trophy.fight" tag="span" class="date" path="farmer.unlocked_the">
+								<router-link slot="date" :to="'/fight/' + trophy.fight" class="fight">{{ trophy.date | date }}</router-link>
+							</i18n>
+							<i18n v-else tag="span" class="date" path="farmer.unlocked_the">
+								<span slot="date">{{ trophy.date | date }}</span>
+							</i18n>
+						</template>
+					</div>
 				</div>
 			</div>
 		</panel>
@@ -219,6 +226,9 @@
 			margin-right: 8px;
 			margin-bottom: 2px;
 		}
+		.info {
+			flex: 1;
+		}
 		.name {
 			font-size: 16px;
 			margin-bottom: 5px;
@@ -227,13 +237,17 @@
 			color: #888;
 			font-size: 14px;
 		}
+		.fight-icon {
+			width: 16px;
+			height: 16px;
+			opacity: 0.7;
+			margin-right: 2px;
+		}
 		.trophy-bar {
 			height: 8px;
 			position: relative;
 			background: white;
-			width: calc(100% - 58px);
 			border-radius: 6px;
-			margin-left: 58px;
 			margin-top: 6px;
 			border: 1px solid #ddd;
 			.bar {
@@ -242,6 +256,10 @@
 				position: absolute;
 				background: #30bb00;
 			}
+		}
+		.unlock {
+			display: flex;
+			align-items: center;
 		}
 		.date {
 			color: #888;
