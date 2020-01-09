@@ -51,7 +51,7 @@ import weapon from '@/lang/en/weapon.json'
 const translations = { garden, trophies, changelog, change_email, market, main, documentation, general_help, about, farmer, conditions, chip, weapon, potion, effect, bank, country, entity, hat, leekscript, mail, notifications, leek, forum, tournament, statistics, settings, team, help, ranking, editor, forum_topic, forum_category, accept_conditions, fight, forgot_password, history, legal, login, messages, mobile_app, moderation, report, search, signup, trophy, new_leek, tutorial, didactitiel }
 
 import { setTranslations } from "@/locale"
-import wiki from '@/wiki/fr.wiki'
-setTranslations("en", translations, wiki)
+// import wiki from '@/wiki/fr.wiki'
+setTranslations("en", translations, null)
 
 export { translations }
