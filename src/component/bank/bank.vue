@@ -2,6 +2,14 @@
 	<div>
 		<div class="page-header page-bar">
 			<h1>{{ $t('title') }}</h1>
+			<div class="tabs">
+				<router-link to="/market">
+					<div class="tab action" image="icon/market.png" link="/market">
+						<img src="/image/icon/market.png">
+						<span>{{ $t('main.market') }}</span>
+					</div>
+				</router-link>
+			</div>
 		</div>
 		<panel class="first last">
 			<div class="bank-description center" v-html="$t('description')"></div>
@@ -32,6 +40,9 @@
 	export default class Bank extends Vue {
 		packs: any = null
 		created() {
+			LeekWars.setActions([
+				{image: 'icon/market.png', click: () => this.$router.push('/market')}
+			])
 			LeekWars.get('bank/get-packs').then(data => {
 				this.packs = data.packs
 				LeekWars.setTitle(this.$i18n.t('bank.title'))
