@@ -40,5 +40,6 @@ class Farmer {
 	public team!: Team | null
 	public total_level!: number
 	public ais!: AI[]
+	public language!: string
 }
 export { Farmer }
