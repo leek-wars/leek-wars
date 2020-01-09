@@ -21,8 +21,8 @@
 
 <script lang="ts">
 	import { LeekWars } from '@/model/leekwars'
-	import ChangelogVersion from './changelog-version'
 	import { Component, Vue } from 'vue-property-decorator'
+	import ChangelogVersion from './changelog-version.vue'
 	
 	@Component({ name: 'changelog', i18n: {}, components: { ChangelogVersion } })
 	export default class Changelog extends Vue {

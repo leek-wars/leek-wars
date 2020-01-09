@@ -19,7 +19,7 @@
 	export default class ChangelogVersion extends Vue {
 		@Prop({required: true}) version!: any
 		get changes() {
-			if (!this.version) return []
+			if (!this.version) { return [] }
 			const data = this.$t('changelog.' + this.version.data) as string
 			return data.split("=====").map(s => s.split("\n").filter((c) => c.length > 0).map((c) => c.replace('# ', '')))
 		}
