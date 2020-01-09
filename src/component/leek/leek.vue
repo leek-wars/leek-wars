@@ -131,7 +131,10 @@
 						<center v-if="leek && my_leek">
 							<br>
 							<v-btn v-if="leek.capital > 0" color="primary" @click="capitalDialog = true">{{ $t('n_capital', [leek.capital]) }}</v-btn>&nbsp;
-							<v-btn @click="potionDialog = true">{{ $t('potions') }}</v-btn>
+							<v-btn class="potions-button" @click="potionDialog = true">
+								<img src="/image/icon/black/potion.png">
+								{{ $t('potions') }}
+							</v-btn>
 						</center>
 					</div>
 				</panel>
@@ -1045,6 +1048,11 @@
 	}
 	.ai_popup .ai {
 		cursor: pointer;
+	}
+	.potions-button img {
+		height: 22px;
+		margin-right: 4px;
+		opacity: 0.7;
 	}
 	.farmer-potions {
 		.potions-grid {
