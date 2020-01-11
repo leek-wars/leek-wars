@@ -173,34 +173,35 @@ class LaserWeapon extends RangeWeapon {
 	public laserTexture: Texture
 	public range: number
 	public min_range: number
+	public color: string
 	constructor(game: Game, texture: Texture, laserTexture: Texture, cartTexture: Texture, sound: Sound, cx: number, cz: number, ocx: number, x: number, z: number, mx1: number, mz1: number, mx2: number, mz2: number, sx: number, sz: number, cartX: number, cartZ: number, cartAngle: number, recoilForce: number, range: number, min_range: number, color: string) {
 		super(game, texture, cartTexture, sound, cx, cz, ocx, x, z, mx1, mz1, mx2, mz2, sx, sz, cartX, cartZ, cartAngle, recoilForce)
 		this.laserTexture = laserTexture
 		this.range = range
 		this.min_range = min_range
+		this.color = color
 	}
 	public throwBullet(X: number, Y: number, z: number, angle: number, cell: Cell, targets: Entity[], caster: Entity) {
-		const target = cell.getXY(this.game)
-		const dx = Math.sign(target.x - caster.x)
-		const dy = Math.sign(target.y - caster.y)
+		const dx = Math.sign(cell.x - caster.cell!.x)
+		const dy = Math.sign(cell.y - caster.cell!.y)
 		let current_cell = caster.cell
 		for (let r = 0; r < this.min_range; ++r) {
 			current_cell = this.game.ground.next_cell(current_cell, dx, dy)
 		}
 		let length = this.min_range - 1
-		const cells = []
+		const cells = [] as Cell[]
 		for (let r = 0; r < this.range; ++r) {
 			length++
-			cells.push(current_cell)
+			if (current_cell) { cells.push(current_cell) }
 			current_cell = this.game.ground.next_cell(current_cell, dx, dy)
-			if (this.game.ground.map[current_cell]) { break }
+			if (!current_cell || current_cell.obstacle) { break }
 		}
 		const width = (length + 0.5) * this.game.ground.realTileLength - this.sx - this.x
 		const deltaX = Math.cos(angle) * width / 2
 		const deltaY = Math.sin(angle) * width / 2
 		this.game.particles.addLaser(X + deltaX, Y + deltaY, z, angle, width, this.laserTexture, targets)
 
-		this.game.setEffectAreaCells(cells, "red")
+		this.game.setEffectAreaLaser(cells, this.color, dx, dy)
 	}
 }
 
@@ -211,7 +212,7 @@ class Axe extends WhiteWeaponAnimation {
 }
 class BLaser extends LaserWeapon {
 	constructor(game: Game) {
-		super(game, game.T.b_laser, game.T.b_laser_bullet, game.T.cart_b_laser, game.S.laser, 15, 38, 0, -70, -20, 33, 33, 80, 33, 123, 25, 60, 20, Math.PI / 2, 18, 7, 2)
+		super(game, game.T.b_laser, game.T.b_laser_bullet, game.T.cart_b_laser, game.S.laser, 15, 38, 0, -70, -20, 33, 33, 80, 33, 123, 25, 60, 20, Math.PI / 2, 18, 7, 2, "#51C5FF")
 	}
 }
 class Broadsword extends WhiteWeaponAnimation {
@@ -257,9 +258,9 @@ class Electrisor extends WeaponAnimation {
 		this.lightningY = leekY + x * sin
 		this.lightningZ = z
 		this.lightningAngle = (angle + Math.PI / 2) * orientation - Math.PI / 2
-		this.lightningCell = cell
+		this.lightningPosition = targetPos
 		this.shoots = 40
-		this.game.setEffectArea(cell.x, cell.y, Area.CIRCLE1, 'red')
+		this.game.setEffectArea(cell, Area.CIRCLE1, '#0263f4')
 		this.game.S.electrisor.play()
 		this.caster = caster
 	}
@@ -268,7 +269,7 @@ class Electrisor extends WeaponAnimation {
 			this.currentDelay -= dt
 			if (this.currentDelay <= 0) {
 				this.currentDelay = this.delay
-				this.game.particles.addLightning(this.lightningX, this.lightningY, this.lightningZ + this.caster.handPos, this.lightningAngle, this.lightningCell, this.game.T.lightning)
+				this.game.particles.addLightning(this.lightningX, this.lightningY, this.lightningZ + this.caster.handPos, this.lightningAngle, this.lightningPosition, this.game.T.lightning)
 				this.shoots--
 				if (this.shoots === 0) {
 					this.game.actionDone()
@@ -288,6 +289,9 @@ class FlameThrower extends WeaponAnimation {
 	public cartX = 60
 	public cartZ = 20
 	public cartAngle = Math.PI / 2
+	public min_range: number = 2
+	public range: number = 8
+
 	constructor(game: Game) {
 		super(game, game.T.flame_thrower, 25, 60, 0, -60, -15, 31, 51, 80, 50)
 	}
@@ -303,6 +307,20 @@ class FlameThrower extends WeaponAnimation {
 		this.shoots = 42
 		this.game.particles.addCollideFire(this.bulletX, this.bulletY, this.bulletZ, this.bulletAngle, targets)
 		this.game.S.flame_thrower.play()
+
+		const dx = Math.sign(cell.x - caster.cell!.x)
+		const dy = Math.sign(cell.y - caster.cell!.y)
+		let current_cell = caster.cell
+		for (let r = 0; r < this.min_range; ++r) { 
+			current_cell = this.game.ground.next_cell(current_cell, dx, dy)
+		}
+		const cells = [] as Cell[]
+		for (let r = 0; r < this.range; ++r) {
+			if (current_cell) { cells.push(current_cell) }
+			current_cell = this.game.ground.next_cell(current_cell, dx, dy)
+			if (!current_cell || current_cell.obstacle) { break }
+		}
+		this.game.setEffectAreaLaser(cells, "orange", dx, dy)
 	}
 	public update(dt: number) {
 		if (this.shoots > 0) {
@@ -341,7 +359,7 @@ class Gazor extends WeaponAnimation {
 		this.bulletAngle = (angle + Math.PI / 2) * orientation - Math.PI / 2
 		this.shoots = 50
 		this.game.particles.addCollideGaz(this.bulletX, this.bulletY, this.bulletZ, this.bulletAngle, targets)
-		this.game.setEffectArea(cell.x, cell.y, Area.CIRCLE3, 'red')
+		this.game.setEffectArea(cell, Area.CIRCLE3, '#04e513')
 		this.game.S.gazor.play()
 	}
 	public update(dt: number) {
@@ -362,7 +380,7 @@ class GrenadeLauncher extends Firegun {
 	}
 	public throwBullet(x: number, y: number, z: number, angle: number, cell: Cell, targets: Entity[]) {
 		this.game.particles.addGrenade(x, y, z, angle, cell, targets)
-		this.game.setEffectArea(cell.x, cell.y, Area.CIRCLE2, 'red')
+		this.game.setEffectArea(cell, Area.CIRCLE2, 'red')
 	}
 }
 class Katana extends WhiteWeaponAnimation {
@@ -372,12 +390,12 @@ class Katana extends WhiteWeaponAnimation {
 }
 class Laser extends LaserWeapon {
 	constructor(game: Game) {
-		super(game, game.T.laser, game.T.laser_bullet, game.T.cart_laser, game.S.laser, 15, 42, 0, -50, -15, 30, 34, 79, 39, 106, 15, 60, 20, Math.PI / 2, 18, 8, 2)
+		super(game, game.T.laser, game.T.laser_bullet, game.T.cart_laser, game.S.laser, 15, 42, 0, -50, -15, 30, 34, 79, 39, 106, 15, 60, 20, Math.PI / 2, 18, 8, 2, "#02e009")
 	}
 }
 class MLaser extends LaserWeapon {
 	constructor(game: Game) {
-		super(game, game.T.m_laser, game.T.m_laser_bullet, game.T.cart_m_laser, game.S.laser, 15, 38, 0, -70, -20, 69, 33, 114, 33, 126, 25, 60, 20, Math.PI / 2, 18, 8, 5)
+		super(game, game.T.m_laser, game.T.m_laser_bullet, game.T.cart_m_laser, game.S.laser, 15, 38, 0, -70, -20, 69, 33, 114, 33, 126, 25, 60, 20, Math.PI / 2, 18, 8, 5, "#d80205")
 	}
 }
 class MachineGun extends Firegun {

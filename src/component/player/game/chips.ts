@@ -102,7 +102,7 @@ class ChipBoostAnimation extends ChipAnimation {
 		this.createChipImage(targets, this.texture)
 		this.createChipAureol(targets, this.game.T.buff_aureol)
 		if (this.area !== Area.SINGLE_CELL) {
-			this.game.setEffectArea(targetPos.x, targetPos.y, this.area, 'blue')
+			this.game.setEffectArea(targetCell, this.area, 'blue')
 		}
 	}
 	public update(dt: number) {
@@ -131,7 +131,7 @@ class ChipHealAnimation extends ChipAnimation {
 		this.createChipImage(targets, this.texture)
 		this.createChipAureol(targets, this.game.T.cure_aureol)
 		if (this.area !== Area.SINGLE_CELL) {
-			this.game.setEffectArea(targetCell.x, targetCell.y, this.area, 'green')
+			this.game.setEffectArea(targetCell, this.area, 'green')
 		}
 	}
 	public update(dt: number) {
@@ -159,7 +159,7 @@ class ChipDebuffAnimation extends ChipAnimation {
 		this.createChipImage(targets, this.texture)
 		this.createChipAureol(targets, this.game.T.shackle_aureol)
 		if (this.area !== Area.SINGLE_CELL) {
-			this.game.setEffectArea(targetCell.x, targetCell.y, this.area, 'purple')
+			this.game.setEffectArea(targetCell, this.area, 'purple')
 		}
 	}
 }
@@ -177,7 +177,7 @@ class ChipPoisonAnimation extends ChipAnimation {
 		this.createChipImage(targets, this.texture)
 		this.createChipAureol(targets, this.game.T.poison_aureol)
 		if (this.area !== Area.SINGLE_CELL) {
-			this.game.setEffectArea(targetCell.x, targetCell.y, this.area, 'pink')
+			this.game.setEffectArea(targetCell, this.area, '#ea5ef9')
 		}
 	}
 }
@@ -195,7 +195,7 @@ class ChipDamageReturnAnimation extends ChipAnimation {
 		this.createChipImage(targets, this.texture)
 		this.createChipAureol(targets, this.game.T.damage_return_aureol)
 		if (this.area !== Area.SINGLE_CELL) {
-			this.game.setEffectArea(targetCell.x, targetCell.y, this.area, Colors.AGILITY_COLOR)
+			this.game.setEffectArea(targetCell, this.area, Colors.AGILITY_COLOR)
 		}
 	}
 }
@@ -230,7 +230,7 @@ class DevilStrike extends ChipAnimation {
 		super.launch(launchPos, targetPos, targets, targetCell)
 		this.x = targetCell.x
 		this.y = targetCell.y
-		this.game.setEffectArea(this.x, this.y, Area.CIRCLE3, 'red', 180)
+		this.game.setEffectArea(targetCell, Area.CIRCLE3, 'red', 180)
 		this.game.particles.addImage(this.x, this.y, 0, 0, 0, 0, 0, this.game.T.red_circle, 120, 0.6, true)
 		this.game.particles.addImage(this.x, this.y, 50, 0, 0, 1.2, 0, this.game.T.daemon_shadow, 100, 0.9)
 	}
@@ -288,7 +288,7 @@ class Flash extends ChipAnimation {
 		this.game.particles.addImage(targetPos.x + 50, targetPos.y, 220, -0.5, 0, 0, 0, this.game.T.grey_cloud, 80)
 		this.game.particles.addImage(targetPos.x + 10, targetPos.y, 230, 0.2, 0, 0, 0, this.game.T.grey_cloud, 80)
 		this.game.particles.addImage(targetPos.x - 10, targetPos.y, 230, -0.2, 0, 0, 0, this.game.T.grey_cloud, 80)
-		this.game.setEffectArea(targetPos.x, targetPos.y, Area.CIRCLE1, 'red')
+		this.game.setEffectArea(targetCell, Area.CIRCLE1, 'red')
 	}
 	public update(dt: number) {
 		super.update(dt)
@@ -324,7 +324,7 @@ class Iceberg extends ChipAnimation {
 	constructor(game: Game) { super(game, game.S.ice, 40) }
 	public launch(launchPos: Position, targetPos: Position, targets: Entity[], targetCell: Cell) {
 		this.game.particles.addGarbage(targetPos.x, targetPos.y, 180, 0, 0, 3, this.game.T.iceberg, 1, 0)
-		this.game.setEffectArea(targetPos.x, targetPos.y, Area.CIRCLE2, 'red')
+		this.game.setEffectArea(targetCell, Area.CIRCLE2, 'white')
 	}
 }
 class Inversion extends ChipAnimation {
@@ -406,7 +406,7 @@ class Lightning extends ChipAnimation {
 		this.game.particles.addImage(this.position.x + 50, this.position.y, 230, -0.5, 0, 0, 0, this.game.T.black_cloud, 90)
 		this.game.particles.addImage(this.position.x + 10, this.position.y, 240, 0.2, 0, 0, 0, this.game.T.black_cloud, 90)
 		this.game.particles.addImage(this.position.x - 10, this.position.y, 240, -0.2, 0, 0, 0, this.game.T.black_cloud, 90)
-		this.game.setEffectArea(position.x, position.y, Area.CIRCLE2, 'red')
+		this.game.setEffectArea(targetCell, Area.CIRCLE2, 'red')
 	}
 	public update(dt: number) {
 		super.update(dt)
@@ -436,7 +436,7 @@ class Meteorite extends ChipAnimation {
 	public launch(launchPos: Position, position: Position, targets: Entity[], targetCell: Cell) {
 		super.launch(launchPos, position, targets, targetCell)
 		this.vx = (500 + Math.random() * 300) * ((Math.random() > 0.5) ? 1 : -1)
-		this.game.setEffectArea(this.position.x, this.position.y, Area.CIRCLE2, 'red', 180)
+		this.game.setEffectArea(targetCell, Area.CIRCLE2, '#f26304', 180)
 	}
 	public update(dt: number) {
 		super.update(dt)
@@ -499,7 +499,7 @@ class Rockfall extends ChipAnimation {
 	constructor(game: Game) { super(game, game.S.rockfall, 70) }
 	public launch(launchPos: Position, position: Position, targets: Entity[], targetCell: Cell) {
 		super.launch(launchPos, position, targets, targetCell)
-		this.game.setEffectArea(position.x, position.y, Area.CIRCLE2, 'red')
+		this.game.setEffectArea(targetCell, Area.CIRCLE2, 'red', 100)
 	}
 	public update(dt: number) {
 		super.update(dt)
@@ -666,7 +666,7 @@ class Venom extends ChipPoisonAnimation {
 	constructor(game: Game) { super(game, game.T.chip_venom) }
 }
 class Toxin extends ChipPoisonAnimation {
-	constructor(game: Game) { super(game, game.T.chip_toxin, Area.CIRCLE1) }
+	constructor(game: Game) { super(game, game.T.chip_toxin, Area.CIRCLE2) }
 }
 class Plague extends ChipPoisonAnimation {
 	constructor(game: Game) { super(game, game.T.chip_plague, Area.CIRCLE3) }
