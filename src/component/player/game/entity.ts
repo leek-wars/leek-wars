@@ -7,6 +7,7 @@ import { EffectType } from '@/model/effect'
 import { Farmer } from '@/model/farmer'
 import { i18n } from '@/model/i18n'
 import { LeekWars } from '@/model/leekwars'
+import { Cell } from './cell'
 
 enum EntityType {
 	LEEK = 0,
@@ -55,7 +56,7 @@ class Entity {
 	public y = 0
 	public z = 0
 	public baseZ = 0
-	public cell = 0
+	public cell: Cell | null = null
 	// Position réelle
 	public rx = 0
 	public ry = 0
@@ -89,7 +90,7 @@ class Entity {
 	// Info text
 	public infoText: InfoText[] = []
 	// Movement
-	public path: any
+	public path: Cell[] = []
 	// Dead
 	public deadAnim = 1
 	// Animation
@@ -107,7 +108,7 @@ class Entity {
 		this.game = game
 		this.type = type
 		this.bubble = new Bubble(game)
-		this.path = new Array()
+		this.path = []
 		this.frame = Math.random() * 100
 		this.effects = {}
 		this.bloodTex = this.game.T.leek_blood
@@ -117,7 +118,8 @@ class Entity {
 		return this.dead
 	}
 
-	public setCell(cell: number) {
+	public setCell(cell: Cell) {
+		console.log("setCell", cell)
 		this.cell = cell
 		const pos = this.game.ground.cellToXY(cell)
 		this.setPosition(pos.x, pos.y)
@@ -163,8 +165,8 @@ class Entity {
 		}
 	}
 
-	public move(path: number[]) { // Move along a path
-		this.path = []
+	public move(path: Cell[]) { // Move along a path
+		this.path = [] as Cell[]
 		for (const cell of path) {
 			this.path.push(cell)
 		}
@@ -479,7 +481,7 @@ class Entity {
 		}
 	}
 
-	public useChip(chip: ChipAnimation, cell: number, targets: Entity[]) {
+	public useChip(chip: ChipAnimation, cell: Cell, targets: Entity[]) {
 
 		const pos = this.game.ground.cellToXY(cell)
 		const x = pos.x

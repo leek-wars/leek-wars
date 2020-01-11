@@ -1,5 +1,6 @@
 import { Game, SHADOW_ALPHA, SHADOW_SCALE } from "@/component/player/game/game"
 import { createScaledTexture, Texture } from '@/component/player/game/texture'
+import { Cell } from './cell'
 
 class Obstacle {
 	public game: Game
@@ -18,9 +19,9 @@ class Obstacle {
 	public cellX: number = 0
 	public realY: number = 0
 	public cellY: number = 0
-	public cell: number
+	public cell: Cell
 
-	constructor(game: Game, type: number, size: number, cell: number) {
+	constructor(game: Game, type: number, size: number, cell: Cell) {
 		this.game = game
 		// Get original texture
 		const textureType = size === 2 ? game.map.obstaclesBig : game.map.obstaclesSmall

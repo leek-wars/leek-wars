@@ -1,10 +1,11 @@
-import { Cell } from '@/component/player/game/cell'
 import { Entity, EntityDirection } from '@/component/player/game/entity'
 import { Game } from "@/component/player/game/game"
 import { Sound } from '@/component/player/game/sound'
 import { Texture } from '@/component/player/game/texture'
 import { Area } from '@/model/area'
 import { Leek } from './leek'
+import { Cell } from './cell'
+import { Position } from './position'
 
 abstract class WeaponAnimation {
 	public game: Game
@@ -35,7 +36,7 @@ abstract class WeaponAnimation {
 		this.mx2 = mx2
 		this.mz2 = mz2
 	}
-	public abstract shoot(leekX: number, leekY: number, handPos: number, angle: number, orientation: number, cell: Cell, targets: Entity[], caster: Entity): void
+	public abstract shoot(leekX: number, leekY: number, handPos: number, angle: number, orientation: number, targetPos: Position, targets: Entity[], caster: Entity, cell: Cell): void
 	public abstract update(dt: number): void
 }
 
@@ -50,7 +51,7 @@ class WhiteWeaponAnimation extends WeaponAnimation {
 	constructor(game: Game, texture: Texture, cx: number, cz: number, ocx: number, x: number, z: number, mx1: number, mz1: number, mx2: number, mz2: number) {
 		super(game, texture, cx, cz, ocx, x, z, mx1, mz1, mx2, mz2)
 	}
-	public shoot(leekX: number, leekY: number, handPos: number, angle: number, orientation: number, cell: Cell, targets: Entity[]) {
+	public shoot(leekX: number, leekY: number, handPos: number, angle: number, orientation: number, pos: Position, targets: Entity[]) {
 		this.step = 1
 		this.inte = 0.001
 		this.leekX = leekX
@@ -120,7 +121,7 @@ abstract class RangeWeapon extends WeaponAnimation {
 		this.cartAngle = cartAngle
 		this.recoilForce = recoilForce
 	}
-	public shoot(leekX: number, leekY: number, handPos: number, angle: number, orientation: number, cell: Cell, targets: Entity[], caster: Entity) {
+	public shoot(leekX: number, leekY: number, handPos: number, angle: number, orientation: number, targetPos: Position, targets: Entity[], caster: Entity, cell: Cell) {
 		const cos = Math.cos(angle)
 		const sin = Math.sin(angle)
 		// Coordonnées sans rotation (par rapport au centre)
@@ -172,7 +173,7 @@ class LaserWeapon extends RangeWeapon {
 	public laserTexture: Texture
 	public range: number
 	public min_range: number
-	constructor(game: Game, texture: Texture, laserTexture: Texture, cartTexture: Texture, sound: Sound, cx: number, cz: number, ocx: number, x: number, z: number, mx1: number, mz1: number, mx2: number, mz2: number, sx: number, sz: number, cartX: number, cartZ: number, cartAngle: number, recoilForce: number, range: number, min_range: number) {
+	constructor(game: Game, texture: Texture, laserTexture: Texture, cartTexture: Texture, sound: Sound, cx: number, cz: number, ocx: number, x: number, z: number, mx1: number, mz1: number, mx2: number, mz2: number, sx: number, sz: number, cartX: number, cartZ: number, cartAngle: number, recoilForce: number, range: number, min_range: number, color: string) {
 		super(game, texture, cartTexture, sound, cx, cz, ocx, x, z, mx1, mz1, mx2, mz2, sx, sz, cartX, cartZ, cartAngle, recoilForce)
 		this.laserTexture = laserTexture
 		this.range = range
@@ -240,14 +241,14 @@ class Electrisor extends WeaponAnimation {
 	public lightningY: number = 0
 	public lightningZ: number = 0
 	public lightningAngle: number = 0
-	public lightningCell!: Cell
+	public lightningPosition!: Position
 	public sx: number = 89
 	public sz: number = -15
 	public caster!: Leek
 	constructor(game: Game) {
 		super(game, game.T.electrisor, 5, 52, 0, -30, 0, 42, 31, 72, 34)
 	}
-	public shoot(leekX: number, leekY: number, handPos: number, angle: number, orientation: number, cell: Cell, targets: Entity[], caster: Leek) {
+	public shoot(leekX: number, leekY: number, handPos: number, angle: number, orientation: number, targetPos: Position, targets: Entity[], caster: Leek, cell: Cell) {
 		const cos = Math.cos(angle)
 		const sin = Math.sin(angle)
 		const x = this.x + this.sx
@@ -290,7 +291,7 @@ class FlameThrower extends WeaponAnimation {
 	constructor(game: Game) {
 		super(game, game.T.flame_thrower, 25, 60, 0, -60, -15, 31, 51, 80, 50)
 	}
-	public shoot(leekX: number, leekY: number, handPos: number, angle: number, orientation: number, cell: Cell, targets: Entity[]) {
+	public shoot(leekX: number, leekY: number, handPos: number, angle: number, orientation: number, targetPosition: Position, targets: Entity[], caster: Entity, cell: Cell) {
 		const cos = Math.cos(angle)
 		const sin = Math.sin(angle)
 		const x = this.x + this.sx
@@ -329,7 +330,7 @@ class Gazor extends WeaponAnimation {
 	constructor(game: Game) {
 		super(game, game.T.gazor, 15, 60, 0, -43, -12, 28, 52, 74, 50)
 	}
-	public shoot(leekX: number, leekY: number, handPos: number, angle: number, orientation: number, cell: Cell, targets: Entity[]) {
+	public shoot(leekX: number, leekY: number, handPos: number, angle: number, orientation: number, targetPos: Position, targets: Entity[], caster: Entity, cell: Cell) {
 		const cos = Math.cos(angle)
 		const sin = Math.sin(angle)
 		const x = this.x + this.sx
