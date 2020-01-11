@@ -5,6 +5,7 @@ import { WeaponAnimation, WhiteWeaponAnimation } from '@/component/player/game/w
 import { env } from '@/env'
 import { HatTemplate } from '@/model/hat'
 import { LeekWars } from '@/model/leekwars'
+import { Cell } from './cell'
 
 const SKINS = [
 	"green", // 1
@@ -85,7 +86,7 @@ class Leek extends Entity {
 		}
 	}
 
-	public useWeapon(cell: number, targets: Entity[]) {
+	public useWeapon(cell: Cell, targets: Entity[]) {
 
 		if (this.weapon != null) {
 
@@ -101,9 +102,9 @@ class Leek extends Entity {
 
 			this.angle = Math.atan2(Math.abs(this.x - x), (this.y - y) / 2) - Math.PI / 2
 
-			const cellPixels = this.game.ground.xyToXYPixels(x, y)
+			const position = this.game.ground.xyToXYPixels(x, y)
 
-			this.weapon.shoot(this.ox, this.oy, this.handPos + this.z, this.angle, this.direction, cellPixels, targets, this)
+			this.weapon.shoot(this.ox, this.oy, this.handPos + this.z, this.angle, this.direction, position, targets, this, cell)
 
 			if (this.weapon instanceof WhiteWeaponAnimation) {
 				this.jump()

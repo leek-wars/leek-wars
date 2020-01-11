@@ -2,6 +2,7 @@ import { Game, GROUND_TEXTURE } from "@/component/player/game/game"
 import { Obstacle } from '@/component/player/game/obstacle'
 import { LeekWars } from '@/model/leekwars'
 import { Cell } from './cell'
+import { Position } from './position'
 
 let GROUND_PADDING_LEFT = 210
 let GROUND_PADDING_RIGHT = 20
@@ -14,6 +15,7 @@ class Ground {
 	public tileSize = 60
 	public tilesX = 18
 	public tilesY = 18
+	public nb_cells = 0
 	public startX: number = 0
 	public startY: number = 0
 	public texture!: HTMLCanvasElement | null
@@ -30,10 +32,52 @@ class Ground {
 	public scale: number = 0
 	public realGridWidth: number = 0
 	public realGridHeight: number = 0
-	public map: {[key: number]: boolean} = {}
+	public coord: Cell[][] = []
+	private min_x = -1
+	private max_x = -1
+	private min_y = -1
+	private max_y = -1
+	public cells: Cell[] = []
 
 	constructor(game: Game) {
 		this.game = game
+
+		this.nb_cells = (this.tilesX * 2 - 1) * this.tilesY - (this.tilesX - 1)
+		console.log(this.nb_cells)
+		for (let id = 0; id < this.nb_cells; id++) {
+			const x1 = id % (this.tilesX * 2 - 1)
+			const y1 = Math.floor(id / (this.tilesX * 2 - 1))
+			const y = y1 - x1 % this.tilesX
+			const x = (id - (this.tilesX - 1) * y) / this.tilesX
+			const cell = new Cell(id, x, y)
+			if (this.min_x == -1 || x < this.min_x)
+				this.min_x = x;
+			if (this.max_x == -1 || x > this.max_x)
+				this.max_x = x;
+			if (this.min_y == -1 || y < this.min_y)
+				this.min_y = y;
+			if (this.max_y == -1 || y > this.max_y)
+				this.max_y = y;
+			this.cells.push(cell)
+		}
+		console.log(this.min_x, this.min_y, this.max_x, this.max_y)
+		let sx = this.max_x - this.min_x + 1
+		let sy = this.max_y - this.min_y + 1
+		console.log(sx, sy)
+		this.coord = Array.from(Array(sy), () => new Array(sx).fill(null))
+		for (const cell of this.cells) {
+			this.coord[cell.x - this.min_x][cell.y - this.min_y] = cell
+		}
+	}
+
+	public addObstacle(obstacle: Obstacle) {
+		this.obstacles.push(obstacle)
+		obstacle.cell.obstacle = true
+		if (obstacle.size === 2) {
+			this.cells[obstacle.cell.id + 17].obstacle = true
+			this.cells[obstacle.cell.id + 18].obstacle = true
+			this.cells[obstacle.cell.id + 35].obstacle = true
+		}
 	}
 
 	public resize(width: number, height: number, shadows: boolean) {
@@ -157,16 +201,8 @@ class Ground {
 		}
 	}
 
-	public addObstacle(obstacle: Obstacle) {
-		this.obstacles.push(obstacle)
+	public addObstacleElement(obstacle: Obstacle) {
 		this.game.addDrawableElement(obstacle, obstacle.y + obstacle.size - 1)
-
-		this.map[obstacle.cell] = true
-		if (obstacle.size === 2) {
-			this.map[obstacle.cell + 17] = true
-			this.map[obstacle.cell + 18] = true
-			this.map[obstacle.cell + 35] = true
-		}
 	}
 
 	public drawTexture(image: HTMLImageElement, x: number, y: number, angle: number) {
@@ -251,11 +287,11 @@ class Ground {
 		ctx.restore()
 	}
 
-	public cellToXY(cell: number) {
+	public cellToXY(cell: Cell) {
 		const mod = this.game.ground.tilesX * 2 - 1
 		const pos = {
-			x: (cell % mod) * 2,
-			y: Math.floor(cell / mod) * 2,
+			x: (cell.id % mod) * 2,
+			y: Math.floor(cell.id / mod) * 2,
 		}
 		if (pos.x > mod) {
 			pos.x = pos.x % mod
@@ -267,14 +303,14 @@ class Ground {
 	public xyToCell(x: number, y: number) {
 		const mod = this.game.ground.tilesX * 2 - 1
 		if (y % 2 === 0) {
-			return (y / 2) * mod + x / 2
+			return this.cells[(y / 2) * mod + x / 2]
 		} else {
-			return ((y - 1) / 2) * mod + this.game.ground.tilesX + (x - 1) / 2
+			return this.cells[((y - 1) / 2) * mod + this.game.ground.tilesX + (x - 1) / 2]
 		}
 	}
 
 	public xyToXYPixels(x: number, y: number) {
-		return new Cell(
+		return new Position(
 			x * this.realTileSizeX / 2 + this.realTileSizeX / 2,
 			y * this.realTileSizeY / 2 + this.realTileSizeY / 2,
 		)
@@ -284,25 +320,15 @@ class Ground {
 		return (this.tilesX * 2 - 1) * this.tilesY - this.tilesX - 1
 	}
 
-	public next_cell(cell: number, dx: number, dy: number) {
-		if (cell === -1) { return -1 }
-		const right = cell % 35 === 17
-		const left = cell % 35 === 0
-		const top = cell >= 0 && cell <= 17
-		const bottom = cell >= 595 && cell <= 612
-		if (dx === 1 && dy === 1) {
-			if (right || bottom) { return -1 }
-			return cell + 18
-		} else if (dx === 1 && dy === -1) {
-			if (right || top) { return -1 }
-			return cell - 17
-		} else if (dx === -1 && dy === 1) {
-			if (left || bottom) { return -1 }
-			return cell + 17
-		} else {
-			if (left || top) { return -1 }
-			return cell - 18
+	public next_cell(cell: Cell | null, dx: number, dy: number) {
+		if (cell === null) { return null }
+		let x = cell.x + dx
+		let y = cell.y + dy
+		console.log(x, y)
+		if (x < this.min_x || y < this.min_y || x > this.max_x || y > this.max_y) {
+			return null
 		}
+		return this.coord[x - this.min_x][y - this.min_y]
 	}
 }
 

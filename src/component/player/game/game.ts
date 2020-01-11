@@ -19,6 +19,7 @@ import { Fight, FightData, TEAM_COLORS } from '@/model/fight'
 import { i18n } from '@/model/i18n'
 import { LeekWars } from '@/model/leekwars'
 import { Turret } from './turret'
+import { Cell } from './cell'
 
 enum Colors {
 	MP_COLOR = "#08D900",
@@ -218,7 +219,7 @@ class Game {
 	public mouseY = 0
 	public mouseTileX: number | undefined = 0
 	public mouseTileY: number | undefined = 0
-	public mouseCell: number | undefined = undefined
+	public mouseCell: Cell | undefined = undefined
 	public mouseCellX: number = 0
 	public mouseCellY: number = 0
 	public mouseRealX: number = 0
@@ -246,7 +247,7 @@ class Game {
 	public area!: any[]
 	public showCellX: any
 	public showCellY: any
-	public ctx: any
+	public ctx!: CanvasRenderingContext2D
 	public showCellColor: any
 	public showCellCell: any
 	public reportTimer: any
@@ -298,7 +299,19 @@ class Game {
 
 		// Atmosphere sound of the map
 		this.atmosphere = this.map.sound
+
+		// Obstacles
 		this.obstacles = this.data.map.obstacles
+		for (const i in this.obstacles) {
+			const o = this.obstacles[i]
+			const type = o[0]
+			const size = o[1]
+			if (size !== -1) {
+				const obstacle = new Obstacle(this, type, size, this.ground.cells[parseInt(i, 10)])
+				obstacle.resize()
+				this.ground.addObstacle(obstacle)
+			}
+		}
 
 		// Add entities
 		const entities = this.data.leeks
@@ -389,8 +402,10 @@ class Game {
 			}
 			entity.maxMP = entity.mp
 
-			entity.setCell(e.cellPos)
-			entity.setOrientation(this.getInitialOrientation(entity.cell))
+			entity.setCell(this.ground.cells[e.cellPos])
+			if (entity.cell) {
+				entity.setOrientation(this.getInitialOrientation(entity.cell))
+			}
 
 			this.leeks[entity.id] = entity
 			
@@ -470,16 +485,9 @@ class Game {
 		if (this.atmosphere != null && this.sound) {
 			this.atmosphere.loop()
 		}
-		// Obstacles
-		for (const i in this.obstacles) {
-			const o = this.obstacles[i]
-			const type = o[0]
-			const size = o[1]
-			if (size !== -1) {
-				const obstacle = new Obstacle(this, type, size, parseInt(i, 10))
-				obstacle.resize()
-				this.ground.addObstacle(obstacle)
-			}
+		for (const obstacle of this.ground.obstacles) {
+			obstacle.resize()
+			this.ground.addObstacleElement(obstacle)
 		}
 		this.ground.resize(this.width, this.height, this.shadows)
 		for (const l in this.leeks) {
@@ -739,10 +747,14 @@ class Game {
 		}
 		case ActionType.MOVE_TO: {
 			if (this.jumping) {
-				this.leeks[action.params[1]].cell = action.params[2]
+				this.leeks[action.params[1]].cell = this.ground.cells[action.params[2]]
 				this.actionDone()
 			} else {
-				this.leeks[action.params[1]].move(action.params[3])
+				const cells = [] as Cell[]
+				for (const c of action.params[3]) {
+					cells.push(this.ground.cells[c])
+				}
+				this.leeks[action.params[1]].move(cells)
 			}
 			break
 		}
@@ -774,7 +786,7 @@ class Game {
 		case ActionType.USE_CHIP: {
 
 			const launcher = action.params[1]
-			const cell = action.params[2]
+			const cell = this.ground.cells[action.params[2]]
 			const chip = action.params[3]
 			const leeksID = action.params[5]
 
@@ -811,7 +823,7 @@ class Game {
 				break
 			}
 			const launcher = action.params[1]
-			const cell = action.params[2]
+			const cell = this.ground.cells[action.params[2]]
 			const leeksID = action.params[5]
 			action.weapon = (this.leeks[launcher] as Leek).weapon_name
 
@@ -878,7 +890,7 @@ class Game {
 		case ActionType.SUMMON: {
 			const caster = action.params[1]
 			const summonID = action.params[2]
-			const cell = action.params[3]
+			const cell = this.ground.cells[action.params[3]]
 			const summon = this.leeks[summonID]
 			summon.setCell(cell)
 			summon.summoner = this.leeks[caster]
@@ -894,7 +906,7 @@ class Game {
 		}
 		case ActionType.RESURRECTION: {
 			const target = action.params[2]
-			const cell = action.params[3]
+			const cell = this.ground.cells[action.params[3]]
 			const life = action.params[4]
 			const maxLife = action.params[5]
 			const entity = this.leeks[target]
@@ -1267,14 +1279,14 @@ class Game {
 		return this.mouseEntity
 	}
 
-	public addMarker(owner: number, cells: number[], color: string, duration: number) {
+	public addMarker(owner: number, cells: Cell[], color: string, duration: number) {
 		for (const cell of cells) {
 			const pos = this.ground.cellToXY(cell)
 			const xy = this.ground.xyToXYPixels(pos.x, pos.y)
 			const x = xy.x * this.ground.scale
 			const y = xy.y * this.ground.scale
 			if (color.length === 8) { color = color.substr(2) }
-			this.markers[cell] = {owner, color: '#' + color, duration, x, y}
+			this.markers[cell.id] = {owner, color: '#' + color, duration, x, y}
 		}
 	}
 
@@ -1681,7 +1693,7 @@ class Game {
 
 		for (const e in this.leeks) {
 			const entity = this.leeks[e]
-			entity.setCell(entity.cell)
+			entity.setCell(entity.cell!)
 		}
 		this.requestPause = this.paused
 		this.draw()
@@ -1696,10 +1708,10 @@ class Game {
 		}
 	}
 
-	public getInitialOrientation(cell: number) {
-		const top = cell <= 314
+	public getInitialOrientation(cell: Cell) {
+		const top = cell.id <= 314
 		const mod = this.ground.tilesX * 2 - 1
-		const left = ((cell % mod) * 2) % mod < this.ground.tilesX / 2
+		const left = ((cell.id % mod) * 2) % mod < this.ground.tilesX / 2
 		if (top && left) {
 			return EntityDirection.SOUTH
 		} else if (top && !left) {

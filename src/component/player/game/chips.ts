@@ -4,13 +4,13 @@ import { Colors, Game } from "@/component/player/game/game"
 import { Sound } from '@/component/player/game/sound'
 import { Texture } from '@/component/player/game/texture'
 import { Area } from '@/model/area'
-import { Position } from './cell'
+import { Position } from './position'
 
 abstract class ChipAnimation {
 	public game: Game
 	public done: boolean = false
 	public sound: Sound | null
-	public cell!: number | null
+	public cell!: Cell
 	public targets: Entity[] | undefined
 	public duration: number
 	public position!: Position
@@ -20,7 +20,7 @@ abstract class ChipAnimation {
 		this.sound = sound
 		this.duration = duration
 	}
-	public launch(launchPos: Position, position: Position, targets: Entity[], targetCell: number | null = null, launcher?: Entity) {
+	public launch(launchPos: Position, position: Position, targets: Entity[], targetCell: Cell, launcher?: Entity) {
 		this.cell = targetCell
 		this.targets = targets
 		this.position = position
@@ -81,8 +81,8 @@ class ChipShieldAnimation extends ChipAnimation {
 		super(game, game.S.shield, 60)
 		this.texture = texture
 	}
-	public launch(launchCell: Cell, targetPos: Position, targets: Entity[]) {
-		super.launch(launchCell, targetPos, targets)
+	public launch(launchCell: Cell, targetPos: Position, targets: Entity[], targetCell: Cell) {
+		super.launch(launchCell, targetPos, targets, targetCell)
 		this.createChipImage(targets, this.texture)
 		this.createChipAureol(targets, this.game.T.shield_aureol)
 	}
@@ -97,8 +97,8 @@ class ChipBoostAnimation extends ChipAnimation {
 		this.texture = texture
 		this.area = area
 	}
-	public launch(launchCell: Cell, targetPos: Position, targets: Entity[]) {
-		super.launch(launchCell, targetPos, targets)
+	public launch(launchCell: Cell, targetPos: Position, targets: Entity[], targetCell: Cell) {
+		super.launch(launchCell, targetPos, targets, targetCell)
 		this.createChipImage(targets, this.texture)
 		this.createChipAureol(targets, this.game.T.buff_aureol)
 		if (this.area !== Area.SINGLE_CELL) {
@@ -126,8 +126,8 @@ class ChipHealAnimation extends ChipAnimation {
 		this.texture = texture
 		this.area = area
 	}
-	public launch(launchCell: Cell, targetCell: Cell, targets: Entity[]) {
-		super.launch(launchCell, targetCell, targets)
+	public launch(launchCell: Cell, targetPos: Position, targets: Entity[], targetCell: Cell) {
+		super.launch(launchCell, targetPos, targets, targetCell)
 		this.createChipImage(targets, this.texture)
 		this.createChipAureol(targets, this.game.T.cure_aureol)
 		if (this.area !== Area.SINGLE_CELL) {
@@ -154,8 +154,8 @@ class ChipDebuffAnimation extends ChipAnimation {
 		this.texture = texture
 		this.area = area
 	}
-	public launch(launchCell: Cell, targetCell: Cell, targets: Entity[]) {
-		super.launch(launchCell, targetCell, targets)
+	public launch(launchCell: Cell, targetPos: Position, targets: Entity[], targetCell: Cell) {
+		super.launch(launchCell, targetPos, targets, targetCell)
 		this.createChipImage(targets, this.texture)
 		this.createChipAureol(targets, this.game.T.shackle_aureol)
 		if (this.area !== Area.SINGLE_CELL) {
@@ -172,8 +172,8 @@ class ChipPoisonAnimation extends ChipAnimation {
 		this.texture = texture
 		this.area = area
 	}
-	public launch(launchCell: Cell, targetCell: Cell, targets: Entity[]) {
-		super.launch(launchCell, targetCell, targets)
+	public launch(launchCell: Cell, targetPos: Cell, targets: Entity[], targetCell: Cell) {
+		super.launch(launchCell, targetPos, targets, targetCell)
 		this.createChipImage(targets, this.texture)
 		this.createChipAureol(targets, this.game.T.poison_aureol)
 		if (this.area !== Area.SINGLE_CELL) {
@@ -190,8 +190,8 @@ class ChipDamageReturnAnimation extends ChipAnimation {
 		this.texture = texture
 		this.area = area
 	}
-	public launch(launchCell: Cell, targetCell: Cell, targets: Entity[]) {
-		super.launch(launchCell, targetCell, targets)
+	public launch(launchCell: Cell, targetPos: Position, targets: Entity[], targetCell: Cell) {
+		super.launch(launchCell, targetPos, targets, targetCell)
 		this.createChipImage(targets, this.texture)
 		this.createChipAureol(targets, this.game.T.damage_return_aureol)
 		if (this.area !== Area.SINGLE_CELL) {
@@ -226,8 +226,8 @@ class DevilStrike extends ChipAnimation {
 	constructor(game: Game) {
 		super(game, game.S.fire, 100)
 	}
-	public launch(launchPos: Position, targetCell: Cell, targets: Entity[]) {
-		super.launch(launchPos, targetCell, targets)
+	public launch(launchPos: Position, targetPos: Position, targets: Entity[], targetCell: Cell) {
+		super.launch(launchPos, targetPos, targets, targetCell)
 		this.x = targetCell.x
 		this.y = targetCell.y
 		this.game.setEffectArea(this.x, this.y, Area.CIRCLE3, 'red', 180)
@@ -255,8 +255,8 @@ class Drip extends ChipHealAnimation {
 class Flame extends ChipAnimation {
 	public delay = 2
 	constructor(game: Game) { super(game, game.S.fire, 70) }
-	public launch(launchPos: Position, targetPos: Position, targets: Entity[]) {
-		super.launch(launchPos, targetPos, targets)
+	public launch(launchPos: Position, targetPos: Position, targets: Entity[], targetCell: Cell) {
+		super.launch(launchPos, targetPos, targets, targetCell)
 		for (const target of targets) {
 			target.burnAnim(100)
 		}
@@ -282,8 +282,8 @@ class Flame extends ChipAnimation {
 class Flash extends ChipAnimation {
 	public delay = 1
 	constructor(game: Game) { super(game, game.S.lightning, 70) }
-	public launch(launchPos: Position, targetPos: Position, targets: Entity[]) {
-		super.launch(launchPos, targetPos, targets)
+	public launch(launchPos: Position, targetPos: Position, targets: Entity[], targetCell: Cell) {
+		super.launch(launchPos, targetPos, targets, targetCell)
 		this.game.particles.addImage(targetPos.x - 50, targetPos.y, 220, 0.5, 0, 0, 0, this.game.T.grey_cloud, 80)
 		this.game.particles.addImage(targetPos.x + 50, targetPos.y, 220, -0.5, 0, 0, 0, this.game.T.grey_cloud, 80)
 		this.game.particles.addImage(targetPos.x + 10, targetPos.y, 230, 0.2, 0, 0, 0, this.game.T.grey_cloud, 80)
@@ -315,14 +315,14 @@ class Helmet extends ChipShieldAnimation {
 }
 class Ice extends ChipAnimation {
 	constructor(game: Game) { super(game, game.S.ice, 30) }
-	public launch(launchPos: Position, targetPos: Position, targets: Entity[]) {
-		super.launch(launchPos, targetPos, targets)
+	public launch(launchPos: Position, targetPos: Position, targets: Entity[], targetCell: Cell) {
+		super.launch(launchPos, targetPos, targets, targetCell)
 		this.game.particles.addGarbage(targetPos.x, targetPos.y, 100, 0, 0, 1.5, this.game.T.ice_small, 1, 0)
 	}
 }
 class Iceberg extends ChipAnimation {
 	constructor(game: Game) { super(game, game.S.ice, 40) }
-	public launch(launchPos: Position, targetPos: Position, targets: Entity[]) {
+	public launch(launchPos: Position, targetPos: Position, targets: Entity[], targetCell: Cell) {
 		this.game.particles.addGarbage(targetPos.x, targetPos.y, 180, 0, 0, 3, this.game.T.iceberg, 1, 0)
 		this.game.setEffectArea(targetPos.x, targetPos.y, Area.CIRCLE2, 'red')
 	}
@@ -334,7 +334,7 @@ class Inversion extends ChipAnimation {
 	constructor(game: Game) {
 		super(game, game.S.teleportation, 120)
 	}
-	public launch(launchPos: Position, targetPos: Position, targets: Entity[], targetCell: number, launcher: Entity) {
+	public launch(launchPos: Position, targetPos: Position, targets: Entity[], targetCell: Cell, launcher: Entity) {
 		super.launch(launchPos, targetPos, targets, targetCell, launcher)
 		this.target = targets[0]
 		this.launchPos = launchPos
@@ -399,8 +399,8 @@ class Lightning extends ChipAnimation {
 	constructor(game: Game) {
 		super(game, game.S.lightning, 80)
 	}
-	public launch(launchPos: Position, position: Position, targets: Entity[]) {
-		super.launch(launchPos, position, targets)
+	public launch(launchPos: Position, position: Position, targets: Entity[], targetCell: Cell) {
+		super.launch(launchPos, position, targets, targetCell)
 		this.targets = targets
 		this.game.particles.addImage(this.position.x - 50, this.position.y, 230, 0.5, 0, 0, 0, this.game.T.black_cloud, 90)
 		this.game.particles.addImage(this.position.x + 50, this.position.y, 230, -0.5, 0, 0, 0, this.game.T.black_cloud, 90)
@@ -433,8 +433,8 @@ class Meteorite extends ChipAnimation {
 	constructor(game: Game) {
 		super(game, game.S.meteorite, 100)
 	}
-	public launch(launchPos: Position, position: Position, targets: Entity[]) {
-		super.launch(launchPos, position, targets)
+	public launch(launchPos: Position, position: Position, targets: Entity[], targetCell: Cell) {
+		super.launch(launchPos, position, targets, targetCell)
 		this.vx = (500 + Math.random() * 300) * ((Math.random() > 0.5) ? 1 : -1)
 		this.game.setEffectArea(this.position.x, this.position.y, Area.CIRCLE2, 'red', 180)
 	}
@@ -464,8 +464,8 @@ class Motivation extends ChipBoostAnimation {
 }
 class Pebble extends ChipAnimation {
 	constructor(game: Game) { super(game, game.S.rock, 30) }
-	public launch(launchPos: Position, targetPos: Position, targets: Entity[]) {
-		super.launch(launchPos, targetPos, targets)
+	public launch(launchPos: Position, targetPos: Position, targets: Entity[], targetCell: Cell) {
+		super.launch(launchPos, targetPos, targets, targetCell)
 		this.game.particles.addGarbage(targetPos.x, targetPos.y, 100, 0, 0, 2, this.game.T.pebble_small, 1, 0)
 	}
 }
@@ -489,16 +489,16 @@ class Remission extends ChipHealAnimation {
 }
 class Rock extends ChipAnimation {
 	constructor(game: Game) { super(game, game.S.rock, 40) }
-	public launch(launchPos: Position, targetPos: Position, targets: Entity[]) {
-		super.launch(launchPos, targetPos, targets)
+	public launch(launchPos: Position, targetPos: Position, targets: Entity[], targetCell: Cell) {
+		super.launch(launchPos, targetPos, targets, targetCell)
 		this.game.particles.addGarbage(targetPos.x, targetPos.y, 150, 0, 0, 2, this.game.T.rock, 1, 0)
 	}
 }
 class Rockfall extends ChipAnimation {
 	public delay = 0
 	constructor(game: Game) { super(game, game.S.rockfall, 70) }
-	public launch(launchPos: Position, position: Position, targets: Entity[]) {
-		super.launch(launchPos, position, targets)
+	public launch(launchPos: Position, position: Position, targets: Entity[], targetCell: Cell) {
+		super.launch(launchPos, position, targets, targetCell)
 		this.game.setEffectArea(position.x, position.y, Area.CIRCLE2, 'red')
 	}
 	public update(dt: number) {
@@ -524,8 +524,8 @@ class Shield extends ChipShieldAnimation {
 class Shock extends ChipAnimation {
 	public delay = 2
 	constructor(game: Game) { super(game, game.S.lightning, 60) }
-	public launch(launchPos: Position, position: Position, targets: Entity[]) {
-		super.launch(launchPos, position, targets)
+	public launch(launchPos: Position, position: Position, targets: Entity[], targetCell: Cell) {
+		super.launch(launchPos, position, targets, targetCell)
 		this.game.particles.addImage(this.position.x - 50, this.position.y, 220, 0.5, 0, 0, 0, this.game.T.cloud, 70)
 		this.game.particles.addImage(this.position.x + 50, this.position.y, 220, -0.5, 0, 0, 0, this.game.T.cloud, 70)
 		this.game.particles.addImage(this.position.x + 10, this.position.y, 230, 0.2, 0, 0, 0, this.game.T.cloud, 70)
@@ -550,8 +550,8 @@ class Shock extends ChipAnimation {
 }
 class Spark extends ChipAnimation {
 	constructor(game: Game) { super(game, game.S.fire, 40) }
-	public launch(launchPos: Position, targetPos: Position, targets: Entity[]) {
-		super.launch(launchPos, targetPos, targets)
+	public launch(launchPos: Position, targetPos: Position, targets: Entity[], targetCell: Cell) {
+		super.launch(launchPos, targetPos, targets, targetCell)
 		for (const target of targets) {
 			target.burnAnim(50)
 		}
@@ -559,8 +559,8 @@ class Spark extends ChipAnimation {
 }
 class Stalactite extends ChipAnimation {
 	constructor(game: Game) { super(game, game.S.ice, 40) }
-	public launch(launchPos: Position, targetPos: Position, targets: Entity[]) {
-		super.launch(launchPos, targetPos, targets)
+	public launch(launchPos: Position, targetPos: Position, targets: Entity[], targetCell: Cell) {
+		super.launch(launchPos, targetPos, targets, targetCell)
 		this.game.particles.addGarbage(targetPos.x, targetPos.y, 180, 0, 0, 3, this.game.T.stalactite, 1, 0)
 	}
 }
@@ -572,15 +572,15 @@ class Stretching extends ChipBoostAnimation {
 }
 class Teleportation extends ChipAnimation {
 	public teleported = false
-	public cell!: number
+	public cell!: Cell
 	public launchPos!: Position
 	public targetPos: any
 	public target!: Entity
 	constructor(game: Game) {
 		super(game, game.S.teleportation, 140)
 	}
-	public launch(launchPos: Position, targetPos: Position, targets: Entity[], targetCell: number) {
-		super.launch(launchPos, targetPos, targets)
+	public launch(launchPos: Position, targetPos: Position, targets: Entity[], targetCell: Cell) {
+		super.launch(launchPos, targetPos, targets, targetCell)
 		this.cell = targetCell
 		this.target = targets[0]
 		this.launchPos = launchPos
@@ -688,8 +688,8 @@ class Bark extends ChipBoostAnimation {
 }
 class Burning extends ChipAnimation {
 	constructor(game: Game) { super(game, game.S.fire, 60) }
-	public launch(launchPos: Position, targetPos: Position, targets: Entity[]) {
-		super.launch(launchPos, targetPos, targets)
+	public launch(launchPos: Position, targetPos: Position, targets: Entity[], targetCell: Cell) {
+		super.launch(launchPos, targetPos, targets, targetCell)
 		this.createChipImage(targets, this.game.T.chip_burning)
 	}
 }
@@ -717,8 +717,8 @@ class Punishment extends ChipAnimation {
 	constructor(game: Game) {
 		super(game, null, 35)
 	}
-	public launch(launchPos: Position, position: Position, targets: Entity[]) {
-		super.launch(launchPos, position, targets)
+	public launch(launchPos: Position, position: Position, targets: Entity[], targetCell: Cell) {
+		super.launch(launchPos, position, targets, targetCell)
 		this.targets = targets
 		const s = 40
 		const d = 60
