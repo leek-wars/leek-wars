@@ -1313,129 +1313,185 @@ class Game {
 		}
 	}
 
-	public setEffectAreaCells(cells: number[], color: string, duration: number = 80) {
-
+	public setEffectAreaCells(cells: Cell[], color: string, duration: number = 80, lines: number[][], convert: {[key: number]: [number, number]}) {
 		this.drawArea = duration
 		this.areaColor = color
-
 		this.area = []
 		for (const cell of cells) {
-			if (cell === -1) { continue }
 			const xy = this.ground.cellToXY(cell)
 			const real = this.ground.xyToXYPixels(xy.x, xy.y)
-			this.area.push([real.x * this.ground.scale, real.y * this.ground.scale])
+			const c = convert[cell.id]
+			this.area.push([real.x * this.ground.scale, real.y * this.ground.scale, lines[c[0]][c[1]]])
 		}
 	}
 
-	public setEffectArea(x: number, y: number, area: number, color: string, duration: number = 80) {
-
-		x *= this.ground.scale
-		y *= this.ground.scale
-
+	public setEffectAreaLaser(cells: Cell[], color: string, dx: number, dy: number, duration: number = 60) {
 		this.drawArea = duration
 		this.areaColor = color
-
 		this.area = []
-		const w = this.ground.tileSizeX
-		const h = this.ground.tileSizeY
+		const sides = dx == 0 ? 1 + 4 : 2 + 8
+		const first = dx == 0 ? (dy > 0 ? 2 : 8) : (dx > 0 ? 1 : 4)
+		const last = dx == 0 ? (dy > 0 ? 8 : 2) : (dx > 0 ? 4 : 1)
+		for (let c = 0; c < cells.length; ++c) {
+			const cell = cells[c]
+			const xy = this.ground.cellToXY(cell)
+			const real = this.ground.xyToXYPixels(xy.x, xy.y)
+			const lines = sides + (c === 0 ? first : (c === cells.length - 1 ? last : 0))
+			this.area.push([real.x * this.ground.scale, real.y * this.ground.scale, lines])
+		}
+	}
 
-		if (area === Area.SINGLE_CELL) {
+	public setEffectArea(cell: Cell, area: number, color: string, duration: number = 80) {
 
-			this.area.push([x, y])
+		const cells = [] as Cell[]
+		const lines = [] as number[][]
+		const convert = {} as {[key: number]: [number, number]}
+		let c = 0
 
-		} else if (area === Area.CIRCLE1) {
+		const init_lines = (l: number) => {
+			for (let i = 0; i < l; ++i) {
+				lines.push(new Array(l).fill(0))
+			}
+			c = Math.floor(l / 2)
+		}
+		
+		const add_cell = (x: number, y: number) => {
+			const n = this.ground.next_cell(cell, x, y)
+			lines[c + x][c + y] = ~lines[c + x][c + y] + 16
+			if (n && !n.obstacle) {
+				if (x < c) lines[c + x + 1][c + y] ^= 1
+				if (y < c) lines[c + x][c + y + 1] ^= 2
+				if (x > -c) lines[c + x - 1][c + y] ^= 4
+				if (y > -c) lines[c + x][c + y - 1] ^= 8
+			}
+			if (n === null || n.obstacle) { return }
+			cells.push(n)
+			convert[n.id] = [c + x, c + y]
+		}
 
-			this.area.push([x - w / 2, y - h / 2])
-			this.area.push([x + w / 2, y - h / 2])
+		if (area === Area.CIRCLE1) {
 
-			this.area.push([x, y])
-
-			this.area.push([x - w / 2, y + h / 2])
-			this.area.push([x + w / 2, y + h / 2])
+			init_lines(3)
+			add_cell(0, 0)
+			add_cell(1, 0)
+			add_cell(0, 1)
+			add_cell(-1, 0)
+			add_cell(0, -1)
 
 		} else if (area === Area.CIRCLE2) {
 
-			this.area.push([x - w, y - h])
-			this.area.push([x, y - h])
-			this.area.push([x + w, y - h])
-
-			this.area.push([x - w / 2, y - h / 2])
-			this.area.push([x + w / 2, y - h / 2])
-
-			this.area.push([x - w, y])
-			this.area.push([x, y])
-			this.area.push([x + w, y])
-
-			this.area.push([x - w / 2, y + h / 2])
-			this.area.push([x + w / 2, y + h / 2])
-
-			this.area.push([x - w, y + h])
-			this.area.push([x, y + h])
-			this.area.push([x + w, y + h])
+			init_lines(5)
+			add_cell(0, 0)
+			add_cell(1, 0)
+			add_cell(0, 1)
+			add_cell(-1, 0)
+			add_cell(0, -1)
+			add_cell(2, 0)
+			add_cell(0, 2)
+			add_cell(-2, 0)
+			add_cell(0, -2)
+			add_cell(-1, -1)
+			add_cell(1, -1)
+			add_cell(-1, 1)
+			add_cell(1, 1)
 
 		} else if (area === Area.CIRCLE3) {
 
-			this.area.push([x - 1.5 * w, y - 1.5 * h])
-			this.area.push([x - 0.5 * w, y - 1.5 * h])
-			this.area.push([x + 0.5 * w, y - 1.5 * h])
-			this.area.push([x + 1.5 * w, y - 1.5 * h])
-
-			this.area.push([x - w, y - h])
-			this.area.push([x, y - h])
-			this.area.push([x + w, y - h])
-
-			this.area.push([x - 1.5 * w, y - h / 2])
-			this.area.push([x - 0.5 * w, y - h / 2])
-			this.area.push([x + 0.5 * w, y - h / 2])
-			this.area.push([x + 1.5 * w, y - h / 2])
-
-			this.area.push([x - w, y])
-			this.area.push([x, y])
-			this.area.push([x + w, y])
-
-			this.area.push([x - 1.5 * w, y + h / 2])
-			this.area.push([x - 0.5 * w, y + h / 2])
-			this.area.push([x + 0.5 * w, y + h / 2])
-			this.area.push([x + 1.5 * w, y + h / 2])
-
-			this.area.push([x - w, y + h])
-			this.area.push([x, y + h])
-			this.area.push([x + w, y + h])
-
-			this.area.push([x - 1.5 * w, y + 1.5 * h])
-			this.area.push([x - 0.5 * w, y + 1.5 * h])
-			this.area.push([x + 0.5 * w, y + 1.5 * h])
-			this.area.push([x + 1.5 * w, y + 1.5 * h])
+			init_lines(7)
+			add_cell(0, 0)
+			add_cell(1, 0)
+			add_cell(0, 1)
+			add_cell(-1, 0)
+			add_cell(0, -1)
+			add_cell(2, 0)
+			add_cell(0, 2)
+			add_cell(-2, 0)
+			add_cell(0, -2)
+			add_cell(3, 0)
+			add_cell(0, 3)
+			add_cell(-3, 0)
+			add_cell(0, -3)
+			add_cell(-1, -1)
+			add_cell(1, -1)
+			add_cell(-1, 1)
+			add_cell(1, 1)
+			add_cell(1, 2)
+			add_cell(2, 1)
+			add_cell(2, -1)
+			add_cell(1, -2)
+			add_cell(-1, -2)
+			add_cell(-2, -1)
+			add_cell(-2, 1)
+			add_cell(-1, 2)
 		}
+		this.setEffectAreaCells(cells, color, duration, lines, convert)
+		console.log("lines", lines)
+
 	}
 
 	public drawEffectArea() {
 
 		this.ctx.save()
 
-		this.ctx.globalAlpha = 0.4 * Math.min(1, this.drawArea / 10)
+		this.ctx.globalAlpha = 0.5 * Math.min(1, this.drawArea / 10)
 		this.ctx.fillStyle = this.areaColor
+		this.ctx.strokeStyle = this.areaColor
+		this.ctx.lineWidth = 3 * this.ground.scale
+		this.ctx.lineCap = 'round'
 
 		for (const cell of this.area) {
-			this.drawEffectTile(cell[0], cell[1])
+			this.drawEffectTile(cell[0], cell[1], cell[2])
 		}
 		this.ctx.restore()
 	}
 
-	public drawEffectTile(x: number, y: number) {
+	public drawEffectTile(x: number, y: number, lines: number) {
 
 		this.ctx.save()
 
 		this.ctx.translate(x, y)
 
 		this.ctx.beginPath()
-		this.ctx.moveTo(0, -this.ground.tileSizeY / 2.1)
-		this.ctx.lineTo(this.ground.tileSizeX / 2.1, 0)
-		this.ctx.lineTo(0, this.ground.tileSizeY / 2.1)
-		this.ctx.lineTo(-this.ground.tileSizeX / 2.1, 0)
+		this.ctx.moveTo(0, -this.ground.tileSizeY / 2.)
+		this.ctx.lineTo(this.ground.tileSizeX / 2., 0)
+		this.ctx.lineTo(0, this.ground.tileSizeY / 2.)
+		this.ctx.lineTo(-this.ground.tileSizeX / 2., 0)
 		this.ctx.closePath()
-
 		this.ctx.fill()
+
+		if (lines) {
+			const alpha = this.ctx.globalAlpha
+			this.ctx.globalAlpha = alpha * 2
+			if (lines & 2) {
+				this.ctx.beginPath()
+				this.ctx.moveTo(0, -this.ground.tileSizeY / 2.)
+				this.ctx.lineTo(this.ground.tileSizeX / 2., 0)
+				this.ctx.closePath()
+				this.ctx.stroke()
+			}
+			if (lines & 4) {
+				this.ctx.beginPath()
+				this.ctx.moveTo(this.ground.tileSizeX / 2., 0)
+				this.ctx.lineTo(0, this.ground.tileSizeY / 2.)
+				this.ctx.closePath()
+				this.ctx.stroke()
+			}
+			if (lines & 8) {
+				this.ctx.beginPath()
+				this.ctx.moveTo(0, this.ground.tileSizeY / 2.)
+				this.ctx.lineTo(-this.ground.tileSizeX / 2., 0)
+				this.ctx.closePath()
+				this.ctx.stroke()
+			}
+			if (lines & 1) {
+				this.ctx.beginPath()
+				this.ctx.moveTo(-this.ground.tileSizeX / 2., 0)
+				this.ctx.lineTo(0, -this.ground.tileSizeY / 2.)
+				this.ctx.closePath()
+				this.ctx.stroke()
+			}
+			this.ctx.globalAlpha = alpha
+		}
 
 		this.ctx.restore()
 	}
