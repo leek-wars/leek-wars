@@ -1,6 +1,7 @@
 <template lang="html">
 	<div>
-		<template v-if="success">
+		<loader v-if="loading" />
+		<template v-else-if="success">
 			<div class="page-header page-bar">
 				<h1 v-html="$t('payment_success', [vendor])"></h1>
 			</div>
@@ -48,6 +49,7 @@
 	})
 	export default class BankValidate extends Vue {
 		@Prop() success!: boolean
+		loading: boolean = false
 		error: boolean = false
 		reason: string | null = null
 		crystals: number = 0
@@ -57,6 +59,7 @@
 		}
 		@Watch('$route')
 		update() {
+			this.loading = false
 			this.reason = 'reason' in this.$route.params ? this.$route.params.reason : ''
 			this.crystals = 'crystals' in this.$route.params ? parseInt(this.$route.params.crystals, 10) : 0
 			this.vendor = 'vendor' in this.$route.params ? this.$route.params.vendor : ''
@@ -70,6 +73,7 @@
 				const payment_id = this.$route.query.paymentId
 				const token = this.$route.query.token
 				const payer_id = this.$route.query.PayerID
+				this.loading = true
 				LeekWars.post('bank/execute-paypal-payment', {payment_id, paypal_token: token, payer_id}).then(data => {
 					this.$store.commit('update-crystals', data.crystals)
 					this.$router.replace('/bank/validate/success/' + data.crystals + '/PayPal')
@@ -78,6 +82,7 @@
 					this.error = true
 				})
 			} else {
+				this.loading = true
 				LeekWars.post('bank/execute-starpass-payment', {code: (window as any).__STARPASS_CODE}).then(data => {
 					this.$store.commit('update-crystals', data.crystals)
 					this.$router.replace('/bank/validate/success/' + data.crystals + '/StarPass')
