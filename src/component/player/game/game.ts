@@ -1334,9 +1334,9 @@ class Game {
 		this.drawArea = duration
 		this.areaColor = color
 		this.area = []
-		const sides = dx == 0 ? 1 + 4 : 2 + 8
-		const first = dx == 0 ? (dy > 0 ? 2 : 8) : (dx > 0 ? 1 : 4)
-		const last = dx == 0 ? (dy > 0 ? 8 : 2) : (dx > 0 ? 4 : 1)
+		const sides = dx === 0 ? 1 + 4 : 2 + 8
+		const first = dx === 0 ? (dy > 0 ? 2 : 8) : (dx > 0 ? 1 : 4)
+		const last = dx === 0 ? (dy > 0 ? 8 : 2) : (dx > 0 ? 4 : 1)
 		for (let c = 0; c < cells.length; ++c) {
 			const cell = cells[c]
 			const xy = this.ground.cellToXY(cell)
@@ -1364,10 +1364,10 @@ class Game {
 			const n = this.ground.next_cell(cell, x, y)
 			lines[c + x][c + y] = ~lines[c + x][c + y] + 16
 			if (n && !n.obstacle) {
-				if (x < c) lines[c + x + 1][c + y] ^= 1
-				if (y < c) lines[c + x][c + y + 1] ^= 2
-				if (x > -c) lines[c + x - 1][c + y] ^= 4
-				if (y > -c) lines[c + x][c + y - 1] ^= 8
+				if (x < c) { lines[c + x + 1][c + y] ^= 1 }
+				if (y < c) { lines[c + x][c + y + 1] ^= 2 }
+				if (x > -c) { lines[c + x - 1][c + y] ^= 4 }
+				if (y > -c) { lines[c + x][c + y - 1] ^= 8 }
 			}
 			if (n === null || n.obstacle) { return }
 			cells.push(n)
@@ -1430,8 +1430,6 @@ class Game {
 			add_cell(-1, 2)
 		}
 		this.setEffectAreaCells(cells, color, duration, lines, convert)
-		console.log("lines", lines)
-
 	}
 
 	public drawEffectArea() {
