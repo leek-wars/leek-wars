@@ -487,24 +487,23 @@ class Entity {
 	}
 
 	public useChip(chip: ChipAnimation, cell: Cell, targets: Entity[]) {
-
 		const pos = this.game.ground.cellToXY(cell)
-		const x = pos.x
-		const y = pos.y
-
-		// Inclinaison du poireau vers la cellule cible
-		if (this.x !== x || this.y !== y) {
-			const south = this.y > y
-			const east = this.x > x
-			this.setOrientation(south ? (east ? EntityDirection.NORTH : EntityDirection.EAST) : (east ? EntityDirection.WEST : EntityDirection.SOUTH))
-		}
-
 		const cellPixels = this.game.ground.xyToXYPixels(pos.x, pos.y)
-
+		this.watch(cell)
 		this.computeOrginPos()
-
 		chip.launch({x: this.ox, y: this.oy}, cellPixels, targets, cell, this)
 	}
+
+	// Inclinaison du poireau vers la cellule cible
+	public watch(cell: Cell) {
+		if (cell !== this.cell) {
+			const pos = this.game.ground.cellToXY(cell)
+			const east = this.y < pos.y
+			const south = this.x < pos.x
+			this.setOrientation(south ? (east ? EntityDirection.SOUTH : EntityDirection.EAST) : (east ? EntityDirection.WEST : EntityDirection.NORTH))
+		}
+	}
+
 	public say(ctx: CanvasRenderingContext2D, message: string) {
 		if (!this.dead && this.bubble) {
 			this.bubble.setMessage(ctx, message)
