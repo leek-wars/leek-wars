@@ -583,7 +583,7 @@ class Entity {
 		ctx.strokeStyle = TEAM_COLORS[this.team - 1]
 		ctx.lineCap = 'round'
 		ctx.lineJoin = 'round'
-		ctx.lineWidth = 4
+		ctx.lineWidth = 3.5
 		ctx.stroke()
 
 		ctx.globalAlpha = 1
@@ -632,7 +632,7 @@ class Entity {
 	public drawWhiteTile(ctx: CanvasRenderingContext2D, x: number, y: number) {
 
 		ctx.save()
-		ctx.globalAlpha = 0.4
+		ctx.globalAlpha = 0.5
 		ctx.fillStyle = 'white'
 
 		ctx.translate(((x + 1) / 2) * this.game.ground.tileSizeX, ((y + 1) / 2) * this.game.ground.tileSizeY)
@@ -665,15 +665,15 @@ class Entity {
 
 		const text = this.name + " (" + this.life + ")"
 		const width = Math.max(140, ctx.measureText(text).width + 14)
-		const height = 18
-		const barHeight = 9
+		const height = 19
+		const barHeight = 8
 		
 		const active = this === this.game.selectedEntity || this == this.game.hoverEntity || this == this.game.mouseEntity
 
 		// Fond
 		ctx.globalAlpha = active ? 0.8 : 0.5
-		ctx.fillRect(-width / 2, 0, width, height + barHeight)
 		ctx.fillStyle = active ? 'white' : 'black'
+		ctx.fillRect(-width / 2, 0, width, height + barHeight - 1)
 
 		// Nom
 		ctx.globalAlpha = 1
@@ -684,9 +684,11 @@ class Entity {
 
 		// Barre de vie
 		const life = this.life / this.maxLife
-		ctx.fillStyle = this.getLifeColor()
 		const barWidth = life * width
-		ctx.fillRect(-width / 2 + 2, height + 2, barWidth - 4, barHeight - 4)
+		ctx.fillStyle = this.lifeColor
+		ctx.strokeStyle = this.lifeColorLighter
+		ctx.fillRect(-width / 2 + 1, height, barWidth - 2, barHeight - 2)
+		ctx.strokeRect(-width / 2 + 1, height, barWidth - 2, barHeight - 2)
 
 		// Effects
 		const count = LeekWars.objectSize(this.effects)
@@ -695,7 +697,7 @@ class Entity {
 		ctx.textAlign = "left"
 		for (const e in this.effects) {
 			const effect = this.effects[e]
-			ctx.drawImage(effect.texture, x, 26, 28, 28)
+			ctx.drawImage(effect.texture, x, 25, 28, 28)
 			let effect_message = '' + effect.value
 			if (effect.effect === EffectType.SHACKLE_MAGIC || effect.effect === EffectType.SHACKLE_MP || effect.effect === EffectType.SHACKLE_TP || effect.effect === EffectType.SHACKLE_STRENGTH || effect.effect === EffectType.VULNERABILITY || effect.effect === EffectType.ABSOLUTE_VULNERABILITY) {
 				effect_message = '-' + effect_message
@@ -708,12 +710,12 @@ class Entity {
 			const w2 = ctx.measureText(effect_duration).width
 			ctx.globalAlpha = 0.5
 			ctx.fillStyle = 'black'
-			ctx.fillRect(x + 1, 26 + 17, w + 2, 10)
-			ctx.fillRect(x + 19, 27.5, w2 + 2, 11)
+			ctx.fillRect(x + 1, 25 + 17, w + 2, 10)
+			ctx.fillRect(x + 19, 26.5, w2 + 2, 11)
 			ctx.globalAlpha = 1
 			ctx.fillStyle = 'white'
-			ctx.fillText(effect_message, x + 2, 26 + 23)
-			ctx.fillText(effect_duration, x + 20, 33)
+			ctx.fillText(effect_message, x + 2, 25 + 23)
+			ctx.fillText(effect_duration, x + 20, 32)
 			x += 28
 		}
 		ctx.restore()
