@@ -26,8 +26,8 @@
 			</div>
 		</div>
 		<div v-if="!LeekWars.mobile" class="timeline">
-			<div v-for="entity in game.entityOrder" :class="{summon: entity.summon, current: entity.id === game.currentPlayer, dead: entity.dead}" :key="entity.id" :style="{background: entity.gradient, 'border-color': entity.color}" class="entity" @mouseenter="entity_enter(entity)" @mouseleave="entity_leave(entity)" @click="entity_click(entity)">
-				<div v-if="!entity.dead" :style="{height: 'calc(4px + ' + ((entity.life / entity.maxLife) * 100) + '%)', background: entity.getLifeColor(), 'border-color': entity.getLifeBarBorderColor()}" class="bar"></div>
+			<div v-for="entity in game.entityOrder" :class="{summon: entity.summon, current: entity.id === game.currentPlayer, dead: entity.dead}" :key="entity.id" :style="{background: entity === game.selectedEntity ? '#fffc' : entity.gradient, 'border-color': entity.color}" class="entity" @mouseenter="entity_enter(entity)" @mouseleave="entity_leave(entity)" @click="entity_click(entity)">
+				<div v-if="!entity.dead" :style="{height: 'calc(4px + ' + ((entity.life / entity.maxLife) * 100) + '%)', background: entity.lifeColor, 'border-color': entity.lifeColorLighter}" class="bar"></div>
 				<div class="image">
 					<img v-if="entity.summon" :src="'/image/bulb/' + entity.bulbName + '_front.png'">
 					<turret-image v-else-if="(entity instanceof Turret)" :level="entity.level" :skin="entity.team" :scale="1" />
@@ -36,8 +36,8 @@
 			</div>
 		</div>
 		<template v-if="!LeekWars.mobile">
-			<entity-details v-if="hover_entity" :entity="hover_entity" />
-			<entity-details v-else-if="selected_entity" :entity="selected_entity" />
+			<entity-details v-if="game.hoverEntity" :entity="game.hoverEntity" />
+			<entity-details v-else-if="game.selectedEntity" :entity="game.selectedEntity" />
 			<entity-details v-else-if="game.currentPlayer in game.leeks" :entity="game.leeks[game.currentPlayer]" />
 		</template>
 	</div>
@@ -59,7 +59,6 @@
 		debug: boolean = false
 		actionsMargin: number = 0
 		hover_entity: any | null = null
-		selected_entity: any | null = null
 		Turret = Turret
 		get barWidth() {
 			return LeekWars.mobile ? 300 : 500
@@ -78,13 +77,13 @@
 			})
 		}
 		entity_enter(entity: any) {
-			this.hover_entity = entity
+			this.game.hoverEntity = entity
 		}
 		entity_leave(entity: any) {
-			this.hover_entity = null
+			this.game.hoverEntity = null
 		}
 		entity_click(entity: any) {
-			this.selected_entity = entity
+			this.game.selectedEntity = entity
 		}
 
 		logClass(log: any[]) {

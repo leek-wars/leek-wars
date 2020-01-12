@@ -664,15 +664,17 @@ class Entity {
 		const width = Math.max(140, ctx.measureText(text).width + 14)
 		const height = 18
 		const barHeight = 9
+		
+		const active = this === this.game.selectedEntity || this == this.game.hoverEntity || this == this.game.mouseEntity
 
 		// Fond
-		ctx.globalAlpha = 0.4
-		ctx.fillStyle = 'black'
+		ctx.globalAlpha = active ? 0.8 : 0.5
 		ctx.fillRect(-width / 2, 0, width, height + barHeight)
+		ctx.fillStyle = active ? 'white' : 'black'
 
 		// Nom
 		ctx.globalAlpha = 1
-		ctx.fillStyle = 'white'
+		ctx.fillStyle = active ? 'black' : 'white'
 		ctx.textBaseline = "middle"
 		ctx.textAlign = "center"
 		ctx.fillText(text, 0, 10)

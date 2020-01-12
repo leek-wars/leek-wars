@@ -406,7 +406,7 @@
 			localStorage.setItem('fight/lifes', '' + this.game.showLifes)
 		}
 		canvasClick() {
-			(this.$refs.hud as Hud).selected_entity = this.game.click()
+			this.game.selectedEntity = this.game.click()
 		}
 		@Watch("game.going_to_report")
 		endOfFight() {
