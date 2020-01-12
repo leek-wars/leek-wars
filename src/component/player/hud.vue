@@ -1,10 +1,10 @@
 <template>
-	<div v-if="!LeekWars.mobile" class="hud">
+	<div class="hud">
 		<div class="life-bar">
 			<div class="wrapper">
 				<template v-for="team in game.teams">
 					<tooltip v-for="entity in team" v-if="!entity.dead" :key="entity.id">
-						<div slot="activator" :style="{background: entity.lifeBarGadient, width: Math.max(1, 500 * (entity.life / totalLife) - 3) + 'px'}" class="bar"></div>
+						<div slot="activator" :style="{background: entity.lifeBarGadient, width: Math.max(1, barWidth * (entity.life / totalLife) - 3) + 'px'}" class="bar"></div>
 						{{ entity.name }} ({{ entity.life }})
 					</tooltip>
 				</template>
@@ -17,7 +17,7 @@
 			<div>Mouse cell : {{ game.mouseCell }}</div>
 			<div>FPS : {{ game.fps }}, avg: {{ game.avgFPS }}</div>
 		</div>
-		<div ref="leftPart" class="left-part">
+		<div v-if="!LeekWars.mobile" ref="leftPart" class="left-part">
 			<div ref="actions" :style="{'margin-top': actionsMargin + 'px'}" class="actions">
 				<template v-for="line of game.consoleLines">
 					<action-element v-if="line.action" :key="line.id" :action="line.action" :leeks="game.leeks" turn="1" class="action" />
@@ -25,7 +25,7 @@
 				</template>
 			</div>
 		</div>
-		<div class="timeline">
+		<div v-if="!LeekWars.mobile" class="timeline">
 			<div v-for="entity in game.entityOrder" :class="{summon: entity.summon, current: entity.id === game.currentPlayer, dead: entity.dead}" :key="entity.id" :style="{background: entity.gradient, 'border-color': entity.color}" class="entity" @mouseenter="entity_enter(entity)" @mouseleave="entity_leave(entity)" @click="entity_click(entity)">
 				<div v-if="!entity.dead" :style="{height: 'calc(4px + ' + ((entity.life / entity.maxLife) * 100) + '%)', background: entity.getLifeColor(), 'border-color': entity.getLifeBarBorderColor()}" class="bar"></div>
 				<div class="image">
@@ -35,9 +35,11 @@
 				</div>
 			</div>
 		</div>
-		<entity-details v-if="hover_entity" :entity="hover_entity" />
-		<entity-details v-else-if="selected_entity" :entity="selected_entity" />
-		<entity-details v-else-if="game.currentPlayer in game.leeks" :entity="game.leeks[game.currentPlayer]" />
+		<template v-if="!LeekWars.mobile">
+			<entity-details v-if="hover_entity" :entity="hover_entity" />
+			<entity-details v-else-if="selected_entity" :entity="selected_entity" />
+			<entity-details v-else-if="game.currentPlayer in game.leeks" :entity="game.leeks[game.currentPlayer]" />
+		</template>
 	</div>
 </template>
 
@@ -59,6 +61,9 @@
 		hover_entity: any | null = null
 		selected_entity: any | null = null
 		Turret = Turret
+		get barWidth() {
+			return LeekWars.mobile ? 300 : 500
+		}
 		get totalLife() {
 			return this.game.leeks.reduce((total, e) => total + (!e.summon ? e.life : 0), 0)
 		}
@@ -172,11 +177,13 @@
 		padding-left: 4px;
 		padding-bottom: 0px;
 		padding-right: 1px;
+		height: 15px;
 	}
 	.life-bar .bar {
 		display: inline-block;
-		height: 15px;
 		margin-right: 3px;
+		height: calc(100% - 3px);
+		vertical-align: top;
 	}
 	.life-bar .bar.dead {
 		margin-right: 0px;
@@ -186,6 +193,9 @@
 	}
 	.life-bar .v-tooltip:last-child .bar {
 		border-bottom-right-radius: 10px;
+	}
+	#app.app .life-bar .wrapper {
+		height: 12px;
 	}
 	.actions {
 		text-align: left;

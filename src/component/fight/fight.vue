@@ -122,7 +122,7 @@
 						this.playerHeight = height
 					} else {
 						this.playerWidth = window.innerWidth
-						this.playerHeight = this.playerWidth / RATIO
+						this.playerHeight = this.playerWidth / RATIO + 60
 					}
 				}
 			})

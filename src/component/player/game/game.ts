@@ -18,8 +18,9 @@ import { EffectType } from '@/model/effect'
 import { Fight, FightData, TEAM_COLORS } from '@/model/fight'
 import { i18n } from '@/model/i18n'
 import { LeekWars } from '@/model/leekwars'
-import { Turret } from './turret'
 import { Cell } from './cell'
+import { Turret } from './turret'
+import Vue from 'vue'
 
 enum Colors {
 	MP_COLOR = "#08D900",
@@ -413,7 +414,7 @@ class Game {
 			if (entity instanceof Leek) {
 
 				if (this.teams[entity.team - 1] === undefined) {
-					this.teams[entity.team - 1] = []
+					Vue.set(this.teams, entity.team - 1, [])
 				}
 				this.teams[entity.team - 1].push(entity)
 				this.entityOrder.push(entity)
