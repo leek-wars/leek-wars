@@ -228,8 +228,8 @@ class DevilStrike extends ChipAnimation {
 	}
 	public launch(launchPos: Position, targetPos: Position, targets: Entity[], targetCell: Cell) {
 		super.launch(launchPos, targetPos, targets, targetCell)
-		this.x = targetCell.x
-		this.y = targetCell.y
+		this.x = targetPos.x
+		this.y = targetPos.y
 		this.game.setEffectArea(targetCell, Area.CIRCLE3, 'red', 180)
 		this.game.particles.addImage(this.x, this.y, 0, 0, 0, 0, 0, this.game.T.red_circle, 120, 0.6, true)
 		this.game.particles.addImage(this.x, this.y, 50, 0, 0, 1.2, 0, this.game.T.daemon_shadow, 100, 0.9)
