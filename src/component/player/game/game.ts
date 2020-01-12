@@ -241,6 +241,8 @@ class Game {
 	public avgFPS: number = 0
 	public showCellTime: number = 0
 	public currentPlayer: number | null = null
+	public selectedEntity: Entity | null = null
+	public hoverEntity: Entity | null = null
 	public jumping: any
 	public currentTurn: number = 0
 	public ratio: number = 1
@@ -642,6 +644,9 @@ class Game {
 					}
 				}
 				this.mouseEntity = hover_entity
+				if (this.mouseCell !== undefined) {
+					this.hoverEntity = hover_entity
+				}
 				
 				// Chips
 				for (let c = 0; c < this.chips.length; ++c) {
