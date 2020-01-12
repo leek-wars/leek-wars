@@ -132,7 +132,7 @@ abstract class RangeWeapon extends WeaponAnimation {
 		const X = leekX + (this.cx + x * cos - y * sin) * orientation
 		const Y = leekY + (y * cos + x * sin)
 		const realAngle = (angle + Math.PI / 2) * orientation - Math.PI / 2
-		this.throwBullet(X, Y, z, realAngle, cell, targets, caster)
+		this.throwBullet(X, Y, z, realAngle, targetPos, targets, caster, cell)
 		// Cartridges
 		if (this.cartTexture) {
 			const cx = this.x + this.cartX - this.recoil
@@ -156,14 +156,14 @@ abstract class RangeWeapon extends WeaponAnimation {
 			if (this.recoil < 0) { this.recoil = 0 }
 		}
 	}
-	public abstract throwBullet(X: number, Y: number, z: number, angle: number, cell: Cell, targets: Entity[], caster: Entity): void
+	public abstract throwBullet(X: number, Y: number, z: number, angle: number, position: Position, targets: Entity[], caster: Entity, cell: Cell): void
 }
 
 class Firegun extends RangeWeapon {
 	constructor(game: Game, texture: Texture, cartTexture: Texture | null, sound: Sound, cx: number, cz: number, ocx: number, x: number, z: number, mx1: number, mz1: number, mx2: number, mz2: number, sx: number, sz: number, cartX: number, cartZ: number, cartAngle: number, recoilForce: number) {
 		super(game, texture, cartTexture, sound, cx, cz, ocx, x, z, mx1, mz1, mx2, mz2, sx, sz, cartX, cartZ, cartAngle, recoilForce)
 	}
-	public throwBullet(x: number, y: number, z: number, angle: number, cell: Cell, targets: Entity[]) {
+	public throwBullet(x: number, y: number, z: number, angle: number, position: Position, targets: Entity[], caster: Entity, cell: Cell) {
 		this.game.particles.addShot(x, y, z, angle)
 		this.game.particles.addBullet(x, y, z, angle, targets)
 	}
@@ -181,7 +181,7 @@ class LaserWeapon extends RangeWeapon {
 		this.min_range = min_range
 		this.color = color
 	}
-	public throwBullet(X: number, Y: number, z: number, angle: number, cell: Cell, targets: Entity[], caster: Entity) {
+	public throwBullet(X: number, Y: number, z: number, angle: number, targetPosition: Position, targets: Entity[], caster: Entity, cell: Cell) {
 		const dx = Math.sign(cell.x - caster.cell!.x)
 		const dy = Math.sign(cell.y - caster.cell!.y)
 		let current_cell = caster.cell
@@ -229,7 +229,7 @@ class DoubleGun extends Firegun {
 	constructor(game: Game) {
 		super(game, game.T.double_gun, game.T.cart_double_gun, game.S.double_gun, 15, 35, 0, -10, -15, 11, 30, 32, 31, 160, 14, 60, 20, Math.PI / 2, 18)
 	}
-	public throwBullet(x: number, y: number, z: number, angle: number, cell: Cell, targets: Entity[]) {
+	public throwBullet(x: number, y: number, z: number, angle: number, position: Position, targets: Entity[]) {
 		this.game.particles.addBullet(x, y, z, angle - Math.PI / 40, targets)
 		this.game.particles.addBullet(x, y, z, angle + Math.PI / 40, [])
 	}
@@ -378,8 +378,8 @@ class GrenadeLauncher extends Firegun {
 	constructor(game: Game) {
 		super(game, game.T.grenade_launcher, game.T.cart_grenade_launcher, game.S.grenade_shoot, 0, 40, 0, -35, -15, 38, 28, 66, 29, 150, 14, 60, 20, Math.PI / 2, 18)
 	}
-	public throwBullet(x: number, y: number, z: number, angle: number, cell: Cell, targets: Entity[]) {
-		this.game.particles.addGrenade(x, y, z, angle, cell, targets)
+	public throwBullet(x: number, y: number, z: number, angle: number, position: Position, targets: Entity[], caster: Entity, cell: Cell) {
+		this.game.particles.addGrenade(x, y, z, angle, position, targets)
 		this.game.setEffectArea(cell, Area.CIRCLE2, 'red')
 	}
 }
@@ -402,7 +402,7 @@ class MachineGun extends Firegun {
 	constructor(game: Game) {
 		super(game, game.T.machine_gun, game.T.cart_machine_gun, game.S.machine_gun, 15, 45, 0, -35, -15, 20, 40, 63, 40, 160, 14, 60, 20, Math.PI / 2, 18)
 	}
-	public throwBullet(x: number, y: number, z: number, angle: number, cell: Cell, targets: Entity[]) {
+	public throwBullet(x: number, y: number, z: number, angle: number, position: Position, targets: Entity[], caster: Entity, cell: Cell) {
 		this.game.particles.addBullet(x, y, z, angle, targets)
 		this.game.particles.addBullet(x, y, z, angle + Math.PI / 50, [])
 		this.game.particles.addBullet(x, y, z, angle - Math.PI / 50, [])
@@ -424,7 +424,7 @@ class Shotgun extends Firegun {
 	constructor(game: Game) {
 		super(game, game.T.shotgun, game.T.cart_shotgun, game.S.shotgun, 15, 45, 0, -35, -15, 17, 30, 63, 30, 160, 14, 60, 20, Math.PI / 2, 18)
 	}
-	public throwBullet(x: number, y: number, z: number, angle: number, cell: Cell, targets: Entity[]) {
+	public throwBullet(x: number, y: number, z: number, angle: number, position: Position, targets: Entity[], caster: Entity, cell: Cell) {
 		// Real bullet
 		this.game.particles.addBullet(x, y, z, angle, targets)
 		// Others
