@@ -309,9 +309,9 @@ class Meteorite extends Particle {
 }
 class Grenade extends FallingParticle {
 	public targets: Entity[]
-	constructor(game: Game, x: number, y: number, z: number, angle: number, cell: Cell, targets: Entity[]) {
+	constructor(game: Game, x: number, y: number, z: number, angle: number, pos: Position, targets: Entity[]) {
 		super(game, x, y, z, GRENADE_LIFE)
-		const dist = Math.sqrt((x - cell.x) * (x - cell.x) + (y - cell.y) * (y - cell.y))
+		const dist = Math.sqrt((x - pos.x) * (x - pos.x) + (y - pos.y) * (y - pos.y))
 		this.dx = Math.cos(angle) * dist * 0.033
 		this.dy = Math.sin(angle) * dist * 0.033
 		this.angle = angle
