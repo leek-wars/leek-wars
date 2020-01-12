@@ -76,7 +76,7 @@ class Entity {
 	// Vitesse de déplacement
 	public speed = 0.04
 	public moveDelay = 0
-	public jumpHeight = 35
+	public jumpHeight = 25
 	// Drawing
 	public drawID: number | null = null
 	// States
