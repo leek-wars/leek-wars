@@ -125,6 +125,8 @@ class Entity {
 
 	public setCell(cell: Cell) {
 		this.cell = cell
+		this.path = []
+		this.moveDelay = 0
 		const pos = this.game.ground.cellToXY(cell)
 		this.setPosition(pos.x, pos.y)
 		this.computeOrginPos()
