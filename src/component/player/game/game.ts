@@ -918,7 +918,6 @@ class Game {
 			entity.active = true
 			entity.reborn()
 
-			entity.drawID = this.addDrawableElement(entity, entity.y)
 			this.log(action)
 			this.actionDone()
 			break
