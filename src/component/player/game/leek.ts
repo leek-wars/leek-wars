@@ -49,7 +49,7 @@ class Leek extends Entity {
 	public heightAnim: number = 0
 
 	constructor(game: Game, team: number, level: number) {
-		super(game, EntityType.LEEK)
+		super(game, EntityType.LEEK, team)
 		this.baseZ = -5
 		this.z = this.baseZ
 	}

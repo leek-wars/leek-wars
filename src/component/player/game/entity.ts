@@ -103,15 +103,20 @@ class Entity {
 	public bodyTexFront!: Texture
 	public bodyTexBack!: Texture
 	public bloodTex: Texture
+	public lifeColor!: string
+	public lifeColorLighter!: string
 
-	constructor(game: Game, type: EntityType) {
+	constructor(game: Game, type: EntityType, team: number) {
 		this.game = game
 		this.type = type
+		this.team = team
 		this.bubble = new Bubble(game)
 		this.path = []
 		this.frame = Math.random() * 100
 		this.effects = {}
 		this.bloodTex = this.game.T.leek_blood
+		this.lifeColor = TEAM_COLORS[this.team - 1]
+		this.lifeColorLighter = LeekWars.shadeColor(this.lifeColor, 120)
 	}
 
 	public isDead() {
@@ -723,10 +728,6 @@ class Entity {
 			this.bubble.draw(ctx, 0, this.getHeight() + 40, this.isTop)
 			ctx.restore()
 		}
-	}
-	public getLifeColor() {
-		const rgb = this.getLifeColorRGB()
-		return "rgb(" + rgb[0] + "," + rgb[1] + "," + rgb[2] + ")"
 	}
 	public getLifeColorRGB() {
 		const life = this.life / this.maxLife

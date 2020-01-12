@@ -82,8 +82,8 @@ class Fight {
 }
 
 const TEAM_COLORS = [
-	"#0000AB", // blue
-	"#DC0000", // red
+	"#0b30ea", // blue
+	"#dd0d0d", // red
 	"#4FBF1C", // green
 	"#FDED00", // yellow
 	"#B02D20", // brown
