@@ -260,7 +260,7 @@ class Electrisor extends WeaponAnimation {
 		this.lightningAngle = (angle + Math.PI / 2) * orientation - Math.PI / 2
 		this.lightningPosition = targetPos
 		this.shoots = 40
-		this.game.setEffectArea(cell, Area.CIRCLE1, '#0263f4')
+		this.game.setEffectArea(cell, Area.CIRCLE1, '#0263f4', 110)
 		this.game.S.electrisor.play()
 		this.caster = caster
 	}
