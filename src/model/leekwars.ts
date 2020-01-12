@@ -447,6 +447,7 @@ const LeekWars = {
 	get_cursor_position, set_cursor_position,
 	formatDate, formatDateTime, formatDuration, formatTime, formatTimeSeconds, formatDayMonthShort, formatEmojis,
 	setTitle, setSubTitle, setTitleCounter, setTitleTag,
+	shadeColor,
 	createCodeArea, createCodeAreaSimple,
 	clover: false, cloverTop: 0, cloverLeft: 0, lucky,
 	playSound, setFavicon,
@@ -821,6 +822,10 @@ function detectNativeEmojis() {
 		return ctx.getImageData(0, 0, 1, 1).data[0] > 0
 	}
 	return false
+}
+
+function shadeColor(color: string, amount: number) {
+	return '#' + color.replace(/^#/, '').replace(/../g, c => ('0' + Math.min(255, Math.max(0, parseInt(c, 16) + amount)).toString(16)).substr(-2))
 }
 
 Commands.addDocumentationCommands()

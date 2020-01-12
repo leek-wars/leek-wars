@@ -17,7 +17,7 @@
 					<div class="spacer"></div>
 					<span class="level">{{ $t('fight.leek_level', [entity.level]) }}</span>
 					<div class="bar-wrapper">
-						<div :style="{width: (100 * entity.life / entity.maxLife) + '%', background: entity.getLifeColor()}" class="details-bar"></div>
+						<div :style="{width: (100 * entity.life / entity.maxLife) + '%', background: entity.lifeColor}" class="details-bar"></div>
 					</div>
 					<div>{{ entity.farmer_name }}</div>
 					<avatar :farmer="entity.farmer" class="farmer-avatar" />

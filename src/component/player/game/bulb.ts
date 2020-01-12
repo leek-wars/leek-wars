@@ -8,7 +8,7 @@ class Bulb extends Entity {
 	public heightAnim!: number
 
 	constructor(game: Game, team: number, level: number) {
-		super(game, EntityType.BULB)
+		super(game, EntityType.BULB, team)
 		this.baseZ = -6
 		this.z = this.baseZ
 		this.bloodTex = this.game.T.leek_blood

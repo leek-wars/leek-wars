@@ -15,7 +15,7 @@ class Turret extends Entity {
 	pieces: Piece[]
 
 	constructor(game: Game, team: number, level: number) {
-		super(game, EntityType.TURRET)
+		super(game, EntityType.TURRET, team)
 		const color = team === 1 ? 'blue' : 'red'
 		this.textures.base = new Texture(game, env.STATIC + 'image/turret/base_' + color + '.png', true, SHADOW_QUALITY)
 		this.textures.core = new Texture(game, env.STATIC + 'image/turret/core_' + color + '.png', true, SHADOW_QUALITY)
