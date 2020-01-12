@@ -33,37 +33,37 @@ class Ground {
 	public realGridWidth: number = 0
 	public realGridHeight: number = 0
 	public coord: Cell[][] = []
+	public cells: Cell[] = []
 	private min_x = -1
 	private max_x = -1
 	private min_y = -1
 	private max_y = -1
-	public cells: Cell[] = []
 
 	constructor(game: Game) {
 		this.game = game
-
 		this.nb_cells = (this.tilesX * 2 - 1) * this.tilesY - (this.tilesX - 1)
-		console.log(this.nb_cells)
 		for (let id = 0; id < this.nb_cells; id++) {
 			const x1 = id % (this.tilesX * 2 - 1)
 			const y1 = Math.floor(id / (this.tilesX * 2 - 1))
 			const y = y1 - x1 % this.tilesX
 			const x = (id - (this.tilesX - 1) * y) / this.tilesX
 			const cell = new Cell(id, x, y)
-			if (this.min_x == -1 || x < this.min_x)
-				this.min_x = x;
-			if (this.max_x == -1 || x > this.max_x)
-				this.max_x = x;
-			if (this.min_y == -1 || y < this.min_y)
-				this.min_y = y;
-			if (this.max_y == -1 || y > this.max_y)
-				this.max_y = y;
+			if (this.min_x === -1 || x < this.min_x) {
+				this.min_x = x
+			}
+			if (this.max_x === -1 || x > this.max_x) {
+				this.max_x = x
+			}
+			if (this.min_y === -1 || y < this.min_y) {
+				this.min_y = y
+			}
+			if (this.max_y === -1 || y > this.max_y) {
+				this.max_y = y
+			}
 			this.cells.push(cell)
 		}
-		console.log(this.min_x, this.min_y, this.max_x, this.max_y)
-		let sx = this.max_x - this.min_x + 1
-		let sy = this.max_y - this.min_y + 1
-		console.log(sx, sy)
+		const sx = this.max_x - this.min_x + 1
+		const sy = this.max_y - this.min_y + 1
 		this.coord = Array.from(Array(sy), () => new Array(sx).fill(null))
 		for (const cell of this.cells) {
 			this.coord[cell.x - this.min_x][cell.y - this.min_y] = cell
@@ -322,9 +322,8 @@ class Ground {
 
 	public next_cell(cell: Cell | null, dx: number, dy: number) {
 		if (cell === null) { return null }
-		let x = cell.x + dx
-		let y = cell.y + dy
-		console.log(x, y)
+		const x = cell.x + dx
+		const y = cell.y + dy
 		if (x < this.min_x || y < this.min_y || x > this.max_x || y > this.max_y) {
 			return null
 		}
