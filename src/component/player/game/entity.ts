@@ -124,7 +124,6 @@ class Entity {
 	}
 
 	public setCell(cell: Cell) {
-		console.log("setCell", cell)
 		this.cell = cell
 		const pos = this.game.ground.cellToXY(cell)
 		this.setPosition(pos.x, pos.y)

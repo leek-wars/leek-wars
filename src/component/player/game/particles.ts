@@ -1,9 +1,8 @@
-import { Position } from '@/component/player/game/position'
 import { Entity } from '@/component/player/game/entity'
 import { Game } from "@/component/player/game/game"
 import { Blood, Bullet, Cartridge, CollideFire, CollideGaz, Explosion, Fire, Garbage, Gaz, Grenade, ImageParticle, Laser, Lightning, Meteorite, NUM_BLOOD_SPRITES, Particle, Rectangle, Shot, SimpleFire, SpikeParticle } from '@/component/player/game/particle'
+import { Position } from '@/component/player/game/position'
 import { Texture } from '@/component/player/game/texture'
-import { Cell } from './cell'
 
 class Particles {
 	public game: Game

@@ -3,8 +3,8 @@ import { Game } from "@/component/player/game/game"
 import { Sound } from '@/component/player/game/sound'
 import { Texture } from '@/component/player/game/texture'
 import { Area } from '@/model/area'
-import { Leek } from './leek'
 import { Cell } from './cell'
+import { Leek } from './leek'
 import { Position } from './position'
 
 abstract class WeaponAnimation {

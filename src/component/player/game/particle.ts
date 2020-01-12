@@ -1,8 +1,7 @@
-import { Position } from '@/component/player/game/position'
 import { Entity } from '@/component/player/game/entity'
 import { Game } from '@/component/player/game/game'
+import { Position } from '@/component/player/game/position'
 import { Texture } from "@/component/player/game/texture"
-import { Cell } from './cell'
 
 const NUM_SHOTS_SPRITES = 4
 const NUM_BLOOD_SPRITES = 4
