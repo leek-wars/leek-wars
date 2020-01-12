@@ -159,7 +159,7 @@ class ChipDebuffAnimation extends ChipAnimation {
 		this.createChipImage(targets, this.texture)
 		this.createChipAureol(targets, this.game.T.shackle_aureol)
 		if (this.area !== Area.SINGLE_CELL) {
-			this.game.setEffectArea(targetCell, this.area, 'purple')
+			this.game.setEffectArea(targetCell, this.area, '#9f00ef')
 		}
 	}
 }
@@ -499,7 +499,7 @@ class Rockfall extends ChipAnimation {
 	constructor(game: Game) { super(game, game.S.rockfall, 70) }
 	public launch(launchPos: Position, position: Position, targets: Entity[], targetCell: Cell) {
 		super.launch(launchPos, position, targets, targetCell)
-		this.game.setEffectArea(targetCell, Area.CIRCLE2, 'red', 100)
+		this.game.setEffectArea(targetCell, Area.CIRCLE2, '#c5c2c6', 100)
 	}
 	public update(dt: number) {
 		super.update(dt)
