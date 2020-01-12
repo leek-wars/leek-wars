@@ -670,7 +670,7 @@ class Entity {
 		const height = 19
 		const barHeight = 8
 		
-		const active = this === this.game.selectedEntity || this == this.game.hoverEntity || this == this.game.mouseEntity
+		const active = this === this.game.selectedEntity || this === this.game.hoverEntity || this === this.game.mouseEntity
 
 		// Fond
 		ctx.globalAlpha = active ? 0.8 : 0.5

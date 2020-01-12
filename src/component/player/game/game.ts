@@ -1,3 +1,4 @@
+
 import Player from '@/component/player.vue'
 import { Bubble } from '@/component/player/game/bubble'
 import { Bulb } from '@/component/player/game/bulb'
@@ -18,9 +19,9 @@ import { EffectType } from '@/model/effect'
 import { Fight, FightData, TEAM_COLORS } from '@/model/fight'
 import { i18n } from '@/model/i18n'
 import { LeekWars } from '@/model/leekwars'
+import Vue from 'vue'
 import { Cell } from './cell'
 import { Turret } from './turret'
-import Vue from 'vue'
 
 enum Colors {
 	MP_COLOR = "#08D900",
