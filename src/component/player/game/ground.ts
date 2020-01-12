@@ -87,12 +87,12 @@ class Ground {
 		if (LeekWars.mobile) {
 			GROUND_PADDING_LEFT = 10
 			GROUND_PADDING_RIGHT = 10
-			GROUND_PADDING_TOP = 10
+			GROUND_PADDING_TOP = 100
 			GROUND_PADDING_BOTTOM = 20
 		} else {
 			GROUND_PADDING_LEFT = 210
 			GROUND_PADDING_RIGHT = 20
-			GROUND_PADDING_TOP = 100
+			GROUND_PADDING_TOP = 20
 			GROUND_PADDING_BOTTOM = 50
 		}
 		this.width = width
@@ -109,8 +109,8 @@ class Ground {
 		}
 
 		// Calculate start position
-		this.startX = Math.round(width - this.gridWidth - GROUND_PADDING_RIGHT)
-		this.startY = Math.round(height - this.gridHeight - GROUND_PADDING_BOTTOM) / 2
+		this.startX = GROUND_PADDING_LEFT + Math.round(width - GROUND_PADDING_LEFT - GROUND_PADDING_RIGHT - this.gridWidth) / 2
+		this.startY = GROUND_PADDING_TOP + Math.round(height - GROUND_PADDING_BOTTOM - GROUND_PADDING_TOP - this.gridHeight) / 2
 
 		// Taille des cases
 		this.tileSizeX = this.gridWidth / this.tilesX
