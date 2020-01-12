@@ -906,6 +906,7 @@ class Game {
 			if (!this.jumping) {
 				this.log(action)
 				this.S.bulb.play()
+				this.leeks[caster].watch(cell)
 			}
 			this.actionDone()
 			break
