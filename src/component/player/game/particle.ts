@@ -207,18 +207,6 @@ class Fire extends Particle {
 		ctx.globalAlpha = 1
 	}
 }
-class CollideFire extends CollideParticle {
-	constructor(game: Game, x: number, y: number, z: number, angle: number, targets: Entity[]) {
-		super(game, x, y, z, FIRE_LIFE, targets)
-		angle += (Math.random() * (Math.PI / 10)) - Math.PI / 20
-		const speed = FIRE_SPEED_MIN + Math.random() * (FIRE_SPEED_MAX - FIRE_SPEED_MIN)
-		this.dx = Math.cos(angle) * speed
-		this.dy = Math.sin(angle) * speed
-	}
-	public draw(ctx: CanvasRenderingContext2D) {
-		// don't draw
-	}
-}
 class SimpleFire extends Particle {
 	constructor(game: Game, x: number, y: number, z: number, angle: number) {
 		super(game, x, y, z, FIRE_LIFE)
@@ -249,18 +237,6 @@ class Gaz extends Particle {
 		const size = 70 - this.life / 2.5
 		ctx.drawImage(this.game.T.gaz.texture, this.textureID * 20, 0, 20, 20, -size / 2, -size / 2, size, size)
 		ctx.globalAlpha = 1
-	}
-}
-class CollideGaz extends CollideParticle {
-	constructor(game: Game, x: number, y: number, z: number, targets: Entity[], angle: number) {
-		super(game, x, y, z, GAZ_LIFE, targets)
-		angle += (Math.random() * (Math.PI / 10)) - Math.PI / 20
-		const speed = GAZ_SPEED_MIN + Math.random() * (GAZ_SPEED_MAX - GAZ_SPEED_MIN)
-		this.dx = Math.cos(angle) * speed
-		this.dy = Math.sin(angle) * speed
-	}
-	public draw(ctx: CanvasRenderingContext2D) {
-		// don't draw
 	}
 }
 class Meteorite extends Particle {
@@ -526,4 +502,4 @@ class Blood extends Particle {
 	}
 }
 
-export { Particle, Bullet, Laser, Lightning, Fire, CollideFire, SimpleFire, Gaz, CollideGaz, Meteorite, Grenade, Shot, Explosion, Cartridge, Garbage, ImageParticle, Rectangle, Blood, SpikeParticle, NUM_BLOOD_SPRITES }
+export { Particle, Bullet, Laser, Lightning, Fire, SimpleFire, Gaz, Meteorite, Grenade, Shot, Explosion, Cartridge, Garbage, ImageParticle, Rectangle, Blood, SpikeParticle, NUM_BLOOD_SPRITES }

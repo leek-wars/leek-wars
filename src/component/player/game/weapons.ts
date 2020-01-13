@@ -304,8 +304,7 @@ class FlameThrower extends WeaponAnimation {
 		this.bulletY = leekY + x * sin
 		this.bulletZ = z
 		this.bulletAngle = (angle + Math.PI / 2) * orientation - Math.PI / 2
-		this.shoots = 42
-		this.game.particles.addCollideFire(this.bulletX, this.bulletY, this.bulletZ, this.bulletAngle, targets)
+		this.shoots = 72
 		this.game.S.flame_thrower.play()
 
 		const dx = Math.sign(cell.x - caster.cell!.x)
@@ -324,8 +323,10 @@ class FlameThrower extends WeaponAnimation {
 	}
 	public update(dt: number) {
 		if (this.shoots > 0) {
-			for (let i = 0; i < Math.round(3 * dt); i++) {
-				this.game.particles.addFire(this.bulletX, this.bulletY, this.bulletZ, this.bulletAngle, true)
+			if (this.shoots > 30) {
+				for (let i = 0; i < Math.round(3 * dt); i++) {
+					this.game.particles.addFire(this.bulletX, this.bulletY, this.bulletZ, this.bulletAngle, true)
+				}
 			}
 			this.shoots--
 			if (this.shoots <= 0) {
@@ -357,15 +358,16 @@ class Gazor extends WeaponAnimation {
 		this.bulletY = leekY + x * sin
 		this.bulletZ = z
 		this.bulletAngle = (angle + Math.PI / 2) * orientation - Math.PI / 2
-		this.shoots = 50
-		this.game.particles.addCollideGaz(this.bulletX, this.bulletY, this.bulletZ, this.bulletAngle, targets)
+		this.shoots = 80
 		this.game.setEffectArea(cell, Area.CIRCLE3, '#04e513')
 		this.game.S.gazor.play()
 	}
 	public update(dt: number) {
 		if (this.shoots > 0) {
-			for (let i = 0; i < Math.round(3 * dt); i++) {
-				this.game.particles.addGaz(this.bulletX, this.bulletY, this.bulletZ, this.bulletAngle, true)
+			if (this.shoots > 30) {
+				for (let i = 0; i < Math.round(3 * dt); i++) {
+					this.game.particles.addGaz(this.bulletX, this.bulletY, this.bulletZ, this.bulletAngle, true)
+				}
 			}
 			this.shoots--
 			if (this.shoots <= 0) {

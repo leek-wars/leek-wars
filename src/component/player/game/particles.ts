@@ -1,6 +1,6 @@
 import { Entity } from '@/component/player/game/entity'
 import { Game } from "@/component/player/game/game"
-import { Blood, Bullet, Cartridge, CollideFire, CollideGaz, Explosion, Fire, Garbage, Gaz, Grenade, ImageParticle, Laser, Lightning, Meteorite, NUM_BLOOD_SPRITES, Particle, Rectangle, Shot, SimpleFire, SpikeParticle } from '@/component/player/game/particle'
+import { Blood, Bullet, Cartridge, Explosion, Fire, Garbage, Gaz, Grenade, ImageParticle, Laser, Lightning, Meteorite, NUM_BLOOD_SPRITES, Particle, Rectangle, Shot, SimpleFire, SpikeParticle } from '@/component/player/game/particle'
 import { Position } from '@/component/player/game/position'
 import { Texture } from '@/component/player/game/texture'
 
@@ -50,17 +50,11 @@ class Particles {
 	public addFire(x: number, y: number, z: number, angle: number, thrown: boolean = false) {
 		this.add(new Fire(this.game, x, y, z, angle, thrown))
 	}
-	public addCollideFire(x: number, y: number, z: number, angle: number, targets: Entity[]) {
-		this.add(new CollideFire(this.game, x, y, z, angle, targets))
-	}
 	public addFireSimple(x: number, y: number, z: number, angle: number) {
 		this.add(new SimpleFire(this.game, x, y, z, angle))
 	}
 	public addGaz(x: number, y: number, z: number, angle: number, thrown: boolean = false) {
 		this.add(new Gaz(this.game, x, y, z, angle, thrown))
-	}
-	public addCollideGaz(x: number, y: number, z: number, angle: number, targets: Entity[]) {
-		this.add(new CollideGaz(this.game, x, y, z, targets, angle))
 	}
 	public addMeteorite(x: number, y: number, z: number, angle: number, size: number, targets: Entity[] | undefined, actionDoneAfterDie: boolean) {
 		this.add(new Meteorite(this.game, x, y, z, size, angle, targets, actionDoneAfterDie))
