@@ -535,6 +535,7 @@
 		padding-bottom: 10px;
 		button {
 			margin-bottom: 5px;
+			margin-left: 8px;
 			img {
 				vertical-align: top;
 				margin-left: 5px;
