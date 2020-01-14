@@ -357,7 +357,9 @@ class Entity {
 
 	public buffAbsoluteShield(absoluteShield: number, jump: boolean) {
 		this.absoluteShield += absoluteShield
-		if (!jump) { this.newInfoText("+" + absoluteShield, Colors.SHIELD_COLOR) }
+		if (!jump) {
+			this.newInfoText((absoluteShield >= 0 ? "+" : "") + absoluteShield, Colors.SHIELD_COLOR)
+		}
 	}
 
 	public buffDamageReturn(damageReturn: number, jump: boolean) {

@@ -400,6 +400,11 @@ class MLaser extends LaserWeapon {
 		super(game, game.T.m_laser, game.T.m_laser_bullet, game.T.cart_m_laser, game.S.laser, 15, 38, 0, -70, -20, 69, 33, 114, 33, 126, 25, 60, 20, Math.PI / 2, 18, 8, 5, "#d80205")
 	}
 }
+class JLaser extends LaserWeapon {
+	constructor(game: Game) {
+		super(game, game.T.j_laser, game.T.j_laser_bullet, game.T.cart_j_laser, game.S.laser, 15, 38, 0, -70, -20, 69, 33, 114, 33, 126, 25, 60, 20, Math.PI / 2, 18, 6, 6, "#f7c604")
+	}
+}
 class MachineGun extends Firegun {
 	constructor(game: Game) {
 		super(game, game.T.machine_gun, game.T.cart_machine_gun, game.S.machine_gun, 15, 45, 0, -35, -15, 20, 40, 63, 40, 160, 14, 60, 20, Math.PI / 2, 18)
@@ -436,4 +441,4 @@ class Shotgun extends Firegun {
 	}
 }
 
-export { WeaponAnimation, WhiteWeaponAnimation, Axe, BLaser, Broadsword, Destroyer, DoubleGun, Electrisor, FlameThrower, Gazor, GrenadeLauncher, Katana, Laser, MachineGun, Magnum, MLaser, Pistol, Shotgun }
+export { WeaponAnimation, WhiteWeaponAnimation, Axe, BLaser, Broadsword, Destroyer, DoubleGun, Electrisor, FlameThrower, Gazor, GrenadeLauncher, JLaser, Katana, Laser, MachineGun, Magnum, MLaser, Pistol, Shotgun }

@@ -175,6 +175,9 @@ class Textures {
 	public square: Texture
 	public spike1: Texture
 	public spike2: Texture
+	public j_laser: Texture
+	public j_laser_bullet: Texture
+	public cart_j_laser: Texture
 
 	constructor(game: Game) {
 		this.leek_hand = new Texture(game, env.STATIC + "image/fight/leek_hand.png", true, SHADOW_QUALITY)
@@ -218,6 +221,9 @@ class Textures {
 		this.broadsword = new Texture(game, env.STATIC + 'image/weapon/broadsword.png', true, SHADOW_QUALITY)
 		this.axe = new Texture(game, env.STATIC + 'image/weapon/axe.png', true, SHADOW_QUALITY)
 		this.slash = new Texture(game, env.STATIC + 'image/fight/slash.png', true, SHADOW_QUALITY)
+		this.j_laser = new Texture(game, env.STATIC + 'image/weapon/j_laser.png', true, SHADOW_QUALITY)
+		this.j_laser_bullet = new Texture(game, env.STATIC + 'image/weapon/j_laser_bullet.png', true, SHADOW_QUALITY)
+		this.cart_j_laser = new Texture(game, env.STATIC + 'image/weapon/cart_j_laser.png')
 
 		this.box = new Texture(game, env.STATIC + 'image/map/box.png', true, 1)
 		this.big_box = new Texture(game, env.STATIC + 'image/map/big_box.png', true, 1)
