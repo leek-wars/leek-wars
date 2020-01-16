@@ -548,14 +548,23 @@ class Entity {
 	public stopGaz() {
 		this.gazing--
 	}
-	public kill() {
+	public kill(animation: boolean) {
 		this.dead = true
-		this.deadAnim = 1
+		if (animation) {
+			this.deadAnim = 1
+		}
 		this.bubble = null
+		if (this.drawID) {
+			this.game.removeDrawableElement(this.drawID, this.dy)
+			this.drawID = null
+		}
 	}
 	public reborn() {
 		this.dead = false
 		this.bubble = new Bubble(this.game)
+		if (this.drawID == null) {
+			this.drawID = this.game.addDrawableElement(this, this.dy)
+		}
 	}
 
 	public draw(ctx: CanvasRenderingContext2D) {

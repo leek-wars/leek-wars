@@ -869,14 +869,11 @@ class Game {
 			}
 			entity.launched_effects = {}
 			if (this.jumping) {
-				entity.dead = true
-				if (entity.drawID) {
-					this.removeDrawableElement(entity.drawID, entity.dy)
-				}
+				entity.kill(false)
 				this.actionDone()
 			} else {
 				this.log(action)
-				entity.kill() // Animation
+				entity.kill(true) // Animation
 			}
 			break
 		}
