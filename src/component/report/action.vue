@@ -53,7 +53,7 @@
 			<leek slot="leek" :leek="leek" />
 			<b slot="value" class="color-life">{{ $t('fight.n_vita', [action.params[2]]) }}</b>
 		</i18n>
-		<template v-else-if="type === ActionType.ADD_CHIP_EFFECT || type === ActionType.ADD_WEAPON_EFFECT || type === ActionType.ADD_STACKED_CHIP_EFFECT || type === ActionType.ADD_STACKED_WEAPON_EFFECT">
+		<template v-else-if="type === ActionType.ADD_CHIP_EFFECT || type === ActionType.ADD_WEAPON_EFFECT || type === ActionType.ADD_STACKED_EFFECT">
 			<i18n v-if="effect === EffectType.ABSOLUTE_SHIELD || effect === EffectType.STEAL_ABSOLUTE_SHIELD" path="fight.leek_win_x_turns">
 				<leek slot="leek" :leek="target" />
 				<b slot="value" class="color-resistance">{{ $t('fight.n_absolute_shield', [value]) }}</b>
