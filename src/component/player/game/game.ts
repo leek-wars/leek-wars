@@ -944,25 +944,21 @@ class Game {
 		}
 		case ActionType.ADD_WEAPON_EFFECT:
 		case ActionType.ADD_CHIP_EFFECT: {
-			console.log("ADD", action.params)
 			this.addEffect(action, false)
 			this.actionDone()
 			break
 		}
 		case ActionType.ADD_STACKED_EFFECT : {
-			console.log("ADD STACKED", action.params)
 			this.addEffect(action, true)
 			this.actionDone()
 			break
 		}
 		case ActionType.REMOVE_EFFECT : {
-			console.log("REMOVE", action.params)
 			this.removeEffect(action.params[1])
 			this.actionDone()
 			break
 		}
 		case ActionType.UPDATE_EFFECT : {
-			console.log("UPDATE", action.params)
 			this.updateEffect(action.params[1], action.params[2])
 			this.actionDone()
 			break
