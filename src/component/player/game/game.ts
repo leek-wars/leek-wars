@@ -945,32 +945,27 @@ class Game {
 			this.log(action)
 			break
 		}
-		case ActionType.ADD_WEAPON_EFFECT : {
-			this.addEffect(action, 'weapon', false)
+		case ActionType.ADD_WEAPON_EFFECT:
+		case ActionType.ADD_CHIP_EFFECT: {
+			console.log("ADD", action.params)
+			this.addEffect(action, false)
 			this.actionDone()
 			break
 		}
-		case ActionType.ADD_STACKED_WEAPON_EFFECT : {
-			this.addEffect(action, 'weapon', true)
-			this.actionDone()
-			break
-		}
-		case ActionType.ADD_CHIP_EFFECT : {
-			this.addEffect(action, 'chip', false)
-			this.actionDone()
-			break
-		}
-		case ActionType.ADD_STACKED_CHIP_EFFECT : {
-			this.addEffect(action, 'chip', true)
+		case ActionType.ADD_STACKED_EFFECT : {
+			console.log("ADD STACKED", action.params)
+			this.addEffect(action, true)
 			this.actionDone()
 			break
 		}
 		case ActionType.REMOVE_EFFECT : {
+			console.log("REMOVE", action.params)
 			this.removeEffect(action.params[1])
 			this.actionDone()
 			break
 		}
 		case ActionType.UPDATE_EFFECT : {
+			console.log("UPDATE", action.params)
 			this.updateEffect(action.params[1], action.params[2])
 			this.actionDone()
 			break
@@ -997,7 +992,7 @@ class Game {
 		}
 	}
 
-	public addEffect(action: Action, object: any, stacked: boolean) {
+	public addEffect(action: Action, stacked: boolean) {
 		const objectID = action.params[1]
 		const id = action.params[2]
 		const caster_id = action.params[3]
@@ -1010,8 +1005,8 @@ class Game {
 
 		if (stacked) {
 			// Search for an similar effect to stack
-			for (let id in leek.effects) {
-				const e = leek.effects[id]
+			for (const i in leek.effects) {
+				const e = leek.effects[i]
 				if (e.object === objectID && e.effect === effect && e.turns === turns && e.caster === caster_id) {
 					e.value += value
 					break
@@ -1019,15 +1014,13 @@ class Game {
 			}
 		} else {
 			// Ajout de l'effet
-			this.effects[id] = {id, object: objectID, objectType: object, caster: caster_id, target, effect, value, turns}
+			this.effects[id] = {id, object: objectID, caster: caster_id, target, effect, value, turns}
 
 			// Ajout de l'image sur le hud
 			let image: string = ''
-			if (object === 'chip') {
-				if (objectID in LeekWars.chips) {
-					image = env.STATIC + "image/chip/small/" + LeekWars.chips[objectID].name + ".png"
-				}
-			} else /* if (object == 'weapon') */ {
+			if (objectID in LeekWars.chips) {
+				image = env.STATIC + "image/chip/small/" + LeekWars.chips[objectID].name + ".png"
+			} else /* weapon */ {
 
 				if (objectID in LeekWars.weapons) {
 
@@ -1155,12 +1148,10 @@ class Game {
 			break
 		}
 		// Gestion des états du poireau
-		if (effect.objectType === 'weapon') {
-			if (effect.object === 46) {
-				leek.stopBurn()
-			} else if (effect.object === 48) {
-				leek.stopGaz()
-			}
+		if (effect.object === 46) {
+			leek.stopBurn()
+		} else if (effect.object === 48) {
+			leek.stopGaz()
 		}
 		delete leek.effects[id]
 		delete this.effects[id]
