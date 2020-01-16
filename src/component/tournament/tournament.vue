@@ -186,7 +186,7 @@
 		<div v-show="tooltip" :style="{left: tooltipX + 'px', top: tooltipY + 'px'}" class="tooltip v-tooltip__content">{{ tooltipText }}</div>
 
 		<panel :title="$t('comments')" class="last">
-			<comments slot="content" :comments="tournament ? tournament.comments : null" @comment="comment" />
+			<comments :comments="tournament ? tournament.comments : null" @comment="comment" />
 		</panel>
 	</div>
 </template>
