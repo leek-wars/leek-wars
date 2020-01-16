@@ -47,6 +47,7 @@
 						</div>
 					</div>
 				</div>
+
 				<center class="buttons">
 					<router-link :to="'/fight/' + fight.id">
 						<v-btn>
@@ -95,6 +96,22 @@
 						</span>
 					</span>
 				</center>
+
+				<template v-if="fight.trophies.length">
+					<h3 class="trophies-title">{{ $t('report.trophies') }}</h3>
+					<div class="trophies">
+						<div v-for="(trophy, t) in fight.trophies" :key="t" class="trophy card">
+							<img :src="'/image/trophy/big/' + trophy.name + '.png'" class="image">
+							<div class="info">
+								<div class="name">{{ $t('trophy.' + trophy.name) }}</div>
+								<div class="farmer">
+									<avatar :farmer="trophy.farmer" />
+									{{ trophy.farmer.name }}
+								</div>
+							</div>
+						</div>
+					</div>
+				</template>
 			</div>
 		</panel>
 
@@ -529,6 +546,41 @@
 		margin: 4px;
 		i {
 			padding-right: 4px;
+		}
+	}
+	.trophies-title {
+		margin-top: 0;
+	}
+	.trophies {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+		grid-gap: 8px;
+		.trophy {
+			padding: 6px;
+			display: flex;
+			align-items: center;
+			.name {
+				font-size: 18px;
+				margin-bottom: 4px;
+			}
+			.image {
+				width: 46px;
+				height: 46px;
+				padding-right: 10px;
+				flex-basis: 50px 0 0;
+			}
+			.info {
+				flex: 1;
+			}
+			.avatar {
+				width: 26px;
+				height: 26px;
+				margin-right: 6px;
+			}
+			.farmer {
+				display: flex;
+				align-items: center;
+			}
 		}
 	}
 </style>
