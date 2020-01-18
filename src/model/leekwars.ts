@@ -726,7 +726,7 @@ function weaponSound(id: number) {
 		1: ['double_gun'], 2: ['machine_gun'], 3: ['double_gun'], 4: ['shotgun'],
 		5: ['double_gun'], 6: ['laser'], 7: ['grenade_shoot', 0.7, 'explosion'],
 		8: ['flame_thrower'], 9: ['double_gun'], 10: ['gazor'], 11: ['electrisor'],
-		12: ['laser'], 13: ['laser'], 14: ['sword'], 15: ['sword'], 16: ['sword']
+		12: ['laser'], 13: ['laser'], 14: ['sword'], 15: ['sword'], 16: ['sword'], 17: ['laser']
 	} as {[key: number]: any})[id]
 }
 function chipSound(id: number) {
