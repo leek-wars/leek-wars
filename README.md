@@ -22,6 +22,9 @@ Then go to `localhost:8080` in your browser.
 *Be careful*, this project is only the front end of Leek Wars, so it's connected to the
 production server. When you log into this local version, you will use your real account!
 
+## Architecture
+![Banner](https://github.com/leek-wars/leek-wars-meta/blob/master/doc/architecture.svg)
+
 ## Hacking
 I gladly accept pull requests to Leek Wars. Before starting work on a feature, see the [contribution guidelines](https://github.com/leek-wars/leek-wars-client/blob/master/CONTRIBUTING.md).
 
