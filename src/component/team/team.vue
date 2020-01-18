@@ -527,6 +527,7 @@
 				}
 				this.captain = teamCaptain
 				LeekWars.setTitle(this.team.name)
+				LeekWars.setSubTitle(this.$t('ranking.n_farmers', [team.members.length]) + " • " + this.$t('ranking.n_leeks', [team.leek_count]))
 				this.$root.$emit('loaded')
 			})
 		}
