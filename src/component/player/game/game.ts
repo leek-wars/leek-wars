@@ -1294,8 +1294,9 @@ class Game {
 		return this.mouseEntity
 	}
 
-	public addMarker(owner: number, cells: Cell[], color: string, duration: number) {
-		for (const cell of cells) {
+	public addMarker(owner: number, cells: number[], color: string, duration: number) {
+		for (const cell_id of cells) {
+			const cell = this.ground.cells[cell_id]
 			const pos = this.ground.cellToXY(cell)
 			const xy = this.ground.xyToXYPixels(pos.x, pos.y)
 			const x = xy.x * this.ground.scale
