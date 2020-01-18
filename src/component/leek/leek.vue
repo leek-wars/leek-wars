@@ -334,21 +334,23 @@
 		<popup v-model="hatDialog" :width="700">
 			<span slot="title">{{ $t('select_a_hat') }}</span>
 			<div class="hat-dialog">
-				<tooltip>
-					<div slot="activator" :quantity="1" class="hat" @click="selectHat(null)">
-						<img src="/image/hat/no_hat.png">
-					</div>
-					<b>{{ $t('no_hat') }}</b>
-				</tooltip>
-				<tooltip v-for="hat in farmer_hats" :key="hat.id">
-					<div slot="activator" :quantity="hat.quantity" class="hat" @click="selectHat(hat)">
-						<img :src="'/image/hat/' + hat.name + '.png'">
-					</div>
-					<b>{{ $t('hat.' + hat.name) }}</b>
-					<br>
-					{{ $t('level_n', [hat.level]) }}
-				</tooltip>
-				<br><br>
+				<div class="hats">
+					<tooltip>
+						<div v-ripple slot="activator" :quantity="1" class="hat" @click="selectHat(null)">
+							<img src="/image/hat/no_hat.png">
+						</div>
+						<b>{{ $t('no_hat') }}</b>
+					</tooltip>
+					<tooltip v-for="hat in farmer_hats" :key="hat.id">
+						<div v-ripple slot="activator" :quantity="hat.quantity" class="hat" @click="selectHat(hat)">
+							<img :src="'/image/hat/' + hat.name + '.png'">
+						</div>
+						<b>{{ $t('hat.' + hat.name) }}</b>
+						<br>
+						{{ $t('level_n', [hat.level]) }}
+					</tooltip>
+				</div>
+				<br>
 				<center>({{ $t('click_to_put_hat') }})</center>
 			</div>
 		</popup>
@@ -1090,33 +1092,27 @@
 	#app.app .farmer-potions .potions-grid {
 		grid-template-columns: repeat(auto-fill, minmax(65px, 1fr));
 	}
-	.hat-dialog .hat {
-		display: inline-block;
-		vertical-align: top;
-		cursor: pointer;
-		text-align: center;
-		margin: 3px;
-		width: 125px;
-		height: 90px;
-	}
-	.hat-dialog .hat img {
-		max-height: 90px;
-		max-width: 125px;
+	.hat-dialog .hats {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+		grid-auto-rows: 1fr;
+		grid-gap: 8px;
+		.hat {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			cursor: pointer;
+			padding: 2px;
+			height: 74px;
+			border: 1px solid #ddd;
+		}
+		.hat img {
+			max-height: 70px;
+			max-width: 96px;
+		}
 	}
 	#app.app .hat-button {
 		display: none;
-	}
-	#app.app .hat-dialog {
-		text-align: center;
-	}
-	#app.app .hat-dialog .hat {
-		width: 100px;
-		height: 70px;
-		margin: 6px;
-	}
-	#app.app .hat-dialog .hat img {
-		max-height: 70px;
-		max-width: 100px;
 	}
 	.registers {
 		border: 1px solid #ccc;
