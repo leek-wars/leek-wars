@@ -43,7 +43,7 @@
 					</div>
 					<div v-else slot="content">
 						<div v-for="type in EffectTypeMarket" v-if="!isNaN(type)" :key="type">
-							<h3>{{ $t('effect.effect_type_' + type) }}</h3>
+							<h4 :class="{first: type === EffectTypeMarket.ATTACK}">{{ $t('effect.effect_type_' + type) }}</h4>
 							<div class="items chips">
 								<router-link v-ripple v-for="chip in chipsByType[type]" :key="chip.id" :to="'/market/' + chip.name" :farmer-count="items[chip.id].farmer_count" :leek-count="items[chip.id].leek_count" class="item chip">
 									<img :src="'/image/chip/small/' + chip.name + '.png'">
@@ -409,8 +409,8 @@
 	}
 	.items {
 		display: grid;
-		grid-gap: 10px;
-		padding: 10px;
+		grid-gap: 8px;
+		padding: 8px;
 	}
 	.items.potions {
 		grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
@@ -505,10 +505,14 @@
 		width: 62px;
 		vertical-align: bottom;
 	}
-	.panel h3 {
+	.panel h4 {
 		margin: 0;
-		margin-top: 8px;
+		margin-left: 8px;
 		margin-bottom: 0;
+		font-size: 15px;
+		&.first {
+			margin-top: 8px;
+		}
 	}
 	.potion {
 		padding: 6px 0;
