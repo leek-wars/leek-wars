@@ -273,7 +273,11 @@
 				LeekWars.setTitle(this.$t('market.title'))
 				LeekWars.splitShowList()
 			}
+			this.updateSubtitle()
 			LeekWars.setActions(this.actions)
+		}
+		updateSubtitle() {
+			LeekWars.setSubTitle(this.$t('main.x_habs', [LeekWars.formatNumber(this.$store.state.farmer.habs)]) + " • " + this.$t('main.x_crystals', [LeekWars.formatNumber(this.$store.state.farmer.crystals)]))
 		}
 		translateName(item: ItemTemplate) {
 			if (item.type === ItemType.FIGHT_PACK) {
@@ -319,6 +323,7 @@
 					this.$store.commit('update-fights', data.fights)
 				}
 				this.$store.commit('add-inventory', {type: item.type, item_id: data.item, item_template: id})
+				this.updateSubtitle()
 			}).error(error => {
 				let e = error.error
 				if (error.error === 'already_bought_fights_with_habs') {
@@ -341,6 +346,7 @@
 				item.farmer_count--
 				this.$store.commit('update-habs', item.sell_price)
 				this.$store.commit('remove-inventory', {type: item.type, item_template: data.item})
+				this.updateSubtitle()
 			})
 		}
 		updateChipMode() {
