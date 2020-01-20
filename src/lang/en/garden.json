@@ -18,7 +18,7 @@
 	"n_challenges": "{0} challenges",
 	"n_leeks": "{0} leeks",
 	"n_remaining_fights": "{0} remaining fights",
-	"n_fights": "{0} fights",
+	"n_fights": "1 fight | {count} fights",
 	"next_fight_in": "Next fight in {0}",
 	"no_more_fights": "No more fights",
 	"no_opponent_of_your_size": "No opponent to your size!",

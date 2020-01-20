@@ -57,6 +57,11 @@
 							</router-link>
 							{{ $t('you_must_be_level_50') }}
 						</tooltip>
+
+						<div v-if="queue > 0" class="queue">
+							<div class="title">File d'attente</div>
+							<div class="count">{{ $tc('n_fights', queue) }}</div>
+						</div>
 					</div>
 				</div>
 			</panel>
@@ -198,6 +203,7 @@
 	import { Farmer } from '@/model/farmer'
 	import { Leek } from '@/model/leek'
 	import { LeekWars } from '@/model/leekwars'
+	import { SocketMessage } from '@/model/socket'
 	import { store } from '@/model/store'
 	import { Composition } from '@/model/team'
 	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
@@ -228,6 +234,7 @@
 		challengeTarget: number = 0
 		challengeLeekTarget: Leek | null = null
 		challengeFarmerTarget: Farmer | null = null
+		queue: number = 0
 
 		get farmerEnabled() { return this.garden && this.garden.farmer_enabled }
 		get teamEnabled() { return this.garden && this.garden.team_enabled }
@@ -252,9 +259,12 @@
 				localStorage.removeItem('garden/category')
 				this.$router.back()
 			})
+			LeekWars.socket.send([SocketMessage.GARDEN_QUEUE_REGISTER])
+			this.$root.$on('garden-queue', (data: number) => this.queue = data)
 		}
 		beforeDestroy() {
 			this.$root.$off('back')
+			LeekWars.socket.send([SocketMessage.GARDEN_QUEUE_UNREGISTER])
 		}
 
 		@Watch('$route.params')
@@ -297,7 +307,7 @@
 			}
 			if (this.category) {
 				const category_underscore = this.category.replace('-', '_')
-				LeekWars.setTitle(this.$t('garden.garden_' + category_underscore), this.$t('garden.n_fights', [store.state.farmer.fights]))
+				LeekWars.setTitle(this.$t('garden.garden_' + category_underscore), this.$tc('garden.n_fights', store.state.farmer.fights))
 				LeekWars.splitShowContent()
 
 				if (this.category === 'solo') {
@@ -542,5 +552,18 @@
 	}
 	.leek-count {
 		font-size: 22px;
+	}
+	.queue {
+		padding: 15px 10px;
+		.title {
+			font-weight: bold;
+			color: #777;
+		}
+		.count {
+			font-size: 18px;
+			text-align: center;
+			padding: 6px 0;
+			color: #555;
+		}
 	}
 </style>
