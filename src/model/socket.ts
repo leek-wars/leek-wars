@@ -34,7 +34,10 @@ enum SocketMessage {
 	BATTLE_ROYALE_CHAT_NOTIF = 32,
 	PONG = 33,
 	CHAT_ENABLE_FAST = 34,
-	CHAT_RECEIVE_PACK = 35
+	CHAT_RECEIVE_PACK = 35,
+	GARDEN_QUEUE_REGISTER = 37,
+	GARDEN_QUEUE = 38,
+	GARDEN_QUEUE_UNREGISTER = 39,
 }
 
 class Socket {
@@ -146,6 +149,10 @@ class Socket {
 				}
 				case SocketMessage.BATTLE_ROYALE_LEAVE: {
 					LeekWars.battleRoyale.leave()
+					break
+				}
+				case SocketMessage.GARDEN_QUEUE: {
+					vueMain.$emit('garden-queue', data)
 					break
 				}
 			}
