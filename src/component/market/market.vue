@@ -80,7 +80,7 @@
 						<hat-preview v-else-if="selectedItem.type == ItemType.HAT" :hat="LeekWars.hats[selectedItem.id]" />
 
 						<div v-if="selectedItem.trophy" class="trophy">
-							<img src="/image/icon/black/trophy.png">
+							<img :src="'/image/trophy/' + selectedItem.trophy.name + '.png'">
 							<i18n path="unlocked_with">
 								<b slot="trophy">{{ $t('trophy.' + selectedItem.trophy.name) }}</b>
 							</i18n>
@@ -581,9 +581,8 @@
 		align-items: center;
 		justify-content: center;
 		img {
-			opacity: 0.7;
 			width: 20px;
-			margin-right: 5px;
+			margin-right: 4px;
 		}
 	}
 	.already-have {
