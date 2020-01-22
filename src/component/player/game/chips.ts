@@ -691,6 +691,7 @@ class Burning extends ChipAnimation {
 	public launch(launchPos: Position, targetPos: Position, targets: Entity[], targetCell: Cell) {
 		super.launch(launchPos, targetPos, targets, targetCell)
 		this.createChipImage(targets, this.game.T.chip_burning)
+		this.game.setEffectArea(targetCell, Area.CIRCLE3, 'red')
 	}
 }
 class Antidote extends ChipAnimation {
