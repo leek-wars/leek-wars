@@ -1,10 +1,12 @@
 {
 	"already_bought_fights_with_habs": "Vous ne pouvez acheter qu'un seul pack de combat en Habs par jour",
+	"already_have": "Vous possédez déjà cet objet",
 	"are_you_sure_you_want_to_buy": "Êtes-vous sûr de vouloir acheter l'objet {item} ?",
 	"are_you_sure_you_want_to_sell": "Êtes-vous sûr de vouloir vendre l'objet {item} ?",
 	"buy": "Acheter",
 	"buying": "Achat...",
 	"cancel": "Annuler",
+	"cannot_buy": "Cet objet ne peut pas être acheté",
 	"characteristics": "Caractéristiques",
 	"chip": "Puce",
 	"chip_bought": "Puce achetée !",
