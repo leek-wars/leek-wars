@@ -222,8 +222,9 @@ class SimpleFire extends Particle {
 	}
 }
 class Gaz extends Particle {
+	public texture: Texture
 	public textureID: number
-	constructor(game: Game, x: number, y: number, z: number, angle: number, thrown: boolean) {
+	constructor(game: Game, x: number, y: number, z: number, angle: number, thrown: boolean, texture: Texture) {
 		super(game, x, y, z, GAZ_LIFE)
 		this.textureID = Math.floor(Math.random() * 5)
 		angle += (Math.random() * (Math.PI / 10)) - Math.PI / 20
@@ -231,11 +232,12 @@ class Gaz extends Particle {
 		if (!thrown) { speed /= 3 }
 		this.dx = Math.cos(angle) * speed
 		this.dy = Math.sin(angle) * speed
+		this.texture = texture
 	}
 	public draw(ctx: CanvasRenderingContext2D) {
 		ctx.globalAlpha = this.life / 100
 		const size = 70 - this.life / 2.5
-		ctx.drawImage(this.game.T.gaz.texture, this.textureID * 20, 0, 20, 20, -size / 2, -size / 2, size, size)
+		ctx.drawImage(this.texture.texture, this.textureID * 20, 0, 20, 20, -size / 2, -size / 2, size, size)
 		ctx.globalAlpha = 1
 	}
 }
@@ -264,7 +266,7 @@ class Meteorite extends Particle {
 			this.game.particles.addFireSimple(x, y, this.z, (this.originalAngle) * (0.2 + Math.random() * 0.2))
 		}
 		if (this.z < 20) {
-			this.game.particles.addExplosion(this.x, this.y, this.z)
+			this.game.particles.addExplosion(this.x, this.y, this.z, this.game.T.explosion)
 			for (const target of this.targets) {
 				target.hurt(this.x, this.y, this.z, this.dx, this.dy, this.dz)
 			}
@@ -284,7 +286,9 @@ class Meteorite extends Particle {
 }
 class Grenade extends FallingParticle {
 	public targets: Entity[]
-	constructor(game: Game, x: number, y: number, z: number, angle: number, pos: Position, targets: Entity[]) {
+	public texture: Texture
+	public explosion: Texture
+	constructor(game: Game, x: number, y: number, z: number, angle: number, pos: Position, targets: Entity[], texture: Texture, explosion: Texture) {
 		super(game, x, y, z, GRENADE_LIFE)
 		const dist = Math.sqrt((x - pos.x) * (x - pos.x) + (y - pos.y) * (y - pos.y))
 		this.dx = Math.cos(angle) * dist * 0.033
@@ -292,16 +296,18 @@ class Grenade extends FallingParticle {
 		this.angle = angle
 		this.rotation = (Math.random() - 0.5) / 2
 		this.targets = targets
+		this.texture = texture
+		this.explosion = explosion
 	}
 	public onDie() {
-		this.game.particles.addExplosion(this.x, this.y, this.z)
+		this.game.particles.addExplosion(this.x, this.y, this.z, this.explosion)
 		for (const target of this.targets) {
 			target.hurt(this.x, this.y, this.z, this.dx, this.dy, this.dz)
 		}
 		this.game.actionDone()
 	}
 	public draw(ctx: CanvasRenderingContext2D) {
-		ctx.drawImage(this.game.T.grenade.texture, -this.game.T.grenade.texture.width / 2 , -this.game.T.grenade.texture.height / 2)
+		ctx.drawImage(this.texture.texture, -this.game.T.grenade.texture.width / 2 , -this.game.T.grenade.texture.height / 2)
 	}
 }
 class Shot extends Particle {
@@ -318,15 +324,15 @@ class Shot extends Particle {
 	}
 }
 class Explosion extends Particle {
-	public textureID: number
-	constructor(game: Game, x: number, y: number, z: number) {
+	public texture: Texture
+	constructor(game: Game, x: number, y: number, z: number, texture: Texture) {
 		super(game, x, y, z, EXPLOSION_LIFE)
-		this.textureID = Math.floor(Math.random() * NUM_SHOTS_SPRITES)
+		this.texture = texture
 	}
 	public draw(ctx: CanvasRenderingContext2D) {
 		ctx.globalAlpha = this.life / 5
 		const size = 300 - 15 * this.life
-		ctx.drawImage(this.game.T.explosion.texture, 0, 0, this.game.T.explosion.texture.width, this.game.T.explosion.texture.height, -size / 2, -size / 3.6, size, size / 1.8)
+		ctx.drawImage(this.texture.texture, 0, 0, this.texture.texture.width, this.texture.texture.height, -size / 2, -size / 3.6, size, size / 1.8)
 		ctx.globalAlpha = 1
 	}
 }

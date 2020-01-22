@@ -15,9 +15,14 @@ class Textures {
 	public m_laser: Texture
 	public m_laser_bullet: Texture
 	public cart_m_laser: Texture
+	public revoked_m_laser: Texture
+	public revoked_m_laser_bullet: Texture
+	public cart_revoked_m_laser: Texture
 	public leek_blood: Texture
 	public electrisor: Texture
+	public mysterious_electrisor: Texture
 	public lightning: Texture
+	public cyan_lightning: Texture
 	public purple_lightning: Texture
 	public red_lightning: Texture
 	public particle: Texture
@@ -30,11 +35,14 @@ class Textures {
 	public magnum: Texture
 	public cart_magnum: Texture
 	public grenade_launcher: Texture
+	public illicit_grenade_launcher: Texture
 	public cart_grenade_launcher: Texture
+	public cart_illicit_grenade_launcher: Texture
 	public destroyer: Texture
 	public cart_destroyer: Texture
 	public flame_thrower: Texture
 	public gazor: Texture
+	public unbridled_gazor: Texture
 	public b_laser: Texture
 	public b_laser_bullet: Texture
 	public cart_b_laser: Texture
@@ -78,8 +86,11 @@ class Textures {
 	public cone_big: Texture
 	public fire: Texture
 	public gaz: Texture
+	public orange_gaz: Texture
 	public grenade: Texture
+	public red_grenade: Texture
 	public explosion: Texture
+	public red_explosion: Texture
 	public cloud: Texture
 	public grey_cloud: Texture
 	public black_cloud: Texture
@@ -194,9 +205,14 @@ class Textures {
 		this.m_laser = new Texture(game, env.STATIC + "image/weapon/m_laser.png", true, SHADOW_QUALITY)
 		this.m_laser_bullet = new Texture(game, env.STATIC + "image/weapon/m_laser_bullet.png")
 		this.cart_m_laser = new Texture(game, env.STATIC + 'image/weapon/cart_m_laser.png')
+		this.revoked_m_laser = new Texture(game, env.STATIC + "image/weapon/revoked_m_laser.png", true, SHADOW_QUALITY)
+		this.revoked_m_laser_bullet = new Texture(game, env.STATIC + "image/weapon/revoked_m_laser_bullet.png")
+		this.cart_revoked_m_laser = new Texture(game, env.STATIC + 'image/weapon/cart_revoked_m_laser.png')
 		this.leek_blood = new Texture(game, env.STATIC + 'image/fight/leek_blood.png')
 		this.electrisor = new Texture(game, env.STATIC + 'image/weapon/electrisor.png', true, SHADOW_QUALITY)
+		this.mysterious_electrisor = new Texture(game, env.STATIC + 'image/weapon/mysterious_electrisor.png', true, SHADOW_QUALITY)
 		this.lightning = new Texture(game, env.STATIC + 'image/weapon/lightning.png')
+		this.cyan_lightning = new Texture(game, env.STATIC + 'image/weapon/cyan_lightning.png')
 		this.purple_lightning = new Texture(game, env.STATIC + 'image/weapon/purple_lightning.png')
 		this.red_lightning = new Texture(game, env.STATIC + 'image/weapon/red_lightning.png')
 		this.particle = new Texture(game, env.STATIC + 'image/weapon/particle.png')
@@ -209,11 +225,14 @@ class Textures {
 		this.magnum = new Texture(game, env.STATIC + 'image/weapon/magnum.png', true, SHADOW_QUALITY)
 		this.cart_magnum = new Texture(game, env.STATIC + 'image/weapon/cart_magnum.png')
 		this.grenade_launcher = new Texture(game, env.STATIC + 'image/weapon/grenade_launcher.png', true, SHADOW_QUALITY)
+		this.illicit_grenade_launcher = new Texture(game, env.STATIC + 'image/weapon/illicit_grenade_launcher.png', true, SHADOW_QUALITY)
 		this.cart_grenade_launcher = new Texture(game, env.STATIC + 'image/weapon/cart_grenade_launcher.png')
+		this.cart_illicit_grenade_launcher = new Texture(game, env.STATIC + 'image/weapon/cart_illicit_grenade_launcher.png')
 		this.destroyer = new Texture(game, env.STATIC + 'image/weapon/destroyer.png', true, SHADOW_QUALITY)
 		this.cart_destroyer = new Texture(game, env.STATIC + 'image/weapon/cart_destroyer.png')
 		this.flame_thrower = new Texture(game, env.STATIC + 'image/weapon/flame_thrower.png', true, SHADOW_QUALITY)
 		this.gazor = new Texture(game, env.STATIC + 'image/weapon/gazor.png', true, SHADOW_QUALITY)
+		this.unbridled_gazor = new Texture(game, env.STATIC + 'image/weapon/unbridled_gazor.png', true, SHADOW_QUALITY)
 		this.b_laser = new Texture(game, env.STATIC + "image/weapon/b_laser.png", true, SHADOW_QUALITY)
 		this.b_laser_bullet = new Texture(game, env.STATIC + "image/weapon/b_laser_bullet.png")
 		this.cart_b_laser = new Texture(game, env.STATIC + 'image/weapon/cart_b_laser.png')
@@ -262,8 +281,11 @@ class Textures {
 		this.cone_big = new Texture(game, env.STATIC + 'image/map/cone_big.png', true, 1)
 		this.fire = new Texture(game, env.STATIC + 'image/weapon/fire.png')
 		this.gaz = new Texture(game, env.STATIC + 'image/weapon/gaz.png')
+		this.orange_gaz = new Texture(game, env.STATIC + 'image/weapon/orange_gaz.png')
 		this.grenade = new Texture(game, env.STATIC + 'image/weapon/grenade.png')
+		this.red_grenade = new Texture(game, env.STATIC + 'image/weapon/red_grenade.png')
 		this.explosion = new Texture(game, env.STATIC + 'image/weapon/explosion.png')
+		this.red_explosion = new Texture(game, env.STATIC + 'image/weapon/red_explosion.png')
 		this.cloud = new Texture(game, env.STATIC + 'image/fight/cloud.png')
 		this.grey_cloud = new Texture(game, env.STATIC + 'image/fight/grey_cloud.png')
 		this.black_cloud = new Texture(game, env.STATIC + 'image/fight/black_cloud.png')
