@@ -61,6 +61,9 @@ class Leek extends Entity {
 		this.skin = skin
 		this.bodyTexFront = new Texture(this.game, env.STATIC + "image/leek/leek" + appearance + "_front_" + SKINS[skin - 1] + ".png", true, SHADOW_QUALITY)
 		this.bodyTexBack = new Texture(this.game, env.STATIC + "image/leek/leek" + appearance + "_back_" + SKINS[skin - 1] + ".png", true, SHADOW_QUALITY)
+		this.bodyTexFront.texture.addEventListener('load', () => {
+			this.height = this.bodyTexFront.texture.height - 10
+		})
 
 		if (hat) {
 			this.hat = hat

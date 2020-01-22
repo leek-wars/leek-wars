@@ -79,6 +79,7 @@ class Entity {
 	public jumpHeight = 25
 	// Drawing
 	public drawID: number | null = null
+	public height: number = 100
 	// States
 	public dead = false
 	public flash = 0
@@ -671,7 +672,7 @@ class Entity {
 		if (this.isTop) {
 			ctx.translate(this.ox, this.oy)
 		} else {
-			ctx.translate(this.ox, this.oy - this.bodyTexFront.texture.height * 0.85)
+			ctx.translate(this.ox, this.oy - this.height * 0.85)
 		}
 
 		ctx.font = "11pt Roboto"
