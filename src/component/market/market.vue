@@ -87,13 +87,19 @@
 						</div>
 
 						<div class="buy-buttons">
-							<div v-if="selectedItem.price_habs > 0">
+							<div v-if="!selectedItem.buyable && !selectedItem.buyable_crystals" class="already-have">
+								{{ $t('cannot_buy') }}
+							</div>
+							<div v-if="selectedItem.buyable && (!selectedItem.singleton || (selectedItem.farmer_count === 0 && selectedItem.leek_count === 0))">
 								<h4 class="buy-label">{{ $t('buy') }}</h4>
 								<v-btn :disabled="$store.state.farmer && $store.state.farmer.habs < selectedItem.price_habs" class="buy-button" @click="openBuyHabs">{{ selectedItem.price_habs | number }}<img src="/image/hab.png"></v-btn>
 							</div>
-							<div v-if="env.BANK && selectedItem.price_crystals > 0">
+							<div v-if="env.BANK && selectedItem.buyable_crystals && (!selectedItem.singleton || (selectedItem.farmer_count === 0 && selectedItem.leek_count === 0))">
 								<h4 class="buy-label">{{ $t('buy') }}</h4>
 								<v-btn :disabled="$store.state.farmer && $store.state.farmer.crystals < selectedItem.price_crystals" class="buy-crystals-button" @click="openBuyCrystals">{{ selectedItem.price_crystals | number }}<img src="/image/crystal.png"></v-btn>
+							</div>
+							<div v-if="selectedItem.singleton && (selectedItem.farmer_count > 0 || selectedItem.leek_count > 0)" class="already-have">
+								{{ $t('already_have') }}
 							</div>
 							<template v-if="selectedItem.sellable && selectedItem.farmer_count > 0">
 								<div class="sell">
@@ -372,6 +378,8 @@
 					title: this.$t('market.n_fights', [count]),
 					price_habs: p === '0' ? 100000 : 0,
 					price_crystals: costs[p] * 100,
+					buyable: p === '0',
+					buyable_crystals: true,
 					sellable: false,
 					type: ItemType.FIGHT_PACK,
 					description: this.$t('market.n_fights_desc', [count]),
@@ -501,16 +509,16 @@
 	.weapons .weapon {
 		padding: 10px;
 		height: 50px;
-	}
-	.weapons .weapon img {
-		max-height: 52px;
-		max-width: 150px;
-		position: absolute;
-		top: 0;
-		bottom: 0;
-		left: 0;
-		right: 0;
-		margin: auto;
+		img {
+			max-height: 60px;
+			max-width: 150px;
+			position: absolute;
+			top: 0;
+			bottom: 0;
+			left: 0;
+			right: 0;
+			margin: auto;
+		}
 	}
 	.chips .chip {
 		padding: 6px;
@@ -577,5 +585,10 @@
 			width: 20px;
 			margin-right: 5px;
 		}
+	}
+	.already-have {
+		font-style: italic;
+		color: #777;
+		padding-bottom: 8px;
 	}
 </style>

@@ -1,10 +1,12 @@
 {
 	"already_bought_fights_with_habs": "You can only buy one fight pack in Habs per day",
+	"already_have": "You already have this object",
 	"are_you_sure_you_want_to_buy": "Are you sure you want to purchase {item}?",
 	"are_you_sure_you_want_to_sell": "Are you sure you want to sell {item}?",
 	"buy": "Purchase",
 	"buying": "Buying...",
 	"cancel": "Cancel",
+	"cannot_buy": "This object cannot be bought",
 	"characteristics": "Characteristics",
 	"chip": "Chip",
 	"chip_bought": "Chip bought!",
