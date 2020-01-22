@@ -78,6 +78,14 @@
 						<potion-preview v-else-if="selectedItem.type == ItemType.POTION" :potion="LeekWars.potions[selectedItem.id]" />
 						<fight-pack-preview v-else-if="selectedItem.type == ItemType.FIGHT_PACK" :pack="selectedItem" />
 						<hat-preview v-else-if="selectedItem.type == ItemType.HAT" :hat="LeekWars.hats[selectedItem.id]" />
+
+						<div v-if="selectedItem.trophy" class="trophy">
+							<img src="/image/icon/black/trophy.png">
+							<i18n path="unlocked_with">
+								<b slot="trophy">{{ $t('trophy.' + selectedItem.trophy.name) }}</b>
+							</i18n>
+						</div>
+
 						<div class="buy-buttons">
 							<div v-if="selectedItem.price_habs > 0">
 								<h4 class="buy-label">{{ $t('buy') }}</h4>
@@ -558,5 +566,16 @@
 		margin-bottom: -15px;
 		margin-left: 5px;
 		height: 40px;
+	}
+	.trophy {
+		padding: 6px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		img {
+			opacity: 0.7;
+			width: 20px;
+			margin-right: 5px;
+		}
 	}
 </style>
