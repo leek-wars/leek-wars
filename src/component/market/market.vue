@@ -168,7 +168,7 @@
 			</div>
 			<div slot="actions">
 				<div @click="sellDialog = false">{{ $t('cancel') }}</div>
-				<div class="sell green" @click="sell">{{ $t('sell') }}</div>
+				<div class="sell red" @click="sell">{{ $t('sell') }}</div>
 			</div>
 		</popup>
 	</div>
