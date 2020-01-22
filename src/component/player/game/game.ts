@@ -11,7 +11,7 @@ import { Obstacle } from '@/component/player/game/obstacle'
 import { Particles } from '@/component/player/game/particles'
 import { Sounds } from '@/component/player/game/sound'
 import { Textures } from '@/component/player/game/texture'
-import { Axe, BLaser, Broadsword, Destroyer, DoubleGun, Electrisor, FlameThrower, Gazor, GrenadeLauncher, JLaser, Katana, Laser, MachineGun, Magnum, MLaser, Pistol, Shotgun } from '@/component/player/game/weapons'
+import { Axe, BLaser, Broadsword, Destroyer, DoubleGun, Electrisor, FlameThrower, Gazor, GrenadeLauncher, JLaser, Katana, Laser, MachineGun, Magnum, MLaser, Pistol, Shotgun, MysteriousElectrisor, IllicitGrenadeLauncher, RevokedMLaser, UnbridledGazor } from '@/component/player/game/weapons'
 import { env } from '@/env'
 import { Action, ActionType } from '@/model/action'
 import { Area } from '@/model/area'
@@ -95,6 +95,10 @@ const WEAPONS = [
 	Broadsword, // 15
 	Axe, // 16
 	JLaser, // 17
+	IllicitGrenadeLauncher, // 18
+	MysteriousElectrisor, // 19
+	UnbridledGazor, // 20
+	RevokedMLaser, // 21
 ]
 
 const CHIPS: any[] = [
@@ -1018,7 +1022,7 @@ class Game {
 				if (objectID in LeekWars.weapons) {
 
 					const template = LeekWars.weapons[objectID].template
-					const img = ["pistol", "machine_gun", "double_gun", "shotgun", "magnum", "laser", "grenade_launcher", "flamme", "destroyer", "gaz_icon", "electrisor", "m_laser", "b_laser", "katana", "broadsword", "axe", "j_laser"][template - 1]
+					const img = ["pistol", "machine_gun", "double_gun", "shotgun", "magnum", "laser", "grenade_launcher", "flamme", "destroyer", "gaz_icon", "electrisor", "m_laser", "b_laser", "katana", "broadsword", "axe", "j_laser", "illicit_grenade_launcher", "mysterious_electrisor", "unbridled_gazor", "revoked_m_laser"][template - 1]
 					image = env.STATIC + "image/weapon/" + img + ".png"
 					// Gestion des états du poireau
 					if (template === 8) {

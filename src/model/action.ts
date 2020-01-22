@@ -16,6 +16,7 @@ enum ActionType {
 	CARE = 103,
 	BOOST_VITA = 104,
 	RESURRECTION = 105,
+	LOST_MAX_LIFE = 107,
 	SAY = 200,
 	LAMA = 201,
 	SHOW = 202,

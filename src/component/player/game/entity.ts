@@ -482,7 +482,7 @@ class Entity {
 			if (this.gazing > 0) {
 				if (Math.random() > 0.8) {
 					for (let i = 0; i < Math.round(dt); i++) {
-						this.game.particles.addGaz(this.ox + Math.random() * 40 - 20, this.oy + Math.random() * 40 - 20, 10, -Math.PI / 2)
+						this.game.particles.addGaz(this.ox + Math.random() * 40 - 20, this.oy + Math.random() * 40 - 20, 10, -Math.PI / 2, this.game.T.gaz)
 					}
 				}
 			}

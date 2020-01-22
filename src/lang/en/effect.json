@@ -50,6 +50,7 @@
 	"type_27_fixed": "Apply an absolute vulnerability of <b>{0}</b>",
 	"type_28_fixed": "Inflicts <b>{0}%</b> of the launcher's life in damage",
 	"type_29_fixed": "Steals the removed absolute shields",
+	"type_30": "Deals <b>{0}</b> to <b>{1}</b> nova damage",
 	"type_2_fixed": "Restores <b>{0}</b> HP",
 	"type_3": "Increases strength by <b>{0}</b> to <b>{1}</b>",
 	"type_3_fixed": "Increases strength by <b>{0}</b>",

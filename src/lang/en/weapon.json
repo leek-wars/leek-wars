@@ -15,5 +15,9 @@
 	"magnum": "Magnum",
 	"m_laser": "M-Laser",
 	"pistol": "Pistol",
-	"shotgun": "Shotgun"
+	"shotgun": "Shotgun",
+	"illicit_grenade_launcher": "Illicit grenade launcher",
+	"mysterious_electrisor": "Mysterious electrisor",
+	"unbridled_gazor": "Unbridled gazor",
+	"revoked_m_laser": "Revoked M-Laser"
 }

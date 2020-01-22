@@ -53,20 +53,20 @@ class Particles {
 	public addFireSimple(x: number, y: number, z: number, angle: number) {
 		this.add(new SimpleFire(this.game, x, y, z, angle))
 	}
-	public addGaz(x: number, y: number, z: number, angle: number, thrown: boolean = false) {
-		this.add(new Gaz(this.game, x, y, z, angle, thrown))
+	public addGaz(x: number, y: number, z: number, angle: number, texture: Texture, thrown: boolean = false) {
+		this.add(new Gaz(this.game, x, y, z, angle, thrown, texture))
 	}
 	public addMeteorite(x: number, y: number, z: number, angle: number, size: number, targets: Entity[] | undefined, actionDoneAfterDie: boolean) {
 		this.add(new Meteorite(this.game, x, y, z, size, angle, targets, actionDoneAfterDie))
 	}
-	public addGrenade(x: number, y: number, z: number, angle: number, pos: Position, targets: Entity[]) {
-		this.add(new Grenade(this.game, x, y, z, angle, pos, targets))
+	public addGrenade(x: number, y: number, z: number, angle: number, pos: Position, targets: Entity[], texture: Texture, explosion: Texture) {
+		this.add(new Grenade(this.game, x, y, z, angle, pos, targets, texture, explosion))
 	}
 	public addShot(x: number, y: number, z: number, angle: number) {
 		this.add(new Shot(this.game, x, y, z, angle))
 	}
-	public addExplosion(x: number, y: number, z: number) {
-		this.add(new Explosion(this.game, x, y, z))
+	public addExplosion(x: number, y: number, z: number, texture: Texture) {
+		this.add(new Explosion(this.game, x, y, z, texture))
 		this.game.S.explosion.play()
 	}
 	public addCartridge(x: number, y: number, z: number, dx: number, dy: number, dz: number, texture: Texture) {

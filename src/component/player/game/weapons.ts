@@ -246,8 +246,12 @@ class Electrisor extends WeaponAnimation {
 	public sx: number = 89
 	public sz: number = -15
 	public caster!: Leek
+	public lightning!: Texture
+	public areaColor!: string
 	constructor(game: Game) {
 		super(game, game.T.electrisor, 5, 52, 0, -30, 0, 42, 31, 72, 34)
+		this.lightning = game.T.lightning
+		this.areaColor = '#0263f4'
 	}
 	public shoot(leekX: number, leekY: number, handPos: number, angle: number, orientation: number, targetPos: Position, targets: Entity[], caster: Leek, cell: Cell) {
 		const cos = Math.cos(angle)
@@ -260,7 +264,7 @@ class Electrisor extends WeaponAnimation {
 		this.lightningAngle = (angle + Math.PI / 2) * orientation - Math.PI / 2
 		this.lightningPosition = targetPos
 		this.shoots = 40
-		this.game.setEffectArea(cell, Area.CIRCLE1, '#0263f4', 110)
+		this.game.setEffectArea(cell, Area.CIRCLE1, this.areaColor, 110)
 		this.game.S.electrisor.play()
 		this.caster = caster
 	}
@@ -269,13 +273,21 @@ class Electrisor extends WeaponAnimation {
 			this.currentDelay -= dt
 			if (this.currentDelay <= 0) {
 				this.currentDelay = this.delay
-				this.game.particles.addLightning(this.lightningX, this.lightningY, this.lightningZ + this.caster.handPos, this.lightningAngle, this.lightningPosition, this.game.T.lightning)
-				this.shoots--
+				this.game.particles.addLightning(this.lightningX, this.lightningY, this.lightningZ + this.caster.handPos, this.lightningAngle, this.lightningPosition, this.lightning)
+				this.shoots -= dt
 				if (this.shoots === 0) {
 					this.game.actionDone()
 				}
 			}
 		}
+	}
+}
+class MysteriousElectrisor extends Electrisor {
+	constructor(game: Game) {
+		super(game)
+		this.texture = game.T.mysterious_electrisor
+		this.lightning = game.T.cyan_lightning
+		this.areaColor = '#00de9b'
 	}
 }
 class FlameThrower extends WeaponAnimation {
@@ -328,7 +340,7 @@ class FlameThrower extends WeaponAnimation {
 					this.game.particles.addFire(this.bulletX, this.bulletY, this.bulletZ, this.bulletAngle, true)
 				}
 			}
-			this.shoots--
+			this.shoots -= dt
 			if (this.shoots <= 0) {
 				this.game.actionDone()
 			}
@@ -346,8 +358,12 @@ class Gazor extends WeaponAnimation {
 	public cartX = 60
 	public cartZ = 20
 	public cartAngle = Math.PI / 2
+	public color: string
+	public gaz: Texture
 	constructor(game: Game) {
 		super(game, game.T.gazor, 15, 60, 0, -43, -12, 28, 52, 74, 50)
+		this.color = '#04e513'
+		this.gaz = game.T.gaz
 	}
 	public shoot(leekX: number, leekY: number, handPos: number, angle: number, orientation: number, targetPos: Position, targets: Entity[], caster: Entity, cell: Cell) {
 		const cos = Math.cos(angle)
@@ -359,14 +375,14 @@ class Gazor extends WeaponAnimation {
 		this.bulletZ = z
 		this.bulletAngle = (angle + Math.PI / 2) * orientation - Math.PI / 2
 		this.shoots = 80
-		this.game.setEffectArea(cell, Area.CIRCLE3, '#04e513')
+		this.game.setEffectArea(cell, Area.CIRCLE3, this.color)
 		this.game.S.gazor.play()
 	}
 	public update(dt: number) {
 		if (this.shoots > 0) {
 			if (this.shoots > 30) {
 				for (let i = 0; i < Math.round(3 * dt); i++) {
-					this.game.particles.addGaz(this.bulletX, this.bulletY, this.bulletZ, this.bulletAngle, true)
+					this.game.particles.addGaz(this.bulletX, this.bulletY, this.bulletZ, this.bulletAngle, this.gaz, true)
 				}
 			}
 			this.shoots--
@@ -376,12 +392,29 @@ class Gazor extends WeaponAnimation {
 		}
 	}
 }
+class UnbridledGazor extends Gazor {
+	constructor(game: Game) {
+		super(game)
+		this.texture = game.T.unbridled_gazor
+		this.gaz = game.T.orange_gaz
+		this.color = '#ff5c00'
+	}
+}
 class GrenadeLauncher extends Firegun {
 	constructor(game: Game) {
 		super(game, game.T.grenade_launcher, game.T.cart_grenade_launcher, game.S.grenade_shoot, 0, 40, 0, -35, -15, 38, 28, 66, 29, 150, 14, 60, 20, Math.PI / 2, 18)
 	}
 	public throwBullet(x: number, y: number, z: number, angle: number, position: Position, targets: Entity[], caster: Entity, cell: Cell) {
-		this.game.particles.addGrenade(x, y, z, angle, position, targets)
+		this.game.particles.addGrenade(x, y, z, angle, position, targets, this.game.T.grenade, this.game.T.explosion)
+		this.game.setEffectArea(cell, Area.CIRCLE2, '#0094c5')
+	}
+}
+class IllicitGrenadeLauncher extends Firegun {
+	constructor(game: Game) {
+		super(game, game.T.illicit_grenade_launcher, game.T.cart_illicit_grenade_launcher, game.S.grenade_shoot, 0, 40, 0, -35, -15, 38, 28, 66, 29, 150, 14, 60, 20, Math.PI / 2, 18)
+	}
+	public throwBullet(x: number, y: number, z: number, angle: number, position: Position, targets: Entity[], caster: Entity, cell: Cell) {
+		this.game.particles.addGrenade(x, y, z, angle, position, targets, this.game.T.red_grenade, this.game.T.red_explosion)
 		this.game.setEffectArea(cell, Area.CIRCLE2, 'red')
 	}
 }
@@ -398,6 +431,15 @@ class Laser extends LaserWeapon {
 class MLaser extends LaserWeapon {
 	constructor(game: Game) {
 		super(game, game.T.m_laser, game.T.m_laser_bullet, game.T.cart_m_laser, game.S.laser, 15, 38, 0, -70, -20, 69, 33, 114, 33, 126, 25, 60, 20, Math.PI / 2, 18, 8, 5, "#d80205")
+	}
+}
+class RevokedMLaser extends LaserWeapon {
+	constructor(game: Game) {
+		super(game, game.T.revoked_m_laser, game.T.revoked_m_laser_bullet, game.T.cart_revoked_m_laser, game.S.laser, 15, 38, 0, -70, -20, 69, 33, 114, 33, 126, 25, 60, 20, Math.PI / 2, 18, 8, 5, "#c500e6")
+	}
+	public shoot(leekX: number, leekY: number, handPos: number, angle: number, orientation: number, targetPos: Position, targets: Entity[], caster: Entity, cell: Cell) {
+		super.shoot(leekX, leekY, handPos, angle, orientation, targetPos, targets, caster, cell)
+		this.game.S.poison.play()
 	}
 }
 class JLaser extends LaserWeapon {
@@ -441,4 +483,4 @@ class Shotgun extends Firegun {
 	}
 }
 
-export { WeaponAnimation, WhiteWeaponAnimation, Axe, BLaser, Broadsword, Destroyer, DoubleGun, Electrisor, FlameThrower, Gazor, GrenadeLauncher, JLaser, Katana, Laser, MachineGun, Magnum, MLaser, Pistol, Shotgun }
+export { WeaponAnimation, WhiteWeaponAnimation, Axe, BLaser, Broadsword, Destroyer, DoubleGun, Electrisor, FlameThrower, Gazor, GrenadeLauncher, IllicitGrenadeLauncher, JLaser, Katana, Laser, MachineGun, Magnum, MLaser, MysteriousElectrisor, Pistol, RevokedMLaser, Shotgun, UnbridledGazor }
