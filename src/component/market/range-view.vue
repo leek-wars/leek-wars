@@ -20,7 +20,11 @@
 				for (let j = 0; j < this.max * 2 + 1; ++j) {
 					const x = i - this.max
 					const y = j - this.max
-					cells[i][j] = (Math.abs(x) + Math.abs(y) <= this.max && Math.abs(x) + Math.abs(y) >= this.min && (this.type === 1 || (x === 0 || y === 0))) ? "full" : ""
+					if (this.type === 3) {
+						cells[i][j] = (Math.abs(x) === Math.abs(y)) ? "full" : ""
+					} else {
+						cells[i][j] = (Math.abs(x) + Math.abs(y) <= this.max && Math.abs(x) + Math.abs(y) >= this.min && (this.type === 1 || (x === 0 || y === 0))) ? "full" : ""
+					}
 				}
 			}
 			return cells
