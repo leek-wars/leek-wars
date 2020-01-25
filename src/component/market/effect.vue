@@ -7,7 +7,7 @@
 		<span v-else v-html="$t('effect.type_' + effect.id, [effect.value1, format(effect.value1 + effect.value2)])"></span>
 		
 		<i18n v-if="effect.turns > 0" path="effect.on_n_turns">
-			<b slot="turns">{{ effect.turns }}</b>
+			<span slot="turns" v-html="$tc('effect.n_turns', effect.turns)"></span>
 		</i18n>
 
 		<tooltip>
