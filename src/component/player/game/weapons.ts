@@ -274,7 +274,7 @@ class Electrisor extends WeaponAnimation {
 			if (this.currentDelay <= 0) {
 				this.currentDelay = this.delay
 				this.game.particles.addLightning(this.lightningX, this.lightningY, this.lightningZ + this.caster.handPos, this.lightningAngle, this.lightningPosition, this.lightning)
-				this.shoots -= dt
+				this.shoots--
 				if (this.shoots === 0) {
 					this.game.actionDone()
 				}
