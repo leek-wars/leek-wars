@@ -4,5 +4,10 @@ enum Area {
 	CIRCLE1 = 3,
 	CIRCLE2 = 4,
 	CIRCLE3 = 5,
+	PLUS_2 = 6,
+	PLUS_3 = 7,
+	X_1 = 8,
+	X_2 = 9,
+	X_3 = 10,
 }
 export { Area }
