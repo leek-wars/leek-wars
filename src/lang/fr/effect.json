@@ -77,6 +77,8 @@
 	"type_28_fixed": "Inflige <b>{0}%</b> de la vie du lanceur en dégâts",
 	"type_29_fixed": "Vole les boucliers absolus retirés",
 	"type_30": "Dégâts nova de <b>{0}</b> à <b>{1}</b>",
+	"type_31_fixed": "Donne <b>{0}</b> PM",
+	"type_32_fixed": "Donne <b>{0}</b> PT",
 	"effect_type_1": "Attaques",
 	"effect_type_2": "Soins",
 	"effect_type_3": "Boosts",
