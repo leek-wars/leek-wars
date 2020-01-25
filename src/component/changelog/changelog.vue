@@ -7,7 +7,7 @@
 			<loader />
 		</panel>
 		<template v-else>
-			<panel v-for="version in changelog" :key="version.version">
+			<panel v-for="(version, v) in changelog" :key="version.version" :class="{last: v === changelog.length - 1}">
 				<h2 slot="title">{{ $t('version_n', [version.version_name]) }} ({{ version.date }})</h2>
 				<div slot="content" class="wrapper">
 					<div class="content">
