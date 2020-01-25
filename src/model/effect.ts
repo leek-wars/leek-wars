@@ -22,7 +22,9 @@ enum EffectType {
 	ABSOLUTE_VULNERABILITY = 27,
 	LIFE_DAMAGE = 28,
 	STEAL_ABSOLUTE_SHIELD = 29,
-	NOVA_DAMAGE = 30
+	NOVA_DAMAGE = 30,
+	RAW_BUFF_MP = 31,
+	RAW_BUFF_TP = 32,
 }
 
 enum EffectTypeMarket {
