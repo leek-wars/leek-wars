@@ -28,10 +28,14 @@
 			</div>
 			<area-view v-if="chip.area != Area.SINGLE_CELL" :area="chip.area" />		
 			<div v-if="chip.cooldown != 0">
-				<span v-html="$t('effect.cooldown', [chip.cooldown >= 0 ? chip.cooldown : '∞'])"></span>
+				<i18n path="effect.cooldown">
+					<span slot="turns" v-html="$tc('effect.n_turns', chip.cooldown >= 0 ? chip.cooldown : '∞')"></span>
+				</i18n>
 				<b v-if="chip.team_cooldown" v-html="'&nbsp;' + $t('effect.team_cooldown')"></b>
 			</div>
-			<div v-if="chip.initial_cooldown > 0" v-html="$t('effect.initial_cooldown', [chip.initial_cooldown])"></div>
+			<i18n v-if="chip.initial_cooldown > 0" tag="div" path="effect.initial_cooldown">
+				<span slot="turns" v-html="$tc('effect.n_turns', chip.initial_cooldown)"></span>
+			</i18n>
 			<effect-view v-for="(effect, e) in chip.effects" :key="e" :effect="effect" />
 		</div>
 		<summon-view v-if="summon" :summon="summon" />
