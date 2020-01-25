@@ -726,7 +726,8 @@ function weaponSound(id: number) {
 		1: ['double_gun'], 2: ['machine_gun'], 3: ['double_gun'], 4: ['shotgun'],
 		5: ['double_gun'], 6: ['laser'], 7: ['grenade_shoot', 0.7, 'explosion'],
 		8: ['flame_thrower'], 9: ['double_gun'], 10: ['gazor'], 11: ['electrisor'],
-		12: ['laser'], 13: ['laser'], 14: ['sword'], 15: ['sword'], 16: ['sword'], 17: ['laser']
+		12: ['laser'], 13: ['laser'], 14: ['sword'], 15: ['sword'], 16: ['sword'], 17: ['laser'],
+		18: ['grenade_shoot', 0.7, 'explosion'], 19: ['electrisor'], 20: ['gazor'], 21: ['laser', 0.1, 'poison']
 	} as {[key: number]: any})[id]
 }
 function chipSound(id: number) {
@@ -743,7 +744,8 @@ function chipSound(id: number) {
 		47: ['heal'], 48: ['shield'], 49: ['heal'], 50: ['fire', 0, 'rock', 0.25, 'rock', 0.2, 'rock', 0.3, 'rock', 0.2, 'rock'],
 		51: ['buff'], 52: ['heal'], 53: ['heal'], 54: ['buff'], 55: ['debuff'], 56: ['debuff'], 57: ['debuff'],
 		58: ['debuff'], 59: ['debuff'], 60: ['buff'], 61: ['poison'], 62: ['poison'], 63: ['poison'],
-		64: ['buff'], 65: ['buff'], 66: ['buff'], 67: ['buff'], 68: ['buff'], 69: ['fire'], 70: ['liberation']
+		64: ['buff'], 65: ['buff'], 66: ['buff'], 67: ['buff'], 68: ['buff'], 69: ['fire'], 70: ['liberation'],
+		71: ['sword'], 72: ['buff'], 73: ['heal'], 74: ['buff']
 	} as {[key: number]: any})[id]
 }
 function playSound(item: any, type: string) {
