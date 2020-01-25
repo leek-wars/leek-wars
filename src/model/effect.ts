@@ -45,6 +45,7 @@ class Effect {
 	public value2!: number
 	public turns!: number
 	public targets!: number
+	public modifiers!: number
 	public type!: number
 }
 export { Effect, EffectType, EffectTypeMarket }
