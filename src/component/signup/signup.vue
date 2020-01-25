@@ -9,7 +9,7 @@
 					<div class="desc introduction" v-html="$t('intro')"></div>
 					<div class="leek-rect">
 						<img class="leeks" src="/image/signup_illustration.png">
-						<div v-if="leek_count" class="desc" v-html="$t('n_leeks_already', [leek_count])"></div>
+						<div v-if="leek_count" class="desc" v-html="$t('n_leeks_already', [LeekWars.formatNumber(leek_count)])"></div>
 					</div>
 				</panel>
 			</div>
