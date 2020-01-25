@@ -280,6 +280,7 @@
 	.vote i {
 		vertical-align: bottom;
 		font-size: 20px;
+		margin-right: 5px;
 	}
 	.vote.zero {
 		opacity: 0.3;
