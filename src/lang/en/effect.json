@@ -7,6 +7,7 @@
 	"line_until_obstacle": "Affects all the line up to an osbtacle",
 	"on_n_turns": " for {turns} turns",
 	"range": "Range: {0} to {1}",
+	"range_fixed": "Range: {0}",
 	"summon_1": "Puny bulb",
 	"summon_2": "Fire bulb",
 	"summon_3": "Healer bulb",

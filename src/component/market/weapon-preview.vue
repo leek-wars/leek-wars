@@ -17,7 +17,9 @@
 			<div>
 				<range-view :min="weapon.min_range" :max="weapon.max_range" :type="weapon.launch_type" />
 				<span>
-					{{ $t('effect.range', [weapon.min_range, weapon.max_range]) }}
+					<span v-if="weapon.min_range == weapon.max_range">{{ $t('effect.range_fixed', [weapon.min_range]) }}</span>
+					<span v-else>{{ $t('effect.range', [weapon.min_range, weapon.max_range]) }}</span>
+					&nbsp;
 					<span v-if="weapon.launch_type == 0">{{ $t('effect.in_lign') }}</span>
 					<template v-if="!weapon.los">
 						<br>

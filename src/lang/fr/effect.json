@@ -7,6 +7,7 @@
 	"line_until_obstacle": "Agit sur toute la ligne jusqu'a un obstacle",
 	"on_n_turns": " sur {turns} tours",
 	"range": "Portée : {0} à {1}",
+	"range_fixed": "Portée : {0}",
 	"summon_1": "Bulbe chétif",
 	"summon_2": "Bulbe enflammé",
 	"summon_3": "Bulbe guérisseur",
