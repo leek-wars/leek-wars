@@ -5,6 +5,7 @@
 		</i18n>
 		<span v-else-if="effect.value2 == 0" v-html="$t('effect.type_' + effect.id + '_fixed', [format(effect.value1)])"></span>
 		<span v-else v-html="$t('effect.type_' + effect.id, [effect.value1, format(effect.value1 + effect.value2)])"></span>
+		<b v-if="effect.modifiers & 1">&nbsp;{{ $t('effect.multiplied_target') }}</b>
 		
 		<i18n v-if="effect.turns > 0" path="effect.on_n_turns">
 			<span slot="turns" v-html="$tc('effect.n_turns', effect.turns)"></span>

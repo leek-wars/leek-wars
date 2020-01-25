@@ -14,6 +14,7 @@
 	"in_lign": "in line",
 	"level_n": "Level {0}",
 	"line_until_obstacle": "all the line up to an osbtacle",
+	"multiplied_target": "per target hit",
 	"n_turns": "<b>1</b> turn | <b>{n}</b> turns",
 	"on_n_turns": " for {turns}",
 	"range": "Range: {0} to {1}",

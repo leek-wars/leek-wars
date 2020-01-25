@@ -14,6 +14,7 @@
 	"in_lign": "en ligne",
 	"level_n": "Niveau {0}",
 	"line_until_obstacle": "toute la ligne jusqu'a un obstacle",
+	"multiplied_target": "par cible touchée",
 	"n_turns": "<b>1</b> tour | <b>{n}</b> tours",
 	"on_n_turns": " sur {turns}",
 	"range": "Portée : {0} à {1}",
