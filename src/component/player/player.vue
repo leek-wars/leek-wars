@@ -404,6 +404,7 @@
 		}
 		@Watch("game.showLifes") toggleLifes() {
 			localStorage.setItem('fight/lifes', '' + this.game.showLifes)
+			this.game.redraw()
 		}
 		canvasClick() {
 			this.game.selectedEntity = this.game.click()
