@@ -364,12 +364,13 @@
 		margin: 8px 5px;
 	}
 	.ranking {
+		background: white;
 		/deep/ td {
 			border-bottom: 1px solid #ddd;
 			border-right: 1px solid #ddd;
 			text-align: center;
 			padding: 4px 7px;
-			background: white;
+			white-space: nowrap;
 		}
 		/deep/ td:last-child {
 			border-right: none;
