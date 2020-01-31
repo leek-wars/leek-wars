@@ -15,6 +15,7 @@
 					<div class="option" @click="consoleRandom"><img src="/image/icon/dice.png"></div>
 					<div class="option" @click="consolePopup"><i class="material-icons">open_in_new</i></div>
 					<div class="option" @click="consoleClose"><i class="material-icons">clear</i></div>
+					<div class="spacer"></div>
 				</div>
 			</div>
 			<console ref="console" />
@@ -340,6 +341,9 @@
 			margin: -15px;
 			margin-bottom: 10px;
 		}
+	}
+	.console .title .spacer {
+		flex: 1;
 	}
 	@media screen and (min-width: 1600px) {
 		#app.connected:not(.social-collapsed):not(.app) .app-center {
