@@ -749,12 +749,13 @@ class Game {
 			break
 		}
 		case ActionType.END_TURN: {
+			this.currentPlayer = null
 			// Reinitialisation of characteristics
 			this.leeks[action.params[1]].tp = action.params[2]
 			this.leeks[action.params[1]].mp = action.params[3]
 			if (action.params.length > 4) { this.leeks[action.params[1]].strength = action.params[4] }
 			if (action.params.length > 5) { this.leeks[action.params[1]].magic = action.params[5] }
-			this.actionDone()
+			this.actionDone(0)
 			break
 		}
 		case ActionType.MOVE_TO: {
@@ -1225,9 +1226,9 @@ class Game {
 		}
 		return false
 	}
-	public actionDone() {
+	public actionDone(delay: number = 6) {
 		this.actionToDo = true
-		this.actionDelay = 6
+		this.actionDelay = delay
 	}
 	public log(action: any) {
 		if (!this.jumping) {
