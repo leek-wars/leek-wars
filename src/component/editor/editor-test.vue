@@ -679,7 +679,8 @@
 			if (!this.currentScenario) { return {} }
 			const available_leeks: {[key: string]: Leek} = {}
 			for (const l in this.allLeeks) {
-				if (this.currentScenario.team1.find(le => le.id === l) || this.currentScenario.team2.find(le => le.id === l)) { continue }
+				const li = parseInt(l, 10)
+				if (this.currentScenario.team1.find(le => le.id === li) || this.currentScenario.team2.find(le => le.id === li)) { continue }
 				available_leeks[l] = this.allLeeks[l]
 			}
 			return available_leeks
@@ -1038,8 +1039,8 @@
 		cursor: pointer;
 	}
 	.leek-dialog {
-		display: flex;
-		flex-wrap: wrap;
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
 	}
 	.leek-dialog .leek {
 		text-align: center;
