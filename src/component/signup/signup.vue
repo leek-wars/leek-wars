@@ -85,8 +85,10 @@
 						<tr v-for="(leek, i) in leek_ranking" :key="i" :class="leek ? leek.style : ''">
 							<td>{{ parseInt(i) + 1 }}</td>
 							<td :class="leek ? leek.class : ''">
-								<rich-tooltip-leek v-if="leek" :id="leek.id">
-									<router-link :to="'/leek/' + leek.id">{{ leek.name }}</router-link>
+								<rich-tooltip-leek v-if="leek" :id="leek.id" v-slot="{ on }">
+									<router-link :to="'/leek/' + leek.id">
+										<span v-on="on">{{ leek.name }}</span>
+									</router-link>
 								</rich-tooltip-leek>
 							</td>
 							<td>{{ leek ? leek.talent : '' }}</td>
@@ -105,8 +107,10 @@
 						<tr v-for="(farmer, i) in farmer_ranking" :key="i" :class="farmer ? farmer.style : ''">
 							<td>{{ parseInt(i) + 1 }}</td>
 							<td :class="farmer ? farmer.class : ''">
-								<rich-tooltip-farmer v-if="farmer" :id="farmer.id">
-									<router-link :to="'/farmer/' + farmer.id">{{ farmer.name }}</router-link>
+								<rich-tooltip-farmer v-if="farmer" :id="farmer.id" v-slot="{ on }">
+									<router-link :to="'/farmer/' + farmer.id">
+										<span v-on="on">{{ farmer.name }}</span>
+									</router-link>
 								</rich-tooltip-farmer>
 							</td>
 							<td>{{ farmer ? farmer.talent : '' }}</td>

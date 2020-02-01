@@ -1,5 +1,5 @@
 <template lang="html">
-	<img :src="url" class="avatar">
+	<img :src="url" class="avatar" v-on="on">
 </template>
 
 <script lang="ts">
@@ -11,6 +11,7 @@
 	@Component({ name: "avatar" })
 	export default class Avatar extends Vue {
 		@Prop() farmer!: Farmer
+		@Prop() on!: any
 		get url() {
 			if (this.farmer) {
 				if (this.farmer.id > 0) {

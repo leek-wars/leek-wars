@@ -11,14 +11,14 @@
 		</div>
 		<div v-else class="fighters">
 			<router-link v-if="fight.type == FightType.SOLO" :to="'/leek/' + fight.leeks1[0].id">
-				<div class="fighter">
-					<rich-tooltip-leek :id="fight.leeks1[0].id">{{ fight.leeks1[0].name }}</rich-tooltip-leek>
-				</div>
+				<rich-tooltip-leek :id="fight.leeks1[0].id" v-slot="{ on }">
+					<div class="fighter" v-on="on">{{ fight.leeks1[0].name }}</div>
+				</rich-tooltip-leek>
 			</router-link>
 			<router-link v-else-if="fight.type == FightType.FARMER" :to="'/farmer/' + fight.farmer1">
-				<div class="fighter">
-					<rich-tooltip-farmer :id="fight.farmer1">({{ fight.farmer1_name }})</rich-tooltip-farmer>
-				</div>
+				<rich-tooltip-farmer :id="fight.farmer1" v-slot="{ on }">
+					<div class="fighter" v-on="on">({{ fight.farmer1_name }})</div>
+				</rich-tooltip-farmer>
 			</router-link>
 			<router-link v-else-if="fight.type == FightType.TEAM" :to="'/team/' + fight.team1">
 				<div class="fighter">[{{ fight.team1_name }}]</div>
@@ -32,14 +32,14 @@
 				</router-link>
 			</div>
 			<router-link v-if="fight.type == FightType.SOLO" :to="'/leek/' + fight.leeks2[0].id">
-				<div class="fighter">
-					<rich-tooltip-leek :id="fight.leeks2[0].id">{{ fight.leeks2[0].name }}</rich-tooltip-leek>
-				</div>
+				<rich-tooltip-leek :id="fight.leeks2[0].id" v-slot="{ on }">
+					<div class="fighter" v-on="on">{{ fight.leeks2[0].name }}</div>
+				</rich-tooltip-leek>
 			</router-link>
 			<router-link v-else-if="fight.type == FightType.FARMER" :to="'/farmer/' + fight.farmer2">
-				<div class="fighter">
-					<rich-tooltip-farmer :id="fight.farmer2">({{ fight.farmer2_name }})</rich-tooltip-farmer>
-				</div>
+				<rich-tooltip-farmer :id="fight.farmer2" v-slot="{ on }">
+					<div class="fighter" v-on="on">({{ fight.farmer2_name }})</div>
+				</rich-tooltip-farmer>
 			</router-link>
 			<router-link v-else-if="fight.type == FightType.TEAM" :to="'/team/' + fight.team2">
 				<div class="fighter">[{{ fight.team2_name }}]</div>

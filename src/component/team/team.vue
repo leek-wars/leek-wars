@@ -131,10 +131,12 @@
 			<h2 slot="title">{{ $t('candidacies') }} ({{ team.candidacies.length }})</h2>
 			<div slot="content" class="content candidacies">
 				<div v-for="candidacy in team.candidacies" :key="candidacy.id" class="farmer">
-					<rich-tooltip-farmer :id="candidacy.farmer.id">
+					<rich-tooltip-farmer :id="candidacy.farmer.id" v-slot="{ on }">
 						<router-link :to="'/farmer/' + candidacy.farmer.id">
-							<avatar :farmer="candidacy.farmer" />
-							<div class="name">{{ candidacy.farmer.name }}</div>
+							<div v-on="on">
+								<avatar :farmer="candidacy.farmer" />
+								<div class="name">{{ candidacy.farmer.name }}</div>
+							</div>
 						</router-link>
 					</rich-tooltip-farmer>
 					<span class="accept" @click="acceptCandidacy(candidacy)">{{ $t('candidacy_accept') }}</span>
@@ -148,10 +150,10 @@
 			<loader v-if="!team" slot="content" />
 			<div v-else slot="content" class="members">
 				<div v-for="member in team.members" :key="member.id" class="farmer">
-					<rich-tooltip-farmer :id="member.id">
-						<router-link :to="'/farmer/' + member.id">
-							<avatar :farmer="member" />
-							<div class="name">
+					<router-link :to="'/farmer/' + member.id">
+						<rich-tooltip-farmer :id="member.id" v-slot="{ on }">
+							<avatar :farmer="member" :on="on" />
+							<div class="name" v-on="on">
 								<tooltip v-if="member.grade == 'owner'">
 									<span slot="activator">★</span>
 									{{ $t('owner') }}
@@ -164,8 +166,8 @@
 								<img v-if="member.connected" class="status" src="/image/connected.png">
 								<img v-else class="status" src="/image/disconnected.png">
 							</div>
-						</router-link>
-					</rich-tooltip-farmer>
+						</rich-tooltip-farmer>
+					</router-link>
 					<template v-if="owner">
 						<i v-if="member.grade == 'owner'">{{ $t('owner') }}</i>
 						<select v-else v-model="member.grade" class="level" @change="changeLevel(member, $event)">
@@ -215,8 +217,8 @@
 
 					<div v-if="composition.leeks.length == 0" class="empty">{{ $t('empty_compo') }}</div>
 
-					<rich-tooltip-leek v-for="leek in composition.leeks" :id="leek.id" :key="leek.id">
-						<div :class="{dragging: leek.dragging}" class="leek" draggable="true" @click="$router.push('/leek/' + leek.id)" @dragstart="leeksDragstart(composition, leek, $event)" @dragend="leeksDragend(leek, $event)">
+					<rich-tooltip-leek v-for="leek in composition.leeks" :id="leek.id" :key="leek.id" v-slot="{ on }">
+						<div :class="{dragging: leek.dragging}" class="leek" draggable="true" v-on="on" @click="$router.push('/leek/' + leek.id)" @dragstart="leeksDragstart(composition, leek, $event)" @dragend="leeksDragend(leek, $event)">
 							<leek-image :leek="leek" :scale="0.6" />
 							<br>
 							<div class="name">{{ leek.name }} ({{ leek.level }})</div><br>
@@ -236,8 +238,8 @@
 			<div slot="content" :class="{dashed: draggedLeek != null}" class="leeks" @dragover="leeksDragover" @drop="leeksDrop(null, $event)">
 				<div v-if="team.unengaged_leeks.length == 0" class="empty">{{ $t('empty_compo') }}</div>
 
-				<rich-tooltip-leek v-for="leek in team.unengaged_leeks" :id="leek.id" :key="leek.id">
-					<div :class="{dragging: leek.dragging}" class="leek" draggable="true" @click="$router.push('/leek/' + leek.id)" @dragstart="leeksDragstart(null, leek, $event)" @dragend="leeksDragend(leek, $event)">
+				<rich-tooltip-leek v-for="leek in team.unengaged_leeks" :id="leek.id" :key="leek.id" v-slot="{ on }">
+					<div :class="{dragging: leek.dragging}" class="leek" draggable="true" v-on="on" @click="$router.push('/leek/' + leek.id)" @dragstart="leeksDragstart(null, leek, $event)" @dragend="leeksDragend(leek, $event)">
 						<leek-image :leek="leek" :scale="0.6" />
 						<br>
 						<div class="name">{{ leek.name }} ({{ leek.level }})</div><br>
@@ -253,12 +255,14 @@
 			<h2 v-if="team" slot="title">{{ $t('leeks', [team.leek_count]) }}</h2>
 			<loader v-if="!team" slot="content" />
 			<div v-else slot="content" class="leeks">
-				<rich-tooltip-leek v-for="leek in team.leeks" :id="leek.id" :key="leek.id">
+				<rich-tooltip-leek v-for="leek in team.leeks" :id="leek.id" :key="leek.id" v-slot="{ on }">
 					<router-link :to="'/leek/' + leek.id" :leek="leek.id" class="leek">
-						<leek-image :leek="leek" :scale="0.6" />
-						<br>
-						<div class="name">{{ leek.name }}</div>
-						<div>{{ $t('main.level_n', [leek.level]) }}</div>
+						<div v-on="on">
+							<leek-image :leek="leek" :scale="0.6" />
+							<br>
+							<div class="name">{{ leek.name }}</div>
+							<div>{{ $t('main.level_n', [leek.level]) }}</div>
+						</div>
 					</router-link>
 				</rich-tooltip-leek>
 			</div>
@@ -346,8 +350,8 @@
 			<div class="change_owner_popup">
 				{{ $t('change_owner_select') }}
 				<br>
-				<rich-tooltip-farmer v-for="member in team.members" :id="member.id" :key="member.id">
-					<div :class="{selected: member === changeOwnerSelected}" class="farmer" @click="changeOwnerSelected = member">
+				<rich-tooltip-farmer v-for="member in team.members" :id="member.id" :key="member.id" v-slot="{ on }">
+					<div :class="{selected: member === changeOwnerSelected}" class="farmer" v-on="on" @click="changeOwnerSelected = member">
 						<avatar :farmer="member" />
 						<div class="name">
 							<tooltip v-if="member.grade === 'owner'">

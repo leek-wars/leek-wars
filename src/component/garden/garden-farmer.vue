@@ -1,6 +1,6 @@
 <template lang="html">
-	<rich-tooltip-farmer :id="farmer.id" :bottom="true" :instant="true" class="rich">
-		<div class="elem">
+	<rich-tooltip-farmer :id="farmer.id" v-slot="{ on }" :bottom="true" :instant="true" class="rich">
+		<div class="elem" v-on="on">
 			<avatar :farmer="farmer" />
 			<div class="name">{{ farmer.name }}</div>
 			<talent :talent="farmer.talent" />

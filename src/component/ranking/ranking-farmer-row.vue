@@ -3,7 +3,9 @@
 		<td>{{ row.rank }}</td>
 		<td :class="row.style">
 			<router-link :to="'/farmer/' + row.id">
-				<rich-tooltip-farmer :id="row.id">{{ row.name }}</rich-tooltip-farmer>
+				<rich-tooltip-farmer :id="row.id" v-slot="{ on }">
+					<span v-on="on">{{ row.name }}</span>
+				</rich-tooltip-farmer>
 			</router-link>
 		</td>
 		<td>{{ row.talent }}</td>

@@ -1,5 +1,5 @@
 <template lang="html">
-	<svg :viewBox="'0 0 ' + width + ' ' + height" :width="width" :height="height">
+	<svg :viewBox="'0 0 ' + width + ' ' + height" :width="width" :height="height" v-on="on">
 		<image v-if="leekImage" :x="leekX" :y="leekY" :width="leekWidth" :height="leekHeight" :xlink:href="'/image/' + leekImage" />
 		<image v-if="hasHat && hatImage" :x="hatX" :width="hatWidth" :height="hatHeight" :xlink:href="'/image/' + hatImage" y="0" />
 	</svg>
@@ -15,6 +15,7 @@
 	export default class LeekImage extends Vue {
 		@Prop({required: true}) leek!: Leek
 		@Prop({required: true}) scale!: number
+		@Prop() on!: any
 		leekSize: any = null
 		hatSize: any = null
 		get leekImage(): string {

@@ -31,8 +31,8 @@
 				<loader v-if="!topic || !topic.messages" />
 				<div v-else>
 					<div v-for="message in topic.messages" :id="'message-' + message.id" :key="message.id" class="message-wrapper">
-						<rich-tooltip-farmer :id="message.writer.id">
-							<div class="profile">
+						<rich-tooltip-farmer :id="message.writer.id" v-slot="{ on }">
+							<div class="profile" v-on="on">
 								<router-link :to="'/farmer/' + message.writer.id" class="">
 									<avatar :farmer="message.writer" />
 								</router-link>

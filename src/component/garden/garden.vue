@@ -77,8 +77,10 @@
 								<garden-leek :leek="leek" />
 							</router-link>
 							<div class="versus">VS</div>
-							<div v-if="challengeFights" class="enemies" @click="startLeekChallenge">
-								<garden-leek :leek="challengeLeekTarget" />
+							<div v-if="challengeFights" class="enemies">
+								<div class="leek" @click="startLeekChallenge">
+									<garden-leek :leek="challengeLeekTarget" />
+								</div>
 							</div>
 							<div v-else>
 								<img src="/image/notgood.png">
@@ -113,8 +115,8 @@
 							<div v-if="selectedLeek && garden.fights">
 								<loader v-if="!leekOpponents[selectedLeek.id] && !leekErrors[selectedLeek.id]" />
 								<div v-else-if="leekOpponents[selectedLeek.id]" class="opponents">
-									<span v-for="leek in leekOpponents[selectedLeek.id]" :key="leek.id" v-ripple class="leek">
-										<garden-leek :leek="leek" @click.native="clickSoloOpponent(leek)" />
+									<span v-for="leek in leekOpponents[selectedLeek.id]" :key="leek.id" v-ripple class="leek" @click="clickSoloOpponent(leek)">
+										<garden-leek :leek="leek" />
 									</span>
 									<div v-if="!leekOpponents[selectedLeek.id].length">
 										<img src="/image/notgood.png">

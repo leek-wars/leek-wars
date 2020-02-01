@@ -2,15 +2,17 @@
 	<div class="result card">
 		<div v-ripple class="main" @click="$emit('gotoresult', result)">
 			<div class="image">
-				<leek-image v-if="result.type === 'leek'" :leek="result" :scale="1" width="40" height="40" />
-				<rich-tooltip-farmer v-else-if="result.type === 'farmer'" :id="result.id">
-					<avatar :farmer="result" />
+				<rich-tooltip-leek v-if="result.type === 'leek'" :id="result.id" v-slot="{ on }">
+					<leek-image :leek="result" :scale="1" width="40" height="40" :on="on" />
+				</rich-tooltip-leek>
+				<rich-tooltip-farmer v-else-if="result.type === 'farmer'" :id="result.id" v-slot="{ on }">
+					<avatar :farmer="result" :on="on" />
 				</rich-tooltip-farmer>
 				<emblem v-else-if="result.type === 'team'" :team="result" />
 			</div>
 			<div class="name">
-				<rich-tooltip-farmer v-if="result.type === 'farmer'" :id="result.id">
-					{{ result.name }}
+				<rich-tooltip-farmer v-if="result.type === 'farmer'" :id="result.id" v-slot="{ on }">
+					<span v-on="on">{{ result.name }}</span>
 				</rich-tooltip-farmer>
 				<span v-else>{{ result.name }}</span>
 			</div>

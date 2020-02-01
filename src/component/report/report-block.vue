@@ -20,8 +20,8 @@
 				<td class="name">
 					<span class="alive">
 						<router-link :to="'/farmer/' + farmer.id">
-							<rich-tooltip-farmer :id="farmer.id">
-								{{ farmer.name }}
+							<rich-tooltip-farmer :id="farmer.id" v-slot="{ on }" :bottom="true">
+								<span v-on="on">{{ farmer.name }}</span>
 							</rich-tooltip-farmer>
 						</router-link>
 					</span>
@@ -215,7 +215,7 @@
 		padding: 7px;
 		margin-bottom: 8px;
 		margin-right: 6px;
-		height: 22px;
+		height: 36px;
 		img {
 			width: 22px;
 			vertical-align: bottom;
