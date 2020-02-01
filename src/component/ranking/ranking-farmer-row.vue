@@ -11,6 +11,7 @@
 		<td>{{ row.talent }}</td>
 		<td>{{ row.total_level }}</td>
 		<td>{{ row.leek_count }}</td>
+		<td>{{ row.trophies }}</td>
 		<td>
 			<div class="country-wrapper">
 				<img v-if="row.country" :title="$t('country.' + row.country)" :src="'/image/flag/' + row.country + '.png'">

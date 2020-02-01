@@ -110,6 +110,12 @@
 								</router-link>
 							</th>
 							<th>{{ $t('leeks') }}</th>
+							<th>
+								<router-link :to="'/ranking/farmer/trophies' + (active ? '/active' : '') + '/page-' + page">
+									<span>{{ $t('trophies') }}</span>
+									<i v-if="order === 'trophies'" class="material-icons">expand_less</i>
+								</router-link>
+							</th>
 							<th>{{ $t('country') }}</th>
 							<th>{{ $t('team') }}</th>
 						</tr>
