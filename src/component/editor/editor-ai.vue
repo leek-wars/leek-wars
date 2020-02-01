@@ -79,6 +79,7 @@
 	}
 	.item .label {
 		padding: 5px 10px;
+		white-space: nowrap;
 	}
 	#app.app .item .label {
 		padding: 8px 10px;
