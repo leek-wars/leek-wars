@@ -50,9 +50,9 @@
 				<div class="center">
 					<pagination :current="page" :total="pages" :url="url" />
 					<div v-if="$store.state.farmer" class="me-buttons">
-						<div v-if="category === 'leek'">
+						<template v-if="category === 'leek'">
 							<v-btn v-for="leek in $store.state.farmer.leeks" :key="leek.id" @click="goToRanking('leek', leek.id)">{{ leek.name }}</v-btn>
-						</div>
+						</template>
 						<v-btn v-else-if="category === 'farmer'" @click="goToRanking('farmer', $store.state.farmer.id)">{{ $t('my_farmer') }}</v-btn>
 						<v-btn v-else-if="category === 'team' && $store.state.farmer.team" @click="goToRanking('team', $store.state.farmer.team.id)">{{ $t('my_team') }}</v-btn>
 					</div>
@@ -165,11 +165,11 @@
 
 		<popup v-model="searchDialog" :width="500">
 			<span slot="title">{{ $t('search_in_ranking') }}</span>
-			<input ref="search" :placeholder="$t('search_name')" v-model="searchQuery" class="query" type="text">
+			<input ref="search" v-model="searchQuery" :placeholder="$t('search_name')" class="query" type="text">
 			<div class="flex">
-				<v-checkbox :label="$t('leeks')" v-model="searchLeeks" hide-details />
-				<v-checkbox :label="$t('farmers')" v-model="searchFarmers" hide-details />
-				<v-checkbox :label="$t('teams')" v-model="searchTeams" hide-details />
+				<v-checkbox v-model="searchLeeks" :label="$t('leeks')" hide-details />
+				<v-checkbox v-model="searchFarmers" :label="$t('farmers')" hide-details />
+				<v-checkbox v-model="searchTeams" :label="$t('teams')" hide-details />
 			</div>
 			<br>
 			<loader v-if="!searchResults && searchQuery.length" />
@@ -346,14 +346,14 @@
 	}
 	.me-buttons {
 		padding-top: 8px;
-		display: inline-block;
+		display: inline-flex;
 		.button {
 			margin: 0 3px;
 		}
 	}
 	.inactives {
 		padding-left: 8px;
-		margin-bottom: -10px;
+		margin-bottom: -6px;
 		vertical-align: bottom;
 	}
 	.ranking.large {
@@ -365,14 +365,14 @@
 	}
 	.ranking {
 		background: white;
-		/deep/ td {
+		::v-deep td {
 			border-bottom: 1px solid #ddd;
 			border-right: 1px solid #ddd;
 			text-align: center;
 			padding: 4px 7px;
 			white-space: nowrap;
 		}
-		/deep/ td:last-child {
+		::v-deep td:last-child {
 			border-right: none;
 		}
 		tr.header {
@@ -405,36 +405,36 @@
 		th a {
 			color: #222;
 		}
-		/deep/ .first a {
+		::v-deep .first a {
 			color: #ffa900;
 			font-weight: bold;
 		}
-		/deep/ .second a {
+		::v-deep .second a {
 			color: #9c9c9c;
 			font-weight: bold;
 		}
-		/deep/ .third a {
+		::v-deep .third a {
 			color: #ae4e00;
 			font-weight: bold;
 		}
 		tr.me {
 			font-weight: bold;
-			/deep/ td {
+			::v-deep td {
 				background: #eee;
 			}
 		}
 		tr.highlight {
-			/deep/ td {
+			::v-deep td {
 				background: #b5ee84;
 			}
 		}
 		tr.inactive {
-			/deep/ td, /deep/ a {
+			::v-deep td, ::v-deep a {
 				color: #777;
 				font-style: italic;
 			}
 		}
-		/deep/ .country-wrapper {
+		::v-deep .country-wrapper {
 			height: 20px;
 			img {
 				margin-top: -2px;
@@ -484,7 +484,7 @@
 		}
 	}
 	.query {
-		width: calc(100% - 15px);
+		width: 100%;
 		padding: 0 6px;
 		height: 36px;
 		margin-bottom: 15px;

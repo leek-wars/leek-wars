@@ -2,7 +2,7 @@
 	<div class="version">
 		<img v-if="version.image" :src="'/image/mail/mail_' + version.version + '.png'" class="image">
 		<div v-for="(section, s) in changes" :key="s" class="section">
-			<h4 v-emojis v-if="changes.length > 1" :class="{first: s === 0}">{{ $t('changelog.title_' + s) }}</h4>
+			<h4 v-if="changes.length > 1" v-emojis :class="{first: s === 0}">{{ $t('changelog.title_' + s) }}</h4>
 			<div v-for="(change, c) in section" :key="c" class="change" v-html="'➤ ' + change"></div>
 		</div>
 		<router-link v-if="version.forum_topic" :to="'/forum/category-' + version.forum_category + '/topic-' + version.forum_topic">

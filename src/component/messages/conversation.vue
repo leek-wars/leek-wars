@@ -1,5 +1,5 @@
 <template>
-	<div v-ripple v-if="conversation" class="conversation">
+	<div v-if="conversation" v-ripple class="conversation">
 		<rich-tooltip-farmer :id="farmer.id">
 			<avatar v-if="farmer" :farmer="farmer" />
 		</rich-tooltip-farmer>

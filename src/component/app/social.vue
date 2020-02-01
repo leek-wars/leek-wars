@@ -15,7 +15,7 @@
 						<router-link to="/notifications">{{ $t('main.notifications') }}</router-link>
 						<span v-show="$store.state.unreadNotifications" class="label">{{ $store.state.unreadNotifications }}</span>
 					</h2>
-					<div v-autostopscroll slot="content" class="content-limit">
+					<div slot="content" v-autostopscroll class="content-limit">
 						<notification v-for="notification in $store.state.notifications" :key="notification.id" :notification="notification" @click.native="readNotification(notification)" />
 					</div>
 				</panel>
@@ -25,7 +25,7 @@
 						<router-link to="/messages">{{ $t('main.messages') }}</router-link>
 						<span v-show="$store.state.unreadMessages" class="label">{{ $store.state.unreadMessages }}</span>
 					</h2>
-					<div v-autostopscroll slot="content" class="content-limit">
+					<div slot="content" v-autostopscroll class="content-limit">
 						<router-link v-for="conversation in $store.state.conversationsList" :key="conversation.id" :to="'/messages/conversation/' + conversation.id">
 							<conversation :conversation="conversation" />
 						</router-link>
@@ -36,19 +36,19 @@
 					<h2 slot="title">
 						<router-link to="/chat">Chat</router-link>
 						<v-menu offset-y>
-							<img slot="activator" :src="chatLanguage.flag" class="language-button">
+							<template v-slot:activator="{ on }">
+								<img :src="chatLanguage.flag" class="language-button" v-on="on">
+							</template>
 							<v-list :dense="true">
-								<v-list-tile v-for="(language, i) in LeekWars.languages" :key="i" @click="chatLanguage = language">
-									<v-list-tile-title class="language">
-										<img :src="language.flag" class="flag">
-										<span class="name">{{ language.name }}</span>
-									</v-list-tile-title>
-								</v-list-tile>
+								<v-list-item v-for="(language, i) in LeekWars.languages" :key="i" class="language" @click="chatLanguage = language">
+									<img :src="language.flag" class="flag">
+									<span class="name">{{ language.name }}</span>
+								</v-list-item>
 							</v-list>
 						</v-menu>
 					</h2>
 					<div slot="actions">
-						<div class="button flat" @click="LeekWars.addChat(chatLanguage.code, ChatType.GLOBAL, 'Chat ' + chatLanguage.code.toUpperCase())">
+						<div class="button text" @click="LeekWars.addChat(chatLanguage.code, ChatType.GLOBAL, 'Chat ' + chatLanguage.code.toUpperCase())">
 							<i class="material-icons">picture_in_picture_alt</i>
 						</div>
 					</div>
@@ -193,8 +193,9 @@
 		margin-bottom: 0;
 	}
 	.social-chat .language-button {
-		height: 28px;
-		max-height: 28px;
+		cursor: pointer;
+		height: 38px;
+		max-height: 38px;
 		max-width: none;
 		padding: 5px;
 		margin-left: 4px;

@@ -6,7 +6,7 @@
 			</slot>
 			<div class="actions">
 				<slot name="actions"></slot>
-				<div v-if="toggle" class="button flat expand" @click="expanded = !expanded">
+				<div v-if="toggle" class="button text expand" @click="expanded = !expanded">
 					<i v-if="expanded" class="material-icons">expand_less</i>
 					<i v-else class="material-icons">expand_more</i>
 				</div>
@@ -101,6 +101,7 @@
 	.panel > .header h2 a, .panel > .header h2 a:visited {
 		color: white;
 		font-weight: bold;
+		vertical-align: top;
 	}
 	.panel > .header h2 img {
 		vertical-align: top;
@@ -122,19 +123,13 @@
 		border-width: 36px 0 0 20px;
 		border-color: transparent transparent transparent rgba(150, 150, 150, 0.5);
 	}
-	.panel > .header img {
-		max-height: 24px;
-		max-width: 24px;
-		vertical-align: top;
-		opacity: 0.9;
-	}
 	.header > .actions {
 		height: 36px;
 		display: flex;
 		justify-content: flex-end;
 		flex: 1;
 	}
-	.header > .actions .button {
+	.header > .actions ::v-deep .button {
 		height: 36px;
 		line-height: 36px;
 		color: white;
@@ -143,30 +138,30 @@
 		cursor: pointer;
 		display: inline-flex;
 		user-select: none;
+		img {
+			height: 36px;
+			width: 28px;
+			padding: 7px 3px;
+			opacity: 0.9;
+			vertical-align: top;
+			margin-right: 6px;
+		}
+		i {
+			padding: 4px 0;
+			opacity: 0.9;
+			font-size: 28px;
+			margin-right: 6px;
+		}
 	}
-	.header > .actions > div:last-child.button,
-	.header > .actions > a:last-child .button,
-	.header > .actions > div:last-child .button {
+	.header > .actions ::v-deep > div:last-child.button,
+	.header > .actions ::v-deep > a:last-child .button,
+	.header > .actions ::v-deep > div:last-child .button {
 		border-top-right-radius: 3px;
 	}
-	.header > .actions .button /deep/ img {
-		height: 22px;
-		width: 22px;
-		padding: 7px 3px;
-		opacity: 0.9;
-    	vertical-align: top;
-		margin-right: 6px;
-	}
-	.header > .actions .button /deep/ i {
-		padding: 4px 0;
-		opacity: 0.9;
-		font-size: 28px;
-		margin-right: 6px;
-	}
-	.header > .actions .button :last-child {
+	.header > .actions ::v-deep .button :last-child {
 		margin-right: 0;
 	}
-	.header > .actions .button:hover {
+	.header > .actions ::v-deep .button:hover {
 		background-image: linear-gradient(to bottom, rgba(110, 201, 31, 0.7) 0%, rgba(110, 201, 31, 0.9) 50%, rgba(110, 201, 31, 0.7) 100%);
 	}
 	.panel > .content {

@@ -283,7 +283,7 @@
 			<panel :title="$t('leeks')">
 				<loader v-if="!farmer" />
 				<div v-else>
-					<rich-tooltip-leek v-for="leek in farmer.leeks" :key="leek.id" :id="leek.id">
+					<rich-tooltip-leek v-for="leek in farmer.leeks" :id="leek.id" :key="leek.id">
 						<router-link v-ripple :to="'/leek/' + leek.id" class="leek">
 							<leek-image :leek="leek" :scale="0.9" />
 							<br>

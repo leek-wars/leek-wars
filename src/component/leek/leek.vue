@@ -22,7 +22,7 @@
 					<tooltip>
 						<div slot="activator" class="tab" @click="updateGarden">
 							<span>{{ $t('garden') }}</span>
-							<v-switch :input-value="leek.in_garden" hide-details />
+							<v-switch v-model="leek.in_garden" hide-details />
 						</div>
 						{{ $t('authorize_agressions') }}
 					</tooltip>
@@ -336,13 +336,13 @@
 			<div class="hat-dialog">
 				<div class="hats">
 					<tooltip>
-						<div v-ripple slot="activator" :quantity="1" class="hat" @click="selectHat(null)">
+						<div slot="activator" v-ripple :quantity="1" class="hat" @click="selectHat(null)">
 							<img src="/image/hat/no_hat.png">
 						</div>
 						<b>{{ $t('no_hat') }}</b>
 					</tooltip>
 					<tooltip v-for="hat in farmer_hats" :key="hat.id">
-						<div v-ripple slot="activator" :quantity="hat.quantity" class="hat" @click="selectHat(hat)">
+						<div slot="activator" v-ripple :quantity="hat.quantity" class="hat" @click="selectHat(hat)">
 							<img :src="'/image/hat/' + hat.name + '.png'">
 						</div>
 						<b>{{ $t('hat.' + hat.name) }}</b>
@@ -856,12 +856,12 @@
 		display: flex;
 		justify-content: center;
 		align-items: center;
-		height: calc(100% - 66px);
+		height: 100%;
 	}
 	.characteristics {
 		padding: 15px 0;
 		.characteristic {
-			width: calc(50% - 60px);
+			width: 50%;
 			padding: 5px 30px;
 			display: inline-block;
 			img {
@@ -891,7 +891,7 @@
 	}
 	.bar {
 		width: 100%;
-		height: 10px;
+		height: 12px;
 		margin-top: 5px;
 		background: white;
 		border: 1px solid #ddd;
@@ -941,18 +941,18 @@
 		margin-right: -4px;
 		margin-bottom: -16px;
 		position: relative;
-		/deep/ .ct-line {
+		::v-deep .ct-line {
 			stroke: rgba(95, 173, 27, 0.7);
 			stroke-width: 2px;
 		}
-		/deep/ .ct-point {
+		::v-deep .ct-point {
 			stroke: #5fad1b;
 		}
-		/deep/ .ct-area {
+		::v-deep .ct-area {
 			fill: rgba(95, 173, 27, 1);
 			fill-opacity: 0.2;
 		}
-		/deep/ .ct-label.ct-horizontal {
+		::v-deep .ct-label.ct-horizontal {
 			text-align: center;
 			display: block;
 		}

@@ -5,6 +5,9 @@ declare module '*.vue' {
 
 declare var ga: Function
 
+declare module 'vuetify/lib/framework';
+declare module '@/vtooltip-fast';
+
 declare module 'vue-chartist' {
 	const Chartist: any
 	export = Chartist

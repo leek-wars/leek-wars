@@ -16,7 +16,7 @@
 						</router-link>
 						<div class="right">
 							<router-link to="/farmer" @click.native="clickItem">
-								<div v-ripple v-if="$store.state.farmer" class="text farmer-name">{{ $store.state.farmer.name }}</div>
+								<div v-if="$store.state.farmer" v-ripple class="text farmer-name">{{ $store.state.farmer.name }}</div>
 							</router-link>
 							<div class="moneys">
 								<router-link v-ripple to="/market" @click.native="clickItem">
@@ -33,13 +33,13 @@
 
 			<div class="menu-center">
 				<span v-if="$store.state.farmer && $store.state.farmer.leeks" class="leeks">
-					<router-link v-ripple v-for="(leek, key, i) in $store.state.farmer.leeks" :key="leek.id" :to="{ name: 'leek', params: { id: leek.id }}" :label="leek.capital || null" :class="{'router-link-active': i == 0 && isHomePage}" class="section">
+					<router-link v-for="(leek, key, i) in $store.state.farmer.leeks" :key="leek.id" v-ripple :to="{ name: 'leek', params: { id: leek.id }}" :label="leek.capital || null" :class="{'router-link-active': i == 0 && isHomePage}" class="section">
 						<div :leek="leek.id" :tab="'leek-' + leek.id" @click="clickItem">
 							<img src="/image/icon/house.png">
 							<div class="text">{{ leek.name }}</div>
 						</div>
 					</router-link>
-					<router-link v-ripple v-if="Object.keys($store.state.farmer.leeks).length < 4" to="/new-leek" class="section">
+					<router-link v-if="Object.keys($store.state.farmer.leeks).length < 4" v-ripple to="/new-leek" class="section">
 						<i class="material-icons">add</i>
 						<div class="text">{{ $t('main.add_leek') }}</div>
 					</router-link>
@@ -72,7 +72,7 @@
 					<div class="text">{{ $t("main.market") }}</div>
 				</router-link>
 			
-				<router-link v-ripple v-if="$store.state.farmer && $store.state.farmer.team" to="/team" class="section" @click.native="clickItem">
+				<router-link v-if="$store.state.farmer && $store.state.farmer.team" v-ripple to="/team" class="section" @click.native="clickItem">
 					<img src="/image/icon/team.png">
 					<div class="text">{{ $t('main.team') }}</div>
 				</router-link>
@@ -92,17 +92,17 @@
 					<div class="text">{{ $t("main.help") }}</div>
 				</router-link>
 
-				<router-link v-ripple v-if="env.SOCIAL" to="/forum" class="section" @click.native="clickItem">
+				<router-link v-if="env.SOCIAL" v-ripple to="/forum" class="section" @click.native="clickItem">
 					<img src="/image/icon/forum.png">
 					<div class="text">{{ $t("main.forum") }}</div>
 				</router-link>
 
-				<router-link v-ripple v-if="$store.getters.moderator" :label="$store.state.farmer.reportings || null" to="/moderation" class="section" tab="moderation" @click.native="clickItem">
+				<router-link v-if="$store.getters.moderator" v-ripple :label="$store.state.farmer.reportings || null" to="/moderation" class="section" tab="moderation" @click.native="clickItem">
 					<i class="material-icons">gavel</i>
 					<div class="text">{{ $t('main.moderation') }}</div>
 				</router-link>
 
-				<router-link v-ripple v-if="$store.getters.admin" to="/admin" class="section" tab="admin" @click.native="clickItem">
+				<router-link v-if="$store.getters.admin" v-ripple to="/admin" class="section" tab="admin" @click.native="clickItem">
 					<i class="material-icons">security</i>
 					<div class="text">{{ $t('main.admin') }}</div>
 				</router-link>

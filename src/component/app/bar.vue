@@ -13,11 +13,11 @@
 		</div>
 		<div class="actions-wrapper">
 			<div class="static-actions">
-				<div v-ripple v-show="LeekWars.menuExpanded || $store.state.unreadMessages > 0" class="action header-button mobile messages-button" @click="$router.push('/messages'); LeekWars.closeMenu()">
+				<div v-show="LeekWars.menuExpanded || $store.state.unreadMessages > 0" v-ripple class="action header-button mobile messages-button" @click="$router.push('/messages'); LeekWars.closeMenu()">
 					<i class="icon material-icons">chat</i>
 					<span v-show="$store.state.unreadMessages > 0" class="counter messages-counter">{{ $store.state.unreadMessages }}</span>
 				</div>
-				<div v-ripple v-show="LeekWars.menuExpanded || $store.state.unreadNotifications > 0" class="action header-button mobile notifications-button">
+				<div v-show="LeekWars.menuExpanded || $store.state.unreadNotifications > 0" v-ripple class="action header-button mobile notifications-button">
 					<v-menu :nudge-bottom="0" :max-width="400" :max-height="400" bottom offset-y @input="readNotifications">
 						<div slot="activator" class="header-button notifications-button">
 							<i class="icon material-icons">info</i>
@@ -31,12 +31,12 @@
 						</div>
 					</v-menu>
 				</div>
-				<router-link v-ripple v-show="LeekWars.menuExpanded" to="/settings" class="action header-button mobile settings" @click.native="closeMenu">
+				<router-link v-show="LeekWars.menuExpanded" v-ripple to="/settings" class="action header-button mobile settings" @click.native="closeMenu">
 					<i class="icon material-icons">settings</i>
 				</router-link>
 			</div>
 			<div v-show="!LeekWars.menuExpanded" class="actions">
-				<div v-ripple v-for="(action, a) in LeekWars.actions" :key="a" class="tab action" @click="action.click($event)">
+				<div v-for="(action, a) in LeekWars.actions" :key="a" v-ripple class="tab action" @click="action.click($event)">
 					<i v-if="action.icon" class="action material-icons">{{ action.icon }}</i>
 					<img v-else :src="'/image/' + action.image" class="action">
 				</div>
@@ -96,7 +96,7 @@
 		display: none;
 	}
 	.app-bar .menu-button {
-		width: 27px;
+		width: 61px;
 		padding: 14px 20px;
 		padding-right: 14px;
 		margin-right: 4px;

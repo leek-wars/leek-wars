@@ -26,8 +26,8 @@
 			</div>
 		</div>
 		<div v-if="!LeekWars.mobile" class="timeline">
-			<div v-for="entity in game.entityOrder" :class="{summon: entity.summon, current: entity.id === game.currentPlayer, dead: entity.dead}" :key="entity.id" :style="{background: entity === game.selectedEntity || entity === game.mouseEntity ? '#fffc' : entity.gradient, 'border-color': entity.color}" class="entity" @mouseenter="entity_enter(entity)" @mouseleave="entity_leave(entity)" @click="entity_click(entity)">
-				<div v-if="!entity.dead" :style="{height: 'calc(4px + ' + ((entity.life / entity.maxLife) * 100) + '%)', background: entity.lifeColor, 'border-color': entity.lifeColorLighter}" class="bar"></div>
+			<div v-for="entity in game.entityOrder" :key="entity.id" :class="{summon: entity.summon, current: entity.id === game.currentPlayer, dead: entity.dead}" :style="{background: entity === game.selectedEntity || entity === game.mouseEntity ? '#fffc' : entity.gradient, 'border-color': entity.color}" class="entity" @mouseenter="entity_enter(entity)" @mouseleave="entity_leave(entity)" @click="entity_click(entity)">
+				<div v-if="!entity.dead" :style="{height: 'calc(6px + ' + ((entity.life / entity.maxLife) * 100) + '%)', background: entity.lifeColor, 'border-color': entity.lifeColorLighter}" class="bar"></div>
 				<div class="image">
 					<img v-if="entity.summon" :src="'/image/bulb/' + entity.bulbName + '_front.png'">
 					<turret-image v-else-if="(entity instanceof Turret)" :level="entity.level" :skin="entity.team" :scale="1" />
@@ -112,10 +112,10 @@
 	.timeline .entity {
 		display: inline-flex;
 		vertical-align: bottom;
-		width: 55px;
-		height: 70px;
-		margin: 0 3px;
-		padding: 3px;
+		width: 58px;
+		height: 76px;
+		margin: 0 2px;
+		padding: 3px 2px;
 		position: relative;
 		border-top-left-radius: 3px;
 		border-top-right-radius: 3px;
@@ -126,13 +126,15 @@
 		border-top: 5px solid black;
 		border-left: 5px solid black;
 		border-right: 5px solid black;
+		height: 81px;
+		width: 71px;
 		margin: 0 0px;
 	}
 	.timeline .entity.dead {
 		opacity: 0.3;
 	}
 	.timeline .entity .bar {
-		flex: 5px 0 0;
+		flex: 6px 0 0;
 		border-top-left-radius: 3px;
 		border: 1px solid black;
 		margin-right: 2px;
@@ -149,8 +151,12 @@
 		max-height: 70px;
 	}
 	.timeline .entity.summon {
-		width: 35px;
-		height: 50px;
+		width: 41px;
+		height: 56px;
+	}
+	.timeline .entity.summon.current {
+		width: 51px;
+		height: 61px;
 	}
 	.timeline .entity.summon .bar {
 		margin-right: 4px;

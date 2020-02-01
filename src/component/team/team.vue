@@ -197,12 +197,14 @@
 						<talent :talent="composition.talent" />
 					</div>
 					<router-link v-if="composition.tournament.current" :to="'/tournament/' + composition.tournament.current" class="view-tournament button flat">{{ $t('see_tournament') }}</router-link>
-					<tooltip v-if="captain" class="button flat">
-						<div slot="activator" @click="registerTournament(composition)">
-							<img src="/image/icon/trophy.png">
-							<span v-if="!composition.tournament.registered" class="register-tournament">{{ $t('register_tournament') }}</span>
-							<span v-else class="unregister-tournament">{{ $t('unregister') }}</span>
-						</div>
+					<tooltip v-if="captain">
+						<template v-slot:activator="{ on }">
+							<div class="button flat" v-on="on" @click="registerTournament(composition)">
+								<img src="/image/icon/trophy.png">
+								<span v-if="!composition.tournament.registered" class="register-tournament">{{ $t('register_tournament') }}</span>
+								<span v-else class="unregister-tournament">{{ $t('unregister') }}</span>
+							</div>
+						</template>
 						{{ $t('tournament_time') }}
 					</tooltip>
 					<div v-if="captain" class="delete-compo button flat" @click="compositionToDelete = composition; deleteCompoDialog = true">
@@ -213,7 +215,7 @@
 
 					<div v-if="composition.leeks.length == 0" class="empty">{{ $t('empty_compo') }}</div>
 
-					<rich-tooltip-leek v-for="leek in composition.leeks" :key="leek.id" :id="leek.id">
+					<rich-tooltip-leek v-for="leek in composition.leeks" :id="leek.id" :key="leek.id">
 						<div :class="{dragging: leek.dragging}" class="leek" draggable="true" @click="$router.push('/leek/' + leek.id)" @dragstart="leeksDragstart(composition, leek, $event)" @dragend="leeksDragend(leek, $event)">
 							<leek-image :leek="leek" :scale="0.6" />
 							<br>
@@ -234,7 +236,7 @@
 			<div slot="content" :class="{dashed: draggedLeek != null}" class="leeks" @dragover="leeksDragover" @drop="leeksDrop(null, $event)">
 				<div v-if="team.unengaged_leeks.length == 0" class="empty">{{ $t('empty_compo') }}</div>
 
-				<rich-tooltip-leek v-for="leek in team.unengaged_leeks" :key="leek.id" :id="leek.id">
+				<rich-tooltip-leek v-for="leek in team.unengaged_leeks" :id="leek.id" :key="leek.id">
 					<div :class="{dragging: leek.dragging}" class="leek" draggable="true" @click="$router.push('/leek/' + leek.id)" @dragstart="leeksDragstart(null, leek, $event)" @dragend="leeksDragend(leek, $event)">
 						<leek-image :leek="leek" :scale="0.6" />
 						<br>
@@ -251,7 +253,7 @@
 			<h2 v-if="team" slot="title">{{ $t('leeks', [team.leek_count]) }}</h2>
 			<loader v-if="!team" slot="content" />
 			<div v-else slot="content" class="leeks">
-				<rich-tooltip-leek v-for="leek in team.leeks" :key="leek.id" :id="leek.id">
+				<rich-tooltip-leek v-for="leek in team.leeks" :id="leek.id" :key="leek.id">
 					<router-link :to="'/leek/' + leek.id" :leek="leek.id" class="leek">
 						<leek-image :leek="leek" :scale="0.6" />
 						<br>
@@ -262,7 +264,7 @@
 			</div>
 		</panel>
 
-		<div class="container">
+		<div>
 			<div class="column6">
 				<panel v-if="team && team.fights.length > 0" :title="$t('history')">
 					<fights-history v-if="team" slot="content" :fights="team.fights" />
@@ -289,7 +291,7 @@
 			</div>
 		</div>
 
-		<report-dialog v-if="team" v-model="reportDialog" :name="team.name" :target="0" :reasons="reasons" :parameter="team.id" />
+		<report-dialog v-if="team" v-model="reportDialog" :team="team" :reasons="reasons" :parameter="team.id" />
 
 		<popup v-model="createCompoDialog" :width="500">
 			<span slot="title">{{ $t('create_composition') }}</span>
@@ -344,7 +346,7 @@
 			<div class="change_owner_popup">
 				{{ $t('change_owner_select') }}
 				<br>
-				<rich-tooltip-farmer v-for="member in team.members" :key="member.id" :id="member.id">
+				<rich-tooltip-farmer v-for="member in team.members" :id="member.id" :key="member.id">
 					<div :class="{selected: member === changeOwnerSelected}" class="farmer" @click="changeOwnerSelected = member">
 						<avatar :farmer="member" />
 						<div class="name">
@@ -392,7 +394,7 @@
 						<div v-for="c in ['life', 'science', 'strength', 'magic', 'wisdom', 'frequency', 'agility', 'mp', 'resistance', 'tp']" :key="c" class="characteristic">
 							<characteristic-tooltip :characteristic="c" :value="turret[c]" :leek="turret" :test="true">
 								<img :src="'/image/charac/' + c + '.png'">
-								<span :class="'color-' + c">{{ turret[c] }}</span>
+								<span class="stat" :class="'color-' + c">{{ turret[c] }}</span>
 							</characteristic-tooltip>
 						</div>
 					</div>
@@ -1041,7 +1043,7 @@
 	.compo .leeks.dashed {
 		border: 4px dashed #aaa;
 	}
-	.panel /deep/ .turret-wrapper {
+	.panel ::v-deep .turret-wrapper {
 		display: flex;
 		align-items: flex-end;
 		height: 100%;
@@ -1098,7 +1100,7 @@
 		.characteristics {
 			margin-top: 8px;
 			.characteristic {
-				width: calc(50% - 40px);
+				width: 50%;
 				padding: 5px 20px;
 				display: inline-block;
 				img {
@@ -1106,7 +1108,7 @@
 					margin-right: 7px;
 					width: 25px;
 				}
-				span {
+				.stat {
 					font-size: 18px;
 					vertical-align: top;
 					display: inline-block;

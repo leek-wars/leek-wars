@@ -9,8 +9,8 @@
 	@Component({ name: "loader" })
 	export default class LWLoader extends Vue {
 		@Prop() size!: number
-		get s() { return this.size || 50 }
-		get w() { return this.s / 10 }
+		get s() { return this.size || 60 }
+		get w() { return this.s / 14 }
 	}
 </script>
 

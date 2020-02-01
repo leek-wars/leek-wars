@@ -34,7 +34,7 @@
 					<div class="team team1">
 						<div class="leeks">
 							<div v-for="leek of currentScenario.team1" :key="leek.id" class="leek">
-								<div v-ripple v-if="!currentScenario.base" class="delete" @click="deleteLeek(leek, 0)">×</div>
+								<div v-if="!currentScenario.base" v-ripple class="delete" @click="deleteLeek(leek, 0)">×</div>
 								<div v-if="leek.id in allLeeks" class="card">
 									<leek-image :leek="allLeeks[leek.id]" :scale="0.4" />
 									<div>{{ allLeeks[leek.id].name }}</div>
@@ -48,7 +48,7 @@
 					<div v-if="currentScenario.type !== FightType.BATTLE_ROYALE" class="team team2">
 						<div class="leeks">
 							<div v-for="leek of currentScenario.team2" :key="leek.id" class="leek">
-								<div v-ripple v-if="!currentScenario.base" class="delete" @click="deleteLeek(leek, 1)">×</div>
+								<div v-if="!currentScenario.base" v-ripple class="delete" @click="deleteLeek(leek, 1)">×</div>
 								<div v-if="leek.id in allLeeks" class="card">
 									<leek-image :leek="allLeeks[leek.id]" :scale="0.4" />
 									<div>{{ allLeeks[leek.id].name }}</div>
@@ -61,11 +61,11 @@
 					<br>
 					<div class="title">{{ $t('editor.test_map') }}</div>
 					<div class="map-container">
-						<div v-ripple v-if="(currentScenario.map && currentScenario.map !== -1)" class="map card" @click="mapDialog = true">
+						<div v-if="(currentScenario.map && currentScenario.map !== -1)" v-ripple class="map card" @click="mapDialog = true">
 							<img src="/image/map_icon.png">
 							<div v-if="currentScenario.map in maps" class="name">{{ maps[currentScenario.map].name }}</div>
 						</div>
-						<div v-ripple v-else class="map card" @click="mapDialog = true">
+						<div v-else v-ripple class="map card" @click="mapDialog = true">
 							<img src="/image/map_icon_random.png">
 							<div class="name">{{ $t('main.random') }}</div>
 						</div>
@@ -94,7 +94,7 @@
 							<div v-for="c in ['life', 'science', 'strength', 'magic', 'wisdom', 'frequency', 'agility', 'mp', 'resistance', 'tp']" :key="c" class="characteristic">
 								<characteristic-tooltip :characteristic="c" :value="currentLeek[c]" :leek="currentLeek" :test="true">
 									<img :src="'/image/charac/' + c + '.png'">
-									<span :contenteditable="!currentLeek.bot" :class="'color-' + c" @focusout="characteristicFocusout(c, $event)" v-html="currentLeek[c]"></span>
+									<span :contenteditable="!currentLeek.bot" class="stat" :class="'color-' + c" @focusout="characteristicFocusout(c, $event)" v-html="currentLeek[c]"></span>
 								</characteristic-tooltip>
 							</div>
 						</div>
@@ -179,7 +179,7 @@
 				<br><br>
 				<div class="title">Modèles</div>
 				<div class="templates">
-					<div v-ripple v-for="(template, t) of templates" :key="t" :class="{selected: selectedTemplate === t}" class="template card" @click="selectedTemplate = t; newScenarioName = template.name">
+					<div v-for="(template, t) of templates" :key="t" v-ripple :class="{selected: selectedTemplate === t}" class="template card" @click="selectedTemplate = t; newScenarioName = template.name">
 						<div v-if="template.category == 'free'">
 							<i class="material-icons">build</i>
 						</div>
@@ -235,7 +235,7 @@
 					<img src="/image/map_icon_random.png">
 					<div class="name">{{ $t('main.random') }}</div>
 				</div>
-				<div v-ripple v-for="map of maps" :key="map.id" class="map card" @click="selectScenarioMap(map)">
+				<div v-for="map of maps" :key="map.id" v-ripple class="map card" @click="selectScenarioMap(map)">
 					<img src="/image/map_icon.png">
 					<div class="name">{{ map.name }}</div>
 				</div>
@@ -245,7 +245,7 @@
 		<popup v-model="leekDialog" :width="700">
 			<span slot="title">{{ $t('editor.select_leek') }}</span>
 			<div class="leek-dialog padding">
-				<div v-ripple v-for="leek of availableLeeks" :key="leek.id" class="leek card" @click="addScenarioLeek(leek)">
+				<div v-for="leek of availableLeeks" :key="leek.id" v-ripple class="leek card" @click="addScenarioLeek(leek)">
 					<leek-image :leek="leek" :scale="0.5" />
 					<div class="name">{{ leek.name }}</div>
 				</div>
@@ -995,8 +995,8 @@
 		vertical-align: top;
 		background-image: url("/image/ai.png");
 		background-size: cover;
-		width: 55px;
-		height: 65px;
+		width: 65px;
+		height: 87px;
 		margin-top: 10px;
 		margin-left: -30px;
 		padding: 6px;
@@ -1104,7 +1104,7 @@
 		margin-right: 130px;
 		margin-left: 15px;
 		.characteristic {
-			width: calc(50% - 40px);
+			width: 50%;
 			padding: 5px 20px;
 			display: inline-block;
 			img {
@@ -1112,7 +1112,7 @@
 				margin-right: 7px;
 				width: 25px;
 			}
-			span {
+			.stat {
 				font-size: 18px;
 				vertical-align: top;
 				display: inline-block;
@@ -1143,7 +1143,7 @@
 		margin: 0 2px;
 	}
 	.map-column .map {
-		height: 415px;
+		height: 430px;
 		width: 800px;
 		overflow: hidden;
 		margin-top: -20px;
@@ -1157,8 +1157,8 @@
 		white-space: nowrap;
 	}
 	.map .cell {
-		width: 25px;
-		height: 25px;
+		width: 27px;
+		height: 27px;
 		display: inline-block;
 		border: 1px solid #888;
 		margin: 2px;
@@ -1199,9 +1199,10 @@
 		padding: 15px;
 	}
 	.v-dialog input {
-		width: calc(100% - 8px);
+		width: 100%;
 		padding-top: 3px;
 		padding-bottom: 3px;
+		height: 34px;
 	}
 	.templates {
 		display: grid;

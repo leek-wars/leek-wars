@@ -31,7 +31,7 @@
 							<img class="player" src="/image/player.png">
 						</router-link>
 						<tooltip :disabled="farmerEnabled">
-							<router-link v-ripple slot="activator" :class="{ enabled: farmerEnabled }" :event="farmerEnabled ? 'click' : ''" to="/garden/farmer" class="tab">
+							<router-link slot="activator" v-ripple :class="{ enabled: farmerEnabled }" :event="farmerEnabled ? 'click' : ''" to="/garden/farmer" class="tab">
 								<h2>{{ $t('category_farmer_fight') }}</h2>
 								<span class="player-count">4</span>&nbsp;<img class="player" src="/image/player.png">
 								<img class="sword" src="/image/icon/grey/garden.png">
@@ -41,7 +41,7 @@
 						</tooltip>
 
 						<tooltip :disabled="teamEnabled">
-							<router-link v-ripple slot="activator" :class="{ enabled: teamEnabled }" :event="teamEnabled ? 'click' : ''" to="/garden/team" class="tab">
+							<router-link slot="activator" v-ripple :class="{ enabled: teamEnabled }" :event="teamEnabled ? 'click' : ''" to="/garden/team" class="tab">
 								<h2>{{ $t('category_team_fight') }}</h2>
 								<span class="player-count">6</span>&nbsp;<img class="player" src="/image/player.png">
 								<img class="sword" src="/image/icon/grey/garden.png">
@@ -51,7 +51,7 @@
 						</tooltip>
 
 						<tooltip :disabled="battleRoyaleEnabled">
-							<router-link v-ripple slot="activator" :class="{ enabled: battleRoyaleEnabled }" :event="battleRoyaleEnabled ? 'click' : ''" to="/garden/battle-royale" class="tab">
+							<router-link slot="activator" v-ripple :class="{ enabled: battleRoyaleEnabled }" :event="battleRoyaleEnabled ? 'click' : ''" to="/garden/battle-royale" class="tab">
 								<h2>{{ $t('category_battle_royale') }}</h2>
 								<span class="player-count">10</span>&nbsp;<img class="player" src="/image/player.png">
 							</router-link>
@@ -73,12 +73,12 @@
 				<template v-else>
 					<div v-if="category === 'challenge'">
 						<template v-if="challengeType == 'leek'">
-							<router-link v-for="leek in $store.state.farmer.leeks" :key="leek.id" :to="'/garden/challenge/leek/' + challengeTarget + '/' + leek.id" class="my-leek">
+							<router-link v-for="leek in $store.state.farmer.leeks" :key="leek.id" :to="'/garden/challenge/leek/' + challengeTarget + '/' + leek.id" class="my-leek leek">
 								<garden-leek :leek="leek" />
 							</router-link>
 							<div class="versus">VS</div>
-							<div v-if="challengeFights" class="enemies">
-								<garden-leek :leek="challengeLeekTarget" @click.native="startLeekChallenge" />
+							<div v-if="challengeFights" class="enemies" @click="startLeekChallenge">
+								<garden-leek :leek="challengeLeekTarget" />
 							</div>
 							<div v-else>
 								<img src="/image/notgood.png">
@@ -86,12 +86,16 @@
 							</div>
 						</template>
 						<template v-else>
-							<garden-farmer v-if="$store.state.farmer" :farmer="$store.state.farmer" />
+							<span v-ripple class="my-farmer farmer">
+								<garden-farmer v-if="$store.state.farmer" :farmer="$store.state.farmer" />
+							</span>
 							<div class="versus">VS</div>
 							<div v-if="challengeFights" class="enemies">
 								<loader v-if="!challengeFarmerTarget" />
 								<div v-else class="opponents">
-									<garden-farmer :farmer="challengeFarmerTarget" @click.native="startFarmerChallenge" />
+									<span v-ripple class="farmer" @click="startFarmerChallenge">
+										<garden-farmer :farmer="challengeFarmerTarget" />
+									</span>
 								</div>
 							</div>
 							<div v-else>
@@ -102,14 +106,16 @@
 					</div>
 					<div v-else>
 						<div v-if="category == 'solo'">
-							<router-link v-for="leek in $store.state.farmer.leeks" :key="leek.id" :to="'/garden/solo/' + leek.id" class="my-leek">
+							<router-link v-for="leek in $store.state.farmer.leeks" :key="leek.id" v-ripple :to="'/garden/solo/' + leek.id" class="my-leek leek">
 								<garden-leek :leek="leek" />
 							</router-link>
 							<div class="versus">VS</div>
 							<div v-if="selectedLeek && garden.fights">
 								<loader v-if="!leekOpponents[selectedLeek.id] && !leekErrors[selectedLeek.id]" />
 								<div v-else-if="leekOpponents[selectedLeek.id]" class="opponents">
-									<garden-leek v-for="leek in leekOpponents[selectedLeek.id]" :key="leek.id" :leek="leek" @click.native="clickSoloOpponent(leek)" />
+									<span v-for="leek in leekOpponents[selectedLeek.id]" :key="leek.id" v-ripple class="leek">
+										<garden-leek :leek="leek" @click.native="clickSoloOpponent(leek)" />
+									</span>
 									<div v-if="!leekOpponents[selectedLeek.id].length">
 										<img src="/image/notgood.png">
 										<h4>{{ $t('no_opponent_of_your_size') }}</h4>
@@ -126,12 +132,16 @@
 							</div>
 						</div>
 						<div v-if="category == 'farmer'">
-							<garden-farmer v-if="$store.state.farmer" :farmer="$store.state.farmer" class="my-farmer" />
+							<span v-ripple class="my-farmer farmer">
+								<garden-farmer v-if="$store.state.farmer" :farmer="$store.state.farmer" />
+							</span>
 							<div class="versus">VS</div>
 							<div v-if="garden.fights" class="enemies">
 								<loader v-if="!farmerOpponents" />
 								<div v-else class="opponents">
-									<garden-farmer v-for="farmer in farmerOpponents" :key="farmer.id" :farmer="farmer" @click.native="clickFarmerOpponent(farmer)" />
+									<span v-for="farmer in farmerOpponents" :key="farmer.id" v-ripple class="farmer" @click="clickFarmerOpponent(farmer)">
+										<garden-farmer :farmer="farmer" />
+									</span>
 									<div v-if="!farmerOpponents.length">
 										<img src="/image/notgood.png">
 										<h4>{{ $t('no_opponent_of_your_size') }}</h4>
@@ -144,7 +154,7 @@
 							</div>
 						</div>
 						<div v-if="category == 'team'">
-							<router-link v-ripple v-for="composition in garden.my_compositions" :key="composition.id" :to="'/garden/team/' + composition.id" class="composition-wrapper my-composition">
+							<router-link v-for="composition in garden.my_compositions" :key="composition.id" v-ripple :to="'/garden/team/' + composition.id" class="composition-wrapper my-composition">
 								<garden-compo :compo="composition" />
 								<span class="fights">
 									<img class="sword" src="/image/icon/grey/garden.png">{{ composition.fights }}
@@ -158,7 +168,7 @@
 								</div>
 								<loader v-else-if="!teamOpponents[selectedComposition.id]" />
 								<div v-else class="opponents">
-									<garden-compo v-ripple v-for="compo in teamOpponents[selectedComposition.id]" :key="compo.id" :compo="compo" class="composition-wrapper" @click.native="clickCompositionOpponent(compo)" />
+									<garden-compo v-for="compo in teamOpponents[selectedComposition.id]" :key="compo.id" v-ripple :compo="compo" class="composition-wrapper" @click.native="clickCompositionOpponent(compo)" />
 									<div v-if="!teamOpponents[selectedComposition.id].length">
 										<img src="/image/notgood.png">
 										<h4>{{ $t('no_opponent_of_your_size') }}</h4>
@@ -169,9 +179,11 @@
 						<div v-if="category == 'battle-royale'">
 							<div v-if="!LeekWars.battleRoyale.enabled">
 								<tooltip v-for="leek in $store.state.farmer.leeks" :key="leek.id" :disabled="leek.level >= 50">
-									<router-link slot="activator" :to="'/garden/battle-royale/' + leek.id" :class="{disabled: leek.level < 50}" :event="leek.level < 50 ? null : 'click'" class="my-leek">
-										<garden-leek :leek="leek" />
-									</router-link>
+									<template v-slot:activator="{ on }">
+										<router-link v-ripple :to="'/garden/battle-royale/' + leek.id" :class="{disabled: leek.level < 50}" :event="leek.level < 50 ? null : 'click'" class="leek my-leek" v-on="on">
+											<garden-leek :leek="leek" />
+										</router-link>
+									</template>
 									Level &lt; 50
 								</tooltip>
 								<br><br>
@@ -184,7 +196,9 @@
 							<div v-else>
 								<loader v-if="LeekWars.battleRoyale.progress == 0" />
 								<div class="leeks">
-									<garden-leek v-for="leek in LeekWars.battleRoyale.leeks" :key="leek.id" :leek="leek" />
+									<div v-for="leek in LeekWars.battleRoyale.leeks" :key="leek.id" class="leek">
+										<garden-leek :leek="leek" />
+									</div>
 								</div>
 								<br>
 								<div class="leek-count">{{ LeekWars.battleRoyale.progress }} / 10</div>
@@ -527,11 +541,11 @@
 	a.my-leek:not(.router-link-active) {
 		opacity: 0.5;
 	}
-	a.my-leek.router-link-active .leek, a.my-composition.router-link-active {
+	a.my-leek.router-link-active, a.my-composition.router-link-active {
 		background-color: white;
 		box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
 	}
-	>>> .talent {
+	::v-deep .talent {
 		font-size: 22px;
 		color: #555;
 		font-weight: 300;

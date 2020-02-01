@@ -6,8 +6,8 @@
 	background: #333 !important;
 	font-size: 14px !important;
 	pointer-events: none;
-	transition: none !important;
 	max-width: 250px !important;
+	transition: none !important;
 }
 .v-tooltip__content::before {
 	position: absolute;
@@ -37,10 +37,7 @@
 .dialog-transition-enter-to, .dialog-transition-leave {
 	opacity: 1;
 }
-.v-progress-circular {
-	color: #5fad1b;
-}
-.accent--text {
+.accent--text, .primary--text {
 	color: #5fad1b !important;
 	caret-color: #5fad1b !important;
 }
@@ -50,6 +47,9 @@
 }
 .v-input--switch {
 	display: inline-block !important;
+}
+.v-input--selection-controls__input {
+	margin-right: 8px;
 }
 .v-snack__wrapper.success {
 	background-color: #4caf50 !important;
@@ -86,6 +86,16 @@
 	position: absolute;
 	transform: translate(100%, 0);
 }
+.theme--light.v-tabs-items {
+	background-color: inherit;
+}
+.v-input--switch.v-input--is-dirty .v-input--selection-controls__ripple, .v-input--switch.v-input--is-dirty .v-input--switch__thumb {
+    transform: translate(18px, 0);
+}
+.v-list--dense {
+    padding-top: 4px;
+    padding-bottom: 4px;
+}
 .primary {
     background-color: #5fad1b !important;
     border-color: #5fad1b !important;
@@ -100,12 +110,18 @@ button {
 	margin: 0 3px;
 	color: #333;
 	border-radius: 4px;
+	font-weight: normal;
+	letter-spacing: normal;
 }
-.v-btn--large {
+.v-btn.v-size--default {
+	font-size: 17px;
+}
+.v-btn.v-size--large, .v-btn:not(.v-btn--round).v-size--large {
 	font-size: 18px;
 	height: 40px;
+	padding: 0 32px;
 }
-.theme--light.v-btn:not(.v-btn--icon):not(.v-btn--flat) {
+.theme--light.v-btn:not(.v-btn--flat):not(.v-btn--text):not(.v-btn--outlined) {
 	background-color: white;
 }
 .v-btn.error {
@@ -116,12 +132,16 @@ button {
 .material-icons {
 	font-size: 26px;
 }
+html {
+	box-sizing: border-box;
+}
+*, *:before, *:after {
+	box-sizing: inherit;
+}
 body {
 	margin: 0;
 	font-family: "Roboto", sans-serif;
 	font-size: 15px;
-	overflow-y: scroll;
-	overflow-x: hidden;
 	color: #111;
 	background: #333;
 }
@@ -184,7 +204,7 @@ h3 {
 	padding: 5px 10px;
 	font-size: 18px;
 	position: relative;
-	height: 22px;
+	height: 32px;
 }
 h3::before {
 	content: "";
@@ -237,7 +257,7 @@ textarea {
 	padding: 7px 10px;
 	padding-bottom: 11px;
 	font-size: 18px;
-	height: 18px;
+	height: 36px;
 	vertical-align: top;
 	margin-right: 20px;
 	color: #eee;
@@ -390,7 +410,7 @@ textarea {
 	padding: 0 10px;
 	padding-top: 6px;
 	padding-bottom: 4px;
-	height: 30px;
+	height: 40px;
 	font-size: 23px;
 	text-align: left;
 	border-top-left-radius: 2px;
@@ -410,8 +430,8 @@ textarea {
 }
 .v-dialog .title .options .option {
 	background: black;
-	height: 26px;
-	width: 26px;
+	height: 40px;
+	width: 40px;
 	padding: 7px;
 }
 .v-dialog .title .options .option:hover {
@@ -487,6 +507,12 @@ textarea {
 	min-height: 26px;
 	padding: 0 4px;
 	outline: 0;
+	background: white;
+}
+select {
+	-webkit-appearance: menulist-button;
+	border: solid 1px #ddd;
+	background-color: white;
 }
 input:active, input:focus {
 	outline: none;
@@ -829,4 +855,15 @@ body #app:not(.app) {
 		vertical-align: middle;
 		margin-bottom: 2px;
 	}
+}
+.ellipsis {
+	text-overflow: ellipsis;
+	overflow: hidden;
+	white-space: nowrap;
+}
+code.single {
+	display: inline-block;
+	border: 1px solid #ccc;
+	padding: 1px 4px;
+	border-radius: 3px;
 }

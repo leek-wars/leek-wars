@@ -33,37 +33,20 @@ import { store } from "@/model/store"
 import router from '@/router'
 import 'chartist/dist/scss/chartist.scss'
 import Vue from 'vue'
-import Chartist from 'vue-chartist'
-import transitions from 'vuetify/es5/components/transitions'
-import VApp from 'vuetify/es5/components/VApp'
-import VBtn from 'vuetify/es5/components/VBtn'
-import VCarousel from 'vuetify/es5/components/VCarousel'
-import VCheckbox from 'vuetify/es5/components/VCheckbox'
-import VDialog from 'vuetify/es5/components/VDialog'
-import VIcon from 'vuetify/es5/components/VIcon'
-import VList from 'vuetify/es5/components/VList'
-import VMenu from 'vuetify/es5/components/VMenu'
-import VProgressCircular from 'vuetify/es5/components/VProgressCircular'
-import VRadioGroup from 'vuetify/es5/components/VRadioGroup'
-import VSnackbar from 'vuetify/es5/components/VSnackbar'
-import VSwitch from 'vuetify/es5/components/VSwitch'
-import VTabs from 'vuetify/es5/components/VTabs'
-import VTooltip from 'vuetify/es5/components/VTooltip'
-import Vuetify from 'vuetify/es5/components/Vuetify'
-import * as directives from 'vuetify/es5/directives'
 import { Latex } from './latex'
 
+import Chartist from 'vue-chartist'
 Vue.use(Chartist)
-Vue.use(Vuetify, {
-	components: { VApp, VBtn, VTooltip, VMenu, VList, VIcon, VTabs, VRadioGroup, VSnackbar, VCheckbox, VSwitch, VProgressCircular, VDialog, VCarousel, transitions },
-	directives
-})
-// import 'vuetify/src/stylus/app.styl'
 
-// require styles
+import Vuetify from 'vuetify/lib/framework'
+Vue.use(Vuetify)
+
+import tooltip from '@/vtooltip-fast'
+Vue.component('fast-tooltip', tooltip)
+
 import 'swiper/dist/css/swiper.css'
 import VueAwesomeSwiper from 'vue-awesome-swiper'
-Vue.use(VueAwesomeSwiper, /* { default global options } */)
+Vue.use(VueAwesomeSwiper)
 
 Vue.config.productionTip = false
 
@@ -173,9 +156,9 @@ Vue.directive('chat-code-latex', {
 		})
 		el.querySelectorAll('code').forEach((c) => {
 			if (c.innerHTML.indexOf("<br>") !== -1) {
-				c.classList.add('ml')
 				LeekWars.createCodeArea(c.innerText.trim(), c)
 			} else {
+				c.classList.add('single')
 				LeekWars.createCodeAreaSimple(c.innerText, c)
 			}
 		})
@@ -190,6 +173,7 @@ Vue.directive('chat-code-latex', {
 const vueMain = new Vue({
 	router, i18n, store,
 	data: { savedPosition: 0 },
+	vuetify: new Vuetify(),
 	methods: {
 		onLanguageLoaded: () => {
 			if (!env.DEV) {

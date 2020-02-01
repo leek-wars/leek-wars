@@ -898,10 +898,10 @@
 		top: calc(50% - 35px);
 		left: calc(50% - 35px);
 	}
-	.codemirror /deep/ .line-error {
+	.codemirror ::v-deep .line-error {
 		position: relative;
 	}
-	.codemirror /deep/ .line-error:after {
+	.codemirror ::v-deep .line-error:after {
 		position: absolute;
 		top: 6px;
 		left: 0;
@@ -963,7 +963,7 @@
 		border: 1px solid silver;
 		z-index: 100;
 	}
-	.details /deep/ .deprecated-message {
+	.details ::v-deep .deprecated-message {
 		color: #ff7f00;
 		font-weight: bold;
 		margin: 10px 0;

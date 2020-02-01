@@ -86,7 +86,7 @@
 	.section {
 		padding: 10px 5px;
 		text-align: center;
-		height: calc(100% - 20px);
+		height: 100%;
 	}
 	.section img {
 		margin: 10px 0;

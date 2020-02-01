@@ -162,7 +162,7 @@
 		line-height: 55px;
 	}
 	.global-bar {
-		height: 12px;
+		height: 14px;
 		position: relative;
 		background: white;
 		border-radius: 6px;
@@ -189,7 +189,7 @@
 	}
 	.category-bar {
 		display: inline-block;
-		height: 12px;
+		height: 14px;
 		position: relative;
 		background: white;
 		border-radius: 6px;
@@ -244,7 +244,7 @@
 			margin-right: 2px;
 		}
 		.trophy-bar {
-			height: 8px;
+			height: 10px;
 			position: relative;
 			background: white;
 			border-radius: 6px;

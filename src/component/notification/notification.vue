@@ -1,5 +1,5 @@
 <template>
-	<router-link v-ripple v-if="notification" :to="link" :notif="notification.id" :type="notification.type" :class="{unread: !notification.read}" class="notification" @click.native="click">
+	<router-link v-if="notification" v-ripple :to="link" :notif="notification.id" :type="notification.type" :class="{unread: !notification.read}" class="notification" @click.native="click">
 		<img :src="'/image/notif/' + notification.image + '.png'" class="avatar">
 		<div class="title" v-html="$t('notifications.title_' + notification.type, notification.title)"></div>
 		<div class="message">{{ $t('notifications.message_' + notification.type, notification.message) }}</div>
@@ -93,8 +93,8 @@
 		padding-right: 8px;
 	}
 	img {
-		height: 30px;
-		width: 30px;
+		height: 50px;
+		width: 50px;
 		float: left;
 		padding: 10px;
 	}

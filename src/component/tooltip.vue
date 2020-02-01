@@ -1,8 +1,12 @@
 <template lang="html">
-	<v-tooltip :open-delay="0" :close-delay="0" :disabled="disabled" lazy bottom @input="open()">
-		<slot slot="activator" name="activator"></slot>
-		<slot v-if="content_created"></slot>
-	</v-tooltip>
+	<fast-tooltip :open-delay="0" :close-delay="0" :disabled="disabled" bottom @input="open()">
+		<template v-slot:activator="{ on }">
+			<span v-on="on">
+				<slot name="activator"></slot>
+			</span>
+		</template>
+		<slot></slot>
+	</fast-tooltip>
 </template>
 
 <script lang="ts">
@@ -10,7 +14,7 @@
 	@Component({ name: "tooltip" })
 	export default class Tooltip extends Vue {
 		@Prop() disabled!: boolean
-		content_created: boolean = false
+		content_created: boolean = true
 		open() {
 			this.content_created = true
 		}

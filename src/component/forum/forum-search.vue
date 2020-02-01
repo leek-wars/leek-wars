@@ -47,7 +47,7 @@
 
 				<div v-else class="results-wrapper">
 					<div v-if="results.length" class="results">
-						<div v-ripple v-for="(result, r) in results" :key="r" class="result card">
+						<div v-for="(result, r) in results" :key="r" v-ripple class="result card">
 							<router-link :to="'/forum/category-' + result.cid + '/topic-' + result.tid">
 								<div class="title" v-html="result.title"></div>
 							</router-link>
@@ -245,7 +245,7 @@
 		color: #777;
 		font-size: 14px;
 	}
-	.result /deep/ b {
+	.result ::v-deep b {
 		color: #5fad1b;
 		font-weight: bold;
 	}

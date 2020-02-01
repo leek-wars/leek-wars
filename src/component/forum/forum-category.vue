@@ -253,7 +253,7 @@
 		text-align: center;
 	}
 	.topic .last-message {
-		flex: 0 0 160px;
+		flex: 0 0 176px;
 		text-align: center;
 		vertical-align: top;
 	}

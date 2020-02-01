@@ -30,7 +30,7 @@
 				<pagination v-if="topic" :current="page" :total="pages" :url="'/forum/category-' + category.id + '/topic-' + topic.id" />
 				<loader v-if="!topic || !topic.messages" />
 				<div v-else>
-					<div v-for="message in topic.messages" :key="message.id" :id="'message-' + message.id" class="message-wrapper">
+					<div v-for="message in topic.messages" :id="'message-' + message.id" :key="message.id" class="message-wrapper">
 						<rich-tooltip-farmer :id="message.writer.id">
 							<div class="profile">
 								<router-link :to="'/farmer/' + message.writer.id" class="">
@@ -58,7 +58,7 @@
 								</template>
 								
 								<textarea v-if="message.editing" ref="textarea" v-model="message.message" :style="{height: message.height + 'px'}" class="original"></textarea>
-								<div v-emojis v-code v-else class="text" v-html="message.html"></div>
+								<div v-else v-emojis v-code class="text" v-html="message.html"></div>
 								<emoji-picker v-if="message.editing" class="emoji-picker" @pick="addEmoji(message, $event, $refs.textarea[0])" />
 
 								<div class="date">
@@ -71,21 +71,25 @@
 
 								<div v-if="!message.editing" class="edit-wrapper">
 									<div class="votes">
-										<v-tooltip :open-delay="0" :close-delay="0" :disabled="message.votes_up === 0" :key="votes_up_names[message.id] ? message.id * 101 + votes_up_names[message.id].length : message.id * 101" bottom @input="loadVotesUp(message)">
-											<div slot="activator" :class="{active: message.my_vote == 1, zero: message.votes_up === 0}" class="vote up" @click="voteUp(message)">
-												<i class="material-icons">thumb_up</i>
-												<span class="counter">{{ message.votes_up }}</span>
-											</div>
+										<v-tooltip :key="votes_up_names[message.id] ? message.id * 101 + votes_up_names[message.id].length : message.id * 101" :open-delay="0" :close-delay="0" :disabled="message.votes_up === 0" bottom @input="loadVotesUp(message)">
+											<template v-slot:activator="{ on }">
+												<div :class="{active: message.my_vote == 1, zero: message.votes_up === 0}" class="vote up" @click="voteUp(message)" v-on="on">
+													<i class="material-icons">thumb_up</i>
+													<span class="counter">{{ message.votes_up }}</span>
+												</div>
+											</template>
 											<loader v-if="!votes_up_names[message.id]" :size="30" />
 											<div v-else>
 												<div v-for="name in votes_up_names[message.id]" :key="name">{{ name }}</div>
 											</div>
 										</v-tooltip>
-										<v-tooltip :open-delay="0" :close-delay="0" :disabled="message.votes_down === 0" :key="votes_down_names[message.id] ? message.id * 100 + votes_down_names[message.id].length : message.id" bottom @input="loadVotesDown(message)">
-											<div slot="activator" :class="{active: message.my_vote == -1, zero: !message.votes_down}" class="vote down" @click="voteDown(message)">
-												<i class="material-icons">thumb_down</i>
-												<span class="counter">{{ message.votes_down }}</span>
-											</div>
+										<v-tooltip :key="votes_down_names[message.id] ? message.id * 100 + votes_down_names[message.id].length : message.id" :open-delay="0" :close-delay="0" :disabled="message.votes_down === 0" bottom @input="loadVotesDown(message)">
+											<template v-slot:activator="{ on }">
+												<div :class="{active: message.my_vote == -1, zero: !message.votes_down}" class="vote down" @click="voteDown(message)" v-on="on">
+													<i class="material-icons">thumb_down</i>
+													<span class="counter">{{ message.votes_down }}</span>
+												</div>
+											</template>
 											<loader v-if="!votes_down_names[message.id]" :size="30" />
 											<div v-else>
 												<div v-for="name in votes_down_names[message.id]" :key="name">{{ name }}</div>
@@ -543,7 +547,7 @@
 		margin-bottom: 40px;
 		word-break: break-word;
 	}
-	.message .text /deep/ a {
+	.message .text ::v-deep a {
 		color: #5fad1b;
 	}
 	.message .original {
@@ -670,7 +674,7 @@
 		margin: 3px 40px;
 		display: block;
 	}
-	.message /deep/ h1 {
+	.message ::v-deep h1 {
 		margin-left: 0;
 		margin-bottom: 10px;
 		font-size: 28px;
@@ -681,19 +685,19 @@
 		padding: 0px;
 		text-shadow: none;
 	}
-	.message /deep/ h1:after {
+	.message ::v-deep h1:after {
 		display: none;
 	}
-	.message /deep/ h1:before {
+	.message ::v-deep h1:before {
 		display: none;
 	}
-	.message /deep/ h2 {
+	.message ::v-deep h2 {
 		margin-left: 0;
 		margin-bottom: 10px;
 		font-size: 23px;
 		margin-top: 10px;
 	}
-	.message /deep/ h3 {
+	.message ::v-deep h3 {
 		margin-left: 0;
 		margin-bottom: 10px;
 		font-size: 18px;
@@ -704,17 +708,17 @@
 		padding: 0px;
 		text-shadow: none;
 	}
-	.message /deep/ h3:after {
+	.message ::v-deep h3:after {
 		display: none;
 	}
-	.message /deep/ h3:before {
+	.message ::v-deep h3:before {
 		display: none;
 	}
-	.message /deep/ code {
+	.message ::v-deep code {
 		display: block;
 		width: 100%;
 	}
-	.emoji-picker /deep/ .chat-input-emoji {
+	.emoji-picker ::v-deep .chat-input-emoji {
 		position: absolute;
 		right: 10px;
 		top: 10px;

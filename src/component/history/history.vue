@@ -184,9 +184,6 @@
 		text-align: center;
 		display: flex;
 	}
-	.history /deep/ .wrapper {
-		min-width: 25% !important;
-	}
 	.grey {
 		color: #aaa;
 	}

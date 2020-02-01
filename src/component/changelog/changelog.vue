@@ -53,7 +53,7 @@
 		background: #f2f2f2;
 		padding: 15px;
 	}
-	.changelog-page /deep/ a {
+	.changelog-page ::v-deep a {
 		color: green;
 	}
 	.image {

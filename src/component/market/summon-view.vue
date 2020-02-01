@@ -6,19 +6,21 @@
 				<img :src="'/image/bulb/' + summon.name + '_front.png'" width="width">
 			</div>
 			<div>
-				<tooltip v-for="c in ['life', 'science', 'wisdom', 'magic', 'strength', 'frequency', 'agility', 'mp', 'resistance', 'tp']" :key="c" class="characteristic">
-					<div slot="activator">
-						<img :src="'/image/charac/' + c + '.png'">
-						<span :class="'color-' + c">
-							<span v-if="c == 'frequency'">0</span>
-							<span v-else-if="summon.characteristics[c][0] == summon.characteristics[c][1]">
-								{{ summon.characteristics[c][0] }}
+				<tooltip v-for="c in ['life', 'science', 'wisdom', 'magic', 'strength', 'frequency', 'agility', 'mp', 'resistance', 'tp']" :key="c">
+					<template v-slot:activator="{ on }">
+						<div class="characteristic" v-on="on">
+							<img :src="'/image/charac/' + c + '.png'" v-on="on">
+							<span :class="'color-' + c">
+								<span v-if="c == 'frequency'">0</span>
+								<span v-else-if="summon.characteristics[c][0] == summon.characteristics[c][1]">
+									{{ summon.characteristics[c][0] }}
+								</span>
+								<span v-else>
+									{{ summon.characteristics[c][0] + " à " + summon.characteristics[c][1] }}
+								</span>
 							</span>
-							<span v-else>
-								{{ summon.characteristics[c][0] + " à " + summon.characteristics[c][1] }}
-							</span>
-						</span>
-					</div>
+						</div>
+					</template>
 					<b>{{ $t('leek.' + c) }}</b>
 				</tooltip>
 			</div>

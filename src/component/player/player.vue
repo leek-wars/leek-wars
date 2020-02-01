@@ -83,55 +83,71 @@
 			</div>
 			<div class="controls">
 				<v-tooltip :open-delay="0" :close-delay="0" top content-class="top">
-					<i v-ripple slot="activator" class="material-icons control" @click="pause">{{ game.paused ? 'play_arrow' : 'pause' }}</i>
+					<template v-slot:activator="{ on }">
+						<i v-ripple class="material-icons control" @click="pause" v-on="on">{{ game.paused ? 'play_arrow' : 'pause' }}</i>
+					</template>
 					{{ $t('fight.pause') }} (P)
 				</v-tooltip>
 				<v-tooltip :open-delay="0" :close-delay="0" top content-class="top">
-					<i v-ripple slot="activator" class="material-icons control" @click="game.speedUp()">
-						<span :style="{opacity: game.speedButtonVisible ? 1 : 0}">fast_forward</span>
-					</i>
+					<template v-slot:activator="{ on }">
+						<i v-ripple class="material-icons control" v-on="on" @click="game.speedUp()">
+							<span :style="{opacity: game.speedButtonVisible ? 1 : 0}">fast_forward</span>
+						</i>
+					</template>
 					{{ $t('fight.accelerate') }} (S)
 				</v-tooltip>
 				<v-tooltip :open-delay="0" :close-delay="0" top content-class="top">
-					<i v-ripple slot="activator" class="material-icons control" @click="game.sound = !game.sound">{{ game.sound ? 'volume_up' : 'volume_mute' }}</i>
+					<template v-slot:activator="{ on }">
+						<i v-ripple class="material-icons control" v-on="on" @click="game.sound = !game.sound">{{ game.sound ? 'volume_up' : 'volume_mute' }}</i>
+					</template>
 					{{ $t(game.sound ? 'fight.sound_activated' : 'fight.sound_disactivated') }} (V)
 				</v-tooltip>
 				<div class="turn">{{ $t('fight.turn_n', [game.turn]) }}</div>
 				<div class="filler"></div>
 				<v-tooltip v-if="!LeekWars.mobile" :open-delay="0" :close-delay="0" top content-class="top">
-					<i v-ripple slot="activator" class="material-icons control" @click="LeekWars.flex = !LeekWars.flex">crop_5_4</i>
+					<template v-slot:activator="{ on }">
+						<i v-ripple class="material-icons control" v-on="on" @click="LeekWars.flex = !LeekWars.flex">crop_5_4</i>
+					</template>
 					{{ $t('fight.enlarge_fight') }}
 				</v-tooltip>
 				<v-tooltip :open-delay="0" :close-delay="0" top content-class="top">
-					<i v-ripple slot="activator" class="material-icons control" @click="toggleFullscreen">aspect_ratio</i>
+					<template v-slot:activator="{ on }">
+						<i v-ripple class="material-icons control" v-on="on" @click="toggleFullscreen">aspect_ratio</i>
+					</template>
 					{{ $t('fight.fullscreen') }}
 				</v-tooltip>
 				<v-tooltip :open-delay="0" :close-delay="0" top content-class="top">
-					<v-menu slot="activator" :close-on-content-click="false" top offset-y left lazy>
-						<i v-ripple slot="activator" class="material-icons control">settings</i>
-						<v-list :dense="true" dark class="settings-menu">
-							<v-list-tile v-ripple>
-								<i class="material-icons">favorite_border</i>
-								<v-switch v-model="game.showLifes" :label="$t('fight.display_life_bars')" hide-details />
-							</v-list-tile>
-							<v-list-tile v-ripple>
-								<i class="material-icons">view_comfy</i>
-								<v-switch v-model="game.tactic" :label="$t('fight.tactic_mode')" hide-details />
-							</v-list-tile>
-							<v-list-tile v-ripple>
-								<i class="material-icons">looks_one</i>
-								<v-switch v-model="game.showCells" :label="$t('fight.display_cell_numbers')" hide-details />
-							</v-list-tile>
-							<v-list-tile v-ripple>
-								<i class="material-icons">flip_to_front</i>
-								<v-switch v-model="game.shadows" :label="$t('fight.display_shadows')" hide-details />
-							</v-list-tile>
-						</v-list>
-					</v-menu>
+					<template v-slot:activator="{ on: tooltip }">
+						<v-menu :close-on-content-click="false" top offset-y left>
+							<template v-slot:activator="{ on: menu }">
+								<i v-ripple class="material-icons control" v-on="{...tooltip, ...menu}">settings</i>
+							</template>
+							<v-list :dense="true" class="settings-menu">
+								<v-list-item v-ripple>
+									<i class="material-icons">favorite_border</i>
+									<v-switch v-model="game.showLifes" :label="$t('fight.display_life_bars')" hide-details />
+								</v-list-item>
+								<v-list-item v-ripple>
+									<i class="material-icons">view_comfy</i>
+									<v-switch v-model="game.tactic" :label="$t('fight.tactic_mode')" hide-details />
+								</v-list-item>
+								<v-list-item v-ripple>
+									<i class="material-icons">looks_one</i>
+									<v-switch v-model="game.showCells" :label="$t('fight.display_cell_numbers')" hide-details />
+								</v-list-item>
+								<v-list-item v-ripple>
+									<i class="material-icons">flip_to_front</i>
+									<v-switch v-model="game.shadows" :label="$t('fight.display_shadows')" hide-details />
+								</v-list-item>
+							</v-list>
+						</v-menu>
+					</template>
 					{{ $t('fight.settings') }}
 				</v-tooltip>
 				<v-tooltip :open-delay="0" :close-delay="0" top content-class="top">
-					<i v-ripple slot="activator" class="material-icons control" @click="quit">input</i>
+					<template v-slot:activator="{ on }">
+						<i v-ripple class="material-icons control" v-on="on" @click="quit">input</i>
+					</template>
 					{{ $t('fight.quit') }}
 				</v-tooltip>
 			</div>
@@ -468,14 +484,14 @@
 	.controls i {
 		color: white;
 	}
-	.controls > div {
+	.controls .turn {
 		line-height: 36px;
 		color: white;
 		display: inline-block;
 		vertical-align: top;
 		padding: 0 8px;
 	}
-	.controls.large > div {
+	.controls.large .turn {
 		line-height: 50px;
 	}
 	.controls .filler {
@@ -541,8 +557,8 @@
 		vertical-align: top;
 	}
 	.progress-bar .circle {
-		width: 8px;
-		height: 8px;
+		width: 16px;
+		height: 16px;
 		margin-top: -4px;
 		margin-left: -7px;
 		display: inline-block;
@@ -619,8 +635,14 @@
 		opacity: 0;
 		transform: scale(1.5);
 	}
-	.settings-menu i {
-		padding-right: 10px;
-		color: #eee;
+	.settings-menu {
+		background: #1E1E1E;
+		i {
+			padding-right: 10px;
+			color: #eee;
+		}
+	}
+	.settings-menu ::v-deep label {
+		color: hsla(0,0%,100%,.7);
 	}
 </style>

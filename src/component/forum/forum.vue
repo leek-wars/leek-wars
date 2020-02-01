@@ -3,18 +3,18 @@
 		<div class="page-header page-bar">
 			<div>
 				<h1>{{ $t('title') }}</h1>
-				<v-menu offset-y lazy class="forum-language info">
-					<div slot="activator">
-						<img :src="forumLanguage.flag" class="flag">
-						<img width="10" src="/image/selector.png">
-					</div>
+				<v-menu offset-y>
+					<template v-slot:activator="{ on }">
+						<div class="forum-language info" v-on="on">
+							<img :src="forumLanguage.flag" class="flag">
+							<img width="10" src="/image/selector.png">
+						</div>
+					</template>
 					<v-list :dense="true">
-						<v-list-tile v-for="(language, i) in LeekWars.languages" :key="i" @click="setForumLanguage(language)">
-							<v-list-tile-title class="language">
-								<img :src="language.flag" class="flag">
-								<span class="name">{{ language.name }}</span>
-							</v-list-tile-title>
-						</v-list-tile>
+						<v-list-item v-for="(language, i) in LeekWars.languages" :key="i" class="language" @click="setForumLanguage(language)">
+							<img :src="language.flag" class="flag">
+							<span class="name">{{ language.name }}</span>
+						</v-list-item>
 					</v-list>
 				</v-menu>
 			</div>
@@ -41,7 +41,7 @@
 					<div class="num-topics">{{ $t('topics') }}</div>
 					<div class="num-messages">{{ $t('messages') }}</div>
 				</div>
-				<router-link v-ripple v-for="category in categories" :key="category.id" :to="'/forum/category-' + category.id" class="category">
+				<router-link v-for="category in categories" :key="category.id" v-ripple :to="'/forum/category-' + category.id" class="category">
 					<div class="seen">
 						<img v-if="category.seen" src="/image/forum_seen.png">
 						<img v-else src="/image/forum_unseen.png">
@@ -97,15 +97,15 @@
 		<panel class="last">
 			<h2 slot="title">
 				<router-link to="/chat">{{ $t('chat') }}</router-link>
-				<v-menu offset-y lazy>
-					<img slot="activator" :src="chatLanguage.flag" class="language-button">
+				<v-menu offset-y>
+					<template v-slot:activator="{ on }">
+						<img :src="chatLanguage.flag" class="language-button" v-on="on">
+					</template>
 					<v-list :dense="true">
-						<v-list-tile v-for="(language, i) in LeekWars.languages" :key="i" @click="chatLanguage = language">
-							<v-list-tile-title class="language">
-								<img :src="language.flag" class="flag">
-								<span class="name">{{ language.name }}</span>
-							</v-list-tile-title>
-						</v-list-tile>
+						<v-list-item v-for="(language, i) in LeekWars.languages" :key="i" class="language" @click="chatLanguage = language">
+							<img :src="language.flag" class="flag">
+							<span class="name">{{ language.name }}</span>
+						</v-list-item>
 					</v-list>
 				</v-menu>
 			</h2>
@@ -192,7 +192,7 @@
 	.search-icon {
 		cursor: pointer;
 	}
-	.panel.first /deep/ .content {
+	.panel.first ::v-deep .content {
 		padding: 5px;
 	}
 	.header.category {
@@ -223,7 +223,7 @@
 		box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
 	}
 	.category .seen {
-		width: 40px;
+		width: 55px;
 		padding-top: 10px;
 		padding-bottom: 8px;
 		padding-right: 5px;
@@ -281,8 +281,9 @@
 		height: 400px;
 	}
 	.panel .language-button {
-		height: 28px;
-		max-height: 28px;
+		cursor: pointer;
+		height: 38px;
+		max-height: 38px;
 		max-width: none;
 		padding: 5px;
 		margin-left: 4px;

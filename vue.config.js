@@ -1,5 +1,6 @@
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
 const CopyWebpackPlugin = require('copy-webpack-plugin')
+const VuetifyLoaderPlugin = require('vuetify-loader/lib/plugin')
 const path = require('path')
 
 const dotenv = require('dotenv')
@@ -13,7 +14,8 @@ module.exports = {
 	configureWebpack: {
 		plugins: [
 			// new BundleAnalyzerPlugin(),
-			new CopyWebpackPlugin([{ from: 'src/wiki/image/', to: 'wiki' }])
+			new CopyWebpackPlugin([{ from: 'src/wiki/image/', to: 'wiki' }]),
+			new VuetifyLoaderPlugin()
 		],
 		performance: {
 			hints: false

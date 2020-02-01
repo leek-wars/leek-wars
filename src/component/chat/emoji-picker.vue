@@ -1,14 +1,16 @@
 <template>
-	<v-menu :close-on-content-click="false" :nudge-width="width" :left="true" :nudge-top="0" :min-width="width" :max-width="width" top offset-y lazy>
-		<div v-ripple slot="activator" class="chat-input-emoji">
-			<img src="https://twemoji.maxcdn.com/2/svg/1f603.svg">
-		</div>
-		<v-tabs :key="categories.length" class="tabs" centered>
+	<v-menu :close-on-content-click="false" :nudge-width="width" :left="true" :nudge-top="0" :min-width="width" :max-width="width" top offset-y>
+		<template v-slot:activator="{ on }">
+			<div v-ripple class="chat-input-emoji" v-on="on">
+				<img src="https://twemoji.maxcdn.com/2/svg/1f603.svg">
+			</div>
+		</template>
+		<v-tabs :key="categories.length" class="tabs" grow :show-arrows="false">
 			<v-tabs-slider class="indicator" />
 			<v-tab v-for="(category, c) in categories" :key="c" :href="'#tab-' + c" class="tab">
 				<span v-emojis>{{ category.icon }}</span>
 			</v-tab>
-			<v-tab-item v-autostopscroll v-for="(category, c) in categories" :value="'tab-' + c" :key="c" class="content">
+			<v-tab-item v-for="(category, c) in categories" :key="c" v-autostopscroll :value="'tab-' + c" class="content">
 				<div class="grid">
 					<template v-for="(emoji, e) in category.emojis">
 						<img v-if="c == 0 && e < 11" :key="e" :src="'/image/emoji/' + Emojis.custom[emoji] + '.png'" :title="emoji" class="emoji classic" @click="$emit('pick', emoji)">
@@ -36,14 +38,14 @@
 <style lang="scss" scoped>
 	.chat-input-emoji {
 		position: absolute;
-		width: 24px;
-		height: 24px;
+		width: 40px;
+		height: 40px;
 		padding: 8px;
 		right: 0;
 		top: 0;
 		cursor: pointer;
 	}
-	.tab /deep/ .emoji {
+	.tab ::v-deep .emoji {
 		font-size: 20px;
 	}
 	.indicator {
@@ -52,16 +54,17 @@
 	.tabs {
 		height: 264px;
 	}
-	.tabs /deep/ .tabs__container {
+	.tabs ::v-deep .v-slide-group {
 		height: 38px;
 	}
-	.tabs /deep/ .v-tabs__items {
+	.tabs ::v-deep .v-tabs__items {
 		background: #f5f5f5;
 	}
 	.tab {
 		font-size: 20px;
 	}
-	.tab /deep/ .v-tabs__item {
+	.tabs ::v-deep .v-tab {
+		min-width: 20px;
 		width: 20px;
 	}
 	.content {
@@ -70,7 +73,7 @@
 	}
 	.grid {
 		padding: 8px;
-		height: 200px;
+		height: 226px;
 		display: grid;
 		grid-template-columns: repeat(auto-fill, minmax(32px, 1fr));
 		grid-auto-rows: minmax(min-content, max-content);
@@ -88,8 +91,8 @@
 		text-align: center;
 	}
 	.emoji.classic {
-		width: 24px;
-		height: 24px;
+		width: 32px;
+		height: 32px;
 		padding: 4px;
 	}
 	.emoji:hover {

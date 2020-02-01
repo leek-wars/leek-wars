@@ -19,8 +19,8 @@
 		background-size: 100% 100%;
 		padding: 0 14px;
 		padding-top: 45px;
-		width: 75px;
-		height: 90px;
+		width: 103px;
+		height: 135px;
 		position: relative;
 		word-wrap: break-word;
 		color: #888;

@@ -17,7 +17,7 @@
 			<div class="level">{{ description }}</div>
 		</div>
 		<router-link :to="'/' + result.type + '/' + result.id">
-			<v-btn flat icon color="grey">
+			<v-btn text icon color="grey">
 				<v-icon>perm_identity</v-icon>
 			</v-btn>
 		</router-link>

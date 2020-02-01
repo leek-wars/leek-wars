@@ -12,7 +12,7 @@
 		<div class="flex-container">
 			<div class="column6">
 				<panel :title="$t('language')" class="languages">
-					<div v-ripple v-for="language in LeekWars.languages" :key="language.code" :class="{selected: language.code == $i18n.locale}" :lang="language.code" class="language" @click="LeekWars.setLocale(language.code)">
+					<div v-for="language in LeekWars.languages" :key="language.code" v-ripple :class="{selected: language.code == $i18n.locale}" :lang="language.code" class="language" @click="LeekWars.setLocale(language.code)">
 						<img :src="language.flag">
 						<br>
 						{{ language.name }} ({{ language.code }})
@@ -95,7 +95,7 @@
 										{{ $t('mail.notif_' + category + '_' + n) }}
 									</td>
 									<td class="push">
-										<v-checkbox :disabled="!pushNotifications" v-model="settings['push_' + category + '_' + n]" hide-details label="Push" @change="updateNotif('push_' + category + '_' + n, $event)" />
+										<v-checkbox v-model="settings['push_' + category + '_' + n]" :disabled="!pushNotifications" hide-details label="Push" @change="updateNotif('push_' + category + '_' + n, $event)" />
 									</td>
 									<td class="mail">
 										<v-checkbox v-model="settings['mail_' + category + '_' + n]" hide-details label="E-mail" @change="updateNotif('mail_' + category + '_' + n, $event)" />
