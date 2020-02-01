@@ -4,10 +4,10 @@
 		<panel class="first last">
 			<form @submit.prevent="login">
 				<br>
-				<h2>{{ $t('login') }}</h2>
+				<h4>{{ $t('login') }}</h4>
 				<input v-model="form.login" type="text" name="login">
 				<br><br>
-				<h2>{{ $t('password') }}</h2>
+				<h4>{{ $t('password') }}</h4>
 				<input v-model="form.password" type="password" name="password">
 				<br><br>
 				<v-checkbox v-model="form.keep_connected" :label="$t('keep_connected')" hide-details />
