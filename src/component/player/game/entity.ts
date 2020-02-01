@@ -685,7 +685,7 @@ class Entity {
 		const active = this === this.game.selectedEntity || this === this.game.hoverEntity || this === this.game.mouseEntity
 
 		// Fond
-		ctx.globalAlpha = active ? 0.8 : 0.5
+		ctx.globalAlpha = active ? 0.8 : 0.6
 		ctx.fillStyle = active ? 'white' : 'black'
 		ctx.fillRect(-width / 2, 0, width, height + barHeight - 1)
 
@@ -732,8 +732,50 @@ class Entity {
 			ctx.fillText(effect_duration, x + 20, 32)
 			x += 28
 		}
+
+		if (this.id === this.game.currentPlayer) {
+			this.drawCurrentTPMP(ctx)
+		}
+
 		ctx.restore()
 	}
+
+	public drawCurrentTPMP(ctx: CanvasRenderingContext2D) {
+
+		ctx.translate(0, -18)
+
+		ctx.font = "bold 11pt Roboto"
+		ctx.textAlign = "center"
+		const textTP = '' + this.tp
+		const textMP = '' + this.mp
+		const iconSize = 13
+		const padding = 2
+		const widthTP = ctx.measureText(textTP).width
+		const barWidthTP = widthTP + iconSize + padding * 3
+		const widthMP = ctx.measureText(textMP).width
+		const barWidthMP = widthMP + iconSize + padding * 3
+		const height = 16
+		const totalWidth = barWidthTP + padding + barWidthMP
+
+		// Fond
+		ctx.globalAlpha = 0.6
+		ctx.fillStyle = 'black'
+		ctx.fillRect(-totalWidth / 2, 0, barWidthTP, height)
+		ctx.fillRect(-totalWidth / 2 + barWidthTP + padding, 0, barWidthMP, height)
+
+		// TP
+		ctx.globalAlpha = 1
+		ctx.drawImage(this.game.T.tp.texture, -totalWidth / 2 + padding, 1, iconSize, iconSize)
+		ctx.fillStyle = '#ffa100'
+		ctx.fillText(textTP, -totalWidth / 2 + iconSize / 2 + 0.5 * padding + barWidthTP / 2, 9)
+
+		// MP
+		ctx.globalAlpha = 1
+		ctx.drawImage(this.game.T.mp.texture, -totalWidth / 2 + barWidthTP + 2 * padding, 1, iconSize, iconSize)
+		ctx.fillStyle = '#5ebe00'
+		ctx.fillText(textMP, -totalWidth / 2 + barWidthTP + iconSize / 2 + barWidthMP / 2 + 1.5 * padding, 9)
+	}
+
 	public drawBubble(ctx: CanvasRenderingContext2D) {
 		if (this.bubble != null) {
 			ctx.save()
@@ -743,6 +785,7 @@ class Entity {
 			ctx.restore()
 		}
 	}
+
 	public getLifeColorRGB() {
 		const life = this.life / this.maxLife
 		return [Math.min(210, Math.round(420 * (1 - life))), Math.min(210, Math.round(420 * life)), 0]

@@ -189,6 +189,8 @@ class Textures {
 	public j_laser: Texture
 	public j_laser_bullet: Texture
 	public cart_j_laser: Texture
+	public tp: Texture
+	public mp: Texture
 
 	constructor(game: Game) {
 		this.leek_hand = new Texture(game, env.STATIC + "image/fight/leek_hand.png", true, SHADOW_QUALITY)
@@ -401,6 +403,9 @@ class Textures {
 		this.lightning_bulb_back = new Texture(game, env.STATIC + 'image/bulb/lightning_bulb_back.png', true, SHADOW_QUALITY)
 		this.metallic_bulb_front = new Texture(game, env.STATIC + 'image/bulb/metallic_bulb_front.png', true, SHADOW_QUALITY)
 		this.metallic_bulb_back = new Texture(game, env.STATIC + 'image/bulb/metallic_bulb_back.png', true, SHADOW_QUALITY)
+
+		this.tp = new Texture(game, env.STATIC + 'image/charac/small/tp.png')
+		this.mp = new Texture(game, env.STATIC + 'image/charac/small/mp.png')
 	}
 }
 
