@@ -112,7 +112,7 @@
 	position: absolute;
 	bottom: 6px;
 	left: 0;
-	width: 480px;
+	width: 490px;
 }
 .details {
 	width: 100%;
@@ -176,6 +176,7 @@
 	font-weight: bold;
 	width: 58px;
 	margin-bottom: 3px;
+	white-space: nowrap;
 	div {
 		display: inline-block;
 		vertical-align: bottom;

@@ -54,27 +54,27 @@
 </script>
 
 <style lang="scss" scoped>
-	.md /deep/ p {
+	.md ::v-deep p {
 		color: #252525;
 		font-size: 16px;
 		line-height: 1.6;
 	}
-	.md /deep/ h2 {
+	.md ::v-deep h2 {
 		color: #000;
 		margin-top: 1em;
 		padding-bottom: 6px;
 		border-bottom: 1px solid #aaa;
 	}
-	.md /deep/ img {
+	.md ::v-deep img {
 		max-width: 100%;
 	}
-	.md /deep/ a {
+	.md ::v-deep a {
 		color: #0645ad;
 	}
-	.md /deep/ a.new {
+	.md ::v-deep a.new {
 		color: #ba0000;
 	}
-	.md /deep/ a:hover {
+	.md ::v-deep a:hover {
 		text-decoration: underline;
 	}
 </style>

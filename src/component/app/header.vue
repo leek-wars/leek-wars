@@ -55,10 +55,12 @@
 				</div>
 				<div class="button-wrapper">
 					<v-menu v-if="env.SOCIAL" :nudge-bottom="3" :max-width="400" :max-height="400" bottom offset-y @input="readNotifications">
-						<div slot="activator" class="header-button messages-button">
-							<i class="material-icons">email</i>
-							<span v-show="$store.state.unreadMessages > 0" class="counter">{{ $store.state.unreadMessages }}</span>
-						</div>
+						<template v-slot:activator="{ on }">
+							<div class="header-button messages-button" v-on="on">
+								<i class="material-icons">email</i>
+								<span v-show="$store.state.unreadMessages > 0" class="counter">{{ $store.state.unreadMessages }}</span>
+							</div>
+						</template>
 						<div class="dialog">
 							<div class="dialog-items">
 								<router-link v-for="conversation in $store.state.conversationsList" :key="conversation.id" :to="'/messages/conversation/' + conversation.id">
@@ -71,10 +73,12 @@
 				</div>
 				<div class="button-wrapper">
 					<v-menu :nudge-bottom="3" :max-width="400" :max-height="400" bottom offset-y @input="readNotifications">
-						<div slot="activator" class="header-button notifications-button">
-							<i class="material-icons">notifications</i>
-							<span v-show="$store.state.unreadNotifications > 0" class="counter">{{ $store.state.unreadNotifications }}</span>
-						</div>
+						<template v-slot:activator="{ on }">
+							<div class="header-button notifications-button" v-on="on">
+								<i class="material-icons">notifications</i>
+								<span v-show="$store.state.unreadNotifications > 0" class="counter">{{ $store.state.unreadNotifications }}</span>
+							</div>
+						</template>
 						<div class="dialog">
 							<div class="dialog-items">
 								<notification v-for="notification in $store.state.notifications" :key="notification.id" :notification="notification" @click.native="readNotification(notification)" />
@@ -273,7 +277,7 @@
 		padding: 4px 5px;
 		color: white;
 		border-radius: 5px;
-		height: 12px;
+		height: 20px;
 		line-height: 12px;
 	}
 	.dialog {

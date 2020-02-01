@@ -1,10 +1,10 @@
 <template lang="html">
 	<div class="chat">
 		<loader v-show="loading" />
-		<div v-autostopscroll v-if="!loading && (!chat || !chat.messages.length)" ref="messages" class="messages">
+		<div v-if="!loading && (!chat || !chat.messages.length)" ref="messages" v-autostopscroll class="messages">
 			<div class="no-messages">No messages yet</div>
 		</div>
-		<div v-autostopscroll v-if="chat && chat.messages.length" ref="messages" class="messages">
+		<div v-if="chat && chat.messages.length" ref="messages" v-autostopscroll class="messages">
 			<template v-for="(message, m) in $store.state.chat[channel].messages">
 				<div v-if="message.author.id === 0" :key="m" class="message">
 					<img class="avatar" src="/image/favicon.png">
@@ -27,26 +27,28 @@
 								<rich-tooltip-farmer :id="message.author.id">{{ message.author.name }}</rich-tooltip-farmer>
 							</span>
 						</router-link>
-						<div v-large-emojis v-chat-code-latex v-for="(text, i) in message.texts" :key="i" class="text" v-html="text"></div>
+						<div v-for="(text, i) in message.texts" :key="i" v-large-emojis v-chat-code-latex class="text" v-html="text"></div>
 						<div class="right">
 							<span :title="LeekWars.formatDateTime(message.time)" class="time">{{ LeekWars.formatTime(message.time) }}</span>
-							<v-menu v-if="!privateMessages" offset-y lazy>
-								<v-btn slot="activator" flat small icon color="grey">
-									<v-icon>more_vert</v-icon>
-								</v-btn>
-								<v-list :dense="true" class="message-actions">
-									<v-list-tile v-ripple @click="report(message)">
+							<v-menu v-if="!privateMessages" offset-y>
+								<template v-slot:activator="{ on }">
+									<v-btn text small icon color="grey" v-on="on">
+										<v-icon>more_vert</v-icon>
+									</v-btn>
+								</template>
+								<v-list dense class="message-actions">
+									<v-list-item v-ripple @click="report(message)">
 										<v-icon>flag</v-icon>
 										<span>Signaler</span>
-									</v-list-tile>
-									<v-list-tile v-ripple v-if="$store.getters.moderator && !message.author.muted" @click="mute(message.author)">
+									</v-list-item>
+									<v-list-item v-if="$store.getters.moderator && !message.author.muted" v-ripple @click="mute(message.author)">
 										<v-icon>volume_off</v-icon>
 										<span>Mute</span>
-									</v-list-tile>
-									<v-list-tile v-ripple v-if="$store.getters.moderator && message.author.muted" @click="unmute(message.author)">
+									</v-list-item>
+									<v-list-item v-if="$store.getters.moderator && message.author.muted" v-ripple @click="unmute(message.author)">
 										<v-icon>volume_up</v-icon>
 										<span>Unmute</span>
-									</v-list-tile>
+									</v-list-item>
 								</v-list>
 							</v-menu>
 						</div>
@@ -304,12 +306,6 @@
 			display: none;
 			cursor: pointer;
 		}
-		/deep/ code:not(.ml) {
-			display: inline-block;
-			border: 1px solid #ccc;
-			padding: 1px 4px;
-			border-radius: 3px;
-		}
 	}
 	.bubble:hover {
 		.report, .mute, .unmute {
@@ -326,7 +322,7 @@
 		word-break: break-word;
 		color: #333;
 	}
-	.text.large-emojis /deep/ .emoji {
+	.text.large-emojis ::v-deep .emoji {
 		font-size: 28px;
 		line-height: 34px;
 	}
@@ -353,7 +349,7 @@
 	.message-actions .v-icon {
 		margin-right: 4px;
 	}
-	.text /deep/ a {
+	.text ::v-deep a {
 		color: #5fad1b;
 	}
 	.br-notification {

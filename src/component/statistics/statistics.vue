@@ -329,36 +329,36 @@
 	.chart.right {
 		float: right;
 	}
-	.chart /deep/ .ct-label {
+	.chart ::v-deep .ct-label {
 		font-size: 13px;
 		fill: rgba(0,0,0,.7);
 		font-weight: bold;
 		pointer-events: none;
 	}
-	.chart /deep/ .ct-series path {
+	.chart ::v-deep .ct-series path {
 		cursor: pointer;
 		stroke-width: 38px;
 		transition: stroke-width 0.1s ease;
 	}
-	.chart /deep/ .ct-series.selected path {
+	.chart ::v-deep .ct-series.selected path {
 		stroke-width: 48px;
 	}
-	.chart /deep/ .ct-series-a path {
+	.chart ::v-deep .ct-series-a path {
 		stroke: #55e055;
 	}
-	.chart /deep/ .ct-series-b path {
+	.chart ::v-deep .ct-series-b path {
 		stroke: #ffd45d;
 	}
-	.chart /deep/ .ct-series-c path {
+	.chart ::v-deep .ct-series-c path {
 		stroke: #ff5c5c;
 	}
-	.chart /deep/ .ct-series-d path {
+	.chart ::v-deep .ct-series-d path {
 		stroke: #ff61c6;
 	}
-	.chart /deep/ .ct-series-e path {
+	.chart ::v-deep .ct-series-e path {
 		stroke: #6179ff;
 	}
-	.chart /deep/ .ct-series-f path {
+	.chart ::v-deep .ct-series-f path {
 		stroke: #65e5ff;
 	}
 	.category[category="6"] {

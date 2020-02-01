@@ -1,6 +1,6 @@
 <template lang="html">
-	<rich-tooltip-leek :id="leek.id" :bottom="true" :instant="true" :leek="leek.id" :disabled="leek.id in $store.state.farmer.leeks" class="leek">
-		<div v-ripple v-if="leek" class="elem">
+	<rich-tooltip-leek :id="leek.id" :bottom="true" :instant="true">
+		<div v-if="leek" class="elem">
 			<div class="image">
 				<leek-image :leek="leek" :scale="0.70" />
 			</div>

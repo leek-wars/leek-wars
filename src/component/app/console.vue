@@ -1,5 +1,5 @@
 <template lang="html">
-	<div v-autostopscroll ref="scroll" class="console">
+	<div ref="scroll" v-autostopscroll class="console">
 		<div class="lines">
 			<div v-for="(line, l) in lines" :key="l" class="line">
 				<div v-if="line.type === 'code'">

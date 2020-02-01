@@ -23,8 +23,8 @@
 	.icon {
 		z-index: 2;
 		display: inline-block;
-		width: 24px;
-		height: 24px;
+		width: 34px;
+		height: 34px;
 		padding: 5px;
 		padding-top: 4px;
 		padding-bottom: 6px;

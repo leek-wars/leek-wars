@@ -24,7 +24,7 @@
 			</div>
 			<div v-show="!LeekWars.mobile || LeekWars.splitBack" class="column9">
 				<panel>
-					<div v-autostopscroll="'bottom'" slot="content" ref="elements" class="items">
+					<div slot="content" ref="elements" v-autostopscroll="'bottom'" class="items">
 						<div v-for="(item, i) in items" :key="i" :item="item.name" :class="{deprecated: item.deprecated}" class="item">
 							<documentation-function v-if="'return_type' in item" :fun="item" />
 							<documentation-constant v-else :constant="item" />
@@ -266,34 +266,34 @@
 		border-bottom: none;
 		margin-bottom: 0;
 	}
-	.items .item /deep/ .content {
+	.items .item ::v-deep .content {
 		padding-right: 100px;
 		padding-left: 10px;
 	}
-	.items .item /deep/ a {
+	.items .item ::v-deep a {
 		color: #5fad1b;
 		text-decoration: underline;
 	}
-	.items .item /deep/ h2 {
+	.items .item ::v-deep h2 {
 		margin-bottom: 10px;
 		font-size: 20px;
 	}
-	.items .item /deep/ ul {
+	.items .item ::v-deep ul {
 		margin: 5px 0;
 	}
 	.items .function-name {
 		color: black;
 	}
-	.item /deep/ h4 {
+	.item ::v-deep h4 {
 		font-weight: 300;
 		margin: 0;
 		color: #666;
 		margin-top: 8px;
 	}
-	.items /deep/ .item.deprecated {
+	.items ::v-deep .item.deprecated {
 		opacity: 0.6;
 	}
-	.items /deep/ .item .deprecated-message {
+	.items ::v-deep .item .deprecated-message {
 		color: #ff7f00;
 		font-weight: bold;
 		margin: 10px;

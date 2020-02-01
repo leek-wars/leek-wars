@@ -1,75 +1,76 @@
 <template>
 	<div id="app" :class="{ connected: $store.state.connected, app: LeekWars.mobile, 'social-collapsed': LeekWars.socialCollapsed, 'menu-expanded': LeekWars.menuExpanded, sfw: LeekWars.sfw, 'menu-collapsed': !LeekWars.mobile && LeekWars.menuCollapsed, beta: env.BETA }" data-app="true" @mousemove="consoleMouseMove" @mouseup="consoleMouseUp">
-	
-		<div :class="{visible: LeekWars.dark > 0}" :style="{opacity: LeekWars.dark}" class="dark" @click="darkClick"></div>
-	
-		<lw-menu v-if="$store.state.connected" />
+		<div class="v-application--wrap">
+			<div :class="{visible: LeekWars.dark > 0}" :style="{opacity: LeekWars.dark}" class="dark" @click="darkClick"></div>
+		
+			<lw-menu v-if="$store.state.connected" />
 
-		<div class="console-button" @click="leekscriptConsole">
-			<img src="/image/console.png">
-		</div>
-		<div v-if="console" :style="{top: consoleY + 'px', left: consoleX + 'px'}" class="console v-dialog draggable">
-			<div class="title" @mousedown="consoleMouseDown">
-				Console LeekScript V2
-				<div class="options">
-					<div class="option" @click="consoleRandom"><img src="/image/icon/dice.png"></div>
-					<div class="option" @click="consolePopup"><i class="material-icons">open_in_new</i></div>
-					<div class="option" @click="consoleClose"><i class="material-icons">clear</i></div>
+			<div class="console-button" @click="leekscriptConsole">
+				<img src="/image/console.png">
+			</div>
+			<div v-if="console" :style="{top: consoleY + 'px', left: consoleX + 'px'}" class="console v-dialog draggable">
+				<div class="title" @mousedown="consoleMouseDown">
+					Console LeekScript V2
 					<div class="spacer"></div>
+					<div class="options">
+						<div class="option" @click="consoleRandom"><img src="/image/icon/dice.png"></div>
+						<div class="option" @click="consolePopup"><i class="material-icons">open_in_new</i></div>
+						<div class="option" @click="consoleClose"><i class="material-icons">clear</i></div>
+					</div>
+				</div>
+				<console ref="console" />
+			</div>
+
+			<lw-bar v-if="LeekWars.mobile" />
+			
+			<div v-if="!LeekWars.mobile" class="big-leeks">
+				<div class="wrapper">
+					<img class="big-leek-1" src="/image/big_leek_1_white.png">
+					<img class="big-leek-2" src="/image/big_leek_2_white.png">
 				</div>
 			</div>
-			<console ref="console" />
-		</div>
-
-		<lw-bar v-if="LeekWars.mobile" />
-		
-		<div v-if="!LeekWars.mobile" class="big-leeks">
-			<div class="wrapper">
-				<img class="big-leek-1" src="/image/big_leek_1_white.png">
-				<img class="big-leek-2" src="/image/big_leek_2_white.png">
-			</div>
-		</div>
-		
-		<div class="app-center">
-			<div :class="{large: LeekWars.large || LeekWars.flex, flex: LeekWars.flex}" class="app-wrapper">
-				<lw-header />
-				<div class="page-wrapper">
-					<div class="page">
-						<router-view />
+			
+			<div class="app-center">
+				<div :class="{large: LeekWars.large || LeekWars.flex, flex: LeekWars.flex}" class="app-wrapper">
+					<lw-header />
+					<div class="page-wrapper">
+						<div class="page">
+							<router-view />
+						</div>
 					</div>
 				</div>
 			</div>
-		</div>
-		
-		<lw-social v-if="$store.state.connected" />
-		
-		<lw-footer />
+			
+			<lw-social v-if="$store.state.connected" />
+			
+			<lw-footer />
 
-		<chats v-if="!LeekWars.mobile" />
-		<squares />
-		<mobile-br v-if="LeekWars.mobile" />
-		
-		<div class="toasts"></div>
+			<chats v-if="!LeekWars.mobile" />
+			<squares />
+			<mobile-br v-if="LeekWars.mobile" />
+			
+			<div class="toasts"></div>
 
-		<img v-if="LeekWars.clover" :style="{top: LeekWars.cloverTop + 'px', left: LeekWars.cloverLeft + 'px'}" class="clover" src="/image/clover.png" @click="clickClover">
+			<img v-if="LeekWars.clover" :style="{top: LeekWars.cloverTop + 'px', left: LeekWars.cloverLeft + 'px'}" class="clover" src="/image/clover.png" @click="clickClover">
 
-		<didactitiel v-model="didactitiel" />
+			<didactitiel v-model="didactitiel" />
 
-		<popup v-model="changelogDialog" :width="800">
-			<i18n slot="title" path="changelog.version_online">
-				<b v-if="changelog" slot="version">{{ changelog.version_name }}</b>
-			</i18n>
-			<div v-if="changelog" class="changelog-dialog">
-				<changelog-version :version="changelog" />
-				<br>
-				<i18n path="changelog.see_all_changes">
-					<router-link slot="changelog" to="/changelog">changelog</router-link>
+			<popup v-model="changelogDialog" :width="800">
+				<i18n slot="title" path="changelog.version_online">
+					<b v-if="changelog" slot="version">{{ changelog.version_name }}</b>
 				</i18n>
-			</div>
-			<div slot="actions">
-				<div @click="changelogDialog = false">{{ $t('changelog.popup_ok') }}</div>
-			</div>
-		</popup>
+				<div v-if="changelog" class="changelog-dialog">
+					<changelog-version :version="changelog" />
+					<br>
+					<i18n path="changelog.see_all_changes">
+						<router-link slot="changelog" to="/changelog">changelog</router-link>
+					</i18n>
+				</div>
+				<div slot="actions">
+					<div @click="changelogDialog = false">{{ $t('changelog.popup_ok') }}</div>
+				</div>
+			</popup>
+		</div>
 	</div>
 </template>
 

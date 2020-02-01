@@ -46,7 +46,8 @@
 			<tr>
 				<td class="name">
 					<span class="alive">
-					<router-link :to="'/team/' + team.id">{{ team.name }}</router-link></span>
+						<router-link :to="'/team/' + team.id">{{ team.name }}</router-link>
+					</span>
 				</td>
 				<td class="level">{{ team.level }}</td>
 				<td class="xp">

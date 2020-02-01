@@ -4,8 +4,10 @@
 			<div>
 				<h1>
 					{{ $t('main.chat') }}
-					<v-menu offset-y lazy>
-						<img slot="activator" :src="chatLanguage.flag" class="language-button">
+					<v-menu offset-y>
+						<template v-slot:activator="{ on }">
+							<img :src="chatLanguage.flag" class="language-button" v-on="on">
+						</template>
 						<v-list :dense="true">
 							<v-list-tile v-for="(language, i) in LeekWars.languages" :key="i" @click="chatLanguage = language">
 								<v-list-tile-title class="language">
@@ -57,11 +59,12 @@
 		height: calc(100vh - 56px);
 	}
 	h1 .language-button {
-		height: 28px;
-		max-height: 28px;
+		height: 38px;
+		max-height: 38px;
 		max-width: none;
 		padding: 5px;
 		margin-right: -10px;
+		vertical-align: bottom;
 	}
 	h1 .languages {
 		padding: 0 5px;

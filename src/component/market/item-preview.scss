@@ -59,7 +59,7 @@
 		height: 14px;
 		display: inline-block;
 		vertical-align: middle;
-		margin-left: 10px;
+		margin-left: 8px;
 		border-radius: 2px;
 	}
 	.ennemies {
@@ -74,8 +74,6 @@
 	.not-player {
 		background-color: white;
 		border: 2px solid #555;
-		width: 10px;
-		height: 10px;
 	}
 	.summons {
 		background-color: #00dfff;
@@ -83,8 +81,6 @@
 	.not-summons {
 		background-color: white;
 		border: 2px solid #00dfff;
-		width: 10px;
-		height: 10px;
 	}
 	.always-caster {
 		background-color: #555;

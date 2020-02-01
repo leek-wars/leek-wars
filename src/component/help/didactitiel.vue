@@ -222,7 +222,7 @@
 	.stats td img {
 		width: 50px;
 	}
-	.text /deep/ a {
+	.text ::v-deep a {
 		color: #5fad1b;
 	}
 </style>

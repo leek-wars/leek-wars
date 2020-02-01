@@ -908,7 +908,7 @@
 	.menu-item {
 		padding: 10px;
 		text-align: center;
-		height: 100px;
+		height: 120px;
 		border: 2px solid #0000;
 		font-weight: 300;
 		color: #555;
@@ -963,12 +963,12 @@
 		margin: 10px auto;
 		background: white;
 	}
-	table /deep/ td, table /deep/ th {
+	table ::v-deep td, table ::v-deep th {
 		border: 1px solid #aaa;
 		padding: 3px 10px;
 		text-align: center;
 	}
-	a, .content /deep/ a {
+	a, .content ::v-deep a {
 		color: #5fad1b;
 	}
 	.sign-table {

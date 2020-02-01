@@ -1,6 +1,6 @@
 <template lang="html">
 	<v-list v-if="filterOptions === null">
-		<v-list-tile v-ripple v-for="command of commands" :key="command.name" class="command" @click="$emit('command', command.name)">
+		<v-list-tile v-for="command of commands" :key="command.name" v-ripple class="command" @click="$emit('command', command.name)">
 			<v-list-tile-content>
 				<v-list-tile-title>/{{ command.name }}</v-list-tile-title>
 				<v-list-tile-sub-title>{{ command.description }}</v-list-tile-sub-title>
@@ -8,7 +8,7 @@
 		</v-list-tile>
 	</v-list>
 	<v-list v-else-if="options.length">
-		<v-list-tile v-ripple v-for="option of options" :key="option.name" class="command" @click="$emit('command', commands[0].name + ':' + option.name)">
+		<v-list-tile v-for="option of options" :key="option.name" v-ripple class="command" @click="$emit('command', commands[0].name + ':' + option.name)">
 			<v-list-tile-content>
 				<v-list-tile-title>/{{ commands[0].name }}:{{ option.name }}</v-list-tile-title>
 				<v-list-tile-sub-title>{{ option.description }}</v-list-tile-sub-title>

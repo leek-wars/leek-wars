@@ -1,6 +1,10 @@
 <template>
-	<v-menu :close-on-content-click="false" :disabled="disabled" :max-width="expand_items ? 600 : 360" :nudge-top="bottom ? 0 : 6" :open-delay="_open_delay" :close-delay="_close_delay" :top="!bottom" :bottom="bottom" :key="key" open-on-hover offset-y lazy @input="open($event)">
-		<slot slot="activator"></slot>
+	<v-menu :key="key" :close-on-content-click="false" :disabled="disabled" :max-width="expand_items ? 600 : 360" :nudge-top="bottom ? 0 : 6" :open-delay="_open_delay" :close-delay="_close_delay" :top="!bottom" :bottom="bottom" open-on-hover offset-y @input="open($event)">
+		<template v-slot:activator="{ on }">
+			<span class="elem" v-on="on">
+				<slot></slot>
+			</span>
+		</template>
 		<div v-if="content_created" :class="{expanded: expand_items}" class="card">
 			<loader v-if="!leek" :size="30" />
 			<template v-else>
@@ -114,9 +118,12 @@
 </script>
 
 <style lang="scss" scoped>
+	.elem {
+		display: inline-block;
+	}
 	.card {
 		padding: 8px;
-		height: 65px;
+		height: 81px;
 	}
 	.card.expanded {
 		height: auto;

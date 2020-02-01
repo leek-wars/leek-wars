@@ -17,7 +17,7 @@
 				<br>
 				<h4>{{ $t('paypal_message') }}</h4>
 				<br>
-				<div v-ripple v-if="!loading" class="paypal-button" @click="clickPayPal">
+				<div v-if="!loading" v-ripple class="paypal-button" @click="clickPayPal">
 					{{ $t('buy_with') }}
 					<img src="/image/bank/paypal.png">
 				</div>
@@ -107,11 +107,11 @@
 	.panel h3 {
 		color: red;
 	}
-	.panel /deep/ .sk-main-content h3:before {
+	.panel ::v-deep .sk-main-content h3:before {
 		width: 0;
 	}
-	.panel /deep/ .sk-main-content h3:after,
-	.panel /deep/ .sk-kit-header h1:after {
+	.panel ::v-deep .sk-main-content h3:after,
+	.panel ::v-deep .sk-kit-header h1:after {
 		border: none;
 	}
 </style>

@@ -3,7 +3,7 @@
 		<div class="page-bar page-header">
 			<h1>Line of Sight</h1>
 		</div>
-		<panel>
+		<panel class="first">
 			<div class="map">
 				<div v-for="(row, i) in map" :key="i" class="row">
 					<div v-for="(cell, j) in row" :key="j" :class="{obstacle: cell === 1, los: cell === 2, red: cell === 3}" class="cell" @click="clickCell(j, i)"></div>

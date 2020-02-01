@@ -2,10 +2,10 @@
 	<div v-if="$store.state.farmer" class="chats">
 		<div v-for="(window, i) in LeekWars.chatWindows" :key="window.name" :class="{expanded: window.expanded, unread: $refs.chats && $refs.chats[i] && $refs.chats[i].unread}" class="window">
 			<div class="header">
-				<router-link v-ripple v-if="window.type === ChatType.PM" :to="'/farmer/' + getFarmer(window.name).id">
+				<router-link v-if="window.type === ChatType.PM" v-ripple :to="'/farmer/' + getFarmer(window.name).id">
 					<avatar :farmer="getFarmer(window.name)" class="image" />
 				</router-link>
-				<router-link v-ripple v-else-if="window.type === ChatType.TEAM" :to="'/team/' + $store.state.farmer.team.id">
+				<router-link v-else-if="window.type === ChatType.TEAM" v-ripple :to="'/team/' + $store.state.farmer.team.id">
 					<emblem :team="$store.state.farmer.team" class="image" />
 				</router-link>
 				<div v-ripple class="title" @click="toggleExpanded(window, i)">{{ window.title }}</div>

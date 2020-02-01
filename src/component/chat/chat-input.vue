@@ -2,7 +2,7 @@
 	<div class="chat-input">
 		<div ref="input" :placeholder="$t('main.chat_placeholder')" class="chat-input-content" contenteditable="true" @keyup="keyUp" @keydown="keyDown" @click="updateCursor"></div>
 		<emoji-picker @pick="addEmoji" />
-		<chat-commands v-autostopscroll v-if="commandsEnabled" ref="commands" :filter="commandFilter" class="commands v-menu__content" @command="selectCommand" />
+		<chat-commands v-if="commandsEnabled" ref="commands" v-autostopscroll :filter="commandFilter" class="commands v-menu__content" @command="selectCommand" />
 	</div>
 </template>
 

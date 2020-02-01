@@ -16,7 +16,7 @@
 				<panel :title="$t('fights')">
 					<loader v-if="!fight_packs.length" slot="content" />
 					<div v-else slot="content" class="items fights">
-						<router-link v-ripple v-for="pack in fight_packs" :key="pack.id" :to="'/market/' + pack.name" :farmer-count="0" :leek-count="0" class="item fight-pack" @click="selectItem(pack)">
+						<router-link v-for="pack in fight_packs" :key="pack.id" v-ripple :to="'/market/' + pack.name" :farmer-count="0" :leek-count="0" class="item fight-pack" @click="selectItem(pack)">
 							<img src="/image/market/fights.png">
 							<div>{{ pack.title }}</div>
 						</router-link>
@@ -25,7 +25,7 @@
 				<panel :title="$t('weapons')">
 					<loader v-if="!weapons.length" slot="content" />
 					<div v-else slot="content" class="items weapons">
-						<router-link v-ripple v-for="weapon in weapons" :key="weapon.id" :to="'/market/' + weapon.name" :farmer-count="items[weapon.id].farmer_count" :leek-count="items[weapon.id].leek_count" class="item weapon">
+						<router-link v-for="weapon in weapons" :key="weapon.id" v-ripple :to="'/market/' + weapon.name" :farmer-count="items[weapon.id].farmer_count" :leek-count="items[weapon.id].leek_count" class="item weapon">
 							<img :src="'/image/weapon/' + weapon.name + '.png'">
 						</router-link>
 					</div>
@@ -37,7 +37,7 @@
 					</div>
 					<loader v-if="!chips.length" slot="content" />
 					<div v-else-if="chipMode === 'level'" slot="content" class="items chips">
-						<router-link v-ripple v-for="chip in chips" :key="chip.id" :to="'/market/' + chip.name" :farmer-count="items[chip.id].farmer_count" :leek-count="items[chip.id].leek_count" class="item chip">
+						<router-link v-for="chip in chips" :key="chip.id" v-ripple :to="'/market/' + chip.name" :farmer-count="items[chip.id].farmer_count" :leek-count="items[chip.id].leek_count" class="item chip">
 							<img :src="'/image/chip/small/' + chip.name + '.png'">
 						</router-link>
 					</div>
@@ -45,7 +45,7 @@
 						<div v-for="type in EffectTypeMarket" v-if="!isNaN(type)" :key="type">
 							<h4 :class="{first: type === EffectTypeMarket.ATTACK}">{{ $t('effect.effect_type_' + type) }}</h4>
 							<div class="items chips">
-								<router-link v-ripple v-for="chip in chipsByType[type]" :key="chip.id" :to="'/market/' + chip.name" :farmer-count="items[chip.id].farmer_count" :leek-count="items[chip.id].leek_count" class="item chip">
+								<router-link v-for="chip in chipsByType[type]" :key="chip.id" v-ripple :to="'/market/' + chip.name" :farmer-count="items[chip.id].farmer_count" :leek-count="items[chip.id].leek_count" class="item chip">
 									<img :src="'/image/chip/small/' + chip.name + '.png'">
 								</router-link>
 							</div>
@@ -55,7 +55,7 @@
 				<panel :title="$t('potions')">
 					<loader v-if="!potions.length" slot="content" />
 					<div v-else slot="content" class="items potions">
-						<router-link v-ripple v-for="potion in potions" :key="potion.id" :to="'/market/' + potion.name" :farmer-count="items[potion.id].farmer_count" :leek-count="items[potion.id].leek_count" class="item potion">
+						<router-link v-for="potion in potions" :key="potion.id" v-ripple :to="'/market/' + potion.name" :farmer-count="items[potion.id].farmer_count" :leek-count="items[potion.id].leek_count" class="item potion">
 							<img :src="'/image/potion/' + potion.name + '.png'">
 						</router-link>
 					</div>
@@ -63,7 +63,7 @@
 				<panel :title="$t('hats')" class="last">
 					<loader v-if="!hats.length" slot="content" />
 					<div v-else slot="content" class="items hats">
-						<router-link v-ripple v-for="hat in hats" :key="hat.id" :to="'/market/' + hat.name" :farmer-count="items[hat.id].farmer_count" :leek-count="items[hat.id].leek_count" class="item hat">
+						<router-link v-for="hat in hats" :key="hat.id" v-ripple :to="'/market/' + hat.name" :farmer-count="items[hat.id].farmer_count" :leek-count="items[hat.id].leek_count" class="item hat">
 							<img :src="'/image/hat/' + hat.name + '.png'">
 						</router-link>
 					</div>
@@ -112,7 +112,9 @@
 							<div><b>{{ $t('equipped_on') }}</b></div>
 							<div class="leeks">
 								<router-link v-for="leek in selectedItem.leek_objs" :key="leek.id" :to="'/leek/' + leek.id">
-									<rich-tooltip-leek :id="leek.id" class="leek">{{ leek.name }}</rich-tooltip-leek>
+									<rich-tooltip-leek :id="leek.id">
+										<div class="leek">{{ leek.name }}</div>
+									</rich-tooltip-leek>
 								</router-link>
 							</div>
 						</div>
@@ -508,7 +510,7 @@
 	}
 	.weapons .weapon {
 		padding: 10px;
-		height: 50px;
+		height: 70px;
 		img {
 			max-height: 60px;
 			max-width: 150px;
@@ -543,7 +545,7 @@
 		width: 80px;
 	}
 	.hat {
-		height: 70px;
+		height: 82px;
 		padding: 6px;
 	}
 	.hat img {

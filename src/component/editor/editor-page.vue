@@ -9,31 +9,31 @@
 				<div ref="addButton" :title="$t('new_desc')" class="action list tab" icon="add">
 					<i class="material-icons">add</i> <span>{{ $t('new') }}</span>
 				</div>
-				<v-menu v-model="addMenu" :activator="LeekWars.mobile ? addMenuActivator : $refs.addButton" offset-y lazy>
+				<v-menu v-model="addMenu" :activator="LeekWars.mobile ? addMenuActivator : $refs.addButton" offset-y>
 					<v-list>
-						<v-list-tile v-ripple @click="openNewAI(false)">
-							<i class="material-icons">insert_drive_file</i>
-							<v-list-tile-content class="language">
-								<v-list-tile-title>{{ $t('new_ai') }}</v-list-tile-title>
-							</v-list-tile-content>
-						</v-list-tile>
-						<v-list-tile v-ripple @click="openNewAI(true)">
-							<i class="material-icons">insert_drive_file</i>
-							<v-list-tile-content class="language">
-								<v-list-tile-title>{{ $t('new_v2') }}
+						<v-list-item v-ripple @click="openNewAI(false)">
+							<i class="material-icons list-icon">insert_drive_file</i>
+							<v-list-item-content>
+								<v-list-item-title>{{ $t('new_ai') }}</v-list-item-title>
+							</v-list-item-content>
+						</v-list-item>
+						<v-list-item v-ripple @click="openNewAI(true)">
+							<i class="material-icons list-icon">insert_drive_file</i>
+							<v-list-item-content>
+								<v-list-item-title>{{ $t('new_v2') }}
 									<tooltip>
 										<span slot="activator" class="label-beta">bêta <i class="material-icons">info</i></span>
 										{{ $t('editor.v2_beta_message') }}
 									</tooltip>
-								</v-list-tile-title>
-							</v-list-tile-content>
-						</v-list-tile>
-						<v-list-tile v-ripple @click="openNewFolder()">
-							<i class="material-icons">folder_open</i>
-							<v-list-tile-content class="language">
-								<v-list-tile-title>{{ $t('new_folder') }}</v-list-tile-title>
-							</v-list-tile-content>
-						</v-list-tile>
+								</v-list-item-title>
+							</v-list-item-content>
+						</v-list-item>
+						<v-list-item v-ripple @click="openNewFolder()">
+							<i class="material-icons list-icon">folder_open</i>
+							<v-list-item-content>
+								<v-list-item-title>{{ $t('new_folder') }}</v-list-item-title>
+							</v-list-item-content>
+						</v-list-item>
 					</v-list>
 				</v-menu>
 				<div :title="$t('save_desc')" class="action content tab" icon="save" @click="save">
@@ -60,7 +60,7 @@
 					<div slot="content" class="full">
 						<loader v-if="!rootFolder" />
 
-						<div v-autostopscroll v-if="rootFolder" class="ai-list">
+						<div v-if="rootFolder" v-autostopscroll class="ai-list">
 							<editor-folder :folder="rootFolder" :level="0" />
 						</div>
 						<div v-if="currentEditor && currentEditor.loaded" class="ai-stats">
@@ -104,7 +104,7 @@
 
 		<popup v-model="infoDialog" :width="500">
 			<span slot="title">{{ $t('shortcuts') }}</span>
-			<ul>
+			<ul class="shortcuts">
 				<li v-html="$t('shortcut_1')"></li>
 				<li v-html="$t('shortcut_2')"></li>
 				<li v-html="$t('shortcut_3')"></li>
@@ -136,9 +136,9 @@
 
 				<div class="title">{{ $t('settings_editor') }}</div>
 
-				<v-checkbox :label="$t('auto_closing')" v-model="autoClosing" hide-details />
-				<v-checkbox :label="$t('autocompletion')" v-model="autocomplete" hide-details />
-				<v-checkbox :label="$t('popups')" v-model="popups" hide-details />
+				<v-checkbox v-model="autoClosing" :label="$t('auto_closing')" hide-details />
+				<v-checkbox v-model="autocomplete" :label="$t('autocompletion')" hide-details />
+				<v-checkbox v-model="popups" :label="$t('popups')" hide-details />
 			</div>
 		</popup>
 
@@ -783,7 +783,7 @@
 	.popup.input_popup input {
 		width: 90%;
 	}
-	.ai-list /deep/ .router-link-active > .item > .label {
+	.ai-list ::v-deep .router-link-active > .item > .label {
 		background: #cacaca;
 		color: black;
 	}
@@ -795,19 +795,19 @@
 		color: #eee;
 		box-shadow: 0px 3px 0px black;
 	}
-	.theme-monokai .ai-list /deep/ .item:not(.modified) > .label {
+	.theme-monokai .ai-list ::v-deep .item:not(.modified) > .label {
 		color: #eee;
 	}
-	.theme-monokai .ai-list /deep/ .router-link-active > .item > .label {
+	.theme-monokai .ai-list ::v-deep .router-link-active > .item > .label {
 		background: #555;
 	}
-	.theme-monokai .ai-list /deep/ .item.router-link-active > .label {
+	.theme-monokai .ai-list ::v-deep .item.router-link-active > .label {
 		background: #555;
 	}
-	.theme-monokai .ai-list /deep/ .item > .label:hover {
+	.theme-monokai .ai-list ::v-deep .item > .label:hover {
 		background: #444;
 	}
-	.theme-monokai .ai-list /deep/ .folder.dragover {
+	.theme-monokai .ai-list ::v-deep .folder.dragover {
 		background: #333;
 	}
 	.theme-monokai .ai-stats {
@@ -822,7 +822,7 @@
 	.folder-content img {
 		width: 80px;
 	}
-	/deep/ .CodeMirror {
+	::v-deep .CodeMirror {
 		height: 100%;
 	}
 	.editor-left {
@@ -870,5 +870,11 @@
 	.dialog-input {
 		width: calc(100% - 10px);
 		padding: 5px;
+	}
+	.list-icon {
+		margin-right: 8px;
+	}
+	.shortcuts {
+		padding-left: 30px;
 	}
 </style>
