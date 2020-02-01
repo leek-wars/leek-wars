@@ -1,7 +1,7 @@
 <template lang="html">
 	<div :class="{raw: raw}" class="breadcrumb">
 		<template v-for="(item, i) in items">
-			<router-link :key="item.name" :to="item.link" class="item">{{ item.name }}</router-link>
+			<router-link :key="item.name" v-ripple :to="item.link" class="item">{{ item.name }}</router-link>
 			<i v-if="i < items.length - 1" :key="i" class="material-icons">chevron_right</i>
 		</template>
 	</div>
@@ -28,9 +28,12 @@
 	}
 	.breadcrumb:not(.raw) {
 		font-size: 16px;
-		padding: 0 10px;
+		i {
+			margin-left: -6px;
+			margin-right: -6px;
+		}
 		.item {
-			padding: 10px 2px;
+			padding: 10px;
 		}
 	}
 </style>
