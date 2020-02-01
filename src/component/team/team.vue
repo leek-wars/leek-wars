@@ -152,19 +152,22 @@
 				<div v-for="member in team.members" :key="member.id" class="farmer">
 					<router-link :to="'/farmer/' + member.id">
 						<rich-tooltip-farmer :id="member.id" v-slot="{ on }">
-							<avatar :farmer="member" :on="on" />
-							<div class="name" v-on="on">
-								<tooltip v-if="member.grade == 'owner'">
-									<span slot="activator">★</span>
-									{{ $t('owner') }}
-								</tooltip>
-								<tooltip v-else-if="member.grade == 'captain'">
-									<span slot="activator">☆</span>
-									{{ $t('captain') }}
-								</tooltip>
-								{{ member.name }}
-								<img v-if="member.connected" class="status" src="/image/connected.png">
-								<img v-else class="status" src="/image/disconnected.png">
+							<div v-on="on">
+								<avatar :farmer="member" />
+								<div class="name">
+									<tooltip v-if="member.grade == 'owner'">
+										<span slot="activator">★</span>
+										{{ $t('owner') }}
+									</tooltip>
+									<tooltip v-else-if="member.grade == 'captain'">
+										<span slot="activator">☆</span>
+										{{ $t('captain') }}
+									</tooltip>
+									{{ member.name }}
+									<img v-if="member.connected" class="status" src="/image/connected.png">
+									<img v-else class="status" src="/image/disconnected.png">
+								</div>
+								<talent :talent="member.talent" />
 							</div>
 						</rich-tooltip-farmer>
 					</router-link>
@@ -221,7 +224,9 @@
 						<div :class="{dragging: leek.dragging}" class="leek" draggable="true" v-on="on" @click="$router.push('/leek/' + leek.id)" @dragstart="leeksDragstart(composition, leek, $event)" @dragend="leeksDragend(leek, $event)">
 							<leek-image :leek="leek" :scale="0.6" />
 							<br>
-							<div class="name">{{ leek.name }} ({{ leek.level }})</div><br>
+							<div class="name">{{ leek.name }}</div>
+							<talent :talent="leek.talent" />
+							<div>{{ $t('main.level_n', [leek.level]) }}</div>
 							<div class="fights">
 								<img src="/image/icon/grey/garden.png">
 								<span>{{ leek.team_fights }}</span>
@@ -242,7 +247,8 @@
 					<div :class="{dragging: leek.dragging}" class="leek" draggable="true" v-on="on" @click="$router.push('/leek/' + leek.id)" @dragstart="leeksDragstart(null, leek, $event)" @dragend="leeksDragend(leek, $event)">
 						<leek-image :leek="leek" :scale="0.6" />
 						<br>
-						<div class="name">{{ leek.name }} ({{ leek.level }})</div><br>
+						<div class="name">{{ leek.name }} ({{ leek.level }})</div>
+						<talent :talent="leek.talent" />
 						<div class="fights">
 							<img src="/image/icon/grey/garden.png">
 							<span>{{ leek.team_fights }}</span>
@@ -261,6 +267,7 @@
 							<leek-image :leek="leek" :scale="0.6" />
 							<br>
 							<div class="name">{{ leek.name }}</div>
+							<talent :talent="leek.talent" />
 							<div>{{ $t('main.level_n', [leek.level]) }}</div>
 						</div>
 					</router-link>
