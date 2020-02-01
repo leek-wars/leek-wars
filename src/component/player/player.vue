@@ -192,6 +192,7 @@
 		created() {
 			if (localStorage.getItem('fight/shadows') === null) { localStorage.setItem('fight/shadows', 'true') }
 			if (localStorage.getItem('fight/sound') === null) { localStorage.setItem('fight/sound', 'true') }
+			if (localStorage.getItem('fight/lifes') === null) { localStorage.setItem('fight/lifes', 'true') }
 			this.game.shadows = localStorage.getItem('fight/shadows') === 'true'
 			this.game.tactic = localStorage.getItem('fight/tactic') === 'true'
 			this.game.showCells = localStorage.getItem('fight/cells') === 'true'
