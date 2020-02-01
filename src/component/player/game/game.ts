@@ -238,7 +238,7 @@ class Game {
 	public tactic = false
 	public shadows = true
 	public showCells: boolean = false
-	public showLifes: boolean = false
+	public showLifes: boolean = true
 	public sound: boolean = false
 	public atmosphere: any
 	public obstacles!: {[key: number]: number[]}
