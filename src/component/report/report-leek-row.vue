@@ -4,7 +4,9 @@
 			<span v-if="leek.dead" class="dead"></span>
 			<span v-else class="alive"></span>
 			<router-link v-if="leek.id != -1" :to="'/leek/' + leek.id">
-				<rich-tooltip-leek :id="leek.id">{{ leek.name }}</rich-tooltip-leek>
+				<rich-tooltip-leek :id="leek.id" v-slot="{ on }" :bottom="true">
+					<span v-on="on">{{ leek.name }}</span>
+				</rich-tooltip-leek>
 			</router-link>
 			<span v-else>{{ leek.name }}</span>
 		</td>

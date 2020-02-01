@@ -1,6 +1,6 @@
 <template lang="html">
-	<rich-tooltip-leek :id="leek.id" :bottom="true" :instant="true">
-		<div v-if="leek" class="elem">
+	<rich-tooltip-leek :id="leek.id" v-slot="{ on }" :bottom="true" :instant="true">
+		<div v-if="leek" class="leek" v-on="on">
 			<div class="image">
 				<leek-image :leek="leek" :scale="0.70" />
 			</div>
@@ -22,7 +22,7 @@
 </script>
 
 <style lang="scss" scoped>
-	.elem {
+	.leek {
 		width: 100%;
 		padding: 10px 0;
 	}

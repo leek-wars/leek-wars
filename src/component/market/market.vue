@@ -112,8 +112,8 @@
 							<div><b>{{ $t('equipped_on') }}</b></div>
 							<div class="leeks">
 								<router-link v-for="leek in selectedItem.leek_objs" :key="leek.id" :to="'/leek/' + leek.id">
-									<rich-tooltip-leek :id="leek.id">
-										<div class="leek">{{ leek.name }}</div>
+									<rich-tooltip-leek :id="leek.id" v-slot="{ on }">
+										<div class="leek" v-on="on">{{ leek.name }}</div>
 									</rich-tooltip-leek>
 								</router-link>
 							</div>

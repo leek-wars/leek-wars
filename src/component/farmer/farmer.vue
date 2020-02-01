@@ -283,14 +283,16 @@
 			<panel :title="$t('leeks')">
 				<loader v-if="!farmer" />
 				<div v-else>
-					<rich-tooltip-leek v-for="leek in farmer.leeks" :id="leek.id" :key="leek.id">
+					<rich-tooltip-leek v-for="leek in farmer.leeks" :id="leek.id" :key="leek.id" v-slot="{ on }">
 						<router-link v-ripple :to="'/leek/' + leek.id" class="leek">
-							<leek-image :leek="leek" :scale="0.9" />
-							<br>
-							<div class="name">{{ leek.name }}</div>
-							<talent :talent="leek.talent" />
-							<br>
-							<span class="level">{{ $t('leek_level_n', [leek.level]) }}</span>
+							<div v-on="on">
+								<leek-image :leek="leek" :scale="0.9" />
+								<br>
+								<div class="name">{{ leek.name }}</div>
+								<talent :talent="leek.talent" />
+								<br>
+								<span class="level">{{ $t('leek_level_n', [leek.level]) }}</span>
+							</div>
 						</router-link>
 					</rich-tooltip-leek>
 				</div>

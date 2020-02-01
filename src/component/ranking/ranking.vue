@@ -29,7 +29,9 @@
 							<td>{{ parseInt(i) + 1 }}</td>
 							<td :class="farmer.style">
 								<router-link :to="'/farmer/' + farmer.id">
-									<rich-tooltip-farmer :id="farmer.id">{{ farmer.name }}</rich-tooltip-farmer>
+									<rich-tooltip-farmer :id="farmer.id" v-slot="{ on }">
+										<span v-on="on">{{ farmer.name }}</span>
+									</rich-tooltip-farmer>
 								</router-link>
 							</td>
 							<td v-if="funRanking.value_type == 'number'">{{ farmer.value | number }}</td>

@@ -4,14 +4,14 @@
 		<div v-else class="comments">
 			<div v-for="(comment, c) in comments" :key="c" class="comment">
 				<router-link :to="'/farmer/' + comment.farmer.id">
-					<rich-tooltip-farmer :id="comment.farmer.id">
-						<avatar :farmer="comment.farmer" />
+					<rich-tooltip-farmer :id="comment.farmer.id" v-slot="{ on }">
+						<avatar :farmer="comment.farmer" :on="on" />
 					</rich-tooltip-farmer>
 				</router-link>
 				<div class="content">
 					<div class="author">
-						<rich-tooltip-farmer :id="comment.farmer.id">
-							<router-link :to="'/farmer/' + comment.farmer.id"><b>{{ comment.farmer.name }}</b></router-link>
+						<rich-tooltip-farmer :id="comment.farmer.id" v-slot="{ on }">
+							<router-link :to="'/farmer/' + comment.farmer.id"><b v-on="on">{{ comment.farmer.name }}</b></router-link>
 						</rich-tooltip-farmer>
 					</div>
 					<div v-emojis class="text" v-text="comment.comment"></div>

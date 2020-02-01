@@ -79,12 +79,14 @@
 			</div>
 			<loader v-if="!connected_farmers.length" />
 			<div v-else :class="{expanded: expandFarmers}" class="connected-farmers">
-				<router-link v-for="(farmer, f) in connected_farmers" :key="farmer.id" :to="'/farmer/' + farmer.id">
-					<span v-if="f > 0">, </span>
-					<span :class="farmer.class">
-						<rich-tooltip-farmer :id="farmer.id">{{ farmer.name }}</rich-tooltip-farmer>
-					</span>
-				</router-link>
+				<template v-for="(farmer, f) in connected_farmers">
+					<template v-if="f > 0">, </template>
+					<rich-tooltip-farmer :id="farmer.id" :key="farmer.id" v-slot="{ on }">
+						<router-link :to="'/farmer/' + farmer.id">
+							<span :class="farmer.class" v-on="on">{{ farmer.name }}</span>
+						</router-link>
+					</rich-tooltip-farmer>
+				</template>
 			</div>
 			<div class="grades-legend">
 				{{ $t('legend') }} : <span class="admin">{{ $t('main.grade_admin') }}</span>,

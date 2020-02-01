@@ -1,9 +1,7 @@
 <template>
 	<v-menu :key="key" :close-on-content-click="false" :disabled="disabled || id <= 0" :nudge-width="expand_leeks ? 500 : 200" :nudge-top="bottom ? 0 : 6" :open-delay="_open_delay" :close-delay="_close_delay" :top="!bottom" :bottom="bottom" open-on-hover offset-y @input="open($event)">
 		<template v-slot:activator="{ on }">
-			<span class="elem" v-on="on">
-				<slot></slot>
-			</span>
+			<slot :on="on"></slot>
 		</template>
 		<div v-if="content_created" class="card">
 			<loader v-if="!farmer" :size="30" />
@@ -51,8 +49,10 @@
 					</tr>
 					<tr v-for="leek in farmer.leeks" :key="leek.id">
 						<td class="leek-name">
-							<rich-tooltip-leek :id="leek.id" :bottom="true">
-								<router-link :to="'/leek/' + leek.id">{{ leek.name }}</router-link>
+							<rich-tooltip-leek :id="leek.id" v-slot="{ on }" :bottom="true">
+								<router-link :to="'/leek/' + leek.id">
+									<span v-on="on">{{ leek.name }}</span>
+								</router-link>
 							</rich-tooltip-leek>
 						</td>
 						<td>{{ leek.level }}</td>
@@ -122,9 +122,6 @@
 </script>
 
 <style lang="scss" scoped>
-	.elem {
-		display: inline-block;
-	}
 	.card {
 		padding: 8px;
 	}
