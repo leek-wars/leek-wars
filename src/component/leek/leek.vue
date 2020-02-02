@@ -153,16 +153,11 @@
 					<div slot="content" class="content center">
 						<loader v-if="!leek" />
 						<template v-else>
-							<tooltip v-for="weapon in leek.orderedWeapons" :key="weapon.id">
-								<div slot="activator" class="weapon">
+							<rich-tooltip-weapon v-for="weapon in leek.orderedWeapons" :key="weapon.id" v-slot="{ on }" :instant="true" :weapon="LeekWars.weapons[weapon.template]" :bottom="true">
+								<div class="weapon" v-on="on">
 									<img :src="'/image/weapon/' + LeekWars.weapons[weapon.template].name + '.png'">
 								</div>
-								<b>{{ $t('weapon.' + LeekWars.weapons[weapon.template].name) }}</b>
-								<br>
-								{{ $t('weapon_level_n', [LeekWars.weapons[weapon.template].level]) }}
-								<br>
-								<small>{{ 'WEAPON_' + LeekWars.weapons[weapon.template].name.toUpperCase() }}</small>
-							</tooltip>
+							</rich-tooltip-weapon>
 						</template>
 					</div>
 				</panel>
@@ -179,16 +174,11 @@
 					<div slot="content" class="chips">
 						<loader v-if="!leek" />
 						<template v-else>
-							<tooltip v-for="chip in leek.orderedChips" :key="chip.id">
-								<div slot="activator" class="chip">
+							<rich-tooltip-chip v-for="chip in leek.orderedChips" :key="chip.id" v-slot="{ on }" :chip="LeekWars.chips[chip.template]" :bottom="true" :instant="true">
+								<div class="chip" v-on="on">
 									<img :src="'/image/chip/small/' + LeekWars.chips[chip.template].name + '.png'">
 								</div>
-								<b>{{ $t('chip.' + LeekWars.chips[chip.template].name) }}</b>
-								<br>
-								{{ $t('chip_level_n', [LeekWars.chips[chip.template].level]) }}
-								<br>
-								<small>{{ 'CHIP_' + LeekWars.chips[chip.template].name.toUpperCase() }}</small>
-							</tooltip>
+							</rich-tooltip-chip>
 						</template>
 					</div>
 				</panel>
@@ -273,25 +263,21 @@
 			</template>
 			<div class="weapons-popup">
 				<div :class="{dashed: draggedWeapon && draggedWeaponLocation === 'farmer'}" class="leek-weapons" @dragover="dragOver" @drop="weaponsDrop('leek', $event)">
-					<tooltip v-for="(weapon, i) in leek.orderedWeapons" :key="i">
-						<div slot="activator" :class="{dragging: draggedWeapon && draggedWeapon.template === weapon.template && draggedWeaponLocation === 'leek'}" class="weapon" draggable="true" @dragstart="weaponDragStart('leek', weapon, $event)" @dragend="weaponDragEnd(weapon)" @click="removeWeapon(weapon)">
+					<rich-tooltip-weapon v-for="(weapon, i) in leek.orderedWeapons" :key="i" v-slot="{ on }" :instant="true" :weapon="LeekWars.weapons[weapon.template]" :bottom="true">
+						<div :class="{dragging: draggedWeapon && draggedWeapon.template === weapon.template && draggedWeaponLocation === 'leek'}" class="weapon" draggable="true" v-on="on" @dragstart="weaponDragStart('leek', weapon, $event)" @dragend="weaponDragEnd(weapon)" @click="removeWeapon(weapon)">
 							<img :src="'/image/weapon/' + LeekWars.weapons[weapon.template].name + '.png'" draggable="false">
 						</div>
-						<b>{{ $t("weapon." + LeekWars.weapons[weapon.template].name) }}</b><br>
-						{{ $t('level_n', [LeekWars.weapons[weapon.template].level]) }}
-					</tooltip>
+					</rich-tooltip-weapon>
 				</div>
 				<br>
 				<h2>{{ $t('all_my_weapons') }}</h2>
 				<br>
 				<div :class="{dashed: draggedWeapon && draggedWeaponLocation === 'leek'}" class="farmer-weapons" @dragover="dragOver" @drop="weaponsDrop('farmer', $event)">
-					<tooltip v-for="(weapon, i) in farmer_weapons" :key="i">
-						<div slot="activator" :quantity="weapon.quantity" :class="{dragging: draggedWeapon && draggedWeapon.template === weapon.template && draggedWeaponLocation === 'farmer', locked: LeekWars.weapons[weapon.template].level > leek.level}" :draggable="LeekWars.weapons[weapon.template].level <= leek.level" class="weapon" @dragstart="weaponDragStart('farmer', weapon, $event)" @dragend="weaponDragEnd(weapon)" @click="addWeapon(weapon)">
+					<rich-tooltip-weapon v-for="(weapon, i) in farmer_weapons" :key="i" v-slot="{ on }" :instant="true" :weapon="LeekWars.weapons[weapon.template]" :bottom="true">
+						<div :quantity="weapon.quantity" :class="{dragging: draggedWeapon && draggedWeapon.template === weapon.template && draggedWeaponLocation === 'farmer', locked: LeekWars.weapons[weapon.template].level > leek.level}" :draggable="LeekWars.weapons[weapon.template].level <= leek.level" class="weapon" v-on="on" @dragstart="weaponDragStart('farmer', weapon, $event)" @dragend="weaponDragEnd(weapon)" @click="addWeapon(weapon)">
 							<img :src="'/image/weapon/' + LeekWars.weapons[weapon.template].name + '.png'" draggable="false">
 						</div>
-						<b>{{ $t('weapon.' + LeekWars.weapons[weapon.template].name) }}</b><br>
-						{{ $t('level_n', [LeekWars.weapons[weapon.template].level]) }}
-					</tooltip>
+					</rich-tooltip-weapon>
 				</div>
 			</div>
 		</popup>
@@ -378,25 +364,21 @@
 			<template slot="title">{{ $t('chips_of', [leek.name]) }} <span class="chip-count">[{{ leek.chips.length }}/{{ leek.max_chips }}]</span></template>
 			<div class="chips-dialog">
 				<div :class="{dashed: draggedChip && draggedChipLocation === 'farmer'}" class="leek-chips" @dragover="dragOver" @drop="chipsDrop('leek', $event)">
-					<tooltip v-for="chip in leek.orderedChips" :key="chip.id">
-						<div slot="activator" :class="{dragging: draggedChip && draggedChip.template === chip.template && draggedChipLocation === 'leek'}" class="chip" draggable="true" @dragstart="chipDragStart('leek', chip, $event)" @dragend="chipDragEnd(chip)" @click="removeChip(chip)">
+					<rich-tooltip-chip v-for="chip in leek.orderedChips" :key="chip.id" v-slot="{ on }" :chip="LeekWars.chips[chip.template]" :bottom="true" :instant="true">
+						<div slot="activator" :class="{dragging: draggedChip && draggedChip.template === chip.template && draggedChipLocation === 'leek'}" class="chip" draggable="true" v-on="on" @dragstart="chipDragStart('leek', chip, $event)" @dragend="chipDragEnd(chip)" @click="removeChip(chip)">
 							<img :src="'/image/chip/small/' + LeekWars.chips[chip.template].name + '.png'" draggable="false">
 						</div>
-						<b>{{ $t("chip." + LeekWars.chips[chip.template].name) }}</b><br>
-						{{ $t('level_n', [LeekWars.chips[chip.template].level]) }}
-					</tooltip>
+					</rich-tooltip-chip>
 				</div>
 				<br>
 				<h2>{{ $t('all_my_chips') }}</h2>
 				<br>
 				<div :class="{dashed: draggedChip && draggedChipLocation === 'leek'}" class="farmer-chips" @dragover="dragOver" @drop="chipsDrop('farmer', $event)">
-					<tooltip v-for="chip in farmer_chips" :key="chip.id">
-						<div slot="activator" :quantity="chip.quantity" :class="{dragging: draggedChip && draggedChip.template === chip.template && draggedChipLocation === 'farmer', locked: LeekWars.chips[chip.template].level > leek.level}" :draggable="LeekWars.chips[chip.template].level <= leek.level" class="chip" @dragstart="chipDragStart('farmer', chip, $event)" @dragend="chipDragEnd(chip)" @click="addChip(chip)">
+					<rich-tooltip-chip v-for="chip in farmer_chips" :key="chip.id" v-slot="{ on }" :chip="LeekWars.chips[chip.template]" :bottom="true" :instant="true">
+						<div :quantity="chip.quantity" :class="{dragging: draggedChip && draggedChip.template === chip.template && draggedChipLocation === 'farmer', locked: LeekWars.chips[chip.template].level > leek.level}" :draggable="LeekWars.chips[chip.template].level <= leek.level" class="chip" v-on="on" @dragstart="chipDragStart('farmer', chip, $event)" @dragend="chipDragEnd(chip)" @click="addChip(chip)">
 							<img :src="'/image/chip/small/' + LeekWars.chips[chip.template].name + '.png'" draggable="false">
 						</div>
-						<b>{{ $t('chip.' + LeekWars.chips[chip.template].name) }}</b><br>
-						{{ $t('level_n', [LeekWars.chips[chip.template].level]) }}
-					</tooltip>
+					</rich-tooltip-chip>
 				</div>
 			</div>
 		</popup>
@@ -995,7 +977,7 @@
 		cursor: move;
 		border: 1px solid #ddd;
 		vertical-align: bottom;
-		height: 66px;
+		height: 72px;
 		display: flex;
 		align-items: center;
 		justify-content: center;
