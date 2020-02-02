@@ -20,8 +20,10 @@ import ReportDialog from '@/component/moderation/report-dialog.vue'
 import NotificationElement from '@/component/notification/notification.vue'
 import Pagination from '@/component/pagination.vue'
 import Popup from '@/component/popup.vue'
+import RichTooltipChip from '@/component/rich-tooltip/rich-tooltip-chip.vue'
 import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 import RichTooltipLeek from '@/component/rich-tooltip/rich-tooltip-leek.vue'
+import RichTooltipWeapon from '@/component/rich-tooltip/rich-tooltip-weapon.vue'
 import Talent from '@/component/talent.vue'
 import Tooltip from '@/component/tooltip.vue'
 import TurretImage from '@/component/turret-image.vue'
@@ -94,6 +96,8 @@ Vue.component('popup', Popup)
 Vue.component('tooltip', Tooltip)
 Vue.component('rich-tooltip-farmer', RichTooltipFarmer)
 Vue.component('rich-tooltip-leek', RichTooltipLeek)
+Vue.component('rich-tooltip-weapon', RichTooltipWeapon)
+Vue.component('rich-tooltip-chip', RichTooltipChip)
 Vue.component('loader', LWLoader)
 
 Vue.directive('autostopscroll', {
