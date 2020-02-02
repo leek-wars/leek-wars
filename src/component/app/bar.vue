@@ -19,10 +19,12 @@
 				</div>
 				<div v-show="LeekWars.menuExpanded || $store.state.unreadNotifications > 0" v-ripple class="action header-button mobile notifications-button">
 					<v-menu :nudge-bottom="0" :max-width="400" :max-height="400" bottom offset-y @input="readNotifications">
-						<div slot="activator" class="header-button notifications-button">
-							<i class="icon material-icons">info</i>
-							<span v-show="$store.state.unreadNotifications > 0" class="counter notifications-counter">{{ $store.state.unreadNotifications }}</span>
-						</div>
+						<template v-slot:activator="{ on }">
+							<div class="header-button notifications-button" v-on="on">
+								<i class="icon material-icons">info</i>
+								<span v-show="$store.state.unreadNotifications > 0" class="counter notifications-counter">{{ $store.state.unreadNotifications }}</span>
+							</div>
+						</template>
 						<div class="dialog">
 							<div class="dialog-items">
 								<notification v-for="notification in $store.state.notifications" :key="notification.id" :notification="notification" @click.native="readNotification(notification)" />

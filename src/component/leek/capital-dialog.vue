@@ -6,7 +6,9 @@
 
 		<div v-for="c in LeekWars.characteristics" :key="c" class="charac">
 			<tooltip>
-				<img slot="activator" :src="'/image/charac/' + c + '.png'">
+				<template v-slot:activator="{ on }">
+					<img :src="'/image/charac/' + c + '.png'" v-on="on">
+				</template>
 				<b>{{ $t('leek.' + c) }}</b><br>
 				{{ $t('leek.' + c + '_description') }}
 			</tooltip>
@@ -15,7 +17,9 @@
 				<span v-if="bonuses[c]" class="sup">&nbsp;(+{{ bonuses[c] }})</span>
 				<div class="add-wrapper">
 					<tooltip v-for="cost in [1, 10, 100]" :key="cost">
-						<span slot="activator" :q="cost" :class="{locked: costs[c + cost].cost > capital}" class="add" @click="add(c, cost)"></span>
+						<template v-slot:activator="{ on }">
+							<span :q="cost" :class="{locked: costs[c + cost].cost > capital}" class="add" @click="add(c, cost)" v-on="on"></span>
+						</template>
 						{{ costs[c + cost].cost + ' capital ⇔ ' + costs[c + cost].bonus + ' ' + $t('leek.' + c) }}
 					</tooltip>
 				</div>

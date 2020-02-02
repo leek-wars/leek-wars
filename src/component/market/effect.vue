@@ -12,32 +12,44 @@
 		</i18n>
 
 		<tooltip>
-			<span v-if="enemies && !allies" slot="activator" class="ennemies"></span>
+			<template v-slot:activator="{ on }">
+				<span v-if="enemies && !allies" class="ennemies" v-on="on"></span>
+			</template>
 			<span>{{ $t('effect.target_enemies') }}</span>
 		</tooltip>
 
 		<tooltip>
-			<span v-if="allies && !enemies" slot="activator" class="allies"></span>
+			<template v-slot:activator="{ on }">
+				<span v-if="allies && !enemies" class="allies" v-on="on"></span>
+			</template>
 			<span>{{ $t('effect.target_allies') }}</span>
 		</tooltip>
 
 		<tooltip>
-			<span v-if="!caster && !always_caster" slot="activator" class="not-player"></span>
+			<template v-slot:activator="{ on }">
+				<span v-if="!caster && !always_caster" class="not-player" v-on="on"></span>
+			</template>
 			<span>{{ $t('effect.target_not_player') }}</span>
 		</tooltip>
 
 		<tooltip>
-			<span v-if="!nonSummons && !always_caster" slot="activator" class="summons"></span>
+			<template v-slot:activator="{ on }">
+				<span v-if="!nonSummons && !always_caster" class="summons" v-on="on"></span>
+			</template>
 			<span>{{ $t('effect.target_summons') }}</span>
 		</tooltip>
 
 		<tooltip>
-			<span v-if="!summons && !always_caster" slot="activator" class="not-summons"></span>
+			<template v-slot:activator="{ on }">
+				<span v-if="!summons && !always_caster" class="not-summons" v-on="on"></span>
+			</template>
 			<span>{{ $t('effect.target_not_summons') }}</span>
 		</tooltip>
 
 		<tooltip>
-			<span v-if="always_caster" slot="activator" class="always-caster"></span>
+			<template v-slot:activator="{ on }">
+				<span v-if="always_caster" class="always-caster" v-on="on"></span>
+			</template>
 			<span>{{ $t('effect.target_always_caster') }}</span>
 		</tooltip>
 	</div>

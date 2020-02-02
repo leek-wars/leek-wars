@@ -1,8 +1,8 @@
 <template lang="html">
 	<tooltip bottom>
-		<div slot="activator">
-			<slot></slot>
-		</div>
+		<template v-slot:activator="{ on }">
+			<slot :on="on"></slot>
+		</template>
 		<div class="tooltip">
 			<b>{{ $t('leek.' + characteristic) }}</b>
 			<br>

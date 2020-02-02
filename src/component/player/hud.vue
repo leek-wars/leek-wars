@@ -4,7 +4,9 @@
 			<div class="wrapper">
 				<template v-for="team in game.teams">
 					<tooltip v-for="entity in team" v-if="!entity.dead" :key="entity.id">
-						<div slot="activator" :style="{background: entity.lifeBarGadient, width: Math.max(1, barWidth * (entity.life / totalLife) - 3) + 'px'}" class="bar"></div>
+						<template v-slot:activator="{ on }">
+							<div :style="{background: entity.lifeBarGadient, width: Math.max(1, barWidth * (entity.life / totalLife) - 3) + 'px'}" class="bar" v-on="on"></div>
+						</template>
 						{{ entity.name }} ({{ entity.life }})
 					</tooltip>
 				</template>

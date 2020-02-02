@@ -12,18 +12,22 @@
 						</router-link>
 					</template>
 					<tooltip v-if="leek.tournament">
-						<div slot="activator" class="tab" @click="registerTournament">
-							<img src="/image/icon/trophy.png">
-							<span v-if="!leek.tournament.registered" class="register">{{ $t('register_to_tournament') }}</span>
-							<span v-else class="unregister">{{ $t('unregister') }}</span>
-						</div>
+						<template v-slot:activator="{ on }">
+							<div class="tab" @click="registerTournament" v-on="on">
+								<img src="/image/icon/trophy.png">
+								<span v-if="!leek.tournament.registered" class="register">{{ $t('register_to_tournament') }}</span>
+								<span v-else class="unregister">{{ $t('unregister') }}</span>
+							</div>
+						</template>
 						{{ $t('tournament_time') }}
 					</tooltip>
 					<tooltip>
-						<div slot="activator" class="tab" @click="updateGarden">
-							<span>{{ $t('garden') }}</span>
-							<v-switch v-model="leek.in_garden" hide-details />
-						</div>
+						<template v-slot:activator="{ on }">
+							<div class="tab" @click="updateGarden" v-on="on">
+								<span>{{ $t('garden') }}</span>
+								<v-switch v-model="leek.in_garden" hide-details />
+							</div>
+						</template>
 						{{ $t('authorize_agressions') }}
 					</tooltip>
 				</template>
@@ -63,9 +67,11 @@
 					<h4 class="level">{{ $t('level_n', [leek ? leek.level : '...']) }}</h4>
 
 					<tooltip>
-						<div slot="activator" class="bar">
-							<span :class="{ blue: blue_xp_bar }" :style="{width: xp_bar_width + '%'}" class="xp-bar striked"></span>
-						</div>
+						<template v-slot:activator="{ on }">
+							<div class="bar" v-on="on">
+								<span :class="{ blue: blue_xp_bar }" :style="{width: xp_bar_width + '%'}" class="xp-bar striked"></span>
+							</div>
+						</template>
 						<template v-if="leek && leek.isMaxLevel">
 							<b>{{ $t('max_level') }}</b> <br>
 							{{ $t('xp', [LeekWars.formatNumber(leek.xp)]) }}
@@ -79,11 +85,15 @@
 
 					<div class="talent-wrapper">
 						<tooltip>
-							<talent slot="activator" :talent="leek ? leek.talent : '...'" />
+							<template v-slot:activator="{ on }">
+								<talent :talent="leek ? leek.talent : '...'" :on="on" />
+							</template>
 							<div>{{ $t('talent') }}</div>
 						</tooltip>
 						<tooltip v-if="leek">
-							<div slot="activator" class="talent-more">({{ leek.talent_more >= 0 ? '+' + leek.talent_more : leek.talent_more }})</div>
+							<template v-slot:activator="{ on }">
+								<div class="talent-more" v-on="on">({{ leek.talent_more >= 0 ? '+' + leek.talent_more : leek.talent_more }})</div>
+							</template>
 							<template v-if="leek.talent_more > 0">
 								<span v-html="$t('report.talent_difference', [leek.name, leek.talent_more, leek.talentGains + '%'])"></span>
 							</template>
@@ -94,18 +104,20 @@
 					</div>
 
 					<tooltip v-if="leek">
-						<table slot="activator" class="fights">
-							<tr>
-								<td class="big">{{ (leek ? leek.victories : '...') | number }}</td>
-								<td class="big">{{ (leek ? leek.draws : '...') | number }}</td>
-								<td class="big">{{ (leek ? leek.defeats : '...') | number }}</td>
-							</tr>
-							<tr>
-								<td class="grey">{{ $t('victories') }}</td>
-								<td class="grey">{{ $t('draws') }}</td>
-								<td class="grey">{{ $t('defeats') }}</td>
-							</tr>
-						</table>
+						<template v-slot:activator="{ on }">
+							<table class="fights" v-on="on">
+								<tr>
+									<td class="big">{{ (leek ? leek.victories : '...') | number }}</td>
+									<td class="big">{{ (leek ? leek.draws : '...') | number }}</td>
+									<td class="big">{{ (leek ? leek.defeats : '...') | number }}</td>
+								</tr>
+								<tr>
+									<td class="grey">{{ $t('victories') }}</td>
+									<td class="grey">{{ $t('draws') }}</td>
+									<td class="grey">{{ $t('defeats') }}</td>
+								</tr>
+							</table>
+						</template>
 						{{ $t('ratio', [leek ? leek.ratio : 0]) }}
 					</tooltip>
 
@@ -124,12 +136,12 @@
 						</div>
 					</template>
 					<div slot="content" class="characteristics">
-						<div v-for="c in ['life', 'science', 'strength', 'magic', 'wisdom', 'frequency', 'agility', 'mp', 'resistance', 'tp']" :key="c" class="characteristic">
-							<characteristic-tooltip :characteristic="c" :value="leek ? leek[c] : 0" :leek="leek" :test="false">
+						<characteristic-tooltip v-for="c in ['life', 'science', 'strength', 'magic', 'wisdom', 'frequency', 'agility', 'mp', 'resistance', 'tp']" :key="c" v-slot="{ on }" :characteristic="c" :value="leek ? leek[c] : 0" :leek="leek" :test="false">
+							<div class="characteristic" v-on="on">
 								<img :src="'/image/charac/' + c + '.png'">
 								<span :class="'color-' + c">{{ leek ? leek[c] : '...' }}</span>
-							</characteristic-tooltip>
-						</div>
+							</div>
+						</characteristic-tooltip>
 						<center v-if="leek && my_leek">
 							<br>
 							<v-btn v-if="leek.capital > 0" color="primary" @click="capitalDialog = true">{{ $t('n_capital', [leek.capital]) }}</v-btn>&nbsp;
@@ -305,9 +317,11 @@
 			<div class="farmer-potions">
 				<div class="potions-grid">
 					<tooltip v-for="(potion, id) in $store.state.farmer.potions" :key="id">
-						<div slot="activator" :quantity="potion.quantity" class="potion" @click="usePotion(potion)">
-							<img :src="'/image/potion/' + LeekWars.potions[potion.template].name + '.png'">
-						</div>
+						<template v-slot:activator="{ on }">
+							<div :quantity="potion.quantity" class="potion" @click="usePotion(potion)" v-on="on">
+								<img :src="'/image/potion/' + LeekWars.potions[potion.template].name + '.png'">
+							</div>
+						</template>
 						<b>{{ $t('potion.' + LeekWars.potions[potion.template].name) }}</b>
 						<br>
 						{{ $t('level_n', [LeekWars.potions[potion.template].level]) }}
@@ -324,15 +338,19 @@
 			<div class="hat-dialog">
 				<div class="hats">
 					<tooltip>
-						<div slot="activator" v-ripple :quantity="1" class="hat" @click="selectHat(null)">
-							<img src="/image/hat/no_hat.png">
-						</div>
+						<template v-slot:activator="{ on }">
+							<div v-ripple :quantity="1" class="hat" @click="selectHat(null)" v-on="on">
+								<img src="/image/hat/no_hat.png">
+							</div>
+						</template>
 						<b>{{ $t('no_hat') }}</b>
 					</tooltip>
 					<tooltip v-for="hat in farmer_hats" :key="hat.id">
-						<div slot="activator" v-ripple :quantity="hat.quantity" class="hat" @click="selectHat(hat)">
-							<img :src="'/image/hat/' + hat.name + '.png'">
-						</div>
+						<template v-slot:activator="{ on }">
+							<div v-ripple :quantity="hat.quantity" class="hat" @click="selectHat(hat)" v-on="on">
+								<img :src="'/image/hat/' + hat.name + '.png'">
+							</div>
+						</template>
 						<b>{{ $t('hat.' + hat.name) }}</b>
 						<br>
 						{{ $t('level_n', [hat.level]) }}
@@ -365,7 +383,7 @@
 			<div class="chips-dialog">
 				<div :class="{dashed: draggedChip && draggedChipLocation === 'farmer'}" class="leek-chips" @dragover="dragOver" @drop="chipsDrop('leek', $event)">
 					<rich-tooltip-chip v-for="chip in leek.orderedChips" :key="chip.id" v-slot="{ on }" :chip="LeekWars.chips[chip.template]" :bottom="true" :instant="true">
-						<div slot="activator" :class="{dragging: draggedChip && draggedChip.template === chip.template && draggedChipLocation === 'leek'}" class="chip" draggable="true" v-on="on" @dragstart="chipDragStart('leek', chip, $event)" @dragend="chipDragEnd(chip)" @click="removeChip(chip)">
+						<div :class="{dragging: draggedChip && draggedChip.template === chip.template && draggedChipLocation === 'leek'}" class="chip" draggable="true" v-on="on" @dragstart="chipDragStart('leek', chip, $event)" @dragend="chipDragEnd(chip)" @click="removeChip(chip)">
 							<img :src="'/image/chip/small/' + LeekWars.chips[chip.template].name + '.png'" draggable="false">
 						</div>
 					</rich-tooltip-chip>
@@ -853,7 +871,7 @@
 				margin-right: 7px;
 				width: 25px;
 			}
-			div > span {
+			span {
 				font-size: 18px;
 				vertical-align: top;
 				display: inline-block;
@@ -861,9 +879,8 @@
 				font-weight: bold;
 			}
 		}
-		.characteristic:nth-child(4n),
-		.characteristic:nth-child(3),
-		.characteristic:nth-child(7) {
+		.characteristic:nth-child(8n+6),
+		.characteristic:nth-child(8n+8) {
 			background: white;
 		}
 	}

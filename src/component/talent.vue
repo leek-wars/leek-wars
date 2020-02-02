@@ -1,5 +1,5 @@
 <template lang="html">
-	<span class="talent">
+	<span class="talent" v-on="on">
 		<div class="icon">
 			<img src="/image/talent.png">
 		</div>
@@ -12,6 +12,7 @@
 	@Component({ name: "talent" })
 	export default class Talent extends Vue {
 		@Prop() talent!: number
+		@Prop() on!: any
 	}
 </script>
 

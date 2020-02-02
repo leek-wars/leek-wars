@@ -38,9 +38,11 @@
 							<div class="name">{{ trophy.name }}</div>
 							<div class="description">{{ trophy.description }}</div>
 							<tooltip v-if="!trophy.unlocked && trophy.progression != null">
-								<div slot="activator" class="trophy-bar">
-									<div :style="{width: Math.floor(100 * trophy.progression / trophy.threshold) + '%'}" class="bar striked"></div>
-								</div>
+								<template v-slot:activator="{ on }">
+									<div class="trophy-bar" v-on="on">
+										<div :style="{width: Math.floor(100 * trophy.progression / trophy.threshold) + '%'}" class="bar striked"></div>
+									</div>
+								</template>
 								{{ trophy.progression }} / {{ trophy.threshold }}
 							</tooltip>
 						</div>

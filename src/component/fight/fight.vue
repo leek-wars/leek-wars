@@ -31,12 +31,14 @@
 				<tr>
 					<td>
 						<router-link v-for="farmer in fight.farmers1" :key="farmer.id" :disabled="farmer.id > 0" :to="'/farmer/' + farmer.id">
-							<rich-tooltip-farmer :id="farmer.id">
-								<div class="farmer">
+							<rich-tooltip-farmer :id="farmer.id" v-slot="{ on: rich }">
+								<div class="farmer" v-on="rich">
 									<avatar :farmer="farmer" /><br>
 									<span class="name">
 										<tooltip>
-											<span v-if="farmer.id === fight.starter" slot="activator" class="arrow">▶</span>
+											<template v-slot:activator="{ on }">
+												<span v-if="farmer.id === fight.starter" class="arrow" v-on="on">▶</span>
+											</template>
 											{{ $t('starter') }}
 										</tooltip>
 										{{ farmer.name }}
@@ -48,12 +50,14 @@
 					<td class="versus">VS</td>
 					<td>
 						<router-link v-for="farmer in fight.farmers2" :key="farmer.id" :event="farmer.id > 0 ? 'click' : ''" :to="'/farmer/' + farmer.id">
-							<rich-tooltip-farmer :id="farmer.id">
-								<div class="farmer">
+							<rich-tooltip-farmer :id="farmer.id" v-slot="{ on: rich }">
+								<div class="farmer" v-on="rich">
 									<avatar :farmer="farmer" /><br>
 									<span class="name">
 										<tooltip>
-											<span v-if="farmer.id === fight.starter" slot="activator" class="arrow">▶</span>
+											<template v-slot:activator="{ on }">
+												<span v-if="farmer.id === fight.starter" class="arrow" v-on="on">▶</span>
+											</template>
 											{{ $t('starter') }}
 										</tooltip>
 										{{ farmer.name }}

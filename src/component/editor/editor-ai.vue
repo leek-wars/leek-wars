@@ -3,7 +3,9 @@
 		<div :style="{'padding-left': (level * 20 + 17) + 'px'}" class="label" draggable="true" @dragstart="dragstart">
 			<span ref="name" :contenteditable="editing" class="text" @keydown.enter="enter" @blur="blur">{{ ai.name }}</span>
 			<tooltip v-if="ai.v2">
-				<span slot="activator" class="v2">V2</span>
+				<template v-slot:activator="{ on }">
+					<span class="v2" v-on="on">V2</span>
+				</template>
 				{{ $t('editor.v2_beta_message') }}
 			</tooltip>
 			<div class="edit" @click="edit"></div>
