@@ -17,7 +17,7 @@
 					<loader v-if="!fight_packs.length" slot="content" />
 					<div v-else slot="content" class="items fights">
 						<router-link v-for="pack in fight_packs" :key="pack.id" v-ripple :to="'/market/' + pack.name" :farmer-count="0" :leek-count="0" class="item fight-pack" @click="selectItem(pack)">
-							<img src="/image/market/fights.png">
+							<img :src="'/image/market/fight_pack_' + pack.fights + '.png'">
 							<div>{{ pack.title }}</div>
 						</router-link>
 					</div>
@@ -389,7 +389,8 @@
 					leek_objs: [],
 					leek_count: 0,
 					farmer_count: 0,
-					sell_price: 0
+					sell_price: 0,
+					fights: count
 				} as ItemTemplate
 				this.fight_packs.push(pack)
 				this.items[pack.id] = pack
@@ -502,11 +503,12 @@
 	}
 	.fight-pack {
 		padding: 10px;
-		font-size: 18px;
+		font-size: 16px;
 		color: #777;
 	}
 	.fights img {
-		width: 60px;
+		height: 75px;
+		margin-bottom: -3px;
 	}
 	.weapons .weapon {
 		padding: 10px;
