@@ -314,8 +314,8 @@
 			this.searchResultType = type
 			LeekWars.get(url).then(data => {
 				const page = 1 + Math.floor((data.rank - 1) / 50)
-				if (page !== this.page || type !== this.category) {
-					const active_url = this.active ? '/active' : ''
+				if (page !== this.page || type !== this.category || data.active !== this.active) {
+					const active_url = this.active && data.active ? '/active' : ''
 					this.$router.push('/ranking/' + type + '/' + this.order + active_url + '/page-' + page)
 				}
 			})
