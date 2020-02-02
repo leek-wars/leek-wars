@@ -21,17 +21,23 @@
 	.image {
 		height: 90px;
 		position: relative;
+		img {
+			position: absolute;
+			top: 0;
+			bottom: 0;
+			left: 0; right: 0;
+			margin: auto;
+			max-height: 80px;
+		}
+	}
+	&.fights .image {
+		height: 130px;
+		img {
+			max-height: 120px;
+		}
 	}
 	.image.sound img {
 		cursor: help;
-	}
-	.image img {
-		position: absolute;
-		top: 0;
-		bottom: 0;
-		left: 0; right: 0;
-		margin: auto;
-		max-height: 80px;
 	}
 	.desc {
 		text-align: justify;
