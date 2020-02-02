@@ -28,14 +28,19 @@
 			</div>
 		</div>
 		<div v-if="!LeekWars.mobile" class="timeline">
-			<div v-for="entity in game.entityOrder" :key="entity.id" :class="{summon: entity.summon, current: entity.id === game.currentPlayer, dead: entity.dead}" :style="{background: entity === game.selectedEntity || entity === game.mouseEntity ? '#fffc' : entity.gradient, 'border-color': entity.color}" class="entity" @mouseenter="entity_enter(entity)" @mouseleave="entity_leave(entity)" @click="entity_click(entity)">
-				<div v-if="!entity.dead" :style="{height: 'calc(6px + ' + ((entity.life / entity.maxLife) * 100) + '%)', background: entity.lifeColor, 'border-color': entity.lifeColorLighter}" class="bar"></div>
-				<div class="image">
-					<img v-if="entity.summon" :src="'/image/bulb/' + entity.bulbName + '_front.png'">
-					<turret-image v-else-if="(entity instanceof Turret)" :level="entity.level" :skin="entity.team" :scale="1" />
-					<leek-image v-else :leek="entity" :scale="1" />
-				</div>
-			</div>
+			<tooltip v-for="entity in game.entityOrder" :key="entity.id" top content-class="top">
+				<template v-slot:activator="{ on }">
+					<div :class="{summon: entity.summon, current: entity.id === game.currentPlayer, dead: entity.dead}" :style="{background: entity === game.selectedEntity || entity === game.mouseEntity ? '#fffc' : entity.gradient, 'border-color': entity.color}" class="entity" v-on="on" @mouseenter="entity_enter(entity)" @mouseleave="entity_leave(entity)" @click="entity_click(entity)">
+						<div v-if="!entity.dead" :style="{height: 'calc(6px + ' + ((entity.life / entity.maxLife) * 100) + '%)', background: entity.lifeColor, 'border-color': entity.lifeColorLighter}" class="bar"></div>
+						<div class="image">
+							<img v-if="entity.summon" :src="'/image/bulb/' + entity.bulbName + '_front.png'">
+							<turret-image v-else-if="(entity instanceof Turret)" :level="entity.level" :skin="entity.team" :scale="1" />
+							<leek-image v-else :leek="entity" :scale="1" />
+						</div>
+					</div>
+				</template>
+				{{ entity.name }}
+			</tooltip>
 		</div>
 		<template v-if="!LeekWars.mobile">
 			<entity-details v-if="game.hoverEntity" :entity="game.hoverEntity" />
