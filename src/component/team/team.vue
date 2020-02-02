@@ -12,10 +12,12 @@
 					</div>
 				</router-link>
 				<tooltip>
-					<div slot="activator" class="tab" @click="updateOpened">
-						<span>{{ $t('opened') }}</span>
-						<v-switch v-model="team.opened" hide-details />
-					</div>
+					<template v-slot:activator="{ on }">
+						<div class="tab" @click="updateOpened" v-on="on">
+							<span>{{ $t('opened') }}</span>
+							<v-switch v-model="team.opened" hide-details />
+						</div>
+					</template>
 					{{ $t('recrutment_mode') }}
 				</tooltip>
 			</div>
@@ -27,10 +29,12 @@
 					<div v-if="team" slot="content" class="content">
 						<template v-if="member">
 							<tooltip>
-								<div slot="activator" class="emblem-input">
-									<input ref="emblemInput" type="file" @change="changeEmblem">
-									<emblem ref="emblem" :team="team" @click.native="$refs.emblemInput.click()" />
-								</div>
+								<template v-slot:activator="{ on }">
+									<div class="emblem-input" v-on="on">
+										<input ref="emblemInput" type="file" @change="changeEmblem">
+										<emblem ref="emblem" :team="team" @click.native="$refs.emblemInput.click()" />
+									</div>
+								</template>
 								{{ $t('change_emblem') }}
 							</tooltip>
 						</template>
@@ -50,9 +54,11 @@
 				<panel>
 					<h4 class="team-level">{{ $t('level_n', [team ? team.level : '...']) }}</h4>
 					<tooltip v-if="team">
-						<div slot="activator" class="bar">
-							<span :class="{blue: max_level}" :style="{width: xp_bar_width + '%'}" class="xp-bar striked"></span>
-						</div>
+						<template v-slot:activator="{ on }">
+							<div class="bar" v-on="on">
+								<span :class="{blue: max_level}" :style="{width: xp_bar_width + '%'}" class="xp-bar striked"></span>
+							</div>
+						</template>
 						<template v-if="max_level">
 							<b>{{ $t('max_level') }}</b>
 							<br>
@@ -68,25 +74,29 @@
 					<center>
 						<br>
 						<tooltip>
-							<talent slot="activator" :talent="team ? team.talent : '...'" />
+							<template v-slot:activator="{ on }">
+								<talent :talent="team ? team.talent : '...'" :on="on" />
+							</template>
 							{{ $t('talent') }}
 						</tooltip>
 					</center>
 
 					<br>
 					<tooltip v-if="team">
-						<table slot="activator" class="fights">
-							<tr>
-								<td class="big">{{ team.victories | number }}</td>
-								<td class="big">{{ team.draws | number }}</td>
-								<td class="big">{{ team.defeats | number }}</td>
-							</tr>
-							<tr>
-								<td class="grey">{{ $t('victories') }}</td>
-								<td class="grey">{{ $t('draws') }}</td>
-								<td class="grey">{{ $t('defeats') }}</td>
-							</tr>
-						</table>
+						<template v-slot:activator="{ on }">
+							<table class="fights" v-on="on">
+								<tr>
+									<td class="big">{{ team.victories | number }}</td>
+									<td class="big">{{ team.draws | number }}</td>
+									<td class="big">{{ team.defeats | number }}</td>
+								</tr>
+								<tr>
+									<td class="grey">{{ $t('victories') }}</td>
+									<td class="grey">{{ $t('draws') }}</td>
+									<td class="grey">{{ $t('defeats') }}</td>
+								</tr>
+							</table>
+						</template>
 						{{ $t('ratio', [team.ratio]) }}
 					</tooltip>
 
@@ -156,11 +166,15 @@
 								<avatar :farmer="member" />
 								<div class="name">
 									<tooltip v-if="member.grade == 'owner'">
-										<span slot="activator">★</span>
+										<template v-slot:activator="{ on }">
+											<span v-on="on">★</span>
+										</template>
 										{{ $t('owner') }}
 									</tooltip>
 									<tooltip v-else-if="member.grade == 'captain'">
-										<span slot="activator">☆</span>
+										<template v-slot:activator="{ on }">
+											<span v-on="on">☆</span>
+										</template>
 										{{ $t('captain') }}
 									</tooltip>
 									{{ member.name }}
@@ -362,11 +376,15 @@
 						<avatar :farmer="member" />
 						<div class="name">
 							<tooltip v-if="member.grade === 'owner'">
-								<span slot="activator">★</span>
+								<template v-slot:activator="{ on }">
+									<span v-on="on">★</span>
+								</template>
 								{{ $t('owner') }}
 							</tooltip>
 							<tooltip v-else-if="member.grade === 'captain'">
-								<span slot="activator">☆</span>
+								<template v-slot:activator="{ on }">
+									<span v-on="on">☆</span>
+								</template>
 								{{ $t('captain') }}
 							</tooltip>
 							{{ member.name }}
@@ -414,9 +432,11 @@
 					<h4>{{ $t('leek.chips') }}</h4>
 					<div class="chips">
 						<tooltip v-for="chip of [4, 23, 20, 1, 15, 92, 97, 100]" :key="chip">
-							<span slot="activator">
-								<img :src="'/image/chip/small/' + LeekWars.chips[chip].name + '.png'" class="chip">
-							</span>
+							<template v-slot:activator="{ on }">
+								<span v-on="on">
+									<img :src="'/image/chip/small/' + LeekWars.chips[chip].name + '.png'" class="chip">
+								</span>
+							</template>
 							<b>{{ $t('chip.' + LeekWars.chips[chip].name) }}</b>
 							<br>
 							{{ $t('leek.chip_level_n', [LeekWars.chips[chip].level]) }}

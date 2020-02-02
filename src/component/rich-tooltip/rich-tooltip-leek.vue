@@ -49,7 +49,9 @@
 					<div class="items">
 						<div class="weapons">
 							<tooltip v-for="weapon in leek.orderedWeapons" :key="weapon.id">
-								<img slot="activator" :src="'/image/weapon/' + LeekWars.weapons[weapon.template].name + '.png'" class="weapon">
+								<template v-slot:activator="{ on }">
+									<img :src="'/image/weapon/' + LeekWars.weapons[weapon.template].name + '.png'" class="weapon" v-on="on">
+								</template>
 								<b>{{ $t('weapon.' + LeekWars.weapons[weapon.template].name) }}</b>
 								<br>
 								{{ $t('main.level_n', [LeekWars.weapons[weapon.template].level]) }}
@@ -59,7 +61,9 @@
 						</div>
 						<div class="chips">
 							<tooltip v-for="chip in leek.orderedChips" :key="chip.id">
-								<img slot="activator" :src="'/image/chip/small/' + LeekWars.chips[chip.template].name + '.png'" class="chip">
+								<template v-slot:activator="{ on }">
+									<img :src="'/image/chip/small/' + LeekWars.chips[chip.template].name + '.png'" class="chip" v-on="on">
+								</template>
 								<b>{{ $t('chip.' + LeekWars.chips[chip.template].name) }}</b>
 								<br>
 								{{ $t('main.level_n', [LeekWars.chips[chip.template].level]) }}

@@ -25,7 +25,6 @@ import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 import RichTooltipLeek from '@/component/rich-tooltip/rich-tooltip-leek.vue'
 import RichTooltipWeapon from '@/component/rich-tooltip/rich-tooltip-weapon.vue'
 import Talent from '@/component/talent.vue'
-import Tooltip from '@/component/tooltip.vue'
 import TurretImage from '@/component/turret-image.vue'
 import { env } from '@/env'
 import { i18n, loadInstanceTranslations } from '@/model/i18n'
@@ -44,7 +43,7 @@ import Vuetify from 'vuetify/lib/framework'
 Vue.use(Vuetify)
 
 import tooltip from '@/vtooltip-fast'
-Vue.component('fast-tooltip', tooltip)
+Vue.component('tooltip', tooltip)
 
 import 'swiper/dist/css/swiper.css'
 import VueAwesomeSwiper from 'vue-awesome-swiper'
@@ -93,7 +92,6 @@ Vue.component('ai', AIElement)
 Vue.component('not-found', NotFound)
 Vue.component('panel', Panel)
 Vue.component('popup', Popup)
-Vue.component('tooltip', Tooltip)
 Vue.component('rich-tooltip-farmer', RichTooltipFarmer)
 Vue.component('rich-tooltip-leek', RichTooltipLeek)
 Vue.component('rich-tooltip-weapon', RichTooltipWeapon)

@@ -22,7 +22,9 @@
 							<v-list-item-content>
 								<v-list-item-title>{{ $t('new_v2') }}
 									<tooltip>
-										<span slot="activator" class="label-beta">bêta <i class="material-icons">info</i></span>
+										<template v-slot:activator="{ on }">
+											<span class="label-beta" v-on="on">bêta <i class="material-icons">info</i></span>
+										</template>
 										{{ $t('editor.v2_beta_message') }}
 									</tooltip>
 								</v-list-item-title>

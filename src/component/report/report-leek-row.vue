@@ -13,10 +13,12 @@
 		<td class="level">{{ leek.level }}</td>
 		<td class="xp">
 			<tooltip>
-				<div slot="activator" class="bar">
-					<span :style="{width: currentBar + '%'}" class="current_xp"></span>
-					<span :style="{width: newBar + '%'}" class="new_xp"></span>
-				</div>
+				<template v-slot:activator="{ on }">
+					<div class="bar" v-on="on">
+						<span :style="{width: currentBar + '%'}" class="current_xp"></span>
+						<span :style="{width: newBar + '%'}" class="new_xp"></span>
+					</div>
+				</template>
 				{{ leek.cur_xp | number }} / {{ leek.next_xp | number }}
 			</tooltip>
 			<span>{{ (leek.xp || 0) | number }}</span>

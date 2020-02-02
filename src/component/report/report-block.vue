@@ -3,9 +3,11 @@
 		<h3>{{ title }}</h3>
 		<div class="flags">
 			<tooltip v-for="flag in flags" :key="flag">
-				<div slot="activator" class="flag card">
-					<img slot="activator" :src="'/image/fight_flag/' + flag + '.png'">
-				</div>
+				<template v-slot:activator="{ on }">
+					<div class="flag card" v-on="on">
+						<img :src="'/image/fight_flag/' + flag + '.png'">
+					</div>
+				</template>
 				{{ $t('fight.flag_' + flag) }}
 			</tooltip>
 		</div>
@@ -52,10 +54,12 @@
 				<td class="level">{{ team.level }}</td>
 				<td class="xp">
 					<tooltip>
-						<div slot="activator" class="bar">
-							<span :style="{width: currentBar + '%'}" class="current_xp"></span>
-							<span :style="{width: newBar + '%'}" class="new_xp team"></span>
-						</div>
+						<template v-slot:activator="{ on }">
+							<div class="bar" v-on="on">
+								<span :style="{width: currentBar + '%'}" class="current_xp"></span>
+								<span :style="{width: newBar + '%'}" class="new_xp team"></span>
+							</div>
+						</template>
 						{{ team.cur_xp | number }} / {{ team.next_xp | number }}
 					</tooltip>
 					<span>{{ team.xp | number }}</span>

@@ -10,12 +10,16 @@
 				<br>
 				<center>
 					<tooltip>
-						<img slot="activator" width="100" src="/image/potion/skin_gold.png">
+						<template v-slot:activator="{ on }">
+							<img width="100" src="/image/potion/skin_gold.png" v-on="on">
+						</template>
 						<b>{{ $t('potion.skin_gold') }}</b>
 					</tooltip>
 					&nbsp;&nbsp;&nbsp;&nbsp;
 					<tooltip>
-						<img slot="activator" width="100" src="/image/hat/crown.png">
+						<template v-slot:activator="{ on }">
+							<img width="100" src="/image/hat/crown.png" v-on="on">
+						</template>
 						<b>{{ $t('hat.crown') }}</b>
 					</tooltip>
 				</center>

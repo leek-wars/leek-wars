@@ -78,7 +78,7 @@ export default mixins(Colorable, Delayable, Dependent, Detachable, Menuable, Tog
       let top = 0;
 
       if (this.top || this.bottom) {
-        top = activatorTop + (this.bottom ? activator.height : -content.height) + (this.bottom ? 10 : -10);
+        top = activatorTop + (this.top ? -content.height : activator.height) + (this.top ? -10 : 10);
       } else if (this.left || this.right) {
         top = activatorTop + activator.height / 2 - content.height / 2;
       }

@@ -4,11 +4,13 @@
 			<h1>{{ $t('title') }}</h1>
 			<div v-if="garden" class="tabs">
 				<tooltip>
-					<div slot="activator" class="tab action hidden">
-						<img src="/image/icon/garden.png">
-						<span v-if="garden.fights > 0">{{ garden.fights }}</span>
-						<span v-else>{{ remainingTime }}</span>
-					</div>
+					<template v-slot:activator="{ on }">
+						<div class="tab action hidden" v-on="on">
+							<img src="/image/icon/garden.png">
+							<span v-if="garden.fights > 0">{{ garden.fights }}</span>
+							<span v-else>{{ remainingTime }}</span>
+						</div>
+					</template>
 					<span v-if="garden.fights > 0">{{ $t('n_remaining_fights', [garden.fights]) }}</span>
 					<span v-else>{{ $t('next_fight_in', [remainingTime]) }}</span>
 				</tooltip>
@@ -31,30 +33,36 @@
 							<img class="player" src="/image/player.png">
 						</router-link>
 						<tooltip :disabled="farmerEnabled">
-							<router-link slot="activator" v-ripple :class="{ enabled: farmerEnabled }" :event="farmerEnabled ? 'click' : ''" to="/garden/farmer" class="tab">
-								<h2>{{ $t('category_farmer_fight') }}</h2>
-								<span class="player-count">4</span>&nbsp;<img class="player" src="/image/player.png">
-								<img class="sword" src="/image/icon/grey/garden.png">
-								<span class="player-count">4</span>&nbsp;<img class="player" src="/image/player.png">
-							</router-link>
+							<template v-slot:activator="{ on }">
+								<router-link v-ripple :class="{ enabled: farmerEnabled }" :event="farmerEnabled ? 'click' : ''" to="/garden/farmer" class="tab" v-on="on">
+									<h2>{{ $t('category_farmer_fight') }}</h2>
+									<span class="player-count">4</span>&nbsp;<img class="player" src="/image/player.png">
+									<img class="sword" src="/image/icon/grey/garden.png">
+									<span class="player-count">4</span>&nbsp;<img class="player" src="/image/player.png">
+								</router-link>
+							</template>
 							{{ $t('you_must_have_2_leeks') }}
 						</tooltip>
 
 						<tooltip :disabled="teamEnabled">
-							<router-link slot="activator" v-ripple :class="{ enabled: teamEnabled }" :event="teamEnabled ? 'click' : ''" to="/garden/team" class="tab">
-								<h2>{{ $t('category_team_fight') }}</h2>
-								<span class="player-count">6</span>&nbsp;<img class="player" src="/image/player.png">
-								<img class="sword" src="/image/icon/grey/garden.png">
-								<span class="player-count">6</span>&nbsp;<img class="player" src="/image/player.png">
-							</router-link>
+							<template v-slot:activator="{ on }">
+								<router-link v-ripple :class="{ enabled: teamEnabled }" :event="teamEnabled ? 'click' : ''" to="/garden/team" class="tab" v-on="on">
+									<h2>{{ $t('category_team_fight') }}</h2>
+									<span class="player-count">6</span>&nbsp;<img class="player" src="/image/player.png">
+									<img class="sword" src="/image/icon/grey/garden.png">
+									<span class="player-count">6</span>&nbsp;<img class="player" src="/image/player.png">
+								</router-link>
+							</template>
 							{{ $t('you_must_have_a_team') }}
 						</tooltip>
 
 						<tooltip :disabled="battleRoyaleEnabled">
-							<router-link slot="activator" v-ripple :class="{ enabled: battleRoyaleEnabled }" :event="battleRoyaleEnabled ? 'click' : ''" to="/garden/battle-royale" class="tab">
-								<h2>{{ $t('category_battle_royale') }}</h2>
-								<span class="player-count">10</span>&nbsp;<img class="player" src="/image/player.png">
-							</router-link>
+							<template v-slot:activator="{ on }">
+								<router-link v-ripple :class="{ enabled: battleRoyaleEnabled }" :event="battleRoyaleEnabled ? 'click' : ''" to="/garden/battle-royale" class="tab" v-on="on">
+									<h2>{{ $t('category_battle_royale') }}</h2>
+									<span class="player-count">10</span>&nbsp;<img class="player" src="/image/player.png">
+								</router-link>
+							</template>
 							{{ $t('you_must_be_level_50') }}
 						</tooltip>
 
