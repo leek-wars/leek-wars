@@ -937,7 +937,7 @@ class Game {
 				this.actionDone()
 				break
 			}
-			this.showCellCell = action.params[2]
+			this.showCellCell = this.ground.cells[action.params[2]]
 			this.showCellColor = '#' + action.params[3]
 			const pos = this.ground.cellToXY(this.showCellCell)
 			const xy = this.ground.xyToXYPixels(pos.x, pos.y)
