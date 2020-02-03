@@ -136,6 +136,10 @@
 									<v-switch v-model="game.showCells" :label="$t('fight.display_cell_numbers')" hide-details />
 								</v-list-item>
 								<v-list-item v-ripple>
+									<i class="material-icons">vpn_key</i>
+									<v-switch v-model="game.showIDs" :label="$t('fight.show_ids')" hide-details />
+								</v-list-item>
+								<v-list-item v-ripple>
 									<i class="material-icons">flip_to_front</i>
 									<v-switch v-model="game.shadows" :label="$t('fight.display_shadows')" hide-details />
 								</v-list-item>
@@ -197,6 +201,7 @@
 			this.game.tactic = localStorage.getItem('fight/tactic') === 'true'
 			this.game.showCells = localStorage.getItem('fight/cells') === 'true'
 			this.game.showLifes = localStorage.getItem('fight/lifes') === 'true'
+			this.game.showIDs = localStorage.getItem('fight/ids') === 'true'
 			this.game.sound = localStorage.getItem('fight/sound') === 'true'
 			this.game.player = this
 			this.getFight()
@@ -421,6 +426,10 @@
 		}
 		@Watch("game.showLifes") toggleLifes() {
 			localStorage.setItem('fight/lifes', '' + this.game.showLifes)
+			this.game.redraw()
+		}
+		@Watch("game.showIDs") toggleIDs() {
+			localStorage.setItem('fight/ids', '' + this.game.showIDs)
 			this.game.redraw()
 		}
 		canvasClick() {
