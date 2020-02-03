@@ -677,7 +677,8 @@ class Entity {
 
 		ctx.font = "11pt Roboto"
 
-		const text = this.name + " (" + this.life + ")"
+		let text = this.name + " (" + this.life + ")"
+		if (this.game.showIDs) { text = '#' + this.id + ' • ' + text }
 		const width = Math.max(140, ctx.measureText(text).width + 14)
 		const height = 19
 		const barHeight = 8

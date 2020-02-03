@@ -67,6 +67,7 @@
 	"settings": "Options",
 	"sound_activated": "Son activé",
 	"sound_disactivated": "Son coupé",
+	"show_ids": "Afficher les IDs",
 	"start_of_fight": "Début du combat !",
 	"starter": "Lanceur du combat",
 	"summon": "{leek} invoque {summon}",

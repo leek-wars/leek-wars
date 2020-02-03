@@ -67,6 +67,7 @@
 	"settings": "Settings",
 	"sound_activated": "Sound is on",
 	"sound_disactivated": "Sound is off",
+	"show_ids": "Display IDs",
 	"start_of_fight": "Starting fight!",
 	"starter": "Fight launcher",
 	"summon": "{leek} summons {summon}",
