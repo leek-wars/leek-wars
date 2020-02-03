@@ -1144,6 +1144,12 @@ class Game {
 		case EffectType.DAMAGE_RETURN:
 			leek.damageReturn -= value
 			break
+		case EffectType.BUFF_MP:
+			leek.mp -= value
+			break
+		case EffectType.BUFF_TP:
+			leek.tp -= value
+			break
 		}
 		// Gestion des états du poireau
 		if (effect.object === 46) {
