@@ -481,16 +481,16 @@
 					this.errors = []
 					for (const res of data.result) {
 						const code = res[0]
-						const ai = this.activeAIs[res[1]]
+						const ai = this.ais[res[1]]
+						const ai_name = ai ? ai.name : 'AI #' + res[1]
 						const editor = (this.$refs.editors as AIView[]).find(e => e.ai === ai)
-						if (!ai || !editor) { continue }
 						if (code === 2) {
 							this.good = true
 							setTimeout(() => this.good = false, 800)
 							ai.valid = true
-							editor.removeErrors()
+							if (editor) { editor.removeErrors() }
 						} else if (code === 1) {
-							this.errors.push({ai: ai.name, error: res[2], line: res[3]})
+							this.errors.push({ai: ai_name, error: res[2], line: res[3]})
 							ai.valid = false
 						} else if (code === 0) {
 							const line = res[2]
@@ -501,9 +501,9 @@
 								info = this.$t('leekscript.' + res[5])
 							}
 							info = '(' + res[4] + ') ' + info
-							this.errors.push({ai: ai.name, message: info, line})
+							this.errors.push({ai: ai_name, message: info, line})
 							ai.valid = false
-							editor.showError(line)
+							if (editor) { editor.showError(line) }
 						}
 					}
 				}
