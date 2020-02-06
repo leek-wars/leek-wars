@@ -23,14 +23,12 @@
 				</panel>
 			</div>
 			<div v-show="!LeekWars.mobile || LeekWars.splitBack" class="column9">
-				<panel>
-					<div slot="content" ref="elements" v-autostopscroll="'bottom'" class="items">
-						<div v-for="(item, i) in items" :key="i" :item="item.name" :class="{deprecated: item.deprecated}" class="item">
-							<documentation-function v-if="'return_type' in item" :fun="item" />
-							<documentation-constant v-else :constant="item" />
-						</div>
-					</div>
-				</panel>
+				<div ref="elements" v-autostopscroll="'bottom'" class="items">
+					<panel v-for="(item, i) in items" :key="i" :item="item.name" :class="{deprecated: item.deprecated}" class="item">
+						<documentation-function v-if="'return_type' in item" :fun="item" />
+						<documentation-constant v-else :constant="item" />
+					</panel>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -160,7 +158,7 @@
 				const elements = this.$refs.elements as HTMLElement
 				if (element) {
 					const offset = LeekWars.mobile ? 70 : 140
-					elements.scrollTo(0, element.offsetTop - offset)
+					elements.scrollTo(0, element.offsetTop - offset + 10)
 				}
 			}, 100)
 		}
@@ -251,35 +249,38 @@
 		box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
 	}
 	.items {
-		padding: 10px;
 		overflow-y: auto;
 		overflow-x: hidden;
-		height: calc(100% - 20px);
+		height: 100%;
 	}
 	.items .item {
-		margin-bottom: 20px;
 		position: relative;
-		padding-bottom: 20px;
 		max-height: 999999px;
+		height: initial;
+		margin-right: 0;
+		::v-deep .content {
+			padding-right: 100px;
+			padding-left: 10px;
+		}
+		::v-deep a {
+			color: #5fad1b;
+			font-weight: 500;
+		}
+		::v-deep h2 {
+			margin-bottom: 10px;
+			font-size: 20px;
+			color: #333;
+		}
+		::v-deep ul {
+			margin: 5px 0;
+		}
+		&::last-child {
+			margin-bottom: 0;
+		}
 	}
 	.items .item:last-child {
 		border-bottom: none;
 		margin-bottom: 0;
-	}
-	.items .item ::v-deep .content {
-		padding-right: 100px;
-		padding-left: 10px;
-	}
-	.items .item ::v-deep a {
-		color: #5fad1b;
-		text-decoration: underline;
-	}
-	.items .item ::v-deep h2 {
-		margin-bottom: 10px;
-		font-size: 20px;
-	}
-	.items .item ::v-deep ul {
-		margin: 5px 0;
 	}
 	.items .function-name {
 		color: black;
@@ -290,13 +291,16 @@
 		color: #666;
 		margin-top: 8px;
 	}
-	.items ::v-deep .item.deprecated {
+	.items ::v-deep .item.deprecated .content {
 		opacity: 0.6;
 	}
 	.items ::v-deep .item .deprecated-message {
 		color: #ff7f00;
 		font-weight: bold;
 		margin: 10px;
+	}
+	.item ::v-deep li {
+		margin-left: 30px;
 	}
 	pre {
 		max-width: 500px;
