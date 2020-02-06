@@ -46,8 +46,8 @@
 	}
 	.min-stats {
 		position: absolute;
-		top: 40px;
-		right: 0;
+		top: 10px;
+		right: 10px;
 		text-align: right;
 		color: #777;
 		max-width: 110px;
