@@ -504,18 +504,18 @@
 		get turret() {
 			if (!this.team) { return {} }
 			const team_ratio = 1 + (this.team.level / 100)
-			const max_life = Math.round(10000 * team_ratio)
-			const characteristics_base_1000 = Math.round(1000 * team_ratio)
-			const characteristics_base_2000 = Math.round(2000 * team_ratio)
-			const characteristics_base_500 = Math.round(500 * team_ratio)
+			const max_life = 1000 + Math.round((10000 - 500) * team_ratio)
+			const characteristics_base_1000 = 100 + Math.round(950 * team_ratio)
+			const characteristics_base_2000 = 200 + Math.round(1900 * team_ratio)
+			const characteristics_base_500 = 50 + Math.round(475 * team_ratio)
 			return {
-				life: 0 + " à " + max_life,
-				strength: 0 + " à " + characteristics_base_2000,
-				agility: 0 + " à " + characteristics_base_500,
-				resistance: 0 + " à " + characteristics_base_500,
-				science: 0 + " à " + characteristics_base_500,
-				wisdom: 0 + " à " + characteristics_base_1000,
-				magic: 0 + " à " + characteristics_base_1000,
+				life: 1000 + " à " + max_life,
+				strength: 200 + " à " + characteristics_base_2000,
+				agility: 50 + " à " + characteristics_base_500,
+				resistance: 50 + " à " + characteristics_base_500,
+				science: 50 + " à " + characteristics_base_500,
+				wisdom: 100 + " à " + characteristics_base_1000,
+				magic: 100 + " à " + characteristics_base_1000,
 				frequency: 111,
 				tp: Math.floor(12 * team_ratio),
 				mp: 0
