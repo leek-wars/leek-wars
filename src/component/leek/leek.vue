@@ -183,15 +183,15 @@
 							<i class="material-icons">edit</i>
 						</div>
 					</template>
-					<div slot="content" class="chips">
+					<div slot="content" class="chips-wrapper center">
 						<loader v-if="!leek" />
-						<template v-else>
+						<div v-else class="chips">
 							<rich-tooltip-chip v-for="chip in leek.orderedChips" :key="chip.id" v-slot="{ on }" :chip="LeekWars.chips[chip.template]" :bottom="true" :instant="true">
 								<div class="chip" v-on="on">
 									<img :src="'/image/chip/small/' + LeekWars.chips[chip.template].name + '.png'">
 								</div>
 							</rich-tooltip-chip>
-						</template>
+						</div>
 					</div>
 				</panel>
 			</div>
@@ -1009,16 +1009,28 @@
 		opacity: 0.3;
 		cursor: default;
 	}
+	.chips-wrapper {
+		height: 100%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		.loader {
+			margin: 20px;
+		}
+	}
 	.panel .chips {
 		text-align: center;
-		padding: 20px 0;
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(50px, 1fr));
+		grid-gap: 3px;
+		margin: 8px;
+		flex: 1;
 	}
 	.chip {
 		display: inline-block;
 		vertical-align: bottom;
-		margin: 2px;
 		img {
-			width: 62px;
+			width: 100%;
 			vertical-align: bottom;
 		}
 	}
