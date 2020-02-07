@@ -110,6 +110,7 @@ class Textures {
 	public shield_aureol: Texture
 	public buff_aureol: Texture
 	public halo: Texture
+	public halo_green: Texture
 	public heal_cross: Texture
 	public liberation_halo: Texture
 	public antidote_halo: Texture
@@ -191,6 +192,9 @@ class Textures {
 	public cart_j_laser: Texture
 	public tp: Texture
 	public mp: Texture
+	public chip_precipitation: Texture
+	public chip_covetousness: Texture
+	public chip_vampirization: Texture
 
 	constructor(game: Game) {
 		this.leek_hand = new Texture(game, env.STATIC + "image/fight/leek_hand.png", true, SHADOW_QUALITY)
@@ -318,6 +322,7 @@ class Textures {
 		this.shield_aureol = new Texture(game, env.STATIC + 'image/fight/shield_aureol.png')
 		this.buff_aureol = new Texture(game, env.STATIC + 'image/fight/buff_aureol.png')
 		this.halo = new Texture(game, env.STATIC + 'image/fight/halo.png')
+		this.halo_green = new Texture(game, env.STATIC + 'image/fight/halo_green.png')
 		this.heal_cross = new Texture(game, env.STATIC + 'image/fight/heal_cross.png')
 		this.liberation_halo = new Texture(game, env.STATIC + 'image/fight/liberation.png')
 		this.antidote_halo = new Texture(game, env.STATIC + 'image/fight/antidote.png')
@@ -345,6 +350,9 @@ class Textures {
 		this.chip_ferocity = new Texture(game, env.STATIC + 'image/chip/glyph/ferocity.png')
 		this.chip_collar = new Texture(game, env.STATIC + 'image/chip/glyph/collar.png')
 		this.chip_bark = new Texture(game, env.STATIC + 'image/chip/glyph/bark.png')
+		this.chip_precipitation = new Texture(game, env.STATIC + 'image/chip/glyph/precipitation.png')
+		this.chip_covetousness = new Texture(game, env.STATIC + 'image/chip/glyph/covetousness.png')
+		this.chip_vampirization = new Texture(game, env.STATIC + 'image/chip/glyph/vampirization.png')
 
 		// Shield
 		this.chip_helmet = new Texture(game, env.STATIC + 'image/chip/glyph/helmet.png')
