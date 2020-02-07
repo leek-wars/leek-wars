@@ -59,8 +59,7 @@
 	.player,
 	.not-player,
 	.summons,
-	.not-summons,
-	.always-caster {
+	.not-summons {
 		width: 14px;
 		height: 14px;
 		display: inline-block;
@@ -87,9 +86,6 @@
 	.not-summons {
 		background-color: white;
 		border: 2px solid #00dfff;
-	}
-	.always-caster {
-		background-color: #555;
 	}
 	.constant {
 		text-align: left;

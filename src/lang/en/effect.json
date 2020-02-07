@@ -27,7 +27,6 @@
 	"summon_6": "Lightning bulb",
 	"summon_7": "Metallic bulb",
 	"target_allies": "Only affects allies",
-	"target_always_caster": "Effect applied on the caster",
 	"target_enemies": "Only affects enemies",
 	"target_not_player": "Never affects the caster",
 	"target_not_summons": "Doesn't affect summons",
@@ -52,8 +51,8 @@
 	"type_8": "Increases TP by <b>{0}</b> to <b>{1}</b>",
 	"type_8_fixed": "Increases TP by <b>{0}</b>",
 	"type_9_fixed": "Decrease all effects by {0}%",
-	"type_10_fixed": "Teleports the leek",
-	"type_11_fixed": "Exchanges the position of two leeks",
+	"type_10_fixed": "Teleports the entity",
+	"type_11_fixed": "Exchanges the position of two entities",
 	"type_12": "Increases max health by <b>{0}</b> to <b>{1}</b>",
 	"type_12_fixed": "Increases max health by <b>{0}</b>",
 	"type_13": "Poison of <b>{0}</b> to <b>{1}</b>",
@@ -75,7 +74,7 @@
 	"type_26_fixed": "Apply a vulnerability of <b>{0}%</b>",
 	"type_27_fixed": "Apply an absolute vulnerability of <b>{0}</b>",
 	"type_28_fixed": "Inflicts <b>{0}%</b> of the launcher's life in damage",
-	"type_29_fixed": "Steals the removed absolute shields",
+	"type_29_fixed": "Gives the removed absolute shields",
 	"type_30": "Deals <b>{0}</b> to <b>{1}</b> nova damage",
 	"type_31_fixed": "Gives <b>{0}</b> MP",
 	"type_32_fixed": "Gives <b>{0}</b> TP",
@@ -87,5 +86,9 @@
 	"effect_type_6": "Returns",
 	"effect_type_7": "Poisons",
 	"effect_type_8": "Bulbs",
-	"effect_type_9": "Shackles"
+	"effect_type_9": "Shackles",
+	"infinite": " endlessly",
+	"stackable": "stackable",
+	"the_caster": "the caster",
+	"to_the_caster": "to the caster"
 }
