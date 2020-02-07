@@ -507,5 +507,33 @@ class Blood extends Particle {
 		ctx.globalAlpha = 1
 	}
 }
+class SpinningParticle extends Particle {
+	angle2: number = 0
+	rotation2: number = 0
+	texture: Texture
+	constructor(game: Game, x: number, y: number, angle: number, texture: Texture) {
+		super(game, x, y, 0, 80)
+		this.dz = 0.75
+		this.angle2 = angle
+		this.rotation2 = 0.16
+		this.texture = texture
+	}
+	public update(dt: number) {
+		this.angle2 += this.rotation2 * dt
+		return super.update(dt)
+	}
+	public draw(ctx: CanvasRenderingContext2D) {
+		ctx.save()
+		const behind = Math.max(0, Math.abs((this.angle2 % (2 * Math.PI)) - 3 * Math.PI / 2) / (Math.PI / 3) - 0.3)
+		ctx.globalAlpha = Math.min(1, this.life / 10) * behind
+		const x = Math.cos(this.angle2) * 20
+		const y = Math.sin(this.angle2) * 20
+		ctx.translate(x, y / 2)
+		ctx.rotate(this.angle2 + 0.4)
+		ctx.drawImage(this.texture.texture, -10, -20, 20, 40)
+		ctx.restore()
+		ctx.globalAlpha = 1
+	}
+}
 
-export { Particle, Bullet, Laser, Lightning, Fire, SimpleFire, Gaz, Meteorite, Grenade, Shot, Explosion, Cartridge, Garbage, ImageParticle, Rectangle, Blood, SpikeParticle, NUM_BLOOD_SPRITES }
+export { Particle, Bullet, Laser, Lightning, Fire, SimpleFire, Gaz, Meteorite, Grenade, Shot, Explosion, Cartridge, Garbage, ImageParticle, Rectangle, Blood, SpikeParticle, SpinningParticle, NUM_BLOOD_SPRITES }

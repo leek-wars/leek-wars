@@ -51,26 +51,32 @@ abstract class ChipAnimation {
 			this.game.particles.addImage(x, y, z, 0, 0, 0.2, 0, texture, 70)
 		}
 	}
+	public createChipHaloEntity(target: Entity) {
+		const dx = Math.random() * 100 - 50
+		const x = target.ox + dx
+		const y = target.oy + Math.random() * 30 - 15
+		const z = Math.random() * 10
+		const speed = 1.5 + (50 - Math.abs(dx)) / 50
+		const life = 80 - Math.abs(dx)
+		this.game.particles.addImage(x, y, z, 0, 0, speed, 0, this.game.T.halo, life)
+	}
 	public createChipHalo(targets: Entity[]) {
 		for (const target of targets) {
-			const dx = Math.random() * 100 - 50
-			const x = target.ox + dx
-			const y = target.oy + Math.random() * 30 - 15
-			const z = Math.random() * 10
-			const speed = 1.5 + (50 - Math.abs(dx)) / 50
-			const life = 80 - Math.abs(dx)
-			this.game.particles.addImage(x, y, z, 0, 0, speed, 0, this.game.T.halo, life)
+			this.createChipHaloEntity(target)
 		}
+	}
+	public createChipHealEntity(target: Entity) {
+		const dx = Math.random() * 100 - 50
+		const x = target.ox + dx
+		const y = target.oy + Math.random() * 30 - 15
+		const z = Math.random() * 10
+		const speed = 1.5 + (50 - Math.abs(dx)) / 50
+		const life = 80 - Math.abs(dx)
+		this.game.particles.addImage(x, y, z, 0, 0, speed, 0, this.game.T.heal_cross, life)
 	}
 	public createChipHeal(targets: Entity[]) {
 		for (const target of targets) {
-			const dx = Math.random() * 100 - 50
-			const x = target.ox + dx
-			const y = target.oy + Math.random() * 30 - 15
-			const z = Math.random() * 10
-			const speed = 1.5 + (50 - Math.abs(dx)) / 50
-			const life = 80 - Math.abs(dx)
-			this.game.particles.addImage(x, y, z, 0, 0, speed, 0, this.game.T.heal_cross, life)
+			this.createChipHealEntity(target)
 		}
 	}
 }
@@ -737,5 +743,67 @@ class Punishment extends ChipAnimation {
 		}
 	}
 }
+class StealChipAnimation extends ChipAnimation {
+	delta: number = 0
+	caster!: Entity
+	spinningTexture!: Texture
+	halo: Function
+	constructor(game: Game, sound: Sound, spinningTexture: Texture, halo: Function) {
+		super(game, sound, 110)
+		this.spinningTexture = spinningTexture
+		this.halo = halo
+	}
+	public launch(launchPos: Position, position: Position, targets: Entity[], targetCell: Cell, caster: Entity) {
+		super.launch(launchPos, position, targets, targetCell)
+		this.caster = caster
+	}
+	public update(dt: number) {
+		super.update(dt)
+		this.delta += dt
+		if (this.delta > 3 && this.duration > 60) {
+			for (const target of this.targets!) {
+				if (target === this.caster) {
+					this.halo(target)
+				} else {
+					this.game.particles.addSpinningParticle(target.ox, target.oy, Math.PI / 2, this.spinningTexture)
+				}
+			}
+			this.delta = 0
+		}
+	}
+}
+class Precipitation extends StealChipAnimation {
+	constructor(game: Game) {
+		super(game, game.S.buff, game.T.halo, ChipAnimation.prototype.createChipHaloEntity)
+	}
+	public launch(launchPos: Position, position: Position, targets: Entity[], targetCell: Cell, caster: Entity) {
+		super.launch(launchPos, position, targets, targetCell, caster)
+		this.game.setEffectArea(targetCell, Area.X_2, '#0280db')
+		this.createChipImage([caster], this.game.T.chip_precipitation)
+		this.createChipAureol([caster], this.game.T.buff_aureol)
+	}
+}
+class Covetousness extends StealChipAnimation {
+	constructor(game: Game) {
+		super(game, game.S.buff, game.T.halo, ChipAnimation.prototype.createChipHaloEntity)
+	}
+	public launch(launchPos: Position, position: Position, targets: Entity[], targetCell: Cell, caster: Entity) {
+		super.launch(launchPos, position, targets, targetCell, caster)
+		this.game.setEffectArea(targetCell, Area.X_2, '#0280db')
+		this.createChipImage([caster], this.game.T.chip_covetousness)
+		this.createChipAureol([caster], this.game.T.buff_aureol)
+	}
+}
+class Vampirization extends StealChipAnimation {
+	constructor(game: Game) {
+		super(game, game.S.heal, game.T.halo_green, ChipAnimation.prototype.createChipHealEntity)
+	}
+	public launch(launchPos: Position, position: Position, targets: Entity[], targetCell: Cell, caster: Entity) {
+		super.launch(launchPos, position, targets, targetCell, caster)
+		this.game.setEffectArea(targetCell, Area.X_2, '#5efe36')
+		this.createChipImage([caster], this.game.T.chip_vampirization)
+		this.createChipAureol([caster], this.game.T.heal_cross)
+	}
+}
 
-export { ChipAnimation, Adrenaline, Armor, Acceleration, Antidote, Armoring, BallAndChain, Bandage, Bark, Burning, Carapace, Collar, Cure, DevilStrike, Doping, Drip, Ferocity, Fertilizer, Flame, Flash, Fortress, Fracture, Helmet, Ice, Iceberg, Inversion, LeatherBoots, Liberation, Lightning, Loam, Meteorite, Mirror, Motivation, Pebble, Plague, Protein, Punishment, Rage, Rampart, Reflexes, Regeneration, Remission, Rock, Rockfall, SevenLeagueBoots, Shield, Shock, SlowDown, Solidification, Soporific, Spark, Stalactite, Steroid, Stretching, Teleportation, Thorn, Toxin, Tranquilizer, Vaccine, Venom, Wall, WarmUp, Whip, WingedBoots }
+export { ChipAnimation, Adrenaline, Armor, Acceleration, Antidote, Armoring, BallAndChain, Bandage, Bark, Burning, Carapace, Collar, Covetousness, Cure, DevilStrike, Doping, Drip, Ferocity, Fertilizer, Flame, Flash, Fortress, Fracture, Helmet, Ice, Iceberg, Inversion, LeatherBoots, Liberation, Lightning, Loam, Meteorite, Mirror, Motivation, Pebble, Plague, Precipitation, Protein, Punishment, Rage, Rampart, Reflexes, Regeneration, Remission, Rock, Rockfall, SevenLeagueBoots, Shield, Shock, SlowDown, Solidification, Soporific, Spark, Stalactite, Steroid, Stretching, Teleportation, Thorn, Toxin, Tranquilizer, Vaccine, Vampirization, Venom, Wall, WarmUp, Whip, WingedBoots }

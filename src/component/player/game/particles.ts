@@ -1,6 +1,6 @@
 import { Entity } from '@/component/player/game/entity'
 import { Game } from "@/component/player/game/game"
-import { Blood, Bullet, Cartridge, Explosion, Fire, Garbage, Gaz, Grenade, ImageParticle, Laser, Lightning, Meteorite, NUM_BLOOD_SPRITES, Particle, Rectangle, Shot, SimpleFire, SpikeParticle } from '@/component/player/game/particle'
+import { Blood, Bullet, Cartridge, Explosion, Fire, Garbage, Gaz, Grenade, ImageParticle, Laser, Lightning, Meteorite, NUM_BLOOD_SPRITES, Particle, Rectangle, Shot, SimpleFire, SpikeParticle, SpinningParticle } from '@/component/player/game/particle'
 import { Position } from '@/component/player/game/position'
 import { Texture } from '@/component/player/game/texture'
 
@@ -91,6 +91,9 @@ class Particles {
 		const angle = Math.random() * Math.PI * 2
 		const textureId = Math.floor(Math.random() * NUM_BLOOD_SPRITES)
 		this.game.ground.drawTextureCropScale(texture.texture, x, y, angle, textureId * 50, 0, 50, 50, 1, 0.5)
+	}
+	public addSpinningParticle(x: number, y: number, angle: number, texture: Texture) {
+		this.particles.unshift(new SpinningParticle(this.game, x, y, angle, texture))
 	}
 	public add(particle: Particle, onground: boolean = false) {
 		if (onground) {
