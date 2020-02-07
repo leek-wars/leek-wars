@@ -27,6 +27,12 @@ enum EffectType {
 	RAW_BUFF_TP = 32,
 }
 
+enum EffectModifier {
+	STACKABLE = 1,
+	MULTIPLIED_BY_TARGETS = 2,
+	ON_CASTER = 4,
+}
+
 enum EffectTypeMarket {
 	ATTACK = 1,
 	HEAL = 2,
@@ -48,4 +54,4 @@ class Effect {
 	public modifiers!: number
 	public type!: number
 }
-export { Effect, EffectType, EffectTypeMarket }
+export { Effect, EffectModifier, EffectType, EffectTypeMarket }
