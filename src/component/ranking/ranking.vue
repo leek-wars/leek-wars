@@ -251,10 +251,12 @@
 						row.ranking.ranking[1].style = 'second'
 						row.ranking.ranking[2].style = 'third'
 					}
-					for (const category of data.rankings) {
-						for (const row of category.ranking.ranking as Ranking) {
-							if (row.id === this.$store.state.farmer.id) {
-								row.me = 'me'
+					if (this.$store.state.connected) {
+						for (const category of data.rankings) {
+							for (const row of category.ranking.ranking as Ranking) {
+								if (row.id === this.$store.state.farmer.id) {
+									row.me = 'me'
+								}
 							}
 						}
 					}
@@ -275,18 +277,20 @@
 						ranking[1].style = 'second'
 						ranking[2].style = 'third'
 					}
-					for (const row of ranking) {
-						if (this.category === 'leek') {
-							if (this.$store.state.farmer && row.id in this.$store.state.farmer.leeks) {
-								row.me = 'me'
-							}
-						} else if (this.category === 'farmer') {
-							if (row.id === this.$store.state.farmer.id) {
-								row.me = 'me'
-							}
-						} else if (this.category === 'team') {
-							if (this.$store.state.farmer.team && row.id === this.$store.state.farmer.team.id) {
-								row.me = 'me'
+					if (this.$store.state.connected) {
+						for (const row of ranking) {
+							if (this.category === 'leek') {
+								if (this.$store.state.farmer && row.id in this.$store.state.farmer.leeks) {
+									row.me = 'me'
+								}
+							} else if (this.category === 'farmer') {
+								if (row.id === this.$store.state.farmer.id) {
+									row.me = 'me'
+								}
+							} else if (this.category === 'team') {
+								if (this.$store.state.farmer.team && row.id === this.$store.state.farmer.team.id) {
+									row.me = 'me'
+								}
 							}
 						}
 					}
