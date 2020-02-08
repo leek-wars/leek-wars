@@ -7,14 +7,16 @@
 			<loader />
 		</panel>
 		<template v-else>
-			<panel v-for="(version, v) in changelog" :key="version.version" :class="{last: v === changelog.length - 1}">
-				<h2 slot="title">{{ $t('version_n', [version.version_name]) }} ({{ version.date }})</h2>
-				<div slot="content" class="wrapper">
-					<div class="content">
-						<changelog-version :version="version" />
+			<v-lazy v-for="(version, v) in changelog" :key="version.version" v-model="version.active" :options="{threshold: 0.25}" min-height="100">
+				<panel :class="{last: v === changelog.length - 1}">
+					<h2 slot="title">{{ $t('version_n', [version.version_name]) }} ({{ version.date }})</h2>
+					<div slot="content" class="wrapper">
+						<div class="content">
+							<changelog-version :version="version" />
+						</div>
 					</div>
-				</div>
-			</panel>
+				</panel>
+			</v-lazy>
 		</template>
 	</div>
 </template>
@@ -30,6 +32,9 @@
 		created() {
 			LeekWars.get('changelog/get/' + this.$i18n.locale).then(data => {
 				this.changelog = data.changelog
+				for (const c in this.changelog) {
+					Vue.set(this.changelog[c], 'active', parseInt(c, 10) < 2 ? true : false)
+				}
 				LeekWars.setTitle(this.$t('title'))
 				this.$root.$emit('loaded')
 			})
