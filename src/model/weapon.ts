@@ -19,5 +19,6 @@ class WeaponTemplate {
 	public los!: number
 	public template!: number
 	public passive_effects!: Effect[]
+	public forgotten!: boolean
 }
 export { WeaponTemplate }

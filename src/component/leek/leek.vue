@@ -286,7 +286,7 @@
 				<br>
 				<div :class="{dashed: draggedWeapon && draggedWeaponLocation === 'leek'}" class="farmer-weapons" @dragover="dragOver" @drop="weaponsDrop('farmer', $event)">
 					<rich-tooltip-weapon v-for="(weapon, i) in farmer_weapons" :key="i" v-slot="{ on }" :instant="true" :weapon="LeekWars.weapons[weapon.template]" :bottom="true">
-						<div :quantity="weapon.quantity" :class="{dragging: draggedWeapon && draggedWeapon.template === weapon.template && draggedWeaponLocation === 'farmer', locked: LeekWars.weapons[weapon.template].level > leek.level}" :draggable="LeekWars.weapons[weapon.template].level <= leek.level" class="weapon" v-on="on" @dragstart="weaponDragStart('farmer', weapon, $event)" @dragend="weaponDragEnd(weapon)" @click="addWeapon(weapon)">
+						<div :quantity="weapon.quantity" :class="{dragging: draggedWeapon && draggedWeapon.template === weapon.template && draggedWeaponLocation === 'farmer', locked: LeekWars.weapons[weapon.template].level > leek.level || (LeekWars.weapons[weapon.template].forgotten && hasForgottenWeapon) }" :draggable="LeekWars.weapons[weapon.template].level <= leek.level" class="weapon" v-on="on" @dragstart="weaponDragStart('farmer', weapon, $event)" @dragend="weaponDragEnd(weapon)" @click="addWeapon(weapon)">
 							<img :src="'/image/weapon/' + LeekWars.weapons[weapon.template].name + '.png'" draggable="false">
 						</div>
 					</rich-tooltip-weapon>
@@ -527,6 +527,13 @@
 			}
 			return groupedFarmerHats
 		}
+		get hasForgottenWeapon() {
+			if (!this.leek) { return false }
+			for (const weapon of this.leek.weapons) {
+				if (LeekWars.weapons[weapon.template].forgotten) { return true }
+			}
+			return false
+		}
 
 		@Watch('id', {immediate: true})
 		update() {
@@ -759,6 +766,7 @@
 
 		weaponDragStart(location: string, weapon: Weapon, e: DragEvent) {
 			if (this.leek && LeekWars.weapons[weapon.template].level > this.leek.level) { return }
+			if (location === 'farmer' && this.hasForgottenWeapon && LeekWars.weapons[weapon.template].forgotten) { return }
 			this.draggedWeapon = weapon
 			this.draggedWeaponLocation = location
 		}
@@ -776,6 +784,9 @@
 			}
 			if (this.leek.weapons.some((w) => w.template === template.id)) {
 				return LeekWars.toast(this.$i18n.t('leek.error_weapon_already_equipped', [this.leek.name]))
+			}
+			if (this.hasForgottenWeapon && LeekWars.weapons[weapon.template].forgotten) {
+				return LeekWars.toast(this.$i18n.t('leek.error_weapon_two_forgotten', [this.leek.name]))
 			}
 			LeekWars.post('leek/add-weapon', {leek_id: this.leek.id, weapon_id: weapon.id}).then(data => {
 				if (this.leek) {
