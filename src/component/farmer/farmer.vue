@@ -303,7 +303,6 @@
 						<router-link v-ripple :to="'/leek/' + leek.id" class="leek">
 							<div v-on="on">
 								<leek-image :leek="leek" :scale="0.9" />
-								<br>
 								<div class="name">{{ leek.name }}</div>
 								<talent :talent="leek.talent" />
 								<br>
