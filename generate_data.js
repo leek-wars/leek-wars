@@ -19,7 +19,8 @@ const values = [
 const promises = []
 
 for (const value of values) {
-	const p = request('https://leekwars.com/api/' + value[2])
+	const host = 'https://leekwars.com/'
+	const p = request(host + 'api/' + value[2])
 	promises.push(p.then((data) => {
 		console.log('received', value[0])
 		return "const " + value[1].toUpperCase()
