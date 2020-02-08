@@ -41,6 +41,7 @@
 	"error_max_weapon": "{0} ne peut pas équiper une arme supplémentaire.",
 	"error_max_chip": "{0} ne peut pas équiper une puce supplémentaire.",
 	"error_weapon_already_equipped": "{0} a déjà équipé cette arme.",
+	"error_weapon_two_forgotten": "{0} a déjà une arme oubliée équipée.",
 	"error_chip_already_equipped": "{0} a déjà équipé cette puce.",
 	"farmed_by": "Élevé par {farmer}",
 	"fights": "Combats",
