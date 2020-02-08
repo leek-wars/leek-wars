@@ -35,6 +35,8 @@
 			<area-view v-if="weapon.area != Area.SINGLE_CELL" :area="weapon.area" />
 
 			<effect-view v-for="(effect, e) in weapon.effects" :key="e" :effect="effect" />
+
+			<effect-view v-for="(effect, e) in weapon.passive_effects" :key="e" :effect="effect" :passive="true" />
 		</div>
 	</div>
 </template>

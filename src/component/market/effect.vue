@@ -1,5 +1,6 @@
 <template lang="html">
 	<div>
+		<span v-if="passive">{{ $t('effect.passive') }}</span>
 		<i18n v-if="effect.id == 14" path="effect.type_14_fixed">
 			<b slot="summon">{{ $t('effect.summon_' + effect.value1) }}</b>
 		</i18n>
@@ -66,6 +67,7 @@
 	@Component({ name: 'effect-view' })
 	export default class EffectView extends Vue {
 		@Prop() effect!: Effect
+		@Prop() passive!: boolean
 		EffectModifier = EffectModifier
 		get enemies() { return this.effect.targets & 1 }
 		get allies(): boolean { return (this.effect.targets & (1 << 1)) !== 0 }
