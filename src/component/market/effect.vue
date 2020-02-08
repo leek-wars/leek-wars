@@ -38,21 +38,21 @@
 			<span>{{ $t('effect.target_allies') }}</span>
 		</tooltip>
 
-		<tooltip v-if="!caster && !always_caster">
+		<tooltip v-if="!caster">
 			<template v-slot:activator="{ on }">
 				<span class="not-player" v-on="on"></span>
 			</template>
 			<span>{{ $t('effect.target_not_player') }}</span>
 		</tooltip>
 
-		<tooltip v-if="!nonSummons && !always_caster">
+		<tooltip v-if="!nonSummons">
 			<template v-slot:activator="{ on }">
 				<span class="summons" v-on="on"></span>
 			</template>
 			<span>{{ $t('effect.target_summons') }}</span>
 		</tooltip>
 
-		<tooltip v-if="!summons && !always_caster">
+		<tooltip v-if="!summons">
 			<template v-slot:activator="{ on }">
 				<span class="not-summons" v-on="on"></span>
 			</template>

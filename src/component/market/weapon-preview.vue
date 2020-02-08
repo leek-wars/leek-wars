@@ -36,7 +36,7 @@
 
 			<effect-view v-for="(effect, e) in weapon.effects" :key="e" :effect="effect" />
 
-			<effect-view v-for="(effect, e) in weapon.passive_effects" :key="e" :effect="effect" :passive="true" />
+			<effect-view v-for="(effect, e) in weapon.passive_effects" :key="'_' + e" :effect="effect" :passive="true" />
 		</div>
 	</div>
 </template>
