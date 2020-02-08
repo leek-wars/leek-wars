@@ -162,7 +162,7 @@
 							<i class="material-icons">edit</i>
 						</div>
 					</template>
-					<div slot="content" class="content center">
+					<div slot="content" class="weapons-wrapper center">
 						<loader v-if="!leek" />
 						<template v-else>
 							<rich-tooltip-weapon v-for="weapon in leek.orderedWeapons" :key="weapon.id" v-slot="{ on }" :instant="true" :weapon="LeekWars.weapons[weapon.template]" :bottom="true">
@@ -1173,6 +1173,9 @@
 			color: #555;
 		}
 	}
+	.weapons-wrapper {
+		padding: 6px 0;
+	}
 	.farmer-weapons .weapon, .farmer-chips .chip, .hat-dialog .hat {
 		position: relative;
 	}
@@ -1182,7 +1185,6 @@
 		position: absolute;
 		bottom: -5px;
 		right: -5px;
-		width: 20px;
 		height: 20px;
 		content: attr(quantity);
 		text-align: center;
