@@ -1,5 +1,5 @@
 <template>
-	<v-menu :close-on-content-click="false" :width="280" :nudge-top="bottom ? 0 : 6" :open-delay="_open_delay" :close-delay="_close_delay" :top="!bottom" transition="none" :bottom="bottom" open-on-hover offset-y>
+	<v-menu :close-on-content-click="false" :width="280" offset-overflow :nudge-top="bottom ? 0 : 6" :open-delay="_open_delay" :close-delay="_close_delay" :top="!bottom" transition="none" :bottom="bottom" open-on-hover offset-y>
 		<template v-slot:activator="{ on }">
 			<slot :on="on"></slot>
 		</template>
