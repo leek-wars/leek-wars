@@ -1490,6 +1490,52 @@ class Game {
 			add_cell(-2, -1)
 			add_cell(-2, 1)
 			add_cell(-1, 2)
+
+		} else if (area === Area.PLUS_2) {
+			init_lines(5)
+			add_cell(0, 0)
+			for (let i = 1; i <= 2; ++i) {
+				add_cell(i, 0)
+				add_cell(0, i)
+				add_cell(-i, 0)
+				add_cell(0, -i)
+			}
+		} else if (area === Area.PLUS_3) {
+			init_lines(7)
+			add_cell(0, 0)
+			for (let i = 1; i <= 3; ++i) {
+				add_cell(i, 0)
+				add_cell(0, i)
+				add_cell(-i, 0)
+				add_cell(0, -i)
+			}
+		} else if (area === Area.X_1) {
+			init_lines(3)
+			add_cell(0, 0)
+			for (let i = 1; i <= 1; ++i) {
+				add_cell(i, i)
+				add_cell(i, -i)
+				add_cell(-i, i)
+				add_cell(-i, -i)
+			}
+		} else if (area === Area.X_2) {
+			init_lines(5)
+			add_cell(0, 0)
+			for (let i = 1; i <= 2; ++i) {
+				add_cell(i, i)
+				add_cell(i, -i)
+				add_cell(-i, i)
+				add_cell(-i, -i)
+			}
+		} else if (area === Area.X_3) {
+			init_lines(7)
+			add_cell(0, 0)
+			for (let i = 1; i <= 3; ++i) {
+				add_cell(i, i)
+				add_cell(i, -i)
+				add_cell(-i, i)
+				add_cell(-i, -i)
+			}
 		}
 		this.setEffectAreaCells(cells, color, duration, lines, convert)
 	}
