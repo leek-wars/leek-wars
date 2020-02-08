@@ -863,19 +863,21 @@
 	}
 	.trophies-container {
 		display: grid;
-		grid-template-columns: repeat(auto-fill, minmax(48px, 1fr));
+		grid-template-columns: repeat(auto-fill, minmax(42px, 1fr));
 		grid-gap: 5px;
 		padding: 5px;
+	}
+	#app.app .trophies-container {
+		grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
 	}
 	.trophy {
 		padding: 4px;
 		border: 1px solid transparent;
 		text-align: center;
-	}
-	.trophy img {
-		width: 38px;
-		height: 38px;
-		vertical-align: bottom;
+		img {
+			width: 100%;
+			vertical-align: bottom;
+		}
 	}
 	.trophy-date {
 		padding-top: 4px;
