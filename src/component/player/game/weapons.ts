@@ -360,12 +360,14 @@ class Gazor extends WeaponAnimation {
 	public cartAngle = Math.PI / 2
 	public color: string
 	public gaz: Texture
+	public targetPos!: Position
 	constructor(game: Game) {
 		super(game, game.T.gazor, 15, 60, 0, -43, -12, 28, 52, 74, 50)
 		this.color = '#04e513'
 		this.gaz = game.T.gaz
 	}
 	public shoot(leekX: number, leekY: number, handPos: number, angle: number, orientation: number, targetPos: Position, targets: Entity[], caster: Entity, cell: Cell) {
+		this.targetPos = targetPos
 		const cos = Math.cos(angle)
 		const sin = Math.sin(angle)
 		const x = this.x + this.sx
@@ -375,7 +377,7 @@ class Gazor extends WeaponAnimation {
 		this.bulletZ = z
 		this.bulletAngle = (angle + Math.PI / 2) * orientation - Math.PI / 2
 		this.shoots = 80
-		this.game.setEffectArea(cell, Area.CIRCLE3, this.color)
+		this.game.setEffectArea(cell, Area.CIRCLE3, this.color, 120)
 		this.game.S.gazor.play()
 	}
 	public update(dt: number) {
@@ -393,11 +395,29 @@ class Gazor extends WeaponAnimation {
 	}
 }
 class UnbridledGazor extends Gazor {
+	explosions: number = 0
+	delay: number = 0
 	constructor(game: Game) {
 		super(game)
 		this.texture = game.T.unbridled_gazor
 		this.gaz = game.T.orange_gaz
 		this.color = '#ff5c00'
+	}
+	public shoot(leekX: number, leekY: number, handPos: number, angle: number, orientation: number, targetPos: Position, targets: Entity[], caster: Entity, cell: Cell) {
+		super.shoot(leekX, leekY, handPos, angle, orientation, targetPos, targets, caster, cell)
+		this.explosions = 4
+		this.delay = 40
+	}
+	public update(dt: number) {
+		super.update(dt)
+		if (this.explosions > 0) {
+			this.delay -= dt
+			if (this.delay < 0) {
+				this.game.particles.addExplosion(this.targetPos.x + Math.random() * 200 - 100, this.targetPos.y + Math.random() * 100 - 50, 0, this.game.T.explosion)
+				this.explosions--
+				this.delay = 15 + Math.random() * 10
+			}
+		}
 	}
 }
 class GrenadeLauncher extends Firegun {
