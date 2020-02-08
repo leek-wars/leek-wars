@@ -21,7 +21,10 @@
 		get changes() {
 			if (!this.version) { return [] }
 			const data = this.$t('changelog.' + this.version.data) as string
-			return data.split("=====").map(s => s.split("\n").filter((c) => c.length > 0).map((c) => c.replace('# ', '')))
+			return data.split("=====").map(s => s.split("\n")
+				.filter((c) => c.length > 0)
+				.map((c) => c.replace('# ', '').replace('#ai', '<span class="ai" title="' + this.$t('changelog.need_ai_change') + '">AI</span>'))
+			)
 		}
 	}
 </script>
@@ -30,6 +33,12 @@
 	.change {
 		padding: 0 10px;
 		line-height: 20px;
+		::v-deep .ai {
+			background: #00a3cc;
+			padding: 0 4px;
+			color: white;
+			border-radius: 4px;
+		}
 	}
 	.image {
 		width: calc(100% + 30px);
