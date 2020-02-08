@@ -513,21 +513,24 @@
 		position: absolute;
 		bottom: -5px;
 		right: -5px;
-		width: 20px;
+		min-width: 20px;
 		height: 20px;
+		padding: 1px 5px;
 		content: attr(leek-count);
 		text-align: center;
 		color: #eee;
 		border-radius: 20px;
 		background-color: #5fad1b;
 		font-weight: bold;
+		z-index: 1;
 	}
 	.items .item:not([farmer-count="0"]):after {
 		position: absolute;
 		bottom: -5px;
 		right: -5px;
-		width: 20px;
+		min-width: 20px;
 		height: 20px;
+		padding: 1px 5px;
 		content: attr(farmer-count);
 		text-align: center;
 		color: #eee;
