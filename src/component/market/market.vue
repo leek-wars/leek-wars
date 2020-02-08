@@ -179,6 +179,23 @@
 				<div class="sell red" @click="sell">{{ $t('sell') }}</div>
 			</div>
 		</popup>
+
+		<popup v-model="unseenItemDialog" :width="400" :full="true">
+			<span slot="title">{{ $t('new_item_unlocked') }}</span>
+			<div v-if="unseenItem" class="unseen-dialog">
+				<weapon-preview v-if="unseenItem.type == ItemType.WEAPON" :weapon="LeekWars.weapons[unseenItem.id]" />
+				<chip-preview v-else-if="unseenItem.type == ItemType.CHIP" :chip="LeekWars.chips[unseenItem.id]" />
+				<potion-preview v-else-if="unseenItem.type == ItemType.POTION" :potion="LeekWars.potions[unseenItem.id]" />
+				<hat-preview v-else-if="unseenItem.type == ItemType.HAT" :hat="LeekWars.hats[unseenItem.id]" />
+
+				<div v-if="unseenItem.trophy" class="card trophy">
+					<img :src="'/image/trophy/' + unseenItem.trophy.name + '.png'">
+					<i18n path="unlocked_with">
+						<b slot="trophy">{{ $t('trophy.' + unseenItem.trophy.name) }}</b>
+					</i18n>
+				</div>
+			</div>
+		</popup>
 	</div>
 </template>
 
@@ -226,6 +243,9 @@
 		chipMode: string = localStorage.getItem('market/sort_mode') === 'type' ? 'type' : 'level'
 		EffectTypeMarket = EffectTypeMarket
 		actions: any
+		unseen_items: ItemTemplate[] = []
+		unseenItem: ItemTemplate | null = null
+		unseenItemDialog: boolean = false
 
 		created() {
 			this.actions = [{icon: 'account_balance', click: () => this.$router.push('/bank')}]
@@ -264,10 +284,19 @@
 							}
 						}
 					}
+					if (!item.seen) {
+						this.unseen_items.push(item)
+					}
 				}
 				this.createFightPacks()
 				if (store.state.farmer) { this.setFightPackPrice(store.state.farmer) }
 				else { this.$root.$on('connected', (farmer: Farmer) => this.setFightPackPrice(farmer)) }
+
+				if (this.unseen_items.length) {
+					this.unseenItem = this.unseen_items[0]
+					this.unseenItemDialog = true
+				}
+
 				this.update()
 			})
 			this.$root.$on('back', () => {
@@ -390,7 +419,8 @@
 					leek_count: 0,
 					farmer_count: 0,
 					sell_price: 0,
-					fights: count
+					fights: count,
+					seen: true
 				} as ItemTemplate
 				this.fight_packs.push(pack)
 				this.items[pack.id] = pack
@@ -401,6 +431,20 @@
 			const ratio = store.state.farmer!.total_level / 1204
 			const priceHabs = Math.round(100000 + Math.pow(ratio, 3) * 4900000)
 			this.items_by_name['100-fights'].price_habs = priceHabs
+		}
+
+		@Watch('unseenItemDialog')
+		updateUnseenDialog() {
+			if (!this.unseenItemDialog) {
+				LeekWars.post('market/item-seen', {item: this.unseenItem!.id})
+				setTimeout(() => {
+					this.unseen_items.shift()
+					if (this.unseen_items.length) {
+						this.unseenItem = this.unseen_items[0]
+						this.unseenItemDialog = true
+					}
+				}, 200)
+			}
 		}
 	}
 </script>
@@ -593,5 +637,9 @@
 		font-style: italic;
 		color: #777;
 		padding-bottom: 8px;
+	}
+	.unseen-dialog .trophy {
+		margin: 10px;
+		padding: 10px;
 	}
 </style>
