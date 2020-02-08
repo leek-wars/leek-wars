@@ -21,5 +21,6 @@ class ItemTemplate {
 	public price_crystals!: number
 	public sellable!: boolean
 	public sell_price!: number
+	public seen!: boolean
 }
 export { ItemTemplate }
