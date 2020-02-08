@@ -18,5 +18,6 @@ class WeaponTemplate {
 	public area!: number
 	public los!: number
 	public template!: number
+	public passive_effects!: Effect[]
 }
 export { WeaponTemplate }

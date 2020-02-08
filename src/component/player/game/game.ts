@@ -33,6 +33,7 @@ enum Colors {
 	WISDOM_COLOR = "#5ebe00",
 	RESISTANCE_COLOR = "#fe7700",
 	MAGIC_COLOR = "#b800b6",
+	SCIENCE_COLOR = "#0000a2",
 }
 
 // Params
@@ -732,7 +733,7 @@ class Game {
 				const effect = entity.launched_effects[effect_id]
 				if (effect.turns === 1) {
 					delete entity.launched_effects[effect_id]
-				} else {
+				} else if (effect.turns !== -1) {
 					effect.turns--
 				}
 			}
@@ -1049,6 +1050,7 @@ class Game {
 		switch (effect) {
 		case EffectType.ABSOLUTE_SHIELD:
 		case EffectType.STEAL_ABSOLUTE_SHIELD:
+		case EffectType.RAW_ABSOLUTE_SHIELD:
 			leek.buffAbsoluteShield(value, this.jumping)
 			break
 		case EffectType.RELATIVE_SHIELD:
@@ -1063,13 +1065,22 @@ class Game {
 		case EffectType.BUFF_AGILITY:
 			leek.buffAgility(value, this.jumping)
 			break
+		case EffectType.RAW_BUFF_MAGIC:
+			leek.buffMagic(value, this.jumping)
+			break
+		case EffectType.RAW_BUFF_SCIENCE:
+			leek.buffScience(value, this.jumping)
+			break
 		case EffectType.BUFF_STRENGTH:
+		case EffectType.RAW_BUFF_STRENGTH:
 			leek.buffStrength(value, this.jumping)
 			break
 		case EffectType.BUFF_TP:
+		case EffectType.RAW_BUFF_TP:
 			leek.buffTP(value, this.jumping)
 			break
 		case EffectType.BUFF_MP:
+		case EffectType.RAW_BUFF_MP:
 			leek.buffMP(value, this.jumping)
 			break
 		case EffectType.BUFF_WISDOM:
@@ -1122,6 +1133,7 @@ class Game {
 			break
 		case EffectType.STEAL_ABSOLUTE_SHIELD:
 		case EffectType.ABSOLUTE_SHIELD:
+		case EffectType.RAW_ABSOLUTE_SHIELD:
 			leek.absoluteShield -= value
 			break
 		case EffectType.RELATIVE_SHIELD:
@@ -1137,10 +1149,17 @@ class Game {
 			leek.agility -= value
 			break
 		case EffectType.BUFF_STRENGTH:
+		case EffectType.RAW_BUFF_STRENGTH:
 			leek.strength -= value
 			break
 		case EffectType.BUFF_WISDOM:
 			leek.wisdom -= value
+			break
+		case EffectType.RAW_BUFF_MAGIC:
+			leek.magic -= value
+			break
+		case EffectType.RAW_BUFF_SCIENCE:
+			leek.science -= value
 			break
 		case EffectType.BUFF_RESISTANCE:
 			leek.resistance -= value
@@ -1149,9 +1168,11 @@ class Game {
 			leek.damageReturn -= value
 			break
 		case EffectType.BUFF_MP:
+		case EffectType.RAW_BUFF_MP:
 			leek.mp -= value
 			break
 		case EffectType.BUFF_TP:
+		case EffectType.RAW_BUFF_TP:
 			leek.tp -= value
 			break
 		}
@@ -1203,16 +1224,31 @@ class Game {
 			leek.agility += delta
 			break
 		case EffectType.BUFF_STRENGTH:
+		case EffectType.RAW_BUFF_STRENGTH:
 			leek.strength += delta
 			break
 		case EffectType.BUFF_WISDOM:
 			leek.wisdom += delta
+			break
+		case EffectType.RAW_BUFF_MAGIC:
+			leek.magic += delta
+			break
+		case EffectType.RAW_BUFF_SCIENCE:
+			leek.science += delta
 			break
 		case EffectType.BUFF_RESISTANCE:
 			leek.resistance += delta
 			break
 		case EffectType.DAMAGE_RETURN:
 			leek.damageReturn += delta
+			break
+		case EffectType.BUFF_MP:
+		case EffectType.RAW_BUFF_MP:
+			leek.mp += delta
+			break
+		case EffectType.BUFF_TP:
+		case EffectType.RAW_BUFF_TP:
+			leek.tp += delta
 			break
 		}
 		effect.value = new_value // Updating the effect's value to properly remove it with `removeEffect`
