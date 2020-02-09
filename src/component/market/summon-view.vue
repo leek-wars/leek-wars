@@ -27,12 +27,9 @@
 		</div>
 		<h4>{{ $t('market.summon_available_chips') }}</h4>
 		<div class="chips">
-			<tooltip v-for="chip of summon.chips" :key="chip.id">
-				<template v-slot:activator="{ on }">
-					<img :src="'/image/chip/small/' + LeekWars.chips[chip].name + '.png'" class="chip" v-on="on">
-				</template>
-				{{ $t('chip.' + LeekWars.chips[chip].name) }}
-			</tooltip>
+			<rich-tooltip-chip v-for="chip of summon.chips" :key="chip.id" v-slot="{ on }" :chip="LeekWars.chips[chip]" :bottom="true" :instant="true">
+				<img :src="'/image/chip/small/' + LeekWars.chips[chip].name + '.png'" class="chip" v-on="on">
+			</rich-tooltip-chip>
 		</div>
 	</div>
 </template>
