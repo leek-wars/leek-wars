@@ -115,8 +115,8 @@
 							<rich-tooltip-chip v-for="chip in currentLeek.chips" :key="chip.id" v-slot="{ on }" :chip="LeekWars.chips[chip]" :instant="true">
 								<img :src="'/image/chip/small/' + LeekWars.chips[chip].name + '.png'" class="chip" v-on="on" @click="removeLeekChip(chip)">
 							</rich-tooltip-chip>
+							<div v-if="currentLeek.chips.length < 20" class="add" @click="chipsDialog = true">+</div>
 						</div>
-						<div v-if="currentLeek.chips.length < 12" class="add" @click="chipsDialog = true">+</div>
 					</div>
 				</div>
 			</v-tab-item>
@@ -950,8 +950,8 @@
 		cursor: pointer;
 		display: inline-block;
 		vertical-align: top;
-		margin-left: 10px;
-		margin-right: 10px;
+		margin-left: 7px;
+		margin-right: 7px;
 		margin-top: 5px;
 	}
 	.column-scenario .add {
@@ -1121,6 +1121,7 @@
 	.leek-column .chips .container, .leek-column .weapons .container {
 		display: inline-flex;
 		align-items: center;
+		flex-wrap: wrap;
 	}
 	.leek-column .chip, .chips-dialog .chip {
 		width: 63px;
@@ -1132,7 +1133,7 @@
 		margin: 5px;
 	}
 	.leek-column .chip, .leek-column .weapon {
-		margin: 0 2px;
+		margin: 2px;
 	}
 	.map-column .map {
 		height: 430px;
