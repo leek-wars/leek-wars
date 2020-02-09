@@ -44,6 +44,7 @@
 	"n_agility": "{0} agilité",
 	"n_damage_return": "{0} renvoi dommages",
 	"n_life": "{0} PV",
+	"n_max_life": "{0} vie max",
 	"n_magic": "{0} magie",
 	"n_mp": "{0} PM",
 	"n_views": "pas de vue | 1 vue | {n} vues",
