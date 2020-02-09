@@ -800,7 +800,7 @@ class Vampirization extends StealChipAnimation {
 	}
 	public launch(launchPos: Position, position: Position, targets: Entity[], targetCell: Cell, caster: Entity) {
 		super.launch(launchPos, position, targets, targetCell, caster)
-		this.game.setEffectArea(targetCell, Area.X_2, '#5efe36')
+		this.game.setEffectArea(targetCell, Area.PLUS_3, '#5efe36')
 		this.createChipImage([caster], this.game.T.chip_vampirization)
 		this.createChipAureol([caster], this.game.T.heal_cross)
 	}
