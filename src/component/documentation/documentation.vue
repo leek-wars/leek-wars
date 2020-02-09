@@ -258,10 +258,6 @@
 		max-height: 999999px;
 		height: initial;
 		margin-right: 0;
-		::v-deep .content {
-			padding-right: 100px;
-			padding-left: 10px;
-		}
 		::v-deep a {
 			color: #5fad1b;
 			font-weight: 500;

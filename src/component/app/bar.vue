@@ -173,7 +173,7 @@
 		color: white;
 	}
 	.action img {
-		width: 26px;
+		width: 54px;
 		opacity: 1;
 		padding: 15px 14px;
 	}
@@ -193,7 +193,7 @@
 		background: #ff6f00;
 		color: #fff;
 		border-radius: 5px;
-		height: 12px;
+		height: 20px;
 		line-height: 12px;
 	}
 	.dialog {
