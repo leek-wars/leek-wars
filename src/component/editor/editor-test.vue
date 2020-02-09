@@ -635,7 +635,7 @@
 		}
 		createScenario() {
 			LeekWars.post('test-scenario/new', {name: this.newScenarioName}).then(data => {
-				const template = this.templates[this.selectedTemplate]
+				const template = LeekWars.clone(this.templates[this.selectedTemplate])
 				const team1 = template.team1
 				const team2 = template.team2
 				Vue.set(this.scenarios, data.id, {
