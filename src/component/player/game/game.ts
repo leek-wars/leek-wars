@@ -26,6 +26,7 @@ import { Turret } from './turret'
 enum Colors {
 	MP_COLOR = "#08D900",
 	LIFE_COLOR = "#ff0000",
+	MAX_LIFE_COLOR = "#00d5b5",
 	TP_COLOR = "#FF7F01",
 	SHIELD_COLOR = "#FF4A01",
 	STRENGTH_COLOR = "#833100",
@@ -860,6 +861,15 @@ class Game {
 		case ActionType.LIFE_LOST: {
 			const erosion = action.params.length > 3 ? action.params[3] : 0
 			this.leeks[action.params[1]].looseLife(action.params[2], erosion, this.jumping)
+			if (!this.jumping) {
+				this.log(action)
+				this.leeks[action.params[1]].randomHurt()
+			}
+			this.actionDone()
+			break
+		}
+		case ActionType.LOST_MAX_LIFE: {
+			this.leeks[action.params[1]].looseMaxLife(action.params[2], this.jumping)
 			if (!this.jumping) {
 				this.log(action)
 				this.leeks[action.params[1]].randomHurt()

@@ -44,6 +44,7 @@
 	"n_agility": "{0} agility",
 	"n_damage_return": "{0} damage return",
 	"n_life": "{0} HP",
+	"n_max_life": "{0} max life",
 	"n_magic": "{0} magic",
 	"n_mp": "{0} MP",
 	"n_views": "no view | 1 view | {n} views",

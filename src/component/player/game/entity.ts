@@ -272,6 +272,17 @@ class Entity {
 		}
 	}
 
+	public looseMaxLife(life: number, jump: boolean) {
+		this.maxLife -= life
+		if (this.maxLife < 0) { this.maxLife = 0 }
+
+		if (!jump) {
+			const info = new InfoText()
+			info.init("-" + life, Colors.MAX_LIFE_COLOR, -this.getHeight(), this.isTop)
+			this.infoText.push(info)
+		}
+	}
+
 	public looseStrength(strength: number, jump: boolean) {
 
 		this.strength -= strength
