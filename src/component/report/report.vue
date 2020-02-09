@@ -566,7 +566,7 @@
 			.image {
 				width: 46px;
 				height: 46px;
-				padding-right: 10px;
+				margin-right: 10px;
 				flex-basis: 50px 0 0;
 			}
 			.info {

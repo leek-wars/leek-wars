@@ -52,4 +52,7 @@
 		color: #777;
 		max-width: 110px;
 	}
+	.content {
+		padding-right: 100px;
+	}
 </style>

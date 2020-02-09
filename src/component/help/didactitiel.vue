@@ -128,7 +128,7 @@
 	export default class Didactitiel extends Vue {
 		@Prop() value!: boolean
 		page: number = 1
-		height: number = 250
+		height: number = 280
 
 		get farmerName() {
 			return this.$store.state.farmer ? this.$store.state.farmer.name : ''
@@ -139,7 +139,7 @@
 		next() {
 			if (this.page < 8) {
 				this.page++
-				setTimeout(() => this.height = (this.$refs.content as any).querySelector('.page.active').offsetHeight, 10)
+				setTimeout(() => this.height = (this.$refs.content as any).querySelector('.page.active').offsetHeight + 30, 10)
 			} else {
 				this.close()
 			}
@@ -147,7 +147,7 @@
 		previous() {
 			if (this.page > 1) {
 				this.page--
-				setTimeout(() => this.height = (this.$refs.content as any).querySelector('.page.active').offsetHeight, 10)
+				setTimeout(() => this.height = (this.$refs.content as any).querySelector('.page.active').offsetHeight + 30, 10)
 			} else {
 				this.close()
 			}
