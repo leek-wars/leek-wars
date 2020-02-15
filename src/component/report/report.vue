@@ -128,7 +128,7 @@
 			</div>
 			<loader v-if="!report" />
 			<div v-else ref="chartPanel" class="chart-panel" @mouseleave="chartMouseLeave" @mousemove="chartMouseMove">
-				<chartist ref="chart" :data="chartData" :options="chartOptions" :event-handlers="chartEvents" ratio="ct-major-eleventh" class="chart" type="Line" />
+				<chartist ref="chart" :data="chartData" :options="chartOptions" :event-handlers="chartEvents" ratio="ct-major-eleventh" class="chart" :class="{long: report.duration >= 30}" type="Line" />
 				<div v-show="chartTooltipValue" ref="chartTooltip" :style="{top: chartTooltipY + 'px', left: chartTooltipX + 'px'}" class="chart-tooltip v-tooltip__content top" v-html="chartTooltipValue"></div>
 			</div>
 		</panel>
@@ -537,6 +537,9 @@
 		.tooltip {
 			pointer-events: none;
 		}
+		&.long::v-deep .ct-labels *:nth-child(even) .ct-label.ct-horizontal.ct-end {
+			padding-top: 12px;
+		}
 	}
 	.warnings-errors .title {
 		font-size: 18px;
@@ -582,10 +585,5 @@
 				align-items: center;
 			}
 		}
-	}
-</style>
-<style>
-	.chart .ct-labels *:nth-child(even) .ct-label.ct-horizontal.ct-end {
-		padding-top: 12px;
 	}
 </style>
