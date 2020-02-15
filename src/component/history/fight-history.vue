@@ -25,7 +25,7 @@
 			</router-link>
 			<div class="center">
 				<router-link :to="'/fight/' + fight.id">
-					<img v-if="fight.status == 0" src="/image/icon/gearing.png">
+					<i v-if="fight.status == 0" class="material-icons">hourglass_empty</i>
 					<img v-else-if="fight.context == FightContext.CHALLENGE" src="/image/icon/flag.png">
 					<img v-else-if="fight.context == FightContext.TOURNAMENT" src="/image/icon/trophy.png">
 					<img v-else src="/image/icon/garden.png">
@@ -81,6 +81,11 @@
 				height: 22px;
 				margin: 10px 6px;
 			}
+			i {
+				color: white;
+				line-height: 42px;
+				animation: rotate 2s linear infinite;
+			}
 		}
 		.fighters {
 			height: 42px;
@@ -118,5 +123,10 @@
 	}
 	.generating {
 		background-color: white;
+	}
+	@keyframes rotate {
+		0% { transform: rotate(0); }
+		20% { transform: rotate(180deg); }
+		100% { transform: rotate(180deg); }
 	}
 </style>
