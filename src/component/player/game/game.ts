@@ -1330,7 +1330,7 @@ class Game {
 			this.mouseRealY = pos.y * this.ground.scale
 			let hover_entity = null
 			for (const entity of this.leeks) {
-				if (entity.cell === this.mouseCell && entity.active) {
+				if (entity.cell === this.mouseCell && entity.active && !entity.dead) {
 					hover_entity = entity
 					break
 				}
