@@ -38,6 +38,7 @@
 			padding: 0 4px;
 			color: white;
 			border-radius: 4px;
+			cursor: help;
 		}
 	}
 	.image {
