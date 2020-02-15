@@ -10,6 +10,7 @@
 		</td>
 		<td>{{ row.talent }}</td>
 		<td>{{ row.level }}</td>
+		<td>{{ row.xp | number }}</td>
 		<td>
 			<router-link :to="'/farmer/' + row.farmer_id">
 				<rich-tooltip-farmer :id="row.farmer_id" v-slot="{ on }">

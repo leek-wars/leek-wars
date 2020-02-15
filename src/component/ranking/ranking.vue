@@ -82,6 +82,12 @@
 									<i v-if="order === 'level'" class="material-icons">expand_less</i>
 								</router-link>
 							</th>
+							<th>
+								<router-link :to="'/ranking/leek/xp' + (active ? '/active' : '') + '/page-' + page">
+									<span>{{ $t('xp') }}</span>
+									<i v-if="order === 'xp'" class="material-icons">expand_less</i>
+								</router-link>
+							</th>
 							<th class="column-farmer">{{ $t('farmer') }}</th>
 							<th>{{ $t('country') }}</th>
 							<th class="column-team">{{ $t('team') }}</th>
@@ -146,6 +152,12 @@
 								<router-link :to="'/ranking/team/total-level' + (active ? '/active' : '') + '/page-' + page">
 									<span>{{ $t('total_level') }}</span>
 									<i v-if="order === 'total-level'" class="material-icons">expand_less</i>
+								</router-link>
+							</th>
+							<th>
+								<router-link :to="'/ranking/team/xp' + (active ? '/active' : '') + '/page-' + page">
+									<span>{{ $t('xp') }}</span>
+									<i v-if="order === 'xp'" class="material-icons">expand_less</i>
 								</router-link>
 							</th>
 							<th>
