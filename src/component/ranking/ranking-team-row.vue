@@ -7,6 +7,7 @@
 		<td>{{ row.talent }}</td>
 		<td>{{ row.level }}</td>
 		<td>{{ row.total_level }}</td>
+		<td>{{ row.xp | number }}</td>
 		<td>{{ row.farmer_count }}</td>
 		<td>{{ row.leek_count }}</td>
 	</tr>
