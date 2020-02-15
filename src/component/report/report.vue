@@ -9,6 +9,9 @@
 		<div class="page-header page-bar">
 			<h1>{{ $t('title') }}</h1>
 			<div class="tabs">
+				<div v-if="report && $store.getters.admin" class="tab disabled">
+					{{ fight.size | number }} Ko
+				</div>
 				<div v-if="report" class="tab disabled">
 					{{ $t('duration', [report.duration]) }}
 				</div>
