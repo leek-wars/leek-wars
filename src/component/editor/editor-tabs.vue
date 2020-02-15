@@ -13,18 +13,18 @@
 		</div>
 		<v-menu ref="menu" v-model="menu" :activator="activator" offset-y @input="menuChange()">
 			<v-list :dense="true">
-				<v-list-tile v-ripple @click="close(currentI)">
+				<v-list-item v-ripple @click="close(currentI)">
 					<i class="material-icons">close</i>
-					<v-list-tile-content>
-						<v-list-tile-title>{{ $t('editor.close') }}</v-list-tile-title>
-					</v-list-tile-content>
-				</v-list-tile>
-				<v-list-tile v-ripple @click="closeOthers(currentAI)">
+					<v-list-item-content>
+						<v-list-item-title>{{ $t('editor.close') }}</v-list-item-title>
+					</v-list-item-content>
+				</v-list-item>
+				<v-list-item v-ripple @click="closeOthers(currentAI)">
 					<i class="material-icons">close</i>
-					<v-list-tile-content>
-						<v-list-tile-title>{{ $t('editor.close_others') }}</v-list-tile-title>
-					</v-list-tile-content>
-				</v-list-tile>
+					<v-list-item-content>
+						<v-list-item-title>{{ $t('editor.close_others') }}</v-list-item-title>
+					</v-list-item-content>
+				</v-list-item>
 			</v-list>
 		</v-menu>
 	</div>
