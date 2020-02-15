@@ -1840,6 +1840,7 @@ class Game {
 		}
 		this.consoleLines = []
 		this.effects = []
+		this.drawArea = 0
 
 		for (let i = 0; i < this.particles.particles.length; i++) {
 			this.particles.particles.splice(i, 1)
