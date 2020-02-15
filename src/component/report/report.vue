@@ -584,3 +584,8 @@
 		}
 	}
 </style>
+<style>
+	.chart .ct-labels *:nth-child(even) .ct-label.ct-horizontal.ct-end {
+		padding-top: 12px;
+	}
+</style>
