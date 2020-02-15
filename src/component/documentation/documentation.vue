@@ -23,8 +23,8 @@
 				</panel>
 			</div>
 			<div v-show="!LeekWars.mobile || LeekWars.splitBack" class="column9">
-				<div ref="elements" v-autostopscroll="'bottom'" class="items">
-					<panel v-for="(item, i) in items" :key="i" :item="item.name" :class="{deprecated: item.deprecated}" class="item">
+				<div ref="elements" v-autostopscroll="'bottom'" class="items" @scroll="scroll">
+					<panel v-for="(item, i) of lazy_items" :key="i" :item="item.name" :class="{deprecated: item.deprecated}" class="item">
 						<documentation-function v-if="'return_type' in item" :fun="item" />
 						<documentation-constant v-else :constant="item" />
 					</panel>
@@ -50,6 +50,7 @@
 		items_by_category: {[key: number]: any} = {}
 		query: string = ''
 		Function = Function
+		lazy_items: any[] = []
 		created() {
 			const get_categories = (callback: any) => {
 				if (localStorage.getItem('data/function_categories')) {
@@ -86,6 +87,7 @@
 					; (item as any).real_name = item.name
 					this.items_by_category[item.category].push(item)
 				}
+				this.lazy_items = this.items.slice(0, 20)
 
 				LeekWars.setTitle(this.$i18n.t('documentation.title'))
 				this.update()
@@ -193,6 +195,14 @@
 		regexIndexOf(str: string, regex: RegExp, startpos: number) {
 			const indexOf = str.substring(startpos || 0).search(regex)
 			return (indexOf >= 0) ? (indexOf + (startpos || 0)) : indexOf
+		}
+		scroll(e: Event) {
+			if (this.lazy_items.length < this.items.length) {
+				const items = this.$refs.elements as Element
+				if (items.scrollTop + window.innerHeight + 500 > items.scrollHeight) {
+					this.lazy_items.push(...this.items.slice(this.lazy_items.length, this.lazy_items.length + 10))
+				}
+			}
 		}
 	}
 </script>
