@@ -75,7 +75,9 @@
 		<panel class="first">
 			<div class="container">
 				<div class="column4">
-					<h4>{{ $t('leek') }}</h4>
+					<router-link to="/ranking/active">
+						<h4>{{ $t('leek') }} <span class="arrow">▶</span></h4>
+					</router-link>
 					<table class="ranking">
 						<tr class="header">
 							<th class="p15">{{ $t('place') }}</th>
@@ -96,7 +98,9 @@
 					</table>
 				</div>
 				<div class="column4">
-					<h4>{{ $t('farmer') }}</h4>
+					<router-link to="/ranking/farmer/active">
+						<h4>{{ $t('farmer') }} <span class="arrow">▶</span></h4>
+					</router-link>
 					<table class="ranking">
 						<tr class="header">
 							<th class="p15">{{ $t('place') }}</th>
@@ -123,7 +127,9 @@
 					</table>
 				</div>
 				<div class="column4">
-					<h4>{{ $t('main.team') }}</h4>
+					<router-link to="/ranking/team/active">
+						<h4>{{ $t('team') }} <span class="arrow">▶</span></h4>
+					</router-link>
 					<table class="ranking">
 						<tr class="header">
 							<th class="p20">{{ $t('place') }}</th>
@@ -512,6 +518,9 @@
 	h4 {
 		margin: 10px;
 		margin-top: 0;
+		.arrow {
+			padding-left: 2px;
+		}
 	}
 	.tiles {
 		display: grid;
