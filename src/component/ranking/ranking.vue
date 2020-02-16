@@ -393,7 +393,7 @@
 			border-bottom: 1px solid #ddd;
 			border-right: 1px solid #ddd;
 			text-align: center;
-			padding: 4px 7px;
+			padding: 5px 7px;
 			white-space: nowrap;
 		}
 		::v-deep td:last-child {
@@ -459,7 +459,7 @@
 			}
 		}
 		::v-deep .country-wrapper {
-			height: 20px;
+			height: 18px;
 			img {
 				margin-top: -2px;
 				width: 24px;
