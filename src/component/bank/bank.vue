@@ -56,6 +56,10 @@
 		padding: 20px;
 		font-size: 17px;
 		text-align: justify;
+		line-height: 26px;
+		::v-deep .crystal {
+			margin-bottom: -6px;
+		}
 	}
 	#app.app .bank-description {
 		padding: 5px 0;
