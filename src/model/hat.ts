@@ -10,5 +10,6 @@ class HatTemplate {
 	public level!: number
 	public width!: number
 	public height!: number
+	public template!: number
 }
 export { Hat, HatTemplate }

@@ -12,7 +12,13 @@
 		<div v-if="$te('hat.' + hat.name + '_desc')" class="desc">
 			{{ $t('hat.' + hat.name + '_desc') }}
 		</div>
-		<div class="stats"></div>
+		<div class="stats">
+			<div class="leek-preview">
+				<leek-image :leek="{level: 30, hat: hat.template}" :scale="0.55" />
+				<leek-image :leek="{level: 90, hat: hat.template}" :scale="0.65" />
+				<leek-image :leek="{level: 250, hat: hat.template}" :scale="0.7" />
+			</div>
+		</div>
 	</div>
 </template>
 

@@ -15,9 +15,9 @@
 				<template v-if="effect.type == PotionEffect.CHANGE_SKIN">
 					<div :key="e" v-html="$t('potion.effect_' + effect.type, [$t('potion.skin_' + effect.params[0])])"></div>
 					<div :key="e + '_'" class="leek-preview">
-						<img :src="'/image/leek/leek3_front_' + LeekWars.skins[effect.params[0]] + '.png'" width="55">
-						<img :src="'/image/leek/leek5_front_' + LeekWars.skins[effect.params[0]] + '.png'" width="75">
-						<img :src="'/image/leek/leek8_front_' + LeekWars.skins[effect.params[0]] + '.png'" width="105">
+						<leek-image :leek="{level: 30, skin: effect.params[0]}" :scale="0.55" />
+						<leek-image :leek="{level: 90, skin: effect.params[0]}" :scale="0.65" />
+						<leek-image :leek="{level: 250, skin: effect.params[0]}" :scale="0.7" />
 					</div>
 				</template>
 				<div v-else :key="e">
