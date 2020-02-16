@@ -845,6 +845,11 @@
 	.v-dialog .content {
 		padding: 0;
 	}
+	.tabs {
+		::v-deep .tab-content {
+			min-height: 550px;
+		}
+	}
 	.tabs .tab {
 		cursor: pointer;
 	}
