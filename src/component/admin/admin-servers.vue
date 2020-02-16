@@ -170,7 +170,7 @@
 		padding-left: 5px;
 		padding-right: 5px;
 		display: inline-block;
-		width: 46.5%;
+		width: 50%;
 	}
 	.server .thread .th-name {
 		color: #666;
@@ -192,9 +192,9 @@
 	}
 	.queue .farmer {
 		display: inline-block;
-		width: 60px;
+		width: 68px;
 		text-align: center;
-		padding: 3px 4px;
+		padding: 4px 4px;
 		margin-right: 6px;
 		margin-bottom: 6px;
 		.fight {
