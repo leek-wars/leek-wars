@@ -305,9 +305,6 @@
 		font-weight: bold;
 		margin: 10px;
 	}
-	.item ::v-deep li {
-		margin-left: 30px;
-	}
 	pre {
 		max-width: 500px;
 	}

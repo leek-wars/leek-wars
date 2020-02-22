@@ -962,9 +962,6 @@
 		box-shadow: 2px 3px 5px rgba(0,0,0,.2);
 		border: 1px solid silver;
 		z-index: 100;
-		::v-deep li {
-			margin-left: 30px;
-		}
 	}
 	.details ::v-deep .deprecated-message {
 		color: #ff7f00;
