@@ -952,9 +952,6 @@
 		margin-right: 10px;
 		margin-top: 10px;
 	}
-	li {
-		margin-left: 20px;
-	}
 	code .CodeMirror {
 		width: 90%;
 		margin: 10px auto;
