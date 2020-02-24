@@ -299,7 +299,7 @@
 		bottom: 50px;
 	}
 	.page-wrapper {
-		background: rgba(80, 80, 80, 0.6);
+		background: rgba(255, 255, 255, 0.1);
 		padding: 12px;
 		padding-bottom: 0;
 	}

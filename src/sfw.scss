@@ -59,8 +59,8 @@
 	.xp-bar, .switch-active .switch-switch {
 		background: #caf0ca;
 	}
-	.switch-active .switch-switch:before {
-		border-color: #caf0ca transparent transparent #caf0ca;
+	.accent--text, .primary--text {
+		color: #caf0ca !important;
 	}
 	.pagination a.current {
 		background: none repeat scroll 0% 0% transparent;
@@ -243,5 +243,17 @@
 	.v-btn.error {
 		background-color: #ffecec !important;
 		color: #777;
+	}
+	svg.tournament {
+		opacity: 1;
+		polyline, rect:not([me]) {
+			opacity: 0.1;
+		}
+		rect[me] {
+			fill: transparent;
+		}
+		image {
+			opacity: 0.08;
+		}
 	}
 }
