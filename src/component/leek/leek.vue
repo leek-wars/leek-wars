@@ -1175,6 +1175,10 @@
 	}
 	.weapons-wrapper {
 		padding: 6px 0;
+		height: 100%;
+		justify-content: center;
+		display: flex;
+		flex-direction: column;
 	}
 	.farmer-weapons .weapon, .farmer-chips .chip, .hat-dialog .hat {
 		position: relative;

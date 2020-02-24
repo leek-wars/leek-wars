@@ -88,11 +88,10 @@
 	}
 	.panel > .header h2 {
 		color: #eee;
-		font-size: 19px;
+		font-size: 18px;
 		display: inline-block;
 		height: 36px;
 		line-height: 36px;
-		background: rgba(150, 150, 150, 0.5);
 		padding: 0 12px;
 		position: relative;
 		white-space: nowrap;
@@ -112,17 +111,6 @@
 	.panel.first > .header h2 {
 		border-top-left-radius: 0px;
 	}
-	.panel > .header h2:before {
-		content: "";
-		position: absolute;
-		right: -20px;
-		top: 0;
-		width: 0;
-		height: 0;
-		border-style: solid;
-		border-width: 36px 0 0 20px;
-		border-color: transparent transparent transparent rgba(150, 150, 150, 0.5);
-	}
 	.header > .actions {
 		height: 36px;
 		display: flex;
@@ -133,7 +121,6 @@
 		height: 36px;
 		line-height: 36px;
 		color: white;
-		background: rgba(0, 0, 0, 0.4);
 		padding: 0 10px;
 		cursor: pointer;
 		display: inline-flex;
@@ -147,9 +134,9 @@
 			margin-right: 6px;
 		}
 		i {
-			padding: 4px 0;
+			padding: 6px 0;
 			opacity: 0.9;
-			font-size: 28px;
+			font-size: 24px;
 			margin-right: 6px;
 		}
 	}
@@ -162,7 +149,7 @@
 		margin-right: 0;
 	}
 	.header > .actions ::v-deep .button:hover {
-		background-image: linear-gradient(to bottom, rgba(110, 201, 31, 0.7) 0%, rgba(110, 201, 31, 0.9) 50%, rgba(110, 201, 31, 0.7) 100%);
+		background: rgba(110, 201, 31, 0.8) 0%;
 	}
 	.panel > .content {
 		padding: 15px;

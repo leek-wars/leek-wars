@@ -93,7 +93,7 @@
 		}
 		.fighter {
 			padding: 4px 6px;
-			width: 98px;
+			width: 109px;
 			vertical-align: top;
 			display: inline-block;
 			overflow: hidden;

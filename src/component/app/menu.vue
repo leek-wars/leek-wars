@@ -266,21 +266,20 @@
 	.menu .section {
 		height: 40px;
 		line-height: 40px;
-		margin-bottom: 1px;
 		position: relative;
-		background: #222;
 		font-weight: 400;
 		font-size: 17px;
 		color: #eee;
 		white-space: nowrap;
 		display: block;
+		background: #222;
 	}
 	.menu a div {
 		overflow: hidden;
 	}
 	.menu .section[label]:after {
 		position: absolute;
-		background: #5fad1b;
+		background: #333;
 		right: -10px;
 		top: 50%;
 		margin-top: -13.5px;
@@ -289,6 +288,7 @@
 		border-radius: 5px;
 		padding: 1px 5px;
 		line-height: normal;
+		z-index: 2;
 	}
 	#app.app .menu .section[label]:after {
 		right: 8px;
@@ -314,16 +314,41 @@
 		height: 46px;
 	}
 	.menu-center a:not(.router-link-active):hover {
-		background-image: linear-gradient(to bottom, rgba(150, 150, 150, 0.5) 0%, rgba(150, 150, 150, 0.7) 50%, rgba(150, 150, 150, 0.5) 100%);
+		background: rgba(150, 150, 150, 0.2);
 	}
 	.menu-center a.router-link-active {
-		background-image: linear-gradient(to bottom, rgba(110, 201, 31, 0.7) 0%, rgba(110, 201, 31, 0.9) 50%, rgba(110, 201, 31, 0.7) 100%);
+		background: #5fad1b;
+		color: white;
+		text-shadow: 0px 2px 3px rgba(0, 0, 0, 0.3), 0px 1px 3px rgba(0, 0, 0, 0.3), 0px 2px 6px rgba(0, 0, 0, 0.3);
+		&:before {
+			content: "";
+			position: absolute;
+			z-index: 1;
+			right: -13px;
+			top: 0;
+			width: 0;
+			height: 0;
+			border-style: solid;
+			border-width: 40px 13px 0 0;
+			border-color: #5fad1b transparent transparent transparent;
+		}
 	}
-	.menu-center a.router-link-active:active {
-		background-image: linear-gradient(to bottom, rgba(110, 201, 31, 0.9) 0%, rgba(110, 201, 31, 1) 50%, rgba(110, 201, 31, 0.9) 100%);
-	}
-	#app.menu-collapsed .menu-center a .text {
-		display: none;
+	#app.menu-collapsed .menu-center a {
+		.text {
+			display: none;
+		}
+		&.router-link-active:before {
+			content: "";
+			position: absolute;
+			z-index: 1;
+			right: -13px;
+			top: 0;
+			width: 0;
+			height: 0;
+			border-style: solid;
+			border-width: 46px 13px 0 0;
+			border-color: #5fad1b transparent transparent transparent;
+		}
 	}
 	.menu-center a img {
 		height: 24px;
