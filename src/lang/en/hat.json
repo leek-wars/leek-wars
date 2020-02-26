@@ -1,13 +1,23 @@
 {
+	"black_chinese_hat": "Black chinese hat",
+	"black_harlequin": "Black harlequin",
+	"blue_wizard_hat": "Blue wizard Hat",
 	"chinese_hat": "Rice Hat",
 	"christmas_hat": "Christmas Hat",
 	"christmas_hat_desc": "Who never dreamed of seeing a leek wearing a Christmas hat?",
+	"christmas_hat_black": "Bogeymen hat",
 	"crown": "Crown",
 	"cyan_christmas_hat": "Cyan Christmas Hat",
 	"green_christmas_hat": "Green Christmas Hat",
+	"green_wizard_hat": "Green wizard hat",
 	"harlequin": "Harlequin",
 	"mugiwara": "Straw Hat",
 	"panama": "Panama",
+	"red_chinese_hat": "Red chinese hat",
+	"red_wizard_hat": "Red wizard hat",
 	"topper": "Topper",
-	"wizard_hat": "Wizard Hat"
+	"wizard_hat": "Wizard Hat",
+	"white_chinese_hat": "White chinese hat",
+	"white_harlequin": "White harlequin",
+	"white_wizard_hat": "White wizard hat"
 }
