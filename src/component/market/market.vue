@@ -77,7 +77,7 @@
 						<chip-preview v-else-if="selectedItem.type == ItemType.CHIP" :chip="LeekWars.chips[selectedItem.id]" />
 						<potion-preview v-else-if="selectedItem.type == ItemType.POTION" :potion="LeekWars.potions[selectedItem.id]" />
 						<fight-pack-preview v-else-if="selectedItem.type == ItemType.FIGHT_PACK" :pack="selectedItem" />
-						<hat-preview v-else-if="selectedItem.type == ItemType.HAT" :hat="LeekWars.hats[selectedItem.id]" />
+						<hat-preview v-else-if="selectedItem.type === ItemType.HAT && LeekWars.hats[selectedItem.id]" :hat="LeekWars.hats[selectedItem.id]" />
 
 						<div v-if="selectedItem.trophy" class="trophy">
 							<img :src="'/image/trophy/' + selectedItem.trophy.name + '.png'">
@@ -108,7 +108,7 @@
 								</div>
 							</template>
 						</div>
-						<div v-if="selectedItem.leek_objs.length">
+						<div v-if="selectedItem.leek_objs && selectedItem.leek_objs.length">
 							<div><b>{{ $t('equipped_on') }}</b></div>
 							<div class="leeks">
 								<router-link v-for="leek in selectedItem.leek_objs" :key="leek.id" :to="'/leek/' + leek.id">
@@ -273,8 +273,15 @@
 						this.potions.push(LeekWars.potions[item.id])
 						this.items_by_name[LeekWars.potions[item.id].name] = item
 					} else if (item.type === ItemType.HAT) {
-						this.hats.push(LeekWars.hats[item.id])
-						this.items_by_name[LeekWars.hats[item.id].name] = item
+						const hat = LeekWars.hats[item.id]
+						if (hat) {
+							this.hats.push(hat)
+							this.items_by_name[hat.name] = item
+						} else {
+							const hat = {...item, name: item.name.replace(/^hat_/, '')}
+							this.hats.push(hat)
+							this.items_by_name[hat.name] = hat
+						}
 					}
 					item.leek_objs = []
 					if (this.$store.state.farmer) {

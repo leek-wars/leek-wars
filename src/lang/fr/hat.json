@@ -1,13 +1,23 @@
 {
+	"black_chinese_hat": "Chapeau chinois noir",
+	"black_harlequin": "Arlequin noir",
+	"blue_wizard_hat": "Chapeau de sorcier bleu",
 	"chinese_hat": "Chapeau chinois",
 	"christmas_hat": "Bonnet de Noël",
 	"christmas_hat_desc": "Qui n'a jamais rêvé de voir un poireau porter un bonnet de Noël ?",
+	"christmas_hat_black": "Bonnet du Père Fouettard",
 	"crown": "Couronne",
 	"cyan_christmas_hat": "Bonnet de Noël turquoise",
 	"green_christmas_hat": "Bonnet de Noël vert",
+	"green_wizard_hat": "Chapeau de sorcier vert",
 	"harlequin": "Arlequin",
 	"mugiwara": "Chapeau de paille",
 	"panama": "Panama",
+	"red_chinese_hat": "Chapeau chinois rouge",
+	"red_wizard_hat": "Chapeau de sorcier rouge",
 	"topper": "Haut-de-forme",
-	"wizard_hat": "Chapeau de sorcier"
+	"wizard_hat": "Chapeau de sorcier",
+	"white_chinese_hat": "Chapeau chinois blanc",
+	"white_harlequin": "Arlequin blanc",
+	"white_wizard_hat": "Chapeau de sorcier blanc"
 }
