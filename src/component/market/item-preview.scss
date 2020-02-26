@@ -36,14 +36,20 @@
 			max-height: 120px;
 		}
 	}
+	&.pomp .image {
+		height: 100px;
+		img {
+			max-height: 90px;
+		}
+	}
 	.image.sound img {
 		cursor: help;
 	}
 	.desc {
 		text-align: justify;
 		font-size: 14px;
-		color: #777;
-		padding: 5px;
+		color: #666;
+		padding: 8px;
 	}
 	.stats div {
 		padding: 4px;

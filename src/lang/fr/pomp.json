@@ -1,0 +1,10 @@
+{
+	"ai_lines": "Afficher nombre de lignes de l'IA",
+	"ai_lines_desc": "Cet apparat vous permet d'afficher à tous le nombre de lignes de votre IA sur la page de vos poireaux.",
+	"hold_weapon": "Tenir une arme",
+	"hold_weapon_desc": "Cet apparat permet à votre poireau de tenir une arme dans ses mains, visible sur sa page et partout où son visuel apparaît sur le jeu.",
+	"leek_title": "Titre de poireau",
+	"leek_title_desc": "Cet apparat vous permet de donner un titre à vos poireaux, qui sera affiché sur sa page et à d'autres endroits sur le jeu.",
+	"farmer_title": "Titre d'éleveur",
+	"farmer_title_desc": "Cet apparat vous permet de vous donner un titre, qui sera affiché sur votre page et à d'autres endroits sur le jeu comme le forum, les tooltips avancées etc."
+}

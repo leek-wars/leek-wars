@@ -34,6 +34,7 @@ import mobile_app from "@/lang/en/mobile-app.json"
 import moderation from "@/lang/en/moderation.json"
 import new_leek from '@/lang/en/new-leek.json'
 import notifications from '@/lang/en/notifications.json'
+import pomp from '@/lang/en/pomp.json'
 import potion from '@/lang/en/potion.json'
 import ranking from '@/lang/en/ranking.json'
 import report from '@/lang/en/report.json'
@@ -48,7 +49,7 @@ import trophy from "@/lang/en/trophy.json"
 import tutorial from "@/lang/en/tutorial.json"
 import weapon from '@/lang/en/weapon.json'
 
-const translations = { garden, trophies, changelog, change_email, market, main, documentation, general_help, about, farmer, conditions, chip, weapon, potion, effect, bank, country, entity, hat, leekscript, mail, notifications, leek, forum, tournament, statistics, settings, team, help, ranking, editor, forum_topic, forum_category, accept_conditions, fight, forgot_password, history, legal, login, messages, mobile_app, moderation, report, search, signup, trophy, new_leek, tutorial, didactitiel }
+const translations = { garden, trophies, changelog, change_email, market, main, documentation, general_help, about, farmer, conditions, chip, weapon, potion, effect, bank, country, entity, hat, leekscript, mail, notifications, leek, forum, tournament, statistics, settings, team, help, ranking, editor, forum_topic, forum_category, accept_conditions, fight, forgot_password, history, legal, login, messages, mobile_app, moderation, report, search, signup, trophy, new_leek, tutorial, didactitiel, pomp }
 
 import { setTranslations } from "@/locale"
 // import wiki from '@/wiki/fr.wiki'
