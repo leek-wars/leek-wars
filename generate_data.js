@@ -8,6 +8,7 @@ const values = [
 	['functions', 'functions', 'function/get-all', 'Function[]'],
 	['hats', 'hats', 'hat/get-all', '{[key: string]: HatTemplate}'],
 	['weapons', 'weapons', 'weapon/get-all', '{[key: string]: WeaponTemplate}'],
+	['pomps', 'pomps', 'pomp/get-all', '{[key: string]: PompTemplate}'],
 	['potions', 'potions', 'potion/get-all', '{[key: string]: PotionTemplate}'],
 	['hatTemplates', 'hat_templates', 'hat/get-templates', '{[key: string]: {id: number, item: number}}'],
 	['weaponTemplates', 'weapon_templates', 'weapon/get-templates', '{[key: string]: {id: number, item: number}}'],
@@ -41,6 +42,7 @@ import { ChipTemplate } from '@/model/chip'
 import { Constant } from '@/model/constant'
 import { Function } from '@/model/function'
 import { HatTemplate } from '@/model/hat'
+import { PompTemplate } from '@/model/pomp'
 import { PotionTemplate } from '@/model/potion'
 import { SummonTemplate } from '@/model/summon'
 import { WeaponTemplate } from '@/model/weapon'

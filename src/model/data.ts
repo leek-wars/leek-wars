@@ -4,6 +4,7 @@ import { ChipTemplate } from '@/model/chip'
 import { Constant } from '@/model/constant'
 import { Function } from '@/model/function'
 import { HatTemplate } from '@/model/hat'
+import { PompTemplate } from '@/model/pomp'
 import { PotionTemplate } from '@/model/potion'
 import { SummonTemplate } from '@/model/summon'
 import { WeaponTemplate } from '@/model/weapon'
@@ -399,6 +400,9 @@ const WEAPONS: {[key: string]: WeaponTemplate} = {
   '119': { id: 119, name: 'revoked_m_laser', level: 300, min_range: 5, max_range: 12, launch_type: 0, effects: [ { id: 13, value1: 60, value2: 10, turns: 2, targets: 31, modifiers: 0, type: 7 } ], cost: 8, area: 2, los: 1, template: 21, passive_effects: [ { id: 35, value1: 5, value2: 0, turns: -1, targets: 31, modifiers: 1, type: 0 } ], forgotten: true }
 }
 export { WEAPONS }
+
+const POMPS: {[key: string]: PompTemplate} = { '123': { id: 123, name: 'hold_weapon', template: 1 }, '124': { id: 124, name: 'ai_lines', template: 2 }, '125': { id: 125, name: 'leek_title', template: 3 }, '126': { id: 126, name: 'farmer_title', template: 4 } }
+export { POMPS }
 
 const POTIONS: {[key: string]: PotionTemplate} = {
   '49': { id: 49, name: 'restat', level: 1, consumable: 1, effects: [ { type: 1, params: [] } ] },

@@ -5,7 +5,8 @@ enum ItemType {
 	CHIP = 2,
 	POTION = 3,
 	HAT = 4,
-	FIGHT_PACK = 5,
+	POMP = 5,
+	FIGHT_PACK = 6,
 }
 export { ItemType }
 

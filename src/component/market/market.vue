@@ -60,11 +60,18 @@
 						</router-link>
 					</div>
 				</panel>
-				<panel :title="$t('hats')" class="last">
+				<panel :title="$t('hats')">
 					<loader v-if="!hats.length" slot="content" />
 					<div v-else slot="content" class="items hats">
 						<router-link v-for="hat in hats" :key="hat.id" v-ripple :to="'/market/' + hat.name" :farmer-count="items[hat.id].farmer_count" :leek-count="items[hat.id].leek_count" class="item hat">
 							<img :src="'/image/hat/' + hat.name + '.png'">
+						</router-link>
+					</div>
+				</panel>
+				<panel :title="$t('pomps')" class="last">
+					<div slot="content" class="items pomps">
+						<router-link v-for="pomp in pomps" :key="pomp.id" :to="'/market/' + pomp.name" :farmer-count="items[pomp.id].farmer_count" :leek-count="items[pomp.id].leek_count" class="item pomp">
+							<img :src="'/image/pomp/' + pomp.name + '.png'">
 						</router-link>
 					</div>
 				</panel>
@@ -78,6 +85,7 @@
 						<potion-preview v-else-if="selectedItem.type == ItemType.POTION" :potion="LeekWars.potions[selectedItem.id]" />
 						<fight-pack-preview v-else-if="selectedItem.type == ItemType.FIGHT_PACK" :pack="selectedItem" />
 						<hat-preview v-else-if="selectedItem.type === ItemType.HAT && LeekWars.hats[selectedItem.id]" :hat="LeekWars.hats[selectedItem.id]" />
+						<pomp-preview v-else-if="selectedItem.type == ItemType.POMP" :pomp="LeekWars.pomps[selectedItem.id]" />
 
 						<div v-if="selectedItem.trophy" class="trophy">
 							<img :src="'/image/trophy/' + selectedItem.trophy.name + '.png'">
@@ -187,6 +195,7 @@
 				<chip-preview v-else-if="unseenItem.type == ItemType.CHIP" :chip="LeekWars.chips[unseenItem.id]" />
 				<potion-preview v-else-if="unseenItem.type == ItemType.POTION" :potion="LeekWars.potions[unseenItem.id]" />
 				<hat-preview v-else-if="unseenItem.type == ItemType.HAT" :hat="LeekWars.hats[unseenItem.id]" />
+				<pomp-preview v-else-if="unseenItem.type == ItemType.POMP" :hat="LeekWars.pomps[unseenItem.id]" />
 
 				<div v-if="unseenItem.trophy" class="card trophy">
 					<img :src="'/image/trophy/' + unseenItem.trophy.name + '.png'">
@@ -206,6 +215,7 @@
 	import { HatTemplate } from '@/model/hat'
 	import { ItemTemplate, ItemType } from '@/model/item'
 	import { LeekWars } from '@/model/leekwars'
+	import { PompTemplate } from '@/model/pomp'
 	import { PotionTemplate } from '@/model/potion'
 	import { store } from '@/model/store'
 	import { WeaponTemplate } from '@/model/weapon'
@@ -213,6 +223,7 @@
 	import ChipPreview from './chip-preview.vue'
 	import FightPackPreview from './fight-pack-preview.vue'
 	import HatPreview from './hat-preview.vue'
+	import PompPreview from './pomp-preview.vue'
 	import PotionPreview from './potion-preview.vue'
 	import WeaponPreview from './weapon-preview.vue'
 
@@ -223,7 +234,8 @@
 			'chip-preview': ChipPreview,
 			'potion-preview': PotionPreview,
 			'fight-pack-preview': FightPackPreview,
-			'hat-preview': HatPreview
+			'hat-preview': HatPreview,
+			'pomp-preview': PompPreview
 		}
 	})
 	export default class Market extends Vue {
@@ -246,6 +258,7 @@
 		unseen_items: ItemTemplate[] = []
 		unseenItem: ItemTemplate | null = null
 		unseenItemDialog: boolean = false
+		pomps: PompTemplate[] = []
 
 		created() {
 			this.actions = [{icon: 'account_balance', click: () => this.$router.push('/bank')}]
@@ -282,6 +295,9 @@
 							this.hats.push(hat)
 							this.items_by_name[hat.name] = hat
 						}
+					} else if (item.type === ItemType.POMP) {
+						this.pomps.push(LeekWars.pomps[item.id])
+						this.items_by_name[LeekWars.pomps[item.id].name] = item
 					}
 					item.leek_objs = []
 					if (this.$store.state.farmer) {
@@ -503,6 +519,9 @@
 	.items.hats {
 		grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
 	}
+	.items.pomps {
+		grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+	}
 	.item {
 		border: 1px solid #ddd;
 		cursor: pointer;
@@ -651,5 +670,14 @@
 	.unseen-dialog .trophy {
 		margin: 10px;
 		padding: 10px;
+	}
+	.pomps {
+		.pomp {
+			padding: 6px;
+			img {
+				vertical-align: bottom;
+				width: 75px;
+			}
+		}
 	}
 </style>

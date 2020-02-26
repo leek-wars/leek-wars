@@ -4,7 +4,7 @@ import { env } from '@/env'
 import { BattleRoyale } from '@/model/battle-royale'
 import { ChipTemplate } from '@/model/chip'
 import { Commands } from '@/model/commands'
-import { CHIP_TEMPLATES, CHIPS, CONSTANTS, FUNCTIONS, HAT_TEMPLATES, HATS, POTIONS, SUMMON_TEMPLATES, TROPHIES, TROPHY_CATEGORIES, WEAPON_TEMPLATES, WEAPONS } from '@/model/data'
+import { CHIP_TEMPLATES, CHIPS, CONSTANTS, FUNCTIONS, HAT_TEMPLATES, HATS, POMPS, POTIONS, SUMMON_TEMPLATES, TROPHIES, TROPHY_CATEGORIES, WEAPON_TEMPLATES, WEAPONS } from '@/model/data'
 import { Emojis } from '@/model/emojis'
 import { Socket } from '@/model/socket'
 import { Squares } from '@/model/squares'
@@ -456,6 +456,7 @@ const LeekWars = {
 	EFFECT_TYPES: Object.freeze(EFFECT_TYPES),
 	constants: Object.freeze(CONSTANTS),
 	hats: Object.freeze(HATS),
+	pomps: Object.freeze(POMPS),
 	weapons: Object.freeze(WEAPONS),
 	chips: Object.freeze(CHIPS),
 	trophies: Object.freeze(TROPHIES),
