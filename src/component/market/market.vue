@@ -98,13 +98,13 @@
 							<div v-if="!selectedItem.buyable && !selectedItem.buyable_crystals" class="already-have">
 								{{ $t('cannot_buy') }}
 							</div>
-							<div v-if="selectedItem.buyable && (!selectedItem.singleton || (selectedItem.farmer_count === 0 && selectedItem.leek_count === 0))">
+							<div v-if="selectedItem.buyable">
 								<h4 class="buy-label">{{ $t('buy') }}</h4>
-								<v-btn :disabled="$store.state.farmer && $store.state.farmer.habs < selectedItem.price_habs" class="buy-button" @click="openBuyHabs">{{ selectedItem.price_habs | number }}<img src="/image/hab.png"></v-btn>
+								<v-btn :disabled="($store.state.farmer && $store.state.farmer.habs < selectedItem.price_habs) || (selectedItem.singleton && (selectedItem.farmer_count > 0 || selectedItem.leek_count > 0))" class="buy-button" @click="openBuyHabs">{{ selectedItem.price_habs | number }}<img src="/image/hab.png"></v-btn>
 							</div>
-							<div v-if="env.BANK && selectedItem.buyable_crystals && (!selectedItem.singleton || (selectedItem.farmer_count === 0 && selectedItem.leek_count === 0))">
+							<div v-if="env.BANK && selectedItem.buyable_crystals">
 								<h4 class="buy-label">{{ $t('buy') }}</h4>
-								<v-btn :disabled="$store.state.farmer && $store.state.farmer.crystals < selectedItem.price_crystals" class="buy-crystals-button" @click="openBuyCrystals">{{ selectedItem.price_crystals | number }}<img src="/image/crystal.png"></v-btn>
+								<v-btn :disabled="($store.state.farmer && $store.state.farmer.crystals < selectedItem.price_crystals) || (selectedItem.singleton && (selectedItem.farmer_count > 0 || selectedItem.leek_count > 0))" class="buy-crystals-button" @click="openBuyCrystals">{{ selectedItem.price_crystals | number }}<img src="/image/crystal.png"></v-btn>
 							</div>
 							<div v-if="selectedItem.singleton && (selectedItem.farmer_count > 0 || selectedItem.leek_count > 0)" class="already-have">
 								{{ $t('already_have') }}
