@@ -431,18 +431,9 @@
 
 					<h4>{{ $t('leek.chips') }}</h4>
 					<div class="chips">
-						<tooltip v-for="chip of [4, 23, 20, 1, 15, 92, 97, 100]" :key="chip">
-							<template v-slot:activator="{ on }">
-								<span v-on="on">
-									<img :src="'/image/chip/small/' + LeekWars.chips[chip].name + '.png'" class="chip">
-								</span>
-							</template>
-							<b>{{ $t('chip.' + LeekWars.chips[chip].name) }}</b>
-							<br>
-							{{ $t('leek.chip_level_n', [LeekWars.chips[chip].level]) }}
-							<br>
-							<small>{{ 'CHIP_' + LeekWars.chips[chip].name.toUpperCase() }}</small>
-						</tooltip>
+						<rich-tooltip-chip v-for="chip in [4, 23, 20, 1, 15, 92, 97, 100]" :key="chip" v-slot="{ on }" :chip="LeekWars.chips[chip]" :bottom="true" :instant="true">
+							<img :src="'/image/chip/small/' + LeekWars.chips[chip].name + '.png'" class="chip" v-on="on">
+						</rich-tooltip-chip>
 					</div>
 				</div>
 			</div>
