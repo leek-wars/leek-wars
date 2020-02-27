@@ -65,6 +65,7 @@
 		public editor!: CodeMirror.Editor
 		public document!: CodeMirror.Doc
 		public lines: number = 0
+		public totalLines: number = 0
 		public characters: number = 0
 		public saving: boolean = false
 		public loaded = false
@@ -222,6 +223,8 @@
 					setTimeout(() => this.editor.refresh())
 					this.lines = this.editor.getDoc().lineCount()
 					this.characters = this.editor.getDoc().getValue().length
+					Vue.set(this.ai, 'included_lines', this.ai.total_lines - this.lines)
+					Vue.set(this.ai, 'included_chars', this.ai.total_chars - this.ai.code.length)
 					LeekWars.setSubTitle(this.$i18n.t('editor.n_lines', [this.lines]))
 				})
 			}

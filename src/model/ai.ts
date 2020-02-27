@@ -12,5 +12,9 @@ class AI {
 	public path!: string
 	public includes: AI[] = []
 	public functions: Keyword[] = []
+	public total_lines!: number
+	public total_chars!: number
+	public included_lines!: number
+	public included_chars!: number
 }
 export { AI }

@@ -68,6 +68,8 @@
 						<div v-if="currentEditor && currentEditor.loaded" class="ai-stats">
 							<div class="line-count-wrapper">{{ $t('n_lines', [currentEditor.lines]) }}</div>
 							<div class="char-count-wrapper">{{ $t('n_characters', [currentEditor.characters]) }}</div>
+							<div v-if="currentAI.included_lines !== 0" class="line-count-wrapper">{{ $t('n_total_lines', [currentEditor.lines + currentAI.included_lines]) }}</div>
+							<div v-if="currentAI.included_chars !== 0" class="char-count-wrapper">{{ $t('n_total_chars', [currentEditor.characters + currentAI.included_chars]) }}</div>
 						</div>
 						<br>
 						<!--
