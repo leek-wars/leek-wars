@@ -8,10 +8,16 @@
 	@Component({ name: 'lw-code' })
 	export default class Code extends Vue {
 		@Prop({required: true}) code!: string
+		@Prop() single!: boolean
 		@Watch('code', {immediate: true})
+		@Watch('simple', {immediate: true})
 		update() {
 			this.$nextTick(() => {
-				LeekWars.createCodeArea(this.code, this.$el as HTMLElement)
+				if (this.single) {
+					LeekWars.createCodeAreaSimple(this.code, this.$el as HTMLElement)
+				} else {
+					LeekWars.createCodeArea(this.code, this.$el as HTMLElement)
+				}
 			})
 		}
 	}

@@ -1,11 +1,11 @@
 <template lang="html">
-	<div>
+	<div class="effect" @click="LeekWars.effectRawOpened = !LeekWars.effectRawOpened">
 		<span v-if="passive">{{ $t('effect.passive') }}</span>
 		<i18n v-if="effect.id == 14" path="effect.type_14_fixed">
 			<b slot="summon">{{ $t('effect.summon_' + effect.value1) }}</b>
 		</i18n>
 		<span v-else-if="effect.value2 == 0" v-html="$t('effect.type_' + effect.id + '_fixed', [format(effect.value1)])"></span>
-		<span v-else v-html="$t('effect.type_' + effect.id, [effect.value1, format(effect.value1 + effect.value2)])"></span>
+		<span v-else v-html="$t('effect.type_' + effect.id, [format(effect.value1), format(effect.value1 + effect.value2)])"></span>
 		<span v-if="effect.modifiers & EffectModifier.ON_CASTER">
 			<template v-if="effectThe">
 				{{ $t('effect.the_caster') }}
@@ -58,6 +58,10 @@
 			</template>
 			<span>{{ $t('effect.target_not_summons') }}</span>
 		</tooltip>
+
+		<code v-if="LeekWars.effectRawOpened" class="raw">
+			<lw-code :single="true" :code="'[' + effect.id + ' ' + EffectType[effect.id] + ', ' + format(effect.value1) + ', ' + format(effect.value1 + effect.value2) + ', ' + effect.turns + ', ' + effect.targets + ', ' + effect.modifiers + ']'" />
+		</code>
 	</div>
 </template>
 
@@ -69,6 +73,8 @@
 		@Prop() effect!: Effect
 		@Prop() passive!: boolean
 		EffectModifier = EffectModifier
+		EffectType = EffectType
+		raw_opened: boolean = false
 		get enemies() { return this.effect.targets & 1 }
 		get allies(): boolean { return (this.effect.targets & (1 << 1)) !== 0 }
 		get caster(): boolean { return (this.effect.targets & (1 << 2)) !== 0 }
@@ -85,3 +91,13 @@
 		}
 	}
 </script>
+
+<style lang="scss" scoped>
+	.effect {
+		cursor: pointer;
+	}
+	.raw {
+		font-size: 13px;
+		white-space: pre-wrap;
+	}
+</style>
