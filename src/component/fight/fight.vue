@@ -1,5 +1,11 @@
 <template lang="html">
 	<div>
+		<div class="page-header page-bar">
+			<div v-if="fight">
+				<h1>{{ fight.title }}</h1>
+				<div class="info">{{ fight.date | date }}</div>
+			</div>
+		</div>
 	
 		<panel class="first">
 			<div slot="content" class="fight">
@@ -63,13 +69,7 @@
 				</tr>
 			</table>
 		</div>
-		
-		<div class="page-header page-bar">
-			<div v-if="fight">
-				<h1>{{ fight.title }}</h1>
-				<div class="info">{{ fight.date | date }}</div>
-			</div>
-		</div>
+	
 		<panel v-if="fight" :title="$t('comments') + ' (' + fight.comments.length + ')'">
 			<div slot="actions" class="views-counter">
 				{{ $tc('n_views', fight.views) }}
