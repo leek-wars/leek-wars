@@ -57,7 +57,7 @@
 	.stats div img {
 		vertical-align: bottom;
 	}
-	.stats div:nth-child(2n+1) {
+	.stats > div:nth-child(2n+1) {
 		background-color: white;
 	}
 	.ennemies,
