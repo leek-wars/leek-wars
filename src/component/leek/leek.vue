@@ -875,12 +875,12 @@
 		padding: 15px 0;
 		.characteristic {
 			width: 50%;
-			padding: 5px 30px;
+			padding: 4px 30px;
 			display: inline-block;
 			img {
-				vertical-align: top;
 				margin-right: 7px;
-				width: 25px;
+				width: 23px;
+				margin-top: 3px;
 			}
 			span {
 				font-size: 18px;
