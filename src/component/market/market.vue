@@ -291,9 +291,9 @@
 							this.hats.push(hat)
 							this.items_by_name[hat.name] = item
 						} else {
-							const hat = {...item, name: item.name.replace(/^hat_/, '')}
-							this.hats.push(hat)
-							this.items_by_name[hat.name] = hat
+							const fakeHat = {...item, name: item.name.replace(/^hat_/, ''), level: 1, width: 0, height: 0, template: item.id}
+							this.hats.push(fakeHat)
+							this.items_by_name[fakeHat.name] = fakeHat
 						}
 					} else if (item.type === ItemType.POMP) {
 						this.pomps.push(LeekWars.pomps[item.id])
