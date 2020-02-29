@@ -351,7 +351,7 @@
 			if (item.type === ItemType.FIGHT_PACK) {
 				return this.$t('n_fights', [item.id - 1000000])
 			}
-			const type = ['weapon', 'chip', 'potion', 'hat'][item.type - 1]
+			const type = ['weapon', 'chip', 'potion', 'hat', 'pomp'][item.type - 1]
 			return this.$t(type + '.' + item.name.replace(type + '_', ''))
 		}
 		openBuyHabs() {
