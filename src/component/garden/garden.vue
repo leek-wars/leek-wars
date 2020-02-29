@@ -567,9 +567,6 @@
 		margin: 10px;
 		color: #666;
 	}
-	.enemies .opponents {
-		min-height: 250px;
-	}
 	a.my-leek.disabled {
 		opacity: 0.15;
 		cursor: auto;
