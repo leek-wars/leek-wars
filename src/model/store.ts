@@ -291,6 +291,9 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 		},
 		'read-notifications'(state: LeekWarsState) {
 			state.unreadNotifications = 0
+			for (const notification of state.notifications) {
+				notification.read = true
+			}
 			updateTitle(state)
 		},
 		'read-notification'(state: LeekWarsState, id: number) {
