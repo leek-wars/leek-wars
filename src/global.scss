@@ -8,6 +8,11 @@
 	pointer-events: none;
 	max-width: 250px !important;
 	transition: none !important;
+	.v-icon {
+		font-size: 20px;
+		color: white;
+		vertical-align: top;
+	}
 }
 .v-tooltip__content::before {
 	position: absolute;
@@ -875,4 +880,7 @@ code.single {
 	border: 1px solid #ccc;
 	padding: 1px 4px;
 	border-radius: 3px;
+}
+.pointer {
+	cursor: pointer;
 }

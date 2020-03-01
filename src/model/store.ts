@@ -420,6 +420,23 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			if (state.farmer) {
 				state.farmer.title = title
 			}
+		},
+		'set-leek-title'(state: LeekWarsState, data: any) {
+			if (state.farmer) {
+				const leek = state.farmer.leeks[data.leek]
+				leek.title = data.title
+			}
+		},
+		'set-leek-weapon'(state: LeekWarsState, data: any) {
+			if (state.farmer) {
+				const leek = state.farmer.leeks[data.leek]
+				leek.weapon = data.weapon
+			}
+		},
+		'toggle-show-ai-lines'(state: LeekWarsState) {
+			if (state.farmer) {
+				state.farmer.show_ai_lines = !state.farmer.show_ai_lines
+			}
 		}
 	},
 })
