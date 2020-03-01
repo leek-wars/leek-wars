@@ -14,6 +14,7 @@ import { WeaponTemplate } from '@/model/weapon'
 import { TranslateResult } from 'vue-i18n'
 import { ChatType, ChatWindow } from './chat'
 import { i18n, loadLanguageAsync } from './i18n'
+import { PotionEffect, PotionTemplate } from './potion'
 
 const MONTHS: { [key: string]: string[] } = {
 	fr: ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'],
@@ -106,6 +107,7 @@ const SKINS: { [key: number]: string } = {
 
 const ORDERED_CHIPS = orderChips(CHIPS)
 const ORDERED_WEAPONS = orderWeapons(WEAPONS)
+const POTIONS_BY_SKIN = potionsBySkin(POTIONS)
 
 class Language {
 	public code!: string
@@ -469,6 +471,7 @@ const LeekWars = {
 	hatTemplates: Object.freeze(HAT_TEMPLATES),
 	orderedChips: Object.freeze(ORDERED_CHIPS),
 	orderedWeapons: Object.freeze(ORDERED_WEAPONS),
+	potionsBySkin: Object.freeze(POTIONS_BY_SKIN),
 	keywords: [] as Keyword[],
 	characteristics: Object.freeze(['life', 'strength', 'wisdom', 'agility', 'resistance', 'science', 'magic', 'frequency', 'mp', 'tp']),
 	effectRawOpened: false,
@@ -555,6 +558,17 @@ function orderWeapons(weapons: { [key: number]: WeaponTemplate }) {
 	let position = 0
 	for (const w in weapons) {
 		result[weapons[w].id] = position++
+	}
+	return result
+}
+
+function potionsBySkin(potions: {[key: string]: PotionTemplate}) {
+	const result: { [key: number]: PotionTemplate } = {}
+	for (const p in potions) {
+		const potion = potions[p]
+		if (potion.effects.length && potion.effects[0].type === PotionEffect.CHANGE_SKIN) {
+			result[potion.effects[0].params[0]] = potion
+		}
 	}
 	return result
 }

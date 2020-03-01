@@ -139,6 +139,9 @@
 			font-size: 24px;
 			margin-right: 6px;
 		}
+		.v-icon {
+			color: white;
+		}
 	}
 	.header > .actions ::v-deep > div:last-child.button,
 	.header > .actions ::v-deep > a:last-child .button,

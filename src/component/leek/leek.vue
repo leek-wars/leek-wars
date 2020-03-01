@@ -52,8 +52,8 @@
 						</router-link>
 					</i18n>
 					<template v-if="my_leek" slot="actions">
-						<div class="button flat hat-button" @click="hat">
-							<img src="/image/icon/hat.png">
+						<div class="button flat hat-button" @click="customizeDialog = true">
+							<v-icon>mdi-auto-fix</v-icon>
 						</div>
 					</template>
 					<div slot="content" class="leek-image">
@@ -168,7 +168,7 @@
 						<template v-else>
 							<rich-tooltip-weapon v-for="weapon in leek.orderedWeapons" :key="weapon.id" v-slot="{ on }" :instant="true" :weapon="LeekWars.weapons[weapon.template]" :bottom="true">
 								<div class="weapon" v-on="on">
-									<img :src="'/image/weapon/' + LeekWars.weapons[weapon.template].name + '.png'">
+									<img :src="'/image/weapon/' + LeekWars.weapons[weapon.template].name + '.png'" @click="setWeapon(weapon.template)">
 								</div>
 							</rich-tooltip-weapon>
 						</template>
@@ -332,9 +332,27 @@
 			</div>
 		</popup>
 
+		<popup v-if="leek && my_leek" v-model="skinPotionDialog" :width="750">
+			<span slot="title">{{ $t("select_skin") }}</span>
+			<div class="farmer-potions">
+				<div class="potions-grid">
+					<tooltip v-for="(potion, id) in skinPotions" :key="id">
+						<template v-slot:activator="{ on }">
+							<div :quantity="potion.quantity" class="potion" @click="usePotion(potion)" v-on="on">
+								<img :src="'/image/potion/' + LeekWars.potions[potion.template].name + '.png'">
+							</div>
+						</template>
+						<b>{{ $t('potion.' + LeekWars.potions[potion.template].name) }}</b>
+						<br>
+						{{ $t('level_n', [LeekWars.potions[potion.template].level]) }}
+					</tooltip>
+				</div>
+			</div>
+		</popup>
+
 		<report-dialog v-if="leek" v-model="reportDialog" :name="leek.farmer.name" :target="leek.farmer.id" :reasons="reasons" :parameter="leek.id" />
 
-		<popup v-model="hatDialog" :width="700">
+		<popup v-model="hatDialog" :width="750">
 			<span slot="title">{{ $t('select_a_hat') }}</span>
 			<div class="hat-dialog">
 				<div class="hats">
@@ -359,6 +377,113 @@
 				</div>
 				<br>
 				<center>({{ $t('click_to_put_hat') }})</center>
+			</div>
+		</popup>
+
+		<popup v-model="skinWeaponDialog" :width="650">
+			<span slot="title">{{ $t('select_a_weapon') }}</span>
+			<div v-if="leek" class="weapons-popup">
+				<div class="leek-weapons">
+					<tooltip>
+						<template v-slot:activator="{ on }">
+							<div v-ripple :quantity="1" class="weapon" @click="setWeapon(0)" v-on="on">
+								<img src="/image/weapon/no_weapon.png">
+							</div>
+						</template>
+						<b>{{ $t('no_weapon') }}</b>
+					</tooltip>
+					<rich-tooltip-weapon v-for="(weapon, i) in leek.orderedWeapons" :key="i" v-slot="{ on }" :instant="true" :weapon="LeekWars.weapons[weapon.template]" :bottom="true">
+						<div class="weapon" v-on="on" @click="setWeapon(weapon.template)">
+							<img :src="'/image/weapon/' + LeekWars.weapons[weapon.template].name + '.png'">
+						</div>
+					</rich-tooltip-weapon>
+				</div>
+			</div>
+		</popup>
+
+		<popup v-model="customizeDialog" :width="700">
+			<span slot="title">{{ $t('customize') }}</span>
+			<div v-if="leek" class="customize-dialog">
+				<center>
+					<leek-image :leek="leek" :scale="1" />
+					<br>
+					<lw-title v-if="leek.title.length" :title="leek.title" />
+				</center>
+
+				<div class="customize-grid">
+					<div v-ripple class="item card" @click="skinPotionDialog = true">
+						<div class="title">{{ $t('skin') }}</div>
+						<img v-if="leek.skin" class="image" :src="'/image/potion/' + LeekWars.potionsBySkin[leek.skin].name + '.png'">
+						<img v-else class="image" src="/image/potion/skin_green.png">
+						<div class="name">{{ $t('potion.' + LeekWars.potionsBySkin[leek.skin].name) }}</div>
+					</div>
+					<div v-ripple class="item card" @click="hatDialog = true">
+						<div class="title">{{ $t('leek.hat') }}</div>
+						<img v-if="leek.hat" class="image" :src="'/image/hat/' + LeekWars.hats[LeekWars.hatTemplates[leek.hat].item].name + '.png'">
+						<img v-else class="image" src="/image/hat/no_hat.png">
+						<div v-if="leek.hat" class="name">{{ $t('hat.' + LeekWars.hats[LeekWars.hatTemplates[leek.hat].item].name) }}</div>
+					</div>
+					<div v-ripple class="item card" :class="{disabled: !holdWeaponEnabled}" @click="skinWeaponDialog = true">
+						<div class="title">
+							<tooltip v-if="holdWeaponEnabled">
+								<template v-slot:activator="{ on }">
+									<img src="/image/pomp/hold_weapon.png" v-on="on">
+								</template>
+								{{ $t('pomp.hold_weapon') }}
+							</tooltip>
+							{{ $t('leek.weapon') }}
+						</div>
+						<template v-if="holdWeaponEnabled">
+							<img v-if="leek.weapon" class="image" :src="'/image/weapon/' + LeekWars.weapons[leek.weapon].name + '.png'">
+							<img v-else class="image" src="/image/weapon/no_weapon.png">
+							<div v-if="leek.weapon" class="name">{{ $t('weapon.' + LeekWars.weapons[leek.weapon].name) }}</div>
+						</template>
+						<template v-else>
+							<img class="image" src="/image/pomp/hold_weapon.png">
+							<div class="name"><v-icon>mdi-lock</v-icon> {{ $t('pomp.hold_weapon') }}</div>
+						</template>
+					</div>
+					<div v-ripple class="item card" :class="{disabled: !leekTitleEnabled}" @click="titleDialog = true">
+						<div class="title">
+							<tooltip v-if="leekTitleEnabled">
+								<template v-slot:activator="{ on }">
+									<img src="/image/pomp/leek_title.png" v-on="on">
+								</template>
+								{{ $t('pomp.leek_title') }}
+							</tooltip>
+							{{ $t('leek.title') }}
+						</div>
+						<template v-if="leekTitleEnabled">
+							<span class="large-icon image">«<v-icon>mdi-format-font</v-icon>»</span>
+							<div v-if="leek.title.length" class="name">{{ $t('leek.title') }}</div>
+						</template>
+						<template v-else>
+							<img class="image" src="/image/pomp/leek_title.png">
+							<div class="name"><v-icon>mdi-lock</v-icon> {{ $t('pomp.leek_title') }}</div>
+						</template>
+					</div>
+				</div>
+				<br>
+				<tooltip :disabled="showAiLinesEnabled">
+					<template v-slot:activator="{ on }">
+						<span v-if="$store.state.farmer" class="ai-lines" v-on="on">
+							<v-switch :input-value="$store.state.farmer.show_ai_lines" hide-details :label="$t('pomp.ai_lines')" :disabled="!showAiLinesEnabled" @change="changeShowAiLines" />
+							<img src="/image/pomp/ai_lines.png">
+						</span>
+					</template>
+					<v-icon>mdi-lock</v-icon> {{ $t('pomp.ai_lines') }}
+				</tooltip>
+			</div>
+		</popup>
+
+		<popup v-if="leek" v-model="titleDialog" :width="550">
+			<span slot="title">{{ $t('main.select_title') }}</span>
+			<div class="title-dialog">
+				<title-picker ref="picker" :title="leek.title" />
+			</div>
+			<div slot="actions">
+				<div @click="titleDialog = false">{{ $t('cancel') }}</div>
+				<div class="green" @click="pickTitle($refs.picker.getTitle())">{{ $t('validate') }}</div>
 			</div>
 		</popup>
 
@@ -413,7 +538,7 @@
 	import { Leek, Register } from '@/model/leek'
 	import { LeekWars } from '@/model/leekwars'
 	import { Warning } from '@/model/moderation'
-	import { Potion } from '@/model/potion'
+	import { Potion, PotionEffect } from '@/model/potion'
 	import { store } from '@/model/store'
 	import { Weapon } from '@/model/weapon'
 	import { Component, Vue, Watch } from 'vue-property-decorator'
@@ -454,6 +579,10 @@
 		draggedChip: Chip | null = null
 		draggedChipLocation: string | null = null
 		capitalDialog: boolean = false
+		customizeDialog: boolean = false
+		skinWeaponDialog: boolean = false
+		titleDialog: boolean = false
+		skinPotionDialog: boolean = false
 		
 		get id(): number {
 			return parseInt(this.$route.params.id, 10) || (this.$store.state.farmer && LeekWars.first(this.$store.state.farmer.leeks).id)
@@ -535,6 +664,18 @@
 			}
 			return false
 		}
+		get holdWeaponEnabled() {
+			return this.$store.state.farmer && this.$store.state.farmer.pomps.indexOf(123) !== -1
+		}
+		get leekTitleEnabled() {
+			return this.$store.state.farmer && this.$store.state.farmer.pomps.indexOf(125) !== -1
+		}
+		get showAiLinesEnabled() {
+			return this.$store.state.farmer && this.$store.state.farmer.pomps.indexOf(124) !== -1
+		}
+		get skinPotions() {
+			return store.state.farmer!.potions.filter(p => LeekWars.potions[p.template].effects.some(e => e.type === PotionEffect.CHANGE_SKIN))
+		}
 
 		@Watch('id', {immediate: true})
 		update() {
@@ -548,7 +689,7 @@
 					LeekWars.setTitle(this.leek.name, this.$t('level_n', [this.leek.level]))
 					if (this.my_leek) {
 						LeekWars.setActions([
-							{image: 'icon/hat.png', click: () => this.hat()},
+							{vicon: 'mdi-auto-fix', click: () => this.customize()},
 							{image: 'icon/potion.png', click: () => this.potion()},
 						])
 					} else {
@@ -609,6 +750,7 @@
 					}
 				}
 				this.potionDialog = false
+				this.skinPotionDialog = false
 				LeekWars.post('leek/use-potion', {leek_id: this.leek.id, potion_id: potion.id}).then(data => {
 					if (template.consumable) {
 						this.$store.commit('remove-inventory', {type: ItemType.POTION, item_template: potion.template})
@@ -698,6 +840,9 @@
 		}
 		potion() {
 			this.potionDialog = true
+		}
+		customize() {
+			this.customizeDialog = true
 		}
 
 		showLevelPopup() {
@@ -862,6 +1007,23 @@
 			e.preventDefault()
 			return false
 		}
+		setWeapon(weapon: number) {
+			this.skinWeaponDialog = false
+			if (!this.leek || !this.my_leek) { return }
+			LeekWars.put('leek/set-weapon', {leek: this.leek.id, weapon})
+			this.leek.weapon = weapon
+			store.commit('set-leek-weapon', {leek: this.leek.id, weapon})
+		}
+		pickTitle(title: number[]) {
+			this.leek!.title = title
+			this.titleDialog = false
+			LeekWars.put('leek/set-title', {leek: this.leek!.id, icon: title[0] || 0, noun: title[1] || 0, gender: title[2] || 0, adjective: title[3] || 0})
+			this.$store.commit('set-leek-title', {leek: this.leek!.id, title})
+		}
+		changeShowAiLines() {
+			store.commit('toggle-show-ai-lines')
+			LeekWars.put('farmer/set-show-ai-lines', {show_ai_lines: store.state.farmer!.show_ai_lines})
+		}
 	}
 </script>
 
@@ -1011,7 +1173,7 @@
 		margin: 2px;
 	}
 	.weapons-popup .weapon {
-		cursor: move;
+		cursor: pointer;
 		border: 1px solid #ddd;
 		vertical-align: bottom;
 		height: 72px;
@@ -1020,6 +1182,9 @@
 		justify-content: center;
 		text-align: center;
 		padding: 3px 0;
+	}
+	.weapons-popup .weapon[draggable] {
+		cursor: move;
 	}
 	.weapons-popup .weapon img {
 		max-width: calc(100% - 20px);
@@ -1211,5 +1376,67 @@
 	}
 	.v-input--switch {
 		margin-left: 8px;
+	}
+	.customize-dialog {
+		.customize-grid {
+			display: grid;
+			grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+			grid-gap: 10px;
+			margin-top: 20px;
+			.item {
+				text-align: center;
+				padding: 6px;
+				cursor: pointer;
+				.image {
+					height: 70px;
+					max-width: 100%;
+					object-fit: contain;
+					margin: 6px 0;
+				}
+				.title {
+					text-align: left;
+					color: #777;
+					display: flex;
+					text-align: center;
+					img {
+						width: 20px;
+						margin-right: 4px;
+					}
+				}
+				.name {
+					.v-icon {
+						font-size: 20px;
+						vertical-align: bottom;
+					}
+				}
+				.large-icon {
+					font-size: 50px;
+					color: #777;
+					display: block;
+					.v-icon {
+						font-size: 50px;
+					}
+				}
+				&.disabled {
+					background: transparent;
+					pointer-events: none;
+					.image {
+						opacity: 0.5;
+					}
+					.name {
+						color: #555;
+						.v-icon {
+							color: #999;
+						}
+					}
+				}
+			}
+		}
+		.ai-lines {
+			img {
+				width: 20px;
+				margin-left: 4px;
+			}
+		}
 	}
 </style>

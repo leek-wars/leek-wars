@@ -40,6 +40,7 @@
 			<div v-show="!LeekWars.menuExpanded" class="actions">
 				<div v-for="(action, a) in LeekWars.actions" :key="a" v-ripple class="tab action" @click="action.click($event)">
 					<i v-if="action.icon" class="action material-icons">{{ action.icon }}</i>
+					<v-icon v-else-if="action.vicon" class="action">{{ action.vicon }}</v-icon>
 					<img v-else :src="'/image/' + action.image" class="action">
 				</div>
 			</div>
