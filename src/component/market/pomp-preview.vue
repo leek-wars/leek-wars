@@ -13,9 +13,9 @@
 		</div>
 		<div class="stats">
 			<div v-if="pomp.template === 1">
-				<leek-image :leek="{level: 30, weapon: 37}" :scale="0.55" />
-				<leek-image :leek="{level: 90, weapon: 40}" :scale="0.65" />
-				<leek-image :leek="{level: 250, weapon: 47}" :scale="0.7" />
+				<leek-image :leek="{level: 30, weapon: 37}" :scale="0.53" />
+				<leek-image :leek="{level: 90, weapon: 109}" :scale="0.63" />
+				<leek-image :leek="{level: 250, weapon: 47}" :scale="0.67" />
 			</div>
 		</div>
 	</div>
