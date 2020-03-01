@@ -18,6 +18,7 @@
 								<emblem :team="farmer.team" :title="farmer.team.name" />
 							</router-link>
 							<img v-if="farmer.country" :src="'/image/flag/' + farmer.country + '.png'" :title="$t('country.' + farmer.country)" class="country">
+							<lw-title v-if="farmer.title.length" :title="farmer.title" />
 							<div class="spacer"></div>
 							<v-btn v-if="!$store.state.farmer || id != $store.state.farmer.id" icon small @click="sendMessage()">
 								<v-icon>chat</v-icon>
@@ -149,6 +150,9 @@
 			img {
 				opacity: 0.5;
 			}
+		}
+		.title {
+			font-size: 14px;
 		}
 	}
 	.name {
