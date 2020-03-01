@@ -1,6 +1,7 @@
 {
 	"add_website": "Ajouter un site web",
 	"add_github": "Ajouter un GitHub",
+	"add_title": "Ajouter un titre",
 	"admin": "Administrateur",
 	"already_in_team": "Vous faites déjà parti d'une équipe",
 	"already_registered": "Vous êtes déjà inscrit à ce tournoi",
@@ -85,6 +86,7 @@
 	"trophies": "Trophées",
 	"trophy_obtained": "Obtenu {0}",
 	"n_trophies": "{0} trophées",
+	"no_icon": "aucun",
 	"unregister": "Se désinscrire",
 	"impossible_to_unregister_moderator": "Impossible de supprimer un modérateur.",
 	"impossible_to_unregister_team": "Vous êtes le propriétaire d'une équipe, vous devez d'abord la dissoudre avant de supprimer votre compte.",

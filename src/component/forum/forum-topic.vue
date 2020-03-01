@@ -45,6 +45,7 @@
 									<div v-if="message.writer.color == 'admin'" class="grade admin">{{ $t('admin') }}</div>
 									<div v-else-if="message.writer.color == 'moderator'" class="grade moderator">{{ $t('moderator') }}</div>
 									<div v-else-if="message.writer.color == 'contributor'" class="grade contributor">{{ $t('contributor') }}</div>
+									<lw-title v-if="message.writer.title.length" :title="message.writer.title" />
 									<div class="messages-count"><b>{{ message.writer.messages }}</b> messages</div>
 									<div class="trophy-count"><b>{{ message.writer.trophies }}</b> trophées</div>
 								</div>
@@ -449,6 +450,11 @@
 	}
 	.profile .info {
 		margin-left: 10px;
+		.title {
+			margin-bottom: 4px;
+			font-size: 13px;
+			font-weight: normal;
+		}
 	}
 	.profile .pseudo {
 		font-size: 15px;

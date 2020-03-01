@@ -70,7 +70,19 @@
 						<div v-else>
 							<avatar :farmer="farmer" />
 						</div>
+						<lw-title v-if="farmer && farmer.title.length" class="info title" :title="farmer.title" @click.native="titleDialog = true" />
 						<div v-if="farmer" class="infos">
+							<div v-if="!farmer.title.length && myFarmer" class="add add-title" :class="{locked: !farmerTitleEnabled}" @click="titleDialog = farmerTitleEnabled">
+								<tooltip :disabled="farmerTitleEnabled">
+									<template v-slot:activator="{ on }">
+										<span v-on="on">
+											<img class="image" src="/image/pomp/farmer_title.png">
+											{{ $t('add_title') }}
+										</span>
+									</template>
+									<v-icon>mdi-lock</v-icon> {{ $t('pomp.farmer_title') }}
+								</tooltip>
+							</div>
 							<router-link v-if="farmer.forum_messages" :to="'/search?farmer=' + farmer.name + '&order=date'">
 								<div class="info">
 									<img class="flag" src="/image/forum.png"><span class="label">{{ $t('forum_messages', [farmer.forum_messages]) }}</span>
@@ -304,6 +316,7 @@
 							<div v-on="on">
 								<leek-image :leek="leek" :scale="0.9" />
 								<div class="name">{{ leek.name }}</div>
+								<lw-title v-if="leek.title.length" :title="leek.title" />
 								<talent :talent="leek.talent" />
 								<br>
 								<span class="level">{{ $t('leek_level_n', [leek.level]) }}</span>
@@ -414,6 +427,17 @@
 				<div class="green" @click="changeGithub">{{ $t('validate') }}</div>
 			</div>
 		</popup>
+
+		<popup v-if="farmer" v-model="titleDialog" :width="600">
+			<span slot="title">{{ $t('main.select_title') }}</span>
+			<div class="title-dialog">
+				<title-picker ref="picker" :title="farmer.title" />
+			</div>
+			<div slot="actions">
+				<div @click="titleDialog = false">{{ $t('cancel') }}</div>
+				<div class="green" @click="pickTitle($refs.picker.getTitle())">{{ $t('validate') }}</div>
+			</div>
+		</popup>
 	</div>
 </template>
 
@@ -441,6 +465,7 @@
 		githubDialog: boolean = false
 		newGitHub: string = ''
 		notfound: boolean = false
+		titleDialog: boolean = false
 
 		get id(): any {
 			return this.$route.params.id ? parseInt(this.$route.params.id, 10) : (this.$store.state.farmer ? this.$store.state.farmer.id : null)
@@ -478,6 +503,9 @@
 				}
 			}
 			return bonus
+		}
+		get farmerTitleEnabled() {
+			return this.$store.state.farmer.pomps.indexOf(126) !== -1
 		}
 
 		@Watch('id', {immediate: true})
@@ -648,6 +676,12 @@
 				this.$router.push('/messages/new/' + this.farmer.id + '/' + this.farmer.name + '/' + this.farmer.avatar_changed)
 			})
 		}
+		pickTitle(title: number[]) {
+			this.farmer!.title = title
+			this.titleDialog = false
+			LeekWars.put('farmer/set-title', {icon: title[0] || 0, noun: title[1] || 0, gender: title[2] || 0, adjective: title[3] || 0})
+			this.$store.commit('set-title', title)
+		}
 	}
 </script>
 
@@ -710,8 +744,16 @@
 	.infos .add {
 		font-size: 13px;
 		color: #999;
-		cursor: pointer;
 		margin: 3px 0;
+		img {
+			width: 20px;
+			height: 16px;
+			object-fit: contain;
+			vertical-align: bottom;
+		}
+		&:not(.locked) {
+			cursor: pointer;
+		}
 	}
 	.infos .info {
 		padding: 1px;
@@ -746,6 +788,16 @@
 	}
 	.website-dialog input, .github-dialog input {
 		width: calc(100% - 10px);
+	}
+	.title {
+		cursor: pointer;
+		text-align: center;
+		.quote {
+			font-size: 25px;
+			padding: 0 3px;
+			vertical-align: top;
+			line-height: 19px;
+		}
 	}
 	.team {
 		height: 100%;
@@ -836,13 +888,13 @@
 			font-size: 20px;
 			font-weight: 500;
 			padding: 0 5px;
-			padding-top: 4px;
 			text-overflow: ellipsis;
 			overflow: hidden;
 			white-space: nowrap;
 		}
 		.talent {
-			margin: 5px 0;
+			margin-top: 2px;
+			margin-bottom: 5px;
 		}
 		.level {
 			font-size: 17px;

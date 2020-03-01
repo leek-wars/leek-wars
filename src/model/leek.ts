@@ -58,6 +58,7 @@ class Leek {
 	public tp!: number
 	public mp!: number
 	public talent!: number
+	public title!: number[]
 
 	constructor(data: any) {
 		Object.assign(this, data)

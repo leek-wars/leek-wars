@@ -65,6 +65,9 @@
 .v-menu__activator, .v-menu {
 	position: static !important;
 }
+.v-menu__content.theme--light {
+	background: white;
+}
 .tab-transition-enter {
 	transform: translate(100%, 0);
 }
