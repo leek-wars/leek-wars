@@ -76,7 +76,7 @@ const WeaponsData = {
 	// Broadsword
 	15: { w: 160, h: 29, cx: 5, cz: -10, ocx: 15, x: 15, z: -16, mx1: 14, mz1: 14, mx2: 30, mz2: 14, top: 0, bottom: 20, white: true },
 	// Axe
-	16: { w: 170, h: 64, cx: 5, cz: -10, ocx: 25, x: 15, z: -32, mx1: 32, mz1: 32, mx2: 55, mz2: 32, top: 0, bottom: 0, white: true },
+	16: { w: 170, h: 64, cx: 5, cz: -10, ocx: 25, x: 15, z: -35, mx1: 32, mz1: 32, mx2: 55, mz2: 32, top: 0, bottom: 15, white: true },
 	// JLaser
 	17: { w: 180, h: 41, cx: 15, cz: 35, ocx: 0, x: -70, z: -20, mx1: 49, mz1: 29, mx2: 75, mz2: 33, sx: 126, sz: 25, cartX: 60, cartZ: 20, cartAngle: Math.PI / 2, recoilForce: 18, top: 0, bottom: 37, white: false },
 	// IllicitGrenadeLauncher
