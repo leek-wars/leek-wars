@@ -1,6 +1,7 @@
 {
 	"add_website": "Add a website",
 	"add_github": "Add a GitHub",
+	"add_title": "Add a title",
 	"admin": "Administrator",
 	"already_in_team": "You are already a member of a team",
 	"already_registered": "You are already registered for this tournament",
@@ -85,6 +86,7 @@
 	"trophies": "Trophies",
 	"trophy_obtained": "Obtained {0}",
 	"n_trophies": "{0} trophies",
+	"no_icon": "none",
 	"unlocked_the": "Unlocked the {date}",
 	"unregister": "Unregister",
 	"impossible_to_unregister_moderator": "Impossible to delete a moderator.",

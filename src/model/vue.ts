@@ -25,6 +25,8 @@ import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 import RichTooltipLeek from '@/component/rich-tooltip/rich-tooltip-leek.vue'
 import RichTooltipWeapon from '@/component/rich-tooltip/rich-tooltip-weapon.vue'
 import Talent from '@/component/talent.vue'
+import TitlePicker from '@/component/title/title-picker.vue'
+import LWTitle from '@/component/title/title.vue'
 import TurretImage from '@/component/turret-image.vue'
 import { env } from '@/env'
 import { i18n, loadInstanceTranslations } from '@/model/i18n'
@@ -97,6 +99,8 @@ Vue.component('rich-tooltip-leek', RichTooltipLeek)
 Vue.component('rich-tooltip-weapon', RichTooltipWeapon)
 Vue.component('rich-tooltip-chip', RichTooltipChip)
 Vue.component('loader', LWLoader)
+Vue.component('lw-title', LWTitle)
+Vue.component('title-picker', TitlePicker)
 
 Vue.directive('autostopscroll', {
 	inserted: (el, binding) => {

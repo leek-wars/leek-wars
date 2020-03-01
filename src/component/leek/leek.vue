@@ -56,9 +56,10 @@
 							<img src="/image/icon/hat.png">
 						</div>
 					</template>
-					<div slot="content" class="content leek-image">
-						<leek-image v-if="leek" :scale="1.05" :leek="leek" />
+					<div slot="content" class="leek-image">
+						<leek-image v-if="leek" :scale="0.95" :leek="leek" />
 						<loader v-else />
+						<lw-title v-if="leek && leek.title.length" :title="leek.title" :class="{pointer: my_leek}" @click.native="titleDialog = true" />
 					</div>
 				</panel>
 			</div>
@@ -867,9 +868,14 @@
 <style lang="scss" scoped>
 	.leek-image {
 		display: flex;
+		flex-direction: column;
 		justify-content: center;
 		align-items: center;
 		height: 100%;
+		padding: 10px;
+		.title {
+			margin-top: 3px;
+		}
 	}
 	.characteristics {
 		padding: 15px 0;
