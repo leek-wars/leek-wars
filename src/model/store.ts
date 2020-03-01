@@ -321,6 +321,8 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 				} else {
 					state.farmer.potions.push({id: data.item_id, template: data.item_template, quantity: 1})
 				}
+			} else if (data.type === ItemType.POMP) {
+				state.farmer.pomps.push(data.item_template)
 			}
 		},
 		'remove-inventory'(state: LeekWarsState, data) {

@@ -43,5 +43,6 @@ class Farmer {
 	public language!: string
 	public title!: number[]
 	public show_ai_lines!: boolean
+	public pomps!: number[]
 }
 export { Farmer }
