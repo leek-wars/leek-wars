@@ -415,6 +415,11 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			if (state.farmer) {
 				state.farmer.ais = state.farmer.ais.filter(ai => ai.id !== id)
 			}
+		},
+		'set-title'(state: LeekWarsState, title: number[]) {
+			if (state.farmer) {
+				state.farmer.title = title
+			}
 		}
 	},
 })
