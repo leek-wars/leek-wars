@@ -50,7 +50,7 @@
 		get leekHeight(): number { return this.leekSize ? this.leekSize.height * this.scale : 0 }
 		get width(): number {
 			let width = Math.max(this.leekWidth, this.hatWidth)
-			const weapon_offset = this.weaponCX + (this.weaponData!.white ? (
+			const weapon_offset = this.weaponCX + (this.weaponData && this.weaponData.white ? (
 								Math.cos(this.weaponRadianAngle) * (this.weaponX + this.weaponWidth)
 								- Math.cos(this.weaponRadianAngle) * (this.weaponHeight + this.weaponY)
 								- Math.sin(this.weaponRadianAngle) * (this.weaponHeight - this.weaponBottom)
