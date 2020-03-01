@@ -3,6 +3,7 @@ import { Game } from "@/component/player/game/game"
 import { Sound } from '@/component/player/game/sound'
 import { Texture } from '@/component/player/game/texture'
 import { Area } from '@/model/area'
+import { WeaponsData } from '@/model/weapon'
 import { Cell } from './cell'
 import { Leek } from './leek'
 import { Position } from './position'
@@ -23,18 +24,19 @@ abstract class WeaponAnimation {
 	public mx2: number
 	public mz2: number
 	public recoil: number = 0
-	constructor(game: Game, texture: Texture, cx: number, cz: number, ocx: number, x: number, z: number, mx1: number, mz1: number, mx2: number, mz2: number) {
+	constructor(game: Game, texture: Texture, id: number) {
 		this.game = game
 		this.texture = texture
-		this.cx = cx
-		this.cz = cz
-		this.ocx = ocx
-		this.x = x
-		this.z = z
-		this.mx1 = mx1
-		this.mz1 = mz1
-		this.mx2 = mx2
-		this.mz2 = mz2
+		const data = WeaponsData[id]
+		this.cx = data.cx
+		this.cz = data.cz
+		this.ocx = data.ocx
+		this.x = data.x
+		this.z = data.z
+		this.mx1 = data.mx1
+		this.mz1 = data.mz1
+		this.mx2 = data.mx2
+		this.mz2 = data.mz2
 	}
 	public abstract shoot(leekX: number, leekY: number, handPos: number, angle: number, orientation: number, targetPos: Position, targets: Entity[], caster: Entity, cell: Cell): void
 	public abstract update(dt: number): void
@@ -48,8 +50,8 @@ class WhiteWeaponAnimation extends WeaponAnimation {
 	public leekX!: number
 	public leekY!: number
 	public direction!: number
-	constructor(game: Game, texture: Texture, cx: number, cz: number, ocx: number, x: number, z: number, mx1: number, mz1: number, mx2: number, mz2: number) {
-		super(game, texture, cx, cz, ocx, x, z, mx1, mz1, mx2, mz2)
+	constructor(game: Game, texture: Texture, id: number) {
+		super(game, texture, id)
 	}
 	public shoot(leekX: number, leekY: number, handPos: number, angle: number, orientation: number, pos: Position, targets: Entity[]) {
 		this.step = 1
@@ -110,16 +112,17 @@ abstract class RangeWeapon extends WeaponAnimation {
 	public cartTexture: Texture | null
 	public sound: Sound
 
-	constructor(game: Game, texture: Texture, cartTexture: Texture | null, sound: Sound, cx: number, cz: number, ocx: number, x: number, z: number, mx1: number, mz1: number, mx2: number, mz2: number, sx: number, sz: number, cartX: number, cartZ: number, cartAngle: number, recoilForce: number) {
-		super(game, texture, cx, cz, ocx, x, z, mx1, mz1, mx2, mz2)
+	constructor(game: Game, texture: Texture, cartTexture: Texture | null, sound: Sound, id: number) {
+		super(game, texture, id)
 		this.cartTexture = cartTexture
 		this.sound = sound
-		this.sx = sx
-		this.sz = sz
-		this.cartX = cartX
-		this.cartZ = cartZ
-		this.cartAngle = cartAngle
-		this.recoilForce = recoilForce
+		const data = WeaponsData[id]
+		this.sx = data.sx!
+		this.sz = data.sz!
+		this.cartX = data.cartX!
+		this.cartZ = data.cartZ!
+		this.cartAngle = data.cartAngle!
+		this.recoilForce = data.recoilForce!
 	}
 	public shoot(leekX: number, leekY: number, handPos: number, angle: number, orientation: number, targetPos: Position, targets: Entity[], caster: Entity, cell: Cell) {
 		const cos = Math.cos(angle)
@@ -160,8 +163,8 @@ abstract class RangeWeapon extends WeaponAnimation {
 }
 
 class Firegun extends RangeWeapon {
-	constructor(game: Game, texture: Texture, cartTexture: Texture | null, sound: Sound, cx: number, cz: number, ocx: number, x: number, z: number, mx1: number, mz1: number, mx2: number, mz2: number, sx: number, sz: number, cartX: number, cartZ: number, cartAngle: number, recoilForce: number) {
-		super(game, texture, cartTexture, sound, cx, cz, ocx, x, z, mx1, mz1, mx2, mz2, sx, sz, cartX, cartZ, cartAngle, recoilForce)
+	constructor(game: Game, texture: Texture, cartTexture: Texture | null, sound: Sound, id: number) {
+		super(game, texture, cartTexture, sound, id)
 	}
 	public throwBullet(x: number, y: number, z: number, angle: number, position: Position, targets: Entity[], caster: Entity, cell: Cell) {
 		this.game.particles.addShot(x, y, z, angle)
@@ -174,8 +177,8 @@ class LaserWeapon extends RangeWeapon {
 	public range: number
 	public min_range: number
 	public color: string
-	constructor(game: Game, texture: Texture, laserTexture: Texture, cartTexture: Texture, sound: Sound, cx: number, cz: number, ocx: number, x: number, z: number, mx1: number, mz1: number, mx2: number, mz2: number, sx: number, sz: number, cartX: number, cartZ: number, cartAngle: number, recoilForce: number, range: number, min_range: number, color: string) {
-		super(game, texture, cartTexture, sound, cx, cz, ocx, x, z, mx1, mz1, mx2, mz2, sx, sz, cartX, cartZ, cartAngle, recoilForce)
+	constructor(game: Game, texture: Texture, laserTexture: Texture, cartTexture: Texture, sound: Sound, id: number, range: number, min_range: number, color: string) {
+		super(game, texture, cartTexture, sound, id)
 		this.laserTexture = laserTexture
 		this.range = range
 		this.min_range = min_range
@@ -207,27 +210,27 @@ class LaserWeapon extends RangeWeapon {
 
 class Axe extends WhiteWeaponAnimation {
 	constructor(game: Game) {
-		super(game, game.T.axe, 5, 40, 25, 40, -40, 32, 32, 55, 32)
+		super(game, game.T.axe, 16)
 	}
 }
 class BLaser extends LaserWeapon {
 	constructor(game: Game) {
-		super(game, game.T.b_laser, game.T.b_laser_bullet, game.T.cart_b_laser, game.S.laser, 15, 38, 0, -70, -20, 33, 33, 80, 33, 123, 25, 60, 20, Math.PI / 2, 18, 7, 2, "#51C5FF")
+		super(game, game.T.b_laser, game.T.b_laser_bullet, game.T.cart_b_laser, game.S.laser, 13, 7, 2, "#51C5FF")
 	}
 }
 class Broadsword extends WhiteWeaponAnimation {
 	constructor(game: Game) {
-		super(game, game.T.broadsword, 5, 40, 15, 15, -15, 14, 14, 30, 14)
+		super(game, game.T.broadsword, 15)
 	}
 }
 class Destroyer extends Firegun {
 	constructor(game: Game) {
-		super(game, game.T.destroyer, game.T.cart_destroyer, game.S.double_gun, 15, 38, 0, -50, -15, 47, 39, 88, 42, 182, 14, 60, 20, Math.PI / 2, 18)
+		super(game, game.T.destroyer, game.T.cart_destroyer, game.S.double_gun, 9)
 	}
 }
 class DoubleGun extends Firegun {
 	constructor(game: Game) {
-		super(game, game.T.double_gun, game.T.cart_double_gun, game.S.double_gun, 15, 35, 0, -10, -15, 11, 30, 32, 31, 160, 14, 60, 20, Math.PI / 2, 18)
+		super(game, game.T.double_gun, game.T.cart_double_gun, game.S.double_gun, 3)
 	}
 	public throwBullet(x: number, y: number, z: number, angle: number, position: Position, targets: Entity[]) {
 		this.game.particles.addBullet(x, y, z, angle - Math.PI / 40, targets)
@@ -249,7 +252,7 @@ class Electrisor extends WeaponAnimation {
 	public lightning!: Texture
 	public areaColor!: string
 	constructor(game: Game) {
-		super(game, game.T.electrisor, 5, 52, 0, -30, 0, 42, 31, 72, 34)
+		super(game, game.T.electrisor, 11)
 		this.lightning = game.T.lightning
 		this.areaColor = '#0263f4'
 	}
@@ -305,7 +308,7 @@ class FlameThrower extends WeaponAnimation {
 	public range: number = 8
 
 	constructor(game: Game) {
-		super(game, game.T.flame_thrower, 25, 60, 0, -60, -15, 31, 51, 80, 50)
+		super(game, game.T.flame_thrower, 8)
 	}
 	public shoot(leekX: number, leekY: number, handPos: number, angle: number, orientation: number, targetPosition: Position, targets: Entity[], caster: Entity, cell: Cell) {
 		const cos = Math.cos(angle)
@@ -362,7 +365,7 @@ class Gazor extends WeaponAnimation {
 	public gaz: Texture
 	public targetPos!: Position
 	constructor(game: Game) {
-		super(game, game.T.gazor, 15, 60, 0, -43, -12, 28, 52, 74, 50)
+		super(game, game.T.gazor, 10)
 		this.color = '#04e513'
 		this.gaz = game.T.gaz
 	}
@@ -422,7 +425,7 @@ class UnbridledGazor extends Gazor {
 }
 class GrenadeLauncher extends Firegun {
 	constructor(game: Game) {
-		super(game, game.T.grenade_launcher, game.T.cart_grenade_launcher, game.S.grenade_shoot, 0, 40, 0, -35, -15, 38, 28, 66, 29, 150, 14, 60, 20, Math.PI / 2, 18)
+		super(game, game.T.grenade_launcher, game.T.cart_grenade_launcher, game.S.grenade_shoot, 7)
 	}
 	public throwBullet(x: number, y: number, z: number, angle: number, position: Position, targets: Entity[], caster: Entity, cell: Cell) {
 		this.game.particles.addGrenade(x, y, z, angle, position, targets, this.game.T.grenade, this.game.T.explosion)
@@ -431,7 +434,7 @@ class GrenadeLauncher extends Firegun {
 }
 class IllicitGrenadeLauncher extends Firegun {
 	constructor(game: Game) {
-		super(game, game.T.illicit_grenade_launcher, game.T.cart_illicit_grenade_launcher, game.S.grenade_shoot, 0, 40, 0, -35, -15, 38, 28, 66, 29, 150, 14, 60, 20, Math.PI / 2, 18)
+		super(game, game.T.illicit_grenade_launcher, game.T.cart_illicit_grenade_launcher, game.S.grenade_shoot, 18)
 	}
 	public throwBullet(x: number, y: number, z: number, angle: number, position: Position, targets: Entity[], caster: Entity, cell: Cell) {
 		this.game.particles.addGrenade(x, y, z, angle, position, targets, this.game.T.red_grenade, this.game.T.red_explosion)
@@ -440,22 +443,22 @@ class IllicitGrenadeLauncher extends Firegun {
 }
 class Katana extends WhiteWeaponAnimation {
 	constructor(game: Game) {
-		super(game, game.T.katana, 5, 40, 10, 15, -15, 30, 12, 42, 12)
+		super(game, game.T.katana, 14)
 	}
 }
 class Laser extends LaserWeapon {
 	constructor(game: Game) {
-		super(game, game.T.laser, game.T.laser_bullet, game.T.cart_laser, game.S.laser, 15, 42, 0, -50, -15, 30, 34, 79, 39, 106, 15, 60, 20, Math.PI / 2, 18, 8, 2, "#02e009")
+		super(game, game.T.laser, game.T.laser_bullet, game.T.cart_laser, game.S.laser, 6, 8, 2, "#02e009")
 	}
 }
 class MLaser extends LaserWeapon {
 	constructor(game: Game) {
-		super(game, game.T.m_laser, game.T.m_laser_bullet, game.T.cart_m_laser, game.S.laser, 15, 38, 0, -70, -20, 69, 33, 114, 33, 126, 25, 60, 20, Math.PI / 2, 18, 8, 5, "#d80205")
+		super(game, game.T.m_laser, game.T.m_laser_bullet, game.T.cart_m_laser, game.S.laser, 12, 8, 5, "#d80205")
 	}
 }
 class RevokedMLaser extends LaserWeapon {
 	constructor(game: Game) {
-		super(game, game.T.revoked_m_laser, game.T.revoked_m_laser_bullet, game.T.cart_revoked_m_laser, game.S.laser, 15, 38, 0, -70, -20, 69, 33, 114, 33, 126, 25, 60, 20, Math.PI / 2, 18, 8, 5, "#c500e6")
+		super(game, game.T.revoked_m_laser, game.T.revoked_m_laser_bullet, game.T.cart_revoked_m_laser, game.S.laser, 21, 8, 5, "#c500e6")
 	}
 	public shoot(leekX: number, leekY: number, handPos: number, angle: number, orientation: number, targetPos: Position, targets: Entity[], caster: Entity, cell: Cell) {
 		super.shoot(leekX, leekY, handPos, angle, orientation, targetPos, targets, caster, cell)
@@ -464,12 +467,12 @@ class RevokedMLaser extends LaserWeapon {
 }
 class JLaser extends LaserWeapon {
 	constructor(game: Game) {
-		super(game, game.T.j_laser, game.T.j_laser_bullet, game.T.cart_j_laser, game.S.laser, 15, 38, 0, -70, -20, 69, 33, 114, 33, 126, 25, 60, 20, Math.PI / 2, 18, 6, 6, "#f7c604")
+		super(game, game.T.j_laser, game.T.j_laser_bullet, game.T.cart_j_laser, game.S.laser, 17, 6, 6, "#f7c604")
 	}
 }
 class MachineGun extends Firegun {
 	constructor(game: Game) {
-		super(game, game.T.machine_gun, game.T.cart_machine_gun, game.S.machine_gun, 15, 45, 0, -35, -15, 20, 40, 63, 40, 160, 14, 60, 20, Math.PI / 2, 18)
+		super(game, game.T.machine_gun, game.T.cart_machine_gun, game.S.machine_gun, 2)
 	}
 	public throwBullet(x: number, y: number, z: number, angle: number, position: Position, targets: Entity[], caster: Entity, cell: Cell) {
 		this.game.particles.addBullet(x, y, z, angle, targets)
@@ -481,17 +484,17 @@ class MachineGun extends Firegun {
 }
 class Magnum extends Firegun {
 	constructor(game: Game) {
-		super(game, game.T.magnum, game.T.cart_magnum, game.S.double_gun, 12, 40, 0, 15, -15, 22, 32, 25, 23, 94, 22, 60, 20, Math.PI / 2, 18)
+		super(game, game.T.magnum, game.T.cart_magnum, game.S.double_gun, 5)
 	}
 }
 class Pistol extends Firegun {
 	constructor(game: Game) {
-		super(game, game.T.pistol, game.T.cart_pistol, game.S.double_gun, 12, 40, 0, 15, -15, 10, 26, 19, 18, 90, 22, 60, 20, Math.PI / 2, 18)
+		super(game, game.T.pistol, game.T.cart_pistol, game.S.double_gun, 1)
 	}
 }
 class Shotgun extends Firegun {
 	constructor(game: Game) {
-		super(game, game.T.shotgun, game.T.cart_shotgun, game.S.shotgun, 15, 45, 0, -35, -15, 17, 30, 63, 30, 160, 14, 60, 20, Math.PI / 2, 18)
+		super(game, game.T.shotgun, game.T.cart_shotgun, game.S.shotgun, 4)
 	}
 	public throwBullet(x: number, y: number, z: number, angle: number, position: Position, targets: Entity[], caster: Entity, cell: Cell) {
 		// Real bullet
