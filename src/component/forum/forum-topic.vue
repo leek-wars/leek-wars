@@ -1,26 +1,26 @@
 <template>
 	<div>
 		<div class="page-header page-bar">
-			<div>
+			<div class="title-wrapper">
 				<h1>
 					<router-link to="/forum">{{ $t('forum.title') }}</router-link>
 					<i class="material-icons">chevron_right</i>
 					<router-link v-if="topic" :to="'/forum/category-' + category.id">{{ categoryName }}</router-link>
 					<i class="material-icons">chevron_right</i>
 					<span ref="topicTitle" :contenteditable="topicEditing" class="topic-title">{{ topic ? topic.name : '...' }}</span>
+					<div v-if="topic" class="info attrs">
+						<i v-if="topic.resolved" :title="$t('topic_resolved')" class="attr material-icons">check_circle</i>
+						<i v-if="topic.locked" :title="$t('topic_locked')" class="attr material-icons">lock</i>
+						<img v-if="topic.pinned" :title="$t('topic_pinned')" class="attr" src="/image/pin_white.png">
+						<a v-if="topic.issue" :href="'https://github.com/leek-wars/leek-wars-client/issues/' + topic.issue" class="attr issue" target="_blank" rel="noopener">
+							<img src="/image/github_white.png"><span>#{{ topic.issue }}</span>
+						</a>
+					</div>
 				</h1>
-				<div v-if="topic" class="info attrs">
-					<i v-if="topic.resolved" :title="$t('topic_resolved')" class="attr material-icons">check_circle</i>
-					<i v-if="topic.locked" :title="$t('topic_locked')" class="attr material-icons">lock</i>
-					<img v-if="topic.pinned" :title="$t('topic_pinned')" class="attr" src="/image/pin_white.png">
-					<a v-if="topic.issue" :href="'https://github.com/leek-wars/leek-wars-client/issues/' + topic.issue" class="attr issue" target="_blank" rel="noopener">
-						<img src="/image/github_white.png"><span>#{{ topic.issue }}</span>
-					</a>
+				<div v-if="!LeekWars.mobile" class="tabs">
+					<div v-if="topic && topic.subscribed" class="tab" @click="unsubscribe">{{ $t('unsubscribe') }}</div>
+					<div v-else class="tab" @click="subscribe">{{ $t('subscribe') }}</div>
 				</div>
-			</div>
-			<div v-if="!LeekWars.mobile" class="tabs">
-				<div v-if="topic && topic.subscribed" class="tab" @click="unsubscribe">{{ $t('unsubscribe') }}</div>
-				<div v-else class="tab" @click="subscribe">{{ $t('subscribe') }}</div>
 			</div>
 		</div>
 
@@ -400,11 +400,24 @@
 </script>
 
 <style lang="scss" scoped>
+	.title-wrapper {
+		flex: 1;
+	}
 	h1 {
 		font-size: 22px;
-		line-height: 35px;
-		display: inline-flex;
-		align-items: center;
+		display: inline;
+		line-height: 36px;
+		min-height: 36px;
+		white-space: normal;
+		padding: 6px 15px;
+		padding-right: 0px;
+		i {
+			vertical-align: text-bottom;
+		}
+	}
+	.tabs {
+		margin-left: 18px;
+		float: right;
 	}
 	#app.app .panel .content {
 		padding: 0;
@@ -608,6 +621,7 @@
 		display: inline-flex;
 		height: 36px;
 		align-items: center;
+		margin-left: 5px;
 	}
 	.attrs img {
 		margin: 0 6px;
