@@ -41,5 +41,6 @@ class Farmer {
 	public total_level!: number
 	public ais!: AI[]
 	public language!: string
+	public show_ai_lines!: boolean
 }
 export { Farmer }
