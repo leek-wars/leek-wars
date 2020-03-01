@@ -974,6 +974,9 @@
 			text-align: center;
 			display: block;
 		}
+		::v-deep &:before {
+			float: none;
+		}
 	}
 	.chart-tooltip {
 		position: absolute;

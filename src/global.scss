@@ -413,12 +413,12 @@ ul {
 .v-dialog > .title {
 	background: #2a2a2a;
 	color: #eee;
-	font-weight: 300;
 	padding: 0 10px;
 	padding-top: 6px;
 	padding-bottom: 4px;
 	height: 40px;
-	font-size: 23px;
+	font-size: 20px;
+	line-height: 28px;
 	text-align: left;
 	border-top-left-radius: 2px;
 	border-top-right-radius: 2px;
@@ -464,7 +464,6 @@ ul {
 }
 .v-dialog .actions {
 	height: 40px;
-	font-weight: 300;
 	display: flex;
 }
 .v-dialog .actions div {

@@ -1,5 +1,5 @@
 <template>
-	<v-menu :key="key" :close-on-content-click="false" :disabled="disabled" :max-width="expand_items ? 600 : 360" :nudge-top="bottom ? 0 : 6" :open-delay="_open_delay" :close-delay="_close_delay" :top="!bottom" :bottom="bottom" :transition="instant ? 'none' : 'v-menu-transition'" open-on-hover offset-y @input="open($event)">
+	<v-menu :key="key" :close-on-content-click="false" :disabled="disabled" :nudge-top="bottom ? 0 : 6" :open-delay="_open_delay" :close-delay="_close_delay" :top="!bottom" :bottom="bottom" :transition="instant ? 'none' : 'v-menu-transition'" open-on-hover offset-y @input="open($event)">
 		<template v-slot:activator="{ on }">
 			<slot :on="on"></slot>
 		</template>
@@ -21,6 +21,7 @@
 							<router-link v-if="leek.team" :to="'/team/' + leek.team.id">
 								<emblem :team="leek.team" :title="leek.team.name" />
 							</router-link>
+							<lw-title v-if="leek.title.length" :title="leek.title" />
 						</span>
 						<talent :talent="leek.talent" />
 						<span class="talent-more">({{ leek.talent_more >= 0 ? '+' + leek.talent_more : leek.talent_more }})</span>
@@ -154,6 +155,9 @@
 			img {
 				opacity: 0.5;
 			}
+		}
+		.title {
+			font-size: 14px;
 		}
 	}
 	.name {
