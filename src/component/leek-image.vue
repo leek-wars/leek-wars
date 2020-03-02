@@ -1,15 +1,17 @@
 <template lang="html">
 	<svg :viewBox="'0 0 ' + width + ' ' + height" :width="width" :height="height" v-on="on">
-		<image v-if="leekImage" :x="leekX" :y="leekY" :width="leekWidth" :height="leekHeight" :xlink:href="'/image/' + leekImage" />
-		<image v-if="hasHat && hatImage" :x="hatX" :width="hatWidth" :height="hatHeight" :xlink:href="'/image/' + hatImage" y="0" />
+		<g :class="{invert}">
+			<image v-if="leekImage" :x="leekX" :y="leekY" :width="leekWidth" :height="leekHeight" :xlink:href="'/image/' + leekImage" />
+			<image v-if="hasHat && hatImage" :x="hatX" :width="hatWidth" :height="hatHeight" :xlink:href="'/image/' + hatImage" y="0" />
 
-		<g v-if="weapon" :transform="'translate(' + (leekWidth / 2 + weaponCX) + ',' + (leekY + leekHeight - weaponCY) + ')'">
-			<g :transform="'scale(' + weaponScale + ')'">
-				<g :transform="'rotate(' + weaponAngle + ')'" transform-box="fill-box">
-					<g :transform="'translate(' + weaponX + ',' + weaponY + ')'">
-						<image :xlink:href="weaponImage" :width="weaponWidth" :height="weaponHeight" />
-						<image xlink:href="/image/fight/leek_hand.png" :width="handSize" :height="handSize" :x="hand1.x - handSize / 2" :y="hand1.y - handSize / 2" />
-						<image xlink:href="/image/fight/leek_hand.png" :width="handSize" :height="handSize" :x="hand2.x - handSize / 2" :y="hand2.y - handSize / 2" />
+			<g v-if="weapon" :transform="'translate(' + (leekWidth / 2 + weaponCX) + ',' + (leekY + leekHeight - weaponCY) + ')'">
+				<g :transform="'scale(' + weaponScale + ')'">
+					<g :transform="'rotate(' + weaponAngle + ')'" transform-box="fill-box">
+						<g :transform="'translate(' + weaponX + ',' + weaponY + ')'">
+							<image :xlink:href="weaponImage" :width="weaponWidth" :height="weaponHeight" />
+							<image xlink:href="/image/fight/leek_hand.png" :width="handSize" :height="handSize" :x="hand1.x - handSize / 2" :y="hand1.y - handSize / 2" />
+							<image xlink:href="/image/fight/leek_hand.png" :width="handSize" :height="handSize" :x="hand2.x - handSize / 2" :y="hand2.y - handSize / 2" />
+						</g>
 					</g>
 				</g>
 			</g>
@@ -30,6 +32,7 @@
 		@Prop({required: true}) leek!: Leek
 		@Prop({required: true}) scale!: number
 		@Prop() on!: any
+		@Prop() invert!: boolean
 		leekSize: any = null
 		hatSize: any = null
 		get leekImage(): string {
@@ -112,3 +115,10 @@
 		}
 	}
 </script>
+
+<style lang="scss" scoped>
+	.invert {
+		transform: scale(-1, 1);
+		transform-origin: center;
+	}
+</style>

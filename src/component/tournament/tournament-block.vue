@@ -1,7 +1,8 @@
 <template>
 	<a :xlink:href="link" @click="click">
 		<rect :width="size" :height="size" :x="x" :y="y" :me="item ? item.me : false" :class="{'no-fight': !item}" class="entry" />
-		<image :win="item ? item.win : false" :width="size - 2" :height="size - 2" :x="x + 1" :y="y + 1" :xlink:href="image" @mouseenter="mouseenter" @mouseleave="mouseleave" />
+		<leek-image v-if="item && item.data" :x="x + 1" :y="y + 1" :width="size - 2" :height="size - 2" :leek="{level: item.data[0], skin: item.data[1], hat: item.data[2], weapon: item.data[3]}" :scale="1" :invert="invert" @mouseenter.native="mouseenter" @mouseleave.native="mouseleave" />
+		<image v-else :win="item ? item.win : false" :width="size - 2" :height="size - 2" :x="x + 1" :y="y + 1" :xlink:href="image" @mouseenter="mouseenter" @mouseleave="mouseleave" />
 	</a>
 </template>
 
@@ -14,6 +15,7 @@
 		@Prop({ required: true }) x!: number
 		@Prop({ required: true }) y!: number
 		@Prop({ required: true }) size!: number
+		@Prop() invert!: boolean
 		get link() { return this.item && this.item.link ? this.item.link : undefined }
 		get image() { return (this.item && this.item.image) ? (this.item.image.indexOf('/') === 0 ? 'https://leekwars.com' + this.item.image : this.item.image) : '' }
 
