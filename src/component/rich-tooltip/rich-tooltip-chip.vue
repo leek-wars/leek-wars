@@ -1,10 +1,10 @@
 <template>
-	<v-menu :close-on-content-click="false" :width="280" offset-overflow :nudge-top="bottom ? 0 : 6" :open-delay="_open_delay" :close-delay="_close_delay" :top="!bottom" transition="none" :bottom="bottom" open-on-hover offset-y>
+	<v-menu :close-on-content-click="false" :width="280" offset-overflow :nudge-top="bottom ? 0 : 6" :open-delay="_open_delay" :close-delay="_close_delay" :top="!bottom" transition="none" :bottom="bottom" :open-on-hover="!locked" offset-y @input="$emit('input', $event)">
 		<template v-slot:activator="{ on }">
 			<slot :on="on"></slot>
 		</template>
 		<div class="card">
-			<chip-preview :chip="chip" />
+			<chip-preview ref="preview" :chip="chip" @input="locked = $event" />
 		</div>
 	</v-menu>
 </template>
@@ -19,6 +19,7 @@
 		@Prop({required: true}) chip!: ChipTemplate
 		@Prop() bottom!: boolean
 		@Prop() instant!: boolean
+		locked: boolean = false
 
 		get _open_delay() {
 			return this.instant ? 0 : 200

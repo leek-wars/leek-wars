@@ -38,7 +38,7 @@
 			</i18n>
 			<effect-view v-for="(effect, e) in chip.effects" :key="e" :effect="effect" />
 		</div>
-		<summon-view v-if="summon" :summon="summon" />
+		<summon-view v-if="summon" :summon="summon" @input="$emit('input', $event)" />
 	</div>
 </template>
 

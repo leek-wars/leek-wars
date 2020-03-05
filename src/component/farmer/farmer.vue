@@ -5,7 +5,10 @@
 	<div v-else>
 		<div class="page-header page-bar">
 			<div>
-				<h1>{{ farmer ? farmer.name : '...' }}</h1>
+				<rich-tooltip-farmer v-if="farmer" :id="farmer.id" v-slot="{ on }" :bottom="true">
+					<h1 v-on="on">{{ farmer.name }}</h1>
+				</rich-tooltip-farmer>
+				<h1 v-else>...</h1>
 				<div class="info state">
 					<span v-if="farmer && farmer.connected"><img src="/image/connected.png">{{ $t('connected') }}</span>
 					<span v-else><img src="/image/disconnected.png">{{ $t('disconnected') }}</span>

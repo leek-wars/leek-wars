@@ -1,9 +1,9 @@
 <template>
-	<v-menu :key="key" :close-on-content-click="false" :disabled="disabled" :nudge-top="bottom ? 0 : 6" :open-delay="_open_delay" :close-delay="_close_delay" :top="!bottom" :bottom="bottom" :transition="instant ? 'none' : 'v-menu-transition'" open-on-hover offset-y @input="open($event)">
+	<v-menu ref="menu" :close-on-content-click="false" :disabled="disabled" :nudge-top="bottom ? 0 : 6" :open-delay="_open_delay" :close-delay="_close_delay" :top="!bottom" :bottom="bottom" :transition="instant ? 'none' : 'my-transition'" :open-on-hover="!locked" offset-y @input="open($event)">
 		<template v-slot:activator="{ on }">
 			<slot :on="on"></slot>
 		</template>
-		<div v-if="content_created" :class="{expanded: expand_items}" class="card">
+		<div :class="{expanded: expand_items}" class="card">
 			<loader v-if="!leek" :size="30" />
 			<template v-else>
 				<div class="flex">
@@ -49,28 +49,14 @@
 					</table>
 					<div class="items">
 						<div class="weapons">
-							<tooltip v-for="weapon in leek.orderedWeapons" :key="weapon.id">
-								<template v-slot:activator="{ on }">
-									<img :src="'/image/weapon/' + LeekWars.weapons[weapon.template].name + '.png'" class="weapon" v-on="on">
-								</template>
-								<b>{{ $t('weapon.' + LeekWars.weapons[weapon.template].name) }}</b>
-								<br>
-								{{ $t('main.level_n', [LeekWars.weapons[weapon.template].level]) }}
-								<br>
-								<small>{{ 'WEAPON_' + LeekWars.weapons[weapon.template].name.toUpperCase() }}</small>
-							</tooltip>
+							<rich-tooltip-weapon v-for="weapon in leek.orderedWeapons" :key="weapon.id" v-slot="{ on }" :weapon="LeekWars.weapons[weapon.template]" :bottom="true" :instant="true" @input="locked = $event">
+								<img :src="'/image/weapon/' + LeekWars.weapons[weapon.template].name + '.png'" class="weapon" v-on="on">
+							</rich-tooltip-weapon>
 						</div>
 						<div class="chips">
-							<tooltip v-for="chip in leek.orderedChips" :key="chip.id">
-								<template v-slot:activator="{ on }">
-									<img :src="'/image/chip/small/' + LeekWars.chips[chip.template].name + '.png'" class="chip" v-on="on">
-								</template>
-								<b>{{ $t('chip.' + LeekWars.chips[chip.template].name) }}</b>
-								<br>
-								{{ $t('main.level_n', [LeekWars.chips[chip.template].level]) }}
-								<br>
-								<small>{{ 'CHIP_' + LeekWars.chips[chip.template].name.toUpperCase() }}</small>
-							</tooltip>
+							<rich-tooltip-chip v-for="chip in leek.orderedChips" :key="chip.id" v-slot="{ on }" :chip="LeekWars.chips[chip.template]" :bottom="true" :instant="true" @input="locked = $event">
+								<img :src="'/image/chip/small/' + LeekWars.chips[chip.template].name + '.png'" class="chip" v-on="on">
+							</rich-tooltip-chip>
 						</div>
 					</div>
 				</div>
@@ -93,7 +79,7 @@
 		content_created: boolean = false
 		leek: Leek | null = null
 		expand_items: boolean = false
-		key: number = 0
+		locked: boolean = false
 
 		get _open_delay() {
 			return this.instant ? 0 : 200
@@ -102,13 +88,15 @@
 			return this.instant ? 0 : 200
 		}
 		open(v: boolean) {
+			this.$emit('input', v)
 			this.expand_items = localStorage.getItem('richtooltipleek/expanded') === 'true'
+			if (this.content_created) { return }
 			this.content_created = true
 			if (this.id > 0 && !this.leek) {
 				LeekWars.get<Leek>('leek/rich-tooltip/' + this.id).then(leek => {
 					this.leek = new Leek(leek)
 					if (this.expand_items) {
-						this.key++
+						(this.$refs.menu as any).onResize()
 					}
 				})
 			}

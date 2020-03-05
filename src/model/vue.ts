@@ -51,6 +51,11 @@ import 'swiper/dist/css/swiper.css'
 import VueAwesomeSwiper from 'vue-awesome-swiper'
 Vue.use(VueAwesomeSwiper)
 
+import { createSimpleTransition } from 'vuetify/lib/components/transitions/createTransition'
+import '../fade-transition.sass'
+const myTransition = createSimpleTransition('my-transition')
+Vue.component('my-transition', myTransition)
+
 Vue.config.productionTip = false
 
 Vue.mixin({
