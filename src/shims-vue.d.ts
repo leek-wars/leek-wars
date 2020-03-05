@@ -6,6 +6,7 @@ declare module '*.vue' {
 declare var ga: Function
 
 declare module 'vuetify/lib/framework';
+declare module 'vuetify/lib/components/transitions/createTransition';
 declare module '@/vtooltip-fast';
 
 declare module 'vue-chartist' {

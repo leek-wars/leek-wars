@@ -1,9 +1,9 @@
 <template>
-	<v-menu :key="key" :close-on-content-click="false" :disabled="disabled || id <= 0" :nudge-width="expand_leeks ? 500 : 200" :nudge-top="bottom ? 0 : 6" :open-delay="_open_delay" :close-delay="_close_delay" :top="!bottom" :bottom="bottom" :transition="instant ? 'none' : 'v-menu-transition'" open-on-hover offset-y @input="open($event)">
+	<v-menu ref="menu" :close-on-content-click="false" :disabled="disabled || id <= 0" :nudge-width="expand_leeks ? 500 : 200" :nudge-top="bottom ? 0 : 6" :open-delay="_open_delay" :close-delay="_close_delay" :top="!bottom" :bottom="bottom" :transition="instant ? 'none' : 'my-transition'" :open-on-hover="!locked" offset-y @input="open($event)">
 		<template v-slot:activator="{ on }">
 			<slot :on="on"></slot>
 		</template>
-		<div v-if="content_created" class="card">
+		<div class="card">
 			<loader v-if="!farmer" :size="30" />
 			<template v-else>
 				<div class="flex">
@@ -50,7 +50,7 @@
 					</tr>
 					<tr v-for="leek in farmer.leeks" :key="leek.id">
 						<td class="leek-name">
-							<rich-tooltip-leek :id="leek.id" v-slot="{ on }" :bottom="true">
+							<rich-tooltip-leek :id="leek.id" v-slot="{ on }" :bottom="true" @input="locked = $event">
 								<router-link :to="'/leek/' + leek.id">
 									<span v-on="on">{{ leek.name }}</span>
 								</router-link>
@@ -82,7 +82,7 @@
 		farmer: Farmer | null = null
 		expand_leeks: boolean = false
 		sums: {[key: string]: number} = {}
-		key: number = 0
+		locked: boolean = false
 
 		get _open_delay() {
 			return this.instant ? 0 : 200
@@ -90,8 +90,10 @@
 		get _close_delay() {
 			return this.instant ? 0 : 200
 		}
+
 		open(v: boolean) {
 			this.expand_leeks = localStorage.getItem('richtooltipfarmer/expanded') === 'true'
+			if (this.content_created) { return }
 			this.content_created = true
 			if (this.id > 0 && !this.farmer) {
 				LeekWars.get<Farmer>('farmer/rich-tooltip/' + this.id).then(farmer => {
@@ -100,7 +102,7 @@
 						Vue.set(this.sums, c, Object.values(this.farmer.leeks).reduce((sum: number, leek: any) => sum + leek[c], 0))
 					}
 					if (this.expand_leeks) {
-						this.key++
+						(this.$refs.menu as any).onResize()
 					}
 				})
 			}
