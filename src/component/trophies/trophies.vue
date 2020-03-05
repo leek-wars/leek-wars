@@ -57,6 +57,7 @@
 								<span slot="date">{{ trophy.date | date }}</span>
 							</i18n>
 						</template>
+						<span class="rarity"> • {{ trophy.total }} • {{ (trophy.rarity * 100).toPrecision(2) }}%</span>
 					</div>
 				</div>
 			</div>
@@ -259,12 +260,12 @@
 			}
 		}
 		.unlock {
-			display: flex;
+			display: flex-wrap;
 			align-items: center;
+			margin-top: 4px;
 		}
-		.date {
+		.date, .rarity {
 			color: #888;
-			padding-top: 4px;
 			font-size: 13px;
 			font-style: italic;
 			.fight {
