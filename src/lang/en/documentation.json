@@ -1096,6 +1096,7 @@
 	"getCellsToUseChipOnCell_2": "Lists all cells that allow your leek to use a given <b>chip</b>, targeting given <b>cell</b>.",
 	"getCellsToUseChipOnCell_2_arg_1": "The chip your leek wants to use.",
 	"getCellsToUseChipOnCell_2_arg_2": "targeted cell.",
+	"items": "Items",
 	"max_cores": "max",
 	"max_level": "max",
 	"min_cores": "Min cores",
