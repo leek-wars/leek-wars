@@ -175,6 +175,21 @@ Vue.directive('chat-code-latex', {
 		})
 	}
 })
+Vue.directive('dochash', {
+	inserted: (el) => {
+		el.innerHTML = el.innerHTML.replace(/#(\w+)/g, (a, b) => {
+			return "<a href='/help/documentation/" + b + "'>" + b + "</a>"
+		})
+		el.querySelectorAll('a').forEach((a: any) => {
+			a.onclick = (e: Event) => {
+				e.stopPropagation()
+				e.preventDefault()
+				router.push('/help/documentation/' + a.innerText)
+				return false
+			}
+		})
+	}
+})
 
 const vueMain = new Vue({
 	router, i18n, store,
