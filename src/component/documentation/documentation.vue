@@ -1,20 +1,28 @@
 <template lang="html">
 	<div>
 		<div class="page-header page-bar">
-			<h1>{{ $t('documentation.title') }}</h1>
+			<div>
+				<h1>{{ $t('documentation.title') }}</h1>
+			</div>
+			<div class="tabs">
+				<div class="tab disabled search" icon="search" link="/search">
+					<img class="search-icon" src="/image/search.png">
+					<input v-model="query" type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+				</div>
+				<div class="tab action" icon="search" link="/search" @click="LeekWars.large = !LeekWars.large">
+					<i v-if="LeekWars.large" class="material-icons">fullscreen_exit</i>
+					<i v-else class="material-icons">fullscreen</i>
+				</div>
+			</div>
 		</div>
 		<div class="documentation">
 			<div v-show="!LeekWars.mobile || !LeekWars.splitBack" class="column3">
 				<panel class="first">
 					<div slot="content">
-						<div class="search-box">
-							<img src="/image/search_black.png">
-							<input v-model="query" type="text" @input="changeQuery">
-						</div>
 						<div v-autostopscroll="'bottom'" class="items-list">
-							<div v-for="category in categories" :key="category.id">
-								<h2>{{ $t('documentation.function_category_' + category.name) }}</h2>
-								<router-link v-for="(item, i) in items_by_category[category.id]" v-if="item.name === item.real_name" :key="i" :to="'/help/documentation/' + item.name" :item="item.name" class="item">
+							<div v-for="(category, c) of filteredCategories" :key="category.id">
+								<h2>{{ $t('documentation.function_category_' + categories[c].name) }}</h2>
+								<router-link v-for="(item, i) in category" v-if="item.name === item.real_name" :key="i" :to="'/help/documentation/' + item.name" :item="item.name" class="item">
 									{{ item.name }}
 								</router-link>
 							</div>
@@ -24,7 +32,7 @@
 			</div>
 			<div v-show="!LeekWars.mobile || LeekWars.splitBack" class="column9">
 				<div ref="elements" v-autostopscroll="'bottom'" class="items" @scroll="scroll">
-					<panel v-for="(item, i) of lazy_items" :key="i" :item="item.name" :class="{deprecated: item.deprecated}" class="item">
+					<panel v-for="item of lazy_items" :key="item.id" :item="item.name" :class="{deprecated: item.deprecated}" class="item">
 						<documentation-function v-if="'return_type' in item" :fun="item" />
 						<documentation-constant v-else :constant="item" />
 					</panel>
@@ -47,10 +55,38 @@
 	export default class Documentation extends Vue {
 		categories: any[] = []
 		items: any[] = []
-		items_by_category: {[key: number]: any} = {}
 		query: string = ''
 		Function = Function
-		lazy_items: any[] = []
+		lazy_start: number = 0
+		lazy_end: number = 10
+
+		get lower_query() {
+			return this.query.toLowerCase()
+		}
+		get filteredItems() {
+			if (this.lower_query.length) {
+				return this.items.filter(item => {
+					return item.lower_name.indexOf(this.lower_query) !== -1
+						|| item.data.indexOf(this.lower_query) !== -1
+				})
+			} else {
+				return [...this.items]
+			}
+		}
+		get lazy_items() {
+			return this.filteredItems.slice(this.lazy_start, this.lazy_end)
+		}
+		get filteredCategories() {
+			const categories: {[key: number]: any} = {}
+			for (const category in this.categories) {
+				categories[category] = []
+			}
+			for (const item of this.filteredItems) {
+				categories[item.category].push(item)
+			}
+			return categories
+		}
+
 		created() {
 			const get_categories = (callback: any) => {
 				if (localStorage.getItem('data/function_categories')) {
@@ -64,11 +100,9 @@
 			}
 			get_categories((data: any) => {
 				this.categories = data.categories
-				for (const category in this.categories) {
-					this.items_by_category[category] = []
-				}
 				let last: any
 				let index = 1
+				let id = 0
 				for (const item of LeekWars.functions) {
 					(item as any).real_name = item.name
 					if (last != null && last.name === item.name) {
@@ -78,70 +112,29 @@
 					}
 					this.items.push(item)
 					; (item as any).lower_name = item.name.toLowerCase()
-					this.items_by_category[item.category].push(item)
+					; (item as any).id = id++
+					let data = this.$t('documentation.func_' + item.real_name).toLowerCase()
+					for (const i in item.arguments_names) {
+						data += this.$t('documentation.func_' + item.real_name + '_arg_' + (parseInt(i) + 1)).toLowerCase()
+					}
+					data += this.$t('documentation.func_' + item.real_name + '_return').toLowerCase()
+					; (item as any).data = data
 					last = item
 				}
 				for (const item of LeekWars.constants) {
 					this.items.push(item)
 					; (item as any).lower_name = item.name.toLowerCase()
 					; (item as any).real_name = item.name
-					this.items_by_category[item.category].push(item)
+					; (item as any).id = id++
+					; (item as any).data = ''
 				}
-				this.lazy_items = this.items.slice(0, 20)
-
 				LeekWars.setTitle(this.$i18n.t('documentation.title'))
 				this.update()
-
-				setTimeout(() => {
-					document.querySelectorAll('.items .item').forEach((item) => {
-						let text: any = item.innerHTML
-						let changed = false
-						let pos = 0
-						while ((pos = this.regexIndexOf(text, /[ \(>-]#/, pos + 1)) >= 0) {
-							pos += 2
-							let size = 0
-							while (this.isNameChar(text.charAt(pos))) {
-								pos++
-								size++
-							}
-							if (size > 0) {
-								const link = text.substring(pos - size, pos)
-								text = text.slice(0, pos - size - 1) + text.slice(pos - size)
-								text = this.insert(text, pos - 1, "'>" + link + "</a>")
-								text = this.insert(text, pos - size - 1, "<a href='/help/documentation/")
-								pos += 15
-								changed = true
-							}
-						}
-						if (changed) {
-							item.innerHTML = text
-							item.querySelectorAll('a').forEach((a: any) => {
-								a.onclick = (e: Event) => {
-									e.stopPropagation()
-									e.preventDefault()
-									this.query = ''
-									this.changeQuery()
-									setTimeout(() => {
-										this.$router.push(a.getAttribute('href'))
-										this.update()
-									}, 50)
-									return false
-								}
-							})
-						}
-					})
-					document.querySelectorAll('.documentation code').forEach((item) => {
-						const content = '' + item.textContent
-						LeekWars.createCodeArea(content, item as HTMLElement)
-					})
-				}, 100)
 			})
 			this.$root.$on('back', this.back)
 		}
 		back() {
 			this.$router.push('/help/documentation')
-		isNameChar(char: string) {
-			return /[a-zA-Z0-9_]/.test(char)
 		}
 		destroyed() {
 			LeekWars.large = false
@@ -159,53 +152,48 @@
 				LeekWars.setTitle(this.$i18n.t('documentation.title'))
 			}
 		}
+
 		selectItem(item: string) {
-			setTimeout(() => {
-				const element: any = document.querySelector('.items .item[item=' + item + ']')
-				const elements = this.$refs.elements as HTMLElement
-				if (element) {
-					const offset = LeekWars.mobile ? 70 : 140
-					elements.scrollTo(0, element.offsetTop - offset + 10)
+			if (!this.filteredItems.find((it) => it.name === item)) {
+				this.query = ''
+			}
+			Vue.nextTick(() => {
+				const index = this.filteredItems.findIndex((it) => it.name === item)
+				if (index !== -1) {
+					this.lazy_start = Math.max(0, index - 2)
+					this.lazy_end = this.lazy_start + 10
 				}
-			}, 100)
-		}
-		changeQuery() {
-			const items = document.querySelectorAll(".items .item")
-			if (this.query.length) {
-				const query = this.query.toLowerCase()
-				items.forEach((item: any) => {
-					const fields = item.querySelectorAll('.searchable')
-					const menuItem: any = document.querySelector('.items-list .item[item=' + item.getAttribute('item') + ']')
-					for (const field of fields) {
-						if (('' + field.textContent).toLowerCase().indexOf(query) !== -1) {
-							item.style.display = 'block'
-							menuItem.style.display = 'block'
-							return
-						}
+				setTimeout(() => {
+					const element: any = document.querySelector('.items .item[item=' + item + ']')
+					const elements = this.$refs.elements as HTMLElement
+					if (element) {
+						const offset = LeekWars.mobile ? 100 : 140
+						elements.scrollTo(0, element.offsetTop - offset + 10)
 					}
-					item.style.display = 'none'
-					menuItem.style.display = 'none'
-				})
-			} else {
-				items.forEach((item: any) => {
-					item.style.display = 'block'
-					const menuItem: any = document.querySelector('.items-list .item[item=' + item.getAttribute('item') + ']')
-					menuItem.style.display = 'block'
-				})
+				}, 100)
+			})
+		}
+
+		@Watch('query')
+		queryChange() {
+			console.log("change query", this.query)
+			const items = this.$refs.elements as Element
+			items.scrollTop = 0
+			this.lazy_start = 0
+			this.lazy_end = 10
+			if (this.query.length && 'item' in this.$route.params) {
+				this.$router.push('/help/documentation')
 			}
 		}
-		insert(str: string, idx: number, s: string) {
-			return (str.slice(0, idx) + s + str.slice(idx))
-		}
-		regexIndexOf(str: string, regex: RegExp, startpos: number) {
-			const indexOf = str.substring(startpos || 0).search(regex)
-			return (indexOf >= 0) ? (indexOf + (startpos || 0)) : indexOf
-		}
+
 		scroll(e: Event) {
-			if (this.lazy_items.length < this.items.length) {
-				const items = this.$refs.elements as Element
+			const items = this.$refs.elements as Element
+			if (items.scrollTop < 100 && this.lazy_start > 0) {
+				this.lazy_start = Math.max(0, this.lazy_start - 10)
+			}
+			if (this.lazy_items.length < this.filteredItems.length) {
 				if (items.scrollTop + window.innerHeight + 500 > items.scrollHeight) {
-					this.lazy_items.push(...this.items.slice(this.lazy_items.length, this.lazy_items.length + 10))
+					this.lazy_end += 10
 				}
 			}
 		}
@@ -240,7 +228,7 @@
 		overflow-y: auto;
 		overflow-x: hidden;
 		position: relative;
-		height: calc(100% - 46px);
+		height: 100%;
 	}
 	.items-list h2 {
 		font-size: 13px;
@@ -264,7 +252,7 @@
 		box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
 	}
 	.items {
-		overflow-y: auto;
+		overflow-y: scroll;
 		overflow-x: hidden;
 		height: 100%;
 	}
@@ -276,6 +264,9 @@
 		::v-deep a {
 			color: #5fad1b;
 			font-weight: 500;
+			&:hover {
+				text-decoration: underline;
+			}
 		}
 		::v-deep h2 {
 			margin-bottom: 10px;
@@ -297,10 +288,11 @@
 		color: black;
 	}
 	.item ::v-deep h4 {
-		font-weight: 300;
+		font-weight: 500;
 		margin: 0;
 		color: #666;
-		margin-top: 8px;
+		margin-top: 10px;
+		font-size: 15px;
 	}
 	.items ::v-deep .item.deprecated .content {
 		opacity: 0.6;
@@ -321,7 +313,21 @@
 	.search-box img {
 		margin: 4px;
 	}
-	input {
-		width: 100%;
+	.tabs {
+		flex: 1;
+		display: flex;
+	}
+	.page-bar .search {
+		flex: 1;
+		input[type=text] {
+			height: 27px;
+			width: calc(100% - 35px);
+			background: #eee;
+			color: black;
+			font-size: 20px;
+			border-radius: 4px;
+			vertical-align: bottom;
+			margin-left: 5px;
+		}
 	}
 </style>

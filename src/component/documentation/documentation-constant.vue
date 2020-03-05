@@ -1,10 +1,10 @@
 <template lang="html">
 	<div v-if="constant">
-		<h2 class="searchable">{{ constant.name }}</h2>
+		<h2>{{ constant.name }}</h2>
 		<div v-if="constant.deprecated" class="deprecated-message">Cette constante est dépréciée.</div>
 		<chip-preview v-if="constant.name.startsWith('CHIP_')" :chip="LeekWars.chips[constant.value]" />
 		<weapon-preview v-else-if="constant.name.startsWith('WEAPON_')" :weapon="LeekWars.weapons[constant.value]" />
-		<div v-else class="content searchable" v-html="$t('documentation.const_' + constant.name)"></div>
+		<div v-else v-dochash class="content" v-html="$t('documentation.const_' + constant.name)"></div>
 		<h4>{{ $t('documentation.value') }}</h4>
 		<ul>
 			<li>{{ constant.name }} = {{ constant.value }}</li>
