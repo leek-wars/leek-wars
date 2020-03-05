@@ -279,15 +279,16 @@
 				}
 				this.update()
 			})
-			this.$root.$on('back', () => {
-				localStorage.removeItem('garden/category')
-				this.$router.back()
-			})
+			this.$root.$on('back', this.back)
 			LeekWars.socket.send([SocketMessage.GARDEN_QUEUE_REGISTER])
 			this.$root.$on('garden-queue', (data: number) => this.queue = data)
 		}
+		back() {
+			localStorage.removeItem('garden/category')
+			this.$router.back()
+		}
 		beforeDestroy() {
-			this.$root.$off('back')
+			this.$root.$off('back', this.back)
 			LeekWars.socket.send([SocketMessage.GARDEN_QUEUE_UNREGISTER])
 		}
 

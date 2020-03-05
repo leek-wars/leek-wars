@@ -322,11 +322,17 @@
 
 				this.update()
 			})
-			this.$root.$on('back', () => {
-				this.$router.push('/market')
-			})
+			console.log("create market")
+			this.$root.$on('back', this.back)
 			LeekWars.setActions(this.actions)
 		}
+		back() {
+			this.$router.push('/market')
+		}
+		destroyed() {
+			this.$root.$off('back', this.back)
+		}
+
 		@Watch('$route.params.item')
 		update() {
 			const item = this.$route.params.item
