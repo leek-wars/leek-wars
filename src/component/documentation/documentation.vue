@@ -136,13 +136,18 @@
 					})
 				}, 100)
 			})
-			this.$root.$on('back', () => {
-				this.$router.push('/help/documentation')
-			})
+			this.$root.$on('back', this.back)
 		}
+		back() {
+			this.$router.push('/help/documentation')
 		isNameChar(char: string) {
 			return /[a-zA-Z0-9_]/.test(char)
 		}
+		destroyed() {
+			LeekWars.large = false
+			this.$root.$off('back', this.back)
+		}
+
 		@Watch('$route.params')
 		update() {
 			if (this.$route.params && 'item' in this.$route.params) {
