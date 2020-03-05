@@ -322,7 +322,6 @@
 
 				this.update()
 			})
-			console.log("create market")
 			this.$root.$on('back', this.back)
 			LeekWars.setActions(this.actions)
 		}
