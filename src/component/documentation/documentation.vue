@@ -176,7 +176,6 @@
 
 		@Watch('query')
 		queryChange() {
-			console.log("change query", this.query)
 			const items = this.$refs.elements as Element
 			items.scrollTop = 0
 			this.lazy_start = 0
@@ -292,6 +291,7 @@
 		margin: 0;
 		color: #666;
 		margin-top: 10px;
+		margin-bottom: 8px;
 		font-size: 15px;
 	}
 	.items ::v-deep .item.deprecated .content {
