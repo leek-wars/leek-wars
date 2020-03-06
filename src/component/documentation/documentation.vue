@@ -113,12 +113,12 @@
 					this.items.push(item)
 					; (item as any).lower_name = item.name.toLowerCase()
 					; (item as any).id = id++
-					let data = this.$t('documentation.func_' + item.real_name).toLowerCase()
+					let item_data = (this.$t('documentation.func_' + (item as any).real_name) as any).toLowerCase()
 					for (const i in item.arguments_names) {
-						data += this.$t('documentation.func_' + item.real_name + '_arg_' + (parseInt(i) + 1)).toLowerCase()
+						item_data += (this.$t('documentation.func_' + (item as any).real_name + '_arg_' + (parseInt(i, 10) + 1)) as any).toLowerCase()
 					}
-					data += this.$t('documentation.func_' + item.real_name + '_return').toLowerCase()
-					; (item as any).data = data
+					item_data += (this.$t('documentation.func_' + (item as any).real_name + '_return') as any).toLowerCase()
+					; (item as any).data = item_data
 					last = item
 				}
 				for (const item of LeekWars.constants) {
