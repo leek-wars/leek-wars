@@ -94,7 +94,7 @@
 		get weaponWidth() { return this.weaponData ? this.weaponData.w : 0 }
 		get weaponHeight() { return this.weaponData ? this.weaponData.h : 0 }
 		get weaponCX() { return this.weaponData ? (this.weaponData.cx + 15) * this.scale : 0 }
-		get weaponCY() { return this.weaponData ? (this.weaponData.cz + 10) * this.scale : 0 }
+		get weaponCY() { return this.weaponData ? (this.weaponData.cz - 40) * this.scale : 0 }
 		get weaponX() { return this.weaponData ? this.weaponData.x - 2 : 0 }
 		get weaponY() { return this.weaponData ? this.weaponData.z : 0 }
 		get weaponBottom() { return this.weaponData ? this.weaponData.bottom : 0 }

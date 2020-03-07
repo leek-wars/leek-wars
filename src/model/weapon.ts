@@ -72,11 +72,11 @@ const WeaponsData = {
 	// BLaser
 	13: { w: 170, h: 45, cx: 15, cz: 38, ocx: 0, x: -70, z: -20, mx1: 33, mz1: 33, mx2: 80, mz2: 33, sx: 123, sz: 25, cartX: 60, cartZ: 20, cartAngle: Math.PI / 2, recoilForce: 18, top: 3, bottom: 35, white: false },
 	// Katana
-	14: { w: 250, h: 26, cx: 5, cz: -15, ocx: 10, x: 15, z: -15, mx1: 30, mz1: 12, mx2: 42, mz2: 12, top: 0, bottom: 20, white: true },
+	14: { w: 250, h: 26, cx: 5, cz: 40, ocx: 10, x: 15, z: -15, mx1: 30, mz1: 12, mx2: 42, mz2: 12, top: 0, bottom: 20, white: true },
 	// Broadsword
-	15: { w: 160, h: 29, cx: 5, cz: -10, ocx: 15, x: 15, z: -16, mx1: 14, mz1: 14, mx2: 30, mz2: 14, top: 0, bottom: 20, white: true },
+	15: { w: 160, h: 29, cx: 5, cz: 40, ocx: 15, x: 15, z: -16, mx1: 14, mz1: 14, mx2: 30, mz2: 14, top: 0, bottom: 20, white: true },
 	// Axe
-	16: { w: 170, h: 64, cx: 5, cz: -10, ocx: 25, x: 15, z: -35, mx1: 32, mz1: 32, mx2: 55, mz2: 32, top: 0, bottom: 15, white: true },
+	16: { w: 170, h: 64, cx: 5, cz: 40, ocx: 25, x: 15, z: -35, mx1: 32, mz1: 32, mx2: 55, mz2: 32, top: 0, bottom: 20, white: true },
 	// JLaser
 	17: { w: 180, h: 41, cx: 15, cz: 35, ocx: 0, x: -70, z: -20, mx1: 49, mz1: 29, mx2: 75, mz2: 33, sx: 126, sz: 25, cartX: 60, cartZ: 20, cartAngle: Math.PI / 2, recoilForce: 18, top: 0, bottom: 37, white: false },
 	// IllicitGrenadeLauncher
