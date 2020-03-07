@@ -84,17 +84,22 @@
 		get leekY() { return this.leek.hat !== null && this.hatTemplate ? this.hatHeight - this.leekHeight * this.hatTemplate.height : 0 }
 		get hatX() { return this.leek.hat !== null ? this.leekWidth / 2 - this.hatWidth / 2 - (this.leekWidth / 25) : 0 }
 
-		get weapon() { return this.leek.weapon }
+		get weapon() {
+			if (typeof this.leek.weapon === 'number') {
+				return this.leek.weapon
+			}
+			return this.leek.weapon ? ((this.leek.weapon as any).id as number) : 0
+		}
 		get weaponTemplate() { return this.weapon ? LeekWars.weapons[this.weapon].template : null }
 		get weaponScale() { return 0.9 * this.scale }
 		get weaponData() { return this.weaponTemplate ? WeaponsData[this.weaponTemplate] : null }
-		get weaponRadianAngle() { return (this.weaponData && this.weaponData.white) ? -Math.PI / 3 : Math.PI / 7 }
+		get weaponRadianAngle() { return (this.weaponData && this.weaponData.white) ? -Math.PI / 2.7 : Math.PI / 7 }
 		get weaponAngle() { return this.weaponRadianAngle * (180 / Math.PI) }
 		get weaponImage() { return '/image/weapon/' + LeekWars.weapons[this.weapon].name + '.png' }
 		get weaponWidth() { return this.weaponData ? this.weaponData.w : 0 }
 		get weaponHeight() { return this.weaponData ? this.weaponData.h : 0 }
 		get weaponCX() { return this.weaponData ? (this.weaponData.cx + 15) * this.scale : 0 }
-		get weaponCY() { return this.weaponData ? (this.weaponData.cz - 40) * this.scale : 0 }
+		get weaponCY() { return this.weaponData ? (this.weaponData.cz + ((this.weaponData && this.weaponData.white) ? (-30) : 10)) * this.scale : 0 }
 		get weaponX() { return this.weaponData ? this.weaponData.x - 2 : 0 }
 		get weaponY() { return this.weaponData ? this.weaponData.z : 0 }
 		get weaponBottom() { return this.weaponData ? this.weaponData.bottom : 0 }

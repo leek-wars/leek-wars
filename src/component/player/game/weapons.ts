@@ -3,6 +3,7 @@ import { Game } from "@/component/player/game/game"
 import { Sound } from '@/component/player/game/sound'
 import { Texture } from '@/component/player/game/texture'
 import { Area } from '@/model/area'
+import { LeekWars } from '@/model/leekwars'
 import { WeaponsData } from '@/model/weapon'
 import { Cell } from './cell'
 import { Leek } from './leek'
@@ -24,6 +25,7 @@ abstract class WeaponAnimation {
 	public mx2: number
 	public mz2: number
 	public recoil: number = 0
+	public id: number
 	constructor(game: Game, texture: Texture, id: number) {
 		this.game = game
 		this.texture = texture
@@ -37,6 +39,7 @@ abstract class WeaponAnimation {
 		this.mz1 = data.mz1
 		this.mx2 = data.mx2
 		this.mz2 = data.mz2
+		this.id = LeekWars.weaponTemplates[id].item
 	}
 	public abstract shoot(leekX: number, leekY: number, handPos: number, angle: number, orientation: number, targetPos: Position, targets: Entity[], caster: Entity, cell: Cell): void
 	public abstract update(dt: number): void
