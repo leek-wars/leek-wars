@@ -13,48 +13,46 @@
 			<br><br>
 		</div>
 		<div v-else-if="!loaded" class="loading">
-			<div v-if="fight && !LeekWars.mobile">
-				<template v-if="fight.type === FightType.BATTLE_ROYALE">
+			<template v-if="fight">
+				<div v-if="fight.type === FightType.BATTLE_ROYALE" class="table br">
 					<template v-for="(leek, i) in fight.leeks1">
-						<div :key="leek.id" class="leek">
-							<leek-image :leek="leek" :scale="0.6" />
+						<div :key="leek.id" class="leek br">
+							<leek-image :leek="leek" :scale="1" />
 							<div class="name">{{ leek.name }}</div>
 							<span class="level">{{ $t('leek.level_n', [leek.level]) }}</span>
 						</div>
-						<br v-if="i == 1 && fight.leeks1.length < 5" :key="leek.id + 'br'">
-						<span v-if="i < fight.leeks1.length - 1" :key="leek.id + 'vs'" class="vs">VS</span>
+						<img v-if="i < fight.leeks1.length - 1" :key="leek.id + 'vs'" class="vs" src="/image/vs.png">
 					</template>
 					<br><br>
-				</template>
-				<table v-else>
-					<tr>
-						<td class="team-td">
-							<span v-for="(leek, i) in fight.leeks1" :key="leek.id">
-								<div class="leek">
-									<leek-image :leek="leek" :scale="0.6" />
-									<div class="name">{{ leek.name }}</div>
-									<span class="level">{{ $t('leek.level_n', [leek.level]) }}</span>
-								</div>
-								<br v-if="i == 1 && fight.leeks1.length < 5">
-							</span>
-						</td>
-						<td><span class="vs">VS</span></td>
-						<td class="team-td">
-							<span v-for="(leek, i) in fight.leeks2" :key="leek.id">
-								<div class="leek">
-									<leek-image :leek="leek" :scale="0.6" />
-									<div class="name">{{ leek.name }}</div>
-									<span class="level">{{ $t('leek.level_n', [leek.level]) }}</span>
-								</div>
-								<br v-if="i == 1 && fight.leeks2.length < 5">
-							</span>
-						</td>
-					</tr>
-				</table>
-			</div>
+				</div>
+				<div v-else class="table">
+					<div class="team">
+						<div v-for="leek in fight.leeks1" :key="leek.id" class="leek" :class="{third: fight.leeks1.length >= 5 || fight.leeks1.length === 3, solo: fight.leeks1.length === 1, oneline: fight.leeks1.length <= 3}">
+							<leek-image :leek="leek" :scale="1" />
+							<div class="name">{{ leek.name }}</div>
+							<lw-title v-if="leek.title.length" :title="leek.title" />
+							<span class="level">{{ $t('leek.level_n', [leek.level]) }}</span>
+						</div>
+					</div>
+					<img class="vs" src="/image/vs.png">
+					<div class="team">
+						<div v-for="leek in fight.leeks2" :key="leek.id" class="leek" :class="{third: fight.leeks2.length >= 5 || fight.leeks2.length === 3, solo: fight.leeks2.length === 1, oneline: fight.leeks2.length <= 3}">
+							<leek-image :leek="leek" :scale="1" :invert="true" />
+							<div class="name">{{ leek.name }}</div>
+							<lw-title v-if="leek.title.length" :title="leek.title" />
+							<span class="level">{{ $t('leek.level_n', [leek.level]) }}</span>
+						</div>
+					</div>
+				</div>
+			</template>
 			<div class="loading-fight">
 				<loader />
-				{{ $t('fight.loading_fight') }}
+				<div class="loading-bar">
+					<span :style="{width: 50 + '%'}" class="bar striked"></span>
+				</div>
+				<div class="status">
+					{{ $t('fight.loading_fight') }}
+				</div>
 				<div v-if="queue" class="queue-position">
 					<span v-if="queue.position == -1">{{ $t('fight.generating') }}</span>
 					<span v-else>{{ $t('fight.position_in_queue', [queue.position + 1, queue.total]) }}</span>
@@ -451,6 +449,90 @@
 	.layers {
 		position: relative;
 	}
+	.table {
+		display: flex;
+		align-items: center;
+		min-height: 0;
+		justify-content: center;
+		&.br {
+			flex-wrap: wrap;
+			margin-bottom: 20px;
+			.vs {
+				width: 6%;
+			}
+		}
+		.team {
+			flex: 1;
+			height: 100%;
+			align-items: baseline;
+			padding: 15px;
+			max-width: 700px;
+		}
+		.vs {
+			font-size: 25px;
+			font-weight: bold;
+			color: #666;
+			width: 9%;
+			padding: 10px;
+			min-width: 50px;
+			max-width: 150px;
+		}
+		.leek {
+			width: 50%;
+			&.third {
+				width: 33%;
+			}
+			&.solo {
+				width: 100%;
+			}
+			&.br {
+				width: 12%;
+			}
+			height: 50%;
+			&.oneline {
+				height: 100%;
+			}
+			text-align: center;
+			display: inline-flex;
+			padding: 6px;
+			flex-direction: column;
+			align-items: center;
+			justify-content: center;
+			.name {
+				padding-top: 5px;
+				font-size: 20px;
+				font-weight: 500;
+				text-overflow: ellipsis;
+				overflow-x: hidden;
+				width: 100%;
+				flex-shrink: 0;
+			}
+			.title {
+				font-size: 14px;
+			}
+			.level {
+				padding-top: 2px;
+			}
+			svg {
+				max-width: 100%;
+			}
+		}
+	}
+	#app.app .table .team {
+		padding: 2px;
+		.leek {
+			padding: 0;
+			.name {
+				font-size: 13px;
+			}
+			.level {
+				font-size: 11px;
+			}
+			.title {
+				display: none;
+			}
+		}
+	}
 	.bg-canvas {
 		position: absolute;
 		top: 0; bottom: 0;
@@ -522,9 +604,11 @@
 		text-align: center;
 	}
 	.loading-fight {
-		padding-bottom: 20px;
+		padding: 5px;
+		padding-top: 0;
 		font-size: 18px;
 		text-align: center;
+		width: 100%;
 	}
 	.queue-position {
 		padding: 6px;
@@ -562,7 +646,7 @@
 	.progress-bar .bar {
 		height: 100%;
 		background-color: #5fad1b;
-		transition: all 0.3s;
+		transition: all 0.2s;
 		display: inline-block;
 		vertical-align: top;
 	}
@@ -579,8 +663,8 @@
 		transition: all 0.2s;
 	}
 	.progress-bar-wrapper:hover .circle {
-		width: 14px;
-		height: 14px;
+		width: 22px;
+		height: 22px;
 	}
 	.progress-bar-turn {
 		position: absolute;
@@ -590,31 +674,6 @@
 	}
 	.progress-bar-wrapper:hover .progress-bar-turn {
 		display: inline-block;
-	}
-	.team-td {
-		width: 470px;
-	}
-	.leek {
-		display: inline-block;
-		text-align: center;
-		margin: 6px;
-		width: 140px;
-	}
-	.leek img {
-		max-width: 90%;
-	}
-	.vs {
-		font-size: 25px;
-		font-weight: bold;
-		margin: 10px;
-		color: #666;
-	}
-	.leek .name {
-		padding: 2px 0;
-		font-size: 20px;
-		font-weight: 500;
-		text-overflow: ellipsis;
-		overflow: hidden;
 	}
 	.level {
 		font-size: 17px;
@@ -654,5 +713,30 @@
 	}
 	.settings-menu ::v-deep label {
 		color: hsla(0,0%,100%,.7);
+	}
+	.loader {
+		padding-bottom: 10px;
+		padding-top: 0;
+	}
+	.status {
+		margin-bottom: 10px;
+	}
+	.loading-bar {
+		height: 14px;
+		position: relative;
+		background: white;
+		border-radius: 6px;
+		border: 1px solid #ddd;
+		text-align: left;
+		max-width: 700px;
+		margin: 10px auto;
+		margin-bottom: 15px;
+		.bar {
+			height: 12px;
+			width: 0;
+			background: #30bb00;
+			position: absolute;
+			border-radius: 6px;
+		}
 	}
 </style>
