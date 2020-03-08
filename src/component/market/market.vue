@@ -82,7 +82,7 @@
 					<div v-else slot="content" class="preview center">
 						<weapon-preview v-if="selectedItem.type == ItemType.WEAPON" :weapon="LeekWars.weapons[selectedItem.id]" />
 						<chip-preview v-else-if="selectedItem.type == ItemType.CHIP" :chip="LeekWars.chips[selectedItem.id]" />
-						<potion-preview v-else-if="selectedItem.type == ItemType.POTION" :potion="LeekWars.potions[selectedItem.id]" />
+						<potion-preview v-else-if="selectedItem.type == ItemType.POTION && LeekWars.potions[selectedItem.id]" :potion="LeekWars.potions[selectedItem.id]" />
 						<fight-pack-preview v-else-if="selectedItem.type == ItemType.FIGHT_PACK" :pack="selectedItem" />
 						<hat-preview v-else-if="selectedItem.type === ItemType.HAT && LeekWars.hats[selectedItem.id]" :hat="LeekWars.hats[selectedItem.id]" />
 						<pomp-preview v-else-if="selectedItem.type == ItemType.POMP" :pomp="LeekWars.pomps[selectedItem.id]" />
@@ -283,8 +283,15 @@
 							break
 						}
 					} else if (item.type === ItemType.POTION) {
-						this.potions.push(LeekWars.potions[item.id])
-						this.items_by_name[LeekWars.potions[item.id].name] = item
+						const potion = LeekWars.potions[item.id]
+						if (potion) {
+							this.potions.push(potion)
+							this.items_by_name[LeekWars.potions[item.id].name] = item
+						} else {
+							const fakePotion = {...item, name: item.name.replace(/^potion_/, ''), level: 1, template: item.id}
+							this.potions.push(fakePotion)
+							this.items_by_name[fakePotion.name] = fakePotion
+						}
 					} else if (item.type === ItemType.HAT) {
 						const hat = LeekWars.hats[item.id]
 						if (hat) {
