@@ -30,7 +30,7 @@
 						<div v-for="leek in fight.leeks1" :key="leek.id" class="leek" :class="{third: fight.leeks1.length >= 5 || fight.leeks1.length === 3, solo: fight.leeks1.length === 1, oneline: fight.leeks1.length <= 3}">
 							<leek-image :leek="leek" :scale="1" />
 							<div class="name">{{ leek.name }}</div>
-							<lw-title v-if="leek.title.length" :title="leek.title" />
+							<lw-title v-if="leek.title && leek.title.length" :title="leek.title" />
 							<span class="level">{{ $t('leek.level_n', [leek.level]) }}</span>
 						</div>
 					</div>
@@ -39,7 +39,7 @@
 						<div v-for="leek in fight.leeks2" :key="leek.id" class="leek" :class="{third: fight.leeks2.length >= 5 || fight.leeks2.length === 3, solo: fight.leeks2.length === 1, oneline: fight.leeks2.length <= 3}">
 							<leek-image :leek="leek" :scale="1" :invert="true" />
 							<div class="name">{{ leek.name }}</div>
-							<lw-title v-if="leek.title.length" :title="leek.title" />
+							<lw-title v-if="leek.title && leek.title.length" :title="leek.title" />
 							<span class="level">{{ $t('leek.level_n', [leek.level]) }}</span>
 						</div>
 					</div>
