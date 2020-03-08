@@ -357,7 +357,9 @@
 			LeekWars.setActions(this.actions)
 		}
 		updateSubtitle() {
-			LeekWars.setSubTitle(this.$t('main.x_habs', [LeekWars.formatNumber(this.$store.state.farmer.habs)]) + " • " + this.$t('main.x_crystals', [LeekWars.formatNumber(this.$store.state.farmer.crystals)]))
+			if (this.$store.getters.connected) {
+				LeekWars.setSubTitle(this.$t('main.x_habs', [LeekWars.formatNumber(this.$store.state.farmer.habs)]) + " • " + this.$t('main.x_crystals', [LeekWars.formatNumber(this.$store.state.farmer.crystals)]))
+			}
 		}
 		translateName(item: ItemTemplate) {
 			if (item.type === ItemType.FIGHT_PACK) {
