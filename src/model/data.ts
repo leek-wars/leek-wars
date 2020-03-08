@@ -443,7 +443,7 @@ const POTIONS: {[key: string]: PotionTemplate} = {
   },
   '55': {
     id: 55,
-    name: 'skin_pink',
+    name: 'skin_magenta',
     level: 1,
     consumable: 0,
     effects: [ { type: 2, params: [ '6' ] } ]

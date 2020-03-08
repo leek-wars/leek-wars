@@ -13,7 +13,7 @@ const SKINS = [
 	"yellow", // 3
 	"red", // 4
 	"orange", // 5
-	"pink", // 6
+	"magenta", // 6
 	"cyan", // 7
 	"purple", // 8
 	"multi", // 9
