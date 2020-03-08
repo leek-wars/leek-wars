@@ -101,7 +101,7 @@ enum EFFECT_TYPES {
 	SHACKLE = 9,
 }
 const SKINS: { [key: number]: string } = {
-	1: "green", 2: "blue", 3: "yellow", 4: "red", 5: "orange", 6: "pink", 7: "cyan", 8: "purple",
+	1: "green", 2: "blue", 3: "yellow", 4: "red", 5: "orange", 6: "magenta", 7: "cyan", 8: "purple",
 	9: "multi", 10: "rasta", 11: "white", 12: "black", 13: "alpha", 14: "apple", 15: "gold",
 }
 
