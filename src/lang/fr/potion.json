@@ -13,11 +13,12 @@
 	"skin_13": "transparent",
 	"skin_14": "vert pomme",
 	"skin_15": "or",
+	"skin_16": "rose",
 	"skin_2": "bleu",
 	"skin_3": "jaune",
 	"skin_4": "rouge",
 	"skin_5": "orange",
-	"skin_6": "rose",
+	"skin_6": "magenta",
 	"skin_7": "turquoise",
 	"skin_8": "violet",
 	"skin_9": "multicolore",
@@ -47,5 +48,6 @@
 	"skin_white": "Potion blanche",
 	"skin_white_desc": "Blanc comme neige",
 	"skin_yellow": "Potion jaune",
-	"skin_yellow_desc": "Jaune power"
+	"skin_yellow_desc": "Jaune power",
+	"skin_magenta": "Potion magenta"
 }

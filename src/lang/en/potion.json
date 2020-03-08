@@ -13,11 +13,12 @@
 	"skin_13": "transparent",
 	"skin_14": "apple green",
 	"skin_15": "gold",
+	"skin_16": "rose",
 	"skin_2": "blue",
 	"skin_3": "yellow",
 	"skin_4": "red",
 	"skin_5": "orange",
-	"skin_6": "pink",
+	"skin_6": "magenta",
 	"skin_7": "cyan",
 	"skin_8": "purple",
 	"skin_9": "multicolored",
@@ -49,5 +50,6 @@
 	"skin_white": "White potion",
 	"skin_white_desc": "White did you say?",
 	"skin_yellow": "Yellow potion",
-	"skin_yellow_desc": "I am not a banana"
+	"skin_yellow_desc": "I am not a banana",
+	"skin_magenta": "Magenta potion"
 }
