@@ -38,6 +38,8 @@ enum SocketMessage {
 	GARDEN_QUEUE_REGISTER = 37,
 	GARDEN_QUEUE = 38,
 	GARDEN_QUEUE_UNREGISTER = 39,
+	FIGHT_PROGRESS_REGISTER = 40,
+	FIGHT_PROGRESS = 41,
 }
 
 class Socket {
@@ -153,6 +155,10 @@ class Socket {
 				}
 				case SocketMessage.GARDEN_QUEUE: {
 					vueMain.$emit('garden-queue', data)
+					break
+				}
+				case SocketMessage.FIGHT_PROGRESS: {
+					vueMain.$emit('fight-progress', data)
 					break
 				}
 			}
