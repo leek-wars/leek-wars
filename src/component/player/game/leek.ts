@@ -7,23 +7,6 @@ import { HatTemplate } from '@/model/hat'
 import { LeekWars } from '@/model/leekwars'
 import { Cell } from './cell'
 
-const SKINS = [
-	"green", // 1
-	"blue", // 2
-	"yellow", // 3
-	"red", // 4
-	"orange", // 5
-	"magenta", // 6
-	"cyan", // 7
-	"purple", // 8
-	"multi", // 9
-	"rasta", // 10
-	"white", // 11
-	"black", // 12
-	"alpha", // 13
-	"apple", // 14
-	"gold", // 15
-]
 const handSize = 14
 const handSize2 = handSize / 2
 
@@ -56,11 +39,11 @@ class Leek extends Entity {
 
 	public setSkin(skin: number, appearance: number, hat: number | null = null) {
 
-		if (typeof SKINS[skin - 1] === 'undefined') { skin = 1 }
+		if (typeof LeekWars.skins[skin - 1] === 'undefined') { skin = 1 }
 
 		this.skin = skin
-		this.bodyTexFront = new Texture(this.game, env.STATIC + "image/leek/leek" + appearance + "_front_" + SKINS[skin - 1] + ".png", true, SHADOW_QUALITY)
-		this.bodyTexBack = new Texture(this.game, env.STATIC + "image/leek/leek" + appearance + "_back_" + SKINS[skin - 1] + ".png", true, SHADOW_QUALITY)
+		this.bodyTexFront = new Texture(this.game, env.STATIC + "image/leek/leek" + appearance + "_front_" + LeekWars.skins[skin - 1] + ".png", true, SHADOW_QUALITY)
+		this.bodyTexBack = new Texture(this.game, env.STATIC + "image/leek/leek" + appearance + "_back_" + LeekWars.skins[skin - 1] + ".png", true, SHADOW_QUALITY)
 		this.bodyTexFront.texture.addEventListener('load', () => {
 			this.height = this.bodyTexFront.texture.height - 10
 		})

@@ -105,6 +105,20 @@ const SKINS: { [key: number]: string } = {
 	9: "multi", 10: "rasta", 11: "white", 12: "black", 13: "alpha", 14: "apple", 15: "gold",
 }
 
+const LEEK_SIZES: { [key: number]: {width: number, height: number} } = {
+	1: {width: 68, height: 136},
+	2: {width: 97,  height: 143},
+	3: {width: 103, height: 151},
+	4: {width: 117, height: 159},
+	5: {width: 129, height: 166},
+	6: {width: 136, height: 174},
+	7: {width: 138, height: 181},
+	8: {width: 148, height: 189},
+	9: {width: 145, height: 196},
+	10: {width: 159, height: 204},
+	11: {width: 161, height: 211}
+}
+
 const ORDERED_CHIPS = orderChips(CHIPS)
 const ORDERED_WEAPONS = orderWeapons(WEAPONS)
 const POTIONS_BY_SKIN = potionsBySkin(POTIONS)
@@ -157,6 +171,7 @@ const LeekWars = {
 		return 11
 	},
 	skins: Object.freeze(SKINS),
+	leekSizes: Object.freeze(LEEK_SIZES),
 	getLeekSkinName: (skin: number) => {
 		if (!(skin in SKINS)) { return SKINS[1] }
 		return SKINS[skin]
