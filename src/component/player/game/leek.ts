@@ -39,11 +39,11 @@ class Leek extends Entity {
 
 	public setSkin(skin: number, appearance: number, hat: number | null = null) {
 
-		if (typeof LeekWars.skins[skin - 1] === 'undefined') { skin = 1 }
+		if (typeof LeekWars.skins[skin] === 'undefined') { skin = 1 }
 
 		this.skin = skin
-		this.bodyTexFront = new Texture(this.game, env.STATIC + "image/leek/leek" + appearance + "_front_" + LeekWars.skins[skin - 1] + ".png", true, SHADOW_QUALITY)
-		this.bodyTexBack = new Texture(this.game, env.STATIC + "image/leek/leek" + appearance + "_back_" + LeekWars.skins[skin - 1] + ".png", true, SHADOW_QUALITY)
+		this.bodyTexFront = new Texture(this.game, env.STATIC + "image/leek/leek" + appearance + "_front_" + LeekWars.skins[skin] + ".png", true, SHADOW_QUALITY)
+		this.bodyTexBack = new Texture(this.game, env.STATIC + "image/leek/leek" + appearance + "_back_" + LeekWars.skins[skin] + ".png", true, SHADOW_QUALITY)
 		this.bodyTexFront.texture.addEventListener('load', () => {
 			this.height = this.bodyTexFront.texture.height - 10
 		})
