@@ -38,7 +38,7 @@
 		}
 		get chips() {
 			const items = []
-			if (this.constant.name.startsWith("EFFECT_") && !this.constant.name.startsWith("EFFECT_TARGET_")) {
+			if (this.constant.name.startsWith("EFFECT_") && !this.constant.name.startsWith("EFFECT_TARGET_") && !this.constant.name.startsWith("EFFECT_MODIFIER_")) {
 				for (const i in LeekWars.chips) {
 					if (LeekWars.chips[i].effects.some((e) => e.id === this.value_int)) {
 						items.push(LeekWars.chips[i])
@@ -49,7 +49,7 @@
 		}
 		get weapons() {
 			const items = []
-			if (this.constant.name.startsWith("EFFECT_") && !this.constant.name.startsWith("EFFECT_TARGET_")) {
+			if (this.constant.name.startsWith("EFFECT_") && !this.constant.name.startsWith("EFFECT_TARGET_") && !this.constant.name.startsWith("EFFECT_MODIFIER_")) {
 				for (const i in LeekWars.weapons) {
 					if (LeekWars.weapons[i].effects.some((e) => e.id === this.value_int) || LeekWars.weapons[i].passive_effects.some((e) => e.id === this.value_int)) {
 						items.push(LeekWars.weapons[i])
