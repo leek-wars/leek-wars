@@ -48,7 +48,7 @@
 			<div class="loading-fight">
 				<loader />
 				<div class="loading-bar">
-					<span :style="{width: 50 + '%'}" class="bar striked"></span>
+					<span :style="{width: progress + '%'}" class="bar striked"></span>
 				</div>
 				<div class="status">
 					{{ $t('fight.loading_fight') }}
@@ -161,6 +161,7 @@
 	import { Farmer } from '@/model/farmer'
 	import { Fight, FightType, Report } from '@/model/fight'
 	import { LeekWars } from '@/model/leekwars'
+	import { SocketMessage } from '@/model/socket'
 	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 	import { Game } from './game/game'
 	import Hud from './hud.vue'
@@ -190,6 +191,7 @@
 		height: number = 0
 		timeout: any = null
 		request: any = null
+		progress: number = 0
 
 		created() {
 			if (localStorage.getItem('fight/shadows') === null) { localStorage.setItem('fight/shadows', 'true') }
@@ -202,7 +204,7 @@
 			this.game.showIDs = localStorage.getItem('fight/ids') === 'true'
 			this.game.sound = localStorage.getItem('fight/sound') === 'true'
 			this.game.player = this
-			this.getFight()
+			this.getFight(true)
 			this.resize()
 			this.$emit('resize')
 			this.$root.$on('resize', () => {
@@ -213,6 +215,11 @@
 			this.$on('game-launched', () => {
 				this.loaded = true
 				this.setOrigin()
+			})
+			this.$root.$on('fight-progress', (data: any) => {
+				if (this.fight && data[0] === this.fight.id) {
+					this.progress = data[1]
+				}
 			})
 		}
 		@Watch('requiredWidth')
@@ -303,10 +310,11 @@
 			this.$root.$off('keyup', this.keyup)
 			this.$root.$off('keydown', this.keydown)
 			this.$root.$off('resize')
+			this.$root.$off('fight-progress')
 			if (this.timeout) { clearTimeout(this.timeout) }
 			if (this.request) { this.request.abort() }
 		}
-		getFight() {
+		getFight(first: boolean) {
 			const fightLoaded = (fight: Fight) => {
 				this.fight = fight
 				this.$emit('fight', fight)
@@ -314,10 +322,13 @@
 					this.getLogs()
 					this.game.init(fight)
 				} else {
+					if (first) {
+						LeekWars.socket.send([SocketMessage.FIGHT_PROGRESS_REGISTER, this.fight.id])
+					}
 					this.queue = fight.queue
 					if (this.loaded) { return }
 					this.timeout = setTimeout(() => {
-						this.getFight()
+						this.getFight(false)
 					}, this.getDelay)
 					this.getDelay += 500
 					this.getDelay = Math.min(4000, this.getDelay)
@@ -737,6 +748,7 @@
 			background: #30bb00;
 			position: absolute;
 			border-radius: 6px;
+			transition: width 1s;
 		}
 	}
 </style>
