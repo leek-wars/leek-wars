@@ -36,6 +36,11 @@ I gladly accept pull requests to Leek Wars. Before starting work on a feature, s
 - Chartist https://github.com/gionkunz/chartist-js
 - Katex https://github.com/Khan/KaTeX
 
+## Social media
+- Twitter : https://twitter.com/LeekWars
+- Facebook : https://www.facebook.com/LeekWars/
+- GitHub (this repo) : https://github.com/leek-wars/leek-wars
+
 ## License
 
 Distributed under the GPL3 license. Copyright (c) 2016-2020, Pierre Lauprêtre
