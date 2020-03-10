@@ -82,6 +82,7 @@
 	"type_34_fixed": "Donne <b>{0}%</b> des dégâts reçus en bouclier absolu",
 	"type_35_fixed": "Donne <b>{0}%</b> des dégâts reçus en force",
 	"type_36_fixed": "Donne <b>{0}%</b> des dégâts nova reçus en magie",
+	"type_41_fixed": "Booste l'agilité de <b>{0}</b>",
 	"effect_type_1": "Attaques",
 	"effect_type_2": "Soins",
 	"effect_type_3": "Boosts",

@@ -39,6 +39,7 @@ enum EffectType {
 	RAW_BUFF_STRENGTH = 38,
 	RAW_BUFF_MAGIC = 39,
 	RAW_BUFF_SCIENCE = 40,
+	RAW_BUFF_AGILITY = 41,
 }
 
 enum EffectModifier {

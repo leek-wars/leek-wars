@@ -82,6 +82,7 @@
 	"type_34_fixed": "Gives <b>{0}%</b> of received damage in absolute shield",
 	"type_35_fixed": "Gives <b>{0}%</b> of received damage in strength",
 	"type_36_fixed": "Gives <b>{0}%</b> of received nova damage in magic",
+	"type_41_fixed": "Increases agility by <b>{0}</b>",
 	"effect_type_1": "Attacks",
 	"effect_type_2": "Heals",
 	"effect_type_3": "Boosts",
