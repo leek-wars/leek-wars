@@ -24,7 +24,7 @@
 				</span>
 			</div>
 			<div>
-				<img src="/image/charac/small/tp.png"> {{ chip.cost }}
+				<img src="/image/charac/small/tp.png">{{ chip.cost }}
 			</div>
 			<area-view v-if="chip.area != Area.SINGLE_CELL" :area="chip.area" />		
 			<div v-if="chip.cooldown != 0">

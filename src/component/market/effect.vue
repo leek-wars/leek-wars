@@ -1,5 +1,14 @@
 <template lang="html">
 	<div class="effect" @click="LeekWars.effectRawOpened = !LeekWars.effectRawOpened">
+		<tooltip v-if="icon">
+			<template v-slot:activator="{ on }">
+				<img class="icon" :src="'/image/charac/small/' + icon + '.png'" v-on="on">
+			</template>
+			<i18n path="effect.increased_by">
+				<b slot="charac">{{ $t('leek.' + icon) }}</b>
+			</i18n>
+		</tooltip>
+
 		<span v-if="passive">{{ $t('effect.passive') }}</span>
 		<i18n v-if="effect.id == 14" path="effect.type_14_fixed">
 			<b slot="summon">{{ $t('effect.summon_' + effect.value1) }}</b>
@@ -89,10 +98,23 @@
 			}
 			return n
 		}
+		get icon() {
+			if ([EffectType.DAMAGE].includes(this.effect.id)) { return 'strength' }
+			if ([EffectType.LIFE_DAMAGE].includes(this.effect.id)) { return 'life' }
+			if ([EffectType.HEAL, EffectType.VITALITY].includes(this.effect.id)) { return 'wisdom' }
+			if ([EffectType.ABSOLUTE_SHIELD, EffectType.RELATIVE_SHIELD].includes(this.effect.id)) { return 'resistance' }
+			if ([EffectType.DAMAGE_RETURN].includes(this.effect.id)) { return 'agility' }
+			if ([EffectType.BUFF_STRENGTH, EffectType.BUFF_RESISTANCE, EffectType.BUFF_WISDOM, EffectType.BUFF_AGILITY, EffectType.BUFF_MP, EffectType.BUFF_TP, EffectType.AFTEREFFECT, EffectType.NOVA_DAMAGE].includes(this.effect.id)) { return 'science' }
+			if ([EffectType.POISON, EffectType.SHACKLE_MP, EffectType.SHACKLE_TP, EffectType.SHACKLE_STRENGTH, EffectType.SHACKLE_MAGIC].includes(this.effect.id)) { return 'magic' }
+		}
 	}
 </script>
 
 <style lang="scss" scoped>
+	div img.icon {
+		width: 16px;
+		margin-bottom: 1px;
+	}
 	.effect {
 		cursor: pointer;
 	}

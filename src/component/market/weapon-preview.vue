@@ -29,7 +29,7 @@
 			</div>
 
 			<div>
-				<img src="/image/charac/small/tp.png"> {{ weapon.cost }}
+				<img src="/image/charac/small/tp.png">{{ weapon.cost }}
 			</div>
 
 			<area-view v-if="weapon.area != Area.SINGLE_CELL" :area="weapon.area" />

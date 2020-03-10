@@ -10,6 +10,7 @@
 	"area_10": "X 3",
 	"cooldown": "Cooldown: {turns}",
 	"critical": "Critical hit!",
+	"increased_by": "Increased by: {charac}",
 	"initial_cooldown": "Initial cooldown of {turns}",
 	"in_lign": "in line",
 	"level_n": "Level {0}",
