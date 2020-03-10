@@ -22,7 +22,7 @@
 						</router-link>
 					</div>
 				</panel>
-				<panel :title="$t('weapons')">
+				<panel :title="$t('weapons') + ' [' + weapons.length + ']'">
 					<loader v-if="!weapons.length" slot="content" />
 					<div v-else slot="content" class="items weapons">
 						<router-link v-for="weapon in weapons" :key="weapon.id" v-ripple :to="'/market/' + weapon.name" :farmer-count="items[weapon.id].farmer_count" :leek-count="items[weapon.id].leek_count" class="item weapon">
@@ -30,7 +30,7 @@
 						</router-link>
 					</div>
 				</panel>
-				<panel :title="$t('chips')">
+				<panel :title="$t('chips') + ' [' + chips.length + ']'">
 					<div slot="actions" class="button flat" @click="updateChipMode">
 						<i v-if="chipMode === 'type'" class="material-icons">view_module</i>
 						<i v-else class="material-icons">sort</i>
@@ -52,7 +52,7 @@
 						</div>
 					</div>
 				</panel>
-				<panel :title="$t('potions')">
+				<panel :title="$t('potions') + ' [' + potions.length + ']'">
 					<loader v-if="!potions.length" slot="content" />
 					<div v-else slot="content" class="items potions">
 						<router-link v-for="potion in potions" :key="potion.id" v-ripple :to="'/market/' + potion.name" :farmer-count="items[potion.id].farmer_count" :leek-count="items[potion.id].leek_count" class="item potion">
@@ -60,7 +60,7 @@
 						</router-link>
 					</div>
 				</panel>
-				<panel :title="$t('hats')">
+				<panel :title="$t('hats') + ' [' + hats.length + ']'">
 					<loader v-if="!hats.length" slot="content" />
 					<div v-else slot="content" class="items hats">
 						<router-link v-for="hat in hats" :key="hat.id" v-ripple :to="'/market/' + hat.name" :farmer-count="items[hat.id].farmer_count" :leek-count="items[hat.id].leek_count" class="item hat">
@@ -68,7 +68,7 @@
 						</router-link>
 					</div>
 				</panel>
-				<panel :title="$t('pomps')" class="last">
+				<panel :title="$t('pomps') + ' [' + pomps.length + ']'" class="last">
 					<div slot="content" class="items pomps">
 						<router-link v-for="pomp in pomps" :key="pomp.id" :to="'/market/' + pomp.name" :farmer-count="items[pomp.id].farmer_count" :leek-count="items[pomp.id].leek_count" class="item pomp">
 							<img :src="'/image/pomp/' + pomp.name + '.png'">
