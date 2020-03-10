@@ -105,7 +105,7 @@
 	"resistance": "Resistance",
 	"resistance_description": "Resistance increases shields",
 	"science": "Science",
-	"science_description": "Science increases boosts",
+	"science_description": "Science increases boosts and nova damages",
 	"see_tournament": "See the tournament",
 	"select_a_hat": "Select a hat",
 	"select_a_weapon": "Select a weapon",
