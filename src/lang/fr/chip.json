@@ -1,6 +1,7 @@
 {
 	"acceleration": "Accélération",
 	"adrenaline": "Adrénaline",
+	"alteration": "Altération",
 	"antidote": "Antidote",
 	"armor": "Armure",
 	"armoring": "Blindage",
@@ -29,6 +30,7 @@
 	"iceberg": "Iceberg",
 	"iced_bulb": "Bulbe Glacé",
 	"inversion": "Inversion",
+	"jump": "Saut",
 	"leather_boots": "Bottes de cuir",
 	"liberation": "Libération",
 	"lightning": "Foudre",
@@ -40,6 +42,7 @@
 	"motivation": "Motivation",
 	"pebble": "Caillou",
 	"plague": "Peste",
+	"plasma": "Plasma",
 	"precipitation": "Précipitation",
 	"protein": "Protéines",
 	"puny_bulb": "Bulbe Chétif",
@@ -74,5 +77,6 @@
 	"wall": "Mur",
 	"warm_up": "Échauffement",
 	"whip": "Fouet",
-	"winged_boots": "Bottes ailées"
+	"winged_boots": "Bottes ailées",
+	"wizard_bulb": "Bulbe magicien"
 }
