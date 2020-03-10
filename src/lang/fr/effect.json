@@ -10,6 +10,7 @@
 	"area_10": "X 3",
 	"cooldown": "Récupération : {turns}",
 	"critical": "Coup critique !",
+	"increased_by": "Augmenté par : {charac}",
 	"initial_cooldown": "Délai initial de {turns}",
 	"in_lign": "en ligne",
 	"level_n": "Niveau {0}",
