@@ -1073,6 +1073,7 @@ class Game {
 			leek.buffAbsoluteShield(-value, this.jumping)
 			break
 		case EffectType.BUFF_AGILITY:
+		case EffectType.RAW_BUFF_AGILITY:
 			leek.buffAgility(value, this.jumping)
 			break
 		case EffectType.RAW_BUFF_MAGIC:
@@ -1156,6 +1157,7 @@ class Game {
 			leek.absoluteShield += value
 			break
 		case EffectType.BUFF_AGILITY:
+		case EffectType.RAW_BUFF_AGILITY:
 			leek.agility -= value
 			break
 		case EffectType.BUFF_STRENGTH:
@@ -1231,6 +1233,7 @@ class Game {
 			leek.absoluteShield -= delta
 			break
 		case EffectType.BUFF_AGILITY:
+		case EffectType.RAW_BUFF_AGILITY:
 			leek.agility += delta
 			break
 		case EffectType.BUFF_STRENGTH:
