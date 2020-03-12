@@ -83,12 +83,6 @@
 						<h4>Facebook</h4>
 					</div>
 				</a>
-				<a href="https://plus.google.com/+LeekwarsGame" target="_blank" rel="noopener">
-					<div class="item">
-						<img src="/image/about/googleplus.png">
-						<h4>Google+</h4>
-					</div>
-				</a>
 				<a href="https://github.com/leek-wars/leek-wars-client" target="_blank" rel="noopener">
 					<div class="item">
 						<img src="image/about/github.png">
