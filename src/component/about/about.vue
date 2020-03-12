@@ -100,49 +100,18 @@
 		
 		<panel :title="$t('languages_libraries_tools')">
 			<p>{{ $t('tools_list') }}</p>
-			<div class="languages">
-				<a href="http://www.java.com/fr/about/" target="_blank" rel="noopener">
-					<div class="item">
-						<img src="/image/about/java.png">
-						<h4>Java</h4>
-					</div>
-				</a>
-				<a href="http://www.php.net/" target="_blank" rel="noopener">
-					<div class="item">
-						<img src="/image/about/php.png">
-						<h4>PHP</h4>
-					</div>
-				</a>
-				<a href="http://www.w3schools.com/html/html5_intro.asp" target="_blank" rel="noopener">
-					<div class="item">
-						<img src="/image/about/html5.png">
-						<h4>HTML 5</h4>
-					</div>
-				</a>
-				<a href="http://www.w3schools.com/css/css3_intro.asp" target="_blank" rel="noopener">
-					<div class="item">
-						<img src="/image/about/css3.png">
-						<h4>CSS 3</h4>
-					</div>
-				</a>
-				<a href="http://www.w3schools.com/js/DEFAULT.asp" target="_blank" rel="noopener">
-					<div class="item">
-						<img src="/image/about/javascript.png">
-						<h4>JavaScript</h4>
-					</div>
-				</a>
-				<a href="http://codemirror.net/" target="_blank" rel="noopener">
-					<div class="item">
-						<img src="/image/about/codemirror.png">
-						<h4>Code Mirror</h4>
-					</div>
-				</a>
-				<a href="http://git-scm.com/" target="_blank" rel="noopener">
-					<div class="item">
-						<img src="/image/about/git.png">
-						<h4>git</h4>
-					</div>
-				</a>
+			<div v-for="(category, c) in technologies" :key="c" class="techno">
+				<div class="title">
+					<h4>{{ $t('about.' + category.name) }}</h4>
+				</div>
+				<div class="languages">
+					<a v-for="(techno, t) in category.items" :key="t" :href="techno.link" target="_blank" rel="noopener">
+						<div class="item">
+							<img :src="'/image/about/' + techno.image">
+							<div class="name">{{ techno.name }}</div>
+						</div>
+					</a>
+				</div>
 			</div>
 		</panel>
 		
@@ -180,6 +149,53 @@
 			["Game Side Story", "http://www.gamesidestory.com/2014/09/02/gametest-leekwars-navigateur/"],
 			['MacAttac', "http://www.macattac.fr/2014/09/28/test-du-jeu-leek-wars/"]
 		]
+
+		technologies = [
+			{ name: "client", items: [
+				{ name: "HTML 5", link: "http://www.w3schools.com/html/html5_intro.asp", image: "html5.png" },
+				{ name: "CSS 3", link: "http://www.w3schools.com/css/css3_intro.asp", image: "css3.png" },
+				{ name: "Sass", link: "https://sass-lang.com/", image: "sass.svg" },
+				{ name: "JavaScript", link: "http://www.w3schools.com/js/DEFAULT.asp", image: "javascript.png" },
+				{ name: "TypeScript", link: "https://www.typescriptlang.org/", image: "typescript.svg" },
+				{ name: "Code Mirror", link: "http://www.java.com/fr/about/", image: "codemirror.png" },
+				{ name: "Vue", link: "https://vuejs.org/", image: "vue.png" },
+				{ name: "Chartist", link: "https://gionkunz.github.io/chartist-js/", image: "chartist.png" },
+				{ name: "KaTeX", link: "https://katex.org/", image: "katex.png" },
+				{ name: "webpack", link: "https://webpack.js.org/", image: "webpack.png" },
+				{ name: "npm", link: "https://www.npmjs.com/", image: "npm.svg" },
+				{ name: "Vuetify", link: "https://vuetifyjs.com/en/", image: "vuetify.png" },
+			]},
+			{ name: "server", items: [
+				{ name: "Debian", link: "https://www.debian.org/", image: "debian.svg" },
+				{ name: "NGINX", link: "https://www.nginx.com/", image: "nginx.svg" },
+				{ name: "PostgreSQL", link: "https://www.postgresql.org/", image: "postgresql.svg" },
+				{ name: "Java", link: "http://www.java.com/fr/about/", image: "java.png" },
+				{ name: "PHP", link: "http://www.php.net/", image: "php.png" },
+				{ name: "Memcached", link: "https://memcached.org/", image: "memcached.svg" },
+				{ name: "Python", link: "https://www.python.org/", image: "python.svg" },
+				{ name: "Swift Mailer", link: "https://swiftmailer.symfony.com/", image: "swiftmailer.png" },
+			]},
+			{ name: "leekscript", items: [
+				{ name: "C++", link: "https://fr.cppreference.com/w/", image: "cpp.png" },
+				{ name: "LLVM", link: "https://llvm.org/", image: "llvm.png" },
+				{ name: "GCC", link: "https://gcc.gnu.org/", image: "gcc.svg" },
+				{ name: "GMP", link: "https://gmplib.org/", image: "gmp.png" },
+				{ name: "Valgrind", link: "https://valgrind.org/", image: "valgrind.png" },
+				{ name: "gcov", link: "https://gcc.gnu.org/onlinedocs/gcc/Gcov.html", image: "gcov.png" },
+			]},
+			{ name: "tools", items: [
+				{ name: "git", link: "http://git-scm.com/", image: "git.png" },
+				{ name: "GitHub", link: "https://github.com/", image: "github.svg" },
+				{ name: "VSCode", link: "https://code.visualstudio.com/", image: "vscode.svg" },
+				{ name: "GIMP", link: "https://www.gimp.org/fr/", image: "gimp.svg" },
+				{ name: "Inkscape", link: "https://inkscape.org/fr/", image: "inkscape.svg" },
+				{ name: "Blender", link: "https://www.blender.org/", image: "blender.svg" },
+				{ name: "Travis CI", link: "https://travis-ci.com/", image: "travis.svg" },
+				{ name: "Codacy", link: "https://www.codacy.com/", image: "codacy.svg" },
+				{ name: "FileZilla", link: "https://filezilla-project.org/", image: "filezilla.svg" },
+			]},
+		]
+
 		created() {
 			LeekWars.setTitle(this.$i18n.t('about.title'))
 			LeekWars.setActions([{image: 'github_white.png', click: () => window.open('https://github.com/leek-wars/leek-wars-client', '_newtab')}])
@@ -202,18 +218,32 @@
 		width: 100%;
 		max-width: 400px;
 	}
-	.languages {
+	.techno {
 		display: flex;
-		justify-content: center;
-		flex-wrap: wrap;
+		.title {
+			flex: 100px 0 0;
+			align-self: center;
+			text-align: center;
+		}
 	}
-	.languages .item {
-		display: inline-block;
-		margin: 7px;
-		text-align: center;
-	}
-	.languages .item img {
-		width: 85px;
+	.languages {
+		display: grid;
+		flex: 1;
+		grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+		align-items: baseline;
+		grid-gap: 10px;
+		margin: 5px 10px;
+		.item {
+			display: inline-block;
+			text-align: center;
+			font-size: 17px;
+			img {
+				width: 80px;
+				height: 80px;
+				margin: 0 5px;
+				object-fit: contain;
+			}
+		}
 	}
 	p {
 		text-align: justify;
