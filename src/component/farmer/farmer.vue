@@ -73,7 +73,7 @@
 						<div v-else>
 							<avatar :farmer="farmer" />
 						</div>
-						<lw-title v-if="farmer && farmer.title.length" class="info title" :title="farmer.title" @click.native="titleDialog = true" />
+						<lw-title v-if="farmer && farmer.title.length" class="info title" :class="{me: myFarmer}" :title="farmer.title" @click.native="titleDialog = myFarmer" />
 						<div v-if="farmer" class="infos">
 							<div v-if="!farmer.title.length && myFarmer" class="add add-title" :class="{locked: !farmerTitleEnabled}" @click="titleDialog = farmerTitleEnabled">
 								<tooltip :disabled="farmerTitleEnabled">
@@ -793,7 +793,9 @@
 		width: calc(100% - 10px);
 	}
 	.title {
-		cursor: pointer;
+		&.me {
+			cursor: pointer;
+		}
 		text-align: center;
 		.quote {
 			font-size: 25px;
