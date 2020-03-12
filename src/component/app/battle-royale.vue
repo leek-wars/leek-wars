@@ -8,13 +8,15 @@
 				</div>
 				<i v-ripple class="material-icons" @click="quit">clear</i>
 			</div>
-			<div v-if="expanded" class="content">
+			<div v-if="expanded" class="content" :class="{expanded}">
 				<loader v-if="LeekWars.battleRoyale.progress == 0" />
-				<div v-for="leek in LeekWars.battleRoyale.leeks" :key="leek.id" class="leek">
-					<leek-image :leek="leek" :scale="0.4" /><br>
-					<div>{{ leek.name }}</div>
-					<talent :talent="leek.talent" />
-					<div class="level">{{ $t('leek.level_n', [leek.level]) }}</div>
+				<div class="leeks">
+					<div v-for="leek in LeekWars.battleRoyale.leeks" :key="leek.id" class="leek">
+						<leek-image :leek="leek" :scale="0.4" /><br>
+						<div>{{ leek.name }}</div>
+						<talent :talent="leek.talent" />
+						<div class="level">{{ $t('leek.level_n', [leek.level]) }}</div>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -38,7 +40,6 @@
 	.br {
 		width: auto;
 		min-width: 250px;
-		max-width: 600px;
 		display: block;
 		margin: 0 15px 0 0 !important;
 		box-shadow: 0px 3px 5px -1px rgba(0,0,0,0.2), 0px 5px 8px 0px rgba(0,0,0,0.14), 0px 1px 14px 0px rgba(0,0,0,0.12);
@@ -47,12 +48,18 @@
 	.content {
 		padding: 10px;
 		background: #f2f2f2;
+		&.expanded {
+			width: 600px;
+		}
 	}
 	.progress {
 		padding-left: 3px;
 	}
+	.leeks {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+	}
 	.leek {
-		display: inline-block;
 		text-align: center;
 		font-size: 15px;
 		font-weight: 500;
