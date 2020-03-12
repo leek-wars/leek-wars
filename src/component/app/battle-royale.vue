@@ -58,6 +58,7 @@
 	.leeks {
 		display: grid;
 		grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+		align-items: baseline;
 	}
 	.leek {
 		text-align: center;
