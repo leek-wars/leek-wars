@@ -7,28 +7,43 @@
 			<loader />
 		</panel>
 		<template v-else>
-			<v-lazy v-for="(version, v) in changelog" :key="version.version" v-model="version.active" :options="{threshold: 0.25}" min-height="100">
-				<panel :class="{last: v === changelog.length - 1}">
-					<h2 slot="title">{{ $t('version_n', [version.version_name]) }} ({{ version.date }})</h2>
-					<div slot="content" class="wrapper">
-						<div class="content">
-							<changelog-version :version="version" />
-						</div>
+			<panel v-for="(version, v) in lazy_changelog" :key="version.version" :class="{last: v === changelog.length - 1}">
+				<h2 slot="title">{{ $t('version_n', [version.version_name]) }} ({{ version.date }}) {{ translations[version.version] && translations[version.version].title ? ' — ' + translations[version.version].title : '' }}</h2>
+				<template slot="actions">
+					<div class="button flat" @click="showChangelogDialog(version)">
+						<i class="material-icons">visibility</i>
 					</div>
-				</panel>
-			</v-lazy>
+				</template>
+				<div slot="content" class="wrapper">
+					<div class="content">
+						<changelog-version :version="version" />
+					</div>
+				</div>
+			</panel>
 		</template>
+		<changelog-dialog v-model="changelogDialog" :changelog="changelogVersion" />
 	</div>
 </template>
 
 <script lang="ts">
 	import { LeekWars } from '@/model/leekwars'
 	import { Component, Vue } from 'vue-property-decorator'
+	import ChangelogDialog from './changelog-dialog.vue'
 	import ChangelogVersion from './changelog-version.vue'
 	
-	@Component({ name: 'changelog', i18n: {}, components: { ChangelogVersion } })
+	@Component({ name: 'changelog', i18n: {}, components: { ChangelogVersion, ChangelogDialog } })
 	export default class Changelog extends Vue {
 		changelog: any = null
+		changelogDialog: boolean = false
+		changelogVersion: any = null
+		translations: any = null
+		lazy_end: number = 2
+
+		get lazy_changelog() {
+			if (!this.changelog) { return [] }
+			return this.changelog.slice(0, this.lazy_end)
+		}
+
 		created() {
 			LeekWars.get('changelog/get/' + this.$i18n.locale).then(data => {
 				this.changelog = data.changelog
@@ -38,6 +53,26 @@
 				LeekWars.setTitle(this.$t('title'))
 				this.$root.$emit('loaded')
 			})
+			window.addEventListener('scroll', this.scroll)
+
+			import(/* webpackChunkName: "changelog-[request]" */ `json-loader!yaml-loader!@/lang/${this.$i18n.locale}/changelog.yaml`).then((translations) => {
+				this.translations = translations
+			})
+		}
+		destroyed() {
+			window.removeEventListener('scroll', this.scroll)
+		}
+		showChangelogDialog(version: any) {
+			this.changelogVersion = version
+			this.changelogDialog = true
+		}
+		scroll(e: Event) {
+			if (!this.changelog) { return }
+			if (this.lazy_changelog.length < this.changelog.length) {
+				if (window.scrollY + window.innerHeight + 2000 > document.body.clientHeight) {
+					this.lazy_end += 2
+				}
+			}
 		}
 	}
 </script>
@@ -52,14 +87,12 @@
 	.wrapper {
 		background: rgba(100,100,100,0.1);
 	}
-	.content {
-		max-width: 800px;
-		margin: 0 auto;
-		background: #f2f2f2;
-		padding: 15px;
-	}
 	.changelog-page ::v-deep a {
 		color: green;
+	}
+	h2 {
+		text-overflow: ellipsis;
+		overflow: hidden;
 	}
 	.image {
 		width: calc(100% + 30px);

@@ -55,21 +55,7 @@
 
 			<didactitiel v-model="didactitiel" />
 
-			<popup v-model="changelogDialog" :width="800">
-				<i18n slot="title" path="changelog.version_online">
-					<b v-if="changelog" slot="version">{{ changelog.version_name }}</b>
-				</i18n>
-				<div v-if="changelog" class="changelog-dialog">
-					<changelog-version :version="changelog" />
-					<br>
-					<i18n path="changelog.see_all_changes">
-						<router-link slot="changelog" to="/changelog">changelog</router-link>
-					</i18n>
-				</div>
-				<div slot="actions">
-					<div @click="changelogDialog = false">{{ $t('changelog.popup_ok') }}</div>
-				</div>
-			</popup>
+			<changelog-dialog v-model="changelogDialog" :changelog="changelog" />
 		</div>
 	</div>
 </template>
@@ -90,9 +76,10 @@
 	import { SocketMessage } from '@/model/socket'
 	import { setTimeout } from 'timers'
 	import { Component, Vue } from 'vue-property-decorator'
+	import ChangelogDialog from '../changelog/changelog-dialog.vue'
 
 	@Component({
-		components: {'lw-bar': Bar, 'lw-footer': Footer, 'lw-header': Header, 'lw-menu': Menu, 'lw-social': Social, Console, Squares, Didactitiel, Chats, 'mobile-br': MobileBR, ChangelogVersion }
+		components: {'lw-bar': Bar, 'lw-footer': Footer, 'lw-header': Header, 'lw-menu': Menu, 'lw-social': Social, Console, Squares, Didactitiel, Chats, 'mobile-br': MobileBR, ChangelogVersion, ChangelogDialog }
 	})
 	export default class App extends Vue {
 		didactitiel: boolean = false
@@ -333,16 +320,6 @@
 		position: fixed;
 		z-index: 1000;
 		cursor: pointer;
-	}
-	.changelog-dialog {
-		a {
-			color: #5fad1b;
-		}
-		.image {
-			width: calc(100% + 30px);
-			margin: -15px;
-			margin-bottom: 10px;
-		}
 	}
 	.console .title .spacer {
 		flex: 1;
