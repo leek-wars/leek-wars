@@ -213,7 +213,11 @@
 	import { i18n } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import { Component, Vue } from 'vue-property-decorator'
-	
+
+	import 'swiper/dist/css/swiper.css'
+	import VueAwesomeSwiper from 'vue-awesome-swiper'
+	Vue.use(VueAwesomeSwiper)
+
 	@Component({ name: 'signup', i18n: {} })
 	export default class Signup extends Vue {
 		godfather: string = ''
@@ -257,6 +261,7 @@
 				disableOnInteraction: true
 			}
 		}
+
 		mounted() {
 			// this.$refs.swiper.swiper.slideTo(0, 0);
 		}
