@@ -13,7 +13,6 @@ dotenv.config({ path: path.resolve(process.cwd(), 'src', 'env', '.env') })
 module.exports = {
 	configureWebpack: {
 		plugins: [
-			// new BundleAnalyzerPlugin(),
 			new CopyWebpackPlugin([{ from: 'src/wiki/image/', to: 'wiki' }]),
 			new VuetifyLoaderPlugin()
 		],
@@ -62,4 +61,10 @@ module.exports = {
 			favicon16: 'image/favicon.png'
 		}
 	}
+}
+
+if (process.env.VUE_MODE === 'build') {
+	module.exports.configureWebpack.plugins.push(
+		new BundleAnalyzerPlugin()
+	)
 }
