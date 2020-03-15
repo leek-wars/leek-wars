@@ -547,6 +547,7 @@
 	import CapitalDialog from './capital-dialog.vue'
 	import CharacteristicTooltip from './characteristic-tooltip.vue'
 	import LevelDialog from './level-dialog.vue'
+	import(/* webpackChunkName: "chartist" */ "@/chartist-wrapper")
 
 	@Component({ name: "leek", i18n: {}, components: { CapitalDialog, LevelDialog, CharacteristicTooltip } })
 	export default class LeekPage extends Vue {
