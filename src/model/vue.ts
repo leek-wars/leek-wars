@@ -34,12 +34,8 @@ import { LeekWars } from '@/model/leekwars'
 import '@/model/serviceworker'
 import { store } from "@/model/store"
 import router from '@/router'
-import 'chartist/dist/scss/chartist.scss'
 import Vue from 'vue'
 import { Latex } from './latex'
-
-import Chartist from 'vue-chartist'
-Vue.use(Chartist)
 
 import Vuetify from 'vuetify/lib/framework'
 Vue.use(Vuetify)

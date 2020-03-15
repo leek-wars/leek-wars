@@ -39,6 +39,7 @@
 <script lang="ts">
 	import { LeekWars } from '@/model/leekwars'
 	import { Component, Vue, Watch } from 'vue-property-decorator'
+	import(/* webpackChunkName: "chartist" */ "@/chartist-wrapper")
 
 	const FIGHT_CATEGORY = 2
 	const AI_CATEGORY = 3

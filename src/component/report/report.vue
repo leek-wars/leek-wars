@@ -172,6 +172,7 @@
 	import ReportLeekRow from './report-leek-row.vue'
 	import ReportStatistics from './report-statistics.vue'
 	import { Statistics } from './statistics'
+	import(/* webpackChunkName: "chartist" */ "@/chartist-wrapper")
 
 	class FightResponse {
 		success!: boolean
