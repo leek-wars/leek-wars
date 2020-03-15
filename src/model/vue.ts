@@ -47,10 +47,6 @@ Vue.use(Vuetify)
 import tooltip from '@/vtooltip-fast'
 Vue.component('tooltip', tooltip)
 
-import 'swiper/dist/css/swiper.css'
-import VueAwesomeSwiper from 'vue-awesome-swiper'
-Vue.use(VueAwesomeSwiper)
-
 import { createSimpleTransition } from 'vuetify/lib/components/transitions/createTransition'
 import '../fade-transition.sass'
 const myTransition = createSimpleTransition('my-transition')
