@@ -183,8 +183,8 @@
 	.life-bar .wrapper {
 		display: inline-block;
 		background: rgba(255,255,255,0.2);
-		border-bottom-left-radius: 15px;
-		border-bottom-right-radius: 15px;
+		border-bottom-left-radius: 12px;
+		border-bottom-right-radius: 12px;
 		padding-top: 3px;
 		padding-left: 4px;
 		padding-bottom: 0px;
@@ -200,10 +200,10 @@
 	.life-bar .bar.dead {
 		margin-right: 0px;
 	}
-	.life-bar .v-tooltip:first-child .bar {
+	.life-bar .wrapper :first-child {
 		border-bottom-left-radius: 10px;
 	}
-	.life-bar .v-tooltip:last-child .bar {
+	.life-bar .wrapper :last-child {
 		border-bottom-right-radius: 10px;
 	}
 	#app.app .life-bar .wrapper {
