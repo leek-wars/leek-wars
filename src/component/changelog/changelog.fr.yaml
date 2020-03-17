@@ -47,6 +47,7 @@
     - "#ai Ajout des effets passifs (3 nouvelles armes) et des fonctions getPassiveEffects et getWeaponPassiveEffects."
     - "#ai Ajout de modificateurs d'effets : cumulable, sur le lanceur, multiplié par le nombre de cible."
     - "#ai Nouvelles zones en forme de + et X."
+    - "#ai Ajout d'effets infinis : leur durée dans le code est de -1."
     - Affichage de la file d'attente actuelle dans le potager.
     - Affichage dans le marché des objets déblocables via un trophée.
     - Ajout de ses propres tooltips avancées dans le potager.
