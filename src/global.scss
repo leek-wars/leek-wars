@@ -2,12 +2,20 @@
 	font-family: 'Noto Color Emoji';
 	src: url("/NotoColorEmoji.ttf");
 }
+.v-tooltip {
+	display: none;
+}
 .v-tooltip__content {
 	background: #333 !important;
 	font-size: 14px !important;
 	pointer-events: none;
 	max-width: 250px !important;
 	transition: none !important;
+	position: absolute;
+	color: white;
+	padding: 5px 16px;
+	border-radius: 4px;
+	line-height: 20px;
 	.v-icon {
 		font-size: 20px;
 		color: white;

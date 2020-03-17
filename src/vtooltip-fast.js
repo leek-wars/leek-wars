@@ -1,4 +1,3 @@
-
 import Activatable from 'vuetify/src/mixins/activatable';
 import Colorable from 'vuetify/src/mixins/colorable';
 import Delayable from 'vuetify/src/mixins/delayable';
@@ -10,6 +9,7 @@ import Toggleable from 'vuetify/src/mixins/toggleable'; // Helpers
 import { convertToUnit, keyCodes, getSlotType } from 'vuetify/src/util/helpers';
 import { consoleError } from 'vuetify/src/util/console';
 import mixins from 'vuetify/src/util/mixins';
+/* @vue/component */
 
 export default mixins(Colorable, Delayable, Dependent, Detachable, Menuable, Toggleable).extend({
   name: 'tooltip',
@@ -170,29 +170,44 @@ export default mixins(Colorable, Delayable, Dependent, Detachable, Menuable, Tog
       };
 
       return listeners;
+    },
+
+    genTransition() {
+      const content = this.genContent();
+      if (!this.computedTransition) return content;
+      return this.$createElement('transition', {
+        props: {
+          name: this.computedTransition
+        }
+      }, [content]);
+    },
+
+    genContent() {
+      return this.$createElement('div', this.setBackgroundColor(this.color, {
+        staticClass: 'v-tooltip__content',
+        class: {
+          [this.contentClass]: true,
+          menuable__content__active: this.isActive,
+          'v-tooltip__content--fixed': this.activatorFixed
+        },
+        style: this.styles,
+        attrs: this.getScopeIdAttrs(),
+        directives: [{
+          name: 'show',
+          value: this.isContentActive
+        }],
+        ref: 'content'
+      }), this.getContentSlot());
     }
 
   },
 
   render(h) {
-    const tooltip = h('div', this.setBackgroundColor(this.color, {
-      staticClass: 'v-tooltip__content',
-      class: {
-        [this.contentClass]: true,
-        menuable__content__active: this.isActive,
-        'v-tooltip__content--fixed': this.activatorFixed
-      },
-      style: this.styles,
-      attrs: this.getScopeIdAttrs(),
-      directives: [{
-        name: 'show',
-        value: this.isContentActive
-      }],
-      ref: 'content'
-    }), this.showLazyContent(this.getContentSlot()));
     return h(this.tag, {
       staticClass: 'v-tooltip',
       class: this.classes
-    }, [h('transition', {}, [tooltip]), this.genActivator()]);
+    }, [this.showLazyContent(() => [this.genTransition()]), this.genActivator()]);
   }
+
 });
+//# sourceMappingURL=VTooltip.js.map
