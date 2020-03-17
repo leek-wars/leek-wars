@@ -162,6 +162,7 @@
 		<editor-test ref="editorTest" v-model="testDialog" :ais="ais" :leek-ais="leekAIs" />
 
 		<popup v-model="newAIDialog" :width="500">
+			<v-icon slot="icon">mdi-plus-circle-outline</v-icon>
 			<span slot="title">{{ $t('editor.new_desc') }}</span>
 			<div class="padding">
 				<input ref="newAIInput" v-model="newAIName" :placeholder="$t('editor.ai_name')" type="text" class="input dialog-input" @keyup.enter="newAI(false, newAIName)">
@@ -173,6 +174,7 @@
 		</popup>
 
 		<popup v-model="newAIv2Dialog" :width="500">
+			<v-icon slot="icon">mdi-plus-circle-outline</v-icon>
 			<span slot="title">{{ $t('editor.new_desc') }}</span>
 			<div class="padding">
 				<input ref="newAIInputv2" v-model="newAIName" :placeholder="$t('editor.ai_name')" type="text" class="input dialog-input" @keyup.enter="newAI(true, newAIName)">
@@ -184,6 +186,7 @@
 		</popup>
 
 		<popup v-model="newFolderDialog" :width="500">
+			<v-icon slot="icon">mdi-folder-plus</v-icon>
 			<span slot="title">{{ $t('editor.new_folder') }}</span>
 			<div class="padding">
 				<input ref="newFolderInput" v-model="newFolderName" :placeholder="$t('editor.folder_name')" type="text" class="input dialog-input" @keyup.enter="newFolder(newFolderName)">
