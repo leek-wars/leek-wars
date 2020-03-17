@@ -1023,9 +1023,11 @@
 		setWeapon(weapon: number) {
 			this.skinWeaponDialog = false
 			if (!this.leek || !this.my_leek) { return }
-			LeekWars.put('leek/set-weapon', {leek: this.leek.id, weapon})
-			this.leek.weapon = weapon
-			store.commit('set-leek-weapon', {leek: this.leek.id, weapon})
+			if (this.holdWeaponEnabled) {
+				LeekWars.put('leek/set-weapon', {leek: this.leek.id, weapon})
+				this.leek.weapon = weapon
+				store.commit('set-leek-weapon', {leek: this.leek.id, weapon})
+			}
 		}
 		pickTitle(title: number[]) {
 			this.leek!.title = title
