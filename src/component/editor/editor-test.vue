@@ -99,7 +99,7 @@
 							</div>
 						</div>
 					</div>
-					<div class="title">{{ $t('leek.weapons') }} [{{ currentLeek.weapons.length }}]</div>
+					<div class="title">{{ $t('editor.weapons') }} [{{ currentLeek.weapons.length }}]</div>
 					<div class="weapons">
 						<div class="container">
 							<rich-tooltip-weapon v-for="weapon of currentLeek.weapons" :key="weapon" v-slot="{ on }" :weapon="LeekWars.weapons[weapon]" :instant="true">
@@ -109,7 +109,7 @@
 						<div v-if="currentLeek.weapons.length < 4" class="add" @click="weaponsDialog = true">+</div>
 					</div>
 					<br>
-					<div class="title">{{ $t('leek.chips') }} [{{ currentLeek.chips.length }}]</div>
+					<div class="title">{{ $t('editor.chips') }} [{{ currentLeek.chips.length }}]</div>
 					<div class="chips">
 						<div class="container">
 							<rich-tooltip-chip v-for="chip in currentLeek.chips" :key="chip.id" v-slot="{ on }" :chip="LeekWars.chips[chip]" :instant="true">

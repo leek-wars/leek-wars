@@ -53,7 +53,7 @@
 
 			<img v-if="LeekWars.clover" :style="{top: LeekWars.cloverTop + 'px', left: LeekWars.cloverLeft + 'px'}" class="clover" src="/image/clover.png" @click="clickClover">
 
-			<didactitiel v-model="didactitiel" />
+			<didactitiel v-if="didactitiel_enabled" v-model="didactitiel" />
 
 			<changelog-dialog v-model="changelogDialog" :changelog="changelog" />
 		</div>
@@ -71,18 +71,20 @@
 	import Social from '@/component/app/social.vue'
 	import Squares from '@/component/app/squares.vue'
 	import ChangelogVersion from '@/component/changelog/changelog-version.vue'
-	import Didactitiel from '@/component/help/didactitiel.vue'
+	import { locale } from '@/locale'
 	import { LeekWars } from '@/model/leekwars'
 	import { SocketMessage } from '@/model/socket'
 	import { setTimeout } from 'timers'
 	import { Component, Vue } from 'vue-property-decorator'
 	import ChangelogDialog from '../changelog/changelog-dialog.vue'
+	const Didactitiel = () => import(/* webpackChunkName: "[request]" */ `@/component/didactitiel/didactitiel.${locale}.i18n`)
 
 	@Component({
 		components: {'lw-bar': Bar, 'lw-footer': Footer, 'lw-header': Header, 'lw-menu': Menu, 'lw-social': Social, Console, Squares, Didactitiel, Chats, 'mobile-br': MobileBR, ChangelogVersion, ChangelogDialog }
 	})
 	export default class App extends Vue {
 		didactitiel: boolean = false
+		didactitiel_enabled: boolean = false
 		console: boolean = false
 		consoleDown: boolean = false
 		consoleX: number = 0
@@ -98,8 +100,11 @@
 		created() {
 			this.$root.$on('connected', () => {
 				if (!this.$store.state.farmer.didactitiel_seen) {
-					this.didactitiel = true
-					this.$store.commit('didactitiel-seen')
+					this.didactitiel_enabled = true
+					Vue.nextTick(() => {
+						this.didactitiel = true
+						this.$store.commit('didactitiel-seen')
+					})
 				}
 			})
 			if (this.$store.state.connected && localStorage.getItem('changelog_version') !== LeekWars.version) {

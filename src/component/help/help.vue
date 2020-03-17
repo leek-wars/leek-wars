@@ -3,7 +3,7 @@
 		<div class="page-bar page-header">
 			<h1>{{ $t('title') }}</h1>
 			<div class="tabs">
-				<div class="tab" @click="didactitiel = true">▶&nbsp; {{ $t('rewatch_didactitiel') }}</div>
+				<div class="tab" @click="show_didactitiel">▶&nbsp; {{ $t('rewatch_didactitiel') }}</div>
 			</div>
 		</div>
 		<div class="flex-container">
@@ -94,22 +94,32 @@
 				</panel>
 			</div>
 		</div>
-		<didactitiel v-model="didactitiel" />
+		<didactitiel v-if="didactitiel_enabled" v-model="didactitiel" />
 	</div>
 </template>
 
 <script lang="ts">
-	import Didactitiel from '@/component/help/didactitiel.vue'
+	import { locale } from '@/locale'
 	import { LeekWars } from '@/model/leekwars'
 	import { Component, Vue } from 'vue-property-decorator'
+	const Didactitiel = () => import(/* webpackChunkName: "[request]" */ `@/component/didactitiel/didactitiel.${locale}.i18n`)
 	
-	@Component({ name: 'help', i18n: {}, components: {Didactitiel} })
+	@Component({ name: 'help', i18n: {}, components: { Didactitiel } })
 	export default class Help extends Vue {
 		advanced: boolean = false
 		didactitiel: boolean = false
+		didactitiel_enabled: boolean = false
+		
 		created() {
 			LeekWars.setTitle(this.$t('help.title'))
 			LeekWars.setActions([{icon: 'contact_support', click: () => this.$router.push('/about')}])
+		}
+
+		show_didactitiel() {
+			this.didactitiel_enabled = true
+			Vue.nextTick(() => {
+				this.didactitiel = true
+			})
 		}
 	}
 </script>

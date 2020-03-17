@@ -15,6 +15,9 @@ declare module 'vue/types/vue' {
 	interface Vue {
 		env: any
 	}
+	interface VueConstructor {
+		options: any
+	}
 }
 
 declare global {

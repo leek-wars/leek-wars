@@ -23,7 +23,7 @@
 		changelog: any = null
 
 		created() {
-			import(/* webpackChunkName: "changelog-[request]" */ `json-loader!yaml-loader!@/lang/${this.$i18n.locale}/changelog.yaml`).then((changelog) => {
+			import(/* webpackChunkName: "changelog-[request]" */ `json-loader!yaml-loader!@/component/changelog/changelog.${this.$i18n.locale}.yaml`).then((changelog) => {
 				this.changelog = changelog
 			})
 		}

@@ -8,6 +8,6 @@
 	"category_social": "Social",
 	"category_tournament": "Tournaments",
 	"hide_unlocked": "Hide unlocked",
-	"title": "Trophies of {farmer}",
+	"title": "Trophies of {0}",
 	"title_me": "My trophies"
 }

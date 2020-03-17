@@ -9,6 +9,7 @@
 	"base": "base",
 	"cancel": "Annuler",
 	"child": "Enfant",
+	"chips": "Puces",
 	"close": "Fermer",
 	"close_others": "Fermer les autres",
 	"constant": "Constante {0}",
@@ -115,5 +116,6 @@
 	"v2_beta_message": "[bêta] Le LeekScript V2 est uniquement disponible pour les combats de test, pas encore pour les combats 'classés'.",
 	"valid_ai": "<b>{0}</b> valide",
 	"variable": "Variable <b>{0}</b>",
-	"variable_defined_in_ai": "Variable définie dans l'IA <b>{0}</b>"
+	"variable_defined_in_ai": "Variable définie dans l'IA <b>{0}</b>",
+	"weapons": "Armes"
 }
