@@ -319,6 +319,7 @@
 		<report-dialog v-if="team" v-model="reportDialog" :team="team" :reasons="reasons" :parameter="team.id" />
 
 		<popup v-model="createCompoDialog" :width="500">
+			<v-icon slot="icon">mdi-plus</v-icon>
 			<span slot="title">{{ $t('create_composition') }}</span>
 			<h4>{{ $t('compo_name') }}</h4>
 			<input v-model="createCompoName" type="text" @keyup.enter="createComposition">
@@ -329,6 +330,7 @@
 		</popup>
 
 		<popup v-if="team" v-model="deleteCompoDialog" :width="600">
+			<v-icon slot="icon">mdi-delete</v-icon>
 			<span v-if="compositionToDelete" slot="title">{{ $t('delete_compo_confirm_title', [compositionToDelete.name]) }}</span>
 			<div v-if="compositionToDelete">
 				{{ $t('delete_compo_confirm', [compositionToDelete.name]) }}
@@ -340,6 +342,7 @@
 		</popup>
 
 		<popup v-if="team" v-model="quitTeamDialog" :width="500">
+			<v-icon slot="icon">mdi-exit</v-icon>
 			<span slot="title">{{ $t('quit_team_confirm_title', [team.name]) }}</span>
 			{{ $t('quit_team_confirm') }}
 			<div slot="actions">
@@ -349,6 +352,7 @@
 		</popup>
 
 		<popup v-if="team" v-model="dissolveDialog" :width="500">
+			<v-icon slot="icon">mdi-delete</v-icon>
 			<span slot="title">{{ $t('disolve_confirm_title', [team.name]) }}</span>
 			{{ $t('disolve_confirm') }}
 			<div slot="actions">
@@ -358,6 +362,7 @@
 		</popup>
 
 		<popup v-if="banMemberTarget" v-model="banDialog" :width="500">
+			<v-icon slot="icon">mdi-delete</v-icon>
 			<span slot="title">{{ $t('ban_confirm_title', [banMemberTarget.name]) }}</span>
 			{{ $t('ban_confirm', [banMemberTarget.name]) }}
 			<div slot="actions">
@@ -367,6 +372,7 @@
 		</popup>
 
 		<popup v-if="team" v-model="changeOwnerDialog" :width="650">
+			<v-icon slot="icon">mdi-account-switch</v-icon>
 			<span slot="title">{{ $t('change_owner_confirm_title') }}</span>
 			<div class="change_owner_popup">
 				{{ $t('change_owner_select') }}
@@ -399,6 +405,7 @@
 		</popup>
 
 		<popup v-if="changeOwnerSelected" v-model="changeOwnerConfirmDialog" :width="500">
+			<v-icon slot="icon">mdi-account-switch</v-icon>
 			<span slot="title">{{ $t('change_owner_confirm_title') }}</span>
 			<i18n path="change_owner_confirm">
 				<b slot="farmer">{{ changeOwnerSelected.name }}</b>
@@ -414,6 +421,7 @@
 		</popup>
 
 		<popup v-if="team" v-model="turretDialog" :width="600">
+			<v-icon slot="icon">mdi-information-outline</v-icon>
 			<span slot="title">{{ $t('turret') }} [{{ $t('level_n', [team.level]) }}]</span>
 			<div class="turret-dialog">
 				<turret-image :level="team.level" :skin="1" :scale="0.32" />
@@ -440,6 +448,7 @@
 		</popup>
 
 		<popup v-if="team && member" v-model="turretAiDialog" :width="870">
+			<v-icon slot="icon">mdi-code-braces</v-icon>
 			<span slot="title">{{ $t('fight.turret') }} [{{ $t('level_n', [team.level]) }}]</span>
 			<div class="turret-ai-dialog">
 				<div class="farmer-ais">

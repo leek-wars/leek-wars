@@ -377,6 +377,7 @@
 		</div>
 
 		<popup v-model="createTeamDialog" :width="500">
+			<v-icon slot="icon">mdi-plus-circle-outline</v-icon>
 			<span slot="title">{{ $t('create_team') }}</span>
 			{{ $t('team_name') }} <input v-model="createTeamName" type="text">
 			<div slot="actions">
@@ -386,6 +387,7 @@
 		</popup>
 
 		<popup v-if="farmer" v-model="godfatherDialog" :width="600">
+			<v-icon slot="icon">mdi-hat-fedora</v-icon>
 			<span slot="title">{{ $t('godfather_link') }}</span>
 			{{ $t('godfather_link_description') }} :
 			<br>
@@ -394,6 +396,7 @@
 		</popup>
 
 		<popup v-if="farmer" v-model="countryDialog" :width="800">
+			<v-icon slot="icon">mdi-earth</v-icon>
 			<span slot="title">{{ $t('country_selection') }}</span>
 			<div class="country-dialog">
 				<div class="country" code="null" @click="selectCountry(null)">
@@ -410,6 +413,7 @@
 		<report-dialog v-if="farmer" v-model="reportDialog" :name="farmer.name" :target="farmer.id" :reasons="reasons" />
 		
 		<popup v-if="farmer" v-model="websiteDialog" :width="500">
+			<v-icon slot="icon">mdi-web</v-icon>
 			<span slot="title">{{ $t('add_website') }}</span>
 			<div class="website-dialog">
 				<input v-model="newWebsite" type="text" class="input">
@@ -421,6 +425,7 @@
 		</popup>
 		
 		<popup v-if="farmer" v-model="githubDialog" :width="500">
+			<img slot="icon" src="/image/github_white.png">
 			<span slot="title">{{ $t('add_github') }}</span>
 			<div class="github-dialog">
 				<input v-model="newGitHub" type="text" class="input">
@@ -432,6 +437,7 @@
 		</popup>
 
 		<popup v-if="farmer" v-model="titleDialog" :width="600">
+			<v-icon slot="icon">mdi-medal-outline</v-icon>
 			<span slot="title">{{ $t('main.select_title') }}</span>
 			<div class="title-dialog">
 				<title-picker ref="picker" :title="farmer.title" />

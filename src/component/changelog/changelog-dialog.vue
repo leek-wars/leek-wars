@@ -1,5 +1,6 @@
 <template lang="html">
 	<popup :value="value" :width="800" :full="true" @input="$emit('input', $event)">
+		<v-icon slot="icon">star</v-icon>
 		<i18n slot="title" path="changelog.version_online">
 			<b v-if="changelog" slot="version">{{ changelog.version_name }}</b>
 		</i18n>

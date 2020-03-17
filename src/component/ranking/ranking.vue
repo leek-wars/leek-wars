@@ -184,6 +184,7 @@
 		</panel>
 
 		<popup v-model="searchDialog" :width="500">
+			<v-icon slot="icon">mdi-magnify</v-icon>
 			<span slot="title">{{ $t('search_in_ranking') }}</span>
 			<input ref="search" v-model="searchQuery" :placeholder="$t('search_name')" class="query" type="text">
 			<div class="flex">

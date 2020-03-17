@@ -63,6 +63,7 @@
 		<report-dialog v-if="reportFarmer" v-model="reportDialog" :name="reportFarmer.name" :target="reportFarmer.id" :reasons="reasons" :parameter="reportContent" />
 
 		<popup v-model="muteDialog" :width="600">
+			<v-icon slot="icon">mdi-volume-off</v-icon>
 			<span slot="title">{{ $t('moderation.mute') }}</span>
 			<template v-if="muteFarmer">
 				<i18n path="moderation.mute_popup">
@@ -75,6 +76,7 @@
 			</div>
 		</popup>
 		<popup v-model="unmuteDialog" :width="600">
+			<v-icon slot="icon">mdi-volume-high</v-icon>
 			<span slot="title">{{ $t('moderation.unmute') }}</span>
 			<div v-if="muteFarmer">
 				<i18n path="moderation.unmute_popup">

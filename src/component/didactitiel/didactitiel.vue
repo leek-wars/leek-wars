@@ -1,5 +1,6 @@
 <template>
 	<popup :value="value" :width="800" :full="true" persistent @input="$emit('input', $event)">
+		<v-icon slot="icon">mdi-human-greeting</v-icon>
 		<span slot="title">{{ $t("title") }}</span>
 
 		<div ref="content" :style="{height: height + 'px'}" class="content">

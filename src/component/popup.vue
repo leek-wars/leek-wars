@@ -2,6 +2,7 @@
 	<v-dialog :value="value" :max-width="width" :persistent="persistent" @input="$emit('input', $event)">
 		<template v-if="content_created">
 			<div class="title">
+				<slot name="icon"></slot>
 				<div class="main">
 					<slot name="title"></slot>
 				</div>
@@ -41,6 +42,9 @@
 				}
 			})
 		}
+		hasIcon() {
+			return !!this.$slots.icon
+		}
 		close() {
 			this.$emit('input', false)
 		}
@@ -48,6 +52,19 @@
 </script>
 
 <style lang="scss" scoped>
+	.title ::v-deep .v-icon {
+		margin-right: 5px;
+		margin-bottom: 2px;
+		color: #eee;
+	}
+	.title ::v-deep img {
+		width: 24px;
+		height: 24px;
+		margin-right: 5px;
+		align-self: center;
+		margin-bottom: 2px;
+		opacity: 0.9;
+	}
 	.content.full {
 		padding: 0;
 	}

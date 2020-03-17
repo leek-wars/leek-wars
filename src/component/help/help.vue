@@ -3,7 +3,9 @@
 		<div class="page-bar page-header">
 			<h1>{{ $t('title') }}</h1>
 			<div class="tabs">
-				<div class="tab" @click="show_didactitiel">▶&nbsp; {{ $t('rewatch_didactitiel') }}</div>
+				<div class="tab" @click="show_didactitiel">
+					<v-icon>mdi-play</v-icon> {{ $t('rewatch_didactitiel') }}
+				</div>
 			</div>
 		</div>
 		<div class="flex-container">
@@ -109,7 +111,7 @@
 		advanced: boolean = false
 		didactitiel: boolean = false
 		didactitiel_enabled: boolean = false
-		
+
 		created() {
 			LeekWars.setTitle(this.$t('help.title'))
 			LeekWars.setActions([{icon: 'contact_support', click: () => this.$router.push('/about')}])

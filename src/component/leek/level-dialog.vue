@@ -1,5 +1,6 @@
 <template>
 	<popup :value="value" :width="700" @input="$emit('input', $event)">
+		<v-icon slot="icon">mdi-new-box</v-icon>
 		<span slot="title" v-html="$t('leek.level_popup_title', [leek.name, data.level])"></span>
 
 		<div class="level-popup">

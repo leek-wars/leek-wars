@@ -6,7 +6,7 @@
 			</h1>
 			<div v-if="!LeekWars.mobile" class="tabs">
 				<div class="tab" @click="createDialog = true">
-					<i class="material-icons">add</i>
+					<v-icon>mdi-comment-edit</v-icon>
 					<span>{{ $t('create_new_topic') }}</span>
 				</div>
 				<div class="tab disabled search-box">
@@ -87,6 +87,7 @@
 		</panel>
 
 		<popup v-model="createDialog" :width="800">
+			<v-icon slot="icon">mdi-comment-edit</v-icon>
 			<span slot="title">{{ $t('create_topic') }}</span>
 			<div class="create-popup">
 				<h3>{{ $t('new_topic_title') }}</h3>

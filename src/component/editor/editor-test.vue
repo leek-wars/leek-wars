@@ -1,5 +1,6 @@
 <template>
 	<popup :value="value" :width="1024" :full="true" @input="$emit('input', $event)">
+		<v-icon slot="icon">mdi-play</v-icon>
 		<span slot="title">{{ $t('editor.run_test') }}</span>
 		<v-tabs :key="value" class="tabs" grow>
 			<v-tabs-slider class="indicator" />
@@ -163,6 +164,7 @@
 		</div>
 
 		<popup v-model="newScenarioDialog" :width="800">
+			<v-icon slot="icon">mdi-plus-circle-outline</v-icon>
 			<span slot="title">{{ $t('editor.create_new_scenario') }}</span>
 			<div class="padding">
 				<input v-model="newScenarioName" :placeholder="$t('editor.scenario_name')" type="text" class="input" @keyup.enter="createScenario">
@@ -197,6 +199,7 @@
 		</popup>
 
 		<popup v-model="newLeekDialog" :width="500">
+			<v-icon slot="icon">mdi-plus-circle-outline</v-icon>
 			<span slot="title">{{ $t('editor.create_new_leek') }}</span>
 			<div class="padding">
 				<input v-model="newLeekName" :placeholder="$t('editor.leek_name')" type="text" class="input" @keyup.enter="createLeek">
@@ -208,6 +211,7 @@
 		</popup>
 
 		<popup v-model="newMapDialog" :width="500">
+			<v-icon slot="icon">mdi-plus-circle-outline</v-icon>
 			<span slot="title">{{ $t('editor.create_new_map') }}</span>
 			<div class="padding">
 				<input v-model="newMapName" :placeholder="$t('editor.map_name')" type="text" class="input" @keyup.enter="createMap">
@@ -219,6 +223,7 @@
 		</popup>
 
 		<popup v-model="mapDialog" :width="700">
+			<v-icon slot="icon">mdi-map</v-icon>
 			<span slot="title">{{ $t('editor.select_map') }}</span>
 			<div class="padding map-dialog">
 				<div v-ripple class="map card" @click="selectScenarioMap(null)">
@@ -233,6 +238,7 @@
 		</popup>
 
 		<popup v-model="leekDialog" :width="700">
+			<v-icon slot="icon">mdi-person</v-icon>
 			<span slot="title">{{ $t('editor.select_leek') }}</span>
 			<div class="leek-dialog padding">
 				<div v-for="leek of availableLeeks" :key="leek.id" v-ripple class="leek card" @click="addScenarioLeek(leek)">
@@ -243,6 +249,7 @@
 		</popup>
 
 		<popup v-model="aiDialog" :width="800">
+			<v-icon slot="icon">mdi-code-braces</v-icon>
 			<span slot="title">{{ $t('editor.select_ai') }}</span>
 			<div class="ai-dialog">
 				<div v-for="ai of sortedAis" :key="ai.id" class="ai" @click="clickDialogAI(ai)">
@@ -253,6 +260,7 @@
 		</popup>
 
 		<popup v-model="chipsDialog" :width="767">
+			<v-icon slot="icon">mdi-chip</v-icon>
 			<span slot="title">{{ $t('editor.select_chip') }}</span>
 			<div v-if="currentLeek" class="padding chips-dialog">
 				<rich-tooltip-chip v-for="chip of availableChips" :key="chip.id" v-slot="{ on }" :chip="LeekWars.chips[chip.id]" :bottom="true" :instant="true">
@@ -262,6 +270,7 @@
 		</popup>
 
 		<popup v-model="weaponsDialog" :width="800">
+			<img slot="icon" src="/image/icon/garden.png">
 			<span slot="title">{{ $t('editor.select_weapon') }}</span>
 			<div v-if="currentLeek" class="padding weapons-dialog">
 				<rich-tooltip-weapon v-for="weapon of availableWeapons" :key="weapon.id" v-slot="{ on }" :weapon="LeekWars.weapons[weapon.id]" :bottom="true" :instant="true">
