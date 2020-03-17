@@ -2,7 +2,7 @@
 	<div>
 		<div class="page-header page-bar">
 			<div>
-				<h1>{{ $t('documentation.title') }}</h1>
+				<h1>{{ $t('title') }}</h1>
 			</div>
 			<div class="tabs">
 				<div class="tab disabled search" icon="search" link="/search">
@@ -21,7 +21,7 @@
 					<div slot="content">
 						<div v-autostopscroll="'bottom'" class="items-list">
 							<div v-for="(category, c) of filteredCategories" :key="category.id">
-								<h2>{{ $t('documentation.function_category_' + categories[c].name) }}</h2>
+								<h2>{{ $t('function_category_' + categories[c].name) }}</h2>
 								<router-link v-for="(item, i) in category" v-if="item.name === item.real_name" :key="i" :to="'/help/documentation/' + item.name" :item="item.name" class="item">
 									{{ item.name }}
 								</router-link>
@@ -48,9 +48,11 @@
 	import { Component, Vue, Watch } from 'vue-property-decorator'
 	import DocumentationConstant from './documentation-constant.vue'
 	import DocumentationFunction from './documentation-function.vue'
+
 	@Component({
 		name: 'documentation',
-		components: { DocumentationFunction, DocumentationConstant }
+		components: { DocumentationFunction, DocumentationConstant },
+		i18n: {}
 	})
 	export default class Documentation extends Vue {
 		categories: any[] = []
@@ -113,11 +115,11 @@
 					this.items.push(item)
 					; (item as any).lower_name = item.name.toLowerCase()
 					; (item as any).id = id++
-					let item_data = (this.$t('documentation.func_' + (item as any).real_name) as any).toLowerCase()
+					let item_data = (this.$t('func_' + (item as any).real_name) as any).toLowerCase()
 					for (const i in item.arguments_names) {
-						item_data += (this.$t('documentation.func_' + (item as any).real_name + '_arg_' + (parseInt(i, 10) + 1)) as any).toLowerCase()
+						item_data += (this.$t('func_' + (item as any).real_name + '_arg_' + (parseInt(i, 10) + 1)) as any).toLowerCase()
 					}
-					item_data += (this.$t('documentation.func_' + (item as any).real_name + '_return') as any).toLowerCase()
+					item_data += (this.$t('func_' + (item as any).real_name + '_return') as any).toLowerCase()
 					; (item as any).data = item_data
 					last = item
 				}
@@ -128,7 +130,7 @@
 					; (item as any).id = id++
 					; (item as any).data = ''
 				}
-				LeekWars.setTitle(this.$i18n.t('documentation.title'))
+				LeekWars.setTitle(this.$i18n.t('title'))
 				this.update()
 			})
 			this.$root.$on('back', this.back)
@@ -149,7 +151,7 @@
 				LeekWars.setTitle(this.$route.params.item)
 			} else {
 				LeekWars.splitShowList()
-				LeekWars.setTitle(this.$i18n.t('documentation.title'))
+				LeekWars.setTitle(this.$i18n.t('title'))
 			}
 		}
 

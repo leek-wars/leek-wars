@@ -1,8 +1,8 @@
 <template>
 	<router-link v-if="notification" v-ripple :to="link" :notif="notification.id" :type="notification.type" :class="{unread: !notification.read}" class="notification" @click.native="click">
 		<img :src="'/image/notif/' + notification.image + '.png'" class="avatar">
-		<div class="title" v-html="$t('notifications.title_' + notification.type, notification.title)"></div>
-		<div class="message">{{ $t('notifications.message_' + notification.type, notification.message) }}</div>
+		<div class="title" v-html="$t('notification.title_' + notification.type, notification.title)"></div>
+		<div class="message">{{ $t('notification.message_' + notification.type, notification.message) }}</div>
 		<span class="date">{{ LeekWars.formatDuration(notification.date) }}</span>
 		<span v-if="resultIcon && LeekWars.notifsResults" class="result">
 			<i :class="resultIcon" class="material-icons">{{ resultIcon }}</i>

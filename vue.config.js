@@ -40,6 +40,12 @@ module.exports = {
 				.loader(path.resolve('./src/wiki-loader.js'))
 				.end()
 		config.module
+			.rule('i18n')
+			.test(/\.\w\w\.i18n/)
+			.use('i18n')
+				.loader(path.resolve('./src/component-loader.js'))
+				.end()
+		config.module
 			.rule('images')
 			.use('url-loader')
 			.loader('url-loader')

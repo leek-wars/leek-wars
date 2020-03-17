@@ -12,6 +12,13 @@
 		</div>
 		<div class="header-right">
 			<div v-if="!$store.state.connected" class="header-signin buttons">
+				<!--
+				<div class="button-wrapper">
+					<div class="header-button" @click="LeekWars.setLocale($i18n.locale === 'fr' ? 'en' : 'fr')">
+						{{ $i18n.locale }}
+					</div>
+				</div>
+				-->
 				<div class="button-wrapper">
 					<router-link to="/login">
 						<div class="header-button">
@@ -19,7 +26,8 @@
 							<span>{{ $t('main.connection') }}</span>
 						</div>
 					</router-link>
-				</div><div v-if="env.SIGN_UP" class="button-wrapper">
+				</div>
+				<div v-if="env.SIGN_UP" class="button-wrapper">
 					<router-link to="/">
 						<div class="signup-button header-button">
 							<i class="material-icons">how_to_reg</i>
@@ -29,6 +37,13 @@
 				</div>
 			</div>
 			<div v-if="$store.state.connected" class="header-farmer buttons">
+				<!--
+				<div class="button-wrapper">
+					<div class="header-button" @click="LeekWars.setLocale($i18n.locale === 'fr' ? 'en' : 'fr')">
+						{{ $i18n.locale }}
+					</div>
+				</div>
+				-->
 				<div v-if="env.BANK" class="button-wrapper">
 					<router-link to="/bank">
 						<div class="header-button">

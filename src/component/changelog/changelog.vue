@@ -36,7 +36,7 @@
 		changelog: any = null
 		changelogDialog: boolean = false
 		changelogVersion: any = null
-		translations: any = null
+		translations: any = {}
 		lazy_end: number = 2
 
 		get lazy_changelog() {
@@ -55,7 +55,7 @@
 			})
 			window.addEventListener('scroll', this.scroll)
 
-			import(/* webpackChunkName: "changelog-[request]" */ `json-loader!yaml-loader!@/lang/${this.$i18n.locale}/changelog.yaml`).then((translations) => {
+			import(/* webpackChunkName: "changelog-[request]" */ `json-loader!yaml-loader!@/component/changelog/changelog.${this.$i18n.locale}.yaml`).then((translations) => {
 				this.translations = translations
 			})
 		}

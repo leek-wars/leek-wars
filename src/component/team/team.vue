@@ -116,7 +116,7 @@
 							<turret-image :level="team.level" :skin="1" :scale="0.32" @click.native="turretDialog = true" />
 
 							<div class="infos">
-								<h4>{{ $t('fight.turret') }}</h4>
+								<h4>{{ $t('turret') }}</h4>
 								<div class="level">{{ $t('level_n', [team.level]) }}</div>
 
 								<ai v-if="team.turret_ai" :ai="team.turret_ai" :class="{active: member}" @click.native="turretAiDialog = true" />
@@ -414,7 +414,7 @@
 		</popup>
 
 		<popup v-if="team" v-model="turretDialog" :width="600">
-			<span slot="title">{{ $t('fight.turret') }} [{{ $t('level_n', [team.level]) }}]</span>
+			<span slot="title">{{ $t('turret') }} [{{ $t('level_n', [team.level]) }}]</span>
 			<div class="turret-dialog">
 				<turret-image :level="team.level" :skin="1" :scale="0.32" />
 				<div class="infos">
