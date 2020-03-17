@@ -263,7 +263,7 @@
 	}
 	.connected-farmers {
 		height: 92px;
-		overflow-y: hidden;
+		overflow: hidden;
 		text-align: justify;
 	}
 	.expand-connected-farmers {
