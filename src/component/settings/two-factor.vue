@@ -56,6 +56,7 @@
 		</div>
 
 		<popup v-model="twoFactorConfirmDialog" :width="750">
+			<v-icon slot="icon">mdi-security</v-icon>
 			<span slot="title">Enter your password to validate</span>
 			Password : <input id="two-factor-confirm-password" type="password">
 			<div slot="actions">

@@ -143,6 +143,7 @@
 		</panel>
 
 		<popup v-model="deleteMessageDialog" :width="600">
+			<v-icon slot="icon">mdi-delete</v-icon>
 			<span slot="title">{{ $t('do_you_want_to_delete_message') }}</span>
 			{{ $t('undoable_action') }}
 			<div slot="actions">
@@ -152,6 +153,7 @@
 		</popup>
 
 		<popup v-model="deleteTopicDialog" :width="600">
+			<v-icon slot="icon">mdi-delete</v-icon>
 			<span slot="title">{{ $t('do_you_want_to_delete_topic') }}</span>
 			{{ $t('undoable_action') }}
 			<div slot="actions">

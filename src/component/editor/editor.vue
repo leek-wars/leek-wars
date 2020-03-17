@@ -48,7 +48,7 @@
 					<i class="material-icons">play_arrow</i> <span>{{ $t('test') }}</span>
 				</div>
 				<div class="tab action" icon="settings" @click="settingsDialog = true">
-					<i class="material-icons">settings</i>
+					<v-icon>mdi-cogs</v-icon>
 				</div>
 				<div class="tab action hidden" icon="help" @click="infoDialog = true">
 					<i class="material-icons">help</i>
@@ -107,6 +107,7 @@
 		<div class="error-tooltip"></div>
 
 		<popup v-model="infoDialog" :width="500">
+			<v-icon slot="icon">mdi-help-circle</v-icon>
 			<span slot="title">{{ $t('shortcuts') }}</span>
 			<ul class="shortcuts">
 				<li v-html="$t('shortcut_1')"></li>
@@ -120,6 +121,7 @@
 		</popup>
 		
 		<popup v-model="settingsDialog" :width="620">
+			<v-icon slot="icon">mdi-cogs</v-icon>
 			<span slot="title">{{ $t('settings') }}</span>
 			<div class="settings-dialog">
 				<div class="title">{{ $t('display') }}</div>
@@ -147,6 +149,7 @@
 		</popup>
 
 		<popup v-model="deleteDialog" :width="500">
+			<v-icon slot="icon">mdi-delete</v-icon>
 			<span v-if="currentType === 'ai' && currentAI" slot="title">{{ $t('delete_ai', [currentAI.name]) }}</span>
 			<span v-else-if="currentFolder" slot="title">{{ $t('delete_folder', [currentFolder.name]) }}</span>
 			{{ $t('delete_warning') }}

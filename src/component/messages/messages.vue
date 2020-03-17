@@ -33,6 +33,7 @@
 			</panel>
 		</div>
 		<popup v-model="quitDialog" :width="500">
+			<v-icon slot="icon">mdi-delete</v-icon>
 			<span slot="title">{{ $t('quit_conversation') }}</span>
 			{{ $t('quit_confirm') }}
 			<div slot="actions">

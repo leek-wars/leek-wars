@@ -69,6 +69,7 @@
 		</div>
 
 		<popup v-if="selectedFault" v-model="warningConfirmDialog" :width="700">
+			<v-icon slot="icon">mdi-gavel</v-icon>
 			<span slot="title">Envoyer un avertissement</span>
 			<h2>Confirmez l'envoi de l'avertissement :</h2>
 			<br>

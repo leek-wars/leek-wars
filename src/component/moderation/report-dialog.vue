@@ -1,5 +1,6 @@
 <template>
 	<popup :value="value" :width="500" @input="$emit('input', $event)">
+		<v-icon slot="icon">mdi-flag</v-icon>
 		<span slot="title">{{ title }}</span>
 		<div class="report-popup">
 			<h3>{{ message }}</h3>

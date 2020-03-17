@@ -132,6 +132,7 @@
 		</div>
 
 		<popup v-model="buyDialog" :width="600">
+			<v-icon slot="icon">mdi-cash-multiple</v-icon>
 			<span slot="title">{{ $t('confirm_purchase') }}</span>
 			<div v-if="selectedItem && $store.state.farmer">
 				<i18n tag="div" path="are_you_sure_you_want_to_buy">
@@ -151,6 +152,7 @@
 		</popup>
 
 		<popup v-model="buyCrystalsDialog" :width="600">
+			<v-icon slot="icon">mdi-cash-multiple</v-icon>
 			<span slot="title">{{ $t('confirm_purchase') }}</span>
 			<div v-if="selectedItem && $store.state.farmer">
 				<i18n tag="div" path="are_you_sure_you_want_to_buy">
@@ -170,6 +172,7 @@
 		</popup>
 		
 		<popup v-model="sellDialog" :width="600">
+			<v-icon slot="icon">mdi-cash-multiple</v-icon>
 			<span slot="title">{{ $t('confirm_sell') }}</span>
 			<div v-if="selectedItem && $store.state.farmer">
 				<i18n tag="div" path="are_you_sure_you_want_to_sell">
@@ -189,6 +192,7 @@
 		</popup>
 
 		<popup v-model="unseenItemDialog" :width="400" :full="true">
+			<v-icon slot="icon">mdi-new-box</v-icon>
 			<span slot="title">{{ $t('new_item_unlocked') }}</span>
 			<div v-if="unseenItem" class="unseen-dialog">
 				<weapon-preview v-if="unseenItem.type == ItemType.WEAPON" :weapon="LeekWars.weapons[unseenItem.id]" />

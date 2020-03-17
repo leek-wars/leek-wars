@@ -272,6 +272,7 @@
 		</div>
 
 		<popup v-if="leek" v-model="weaponsDialog" :width="800">
+			<img slot="icon" src="/image/icon/garden.png">
 			<template slot="title">
 				{{ $t('weapons_of', [leek.name]) }}
 				<span class="weapon-count">[{{ leek.weapons.length }}/{{ leek.max_weapons }}]</span>
@@ -298,6 +299,7 @@
 		</popup>
 
 		<popup v-if="leek" v-model="renameDialog" :width="600">
+			<v-icon slot="icon">mdi-pencil-outline</v-icon>
 			<template slot="title">{{ $t('rename_leek') }}</template>
 			{{ $t('rename_description') }}
 			<br>
@@ -316,6 +318,7 @@
 		<v-snackbar v-if="renameError" v-model="renameFailed" :timeout="5000" color="error">{{ $t(renameError.error, renameError.error_params) }}</v-snackbar>
 
 		<popup v-if="leek && my_leek" v-model="potionDialog" :width="750">
+			<img slot="icon" src="/image/icon/potion.png">
 			<span slot="title">{{ $t("use_a_potion", [leek.name]) }}</span>
 			<div class="farmer-potions">
 				<div class="potions-grid">
@@ -335,6 +338,7 @@
 		</popup>
 
 		<popup v-if="leek && my_leek" v-model="skinPotionDialog" :width="750">
+			<img slot="icon" src="/image/icon/potion.png">
 			<span slot="title">{{ $t("select_skin") }}</span>
 			<div class="farmer-potions">
 				<div class="potions-grid">
@@ -355,6 +359,7 @@
 		<report-dialog v-if="leek" v-model="reportDialog" :name="leek.farmer.name" :target="leek.farmer.id" :reasons="reasons" :parameter="leek.id" />
 
 		<popup v-model="hatDialog" :width="750">
+			<v-icon slot="icon">mdi-hat-fedora</v-icon>
 			<span slot="title">{{ $t('select_a_hat') }}</span>
 			<div class="hat-dialog">
 				<div class="hats">
@@ -383,6 +388,7 @@
 		</popup>
 
 		<popup v-model="skinWeaponDialog" :width="650">
+			<img slot="icon" src="/image/icon/garden.png">
 			<span slot="title">{{ $t('select_a_weapon') }}</span>
 			<div v-if="leek" class="weapons-popup">
 				<div class="leek-weapons">
@@ -404,6 +410,7 @@
 		</popup>
 
 		<popup v-model="customizeDialog" :width="700">
+			<v-icon slot="icon">mdi-auto-fix</v-icon>
 			<span slot="title">{{ $t('customize') }}</span>
 			<div v-if="leek" class="customize-dialog">
 				<center>
@@ -479,6 +486,7 @@
 		</popup>
 
 		<popup v-if="leek" v-model="titleDialog" :width="550">
+			<v-icon slot="icon">mdi-medal-outline</v-icon>
 			<span slot="title">{{ $t('main.select_title') }}</span>
 			<div class="title-dialog">
 				<title-picker ref="picker" :title="leek.title" />
@@ -492,6 +500,7 @@
 		<level-dialog v-if="leek && levelPopupData" v-model="levelPopup" :leek="leek" :data="levelPopupData" />
 
 		<popup v-if="leek && my_leek" v-model="aiDialog" :width="870">
+			<v-icon slot="icon">mdi-code-braces</v-icon>
 			<span slot="title">{{ $t('ai_of', [leek.name]) }}</span>
 			<div class="ai_popup">
 				<div :class="{dashed: draggedAI && (!leek.ai || draggedAI.id !== leek.ai.id)}" class="leek-ai" @dragover="dragOver" @drop="aiDrop('leek', $event)">
@@ -507,6 +516,7 @@
 		</popup>
 
 		<popup v-if="leek && my_leek" v-model="chipsDialog" :width="800">
+			<v-icon slot="icon">mdi-chip</v-icon>
 			<template slot="title">{{ $t('chips_of', [leek.name]) }} <span class="chip-count">[{{ leek.chips.length }}/{{ leek.max_chips }}]</span></template>
 			<div class="chips-dialog">
 				<div :class="{dashed: draggedChip && draggedChipLocation === 'farmer'}" class="leek-chips" @dragover="dragOver" @drop="chipsDrop('leek', $event)">
