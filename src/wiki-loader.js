@@ -1,7 +1,7 @@
 const fs = require('fs')
 const path = require('path')
 
-module.exports = function(source, file) {
+module.exports = function(source) {
 	const language = source.trim()
 	const data = {}
 	const files = fs.readdirSync("./src/wiki/src/")
