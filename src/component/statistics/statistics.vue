@@ -24,7 +24,7 @@
 					</div>
 				</router-link>
 				<div class="tab" @click="playing = !playing">
-					<i class="material-icons">{{ playing ? 'pause' : 'play_arrow' }}</i>
+					<v-icon>{{ playing ? 'mdi-pause' : 'mdi-play' }}</v-icon>
 					<span>{{ $t(playing ? 'pause' : 'play') }}</span>
 				</div>
 			</div>

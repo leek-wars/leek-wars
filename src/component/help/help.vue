@@ -51,7 +51,7 @@
 				<panel v-ripple>
 					<a href="http://leekwarswiki.net/" target="_blank" rel="noopener">
 						<div>
-							<h2>{{ $t('wiki') }} <i class="material-icons">launch</i></h2>
+							<h2>{{ $t('wiki') }} <v-icon>mdi-open-in-new</v-icon></h2>
 							<img src="/image/help/wiki.png">
 						</div>
 						<span class="description">{{ $t('wiki_desc') }}</span>
@@ -59,7 +59,7 @@
 					<!--
 					<router-link to="/encyclopedia/Guide_du_débutant">
 						<div v-ripple class="card">
-							<h2>{{ $t('wiki') }} <span class="label-beta">bêta <i class="material-icons">info</i></span></h2>
+							<h2>{{ $t('wiki') }} <span class="label-beta">bêta <v-icon>mdi-info</v-icon></span></h2>
 							<img src="/image/help/wiki.png">
 						</div>
 					</router-link>
@@ -70,8 +70,8 @@
 		<center>
 			<div class="advanced-button" @click="advanced = !advanced">
 				<span>Avancé</span>
-				<i v-if="advanced" class="material-icons">expand_less</i>
-				<i v-else class="material-icons">expand_more</i>
+				<v-icon v-if="advanced">mdi-chevron-up</v-icon>
+				<v-icon v-else>mdi-chevron-down</v-icon>
 			</div>
 		</center>
 		<div v-if="advanced" class="flex-container advanced">
@@ -89,7 +89,7 @@
 				<panel title="Line Of Sight" class="last">
 					<router-link to="/help/line-of-sight">
 						<h2>Line Of Sight</h2>
-						<i class="bigicon material-icons">grid_on</i>
+						<v-icon class="bigicon">mdi-grid</v-icon>
 						<br>
 						<span class="description">Little demo for line of sight function</span>
 					</router-link>

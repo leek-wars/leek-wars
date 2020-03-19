@@ -131,7 +131,7 @@
 		<panel v-if="member" :title="$t('chat')" toggle="team/chat">
 			<div slot="actions">
 				<div v-if="!LeekWars.mobile" class="button flat" @click="LeekWars.addChat('team', ChatType.TEAM, team.name)">
-					<i class="material-icons">picture_in_picture_alt</i>
+					<v-icon>mdi-picture-in-picture-bottom-right</v-icon>
 				</div>
 			</div>
 			<chat slot="content" channel="team" />
@@ -219,7 +219,7 @@
 					<tooltip v-if="captain">
 						<template v-slot:activator="{ on }">
 							<div class="button flat" v-on="on" @click="registerTournament(composition)">
-								<img src="/image/icon/trophy.png">
+								<v-icon>mdi-trophy</v-icon>
 								<span v-if="!composition.tournament.registered" class="register-tournament">{{ $t('register_tournament') }}</span>
 								<span v-else class="unregister-tournament">{{ $t('unregister') }}</span>
 							</div>
@@ -227,7 +227,7 @@
 						{{ $t('tournament_time') }}
 					</tooltip>
 					<div v-if="captain" class="delete-compo button flat" @click="compositionToDelete = composition; deleteCompoDialog = true">
-						<i class="material-icons">clear</i>
+						<v-icon>mdi-close</v-icon>
 					</div>
 				</template>
 				<div slot="content" :class="{dashed: draggedLeek != null && canDrop(composition)}" class="leeks" @dragover="leeksDragover" @drop="leeksDrop(composition, $event)">

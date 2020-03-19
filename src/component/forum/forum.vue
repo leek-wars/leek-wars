@@ -73,8 +73,8 @@
 			</h2>
 			<div slot="actions">
 				<div class="button flat">
-					<i v-if="expandFarmers" class="material-icons expand-connected-farmers" @click="expandFarmers = !expandFarmers">expand_more</i>
-					<i v-else class="material-icons expand-connected-farmers" @click="expandFarmers = !expandFarmers">expand_less</i>
+					<v-icon v-if="expandFarmers" @click="expandFarmers = !expandFarmers">mdi-chevron-down</v-icon>
+					<v-icon v-else @click="expandFarmers = !expandFarmers">mdi-chevron-up</v-icon>
 				</div>
 			</div>
 			<loader v-if="!connected_farmers.length" />
@@ -113,7 +113,7 @@
 			</h2>
 			<div slot="actions">
 				<div v-if="!LeekWars.mobile" class="button flat" @click="LeekWars.addChat(chatLanguage.code, ChatType.GLOBAL, 'Chat ' + chatLanguage.code.toUpperCase())">
-					<i class="material-icons">picture_in_picture_alt</i>
+					<v-icon>mdi-picture-in-picture-bottom-right</v-icon>
 				</div>
 			</div>
 			<chat slot="content" :channel="chatLanguage.code" />
@@ -265,10 +265,6 @@
 		height: 92px;
 		overflow: hidden;
 		text-align: justify;
-	}
-	.expand-connected-farmers {
-		padding: 10px;
-		cursor: pointer;
 	}
 	.connected-farmers.expanded {
 		height: auto;

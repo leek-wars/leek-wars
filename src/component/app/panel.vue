@@ -7,8 +7,8 @@
 			<div class="actions">
 				<slot name="actions"></slot>
 				<div v-if="toggle" class="button text expand" @click="expanded = !expanded">
-					<i v-if="expanded" class="material-icons">expand_less</i>
-					<i v-else class="material-icons">expand_more</i>
+					<v-icon v-if="expanded">mdi-chevron-up</v-icon>
+					<v-icon v-else>mdi-chevron-down</v-icon>
 				</div>
 			</div>
 		</div>

@@ -66,11 +66,11 @@
 							</router-link>
 							<div v-if="result.vu !== 0 || result.vd !== 0" class="votes">
 								<div :class="{zero: result.vu === 0}" class="vote up">
-									<i class="material-icons">thumb_up</i>
+									<v-icon>mdi-thumb-up</v-icon>
 									<span class="counter">{{ result.vu }}</span>
 								</div>
 								<div :class="{zero: !result.vd}" class="vote down">
-									<i class="material-icons">thumb_down</i>
+									<v-icon>mdi-thumb-down</v-icon>
 									<span class="counter">{{ result.vd }}</span>
 								</div>
 							</div>

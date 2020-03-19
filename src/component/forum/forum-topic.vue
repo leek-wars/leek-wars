@@ -4,22 +4,28 @@
 			<div class="title-wrapper">
 				<h1>
 					<router-link to="/forum">{{ $t('forum.title') }}</router-link>
-					<i class="material-icons">chevron_right</i>
+					<v-icon>mdi-chevron-right</v-icon>
 					<router-link v-if="topic" :to="'/forum/category-' + category.id">{{ categoryName }}</router-link>
-					<i class="material-icons">chevron_right</i>
+					<v-icon>mdi-chevron-right</v-icon>
 					<span ref="topicTitle" :contenteditable="topicEditing" class="topic-title">{{ topic ? topic.name : '...' }}</span>
 					<div v-if="topic" class="info attrs">
-						<i v-if="topic.resolved" :title="$t('topic_resolved')" class="attr material-icons">check_circle</i>
-						<i v-if="topic.locked" :title="$t('topic_locked')" class="attr material-icons">lock</i>
-						<img v-if="topic.pinned" :title="$t('topic_pinned')" class="attr" src="/image/pin_white.png">
+						<v-icon v-if="topic.resolved" :title="$t('topic_resolved')" class="attr">mdi-check-circle</v-icon>
+						<v-icon v-if="topic.locked" :title="$t('topic_locked')" class="attr">mdi-lock</v-icon>
+						<v-icon v-if="topic.pinned" :title="$t('topic_pinned')" class="attr">mdi-pin</v-icon>
 						<a v-if="topic.issue" :href="'https://github.com/leek-wars/leek-wars-client/issues/' + topic.issue" class="attr issue" target="_blank" rel="noopener">
 							<img src="/image/github_white.png"><span>#{{ topic.issue }}</span>
 						</a>
 					</div>
 				</h1>
 				<div v-if="!LeekWars.mobile" class="tabs">
-					<div v-if="topic && topic.subscribed" class="tab" @click="unsubscribe">{{ $t('unsubscribe') }}</div>
-					<div v-else class="tab" @click="subscribe">{{ $t('subscribe') }}</div>
+					<div v-if="topic && topic.subscribed" class="tab" @click="unsubscribe">
+						<v-icon>mdi-newspaper-minus</v-icon>
+						{{ $t('unsubscribe') }}
+					</div>
+					<div v-else class="tab" @click="subscribe">
+						<v-icon>mdi-newspaper-plus</v-icon>
+						{{ $t('subscribe') }}
+					</div>
 				</div>
 			</div>
 		</div>
@@ -75,7 +81,7 @@
 										<v-tooltip :key="votes_up_names[message.id] ? message.id * 101 + votes_up_names[message.id].length : message.id * 101" :open-delay="0" :close-delay="0" :disabled="message.votes_up === 0" bottom @input="loadVotesUp(message)">
 											<template v-slot:activator="{ on }">
 												<div :class="{active: message.my_vote == 1, zero: message.votes_up === 0}" class="vote up" @click="voteUp(message)" v-on="on">
-													<i class="material-icons">thumb_up</i>
+													<v-icon>mdi-thumb-up</v-icon>
 													<span class="counter">{{ message.votes_up }}</span>
 												</div>
 											</template>
@@ -87,7 +93,7 @@
 										<v-tooltip :key="votes_down_names[message.id] ? message.id * 100 + votes_down_names[message.id].length : message.id" :open-delay="0" :close-delay="0" :disabled="message.votes_down === 0" bottom @input="loadVotesDown(message)">
 											<template v-slot:activator="{ on }">
 												<div :class="{active: message.my_vote == -1, zero: !message.votes_down}" class="vote down" @click="voteDown(message)" v-on="on">
-													<i class="material-icons">thumb_down</i>
+													<v-icon>mdi-thumb-down</v-icon>
 													<span class="counter">{{ message.votes_down }}</span>
 												</div>
 											</template>
@@ -413,7 +419,7 @@
 		white-space: normal;
 		padding: 6px 15px;
 		padding-right: 0px;
-		i {
+		.v-icon {
 			vertical-align: text-bottom;
 		}
 	}

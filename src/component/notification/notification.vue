@@ -5,7 +5,7 @@
 		<div class="message">{{ $t('notification.message_' + notification.type, notification.message) }}</div>
 		<span class="date">{{ LeekWars.formatDuration(notification.date) }}</span>
 		<span v-if="resultIcon && LeekWars.notifsResults" class="result">
-			<i :class="resultIcon" class="material-icons">{{ resultIcon }}</i>
+			<v-icon :class="resultIcon">{{ resultIcon }}</v-icon>
 		</span>
 	</router-link>
 </template>
@@ -20,7 +20,7 @@
 		@Prop({ required: true }) notification!: Notification
 		get link() { return this.notification.link ? this.notification.link : '' }
 		get resultIcon() {
-			return this.notification.result === null ? '' : this.notification.result === 1 ? 'done' : this.notification.result === 0 ? 'drag_handle' : 'clear'
+			return this.notification.result === null ? '' : this.notification.result === 1 ? 'mdi-check' : this.notification.result === 0 ? 'mdi-equal' : 'mdi-close'
 		}
 		click() {
 			LeekWars.post('notification/read', {notification_id: this.notification.id})
@@ -67,14 +67,14 @@
 	}
 	.result i {
 		font-size: 20px;
-		padding-top: 3px;
-		padding-left: 1px;
+		padding-top: 2px;
+		padding-left: 2px;
 		font-weight: bold;
 	}
-	.result .done {
+	.result .mdi-check {
 		color: green;
 	}
-	.result .clear {
+	.result .mdi-close {
 		color: red;
 	}
 	.message {

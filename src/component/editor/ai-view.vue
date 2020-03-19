@@ -2,11 +2,11 @@
 	<div v-show="visible" class="ai" @mousemove="mousemove" @mouseleave="mouseleave" @keyup="editorKeyUp" @keydown="editorKeyDown">
 		<div v-show="!loading" ref="codemirror" :style="{'font-size': fontSize + 'px', 'line-height': lineHeight + 'px'}" :class="{search: searchEnabled}" class="codemirror"></div>
 		<div v-show="searchEnabled" class="search-panel">
-			<i class="material-icons">search</i>
+			<v-icon>mdi-magnify</v-icon>
 			<input ref="searchInput" v-model="searchQuery" type="text" class="query" autocomplete="off" @keyup.enter="$event.shiftKey ? searchPrevious() : searchNext()">
 			<span v-if="searchLines.length" class="results">{{ searchCurrent + 1 }} / {{ searchLines.length }}</span>
-			<i class="material-icons arrow" @click="searchPrevious">expand_less</i>
-			<i class="material-icons arrow" @click="searchNext">expand_more</i>
+			<v-icon class="arrow" @click="searchPrevious">mdi-chevron-left</v-icon>
+			<v-icon class="arrow" @click="searchNext">mdi-chevron-right</v-icon>
 		</div>
 		<div v-show="hintDialog" ref="hintDialog" :style="{left: hintDialogLeft + 'px', top: hintDialogTop + 'px'}" class="hint-dialog">
 			<div ref="hints" class="hints">
@@ -988,9 +988,9 @@
 		background: #eee;
 		display: flex;
 	}
-	.search-panel i {
-		width: 24px;
-		height: 24px;
+	.search-panel .v-icon {
+		width: 40px;
+		height: 40px;
 		padding: 8px;
 	}
 	.search-panel .arrow {

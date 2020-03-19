@@ -33,7 +33,7 @@
 							<v-menu v-if="!privateMessages" offset-y>
 								<template v-slot:activator="{ on }">
 									<v-btn text small icon color="grey" v-on="on">
-										<v-icon>more_vert</v-icon>
+										<v-icon>mdi-dots-vertical</v-icon>
 									</v-btn>
 								</template>
 								<v-list dense class="message-actions">

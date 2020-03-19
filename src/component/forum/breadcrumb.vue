@@ -2,7 +2,7 @@
 	<div :class="{raw: raw}" class="breadcrumb">
 		<template v-for="(item, i) in items">
 			<router-link :key="item.name" v-ripple :to="item.link" class="item">{{ item.name }}</router-link>
-			<i v-if="i < items.length - 1" :key="i" class="material-icons">chevron_right</i>
+			<v-icon v-if="i < items.length - 1" :key="i">mdi-chevron-right</v-icon>
 		</template>
 	</div>
 </template>

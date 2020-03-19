@@ -14,8 +14,8 @@
 					<div class="spacer"></div>
 					<div class="options">
 						<div class="option" @click="consoleRandom"><img src="/image/icon/dice.png"></div>
-						<div class="option" @click="consolePopup"><i class="material-icons">open_in_new</i></div>
-						<div class="option" @click="consoleClose"><i class="material-icons">clear</i></div>
+						<div class="option" @click="consolePopup"><v-icon>mdi-open-in-new</v-icon></div>
+						<div class="option" @click="consoleClose"><v-icon>mdi-close</v-icon></div>
 					</div>
 				</div>
 				<console ref="console" />

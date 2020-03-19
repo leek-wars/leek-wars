@@ -5,7 +5,7 @@
 			<div class="tabs">
 				<router-link v-if="env.BANK" to="/bank">
 					<div class="tab action" icon="account_balance" link="/bank">
-						<i class="material-icons">account_balance</i>
+						<v-icon>mdi-bank</v-icon>
 						<span>{{ $t('main.bank') }}</span>
 					</div>
 				</router-link>
@@ -32,8 +32,8 @@
 				</panel>
 				<panel :title="$t('chips') + ' [' + chips.length + ']'">
 					<div slot="actions" class="button flat" @click="updateChipMode">
-						<i v-if="chipMode === 'type'" class="material-icons">view_module</i>
-						<i v-else class="material-icons">sort</i>
+						<v-icon v-if="chipMode === 'type'">mdi-sort-descending</v-icon>
+						<v-icon v-else>mdi-view-grid</v-icon>
 					</div>
 					<loader v-if="!chips.length" slot="content" />
 					<div v-else-if="chipMode === 'level'" slot="content" class="items chips">

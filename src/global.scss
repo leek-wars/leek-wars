@@ -2,6 +2,9 @@
 	font-family: 'Noto Color Emoji';
 	src: url("/NotoColorEmoji.ttf");
 }
+.theme--light.v-icon {
+	color: inherit;
+}
 .v-tooltip {
 	display: none;
 }
@@ -18,7 +21,6 @@
 	line-height: 20px;
 	.v-icon {
 		font-size: 20px;
-		color: white;
 		vertical-align: top;
 	}
 }
@@ -145,9 +147,6 @@ button {
     border-color: #ca0000 !important;
 }
 
-.material-icons {
-	font-size: 26px;
-}
 html {
 	box-sizing: border-box;
 }
@@ -355,11 +354,10 @@ ul {
 	margin-top: -1px;
 }
 .page-bar .tab i {
-	margin-top: -3px;
+	margin-top: -2px;
 	margin-right: 5px;
-}
-.page-bar .tab .v-icon {
 	color: white;
+	font-size: 26px;
 }
 .page-bar .tab input[type="text"],
 .page-bar .tab input[type="number"] {
@@ -456,6 +454,10 @@ ul {
 	height: 40px;
 	width: 40px;
 	padding: 7px;
+	i {
+		font-size: 26px;
+		vertical-align: baseline;
+	}
 }
 .v-dialog .title .options .option:hover {
 	background-image: linear-gradient(to bottom, rgba(110, 201, 31, 0.7) 0%, rgba(110, 201, 31, 0.9) 50%, rgba(110, 201, 31, 0.7) 100%);

@@ -2,7 +2,7 @@
 	<not-found v-if="error" :title="$t('title')" :message="$t('not_found')" />
 	<not-found v-else-if="generating" :title="$t('title')" :message="$t('not_generated_yet')">
 		<v-btn slot="button" large color="primary" @click="update">
-			<i class="material-icons">refresh</i>&nbsp;<span>{{ $t('refresh') }}</span>
+			<v-icon>mdi-refresh</v-icon>&nbsp;<span>{{ $t('refresh') }}</span>
 		</v-btn>
 	</not-found>
 	<div v-else>
@@ -54,33 +54,33 @@
 				<center class="buttons">
 					<router-link :to="'/fight/' + fight.id">
 						<v-btn>
-							<i class="material-icons">replay</i>
+							<v-icon>mdi-replay</v-icon>
 							{{ $t('rewatch_fight') }}
 						</v-btn>
 					</router-link>
 					<span v-if="$store.state.connected">
 						<router-link v-if="fight.context === FightContext.GARDEN" to="/garden">
 							<v-btn>
-								<i class="material-icons">undo</i>
+								<v-icon>mdi-undo</v-icon>
 								{{ $t('back_to_garden') }}
 							</v-btn>
 						</router-link>
 						<span v-else-if="fight.context == FightContext.TEST">
 							<router-link to="/editor">
 								<v-btn>
-									<i class="material-icons">undo</i>
+									<v-icon>mdi-undo</v-icon>
 									{{ $t('back_to_editor') }}
 								</v-btn>
 							</router-link>
 							<v-btn @click="refight">
-								<i class="material-icons">undo</i>
+								<v-icon>mdi-undo</v-icon>
 								{{ $t('refight') }}
 							</v-btn>
 						</span>
 						<span v-else-if="fight.context == FightContext.TOURNAMENT">
 							<router-link :to="'/tournament/' + fight.tournament">
 								<v-btn>
-									<i class="material-icons">undo</i>
+									<v-icon>mdi-undo</v-icon>
 									{{ $t('back_to_tournament') }}
 								</v-btn>
 							</router-link>
@@ -88,11 +88,11 @@
 						<span v-else-if="fight.context == FightContext.CHALLENGE">
 							<router-link v-if="myFight" :to="'/garden/challenge/' + ['leek', 'farmer'][fight.type] + '/' + enemy">
 								<v-btn v-if="iWin">
-									<i class="material-icons">undo</i>
+									<v-icon>mdi-undo</v-icon>
 									{{ $t('refight') }}
 								</v-btn>
 								<v-btn v-else>
-									<i class="material-icons">undo</i>
+									<v-icon>mdi-undo</v-icon>
 									<span v-html="$t('take_revenge')"></span>
 								</v-btn>
 							</router-link>

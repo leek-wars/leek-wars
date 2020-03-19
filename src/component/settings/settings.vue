@@ -4,7 +4,7 @@
 			<h1>{{ $t('title') }}</h1>
 			<div class="tabs">
 				<div class="tab action" icon="power_settings_new" @click="logout">
-					<i class="material-icons">power_settings_new</i>
+					<v-icon>mdi-power</v-icon>
 					<span>{{ $t('logout') }}</span>
 				</div>
 			</div>
@@ -40,9 +40,9 @@
 			<div class="column6">
 				<panel :title="$t('account')">
 					<div v-ripple class="list-item card" @click="viewChangePassword = !viewChangePassword">
-						<i class="material-icons">lock_open</i>
+						<v-icon>mdi-lock-open-outline</v-icon>
 						<span class="label">{{ $t('change_password') }}</span>
-						<i class="material-icons">{{ viewChangePassword ? 'arrow_drop_down' : 'arrow_right' }}</i>
+						<v-icon>{{ viewChangePassword ? 'mdi-menu-up' : 'mdi-menu-down' }}</v-icon>
 					</div>
 					<form v-if="viewChangePassword" class="change-password" @submit="changePassword">
 						<h4>{{ $t('old_password') }}</h4>
@@ -55,23 +55,23 @@
 					</form>
 
 					<div v-ripple class="list-item card" @click="viewChangeEmail = !viewChangeEmail">
-						<i class="material-icons">email</i>
+						<v-icon>mdi-email-outline</v-icon>
 						<span class="label">{{ $t('change_email') }}</span>
-						<i class="material-icons">{{ viewChangeEmail ? 'arrow_drop_down' : 'arrow_right' }}</i>
+						<v-icon>{{ viewChangeEmail ? 'mdi-menu-up' : 'mdi-menu-down' }}</v-icon>
 					</div>
 					<v-btn v-if="viewChangeEmail" :disabled="changeEmailSent" @click="sendChangeEmail()">{{ $t('change_email_send') }}</v-btn>
 
 					<div v-ripple class="list-item card" @click="view2FA = !view2FA">
-						<i class="material-icons">security</i>
+						<v-icon>mdi-security</v-icon>
 						<span class="label">Two factor authentication</span>
-						<i class="material-icons">{{ view2FA ? 'arrow_drop_down' : 'arrow_right' }}</i>
+						<v-icon>{{ view2FA ? 'mdi-menu-up' : 'mdi-menu-down' }}</v-icon>
 					</div>
 					<two-factor v-if="view2FA" />
 
 					<div v-ripple class="list-item card" @click="viewDeleteAccount = !viewDeleteAccount">
-						<i class="material-icons">delete_forever</i>
+						<v-icon>mdi-delete-forever</v-icon>
 						<span class="label">{{ $t('delete_account') }}</span>
-						<i class="material-icons">{{ viewDeleteAccount ? 'arrow_drop_down' : 'arrow_right' }}</i>
+						<v-icon>{{ viewDeleteAccount ? 'mdi-menu-up' : 'mdi-menu-down' }}</v-icon>
 					</div>
 					<v-btn v-if="viewDeleteAccount" @click="deleteDialog = true">{{ $t('delete_account') }}</v-btn>
 				</panel>
@@ -113,8 +113,8 @@
 		<center>
 			<div class="advanced-button" @click="advanced = !advanced">
 				Avancé
-				<i v-if="advanced" class="material-icons">expand_less</i>
-				<i v-else class="material-icons">expand_more</i>
+				<v-icon v-if="advanced">mdi-chevron-up</v-icon>
+				<v-icon v-else>mdi-chevron-down</v-icon>
 			</div>
 		</center>
 

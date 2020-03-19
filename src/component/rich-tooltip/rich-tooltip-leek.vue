@@ -27,8 +27,8 @@
 						<span class="talent-more">({{ leek.talent_more >= 0 ? '+' + leek.talent_more : leek.talent_more }})</span>
 						<span class="level">• {{ $t('main.level_n', [leek.level]) }}</span>
 						<v-btn class="expand" icon small @click="expand_items = !expand_items">
-							<v-icon v-if="expand_items">expand_less</v-icon>
-							<v-icon v-else>expand_more</v-icon>
+							<v-icon v-if="expand_items">mdi-chevron-up</v-icon>
+							<v-icon v-else>mdi-chevron-down</v-icon>
 						</v-btn>
 					</div>
 				</div>

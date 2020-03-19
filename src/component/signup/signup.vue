@@ -166,7 +166,7 @@
 			<router-link to="/help">
 				<panel v-ripple class="help">
 					<div slot="content">
-						<i class="material-icons">help_outline</i> {{ $t('help_tutorial_doc') }}
+						<v-icon>mdi-help-circle-outline</v-icon> {{ $t('help_tutorial_doc') }}
 					</div>
 				</panel>
 			</router-link>
