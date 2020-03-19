@@ -12,7 +12,6 @@
     - Ajout des apparats "Titre d'éleveur" / "Titre de poireau" pour créer un titre à partir des mots de trophées.
     - Ajout de l'apparat "Tenir une arme" qui permet à votre poireau se s'afficher une arme dans les mains.
     - Ajout de l'apparat "Afficher nombre de lignes de l'IA".
-    - Ajout d'un dialogue de personalisation qui regroupe tous les éléments d'apparence d'un poireau.
     - Ajout de tooltips avancées sur les titres des pages poireau et éleveur.
     - "Page trophées : affichage de la rareté du trophée (en %) et du nombre de personnes l'ayant débloqué."
     - "Documentation : affichage des items liés aux effets sur les constantes d'effets."
