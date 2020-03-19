@@ -1,6 +1,7 @@
 {
 	"account": "Compte",
 	"activate_discrete_mode": "Activer le mode discret",
+	"advanced": "Avancé",
 	"change": "Changer",
 	"change_email": "Changer l'email",
 	"change_email_send": "Envoyer un email de confirmation",
@@ -21,6 +22,8 @@
 	"delete_success": "Suppression réussie",
 	"delete_success_message": "Votre compte a bien été supprimé, vous allez êtes redirigé dans quelques secondes, à bientôt sur Leek Wars !",
 	"discrete_mode": "Mode discret",
+	"empty": "Vider",
+	"empty_localstorage": "Vider le localStorage",
 	"language": "Langue",
 	"logout": "Déconnexion",
 	"new_password": "Nouveau mot de passe",
