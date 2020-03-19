@@ -10,7 +10,7 @@
 		</div>
 		<div class="flex-container">
 			<div class="column6">
-				<panel class="first">
+				<panel v-ripple class="first">
 					<router-link to="/help/general">
 						<div>
 							<h2>Leek Wars</h2>
@@ -22,7 +22,33 @@
 				</panel>
 			</div>
 			<div class="column6">
-				<panel>
+				<panel v-ripple>
+					<router-link to="/help/tutorial">
+						<div>
+							<h2>{{ $t('tutorial') }}</h2>
+							<img src="/image/help/interface.png">
+							<br>
+							<span class="description" v-html="$t('tutorial_desc')"></span>
+						</div>
+					</router-link>
+				</panel>
+			</div>
+		</div>
+		<div class="flex-container">
+			<div class="column6">
+				<panel v-ripple>
+					<router-link to="/help/documentation">
+						<div>
+							<h2>{{ $t('documentation') }}</h2>
+							<img src="/image/help/presentation.png">
+							<br>
+							<span class="description" v-html="$t('documentation_desc')"></span>
+						</div>
+					</router-link>
+				</panel>
+			</div>
+			<div class="column6">
+				<panel v-ripple>
 					<a href="http://leekwarswiki.net/" target="_blank" rel="noopener">
 						<div>
 							<h2>{{ $t('wiki') }} <i class="material-icons">launch</i></h2>
@@ -38,32 +64,6 @@
 						</div>
 					</router-link>
 					-->
-				</panel>
-			</div>
-		</div>
-		<div class="flex-container">
-			<div class="column6">
-				<panel>
-					<router-link to="/help/tutorial">
-						<div>
-							<h2>{{ $t('tutorial') }}</h2>
-							<img src="/image/help/interface.png">
-							<br>
-							<span class="description" v-html="$t('tutorial_desc')"></span>
-						</div>
-					</router-link>
-				</panel>
-			</div>
-			<div class="column6">
-				<panel>
-					<router-link to="/help/documentation">
-						<div>
-							<h2>{{ $t('documentation') }}</h2>
-							<img src="/image/help/presentation.png">
-							<br>
-							<span class="description" v-html="$t('documentation_desc')"></span>
-						</div>
-					</router-link>
 				</panel>
 			</div>
 		</div>
