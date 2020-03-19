@@ -109,20 +109,18 @@
 			</div>
 		</div>
 
-		<!-- TODO Translation -->
 		<center>
 			<div class="advanced-button" @click="advanced = !advanced">
-				Avancé
+				{{ $t('advanced') }}
 				<v-icon v-if="advanced">mdi-chevron-up</v-icon>
 				<v-icon v-else>mdi-chevron-down</v-icon>
 			</div>
 		</center>
 
-		<!-- TODO Translation -->
 		<div v-if="advanced" class="flex-container">
 			<div class="column6">
-				<panel title="Vider le localStorage" class="last">
-					<v-btn class="clear-localstorage" @click="clearLocalStorage">Vider</v-btn>
+				<panel :title="$t('empty_localstorage')" class="last">
+					<v-btn class="clear-localstorage" @click="clearLocalStorage">{{ $t('empty') }}</v-btn>
 				</panel>
 			</div>
 			<div class="column6"></div>
