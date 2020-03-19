@@ -262,8 +262,8 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			if (data.unread) {
 				LeekWars.squares.add({
 					image: '/image/notif/' + notification.image + '.png',
-					title: i18n.t('notifications.title_' + notification.type, notification.title) as string,
-					message: i18n.t('notifications.message_' + notification.type, notification.message) as string,
+					title: i18n.t('notification.title_' + notification.type, notification.title) as string,
+					message: i18n.t('notification.message_' + notification.type, notification.message) as string,
 					link: notification.link,
 					padding: true
 				})
