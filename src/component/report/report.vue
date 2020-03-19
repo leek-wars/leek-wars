@@ -560,7 +560,7 @@
 	}
 	.trophies {
 		display: grid;
-		grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+		grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
 		grid-gap: 8px;
 		.trophy {
 			padding: 6px;
@@ -574,7 +574,7 @@
 				width: 46px;
 				height: 46px;
 				margin-right: 10px;
-				flex-basis: 50px 0 0;
+				flex: 0 0 46px;
 			}
 			.info {
 				flex: 1;
