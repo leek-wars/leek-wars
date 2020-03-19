@@ -19,11 +19,20 @@
 <style lang="scss" scoped>
 	.breadcrumb {
 		display: flex;
-		align-items: center;
+		align-items: baseline;
+		margin: 0 -6px;
+		height: 100%;
+		.item {
+			padding: 0 6px;
+			height: 100%;
+		}
 		.item:not(:first-child) {
 			white-space: nowrap;
 			text-overflow: ellipsis;
 			overflow: hidden;
+		}
+		i {
+			align-self: center;
 		}
 	}
 	.breadcrumb:not(.raw) {

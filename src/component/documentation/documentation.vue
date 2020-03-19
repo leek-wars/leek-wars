@@ -2,9 +2,23 @@
 	<div>
 		<div class="page-header page-bar">
 			<div>
-				<h1>{{ $t('title') }}</h1>
+				<h1>
+					<breadcrumb :items="breadcrumb_items" :raw="true" />
+				</h1>
 			</div>
 			<div class="tabs">
+				<router-link to="/help/general">
+					<div class="tab">
+						<v-icon>mdi-help-circle-outline</v-icon>
+						{{ $t('main.general_help') }}
+					</div>
+				</router-link>
+				<router-link to="/help/tutorial">
+					<div class="tab">
+						<v-icon>mdi-laptop</v-icon>
+						{{ $t('main.tutorial') }}
+					</div>
+				</router-link>
 				<div class="tab disabled search" icon="search" link="/search">
 					<img class="search-icon" src="/image/search.png">
 					<input v-model="query" type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
@@ -46,12 +60,13 @@
 	import { Function } from '@/model/function'
 	import { LeekWars } from '@/model/leekwars'
 	import { Component, Vue, Watch } from 'vue-property-decorator'
+	import Breadcrumb from '../forum/breadcrumb.vue'
 	import DocumentationConstant from './documentation-constant.vue'
 	import DocumentationFunction from './documentation-function.vue'
 
 	@Component({
 		name: 'documentation',
-		components: { DocumentationFunction, DocumentationConstant },
+		components: { DocumentationFunction, DocumentationConstant, Breadcrumb },
 		i18n: {}
 	})
 	export default class Documentation extends Vue {
@@ -61,6 +76,13 @@
 		Function = Function
 		lazy_start: number = 0
 		lazy_end: number = 10
+
+		get breadcrumb_items() {
+			return [
+				{name: this.$t('main.help'), link: '/help'},
+				{name: this.$t('title'), link: '/help/documentation'}
+			]
+		}
 
 		get lower_query() {
 			return this.query.toLowerCase()
