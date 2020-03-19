@@ -9,7 +9,7 @@
 					<img class="search-icon" src="/image/search.png">
 					<input v-model="query" type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
 				</div>
-				<div class="tab action" icon="search" link="/search" @click="LeekWars.large = !LeekWars.large">
+				<div class="tab action" icon="search" link="/search" @click="toggleLarge">
 					<i v-if="LeekWars.large" class="material-icons">fullscreen_exit</i>
 					<i v-else class="material-icons">fullscreen</i>
 				</div>
@@ -90,6 +90,7 @@
 		}
 
 		created() {
+			LeekWars.large = localStorage.getItem('documentation/large') === 'true'
 			const get_categories = (callback: any) => {
 				if (localStorage.getItem('data/function_categories')) {
 					callback({categories: JSON.parse(localStorage.getItem('data/function_categories') || '[]')})
@@ -197,6 +198,11 @@
 					this.lazy_end += 10
 				}
 			}
+		}
+
+		toggleLarge() {
+			LeekWars.large = !LeekWars.large
+			localStorage.setItem('documentation/large', '' + LeekWars.large)
 		}
 	}
 </script>
