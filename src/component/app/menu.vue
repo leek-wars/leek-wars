@@ -2,8 +2,8 @@
 	<div class="menu">
 		
 		<div v-if="!LeekWars.mobile" class="menu-button" @click="LeekWars.menuCollapsed = !LeekWars.menuCollapsed">
-			<i v-if="LeekWars.menuCollapsed" class="icon material-icons">navigate_next</i>
-			<i v-else class="icon material-icons">navigate_before</i>
+			<v-icon v-if="LeekWars.menuCollapsed">mdi-chevron-left</v-icon>
+			<v-icon v-else>mdi-chevron-right</v-icon>
 		</div>
 
 		<div class="menu-wrapper">
@@ -40,7 +40,7 @@
 						</div>
 					</router-link>
 					<router-link v-if="Object.keys($store.state.farmer.leeks).length < 4" v-ripple to="/new-leek" class="section">
-						<i class="material-icons">add</i>
+						<v-icon>mdi-add</v-icon>
 						<div class="text">{{ $t('main.add_leek') }}</div>
 					</router-link>
 				</span>
@@ -48,7 +48,7 @@
 				<div v-if="$store.state.farmer && $store.state.farmer.leeks" class="separator"></div>
 
 				<router-link v-ripple to="/editor" class="section" @click.native="clickItem">
-					<i class="material-icons">code</i>
+					<v-icon>mdi-code-tags</v-icon>
 					<div class="text">{{ $t("main.editor") }}</div>
 				</router-link>
 
@@ -88,7 +88,7 @@
 				</router-link>
 
 				<router-link v-ripple to="/help" class="section" @click.native="clickItem">
-					<i class="material-icons">help_outline</i>
+					<v-icon>mdi-help-circle-outline</v-icon>
 					<div class="text">{{ $t("main.help") }}</div>
 				</router-link>
 
@@ -98,12 +98,12 @@
 				</router-link>
 
 				<router-link v-if="$store.getters.moderator" v-ripple :label="$store.state.farmer.reportings || null" to="/moderation" class="section" tab="moderation" @click.native="clickItem">
-					<i class="material-icons">gavel</i>
+					<v-icon>mdi-gavel</v-icon>
 					<div class="text">{{ $t('main.moderation') }}</div>
 				</router-link>
 
 				<router-link v-if="$store.getters.admin" v-ripple to="/admin" class="section" tab="admin" @click.native="clickItem">
-					<i class="material-icons">security</i>
+					<v-icon>mdi-security</v-icon>
 					<div class="text">{{ $t('main.admin') }}</div>
 				</router-link>
 			</div>
@@ -259,7 +259,7 @@
 	#app.app .menu-button {
 		display: none;
 	}
-	.menu-button .icon {
+	.menu-button .v-icon {
 		color: white;
 		font-size: 30px;
 	}
@@ -282,7 +282,7 @@
 		background: #333;
 		right: -10px;
 		top: 50%;
-		margin-top: -13.5px;
+		margin-top: -11px;
 		content: attr(label);
 		color: white;
 		border-radius: 5px;

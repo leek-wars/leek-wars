@@ -16,7 +16,7 @@
 					<tooltip v-if="leek.tournament">
 						<template v-slot:activator="{ on }">
 							<div class="tab" @click="registerTournament" v-on="on">
-								<img src="/image/icon/trophy.png">
+								<v-icon>mdi-trophy</v-icon>
 								<span v-if="!leek.tournament.registered" class="register">{{ $t('register_to_tournament') }}</span>
 								<span v-else class="unregister">{{ $t('unregister') }}</span>
 							</div>
@@ -135,7 +135,7 @@
 				<panel :title="$t('characteristics')">
 					<template v-if="leek && my_leek && leek.capital == 0" slot="actions">
 						<div class="button flat" @click="capitalDialog = true">
-							<i class="material-icons">visibility</i>
+							<v-icon>mdi-star-outline</v-icon>
 						</div>
 					</template>
 					<div slot="content" class="characteristics">
@@ -162,7 +162,7 @@
 					<h2 slot="title">{{ $t('weapons') }} <span v-if="leek && leek.weapons" class="weapon-count">[{{ leek.weapons.length }}/{{ leek.max_weapons }}]</span></h2>
 					<template v-if="leek && my_leek" slot="actions">
 						<div class="button flat" @click="weaponsDialog = true">
-							<i class="material-icons">edit</i>
+							<v-icon>mdi-pencil</v-icon>
 						</div>
 					</template>
 					<div slot="content" class="weapons-wrapper center">
@@ -183,7 +183,7 @@
 					<h2 slot="title">{{ $t('chips') }} <span v-if="leek && leek.chips" class="chip-count">[{{ leek.chips.length }}/{{ leek.max_chips }}]</span></h2>
 					<template v-if="leek && my_leek" slot="actions">
 						<div class="button flat" @click="chipsDialog = true">
-							<i class="material-icons">edit</i>
+							<v-icon>mdi-pencil</v-icon>
 						</div>
 					</template>
 					<div slot="content" class="chips-wrapper center">
@@ -203,7 +203,7 @@
 				<panel :title="$t('ai')">
 					<template v-if="leek && my_leek" slot="actions">
 						<div class="button flat" @click="aiDialog = true">
-							<i class="material-icons">edit</i>
+							<v-icon>mdi-pencil</v-icon>
 						</div>
 					</template>
 					<div slot="content" class="leek-ai">
@@ -227,7 +227,7 @@
 				<panel v-if="leek && leek.fights && leek.fights.length > 0" :title="$t('fights')">
 					<template v-if="leek" slot="actions">
 						<router-link :to="'/leek/' + leek.id + '/history'" class="button flat">
-							<i class="material-icons">history</i>
+							<v-icon>mdi-history</v-icon>
 							<span>{{ $t('history') }}</span>
 						</router-link>
 					</template>
@@ -252,7 +252,7 @@
 				<tr v-for="register in leek.registers" :key="register.key" class="register">
 					<td class="key">{{ register.key }}</td>
 					<td class="value" contenteditable @focusout="registerFocusout(register, $event)"><div>{{ register.value }}</div></td>
-					<td class="delete" @click="registerDelete(register)"><i class="material-icons">clear</i></td>
+					<td class="delete" @click="registerDelete(register)"><v-icon>mdi-close</v-icon></td>
 				</tr>
 			</table>
 		</panel>

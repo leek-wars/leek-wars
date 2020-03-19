@@ -25,7 +25,7 @@
 			</router-link>
 			<div class="center">
 				<router-link :to="'/fight/' + fight.id">
-					<i v-if="fight.status == 0" class="material-icons">hourglass_empty</i>
+					<v-icon v-if="fight.status == 0">mdi-timer-sand-empty</v-icon>
 					<img v-else-if="fight.context == FightContext.CHALLENGE" src="/image/icon/flag.png">
 					<img v-else-if="fight.context == FightContext.TOURNAMENT" src="/image/icon/trophy.png">
 					<img v-else src="/image/icon/garden.png">

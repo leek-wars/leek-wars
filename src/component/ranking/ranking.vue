@@ -67,25 +67,25 @@
 							<th>
 								<router-link :to="'/ranking/leek/name/page-' + page">
 									<span>{{ $t('leek') }}</span>
-									<i v-if="order === 'name'" class="material-icons">expand_less</i>
+									<v-icon v-if="order === 'name'">mdi-chevron-up</v-icon>
 								</router-link>
 							</th>
 							<th>
 								<router-link :to="'/ranking/leek' + (active ? '/active' : '') + '/page-' + page">
 									<span>{{ $t('talent') }}</span>
-									<i v-if="order === 'talent'" class="material-icons">expand_less</i>
+									<v-icon v-if="order === 'talent'">mdi-chevron-up</v-icon>
 								</router-link>
 							</th>
 							<th>
 								<router-link :to="'/ranking/leek/level' + (active ? '/active' : '') + '/page-' + page">
 									<span>{{ $t('level') }}</span>
-									<i v-if="order === 'level'" class="material-icons">expand_less</i>
+									<v-icon v-if="order === 'level'">mdi-chevron-up</v-icon>
 								</router-link>
 							</th>
 							<th>
 								<router-link :to="'/ranking/leek/xp' + (active ? '/active' : '') + '/page-' + page">
 									<span>{{ $t('xp') }}</span>
-									<i v-if="order === 'xp'" class="material-icons">expand_less</i>
+									<v-icon v-if="order === 'xp'">mdi-chevron-up</v-icon>
 								</router-link>
 							</th>
 							<th class="column-farmer">{{ $t('farmer') }}</th>
@@ -100,26 +100,26 @@
 							<th>
 								<router-link :to="'/ranking/farmer/name' + (active ? '/active' : '') + '/page-' + page">
 									<span>{{ $t('farmer') }}</span>
-									<i v-if="order === 'name'" class="material-icons">expand_less</i>
+									<v-icon v-if="order === 'name'">mdi-chevron-up</v-icon>
 								</router-link>
 							</th>
 							<th>
 								<router-link :to="'/ranking/farmer/talent' + (active ? '/active' : '') + '/page-' + page">
 									<span>{{ $t('talent') }}</span>
-									<i v-if="order === 'talent'" class="material-icons">expand_less</i>
+									<v-icon v-if="order === 'talent'">mdi-chevron-up</v-icon>
 								</router-link>
 							</th>
 							<th>
 								<router-link :to="'/ranking/farmer/total-level' + (active ? '/active' : '') + '/page-' + page">
 									<span>{{ $t('total_level') }}</span>
-									<i v-if="order === 'total-level'" class="material-icons">expand_less</i>
+									<v-icon v-if="order === 'total-level'">mdi-chevron-up</v-icon>
 								</router-link>
 							</th>
 							<th>{{ $t('leeks') }}</th>
 							<th>
 								<router-link :to="'/ranking/farmer/trophies' + (active ? '/active' : '') + '/page-' + page">
 									<span>{{ $t('trophies') }}</span>
-									<i v-if="order === 'trophies'" class="material-icons">expand_less</i>
+									<v-icon v-if="order === 'trophies'">mdi-chevron-up</v-icon>
 								</router-link>
 							</th>
 							<th>{{ $t('country') }}</th>
@@ -133,43 +133,43 @@
 							<th>
 								<router-link :to="'/ranking/team/name' + (active ? '/active' : '') + '/page-' + page">
 									<span>{{ $t('leek') }}</span>
-									<i v-if="order === 'name'" class="material-icons">expand_less</i>
+									<v-icon v-if="order === 'name'">mdi-chevron-up</v-icon>
 								</router-link>
 							</th>
 							<th>
 								<router-link :to="'/ranking/team' + (active ? '/active' : '') + '/page-' + page">
 									<span>{{ $t('talent') }}</span>
-									<i v-if="order === 'talent'" class="material-icons">expand_less</i>
+									<v-icon v-if="order === 'talent'">mdi-chevron-up</v-icon>
 								</router-link>
 							</th>
 							<th>
 								<router-link :to="'/ranking/team/level' + (active ? '/active' : '') + '/page-' + page">
 									<span>{{ $t('level') }}</span>
-									<i v-if="order === 'level'" class="material-icons">expand_less</i>
+									<v-icon v-if="order === 'level'">mdi-chevron-up</v-icon>
 								</router-link>
 							</th>
 							<th>
 								<router-link :to="'/ranking/team/total-level' + (active ? '/active' : '') + '/page-' + page">
 									<span>{{ $t('total_level') }}</span>
-									<i v-if="order === 'total-level'" class="material-icons">expand_less</i>
+									<v-icon v-if="order === 'total-level'">mdi-chevron-up</v-icon>
 								</router-link>
 							</th>
 							<th>
 								<router-link :to="'/ranking/team/xp' + (active ? '/active' : '') + '/page-' + page">
 									<span>{{ $t('xp') }}</span>
-									<i v-if="order === 'xp'" class="material-icons">expand_less</i>
+									<v-icon v-if="order === 'xp'">mdi-chevron-up</v-icon>
 								</router-link>
 							</th>
 							<th>
 								<router-link :to="'/ranking/team/farmers/page-' + page">
 									<span>{{ $t('farmers') }}</span>
-									<i v-if="order === 'farmers'" class="material-icons">expand_less</i>
+									<v-icon v-if="order === 'farmers'">mdi-chevron-up</v-icon>
 								</router-link>
 							</th>
 							<th>
 								<router-link :to="'/ranking/team/leeks/page-' + page">
 									<span>{{ $t('leeks') }}</span>
-									<i v-if="order === 'leeks'" class="material-icons">expand_less</i>
+									<v-icon v-if="order === 'leeks'">mdi-chevron-up</v-icon>
 								</router-link>
 							</th>
 						</tr>

@@ -22,7 +22,7 @@
 				<div class="button-wrapper">
 					<router-link to="/login">
 						<div class="header-button">
-							<i class="material-icons">power_settings_new</i>
+							<v-icon>mdi-power</v-icon>
 							<span>{{ $t('main.connection') }}</span>
 						</div>
 					</router-link>
@@ -30,7 +30,7 @@
 				<div v-if="env.SIGN_UP" class="button-wrapper">
 					<router-link to="/">
 						<div class="signup-button header-button">
-							<i class="material-icons">how_to_reg</i>
+							<v-icon>mdi-account-plus</v-icon>
 							<span>{{ $t('main.signup') }}</span>
 						</div>
 					</router-link>
@@ -72,7 +72,7 @@
 					<v-menu v-if="env.SOCIAL" :nudge-bottom="3" :max-width="400" :max-height="400" bottom offset-y @input="readNotifications">
 						<template v-slot:activator="{ on }">
 							<div class="header-button messages-button" v-on="on">
-								<i class="material-icons">email</i>
+								<v-icon>mdi-email-outline</v-icon>
 								<span v-show="$store.state.unreadMessages > 0" class="counter">{{ $store.state.unreadMessages }}</span>
 							</div>
 						</template>
@@ -90,7 +90,7 @@
 					<v-menu :nudge-bottom="3" :max-width="400" :max-height="400" bottom offset-y @input="readNotifications">
 						<template v-slot:activator="{ on }">
 							<div class="header-button notifications-button" v-on="on">
-								<i class="material-icons">notifications</i>
+								<v-icon>mdi-bell-outline</v-icon>
 								<span v-show="$store.state.unreadNotifications > 0" class="counter">{{ $store.state.unreadNotifications }}</span>
 							</div>
 						</template>

@@ -1,8 +1,8 @@
 <template>
 	<div v-show="!LeekWars.mobile">
 		<div v-if="$store.state.connected" class="social-button" @click="toggleSocial">
-			<i v-if="LeekWars.socialCollapsed" class="icon material-icons">navigate_before</i>
-			<i v-else class="icon material-icons">navigate_next</i>
+			<v-icon v-if="LeekWars.socialCollapsed">mdi-chevron-left</v-icon>
+			<v-icon v-else>mdi-chevron-right</v-icon>
 		</div>
 		
 		<div :style="{width: panelWidth + 'px'}" class="social-panel">
@@ -49,7 +49,7 @@
 					</h2>
 					<div slot="actions">
 						<div class="button text" @click="LeekWars.addChat(chatLanguage.code, ChatType.GLOBAL, 'Chat ' + chatLanguage.code.toUpperCase())">
-							<i class="material-icons">picture_in_picture_alt</i>
+							<v-icon>mdi-picture-in-picture-bottom-right</v-icon>
 						</div>
 					</div>
 					<chat slot="content" :channel="chatLanguage.code" />
@@ -138,7 +138,7 @@
 		height: 30px;
 		cursor: pointer;
 		user-select: none;
-		.icon {
+		.v-icon {
 			width: 30px;
 			height: 30px;
 			color: white;

@@ -38,9 +38,9 @@
 						</div>
 						<div>
 							<span v-ripple class="title">
-								<i v-if="topic.resolved" :title="$t('topic_resolved')" class="attr material-icons resolved">check_circle</i>
-								<i v-if="topic.closed" :title="$t('topic_locked')" class="attr material-icons">lock</i>
-								<img v-if="topic.pinned" :title="$t('topic_pinned')" class="attr" src="/image/pin.png">
+								<v-icon v-if="topic.resolved" :title="$t('topic_resolved')" class="attr resolved">mdi-check-circle</v-icon>
+								<v-icon v-if="topic.closed" :title="$t('topic_locked')" class="attr">mdi-lock</v-icon>
+								<v-icon v-if="topic.pinned" :title="$t('topic_pinned')" class="attr">mdi-pin</v-icon>
 								<a v-if="topic.issue" :href="'https://github.com/leek-wars/leek-wars-client/issues/' + topic.issue" class="attr issue" target="_blank" rel="noopener">
 									#{{ topic.issue }}
 								</a>
@@ -57,7 +57,7 @@
 								</i18n>
 							</div>
 							<div v-if="LeekWars.mobile" class="description grey">
-								<span class="messages"><i class="material-icons">chat_bubble_outline</i> {{ topic.messages }} • </span>
+								<span class="messages"><v-icon>mdi-message-outline</v-icon> {{ topic.messages }} • </span>
 								<i18n v-if="LeekWars.mobile" tag="span" path="last_message">
 									<span slot="date">{{ LeekWars.formatDuration(topic.last_message_date) }}</span>
 									<router-link slot="farmer" :to="'/forum/category-' + category.id + '/topic-' + topic.id + '/page-' + topic.last_message_page + '#message-' + topic.last_message_id">
@@ -195,9 +195,10 @@
 	}
 	.topic .attr {
 		height: 19px;
-		margin-right: 6px;
+		margin-right: 4px;
 		padding: 2px 0;
 		vertical-align: bottom;
+		margin-bottom: 2px;
 	}
 	i.attr.resolved {
 		color: #5fad1b;

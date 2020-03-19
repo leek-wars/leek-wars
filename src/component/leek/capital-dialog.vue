@@ -28,11 +28,11 @@
 		</div>
 		<div v-if="totalCapital" slot="actions">
 			<div class="action" @click="reset">
-				<i class="material-icons">refresh</i>
+				<v-icon>mdi-refresh</v-icon>
 				<span>{{ $t('leek.reset') }}</span>
 			</div>
 			<div class="action green" @click="validate">
-				<i class="material-icons">check</i>
+				<v-icon>mdi-check</v-icon>
 				<span>{{ $t('leek.validate') }}</span>
 			</div>
 		</div>

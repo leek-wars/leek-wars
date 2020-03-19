@@ -4,10 +4,10 @@
 			<h1>{{ $t('title') }}</h1>
 			<div class="tabs">
 				<div class="tab action content" icon="delete" @click="LeekWars.addChat('pm-' + currentID, ChatType.PM, getConversationName())">
-					<i class="material-icons">picture_in_picture_alt</i>
+					<v-icon>mdi-open-in-new</v-icon>
 				</div>
 				<div class="tab action content" icon="delete" @click="quitDialog = true">
-					<i class="material-icons">delete</i>
+					<v-icon>mdi-delete</v-icon>
 					<span>{{ $t('quit') }}</span>
 				</div>
 			</div>

@@ -24,7 +24,7 @@
 					<tooltip>
 						<template v-slot:activator="{ on }">
 							<div class="tab" v-on="on">
-								<img src="/image/icon/trophy.png">
+								<v-icon>mdi-trophy</v-icon>
 								<span v-if="farmer.tournament && !farmer.tournament.registered" class="register" @click="registerTournament">{{ $t('register_to_tournament') }}</span>
 								<span v-else class="unregister" @click="registerTournament">{{ $t('unregister') }}</span>
 							</div>
@@ -36,13 +36,13 @@
 						<v-switch :input-value="farmer.in_garden" hide-details />
 					</div>
 					<div class="tab action" icon="power_settings_new" @click="logout">
-						<i class="material-icons">power_settings_new</i>
+						<v-icon>mdi-power</v-icon>
 						<span>{{ $t('logout') }}</span>
 					</div>
 				</div>
 				<div v-else>
 					<div v-if="env.SOCIAL" class="tab action" @click="sendMessage">
-						<i class="material-icons">email</i>
+						<v-icon>mdi-email-outline</v-icon>
 						<span>{{ $t('send_private_message') }}</span>
 					</div>
 					<router-link v-if="$store.state.connected" :to="'/garden/challenge/farmer/' + farmer.id">
@@ -237,14 +237,14 @@
 		</div>
 		<div class="column12">
 			<panel>
-				<h2 slot="title">{{ $t('trophies') }} <span v-if="farmer">({{ farmer.trophies }})</span></h2>
+				<h2 slot="title"><img src="/image/icon/trophy.png">{{ $t('trophies') }} <span v-if="farmer">({{ farmer.trophies }})</span></h2>
 				<template slot="actions">
 					<router-link :to="'/trophies/' + id" class="button flat">
 						<img src="/image/icon/trophy.png">
 						<span>{{ $t('see_all_trophies') }}</span>
 					</router-link>
 					<div class="button flat" @click="trophiesModeButton">
-						<i class="material-icons">{{ (trophiesMode === 'grid' ? 'list' : 'view_module') }}</i>
+						<v-icon>{{ (trophiesMode === 'grid' ? 'mdi-format-list-bulleted-square' : 'mdi-view-module') }}</v-icon>
 					</div>
 				</template>
 				<div slot="content" class="trophies">
@@ -334,7 +334,7 @@
 				<panel v-if="!farmer || farmer.fight_history.length > 0" :title="$t('fights')">
 					<template slot="actions">
 						<router-link :to="'/farmer/' + id + '/history'" class="button flat">
-							<i class="material-icons">history</i>
+							<v-icon class="list-icon">mdi-history</v-icon>
 							<span>{{ $t('history') }}</span>
 						</router-link>
 					</template>

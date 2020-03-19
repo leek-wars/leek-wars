@@ -5,22 +5,22 @@
 				<div class="name">
 					{{ ai.name }}
 				</div>
-				<i class="material-icons" @click.stop="close(i)">
-					<span class="modified">fiber_manual_record</span>
-					<span class="close">close</span>
-				</i>
+				<span @click.stop="close(i)">
+					<v-icon class="modified">mdi-record</v-icon>
+					<v-icon class="close">mdi-close</v-icon>
+				</span>
 			</div>
 		</div>
 		<v-menu ref="menu" v-model="menu" :activator="activator" offset-y @input="menuChange()">
-			<v-list :dense="true">
+			<v-list class="menu" :dense="true">
 				<v-list-item v-ripple @click="close(currentI)">
-					<i class="material-icons">close</i>
+					<v-icon>mdi-close-circle-outline</v-icon>
 					<v-list-item-content>
 						<v-list-item-title>{{ $t('editor.close') }}</v-list-item-title>
 					</v-list-item-content>
 				</v-list-item>
 				<v-list-item v-ripple @click="closeOthers(currentAI)">
-					<i class="material-icons">close</i>
+					<v-icon>mdi-close-circle-outline</v-icon>
 					<v-list-item-content>
 						<v-list-item-title>{{ $t('editor.close_others') }}</v-list-item-title>
 					</v-list-item-content>
@@ -140,7 +140,7 @@
 	.tab.selected .name {
 		color: black;
 	}
-	.tab i {
+	.tab .v-icon {
 		font-size: 20px;
 		margin-right: 6px;
 	}
@@ -169,5 +169,8 @@
 	}
 	.tab.modified:hover .close {
 		display: block;
+	}
+	.menu .v-icon {
+		margin-right: 8px;
 	}
 </style>

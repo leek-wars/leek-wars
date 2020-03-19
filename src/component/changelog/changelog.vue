@@ -31,7 +31,7 @@
 				<h2 slot="title">{{ $t('version_n', [version.version_name]) }} ({{ version.date }}) {{ translations[version.version] && translations[version.version].title ? ' — ' + translations[version.version].title : '' }}</h2>
 				<template slot="actions">
 					<div class="button flat" @click="showChangelogDialog(version)">
-						<i class="material-icons">visibility</i>
+						<v-icon>mdi-eye-outline</v-icon>
 					</div>
 				</template>
 				<div slot="content" class="wrapper">

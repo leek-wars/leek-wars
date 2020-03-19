@@ -7,23 +7,23 @@
 			</div>
 			<div class="tabs">
 				<div ref="addButton" :title="$t('new_desc')" class="action list tab" icon="add">
-					<i class="material-icons">add</i> <span>{{ $t('new') }}</span>
+					<v-icon>mdi-plus</v-icon><span>{{ $t('new') }}</span>
 				</div>
 				<v-menu v-model="addMenu" :activator="LeekWars.mobile ? addMenuActivator : $refs.addButton" offset-y>
 					<v-list>
 						<v-list-item v-ripple @click="openNewAI(false)">
-							<i class="material-icons list-icon">insert_drive_file</i>
+							<v-icon class="list-icon">mdi-file-outline</v-icon>
 							<v-list-item-content>
 								<v-list-item-title>{{ $t('new_ai') }}</v-list-item-title>
 							</v-list-item-content>
 						</v-list-item>
 						<v-list-item v-ripple @click="openNewAI(true)">
-							<i class="material-icons list-icon">insert_drive_file</i>
+							<v-icon class="list-icon">mdi-file-star-outline</v-icon>
 							<v-list-item-content>
 								<v-list-item-title>{{ $t('new_v2') }}
 									<tooltip>
 										<template v-slot:activator="{ on }">
-											<span class="label-beta" v-on="on">bêta <i class="material-icons">info</i></span>
+											<span class="label-beta" v-on="on">bêta <v-icon>mdi-information-outline</v-icon></span>
 										</template>
 										{{ $t('editor.v2_beta_message') }}
 									</tooltip>
@@ -31,7 +31,7 @@
 							</v-list-item-content>
 						</v-list-item>
 						<v-list-item v-ripple @click="openNewFolder()">
-							<i class="material-icons list-icon">folder_open</i>
+							<v-icon class="list-icon">mdi-folder-outline</v-icon>
 							<v-list-item-content>
 								<v-list-item-title>{{ $t('new_folder') }}</v-list-item-title>
 							</v-list-item-content>
@@ -39,19 +39,19 @@
 					</v-list>
 				</v-menu>
 				<div :title="$t('save_desc')" class="action content tab" icon="save" @click="save">
-					<i class="material-icons">save_alt</i> <span>{{ $t('save') }}</span>
+					<v-icon class="list-icon">mdi-content-save</v-icon><span>{{ $t('save') }}</span>
 				</div>
 				<div :title="$t('delete_desc')" class="action list content tab" icon="delete" @click="deleteDialog = true">
-					<i class="material-icons">delete</i> <span>{{ $t('delete') }}</span>
+					<v-icon class="list-icon">mdi-delete</v-icon><span>{{ $t('delete') }}</span>
 				</div>
 				<div :title="$t('test_desc')" class="action content tab" icon="play_arrow" @click="test">
-					<i class="material-icons">play_arrow</i> <span>{{ $t('test') }}</span>
+					<v-icon class="list-icon">mdi-play</v-icon><span>{{ $t('test') }}</span>
 				</div>
 				<div class="tab action" icon="settings" @click="settingsDialog = true">
 					<v-icon>mdi-cogs</v-icon>
 				</div>
 				<div class="tab action hidden" icon="help" @click="infoDialog = true">
-					<i class="material-icons">help</i>
+					<v-icon class="list-icon">mdi-help-circle-outline</v-icon>
 				</div>
 			</div>
 		</div>

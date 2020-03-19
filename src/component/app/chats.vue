@@ -9,7 +9,7 @@
 					<emblem :team="$store.state.farmer.team" class="image" />
 				</router-link>
 				<div v-ripple class="title" @click="toggleExpanded(window, i)">{{ window.title }}</div>
-				<i v-ripple class="material-icons" @click="LeekWars.removeChat(i)">close</i>
+				<v-icon class="close" @click="LeekWars.removeChat(i)">mdi-close</v-icon>
 			</div>
 			<chat ref="chats" :channel="window.name" class="chat" @send="sendMessage($event, window.name)" />
 		</div>
@@ -99,7 +99,7 @@
 			.title:first-child {
 				padding-left: 10px;
 			}
-			i {
+			.v-icon {
 				padding: 8px;
 			}
 		}

@@ -14,14 +14,14 @@
 		<div class="actions-wrapper">
 			<div class="static-actions">
 				<div v-show="LeekWars.menuExpanded || $store.state.unreadMessages > 0" v-ripple class="action header-button mobile messages-button" @click="$router.push('/messages'); LeekWars.closeMenu()">
-					<i class="icon material-icons">chat</i>
+					<v-icon>mdi-message-outline</v-icon>
 					<span v-show="$store.state.unreadMessages > 0" class="counter messages-counter">{{ $store.state.unreadMessages }}</span>
 				</div>
 				<div v-show="LeekWars.menuExpanded || $store.state.unreadNotifications > 0" v-ripple class="action header-button mobile notifications-button">
 					<v-menu :nudge-bottom="0" :max-width="400" :max-height="400" bottom offset-y @input="readNotifications">
 						<template v-slot:activator="{ on }">
 							<div class="header-button notifications-button" v-on="on">
-								<i class="icon material-icons">info</i>
+								<v-icon>mdi-information-outline</v-icon>
 								<span v-show="$store.state.unreadNotifications > 0" class="counter notifications-counter">{{ $store.state.unreadNotifications }}</span>
 							</div>
 						</template>
@@ -34,13 +34,12 @@
 					</v-menu>
 				</div>
 				<router-link v-show="LeekWars.menuExpanded" v-ripple to="/settings" class="action header-button mobile settings" @click.native="closeMenu">
-					<i class="icon material-icons">settings</i>
+					<v-icon>mdi-settings-outline</v-icon>
 				</router-link>
 			</div>
 			<div v-show="!LeekWars.menuExpanded" class="actions">
 				<div v-for="(action, a) in LeekWars.actions" :key="a" v-ripple class="tab action" @click="action.click($event)">
-					<i v-if="action.icon" class="action material-icons">{{ action.icon }}</i>
-					<v-icon v-else-if="action.vicon" class="action">{{ action.vicon }}</v-icon>
+					<v-icon v-if="action.icon" class="action">{{ action.icon }}</v-icon>
 					<img v-else :src="'/image/' + action.image" class="action">
 				</div>
 			</div>
@@ -170,6 +169,7 @@
 		position: relative;
 	}
 	.action i {
+		font-size: 26px;
 		padding: 15px 12px;
 		color: white;
 	}

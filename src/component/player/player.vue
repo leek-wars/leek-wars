@@ -73,30 +73,28 @@
 				</div>
 				<hud ref="hud" :game="game" />
 				<transition name="fade">
-					<i v-if="game.paused" class="play-pause material-icons">pause</i>
+					<v-icon v-if="game.paused" class="play-pause">mdi-pause</v-icon>
 				</transition>
 				<transition name="fade">
-					<i v-if="!game.paused" class="play-pause material-icons">play_arrow</i>
+					<v-icon v-if="!game.paused" class="play-pause">mdi-play</v-icon>
 				</transition>
 			</div>
 			<div class="controls">
 				<v-tooltip :open-delay="0" :close-delay="0" top content-class="top">
 					<template v-slot:activator="{ on }">
-						<i v-ripple class="material-icons control" @click="pause" v-on="on">{{ game.paused ? 'play_arrow' : 'pause' }}</i>
+						<v-icon v-ripple class="control" @click="pause" v-on="on">{{ game.paused ? 'mdi-play' : 'mdi-pause' }}</v-icon>
 					</template>
 					{{ $t('fight.pause') }} (P)
 				</v-tooltip>
 				<v-tooltip :open-delay="0" :close-delay="0" top content-class="top">
 					<template v-slot:activator="{ on }">
-						<i v-ripple class="material-icons control" v-on="on" @click="game.speedUp()">
-							<span :style="{opacity: game.speedButtonVisible ? 1 : 0}">fast_forward</span>
-						</i>
+						<v-icon v-ripple class="control" :style="{opacity: game.speedButtonVisible ? 1 : 0}" v-on="on" @click="game.speedUp()">mdi-fast-forward</v-icon>
 					</template>
 					{{ $t('fight.accelerate') }} (S)
 				</v-tooltip>
 				<v-tooltip :open-delay="0" :close-delay="0" top content-class="top">
 					<template v-slot:activator="{ on }">
-						<i v-ripple class="material-icons control" v-on="on" @click="game.sound = !game.sound">{{ game.sound ? 'volume_up' : 'volume_mute' }}</i>
+						<v-icon v-ripple class="control" v-on="on" @click="game.sound = !game.sound">{{ game.sound ? 'mdi-volume-high' : 'mdi-volume-off' }}</v-icon>
 					</template>
 					{{ $t(game.sound ? 'fight.sound_activated' : 'fight.sound_disactivated') }} (V)
 				</v-tooltip>
@@ -104,13 +102,13 @@
 				<div class="filler"></div>
 				<v-tooltip v-if="!LeekWars.mobile" :open-delay="0" :close-delay="0" top content-class="top">
 					<template v-slot:activator="{ on }">
-						<i v-ripple class="material-icons control" v-on="on" @click="LeekWars.flex = !LeekWars.flex">crop_5_4</i>
+						<v-icon v-ripple class="control" v-on="on" @click="LeekWars.flex = !LeekWars.flex">mdi-crop-landscape</v-icon>
 					</template>
 					{{ $t('fight.enlarge_fight') }}
 				</v-tooltip>
 				<v-tooltip :open-delay="0" :close-delay="0" top content-class="top">
 					<template v-slot:activator="{ on }">
-						<i v-ripple class="material-icons control" v-on="on" @click="toggleFullscreen">aspect_ratio</i>
+						<v-icon v-ripple class="control" v-on="on" @click="toggleFullscreen">mdi-aspect-ratio</v-icon>
 					</template>
 					{{ $t('fight.fullscreen') }}
 				</v-tooltip>
@@ -118,27 +116,27 @@
 					<template v-slot:activator="{ on: tooltip }">
 						<v-menu :close-on-content-click="false" top offset-y left>
 							<template v-slot:activator="{ on: menu }">
-								<i v-ripple class="material-icons control" v-on="{...tooltip, ...menu}">settings</i>
+								<v-icon v-ripple class="control" v-on="{...tooltip, ...menu}">mdi-settings-outline</v-icon>
 							</template>
 							<v-list :dense="true" class="settings-menu">
 								<v-list-item v-ripple>
-									<i class="material-icons">favorite_border</i>
+									<v-icon>mdi-heart-half-full</v-icon>
 									<v-switch v-model="game.showLifes" :label="$t('fight.display_life_bars')" hide-details />
 								</v-list-item>
 								<v-list-item v-ripple>
-									<i class="material-icons">view_comfy</i>
+									<v-icon>mdi-view-comfy</v-icon>
 									<v-switch v-model="game.tactic" :label="$t('fight.tactic_mode')" hide-details />
 								</v-list-item>
 								<v-list-item v-ripple>
-									<i class="material-icons">looks_one</i>
+									<v-icon>mdi-numeric-1-box</v-icon>
 									<v-switch v-model="game.showCells" :label="$t('fight.display_cell_numbers')" hide-details />
 								</v-list-item>
 								<v-list-item v-ripple>
-									<i class="material-icons">vpn_key</i>
+									<v-icon>mdi-key</v-icon>
 									<v-switch v-model="game.showIDs" :label="$t('fight.show_ids')" hide-details />
 								</v-list-item>
 								<v-list-item v-ripple>
-									<i class="material-icons">flip_to_front</i>
+									<v-icon>mdi-box-shadow</v-icon>
 									<v-switch v-model="game.shadows" :label="$t('fight.display_shadows')" hide-details />
 								</v-list-item>
 							</v-list>
@@ -148,7 +146,7 @@
 				</v-tooltip>
 				<v-tooltip :open-delay="0" :close-delay="0" top content-class="top">
 					<template v-slot:activator="{ on }">
-						<i v-ripple class="material-icons control" v-on="on" @click="quit">input</i>
+						<v-icon v-ripple class="control" v-on="on" @click="quit">mdi-exit-to-app</v-icon>
 					</template>
 					{{ $t('fight.quit') }}
 				</v-tooltip>
@@ -577,15 +575,13 @@
 	.controls .control {
 		padding: 5px 12px;
 		cursor: pointer;
+		color: white;
 	}
 	.controls .control:hover {
 		background: rgba(255,255,255, 0.2);
 	}
 	.controls .v-menu {
 		vertical-align: top;
-	}
-	.controls i {
-		color: white;
 	}
 	.controls .turn {
 		line-height: 36px;

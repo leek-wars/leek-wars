@@ -154,11 +154,11 @@
 		</v-tabs>
 		<div slot="actions">
 			<div @click="$emit('input', false)">
-				<i class="material-icons">clear</i>
+				<v-icon>mdi-close</v-icon>
 				<span>{{ $t('editor.test_cancel') }}</span>
 			</div>
 			<div class="green" @click="launchTest">
-				<i class="material-icons">play_arrow</i>
+				<v-icon>mdi-play</v-icon>
 				<span>{{ $t('editor.test_validate') }}</span>
 			</div>
 		</div>
@@ -173,7 +173,7 @@
 				<div class="templates">
 					<div v-for="(template, t) of templates" :key="t" v-ripple :class="{selected: selectedTemplate === t}" class="template card" @click="selectedTemplate = t; newScenarioName = template.name">
 						<div v-if="template.category == 'free'">
-							<i class="material-icons">build</i>
+							<v-icon>mdi-wrench</v-icon>
 						</div>
 						<div v-else-if="template.category == 'solo'">
 							<leek-image :leek="allLeeks[template.team1[0].id]" :scale="0.27" />

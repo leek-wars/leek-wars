@@ -8,7 +8,7 @@
 				</div>
 				<div class="options">
 					<div class="option" @click="close">
-						<i class="material-icons">clear</i>
+						<v-icon>mdi-close</v-icon>
 					</div>
 				</div>
 			</div>

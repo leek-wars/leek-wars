@@ -38,8 +38,8 @@
 				<span class="talent-more">({{ farmer.talent_more >= 0 ? '+' + farmer.talent_more : farmer.talent_more }})</span>
 				<span class="level">• {{ $t('main.level_n', [farmer.total_level]) }}</span>
 				<v-btn class="expand" icon small @click="expand_leeks = !expand_leeks">
-					<v-icon v-if="expand_leeks">expand_less</v-icon>
-					<v-icon v-else>expand_more</v-icon>
+					<v-icon v-if="expand_leeks">mdi-chevron-up</v-icon>
+					<v-icon v-else>mdi-chevron-down</v-icon>
 				</v-btn>
 				<table v-if="expand_leeks" class="leeks">
 					<tr>

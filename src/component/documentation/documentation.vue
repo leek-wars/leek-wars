@@ -24,8 +24,8 @@
 					<input v-model="query" type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
 				</div>
 				<div class="tab action" icon="search" link="/search" @click="toggleLarge">
-					<i v-if="LeekWars.large" class="material-icons">fullscreen_exit</i>
-					<i v-else class="material-icons">fullscreen</i>
+					<v-icon v-if="LeekWars.large">mdi-fullscreen-exit</v-icon>
+					<v-icon v-else>mdi-fullscreen</v-icon>
 				</div>
 			</div>
 		</div>

@@ -7,7 +7,7 @@
 					{{ $t('garden.category_battle_royale') }}
 					<b class="progress">{{ LeekWars.battleRoyale.progress }} / 10</b>
 				</div>
-				<i v-ripple class="material-icons" @click="quit">clear</i>
+				<v-icon class="close" @click="quit">mdi-close</v-icon>
 			</div>
 			<div v-if="expanded" class="content" :class="{expanded}">
 				<loader v-if="LeekWars.battleRoyale.progress == 0" />
@@ -85,14 +85,14 @@
 			overflow: hidden;
 			text-overflow: ellipsis;
 		}
-		i {
-			padding: 8px;
-		}
 		.v-icon {
 			color: white;
 			padding: 0;
 			margin-right: 2px;
 			margin-bottom: 1px;
+		}
+		.close {
+			padding: 8px;
 		}
 	}
 </style>

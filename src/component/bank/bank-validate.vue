@@ -20,7 +20,7 @@
 				</h4>
 				<br><br><br>
 				<router-link to="/bank">
-					<v-btn color="primary"><i class="material-icons">undo</i> {{ $t('back_to_bank') }}</v-btn>
+					<v-btn color="primary"><v-icon>mdi-undo</v-icon> {{ $t('back_to_bank') }}</v-btn>
 				</router-link>
 				<br><br>
 			</panel>
@@ -34,7 +34,7 @@
 				<img src="/image/notgood.png"><br><br>
 				<h4>{{ $t('payment_fail_reason', [$t(reason)]) }}</h4>
 				<br>
-				<router-link to="/bank"><v-btn>{{ $t('back_to_bank') }}</v-btn></router-link>
+				<router-link to="/bank"><v-btn>{{ $t('bank.back_to_bank') }}</v-btn></router-link>
 			</panel>
 		</div>
 	</div>
