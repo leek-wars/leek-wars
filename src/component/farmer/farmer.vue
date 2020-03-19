@@ -313,7 +313,7 @@
 		<div class="column12">
 			<panel :title="$t('leeks')">
 				<loader v-if="!farmer" />
-				<div v-else>
+				<div v-else class="leeks">
 					<rich-tooltip-leek v-for="leek in farmer.leeks" :id="leek.id" :key="leek.id" v-slot="{ on }">
 						<router-link v-ripple :to="'/leek/' + leek.id" class="leek">
 							<div v-on="on">
@@ -890,6 +890,11 @@
 		.grade.contributor {
 			background: #009c1d;
 		}
+	}
+	#app.app .leeks {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+		align-items: flex-end;
 	}
 	.leek {
 		text-align: center;
