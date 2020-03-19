@@ -325,8 +325,10 @@
 		color: #333;
 	}
 	.text.large-emojis ::v-deep .emoji {
-		font-size: 28px;
+		font-size: 26px;
 		line-height: 34px;
+		width: 30px;
+		height: 30px;
 	}
 	.right {
 		font-size: 13px;

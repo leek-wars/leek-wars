@@ -98,7 +98,7 @@ Vue.component('title-picker', TitlePicker)
 
 Vue.directive('autostopscroll', {
 	inserted: (el, binding) => {
-		const top = binding.value === 'top' || !binding.value 
+		const top = binding.value === 'top' || !binding.value
 		const bottom = binding.value === 'bottom' || !binding.value
 		el.addEventListener("wheel", (e: MouseWheelEvent) => {
 			if ((top && e.deltaY < 0 && el.scrollTop === 0) || (bottom && e.deltaY > 0 && Math.abs(el.scrollTop - (el.scrollHeight - el.offsetHeight)) < 1)) {
@@ -125,7 +125,16 @@ Vue.directive('code', {
 Vue.directive('large-emojis', {
 	inserted: (el) => {
 		if (!el.classList.contains('large-emojis')) {
-			if (el.querySelectorAll('.emoji').length === 1) {
+			const firstChild = el.childNodes[0]
+			let onlyEmojis = false
+			if (firstChild) {
+				if (firstChild.nodeType === Node.ELEMENT_NODE) {
+					onlyEmojis = true
+				} else if (firstChild.nodeType === Node.TEXT_NODE) {
+					onlyEmojis = firstChild.textContent!.length === 0
+				}
+			}
+			if (onlyEmojis) {
 				el.classList.add('large-emojis')
 			}
 		}
@@ -266,7 +275,7 @@ const vueMain = new Vue({
 		LeekWars.sfwInit()
 		LeekWars.setFavicon()
 		LeekWars.initChats()
-		
+
 		// Keep connected
 		setInterval(() => {
 			store.commit('last-connection', LeekWars.time)
