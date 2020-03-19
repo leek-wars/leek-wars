@@ -1,13 +1,31 @@
 <template lang="html">
 	<div class="help">
 		<div class="page-header page-bar">
-			<h1>{{ $t('title') }}</h1>
+			<h1>
+				<breadcrumb :items="breadcrumb_items" :raw="true" />
+			</h1>
+			<div v-if="!LeekWars.mobile" class="tabs">
+				<router-link to="/help/tutorial">
+					<div class="tab">
+						<v-icon>mdi-laptop</v-icon>
+						{{ $t('main.tutorial') }}
+					</div>
+				</router-link>
+				<router-link to="/help/documentation">
+					<div class="tab">
+						<v-icon>mdi-book-open-variant</v-icon>
+						{{ $t('main.documentation') }}
+					</div>
+				</router-link>
+			</div>
 		</div>
 		<panel class="first">
 			<div slot="content" class="wrapper">
 				<center>
 					<img src="/image/signup_illustration.png">
+					<br><br>
 					<h2>{{ $t('welcome') }}</h2>
+					<br>
 				</center>
 
 				<i18n tag="p" path="intro">
@@ -261,12 +279,20 @@
 <script lang="ts">
 	import { LeekWars } from '@/model/leekwars'
 	import { Component, Vue } from 'vue-property-decorator'
+	import Breadcrumb from '../forum/breadcrumb.vue'
 	
-	@Component({ name: "general_help", i18n: {} })
+	@Component({ name: "general_help", i18n: {}, components: { Breadcrumb } })
 	export default class GeneralHelp extends Vue {
 		created() {
-			LeekWars.setTitle(this.$t('general_help.title'))
+			LeekWars.setTitle(this.$t('title'))
 			this.$root.$emit('loaded')
+		}
+
+		get breadcrumb_items() {
+			return [
+				{name: this.$t('main.help'), link: '/help'},
+				{name: this.$t('title'), link: '/help/general'}
+			]
 		}
 	}
 </script>

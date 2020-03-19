@@ -1,7 +1,23 @@
 <template>
 	<div class="tutorial">
 		<div class="page-header page-bar">
-			<h1>{{ $t('title') }}</h1>
+			<h1>
+				<breadcrumb :items="breadcrumb_items" :raw="true" />
+			</h1>
+			<div class="tabs">
+				<router-link to="/help/general">
+					<div class="tab">
+						<v-icon>mdi-help-circle-outline</v-icon>
+						{{ $t('main.general_help') }}
+					</div>
+				</router-link>
+				<router-link to="/help/documentation">
+					<div class="tab">
+						<v-icon>mdi-book-open-variant</v-icon>
+						{{ $t('main.documentation') }}
+					</div>
+				</router-link>
+			</div>
 		</div>
 
 		<panel class="first">
@@ -850,9 +866,10 @@
 <script lang="ts">
 	import { LeekWars } from '@/model/leekwars'
 	import { Component, Vue } from 'vue-property-decorator'
+	import Breadcrumb from '../forum/breadcrumb.vue'
 	import Screen from './screen.vue'
-	
-	@Component({ name: 'tutorial', i18n: {}, components: { Screen } })
+
+	@Component({ name: 'tutorial', i18n: {}, components: { Screen, Breadcrumb } })
 	export default class Tutorial extends Vue {
 		values = ['false', 'true', '0', '1', '12', '" "', '"0"', '"1"', '"12"', '"lama"',
 					'"true"', '"false"', '[]', '[0]', '[1]', '[12]', '[1,2,3]', 'null']
@@ -877,6 +894,14 @@
 			'                 X', // null
 		]
 		trophy: boolean = false
+
+		get breadcrumb_items() {
+			return [
+				{name: this.$t('main.help'), link: '/help'},
+				{name: this.$t('title'), link: '/help/tutorial'}
+			]
+		}
+
 		created() {
 			LeekWars.setTitle(this.$t('tutorial.title'))
 			window.addEventListener('scroll', this.scroll)
