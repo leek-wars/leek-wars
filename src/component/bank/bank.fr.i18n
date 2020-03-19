@@ -1,23 +1,6 @@
 {
-	"buy_with": "Acheter avec",
 	"description": "La banque vous propose d'obtenir des <b>cristaux</b> <span class='crystal'></span>, la deuxième monnaie de Leek Wars, vous permettant d'acheter ensuite des potions et d'autres objets purement décoratifs et <b>n'influençant pas</b> sur votre puissance en combat. <br>\nOffrez-vous une potion de couleur pour votre poireau et soutenez Leek Wars !",
 	"pack_of_n_crystals": "Pack de <b>{0}</b> cristaux",
-	"payment_cancelled": "Vous avez annulé le paiement",
-	"payment_no_code": "Pas de code",
-	"payment_wrong_code": "Code non valide",
 	"paypal_description": "Achat de {0} cristaux pour {1} €",
-	"title": "Banque des cristaux",
-	"paypal_message": "Cliquer sur le bouton pour commencer l'achat",
-	"purshase_title": "Achat de <b>{0}</b> cristaux avec <i>{1}</i>",
-	"purshase_title_text": "Achat de {0} cristaux avec {1}",
-	"back_to_bank": "Retour à la banque",
-	"payment_fail": "Paiement {0} échoué.",
-	"payment_fail_reason": "Le paiement a échoué : {0}",
-	"payment_success": "Paiement {0} validé",
-	"you_earn_n_crystals": "Vous avez obtenu {crystals}.",
-	"no_running_payment": "pas de paiement en cours",
-	"failed_to_execute_payment_wrong_code": "le code que vous avez entré n'est pas valide",
-	"failed_to_execute_payment": "le paiement n'a pas fonctionné ou a été annulé",
-	"thank_you": "Merci",
-	"for_your_support": "pour votre support !"
+	"title": "Banque des cristaux"
 }

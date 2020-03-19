@@ -1,23 +1,6 @@
 {
-	"buy_with": "Buy with",
 	"description": "The bank offers you the possibility to get <b>crystals</b> <span class='crystal'></span>, the second currency of Leek Wars, that allows you to buy potions and other purely cosmetic items <b>which do not influence</b> your power in combat. Support Leek Wars by offering yourself a color potion for your leek!",
 	"pack_of_n_crystals": "Pack of <b>{0}</b> crystals",
-	"payment_cancelled": "You canceled the payment",
-	"payment_no_code": "No code",
-	"payment_wrong_code": "Invalid code",
 	"paypal_description": "Purchase {0} crystals for {1} €",
-	"title": "Crystal bank",
-	"paypal_message": "Click on the button to start the purchase",
-	"purshase_title": "Purchase of <b>{0}</b> crystals with <i>{1}</i>",
-	"purshase_title_text": "Purchase of {0} crystals with {1}",
-	"back_to_bank": "Back to bank",
-	"payment_fail": "{0} payment failed.",
-	"payment_fail_reason": "Payment has failed: {0}",
-	"payment_success": "{0} payment validated!",
-	"you_earn_n_crystals": "You got {crystals}.",
-	"no_running_payment": "no running paiement",
-	"failed_to_execute_payment_wrong_code": "the code you entered is not valid",
-	"failed_to_execute_payment": "the payment did not work or was cancelled",
-	"thank_you": "Thank you",
-	"for_your_support": "for your support!"
+	"title": "Crystal bank"
 }

@@ -1,0 +1,15 @@
+{
+	"thank_you": "Thank you",
+	"for_your_support": "for your support!",
+	"you_earn_n_crystals": "You got {crystals}.",
+	"back_to_bank": "Back to bank",
+	"payment_fail": "{0} payment failed.",
+	"payment_fail_reason": "Payment has failed: {0}",
+	"payment_success": "{0} payment validated!",
+	"no_running_payment": "no running paiement",
+	"failed_to_execute_payment_wrong_code": "the code you entered is not valid",
+	"failed_to_execute_payment": "the payment did not work or was cancelled",
+	"payment_cancelled": "You canceled the payment",
+	"payment_no_code": "No code",
+	"payment_wrong_code": "Invalid code"
+}
