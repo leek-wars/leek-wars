@@ -29,13 +29,13 @@
 				</a>
 			</div>
 		</div>
-		
+
 		<panel class="first">
 			<div class="center">
 				<img class="illustration" src="/image/about/illustration.png">
 				<br>
 				<h2 class="title">Leek Wars</h2>
-				<h4>{{ $t('version_n', [LeekWars.version]) }}</h4>
+				<h4>{{ $t('version_n', [version]) }}</h4>
 				<br>
 				<a href="https://www.facebook.com/LeekWars">
 					<img height="28" src="image/about/facebook_like.png">
@@ -45,17 +45,17 @@
 				<iframe class="twitter-button" allowtransparency="true" frameborder="0" scrolling="no" src="//platform.twitter.com/widgets/follow_button.html?screen_name=LeekWars&size=l" width="250" height="28"></iframe>
 			</div>
 		</panel>
-		
+
 		<panel :title="$t('leekwars')">
 			<p v-html="$t('leekwars_content')"></p>
 		</panel>
-		
+
 		<panel :title="$t('why')">
 			<p v-html="$t('why_1')"></p>
 			<br>
 			<p v-html="$t('why_2')"></p>
 		</panel>
-		
+
 		<panel :title="$t('team')">
 			<div class="devs">
 				<router-link to="/farmer/1">
@@ -75,7 +75,7 @@
 				</router-link>
 			</div>
 		</panel>
-		
+
 		<panel :title="$t('we_talk_about_leeks')">
 			<p>{{ $t('thanks_about_articles') }}</p>
 			<div class="links">
@@ -86,7 +86,7 @@
 				</div>
 			</div>
 		</panel>
-		
+
 		<panel :title="$t('social_networks')">
 			<p>{{ $t('follow_on_social_networks') }}</p>
 			<div class="social">
@@ -110,7 +110,7 @@
 				</a>
 			</div>
 		</panel>
-		
+
 		<panel :title="$t('languages_libraries_tools')">
 			<p>{{ $t('tools_list') }}</p>
 			<div v-for="(category, c) in technologies" :key="c" class="techno">
@@ -127,13 +127,13 @@
 				</div>
 			</div>
 		</panel>
-		
+
 		<panel :title="$t('contact')">
 			<i18n path="contact_text" tag="p">
 				<a slot="contact" class="green" target="_blank" rel="noopener" href="mailto:contact@leekwars.com">contact@leekwars.com</a>
 			</i18n>
 		</panel>
-		
+
 		<panel :title="$t('links')" class="last">
 			<router-link to="/statistics" class="green">{{ $t('main.statistics') }}</router-link>
 			<br>
@@ -208,6 +208,11 @@
 				{ name: "FileZilla", link: "https://filezilla-project.org/", image: "filezilla.svg" },
 			]},
 		]
+
+		get version() {
+			const v = LeekWars.version.split('.')
+			return v[0] + '.' + v[1] + v[2]
+		}
 
 		created() {
 			LeekWars.setTitle(this.$i18n.t('about.title'))
