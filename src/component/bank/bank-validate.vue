@@ -43,9 +43,9 @@
 <script lang="ts">
 	import { LeekWars } from '@/model/leekwars'
 	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
+
 	@Component({
-		name: 'bank-validate', i18n: {},
-		props: ['success']
+		name: 'bank-validate', i18n: {}
 	})
 	export default class BankValidate extends Vue {
 		@Prop() success!: boolean
