@@ -111,7 +111,7 @@ class Notification {
 			const leekName = params[3]
 			const rounds = ['sixteenth_final', 'eighth_final', 'quarter_final', 'semi_final', 'final']
 			const lastRoundName = lastRound < 5 ? rounds[lastRound] : rounds[4]
-			return new Notification(data, "/tournament/" + tournamentID, "tournament_end", [leekName, i18n.t('tournament.' + lastRoundName) as string])
+			return new Notification(data, "/tournament/" + tournamentID, "tournament_end", [leekName, i18n.t('main.' + lastRoundName) as string])
 		} else if (type === NotificationType.CHALLENGE) {
 			const leekName = leeks[parseInt(params[0], 10)].name
 			const fightID = params[1]
@@ -142,7 +142,7 @@ class Notification {
 			const lastRound = parseInt(params[1], 10)
 			const rounds = ['sixteenth_final', 'eighth_final', 'quarter_final', 'semi_final', 'final']
 			const lastRoundName = lastRound < 5 ? rounds[lastRound] : rounds[4]
-			return new Notification(data, "/tournament/" + tournamentID, "tournament_end", [i18n.t('tournament.' + lastRoundName) as string])
+			return new Notification(data, "/tournament/" + tournamentID, "tournament_end", [i18n.t('main.' + lastRoundName) as string])
 		} else if (type === NotificationType.NEW_WARNING) {
 			return new Notification(data, "/farmer", "warning")
 		} else if (type === NotificationType.TEAM_TOURNAMENT_WIN) {
@@ -155,7 +155,7 @@ class Notification {
 			const compoName = params[2]
 			const rounds = ['sixteenth_final', 'eighth_final', 'quarter_final', 'semi_final', 'final']
 			const lastRoundName = lastRound < 5 ? rounds[lastRound] : rounds[4]
-			return new Notification(data, "/tournament/" + tournamentID, "tournament_end", [compoName, i18n.t('tournament.' + lastRoundName) as string])
+			return new Notification(data, "/tournament/" + tournamentID, "tournament_end", [compoName, i18n.t('main.' + lastRoundName) as string])
 		} else if (type === NotificationType.REPORTING_PROCESSED) {
 			const targetName = params[0]
 			return new Notification(data, null, "reporting_processed", [targetName])
