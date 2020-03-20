@@ -178,6 +178,8 @@ class Textures {
 	public lightning_bulb_back: Texture
 	public metallic_bulb_front: Texture
 	public metallic_bulb_back: Texture
+	public wizard_bulb_front: Texture
+	public wizard_bulb_back: Texture
 	public arena: Texture
 	public pyramid: Texture
 	public grass: Texture
@@ -411,6 +413,8 @@ class Textures {
 		this.lightning_bulb_back = new Texture(game, env.STATIC + 'image/bulb/lightning_bulb_back.png', true, SHADOW_QUALITY)
 		this.metallic_bulb_front = new Texture(game, env.STATIC + 'image/bulb/metallic_bulb_front.png', true, SHADOW_QUALITY)
 		this.metallic_bulb_back = new Texture(game, env.STATIC + 'image/bulb/metallic_bulb_back.png', true, SHADOW_QUALITY)
+		this.wizard_bulb_front = new Texture(game, env.STATIC + 'image/bulb/wizard_bulb_front.png', true, SHADOW_QUALITY)
+		this.wizard_bulb_back = new Texture(game, env.STATIC + 'image/bulb/wizard_bulb_back.png', true, SHADOW_QUALITY)
 
 		this.tp = new Texture(game, env.STATIC + 'image/charac/small/tp.png')
 		this.mp = new Texture(game, env.STATIC + 'image/charac/small/mp.png')
