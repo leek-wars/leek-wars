@@ -1,5 +1,5 @@
 <template>
-	<v-menu ref="menu" :close-on-content-click="false" :disabled="disabled || id <= 0" :nudge-width="expand_leeks ? 500 : 200" :nudge-top="bottom ? 0 : 6" :open-delay="_open_delay" :close-delay="_close_delay" :top="!bottom" :bottom="bottom" :transition="instant ? 'none' : 'my-transition'" :open-on-hover="!locked" offset-y @input="open($event)">
+	<v-menu ref="menu" :close-on-content-click="false" offset-overflow :disabled="disabled || id <= 0" :nudge-width="expand_leeks ? 500 : 200" :nudge-top="bottom ? 0 : 6" :open-delay="_open_delay" :close-delay="_close_delay" :top="!bottom" :bottom="bottom" :transition="instant ? 'none' : 'my-transition'" :open-on-hover="!locked" offset-y @input="open($event)">
 		<template v-slot:activator="{ on }">
 			<slot :on="on"></slot>
 		</template>
@@ -21,7 +21,7 @@
 							<lw-title v-if="farmer.title.length" :title="farmer.title" />
 							<div class="spacer"></div>
 							<v-btn v-if="!$store.state.farmer || id != $store.state.farmer.id" icon small @click="sendMessage()">
-								<v-icon>chat</v-icon>
+								<v-icon>mdi-chat</v-icon>
 							</v-btn>
 						</span>
 						<div>
@@ -90,7 +90,11 @@
 		get _close_delay() {
 			return this.instant ? 0 : 200
 		}
-
+		@Watch('id')
+		update() {
+			this.farmer = null
+			this.content_created = false
+		}
 		open(v: boolean) {
 			this.expand_leeks = localStorage.getItem('richtooltipfarmer/expanded') === 'true'
 			if (this.content_created) { return }
