@@ -108,7 +108,6 @@
 		first_farmer!: number
 		getDelay: any
 		error: any
-		queue: any
 		playerWidth: number = 0
 		playerHeight: number = 0
 		FightType = FightType
