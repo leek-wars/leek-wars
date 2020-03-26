@@ -21,6 +21,8 @@ enum EntityDirection {
 	WEST = 3,
 }
 const MOVE_DELAY = 3
+const MOVE_DURATION = 25
+const MOVE_HEIGHT = 17
 
 class Entity {
 	// Infos générales
@@ -76,7 +78,9 @@ class Entity {
 	// Vitesse de déplacement
 	public speed = 0.04
 	public moveDelay = 0
-	public jumpHeight = 25
+	public moveDuration = 0
+	public moveAnim = 0
+	public jumpHeight = 0
 	// Drawing
 	public drawID: number | null = null
 	public height: number = 100
@@ -166,12 +170,6 @@ class Entity {
 		this.angle = this.front ? Math.PI / 7 : -Math.PI / 7
 	}
 
-	public jump() {
-		if (this.dz === 0) {
-			this.dz = this.jumpForce
-		}
-	}
-
 	public move(path: Cell[]) { // Move along a path
 		this.path = [] as Cell[]
 		for (const cell of path) {
@@ -183,13 +181,20 @@ class Entity {
 	public pathNext() {
 		if (this.path.length === 0) {
 			this.game.actionDone()
-			return
+		} else {
+			const cell = this.path[0]
+			this.jumpToCell(cell)
+			this.path.shift() // Supprime la première case
 		}
+	}
+
+	public jumpToCell(cell: Cell) {
+
 		// Set destination
 		this.rx = this.x
 		this.ry = this.y
 
-		const cell = this.path[0]
+		const distance = Math.abs(this.cell!.x - cell.x) + Math.abs(this.cell!.y - cell.y)
 		this.cell = cell
 
 		const pos = this.game.ground.cellToXY(cell)
@@ -197,9 +202,11 @@ class Entity {
 		this.dx = pos.x
 		this.dy = pos.y
 
+		this.moveDuration = distance * MOVE_DURATION
+		this.moveAnim = this.moveDuration
+
 		// Jump
-		this.jump()
-		this.game.S.move.play()
+		this.jumpHeight = Math.pow(distance, 1.6) * MOVE_HEIGHT
 		// Orientation
 		if (this.dx > this.rx) {
 			if (this.dy > this.ry) {
@@ -219,7 +226,6 @@ class Entity {
 		if (this.drawID) {
 			this.game.moveDrawableElement(this, this.drawID, this.ry, this.dy)
 		}
-		this.path.shift() // Supprime la première case
 	}
 
 	public looseMP(mp: number, jump: boolean) {
@@ -419,8 +425,6 @@ class Entity {
 
 		if (!this.dead) {
 
-			let pathNext = false
-
 			// Animation
 			this.frame += dt / Math.max(1, this.game.speed / 6)
 			this.oscillation = 1 + Math.cos(this.frame / 17) / 40
@@ -430,47 +434,32 @@ class Entity {
 
 				this.moveDelay -= dt
 
-			} else {
+			} else if (this.moveAnim > 0) {
 
-				let check = false
-
-				if (this.x !== this.dx) {
-					if (this.x < this.dx) { this.x += this.speed * dt }
-					if (this.x > this.dx) { this.x -= this.speed * dt }
-
-					// Saut
-					this.z = this.baseZ + (0.5 - Math.abs((this.dx + this.ox) / 2 - this.x)) * 2 * this.jumpHeight
-					check = true
-				}
-				if (this.y !== this.dy) {
-					if (this.y < this.dy) { this.y += this.speed * dt }
-					if (this.y > this.dy) { this.y -= this.speed * dt }
-
-					// Saut
-					this.z = this.baseZ + (0.5 - Math.abs((this.dy + this.ry) / 2 - this.y)) * 2 * this.jumpHeight
-					check = true
-				}
-
-				if (check && Math.abs(this.x - this.dx) <= dt * this.speed &&
-					Math.abs(this.y - this.dy) <= dt * this.speed) { // Arrivé
-
+				this.moveAnim -= dt
+				if (this.moveAnim <= 0) {
+					// Arrivé
+					this.game.S.move.play()
 					this.x = this.dx
 					this.y = this.dy
 					this.z = this.baseZ
+					this.computeOrginPos()
+					// Is on top ?
+					this.isTop = this.y <= 4
 
 					this.moveDelay = MOVE_DELAY
-					pathNext = true
+					this.pathNext()
+
+				} else {
+
+					const progress = 1 - this.moveAnim / this.moveDuration
+
+					this.z = Math.pow(Math.cos((Math.PI * (progress - 0.5))), 1) * this.jumpHeight
+					this.x = this.rx + (this.dx - this.rx) * progress
+					this.y = this.ry + (this.dy - this.ry) * progress
+					this.computeOrginPos()
 				}
 			}
-
-			// Compute origin position
-			this.computeOrginPos()
-
-			// Is on top ?
-			this.isTop = this.y <= 4
-
-			// Start new path
-			if (pathNext) { this.pathNext() }
 		}
 
 		// Update bubble
@@ -703,7 +692,7 @@ class Entity {
 		const width = Math.max(140, ctx.measureText(text).width + 14)
 		const height = 19
 		const barHeight = 8
-		
+
 		const active = this === this.game.selectedEntity || this === this.game.hoverEntity || this === this.game.mouseEntity
 
 		// Fond

@@ -9,6 +9,7 @@ import { Position } from './position'
 abstract class ChipAnimation {
 	public game: Game
 	public done: boolean = false
+	public willFinish: boolean = false
 	public sound: Sound | null
 	public cell!: Cell
 	public targets: Entity[] | undefined
@@ -226,7 +227,6 @@ class Cure extends ChipHealAnimation {
 }
 class DevilStrike extends ChipAnimation {
 	public delay = 0
-	public willFinish = false
 	public x!: number
 	public y!: number
 	constructor(game: Game) {
@@ -837,4 +837,63 @@ class Plasma extends ChipAnimation {
 	}
 }
 
-export { ChipAnimation, Adrenaline, Armor, Acceleration, Antidote, Armoring, BallAndChain, Bandage, Bark, Burning, Carapace, Collar, Covetousness, Cure, DevilStrike, Doping, Drip, Ferocity, Fertilizer, Flame, Flash, Fortress, Fracture, Helmet, Ice, Iceberg, Inversion, LeatherBoots, Liberation, Lightning, Loam, Meteorite, Mirror, Motivation, Pebble, Plague, Plasma, Precipitation, Protein, Punishment, Rage, Rampart, Reflexes, Regeneration, Remission, Rock, Rockfall, SevenLeagueBoots, Shield, Shock, SlowDown, Solidification, Soporific, Spark, Stalactite, Steroid, Stretching, Teleportation, Thorn, Toxin, Tranquilizer, Vaccine, Vampirization, Venom, Wall, WarmUp, Whip, WingedBoots }
+class Alteration extends ChipAnimation {
+	public delay = 2
+	public directions: number[] = []
+	constructor(game: Game) {
+		super(game, game.S.alteration, 60)
+	}
+	public launch(launchPos: Position, position: Position, targets: Entity[], targetCell: Cell) {
+		super.launch(launchPos, position, targets, targetCell)
+		this.directions = []
+		for (let i = 0; i < 10; ++i) {
+			this.directions.push((2 * Math.PI * i) / 10 + (Math.random() * (Math.PI / 4)))
+		}
+	}
+	public update(dt: number) {
+		super.update(dt)
+		if (!this.targets) { return  }
+		this.delay -= dt
+		if (this.delay < 0) {
+			for (const direction of this.directions) {
+				const t = this.targets[0]
+				const dx = Math.cos(direction) * 2 * 1.3
+				const dy = Math.sin(direction) * 1.3
+				const angle = Math.atan2(dy, dx)
+				const x = t.ox + dx * 5
+				const y = t.oy + dy * 5
+				const z = 50
+				this.game.particles.addImage(x, y, z, dx, dy, 0, angle, this.game.T.alteration, 50)
+			}
+			this.delay = 4
+		}
+	}
+}
+
+class Jump extends ChipAnimation {
+	public teleported = false
+	public cell!: Cell
+	public launchPos!: Position
+	public targetPos: any
+	public target!: Entity
+	constructor(game: Game) {
+		super(game, game.S.move, 70)
+	}
+	public launch(launchPos: Position, targetPos: Position, targets: Entity[], targetCell: Cell, caster: Entity) {
+		super.launch(launchPos, targetPos, targets, targetCell)
+		this.cell = targetCell
+		this.target = targets[0]
+		this.launchPos = launchPos
+		this.targetPos = targetPos
+
+		caster.jumpToCell(targetCell)
+	}
+	public update(dt: number) {
+		this.duration -= dt
+		if (this.duration <= 0) {
+			this.willFinish = true
+		}
+	}
+}
+
+export { Alteration, ChipAnimation, Adrenaline, Armor, Acceleration, Antidote, Armoring, BallAndChain, Bandage, Bark, Burning, Carapace, Collar, Covetousness, Cure, DevilStrike, Doping, Drip, Ferocity, Fertilizer, Flame, Flash, Fortress, Fracture, Helmet, Ice, Iceberg, Inversion, Jump, LeatherBoots, Liberation, Lightning, Loam, Meteorite, Mirror, Motivation, Pebble, Plague, Plasma, Precipitation, Protein, Punishment, Rage, Rampart, Reflexes, Regeneration, Remission, Rock, Rockfall, SevenLeagueBoots, Shield, Shock, SlowDown, Solidification, Soporific, Spark, Stalactite, Steroid, Stretching, Teleportation, Thorn, Toxin, Tranquilizer, Vaccine, Vampirization, Venom, Wall, WarmUp, Whip, WingedBoots }
