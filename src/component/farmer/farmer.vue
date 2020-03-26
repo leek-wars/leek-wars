@@ -634,7 +634,7 @@
 			if (!this.farmer) { return }
 			LeekWars.get('moderation/get-warnings/' + this.farmer.id).then(data => {
 				if (this.farmer) {
-					this.farmer.warnings = data.warnings
+					Vue.set(this.farmer, 'warnings', data.warnings)
 				}
 			})
 		}
