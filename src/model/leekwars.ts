@@ -490,6 +490,7 @@ const LeekWars = {
 	potionsBySkin: Object.freeze(POTIONS_BY_SKIN),
 	keywords: [] as Keyword[],
 	characteristics: Object.freeze(['life', 'strength', 'wisdom', 'agility', 'resistance', 'science', 'magic', 'frequency', 'mp', 'tp']),
+	characteristics_table: Object.freeze(['life', 'science', 'strength', 'magic', 'wisdom', 'frequency', 'agility', 'mp', 'resistance', 'tp']),
 	effectRawOpened: false,
 }
 

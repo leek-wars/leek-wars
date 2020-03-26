@@ -6,13 +6,11 @@
 		<center><div v-if="totalCapital" :class="{zero: capital == 0}" class="capital rounded4">{{ $t('leek.n_capital', [capital]) }}</div></center>
 
 		<div v-for="c in LeekWars.characteristics" :key="c" class="charac">
-			<tooltip>
-				<template v-slot:activator="{ on }">
+			<characteristic-tooltip v-slot="{ on }" :characteristic="c" :value="leek[c] + bonuses[c]" :leek="leek" :test="false">
+				<template v-on="on">
 					<img :src="'/image/charac/' + c + '.png'" v-on="on">
 				</template>
-				<b>{{ $t('leek.' + c) }}</b><br>
-				{{ $t('leek.' + c + '_description') }}
-			</tooltip>
+			</characteristic-tooltip>
 			<div>
 				<span :class="'stat color-' + c">{{ leek[c] + bonuses[c] }}</span>
 				<span v-if="bonuses[c]" class="sup">&nbsp;(+{{ bonuses[c] }})</span>
@@ -21,7 +19,7 @@
 						<template v-slot:activator="{ on }">
 							<span :q="cost" :class="{locked: costs[c + cost].cost > capital}" class="add" @click="add(c, cost)" v-on="on"></span>
 						</template>
-						{{ costs[c + cost].cost + ' capital ⇔ ' + costs[c + cost].bonus + ' ' + $t('leek.' + c) }}
+						{{ costs[c + cost].cost + ' capital ⇔ ' + costs[c + cost].bonus + ' ' + $t('characteristic.' + c) }}
 					</tooltip>
 				</div>
 			</div>
@@ -43,6 +41,7 @@
 	import { Leek } from '@/model/leek'
 	import { LeekWars } from '@/model/leekwars'
 	import { Component, Prop, Vue } from 'vue-property-decorator'
+	import CharacteristicTooltip from './characteristic-tooltip.vue'
 
 	const COSTS: {[key: string]: any} = {
 		life : [
@@ -112,7 +111,7 @@
 		]
 	}
 
-	@Component({ name: 'capital-dialog' })
+	@Component({ name: 'capital-dialog', components: { "characteristic-tooltip": CharacteristicTooltip } })
 	export default class CapitalDialog extends Vue {
 		@Prop() value!: boolean
 		@Prop({required: true}) leek!: Leek

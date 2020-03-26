@@ -5,7 +5,7 @@
 				<img class="icon" :src="'/image/charac/small/' + icon + '.png'" v-on="on">
 			</template>
 			<i18n path="effect.increased_by">
-				<b slot="charac">{{ $t('leek.' + icon) }}</b>
+				<b slot="charac">{{ $t('characteristic.' + icon) }}</b>
 			</i18n>
 		</tooltip>
 
@@ -24,7 +24,7 @@
 			</template>
 		</span>
 		<b v-if="effect.modifiers & EffectModifier.MULTIPLIED_BY_TARGETS">&nbsp;{{ $t('effect.multiplied_target') }}</b>
-		
+
 		<b v-if="effect.turns === -1">{{ $t('effect.infinite') }}</b>
 		<i18n v-else-if="effect.turns > 0" path="effect.on_n_turns">
 			<span slot="turns" v-html="$tc('effect.n_turns', effect.turns)"></span>

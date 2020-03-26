@@ -130,16 +130,17 @@
 					</template>
 				</panel>
 			</div>
+
 			
 			<div class="column4">
-				<panel :title="$t('characteristics')">
+				<panel :title="$t('characteristic.characteristics')">
 					<template v-if="leek && my_leek && leek.capital == 0" slot="actions">
 						<div class="button flat" @click="capitalDialog = true">
 							<v-icon>mdi-star-outline</v-icon>
 						</div>
 					</template>
 					<div slot="content" class="characteristics">
-						<characteristic-tooltip v-for="c in ['life', 'science', 'strength', 'magic', 'wisdom', 'frequency', 'agility', 'mp', 'resistance', 'tp']" :key="c" v-slot="{ on }" :characteristic="c" :value="leek ? leek[c] : 0" :leek="leek" :test="false">
+						<characteristic-tooltip v-for="c in LeekWars.characteristics_table" :key="c" v-slot="{ on }" :characteristic="c" :value="leek ? leek[c] : 0" :leek="leek" :test="false">
 							<div class="characteristic" v-on="on">
 								<img :src="'/image/charac/' + c + '.png'">
 								<span :class="'color-' + c">{{ leek ? leek[c] : '...' }}</span>
