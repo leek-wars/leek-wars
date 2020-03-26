@@ -6,12 +6,13 @@
 		<panel class="first last">
 			<center>
 				<h4>{{ $t('version_n', [LeekWars.cgu_version]) }}</h4>
+				<br>
 			</center>
 			<p>{{ $t('intro') }}</p>
 
 			<h2>{{ $t('acceptation') }}</h2>
 			<p v-html="$t('acceptation_content')"></p>
-			
+
 			<h2>{{ $t('access') }}</h2>
 			<p v-html="$t('access_content')"></p>
 
@@ -56,7 +57,7 @@
 	#app.app h2 {
 		margin-left: 0;
 	}
-	p {
+	::v-deep p {
 		margin-bottom: 10px;
 		margin-left: 20px;
 		margin-right: 20px;
