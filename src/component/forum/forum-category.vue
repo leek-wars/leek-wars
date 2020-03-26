@@ -271,13 +271,13 @@
 		color: black;
 	}
 	.create-popup .topic-name {
-		width: calc(100% - 20px);
+		width: 100%;
 		padding: 10px;
 		font-size: 17px;
 	}
 	.create-popup .topic-message {
-		min-width: calc(100% - 20px);
-		max-width: calc(100% - 20px);
+		min-width: 100%;
+		max-width: 100%;
 		min-height: 100%;
 		height: 180px;
 		max-height: 500px;
