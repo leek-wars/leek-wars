@@ -30,7 +30,7 @@
 						<div v-for="(text, i) in message.texts" :key="i" v-large-emojis v-chat-code-latex class="text" v-html="text"></div>
 						<div class="right">
 							<span :title="LeekWars.formatDateTime(message.time)" class="time">{{ LeekWars.formatTime(message.time) }}</span>
-							<v-menu v-if="!privateMessages" offset-y>
+							<v-menu v-if="!privateMessages && !($store.state.farmer && message.author.id === $store.state.farmer.id)" offset-y>
 								<template v-slot:activator="{ on }">
 									<v-btn text small icon color="grey" v-on="on">
 										<v-icon>mdi-dots-vertical</v-icon>
