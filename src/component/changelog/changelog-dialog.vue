@@ -1,6 +1,6 @@
 <template lang="html">
 	<popup :value="value" :width="800" :full="true" @input="$emit('input', $event)">
-		<v-icon slot="icon">star</v-icon>
+		<v-icon slot="icon">mdi-star</v-icon>
 		<i18n slot="title" path="changelog.version_online">
 			<b v-if="changelog" slot="version">{{ changelog.version_name }}</b>
 		</i18n>
@@ -22,7 +22,7 @@
 	import { LeekWars } from '@/model/leekwars'
 	import { Component, Prop, Vue } from 'vue-property-decorator'
 	import ChangelogVersion from './changelog-version.vue'
-	
+
 	@Component({ name: 'changelog-dialog', i18n: {}, components: { ChangelogVersion } })
 	export default class ChangelogDialog extends Vue {
 		@Prop({required: true}) changelog!: any

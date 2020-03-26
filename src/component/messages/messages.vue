@@ -60,7 +60,7 @@
 		newConversationSent: boolean = false
 		currentID: number | null = null
 		quitDialog: boolean = false
-		actions = [{icon: 'delete', click: () => this.showQuitDialog()}]
+		actions = [{icon: 'mdi-delete', click: () => this.showQuitDialog()}]
 
 		created() {
 			if (!this.env.SOCIAL) {
@@ -81,7 +81,7 @@
 		}
 		isNewConversation(): boolean {
 			return 'name' in this.$route.params
-		}	
+		}
 		get newConversation(): Conversation | null {
 			if (!this.newConversation_ && 'name' in this.$route.params) {
 				this.newConversation_ = {id: 0, last_message: this.$t('messages.new_message') as string, farmers: [this.newFarmer]} as Conversation

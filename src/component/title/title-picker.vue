@@ -60,7 +60,7 @@
 					</v-select>
 				</div>
 				<v-btn v-if="noun !== 0 || icon !== 0" text icon @click="clear">
-					<v-icon>clear</v-icon>
+					<v-icon>mdi-close</v-icon>
 				</v-btn>
 			</div>
 		</div>

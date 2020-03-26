@@ -6,13 +6,13 @@
 				<div class="info">{{ fight.date | date }}</div>
 			</div>
 		</div>
-	
+
 		<panel class="first">
 			<div slot="content" class="fight">
 				<player :key="fight_id" :fight-id="fight_id" :required-width="playerWidth" :required-height="playerHeight" @fight="fightLoaded" @resize="resize" />
 			</div>
 		</panel>
-	
+
 		<div v-if="fight" class="fight-info">
 			<center v-if="fight.type === FightType.BATTLE_ROYALE">
 				<span v-for="(farmer, f, i) in fight.farmers1" :key="f">
@@ -69,8 +69,8 @@
 				</tr>
 			</table>
 		</div>
-	
-		<panel v-if="fight" :title="$t('comments') + ' (' + fight.comments.length + ')'">
+
+		<panel v-if="fight" :title="$t('comments') + ' (' + fight.comments.length + ')'" icon="mdi-comment-multiple-outline">
 			<div slot="actions" class="views-counter">
 				{{ $tc('n_views', fight.views) }}
 			</div>

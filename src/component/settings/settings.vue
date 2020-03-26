@@ -3,7 +3,7 @@
 		<div class="page-header page-bar">
 			<h1>{{ $t('title') }}</h1>
 			<div class="tabs">
-				<div class="tab action" icon="power_settings_new" @click="logout">
+				<div class="tab action" icon="mdi-power-settings-new" @click="logout">
 					<v-icon>mdi-power</v-icon>
 					<span>{{ $t('logout') }}</span>
 				</div>
@@ -11,7 +11,7 @@
 		</div>
 		<div class="flex-container">
 			<div class="column6">
-				<panel :title="$t('language')" class="languages">
+				<panel :title="$t('language')" class="languages" icon="mdi-translate">
 					<div v-for="language in LeekWars.languages" :key="language.code" v-ripple :class="{selected: language.code == $i18n.locale}" :lang="language.code" class="language" @click="LeekWars.setLocale(language.code)">
 						<img :src="language.flag">
 						<br>
@@ -20,7 +20,7 @@
 				</panel>
 			</div>
 			<div class="column6">
-				<panel :title="$t('misc_options')">
+				<panel :title="$t('misc_options')" icon="mdi-settings-outline">
 					<table class="misc-settings">
 						<tr id="sfw-button">
 							<td><h4>{{ $t('activate_discrete_mode') }}</h4></td>
@@ -38,7 +38,7 @@
 				</panel>
 			</div>
 			<div class="column6">
-				<panel :title="$t('account')">
+				<panel :title="$t('account')" icon="mdi-account">
 					<div v-ripple class="list-item card" @click="viewChangePassword = !viewChangePassword">
 						<v-icon>mdi-lock-open-outline</v-icon>
 						<span class="label">{{ $t('change_password') }}</span>
@@ -77,7 +77,7 @@
 				</panel>
 			</div>
 			<div class="column6">
-				<panel title="Notifications">
+				<panel title="Notifications" icon="mdi-bell-outline">
 					<span slot="actions" class="push-notifs-button" @click="updatePushNotifications">
 						<span>{{ $t('push_notifications') }}</span>
 						<v-switch :input-value="pushNotifications" hide-details />
@@ -119,7 +119,7 @@
 
 		<div v-if="advanced" class="flex-container">
 			<div class="column6">
-				<panel :title="$t('empty_localstorage')" class="last">
+				<panel :title="$t('empty_localstorage')" class="last" icon="mdi-eraser">
 					<v-btn class="clear-localstorage" @click="clearLocalStorage">{{ $t('empty') }}</v-btn>
 				</panel>
 			</div>
@@ -209,14 +209,14 @@
 			}
 			this.pushNotifications = localStorage.getItem('options/push-notifs') === 'true'
 			LeekWars.setActions([
-				{icon: 'power_settings_new', click: () => this.logout()}
+				{icon: 'mdi-power', click: () => this.logout()}
 			])
 
 			LeekWars.get('settings/get-settings').then(data => {
 				this.sfwMode = localStorage.getItem('sfw') === 'true'
 				this.notifsResults = localStorage.getItem('options/notifs-results') === 'true'
 				this.chatFirst = localStorage.getItem('options/chat-first') === 'true'
-				
+
 				this.settings = data.settings
 
 				LeekWars.setTitle(this.$t('title'), this.$store.state.farmer.name)

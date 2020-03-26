@@ -310,7 +310,7 @@
 					this.fun = false
 					this.pages = data.pages
 					this.ranking = ranking
-					LeekWars.setActions([{icon: 'search', click: () => this.openSearch()}])
+					LeekWars.setActions([{icon: 'mdi-magnify', click: () => this.openSearch()}])
 					LeekWars.setTitle(this.$t('ranking.title'), this.$t('ranking.n_' + this.category + 's', [data.total]))
 					this.$root.$emit('loaded')
 				})

@@ -48,7 +48,7 @@
 				<div v-if="$store.state.farmer && $store.state.farmer.leeks" class="separator"></div>
 
 				<router-link v-ripple to="/editor" class="section" @click.native="clickItem">
-					<v-icon>mdi-code-tags</v-icon>
+					<v-icon>mdi-code-braces</v-icon>
 					<div class="text">{{ $t("main.editor") }}</div>
 				</router-link>
 

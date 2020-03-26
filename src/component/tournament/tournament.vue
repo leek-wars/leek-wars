@@ -8,7 +8,7 @@
 		</div>
 		<panel class="first">
 			<div slot="content" ref="sizer" :class="{zoomed: zoomed}" class="content tournament">
-				
+
 				<loader v-if="!tournament" />
 				<svg v-else :class="{zoomed: zoomed}" :style="{height: zoomed ? height : 'auto'}" class="tournament" viewBox="-485 -400 970 800">
 
@@ -43,7 +43,7 @@
 					<tournament-block :item="sixteenths[7].contestants[0]" :x="-470" :y="300" :size="50" />
 					<tournament-fight :fight="sixteenths[7].fight" :x="-420" :y="310" />
 					<tournament-block :item="sixteenths[7].contestants[1]" :x="-390" :y="300" :size="50" :invert="true" />
-			
+
 					<polyline class="line" points="-405 -340, -405 -370, -320 -370, -320 -335, -300 -335" />
 					<polyline class="line" points="-405 -240, -405 -210, -320 -210, -320 -245, -300 -245" />
 					<polyline class="line" points="-405 -140, -405 -170, -320 -170, -320 -135, -300 -135" />
@@ -82,7 +82,7 @@
 					<tournament-block :item="quarters[1].contestants[0]" :x="-210" :y="105" :size="70" />
 					<tournament-fight :fight="quarters[1].fight" :x="-190" :y="175" />
 					<tournament-block :item="quarters[1].contestants[1]" :x="-210" :y="205" :size="70" :invert="true" />
-	
+
 					<polyline class="line" points="-160 -190, -122.2 -190, -122.5 -110, -80 -110, -80, -95" />
 					<polyline class="line" points="-160 190, -122.2 190, -122.5 110, -80 110, -80, 95" />
 
@@ -177,7 +177,7 @@
 					<tournament-block :item="finals[0].contestants[1]" :x="15" :y="-250" :size="90" :invert="true" />
 
 					<polyline class="line" points="0 -220, 0 -295" />
-					
+
 					<tournament-block :item="tournament.winner.name ? tournament.winner : null" :x="-60" :y="-395" :size="120" />
 				</svg>
 			</div>
@@ -185,7 +185,7 @@
 
 		<div v-show="tooltip" :style="{left: tooltipX + 'px', top: tooltipY + 'px'}" class="tooltip v-tooltip__content">{{ tooltipText }}</div>
 
-		<panel :title="$t('comments')" class="last">
+		<panel :title="$t('comments')" class="last" icon="mdi-comment-multiple-outline">
 			<comments :comments="tournament ? tournament.comments : null" @comment="comment" />
 		</panel>
 	</div>
@@ -199,7 +199,7 @@
 	import { Tournament } from '@/model/tournament'
 	import { Component, Vue, Watch } from 'vue-property-decorator'
 
-	@Component({ name: 'tournament', i18n: {}, components: { 
+	@Component({ name: 'tournament', i18n: {}, components: {
 		'tournament-block': TournamentBlock,
 		'tournament-fight': TournamentFight,
 	} })

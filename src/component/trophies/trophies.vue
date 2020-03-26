@@ -11,15 +11,14 @@
 		</div>
 		<panel class="first">
 			<span class="global-percent">{{ loaded ? Math.floor(100 * count / total) : 0 }}%</span>
-			<span class="global-count">{{ count }} / {{ total }}</span>  
+			<span class="global-count">{{ count }} / {{ total }}</span>
 			<br>
 			<div class="global-bar">
 				<div :style="{width: (loaded ? Math.floor(100 * count / total) : 0) + '%'}" class="bar striked"></div>
 			</div>
 		</panel>
-		<panel v-for="category in categories" :key="category.id">
-			<h2 slot="title">{{ $t('category_' + category.name) }}</h2> 
-
+		<panel v-for="(category, c) in categories" :key="category.id" :icon="icons[c]">
+			<template slot="title">{{ $t('category_' + category.name) }}</template>
 			<template v-if="category.id != 6" slot="actions">
 				<div class="category-bar-wrapper">
 					<div class="stats">{{ progressions[category.id] }} / {{ totals[category.id] }}</div>
@@ -80,6 +79,9 @@
 		title: any = null
 		loaded: boolean = false
 		hide_unlocked: boolean = localStorage.getItem('options/hide-unlocked-trophies') === 'true'
+		icons = [
+			'mdi-trophy-variant-outline', 'mdi-sword-cross', 'mdi-trophy-outline', 'mdi-code-braces', 'mdi-emoticon-outline', 'mdi-basket-outline', 'mdi-chat-outline', 'mdi-star-outline'
+		]
 
 		get id() {
 			return this.$route.params.id || (this.$store.state.farmer ? this.$store.state.farmer.id : null)

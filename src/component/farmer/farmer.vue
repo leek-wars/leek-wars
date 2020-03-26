@@ -35,7 +35,7 @@
 						<span>{{ $t('garden') }}</span>
 						<v-switch :input-value="farmer.in_garden" hide-details />
 					</div>
-					<div class="tab action" icon="power_settings_new" @click="logout">
+					<div class="tab action" @click="logout">
 						<v-icon>mdi-power</v-icon>
 						<span>{{ $t('logout') }}</span>
 					</div>
@@ -114,7 +114,7 @@
 					</div>
 				</panel>
 			</div>
-			
+
 			<div class="column4">
 				<panel>
 					<div slot="content" class="content stats">
@@ -152,7 +152,7 @@
 							</template>
 							{{ $t('ratio') }} : {{ farmer.ratio }}
 						</tooltip>
-		
+
 						<table v-if="farmer && farmer.won_solo_tournaments + farmer.won_farmer_tournaments + farmer.won_team_tournaments > 0" class="tournaments">
 							<tr>
 								<td class="grey">Tournois</td>
@@ -161,7 +161,7 @@
 								<td width="25%"><span class="big">{{ farmer.won_team_tournaments }}</span><br><span class="small grey">équipe</span></td>
 							</tr>
 						</table>
-		
+
 						<div v-if="farmer" class="log-time grey">
 							<span v-if="$store.getters.moderator">{{ $t('registered_the', [LeekWars.formatDateTime(farmer.register_date)]) }}</span>
 							<span v-else>{{ $t('registered_the', [LeekWars.formatDate(farmer.register_date)]) }}</span>
@@ -237,7 +237,7 @@
 		</div>
 		<div class="column12">
 			<panel>
-				<h2 slot="title"><img src="/image/icon/trophy.png">{{ $t('trophies') }} <span v-if="farmer">({{ farmer.trophies }})</span></h2>
+				<template slot="title"><img src="/image/icon/trophy.png">{{ $t('trophies') }} <span v-if="farmer">({{ farmer.trophies }})</span></template>
 				<template slot="actions">
 					<router-link :to="'/trophies/' + id" class="button flat">
 						<img src="/image/icon/trophy.png">
@@ -331,7 +331,7 @@
 		</div>
 		<div class="flex-container">
 			<div class="column6">
-				<panel v-if="!farmer || farmer.fight_history.length > 0" :title="$t('fights')">
+				<panel v-if="!farmer || farmer.fight_history.length > 0" :title="$t('fights')" icon="mdi-sword-cross">
 					<template slot="actions">
 						<router-link :to="'/farmer/' + id + '/history'" class="button flat">
 							<v-icon class="list-icon">mdi-history</v-icon>
@@ -343,7 +343,7 @@
 				</panel>
 			</div>
 			<div class="column6">
-				<panel v-if="!farmer || farmer.tournaments.length > 0" :title="$t('tournaments')">
+				<panel v-if="!farmer || farmer.tournaments.length > 0" :title="$t('tournaments')" icon="mdi-trophy">
 					<loader v-if="!farmer" />
 					<tournaments-history v-else slot="content" :tournaments="farmer.tournaments" />
 				</panel>
@@ -354,9 +354,9 @@
 				<h4 v-if="myFarmer" class="warning-title">{{ $tc('you_have_n_warnings', farmer.warnings.length, [farmer.warnings.length]) }}</h4>
 				<h4 v-else class="warning-title">{{ $tc('farmer_have_n_warnings', farmer.warnings.length, [farmer.warnings.length]) }}</h4>
 				<div v-for="(warning, w) in farmer.warnings" :key="w" class="warning card">
-					<div class="reason">{{ $t('moderation.reason_' + warning.reason) }} ({{ $t('warning_severity_s', [ warning.severity]) }})</div>
+					<div class="reason">{{ $t('warning.reason_' + warning.reason) }} ({{ $t('warning.severity_s', [ warning.severity]) }})</div>
 					<div class="message"><i>{{ warning.message }}</i></div>
-					<i18n v-if="$store.getters.moderator" class="date" path="moderation.given_by_x_the_d">
+					<i18n v-if="$store.getters.moderator" class="date" path="warning.given_by_x_the_d">
 						<router-link slot="farmer" :to="'/farmer/' + warning.author_id">{{ warning.author_name }}</router-link>
 						<span slot="date">{{ warning.date | date }}</span>
 					</i18n>
@@ -364,7 +364,7 @@
 				</div>
 			</div>
 		</panel>
-		
+
 		<div class="page-footer page-bar">
 			<div class="tabs">
 				<div v-if="farmer && $store.state.connected && !myFarmer && !farmer.admin">
@@ -423,7 +423,7 @@
 				<div class="green" @click="changeWebsite">{{ $t('validate') }}</div>
 			</div>
 		</popup>
-		
+
 		<popup v-if="farmer" v-model="githubDialog" :width="500">
 			<img slot="icon" src="/image/github_white.png">
 			<span slot="title">{{ $t('add_github') }}</span>
@@ -541,7 +541,7 @@
 			LeekWars.setTitle(farmer.name, this.$t('farmer.n_trophies', [farmer.trophies]) as string)
 			if (this.myFarmer) {
 				LeekWars.setActions([
-					{icon: 'power_settings_new', click: () => this.logout()}
+					{icon: 'mdi-settings-outline', click: () => this.logout()}
 				])
 			} else {
 				LeekWars.setActions([

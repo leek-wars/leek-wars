@@ -257,13 +257,13 @@
 		newFolderDialog: boolean = false
 		newFolderName: string = ''
 		actions_list = [
-			{icon: 'add', click: (e: any) => this.add(e)},
-			{icon: 'settings', click: () => this.settings() }
+			{icon: 'mdi-plus', click: (e: any) => this.add(e)},
+			{icon: 'mdi-cogs', click: () => this.settings() }
 		]
 		actions_content = [
-			{icon: 'save_alt', click: () => this.save()},
-			{icon: 'delete', click: () => this.startDelete()},
-			{icon: 'play_arrow', click: () => this.test()},
+			{icon: 'mdi-content-save', click: () => this.save()},
+			{icon: 'mdi-delete', click: () => this.startDelete()},
+			{icon: 'mdi-play', click: () => this.test()},
 		]
 		get currentID() {
 			if (this.currentType === 'ai' && this.currentAI) { return this.currentAI.id }

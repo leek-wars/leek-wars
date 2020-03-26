@@ -63,7 +63,7 @@
 									<a v-if="message.id != -1" :href="'#message-' + message.id" class="link">#</a>
 									<router-link v-else to="" class="link">#</router-link>
 								</template>
-								
+
 								<textarea v-if="message.editing" ref="textarea" v-model="message.message" :style="{height: message.height + 'px'}" class="original"></textarea>
 								<div v-else v-emojis v-code class="text" v-html="message.html"></div>
 								<emoji-picker v-if="message.editing" class="emoji-picker" @pick="addEmoji(message, $event, $refs.textarea[0])" />
@@ -103,7 +103,7 @@
 											</div>
 										</v-tooltip>
 									</div>
-								
+
 									<template v-if="$store.state.farmer && (message.writer.id == $store.state.farmer.id || category.moderator)">
 										<span class="edit" @click="edit(message)">{{ $t('forum.edit') }}</span>
 										&nbsp;&nbsp;
@@ -190,7 +190,7 @@
 		toDeleteMessage: ForumMessage | null = null
 		newMessage: string = ''
 		topicEditing: boolean = false
-		action = {icon: 'notifications_off', click: () => this.toggleSubscribe()}
+		action = {icon: 'mdi-newspaper-plus', click: () => this.toggleSubscribe()}
 		sendingMessage: boolean = false
 
 		get categoryName() {
@@ -234,7 +234,7 @@
 				this.pages = data.pages
 				LeekWars.setTitle(this.topic.name, this.$t('forum_topic.n_messages', [data.total]))
 				LeekWars.setActions([this.action])
-				if (this.topic.subscribed) { this.action.icon = 'notifications_active' }
+				if (this.topic.subscribed) { this.action.icon = 'mdi-newspaper-minus' }
 				this.$root.$emit('loaded')
 				this.newMessage = localStorage.getItem('forum/draft') as string
 			})
@@ -356,14 +356,14 @@
 			if (!this.topic) { return }
 			LeekWars.post('forum/subscribe-topic', {topic_id: this.topic.id})
 			this.topic.subscribed = true
-			this.action.icon = 'notifications_active'
+			this.action.icon = 'mdi-newspaper-minus'
 			LeekWars.toast(this.$t('notifications_on'))
 		}
 		unsubscribe() {
 			if (!this.topic) { return }
 			LeekWars.post('forum/unsubscribe-topic', {topic_id: this.topic.id})
 			this.topic.subscribed = false
-			this.action.icon = 'notifications_off'
+			this.action.icon = 'mdi-newspaper-plus'
 			LeekWars.toast(this.$t('notifications_off'))
 		}
 		edit(message: ForumMessage) {

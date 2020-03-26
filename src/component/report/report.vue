@@ -80,7 +80,7 @@
 						<span v-else-if="fight.context == FightContext.TOURNAMENT">
 							<router-link :to="'/tournament/' + fight.tournament">
 								<v-btn>
-									<v-icon>mdi-undo</v-icon>
+									<v-icon>mdi-trophy</v-icon>
 									{{ $t('back_to_tournament') }}
 								</v-btn>
 							</router-link>
@@ -118,11 +118,11 @@
 			</div>
 		</panel>
 
-		<panel v-if="fight" :title="$t('fight.comments') + ' (' + fight.comments.length + ')'">
+		<panel v-if="fight" :title="$t('fight.comments') + ' (' + fight.comments.length + ')'" icon="mdi-comment-multiple-outline">
 			<comments :comments="fight.comments" @comment="comment" />
 		</panel>
 
-		<panel title="Évolution des points de vie" toggle="report/graph">
+		<panel title="Évolution des points de vie" toggle="report/graph" icon="mdi-chart-line">
 			<div slot="actions">
 				<div class="button flat" @click="toggleSmooth">
 					<img v-if="smooth" src="/image/icon/graph_angular.png">
@@ -136,14 +136,14 @@
 			</div>
 		</panel>
 
-		<panel :title="$t('statistics')" toggle="report/statistics">
+		<panel :title="$t('statistics')" toggle="report/statistics" icon="mdi-table-large">
 			<loader v-if="!report" />
 			<div v-else class="scroll-x">
 				<report-statistics :fight="fight" :statistics="statistics" />
 			</div>
 		</panel>
 
-		<panel v-if="errors.length > 0 || warnings.length > 0" class="warnings-error" toggle="report/warnings-errors">
+		<panel v-if="errors.length > 0 || warnings.length > 0" class="warnings-error" toggle="report/warnings-errors" icon="mdi-alert">
 			<h2 slot="title">Erreurs et avertissements ({{ errors.length + warnings.length }})</h2>
 			<div class="title"><b>{{ errors.length }}</b> erreurs</div>
 			<pre v-for="(e, i) in errors" :key="i" class="log error">[{{ e.entity }}] {{ e.data }}</pre>
@@ -152,7 +152,7 @@
 			<pre v-for="(w, i) in warnings" :key="errors.length + i" class="log warning">[{{ w.entity }}] {{ w.data }}</pre>
 		</panel>
 
-		<panel class="last" title="Actions">
+		<panel class="last" title="Actions" icon="mdi-format-list-bulleted">
 			<loader v-if="!report" />
 			<div v-else>
 				<actions :actions="actions" :leeks="leeks" class="actions" />

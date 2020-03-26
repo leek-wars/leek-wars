@@ -49,7 +49,7 @@
 					</div>
 				</panel>
 			</div>
-			
+
 			<div class="column4">
 				<panel>
 					<h4 class="team-level">{{ $t('level_n', [team ? team.level : '...']) }}</h4>
@@ -108,7 +108,7 @@
 					</center>
 				</panel>
 			</div>
-				
+
 			<div class="column4">
 				<panel class="description">
 					<div v-if="team" slot="content" class="turret-wrapper">
@@ -128,7 +128,7 @@
 			</div>
 		</div>
 
-		<panel v-if="member" :title="$t('chat')" toggle="team/chat">
+		<panel v-if="member" :title="$t('chat')" toggle="team/chat" icon="mdi-chat-outline">
 			<div slot="actions">
 				<div v-if="!LeekWars.mobile" class="button flat" @click="LeekWars.addChat('team', ChatType.TEAM, team.name)">
 					<v-icon>mdi-picture-in-picture-bottom-right</v-icon>
@@ -155,8 +155,8 @@
 			</div>
 		</panel>
 
-		<panel>
-			<h2 slot="title"><span v-if="team">{{ $t('farmers', [team.member_count]) }}</span></h2>
+		<panel icon="mdi-account-supervisor">
+			<template slot="title"><span v-if="team">{{ $t('farmers', [team.member_count]) }}</span></template>
 			<loader v-if="!team" slot="content" />
 			<div v-else slot="content" class="members">
 				<div v-for="member in team.members" :key="member.id" class="farmer">
@@ -291,12 +291,12 @@
 
 		<div>
 			<div class="column6">
-				<panel v-if="team && team.fights.length > 0" :title="$t('history')">
+				<panel v-if="team && team.fights.length > 0" :title="$t('history')" icon="mdi-sword-cross">
 					<fights-history v-if="team" slot="content" :fights="team.fights" />
 				</panel>
 			</div>
 			<div class="column6">
-				<panel v-if="team && team.tournaments.length > 0" :title="$t('tournaments')">
+				<panel v-if="team && team.tournaments.length > 0" :title="$t('tournaments')" icon="mdi-trophy">
 					<tournaments-history v-if="team" slot="content" :tournaments="team.tournaments" />
 				</panel>
 			</div>
@@ -500,7 +500,7 @@
 		get max_level() { return this.team && this.team.level === 100 }
 		get xp_bar_width() { return this.team ? this.team.level === 100 ? 100 : Math.floor(100 * (this.team.xp - this.team.down_xp) / (this.team.up_xp - this.team.down_xp)) : 0 }
 		get member() { return !this.$route.params.id || (this.team && this.$store.state.farmer && this.$store.state.farmer.team !== null && this.team.id === this.$store.state.farmer.team.id) }
-		
+
 		get turret() {
 			if (!this.team) { return {} }
 			const team_ratio = 1 + (this.team.level / 100)
@@ -561,6 +561,11 @@
 				this.captain = teamCaptain
 				LeekWars.setTitle(this.team.name)
 				LeekWars.setSubTitle(this.$t('ranking.n_farmers', [team.members.length]) + " • " + this.$t('ranking.n_leeks', [team.leek_count]))
+				if (this.member) {
+					LeekWars.setActions([
+						{icon: 'mdi-chat-outline', click: () => this.$router.push('/forum/category-' + team.forum)}
+					])
+				}
 				this.$root.$emit('loaded')
 			})
 		}
@@ -632,7 +637,7 @@
 				LeekWars.toast(error)
 			})
 		}
-				
+
 		quitTeamStart() {
 			if (this.owner) {
 				LeekWars.toast(this.$i18n.t('team.cant_quit_owner'))

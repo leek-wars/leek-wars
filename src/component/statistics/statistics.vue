@@ -90,7 +90,7 @@
 			startAngle: 90,
 			showLabel: true
 		}
-		actions = [{icon: 'play_arrow', click: () => this.toggleAction()}]
+		actions = [{icon: 'mdi-play', click: () => this.toggleAction()}]
 		get chartFightType() {
 			const statistics = this.statistics[FIGHT_CATEGORY]
 			if (!statistics) { return {} }
@@ -201,7 +201,7 @@
 			this.playing ? this.play() : this.pause()
 		}
 		play() {
-			this.actions[0].icon = 'pause'
+			this.actions[0].icon = 'mdi-pause'
 			this.interval = setInterval(() => {
 				for (const statistic of this.interpolated) {
 					statistic.value += statistic.speed
@@ -210,7 +210,7 @@
 			}, DELAY)
 		}
 		pause() {
-			this.actions[0].icon = 'play_arrow'
+			this.actions[0].icon = 'mdi-play'
 			if (this.interval) { clearInterval(this.interval) }
 		}
 		getChartDamage() {
