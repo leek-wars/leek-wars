@@ -80,7 +80,7 @@
 				</panel>
 				<div class="resizer" @mousedown="resizerMousedown"></div>
 			</div>
-		
+
 			<div v-show="!LeekWars.mobile || LeekWars.splitBack" :style="{width: 'calc(100% - ' + (LeekWars.mobile ? 0 : panelWidth) + 'px)'}" class="column9">
 				<panel>
 					<div slot="content" class="full">
@@ -119,7 +119,7 @@
 				<li v-html="$t('shortcut_7')"></li>
 			</ul>
 		</popup>
-		
+
 		<popup v-model="settingsDialog" :width="620">
 			<v-icon slot="icon">mdi-cogs</v-icon>
 			<span slot="title">{{ $t('settings') }}</span>
@@ -211,7 +211,6 @@
 	import EditorTest from './editor-test.vue'
 	import { generateKeywords } from './keywords'
 	import './leekscript-monokai.css'
-	import './leekscript.css'
 
 	const DEFAULT_FONT_SIZE = 16
 	const DEFAULT_LINE_HEIGHT = 22
@@ -289,7 +288,7 @@
 			if (width) {
 				this.panelWidth = parseInt(width, 10)
 			}
-			
+
 			LeekWars.get<{ais: AI[], folders: any[], leek_ais: {[key: number]: number}}>('ai/get-farmer-ais').then(data => {
 				const folders: {[key: number]: any} = {}
 				for (const folder of data.folders) {
