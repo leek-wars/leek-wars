@@ -9,12 +9,12 @@
 							<img :src="chatLanguage.flag" class="language-button" v-on="on">
 						</template>
 						<v-list :dense="true">
-							<v-list-tile v-for="(language, i) in LeekWars.languages" :key="i" @click="chatLanguage = language">
-								<v-list-tile-title class="language">
+							<v-list-item v-for="(language, i) in LeekWars.languages" :key="i" @click="chatLanguage = language">
+								<v-list-item-title class="language">
 									<img :src="language.flag" class="flag">
 									<span class="name">{{ language.name }}</span>
-								</v-list-tile-title>
-							</v-list-tile>
+								</v-list-item-title>
+							</v-list-item>
 						</v-list>
 					</v-menu>
 				</h1>
@@ -59,12 +59,13 @@
 		height: calc(100vh - 56px);
 	}
 	h1 .language-button {
-		height: 38px;
-		max-height: 38px;
+		height: 36px;
+		max-height: 36px;
 		max-width: none;
 		padding: 5px;
 		margin-right: -10px;
 		vertical-align: bottom;
+		cursor: pointer;
 	}
 	h1 .languages {
 		padding: 0 5px;
