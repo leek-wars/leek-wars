@@ -1,6 +1,6 @@
 <template lang="html">
 	<div class="menu">
-		
+
 		<div v-if="!LeekWars.mobile" class="menu-button" @click="LeekWars.menuCollapsed = !LeekWars.menuCollapsed">
 			<v-icon v-if="LeekWars.menuCollapsed">mdi-chevron-left</v-icon>
 			<v-icon v-else>mdi-chevron-right</v-icon>
@@ -62,7 +62,6 @@
 					<div class="text">{{ $t("main.garden") }}
 						<span class="right">
 							<img src="/image/icon/garden.png">
-							<span v-if="$store.state.farmer" class="farmer-fights">{{ $store.state.farmer.fights }}</span>
 						</span>
 					</div>
 				</router-link>
@@ -71,7 +70,7 @@
 					<img src="/image/icon/market.png">
 					<div class="text">{{ $t("main.market") }}</div>
 				</router-link>
-			
+
 				<router-link v-if="$store.state.farmer && $store.state.farmer.team" v-ripple to="/team" class="section" @click.native="clickItem">
 					<img src="/image/icon/team.png">
 					<div class="text">{{ $t('main.team') }}</div>
