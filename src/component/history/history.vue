@@ -182,7 +182,6 @@
 	}
 	.history {
 		text-align: center;
-		display: flex;
 	}
 	.grey {
 		color: #aaa;

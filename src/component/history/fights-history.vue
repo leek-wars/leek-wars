@@ -23,7 +23,6 @@
 		padding: 5px;
 		.wrapper {
 			flex-grow: 1;
-			min-width: 50%;
 		}
 	}
 </style>
