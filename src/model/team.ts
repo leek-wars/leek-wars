@@ -14,6 +14,7 @@ class Team {
 	public compositions!: Composition[]
 	public compositionsById!: {[key: number]: Composition}
 	public tournaments!: any
+	public leeks!: Leek[]
 	public unengaged_leeks!: Leek[]
 	public opened!: boolean
 	public description!: string
