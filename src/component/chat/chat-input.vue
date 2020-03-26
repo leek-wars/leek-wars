@@ -13,7 +13,7 @@
 	import { Component, Prop, Vue } from 'vue-property-decorator'
 	import ChatCommands from './chat-commands.vue'
 	import EmojiPicker from './emoji-picker.vue'
-	
+
 	@Component({ components: { 'emoji-picker': EmojiPicker, ChatCommands } })
 	export default class ChatInput extends Vue {
 		message: string = ''
@@ -36,8 +36,9 @@
 			if (e.which === 9) {
 				if (this.commandsEnabled) {
 					const selectedCommand = (this.$refs.commands as ChatCommands).getSelected()
+					const selectedOption = (this.$refs.commands as ChatCommands).getSelectedOption()
 					const isSimple = !selectedCommand.options
-					this.selectCommand(selectedCommand.name + (isSimple ? '' : ':'), isSimple)
+					this.selectCommand(selectedCommand.name + (isSimple ? '' : ':') + (selectedOption ? selectedOption.name : ''), isSimple || !!selectedOption)
 					e.preventDefault()
 				}
 			} else if (e.which === 13 && !e.shiftKey) {
@@ -50,7 +51,7 @@
 			const input = this.$refs.input as HTMLElement
 			this.message = input.innerText
 			this.updateCommands()
-			
+
 			if (e.which === 13 && this.commandsEnabled) {
 				(this.$refs.commands as ChatCommands).selectFirst()
 				return
@@ -137,5 +138,6 @@
 		max-height: 250px;
 		background: white;
 		bottom: 39px;
+		position: absolute;
 	}
 </style>
