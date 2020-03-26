@@ -40,6 +40,7 @@ const Market = () => import(/* webpackChunkName: "[request]" */ `@/component/mar
 const Messages = () => import(/* webpackChunkName: "[request]" */ `@/component/messages/messages.${locale}.i18n`)
 const MobileApp = () => import(/* webpackChunkName: "[request]" */ `@/component/mobile-app/mobile-app.${locale}.i18n`)
 const Moderation = () => import(/* webpackChunkName: "[request]" */ `@/component/moderation/moderation.${locale}.i18n`)
+const ModerationThugs = () => import(/* webpackChunkName: "[request]" */ `@/component/moderation/moderation-thugs.${locale}.i18n`)
 const NewLeek = () => import(/* webpackChunkName: "[request]" */ `@/component/new-leek/new-leek.${locale}.i18n`)
 const Notifications = () => import(/* webpackChunkName: "[request]" */ `@/component/notification/notifications.${locale}.i18n`)
 const Ranking = () => import(/* webpackChunkName: "[request]" */ `@/component/ranking/ranking.${locale}.i18n`)
@@ -139,6 +140,7 @@ const routes = [
 	{ path: '/messages/new/:id/:name/:avatar_changed', component: Messages, beforeEnter: connected },
 	{ path: '/moderation', component: Moderation, meta: {noscroll: true}, beforeEnter: connected },
 	{ path: '/moderation/fault/:id', component: Moderation, meta: {noscroll: true}, beforeEnter: connected },
+	{ path: '/moderation/thugs', component: ModerationThugs, meta: {noscroll: true}, beforeEnter: connected },
 	{ path: '/new-leek', component: NewLeek, beforeEnter: connected },
 	{ path: '/notifications', component: Notifications, beforeEnter: connected },
 	{ path: '/ranking', component: Ranking },
