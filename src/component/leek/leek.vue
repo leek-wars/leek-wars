@@ -67,7 +67,7 @@
 			</div>
 			<div class="column4">
 				<panel :title="$t('statistics')">
-					<h4 class="level">{{ $t('level_n', [leek ? leek.level : '...']) }}</h4>
+					<h4 class="level">{{ $t('main.level_n', [leek ? leek.level : '...']) }}</h4>
 
 					<tooltip>
 						<template v-slot:activator="{ on }">
@@ -131,7 +131,6 @@
 				</panel>
 			</div>
 
-			
 			<div class="column4">
 				<panel :title="$t('characteristic.characteristics')">
 					<template v-if="leek && my_leek && leek.capital == 0" slot="actions">
@@ -334,7 +333,7 @@
 						</template>
 						<b>{{ $t('potion.' + LeekWars.potions[potion.template].name) }}</b>
 						<br>
-						{{ $t('level_n', [LeekWars.potions[potion.template].level]) }}
+						{{ $t('main.level_n', [LeekWars.potions[potion.template].level]) }}
 					</tooltip>
 				</div>
 				<center>({{ $t('click_to_use') }})</center>
@@ -354,7 +353,7 @@
 						</template>
 						<b>{{ $t('potion.' + LeekWars.potions[potion.template].name) }}</b>
 						<br>
-						{{ $t('level_n', [LeekWars.potions[potion.template].level]) }}
+						{{ $t('main.level_n', [LeekWars.potions[potion.template].level]) }}
 					</tooltip>
 				</div>
 			</div>
@@ -383,7 +382,7 @@
 						</template>
 						<b>{{ $t('hat.' + hat.name) }}</b>
 						<br>
-						{{ $t('level_n', [hat.level]) }}
+						{{ $t('main.level_n', [hat.level]) }}
 					</tooltip>
 				</div>
 				<br>
@@ -545,7 +544,7 @@
 		<capital-dialog v-if="leek && my_leek" v-model="capitalDialog" :leek="leek" :total-capital="leek.capital" />
 	</div>
 </template>
-	
+
 <script lang="ts">
 	import { AI } from '@/model/ai'
 	import { Chip } from '@/model/chip'
@@ -600,7 +599,7 @@
 		skinWeaponDialog: boolean = false
 		titleDialog: boolean = false
 		skinPotionDialog: boolean = false
-		
+
 		get id(): number {
 			return parseInt(this.$route.params.id, 10) || (this.$store.state.farmer && LeekWars.first(this.$store.state.farmer.leeks).id)
 		}
@@ -703,7 +702,7 @@
 			LeekWars.get(method).then(leek => {
 				this.leek = new Leek(leek)
 				if (this.leek) {
-					LeekWars.setTitle(this.leek.name, this.$t('level_n', [this.leek.level]))
+					LeekWars.setTitle(this.leek.name, this.$t('main.level_n', [this.leek.level]))
 					if (this.my_leek) {
 						LeekWars.setActions([
 							{icon: 'mdi-auto-fix', click: () => this.customize()},
@@ -908,7 +907,7 @@
 		dragOver(e: DragEvent) {
 			e.preventDefault()
 		}
-		
+
 		registerFocusout(register: Register, e: Event) {
 			if (!this.leek) { return }
 			const value = (e.target as HTMLElement).textContent || ''

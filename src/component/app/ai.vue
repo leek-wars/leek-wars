@@ -1,7 +1,7 @@
 <template lang="html">
 	<div draggable="true" class="ai">
 		<div>{{ ai.name }}</div>
-		<div v-if="show_lines" class="lines">{{ $tc('editor.n_lines', ai.total_lines) }}</div>
+		<div v-if="show_lines" class="lines">{{ $tc('main.n_lines', ai.total_lines) }}</div>
 	</div>
 </template>
 
