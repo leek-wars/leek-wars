@@ -26,38 +26,38 @@
 				<table class="stats">
 					<tr>
 						<td><img src="/image/charac/life.png"></td>
-						<td><h4>{{ $t("leek.life") }}</h4>{{ $t("leek.life_description") }}</td>
+						<td><h4>{{ $t("characteristic.life") }}</h4>{{ $t("characteristic.life_desc") }}</td>
 
 						<td><img src="/image/charac/science.png"></td>
-						<td><h4>{{ $t("leek.science") }}</h4>{{ $t("leek.science_description") }}</td>
+						<td><h4>{{ $t("characteristic.science") }}</h4>{{ $t("characteristic.science_desc") }}</td>
 					</tr>
 					<tr>
 						<td><img src="/image/charac/strength.png"></td>
-						<td><h4>{{ $t("leek.strength") }}</h4>{{ $t("leek.strength_description") }}</td>
+						<td><h4>{{ $t("characteristic.strength") }}</h4>{{ $t("characteristic.strength_desc") }}</td>
 
 						<td><img src="/image/charac/magic.png"></td>
-						<td><h4>{{ $t("leek.magic") }}</h4>{{ $t("leek.magic_description") }}</td>
+						<td><h4>{{ $t("characteristic.magic") }}</h4>{{ $t("characteristic.magic_desc") }}</td>
 					</tr>
 					<tr>
 						<td><img src="/image/charac/wisdom.png"></td>
-						<td><h4>{{ $t("leek.wisdom") }}</h4>{{ $t("leek.wisdom_description") }}</td>
+						<td><h4>{{ $t("characteristic.wisdom") }}</h4>{{ $t("characteristic.wisdom_desc") }}</td>
 
 						<td><img src="/image/charac/frequency.png"></td>
-						<td><h4>{{ $t("leek.frequency") }}</h4>{{ $t("leek.frequency_description") }}</td>
+						<td><h4>{{ $t("characteristic.frequency") }}</h4>{{ $t("characteristic.frequency_desc") }}</td>
 					</tr>
 					<tr>
 						<td><img src="/image/charac/agility.png"></td>
-						<td><h4>{{ $t("leek.agility") }}</h4>{{ $t("leek.agility_description") }}</td>
+						<td><h4>{{ $t("characteristic.agility") }}</h4>{{ $t("characteristic.agility_desc") }}</td>
 
 						<td><img src="/image/charac/tp.png"></td>
-						<td><h4>{{ $t("leek.tp") }}</h4>{{ $t("leek.tp_description") }}</td>
+						<td><h4>{{ $t("characteristic.tp") }}</h4>{{ $t("characteristic.tp_desc") }}</td>
 					</tr>
 					<tr>
 						<td><img src="/image/charac/resistance.png"></td>
-						<td><h4>{{ $t("leek.resistance") }}</h4>{{ $t("leek.resistance_description") }}</td>
+						<td><h4>{{ $t("characteristic.resistance") }}</h4>{{ $t("characteristic.resistance_desc") }}</td>
 
 						<td><img src="/image/charac/mp.png"></td>
-						<td><h4>{{ $t("leek.mp") }}</h4>{{ $t("leek.mp_description") }}</td>
+						<td><h4>{{ $t("characteristic.mp") }}</h4>{{ $t("characteristic.mp_desc") }}</td>
 					</tr>
 				</table>
 			</div>
@@ -124,7 +124,7 @@
 <script lang="ts">
 	import { LeekWars } from '@/model/leekwars'
 	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
-	
+
 	@Component({ name: 'didactitiel', i18n: {} })
 	export default class Didactitiel extends Vue {
 		@Prop() value!: boolean
