@@ -409,9 +409,9 @@
 				</div>
 			</div>
 		</popup>
-		
-		<report-dialog v-if="farmer" v-model="reportDialog" :name="farmer.name" :target="farmer.id" :reasons="reasons" />
-		
+
+		<report-dialog v-if="farmer" v-model="reportDialog" :target="farmer" :reasons="reasons" />
+
 		<popup v-if="farmer" v-model="websiteDialog" :width="500">
 			<v-icon slot="icon">mdi-web</v-icon>
 			<span slot="title">{{ $t('add_website') }}</span>

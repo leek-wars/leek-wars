@@ -164,7 +164,7 @@
 <script lang="ts">
 	import { Action, ActionType } from '@/model/action'
 	import { Comment } from '@/model/comment'
-	import { Fight, FightContext, FightLeek, FightType, Report, ReportLeek, TEAM_COLORS } from '@/model/fight'
+	import { Fight, FightContext, FightLeek, FightType, Report, ReportFarmer, ReportLeek, TEAM_COLORS } from '@/model/fight'
 	import { LeekWars } from '@/model/leekwars'
 	import { Component, Vue, Watch } from 'vue-property-decorator'
 	import ActionsElement from './report-actions.vue'
@@ -184,6 +184,7 @@
 		report: Report | null = null
 		actions: Action[] | null = null
 		leeks: {[key: number]: ReportLeek} = {}
+		farmers: {[key: number]: any} = {}
 		logs: {[key: number]: any[][]} = {}
 		FightType = FightType
 		FightContext = FightContext
@@ -234,11 +235,19 @@
 				this.actions = this.fight.data.actions.map(a => new Action(a))
 				this.statistics = Statistics.generate(this.fight)
 
+				for (const fid in this.fight.farmers1) {
+					this.farmers[fid] = this.fight.farmers1[fid]
+				}
+				for (const fid in this.fight.farmers2) {
+					this.farmers[fid] = this.fight.farmers2[fid]
+				}
+
 				for (const leek of this.fight.data.leeks) {
 					this.leeks[leek.id] = leek as any
 					if (leek.summon) {
 						leek.name = this.$i18n.t('entity.' + leek.name) as string
 					}
+					leek.farmer = this.farmers[leek.farmer]
 				}
 				for (const action of this.actions) {
 					if (action.params[0] === ActionType.SET_WEAPON) {

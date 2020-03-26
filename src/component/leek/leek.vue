@@ -357,7 +357,7 @@
 			</div>
 		</popup>
 
-		<report-dialog v-if="leek" v-model="reportDialog" :name="leek.farmer.name" :target="leek.farmer.id" :reasons="reasons" :parameter="leek.id" />
+		<report-dialog v-if="leek" v-model="reportDialog" :name="leek.farmer.name" :target="leek.farmer" :leek="leek" :reasons="reasons" :parameter="leek.id" />
 
 		<popup v-model="hatDialog" :width="750">
 			<v-icon slot="icon">mdi-hat-fedora</v-icon>

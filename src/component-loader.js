@@ -10,6 +10,7 @@ module.exports = function(source) {
 	let lang = name
 	if (name.endsWith('notifications')) { folder = 'notification' }
 	if (name.startsWith('forum')) { folder = 'forum' }
+	if (name.startsWith('moderation')) { folder = 'moderation' }
 	if (name.startsWith('chat')) { folder = 'chat' }
 	if (name.startsWith('bank')) {
 		folder = 'bank'
