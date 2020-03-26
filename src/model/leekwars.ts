@@ -158,7 +158,7 @@ const LeekWars = {
 		en: { code: 'en', name: 'English', flag: '/image/flag/gb.png' } as Language,
 	} as { [key: string]: Language }),
 	timeDelta: 0, // (Date.now() / 1000 | 0) - __SERVER_TIME,
-	time: (Date.now() / 1000) | 0, 
+	time: (Date.now() / 1000) | 0,
 	timeSeconds: (Date.now() / 1000) | 0,
 	large: false,
 	flex: false,
@@ -766,7 +766,7 @@ function weaponSound(id: number) {
 function chipSound(id: number) {
 	return ({
 		1: ['heal'], 2: ['heal'], 3: ['heal'], 4: ['heal'], 5: ['heal'], 6: ['lightning'],
-		7: ['lightning'], 8: ['lightning'], 9: ['fire'], 10: ['fire'], 
+		7: ['lightning'], 8: ['lightning'], 9: ['fire'], 10: ['fire'],
 		11: ['meteorite', 1.8, 'explosion', 0.3, 'explosion', 0.3, 'explosion'],
 		12: ['rock'], 13: ['rock'], 14: ['rockfall'], 15: ['ice'], 16: ['ice'], 17: ['ice'],
 		18: ['shield'], 19: ['shield'], 20: ['shield'], 21: ['shield'], 22: ['shield'],

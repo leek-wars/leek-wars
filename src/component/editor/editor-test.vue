@@ -648,8 +648,8 @@
 				const team1 = template.team1
 				const team2 = template.team2
 				Vue.set(this.scenarios, data.id, {
-					name: this.newScenarioName, 
-					id: data.id, 
+					name: this.newScenarioName,
+					id: data.id,
 					team1,
 					team2,
 					map: null,
@@ -693,7 +693,7 @@
 		}
 		updateLeekLevel(leek: any) {
 			leek.level = Math.max(
-				leek.weapons.reduce((m: number, e: any) => Math.max(m, LeekWars.weapons[e].level), 1), 
+				leek.weapons.reduce((m: number, e: any) => Math.max(m, LeekWars.weapons[e].level), 1),
 				leek.chips.reduce((m: number, e: any) => Math.max(m, LeekWars.chips[e].level), 1)
 			)
 		}
@@ -834,7 +834,7 @@
 							Vue.set(this.alliesAIs, leek.ai, {
 								id: leek.ai,
 								name: leek.ai_name,
-								path: leek.ai_name	
+								path: leek.ai_name
 							})
 						}
 					}
