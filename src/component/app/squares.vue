@@ -46,9 +46,9 @@
 		margin-right: 8px;
 	}
 	.image.padding {
-		width: 54px;
+		width: 60px;
 		height: 60px;
-		flex: 0 0 30px;
+		flex: 0 0 60px;
 		margin-right: 0;
 		padding: 15px 12px;
 	}
