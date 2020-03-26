@@ -34,7 +34,7 @@
 					<td>
 						<div class="gains">
 							<div class="life">
-								<img src="/image/charac/small/life.png"><span class="name">{{ $t('leek.life') }}</span> &nbsp;<b>+ {{ data.gains.life }}</b>
+								<img src="/image/charac/small/life.png"><span class="name">{{ $t('characteristic.life') }}</span> &nbsp;<b>+ {{ data.gains.life }}</b>
 							</div>
 							<div class="capital">
 								<img src="/image/add.png"><span class="name">{{ $t('leek.capital') }}</span> &nbsp;<b>+ {{ data.gains.capital }}</b>

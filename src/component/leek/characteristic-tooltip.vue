@@ -4,9 +4,9 @@
 			<slot :on="on"></slot>
 		</template>
 		<div class="tooltip">
-			<b>{{ $t('leek.' + characteristic) }}</b>
+			<b>{{ $t('characteristic.' + characteristic) }}</b>
 			<br>
-			{{ $t('leek.' + characteristic + '_description') }}
+			{{ $t('characteristic.' + characteristic + '_desc') }}
 			<template v-if="value > 0 && (characteristic != 'frequency' || value > 100)">
 				<br>
 				<template v-if="!test && characteristic == 'life'">
@@ -19,26 +19,26 @@
 					<b class="capital">{{ $t('leek.invested_capital') }} : <span class="amount">{{ capitalSpent(characteristic, value, leek.level) }}</span></b>
 				</div>
 				<template v-if="characteristic == 'strength'">
-					<b class="effect">{{ $t('leek.damage_effect') }} : × <span class="damage">{{ (1 + value / 100).toFixed(2) }}</span></b>
+					<b class="effect">{{ $t('characteristic.damage') }} : × <span class="damage">{{ (1 + value / 100).toFixed(2) }}</span></b>
 				</template>
 				<template v-else-if="characteristic == 'agility'">
-					<b class="effect">{{ $t('leek.return_damage_effect') }} : × <span class="damage-return">{{ (1 + value / 100).toFixed(2) }}</span></b>
+					<b class="effect">{{ $t('characteristic.damage_return') }} : × <span class="damage-return">{{ (1 + value / 100).toFixed(2) }}</span></b>
 					<br>
-					<b class="effect">{{ $t('leek.critical_effect') }} : <span class="critical">{{ (value / 10).toFixed(2) }}%</span></b>
+					<b class="effect">{{ $t('characteristic.critical') }} : <span class="critical">{{ (value / 10).toFixed(2) }}%</span></b>
 				</template>
 				<template v-else-if="characteristic == 'science'">
-					<b class="effect">{{ $t('leek.boost_effect') }} : × <span class="damage">{{ (1 + value / 100).toFixed(2) }}</span></b>
+					<b class="effect">{{ $t('characteristic.boost') }} : × <span class="damage">{{ (1 + value / 100).toFixed(2) }}</span></b>
 				</template>
 				<template v-else-if="characteristic == 'wisdom'">
-					<b class="effect">{{ $t('leek.heal_effect') }} : × <span class="heal">{{ (1 + leek.wisdom / 100).toFixed(2) }}</span></b>
+					<b class="effect">{{ $t('characteristic.heal') }} : × <span class="heal">{{ (1 + value / 100).toFixed(2) }}</span></b>
 					<br>
-					<b class="effect">{{ $t('leek.life_steal_effect') }} : <span class="life-steal">{{ Math.round(leek.wisdom / 10) }}%</span></b>
+					<b class="effect">{{ $t('characteristic.life_steal') }} : <span class="life-steal">{{ Math.round(value / 10) }}%</span></b>
 				</template>
 				<template v-else-if="characteristic == 'magic'">
-					<b class="effect">{{ $t('leek.shackle_poison_effect') }} : × <span class="damage">{{ (1 + value / 100).toFixed(2) }}</span></b>
+					<b class="effect">{{ $t('characteristic.shackle_poison') }} : × <span class="damage">{{ (1 + value / 100).toFixed(2) }}</span></b>
 				</template>
 				<template v-else-if="characteristic == 'resistance'">
-					<b class="effect">{{ $t('leek.shield_effect') }} : × <span class="damage">{{ (1 + value / 100).toFixed(2) }}</span></b>
+					<b class="effect">{{ $t('characteristic.shield') }} : × <span class="damage">{{ (1 + value / 100).toFixed(2) }}</span></b>
 				</template>
 			</template>
 		</div>

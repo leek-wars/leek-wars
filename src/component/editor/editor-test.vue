@@ -92,12 +92,12 @@
 							<leek-image :leek="currentLeek" :scale="1" />
 						</div>
 						<div class="card characteristics">
-							<div v-for="c in ['life', 'science', 'strength', 'magic', 'wisdom', 'frequency', 'agility', 'mp', 'resistance', 'tp']" :key="c" class="characteristic">
-								<characteristic-tooltip :characteristic="c" :value="currentLeek[c]" :leek="currentLeek" :test="true">
+							<characteristic-tooltip v-for="c in LeekWars.characteristics_table" :key="c" v-slot="{ on }" :characteristic="c" :value="currentLeek[c]" :leek="currentLeek" :test="true">
+								<div class="characteristic" v-on="on">
 									<img :src="'/image/charac/' + c + '.png'">
 									<span :contenteditable="!currentLeek.bot" class="stat" :class="'color-' + c" @focusout="characteristicFocusout(c, $event)" v-html="currentLeek[c]"></span>
-								</characteristic-tooltip>
-							</div>
+								</div>
+							</characteristic-tooltip>
 						</div>
 					</div>
 					<div class="title">{{ $t('editor.weapons') }} [{{ currentLeek.weapons.length }}]</div>
@@ -1126,9 +1126,8 @@
 				font-weight: bold;
 			}
 		}
-		.characteristic:nth-child(4n),
-		.characteristic:nth-child(3),
-		.characteristic:nth-child(7) {
+		.characteristic:nth-child(8n+6),
+		.characteristic:nth-child(8n+8) {
 			background: #eee;
 		}
 	}

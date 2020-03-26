@@ -426,14 +426,14 @@
 			<div class="turret-dialog">
 				<turret-image :level="team.level" :skin="1" :scale="0.32" />
 				<div class="infos">
-					<h4>{{ $t('leek.characteristics') }}</h4>
+					<h4>{{ $t('characteristic.characteristics') }}</h4>
 					<div class="card characteristics">
-						<div v-for="c in ['life', 'science', 'strength', 'magic', 'wisdom', 'frequency', 'agility', 'mp', 'resistance', 'tp']" :key="c" class="characteristic">
-							<characteristic-tooltip :characteristic="c" :value="turret[c]" :leek="turret" :test="true">
+						<characteristic-tooltip v-for="c in LeekWars.characteristics_table" :key="c" v-slot="{ on }" :characteristic="c" :value="turret[c]" :leek="turret" :test="true">
+							<div class="characteristic" v-on="on">
 								<img :src="'/image/charac/' + c + '.png'">
 								<span class="stat" :class="'color-' + c">{{ turret[c] }}</span>
-							</characteristic-tooltip>
-						</div>
+							</div>
+						</characteristic-tooltip>
 					</div>
 					<br>
 
@@ -1148,9 +1148,8 @@
 					font-weight: bold;
 				}
 			}
-			.characteristic:nth-child(4n),
-			.characteristic:nth-child(3),
-			.characteristic:nth-child(7) {
+			.characteristic:nth-child(8n+6),
+			.characteristic:nth-child(8n+8) {
 				background: #eee;
 			}
 		}
