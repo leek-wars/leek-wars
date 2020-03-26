@@ -20,7 +20,7 @@
 <script lang="ts">
 	import { Command, Commands } from '@/model/commands'
 	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
-	
+
 	@Component({ name: 'chat-commands' })
 	export default class ChatCommands extends Vue {
 		@Prop() filter!: string
@@ -34,7 +34,7 @@
 			const filterCommand = parts[0]
 			this.filterOptions = parts.length > 1 ? parts[1] : null
 			this.options = []
-			this.commands = Commands.commands.filter(command => 
+			this.commands = Commands.commands.filter(command =>
 				(parts.length === 1 && command.name.indexOf(filterCommand) === 0) || command.name === filterCommand
 			)
 			if (this.commands.length === 1) {
@@ -50,6 +50,9 @@
 		}
 		getSelected(): Command {
 			return this.commands[0]
+		}
+		getSelectedOption() {
+			return this.commands[0].options ? this.options[0] : null
 		}
 		selectFirst() {
 			let command = this.commands[0].name
