@@ -205,6 +205,7 @@ class Game {
 	// Players
 	public teams = new Array()
 	public leeks: Entity[] = []
+	public farmers: {[key: number]: any} = {}
 	public entityOrder = new Array()
 	public states = new Array()
 	// Actions
@@ -424,8 +425,15 @@ class Game {
 				entity.setOrientation(this.getInitialOrientation(entity.cell))
 			}
 
+			for (const id in fight.farmers1) {
+				this.farmers[id] = fight.farmers1[id]
+			}
+			for (const id in fight.farmers2) {
+				this.farmers[id] = fight.farmers2[id]
+			}
+
 			this.leeks[entity.id] = entity
-			
+
 			// entity
 			if (entity instanceof Leek) {
 
@@ -451,7 +459,7 @@ class Game {
 			} else if (entity instanceof Turret) {
 
 				entity.name = i18n.t('fight.turret') as string
-				
+
 				if (this.teams[entity.team - 1] === undefined) {
 					this.teams[entity.team - 1] = []
 				}
@@ -661,7 +669,7 @@ class Game {
 				if (this.mouseCell !== undefined) {
 					this.hoverEntity = hover_entity
 				}
-				
+
 				// Chips
 				for (let c = 0; c < this.chips.length; ++c) {
 					const chip = this.chips[c]
@@ -902,7 +910,12 @@ class Game {
 		case ActionType.SAY: {
 			if (!this.jumping) {
 				this.log(action)
-				this.leeks[action.params[1]].say(this.ctx, action.params[2])
+				const entity = this.leeks[action.params[1]]
+				let message = action.params[2]
+				if (entity.farmer && entity.farmer.muted) {
+					message = "@*%#$€"
+				}
+				entity.say(this.ctx, message)
 			}
 			this.actionDone()
 			break
@@ -1056,7 +1069,7 @@ class Game {
 			leek.effects[id] = this.effects[id]
 			caster.launched_effects[id] = this.effects[id]
 		}
-		
+
 		this.log(action)
 
 		switch (effect) {
@@ -1436,7 +1449,7 @@ class Game {
 			}
 			c = Math.floor(l / 2)
 		}
-		
+
 		const add_cell = (x: number, y: number) => {
 			const n = this.ground.next_cell(cell, x, y)
 			lines[c + x][c + y] = ~lines[c + x][c + y] + 16

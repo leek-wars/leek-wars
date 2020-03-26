@@ -60,7 +60,7 @@
 		<div v-if="!$store.state.wsconnected" class="chat-disconnected">{{ $t('main.disconnected') }}</div>
 		<chat-input @message="sendMessage" />
 
-		<report-dialog v-if="reportFarmer" v-model="reportDialog" :name="reportFarmer.name" :target="reportFarmer.id" :reasons="reasons" :parameter="reportContent" />
+		<report-dialog v-if="reportFarmer" v-model="reportDialog" :target="reportFarmer" :reasons="reasons" :parameter="reportContent" class="report-dialog" />
 
 		<popup v-model="muteDialog" :width="600">
 			<v-icon slot="icon">mdi-volume-off</v-icon>

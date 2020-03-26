@@ -76,6 +76,18 @@
 			</div>
 			<comments :comments="fight.comments" @comment="comment" />
 		</panel>
+
+		<div class="page-footer page-bar">
+			<div class="tabs">
+				<template v-if="$store.state.connected">
+					<div class="tab" @click="reportDialog = true">
+						<img src="/image/icon/flag.png">
+						<span class="report-button">{{ $t('warning.report') }}</span>
+					</div>
+				</template>
+			</div>
+		</div>
+		<report-dialog v-if="fight" v-model="reportDialog" :leeks="reportLeeks" :reasons="reasons" :fight="fight.id" />
 	</div>
 </template>
 
@@ -85,6 +97,7 @@
 	import { Fight, FightType, Report } from '@/model/fight'
 	import { Leek } from '@/model/leek'
 	import { LeekWars } from '@/model/leekwars'
+	import { Warning } from '@/model/moderation'
 	import { Component, Vue, Watch } from 'vue-property-decorator'
 
 	@Component({ name: "fight", i18n: {} })
@@ -100,6 +113,20 @@
 		playerHeight: number = 0
 		FightType = FightType
 		large: boolean = false
+		reportDialog: boolean = false
+		reasons = [Warning.RUDE_SAY, Warning.INCORRECT_LEEK_NAME, Warning.INCORRECT_FARMER_NAME, Warning.INCORRECT_AVATAR]
+
+		get reportLeeks() {
+			if (!this.fight) { return [] }
+			const leeks = []
+			for (const leek of this.fight.leeks1) {
+				leeks.push({...leek, farmer: this.fight.farmers1[leek.farmer]})
+			}
+			for (const leek of this.fight.leeks2) {
+				leeks.push({...leek, farmer: this.fight.farmers2[leek.farmer]})
+			}
+			return leeks
+		}
 
 		created() {
 			this.update()
