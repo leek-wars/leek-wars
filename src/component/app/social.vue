@@ -194,13 +194,13 @@
 	}
 	.social-chat .language-button {
 		cursor: pointer;
-		height: 38px;
-		max-height: 38px;
+		height: 36px;
+		max-height: 36px;
 		max-width: none;
 		padding: 5px;
 		margin-left: 4px;
 		margin-right: -10px;
-		margin-top: -2px;
+		vertical-align: bottom;
 	}
 	.social-chat .languages {
 		padding: 0 5px;
