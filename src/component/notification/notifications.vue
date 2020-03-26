@@ -28,7 +28,9 @@
 			LeekWars.get('notification/get-latest/500').then(data => {
 				this.notifications = []
 				for (const notification of data.notifications) {
-					this.notifications.push(Notification.build(notification))
+					const notif = Notification.build(notification)
+					notif.read = true
+					this.notifications.push(notif)
 				}
 				LeekWars.setTitle(this.$t('title'))
 				LeekWars.post('notification/read-all')
