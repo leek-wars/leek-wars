@@ -43,6 +43,7 @@ class Sounds {
 	public map_factory: Sound
 	public map_glacier: Sound
 	public map_nexus: Sound
+	public alteration: Sound
 
 	constructor(game: Game) {
 		// weapons
@@ -70,6 +71,7 @@ class Sounds {
 		this.liberation = new Sound(game, env.STATIC + "sound/liberation.mp3", VOL_SPECIAL_SOUND)
 		this.teleportation = new Sound(game, env.STATIC + "sound/teleportation.mp3", VOL_SPECIAL_SOUND)
 		this.debuff = new Sound(game, env.STATIC + "sound/debuff.mp3", VOL_OFFENSIVE_SOUND)
+		this.alteration = new Sound(game, env.STATIC + "sound/alteration.wav", VOL_OFFENSIVE_SOUND)
 		// other
 		this.move = new Sound(game, env.STATIC + "sound/move.mp3", VOL_OTHER_SOUND)
 		this.lama = new Sound(game, env.STATIC + "sound/lama.mp3", VOL_OTHER_SOUND)
