@@ -109,7 +109,7 @@
 	import { LeekWars } from '@/model/leekwars'
 	import { Component, Vue, Watch } from 'vue-property-decorator'
 	import Breadcrumb from './breadcrumb.vue'
-	
+
 	@Component({ name: 'forum_category', i18n: {}, components: { Breadcrumb } })
 	export default class ForumCategoryPage extends Vue {
 		category: ForumCategory | null = null
@@ -132,8 +132,8 @@
 			const category = this.$route.params.category
 			this.page = 'page' in this.$route.params ? parseInt(this.$route.params.page, 10) : 1
 			LeekWars.setActions([
-				{icon: 'edit', click: () => this.createDialog = true},
-				{icon: 'search', click: () => this.$router.push('/search/-/-/' + category) }
+				{icon: 'mdi-pencil', click: () => this.createDialog = true},
+				{icon: 'mdi-magnify', click: () => this.$router.push('/search/-/-/' + category) }
 			])
 			if (this.category) { this.category.topics = null }
 			LeekWars.get('forum/get-topics/' + category + '/' + this.page).then(data => {

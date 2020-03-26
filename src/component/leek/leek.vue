@@ -46,7 +46,7 @@
 		<div class="flex-container">
 			<div class="column4">
 				<panel>
-					<i18n slot="title" path="farmed_by" tag="h2">
+					<i18n slot="title" path="farmed_by">
 						<router-link slot="farmer" :to="'/farmer/' + (leek ? leek.farmer.id : 0)">
 							<rich-tooltip-farmer :id="(leek ? leek.farmer.id : 0)" v-slot="{ on }" :bottom="true">
 								<span v-on="on">{{ leek ? leek.farmer.name : '...' }}</span>
@@ -160,7 +160,7 @@
 
 			<div class="column4">
 				<panel>
-					<h2 slot="title">{{ $t('weapons') }} <span v-if="leek && leek.weapons" class="weapon-count">[{{ leek.weapons.length }}/{{ leek.max_weapons }}]</span></h2>
+					<template slot="title">{{ $t('weapons') }} <span v-if="leek && leek.weapons" class="weapon-count">[{{ leek.weapons.length }}/{{ leek.max_weapons }}]</span></template>
 					<template v-if="leek && my_leek" slot="actions">
 						<div class="button flat" @click="weaponsDialog = true">
 							<v-icon>mdi-pencil</v-icon>
@@ -178,10 +178,10 @@
 					</div>
 				</panel>
 			</div>
-		
+
 			<div class="column4">
-				<panel>
-					<h2 slot="title">{{ $t('chips') }} <span v-if="leek && leek.chips" class="chip-count">[{{ leek.chips.length }}/{{ leek.max_chips }}]</span></h2>
+				<panel icon="mdi-chip">
+					<template slot="title">{{ $t('chips') }} <span v-if="leek && leek.chips" class="chip-count">[{{ leek.chips.length }}/{{ leek.max_chips }}]</span></template>
 					<template v-if="leek && my_leek" slot="actions">
 						<div class="button flat" @click="chipsDialog = true">
 							<v-icon>mdi-pencil</v-icon>
@@ -199,9 +199,9 @@
 					</div>
 				</panel>
 			</div>
-			
+
 			<div class="column4">
-				<panel :title="$t('ai')">
+				<panel :title="$t('ai')" icon="mdi-code-braces">
 					<template v-if="leek && my_leek" slot="actions">
 						<div class="button flat" @click="aiDialog = true">
 							<v-icon>mdi-pencil</v-icon>
@@ -225,7 +225,7 @@
 
 		<div class="flex-container">
 			<div class="column6">
-				<panel v-if="leek && leek.fights && leek.fights.length > 0" :title="$t('fights')">
+				<panel v-if="leek && leek.fights && leek.fights.length > 0" :title="$t('fights')" icon="mdi-sword-cross">
 					<template v-if="leek" slot="actions">
 						<router-link :to="'/leek/' + leek.id + '/history'" class="button flat">
 							<v-icon>mdi-history</v-icon>
@@ -236,14 +236,14 @@
 				</panel>
 			</div>
 			<div class="column6">
-				<panel v-if="leek && leek.tournaments && leek.tournaments.length > 0" :title="$t('tournaments')">
+				<panel v-if="leek && leek.tournaments && leek.tournaments.length > 0" :title="$t('tournaments')" icon="mdi-trophy">
 					<tournaments-history slot="content" :tournaments="leek.tournaments" />
 				</panel>
 			</div>
 		</div>
 
-		<panel v-if="leek && my_leek && leek.registers && leek.registers.length > 0" toggle="leek/registers">
-			<h2 slot="title">{{ $t('registers') }} <span class="register-count">[{{ leek.registers.length }}/100]</span></h2>
+		<panel v-if="leek && my_leek && leek.registers && leek.registers.length > 0" toggle="leek/registers" icon="mdi-database">
+			<template slot="title">{{ $t('registers') }} <span class="register-count">[{{ leek.registers.length }}/100]</span></template>
 			<table class="registers">
 				<tr>
 					<th>{{ $t('register_key') }}</th>
@@ -267,7 +267,10 @@
 					</div>
 				</template>
 				<template v-if="my_leek">
-					<div class="tab" @click="renameDialog = true">{{ $t('rename_leek') }}</div>
+					<div class="tab" @click="renameDialog = true">
+						<v-icon>mdi-pencil-outline</v-icon>
+						{{ $t('rename_leek') }}
+					</div>
 				</template>
 			</div>
 		</div>
@@ -703,7 +706,7 @@
 					LeekWars.setTitle(this.leek.name, this.$t('level_n', [this.leek.level]))
 					if (this.my_leek) {
 						LeekWars.setActions([
-							{vicon: 'mdi-auto-fix', click: () => this.customize()},
+							{icon: 'mdi-auto-fix', click: () => this.customize()},
 							{image: 'icon/potion.png', click: () => this.potion()},
 						])
 					} else {

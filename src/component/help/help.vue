@@ -105,7 +105,7 @@
 	import { LeekWars } from '@/model/leekwars'
 	import { Component, Vue } from 'vue-property-decorator'
 	const Didactitiel = () => import(/* webpackChunkName: "[request]" */ `@/component/didactitiel/didactitiel.${locale}.i18n`)
-	
+
 	@Component({ name: 'help', i18n: {}, components: { Didactitiel } })
 	export default class Help extends Vue {
 		advanced: boolean = false
@@ -114,7 +114,7 @@
 
 		created() {
 			LeekWars.setTitle(this.$t('help.title'))
-			LeekWars.setActions([{icon: 'contact_support', click: () => this.$router.push('/about')}])
+			LeekWars.setActions([{icon: 'mdi-information-variant', click: () => this.$router.push('/about')}])
 		}
 
 		show_didactitiel() {

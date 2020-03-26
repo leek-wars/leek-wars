@@ -13,7 +13,7 @@
 		</div>
 		<div class="container">
 			<div v-show="!LeekWars.mobile || !LeekWars.splitBack" class="column8">
-				<panel :title="$t('fights')">
+				<panel :title="$t('fights')" icon="mdi-sword-cross">
 					<loader v-if="!fight_packs.length" slot="content" />
 					<div v-else slot="content" class="items fights">
 						<router-link v-for="pack in fight_packs" :key="pack.id" v-ripple :to="'/market/' + pack.name" :farmer-count="0" :leek-count="0" class="item fight-pack" @click="selectItem(pack)">
@@ -22,7 +22,7 @@
 						</router-link>
 					</div>
 				</panel>
-				<panel :title="$t('weapons') + ' [' + weapons.length + ']'">
+				<panel :title="$t('weapons') + ' [' + weapons.length + ']'" icon="mdi-pistol">
 					<loader v-if="!weapons.length" slot="content" />
 					<div v-else slot="content" class="items weapons">
 						<router-link v-for="weapon in weapons" :key="weapon.id" v-ripple :to="'/market/' + weapon.name" :farmer-count="items[weapon.id].farmer_count" :leek-count="items[weapon.id].leek_count" class="item weapon">
@@ -30,7 +30,7 @@
 						</router-link>
 					</div>
 				</panel>
-				<panel :title="$t('chips') + ' [' + chips.length + ']'">
+				<panel :title="$t('chips') + ' [' + chips.length + ']'" icon="mdi-chip">
 					<div slot="actions" class="button flat" @click="updateChipMode">
 						<v-icon v-if="chipMode === 'type'">mdi-sort-descending</v-icon>
 						<v-icon v-else>mdi-view-grid</v-icon>
@@ -52,7 +52,7 @@
 						</div>
 					</div>
 				</panel>
-				<panel :title="$t('potions') + ' [' + potions.length + ']'">
+				<panel :title="$t('potions') + ' [' + potions.length + ']'" icon="mdi-bottle-tonic-plus-outline">
 					<loader v-if="!potions.length" slot="content" />
 					<div v-else slot="content" class="items potions">
 						<router-link v-for="potion in potions" :key="potion.id" v-ripple :to="'/market/' + potion.name" :farmer-count="items[potion.id].farmer_count" :leek-count="items[potion.id].leek_count" class="item potion">
@@ -60,7 +60,7 @@
 						</router-link>
 					</div>
 				</panel>
-				<panel :title="$t('hats') + ' [' + hats.length + ']'">
+				<panel :title="$t('hats') + ' [' + hats.length + ']'" icon="mdi-hat-fedora">
 					<loader v-if="!hats.length" slot="content" />
 					<div v-else slot="content" class="items hats">
 						<router-link v-for="hat in hats" :key="hat.id" v-ripple :to="'/market/' + hat.name" :farmer-count="items[hat.id].farmer_count" :leek-count="items[hat.id].leek_count" class="item hat">
@@ -68,7 +68,7 @@
 						</router-link>
 					</div>
 				</panel>
-				<panel :title="$t('pomps') + ' [' + pomps.length + ']'" class="last">
+				<panel :title="$t('pomps') + ' [' + pomps.length + ']'" class="last" icon="mdi-auto-fix">
 					<div slot="content" class="items pomps">
 						<router-link v-for="pomp in pomps" :key="pomp.id" :to="'/market/' + pomp.name" :farmer-count="items[pomp.id].farmer_count" :leek-count="items[pomp.id].leek_count" class="item pomp">
 							<img :src="'/image/pomp/' + pomp.name + '.png'">
@@ -77,7 +77,7 @@
 				</panel>
 			</div>
 			<div v-show="!LeekWars.mobile || LeekWars.splitBack" class="column4">
-				<panel :title="$t('characteristics')" class="last preview-panel">
+				<panel :title="$t('characteristics')" class="last preview-panel" icon="mdi-information-outline">
 					<loader v-if="!selectedItem" slot="content" />
 					<div v-else slot="content" class="preview center">
 						<weapon-preview v-if="selectedItem.type == ItemType.WEAPON" :weapon="LeekWars.weapons[selectedItem.id]" />
@@ -170,7 +170,7 @@
 				<div class="buy green" @click="buy('crystals')">{{ $t('buy') }}</div>
 			</div>
 		</popup>
-		
+
 		<popup v-model="sellDialog" :width="600">
 			<v-icon slot="icon">mdi-cash-multiple</v-icon>
 			<span slot="title">{{ $t('confirm_sell') }}</span>
@@ -265,7 +265,7 @@
 		pomps: PompTemplate[] = []
 
 		created() {
-			this.actions = [{icon: 'account_balance', click: () => this.$router.push('/bank')}]
+			this.actions = [{icon: 'mdi-bank', click: () => this.$router.push('/bank')}]
 			LeekWars.get('market/get-item-templates').then(res => {
 				const items = res.items as ItemTemplate[]
 				for (const i in items) {

@@ -4,27 +4,27 @@
 			<v-icon v-if="LeekWars.socialCollapsed">mdi-chevron-left</v-icon>
 			<v-icon v-else>mdi-chevron-right</v-icon>
 		</div>
-		
+
 		<div :style="{width: panelWidth + 'px'}" class="social-panel">
 			<div class="content">
-		
+
 				<div class="resizer" @mousedown="resizerMousedown"></div>
-		
-				<panel toggle="social/notifications">
-					<h2 slot="title">
+
+				<panel toggle="social/notifications" icon="mdi-bell-outline">
+					<template slot="title">
 						<router-link to="/notifications">{{ $t('main.notifications') }}</router-link>
 						<span v-show="$store.state.unreadNotifications" class="label">{{ $store.state.unreadNotifications }}</span>
-					</h2>
+					</template>
 					<div slot="content" v-autostopscroll class="content-limit">
 						<notification v-for="notification in $store.state.notifications" :key="notification.id" :notification="notification" @click.native="readNotification(notification)" />
 					</div>
 				</panel>
-		
-				<panel v-if="env.SOCIAL" toggle="social/messages">
-					<h2 slot="title">
+
+				<panel v-if="env.SOCIAL" toggle="social/messages" icon="mdi-email-outline">
+					<template slot="title">
 						<router-link to="/messages">{{ $t('main.messages') }}</router-link>
 						<span v-show="$store.state.unreadMessages" class="label">{{ $store.state.unreadMessages }}</span>
-					</h2>
+					</template>
 					<div slot="content" v-autostopscroll class="content-limit">
 						<router-link v-for="conversation in $store.state.conversationsList" :key="conversation.id" :to="'/messages/conversation/' + conversation.id">
 							<conversation :conversation="conversation" />
@@ -32,8 +32,8 @@
 					</div>
 				</panel>
 
-				<panel v-if="env.SOCIAL" class="social-chat" toggle="social/chat">
-					<h2 slot="title">
+				<panel v-if="env.SOCIAL" class="social-chat" toggle="social/chat" icon="mdi-chat-outline">
+					<template slot="title">
 						<router-link to="/chat">Chat</router-link>
 						<v-menu offset-y>
 							<template v-slot:activator="{ on }">
@@ -46,7 +46,7 @@
 								</v-list-item>
 							</v-list>
 						</v-menu>
-					</h2>
+					</template>
 					<div slot="actions">
 						<div class="button text" @click="LeekWars.addChat(chatLanguage.code, ChatType.GLOBAL, 'Chat ' + chatLanguage.code.toUpperCase())">
 							<v-icon>mdi-picture-in-picture-bottom-right</v-icon>

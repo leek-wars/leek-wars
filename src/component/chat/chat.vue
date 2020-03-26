@@ -38,15 +38,15 @@
 								</template>
 								<v-list dense class="message-actions">
 									<v-list-item v-ripple @click="report(message)">
-										<v-icon>flag</v-icon>
+										<v-icon>mdi-flag</v-icon>
 										<span>Signaler</span>
 									</v-list-item>
 									<v-list-item v-if="$store.getters.moderator && !message.author.muted" v-ripple @click="mute(message.author)">
-										<v-icon>volume_off</v-icon>
+										<v-icon>mdi-volume-off</v-icon>
 										<span>Mute</span>
 									</v-list-item>
 									<v-list-item v-if="$store.getters.moderator && message.author.muted" v-ripple @click="unmute(message.author)">
-										<v-icon>volume_up</v-icon>
+										<v-icon>mdi-volume-high</v-icon>
 										<span>Unmute</span>
 									</v-list-item>
 								</v-list>
@@ -100,7 +100,7 @@
 	import { store } from '@/model/store'
 	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 	import ChatInput from './chat-input.vue'
-	
+
 	@Component({
 		components: { 'chat-input': ChatInput }
 	})

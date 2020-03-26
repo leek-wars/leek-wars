@@ -1,9 +1,10 @@
 <template>
 	<div class="panel">
 		<div v-if="hasTitle" class="header">
-			<slot name="title">
-				<h2>{{ title }}</h2>
-			</slot>
+			<h2>
+				<v-icon v-if="icon">{{ icon }}</v-icon>
+				<slot name="title">{{ title }}</slot>
+			</h2>
 			<div class="actions">
 				<slot name="actions"></slot>
 				<div v-if="toggle" class="button text expand" @click="expanded = !expanded">
@@ -26,6 +27,7 @@
 
 	@Component({ name: 'panel' })
 	export default class Panel extends Vue {
+		@Prop() icon!: string
 		@Prop() title!: string
 		@Prop() toggle!: string
 		expanded: boolean = true
@@ -79,6 +81,10 @@
 		border-top-left-radius: 3px;
 		border-top-right-radius: 3px;
 		display: flex;
+		i {
+			margin-bottom: 3px;
+			margin-right: 7px;
+		}
 	}
 	#app.app .panel > .header {
 		border-radius: 0;
@@ -96,6 +102,8 @@
 		position: relative;
 		white-space: nowrap;
 		border-top-left-radius: 3px;
+		text-overflow: ellipsis;
+		overflow: hidden;
 	}
 	.panel > .header h2 a, .panel > .header h2 a:visited {
 		color: white;

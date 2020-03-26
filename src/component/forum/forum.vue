@@ -20,8 +20,8 @@
 			</div>
 			<div class="tabs">
 				<router-link to="/chat">
-					<div class="tab action" icon="chat_bubble" link="/chat">
-						<img src="image/icon/forum.png">
+					<div class="tab action" icon="mdi-chat" link="/chat">
+						<v-icon>mdi-chat-outline</v-icon>
 						<span>{{ $t('chat') }}</span>
 					</div>
 				</router-link>
@@ -67,10 +67,10 @@
 			</template>
 		</panel>
 
-		<panel>
-			<h2 slot="title">
+		<panel icon="mdi-account-supervisor">
+			<span slot="title">
 				<span v-if="connected_farmers.length">{{ $t('connected_farmers', [connected_farmers.length]) }}</span>
-			</h2>
+			</span>
 			<div slot="actions">
 				<div class="button flat">
 					<v-icon v-if="expandFarmers" @click="expandFarmers = !expandFarmers">mdi-chevron-down</v-icon>
@@ -96,8 +96,8 @@
 			</div>
 		</panel>
 
-		<panel class="last">
-			<h2 slot="title">
+		<panel class="last" icon="mdi-chat-outline">
+			<span slot="title">
 				<router-link to="/chat">{{ $t('chat') }}</router-link>
 				<v-menu offset-y>
 					<template v-slot:activator="{ on }">
@@ -110,7 +110,7 @@
 						</v-list-item>
 					</v-list>
 				</v-menu>
-			</h2>
+			</span>
 			<div slot="actions">
 				<div v-if="!LeekWars.mobile" class="button flat" @click="LeekWars.addChat(chatLanguage.code, ChatType.GLOBAL, 'Chat ' + chatLanguage.code.toUpperCase())">
 					<v-icon>mdi-picture-in-picture-bottom-right</v-icon>
@@ -126,7 +126,7 @@
 	import { Farmer } from '@/model/farmer'
 	import { Language, LeekWars } from '@/model/leekwars'
 	import { Component, Vue } from 'vue-property-decorator'
-	
+
 	@Component({ name: 'forum', i18n: {} })
 	export default class Forum extends Vue {
 		ChatType = ChatType
@@ -136,7 +136,7 @@
 		forumLanguage: Language | null = null
 		expandFarmers: boolean = false
 		searchQuery: string = ''
-		
+
 		created() {
 			const lang = localStorage.getItem('forum/language') as string || this.$i18n.locale
 			this.forumLanguage = LeekWars.languages[lang]
@@ -151,8 +151,8 @@
 			})
 			LeekWars.setTitle(this.$t('forum.title'))
 			LeekWars.setActions([
-				{icon: 'chat_bubble', click: () => this.$router.push('/chat')},
-				{icon: 'search', click: () => this.$router.push('/search')}
+				{icon: 'mdi-chat-outline', click: () => this.$router.push('/chat')},
+				{icon: 'mdi-magnify', click: () => this.$router.push('/search')}
 			])
 		}
 		setForumLanguage(language: Language) {

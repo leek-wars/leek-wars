@@ -94,7 +94,7 @@
 				</v-tooltip>
 				<v-tooltip :open-delay="0" :close-delay="0" top content-class="top">
 					<template v-slot:activator="{ on }">
-						<v-icon v-ripple class="control" v-on="on" @click="game.sound = !game.sound">{{ game.sound ? 'mdi-volume-high' : 'mdi-volume-off' }}</v-icon>
+						<v-icon v-ripple class="control" v-on="on" @click="game.sound = !game.sound">{{ game.sound ? 'mdi-volume-high' : 'mdi-volume-low' }}</v-icon>
 					</template>
 					{{ $t(game.sound ? 'fight.sound_activated' : 'fight.sound_disactivated') }} (V)
 				</v-tooltip>
