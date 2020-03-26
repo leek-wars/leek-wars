@@ -746,7 +746,7 @@
 	}
 	.infos {
 		text-align: left;
-		width: 200px;
+		width: 250px;
 		margin: 0 auto;
 		margin-top: 6px;
 	}
@@ -849,7 +849,7 @@
 			border-left: 2px solid #ddd;
 		}
 		td {
-			padding: 0 20px;
+			padding: 0 17px;
 			text-align: center;
 		}
 		.big {
