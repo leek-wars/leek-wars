@@ -7,15 +7,11 @@ module.exports = function(source) {
 	const locale = match[2]
 	let nameUpper = (name.charAt(0).toUpperCase() + name.slice(1)).replace(/-([a-z])/g, (g) => g[1].toUpperCase())
 	let folder = name
-	let lang = name
 	if (name.endsWith('notifications')) { folder = 'notification' }
 	if (name.startsWith('forum')) { folder = 'forum' }
 	if (name.startsWith('moderation')) { folder = 'moderation' }
 	if (name.startsWith('chat')) { folder = 'chat' }
-	if (name.startsWith('bank')) {
-		folder = 'bank'
-		lang = 'bank'
-	}
+	if (name.startsWith('bank')) { folder = 'bank' }
 	// let locale = this.resourceQuery.substring(1) || 'fr'
 	// if (locale.indexOf('=') !== -1) {
 	// 	locale = locale.split('=')[1]
