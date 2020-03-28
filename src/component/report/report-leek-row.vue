@@ -68,6 +68,7 @@
 		border: 1px solid #ddd;
 		text-align: center;
 		padding: 4px 8px;
+		white-space: nowrap;
 	}
 	.name {
 		text-align: left;
