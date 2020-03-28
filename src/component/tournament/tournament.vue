@@ -219,7 +219,7 @@
 		height: number = 0
 		timerText: string = ''
 		timer: any
-		actions = [{icon: 'zoom_in', click: () => this.zoom()}]
+		actions = [{icon: 'mdi-magnify-plus-outline', click: () => this.zoom()}]
 
 		@Watch('$route.params', {immediate: true})
 		update() {
@@ -269,11 +269,11 @@
 		zoom() {
 			if (this.zoomed) {
 				this.zoomed = false
-				this.actions[0].icon = 'zoom_in'
+				this.actions[0].icon = 'mdi-magnify-plus-outline'
 			} else {
 				this.zoomed = true
 				this.height = window.innerHeight - 86
-				this.actions[0].icon = 'zoom_out'
+				this.actions[0].icon = 'mdi-magnify-minus-outline'
 			}
 		}
 		setupTimer() {
