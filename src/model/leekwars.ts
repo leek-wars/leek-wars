@@ -697,7 +697,7 @@ function formatTime(time: number) {
 function createCodeArea(code: string, element: HTMLElement) {
 	import(/* webpackChunkName: "codemirror" */ "@/codemirror-wrapper").then(wrapper => {
 		wrapper.CodeMirror.runMode(code, "leekscript", element)
-		element.innerHTML = '<span class="line-number"></span><pre class="code">' + element.innerHTML + '</pre>'
+		element.innerHTML = '<span class="line-number"></span><pre>' + element.innerHTML + '</pre>'
 		const num = element.innerHTML.split(/\n/).length
 		for (let j = 0; j < num; j++) {
 			const line_num = element.getElementsByTagName('span')[0]
@@ -709,6 +709,8 @@ function createCodeArea(code: string, element: HTMLElement) {
 function createCodeAreaSimple(code: string, element: HTMLElement) {
 	import(/* webpackChunkName: "codemirror" */ "@/codemirror-wrapper").then(wrapper => {
 		wrapper.CodeMirror.runMode(code, "leekscript", element)
+		element.innerHTML = '<pre>' + element.innerHTML + '</pre>'
+		element.classList.add('single')
 	})
 }
 
