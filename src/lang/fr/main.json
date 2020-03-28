@@ -116,6 +116,8 @@
 	"time_x_years_ago": "il y a {0} ans",
 	"total_level_n": "Niveau total : {0}",
 	"tournament": "Tournoi",
+	"tournament_of": "Tournoi du {0}",
+	"tournaments": "Tournois",
 	"trophies": "Trophées",
 	"tutorial": "Tutoriel",
 	"unread_messages": "Nouveaux messages non lus",
