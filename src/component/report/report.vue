@@ -144,7 +144,7 @@
 		</panel>
 
 		<panel v-if="errors.length > 0 || warnings.length > 0" class="warnings-error" toggle="report/warnings-errors" icon="mdi-alert">
-			<h2 slot="title">Erreurs et avertissements ({{ errors.length + warnings.length }})</h2>
+			<template slot="title">Erreurs et avertissements ({{ errors.length + warnings.length }})</template>
 			<div class="title"><b>{{ errors.length }}</b> erreurs</div>
 			<pre v-for="(e, i) in errors" :key="i" class="log error">[{{ e.entity }}] {{ e.data }}</pre>
 			<br>
