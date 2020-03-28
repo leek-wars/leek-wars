@@ -546,7 +546,7 @@
 			} else {
 				LeekWars.setActions([
 					{image: 'icon/garden.png', click: () => this.$router.push('/garden/challenge/farmer/' + farmer.id)},
-					{icon: 'question_answer', click: () => this.$router.push('/messages/new/' + farmer.id + '/' + farmer.name + '/'+ farmer.avatar_changed)}
+					{icon: 'mdi-email-outline', click: () => this.$router.push('/messages/new/' + farmer.id + '/' + farmer.name + '/'+ farmer.avatar_changed)}
 				])
 			}
 			this.getTrophies()
