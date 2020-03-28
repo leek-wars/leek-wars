@@ -108,10 +108,15 @@ Vue.directive('autostopscroll', {
 		})
 	}
 })
-Vue.directive('emojis', (el, binding, vnode) => {
-	if (LeekWars.nativeEmojis) { return }
-	const text = vnode.data && vnode.data.domProps && vnode.data.domProps.textContent ? vnode.data.domProps.textContent : el.innerHTML
-	el.innerHTML = LeekWars.formatEmojis(text)
+Vue.directive('emojis', (el) => {
+	el.childNodes.forEach((child) => {
+		if (child.nodeType === Node.TEXT_NODE) {
+			const html = LeekWars.formatEmojis(LeekWars.protect((child as Text).wholeText))
+			const template = document.createElement('span')
+			template.innerHTML = html
+			el.replaceChild(template, child)
+		}
+	})
 })
 Vue.directive('code', (el) => {
 	el.querySelectorAll('code:not(.formatted)').forEach((c) => {
