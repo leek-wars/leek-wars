@@ -540,7 +540,7 @@
 		margin-left: 10px;
 	}
 	#app.app .message {
-		width: calc(100% - 30px);
+		width: calc(100% - 20px);
 		padding: 5px;
 	}
 	.message .deleted {
@@ -570,7 +570,6 @@
 	}
 	.message .text {
 		padding: 5px;
-		padding-right: 10px;
 		margin-bottom: 40px;
 		word-break: break-word;
 	}
@@ -614,7 +613,7 @@
 		margin-right: 10px;
 	}
 	.response {
-		width: calc(100% - 20px);
+		width: 100%;
 		height: 170px;
 		max-width: 100%;
 		margin-top: 5px;
