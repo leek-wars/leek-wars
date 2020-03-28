@@ -296,7 +296,7 @@
 				</panel>
 			</div>
 			<div class="column6">
-				<panel v-if="team && team.tournaments.length > 0" :title="$t('tournaments')" icon="mdi-trophy">
+				<panel v-if="team && team.tournaments.length > 0" :title="$t('main.tournaments')" icon="mdi-trophy">
 					<tournaments-history v-if="team" slot="content" :tournaments="team.tournaments" />
 				</panel>
 			</div>

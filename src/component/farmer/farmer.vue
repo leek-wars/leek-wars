@@ -343,7 +343,7 @@
 				</panel>
 			</div>
 			<div class="column6">
-				<panel v-if="!farmer || farmer.tournaments.length > 0" :title="$t('tournaments')" icon="mdi-trophy">
+				<panel v-if="!farmer || farmer.tournaments.length > 0" :title="$t('main.tournaments')" icon="mdi-trophy">
 					<loader v-if="!farmer" />
 					<tournaments-history v-else slot="content" :tournaments="farmer.tournaments" />
 				</panel>

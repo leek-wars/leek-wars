@@ -235,7 +235,7 @@
 				</panel>
 			</div>
 			<div class="column6">
-				<panel v-if="leek && leek.tournaments && leek.tournaments.length > 0" :title="$t('tournaments')" icon="mdi-trophy">
+				<panel v-if="leek && leek.tournaments && leek.tournaments.length > 0" :title="$t('main.tournaments')" icon="mdi-trophy">
 					<tournaments-history slot="content" :tournaments="leek.tournaments" />
 				</panel>
 			</div>

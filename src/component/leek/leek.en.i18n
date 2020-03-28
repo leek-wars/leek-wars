@@ -87,8 +87,6 @@
 	"talent": "Leek solo Talent",
 	"title": "Title",
 	"tournament": "Tournament",
-	"tournament_of": "Tournament on {0}",
-	"tournaments": "Tournaments",
 	"tournament_time": "Solo tournament every day between 12:00 PM and 2:00 PM (French timezone)",
 	"unregister": "Unregister",
 	"use_a_potion": "Use a potion on {0}",
