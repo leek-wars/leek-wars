@@ -167,7 +167,7 @@
 				this.editor.on('cursorActivity', (_) => this.cursorChange())
 
 				this.show()
-				
+
 				// Lock scroll down
 				const codeMirrorScroll = codeMirrorElement.querySelector('.CodeMirror-scroll') as HTMLElement
 				if (codeMirrorScroll) {
@@ -233,7 +233,7 @@
 					this.characters = this.editor.getDoc().getValue().length
 					Vue.set(this.ai, 'included_lines', this.ai.total_lines - this.lines)
 					Vue.set(this.ai, 'included_chars', this.ai.total_chars - this.ai.code.length)
-					LeekWars.setSubTitle(this.$i18n.tc('editor.n_lines', this.lines))
+					LeekWars.setSubTitle(this.$i18n.tc('main.n_lines', this.lines))
 				})
 			}
 		}
@@ -297,7 +297,7 @@
 			}
 			this.lines = this.editor.getDoc().lineCount()
 			this.characters = this.editor.getDoc().getValue().length
-			LeekWars.setSubTitle(this.$i18n.tc('editor.n_lines', this.lines))
+			LeekWars.setSubTitle(this.$i18n.tc('main.n_lines', this.lines))
 
 			if (userChange && this.autoClosing) {
 
