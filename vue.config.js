@@ -46,6 +46,12 @@ module.exports = {
 				.loader(path.resolve('./src/component-loader.js'))
 				.end()
 		config.module
+			.rule('lang')
+			.test(/\.\w\w\.lang/)
+			.use('lang')
+				.loader(path.resolve('./src/translation-loader.js'))
+				.end()
+		config.module
 			.rule('images')
 			.use('url-loader')
 			.loader('url-loader')
