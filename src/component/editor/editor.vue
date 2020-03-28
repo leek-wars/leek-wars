@@ -325,6 +325,7 @@
 			})
 		}
 		mounted() {
+			LeekWars.footer = false
 			this.$root.$on('ctrlS', () => {
 				this.save()
 			})
@@ -440,6 +441,7 @@
 			this.$root.$off('escape')
 			this.$root.$off('htmlclick')
 			LeekWars.large = false
+			LeekWars.footer = true
 		}
 		beforeRouteLeave(to: Route, from: Route, next: Function) {
 			let num = 0

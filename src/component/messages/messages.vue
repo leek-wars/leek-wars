@@ -76,6 +76,12 @@
 				this.conversationRead()
 			})
 		}
+		mounted() {
+			LeekWars.footer = false
+		}
+		destroyed() {
+			LeekWars.footer = true
+		}
 		get currentConversation() {
 			return (this.currentID === 0) ? this.newConversation : (this.currentID ? this.$store.state.conversations[this.currentID] : null)
 		}

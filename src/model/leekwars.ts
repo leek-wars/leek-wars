@@ -162,6 +162,7 @@ const LeekWars = {
 	timeSeconds: (Date.now() / 1000) | 0,
 	large: false,
 	flex: false,
+	footer: true,
 	nativeEmojis: detectNativeEmojis(),
 	setLocale(locale: string) {
 		loadLanguageAsync(vueMain, locale)
