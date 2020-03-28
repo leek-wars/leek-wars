@@ -113,15 +113,10 @@ Vue.directive('emojis', (el, binding, vnode) => {
 	const text = vnode.data && vnode.data.domProps && vnode.data.domProps.textContent ? vnode.data.domProps.textContent : el.innerHTML
 	el.innerHTML = LeekWars.formatEmojis(text)
 })
-Vue.directive('code', {
-	inserted: (el) => {
-		el.querySelectorAll('code .smiley').forEach((smiley) => {
-			smiley.outerHTML = smiley.getAttribute('title') || ''
-		})
-		el.querySelectorAll('code').forEach((c) => {
-			LeekWars.createCodeArea(c.innerText, c)
-		})
-	}
+Vue.directive('code', (el) => {
+	el.querySelectorAll('code:not(.formatted)').forEach((c) => {
+		LeekWars.createCodeArea((c as HTMLElement).innerText, c as HTMLElement)
+	})
 })
 Vue.directive('large-emojis', {
 	inserted: (el) => {

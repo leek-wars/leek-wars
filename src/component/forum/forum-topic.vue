@@ -742,10 +742,6 @@
 	.message ::v-deep h3:before {
 		display: none;
 	}
-	.message ::v-deep code {
-		display: block;
-		width: 100%;
-	}
 	.emoji-picker ::v-deep .chat-input-emoji {
 		position: absolute;
 		right: 10px;
