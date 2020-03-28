@@ -13,15 +13,19 @@
 				<div v-for="(hint, index) of hints" :key="hint.fullName" :class="{active: selectedCompletion === index}" class="hint" @click="clickHint($event, index)">{{ hint.fullName }}</div>
 			</div>
 			<div v-if="selectedHint" class="details">
-				<span v-if="typeof(selectedHint.details) === 'string'" v-html="selectedHint.details"></span>
-				<weapon-preview v-if="selectedHint.details.type === 'weapon'" :weapon="selectedHint.details.weapon" />
+				<documentation-function v-if="selectedHint.type === 'function'" :fun="selectedHint.function" />
+				<documentation-constant v-else-if="selectedHint.type === 'constant'" :constant="selectedHint.constant" />
+				<weapon-preview v-else-if="selectedHint.details.type === 'weapon'" :weapon="selectedHint.details.weapon" />
 				<chip-preview v-else-if="selectedHint.details.type === 'chip'" :chip="selectedHint.details.chip" />
+				<span v-else v-html="selectedHint.details"></span>
 			</div>
 		</div>
 		<div v-show="detailDialog" v-if="detailDialogContent" ref="detailDialog" :style="{left: detailDialogLeft + 'px', top: detailDialogTop + 'px'}" class="detail-dialog">
-			<span v-if="typeof(detailDialogContent.details) === 'string'" v-html="detailDialogContent.details"></span>
-			<weapon-preview v-if="detailDialogContent.details.type === 'weapon'" :weapon="detailDialogContent.details.weapon" />
+			<documentation-function v-if="detailDialogContent.type === 'function'" :fun="detailDialogContent.function" />
+			<documentation-constant v-else-if="detailDialogContent.type === 'constant'" :constant="detailDialogContent.constant" />
+			<weapon-preview v-else-if="detailDialogContent.details.type === 'weapon'" :weapon="detailDialogContent.details.weapon" />
 			<chip-preview v-else-if="detailDialogContent.details.type === 'chip'" :chip="detailDialogContent.details.chip" />
+			<span v-else v-html="detailDialogContent.details"></span>
 		</div>
 		<div v-show="errorTooltip" ref="tooltip" :style="{left: errorTooltipLeft + 'px', top: errorTooltipTop + 'px'}" class="error-tooltip">{{ errorTooltipText }}</div>
 		<loader v-if="loading" />
@@ -37,6 +41,8 @@
 	import { LeekWars } from '@/model/leekwars'
 	import { store } from '@/model/store'
 	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
+	import DocumentationConstant from '../documentation/documentation-constant.vue'
+	import DocumentationFunction from '../documentation/documentation-function.vue'
 
 	const AUTO_SHORTCUTS = [
 		["lama", "#LamaSwag", "", "Le pouvoir du lama"],
@@ -48,7 +54,9 @@
 
 	@Component({ name: 'ai-view', components: {
 		'weapon-preview': WeaponPreview,
-		'chip-preview': ChipPreview
+		'chip-preview': ChipPreview,
+		'documentation-function': DocumentationFunction,
+		'documentation-constant': DocumentationConstant
 	}})
 	export default class AIView extends Vue {
 		@Prop({required: true}) ai!: AI
@@ -931,8 +939,7 @@
 		vertical-align: top;
 		height: 260px;
 		padding: 2px;
-		box-shadow: 2px 3px 5px rgba(0,0,0,.2);
-		border: 1px solid silver;
+		box-shadow: 0px 5px 5px -3px rgba(0, 0, 0, 0.2), 0px 8px 10px 1px rgba(0, 0, 0, 0.14), 0px 3px 14px 2px rgba(0, 0, 0, 0.12);
 	}
 	.hint-dialog .hint.active {
 		background: #5fad1b;
@@ -949,22 +956,21 @@
 		line-height: 20px;
 	}
 	.hint-dialog .details {
-		width: 400px;
+		width: 500px;
 		overflow-y: auto;
 		background: #f2f2f2;
 		max-height: 600px;
-		padding: 5px;
-		border: 1px solid silver;
-		box-shadow: 2px 3px 5px rgba(0,0,0,.2);
+		padding: 8px;
+		box-shadow: 0px 5px 5px -3px rgba(0, 0, 0, 0.2), 0px 8px 10px 1px rgba(0, 0, 0, 0.14), 0px 3px 14px 2px rgba(0, 0, 0, 0.12);
 	}
 	.detail-dialog {
 		position: absolute;
 		padding: 8px;
 		background: #f2f2f2;
-		width: 350px;
-		box-shadow: 2px 3px 5px rgba(0,0,0,.2);
-		border: 1px solid silver;
+		width: 500px;
+		box-shadow: 0px 5px 5px -3px rgba(0, 0, 0, 0.2), 0px 8px 10px 1px rgba(0, 0, 0, 0.14), 0px 3px 14px 2px rgba(0, 0, 0, 0.12);
 		z-index: 100;
+		border-radius: 4px;
 	}
 	.details ::v-deep .deprecated-message {
 		color: #ff7f00;

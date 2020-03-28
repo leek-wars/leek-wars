@@ -4,12 +4,12 @@
 		<div v-if="constant.deprecated" class="deprecated-message">Cette constante est dépréciée.</div>
 		<chip-preview v-if="constant.name.startsWith('CHIP_')" :chip="LeekWars.chips[constant.value]" />
 		<weapon-preview v-else-if="constant.name.startsWith('WEAPON_')" :weapon="LeekWars.weapons[constant.value]" />
-		<div v-else v-dochash class="content" v-html="$t('documentation.const_' + constant.name)"></div>
-		<h4>{{ $t('documentation.value') }}</h4>
+		<div v-else-if="$te('doc.const_' + constant.name)" v-dochash v-code class="content" v-html="$t('doc.const_' + constant.name)"></div>
+		<h4>{{ $t('doc.value') }}</h4>
 		<ul>
 			<li>{{ constant.name }} = {{ constant.value }}</li>
 		</ul>
-		<h4 v-if="chips.length + weapons.length">{{ $t('documentation.items') }} ({{ chips.length + weapons.length }})</h4>
+		<h4 v-if="chips.length + weapons.length">{{ $t('doc.items') }} ({{ chips.length + weapons.length }})</h4>
 		<router-link v-for="chip of chips" :key="chip.id" :to="'/help/documentation/CHIP_' + chip.name.toUpperCase()">
 			<rich-tooltip-chip v-slot="{ on }" :chip="chip" :bottom="true" :instant="true" @input="$emit('input', $event)">
 				<img :src="'/image/chip/small/' + chip.name + '.png'" class="item" v-on="on">
@@ -75,12 +75,25 @@
 </script>
 
 <style lang="scss" scoped>
-.item {
-	height: 50px;
-	margin: 0 2px;
-}
-.weapon {
-	width: 104px;
-	object-fit: contain;
-}
+	h2 {
+		margin-bottom: 10px;
+		font-size: 20px;
+		color: #333;
+	}
+	h4 {
+		font-weight: 500;
+		margin: 0;
+		color: #666;
+		margin-top: 10px;
+		margin-bottom: 8px;
+		font-size: 15px;
+	}
+	.item {
+		height: 50px;
+		margin: 0 2px;
+	}
+	.weapon {
+		width: 104px;
+		object-fit: contain;
+	}
 </style>

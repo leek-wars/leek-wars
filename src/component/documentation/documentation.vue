@@ -35,7 +35,7 @@
 					<div slot="content">
 						<div v-autostopscroll="'bottom'" class="items-list">
 							<div v-for="(category, c) of filteredCategories" :key="category.id">
-								<h2>{{ $t('function_category_' + categories[c].name) }}</h2>
+								<h2>{{ $t('doc.function_category_' + categories[c].name) }}</h2>
 								<router-link v-for="(item, i) in category" v-if="item.name === item.real_name" :key="i" :to="'/help/documentation/' + item.name" :item="item.name" class="item">
 									{{ item.name }}
 								</router-link>
@@ -57,12 +57,14 @@
 </template>
 
 <script lang="ts">
+	import { locale } from '@/locale'
 	import { Function } from '@/model/function'
 	import { LeekWars } from '@/model/leekwars'
 	import { Component, Vue, Watch } from 'vue-property-decorator'
 	import Breadcrumb from '../forum/breadcrumb.vue'
 	import DocumentationConstant from './documentation-constant.vue'
 	import DocumentationFunction from './documentation-function.vue'
+	import(/* webpackChunkName: "[request]" */ /* webpackMode: "eager" */ `@/lang/doc.${locale}.lang`)
 
 	@Component({
 		name: 'documentation',
@@ -235,7 +237,7 @@
 
 <style lang="scss" scoped>
 	.documentation {
-		height: calc(100vh - 140px);
+		height: calc(100vh - 128px);
 		padding-bottom: 12px;
 	}
 	#app.app .documentation {
@@ -294,21 +296,6 @@
 		max-height: 999999px;
 		height: initial;
 		margin-right: 0;
-		::v-deep a {
-			color: #5fad1b;
-			font-weight: 500;
-			&:hover {
-				text-decoration: underline;
-			}
-		}
-		::v-deep h2 {
-			margin-bottom: 10px;
-			font-size: 20px;
-			color: #333;
-		}
-		::v-deep ul {
-			margin: 5px 0;
-		}
 		&::last-child {
 			margin-bottom: 0;
 		}
@@ -319,14 +306,6 @@
 	}
 	.items .function-name {
 		color: black;
-	}
-	.item ::v-deep h4 {
-		font-weight: 500;
-		margin: 0;
-		color: #666;
-		margin-top: 10px;
-		margin-bottom: 8px;
-		font-size: 15px;
 	}
 	.items ::v-deep .item.deprecated .content {
 		opacity: 0.6;

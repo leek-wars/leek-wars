@@ -200,6 +200,7 @@
 </template>
 
 <script lang="ts">
+	import { locale } from '@/locale'
 	import { AI } from '@/model/ai'
 	import { LeekWars } from '@/model/leekwars'
 	import { Component, Vue, Watch } from 'vue-property-decorator'
@@ -210,7 +211,8 @@
 	import EditorTabs from './editor-tabs.vue'
 	import EditorTest from './editor-test.vue'
 	import { generateKeywords } from './keywords'
-	import './leekscript-monokai.css'
+	import './leekscript-monokai.scss'
+	import(/* webpackChunkName: "[request]" */ /* webpackMode: "eager" */ `@/lang/doc.${locale}.lang`)
 
 	const DEFAULT_FONT_SIZE = 16
 	const DEFAULT_LINE_HEIGHT = 22
