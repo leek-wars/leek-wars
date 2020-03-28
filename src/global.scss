@@ -764,16 +764,27 @@ code {
 	font-family: monospace;
 	white-space: pre-wrap;
 	display: flex;
-	line-height: 25px;
 	padding: 6px 0;
 	pre {
 		overflow: auto;
 		word-break: break-all;
-		padding: 6px;
-		border: 6px solid #f7f7f7;
 		overflow-x: auto;
-		background: white;
 		flex: 1;
+	}
+	&.single {
+		display: inline-block;
+		border: 1px solid #ccc;
+		padding: 1px 4px;
+		border-radius: 3px;
+		pre {
+			white-space: pre-wrap;
+		}
+	}
+	&:not(.single) pre {
+		border: 6px solid #f7f7f7;
+		background: white;
+		padding: 6px;
+		line-height: 25px;
 	}
 	.line-number {
 		color: #666;
@@ -782,6 +793,7 @@ code {
 		background: #f7f7f7;
 		text-align: right;
 		padding: 12px 0;
+		line-height: 25px;
 		span {
 			display: block;
 			padding-right: 4px;
@@ -882,12 +894,6 @@ body #app:not(.app) {
 	text-overflow: ellipsis;
 	overflow: hidden;
 	white-space: nowrap;
-}
-code.single {
-	display: inline-block;
-	border: 1px solid #ccc;
-	padding: 1px 4px;
-	border-radius: 3px;
 }
 .pointer {
 	cursor: pointer;

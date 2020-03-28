@@ -1,5 +1,5 @@
 <template>
-	<div></div>
+	<code></code>
 </template>
 
 <script lang="ts">
@@ -10,7 +10,7 @@
 		@Prop({required: true}) code!: string
 		@Prop() single!: boolean
 		@Watch('code', {immediate: true})
-		@Watch('simple', {immediate: true})
+		@Watch('single', {immediate: true})
 		update() {
 			this.$nextTick(() => {
 				if (this.single) {
