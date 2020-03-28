@@ -38,7 +38,7 @@ class Bulb extends Entity {
 		} else if (skin === 7) {
 			this.bodyTexFront = this.game.T.metallic_bulb_front
 			this.bodyTexBack = this.game.T.metallic_bulb_back
-		} else if (skin === 7) {
+		} else if (skin === 8) {
 			this.bodyTexFront = this.game.T.wizard_bulb_front
 			this.bodyTexBack = this.game.T.wizard_bulb_back
 		}
