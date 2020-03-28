@@ -70,6 +70,10 @@
 				for (const c in this.changelog) {
 					Vue.set(this.changelog[c], 'active', parseInt(c, 10) < 2 ? true : false)
 				}
+				const lw_version = parseInt(LeekWars.version.replace(/\./g, ''), 10)
+				if (this.changelog[0].version !== lw_version) {
+					this.changelog.unshift({active: true, image: true, version: lw_version, version_name: LeekWars.version.replace(/\.(\d)$/, '$1'), date: LeekWars.formatDate(Date.now() / 1000), data: 'changelog_' + lw_version})
+				}
 				LeekWars.setTitle(this.$t('title'))
 				this.$root.$emit('loaded')
 			})
