@@ -38,40 +38,42 @@
 			</tr>
 		</table>
 
-		<table v-else-if="fight.type === FightType.TEAM" class="report">
-			<tr>
-				<th>{{ $t('report.team') }}</th>
-				<th>{{ $t('report.level') }}</th>
-				<th>{{ $t('report.xp') }}</th>
-				<th v-if="fight.context !== FightContext.CHALLENGE" class="gain">{{ $t('report.talent') }}</th>
-			</tr>
-			<tr>
-				<td class="name">
-					<span class="alive">
-						<router-link :to="'/team/' + team.id">{{ team.name }}</router-link>
-					</span>
-				</td>
-				<td class="level">{{ team.level }}</td>
-				<td class="xp">
-					<tooltip>
-						<template v-slot:activator="{ on }">
-							<div class="bar" v-on="on">
-								<span :style="{width: currentBar + '%'}" class="current_xp"></span>
-								<span :style="{width: newBar + '%'}" class="new_xp team"></span>
-							</div>
-						</template>
-						{{ team.cur_xp | number }} / {{ team.next_xp | number }}
-					</tooltip>
-					<span>{{ team.xp | number }}</span>
-				</td>
-				<td v-if="fight.context !== FightContext.CHALLENGE" class="talent">
-					<img src="/image/talent.png">
-					{{ team.talent }}
-					<span v-if="team.talent_gain >= 0">+ {{ team.talent_gain }}</span>
-					<span v-else>- {{ -team.talent_gain }}</span>
-				</td>
-			</tr>
-		</table>
+		<div v-else-if="fight.type === FightType.TEAM" class="scroll-x">
+			<table class="report">
+				<tr>
+					<th>{{ $t('report.team') }}</th>
+					<th>{{ $t('report.level') }}</th>
+					<th>{{ $t('report.xp') }}</th>
+					<th v-if="fight.context !== FightContext.CHALLENGE" class="gain">{{ $t('report.talent') }}</th>
+				</tr>
+				<tr>
+					<td class="name">
+						<span class="alive">
+							<router-link :to="'/team/' + team.id">{{ team.name }}</router-link>
+						</span>
+					</td>
+					<td class="level">{{ team.level }}</td>
+					<td class="xp">
+						<tooltip>
+							<template v-slot:activator="{ on }">
+								<div class="bar" v-on="on">
+									<span :style="{width: currentBar + '%'}" class="current_xp"></span>
+									<span :style="{width: newBar + '%'}" class="new_xp team"></span>
+								</div>
+							</template>
+							{{ team.cur_xp | number }} / {{ team.next_xp | number }}
+						</tooltip>
+						<span>{{ team.xp | number }}</span>
+					</td>
+					<td v-if="fight.context !== FightContext.CHALLENGE" class="talent">
+						<img src="/image/talent.png">
+						{{ team.talent }}
+						<span v-if="team.talent_gain >= 0">+ {{ team.talent_gain }}</span>
+						<span v-else>- {{ -team.talent_gain }}</span>
+					</td>
+				</tr>
+			</table>
+		</div>
 
 		<div class="scroll-x">
 			<table class="report">
@@ -166,6 +168,7 @@
 		border: 1px solid #ddd;
 		text-align: center;
 		padding: 4px 8px;
+		white-space: nowrap;
 	}
 	.name {
 		text-align: left;
