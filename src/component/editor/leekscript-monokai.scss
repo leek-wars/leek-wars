@@ -1,0 +1,106 @@
+.theme-monokai .CodeMirror {
+	background: #272822;
+	color: #f8f8f2;
+
+	.cm-number {
+		color: #ae81ff;
+	}
+	.cm-string {
+		color: #e6db74;
+	}
+	.cm-variable-declaration,
+	.cm-function-declaration {
+		color: #66d9ef;
+		font-weight: normal;
+		font-style: italic;
+	}
+	.cm-keyword {
+		color: #f92672;
+		font-weight: normal;
+	}
+	.cm-atom {
+		color: #ae81ff;
+		font-weight: normal;
+	}
+	.cm-comment {
+		color: #75715e;
+	}
+	.cm-variable {
+		color: #f8f8f2;
+	}
+	.cm-variable-2 {
+		color: #f8f8f2;
+	}
+	.CodeMirror-lines .activeline {
+		background: #222;
+	}
+	.cm-operator {
+		color: #f92672;
+	}
+	.cm-function {
+		color: #a6e22e;
+	}
+	.cm-def {
+		color: #fd971f;
+	}
+	.cm-lsconst {
+		color: white;
+		font-weight: bold;
+	}
+	.cm-lsfunc {
+		color: white;
+		font-style: italic;
+	}
+	.cm-lsfunc-deprec {
+		color: white;
+	}
+	.cm-matchhighlight {
+		border: 1px solid #aaa;
+		border-radius: 2px;
+		margin: -1px;
+	}
+	.cm-matchhighlight-green {
+		background: #5fad1b;
+	}
+}
+.theme-monokai .CodeMirror-gutters {
+	background: #303029;
+	border-right: 1px solid #444;
+}
+
+.theme-monokai .CodeMirror-selected,
+.theme-monokai .CodeMirror-focused .CodeMirror-selected {
+	background: #555;
+}
+.theme-monokai .CodeMirror-matchingbracket {
+	color: #f8f8f2;
+	border-bottom: 1px solid #f8f8f2;
+}
+.theme-monokai .CodeMirror-nonmatchingbracket {
+	color: #f00;
+	font-weight: bold;
+}
+.theme-monokai .CodeMirror div.CodeMirror-cursor {
+	border-left: 1px solid #eee;
+}
+.theme-monokai ::-webkit-scrollbar-thumb {
+	background: #555;
+}
+.theme-monokai ::-webkit-scrollbar-thumb:hover {
+	background: #666;
+}
+.theme-monokai .item.selected > .label {
+	background: #666;
+}
+.theme-monokai .tabs-wrapper {
+	.tab {
+		background: #555;
+		color: #eee;
+	}
+	.tab.selected {
+		background: #272822;
+	}
+	.tab.selected .name {
+		color: white;
+	}
+}
