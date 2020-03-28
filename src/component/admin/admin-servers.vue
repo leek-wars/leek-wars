@@ -35,8 +35,10 @@
 					<h4>➤ Queue ({{ queue.length }})</h4>
 					<div class="farmers">
 						<div v-for="(fight, f) in queue" :key="f" class="card farmer">
-							{{ fight[0] }}
-							<div class="fight"><router-link :to="'/fight/' + fight[1]">{{ fight[1] }}</router-link></div>
+							<avatar :farmer="{id: fight[0], avatar_changed: Date.now() / 1000}" /> {{ fight[0] }}
+							<div class="fight">
+								<router-link :to="'/fight/' + fight[1]">{{ fight[1] }}</router-link>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -197,6 +199,9 @@
 		padding: 4px 4px;
 		margin-right: 6px;
 		margin-bottom: 6px;
+		.avatar {
+			width: 50px;
+		}
 		.fight {
 			font-size: 13px;
 			a {
