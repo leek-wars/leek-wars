@@ -158,11 +158,15 @@
 			})
 			this.$root.$on('back', this.back)
 		}
+		mounted() {
+			LeekWars.footer = false
+		}
 		back() {
 			this.$router.push('/help/documentation')
 		}
 		destroyed() {
 			LeekWars.large = false
+			LeekWars.footer = true
 			this.$root.$off('back', this.back)
 		}
 
