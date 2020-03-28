@@ -68,9 +68,7 @@
 			<span>{{ $t('effect.target_not_summons') }}</span>
 		</tooltip>
 
-		<code v-if="LeekWars.effectRawOpened" class="raw">
-			<lw-code :single="true" :code="'[' + effect.id + ' ' + EffectType[effect.id] + ', ' + format(effect.value1) + ', ' + format(effect.value1 + effect.value2) + ', ' + effect.turns + ', ' + effect.targets + ', ' + effect.modifiers + ']'" />
-		</code>
+		<lw-code v-if="LeekWars.effectRawOpened" :single="true" :code="'[' + effect.id + ' ' + EffectType[effect.id] + ', ' + format(effect.value1) + ', ' + format(effect.value1 + effect.value2) + ', ' + effect.turns + ', ' + effect.targets + ', ' + effect.modifiers + ']'" class="raw" />
 	</div>
 </template>
 
@@ -120,6 +118,8 @@
 	}
 	.raw {
 		font-size: 13px;
-		white-space: pre-wrap;
+		padding: 4px 0;
+		display: block;
+		border: none;
 	}
 </style>
