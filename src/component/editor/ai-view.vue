@@ -478,7 +478,7 @@
 			this.updateMouseAndCtrl()
 		}
 		public updateMouseAndCtrl() {
-			if (!this.popups) { return null }
+			if (!this.popups || !this.editor) { return null }
 			if (this.hintDialog) { return null }
 
 			if (!this.ctrl && this.underlineMarker) {
