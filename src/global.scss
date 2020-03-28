@@ -763,38 +763,33 @@ img.emoji {
 code {
 	font-family: monospace;
 	white-space: pre-wrap;
-}
-pre.code {
-	overflow: auto;
-	word-break: break-all;
-	padding: 6px;
-	margin: 6px 0;
-	border: 6px solid #f7f7f7;
-	overflow-x: auto;
-	background: white;
+	display: flex;
 	line-height: 25px;
-}
-pre.code .line-number {
-	color: #666;
-	display: block;
-	user-select: none;
-	float: left;
-	background: #f7f7f7;
-	text-align: right;
 	padding: 6px 0;
-	margin-top: -6px;
-	margin-bottom: -6px;
-	margin-left: -6px;
-	margin-right: 6px;
+	pre {
+		overflow: auto;
+		word-break: break-all;
+		padding: 6px;
+		border: 6px solid #f7f7f7;
+		overflow-x: auto;
+		background: white;
+		flex: 1;
+	}
+	.line-number {
+		color: #666;
+		display: block;
+		user-select: none;
+		background: #f7f7f7;
+		text-align: right;
+		padding: 12px 0;
+		span {
+			display: block;
+			padding-right: 4px;
+			padding-left: 10px;
+		}
+	}
 }
-pre.code .line-number span {
-	display: block;
-	padding: 0px 6px;
-}
-pre.code .cl {
-	display: block;
-	clear: both;
-}
+
 #app.app .page-bar .action {
 	display: none;
 }
