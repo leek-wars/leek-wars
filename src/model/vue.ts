@@ -126,15 +126,12 @@ Vue.directive('code', {
 Vue.directive('large-emojis', {
 	inserted: (el) => {
 		if (!el.classList.contains('large-emojis')) {
-			const firstChild = el.childNodes[0]
-			let onlyEmojis = false
-			if (firstChild) {
-				if (firstChild.nodeType === Node.ELEMENT_NODE) {
-					onlyEmojis = true
-				} else if (firstChild.nodeType === Node.TEXT_NODE) {
-					onlyEmojis = firstChild.textContent!.length === 0
+			let onlyEmojis = true
+			el.childNodes.forEach((child) => {
+				if (child.nodeType === Node.TEXT_NODE) {
+					onlyEmojis = onlyEmojis && child.textContent!.length === 0
 				}
-			}
+			})
 			if (onlyEmojis) {
 				el.classList.add('large-emojis')
 			}
