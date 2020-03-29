@@ -362,7 +362,7 @@
 			LeekWars.setActions(this.actions)
 		}
 		updateSubtitle() {
-			if (this.$store.getters.connected) {
+			if (this.$store.state.farmer) {
 				LeekWars.setSubTitle(this.$t('main.x_habs', [LeekWars.formatNumber(this.$store.state.farmer.habs)]) + " • " + this.$t('main.x_crystals', [LeekWars.formatNumber(this.$store.state.farmer.crystals)]))
 			}
 		}
