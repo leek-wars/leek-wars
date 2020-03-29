@@ -884,7 +884,7 @@
 	}
 	.bar {
 		width: 100%;
-		height: 10px;
+		height: 12px;
 		margin-top: 5px;
 		background: white;
 		border: 1px solid #ddd;
