@@ -511,6 +511,34 @@ const POTIONS: {[key: string]: PotionTemplate} = {
     level: 1,
     consumable: 0,
     effects: [ { type: 2, params: [ '15' ] } ]
+  },
+  '137': {
+    id: 137,
+    name: 'skin_pink',
+    level: 1,
+    consumable: 0,
+    effects: [ { type: 2, params: [ '16' ] } ]
+  },
+  '138': {
+    id: 138,
+    name: 'skin_grey',
+    level: 1,
+    consumable: 0,
+    effects: [ { type: 2, params: [ '17' ] } ]
+  },
+  '139': {
+    id: 139,
+    name: 'skin_turquoise',
+    level: 1,
+    consumable: 0,
+    effects: [ { type: 2, params: [ '18' ] } ]
+  },
+  '140': {
+    id: 140,
+    name: 'skin_celestial_blue',
+    level: 1,
+    consumable: 0,
+    effects: [ { type: 2, params: [ '19' ] } ]
   }
 }
 export { POTIONS }
