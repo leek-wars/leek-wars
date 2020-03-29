@@ -115,7 +115,7 @@
 			<p>{{ $t('tools_list') }}</p>
 			<div v-for="(category, c) in technologies" :key="c" class="techno">
 				<div class="title">
-					<h4>{{ $t('about.' + category.name) }}</h4>
+					<h4>{{ $t(category.name) }}</h4>
 				</div>
 				<div class="languages">
 					<a v-for="(techno, t) in category.items" :key="t" :href="techno.link" target="_blank" rel="noopener">
