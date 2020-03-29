@@ -109,7 +109,7 @@
 				else if (fight.result === "defeat") { this.defeats++ }
 				else { this.draws++ }
 			}
-			this.ratio = this.defeats === 0 ? '' + this.victories : LeekWars.numberPrecision(this.victories / this.defeats, 3)
+			this.ratio = this.defeats === 0 ? '∞' : LeekWars.numberPrecision(this.victories / this.defeats, 3)
 		}
 	}
 </script>
