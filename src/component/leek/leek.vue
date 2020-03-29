@@ -147,7 +147,7 @@
 						</characteristic-tooltip>
 						<center v-if="leek && my_leek">
 							<br>
-							<v-btn v-if="leek.capital > 0" color="primary" @click="capitalDialog = true">{{ $t('n_capital', [leek.capital]) }}</v-btn>&nbsp;
+							<v-btn v-if="leek.capital > 0" color="primary" @click="capitalDialog = true">{{ $t('main.n_capital', [leek.capital]) }}</v-btn>&nbsp;
 							<v-btn class="potions-button" @click="potionDialog = true">
 								<img src="/image/icon/black/potion.png">
 								{{ $t('potions') }}
