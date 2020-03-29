@@ -5,6 +5,24 @@
 				<h1>{{ $t('title') }}</h1>
 			</div>
 			<div v-if="!LeekWars.mobile" class="tabs">
+				<router-link to="/about">
+					<div class="tab">
+						<v-icon>mdi-information-variant</v-icon>
+						{{ $t('main.about') }}
+					</div>
+				</router-link>
+				<router-link to="/changelog">
+					<div class="tab">
+						<v-icon>mdi-format-list-bulleted-square</v-icon>
+						{{ $t('main.changelog') }}
+					</div>
+				</router-link>
+				<router-link to="/app">
+					<div class="tab">
+						<v-icon>mdi-cellphone-android</v-icon>
+						{{ $t('main.app') }}
+					</div>
+				</router-link>
 				<div class="tab" @click="playing = !playing">
 					<i class="material-icons">{{ playing ? 'pause' : 'play_arrow' }}</i>
 					<span>{{ $t(playing ? 'pause' : 'play') }}</span>

@@ -2,6 +2,26 @@
 	<div class="changelog-page">
 		<div class="page-header page-bar">
 			<h1>{{ $t('title') }}</h1>
+			<div class="tabs">
+				<router-link to="/about">
+					<div class="tab">
+						<v-icon>mdi-information-variant</v-icon>
+						{{ $t('main.about') }}
+					</div>
+				</router-link>
+				<router-link to="/statistics">
+					<div class="tab">
+						<v-icon>mdi-chart-timeline-variant</v-icon>
+						{{ $t('main.stats') }}
+					</div>
+				</router-link>
+				<router-link to="/app">
+					<div class="tab">
+						<v-icon>mdi-cellphone-android</v-icon>
+						{{ $t('main.app') }}
+					</div>
+				</router-link>
+			</div>
 		</div>
 		<panel v-if="!changelog" class="first">
 			<loader />
