@@ -208,7 +208,7 @@
 	import AIView from './ai-view.vue'
 	import EditorFolder from './editor-folder.vue'
 	import { AIItem, Folder, Item } from './editor-item'
-	import EditorTabs from './editor-tabs.vue'
+	const EditorTabs = () => import(/* webpackChunkName: "[request]" */ `@/component/editor/editor-tabs.${locale}.i18n`)
 	const EditorTest = () => import(/* webpackChunkName: "[request]" */ `@/component/editor/editor-test.${locale}.i18n`)
 	import { generateKeywords } from './keywords'
 	import './leekscript-monokai.scss'
@@ -399,7 +399,7 @@
 						this.currentEditor = (this.$refs.editors as AIView[]).find(editor => editor.ai === ai) || null
 					})
 					if (this.$refs.tabs) {
-						(this.$refs.tabs as EditorTabs).add(this.currentAI)
+						(this.$refs.tabs as any).add(this.currentAI)
 					}
 					LeekWars.setTitle(this.currentAI.name)
 					LeekWars.splitShowContent()
@@ -599,7 +599,7 @@
 					Vue.delete(this.$data.activeAIs, '' + this.currentID)
 					this.$store.commit('delete-ai', this.currentID)
 					if (this.$refs.tabs) {
-						(this.$refs.tabs as EditorTabs).closeById(this.currentID)
+						(this.$refs.tabs as any).closeById(this.currentID)
 					}
 					(this.$refs.editorTest as any).onAIDeleted(this.currentID)
 					ai_deleted = true
