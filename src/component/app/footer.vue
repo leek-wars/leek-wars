@@ -3,7 +3,7 @@
 		<div class="footer">
 			<table><tr>
 				<td width="50%">
-					<router-link to="/"><h4>Leek Wars {{ version }}</h4></router-link>
+					<router-link to="/"><h4>Leek Wars {{ LeekWars.version }}</h4></router-link>
 					<br>
 					<router-link to="/about">{{ $t('main.about') }}</router-link> - <router-link to="/statistics">{{ $t('main.statistics') }}</router-link> - <router-link to="/changelog">{{ $t('main.changelog') }}</router-link> - <router-link to="/app">{{ $t('main.app') }}</router-link>
 					<div class="social">
@@ -34,12 +34,7 @@
 	import { LeekWars } from '@/model/leekwars'
 	import { Component, Vue } from 'vue-property-decorator'
 	@Component({ name: 'lw-footer' })
-	export default class Footer extends Vue {
-		get version() {
-			const v = LeekWars.version.split('.')
-			return v[0] + '.' + v[1] + v[2]
-		}
-	}
+	export default class Footer extends Vue {}
 </script>
 
 <style lang="scss" scoped>

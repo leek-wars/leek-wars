@@ -35,7 +35,7 @@
 				<img class="illustration" src="/image/about/illustration.png">
 				<br>
 				<h2 class="title">Leek Wars</h2>
-				<h4>{{ $t('version_n', [version]) }}</h4>
+				<h4>{{ $t('version_n', [LeekWars.version]) }}</h4>
 				<br>
 				<a href="https://www.facebook.com/LeekWars">
 					<img height="28" src="image/about/facebook_like.png">
@@ -209,10 +209,6 @@
 			]},
 		]
 
-		get version() {
-			const v = LeekWars.version.split('.')
-			return v[0] + '.' + v[1] + v[2]
-		}
 
 		created() {
 			LeekWars.setTitle(this.$i18n.t('about.title'))
