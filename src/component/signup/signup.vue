@@ -76,7 +76,7 @@
 			<div class="container">
 				<div class="column4">
 					<router-link to="/ranking/active">
-						<h4>{{ $t('leek') }} <span class="arrow">▶</span></h4>
+						<h4>{{ $t('main.leek') }} <span class="arrow">▶</span></h4>
 					</router-link>
 					<table class="ranking">
 						<tr class="header">
@@ -128,7 +128,7 @@
 				</div>
 				<div class="column4">
 					<router-link to="/ranking/team/active">
-						<h4>{{ $t('team') }} <span class="arrow">▶</span></h4>
+						<h4>{{ $t('main.team') }} <span class="arrow">▶</span></h4>
 					</router-link>
 					<table class="ranking">
 						<tr class="header">

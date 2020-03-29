@@ -430,7 +430,7 @@
 						<div class="name">{{ $t('potion.' + LeekWars.potionsBySkin[leek.skin].name) }}</div>
 					</div>
 					<div v-ripple class="item card" @click="hatDialog = true">
-						<div class="title">{{ $t('leek.hat') }}</div>
+						<div class="title">{{ $t('hat') }}</div>
 						<img v-if="leek.hat" class="image" :src="'/image/hat/' + LeekWars.hats[LeekWars.hatTemplates[leek.hat].item].name + '.png'">
 						<img v-else class="image" src="/image/hat/no_hat.png">
 						<div v-if="leek.hat" class="name">{{ $t('hat.' + LeekWars.hats[LeekWars.hatTemplates[leek.hat].item].name) }}</div>
@@ -443,7 +443,7 @@
 								</template>
 								{{ $t('pomp.hold_weapon') }}
 							</tooltip>
-							{{ $t('leek.weapon') }}
+							{{ $t('weapon') }}
 						</div>
 						<template v-if="holdWeaponEnabled">
 							<img v-if="leek.weapon" class="image" :src="'/image/weapon/' + LeekWars.weapons[leek.weapon].name + '.png'">
@@ -463,11 +463,11 @@
 								</template>
 								{{ $t('pomp.leek_title') }}
 							</tooltip>
-							{{ $t('leek.title') }}
+							{{ $t('title') }}
 						</div>
 						<template v-if="leekTitleEnabled">
 							<span class="large-icon image">«<v-icon>mdi-format-font</v-icon>»</span>
-							<div v-if="leek.title.length" class="name">{{ $t('leek.title') }}</div>
+							<div v-if="leek.title.length" class="name">{{ $t('title') }}</div>
 						</template>
 						<template v-else>
 							<img class="image" src="/image/pomp/leek_title.png">
