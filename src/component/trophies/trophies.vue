@@ -17,7 +17,7 @@
 				<div :style="{width: (loaded ? Math.floor(100 * count / total) : 0) + '%'}" class="bar striked"></div>
 			</div>
 		</panel>
-		<panel v-for="(category, c) in categories" :key="category.id" :icon="icons[c]">
+		<panel v-for="category in categories" :key="category.id" :icon="icons[category.id - 1]">
 			<template slot="title">{{ $t('category_' + category.name) }}</template>
 			<template v-if="category.id != 6" slot="actions">
 				<div class="category-bar-wrapper">
@@ -80,7 +80,14 @@
 		loaded: boolean = false
 		hide_unlocked: boolean = localStorage.getItem('options/hide-unlocked-trophies') === 'true'
 		icons = [
-			'mdi-trophy-variant-outline', 'mdi-sword-cross', 'mdi-trophy-outline', 'mdi-code-braces', 'mdi-emoticon-outline', 'mdi-basket-outline', 'mdi-chat-outline', 'mdi-star-outline'
+			'mdi-trophy-variant-outline',
+			'mdi-sword-cross',
+			'mdi-trophy-outline',
+			'mdi-emoticon-outline',
+			'mdi-chat-outline',
+			'mdi-star-outline',
+			'mdi-code-braces',
+			'mdi-basket-outline',
 		]
 
 		get id() {
