@@ -3,11 +3,30 @@
 		<div class="page-header page-bar">
 			<h1>{{ $t('about') }}</h1>
 			<div class="tabs">
-				<div class="tab action">
-					<a href="https://github.com/leek-wars/leek-wars-client" target="_blank" rel="noopener">
+				<router-link to="/changelog">
+					<div class="tab">
+						<v-icon>mdi-format-list-bulleted-square</v-icon>
+						{{ $t('main.changelog') }}
+					</div>
+				</router-link>
+				<router-link to="/statistics">
+					<div class="tab">
+						<v-icon>mdi-chart-timeline-variant</v-icon>
+						{{ $t('main.stats') }}
+					</div>
+				</router-link>
+				<router-link to="/app">
+					<div class="tab">
+						<v-icon>mdi-cellphone-android</v-icon>
+						{{ $t('main.app') }}
+					</div>
+				</router-link>
+				<a href="https://github.com/leek-wars/leek-wars-client" target="_blank" rel="noopener">
+					<div class="tab action">
 						<img src="image/github_white.png">
-					</a>
-				</div>
+						<span>GitHub <v-icon>mdi-open-in-new</v-icon></span>
+					</div>
+				</a>
 			</div>
 		</div>
 		
