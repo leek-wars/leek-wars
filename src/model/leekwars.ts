@@ -102,7 +102,8 @@ enum EFFECT_TYPES {
 }
 const SKINS: { [key: number]: string } = {
 	1: "green", 2: "blue", 3: "yellow", 4: "red", 5: "orange", 6: "magenta", 7: "cyan", 8: "purple",
-	9: "multi", 10: "rasta", 11: "white", 12: "black", 13: "alpha", 14: "apple", 15: "gold",
+	9: "multi", 10: "rasta", 11: "white", 12: "black", 13: "alpha", 14: "apple", 15: "gold", 16: "pink",
+	17: "grey", 18: "turquoise", 19: "celestial_blue"
 }
 
 const LEEK_SIZES: { [key: number]: {width: number, height: number} } = {
