@@ -90,7 +90,7 @@
 				<div class="button-wrapper">
 					<router-link to="/settings">
 						<div class="settings-button header-button">
-							<i class="material-icons">settings</i>
+							<v-icon>mdi-settings-outline</v-icon>
 						</div>
 					</router-link>
 				</div>
@@ -190,6 +190,10 @@
 		user-select: none;
 		align-items: center;
 		line-height: 42px;
+		i {
+			color: #eee;
+			font-size: 26px;
+		}
 	}
 	.header-button i {
 		vertical-align: text-bottom;
