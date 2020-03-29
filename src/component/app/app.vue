@@ -107,7 +107,7 @@
 					})
 				}
 			})
-			if (this.$store.state.connected && localStorage.getItem('changelog_version') !== LeekWars.version) {
+			if (this.$store.state.connected && localStorage.getItem('changelog_version') !== LeekWars.normal_version) {
 				this.changelogShow()
 			}
 			this.$root.$on('keyup', (event: KeyboardEvent) => {
@@ -129,7 +129,7 @@
 			LeekWars.get('changelog/get-last/' + this.$i18n.locale).then(data => {
 				this.changelog = data.changelog
 				this.changelogDialog = true
-				localStorage.setItem('changelog_version', LeekWars.version)
+				localStorage.setItem('changelog_version', LeekWars.normal_version)
 				localStorage.setItem('changelog_forum_topic', data.changelog.forum_topic)
 			})
 		}
