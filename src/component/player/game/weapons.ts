@@ -279,7 +279,7 @@ class Electrisor extends WeaponAnimation {
 			this.currentDelay -= dt
 			if (this.currentDelay <= 0) {
 				this.currentDelay = this.delay
-				this.game.particles.addLightning(this.lightningX, this.lightningY, this.lightningZ + this.caster.handPos, this.lightningAngle, this.lightningPosition, this.lightning)
+				this.game.particles.addLightning(this.lightningX, this.lightningY, this.lightningZ + this.caster.handPos, this.lightningAngle, this.lightningPosition, this.lightning, 42)
 				this.shoots--
 				if (this.shoots === 0) {
 					this.game.actionDone()
@@ -328,7 +328,7 @@ class FlameThrower extends WeaponAnimation {
 		const dx = Math.sign(cell.x - caster.cell!.x)
 		const dy = Math.sign(cell.y - caster.cell!.y)
 		let current_cell = caster.cell
-		for (let r = 0; r < this.min_range; ++r) { 
+		for (let r = 0; r < this.min_range; ++r) {
 			current_cell = this.game.ground.next_cell(current_cell, dx, dy)
 		}
 		const cells = [] as Cell[]

@@ -21,7 +21,6 @@ const LASER_LIFE = 25
 const BLOOD_LIFE = 12
 const LIGHTNING_LIFE = 10
 const GRENADE_LIFE = 10000
-const EXPLOSION_LIFE = 15
 const GARBAGE_LIFE = 50
 
 abstract class Particle {
@@ -145,7 +144,7 @@ class Laser extends Particle {
 class Lightning extends Particle {
 	public vertices: number[]
 	public texture: HTMLImageElement
-	constructor(game: Game, texture: Texture, x: number, y: number, z: number, angle: number, position: Position) {
+	constructor(game: Game, texture: Texture, x: number, y: number, z: number, angle: number, position: Position, threshold: number = 50) {
 		super(game, x, y, z, LIGHTNING_LIFE)
 		this.texture = texture.texture
 		angle += (Math.random() * 0.3 - 0.15)
@@ -156,7 +155,7 @@ class Lightning extends Particle {
 		const longX = x - position.x
 		const longY = y - position.y
 		const long = Math.sqrt(longX * longX + longY * longY)
-		const points = Math.round(long / 50)
+		const points = Math.round(long / threshold)
 		const fragLength = long / points
 		// Création des points
 		for (let i = 0; i <= points; i++) {
@@ -324,15 +323,32 @@ class Shot extends Particle {
 	}
 }
 class Explosion extends Particle {
+	static EXPLOSION_LIFE = 15
 	public texture: Texture
-	constructor(game: Game, x: number, y: number, z: number, texture: Texture) {
-		super(game, x, y, z, EXPLOSION_LIFE)
+	constructor(game: Game, x: number, y: number, z: number, texture: Texture, life = Explosion.EXPLOSION_LIFE) {
+		super(game, x, y, z, life)
 		this.texture = texture
 	}
 	public draw(ctx: CanvasRenderingContext2D) {
 		ctx.globalAlpha = this.life / 5
 		const size = 300 - 15 * this.life
 		ctx.drawImage(this.texture.texture, 0, 0, this.texture.texture.width, this.texture.texture.height, -size / 2, -size / 3.6, size, size / 1.8)
+		ctx.globalAlpha = 1
+	}
+}
+class Plasma extends Particle {
+	public texture: Texture
+	constructor(game: Game, x: number, y: number, z: number, texture: Texture, life: number) {
+		super(game, x, y, z, life)
+		this.texture = texture
+
+	}
+	public draw(ctx: CanvasRenderingContext2D) {
+		const x = 1 - this.life / 120
+		const r = Math.pow(Math.cos((Math.PI * (x - 0.5))), 0.2)
+		const size = 80 * r
+		ctx.globalAlpha = r
+		ctx.drawImage(this.texture.texture, 0, 0, this.texture.texture.width, this.texture.texture.height, -size / 2, -size / 2, size, size)
 		ctx.globalAlpha = 1
 	}
 }
@@ -393,14 +409,14 @@ class ImageParticle extends Particle {
 	public totalLife: any
 	public alpha: number
 	public texture: HTMLImageElement
-	constructor(game: Game, x: number, y: number, z: number, dx: number, dy: number, dz: number, angle: number, texture: Texture, life: number, alpha: number) {
+	constructor(game: Game, x: number, y: number, z: number, dx: number, dy: number, dz: number, angle: number, texture: Texture, life: number, alpha: number, rotation: number) {
 		super(game, x, y, z, life)
 		this.texture = texture.texture
 		this.dx = dx
 		this.dy = dy
 		this.dz = dz
 		this.angle = angle
-		this.rotation = 0
+		this.rotation = rotation
 		this.totalLife = life
 		this.alpha = alpha || 1
 	}
@@ -536,4 +552,4 @@ class SpinningParticle extends Particle {
 	}
 }
 
-export { Particle, Bullet, Laser, Lightning, Fire, SimpleFire, Gaz, Meteorite, Grenade, Shot, Explosion, Cartridge, Garbage, ImageParticle, Rectangle, Blood, SpikeParticle, SpinningParticle, NUM_BLOOD_SPRITES }
+export { Particle, Bullet, Laser, Lightning, Fire, SimpleFire, Gaz, Meteorite, Grenade, Shot, Explosion, Cartridge, Garbage, ImageParticle, Plasma, Rectangle, Blood, SpikeParticle, SpinningParticle, NUM_BLOOD_SPRITES }

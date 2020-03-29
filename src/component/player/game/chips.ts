@@ -237,7 +237,7 @@ class DevilStrike extends ChipAnimation {
 		this.x = targetPos.x
 		this.y = targetPos.y
 		this.game.setEffectArea(targetCell, Area.CIRCLE3, 'red', 180)
-		this.game.particles.addImage(this.x, this.y, 0, 0, 0, 0, 0, this.game.T.red_circle, 120, 0.6, true)
+		this.game.particles.addImage(this.x, this.y, 0, 0, 0, 0, 0, this.game.T.red_circle, 120, 0.6, 0, true)
 		this.game.particles.addImage(this.x, this.y, 50, 0, 0, 1.2, 0, this.game.T.daemon_shadow, 100, 0.9)
 	}
 	public update(dt: number) {
@@ -805,5 +805,36 @@ class Vampirization extends StealChipAnimation {
 		this.createChipAureol([caster], this.game.T.heal_cross)
 	}
 }
+class Plasma extends ChipAnimation {
+	static DURATION = 120
+	public delay: number = 0
+	constructor(game: Game) {
+		super(game, null, Plasma.DURATION)
+	}
+	public launch(launchPos: Position, position: Position, targets: Entity[], targetCell: Cell) {
+		super.launch(launchPos, position, targets, targetCell)
+		this.targets = targets
+		this.game.particles.addPlasma(position.x, position.y, 20, this.game.T.plasma, Plasma.DURATION)
+		this.game.setEffectArea(targetCell, Area.PLUS_2, '#2400ff', Plasma.DURATION)
+		this.game.S.lightning.play()
+		this.game.S.electrisor.play()
+	}
+	public update(dt: number) {
+		super.update(dt)
+		this.delay -= dt
+		if (this.delay <= 0) {
+			this.delay = 1
+			if (this.targets) {
+				for (const target of this.targets) {
+					if (target.cell !== this.cell) {
+						const angle = Math.atan2((target.oy - this.position.y + 20) / 2, target.ox - this.position.x)
+						this.game.particles.addLightning(this.position.x, this.position.y, 20, angle, {x: target.ox, y: target.oy}, Math.random() > 0.5 ? this.game.T.purple_lightning : this.game.T.lightning, 25)
+					}
+					target.electrify()
+				}
+			}
+		}
+	}
+}
 
-export { ChipAnimation, Adrenaline, Armor, Acceleration, Antidote, Armoring, BallAndChain, Bandage, Bark, Burning, Carapace, Collar, Covetousness, Cure, DevilStrike, Doping, Drip, Ferocity, Fertilizer, Flame, Flash, Fortress, Fracture, Helmet, Ice, Iceberg, Inversion, LeatherBoots, Liberation, Lightning, Loam, Meteorite, Mirror, Motivation, Pebble, Plague, Precipitation, Protein, Punishment, Rage, Rampart, Reflexes, Regeneration, Remission, Rock, Rockfall, SevenLeagueBoots, Shield, Shock, SlowDown, Solidification, Soporific, Spark, Stalactite, Steroid, Stretching, Teleportation, Thorn, Toxin, Tranquilizer, Vaccine, Vampirization, Venom, Wall, WarmUp, Whip, WingedBoots }
+export { ChipAnimation, Adrenaline, Armor, Acceleration, Antidote, Armoring, BallAndChain, Bandage, Bark, Burning, Carapace, Collar, Covetousness, Cure, DevilStrike, Doping, Drip, Ferocity, Fertilizer, Flame, Flash, Fortress, Fracture, Helmet, Ice, Iceberg, Inversion, LeatherBoots, Liberation, Lightning, Loam, Meteorite, Mirror, Motivation, Pebble, Plague, Plasma, Precipitation, Protein, Punishment, Rage, Rampart, Reflexes, Regeneration, Remission, Rock, Rockfall, SevenLeagueBoots, Shield, Shock, SlowDown, Solidification, Soporific, Spark, Stalactite, Steroid, Stretching, Teleportation, Thorn, Toxin, Tranquilizer, Vaccine, Vampirization, Venom, Wall, WarmUp, Whip, WingedBoots }
