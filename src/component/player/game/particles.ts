@@ -1,6 +1,6 @@
 import { Entity } from '@/component/player/game/entity'
 import { Game } from "@/component/player/game/game"
-import { Blood, Bullet, Cartridge, Explosion, Fire, Garbage, Gaz, Grenade, ImageParticle, Laser, Lightning, Meteorite, NUM_BLOOD_SPRITES, Particle, Rectangle, Shot, SimpleFire, SpikeParticle, SpinningParticle } from '@/component/player/game/particle'
+import { Blood, Bullet, Cartridge, Explosion, Fire, Garbage, Gaz, Grenade, ImageParticle, Laser, Lightning, Meteorite, NUM_BLOOD_SPRITES, Particle, Plasma, Rectangle, Shot, SimpleFire, SpikeParticle, SpinningParticle } from '@/component/player/game/particle'
 import { Position } from '@/component/player/game/position'
 import { Texture } from '@/component/player/game/texture'
 
@@ -44,8 +44,8 @@ class Particles {
 		}
 	}
 
-	public addLightning(x: number, y: number, z: number, angle: number, position: Position, texture: Texture) {
-		this.add(new Lightning(this.game, texture, x, y, z, angle, position))
+	public addLightning(x: number, y: number, z: number, angle: number, position: Position, texture: Texture, threshold: number = 50) {
+		this.add(new Lightning(this.game, texture, x, y, z, angle, position, threshold))
 	}
 	public addFire(x: number, y: number, z: number, angle: number, thrown: boolean = false) {
 		this.add(new Fire(this.game, x, y, z, angle, thrown))
@@ -65,9 +65,12 @@ class Particles {
 	public addShot(x: number, y: number, z: number, angle: number) {
 		this.add(new Shot(this.game, x, y, z, angle))
 	}
-	public addExplosion(x: number, y: number, z: number, texture: Texture) {
-		this.add(new Explosion(this.game, x, y, z, texture))
+	public addExplosion(x: number, y: number, z: number, texture: Texture, life: number = Explosion.EXPLOSION_LIFE) {
+		this.add(new Explosion(this.game, x, y, z, texture, life))
 		this.game.S.explosion.play()
+	}
+	public addPlasma(x: number, y: number, z: number, texture: Texture, life: number) {
+		this.add(new Plasma(this.game, x, y, z, texture, life))
 	}
 	public addCartridge(x: number, y: number, z: number, dx: number, dy: number, dz: number, texture: Texture) {
 		this.add(new Cartridge(this.game, x, y, z, dx, dy, dz, texture))
@@ -75,8 +78,8 @@ class Particles {
 	public addGarbage(x: number, y: number, z: number, dx: number, dy: number, dz: number, texture: Texture, orientation: number, rotation: number, scale: number = 1) {
 		this.add(new Garbage(this.game, x, y, z, dx, dy, dz, texture, orientation, rotation, scale))
 	}
-	public addImage(x: number, y: number, z: number, dx: number, dy: number, dz: number, angle: number, texture: Texture, life: number, alpha: number = 1, onground: boolean = false) {
-		this.add(new ImageParticle(this.game, x, y, z, dx, dy, dz, angle, texture, life, alpha), onground)
+	public addImage(x: number, y: number, z: number, dx: number, dy: number, dz: number, angle: number, texture: Texture, life: number, alpha: number = 1, rotation: number = 0, onground: boolean = false) {
+		this.add(new ImageParticle(this.game, x, y, z, dx, dy, dz, angle, texture, life, alpha, rotation), onground)
 	}
 	public addSpike(x: number, y: number, z: number, dx: number, dy: number, texture: Texture, life: number, flip: boolean) {
 		this.add(new SpikeParticle(this.game, x, y, z, dx, dy, texture, life, flip))

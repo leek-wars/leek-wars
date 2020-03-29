@@ -197,6 +197,7 @@ class Textures {
 	public chip_precipitation: Texture
 	public chip_covetousness: Texture
 	public chip_vampirization: Texture
+	public plasma: Texture
 
 	constructor(game: Game) {
 		this.leek_hand = new Texture(game, env.STATIC + "image/fight/leek_hand.png", true, SHADOW_QUALITY)
@@ -318,6 +319,7 @@ class Textures {
 		this.square = new Texture(game, env.STATIC + 'image/map/square.png', true, 1)
 		this.spike1 = new Texture(game, env.STATIC + 'image/fight/spike1.png', true, 1)
 		this.spike2 = new Texture(game, env.STATIC + 'image/fight/spike2.png', true, 1)
+		this.plasma = new Texture(game, env.STATIC + 'image/fight/plasma.png', true, 1)
 
 		// Chips
 		this.cure_aureol = new Texture(game, env.STATIC + 'image/fight/cure_aureol.png')
