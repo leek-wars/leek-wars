@@ -1,3 +1,43 @@
+211:
+  title: 4 nouvelles puces, 4 couleurs, modération des combats et nouvelles icônes.
+  added:
+    - "4 nouvelles couleurs : rose (l'ancien -> magenta), gris, turquoise (l'ancien -> cyan) et bleu céleste."
+    - Affichage du compteur de combat sur la section potager du menu.
+    - Ajout d'icônes sur toutes les fenêtres contextuelles du jeu et sur de nombreux panneaux.
+    - "#ai La vie maximale de la tourelle passe de 20 000 à 12 000."
+    - "#ai Ajout du bulbe magicien : puces poison et entraves avec 300 de magie au niveau max."
+    - "#ai Ajout de la puce Plasma, qui inflige des dégâts en zone PLUS_2, multiplié par le nombre de cibles."
+    - "#ai Ajout de la puce Altération, qui inflige des dégâts nova à grande portée."
+    - "#ai Ajout de la puce Saut, qui permet de sauter jusqu'à 3 cellules."
+    - "Ajout de la modération des say() en combat : signalement et traitement par les modérateurs."
+  improved:
+    - "Marché : affichage de la caractéristique qui augmente l'effet sur chaque description d'item."
+    - Changement de l'icône paramètres dans la barre du haut.
+    - "Corrections de style sur : fenêtre renommage poireau, info-bulle poireau, barre de vie en combat."
+    - Ratio infini (∞) si les défaites sont égales à 0.
+    - Les trophées verrouillés sont davantage visibles sur la page trophées.
+    - Chargement plus rapide des images de poireaux.
+    - "Marché : affichage du total des items de chaque catégorie."
+    - "Documentation : ajout des items possédant des modificateurs dans les descriptions de ces derniers."
+    - Amélioration des temps de chargement du site, grâce au chargement des composants à la demande.
+    - "Changelog : titres, images plus grandes, fenêtres et réorganisation des màjs précédentes."
+    - Le paramètre d'agrandissement de la documentation est sauvegardé définitivement.
+    - "Pages aide : ajout d'onglets pour naviguer entre les pages facilement."
+    - "Pages à propos / changelog / statistiques / appli mobile : ajout d'onglets de navigation."
+    - "Page à propos : mise à jour des technologies."
+    - Affichage des poireaux en grille page éleveur sur version mobile.
+    - Élargissement de la fourchette de niveau dans le potager éleveur pour plus d'aversaires.
+    - Il n'est plus possible de s'auto-signaler sur le chat (merci à Ref).
+  fixed:
+    - Les combats de test en mode éleveur ne sont plus affichés dans l'historique de l'éleveur.
+    - Correction de la fonction qui affiche un animal en combat.
+    - "#ai Le coût de la fonction insert() est augmenté pour les cas ou le décalage est important."
+    - Ajout des dégâts nova dans la description de la science.
+    - Correction d'un bug qui permettait d'utiliser l'apparat Tenir une arme sans l'avoir acheté.
+    - "#ai Correction du coût de getPathLength qui est maintenant fortement augmenté."
+    - Corrections des grands emojis dans les chats.
+    - Grande accélération du chargement de la page forum pour certains joueurs.
+
 210:
   title: Apparats, nouveaux chapeaux, documentation, barre de chargement de combat
   added:
@@ -38,6 +78,7 @@
     - Les notifications sont bien passées en non lu quand on les lit toutes.
     - Correction de la fonction isStatic sur les tourelles n'ayant pas d'IA (merci à Caneton).
     - Correction du trophée Explorateur.
+
 209:
   title: 3 nouvelles puces, zones en croix, armes oubliées, effets passifs, tooltips avancées pour armes et puces
   added:
