@@ -58,7 +58,7 @@
 								</router-link>
 								<span slot="date" class="dark">{{ result.date | date }}</span>
 								<router-link slot="topic" :to="'/forum/category-' + result.cid">
-									{{ $i18n.t('forum.category_' + result.cname) }}
+									{{ $i18n.t('forum-category.' + result.cname) }}
 								</router-link>
 							</i18n>
 							<router-link :to="'/forum/category-' + result.cid + '/topic-' + result.tid + '/page-' + (floor(result.pos / 20) + 1) + (result.mid !== -1 ? '#message-' + result.mid : '')">
