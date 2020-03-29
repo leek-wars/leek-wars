@@ -16,13 +16,13 @@
 				<v-list-item v-ripple @click="close(currentI)">
 					<v-icon>mdi-close-circle-outline</v-icon>
 					<v-list-item-content>
-						<v-list-item-title>{{ $t('editor.close') }}</v-list-item-title>
+						<v-list-item-title>{{ $t('close') }}</v-list-item-title>
 					</v-list-item-content>
 				</v-list-item>
 				<v-list-item v-ripple @click="closeOthers(currentAI)">
 					<v-icon>mdi-close-circle-outline</v-icon>
 					<v-list-item-content>
-						<v-list-item-title>{{ $t('editor.close_others') }}</v-list-item-title>
+						<v-list-item-title>{{ $t('close_others') }}</v-list-item-title>
 					</v-list-item-content>
 				</v-list-item>
 			</v-list>
