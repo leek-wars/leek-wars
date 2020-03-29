@@ -45,7 +45,7 @@
 			])
 			LeekWars.get('bank/get-packs').then(data => {
 				this.packs = data.packs
-				LeekWars.setTitle(this.$i18n.t('bank.title'))
+				LeekWars.setTitle(this.$i18n.t('title'))
 			})
 		}
 	}

@@ -55,7 +55,7 @@
 		created() {
 			LeekWars.get<ModerationRequest>('moderation/get-reportings').then(data => {
 				this.thugs = data.thugs
-				LeekWars.setTitle(this.$t('moderation.title'))
+				LeekWars.setTitle(this.$t('title'))
 			})
 		}
 

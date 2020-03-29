@@ -7,13 +7,13 @@
 				</h1>
 			</div>
 			<div class="tabs">
-				<router-link to="/help/general">
+				<router-link v-if="!LeekWars.mobile" to="/help/general">
 					<div class="tab">
 						<v-icon>mdi-help-circle-outline</v-icon>
 						{{ $t('main.general_help') }}
 					</div>
 				</router-link>
-				<router-link to="/help/tutorial">
+				<router-link v-if="!LeekWars.mobile" to="/help/tutorial">
 					<div class="tab">
 						<v-icon>mdi-laptop</v-icon>
 						{{ $t('main.tutorial') }}

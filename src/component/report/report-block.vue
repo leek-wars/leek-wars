@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<h3>{{ title }}</h3>
+		<h3><v-icon>{{ icon }}</v-icon> {{ title }}</h3>
 		<div class="flags">
 			<tooltip v-for="flag in flags" :key="flag">
 				<template v-slot:activator="{ on }">
@@ -14,9 +14,9 @@
 
 		<table v-if="fight.type === FightType.FARMER" class="report">
 			<tr>
-				<th>{{ $t('report.farmer') }}</th>
+				<th>{{ $t('main.farmer') }}</th>
 				<th></th>
-				<th v-if="fight.context !== FightContext.CHALLENGE" class="gain">{{ $t('report.talent') }}</th>
+				<th v-if="fight.context !== FightContext.CHALLENGE" class="gain">{{ $t('main.talent') }}</th>
 			</tr>
 			<tr>
 				<td class="name">
@@ -41,10 +41,10 @@
 		<div v-else-if="fight.type === FightType.TEAM" class="scroll-x">
 			<table class="report">
 				<tr>
-					<th>{{ $t('report.team') }}</th>
-					<th>{{ $t('report.level') }}</th>
-					<th>{{ $t('report.xp') }}</th>
-					<th v-if="fight.context !== FightContext.CHALLENGE" class="gain">{{ $t('report.talent') }}</th>
+					<th>{{ $t('main.team') }}</th>
+					<th>{{ $t('main.level') }}</th>
+					<th>{{ $t('main.xp') }}</th>
+					<th v-if="fight.context !== FightContext.CHALLENGE" class="gain">{{ $t('main.talent') }}</th>
 				</tr>
 				<tr>
 					<td class="name">
@@ -78,16 +78,16 @@
 		<div class="scroll-x">
 			<table class="report">
 				<tr>
-					<th>{{ $t('report.leek') }}</th>
-					<th>{{ $t('report.level') }}</th>
-					<th>{{ $t('report.xp') }}</th>
-					<th class="gain">{{ $t('report.money') }}</th>
-					<th v-if="fight.type === FightType.SOLO && fight.context != FightContext.TEST && fight.context != FightContext.CHALLENGE" class="gain">{{ $t('report.talent') }}</th>
+					<th>{{ $t('main.leek') }}</th>
+					<th>{{ $t('main.level') }}</th>
+					<th>{{ $t('main.xp') }}</th>
+					<th class="gain">{{ $t('main.habs') }}</th>
+					<th v-if="fight.type === FightType.SOLO && fight.context != FightContext.TEST && fight.context != FightContext.CHALLENGE" class="gain">{{ $t('main.talent') }}</th>
 					<th v-if="$store.getters.admin" class="gain">Time</th>
 				</tr>
 				<report-leek-row v-for="leek in leeks" :key="leek.id" :leek="leek" :fight="fight" />
 				<tr v-if="fight.type !== FightType.SOLO" class="total">
-					<td class="name"><span class="alive">{{ $t('report.total') }}</span></td>
+					<td class="name"><span class="alive">{{ $t('total') }}</span></td>
 					<td class="level">{{ totalLevel }}</td>
 					<td class="xp"><div class="bar"></div>{{ totalXP | number }}</td>
 					<td class="money">
@@ -112,6 +112,7 @@
 	})
 	export default class ReportBlock extends Vue {
 		@Prop({required: true}) fight!: Fight
+		@Prop({required: true}) icon!: string
 		@Prop({required: true}) title!: string
 		@Prop({required: true}) leeks!: any
 		@Prop({required: true}) farmer!: any

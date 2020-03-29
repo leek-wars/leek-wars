@@ -42,7 +42,7 @@ const MobileApp = () => import(/* webpackChunkName: "[request]" */ `@/component/
 const Moderation = () => import(/* webpackChunkName: "[request]" */ `@/component/moderation/moderation.${locale}.i18n`)
 const ModerationThugs = () => import(/* webpackChunkName: "[request]" */ `@/component/moderation/moderation-thugs.${locale}.i18n`)
 const NewLeek = () => import(/* webpackChunkName: "[request]" */ `@/component/new-leek/new-leek.${locale}.i18n`)
-const Notifications = () => import(/* webpackChunkName: "[request]" */ `@/component/notification/notifications.${locale}.i18n`)
+const Notifications = () => import(/* webpackChunkName: "[request]" */ `@/component/notifications/notifications.${locale}.i18n`)
 const Ranking = () => import(/* webpackChunkName: "[request]" */ `@/component/ranking/ranking.${locale}.i18n`)
 const Report = () => import(/* webpackChunkName: "[request]" */ `@/component/report/report.${locale}.i18n`)
 const Settings = () => import(/* webpackChunkName: "[request]" */ `@/component/settings/settings.${locale}.i18n`)

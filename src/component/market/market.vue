@@ -78,7 +78,7 @@
 				</panel>
 			</div>
 			<div v-show="!LeekWars.mobile || LeekWars.splitBack" class="column4">
-				<panel :title="$t('characteristics')" class="last preview-panel" icon="mdi-information-outline">
+				<panel :title="$t('characteristic.characteristics')" class="last preview-panel" icon="mdi-information-outline">
 					<loader v-if="!selectedItem" slot="content" />
 					<div v-else slot="content" class="preview center">
 						<weapon-preview v-if="selectedItem.type == ItemType.WEAPON" :weapon="LeekWars.weapons[selectedItem.id]" />
@@ -355,7 +355,7 @@
 				this.$router.replace('/market/pistol')
 			} else {
 				this.selectedItem = null
-				LeekWars.setTitle(this.$t('market.title'))
+				LeekWars.setTitle(this.$t('title'))
 				LeekWars.splitShowList()
 			}
 			this.updateSubtitle()
@@ -414,7 +414,7 @@
 			}).error(error => {
 				let e = error.error
 				if (error.error === 'already_bought_fights_with_habs') {
-					e = this.$t('market.' + error.error)
+					e = this.$t(error.error)
 				}
 				LeekWars.toast(e)
 			})
@@ -448,14 +448,14 @@
 				const pack: ItemTemplate = {
 					id: 1000000 + fights[p],
 					name: count + '-fights',
-					title: this.$t('market.n_fights', [count]),
+					title: this.$t('n_fights', [count]),
 					price_habs: p === '0' ? 100000 : 0,
 					price_crystals: costs[p] * 100,
 					buyable: p === '0',
 					buyable_crystals: true,
 					sellable: false,
 					type: ItemType.FIGHT_PACK,
-					description: this.$t('market.n_fights_desc', [count]),
+					description: this.$t('n_fights_desc', [count]),
 					leeks: [],
 					leek_objs: [],
 					leek_count: 0,

@@ -1,6 +1,8 @@
 {
+	"added_life": "Vie ajoutée",
 	"agility": "Agilité",
 	"agility_desc": "L'agilité augmente les chances de coup critique et les renvois de dégâts.",
+	"base_life": "Vie de base",
 	"boost": "Boosts",
 	"characteristics": "Caractéristiques",
 	"critical": "Coups critiques",
@@ -9,6 +11,7 @@
 	"frequency": "Fréquence",
 	"frequency_desc": "Les fréquences élevées commencent le combat en premier",
 	"heal": "Soins",
+	"invested_capital": "Capital investi",
 	"life": "Points de vie",
 	"life_desc": "Dégâts que peut encaisser le poireau avant de mourir",
 	"life_steal": "Vol de vie",

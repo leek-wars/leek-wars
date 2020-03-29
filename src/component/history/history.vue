@@ -75,7 +75,7 @@
 			LeekWars.get('history/get-' + this.type + '-history/' + id).then(data => {
 				this.fights = data.fights
 				this.entity = data.entity
-				LeekWars.setTitle(this.$t('history.title', [data.entity.name]))
+				LeekWars.setTitle(this.$t('title', [data.entity.name]))
 				const period = localStorage.getItem('options/history-period') || '1week'
 				this.select_period(period)
 			})

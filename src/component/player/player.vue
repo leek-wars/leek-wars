@@ -51,11 +51,11 @@
 					<span :style="{width: progress + '%'}" class="bar striked"></span>
 				</div>
 				<div class="status">
-					{{ $t('fight.loading_fight') }}
+					{{ $t('loading_fight') }}
 				</div>
 				<div v-if="queue" class="queue-position">
-					<span v-if="queue.position == -1">{{ $t('fight.generating') }}</span>
-					<span v-else>{{ $t('fight.position_in_queue', [queue.position + 1, queue.total]) }}</span>
+					<span v-if="queue.position == -1">{{ $t('generating') }}</span>
+					<span v-else>{{ $t('position_in_queue', [queue.position + 1, queue.total]) }}</span>
 				</div>
 			</div>
 		</div>
@@ -84,19 +84,19 @@
 					<template v-slot:activator="{ on }">
 						<v-icon v-ripple class="control" @click="pause" v-on="on">{{ game.paused ? 'mdi-play' : 'mdi-pause' }}</v-icon>
 					</template>
-					{{ $t('fight.pause') }} (P)
+					{{ $t('pause') }} (P)
 				</v-tooltip>
 				<v-tooltip :open-delay="0" :close-delay="0" top content-class="top">
 					<template v-slot:activator="{ on }">
 						<v-icon v-ripple class="control" :style="{opacity: game.speedButtonVisible ? 1 : 0}" v-on="on" @click="game.speedUp()">mdi-fast-forward</v-icon>
 					</template>
-					{{ $t('fight.accelerate') }} (S)
+					{{ $t('accelerate') }} (S)
 				</v-tooltip>
 				<v-tooltip :open-delay="0" :close-delay="0" top content-class="top">
 					<template v-slot:activator="{ on }">
 						<v-icon v-ripple class="control" v-on="on" @click="game.sound = !game.sound">{{ game.sound ? 'mdi-volume-high' : 'mdi-volume-low' }}</v-icon>
 					</template>
-					{{ $t(game.sound ? 'fight.sound_activated' : 'fight.sound_disactivated') }} (V)
+					{{ $t(game.sound ? 'sound_activated' : 'sound_disactivated') }} (V)
 				</v-tooltip>
 				<div class="turn">{{ $t('fight.turn_n', [game.turn]) }}</div>
 				<div class="filler"></div>
@@ -104,13 +104,13 @@
 					<template v-slot:activator="{ on }">
 						<v-icon v-ripple class="control" v-on="on" @click="LeekWars.flex = !LeekWars.flex">mdi-crop-landscape</v-icon>
 					</template>
-					{{ $t('fight.enlarge_fight') }}
+					{{ $t('enlarge_fight') }}
 				</v-tooltip>
 				<v-tooltip :open-delay="0" :close-delay="0" top content-class="top">
 					<template v-slot:activator="{ on }">
 						<v-icon v-ripple class="control" v-on="on" @click="toggleFullscreen">mdi-aspect-ratio</v-icon>
 					</template>
-					{{ $t('fight.fullscreen') }}
+					{{ $t('fullscreen') }}
 				</v-tooltip>
 				<v-tooltip :open-delay="0" :close-delay="0" top content-class="top">
 					<template v-slot:activator="{ on: tooltip }">
@@ -121,34 +121,34 @@
 							<v-list :dense="true" class="settings-menu">
 								<v-list-item v-ripple>
 									<v-icon>mdi-heart-half-full</v-icon>
-									<v-switch v-model="game.showLifes" :label="$t('fight.display_life_bars')" hide-details />
+									<v-switch v-model="game.showLifes" :label="$t('display_life_bars')" hide-details />
 								</v-list-item>
 								<v-list-item v-ripple>
 									<v-icon>mdi-view-comfy</v-icon>
-									<v-switch v-model="game.tactic" :label="$t('fight.tactic_mode')" hide-details />
+									<v-switch v-model="game.tactic" :label="$t('tactic_mode')" hide-details />
 								</v-list-item>
 								<v-list-item v-ripple>
 									<v-icon>mdi-numeric-1-box</v-icon>
-									<v-switch v-model="game.showCells" :label="$t('fight.display_cell_numbers')" hide-details />
+									<v-switch v-model="game.showCells" :label="$t('display_cell_numbers')" hide-details />
 								</v-list-item>
 								<v-list-item v-ripple>
 									<v-icon>mdi-key</v-icon>
-									<v-switch v-model="game.showIDs" :label="$t('fight.show_ids')" hide-details />
+									<v-switch v-model="game.showIDs" :label="$t('show_ids')" hide-details />
 								</v-list-item>
 								<v-list-item v-ripple>
 									<v-icon>mdi-box-shadow</v-icon>
-									<v-switch v-model="game.shadows" :label="$t('fight.display_shadows')" hide-details />
+									<v-switch v-model="game.shadows" :label="$t('display_shadows')" hide-details />
 								</v-list-item>
 							</v-list>
 						</v-menu>
 					</template>
-					{{ $t('fight.settings') }}
+					{{ $t('settings') }}
 				</v-tooltip>
 				<v-tooltip :open-delay="0" :close-delay="0" top content-class="top">
 					<template v-slot:activator="{ on }">
 						<v-icon v-ripple class="control" v-on="on" @click="quit">mdi-exit-to-app</v-icon>
 					</template>
-					{{ $t('fight.quit') }}
+					{{ $t('quit') }}
 				</v-tooltip>
 			</div>
 		</div>
@@ -156,6 +156,7 @@
 </template>
 
 <script lang="ts">
+	import { locale } from '@/locale'
 	import { Farmer } from '@/model/farmer'
 	import { Fight, FightType, Report } from '@/model/fight'
 	import { LeekWars } from '@/model/leekwars'
@@ -163,6 +164,7 @@
 	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 	import { Game } from './game/game'
 	import Hud from './hud.vue'
+	import(/* webpackChunkName: "[request]" */ /* webpackMode: "eager" */ `@/lang/fight.${locale}.lang`)
 
 	const BAR_HEIGHT = 36
 

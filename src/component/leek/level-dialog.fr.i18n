@@ -1,0 +1,9 @@
+{
+	"available_on_market": "(Disponible à l'achat dans le marché)",
+	"new_chips": "Nouvelles puces",
+	"new_weapons": "Nouvelles armes",
+	"no_news": "Pas de nouvel item pour ce niveau.",
+	"title": "<b>{0}</b> passe niveau <b>{1}</b> !",
+	"301_title": "Félicitations !",
+	"301_message": "Vous avez atteint le plus haut niveau dans Leek Wars, votre poireau est arrivé au stade ultime de son évolution !<br> Vous obtenez une <b>potion dorée</b> ainsi qu'<b>une couronne</b> en récompense."
+}

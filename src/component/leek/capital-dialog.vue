@@ -3,7 +3,7 @@
 		<v-icon slot="icon">mdi-star-outline</v-icon>
 		<span slot="title">Ajouter des points de capital ({{ totalCapital }})</span>
 
-		<center><div v-if="totalCapital" :class="{zero: capital == 0}" class="capital rounded4">{{ $t('leek.n_capital', [capital]) }}</div></center>
+		<center><div v-if="totalCapital" :class="{zero: capital == 0}" class="capital rounded4">{{ $t('main.n_capital', [capital]) }}</div></center>
 
 		<div v-for="c in LeekWars.characteristics" :key="c" class="charac">
 			<characteristic-tooltip v-slot="{ on }" :characteristic="c" :value="leek[c] + bonuses[c]" :leek="leek" :test="false">
@@ -27,11 +27,11 @@
 		<div v-if="totalCapital" slot="actions">
 			<div class="action" @click="reset">
 				<v-icon>mdi-refresh</v-icon>
-				<span>{{ $t('leek.reset') }}</span>
+				<span>{{ $t('main.reset') }}</span>
 			</div>
 			<div class="action green" @click="validate">
 				<v-icon>mdi-check</v-icon>
-				<span>{{ $t('leek.validate') }}</span>
+				<span>{{ $t('main.validate') }}</span>
 			</div>
 		</div>
 	</popup>

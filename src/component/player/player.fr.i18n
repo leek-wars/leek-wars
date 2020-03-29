@@ -1,0 +1,21 @@
+{
+	"accelerate": "Accélérer",
+	"accelerate_again": "Accélérer encore",
+	"decelerate": "Décélérer",
+	"display_cell_numbers": "Afficher numéros cases",
+	"display_debug": "Afficher infos debug",
+	"display_life_bars": "Afficher barres de vie",
+	"display_shadows": "Afficher les ombres",
+	"enlarge_fight": "Agrandir le combat",
+	"loading_fight": "Chargement du combat...",
+	"fullscreen": "Plein écran (F)",
+	"pause": "Pause",
+	"position_in_queue": "Position dans la file : {0} / {1}",
+	"quit": "Quitter (Q)",
+	"resume": "Reprendre",
+	"settings": "Options",
+	"show_ids": "Afficher les IDs",
+	"sound_activated": "Son activé",
+	"sound_disactivated": "Son coupé",
+	"tactic_mode": "Mode tactique"
+}

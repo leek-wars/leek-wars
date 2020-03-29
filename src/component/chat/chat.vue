@@ -2,7 +2,7 @@
 	<div class="chat">
 		<loader v-show="loading" />
 		<div v-if="!loading && (!chat || !chat.messages.length)" ref="messages" v-autostopscroll class="messages">
-			<div class="no-messages">No messages yet</div>
+			<div class="no-messages">{{ $t('main.no_messages_yet') }}</div>
 		</div>
 		<div v-if="chat && chat.messages.length" ref="messages" v-autostopscroll class="messages">
 			<template v-for="(message, m) in $store.state.chat[channel].messages">

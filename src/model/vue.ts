@@ -18,7 +18,7 @@ import TournamentsHistory from '@/component/history/tournaments-history.vue'
 import LeekImage from '@/component/leek-image.vue'
 import ConversationElement from '@/component/messages/conversation.vue'
 import ReportDialog from '@/component/moderation/report-dialog.vue'
-import NotificationElement from '@/component/notification/notification.vue'
+import NotificationElement from '@/component/notifications/notification.vue'
 import Pagination from '@/component/pagination.vue'
 import Popup from '@/component/popup.vue'
 import RichTooltipChip from '@/component/rich-tooltip/rich-tooltip-chip.vue'
@@ -71,7 +71,6 @@ Vue.component('avatar', Avatar)
 Vue.component('emblem', Emblem)
 Vue.component('talent', Talent)
 Vue.component('chat', ChatElement)
-Vue.component('player', () => import(/* webpackChunkName: "player" */ "@/component/player/player.vue"))
 Vue.component('comments', Comments)
 Vue.component('report-dialog', ReportDialog)
 Vue.component('pagination', Pagination)

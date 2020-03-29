@@ -1,6 +1,8 @@
 {
+	"added_life": "Added life",
 	"agility": "Agility",
 	"agility_desc": "Agility increases the critical hit rate and damage return.",
+	"base_life": "Base life",
 	"boost": "Boosts",
 	"characteristics": "Characteristics",
 	"critical": "Critical hits",
@@ -9,6 +11,7 @@
 	"frequency": "Frequency",
 	"frequency_desc": "Leeks with high frequency start the fight first",
 	"heal": "Heals",
+	"invested_capital": "Invested capital",
 	"life": "Life points",
 	"life_desc": "How much damage your leek can take before it dies",
 	"life_steal": "Life steal",

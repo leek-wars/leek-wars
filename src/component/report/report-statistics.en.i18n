@@ -1,0 +1,18 @@
+{
+	"bugs": "Bugs",
+	"chips_used": "Chips used",
+	"criticals": "Criticals",
+	"damage_inflicted": "Damage inflicted",
+	"damage_received": "Damage received",
+	"heal_casted": "Heal casted",
+	"heal_received": "Heal received",
+	"kills": "Kills",
+	"mp_used": "MP used",
+	"resurrections": "Return to life",
+	"shootings": "Shoots",
+	"summons": "Summons",
+	"team_n": "Team {0}",
+	"tp_per_turn": "TP/turn used",
+	"tp_used": "TP used",
+	"turns_played": "Turns played"
+}

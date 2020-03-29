@@ -13,7 +13,7 @@
 					<br><br>
 					<h4>{{ $t('confirm') }}</h4>
 					<input v-model="email2" name="email2" type="email">
-					
+
 					<br>
 					<br>
 					<center>
@@ -64,7 +64,7 @@
 <script lang="ts">
 	import { LeekWars } from '@/model/leekwars'
 	import { Component, Prop, Vue } from 'vue-property-decorator'
-	
+
 	@Component({ name: 'change_email', i18n: {} })
 	export default class ChangeEmail extends Vue {
 		state: number = 0
@@ -73,6 +73,7 @@
 		error: string | null = null
 
 		created() {
+			LeekWars.setTitle(this.$t('title'))
 			this.state = parseInt(this.$route.params.state, 10)
 
 			if (this.state === 2) {

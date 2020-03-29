@@ -234,7 +234,7 @@
 				this.semifinals = this.tournament.rounds.semifinals
 				this.finals = this.tournament.rounds.finals
 
-				this.title = this.$t('tournament.' + this.tournament.type, [LeekWars.formatDate(this.tournament.date)]) as string
+				this.title = this.$t('' + this.tournament.type, [LeekWars.formatDate(this.tournament.date)]) as string
 				LeekWars.setTitle(this.title)
 				LeekWars.setActions(this.actions)
 				this.setupTimer()
@@ -282,10 +282,10 @@
 				if (!this.tournament) { return }
 				const time = this.tournament.next_round - LeekWars.timeSeconds
 				if (time < 0) {
-					this.timerText = this.$t('tournament.next_round_in', [this.$t('tournament.few_seconds')]) as string
+					this.timerText = this.$t('next_round_in', [this.$t('few_seconds')]) as string
 					LeekWars.setSubTitle(this.timerText)
 				} else {
-					this.timerText = this.$t('tournament.next_round_in', [LeekWars.formatTimeSeconds(time)]) as string
+					this.timerText = this.$t('next_round_in', [LeekWars.formatTimeSeconds(time)]) as string
 					LeekWars.setSubTitle(this.timerText)
 					this.timer = setTimeout(update, 1000)
 				}

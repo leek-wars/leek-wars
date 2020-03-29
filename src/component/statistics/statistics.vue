@@ -95,19 +95,19 @@
 			const statistics = this.statistics[FIGHT_CATEGORY]
 			if (!statistics) { return {} }
 			const stats: any = {}
-			stats[this.$i18n.t('statistics.fight_solo') as string] = statistics.fight_solo.value
-			stats[this.$i18n.t('statistics.fight_farmer') as string] = statistics.fight_farmer.value
-			stats[this.$i18n.t('statistics.fight_team') as string] = statistics.fight_team.value
+			stats[this.$i18n.t('fight_solo') as string] = statistics.fight_solo.value
+			stats[this.$i18n.t('fight_farmer') as string] = statistics.fight_farmer.value
+			stats[this.$i18n.t('fight_team') as string] = statistics.fight_team.value
 			return {labels: Object.keys(stats),	series: Object.values(stats)}
 		}
 		get chartFightContext() {
 			const statistics = this.statistics[FIGHT_CATEGORY]
 			if (!statistics) { return {} }
 			const stats: any = {}
-			stats[this.$i18n.t('statistics.fight_garden') as string] = statistics.fight_garden.value
-			stats[this.$i18n.t('statistics.fight_test') as string] = statistics.fight_test.value
-			stats[this.$i18n.t('statistics.fight_tournament') as string] = statistics.fight_tournament.value
-			stats[this.$i18n.t('statistics.fight_challenge') as string] = statistics.fight_challenge.value
+			stats[this.$i18n.t('fight_garden') as string] = statistics.fight_garden.value
+			stats[this.$i18n.t('fight_test') as string] = statistics.fight_test.value
+			stats[this.$i18n.t('fight_tournament') as string] = statistics.fight_tournament.value
+			stats[this.$i18n.t('fight_challenge') as string] = statistics.fight_challenge.value
 			return {labels: Object.keys(stats),	series: Object.values(stats)}
 		}
 		get chartAI() {
@@ -140,7 +140,7 @@
 		}
 		created() {
 			LeekWars.get('statistic/get-all').then(data => {
-				LeekWars.setTitle(this.$i18n.t('statistics.title'))
+				LeekWars.setTitle(this.$i18n.t('title'))
 				LeekWars.setActions(this.actions)
 				this.statistics = data.statistics
 				this.statistics[3].operations.value *= 1000000
@@ -224,9 +224,9 @@
 			direct = direct / sum
 			poison = poison / sum
 			back = Math.max(0.04, back / sum)
-			stats[this.$i18n.t('statistics.chart_damage_direct') as string] = direct
-			stats[this.$i18n.t('statistics.chart_damage_poison') as string] = poison
-			stats[this.$i18n.t('statistics.chart_damage_return') as string] = back
+			stats[this.$i18n.t('chart_damage_direct') as string] = direct
+			stats[this.$i18n.t('chart_damage_poison') as string] = poison
+			stats[this.$i18n.t('chart_damage_return') as string] = back
 			this.chartDamage = {labels: Object.keys(stats), series: Object.values(stats)}
 		}
 		hoverLanguage(i: number) {
@@ -253,6 +253,7 @@
 		text-align: center;
 		font-weight: 500;
 		font-size: 28px;
+		margin-bottom: 10px;
 	}
 	h2:before, h2:after {
 		height: 5px;
@@ -268,6 +269,9 @@
 	h2:after {
 		background: linear-gradient(to right, #aaa, rgba(0,0,0,0));
 		margin-left: 5px;
+	}
+	#app.app h2 {
+		font-size: 22px;
 	}
 	.stats {
 		padding-top: 10px;
@@ -299,6 +303,9 @@
 		border-bottom: 2px solid #ddd;
 		padding-bottom: 4px;
 		min-width: 120px;
+	}
+	#app.app .statistic {
+		margin: 5px;
 	}
 	.statistic.private {
 		background: #eee;

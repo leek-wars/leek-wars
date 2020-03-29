@@ -31,7 +31,7 @@
 	@Component({ name: 'legal', i18n: {} })
 	export default class Legal extends Vue {
 		created() {
-			LeekWars.setTitle(this.$t('legal.title'))
+			LeekWars.setTitle(this.$t('title'))
 		}
 	}
 </script>

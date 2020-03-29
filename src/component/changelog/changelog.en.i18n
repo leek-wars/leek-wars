@@ -1,11 +1,3 @@
 {
-	"forum_topic": "Forum topic",
-	"popup_ok": "OK :)",
-	"see_all_changes": "See all changes at {changelog}.",
-	"title": "Changelog",
-	"title_0" : "🌟 Added",
-	"title_1" : "⚒️ Improved",
-	"title_2" : "🐞 Fixed",
-	"version_n": "Version {0}",
-	"version_online": "Version {version} available!"
+
 }

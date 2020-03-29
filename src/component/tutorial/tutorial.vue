@@ -903,7 +903,7 @@
 		}
 
 		created() {
-			LeekWars.setTitle(this.$t('tutorial.title'))
+			LeekWars.setTitle(this.$t('title'))
 			window.addEventListener('scroll', this.scroll)
 		}
 		scroll(e: Event) {

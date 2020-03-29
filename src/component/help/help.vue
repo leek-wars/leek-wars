@@ -113,7 +113,7 @@
 		didactitiel_enabled: boolean = false
 
 		created() {
-			LeekWars.setTitle(this.$t('help.title'))
+			LeekWars.setTitle(this.$t('title'))
 			LeekWars.setActions([{icon: 'mdi-information-variant', click: () => this.$router.push('/about')}])
 		}
 

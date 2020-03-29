@@ -1,33 +1,33 @@
 <template>
-	<table v-if="statistics" id="statistics-table" class="report">
+	<table v-if="statistics" class="report">
 		<tr>
-			<th>{{ $t('report.leek') }}</th>
-			<th>{{ $t('report.level') }}</th>
-			<th>{{ $t('report.damage_received') }}</th>
-			<th>{{ $t('report.damage_inflicted') }}</th>
-			<th>{{ $t('report.heal_received') }}</th>
-			<th>{{ $t('report.heal_casted') }}</th>
-			<th>{{ $t('report.kills') }}</th>
-			<th>{{ $t('report.tp_used') }}</th>
-			<th>{{ $t('report.tp_per_turn') }}</th>
-			<th>{{ $t('report.mp_used') }}</th>
-			<th>{{ $t('report.turns_played') }}</th>
-			<th>{{ $t('report.shootings') }}</th>
-			<th>{{ $t('report.chips_used') }}</th>
-			<th>{{ $t('report.summons') }}</th>
-			<th>{{ $t('report.resurrections') }}</th>
-			<th>{{ $t('report.criticals') }}</th>
-			<th>{{ $t('report.bugs') }}</th>
+			<th>{{ $t('main.leek') }}</th>
+			<th>{{ $t('main.level') }}</th>
+			<th>{{ $t('damage_received') }}</th>
+			<th>{{ $t('damage_inflicted') }}</th>
+			<th>{{ $t('heal_received') }}</th>
+			<th>{{ $t('heal_casted') }}</th>
+			<th>{{ $t('kills') }}</th>
+			<th>{{ $t('tp_used') }}</th>
+			<th>{{ $t('tp_per_turn') }}</th>
+			<th>{{ $t('mp_used') }}</th>
+			<th>{{ $t('turns_played') }}</th>
+			<th>{{ $t('shootings') }}</th>
+			<th>{{ $t('chips_used') }}</th>
+			<th>{{ $t('summons') }}</th>
+			<th>{{ $t('resurrections') }}</th>
+			<th>{{ $t('criticals') }}</th>
+			<th>{{ $t('bugs') }}</th>
 		</tr>
 		<tr>
-			<td colspan="17" class="header"><b>{{ $t('report.team1') }}</b></td>
+			<td colspan="17" class="header"><b>{{ $t('team_n', [1]) }}</b></td>
 		</tr>
 		<template v-for="entity in statistics.team1">
 			<report-statistics-entity :key="entity.leek.id" :entity="entity" :stats="stats" :best="best" />
 			<report-statistics-entity v-for="summon in entity.summons" :key="entity.leek.id + '-' + summon.leek.id" :entity="summon" :stats="stats" :best="best" />
 		</template>
 		<tr>
-			<td colspan="17" class="header"><b>{{ $t('report.team2') }}</b></td>
+			<td colspan="17" class="header"><b>{{ $t('team_n', [2]) }}</b></td>
 		</tr>
 		<template v-for="entity in statistics.team2">
 			<report-statistics-entity :key="entity.leek.id" :entity="entity" :stats="stats" :best="best" />

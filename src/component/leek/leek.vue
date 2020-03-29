@@ -98,10 +98,10 @@
 								<div class="talent-more" v-on="on">({{ leek.talent_more >= 0 ? '+' + leek.talent_more : leek.talent_more }})</div>
 							</template>
 							<template v-if="leek.talent_more > 0">
-								<span v-html="$t('report.talent_difference', [leek.name, leek.talent_more, leek.talentGains + '%'])"></span>
+								<span v-html="$t('main.talent_difference', [leek.name, leek.talent_more, leek.talentGains + '%'])"></span>
 							</template>
 							<template v-else>
-								<span v-html="$t('report.talent_difference_no_gains', [leek.name])"></span>
+								<span v-html="$t('main.talent_difference_no_gains', [leek.name])"></span>
 							</template>
 						</tooltip>
 					</div>
@@ -180,7 +180,7 @@
 
 			<div class="column4">
 				<panel icon="mdi-chip">
-					<template slot="title">{{ $t('chips') }} <span v-if="leek && leek.chips" class="chip-count">[{{ leek.chips.length }}/{{ leek.max_chips }}]</span></template>
+					<template slot="title">{{ $t('main.chips') }} <span v-if="leek && leek.chips" class="chip-count">[{{ leek.chips.length }}/{{ leek.max_chips }}]</span></template>
 					<template v-if="leek && my_leek" slot="actions">
 						<div class="button flat" @click="chipsDialog = true">
 							<v-icon>mdi-pencil</v-icon>
@@ -546,6 +546,7 @@
 </template>
 
 <script lang="ts">
+	import { locale } from '@/locale'
 	import { AI } from '@/model/ai'
 	import { Chip } from '@/model/chip'
 	import { Hat } from '@/model/hat'
@@ -559,7 +560,7 @@
 	import { Component, Vue, Watch } from 'vue-property-decorator'
 	import CapitalDialog from './capital-dialog.vue'
 	import CharacteristicTooltip from './characteristic-tooltip.vue'
-	import LevelDialog from './level-dialog.vue'
+	const LevelDialog = () => import(/* webpackChunkName: "[request]" */ `@/component/leek/level-dialog.${locale}.i18n`)
 	import(/* webpackChunkName: "chartist" */ "@/chartist-wrapper")
 
 	@Component({ name: "leek", i18n: {}, components: { CapitalDialog, LevelDialog, CharacteristicTooltip } })

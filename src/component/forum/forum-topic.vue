@@ -3,15 +3,15 @@
 		<div class="page-header page-bar">
 			<div class="title-wrapper">
 				<h1>
-					<router-link to="/forum">{{ $t('forum.title') }}</router-link>
+					<router-link to="/forum">{{ $t('main.forum') }}</router-link>
 					<v-icon>mdi-chevron-right</v-icon>
 					<router-link v-if="topic" :to="'/forum/category-' + category.id">{{ categoryName }}</router-link>
 					<v-icon>mdi-chevron-right</v-icon>
 					<span ref="topicTitle" :contenteditable="topicEditing" class="topic-title">{{ topic ? topic.name : '...' }}</span>
 					<div v-if="topic" class="info attrs">
-						<v-icon v-if="topic.resolved" :title="$t('topic_resolved')" class="attr">mdi-check-circle</v-icon>
-						<v-icon v-if="topic.locked" :title="$t('topic_locked')" class="attr">mdi-lock</v-icon>
-						<v-icon v-if="topic.pinned" :title="$t('topic_pinned')" class="attr">mdi-pin</v-icon>
+						<v-icon v-if="topic.resolved" :title="$t('resolved')" class="attr">mdi-check-circle</v-icon>
+						<v-icon v-if="topic.locked" :title="$t('locked')" class="attr">mdi-lock</v-icon>
+						<v-icon v-if="topic.pinned" :title="$t('pinned')" class="attr">mdi-pin</v-icon>
 						<a v-if="topic.issue" :href="'https://github.com/leek-wars/leek-wars-client/issues/' + topic.issue" class="attr issue" target="_blank" rel="noopener">
 							<img src="/image/github_white.png"><span>#{{ topic.issue }}</span>
 						</a>
@@ -48,9 +48,9 @@
 										<img v-if="message.writer.connected" class="status" src="/image/connected.png">
 										<img v-else class="status" src="/image/disconnected.png">
 									</div>
-									<div v-if="message.writer.color == 'admin'" class="grade admin">{{ $t('admin') }}</div>
-									<div v-else-if="message.writer.color == 'moderator'" class="grade moderator">{{ $t('moderator') }}</div>
-									<div v-else-if="message.writer.color == 'contributor'" class="grade contributor">{{ $t('contributor') }}</div>
+									<div v-if="message.writer.color == 'admin'" class="grade admin">{{ $t('main.grade_admin') }}</div>
+									<div v-else-if="message.writer.color == 'moderator'" class="grade moderator">{{ $t('main.grade_moderator') }}</div>
+									<div v-else-if="message.writer.color == 'contributor'" class="grade contributor">{{ $t('main.grade_contributor') }}</div>
 									<lw-title v-if="message.writer.title.length" :title="message.writer.title" />
 									<div class="messages-count"><b>{{ message.writer.messages }}</b> messages</div>
 									<div class="trophy-count"><b>{{ message.writer.trophies }}</b> trophées</div>
@@ -72,7 +72,7 @@
 									{{ LeekWars.formatDateTime(message.date) }}
 									<br>
 									<span v-if="message.edition_date != null">
-										{{ $t('forum.edited_the', [LeekWars.formatDateTime(message.edition_date)]) }}
+										{{ $t('edited_the', [LeekWars.formatDateTime(message.edition_date)]) }}
 									</span>
 								</div>
 
@@ -105,7 +105,7 @@
 									</div>
 
 									<template v-if="$store.state.farmer && (message.writer.id == $store.state.farmer.id || category.moderator)">
-										<span class="edit" @click="edit(message)">{{ $t('forum.edit') }}</span>
+										<span class="edit" @click="edit(message)">{{ $t('edit') }}</span>
 										&nbsp;&nbsp;
 										<template v-if="$store.getters.moderator">-&nbsp;&nbsp;
 											<span class="delete" @click="deleteGeneric(message)">{{ $t('delete') }}</span>
@@ -113,16 +113,16 @@
 									</template>
 									<template v-if="message.id == -1 && $store.state.connected && category.moderator">
 										&nbsp;&nbsp;-&nbsp;&nbsp;
-										<span class="lock" @click="lock">{{ topic.locked ? $t('forum.unlock') : $t('forum.lock') }}</span>
+										<span class="lock" @click="lock">{{ topic.locked ? $t('unlock') : $t('lock') }}</span>
 										&nbsp;&nbsp;-&nbsp;&nbsp;
-										<span class="pin" @click="pin">{{ topic.pinned ? $t('forum.unpin') : $t('forum.pin') }}</span>
+										<span class="pin" @click="pin">{{ topic.pinned ? $t('unpin') : $t('pin') }}</span>
 										&nbsp;&nbsp;-&nbsp;&nbsp;
-										<span class="resolve" @click="resolve">{{ topic.resolved ? $t('forum.unsolved') : $t('forum.solved') }}</span>
+										<span class="resolve" @click="resolve">{{ topic.resolved ? $t('unsolved') : $t('solved') }}</span>
 									</template>
 								</div>
 								<div v-else class="edit-buttons">
-									<v-btn color="primary" class="confirm-edit" @click="confirmEdit(message)">{{ $t('send') }}</v-btn>
-									<v-btn class="cancel-edit" @click="endEdit(message)">{{ $t('cancel') }}</v-btn>
+									<v-btn color="primary" class="confirm-edit" @click="confirmEdit(message)">{{ $t('main.send') }}</v-btn>
+									<v-btn class="cancel-edit" @click="endEdit(message)">{{ $t('main.cancel') }}</v-btn>
 									<span v-if="message.id == -1">
 										&nbsp;GitHub Issue <input v-model.number="topic.issue" type="number">
 									</span>
@@ -194,11 +194,11 @@
 		sendingMessage: boolean = false
 
 		get categoryName() {
-			return this.category ? this.category.team > 0 ? this.category.name : this.$t('forum.category_' + this.category.name) : ''
+			return this.category ? this.category.team > 0 ? this.category.name : this.$t('forum-category.' + this.category.name) : ''
 		}
 		get breadcrumb_items() {
 			return [
-				{name: this.$t('forum.title'), link: '/forum'},
+				{name: this.$t('main.forum'), link: '/forum'},
 				{name: this.categoryName, link: '/forum/category-' + (this.category ? this.category.id : 0)},
 				{name: this.topic ? this.topic.name : '...', link: '/forum-category-' + (this.category ? this.category.id : 0) + '/topic-' + (this.topic ? this.topic.id : 0)}
 			]
@@ -232,7 +232,7 @@
 					}
 				}
 				this.pages = data.pages
-				LeekWars.setTitle(this.topic.name, this.$t('forum_topic.n_messages', [data.total]))
+				LeekWars.setTitle(this.topic.name, this.$t('n_messages', [data.total]))
 				LeekWars.setActions([this.action])
 				if (this.topic.subscribed) { this.action.icon = 'mdi-newspaper-minus' }
 				this.$root.$emit('loaded')

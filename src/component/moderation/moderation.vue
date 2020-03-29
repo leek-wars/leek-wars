@@ -201,7 +201,7 @@
 				for (const fault of this.faults) {
 					this.faultsById[fault.id] = fault
 				}
-				LeekWars.setTitle(this.$t('moderation.title'), data.faults.length + ' signalements')
+				LeekWars.setTitle(this.$t('title'), data.faults.length + ' signalements')
 				this.update()
 			})
 			this.$root.$on('back', () => {

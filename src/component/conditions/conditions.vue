@@ -43,7 +43,7 @@
 	@Component({ name: "conditions", i18n: {} })
 	export default class Conditions extends Vue {
 		created() {
-			LeekWars.setTitle(this.$t('conditions.title'))
+			LeekWars.setTitle(this.$t('title'))
 		}
 	}
 </script>

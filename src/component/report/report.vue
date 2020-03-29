@@ -41,12 +41,12 @@
 					</div>
 					<div v-else>
 						<div v-if="report.win === 1">
-							<report-block :title="team1Title" :fight="fight" :leeks="report.leeks1" :farmer="report.farmer1" :team="report.team1" :flags="report.flags1" />
-							<report-block :title="team2Title" :fight="fight" :leeks="report.leeks2" :farmer="report.farmer2" :team="report.team2" :flags="report.flags2" />
+							<report-block :icon="team1Icon" :title="team1Title" :fight="fight" :leeks="report.leeks1" :farmer="report.farmer1" :team="report.team1" :flags="report.flags1" />
+							<report-block :icon="team2Icon" :title="team2Title" :fight="fight" :leeks="report.leeks2" :farmer="report.farmer2" :team="report.team2" :flags="report.flags2" />
 						</div>
 						<div v-else>
-							<report-block :title="team1Title" :fight="fight" :leeks="report.leeks2" :farmer="report.farmer2" :team="report.team2" :flags="report.flags2" />
-							<report-block :title="team2Title" :fight="fight" :leeks="report.leeks1" :farmer="report.farmer1" :team="report.team1" :flags="report.flags1" />
+							<report-block :icon="team1Icon" :title="team1Title" :fight="fight" :leeks="report.leeks2" :farmer="report.farmer2" :team="report.team2" :flags="report.flags2" />
+							<report-block :icon="team2Icon" :title="team2Title" :fight="fight" :leeks="report.leeks1" :farmer="report.farmer1" :team="report.team1" :flags="report.flags1" />
 						</div>
 					</div>
 				</div>
@@ -118,7 +118,7 @@
 			</div>
 		</panel>
 
-		<panel v-if="fight" :title="$t('fight.comments') + ' (' + fight.comments.length + ')'" icon="mdi-comment-multiple-outline">
+		<panel v-if="fight" :title="$t('main.comments') + ' (' + fight.comments.length + ')'" icon="mdi-comment-multiple-outline">
 			<comments :comments="fight.comments" @comment="comment" />
 		</panel>
 
@@ -162,6 +162,7 @@
 </template>
 
 <script lang="ts">
+	import { locale } from '@/locale'
 	import { Action, ActionType } from '@/model/action'
 	import { Comment } from '@/model/comment'
 	import { Fight, FightContext, FightLeek, FightType, Report, ReportFarmer, ReportLeek, TEAM_COLORS } from '@/model/fight'
@@ -170,9 +171,10 @@
 	import ActionsElement from './report-actions.vue'
 	import ReportBlock from './report-block.vue'
 	import ReportLeekRow from './report-leek-row.vue'
-	import ReportStatistics from './report-statistics.vue'
+	const ReportStatistics = () => import(/* webpackChunkName: "[request]" */ `@/component/report/report-statistics.${locale}.i18n`)
 	import { Statistics } from './statistics'
 	import(/* webpackChunkName: "chartist" */ "@/chartist-wrapper")
+	import(/* webpackChunkName: "[request]" */ /* webpackMode: "eager" */ `@/lang/fight.${locale}.lang`)
 
 	class FightResponse {
 		success!: boolean
@@ -208,11 +210,19 @@
 
 		get team1Title() {
 			if (!this.fight) { return '' }
-			return this.fight.report.win === 0 ? this.$i18n.t('report.team1') : this.$i18n.t('report.winners')
+			return this.fight.report.win === 0 ? this.$i18n.t('team1') : this.$i18n.t('winners')
 		}
 		get team2Title() {
 			if (!this.fight) { return '' }
-			return this.fight.report.win === 0 ? this.$i18n.t('report.team2') : this.$i18n.t('report.loosers')
+			return this.fight.report.win === 0 ? this.$i18n.t('team2') : this.$i18n.t('loosers')
+		}
+		get team1Icon() {
+			if (!this.fight) { return '' }
+			return this.fight.report.win === 0 ? '' : 'mdi-trophy-outline'
+		}
+		get team2Icon() {
+			if (!this.fight) { return '' }
+			return this.fight.report.win === 0 ? '' : 'mdi-skull-outline'
 		}
 
 		@Watch('$route.params', {immediate: true})

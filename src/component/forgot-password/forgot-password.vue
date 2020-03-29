@@ -10,10 +10,10 @@
 					<br>
 					<h4>{{ $t('new_password') }}</h4>
 					<input v-model="password" name="password" type="password">
-					
+
 					<h4>{{ $t('confirm') }}</h4>
 					<input v-model="password2" name="password2" type="password">
-					
+
 					<br>
 					<br>
 					<center>
@@ -58,13 +58,17 @@
 <script lang="ts">
 	import { LeekWars } from '@/model/leekwars'
 	import { Component, Prop, Vue } from 'vue-property-decorator'
-	
+
 	@Component({ name: 'forgot_password', i18n: {} })
 	export default class ForgotPassword extends Vue {
 		@Prop() state!: string
 		email: string = ''
 		password: string = ''
 		password2: string = ''
+
+		created() {
+			LeekWars.setTitle(this.$t('title'))
+		}
 
 		submitForm() {
 			LeekWars.post('farmer/forgot-password', {email: this.email}).then(data => {

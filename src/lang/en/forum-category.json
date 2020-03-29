@@ -1,0 +1,18 @@
+{
+	"category_admin": "Admin",
+	"category_admin_desc": "Admin restricted category",
+	"category_bug_reports": "Bug reports",
+	"category_bug_reports_desc": "If you think you found a bug in the game\n",
+	"category_composter": "Composter",
+	"category_composter_desc": "Talk about this and that",
+	"category_exploits": "Your feats",
+	"category_exploits_desc": "Show your feats and unusual screenshots",
+	"category_general_discussion": "General discussion",
+	"category_general_discussion_desc": "General discussion about Leek Wars",
+	"category_help": "Help and tricks",
+	"category_help_desc": "If you have questions about the game or you want to share some tricks",
+	"category_moderation": "Moderation",
+	"category_moderation_desc": "Moderators restricted category",
+	"category_suggestions_ideas": "Suggestions and ideas",
+	"category_suggestions_ideas_desc": "If you have some improvements or ideas for the game"
+}

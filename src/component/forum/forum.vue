@@ -22,7 +22,7 @@
 				<router-link to="/chat">
 					<div class="tab action" icon="mdi-chat" link="/chat">
 						<v-icon>mdi-chat-outline</v-icon>
-						<span>{{ $t('chat') }}</span>
+						<span>{{ $t('main.chat') }}</span>
 					</div>
 				</router-link>
 				<div class="tab action disabled" icon="search" link="/search">
@@ -48,8 +48,8 @@
 					</div>
 					<div class="text">
 						<template v-if="category.type == 'normal'">
-							<div class="title">{{ $t('category_' + category.name) }}</div>
-							<div class="description">{{ $t('category_' + category.name + '_desc') }}</div>
+							<div class="title">{{ $t('forum-category.' + category.name) }}</div>
+							<div class="description">{{ $t('forum-category.' + category.name + '_desc') }}</div>
 						</template>
 						<div v-else-if="category.type == 'team'">
 							<div class="title">{{ category.name }}</div>
@@ -98,7 +98,7 @@
 
 		<panel class="last" icon="mdi-chat-outline">
 			<span slot="title">
-				<router-link to="/chat">{{ $t('chat') }}</router-link>
+				<router-link to="/chat">{{ $t('main.chat') }}</router-link>
 				<v-menu offset-y>
 					<template v-slot:activator="{ on }">
 						<img :src="chatLanguage.flag" class="language-button" v-on="on">
@@ -147,9 +147,9 @@
 			})
 			LeekWars.get('farmer/get-connected').then(data => {
 				this.connected_farmers = data.farmers
-				LeekWars.setSubTitle(this.$t('forum.connected_farmers_subtitle', [data.count]))
+				LeekWars.setSubTitle(this.$t('connected_farmers_subtitle', [data.count]))
 			})
-			LeekWars.setTitle(this.$t('forum.title'))
+			LeekWars.setTitle(this.$t('title'))
 			LeekWars.setActions([
 				{icon: 'mdi-chat-outline', click: () => this.$router.push('/chat')},
 				{icon: 'mdi-magnify', click: () => this.$router.push('/search')}
