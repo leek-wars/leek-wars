@@ -284,9 +284,8 @@
 		}
 	}
 	.trophy.locked {
-		opacity: 0.7;
 		.image {
-			opacity: 0.4;
+			opacity: 0.8;
 		}
 	}
 </style>
