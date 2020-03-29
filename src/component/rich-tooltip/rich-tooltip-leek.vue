@@ -240,10 +240,10 @@
 		width: 600px;
 	}
 	.weapons {
-		flex: 1.1;
+		flex: 0.85;
 		padding: 10px;
 		.weapon {
-			width: 120px;
+			width: 115px;
 			max-height: 46px;
 			margin: 8px;
 			vertical-align: middle;
