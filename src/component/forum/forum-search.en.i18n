@@ -1,10 +1,7 @@
 {
-	"admin": "Administrator",
 	"all_categories": "All categories",
 	"author": "Author",
 	"category": "Category",
-	"dev": "Developers",
-	"moderator": "Moderator",
 	"no_results_found": "No result found...",
 	"not_enough_parameters": "Not enough parameters to start searching",
 	"post_by_x_the_x_in_x": "Posted by {farmer} the {date} in {topic}",

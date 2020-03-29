@@ -8,7 +8,7 @@
 				<div class="name" v-on="on">{{ farmer.name }}</div>
 			</rich-tooltip-farmer>
 			<div class="last-message">
-				<b v-if="$store.state.farmer && conversation.last_farmer_id === $store.state.farmer.id">{{ $t('messages.me') }} ►</b>
+				<b v-if="$store.state.farmer && conversation.last_farmer_id === $store.state.farmer.id">{{ $t('main.me') }} ►</b>
 				<span v-emojis v-text="conversation.last_message"></span>
 			</div>
 			<div class="date">{{ LeekWars.formatDuration(conversation.last_date) }}</div>

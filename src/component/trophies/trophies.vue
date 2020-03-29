@@ -49,10 +49,10 @@
 					<div class="unlock">
 						<img v-if="trophy.in_fight" class="fight-icon" src="/image/trophy/winner.png" title="Déblocable en combat">
 						<template v-if="trophy.unlocked">
-							<i18n v-if="trophy.fight" tag="span" class="date" path="farmer.unlocked_the">
+							<i18n v-if="trophy.fight" tag="span" class="date" path="main.unlocked_the">
 								<router-link slot="date" :to="'/fight/' + trophy.fight" class="fight">{{ trophy.date | date }}</router-link>
 							</i18n>
-							<i18n v-else tag="span" class="date" path="farmer.unlocked_the">
+							<i18n v-else tag="span" class="date" path="main.unlocked_the">
 								<span slot="date">{{ trophy.date | date }}</span>
 							</i18n>
 						</template>

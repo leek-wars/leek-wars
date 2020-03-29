@@ -16,7 +16,6 @@
 	"no_ai_equipped": "Le poireau n'a pas d'IA équipée !",
 	"level_n": "Niveau {0}",
 	"n_challenges": "{0} défis",
-	"n_leeks": "{0} poireaux",
 	"n_remaining_fights": "{0} combats restants",
 	"n_fights": "1 combat | {count} combats",
 	"next_fight_in": "Prochain combat dans {0}",

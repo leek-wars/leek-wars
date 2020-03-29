@@ -1,6 +1,6 @@
 <template lang="html">
 	<div class="summon">
-		<h4>{{ $t('market.summon_characteristics') }}</h4>
+		<h4>{{ $t('characteristic.characteristics') }}</h4>
 		<div class="characteristics">
 			<div class="summon-image">
 				<img :src="'/image/bulb/' + summon.name + '_front.png'" width="width">
@@ -22,7 +22,7 @@
 				</characteristic-tooltip>
 			</div>
 		</div>
-		<h4>{{ $t('market.summon_available_chips') }}</h4>
+		<h4>{{ $t('main.chips') }}</h4>
 		<div class="chips">
 			<rich-tooltip-chip v-for="chip of summon.chips" :key="chip.id" v-slot="{ on }" :chip="LeekWars.chips[chip]" :bottom="true" :instant="true" @input="$emit('input', $event)">
 				<img :src="'/image/chip/small/' + LeekWars.chips[chip].name + '.png'" class="chip" v-on="on">

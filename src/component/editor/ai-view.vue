@@ -576,7 +576,7 @@
 			const maybeAdd = (data: string | Keyword) => {
 				if (typeof data === 'string') {
 					if (data.toLowerCase().indexOf(start.toLowerCase()) === 0) {
-						completions.push({name: data, fullName: data, details: i18n.t('editor.keyword', [data]) as string, type: 'keyword'})
+						completions.push({name: data, fullName: data, details: i18n.t('leekscript.keyword', [data]) as string, type: 'keyword'})
 					}
 				} else {
 					if (data.name.toLowerCase().indexOf(start.toLowerCase()) === 0) {
@@ -587,7 +587,7 @@
 			// Ajout des variables locales du code
 			for (let v = token.state.localVars; v; v = v.next) {
 				if (v.name.toLowerCase().indexOf(start.toLowerCase()) === 0) {
-					completions.push({name: v.name, fullName: v.name, details: i18n.t('editor.variable', [v.name]) as string, type: 'keyword'})
+					completions.push({name: v.name, fullName: v.name, details: i18n.t('leekscript.variable', [v.name]) as string, type: 'keyword'})
 				}
 			}
 			// Variables globales
@@ -600,7 +600,7 @@
 						const keyword = this.getTokenInformation(v.name)
 						if (!keyword) {
 							let text = "Variable <b>" + v.name + "</b>"
-							if (parseInt(i, 10) !== this.id) { text += "<br><br>" + this.$i18n.t('editor.variable_defined_in_ai', [this.ais[parseInt(i, 10)].name]) }
+							if (parseInt(i, 10) !== this.id) { text += "<br><br>" + this.$i18n.t('leekscript.variable_defined_in_ai', [this.ais[parseInt(i, 10)].name]) }
 							completions.push({name: v.name, fullName: v.name, details: text, type: 'variable'})
 						}
 					}
@@ -775,8 +775,8 @@
 					arg = arg.trim()
 				}
 				const fullName = match[1] + "(" + args.join(", ") + ")"
-				let description = "<h4>" + i18n.t('editor.function_f', [fullName]) + "</h4><br>"
-				description += i18n.t('editor.defined_in', [this.ai.name, line])
+				let description = "<h4>" + i18n.t('leekscript.function_f', [fullName]) + "</h4><br>"
+				description += i18n.t('leekscript.defined_in', [this.ai.name, line])
 
 				this.ai.functions.push({name: match[1], fullName, details: description, type: 'user-function', argumentCount: args.length, arguments: args, ai: this.ai, line})
 			}

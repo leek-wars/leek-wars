@@ -6,7 +6,7 @@
 			<talent :talent="farmer.talent" />
 			<br>
 			<span class="level">
-				{{ $t('garden.n_leeks', [farmer.leek_count]) }}
+				{{ $t('main.n_leeks', [farmer.leek_count]) }}
 			</span>
 			<br>
 			<span class="level">{{ $t('main.total_level_n', [farmer.total_level]) }}</span>

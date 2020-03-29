@@ -209,9 +209,8 @@
 			]},
 		]
 
-
 		created() {
-			LeekWars.setTitle(this.$i18n.t('about.title'))
+			LeekWars.setTitle(this.$i18n.t('title'))
 			LeekWars.setActions([{image: 'github_white.png', click: () => window.open('https://github.com/leek-wars/leek-wars-client', '_newtab')}])
 		}
 		mounted() {

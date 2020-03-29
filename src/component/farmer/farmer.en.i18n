@@ -87,7 +87,6 @@
 	"trophy_obtained": "Obtained {0}",
 	"n_trophies": "{0} trophies",
 	"no_icon": "none",
-	"unlocked_the": "Unlocked the {date}",
 	"unregister": "Unregister",
 	"impossible_to_unregister_moderator": "Impossible to delete a moderator.",
 	"impossible_to_unregister_team": "You are the owner of a team, you shall first dissolve before deleting your account.",

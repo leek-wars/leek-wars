@@ -25,7 +25,7 @@
 										<template v-slot:activator="{ on }">
 											<span class="label-beta" v-on="on">bêta <v-icon>mdi-information-outline</v-icon></span>
 										</template>
-										{{ $t('editor.v2_beta_message') }}
+										{{ $t('v2_beta_message') }}
 									</tooltip>
 								</v-list-item-title>
 							</v-list-item-content>
@@ -163,36 +163,36 @@
 
 		<popup v-model="newAIDialog" :width="500">
 			<v-icon slot="icon">mdi-plus-circle-outline</v-icon>
-			<span slot="title">{{ $t('editor.new_desc') }}</span>
+			<span slot="title">{{ $t('new_desc') }}</span>
 			<div class="padding">
-				<input ref="newAIInput" v-model="newAIName" :placeholder="$t('editor.ai_name')" type="text" class="input dialog-input" @keyup.enter="newAI(false, newAIName)">
+				<input ref="newAIInput" v-model="newAIName" :placeholder="$t('ai_name')" type="text" class="input dialog-input" @keyup.enter="newAI(false, newAIName)">
 			</div>
 			<div slot="actions">
-				<div @click="newAIDialog = false">{{ $t('editor.cancel') }}</div>
+				<div @click="newAIDialog = false">{{ $t('cancel') }}</div>
 				<div class="green" @click="newAI(false, newAIName)">{{ $t('main.create') }}</div>
 			</div>
 		</popup>
 
 		<popup v-model="newAIv2Dialog" :width="500">
 			<v-icon slot="icon">mdi-plus-circle-outline</v-icon>
-			<span slot="title">{{ $t('editor.new_desc') }}</span>
+			<span slot="title">{{ $t('new_desc') }}</span>
 			<div class="padding">
-				<input ref="newAIInputv2" v-model="newAIName" :placeholder="$t('editor.ai_name')" type="text" class="input dialog-input" @keyup.enter="newAI(true, newAIName)">
+				<input ref="newAIInputv2" v-model="newAIName" :placeholder="$t('ai_name')" type="text" class="input dialog-input" @keyup.enter="newAI(true, newAIName)">
 			</div>
 			<div slot="actions">
-				<div @click="newAIv2Dialog = false">{{ $t('editor.cancel') }}</div>
+				<div @click="newAIv2Dialog = false">{{ $t('cancel') }}</div>
 				<div class="green" @click="newAI(true, newAIName)">{{ $t('main.create') }}</div>
 			</div>
 		</popup>
 
 		<popup v-model="newFolderDialog" :width="500">
 			<v-icon slot="icon">mdi-folder-plus</v-icon>
-			<span slot="title">{{ $t('editor.new_folder') }}</span>
+			<span slot="title">{{ $t('new_folder') }}</span>
 			<div class="padding">
-				<input ref="newFolderInput" v-model="newFolderName" :placeholder="$t('editor.folder_name')" type="text" class="input dialog-input" @keyup.enter="newFolder(newFolderName)">
+				<input ref="newFolderInput" v-model="newFolderName" :placeholder="$t('folder_name')" type="text" class="input dialog-input" @keyup.enter="newFolder(newFolderName)">
 			</div>
 			<div slot="actions">
-				<div @click="newFolderDialog = false">{{ $t('editor.cancel') }}</div>
+				<div @click="newFolderDialog = false">{{ $t('cancel') }}</div>
 				<div class="green" @click="newFolder(newFolderName)">{{ $t('main.create') }}</div>
 			</div>
 		</popup>
@@ -209,7 +209,7 @@
 	import EditorFolder from './editor-folder.vue'
 	import { AIItem, Folder, Item } from './editor-item'
 	import EditorTabs from './editor-tabs.vue'
-	import EditorTest from './editor-test.vue'
+	const EditorTest = () => import(/* webpackChunkName: "[request]" */ `@/component/editor/editor-test.${locale}.i18n`)
 	import { generateKeywords } from './keywords'
 	import './leekscript-monokai.scss'
 	import(/* webpackChunkName: "[request]" */ /* webpackMode: "eager" */ `@/lang/doc.${locale}.lang`)
@@ -323,7 +323,7 @@
 					this.items[ai.name] = ai
 				}
 				this.update()
-				LeekWars.setTitle(this.$t('editor.title'), this.$t('editor.n_ais', [LeekWars.objectSize(data.ais)]))
+				LeekWars.setTitle(this.$t('title'), this.$t('n_ais', [LeekWars.objectSize(data.ais)]))
 			})
 		}
 		mounted() {
@@ -601,7 +601,7 @@
 					if (this.$refs.tabs) {
 						(this.$refs.tabs as EditorTabs).closeById(this.currentID)
 					}
-					(this.$refs.editorTest as EditorTest).onAIDeleted(this.currentID)
+					(this.$refs.editorTest as any).onAIDeleted(this.currentID)
 					ai_deleted = true
 				} else if (this.currentFolder) {
 					const folder = this.currentFolder.parent

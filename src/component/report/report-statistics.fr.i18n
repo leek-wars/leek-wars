@@ -1,0 +1,18 @@
+{
+	"bugs": "Bugs",
+	"chips_used": "Puces utilisées",
+	"criticals": "CC",
+	"damage_inflicted": "Dégats infligés",
+	"damage_received": "Dégâts reçus",
+	"heal_casted": "Soins lancés",
+	"heal_received": "Soins reçus",
+	"kills": "Kills",
+	"mp_used": "PM utilisés",
+	"resurrections": "Retours à la vie",
+	"shootings": "Tirs",
+	"summons": "Invoc.",
+	"team_n": "Équipe {0}",
+	"tp_per_turn": "PT/tour utilisés",
+	"tp_used": "PT utilisés",
+	"turns_played": "Tours joués"
+}

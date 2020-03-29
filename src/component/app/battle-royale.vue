@@ -4,7 +4,7 @@
 			<div class="header">
 				<div v-ripple class="title" @click="expanded = !expanded">
 					<v-icon>mdi-sword-cross</v-icon>
-					{{ $t('garden.category_battle_royale') }}
+					{{ $t('main.battle_royale') }}
 					<b class="progress">{{ LeekWars.battleRoyale.progress }} / 10</b>
 				</div>
 				<v-icon class="close" @click="quit">mdi-close</v-icon>

@@ -13,13 +13,13 @@
 					<div class="label">{{ $t('author') }}</div>
 					<input v-model="options.farmer" class="query card" type="text" @keydown.enter="search">
 				</div>
-				<v-switch v-model="options.moderator" :label="$t('moderator')" class="switch" hide-details @change="search" />
-				<v-switch v-model="options.admin" :label="$t('admin')" class="switch" hide-details @change="search" />
+				<v-switch v-model="options.moderator" :label="$t('main.grade_moderator')" class="switch" hide-details @change="search" />
+				<v-switch v-model="options.admin" :label="$t('main.grade_admin')" class="switch" hide-details @change="search" />
 				<div>
 					<div class="label">{{ $t('category') }}</div>
 					<select v-model="options.category" class="search-category" @change="search">
 						<option value="-1">{{ $t('all_categories') }}</option>
-						<option v-for="c in categories" :key="c.id" :value="c.id">{{ c.type == 'team' ? c.name : $i18n.t('forum.category_' + c.name) }}</option>
+						<option v-for="c in categories" :key="c.id" :value="c.id">{{ c.type == 'team' ? c.name : $i18n.t('forum-category.' + c.name) }}</option>
 					</select>
 				</div>
 				<div>
@@ -42,7 +42,7 @@
 				<h4>{{ $t('results') }} <span v-if="results">({{ count }})</span></h4>
 
 				<pagination :current="options.page" :total="pages" :url="urlPagination" :query="true" />
-				
+
 				<loader v-if="!results" />
 
 				<div v-else class="results-wrapper">
@@ -128,7 +128,7 @@
 			LeekWars.get('forum/get-categories/' + language).then(data => {
 				this.categories = data.categories
 			})
-			LeekWars.setTitle(i18n.t('search.title'))
+			LeekWars.setTitle(i18n.t('title'))
 		}
 
 		@Watch('$route.query', {immediate: true})

@@ -130,9 +130,9 @@
 									<div class="talent-more" v-on="on">({{ farmer.talent_more >= 0 ? '+' + farmer.talent_more : farmer.talent_more }})</div>
 								</template>
 								<template v-if="farmer.talent_more > 0">
-									<span v-html="$t('report.talent_difference_farmer', [farmer.name, farmer.talent_more, talent_gains + '%'])"></span>
+									<span v-html="$t('main.talent_difference_farmer', [farmer.name, farmer.talent_more, talent_gains + '%'])"></span>
 								</template>
-								<div v-else v-html="$t('report.talent_difference_farmer_no_gains', [farmer.name])"></div>
+								<div v-else v-html="$t('main.talent_difference_farmer_no_gains', [farmer.name])"></div>
 							</tooltip>
 						</div>
 						<tooltip v-if="farmer">
@@ -212,7 +212,7 @@
 								<emblem :team="farmer.team" />
 								<br>
 								<h2>{{ farmer.team.name }}</h2>
-								{{ $t('leek_level_n', [farmer.team.level]) }}
+								{{ $t('main.level_n', [farmer.team.level]) }}
 							</router-link>
 						</div>
 						<div v-else>
@@ -282,7 +282,7 @@
 										<br>{{ trophy.description }}
 									</span>
 									<br>
-									<i18n tag="span" class="trophy-date" path="unlocked_the">
+									<i18n tag="span" class="trophy-date" path="main.unlocked_the">
 										<span slot="date">{{ trophy.date | date }}</span>
 									</i18n>
 								</span>
@@ -322,7 +322,7 @@
 								<lw-title v-if="leek.title.length" :title="leek.title" />
 								<talent :talent="leek.talent" />
 								<br>
-								<span class="level">{{ $t('leek_level_n', [leek.level]) }}</span>
+								<span class="level">{{ $t('main.level_n', [leek.level]) }}</span>
 							</div>
 						</router-link>
 					</rich-tooltip-leek>
@@ -538,7 +538,7 @@
 			if (this.farmer.banned || this.farmer.deleted) {
 				return
 			}
-			LeekWars.setTitle(farmer.name, this.$t('farmer.n_trophies', [farmer.trophies]) as string)
+			LeekWars.setTitle(farmer.name, this.$t('n_trophies', [farmer.trophies]) as string)
 			if (this.myFarmer) {
 				LeekWars.setActions([
 					{icon: 'mdi-settings-outline', click: () => this.logout()}
@@ -703,9 +703,6 @@
 	.v-input--switch {
 		margin-left: 8px;
 		margin-right: -12px;
-	}
-	#app.app .panel.first .content {
-		padding-top: 0;
 	}
 	.avatar-td {
 		text-align: center;

@@ -122,7 +122,7 @@
 
 		get breadcrumb_items() {
 			return [
-				{name: this.$t('forum.title'), link: '/forum'},
+				{name: this.$t('main.forum'), link: '/forum'},
 				{name: this.category ? this.category.name : '...', link: '/forum/category-' + (this.category ? this.category.id : 0)}
 			]
 		}
@@ -139,11 +139,11 @@
 			LeekWars.get('forum/get-topics/' + category + '/' + this.page).then(data => {
 				this.category = data.category
 				if (this.category) {
-					this.category.name = this.category.team > 0 ? this.category.name : this.$t('forum.category_' + this.category.name) as string
+					this.category.name = this.category.team > 0 ? this.category.name : this.$t('forum-category.' + this.category.name) as string
 					this.category.topics = data.topics
 					this.pages = data.pages
 
-					LeekWars.setTitle(this.category.name, this.$t('forum_category.n_topic_n_messages', [data.total_topics, data.total_messages]))
+					LeekWars.setTitle(this.category.name, this.$t('n_topic_n_messages', [data.total_topics, data.total_messages]))
 					this.$root.$emit('loaded')
 				}
 			})

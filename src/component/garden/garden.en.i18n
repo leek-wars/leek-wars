@@ -16,7 +16,6 @@
 	"no_ai_equipped": "Leek has no AI equipped!",
 	"level_n": "Level {0}",
 	"n_challenges": "{0} challenges",
-	"n_leeks": "{0} leeks",
 	"n_remaining_fights": "{0} remaining fights",
 	"n_fights": "1 fight | {count} fights",
 	"next_fight_in": "Next fight in {0}",

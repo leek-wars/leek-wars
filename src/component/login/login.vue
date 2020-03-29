@@ -20,7 +20,7 @@
 			</form>
 		</panel>
 	</div>
-	
+
 </template>
 
 <script lang="ts">
@@ -37,6 +37,7 @@
 			keep_connected: false
 		}
 		created() {
+			LeekWars.setTitle(this.$t('title'))
 			this.form.keep_connected = localStorage.getItem("keep_connected") === 'true'
 		}
 		login() {

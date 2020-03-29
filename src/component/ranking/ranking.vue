@@ -22,8 +22,8 @@
 					<table class="ranking">
 						<tr class="header">
 							<th>{{ $t('place') }}</th>
-							<th>{{ $t('farmer') }}</th>
-							<th>{{ $t('ranking.' + funRanking.value) }}</th>
+							<th>{{ $t('main.farmer') }}</th>
+							<th>{{ $t(funRanking.value) }}</th>
 						</tr>
 						<tr v-for="(farmer, i) in funRanking.ranking.ranking" :key="i" :class="farmer.me">
 							<td>{{ parseInt(i) + 1 }}</td>
@@ -72,13 +72,13 @@
 							</th>
 							<th>
 								<router-link :to="'/ranking/leek' + (active ? '/active' : '') + '/page-' + page">
-									<span>{{ $t('talent') }}</span>
+									<span>{{ $t('main.talent') }}</span>
 									<v-icon v-if="order === 'talent'">mdi-chevron-up</v-icon>
 								</router-link>
 							</th>
 							<th>
 								<router-link :to="'/ranking/leek/level' + (active ? '/active' : '') + '/page-' + page">
-									<span>{{ $t('level') }}</span>
+									<span>{{ $t('main.level') }}</span>
 									<v-icon v-if="order === 'level'">mdi-chevron-up</v-icon>
 								</router-link>
 							</th>
@@ -88,7 +88,7 @@
 									<v-icon v-if="order === 'xp'">mdi-chevron-up</v-icon>
 								</router-link>
 							</th>
-							<th class="column-farmer">{{ $t('farmer') }}</th>
+							<th class="column-farmer">{{ $t('main.farmer') }}</th>
 							<th>{{ $t('country') }}</th>
 							<th class="column-team">{{ $t('team') }}</th>
 						</tr>
@@ -99,13 +99,13 @@
 							<th class="ranking-column">{{ $t('place') }}</th>
 							<th>
 								<router-link :to="'/ranking/farmer/name' + (active ? '/active' : '') + '/page-' + page">
-									<span>{{ $t('farmer') }}</span>
+									<span>{{ $t('main.farmer') }}</span>
 									<v-icon v-if="order === 'name'">mdi-chevron-up</v-icon>
 								</router-link>
 							</th>
 							<th>
 								<router-link :to="'/ranking/farmer/talent' + (active ? '/active' : '') + '/page-' + page">
-									<span>{{ $t('talent') }}</span>
+									<span>{{ $t('main.talent') }}</span>
 									<v-icon v-if="order === 'talent'">mdi-chevron-up</v-icon>
 								</router-link>
 							</th>
@@ -123,7 +123,7 @@
 								</router-link>
 							</th>
 							<th>{{ $t('country') }}</th>
-							<th>{{ $t('team') }}</th>
+							<th>{{ $t('main.team') }}</th>
 						</tr>
 						<ranking-farmer-row v-for="row in ranking" :key="row.id" :row="row" :class="{highlight: searchResult == row.id}" />
 					</table>
@@ -138,13 +138,13 @@
 							</th>
 							<th>
 								<router-link :to="'/ranking/team' + (active ? '/active' : '') + '/page-' + page">
-									<span>{{ $t('talent') }}</span>
+									<span>{{ $t('main.talent') }}</span>
 									<v-icon v-if="order === 'talent'">mdi-chevron-up</v-icon>
 								</router-link>
 							</th>
 							<th>
 								<router-link :to="'/ranking/team/level' + (active ? '/active' : '') + '/page-' + page">
-									<span>{{ $t('level') }}</span>
+									<span>{{ $t('main.level') }}</span>
 									<v-icon v-if="order === 'level'">mdi-chevron-up</v-icon>
 								</router-link>
 							</th>
@@ -276,7 +276,7 @@
 					this.fun = true
 					this.rankings = data.rankings
 					this.ranking = []
-					LeekWars.setTitle(this.$t('ranking.title'), this.$t('ranking.fun'))
+					LeekWars.setTitle(this.$t('title'), this.$t('fun'))
 					this.$root.$emit('loaded')
 				})
 			} else {
@@ -311,7 +311,7 @@
 					this.pages = data.pages
 					this.ranking = ranking
 					LeekWars.setActions([{icon: 'mdi-magnify', click: () => this.openSearch()}])
-					LeekWars.setTitle(this.$t('ranking.title'), this.$t('ranking.n_' + this.category + 's', [data.total]))
+					LeekWars.setTitle(this.$t('title'), this.$t('main.n_' + this.category + 's', [data.total]))
 					this.$root.$emit('loaded')
 				})
 			}

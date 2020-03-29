@@ -67,7 +67,7 @@
 				this.$router.push('/')
 				return
 			}
-			LeekWars.setTitle(this.$t('messages.title'))
+			LeekWars.setTitle(this.$t('title'))
 			this.update()
 			this.$root.$on('back', () => {
 				this.$router.push('/messages')
@@ -90,7 +90,7 @@
 		}
 		get newConversation(): Conversation | null {
 			if (!this.newConversation_ && 'name' in this.$route.params) {
-				this.newConversation_ = {id: 0, last_message: this.$t('messages.new_message') as string, farmers: [this.newFarmer]} as Conversation
+				this.newConversation_ = {id: 0, last_message: this.$t('new_message') as string, farmers: [this.newFarmer]} as Conversation
 			}
 			return this.newConversation_
 		}
@@ -124,7 +124,7 @@
 				} else {
 					if (LeekWars.mobile) {
 						LeekWars.splitShowList()
-						LeekWars.setTitle(this.$i18n.t('messages.title'))
+						LeekWars.setTitle(this.$i18n.t('title'))
 					} else if (this.$store.state.conversationsList.length) {
 						this.$router.replace('/messages/conversation/' + this.$store.state.conversationsList[0].id)
 					}
@@ -136,11 +136,11 @@
 			LeekWars.splitShowContent()
 			LeekWars.setActions(this.actions)
 			if (id === 0) {
-				LeekWars.setTitle(this.$i18n.t('messages.new_message'))
+				LeekWars.setTitle(this.$i18n.t('new_message'))
 			} else if (this.currentID in this.$store.state.conversations) {
 				LeekWars.setTitle(this.getConversationName())
 			} else {
-				LeekWars.setTitle(this.$i18n.t('messages.title'))
+				LeekWars.setTitle(this.$i18n.t('title'))
 			}
 		}
 		getConversationName() {

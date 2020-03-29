@@ -13,7 +13,7 @@
 </template>
 
 <script lang="ts">
-	import NotificationElement from '@/component/notification/notification.vue'
+	import NotificationElement from '@/component/notifications/notification.vue'
 	import { LeekWars } from '@/model/leekwars'
 	import { Notification } from '@/model/notification'
 	import { Component, Vue } from 'vue-property-decorator'

@@ -15,7 +15,7 @@
 				<div class="flex">
 					<span class="name">{{ entity.name }}</span>&nbsp;
 					<div class="spacer"></div>
-					<span class="level">{{ $t('fight.leek_level', [entity.level]) }}</span>
+					<span class="level">{{ $t('main.level_n', [entity.level]) }}</span>
 					<div class="bar-wrapper">
 						<div :style="{width: (100 * entity.life / entity.maxLife) + '%', background: entity.lifeColor}" class="details-bar"></div>
 					</div>

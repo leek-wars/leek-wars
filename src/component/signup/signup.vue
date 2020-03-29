@@ -99,13 +99,13 @@
 				</div>
 				<div class="column4">
 					<router-link to="/ranking/farmer/active">
-						<h4>{{ $t('farmer') }} <span class="arrow">▶</span></h4>
+						<h4>{{ $t('main.farmer') }} <span class="arrow">▶</span></h4>
 					</router-link>
 					<table class="ranking">
 						<tr class="header">
 							<th class="p15">{{ $t('place') }}</th>
-							<th class="p35">{{ $t('farmer') }}</th>
-							<th class="p20">{{ $t('talent') }}</th>
+							<th class="p35">{{ $t('main.farmer') }}</th>
+							<th class="p20">{{ $t('main.talent') }}</th>
 							<th class="p5">{{ $t('country') }}</th>
 						</tr>
 						<tr v-for="(farmer, i) in farmer_ranking" :key="i" :class="farmer ? farmer.style : ''">

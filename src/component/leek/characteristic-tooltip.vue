@@ -10,13 +10,13 @@
 			<template v-if="value > 0 && (characteristic != 'frequency' || value > 100)">
 				<br>
 				<template v-if="!test && characteristic == 'life'">
-					<b v-if="characteristic == 'life'" class="effect">{{ $t('leek.base_life') }} : <span class="amount">{{ leek.baseLife }}</span></b>
+					<b v-if="characteristic == 'life'" class="effect">{{ $t('characteristic.base_life') }} : <span class="amount">{{ leek.baseLife }}</span></b>
 					<br>
-					<b v-if="characteristic == 'life'" class="effect">{{ $t('leek.added_life') }} : <span class="amount">{{ value - leek.baseLife }}</span></b>
+					<b v-if="characteristic == 'life'" class="effect">{{ $t('characteristic.added_life') }} : <span class="amount">{{ value - leek.baseLife }}</span></b>
 					<br>
 				</template>
 				<div v-if="!test">
-					<b class="capital">{{ $t('leek.invested_capital') }} : <span class="amount">{{ capitalSpent(characteristic, value, leek.level) }}</span></b>
+					<b class="capital">{{ $t('characteristic.invested_capital') }} : <span class="amount">{{ capitalSpent(characteristic, value, leek.level) }}</span></b>
 				</div>
 				<template v-if="characteristic == 'strength'">
 					<b class="effect">{{ $t('characteristic.damage') }} : × <span class="damage">{{ (1 + value / 100).toFixed(2) }}</span></b>

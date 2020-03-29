@@ -4,7 +4,7 @@
 			<h1>
 				<breadcrumb :items="breadcrumb_items" :raw="true" />
 			</h1>
-			<div v-if="!LeekWars.mobile" class="tabs">
+			<div class="tabs">
 				<router-link to="/help/tutorial">
 					<div class="tab">
 						<v-icon>mdi-laptop</v-icon>
@@ -280,7 +280,7 @@
 	import { LeekWars } from '@/model/leekwars'
 	import { Component, Vue } from 'vue-property-decorator'
 	import Breadcrumb from '../forum/breadcrumb.vue'
-	
+
 	@Component({ name: "general_help", i18n: {}, components: { Breadcrumb } })
 	export default class GeneralHelp extends Vue {
 		created() {

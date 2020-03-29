@@ -437,7 +437,7 @@
 					</div>
 					<br>
 
-					<h4>{{ $t('leek.chips') }}</h4>
+					<h4>{{ $t('main.chips') }}</h4>
 					<div class="chips">
 						<rich-tooltip-chip v-for="chip in [4, 23, 20, 1, 15, 92, 97, 100]" :key="chip" v-slot="{ on }" :chip="LeekWars.chips[chip]" :bottom="true" :instant="true">
 							<img :src="'/image/chip/small/' + LeekWars.chips[chip].name + '.png'" class="chip" v-on="on">
@@ -560,7 +560,7 @@
 				}
 				this.captain = teamCaptain
 				LeekWars.setTitle(this.team.name)
-				LeekWars.setSubTitle(this.$t('ranking.n_farmers', [team.members.length]) + " • " + this.$t('ranking.n_leeks', [team.leek_count]))
+				LeekWars.setSubTitle(this.$t('main.n_farmers', [team.members.length]) + " • " + this.$t('main.n_leeks', [team.leek_count]))
 				if (this.member) {
 					LeekWars.setActions([
 						{icon: 'mdi-chat-outline', click: () => this.$router.push('/forum/category-' + team.forum)}
@@ -1157,6 +1157,11 @@
 			.characteristic:nth-child(8n+8) {
 				background: #eee;
 			}
+		}
+	}
+	#app.app .turret-dialog {
+		.characteristic {
+			width: 100%;
 		}
 	}
 	.turret-ai-dialog .farmer-ais {

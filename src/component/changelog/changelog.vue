@@ -1,7 +1,7 @@
 <template lang="html">
 	<div class="changelog-page">
 		<div class="page-header page-bar">
-			<h1>{{ $t('title') }}</h1>
+			<h1>{{ $t('main.changelog') }}</h1>
 			<div class="tabs">
 				<router-link to="/about">
 					<div class="tab">
@@ -28,7 +28,7 @@
 		</panel>
 		<template v-else>
 			<panel v-for="(version, v) in lazy_changelog" :key="version.version" :class="{last: v === changelog.length - 1}" icon="mdi-star">
-				<template slot="title">{{ $t('version_n', [version.version_name]) }} ({{ version.date }}) {{ translations[version.version] && translations[version.version].title ? ' — ' + translations[version.version].title : '' }}</template>
+				<template slot="title">{{ $t('changelog.version_n', [version.version_name]) }} ({{ version.date }}) {{ translations[version.version] && translations[version.version].title ? ' — ' + translations[version.version].title : '' }}</template>
 				<template slot="actions">
 					<div class="button flat" @click="showChangelogDialog(version)">
 						<v-icon>mdi-eye-outline</v-icon>
@@ -74,7 +74,7 @@
 				if (this.changelog[0].version !== lw_version) {
 					this.changelog.unshift({active: true, image: true, version: lw_version, version_name: LeekWars.normal_version.replace(/\.(\d)$/, '$1'), date: LeekWars.formatDate(Date.now() / 1000), data: 'changelog_' + lw_version})
 				}
-				LeekWars.setTitle(this.$t('title'))
+				LeekWars.setTitle(this.$t('main.changelog'))
 				this.$root.$emit('loaded')
 			})
 			window.addEventListener('scroll', this.scroll)

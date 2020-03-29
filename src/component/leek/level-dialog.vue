@@ -1,13 +1,13 @@
 <template>
 	<popup :value="value" :width="700" @input="$emit('input', $event)">
 		<v-icon slot="icon">mdi-new-box</v-icon>
-		<span slot="title" v-html="$t('leek.level_popup_title', [leek.name, data.level])"></span>
+		<span slot="title" v-html="$t('title', [leek.name, data.level])"></span>
 
 		<div class="level-popup">
 			<div v-if="leek.level == 301">
-				<h2>{{ $t('leek.popup_level_301_title') }}</h2>
+				<h2>{{ $t('301_title') }}</h2>
 				<br>
-				<div v-html="$t('leek.popup_level_301_message')"></div>
+				<div v-html="$t('301_message')"></div>
 				<br>
 				<center>
 					<tooltip>
@@ -37,7 +37,7 @@
 								<img src="/image/charac/small/life.png"><span class="name">{{ $t('characteristic.life') }}</span> &nbsp;<b>+ {{ data.gains.life }}</b>
 							</div>
 							<div class="capital">
-								<img src="/image/add.png"><span class="name">{{ $t('leek.capital') }}</span> &nbsp;<b>+ {{ data.gains.capital }}</b>
+								<img src="/image/add.png"><span class="name">{{ $t('main.capital') }}</span> &nbsp;<b>+ {{ data.gains.capital }}</b>
 							</div>
 						</div>
 					</td>
@@ -46,20 +46,20 @@
 			<br>
 
 			<div v-if="data.weapons.length + data.chips.length == 0">
-				<center>{{ $t('leek.level_popup_no_news') }}</center>
+				<center>{{ $t('no_news') }}</center>
 			</div>
 			<div v-else>
 				<template v-if="data.weapons.length > 0">
-					<h2>{{ $t('leek.new_weapons') }}</h2>
-					<div class="available-market">{{ $t('leek.available_on_market') }}</div>
+					<h2>{{ $t('new_weapons') }}</h2>
+					<div class="available-market">{{ $t('available_on_market') }}</div>
 					<div v-for="weapon of data.weapons" :key="weapon" class="weapon">
 						<img :src="'/image/weapon/' + weapon + '.png'"><br>
 						<div class="name">{{ $t('weapon.' + weapon) }}</div>
 					</div>
 				</template>
 				<template v-if="data.chips.length > 0">
-					<h2>{{ $t('leek.new_chips') }}</h2>
-					<div class="available-market">{{ $t('leek.available_on_market') }}</div>
+					<h2>{{ $t('new_chips') }}</h2>
+					<div class="available-market">{{ $t('available_on_market') }}</div>
 					<div v-for="chip of data.chips" :key="chip" class="weapon">
 						<img :src="'/image/chip/small/' + chip + '.png'"><br>
 						<div class="name">{{ $t('chip.' + chip) }}</div>
@@ -68,7 +68,7 @@
 			</div>
 		</div>
 		<div slot="actions">
-			<div class="action" @click="$emit('input', false)">{{ $t('leek.ok') }}</div>
+			<div class="action" @click="$emit('input', false)">{{ $t('main.ok') }}</div>
 		</div>
 	</popup>
 </template>
