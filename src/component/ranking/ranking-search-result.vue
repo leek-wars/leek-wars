@@ -20,7 +20,7 @@
 		</div>
 		<router-link :to="'/' + result.type + '/' + result.id">
 			<v-btn text icon color="grey">
-				<v-icon>perm_identity</v-icon>
+				<v-icon>mdi-account-outline</v-icon>
 			</v-btn>
 		</router-link>
 	</div>
