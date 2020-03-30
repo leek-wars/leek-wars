@@ -199,7 +199,7 @@
 		<popup v-model="successDialog" :width="700">
 			<v-icon slot="icon">mdi-check-bold</v-icon>
 			<span slot="title">{{ $t('signup_validated') }}</span>
-			<center><img src="/image/map/nexus_block.png"></center>
+			<center><img src="/image/map/nexus_block_small.png"></center>
 			<i18n tag="h2" class="signup-message" path="signup_validated_message">
 				<b slot="farmer">{{ login }}</b>
 			</i18n>

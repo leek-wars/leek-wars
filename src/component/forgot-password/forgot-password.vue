@@ -26,7 +26,7 @@
 
 			<template v-else-if="state == 'email_sent'">
 				<center>
-					<img src="/image/map/nexus_block.png">
+					<img src="/image/map/nexus_block_small.png">
 					<br>
 					<br>
 					<i18n path="mail_sent">
