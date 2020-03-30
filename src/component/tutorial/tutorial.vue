@@ -23,7 +23,7 @@
 		<panel class="first">
 			<div slot="content" class="wrapper">
 				<center>
-					<img src="/image/map/nexus_block.png">
+					<img src="/image/map/nexus_block_small.png">
 				</center>
 				<p><center><h2>{{ $t('welcome') }}</h2></center></p>
 				<br>

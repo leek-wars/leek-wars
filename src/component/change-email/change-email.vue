@@ -35,7 +35,7 @@
 
 			<template v-else-if="state == 3">
 				<center>
-					<img src="/image/map/nexus_block.png">
+					<img src="/image/map/nexus_block_small.png">
 					<br>
 					<br>
 					<i18n path="email_sent">
@@ -48,7 +48,7 @@
 
 			<template v-else-if="state == 4">
 				<center>
-					<img src="/image/map/nexus_block.png">
+					<img src="/image/map/nexus_block_small.png">
 					<br>
 					<br>
 					{{ $t('email_changed_success') }}
