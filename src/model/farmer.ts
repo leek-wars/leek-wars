@@ -15,6 +15,7 @@ class Farmer {
 	public deleted!: boolean
 	public tournaments!: any[]
 	public trophies!: number
+	public trophies_list!: any
 	public leeks!: {[key: number]: Leek}
 	public weapons!: Weapon[]
 	public potions!: Potion[]

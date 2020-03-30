@@ -574,9 +574,16 @@
 				localStorage.setItem('farmer/trophies-mode', 'list')
 			}
 			this.trophiesMode = localStorage.getItem('farmer/trophies-mode') || 'list'
-			LeekWars.get('trophy/get-farmer-trophies/' + this.farmer.id + '/' + this.$i18n.locale).then(data => {
-				this.trophies = data.trophies
-			})
+			if (this.farmer.trophies_list) {
+				this.trophies = this.farmer.trophies_list
+			} else {
+				LeekWars.get('trophy/get-farmer-trophies/' + this.farmer.id + '/' + this.$i18n.locale).then(data => {
+					this.trophies = data.trophies
+					if (this.myFarmer) {
+						store.commit('set-trophies', data.trophies)
+					}
+				})
+			}
 		}
 		registerTournament() {
 			if (this.farmer) {

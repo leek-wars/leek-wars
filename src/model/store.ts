@@ -440,6 +440,11 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			if (state.farmer) {
 				state.farmer.show_ai_lines = !state.farmer.show_ai_lines
 			}
+		},
+		'set-trophies'(state: LeekWarsState, trophies) {
+			if (state.farmer) {
+				Vue.set(state.farmer, 'trophies_list', trophies)
+			}
 		}
 	},
 })
