@@ -167,6 +167,7 @@
 					</template>
 					<div slot="content" class="weapons-wrapper center">
 						<loader v-if="!leek" />
+						<div v-else-if="leek.weapons.length === 0" class="empty">{{ $t('no_weapons') }}</div>
 						<template v-else>
 							<rich-tooltip-weapon v-for="weapon in leek.orderedWeapons" :key="weapon.id" v-slot="{ on }" :instant="true" :weapon="LeekWars.weapons[weapon.template]" :bottom="true">
 								<div class="weapon" v-on="on">
@@ -188,6 +189,7 @@
 					</template>
 					<div slot="content" class="chips-wrapper center">
 						<loader v-if="!leek" />
+						<div v-else-if="leek.chips.length === 0" class="empty">{{ $t('no_chips') }}</div>
 						<div v-else class="chips">
 							<rich-tooltip-chip v-for="chip in leek.orderedChips" :key="chip.id" v-slot="{ on }" :chip="LeekWars.chips[chip.template]" :bottom="true" :instant="true">
 								<div class="chip" v-on="on">
@@ -215,7 +217,7 @@
 								</router-link>
 								<ai v-else :ai="leek.ai" />
 							</template>
-							<span v-else>{{ $t('no_ai') }}</span>
+							<span v-else class="empty">{{ $t('no_ai') }}</span>
 						</template>
 					</div>
 				</panel>
@@ -1462,5 +1464,8 @@
 		b {
 			padding-right: 4px;
 		}
+	}
+	.empty {
+		color: #999;
 	}
 </style>
