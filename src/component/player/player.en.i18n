@@ -1,4 +1,22 @@
 {
+	"accelerate": "Speed up",
+	"accelerate_again": "Speed up (x2)",
+	"decelerate": "Slow down",
+	"display_cell_numbers": "Show cell numbers",
+	"display_debug": "Show debug informations",
+	"display_life_bars": "Show health meters",
+	"display_shadows": "Display shadows",
+	"enlarge_fight": "Enlarge fight screen",
+	"fullscreen": "Fullscreen (F)",
+	"generating": "In progress...",
 	"loading_fight": "Loading fight...",
+	"pause": "Pause (P)",
+	"position_in_queue": "Position in queue : {0} / {1}",
+	"quit": "Quit (Q)",
+	"resume": "Resume",
+	"settings": "Settings",
+	"show_ids": "Display IDs",
+	"sound_activated": "Sound is on",
+	"sound_disactivated": "Sound is off",
 	"tactic_mode": "Tactical mode"
 }

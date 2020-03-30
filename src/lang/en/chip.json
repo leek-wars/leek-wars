@@ -1,6 +1,7 @@
 {
 	"acceleration": "Acceleration",
 	"adrenaline": "Adrenaline",
+	"alteration": "Alteration",
 	"antidote": "Antidote",
 	"armor": "Armor",
 	"armoring": "Armoring",
@@ -29,6 +30,7 @@
 	"iceberg": "Iceberg",
 	"iced_bulb": "Iced Bulb",
 	"inversion": "Inversion",
+	"jump": "Jump",
 	"leather_boots": "Leather boots",
 	"liberation": "Liberation",
 	"lightning": "Lightning",
@@ -40,6 +42,7 @@
 	"motivation": "Motivation",
 	"pebble": "Pebble",
 	"plague": "Plague",
+	"plasma": "Plasma",
 	"precipitation": "Precipitation",
 	"protein": "Protein",
 	"puny_bulb": "Puny Bulb",
@@ -74,5 +77,6 @@
 	"wall": "Wall",
 	"warm_up": "Warm up",
 	"whip": "Whip",
-	"winged_boots": "Winged boots"
+	"winged_boots": "Winged boots",
+	"wizard_bulb": "Wizard bulb"
 }

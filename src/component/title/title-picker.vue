@@ -9,7 +9,7 @@
 					</template>
 					<template slot="item" slot-scope="data">
 						<img v-if="data.item.id" class="icon" :src="'/image/trophy/' + data.item.code + '.png'">
-						<span v-else>{{ $t('farmer.no_icon') }}</span>
+						<span v-else>{{ $t('main.none') }}</span>
 						<v-list-item-content>
 							<v-list-item-title class="word">
 								<div class="name"></div>
@@ -55,7 +55,7 @@
 									</v-list-item-title>
 								</v-list-item-content>
 							</template>
-							<span v-else>{{ $t('farmer.no_icon') }}</span>
+							<span v-else>{{ $t('main.none') }}</span>
 						</template>
 					</v-select>
 				</div>

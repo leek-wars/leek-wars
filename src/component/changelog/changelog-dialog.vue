@@ -13,7 +13,7 @@
 			</div>
 		</div>
 		<div slot="actions">
-			<div @click="$emit('input', false)">{{ $t('changelog.popup_ok') }}</div>
+			<div @click="$emit('input', false)">{{ $t('main.ok') }} :)</div>
 		</div>
 	</popup>
 </template>

@@ -64,28 +64,28 @@
 
 		<popup v-model="muteDialog" :width="600">
 			<v-icon slot="icon">mdi-volume-off</v-icon>
-			<span slot="title">{{ $t('moderation.mute') }}</span>
+			<span slot="title">{{ $t('warning.mute') }}</span>
 			<template v-if="muteFarmer">
 				<i18n path="moderation.mute_popup">
 					<b slot="farmer">{{ muteFarmer.name }}</b>
 				</i18n>
 			</template>
 			<div slot="actions">
-				<div @click="muteDialog = false">{{ $t('moderation.cancel') }}</div>
-				<div class="mute red" @click="muteConfirm">{{ $t('moderation.confirm_mute') }}</div>
+				<div @click="muteDialog = false">{{ $t('main.cancel') }}</div>
+				<div class="mute red" @click="muteConfirm">{{ $t('warning.confirm_mute') }}</div>
 			</div>
 		</popup>
 		<popup v-model="unmuteDialog" :width="600">
 			<v-icon slot="icon">mdi-volume-high</v-icon>
-			<span slot="title">{{ $t('moderation.unmute') }}</span>
+			<span slot="title">{{ $t('warning.unmute') }}</span>
 			<div v-if="muteFarmer">
 				<i18n path="moderation.unmute_popup">
 					<b slot="farmer">{{ muteFarmer.name }}</b>
 				</i18n>
 			</div>
 			<div slot="actions">
-				<div @click="unmuteDialog = false">{{ $t('moderation.cancel') }}</div>
-				<div class="unmute red" @click="unmuteConfirm">{{ $t('moderation.unmute') }}</div>
+				<div @click="unmuteDialog = false">{{ $t('main.cancel') }}</div>
+				<div class="unmute red" @click="unmuteConfirm">{{ $t('warning.unmute') }}</div>
 			</div>
 		</popup>
 	</div>

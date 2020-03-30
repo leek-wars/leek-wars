@@ -1,17 +1,10 @@
 {
-	"confirm_mute": "Mute",
-	"given_by_x_the_d": "Given by {farmer} the {date}",
 	"report_farmer": "Report {0}",
-	"report_farmer_for_reason": "Report {0} for which reason ?",
-	"report_informations": "Additional information (optional)",
+	"reporting_deleted": "Reporting deleted",
 	"title": "Moderation",
 	"warning_sent": "Warning sent!",
 	"you_are_muted": "You are muted.",
 	"you_have_been_muted_by_x": "You have been muted by {0}.",
 	"you_have_been_unmuted_by_x": "{0} allowed you to speak again on the chat.",
-	"you_must_choose_reason": "You must choose a reason!",
-	"mute": "Mute",
-	"mute_popup": "Are you sure to mute {farmer} ?",
-	"unmute": "Unmute",
-	"unmute_popup": "Are you sure to unmute {farmer} ?"
+	"you_must_choose_reason": "You must choose a reason!"
 }

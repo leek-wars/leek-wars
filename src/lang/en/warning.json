@@ -1,4 +1,10 @@
 {
+	"confirm_mute": "Mute",
+	"given_by_x_the_d": "Given by {farmer} the {date}",
+	"mute": "Mute",
+	"mute_popup": "Are you sure to mute {farmer} ?",
+	"unmute": "Unmute",
+	"unmute_popup": "Are you sure to unmute {farmer} ?",
 	"reason_1": "Incorrect farmer name",
 	"reason_2": "Incorrect leek name",
 	"reason_3": "Incorrect AI name",
@@ -22,7 +28,8 @@
 	"reason_102": "Bug exploitation",
 	"reason_103": "Using a script or bot",
 	"report": "Report",
-	"reporting_deleted": "Reporting deleted",
+	"report_farmer_for_reason": "Report {0} for which reason ?",
+	"report_informations": "Additional information (optional)",
 	"select_leek": "Select a leek",
 	"severity_s": "severity {0}",
 	"thank_you_for_reporting": "Thanks for your reporting"

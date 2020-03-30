@@ -72,7 +72,7 @@
 
 		submitForm() {
 			LeekWars.post('farmer/forgot-password', {email: this.email}).then(data => {
-				LeekWars.toast(this.$i18n.t('forgot_password.mail_sent', {email: this.email}))
+				LeekWars.toast(this.$i18n.t('mail_sent', {email: this.email}))
 				this.$router.push('/forgot-password/email-sent/' + this.email)
 			}).error(error => {
 				LeekWars.toast(error)
@@ -86,7 +86,7 @@
 				return false
 			}
 			LeekWars.post('farmer/forgot-password-change', {farmer_id: this.$route.params.id, new_password: this.password, code: this.$route.params.code}).then(data => {
-				LeekWars.toast(this.$i18n.t('forgot_password.password_changed'))
+				LeekWars.toast(this.$i18n.t('password_changed'))
 				this.$router.push('/login')
 			})
 			return false

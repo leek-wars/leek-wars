@@ -2,7 +2,7 @@
 	<div>
 		<div class="page-header page-bar">
 			<h1>
-				<router-link to="/bank">{{ $t('title') }}</router-link> > 
+				<router-link to="/bank">{{ $t('title') }}</router-link> >
 				<span v-html="$t('purshase_title', [data.crystalCount, data.vendor])"></span>
 			</h1>
 		</div>
@@ -39,7 +39,7 @@
 		data: any = {}
 		loading: boolean = false
 		starPassLoading: boolean = false
-		created() {			
+		created() {
 			this.pack = parseInt(this.$route.params.pack, 10)
 			this.offer = parseInt(this.$route.params.offer, 10)
 			LeekWars.get('bank/get-packs').then(data => {
@@ -65,7 +65,7 @@
 				} else {
 					this.data = obj
 				}
-				LeekWars.setTitle(this.$t('bank.title'), this.$t('bank.purshase_title_text', [crystalCount, vendor]))
+				LeekWars.setTitle(this.$t('title'), this.$t('purshase_title_text', [crystalCount, vendor]))
 			})
 		}
 		createStarPass() {

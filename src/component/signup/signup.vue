@@ -297,7 +297,7 @@
 			}).error(errors => {
 				for (const error of errors) {
 					const form = ['login', 'leek', 'email', 'password1', 'password2', 'godfather'][error[0]]
-					this.addError(form, i18n.t('farmer.error_' + error[1], error[2]) as string)
+					this.addError(form, i18n.t('error_' + error[1], error[2]) as string)
 				}
 			})
 			return false
