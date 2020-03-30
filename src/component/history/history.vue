@@ -81,7 +81,7 @@
 		get breadcrumb_items() {
 			return [
 				{name: (this.entity ? this.entity.name : '...'), link: '/' + this.type + '/' + (this.entity ? this.entity.id : '')},
-				{name: this.$t('title_html'), link: '/' + this.type + '/' + (this.entity ? this.entity.id : '') + '/history'}
+				{name: this.$t('title_html', [this.entity ? this.entity.name : '...']), link: '/' + this.type + '/' + (this.entity ? this.entity.id : '') + '/history'}
 			]
 		}
 		get filteredFights() {
