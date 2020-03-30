@@ -2,6 +2,8 @@ class Hat {
 	public id!: number
 	public template!: number
 	public hat_template!: number
+	public name!: string
+	public level!: number
 }
 
 class HatTemplate {
