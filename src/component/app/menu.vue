@@ -2,8 +2,8 @@
 	<div class="menu">
 
 		<div v-if="!LeekWars.mobile" class="menu-button" @click="LeekWars.menuCollapsed = !LeekWars.menuCollapsed">
-			<v-icon v-if="LeekWars.menuCollapsed">mdi-chevron-left</v-icon>
-			<v-icon v-else>mdi-chevron-right</v-icon>
+			<v-icon v-if="LeekWars.menuCollapsed">mdi-chevron-right</v-icon>
+			<v-icon v-else>mdi-chevron-left</v-icon>
 		</div>
 
 		<div class="menu-wrapper">
