@@ -395,7 +395,7 @@
 		progressBarClick(e: MouseEvent) {
 			const bar = this.$refs.progressBar as HTMLElement
 			const action = Math.round(this.game.actions.length * (e.pageX - bar.getBoundingClientRect().left) / bar.offsetWidth)
-			this.game.jump(action)
+			this.game.requestJump(action)
 		}
 		progressBarMove(e: MouseEvent) {
 			const bar = this.$refs.progressBar as HTMLElement
@@ -655,9 +655,11 @@
 	.progress-bar .bar {
 		height: 100%;
 		background-color: #5fad1b;
-		transition: all 0.2s;
 		display: inline-block;
 		vertical-align: top;
+	}
+	.progress-bar:not(:hover) .bar {
+		transition: all 1s;
 	}
 	.progress-bar .circle {
 		width: 16px;

@@ -261,6 +261,8 @@ class Game {
 	public selectedEntity: Entity | null = null
 	public hoverEntity: Entity | null = null
 	public jumping: any
+	public jumpRequested: boolean = false
+	public jumpAction: number = 0
 	public currentTurn: number = 0
 	public ratio: number = 1
 	public areaColor: any
@@ -560,8 +562,8 @@ class Game {
 
 	public updateFrame() {
 		if (!this.paused) {
-			setTimeout(() => this.updateFrame(), frameTime)
 			this.update()
+			setTimeout(() => this.updateFrame(), frameTime)
 		}
 	}
 
@@ -617,6 +619,12 @@ class Game {
 	}
 
 	public update() {
+
+		// Jump ?
+		if (this.jumpRequested) {
+			this.jumpRequested = false
+			this.jump(this.jumpAction)
+		}
 
 		if (!this.paused) {
 
@@ -1812,6 +1820,15 @@ class Game {
 		document.body.style.cursor = ''
 	}
 
+	public requestJump(jumpAction: number) {
+		if (this.paused) {
+			this.jump(jumpAction)
+		} else {
+			this.jumpRequested = true
+			this.jumpAction = jumpAction
+		}
+	}
+
 	public jump(jumpAction: number) {
 		// Return to initial state
 		for (const i in this.states) {
@@ -1876,6 +1893,7 @@ class Game {
 		for (const chip of this.chips) {
 			chip.done = true
 		}
+		this.chips = []
 
 		// Do actions
 		this.jumping = true
