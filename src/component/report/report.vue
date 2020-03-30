@@ -101,7 +101,7 @@
 				</center>
 
 				<template v-if="fight.trophies.length">
-					<h3 class="trophies-title">{{ $t('report.trophies') }}</h3>
+					<h3 class="trophies-title">{{ $t('trophies') }}</h3>
 					<div class="trophies">
 						<div v-for="(trophy, t) in fight.trophies" :key="t" class="trophy card">
 							<img :src="'/image/trophy/big/' + trophy.name + '.png'" class="image">

@@ -1,5 +1,10 @@
 {
+	"confirm_mute": "Sourdine",
 	"given_by_x_the_d": "Donné par {farmer} le {date}",
+	"mute": "Mettre en sourdine",
+	"mute_popup": "Etes-vous sûr de vouloir mettre {farmer} en sourdine ?",
+	"unmute": "Rendre la parole",
+	"unmute_popup": "Etes-vous sûr de vouloir rendre la parole à {farmer} ?",
 	"reason_1": "Nom d'éleveur incorrect",
 	"reason_1_action": "Le nom de l'éleveur sera remplacé par 'Farmer@<id>' et le nom incriminé sera ajouté à la liste de mots interdits.",
 	"reason_2": "Nom de poireau incorrect",

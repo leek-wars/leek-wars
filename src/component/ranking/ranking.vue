@@ -66,7 +66,7 @@
 							<th class="ranking-column">{{ $t('place') }}</th>
 							<th>
 								<router-link :to="'/ranking/leek/name/page-' + page">
-									<span>{{ $t('leek') }}</span>
+									<span>{{ $t('main.leek') }}</span>
 									<v-icon v-if="order === 'name'">mdi-chevron-up</v-icon>
 								</router-link>
 							</th>
@@ -90,7 +90,7 @@
 							</th>
 							<th class="column-farmer">{{ $t('main.farmer') }}</th>
 							<th>{{ $t('country') }}</th>
-							<th class="column-team">{{ $t('team') }}</th>
+							<th class="column-team">{{ $t('main.team') }}</th>
 						</tr>
 						<ranking-leek-row v-for="row in ranking" :key="row.id" :row="row" :class="{highlight: searchResult == row.id}" />
 					</table>

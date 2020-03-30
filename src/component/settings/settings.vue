@@ -158,7 +158,7 @@
 		<popup v-model="deleteFailedDialog" :width="600">
 			<v-icon slot="icon">mdi-delete</v-icon>
 			<span slot="title">{{ $t('delete_failed') }}</span>
-			{{ $t('farmer.' + deleteFailedError) }}
+			{{ $t(deleteFailedError) }}
 		</popup>
 	</div>
 </template>

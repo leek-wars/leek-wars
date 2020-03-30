@@ -238,7 +238,7 @@
 			if (!this.selectedFault) { return }
 			const fault = this.selectedFault
 			LeekWars.post('moderation/archive', {target: fault.target.id, reason: fault.reason, parameter: fault.parameter}).then(data => {
-				LeekWars.toast(this.$t('moderation.reporting_deleted') as string)
+				LeekWars.toast(this.$t('reporting_deleted') as string)
 				this.faults!.splice(this.faults!.indexOf(fault), 1)
 				Vue.delete(this.faultsById, '' + fault.id)
 				this.$router.push('/moderation')

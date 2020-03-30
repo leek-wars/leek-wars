@@ -619,15 +619,15 @@
 			const formdata = new FormData()
 			formdata.append('avatar', file)
 
-			LeekWars.toast(this.$t('farmer.uploading_avatar') as string)
+			LeekWars.toast(this.$t('uploading_avatar') as string)
 
 			LeekWars.post('farmer/set-avatar', formdata).then(data => {
 				if (this.farmer) {
-					LeekWars.toast(this.$t('farmer.upload_success') as string)
+					LeekWars.toast(this.$t('upload_success') as string)
 					this.farmer.avatar_changed = data.avatar_changed
 				}
 			}).error(error => {
-				LeekWars.toast(this.$t('farmer.upload_failed', [error]) as string)
+				LeekWars.toast(this.$t('upload_failed', [error]) as string)
 			})
 		}
 		warnings() {
@@ -640,7 +640,7 @@
 		}
 		createTeam() {
 			LeekWars.post('team/create', {team_name: this.createTeamName}).then(data => {
-				LeekWars.toast(this.$i18n.t('farmer.team_created'))
+				LeekWars.toast(this.$i18n.t('team_created'))
 				this.createTeamDialog = false
 				const team = new Team()
 				team.id = data.id
@@ -650,13 +650,13 @@
 				team.opened = true
 				store.commit('create-team', team)
 			}).error(error => {
-				LeekWars.toast(this.$i18n.t('farmer.' + error))
+				LeekWars.toast(this.$i18n.t(error))
 			})
 		}
 		cancelCandidacy() {
 			LeekWars.post('team/cancel-candidacy').then(data => {
 				if (this.farmer) {
-					LeekWars.toast(this.$i18n.t('farmer.candidacy_canceled'))
+					LeekWars.toast(this.$i18n.t('candidacy_canceled'))
 					this.farmer.candidacy = null
 				}
 			}).error(error => {

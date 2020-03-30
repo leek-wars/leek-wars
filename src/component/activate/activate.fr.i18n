@@ -1,1 +1,5 @@
-{}
+{
+	"login": "Se connecter",
+	"signup_done": "Inscription terminée !",
+	"signup_done_message": "Ton compte est maintenant activé ! Connecte-toi et commence à combattre"
+}

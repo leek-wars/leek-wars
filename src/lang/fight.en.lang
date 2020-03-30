@@ -31,5 +31,9 @@
 	"n_vita": "{0} total health",
 	"n_wisdom": "{0} wisdom",
 	"n_vulnerability": "a {0} vulnerability",
-	"turn_n": "Turn {0}"
+	"start_of_fight": "Starting fight!",
+	"summon": "{leek} summons {summon}",
+	"turn_n": "Turn {0}",
+	"turn_of_leek": "{leek}'s turn",
+	"turret": "Turret"
 }

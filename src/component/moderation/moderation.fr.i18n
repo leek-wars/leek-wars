@@ -1,5 +1,4 @@
 {
-	"confirm_mute": "Sourdine",
 	"report_farmer": "Signaler {0}",
 	"reporting_deleted": "Signalement supprimé",
 	"title": "Modération",
@@ -7,9 +6,5 @@
 	"you_are_muted": "Vous avez été reduit au silence.",
 	"you_have_been_muted_by_x": "Vous avez été réduit au silence par {0}.",
 	"you_have_been_unmuted_by_x": "{0} vous autorise à nouveau à parler sur le chat.",
-	"you_must_choose_reason": "Vous devez choisir un motif !",
-	"mute": "Mettre en sourdine",
-	"mute_popup": "Etes-vous sûr de vouloir mettre {farmer} en sourdine ?",
-	"unmute": "Rendre la parole",
-	"unmute_popup": "Etes-vous sûr de vouloir rendre la parole à {farmer} ?"
+	"you_must_choose_reason": "Vous devez choisir un motif !"
 }

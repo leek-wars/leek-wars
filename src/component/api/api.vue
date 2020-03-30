@@ -14,7 +14,7 @@
 			</div>
 			<div class="label">{{ service.method }}</div>
 
-			<div class="description">{{ $t('api.' + service.module + '_' + service.function) }}</div>
+			<div class="description">{{ $t(service.module + '_' + service.function) }}</div>
 
 			<div class="parameters">
 				<div v-for="(parameter, p) in service.parameters" :key="p" class="parameter">{{ parameter }} : {{ service.parameters_types[p] }}</div>
@@ -26,7 +26,7 @@
 <script lang="ts">
 	import { LeekWars } from '@/model/leekwars'
 	import { Component, Vue } from 'vue-property-decorator'
-	
+
 	@Component({ name: 'api', i18n: {} })
 	export default class Api extends Vue {
 		services: any = null

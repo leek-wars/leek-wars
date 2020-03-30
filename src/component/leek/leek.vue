@@ -940,16 +940,16 @@
 			if (!this.leek) { return }
 			const template = LeekWars.weapons[weapon.template]
 			if (this.leek.weapons.length >= this.leek.max_weapons) {
-				return LeekWars.toast(this.$i18n.t('leek.error_max_weapon', [this.leek.name]))
+				return LeekWars.toast(this.$i18n.t('error_max_weapon', [this.leek.name]))
 			}
 			if (template.level > this.leek.level) {
-				return LeekWars.toast(this.$i18n.t('leek.error_under_required_level_weapon', [this.leek.name]))
+				return LeekWars.toast(this.$i18n.t('error_under_required_level_weapon', [this.leek.name]))
 			}
 			if (this.leek.weapons.some((w) => w.template === template.id)) {
-				return LeekWars.toast(this.$i18n.t('leek.error_weapon_already_equipped', [this.leek.name]))
+				return LeekWars.toast(this.$i18n.t('error_weapon_already_equipped', [this.leek.name]))
 			}
 			if (this.hasForgottenWeapon && LeekWars.weapons[weapon.template].forgotten) {
-				return LeekWars.toast(this.$i18n.t('leek.error_weapon_two_forgotten', [this.leek.name]))
+				return LeekWars.toast(this.$i18n.t('error_weapon_two_forgotten', [this.leek.name]))
 			}
 			LeekWars.post('leek/add-weapon', {leek_id: this.leek.id, weapon_id: weapon.id}).then(data => {
 				if (this.leek) {
@@ -990,13 +990,13 @@
 			if (!this.leek) { return }
 			const template = LeekWars.chips[chip.template]
 			if (this.leek.chips.length >= this.leek.max_chips) {
-				return LeekWars.toast(this.$i18n.t('leek.error_max_chip', [this.leek.name]))
+				return LeekWars.toast(this.$i18n.t('error_max_chip', [this.leek.name]))
 			}
 			if (template.level > this.leek.level) {
-				return LeekWars.toast(this.$i18n.t('leek.error_under_required_level_chip', [this.leek.name]))
+				return LeekWars.toast(this.$i18n.t('error_under_required_level_chip', [this.leek.name]))
 			}
 			if (this.leek.chips.some((c) => c.template === template.id)) {
-				return LeekWars.toast(this.$i18n.t('leek.error_chip_already_equipped', [this.leek.name]))
+				return LeekWars.toast(this.$i18n.t('error_chip_already_equipped', [this.leek.name]))
 			}
 			LeekWars.post('leek/add-chip', {leek_id: this.leek.id, chip_id: chip.id}).then(data => {
 				if (this.leek) {

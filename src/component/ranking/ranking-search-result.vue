@@ -34,11 +34,11 @@
 		@Prop({ required: true }) result!: any
 		get description() {
 			if (this.result.type === 'leek') {
-				return i18n.t('ranking.leek_level', [this.result.level])
+				return i18n.t('main.leek_level', [this.result.level])
 			} else if (this.result.type === 'farmer') {
-				return i18n.t('ranking.farmer')
+				return i18n.t('main.farmer')
 			} else if (this.result.type === 'team') {
-				return i18n.t('ranking.team_level', [this.result.level])
+				return i18n.t('main.team_level', [this.result.level])
 			}
 		}
 	}

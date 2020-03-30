@@ -1,1 +1,5 @@
-{}
+{
+	"login": "Sign in",
+	"signup_done": "Registration done successfully!",
+	"signup_done_message": "Your account is now activated! Log in and start fighting"
+}

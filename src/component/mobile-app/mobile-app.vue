@@ -51,7 +51,7 @@
 	@Component({ name: 'mobile_app', i18n: {} })
 	export default class MobileApp extends Vue {
 		created() {
-			LeekWars.setTitle(this.$t('mobile_app.title'))
+			LeekWars.setTitle(this.$t('title'))
 		}
 	}
 </script>
