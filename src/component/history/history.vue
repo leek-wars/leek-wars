@@ -1,9 +1,12 @@
 <template lang="html">
 	<div>
 		<div class="page-bar">
-			<h1>{{ $t('title_html', [entity ? entity.name : '...']) }}</h1>
+			<h1>
+				<breadcrumb :items="breadcrumb_items" :raw="true" />
+			</h1>
 		</div>
-		<panel v-if="entity" class="first last">
+		<panel class="first last">
+
 			<div class="summary">
 				<div class="periods">
 					<div v-ripple :class="{selected: period === 'today'}" class="period card" @click="select_period('today')">{{ $t('today') }}</div>
@@ -11,41 +14,50 @@
 					<div v-ripple :class="{selected: period === '2days'}" class="period card" @click="select_period('2days')">{{ $t('2days') }}</div>
 					<div v-ripple :class="{selected: period === '1week'}" class="period card" @click="select_period('1week')">{{ $t('1week') }}</div>
 				</div>
-
-				<div v-if="type === 'farmer'" class="image">
-					<avatar :farmer="entity" />
-				</div>
-				<div v-if="type === 'leek'" class="image">
-					<leek-image :leek="entity" :scale="0.8" />
-				</div>
-
-				<div class="stats">
-					<center>
-						<talent :talent="entity.talent" />
-						<div class="talent-more">
-							({{ entity.talent_more >= 0 ? '+' + entity.talent_more : entity.talent_more }})
-						</div>
-					</center>
-					<table>
-						<tr>
-							<td class="big">{{ victories }}</td>
-							<td class="big">{{ draws }}</td>
-							<td class="big">{{ defeats }}</td>
-							<td class="big">{{ ratio }}</td>
-						</tr>
-						<tr>
-							<td class="grey">{{ $t('victories') }}</td>
-							<td class="grey">{{ $t('draws') }}</td>
-							<td class="grey">{{ $t('defeats') }}</td>
-							<td class="grey">{{ $t('ratio') }}</td>
-						</tr>
-					</table>
-				</div>
 			</div>
-			<br>
-			<div class="n-fights">{{ $t('n_fights', [filteredFights.length]) }}</div>
 
-			<fights-history :fights="filteredFights" />
+			<loader v-if="!entity" />
+			<div v-else>
+				<div class="summary">
+
+					<div v-if="type === 'farmer'" class="image">
+						<avatar :farmer="entity" />
+					</div>
+					<div v-if="type === 'leek'" class="image">
+						<leek-image :leek="entity" :scale="0.8" />
+					</div>
+					<div v-if="type === 'team'" class="image">
+						<emblem :team="entity" />
+					</div>
+
+					<div class="stats">
+						<center>
+							<talent :talent="entity.talent" />
+							<div v-if="type === 'leek' || type === 'farmer'" class="talent-more">
+								({{ entity.talent_more >= 0 ? '+' + entity.talent_more : entity.talent_more }})
+							</div>
+						</center>
+						<table>
+							<tr>
+								<td class="big">{{ victories }}</td>
+								<td class="big">{{ draws }}</td>
+								<td class="big">{{ defeats }}</td>
+								<td class="big">{{ ratio }}</td>
+							</tr>
+							<tr>
+								<td class="grey">{{ $t('victories') }}</td>
+								<td class="grey">{{ $t('draws') }}</td>
+								<td class="grey">{{ $t('defeats') }}</td>
+								<td class="grey">{{ $t('ratio') }}</td>
+							</tr>
+						</table>
+					</div>
+				</div>
+				<br>
+				<div class="n-fights">{{ $t('n_fights', [filteredFights.length]) }}</div>
+
+				<fights-history :fights="filteredFights" />
+			</div>
 		</panel>
 	</div>
 </template>
@@ -56,27 +68,48 @@
 	import { Leek } from '@/model/leek'
 	import { LeekWars } from '@/model/leekwars'
 	import { Component, Prop, Vue } from 'vue-property-decorator'
+	import Breadcrumb from '../forum/breadcrumb.vue'
 
-	@Component({ name: 'history', i18n: {} })
+	@Component({ name: 'history', i18n: {}, components: { Breadcrumb } })
 	export default class History extends Vue {
 		@Prop({required: true}) type!: string
 		fights!: Fight[]
-		filteredFights!: Fight[]
 		entity: Farmer | Leek | null = null
-		count: number = 0
-		victories: number = 0
-		defeats: number = 0
-		draws: number = 0
-		ratio: string = ''
 		period: string = '1week'
+		start_date: number = 0
+
+		get breadcrumb_items() {
+			return [
+				{name: (this.entity ? this.entity.name : '...'), link: '/' + this.type + '/' + (this.entity ? this.entity.id : '')},
+				{name: this.$t('title_html'), link: '/' + this.type + '/' + (this.entity ? this.entity.id : '') + '/history'}
+			]
+		}
+		get filteredFights() {
+			return this.fights.filter((fight) => {
+				return fight.date >= this.start_date
+			})
+		}
+		get victories() {
+			return this.filteredFights.filter(f => f.result === "win").length
+		}
+		get defeats() {
+			return this.filteredFights.filter(f => f.result === "defeat").length
+		}
+		get draws() {
+			return this.filteredFights.filter(f => f.result === "draw").length
+		}
+		get ratio() {
+			return this.defeats === 0 ? '∞' : LeekWars.numberPrecision(this.victories / this.defeats, 3)
+		}
 
 		created() {
 			const id = this.$route.params.id
+			const period = localStorage.getItem('options/history-period') || '1week'
+			this.select_period(period)
 			LeekWars.get('history/get-' + this.type + '-history/' + id).then(data => {
 				this.fights = data.fights
 				this.entity = data.entity
 				LeekWars.setTitle(this.$t('title', [data.entity.name]))
-				const period = localStorage.getItem('options/history-period') || '1week'
 				this.select_period(period)
 			})
 		}
@@ -87,29 +120,13 @@
 			const midnignt = new Date()
 			midnignt.setHours(0, 0, 0, 0)
 			const day = 24 * 3600
-			const start_date = (() => {
+			this.start_date = (() => {
 				if (period === '24h') { return now - day }
 				if (period === 'today') { return midnignt.getTime() / 1000 }
 				if (period === '2days') { return now - 2 * day }
 				return now - 7 * day
 			})()
-			this.filter_fights(start_date)
 			localStorage.setItem('options/history-period', period)
-		}
-
-		filter_fights(start_date: number) {
-			this.filteredFights = this.fights.filter((fight) => {
-				return fight.date >= start_date
-			})
-			this.victories = 0
-			this.defeats = 0
-			this.draws = 0
-			for (const fight of this.filteredFights) {
-				if (fight.result === "win") { this.victories++ }
-				else if (fight.result === "defeat") { this.defeats++ }
-				else { this.draws++ }
-			}
-			this.ratio = this.defeats === 0 ? '∞' : LeekWars.numberPrecision(this.victories / this.defeats, 3)
 		}
 	}
 </script>
