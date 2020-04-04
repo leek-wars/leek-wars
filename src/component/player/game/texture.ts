@@ -4,6 +4,9 @@ import { env } from '@/env'
 const SHADOW_QUALITY = 0.3
 
 class Textures {
+	private game!: Game
+	private cache: {[key: string]: Texture} = {}
+
 	public leek_hand: Texture
 	public machine_gun: Texture
 	public laser: Texture
@@ -164,22 +167,6 @@ class Textures {
 	public chip_burning: Texture
 	public lama: Texture
 	public bug: Texture
-	public bulb_front: Texture
-	public bulb_back: Texture
-	public fire_bulb_front: Texture
-	public fire_bulb_back: Texture
-	public healer_bulb_front: Texture
-	public healer_bulb_back: Texture
-	public rocky_bulb_front: Texture
-	public rocky_bulb_back: Texture
-	public iced_bulb_front: Texture
-	public iced_bulb_back: Texture
-	public lightning_bulb_front: Texture
-	public lightning_bulb_back: Texture
-	public metallic_bulb_front: Texture
-	public metallic_bulb_back: Texture
-	public wizard_bulb_front: Texture
-	public wizard_bulb_back: Texture
 	public arena: Texture
 	public pyramid: Texture
 	public grass: Texture
@@ -201,6 +188,8 @@ class Textures {
 	public alteration: Texture
 
 	constructor(game: Game) {
+		this.game = game
+
 		this.leek_hand = new Texture(game, env.STATIC + "image/fight/leek_hand.png", true, SHADOW_QUALITY)
 
 		this.machine_gun = new Texture(game, env.STATIC + "image/weapon/machine_gun.png", true, SHADOW_QUALITY)
@@ -402,26 +391,17 @@ class Textures {
 		// Bug
 		this.bug = new Texture(game, env.STATIC + 'image/fight/leek_bug.png')
 
-		// Bulbs
-		this.bulb_front = new Texture(game, env.STATIC + 'image/bulb/puny_bulb_front.png', true, SHADOW_QUALITY)
-		this.bulb_back = new Texture(game, env.STATIC + 'image/bulb/puny_bulb_back.png', true, SHADOW_QUALITY)
-		this.fire_bulb_front = new Texture(game, env.STATIC + 'image/bulb/fire_bulb_front.png', true, SHADOW_QUALITY)
-		this.fire_bulb_back = new Texture(game, env.STATIC + 'image/bulb/fire_bulb_back.png', true, SHADOW_QUALITY)
-		this.healer_bulb_front = new Texture(game, env.STATIC + 'image/bulb/healer_bulb_front.png', true, SHADOW_QUALITY)
-		this.healer_bulb_back = new Texture(game, env.STATIC + 'image/bulb/healer_bulb_back.png', true, SHADOW_QUALITY)
-		this.rocky_bulb_front = new Texture(game, env.STATIC + 'image/bulb/rocky_bulb_front.png', true, SHADOW_QUALITY)
-		this.rocky_bulb_back = new Texture(game, env.STATIC + 'image/bulb/rocky_bulb_back.png', true, SHADOW_QUALITY)
-		this.iced_bulb_front = new Texture(game, env.STATIC + 'image/bulb/iced_bulb_front.png', true, SHADOW_QUALITY)
-		this.iced_bulb_back = new Texture(game, env.STATIC + 'image/bulb/iced_bulb_back.png', true, SHADOW_QUALITY)
-		this.lightning_bulb_front = new Texture(game, env.STATIC + 'image/bulb/lightning_bulb_front.png', true, SHADOW_QUALITY)
-		this.lightning_bulb_back = new Texture(game, env.STATIC + 'image/bulb/lightning_bulb_back.png', true, SHADOW_QUALITY)
-		this.metallic_bulb_front = new Texture(game, env.STATIC + 'image/bulb/metallic_bulb_front.png', true, SHADOW_QUALITY)
-		this.metallic_bulb_back = new Texture(game, env.STATIC + 'image/bulb/metallic_bulb_back.png', true, SHADOW_QUALITY)
-		this.wizard_bulb_front = new Texture(game, env.STATIC + 'image/bulb/wizard_bulb_front.png', true, SHADOW_QUALITY)
-		this.wizard_bulb_back = new Texture(game, env.STATIC + 'image/bulb/wizard_bulb_back.png', true, SHADOW_QUALITY)
-
 		this.tp = new Texture(game, env.STATIC + 'image/charac/small/tp.png')
 		this.mp = new Texture(game, env.STATIC + 'image/charac/small/mp.png')
+	}
+
+	get(path: string, buildShadow: boolean = false, quality: number = 1, inverse: boolean = false) {
+		if (path in this.cache) {
+			return this.cache[path]
+		}
+		const texture = new Texture(this.game, env.STATIC + path, buildShadow, quality, inverse)
+		this.cache[path] = texture
+		return texture
 	}
 }
 

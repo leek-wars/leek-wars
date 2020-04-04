@@ -22,7 +22,6 @@ class Turret extends Entity {
 		this.textures.plane = new Texture(game, env.STATIC + 'image/turret/plane_' + color + '.png', true, SHADOW_QUALITY)
 		this.textures.block = new Texture(game, env.STATIC + 'image/turret/block_' + color + '.png', true, SHADOW_QUALITY)
 		this.textures.spikes = new Texture(game, env.STATIC + 'image/turret/spikes_' + color + '.png', true, SHADOW_QUALITY)
-		this.textures.hat = new Texture(game, env.STATIC + 'image/turret/hat_' + color + '.png', true, SHADOW_QUALITY)
 		this.textures.pyramid_up = new Texture(game, env.STATIC + 'image/turret/pyramid_up_' + color + '.png', true, SHADOW_QUALITY)
 		this.textures.pyramid_down = new Texture(game, env.STATIC + 'image/turret/pyramid_down_' + color + '.png', true, SHADOW_QUALITY)
 		this.bodyTexFront = this.textures.base
