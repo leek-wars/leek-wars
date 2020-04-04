@@ -244,7 +244,6 @@ class Game {
 	public mouseEntity: Entity | null = null
 	// Settings
 	public large = true
-	public debug = false
 	public tactic = false
 	public shadows = true
 	public showCells: boolean = false
