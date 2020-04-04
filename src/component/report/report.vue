@@ -176,10 +176,6 @@
 	import(/* webpackChunkName: "chartist" */ "@/chartist-wrapper")
 	import(/* webpackChunkName: "[request]" */ /* webpackMode: "eager" */ `@/lang/fight.${locale}.lang`)
 
-	class FightResponse {
-		success!: boolean
-		fight!: Fight
-	}
 	@Component({ name: 'report', i18n: {}, components: { actions: ActionsElement, ReportLeekRow, ReportBlock, ReportStatistics} })
 	export default class ReportPage extends Vue {
 		fight: Fight | null = null
@@ -235,12 +231,12 @@
 			this.smooth = localStorage.getItem('report/graph-type') === 'smooth'
 			const id = this.$route.params.id
 			const url = this.$store.getters.admin ? 'fight/get-private/' + id : 'fight/get/' + id
-			LeekWars.get<FightResponse>(url).then(data => {
-				if (data.fight.status === 0) {
+			LeekWars.get<Fight>(url).then(data => {
+				if (data.status === 0) {
 					this.generating = true
 					return
 				}
-				this.fight = data.fight
+				this.fight = data
 				this.report = this.fight.report
 				this.actions = this.fight.data.actions.map(a => new Action(a))
 				this.statistics = Statistics.generate(this.fight)
