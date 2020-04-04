@@ -158,7 +158,7 @@
 }
 .details .bar-wrapper {
 	flex-basis: 200px;
-	height: 6px;
+	height: 8px;
 	border: 1px solid #999;
 	margin: 0 6px;
 	border-radius: 3px;
