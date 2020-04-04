@@ -40,7 +40,7 @@
 						</div>
 					</router-link>
 					<router-link v-if="Object.keys($store.state.farmer.leeks).length < 4" v-ripple to="/new-leek" class="section">
-						<v-icon>mdi-add</v-icon>
+						<v-icon>mdi-plus</v-icon>
 						<div class="text">{{ $t('main.add_leek') }}</div>
 					</router-link>
 				</span>
