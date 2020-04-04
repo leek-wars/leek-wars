@@ -42,8 +42,8 @@ class Leek extends Entity {
 		if (typeof LeekWars.skins[skin] === 'undefined') { skin = 1 }
 
 		this.skin = skin
-		this.bodyTexFront = new Texture(this.game, env.STATIC + "image/leek/leek" + appearance + "_front_" + LeekWars.skins[skin] + ".png", true, SHADOW_QUALITY)
-		this.bodyTexBack = new Texture(this.game, env.STATIC + "image/leek/leek" + appearance + "_back_" + LeekWars.skins[skin] + ".png", true, SHADOW_QUALITY)
+		this.bodyTexFront = this.game.T.get("image/leek/leek" + appearance + "_front_" + LeekWars.skins[skin] + ".png", true, SHADOW_QUALITY)
+		this.bodyTexBack = this.game.T.get("image/leek/leek" + appearance + "_back_" + LeekWars.skins[skin] + ".png", true, SHADOW_QUALITY)
 		this.bodyTexFront.texture.addEventListener('load', () => {
 			this.height = this.bodyTexFront.texture.height - 10
 		})
@@ -52,8 +52,8 @@ class Leek extends Entity {
 			this.hat = hat
 			this.hatTemplate = LeekWars.hats[LeekWars.hatTemplates[hat].item]
 			this.hatName = this.hatTemplate.name
-			this.hatFront = new Texture(this.game, env.STATIC + "image/hat/" + this.hatName + ".png", true, SHADOW_QUALITY)
-			this.hatBack = new Texture(this.game, env.STATIC + "image/hat/" +  this.hatName + "_back.png", true, SHADOW_QUALITY)
+			this.hatFront = this.game.T.get("image/hat/" + this.hatName + ".png", true, SHADOW_QUALITY)
+			this.hatBack = this.game.T.get("image/hat/" +  this.hatName + "_back.png", true, SHADOW_QUALITY)
 			this.hatX = 0
 		}
 		this.handTex = this.game.T.leek_hand

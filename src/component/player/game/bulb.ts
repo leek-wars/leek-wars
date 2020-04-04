@@ -1,6 +1,7 @@
 import { Entity, EntityType } from "@/component/player/game/entity"
 import { Game, SHADOW_ALPHA, SHADOW_SCALE } from '@/component/player/game/game'
 import { LeekWars } from '@/model/leekwars'
+import { SHADOW_QUALITY } from './texture'
 
 class Bulb extends Entity {
 	public skin!: number
@@ -17,30 +18,31 @@ class Bulb extends Entity {
 	public setSkin(skin: number) {
 		this.bulbName = LeekWars.summonTemplates[skin].name
 		this.skin = skin
+
 		if (skin === 1) {
-			this.bodyTexFront = this.game.T.bulb_front
-			this.bodyTexBack = this.game.T.bulb_back
+			this.bodyTexFront = this.game.T.get('image/bulb/puny_bulb_front.png', true, SHADOW_QUALITY)
+			this.bodyTexBack = this.game.T.get('image/bulb/puny_bulb_back.png', true, SHADOW_QUALITY)
 		} else if (skin === 2) {
-			this.bodyTexFront = this.game.T.fire_bulb_front
-			this.bodyTexBack = this.game.T.fire_bulb_back
+			this.bodyTexFront = this.game.T.get('image/bulb/fire_bulb_front.png', true, SHADOW_QUALITY)
+			this.bodyTexBack = this.game.T.get('image/bulb/fire_bulb_back.png', true, SHADOW_QUALITY)
 		} else if (skin === 3) {
-			this.bodyTexFront = this.game.T.healer_bulb_front
-			this.bodyTexBack = this.game.T.healer_bulb_back
+			this.bodyTexFront = this.game.T.get('image/bulb/healer_bulb_front.png', true, SHADOW_QUALITY)
+			this.bodyTexBack = this.game.T.get('image/bulb/healer_bulb_back.png', true, SHADOW_QUALITY)
 		} else if (skin === 4) {
-			this.bodyTexFront = this.game.T.rocky_bulb_front
-			this.bodyTexBack = this.game.T.rocky_bulb_back
+			this.bodyTexFront = this.game.T.get('image/bulb/rocky_bulb_front.png', true, SHADOW_QUALITY)
+			this.bodyTexBack = this.game.T.get('image/bulb/rocky_bulb_back.png', true, SHADOW_QUALITY)
 		} else if (skin === 5) {
-			this.bodyTexFront = this.game.T.iced_bulb_front
-			this.bodyTexBack = this.game.T.iced_bulb_back
+			this.bodyTexFront = this.game.T.get('image/bulb/iced_bulb_front.png', true, SHADOW_QUALITY)
+			this.bodyTexBack = this.game.T.get('image/bulb/iced_bulb_back.png', true, SHADOW_QUALITY)
 		} else if (skin === 6) {
-			this.bodyTexFront = this.game.T.lightning_bulb_front
-			this.bodyTexBack = this.game.T.lightning_bulb_back
+			this.bodyTexFront = this.game.T.get('image/bulb/lightning_bulb_front.png', true, SHADOW_QUALITY)
+			this.bodyTexBack = this.game.T.get('image/bulb/lightning_bulb_back.png', true, SHADOW_QUALITY)
 		} else if (skin === 7) {
-			this.bodyTexFront = this.game.T.metallic_bulb_front
-			this.bodyTexBack = this.game.T.metallic_bulb_back
+			this.bodyTexFront = this.game.T.get('image/bulb/metallic_bulb_front.png', true, SHADOW_QUALITY)
+			this.bodyTexBack = this.game.T.get('image/bulb/metallic_bulb_back.png', true, SHADOW_QUALITY)
 		} else if (skin === 8) {
-			this.bodyTexFront = this.game.T.wizard_bulb_front
-			this.bodyTexBack = this.game.T.wizard_bulb_back
+			this.bodyTexFront = this.game.T.get('image/bulb/wizard_bulb_front.png', true, SHADOW_QUALITY)
+			this.bodyTexBack = this.game.T.get('image/bulb/wizard_bulb_back.png', true, SHADOW_QUALITY)
 		}
 		this.height = this.bodyTexFront.texture.height * 0.65
 		this.bodyTexFront.texture.addEventListener('load', () => {
