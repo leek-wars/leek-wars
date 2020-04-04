@@ -142,6 +142,7 @@ class Entity {
 		const pos = this.game.ground.xyToXYPixels(this.x, this.y)
 		this.ox = pos.x
 		this.oy = pos.y
+		this.isTop = this.y <= 4
 	}
 
 	public setPosition(x: number, y: number) {
@@ -445,8 +446,6 @@ class Entity {
 					this.y = this.dy
 					this.z = this.baseZ
 					this.computeOrginPos()
-					// Is on top ?
-					this.isTop = this.y <= 4
 
 					this.moveDelay = MOVE_DELAY
 					this.pathNext()
