@@ -18,6 +18,7 @@
 			<div>Mouse tile : ({{ game.mouseTileX }}, {{ game.mouseTileY }})</div>
 			<div>Mouse cell : {{ game.mouseCell }}</div>
 			<div>FPS : {{ game.fps }}, avg: {{ game.avgFPS }}</div>
+			<div>Resources : {{ game.numData }}</div>
 		</div>
 		<div v-if="!LeekWars.mobile" ref="leftPart" class="left-part">
 			<div ref="actions" :style="{'margin-top': actionsMargin + 'px'}" class="actions">
@@ -227,9 +228,9 @@
 	}
 	.debug {
 		position: absolute;
-		top: 0;	left: 150px;
+		top: 5px;
+		left: 200px;
 		text-align: left;
-		display: none;
 	}
 	.left-part {
 		position: absolute;
