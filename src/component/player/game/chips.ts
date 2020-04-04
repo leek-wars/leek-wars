@@ -705,7 +705,7 @@ class Antidote extends ChipAnimation {
 	constructor(game: Game) { super(game, game.S.liberation, 60) }
 	public update(dt: number) {
 		super.update(dt)
-		if (!this.targets) { return  }
+		if (!this.targets || !this.targets.length) { return  }
 		if (Math.random() > 0.5) {
 			const t = this.targets[0]
 			let angle = Math.random() * Math.PI * 2
