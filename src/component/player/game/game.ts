@@ -683,14 +683,13 @@ class Game {
 				for (let c = 0; c < this.chips.length; ++c) {
 					const chip = this.chips[c]
 					chip.update(dt)
-					if (chip.done) {
-						this.chips.splice(c, 1)
-						c--
-						this.actionDone()
-					}
 					if (chip.willFinish) {
 						this.chips.splice(c, 1)
 						c--
+					} else if (chip.done) {
+						this.chips.splice(c, 1)
+						c--
+						this.actionDone()
 					}
 				}
 				// Particles
