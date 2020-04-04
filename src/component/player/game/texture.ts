@@ -4,9 +4,6 @@ import { env } from '@/env'
 const SHADOW_QUALITY = 0.3
 
 class Textures {
-	private game!: Game
-	private cache: {[key: string]: Texture} = {}
-
 	public leek_hand: Texture
 	public machine_gun: Texture
 	public laser: Texture
@@ -186,6 +183,9 @@ class Textures {
 	public chip_vampirization: Texture
 	public plasma: Texture
 	public alteration: Texture
+
+	private game!: Game
+	private cache: {[key: string]: Texture} = {}
 
 	constructor(game: Game) {
 		this.game = game
