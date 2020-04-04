@@ -357,8 +357,8 @@
 				})
 			} else {
 				this.request = LeekWars.get('fight/get/' + this.fightId)
-				this.request.then((data: any) => {
-					fightLoaded(data.fight)
+				this.request.then((fight: any) => {
+					fightLoaded(fight)
 				}).error(() => this.error = true)
 			}
 		}
