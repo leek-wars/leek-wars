@@ -78,7 +78,7 @@
 				<b slot="value" class="color-resistance">{{ $t('fight.n_vulnerability', [value]) }}</b>
 				<b slot="turns">{{ formatTurns(turns) }}</b>
 			</i18n>
-			<i18n v-else-if="effect === EffectType.BUFF_AGILITY" path="fight.leek_win_x_turns">
+			<i18n v-else-if="effect === EffectType.BUFF_AGILITY || effect === EffectType.RAW_BUFF_AGILITY" path="fight.leek_win_x_turns">
 				<leek slot="leek" :leek="target" />
 				<b slot="value" class="color-agility">{{ $t('fight.n_agility', [value]) }}</b>
 				<b slot="turns">{{ formatTurns(turns) }}</b>
@@ -146,7 +146,7 @@
 		</template>
 		<i18n v-else-if="type === ActionType.SAY" tag="div" path="fight.leek_speak">
 			<leek slot="leek" :leek="leek" />
-			<i slot="text">{{ leeks[action.params[1]].farmer.muted ? "@*%#$€" : action.params[2] }}</i>
+			<i slot="text">{{ (leeks[action.params[1]].farmer && leeks[action.params[1]].farmer.muted) ? "@*%#$€" : action.params[2] }}</i>
 		</i18n>
 		<i18n v-else-if="type === ActionType.SUMMON" tag="div" path="fight.summon">
 			<leek slot="leek" :leek="leek" />
