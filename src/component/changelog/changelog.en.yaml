@@ -1,6 +1,457 @@
+211:
+  title: 4 new chips, 4 new colors, in combat moderation and new icons
+  added:
+    - "4 new colors : pink (previously -> magenta), grey, turquoise (previously -> cyan) and celestial blue."
+    - Display of the combat counter in the garden section of the menu.
+    - Added icons on all of the game's pop up windows and on various panels.
+    - "#ai The maximum life of the turret goes from 20 000 to 12 000."
+    - "#ai Added the chip Wizard bulb: equipped with poison and shackles chips with 300 magic at max level."
+    - "#ai Added the chip Plasma, which inflicts damages on PLUS_2 area, multiplied by the number of targets."
+    - "#ai Added the chip Alteration, which inflicts nova damages with a great range."
+    - "#ai Added the chip Jump, which allows to jump to up to 3 cells."
+    - "Added the say() moderation in combat : reporting and processing by moderators."
+  improved:
+    - "Market : display of the characteristic which increases the effect on each item description".
+    - Modifications of the parameter icon in the top bar.
+    - "Style corrections on : leek rename window, leek tooltip, in combat life bar."
+    - Infinite ratio (∞) if the losses are equal to 0.
+    - The locked trophies are more visible on the trophies page.
+    - Faster loading of the leeks images.
+    - "Market : display of the total count of items in each category."
+    - "Documentation : addition of items with modifiers in their descriptions."
+    - Improvement in the loading of the website, by loading components on demand.
+    - "Changelog : titles, larger images, windows and reorganization of previous updates."
+    - The documentation magnification setting is now saved for good.
+    - "Help page : added tabs to navigate more easily between pages."
+    - "Pages About / Statistics / Changelog / Mobile app : added navigation tabs."
+    - "Page About : technologies update."
+    - Display leeks on farmer page grid on mobile version.
+    - Broadening the range of the farmer's level to find more opponents in farmer fights.
+    - It's not longer possible to self report on the chat (Thanks to Ref).
+  fixed:
+    - Farmer test combats are no longer displayed in the farmer's history.
+    - Correction of the function that shows an animal in combat.
+    - "#ai The cost of the function insert() is increased for cases where the offset is important."
+    - Added nova damages in the science description.
+    - Correction of a bug allowing to use the "Hold a weapon" pomp without buying it.
+    - "#ai Correction of getPathLenght cost, which is now greatly increased."
+    - Correction of the large emojis on the chat.
+    - Great loading speed boost of the forum page for some players. 
+    
+210:
+  title: Pomps, new hats, documentation, combat loading bar
+  added:
+    - Display of the details of the articles for the content of the constants in the documentation.
+    - Added XP ranking for leeks and teams.
+    - Display of the AI's total number of lines and characters in the editor.
+    - 10 new hats (variations of existing hats), some can only by bought with crystals.
+    - "Added an interface combining all the personalization of a leek : color, hat, weapon, title."
+    - Display of the total AI's line count and total character count in the editor (including the AIs).
+    - Display of an item raw effects in the marked preview (by clicking on effects).
+    - Added of the pomp system, personalizations elements that can be bought from market with Habs or crystals.
+    - Added the "Farmer title" / "Leek title" pomps to create a title from trophies names.
+    - Added the "Hold a weapon" pomp which allows your leek to display a weapon in their hands.
+    - Added the "Display the number of AI's lines" pomp.
+    - Added advanced tooltips on the farmer and leek page titles.
+    - "Trophies page : display for the trophy rarity (in %) and the number of players who unlocked it."
+    - "Documentation : display of the items related to effects in effects constants."
+    - Added a progress bar on the combat generation screen.
+  improved:
+    - "Register page : links to the leek, farmer and team ranking."
+    - Added advanced tooltips on a bulb chips.
+    - "Combat history : display of an animated hourglass during combat generations."
+    - "Combat report : Improved visibility of turn label on the graph (thanks to Ref)."
+    - Display of the preview of a hat in it's details card.
+    - "Solo garden : the formula is slightly changed to select closer talents."
+    - The price for objects you can only buy once are displayed.
+    - Slight improvement of the general design (panels, frames, weapons of a leek, forum topic title).
+    - Using advanced tooltips to display turret chips.
+    - Display hat and weapons on the tournament page, and leeks are facing the correct direction.
+    - Improvement of the nested advanced tooltips.
+    - "Improvement of the documentation page : faster display and search."
+    - Improvement of the combat loading interface.
+  fixed:
+    - During a jump in combat, the displayed area of effects are correctly erased.
+    - Correction of a notification bug, sometimes displayed in the wrong order.
+    - Correction of the limit of the test leeks' weapons and chips (Signaled by Losarou).
+    - Correction of the display of inactive farmers in italic in the rankings.
+    - Notifications are marqued as unread when we read them all.
+    - Correction of the isStatic function on the turret with no equiped AI (Thanks to Caneton).
+    - Correction of the Explorer trophy.
+
+209:
+  title: 3 new chips, cross areas, forgotten weapons, passive effects, advanced tooltips for weapons and chips
+  added:
+    - "Added 3 new chips : Precipitation, Vampirization and Covetousness."
+    - "Added the forgotten weapons : Illicite Grenade Launcher, Mysterious Electrisor, Unbridled gazor and Revoked M-Laser."
+    - "#ai Added passive effects (3 new weapons) and functions getPassiveEffects and getWeaponPassiveEffects."
+    - "#ai Added effect modifiers : stackable, always affect caster, multiplied by targets."
+    - "#ai New areas + and X shaped."
+    - "#ai Added infinite effects : their duration in code is -1."
+    - Display of the current waiting queue in the garden.
+    - Display of the objects unlockable with a trophy in the market.
+    - Adding your own advanced tooltips in the garden.
+    - Display of the current PM and PT of the playing entity.
+    - Added the farmer ranking by trophies.
+    - Added rich tooltips for weapons and chips.
+    - "Combat reader : added an option to display the entitied's IDs."
+    - Maximum chips goes from 15 to 20 at level 300 (12 at level 1).
+    - "Changelog : display of modifications that may require modifications in your AI."
+  improved:
+    - Improvement of the style of the chips categories in the market.
+    - Display of Habs and crystals in subtitles in the market in mobile version.
+    - Display of the life points of the resurrected entites in the market.
+    - Improvement of the style of the hat choice dialog on the leek page.
+    - Display of the number of members and leeks in the subtitle on the mobile team page.
+    - "Market : the 'sell' button is now red to tell it appart from the 'buy' button."
+    - The turrets have more base characteristics.
+    - "Market : improvement of the range, cooldown and effect texts."
+    - "Combat : Display of life bars by default."
+    - Display of leek and farmer talents on the team page.
+    - Broadening the range of the farmer's talent to find more opponents in farmer fights.
+    - New icons for the fight pack in the market.
+    - Display the entity name when hovering over it in a fight.
+    - Improvement of the search of our position in the inactive ranking.
+  fixed:
+    - Displays the chip Punishment in the attack category + added the J-Laser sound in the market.
+    - Correction of the "Clover Hits" statistic.
+    - Added the missing display of the chip Burning area of effect.
+    - Correction of the life bars positions on small turrets.
+    - Correction of the changelog links.
+    - Correction of some rounded values in the characteristics tooltips (Signaled y Rayman26).
+    - "Active farmer ranking : the farmers who removed aggressions are ignored."
+    - Correction of two bugs on the error messages in the editor and combat logs.
+208:
+  title: J-Laser, area of effect, trophies' combats and a lot of improvements
+  added:
+    - Displaying the trophies unlocking date, along with the associated combat in grid mode on the farmer's page.
+    - Display of the trophies obtained during the fight on the report page. #268
+    - Added the syntax `code` and ```code``` in the chat and private messages to display code. #120
+    - Display of the fights comments on the report page.
+    - Displays the unread notifications in green, click on it to read it.
+    - Added the chat commands /update, /issues and /pr.
+    - Added a market tab in the bank.
+    - "Trophies page : display if a trophy can be obtained in a fight or not."
+    - "Changelog : added sections Added, Improvements, Corrections."
+    - Added the getSummons() function to get an entity invocations."
+    - "#ai added the weapon J-Laser : absolute shield steal in an area."
+  improved:
+    - Actions and personal logs scroll improvement in fight.
+    - Display of the animation of chip Antidote in green to tell it appart from chip Liberation.
+    - Display of the negative effects with a '-' in front.
+    - Sending notifications of end of round of tournament when the whole round is completely finished.
+    - "Combat : the effects falling at 0 after Liberation are removed."
+    - Displaying the lasers and the Flame Thrower area of effect.
+    - The ranking displayed on the registration page is now the active player ranking.
+    - At the fight start, the leeks are correctly oriented by looking at the center of the map.
+    - Improved the style of the weapon selection window on mobile.
+    - Improvement of the loading animation fluidity.
+    - Removed the link to Google+ in the footer.
+    - Added an icon on the potions button on a leek page.
+    - Display of the area of effect contour in combat + color adjustments of those areas.
+    - Life bars are now blue and red to help the combat understanding.
+    - The leek turns towards it's invocation when summoning it.
+    - Display of the full life bar on mobile.
+    - Improvement of the indication of the selected/hovered entity.
+    - "#ai The area of effect damage changes : from the center : 80%, 60% and 40%."
+    - "#ai The BroadSword gives a 30 strenght bonus to oneself lasting 2 turns instead of removing PT from target."
+    - The same effects from the same leek and with the same duration are grouped for more readability.
+  fixed:
+    - Lenght of the lasers correction to match their real range.
+    - Correction of a small space problem on the all website after a Vue update.
+    - Correction of the censored refferer names on the farmer page.
+    - Correction of the victory notification for team tournaments.
+    - Correction of the saved selected language in the page parameters.
+207:
+  title: Team Turrets, chip Punishment and test mode improvement
+  added:
+    - "#ai Added team turrets."
+    - "#ai Added the chip Punishment."
+    - Added the ability to do test fights in Battle Royale mode.
+    - Added the ability to fight with team allies in any mode.
+    - Added a model system to more easily create test scenarios.
+    - Addition of a button to view the characteristics window even when the capital is at zero.
+  improved:
+    - The level of the test leek is automatically calculated according its equipped items.
+    - Various improvements to the test configuration interface (translation, design, ergonomics).
+    - "Editor : improved AI and folder creation : choice of the name without the need to rename."
+    - "Editor : better created and deleted AI synchro over the all website. #509"
+    - Added documentation for the EFFECT_* constats (Thanks to Tabc3dd).
+    - Added constants SUMMON_LIMIT and CRITICAL_FACTOR in the documentation.
+    - Possibility to delete a test leek.
+    - When a leek equips a weapon, he looses TP after the SET_WEAPON action.
+    - Improved potion popup design in the leek page.
+    - Improved test scenarios synchronization (test leek or map edition).
+  fixed:
+    - When an AI is deleted, it is properly unequipped from leeks equipped with it.
+    - Popup design correction.
+    - Correction of a bug mixing the colors of the leeks in combat.
+    - Correction of the Double Gun and Shotgun icons under the life bars in combat.
+    - Correction of a bug making some holder combat inaccessible.
+    - Custom test maps correction.
+    - Correction of the display of registers that overflowed on the leek page.
+    - Correction of a bug on getWeapons() with test leeks.
+    - Display correction of the notification menu for the small mobile screens. 
+    
+206:
+  title: Rebalancing, front page redesign, performance improvements
+  added:
+    - "#ai Rebalancing equipment (see the subject on the forum)."
+    - "#ai Added the absolute vulnerability effect (EFFECT_ABSOLUTE_VULNERABILITY)."
+    - "Improved register page : new links, team ranking, new screenshots."
+    - "Combat : display the farmer that started the fight."
+    - The tournament combats are displayed with a cup icon in the combat history.
+  improved:
+    - Improved bank design (new crystal icon).
+    - "Editor : improvement of the LeekScript V2 colorization."
+    - Display of the bots on the combat loading screen + farmer "Leek Wars" under the combat.
+    - Improved combat waiting queue management.
+    - Improved site loading speed (deferred loading of certain modules).
+    - "Rich tooltips : nested tooltips + extended state is saved from one opening to another."
+    - Improved display and performance of emojis (native emojis usage if possible).
+    - "Combat : effects with the value zero are not created."
+    - Reimplemented automatic chat reconnection.
+    - Improved Electrisor animation.
+    - Improved combat report indicator display.
+    - Chat loading speed improvement (All messages are sent in one paquet).
+  fixed:
+    - "Victory series trophies : a tie no longer resets the serie.
+    - Explorer trophy correction.
+    - Fixed display of flags on the combat report page.
+    - Editor's tabs are cleared when switching account.
+    - Added the emojis pannel on the forum.
+    
+205:
+  title: Advanced tooltip, combat reader, performances:
+  added:
+    - "Editor : possibility to fold/unfold blocs and comments."
+    - "Changelog : display of updates pictures."
+    - Reorganization of the parameters page (account parameter page).
+    - "Parameters : possibility to change your account email."
+    - "Combat reader : display of the effect duration under the life bars and in the actions."
+    - Added a 'Close' option at every dialogs.
+    - "Combat reader : the entity life bars around the selected entity are masked for easier reading."
+  improved:
+    - "Ranking : the buttons to display your position works with active farmers rankings."
+    - "Combat : display of the weapon in the action '<leek> attacks with <weapon>'."
+    - General optimization of the website performances (faster page loading).
+    - Advanced characteristics tooltip when hovering the mouse over farmers and leeks.
+    - Entity details display improvement in fight and possibility to lock an entity when clicking.
+  fixed:
+    - "Documentation : correction of some mistakes (include, weaponNeedLos and isInLineWeapon)."
+    - "Combat reader : state correction for fire and gas, visually staying after a jump in combat."
+    - "Combat reader : correction of the bug that keeps playing the combat background music when closing the page quickly."
+    - "Combat Reader : display improvement when starting the combat."
+    - "Combat reader : correction of the hovering of entities with the mouse + display of the targeted cell."
+    - Correction of a bug preventing the player to create an AI when all the AIs are deleted.
+    - "Forum : improvement of the trails of breadcrumbs and display them on the mobile version."
+ 
+204:
+  title: Editor improvements and combat reader
+  added:
+    - "Editor : added tabs to manage open IA."
+    - "Editor : the left pannel is resizable."
+    - "Combat reader : commands reorganization."
+    - "Combat reader : Clic to pause, added animations."
+    - "Combat reader : display the effets values under the life bar."
+    - Added the beta wiki link in the help tab.
+  improved:
+    - Improvement of the history display (display in grids).
+    - Addition of tooltips for LS2 in the editor.
+    - Update of the leek level everywhere after a level gain.
+    - Possibility to watch a tournament without being connected.
+    - "Inscription : added icons on the connexion and inscription buttons."
+  fixed:
+    - Correction of the bank error messages.
+    - Correction of the chip Steroid.
+    - Correction of the Grenade launcher animation.
+    - Correction of the current application on a farmer page.
+    - Correction of a bug that do not display the capital left on a leek page.
+    - Display correction for the selected AI and folders in the editor.
+
+203:
+  title: Improved search in forum/ranking, Android app, hide unlocked trophies 
+  added:
+    - Creation of an Android App (from the web application).
+    - "Forum search : added an option to sort by Pertinence, dates and votes + moderator and admin filter."
+    - "Trophies : added an option to hide the already unlocked trophies."
+  improved:
+    - "Design : scrolling bars more inconspicuous for the element inside the page (especially the editor in dark mode)."
+    - "API : the token transmitted via a header Authorization."
+    - "API : the errors are generated by a status HTTP 400 instead of a success: false (success = status 200)."
+    - "API : use of the methods PUT and DELETE on some API instead of POST."
+    - "Forum search : display the total number of results."
+    - "Forum search : A clic on a result redirects on the target message in the forum."
+    - "Ranking : search improvement : possibility to go to the result ranking or its page + improved pictures."
+    - "Editor : Ctrl + hover with the mouse will highlight the function or constant and change the mouse cursor."
+    - "Editor : Addition of a tooltip on test leek's chips and weapons."
+    - "Private messages : the old conversation is recovered before sending a message to a player."
+  fixed:
+    - "Fight : correction of the BroadSword effects display."
+    - "Fight : correction of the vulnerability sign display."
+    - "Forum search : correction of the highlight of the result in the titles when searching more than one word."
+    - "Garden : correction of the leek selection and the default composition after an account change."
+    - "Garden : correction of the return in challenge mode."
+    - "Ranking : the 'hide inactive' filter stays active when switching pages and order on the farmers and teams ranking."
+    - "Editor : correction of the 'save before a test' functionality."
+
+202:
+  title: Rebalancing, active players ranking, windowed chats
+  added:
+    - Rebalancing of levels and prices of numerous items, with a slight nerf of science (see details in the forum topic).
+    - Invocation limit for a team goes from 6 to 8.
+    - Added the possibility to filter the inactive players in the ranking tab.
+    - Added a special map for tournaments.
+    - Added a Facebook styled windowed chat.
+    - "Modification on the price of the 100 combat pack: from 100000 habs up to 5 millions depending on the farmer total level."
+    - Added a system to link the Github Issues to forum posts.
+    - Added Team description moderation option.
+  improved:
+    - Improvement of the waiting window for BRs.
+    - "History tab : the selected period is saved."
+    - "Rebalancing of the XP and Habs gains between the solo and farmer combats : solo xp halfed."
+    - No more drops in XP and Habs gains at level 99, 199 and 299 (strange inexplicable drop).
+    - Some player avatars removed.
+    - The created test leeks are now level 301.
+    - The bought hats are now properly added to the inventory without the need to reload.
+    - Improvement of the page refreshing when creating and deleting a team.
+  fixed:
+    - Correction of the line breaks in personal logs.
+    - Correction of a bug on the tournament associated trophies.
+    - Correction of the API leek/set-register when the leek does not have any registers.
+    - Correction of the embellishment of the leek/farmer/team in a tournament.
+    - Removal of the application when creating a new team.
+    - Correction of the display of BR in the combat history.
+    - Correction of the description of the function arrayFoldRight.
+    - Removal of the "delete" button on a forum topic for the non moderators.
+    - Correction of a bug  with the character $ in links.
+    - Correction of a bug of the referred attribution when a farmer have the same name except the character case.
+    - Correction of a bug when banishing a team member.
+    - "Some corrections in combat display : lasers, animation sync, combat size."
+    - Removal of the bonus trophies from the trophies grid.
+    - The chat commands are no longer executed after a "/" character in front.
+
+201:
+  title: Redesign of the client in Vue.js
+  added:
+    - Moved the website in Vue.js.
+    - Faster and smoother loading between pages.
+    - Small graphic redesign.
+    - "Statistics : addition of a graphic for the damage types."
+   improved:
+    - Refactoring of the chat design.
+    - Updating the farmer and leek talent in the interface at the end of a combat.
+    - The Explorer trophy can be optained during a solo tournament.
+    - "History page : improvement of the mobile version."
+    - "Forum : improvement of the mobile version design."
+  fixed:
+    - It is now possible to resurrect an entity (leek of bulb) from another team.
+    - Correction of the bug caping the Habs at 2147483647.
+    - "Fight : displaying the area of effet of the chips Toxin, Plague, Ball and Chain, Mirror and Thorn."
+    - "Editor : added an option to change the height of lines."
+    - Correction of the personal logs' position in the combat actions report.
+
+200:
+  added:
+    - "Big milestones in the LeekScript and V2 combat generator: still in Beta !"
+    - Possibility to play the chips and weapons sound when selecting their icon on the market.
+    - "#ai The shackles effect values (PT, PM, strenght, magic and vulnerability) are now positive."
+    - "#ai Shackles are no longer diminished by science."
+    - "#ai Chip Liberation no longer removes all effects, but reduces their values by 50%."
+    - "#ai Chip Liberation cooldown goes from 6 turns to 5 turns."
+    - "#ai Added a boolean in the effects returned by getChip/WeaponEffects indicating is the effect is stackable."
+    - Details of an entity are displayed when hovering the mouse above it in a fight.
+    - "#ai The effects of vulnerability are now stackable (Thanks to Pump)."
+    - "#ai Machine Gun damages goes from 20-24 to 30-35."
+    - Effects displayed under the life bar of each entity in a fight.
+    - Effects values displayed in an entity details popup in a fight.
+  improved:
+    - "Farmer garden : maximum level difference increased to prevent empty gardens."
+    - "Farmer garden : farmer more randomly seleted in the talent range"
+    - Smaller leeks in the combat display.
+    - Improvement of the in fight effect refreshing.
+    - Tactical mode more legible, without transparent obstacles.
+    - "Combat quality" option changed for "Display shadows".
+    - Duration longer than 12 month are now displayed in years.
+  fixed:
+    - "Stay connected" button fixed, and the cookie is now refreshing.
+    - In combat pause is inconspicuous, discreet option removal.
+    - Correction of the entity overview in fight, when the page is zoomed.
+    - Correction for fire and gas animations, that stayed after an entity death.
+    - When changing the password, all the farmer sessions are terminated (Thanks to Rominou).
+    - Correction of the multilines links' Regex.
+    - Correction of a fullscreen bug with F11 or Echap (Thanks to HorsSujet).
+
+199:
+  title: LeekScript V2 Beta, Mobile App and push notifications !
+  added:
+    - "fight waiting queues improvement : less waiting when a farmer launches a large quantity of combats."
+    - "New interface for the mobile version: side menus, material design style, more detailed combats, etc."
+    - Integration of push notifications, on desktop and mobile.
+    - "Added a new page to explain the setup of the mobile app and push notifications: <a href=\"https://leekwars.com/app\">https://leekwars.com/app</a>."
+    - "Farmer garden : the first 3 opponents all have a similar talent, instead of an inferior talent."
+    - "#ai Erosion is up to 10% in case of critical hit."
+    - Roadmap update.
+    - Displaying in the market the leeks on which the item is equiped (Thanks to Amal).
+    - Added the possibility to search in a precise category in the forum."
+  improved:
+    - Added a confirmation popup when trying to suppress a team composition.
+    - Performances improvement for combat actions and Log displaying (Thanks to Amal).
+  fixed:
+    - Correction of the edition function in the forum.
+    - Correction of the trophies Legend and Mythical (finally !). 
+    - Correction of the combat results in the farmer's history.
+    - Correction of the XP bars too big in the combat reports.
+    - Correction of the combat report graphic after a resurrection (Thanks to Pump). 
+
+198:
+  title: Update 1.98 - Rebalancing, Fight history and combat purchase
+  added:
+    - Added the possibility to purchase more combats in the market.
+    - Detailed combat history for leeks and farmers.
+    - Team talent is now talent of the best composition (instead of the mean).
+    - Displaying the BR progression in the title of the page.
+    - Display of the current turn when hovering the mouse over the progress bar in combats (Thanks to Twilight).
+    - Display of a message in the chat when a BR starts.
+    - Possibility to naviguate the market using the keyboard arrows.
+    - Added an option to display the results of a fight in the notifications.
+    - The BR yields habs and XP but now costs 1 combat.
+    - Possibility to buy Crystals with StarPass (SMS and phone).
+  improved:
+    - Notification marked as read when cliqued on.
+    - Reset of the page title and the counter when disconnecting.
+    - Display of the full date on the forum messages.
+    - Improvement of the fight page in the event of a BR (title and loading screen).
+    - Improvement of the comments interface on the fight and tournament pages.
+    - Fun ranking page's loading acceleration.
+  fixed:
+    - Corrections of the graphic overview on the fight report page.
+    - Correction of the ghost window poping in the editor.
+    - Correction of the tutorial apparition for the first farmer connection.
+    - Correction of the talent graphic's labels on the leek page.
+    - "Correction and improvement on BR: tab synchronisation and other bugs."
+    - Poison damages calculation correction in the fight report (Thanks to Pump).
+  
+197:
+  title: Statistics, view counter, leek page
+  added:
+    - Added the statistics page (<a href="/statistics">leekwars.com/statistics</a>).
+    - Added un view counter on the fights.
+    - Added a button Random in the LeekScript console.
+  improved:
+    - Possibility to select the root folder in the editor (Thanks to Amal).
+    - Improvement of the selection and presentation of weapons and chips on the leek page
+    - Improvement of the discreet mode loading (instant activation when loading the page).
+    - Translation corrections and additions
+    - Improvement to the scroll and management of anchors system (link to a precise message in the forum).
+    - Improvement of the moderation and reports.
+  fixed:
+    - Correction of the theme choice in the Editor. 
+
 196:
   - Added a LeekScript v2 console (beta).
   - Added the possibility of writing v2 AIs in the editor (beta).
+  - Added the /lenny smiley on the chat (Thanks to TheTintin).
 
 184:
   - Added function getMapType(), to get the map type (environment).
