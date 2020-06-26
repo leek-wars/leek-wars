@@ -133,6 +133,7 @@
 		cursor: pointer;
 		display: inline-flex;
 		user-select: none;
+		vertical-align: bottom;
 		img {
 			height: 36px;
 			width: 28px;

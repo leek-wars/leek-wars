@@ -124,6 +124,9 @@
 
 		<panel title="Évolution des points de vie" toggle="report/graph" icon="mdi-chart-line">
 			<div slot="actions">
+				<div class="button flat" @click="toggleLog">
+					<v-icon>mdi-math-log</v-icon>
+				</div>
 				<div class="button flat" @click="toggleSmooth">
 					<img v-if="smooth" src="/image/icon/graph_angular.png">
 					<img v-else src="/image/icon/graph_smooth.png">
@@ -192,6 +195,7 @@
 		iWin: boolean = false
 		enemy: any = null
 		smooth: boolean = false
+		log: boolean = false
 		statistics: any = null
 		chartData: any = null
 		chartOptions: any = null
@@ -229,6 +233,7 @@
 			this.report = null
 			this.actions = null
 			this.smooth = localStorage.getItem('report/graph-type') === 'smooth'
+			this.log = localStorage.getItem('report/log') === 'true'
 			const id = this.$route.params.id
 			const url = this.$store.getters.admin ? 'fight/get-private/' + id : 'fight/get/' + id
 			LeekWars.get<Fight>(url).then(data => {
@@ -363,6 +368,11 @@
 			this.smooth = !this.smooth
 			this.updateChart()
 		}
+		toggleLog() {
+			this.log = !this.log
+			localStorage.setItem('report/log', '' + this.log)
+			this.updateChart()
+		}
 		chartGetY(line: number, x: number) {
 			const path = (this.$refs.chart as Vue).$el.querySelectorAll('.ct-series path')[line] as any
 			x = Math.max(path.getPointAtLength(0).x, x)
@@ -389,7 +399,11 @@
 				if (!leek.leek.summon) {
 					const data = []
 					for (let j = 0; j <= this.fight.report.duration; j++) {
-						data.push(this.statistics.life[j][i])
+						let life = Math.max(1, this.statistics.life[j][i])
+						if (this.log) {
+							life = Math.log2(life)
+						}
+						data.push(life)
 					}
 					this.chartSeries.push(data)
 				}
