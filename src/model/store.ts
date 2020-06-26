@@ -25,6 +25,7 @@ class LeekWarsState {
 	public conversations: {[key: number]: Conversation} = {}
 	public conversationsList: Conversation[] = []
 	public last_ping: number = 0
+	public connected_farmers: number = 0
 }
 
 function updateTitle(state: LeekWarsState) {
@@ -61,10 +62,11 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			state.connected = true
 			state.token = token
 		},
-		"connect"(state: LeekWarsState, data: {farmer: Farmer, token: string}) {
+		"connect"(state: LeekWarsState, data: {farmer: Farmer, farmers: number, token: string}) {
 			state.farmer = data.farmer
 			state.token = data.token
 			state.connected = true
+			state.connected_farmers = data.farmers
 			localStorage.setItem('connected', 'true')
 			if (env.DEV) {
 				localStorage.setItem('token', data.token)
@@ -445,6 +447,9 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			if (state.farmer) {
 				Vue.set(state.farmer, 'trophies_list', trophies)
 			}
+		},
+		'connected-count'(state: LeekWarsState, farmers) {
+			state.connected_farmers = farmers
 		}
 	},
 })

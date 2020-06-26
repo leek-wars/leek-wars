@@ -35,6 +35,9 @@
 				<panel v-if="env.SOCIAL" class="social-chat" toggle="social/chat" icon="mdi-chat-outline">
 					<template slot="title">
 						<router-link to="/chat">Chat</router-link>
+						<div class="farmer-count">
+							<span class="count">({{ $store.state.connected_farmers }} <v-icon class="icon">mdi-account-multiple</v-icon>)</span>
+						</div>
 						<v-menu offset-y>
 							<template v-slot:activator="{ on }">
 								<img :src="chatLanguage.flag" class="language-button" v-on="on">
@@ -199,7 +202,6 @@
 		max-width: none;
 		padding: 5px;
 		margin-left: 4px;
-		margin-right: -10px;
 		vertical-align: bottom;
 	}
 	.social-chat .languages {
@@ -220,5 +222,16 @@
 	}
 	.social-panel .content > div:last-child {
 		margin-bottom: 0;
+	}
+	.farmer-count {
+		display: inline-block;
+		margin-left: 5px;
+		.v-icon.icon {
+			margin-right: 0;
+			font-size: 18px;
+		}
+		.count {
+			font-size: 14px;
+		}
 	}
 </style>
