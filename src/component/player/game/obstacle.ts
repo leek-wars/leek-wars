@@ -114,19 +114,17 @@ class Obstacle {
 
 		if (this.baseTexture.shadow != null) {
 
-			const offsetY = this.size * this.game.ground.tileSizeY * 1.5
-
 			ctx.save()
-			ctx.translate(this.realX, this.realY + this.realHeight)
+			ctx.translate(this.cellX, this.cellY)
 			ctx.scale(1, -SHADOW_SCALE)
+			ctx.rotate(-Math.PI / 4)
+			ctx.translate(0, - this.realHeight + 0.3 * this.game.ground.realTileSizeY)
 			ctx.globalAlpha = SHADOW_ALPHA
 
 			if (this.inverse) {
 				ctx.scale(-1, 1)
-				ctx.drawImage(this.baseTexture.shadow, -this.realWidth, -this.realHeight + offsetY, this.realWidth, this.realHeight)
-			} else {
-				ctx.drawImage(this.baseTexture.shadow, 0, -this.realHeight + offsetY, this.realWidth, this.realHeight)
 			}
+			ctx.drawImage(this.baseTexture.shadow, -this.realWidth / 2, 0, this.realWidth, this.realHeight)
 			ctx.restore()
 		}
 	}

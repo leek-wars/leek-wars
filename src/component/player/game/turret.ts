@@ -60,6 +60,7 @@ class Turret extends Entity {
 	public drawShadow(ctx: CanvasRenderingContext2D) {
 		ctx.save()
 		ctx.scale(1, -SHADOW_SCALE)
+		ctx.rotate(-Math.PI / 4)
 		ctx.globalAlpha = SHADOW_ALPHA
 
 		ctx.translate(0, - this.z)
