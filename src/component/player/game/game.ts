@@ -1347,13 +1347,18 @@ class Game {
 		if (cx >= 0 && cy >= 0 && cx < this.ground.tilesX * 2 - 1 && cy < this.ground.tilesY * 2 - 1) {
 			this.mouseTileX = cx
 			this.mouseTileY = cy
-			this.mouseCell = this.ground.xyToCell(cx, cy)
-			const cell = this.ground.cellToXY(this.mouseCell)
-			this.mouseCellX = cell.x
-			this.mouseCellY = cell.y
-			const pos = this.ground.xyToXYPixels(cell.x, cell.y)
-			this.mouseRealX = pos.x * this.ground.scale
-			this.mouseRealY = pos.y * this.ground.scale
+			const cell = this.ground.xyToCell(cx, cy)
+			if (cell.obstacle) {
+				this.mouseCell = undefined
+			} else {
+				this.mouseCell = cell
+				const xy = this.ground.cellToXY(this.mouseCell)
+				this.mouseCellX = xy.x
+				this.mouseCellY = xy.y
+				const pos = this.ground.xyToXYPixels(xy.x, xy.y)
+				this.mouseRealX = pos.x * this.ground.scale
+				this.mouseRealY = pos.y * this.ground.scale
+			}
 			let hover_entity = null
 			for (const entity of this.leeks) {
 				if (entity.cell === this.mouseCell && entity.active && !entity.dead) {
