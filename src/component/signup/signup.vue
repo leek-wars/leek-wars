@@ -181,7 +181,7 @@
 
 		<h1>{{ $t('screenshots') }}</h1>
 
-		<panel class="first last screenshots">
+		<panel class="first screenshots">
 			<div slot="content" class="carousel">
 				<swiper ref="swiper" :options="swiperOption">
 					<swiper-slide v-for="(image, i) of images" :key="i" class="slide">
@@ -191,6 +191,14 @@
 				</swiper>
 			</div>
 		</panel>
+
+		<panel v-if="last_version" class="last" icon="mdi-star-outline">
+			<template slot="title">{{ $t('changelog.version_n', [last_version.version_name]) }} ({{ last_version.date }}) {{ translations[last_version.version] && translations[last_version.version].title ? ' — ' + translations[last_version.version].title : '' }}</template>
+			<div slot="content">
+				<changelog-version :version="last_version" />
+			</div>
+		</panel>
+
 		<div v-if="bigImage" class="bigscreen" @click="bigImage = null">
 			<img :src="'/image/' + bigImage">
 			<div class="biglegend">{{ $t(bigImageLegend) }}</div>
@@ -214,12 +222,13 @@
 	import { i18n } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import { Component, Vue } from 'vue-property-decorator'
+	import ChangelogVersion from '@/component/changelog/changelog-version.vue'
 
 	import 'swiper/css/swiper.css'
 	import VueAwesomeSwiper from 'vue-awesome-swiper'
 	Vue.use(VueAwesomeSwiper)
 
-	@Component({ name: 'signup', i18n: {} })
+	@Component({ name: 'signup', i18n: {}, components: { ChangelogVersion } })
 	export default class Signup extends Vue {
 		godfather: string = ''
 		leek_count: number = 0
@@ -262,6 +271,8 @@
 				disableOnInteraction: true
 			}
 		}
+		last_version: any = null
+		translations: any = {}
 
 		mounted() {
 			// this.$refs.swiper.swiper.slideTo(0, 0);
@@ -280,6 +291,12 @@
 				this.farmer_ranking = data.farmers
 				this.leek_ranking = data.leeks
 				this.team_ranking = data.teams
+			})
+			import(/* webpackChunkName: "changelog-[request]" */ `json-loader!yaml-loader!@/component/changelog/changelog.${this.$i18n.locale}.yaml`).then((translations) => {
+				this.translations = translations
+			})
+			LeekWars.get('changelog/get/' + this.$i18n.locale).then(data => {
+				this.last_version = data.changelog[0]
 			})
 		}
 
