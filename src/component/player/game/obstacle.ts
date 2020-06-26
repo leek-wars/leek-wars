@@ -70,7 +70,7 @@ class Obstacle {
 			this.realHeight = Math.round(this.baseTexture.texture.height * scale)
 
 			this.realX = Math.round(((this.x - 1) / 2) * this.game.ground.tileSizeX + (this.game.ground.tileSizeX * 2 - this.realWidth) / 2)
-			this.realY = Math.round(((this.y + 3) / 2) * this.game.ground.tileSizeY - this.realHeight + 17)
+			this.realY = Math.round(((this.y + 3) / 2) * this.game.ground.tileSizeY - this.realHeight + 22.5)
 
 			this.cellX = ((this.x + 1) / 2) * this.game.ground.tileSizeX
 			this.cellY = (this.y / 2 + 1) * this.game.ground.tileSizeY

@@ -111,8 +111,8 @@ class Nexus extends Map {
 		super(game, game.S.map_nexus, "#fff", game.T.nexus_bg,
 			[game.T.nexus_block_small, game.T.nexus_block_small, game.T.nexus_block_small],
 			[game.T.nexus_block, game.T.nexus_block, game.T.nexus_block])
-		game.T.nexus_block.offset = 1.15
-		game.T.nexus_block_small.offset = 1.15
+		game.T.nexus_block.offset = 1.177
+		game.T.nexus_block_small.offset = 1.18
 	}
 }
 class Arena extends Map {
