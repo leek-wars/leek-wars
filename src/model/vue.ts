@@ -38,7 +38,7 @@ import router from '@/router'
 import Vue from 'vue'
 import { Latex } from './latex'
 
-import Vuetify from 'vuetify/lib/framework'
+import Vuetify from 'vuetify/lib'
 Vue.use(Vuetify)
 
 import tooltip from '@/vtooltip-fast'
