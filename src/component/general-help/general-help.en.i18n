@@ -122,6 +122,6 @@
 	"weapons": "Weapons",
 	"weapons_1": "Weapons are used to attack other leeks. Only one weapon can be equipped but a leek can carry up to 4 weapons (including the equipped one).",
 	"weapons_2": "Each weapon requires a minimum level to be used. The use of a weapon costs a specific amount of Turn Points. Every weapon also has a specific range. You can buy each weapon several times in order to equip multiple leeks with the same weapon. Your leeks are not allowed to fire more than one weapon at the same time. But one leek can of course fire one weapon, then replace it with another weapon, and then fire the new one (as long as it has enough Turn Points).",
-	"weapons_3": "Some weapons have an area of effect. See the \"Grenade Launcher\" for example. Damage decreases linearly from the center cell (100% damage) to the border cells (50% damage).",
+	"weapons_3": "Some weapons have an area of effect. See the \"Grenade Launcher\" for example. Damage decreases linearly from the center cell (100% damage) by 20% per cell distance from the center.",
 	"welcome": "Welcome to Leek Wars!"
 }

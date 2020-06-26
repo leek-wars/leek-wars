@@ -61,9 +61,9 @@
 	"leeks_2": "Le skin de votre poireau évolue en fonction du niveau, lorsqu'il franchit\ncertains paliers.",
 	"leeks_21": "Dégâts finaux = (Dégâts de base) * (1 - Bouclier relatif / 100) - Bouclier\nabsolu",
 	"leeks_22": "Points de mouvement",
-	"leeks_23": "Ces points permettent de se déplacer d'un certain nombre de cases durant\nchaque tour d'un combat. Le coût d'un point de mouvement commence à 20 points de capital et augmente de 5 par point de mouvement investi.",
+	"leeks_23": "Ces points permettent de se déplacer d'un certain nombre de cases durant\nchaque tour d'un combat. Le coût d'un point de mouvement commence à 20 points de capital et augmente de 10 par point de mouvement investi.",
 	"leeks_24": "Points de tour",
-	"leeks_25": "Ces points permettent d'utiliser une ou plusieurs armes et puces durant chaque\ntour d'un combat. Le coût d'un point de tour commence à 30 points de capital et augmente de 5 par point de tour investi.",
+	"leeks_25": "Ces points permettent d'utiliser une ou plusieurs armes et puces durant chaque\ntour d'un combat. Le coût d'un point de tour commence à 30 points de capital et augmente de 10 par point de tour investi.",
 	"leeks_26": "Fréquence",
 	"leeks_27": "Plus votre fréquence est élevée, plus vous aurez de chance de commencer en\npremier durant le combat avec votre adversaire.",
 	"leeks_28": "Science",
@@ -116,6 +116,6 @@
 	"weapons": "Les armes",
 	"weapons_1": "Les armes sont utiles pour attaquer d'autres poireaux durant un combat. Un\npoireau ne peut avoir dans ses mains qu’une seule arme à la fois, mais peut en\nporter de 2 jusqu’à 4 sur lui.",
 	"weapons_2": "Chaque arme requiert un certain niveau pour pouvoir être utilisée et a un coût\nen points de tour. Elle comporte également une\nportée spécifique. Ces armes peuvent être achetées en plusieurs exemplaires\npour permettre à plusieurs de vos poireaux d'utiliser la même arme en même\ntemps. Par contre, il n'est pas possible d'attaquer avec deux armes en même\ntemps.",
-	"weapons_3": "Certaines armes ont une zone d'effet comme pour l'arme \"Lance-grenades\". Le\ncalcul pour les dégâts de zone est linéaire : 100% pour la case centrale et\njusqu'à 50% pour les cases aux extrémités.",
+	"weapons_3": "Certaines armes ont une zone d'effet comme pour l'arme \"Lance-grenades\". Le\ncalcul pour les dégâts de zone est linéaire : 100% pour la case centrale et -20% par case de distance avec le centre.",
 	"welcome": "Bienvenue sur Leek Wars !"
 }
