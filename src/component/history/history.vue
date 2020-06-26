@@ -102,13 +102,6 @@
 			return this.defeats === 0 ? '∞' : LeekWars.numberPrecision(this.victories / this.defeats, 3)
 		}
 
-		get breadcrumb_items() {
-			return [
-				{name: (this.entity ? this.entity.name : '...'), link: '/' + this.type + '/' + (this.entity ? this.entity.id : '')},
-				{name: this.$t('title_html'), link: '/' + this.type + '/' + (this.entity ? this.entity.id : '') + '/history'}
-			]
-		}
-
 		created() {
 			const id = this.$route.params.id
 			const period = localStorage.getItem('options/history-period') || '1week'
