@@ -156,7 +156,7 @@ class Entity {
 		this.dy = y
 		this.ry = y
 
-		this.z = 0
+		this.z = this.baseZ
 
 		this.computeOrginPos()
 
@@ -454,7 +454,7 @@ class Entity {
 
 					const progress = 1 - this.moveAnim / this.moveDuration
 
-					this.z = Math.pow(Math.cos((Math.PI * (progress - 0.5))), 1) * this.jumpHeight
+					this.z = this.baseZ + Math.pow(Math.cos((Math.PI * (progress - 0.5))), 1) * this.jumpHeight
 					this.x = this.rx + (this.dx - this.rx) * progress
 					this.y = this.ry + (this.dy - this.ry) * progress
 					this.computeOrginPos()

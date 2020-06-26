@@ -84,12 +84,12 @@ class Bulb extends Entity {
 
 	public draw(ctx: CanvasRenderingContext2D) {
 		super.draw(ctx)
-		// Draw normal
-		this.drawNormal(ctx)
 		// Draw shadow
 		if (this.game.shadows && !this.dead) {
 			this.drawShadow(ctx)
 		}
+		// Draw normal
+		this.drawNormal(ctx)
 		super.endDraw(ctx)
 	}
 
@@ -115,6 +115,7 @@ class Bulb extends Entity {
 		ctx.scale(1, -SHADOW_SCALE)
 		ctx.globalAlpha = SHADOW_ALPHA
 		ctx.translate(0, - this.z)
+		ctx.rotate(-Math.PI / 4)
 		this.drawBody(ctx, texture.shadow)
 		ctx.restore()
 	}

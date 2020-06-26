@@ -96,12 +96,12 @@ class Leek extends Entity {
 
 	public draw(ctx: CanvasRenderingContext2D) {
 		super.draw(ctx)
-		// Draw normal
-		this.drawNormal(ctx)
 		// Draw shadow
 		if (this.game.shadows && !this.dead) {
 			this.drawShadow(ctx)
 		}
+		// Draw normal
+		this.drawNormal(ctx)
 		super.endDraw(ctx)
 	}
 
@@ -151,7 +151,7 @@ class Leek extends Entity {
 
 		// Rotate
 		if (shadow) {
-			ctx.rotate(-this.angle * 1.5)
+			ctx.rotate(this.angle / 2)
 		} else {
 			ctx.rotate(this.angle)
 		}
@@ -179,11 +179,12 @@ class Leek extends Entity {
 
 		ctx.save()
 		ctx.scale(1, -SHADOW_SCALE)
+		ctx.rotate(-Math.PI / 4)
 		ctx.globalAlpha = SHADOW_ALPHA
 
 		ctx.translate(0, - this.z)
 
-		if (this.weapon != null) {
+		if (this.weapon != null && (this.orientation === EntityDirection.SOUTH || this.orientation === EntityDirection.NORTH)) {
 			this.drawBody(ctx, texture.shadow, hatTexture ? hatTexture.shadow : null)
 			this.drawWeapon(ctx, this.weapon.texture.shadow, true)
 		} else {
