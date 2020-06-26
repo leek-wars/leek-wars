@@ -292,6 +292,12 @@
 		<div>
 			<div class="column6">
 				<panel v-if="team && team.fights.length > 0" :title="$t('history')" icon="mdi-sword-cross">
+					<template slot="actions">
+						<router-link :to="'/team/' + id + '/history'" class="button flat">
+							<v-icon class="list-icon">mdi-history</v-icon>
+							<span>{{ $t('history') }}</span>
+						</router-link>
+					</template>
 					<fights-history v-if="team" slot="content" :fights="team.fights" />
 				</panel>
 			</div>

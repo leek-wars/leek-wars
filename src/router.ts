@@ -160,6 +160,7 @@ const routes = [
 	{ path: '/statistics', component: Statistics },
 	{ path: '/team', component: Team, beforeEnter: connected },
 	{ path: '/team/:id', component: Team },
+	{ path: '/team/:id/history', component: History, props: {type: 'team'} },
 	{ path: '/tournament/:id', component: Tournament },
 	{ path: '/trophies', component: Trophies, beforeEnter: connected },
 	{ path: '/trophies/:id', component: Trophies },
