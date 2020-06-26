@@ -13,8 +13,7 @@ dotenv.config({ path: path.resolve(process.cwd(), 'src', 'env', '.env') })
 module.exports = {
 	configureWebpack: {
 		plugins: [
-			new CopyWebpackPlugin([{ from: 'src/wiki/image/', to: 'wiki' }]),
-			new VuetifyLoaderPlugin()
+			new CopyWebpackPlugin([{ from: 'src/wiki/image/', to: 'wiki' }])
 		],
 		performance: {
 			hints: false
