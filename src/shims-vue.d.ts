@@ -3,7 +3,7 @@ declare module '*.vue' {
 	export default Vue
 }
 
-declare var ga: Function
+declare let ga: Function
 
 declare module 'vuetify/lib/framework';
 declare module 'vuetify/lib/components/transitions/createTransition';
