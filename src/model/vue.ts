@@ -274,7 +274,9 @@ const vueMain = new Vue({
 		// Keep connected
 		setInterval(() => {
 			store.commit('last-connection', LeekWars.time)
-			LeekWars.post('farmer/update')
+			LeekWars.post('farmer/update').then(data => {
+				store.commit('connected-count', data.farmers)
+			})
 		}, 59 * 1000)
 	}
 }).$mount('#app')

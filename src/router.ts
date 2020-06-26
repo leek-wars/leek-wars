@@ -226,7 +226,7 @@ router.beforeEach((to: Route, from: Route, next: any) => {
 		const token = env.DEV ? localStorage.getItem('token') : '$'
 		store.commit('connected', token)
 		LeekWars.get('farmer/get-from-token').then(data => {
-			store.commit('connect', {farmer: data.farmer, token})
+			store.commit('connect', {farmer: data.farmer, farmers: data.farmers, token})
 		}).error(() => {
 			store.commit('disconnect')
 			router.push('/')

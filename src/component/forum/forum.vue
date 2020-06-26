@@ -69,7 +69,7 @@
 
 		<panel icon="mdi-account-supervisor">
 			<span slot="title">
-				<span v-if="connected_farmers.length">{{ $t('connected_farmers', [connected_farmers.length]) }}</span>
+				<span v-if="connected_farmers.length">{{ $t('connected_farmers', [$store.state.connected_farmers]) }}</span>
 			</span>
 			<div slot="actions">
 				<div class="button flat">
