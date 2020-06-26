@@ -158,6 +158,7 @@ class Entity {
 
 		this.z = this.baseZ
 
+		this.isTop = this.y <= 4
 		this.computeOrginPos()
 
 		if (oldY !== y && this.drawID != null) {
