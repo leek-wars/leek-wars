@@ -1,5 +1,5 @@
 211:
-  title: 4 new chips, 4 new colors, in combat moderation and new icons
+  title: 4 new chips, 4 new colors, in combat moderation and new icons.
   added:
     - "4 new colors : pink (previously -> magenta), grey, turquoise (previously -> cyan) and celestial blue."
     - Display of the combat counter in the garden section of the menu.
@@ -11,7 +11,7 @@
     - "#ai Added the chip Jump, which allows to jump to up to 3 cells."
     - "Added the say() moderation in combat : reporting and processing by moderators."
   improved:
-    - "Market : display of the characteristic which increases the effect on each item description".
+    - "Market : display of the characteristic which increases the effect on each item description."
     - Modifications of the parameter icon in the top bar.
     - "Style corrections on : leek rename window, leek tooltip, in combat life bar."
     - Infinite ratio (∞) if the losses are equal to 0.
@@ -37,7 +37,7 @@
     - "#ai Correction of getPathLenght cost, which is now greatly increased."
     - Correction of the large emojis on the chat.
     - Great loading speed boost of the forum page for some players. 
-    
+
 210:
   title: Pomps, new hats, documentation, combat loading bar
   added:
@@ -215,14 +215,14 @@
     - Improved combat report indicator display.
     - Chat loading speed improvement (All messages are sent in one paquet).
   fixed:
-    - "Victory series trophies : a tie no longer resets the serie.
+    - "Victory series trophies : a tie no longer resets the serie."
     - Explorer trophy correction.
     - Fixed display of flags on the combat report page.
     - Editor's tabs are cleared when switching account.
     - Added the emojis pannel on the forum.
-    
+
 205:
-  title: Advanced tooltip, combat reader, performances:
+  title: Advanced tooltip, combat reader, performances
   added:
     - "Editor : possibility to fold/unfold blocs and comments."
     - "Changelog : display of updates pictures."
@@ -338,7 +338,7 @@
     - Faster and smoother loading between pages.
     - Small graphic redesign.
     - "Statistics : addition of a graphic for the damage types."
-   improved:
+  improved:
     - Refactoring of the chat design.
     - Updating the farmer and leek talent in the interface at the end of a combat.
     - The Explorer trophy can be optained during a solo tournament.
@@ -371,10 +371,10 @@
     - Smaller leeks in the combat display.
     - Improvement of the in fight effect refreshing.
     - Tactical mode more legible, without transparent obstacles.
-    - "Combat quality" option changed for "Display shadows".
+    - "'Combat quality' option changed for 'Display shadows'."
     - Duration longer than 12 month are now displayed in years.
   fixed:
-    - "Stay connected" button fixed, and the cookie is now refreshing.
+    - "'Stay connected' button fixed, and the cookie is now refreshing."
     - In combat pause is inconspicuous, discreet option removal.
     - Correction of the entity overview in fight, when the page is zoomed.
     - Correction for fire and gas animations, that stayed after an entity death.
@@ -431,7 +431,7 @@
     - Correction of the talent graphic's labels on the leek page.
     - "Correction and improvement on BR: tab synchronisation and other bugs."
     - Poison damages calculation correction in the fight report (Thanks to Pump).
-  
+
 197:
   title: Statistics, view counter, leek page
   added:
@@ -498,9 +498,9 @@
   - Improvement of forum search bar function.
 
 115:
-- Improvement of general help, thanks to PadiSson and McNalToo.
-- Add of a search bar on from (basic version).
-- "Moderation forum function: lock a topic."
+  - Improvement of general help, thanks to PadiSson and McNalToo.
+  - Add of a search bar on from (basic version).
+  - "Moderation forum function: lock a topic."
 
 114:
   - Achievements display in liste (sorted by order of obtention) or in grid (sorted by achievement number).
