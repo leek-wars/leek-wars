@@ -149,6 +149,7 @@ button {
 
 html {
 	box-sizing: border-box;
+	overflow-y: scroll;
 }
 *, *:before, *:after {
 	box-sizing: inherit;
