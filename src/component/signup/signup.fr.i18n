@@ -11,6 +11,7 @@
 	"error_invalid_mail": "L'adresse e-mail doit être valide",
 	"error_leek_name_already_used": "Ce nom de poireau est déjà utilisé",
 	"error_leek_name_format": "Le nom du poireau ne doit pas contenir des caractères spéciaux",
+	"error_leek_name_length": "Le nom du poireau doit contenir entre {0} et {1} caractères",
 	"error_login_already_used": "Le nom d'utilisateur est déjà utilisé",
 	"error_login_character_count": "Le nom d'utilisateur doit contenir entre {0} et {1} caractères",
 	"error_login_format": "Le nom d'utilisateur ne doit contenir que des caractères alphanumériques",

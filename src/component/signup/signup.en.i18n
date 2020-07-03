@@ -11,6 +11,7 @@
 	"error_invalid_mail": "The e-mail address shall be valid",
 	"error_leek_name_already_used": "This leek's name is already used",
 	"error_leek_name_format": "The leek's name cannot contain special characters",
+	"error_leek_name_length": "The leek's name shall contain {0} to {1} characters",
 	"error_login_already_used": "This username is already used",
 	"error_login_character_count": "The username shall contain {0} to {1} characters",
 	"error_login_format": "The username shall contain only alphanumeric characters",
