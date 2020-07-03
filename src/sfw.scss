@@ -52,6 +52,13 @@
 		background: white;
 		color: #777;
 	}
+	.menu-center a.router-link-active {
+		text-shadow: none;
+		color: black;
+		&:before {
+			display: none;
+		}
+	}
 	.menu .menu-top {
 		background: white;
 		color: #777;
