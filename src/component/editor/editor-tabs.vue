@@ -1,19 +1,19 @@
 <template lang="html">
 	<div v-show="tabs.length > 1" class="tabs-wrapper">
 		<div class="tabs">
-			<div v-for="(ai, i) in tabs" ref="tabs" :key="ai.id" :class="{selected: current == ai.id, modified: ai.modified}" :title="ai.path" class="tab" @click="click($event, ai)" @contextmenu.prevent="openMenu(i)" @mouseup.middle="close(i)">
+			<div v-for="(ai, i) in tabs" ref="tabs" :key="ai.id" :class="{selected: current == ai.id, modified: ai.modified}" :title="ai.path" class="tab" @click="click($event, ai)" @contextmenu.prevent="openMenu(i)" @mouseup.middle="close(ai)">
 				<div class="name">
 					{{ ai.name }}
 				</div>
-				<span @click.stop="close(i)">
+				<span @click.stop="close(ai)">
 					<v-icon class="modified">mdi-record</v-icon>
 					<v-icon class="close">mdi-close</v-icon>
 				</span>
 			</div>
 		</div>
-		<v-menu ref="menu" v-model="menu" :activator="activator" offset-y @input="menuChange()">
+		<v-menu ref="menu" :key="activator" v-model="menu" :activator="activator" offset-y @input="menuChange()">
 			<v-list class="menu" :dense="true">
-				<v-list-item v-ripple @click="close(currentI)">
+				<v-list-item v-ripple @click="close(currentAI)">
 					<v-icon>mdi-close-circle-outline</v-icon>
 					<v-list-item-content>
 						<v-list-item-title>{{ $t('close') }}</v-list-item-title>
@@ -72,11 +72,15 @@
 		}
 		menuChange(e: any) {
 			this.activator = null
+			this.menu = false
 		}
-		close(i: number) {
+		close(ai: AI) {
+			const i = this.tabs.indexOf(ai)
 			this.tabs.splice(i, 1)
 			this.save()
-			this.openOther(i)
+			if (ai.id == this.current) {
+				this.openOther(i)
+			}
 		}
 		closeOthers(ai: AI) {
 			this.tabs = []
@@ -99,16 +103,15 @@
 
 <style lang="scss" scoped>
 	.tabs-wrapper {
-		flex: 30px 0 0;
+		flex: 35px 0 0;
 		user-select: none;
 	}
 	.tabs {
-		height: 30px;
+		height: 35px;
 		display: flex;
-		background: #444;
 	}
 	.tab {
-		line-height: 30px;
+		line-height: 35px;
 		cursor: pointer;
 		display: flex;
 		align-items: center;
