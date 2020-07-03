@@ -8,7 +8,7 @@
 						<img :src="'/image/fight_flag/' + flag + '.png'">
 					</div>
 				</template>
-				{{ $t('fight.flag_' + flag) }}
+				{{ $t('flag.' + flag) }}
 			</tooltip>
 		</div>
 
