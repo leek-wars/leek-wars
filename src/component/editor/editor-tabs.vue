@@ -3,7 +3,7 @@
 		<div class="tabs">
 			<div v-for="(ai, i) in tabs" ref="tabs" :key="ai.id" :class="{selected: current == ai.id, modified: ai.modified}" :title="ai.path" class="tab" @click="click($event, ai)" @contextmenu.prevent="openMenu(i)" @mouseup.middle="close(ai)">
 				<div class="name">
-					{{ ai.name }}
+					{{ ais[ai.id].name }}
 				</div>
 				<span @click.stop="close(ai)">
 					<v-icon class="modified">mdi-record</v-icon>
@@ -39,6 +39,7 @@
 	@Component({ name: 'editor-tabs' })
 	export default class EditorTabs extends Vue {
 		@Prop({required: true}) current!: number
+		@Prop({required: true}) ais!: AI[]
 		tabs: AI[] = []
 		menu: boolean = false
 		activator: any = null

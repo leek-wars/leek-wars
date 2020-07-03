@@ -84,7 +84,7 @@
 			<div v-show="!LeekWars.mobile || LeekWars.splitBack" :style="{width: 'calc(100% - ' + (LeekWars.mobile ? 0 : panelWidth) + 'px)'}" class="column9">
 				<panel>
 					<div slot="content" class="full">
-						<editor-tabs v-if="!LeekWars.mobile" ref="tabs" :current="currentID" />
+						<editor-tabs v-if="!LeekWars.mobile" ref="tabs" :current="currentID" :ais="ais" />
 						<div :class="{tabs: $refs.tabs && $refs.tabs.tabs.length > 1}" class="editors">
 							<ai-view v-for="ai in activeAIs" ref="editors" :key="ai.id" :ai="ai" :ais="ais" :editors="$refs.editors" :visible="currentAI === ai" :font-size="fontSize" :line-height="lineHeight" :popups="popups" :auto-closing="autoClosing" :autocomplete-option="autocomplete" @jump="jump" @load="load" />
 						</div>
