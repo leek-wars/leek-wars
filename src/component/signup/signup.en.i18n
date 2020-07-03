@@ -18,7 +18,6 @@
 	"error_login_length": "The username shall contain {0} to {1} characters",
 	"error_mail_already_used": "This e-mail address is already used",
 	"error_not_same_password": "The two entered passwords were not identical",
-	"error_password_character_count": "The password shall contain {0} to {1} characters",
 	"error_password_length": "The password shall contain {0} to {1} characters",
 	"fight_beach": "Solo fight on the beach",
 	"fight_desert": "Team fight in the desert",

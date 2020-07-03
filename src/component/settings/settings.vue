@@ -285,7 +285,7 @@
 		changePassword(e: Event) {
 			e.preventDefault()
 			if (this.newPassword1 !== this.newPassword2) {
-				LeekWars.toast(this.$i18n.t('farmer.error_not_same_password'))
+				LeekWars.toast(this.$t('error_not_same_password'))
 				return false
 			}
 			LeekWars.post('farmer/change-password', {password: this.password, new_password: this.newPassword1}).then(data => {
@@ -293,7 +293,7 @@
 				LeekWars.toast(this.$i18n.t('settings.password_changed'))
 				this.$router.push('/login')
 			}).error(error => {
-				LeekWars.toast(this.$i18n.t('farmer.error_' + error.error, error.params))
+				LeekWars.toast(this.$t('error_' + error.error, error.params))
 			})
 			return false
 		}
