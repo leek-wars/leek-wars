@@ -788,7 +788,7 @@
 		padding: 0;
 	}
 	.editors.tabs {
-		height: calc(100vh - 170px);
+		height: calc(100vh - 175px);
 	}
 	#app.app .editors {
 		height: calc(100vh - 56px);
