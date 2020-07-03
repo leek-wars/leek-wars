@@ -37,7 +37,7 @@
 				</center>
 			</template>
 
-			<template v-else>
+			<div v-else>
 				<div>{{ $t('email_will_be_sent') }}</div>
 				<form @submit.prevent="submitForm">
 					<br>
@@ -50,7 +50,7 @@
 					<br>
 					<div class="error"></div>
 				</form>
-			</template>
+			</div>
 		</panel>
 	</div>
 </template>
@@ -75,19 +75,21 @@
 				LeekWars.toast(this.$i18n.t('mail_sent', {email: this.email}))
 				this.$router.push('/forgot-password/email-sent/' + this.email)
 			}).error(error => {
-				LeekWars.toast(error)
+				LeekWars.toast(this.$t(error.error, error.params))
 			})
 			return false
 		}
 
 		submitResetForm() {
 			if (this.password !== this.password2) {
-				LeekWars.toast(this.$i18n.t('farmer', 'error_not_same_password'))
+				LeekWars.toast(this.$t('error_not_same_password'))
 				return false
 			}
 			LeekWars.post('farmer/forgot-password-change', {farmer_id: this.$route.params.id, new_password: this.password, code: this.$route.params.code}).then(data => {
-				LeekWars.toast(this.$i18n.t('password_changed'))
+				LeekWars.toast(this.$t('password_changed'))
 				this.$router.push('/login')
+			}).error(error => {
+				LeekWars.toast(this.$t('error_' + error.error, error.params))
 			})
 			return false
 		}

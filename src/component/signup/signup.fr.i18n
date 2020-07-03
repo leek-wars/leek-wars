@@ -18,7 +18,6 @@
 	"error_login_length": "Le nom d'utilisateur doit contenir entre {0} et {1} caractères",
 	"error_mail_already_used": "L'adresse e-mail est déjà utilisée",
 	"error_not_same_password": "Les deux mots de passe entrés doivent être identiques",
-	"error_password_character_count": "Le mot de passe doit contenir entre {0} et {1} caractères",
 	"error_password_length": "Le mot de passe doit contenir entre {0} et {1} caractères",
 	"fight_beach": "Combat solo sur la plage",
 	"fight_desert": "Combat en équipe dans le désert",
