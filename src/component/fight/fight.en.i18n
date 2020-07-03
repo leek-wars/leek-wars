@@ -6,8 +6,6 @@
 	"deleted_team": "Team deleted",
 	"end_of_fight": "End of fight!",
 	"error_generating_fight": "An error occured during fight generation",
-	"flag_perfect": "Perfect",
-	"flag_static": "Static",
 	"n_views": "no view | 1 view | {n} views",
 	"no_data_received": "No data received",
 	"not_found": "Fight not found :(",
