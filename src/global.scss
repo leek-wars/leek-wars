@@ -635,6 +635,10 @@ img.emoji {
 .flex-container .panel {
 	width: 100%;
 }
+.container {
+	padding: 0;
+	max-width: none;
+}
 .column2 {
 	width: 16.666666%;
 	display: inline-block;
