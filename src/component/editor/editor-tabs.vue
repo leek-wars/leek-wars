@@ -79,7 +79,7 @@
 			const i = this.tabs.indexOf(ai)
 			this.tabs.splice(i, 1)
 			this.save()
-			if (ai.id == this.current) {
+			if (ai.id === this.current) {
 				this.openOther(i)
 			}
 		}
