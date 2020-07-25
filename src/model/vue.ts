@@ -30,7 +30,7 @@ import TitlePicker from '@/component/title/title-picker.vue'
 import LWTitle from '@/component/title/title.vue'
 import TurretImage from '@/component/turret-image.vue'
 import { env } from '@/env'
-import { i18n } from '@/model/i18n'
+import { i18n, loadInstanceTranslations } from '@/model/i18n'
 import { LeekWars } from '@/model/leekwars'
 import '@/model/serviceworker'
 import { store } from "@/model/store"

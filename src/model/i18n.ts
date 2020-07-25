@@ -10,6 +10,16 @@ const i18n = new VueI18n({
 })
 const loadedLanguages: string[] = [locale]
 
+const mixins = [{
+	beforeCreate() {
+		// Reload translations because in case of hot reloading, they are lost
+		if (!(this as any).$options.i18n.messages) {
+			console.log("reload translations...")
+			loadInstanceTranslations(i18n.locale, this)
+		}
+	}
+}]
+
 function setI18nLanguage(lang: string) {
 	i18n.locale = lang
 	const html = document.querySelector('html')
@@ -26,7 +36,6 @@ function loadLanguageAsync(vue: any, newLocale: string) {
 	}
 	if (!loadedLanguages.includes(newLocale)) {
 		return import(/* webpackChunkName: "locale-[request]" */ `@/lang/locale/${newLocale}`).then(module => {
-			console.log("loadLanguageAsync merge", module.translations)
 			i18n.mergeLocaleMessage(newLocale, module.translations)
 			loadedLanguages.push(newLocale)
 			vue.onLanguageLoaded()
@@ -37,25 +46,27 @@ function loadLanguageAsync(vue: any, newLocale: string) {
 }
 
 function loadInstanceTranslations(newLocale: string, instance: any) {
-	if (!instance.$options.name || !instance.$options.i18n) {
+	if (!instance.$options.name) {
 		return
+	}
+	if (!instance.$options.i18n) {
+		instance.$options.i18n = {}
 	}
 	let name = instance.$options.name.toLowerCase().replace(/_/g, '-')
 	if (name.indexOf("bank-") === 0) { name = "bank" }
 
-	console.log("Load", `@/lang/${newLocale}/${name}.json`)
-	return import(/* webpackChunkName: "locale-[request]" */ `json-loader!@/lang/${newLocale}/${name}.i18n`).then((module: any) => {
-		console.log(module)
+	return import(/* webpackChunkName: "locale-[request]" */ `!json-loader!@/component/${name}/${name}.${newLocale}.i18n`).then((module: any) => {
 		const instanceI18n = (instance as any)._i18n
 		instanceI18n.setLocaleMessage(newLocale, module)
 	})
 }
 
 function loadComponentLanguage(newLocale: string, component: any, instance: Component | undefined) {
+
 	if (!component.options) { return }
 	let name = (component as any).options.name.toLowerCase().replace(/_/g, '-')
 	if (name === "bankbuy" || name === "bankvalidate") { name = "bank" }
-	console.log("Load translation of:", name)
+
 	if (component === undefined) {
 		return
 	}
@@ -68,7 +79,6 @@ function loadComponentLanguage(newLocale: string, component: any, instance: Comp
 		return 
 	}
 	return import(/* webpackChunkName: "locale-[request]" */ `!json-loader!@/component/${name}/${name}.${newLocale}.i18n`).then((module: any) => {
-		console.log(module)
 		// if (!(name in module.translations)) {
 			// console.log("No messages for '" + name + "' in '" + locale + "'!")
 			// return
@@ -86,4 +96,4 @@ function loadComponentLanguage(newLocale: string, component: any, instance: Comp
 	})
 }
 
-export { i18n, loadComponentLanguage, loadLanguageAsync, loadInstanceTranslations }
+export { i18n, mixins, loadComponentLanguage, loadLanguageAsync, loadInstanceTranslations }
