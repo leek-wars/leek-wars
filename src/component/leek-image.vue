@@ -33,7 +33,6 @@
 		@Prop({required: true}) scale!: number
 		@Prop() on!: any
 		@Prop() invert!: boolean
-		hatSize: any = null
 		get leekImage(): string {
 			return 'leek/leek' + this.appearance + '_front_' + LeekWars.getLeekSkinName(this.leek.skin) + '.png'
 		}
@@ -108,13 +107,7 @@
 		get handSize() { return 16 * this.scale / this.weaponScale }
 		get appearance() { return LeekWars.getLeekAppearance(this.leek.level) }
 		get leekSize() { return LeekWars.leekSizes[this.appearance] }
-
-		@Watch('leek.hat', {immediate: true})
-		updateHat() {
-			if (this.leek.hat != null) {
-				LeekWars.getImageSize(this.hatImage, (hatSize: any) => this.hatSize = hatSize)
-			}
-		}
+		get hatSize() { return this.leek.hat ? LeekWars.hatSizes[this.leek.hat] : null }
 	}
 </script>
 

@@ -120,6 +120,29 @@ const LEEK_SIZES: { [key: number]: {width: number, height: number} } = {
 	11: {width: 161, height: 211}
 }
 
+const HAT_SIZES: { [key: number]: {width: number, height: number} } = {
+	1: {width: 139, height: 84}, // christmas
+	2: {width: 110, height: 72}, // panama
+	3: {width: 139, height: 84}, // christmas
+	4: {width: 139, height: 84}, // christmas
+	5: {width: 100, height: 70}, // crown
+	6: {width: 140, height: 135}, // harlequin
+	7: {width: 130, height: 140}, // topper
+	8: {width: 150, height: 80}, // chinese
+	9: {width: 200, height: 169}, // wizard
+	10: {width: 200, height: 115}, // mugiwara
+	11: {width: 139, height: 84}, // christmas
+	12: {width: 150, height: 80}, // chinese
+	13: {width: 150, height: 80}, // chinese
+	14: {width: 140, height: 135}, // harlequin
+	15: {width: 140, height: 135}, // harlequin
+	16: {width: 200, height: 169}, // wizard
+	17: {width: 200, height: 169}, // wizard
+	18: {width: 200, height: 169}, // wizard
+	19: {width: 200, height: 169}, // wizard
+	20: {width: 150, height: 80}, // chinese
+}
+
 const ORDERED_CHIPS = orderChips(CHIPS)
 const ORDERED_WEAPONS = orderWeapons(WEAPONS)
 const POTIONS_BY_SKIN = potionsBySkin(POTIONS)
@@ -175,6 +198,7 @@ const LeekWars = {
 	},
 	skins: Object.freeze(SKINS),
 	leekSizes: Object.freeze(LEEK_SIZES),
+	hatSizes: Object.freeze(HAT_SIZES),
 	getLeekSkinName: (skin: number) => {
 		if (!(skin in SKINS)) { return SKINS[1] }
 		return SKINS[skin]
