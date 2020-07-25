@@ -27,11 +27,13 @@ self.addEventListener('push', event => {
 	var message = "Cliquer pour voir la notification"
 	var data = null
 	if (event.data) {
-		var data = event.data.json()
-		icon = data.image
-		title = data.title
-		message = data.message
-		data = data
+		try {
+			var data = event.data.json()
+			icon = data.image
+			title = data.title
+			message = data.message
+			data = data
+		} catch (e) {}
 	}
 	event.waitUntil(
 		self.registration.showNotification(title, {
