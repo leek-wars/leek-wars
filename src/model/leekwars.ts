@@ -151,7 +151,7 @@ const LeekWars = {
 	titleTag: null,
 	notifsResults: localStorage.getItem('options/notifs-results') === 'true',
 	rankingActive: localStorage.getItem('options/ranking-active') === 'true',
-	service_worker: null as any,
+	service_worker: null as ServiceWorkerRegistration | null,
 	battleRoyale: new BattleRoyale(),
 	squares: new Squares(),
 	languages: Object.freeze({

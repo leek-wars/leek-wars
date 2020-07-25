@@ -223,7 +223,7 @@
 
 				if (LeekWars.service_worker) {
 					// Check the push notifs switch if we have a valid subscription
-					LeekWars.service_worker.pushManager.getSubscription().then((subscription: PushSubscription) => {
+					LeekWars.service_worker.pushManager.getSubscription().then((subscription: PushSubscription | null) => {
 						if (subscription) {
 							for (const endpoint of data.push_endpoints) {
 								if (subscription.endpoint === endpoint) {
@@ -239,7 +239,7 @@
 		updatePushNotifications(e: Event) {
 			if (!LeekWars.service_worker) { return }
 			if (this.pushNotifications) {
-				LeekWars.service_worker.pushManager.getSubscription().then((subscription: PushSubscription) => {
+				LeekWars.service_worker.pushManager.getSubscription().then((subscription: PushSubscription | null) => {
 					if (subscription) {
 						subscription.unsubscribe()
 					}
