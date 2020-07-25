@@ -552,6 +552,7 @@
 	import { AI } from '@/model/ai'
 	import { Chip } from '@/model/chip'
 	import { Hat } from '@/model/hat'
+	import { mixins } from '@/model/i18n'
 	import { ItemType } from '@/model/item'
 	import { Leek, Register } from '@/model/leek'
 	import { LeekWars } from '@/model/leekwars'
@@ -565,7 +566,7 @@
 	const LevelDialog = () => import(/* webpackChunkName: "[request]" */ `@/component/leek/level-dialog.${locale}.i18n`)
 	import(/* webpackChunkName: "chartist" */ "@/chartist-wrapper")
 
-	@Component({ name: "leek", i18n: {}, components: { CapitalDialog, LevelDialog, CharacteristicTooltip } })
+	@Component({ name: "leek", i18n: {}, mixins, components: { CapitalDialog, LevelDialog, CharacteristicTooltip } })
 	export default class LeekPage extends Vue {
 		leek: Leek | null = null
 		error: boolean = false

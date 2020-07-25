@@ -16,7 +16,7 @@ module.exports = function(source) {
 
 	const data = `
 	import ${nameUpper} from '@/component/${folder}/${name}.vue'
-	import { i18n } from '@/model/i18n'
+	import { loadInstanceTranslations, i18n } from '@/model/i18n'
 	const messages = ${source}
 	${nameUpper}.options.i18n = { messages: {${locale}: messages }}
 	export default ${nameUpper}`
