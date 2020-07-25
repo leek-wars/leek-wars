@@ -2,7 +2,7 @@
 	<div v-show="tabs.length > 1" class="tabs-wrapper">
 		<div class="tabs">
 			<div v-for="(ai, i) in tabs" ref="tabs" :key="ai.id" :class="{selected: current == ai.id, modified: ai.modified}" :title="ai.path" class="tab" @click="click($event, ai)" @contextmenu.prevent="openMenu(i)" @mouseup.middle="close(ai)">
-				<div class="name">
+				<div v-if="ai.id in ais" class="name">
 					{{ ais[ai.id].name }}
 				</div>
 				<span @click.stop="close(ai)">
