@@ -1,6 +1,6 @@
 <template>
 	<div v-if="conversation" v-ripple class="conversation">
-		<rich-tooltip-farmer :id="farmer.id" v-slot="{ on }">
+		<rich-tooltip-farmer :id="farmer ? farmer.id : 0" v-slot="{ on }">
 			<avatar v-if="farmer" :farmer="farmer" :on="on" />
 		</rich-tooltip-farmer>
 		<div class="content">
