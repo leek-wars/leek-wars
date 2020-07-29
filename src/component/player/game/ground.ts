@@ -3,6 +3,7 @@ import { Obstacle } from '@/component/player/game/obstacle'
 import { LeekWars } from '@/model/leekwars'
 import { Cell } from './cell'
 import { Position } from './position'
+import { T, Texture } from './texture'
 
 let GROUND_PADDING_LEFT = 210
 let GROUND_PADDING_RIGHT = 20
@@ -20,6 +21,7 @@ class Ground {
 	public startY: number = 0
 	public texture!: HTMLCanvasElement | null
 	public textureCtx!: CanvasRenderingContext2D | null
+	public pumpkin!: Texture
 	public obstacles: Obstacle[] = []
 	public game: Game
 	public gridHeight: number = 0
@@ -67,6 +69,9 @@ class Ground {
 		this.coord = Array.from(Array(sy), () => new Array(sx).fill(null))
 		for (const cell of this.cells) {
 			this.coord[cell.x - this.min_x][cell.y - this.min_y] = cell
+		}
+		if (this.game.halloween) {
+			T.pumpkin.load(this.game)
 		}
 	}
 

@@ -1,7 +1,7 @@
 import { Entity, EntityType } from "@/component/player/game/entity"
 import { Game, SHADOW_ALPHA, SHADOW_SCALE } from '@/component/player/game/game'
 import { LeekWars } from '@/model/leekwars'
-import { SHADOW_QUALITY } from './texture'
+import { SHADOW_QUALITY, T } from './texture'
 
 class Bulb extends Entity {
 	public skin!: number
@@ -12,7 +12,7 @@ class Bulb extends Entity {
 		super(game, EntityType.BULB, team)
 		this.baseZ = -6
 		this.z = this.baseZ
-		this.bloodTex = this.game.T.leek_blood
+		this.bloodTex = T.leek_blood
 	}
 
 	public setSkin(skin: number) {
@@ -20,29 +20,29 @@ class Bulb extends Entity {
 		this.skin = skin
 
 		if (skin === 1) {
-			this.bodyTexFront = this.game.T.get('image/bulb/puny_bulb_front.png', true, SHADOW_QUALITY)
-			this.bodyTexBack = this.game.T.get('image/bulb/puny_bulb_back.png', true, SHADOW_QUALITY)
+			this.bodyTexFront = T.get(this.game, 'image/bulb/puny_bulb_front.png', true, SHADOW_QUALITY)
+			this.bodyTexBack = T.get(this.game, 'image/bulb/puny_bulb_back.png', true, SHADOW_QUALITY)
 		} else if (skin === 2) {
-			this.bodyTexFront = this.game.T.get('image/bulb/fire_bulb_front.png', true, SHADOW_QUALITY)
-			this.bodyTexBack = this.game.T.get('image/bulb/fire_bulb_back.png', true, SHADOW_QUALITY)
+			this.bodyTexFront = T.get(this.game, 'image/bulb/fire_bulb_front.png', true, SHADOW_QUALITY)
+			this.bodyTexBack = T.get(this.game, 'image/bulb/fire_bulb_back.png', true, SHADOW_QUALITY)
 		} else if (skin === 3) {
-			this.bodyTexFront = this.game.T.get('image/bulb/healer_bulb_front.png', true, SHADOW_QUALITY)
-			this.bodyTexBack = this.game.T.get('image/bulb/healer_bulb_back.png', true, SHADOW_QUALITY)
+			this.bodyTexFront = T.get(this.game, 'image/bulb/healer_bulb_front.png', true, SHADOW_QUALITY)
+			this.bodyTexBack = T.get(this.game, 'image/bulb/healer_bulb_back.png', true, SHADOW_QUALITY)
 		} else if (skin === 4) {
-			this.bodyTexFront = this.game.T.get('image/bulb/rocky_bulb_front.png', true, SHADOW_QUALITY)
-			this.bodyTexBack = this.game.T.get('image/bulb/rocky_bulb_back.png', true, SHADOW_QUALITY)
+			this.bodyTexFront = T.get(this.game, 'image/bulb/rocky_bulb_front.png', true, SHADOW_QUALITY)
+			this.bodyTexBack = T.get(this.game, 'image/bulb/rocky_bulb_back.png', true, SHADOW_QUALITY)
 		} else if (skin === 5) {
-			this.bodyTexFront = this.game.T.get('image/bulb/iced_bulb_front.png', true, SHADOW_QUALITY)
-			this.bodyTexBack = this.game.T.get('image/bulb/iced_bulb_back.png', true, SHADOW_QUALITY)
+			this.bodyTexFront = T.get(this.game, 'image/bulb/iced_bulb_front.png', true, SHADOW_QUALITY)
+			this.bodyTexBack = T.get(this.game, 'image/bulb/iced_bulb_back.png', true, SHADOW_QUALITY)
 		} else if (skin === 6) {
-			this.bodyTexFront = this.game.T.get('image/bulb/lightning_bulb_front.png', true, SHADOW_QUALITY)
-			this.bodyTexBack = this.game.T.get('image/bulb/lightning_bulb_back.png', true, SHADOW_QUALITY)
+			this.bodyTexFront = T.get(this.game, 'image/bulb/lightning_bulb_front.png', true, SHADOW_QUALITY)
+			this.bodyTexBack = T.get(this.game, 'image/bulb/lightning_bulb_back.png', true, SHADOW_QUALITY)
 		} else if (skin === 7) {
-			this.bodyTexFront = this.game.T.get('image/bulb/metallic_bulb_front.png', true, SHADOW_QUALITY)
-			this.bodyTexBack = this.game.T.get('image/bulb/metallic_bulb_back.png', true, SHADOW_QUALITY)
+			this.bodyTexFront = T.get(this.game, 'image/bulb/metallic_bulb_front.png', true, SHADOW_QUALITY)
+			this.bodyTexBack = T.get(this.game, 'image/bulb/metallic_bulb_back.png', true, SHADOW_QUALITY)
 		} else if (skin === 8) {
-			this.bodyTexFront = this.game.T.get('image/bulb/wizard_bulb_front.png', true, SHADOW_QUALITY)
-			this.bodyTexBack = this.game.T.get('image/bulb/wizard_bulb_back.png', true, SHADOW_QUALITY)
+			this.bodyTexFront = T.get(this.game, 'image/bulb/wizard_bulb_front.png', true, SHADOW_QUALITY)
+			this.bodyTexBack = T.get(this.game, 'image/bulb/wizard_bulb_back.png', true, SHADOW_QUALITY)
 		}
 		this.height = this.bodyTexFront.texture.height * 0.65
 		this.bodyTexFront.texture.addEventListener('load', () => {
@@ -116,7 +116,7 @@ class Bulb extends Entity {
 		ctx.globalAlpha = SHADOW_ALPHA
 		ctx.translate(0, - this.z)
 		ctx.rotate(-Math.PI / 4)
-		this.drawBody(ctx, texture.shadow)
+		this.drawBody(ctx, texture.shadow!)
 		ctx.restore()
 	}
 

@@ -1,7 +1,7 @@
 import { Entity } from '@/component/player/game/entity'
 import { Game } from '@/component/player/game/game'
 import { Position } from '@/component/player/game/position'
-import { Texture } from "@/component/player/game/texture"
+import { T, Texture } from "@/component/player/game/texture"
 
 const NUM_SHOTS_SPRITES = 4
 const NUM_BLOOD_SPRITES = 4
@@ -122,7 +122,7 @@ class Bullet extends CollideParticle {
 		this.angle = angle
 	}
 	public draw(ctx: CanvasRenderingContext2D) {
-		ctx.drawImage(this.game.T.bullet.texture, -this.game.T.bullet.texture.width / 2 , -this.game.T.bullet.texture.height / 2)
+		ctx.drawImage(T.bullet.texture, -T.bullet.texture.width / 2 , -T.bullet.texture.height / 2)
 	}
 }
 class Laser extends Particle {
@@ -202,7 +202,7 @@ class Fire extends Particle {
 		ctx.globalAlpha = this.life / 100
 		const size = 70 - this.life / 2.5
 		const textureId = 10 - Math.round(this.life / 10)
-		ctx.drawImage(this.game.T.fire.texture, textureId * 20, 0, 20, 20, -size / 2, -size / 2, size, size)
+		ctx.drawImage(T.fire.texture, textureId * 20, 0, 20, 20, -size / 2, -size / 2, size, size)
 		ctx.globalAlpha = 1
 	}
 }
@@ -216,7 +216,7 @@ class SimpleFire extends Particle {
 		ctx.globalAlpha = this.life / 100
 		const size = 70 - this.life / 2.5
 		const textureId = 10 - Math.round(this.life / 10)
-		ctx.drawImage(this.game.T.fire.texture, textureId * 20, 0, 20, 20, -size / 2, -size / 2, size, size)
+		ctx.drawImage(T.fire.texture, textureId * 20, 0, 20, 20, -size / 2, -size / 2, size, size)
 		ctx.globalAlpha = 1
 	}
 }
@@ -265,7 +265,7 @@ class Meteorite extends Particle {
 			this.game.particles.addFireSimple(x, y, this.z, (this.originalAngle) * (0.2 + Math.random() * 0.2))
 		}
 		if (this.z < 20) {
-			this.game.particles.addExplosion(this.x, this.y, this.z, this.game.T.explosion)
+			this.game.particles.addExplosion(this.x, this.y, this.z, T.explosion)
 			for (const target of this.targets) {
 				target.hurt(this.x, this.y, this.z, this.dx, this.dy, this.dz)
 			}
@@ -280,7 +280,7 @@ class Meteorite extends Particle {
 		this.game.actionDone()
 	}
 	public draw(ctx: CanvasRenderingContext2D) {
-		ctx.drawImage(this.game.T.meteorite.texture, 0, 0, 60, 54, -30 * this.size , -27 * this.size, 60 * this.size, 54 * this.size)
+		ctx.drawImage(T.meteorite.texture, 0, 0, 60, 54, -30 * this.size , -27 * this.size, 60 * this.size, 54 * this.size)
 	}
 }
 class Grenade extends FallingParticle {
@@ -306,7 +306,7 @@ class Grenade extends FallingParticle {
 		this.game.actionDone()
 	}
 	public draw(ctx: CanvasRenderingContext2D) {
-		ctx.drawImage(this.texture.texture, -this.game.T.grenade.texture.width / 2 , -this.game.T.grenade.texture.height / 2)
+		ctx.drawImage(this.texture.texture, -T.grenade.texture.width / 2 , -T.grenade.texture.height / 2)
 	}
 }
 class Shot extends Particle {
@@ -318,7 +318,7 @@ class Shot extends Particle {
 	}
 	public draw(ctx: CanvasRenderingContext2D) {
 		ctx.globalAlpha = this.life / 10
-		ctx.drawImage(this.game.T.shots.texture, this.textureID * 50, 0, 50, 50, -25, -25, 50, 50)
+		ctx.drawImage(T.shots.texture, this.textureID * 50, 0, 50, 50, -25, -25, 50, 50)
 		ctx.globalAlpha = 1
 	}
 }
@@ -386,13 +386,13 @@ class Garbage extends FallingParticle {
 	}
 	public update(dt: number): boolean {
 		// Stalactite ou iceberg
-		if (this.texture === this.game.T.iceberg.texture || this.texture === this.game.T.stalactite.texture) {
+		if (this.texture === T.iceberg.texture || this.texture === T.stalactite.texture) {
 			if (this.z < this.texture.height / 2.8) {
 				// Débrits de glace
-				this.game.particles.addGarbage(this.x + 5, this.y + 7, this.z - 10, 0.2, 1.5, 0, this.game.T.ice_part, 1, 0.02)
-				this.game.particles.addGarbage(this.x + 3, this.y + 4, this.z + 10, -1.3, 0.4, 0, this.game.T.ice_part2, 1, -0.05)
-				this.game.particles.addGarbage(this.x - 3, this.y + 3, this.z + 20, 0.5, -1.4, 0, this.game.T.ice_part, 1, 0.05)
-				this.game.particles.addGarbage(this.x - 2, this.y - 8, this.z - 20, -0.7, 1.1, 0, this.game.T.ice_part2, 1, -0.02)
+				this.game.particles.addGarbage(this.x + 5, this.y + 7, this.z - 10, 0.2, 1.5, 0, T.ice_part, 1, 0.02)
+				this.game.particles.addGarbage(this.x + 3, this.y + 4, this.z + 10, -1.3, 0.4, 0, T.ice_part2, 1, -0.05)
+				this.game.particles.addGarbage(this.x - 3, this.y + 3, this.z + 20, 0.5, -1.4, 0, T.ice_part, 1, 0.05)
+				this.game.particles.addGarbage(this.x - 2, this.y - 8, this.z - 20, -0.7, 1.1, 0, T.ice_part2, 1, -0.02)
 				return true
 			}
 		}

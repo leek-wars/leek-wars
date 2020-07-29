@@ -1,8 +1,7 @@
 import { Entity, EntityType } from "@/component/player/game/entity"
 import { Game, SHADOW_ALPHA, SHADOW_SCALE } from '@/component/player/game/game'
-import { env } from '@/env'
 import { TURRET_DATA } from '@/model/turret-data'
-import { SHADOW_QUALITY, Texture } from './texture'
+import { SHADOW_QUALITY, T, Texture } from './texture'
 
 class Piece {
 	t!: Texture
@@ -17,13 +16,13 @@ class Turret extends Entity {
 	constructor(game: Game, team: number, level: number) {
 		super(game, EntityType.TURRET, team)
 		const color = team === 1 ? 'blue' : 'red'
-		this.textures.base = new Texture(game, env.STATIC + 'image/turret/base_' + color + '.png', true, SHADOW_QUALITY)
-		this.textures.core = new Texture(game, env.STATIC + 'image/turret/core_' + color + '.png', true, SHADOW_QUALITY)
-		this.textures.plane = new Texture(game, env.STATIC + 'image/turret/plane_' + color + '.png', true, SHADOW_QUALITY)
-		this.textures.block = new Texture(game, env.STATIC + 'image/turret/block_' + color + '.png', true, SHADOW_QUALITY)
-		this.textures.spikes = new Texture(game, env.STATIC + 'image/turret/spikes_' + color + '.png', true, SHADOW_QUALITY)
-		this.textures.pyramid_up = new Texture(game, env.STATIC + 'image/turret/pyramid_up_' + color + '.png', true, SHADOW_QUALITY)
-		this.textures.pyramid_down = new Texture(game, env.STATIC + 'image/turret/pyramid_down_' + color + '.png', true, SHADOW_QUALITY)
+		this.textures.base = T.get(this.game, 'image/turret/base_' + color + '.png', true, SHADOW_QUALITY)
+		this.textures.core = T.get(this.game, 'image/turret/core_' + color + '.png', true, SHADOW_QUALITY)
+		this.textures.plane = T.get(this.game, 'image/turret/plane_' + color + '.png', true, SHADOW_QUALITY)
+		this.textures.block = T.get(this.game, 'image/turret/block_' + color + '.png', true, SHADOW_QUALITY)
+		this.textures.spikes = T.get(this.game, 'image/turret/spikes_' + color + '.png', true, SHADOW_QUALITY)
+		this.textures.pyramid_up = T.get(this.game, 'image/turret/pyramid_up_' + color + '.png', true, SHADOW_QUALITY)
+		this.textures.pyramid_down = T.get(this.game, 'image/turret/pyramid_down_' + color + '.png', true, SHADOW_QUALITY)
 		this.bodyTexFront = this.textures.base
 
 		this.pieces = TURRET_DATA[Math.floor(level / 10)].map(piece => ({t: this.textures[piece.t], z: piece.z}))
@@ -54,7 +53,7 @@ class Turret extends Entity {
 
 	public drawPiece(ctx: CanvasRenderingContext2D, texture: Texture, z: number, shadow: boolean) {
 		const scale = 0.3
-		ctx.drawImage(shadow ? texture.shadow : texture.texture, -texture.texture.width * scale / 2, z, texture.texture.width * scale, texture.texture.height * scale)
+		ctx.drawImage(shadow ? texture.shadow! : texture.texture, -texture.texture.width * scale / 2, z, texture.texture.width * scale, texture.texture.height * scale)
 	}
 
 	public drawShadow(ctx: CanvasRenderingContext2D) {
