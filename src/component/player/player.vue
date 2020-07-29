@@ -100,12 +100,6 @@
 				</v-tooltip>
 				<div class="turn">{{ $t('fight.turn_n', [game.turn]) }}</div>
 				<div class="filler"></div>
-				<v-tooltip v-if="!LeekWars.mobile" :open-delay="0" :close-delay="0" top content-class="top">
-					<template v-slot:activator="{ on }">
-						<v-icon v-ripple class="control" v-on="on" @click="LeekWars.flex = !LeekWars.flex">mdi-crop-landscape</v-icon>
-					</template>
-					{{ $t('enlarge_fight') }}
-				</v-tooltip>
 				<v-tooltip :open-delay="0" :close-delay="0" top content-class="top">
 					<template v-slot:activator="{ on }">
 						<v-icon v-ripple class="control" v-on="on" @click="toggleFullscreen">mdi-aspect-ratio</v-icon>
@@ -424,10 +418,6 @@
 			localStorage.setItem('fight/tactic', '' + this.game.tactic)
 			this.game.toggleShadows()
 			this.game.redraw()
-		}
-		@Watch("LeekWars.flex") toggleLarge() {
-			localStorage.setItem('fight/large', '' + LeekWars.flex)
-			this.$emit('resize')
 		}
 		@Watch("game.showCells") toggleCells() {
 			localStorage.setItem('fight/cells', '' + this.game.showCells)
