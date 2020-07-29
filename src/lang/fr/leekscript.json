@@ -18,7 +18,7 @@
 	"closing_parenthesis_expected": "Parenthèse fermante attendue",
 	"closing_square_bracket_expected": "Crochet fermant attendu",
 	"continue_out_of_loop": "Le mot clé continue ne peut être utilisé que dans une boucle",
-	"defined_in": "Définie dans <b>{0}</b> à la ligne <b>{1}</b>",
+	"defined_in": "Définie dans {0} à la ligne {1}",
 	"end_of_instruction_expected": "Une fin d'instruction était attendue ici",
 	"end_of_script_unexpected": "Fin du fichier inattendue",
 	"folder_renamed": "Dossier renommé en {0}",

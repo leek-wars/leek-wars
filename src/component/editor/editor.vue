@@ -57,12 +57,12 @@
 		</div>
 
 		<div class="container last">
-			<panel v-show="!LeekWars.mobile || !LeekWars.splitBack" :style="{width: LeekWars.mobile ? '100%' : panelWidth + 'px', flex: 'none', display: panelWidth ? 'block' : 'none'}" class="editor-left first">
+			<panel v-show="!LeekWars.mobile || !LeekWars.splitBack" :style="{width: LeekWars.mobile ? '100%' : panelWidth + 'px'}" class="editor-left first last">
 				<div slot="content" class="full">
-					<loader v-if="!rootFolder" />
+					<loader v-if="!fileSystem.rootFolder" />
 
-					<div v-if="rootFolder" v-autostopscroll class="ai-list">
-						<editor-folder :folder="rootFolder" :level="0" />
+					<div v-if="fileSystem.rootFolder" v-autostopscroll class="ai-list">
+						<editor-folder :folder="fileSystem.rootFolder" :level="0" />
 					</div>
 					<div v-if="currentEditor && currentEditor.loaded" class="ai-stats">
 						<div class="line-count-wrapper">{{ $tc('main.n_lines', currentEditor.lines) }}</div>
@@ -76,24 +76,73 @@
 					<div id='import-button' class="button" title="{import_desc}">▲ {{ $t('import') }}</div>
 					-->
 				</div>
+				<div v-if="currentEditor && currentEditor.loaded" class="ai-stats">
+					<div class="line-count-wrapper">{{ $tc('main.n_lines', currentEditor.lines) }}</div>
+					<div class="char-count-wrapper">{{ $tc('main.n_characters', currentEditor.characters) }}</div>
+					<div v-if="currentAI.included_lines !== 0" class="line-count-wrapper">{{ $tc('main.n_total_lines', currentEditor.lines + currentAI.included_lines) }}</div>
+					<div v-if="currentAI.included_chars !== 0" class="char-count-wrapper">{{ $tc('main.n_total_chars', currentEditor.characters + currentAI.included_chars) }}</div>
+				</div>
+				<br>
+				<!--
+				<div id='export-button' class="button" title="{export_desc}">▼ {{ $t('export') }}</div>
+				<div id='import-button' class="button" title="{import_desc}">▲ {{ $t('import') }}</div>
+				-->
 			</panel>
 
 			<panel v-show="!LeekWars.mobile || LeekWars.splitBack" :style="{width: 'calc(100% - ' + (LeekWars.mobile ? 0 : panelWidth) + 'px)'}">
-				<div slot="content" class="full">
-					<div class="resizer" @mousedown="resizerMousedown"></div>
-					<editor-tabs v-if="!LeekWars.mobile" ref="tabs" :current="currentID" :ais="ais" />
+				<div slot="content" class="editor-left">
+					<editor-tabs v-if="!LeekWars.mobile" ref="tabs" :current="currentID" :ais="fileSystem.ais" />
 					<div :class="{tabs: $refs.tabs && $refs.tabs.tabs.length > 1}" class="editors">
-						<ai-view v-for="ai in activeAIs" ref="editors" :key="ai.id" :ai="ai" :ais="ais" :editors="$refs.editors" :visible="currentAI === ai" :font-size="fontSize" :line-height="lineHeight" :popups="popups" :auto-closing="autoClosing" :autocomplete-option="autocomplete" @jump="jump" @load="load" />
+						<ai-view v-for="ai in activeAIs" ref="editors" :key="ai.id" :ai="ai" :ais="fileSystem.ais" :editors="$refs.editors" :visible="currentAI === ai" :font-size="fontSize" :line-height="lineHeight" :popups="popups" :auto-closing="autoClosing" :autocomplete-option="autocomplete" @jump="jump" @load="load" @problems="problems" />
 					</div>
-					<div v-if="currentEditor" class="compilation">
-						<div v-if="currentEditor.saving" class="compiling">
-							<loader :size="15" /> {{ $t('saving') }}
+					<div class="results">
+						<div v-for="(good, g) in goods" :key="g" class="good" v-html="'✓ ' + (good.ai !== currentAI ? currentAI.name + ' ➞ ' : '') + $t('valid_ai', [good.ai.name])"></div>
+						<div v-if="currentEditor.serverError" class="error">× <i>{{ $t('server_error') }}</i></div>
+						<div v-for="(error, e) in errors" :key="e" class="error" @click="errors.splice(e, 1)">
+							× <span v-html="$t('ai_error', [error.ai, error.line])"></span> ▶ {{ error.message }}
 						</div>
-						<div class="results">
-							<div v-for="(good, g) in goods" :key="g" class="good" v-html="'✓ ' + (good.ai !== currentAI ? currentAI.name + ' ➞ ' : '') + $t('valid_ai', [good.ai.name])"></div>
-							<div v-if="currentEditor.serverError" class="error">× <i>{{ $t('server_error') }}</i></div>
-							<div v-for="(error, e) in errors" :key="e" class="error" @click="errors.splice(e, 1)">
-								× <span v-html="$t('ai_error', [error.ai, error.line])"></span> ▶ {{ error.message }}
+					</div>
+
+					<div v-if="showProblemsDetails && (LeekWars.analyzer.error_count || LeekWars.analyzer.warning_count)" class="problems-details">
+						<div v-for="(problems, ai) in LeekWars.analyzer.problems" v-if="problems.length" :key="ai">
+							<div class="file" @click="toggleProblemFile(ai)">
+								<v-icon>{{ problemsCollapsed[ai] ? 'mdi-chevron-right' : 'mdi-chevron-down' }}</v-icon>
+								{{ ai }}
+								<span class="count error">{{ problems.length }}</span>
+							</div>
+							<div v-if="!problemsCollapsed[ai]">
+								<div v-for="(problem, p) in problems" :key="p" class="problem" @click="jumpProblem(ai, problem)">
+									<v-icon v-if="problem[4] === 0" class="error">mdi-close-circle-outline</v-icon>
+									<v-icon v-else class="warning">mdi-alert-circle-outline</v-icon>
+									{{ $t('ls_error.' + problem[5], problem[6]) }}
+									<span class="line">ligne {{ problem[0] }}</span>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="status">
+						<div v-ripple class="problems" @click="showProblemsDetails = !showProblemsDetails">
+							<span v-if="LeekWars.analyzer.error_count + LeekWars.analyzer.warning_count === 0" class="no-error">
+								<v-icon>mdi-check-circle</v-icon> Aucun problème
+							</span>
+							<span v-else>
+								<span v-if="LeekWars.analyzer.error_count" class="errors">
+									<v-icon>mdi-close-circle</v-icon> {{ LeekWars.analyzer.error_count }} erreurs
+								</span>
+								<span v-if="LeekWars.analyzer.warning_count" class="warnings">
+									<v-icon>mdi-alert-circle</v-icon> {{ LeekWars.analyzer.warning_count }} warnings
+								</span>
+							</span>
+						</div>
+						<div class="filler"></div>
+						<div class="state">
+							<div v-if="LeekWars.analyzer.running == 0" class="ready">
+								Prêt
+								<v-icon>mdi-check</v-icon>
+							</div>
+							<div v-else class="running">
+								En cours d'analyse
+								<v-icon>mdi-sync</v-icon>
 							</div>
 						</div>
 					</div>
@@ -155,7 +204,7 @@
 			</div>
 		</popup>
 
-		<editor-test ref="editorTest" v-model="testDialog" :ais="ais" :leek-ais="leekAIs" />
+		<editor-test ref="editorTest" v-model="testDialog" :ais="fileSystem.ais" :leek-ais="fileSystem.leekAIs" />
 
 		<popup v-model="newAIDialog" :width="500">
 			<v-icon slot="icon">mdi-plus-circle-outline</v-icon>
@@ -198,10 +247,13 @@
 <script lang="ts">
 	import { locale } from '@/locale'
 	import { AI } from '@/model/ai'
+	import { mixins } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
+	import { fileSystem } from '@/model/filesystem'
 	import { Component, Vue, Watch } from 'vue-property-decorator'
 	import { Route } from 'vue-router'
 	import AIView from './ai-view.vue'
+	import Analyzer from './analyzer'
 	import EditorFolder from './editor-folder.vue'
 	import { AIItem, Folder, Item } from './editor-item'
 	const EditorTabs = () => import(/* webpackChunkName: "[request]" */ `@/component/editor/editor-tabs.${locale}.i18n`)
@@ -216,13 +268,10 @@
 
 	@Component({
 		name: 'editor', i18n: {},
-		components: { 'editor-folder': EditorFolder, 'ai-view': AIView, 'editor-test': EditorTest, 'editor-tabs': EditorTabs }
+		components: { 'editor-folder': EditorFolder, 'ai-view': AIView, 'editor-test': EditorTest, 'editor-tabs': EditorTabs },
+		mixins
 	})
 	export default class EditorPage extends Vue {
-		ais: {[key: number]: AI} = {}
-		folderById: {[key: number]: Folder} = {}
-		items: {[key: string]: AI | Folder} = {}
-		rootFolder: Folder | null = null
 		activeAIs: {[key: number]: AI} = {}
 		currentAI: AI | null = null
 		currentEditor: AIView | null = null
@@ -245,7 +294,6 @@
 		dragging: Item | null = null
 		selected: any = null
 		testDialog: boolean = false
-		leekAIs: any = {}
 		tabs: AI[] = []
 		panelWidth: number = 200
 		newAIDialog: boolean = false
@@ -253,6 +301,9 @@
 		newAIName: string = ''
 		newFolderDialog: boolean = false
 		newFolderName: string = ''
+		showProblemsDetails: boolean = true
+		fileSystem = fileSystem
+		problemsCollapsed: {[key: string]: boolean} = {}
 		actions_list = [
 			{icon: 'mdi-plus', click: (e: any) => this.add(e)},
 			{icon: 'mdi-cogs', click: () => this.settings() }
@@ -286,40 +337,11 @@
 			if (width) {
 				this.panelWidth = parseInt(width, 10)
 			}
+			LeekWars.analyzer.init()
 
-			LeekWars.get<{ais: AI[], folders: any[], leek_ais: {[key: number]: number}}>('ai/get-farmer-ais').then(data => {
-				const folders: {[key: number]: any} = {}
-				for (const folder of data.folders) {
-					folders[folder.id] = folder
-					this.items[folder.name] = folder
-				}
-				this.leekAIs = data.leek_ais
-				const buildFolder = (id: number, parent: Folder): Folder => {
-					const folder = new Folder(id, id in folders ? folders[id].name : '<root>', parent)
-					if (id === 0) {
-						folder.expanded = true
-					} else {
-						folder.expanded = localStorage.getItem('editor/folder/' + id) === 'true'
-					}
-					folder.items = data.folders
-						.filter((f: any) => f.folder === id)
-						.map((f: any) => buildFolder(f.id, folder))
-					folder.items.push(...(data.ais
-						.filter((ai: any) => ai.folder === id)
-						.map((ai: any) => new AIItem(ai, folder))
-					))
-					this.folderById[folder.id] = folder
-					return folder
-				}
-				this.rootFolder = buildFolder(0, this.rootFolder as Folder)
-				for (const ai of data.ais) {
-					ai.path = this.getAIFullPath(ai)
-					Vue.set(ai, 'modified', false)
-					Vue.set(this.ais, '' + ai.id, ai)
-					this.items[ai.name] = ai
-				}
+			fileSystem.init().then(() => {
 				this.update()
-				LeekWars.setTitle(this.$t('title'), this.$t('n_ais', [LeekWars.objectSize(data.ais)]))
+				LeekWars.setTitle(this.$t('title'), this.$t('n_ais', [fileSystem.aiCount]))
 			})
 		}
 		mounted() {
@@ -344,6 +366,16 @@
 			this.$root.$on('htmlclick', () => {
 				if (this.currentEditor) {
 					this.currentEditor.close()
+				}
+			})
+			this.$root.$on('keydown', (e: KeyboardEvent) => {
+				if (this.currentEditor) {
+					this.currentEditor.editorKeyDown(e)
+				}
+			})
+			this.$root.$on('keyup', (e: KeyboardEvent) => {
+				if (this.currentEditor) {
+					this.currentEditor.editorKeyUp(e)
 				}
 			})
 			this.$root.$on('back', () => {
@@ -378,15 +410,16 @@
 			}
 			return false
 		}
+
 		@Watch('$route.params.id')
 		update() {
 			if (this.$route.params.id) {
 				const id = parseInt(this.$route.params.id, 10)
-				if (id in this.ais) {
-					const ai = this.ais[id]
+				if (id in fileSystem.ais) {
+					const ai = fileSystem.ais[id]
 					this.currentAI = ai
 					this.currentType = 'ai'
-					this.currentFolder = this.folderById[ai.folder]
+					this.currentFolder = fileSystem.folderById[ai.folder]
 					localStorage.setItem('editor/last_code', '' + id)
 					if (!(id in this.activeAIs)) {
 						Vue.set(this.$data.activeAIs, ai.id, this.currentAI)
@@ -401,17 +434,17 @@
 					LeekWars.splitShowContent()
 					LeekWars.setActions(this.actions_content)
 				} else {
-					this.currentFolder = this.folderById[id]
+					this.currentFolder = fileSystem.folderById[id]
 					this.currentType = 'folder'
 					LeekWars.splitShowList()
 					LeekWars.setActions(this.actions_list)
 				}
 			} else if (!LeekWars.mobile) {
 				const lastCode = localStorage.getItem('editor/last_code')
-				if (lastCode && lastCode in this.ais) {
+				if (lastCode && lastCode in fileSystem.ais) {
 					this.$router.replace('/editor/' + localStorage.getItem('editor/last_code'))
-				} else if (LeekWars.objectSize(this.ais) > 0) {
-					this.$router.replace('/editor/' + LeekWars.firstKey(this.ais))
+				} else if (LeekWars.objectSize(fileSystem.ais) > 0) {
+					this.$router.replace('/editor/' + LeekWars.firstKey(fileSystem.ais))
 				} else {
 					this.$router.replace('/editor/0') // Go to root folder to be able to create a new AI
 				}
@@ -420,31 +453,22 @@
 				LeekWars.setActions(this.actions_list)
 			}
 		}
-		getAIFullPath(ai: AI) {
-			if (ai.folder > 0 && ai.folder in this.folderById) {
-				return this.getFolderPath(this.folderById[ai.folder]) + ai.name
-			}
-			return ai.name
-		}
-		getFolderPath(folder: Folder): string {
-			if (folder.parent && folder.parent.id !== 0) {
-				return this.getFolderPath(folder.parent) + folder.name + '/'
-			}
-			return folder.name + '/'
-		}
+
 		destroyed() {
 			this.$root.$off('ctrlS')
 			this.$root.$off('ctrlQ')
 			this.$root.$off('ctrlF')
 			this.$root.$off('escape')
 			this.$root.$off('htmlclick')
+			this.$root.$off('keydown')
+			this.$root.$off('keyup')
 			LeekWars.large = false
 			LeekWars.footer = true
 		}
 		beforeRouteLeave(to: Route, from: Route, next: Function) {
 			let num = 0
-			for (const i in this.ais) {
-				if (this.ais[i].modified) { num++ }
+			for (const i in fileSystem.ais) {
+				if (fileSystem.ais[i].modified) { num++ }
 			}
 			if (!next) { return num === 0 }
 			if (num > 0 && !window.confirm(this.$i18n.t('n_ais_unsaved', [num]) as string)) {
@@ -453,6 +477,7 @@
 				next()
 			}
 		}
+
 		save() {
 			if (!this.currentEditor) { return }
 			if (this.currentEditor.saving || !this.currentEditor.loaded) { return }
@@ -464,23 +489,21 @@
 			const saveID = this.currentEditor.id > 0 ? this.currentEditor.id : 0
 			const content = this.currentEditor.editor.getValue()
 
+			if (this.currentAI!.v2) {
+				this.currentEditor.analyze().then((result) => {
+					if (result) {
+						this.good = true
+						setTimeout(() => this.good = false, 800)
+					}
+				})
+			}
+
 			LeekWars.post('ai/save', {ai_id: saveID, code: content}).then(data => {
 				if (this.currentEditor === null) { return }
 				this.currentEditor.saving = false
 				if (this.currentEditor.ai.v2) {
-					const errors = data.result
-					if (this.currentEditor.overlay) {
-						this.currentEditor.editor.removeOverlay(this.currentEditor.overlay)
-					}
-					if (!errors || errors.length === 0) {
-						this.goods.push({ai: this.currentEditor.ai})
-						setTimeout(() => this.goods = [], 2000)
-						this.currentEditor.ai.valid = true
-						this.currentEditor.error = false
-					} else {
-						this.currentEditor.addErrorOverlay(errors)
-					}
-				} else {
+					//
+				} else {
 					if (!data.result || data.result.length === 0) {
 						this.currentEditor.serverError = true
 						return
@@ -489,7 +512,7 @@
 					this.goods = []
 					for (const res of data.result) {
 						const code = res[0]
-						const ai = this.ais[res[1]]
+						const ai = fileSystem.ais[res[1]]
 						const ai_name = ai ? ai.name : 'AI #' + res[1]
 						const editor = (this.$refs.editors as AIView[]).find(e => e.ai === ai)
 						if (code === 2) {
@@ -556,10 +579,8 @@
 					ai.valid = true
 					ai.v2 = v2
 					ai.name = name
-					ai.path = this.getAIFullPath(ai)
-					this.currentFolder.items.push(new AIItem(ai, this.currentFolder))
+					fileSystem.add_ai(ai, this.currentFolder)
 					this.currentFolder.expanded = true
-					Vue.set(this.ais, ai.id, ai)
 					this.$store.commit('add-ai', ai)
 					this.$router.push('/editor/' + ai.id)
 					this.newAIDialog = false
@@ -575,8 +596,7 @@
 				if (this.currentFolder) {
 					const folder = new Folder(data.id, name, this.currentFolder)
 					folder.items = []
-					this.folderById[folder.id] = folder
-					this.currentFolder.items.push(folder)
+					fileSystem.add_folder(folder, this.currentFolder)
 					this.newFolderDialog = false
 					this.newFolderName = ''
 				}
@@ -592,7 +612,7 @@
 			LeekWars.delete(url, args).then(data => {
 				let ai_deleted = false
 				if (this.currentType === 'ai' && this.currentAI) {
-					const folder = this.folderById[this.currentAI.folder]
+					const folder = fileSystem.folderById[this.currentAI.folder]
 					folder.items.splice(folder.items.findIndex((i) => !i.folder && (i as AIItem).ai === this.currentAI), 1)
 					Vue.delete(this.$data.ais, '' + this.currentID)
 					Vue.delete(this.$data.activeAIs, '' + this.currentID)
@@ -607,8 +627,8 @@
 					folder.items.splice(folder.items.indexOf(this.currentFolder), 1)
 				}
 				if (ai_deleted) {
-					if (!LeekWars.isEmptyObj(this.ais)) {
-						this.$router.replace('/editor/' + LeekWars.firstKey(this.ais))
+					if (!LeekWars.isEmptyObj(fileSystem.ais)) {
+						this.$router.replace('/editor/' + LeekWars.firstKey(fileSystem.ais))
 					} else {
 						this.$router.replace('/editor')
 					}
@@ -661,14 +681,23 @@
 			LeekWars.large = this.enlargeWindow
 			localStorage.setItem('editor/large', '' + this.enlargeWindow)
 		}
+
+		getAiView(ai: AI) {
+			return (this.$refs.editors as AIView[]).find(e => e.ai === ai)
+		}
+
 		jump(ai: AI, line: number) {
 			if (ai !== this.currentAI) {
 				this.$router.push('/editor/' + ai.id)
 			}
 			Vue.nextTick(() => {
-				const editor = (this.$refs.editors as AIView[]).find(e => e.ai === ai)
+				const editor = this.getAiView(ai)
 				if (editor) { editor.scrollToLine(line - 1) }
 			})
+		}
+		jumpProblem(path: string, problem: any) {
+			const ai = fileSystem.aiByFullPath[path]
+			this.jump(ai, problem[0])
 		}
 		load(ai: AI) {
 			if (!(ai.id in this.activeAIs)) {
@@ -695,6 +724,31 @@
 			document.documentElement!.addEventListener('mouseup', mouseup, false)
 			e.preventDefault()
 		}
+
+		toggleProblemFile(ai: string) {
+			Vue.set(this.problemsCollapsed, ai, !this.problemsCollapsed[ai])
+		}
+
+		problems(problems: any) {
+			for (const ai in problems) {
+
+				const errors = problems[ai]
+				const editor = this.getAiView(fileSystem.aiByFullPath[ai])
+				if (!editor) { continue }
+
+				// console.log("errors", errors)
+				editor.addErrorOverlay(errors)
+				// if (!errors || errors.length === 0) {
+				// 	this.ai.valid = true
+				// 	this.error = false
+				// 	this.errors = []
+				// 	return true
+				// } else {
+				// 	this.addErrorOverlay(errors)
+				// 	return false
+				// }
+			}
+		}
 	}
 </script>
 
@@ -710,12 +764,6 @@
 	}
 	#app.app .panel {
 		margin-bottom: 0;
-	}
-	.editor-left > .full {
-		padding: 0;
-		display: flex;
-		flex-direction: column;
-		height: 100%;
 	}
 	.ai-list {
 		overflow-y: auto;
@@ -791,14 +839,9 @@
 		font-size: 14px;
 	}
 	.editors {
-		height: calc(100vh - 140px);
 		padding: 0;
-	}
-	.editors.tabs {
-		height: calc(100vh - 175px);
-	}
-	#app.app .editors {
-		height: calc(100vh - 56px);
+		min-height: 0;
+		flex: 1;
 	}
 	.popup.input_popup input {
 		width: 90%;
@@ -847,12 +890,12 @@
 	}
 	.editor-left {
 		height: calc(100vh - 140px);
+		padding: 0;
+		display: flex;
+		flex-direction: column;
 	}
 	#app.app .editor-left {
 		height: calc(100vh - 56px);
-	}
-	.column9 {
-		position: relative;
 	}
 	#app.app .column9 .content {
 		height: calc(100vh - 56px);
@@ -896,5 +939,118 @@
 	}
 	.shortcuts {
 		padding-left: 30px;
+	}
+
+	.problems-details {
+		flex: 0 0 25%;
+		background: white;
+		border-top: 1px solid #ddd;
+		overflow-y: auto;
+		.v-icon {
+			font-size: 20px;
+		}
+		.file {
+			display: flex;
+			align-items: center;
+			padding: 5px 0;
+			cursor: pointer;
+			user-select: none;
+			&:hover {
+				background: #eee;
+			}
+			.count {
+				padding: 1px 6px;
+				margin-left: 5px;
+				border-radius: 10px;
+				font-size: 13px;
+				border: 1px solid #777;
+				color: black;
+				font-weight: 500;
+			}
+		}
+		.problem {
+			display: flex;
+			align-items: center;
+			padding: 5px 0;
+			padding-left: 20px;
+			cursor: pointer;
+			&:hover {
+				background: #eee;
+			}
+			.line {
+				padding-left: 6px;
+				color: #999;
+				user-select: none;
+			}
+		}
+		.error {
+			color: red;
+			margin-right: 4px;
+		}
+		.warning {
+			color: orange;
+			margin-right: 4px;
+		}
+	}
+	.status {
+		flex: 0 0 36px;
+		display: flex;
+		align-items: center;
+		border-top: 1px solid #ddd;
+		.problems {
+			height: 100%;
+			line-height: 36px;
+			padding: 0 10px;
+			cursor: pointer;
+			i {
+				font-size: 17px;
+				margin-bottom: 3px;
+			}
+			.no-error {
+				color: #5fad1b;
+			}
+			.errors {
+				color: red;
+				margin-right: 5px;
+			}
+			.warnings {
+				color: rgb(255, 102, 0);
+			}
+		}
+		.filler {
+			flex: 1;
+		}
+		.state {
+			height: 100%;
+			padding: 0 6px;
+			& > * {
+				height: 100%;
+				display: flex;
+				align-items: center;
+				i {
+					margin-left: 3px;
+				}
+			}
+			.ready {
+				color: #5fad1b;
+			}
+			.running {
+				color: #0084a8;
+			}
+			.running i {
+				animation: rotate 0.8s linear infinite;
+			}
+			@keyframes rotate {
+				0% {
+					transform: rotate(0);
+				}
+				100% {
+					transform: rotate(-360deg);
+				}
+			}
+			.crashed {
+				color: red;
+			}
+		}
 	}
 </style>

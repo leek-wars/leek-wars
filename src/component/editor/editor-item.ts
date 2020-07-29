@@ -3,7 +3,7 @@ import { AI } from '@/model/ai'
 class Item {
 	public name!: string
 	public folder: boolean = false
-	public parent: Folder
+	public parent!: Folder
 	constructor(parent: Folder) {
 		this.parent = parent
 	}
@@ -13,6 +13,7 @@ class AIItem extends Item {
 	constructor(ai: AI, parent: Folder) {
 		super(parent)
 		this.ai = ai
+		this.name = ai.name
 	}
 }
 class Folder extends Item {
