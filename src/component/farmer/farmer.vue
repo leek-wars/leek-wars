@@ -468,7 +468,7 @@
 		createTeamDialog: boolean = false
 		createTeamName: string = ''
 		reportDialog: boolean = false
-		reasons = [Warning.INCORRECT_FARMER_NAME, Warning.INCORRECT_AVATAR]
+		reasons = [Warning.INCORRECT_FARMER_NAME, Warning.INCORRECT_AVATAR, Warning.INCORRECT_WEBSITE]
 		websiteDialog: boolean = false
 		newWebsite: string = ''
 		githubDialog: boolean = false
