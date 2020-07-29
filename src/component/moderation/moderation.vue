@@ -96,6 +96,9 @@
 							<div v-else-if="selectedFault.reason === Warning.INCORRECT_AI_NAME">
 								IA #{{ selectedFault.parameter }} : <b>{{ selectedFault.data }}</b>
 							</div>
+							<div v-else-if="selectedFault.reason === Warning.INCORRECT_WEBSITE">
+								Site web : <b>{{ selectedFault.data }}</b>
+							</div>
 							<div v-else-if="selectedFault.reason === Warning.FLOOD_CHAT || selectedFault.reason === Warning.RUDE_CHAT">
 								Message : {{ selectedFault.parameter }}
 							</div>
@@ -171,6 +174,7 @@
 		get reasons() {
 			const reasons = [
 				Warning.INCORRECT_FARMER_NAME,
+				Warning.INCORRECT_WEBSITE,
 				Warning.RUDE_SAY,
 				Warning.RUDE_FORUM,
 				Warning.RUDE_CHAT,
