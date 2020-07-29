@@ -77,10 +77,10 @@ class Desert extends Map {
 class Factory extends Map {
 	constructor(game: Game) {
 		super(game, S.map_factory, "#8C8C8C", T.factory,
-			[T.box, T.barrel, T.factory_cone],
+			[T.box, T.barrel, T.cone],
 			[T.big_box, T.big_box, T.cone_big])
 		T.barrel.offset = 1.0
-		T.factory_cone.offset = 1.15
+		T.cone.offset = 1.15
 		T.box.offset = 1.2
 	}
 }

@@ -163,7 +163,7 @@ class T {
 	public static ice = new Texture(env.STATIC + 'image/map/ice.png', true, 1)
 	public static ice_small = new Texture(env.STATIC + 'image/map/ice_small.png', true, 1)
 	public static barrel = new Texture(env.STATIC + 'image/map/barrel.png', true, 1)
-	public static factory_cone = new Texture(env.STATIC + 'image/map/factory_cone.png', true, 1)
+	public static cone = new Texture(env.STATIC + 'image/map/cone.png', true, 1)
 	public static cone_big = new Texture(env.STATIC + 'image/map/cone_big.png', true, 1)
 	public static fire = new Texture(env.STATIC + 'image/weapon/fire.png')
 	public static gaz = new Texture(env.STATIC + 'image/weapon/gaz.png')
