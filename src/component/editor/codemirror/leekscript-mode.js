@@ -17,6 +17,7 @@ CodeMirror.defineMode('leekscript', (config, modeOptions) => {
 		var jsKeywords = {
 			"if": kw('if'), "while": A, "else": B, "do": B,
 			"return": C, "break": C, "continue": C, "and": kw('and'), "or": kw('or'), "xor": kw('xor'), "not": kw('not'), "is": kw('is'),
+			"&&": kw('&&'),
 			"for": kw('for'), "in": kw('operator'),
 			"var": variableDeclaration, "global": variableDeclaration, "function": functionDeclaration,
 			"true": atom, "false": atom, "null": atom
@@ -98,7 +99,7 @@ CodeMirror.defineMode('leekscript', (config, modeOptions) => {
 		else {
 			stream.eatWhile(/[\w\$_]/);
 			var word = stream.current(), known = keywords.propertyIsEnumerable(word) && keywords[word];
-        
+
 			if (state.lastType == "function") {
 				return ret("variable", "function", word);
 			}
@@ -107,7 +108,7 @@ CodeMirror.defineMode('leekscript', (config, modeOptions) => {
 				return ret(known.type, known.style, word);
 			} else {
 				return ret("variable", "variable", word);
-			}   
+			}
 		}
 	}
 

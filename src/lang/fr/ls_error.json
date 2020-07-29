@@ -1,0 +1,34 @@
+{
+	"UNKNOWN_ERROR": "Erreur inconnue",
+	"ANALYZER_CRASHED": "Désolé, l'analyseur LeekScript (bêta) a planté et n'a pas pu analyser cette IA",
+
+	"UNTERMINATED_STRING": "Chaîne de caractère non terminée",
+    "UNKNOWN_ESCAPE_SEQUENCE": "Séquence d'échappement inconnue",
+    "NUMBER_INVALID_REPRESENTATION": "Représentation invalide de nombre",
+
+    "BLOCK_NOT_CLOSED": "Un bloc n'est pas fermé",
+    "BREAK_LEVEL_ZERO": "L'instruction « break » doit se trouver dans une boucle",
+    "CONTINUE_LEVEL_ZERO": "L'instruction « continue » doit se trouver dans une boucle",
+    "EXPECTED_VALUE": "Une valeur est attendue",
+	"UNEXPECTED_TOKEN": "Caractères inattendus « {0} »",
+	"NO_SUCH_FILE" : "Le fichier « {0} » n'existe pas",
+
+	"UNDEFINED_VARIABLE" : "Variable « {0} » non déclarée",
+	"VARIABLE_ALREADY_DEFINED" : "Variable « {0} » déjà définie",
+	"METHOD_NOT_FOUND" : "Cette méthode « {0} » n'existe pas",
+	"STATIC_METHOD_NOT_FOUND" : "Cette méthode statique « {0} » n'existe pas",
+	"CANT_ASSIGN_VOID" : "Impossible d'assigner une valeur void à la variable « {0} »",
+	"CANNOT_CALL_VALUE" : "Impossible d'appeller l'expression « {0} », elle n'est pas une fonction ou une classe",
+	"BREAK_MUST_BE_IN_LOOP" : "L'instruction « break » doit se trouver à l'intérieur d'une boucle",
+	"CONTINUE_MUST_BE_IN_LOOP" : "L'instruction « continue » doit se trouver à l'intérieur d'une boucle",
+	"ARRAY_ACCESS_KEY_MUST_BE_NUMBER" : "Cette clé « {0} » d'accès au tableau « {1} » doit être un nombre, mais est de type {2}",
+	"ARRAY_ACCESS_RANGE_KEY_MUST_BE_NUMBER" : "Cette clé d'accès de plage au tableau « {0} » doit être un nombre",
+	"VALUE_MUST_BE_A_LVALUE" : "Cette valeur « {0} » doit être une l-value",
+	"WRONG_ARGUMENT_COUNT" : "La fonction « {0} » prend {1} paramètre(s), mais {2} sont passés",
+	"NO_SUCH_OPERATOR" : "L'opérateur {0} {1} {2} n'est pas défini",
+	"CANT_MODIFY_CONSTANT_VALUE": "Cette valeur « {0} » est constante, impossible de la modifier",
+	"VALUE_NOT_ITERABLE" : "Cette valeur « {0} » de type {1} n'est pas itérable",
+	"INVALID_MAP_KEY": "Cette clé « {0} » d'accès à la map « {1} » doit être un nombre, mais est de type {2}",
+	"NO_SUCH_ATTRIBUTE": "L'attribut « {0} » n'existe pas dans la classe {1}",
+	"VALUE_MUST_BE_A_CONTAINER": "Cette valeur « {0} » doit être un conteneur"
+}

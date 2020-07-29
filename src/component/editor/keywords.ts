@@ -15,6 +15,8 @@ class Keyword {
 	shortcut?: number
 	function?: Function
 	constant?: Constant
+	lstype?: any
+	location?: any
 }
 
 function generateKeywords() {

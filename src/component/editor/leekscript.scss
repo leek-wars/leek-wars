@@ -52,7 +52,28 @@
 	padding: 3px 0;
 }
 .cm-highlight-error {
-	background: #ff9e9e;
+	background: rgba(255, 0, 0, 0.15);
+	padding: 3px 0;
+	position: relative;
+}
+.cm-highlight-error:after {
+	position: absolute;
+	top: 0;
+	bottom: -3px;
+	left: 0;
+	right: 0;
+	content: "";
+	width: 100%;
+	background-image: url("/image/squiggle.gif");
+	background-repeat: repeat-x;
+	background-position: left bottom;
+}
+.cm-highlight-warning {
+	background: #ffdd9f;
+	padding: 3px 0;
+}
+.cm-hover {
+	background: rgb(207, 255, 166);
 	padding: 3px 0;
 }
 div.CodeMirror span.CodeMirror-matchingbracket {
@@ -64,7 +85,19 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {
 	font-weight: bold;
 }
 .cm-underlined {
-	text-decoration: underline;
+	color: #407710;
+	position: relative;
+	padding: 3px 0;
+}
+.cm-underlined:after {
+	position: absolute;
+	top: 0;
+	bottom: 0px;
+	left: 0;
+	right: 0;
+	content: "";
+	width: 100%;
+	border-bottom: 1.5px solid #407710;
 }
 .CodeMirror-foldmarker {
 	color: blue;
@@ -84,4 +117,8 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {
 }
 .CodeMirror-foldgutter-folded:after {
 	content: "\25B8";
+}
+
+.cm-s-leekwars {
+	div.CodeMirror-selected { background: #ddd; }
 }

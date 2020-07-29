@@ -3,3 +3,6 @@ package-lock.json
 node_modules
 .vscode/
 src/report.json
+public/analyzer.js
+public/analyzer.wasm
+public/analyzer.wasm.map

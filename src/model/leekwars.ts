@@ -1,4 +1,5 @@
 import packageJson from '@/../package.json'
+import Analyzer from '@/component/editor/analyzer'
 import { Keyword } from '@/component/editor/keywords'
 import { env } from '@/env'
 import { BattleRoyale } from '@/model/battle-royale'
@@ -202,6 +203,7 @@ const LeekWars = {
 	skins: Object.freeze(SKINS),
 	leekSizes: Object.freeze(LEEK_SIZES),
 	hatSizes: Object.freeze(HAT_SIZES),
+	analyzer: new Analyzer(),
 	getLeekSkinName: (skin: number) => {
 		if (!(skin in SKINS)) { return SKINS[1] }
 		return SKINS[skin]

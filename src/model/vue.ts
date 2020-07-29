@@ -8,7 +8,7 @@ import Panel from '@/component/app/panel.vue'
 import Avatar from '@/component/avatar.vue'
 import ChatElement from '@/component/chat/chat.vue'
 import Comments from '@/component/comment/comments.vue'
-import '@/component/editor/leekscript.css'
+import '@/component/editor/leekscript.scss'
 import Emblem from '@/component/emblem.vue'
 import FormattingRules from '@/component/forum/formatting-rules.vue'
 import FightHistory from '@/component/history/fight-history.vue'
@@ -21,6 +21,7 @@ import ReportDialog from '@/component/moderation/report-dialog.vue'
 import NotificationElement from '@/component/notifications/notification.vue'
 import Pagination from '@/component/pagination.vue'
 import Popup from '@/component/popup.vue'
+import Type from '@/component/type.vue'
 import RichTooltipChip from '@/component/rich-tooltip/rich-tooltip-chip.vue'
 import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 import RichTooltipLeek from '@/component/rich-tooltip/rich-tooltip-leek.vue'
@@ -95,6 +96,7 @@ Vue.component('rich-tooltip-chip', RichTooltipChip)
 Vue.component('loader', LWLoader)
 Vue.component('lw-title', LWTitle)
 Vue.component('title-picker', TitlePicker)
+Vue.component('lw-type', Type)
 
 Vue.directive('autostopscroll', {
 	inserted: (el, binding) => {

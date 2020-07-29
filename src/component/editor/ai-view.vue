@@ -1,5 +1,5 @@
 <template>
-	<div v-show="visible" class="ai" @mousemove="mousemove" @mouseleave="mouseleave" @keyup="editorKeyUp" @keydown="editorKeyDown">
+	<div v-show="visible" class="ai" @mousemove="mousemove" @mouseleave="mouseleave">
 		<div v-show="!loading" ref="codemirror" :style="{'font-size': fontSize + 'px', 'line-height': lineHeight + 'px'}" :class="{search: searchEnabled}" class="codemirror"></div>
 		<div v-show="searchEnabled" class="search-panel">
 			<v-icon>mdi-magnify</v-icon>
@@ -9,8 +9,18 @@
 			<v-icon class="arrow" @click="searchNext">mdi-chevron-right</v-icon>
 		</div>
 		<div v-show="hintDialog" ref="hintDialog" :style="{left: hintDialogLeft + 'px', top: hintDialogTop + 'px'}" class="hint-dialog">
+			<div v-if="completionType" class="type">
+				<lw-type :type="completionType" />
+			</div>
 			<div ref="hints" class="hints">
-				<div v-for="(hint, index) of hints" :key="hint.fullName" :class="{active: selectedCompletion === index}" class="hint" @click="clickHint($event, index)">{{ hint.fullName }}</div>
+				<div v-for="(hint, index) of hints" :key="index" :class="{active: selectedCompletion === index}" class="hint" @click="clickHint($event, index)">
+					<v-icon v-if="hint.category === 0" class="function">mdi-alpha-m-circle-outline</v-icon>
+					<v-icon v-else-if="hint.category === 1" class="field">mdi-cube-outline</v-icon>
+					<v-icon v-else class="variable">mdi-variable-box</v-icon>
+					<!-- <v-icon v-else class="variable">mdi-function</v-icon> -->
+					{{ hint.fullName }}
+					<lw-type :type="hint.lstype" />
+				</div>
 			</div>
 			<div v-if="selectedHint" class="details">
 				<documentation-function v-if="selectedHint.type === 'function'" :fun="selectedHint.function" />
@@ -20,14 +30,27 @@
 				<span v-else v-html="selectedHint.details"></span>
 			</div>
 		</div>
-		<div v-show="detailDialog" v-if="detailDialogContent" ref="detailDialog" :style="{left: detailDialogLeft + 'px', top: detailDialogTop + 'px'}" class="detail-dialog">
-			<documentation-function v-if="detailDialogContent.type === 'function'" :fun="detailDialogContent.function" />
-			<documentation-constant v-else-if="detailDialogContent.type === 'constant'" :constant="detailDialogContent.constant" />
-			<weapon-preview v-else-if="detailDialogContent.details.type === 'weapon'" :weapon="detailDialogContent.details.weapon" />
-			<chip-preview v-else-if="detailDialogContent.details.type === 'chip'" :chip="detailDialogContent.details.chip" />
-			<span v-else v-html="detailDialogContent.details"></span>
+		<div v-show="detailDialog" v-if="detailDialogContent" ref="detailDialog" :style="{left: detailDialogLeft + 'px', bottom: detailDialogTop + 'px'}" class="detail-dialog">
+			<template v-if="detailDialogContent.keyword">
+				<documentation-function v-if="detailDialogContent.keyword.type === 'function'" :fun="detailDialogContent.keyword.function" />
+				<documentation-constant v-else-if="detailDialogContent.keyword.type === 'constant'" :constant="detailDialogContent.keyword.constant" />
+				<weapon-preview v-else-if="detailDialogContent.keyword.details.type === 'weapon'" :weapon="detailDialogContent.keyword.details.weapon" />
+				<chip-preview v-else-if="detailDialogContent.keyword.details.type === 'chip'" :chip="detailDialogContent.keyword.details.chip" />
+				<div class="divider"></div>
+			</template>
+			<template v-if="detailDialogContent.details.defined">
+				<i18n path="leekscript.defined_in">
+					<b slot="0">{{ detailDialogContent.details.defined[0] }}</b>
+					<b slot="1">{{ detailDialogContent.details.defined[1] }}</b>
+				</i18n>
+				<div class="divider"></div>
+			</template>
+			<lw-type v-if="detailDialogContent.details.type" :type="detailDialogContent.details.type" />
+			<template v-if="errorTooltip">
+				<div class="divider"></div>
+				<div class="error"><v-icon class="error">mdi-close-circle-outline</v-icon> {{ errorTooltipText }}</div>
+			</template>
 		</div>
-		<div v-show="errorTooltip" ref="tooltip" :style="{left: errorTooltipLeft + 'px', top: errorTooltipTop + 'px'}" class="error-tooltip">{{ errorTooltipText }}</div>
 		<loader v-if="loading" />
 	</div>
 </template>
@@ -43,6 +66,7 @@
 	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 	import DocumentationConstant from '../documentation/documentation-constant.vue'
 	import DocumentationFunction from '../documentation/documentation-function.vue'
+	import { fileSystem } from '@/model/filesystem'
 
 	const AUTO_SHORTCUTS = [
 		["lama", "#LamaSwag", "", "Le pouvoir du lama"],
@@ -106,17 +130,20 @@
 		public hintDialogLeft: number = 0
 		public hints: Keyword[] = []
 		public selectedHint: Keyword | null = null
+		public completionType: any = null
 		public details: string[] = []
 		public detailDialog: boolean = false
 		public detailDialogContent: any = null
 		public detailDialogTop: number = 0
 		public detailDialogLeft: number = 0
-		public overlay: any = null
+		public detailStart: number = 0
+		public detailEnd: number = 0
+		public searchOverlay: any = null
+		public hoverOverlay: any = null
+		public errorOverlay: any = null
 		public errors!: any[]
 		public errorTooltip: boolean = false
 		public errorTooltipText: string = ''
-		public errorTooltipTop: number = 0
-		public errorTooltipLeft: number = 0
 		public searchEnabled: boolean = false
 		public searchCurrent: number = 0
 		public searchQuery: string = ''
@@ -124,7 +151,11 @@
 		public underlineMarker: CodeMirror.TextMarker | null = null
 		public mouseX: number = -1
 		public mouseY: number = -1
-		public ctrl: boolean = false
+		private analyzerTimeout: any
+		private hoverPosition: number = -1
+		private codemirror!: any
+		private hoverData!: any
+		private ctrl: boolean = false
 
 		created() {
 			this.id = this.ai.id
@@ -133,6 +164,7 @@
 		mounted() {
 			const codeMirrorElement = this.$refs.codemirror as any
 			import(/* webpackChunkName: "codemirror" */ "@/codemirror-wrapper").then(wrapper => {
+				this.codemirror = wrapper.CodeMirror
 				this.editor = wrapper.CodeMirror(codeMirrorElement, {
 					value: "",
 					mode: this.ai.v2 ? "leekscript-v2" : "leekscript",
@@ -187,14 +219,11 @@
 			}
 		}
 		public editorMousedown(editor: CodeMirror.Editor, e: MouseEvent) {
-			if (e.ctrlKey) {
-				const pos = this.editor.coordsChar({left: e.pageX, top: e.pageY }, "page")
-				const token = this.editor.getTokenAt(pos)
-				const keyword = this.getTokenInformation(token.string, pos)
-				if (keyword && keyword.type === 'user-function') {
-					this.detailDialog = false
-					this.$emit('jump', keyword.ai, keyword.line)
-				}
+			if (e.ctrlKey && this.hoverData && this.hoverData.defined) {
+				this.detailDialog = false
+				const ai = fileSystem.aiByFullPath[this.hoverData.defined[0]]
+				this.$emit('jump', ai, this.hoverData.defined[1])
+				this.ctrl = false
 				e.preventDefault()
 			}
 		}
@@ -221,10 +250,10 @@
 				this.loading = true
 				LeekWars.get('ai/get/' + this.id).then(data => {
 					this.ai.code = data.ai.code
+					this.updateIncludes()
 					this.editor.setValue(this.ai.code)
 					this.editor.getDoc().clearHistory()
 					this.editor.refresh()
-					this.updateIncludes()
 					this.updateFunctions()
 					this.loaded = true
 					this.loading = false
@@ -238,15 +267,15 @@
 			}
 		}
 		public showError(line: number) {
-			const codemirror = this.$refs.codemirror as HTMLElement
-			const l = codemirror.querySelectorAll('.CodeMirror-lines .CodeMirror-code > div')[line - 1].querySelector('pre')
-			if (l) { l.classList.add('line-error') }
+			// const codemirror = this.$refs.codemirror as HTMLElement
+			// const l = codemirror.querySelectorAll('.CodeMirror-lines .CodeMirror-code > div')[line - 1].querySelector('pre')
+			// if (l) { l.classList.add('line-error') }
 		}
 		public removeErrors() {
-			const codemirror = this.$refs.codemirror as HTMLElement
-			codemirror.querySelectorAll('.line-error').forEach((line: any) => {
-				line.classList.remove('line-error')
-			})
+			// const codemirror = this.$refs.codemirror as HTMLElement
+			// codemirror.querySelectorAll('.line-error').forEach((line: any) => {
+			// 	line.classList.remove('line-error')
+			// })
 		}
 		public cursorChange() {
 			const cursor = this.document.getCursor()
@@ -259,45 +288,89 @@
 			if (this.activeLine) { this.editor.removeLineClass(this.activeLine, "background", "activeline") }
 			this.activeLine = this.editor.addLineClass(cursor.line, "background", "activeline")
 		}
+
 		public addErrorOverlay(errors: any) {
+			if (this.errorOverlay) {
+				this.editor.removeOverlay(this.errorOverlay)
+				this.errorOverlay = null
+			}
 			this.errors = errors
-			let current = 0
+			if (this.errors.length === 0) { return }
 			let error = errors[0]
-			const overlay = {token: (stream: any) => {
-				const lineNo = stream.lineOracle.line + 1
-				while (error[0] < lineNo && current < this.errors.length - 1) {
-					error = this.errors[++current]
-				}
-				if (error[0] !== lineNo) {
+			let error_by_line = {} as any
+			for (const error of errors) {
+				if (!(error[0] in error_by_line)) { error_by_line[error[0]] = [] }
+				error_by_line[error[0]].push([error[1], error[3]])
+			}
+			// console.log(error_by_line)
+			const overlay = { token: function(stream: any) {
+				const line = stream.lineOracle.line + 1
+				const pos = stream.pos
+				if (line in error_by_line) {
+					// console.log("line", line, pos, error_by_line[line])
+					for (const error of error_by_line[line]) {
+						if (pos == error[0]) {
+							let len = Math.max(1, error[1] - error[0])
+							stream.eatWhile(() => len-- >= 0)
+							return "highlight-error"
+						}
+						if (pos <= error[1]) {
+							let len = error[0] - pos
+							stream.eatWhile(() => len-- > 0)
+							return null
+						}
+					}
 					stream.skipToEnd()
 				} else {
-					if (stream.start === error[1]) {
-						let len = Math.max(1, error[3] - error[1] - 1)
-						stream.eatWhile(() => len-- > 0)
-						while (error[0] === lineNo && error[1] <= stream.start && current < this.errors.length - 1) {
-							error = this.errors[++current]
-						}
-						return "highlight-error"
-					} else {
-						stream.next()
-					}
+					stream.skipToEnd()
 				}
 			}}
-			this.overlay = overlay
-			this.editor.addOverlay(overlay)
+			this.errorOverlay = overlay
+			this.editor.addOverlay(overlay, {priority: 12})
 			this.error = true
 		}
+
+		setAnalyzerTimeout() {
+			// this.analyze()
+			clearTimeout(this.analyzerTimeout)
+			this.analyzerTimeout = setTimeout(() => {
+				this.analyze()
+			}, 40)
+		}
+
+		analyze() {
+			const content = this.editor.getValue()
+			return LeekWars.analyzer.analyze(this.ai, this.editor.getDoc().getValue()).then((problems) => {
+				this.$emit('problems', problems)
+			})
+			.catch(() => {
+				if (this.errorOverlay) {
+					this.editor.removeOverlay(this.errorOverlay)
+					this.errorOverlay = null
+				}
+			})
+		}
+
 		public change(CodeMirror: any, changes: CodeMirror.EditorChange) {
 			const userChange = changes.origin === "+input" || changes.origin === "+delete"
 			if (changes.origin !== "setValue") {
 				this.hasBeenModified()
 			}
 			if (changes.origin === "+input" || (this.hintDialog && changes.origin === "+delete")) {
-				this.autocomplete(CodeMirror)
+				// console.log(changes)
+				if (changes.text.length === 1) { // One line of changes (no enter)
+					this.autocomplete(CodeMirror)
+				}
 			}
 			this.lines = this.editor.getDoc().lineCount()
 			this.characters = this.editor.getDoc().getValue().length
 			LeekWars.setSubTitle(this.$i18n.tc('main.n_lines', this.lines))
+
+			if (changes.origin === "setValue") {
+				this.analyze()
+			} else {
+				this.setAnalyzerTimeout()
+			}
 
 			if (userChange && this.autoClosing) {
 
@@ -477,6 +550,7 @@
 			this.mouseY = e.pageY
 			this.updateMouseAndCtrl()
 		}
+
 		public updateMouseAndCtrl() {
 			if (!this.popups || !this.editor) { return null }
 			if (this.hintDialog) { return null }
@@ -485,58 +559,127 @@
 				this.removeUnderlineMarker()
 			}
 
-			const pos = {left: this.mouseX, top: this.mouseY}
-			const codemirror = this.$refs.codemirror as HTMLElement
-			if (pos.left < codemirror.getBoundingClientRect().left || pos.top < codemirror.getBoundingClientRect().top) {
-				clearTimeout(this.detailTimer)
-				this.detailDialog = false
-				return
-			}
-			const editorPos = this.editor.coordsChar(pos, "page")
+			const pos = {left: this.mouseX - 4, top: this.mouseY}
+			const editorPos = this.editor.coordsChar(pos, "window")
+			const editorPos2 = {line: editorPos.line, ch: editorPos.ch + 1}
+			const token = this.editor.getTokenAt(editorPos2, true)
+			// console.log("token", token)
 
-			// Display error?
-			const tooltip = this.$refs.tooltip
-			let shown = false
-			for (const er in this.errors) {
-				const error = this.errors[er]
-				if (error[0] === editorPos.line + 1 && error[1] <= editorPos.ch && error[3] > editorPos.ch) {
-					const p = this.editor.cursorCoords({line: editorPos.line, ch: error[1]})
-					this.errorTooltipText = error[4]
-					this.errorTooltipTop = p.bottom - codemirror.getBoundingClientRect().top - 3
-					this.errorTooltipLeft = p.left - codemirror.getBoundingClientRect().left - 2
-					this.errorTooltip = true
-					shown = true
-					break
-				}
+			// Underline
+			if (this.ctrl && this.hoverData && this.hoverData.defined) {
+				if (this.underlineMarker) { this.underlineMarker.clear() }
+				this.underlineMarker = this.editor.getDoc().markText({line: editorPos.line, ch: token.start}, {line: editorPos.line, ch: token.end}, {className: 'cm-underlined'})
+				this.togglePointerCursor(true)
+			} else {
+				this.removeUnderlineMarker()
 			}
-			if (!shown) { this.errorTooltip = false }
-			const token = this.editor.getTokenAt(editorPos)
-			const tokenString = token.string
 
-			if (tokenString !== this.hoverToken || this.ctrl !== !!this.underlineMarker) {
-				this.hoverToken = tokenString
-				const keyword = this.getTokenInformation(tokenString, editorPos)
-				if (keyword) {
-					if (this.ctrl) {
-						if (this.underlineMarker) { this.underlineMarker.clear() }
-						this.underlineMarker = this.editor.getDoc().markText({line: editorPos.line, ch: token.start}, {line: editorPos.line, ch: token.end}, {className: 'cm-underlined'})
-						this.togglePointerCursor(true)
-					}
-					clearTimeout(this.detailTimer)
-					this.detailTimer = setTimeout(() => {
-						this.detailDialogContent = keyword
-						const p = this.editor.cursorCoords(editorPos)
-						this.detailDialogTop = p.bottom - codemirror.getBoundingClientRect().top
-						this.detailDialogLeft = this.mouseX - codemirror.getBoundingClientRect().left
-						this.detailDialog = true
-					}, 400)
-				} else {
+			const position = this.document.indexFromPos(editorPos)
+
+			// Leave the hover area?
+			if (this.hoverData) {
+				if (this.hoverPosition < this.hoverData.location[0][2] || this.hoverPosition > this.hoverData.location[1][2]) {
+					this.hoverData = null
 					this.removeUnderlineMarker()
-					clearTimeout(this.detailTimer)
+					if (this.hoverOverlay) {
+						this.editor.removeOverlay(this.hoverOverlay)
+						this.hoverOverlay = null
+					}
 					this.detailDialog = false
 				}
 			}
+			if (this.hoverPosition === position) {
+				return
+			}
+			this.hoverPosition = position
+
+			clearTimeout(this.detailTimer)
+			this.detailTimer = setTimeout(() => {
+
+				// console.log("hover at", position)
+				LeekWars.analyzer.hover(this.ai, position).then((raw_data) => {
+
+					// console.log(JSON.stringify(raw_data))
+					// console.log(raw_data.location[0], raw_data.location[1])
+					// console.log(raw_data)
+					const startPos = { ch: raw_data.location[0][1], line: raw_data.location[0][0] - 1 }
+
+					if (raw_data.location[0][2] && raw_data.location[1][2]) { // Not position [0:0]
+						this.hoverData = raw_data
+						const keyword = this.getTokenInformation(token.string, editorPos)
+						this.detailDialogContent = { details: raw_data, keyword }
+						const p = this.editor.cursorCoords(startPos, "page")
+						this.detailDialogTop = window.innerHeight - p.top
+						this.detailDialogLeft = p.left
+						this.detailDialog = true
+
+						const start_line = raw_data.location[0][0] - 1
+						const start_char = raw_data.location[0][1]
+						const end_line = raw_data.location[1][0] - 1
+						const end_char = raw_data.location[1][1]
+
+						const overlay = {token: (stream: any) => {
+							const lineNo = stream.lineOracle.line
+							if (lineNo >= start_line && lineNo <= end_line) {
+								if (lineNo === start_line) {
+									if (stream.pos < start_char) {
+										stream.next()
+										return
+									} else if (lineNo !== end_line || stream.pos <= end_char) {
+										stream.next()
+										return "hover"
+									}
+								} else if (lineNo === end_line && stream.pos <= end_char) {
+									stream.next()
+									return "hover"
+								} else {
+									stream.skipToEnd()
+									return "hover"
+								}
+							}
+							stream.skipToEnd()
+						}}
+						if (this.hoverOverlay) {
+							this.editor.removeOverlay(this.hoverOverlay)
+						}
+						this.hoverOverlay = overlay
+						this.editor.addOverlay(overlay)
+
+						// Display error?
+						const tooltip = this.$refs.tooltip
+						let shown = false
+						for (const er in this.errors) {
+							const error = this.errors[er]
+							if (error[0] === editorPos.line + 1 && error[1] <= editorPos.ch && error[3] > editorPos.ch) {
+								const p = this.editor.cursorCoords({line: editorPos.line, ch: error[1]})
+								this.errorTooltipText = i18n.t('ls_error.' + error[5], error[6]) as string
+								this.errorTooltip = true
+								shown = true
+								break
+							}
+						}
+						if (!shown) { this.errorTooltip = false }
+					} else {
+						this.hoverData = null
+						this.removeUnderlineMarker()
+						if (this.hoverOverlay) {
+							this.editor.removeOverlay(this.hoverOverlay)
+							this.hoverOverlay = null
+						}
+						// clearTimeout(this.detailTimer)
+						this.detailDialog = false
+					}
+				})
+				.catch(() => {
+					// console.log("cannot hover")
+				})
+			}, this.ctrl ? 0 : 200)
 		}
+
+		public leaveDetails() {
+
+		}
+
 		public removeUnderlineMarker() {
 			if (this.underlineMarker) {
 				this.underlineMarker.clear()
@@ -551,110 +694,67 @@
 		public mouseleave() {
 			clearTimeout(this.detailTimer)
 			this.detailDialog = false
+			this.editor.removeOverlay(this.hoverOverlay)
+			this.hoverOverlay = null
 		}
+
 		public autocomplete(CodeMirror: any, force: boolean = false) {
 			if (!this.autocompleteOption) { return }
 
-			this.updateIncludes()
+			const cursor = this.document.getCursor()
+			const position = this.document.indexFromPos(cursor)
 
-			const cur = this.document.getCursor()
-			const token = this.editor.getTokenAt(cur)
-			let startPos = token.start
+			return ;
 
-			const previousLength = token.string.length
-			token.string = token.string.trim()
-			startPos += previousLength - token.string.length
+			LeekWars.analyzer.complete(this.ai, position).then(raw_data => {
 
-			if (!force && token.string.length === 0) {
-				this.close()
-				return
-			}
-			token.state = CodeMirror.innerMode(this.document.getMode(), token.state).state
-			const completions: Keyword[] = []
-			const start = token.string
+				const raw_completions = raw_data.items
+				this.completionType = raw_data.type
+				console.log(raw_data)
 
-			const maybeAdd = (data: string | Keyword) => {
-				if (typeof data === 'string') {
-					if (data.toLowerCase().indexOf(start.toLowerCase()) === 0) {
-						completions.push({name: data, fullName: data, details: i18n.t('leekscript.keyword', [data]) as string, type: 'keyword'})
+				const completions = raw_completions.sort().map((data: any) => {
+					return {
+						name: data.name,
+						fullName: data.name,
+						details: i18n.t('leekscript.keyword', [data.name]) as string,
+						category: data.type,
+						type: 'function',
+						lstype: data.lstype,
+						location: data.location
 					}
+				})
+
+				// if (!force && token.string.length === 0) {
+				// 	this.close()
+				// 	return
+				// }
+
+				this.completions = completions
+				// this.completionFrom = {line: cursor.line, ch: startPos}
+				// this.completionTo = {line: cur.line, ch: token.end}
+
+				if (completions.length === 0) {
+					this.close()
 				} else {
-					if (data.name.toLowerCase().indexOf(start.toLowerCase()) === 0) {
-						completions.push(data)
-					}
-				}
-			}
-			// Ajout des variables locales du code
-			for (let v = token.state.localVars; v; v = v.next) {
-				if (v.name.toLowerCase().indexOf(start.toLowerCase()) === 0) {
-					completions.push({name: v.name, fullName: v.name, details: i18n.t('leekscript.variable', [v.name]) as string, type: 'keyword'})
-				}
-			}
-			// Variables globales
-			const vars = {[this.id]: token.state.globalVars}
-			const globalVars = this.getGlobalVars(vars)
-			for (const i in globalVars) {
-				const file = vars[parseInt(i, 10)]
-				for (let v = file; v; v = v.next) {
-					if (v.name.toLowerCase().indexOf(start.toLowerCase()) === 0) {
-						const keyword = this.getTokenInformation(v.name)
-						if (!keyword) {
-							let text = "Variable <b>" + v.name + "</b>"
-							if (parseInt(i, 10) !== this.id) { text += "<br><br>" + this.$i18n.t('leekscript.variable_defined_in_ai', [this.ais[parseInt(i, 10)].name]) }
-							completions.push({name: v.name, fullName: v.name, details: text, type: 'variable'})
-						}
-					}
-				}
-			}
-			// File functions
-			for (const fun of this.ai.functions) {
-				if (fun.name.toLowerCase().indexOf(start.toLowerCase()) === 0) {
-					completions.push(fun)
-				}
-			}
-			// Include functions
-			for (const include of this.ai.includes) {
-				const functions = this.ais[include.id].functions
-				if (functions) {
-					for (const fun of functions) {
-						if (fun.name.toLowerCase().indexOf(start.toLowerCase()) === 0) {
-							completions.push(fun)
-						}
-					}
-				}
-			}
-			// Ajout des fonctions
-			LeekWars.keywords.forEach(maybeAdd)
-			// Raccourcis
-			for (const r in AUTO_SHORTCUTS) {
-				if (AUTO_SHORTCUTS[r][0].indexOf(start.toLowerCase()) === 0) {
-					completions.push({name: AUTO_SHORTCUTS[r][0], fullName: AUTO_SHORTCUTS[r][0], details: AUTO_SHORTCUTS[r][3], type: 'shortcut', shortcut: parseInt(r, 10)})
-				}
-			}
-			this.completions = completions
-			this.completionFrom = {line: cur.line, ch: startPos}
-			this.completionTo = {line: cur.line, ch: token.end}
+					this.hintDialog = true
+					this.detailDialog = false
 
-			if (completions.length === 0) {
-				this.close()
-			} else {
-				this.hintDialog = true
-				this.detailDialog = false
+					const pos = this.editor.cursorCoords({line: cursor.line, ch: cursor.ch })
+					const left = pos.left, top = pos.bottom
+					const offset = (this.$refs.codemirror as HTMLElement).getBoundingClientRect()
 
-				const pos = this.editor.cursorCoords({line: cur.line, ch: cur.ch - token.string.length})
-				const left = pos.left, top = pos.bottom
-				const offset = (this.$refs.codemirror as HTMLElement).getBoundingClientRect()
+					this.hintDialogTop = top
+					this.hintDialogLeft = left
 
-				this.hintDialogTop = top - offset.top
-				this.hintDialogLeft = left - offset.left
+					this.hints = completions
+					this.selectHint(0)
 
-				this.hints = completions
-				this.selectHint(0)
-
-				this.editor.removeKeyMap(this.dialogKeyMap)
-				this.editor.addKeyMap(this.dialogKeyMap)
-			}
+					this.editor.removeKeyMap(this.dialogKeyMap)
+					this.editor.addKeyMap(this.dialogKeyMap)
+				}
+			})
 		}
+
 		public clickHint(e: Event, index: number) {
 			if (index === this.selectedCompletion) {
 				this.pick()
@@ -692,23 +792,26 @@
 		}
 		public pick() {
 			const completion = this.completions[this.selectedCompletion]
+			console.log("Pick completion", completion)
+
+			const completion_start = completion.location[0]
+			const completion_end = completion.location[1]
 
 			if (completion.type === 'function' || completion.type === 'user-function') {
-				let name = completion.fullName
+				let name = completion.fullName + "()"
 				if (name.indexOf(':') > -1) {
 					name = name.substring(0, name.indexOf(':') - 1)
 				}
-				this.document.replaceRange(name, this.completionFrom, this.completionTo)
+				this.document.replaceRange(name, {line: completion_start[0] - 1, ch: completion_start[1]}, {line: completion_end[0] - 1, ch: completion_end[1]})
 				const pos = this.document.getCursor()
-				let argCount = name.split(',').length
-				if (argCount === 1) {
-					if (name.indexOf(')') - name.indexOf('(') === 1) { argCount = 0 }
-				}
+				const argCount = completion.lstype.args ? completion.lstype.args.length : 0
 				if (argCount > 0) {
-					const firstArgLength = (argCount > 1 ? name.indexOf(',') : name.indexOf(')')) - name.indexOf('(') - 1
-					this.document.setSelection({line: pos.line, ch: this.completionFrom.ch + completion.name.length + 1}, {line: pos.line, ch: this.completionFrom.ch + completion.name.length + 1 + firstArgLength})
-				} else {
-					this.document.setCursor({line: pos.line, ch: this.completionFrom.ch + name.length})
+					this.document.setCursor({line: pos.line, ch: completion_start[1] + name.length - 1})
+					setTimeout(() => {
+						this.autocomplete(this.codemirror)
+					})
+					// const firstArgLength = (argCount > 1 ? name.indexOf(',') : name.indexOf(')')) - name.indexOf('(') - 1
+					// this.document.setSelection({line: pos.line, ch: this.completionFrom.ch + completion.name.length + 1}, {line: pos.line, ch: this.completionFrom.ch + completion.name.length + 1 + firstArgLength})
 				}
 			} else if (completion.type === 'shortcut') {
 
@@ -744,22 +847,27 @@
 			const coords = this.editor.charCoords({line, ch: 0}, "local")
 			this.editor.scrollTo(null, (coords.top + coords.bottom - height) / 2)
 		}
+
 		public updateIncludes() {
+			console.log("Update includes", this.ai.name)
 			this.ai.includes = []
-			const code = this.document.getValue()
+			const code = this.ai.code
 			const regex = /include\s*\(\s*"(.*?)"\s*\)/gm
 			let m
 			while (m = regex.exec(code)) {
-				for (const id in this.ais) {
-					// TODO Search the AI correctly : by name, full path, relative path etc. from the including AI
-					if (this.ais[id].name === m[1]) {
-						this.ai.includes.push(this.ais[id])
-						this.$emit("load", this.ais[id])
-						break
-					}
+				const path = m[1]
+				const included = fileSystem.find(path, this.ai.folder)
+				if (included) {
+					// console.log("Found included", path, this.ai.folder, included)
+					this.ai.includes.push(included)
+					this.$emit("load", included)
+					LeekWars.analyzer.register(included)
+				} else {
+					console.warn("Included not found", path, this.ai.folder, included)
 				}
 			}
 		}
+
 		public updateFunctions() {
 			const code = this.editor.getValue()
 			this.ai.functions = []
@@ -818,8 +926,9 @@
 		}
 		public closeSearch() {
 			this.searchEnabled = false
-			if (this.overlay) {
-				this.editor.removeOverlay(this.overlay)
+			if (this.searchOverlay) {
+				this.editor.removeOverlay(this.searchOverlay)
+				this.searchOverlay = null
 			}
 		}
 		@Watch('searchQuery')
@@ -837,8 +946,9 @@
 				}
 				this.searchRefresh()
 			} else {
-				if (this.overlay) {
-					this.editor.removeOverlay(this.overlay)
+				if (this.searchOverlay) {
+					this.editor.removeOverlay(this.searchOverlay)
+					this.searchOverlay = null
 				}
 			}
 		}
@@ -867,10 +977,10 @@
 				else if (iu === -1 || il < iu) { stream.skipTo(query.charAt(0)) }
 				else { stream.skipTo(query.charAt(0).toUpperCase()) }
 			}}
-			if (this.overlay) {
-				this.editor.removeOverlay(this.overlay)
+			if (this.searchOverlay) {
+				this.editor.removeOverlay(this.searchOverlay)
 			}
-			this.overlay = overlay
+			this.searchOverlay = overlay
 			this.editor.addOverlay(overlay)
 			if (this.searchLines.length > 0) {
 				const line = this.searchLines[this.searchCurrent][0]
@@ -893,7 +1003,7 @@
 
 <style lang="scss" scoped>
 	.ai {
-		position: relative;
+		// position: relative;
 		height: 100%;
 		display: flex;
 		flex-direction: column;
@@ -914,7 +1024,7 @@
 	}
 	.codemirror ::v-deep .line-error:after {
 		position: absolute;
-		top: 6px;
+		bottom: -3px;
 		left: 0;
 		content: "";
 		height: 20px;
@@ -929,21 +1039,31 @@
 		z-index: 100;
 		margin: 0;
 		display: flex;
+		align-items: end;
+		> .type {
+			position: absolute;
+			top: 0;
+			left: 0;
+			transform: translateX(-100%);
+			font-family: monospace;
+			font-size: 14px;
+			line-height: 20px;
+			padding: 2px 5px;
+			background: #f7f7f7;
+			border: 1px solid #ccc;
+			border-right: none;
+		}
 	}
 	.hint-dialog .hints {
-		width: 400px;
+		min-width: 400px;
 		background: white;
 		font-family: monospace;
 		overflow-y: auto;
 		overflow-x: hidden;
 		vertical-align: top;
-		height: 260px;
-		padding: 2px;
-		box-shadow: 0px 5px 5px -3px rgba(0, 0, 0, 0.2), 0px 8px 10px 1px rgba(0, 0, 0, 0.14), 0px 3px 14px 2px rgba(0, 0, 0, 0.12);
-	}
-	.hint-dialog .hint.active {
-		background: #5fad1b;
-		color: white;
+		max-height: 260px;
+		background: #f7f7f7;
+		border: 1px solid #ccc;
 	}
 	.hint-dialog .hint {
 		margin: 0;
@@ -954,40 +1074,67 @@
 		user-select: none;
 		font-size: 14px;
 		line-height: 20px;
+		.v-icon {
+			transition: none;
+			font-size: 18px;
+			margin-top: -2px;
+			&.field {
+				color: #074f86;
+			}
+			&.function {
+				color: #b12f83;
+			}
+		}
+		&.active {
+			background: #d2e9ff;
+		}
 	}
 	.hint-dialog .details {
 		width: 500px;
 		overflow-y: auto;
-		background: #f2f2f2;
+		background: #f7f7f7;
+		border: 1px solid #ccc;
+		border-left: none;
 		max-height: 600px;
 		padding: 8px;
-		box-shadow: 0px 5px 5px -3px rgba(0, 0, 0, 0.2), 0px 8px 10px 1px rgba(0, 0, 0, 0.14), 0px 3px 14px 2px rgba(0, 0, 0, 0.12);
 	}
 	.detail-dialog {
 		position: absolute;
-		padding: 8px;
-		background: #f2f2f2;
-		width: 500px;
-		box-shadow: 0px 5px 5px -3px rgba(0, 0, 0, 0.2), 0px 8px 10px 1px rgba(0, 0, 0, 0.14), 0px 3px 14px 2px rgba(0, 0, 0, 0.12);
+		max-width: 600px;
 		z-index: 100;
-		border-radius: 4px;
+		background: #f7f7f7;
+		border: 1px solid #ccc;
+		> * {
+			padding: 5px 8px;
+			display: block;
+		}
+		&.type {
+			max-width: none;
+		}
+		::v-deep .item-preview {
+			width: 300px;
+		}
+		.divider {
+			padding: 0;
+			height: 1px;
+			background: #ccc;
+		}
+		.error {
+			display: flex;
+			align-items: center;
+			background: rgba(255, 0, 0, 0.1);
+			.v-icon {
+				color: red;
+				margin-right: 4px;
+				font-size: 20px;
+				background: none;
+			}
+		}
 	}
 	.details ::v-deep .deprecated-message {
 		color: #ff7f00;
 		font-weight: bold;
 		margin: 10px 0;
-	}
-	.error-tooltip {
-		position: absolute;
-		color: #ab0000;
-		background: white;
-		border: 1px solid #ff6c71;
-		z-index: 10;
-		padding: 4px 6px;
-		border-top-right-radius: 3px;
-		border-bottom-right-radius: 3px;
-		border-bottom-left-radius: 3px;
-		font-size: 16px;
 	}
 	.search-panel {
 		height: 40px;
