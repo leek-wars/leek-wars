@@ -137,11 +137,13 @@
 			setTimeout(() => this.resize(), 50)
 		}
 
+		mounted() {
+			LeekWars.flex = true
+		}
+
 		@Watch('$route.params.id')
 		update() {
 			this.fight_id = this.$route.params.id
-			if (localStorage.getItem('fight/large') === null) { localStorage.setItem('fight/large', 'true') }
-			LeekWars.flex = localStorage.getItem('fight/large') === 'true'
 		}
 
 		resize() {
