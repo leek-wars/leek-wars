@@ -180,6 +180,11 @@
 
 					<tournament-block :item="tournament.winner.name ? tournament.winner : null" :x="-60" :y="-395" :size="120" />
 				</svg>
+
+				<pre v-if="$store.getters.admin && tournament">
+Min power: {{ tournament.min_power | number }}
+Max power: {{ tournament.max_power | number }}
+				</pre>
 			</div>
 		</panel>
 
