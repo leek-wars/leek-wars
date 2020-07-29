@@ -219,10 +219,10 @@
 </template>
 
 <script lang="ts">
+	import ChangelogVersion from '@/component/changelog/changelog-version.vue'
 	import { i18n } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import { Component, Vue } from 'vue-property-decorator'
-	import ChangelogVersion from '@/component/changelog/changelog-version.vue'
 
 	import 'swiper/css/swiper.css'
 	import VueAwesomeSwiper from 'vue-awesome-swiper'
