@@ -1,4 +1,5 @@
 import { Game } from "@/component/player/game/game"
+import { T } from './texture'
 
 const round = 10
 const arrowWidth = 10
@@ -111,9 +112,9 @@ class Bubble {
 
 		// Draw message
 		if (this.lama) {
-			ctx.drawImage(this.game.T.lama.texture, -45, -45, 90, 90)
+			ctx.drawImage(T.lama.texture, -45, -45, 90, 90)
 		} else if (this.bug) {
-			ctx.drawImage(this.game.T.bug.texture, -20, -20, 40, 40)
+			ctx.drawImage(T.bug.texture, -20, -20, 40, 40)
 		} else {
 			ctx.fillStyle = 'black'
 			ctx.textBaseline = "middle"

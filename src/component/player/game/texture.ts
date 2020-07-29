@@ -3,457 +3,302 @@ import { env } from '@/env'
 
 const SHADOW_QUALITY = 0.3
 
-class Textures {
-	public leek_hand: Texture
-	public machine_gun: Texture
-	public laser: Texture
-	public laser_bullet: Texture
-	public bullet: Texture
-	public shots: Texture
-	public cart_machine_gun: Texture
-	public cart_laser: Texture
-	public m_laser: Texture
-	public m_laser_bullet: Texture
-	public cart_m_laser: Texture
-	public revoked_m_laser: Texture
-	public revoked_m_laser_bullet: Texture
-	public cart_revoked_m_laser: Texture
-	public leek_blood: Texture
-	public electrisor: Texture
-	public mysterious_electrisor: Texture
-	public lightning: Texture
-	public cyan_lightning: Texture
-	public purple_lightning: Texture
-	public red_lightning: Texture
-	public particle: Texture
-	public double_gun: Texture
-	public cart_double_gun: Texture
-	public pistol: Texture
-	public cart_pistol: Texture
-	public shotgun: Texture
-	public cart_shotgun: Texture
-	public magnum: Texture
-	public cart_magnum: Texture
-	public grenade_launcher: Texture
-	public illicit_grenade_launcher: Texture
-	public cart_grenade_launcher: Texture
-	public cart_illicit_grenade_launcher: Texture
-	public destroyer: Texture
-	public cart_destroyer: Texture
-	public flame_thrower: Texture
-	public gazor: Texture
-	public unbridled_gazor: Texture
-	public b_laser: Texture
-	public b_laser_bullet: Texture
-	public cart_b_laser: Texture
-	public katana: Texture
-	public broadsword: Texture
-	public axe: Texture
-	public slash: Texture
-	public box: Texture
-	public big_box: Texture
-	public factory: Texture
-	public desert: Texture
-	public desert_rock2_small: Texture
-	public desert_grass: Texture
-	public cactus: Texture
-	public desert_rock1_big: Texture
-	public desert_rock2_big: Texture
-	public desert_rock3_big: Texture
-	public skull: Texture
-	public forest: Texture
-	public forest_rock: Texture
-	public forest_rock_small: Texture
-	public stump: Texture
-	public leaf: Texture
-	public leaf2: Texture
-	public leaf3: Texture
-	public leaf4: Texture
-	public mushroom: Texture
-	public glacier: Texture
-	public beach: Texture
-	public starfish: Texture
-	public starfish2: Texture
-	public palm: Texture
-	public pebble: Texture
-	public pebble_small: Texture
-	public snowman: Texture
-	public fir: Texture
-	public ice: Texture
-	public ice_small: Texture
-	public barrel: Texture
-	public cone: Texture
-	public cone_big: Texture
-	public fire: Texture
-	public gaz: Texture
-	public orange_gaz: Texture
-	public grenade: Texture
-	public red_grenade: Texture
-	public explosion: Texture
-	public red_explosion: Texture
-	public cloud: Texture
-	public grey_cloud: Texture
-	public black_cloud: Texture
-	public nexus_bg: Texture
-	public nexus_block: Texture
-	public nexus_block_small: Texture
-	public rock: Texture
-	public stalactite: Texture
-	public iceberg: Texture
-	public ice_part: Texture
-	public ice_part2: Texture
-	public meteorite: Texture
-	public pumpkin: Texture
-	public red_circle: Texture
-	public daemon_shadow: Texture
-	public cure_aureol: Texture
-	public shield_aureol: Texture
-	public buff_aureol: Texture
-	public halo: Texture
-	public halo_green: Texture
-	public heal_cross: Texture
-	public liberation_halo: Texture
-	public antidote_halo: Texture
-	public poison_aureol: Texture
-	public shackle_aureol: Texture
-	public damage_return_aureol: Texture
-	public chip_steroid: Texture
-	public chip_protein: Texture
-	public chip_warm_up: Texture
-	public chip_stretching: Texture
-	public chip_reflexes: Texture
-	public chip_doping: Texture
-	public chip_adrenaline: Texture
-	public chip_motivation: Texture
-	public chip_rage: Texture
-	public chip_seven_league_boots: Texture
-	public chip_leather_boots: Texture
-	public chip_winged_boots: Texture
-	public chip_whip: Texture
-	public chip_acceleration: Texture
-	public chip_solidification: Texture
-	public chip_ferocity: Texture
-	public chip_collar: Texture
-	public chip_bark: Texture
-	public chip_helmet: Texture
-	public chip_wall: Texture
-	public chip_armor: Texture
-	public chip_shield: Texture
-	public chip_fortress: Texture
-	public chip_rampart: Texture
-	public chip_carapace: Texture
-	public chip_bandage: Texture
-	public chip_cure: Texture
-	public chip_vaccine: Texture
-	public chip_regeneration: Texture
-	public chip_drip: Texture
-	public chip_armoring: Texture
-	public chip_remission: Texture
-	public chip_loam: Texture
-	public chip_fertilizer: Texture
-	public chip_thorn: Texture
-	public chip_mirror: Texture
-	public chip_venom: Texture
-	public chip_toxin: Texture
-	public chip_plague: Texture
-	public chip_slow_down: Texture
-	public chip_ball_and_chain: Texture
-	public chip_tranquilizer: Texture
-	public chip_soporific: Texture
-	public chip_fracture: Texture
-	public chip_burning: Texture
-	public lama: Texture
-	public bug: Texture
-	public arena: Texture
-	public pyramid: Texture
-	public grass: Texture
-	public pillar: Texture
-	public cube: Texture
-	public small_cube: Texture
-	public square: Texture
-	public spike1: Texture
-	public spike2: Texture
-	public j_laser: Texture
-	public j_laser_bullet: Texture
-	public cart_j_laser: Texture
-	public tp: Texture
-	public mp: Texture
-	public chip_precipitation: Texture
-	public chip_covetousness: Texture
-	public chip_vampirization: Texture
-	public plasma: Texture
-	public alteration: Texture
+class Texture {
+	public path: string
+	public texture!: HTMLImageElement
+	public offset: number = 1
+	public shadow: HTMLCanvasElement | null = null
+	public buildShadow: boolean
+	public shadowQuality: number
+	private cache: {[key: number]: HTMLCanvasElement} = {}
 
-	private game!: Game
-	private cache: {[key: string]: Texture} = {}
-
-	constructor(game: Game) {
-		this.game = game
-
-		this.leek_hand = new Texture(game, env.STATIC + "image/fight/leek_hand.png", true, SHADOW_QUALITY)
-
-		this.machine_gun = new Texture(game, env.STATIC + "image/weapon/machine_gun.png", true, SHADOW_QUALITY)
-
-		this.laser = new Texture(game, env.STATIC + "image/weapon/laser.png", true, SHADOW_QUALITY)
-		this.laser_bullet = new Texture(game, env.STATIC + "image/weapon/laser_bullet.png")
-
-		this.bullet = new Texture(game, env.STATIC + 'image/weapon/bullet.png')
-		this.shots = new Texture(game, env.STATIC + 'image/weapon/shots.png')
-		this.cart_machine_gun = new Texture(game, env.STATIC + 'image/weapon/cart_machine_gun.png')
-		this.cart_laser = new Texture(game, env.STATIC + 'image/weapon/cart_laser.png')
-		this.m_laser = new Texture(game, env.STATIC + "image/weapon/m_laser.png", true, SHADOW_QUALITY)
-		this.m_laser_bullet = new Texture(game, env.STATIC + "image/weapon/m_laser_bullet.png")
-		this.cart_m_laser = new Texture(game, env.STATIC + 'image/weapon/cart_m_laser.png')
-		this.revoked_m_laser = new Texture(game, env.STATIC + "image/weapon/revoked_m_laser.png", true, SHADOW_QUALITY)
-		this.revoked_m_laser_bullet = new Texture(game, env.STATIC + "image/weapon/revoked_m_laser_bullet.png")
-		this.cart_revoked_m_laser = new Texture(game, env.STATIC + 'image/weapon/cart_revoked_m_laser.png')
-		this.leek_blood = new Texture(game, env.STATIC + 'image/fight/leek_blood.png')
-		this.electrisor = new Texture(game, env.STATIC + 'image/weapon/electrisor.png', true, SHADOW_QUALITY)
-		this.mysterious_electrisor = new Texture(game, env.STATIC + 'image/weapon/mysterious_electrisor.png', true, SHADOW_QUALITY)
-		this.lightning = new Texture(game, env.STATIC + 'image/weapon/lightning.png')
-		this.cyan_lightning = new Texture(game, env.STATIC + 'image/weapon/cyan_lightning.png')
-		this.purple_lightning = new Texture(game, env.STATIC + 'image/weapon/purple_lightning.png')
-		this.red_lightning = new Texture(game, env.STATIC + 'image/weapon/red_lightning.png')
-		this.particle = new Texture(game, env.STATIC + 'image/weapon/particle.png')
-		this.double_gun = new Texture(game, env.STATIC + 'image/weapon/double_gun.png', true, SHADOW_QUALITY)
-		this.cart_double_gun = new Texture(game, env.STATIC + 'image/weapon/cart_double_gun.png')
-		this.pistol = new Texture(game, env.STATIC + 'image/weapon/pistol.png', true, SHADOW_QUALITY)
-		this.cart_pistol = new Texture(game, env.STATIC + 'image/weapon/cart_pistol.png')
-		this.shotgun = new Texture(game, env.STATIC + 'image/weapon/shotgun.png', true, SHADOW_QUALITY)
-		this.cart_shotgun = new Texture(game, env.STATIC + 'image/weapon/cart_shotgun.png')
-		this.magnum = new Texture(game, env.STATIC + 'image/weapon/magnum.png', true, SHADOW_QUALITY)
-		this.cart_magnum = new Texture(game, env.STATIC + 'image/weapon/cart_magnum.png')
-		this.grenade_launcher = new Texture(game, env.STATIC + 'image/weapon/grenade_launcher.png', true, SHADOW_QUALITY)
-		this.illicit_grenade_launcher = new Texture(game, env.STATIC + 'image/weapon/illicit_grenade_launcher.png', true, SHADOW_QUALITY)
-		this.cart_grenade_launcher = new Texture(game, env.STATIC + 'image/weapon/cart_grenade_launcher.png')
-		this.cart_illicit_grenade_launcher = new Texture(game, env.STATIC + 'image/weapon/cart_illicit_grenade_launcher.png')
-		this.destroyer = new Texture(game, env.STATIC + 'image/weapon/destroyer.png', true, SHADOW_QUALITY)
-		this.cart_destroyer = new Texture(game, env.STATIC + 'image/weapon/cart_destroyer.png')
-		this.flame_thrower = new Texture(game, env.STATIC + 'image/weapon/flame_thrower.png', true, SHADOW_QUALITY)
-		this.gazor = new Texture(game, env.STATIC + 'image/weapon/gazor.png', true, SHADOW_QUALITY)
-		this.unbridled_gazor = new Texture(game, env.STATIC + 'image/weapon/unbridled_gazor.png', true, SHADOW_QUALITY)
-		this.b_laser = new Texture(game, env.STATIC + "image/weapon/b_laser.png", true, SHADOW_QUALITY)
-		this.b_laser_bullet = new Texture(game, env.STATIC + "image/weapon/b_laser_bullet.png")
-		this.cart_b_laser = new Texture(game, env.STATIC + 'image/weapon/cart_b_laser.png')
-		this.katana = new Texture(game, env.STATIC + 'image/weapon/katana.png', true, SHADOW_QUALITY)
-		this.broadsword = new Texture(game, env.STATIC + 'image/weapon/broadsword.png', true, SHADOW_QUALITY)
-		this.axe = new Texture(game, env.STATIC + 'image/weapon/axe.png', true, SHADOW_QUALITY)
-		this.slash = new Texture(game, env.STATIC + 'image/fight/slash.png', true, SHADOW_QUALITY)
-		this.j_laser = new Texture(game, env.STATIC + 'image/weapon/j_laser.png', true, SHADOW_QUALITY)
-		this.j_laser_bullet = new Texture(game, env.STATIC + 'image/weapon/j_laser_bullet.png', true, SHADOW_QUALITY)
-		this.cart_j_laser = new Texture(game, env.STATIC + 'image/weapon/cart_j_laser.png')
-
-		this.box = new Texture(game, env.STATIC + 'image/map/box.png', true, 1)
-		this.big_box = new Texture(game, env.STATIC + 'image/map/big_box.png', true, 1)
-		this.factory = new Texture(game, env.STATIC + 'image/map/factory_bg.png')
-		this.desert = new Texture(game, env.STATIC + 'image/map/desert.png')
-		this.desert_rock2_small = new Texture(game, env.STATIC + 'image/map/rock2_small.png', true, 1)
-		this.desert_grass = new Texture(game, env.STATIC + 'image/map/desert_grass.png', true, 1)
-		this.cactus = new Texture(game, env.STATIC + 'image/map/cactus.png', true, 1)
-		this.desert_rock1_big = new Texture(game, env.STATIC + 'image/map/rock1_big.png', true, 1),
-		this.desert_rock2_big = new Texture(game, env.STATIC + 'image/map/rock2_big.png', true, 1),
-		this.desert_rock3_big = new Texture(game, env.STATIC + 'image/map/rock3_big.png', true, 1),
-		this.skull = new Texture(game, env.STATIC + 'image/map/skull.png')
-		this.cactus = new Texture(game, env.STATIC + 'image/map/cactus.png', true, 1)
-		this.forest = new Texture(game, env.STATIC + 'image/map/forest.png')
-		this.forest_rock = new Texture(game, env.STATIC + 'image/map/forest_rock.png', true, 1)
-		this.forest_rock_small = new Texture(game, env.STATIC + 'image/map/forest_rock_small.png', true, 1)
-		this.stump = new Texture(game, env.STATIC + 'image/map/stump.png', true, 1)
-		this.leaf = new Texture(game, env.STATIC + 'image/map/leaf.png')
-		this.leaf2 = new Texture(game, env.STATIC + 'image/map/leaf2.png')
-		this.leaf3 = new Texture(game, env.STATIC + 'image/map/leaf3.png')
-		this.leaf4 = new Texture(game, env.STATIC + 'image/map/leaf4.png')
-		this.mushroom = new Texture(game, env.STATIC + 'image/map/mushroom.png', true, 1)
-		this.glacier = new Texture(game, env.STATIC + 'image/map/glacier.png')
-		this.beach = new Texture(game, env.STATIC + 'image/map/beach.png')
-		this.starfish = new Texture(game, env.STATIC + 'image/map/starfish.png', false, 0, true)
-		this.starfish2 = new Texture(game, env.STATIC + 'image/map/starfish2.png', false, 0, true)
-		this.palm = new Texture(game, env.STATIC + 'image/map/palm.png', true, 1, true)
-		this.pebble = new Texture(game, env.STATIC + 'image/map/pebble.png', true, 1, true)
-		this.pebble_small = new Texture(game, env.STATIC + 'image/map/pebble_small.png')
-		this.snowman = new Texture(game, env.STATIC + 'image/map/snowman.png', true, 1, true)
-		this.fir = new Texture(game, env.STATIC + 'image/map/fir.png', true, 1, true)
-		this.ice = new Texture(game, env.STATIC + 'image/map/ice.png', true, 1, true)
-		this.ice_small = new Texture(game, env.STATIC + 'image/map/ice_small.png', true, 1, true)
-		this.barrel = new Texture(game, env.STATIC + 'image/map/barrel.png', true, 1)
-		this.cone = new Texture(game, env.STATIC + 'image/map/cone.png', true, 1)
-		this.cone_big = new Texture(game, env.STATIC + 'image/map/cone_big.png', true, 1)
-		this.fire = new Texture(game, env.STATIC + 'image/weapon/fire.png')
-		this.gaz = new Texture(game, env.STATIC + 'image/weapon/gaz.png')
-		this.orange_gaz = new Texture(game, env.STATIC + 'image/weapon/orange_gaz.png')
-		this.grenade = new Texture(game, env.STATIC + 'image/weapon/grenade.png')
-		this.red_grenade = new Texture(game, env.STATIC + 'image/weapon/red_grenade.png')
-		this.explosion = new Texture(game, env.STATIC + 'image/weapon/explosion.png')
-		this.red_explosion = new Texture(game, env.STATIC + 'image/weapon/red_explosion.png')
-		this.cloud = new Texture(game, env.STATIC + 'image/fight/cloud.png')
-		this.grey_cloud = new Texture(game, env.STATIC + 'image/fight/grey_cloud.png')
-		this.black_cloud = new Texture(game, env.STATIC + 'image/fight/black_cloud.png')
-		this.nexus_bg = new Texture(game, env.STATIC + 'image/map/nexus_bg.png')
-		this.nexus_block = new Texture(game, env.STATIC + 'image/map/nexus_block.png')
-		this.nexus_block_small = new Texture(game, env.STATIC + 'image/map/nexus_block_small.png')
-		this.rock = new Texture(game, env.STATIC + 'image/map/rock.png')
-		this.stalactite = new Texture(game, env.STATIC + 'image/fight/stalactite.png')
-		this.iceberg = new Texture(game, env.STATIC + 'image/fight/iceberg.png')
-		this.ice_part = new Texture(game, env.STATIC + 'image/fight/ice_part.png')
-		this.ice_part2 = new Texture(game, env.STATIC + 'image/fight/ice_part2.png')
-		this.meteorite = new Texture(game, env.STATIC + 'image/fight/meteorite.png')
-		this.pumpkin = new Texture(game, env.STATIC + 'image/map/pumpkin.png', true, 1, true)
-		this.red_circle = new Texture(game, env.STATIC + 'image/fight/red_circle.png')
-		this.daemon_shadow = new Texture(game, env.STATIC + 'image/fight/daemon_shadow.png')
-		this.arena = new Texture(game, env.STATIC + 'image/map/arena.png')
-		this.pyramid = new Texture(game, env.STATIC + 'image/map/pyramid.png', true, 1)
-		this.grass = new Texture(game, env.STATIC + 'image/map/grass.png', true, 1)
-		this.pillar = new Texture(game, env.STATIC + 'image/map/pillar.png', true, 1)
-		this.cube = new Texture(game, env.STATIC + 'image/map/cube.png', true, 1)
-		this.small_cube = new Texture(game, env.STATIC + 'image/map/small_cube.png', true, 1)
-		this.square = new Texture(game, env.STATIC + 'image/map/square.png', true, 1)
-		this.spike1 = new Texture(game, env.STATIC + 'image/fight/spike1.png', true, 1)
-		this.spike2 = new Texture(game, env.STATIC + 'image/fight/spike2.png', true, 1)
-		this.plasma = new Texture(game, env.STATIC + 'image/fight/plasma.png', true, 1)
-		this.alteration = new Texture(game, env.STATIC + 'image/fight/alteration.png', true, 1)
-
-		// Chips
-		this.cure_aureol = new Texture(game, env.STATIC + 'image/fight/cure_aureol.png')
-		this.shield_aureol = new Texture(game, env.STATIC + 'image/fight/shield_aureol.png')
-		this.buff_aureol = new Texture(game, env.STATIC + 'image/fight/buff_aureol.png')
-		this.halo = new Texture(game, env.STATIC + 'image/fight/halo.png')
-		this.halo_green = new Texture(game, env.STATIC + 'image/fight/halo_green.png')
-		this.heal_cross = new Texture(game, env.STATIC + 'image/fight/heal_cross.png')
-		this.liberation_halo = new Texture(game, env.STATIC + 'image/fight/liberation.png')
-		this.antidote_halo = new Texture(game, env.STATIC + 'image/fight/antidote.png')
-		this.poison_aureol = new Texture(game, env.STATIC + 'image/fight/poison_aureol.png')
-		this.shackle_aureol = new Texture(game, env.STATIC + 'image/fight/shackle_aureol.png')
-		this.damage_return_aureol = new Texture(game, env.STATIC + 'image/fight/damage_return_aureol.png')
-		this.chip_burning = new Texture(game, env.STATIC + 'image/chip/glyph/burning.png')
-
-		// Buff
-		this.chip_steroid = new Texture(game, env.STATIC + 'image/chip/glyph/steroid.png')
-		this.chip_protein = new Texture(game, env.STATIC + 'image/chip/glyph/protein.png')
-		this.chip_warm_up = new Texture(game, env.STATIC + 'image/chip/glyph/warm_up.png')
-		this.chip_stretching = new Texture(game, env.STATIC + 'image/chip/glyph/stretching.png')
-		this.chip_reflexes = new Texture(game, env.STATIC + 'image/chip/glyph/reflexes.png')
-		this.chip_doping = new Texture(game, env.STATIC + 'image/chip/glyph/doping.png')
-		this.chip_adrenaline = new Texture(game, env.STATIC + 'image/chip/glyph/adrenaline.png')
-		this.chip_motivation = new Texture(game, env.STATIC + 'image/chip/glyph/motivation.png')
-		this.chip_rage = new Texture(game, env.STATIC + 'image/chip/glyph/rage.png')
-		this.chip_seven_league_boots = new Texture(game, env.STATIC + 'image/chip/glyph/seven_league_boots.png')
-		this.chip_leather_boots = new Texture(game, env.STATIC + 'image/chip/glyph/leather_boots.png')
-		this.chip_winged_boots = new Texture(game, env.STATIC + 'image/chip/glyph/winged_boots.png')
-		this.chip_whip = new Texture(game, env.STATIC + 'image/chip/glyph/whip.png')
-		this.chip_acceleration = new Texture(game, env.STATIC + 'image/chip/glyph/acceleration.png')
-		this.chip_solidification = new Texture(game, env.STATIC + 'image/chip/glyph/solidification.png')
-		this.chip_ferocity = new Texture(game, env.STATIC + 'image/chip/glyph/ferocity.png')
-		this.chip_collar = new Texture(game, env.STATIC + 'image/chip/glyph/collar.png')
-		this.chip_bark = new Texture(game, env.STATIC + 'image/chip/glyph/bark.png')
-		this.chip_precipitation = new Texture(game, env.STATIC + 'image/chip/glyph/precipitation.png')
-		this.chip_covetousness = new Texture(game, env.STATIC + 'image/chip/glyph/covetousness.png')
-		this.chip_vampirization = new Texture(game, env.STATIC + 'image/chip/glyph/vampirization.png')
-
-		// Shield
-		this.chip_helmet = new Texture(game, env.STATIC + 'image/chip/glyph/helmet.png')
-		this.chip_wall = new Texture(game, env.STATIC + 'image/chip/glyph/wall.png')
-		this.chip_armor = new Texture(game, env.STATIC + 'image/chip/glyph/armor.png')
-		this.chip_shield = new Texture(game, env.STATIC + 'image/chip/glyph/shield.png')
-		this.chip_fortress = new Texture(game, env.STATIC + 'image/chip/glyph/fortress.png')
-		this.chip_rampart = new Texture(game, env.STATIC + 'image/chip/glyph/rampart.png')
-		this.chip_carapace = new Texture(game, env.STATIC + 'image/chip/glyph/carapace.png')
-
-		// Heal
-		this.chip_bandage = new Texture(game, env.STATIC + 'image/chip/glyph/bandage.png')
-		this.chip_cure = new Texture(game, env.STATIC + 'image/chip/glyph/cure.png')
-		this.chip_vaccine = new Texture(game, env.STATIC + 'image/chip/glyph/vaccine.png')
-		this.chip_regeneration = new Texture(game, env.STATIC + 'image/chip/glyph/regeneration.png')
-		this.chip_drip = new Texture(game, env.STATIC + 'image/chip/glyph/drip.png')
-		this.chip_armoring = new Texture(game, env.STATIC + 'image/chip/glyph/armoring.png')
-		this.chip_remission = new Texture(game, env.STATIC + 'image/chip/glyph/remission.png')
-		this.chip_loam = new Texture(game, env.STATIC + 'image/chip/glyph/loam.png')
-		this.chip_fertilizer = new Texture(game, env.STATIC + 'image/chip/glyph/fertilizer.png')
-
-		// Damage return
-		this.chip_thorn = new Texture(game, env.STATIC + 'image/chip/glyph/thorn.png')
-		this.chip_mirror = new Texture(game, env.STATIC + 'image/chip/glyph/mirror.png')
-
-		// Poison
-		this.chip_venom = new Texture(game, env.STATIC + 'image/chip/glyph/venom.png')
-		this.chip_toxin = new Texture(game, env.STATIC + 'image/chip/glyph/toxin.png')
-		this.chip_plague = new Texture(game, env.STATIC + 'image/chip/glyph/plague.png')
-
-		// Shackles
-		this.chip_slow_down = new Texture(game, env.STATIC + 'image/chip/glyph/slow_down.png')
-		this.chip_ball_and_chain = new Texture(game, env.STATIC + 'image/chip/glyph/ball_and_chain.png')
-		this.chip_tranquilizer = new Texture(game, env.STATIC + 'image/chip/glyph/tranquilizer.png')
-		this.chip_soporific = new Texture(game, env.STATIC + 'image/chip/glyph/soporific.png')
-		this.chip_fracture = new Texture(game, env.STATIC + 'image/chip/glyph/fracture.png')
-
-		// Lama
-		this.lama = new Texture(game, env.STATIC + 'image/fight/lama_big.png')
-
-		// Bug
-		this.bug = new Texture(game, env.STATIC + 'image/fight/leek_bug.png')
-
-		this.tp = new Texture(game, env.STATIC + 'image/charac/small/tp.png')
-		this.mp = new Texture(game, env.STATIC + 'image/charac/small/mp.png')
+	constructor(path: string, buildShadow: boolean = false, quality: number = 1) {
+		this.path = path
+		this.buildShadow = buildShadow
+		this.shadowQuality = quality
 	}
 
-	get(path: string, buildShadow: boolean = false, quality: number = 1, inverse: boolean = false) {
+	public load(game: Game) {
+		// Already loaded
+		if (this.texture) {
+			game.numData++
+			setTimeout(() => {
+				game.resourceLoaded(this.path)
+			})
+			return this
+		}
+
+		game.numData++
+		this.texture = new Image()
+		this.texture.crossOrigin = "anonymous"
+		this.texture.onload = () => {
+			if (this.buildShadow) {
+				buildTextureShadow(this, this.shadowQuality)
+			}
+			game.resourceLoaded(this.path)
+		}
+		this.texture.onerror = () => {
+			console.warn("Error loading : " + this.path)
+			game.resourceLoaded(this.path)
+		}
+		this.texture.onabort = () => {
+			console.warn("Error loading : " + this.path)
+			game.resourceLoaded(this.path)
+		}
+		this.texture.src = this.path // Start loading
+		return this
+	}
+
+	getScaled(width: number) {
+		if (width === this.texture.width) {
+			return this.texture
+		}
+		if (width in this.cache) {
+			return this.cache[width]
+		}
+		try {
+			const canvas = document.createElement('canvas')
+			canvas.width = width
+			canvas.height = this.texture.height * (width / this.texture.width)
+			const ctx = canvas.getContext('2d')!
+			ctx.drawImage(this.texture, 0, 0, width, canvas.height)
+			if (isFinite(width) && isFinite(canvas.height)) {
+				ctx.putImageData(ctx.getImageData(0, 0, width, canvas.height), 0, 0)
+			}
+			this.cache[width] = canvas
+			return canvas
+		} catch (e) {
+			return this.texture
+		}
+	}
+}
+
+class T {
+	// Textures communes
+	public static bug = new Texture(env.STATIC + 'image/fight/leek_bug.png')
+	public static tp = new Texture(env.STATIC + 'image/charac/small/tp.png')
+	public static mp = new Texture(env.STATIC + 'image/charac/small/mp.png')
+	public static leek_hand = new Texture(env.STATIC + "image/fight/leek_hand.png", true, SHADOW_QUALITY)
+
+	// Armes
+	public static machine_gun = new Texture(env.STATIC + "image/weapon/machine_gun.png", true, SHADOW_QUALITY)
+	public static laser = new Texture(env.STATIC + "image/weapon/laser.png", true, SHADOW_QUALITY)
+	public static laser_bullet = new Texture(env.STATIC + "image/weapon/laser_bullet.png")
+	public static bullet = new Texture(env.STATIC + 'image/weapon/bullet.png')
+	public static shots = new Texture(env.STATIC + 'image/weapon/shots.png')
+	public static cart_machine_gun = new Texture(env.STATIC + 'image/weapon/cart_machine_gun.png')
+	public static cart_laser = new Texture(env.STATIC + 'image/weapon/cart_laser.png')
+	public static m_laser = new Texture(env.STATIC + "image/weapon/m_laser.png", true, SHADOW_QUALITY)
+	public static m_laser_bullet = new Texture(env.STATIC + "image/weapon/m_laser_bullet.png")
+	public static cart_m_laser = new Texture(env.STATIC + 'image/weapon/cart_m_laser.png')
+	public static revoked_m_laser = new Texture(env.STATIC + "image/weapon/revoked_m_laser.png", true, SHADOW_QUALITY)
+	public static revoked_m_laser_bullet = new Texture(env.STATIC + "image/weapon/revoked_m_laser_bullet.png")
+	public static cart_revoked_m_laser = new Texture(env.STATIC + 'image/weapon/cart_revoked_m_laser.png')
+	public static leek_blood = new Texture(env.STATIC + 'image/fight/leek_blood.png')
+	public static electrisor = new Texture(env.STATIC + 'image/weapon/electrisor.png', true, SHADOW_QUALITY)
+	public static mysterious_electrisor = new Texture(env.STATIC + 'image/weapon/mysterious_electrisor.png', true, SHADOW_QUALITY)
+	public static lightning = new Texture(env.STATIC + 'image/weapon/lightning.png')
+	public static cyan_lightning = new Texture(env.STATIC + 'image/weapon/cyan_lightning.png')
+	public static purple_lightning = new Texture(env.STATIC + 'image/weapon/purple_lightning.png')
+	public static red_lightning = new Texture(env.STATIC + 'image/weapon/red_lightning.png')
+	public static double_gun = new Texture(env.STATIC + 'image/weapon/double_gun.png', true, SHADOW_QUALITY)
+	public static cart_double_gun = new Texture(env.STATIC + 'image/weapon/cart_double_gun.png')
+	public static pistol = new Texture(env.STATIC + 'image/weapon/pistol.png', true, SHADOW_QUALITY)
+	public static cart_pistol = new Texture(env.STATIC + 'image/weapon/cart_pistol.png')
+	public static shotgun = new Texture(env.STATIC + 'image/weapon/shotgun.png', true, SHADOW_QUALITY)
+	public static cart_shotgun = new Texture(env.STATIC + 'image/weapon/cart_shotgun.png')
+	public static magnum = new Texture(env.STATIC + 'image/weapon/magnum.png', true, SHADOW_QUALITY)
+	public static cart_magnum = new Texture(env.STATIC + 'image/weapon/cart_magnum.png')
+	public static grenade_launcher = new Texture(env.STATIC + 'image/weapon/grenade_launcher.png', true, SHADOW_QUALITY)
+	public static illicit_grenade_launcher = new Texture(env.STATIC + 'image/weapon/illicit_grenade_launcher.png', true, SHADOW_QUALITY)
+	public static cart_grenade_launcher = new Texture(env.STATIC + 'image/weapon/cart_grenade_launcher.png')
+	public static cart_illicit_grenade_launcher = new Texture(env.STATIC + 'image/weapon/cart_illicit_grenade_launcher.png')
+	public static destroyer = new Texture(env.STATIC + 'image/weapon/destroyer.png', true, SHADOW_QUALITY)
+	public static cart_destroyer = new Texture(env.STATIC + 'image/weapon/cart_destroyer.png')
+	public static flame_thrower = new Texture(env.STATIC + 'image/weapon/flame_thrower.png', true, SHADOW_QUALITY)
+	public static gazor = new Texture(env.STATIC + 'image/weapon/gazor.png', true, SHADOW_QUALITY)
+	public static unbridled_gazor = new Texture(env.STATIC + 'image/weapon/unbridled_gazor.png', true, SHADOW_QUALITY)
+	public static b_laser = new Texture(env.STATIC + "image/weapon/b_laser.png", true, SHADOW_QUALITY)
+	public static b_laser_bullet = new Texture(env.STATIC + "image/weapon/b_laser_bullet.png")
+	public static cart_b_laser = new Texture(env.STATIC + 'image/weapon/cart_b_laser.png')
+	public static katana = new Texture(env.STATIC + 'image/weapon/katana.png', true, SHADOW_QUALITY)
+	public static broadsword = new Texture(env.STATIC + 'image/weapon/broadsword.png', true, SHADOW_QUALITY)
+	public static axe = new Texture(env.STATIC + 'image/weapon/axe.png', true, SHADOW_QUALITY)
+	public static slash = new Texture(env.STATIC + 'image/fight/slash.png', true, SHADOW_QUALITY)
+	public static j_laser = new Texture(env.STATIC + 'image/weapon/j_laser.png', true, SHADOW_QUALITY)
+	public static j_laser_bullet = new Texture(env.STATIC + 'image/weapon/j_laser_bullet.png', true, SHADOW_QUALITY)
+	public static cart_j_laser = new Texture(env.STATIC + 'image/weapon/cart_j_laser.png')
+
+	// Cartes
+	public static box = new Texture(env.STATIC + 'image/map/box.png', true, 1)
+	public static big_box = new Texture(env.STATIC + 'image/map/big_box.png', true, 1)
+	public static factory = new Texture(env.STATIC + 'image/map/factory_bg.png')
+	public static desert = new Texture(env.STATIC + 'image/map/desert.png')
+	public static desert_rock2_small = new Texture(env.STATIC + 'image/map/rock2_small.png', true, 1)
+	public static desert_grass = new Texture(env.STATIC + 'image/map/desert_grass.png', true, 1)
+	public static cactus = new Texture(env.STATIC + 'image/map/cactus.png', true, 1)
+	public static desert_rock1_big = new Texture(env.STATIC + 'image/map/rock1_big.png', true, 1)
+	public static desert_rock2_big = new Texture(env.STATIC + 'image/map/rock2_big.png', true, 1)
+	public static desert_rock3_big = new Texture(env.STATIC + 'image/map/rock3_big.png', true, 1)
+	public static skull = new Texture(env.STATIC + 'image/map/skull.png')
+	public static forest = new Texture(env.STATIC + 'image/map/forest.png')
+	public static forest_rock = new Texture(env.STATIC + 'image/map/forest_rock.png', true, 1)
+	public static forest_rock_small = new Texture(env.STATIC + 'image/map/forest_rock_small.png', true, 1)
+	public static stump = new Texture(env.STATIC + 'image/map/stump.png', true, 1)
+	public static fern = new Texture(env.STATIC + 'image/map/fern.png', true, 1)
+	public static leaf = new Texture(env.STATIC + 'image/map/leaf.png')
+	public static leaf2 = new Texture(env.STATIC + 'image/map/leaf2.png')
+	public static leaf3 = new Texture(env.STATIC + 'image/map/leaf3.png')
+	public static leaf4 = new Texture(env.STATIC + 'image/map/leaf4.png')
+	public static mushroom = new Texture(env.STATIC + 'image/map/mushroom.png', true, 1)
+	public static glacier = new Texture(env.STATIC + 'image/map/glacier.png')
+	public static beach = new Texture(env.STATIC + 'image/map/beach.png')
+	public static starfish = new Texture(env.STATIC + 'image/map/starfish.png', false, 0)
+	public static starfish2 = new Texture(env.STATIC + 'image/map/starfish2.png', false, 0)
+	public static palm = new Texture(env.STATIC + 'image/map/palm.png', true, 1)
+	public static pebble = new Texture(env.STATIC + 'image/map/pebble.png', true, 1)
+	public static pebble_small = new Texture(env.STATIC + 'image/map/pebble_small.png')
+	public static snowman = new Texture(env.STATIC + 'image/map/snowman.png', true, 1)
+	public static fir = new Texture(env.STATIC + 'image/map/fir.png', true, 1)
+	public static ice = new Texture(env.STATIC + 'image/map/ice.png', true, 1)
+	public static ice_small = new Texture(env.STATIC + 'image/map/ice_small.png', true, 1)
+	public static barrel = new Texture(env.STATIC + 'image/map/barrel.png', true, 1)
+	public static factory_cone = new Texture(env.STATIC + 'image/map/factory_cone.png', true, 1)
+	public static cone_big = new Texture(env.STATIC + 'image/map/cone_big.png', true, 1)
+	public static fire = new Texture(env.STATIC + 'image/weapon/fire.png')
+	public static gaz = new Texture(env.STATIC + 'image/weapon/gaz.png')
+	public static orange_gaz = new Texture(env.STATIC + 'image/weapon/orange_gaz.png')
+	public static grenade = new Texture(env.STATIC + 'image/weapon/grenade.png')
+	public static red_grenade = new Texture(env.STATIC + 'image/weapon/red_grenade.png')
+	public static explosion = new Texture(env.STATIC + 'image/weapon/explosion.png')
+	public static red_explosion = new Texture(env.STATIC + 'image/weapon/red_explosion.png')
+	public static cloud = new Texture(env.STATIC + 'image/fight/cloud.png')
+	public static grey_cloud = new Texture(env.STATIC + 'image/fight/grey_cloud.png')
+	public static black_cloud = new Texture(env.STATIC + 'image/fight/black_cloud.png')
+	public static nexus_bg = new Texture(env.STATIC + 'image/map/nexus_bg.png')
+	public static nexus_block = new Texture(env.STATIC + 'image/map/nexus_block.png')
+	public static nexus_block_small = new Texture(env.STATIC + 'image/map/nexus_block_small.png')
+	public static rock = new Texture(env.STATIC + 'image/map/rock.png')
+	public static stalactite = new Texture(env.STATIC + 'image/fight/stalactite.png')
+	public static iceberg = new Texture(env.STATIC + 'image/fight/iceberg.png')
+	public static ice_part = new Texture(env.STATIC + 'image/fight/ice_part.png')
+	public static ice_part2 = new Texture(env.STATIC + 'image/fight/ice_part2.png')
+	public static meteorite = new Texture(env.STATIC + 'image/fight/meteorite.png')
+	public static pumpkin = new Texture(env.STATIC + 'image/map/pumpkin.png', true, 1)
+	public static red_circle = new Texture(env.STATIC + 'image/fight/red_circle.png')
+	public static daemon_shadow = new Texture(env.STATIC + 'image/fight/daemon_shadow.png')
+	public static arena = new Texture(env.STATIC + 'image/map/arena.png')
+	public static pyramid = new Texture(env.STATIC + 'image/map/pyramid.png', true, 1)
+	public static grass = new Texture(env.STATIC + 'image/map/grass.png', true, 1)
+	public static pillar = new Texture(env.STATIC + 'image/map/pillar.png', true, 1)
+	public static cube = new Texture(env.STATIC + 'image/map/cube.png', true, 1)
+	public static small_cube = new Texture(env.STATIC + 'image/map/small_cube.png', true, 1)
+	public static square = new Texture(env.STATIC + 'image/map/square.png', true, 1)
+	public static dirt = new Texture(env.STATIC + 'image/map/dirt.png')
+	public static forest_grass = new Texture(env.STATIC + 'image/map/forest_grass.png')
+	public static rock_new = new Texture(env.STATIC + 'image/map/rock_new.png', true, 1)
+	public static little_grass = new Texture(env.STATIC + 'image/map/little_grass.png', true, 1)
+	public static little_grass_2 = new Texture(env.STATIC + 'image/map/little_grass_2.png', true, 1)
+	public static caillou = new Texture(env.STATIC + 'image/map/caillou.png', true, 1)
+	public static branch = new Texture(env.STATIC + 'image/map/branch.png')
+	public static glacier_snow = new Texture(env.STATIC + 'image/map/glacier_snow.png')
+	public static factory_metal = new Texture(env.STATIC + 'image/map/factory_metal.png')
+	public static factory_metal_2 = new Texture(env.STATIC + 'image/map/factory_metal_2.png')
+	public static arrows = new Texture(env.STATIC + 'image/map/arrows.png')
+	public static forest_flower = new Texture(env.STATIC + 'image/map/forest_flower.png', true, 1)
+	public static factory_bolt = new Texture(env.STATIC + 'image/map/factory_bolt.png', true, 1)
+	public static forest_branch = new Texture(env.STATIC + 'image/map/forest_branch.png')
+
+	// Chips
+	public static cure_aureol = new Texture(env.STATIC + 'image/fight/cure_aureol.png')
+	public static shield_aureol = new Texture(env.STATIC + 'image/fight/shield_aureol.png')
+	public static buff_aureol = new Texture(env.STATIC + 'image/fight/buff_aureol.png')
+	public static halo = new Texture(env.STATIC + 'image/fight/halo.png')
+	public static halo_green = new Texture(env.STATIC + 'image/fight/halo_green.png')
+	public static heal_cross = new Texture(env.STATIC + 'image/fight/heal_cross.png')
+	public static liberation_halo = new Texture(env.STATIC + 'image/fight/liberation.png')
+	public static antidote_halo = new Texture(env.STATIC + 'image/fight/antidote.png')
+	public static poison_aureol = new Texture(env.STATIC + 'image/fight/poison_aureol.png')
+	public static shackle_aureol = new Texture(env.STATIC + 'image/fight/shackle_aureol.png')
+	public static damage_return_aureol = new Texture(env.STATIC + 'image/fight/damage_return_aureol.png')
+	public static chip_burning = new Texture(env.STATIC + 'image/chip/glyph/burning.png')
+	public static spike1 = new Texture(env.STATIC + 'image/fight/spike1.png', true, 1)
+	public static spike2 = new Texture(env.STATIC + 'image/fight/spike2.png', true, 1)
+	public static plasma = new Texture(env.STATIC + 'image/fight/plasma.png', true, 1)
+	public static alteration = new Texture(env.STATIC + 'image/fight/alteration.png', true, 1)
+
+	// Buff
+	public static chip_steroid = new Texture(env.STATIC + 'image/chip/glyph/steroid.png')
+	public static chip_protein = new Texture(env.STATIC + 'image/chip/glyph/protein.png')
+	public static chip_warm_up = new Texture(env.STATIC + 'image/chip/glyph/warm_up.png')
+	public static chip_stretching = new Texture(env.STATIC + 'image/chip/glyph/stretching.png')
+	public static chip_reflexes = new Texture(env.STATIC + 'image/chip/glyph/reflexes.png')
+	public static chip_doping = new Texture(env.STATIC + 'image/chip/glyph/doping.png')
+	public static chip_adrenaline = new Texture(env.STATIC + 'image/chip/glyph/adrenaline.png')
+	public static chip_motivation = new Texture(env.STATIC + 'image/chip/glyph/motivation.png')
+	public static chip_rage = new Texture(env.STATIC + 'image/chip/glyph/rage.png')
+	public static chip_seven_league_boots = new Texture(env.STATIC + 'image/chip/glyph/seven_league_boots.png')
+	public static chip_leather_boots = new Texture(env.STATIC + 'image/chip/glyph/leather_boots.png')
+	public static chip_winged_boots = new Texture(env.STATIC + 'image/chip/glyph/winged_boots.png')
+	public static chip_whip = new Texture(env.STATIC + 'image/chip/glyph/whip.png')
+	public static chip_acceleration = new Texture(env.STATIC + 'image/chip/glyph/acceleration.png')
+	public static chip_solidification = new Texture(env.STATIC + 'image/chip/glyph/solidification.png')
+	public static chip_ferocity = new Texture(env.STATIC + 'image/chip/glyph/ferocity.png')
+	public static chip_collar = new Texture(env.STATIC + 'image/chip/glyph/collar.png')
+	public static chip_bark = new Texture(env.STATIC + 'image/chip/glyph/bark.png')
+	public static chip_precipitation = new Texture(env.STATIC + 'image/chip/glyph/precipitation.png')
+	public static chip_covetousness = new Texture(env.STATIC + 'image/chip/glyph/covetousness.png')
+	public static chip_vampirization = new Texture(env.STATIC + 'image/chip/glyph/vampirization.png')
+
+	// Shield
+	public static chip_helmet = new Texture(env.STATIC + 'image/chip/glyph/helmet.png')
+	public static chip_wall = new Texture(env.STATIC + 'image/chip/glyph/wall.png')
+	public static chip_armor = new Texture(env.STATIC + 'image/chip/glyph/armor.png')
+	public static chip_shield = new Texture(env.STATIC + 'image/chip/glyph/shield.png')
+	public static chip_fortress = new Texture(env.STATIC + 'image/chip/glyph/fortress.png')
+	public static chip_rampart = new Texture(env.STATIC + 'image/chip/glyph/rampart.png')
+	public static chip_carapace = new Texture(env.STATIC + 'image/chip/glyph/carapace.png')
+
+	// Heal
+	public static chip_bandage = new Texture(env.STATIC + 'image/chip/glyph/bandage.png')
+	public static chip_cure = new Texture(env.STATIC + 'image/chip/glyph/cure.png')
+	public static chip_vaccine = new Texture(env.STATIC + 'image/chip/glyph/vaccine.png')
+	public static chip_regeneration = new Texture(env.STATIC + 'image/chip/glyph/regeneration.png')
+	public static chip_drip = new Texture(env.STATIC + 'image/chip/glyph/drip.png')
+	public static chip_armoring = new Texture(env.STATIC + 'image/chip/glyph/armoring.png')
+	public static chip_remission = new Texture(env.STATIC + 'image/chip/glyph/remission.png')
+	public static chip_loam = new Texture(env.STATIC + 'image/chip/glyph/loam.png')
+	public static chip_fertilizer = new Texture(env.STATIC + 'image/chip/glyph/fertilizer.png')
+
+	// Damage return
+	public static chip_thorn = new Texture(env.STATIC + 'image/chip/glyph/thorn.png')
+	public static chip_mirror = new Texture(env.STATIC + 'image/chip/glyph/mirror.png')
+
+	// Poison
+	public static chip_venom = new Texture(env.STATIC + 'image/chip/glyph/venom.png')
+	public static chip_toxin = new Texture(env.STATIC + 'image/chip/glyph/toxin.png')
+	public static chip_plague = new Texture(env.STATIC + 'image/chip/glyph/plague.png')
+
+	// Shackles
+	public static chip_slow_down = new Texture(env.STATIC + 'image/chip/glyph/slow_down.png')
+	public static chip_ball_and_chain = new Texture(env.STATIC + 'image/chip/glyph/ball_and_chain.png')
+	public static chip_tranquilizer = new Texture(env.STATIC + 'image/chip/glyph/tranquilizer.png')
+	public static chip_soporific = new Texture(env.STATIC + 'image/chip/glyph/soporific.png')
+	public static chip_fracture = new Texture(env.STATIC + 'image/chip/glyph/fracture.png')
+
+	// Lama
+	public static lama = new Texture(env.STATIC + 'image/fight/lama_big.png')
+
+	static get(game: Game, path: string, buildShadow: boolean = false, quality: number = 1) {
 		if (path in this.cache) {
 			return this.cache[path]
 		}
-		const texture = new Texture(this.game, env.STATIC + path, buildShadow, quality, inverse)
+		const texture = new Texture(env.STATIC + path, buildShadow, quality).load(game)
 		this.cache[path] = texture
 		return texture
 	}
-}
 
-class Texture {
-	public texture: HTMLImageElement
-	public offset: number = 1
-	public inverse: boolean = false
-	public shadow!: HTMLCanvasElement
-	public game: Game
-	constructor(game: Game, path: string, buildShadow: boolean = false, quality: number = 1, inverse: boolean = false) {
-		this.texture = new Image()
-		this.game = game
-		game.numData++
-		this.texture.crossOrigin = "anonymous"
-		this.texture.onload = () => {
-			if (buildShadow) {
-				buildTextureShadow(this, quality)
-			}
-			game.resourceLoaded(path)
-		}
-		this.texture.onerror = (err) => {
-			console.warn("Error loading : " + path)
-			game.resourceLoaded(path)
-		}
-		this.texture.onabort = (err) => {
-			console.warn("Error loading : " + path)
-			game.resourceLoaded(path)
-		}
-		this.inverse = inverse
-		this.texture.src = path // Start loading
-	}
-}
-
-function createScaledTexture(texture: HTMLImageElement, width: number, height: number, inverse: boolean) {
-	try {
-		const canvas = document.createElement('canvas')
-		canvas.width = width
-		canvas.height = height
-		const ctx = canvas.getContext('2d')
-		if (!ctx) { return null }
-		if (inverse) {
-			ctx.translate(width, 0)
-			ctx.scale(-1, 1)
-		}
-		ctx.drawImage(texture, 0, 0, width, height)
-		if (isFinite(width) && isFinite(height)) {
-			ctx.putImageData(ctx.getImageData(0, 0, width, height), 0, 0)
-		}
-		return canvas
-	} catch (e) {
-		return texture
-	}
+	private static cache: {[key: string]: Texture} = {}
 }
 
 function buildTextureShadow(texture: Texture, quality: number) {
@@ -481,4 +326,4 @@ function buildTextureShadow(texture: Texture, quality: number) {
 	}
 }
 
-export { Texture, Textures, SHADOW_QUALITY, createScaledTexture }
+export { T, Texture, SHADOW_QUALITY }

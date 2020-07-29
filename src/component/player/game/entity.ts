@@ -2,12 +2,13 @@ import { Bubble } from '@/component/player/game/bubble'
 import { ChipAnimation } from '@/component/player/game/chips'
 import { Colors, Game, TEAM_COLORS } from '@/component/player/game/game'
 import { InfoText } from '@/component/player/game/infotext'
-import { Texture } from '@/component/player/game/texture'
+import { T, Texture } from '@/component/player/game/texture'
 import { EffectType } from '@/model/effect'
 import { Farmer } from '@/model/farmer'
 import { i18n } from '@/model/i18n'
 import { LeekWars } from '@/model/leekwars'
 import { Cell } from './cell'
+import { S } from './sound'
 
 enum EntityType {
 	LEEK = 0,
@@ -119,7 +120,7 @@ class Entity {
 		this.path = []
 		this.frame = Math.random() * 100
 		this.effects = {}
-		this.bloodTex = this.game.T.leek_blood
+		this.bloodTex = T.leek_blood
 		this.lifeColor = TEAM_COLORS[this.team - 1]
 		this.lifeColorLighter = LeekWars.shadeColor(this.lifeColor, 120)
 	}
@@ -442,7 +443,7 @@ class Entity {
 				this.moveAnim -= dt
 				if (this.moveAnim <= 0) {
 					// Arrivé
-					this.game.S.move.play()
+					S.move.play(this.game)
 					this.x = this.dx
 					this.y = this.dy
 					this.z = this.baseZ
@@ -494,7 +495,7 @@ class Entity {
 			if (this.gazing > 0) {
 				if (Math.random() > 0.8) {
 					for (let i = 0; i < Math.round(dt); i++) {
-						this.game.particles.addGaz(this.ox + Math.random() * 40 - 20, this.oy + Math.random() * 40 - 20, 10, -Math.PI / 2, this.game.T.gaz)
+						this.game.particles.addGaz(this.ox + Math.random() * 40 - 20, this.oy + Math.random() * 40 - 20, 10, -Math.PI / 2, T.gaz)
 					}
 				}
 			}
@@ -530,7 +531,7 @@ class Entity {
 		if (!this.dead && this.bubble) {
 			this.bubble.setLama()
 			this.bubble.show(10)
-			this.game.S.lama.play()
+			S.lama.play(this.game)
 		}
 	}
 	public bug() {
@@ -777,13 +778,13 @@ class Entity {
 
 		// TP
 		ctx.globalAlpha = 1
-		ctx.drawImage(this.game.T.tp.texture, -totalWidth / 2 + padding, 1, iconSize, iconSize)
+		ctx.drawImage(T.tp.texture, -totalWidth / 2 + padding, 1, iconSize, iconSize)
 		ctx.fillStyle = '#ffa100'
 		ctx.fillText(textTP, -totalWidth / 2 + iconSize / 2 + 0.5 * padding + barWidthTP / 2, 9)
 
 		// MP
 		ctx.globalAlpha = 1
-		ctx.drawImage(this.game.T.mp.texture, -totalWidth / 2 + barWidthTP + 2 * padding, 1, iconSize, iconSize)
+		ctx.drawImage(T.mp.texture, -totalWidth / 2 + barWidthTP + 2 * padding, 1, iconSize, iconSize)
 		ctx.fillStyle = '#5ebe00'
 		ctx.fillText(textMP, -totalWidth / 2 + barWidthTP + iconSize / 2 + barWidthMP / 2 + 1.5 * padding, 9)
 	}

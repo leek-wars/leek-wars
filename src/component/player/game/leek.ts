@@ -1,11 +1,11 @@
 import { Entity, EntityDirection, EntityType } from "@/component/player/game/entity"
 import { Game, SHADOW_ALPHA, SHADOW_SCALE } from '@/component/player/game/game'
-import { SHADOW_QUALITY, Texture } from '@/component/player/game/texture'
+import { SHADOW_QUALITY, T, Texture } from '@/component/player/game/texture'
 import { WeaponAnimation, WhiteWeaponAnimation } from '@/component/player/game/weapons'
-import { env } from '@/env'
 import { HatTemplate } from '@/model/hat'
 import { LeekWars } from '@/model/leekwars'
 import { Cell } from './cell'
+import { S } from './sound'
 
 const handSize = 14
 const handSize2 = handSize / 2
@@ -42,8 +42,8 @@ class Leek extends Entity {
 		if (typeof LeekWars.skins[skin] === 'undefined') { skin = 1 }
 
 		this.skin = skin
-		this.bodyTexFront = this.game.T.get("image/leek/leek" + appearance + "_front_" + LeekWars.skins[skin] + ".png", true, SHADOW_QUALITY)
-		this.bodyTexBack = this.game.T.get("image/leek/leek" + appearance + "_back_" + LeekWars.skins[skin] + ".png", true, SHADOW_QUALITY)
+		this.bodyTexFront = T.get(this.game, "image/leek/leek" + appearance + "_front_" + LeekWars.skins[skin] + ".png", true, SHADOW_QUALITY)
+		this.bodyTexBack = T.get(this.game, "image/leek/leek" + appearance + "_back_" + LeekWars.skins[skin] + ".png", true, SHADOW_QUALITY)
 		this.bodyTexFront.texture.addEventListener('load', () => {
 			this.height = this.bodyTexFront.texture.height - 10
 		})
@@ -52,11 +52,13 @@ class Leek extends Entity {
 			this.hat = hat
 			this.hatTemplate = LeekWars.hats[LeekWars.hatTemplates[hat].item]
 			this.hatName = this.hatTemplate.name
-			this.hatFront = this.game.T.get("image/hat/" + this.hatName + ".png", true, SHADOW_QUALITY)
-			this.hatBack = this.game.T.get("image/hat/" +  this.hatName + "_back.png", true, SHADOW_QUALITY)
+			this.hatFront = T.get(this.game, "image/hat/" + this.hatName + ".png", true, SHADOW_QUALITY)
+			this.hatBack = T.get(this.game, "image/hat/" +  this.hatName + "_back.png", true, SHADOW_QUALITY)
 			this.hatX = 0
 		}
-		this.handTex = this.game.T.leek_hand
+		this.handTex = T.leek_hand.load(this.game)
+		this.bloodTex = T.leek_blood.load(this.game)
+		S.move.load(this.game)
 	}
 
 	public setWeapon(weapon: WeaponAnimation) {
@@ -185,10 +187,10 @@ class Leek extends Entity {
 		ctx.translate(0, - this.z)
 
 		if (this.weapon != null && (this.orientation === EntityDirection.SOUTH || this.orientation === EntityDirection.NORTH)) {
-			this.drawBody(ctx, texture.shadow, hatTexture ? hatTexture.shadow : null)
-			this.drawWeapon(ctx, this.weapon.texture.shadow, true)
+			this.drawBody(ctx, texture.shadow!, hatTexture ? hatTexture.shadow : null)
+			this.drawWeapon(ctx, this.weapon.texture.shadow!, true)
 		} else {
-			this.drawBody(ctx, texture.shadow, hatTexture ? hatTexture.shadow : null)
+			this.drawBody(ctx, texture.shadow!, hatTexture ? hatTexture.shadow : null)
 		}
 
 		ctx.restore()

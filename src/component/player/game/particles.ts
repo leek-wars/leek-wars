@@ -3,6 +3,7 @@ import { Game } from "@/component/player/game/game"
 import { Blood, Bullet, Cartridge, Explosion, Fire, Garbage, Gaz, Grenade, ImageParticle, Laser, Lightning, Meteorite, NUM_BLOOD_SPRITES, Particle, Plasma, Rectangle, Shot, SimpleFire, SpikeParticle, SpinningParticle } from '@/component/player/game/particle'
 import { Position } from '@/component/player/game/position'
 import { Texture } from '@/component/player/game/texture'
+import { S } from './sound'
 
 class Particles {
 	public game: Game
@@ -67,7 +68,7 @@ class Particles {
 	}
 	public addExplosion(x: number, y: number, z: number, texture: Texture, life: number = Explosion.EXPLOSION_LIFE) {
 		this.add(new Explosion(this.game, x, y, z, texture, life))
-		this.game.S.explosion.play()
+		S.explosion.play(this.game)
 	}
 	public addPlasma(x: number, y: number, z: number, texture: Texture, life: number) {
 		this.add(new Plasma(this.game, x, y, z, texture, life))

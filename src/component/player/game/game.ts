@@ -9,8 +9,8 @@ import { Leek } from '@/component/player/game/leek'
 import { Arena, Beach, Desert, Factory, Forest, Glacier, Map, Nexus } from '@/component/player/game/maps'
 import { Obstacle } from '@/component/player/game/obstacle'
 import { Particles } from '@/component/player/game/particles'
-import { Sounds } from '@/component/player/game/sound'
-import { Textures } from '@/component/player/game/texture'
+import { S, Sound } from '@/component/player/game/sound'
+import { T, Texture } from '@/component/player/game/texture'
 import { Axe, BLaser, Broadsword, Destroyer, DoubleGun, Electrisor, FlameThrower, Gazor, GrenadeLauncher, IllicitGrenadeLauncher, JLaser, Katana, Laser, MachineGun, Magnum, MLaser, MysteriousElectrisor, Pistol, RevokedMLaser, Shotgun, UnbridledGazor } from '@/component/player/game/weapons'
 import { env } from '@/env'
 import { Action, ActionType } from '@/model/action'
@@ -42,7 +42,7 @@ const FPS = 60
 const MAX_DT = 8
 const GROUND_TEXTURE = true
 const SHADOW_SCALE = 0.5
-const SHADOW_ALPHA = 0.3
+const SHADOW_ALPHA = 0.4
 
 let lastTime = new Date().getTime()
 let dt = 0
@@ -103,7 +103,7 @@ const WEAPONS = [
 	RevokedMLaser, // 21
 ]
 
-const CHIPS: any[] = [
+const CHIPS = [
 	Bandage, // 1
 	Cure, // 2
 	Drip, // 3
@@ -188,8 +188,6 @@ class Game {
 	public canvas!: HTMLCanvasElement
 	public loadedData: number = 0
 	public numData: number = 0
-	public T = new Textures(this)
-	public S = new Sounds(this)
 	public initialized: boolean = false
 	public paused: boolean = false
 	public requestPause = false
@@ -250,7 +248,7 @@ class Game {
 	public showLifes: boolean = true
 	public showIDs: boolean = false
 	public sound: boolean = false
-	public atmosphere: any
+	public atmosphere!: Sound
 	public obstacles!: {[key: number]: number[]}
 	public error: boolean = false
 	public fps: number = 0
@@ -317,6 +315,7 @@ class Game {
 		}
 
 		this.map = this.maps[this.data.map.type + 1]
+		this.map.create()
 
 		// Atmosphere sound of the map
 		this.atmosphere = this.map.sound
@@ -492,6 +491,65 @@ class Game {
 				this.turnPosition[this.actions[i].params[1]] = i / this.actions.length
 			}
 		}
+
+		// Lecture des actions pour déterminer les puces et armes utilisées
+		const chipsUsed = new Set<number>()
+		const weaponsTaken = new Set<number>()
+		const weaponsUsed = new Set<number>()
+		const weapons: {[key: number]: number} = {}
+		for (const action of this.actions) {
+			switch (action.type) {
+				case ActionType.USE_CHIP:
+					chipsUsed.add(action.params[3])
+					break
+				case ActionType.SET_WEAPON:
+					weaponsTaken.add(action.params[2])
+					weapons[action.params[1] as number] = action.params[2]
+					break
+				case ActionType.USE_WEAPON:
+					weaponsUsed.add(weapons[action.params[1]])
+					break
+				case ActionType.LAMA:
+					S.lama.load(this)
+					break
+				case ActionType.BUG:
+					T.bug.load(this)
+					break
+			}
+		}
+
+		// Load common textures
+		T.tp.load(this)
+		T.mp.load(this)
+
+		const textures = new Set<Texture>()
+		const sounds = new Set<Sound>()
+		for (const chip of chipsUsed) {
+			const chipAnimation = CHIPS[chip - 1]
+			if (!chipAnimation) { continue }
+			for (const texture of chipAnimation.textures) {
+				textures.add(texture)
+			}
+			for (const sound of chipAnimation.sounds) {
+				sounds.add(sound)
+			}
+		}
+		for (const weapon of weaponsTaken) {
+			const weaponAnimation = WEAPONS[weapon - 1]
+			for (const texture of weaponAnimation.textures) {
+				textures.add(texture)
+			}
+			for (const sound of weaponAnimation.sounds) {
+				sounds.add(sound)
+			}
+		}
+		for (const texture of textures) {
+			texture.load(this)
+		}
+		for (const sound of sounds) {
+			sound.load(this)
+		}
+
 		// On a chargé tout le jeu, on peut charger les ressources
 		// le jeu démarrera quand toutes les ressources seront ok
 		this.initialized = true
@@ -511,7 +569,7 @@ class Game {
 	public launch() {
 		// Atmosphere sound
 		if (this.atmosphere != null && this.sound) {
-			this.atmosphere.loop()
+			this.atmosphere.loop(this)
 		}
 		for (const obstacle of this.ground.obstacles) {
 			obstacle.resize()
@@ -610,7 +668,7 @@ class Game {
 	public toggleSound() {
 		if (this.atmosphere != null) {
 			if (this.sound) {
-				this.atmosphere.loop()
+				this.atmosphere.loop(this)
 			} else {
 				this.atmosphere.stop()
 			}
@@ -724,7 +782,7 @@ class Game {
 	public resume() {
 		if (this.paused) {
 			if (this.atmosphere != null) {
-				this.atmosphere.loop()
+				this.atmosphere.loop(this)
 			}
 			this.paused = false
 			this.updateFrame()
@@ -840,13 +898,13 @@ class Game {
 				this.actionDone()
 				break
 			}
-			if (CHIPS[action.params[3] - 1] !== null) {
-				const chipAnimation: any = new CHIPS[action.params[3] - 1](this)
+			if (CHIPS[chip - 1] !== null) {
+				const chipAnimation: any = new CHIPS[chip - 1]!(this)
 				const leeks = []
 				for (const leek of leeksID) {
 					leeks.push(this.leeks[leek])
 				}
-				this.leeks[action.params[1]].useChip(chipAnimation, cell, leeks)
+				this.leeks[launcher].useChip(chipAnimation, cell, leeks)
 				this.chips.push(chipAnimation)
 			} else {
 				this.actionDone()
@@ -947,7 +1005,7 @@ class Game {
 			this.entityOrder.splice(this.entityOrder.findIndex((e) => e.id === caster) + 1, 0, summon)
 			if (!this.jumping) {
 				this.log(action)
-				this.S.bulb.play()
+				S.bulb.play(this)
 				this.leeks[caster].watch(cell)
 			}
 			this.actionDone()
@@ -1918,7 +1976,7 @@ class Game {
 		this.draw()
 	}
 
-	public resourceLoaded(res: string) {
+	public resourceLoaded(res: string) { // variable "res" utile pour débug
 		this.loadedData++
 		if (this.cancelled) { return }
 		// console.log("Resource loaded : " + res + " (" + this.loadedData + "/" + this.numData + ")")
