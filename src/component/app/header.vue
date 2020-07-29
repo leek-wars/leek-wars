@@ -47,7 +47,7 @@
 				<div v-if="env.BANK" class="button-wrapper">
 					<router-link to="/bank">
 						<div class="header-button">
-							<span v-if="$store.state.farmer" class="farmer-crystals text">{{ $store.state.farmer.crystals }}</span>
+							<span v-if="$store.state.farmer" class="farmer-crystals text">{{ $store.state.farmer.crystals | number }}</span>
 							<span class="crystal text"></span>
 						</div>
 					</router-link>
