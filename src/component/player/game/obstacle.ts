@@ -59,8 +59,8 @@ class Obstacle {
 			this.realWidth = Math.round(this.baseTexture.texture.width * scale)
 			this.realHeight = Math.round(this.baseTexture.texture.height * scale)
 
-			this.realX = Math.round((this.x / 2) * this.game.ground.tileSizeX + (this.game.ground.tileSizeX - this.realWidth) / 2)
-			this.realY = Math.round((this.y / 2 + 1) * this.game.ground.tileSizeY - this.realHeight + 5)
+			this.realX = (this.x / 2) * this.game.ground.tileSizeX + (this.game.ground.tileSizeX - this.realWidth) / 2
+			this.realY = (this.y / 2 + 1) * this.game.ground.tileSizeY - this.realHeight
 
 			this.texture = this.baseTexture.getScaled(this.realWidth)
 
@@ -71,8 +71,8 @@ class Obstacle {
 			this.realWidth = Math.round(this.baseTexture.texture.width * scale)
 			this.realHeight = Math.round(this.baseTexture.texture.height * scale)
 
-			this.realX = Math.round(((this.x - 1) / 2) * this.game.ground.tileSizeX + (this.game.ground.tileSizeX * 2 - this.realWidth) / 2)
-			this.realY = Math.round(((this.y + 3) / 2) * this.game.ground.tileSizeY - this.realHeight + 22.5)
+			this.realX = ((this.x - 1) / 2) * this.game.ground.tileSizeX + (this.game.ground.tileSizeX * 2 - this.realWidth) / 2
+			this.realY = (2 + this.y / 2) * this.game.ground.tileSizeY - this.realHeight
 
 			this.texture = this.baseTexture.getScaled(this.realWidth)
 		}
@@ -114,10 +114,10 @@ class Obstacle {
 		if (this.baseTexture.shadow != null) {
 
 			ctx.save()
-			ctx.translate(this.cellX, this.cellY)
+			ctx.translate(this.cellX, this.cellY - 0.1 * this.game.ground.realTileSizeY)
 			ctx.scale(1, -SHADOW_SCALE)
 			ctx.rotate(-Math.PI / 4)
-			ctx.translate(0, - this.realHeight + 0.3 * this.game.ground.realTileSizeY)
+			ctx.translate(0, - this.realHeight + 0.5 * this.game.ground.realTileSizeY)
 			ctx.globalAlpha = SHADOW_ALPHA
 			ctx.drawImage(this.baseTexture.shadow, -this.realWidth / 2, 0, this.realWidth, this.realHeight)
 			ctx.restore()
