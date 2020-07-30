@@ -54,7 +54,7 @@
 					{{ $t('loading_fight') }}
 				</div>
 				<div v-if="queue" class="queue-position">
-					<span v-if="queue.position == -1">{{ $t('generating') }}</span>
+					<span v-if="queue.position <= 0">{{ $t('generating') }}</span>
 					<span v-else>{{ $t('position_in_queue', [queue.position + 1, queue.total]) }}</span>
 				</div>
 			</div>
