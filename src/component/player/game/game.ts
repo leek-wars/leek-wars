@@ -511,6 +511,7 @@ class Game {
 					break
 				case ActionType.LAMA:
 					S.lama.load(this)
+					T.lama.load(this)
 					break
 				case ActionType.BUG:
 					T.bug.load(this)
