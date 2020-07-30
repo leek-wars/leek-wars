@@ -1,3 +1,43 @@
+212:
+  title: Inscription auto aux tournois, Battle Royales auto, Docker et nouveau serveur.
+  added:
+    - Inscription automatique au tournoi suivant tant que l'éleveur s'est connecté dans les dernières 24h.
+    - Battle Royales automatiques toutes les heures de 9h à 23h.
+    - Historiques d'équipe.
+    - Option pour utiliser une échelle logarithmique pour le graphique page rapport de combat.
+    - Affichage du total de joueurs connectés sur le chat latéral.
+  improved:
+    - Migration vers un nouveau serveur et utilisation de Docker.
+    - Amélioration de l'affichage la documentation dans l'éditeur (autocomplétion et infobulles).
+    - Ajout d'un fil d'ariane et d'une roue de chargement sur les pages historique.
+    - "Carte de test (nexus) : fond entièrement blanc et obstacles plus jolis."
+    - Affichage des nouveautés de la dernière version sur la page d'inscription.
+    - Fourchette matchmaking équipe resserée pour avoir des compositions plus proches en talent.
+    - "Page poireau : ajout des messages 'aucune arme' et 'aucune puce'."
+    - Les trophées sur la page de votre éleveur sont gardés en cache.
+    - Les combats solo et d'équipe sont inclus dans l'historique éleveur.
+    - Les compositions de moins de 3 poireaux ne comptent plus pour le classement équipe.
+    - "Combat : les ombres sont maintenant inclinées à 45°."
+    - Ajout de traductions anglaises pour l'historique des modifications (merci à RussianMafia).
+    - Ajout de documentation pour de nombreuses constantes (merci à RussianMafia).
+    - Amélioration du fonctionnement et du style des onglets dans l'éditeur.
+    - Accélération considérable du temps de chargement des pages combat.
+    - "Nerf du glaive : le boost passe de 30 à 20."
+    - "Nerf du M-Laser révoqué : le poison passe de 60-70 à 50-60."
+  fixed:
+    - Ajout de la documentation manquante pour isStatic et sendTo (merci à TomAijerrie).
+    - Correction d'un bug d'affichage quand on achète pour la première fois un chapeau.
+    - Correction d'un bug de synchronisation du lecteur de combat lors d'un saut dans le temps.
+    - Correction de la couleur des noix de coco sur la carte plage (jaune au lieu de marron).
+    - Correction du bug des cartes personnalisées, à l'origine de plusieurs bugs en combat de test #514.
+    - Correction du soin de la puce Inversion. Le soin était diminué selon la distance avec la cible.
+    - Prise en compte des zones et de coups critiques pour les effets de vulnérabilité (merci à Lmare).
+    - Correction du bug de blocage des combats.
+    - Correction de messages d'erreurs sur les pages inscription, mot de passe oublié et paramètres.
+    - Correction d'un bug qui faisait passer le combat directement au tour suivant en cas de suicide d'entité.
+    - Correction d'un bug de double tour en combat.
+    - Correction d'un bug de la fonction listen().
+
 211:
   title: 4 nouvelles puces, 4 couleurs, modération des combats et nouvelles icônes.
   added:
