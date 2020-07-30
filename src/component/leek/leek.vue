@@ -273,6 +273,16 @@
 						{{ $t('rename_leek') }}
 					</div>
 				</template>
+				<tooltip v-if="leek && my_leek && leek.level >= 50">
+					<template v-slot:activator="{ on }">
+						<div class="tab" @click="registerAutoBr" v-on="on">
+							<v-icon>mdi-trophy</v-icon>
+							<span v-if="!leek.auto_br" class="register">{{ $t('register_to_br') }}</span>
+							<span v-else class="unregister">{{ $t('unregister') }}</span>
+						</div>
+					</template>
+					{{ $t('br_time') }}
+				</tooltip>
 			</div>
 		</div>
 
@@ -787,6 +797,17 @@
 				} else {
 					this.leek.tournament.registered = true
 					LeekWars.post('leek/register-tournament', {leek_id: this.leek.id})
+				}
+			}
+		}
+		registerAutoBr() {
+			if (this.leek) {
+				if (this.leek.auto_br) {
+					this.leek.auto_br = false
+					LeekWars.post('leek/unregister-auto-br', {leek_id: this.leek.id})
+				} else {
+					this.leek.auto_br = true
+					LeekWars.post('leek/register-auto-br', {leek_id: this.leek.id})
 				}
 			}
 		}
