@@ -203,17 +203,6 @@ const LeekWars = {
 		if (!(skin in SKINS)) { return SKINS[1] }
 		return SKINS[skin]
 	},
-	getImageSize(image: string, callback: (r: any) => void) {
-		const cached = localStorage.getItem('imagesize/' + image)
-		if (cached) {
-			const data = cached.split(',')
-			return callback({ width: parseInt(data[0], 10), height: parseInt(data[1], 10) })
-		}
-		this.post('util/get-image-size', { image }).then(data => {
-			localStorage.setItem('imagesize/' + image, data.width + ',' + data.height)
-			callback({ width: data.width, height: data.height })
-		})
-	},
 	objectSize(obj: object): number {
 		let size = 0, key
 		for (key in obj) { if (obj.hasOwnProperty(key)) { size++ } }
