@@ -132,7 +132,7 @@ class Glacier extends Map {
 }
 class Nexus extends Map {
 	constructor(game: Game) {
-		super(game, S.map_nexus, "#fff", T.nexus_bg,
+		super(game, S.map_nexus, "#f2f2f2", T.nexus_bg,
 			[T.nexus_block_small, T.nexus_block_small, T.nexus_block_small],
 			[T.nexus_block, T.nexus_block, T.nexus_block])
 		T.nexus_block.offset = 1.177
