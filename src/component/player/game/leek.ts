@@ -44,6 +44,9 @@ class Leek extends Entity {
 		this.skin = skin
 		this.bodyTexFront = T.get(this.game, "image/leek/leek" + appearance + "_front_" + LeekWars.skins[skin] + ".png", true, SHADOW_QUALITY)
 		this.bodyTexBack = T.get(this.game, "image/leek/leek" + appearance + "_back_" + LeekWars.skins[skin] + ".png", true, SHADOW_QUALITY)
+		if (this.bodyTexFront.texture) {
+			this.height = this.bodyTexFront.texture.height - 10
+		}
 		this.bodyTexFront.texture.addEventListener('load', () => {
 			this.height = this.bodyTexFront.texture.height - 10
 		})
