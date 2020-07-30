@@ -60,6 +60,7 @@ class Leek {
 	public talent!: number
 	public weapon!: number
 	public title!: number[]
+	public auto_br!: boolean
 
 	constructor(data: any) {
 		Object.assign(this, data)
