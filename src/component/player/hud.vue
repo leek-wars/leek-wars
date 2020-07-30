@@ -1,5 +1,5 @@
 <template>
-	<div class="hud">
+	<div class="hud" :class="{dark: game.map && game.map.options.dark}">
 		<div class="life-bar">
 			<div class="wrapper">
 				<template v-for="team in game.teams">
@@ -31,7 +31,7 @@
 		<div v-if="!LeekWars.mobile" class="timeline">
 			<tooltip v-for="(entity, e) of game.entityOrder" :key="e" top>
 				<template v-slot:activator="{ on }">
-					<div :class="{summon: entity.summon, current: entity.id === game.currentPlayer, dead: entity.dead}" :style="{background: entity === game.selectedEntity || entity === game.mouseEntity ? '#fffc' : entity.gradient, 'border-color': entity.color}" class="entity" v-on="on" @mouseenter="entity_enter(entity)" @mouseleave="entity_leave(entity)" @click="entity_click(entity)">
+					<div :class="{summon: entity.summon, current: entity.id === game.currentPlayer, dead: entity.dead}" :style="{background: entity === game.selectedEntity || entity === game.mouseEntity ? '#fffc' : (entity.id === game.currentPlayer ? entity.color : entity.gradient)}" class="entity" v-on="on" @mouseenter="entity_enter(entity)" @mouseleave="entity_leave(entity)" @click="entity_click(entity)">
 						<div v-if="!entity.dead" :style="{height: 'calc(6px + ' + ((entity.life / entity.maxLife) * 100) + '%)', background: entity.lifeColor, 'border-color': entity.lifeColorLighter}" class="bar"></div>
 						<div class="image">
 							<img v-if="entity.summon" :src="'/image/bulb/' + entity.bulbName + '_front.png'">
@@ -44,9 +44,9 @@
 			</tooltip>
 		</div>
 		<template v-if="!LeekWars.mobile">
-			<entity-details v-if="game.mouseEntity" :entity="game.mouseEntity" />
-			<entity-details v-else-if="game.selectedEntity" :entity="game.selectedEntity" />
-			<entity-details v-else-if="game.currentPlayer in game.leeks" :entity="game.leeks[game.currentPlayer]" />
+			<entity-details v-if="game.mouseEntity" :entity="game.mouseEntity" :dark="game.map && game.map.options.dark" />
+			<entity-details v-else-if="game.selectedEntity" :entity="game.selectedEntity" :dark="game.map && game.map.options.dark" />
+			<entity-details v-else-if="game.currentPlayer in game.leeks" :entity="game.leeks[game.currentPlayer]" :dark="game.map && game.map.options.dark" />
 		</template>
 	</div>
 </template>
@@ -126,10 +126,10 @@
 	.timeline .entity {
 		display: inline-flex;
 		vertical-align: bottom;
-		width: 58px;
-		height: 76px;
-		margin: 0 2px;
-		padding: 3px 2px;
+		flex: 0 1 65px;
+		height: 86px;
+		min-width: 0;
+		padding: 3px 0;
 		position: relative;
 		border-top-left-radius: 3px;
 		border-top-right-radius: 3px;
@@ -137,37 +137,29 @@
 		cursor: pointer;
 		min-width: 0;
 	}
-	.timeline .entity.current {
-		border-top: 5px solid black;
-		border-left: 5px solid black;
-		border-right: 5px solid black;
-		height: 81px;
-		width: 71px;
-		margin: 0 0px;
-	}
 	.timeline .entity.dead {
 		opacity: 0.3;
 	}
 	.timeline .entity .bar {
-		flex: 6px 0 0;
+		flex: 7px 0 0;
 		border-top-left-radius: 3px;
 		border: 1px solid black;
-		margin-right: 2px;
-		margin-left: -3px;
 		margin-top: -3px;
 		margin-bottom: -3px;
 	}
 	.timeline .entity .image {
 		max-width: 100%;
 		max-height: 100%;
+		overflow: hidden;
+		padding: 0 4px;
 	}
 	.timeline .entity .image svg {
 		max-width: 50px;
-		max-height: 70px;
+		max-height: 80px;
 	}
 	.timeline .entity.summon {
-		width: 41px;
-		height: 56px;
+		flex: 0 1 50px;
+		height: 60px;
 	}
 	.timeline .entity.summon.current {
 		width: 51px;
@@ -217,18 +209,35 @@
 	.actions {
 		text-align: left;
 		padding: 6px;
-		width: 190px;
+		width: 240px;
 		overflow: hidden;
-		background-color: rgba(255,255,255, 0.2);
+		background-color: rgba(255,255,255, 0.5);
+		.action {
+			white-space: nowrap;
+			padding: 1px 0;
+			font-size: 14px;
+		}
 	}
 	.actions:hover {
-		width: 600px;
+		width: auto;
 		background-color: rgba(255,255,255, 1);
+		.action {
+			width: auto;
+			max-width: 600px;
+		}
+		.log {
+			width: auto;
+			max-width: 600px;
+		}
 	}
-	.actions .action {
-		padding: 1px 0;
-		font-size: 14px;
-		width: 600px;
+	.hud.dark {
+		.actions {
+			background-color: rgba(20,20,20, 0.6);
+			color: #eee;
+			&:hover {
+				background-color: rgba(20,20,20, 0.9);
+			}
+		}
 	}
 	.debug {
 		position: absolute;

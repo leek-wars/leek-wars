@@ -105,6 +105,21 @@
 				</v-tooltip>
 				<div class="turn">{{ $t('fight.turn_n', [game.turn]) }}</div>
 				<div class="filler"></div>
+
+				<v-tooltip v-if="$store.state.farmer && $store.state.farmer.admin" :open-delay="0" :close-delay="0" top content-class="top">
+					<template v-slot:activator="{ on: tooltip }">
+						<v-menu :close-on-content-click="false" top offset-y left>
+							<template v-slot:activator="{ on: menu }">
+								<v-icon v-ripple class="control" v-on="{...tooltip, ...menu}">mdi-map</v-icon>
+							</template>
+							<v-radio-group v-model="game.mapType" class="map-menu" hide-details :mandatory="true">
+								<v-radio v-for="(map, m) of maps" :key="map" :label="map" :value="m" />
+							</v-radio-group>
+						</v-menu>
+					</template>
+					Carte
+				</v-tooltip>
+
 				<v-tooltip :open-delay="0" :close-delay="0" top content-class="top">
 					<template v-slot:activator="{ on }">
 						<v-icon v-ripple class="control" v-on="on" @click="toggleFullscreen">mdi-aspect-ratio</v-icon>
@@ -192,6 +207,10 @@
 		timeout: any = null
 		request: any = null
 		progress: number = 0
+
+		get maps() {
+			return ["Nexus", "Usine", "Désert", "Forêt", "Glacier", "Plage", "Temple"]
+		}
 
 		created() {
 			if (localStorage.getItem('fight/shadows') === null) { localStorage.setItem('fight/shadows', 'true') }
@@ -455,6 +474,13 @@
 		endOfFight() {
 			if (this.game.going_to_report) {
 				this.$router.push("/report/" + this.fightId)
+			}
+		}
+
+		@Watch('game.mapType')
+		updateMap(after: number, before: number) {
+			if (before !== -1) {
+				this.game.updateMap()
 			}
 		}
 	}
@@ -776,6 +802,15 @@
 			position: absolute;
 			border-radius: 6px;
 			transition: width 1s;
+		}
+	}
+	.map-menu {
+		background: #1E1E1E;
+		color: #eee;
+		padding: 10px;
+		overflow: hidden;
+		::v-deep .theme--light.v-label {
+			color: #eee;
 		}
 	}
 </style>

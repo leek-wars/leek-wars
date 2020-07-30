@@ -5,7 +5,7 @@
 				<img :src="effect.texture.src">
 			</div>
 		</div>
-		<div :class="{dead: entity.dead}" class="details">
+		<div :class="{dead: entity.dead, dark}" class="details">
 			<div class="image">
 				<img v-if="entity.summon" :src="'/image/bulb/' + entity.bulbName + '_front.png'">
 				<turret-image v-else-if="(entity instanceof Turret)" :level="entity.level" :skin="entity.team" :scale="0.15" />
@@ -92,6 +92,7 @@
 	@Component({ name: 'entity-details' })
 	export default class EntityDetails extends Vue {
 		@Prop({required: true}) entity!: FightEntity
+		@Prop({required: true}) dark!: boolean
 		Turret = Turret
 
 		effectText(effect: any) {
@@ -123,6 +124,10 @@
 	border-radius: 3px;
 	display: flex;
 	align-items: center;
+	&.dark {
+		background-color: #222;
+		color: #eee;
+	}
 }
 .details.dead {
 	background: rgba(255,255,255,0.3);
@@ -144,7 +149,6 @@
 	margin-right: -4px;
 }
 .name {
-	color: black;
 	font-weight: 500;
 	width: 150px;
     overflow: hidden;

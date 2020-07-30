@@ -235,6 +235,7 @@ class Game {
 	public markers = new Array()
 	public markersText = new Array()
 	// Map
+	public mapType: number = -1 // -1 = pas initialisée
 	public map!: Map
 	public drawArea = 0
 	// Mouse
@@ -322,11 +323,13 @@ class Game {
 			return
 		}
 
+		this.mapType = this.data.map.type + 1
 		this.map = this.maps[this.data.map.type + 1]
+		this.map.seed = fight.id
 		this.map.create()
 
 		// Atmosphere sound of the map
-		this.atmosphere = this.map.sound
+		this.atmosphere = this.map.options.sound
 
 		// Obstacles
 		if (this.halloween) {
@@ -542,6 +545,9 @@ class Game {
 					break
 			}
 		}
+		console.log("used chips", chipsUsed)
+		console.log("weapons taken", weaponsTaken)
+		console.log("weapons used", weaponsUsed)
 
 		// Load common textures
 		T.tp.load(this)
@@ -570,6 +576,8 @@ class Game {
 				sounds.add(sound)
 			}
 		}
+		console.log("textures to load", textures)
+		console.log("sounds to load", sounds)
 		for (const texture of textures) {
 			texture.load(this)
 		}
@@ -2019,7 +2027,7 @@ class Game {
 				entity.drawPath(this.ctx)
 			}
 			if (entity === this.hoverEntity || entity === this.mouseEntity || entity === this.selectedEntity) {
-				this.drawEffectArea(entity.reachableCellsArea, this.map.reachableColor, 2, 0.7, 0.1)
+				this.drawEffectArea(entity.reachableCellsArea, this.map.options.reachableColor, 2, 0.7, 0.1)
 			}
 		}
 
@@ -2104,7 +2112,7 @@ class Game {
 		this.ctx.strokeStyle = 'black'
 		this.ctx.lineCap = 'round'
 		this.ctx.lineJoin = 'round'
-		this.ctx.lineWidth = 2
+		this.ctx.lineWidth = 1.8 * this.ground.scale
 		this.ctx.stroke()
 
 		this.ctx.globalAlpha = 1
@@ -2234,7 +2242,11 @@ class Game {
 		if (this.cancelled) { return }
 		// console.log("Resource loaded : " + res + " (" + this.loadedData + "/" + this.numData + ")")
 		if (this.loadedData === this.numData && this.initialized === true) {
-			this.launch() // Start game if all resources are loaded
+			if (!this.launched) {
+				this.launch() // Start game if all resources are loaded
+			} else {
+				this.mapLoaded()
+			}
 		}
 	}
 
@@ -2251,6 +2263,17 @@ class Game {
 		} else {
 			return EntityDirection.NORTH
 		}
+	}
+
+	public updateMap() {
+		this.map = this.maps[this.mapType]
+		this.map.create()
+		this.atmosphere = this.map.options.sound
+	}
+
+	public mapLoaded() {
+		this.ground.resize(this.width, this.height, this.shadows)
+		this.redraw()
 	}
 }
 
