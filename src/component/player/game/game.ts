@@ -515,6 +515,9 @@ class Game {
 				case ActionType.BUG:
 					T.bug.load(this)
 					break
+				case ActionType.SUMMON:
+					S.bulb.load(this)
+					break
 			}
 		}
 
