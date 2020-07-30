@@ -6,6 +6,7 @@
     - Historiques d'équipe.
     - Option pour utiliser une échelle logarithmique pour le graphique page rapport de combat.
     - Affichage du total de joueurs connectés sur le chat latéral.
+    - Ajout de la modération des site web sur la page éleveur.
   improved:
     - Migration vers un nouveau serveur et utilisation de Docker.
     - Amélioration de l'affichage la documentation dans l'éditeur (autocomplétion et infobulles).
