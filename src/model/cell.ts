@@ -6,6 +6,7 @@ class Cell {
 	public readonly y: number
 	public obstacle: boolean = false
 	public entity: Entity | null = null
+	public color: boolean
 
 	constructor(id: number, x: number, y: number) {
 		this.id = id
