@@ -34,13 +34,15 @@ class BattleRoyale {
 	}
 	start(data: any) {
 		LeekWars.toast(i18n.t('main', 'starting_battle_royale'))
-		LeekWars.setTitleTag(null)
-		this.leeks = []
-		this.enabled = false
-		this.progress = 0
-		localStorage.removeItem('battle-royale')
-		store.commit('update-fights', -1)
-		router.push('/fight/' + data[0])
+		if (data[1]) { // Garden BR (not automatic)
+			LeekWars.setTitleTag(null)
+			this.leeks = []
+			this.enabled = false
+			this.progress = 0
+			localStorage.removeItem('battle-royale')
+			store.commit('update-fights', -1)
+			router.push('/fight/' + data[0])
+		}
 	}
 }
 
