@@ -29,11 +29,12 @@
 						<h3>Poireaux</h3>
 						<table class="report">
 							<tr>
-								<th>{{ $t('leek') }}</th>
-								<th>{{ $t('level') }}</th>
-								<th>{{ $t('xp') }}</th>
-								<th class="gain">{{ $t('money') }}</th>
-								<th v-if="fight.type === FightType.SOLO" class="gain">{{ $t('talent') }}</th>
+								<th>{{ $t('main.leek') }}</th>
+								<th>{{ $t('main.level') }}</th>
+								<th v-if="$store.getters.admin" class="power">Power</th>
+								<th>{{ $t('main.xp') }}</th>
+								<th class="gain">{{ $t('main.habs') }}</th>
+								<th v-if="fight.type === FightType.SOLO" class="gain">{{ $t('main.talent') }}</th>
 								<th v-if="$store.getters.admin" class="gain">Time</th>
 							</tr>
 							<report-leek-row v-for="leek in report.leeks" v-if="!leek.summon" :key="leek.id" :leek="leek" :fight="fight" />

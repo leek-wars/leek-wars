@@ -11,7 +11,7 @@
 			<span v-else>{{ leek.name }}</span>
 		</td>
 		<td class="level">{{ leek.level }}</td>
-		<td class="power">{{ Math.round(Math.pow(leek.level, 4.2)) | number }}</td>
+		<td v-if="$store.getters.admin" class="power">{{ Math.round(Math.pow(leek.level, 4.2)) | number }}</td>
 		<td class="xp">
 			<tooltip>
 				<template v-slot:activator="{ on }">
