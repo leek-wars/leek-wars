@@ -3,12 +3,16 @@
 	"cancel": "Annuler",
 	"create_new_topic": "Créer un sujet",
 	"create_topic": "Créer le sujet",
+	"error_invalid_title": "Le titre du sujet doit faire entre {min} et {max} caractères",
 	"n_topic_n_messages": "{0} sujets / {1} messages",
 	"last": "Dernier",
 	"last_message": "Dernier {date} par {farmer}",
 	"last_by_x": "par {author}",
+	"locked": "Sujet verrouillé",
 	"messages": "Messages",
 	"new_topic_message": "Message du topic",
 	"new_topic_title": "Titre du topic",
+	"pinned": "Sujet accroché",
+	"resolved": "Sujet résolu",
 	"topic": "Sujet"
 }

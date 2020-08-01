@@ -17,7 +17,7 @@
 					<br v-if="error">
 					<div v-if="error" class="error">{{ error }}</div>
 					<br>
-					<v-btn color="primary" @click="createLeek">{{ $t('create') }}</v-btn>  
+					<v-btn color="primary" @click="createLeek">{{ $t('create') }}</v-btn>
 				</template>
 				<template v-else>
 					<h2>{{ $t('4_leeks_only') }}</h2>
@@ -50,7 +50,7 @@
 			LeekWars.post('leek/create', {name: this.leekName}).then(data => {
 				this.$router.push('/leek/' + data.id)
 			}).error(error => {
-				this.error = this.$t('leek.error_' + error.error, error.params) as string
+				this.error = this.$t('error_' + error.error, error.params) as string
 			})
 		}
 	}

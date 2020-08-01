@@ -3,12 +3,16 @@
 	"cancel": "Cancel",
 	"create_new_topic": "Create a topic",
 	"create_topic": "Create topic",
+	"error_invalid_title": "Topic title must be between {min} and {max} characters",
 	"n_topic_n_messages": "{0} topics / {1} messages",
 	"last": "Last",
 	"last_message": "Last {date} by {farmer}",
 	"last_by_x": "by {author}",
+	"locked": "Topic locked",
 	"messages": "Messages",
 	"new_topic_message": "Topic message",
 	"new_topic_title": "Topic title",
+	"pinned": "Topic pinned",
+	"resolved": "Topic solved",
 	"topic": "Subject"
 }

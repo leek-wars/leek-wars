@@ -623,15 +623,14 @@
 					this.team.compositionsById[compo.id] = compo
 					this.createCompoDialog = false
 				}
-			}).error(error => {
-				LeekWars.toast(error)
 			})
+			.error(error => LeekWars.toast(this.$t('error_' + error.error, error.params)))
 		}
 
 		deleteComposition(composition: Composition) {
 			LeekWars.delete('team/delete-composition', {composition_id: composition.id}).then(data => {
 				if (this.team) {
-					LeekWars.toast(this.$i18n.t('compo_deleted', composition.name))
+					LeekWars.toast(this.$i18n.t('compo_deleted', [composition.name]))
 					// On transfère tous les leeks dans les leeks non engagés
 					for (const leek of composition.leeks) {
 						this.team.unengaged_leeks.push(leek)

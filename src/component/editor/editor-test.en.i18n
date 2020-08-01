@@ -2,6 +2,8 @@
 	"create_new_scenario": "Create new scenario",
 	"create_new_leek": "Create new leek",
 	"create_new_map": "Create new map",
+	"error_invalid_name": "The name must be between {min} and {max} characters",
+	"error_not_enough_leeks": "There are not enough leeks",
 	"leek_name": "Leek name",
 	"limit": "Limit: {0}",
 	"map_name": "Map name",

@@ -2,6 +2,8 @@
 	"create_new_scenario": "Créer un nouveau scénario",
 	"create_new_leek": "Créer un nouveau poireau",
 	"create_new_map": "Créer une nouvelle carte",
+	"error_invalid_name": "Le nom doit faire entre {min} et {max} caractères",
+	"error_not_enough_leeks": "Il n'y a pas assez de poireaux",
 	"leek_name": "Nom du poireau",
 	"limit": "Limite: {0}",
 	"map_name": "Nom de la carte",
