@@ -306,7 +306,7 @@ class Grenade extends FallingParticle {
 		this.game.actionDone()
 	}
 	public draw(ctx: CanvasRenderingContext2D) {
-		ctx.drawImage(this.texture.texture, -T.grenade.texture.width / 2 , -T.grenade.texture.height / 2)
+		ctx.drawImage(this.texture.texture, -this.texture.texture.width / 2 , -this.texture.texture.height / 2)
 	}
 }
 class Shot extends Particle {
