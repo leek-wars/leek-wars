@@ -49,7 +49,7 @@
 			const name = (this.$refs.name as HTMLElement).textContent || ''
 			if (name !== this.ai.name) {
 				LeekWars.post('ai/rename', {ai_id: this.ai.id, new_name: name}).then(data => {
-					LeekWars.toast(i18n.t('ai_renamed', [name]) as string)
+					LeekWars.toast(i18n.t('leekscript.ai_renamed', [name]) as string)
 					this.ai.name = name
 				}).error(error => {
 					(this.$refs.name as HTMLElement).textContent = this.initialName

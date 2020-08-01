@@ -95,7 +95,7 @@
 				return w.id !== this.adjective
 			}).map((w: any) => {
 				const trophy = TROPHIES[w.id - 1]
-				const gender_code = this.gender === 2 && (trophy.noun_translation & 2) && ((trophy.noun_gender & 2) === 0) ? '_f' : ''
+				const gender_code = this.gender === 2 && (trophy.noun_translation & 2) && ((trophy.noun_gender & 2) === 0) && this.$te('trophy.' + w.code + '_f') ? '_f' : ''
 				return {code: w.code, id: w.id, t: this.$t('trophy.' + w.code + gender_code) as string, rarity: w.rarity}
 			}).sort((a: any, b: any) => a.t.localeCompare(b.t))
 		}
@@ -104,7 +104,7 @@
 				return w.id !== this.noun
 			}).map((w: any) => {
 				const trophy = TROPHIES[w.id - 1]
-				const gender_code = this.gender === 2 && (trophy.adj_translation & 2) && ((trophy.adj_gender & 2) === 0) ? '_f' : ''
+				const gender_code = this.gender === 2 && (trophy.adj_translation & 2) && ((trophy.adj_gender & 2) === 0) && this.$te('trophy.' + w.code + '_f') ? '_f' : ''
 				return {code: w.code, id: w.id, t: this.$t('trophy.' + w.code + gender_code) as string, rarity: w.rarity}
 			}).sort((a: any, b: any) => a.t.localeCompare(b.t)))
 		}
@@ -180,10 +180,10 @@
 		display: none;
 	}
 }
-.male {
+.v-icon.male {
 	color: rgb(0, 110, 255);
 }
-.female {
+.v-icon.female {
 	color: rgb(242, 97, 255);
 }
 .word {

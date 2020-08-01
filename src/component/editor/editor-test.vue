@@ -451,9 +451,9 @@
 				} else if (LeekWars.objectSize(this.scenarios)) {
 					this.selectScenario(LeekWars.first(this.scenarios)!)
 				}
-			}).error(error => {
-				LeekWars.toast(error)
 			})
+			.error(error => LeekWars.toast(this.$t('error_' + error.error, error.params)))
+
 			LeekWars.get('test-leek/get-all').then(data => {
 				this.leeks = data.leeks
 				this.generateBots()
@@ -468,17 +468,16 @@
 				} else if (LeekWars.objectSize(this.leeks)) {
 					this.selectLeek(LeekWars.first(this.leeks)!)
 				}
-			}).error(error => {
-				LeekWars.toast(error)
 			})
+			.error(error => LeekWars.toast(this.$t('error_' + error.error, error.params)))
+
 			LeekWars.get('test-map/get-all').then(data => {
 				this.maps = data.maps
 				if (!LeekWars.isEmptyObj(this.maps)) {
 					this.currentMap = LeekWars.first(this.maps)
 				}
-			}).error(error => {
-				LeekWars.toast(error)
 			})
+			.error(error => LeekWars.toast(this.$t('error_' + error.error, error.params)))
 		}
 		mounted() {
 			this.initMap()
@@ -509,12 +508,12 @@
 		saveLeek() {
 			if (!this.currentLeek) { return }
 			LeekWars.post('test-leek/update', {id: this.currentLeek.id, data: JSON.stringify(this.currentLeek)})
-				.error(error => LeekWars.toast(error))
+			.error(error => LeekWars.toast(this.$t('error_' + error.error, error.params)))
 		}
 		saveMap() {
 			if (!this.currentMap) { return }
 			LeekWars.post('test-map/update', {id: this.currentMap.id, data: JSON.stringify(this.currentMap.data)})
-				.error(error => LeekWars.toast(error))
+			.error(error => LeekWars.toast(this.$t('error_' + error.error, error.params)))
 		}
 		selectMap(map: TestMap) {
 			if (this.currentMap && this.timeout) {
@@ -598,7 +597,9 @@
 			}, 2000)
 		}
 		deleteMap(map: TestMap) {
-			LeekWars.delete('test-map/delete', {id: map.id}).error(error => LeekWars.toast(error))
+			LeekWars.delete('test-map/delete', {id: map.id})
+				.error(error => LeekWars.toast(this.$t('error_' + error.error, error.params)))
+
 			Vue.delete(this.$data.maps, map.id)
 			// Delete from scenarios
 			for (const s in this.scenarios) {
@@ -638,7 +639,9 @@
 		}
 		deleteScenario(scenario: TestScenario) {
 			if (scenario.base) { return }
-			LeekWars.delete('test-scenario/delete', {id: scenario.id}).error(error => LeekWars.toast(error))
+			LeekWars.delete('test-scenario/delete', {id: scenario.id})
+				.error(error => LeekWars.toast(this.$t('error_' + error.error, error.params)))
+
 			Vue.delete(this.scenarios, scenario.id)
 			this.selectScenario(LeekWars.first(this.scenarios)!)
 		}
@@ -666,7 +669,7 @@
 				this.newScenarioDialog = false
 				this.selectScenario(this.scenarios[data.id])
 			})
-			.error(error => LeekWars.toast(error))
+			.error(error => LeekWars.toast(this.$t('error_' + error.error, error.params)))
 		}
 		addScenarioLeek(leek: Leek) {
 			if (!this.currentScenario || !this.addLeekTeam) { return }
@@ -733,7 +736,7 @@
 				this.newLeekName = ''
 				this.currentLeek = this.leeks[data.id]
 			})
-			.error((error) => LeekWars.toast(error))
+			.error(error => LeekWars.toast(this.$t('error_' + error.error, error.params)))
 		}
 		createMap() {
 			LeekWars.post('test-map/new', {name: this.newMapName}).then(data => {
@@ -742,7 +745,7 @@
 				this.newMapName = ''
 				this.selectMap(this.maps[data.id])
 			})
-			.error(error => LeekWars.toast(error))
+			.error(error => LeekWars.toast(this.$t('error_' + error.error, error.params)))
 		}
 		characteristicFocusout(characteristic: string, event: FocusEvent) {
 			if (!this.currentLeek || this.currentLeek.bot || !event.target) { return }
@@ -775,7 +778,7 @@
 				localStorage.setItem('editor/last-scenario', this.currentScenario!.id)
 				this.$router.push('/fight/' + data.fight)
 			})
-			.error(error => LeekWars.toast(error))
+			.error(error => LeekWars.toast(this.$t('error_' + error.error, error.params)))
 		}
 		onAIDeleted(id: number) {
 			for (const s in this.scenarios) {
@@ -839,7 +842,8 @@
 						}
 					}
 				}
-			}).error(error => LeekWars.toast(error))
+			})
+			.error(error => LeekWars.toast(this.$t('error_' + error.error, error.params)))
 		}
 	}
 </script>

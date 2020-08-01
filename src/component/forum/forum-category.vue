@@ -38,9 +38,9 @@
 						</div>
 						<div>
 							<span v-ripple class="title">
-								<v-icon v-if="topic.resolved" :title="$t('topic_resolved')" class="attr resolved">mdi-check-circle</v-icon>
-								<v-icon v-if="topic.closed" :title="$t('topic_locked')" class="attr">mdi-lock</v-icon>
-								<v-icon v-if="topic.pinned" :title="$t('topic_pinned')" class="attr">mdi-pin</v-icon>
+								<v-icon v-if="topic.resolved" :title="$t('resolved')" class="attr resolved">mdi-check-circle</v-icon>
+								<v-icon v-if="topic.closed" :title="$t('locked')" class="attr">mdi-lock</v-icon>
+								<v-icon v-if="topic.pinned" :title="$t('pinned')" class="attr">mdi-pin</v-icon>
 								<a v-if="topic.issue" :href="'https://github.com/leek-wars/leek-wars-client/issues/' + topic.issue" class="attr issue" target="_blank" rel="noopener">
 									#{{ topic.issue }}
 								</a>
@@ -133,7 +133,7 @@
 			this.page = 'page' in this.$route.params ? parseInt(this.$route.params.page, 10) : 1
 			LeekWars.setActions([
 				{icon: 'mdi-pencil', click: () => this.createDialog = true},
-				{icon: 'mdi-magnify', click: () => this.$router.push('/search/-/-/' + category) }
+				{icon: 'mdi-magnify', click: () => this.$router.push('/search?category=' + category) }
 			])
 			if (this.category) { this.category.topics = null }
 			LeekWars.get('forum/get-topics/' + category + '/' + this.page).then(data => {
@@ -156,7 +156,7 @@
 					this.$router.push("/forum/category-" + this.category.id + "/topic-" + data.topic_id)
 				}
 			}).error(error => {
-				LeekWars.toast(error)
+				LeekWars.toast(this.$i18n.t('error_' + error.error, error.params))
 			})
 		}
 		search() {

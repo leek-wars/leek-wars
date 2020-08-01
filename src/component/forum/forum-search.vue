@@ -128,7 +128,7 @@
 			LeekWars.get('forum/get-categories/' + language).then(data => {
 				this.categories = data.categories
 			})
-			LeekWars.setTitle(i18n.t('title'))
+			LeekWars.setTitle(this.$i18n.t('title'))
 		}
 
 		@Watch('$route.query', {immediate: true})

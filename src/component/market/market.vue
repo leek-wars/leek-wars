@@ -411,13 +411,8 @@
 				}
 				this.$store.commit('add-inventory', {type: item.type, item_id: data.item, item_template: id})
 				this.updateSubtitle()
-			}).error(error => {
-				let e = error.error
-				if (error.error === 'already_bought_fights_with_habs') {
-					e = this.$t(error.error)
-				}
-				LeekWars.toast(e)
 			})
+			.error(error => LeekWars.toast(this.$t('error_' + error.error, error.params)))
 		}
 		sell() {
 			if (!this.selectedItem) { return }
@@ -435,6 +430,7 @@
 				this.$store.commit('remove-inventory', {type: item.type, item_template: data.item})
 				this.updateSubtitle()
 			})
+			.error(error => LeekWars.toast(this.$t('error_' + error.error, error.params)))
 		}
 		updateChipMode() {
 			this.chipMode = this.chipMode === 'level' ? 'type' : 'level'
