@@ -400,9 +400,9 @@
 				if (!leek.leek.summon) {
 					const data = []
 					for (let j = 0; j <= this.fight.report.duration; j++) {
-						let life = Math.max(1, this.statistics.life[j][i])
+						let life = this.statistics.life[j][i]
 						if (this.log) {
-							life = Math.log2(life)
+							life = Math.log2(Math.max(1, life))
 						}
 						data.push(life)
 					}
