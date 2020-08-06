@@ -1,7 +1,7 @@
 <template lang="html">
 	<div v-show="tabs.length > 1" class="tabs-wrapper">
 		<div class="tabs">
-			<div v-for="(ai, i) in tabs" ref="tabs" :key="ai.id" :class="{selected: current == ai.id, modified: ai.modified}" :title="ai.path" class="tab" @click="click($event, ai)" @contextmenu.prevent="openMenu(i)" @mouseup.middle="close(ai)">
+			<div v-for="(ai, i) in tabs" ref="tabs" :key="ai.id" :class="{selected: ai.id in ais && ais[ai.id].selected, modified: ai.modified}" :title="ai.path" class="tab" @click="click($event, ai)" @contextmenu.prevent="openMenu(i)" @mouseup.middle="close(ai)">
 				<div v-if="ai.id in ais" class="name">
 					{{ ais[ai.id].name }}
 				</div>
@@ -38,19 +38,20 @@
 
 	@Component({ name: 'editor-tabs' })
 	export default class EditorTabs extends Vue {
-		@Prop({required: true}) current!: number
 		@Prop({required: true}) ais!: AI[]
 		tabs: AI[] = []
 		menu: boolean = false
 		activator: any = null
 		currentI: number = 0
 		currentAI: AI | null = null
+
 		mounted() {
 			const tabs = JSON.parse(localStorage.getItem('editor/tabs') || '[]')
 			for (const t of tabs) {
 				this.tabs.push(t)
 			}
 		}
+
 		add(ai: AI) {
 			if (this.tabs.findIndex(t => t.id === ai.id) !== -1) {
 				return
@@ -58,9 +59,11 @@
 			this.tabs.push(ai)
 			this.save()
 		}
+
 		click(e: MouseEvent, ai: AI) {
 			this.$router.push('/editor/' + ai.id)
 		}
+
 		openMenu(i: number) {
 			this.currentI = i
 			this.currentAI = this.tabs[i]
@@ -71,31 +74,37 @@
 				})
 			})
 		}
+
 		menuChange(e: any) {
 			this.activator = null
 			this.menu = false
 		}
+
 		close(ai: AI) {
 			const i = this.tabs.indexOf(ai)
 			this.tabs.splice(i, 1)
 			this.save()
-			if (ai.id === this.current) {
+			if (this.ais[ai.id].selected) {
 				this.openOther(i)
 			}
 		}
+
 		closeOthers(ai: AI) {
 			this.tabs = []
 			this.tabs.push(ai)
 			this.save()
 		}
+
 		closeById(id: number) {
 			this.tabs = this.tabs.filter(ai => ai.id !== id)
 			this.save()
 		}
+
 		openOther(i: number) {
 			const ai = this.tabs[Math.max(0, i - 1)]
 			this.$router.push('/editor/' + ai.id)
 		}
+
 		save() {
 			localStorage.setItem('editor/tabs', JSON.stringify(this.tabs.map(ai => ({id: ai.id, name: ai.name}))))
 		}

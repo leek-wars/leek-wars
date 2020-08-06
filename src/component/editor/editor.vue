@@ -249,17 +249,18 @@
 	import { AI } from '@/model/ai'
 	import { mixins } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
-	import { fileSystem } from '@/model/filesystem'
 	import { Component, Vue, Watch } from 'vue-property-decorator'
 	import { Route } from 'vue-router'
 	import AIView from './ai-view.vue'
 	import Analyzer from './analyzer'
 	import EditorFolder from './editor-folder.vue'
+	import { Explorer, explorer } from './explorer'
 	import { AIItem, Folder, Item } from './editor-item'
 	const EditorTabs = () => import(/* webpackChunkName: "[request]" */ `@/component/editor/editor-tabs.${locale}.i18n`)
 	const EditorTest = () => import(/* webpackChunkName: "[request]" */ `@/component/editor/editor-test.${locale}.i18n`)
 	import { generateKeywords } from './keywords'
 	import './leekscript-monokai.scss'
+import { fileSystem } from '@/model/filesystem'
 	import(/* webpackChunkName: "[request]" */ /* webpackMode: "eager" */ `@/lang/doc.${locale}.lang`)
 
 	const DEFAULT_FONT_SIZE = 16
@@ -292,7 +293,6 @@
 		fontSize: number = DEFAULT_FONT_SIZE
 		lineHeight: number = DEFAULT_LINE_HEIGHT
 		dragging: Item | null = null
-		selected: any = null
 		testDialog: boolean = false
 		tabs: AI[] = []
 		panelWidth: number = 200
@@ -302,8 +302,8 @@
 		newFolderDialog: boolean = false
 		newFolderName: string = ''
 		showProblemsDetails: boolean = true
-		fileSystem = fileSystem
 		problemsCollapsed: {[key: string]: boolean} = {}
+		fileSystem = fileSystem
 		actions_list = [
 			{icon: 'mdi-plus', click: (e: any) => this.add(e)},
 			{icon: 'mdi-cogs', click: () => this.settings() }
@@ -340,10 +340,12 @@
 			LeekWars.analyzer.init()
 
 			fileSystem.init().then(() => {
+				console.log("fileSystem loaded")
 				this.update()
 				LeekWars.setTitle(this.$t('title'), this.$t('n_ais', [fileSystem.aiCount]))
 			})
 		}
+
 		mounted() {
 			LeekWars.footer = false
 			this.$root.$on('ctrlS', () => {
@@ -381,22 +383,17 @@
 			this.$root.$on('back', () => {
 				this.$router.push('/editor')
 			})
-			this.$root.$on('editor-select', (item: any) => {
-				if (this.selected) {
-					this.selected.selected = false
-				}
-				this.selected = item
-			})
 			this.$root.$on('editor-drag', (item: any) => {
 				this.dragging = item
 			})
 			this.$root.$on('editor-drop', (folder: Folder) => {
 				if (!this.dragging) { return }
-				if (this.dragging.parent === folder || this.dragging === folder) { return }
+				const parent = fileSystem.folderById[this.dragging.parent]
+				if (parent === folder || this.dragging === folder) { return }
 				if (this.dragging instanceof Folder && this.isChild(folder, this.dragging)) { return }
-				this.dragging.parent.items.splice(this.dragging.parent.items.indexOf(this.dragging), 1)
+				parent.items.splice(parent.items.indexOf(this.dragging), 1)
 				folder.items.push(this.dragging)
-				this.dragging.parent = folder
+				this.dragging.parent = folder.id
 				folder.expanded = true
 				LeekWars.post(this.dragging.folder ? 'ai-folder/change-folder' : 'ai/change-folder', this.dragging.folder ? {folder_id: (this.dragging as Folder).id, dest_folder_id: folder.id} : {ai_id: (this.dragging as AIItem).ai.id, folder_id: folder.id})
 				this.dragging = null
@@ -406,7 +403,7 @@
 			let current = folder
 			while (current.id !== 0) {
 				if (current.id === parent.id) { return true }
-				current = current.parent
+				current = fileSystem.folderById[current.parent]
 			}
 			return false
 		}
@@ -426,6 +423,7 @@
 					}
 					Vue.nextTick(() => {
 						this.currentEditor = (this.$refs.editors as AIView[]).find(editor => editor.ai === ai) || null
+						explorer.selectAI(this.currentAI!)
 					})
 					if (this.$refs.tabs) {
 						(this.$refs.tabs as any).add(this.currentAI)
@@ -436,9 +434,11 @@
 				} else {
 					this.currentFolder = fileSystem.folderById[id]
 					this.currentType = 'folder'
+					explorer.selectFolder(this.currentFolder)
 					LeekWars.splitShowList()
 					LeekWars.setActions(this.actions_list)
 				}
+
 			} else if (!LeekWars.mobile) {
 				const lastCode = localStorage.getItem('editor/last_code')
 				if (lastCode && lastCode in fileSystem.ais) {
@@ -465,6 +465,7 @@
 			LeekWars.large = false
 			LeekWars.footer = true
 		}
+
 		beforeRouteLeave(to: Route, from: Route, next: Function) {
 			let num = 0
 			for (const i in fileSystem.ais) {
@@ -488,15 +489,6 @@
 
 			const saveID = this.currentEditor.id > 0 ? this.currentEditor.id : 0
 			const content = this.currentEditor.editor.getValue()
-
-			if (this.currentAI!.v2) {
-				this.currentEditor.analyze().then((result) => {
-					if (result) {
-						this.good = true
-						setTimeout(() => this.good = false, 800)
-					}
-				})
-			}
 
 			LeekWars.post('ai/save', {ai_id: saveID, code: content}).then(data => {
 				if (this.currentEditor === null) { return }
@@ -594,7 +586,7 @@
 			if (!this.currentFolder) { return }
 			LeekWars.post('ai-folder/new-name', {folder_id: this.currentFolder.id, name}).then(data => {
 				if (this.currentFolder) {
-					const folder = new Folder(data.id, name, this.currentFolder)
+					const folder = new Folder(data.id, name, this.currentFolder.id)
 					folder.items = []
 					fileSystem.add_folder(folder, this.currentFolder)
 					this.newFolderDialog = false
@@ -623,7 +615,7 @@
 					(this.$refs.editorTest as any).onAIDeleted(this.currentID)
 					ai_deleted = true
 				} else if (this.currentFolder) {
-					const folder = this.currentFolder.parent
+					const folder = fileSystem.folderById[this.currentFolder.parent]
 					folder.items.splice(folder.items.indexOf(this.currentFolder), 1)
 				}
 				if (ai_deleted) {
@@ -764,6 +756,11 @@
 	}
 	#app.app .panel {
 		margin-bottom: 0;
+	}
+	.full {
+		height: 100%;
+		display: flex;
+		flex-direction: column;
 	}
 	.ai-list {
 		overflow-y: auto;

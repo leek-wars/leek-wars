@@ -1,6 +1,6 @@
 <template lang="html">
 	<div :class="{root: level === 0}" @click="click">
-		<div :class="{empty: !folder.items.length, 'dragover': dragOver > 0, expanded: folder.expanded, root: level === 0, selected: selected}" :draggable="level > 0" class="item folder" @dragenter="dragenter" @dragleave="dragleave" @dragover="dragover" @drop="drop" @dragstart="dragstart" @dragend="dragend">
+		<div :class="{empty: !folder.items.length, 'dragover': dragOver > 0, expanded: folder.expanded, root: level === 0, selected: folder.selected}" :draggable="level > 0" class="item folder" @dragenter="dragenter" @dragleave="dragleave" @dragover="dragover" @drop="drop" @dragstart="dragstart" @dragend="dragend">
 			<div v-if="level != 0" :style="{'padding-left': ((level - 1) * 20 + 10) + 'px'}" class="label" @click="toggle(folder)">
 				<div class="triangle"></div>
 				<span class="icon"></span>
@@ -18,11 +18,13 @@
 </template>
 
 <script lang="ts">
+	import { AI } from '@/model/ai'
 	import { i18n } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
-	import { Component, Prop, Vue } from 'vue-property-decorator'
+	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 	import EditorAI from './editor-ai.vue'
-	import { Folder } from './editor-item'
+	import { Folder, AIItem } from './editor-item'
+	import { explorer } from './explorer'
 
 	@Component({ name: 'editor-folder', components: { 'editor-ai': EditorAI } })
 	export default class EditorFolder extends Vue {
@@ -32,11 +34,9 @@
 		initialName: string = ''
 		dragOver: number = 0
 		dragging: boolean = false
-		selected: boolean = false
 
 		toggle(folder: Folder) {
-			folder.expanded = !folder.expanded
-			localStorage.setItem('editor/folder/' + folder.id, '' + folder.expanded)
+			explorer.setExpanded(folder, !folder.expanded)
 		}
 		edit(e: Event) {
 			this.editing = true
@@ -97,9 +97,9 @@
 			this.dragging = false
 		}
 		click(e: Event) {
-			this.$router.push('/editor/' + this.folder.id)
-			this.$root.$emit('editor-select', this)
-			this.selected = true
+			if (this.$router.currentRoute.path !== '/editor/' + this.folder.id) {
+				this.$router.push('/editor/' + this.folder.id)
+			}
 			e.stopPropagation()
 		}
 	}
@@ -108,17 +108,17 @@
 <style lang="scss" scoped>
 	.item {
 		cursor: pointer;
-		color: #555;
+		color: #333;
 		display: block;
 	}
 	.root {
 		height: calc(100% - 2px);
 	}
 	.item .label {
-		padding: 5px 10px;
+		padding: 7px 10px;
 	}
 	.item.selected > .label {
-		background: #cacaca;
+		background: #ddd;
 		color: black;
 	}
 	#app.app .item .label {
@@ -138,6 +138,10 @@
 		margin-left: 5px;
 		display: none;
 	}
+	.item .label:hover {
+		background: white;
+		color: black;
+	}
 	.item.folder .icon {
 		display: inline-block;
 		background-image: url("/image/folder.png");
@@ -145,9 +149,6 @@
 		width: 13px;
 		height: 10px;
 		margin-right: 5px;
-	}
-	.item.selected > .label > .icon {
-		background-image: url("/image/folder_white.png");
 	}
 	.label:hover .edit {
 		display: inline-block;
@@ -170,9 +171,6 @@
 		margin-left: -5px;
 		margin-right: 5px;
 		margin-top: 1px;
-	}
-	.item.selected > .label > .triangle {
-		border-left: 6px solid white;
 	}
 	.folder.expanded > .label > .triangle {
 		transform: rotate(90deg);

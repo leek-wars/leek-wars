@@ -17,7 +17,7 @@ class FileSystem {
 
     public aiCount: number = 0
 
-    public async init() {
+    public init() {
         if (this.initialized) { return Promise.resolve() }
         if (this.promise) { return this.promise }
 
@@ -30,7 +30,7 @@ class FileSystem {
 				}
 				this.leekAIs = data.leek_ais
 				this.aiCount = LeekWars.objectSize(data.ais)
-				const buildFolder = (id: number, parent: Folder): Folder => {
+				const buildFolder = (id: number, parent: number): Folder => {
 					const folder = new Folder(id, id in folders ? folders[id].name : '<root>', parent)
 					if (id === 0) {
 						folder.expanded = true
@@ -39,22 +39,23 @@ class FileSystem {
 					}
 					folder.items = data.folders
 						.filter((f: any) => f.folder === id)
-						.map((f: any) => buildFolder(f.id, folder))
+						.map((f: any) => buildFolder(f.id, folder.id))
 					folder.items.push(...(data.ais
 						.filter((ai: any) => ai.folder === id)
-						.map((ai: any) => new AIItem(ai, folder))
+						.map((ai: any) => new AIItem(ai, folder.id))
 					))
-					this.folderById[folder.id] = folder
+					Vue.set(this.folderById, folder.id, folder)
 					return folder
 				}
-				this.rootFolder = buildFolder(0, this.rootFolder as Folder)
 				for (const ai of data.ais) {
-					ai.path = this.getAIFullPath(ai)
+                    ai.path = this.getAIFullPath(ai)
 					Vue.set(ai, 'modified', false)
+					Vue.set(ai, 'selected', false)
                     Vue.set(this.ais, '' + ai.id, ai)
                     Vue.set(this.aiByFullPath, ai.path, ai)
 					this.items[ai.name] = ai
 				}
+                this.rootFolder = buildFolder(0, 0)
 				this.initialized = true
 				resolve()
 			})
@@ -97,7 +98,7 @@ class FileSystem {
             const rest = path.substring(i + 1)
             // console.log("first", first, "rest", rest)
             if (first === '..') {
-                return this.find(rest, f.parent.id)
+                return this.find(rest, f.parent)
             } else if (first === '.') {
                 return this.find(rest, f.id)
             }
@@ -118,8 +119,8 @@ class FileSystem {
     }
 
     private getFolderPath(folder: Folder): string {
-        if (folder.parent && folder.parent.id !== 0) {
-            return this.getFolderPath(folder.parent) + folder.name + '/'
+        if (folder.parent !== 0) {
+            return this.getFolderPath(this.folderById[folder.parent]) + folder.name + '/'
         }
         return folder.name + '/'
     }
