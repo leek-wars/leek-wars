@@ -16,5 +16,6 @@ class AI {
 	public total_chars!: number
 	public included_lines!: number
 	public included_chars!: number
+	public selected: boolean = false
 }
 export { AI }
