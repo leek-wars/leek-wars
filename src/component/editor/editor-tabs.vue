@@ -1,7 +1,7 @@
 <template lang="html">
 	<div v-show="tabs.length > 1" class="tabs-wrapper">
 		<div class="tabs">
-			<div v-for="(ai, i) in tabs" ref="tabs" :key="ai.id" :class="{selected: ai.id in ais && ais[ai.id].selected, modified: ai.modified}" :title="ai.path" class="tab" @click="click($event, ai)" @contextmenu.prevent="openMenu(i)" @mouseup.middle="close(ai)">
+			<div v-for="(ai, i) in tabs" ref="tabs" :key="ai.id" :class="{selected: ai.id in ais && ais[ai.id].selected, modified: ai.id in ais && ais[ai.id].modified}" :title="ai.path" class="tab" @click="click($event, ai)" @contextmenu.prevent="openMenu(i)" @mouseup.middle="close(ai)">
 				<div v-if="ai.id in ais" class="name">
 					{{ ais[ai.id].name }}
 				</div>
@@ -82,9 +82,15 @@
 
 		close(ai: AI) {
 			const i = this.tabs.indexOf(ai)
+			const realAI = this.ais[ai.id]
+			if (realAI.modified) {
+				if (!window.confirm(this.$i18n.t('confirm_close', [1]) as string)) {
+					return
+				}
+			}
 			this.tabs.splice(i, 1)
 			this.save()
-			if (this.ais[ai.id].selected) {
+			if (realAI.selected) {
 				this.openOther(i)
 			}
 		}
@@ -128,7 +134,7 @@
 		max-width: 200px;
 		background: #ddd;
 		min-width: 0;
-		flex-basis: 150px;
+		flex-basis: 180px;
 	}
 	.tab:not(:last-child) {
 		margin-right: 1px;
