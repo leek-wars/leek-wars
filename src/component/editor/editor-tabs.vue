@@ -157,7 +157,7 @@
 		font-size: 20px;
 		margin-right: 6px;
 	}
-	.tab .close {
+	.tab:not(.selected) .close {
 		opacity: 0;
 	}
 	.tab:hover .close {

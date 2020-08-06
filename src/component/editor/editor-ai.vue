@@ -1,7 +1,12 @@
 <template lang="html">
-	<div :class="{error: !ai.valid, modified: ai.modified, selected: ai.selected}" class="item ai" @click="click">
-		<div :style="{'padding-left': (level * 20 + 17) + 'px'}" class="label" draggable="true" @dragstart="dragstart">
+	<div :class="{modified: ai.modified, selected: ai.selected}" class="item ai" @click="click">
+		<div :style="{'padding-left': (level * 20 + 10) + 'px'}" class="label" :class="{error: ai.errors, warning: ai.warnings}" draggable="true" @dragstart="dragstart">
+			<v-icon v-if="ai.errors" class="icon error">mdi-close-circle</v-icon>
+			<v-icon v-else-if="ai.warnings" class="icon warning">mdi-alert-circle</v-icon>
+			<v-icon v-else class="icon valid">mdi-check-bold</v-icon>
 			<span ref="name" :contenteditable="editing" class="text" @keydown.enter="enter" @blur="blur">{{ ai.name }}</span>
+			<span v-if="ai.errors" class="count error">{{ ai.errors }}</span>
+			<span v-if="ai.warnings" class="count warning">{{ ai.warnings }}</span>
 			<tooltip v-if="ai.v2">
 				<template v-slot:activator="{ on }">
 					<span class="v2" v-on="on">V2</span>
@@ -78,17 +83,17 @@
 		opacity: 1;
 	}
 	.item .label {
-		padding: 8px 10px;
+		padding: 7px 10px;
 		white-space: nowrap;
+		&.error {
+			color: red;
+		}
+		&.warning {
+			color: #ff6600;
+		}
 	}
 	#app.app .item .label {
 		padding: 8px 10px;
-	}
-	.item.ai .label:before {
-		content: "✔";
-		font-weight: bold;
-		color: #5fad1b;
-		padding-right: 5px;
 	}
 	.item .edit {
 		background-image: url("/image/edit_pen.png");
@@ -100,7 +105,6 @@
 	}
 	.item .label:hover {
 		background: white;
-		color: black;
 	}
 	.label:hover .edit {
 		display: inline-block;
@@ -112,21 +116,44 @@
 	}
 	.item.selected > .label {
 		background: #ddd;
-		color: black;
 	}
-	.item.modified .label {
-		color: red;
-	}
-	.item.error .label:before {
-		content: "✘";
-		font-weight: bold;
-		color: red;
-		padding-right: 5px;
+	.item.modified .label .text {
+		font-style: italic;
 	}
 	.item .v2 {
 		font-weight: bold;
 		color: #00aae2;
 		padding-left: 5px;
 		display: inline-block;
+	}
+	.icon {
+		font-size: 17px;
+		margin-right: 4px;
+		vertical-align: top;
+		&.valid {
+			color: #5fad1b;
+		}
+		&.error {
+			color: red;
+		}
+		&.warning {
+			color: #ff6600;
+		}
+	}
+	.count {
+		border-radius: 10px;
+		color: #333;
+		padding: 1px 4px;
+		font-size: 13px;
+		margin-left: 6px;
+		font-weight: 500;
+		&.error {
+			color: red;
+			border: 1px solid red;
+		}
+		&.warning {
+			color: #ff6600;
+			border: 1px solid #ff6600;
+		}
 	}
 </style>

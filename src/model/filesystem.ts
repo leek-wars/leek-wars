@@ -51,6 +51,8 @@ class FileSystem {
                     ai.path = this.getAIFullPath(ai)
 					Vue.set(ai, 'modified', false)
 					Vue.set(ai, 'selected', false)
+					Vue.set(ai, 'errors', 0)
+					Vue.set(ai, 'warnings', 0)
                     Vue.set(this.ais, '' + ai.id, ai)
                     Vue.set(this.aiByFullPath, ai.path, ai)
 					this.items[ai.name] = ai
