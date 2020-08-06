@@ -1,5 +1,7 @@
 import { AI } from '@/model/ai';
 import Vue from 'vue';
+import { fileSystem } from '@/model/filesystem';
+import { Folder } from './editor-item';
 
 enum AnalyzerMessage {
 	ANALYZE = 1,
@@ -142,11 +144,12 @@ class Analyzer {
 						problems.sort((a: any, b: any) => {
 							return a[0] - b[0]
 						})
-						Vue.set(this.problems, ai, problems)
+						this.setAIProblems(ai, problems)
 					}
 					return resolve(result)
 				} catch (e) {
-					Vue.set(this.problems, ai.path, [ [0, 0, 0, 0, 1, "ANALYZER_CRASHED"] ])
+					const problems = [ [0, 0, 0, 0, 1, "ANALYZER_CRASHED"] ]
+					this.setAIProblems(ai.path, problems)
 					try {
 						console.error(this.getExceptionMessage(e));
 					} catch (e2) {}
@@ -166,6 +169,22 @@ class Analyzer {
 			this.running++
 		})
 		return promise
+	}
+
+	private setAIProblems(ai: string, problems: any) {
+
+		Vue.set(this.problems, ai, problems)
+		const aiObject = fileSystem.aiByFullPath[ai]
+		Vue.set(aiObject, "errors", problems.filter((p: any) => p[4] === 0).length)
+		Vue.set(aiObject, "warnings", problems.filter((p: any) => p[4] === 1).length)
+
+		// Update parent folders
+		let current = fileSystem.folderById[aiObject.folder] as Folder | null
+		while (current) {
+			current.errors = current.items.reduce((s, i) => s + (i.folder ? i.errors : i.ai.errors), 0)
+			current.warnings = current.items.reduce((s, i) => s + (i.folder ? i.warnings : i.ai.warnings), 0)
+			current = current.id === 0 ? null : fileSystem.folderById[current.parent]
+		}
 	}
 
 	public register(ai: AI) {

@@ -1,10 +1,12 @@
 <template lang="html">
 	<div :class="{root: level === 0}" @click="click">
 		<div :class="{empty: !folder.items.length, 'dragover': dragOver > 0, expanded: folder.expanded, root: level === 0, selected: folder.selected}" :draggable="level > 0" class="item folder" @dragenter="dragenter" @dragleave="dragleave" @dragover="dragover" @drop="drop" @dragstart="dragstart" @dragend="dragend">
-			<div v-if="level != 0" :style="{'padding-left': ((level - 1) * 20 + 10) + 'px'}" class="label" @click="toggle(folder)">
+			<div v-if="level != 0" :style="{'padding-left': ((level - 1) * 15 + 10) + 'px'}" class="label" :class="{error: folder.errors, warning: folder.warnings}" @click="toggle(folder)">
 				<div class="triangle"></div>
-				<span class="icon"></span>
+				<v-icon class="icon">mdi-folder-outline</v-icon>
 				<span ref="name" :contenteditable="editing" class="text" @keydown.enter="enter" @blur="blur">{{ folder.name }}</span>
+				<span v-if="folder.errors" class="count error">{{ folder.errors }}</span>
+				<span v-if="folder.warnings" class="count warning">{{ folder.warnings }}</span>
 				<div class="edit" @click="edit"></div>
 			</div>
 			<div v-if="folder.expanded" :class="{dragging: dragging}" class="content">
@@ -116,10 +118,15 @@
 	}
 	.item .label {
 		padding: 7px 10px;
+		&.error {
+			color: red;
+		}
+		&.warning {
+			color: #ff6600;
+		}
 	}
 	.item.selected > .label {
 		background: #ddd;
-		color: black;
 	}
 	#app.app .item .label {
 		padding: 8px 10px;
@@ -140,15 +147,6 @@
 	}
 	.item .label:hover {
 		background: white;
-		color: black;
-	}
-	.item.folder .icon {
-		display: inline-block;
-		background-image: url("/image/folder.png");
-		background-size: cover;
-		width: 13px;
-		height: 10px;
-		margin-right: 5px;
 	}
 	.label:hover .edit {
 		display: inline-block;
@@ -166,7 +164,7 @@
 		height: 0;
 		border-top: 5px solid transparent;
 		border-bottom: 5px solid transparent;
-		border-left: 6px solid #aaa;
+		border-left: 6px solid #666;
 		display: inline-block;
 		margin-left: -5px;
 		margin-right: 5px;
@@ -203,5 +201,26 @@
 	}
 	.folder.empty .triangle {
 		opacity: 0;
+	}
+	.icon {
+		font-size: 17px;
+		margin-right: 4px;
+		vertical-align: top;
+	}
+	.count {
+		border-radius: 10px;
+		color: #333;
+		padding: 1px 4px;
+		font-size: 13px;
+		margin-left: 6px;
+		font-weight: 500;
+		&.error {
+			color: red;
+			border: 1px solid red;
+		}
+		&.warning {
+			color: #ff6600;
+			border: 1px solid #ff6600;
+		}
 	}
 </style>

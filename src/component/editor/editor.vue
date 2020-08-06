@@ -855,7 +855,7 @@ import { fileSystem } from '@/model/filesystem'
 		color: #eee;
 		box-shadow: 0px 3px 0px black;
 	}
-	.theme-monokai .ai-list ::v-deep .item:not(.modified) > .label {
+	.theme-monokai .ai-list ::v-deep .item > .label:not(.error):not(.warning) {
 		color: #eee;
 	}
 	.theme-monokai .ai-list ::v-deep .router-link-active > .item > .label {
