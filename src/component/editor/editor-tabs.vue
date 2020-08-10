@@ -59,6 +59,11 @@
 					this.tabs.push(this.ais[t])
 				}
 			}
+			if (tabs.length === 0) {
+				if (this.$route.params.id in this.ais) {
+					this.tabs.push(this.ais[parseInt(this.$route.params.id)])
+				}
+			}
 			this.update()
 		}
 
@@ -122,6 +127,7 @@
 		}
 
 		close(ai: AI) {
+			if (this.tabs.length === 1) { return }
 			const i = this.tabs.indexOf(ai)
 			if (ai.modified) {
 				if (!window.confirm(this.$i18n.t('confirm_close', [1]) as string)) {
