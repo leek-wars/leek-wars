@@ -24,7 +24,7 @@
 	import { LeekWars } from '@/model/leekwars'
 	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 	import EditorAI from './editor-ai.vue'
-	import { Folder, AIItem } from './editor-item'
+	import { AIItem, Folder } from './editor-item'
 	import { explorer } from './explorer'
 
 	@Component({ name: 'editor-folder', components: { 'editor-ai': EditorAI } })

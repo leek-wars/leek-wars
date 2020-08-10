@@ -17,7 +17,6 @@ import { TranslateResult } from 'vue-i18n'
 import { ChatType, ChatWindow } from './chat'
 import { i18n, loadLanguageAsync } from './i18n'
 import { PotionEffect, PotionTemplate } from './potion'
-import { FileSystem } from './filesystem'
 
 const MONTHS: { [key: string]: string[] } = {
 	fr: ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'],

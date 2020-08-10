@@ -1,25 +1,24 @@
-import { LeekWars } from '@/model/leekwars'
+import { AIItem, Folder } from '@/component/editor/editor-item'
 import { AI } from '@/model/ai'
-import Vue from 'vue'
+import { LeekWars } from '@/model/leekwars'
 import { store } from '@/model/store'
-import { Folder, AIItem } from '@/component/editor/editor-item'
+import Vue from 'vue'
 
 class FileSystem {
 
-    public ais: {[key: number]: AI} = {}
-    private initialized: boolean = false
-    private items: {[key: string]: AI | Folder} = {}
-    public folderById: {[key: number]: Folder} = {}
-    public aiByFullPath: {[key: string]: AI} = {}
+	public ais: {[key: number]: AI} = {}
+	public folderById: {[key: number]: Folder} = {}
+	public aiByFullPath: {[key: string]: AI} = {}
+	public aiCount: number = 0
+	private initialized: boolean = false
     private leekAIs: any = {}
-    private rootFolder!: Folder
-    private promise!: Promise<void>
+	private items: {[key: string]: AI | Folder} = {}
+	private rootFolder!: Folder
+	private promise!: Promise<void>
 
-    public aiCount: number = 0
-
-    public init() {
-        if (this.initialized) { return Promise.resolve() }
-        if (this.promise) { return this.promise }
+	public init() {
+		if (this.initialized) { return Promise.resolve() }
+		if (this.promise) { return this.promise }
 
 		return this.promise = new Promise((resolve, reject) => {
 			LeekWars.get<{ais: AI[], folders: any[], leek_ais: {[key: number]: number}}>('ai/get-farmer-ais').then(data => {
@@ -47,16 +46,16 @@ class FileSystem {
 					Vue.set(this.folderById, folder.id, folder)
 					return folder
 				}
-                this.rootFolder = buildFolder(0, 0)
+				this.rootFolder = buildFolder(0, 0)
 				for (const ai of data.ais) {
-                    ai.path = this.getAIFullPath(ai)
-                    ai.folderpath = this.getFolderPath(this.folderById[ai.folder])
+					ai.path = this.getAIFullPath(ai)
+					ai.folderpath = this.getFolderPath(this.folderById[ai.folder])
 					Vue.set(ai, 'modified', false)
 					Vue.set(ai, 'selected', false)
 					Vue.set(ai, 'errors', 0)
 					Vue.set(ai, 'warnings', 0)
-                    Vue.set(this.ais, '' + ai.id, ai)
-                    Vue.set(this.aiByFullPath, ai.path, ai)
+					Vue.set(this.ais, '' + ai.id, ai)
+					Vue.set(this.aiByFullPath, ai.path, ai)
 					this.items[ai.name] = ai
 				}
 				this.initialized = true
@@ -65,69 +64,55 @@ class FileSystem {
 		})
 	}
 
-    /**
-     * Ajoute une nouvelle IA dans le filesystem
-     */
-    public add_ai(ai: AI, folder: Folder) {
-        ai.path = this.getAIFullPath(ai)
-        ai.folderpath = this.getFolderPath(this.folderById[ai.folder])
+	/**
+	 * Ajoute une nouvelle IA dans le filesystem
+	 */
+	public add_ai(ai: AI, folder: Folder) {
+		ai.path = this.getAIFullPath(ai)
+		ai.folderpath = this.getFolderPath(this.folderById[ai.folder])
 		Vue.set(this.ais, ai.id, ai)
 		Vue.set(this.aiByFullPath, ai.path, ai)
-        folder.items.push(new AIItem(ai, folder.id))
-        store.commit('add-ai', ai)
-    }
+		folder.items.push(new AIItem(ai, folder.id))
+		store.commit('add-ai', ai)
+	}
 
-    public add_folder(folder: Folder, parent: Folder) {
-        this.folderById[folder.id] = folder
-        parent.items.push(folder)
-    }
+	public add_folder(folder: Folder, parent: Folder) {
+		this.folderById[folder.id] = folder
+		parent.items.push(folder)
+	}
 
-    public find(path: string, folder: number): AI | null {
-        // console.log("find", path, folder)
-        path = path.trim()
-        if (path[0] === '/') { // From root
-            const sub = path.substring(1)
-            return this.find(sub, this.rootFolder.id)
-        }
-        if (!(folder in this.folderById)) { return null }
-        const f = this.folderById[folder]
-        if (path.indexOf('/') === -1) { // Find an AI
-            for (const item of f.items) {
-                if (!item.folder && item.name === path) {
-                    return (item as AIItem).ai
-                }
-            }
-        } else { // Find another path
-            const i = path.indexOf('/')
-            const first = path.substring(0, i)
-            const rest = path.substring(i + 1)
-            // console.log("first", first, "rest", rest)
-            if (first === '..') {
-                return this.find(rest, f.parent)
-            } else if (first === '.') {
-                return this.find(rest, f.id)
-            }
-            for (const item of f.items) {
-                if (item.folder && item.name === first) {
-                    return this.find(rest, (item as Folder).id)
-                }
-            }
-        }
-        return null
-    }
-
-    private getAIFullPath(ai: AI) {
-        if (ai.folder > 0 && ai.folder in this.folderById) {
-            return this.getFolderPath(this.folderById[ai.folder]) + ai.name
-        }
-        return ai.name
-    }
-
-    private getFolderPath(folder: Folder): string {
-        if (folder.parent !== 0) {
-            return this.getFolderPath(this.folderById[folder.parent]) + folder.name + '/'
-        }
-        return folder.name + '/'
+	public find(path: string, folder: number): AI | null {
+		// console.log("find", path, folder)
+		path = path.trim()
+		if (path[0] === '/') { // From root
+			const sub = path.substring(1)
+			return this.find(sub, this.rootFolder.id)
+		}
+		if (!(folder in this.folderById)) { return null }
+			const f = this.folderById[folder]
+			if (path.indexOf('/') === -1) { // Find an AI
+			for (const item of f.items) {
+				if (!item.folder && item.name === path) {
+					return (item as AIItem).ai
+				}
+			}
+		} else { // Find another path
+			const i = path.indexOf('/')
+			const first = path.substring(0, i)
+			const rest = path.substring(i + 1)
+			// console.log("first", first, "rest", rest)
+			if (first === '..') {
+				return this.find(rest, f.parent)
+			} else if (first === '.') {
+				return this.find(rest, f.id)
+			}
+			for (const item of f.items) {
+				if (item.folder && item.name === first) {
+					return this.find(rest, (item as Folder).id)
+				}
+			}
+		}
+		return null
 	}
 
 	public deleteAI(ai: AI) {
@@ -142,15 +127,29 @@ class FileSystem {
 		const parent = this.folderById[folder.parent]
 		parent.items.splice(parent.items.indexOf(folder), 1)
 		LeekWars.delete('ai-folder/delete', {folder_id: folder.id}).error(error => LeekWars.toast(error))
-    }
+	}
 
-    public renameAI(ai: AI, name: string) {
-        ai.name = name
-        Vue.delete(this.aiByFullPath, ai.path)
-        ai.path = this.getAIFullPath(ai)
-        ai.folderpath = this.getFolderPath(this.folderById[ai.folder])
+	public renameAI(ai: AI, name: string) {
+		ai.name = name
+		Vue.delete(this.aiByFullPath, ai.path)
+		ai.path = this.getAIFullPath(ai)
+		ai.folderpath = this.getFolderPath(this.folderById[ai.folder])
 		Vue.set(this.aiByFullPath, ai.path, ai)
-    }
+	}
+
+	private getAIFullPath(ai: AI) {
+		if (ai.folder > 0 && ai.folder in this.folderById) {
+			return this.getFolderPath(this.folderById[ai.folder]) + ai.name
+		}
+		return ai.name
+	}
+
+	private getFolderPath(folder: Folder): string {
+		if (folder.parent !== 0) {
+			return this.getFolderPath(this.folderById[folder.parent]) + folder.name + '/'
+		}
+		return folder.name + '/'
+	}
 }
 
 const fileSystem = new FileSystem()

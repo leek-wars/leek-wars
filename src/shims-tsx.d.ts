@@ -43,4 +43,7 @@ declare global {
 		mozRequestFullScreen: () => void
 		msRequestFullscreen: () => void
 	}
+	interface Window {
+		Module: any
+	}
 }

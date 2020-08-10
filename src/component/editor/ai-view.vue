@@ -60,13 +60,13 @@
 	import ChipPreview from '@/component/market/chip-preview.vue'
 	import WeaponPreview from '@/component/market/weapon-preview.vue'
 	import { AI } from '@/model/ai'
+	import { fileSystem } from '@/model/filesystem'
 	import { i18n } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import { store } from '@/model/store'
 	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 	import DocumentationConstant from '../documentation/documentation-constant.vue'
 	import DocumentationFunction from '../documentation/documentation-function.vue'
-	import { fileSystem } from '@/model/filesystem'
 
 	const AUTO_SHORTCUTS = [
 		["lama", "#LamaSwag", "", "Le pouvoir du lama"],
@@ -296,20 +296,19 @@
 			}
 			this.errors = errors
 			if (this.errors.length === 0) { return }
-			let error = errors[0]
-			let error_by_line = {} as any
+			const error_by_line = {} as any
 			for (const error of errors) {
 				if (!(error[0] in error_by_line)) { error_by_line[error[0]] = [] }
 				error_by_line[error[0]].push([error[1], error[3]])
 			}
 			// console.log(error_by_line)
-			const overlay = { token: function(stream: any) {
+			const overlay = { token: (stream: any) => {
 				const line = stream.lineOracle.line + 1
 				const pos = stream.pos
 				if (line in error_by_line) {
 					// console.log("line", line, pos, error_by_line[line])
 					for (const error of error_by_line[line]) {
-						if (pos == error[0]) {
+						if (pos === error[0]) {
 							let len = Math.max(1, error[1] - error[0])
 							stream.eatWhile(() => len-- >= 0)
 							return "highlight-error"
@@ -651,7 +650,6 @@
 						for (const er in this.errors) {
 							const error = this.errors[er]
 							if (error[0] === editorPos.line + 1 && error[1] <= editorPos.ch && error[3] > editorPos.ch) {
-								const p = this.editor.cursorCoords({line: editorPos.line, ch: error[1]})
 								this.errorTooltipText = i18n.t('ls_error.' + error[5], error[6]) as string
 								this.errorTooltip = true
 								shown = true
@@ -674,10 +672,6 @@
 					// console.log("cannot hover")
 				})
 			}, this.ctrl ? 0 : 200)
-		}
-
-		public leaveDetails() {
-
 		}
 
 		public removeUnderlineMarker() {
@@ -704,7 +698,7 @@
 			const cursor = this.document.getCursor()
 			const position = this.document.indexFromPos(cursor)
 
-			return ;
+			return
 
 			LeekWars.analyzer.complete(this.ai, position).then(raw_data => {
 
@@ -1039,7 +1033,7 @@
 		z-index: 100;
 		margin: 0;
 		display: flex;
-		align-items: end;
+		align-items: flex-end;
 		> .type {
 			position: absolute;
 			top: 0;
