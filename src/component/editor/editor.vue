@@ -1,59 +1,63 @@
 <template lang="html">
 	<div :class="'theme-' + theme">
 		<div class="page-header page-bar">
-			<div>
+			<div class="menu">
 				<h1>{{ $t('title') }}</h1>
-				<div v-if="currentAI" class="info">{{ currentAI.name }}</div>
+				<!-- <div v-if="currentAI" class="info">{{ currentAI.name }}</div> -->
+				<div class="tabs">
+					<div ref="fileButton" class="tab first action" icon="settings">
+						<v-icon>mdi-file-outline</v-icon> Fichier
+					</div>
+					<v-menu v-model="fileMenu" :activator="LeekWars.mobile ? addMenuActivator : $refs.fileButton" offset-y>
+						<v-list>
+							<v-list-item v-ripple @click="openNewAI(false)">
+								<v-icon class="list-icon">mdi-file-outline</v-icon>
+								<v-list-item-content>
+									<v-list-item-title>{{ $t('new_ai') }}</v-list-item-title>
+								</v-list-item-content>
+							</v-list-item>
+							<!-- <v-list-item v-ripple @click="openNewAI(true)">
+								<v-icon class="list-icon">mdi-file-star-outline</v-icon>
+								<v-list-item-content>
+									<v-list-item-title>{{ $t('new_v2') }}
+										<tooltip>
+											<template v-slot:activator="{ on }">
+												<span class="label-beta" v-on="on">bêta <v-icon>mdi-information-outline</v-icon></span>
+											</template>
+											{{ $t('v2_beta_message') }}
+										</tooltip>
+									</v-list-item-title>
+								</v-list-item-content>
+							</v-list-item> -->
+							<v-list-item v-ripple @click="openNewFolder()">
+								<v-icon class="list-icon">mdi-folder-outline</v-icon>
+								<v-list-item-content>
+									<v-list-item-title>{{ $t('new_folder') }}</v-list-item-title>
+								</v-list-item-content>
+							</v-list-item>
+							<v-list-item v-ripple @click="save">
+								<v-icon class="list-icon">mdi-content-save</v-icon>
+								<v-list-item-content>
+									<v-list-item-title>{{ $t('save') }}</v-list-item-title>
+								</v-list-item-content>
+							</v-list-item>
+							<v-list-item v-ripple @click="deleteDialog = true">
+								<v-icon class="list-icon">mdi-delete</v-icon>
+								<v-list-item-content>
+									<v-list-item-title>{{ $t('delete') }}</v-list-item-title>
+								</v-list-item-content>
+							</v-list-item>
+						</v-list>
+					</v-menu>
+					<div ref="settingsButton" class="tab action" icon="settings" @click="settingsDialog = true">
+						<v-icon>mdi-cogs</v-icon>
+					</div>
+					<div :title="$t('test_desc')" class="action content tab" icon="play_arrow" @click="test">
+						<v-icon class="list-icon">mdi-play</v-icon><span>{{ $t('test') }}</span>
+					</div>
+				</div>
 			</div>
-			<div class="tabs">
-				<div ref="addButton" :title="$t('new_desc')" class="action list tab" icon="add">
-					<v-icon>mdi-plus</v-icon><span>{{ $t('new') }}</span>
-				</div>
-				<v-menu v-model="addMenu" :activator="LeekWars.mobile ? addMenuActivator : $refs.addButton" offset-y>
-					<v-list>
-						<v-list-item v-ripple @click="openNewAI(false)">
-							<v-icon class="list-icon">mdi-file-outline</v-icon>
-							<v-list-item-content>
-								<v-list-item-title>{{ $t('new_ai') }}</v-list-item-title>
-							</v-list-item-content>
-						</v-list-item>
-						<!-- <v-list-item v-ripple @click="openNewAI(true)">
-							<v-icon class="list-icon">mdi-file-star-outline</v-icon>
-							<v-list-item-content>
-								<v-list-item-title>{{ $t('new_v2') }}
-									<tooltip>
-										<template v-slot:activator="{ on }">
-											<span class="label-beta" v-on="on">bêta <v-icon>mdi-information-outline</v-icon></span>
-										</template>
-										{{ $t('v2_beta_message') }}
-									</tooltip>
-								</v-list-item-title>
-							</v-list-item-content>
-						</v-list-item> -->
-						<v-list-item v-ripple @click="openNewFolder()">
-							<v-icon class="list-icon">mdi-folder-outline</v-icon>
-							<v-list-item-content>
-								<v-list-item-title>{{ $t('new_folder') }}</v-list-item-title>
-							</v-list-item-content>
-						</v-list-item>
-					</v-list>
-				</v-menu>
-				<div :title="$t('save_desc')" class="action content tab" icon="save" @click="save">
-					<v-icon class="list-icon">mdi-content-save</v-icon><span>{{ $t('save') }}</span>
-				</div>
-				<div :title="$t('delete_desc')" class="action list content tab" icon="delete" @click="deleteDialog = true">
-					<v-icon class="list-icon">mdi-delete</v-icon><span>{{ $t('delete') }}</span>
-				</div>
-				<div :title="$t('test_desc')" class="action content tab" icon="play_arrow" @click="test">
-					<v-icon class="list-icon">mdi-play</v-icon><span>{{ $t('test') }}</span>
-				</div>
-				<div class="tab action" icon="settings" @click="settingsDialog = true">
-					<v-icon>mdi-cogs</v-icon>
-				</div>
-				<div class="tab action hidden" icon="help" @click="infoDialog = true">
-					<v-icon class="list-icon">mdi-help-circle-outline</v-icon>
-				</div>
-			</div>
+			<editor-tabs v-if="!LeekWars.mobile" ref="tabs" :current="currentID" :ais="fileSystem.ais" />
 		</div>
 
 		<div class="container last">
@@ -91,74 +95,52 @@
 
 			<panel v-show="!LeekWars.mobile || LeekWars.splitBack" :style="{width: 'calc(100% - ' + (LeekWars.mobile ? 0 : panelWidth) + 'px)'}">
 				<div slot="content" class="editor-left">
-					<editor-tabs v-if="!LeekWars.mobile" ref="tabs" :current="currentID" :ais="fileSystem.ais" />
 					<div :class="{tabs: $refs.tabs && $refs.tabs.tabs.length > 1}" class="editors">
 						<ai-view v-for="ai in activeAIs" ref="editors" :key="ai.id" :ai="ai" :ais="fileSystem.ais" :editors="$refs.editors" :visible="currentAI === ai" :font-size="fontSize" :line-height="lineHeight" :popups="popups" :auto-closing="autoClosing" :autocomplete-option="autocomplete" @jump="jump" @load="load" @problems="problems" />
 					</div>
-					<div class="results">
-						<div v-for="(good, g) in goods" :key="g" class="good" v-html="'✓ ' + (good.ai !== currentAI ? currentAI.name + ' ➞ ' : '') + $t('valid_ai', [good.ai.name])"></div>
-						<div v-if="currentEditor.serverError" class="error">× <i>{{ $t('server_error') }}</i></div>
-						<div v-for="(error, e) in errors" :key="e" class="error" @click="errors.splice(e, 1)">
-							× <span v-html="$t('ai_error', [error.ai, error.line])"></span> ▶ {{ error.message }}
-						</div>
-					</div>
+				</div>
 
-					<div v-if="enableAnalyzer && showProblemsDetails && (LeekWars.analyzer.error_count || LeekWars.analyzer.warning_count)" class="problems-details">
-						<div v-for="(problems, ai) in LeekWars.analyzer.problems" v-if="problems.length" :key="ai">
-							<div class="file" @click="toggleProblemFile(ai)">
-								<v-icon>{{ problemsCollapsed[ai] ? 'mdi-chevron-right' : 'mdi-chevron-down' }}</v-icon>
-								{{ ai }}
-								<span class="count error">{{ problems.length }}</span>
-							</div>
-							<div v-if="!problemsCollapsed[ai]">
-								<div v-for="(problem, p) in problems" :key="p" class="problem" @click="jumpProblem(ai, problem)">
-									<v-icon v-if="problem[4] === 0" class="error">mdi-close-circle-outline</v-icon>
-									<v-icon v-else class="warning">mdi-alert-circle-outline</v-icon>
-									{{ $t('ls_error.' + problem[5], problem[6]) }}
-									<span class="line">ligne {{ problem[0] }}</span>
-								</div>
+				<div v-if="enableAnalyzer && showProblemsDetails && (LeekWars.analyzer.error_count || LeekWars.analyzer.warning_count)" class="problems-details">
+					<div v-for="(problems, ai) in LeekWars.analyzer.problems" v-if="problems.length" :key="ai">
+						<div class="file" @click="toggleProblemFile(ai)">
+							<v-icon>{{ problemsCollapsed[ai] ? 'mdi-chevron-right' : 'mdi-chevron-down' }}</v-icon>
+							{{ ai }}
+							<span class="count error">{{ problems.length }}</span>
+						</div>
+						<div v-if="!problemsCollapsed[ai]">
+							<div v-for="(problem, p) in problems" :key="p" class="problem" @click="jumpProblem(ai, problem)">
+								<v-icon v-if="problem[4] === 0" class="error">mdi-close-circle-outline</v-icon>
+								<v-icon v-else class="warning">mdi-alert-circle-outline</v-icon>
+								{{ $t('ls_error.' + problem[5], problem[6]) }}
+								<span class="line">ligne {{ problem[0] }}</span>
 							</div>
 						</div>
 					</div>
-					<div v-if="enableAnalyzer" class="status">
-						<div v-ripple class="problems" @click="showProblemsDetails = !showProblemsDetails">
-							<span v-if="LeekWars.analyzer.error_count + LeekWars.analyzer.warning_count === 0" class="no-error">
-								<v-icon>mdi-check-circle</v-icon> Aucun problème
-							</span>
-							<span v-if="LeekWars.analyzer.warning_count" class="warnings">
-								<v-icon>mdi-alert-circle</v-icon> {{ LeekWars.analyzer.warning_count }} warnings
-							</span>
+				</div>
+				<div v-if="enableAnalyzer" class="status">
+					<div v-ripple class="problems" @click="showProblemsDetails = !showProblemsDetails">
+						<span v-if="LeekWars.analyzer.error_count + LeekWars.analyzer.warning_count === 0" class="no-error">
+							<v-icon>mdi-check-circle</v-icon> Aucun problème
+						</span>
+						<span v-if="LeekWars.analyzer.warning_count" class="warnings">
+							<v-icon>mdi-alert-circle</v-icon> {{ LeekWars.analyzer.warning_count }} warnings
 						</span>
 					</div>
-					<div class="filler"></div>
-					<div class="state">
-						<div v-if="LeekWars.analyzer.running == 0" class="ready">
-							Prêt
-							<v-icon>mdi-check</v-icon>
-						</div>
-						<div v-else class="running">
-							En cours d'analyse
-							<v-icon>mdi-sync</v-icon>
-						</div>
+				</div>
+				<div class="filler"></div>
+				<div class="state">
+					<div v-if="LeekWars.analyzer.running == 0" class="ready">
+						Prêt
+						<v-icon>mdi-check</v-icon>
+					</div>
+					<div v-else class="running">
+						En cours d'analyse
+						<v-icon>mdi-sync</v-icon>
 					</div>
 				</div>
 			</panel>
 		</div>
 		<div class="error-tooltip"></div>
-
-		<popup v-model="infoDialog" :width="500">
-			<v-icon slot="icon">mdi-help-circle</v-icon>
-			<span slot="title">{{ $t('shortcuts') }}</span>
-			<ul class="shortcuts">
-				<li v-html="$t('shortcut_1')"></li>
-				<li v-html="$t('shortcut_2')"></li>
-				<li v-html="$t('shortcut_3')"></li>
-				<li v-html="$t('shortcut_4')"></li>
-				<li v-html="$t('shortcut_5')"></li>
-				<li v-html="$t('shortcut_6')"></li>
-				<li v-html="$t('shortcut_7')"></li>
-			</ul>
-		</popup>
 
 		<popup v-model="settingsDialog" :width="620">
 			<v-icon slot="icon">mdi-cogs</v-icon>
@@ -186,6 +168,18 @@
 				<v-checkbox v-model="enableAnalyzer" :label="$t('analyzer')" hide-details />
 				<v-checkbox v-model="autocomplete" :label="$t('autocompletion')" hide-details />
 				<v-checkbox v-model="popups" :label="$t('popups')" hide-details />
+
+				<div class="title">{{ $t('shortcuts') }}</div>
+
+				<ul class="shortcuts">
+					<li v-html="$t('shortcut_1')"></li>
+					<li v-html="$t('shortcut_2')"></li>
+					<li v-html="$t('shortcut_3')"></li>
+					<li v-html="$t('shortcut_4')"></li>
+					<li v-html="$t('shortcut_5')"></li>
+					<li v-html="$t('shortcut_6')"></li>
+					<li v-html="$t('shortcut_7')"></li>
+				</ul>
 			</div>
 		</popup>
 
@@ -256,7 +250,7 @@
 	const EditorTest = () => import(/* webpackChunkName: "[request]" */ `@/component/editor/editor-test.${locale}.i18n`)
 	import { generateKeywords } from './keywords'
 	import './leekscript-monokai.scss'
-import { fileSystem } from '@/model/filesystem'
+	import { fileSystem } from '@/model/filesystem'
 	import(/* webpackChunkName: "[request]" */ /* webpackMode: "eager" */ `@/lang/doc.${locale}.lang`)
 
 	const DEFAULT_FONT_SIZE = 16
@@ -301,6 +295,7 @@ import { fileSystem } from '@/model/filesystem'
 		showProblemsDetails: boolean = true
 		problemsCollapsed: {[key: string]: boolean} = {}
 		fileSystem = fileSystem
+		fileMenu: boolean = false
 		actions_list = [
 			{icon: 'mdi-plus', click: (e: any) => this.add(e)},
 			{icon: 'mdi-cogs', click: () => this.settings() }
@@ -752,8 +747,12 @@ import { fileSystem } from '@/model/filesystem'
 </script>
 
 <style lang="scss" scoped>
-	.full {
-		position: relative;
+	.page-header {
+		flex-wrap: nowrap;
+	}
+	.menu {
+		flex-shrink: 0;
+		display: flex;
 	}
 	.v-list__tile__content {
 		padding-left: 8px;
@@ -893,7 +892,7 @@ import { fileSystem } from '@/model/filesystem'
 		height: 100%;
 	}
 	.editor-left {
-		height: calc(100vh - 140px);
+		height: calc(100vh - 128px);
 		padding: 0;
 		display: flex;
 		flex-direction: column;
@@ -903,6 +902,9 @@ import { fileSystem } from '@/model/filesystem'
 	}
 	#app.app .column9 .content {
 		height: calc(100vh - 56px);
+	}
+	.column9 .panel, .column3 .panel {
+		margin-bottom: 0;
 	}
 	.settings-dialog {
 		h3 {
