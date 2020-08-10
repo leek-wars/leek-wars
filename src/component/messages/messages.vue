@@ -27,10 +27,8 @@
 			</div>
 			<div v-show="!LeekWars.mobile || LeekWars.splitBack" class="column8">
 				<panel class="last">
-					<div slot="content">
-						<chat v-if="currentConversation && currentConversation.id !== 0" :channel="'pm-' + currentConversation.id" @send="sendMessage" />
-						<chat v-else @send="sendMessage" />
-					</div>
+					<chat v-if="currentConversation && currentConversation.id !== 0" slot="content" :channel="'pm-' + currentConversation.id" @send="sendMessage" />
+					<chat v-else slot="content" @send="sendMessage" />
 				</panel>
 			</div>
 		</div>
@@ -75,11 +73,13 @@
 		}
 		mounted() {
 			LeekWars.footer = false
+			LeekWars.box = true
 			this.$root.$on('back', this.back)
 			this.$root.$on('focus', this.conversationRead)
 		}
 		destroyed() {
 			LeekWars.footer = true
+			LeekWars.box = false
 			this.$root.$off('back', this.back)
 			this.$root.$off('focus', this.conversationRead)
 		}
@@ -193,25 +193,23 @@
 </script>
 
 <style lang="scss" scoped>
-	.panel {
-		margin-bottom: 0;
+	.column4, .column8 {
+		height: 100%;
+		.panel {
+			height: 100%;
+			margin-bottom: 0;
+		}
 	}
 	.conversations {
 		overflow-y: auto;
 		overflow-x: hidden;
-		height: calc(100vh - 140px);
+		height: 100%;
 	}
-	#app.app .conversations {
-		height: calc(100vh - 56px);
+	.chat {
+		height: 100%;
 	}
 	.conversations .content {
 		padding: 0;
-	}
-	.chat {
-		height: calc(100vh - 140px);
-	}
-	#app.app .chat {
-		height: calc(100vh - 56px);
 	}
 	.router-link-active .conversation {
 		background: white;

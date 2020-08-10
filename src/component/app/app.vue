@@ -24,7 +24,7 @@
 			<lw-bar v-if="LeekWars.mobile" />
 
 			<div class="app-center">
-				<div :class="{large: LeekWars.large || LeekWars.flex, flex: LeekWars.flex}" class="app-wrapper">
+				<div :class="{large: LeekWars.large || LeekWars.flex, flex: LeekWars.flex, box: LeekWars.box}" class="app-wrapper">
 					<lw-header />
 					<div class="page-wrapper">
 						<div class="page">
@@ -263,6 +263,23 @@
 	.app-wrapper.flex {
 		display: inline-block;
 		flex: 0;
+	}
+	.app-wrapper.box {
+		display: flex;
+		flex-direction: column;
+		height: 100vh;
+		.page-wrapper {
+			flex: 1;
+			min-height: 0;
+			.page {
+				height: 100%;
+				& > * {
+					display: flex;
+					flex-direction: column;
+					height: 100%;
+				}
+			}
+		}
 	}
 	.big-leeks {
 		z-index: -10;

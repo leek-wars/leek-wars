@@ -30,6 +30,7 @@
 	"folder_name": "Folder name",
 	"folder_renamed": "Folder renamed to <b>{0}</b>",
 	"hard": "Hard",
+	"hide_header": "Hide the main header",
 	"import": "Import",
 	"import_desc": "Import a file from your computer.",
 	"level_n": "Level {0}",

@@ -30,6 +30,7 @@
 	"folder_name": "Nom du dossier",
 	"folder_renamed": "Dossier renommé en <b>{0}</b>",
 	"hard": "Difficile",
+	"hide_header": "Masquer le bandeau principal",
 	"import": "Importer",
 	"import_desc": "Importer une IA depuis votre ordinateur.",
 	"level_n": "Niveau {0}",
