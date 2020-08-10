@@ -72,7 +72,7 @@
 					<loader v-if="!fileSystem.rootFolder" />
 
 					<div v-if="fileSystem.rootFolder" v-autostopscroll class="ai-list">
-						<explorer ref="explorer" @test="test" @delete-ai="deleteAI" />
+						<explorer ref="explorer" :current-ai="currentAI" :selected-folder="currentFolder" @test="test" @delete-ai="deleteAI" />
 					</div>
 
 					<div v-if="currentEditor && currentEditor.loaded && panelWidth" class="ai-stats">
