@@ -64,6 +64,8 @@
 				</div>
 			</div>
 			<editor-tabs v-if="!LeekWars.mobile" ref="tabs" :current="currentID" :ais="fileSystem.ais" />
+
+			<editor-finder ref="finder" :active="activeAIs" />
 		</div>
 
 		<div class="container last">
@@ -241,6 +243,7 @@
 	import { generateKeywords } from './keywords'
 	import './leekscript-monokai.scss'
 	import { fileSystem } from '@/model/filesystem'
+	import EditorFinder from './editor-finder.vue'
 	import(/* webpackChunkName: "[request]" */ /* webpackMode: "eager" */ `@/lang/doc.${locale}.lang`)
 
 	const DEFAULT_FONT_SIZE = 16
@@ -249,7 +252,7 @@
 
 	@Component({
 		name: 'editor', i18n: {},
-		components: { 'ai-view': AIView, 'editor-test': EditorTest, 'editor-tabs': EditorTabs, 'explorer': Explorer },
+		components: { 'ai-view': AIView, 'editor-test': EditorTest, 'editor-tabs': EditorTabs, 'explorer': Explorer, 'editor-finder': EditorFinder },
 		mixins
 	})
 	export default class EditorPage extends Vue {
@@ -344,15 +347,21 @@
 					event.preventDefault()
 				}
 			})
+			this.$root.$on('ctrlP', (event: Event) => {
+				;(this.$refs.finder as EditorFinder).open()
+				event.preventDefault()
+			})
 			this.$root.$on('escape', () => {
 				if (this.currentEditor) {
 					this.currentEditor.closeSearch()
 				}
+				;(this.$refs.finder as EditorFinder).close()
 			})
 			this.$root.$on('htmlclick', () => {
 				if (this.currentEditor) {
 					this.currentEditor.close()
 				}
+				;(this.$refs.finder as EditorFinder).close()
 			})
 			this.$root.$on('keydown', (e: KeyboardEvent) => {
 				if (this.currentEditor) {
@@ -442,6 +451,7 @@
 			this.$root.$off('ctrlS')
 			this.$root.$off('ctrlQ')
 			this.$root.$off('ctrlF')
+			this.$root.$off('ctrlP')
 			this.$root.$off('escape')
 			this.$root.$off('htmlclick')
 			this.$root.$off('keydown')
@@ -709,6 +719,7 @@
 	}
 	.page-header {
 		flex-wrap: nowrap;
+		position: relative;
 	}
 	.container {
 		flex: 1;

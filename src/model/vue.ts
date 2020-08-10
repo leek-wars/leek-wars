@@ -231,8 +231,7 @@ const vueMain = new Vue({
 				console.log("Alt + <")
 				event.preventDefault()
 			} else if (event.ctrlKey && event.keyCode === 80) {
-				console.log("Ctrl + P")
-				event.preventDefault()
+				this.$emit('ctrlP', event)
 			}
 		})
 		window.addEventListener('keyup', (event) => {
