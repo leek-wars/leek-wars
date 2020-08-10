@@ -205,20 +205,17 @@
 			font-size: 14px;
 			vertical-align: baseline;
 			margin-right: 2px;
+			transition: none;
 		}
 		&.error .v-icon {
 			color: red
 		}
 		&.warning .v-icon {
-			color: #ff6600;
+			color: orange;
 		}
 	}
 	.tab.single .name {
-		margin-left: 15px;
 		margin-right: 15px;
-	}
-	.tab.selected .name:not(.error):not(.warning) {
-		color: black;
 	}
 	.tab .v-icon {
 		font-size: 20px;
