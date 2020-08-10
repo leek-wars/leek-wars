@@ -1,26 +1,26 @@
 <template lang="html">
-	<div v-show="tabs.length > 1" class="tabs-wrapper">
-		<div class="tabs">
-			<div v-for="(ai, i) in tabs" ref="tabs" :key="ai.id" :class="{selected: ai.id in ais && ais[ai.id].selected, modified: ai.id in ais && ais[ai.id].modified}" :title="ai.path" class="tab" @click="click($event, ai)" @contextmenu.prevent="openMenu(i)" @mouseup.middle="close(ai)">
-				<div v-if="ai.id in ais" class="name">
+	<div v-show="tabs.length" class="tabs-wrapper">
+		<div ref="list" class="list" @wheel.prevent="mousewheel">
+			<div v-for="(ai, i) in tabs" ref="tabs" :key="ai.id" :class="{selected: ai.id in ais && ais[ai.id].selected, modified: ai.id in ais && ais[ai.id].modified, single: tabs.length === 1}" :title="ai.path" class="tab" @click="click($event, ai)" @contextmenu.prevent="openMenu(i)" @mouseup.middle="close(ai)">
+				<div v-if="ai.id in ais" class="name" :class="{error: ais[ai.id].errors, warning: ais[ai.id].warnings}">
 					{{ ais[ai.id].name }}
 				</div>
-				<span @click.stop="close(ai)">
+				<span v-if="tabs.length > 1" @click.stop="close(ai)">
 					<v-icon class="modified">mdi-record</v-icon>
 					<v-icon class="close">mdi-close</v-icon>
 				</span>
 			</div>
 		</div>
-		<v-menu ref="menu" :key="activator" v-model="menu" :activator="activator" offset-y @input="menuChange()">
+		<v-menu ref="menu" :key="currentI" v-model="menu" :activator="activator" offset-y @input="menuChange()">
 			<v-list class="menu" :dense="true">
 				<v-list-item v-ripple @click="close(currentAI)">
-					<v-icon>mdi-close-circle-outline</v-icon>
+					<v-icon>mdi-close-box-outline</v-icon>
 					<v-list-item-content>
 						<v-list-item-title>{{ $t('close') }}</v-list-item-title>
 					</v-list-item-content>
 				</v-list-item>
 				<v-list-item v-ripple @click="closeOthers(currentAI)">
-					<v-icon>mdi-close-circle-outline</v-icon>
+					<v-icon>mdi-close-box-multiple-outline</v-icon>
 					<v-list-item-content>
 						<v-list-item-title>{{ $t('close_others') }}</v-list-item-title>
 					</v-list-item-content>
@@ -32,11 +32,11 @@
 
 <script lang="ts">
 	import { AI } from '@/model/ai'
-	import { i18n } from '@/model/i18n'
+	import { i18n, mixins } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
-	import { Component, Prop, Vue } from 'vue-property-decorator'
+	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 
-	@Component({ name: 'editor-tabs' })
+	@Component({ name: 'editor-tabs', i18n: {}, mixins })
 	export default class EditorTabs extends Vue {
 		@Prop({required: true}) ais!: AI[]
 		tabs: AI[] = []
@@ -49,6 +49,34 @@
 			const tabs = JSON.parse(localStorage.getItem('editor/tabs') || '[]')
 			for (const t of tabs) {
 				this.tabs.push(t)
+			}
+		}
+
+		@Watch('$route.params')
+		update() {
+			Vue.nextTick(() => {
+				const list = (this.$refs.list as HTMLElement)
+				for (let i = 0; i < this.tabs.length; ++i) {
+					if (this.ais[this.tabs[i].id].selected) {
+						const tab = (this.$refs.tabs as HTMLElement[])[i]
+						if (tab.offsetLeft < list.scrollLeft) {
+							list.scrollLeft = tab.offsetLeft
+						} else if (tab.offsetLeft + tab.clientWidth - list.scrollLeft > list.clientWidth) {
+							list.scrollLeft = tab.offsetLeft + tab.clientWidth - list.clientWidth
+						}
+						return
+					}
+				}
+			})
+		}
+
+		mousewheel(event: MouseWheelEvent) {
+			const target = this.$refs.list as HTMLElement
+			const delta = event.deltaY || event.deltaX
+			const toLeft  = delta < 0 && target.scrollLeft > 0
+			const toRight = delta > 0 && target.scrollLeft < target.scrollWidth - target.clientWidth
+			if (toLeft || toRight) {
+				target.scrollLeft += delta
 			}
 		}
 
@@ -76,6 +104,7 @@
 		}
 
 		menuChange(e: any) {
+			this.currentI = -1
 			this.activator = null
 			this.menu = false
 		}
@@ -93,12 +122,14 @@
 			if (realAI.selected) {
 				this.openOther(i)
 			}
+			this.currentI = -1
 		}
 
 		closeOthers(ai: AI) {
 			this.tabs = []
 			this.tabs.push(ai)
 			this.save()
+			this.$router.push('/editor/' + ai.id)
 		}
 
 		closeById(id: number) {
@@ -119,44 +150,66 @@
 
 <style lang="scss" scoped>
 	.tabs-wrapper {
-		flex: 35px 0 0;
+		flex: 36px 1 0;
 		user-select: none;
-	}
-	.tabs {
-		height: 35px;
+		overflow: hidden;
 		display: flex;
+		justify-content: flex-end;
+	}
+	.list {
+		height: 36px;
+		overflow-y: hidden;
+		white-space: nowrap;
+		position: relative;
+		border-top-left-radius: 4px;
+		border-top-right-radius: 4px;
+	}
+	#app:not(.app) .list {
+		&::-webkit-scrollbar {
+			width: 0px;
+			height: 0px;
+		}
 	}
 	.tab {
 		line-height: 35px;
+		height: 36px;
 		cursor: pointer;
-		display: flex;
+		display: inline-flex;
 		align-items: center;
 		max-width: 200px;
-		background: #ddd;
+		background: rgba(0, 0, 0, 0.3);
 		min-width: 0;
-		flex-basis: 180px;
+		min-width: 100px;
+		flex-shrink: 0;
+		overflow: hidden;
+		color: #eee;
 	}
 	.tab:not(:last-child) {
 		margin-right: 1px;
 	}
-	.tab:first-child {
-		border-top-left-radius: 4px;
-	}
-	.tab:last-child {
-		border-top-right-radius: 4px;
-	}
 	.tab.selected {
 		background: white;
+		color: #333;
 	}
 	.tab .name {
 		text-overflow: ellipsis;
 		overflow: hidden;
 		white-space: nowrap;
 		margin-left: 10px;
-		margin-right: 3px;
+		margin-right: 4px;
 		width: 100%;
+		&.error {
+			color: red
+		}
+		&.warning {
+			color: #ff6600;
+		}
 	}
-	.tab.selected .name {
+	.tab.single .name {
+		margin-left: 15px;
+		margin-right: 15px;
+	}
+	.tab.selected .name:not(.error):not(.warning) {
 		color: black;
 	}
 	.tab .v-icon {

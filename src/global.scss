@@ -271,7 +271,7 @@ ul {
 .page-header.page-bar .tabs {
 	margin-left: 20px;
 }
-.page-bar .tab {
+.page-bar .tabs .tab {
 	display: inline-block;
 	text-align: center;
 	padding: 7px 8px;
@@ -286,13 +286,13 @@ ul {
 	margin-left: 2px;
 	user-select: none;
 }
-.page-bar .tab:not(.disabled) {
+.page-bar .tabs .tab:not(.disabled) {
 	cursor: pointer;
 }
-.page-bar .tab:not(.disabled):hover {
+.page-bar .tabs .tab:not(.disabled):hover {
 	background-color: rgba(0, 0, 0, 0.6);
 }
-.page-bar .tab::before {
+.page-bar .tabs .tab::before {
 	content: "";
 	position: absolute;
 	left: -20px;
@@ -303,10 +303,10 @@ ul {
 	border-width: 0 20px 36px 0;
 	border-color: transparent rgba(0, 0, 0, 0.3) transparent transparent;
 }
-.page-bar .tab:not(.disabled):hover::before {
+.page-bar .tabs .tab:not(.disabled):hover::before {
 	border-color: transparent rgba(0, 0, 0, 0.6) transparent transparent ;
 }
-.page-bar .tab::after {
+.page-bar .tabs .tab::after {
 	content: "";
 	position: absolute;
 	right: -20px;
@@ -317,14 +317,14 @@ ul {
 	border-width: 36px 0 0 20px;
 	border-color: transparent transparent transparent rgba(0, 0, 0, 0.3);
 }
-.page-bar .tab:not(.disabled):hover::after {
+.page-bar .tabs .tab:not(.disabled):hover::after {
 	border-color: transparent  transparent transparent rgba(0, 0, 0, 0.6);
 }
-.page-bar .tab.selected {
+.page-bar .tabs .tab.selected {
 	background-color: rgba(110, 201, 31, 0.8);
 	color: #111;
 }
-.page-bar .tab:first-child.selected::before {
+.page-bar .tabs .tab:first-child.selected::before {
 	content: "";
 	position: absolute;
 	left: -20px;
@@ -335,7 +335,7 @@ ul {
 	border-width: 0 20px 36px 0;
 	border-color: transparent rgba(110, 201, 31, 0.8) transparent   transparent ;
 }
-.page-bar .tab:first-child.selected::after {
+.page-bar .tabs .tab:first-child.selected::after {
 	content: "";
 	position: absolute;
 	right: -20px;
@@ -346,48 +346,48 @@ ul {
 	border-width: 36px 0 0 20px;
 	border-color: transparent  transparent   transparent rgba(110, 201, 31, 0.8);
 }
-.page-bar .tab span {
+.page-bar .tabs .tab span {
 	vertical-align: top;
 }
-.page-bar .tab img {
+.page-bar .tabs .tab img {
 	width: 22px;
 	margin-right: 8px;
 	margin-top: -1px;
 }
-.page-bar .tab i {
+.page-bar .tabs .tab i {
 	margin-top: -2px;
 	margin-right: 5px;
 	color: white;
 	font-size: 26px;
 }
-.page-bar .tab input[type="text"],
-.page-bar .tab input[type="number"] {
+.page-bar .tabs .tab input[type="text"],
+.page-bar .tabs .tab input[type="number"] {
 	vertical-align: top;
 	margin-top: -4px;
 	background: rgba(0,0,0,0.2);
 	color: white;
 	border: none;
 }
-.page-bar .tab.green {
+.page-bar .tabs .tab.green {
 	background-color: rgba(95,173,27,0.7);
 	color: white;
 }
-.page-bar .tab.green:before {
+.page-bar .tabs .tab.green:before {
 	border-color: transparent rgba(95,173,27,0.7) transparent transparent;
 }
-.page-bar .tab.green:after {
+.page-bar .tabs .tab.green:after {
 	border-color: transparent transparent transparent rgba(95,173,27,0.7);
 }
-.page-bar .tab.green:not(.disabled):hover {
+.page-bar .tabs .tab.green:not(.disabled):hover {
 	background-color: rgba(95,173,27,0.9);
 }
-.page-bar .tab.green:not(.disabled):hover:before {
+.page-bar .tabs .tab.green:not(.disabled):hover:before {
 	border-color: transparent rgba(95,173,27,0.9) transparent transparent;
 }
-.page-bar .tab.green:not(.disabled):hover:after {
+.page-bar .tabs .tab.green:not(.disabled):hover:after {
 	border-color: transparent transparent transparent rgba(95,173,27,0.9);
 }
-.page-footer .tab:first-child:before {
+.page-footer .tabs .tab:first-child:before {
 	border: none;
 }
 .hab {
@@ -764,7 +764,7 @@ code {
 	display: none;
 }
 .page-bar {
-	padding-right: 15px;
+	padding-right: 12px;
 	display: flex;
 	flex-wrap: wrap;
 	justify-content: space-between;
@@ -822,6 +822,7 @@ code {
 body #app:not(.app) {
 	::-webkit-scrollbar {
 		width: 10px;
+		height: 10px;
 	}
 	::-webkit-scrollbar-thumb {
 		background: #bbb;
