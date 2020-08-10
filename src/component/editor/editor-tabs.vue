@@ -211,7 +211,7 @@
 			color: red
 		}
 		&.warning .v-icon {
-			color: orange;
+			color: #ff9100;
 		}
 	}
 	.tab.single .name {

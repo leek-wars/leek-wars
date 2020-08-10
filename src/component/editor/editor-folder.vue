@@ -122,7 +122,7 @@
 			color: red;
 		}
 		&.warning {
-			color: #ff6600;
+			color: #ff9100;
 		}
 	}
 	.item.selected > .label {
@@ -219,8 +219,8 @@
 			border: 1px solid red;
 		}
 		&.warning {
-			color: #ff6600;
-			border: 1px solid #ff6600;
+			color: #ff9100;
+			border: 1px solid #ff9100;
 		}
 	}
 </style>
