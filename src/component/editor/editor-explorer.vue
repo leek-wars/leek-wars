@@ -122,6 +122,8 @@
 
 	@Component({ name: 'editor-explorer', i18n: {}, mixins, components: { 'editor-folder': EditorFolder } })
 	export default class Explorer extends Vue {
+		@Prop({required: true}) currentAi!: AI
+		@Prop({required: true}) selectedFolder!: Folder
 		fileSystem = fileSystem
 		aiMenu: boolean = false
 		folderMenu: boolean = false
@@ -139,9 +141,11 @@
 
 		created() {
 			this.$root.$on('editor-menu', this.openMenu)
+			this.$root.$on('keyup', this.keyup)
 		}
 		destroyed() {
 			this.$root.$off('editor-menu', this.openMenu)
+			this.$root.$off('keyup', this.keyup)
 		}
 
 		open() {
@@ -257,6 +261,18 @@
 					this.newFolderName = ''
 				}
 			})
+		}
+
+		keyup(e: KeyboardEvent) {
+			if (e.which === 46) {
+				if (this.currentAi) {
+					this.ai = this.currentAi
+					this.deleteDialog = true
+				} else if (this.selectedFolder) {
+					this.folder = this.selectedFolder
+					this.deleteDialog = true
+				}
+			}
 		}
 	}
 </script>
