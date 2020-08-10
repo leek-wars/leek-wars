@@ -99,7 +99,9 @@
 		}
 
 		click(e: MouseEvent, ai: AI) {
-			this.$router.push('/editor/' + ai.id)
+			if (this.$route.path !== '/editor/' + ai.id) {
+				this.$router.push('/editor/' + ai.id)
+			}
 		}
 
 		openMenu(i: number) {
@@ -138,7 +140,9 @@
 			this.tabs = []
 			this.tabs.push(ai)
 			this.save()
-			this.$router.push('/editor/' + ai.id)
+			if (this.$route.path !== '/editor/' + ai.id) {
+				this.$router.push('/editor/' + ai.id)
+			}
 		}
 
 		closeById(id: number) {
@@ -148,7 +152,9 @@
 
 		openOther(i: number) {
 			const ai = this.tabs[Math.max(0, i - 1)]
-			this.$router.push('/editor/' + ai.id)
+			if (this.$route.path !== '/editor/' + ai.id) {
+				this.$router.push('/editor/' + ai.id)
+			}
 		}
 
 		save() {
