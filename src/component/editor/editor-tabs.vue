@@ -3,6 +3,9 @@
 		<div ref="list" class="list" @wheel.prevent="mousewheel">
 			<div v-for="(ai, i) in tabs" ref="tabs" :key="ai.id" :class="{selected: ai.id in ais && ais[ai.id].selected, modified: ai.id in ais && ais[ai.id].modified, single: tabs.length === 1}" :title="ai.path" class="tab" @click="click($event, ai)" @contextmenu.prevent="openMenu(i)" @mouseup.middle="close(ai)">
 				<div v-if="ai.id in ais" class="name" :class="{error: ais[ai.id].errors, warning: ais[ai.id].warnings}">
+					<v-icon v-if="ais[ai.id].errors" class="icon error">mdi-close-circle</v-icon>
+					<v-icon v-else-if="ais[ai.id].warnings" class="icon warning">mdi-alert-circle</v-icon>
+					<v-icon v-else class="icon valid">mdi-check-bold</v-icon>
 					{{ ais[ai.id].name }}
 				</div>
 				<span v-if="tabs.length > 1" @click.stop="close(ai)">
@@ -198,10 +201,15 @@
 		margin-left: 10px;
 		margin-right: 4px;
 		width: 100%;
-		&.error {
+		.v-icon {
+			font-size: 14px;
+			vertical-align: baseline;
+			margin-right: 2px;
+		}
+		&.error .v-icon {
 			color: red
 		}
-		&.warning {
+		&.warning .v-icon {
 			color: #ff6600;
 		}
 	}
