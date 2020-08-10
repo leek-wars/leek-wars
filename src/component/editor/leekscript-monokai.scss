@@ -105,3 +105,21 @@
 		color: white;
 	}
 }
+.theme-monokai .problems-details {
+	background: #272822 !important;
+	color: #eee;
+	border-top: 1px solid #555 !important;
+	.file:hover {
+		background: #444 !important;
+	}
+	.problem:hover {
+		background: #444 !important;
+	}
+	.count {
+		color: #eee !important;
+	}
+}
+
+.theme-monokai .status {
+	border-top: 1px solid #555 !important;
+}

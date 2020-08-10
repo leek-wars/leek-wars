@@ -1009,7 +1009,7 @@
 			margin-right: 4px;
 		}
 		.warning {
-			color: orange;
+			color: #ff9100;
 			margin-right: 4px;
 		}
 	}
@@ -1035,7 +1035,7 @@
 				margin-right: 5px;
 			}
 			.warnings {
-				color: rgb(255, 102, 0);
+				color: #ff9100;
 			}
 		}
 		.filler {
