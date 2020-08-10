@@ -1,12 +1,12 @@
 <template lang="html">
 	<div v-show="tabs.length" class="tabs-wrapper">
 		<div ref="list" class="list" @wheel.prevent="mousewheel">
-			<div v-for="(ai, i) in tabs" ref="tabs" :key="ai.id" :class="{selected: ai.id in ais && ais[ai.id].selected, modified: ai.id in ais && ais[ai.id].modified, single: tabs.length === 1}" :title="ai.path" class="tab" @click="click($event, ai)" @contextmenu.prevent="openMenu(i)" @mouseup.middle="close(ai)">
-				<div v-if="ai.id in ais" class="name" :class="{error: ais[ai.id].errors, warning: ais[ai.id].warnings}">
-					<v-icon v-if="ais[ai.id].errors" class="icon error">mdi-close-circle</v-icon>
-					<v-icon v-else-if="ais[ai.id].warnings" class="icon warning">mdi-alert-circle</v-icon>
+			<div v-for="(ai, i) in tabs" ref="tabs" :key="ai.id" :class="{selected: ai.selected, modified: ai.modified, single: tabs.length === 1}" :title="ai.path" class="tab" @click="click($event, ai)" @contextmenu.prevent="openMenu(i)" @mouseup.middle="close(ai)">
+				<div class="name" :class="{error: ai.errors, warning: ai.warnings}">
+					<v-icon v-if="ai.errors" class="icon error">mdi-close-circle</v-icon>
+					<v-icon v-else-if="ai.warnings" class="icon warning">mdi-alert-circle</v-icon>
 					<v-icon v-else class="icon valid">mdi-check-bold</v-icon>
-					{{ ais[ai.id].name }}
+					{{ ai.name }}
 				</div>
 				<span v-if="tabs.length > 1" @click.stop="close(ai)">
 					<v-icon class="modified">mdi-record</v-icon>
@@ -48,11 +48,16 @@
 		currentI: number = 0
 		currentAI: AI | null = null
 
-		mounted() {
+		@Watch('ais', {immediate: true})
+		updateAis() {
+			console.log("update ais", this.ais)
 			const tabs = JSON.parse(localStorage.getItem('editor/tabs') || '[]')
 			for (const t of tabs) {
-				this.tabs.push(t)
+				if (t in this.ais) {
+					this.tabs.push(this.ais[t])
+				}
 			}
+			this.update()
 		}
 
 		@Watch('$route.params')
@@ -60,7 +65,7 @@
 			Vue.nextTick(() => {
 				const list = (this.$refs.list as HTMLElement)
 				for (let i = 0; i < this.tabs.length; ++i) {
-					if (this.ais[this.tabs[i].id].selected) {
+					if (this.tabs[i].selected) {
 						const tab = (this.$refs.tabs as HTMLElement[])[i]
 						if (tab.offsetLeft < list.scrollLeft) {
 							list.scrollLeft = tab.offsetLeft
@@ -84,7 +89,7 @@
 		}
 
 		add(ai: AI) {
-			if (this.tabs.findIndex(t => t.id === ai.id) !== -1) {
+			if (this.tabs.findIndex(t => t === ai) !== -1) {
 				return
 			}
 			this.tabs.push(ai)
@@ -114,15 +119,14 @@
 
 		close(ai: AI) {
 			const i = this.tabs.indexOf(ai)
-			const realAI = this.ais[ai.id]
-			if (realAI.modified) {
+			if (ai.modified) {
 				if (!window.confirm(this.$i18n.t('confirm_close', [1]) as string)) {
 					return
 				}
 			}
 			this.tabs.splice(i, 1)
 			this.save()
-			if (realAI.selected) {
+			if (ai.selected) {
 				this.openOther(i)
 			}
 			this.currentI = -1
@@ -146,7 +150,7 @@
 		}
 
 		save() {
-			localStorage.setItem('editor/tabs', JSON.stringify(this.tabs.map(ai => ({id: ai.id, name: ai.name}))))
+			localStorage.setItem('editor/tabs', JSON.stringify(this.tabs.map(ai => ai.id)))
 		}
 	}
 </script>
