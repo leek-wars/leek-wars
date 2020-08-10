@@ -85,6 +85,8 @@
 	.item .label {
 		padding: 7px 10px;
 		white-space: nowrap;
+		text-overflow: ellipsis;
+		overflow: hidden;
 		&.error {
 			color: red;
 		}
