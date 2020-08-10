@@ -22,13 +22,13 @@
 
 <script lang="ts">
 	import { AI } from '@/model/ai'
+	import { fileSystem } from '@/model/filesystem'
 	import { i18n } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 	import EditorAI from './editor-ai.vue'
-	import { Folder, AIItem } from './editor-item'
+	import { AIItem, Folder } from './editor-item'
 	import { explorer } from './explorer'
-	import { fileSystem } from '@/model/filesystem'
 
 	@Component({ name: 'editor-finder', components: { } })
 	export default class EditorFinder extends Vue {
@@ -38,7 +38,7 @@
 		selected: number = 0
 
 		get results() {
-			let result = []
+			const result = []
 			const queryLower = this.query.toLocaleLowerCase()
 
 			if (this.query.length === 0) {
@@ -88,10 +88,11 @@
 			}
 			Vue.nextTick(() => {
 				const height = 30
-				if (this.$refs.list.scrollTop < (this.selected - 8) * height) {
-					this.$refs.list.scrollTop = (this.selected - 8) * height
-				} else if (this.$refs.list.scrollTop > (this.selected - 2) * height) {
-					this.$refs.list.scrollTop = (this.selected - 2) * height
+				const list = this.$refs.list as HTMLElement
+				if (list.scrollTop < (this.selected - 8) * height) {
+					list.scrollTop = (this.selected - 8) * height
+				} else if (list.scrollTop > (this.selected - 2) * height) {
+					list.scrollTop = (this.selected - 2) * height
 				}
 			})
 		}
@@ -119,22 +120,22 @@
 		score_aux(str: string, query: string, query_lower: string) {
 			const str_lower = str.toLocaleLowerCase()
 			let index = 0
-			let parts = []
+			const parts = []
 			let score = 0
-			let fullUpper = str.toLocaleUpperCase() === str
+			const fullUpper = str.toLocaleUpperCase() === str
 			for (let q = 0; q < query.length; ++q) {
 				const i = str_lower.indexOf(query_lower[q], index)
 				if (i === -1) { return {score: 9999, parts, type: 0} }
 				parts.push(str.substring(index, i))
 				parts.push(str.substring(i, i + 1))
 				let distance = i - index
-				if (q == 0) {
+				if (q === 0) {
 					distance /= 500
 				}
 				if (str[i - 1] === '_' || str[i - 1] === '/' || str[i - 1] === ' ' || str[i - 1] === '-' || str[i - 1] === '.' || (!fullUpper && this.isUpper(str[i]))) {
 					distance /= 1000
 				}
-				if (str[i] != query[q]) { distance += 0.001 }
+				if (str[i] !== query[q]) { distance += 0.001 }
 				score = (score + distance) / Math.max(1, q)
 				index = i + 1
 			}
@@ -145,7 +146,7 @@
 		score_separators(str: string, query: string, query_lower: string) {
 			const s = this.separators(str)
 			const str_lower = str.toLocaleLowerCase()
-			let parts = []
+			const parts = []
 			let score = 0
 			let index = 0
 			for (let q = 0; q < query.length; ++q) {
@@ -154,8 +155,8 @@
 				parts.push(str.substring(s.pos[index - 1] + 1, s.pos[i]))
 				parts.push(str.substring(s.pos[i], s.pos[i] + 1))
 				let distance = i - index
-				if (q == 0) { distance /= 500 }
-				if (s.chars[i] != query[q]) { distance += 0.001 }
+				if (q === 0) { distance /= 500 }
+				if (s.chars[i] !== query[q]) { distance += 0.001 }
 				score = (score + distance) // / Math.max(1, q)
 				index = i + 1
 			}
@@ -171,8 +172,8 @@
 		separators(str: string) {
 			let chars = ""
 			let lower_chars = ""
-			let pos = []
-			let fullUpper = str.toLocaleUpperCase() === str
+			const pos = []
+			const fullUpper = str.toLocaleUpperCase() === str
 			for (let i = 0; i < str.length; ++i) {
 				if (i === 0 || str[i - 1] === '_' || str[i - 1] === '/' || str[i - 1] === ' ' || str[i - 1] === '-' || str[i - 1] === '.' || (!fullUpper && this.isUpper(str[i]))) {
 					chars += str[i]

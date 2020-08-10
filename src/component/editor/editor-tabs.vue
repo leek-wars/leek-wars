@@ -61,7 +61,7 @@
 			}
 			if (tabs.length === 0) {
 				if (this.$route.params.id in this.ais) {
-					this.tabs.push(this.ais[parseInt(this.$route.params.id)])
+					this.tabs.push(this.ais[parseInt(this.$route.params.id, 10)])
 				}
 			}
 			this.update()

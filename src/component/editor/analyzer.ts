@@ -1,68 +1,31 @@
-import { AI } from '@/model/ai';
-import Vue from 'vue';
-import { fileSystem } from '@/model/filesystem';
-import { Folder } from './editor-item';
-
-enum AnalyzerMessage {
-	ANALYZE = 1,
-	HOVER = 2,
-	COMPLETE = 3
-}
+import { AI } from '@/model/ai'
+import { fileSystem } from '@/model/filesystem'
+import Vue from 'vue'
+import { AIItem, Folder } from './editor-item'
 
 class Analyzer {
 
-    private initialized: boolean = false
-	private worker!: Worker
-	private id: number = 0
-	private promises: {[key: number]: any} = {};
-	private GeneratorAnalyze
-	private GeneratorComplete
-	private GeneratorHover
-	private GeneratorRegister
-	private getExceptionMessage
+	public enabled: boolean = false
+	public running: number = 0
+	public problems: {[key: string]: any[]} = {}
+	public error_count: number = 0
+	public warning_count: number = 0
+	public promise!: Promise<any>
 
-	enabled: boolean = false
-	running: number = 0
-	problems: {[key: string]: any[]} = {}
-	error_count: number = 0
-	warning_count: number = 0
-	promise!: Promise<any>
-	resolve: any
+	private initialized: boolean = false
+	private GeneratorAnalyze!: Function
+	private GeneratorComplete!: Function
+	private GeneratorHover!: Function
+	private GeneratorRegister!: Function
+	private getExceptionMessage!: Function
 
-    public init() {
+	public init() {
 		this.enabled = true
-        if (this.initialized) { return Promise.resolve() }
+		if (this.initialized) { return Promise.resolve() }
 		this.initialized = true
 
-        // this.worker = new Worker("/analyzer-worker.js")
-        // this.worker.onmessage = (message) => {
-		// 	const data = JSON.parse(message.data)
-		// 	console.log(message.data)
-		// 	if (data) {
-
-		// 		const type = data.type
-		// 		const result = JSON.parse(data.result)
-
-		// 		if (type === AnalyzerMessage.ANALYZE) {
-		// 			const ai = data.ai
-		// 			console.log("analyze ai", ai, "done", result)
-
-		// 			if (ai in this.problems) {
-		// 				this.error_count -= this.problems[ai].length
-		// 			}
-		// 			this.problems[ai] = result
-		// 			this.error_count += result.errors.length
-		// 		}
-
-		// 		this.promises[data.id].resolve(result)
-		// 	} else {
-		// 		this.promises[data.id].reject()
-		// 	}
-		// 	this.running--
-		// }
-
 		this.promise = new Promise((resolve, reject) => {
-			const Module = {
+			const Module: any = {
 				onRuntimeInitialized: () => {
 					// console.log("Module initialized", Module)
 					Module.ccall('init')
@@ -97,7 +60,7 @@ class Analyzer {
 		this.warning_count = warnings
 	}
 
-    public hover(ai: AI, position: number) {
+	public hover(ai: AI, position: number) {
 
 		if (!this.enabled) { return Promise.reject() }
 
@@ -106,33 +69,18 @@ class Analyzer {
 		// console.time("hover")
 		return this.promise.then(() => {
 			try {
-				const data = this.GeneratorHover(!ai.v2, ai.path, position);
+				const data = this.GeneratorHover(!ai.v2, ai.path, position)
 				const result = JSON.parse(data)
 				// console.log(result)
 				return Promise.resolve(result)
 			} catch (e) {
-				console.error(this.getExceptionMessage(e));
+				console.error(this.getExceptionMessage(e))
 				return Promise.reject()
 			}
 		})
-		// console.timeEnd("hover")
-		// console.log(data)
-		// console.log(result)
-		// this.problems[ai] = result
-		// this.error_count += result.errors.length
-		// console.log(this.error_count)
+	}
 
-
-		const id = this.id++
-		const promise = new Promise<any>((resolve, reject) => {
-			this.worker.postMessage({ id, type: AnalyzerMessage.HOVER, legacy: !ai.v2, path: ai.path, position })
-			this.promises[id] = { resolve, reject }
-			this.running++
-		})
-		return promise
-    }
-
-    public analyze(ai: AI, code: string) {
+	public analyze(ai: AI, code: string) {
 
 		if (!this.enabled) { return Promise.reject() }
 
@@ -146,20 +94,22 @@ class Analyzer {
 					console.time("analyze")
 					const result = JSON.parse(this.GeneratorAnalyze(!ai.v2, ai.path, code))
 					// console.log(result)
-					for (const ai in result) {
-						const problems = result[ai]
+					for (const path in result) {
+						const problems = result[path]
 						problems.sort((a: any, b: any) => {
 							return a[0] - b[0]
 						})
-						this.setAIProblems(ai, problems)
+						this.setAIProblems(path, problems)
 					}
 					return resolve(result)
 				} catch (e) {
 					const problems = [ [0, 0, 0, 0, 1, "ANALYZER_CRASHED"] ]
 					this.setAIProblems(ai.path, problems)
 					try {
-						console.error(this.getExceptionMessage(e));
-					} catch (e2) {}
+						console.error(this.getExceptionMessage(e))
+					} catch (e2) {
+						// nothing
+					}
 					return reject()
 				} finally {
 					this.running = 0
@@ -168,30 +118,6 @@ class Analyzer {
 				}
 			}))
 		})
-
-		const id = this.id++
-		const promise = new Promise<any>((resolve, reject) => {
-			this.worker.postMessage({ id, type: AnalyzerMessage.ANALYZE, legacy: !ai.v2, ai: ai.id, path: ai.path, code: ai.code })
-			this.promises[id] = { resolve, reject }
-			this.running++
-		})
-		return promise
-	}
-
-	private setAIProblems(ai: string, problems: any) {
-
-		Vue.set(this.problems, ai, problems)
-		const aiObject = fileSystem.aiByFullPath[ai]
-		Vue.set(aiObject, "errors", problems.filter((p: any) => p[4] === 0).length)
-		Vue.set(aiObject, "warnings", problems.filter((p: any) => p[4] === 1).length)
-
-		// Update parent folders
-		let current = fileSystem.folderById[aiObject.folder] as Folder | null
-		while (current) {
-			current.errors = current.items.reduce((s, i) => s + (i.folder ? i.errors : i.ai.errors), 0)
-			current.warnings = current.items.reduce((s, i) => s + (i.folder ? i.warnings : i.ai.warnings), 0)
-			current = current.id === 0 ? null : fileSystem.folderById[current.parent]
-		}
 	}
 
 	public register(ai: AI) {
@@ -204,16 +130,16 @@ class Analyzer {
 			this.GeneratorRegister(!ai.v2, ai.path)
 			return Promise.resolve()
 		})
-    }
+	}
 
-    public complete(ai: AI, position: number) {
+	public complete(ai: AI, position: number) {
 
 		if (!this.enabled) { return Promise.reject() }
 
 		// console.log("Complete", ai.path)
 
 		console.time("complete")
-		const data = this.GeneratorComplete(!ai.v2, ai.path, position);
+		const data = this.GeneratorComplete(!ai.v2, ai.path, position)
 		console.timeEnd("complete")
 		// console.log("complete", data)
 		const result = JSON.parse(data)
@@ -223,33 +149,39 @@ class Analyzer {
 		// console.log(this.error_count)
 
 		return Promise.resolve(result)
-
-		const id = this.id++
-		const promise = new Promise<any>((resolve, reject) => {
-			this.worker.postMessage({ id, type: AnalyzerMessage.COMPLETE, legacy, code, position })
-			this.promises[id] = { resolve, reject }
-			this.running++
-		})
-		return promise
 	}
 
-	loadJs(url: string) {
-		return new Promise(( resolve, reject ) => {
-		  if (document.querySelector( `head > script[ src = "${url}" ]`) !== null ){
-			  console.warn( `script already loaded: ${url}` );
-			  resolve();
-		  }
-		  const script = document.createElement( "script" );
-		  script.src = url;
-		  script.onload = resolve;
-		  script.onerror = function( reason ){
-			  // this can be useful for your error-handling code
-			  reason.message = `error trying to load script ${url}`;
-			  reject( reason );
-		  };
-		  document.head.appendChild( script );
-		});
-	  }
+	private setAIProblems(ai: string, problems: any) {
+
+		Vue.set(this.problems, ai, problems)
+		const aiObject = fileSystem.aiByFullPath[ai]
+		Vue.set(aiObject, "errors", problems.filter((p: any) => p[4] === 0).length)
+		Vue.set(aiObject, "warnings", problems.filter((p: any) => p[4] === 1).length)
+
+		// Update parent folders
+		let current = fileSystem.folderById[aiObject.folder] as Folder | null
+		while (current) {
+			current.errors = current.items.reduce((s, i) => s + (i.folder ? (i as Folder).errors : (i as AIItem).ai.errors), 0)
+			current.warnings = current.items.reduce((s, i) => s + (i.folder ? (i as Folder).warnings : (i as AIItem).ai.warnings), 0)
+			current = current.id === 0 ? null : fileSystem.folderById[current.parent]
+		}
+	}
+
+	private loadJs(url: string) {
+		return new Promise((resolve, reject) => {
+			if (document.querySelector(`head > script[ src = "${url}" ]`) !== null) {
+				console.warn(`script already loaded: ${url}`)
+				resolve()
+			}
+			const script = document.createElement("script")
+			script.src = url
+			script.onload = resolve
+			script.onerror = (reason) => {
+				reject(reason)
+			}
+			document.head.appendChild(script)
+		})
+	}
 }
 
 export default Analyzer

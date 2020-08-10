@@ -229,21 +229,21 @@
 <script lang="ts">
 	import { locale } from '@/locale'
 	import { AI } from '@/model/ai'
+	import { fileSystem } from '@/model/filesystem'
 	import { mixins } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import { Component, Vue, Watch } from 'vue-property-decorator'
 	import { Route } from 'vue-router'
 	import AIView from './ai-view.vue'
 	import Analyzer from './analyzer'
-	const Explorer = () => import(/* webpackChunkName: "[request]" */ `@/component/editor/editor-explorer.${locale}.i18n`)
-	import { explorer } from './explorer'
+	import EditorFinder from './editor-finder.vue'
 	import { AIItem, Folder, Item } from './editor-item'
+	import { explorer } from './explorer'
+	const Explorer = () => import(/* webpackChunkName: "[request]" */ `@/component/editor/editor-explorer.${locale}.i18n`)
 	const EditorTabs = () => import(/* webpackChunkName: "[request]" */ `@/component/editor/editor-tabs.${locale}.i18n`)
 	const EditorTest = () => import(/* webpackChunkName: "[request]" */ `@/component/editor/editor-test.${locale}.i18n`)
 	import { generateKeywords } from './keywords'
 	import './leekscript-monokai.scss'
-	import { fileSystem } from '@/model/filesystem'
-	import EditorFinder from './editor-finder.vue'
 	import(/* webpackChunkName: "[request]" */ /* webpackMode: "eager" */ `@/lang/doc.${locale}.lang`)
 
 	const DEFAULT_FONT_SIZE = 16
@@ -318,10 +318,9 @@
 			this.enableAnalyzer = localStorage.getItem('editor/analyzer') === 'true'
 			this.fontSize = parseInt(localStorage.getItem('editor/font_size') || '', 10) || DEFAULT_FONT_SIZE
 			this.lineHeight = parseInt(localStorage.getItem('editor/line_height') || '', 10) || DEFAULT_LINE_HEIGHT
-			const width = localStorage.getItem('editor/panel-width')
-			if (width) {
-				this.panelWidth = parseInt(width, 10)
-			}
+			this.problemsHeight = parseInt(localStorage.getItem('editor/problems-height') || '', 10) || 200
+			this.panelWidth = parseInt(localStorage.getItem('editor/panel-width') || '', 10) || 200
+
 			if (this.enableAnalyzer) {
 				LeekWars.analyzer.init()
 			}
@@ -348,20 +347,20 @@
 				}
 			})
 			this.$root.$on('ctrlP', (event: Event) => {
-				;(this.$refs.finder as EditorFinder).open()
+				(this.$refs.finder as EditorFinder).open()
 				event.preventDefault()
 			})
 			this.$root.$on('escape', () => {
 				if (this.currentEditor) {
 					this.currentEditor.closeSearch()
 				}
-				;(this.$refs.finder as EditorFinder).close()
+				(this.$refs.finder as EditorFinder).close()
 			})
 			this.$root.$on('htmlclick', () => {
 				if (this.currentEditor) {
 					this.currentEditor.close()
 				}
-				;(this.$refs.finder as EditorFinder).close()
+				(this.$refs.finder as EditorFinder).close()
 			})
 			this.$root.$on('keydown', (e: KeyboardEvent) => {
 				if (this.currentEditor) {
@@ -659,7 +658,7 @@
 		}
 
 		toggleProblems() {
-			if (this.problemsHeight == 0) {
+			if (this.problemsHeight === 0) {
 				this.problemsHeight = 200
 			} else {
 				this.showProblemsDetails = !this.showProblemsDetails

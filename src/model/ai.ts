@@ -18,6 +18,8 @@ class AI {
 	public included_lines!: number
 	public included_chars!: number
 	public selected: boolean = false
+	public errors: number = 0
+	public warnings: number = 0
 
 	constructor(data: any) {
 		Object.assign(this, data)
