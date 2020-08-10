@@ -14,7 +14,7 @@ const mixins = [{
 	beforeCreate() {
 		// Reload translations because in case of hot reloading, they are lost
 		if (!(this as any).$options.i18n.messages) {
-			console.log("reload translations...")
+			// console.log("reload translations...")
 			loadInstanceTranslations(i18n.locale, this)
 		}
 	}
