@@ -848,7 +848,7 @@
 	}
 	.results .error {
 		color: white;
-		background: #ff6c71;
+		background: #ff0008;
 	}
 	.compiling img {
 		vertical-align: middle;
