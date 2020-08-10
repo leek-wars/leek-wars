@@ -183,7 +183,7 @@
 				if (this.newName !== this.ai.name) {
 					LeekWars.post('ai/rename', {ai_id: this.ai.id, new_name: this.newName}).then(data => {
 						LeekWars.toast(i18n.t('leekscript.ai_renamed', [this.newName]) as string)
-						this.ai!.name = this.newName
+						fileSystem.renameAI(this.ai!, this.newName)
 					}).error(error => {
 						LeekWars.toast(error)
 					})

@@ -49,7 +49,8 @@ class FileSystem {
 				}
                 this.rootFolder = buildFolder(0, 0)
 				for (const ai of data.ais) {
-					ai.path = this.getAIFullPath(ai)
+                    ai.path = this.getAIFullPath(ai)
+                    ai.folderpath = this.getFolderPath(this.folderById[ai.folder])
 					Vue.set(ai, 'modified', false)
 					Vue.set(ai, 'selected', false)
 					Vue.set(ai, 'errors', 0)
@@ -69,6 +70,7 @@ class FileSystem {
      */
     public add_ai(ai: AI, folder: Folder) {
         ai.path = this.getAIFullPath(ai)
+        ai.folderpath = this.getFolderPath(this.folderById[ai.folder])
 		Vue.set(this.ais, ai.id, ai)
 		Vue.set(this.aiByFullPath, ai.path, ai)
         folder.items.push(new AIItem(ai, folder.id))
@@ -140,7 +142,15 @@ class FileSystem {
 		const parent = this.folderById[folder.parent]
 		parent.items.splice(parent.items.indexOf(folder), 1)
 		LeekWars.delete('ai-folder/delete', {folder_id: folder.id}).error(error => LeekWars.toast(error))
-	}
+    }
+
+    public renameAI(ai: AI, name: string) {
+        ai.name = name
+        Vue.delete(this.aiByFullPath, ai.path)
+        ai.path = this.getAIFullPath(ai)
+        ai.folderpath = this.getFolderPath(this.folderById[ai.folder])
+		Vue.set(this.aiByFullPath, ai.path, ai)
+    }
 }
 
 const fileSystem = new FileSystem()
