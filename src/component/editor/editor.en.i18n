@@ -3,6 +3,7 @@
 	"ai_error": "<b>{0}</b> line <b>{1}</b>",
 	"ai_name": "AI name",
 	"ai_to_test": "AI to test",
+	"analyzer": "[bêta] New generation LeekScript analyzer",
 	"auto_closing": "Automatic closing of parentheses, brackets and quotation marks.",
 	"autocompletion": "Code completion (suggest variables and leekscript functions)",
 	"base": "base",

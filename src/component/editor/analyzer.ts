@@ -21,6 +21,7 @@ class Analyzer {
 	private GeneratorRegister
 	private getExceptionMessage
 
+	enabled: boolean = false
 	running: number = 0
 	problems: {[key: string]: any[]} = {}
 	error_count: number = 0
@@ -29,6 +30,7 @@ class Analyzer {
 	resolve: any
 
     public init() {
+		this.enabled = true
         if (this.initialized) { return Promise.resolve() }
 		this.initialized = true
 
@@ -97,6 +99,8 @@ class Analyzer {
 
     public hover(ai: AI, position: number) {
 
+		if (!this.enabled) { return Promise.reject() }
+
 		// console.log("Hover", ai.path)
 
 		// console.time("hover")
@@ -129,6 +133,9 @@ class Analyzer {
     }
 
     public analyze(ai: AI, code: string) {
+
+		if (!this.enabled) { return Promise.reject() }
+
 		console.log("Analyze", ai.path)
 
 		// console.log("Chain promise")
@@ -188,6 +195,9 @@ class Analyzer {
 	}
 
 	public register(ai: AI) {
+
+		if (!this.enabled) { return Promise.reject() }
+
 		console.log("Register", ai.path)
 
 		return this.promise.then(() => {
@@ -197,6 +207,8 @@ class Analyzer {
     }
 
     public complete(ai: AI, position: number) {
+
+		if (!this.enabled) { return Promise.reject() }
 
 		// console.log("Complete", ai.path)
 

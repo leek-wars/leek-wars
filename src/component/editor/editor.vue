@@ -103,7 +103,7 @@
 						</div>
 					</div>
 
-					<div v-if="showProblemsDetails && (LeekWars.analyzer.error_count || LeekWars.analyzer.warning_count)" class="problems-details">
+					<div v-if="enableAnalyzer && showProblemsDetails && (LeekWars.analyzer.error_count || LeekWars.analyzer.warning_count)" class="problems-details">
 						<div v-for="(problems, ai) in LeekWars.analyzer.problems" v-if="problems.length" :key="ai">
 							<div class="file" @click="toggleProblemFile(ai)">
 								<v-icon>{{ problemsCollapsed[ai] ? 'mdi-chevron-right' : 'mdi-chevron-down' }}</v-icon>
@@ -120,30 +120,25 @@
 							</div>
 						</div>
 					</div>
-					<div class="status">
+					<div v-if="enableAnalyzer" class="status">
 						<div v-ripple class="problems" @click="showProblemsDetails = !showProblemsDetails">
 							<span v-if="LeekWars.analyzer.error_count + LeekWars.analyzer.warning_count === 0" class="no-error">
 								<v-icon>mdi-check-circle</v-icon> Aucun problème
 							</span>
-							<span v-else>
-								<span v-if="LeekWars.analyzer.error_count" class="errors">
-									<v-icon>mdi-close-circle</v-icon> {{ LeekWars.analyzer.error_count }} erreurs
-								</span>
-								<span v-if="LeekWars.analyzer.warning_count" class="warnings">
-									<v-icon>mdi-alert-circle</v-icon> {{ LeekWars.analyzer.warning_count }} warnings
-								</span>
+							<span v-if="LeekWars.analyzer.warning_count" class="warnings">
+								<v-icon>mdi-alert-circle</v-icon> {{ LeekWars.analyzer.warning_count }} warnings
 							</span>
+						</span>
+					</div>
+					<div class="filler"></div>
+					<div class="state">
+						<div v-if="LeekWars.analyzer.running == 0" class="ready">
+							Prêt
+							<v-icon>mdi-check</v-icon>
 						</div>
-						<div class="filler"></div>
-						<div class="state">
-							<div v-if="LeekWars.analyzer.running == 0" class="ready">
-								Prêt
-								<v-icon>mdi-check</v-icon>
-							</div>
-							<div v-else class="running">
-								En cours d'analyse
-								<v-icon>mdi-sync</v-icon>
-							</div>
+						<div v-else class="running">
+							En cours d'analyse
+							<v-icon>mdi-sync</v-icon>
 						</div>
 					</div>
 				</div>
@@ -188,6 +183,7 @@
 				<div class="title">{{ $t('settings_editor') }}</div>
 
 				<v-checkbox v-model="autoClosing" :label="$t('auto_closing')" hide-details />
+				<v-checkbox v-model="enableAnalyzer" :label="$t('analyzer')" hide-details />
 				<v-checkbox v-model="autocomplete" :label="$t('autocompletion')" hide-details />
 				<v-checkbox v-model="popups" :label="$t('popups')" hide-details />
 			</div>
@@ -264,7 +260,7 @@ import { fileSystem } from '@/model/filesystem'
 	import(/* webpackChunkName: "[request]" */ /* webpackMode: "eager" */ `@/lang/doc.${locale}.lang`)
 
 	const DEFAULT_FONT_SIZE = 16
-	const DEFAULT_LINE_HEIGHT = 22
+	const DEFAULT_LINE_HEIGHT = 24
 	const DEFAULT_THEME = "leek-wars"
 
 	@Component({
@@ -289,6 +285,7 @@ import { fileSystem } from '@/model/filesystem'
 		theme: string = DEFAULT_THEME
 		autoClosing: boolean = false
 		autocomplete: boolean = false
+		enableAnalyzer: boolean = true
 		popups: boolean = false
 		fontSize: number = DEFAULT_FONT_SIZE
 		lineHeight: number = DEFAULT_LINE_HEIGHT
@@ -326,18 +323,22 @@ import { fileSystem } from '@/model/filesystem'
 			if (localStorage.getItem('editor/autocomplete') === null) { localStorage.setItem('editor/autocomplete', 'true') }
 			if (localStorage.getItem('editor/auto_closing') === null) { localStorage.setItem('editor/auto_closing', 'true') }
 			if (localStorage.getItem('editor/popups') === null) { localStorage.setItem('editor/popups', 'true') }
+			if (localStorage.getItem('editor/analyzer') === null) { localStorage.setItem('editor/analyzer', 'true') }
 			this.enlargeWindow = localStorage.getItem('editor/large') === 'true'
 			this.theme = localStorage.getItem('editor/theme') || DEFAULT_THEME
 			this.autoClosing = localStorage.getItem('editor/auto_closing') === 'true'
 			this.autocomplete = localStorage.getItem('editor/autocomplete') === 'true'
 			this.popups = localStorage.getItem('editor/popups') === 'true'
+			this.enableAnalyzer = localStorage.getItem('editor/analyzer') === 'true'
 			this.fontSize = parseInt(localStorage.getItem('editor/font_size') || '', 10) || DEFAULT_FONT_SIZE
 			this.lineHeight = parseInt(localStorage.getItem('editor/line_height') || '', 10) || DEFAULT_LINE_HEIGHT
 			const width = localStorage.getItem('editor/panel-width')
 			if (width) {
 				this.panelWidth = parseInt(width, 10)
 			}
-			LeekWars.analyzer.init()
+			if (this.enableAnalyzer) {
+				LeekWars.analyzer.init()
+			}
 
 			fileSystem.init().then(() => {
 				console.log("fileSystem loaded")
@@ -668,6 +669,12 @@ import { fileSystem } from '@/model/filesystem'
 		}
 		@Watch('popups') popupsChange() {
 			localStorage.setItem('editor/popups', '' + this.popups)
+		}
+		@Watch('enableAnalyzer') analyzerChange() {
+			if (this.enableAnalyzer) {
+				LeekWars.analyzer.init()
+			}
+			localStorage.setItem('editor/analyzer', '' + this.enableAnalyzer)
 		}
 		@Watch('enlargeWindow') enlargeWindowChange() {
 			LeekWars.large = this.enlargeWindow
