@@ -1,16 +1,16 @@
 <template lang="html">
 	<div v-show="tabs.length" class="tabs-wrapper">
 		<div ref="list" class="list" @wheel.prevent="mousewheel">
-			<div v-for="(ai, i) in tabs" ref="tabs" :key="ai.id" :class="{selected: ai.selected, modified: ai.modified, single: tabs.length === 1}" :title="ai.path" class="tab" @click="click($event, ai)" @contextmenu.prevent="openMenu(i)" @mouseup.middle="close(ai)">
+			<div v-for="(ai, i) in tabs" ref="tabs" :key="ai.id" :class="{selected: ai.selected, modified: ai.modified}" :title="ai.path" class="tab" @click="click($event, ai)" @contextmenu.prevent="openMenu(i)" @mouseup.middle="close(ai)">
 				<div class="name" :class="{error: ai.errors, warning: ai.warnings}">
 					<v-icon v-if="ai.errors" class="icon error">mdi-close-circle</v-icon>
 					<v-icon v-else-if="ai.warnings" class="icon warning">mdi-alert-circle</v-icon>
 					<v-icon v-else class="icon valid">mdi-check-bold</v-icon>
 					{{ ai.name }}
 				</div>
-				<span v-if="tabs.length > 1" @click.stop="close(ai)">
+				<span @click.stop="close(ai)">
 					<v-icon class="modified">mdi-record</v-icon>
-					<v-icon class="close">mdi-close</v-icon>
+					<v-icon class="close" :class="{hidden: tabs.length === 1}">mdi-close</v-icon>
 				</span>
 			</div>
 		</div>
@@ -235,12 +235,12 @@
 			color: #ff9100;
 		}
 	}
-	.tab.single .name {
-		margin-right: 15px;
-	}
 	.tab .v-icon {
 		font-size: 20px;
 		margin-right: 6px;
+		&.hidden::before {
+			opacity: 0;
+		}
 	}
 	.tab:not(.selected) .close {
 		opacity: 0;
