@@ -68,7 +68,7 @@
 					<div v-if="fileSystem.rootFolder" v-autostopscroll class="ai-list">
 						<editor-folder :folder="fileSystem.rootFolder" :level="0" />
 					</div>
-					<div v-if="currentEditor && currentEditor.loaded" class="ai-stats">
+					<div v-if="currentEditor && currentEditor.loaded && panelWidth" class="ai-stats">
 						<div class="line-count-wrapper">{{ $tc('main.n_lines', currentEditor.lines) }}</div>
 						<div class="char-count-wrapper">{{ $tc('main.n_characters', currentEditor.characters) }}</div>
 						<div v-if="currentAI.included_lines !== 0" class="line-count-wrapper">{{ $tc('main.n_total_lines', currentEditor.lines + currentAI.included_lines) }}</div>
@@ -80,17 +80,6 @@
 					<div id='import-button' class="button" title="{import_desc}">▲ {{ $t('import') }}</div>
 					-->
 				</div>
-				<div v-if="currentEditor && currentEditor.loaded" class="ai-stats">
-					<div class="line-count-wrapper">{{ $tc('main.n_lines', currentEditor.lines) }}</div>
-					<div class="char-count-wrapper">{{ $tc('main.n_characters', currentEditor.characters) }}</div>
-					<div v-if="currentAI.included_lines !== 0" class="line-count-wrapper">{{ $tc('main.n_total_lines', currentEditor.lines + currentAI.included_lines) }}</div>
-					<div v-if="currentAI.included_chars !== 0" class="char-count-wrapper">{{ $tc('main.n_total_chars', currentEditor.characters + currentAI.included_chars) }}</div>
-				</div>
-				<br>
-				<!--
-				<div id='export-button' class="button" title="{export_desc}">▼ {{ $t('export') }}</div>
-				<div id='import-button' class="button" title="{import_desc}">▲ {{ $t('import') }}</div>
-				-->
 			</panel>
 
 			<panel v-show="!LeekWars.mobile || LeekWars.splitBack" :style="{width: 'calc(100% - ' + (LeekWars.mobile ? 0 : panelWidth) + 'px)'}">
@@ -919,6 +908,10 @@
 		margin-bottom: 0;
 		height: 100%;
 		border-radius: 0;
+	}
+	.column3 .panel {
+		margin-right: 0;
+		border-right: 1px solid #ddd;
 	}
 	.settings-dialog {
 		h3 {

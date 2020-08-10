@@ -207,6 +207,9 @@
 			margin-right: 2px;
 			transition: none;
 		}
+		.v-icon {
+			color: #5fad1b;
+		}
 		&.error .v-icon {
 			color: red
 		}
