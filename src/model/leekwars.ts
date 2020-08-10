@@ -190,7 +190,9 @@ const LeekWars = {
 	timeSeconds: (Date.now() / 1000) | 0,
 	large: false,
 	flex: false,
+	header: true,
 	footer: true,
+	box: false,
 	nativeEmojis: detectNativeEmojis(),
 	leekTheme: localStorage.getItem('leek-theme') === 'true',
 	setLocale(locale: string) {

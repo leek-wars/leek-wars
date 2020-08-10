@@ -1,5 +1,5 @@
 <template lang="html">
-	<div class="header">
+	<div v-if="LeekWars.header" class="header">
 		<div class="header-left">
 			<router-link to="/">
 				<div class="logo-wrapper">

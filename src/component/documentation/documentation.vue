@@ -162,6 +162,7 @@
 		}
 		mounted() {
 			LeekWars.footer = false
+			LeekWars.box = true
 		}
 		back() {
 			this.$router.push('/help/documentation')
@@ -169,6 +170,7 @@
 		destroyed() {
 			LeekWars.large = false
 			LeekWars.footer = true
+			LeekWars.box = false
 			this.$root.$off('back', this.back)
 		}
 
@@ -237,10 +239,10 @@
 
 <style lang="scss" scoped>
 	.documentation {
-		height: calc(100vh - 140px);
+		padding-bottom: 12px;
+		min-height: 0;
 	}
 	#app.app .documentation {
-		height: calc(100vh - 56px);
 		padding-bottom: 0;
 	}
 	.column3 {

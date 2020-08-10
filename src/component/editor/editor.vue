@@ -1,5 +1,5 @@
 <template lang="html">
-	<div :class="'theme-' + theme">
+	<div class="editor" :class="'theme-' + theme">
 		<div class="page-header page-bar">
 			<div class="menu">
 				<h1>{{ $t('title') }}</h1>
@@ -148,8 +148,9 @@
 			<div class="settings-dialog">
 				<div class="title">{{ $t('display') }}</div>
 				<template v-if="!LeekWars.mobile">
-					<v-switch v-model="enlargeWindow" :label="$t('enlarge_window')" hide-details />
-					<br><br>
+					<v-checkbox v-model="enlargeWindow" :label="$t('enlarge_window')" hide-details />
+					<v-checkbox v-model="hideHeader" :label="$t('hide_header')" hide-details />
+					<br>
 				</template>
 				{{ $t('font_size') }} : <input v-model="fontSize" type="number" min="6" max="30">
 				<br>
@@ -281,6 +282,7 @@
 		autocomplete: boolean = false
 		enableAnalyzer: boolean = true
 		popups: boolean = false
+		hideHeader: boolean = false
 		fontSize: number = DEFAULT_FONT_SIZE
 		lineHeight: number = DEFAULT_LINE_HEIGHT
 		dragging: Item | null = null
@@ -324,6 +326,7 @@
 			this.autoClosing = localStorage.getItem('editor/auto_closing') === 'true'
 			this.autocomplete = localStorage.getItem('editor/autocomplete') === 'true'
 			this.popups = localStorage.getItem('editor/popups') === 'true'
+			this.hideHeader = localStorage.getItem('editor/hideHeader') === 'true'
 			this.enableAnalyzer = localStorage.getItem('editor/analyzer') === 'true'
 			this.fontSize = parseInt(localStorage.getItem('editor/font_size') || '', 10) || DEFAULT_FONT_SIZE
 			this.lineHeight = parseInt(localStorage.getItem('editor/line_height') || '', 10) || DEFAULT_LINE_HEIGHT
@@ -344,6 +347,7 @@
 
 		mounted() {
 			LeekWars.footer = false
+			LeekWars.box = true
 			this.$root.$on('ctrlS', () => {
 				this.save()
 			})
@@ -459,7 +463,9 @@
 			this.$root.$off('keydown')
 			this.$root.$off('keyup')
 			LeekWars.large = false
+			LeekWars.header = true
 			LeekWars.footer = true
+			LeekWars.box = false
 		}
 
 		beforeRouteLeave(to: Route, from: Route, next: Function) {
@@ -665,6 +671,10 @@
 		@Watch('popups') popupsChange() {
 			localStorage.setItem('editor/popups', '' + this.popups)
 		}
+		@Watch('hideHeader') hideHeaderChange() {
+			LeekWars.header = !this.hideHeader
+			localStorage.setItem('editor/hideHeader', '' + this.hideHeader)
+		}
 		@Watch('enableAnalyzer') analyzerChange() {
 			if (this.enableAnalyzer) {
 				LeekWars.analyzer.init()
@@ -747,8 +757,17 @@
 </script>
 
 <style lang="scss" scoped>
+	.editor {
+		display: flex;
+		flex-direction: column;
+		height: 100%;
+	}
 	.page-header {
 		flex-wrap: nowrap;
+	}
+	.container {
+		flex: 1;
+		min-height: 0;
 	}
 	.menu {
 		flex-shrink: 0;
@@ -785,10 +804,6 @@
 	}
 	.line-count-wrapper, .char-count-wrapper {
 		font-size: 13px;
-	}
-	.editor {
-		font-family: "Roboto";
-		font-size: 25px;
 	}
 	.compilation {
 		position: fixed;
@@ -892,19 +907,18 @@
 		height: 100%;
 	}
 	.editor-left {
-		height: calc(100vh - 128px);
+		height: 100%;
 		padding: 0;
 		display: flex;
 		flex-direction: column;
 	}
-	#app.app .editor-left {
-		height: calc(100vh - 56px);
-	}
-	#app.app .column9 .content {
-		height: calc(100vh - 56px);
+	.column9 {
+		height: 100%;
 	}
 	.column9 .panel, .column3 .panel {
 		margin-bottom: 0;
+		height: 100%;
+		border-radius: 0;
 	}
 	.settings-dialog {
 		h3 {
@@ -927,6 +941,7 @@
 	}
 	.column3 {
 		position: relative;
+		height: 100%;
 	}
 	.resizer {
 		position: absolute;
