@@ -10,6 +10,7 @@ class AI {
 	public dragging: boolean = false
 	public folder!: number
 	public path!: string
+	public folderpath!: string
 	public includes: AI[] = []
 	public functions: Keyword[] = []
 	public total_lines!: number
