@@ -17,5 +17,9 @@ class AI {
 	public included_lines!: number
 	public included_chars!: number
 	public selected: boolean = false
+
+	constructor(data: any) {
+		Object.assign(this, data)
+	}
 }
 export { AI }

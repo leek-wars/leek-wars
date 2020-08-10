@@ -849,7 +849,7 @@
 		}
 
 		public updateIncludes() {
-			console.log("Update includes", this.ai.name)
+			// console.log("Update includes", this.ai.name)
 			this.ai.includes = []
 			const code = this.ai.code
 			const regex = /include\s*\(\s*"(.*?)"\s*\)/gm

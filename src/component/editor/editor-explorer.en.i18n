@@ -1,0 +1,17 @@
+{
+	"ai_name": "AI name",
+	"open": "Open",
+	"test": "Test",
+	"delete": "Delete",
+	"rename": "Rename",
+	"delete_ai": "Delete the AI \"{0}\"?",
+	"delete_folder": "Delete folder \"{0}\"?",
+	"delete_cancel": "Cancel",
+	"delete_desc": "Delete the current AI or folder",
+	"delete_validate": "Delete",
+	"delete_warning": "This action is irreversible.",
+	"new_ai": "New AI",
+	"new_v2": "New V2 AI",
+	"new_desc": "Create a new AI",
+	"new_folder": "New folder"
+}

@@ -1,0 +1,17 @@
+{
+	"ai_name": "Nom de l'IA",
+	"open": "Ouvrir",
+	"test": "Tester",
+	"delete": "Supprimer",
+	"rename": "Renommer",
+	"delete_ai": "Supprimer l'IA \"{0}\" ?",
+	"delete_folder": "Supprimer le dossier \"{0}\" ?",
+	"delete_cancel": "Annuler",
+	"delete_desc": "Supprimer l'IA ou le dossier courant",
+	"delete_validate": "Supprimer",
+	"delete_warning": "Cette action est irreversible.",
+	"new_ai": "Nouvelle IA",
+	"new_folder": "Nouveau dossier",
+	"new_desc": "Créer une nouvelle IA",
+	"folder_name": "Nom du dossier"
+}

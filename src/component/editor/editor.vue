@@ -10,8 +10,11 @@
 					</div>
 					<v-menu v-model="fileMenu" :activator="LeekWars.mobile ? addMenuActivator : $refs.fileButton" offset-y>
 						<v-list>
-							<v-list-item v-ripple @click="openNewAI(false)">
-								<v-icon class="list-icon">mdi-file-outline</v-icon>
+							<div v-if="currentFolder && currentFolder.id !== 0" class="menu-title">
+								<v-icon>mdi-folder-outline</v-icon> {{ currentFolder.name }}
+							</div>
+							<v-list-item v-ripple @click="$refs.explorer.openNewAI(currentFolder)">
+								<v-icon class="list-icon">mdi-file-plus-outline</v-icon>
 								<v-list-item-content>
 									<v-list-item-title>{{ $t('new_ai') }}</v-list-item-title>
 								</v-list-item-content>
@@ -29,19 +32,22 @@
 									</v-list-item-title>
 								</v-list-item-content>
 							</v-list-item> -->
-							<v-list-item v-ripple @click="openNewFolder()">
-								<v-icon class="list-icon">mdi-folder-outline</v-icon>
+							<v-list-item v-ripple @click="$refs.explorer.openNewFolder(currentFolder)">
+								<v-icon class="list-icon">mdi-folder-plus-outline</v-icon>
 								<v-list-item-content>
 									<v-list-item-title>{{ $t('new_folder') }}</v-list-item-title>
 								</v-list-item-content>
 							</v-list-item>
-							<v-list-item v-ripple @click="save">
+							<div v-if="currentAI" class="menu-title">
+								<v-icon>mdi-file-outline</v-icon> {{ currentAI.name }}
+							</div>
+							<v-list-item v-if="currentAI" v-ripple @click="save">
 								<v-icon class="list-icon">mdi-content-save</v-icon>
 								<v-list-item-content>
 									<v-list-item-title>{{ $t('save') }}</v-list-item-title>
 								</v-list-item-content>
 							</v-list-item>
-							<v-list-item v-ripple @click="deleteDialog = true">
+							<v-list-item v-if="currentAI" v-ripple @click="$refs.explorer.deleteAI(currentAI)">
 								<v-icon class="list-icon">mdi-delete</v-icon>
 								<v-list-item-content>
 									<v-list-item-title>{{ $t('delete') }}</v-list-item-title>
@@ -66,8 +72,9 @@
 					<loader v-if="!fileSystem.rootFolder" />
 
 					<div v-if="fileSystem.rootFolder" v-autostopscroll class="ai-list">
-						<editor-folder :folder="fileSystem.rootFolder" :level="0" />
+						<explorer ref="explorer" @test="test" @delete-ai="deleteAI" />
 					</div>
+
 					<div v-if="currentEditor && currentEditor.loaded && panelWidth" class="ai-stats">
 						<div class="line-count-wrapper">{{ $tc('main.n_lines', currentEditor.lines) }}</div>
 						<div class="char-count-wrapper">{{ $tc('main.n_characters', currentEditor.characters) }}</div>
@@ -200,31 +207,9 @@
 			</div>
 		</popup>
 
-		<popup v-model="deleteDialog" :width="500">
-			<v-icon slot="icon">mdi-delete</v-icon>
-			<span v-if="currentType === 'ai' && currentAI" slot="title">{{ $t('delete_ai', [currentAI.name]) }}</span>
-			<span v-else-if="currentFolder" slot="title">{{ $t('delete_folder', [currentFolder.name]) }}</span>
-			{{ $t('delete_warning') }}
-			<div slot="actions">
-				<div @click="deleteDialog = false">{{ $t('delete_cancel') }}</div>
-				<div class="red" @click="deleteItem">{{ $t('delete_validate') }}</div>
-			</div>
-		</popup>
-
 		<editor-test ref="editorTest" v-model="testDialog" :ais="fileSystem.ais" :leek-ais="fileSystem.leekAIs" />
 
-		<popup v-model="newAIDialog" :width="500">
-			<v-icon slot="icon">mdi-plus-circle-outline</v-icon>
-			<span slot="title">{{ $t('new_desc') }}</span>
-			<div class="padding">
-				<input ref="newAIInput" v-model="newAIName" :placeholder="$t('ai_name')" type="text" class="input dialog-input" @keyup.enter="newAI(false, newAIName)">
-			</div>
-			<div slot="actions">
-				<div @click="newAIDialog = false">{{ $t('cancel') }}</div>
-				<div class="green" @click="newAI(false, newAIName)">{{ $t('main.create') }}</div>
-			</div>
-		</popup>
-
+		<!--
 		<popup v-model="newAIv2Dialog" :width="500">
 			<v-icon slot="icon">mdi-plus-circle-outline</v-icon>
 			<span slot="title">{{ $t('new_desc') }}</span>
@@ -235,19 +220,7 @@
 				<div @click="newAIv2Dialog = false">{{ $t('cancel') }}</div>
 				<div class="green" @click="newAI(true, newAIName)">{{ $t('main.create') }}</div>
 			</div>
-		</popup>
-
-		<popup v-model="newFolderDialog" :width="500">
-			<v-icon slot="icon">mdi-folder-plus</v-icon>
-			<span slot="title">{{ $t('new_folder') }}</span>
-			<div class="padding">
-				<input ref="newFolderInput" v-model="newFolderName" :placeholder="$t('folder_name')" type="text" class="input dialog-input" @keyup.enter="newFolder(newFolderName)">
-			</div>
-			<div slot="actions">
-				<div @click="newFolderDialog = false">{{ $t('cancel') }}</div>
-				<div class="green" @click="newFolder(newFolderName)">{{ $t('main.create') }}</div>
-			</div>
-		</popup>
+		</popup> -->
 	</div>
 </template>
 
@@ -260,8 +233,8 @@
 	import { Route } from 'vue-router'
 	import AIView from './ai-view.vue'
 	import Analyzer from './analyzer'
-	import EditorFolder from './editor-folder.vue'
-	import { Explorer, explorer } from './explorer'
+	const Explorer = () => import(/* webpackChunkName: "[request]" */ `@/component/editor/editor-explorer.${locale}.i18n`)
+	import { explorer } from './explorer'
 	import { AIItem, Folder, Item } from './editor-item'
 	const EditorTabs = () => import(/* webpackChunkName: "[request]" */ `@/component/editor/editor-tabs.${locale}.i18n`)
 	const EditorTest = () => import(/* webpackChunkName: "[request]" */ `@/component/editor/editor-test.${locale}.i18n`)
@@ -276,7 +249,7 @@
 
 	@Component({
 		name: 'editor', i18n: {},
-		components: { 'editor-folder': EditorFolder, 'ai-view': AIView, 'editor-test': EditorTest, 'editor-tabs': EditorTabs },
+		components: { 'ai-view': AIView, 'editor-test': EditorTest, 'editor-tabs': EditorTabs, 'explorer': Explorer },
 		mixins
 	})
 	export default class EditorPage extends Vue {
@@ -291,7 +264,6 @@
 		settingsDialog: boolean = false
 		addMenu: boolean = false
 		addMenuActivator: any = null
-		deleteDialog: boolean = false
 		enlargeWindow: boolean = false
 		theme: string = DEFAULT_THEME
 		autoClosing: boolean = false
@@ -306,11 +278,7 @@
 		tabs: AI[] = []
 		panelWidth: number = 200
 		problemsHeight: number = 200
-		newAIDialog: boolean = false
 		newAIv2Dialog: boolean = false
-		newAIName: string = ''
-		newFolderDialog: boolean = false
-		newFolderName: string = ''
 		showProblemsDetails: boolean = true
 		problemsCollapsed: {[key: string]: boolean} = {}
 		fileSystem = fileSystem
@@ -356,7 +324,6 @@
 			}
 
 			fileSystem.init().then(() => {
-				console.log("fileSystem loaded")
 				this.update()
 				LeekWars.setTitle(this.$t('title'), this.$t('n_ais', [fileSystem.aiCount]))
 			})
@@ -561,93 +528,8 @@
 				this.currentEditor.serverError = true
 			})
 		}
-		openNewAI(v2: boolean) {
-			this.newAIName = ''
-			if (v2) {
-				this.newAIv2Dialog = true
-				Vue.nextTick(() => {
-					(this.$refs.newAIInputv2 as HTMLElement).focus()
-				})
-			} else {
-				this.newAIDialog = true
-				Vue.nextTick(() => {
-					(this.$refs.newAIInput as HTMLElement).focus()
-				})
-			}
-		}
-		openNewFolder() {
-			this.newFolderName = ''
-			this.newFolderDialog = true
-			Vue.nextTick(() => {
-				(this.$refs.newFolderInput as HTMLElement).focus()
-			})
-		}
-		newAI(v2: boolean, name: string) {
-			if (!this.currentFolder) { return }
-			LeekWars.post('ai/new-name', {folder_id: this.currentFolder.id, v2, name}).then(data => {
-				if (this.currentFolder) {
-					const ai = data.ai
-					ai.valid = true
-					ai.v2 = v2
-					ai.name = name
-					fileSystem.add_ai(ai, this.currentFolder)
-					this.currentFolder.expanded = true
-					this.$store.commit('add-ai', ai)
-					this.$router.push('/editor/' + ai.id)
-					this.newAIDialog = false
-					this.newAIv2Dialog = false
-					this.newAIName = ''
-				}
-			})
-			.error(error => LeekWars.toast(this.$t(error.error, error.parameters)))
-		}
-		newFolder(name: string) {
-			if (!this.currentFolder) { return }
-			LeekWars.post('ai-folder/new-name', {folder_id: this.currentFolder.id, name}).then(data => {
-				if (this.currentFolder) {
-					const folder = new Folder(data.id, name, this.currentFolder.id)
-					folder.items = []
-					fileSystem.add_folder(folder, this.currentFolder)
-					this.newFolderDialog = false
-					this.newFolderName = ''
-				}
-			})
-			.error(error => LeekWars.toast(this.$t(error.error, error.parameters)))
-		}
 		startDelete() {
-			this.deleteDialog = true
-		}
-		deleteItem() {
-			const url = this.currentType === 'folder' ? 'ai-folder/delete' : 'ai/delete'
-			const args = this.currentType === 'folder' ? {folder_id: this.currentID} : {ai_id: this.currentID}
-			LeekWars.delete(url, args).then(data => {
-				let ai_deleted = false
-				if (this.currentType === 'ai' && this.currentAI) {
-					const folder = fileSystem.folderById[this.currentAI.folder]
-					folder.items.splice(folder.items.findIndex((i) => !i.folder && (i as AIItem).ai === this.currentAI), 1)
-					Vue.delete(this.$data.ais, '' + this.currentID)
-					Vue.delete(this.$data.activeAIs, '' + this.currentID)
-					this.$store.commit('delete-ai', this.currentID)
-					if (this.$refs.tabs) {
-						(this.$refs.tabs as any).closeById(this.currentID)
-					}
-					(this.$refs.editorTest as any).onAIDeleted(this.currentID)
-					ai_deleted = true
-				} else if (this.currentFolder) {
-					const folder = fileSystem.folderById[this.currentFolder.parent]
-					folder.items.splice(folder.items.indexOf(this.currentFolder), 1)
-				}
-				if (ai_deleted) {
-					if (!LeekWars.isEmptyObj(fileSystem.ais)) {
-						this.$router.replace('/editor/' + LeekWars.firstKey(fileSystem.ais))
-					} else {
-						this.$router.replace('/editor')
-					}
-				}
-				this.deleteDialog = false
-			}).error(error => {
-				LeekWars.toast(error)
-			})
+			(this.$refs.explorer as any).deleteDialog = true
 		}
 		test() {
 			if (!this.currentAI || !this.currentEditor) { return }
@@ -796,6 +678,24 @@
 				// 	this.addErrorOverlay(errors)
 				// 	return false
 				// }
+			}
+		}
+
+		deleteAI(ai: AI) {
+			// Remove from active AIs
+			Vue.delete(this.$data.activeAIs, '' + ai.id)
+			// Remove from tabs
+			if (this.$refs.tabs) {
+				(this.$refs.tabs as any).closeById(ai.id)
+			}
+			// Clear the AI from scenarios
+			(this.$refs.editorTest as any).onAIDeleted(ai.id)
+
+			// Open a new one
+			if (!LeekWars.isEmptyObj(fileSystem.ais)) {
+				this.$router.replace('/editor/' + LeekWars.firstKey(fileSystem.ais))
+			} else {
+				this.$router.replace('/editor')
 			}
 		}
 	}
@@ -1000,7 +900,7 @@
 		bottom: 10px;
 		cursor: ew-resize;
 		width: 20px;
-		z-index: 10;
+		z-index: 5;
 	}
 	.dialog-input {
 		width: calc(100% - 10px);
@@ -1132,6 +1032,16 @@
 			.crashed {
 				color: red;
 			}
+		}
+	}
+	.menu-title {
+		padding: 5px 10px;
+		padding-top: 10px;
+		color: #777;
+		font-size: 13px;
+		.v-icon {
+			font-size: 16px;
+			vertical-align: bottom;
 		}
 	}
 </style>

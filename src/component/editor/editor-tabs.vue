@@ -42,6 +42,7 @@
 	@Component({ name: 'editor-tabs', i18n: {}, mixins })
 	export default class EditorTabs extends Vue {
 		@Prop({required: true}) ais!: AI[]
+		loaded: boolean = false
 		tabs: AI[] = []
 		menu: boolean = false
 		activator: any = null
@@ -50,7 +51,8 @@
 
 		@Watch('ais', {immediate: true})
 		updateAis() {
-			console.log("update ais", this.ais)
+			if (this.loaded) { return }
+			this.loaded = true
 			const tabs = JSON.parse(localStorage.getItem('editor/tabs') || '[]')
 			for (const t of tabs) {
 				if (t in this.ais) {

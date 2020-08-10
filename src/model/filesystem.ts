@@ -47,8 +47,9 @@ class FileSystem {
 					Vue.set(this.folderById, folder.id, folder)
 					return folder
 				}
+                this.rootFolder = buildFolder(0, 0)
 				for (const ai of data.ais) {
-                    ai.path = this.getAIFullPath(ai)
+					ai.path = this.getAIFullPath(ai)
 					Vue.set(ai, 'modified', false)
 					Vue.set(ai, 'selected', false)
 					Vue.set(ai, 'errors', 0)
@@ -57,7 +58,6 @@ class FileSystem {
                     Vue.set(this.aiByFullPath, ai.path, ai)
 					this.items[ai.name] = ai
 				}
-                this.rootFolder = buildFolder(0, 0)
 				this.initialized = true
 				resolve()
 			})
@@ -69,8 +69,9 @@ class FileSystem {
      */
     public add_ai(ai: AI, folder: Folder) {
         ai.path = this.getAIFullPath(ai)
-        Vue.set(this.ais, ai.id, ai)
-        folder.items.push(new AIItem(ai, folder))
+		Vue.set(this.ais, ai.id, ai)
+		Vue.set(this.aiByFullPath, ai.path, ai)
+        folder.items.push(new AIItem(ai, folder.id))
         store.commit('add-ai', ai)
     }
 
@@ -125,7 +126,21 @@ class FileSystem {
             return this.getFolderPath(this.folderById[folder.parent]) + folder.name + '/'
         }
         return folder.name + '/'
-    }
+	}
+
+	public deleteAI(ai: AI) {
+		const folder = this.folderById[ai.folder]
+		folder.items.splice(folder.items.findIndex((i) => !i.folder && (i as AIItem).ai === ai), 1)
+		Vue.delete(this.ais, '' + ai.id)
+		store.commit('delete-ai', ai.id)
+		LeekWars.delete('ai/delete', {ai_id: ai.id}).error(error => LeekWars.toast(error))
+	}
+
+	public deleteFolder(folder: Folder) {
+		const parent = this.folderById[folder.parent]
+		parent.items.splice(parent.items.indexOf(folder), 1)
+		LeekWars.delete('ai-folder/delete', {folder_id: folder.id}).error(error => LeekWars.toast(error))
+	}
 }
 
 const fileSystem = new FileSystem()
