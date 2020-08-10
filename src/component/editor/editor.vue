@@ -778,6 +778,7 @@
 	}
 	.ai-list {
 		overflow-y: auto;
+		overflow-x: hidden;
 		height: 100%;
 	}
 	.ai-stats {
@@ -942,7 +943,8 @@
 		top: 0;
 		bottom: 10px;
 		cursor: ew-resize;
-		width: 15px;
+		width: 20px;
+		z-index: 10;
 	}
 	.dialog-input {
 		width: calc(100% - 10px);
