@@ -3,6 +3,7 @@
 	"ai_error": "<b>{0}</b> ligne <b>{1}</b>",
 	"ai_name": "Nom de l'IA",
 	"ai_to_test": "IA à tester",
+	"analyzer": "[bêta] Analyzeur LeekScript de nouvelle génération",
 	"auto_closing": "Fermeture automatique des parenthèses, crochets, accolades et guillemets",
 	"autocompletion": "Autocomplétion (proposition des variables courantes et fonctions de la doc)",
 	"base": "base",
