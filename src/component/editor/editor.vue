@@ -89,7 +89,8 @@
 					</div>
 				</div>
 
-				<div v-if="enableAnalyzer && showProblemsDetails && (LeekWars.analyzer.error_count || LeekWars.analyzer.warning_count)" class="problems-details">
+				<div v-if="enableAnalyzer && showProblemsDetails && problemsHeight && (LeekWars.analyzer.error_count || LeekWars.analyzer.warning_count)" class="problems-details" :style="{height: problemsHeight + 'px'}">
+					<div class="problems-resizer" @mousedown="problemsResizerMousedown"></div>
 					<div v-for="(problems, ai) in LeekWars.analyzer.problems" v-if="problems.length" :key="ai">
 						<div class="file" @click="toggleProblemFile(ai)">
 							<v-icon>{{ problemsCollapsed[ai] ? 'mdi-chevron-right' : 'mdi-chevron-down' }}</v-icon>
@@ -103,6 +104,32 @@
 								{{ $t('ls_error.' + problem[5], problem[6]) }}
 								<span class="line">ligne {{ problem[0] }}</span>
 							</div>
+						</div>
+					</div>
+				</div>
+				<div v-if="enableAnalyzer" class="status">
+					<div v-ripple class="problems" @click="toggleProblems">
+						<span v-if="LeekWars.analyzer.error_count + LeekWars.analyzer.warning_count === 0" class="no-error">
+							<v-icon>mdi-check-circle</v-icon> Aucun problème
+						</span>
+						<span v-else>
+							<span v-if="LeekWars.analyzer.error_count" class="errors">
+								<v-icon>mdi-close-circle</v-icon> {{ LeekWars.analyzer.error_count }} erreurs
+							</span>
+							<span v-if="LeekWars.analyzer.warning_count" class="warnings">
+								<v-icon>mdi-alert-circle</v-icon> {{ LeekWars.analyzer.warning_count }} warnings
+							</span>
+						</span>
+					</div>
+					<div class="filler"></div>
+					<div class="state">
+						<div v-if="LeekWars.analyzer.running == 0" class="ready">
+							Prêt
+							<v-icon>mdi-check</v-icon>
+						</div>
+						<div v-else class="running">
+							En cours d'analyse
+							<v-icon>mdi-sync</v-icon>
 						</div>
 					</div>
 				</div>
@@ -278,6 +305,7 @@
 		testDialog: boolean = false
 		tabs: AI[] = []
 		panelWidth: number = 200
+		problemsHeight: number = 200
 		newAIDialog: boolean = false
 		newAIv2Dialog: boolean = false
 		newAIName: string = ''
@@ -718,6 +746,34 @@
 			e.preventDefault()
 		}
 
+		problemsResizerMousedown(e: MouseEvent) {
+			const startHeight = this.problemsHeight
+			const startY = e.clientY
+			const mousemove: any = (ev: MouseEvent) => {
+				let problemsHeight = Math.max(0, startHeight + startY - ev.clientY)
+				if (problemsHeight < 50) {
+					problemsHeight = 0
+				}
+				this.problemsHeight = problemsHeight
+				localStorage.setItem('editor/problems-height', '' + this.problemsHeight)
+			}
+			const mouseup: any = (ev: MouseEvent) => {
+				document.documentElement!.removeEventListener('mousemove', mousemove)
+				document.documentElement!.removeEventListener('mouseup', mouseup)
+			}
+			document.documentElement!.addEventListener('mousemove', mousemove, false)
+			document.documentElement!.addEventListener('mouseup', mouseup, false)
+			e.preventDefault()
+		}
+
+		toggleProblems() {
+			if (this.problemsHeight == 0) {
+				this.problemsHeight = 200
+			} else {
+				this.showProblemsDetails = !this.showProblemsDetails
+			}
+		}
+
 		toggleProblemFile(ai: string) {
 			Vue.set(this.problemsCollapsed, ai, !this.problemsCollapsed[ai])
 		}
@@ -957,11 +1013,19 @@
 		padding-left: 30px;
 	}
 
+	.problems-resizer {
+		height: 8px;
+		cursor: ns-resize;
+		position: absolute;
+		left: 0;
+		right: 0;
+	}
+
 	.problems-details {
-		flex: 0 0 25%;
 		background: white;
 		border-top: 1px solid #ddd;
 		overflow-y: auto;
+		position: relative;
 		.v-icon {
 			font-size: 20px;
 		}
@@ -1018,6 +1082,7 @@
 			line-height: 36px;
 			padding: 0 10px;
 			cursor: pointer;
+			user-select: none;
 			i {
 				font-size: 17px;
 				margin-bottom: 3px;
