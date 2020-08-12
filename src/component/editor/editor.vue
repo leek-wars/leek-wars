@@ -523,7 +523,7 @@
 							if (editor) { editor.showError(line) }
 						}
 					}
-					setTimeout(() => this.goods = [], 1500 * this.goods.length)
+					setTimeout(() => this.goods = [], 2000)
 				}
 				this.currentEditor.updateFunctions()
 				if (this.currentEditor.needTest) {
