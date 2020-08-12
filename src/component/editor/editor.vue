@@ -93,7 +93,7 @@
 								<loader :size="15" /> {{ $t('saving') }}
 							</div>
 							<div class="results">
-								<div v-show="good" class="good" v-html="'✓ ' + $t('valid_ai', [currentEditor.ai.name])"></div>
+								<div v-for="(good, g) in goods" :key="g" class="good" v-html="'✓ ' + (good.ai !== currentAI ? currentAI.name + ' ➞ ' : '') + $t('valid_ai', [good.ai.name])"></div>
 								<div v-if="currentEditor.serverError" class="error">× <i>{{ $t('server_error') }}</i></div>
 								<div v-for="(error, e) in errors" :key="e" class="error" @click="errors.splice(e, 1)">
 									× <span v-html="$t('ai_error', [error.ai, error.line])"></span> ▶ {{ error.message }}
@@ -233,7 +233,7 @@
 		currentType: string | null = null
 		currentFolder: Folder | null = null
 		errors: any[] = []
-		good: boolean = false
+		goods: any[] = []
 		infoDialog: boolean = false
 		settingsDialog: boolean = false
 		addMenu: boolean = false
@@ -477,8 +477,8 @@
 						this.currentEditor.editor.removeOverlay(this.currentEditor.overlay)
 					}
 					if (!errors || errors.length === 0) {
-						this.good = true
-						setTimeout(() => this.good = false, 800)
+						this.goods.push({ai: this.currentEditor.ai})
+						setTimeout(() => this.goods = [], 2000)
 						this.currentEditor.ai.valid = true
 						this.currentEditor.error = false
 					} else {
@@ -490,14 +490,14 @@
 						return
 					}
 					this.errors = []
+					this.goods = []
 					for (const res of data.result) {
 						const code = res[0]
 						const ai = this.ais[res[1]]
 						const ai_name = ai ? ai.name : 'AI #' + res[1]
 						const editor = (this.$refs.editors as AIView[]).find(e => e.ai === ai)
 						if (code === 2) {
-							this.good = true
-							setTimeout(() => this.good = false, 800)
+							this.goods.push({ai})
 							ai.valid = true
 							if (editor) { editor.removeErrors() }
 						} else if (code === 1) {
@@ -517,6 +517,7 @@
 							if (editor) { editor.showError(line) }
 						}
 					}
+					setTimeout(() => this.goods = [], 1500 * this.goods.length)
 				}
 				this.currentEditor.updateFunctions()
 				if (this.currentEditor.needTest) {
@@ -760,10 +761,15 @@
 		padding: 0;
 		padding-right: 5px;
 	}
+	.results {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+	}
 	.results .good, .results .error {
 		padding: 5px 10px;
 		border-radius: 2px;
-		display: inline-block;
 		margin: 4px;
 	}
 	.results {
