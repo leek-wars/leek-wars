@@ -433,13 +433,12 @@ class Liberation extends ChipAnimation {
 		super.update(dt)
 		if (!this.targets) { return  }
 		if (Math.random() > 0.5) {
-			const t = this.targets[0]
 			let angle = Math.random() * Math.PI * 2
 			const dx = Math.cos(angle) * 2
 			const dy = Math.sin(angle)
 			angle = Math.atan2(dy, dx)
-			const x = t.ox + dx * 10
-			const y = t.oy + dy * 10
+			const x = this.position.x + dx * 10
+			const y = this.position.y + dy * 10
 			const z = 50
 			this.game.particles.addImage(x, y, z, dx, dy, 0, angle, T.liberation_halo, 60)
 		}
@@ -840,15 +839,13 @@ class Antidote extends ChipAnimation {
 	constructor(game: Game) { super(game, S.liberation, 60) }
 	public update(dt: number) {
 		super.update(dt)
-		if (!this.targets || !this.targets.length) { return  }
 		if (Math.random() > 0.5) {
-			const t = this.targets[0]
 			let angle = Math.random() * Math.PI * 2
 			const dx = Math.cos(angle) * 2
 			const dy = Math.sin(angle)
 			angle = Math.atan2(dy, dx)
-			const x = t.ox + dx * 10
-			const y = t.oy + dy * 10
+			const x = this.position.x + dx * 10
+			const y = this.position.y + dy * 10
 			const z = 50
 			this.game.particles.addImage(x, y, z, dx, dy, 0, angle, T.antidote_halo, 60)
 		}
@@ -1004,12 +1001,11 @@ class Alteration extends ChipAnimation {
 		this.delay -= dt
 		if (this.delay < 0) {
 			for (const direction of this.directions) {
-				const t = this.targets[0]
 				const dx = Math.cos(direction) * 2 * 1.3
 				const dy = Math.sin(direction) * 1.3
 				const angle = Math.atan2(dy, dx)
-				const x = t.ox + dx * 5
-				const y = t.oy + dy * 5
+				const x = this.position.x + dx * 5
+				const y = this.position.y + dy * 5
 				const z = 50
 				this.game.particles.addImage(x, y, z, dx, dy, 0, angle, T.alteration, 50)
 			}
