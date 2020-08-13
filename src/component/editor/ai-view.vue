@@ -878,7 +878,9 @@
 					// console.log("Found included", path, this.ai.folder, included)
 					this.ai.includes.push(included)
 					this.$emit("load", included)
-					LeekWars.analyzer.register(included)
+					LeekWars.analyzer.register(included).catch(e => {
+						// nothing
+					})
 				} else {
 					console.warn("Included not found", path, this.ai.folder, included)
 				}
