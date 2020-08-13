@@ -12,8 +12,8 @@ Related projects: [LeekScript](https://github.com/leek-wars/leekscript) and [Lee
 
 The project is very easy to install and deploy in 10s:
 ```shell
-git clone https://github.com/leek-wars/leek-wars-client.git
-cd leek-wars-client
+git clone https://github.com/leek-wars/leek-wars.git
+cd leek-wars
 npm i
 npm start
 ```
