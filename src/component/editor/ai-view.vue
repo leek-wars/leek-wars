@@ -605,7 +605,7 @@
 					// console.log(raw_data)
 					const startPos = { ch: raw_data.location[0][1], line: raw_data.location[0][0] - 1 }
 
-					if (raw_data.location[0][2] && raw_data.location[1][2]) { // Not position [0:0]
+					if (raw_data.location[0][2] !== 0 || raw_data.location[1][2] !== 0) { // Not position [0:0]
 						this.hoverData = raw_data
 						const keyword = this.getTokenInformation(token.string, editorPos)
 						this.detailDialogContent = { details: raw_data, keyword }
