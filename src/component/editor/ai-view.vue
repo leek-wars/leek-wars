@@ -30,7 +30,7 @@
 				<span v-else v-html="selectedHint.details"></span>
 			</div>
 		</div>
-		<div v-show="detailDialog" v-if="detailDialogContent" ref="detailDialog" :style="{left: detailDialogLeft + 'px', bottom: detailDialogTop + 'px'}" class="detail-dialog">
+		<div v-show="detailDialog" v-if="detailDialogContent" ref="detailDialog" :style="{left: detailDialogLeft + 'px', bottom: (!detailDialogAtBottom ? detailDialogTop + 'px' : 'auto'), top: (detailDialogAtBottom ? detailDialogTop + 'px' : 'auto'), 'max-height': detailDialogMaxHeight + 'px'}" class="detail-dialog">
 			<template v-if="detailDialogContent.keyword">
 				<documentation-function v-if="detailDialogContent.keyword.type === 'function'" :fun="detailDialogContent.keyword.function" />
 				<documentation-constant v-else-if="detailDialogContent.keyword.type === 'constant'" :constant="detailDialogContent.keyword.constant" />
@@ -136,6 +136,8 @@
 		public detailDialogContent: any = null
 		public detailDialogTop: number = 0
 		public detailDialogLeft: number = 0
+		public detailDialogAtBottom: boolean = false
+		public detailDialogMaxHeight: number = 0
 		public detailStart: number = 0
 		public detailEnd: number = 0
 		public searchOverlay: any = null
@@ -608,9 +610,30 @@
 						const keyword = this.getTokenInformation(token.string, editorPos)
 						this.detailDialogContent = { details: raw_data, keyword }
 						const p = this.editor.cursorCoords(startPos, "page")
+						const left = p.left
 						this.detailDialogTop = window.innerHeight - p.top
-						this.detailDialogLeft = p.left
+						this.detailDialogLeft = left
+						this.detailDialogAtBottom = false
+						this.detailDialogMaxHeight = 999999
 						this.detailDialog = true
+
+						const fixPosition = () => {
+							const detailDialog = this.$refs.detailDialog as HTMLElement
+							const height = detailDialog.scrollHeight
+							const top = window.innerHeight - this.detailDialogTop
+							this.detailDialogMaxHeight = window.innerHeight - this.detailDialogTop
+							if (top - height < 0 && top + this.lineHeight + height <= window.innerHeight) { // Y'a moyen de positionner le dialogue en bas
+								this.detailDialogAtBottom = true
+								this.detailDialogTop = top + this.lineHeight
+								this.detailDialogMaxHeight = window.innerHeight - top - this.lineHeight
+							}
+
+							const width = detailDialog.clientWidth
+							if (left + width > window.innerWidth - 20) {
+								this.detailDialogLeft = window.innerWidth - width - 20
+							}
+						}
+						Vue.nextTick(fixPosition)
 
 						const start_line = raw_data.location[0][0] - 1
 						const start_char = raw_data.location[0][1]
@@ -1095,9 +1118,12 @@
 	.detail-dialog {
 		position: absolute;
 		max-width: 600px;
+		width: max-content;
 		z-index: 100;
 		background: #f7f7f7;
 		border: 1px solid #ccc;
+		box-shadow: 0px 3px 5px -1px rgba(0, 0, 0, 0.2), 0px 5px 8px 0px rgba(0, 0, 0, 0.14), 0px 1px 14px 0px rgba(0, 0, 0, 0.12);
+		overflow-y: auto;
 		> * {
 			padding: 5px 8px;
 			display: block;
