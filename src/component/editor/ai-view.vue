@@ -196,6 +196,29 @@
 					},
 				} as any)
 
+				const overlay_javadoc = { token: (stream: any) => {
+					if (stream.match("@")) {
+						stream.eatWhile(/\w/)
+						return "at"
+					}
+					if (!stream.skipTo("@")) {
+						stream.skipToEnd()
+					}
+					return null
+				}}
+				const overlay_ref = { token: (stream: any) => {
+					if (stream.match("#")) {
+						stream.eatWhile(/\w/)
+						return "ref"
+					}
+					if (!stream.skipTo("#")) {
+						stream.skipToEnd()
+					}
+					return null
+				}}
+				this.editor.addOverlay(overlay_javadoc)
+				this.editor.addOverlay(overlay_ref)
+
 				this.document = this.editor.getDoc()
 
 				this.editor.on('change', (_, changes) => this.change(wrapper.CodeMirror, changes))

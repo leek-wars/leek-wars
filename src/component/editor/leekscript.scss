@@ -84,10 +84,21 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {
 	color: #f00;
 	font-weight: bold;
 }
+
 .cm-underlined {
 	color: #407710;
 	position: relative;
 	padding: 3px 0;
+}
+.cm-comment-multi {
+	color: #639be2;
+}
+.cm-comment-multi.cm-at {
+	font-weight: bold;
+	color: #6385e2;
+}
+.cm-comment-multi.cm-ref {
+	color: #5fad1b;
 }
 .cm-underlined:after {
 	position: absolute;
