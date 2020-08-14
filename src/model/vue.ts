@@ -227,9 +227,6 @@ const vueMain = new Vue({
 				this.$emit('ctrlF', event)
 			} else if (event.keyCode === 27) {
 				this.$emit('escape')
-			} else if (event.altKey && event.which === 37) {
-				console.log("Alt + <")
-				event.preventDefault()
 			} else if (event.ctrlKey && event.keyCode === 80) {
 				this.$emit('ctrlP', event)
 			}
