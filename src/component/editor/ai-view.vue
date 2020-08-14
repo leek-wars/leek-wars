@@ -1134,8 +1134,17 @@
 		&.type {
 			max-width: none;
 		}
-		::v-deep .item-preview {
-			width: 300px;
+		::v-deep .doc-constant.item {
+			padding: 0 !important;
+			min-width: 280px;
+			max-width: 320px;
+			h4 {
+				margin-left: 6px;
+				margin-right: 6px;
+			}
+			ul {
+				margin: 10px;
+			}
 		}
 		.divider {
 			padding: 0;

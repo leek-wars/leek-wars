@@ -1,5 +1,5 @@
 <template lang="html">
-	<div v-if="fun">
+	<div v-if="fun" class="doc-function">
 		<h2 class="content">
 			{{ fun.name }}(<span v-for="(arg, i) in fun.arguments_names" :key="i"><span v-if="fun.arguments_types[i] != -1" class="argument">{{ $t('doc.arg_type_' + fun.arguments_types[i]) }}</span><span v-else class="argument">?</span>&nbsp;{{ arg }}<span v-if="i < fun.arguments_names.length - 1">, </span>
 			</span>)
