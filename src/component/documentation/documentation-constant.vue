@@ -1,9 +1,9 @@
 <template lang="html">
-	<div v-if="constant">
-		<h2>{{ constant.name }}</h2>
+	<div v-if="constant" class="doc-constant" :class="{item: is_weapon || is_chip}">
+		<h2 v-if="!is_weapon && !is_chip">{{ constant.name }}</h2>
 		<div v-if="constant.deprecated" class="deprecated-message">Cette constante est dépréciée.</div>
-		<chip-preview v-if="constant.name.startsWith('CHIP_')" :chip="LeekWars.chips[constant.value]" />
-		<weapon-preview v-else-if="constant.name.startsWith('WEAPON_')" :weapon="LeekWars.weapons[constant.value]" />
+		<chip-preview v-if="is_chip" :chip="LeekWars.chips[constant.value]" />
+		<weapon-preview v-else-if="is_weapon" :weapon="LeekWars.weapons[constant.value]" />
 		<div v-else-if="$te('doc.const_' + constant.name)" v-dochash v-code class="content" v-html="$t('doc.const_' + constant.name)"></div>
 		<h4>{{ $t('doc.value') }}</h4>
 		<ul>
@@ -35,6 +35,12 @@
 
 		get value_int() {
 			return parseInt(this.constant.value, 10)
+		}
+		get is_weapon() {
+			return this.constant.name.startsWith('WEAPON_')
+		}
+		get is_chip() {
+			return this.constant.name.startsWith('CHIP_')
 		}
 		get chips() {
 			const items = [] as any
@@ -88,7 +94,7 @@
 		margin-bottom: 8px;
 		font-size: 15px;
 	}
-	.item {
+	.doc-constant .item {
 		height: 50px;
 		margin: 0 2px;
 	}
