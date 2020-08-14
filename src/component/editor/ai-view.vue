@@ -178,6 +178,7 @@
 					matchBrackets: true,
 					lineNumbers: true,
 					lineWrapping: true,
+					continueComments: true,
 					undoDepth: 200,
 					autofocus: true,
 					smartIndent: false,
