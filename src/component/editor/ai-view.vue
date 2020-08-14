@@ -30,7 +30,7 @@
 				<span v-else v-html="selectedHint.details"></span>
 			</div>
 		</div>
-		<div v-show="detailDialog" v-if="detailDialogContent" ref="detailDialog" :style="{left: detailDialogLeft + 'px', bottom: (!detailDialogAtBottom ? detailDialogTop + 'px' : 'auto'), top: (detailDialogAtBottom ? detailDialogTop + 'px' : 'auto'), 'max-height': detailDialogMaxHeight + 'px'}" class="detail-dialog">
+		<div v-show="detailDialog" v-if="detailDialogContent" ref="detailDialog" :style="{left: detailDialogLeft + 'px', bottom: (!detailDialogAtBottom ? detailDialogTop + 'px' : 'auto'), top: (detailDialogAtBottom ? detailDialogTop + 'px' : 'auto'), 'max-height': detailDialogMaxHeight + 'px'}" class="detail-dialog" :class="{active: detailsDialogActive}" @mousemove="detailsDialogEnter" @mouseleave="detailsDialogLeave">
 			<template v-if="detailDialogContent.keyword">
 				<documentation-function v-if="detailDialogContent.keyword.type === 'function'" :fun="detailDialogContent.keyword.function" />
 				<documentation-constant v-else-if="detailDialogContent.keyword.type === 'constant'" :constant="detailDialogContent.keyword.constant" />
@@ -39,7 +39,7 @@
 				<div class="divider"></div>
 			</template>
 			<template v-if="detailDialogContent.details.defined">
-				<i18n path="leekscript.defined_in">
+				<i18n class="defined" path="leekscript.defined_in">
 					<b slot="0">{{ detailDialogContent.details.defined[0] }}</b>
 					<b slot="1">{{ detailDialogContent.details.defined[1] }}</b>
 				</i18n>
@@ -138,6 +138,7 @@
 		public detailDialogLeft: number = 0
 		public detailDialogAtBottom: boolean = false
 		public detailDialogMaxHeight: number = 0
+		public detailsDialogActive: boolean = false
 		public detailStart: number = 0
 		public detailEnd: number = 0
 		public searchOverlay: any = null
@@ -584,6 +585,8 @@
 				this.removeUnderlineMarker()
 			}
 
+			if (this.detailsDialogActive) { return }
+
 			const pos = {left: this.mouseX - 4, top: this.mouseY}
 			const editorPos = this.editor.coordsChar(pos, "window")
 			const editorPos2 = {line: editorPos.line, ch: editorPos.ch + 1}
@@ -721,6 +724,15 @@
 			}, this.ctrl ? 0 : 200)
 		}
 
+		public detailsDialogEnter() {
+			this.detailsDialogActive = true
+			clearTimeout(this.detailTimer)
+		}
+
+		public detailsDialogLeave() {
+			this.detailsDialogActive = false
+		}
+
 		public removeUnderlineMarker() {
 			if (this.underlineMarker) {
 				this.underlineMarker.clear()
@@ -728,13 +740,17 @@
 				this.togglePointerCursor(false)
 			}
 		}
+
 		public togglePointerCursor(enabled: boolean) {
 			const lines = (this.$refs.codemirror as HTMLElement).querySelector('.CodeMirror-lines') as HTMLElement
 			if (lines) { lines.style.cursor = enabled ? "pointer" : "text" }
 		}
+
 		public mouseleave() {
 			clearTimeout(this.detailTimer)
-			this.detailDialog = false
+			if (!this.detailsDialogActive) {
+				this.detailDialog = false
+			}
 			this.editor.removeOverlay(this.hoverOverlay)
 			this.hoverOverlay = null
 		}
@@ -1144,18 +1160,17 @@
 	.detail-dialog {
 		position: absolute;
 		max-width: 600px;
-		width: max-content;
+		width: fit-content;
 		z-index: 100;
 		background: #f7f7f7;
 		border: 1px solid #ccc;
-		box-shadow: 0px 3px 5px -1px rgba(0, 0, 0, 0.2), 0px 5px 8px 0px rgba(0, 0, 0, 0.14), 0px 1px 14px 0px rgba(0, 0, 0, 0.12);
 		overflow-y: auto;
-		> * {
-			padding: 5px 8px;
-			display: block;
+		&.active {
+			box-shadow: 0px 3px 1px -2px rgba(0, 0, 0, 0.2), 0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 1px 5px 0px rgba(0, 0, 0, 0.12);
 		}
-		&.type {
-			max-width: none;
+		> * {
+			display: block;
+			padding: 5px 8px;
 		}
 		::v-deep .doc-constant.item {
 			padding: 0 !important;
@@ -1174,10 +1189,11 @@
 			height: 1px;
 			background: #ccc;
 		}
-		.error {
+		> .error {
 			display: flex;
 			align-items: center;
 			background: rgba(255, 0, 0, 0.1);
+			padding: 5px 8px;
 			.v-icon {
 				color: red;
 				margin-right: 4px;
