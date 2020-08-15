@@ -121,7 +121,9 @@
 								<div class="file" @click="toggleProblemFile(ai)">
 									<v-icon>{{ problemsCollapsed[ai] ? 'mdi-chevron-right' : 'mdi-chevron-down' }}</v-icon>
 									{{ ai }}
-									<span class="count error">{{ problems.length }}</span>
+									<span v-if="fileSystem.aiByFullPath[ai].errors" class="count error">{{ fileSystem.aiByFullPath[ai].errors }}</span>
+									<span v-if="fileSystem.aiByFullPath[ai].warnings" class="count warning">{{ fileSystem.aiByFullPath[ai].warnings }}</span>
+									<span v-if="fileSystem.aiByFullPath[ai].todos" class="count todo">{{ fileSystem.aiByFullPath[ai].todos }}</span>
 								</div>
 								<div v-if="!problemsCollapsed[ai]">
 									<div v-for="(problem, p) in problems" :key="p" class="problem" @click="jumpProblem(ai, problem)">
@@ -976,8 +978,8 @@
 				margin-left: 5px;
 				border-radius: 10px;
 				font-size: 13px;
-				border: 1px solid #777;
-				color: black;
+				border-width: 1px;
+				border-style: solid;
 				font-weight: 500;
 			}
 		}
@@ -994,6 +996,8 @@
 				padding-left: 6px;
 				color: #999;
 				user-select: none;
+				flex-shrink: 0;
+				padding-right: 8px;
 			}
 		}
 		.error {
