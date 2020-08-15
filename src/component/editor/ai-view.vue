@@ -468,6 +468,15 @@
 		public commentCode() {
 			const start = this.document.getCursor('from').line
 			const end = this.document.getCursor('to').line
+
+			let fullComments = true
+			for (let i = 0; i < end - start + 1; i++) {
+				const line = this.document.getLine(start + i).trim()
+				if (line.length && !line.trim().startsWith('//')) {
+					fullComments = false
+					break
+				}
+			}
 			for (let i = 0; i < end - start + 1; i++) {
 				const line = this.document.getLine(start + i)
 				let pos = 0
@@ -482,7 +491,7 @@
 				if (cuttedLine.length > 0) {
 					const from = {line: start + i, ch: 0}
 					const to = {line: start + i, ch: line.length}
-					if (line.charAt(pos) === "/" && line.charAt(pos + 1) === "/") {
+					if (fullComments) {
 						this.document.replaceRange(line.slice(0, pos) + line.slice(pos + 2), from, to) // Dé-Comment
 					} else {
 						this.document.replaceRange(line.slice(0, pos) + "//" + cuttedLine, from, to) // Comment
