@@ -113,23 +113,31 @@
 							</characteristic-tooltip>
 						</div>
 					</div>
-					<div class="title">{{ $t('main.weapons') }} [{{ currentLeek.weapons.length }}]</div>
-					<div class="weapons">
-						<div class="container">
-							<rich-tooltip-weapon v-for="weapon of currentLeek.weapons" :key="weapon" v-slot="{ on }" :weapon="LeekWars.weapons[weapon]" :instant="true">
-								<img :src="'/image/weapon/' + LeekWars.weapons[weapon].name + '.png'" class="weapon" v-on="on" @click="removeLeekWeapon(weapon)">
-							</rich-tooltip-weapon>
+					<div v-if="currentLeek.bot">
+						<div class="title">
+							{{ $t('main.weapons') }} & {{ $t('main.chips') }}
 						</div>
-						<div v-if="currentLeek.weapons.length < 4" class="add" @click="weaponsDialog = true">+</div>
+						<div>{{ $t('auto_items') }}</div>
 					</div>
-					<br>
-					<div class="title">{{ $t('main.chips') }} [{{ currentLeek.chips.length }}]</div>
-					<div class="chips">
-						<div class="container">
-							<rich-tooltip-chip v-for="chip in currentLeek.chips" :key="chip.id" v-slot="{ on }" :chip="LeekWars.chips[chip]" :instant="true">
-								<img :src="'/image/chip/small/' + LeekWars.chips[chip].name + '.png'" class="chip" v-on="on" @click="removeLeekChip(chip)">
-							</rich-tooltip-chip>
-							<div v-if="currentLeek.chips.length < 20" class="add" @click="chipsDialog = true">+</div>
+					<div v-else>
+						<div class="title">{{ $t('main.weapons') }} [{{ currentLeek.weapons.length }}]</div>
+						<div class="weapons">
+							<div class="container">
+								<rich-tooltip-weapon v-for="weapon of currentLeek.weapons" :key="weapon" v-slot="{ on }" :weapon="LeekWars.weapons[weapon]" :instant="true">
+									<img :src="'/image/weapon/' + LeekWars.weapons[weapon].name + '.png'" class="weapon" v-on="on" @click="removeLeekWeapon(weapon)">
+								</rich-tooltip-weapon>
+								<div v-if="currentLeek.weapons.length < 4" class="add" @click="weaponsDialog = true">+</div>
+							</div>
+						</div>
+						<br>
+						<div class="title">{{ $t('main.chips') }} [{{ currentLeek.chips.length }}]</div>
+						<div class="chips">
+							<div class="container">
+								<rich-tooltip-chip v-for="chip in currentLeek.chips" :key="chip.id" v-slot="{ on }" :chip="LeekWars.chips[chip]" :instant="true">
+									<img :src="'/image/chip/small/' + LeekWars.chips[chip].name + '.png'" class="chip" v-on="on" @click="removeLeekChip(chip)">
+								</rich-tooltip-chip>
+								<div v-if="currentLeek.chips.length < 20" class="add" @click="chipsDialog = true">+</div>
+							</div>
 						</div>
 					</div>
 				</div>
