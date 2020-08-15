@@ -193,7 +193,9 @@
 						"Shift-Ctrl-/": () => this.commentCode(),
 						"Ctrl-K": () => this.removeLine(),
 						"Ctrl-Space": () => this.autocomplete(wrapper.CodeMirror, true),
-						"Shift-Ctrl-F": () => this.formatCode()
+						"Shift-Ctrl-F": () => this.formatCode(),
+						"Alt-Left": () => {},
+						"Alt-Right": () => {}
 					},
 				} as any)
 

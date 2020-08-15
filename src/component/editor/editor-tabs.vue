@@ -126,10 +126,10 @@
 			this.menu = false
 		}
 
-		close(ai: AI) {
+		close(ai: AI, confirm: boolean = true) {
 			if (this.tabs.length === 1) { return }
 			const i = this.tabs.indexOf(ai)
-			if (ai.modified) {
+			if (confirm && ai.modified) {
 				if (!window.confirm(this.$i18n.t('confirm_close', [1]) as string)) {
 					return
 				}
@@ -140,20 +140,17 @@
 				this.openOther(i)
 			}
 			this.currentI = -1
+			this.$emit('close', ai)
 		}
 
 		closeOthers(ai: AI) {
 			this.tabs = []
+			this.$emit('close-all')
 			this.tabs.push(ai)
 			this.save()
 			if (this.$route.path !== '/editor/' + ai.id) {
 				this.$router.push('/editor/' + ai.id)
 			}
-		}
-
-		closeById(id: number) {
-			this.tabs = this.tabs.filter(ai => ai.id !== id)
-			this.save()
 		}
 
 		openOther(i: number) {

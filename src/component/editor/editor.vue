@@ -63,9 +63,9 @@
 					</div>
 				</div>
 			</div>
-			<editor-tabs v-if="!LeekWars.mobile" ref="tabs" :current="currentID" :ais="fileSystem.ais" />
+			<editor-tabs v-if="!LeekWars.mobile" ref="tabs" :current="currentID" :ais="fileSystem.ais" @close="close" @close-all="closeAll" />
 
-			<editor-finder ref="finder" :active="activeAIs" />
+			<editor-finder ref="finder" :active="activeAIs" :history="history" />
 		</div>
 
 		<div class="container last">
@@ -230,6 +230,10 @@
 					<li v-html="$t('shortcut_5')"></li>
 					<li v-html="$t('shortcut_6')"></li>
 					<li v-html="$t('shortcut_7')"></li>
+					<li v-html="$t('shortcut_8')"></li>
+					<li v-html="$t('shortcut_9')"></li>
+					<li v-html="$t('shortcut_10')"></li>
+					<li v-html="$t('shortcut_11')"></li>
 				</ul>
 			</div>
 		</popup>
@@ -311,6 +315,7 @@
 		problemsCollapsed: {[key: string]: boolean} = {}
 		fileSystem = fileSystem
 		fileMenu: boolean = false
+		history: AI[] = []
 		actions_list = [
 			{icon: 'mdi-plus', click: (e: any) => this.add(e)},
 			{icon: 'mdi-cogs', click: () => this.settings() }
@@ -351,6 +356,13 @@
 			}
 
 			fileSystem.init().then(() => {
+
+				// Chargement de l'historique
+				const history = JSON.parse(localStorage.getItem('editor/history') || '[]')
+				for (const id of history) {
+					this.history.push(fileSystem.ais[id])
+				}
+
 				this.update()
 				LeekWars.setTitle(this.$t('title'), this.$t('n_ais', [fileSystem.aiCount]))
 			})
@@ -372,7 +384,9 @@
 				}
 			})
 			this.$root.$on('ctrlP', (event: Event) => {
-				(this.$refs.finder as EditorFinder).open()
+				const finder = this.$refs.finder as EditorFinder
+				finder.search = true
+				finder.open()
 				event.preventDefault()
 			})
 			this.$root.$on('escape', () => {
@@ -391,11 +405,35 @@
 				if (this.currentEditor) {
 					this.currentEditor.editorKeyDown(e)
 				}
+				// Up and down arrows while Alt + Left/right
+				const finder = this.$refs.finder as EditorFinder
+				if (e.altKey && finder.value) {
+					if (e.which === 40) { finder.previous() }
+					else if (e.which === 38) { finder.next() }
+				}
 			})
 			this.$root.$on('keyup', (e: KeyboardEvent) => {
 				if (this.currentEditor) {
 					this.currentEditor.editorKeyUp(e)
 				}
+				if (e.which === 18) {
+					const finder = this.$refs.finder as EditorFinder
+					finder.go(this.history[finder.selected])
+				}
+			})
+			this.$root.$on('previous', (event: Event) => {
+				const finder = this.$refs.finder as EditorFinder
+				finder.search = false
+				finder.open()
+				finder.previous()
+				event.preventDefault()
+			})
+			this.$root.$on('next', (event: Event) => {
+				const finder = this.$refs.finder as EditorFinder
+				finder.search = false
+				finder.open()
+				finder.next()
+				event.preventDefault()
 			})
 			this.$root.$on('back', () => {
 				this.$router.push('/editor')
@@ -445,6 +483,11 @@
 					if (this.$refs.tabs) {
 						(this.$refs.tabs as any).add(this.currentAI)
 					}
+					// Ajout dans l'historique
+					const i = this.history.indexOf(this.currentAI)
+					if (i !== -1) { this.history.splice(i, 1) }
+					this.history.unshift(this.currentAI)
+
 					LeekWars.setTitle(this.currentAI.name)
 					LeekWars.splitShowContent()
 					LeekWars.setActions(this.actions_content)
@@ -480,6 +523,8 @@
 			this.$root.$off('htmlclick')
 			this.$root.$off('keydown')
 			this.$root.$off('keyup')
+			this.$root.$off('previous')
+			this.$root.$off('next')
 			LeekWars.large = false
 			LeekWars.header = true
 			LeekWars.footer = true
@@ -720,7 +765,7 @@
 			Vue.delete(this.$data.activeAIs, '' + ai.id)
 			// Remove from tabs
 			if (this.$refs.tabs) {
-				(this.$refs.tabs as any).closeById(ai.id)
+				(this.$refs.tabs as any).close(ai, false)
 			}
 			// Clear the AI from scenarios
 			(this.$refs.editorTest as any).onAIDeleted(ai.id)
@@ -731,6 +776,19 @@
 			} else {
 				this.$router.replace('/editor')
 			}
+		}
+
+		close(ai: AI) {
+			this.history = this.history.filter(a => a !== ai)
+		}
+
+		closeAll() {
+			this.history = []
+		}
+
+		@Watch('history')
+		updateHistory() {
+			localStorage.setItem('editor/history', JSON.stringify(this.history.map(ai => ai.id)))
 		}
 	}
 </script>
