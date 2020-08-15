@@ -182,7 +182,7 @@
 					continueComments: true,
 					undoDepth: 200,
 					autofocus: true,
-					smartIndent: false,
+					smartIndent: true,
 					cursorHeight: 1,
 					foldGutter: true,
 					gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"],
@@ -421,19 +421,6 @@
 				const add = '})]\'"'
 				let cursor = this.document.getCursor()
 				let nextChar = this.document.getLine(cursor.line)[cursor.ch]
-
-				// Enter
-				if (changes.from.ch === changes.to.ch && changes.from.line === changes.to.line && changes.text.length === 2 && changes.text[0] === '' && changes.text[1] === '') {
-
-					const prevLine = this.document.getLine(cursor.line - 1)
-					const prevChar = prevLine[prevLine.length - 1]
-
-					if (prevChar === '{' && nextChar === '}') {
-						const indent = this.getLineIndentation(cursor.line)
-						this.document.replaceSelection("\t\n" + indent)
-						this.document.setCursor({line: cursor.line, ch: cursor.ch + 1})
-					}
-				}
 
 				// Peut etre une insertion d'un délimiteur
 				if (changes.from.ch === changes.to.ch) {
