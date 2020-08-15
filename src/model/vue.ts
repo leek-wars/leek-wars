@@ -227,6 +227,10 @@ const vueMain = new Vue({
 				this.$emit('ctrlF', event)
 			} else if (event.keyCode === 27) {
 				this.$emit('escape')
+			} else if (event.altKey && event.which === 37) {
+				this.$emit('previous', event)
+			} else if (event.altKey && event.which === 39) {
+				this.$emit('next', event)
 			} else if (event.ctrlKey && event.keyCode === 80) {
 				this.$emit('ctrlP', event)
 			}

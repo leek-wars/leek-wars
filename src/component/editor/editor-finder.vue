@@ -1,6 +1,6 @@
 <template lang="html">
 	<div v-if="value" class="finder" @click.stop>
-		<input ref="input" v-model="query" class="input" type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" @change="change" @keydown="keydown">
+		<input v-if="search" ref="input" v-model="query" class="input" type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" @change="change" @keydown="keydown">
 		<div ref="list" class="results">
 			<div v-for="(result, r) of results" :key="result.ai.id" class="result active" :class="{selected: selected === r}" @click="go(result.ai)">
 				<v-icon v-if="result.ai.errors" class="icon error">mdi-close-circle</v-icon>
@@ -33,6 +33,8 @@
 	@Component({ name: 'editor-finder', components: { } })
 	export default class EditorFinder extends Vue {
 		@Prop({required: true}) active!: {[key: number]: AI}
+		@Prop({required: true}) history!: AI[]
+		search: boolean = true
 		query: string = ''
 		value: boolean = false
 		selected: number = 0
@@ -42,8 +44,7 @@
 			const queryLower = this.query.toLocaleLowerCase()
 
 			if (this.query.length === 0) {
-				for (const id in this.active) {
-					const ai = this.active[id]
+				for (const ai of this.history) {
 					result.push({ai, score: 0, name: [ai.name], type: 1})
 				}
 			} else {
@@ -63,17 +64,20 @@
 		open() {
 			this.value = true
 			this.query = ''
-			setTimeout(() => (this.$refs.input as HTMLElement).focus(), 20)
+			if (this.search) {
+				setTimeout(() => (this.$refs.input as HTMLElement).focus(), 20)
+			}
 		}
 		close() {
 			this.value = false
+			this.selected = 0
 		}
 
 		go(ai: AI) {
 			if (this.$route.path !== '/editor/' + ai.id) {
 				this.$router.push('/editor/' + ai.id)
 			}
-			this.value = false
+			this.close()
 		}
 
 		keydown(event: KeyboardEvent) {
@@ -86,6 +90,27 @@
 				this.go(this.results[this.selected].ai)
 				this.value = false
 			}
+			this.updateScroll()
+		}
+
+		change() {
+			setTimeout(() => {
+				this.selected = 0
+			}, 20)
+		}
+
+		previous() {
+			this.selected = (this.selected + 1) % this.results.length
+			this.updateScroll()
+		}
+
+		next() {
+			this.selected--
+			if (this.selected < 0) { this.selected = this.results.length - 1 }
+			this.updateScroll()
+		}
+
+		updateScroll() {
 			Vue.nextTick(() => {
 				const height = 30
 				const list = this.$refs.list as HTMLElement
@@ -95,12 +120,6 @@
 					list.scrollTop = (this.selected - 2) * height
 				}
 			})
-		}
-
-		change() {
-			setTimeout(() => {
-				this.selected = 0
-			}, 20)
 		}
 
 		score(path: string, file: string, query: string, query_lower: string) {
