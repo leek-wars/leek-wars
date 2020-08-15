@@ -30,5 +30,7 @@
 	"VALUE_NOT_ITERABLE" : "Cette valeur « {0} » de type {1} n'est pas itérable",
 	"INVALID_MAP_KEY": "Cette clé « {0} » d'accès à la map « {1} » doit être un nombre, mais est de type {2}",
 	"NO_SUCH_ATTRIBUTE": "L'attribut « {0} » n'existe pas dans la classe {1}",
-	"VALUE_MUST_BE_A_CONTAINER": "Cette valeur « {0} » doit être un conteneur"
+	"VALUE_MUST_BE_A_CONTAINER": "Cette valeur « {0} » doit être un conteneur",
+
+	"TODO": "{0}"
 }

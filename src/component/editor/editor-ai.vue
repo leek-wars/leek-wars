@@ -8,6 +8,7 @@
 				<span class="text">{{ ai.name }}</span>
 				<span v-if="ai.errors" class="count error">{{ ai.errors }}</span>
 				<span v-if="ai.warnings" class="count warning">{{ ai.warnings }}</span>
+				<span v-if="ai.todos" class="count todo">{{ ai.todos }}</span>
 				<tooltip v-if="ai.v2">
 					<template v-slot:activator="{ on }">
 						<span class="v2" v-on="on">V2</span>
@@ -57,11 +58,11 @@
 		white-space: nowrap;
 		text-overflow: ellipsis;
 		overflow: hidden;
-		&.error {
-			color: red;
-		}
 		&.warning {
 			color: #ff9100;
+		}
+		&.error {
+			color: red;
 		}
 	}
 	#app.app .item .label {
@@ -110,6 +111,10 @@
 		&.warning {
 			color: #ff9100;
 			border: 1px solid #ff9100;
+		}
+		&.todo {
+			color: #0099ff;
+			border: 1px solid #0099ff;
 		}
 	}
 </style>
