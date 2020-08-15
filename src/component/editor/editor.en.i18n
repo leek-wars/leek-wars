@@ -67,7 +67,7 @@
 	"shortcut_2": "<b>Ctrl + Q</b> : run a test",
 	"shortcut_3": "<b>Ctrl + D</b> : duplicate the line or the selected text",
 	"shortcut_4": "<b>Ctrl + K</b> : delete the current line",
-	"shortcut_5": "<b>Ctrl + E</b> : comment/uncomment the current line",
+	"shortcut_5": "<b>Ctrl + E</b> or <b>Ctrl + /</b> : comment/uncomment the current line",
 	"shortcut_6": "<b>Ctrl + P</b> : open a file",
 	"shortcut_7": "<b>Ctrl + F</b> : search in current file",
 	"shortcut_8": "<b>Alt + left/right</b> : switch between opened files",

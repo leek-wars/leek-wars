@@ -67,7 +67,7 @@
 	"shortcut_2": "<b>Ctrl + Q</b> : lancer un test",
 	"shortcut_3": "<b>Ctrl + D</b> : dupliquer la ligne ou la sélection courante",
 	"shortcut_4": "<b>Ctrl + K</b> : supprimer la ligne courante",
-	"shortcut_5": "<b>Ctrl + E</b> : commenter/décommenter la ligne courante",
+	"shortcut_5": "<b>Ctrl + E</b> ou <b>Ctrl + /</b> : commenter/décommenter la ligne courante",
 	"shortcut_6": "<b>Ctrl + P</b> : ouvrir un fichier",
 	"shortcut_7": "<b>Ctrl + F</b> : rechercher dans le fichier courant",
 	"shortcut_8": "<b>Alt + gauche/droite</b> : basculer entre les fichiers ouverts",
