@@ -114,31 +114,54 @@
 								<span class="line">ligne {{ problem[0] }}</span>
 							</div>
 						</div>
-					</div>
-				</div>
-				<div v-if="enableAnalyzer" class="status">
-					<div v-ripple class="problems" @click="toggleProblems">
-						<span v-if="LeekWars.analyzer.error_count + LeekWars.analyzer.warning_count === 0" class="no-error">
-							<v-icon>mdi-check-circle</v-icon> Aucun problème
-						</span>
-						<span v-else>
-							<span v-if="LeekWars.analyzer.error_count" class="errors">
-								<v-icon>mdi-close-circle</v-icon> {{ LeekWars.analyzer.error_count }} erreurs
-							</span>
-							<span v-if="LeekWars.analyzer.warning_count" class="warnings">
-								<v-icon>mdi-alert-circle</v-icon> {{ LeekWars.analyzer.warning_count }} warnings
-							</span>
-						</span>
-					</div>
-					<div class="filler"></div>
-					<div class="state">
-						<div v-if="LeekWars.analyzer.running == 0" class="ready">
-							Prêt
-							<v-icon>mdi-check</v-icon>
+
+						<div v-if="enableAnalyzer && showProblemsDetails && problemsHeight && (LeekWars.analyzer.error_count || LeekWars.analyzer.warning_count || LeekWars.analyzer.todo_count)" class="problems-details" :style="{height: problemsHeight + 'px'}">
+							<div class="problems-resizer" @mousedown="problemsResizerMousedown"></div>
+							<div v-for="(problems, ai) in LeekWars.analyzer.problems" v-if="problems.length" :key="ai">
+								<div class="file" @click="toggleProblemFile(ai)">
+									<v-icon>{{ problemsCollapsed[ai] ? 'mdi-chevron-right' : 'mdi-chevron-down' }}</v-icon>
+									{{ ai }}
+									<span class="count error">{{ problems.length }}</span>
+								</div>
+								<div v-if="!problemsCollapsed[ai]">
+									<div v-for="(problem, p) in problems" :key="p" class="problem" @click="jumpProblem(ai, problem)">
+										<v-icon v-if="problem[4] === 0" class="error">mdi-close-circle-outline</v-icon>
+										<v-icon v-else-if="problem[4] === 1" class="warning">mdi-alert-circle-outline</v-icon>
+										<v-icon v-else class="todo">mdi-format-list-checks</v-icon>
+										{{ $t('ls_error.' + problem[5], problem[6]) }}
+										<span class="line">ligne {{ problem[0] }}</span>
+									</div>
+								</div>
+							</div>
 						</div>
-						<div v-else class="running">
-							En cours d'analyse
-							<v-icon>mdi-sync</v-icon>
+						<div v-if="enableAnalyzer" class="status">
+							<div v-ripple class="problems" @click="toggleProblems">
+								<span v-if="LeekWars.analyzer.error_count + LeekWars.analyzer.warning_count + LeekWars.analyzer.todo_count === 0" class="no-error">
+									<v-icon>mdi-check-circle</v-icon> Aucun problème
+								</span>
+								<span v-else>
+									<span v-if="LeekWars.analyzer.error_count" class="errors">
+										<v-icon>mdi-close-circle</v-icon> {{ LeekWars.analyzer.error_count }} erreurs
+									</span>
+									<span v-if="LeekWars.analyzer.warning_count" class="warnings">
+										<v-icon>mdi-alert-circle</v-icon> {{ LeekWars.analyzer.warning_count }} warnings
+									</span>
+									<span v-if="LeekWars.analyzer.todo_count" class="todos">
+										<v-icon>mdi-format-list-checks</v-icon> {{ LeekWars.analyzer.todo_count }} todos
+									</span>
+								</span>
+							</div>
+							<div class="filler"></div>
+							<div class="state">
+								<div v-if="LeekWars.analyzer.running == 0" class="ready">
+									Prêt
+									<v-icon>mdi-check</v-icon>
+								</div>
+								<div v-else class="running">
+									En cours d'analyse
+									<v-icon>mdi-sync</v-icon>
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -981,6 +1004,10 @@
 			color: #ff9100;
 			margin-right: 4px;
 		}
+		.todo {
+			color: #0099ff;
+			margin-right: 4px;
+		}
 	}
 	.status {
 		flex: 0 0 36px;
@@ -1006,6 +1033,9 @@
 			}
 			.warnings {
 				color: #ff9100;
+			}
+			.todos {
+				color: #0099ff;
 			}
 		}
 		.filler {

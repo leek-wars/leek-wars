@@ -10,6 +10,7 @@ class Analyzer {
 	public problems: {[key: string]: any[]} = {}
 	public error_count: number = 0
 	public warning_count: number = 0
+	public todo_count: number = 0
 	public promise!: Promise<any>
 
 	private initialized: boolean = false
@@ -49,15 +50,18 @@ class Analyzer {
 	public updateCount() {
 		let errors = 0
 		let warnings = 0
+		let todos = 0
 		for (const ai in this.problems) {
 			// console.log(this.problems[ai])
 			for (const problem of this.problems[ai]) {
 				if (problem[4] === 0) { errors++ }
 				else if (problem[4] === 1) { warnings++ }
+				else if (problem[4] === 2) { todos++ }
 			}
 		}
 		this.error_count = errors
 		this.warning_count = warnings
+		this.todo_count = todos
 	}
 
 	public hover(ai: AI, position: number) {
@@ -157,12 +161,14 @@ class Analyzer {
 		const aiObject = fileSystem.aiByFullPath[ai]
 		Vue.set(aiObject, "errors", problems.filter((p: any) => p[4] === 0).length)
 		Vue.set(aiObject, "warnings", problems.filter((p: any) => p[4] === 1).length)
+		Vue.set(aiObject, "todos", problems.filter((p: any) => p[4] === 2).length)
 
 		// Update parent folders
 		let current = fileSystem.folderById[aiObject.folder] as Folder | null
 		while (current) {
 			current.errors = current.items.reduce((s, i) => s + (i.folder ? (i as Folder).errors : (i as AIItem).ai.errors), 0)
 			current.warnings = current.items.reduce((s, i) => s + (i.folder ? (i as Folder).warnings : (i as AIItem).ai.warnings), 0)
+			current.todos = current.items.reduce((s, i) => s + (i.folder ? (i as Folder).todos : (i as AIItem).ai.todos), 0)
 			current = current.id === 0 ? null : fileSystem.folderById[current.parent]
 		}
 	}

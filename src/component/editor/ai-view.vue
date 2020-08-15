@@ -217,8 +217,22 @@
 					}
 					return null
 				}}
+				const overlay_todo = { token: (stream: any) => {
+					if (stream.match(/TODO/, false)) {
+						if (stream.match(/TODO([^\w]|$)/)) {
+							return "todo"
+						} else {
+							stream.next()
+						}
+					}
+					if (!stream.skipTo("TODO")) {
+						stream.skipToEnd()
+					}
+					return null
+				}}
 				this.editor.addOverlay(overlay_javadoc)
 				this.editor.addOverlay(overlay_ref)
+				this.editor.addOverlay(overlay_todo)
 
 				this.document = this.editor.getDoc()
 
@@ -325,6 +339,7 @@
 			if (this.errors.length === 0) { return }
 			const error_by_line = {} as any
 			for (const error of errors) {
+				if (error[4] >= 2) { continue }
 				if (!(error[0] in error_by_line)) { error_by_line[error[0]] = [] }
 				error_by_line[error[0]].push([error[1], error[3]])
 			}

@@ -2,7 +2,7 @@
 	color: #007f00;
 }
 .cm-string {
-	color: #ff901e;
+	color: #ff781e;
 }
 .cm-keyword, .cm-variable-declaration, .cm-function-declaration {
 	color: #00007f;
@@ -99,6 +99,9 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {
 }
 .cm-comment-multi.cm-ref {
 	color: #5fad1b;
+}
+.cm-comment-multi.cm-todo, .cm-comment.cm-todo {
+	font-weight: bold;
 }
 .cm-underlined:after {
 	position: absolute;

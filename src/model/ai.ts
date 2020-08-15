@@ -20,6 +20,7 @@ class AI {
 	public selected: boolean = false
 	public errors: number = 0
 	public warnings: number = 0
+	public todos: number = 0
 
 	constructor(data: any) {
 		Object.assign(this, data)

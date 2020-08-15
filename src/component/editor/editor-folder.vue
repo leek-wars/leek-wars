@@ -7,6 +7,7 @@
 				<span ref="name" class="text">{{ folder.name }}</span>
 				<span v-if="folder.errors" class="count error">{{ folder.errors }}</span>
 				<span v-if="folder.warnings" class="count warning">{{ folder.warnings }}</span>
+				<span v-if="folder.todos" class="count todo">{{ folder.todos }}</span>
 			</div>
 			<div v-if="folder.expanded" :class="{dragging: dragging}" class="content">
 				<template v-for="(item, i) in folder.items">
@@ -89,11 +90,11 @@
 		white-space: nowrap;
 		text-overflow: ellipsis;
 		overflow: hidden;
-		&.error {
-			color: red;
-		}
 		&.warning {
 			color: #ff9100;
+		}
+		&.error {
+			color: red;
 		}
 	}
 	.item.selected > .label {
@@ -176,6 +177,10 @@
 		&.warning {
 			color: #ff9100;
 			border: 1px solid #ff9100;
+		}
+		&.todo {
+			color: #0099ff;
+			border: 1px solid #0099ff;
 		}
 	}
 </style>
