@@ -929,8 +929,8 @@
 		public updateIncludes() {
 			// console.log("Update includes", this.ai.name)
 			this.ai.includes = []
-			const code = this.ai.code
-			const regex = /include\s*\(\s*(?:"|')(.*?)(?:"|')\s*\)/gm
+			const code = this.document.getValue() || this.ai.code
+			const regex = /include\s*\(\s*["'](.*?)["']\s*\)/gm
 			let m
 			while (m = regex.exec(code)) {
 				const path = m[1]
