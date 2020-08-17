@@ -140,13 +140,17 @@
 
 				<p>{{ $t('editor_8') }}
 					<ul>
-						<li v-html="$t('editor_shortcut_1')"></li>
-						<li v-html="$t('editor_shortcut_2')"></li>
-						<li v-html="$t('editor_shortcut_3')"></li>
-						<li v-html="$t('editor_shortcut_4')"></li>
-						<li v-html="$t('editor_shortcut_5')"></li>
-						<li v-html="$t('editor_shortcut_6')"></li>
-						<li v-html="$t('editor_shortcut_7')"></li>
+						<li v-html="$t('shortcut.shortcut_1')"></li>
+						<li v-html="$t('shortcut.shortcut_2')"></li>
+						<li v-html="$t('shortcut.shortcut_3')"></li>
+						<li v-html="$t('shortcut.shortcut_4')"></li>
+						<li v-html="$t('shortcut.shortcut_5')"></li>
+						<li v-html="$t('shortcut.shortcut_6')"></li>
+						<li v-html="$t('shortcut.shortcut_7')"></li>
+						<li v-html="$t('shortcut.shortcut_8')"></li>
+						<li v-html="$t('shortcut.shortcut_9')"></li>
+						<li v-html="$t('shortcut.shortcut_10')"></li>
+						<li v-html="$t('shortcut.shortcut_11')"></li>
 					</ul>
 				</p>
 
