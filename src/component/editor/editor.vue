@@ -106,12 +106,16 @@
 							{{ ai }}
 							<span class="count error">{{ problems.length }}</span>
 						</div>
-						<div v-if="!problemsCollapsed[ai]">
-							<div v-for="(problem, p) in problems" :key="p" class="problem" @click="jumpProblem(ai, problem)">
-								<v-icon v-if="problem[4] === 0" class="error">mdi-close-circle-outline</v-icon>
-								<v-icon v-else class="warning">mdi-alert-circle-outline</v-icon>
-								{{ $t('ls_error.' + problem[5], problem[6]) }}
-								<span class="line">ligne {{ problem[0] }}</span>
+						<div v-if="currentEditor" class="compilation">
+							<div v-if="currentEditor.saving" class="compiling">
+								<loader :size="15" /> {{ $t('saving') }}
+							</div>
+							<div class="results">
+								<div v-for="(good, g) in goods" :key="g" class="good" v-html="'✓ ' + (good.ai !== currentAI ? currentAI.name + ' ➞ ' : '') + $t('valid_ai', [good.ai.name])"></div>
+								<div v-if="currentEditor.serverError" class="error" @click="currentEditor.serverError = false">× <i>{{ $t('server_error') }}</i></div>
+								<div v-for="(error, e) in errors" :key="e" class="error" @click="errors.splice(e, 1)">
+									× <span v-html="$t('ai_error', [error.ai, error.line])"></span> ▶ {{ error.message }}
+								</div>
 							</div>
 						</div>
 
@@ -607,6 +611,7 @@
 			}).error(() => {
 				if (this.currentEditor === null) { return }
 				this.currentEditor.serverError = true
+				this.currentEditor.saving = false
 			})
 		}
 		startDelete() {
