@@ -32,10 +32,10 @@
 		</div>
 		<div v-show="detailDialog" v-if="detailDialogContent" ref="detailDialog" :style="{left: detailDialogLeft + 'px', bottom: (!detailDialogAtBottom ? detailDialogTop + 'px' : 'auto'), top: (detailDialogAtBottom ? detailDialogTop + 'px' : 'auto'), 'max-height': detailDialogMaxHeight + 'px'}" class="detail-dialog" :class="{active: detailsDialogActive}" @mousemove="detailsDialogEnter" @mouseleave="detailsDialogLeave">
 			<template v-if="detailDialogContent.keyword">
-				<documentation-function v-if="detailDialogContent.keyword.type === 'function'" :fun="detailDialogContent.keyword.function" />
-				<documentation-constant v-else-if="detailDialogContent.keyword.type === 'constant'" :constant="detailDialogContent.keyword.constant" />
-				<weapon-preview v-else-if="detailDialogContent.keyword.details.type === 'weapon'" :weapon="detailDialogContent.keyword.details.weapon" />
-				<chip-preview v-else-if="detailDialogContent.keyword.details.type === 'chip'" :chip="detailDialogContent.keyword.details.chip" />
+				<documentation-function v-if="detailDialogContent.keyword.type === 'function'" :fun="detailDialogContent.keyword.function" class="main" />
+				<documentation-constant v-else-if="detailDialogContent.keyword.type === 'constant'" :constant="detailDialogContent.keyword.constant" class="main" />
+				<weapon-preview v-else-if="detailDialogContent.keyword.details.type === 'weapon'" :weapon="detailDialogContent.keyword.details.weapon" class="main" />
+				<chip-preview v-else-if="detailDialogContent.keyword.details.type === 'chip'" :chip="detailDialogContent.keyword.details.chip" class="main" />
 				<div class="divider"></div>
 			</template>
 			<template v-if="detailDialogContent.details.defined">
@@ -1191,13 +1191,17 @@
 		z-index: 100;
 		background: #f7f7f7;
 		border: 1px solid #ccc;
-		overflow-y: auto;
+		display: flex;
+		flex-direction: column;
 		&.active {
 			box-shadow: 0px 3px 1px -2px rgba(0, 0, 0, 0.2), 0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 1px 5px 0px rgba(0, 0, 0, 0.12);
 		}
 		> * {
 			display: block;
 			padding: 5px 8px;
+		}
+		.main {
+			overflow-y: auto;
 		}
 		::v-deep .doc-constant.item {
 			padding: 0 !important;
