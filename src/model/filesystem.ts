@@ -27,6 +27,9 @@ class FileSystem {
 					folders[folder.id] = folder
 					this.items[folder.name] = folder
 				}
+				for (const id in data.ais) {
+					data.ais[id] = new AI(data.ais[id])
+				}
 				this.leekAIs = data.leek_ais
 				this.aiCount = LeekWars.objectSize(data.ais)
 				const buildFolder = (id: number, parent: number): Folder => {
@@ -50,11 +53,6 @@ class FileSystem {
 				for (const ai of data.ais) {
 					ai.path = this.getAIFullPath(ai)
 					ai.folderpath = this.getFolderPath(this.folderById[ai.folder])
-					Vue.set(ai, 'modified', false)
-					Vue.set(ai, 'selected', false)
-					Vue.set(ai, 'errors', 0)
-					Vue.set(ai, 'warnings', 0)
-					Vue.set(ai, 'todos', 0)
 					Vue.set(this.ais, '' + ai.id, ai)
 					Vue.set(this.aiByFullPath, ai.path, ai)
 					this.items[ai.name] = ai

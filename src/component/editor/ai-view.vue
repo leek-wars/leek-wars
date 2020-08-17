@@ -930,7 +930,7 @@
 			// console.log("Update includes", this.ai.name)
 			this.ai.includes = []
 			const code = this.ai.code
-			const regex = /include\s*\(\s*"(.*?)"\s*\)/gm
+			const regex = /include\s*\(\s*(?:"|')(.*?)(?:"|')\s*\)/gm
 			let m
 			while (m = regex.exec(code)) {
 				const path = m[1]
@@ -944,6 +944,12 @@
 					})
 				} else {
 					console.warn("Included not found", path, this.ai.folder, included)
+				}
+			}
+			for (const entrypoint_id of this.ai.entrypoints) {
+				const entrypoint = fileSystem.ais[entrypoint_id]
+				if (entrypoint) {
+					this.$emit("load", entrypoint)
 				}
 			}
 		}
