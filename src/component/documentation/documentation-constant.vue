@@ -1,5 +1,5 @@
 <template lang="html">
-	<div v-if="constant" class="doc-constant" :class="{item: is_weapon || is_chip}">
+	<div v-if="constant" class="doc-constant" :class="{item: is_weapon || is_chip, deprecated: constant.deprecated}">
 		<h2 v-if="!is_weapon && !is_chip">{{ constant.name }}</h2>
 		<div v-if="constant.deprecated" class="deprecated-message">Cette constante est dépréciée.</div>
 		<chip-preview v-if="is_chip" :chip="LeekWars.chips[constant.value]" />
