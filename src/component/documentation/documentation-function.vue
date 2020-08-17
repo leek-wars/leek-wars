@@ -4,7 +4,7 @@
 			{{ fun.name }}(<span v-for="(arg, i) in fun.arguments_names" :key="i"><span v-if="fun.arguments_types[i] != -1" class="argument">{{ $t('doc.arg_type_' + fun.arguments_types[i]) }}</span><span v-else class="argument">?</span>&nbsp;{{ arg }}<span v-if="i < fun.arguments_names.length - 1">, </span>
 			</span>)
 			<span v-if="fun.return_type != 0">
-				<span class="arrow">→</span> <span v-if="fun.return_type != -1" class="argument"> {{ $t('doc.arg_type_' + fun.return_type) }}</span><span v-else>?</span>&nbsp;{{ fun.return_name }}
+				<span class="arrow">→</span> <span v-if="fun.return_type != -1" class="argument"> {{ $t('doc.arg_type_' + fun.return_type) }}</span><span v-else class="argument">?</span>&nbsp;{{ fun.return_name }}
 			</span>
 		</h2>
 		<div v-if="fun.deprecated" class="deprecated-message">Cette fonction est dépréciée.</div>
@@ -42,27 +42,28 @@
 
 <style lang="scss" scoped>
 	h2 {
-		margin-bottom: 10px;
-		font-size: 20px;
-		color: #333;
+		margin-bottom: 12px;
+		font-size: 18px;
+		color: #111;
 	}
 	h4 {
 		font-weight: 500;
 		margin: 0;
-		color: #666;
+		color: #111;
 		margin-top: 10px;
 		margin-bottom: 8px;
 		font-size: 15px;
 	}
 	.argument {
-		color: #5fad1b;
+		color: #0000D0;
+		font-weight: bold;
 	}
 	.operations {
 		padding-top: 5px;
 	}
 	.arrow {
 		font-size: 30px;
-		line-height: 18px;
+		line-height: 15px;
 		vertical-align: top;
 	}
 	::v-deep a {
