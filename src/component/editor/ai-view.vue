@@ -1211,6 +1211,14 @@
 				margin: 10px;
 			}
 		}
+		::v-deep .deprecated {
+			opacity: 0.6;
+		}
+		::v-deep .deprecated-message {
+			color: #ff7f00;
+			font-weight: bold;
+			margin: 10px 0;
+		}
 		.divider {
 			padding: 0;
 			height: 1px;
@@ -1228,11 +1236,6 @@
 				background: none;
 			}
 		}
-	}
-	.details ::v-deep .deprecated-message {
-		color: #ff7f00;
-		font-weight: bold;
-		margin: 10px 0;
 	}
 	.search-panel {
 		height: 40px;
