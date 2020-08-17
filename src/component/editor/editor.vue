@@ -223,17 +223,17 @@
 				<div class="title">{{ $t('shortcuts') }}</div>
 
 				<ul class="shortcuts">
-					<li v-html="$t('shortcut_1')"></li>
-					<li v-html="$t('shortcut_2')"></li>
-					<li v-html="$t('shortcut_3')"></li>
-					<li v-html="$t('shortcut_4')"></li>
-					<li v-html="$t('shortcut_5')"></li>
-					<li v-html="$t('shortcut_6')"></li>
-					<li v-html="$t('shortcut_7')"></li>
-					<li v-html="$t('shortcut_8')"></li>
-					<li v-html="$t('shortcut_9')"></li>
-					<li v-html="$t('shortcut_10')"></li>
-					<li v-html="$t('shortcut_11')"></li>
+					<li v-html="$t('shortcut.shortcut_1')"></li>
+					<li v-html="$t('shortcut.shortcut_2')"></li>
+					<li v-html="$t('shortcut.shortcut_3')"></li>
+					<li v-html="$t('shortcut.shortcut_4')"></li>
+					<li v-html="$t('shortcut.shortcut_5')"></li>
+					<li v-html="$t('shortcut.shortcut_6')"></li>
+					<li v-html="$t('shortcut.shortcut_7')"></li>
+					<li v-html="$t('shortcut.shortcut_8')"></li>
+					<li v-html="$t('shortcut.shortcut_9')"></li>
+					<li v-html="$t('shortcut.shortcut_10')"></li>
+					<li v-html="$t('shortcut.shortcut_11')"></li>
 				</ul>
 			</div>
 		</popup>
