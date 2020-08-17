@@ -360,7 +360,9 @@
 				// Chargement de l'historique
 				const history = JSON.parse(localStorage.getItem('editor/history') || '[]')
 				for (const id of history) {
-					this.history.push(fileSystem.ais[id])
+					if (id in fileSystem.ais) {
+						this.history.push(fileSystem.ais[id])
+					}
 				}
 
 				this.update()
