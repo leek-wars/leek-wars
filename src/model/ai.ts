@@ -21,9 +21,15 @@ class AI {
 	public errors: number = 0
 	public warnings: number = 0
 	public todos: number = 0
+	public equipped: boolean = false
+	public entrypoints: number[] = []
 
 	constructor(data: any) {
 		Object.assign(this, data)
+	}
+
+	get entrypoint() {
+		return this.equipped || this.entrypoints.length === 0
 	}
 }
 export { AI }

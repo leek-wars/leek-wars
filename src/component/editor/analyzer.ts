@@ -18,6 +18,7 @@ class Analyzer {
 	private GeneratorComplete!: Function
 	private GeneratorHover!: Function
 	private GeneratorRegister!: Function
+	private GeneratorAddEntrypoint!: Function
 	private getExceptionMessage!: Function
 
 	public init() {
@@ -30,10 +31,11 @@ class Analyzer {
 				onRuntimeInitialized: () => {
 					// console.log("Module initialized", Module)
 					Module.ccall('init')
-					this.GeneratorAnalyze = Module.cwrap('analyze', 'string', ['boolean', 'string', 'string'])
+					this.GeneratorAnalyze = Module.cwrap('analyze', 'string', ['boolean', 'string', 'string', 'boolean'])
 					this.GeneratorComplete = Module.cwrap('complete', 'string', ['boolean', 'string', 'number'])
-					this.GeneratorHover = Module.cwrap('hover', 'string', ['boolean', 'string', 'number'])
+					this.GeneratorHover = Module.cwrap('hover', 'string', ['boolean', 'string', 'number', 'boolean'])
 					this.GeneratorRegister = Module.cwrap('register_', 'void', ['boolean', 'string'])
+					this.GeneratorAddEntrypoint = Module.cwrap('addEntrypoint', 'void', ['boolean', 'string', 'boolean', 'string'])
 					this.getExceptionMessage = Module.cwrap('getExceptionMessage', 'string', ['number'])
 
 					// console.log(this.GeneratorAnalyze(false, "Fight.toto"))
@@ -73,7 +75,7 @@ class Analyzer {
 		// console.time("hover")
 		return this.promise.then(() => {
 			try {
-				const data = this.GeneratorHover(!ai.v2, ai.path, position)
+				const data = this.GeneratorHover(!ai.v2, ai.path, position, ai.entrypoint)
 				const result = JSON.parse(data)
 				// console.log(result)
 				return Promise.resolve(result)
@@ -88,15 +90,18 @@ class Analyzer {
 
 		if (!this.enabled) { return Promise.reject() }
 
-		console.log("Analyze", ai.path)
-
 		// console.log("Chain promise")
 		return this.promise.then(() => {
+
+			this.registerEntrypoints(ai)
+
+			console.log("🔥 Analyze", ai.path, {entrypoint: ai.entrypoint})
+
 			this.running = 1
 			return new Promise((resolve, reject) => setTimeout(() => {
 				try {
 					console.time("analyze")
-					const result = JSON.parse(this.GeneratorAnalyze(!ai.v2, ai.path, code))
+					const result = JSON.parse(this.GeneratorAnalyze(!ai.v2, ai.path, code, ai.entrypoint))
 					// console.log(result)
 					for (const path in result) {
 						const problems = result[path]
@@ -110,7 +115,7 @@ class Analyzer {
 					const problems = [ [0, 0, 0, 0, 1, "ANALYZER_CRASHED"] ]
 					this.setAIProblems(ai.path, problems)
 					try {
-						console.error(this.getExceptionMessage(e))
+						// console.error(this.getExceptionMessage(e))
 					} catch (e2) {
 						// nothing
 					}
@@ -128,10 +133,14 @@ class Analyzer {
 
 		if (!this.enabled) { return Promise.reject() }
 
-		console.log("Register", ai.path)
+		// console.log("Register", ai.path)
 
 		return this.promise.then(() => {
+
 			this.GeneratorRegister(!ai.v2, ai.path)
+
+			this.registerEntrypoints(ai)
+
 			return Promise.resolve()
 		})
 	}
@@ -153,6 +162,16 @@ class Analyzer {
 		// console.log(this.error_count)
 
 		return Promise.resolve(result)
+	}
+
+	private registerEntrypoints(ai: AI) {
+		for (const entrypoint_id of ai.entrypoints) {
+			const entrypoint = fileSystem.ais[entrypoint_id]
+			if (entrypoint) {
+				// console.log("Add entrypoint", ai.path, "==>", entrypoint.path)
+				this.GeneratorAddEntrypoint(!ai.v2, ai.path, !entrypoint.v2, entrypoint.path)
+			}
+		}
 	}
 
 	private setAIProblems(ai: string, problems: any) {
