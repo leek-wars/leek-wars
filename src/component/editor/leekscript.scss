@@ -51,12 +51,12 @@
 	background: #76d820;
 	padding: 3px 0;
 }
-.cm-highlight-error {
+.cm-error {
 	background: rgba(255, 0, 0, 0.15);
 	padding: 3px 0;
 	position: relative;
 }
-.cm-highlight-error:after {
+.cm-error:after {
 	position: absolute;
 	top: 0;
 	bottom: -3px;
@@ -68,9 +68,22 @@
 	background-repeat: repeat-x;
 	background-position: left bottom;
 }
-.cm-highlight-warning {
-	background: #ffdd9f;
+.cm-warning {
+	background: #ffe3be;
 	padding: 3px 0;
+	position: relative;
+}
+.cm-warning:after {
+	position: absolute;
+	top: 0;
+	bottom: -3px;
+	left: 0;
+	right: 0;
+	content: "";
+	width: 100%;
+	background-image: url("/image/squiggle_w.gif");
+	background-repeat: repeat-x;
+	background-position: left bottom;
 }
 .cm-hover {
 	background: rgba(119, 255, 0, 0.5);
