@@ -45,7 +45,16 @@
 				</i18n>
 				<div class="divider"></div>
 			</template>
-			<lw-type v-if="detailDialogContent.details.type" :type="detailDialogContent.details.type" />
+			<template v-if="detailDialogContent.details.type">
+				<div v-if="detailDialogContent.details.type.name === 'function' && detailDialogContent.details.alias">
+					<lw-type :type="detailDialogContent.details.type.args[0]" />
+					{{ detailDialogContent.details.alias }}
+					<lw-type :type="detailDialogContent.details.type.args[1]" />
+					=
+					<lw-type :type="detailDialogContent.details.type.return" />
+				</div>
+				<lw-type v-else :type="detailDialogContent.details.type" />
+			</template>
 			<template v-if="errorTooltip">
 				<div class="divider"></div>
 				<div v-if="errorLevel === 0" class="error"><v-icon class="error">mdi-close-circle-outline</v-icon> {{ errorTooltipText }}</div>
