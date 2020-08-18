@@ -48,7 +48,8 @@
 			<lw-type v-if="detailDialogContent.details.type" :type="detailDialogContent.details.type" />
 			<template v-if="errorTooltip">
 				<div class="divider"></div>
-				<div class="error"><v-icon class="error">mdi-close-circle-outline</v-icon> {{ errorTooltipText }}</div>
+				<div v-if="errorLevel === 0" class="error"><v-icon class="error">mdi-close-circle-outline</v-icon> {{ errorTooltipText }}</div>
+				<div v-else class="warning"><v-icon class="warning">mdi-alert-circle-outline</v-icon> {{ errorTooltipText }}</div>
 			</template>
 		</div>
 		<loader v-if="loading" />
@@ -147,6 +148,7 @@
 		public errors!: any[]
 		public errorTooltip: boolean = false
 		public errorTooltipText: string = ''
+		public errorLevel: number = 0
 		public searchEnabled: boolean = false
 		public searchCurrent: number = 0
 		public searchQuery: string = ''
@@ -351,7 +353,7 @@
 			for (const error of errors) {
 				if (error[4] >= 2) { continue }
 				if (!(error[0] in error_by_line)) { error_by_line[error[0]] = [] }
-				error_by_line[error[0]].push([error[1], error[3]])
+				error_by_line[error[0]].push([error[1], error[3], error[4]])
 			}
 			// console.log(error_by_line)
 			const overlay = { token: (stream: any) => {
@@ -363,7 +365,7 @@
 						if (pos === error[0]) {
 							let len = Math.max(1, error[1] - error[0])
 							stream.eatWhile(() => len-- >= 0)
-							return "highlight-error"
+							return error[2] === 0 ? "error" : "warning"
 						}
 						if (pos <= error[1]) {
 							let len = error[0] - pos
@@ -720,9 +722,10 @@
 						let shown = false
 						for (const er in this.errors) {
 							const error = this.errors[er]
-							if (error[0] === editorPos.line + 1 && error[1] <= editorPos.ch && error[3] > editorPos.ch) {
+							if (error[0] === editorPos.line + 1 && error[1] <= editorPos.ch && error[3] >= editorPos.ch) {
 								this.errorTooltipText = i18n.t('ls_error.' + error[5], error[6]) as string
 								this.errorTooltip = true
+								this.errorLevel = error[4]
 								shown = true
 								break
 							}
@@ -1228,16 +1231,26 @@
 			height: 1px;
 			background: #ccc;
 		}
-		> .error {
+		> .error, > .warning {
 			display: flex;
 			align-items: center;
-			background: rgba(255, 0, 0, 0.1);
 			padding: 5px 8px;
 			.v-icon {
-				color: red;
 				margin-right: 4px;
 				font-size: 20px;
 				background: none;
+			}
+		}
+		> .error {
+			background: rgba(255, 0, 0, 0.1);
+			.v-icon {
+				color: red;
+			}
+		}
+		> .warning {
+			background: rgba(255, 145, 0, 0.1);
+			.v-icon {
+				color: #ff9100;
 			}
 		}
 	}
