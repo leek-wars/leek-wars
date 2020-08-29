@@ -1,10 +1,10 @@
 <template>
-	<not-found v-if="error" :title="$t('title')" :message="$t('not_found')" />
-	<not-found v-else-if="generating" :title="$t('title')" :message="$t('not_generated_yet')">
+	<error v-if="error" :title="$t('title')" :message="$t('not_found')" />
+	<error v-else-if="generating" :title="$t('title')" :message="$t('not_generated_yet')">
 		<v-btn slot="button" large color="primary" @click="update">
 			<v-icon>mdi-refresh</v-icon>&nbsp;<span>{{ $t('refresh') }}</span>
 		</v-btn>
-	</not-found>
+	</error>
 	<div v-else>
 		<div class="page-header page-bar">
 			<h1>{{ $t('title') }}</h1>

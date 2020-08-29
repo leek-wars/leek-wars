@@ -19,14 +19,17 @@
 
 <script lang="ts">
 	import { Component, Prop, Vue } from 'vue-property-decorator'
-	@Component({ name: "not_found" })
-	export default class NotFound extends Vue {
+	@Component({ name: "error" })
+	export default class Error extends Vue {
 		@Prop() title!: string
 		@Prop() message!: string
 		get _title() {
-			return this.title || '404'
+			const t = 'main.' + this.$route.params.title
+			if (this.$te(t)) { return this.$t(t) }
+			return this.title || this.$t('main.error')
 		}
 		get _message() {
+			if (this.$route.params.message) { return this.$t('main.' + this.$route.params.message) }
 			return this.message || this.$t('main.page_not_found')
 		}
 	}

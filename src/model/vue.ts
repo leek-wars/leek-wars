@@ -3,7 +3,7 @@ import App from '@/component/app/app.vue'
 import Code from '@/component/app/code.vue'
 import Console from '@/component/app/console.vue'
 import LWLoader from '@/component/app/loader.vue'
-import NotFound from '@/component/app/not-found.vue'
+import Error from '@/component/app/error.vue'
 import Panel from '@/component/app/panel.vue'
 import Avatar from '@/component/avatar.vue'
 import ChatElement from '@/component/chat/chat.vue'
@@ -85,7 +85,7 @@ Vue.component('notification', NotificationElement)
 Vue.component('lw-code', Code)
 Vue.component('conversation', ConversationElement)
 Vue.component('ai', AIElement)
-Vue.component('not-found', NotFound)
+Vue.component('error', Error)
 Vue.component('panel', Panel)
 Vue.component('popup', Popup)
 Vue.component('rich-tooltip-farmer', RichTooltipFarmer)
