@@ -1,5 +1,5 @@
 const env = Object.freeze({
-	DEV: process.env.NODE_ENV === 'development',
+	DEV: process.env.VUE_APP_DEV === 'true',
 	BETA: process.env.VUE_APP_BETA === 'true',
 	LOCAL: process.env.VUE_APP_LOCAL === 'true',
 	SIGN_UP: process.env.VUE_APP_SIGN_UP === 'true',
