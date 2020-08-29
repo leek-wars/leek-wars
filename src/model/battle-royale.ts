@@ -33,7 +33,6 @@ class BattleRoyale {
 		this.progress = 0
 	}
 	start(data: any) {
-		LeekWars.toast(i18n.t('main', 'starting_battle_royale'))
 		if (data[1]) { // Garden BR (not automatic)
 			LeekWars.setTitleTag(null)
 			this.leeks = []
