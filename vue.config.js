@@ -24,13 +24,6 @@ module.exports = {
 		'app-fr': {entry: 'src/main-fr'},
 		'app-en': {entry: 'src/main-en'}
 	},
-	devServer: {
-		proxy: {
-			'/api': {
-				target: 'http://localhost:5000'
-			}
-		}
-	},
     chainWebpack: config => {
 		config.module
 			.rule('wiki')
