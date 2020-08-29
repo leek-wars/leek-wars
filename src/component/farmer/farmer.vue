@@ -1,7 +1,7 @@
 <template lang="html">
-	<not-found v-if="notfound" title="Unknown farmer" />
-	<not-found v-else-if="farmer && farmer.banned" :title="$t('banned')" :message="$t('banned_message')" />
-	<not-found v-else-if="farmer && farmer.deleted" :title="$t('deleted')" :message="$t('deleted_message')" />
+	<error v-if="notfound" title="Unknown farmer" />
+	<error v-else-if="farmer && farmer.banned" :title="$t('banned')" :message="$t('banned_message')" />
+	<error v-else-if="farmer && farmer.deleted" :title="$t('deleted')" :message="$t('deleted_message')" />
 	<div v-else>
 		<div class="page-header page-bar">
 			<div>

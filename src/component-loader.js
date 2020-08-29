@@ -13,6 +13,8 @@ module.exports = function(source) {
 	if (name.startsWith('report')) { folder = 'report' }
 	if (name.startsWith('editor')) { folder = 'editor' }
 	if (name.startsWith('level-dialog')) { folder = 'leek' }
+	if (name.startsWith('signup')) { folder = 'signup' }
+	if (name.startsWith('success')) { folder = 'app' }
 
 	const data = `
 	import ${nameUpper} from '@/component/${folder}/${name}.vue'

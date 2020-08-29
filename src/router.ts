@@ -2,7 +2,6 @@ import { locale } from '@/locale'
 
 const About = () => import(/* webpackChunkName: "[request]" */ `@/component/about/about.${locale}.i18n`)
 const AcceptConditions = () => import(/* webpackChunkName: "[request]" */ `@/component/accept-conditions/accept-conditions.${locale}.i18n`)
-const Activate = () => import(/* webpackChunkName: "[request]" */ `@/component/activate/activate.${locale}.i18n`)
 const AdminEmails = () => import(/* webpackChunkName: "admin" */ `@/component/admin/admin-emails.vue`)
 const AdminErrors = () => import(/* webpackChunkName: "admin" */ `@/component/admin/admin-errors.vue`)
 const AdminServers = () => import(/* webpackChunkName: "admin" */ `@/component/admin/admin-servers.vue`)
@@ -10,7 +9,7 @@ const AdminServices = () => import(/* webpackChunkName: "admin" */ `@/component/
 const AdminTrophies = () => import(/* webpackChunkName: "admin" */ `@/component/admin/admin-trophies.vue`)
 const Admin = () => import(/* webpackChunkName: "admin" */ `@/component/admin/admin.vue`)
 const Api = () => import(/* webpackChunkName: "[request]" */ `@/component/api/api.${locale}.i18n`)
-import NotFound from '@/component/app/not-found.vue'
+import Error from '@/component/app/error.vue'
 const BankBuy = () => import(/* webpackChunkName: "[request]" */ `@/component/bank/bank-buy.${locale}.i18n`)
 const BankValidate = () => import(/* webpackChunkName: "[request]" */ `@/component/bank/bank-validate.${locale}.i18n`)
 const Bank = () => import(/* webpackChunkName: "[request]" */ `@/component/bank/bank.${locale}.i18n`)
@@ -48,6 +47,7 @@ const Report = () => import(/* webpackChunkName: "[request]" */ `@/component/rep
 const Settings = () => import(/* webpackChunkName: "[request]" */ `@/component/settings/settings.${locale}.i18n`)
 const Signup = () => import(/* webpackChunkName: "[request]" */ `@/component/signup/signup.${locale}.i18n`)
 const Statistics = () => import(/* webpackChunkName: "[request]" */ `@/component/statistics/statistics.${locale}.i18n`)
+const SignupResult = () => import(/* webpackChunkName: "[request]" */ `@/component/signup/signup-result.${locale}.i18n`)
 const Team = () => import(/* webpackChunkName: "[request]" */ `@/component/team/team.${locale}.i18n`)
 const Tournament = () => import(/* webpackChunkName: "[request]" */ `@/component/tournament/tournament.${locale}.i18n`)
 const Trophies = () => import(/* webpackChunkName: "[request]" */ `@/component/trophies/trophies.${locale}.i18n`)
@@ -95,7 +95,6 @@ const routes = [
 	{ path: '/godfather', component: Home },
 	{ path: '/godfather/:godfather', component: Home },
 	{ path: '/accept-conditions', component: AcceptConditions, beforeEnter: connected },
-	{ path: '/activate/:id/:code', component: Activate },
 	{ path: '/admin', component: Admin, beforeEnter: connected },
 	{ path: '/admin/services', component: AdminServices, beforeEnter: connected },
 	{ path: '/admin/emails', component: AdminEmails, beforeEnter: connected },
@@ -110,6 +109,8 @@ const routes = [
 	{ path: '/encyclopedia/:page', component: Encyclopedia },
 	{ path: '/editor', component: Editor, beforeEnter: connected },
 	{ path: '/editor/:id', component: Editor, beforeEnter: connected },
+	{ path: '/error/:message', component: Error },
+	{ path: '/error/:message/:title', component: Error },
 	{ path: '/farmer', component: Farmer, beforeEnter: connected },
 	{ path: '/farmer/:id', component: Farmer },
 	{ path: '/farmer/:id/history', component: History, props: {type: 'farmer'} },
@@ -157,6 +158,8 @@ const routes = [
 	{ path: '/ranking/:category/:order/active/page-:page', component: Ranking, props: {active: true} },
 	{ path: '/report/:id', component: Report },
 	{ path: '/settings', component: Settings, beforeEnter: connected },
+	{ path: '/signup/success/:farmer', component: SignupResult, props: { result: 'success' } },
+	{ path: '/signup/failed', component: SignupResult, props: { result: 'failed' } },
 	{ path: '/statistics', component: Statistics },
 	{ path: '/team', component: Team, beforeEnter: connected },
 	{ path: '/team/:id', component: Team },
@@ -164,7 +167,7 @@ const routes = [
 	{ path: '/tournament/:id', component: Tournament },
 	{ path: '/trophies', component: Trophies, beforeEnter: connected },
 	{ path: '/trophies/:id', component: Trophies },
-	{ path: '*', component: NotFound },
+	{ path: '*', component: Error },
 ] as RouteConfig[]
 
 if (process.env.VUE_APP_SOCIAL === 'true') {

@@ -53,9 +53,12 @@ function loadInstanceTranslations(newLocale: string, instance: any) {
 		instance.$options.i18n = {}
 	}
 	let name = instance.$options.name.toLowerCase().replace(/_/g, '-')
+	let folder = name
 	if (name.indexOf("bank-") === 0) { name = "bank" }
+	if (name.indexOf("editor-") === 0) { folder = "editor" }
+	if (name.indexOf("signup-") === 0) { folder = "signup" }
 
-	return import(/* webpackChunkName: "locale-[request]" */ `!json-loader!@/component/${name}/${name}.${newLocale}.i18n`).then((module: any) => {
+	return import(/* webpackChunkName: "locale-[request]" */ `!json-loader!@/component/${folder}/${name}.${newLocale}.i18n`).then((module: any) => {
 		const instanceI18n = (instance as any)._i18n
 		instanceI18n.setLocaleMessage(newLocale, module)
 	})
@@ -72,11 +75,11 @@ function loadComponentLanguage(newLocale: string, component: any, instance: Comp
 	}
 	if (instance && (instance as any).$i18n && (instance as any).$i18n.messages[newLocale]) {
 		// console.log("i18n already loaded on instance!")
-		return 
+		return
 	}
 	if (component && component.options.i18n && component.options.i18n.messages && component.options.i18n.messages[newLocale]) {
 		// console.log("i18n already set on component!")
-		return 
+		return
 	}
 	return import(/* webpackChunkName: "locale-[request]" */ `!json-loader!@/component/${name}/${name}.${newLocale}.i18n`).then((module: any) => {
 		// if (!(name in module.translations)) {
