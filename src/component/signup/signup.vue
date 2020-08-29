@@ -32,16 +32,31 @@
 								</td>
 							</tr>
 							<tr>
+								<td class="align-right"><i>{{ $t('godfather') }}</i></td>
+								<td class="align-left">
+									<input v-model="godfather" :status="status('godfather')" type="text">
+									<div v-for="e in errors.godfather" :key="e" class="error-msg">{{ e }}</div>
+								</td>
+							</tr>
+							<tr>
 								<td><div class="space"></div></td>
 							</tr>
 							<tr>
+								<td colspan="2">
+									<v-radio-group v-model="signupMethod" class="radio" :row="true" :dense="true" :hide-details="true">
+										<v-radio label="Email / mot de passe" :value="1" />
+										<v-radio label="GitHub" :value="2" />
+									</v-radio-group>
+								</td>
+							</tr>
+							<tr v-if="signupMethod === 1">
 								<td class="align-right">{{ $t('your_email') }}</td>
 								<td class="align-left">
 									<input v-model="email" :status="status('email')" name="email" type="text" required>
 									<div v-for="e in errors.email" :key="e" class="error-msg">{{ e }}</div>
 								</td>
 							</tr>
-							<tr>
+							<tr v-if="signupMethod === 1">
 								<td class="align-right">{{ $t('password') }}</td>
 								<td class="align-left">
 									<input v-model="password1" :status="status('password1')" name="password" type="password" required>
@@ -51,20 +66,17 @@
 							<tr>
 								<td><div class="space"></div></td>
 							</tr>
-							<tr>
-								<td class="align-right"><i>{{ $t('godfather') }}</i></td>
-								<td class="align-left">
-									<input v-model="godfather" :status="status('godfather')" type="text">
-									<div v-for="e in errors.godfather" :key="e" class="error-msg">{{ e }}</div>
-								</td>
+							<tr v-if="signupMethod === 2">
+								<td><div class="space"></div></td>
 							</tr>
 						</table>
-						<br>
 						<i18n class="cgu" tag="div" path="conditions">
 							<router-link slot="link" to="/conditions">{{ $t('conditions_name') }}</router-link>
 						</i18n>
-						<br>
-						<center><v-btn large color="primary" type="submit">{{ $t('signup') }}</v-btn></center>
+						<center>
+							<v-btn v-if="signupMethod === 2" color="black" type="submit" class="gh-button"> <img src="/image/github_black.png"> {{ $t('signup_gh') }}</v-btn>
+							<v-btn v-if="signupMethod === 1" large color="primary" type="submit">{{ $t('signup') }}</v-btn>
+						</center>
 					</form>
 				</panel>
 			</div>
@@ -198,24 +210,13 @@
 			<img :src="'/image/' + bigImage">
 			<div class="biglegend">{{ $t(bigImageLegend) }}</div>
 		</div>
-
-		<popup v-model="successDialog" :width="700">
-			<v-icon slot="icon">mdi-check-bold</v-icon>
-			<span slot="title">{{ $t('signup_validated') }}</span>
-			<center><img src="/image/map/nexus_block_small.png"></center>
-			<i18n tag="h2" class="signup-message" path="signup_validated_message">
-				<b slot="farmer">{{ login }}</b>
-			</i18n>
-			<div slot="actions">
-				<div class="action" @click="successConfirm">OK</div>
-			</div>
-		</popup>
 	</div>
 </template>
 
 <script lang="ts">
 	import ChangelogVersion from '@/component/changelog/changelog-version.vue'
-	import { i18n } from '@/model/i18n'
+	import { locale } from '@/locale'
+	import { i18n, mixins } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import { Component, Vue } from 'vue-property-decorator'
 	const SignupCarousel = () => import(/* webpackChunkName: "[request]" */ `@/component/signup/signup-carousel.${locale}.i18n`)
@@ -224,7 +225,7 @@
 	import VueAwesomeSwiper from 'vue-awesome-swiper'
 	Vue.use(VueAwesomeSwiper)
 
-	@Component({ name: 'signup', i18n: {}, components: { ChangelogVersion } })
+	@Component({ name: 'signup', i18n: {}, mixins, components: { ChangelogVersion, SignupCarousel } })
 	export default class Signup extends Vue {
 		godfather: string = ''
 		leek_count: number = 0
@@ -235,10 +236,10 @@
 		leek: string = ''
 		email: string = ''
 		password1: string = ''
-		successDialog: boolean = false
 		errors: {[key: string]: string[]} = {}
 		bigImage: string | null = null
 		bigImageLegend: string = ''
+		signupMethod: number = 1
 		last_version: any = null
 		translations: any = {}
 
@@ -267,14 +268,25 @@
 		submit(e: Event) {
 			e.preventDefault()
 			this.errors = {}
-			LeekWars.post('farmer/register', {
+			const service = this.signupMethod === 1 ? 'farmer/register' : 'farmer/register-github'
+			const args = {
 				login: this.login,
-				password: this.password1,
-				email: this.email,
 				leek_name: this.leek,
 				godfather: this.godfather
-			}).then(data => {
-				this.successDialog = true
+			} as any
+			if (this.signupMethod === 1) {
+				args.password = this.password1,
+				args.email = this.email
+			}
+			LeekWars.post(service, args).then(data => {
+				if (this.signupMethod === 1) {
+					this.$router.push('/signup/success/' + this.login)
+				} else {
+					localStorage.setItem('login-attempt', 'true')
+					localStorage.setItem('token', '$')
+					const redirect_uri = document.location.origin + "/api/farmer/login-github"
+					document.location.href = "https://github.com/login/oauth/authorize?client_id=0253d6b35d4db2a77a3b&redirect_uri=" + redirect_uri + "&state=" + data.state
+				}
 			}).error(errors => {
 				for (const error of errors) {
 					const form = ['login', 'leek', 'email', 'password1', 'password2', 'godfather'][error[0]]
@@ -308,6 +320,7 @@
 			this.bigImage = image[0].replace('_small', '')
 			this.bigImageLegend = image[1]
 		}
+
 	}
 </script>
 
@@ -343,7 +356,7 @@
 		}
 	}
 	.leeks {
-		height: 154px;
+		height: 165px;
 	}
 	.leek-rect {
 		text-align: center;
@@ -395,6 +408,7 @@
 	.cgu {
 		font-size: 11px;
 		text-align: center;
+		margin-bottom: 10px;
 		a {
 			color: #5fad1b;
 		}
@@ -518,5 +532,17 @@
 			margin-top: -2px;
 			width: 24px;
 		}
+	}
+	.v-btn.gh-button {
+		height: 40px;
+		margin-right: 10px;
+		img {
+			height: 20px;
+			margin-right: 5px;
+		}
+	}
+	.radio {
+		width: 100%;
+		margin-bottom: 6px;
 	}
 </style>

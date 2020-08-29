@@ -226,16 +226,23 @@ router.beforeEach((to: Route, from: Route, next: any) => {
 	LeekWars.splitShowList()
 	LeekWars.actions = []
 
-	if (!store.state.connected && localStorage.getItem('connected') === 'true') {
+	if (!store.state.connected) {
 		const token = env.DEV ? localStorage.getItem('token') : '$'
-		store.commit('connected', token)
-		LeekWars.get('farmer/get-from-token').then(data => {
-			store.commit('connect', {farmer: data.farmer, farmers: data.farmers, token})
-		}).error(() => {
-			store.commit('disconnect')
-			router.push('/')
-		})
+		if (localStorage.getItem('connected') === 'true') {
+			store.commit('connected', token)
+			LeekWars.get('farmer/get-from-token').then(data => {
+				store.commit('connect', {farmer: data.farmer, farmers: data.farmers, token})
+			}).error(() => {
+				store.commit('disconnect')
+				router.push('/')
+			})
+		} else if (localStorage.getItem('login-attempt') === 'true') {
+			LeekWars.get('farmer/get-from-token').then(data => {
+				store.commit('connect', {farmer: data.farmer, farmers: data.farmers, token})
+			})
+		}
 	}
+
 	next()
 })
 
