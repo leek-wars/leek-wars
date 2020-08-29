@@ -19,6 +19,7 @@
 						<div :key="leek.id" class="leek br">
 							<leek-image :leek="leek" :scale="1" />
 							<div class="name">{{ leek.name }}</div>
+							<lw-title v-if="leek.title && leek.title.length" :title="leek.title" />
 							<span class="level">{{ $t('main.level_n', [leek.level]) }}</span>
 						</div>
 						<img v-if="i < fight.leeks1.length - 1" :key="leek.id + 'vs'" class="vs" src="/image/vs.png">
