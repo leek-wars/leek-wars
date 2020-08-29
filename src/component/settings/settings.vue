@@ -38,15 +38,16 @@
 				</panel>
 			</div>
 			<div class="column6">
-				<panel :title="$t('account')" icon="mdi-account">
+				<panel :title="$t('account')" icon="mdi-account" class="account">
 					<div v-ripple class="list-item card" @click="viewChangePassword = !viewChangePassword">
 						<v-icon>mdi-lock-open-outline</v-icon>
 						<span class="label">{{ $t('change_password') }}</span>
 						<v-icon>{{ viewChangePassword ? 'mdi-menu-up' : 'mdi-menu-down' }}</v-icon>
 					</div>
 					<form v-if="viewChangePassword" class="change-password" @submit="changePassword">
-						<h4>{{ $t('old_password') }}</h4>
-						<input v-model="password" name="password" type="password" required> <br>
+						<h4 v-if="$store.state.farmer.pass">{{ $t('old_password') }}</h4>
+						<input v-if="$store.state.farmer.pass" v-model="password" name="password" type="password">
+						<br v-if="$store.state.farmer.pass">
 						<h4>{{ $t('new_password') }}</h4>
 						<input v-model="newPassword1" name="new_password1" type="password" required> <br>
 						<h4>{{ $t('confirm_password') }}</h4>
@@ -74,6 +75,8 @@
 						<v-icon>{{ viewDeleteAccount ? 'mdi-menu-up' : 'mdi-menu-down' }}</v-icon>
 					</div>
 					<v-btn v-if="viewDeleteAccount" @click="deleteDialog = true">{{ $t('delete_account') }}</v-btn>
+
+					<v-switch v-model="settings.github_login" :disabled="!$store.state.farmer.pass" label="Autoriser la connexion via GitHub" />
 				</panel>
 			</div>
 			<div class="column6">
@@ -165,10 +168,12 @@
 
 <script lang="ts">
 	import TwoFactor from '@/component/settings/two-factor.vue'
+	import { mixins } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
+	import { store } from '@/model/store'
 	import { Component, Vue, Watch } from 'vue-property-decorator'
 
-	@Component({ name: 'settings', i18n: {}, components: {TwoFactor} })
+	@Component({ name: 'settings', i18n: {}, mixins, components: {TwoFactor} })
 	export default class Settings extends Vue {
 		vapid_key = new Uint8Array([4, 92, 237, 40, 114, 162, 99, 215, 179, 242, 70, 151, 236, 60, 216, 10, 167, 186, 77, 27, 233, 193, 117, 111, 78, 20, 121, 201, 142, 186, 91, 13, 111, 26, 241, 126, 12, 216, 94, 160, 38, 110, 214, 161, 249, 147, 233, 133, 128, 210, 170, 161, 158, 57, 24, 54, 194, 103, 195, 94, 49, 182, 20, 62, 184])
 		mails: {[key: string]: string[]} = {
@@ -323,6 +328,11 @@
 			})
 			this.changeEmailSent = true
 		}
+
+		@Watch('settings.github_login')
+		updateGithubLogin() {
+			LeekWars.post("settings/update-setting", {setting: 'github_login', value: this.settings.github_login})
+		}
 	}
 </script>
 
@@ -442,5 +452,8 @@
 	}
 	.v-input--switch {
 		margin-left: 8px;
+	}
+	.account {
+		text-align: left;
 	}
 </style>

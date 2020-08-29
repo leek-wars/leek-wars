@@ -68,6 +68,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			state.connected = true
 			state.connected_farmers = data.farmers
 			localStorage.setItem('connected', 'true')
+			localStorage.removeItem('login-attempt')
 			if (env.DEV) {
 				localStorage.setItem('token', data.token)
 			}
@@ -79,6 +80,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			LeekWars.post('farmer/disconnect')
 			state.connected = false
 			localStorage.removeItem('connected')
+			localStorage.removeItem('login-attempt')
 			localStorage.removeItem('token')
 			localStorage.removeItem('editor/tabs')
 			state.token = null
