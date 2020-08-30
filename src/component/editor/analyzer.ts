@@ -20,6 +20,7 @@ class Analyzer {
 	private GeneratorRegister!: Function
 	private GeneratorAddEntrypoint!: Function
 	private getExceptionMessage!: Function
+	private GeneratorDelete!: Function
 
 	public init() {
 		this.enabled = true
@@ -37,6 +38,7 @@ class Analyzer {
 					this.GeneratorRegister = Module.cwrap('register_', 'void', ['boolean', 'string'])
 					this.GeneratorAddEntrypoint = Module.cwrap('addEntrypoint', 'void', ['boolean', 'string', 'boolean', 'string'])
 					this.getExceptionMessage = Module.cwrap('getExceptionMessage', 'string', ['number'])
+					this.GeneratorDelete = Module.cwrap('delete_', 'string', ['string'])
 
 					// console.log(this.GeneratorAnalyze(false, "Fight.toto"))
 					// console.log(this.GeneratorComplete(false, "Fight.getEntity().name", 18))
@@ -102,7 +104,7 @@ class Analyzer {
 				try {
 					console.time("analyze")
 					const result = JSON.parse(this.GeneratorAnalyze(!ai.v2, ai.path, code, ai.entrypoint))
-					// console.log(result)
+					console.log(result)
 					for (const path in result) {
 						const problems = result[path]
 						problems.sort((a: any, b: any) => {
@@ -133,7 +135,7 @@ class Analyzer {
 
 		if (!this.enabled) { return Promise.reject() }
 
-		// console.log("Register", ai.path)
+		console.log("Register", ai.path)
 
 		return this.promise.then(() => {
 
@@ -162,6 +164,46 @@ class Analyzer {
 		// console.log(this.error_count)
 
 		return Promise.resolve(result)
+	}
+
+	public delete(ai: AI) {
+
+		if (!this.enabled) { return Promise.reject() }
+
+		return this.promise.then(() => {
+
+			console.log("🔥 Delete", ai.path)
+
+			this.running = 1
+			return new Promise((resolve, reject) => setTimeout(() => {
+				try {
+					console.time("delete")
+					const result = JSON.parse(this.GeneratorDelete(ai.path))
+					console.log(result)
+					for (const path in result) {
+						const problems = result[path]
+						problems.sort((a: any, b: any) => {
+							return a[0] - b[0]
+						})
+						this.setAIProblems(path, problems)
+					}
+					return resolve(result)
+				} catch (e) {
+					const problems = [ [0, 0, 0, 0, 1, "ANALYZER_CRASHED"] ]
+					this.setAIProblems(ai.path, problems)
+					try {
+						// console.error(this.getExceptionMessage(e))
+					} catch (e2) {
+						// nothing
+					}
+					return reject()
+				} finally {
+					this.running = 0
+					this.updateCount()
+					console.timeEnd("delete")
+				}
+			}))
+		})
 	}
 
 	private registerEntrypoints(ai: AI) {

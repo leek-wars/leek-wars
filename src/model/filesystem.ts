@@ -120,6 +120,8 @@ class FileSystem {
 		Vue.delete(this.ais, '' + ai.id)
 		store.commit('delete-ai', ai.id)
 		LeekWars.delete('ai/delete', {ai_id: ai.id}).error(error => LeekWars.toast(error))
+
+		LeekWars.analyzer.delete(ai)
 	}
 
 	public deleteFolder(folder: Folder) {
