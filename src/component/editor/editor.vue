@@ -561,6 +561,8 @@
 			const saveID = this.currentEditor.id > 0 ? this.currentEditor.id : 0
 			const content = this.currentEditor.editor.getValue()
 
+			this.currentEditor.updateIncludes()
+
 			LeekWars.post('ai/save', {ai_id: saveID, code: content}).then(data => {
 				if (this.currentEditor === null) { return }
 				this.currentEditor.saving = false
