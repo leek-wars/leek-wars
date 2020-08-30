@@ -10,7 +10,10 @@
 			<span v-if="i < type.length - 1" :key="i + '_'"> | </span>
 		</template>
 	</span>
-	<span v-else-if="(type instanceof Object)" class="type">{{ type.name }}<span v-if="type.element">&lt;<span v-if="type.key"><lw-type :type="type.key" />, </span><lw-type :type="type.element" />&gt;</span></span>
+	<span v-else-if="type.name == 'array' && type.elements" class="type">array[<template v-for="(arg, a) of type.elements">
+		<span v-if="a > 0" :key="a">, </span><lw-type :key="a + '_'" :type="arg" />
+	</template>]</span>
+	<span v-else-if="(type instanceof Object)" class="type">{{ type.name }}<span v-if="type.element">&lt;<span v-if="type.key"><lw-type :type="type.key" /> : </span><lw-type :type="type.element" />&gt;</span></span>
 	<span v-else class="type">{{ type }}</span>
 </template>
 
