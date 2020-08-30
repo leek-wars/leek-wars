@@ -45,8 +45,12 @@
 				</i18n>
 				<div class="divider"></div>
 			</template>
+			<template v-if="detailDialogContent.details.alias && !detailDialogContent.details.op">
+				<lw-code :code="detailDialogContent.details.alias" :single="true" />
+				<div class="divider"></div>
+			</template>
 			<template v-if="detailDialogContent.details.type">
-				<div v-if="detailDialogContent.details.type.name === 'function' && detailDialogContent.details.alias">
+				<div v-if="detailDialogContent.details.op">
 					<lw-type :type="detailDialogContent.details.type.args[0]" />
 					{{ detailDialogContent.details.alias }}
 					<lw-type :type="detailDialogContent.details.type.args[1]" />
@@ -167,9 +171,13 @@
 		public mouseY: number = -1
 		private analyzerTimeout: any
 		private hoverPosition: number = -1
+		private hoverLine: number = -1
+		private hoverLineWidth: number = 0
+		private hoverEditorOrigin: number = 0
 		private codemirror!: any
 		private hoverData!: any
 		private ctrl: boolean = false
+		private CodeMirrorLines!: HTMLElement
 
 		created() {
 			this.id = this.ai.id
@@ -253,6 +261,8 @@
 				this.editor.on('cursorActivity', (_) => this.cursorChange())
 
 				this.show()
+
+				this.CodeMirrorLines = codeMirrorElement.querySelector('.CodeMirror-lines') as HTMLElement
 
 				// Lock scroll down
 				const codeMirrorScroll = codeMirrorElement.querySelector('.CodeMirror-scroll') as HTMLElement
@@ -609,6 +619,15 @@
 			this.updateMouseAndCtrl()
 		}
 
+		private stringRealSize(str: string) {
+			let s = 0
+			for (let c = 0; c < str.length; ++c) {
+				if (str[c] === '\t') s += 4;
+				else s++;
+			}
+			return s
+		}
+
 		public updateMouseAndCtrl() {
 			if (!this.popups || !this.editor) { return null }
 			if (this.hintDialog) { return null }
@@ -634,11 +653,23 @@
 				this.removeUnderlineMarker()
 			}
 
+			if (editorPos.line !== this.hoverLine) {
+				const current_line = this.document.getLine(editorPos.line)
+				this.hoverLineWidth = this.stringRealSize(current_line) * 10.2358333333 + 4
+				this.hoverEditorOrigin = this.CodeMirrorLines.getBoundingClientRect().left
+				this.hoverLine = editorPos.line
+				// console.log("line width", this.hoverLineWidth)
+			}
+
+			// console.log("origin", origin)
 			const position = this.document.indexFromPos(editorPos)
+			const pos_in_line = pos.left - this.hoverEditorOrigin
+			// console.log("line width", line_length, pos_in_line)
 
 			// Leave the hover area?
 			if (this.hoverData) {
-				if (this.hoverPosition < this.hoverData.location[0][2] || this.hoverPosition > this.hoverData.location[1][2]) {
+				if (position < this.hoverData.location[0][2] || position > this.hoverData.location[1][2] || pos_in_line > this.hoverLineWidth) {
+					clearTimeout(this.detailTimer)
 					this.hoverData = null
 					this.removeUnderlineMarker()
 					if (this.hoverOverlay) {
@@ -648,7 +679,8 @@
 					this.detailDialog = false
 				}
 			}
-			if (this.hoverPosition === position) {
+			// console.log(this.hoverPosition, position)
+			if (this.hoverPosition === position || pos_in_line > this.hoverLineWidth) {
 				return
 			}
 			this.hoverPosition = position
@@ -940,6 +972,7 @@
 
 		public updateIncludes() {
 			// console.log("Update includes", this.ai.name)
+			// console.time("inc")
 			this.ai.includes = []
 			const code = this.document.getValue() || this.ai.code
 			const regex = /include\s*\(\s*["'](.*?)["']\s*\)/gm
@@ -955,7 +988,7 @@
 						// nothing
 					})
 				} else {
-					console.warn("Included not found", path, this.ai.folder, included)
+					// console.warn("Included not found", path, this.ai.folder, included)
 				}
 			}
 			for (const entrypoint_id of this.ai.entrypoints) {
@@ -964,6 +997,7 @@
 					this.$emit("load", entrypoint)
 				}
 			}
+			// console.timeEnd("inc")
 		}
 
 		public updateFunctions() {
@@ -1261,6 +1295,9 @@
 			.v-icon {
 				color: #ff9100;
 			}
+		}
+		code.single {
+			border: none;
 		}
 	}
 	.search-panel {
