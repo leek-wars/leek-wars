@@ -31,7 +31,7 @@
 	"INVALID_MAP_KEY": "Cette clé « {0} » d'accès à la map « {1} » doit être un nombre, mais est de type {2}",
 	"NO_SUCH_ATTRIBUTE": "L'attribut « {0} » n'existe pas dans la classe {1}",
 	"VALUE_MUST_BE_A_CONTAINER": "Cette valeur « {0} » doit être un conteneur",
-	"ARRAY_OUT_OF_BOUNDS": "L'indice « {1} » est hors du tableau « {0} »",
+	"ARRAY_OUT_OF_BOUNDS": "L'indice « {1} » est hors du tableau « {0} » qui possède {2} élément(s)",
 
 	"TODO": "{0}"
 }
