@@ -1,6 +1,19 @@
 <template>
 	<div v-show="visible" class="ai" @mousemove="mousemove" @mouseleave="mouseleave">
-		<div v-show="!loading" ref="codemirror" :style="{'font-size': fontSize + 'px', 'line-height': lineHeight + 'px'}" :class="{search: searchEnabled}" class="codemirror"></div>
+		<div class="codemirror-wrapper">
+			<div v-show="!loading" ref="codemirror" :style="{'font-size': fontSize + 'px', 'line-height': lineHeight + 'px'}" :class="{search: searchEnabled}" class="codemirror"></div>
+			<div v-if="errors" class="errors-band">
+				<tooltip v-for="(error, e) of errors" :key="e">
+					<template v-slot:activator="{ on }">
+						<div :style="{top: (100 * error[0] / (ai.total_lines - ai.included_lines)) + '%'}" :class="{warning: error[4] === 1, todo: error[4] === 2}" class="error" v-on="on" @click="$emit('jump', ai, error[0])"></div>
+					</template>
+					<v-icon v-if="error[4] === 0" class="tooltip error">mdi-close-circle-outline</v-icon>
+					<v-icon v-else-if="error[4] === 1" class="tooltip warning">mdi-alert-circle-outline</v-icon>
+					<v-icon v-else class="tooltip todo">mdi-format-list-checks</v-icon>
+					{{ $i18n.t('ls_error.' + error[5], error[6]) }}
+				</tooltip>
+			</div>
+		</div>
 		<div v-show="searchEnabled" class="search-panel">
 			<v-icon>mdi-magnify</v-icon>
 			<input ref="searchInput" v-model="searchQuery" type="text" class="query" autocomplete="off" @keyup.enter="$event.shiftKey ? searchPrevious() : searchNext()">
@@ -161,7 +174,7 @@
 		public searchOverlay: any = null
 		public hoverOverlay: any = null
 		public errorOverlay: any = null
-		public errors!: any[]
+		public errors: any[] = []
 		public errorTooltip: boolean = false
 		public errorTooltipText: string = ''
 		public errorLevel: number = 0
@@ -1208,6 +1221,10 @@
 		display: flex;
 		flex-direction: column;
 	}
+	.codemirror-wrapper {
+		height: 100%;
+		position: relative;
+	}
 	.codemirror {
 		height: 100%;
 	}
@@ -1399,5 +1416,37 @@
 		margin-right: 13px;
 		line-height: 40px;
 		white-space: nowrap;
+	}
+	.errors-band {
+		width: 10px;
+		position: absolute;
+		right: 0;
+		top: 0;
+		bottom: 0;
+		.error {
+			background: red;
+			height: 10px;
+			width: 100%;
+			position: absolute;
+			z-index: 6;
+			cursor: pointer;
+			&.warning {
+				background: #ff9100;
+			}
+			&.todo {
+				background: #0099ff;
+			}
+		}
+	}
+	.tooltip {
+		&.error {
+			color: red;
+		}
+		&.warning {
+			color: #ff9100;
+		}
+		&.todo {
+			color: #0099ff;
+		}
 	}
 </style>
