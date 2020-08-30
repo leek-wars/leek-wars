@@ -36,6 +36,7 @@
 				<documentation-constant v-else-if="detailDialogContent.keyword.type === 'constant'" :constant="detailDialogContent.keyword.constant" class="main" />
 				<weapon-preview v-else-if="detailDialogContent.keyword.details.type === 'weapon'" :weapon="detailDialogContent.keyword.details.weapon" class="main" />
 				<chip-preview v-else-if="detailDialogContent.keyword.details.type === 'chip'" :chip="detailDialogContent.keyword.details.chip" class="main" />
+				<javadoc v-if="detailDialogContent.keyword.javadoc" :javadoc="detailDialogContent.keyword.javadoc" />
 				<div class="divider"></div>
 			</template>
 			<template v-if="detailDialogContent.details.defined">
@@ -81,6 +82,7 @@
 	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 	import DocumentationConstant from '../documentation/documentation-constant.vue'
 	import DocumentationFunction from '../documentation/documentation-function.vue'
+	import Javadoc from './javadoc.vue'
 
 	const AUTO_SHORTCUTS = [
 		["lama", "#LamaSwag", "", "Le pouvoir du lama"],
@@ -94,7 +96,8 @@
 		'weapon-preview': WeaponPreview,
 		'chip-preview': ChipPreview,
 		'documentation-function': DocumentationFunction,
-		'documentation-constant': DocumentationConstant
+		'documentation-constant': DocumentationConstant,
+		'javadoc': Javadoc
 	}})
 	export default class AIView extends Vue {
 		@Prop({required: true}) ai!: AI
@@ -574,6 +577,7 @@
 		}
 		public getTokenInformation(token: string, pos: CodeMirror.Position | null = null) {
 			if (token.startsWith('@')) { token = token.substring(1) }
+			let wrong_arguments = false
 			for (const keyword of LeekWars.keywords) {
 				if (keyword.name === token) {
 					if (keyword.type === 'function' && pos) {
@@ -592,8 +596,17 @@
 						argCount = capture.trim() === '' ? 0 : argCount + 1
 						if (argCount === keyword.argumentCount) {
 							return keyword
+						} else {
+							wrong_arguments = true
 						}
 					} else {
+						return keyword
+					}
+				}
+			}
+			if (wrong_arguments) {
+				for (const keyword of LeekWars.keywords) {
+					if (keyword.name === token) {
 						return keyword
 					}
 				}
@@ -688,105 +701,121 @@
 			clearTimeout(this.detailTimer)
 			this.detailTimer = setTimeout(() => {
 
+				const keyword = this.getTokenInformation(token.string, editorPos2)
+
 				// console.log("hover at", position)
 				LeekWars.analyzer.hover(this.ai, position).then((raw_data) => {
 
 					// console.log(JSON.stringify(raw_data))
 					// console.log(raw_data.location[0], raw_data.location[1])
 					// console.log(raw_data)
-					const startPos = { ch: raw_data.location[0][1], line: raw_data.location[0][0] - 1 }
 
-					if (raw_data.location[0][2] !== 0 || raw_data.location[1][2] !== 0) { // Not position [0:0]
-						this.hoverData = raw_data
-						const keyword = this.getTokenInformation(token.string, editorPos)
-						this.detailDialogContent = { details: raw_data, keyword }
-						const p = this.editor.cursorCoords(startPos, "page")
-						const left = p.left
-						this.detailDialogTop = window.innerHeight - p.top
-						this.detailDialogLeft = left
-						this.detailDialogAtBottom = false
-						this.detailDialogMaxHeight = 999999
-						this.detailDialog = true
-
-						const fixPosition = () => {
-							const detailDialog = this.$refs.detailDialog as HTMLElement
-							const height = detailDialog.scrollHeight
-							const top = window.innerHeight - this.detailDialogTop
-							this.detailDialogMaxHeight = window.innerHeight - this.detailDialogTop
-							if (top - height < 0 && top + this.lineHeight + height <= window.innerHeight) { // Y'a moyen de positionner le dialogue en bas
-								this.detailDialogAtBottom = true
-								this.detailDialogTop = top + this.lineHeight
-								this.detailDialogMaxHeight = window.innerHeight - top - this.lineHeight
-							}
-
-							const width = detailDialog.clientWidth
-							if (left + width > window.innerWidth - 20) {
-								this.detailDialogLeft = window.innerWidth - width - 20
-							}
-						}
-						Vue.nextTick(fixPosition)
-
-						const start_line = raw_data.location[0][0] - 1
-						const start_char = raw_data.location[0][1]
-						const end_line = raw_data.location[1][0] - 1
-						const end_char = raw_data.location[1][1]
-
-						const overlay = {token: (stream: any) => {
-							const lineNo = stream.lineOracle.line
-							if (lineNo >= start_line && lineNo <= end_line) {
-								if (lineNo === start_line) {
-									if (stream.pos < start_char) {
-										stream.next()
-										return
-									} else if (lineNo !== end_line || stream.pos <= end_char) {
-										stream.next()
-										return "hover"
-									}
-								} else if (lineNo === end_line && stream.pos <= end_char) {
-									stream.next()
-									return "hover"
-								} else {
-									stream.skipToEnd()
-									return "hover"
-								}
-							}
-							stream.skipToEnd()
-						}}
-						if (this.hoverOverlay) {
-							this.editor.removeOverlay(this.hoverOverlay)
-						}
-						this.hoverOverlay = overlay
-						this.editor.addOverlay(overlay)
-
-						// Display error?
-						const tooltip = this.$refs.tooltip
-						let shown = false
-						for (const er in this.errors) {
-							const error = this.errors[er]
-							if (error[0] === editorPos.line + 1 && error[1] <= editorPos.ch && error[3] >= editorPos.ch) {
-								this.errorTooltipText = i18n.t('ls_error.' + error[5], error[6]) as string
-								this.errorTooltip = true
-								this.errorLevel = error[4]
-								shown = true
-								break
-							}
-						}
-						if (!shown) { this.errorTooltip = false }
-					} else {
-						this.hoverData = null
-						this.removeUnderlineMarker()
-						if (this.hoverOverlay) {
-							this.editor.removeOverlay(this.hoverOverlay)
-							this.hoverOverlay = null
-						}
-						// clearTimeout(this.detailTimer)
-						this.detailDialog = false
-					}
+					this.showHoverDetails(editorPos, keyword, raw_data)
 				})
 				.catch(() => {
-					// console.log("cannot hover")
+					// console.log("cannot hover", token, editorPos)
+
+					if (keyword) {
+						this.showHoverDetails(editorPos2, keyword, {
+							location: [
+								[editorPos2.line + 1, token.start],
+								[editorPos2.line + 1, token.end - 1]
+							]
+						})
+					}
 				})
 			}, this.ctrl ? 0 : 200)
+		}
+
+		public showHoverDetails(editorPos: any, keyword: any, raw_data: any) {
+
+			const startPos = { ch: raw_data.location[0][1], line: raw_data.location[0][0] - 1 }
+
+			if (raw_data.location[0][2] !== 0 || raw_data.location[1][2] !== 0) { // Not position [0:0]
+				this.hoverData = raw_data
+				this.detailDialogContent = { details: raw_data, keyword }
+				const p = this.editor.cursorCoords(startPos, "page")
+				const left = p.left
+				this.detailDialogTop = window.innerHeight - p.top
+				this.detailDialogLeft = left
+				this.detailDialogAtBottom = false
+				this.detailDialogMaxHeight = 999999
+				this.detailDialog = true
+
+				const fixPosition = () => {
+					const detailDialog = this.$refs.detailDialog as HTMLElement
+					const height = detailDialog.scrollHeight
+					const top = window.innerHeight - this.detailDialogTop
+					this.detailDialogMaxHeight = window.innerHeight - this.detailDialogTop
+					if (top - height < 0 && top + this.lineHeight + height <= window.innerHeight) { // Y'a moyen de positionner le dialogue en bas
+						this.detailDialogAtBottom = true
+						this.detailDialogTop = top + this.lineHeight
+						this.detailDialogMaxHeight = window.innerHeight - top - this.lineHeight
+					}
+
+					const width = detailDialog.clientWidth
+					if (left + width > window.innerWidth - 20) {
+						this.detailDialogLeft = window.innerWidth - width - 20
+					}
+				}
+				Vue.nextTick(fixPosition)
+
+				const start_line = raw_data.location[0][0] - 1
+				const start_char = raw_data.location[0][1]
+				const end_line = raw_data.location[1][0] - 1
+				const end_char = raw_data.location[1][1]
+
+				const overlay = {token: (stream: any) => {
+					const lineNo = stream.lineOracle.line
+					if (lineNo >= start_line && lineNo <= end_line) {
+						if (lineNo === start_line) {
+							if (stream.pos < start_char) {
+								stream.next()
+								return
+							} else if (lineNo !== end_line || stream.pos <= end_char) {
+								stream.next()
+								return "hover"
+							}
+						} else if (lineNo === end_line && stream.pos <= end_char) {
+							stream.next()
+							return "hover"
+						} else {
+							stream.skipToEnd()
+							return "hover"
+						}
+					}
+					stream.skipToEnd()
+				}}
+				if (this.hoverOverlay) {
+					this.editor.removeOverlay(this.hoverOverlay)
+				}
+				this.hoverOverlay = overlay
+				this.editor.addOverlay(overlay)
+
+				// Display error?
+				const tooltip = this.$refs.tooltip
+				let shown = false
+				for (const er in this.errors) {
+					const error = this.errors[er]
+					if (error[0] === editorPos.line + 1 && error[1] <= editorPos.ch && error[3] >= editorPos.ch) {
+						this.errorTooltipText = i18n.t('ls_error.' + error[5], error[6]) as string
+						this.errorTooltip = true
+						this.errorLevel = error[4]
+						shown = true
+						break
+					}
+				}
+				if (!shown) { this.errorTooltip = false }
+			} else {
+				this.hoverData = null
+				this.removeUnderlineMarker()
+				if (this.hoverOverlay) {
+					this.editor.removeOverlay(this.hoverOverlay)
+					this.hoverOverlay = null
+				}
+				// clearTimeout(this.detailTimer)
+				this.detailDialog = false
+			}
 		}
 
 		public detailsDialogEnter() {
@@ -1004,21 +1033,60 @@
 			const code = this.editor.getValue()
 			this.ai.functions = []
 			let match
-			const regex = /function\s+(\w+)\s*\(\s*([\s\S]*?)\s*\)/g
+			const regex = /(?:\/\*(.*?)\*\/\s*)?function\s+(\w+)\s*\((.*?)\)\s*{/gms
+			// Match [ full_match, javadoc, nom, arguments ]
 
 			while ((match = regex.exec(code)) != null) {
 
 				const line = code.substring(0, match.index).split("\n").length
-				let args = match[2].split(",")
+				let args = match[3].split(",")
 				if (args.length === 1 && args[0].trim() === '') { args = [] }
 				for (let arg of args) {
 					arg = arg.trim()
 				}
-				const fullName = match[1] + "(" + args.join(", ") + ")"
+				const fullName = match[2] + "(" + args.join(", ") + ")"
 				let description = "<h4>" + i18n.t('leekscript.function_f', [fullName]) + "</h4><br>"
 				description += i18n.t('leekscript.defined_in', [this.ai.name, line])
 
-				this.ai.functions.push({name: match[1], fullName, details: description, type: 'user-function', argumentCount: args.length, arguments: args, ai: this.ai, line})
+				const javadoc_comment = match[1]
+				let javadoc = null
+				if (javadoc_comment) {
+					javadoc = {
+						name: fullName,
+						description: "",
+						items: [] as any[]
+					}
+					const javadoc_lines = javadoc_comment.split("\n")
+					const javadoc_regex = /^\s*\*\s*@(\w+)(?:\s+([a-zA-Z\u00C0-\u024F\u1E00-\u1EFF]+)\s*:\s*)?(?:\s*:\s*)?(.*)$/
+					let match_javadoc
+					for (const line of javadoc_lines) {
+						if (match_javadoc = javadoc_regex.exec(line)) {
+							// console.log(match_javadoc)
+							javadoc.items.push({ type: match_javadoc[1], name: match_javadoc[2], text: match_javadoc[3] })
+						} else {
+							let star = line.indexOf("*")
+							const formatted_line = line.substring(star + 1).trim()
+							if (formatted_line.length) {
+								javadoc.description += formatted_line + "\n"
+							}
+						}
+					}
+					// console.log("javadoc", javadoc)
+				}
+
+				const fun = {
+					name: match[2],
+					fullName,
+					details: description,
+					type: 'user-function',
+					argumentCount: args.length,
+					arguments: args,
+					ai: this.ai,
+					line,
+					javadoc
+				}
+				// console.log(fun)
+				this.ai.functions.push(fun)
 			}
 		}
 		public getGlobalVars(vars: any) {
