@@ -196,7 +196,7 @@
 		</panel>
 
 		<h1>{{ $t('last_update') }}</h1>
-		<panel v-if="last_version" class="last" icon="mdi-star-outline">
+		<panel v-if="last_version" icon="mdi-star-outline">
 			<template slot="title">{{ $t('changelog.version_n', [last_version.version_name]) }} ({{ last_version.date | date }}) {{ translations[last_version.version] && translations[last_version.version].title ? ' — ' + translations[last_version.version].title : '' }}</template>
 			<div slot="content">
 				<changelog-version :version="last_version" />

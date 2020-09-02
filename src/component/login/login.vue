@@ -1,7 +1,7 @@
 <template lang="html">
 	<div>
 		<h1>{{ $t('title') }}</h1>
-		<panel class="first last">
+		<panel class="first">
 			<div class="container">
 				<div class="column">
 					<form @submit.prevent="login">

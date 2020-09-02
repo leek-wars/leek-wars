@@ -239,7 +239,6 @@
 
 <style lang="scss" scoped>
 	.documentation {
-		padding-bottom: 12px;
 		min-height: 0;
 	}
 	#app.app .documentation {
@@ -249,6 +248,9 @@
 		position: sticky;
 		top: 12px;
 		height: 100%;
+		.panel {
+			margin-bottom: 0;
+		}
 	}
 	.column9 {
 		height: 100%;

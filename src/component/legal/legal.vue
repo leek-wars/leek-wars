@@ -3,7 +3,7 @@
 		<div class="page-bar page-header">
 			<h1>{{ $t('title') }}</h1>
 		</div>
-		<panel class="first last">
+		<panel class="first">
 			<h2>{{ $t('host') }}</h2>
 			<p>
 				<b>OVH</b>

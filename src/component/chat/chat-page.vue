@@ -28,7 +28,7 @@
 				</router-link>
 			</div>
 		</div>
-		<panel class="first last">
+		<panel class="first">
 			<chat slot="content" :chat="$store.state.chat[chatLanguage.code]" :channel="chatLanguage.code" />
 		</panel>
 	</div>
@@ -49,9 +49,6 @@
 </script>
 
 <style lang="scss" scoped>
-	.panel {
-		margin-bottom: 0px;
-	}
 	.chat {
 		height: calc(100vh - 128px);
 	}

@@ -63,9 +63,6 @@
 	#app.app .panel {
 		border-radius: 0;
 	}
-	.panel.last {
-		margin-bottom: 0;
-	}
 	.panel.first {
 		border-top-left-radius: 0px;
 	}

@@ -279,7 +279,7 @@
 			</div>
 		</panel>
 
-		<panel class="last">
+		<panel>
 			<div slot="content" class="wrapper">
 				<div class="credits" v-html="$t('credits')"></div>
 			</div>

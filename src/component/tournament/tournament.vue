@@ -190,7 +190,7 @@ Max power: {{ tournament.max_power | number }}
 
 		<div v-show="tooltip" :style="{left: tooltipX + 'px', top: tooltipY + 'px'}" class="tooltip v-tooltip__content">{{ tooltipText }}</div>
 
-		<panel :title="$t('comments')" class="last" icon="mdi-comment-multiple-outline">
+		<panel :title="$t('comments')" icon="mdi-comment-multiple-outline">
 			<comments :comments="tournament ? tournament.comments : null" @comment="comment" />
 		</panel>
 	</div>

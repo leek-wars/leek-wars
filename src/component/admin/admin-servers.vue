@@ -3,7 +3,7 @@
 		<div class="page-header page-bar">
 			<h1><router-link to="/admin">Administration</router-link> > Serveurs</h1>
 		</div>
-		<panel class="first last servers">
+		<panel class="first servers">
 			<loader v-if="LeekWars.objectSize(servers) == 0" />
 			<div v-else>
 				<div v-for="(server, s) in servers" :key="s" class="server card">

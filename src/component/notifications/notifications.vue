@@ -3,7 +3,7 @@
 		<div class="page-header page-bar">
 			<h1>{{ $t('title') }}</h1>
 		</div>
-		<panel class="first last">
+		<panel class="first">
 			<loader v-if="!notifications" slot="content" />
 			<div v-else slot="content" class="content">
 				<notification v-for="notification in notifications" :key="notification.id" :notification="notification" />

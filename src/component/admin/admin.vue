@@ -3,7 +3,7 @@
 		<div class="page-header page-bar">
 			<h1>Administration</h1>
 		</div>
-		<panel class="first last">
+		<panel class="first">
 			<div slot="content" class="admin">
 				<router-link to="/admin/servers">
 					<div v-ripple class="section card">

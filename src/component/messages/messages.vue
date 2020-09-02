@@ -14,7 +14,7 @@
 		</div>
 		<div class="container last">
 			<div v-show="!LeekWars.mobile || !LeekWars.splitBack" class="column4">
-				<panel v-autostopscroll="'bottom'" class="conversations last first">
+				<panel v-autostopscroll="'bottom'" class="conversations first">
 					<div slot="content">
 						<router-link v-if="newConversation && !newConversationSent" :to="'/messages/new/' + newFarmer.id + '/' + newFarmer.name + '/' + newFarmer.avatar_changed">
 							<conversation :conversation="newConversation" />
@@ -26,7 +26,7 @@
 				</panel>
 			</div>
 			<div v-show="!LeekWars.mobile || LeekWars.splitBack" class="column8">
-				<panel class="last">
+				<panel>
 					<chat v-if="currentConversation && currentConversation.id !== 0" slot="content" :channel="'pm-' + currentConversation.id" @send="sendMessage" />
 					<chat v-else slot="content" @send="sendMessage" />
 				</panel>

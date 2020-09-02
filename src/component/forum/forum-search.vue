@@ -3,7 +3,7 @@
 		<div class="page-bar">
 			<h1>{{ $t('title') }}</h1>
 		</div>
-		<panel class="first last">
+		<panel class="first">
 			<div class="search">
 				<div class="search-box">
 					<div class="label">{{ $t('query') }}</div>

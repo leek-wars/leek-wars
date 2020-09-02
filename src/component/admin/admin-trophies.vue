@@ -3,7 +3,7 @@
 		<div class="page-header page-bar">
 			<h1><router-link to="/admin">Administration</router-link> > Trophées</h1>
 		</div>
-		<panel class="first last">
+		<panel class="first">
 			<loader v-if="!trophies" />
 			<table v-else class="trophies">
 				<tr>
