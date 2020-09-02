@@ -3,7 +3,7 @@
 		<div class="page-bar page-header">
 			<h1>{{ $t('title') }}</h1>
 		</div>
-		<panel class="first last">
+		<panel class="first">
 			<center>
 				<h4>{{ $t('version_n', [LeekWars.cgu_version]) }}</h4>
 				<br>

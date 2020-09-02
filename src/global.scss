@@ -387,6 +387,9 @@ ul {
 .page-bar .tabs .tab.green:not(.disabled):hover:after {
 	border-color: transparent transparent transparent rgba(95,173,27,0.9);
 }
+.page-footer {
+	margin-bottom: 12px;
+}
 .page-footer .tabs .tab:first-child:before {
 	border: none;
 }

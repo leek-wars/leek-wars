@@ -5,7 +5,7 @@
 				<breadcrumb :items="breadcrumb_items" :raw="true" />
 			</h1>
 		</div>
-		<panel class="first last">
+		<panel class="first">
 
 			<div class="summary">
 				<div class="periods">

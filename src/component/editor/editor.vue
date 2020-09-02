@@ -68,43 +68,23 @@
 			<editor-finder ref="finder" :active="activeAIs" :history="history" />
 		</div>
 
-		<div class="container last">
-			<panel v-show="!LeekWars.mobile || !LeekWars.splitBack" :style="{width: LeekWars.mobile ? '100%' : panelWidth + 'px'}" class="editor-left first last">
-				<div slot="content" class="full">
-					<loader v-if="!fileSystem.rootFolder" />
+		<div class="container">
+			<div v-show="!LeekWars.mobile || !LeekWars.splitBack" :style="{width: LeekWars.mobile ? '100%' : panelWidth + 'px'}" class="column3">
+				<panel class="editor-left first">
+					<div slot="content" class="full">
+						<loader v-if="!fileSystem.rootFolder" />
 
 					<div v-if="fileSystem.rootFolder" v-autostopscroll class="ai-list">
 						<explorer ref="explorer" :current-ai="currentAI" :selected-folder="currentFolder" @test="test" @delete-ai="deleteAI" />
 					</div>
+				</panel>
+			</div>
 
-					<div v-if="currentEditor && currentEditor.loaded && panelWidth" class="ai-stats">
-						<div class="line-count-wrapper">{{ $tc('main.n_lines', currentEditor.lines) }}</div>
-						<div class="char-count-wrapper">{{ $tc('main.n_characters', currentEditor.characters) }}</div>
-						<div v-if="currentAI.included_lines !== 0" class="line-count-wrapper">{{ $tc('main.n_total_lines', currentEditor.lines + currentAI.included_lines) }}</div>
-						<div v-if="currentAI.included_chars !== 0" class="char-count-wrapper">{{ $tc('main.n_total_chars', currentEditor.characters + currentAI.included_chars) }}</div>
-					</div>
-					<br>
-					<!--
-					<div id='export-button' class="button" title="{export_desc}">▼ {{ $t('export') }}</div>
-					<div id='import-button' class="button" title="{import_desc}">▲ {{ $t('import') }}</div>
-					-->
-				</div>
-			</panel>
-
-			<panel v-show="!LeekWars.mobile || LeekWars.splitBack" :style="{width: 'calc(100% - ' + (LeekWars.mobile ? 0 : panelWidth) + 'px)'}">
-				<div slot="content" class="editor-left">
-					<div :class="{tabs: $refs.tabs && $refs.tabs.tabs.length > 1}" class="editors">
-						<ai-view v-for="ai in activeAIs" ref="editors" :key="ai.id" :ai="ai" :ais="fileSystem.ais" :editors="$refs.editors" :visible="currentAI === ai" :font-size="fontSize" :line-height="lineHeight" :popups="popups" :auto-closing="autoClosing" :autocomplete-option="autocomplete" @jump="jump" @load="load" @problems="problems" />
-					</div>
-				</div>
-
-				<div v-if="enableAnalyzer && showProblemsDetails && problemsHeight && (LeekWars.analyzer.error_count || LeekWars.analyzer.warning_count)" class="problems-details" :style="{height: problemsHeight + 'px'}">
-					<div class="problems-resizer" @mousedown="problemsResizerMousedown"></div>
-					<div v-for="(problems, ai) in LeekWars.analyzer.problems" v-if="problems.length" :key="ai">
-						<div class="file" @click="toggleProblemFile(ai)">
-							<v-icon>{{ problemsCollapsed[ai] ? 'mdi-chevron-right' : 'mdi-chevron-down' }}</v-icon>
-							{{ ai }}
-							<span class="count error">{{ problems.length }}</span>
+			<div v-show="!LeekWars.mobile || LeekWars.splitBack" :style="{width: 'calc(100% - ' + (LeekWars.mobile ? 0 : panelWidth) + 'px)'}" class="column9">
+				<panel>
+					<div slot="content" class="editor-left">
+						<div :class="{tabs: $refs.tabs && $refs.tabs.tabs.length > 1}" class="editors">
+							<ai-view v-for="ai in activeAIs" ref="editors" :key="ai.id" :ai="ai" :ais="fileSystem.ais" :editors="$refs.editors" :visible="currentAI === ai" :font-size="fontSize" :line-height="lineHeight" :popups="popups" :auto-closing="autoClosing" :autocomplete-option="autocomplete" @jump="jump" @load="load" @problems="problems" />
 						</div>
 						<div v-if="currentEditor" class="compilation">
 							<div v-if="currentEditor.saving" class="compiling">

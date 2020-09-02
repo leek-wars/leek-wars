@@ -3,7 +3,7 @@
 		<div class="page-header page-bar">
 			<h1><router-link to="/admin">Administration</router-link> > Gestionnaire d'erreur</h1>
 		</div>
-		<panel class="first last">
+		<panel class="first">
 			<div class="errors content">
 				<loader v-if="!errors" />
 				<div v-else>

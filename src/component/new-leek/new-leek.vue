@@ -3,7 +3,7 @@
 		<div class="page-header page-bar">
 			<h1>{{ $t('title') }}</h1>
 		</div>
-		<panel class="first last">
+		<panel class="first">
 			<img src="/image/leek/leek1_front_green.png">
 			<br>
 			<br>

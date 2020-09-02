@@ -134,7 +134,7 @@
 			</i18n>
 		</panel>
 
-		<panel :title="$t('links')" class="last">
+		<panel :title="$t('links')">
 			<router-link to="/statistics" class="green">{{ $t('main.statistics') }}</router-link>
 			<br>
 			<router-link to="/changelog" class="green">{{ $t('main.changelog') }}</router-link>

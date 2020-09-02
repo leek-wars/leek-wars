@@ -741,7 +741,7 @@
 			</div>
 		</panel>
 
-		<panel id="advanced" :title="$t('advanced')" class="last">
+		<panel id="advanced" :title="$t('advanced')">
 			<div slot="content" class="wrapper">
 
 				<p v-html="$t('advanced_intro')"></p>

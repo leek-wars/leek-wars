@@ -8,7 +8,7 @@
 				</router-link>
 			</div>
 		</div>
-		<panel class="first last encyclopedia">
+		<panel class="first encyclopedia">
 			<markdown :content="content" :wiki-pages="wiki" />
 		</panel>
 	</div>
@@ -19,7 +19,7 @@
 	import { defaultWiki } from '@/locale'
 	import { LeekWars } from '@/model/leekwars'
 	import { Component, Vue, Watch } from 'vue-property-decorator'
-	
+
 	@Component({ name: 'encyclopedia', i18n: {}, components: { Markdown } })
 	export default class Encyclopedia extends Vue {
 		wiki = defaultWiki

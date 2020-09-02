@@ -166,9 +166,6 @@
 </script>
 
 <style lang="scss" scoped>
-	.panel:last-child {
-		margin-bottom: 0px;
-	}
 	.content:not(.first) {
 		padding: 8px;
 	}

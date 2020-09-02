@@ -11,7 +11,7 @@
 				</router-link>
 			</div>
 		</div>
-		<panel class="first last">
+		<panel class="first">
 			<div class="bank-description center" v-html="$t('description')"></div>
 			<loader v-if="!packs" />
 			<div v-else class="packs">
