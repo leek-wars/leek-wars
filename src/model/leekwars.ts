@@ -778,7 +778,7 @@ function weaponSound(id: number) {
 		5: ['double_gun'], 6: ['laser'], 7: ['grenade_shoot', 0.7, 'explosion'],
 		8: ['flame_thrower'], 9: ['double_gun'], 10: ['gazor'], 11: ['electrisor'],
 		12: ['laser'], 13: ['laser'], 14: ['sword'], 15: ['sword'], 16: ['sword'], 17: ['laser'],
-		18: ['grenade_shoot', 0.7, 'explosion'], 19: ['electrisor'], 20: ['gazor'], 21: ['laser', 0.1, 'poison']
+		18: ['grenade_shoot', 0.7, 'explosion'], 19: ['electrisor'], 20: ['gazor', 1.2, 'explosion'], 21: ['laser', 0.1, 'poison']
 	} as {[key: number]: any})[id]
 }
 function chipSound(id: number) {
@@ -796,14 +796,15 @@ function chipSound(id: number) {
 		51: ['buff'], 52: ['heal'], 53: ['heal'], 54: ['buff'], 55: ['debuff'], 56: ['debuff'], 57: ['debuff'],
 		58: ['debuff'], 59: ['debuff'], 60: ['buff'], 61: ['poison'], 62: ['poison'], 63: ['poison'],
 		64: ['buff'], 65: ['buff'], 66: ['buff'], 67: ['buff'], 68: ['buff'], 69: ['fire'], 70: ['liberation'],
-		71: ['sword'], 72: ['buff'], 73: ['heal'], 74: ['buff']
+		71: ['sword'], 72: ['buff'], 73: ['heal'], 74: ['buff'], 75: ['alteration.wav'], 76: ['lightning', 0, 'electrisor'], 77: ['bulb'], 78: ['move']
 	} as {[key: number]: any})[id]
 }
 function playSound(item: any, type: string) {
 	const play = (sounds: any) => {
 		if (sounds.length === 0) { return }
 		const sound = sounds[0]
-		const audio = new Audio('/sound/' + sound + '.mp3')
+		const sound_ext = sound.includes('.') ? sound : sound + '.mp3'
+		const audio = new Audio('/sound/' + sound_ext)
 		audio.volume = 0.5
 		audio.play()
 		if (sounds.length > 1) {
