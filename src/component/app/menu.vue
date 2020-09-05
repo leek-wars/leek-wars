@@ -39,7 +39,7 @@
 							<div class="text">{{ leek.name }}</div>
 						</div>
 					</router-link>
-					<router-link v-if="Object.keys($store.state.farmer.leeks).length < 4" v-ripple to="/new-leek" class="section">
+					<router-link v-if="new_leek_condition" v-ripple to="/new-leek" class="section">
 						<v-icon>mdi-plus</v-icon>
 						<div class="text">{{ $t('main.add_leek') }}</div>
 					</router-link>
@@ -112,7 +112,9 @@
 
 <script lang="ts">
 	import { LeekWars } from '@/model/leekwars'
+	import { store } from '@/model/store'
 	import { Component, Vue, Watch } from 'vue-property-decorator'
+
 	@Component({
 		name: 'lw-menu'
 	})
@@ -123,6 +125,12 @@
 		get rankingURL() {
 			return '/ranking' + (LeekWars.rankingActive ? '/active' : '')
 		}
+		get new_leek_condition() {
+			const leeks = store.state.farmer!.leeks
+			if (Object.keys(leeks).length === 4) { return false }
+			return LeekWars.first(leeks)!.level >= 20
+		}
+
 		mounted() {
 			LeekWars.menuCollapsed = localStorage.getItem('main/menu-collapsed') === 'true'
 			setTimeout(() => {
