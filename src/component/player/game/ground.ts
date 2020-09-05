@@ -167,6 +167,34 @@ class Ground {
 			// Draw lines
 			this.drawGrid(this.textureCtx)
 
+			// Draw checkerboard
+			if (this.game.tactic) {
+				this.textureCtx.save()
+				this.textureCtx.fillStyle = 'black'
+				this.textureCtx.globalAlpha = 0.11
+
+				for (const cell of this.cells) {
+
+					if (((cell.x + cell.y) % 2) || cell.obstacle) { continue }
+
+					this.textureCtx.save()
+					const xy = this.cellToXY(cell)
+					const real = this.xyToXYPixels(xy.x, xy.y)
+					this.textureCtx.translate(real.x * this.scale, real.y * this.scale)
+
+					this.textureCtx.beginPath()
+					this.textureCtx.moveTo(0, -this.tileSizeY / 2.)
+					this.textureCtx.lineTo(this.tileSizeX / 2., 0)
+					this.textureCtx.lineTo(0, this.tileSizeY / 2.)
+					this.textureCtx.lineTo(-this.tileSizeX / 2., 0)
+					this.textureCtx.closePath()
+					this.textureCtx.fill()
+
+					this.textureCtx.restore()
+				}
+				this.textureCtx.restore()
+			}
+
 			// Obstacles shadows
 			if (shadows) {
 				for (const obstacle of this.obstacles) {
