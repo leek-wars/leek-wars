@@ -12,8 +12,10 @@
 
 				<panel toggle="social/notifications" icon="mdi-bell-outline">
 					<template slot="title">
-						<router-link to="/notifications">{{ $t('main.notifications') }}</router-link>
-						<span v-show="$store.state.unreadNotifications" class="label">{{ $store.state.unreadNotifications }}</span>
+						<div v-ripple class="title">
+							<router-link to="/notifications">{{ $t('main.notifications') }}</router-link>
+							<span v-show="$store.state.unreadNotifications" class="label">{{ $store.state.unreadNotifications }}</span>
+						</div>
 					</template>
 					<div slot="content" v-autostopscroll class="content-limit">
 						<notification v-for="notification in $store.state.notifications" :key="notification.id" :notification="notification" @click.native="readNotification(notification)" />
@@ -22,8 +24,10 @@
 
 				<panel v-if="env.SOCIAL" toggle="social/messages" icon="mdi-email-outline">
 					<template slot="title">
-						<router-link to="/messages">{{ $t('main.messages') }}</router-link>
-						<span v-show="$store.state.unreadMessages" class="label">{{ $store.state.unreadMessages }}</span>
+						<div v-ripple class="title">
+							<router-link to="/messages">{{ $t('main.messages') }}</router-link>
+							<span v-show="$store.state.unreadMessages" class="label">{{ $store.state.unreadMessages }}</span>
+						</div>
 					</template>
 					<div slot="content" v-autostopscroll class="content-limit">
 						<router-link v-for="conversation in $store.state.conversationsList" :key="conversation.id" :to="'/messages/conversation/' + conversation.id">
@@ -34,10 +38,12 @@
 
 				<panel v-if="env.SOCIAL" class="social-chat" toggle="social/chat" icon="mdi-chat-outline">
 					<template slot="title">
-						<router-link to="/chat">Chat</router-link>
-						<div class="farmer-count">
-							<span class="count">({{ $store.state.connected_farmers }} <v-icon class="icon">mdi-account-multiple</v-icon>)</span>
-						</div>
+						<router-link v-ripple to="/chat" class="title">
+							Chat
+							<span class="farmer-count">
+								<span class="count">({{ $store.state.connected_farmers }} <v-icon class="icon">mdi-account-multiple</v-icon>)</span>
+							</span>
+						</router-link>
 						<v-menu offset-y>
 							<template v-slot:activator="{ on }">
 								<img :src="chatLanguage.flag" class="language-button" v-on="on">
@@ -180,6 +186,9 @@
 		z-index: 1000;
 		vertical-align: middle;
 	}
+	.header .title {
+		display: inline-block;
+	}
 	.content-limit {
 		padding: 0;
 		max-height: 200px;
@@ -224,11 +233,10 @@
 		margin-bottom: 0;
 	}
 	.farmer-count {
-		display: inline-block;
-		margin-left: 5px;
 		.v-icon.icon {
 			margin-right: 0;
 			font-size: 18px;
+			margin-bottom: 3px;
 		}
 		.count {
 			font-size: 14px;
