@@ -1,7 +1,9 @@
 <template>
 	<div>
 		<div class="page-bar page-header">
-			<h1>{{ loaded ? title : '...' }}</h1>
+			<h1>
+				<breadcrumb :items="breadcrumb_items" :raw="true" />
+			</h1>
 			<div class="tabs">
 				<div class="tab" @click="hide_unlocked = !hide_unlocked">
 					<span>{{ $t('hide_unlocked') }}</span>
@@ -67,8 +69,9 @@
 <script lang="ts">
 	import { LeekWars } from '@/model/leekwars'
 	import { Component, Vue, Watch } from 'vue-property-decorator'
+	import Breadcrumb from '../forum/breadcrumb.vue'
 
-	@Component({ name: 'trophies', i18n: {} })
+	@Component({ name: 'trophies', i18n: {}, components: { Breadcrumb } })
 	export default class Trophies extends Vue {
 		raw_trophies: {[key: number]: any} = {}
 		progressions: {[key: number]: number} = {}
@@ -79,6 +82,7 @@
 		title: any = null
 		loaded: boolean = false
 		hide_unlocked: boolean = localStorage.getItem('options/hide-unlocked-trophies') === 'true'
+		farmer_name: string = '...'
 		icons = [
 			'mdi-trophy-variant-outline',
 			'mdi-sword-cross',
@@ -103,6 +107,13 @@
 			}
 			return result
 		}
+		get breadcrumb_items() {
+			return [
+				{name: this.farmer_name, link: '/farmer/' + this.id},
+				{name: this.$t('trophies'), link: '/trophies/' + this.id},
+			]
+		}
+
 		@Watch('id', {immediate: true})
 		update() {
 			this.loaded = false
@@ -131,6 +142,7 @@
 				}
 				this.count = data.count
 				this.total = data.total
+				this.farmer_name = data.farmer_name
 				if (this.$store.state.farmer && this.id === this.$store.state.farmer.id) {
 					this.title = this.$t('title_me')
 				} else {

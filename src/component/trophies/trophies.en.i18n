@@ -9,5 +9,6 @@
 	"category_tournament": "Tournaments",
 	"hide_unlocked": "Hide unlocked",
 	"title": "Trophies of {0}",
-	"title_me": "My trophies"
+	"title_me": "My trophies",
+	"trophies": "Trophies"
 }
