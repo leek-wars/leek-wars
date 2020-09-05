@@ -39,7 +39,7 @@
 							</tooltip>
 						</template>
 						<emblem v-else :team="team" />
-						<div class="description">
+						<div v-if="team.description || member" class="description">
 							<span class="guillemet">«</span>
 							<span v-if="owner" ref="descriptionElement" :class="{empty: !team.description && !editingDescription}" class="team-status text" contenteditable @click="startEditingDescription" @blur="saveDescription" @keydown.enter.prevent="saveDescription">{{ team.description }}</span>
 							<span v-else class="text team-status">{{ team.description }}</span>
@@ -723,7 +723,7 @@
 			this.team.description = '' + (this.$refs.descriptionElement as HTMLElement).textContent
 			LeekWars.put('team/change-description', {team_id: this.team.id, description: this.team.description})
 			if (!this.team.description) {
-				(this.$refs.descriptionElement as HTMLElement).innerText = this.$i18n.t('no_description') as string
+				(this.$refs.descriptionElement as HTMLElement).innerText = ''
 			}
 		}
 
