@@ -9,5 +9,6 @@
 	"category_tournament": "Tournois",
 	"hide_unlocked": "Cacher obtenus",
 	"title": "Trophées de {0}",
-	"title_me": "Mes trophées"
+	"title_me": "Mes trophées",
+	"trophies": "Trophées"
 }
