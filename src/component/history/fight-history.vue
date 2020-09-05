@@ -73,11 +73,11 @@
 		background: white;
 		position: relative;
 		.center {
-			background: rgba(255, 255, 255, 0.25);
+			background: rgba(255, 255, 255, 0.3);
 			&:hover {
 				background: rgba(255, 255, 255, 0.75);
 			}
-			flex: 36px 0 0;
+			flex: 42px 0 0;
 			height: 42px;
 			img {
 				width: 22px;
@@ -86,8 +86,9 @@
 				opacity: 0.8;
 			}
 			i {
-				color: #444;
+				color: #333;
 				line-height: 42px;
+				font-size: 28px;
 				&.timersand {
 					animation: rotate 2s linear infinite;
 				}
