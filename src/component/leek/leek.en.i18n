@@ -5,7 +5,7 @@
 	"all_my_chips": "All my chips",
 	"all_my_weapons": "All my weapons",
 	"authorize_agressions": "Allow attacks by other leeks",
-	"br_time": "Automatic Battle Royale every hour between 9:00 AM and 11:00 PM (French timezone)",
+	"br_time": "Automatic Battle Royale every two hour between 9:00 AM and 11:00 PM (French timezone)",
 	"challenge": "Challenge",
 	"chips_of": "Chips equiped on {0}",
 	"click_to_change_hat": "Click to change hat",
