@@ -26,6 +26,9 @@
 		color: #333;
 		border-radius: 3px;
 		background-color: #dcdcdc;
+		&:hover {
+			background-color: #ccc;
+		}
 		.date {
 			font-size: 10px;
 			text-align: right;
