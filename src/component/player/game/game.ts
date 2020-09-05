@@ -16,7 +16,7 @@ import { env } from '@/env'
 import { Action, ActionType } from '@/model/action'
 import { Area } from '@/model/area'
 import { EffectType } from '@/model/effect'
-import { Fight, FightData, TEAM_COLORS } from '@/model/fight'
+import { Fight, FightData, TEAM_COLORS, FightType } from '@/model/fight'
 import { i18n } from '@/model/i18n'
 import { LeekWars } from '@/model/leekwars'
 import Vue from 'vue'
@@ -355,7 +355,7 @@ class Game {
 
 			entity.farmer = null
 			if (typeof(e.farmer) !== 'undefined') {
-				entity.farmer = (entity.team === 1 ? fight.farmers1 : fight.farmers2)[e.farmer]
+				entity.farmer = ((entity.team === 1 || fight.type === FightType.BATTLE_ROYALE) ? fight.farmers1 : fight.farmers2)[e.farmer]
 			}
 
 			////// Stats
