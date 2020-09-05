@@ -2,12 +2,10 @@
 	<div :class="{generating: fight.status == 0, win: fight.result == 'win', defeat: fight.result == 'defeat', draw: fight.result == 'draw'}" class="fight">
 		<div v-if="fight.type == FightType.BATTLE_ROYALE" class="fighters">
 			<div class="fighter left"><div>Battle</div></div>
-			<div class="center">
-				<router-link :to="'/fight/' + fight.id">
-					<v-icon v-if="fight.status == 0" class="timersand">mdi-timer-sand-empty</v-icon>
-					<v-icon v-else>mdi-sword-cross</v-icon>
-				</router-link>
-			</div>
+			<router-link :to="'/fight/' + fight.id" class="center">
+				<v-icon v-if="fight.status == 0" class="timersand">mdi-timer-sand-empty</v-icon>
+				<v-icon v-else>mdi-sword-cross</v-icon>
+			</router-link>
 			<div class="fighter right"><div>Royale</div></div>
 		</div>
 		<div v-else class="fighters">
@@ -24,14 +22,12 @@
 			<router-link v-else-if="fight.type == FightType.TEAM" :to="'/team/' + fight.team1" class="fighter">
 				<div>[{{ fight.team1_name }}]</div>
 			</router-link>
-			<div class="center">
-				<router-link :to="'/fight/' + fight.id">
-					<v-icon v-if="fight.status == 0" class="timersand">mdi-timer-sand-empty</v-icon>
-					<v-icon v-else-if="fight.context == FightContext.CHALLENGE">mdi-flag-outline</v-icon>
-					<v-icon v-else-if="fight.context == FightContext.TOURNAMENT">mdi-trophy-outline</v-icon>
-					<img v-else src="/image/icon/black/garden.png">
-				</router-link>
-			</div>
+			<router-link :to="'/fight/' + fight.id" class="center">
+				<v-icon v-if="fight.status == 0" class="timersand">mdi-timer-sand-empty</v-icon>
+				<v-icon v-else-if="fight.context == FightContext.CHALLENGE">mdi-flag-outline</v-icon>
+				<v-icon v-else-if="fight.context == FightContext.TOURNAMENT">mdi-trophy-outline</v-icon>
+				<img v-else src="/image/icon/black/garden.png">
+			</router-link>
 			<router-link v-if="fight.type == FightType.SOLO" :to="'/leek/' + fight.leeks2[0].id" class="fighter">
 				<rich-tooltip-leek :id="fight.leeks2[0].id" v-slot="{ on }">
 					<div v-on="on">{{ fight.leeks2[0].name }}</div>
