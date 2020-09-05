@@ -200,6 +200,9 @@
 .effects {
 	padding: 4px;
 	white-space: nowrap;
+	display: inline-block;
+	position: absolute;
+	top: -44px;
 }
 .effects .effect {
 	position: relative;
