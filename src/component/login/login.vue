@@ -100,6 +100,8 @@
 		display: flex;
 		max-width: 600px;
 		align-items: center;
+		justify-content: center;
+		margin: 0 auto;
 		.column {
 			flex: 1;
 			text-align: center;
