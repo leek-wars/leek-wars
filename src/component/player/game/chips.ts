@@ -413,6 +413,7 @@ class Inversion extends ChipAnimation {
 			const cell = this.launcher.cell
 			this.launcher.setCell(this.target.cell)
 			this.target.setCell(cell)
+			this.game.updateReachableCells()
 			this.inverted = true
 		}
 	}
@@ -708,6 +709,7 @@ class Teleportation extends ChipAnimation {
 		}
 		if (!this.teleported && this.duration < 50) {
 			this.target.setCell(this.cell)
+			this.game.updateReachableCells()
 			this.teleported = true
 		}
 	}

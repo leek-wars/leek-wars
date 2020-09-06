@@ -433,7 +433,7 @@
 			this.game.redraw()
 		}
 		canvasClick() {
-			this.game.selectedEntity = this.game.click()
+			this.game.selectEntity(this.game.click())
 		}
 		@Watch("game.going_to_report")
 		endOfFight() {

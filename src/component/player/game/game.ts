@@ -208,6 +208,7 @@ class Game {
 	public farmers: {[key: number]: any} = {}
 	public entityOrder = new Array()
 	public states = new Array()
+	public stateCells: {[key: number]: Cell | null} = {}
 	// Actions
 	public data!: FightData
 	public actions: Action[] = []
@@ -422,9 +423,11 @@ class Game {
 			}
 			entity.maxMP = entity.mp
 
-			entity.setCell(this.ground.cells[e.cellPos])
-			if (entity.cell) {
-				entity.setOrientation(this.getInitialOrientation(entity.cell))
+			if (!entity.summon) {
+				entity.setCell(this.ground.cells[e.cellPos])
+				if (entity.cell) {
+					entity.setOrientation(this.getInitialOrientation(entity.cell))
+				}
 			}
 
 			for (const id in fight.farmers1) {
@@ -435,6 +438,7 @@ class Game {
 			}
 
 			this.leeks[entity.id] = entity
+			this.stateCells[entity.id] = entity.cell
 
 			// entity
 			if (entity instanceof Leek) {
@@ -580,9 +584,13 @@ class Game {
 			this.ground.addObstacleElement(obstacle)
 		}
 		this.ground.resize(this.width, this.height, this.shadows)
-		for (const l in this.leeks) {
-			if (this.leeks[l].active) { this.leeks[l].computeOrginPos() }
+
+		for (const entity of this.leeks) {
+			if (entity.active) {
+				entity.computeOrginPos()
+			}
 		}
+
 		// console.log(this.leeks)
 		for (const leek of this.leeks) {
 			this.states[leek.id] = {
@@ -736,9 +744,19 @@ class Game {
 						}
 					}
 				}
-				this.mouseEntity = hover_entity
+				if (this.mouseEntity !== hover_entity) {
+					this.mouseEntity = hover_entity
+					if (this.mouseEntity) {
+						this.mouseEntity.updateReachableCells()
+					}
+				}
 				if (this.mouseCell !== undefined) {
-					this.hoverEntity = hover_entity
+					if (this.hoverEntity !== hover_entity) {
+						this.hoverEntity = hover_entity
+						if (this.hoverEntity) {
+							this.hoverEntity.updateReachableCells()
+						}
+					}
 				}
 
 				// Chips
@@ -846,7 +864,7 @@ class Game {
 		}
 		case ActionType.MOVE_TO: {
 			if (this.jumping) {
-				this.leeks[action.params[1]].cell = this.ground.cells[action.params[2]]
+				this.stateCells[action.params[1]] = this.ground.cells[action.params[2]]
 				this.actionDone()
 			} else {
 				const cells = [] as Cell[]
@@ -892,12 +910,12 @@ class Game {
 			if (this.jumping) {
 				// Update leek cell after teleportation
 				if (chip === 37) {
-					this.leeks[launcher].cell = cell
+					this.stateCells[launcher] = cell
 				}
 				// Update leeks cells after inversion
 				if (chip === 39) {
-					this.leeks[leeksID[0]].cell = this.leeks[launcher].cell
-					this.leeks[launcher].cell = cell
+					this.stateCells[leeksID[0]] = this.stateCells[launcher]!
+					this.stateCells[launcher] = cell
 				}
 				this.actionDone()
 				break
@@ -971,13 +989,17 @@ class Game {
 				}
 			}
 			entity.launched_effects = {}
-			if (this.jumping) {
+			entity.active = false
+			if (entity.cell) {
+				entity.cell.entity = null
+			}
+			// if (this.jumping) {
 				entity.kill(false)
 				this.actionDone()
-			} else {
-				this.log(action)
-				entity.kill(true) // Animation
-			}
+			// } else {
+			// 	this.log(action)
+			// 	entity.kill(true) // Animation
+			// }
 			break
 		}
 		case ActionType.SAY: {
@@ -1005,10 +1027,15 @@ class Game {
 			const summonID = action.params[2]
 			const cell = this.ground.cells[action.params[3]]
 			const summon = this.leeks[summonID]
-			summon.setCell(cell)
 			summon.summoner = this.leeks[caster]
 			summon.active = true
-			summon.drawID = this.addDrawableElement(summon, summon.y)
+			if (this.jumping) {
+				this.stateCells[summon.id] = cell
+			} else {
+				summon.setCell(cell)
+				summon.drawID = this.addDrawableElement(summon, summon.y)
+				this.updateReachableCells()
+			}
 			const index = this.entityOrder.findIndex((e) => e.id === caster)
 			this.entityOrder.splice(index + 1, 0, summon)
 			if (!this.jumping) {
@@ -1026,7 +1053,7 @@ class Game {
 			const maxLife = action.params[5]
 			const entity = this.leeks[target]
 
-			entity.setCell(cell)
+			this.stateCells[entity.id] = cell
 			entity.life = life
 			entity.maxLife = maxLife
 			entity.active = true
@@ -1438,13 +1465,21 @@ class Game {
 			if (this.mouseEntity && !hover_entity) {
 				this.canvas.style.cursor = "auto"
 			}
-			this.mouseEntity = hover_entity
+			if (this.mouseEntity !== hover_entity) {
+				this.mouseEntity = hover_entity
+				if (this.mouseEntity) {
+					this.mouseEntity.updateReachableCells()
+				}
+			}
 		} else {
 			this.mouseTileX = undefined
 			this.mouseTileY = undefined
 			this.mouseCell = undefined
 			this.mouseEntity = null
 			this.canvas.style.cursor = "auto"
+		}
+		if (this.paused) {
+			this.draw()
 		}
 	}
 
@@ -1465,12 +1500,14 @@ class Game {
 	}
 
 	public addDrawableElement(element: any, line: number): number {
+		// console.log("add drawable element")
 		this.drawableElementCurrentId++
 		this.drawableElements[line][this.drawableElementCurrentId] = element
 		return this.drawableElementCurrentId
 	}
 
 	public moveDrawableElement(element: any, id: number, line: number, newLine: number) {
+		// console.log("move drawable element")
 		if (!this.drawableElements[newLine]) {
 			console.warn("Error moving object to line " + newLine)
 			return
@@ -1487,16 +1524,15 @@ class Game {
 		}
 	}
 
-	public setEffectAreaCells(cells: Cell[], color: string, duration: number = 80, lines: number[][], convert: {[key: number]: [number, number]}) {
-		this.drawArea = duration
-		this.areaColor = color
-		this.area = []
+	public createEffectAreaCells(cells: Cell[], lines: number[][], convert: {[key: number]: [number, number]}) {
+		const area = []
 		for (const cell of cells) {
 			const xy = this.ground.cellToXY(cell)
 			const real = this.ground.xyToXYPixels(xy.x, xy.y)
 			const c = convert[cell.id]
-			this.area.push([real.x * this.ground.scale, real.y * this.ground.scale, lines[c[0]][c[1]]])
+			area.push([real.x * this.ground.scale, real.y * this.ground.scale, lines[c[0]][c[1]]])
 		}
+		return area
 	}
 
 	public setEffectAreaLaser(cells: Cell[], color: string, dx: number, dy: number, duration: number = 60) {
@@ -1516,6 +1552,12 @@ class Game {
 	}
 
 	public setEffectArea(cell: Cell, area: number, color: string, duration: number = 80) {
+		this.drawArea = duration
+		this.areaColor = color
+		this.area = this.createEffectAreaOutline(cell, area)
+	}
+
+	public createEffectAreaOutline(cell: Cell, area: number) {
 
 		const cells = [] as Cell[]
 		const lines = [] as number[][]
@@ -1644,28 +1686,84 @@ class Game {
 				add_cell(-i, -i)
 			}
 		}
-		this.setEffectAreaCells(cells, color, duration, lines, convert)
+		return this.createEffectAreaCells(cells, lines, convert)
 	}
 
-	public drawEffectArea() {
+	public createReachableAreaOutline(mp: number, cell: Cell, reachableCells: Set<Cell>) {
+
+		const cells = [] as Cell[]
+		const lines = [] as number[][]
+		const convert = {} as {[key: number]: [number, number]}
+		let c = 0
+
+		const init_lines = (l: number) => {
+			for (let i = 0; i < l; ++i) {
+				lines.push(new Array(l).fill(0))
+			}
+			c = Math.floor(l / 2)
+		}
+
+		const add_cell = (x: number, y: number) => {
+			const n = this.ground.next_cell(cell, x, y)
+			lines[c + x][c + y] = ~lines[c + x][c + y] + 16
+			if (n && !n.obstacle) {
+				if (x < c) { lines[c + x + 1][c + y] ^= 1 }
+				if (y < c) { lines[c + x][c + y + 1] ^= 2 }
+				if (x > -c) { lines[c + x - 1][c + y] ^= 4 }
+				if (y > -c) { lines[c + x][c + y - 1] ^= 8 }
+			}
+			if (n === null || n.obstacle) { return }
+			cells.push(n)
+			convert[n.id] = [c + x, c + y]
+		}
+
+		init_lines(2 * mp + 1)
+		for (const reachableCell of reachableCells) {
+			add_cell(reachableCell.x - cell.x, reachableCell.y - cell.y)
+		}
+
+		return this.createEffectAreaCells(cells, lines, convert)
+	}
+
+	public updateReachableCells() {
+		// Update only the necessary entities
+		if (this.selectedEntity && this.selectedEntity.active) {
+			this.selectedEntity.updateReachableCells()
+		}
+		if (this.mouseEntity && this.mouseEntity.active) {
+			this.mouseEntity.updateReachableCells()
+		}
+		if (this.hoverEntity && this.hoverEntity.active) {
+			this.hoverEntity.updateReachableCells()
+		}
+	}
+
+	public selectEntity(entity: Entity | null) {
+		this.selectedEntity = entity
+		if (this.selectedEntity) {
+			this.selectedEntity.updateReachableCells()
+		}
+	}
+
+	public drawEffectArea(area: any, color: string, width: number, lineAlpha: number, areaAlpha: number) {
 
 		this.ctx.save()
 
-		this.ctx.globalAlpha = 0.5 * Math.min(1, this.drawArea / 10)
-		this.ctx.fillStyle = this.areaColor
-		this.ctx.strokeStyle = this.areaColor
-		this.ctx.lineWidth = 3 * this.ground.scale
+		this.ctx.fillStyle = color
+		this.ctx.strokeStyle = color
+		this.ctx.lineWidth = width * this.ground.scale
 		this.ctx.lineCap = 'round'
 
-		for (const cell of this.area) {
-			this.drawEffectTile(cell[0], cell[1], cell[2])
+		for (const cell of area) {
+			this.drawEffectTile(cell[0], cell[1], cell[2], lineAlpha, areaAlpha)
 		}
 		this.ctx.restore()
 	}
 
-	public drawEffectTile(x: number, y: number, lines: number) {
+	public drawEffectTile(x: number, y: number, lines: number, lineAlpha: number, areaAlpha: number) {
 
 		this.ctx.save()
+		this.ctx.globalAlpha = areaAlpha
 
 		this.ctx.translate(x, y)
 
@@ -1678,8 +1776,7 @@ class Game {
 		this.ctx.fill()
 
 		if (lines) {
-			const alpha = this.ctx.globalAlpha
-			this.ctx.globalAlpha = alpha * 2
+			this.ctx.globalAlpha = lineAlpha
 			if (lines & 2) {
 				this.ctx.beginPath()
 				this.ctx.moveTo(0, -this.ground.tileSizeY / 2.)
@@ -1708,7 +1805,6 @@ class Game {
 				this.ctx.closePath()
 				this.ctx.stroke()
 			}
-			this.ctx.globalAlpha = alpha
 		}
 
 		this.ctx.restore()
@@ -1800,13 +1896,20 @@ class Game {
 		this.particles.drawGround(this.ctx)
 
 		// Draw leeks paths
-		for (const i in this.leeks) {
-			if (this.leeks[i].active) { this.leeks[i].drawPath(this.ctx) }
+		for (const entity of this.leeks) {
+			if (entity.active) {
+				entity.drawPath(this.ctx)
+			}
+			if (entity === this.hoverEntity || entity === this.mouseEntity || entity === this.selectedEntity) {
+				this.drawEffectArea(entity.reachableCellsArea, this.map.reachableColor, 2, 0.7, 0.1)
+			}
 		}
 
 		// Effect area
 		if (this.drawArea > 0) {
-			this.drawEffectArea()
+			const areaAlpha = 0.5 * Math.min(1, this.drawArea / 10)
+			const lineAlpha = 2 * areaAlpha
+			this.drawEffectArea(this.area, this.areaColor, 3, lineAlpha, areaAlpha)
 		}
 
 		// Draw markers
@@ -1922,21 +2025,14 @@ class Game {
 			leek.bubble = new Bubble(this)
 			leek.weapon = null
 
-			if (leek.drawID) {
-				this.removeDrawableElement(leek.drawID, leek.dy)
-				leek.drawID = null
-			}
-			leek.setCell(this.states[i].cell)
+			this.stateCells[leek.id] = this.states[i].cell
 
-			if (!leek.active) {
-				if (leek.summon) {
-					const index = this.entityOrder.indexOf(leek)
-					if (index !== -1) {
-						this.entityOrder.splice(index, 1)
-					}
+			if (leek.summon) {
+				const index = this.entityOrder.indexOf(leek)
+				if (index !== -1) {
+					this.entityOrder.splice(index, 1)
 				}
-			} else {
-				leek.drawID = this.addDrawableElement(leek, leek.dy)
+				leek.active = false
 			}
 			leek.moveDelay = 0
 			leek.path = []
@@ -1978,10 +2074,18 @@ class Game {
 		this.jumping = false
 		this.currentAction = action
 
-		for (const e in this.leeks) {
+		for (const e in this.stateCells) {
+			const cell = this.stateCells[e]
 			const entity = this.leeks[e]
-			entity.setCell(entity.cell!)
+			if (cell && entity.active) {
+				entity.setCell(cell)
+				if (!entity.drawID) {
+					entity.drawID = this.addDrawableElement(entity, entity.y)
+				}
+			}
 		}
+		this.updateReachableCells()
+
 		this.requestPause = this.paused
 		this.draw()
 	}
