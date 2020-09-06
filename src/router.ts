@@ -206,8 +206,6 @@ const router = new Router({
 })
 
 router.afterEach((to: Route) => {
-	ga('set', 'page', to.path)
-	ga('send', 'pageview')
 	if (to.hash) {
 		vueMain.$once('loaded', () => {
 			setTimeout(() => {
