@@ -195,7 +195,7 @@
 	.conversations {
 		overflow-y: auto;
 		overflow-x: hidden;
-		height: calc(100vh - 128px);
+		height: calc(100vh - 140px);
 	}
 	#app.app .conversations {
 		height: calc(100vh - 56px);
@@ -204,7 +204,7 @@
 		padding: 0;
 	}
 	.chat {
-		height: calc(100vh - 128px);
+		height: calc(100vh - 140px);
 	}
 	#app.app .chat {
 		height: calc(100vh - 56px);

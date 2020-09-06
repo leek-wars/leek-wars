@@ -38,12 +38,11 @@
 							<router-view />
 						</div>
 					</div>
+					<lw-footer v-if="LeekWars.footer" />
 				</div>
 			</div>
 
 			<lw-social v-if="$store.state.connected" />
-
-			<lw-footer v-if="LeekWars.footer" />
 
 			<chats v-if="!LeekWars.mobile" />
 			<squares />
@@ -307,7 +306,7 @@
 	}
 	.page {
 		margin-right: -12px;
-		min-height: calc(100vh - 256px);
+		min-height: calc(100vh - 370px);
 	}
 	.dark {
 		display: none;

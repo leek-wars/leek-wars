@@ -156,6 +156,7 @@ class Language {
 const LeekWars = {
 	version: packageJson.version,
 	normal_version: packageJson.version.replace(/\.\d+$/, ''),
+	smart_version: packageJson.version.replace(/\.0$/, ''),
 	post,
 	get,
 	put,
