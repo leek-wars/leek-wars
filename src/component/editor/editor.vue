@@ -58,7 +58,7 @@
 
 		<div class="container">
 			<div v-show="!LeekWars.mobile || !LeekWars.splitBack" :style="{width: LeekWars.mobile ? '100%' : panelWidth + 'px'}" class="column3">
-				<panel class="editor-left first">
+				<panel class="editor-left first last">
 					<div slot="content" class="full">
 						<loader v-if="!rootFolder" />
 
@@ -82,7 +82,7 @@
 			</div>
 
 			<div v-show="!LeekWars.mobile || LeekWars.splitBack" :style="{width: 'calc(100% - ' + (LeekWars.mobile ? 0 : panelWidth) + 'px)'}" class="column9">
-				<panel>
+				<panel class="last">
 					<div slot="content" class="full">
 						<editor-tabs v-if="!LeekWars.mobile" ref="tabs" :current="currentID" :ais="ais" />
 						<div :class="{tabs: $refs.tabs && $refs.tabs.tabs.length > 1}" class="editors">
