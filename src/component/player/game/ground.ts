@@ -168,7 +168,7 @@ class Ground {
 			this.drawGrid(this.textureCtx)
 
 			// Draw checkerboard
-			if (this.game.tactic) {
+			if (this.game.tactic || this.game.map.groundColor === '#f2f2f2') {
 				this.textureCtx.save()
 				this.textureCtx.fillStyle = 'black'
 				this.textureCtx.globalAlpha = 0.11
