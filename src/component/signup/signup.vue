@@ -286,7 +286,7 @@
 				} else {
 					localStorage.setItem('login-attempt', 'true')
 					const redirect_uri = document.location.origin + "/api/farmer/login-github"
-					document.location.href = "https://github.com/login/oauth/authorize?client_id=0253d6b35d4db2a77a3b&redirect_uri=" + redirect_uri + "&state=" + data.state
+					document.location.href = "https://github.com/login/oauth/authorize?client_id=0253d6b35d4db2a77a3b&scope=user:email&redirect_uri=" + redirect_uri + "&state=" + data.state
 				}
 			}).error(errors => {
 				for (const error of errors) {
