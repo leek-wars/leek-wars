@@ -16,7 +16,7 @@ import { env } from '@/env'
 import { Action, ActionType } from '@/model/action'
 import { Area } from '@/model/area'
 import { EffectType } from '@/model/effect'
-import { Fight, FightData, TEAM_COLORS, FightType } from '@/model/fight'
+import { Fight, FightData, FightType, TEAM_COLORS } from '@/model/fight'
 import { i18n } from '@/model/i18n'
 import { LeekWars } from '@/model/leekwars'
 import Vue from 'vue'
@@ -1009,7 +1009,8 @@ class Game {
 			summon.summoner = this.leeks[caster]
 			summon.active = true
 			summon.drawID = this.addDrawableElement(summon, summon.y)
-			this.entityOrder.splice(this.entityOrder.findIndex((e) => e.id === caster) + 1, 0, summon)
+			const index = this.entityOrder.findIndex((e) => e.id === caster)
+			this.entityOrder.splice(index + 1, 0, summon)
 			if (!this.jumping) {
 				this.log(action)
 				S.bulb.play(this)
@@ -1930,7 +1931,9 @@ class Game {
 			if (!leek.active) {
 				if (leek.summon) {
 					const index = this.entityOrder.indexOf(leek)
-					if (index !== -1) { this.entityOrder.splice(index, 1) }
+					if (index !== -1) {
+						this.entityOrder.splice(index, 1)
+					}
 				}
 			} else {
 				leek.drawID = this.addDrawableElement(leek, leek.dy)

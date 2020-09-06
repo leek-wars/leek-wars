@@ -29,7 +29,7 @@
 			</div>
 		</div>
 		<div v-if="!LeekWars.mobile" class="timeline">
-			<tooltip v-for="entity in game.entityOrder" :key="entity.id" top>
+			<tooltip v-for="(entity, e) of game.entityOrder" :key="e" top>
 				<template v-slot:activator="{ on }">
 					<div :class="{summon: entity.summon, current: entity.id === game.currentPlayer, dead: entity.dead}" :style="{background: entity === game.selectedEntity || entity === game.mouseEntity ? '#fffc' : entity.gradient, 'border-color': entity.color}" class="entity" v-on="on" @mouseenter="entity_enter(entity)" @mouseleave="entity_leave(entity)" @click="entity_click(entity)">
 						<div v-if="!entity.dead" :style="{height: 'calc(6px + ' + ((entity.life / entity.maxLife) * 100) + '%)', background: entity.lifeColor, 'border-color': entity.lifeColorLighter}" class="bar"></div>
