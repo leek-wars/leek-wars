@@ -1,3 +1,78 @@
+213:
+  title: Registration via GitHub, accessible cells and checkerboard
+  added:
+    - Added registration and login via GitHub.
+    - Display of accessible cells when hovering over an entity in combat.
+    - "Combat: Added a checkerboard pattern in tactical mode."
+  improved:
+    - "Critical hits are now active on the Liberation chip: from -60% to -84% effects in CC."
+    - The selection color in the editor is gray instead of light purple.
+    - When registering, after activation the player is connected to the game directly.
+    - "Battle Royale: removal of the small toast at launch."
+    - "Team page: the slogan is not displayed if it is empty."
+    - Improvement of the style of the battle histories.
+    - Added missing sounds of new items in the market.
+    - Added a hover effect on tournament histories.
+    - Added a breadcrumb trail on the trophies page.
+    - "Documentation : changed the functions that mentioned 'leek' instead of 'entity'."
+    - The "new leek" button in the menu is hidden below level 20.
+    - The automatic BRs are now every 2 hours from 9am to 11pm, instead of every hour (Paris timezone).
+    - Added advanced farmer tooltips under the BRs.
+  fixed:
+    - Fixed an animation bug in Liberation, Alteration and illegal grenade launcher.
+    - Displaying missing leek titles on the combat page of a Battle Royale.
+    - Fixed a typo in the documentation of the isStatic method.
+    - Correction of the last update date on the registration page and addition of a title.
+    - Fixed a bug loading a team tournament if a composition is deleted.
+    - Correction of the color of the Battle Royales in the battle histories.
+    - "Battle report: correction in the display of the graph's health points (thanks to Liemmerle)."
+    - "Combat: correction of the avatars on the entities in Battle Royale."
+    - "Combat: correction of a bug that prevented to fly over the entities located at the bottom left."
+    - Correction of the update of the trophy statistics.
+    - Fixed a bug that prevented to return to the random map on a test scenario.
+    - Fixed a bug displaying entities in combat when a bulb was dying.
+
+212:
+  title: Tournament registration, auto Battle Royales, Docker and new server.
+  added:
+    - Automatic registration to the next tournament as long as the farmer has logged in the last 24 hours.
+    - Automatic Battle Royales every hour from 9am to 11pm (Paris timezone).
+    - Team history.
+    - Option to use a logarithmic scale for the fight report page graph.
+    - Display of the total number of connected players on the side chat.
+    - Added website moderation on the farmer page.
+  Improved:
+    - Migration to a new server and use of Docker.
+    - Improved the display of the documentation in the editor (autocompletion and tooltips).
+    - Added a breadcrumb trail and a loading wheel on the history pages.
+    - "Test card (nexus) : all white background and prettier obstacles"
+    - New features of the latest version are displayed on the registration page.
+    - Matchmaking team tightened to have closer compositions in talent.
+    - "Leek page: added the messages 'no weapon' and 'no chip'."
+    - Trophies on your farmer's page are cached.
+    - Solo and team fights are included in the farmer history.
+    - The compositions of less than 3 leeks do not count anymore for the team ranking.
+    - "Fight: shadows are now tilted at 45°."
+    - Added English translations for the modification history (thanks to RussianMafia).
+    - Added documentation for many constants (thanks to RussianMafia).
+    - Improved the operation and style of the tabs in the editor.
+    - Considerably speeded up the loading time of combat pages.
+    - "Nerf of the broadsword: the boost goes from 30 to 20."
+    - "Nerf M-Laser revoked: Poison increases from 60-70 to 50-60."
+  fixed:
+    - Added missing documentation for isStatic and sendTo (thanks to TomAijerrie).
+    - Fixed a display bug when buying a hat for the first time.
+    - Fixed a bug with the synchronization of the fight player when jumping in time.
+    - Correction of the color of coconuts on the beach map (yellow instead of brown).
+    - Correction of the bug of the personalized cards, which caused several bugs in test fight #514.
+    - Correction of the care of the Inversion chip. The care was decreased according to the distance with the target.
+    - Taking into account critical areas and hits for vulnerability effects (thanks to Lmare).
+    - Correction of the fight blocking bug.
+    - Fixed error messages on the registration, forgotten password and settings pages.
+    - Fixed a bug that made the fight go directly to the next turn in case of entity suicide.
+    - Fixed a bug that caused a double turn in combat.
+    - Fixed a bug in the listen() function.
+
 211:
   title: 4 new chips, 4 new colors, in combat moderation and new icons.
   added:
@@ -36,7 +111,7 @@
     - Correction of a bug allowing to use the "Hold a weapon" pomp without buying it.
     - "#ai Correction of getPathLenght cost, which is now greatly increased."
     - Correction of the large emojis on the chat.
-    - Great loading speed boost of the forum page for some players. 
+    - Great loading speed boost of the forum page for some players.
 
 210:
   title: Pomps, new hats, documentation, combat loading bar
@@ -191,8 +266,8 @@
     - Custom test maps correction.
     - Correction of the display of registers that overflowed on the leek page.
     - Correction of a bug on getWeapons() with test leeks.
-    - Display correction of the notification menu for the small mobile screens. 
-    
+    - Display correction of the notification menu for the small mobile screens.
+
 206:
   title: Rebalancing, front page redesign, performance improvements
   added:
@@ -245,7 +320,7 @@
     - "Combat reader : correction of the hovering of entities with the mouse + display of the targeted cell."
     - Correction of a bug preventing the player to create an AI when all the AIs are deleted.
     - "Forum : improvement of the trails of breadcrumbs and display them on the mobile version."
- 
+
 204:
   title: Editor improvements and combat reader
   added:
@@ -270,7 +345,7 @@
     - Display correction for the selected AI and folders in the editor.
 
 203:
-  title: Improved search in forum/ranking, Android app, hide unlocked trophies 
+  title: Improved search in forum/ranking, Android app, hide unlocked trophies
   added:
     - Creation of an Android App (from the web application).
     - "Forum search : added an option to sort by Pertinence, dates and votes + moderator and admin filter."
@@ -399,10 +474,10 @@
     - Performances improvement for combat actions and Log displaying (Thanks to Amal).
   fixed:
     - Correction of the edition function in the forum.
-    - Correction of the trophies Legend and Mythical (finally !). 
+    - Correction of the trophies Legend and Mythical (finally !).
     - Correction of the combat results in the farmer's history.
     - Correction of the XP bars too big in the combat reports.
-    - Correction of the combat report graphic after a resurrection (Thanks to Pump). 
+    - Correction of the combat report graphic after a resurrection (Thanks to Pump).
 
 198:
   title: Update 1.98 - Rebalancing, Fight history and combat purchase
@@ -446,7 +521,7 @@
     - Improvement to the scroll and management of anchors system (link to a precise message in the forum).
     - Improvement of the moderation and reports.
   fixed:
-    - Correction of the theme choice in the Editor. 
+    - Correction of the theme choice in the Editor.
 
 196:
   - Added a LeekScript v2 console (beta).
@@ -510,12 +585,12 @@
   - Add of 5 achievements for farmer tournament.
 
 112:
-  - Add of pathFinding for better fight performances. 
+  - Add of pathFinding for better fight performances.
   - Achievements on number of victories bug fixed.
   - Improvement of the team description edit.
 
 111:
-  - Reimplementation of subArray, push and push all methods. 
+  - Reimplementation of subArray, push and push all methods.
   - getFarestAlly() and getFarestEnemy() bug fixed.
   - double converted in int while using operator "-" bug fixed.
 
@@ -523,7 +598,7 @@
   - Add of a capital counter on the leek tab.
   - Add of the obtention date for each achievements earned on the farmer page.
   - Add of an display leek life option in fights.
-  - Improvement of the display fights handling. 
+  - Improvement of the display fights handling.
 
 109:
   - Add of a removal option on the forum and subject (only for moderators).
@@ -547,16 +622,16 @@
   - Tactic mode added (option in fight).
   - Option to modify display quality added.
   - Function getWeaponTargets(cell) added.
-  - Error "Unknown Function" is more explicit and does no longer crash the AI, the value null is returned. 
+  - Error "Unknown Function" is more explicit and does no longer crash the AI, the value null is returned.
 
 105:
   - Generation fights bug corrected.
   - Function getCellToUseWeapon for linear range (laser) corrected.
-  - Improvement of the editor to handle a big amount of AI. 
+  - Improvement of the editor to handle a big amount of AI.
 
 104:
   - Limit of 5.000 debug() per fight.
-  - Reaching a nonexistent index of an array does no longer create this index. 
+  - Reaching a nonexistent index of an array does no longer create this index.
 
 103:
   - Function getInstructionCount() added, to get the number of instructions executed by the leek during the current turn.
@@ -566,7 +641,7 @@
 
 102:
   - Improvement of the editor, concerning the creation, name modification and removal of the AI. For extension creator => it may cause problems.
-  - Trophies added 
+  - Trophies added
 
 101:
   - Sale of weapon added => give back 80% of the initial price.

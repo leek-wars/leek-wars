@@ -1,3 +1,37 @@
+213:
+  title: Inscription via GitHub, cellules accessibles et damier
+  added:
+    - Ajout de l'inscription et de la connexion via GitHub.
+    - Affichage des cellules accessibles au survol d'une entité en combat.
+    - "Combat : ajout d'un motif damier en mode tactique."
+  improved:
+    - "Les coups critiques sont désormais actifs sur la puce Libération : de -60% à -84% d'effets en CC."
+    - La couleur de sélection dans l'éditeur est grise au lieu de mauve clair.
+    - Lors de l'inscription, après l'activation le joueur est connecté au jeu directement.
+    - "Battle Royale : suppression du petit toast au lancement."
+    - "Page équipe : le slogan n'est pas affiché si il est vide."
+    - Amélioration du style des historiques de combat.
+    - Ajout des sons manquants de nouveaux items dans le marché.
+    - Ajout d'un effet d'hover sur les historiques de tournoi.
+    - Ajout d'un fil d'ariane sur la page des trophées.
+    - "Documentation : changement des fonctions qui mentionnaient 'poireau' au lieu de 'entité'."
+    - Le bouton "nouveau poireau" du menu est masqué en dessous du niveau 20.
+    - Les BR automatiques sont maintenant toutes les 2h de 9h à 23h, au lieu de toutes les heures.
+    - Ajout des tooltips avancées d'éleveur sous les BR.
+  fixed:
+    - Correction d'un bug d'animation de Libération, Altération et du lance-grenades illicite.
+    - Affichage des titres de poireaux manquants sur la page combat d'une Battle Royale.
+    - Correction d'une typo dans la documentation de la méthode isStatic.
+    - Correction de la date de dernière màj sur la page inscription et ajout d'un titre.
+    - Correction d'un bug de chargement de tournoi d'équipe si une composition est supprimée.
+    - Correction de la couleur des Battle Royales dans les historiques de combat.
+    - "Rapport de combat : correction dans l'affichage des points de vie du graphe (merci à Liemmerle)."
+    - "Combat : corrections des avatars sur les entités en Battle Royale."
+    - "Combat : correction d'un bug qui empechait de survoler les entités situées en bas à gauche."
+    - Correction de la mise à jour des statistiques de trophées.
+    - Correction d'un bug qui empêchait de revenir à la map aléatoire sur un scénario de test.
+    - Correction d'un bug d'affichage des entités en combat lorsqu'un bulbe mourait.
+
 212:
   title: Inscription auto aux tournois, Battle Royales auto, Docker et nouveau serveur.
   added:
