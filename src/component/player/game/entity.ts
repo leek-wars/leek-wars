@@ -67,6 +67,7 @@ class Entity {
 	public dx = 0
 	public dy = 0
 	public dz = 0
+	public dcell: Cell | null = null
 	// Position en pixels
 	public ox = 0
 	public oy = 0
@@ -136,48 +137,34 @@ class Entity {
 		if (cell === null) {
 			console.trace("Cell is null")
 		}
-		this.setCellInternal(cell)
-		this.path = []
-		this.moveDelay = 0
-		this.moveAnim = 0
-		const pos = this.game.ground.cellToXY(cell)
-		this.setPosition(pos.x, pos.y)
-		this.computeOrginPos()
-	}
-
-	public setCellInternal(cell: Cell) {
 		if (this.cell) {
 			this.cell.entity = null
 		}
 		this.cell = cell
 		cell.entity = this
-	}
 
-	public computeOrginPos() {
-		const pos = this.game.ground.xyToXYPixels(this.x, this.y)
-		this.ox = pos.x
-		this.oy = pos.y
-		this.isTop = this.y <= 4
-	}
-
-	public setPosition(x: number, y: number) {
+		const pos = this.game.ground.cellToXY(cell)
 		const oldY = this.y
 
-		this.x = x
-		this.dx = x
-		this.rx = x
+		this.x = pos.x
+		this.dx = pos.x
+		this.rx = pos.x
 
-		this.y = y
-		this.dy = y
-		this.ry = y
+		this.y = pos.y
+		this.dy = pos.y
+		this.ry = pos.y
 
 		this.z = this.baseZ
 
 		this.isTop = this.y <= 4
-		this.computeOrginPos()
 
-		if (oldY !== y && this.drawID != null) {
-			this.game.moveDrawableElement(this, this.drawID, oldY, y)
+		const xy = this.game.ground.xyToXYPixels(this.x, this.y)
+		this.ox = xy.x
+		this.oy = xy.y
+		this.isTop = this.y <= 4
+
+		if (oldY !== this.y && this.drawID != null) {
+			this.game.moveDrawableElement(this, this.drawID, oldY, this.y)
 		}
 	}
 
@@ -211,9 +198,9 @@ class Entity {
 		// Set destination
 		this.rx = this.x
 		this.ry = this.y
+		this.dcell = cell
 
 		const distance = Math.abs(this.cell!.x - cell.x) + Math.abs(this.cell!.y - cell.y)
-		this.setCellInternal(cell)
 
 		const pos = this.game.ground.cellToXY(cell)
 
@@ -238,11 +225,6 @@ class Entity {
 			} else {
 				this.setOrientation(EntityDirection.NORTH)
 			}
-		}
-
-		// Update line
-		if (this.drawID) {
-			this.game.moveDrawableElement(this, this.drawID, this.ry, this.dy)
 		}
 	}
 
@@ -483,6 +465,7 @@ class Entity {
 				if (this.deadAnim <= 0) {
 					if (this.drawID) {
 						this.game.removeDrawableElement(this.drawID, this.dy)
+						this.drawID = null
 					}
 					this.game.actionDone()
 				}
@@ -506,10 +489,8 @@ class Entity {
 				if (this.moveAnim <= 0) {
 					// Arrivé
 					S.move.play(this.game)
-					this.x = this.dx
-					this.y = this.dy
 					this.z = this.baseZ
-					this.computeOrginPos()
+					this.setCell(this.dcell!)
 
 					this.moveDelay = MOVE_DELAY
 					this.pathNext()
@@ -519,9 +500,12 @@ class Entity {
 					const progress = 1 - this.moveAnim / this.moveDuration
 
 					this.z = this.baseZ + Math.pow(Math.cos((Math.PI * (progress - 0.5))), 1) * this.jumpHeight
-					this.x = this.rx + (this.dx - this.rx) * progress
-					this.y = this.ry + (this.dy - this.ry) * progress
-					this.computeOrginPos()
+					const x = this.rx + (this.dx - this.rx) * progress
+					const y = this.ry + (this.dy - this.ry) * progress
+
+					const xy = this.game.ground.xyToXYPixels(x, y)
+					this.ox = xy.x
+					this.oy = xy.y
 				}
 			}
 		}
@@ -568,7 +552,6 @@ class Entity {
 		const pos = this.game.ground.cellToXY(cell)
 		const cellPixels = this.game.ground.xyToXYPixels(pos.x, pos.y)
 		this.watch(cell)
-		this.computeOrginPos()
 		chip.launch({x: this.ox, y: this.oy}, cellPixels, targets, cell, this)
 	}
 
@@ -623,6 +606,7 @@ class Entity {
 	public stopGaz() {
 		this.gazing--
 	}
+
 	public kill(animation: boolean) {
 		this.dead = true
 		if (animation) {
@@ -630,16 +614,15 @@ class Entity {
 		}
 		this.bubble = null
 		if (this.drawID) {
-			this.game.removeDrawableElement(this.drawID, this.dy)
+			this.game.removeDrawableElement(this.drawID, this.y)
 			this.drawID = null
 		}
 	}
+
 	public reborn() {
 		this.dead = false
 		this.bubble = new Bubble(this.game)
-		if (this.drawID == null) {
-			this.drawID = this.game.addDrawableElement(this, this.dy)
-		}
+		this.active = true
 	}
 
 	public draw(ctx: CanvasRenderingContext2D) {
