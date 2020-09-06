@@ -153,7 +153,7 @@
 					; (item as any).lower_name = item.name.toLowerCase()
 					; (item as any).real_name = item.name
 					; (item as any).id = id++
-					; (item as any).data = ''
+					; (item as any).data = (this.$t('doc.const_' + item.name) as string).toLowerCase()
 				}
 				LeekWars.setTitle(this.$i18n.t('title'))
 				this.update()
