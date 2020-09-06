@@ -9,13 +9,15 @@ abstract class Map {
 	public groundTexture: Texture
 	public obstaclesSmall: Texture[]
 	public obstaclesBig: Texture[]
-	constructor(game: Game, sound: Sound, groundColor: string, groundTexture: Texture, obstaclesSmall: Texture[], obstaclesBig: Texture[]) {
+	public reachableColor: string
+	constructor(game: Game, sound: Sound, groundColor: string, groundTexture: Texture, obstaclesSmall: Texture[], obstaclesBig: Texture[], reachableColor: string) {
 		this.game = game
 		this.sound = sound
 		this.groundColor = groundColor
 		this.groundTexture = groundTexture
 		this.obstaclesSmall = obstaclesSmall
 		this.obstaclesBig = obstaclesBig
+		this.reachableColor = reachableColor
 	}
 	create() {
 		this.sound.load(this.game)
@@ -39,7 +41,7 @@ class Beach extends Map {
 	constructor(game: Game) {
 		super(game, S.map_beach, "#ffff52", T.beach,
 			[T.starfish, T.starfish2, T.palm],
-			[T.pebble, T.pebble, T.pebble])
+			[T.pebble, T.pebble, T.pebble], "#333")
 		T.starfish.offset = 1.2
 		T.starfish2.offset = 1.2
 		T.palm.offset = 4.0
@@ -49,7 +51,7 @@ class Desert extends Map {
 	constructor(game: Game) {
 		super(game, S.map_desert, "#ffc000", T.desert,
 			[T.desert_rock2_small, T.desert_grass, T.cactus],
-			[T.desert_rock1_big, T.desert_rock2_big, T.desert_rock3_big])
+			[T.desert_rock1_big, T.desert_rock2_big, T.desert_rock3_big], "#333")
 		T.cactus.offset = 2.0
 		T.desert_grass.offset = 2.0
 	}
@@ -78,7 +80,7 @@ class Factory extends Map {
 	constructor(game: Game) {
 		super(game, S.map_factory, "#8C8C8C", T.factory,
 			[T.box, T.barrel, T.cone],
-			[T.big_box, T.big_box, T.cone_big])
+			[T.big_box, T.big_box, T.cone_big], "#fff")
 		T.barrel.offset = 1.0
 		T.cone.offset = 1.15
 		T.box.offset = 1.2
@@ -89,7 +91,7 @@ class Forest extends Map {
 	constructor(game: Game) {
 		super(game, S.map_forest, "#2a6800", T.forest,
 			[T.forest_rock_small, T.forest_rock_small, T.mushroom],
-			[T.forest_rock, T.stump, T.stump])
+			[T.forest_rock, T.stump, T.stump], "#fff")
 		T.stump.offset = 1.1
 		T.mushroom.offset = 1.3
 	}
@@ -125,7 +127,7 @@ class Glacier extends Map {
 	constructor(game: Game) {
 		super(game, S.map_glacier, "#2effff", T.glacier,
 			[T.ice_small, T.ice_small, T.ice_small],
-			[T.snowman, T.fir, T.ice])
+			[T.snowman, T.fir, T.ice], "#fff")
 		T.fir.offset = 1.5
 		T.snowman.offset = 0.8
 	}
@@ -134,7 +136,7 @@ class Nexus extends Map {
 	constructor(game: Game) {
 		super(game, S.map_nexus, "#f2f2f2", T.nexus_bg,
 			[T.nexus_block_small, T.nexus_block_small, T.nexus_block_small],
-			[T.nexus_block, T.nexus_block, T.nexus_block])
+			[T.nexus_block, T.nexus_block, T.nexus_block], "#333")
 		T.nexus_block.offset = 1.177
 		T.nexus_block_small.offset = 1.18
 	}
@@ -143,7 +145,7 @@ class Arena extends Map {
 	constructor(game: Game) {
 		super(game, S.map_desert, "#aca28b", T.arena,
 			[T.grass, T.pillar, T.small_cube],
-			[T.pyramid, T.cube, T.square])
+			[T.pyramid, T.cube, T.square], "#fff")
 		T.grass.offset = 1.5
 		T.pillar.offset = 1.3
 		T.cube.offset = 1.0

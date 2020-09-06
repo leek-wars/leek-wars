@@ -16,7 +16,7 @@
 			<div>Particles : {{ game.particles.particles.length }}</div>
 			<div>Mouse : ({{ game.mouseX }}, {{ game.mouseY }})</div>
 			<div>Mouse tile : ({{ game.mouseTileX }}, {{ game.mouseTileY }})</div>
-			<div>Mouse cell : {{ game.mouseCell }}</div>
+			<div>Mouse cell : <span v-if="game.mouseCell">{obstacle: {{ game.mouseCell.obstacle }}, entity: <span v-if="game.mouseCell.entity">{{ game.mouseCell.entity.name }}</span>, id: {{ game.mouseCell.id }}, x: {{ game.mouseCell.x }}, y: {{ game.mouseCell.y }}}</span></div>
 			<div>FPS : {{ game.fps }}, avg: {{ game.avgFPS }}</div>
 			<div>Resources : {{ game.numData }}</div>
 		</div>
@@ -86,12 +86,13 @@
 		}
 		entity_enter(entity: any) {
 			this.game.hoverEntity = entity
+			this.game.hoverEntity!.updateReachableCells()
 		}
 		entity_leave(entity: any) {
 			this.game.hoverEntity = null
 		}
 		entity_click(entity: any) {
-			this.game.selectedEntity = entity
+			this.game.selectEntity(entity)
 		}
 
 		logClass(log: any[]) {
@@ -228,9 +229,11 @@
 	}
 	.debug {
 		position: absolute;
-		top: 5px;
+		top: 0;
 		left: 200px;
 		text-align: left;
+		background: rgba(255,255,255,0.9);
+		padding: 5px;
 	}
 	.left-part {
 		position: absolute;

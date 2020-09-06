@@ -111,6 +111,9 @@ class Entity {
 	public bloodTex: Texture
 	public lifeColor!: string
 	public lifeColorLighter!: string
+	// Reachable cells
+	public reachableCells: Set<Cell> = new Set<Cell>()
+	public reachableCellsArea: any
 
 	constructor(game: Game, type: EntityType, team: number) {
 		this.game = game
@@ -130,13 +133,24 @@ class Entity {
 	}
 
 	public setCell(cell: Cell) {
-		this.cell = cell
+		if (cell === null) {
+			console.trace("Cell is null")
+		}
+		this.setCellInternal(cell)
 		this.path = []
 		this.moveDelay = 0
 		this.moveAnim = 0
 		const pos = this.game.ground.cellToXY(cell)
 		this.setPosition(pos.x, pos.y)
 		this.computeOrginPos()
+	}
+
+	public setCellInternal(cell: Cell) {
+		if (this.cell) {
+			this.cell.entity = null
+		}
+		this.cell = cell
+		cell.entity = this
 	}
 
 	public computeOrginPos() {
@@ -199,7 +213,7 @@ class Entity {
 		this.ry = this.y
 
 		const distance = Math.abs(this.cell!.x - cell.x) + Math.abs(this.cell!.y - cell.y)
-		this.cell = cell
+		this.setCellInternal(cell)
 
 		const pos = this.game.ground.cellToXY(cell)
 
@@ -232,12 +246,55 @@ class Entity {
 		}
 	}
 
+	public updateReachableCells() {
+		// console.log("update reachable cells", this.name)
+
+		this.reachableCells.clear()
+
+		let grow = [this.cell]
+
+		for (let i = 1; i <= this.mp; ++i) {
+			const new_cells = []
+			for (const c of grow) {
+				const c1 = this.game.ground.next_cell(c, 1, 0)
+				const c2 = this.game.ground.next_cell(c, -1, 0)
+				const c3 = this.game.ground.next_cell(c, 0, 1)
+				const c4 = this.game.ground.next_cell(c, 0, -1)
+				if (c1 && !c1.obstacle && !c1.entity && !this.reachableCells.has(c1)) {
+					new_cells.push(c1)
+					this.reachableCells.add(c1)
+				}
+				if (c2 && !c2.obstacle && !c2.entity && !this.reachableCells.has(c2)) {
+					new_cells.push(c2)
+					this.reachableCells.add(c2)
+				}
+				if (c3 && !c3.obstacle && !c3.entity && !this.reachableCells.has(c3)) {
+					new_cells.push(c3)
+					this.reachableCells.add(c3)
+				}
+				if (c4 && !c4.obstacle && !c4.entity && !this.reachableCells.has(c4)) {
+					new_cells.push(c4)
+					this.reachableCells.add(c4)
+				}
+			}
+			grow = new_cells
+		}
+		// console.log(Array.from(this.reachableCells).map(cell => cell.id))
+
+		this.reachableCellsArea = this.game.createReachableAreaOutline(this.mp, this.cell!, this.reachableCells)
+	}
+
 	public looseMP(mp: number, jump: boolean) {
 		this.mp -= mp
 		if (!jump) {
 			const info = new InfoText()
 			info.init("-" + mp, Colors.MP_COLOR, -this.getHeight(), this.isTop)
 			this.infoText.push(info)
+
+			// Update reachable cells when loosing MPs
+			if (this.game.mouseEntity === this || this.game.hoverEntity === this || this.game.selectedEntity === this) {
+				this.updateReachableCells()
+			}
 		}
 	}
 
@@ -247,6 +304,11 @@ class Entity {
 			const info = new InfoText()
 			info.init("+" + mp, Colors.MP_COLOR, -this.getHeight(), this.isTop)
 			this.infoText.push(info)
+
+			// Update reachable cells when earning MPs
+			if (this.game.mouseEntity === this || this.game.hoverEntity === this || this.game.selectedEntity === this) {
+				this.updateReachableCells()
+			}
 		}
 	}
 
@@ -647,20 +709,24 @@ class Entity {
 
 	public drawPath(ctx: CanvasRenderingContext2D) {
 		if (this.x !== this.dx || this.y !== this.dy) {
+			ctx.save()
+			ctx.globalAlpha = 0.5
+			ctx.fillStyle = 'white'
+
 			for (const cell of this.path) {
 				const pos = this.game.ground.cellToXY(cell)
 				this.drawWhiteTile(ctx, pos.x, pos.y)
 			}
 			this.drawWhiteTile(ctx, this.dx, this.dy)
+
+			ctx.globalAlpha = 1
+			ctx.restore()
 		}
 	}
 
 	public drawWhiteTile(ctx: CanvasRenderingContext2D, x: number, y: number) {
 
 		ctx.save()
-		ctx.globalAlpha = 0.5
-		ctx.fillStyle = 'white'
-
 		ctx.translate(((x + 1) / 2) * this.game.ground.tileSizeX, ((y + 1) / 2) * this.game.ground.tileSizeY)
 
 		ctx.beginPath()
@@ -671,8 +737,6 @@ class Entity {
 		ctx.closePath()
 
 		ctx.fill()
-
-		ctx.globalAlpha = 1
 		ctx.restore()
 	}
 
