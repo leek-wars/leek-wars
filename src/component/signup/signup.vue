@@ -281,10 +281,10 @@
 			}
 			LeekWars.post(service, args).then(data => {
 				if (this.signupMethod === 1) {
+					localStorage.setItem('login-attempt', 'true')
 					this.$router.push('/signup/success/' + this.login)
 				} else {
 					localStorage.setItem('login-attempt', 'true')
-					localStorage.setItem('token', '$')
 					const redirect_uri = document.location.origin + "/api/farmer/login-github"
 					document.location.href = "https://github.com/login/oauth/authorize?client_id=0253d6b35d4db2a77a3b&redirect_uri=" + redirect_uri + "&state=" + data.state
 				}
