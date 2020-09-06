@@ -4,6 +4,7 @@ import { vueMain } from '@/model/vue'
 import { store } from './store'
 
 enum SocketMessage {
+	AUTH = 0,
 	TEAM_CHAT_SEND = 1,
 	TEAM_CHAT_RECEIVE = 2,
 	TEAM_CHAT_MEMBERS = 3,
@@ -55,9 +56,13 @@ class Socket {
 		this.socket = new WebSocket(env.WEBSOCKET)
 
 		this.socket.onopen = () => {
+			if (env.DEV) {
+				// In dev mode, auth via a AUTH message
+				this.send([SocketMessage.AUTH, store.state.token])
+			}
 			store.commit('wsconnected')
 			this.retry_count = 10
-			this.retry_delay = 1000
+			this.retry_delay = 5000
 			for (const p of this.queue) {
 				this.send(p)
 			}
@@ -76,10 +81,6 @@ class Socket {
 			vueMain.$emit('wsmessage', {type: id, data})
 
 			switch (id) {
-				case 0 : {
-					// send({id: 0})
-					break
-				}
 				case SocketMessage.FORUM_CHAT_RECEIVE : {
 					store.commit('chat-receive', {message: data})
 					break
