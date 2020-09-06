@@ -129,6 +129,27 @@
 						</div>
 					</div>
 				</panel>
+
+				<div v-if="!LeekWars.mobile" class="menu">
+					<div v-ripple class="item" @click="scroll(0)">
+						<v-icon>mdi-sword-cross</v-icon> {{ $t('fights') }}
+					</div>
+					<div v-ripple class="item" @click="scroll(1)">
+						<v-icon>mdi-pistol</v-icon> {{ $t('weapons') }}
+					</div>
+					<div v-ripple class="item" @click="scroll(2)">
+						<v-icon>mdi-chip</v-icon> {{ $t('chips') }}
+					</div>
+					<div v-ripple class="item" @click="scroll(3)">
+						<v-icon>mdi-bottle-tonic-plus-outline</v-icon> {{ $t('potions') }}
+					</div>
+					<div v-ripple class="item" @click="scroll(4)">
+						<v-icon>mdi-hat-fedora</v-icon> {{ $t('hats') }}
+					</div>
+					<div v-ripple class="item" @click="scroll(5)">
+						<v-icon>mdi-auto-fix</v-icon> {{ $t('pomps') }}
+					</div>
+				</div>
 			</div>
 		</div>
 
@@ -218,6 +239,7 @@
 	import { EffectTypeMarket } from '@/model/effect'
 	import { Farmer } from '@/model/farmer'
 	import { HatTemplate } from '@/model/hat'
+	import { mixins } from '@/model/i18n'
 	import { ItemTemplate, ItemType } from '@/model/item'
 	import { LeekWars } from '@/model/leekwars'
 	import { PompTemplate } from '@/model/pomp'
@@ -233,7 +255,7 @@
 	import WeaponPreview from './weapon-preview.vue'
 
 	@Component({
-		name: 'market', i18n: {},
+		name: 'market', i18n: {}, mixins,
 		components: {
 			'weapon-preview': WeaponPreview,
 			'chip-preview': ChipPreview,
@@ -484,6 +506,11 @@
 				}, 200)
 			}
 		}
+
+		scroll(index: number) {
+			const position = document.querySelectorAll('.column8 h2')[index].getBoundingClientRect().top + window.scrollY
+			window.scrollTo(0, position)
+		}
 	}
 </script>
 
@@ -497,11 +524,20 @@
 	}
 	.column4 {
 		position: sticky;
-		top: 15px;
+		top: 12px;
+		max-height: calc(100vh - 24px);
+		display: inline-flex;
+		flex-direction: column;
+		& > * {
+			min-height: 0;
+		}
 	}
 	.preview.content {
 		text-align: center;
 		padding: 0;
+	}
+	.preview {
+		overflow-y: auto;
 	}
 	.preview .leeks {
 		padding: 6px 0;
@@ -537,13 +573,13 @@
 	.items.pomps {
 		grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
 	}
-	.item {
+	.items .item {
 		border: 1px solid #ddd;
 		cursor: pointer;
 		position: relative;
 		text-align: center;
 	}
-	.item.router-link-active {
+	.items .item.router-link-active {
 		background: white;
 		box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
 	}
@@ -692,6 +728,27 @@
 			img {
 				vertical-align: bottom;
 				width: 75px;
+			}
+		}
+	}
+	.menu {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+		grid-gap: 8px;
+		margin-top: 8px;
+		margin-right: 12px;
+		user-select: none;
+		flex: 0 0 auto;
+		.item {
+			background: #f2f2f2;
+			border-radius: 4px;
+			box-shadow: 0px 10px 11px -11px rgba(0,0,0,0.75);
+			padding: 8px 5px;
+			cursor: pointer;
+			color: #555;
+			&:hover {
+				background: white;
+				color: black;
 			}
 		}
 	}
