@@ -2052,6 +2052,7 @@ class Game {
 		// Clear entity effects
 		for (const entity of this.leeks) {
 			entity.effects = {}
+			entity.infoText = []
 		}
 		this.consoleLines = []
 		this.effects = []
