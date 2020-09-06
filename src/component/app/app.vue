@@ -23,7 +23,7 @@
 
 			<lw-bar v-if="LeekWars.mobile" />
 
-			<div v-if="!LeekWars.mobile" class="big-leeks">
+			<div v-if="!LeekWars.mobile" class="big-leeks" :class="{flex: LeekWars.flex || LeekWars.large}">
 				<div class="wrapper">
 					<img class="big-leek-1" :src="LeekWars.leekTheme ? '/image/big_leek_1_white.png' : '/image/big_leek_1.png'">
 					<img class="big-leek-2" :src="LeekWars.leekTheme ? '/image/big_leek_2_white.png' : '/image/big_leek_2.png'">
@@ -268,9 +268,15 @@
 		height: 100px;
 		.wrapper {
 			position: relative;
-			max-width: 1000px;
+			max-width: 1100px;
 			margin: 0 auto;
 			height: 100px;
+		}
+		&.flex {
+			.wrapper {
+				max-width: none;
+				width: 100%;
+			}
 		}
 	}
 	#app.connected .big-leeks {
@@ -284,17 +290,16 @@
 		z-index: -10;
 	}
 	.big-leek-1 {
-		left: -205px;
+		left: -153px;
 		bottom: 50px;
 	}
 	.big-leek-2 {
-		right: -280px;
+		right: -230px;
 		bottom: 50px;
 	}
 	.page-wrapper {
 		background: rgba(255, 255, 255, 0.1);
 		padding: 12px;
-		padding-bottom: 0;
 	}
 	#app.app .page-wrapper {
 		background: none;
@@ -302,7 +307,7 @@
 	}
 	.page {
 		margin-right: -12px;
-		min-height: calc(100vh - 244px);
+		min-height: calc(100vh - 256px);
 	}
 	.dark {
 		display: none;
@@ -330,17 +335,24 @@
 		flex: 1;
 	}
 	@media screen and (min-width: 1600px) {
-		#app.connected:not(.social-collapsed):not(.app) .app-center {
-			margin-right: 400px;
+		#app.connected:not(.social-collapsed):not(.app) {
+			.app-center {
+				margin-right: 400px;
+			}
+			.chats {
+				padding-right: 400px;
+			}
+			.big-leeks {
+				right: 420px;
+			}
 		}
-		#app.connected:not(.social-collapsed):not(.app) .chats {
-			padding-right: 400px;
-		}
-		#app.connected.social-collapsed .app-center {
-			margin-right: 30px;
-		}
-		#app.connected:not(.social-collapsed) .big-leeks {
-			right: 420px;
+		#app.connected.social-collapsed {
+			.app-center {
+				margin-right: 30px;
+			}
+			.big-leeks {
+				right: 50px;
+			}
 		}
 	}
 	@media screen and (max-width: 999px) {
