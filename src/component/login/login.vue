@@ -69,7 +69,6 @@
 
 		githubStart() {
 			localStorage.setItem('login-attempt', 'true')
-			localStorage.setItem('token', '$')
 			document.location.href = env.API + "farmer/start-github-login"
 		}
 	}
