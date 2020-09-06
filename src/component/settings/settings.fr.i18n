@@ -28,6 +28,7 @@
 	"error_password_length": "Le mot de passe doit contenir entre {0} et {1} caractères",
 	"error_wrong_password": "Le mot de passe est incorrect",
 	"language": "Langue",
+	"leek_theme": "Grands poireaux en blanc",
 	"logout": "Déconnexion",
 	"new_password": "Nouveau mot de passe",
 	"notifs_results": "Résultats des combats dans les notifications",

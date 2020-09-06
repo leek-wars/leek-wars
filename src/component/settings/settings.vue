@@ -30,9 +30,13 @@
 							<td><h4>{{ $t('notifs_results') }}</h4></td>
 							<td><v-switch v-model="notifsResults" hide-details /></td>
 						</tr>
-						<tr v-if="LeekWars.mobile" id="chat-first-button">
+						<tr v-if="LeekWars.mobile">
 							<td><h4>{{ $t('chat_first') }}</h4></td>
 							<td><v-switch v-model="chatFirst" hide-details /></td>
+						</tr>
+						<tr v-if="!LeekWars.mobile">
+							<td><h4>{{ $t('leek_theme') }}</h4></td>
+							<td><v-switch v-model="LeekWars.leekTheme" hide-details /></td>
 						</tr>
 					</table>
 				</panel>
@@ -332,6 +336,11 @@
 		@Watch('settings.github_login')
 		updateGithubLogin() {
 			LeekWars.post("settings/update-setting", {setting: 'github_login', value: this.settings.github_login})
+		}
+
+		@Watch('LeekWars.leekTheme')
+		updateLeekTheme() {
+			localStorage.setItem('leek-theme', '' + LeekWars.leekTheme)
 		}
 	}
 </script>

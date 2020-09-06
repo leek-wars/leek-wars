@@ -25,8 +25,8 @@
 
 			<div v-if="!LeekWars.mobile" class="big-leeks">
 				<div class="wrapper">
-					<img class="big-leek-1" src="/image/big_leek_1_white.png">
-					<img class="big-leek-2" src="/image/big_leek_2_white.png">
+					<img class="big-leek-1" :src="LeekWars.leekTheme ? '/image/big_leek_1_white.png' : '/image/big_leek_1.png'">
+					<img class="big-leek-2" :src="LeekWars.leekTheme ? '/image/big_leek_2_white.png' : '/image/big_leek_2.png'">
 				</div>
 			</div>
 
