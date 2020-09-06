@@ -18,8 +18,8 @@
 				<span v-for="(farmer, f, i) in fight.farmers1" :key="f">
 					<span v-if="i !== 0" class="br-versus">VS</span>
 					<router-link :to="'/farmer/' + farmer.id">
-						<rich-tooltip-farmer :id="farmer.id">
-							<div class="farmer">
+						<rich-tooltip-farmer :id="farmer.id" v-slot="{ on: rich }">
+							<div class="farmer" v-on="rich">
 								<avatar :farmer="farmer" /><br>
 								<span class="name">{{ farmer.name }}</span>
 							</div>
