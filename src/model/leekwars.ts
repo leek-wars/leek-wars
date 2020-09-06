@@ -188,6 +188,7 @@ const LeekWars = {
 	flex: false,
 	footer: true,
 	nativeEmojis: detectNativeEmojis(),
+	leekTheme: localStorage.getItem('leek-theme') === 'true',
 	setLocale(locale: string) {
 		loadLanguageAsync(vueMain, locale)
 		LeekWars.post('farmer/set-language', {language: locale})

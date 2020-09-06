@@ -28,6 +28,7 @@
 	"error_password_length": "The password shall contain {0} to {1} characters",
 	"error_wrong_password": "The password is incorrect",
 	"language": "Language",
+	"leek_theme": "Big leeks in white",
 	"logout": "Log out",
 	"new_password": "New password",
 	"notifs_results": "Fights results in notifications",
