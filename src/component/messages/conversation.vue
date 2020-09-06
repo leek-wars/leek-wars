@@ -80,7 +80,7 @@
 	}
 	.date {
 		position: absolute;
-		color: #777;
+		color: #555;
 		font-size: 12px;
 		top: 8px;
 		right: 8px;

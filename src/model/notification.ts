@@ -48,7 +48,7 @@ class Notification {
 			if (isNew) {
 				store.commit('level-up', {leek: leekId, level})
 			}
-			return new Notification(data, "/leek/" + leekId, "level_up", [leekName, level], [leekName])
+			return new Notification(data, "/leek/" + leekId, "mdi-transfer-up", [leekName, level], [leekName])
 		} else if (type === NotificationType.FIGHT_REPORT) {
 			let leekName = "?"
 			if (params[0] in leeks) {
@@ -57,36 +57,36 @@ class Notification {
 			const fightId = params[1]
 			const enemyName = params[2]
 			const result = params.length > 3 ? parseInt(params[3], 10) : null
-			return new Notification(data, "/fight/" + fightId, "fight", [leekName, enemyName], [], result)
+			return new Notification(data, "/fight/" + fightId, "garden.png", [leekName, enemyName], [], result)
 		} else if (type === NotificationType.NEW_MESSAGE) {
 			const farmerName = params[0]
 			const topicId = params[1]
 			const catgoryId = params[3]
 			const page = parseInt(params[4], 10)
 			const topicTitle = params[5]
-			return new Notification(data, "/forum/category-" + catgoryId + "/topic-" + topicId + (page > 1 ? "/page-" + page : "") + "#message-" + params[2], "forum_response", [farmerName, topicTitle])
+			return new Notification(data, "/forum/category-" + catgoryId + "/topic-" + topicId + (page > 1 ? "/page-" + page : "") + "#message-" + params[2], "mdi-forum", [farmerName, topicTitle])
 		} else if (type === NotificationType.COMPOSITION_FIGHT_REPORT) {
 			const leekName = leeks[parseInt(params[0], 10)].name
 			const fightId = params[1]
 			const teamName = params[2]
 			const result = params.length > 3 ? parseInt(params[3], 10) : null
-			return new Notification(data, "/fight/" + fightId, "team_fight", [leekName, teamName], [], result)
+			return new Notification(data, "/fight/" + fightId, "team_fight.png", [leekName, teamName], [], result)
 		} else if (type === NotificationType.TEAM_BANNED) {
 			const teamName = params[0]
-			return new Notification(data, "/farmer", "team_banned", [teamName])
+			return new Notification(data, "/farmer", "team_banned.png", [teamName])
 		} else if (type === NotificationType.TEAM_NEW_CANDIDACY) {
 			const teamID = params[0]
 			const teamName = params[1]
 			const farmerName = params[2]
-			return new Notification(data, "/team/" + teamID, "team_candidacy", [farmerName, teamName])
+			return new Notification(data, "/team/" + teamID, "team_candidacy.png", [farmerName, teamName])
 		} else if (type === NotificationType.CANDIDACY_ACCEPTED) {
 			const teamID = params[0]
 			const teamName = params[1]
-			return new Notification(data, "/team/" + teamID, "team_accepted", [teamName])
+			return new Notification(data, "/team/" + teamID, "team_accepted.png", [teamName])
 		} else if (type === NotificationType.CANDIDACY_REFUSED) {
 			const teamID = params[0]
 			const teamName = params[1]
-			return new Notification(data, "/team/" + teamID, "team_refused", [teamName])
+			return new Notification(data, "/team/" + teamID, "team_refused.png", [teamName])
 		} else if (type === NotificationType.TOURNAMENT_WINNER) {
 			const tournamentID = params[0]
 			const leekName = params[1]
@@ -95,73 +95,74 @@ class Notification {
 			return new Notification(data, "/farmer", "tournament_fail")
 		} else if (type === NotificationType.TROPHY_UNLOCKED) {
 			const trophyID = parseInt(params[0], 10)
-			const trophyName = i18n.t('trophy.' + LeekWars.trophies[trophyID - 1].code) as string
-			return new Notification(data, "/farmer", "trophy_unlocked", [trophyName])
+			const trophy = LeekWars.trophies[trophyID - 1]
+			const trophyName = i18n.t('trophy.' + trophy.code) as string
+			return new Notification(data, "/farmer", "trophy/" + trophy.code + '.png', [trophyName])
 		} else if (type === NotificationType.FIGHT_COMMENT) {
 			const farmerName = params[0]
 			const fightID = params[1]
-			return new Notification(data, "/fight/" + fightID, "comment", [farmerName])
+			return new Notification(data, "/fight/" + fightID, "mdi-message", [farmerName])
 		} else if (type === NotificationType.TOURNAMENT_COMMENT) {
 			const farmerName = params[0]
 			const tournamentID = params[1]
-			return new Notification(data, "/tournament/" + tournamentID, "comment", [farmerName])
+			return new Notification(data, "/tournament/" + tournamentID, "mdi-message", [farmerName])
 		} else if (type === NotificationType.TOURNAMENT_END) {
 			const tournamentID = parseInt(params[0], 10)
 			const lastRound = parseInt(params[1], 10)
 			const leekName = params[3]
 			const rounds = ['sixteenth_final', 'eighth_final', 'quarter_final', 'semi_final', 'final']
 			const lastRoundName = lastRound < 5 ? rounds[lastRound] : rounds[4]
-			return new Notification(data, "/tournament/" + tournamentID, "tournament_end", [leekName, i18n.t('main.' + lastRoundName) as string])
+			return new Notification(data, "/tournament/" + tournamentID, "tournament_end.png", [leekName, i18n.t('main.' + lastRoundName) as string])
 		} else if (type === NotificationType.CHALLENGE) {
 			const leekName = leeks[parseInt(params[0], 10)].name
 			const fightID = params[1]
 			const enemyName = params[2]
-			return new Notification(data, "/fight/" + fightID, "fight", [leekName, enemyName])
+			return new Notification(data, "/fight/" + fightID, "mdi-flag-outline", [leekName, enemyName])
 		} else if (type === NotificationType.FARMER_CHALLENGE) {
 			const fightID = params[0]
 			const enemyName = params[1]
-			return new Notification(data, "/fight/" + fightID, "fight", [enemyName])
+			return new Notification(data, "/fight/" + fightID, "mdi-flag-outline", [enemyName])
 		} else if (type === NotificationType.FARMER_FIGHT_REPORT) {
 			const fightID = params[1]
 			const farmerName = params[2]
 			const result = params.length > 3 ? parseInt(params[3], 10) : null
-			return new Notification(data, "/fight/" + fightID, "fight", [farmerName], [], result)
+			return new Notification(data, "/fight/" + fightID, "garden.png", [farmerName], [], result)
 		} else if (type === NotificationType.TEAM_NEW_FARMER) {
 			const teamID = params[0]
 			const farmerName = params[1]
-			return new Notification(data, "/team/" + teamID, "team_accepted", [farmerName])
+			return new Notification(data, "/team/" + teamID, "team_accepted.png", [farmerName])
 		} else if (type === NotificationType.FARMER_TOURNAMENT_WIN) {
 			const tournamentID = params[0]
-			return new Notification(data, "/tournament/" + tournamentID, "tournament_win")
+			return new Notification(data, "/tournament/" + tournamentID, "tournament_win.png")
 		} else if (type === NotificationType.NEW_GODSON) {
 			const godsonID = params[0]
 			const godsonName = params[1]
-			return new Notification(data, "/farmer/" + godsonID, "godfather", [godsonName])
+			return new Notification(data, "/farmer/" + godsonID, "godfather.png", [godsonName])
 		} else if (type === NotificationType.FARMER_TOURNAMENT_END) {
 			const tournamentID = params[0]
 			const lastRound = parseInt(params[1], 10)
 			const rounds = ['sixteenth_final', 'eighth_final', 'quarter_final', 'semi_final', 'final']
 			const lastRoundName = lastRound < 5 ? rounds[lastRound] : rounds[4]
-			return new Notification(data, "/tournament/" + tournamentID, "tournament_end", [i18n.t('main.' + lastRoundName) as string])
+			return new Notification(data, "/tournament/" + tournamentID, "tournament_end.png", [i18n.t('main.' + lastRoundName) as string])
 		} else if (type === NotificationType.NEW_WARNING) {
-			return new Notification(data, "/farmer", "warning")
+			return new Notification(data, "/farmer", "mdi-flag")
 		} else if (type === NotificationType.TEAM_TOURNAMENT_WIN) {
 			const tournamentID = params[0]
 			const compoName = params[1]
-			return new Notification(data, "/tournament/" + tournamentID, "tournament_win", [compoName])
+			return new Notification(data, "/tournament/" + tournamentID, "tournament_win.png", [compoName])
 		} else if (type === NotificationType.TEAM_TOURNAMENT_END) {
 			const tournamentID = params[0]
 			const lastRound = parseInt(params[1], 10)
 			const compoName = params[2]
 			const rounds = ['sixteenth_final', 'eighth_final', 'quarter_final', 'semi_final', 'final']
 			const lastRoundName = lastRound < 5 ? rounds[lastRound] : rounds[4]
-			return new Notification(data, "/tournament/" + tournamentID, "tournament_end", [compoName, i18n.t('main.' + lastRoundName) as string])
+			return new Notification(data, "/tournament/" + tournamentID, "tournament_end.png", [compoName, i18n.t('main.' + lastRoundName) as string])
 		} else if (type === NotificationType.REPORTING_PROCESSED) {
 			const targetName = params[0]
-			return new Notification(data, null, "reporting_processed", [targetName])
+			return new Notification(data, null, "reporting_processed.png", [targetName])
 		} else if (type === NotificationType.BATTLE_ROYALE_STARTED) {
 			const fightID = params[0]
-			return new Notification(data, "/fight/" + fightID, "fight")
+			return new Notification(data, "/fight/" + fightID, "mdi-sword-cross")
 		} else {
 			return new Notification(data, null, null, ["? type " + type])
 		}
@@ -175,6 +176,7 @@ class Notification {
 	public message!: string[]
 	public result!: number | null
 	public read!: boolean
+	public icon!: boolean
 
 	constructor(data: any, link: string | null, image: string | null, title: string[] = [], message: string[] = [], result: number | null = null) {
 		this.id = data.id
@@ -182,6 +184,15 @@ class Notification {
 		this.type = data.type as NotificationType
 		this.link = link
 		this.image = image
+		if (this.image) {
+			if (this.image.includes(".")) {
+				if (!this.image.includes('/')) {
+					this.image = 'notif/' + this.image
+				}
+			} else {
+				this.icon = true
+			}
+		}
 		this.title = title.map(LeekWars.protect)
 		this.message = message.map(LeekWars.protect)
 		this.result = result
