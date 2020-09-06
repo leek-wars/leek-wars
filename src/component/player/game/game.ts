@@ -587,7 +587,7 @@ class Game {
 
 		for (const entity of this.leeks) {
 			if (entity.active) {
-				entity.computeOrginPos()
+				entity.setCell(entity.cell!)
 			}
 		}
 
@@ -1056,8 +1056,11 @@ class Game {
 			this.stateCells[entity.id] = cell
 			entity.life = life
 			entity.maxLife = maxLife
-			entity.active = true
 			entity.reborn()
+			if (!this.jumping) {
+				entity.setCell(cell)
+				entity.drawID = this.addDrawableElement(entity, entity.y)
+			}
 
 			this.log(action)
 			this.actionDone()
@@ -2024,18 +2027,26 @@ class Game {
 			leek.gazing = 0
 			leek.bubble = new Bubble(this)
 			leek.weapon = null
-
 			this.stateCells[leek.id] = this.states[i].cell
+			if (leek.cell) {
+				leek.cell.entity = null
+				leek.cell = null
+			}
+			leek.path = []
+			leek.moveDelay = 0
+			leek.moveAnim = 0
 
 			if (leek.summon) {
 				const index = this.entityOrder.indexOf(leek)
 				if (index !== -1) {
 					this.entityOrder.splice(index, 1)
 				}
-				leek.active = false
 			}
-			leek.moveDelay = 0
-			leek.path = []
+			// Remove drawable element
+			if (leek.drawID) {
+				this.removeDrawableElement(leek.drawID, leek.y)
+				leek.drawID = null
+			}
 		}
 
 		// Clear entity effects
@@ -2074,6 +2085,7 @@ class Game {
 		this.jumping = false
 		this.currentAction = action
 
+		// Set cells
 		for (const e in this.stateCells) {
 			const cell = this.stateCells[e]
 			const entity = this.leeks[e]
