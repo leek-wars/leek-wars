@@ -1,27 +1,41 @@
 <template>
-	<router-link v-if="notification" v-ripple :to="link" :notif="notification.id" :type="notification.type" :class="{unread: !notification.read}" class="notification" @click.native="click">
-		<img :src="'/image/notif/' + notification.image + '.png'" class="avatar">
+	<router-link v-if="notification" v-ripple :to="link" :notif="notification.id" :type="notification.type" :class="{unread: !notification.read, [clazz]: clazz }" class="notification" @click.native="click">
+		<v-icon v-if="notification.icon" class="image">{{ notification.image }}</v-icon>
+		<img v-else :src="'/image/' + notification.image" class="image">
 		<div class="title" v-html="$t('notification.title_' + notification.type, notification.title)"></div>
 		<div class="message">{{ $t('notification.message_' + notification.type, notification.message) }}</div>
 		<span class="date">{{ LeekWars.formatDuration(notification.date) }}</span>
 		<span v-if="resultIcon && LeekWars.notifsResults" class="result">
 			<v-icon :class="resultIcon">{{ resultIcon }}</v-icon>
 		</span>
+		<v-icon v-if="clazz === 'bigwin'" class="large-icon">mdi-crown</v-icon>
+		<v-icon v-else-if="clazz === 'trophy'" class="large-icon">mdi-trophy</v-icon>
 	</router-link>
 </template>
 
 <script lang="ts">
 	import { LeekWars } from '@/model/leekwars'
-	import { Notification } from '@/model/notification'
+	import { Notification, NotificationType } from '@/model/notification'
 	import { Component, Prop, Vue } from 'vue-property-decorator'
 
 	@Component({ name: 'notification' })
 	export default class NotificationElement extends Vue {
 		@Prop({ required: true }) notification!: Notification
+
 		get link() { return this.notification.link ? this.notification.link : '' }
 		get resultIcon() {
 			return this.notification.result === null ? '' : this.notification.result === 1 ? 'mdi-check' : this.notification.result === 0 ? 'mdi-equal' : 'mdi-close'
 		}
+		get clazz() {
+			if (this.notification.type === NotificationType.TROPHY_UNLOCKED) {
+				return 'trophy'
+			}
+			if (this.notification.type === NotificationType.TEAM_TOURNAMENT_WIN || this.notification.type === NotificationType.FARMER_TOURNAMENT_WIN || this.notification.type === NotificationType.TOURNAMENT_WINNER) {
+				return 'bigwin'
+			}
+			return ''
+		}
+
 		click() {
 			LeekWars.post('notification/read', {notification_id: this.notification.id})
 			this.$store.commit('read-notification', this.notification.id)
@@ -38,6 +52,25 @@
 			background-color: rgba(95, 173, 27, 0.15);
 		}
 		margin-bottom: 1px;
+		&.trophy {
+			background: linear-gradient(0deg, #ffb029, #ffdc3a);
+			border-radius: 2px;
+			border: 1px solid #ffb430;
+			.large-icon {
+				color: white;
+			}
+		}
+		&.bigwin {
+			background: linear-gradient(0deg, #0d2ad3, #329cff);
+			border-radius: 2px;
+			border: 1px solid #329cff;
+			&, .date, .message {
+				color: white;
+			}
+			.large-icon {
+				color: white;
+			}
+		}
 	}
 	.notification:hover {
 		background-color: white;
@@ -48,7 +81,7 @@
 	}
 	.title {
 		font-size: 14px;
-		padding-top: 6px;
+		padding-top: 7px;
 		text-overflow: ellipsis;
 		white-space: nowrap;
 		overflow: hidden;
@@ -77,6 +110,13 @@
 	.result .mdi-close {
 		color: red;
 	}
+	.large-icon {
+		position: absolute;
+		top: 0;
+		right: 80px;
+		font-size: 50px;
+		opacity: 0.5;
+	}
 	.message {
 		color: #555;
 		font-size: 12px;
@@ -92,10 +132,17 @@
 		margin-top: -16px;
 		padding-right: 8px;
 	}
-	img {
+	.image {
 		height: 50px;
 		width: 50px;
 		float: left;
 		padding: 10px;
+	}
+	.notification:not(.bigwin):not(.trophy) img.image {
+		opacity: 0.7;
+	}
+	.image.v-icon {
+		font-size: 32px;
+		color: #444;
 	}
 </style>
