@@ -84,6 +84,7 @@
 			font-weight: 300;
 			color: #333;
 			margin-top: 5px;
+			margin-bottom: 10px;
 		}
 	}
 	.bigscreen {
