@@ -965,7 +965,10 @@ class Game {
 		case ActionType.PLAYER_DEAD: {
 			const entity = this.leeks[action.params[1]]
 			if (entity.summon) {
-				this.entityOrder.splice(this.entityOrder.indexOf(entity), 1)
+				const index = this.entityOrder.indexOf(entity)
+				if (index !== -1) {
+					this.entityOrder.splice(index, 1)
+				}
 			}
 			entity.launched_effects = {}
 			if (this.jumping) {
