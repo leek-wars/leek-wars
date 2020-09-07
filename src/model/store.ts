@@ -18,6 +18,7 @@ class LeekWarsState {
 	public farmer: Farmer | null = null
 	public chat: {[key: string]: Chat} = {}
 	public wsconnected: boolean = false
+	public wsdisconnected: boolean = false
 	public supertoken: string = ''
 	public unreadMessages: number = 0
 	public unreadNotifications: number = 0
@@ -98,6 +99,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 		},
 		"wsconnected"(state: LeekWarsState) {
 			state.wsconnected = true
+			state.wsdisconnected = false
 			vueMain.$emit('wsconnected')
 		},
 		"wsclose"(state: LeekWarsState) {
@@ -105,6 +107,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 				state.chat[chat].invalidated = true
 			}
 			state.wsconnected = false
+			state.wsdisconnected = true
 		},
 		'clear-chat'(state: LeekWarsState, chat: string) {
 			Vue.delete(state.chat, chat)
