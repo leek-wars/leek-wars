@@ -12,6 +12,10 @@
 				<div v-if="report && $store.getters.admin" class="tab disabled">
 					{{ fight.size | number }} Ko
 				</div>
+				<a v-if="report && (errors.length > 0 || warnings.length > 0)" href="#errors" class="tab">
+					<span v-if="errors.length > 0"><v-icon class="error">mdi-alert-circle</v-icon> {{ errors.length }}</span>
+					<span v-if="warnings.length > 0"><v-icon class="warning">mdi-alert</v-icon> {{ warnings.length }}</span>
+				</a>
 				<div v-if="report" class="tab disabled">
 					{{ $t('duration', [report.duration]) }}
 				</div>
@@ -147,12 +151,11 @@
 			</div>
 		</panel>
 
-		<panel v-if="errors.length > 0 || warnings.length > 0" class="warnings-error" toggle="report/warnings-errors" icon="mdi-alert">
+		<panel v-if="errors.length > 0 || warnings.length > 0" id="errors" class="warnings-error" toggle="report/warnings-errors" icon="mdi-alert">
 			<template slot="title">Erreurs et avertissements ({{ errors.length + warnings.length }})</template>
-			<div class="title"><b>{{ errors.length }}</b> erreurs</div>
+			<div v-if="errors.length" class="title"><b>{{ errors.length }}</b> erreurs</div>
 			<pre v-for="(e, i) in errors" :key="i" class="log error">[{{ e.entity }}] {{ e.data }}</pre>
-			<br>
-			<div class="title"><b>{{ warnings.length }}</b> avertissements</div>
+			<div v-if="warnings.length" class="title"><b>{{ warnings.length }}</b> avertissements</div>
 			<pre v-for="(w, i) in warnings" :key="errors.length + i" class="log warning">[{{ w.entity }}] {{ w.data }}</pre>
 		</panel>
 
@@ -209,6 +212,9 @@
 		generating: boolean = false
 		error: boolean = false
 
+		get id() {
+			return this.$route.params.id
+		}
 		get team1Title() {
 			if (!this.fight) { return '' }
 			return this.fight.report.win === 0 ? this.$i18n.t('team1') : this.$i18n.t('winners')
@@ -226,7 +232,7 @@
 			return this.fight.report.win === 0 ? '' : 'mdi-skull-outline'
 		}
 
-		@Watch('$route.params', {immediate: true})
+		@Watch('id', {immediate: true})
 		update() {
 			this.generating = false
 			this.error = false
@@ -505,6 +511,16 @@
 </script>
 
 <style lang="scss" scoped>
+	.tab .v-icon {
+		font-size: 20px;
+		margin-right: 0;
+		&.error {
+			color: red;
+		}
+		&.warning {
+			color: orange;
+		}
+	}
 	.report-general .flags {
 		margin: 0 auto;
 		padding-bottom: 4px;
