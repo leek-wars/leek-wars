@@ -59,19 +59,43 @@
 						<h2>StarPass <v-icon>mdi-open-in-new</v-icon></h2>
 					</div>
 				</a>
+				<v-btn @click="square">Square notif image</v-btn>
+				<v-btn @click="squareIcon">Square notif icon</v-btn>
+				<v-btn @click="squareMP">Square MP</v-btn>
 			</div>
 		</panel>
 	</div>
 </template>
 
 <script lang="ts">
+import { Conversation } from '@/model/conversation'
+	import { i18n } from '@/model/i18n'
+import { Leek } from '@/model/leek'
 	import { LeekWars } from '@/model/leekwars'
+	import { Notification } from '@/model/notification'
 	import { Component, Vue } from 'vue-property-decorator'
 
 	@Component({})
 	export default class Admin extends Vue {
 		created() {
 			LeekWars.setTitle('Admin')
+		}
+
+		square() {
+			const data = { id: 51568168, type:2, parameters: ["192","32139522","Mimi25","-1"], date: 1599731275 }
+			const notification = Notification.build(data, true)
+			LeekWars.squares.addFromNotification(notification)
+		}
+
+		squareIcon() {
+			const data = { date: 1599731298, id: 51568182, parameters: ["Magestik25", "32139522"], read: true, type: 12 }
+			const notification = Notification.build(data, true)
+			LeekWars.squares.addFromNotification(notification)
+		}
+
+		squareMP() {
+			const conversation = { id: 1212, farmers: [{}, {}], last_farmer_id: 48, last_farmer_name: "Skouarniek", last_message: "Salut ça va ?" } as Conversation
+			LeekWars.squares.addFromConversation(conversation, 123456789)
 		}
 	}
 </script>
