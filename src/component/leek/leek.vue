@@ -305,7 +305,7 @@
 				<br>
 				<div :class="{dashed: draggedWeapon && draggedWeaponLocation === 'leek'}" class="farmer-weapons" @dragover="dragOver" @drop="weaponsDrop('farmer', $event)">
 					<rich-tooltip-weapon v-for="(weapon, i) in farmer_weapons" :key="i" v-slot="{ on }" :instant="true" :weapon="LeekWars.weapons[weapon.template]" :bottom="true">
-						<div :quantity="weapon.quantity" :class="{dragging: draggedWeapon && draggedWeapon.template === weapon.template && draggedWeaponLocation === 'farmer', locked: LeekWars.weapons[weapon.template].level > leek.level || (LeekWars.weapons[weapon.template].forgotten && hasForgottenWeapon) }" :draggable="LeekWars.weapons[weapon.template].level <= leek.level" class="weapon" v-on="on" @dragstart="weaponDragStart('farmer', weapon, $event)" @dragend="weaponDragEnd(weapon)" @click="addWeapon(weapon)">
+						<div :quantity="weapon.quantity" :class="{dragging: draggedWeapon && draggedWeapon.template === weapon.template && draggedWeaponLocation === 'farmer', locked: LeekWars.weapons[weapon.template].level > leek.level || (LeekWars.weapons[weapon.template].forgotten && hasForgottenWeapon) || leek.weapons.find(w => w.template === weapon.template) }" :draggable="LeekWars.weapons[weapon.template].level <= leek.level" class="weapon" v-on="on" @dragstart="weaponDragStart('farmer', weapon, $event)" @dragend="weaponDragEnd(weapon)" @click="addWeapon(weapon)">
 							<img :src="'/image/weapon/' + LeekWars.weapons[weapon.template].name + '.png'" draggable="false">
 						</div>
 					</rich-tooltip-weapon>
@@ -552,7 +552,7 @@
 				<br>
 				<div :class="{dashed: draggedChip && draggedChipLocation === 'leek'}" class="farmer-chips" @dragover="dragOver" @drop="chipsDrop('farmer', $event)">
 					<rich-tooltip-chip v-for="chip in farmer_chips" :key="chip.id" v-slot="{ on }" :chip="LeekWars.chips[chip.template]" :bottom="true" :instant="true">
-						<div :quantity="chip.quantity" :class="{dragging: draggedChip && draggedChip.template === chip.template && draggedChipLocation === 'farmer', locked: LeekWars.chips[chip.template].level > leek.level}" :draggable="LeekWars.chips[chip.template].level <= leek.level" class="chip" v-on="on" @dragstart="chipDragStart('farmer', chip, $event)" @dragend="chipDragEnd(chip)" @click="addChip(chip)">
+						<div :quantity="chip.quantity" :class="{dragging: draggedChip && draggedChip.template === chip.template && draggedChipLocation === 'farmer', locked: LeekWars.chips[chip.template].level > leek.level || leek.chips.find(c => c.template === chip.template) }" :draggable="LeekWars.chips[chip.template].level <= leek.level" class="chip" v-on="on" @dragstart="chipDragStart('farmer', chip, $event)" @dragend="chipDragEnd(chip)" @click="addChip(chip)">
 							<img :src="'/image/chip/small/' + LeekWars.chips[chip.template].name + '.png'" draggable="false">
 						</div>
 					</rich-tooltip-chip>
