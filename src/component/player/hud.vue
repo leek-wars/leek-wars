@@ -234,6 +234,7 @@
 		text-align: left;
 		background: rgba(255,255,255,0.9);
 		padding: 5px;
+		pointer-events: none;
 	}
 	.left-part {
 		position: absolute;
