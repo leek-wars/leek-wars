@@ -1,5 +1,6 @@
 <template lang="html">
 	<div class="chat-input">
+		<avatar :farmer="$store.state.farmer" />
 		<div ref="input" :placeholder="$t('main.chat_placeholder')" class="chat-input-content" contenteditable="true" @keyup="keyUp" @keydown="keyDown" @click="updateCursor"></div>
 		<emoji-picker @pick="addEmoji" />
 		<chat-commands v-if="commandsEnabled" ref="commands" v-autostopscroll :filter="commandFilter" class="commands v-menu__content" @command="selectCommand" />
@@ -119,6 +120,7 @@
 		background: white;
 		padding: 10px;
 		border: 1px solid #eee;
+		padding-left: 56px;
 		padding-right: 36px;
 		cursor: text;
 		word-wrap: break-word;
@@ -139,5 +141,11 @@
 		background: white;
 		bottom: 39px;
 		position: absolute;
+	}
+	.avatar {
+		position: absolute;
+		top: 4px;
+		left: 13px;
+		width: 32px;
 	}
 </style>
