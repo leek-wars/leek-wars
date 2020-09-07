@@ -77,6 +77,8 @@
 	"leeks_35": "Les boucliers réduisent les dégâts directs, de la manière suivante :",
 	"leeks_36": "La résistance augmente les boucliers.",
 	"leeks_37": "Boost = (Boost de base) × (1 + Science / 100)",
+	"leeks_37_1": "Les dégâts nova réduisent la vie maximale (pas en dessous de la vie actuelle). La science augmente les dégâts nova :",
+	"leeks_37_2": "Dégâts nova = min(vie, (Dégâts de base) × (1 + Science / 100))",
 	"leeks_38": "Entrave = (Entrave de base) × (1 + Magie / 100)",
 	"leeks_4": "Un poireau a aussi de nombreuses caractéristiques :",
 	"leeks_41": "Dégâts poison = (Dégâts de base) × (1 + Magie / 100)",

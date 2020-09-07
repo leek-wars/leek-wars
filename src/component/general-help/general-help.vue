@@ -116,6 +116,8 @@
 				<h3>{{ $t('leeks_28') }}</h3>
 				<p>{{ $t('leeks_29') }}</p>
 				<div class="formula">{{ $t('leeks_37') }}</div>
+				<p>{{ $t('leeks_37_1') }}</p>
+				<div class="formula">{{ $t('leeks_37_2') }}</div>
 
 				<!-- magic -->
 				<h3>{{ $t('leeks_30') }}</h3>
@@ -275,10 +277,11 @@
 
 <script lang="ts">
 	import { LeekWars } from '@/model/leekwars'
+	import { mixins } from '@/model/i18n'
 	import { Component, Vue } from 'vue-property-decorator'
 	import Breadcrumb from '../forum/breadcrumb.vue'
 
-	@Component({ name: "general_help", i18n: {}, components: { Breadcrumb } })
+	@Component({ name: "general_help", i18n: {}, mixins, components: { Breadcrumb } })
 	export default class GeneralHelp extends Vue {
 		created() {
 			LeekWars.setTitle(this.$t('title'))
