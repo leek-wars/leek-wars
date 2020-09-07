@@ -116,6 +116,8 @@
 										<span class="lock" @click="lock">{{ topic.locked ? $t('unlock') : $t('lock') }}</span>
 										&nbsp;&nbsp;-&nbsp;&nbsp;
 										<span class="pin" @click="pin">{{ topic.pinned ? $t('unpin') : $t('pin') }}</span>
+									</template>
+									<template v-if="$store.state.connected && (topic.owner === $store.state.farmer.id || category.moderator)">
 										&nbsp;&nbsp;-&nbsp;&nbsp;
 										<span class="resolve" @click="resolve">{{ topic.resolved ? $t('unsolved') : $t('solved') }}</span>
 									</template>
