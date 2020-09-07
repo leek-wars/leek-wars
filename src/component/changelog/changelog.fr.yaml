@@ -5,7 +5,7 @@
     - Affichage des cellules accessibles au survol d'une entité en combat.
     - "Combat : ajout d'un motif damier en mode tactique."
   improved:
-    - "Les coups critiques sont désormais actifs sur la puce Libération : de -60% à -84% d'effets en CC."
+    - "#ai Les coups critiques sont désormais actifs sur la puce Libération : de -60% à -84% d'effets en CC."
     - La couleur de sélection dans l'éditeur est grise au lieu de mauve clair.
     - Lors de l'inscription, après l'activation le joueur est connecté au jeu directement.
     - "Battle Royale : suppression du petit toast au lancement."
@@ -57,21 +57,21 @@
     - Ajout de documentation pour de nombreuses constantes (merci à RussianMafia).
     - Amélioration du fonctionnement et du style des onglets dans l'éditeur.
     - Accélération considérable du temps de chargement des pages combat.
-    - "Nerf du glaive : le boost passe de 30 à 20."
-    - "Nerf du M-Laser révoqué : le poison passe de 60-70 à 50-60."
+    - "#ai Nerf du glaive : le boost passe de 30 à 20."
+    - "#ai Nerf du M-Laser révoqué : le poison passe de 60-70 à 50-60."
   fixed:
     - Ajout de la documentation manquante pour isStatic et sendTo (merci à TomAijerrie).
     - Correction d'un bug d'affichage quand on achète pour la première fois un chapeau.
     - Correction d'un bug de synchronisation du lecteur de combat lors d'un saut dans le temps.
     - Correction de la couleur des noix de coco sur la carte plage (jaune au lieu de marron).
     - Correction du bug des cartes personnalisées, à l'origine de plusieurs bugs en combat de test #514.
-    - Correction du soin de la puce Inversion. Le soin était diminué selon la distance avec la cible.
-    - Prise en compte des zones et de coups critiques pour les effets de vulnérabilité (merci à Lmare).
+    - "#ai Correction du soin de la puce Inversion. Le soin était diminué selon la distance avec la cible."
+    - "#ai Prise en compte des zones et de coups critiques pour les effets de vulnérabilité (merci à Lmare)."
     - Correction du bug de blocage des combats.
     - Correction de messages d'erreurs sur les pages inscription, mot de passe oublié et paramètres.
-    - Correction d'un bug qui faisait passer le combat directement au tour suivant en cas de suicide d'entité.
-    - Correction d'un bug de double tour en combat.
-    - Correction d'un bug de la fonction listen().
+    - "#ai Correction d'un bug qui faisait passer le combat directement au tour suivant en cas de suicide d'entité."
+    - "#ai Correction d'un bug de double tour en combat."
+    - "#ai Correction d'un bug de la fonction listen()."
 
 211:
   title: 4 nouvelles puces, 4 couleurs, modération des combats et nouvelles icônes.

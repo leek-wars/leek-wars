@@ -5,7 +5,7 @@
     - Display of accessible cells when hovering over an entity in combat.
     - "Combat: Added a checkerboard pattern in tactical mode."
   improved:
-    - "Critical hits are now active on the Liberation chip: from -60% to -84% effects in CC."
+    - "#ai Critical hits are now active on the Liberation chip: from -60% to -84% effects in CC."
     - The selection color in the editor is gray instead of light purple.
     - When registering, after activation the player is connected to the game directly.
     - "Battle Royale: removal of the small toast at launch."
@@ -57,21 +57,21 @@
     - Added documentation for many constants (thanks to RussianMafia).
     - Improved the operation and style of the tabs in the editor.
     - Considerably speeded up the loading time of combat pages.
-    - "Nerf of the broadsword: the boost goes from 30 to 20."
-    - "Nerf M-Laser revoked: Poison increases from 60-70 to 50-60."
+    - "#ai Nerf of the broadsword: the boost goes from 30 to 20."
+    - "#ai Nerf M-Laser revoked: Poison increases from 60-70 to 50-60."
   fixed:
     - Added missing documentation for isStatic and sendTo (thanks to TomAijerrie).
     - Fixed a display bug when buying a hat for the first time.
     - Fixed a bug with the synchronization of the fight player when jumping in time.
     - Correction of the color of coconuts on the beach map (yellow instead of brown).
     - Correction of the bug of the personalized cards, which caused several bugs in test fight #514.
-    - Correction of the care of the Inversion chip. The care was decreased according to the distance with the target.
-    - Taking into account critical areas and hits for vulnerability effects (thanks to Lmare).
+    - "#ai Correction of the care of the Inversion chip. The care was decreased according to the distance with the target."
+    - "#ai Taking into account critical areas and hits for vulnerability effects (thanks to Lmare)."
     - Correction of the fight blocking bug.
     - Fixed error messages on the registration, forgotten password and settings pages.
-    - Fixed a bug that made the fight go directly to the next turn in case of entity suicide.
-    - Fixed a bug that caused a double turn in combat.
-    - Fixed a bug in the listen() function.
+    - "#ai Fixed a bug that made the fight go directly to the next turn in case of entity suicide."
+    - "#ai Fixed a bug that caused a double turn in combat."
+    - "#ai Fixed a bug in the listen() function."
 
 211:
   title: 4 new chips, 4 new colors, in combat moderation and new icons.
