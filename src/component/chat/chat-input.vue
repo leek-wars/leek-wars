@@ -147,5 +147,6 @@
 		top: 4px;
 		left: 13px;
 		width: 32px;
+		height: 32px;
 	}
 </style>
