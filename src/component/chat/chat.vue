@@ -1,10 +1,10 @@
 <template lang="html">
 	<div class="chat">
 		<loader v-show="loading" />
-		<div v-if="!loading && (!chat || !chat.messages.length)" ref="messages" v-autostopscroll class="messages">
+		<div v-if="!loading && (!chat || !chat.messages.length)" v-autostopscroll class="messages">
 			<div class="no-messages">{{ $t('main.no_messages_yet') }}</div>
 		</div>
-		<div v-if="chat && chat.messages.length" ref="messages" v-autostopscroll class="messages">
+		<div v-if="chat && chat.messages.length" ref="messages" v-autostopscroll class="messages" @scroll="scroll">
 			<template v-for="(message, m) in $store.state.chat[channel].messages">
 				<div v-if="message.author.id === 0" :key="m" class="message">
 					<img class="avatar" src="/image/favicon.png">
@@ -55,7 +55,7 @@
 					</div>
 				</div>
 			</template>
-			<div v-show="unread" class="chat-new-messages" @click="updateScroll(true)">{{ $t('main.unread_messages') }}</div>
+			<div v-show="unread" v-ripple class="chat-new-messages" @click="updateScroll(true)">{{ $t('main.unread_messages') }}</div>
 		</div>
 		<div v-if="!$store.state.wsconnected" class="chat-disconnected">{{ $t('main.disconnected') }}</div>
 		<chat-input @message="sendMessage" />
@@ -114,7 +114,6 @@
 		reportContent: string = ''
 		userScroll: boolean = false
 		unread: boolean = false
-		messagesMounted: boolean = false
 		reasons = [
 			Warning.INCORRECT_FARMER_NAME,
 			Warning.INCORRECT_AVATAR,
@@ -128,20 +127,22 @@
 		get chat() {
 			return this.channel ? store.state.chat[this.channel] : null
 		}
+
 		created() {
 			this.$root.$on('chat', (e: any) => {
 				if (e[0] === this.channel) {
 					this.updateScroll()
 					if (!this.scrollBottom()) { this.unread = true }
-					if (!this.messagesMounted) {
-						setTimeout(() => this.mountMessages(), 50)
-						this.messagesMounted = true
-					}
 				}
 			})
-			this.$root.$on('resize', () => this.updateScroll())
-			this.$root.$on('wsconnected', () => this.update())
+			this.$root.$on('resize', this.updateScroll)
+			this.$root.$on('wsconnected', this.update)
 		}
+		beforeDestroy() {
+			this.$root.$off('resize', this.updateScroll)
+			this.$root.$off('wsconnected', this.update)
+		}
+
 		scrollBottom() {
 			const messages = this.$refs.messages as HTMLElement
 			if (!messages) { return true }
@@ -150,25 +151,13 @@
 		mounted() {
 			this.updateScroll()
 		}
-		mountMessages() {
-			const messages = this.$refs.messages as HTMLElement
-			if (!messages) { return }
-			messages.addEventListener('scroll', () => {
-				if (this.scrollBottom()) {
-					this.userScroll = false
-					this.unread = false
-				}
-			})
-			messages.addEventListener('wheel', (e: MouseWheelEvent) => {
-				if (!this.scrollBottom()) {
-					this.userScroll = true
-				}
-			}, {passive: true})
-			messages.addEventListener('touchmove', (e: TouchEvent) => {
-				if (!this.scrollBottom()) {
-					this.userScroll = true
-				}
-			}, {passive: true})
+		scroll() {
+			if (this.scrollBottom()) {
+				this.userScroll = false
+				this.unread = false
+			} else {
+				this.userScroll = true
+			}
 		}
 		updated() {
 			this.updateScroll()
@@ -184,6 +173,7 @@
 				}, 60)
 			}
 		}
+
 		@Watch('channel', {immediate: true})
 		update() {
 			if (!this.channel) { return }
