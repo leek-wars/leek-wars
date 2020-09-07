@@ -57,7 +57,7 @@
 			</template>
 			<div v-show="unread" v-ripple class="chat-new-messages" @click="updateScroll(true)">{{ $t('main.unread_messages') }}</div>
 		</div>
-		<div v-if="!$store.state.wsconnected" class="chat-disconnected">{{ $t('main.disconnected') }}</div>
+		<div v-if="$store.state.wsdisconnected" class="chat-disconnected">{{ $t('main.disconnected') }}</div>
 		<chat-input @message="sendMessage" />
 
 		<report-dialog v-if="reportFarmer" v-model="reportDialog" :target="reportFarmer" :reasons="reasons" :parameter="reportContent" class="report-dialog" />
