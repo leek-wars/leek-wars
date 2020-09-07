@@ -13,6 +13,10 @@ declare module 'vue-chartist' {
 	const Chartist: any
 	export = Chartist
 }
+declare module 'chartist' {
+	const Chartist: any
+	export = Chartist
+}
 declare module 'katex' {
 	const katex: any
 	export = katex

@@ -1,16 +1,16 @@
-import { Entity, EntityDirection, EntityType } from "@/component/player/game/entity"
+import { EntityDirection, EntityType, FightEntity } from "@/component/player/game/entity"
 import { Game, SHADOW_ALPHA, SHADOW_SCALE } from '@/component/player/game/game'
 import { SHADOW_QUALITY, T, Texture } from '@/component/player/game/texture'
 import { WeaponAnimation, WhiteWeaponAnimation } from '@/component/player/game/weapons'
+import { Cell } from '@/model/cell'
 import { HatTemplate } from '@/model/hat'
 import { LeekWars } from '@/model/leekwars'
-import { Cell } from './cell'
 import { S } from './sound'
 
 const handSize = 14
 const handSize2 = handSize / 2
 
-class Leek extends Entity {
+class Leek extends FightEntity {
 	public bodyTexFront!: Texture
 	public bodyTexBack!: Texture
 	public handTex!: Texture
@@ -77,11 +77,11 @@ class Leek extends Entity {
 		}
 	}
 
-	public useWeapon(cell: Cell, targets: Entity[]) {
+	public useWeapon(cell: Cell, targets: FightEntity[]) {
 
 		if (this.weapon != null) {
 
-			const pos = this.game.ground.cellToXY(cell)
+			const pos = this.game.ground.field.cellToXY(cell)
 			const x = pos.x
 			const y = pos.y
 

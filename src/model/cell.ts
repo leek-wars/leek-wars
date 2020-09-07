@@ -12,6 +12,24 @@ class Cell {
 		this.x = x
 		this.y = y
 	}
+
+	public setEntity(entity: Entity | null) {
+		if (this.entity === entity) {
+			return
+		}
+		if (entity === null) {
+			this.entity = null
+			return
+		}
+		if (this.entity) {
+			this.entity.cell = null
+		}
+		if (entity.cell) {
+			entity.cell.setEntity(null)
+		}
+		entity.cell = this
+		this.entity = entity
+	}
 }
 
 export { Cell }

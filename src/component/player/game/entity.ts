@@ -3,11 +3,12 @@ import { ChipAnimation } from '@/component/player/game/chips'
 import { Colors, Game, TEAM_COLORS } from '@/component/player/game/game'
 import { InfoText } from '@/component/player/game/infotext'
 import { T, Texture } from '@/component/player/game/texture'
-import { EffectType } from '@/model/effect'
+import { Cell } from '@/model/cell'
+import { EffectType, EntityEffect } from '@/model/effect'
+import { Entity } from '@/model/entity'
 import { Farmer } from '@/model/farmer'
 import { i18n } from '@/model/i18n'
 import { LeekWars } from '@/model/leekwars'
-import { Cell } from './cell'
 import { S } from './sound'
 
 enum EntityType {
@@ -25,13 +26,9 @@ const MOVE_DELAY = 3
 const MOVE_DURATION = 25
 const MOVE_HEIGHT = 17
 
-class Entity {
+class FightEntity extends Entity {
 	// Infos générales
 	public game: Game
-	public name = ""
-	public id!: number
-	public level = 1
-	public team!: number
 	public farmer!: Farmer | null
 	public type: EntityType
 	public summon = false
@@ -59,7 +56,6 @@ class Entity {
 	public y = 0
 	public z = 0
 	public baseZ = 0
-	public cell: Cell | null = null
 	// Position réelle
 	public rx = 0
 	public ry = 0
@@ -104,8 +100,8 @@ class Entity {
 	public oscillation = 1
 	public frame: number
 	// Effects
-	public effects: {[key: number]: any} = {}
-	public launched_effects: {[key: number]: any} = {}
+	public effects: {[key: number]: EntityEffect} = {}
+	public launched_effects: {[key: number]: EntityEffect} = {}
 	public jumpForce: number = 0
 	public bodyTexFront!: Texture
 	public bodyTexBack!: Texture
@@ -117,6 +113,7 @@ class Entity {
 	public reachableCellsArea: any
 
 	constructor(game: Game, type: EntityType, team: number) {
+		super()
 		this.game = game
 		this.type = type
 		this.team = team
@@ -137,13 +134,10 @@ class Entity {
 		if (cell === null) {
 			console.trace("Cell is null")
 		}
-		if (this.cell) {
-			this.cell.entity = null
-		}
+		cell.setEntity(this)
 		this.cell = cell
-		cell.entity = this
 
-		const pos = this.game.ground.cellToXY(cell)
+		const pos = this.game.ground.field.cellToXY(cell)
 		const oldY = this.y
 
 		this.x = pos.x
@@ -202,7 +196,7 @@ class Entity {
 
 		const distance = Math.abs(this.cell!.x - cell.x) + Math.abs(this.cell!.y - cell.y)
 
-		const pos = this.game.ground.cellToXY(cell)
+		const pos = this.game.ground.field.cellToXY(cell)
 
 		this.dx = pos.x
 		this.dy = pos.y
@@ -238,10 +232,10 @@ class Entity {
 		for (let i = 1; i <= this.mp; ++i) {
 			const new_cells = []
 			for (const c of grow) {
-				const c1 = this.game.ground.next_cell(c, 1, 0)
-				const c2 = this.game.ground.next_cell(c, -1, 0)
-				const c3 = this.game.ground.next_cell(c, 0, 1)
-				const c4 = this.game.ground.next_cell(c, 0, -1)
+				const c1 = this.game.ground.field.next_cell(c, 1, 0)
+				const c2 = this.game.ground.field.next_cell(c, -1, 0)
+				const c3 = this.game.ground.field.next_cell(c, 0, 1)
+				const c4 = this.game.ground.field.next_cell(c, 0, -1)
 				if (c1 && !c1.obstacle && !c1.entity && !this.reachableCells.has(c1)) {
 					new_cells.push(c1)
 					this.reachableCells.add(c1)
@@ -548,8 +542,8 @@ class Entity {
 		}
 	}
 
-	public useChip(chip: ChipAnimation, cell: Cell, targets: Entity[]) {
-		const pos = this.game.ground.cellToXY(cell)
+	public useChip(chip: ChipAnimation, cell: Cell, targets: FightEntity[]) {
+		const pos = this.game.ground.field.cellToXY(cell)
 		const cellPixels = this.game.ground.xyToXYPixels(pos.x, pos.y)
 		this.watch(cell)
 		chip.launch({x: this.ox, y: this.oy}, cellPixels, targets, cell, this)
@@ -558,7 +552,7 @@ class Entity {
 	// Inclinaison du poireau vers la cellule cible
 	public watch(cell: Cell) {
 		if (cell !== this.cell) {
-			const pos = this.game.ground.cellToXY(cell)
+			const pos = this.game.ground.field.cellToXY(cell)
 			const east = this.y < pos.y
 			const south = this.x < pos.x
 			this.setOrientation(south ? (east ? EntityDirection.SOUTH : EntityDirection.EAST) : (east ? EntityDirection.WEST : EntityDirection.NORTH))
@@ -697,7 +691,7 @@ class Entity {
 			ctx.fillStyle = 'white'
 
 			for (const cell of this.path) {
-				const pos = this.game.ground.cellToXY(cell)
+				const pos = this.game.ground.field.cellToXY(cell)
 				this.drawWhiteTile(ctx, pos.x, pos.y)
 			}
 			this.drawWhiteTile(ctx, this.dx, this.dy)
@@ -773,10 +767,10 @@ class Entity {
 			const effect = this.effects[e]
 			ctx.drawImage(effect.texture, x, 25, 28, 28)
 			let effect_message = '' + effect.value
-			if (effect.effect === EffectType.SHACKLE_MAGIC || effect.effect === EffectType.SHACKLE_MP || effect.effect === EffectType.SHACKLE_TP || effect.effect === EffectType.SHACKLE_STRENGTH || effect.effect === EffectType.VULNERABILITY || effect.effect === EffectType.ABSOLUTE_VULNERABILITY) {
+			if (effect.type === EffectType.SHACKLE_MAGIC || effect.type === EffectType.SHACKLE_MP || effect.type === EffectType.SHACKLE_TP || effect.type === EffectType.SHACKLE_STRENGTH || effect.type === EffectType.VULNERABILITY || effect.type === EffectType.ABSOLUTE_VULNERABILITY) {
 				effect_message = '-' + effect_message
 			}
-			if (effect.effect === EffectType.RELATIVE_SHIELD || effect.effect === EffectType.DAMAGE_RETURN || effect.effect === EffectType.VULNERABILITY) {
+			if (effect.type === EffectType.RELATIVE_SHIELD || effect.type === EffectType.DAMAGE_RETURN || effect.type === EffectType.VULNERABILITY) {
 				effect_message = effect_message + '%'
 			}
 			const effect_duration = effect.turns === -1 ? '∞' : '' + effect.turns
@@ -903,4 +897,4 @@ class Entity {
 	}
 }
 
-export { Entity, EntityType, EntityDirection }
+export { EntityType, EntityDirection, FightEntity }

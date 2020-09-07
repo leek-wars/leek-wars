@@ -1,4 +1,4 @@
-import { Entity } from '@/component/player/game/entity'
+import { FightEntity } from '@/component/player/game/entity'
 import { Game } from '@/component/player/game/game'
 import { Position } from '@/component/player/game/position'
 import { T, Texture } from "@/component/player/game/texture"
@@ -69,8 +69,8 @@ abstract class Particle {
 }
 
 abstract class CollideParticle extends Particle {
-	public targets: Entity[]
-	constructor(game: Game, x: number, y: number, z: number, life: number, targets: Entity[]) {
+	public targets: FightEntity[]
+	constructor(game: Game, x: number, y: number, z: number, life: number, targets: FightEntity[]) {
 		super(game, x, y, z, life)
 		this.targets = targets
 	}
@@ -115,7 +115,7 @@ abstract class FallingParticle extends Particle {
 }
 
 class Bullet extends CollideParticle {
-	constructor(game: Game, x: number, y: number, z: number, angle: number, targets: Entity[]) {
+	constructor(game: Game, x: number, y: number, z: number, angle: number, targets: FightEntity[]) {
 		super(game, x, y, z, BULLET_LIFE, targets)
 		this.dx = Math.cos(angle) * BULLET_SPEED
 		this.dy = Math.sin(angle) * BULLET_SPEED
@@ -243,9 +243,9 @@ class Gaz extends Particle {
 class Meteorite extends Particle {
 	public size: number
 	public originalAngle: number
-	public targets: Entity[]
+	public targets: FightEntity[]
 	public actionDoneAfterDie: boolean
-	constructor(game: Game, x: number, y: number, z: number, size: number, angle: number, targets: Entity[] = [], actionDoneAfterDie: boolean = false) {
+	constructor(game: Game, x: number, y: number, z: number, size: number, angle: number, targets: FightEntity[] = [], actionDoneAfterDie: boolean = false) {
 		super(game, x, y, z, 1000)
 		this.size = size
 		this.dx = Math.cos(angle) * 8
@@ -284,10 +284,10 @@ class Meteorite extends Particle {
 	}
 }
 class Grenade extends FallingParticle {
-	public targets: Entity[]
+	public targets: FightEntity[]
 	public texture: Texture
 	public explosion: Texture
-	constructor(game: Game, x: number, y: number, z: number, angle: number, pos: Position, targets: Entity[], texture: Texture, explosion: Texture) {
+	constructor(game: Game, x: number, y: number, z: number, angle: number, pos: Position, targets: FightEntity[], texture: Texture, explosion: Texture) {
 		super(game, x, y, z, GRENADE_LIFE)
 		const dist = Math.sqrt((x - pos.x) * (x - pos.x) + (y - pos.y) * (y - pos.y))
 		this.dx = Math.cos(angle) * dist * 0.033
