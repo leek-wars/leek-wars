@@ -105,6 +105,8 @@
 					</span>
 				</center>
 
+				<div v-if="fight.seed" class="seed"><v-icon>mdi-seed</v-icon>{{ $t('seed', [fight.seed]) }}</div>
+
 				<template v-if="fight.trophies.length">
 					<h3 class="trophies-title">{{ $t('trophies') }}</h3>
 					<div class="trophies">
