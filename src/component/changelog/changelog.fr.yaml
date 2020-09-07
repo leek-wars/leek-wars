@@ -1,3 +1,39 @@
+214:
+  title: Graines de scénario, répartition des dommages, opérations et graphique de vie précis.
+  added:
+    - Possibilité d'entrer une graine pour le générateur de nombres aléatoires dans un scénario de test.
+    - Ajout d'un graphique détaillé des statistiques de dégâts, soins et tank dans le rapport de combat.
+    - Affichage de la consommation en opérations de chaque poireau dans le rapport de combat.
+    - Graphique de l'évolution des points de vie plus précis.
+    - Ajout d'un menu de navigation rapide entre catégories dans le marché.
+    - Ajout d'une option pour afficher les grands poireaux en lignes blanches sur les côtés.
+    - Affichage du nombre d'erreurs et d'avertissement tout en haut du rapport.
+  improved:
+    - "Documentation : recherche dans les descriptions des constantes."
+    - "Marché : ajout d'un défilement vertical sur les détails d'un item si l'écran est trop petit."
+    - "Combat de test : le damier est toujours affiché même en mode non tactique."
+    - Amélioration des icônes des notifications.
+    - "Notifications : affichage de l'icone du trophée gagné."
+    - "Notifications : mise en valeur des notifications de trophées et de victoires de tournoi."
+    - Amélioration du design du pied de page.
+    - "Combat : possibilité de survoler les entités même en pause."
+    - Ajout de la formule des dégâts nova dans l'aide générale.
+    - Plus de drapeau "Perfect" en cas d'égalité.
+    - Plus de bandeau "déconnecté" sur le chat avant la première connexion.
+    - Ajout de son avatar dans la barre de saisie des chats, pour ne pas se tromper de compte.
+    - Le propriétaire d'un sujet sur le forum peut maintenant le passer en résolu.
+    - "Page poireau : affichage d'une mention 'Réutilisable' sur les potions concernées."
+    - "Sélection de l'équipement : les puces et armes déjà équipées sont grisées."
+    - La barre de progression du combat passe bien à 100% quand la génération est terminée.
+  fixed:
+    - "Combat : les textes au dessus des entités sont effacés lors d'un saut dans le combat."
+    - Correction de la position des grands poireaux sur le côté de la page en mode élargi.
+    - Correction du bug de scroll des chats lors d'un nouveau message.
+    - Correction de recherche de la page d'une recherche dans le classement si inactif.
+    - Correction de la barre de génération du combat pour les Battle Royales.
+    - Les kills au poisons sont maintenant comptabilisés dans les statistiques du lanceur.
+    - "#ai Correction du retour de summon(): -4 quand la cellule cible est occupée, -1 pour une puce invalide."
+
 213:
   title: Inscription via GitHub, cellules accessibles et damier
   added:

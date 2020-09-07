@@ -1,3 +1,39 @@
+214:
+  title: Scenario seeds, damage distribution, operations and accurate life graph.
+  added:
+    - Ability to enter a seed for the random number generator in a test scenario.
+    - "Added: Detailed graph of damage, healing and tank statistics in the combat report."
+    - Display of the operations consumption of each leek in the combat report.
+    - More accurate graph of the evolution of life points.
+    - Added a quick navigation menu between categories in the market.
+    - Added an option to display large leeks in white lines on the sides.
+    - Display of the number of errors and warnings at the very top of the report.
+  Improved:
+    - "Documentation: search in the descriptions of constants."
+    - "Market: added vertical scrolling on item details if the screen is too small."
+    - "Test combat: the checkerboard is always displayed even in non-tactical mode."
+    - Improved notification icons.
+    - "Notifications: display the icon of the trophy won."
+    - "Notifications: enhancement of trophy and tournament win notifications."
+    - Improvement of the footer design.
+    - "Combat: ability to hover over entities even when paused."
+    - Added the nova damage formula in the general help.
+    - No more "Perfect" flag in case of a tie.
+    - No more "Disconnected" banner on the chat before the first connection.
+    - Added his avatar in the chat input bar, so you don't get the wrong account.
+    - The owner of a topic on the forum can now post it as resolved.
+    - "Leek page : display of a 'Reusable' mention on the potions concerned."
+    - "Equipment selection: chips and weapons already equipped are grayed out."
+    - The progress bar of the fight is now set to 100% when the generation is over.
+  fixed:
+    - "Combat: Text above the entities is erased when jumping into the combat."
+    - Correction of the position of the large leeks on the side of the page in expanded mode.
+    - "Fixed: chat scroll bug when sending a new message."
+    - Correction of page search in the ranking if inactive.
+    - Correction of the fight generation bar for the Battle Royales.
+    - Poison kills are now counted in the launcher's statistics.
+    - "#ai Correction of summon() return: -4 when the target cell is occupied, -1 for an invalid kill."
+
 213:
   title: Registration via GitHub, accessible cells and checkerboard
   added:
