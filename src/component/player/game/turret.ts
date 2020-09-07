@@ -1,4 +1,4 @@
-import { Entity, EntityType } from "@/component/player/game/entity"
+import { EntityType, FightEntity } from "@/component/player/game/entity"
 import { Game, SHADOW_ALPHA, SHADOW_SCALE } from '@/component/player/game/game'
 import { TURRET_DATA } from '@/model/turret-data'
 import { SHADOW_QUALITY, T, Texture } from './texture'
@@ -8,7 +8,7 @@ class Piece {
 	z!: number
 }
 
-class Turret extends Entity {
+class Turret extends FightEntity {
 
 	textures: {[key: string]: Texture} = {}
 	pieces: Piece[]

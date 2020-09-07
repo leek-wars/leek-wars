@@ -1,6 +1,6 @@
 import { Game, SHADOW_ALPHA, SHADOW_SCALE } from "@/component/player/game/game"
 import { T, Texture } from '@/component/player/game/texture'
-import { Cell } from './cell'
+import { Cell } from '@/model/cell'
 
 class Obstacle {
 	public game: Game
@@ -29,7 +29,7 @@ class Obstacle {
 		this.size = size
 		this.type = type
 		// Position
-		const pos = game.ground.cellToXY(cell)
+		const pos = game.ground.field.cellToXY(cell)
 		this.x = pos.x
 		this.y = pos.y
 		this.cell = cell

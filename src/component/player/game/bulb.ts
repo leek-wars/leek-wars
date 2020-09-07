@@ -1,9 +1,9 @@
-import { Entity, EntityType } from "@/component/player/game/entity"
+import { EntityType, FightEntity } from "@/component/player/game/entity"
 import { Game, SHADOW_ALPHA, SHADOW_SCALE } from '@/component/player/game/game'
 import { LeekWars } from '@/model/leekwars'
 import { SHADOW_QUALITY, T } from './texture'
 
-class Bulb extends Entity {
+class Bulb extends FightEntity {
 	public skin!: number
 	public bulbName!: string
 	public heightAnim!: number

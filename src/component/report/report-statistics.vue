@@ -3,11 +3,13 @@
 		<tr>
 			<th>{{ $t('main.leek') }}</th>
 			<th>{{ $t('main.level') }}</th>
-			<th>{{ $t('damage_received') }}</th>
 			<th>{{ $t('damage_inflicted') }}</th>
-			<th>{{ $t('heal_received') }}</th>
+			<th>{{ $t('damage_received') }}</th>
 			<th>{{ $t('heal_casted') }}</th>
+			<th>{{ $t('heal_received') }}</th>
 			<th>{{ $t('kills') }}</th>
+			<th>{{ $t('operations') }}</th>
+			<th>{{ $t('operations_per_turn') }}</th>
 			<th>{{ $t('tp_used') }}</th>
 			<th>{{ $t('tp_per_turn') }}</th>
 			<th>{{ $t('mp_used') }}</th>
@@ -20,14 +22,14 @@
 			<th>{{ $t('bugs') }}</th>
 		</tr>
 		<tr>
-			<td colspan="17" class="header"><b>{{ $t('team_n', [1]) }}</b></td>
+			<td colspan="19" class="header"><b :style="{color: TEAM_COLORS[0]}">{{ $t('team_n', [1]) }}</b></td>
 		</tr>
 		<template v-for="entity in statistics.team1">
 			<report-statistics-entity :key="entity.leek.id" :entity="entity" :stats="stats" :best="best" />
 			<report-statistics-entity v-for="summon in entity.summons" :key="entity.leek.id + '-' + summon.leek.id" :entity="summon" :stats="stats" :best="best" />
 		</template>
 		<tr>
-			<td colspan="17" class="header"><b>{{ $t('team_n', [2]) }}</b></td>
+			<td colspan="19" class="header"><b :style="{color: TEAM_COLORS[1]}">{{ $t('team_n', [2]) }}</b></td>
 		</tr>
 		<template v-for="entity in statistics.team2">
 			<report-statistics-entity :key="entity.leek.id" :entity="entity" :stats="stats" :best="best" />
@@ -39,24 +41,27 @@
 <script lang="ts">
 	import { Action, ActionType } from '@/model/action'
 	import { EffectType } from '@/model/effect'
+	import { TEAM_COLORS } from '@/model/fight'
 	import { Component, Prop, Vue } from 'vue-property-decorator'
 	import ReportStatisticsEntity from './report-statistics-entity.vue'
+	import { FightStatistics } from './statistics'
 
 	@Component({ components: { ReportStatisticsEntity } })
 	export default class ReportStatistics extends Vue {
 		@Prop({required: true}) fight!: any
-		@Prop({required: true}) statistics!: any
-		stats = ['dmg_in', 'dmg_out', 'heal_in', 'heal_out', 'kills', 'usedPT', 'usedPTperTurn', 'usedPM', 'roundsPlayed', 'actionsWeapon', 'actionsChip', 'invocation', 'resurrection', 'critical', 'crashes']
+		@Prop({required: true}) statistics!: FightStatistics
+		stats = ['dmg_out', 'dmg_in', 'heal_in', 'heal_out', 'kills', 'operations', 'operations_per_turn', 'usedPT', 'usedPTperTurn', 'usedPM', 'roundsPlayed', 'actionsWeapon', 'actionsChip', 'invocation', 'resurrection', 'critical', 'crashes']
+		TEAM_COLORS = TEAM_COLORS
 
 		get best() {
 			const result: any = {}
 			for (const stat of this.stats) {
 				let best = 0
 				let bestEntity = null
-				for (const e in this.statistics.leeks) {
-					if (this.statistics.leeks[e][stat] > best) {
-						best = this.statistics.leeks[e][stat]
-						bestEntity = this.statistics.leeks[e].leek.id
+				for (const e in this.statistics.entities) {
+					if ((this.statistics.entities[e] as any)[stat] > best) {
+						best = (this.statistics.entities[e] as any)[stat]
+						bestEntity = this.statistics.entities[e].leek.id
 					}
 				}
 				if (bestEntity !== null) {

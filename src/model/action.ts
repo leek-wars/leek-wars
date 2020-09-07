@@ -16,7 +16,12 @@ enum ActionType {
 	CARE = 103,
 	BOOST_VITA = 104,
 	RESURRECTION = 105,
-	LOST_MAX_LIFE = 107,
+	NOVA_DAMAGE = 107,
+	DAMAGE_RETURN = 108,
+	LIFE_DAMAGE = 109,
+	POISON_DAMAGE = 110,
+	AFTEREFFECT = 111,
+
 	SAY = 200,
 	LAMA = 201,
 	SHOW = 202,
@@ -35,6 +40,6 @@ class Action {
 	get type() { return this.params[0] }
 	constructor(params: any[]) {
 		this.params = params
-	}	
+	}
 }
 export { Action, ActionLog, ActionType }

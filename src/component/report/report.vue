@@ -39,7 +39,8 @@
 								<th>{{ $t('main.xp') }}</th>
 								<th class="gain">{{ $t('main.habs') }}</th>
 								<th v-if="fight.type === FightType.SOLO" class="gain">{{ $t('main.talent') }}</th>
-								<th v-if="$store.getters.admin" class="gain">Time</th>
+								<!-- <th>Opérations</th> -->
+								<!-- <th v-if="$store.getters.admin" class="gain">Time</th> -->
 							</tr>
 							<report-leek-row v-for="leek in report.leeks" v-if="!leek.summon" :key="leek.id" :leek="leek" :fight="fight" />
 						</table>
@@ -129,10 +130,10 @@
 			<comments :comments="fight.comments" @comment="comment" />
 		</panel>
 
-		<panel title="Évolution des points de vie" toggle="report/graph" icon="mdi-chart-line">
+		<panel :title="$t('life_chart')" toggle="report/graph" icon="mdi-chart-line">
 			<div slot="actions">
 				<div class="button flat" @click="toggleLog">
-					<v-icon>mdi-math-log</v-icon>
+					<v-icon>mdi-percent-outline</v-icon>
 				</div>
 				<div class="button flat" @click="toggleSmooth">
 					<img v-if="smooth" src="/image/icon/graph_angular.png">
@@ -141,9 +142,46 @@
 			</div>
 			<loader v-if="!report" />
 			<div v-else ref="chartPanel" class="chart-panel" @mouseleave="chartMouseLeave" @mousemove="chartMouseMove">
-				<chartist ref="chart" :data="chartData" :options="chartOptions" :event-handlers="chartEvents" ratio="ct-major-eleventh" class="chart" :class="{long: report.duration >= 30}" type="Line" />
+				<div class="damage-options">
+					<div class="spacer"></div>
+					<v-switch v-model="chartDisplaySummons" :label="$t('display_summons')" :hide-details="true" />
+				</div>
+				<chartist ref="chart" :data="chartData" :options="chartOptions" :event-handlers="chartEvents" ratio="ct-major-eleventh" class="chart" :class="{long: statistics.lives.length >= 30}" type="Line" />
 				<div v-show="chartTooltipValue" ref="chartTooltip" :style="{top: chartTooltipY + 'px', left: chartTooltipX + 'px'}" class="chart-tooltip v-tooltip__content top" v-html="chartTooltipValue"></div>
 			</div>
+		</panel>
+
+		<panel :title="$t('damages_title')" toggle="report/damage" icon="mdi-chart-pie">
+			<loader v-if="!loaded" />
+			<template v-else>
+				<div class="damage-options">
+					<v-radio-group v-model="damageChartType" :row="true" :dense="true" :hide-details="true">
+						<v-radio :label="$t('inflicted_damage')" />
+						<v-radio :label="$t('received_damage')" />
+						<v-radio :label="$t('heal')" />
+						<v-radio label="Tank" />
+					</v-radio-group>
+					<div class="spacer"></div>
+					<v-radio-group v-if="fight.type !== FightType.BATTLE_ROYALE && fight.type !== FightType.SOLO" v-model="damagesTeams" :row="true" :dense="true" :hide-details="true">
+						<v-radio label="Entités" />
+						<v-radio label="Équipes" />
+					</v-radio-group>
+					<v-switch v-model="damagesDisplaySummons" :disabled="damagesTeams === 1" :label="$t('display_summons')" :hide-details="true" />
+				</div>
+				<div class="damages">
+					<div class="damage-chart">
+						<chartist :data="damageChartDamage" :options="damageChartOptions" :class="{heal: damageChartType === 2, tank: damageChartType === 3}" class="right" type="Pie" />
+						<div class="legend">
+							<div v-for="(damage, d) in damageChartDamage.series" :key="d">
+								<span :style="{color: legends[d]}">{{ $t('stat_' + damageChartDamage.labels[d]) }}</span> <div class="value">{{ damage | number }}</div>
+							</div>
+						</div>
+					</div>
+					<div class="damages-bars" :style="{height: (damagesBarsHeight - 10) + 'px'}">
+						<chartist :data="damagesBarsData" :options="damagesBarsOptions" :event-handlers="damagesBarsEvents" :class="{heal: damageChartType === 2, tank: damageChartType === 3}" :style="{height: damagesBarsHeight + 'px'}" class="chart" type="Bar" />
+					</div>
+				</div>
+			</template>
 		</panel>
 
 		<panel :title="$t('statistics')" toggle="report/statistics" icon="mdi-table-large">
@@ -152,6 +190,17 @@
 				<report-statistics :fight="fight" :statistics="statistics" />
 			</div>
 		</panel>
+
+		<!-- <panel :title="$t('statistics')" toggle="report/statistics" icon="mdi-table-large">
+			<loader v-if="!loaded" />
+			<div v-else>
+				<lw-map v-if="cells" :cells="cells" />
+
+				<span v-for="(entity, e) in fight.data.leeks" :key="e">
+					<v-btn @click="walkedCells(entity.id)">{{ entity.name }}</v-btn>
+				</span>
+			</div>
+		</panel> -->
 
 		<panel v-if="errors.length > 0 || warnings.length > 0" id="errors" class="warnings-error" toggle="report/warnings-errors" icon="mdi-alert">
 			<template slot="title">Erreurs et avertissements ({{ errors.length + warnings.length }})</template>
@@ -162,7 +211,7 @@
 		</panel>
 
 		<panel class="last" title="Actions" icon="mdi-format-list-bulleted">
-			<loader v-if="!report" />
+			<loader v-if="!loaded" />
 			<div v-else>
 				<actions :actions="actions" :leeks="leeks" class="actions" />
 			</div>
@@ -171,21 +220,24 @@
 </template>
 
 <script lang="ts">
+	import Map from '@/component/app/map.vue'
 	import { locale } from '@/locale'
 	import { Action, ActionType } from '@/model/action'
 	import { Comment } from '@/model/comment'
 	import { Fight, FightContext, FightLeek, FightType, Report, ReportFarmer, ReportLeek, TEAM_COLORS } from '@/model/fight'
+	import { mixins } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
+	import Chartist from 'chartist'
 	import { Component, Vue, Watch } from 'vue-property-decorator'
 	import ActionsElement from './report-actions.vue'
 	import ReportBlock from './report-block.vue'
 	import ReportLeekRow from './report-leek-row.vue'
 	const ReportStatistics = () => import(/* webpackChunkName: "[request]" */ `@/component/report/report-statistics.${locale}.i18n`)
-	import { Statistics } from './statistics'
-	import(/* webpackChunkName: "chartist" */ "@/chartist-wrapper")
+	import { FightStatistics } from './statistics'
+	import(/* webpackChunkName: "chartist" */ /* webpackMode: "eager" */ "@/chartist-wrapper")
 	import(/* webpackChunkName: "[request]" */ /* webpackMode: "eager" */ `@/lang/fight.${locale}.lang`)
 
-	@Component({ name: 'report', i18n: {}, components: { actions: ActionsElement, ReportLeekRow, ReportBlock, ReportStatistics} })
+	@Component({ name: 'report', i18n: {}, mixins, components: { actions: ActionsElement, ReportLeekRow, ReportBlock, ReportStatistics, 'lw-map': Map } })
 	export default class ReportPage extends Vue {
 		fight: Fight | null = null
 		report: Report | null = null
@@ -195,6 +247,7 @@
 		logs: {[key: number]: any[][]} = {}
 		FightType = FightType
 		FightContext = FightContext
+		loaded: boolean = false
 		errors: any[] = []
 		warnings: any[] = []
 		myFight: boolean = false
@@ -202,17 +255,46 @@
 		enemy: any = null
 		smooth: boolean = false
 		log: boolean = false
-		statistics: any = null
+		statistics!: FightStatistics
 		chartData: any = null
 		chartOptions: any = null
 		chartEvents: any = []
-		chartSeries: any = null
 		chartTooltipValue: any = null
 		chartTooltipX: number = 0
 		chartTooltipY: number = 0
 		chartTooltipLeek: number | null = null
+		chartScale: number = 1
+		chart: any
+		chartDisplaySummons: boolean = false
 		generating: boolean = false
 		error: boolean = false
+		damageEntities: any = null
+		damageChartType: number = 0
+		damageChartDamage: any = {}
+		damageChartOptions = {
+			donut: true,
+			donutWidth: 38,
+			startAngle: 90,
+			showLabel: false
+		}
+		damagesBarsData: any = {}
+		damagesBarsOptions = {
+			stackBars: true,
+			horizontalBars: true,
+			showLabel: true,
+			chartPadding: {
+				top: 10,
+				right: 35,
+				bottom: 0,
+				left: 90
+			}
+		}
+		damagesTeams: number = 0
+		damagesBarsHeight: number = 0
+		damagesBarsEvents: any
+		damagesDisplaySummons: boolean = false
+		cells: any = null
+		legends: any
 
 		get id() {
 			return this.$route.params.id
@@ -238,6 +320,7 @@
 		update() {
 			this.generating = false
 			this.error = false
+			this.loaded = false
 			this.fight = null
 			this.report = null
 			this.actions = null
@@ -253,7 +336,9 @@
 				this.fight = data
 				this.report = this.fight.report
 				this.actions = this.fight.data.actions.map(a => new Action(a))
-				this.statistics = Statistics.generate(this.fight)
+				this.statistics = new FightStatistics()
+				this.statistics.generate(this.fight)
+				// console.log(this.statistics)
 
 				for (const fid in this.fight.farmers1) {
 					this.farmers[fid] = this.fight.farmers1[fid]
@@ -276,29 +361,33 @@
 						action.weapon = this.leeks[action.params[1]].weapon_name
 					}
 				}
-				if (this.$store.getters.admin && this.report.ai_times) {
-					for (const l in this.report.leeks) {
-						this.report.leeks[l].aiTime = Math.round(this.report.ai_times[l].time / 1000) / 1000
-					}
-					for (const l in this.report.leeks1) {
-						this.report.leeks1[l].aiTime = Math.round(this.report.ai_times[l].time / 1000) / 1000
-					}
-					for (const l in this.report.leeks2) {
-						this.report.leeks2[l].aiTime = Math.round(this.report.ai_times[l].time / 1000) / 1000
-					}
-				}
+				// if (this.$store.getters.admin && this.fight.data.times) {
+				// 	for (const l in this.fight.data.times) {
+				// 		const id = parseInt(l, 10)
+				// 		const leek = this.report.leeks1.find(x => x.id === id)
+				// 		if (leek) {
+				// 			leek.time = this.fight.data.times[l]
+				// 		}
+				// 		const leek2 = this.report.leeks2.find(x => x.id === id)
+				// 		if (leek2) {
+				// 			leek2.time = this.fight.data.times[l]
+				// 		}
+				// 	}
+				// }
 				LeekWars.get('fight/get-logs/' + id).then(d => {
 					this.logs = d.logs
 					this.processLogs()
 					this.warningsErrors()
 				})
 				this.updateChart()
+				this.getChartDamage()
 				if (this.fight.context === FightContext.CHALLENGE) {
 					this.challenge()
 				}
 				LeekWars.setActions([{icon: 'mdi-undo', click: () => this.$router.push('/fight/' + id)}])
 				LeekWars.setTitle(this.$i18n.t('title') + " - " + this.fight.team1_name + " vs " + this.fight.team2_name)
 				this.$root.$emit('loaded')
+				this.loaded = true
 			})
 			.error(error => this.error = true)
 		}
@@ -400,42 +489,41 @@
 			}
 			return pos.y
 		}
+
+		@Watch('chartDisplaySummons')
 		updateChart() {
 			if (!this.fight) { return }
-			this.chartSeries = []
-			for (const i in this.statistics.leeks) {
-				const leek = this.statistics.leeks[i]
-				if (!leek.leek.summon) {
-					const data = []
-					for (let j = 0; j <= this.fight.report.duration; j++) {
-						let life = this.statistics.life[j][i]
-						if (this.log) {
-							life = Math.log2(Math.max(1, life))
-						}
-						data.push(life)
-					}
-					this.chartSeries.push(data)
-				}
+			let series = this.log ? this.statistics.lives_percent : this.statistics.lives
+			if (!this.chartDisplaySummons) {
+				series = series.filter((value, index) => !this.statistics.entities[index].leek.summon)
 			}
 			this.chartData = {
-				labels: this.chartSeries[0].map((i: number, j: number) => j + 1),
-				series: this.chartSeries
+				series
 			}
 			this.chartOptions = {
 				showPoint: false,
 				lineSmooth: this.smooth,
 				fullWidth: true,
-				fullHeight: true
+				fullHeight: true,
+				axisX: {
+					type: Chartist.FixedScaleAxis,
+					divisor: this.fight.report.duration,
+				}
 			}
 			this.chartEvents = [{
 				event: 'draw', fn: (context: any) => {
 					if (context.type === 'line') {
 						context.element.attr({
-							style: 'stroke: ' + (TEAM_COLORS[this.statistics.leeks[context.index].leek.team - 1])
+							style: 'stroke: ' + (TEAM_COLORS[this.statistics.entities[context.index].leek.team - 1])
 						})
 					}
+					if (context.type === 'label') {
+						if (this.fight!.report.duration >= 30 && context.axis.units.pos === 'x' && context.text % 2 === 0) {
+							context.element.attr({style: 'padding-top: 12px; overflow: visible'})
+						}
+					}
 				}
-			}, { event: 'created', fn: () => {
+			}, { event: 'created', fn: (c: any) => {
 				if (!this.$refs.chart) { return }
 				const chart = (this.$refs.chart as Vue).$el
 				chart.querySelectorAll('.ct-line').forEach((e, i) => {
@@ -446,6 +534,8 @@
 						this.chartTooltipLeek = i
 					})
 				})
+				this.chartScale = (c.axisY.bounds.max - c.axisY.bounds.min)
+				this.chart = c
 			}}]
 		}
 		chartMouseLeave() {
@@ -461,14 +551,16 @@
 			const chart = (this.$refs.chart as Vue).$el as HTMLElement
 			const chartPanel = this.$refs.chartPanel as HTMLElement
 			const tooltip = this.$refs.chartTooltip as HTMLElement
+
 			if (this.chartTooltipLeek === null) { return }
-			const x = e.clientX - chartPanel.getBoundingClientRect().left
-			const index = Math.floor(this.chartSeries[this.chartTooltipLeek].length * x / chart.offsetWidth)
-			if (typeof this.chartSeries[this.chartTooltipLeek][index] === 'undefined') { return }
-			const top = this.chartGetY(this.chartTooltipLeek, x) - 62
-			this.chartTooltipX = x - tooltip.offsetWidth / 2 - 5,
-			this.chartTooltipY = top
-			this.chartTooltipValue = this.statistics.leeks[this.chartTooltipLeek].leek.name + '<br>' + this.chartSeries[this.chartTooltipLeek][index] + ' PV'
+			const x = e.clientX - chartPanel.getBoundingClientRect().left + 10
+
+			const top = this.chartGetY(this.chartTooltipLeek, x)
+			this.chartTooltipX = x - tooltip.offsetWidth / 2 - 10,
+			this.chartTooltipY = top - 40
+
+			const value = Math.round((this.chart.chartRect.y1 - top) * (this.chartScale / (this.chart.chartRect.y1 - this.chart.chartRect.y2)))
+			this.chartTooltipValue = this.statistics.entities[this.chartTooltipLeek].leek.name + '<br>' + value + (this.log ? '%' : '') + ' PV'
 		}
 
 		comment(comment: Comment) {
@@ -481,34 +573,155 @@
 			}
 		}
 
-		expandTabs() {
-			// var update = function(panel) {
-			// 	var name = $(panel).attr('name')
-			// 	var collapsed = localStorage['report/' + name + '-collapsed'] === 'true'
-			// 	if (collapsed) {
-			// 		$(panel).find('.button.expand img').attr('src', LW.staticURL + 'image/icon/expand.png')
-			// 		$(panel).find('.content').hide()
-			// 	} else {
-			// 		$(panel).find('.button.expand img').attr('src', LW.staticURL + 'image/icon/collapse.png')
-			// 		$(panel).find('.content').show()
-			// 	}
+		@Watch('damageChartType')
+		@Watch('damagesDisplaySummons')
+		@Watch('damagesTeams')
+		getChartDamage() {
+			const entities: any[][] = [] // Entities or teams
 
-			// 	if (name == 'graph') LW.pages.report.updateGraph()
-			// }
+			for (const e in this.statistics.entities) {
+				const entity = this.statistics.entities[e]
+				let total = 0
+				let stats: any[] = []
+				const name = entity.leek.summon ? this.$t('entity.' + entity.name) : entity.name
+				if (this.damageChartType === 0) {
+					total = entity.dmg_out
+					stats = [name, entity.leek.id, entity.leek.team, total, entity.direct_dmg_out, entity.poison_out, entity.return_out, entity.nova_out, entity.life_dmg_out]
+				} else if (this.damageChartType === 1) {
+					total = entity.dmg_in
+					stats = [name, entity.leek.id, entity.leek.team, total, entity.direct_dmg_in, entity.poison_in, entity.return_in, entity.nova_in, entity.life_dmg_in]
+				} else if (this.damageChartType === 2) {
+					total = entity.heal_out + entity.life_steal_out + entity.max_life_out
+					stats = [name, entity.leek.id, entity.leek.team, total, entity.heal_out, entity.life_steal_out, entity.max_life_out]
+				} else {
+					total = entity.tank
+					stats = [name, entity.leek.id, entity.leek.team, total, entity.tank]
+				}
+				if (this.damagesTeams === 1) {
+					const team = entities.find(ee => ee[2] === entity.leek.team)
+					if (team) {
+						team[3] += total
+						for (let v = 4; v < stats.length; ++v) {
+							team[v] += stats[v]
+						}
+					} else {
+						stats[0] = this.$t('team' + (stats[2]))
+						entities.push(stats)
+					}
+				} else if (entity.leek.summon && !this.damagesDisplaySummons) {
+					const summoner = entities.find(ee => ee[1] === entity.leek.owner)!
+					summoner[3] += total
+					for (let v = 4; v < stats.length; ++v) {
+						summoner[v] += stats[v]
+					}
+				} else {
+					entities.push(stats)
+				}
+			}
+			entities.sort((a: any, b: any) => {
+				const team1 = this.statistics.entities[a[1]].leek.team
+				const team2 = this.statistics.entities[b[1]].leek.team
+				if (this.fight!.type !== FightType.BATTLE_ROYALE && team1 !== team2) {
+					return team2 - team1
+				}
+				return a[3] - b[3]
+			})
+			const series = []
+			for (let v = 4; v < entities[0].length; ++v) {
+				series.push(entities.map(e => e[v]))
+			}
+			this.damageEntities = entities
+			this.damagesBarsData = {
+				labels: entities.map(e => e[0]),
+				series
+			}
+			this.damagesBarsHeight = Math.max(370, entities.length * 25)
+			this.damagesBarsEvents = [{
+				event: 'draw', fn: (data: any) => {
+					if (data.type === 'bar' && data.seriesIndex === this.damagesBarsData.series.length - 1) {
+						const node = new Chartist.Svg('text', {
+							x: data.x2 + 5,
+							y: data.y2 + 5,
+						}, 'total')
+						node._node.textContent = this.damageEntities[data.index][3]
+						data.group.append(node, 'ct-slice-pie')
+					}
+				}
+			}]
 
-			// $('#report-page .panel[name]').each(function() {
-
-			// 	var name = $(this).attr('name')
-			// 	var panel = this
-
-			// 	$(this).find('.button.expand').click(function() {
-			// 		localStorage['report/' + name + '-collapsed'] = !(localStorage['report/' + name + '-collapsed'] === 'true')
-			// 		update(panel)
+			// Chart
+			const chartSeries = []
+			for (let v = 4; v < entities[0].length; ++v) {
+				chartSeries.push(entities.reduce((sum, e) => sum + e[v], 0))
+			}
+			let labels = []
+			if (this.damageChartType === 0) {
+				labels = ['direct', 'poison', 'return', 'nova', 'life']
+				this.legends = ['#e22424', '#a017d6', '#32b2da', '#2bc491', '#f28dff']
+			} else if (this.damageChartType === 1) {
+				labels = ['direct', 'poison', 'return', 'nova', 'life']
+				this.legends = ['#e22424', '#a017d6', '#32b2da', '#2bc491', '#f28dff']
+			} else if (this.damageChartType === 2) {
+				labels = ['direct', 'steal', 'max_life']
+				this.legends = ['#5fad1b', '#e22424', '#38e9ae']
+			} else {
+				labels = ['direct']
+				this.legends = ['orange']
+			}
+			this.damageChartDamage = {
+				labels,
+				series: chartSeries
+			}
+			// setTimeout(() => {
+			// 	this.$el.querySelectorAll('.damage-chart').forEach((chart, i) => {
+			// 		chart.querySelectorAll('.ct-series path').forEach((e) => (e as HTMLElement).style.strokeWidth = '')
+			// 		chart.querySelectorAll('.ct-series').forEach((e, j) => {
+			// 			e.addEventListener('mouseenter', () => {
+			// 				e.classList.add('selected')
+			// 			})
+			// 			e.addEventListener('mouseleave', () => {
+			// 				e.classList.remove('selected')
+			// 			})
+			// 		})
 			// 	})
-
-			// 	update(panel)
-			// })
+			// }, 500)
 		}
+
+		walkedCells(fid: number) {
+			this.cells = this.statistics.entities[fid].walkedCells
+		}
+
+		// walkedCells(fid: number) {
+		// 	console.log("fid", fid)
+		// 	const farmer = this.fight.data.leeks.find(l => l.id === fid).farmer.id
+		// 	console.log("farmer", farmer)
+		// 	const walked = this.statistics.entities[fid].
+		// 	const parts = walked.split(',')
+		// 	const data = parts[0]
+		// 	const start = parseInt(parts[1], 10)
+		// 	let array = this.convertStringToUTF8ByteArray(atob(data))
+		// 	console.log(array)
+		// 	let bits = new Uint8Array(613)
+		// 	let cells = new Set<number>()
+		// 	let b = start
+		// 	for (let i = 0; i < array.length; i++) {
+		// 		for (let j = 0; j < 8; ++j) {
+		// 			const on = (array[i] & (1 << j)) != 0
+		// 			if (on) { cells.add(b) }
+		// 			bits[b] = on ? 1 : 0
+		// 			b++
+		// 		}
+		// 	}
+		// 	console.log("bits = " + bits)
+		// 	console.log("cells = ", cells)
+		// 	this.cells = cells
+		// }
+
+		// convertStringToUTF8ByteArray(str: string) {
+		// 	let binaryArray = new Uint8Array(str.length)
+		// 	Array.prototype.forEach.call(binaryArray, function (el, idx, arr) { arr[idx] = str.charCodeAt(idx) })
+		// 	return binaryArray
+		// }
 	}
 </script>
 
@@ -575,22 +788,14 @@
 		margin-left: -10px;
 		margin-right: -4px;
 		margin-bottom: -16px;
-		.ct-line {
-			stroke: rgba(95,173,27,0.7);
+		::v-deep .ct-line {
 			stroke-width: 3px;
-		}
-		.ct-area {
-			fill: rgba(95,173,27,1);
-			fill-opacity: 0.2;
 		}
 		.ct-label.ct-horizontal {
 			text-align: center;
 		}
 		.tooltip {
 			pointer-events: none;
-		}
-		&.long::v-deep .ct-labels *:nth-child(even) .ct-label.ct-horizontal.ct-end {
-			padding-top: 12px;
 		}
 	}
 	.warnings-errors .title {
@@ -636,6 +841,156 @@
 				display: flex;
 				align-items: center;
 			}
+		}
+	}
+	.damages {
+		display: flex;
+		& > * {
+			flex: 270px 0 0;
+		}
+		.legend {
+			display: grid;
+			grid-template-columns: repeat(auto-fill, minmax(125px, 1fr));
+			font-weight: 500;
+			margin-top: 15px;
+			& > div {
+				display: flex;
+				padding: 2px 0;
+				border-bottom: 1px solid #ccc;
+			}
+			span {
+				min-width: 55px;
+				text-align: left;
+			}
+			.value {
+				flex: 1;
+				text-align: right;
+				padding-right: 10px;
+			}
+		}
+	}
+	@media screen and (max-width: 599px) {
+		.damages {
+			flex-direction: column;
+		}
+	}
+	.damage-chart {
+		text-align: center;
+		width: 100%;
+		padding: 10px;
+		padding-top: 15px;
+		padding-bottom: 5px;
+		svg {
+			width: 220px;
+			height: 220px;
+		}
+		::v-deep .ct-label {
+			font-size: 13px;
+			fill: rgba(0,0,0,.7);
+			font-weight: bold;
+			pointer-events: none;
+		}
+		::v-deep .ct-series path {
+			cursor: pointer;
+			stroke-width: 38px;
+			transition: stroke-width 0.1s ease;
+		}
+		::v-deep .ct-series.selected path {
+			stroke-width: 48px;
+		}
+		::v-deep .ct-series-a path {
+			stroke: #e22424;
+		}
+		::v-deep .ct-series-b path {
+			stroke: #a017d6;
+		}
+		::v-deep .ct-series-c path {
+			stroke: #32b2da;
+		}
+		::v-deep .ct-series-d path {
+			stroke: #38e9ae;
+		}
+		::v-deep .ct-series-e path {
+			stroke: #f28dff;
+		}
+		.heal {
+			::v-deep .ct-series-a path {
+				stroke: #5fad1b;
+			}
+			::v-deep .ct-series-b path {
+				stroke: #e22424;
+			}
+			::v-deep .ct-series-c path {
+				stroke: #38e9ae;
+			}
+		}
+		.tank {
+			::v-deep .ct-series-a path {
+				stroke: orange;
+			}
+		}
+	}
+	.damages-bars {
+		flex: 1.8;
+		width: 100%;
+		height: 356px;
+		.chart {
+			height: 380px;
+		}
+		::v-deep .ct-bar {
+			stroke-width: 15px;
+		}
+		::v-deep .ct-series-a line {
+			stroke: #e22424;
+		}
+		::v-deep .ct-series-b line {
+			stroke: #a017d6;
+		}
+		::v-deep .ct-series-c line {
+			stroke: #41d3ff;
+		}
+		::v-deep .ct-series-d line {
+			stroke: #38e9ae;
+		}
+		::v-deep .ct-series-e line {
+			stroke: #f28dff;
+		}
+		.heal {
+			::v-deep .ct-series-a line {
+				stroke: #5fad1b;
+			}
+			::v-deep .ct-series-b line {
+				stroke: #e22424;
+			}
+			::v-deep .ct-series-c line {
+				stroke: #38e9ae;
+			}
+		}
+		.tank {
+			::v-deep .ct-series-a line {
+				stroke: orange;
+			}
+		}
+		::v-deep .total {
+			font-weight: 500;
+			font-size: 14px;
+		}
+		::v-deep .ct-label.ct-vertical {
+			color: #444;
+			white-space: nowrap;
+		}
+	}
+	.damage-options {
+		display: flex;
+		.spacer {
+			flex: 1;
+		}
+	}
+	.seed {
+		text-align: right;
+		color: #333;
+		.v-icon {
+			font-size: 20px;
 		}
 	}
 </style>

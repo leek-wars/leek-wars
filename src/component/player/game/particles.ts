@@ -1,4 +1,4 @@
-import { Entity } from '@/component/player/game/entity'
+import { FightEntity } from '@/component/player/game/entity'
 import { Game } from "@/component/player/game/game"
 import { Blood, Bullet, Cartridge, Explosion, Fire, Garbage, Gaz, Grenade, ImageParticle, Laser, Lightning, Meteorite, NUM_BLOOD_SPRITES, Particle, Plasma, Rectangle, Shot, SimpleFire, SpikeParticle, SpinningParticle } from '@/component/player/game/particle'
 import { Position } from '@/component/player/game/position'
@@ -14,7 +14,7 @@ class Particles {
 		this.game = game
 	}
 
-	public addBullet(x: number, y: number, z: number, angle: number, targets: Entity[]) {
+	public addBullet(x: number, y: number, z: number, angle: number, targets: FightEntity[]) {
 		const bullet = new Bullet(this.game, x, y, z, angle, targets)
 		// Vérification traversée
 		if (targets.length > 0) {
@@ -34,7 +34,7 @@ class Particles {
 		this.add(bullet)
 	}
 
-	public addLaser(x: number, y: number, z: number, angle: number, width: number, texture: Texture, targets: Entity[] | null) {
+	public addLaser(x: number, y: number, z: number, angle: number, width: number, texture: Texture, targets: FightEntity[] | null) {
 		this.add(new Laser(this.game, texture, x, y, z, width, angle))
 		// Collision
 		if (targets != null) {
@@ -57,10 +57,10 @@ class Particles {
 	public addGaz(x: number, y: number, z: number, angle: number, texture: Texture, thrown: boolean = false) {
 		this.add(new Gaz(this.game, x, y, z, angle, thrown, texture))
 	}
-	public addMeteorite(x: number, y: number, z: number, angle: number, size: number, targets: Entity[] | undefined, actionDoneAfterDie: boolean) {
+	public addMeteorite(x: number, y: number, z: number, angle: number, size: number, targets: FightEntity[] | undefined, actionDoneAfterDie: boolean) {
 		this.add(new Meteorite(this.game, x, y, z, size, angle, targets, actionDoneAfterDie))
 	}
-	public addGrenade(x: number, y: number, z: number, angle: number, pos: Position, targets: Entity[], texture: Texture, explosion: Texture) {
+	public addGrenade(x: number, y: number, z: number, angle: number, pos: Position, targets: FightEntity[], texture: Texture, explosion: Texture) {
 		this.add(new Grenade(this.game, x, y, z, angle, pos, targets, texture, explosion))
 	}
 	public addShot(x: number, y: number, z: number, angle: number) {

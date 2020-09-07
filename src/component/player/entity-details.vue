@@ -2,7 +2,7 @@
 	<div class="details-wrapper">
 		<div class="effects">
 			<div v-for="effect in entity.effects" :key="effect.id" :value="effectText(effect)" class="effect">
-				<img :src="effect.image">
+				<img :src="effect.texture.src">
 			</div>
 		</div>
 		<div :class="{dead: entity.dead}" class="details">
@@ -85,13 +85,13 @@
 <script lang="ts">
 	import { Effect, EffectType } from '@/model/effect'
 	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
-	import { Entity } from './game/entity'
+	import { FightEntity } from './game/entity'
 	import { Game } from './game/game'
 	import { Turret } from './game/turret'
 
 	@Component({ name: 'entity-details' })
 	export default class EntityDetails extends Vue {
-		@Prop({required: true}) entity!: Entity
+		@Prop({required: true}) entity!: FightEntity
 		Turret = Turret
 
 		effectText(effect: any) {
@@ -207,11 +207,13 @@
 .effects .effect {
 	position: relative;
 	display: inline-block;
-}
-.effects .effect img {
-	width: 36px;
-	margin-right: 4px;
-	vertical-align: bottom;
+	img {
+		width: 36px;
+		height: 36px;
+		margin-right: 4px;
+		vertical-align: bottom;
+		object-fit: fill;
+	}
 }
 .effects .effect:after {
 	position: absolute;

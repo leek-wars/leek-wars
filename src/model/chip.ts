@@ -1,3 +1,5 @@
+import { Area } from './area'
+
 class Chip {
 	public id!: number
 	public template!: number
@@ -13,7 +15,7 @@ class ChipTemplate {
 	public launch_type!: number
 	public effects!: any[]
 	public cost!: number
-	public area!: number
+	public area!: Area
 	public los!: number
 	public template!: number
 	public cooldown!: number

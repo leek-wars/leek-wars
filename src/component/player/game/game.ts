@@ -3,7 +3,7 @@ import Player from '@/component/player.vue'
 import { Bubble } from '@/component/player/game/bubble'
 import { Bulb } from '@/component/player/game/bulb'
 import { Acceleration, Adrenaline, Alteration, Antidote, Armor, Armoring, BallAndChain, Bandage, Bark, Burning, Carapace, ChipAnimation, Collar, Covetousness, Cure, DevilStrike, Doping, Drip, Ferocity, Fertilizer, Flame, Flash, Fortress, Fracture, Helmet, Ice, Iceberg, Inversion, Jump, LeatherBoots, Liberation, Lightning, Loam, Meteorite, Mirror, Motivation, Pebble, Plague, Plasma, Precipitation, Protein, Punishment, Rage, Rampart, Reflexes, Regeneration, Remission, Rock, Rockfall, SevenLeagueBoots, Shield, Shock, SlowDown, Solidification, Soporific, Spark, Stalactite, Steroid, Stretching, Teleportation, Thorn, Toxin, Tranquilizer, Vaccine, Vampirization, Venom, Wall, WarmUp, Whip, WingedBoots } from '@/component/player/game/chips'
-import { Entity, EntityDirection, EntityType } from '@/component/player/game/entity'
+import { EntityDirection, EntityType, FightEntity } from '@/component/player/game/entity'
 import { Ground } from '@/component/player/game/ground'
 import { Leek } from '@/component/player/game/leek'
 import { Arena, Beach, Desert, Factory, Forest, Glacier, Map, Nexus } from '@/component/player/game/maps'
@@ -15,12 +15,12 @@ import { Axe, BLaser, Broadsword, Destroyer, DoubleGun, Electrisor, FlameThrower
 import { env } from '@/env'
 import { Action, ActionType } from '@/model/action'
 import { Area } from '@/model/area'
-import { EffectType } from '@/model/effect'
+import { Cell } from '@/model/cell'
+import { EffectType, EntityEffect } from '@/model/effect'
 import { Fight, FightData, FightType, TEAM_COLORS } from '@/model/fight'
 import { i18n } from '@/model/i18n'
 import { LeekWars } from '@/model/leekwars'
 import Vue from 'vue'
-import { Cell } from './cell'
 import { Turret } from './turret'
 
 enum Colors {
@@ -204,11 +204,10 @@ class Game {
 	public drawableElementCurrentId: number = 0
 	// Players
 	public teams = new Array()
-	public leeks: Entity[] = []
+	public leeks: FightEntity[] = []
 	public farmers: {[key: number]: any} = {}
 	public entityOrder = new Array()
-	public states = new Array()
-	public stateCells: {[key: number]: Cell | null} = {}
+	public states: {[key: number]: any} = []
 	// Actions
 	public data!: FightData
 	public actions: Action[] = []
@@ -219,7 +218,7 @@ class Game {
 	public fightEnd = false
 	public turn = 1
 	public turnPosition: {[key: number]: number} = {}
-	public effects = new Array()
+	public effects: EntityEffect[] = []
 	// Chips
 	public chips: ChipAnimation[] = []
 	// Logs
@@ -240,7 +239,7 @@ class Game {
 	public mouseCellY: number = 0
 	public mouseRealX: number = 0
 	public mouseRealY: number = 0
-	public mouseEntity: Entity | null = null
+	public mouseEntity: FightEntity | null = null
 	// Settings
 	public large = true
 	public tactic = false
@@ -256,8 +255,8 @@ class Game {
 	public avgFPS: number = 0
 	public showCellTime: number = 0
 	public currentPlayer: number | null = null
-	public selectedEntity: Entity | null = null
-	public hoverEntity: Entity | null = null
+	public selectedEntity: FightEntity | null = null
+	public hoverEntity: FightEntity | null = null
 	public jumping: any
 	public jumpRequested: boolean = false
 	public jumpAction: number = 0
@@ -290,7 +289,7 @@ class Game {
 	]
 
 	constructor() {
-		for (let i = 0; i < this.ground.tilesY * 2; i++) {
+		for (let i = 0; i < this.ground.field.tilesY * 2; i++) {
 			this.drawableElements[i] = {}
 		}
 		const halloweenStart = new Date()
@@ -328,7 +327,7 @@ class Game {
 			const type = o[0]
 			const size = o[1]
 			if (size !== -1) {
-				const obstacle = new Obstacle(this, type, size, this.ground.cells[parseInt(i, 10)])
+				const obstacle = new Obstacle(this, type, size, this.ground.field.cells[parseInt(i, 10)])
 				obstacle.resize()
 				this.ground.addObstacle(obstacle)
 			}
@@ -424,7 +423,9 @@ class Game {
 			entity.maxMP = entity.mp
 
 			if (!entity.summon) {
-				entity.setCell(this.ground.cells[e.cellPos])
+				const cell = this.ground.field.cells[e.cellPos]
+				cell.setEntity(entity)
+				entity.setCell(cell)
 				if (entity.cell) {
 					entity.setOrientation(this.getInitialOrientation(entity.cell))
 				}
@@ -438,7 +439,6 @@ class Game {
 			}
 
 			this.leeks[entity.id] = entity
-			this.stateCells[entity.id] = entity.cell
 
 			// entity
 			if (entity instanceof Leek) {
@@ -594,17 +594,17 @@ class Game {
 		// console.log(this.leeks)
 		for (const leek of this.leeks) {
 			this.states[leek.id] = {
-				absolute_shield: 0,
-				relative_shield: 0,
+				absoluteShield: 0,
+				relativeShield: 0,
 				active: !leek.summon,
 				life: leek.life,
-				max_life: leek.life,
+				maxLife: leek.life,
 				tp: leek.tp,
 				mp: leek.mp,
 				agility: leek.agility,
 				strength: leek.strength,
 				wisdom: leek.wisdom,
-				damage_return: leek.damageReturn,
+				damageReturn: leek.damageReturn,
 				science: leek.science,
 				magic: leek.magic,
 				resistance: leek.resistance,
@@ -863,13 +863,15 @@ class Game {
 			break
 		}
 		case ActionType.MOVE_TO: {
+			const entity = action.params[1]
+			const end_cell = action.params[3][action.params[3].length - 1]
 			if (this.jumping) {
-				this.stateCells[action.params[1]] = this.ground.cells[action.params[2]]
+				this.ground.field.cells[end_cell].setEntity(this.leeks[entity])
 				this.actionDone()
 			} else {
 				const cells = [] as Cell[]
 				for (const c of action.params[3]) {
-					cells.push(this.ground.cells[c])
+					cells.push(this.ground.field.cells[c])
 				}
 				this.leeks[action.params[1]].move(cells)
 			}
@@ -896,37 +898,41 @@ class Game {
 			const leek = this.leeks[action.params[1]] as Leek
 			leek.setWeapon(new WEAPONS[action.params[2] - 1](this))
 			leek.weapon_name = LeekWars.weapons[LeekWars.weaponTemplates[action.params[2]].item].name
+
 			this.log(action)
 			this.actionDone()
 			break
 		}
 		case ActionType.USE_CHIP: {
 
-			const launcher = action.params[1]
-			const cell = this.ground.cells[action.params[2]]
+			const launcher_id = action.params[1] as number
+			const launcher = this.leeks[launcher_id]
+			const target_cell = this.ground.field.cells[action.params[2]]
 			const chip = action.params[3]
-			const leeksID = action.params[5]
+
+			// TODO take the area from the action instead of the item data when available
+			const area = LeekWars.chips[LeekWars.chipTemplates[chip].item].area
+			const targets = this.ground.field.getTargets(target_cell, area) as FightEntity[]
 
 			if (this.jumping) {
 				// Update leek cell after teleportation
 				if (chip === 37) {
-					this.stateCells[launcher] = cell
+					target_cell.setEntity(launcher)
 				}
 				// Update leeks cells after inversion
 				if (chip === 39) {
-					this.stateCells[leeksID[0]] = this.stateCells[launcher]!
-					this.stateCells[launcher] = cell
+					if (targets.length) { // C'est possible de lancer dans le vide
+						const launcher_cell = launcher.cell!
+						target_cell.setEntity(launcher)
+						launcher_cell.setEntity(targets[0])
+					}
 				}
 				this.actionDone()
 				break
 			}
 			if (CHIPS[chip - 1] !== null) {
 				const chipAnimation: any = new CHIPS[chip - 1]!(this)
-				const leeks = []
-				for (const leek of leeksID) {
-					leeks.push(this.leeks[leek])
-				}
-				this.leeks[launcher].useChip(chipAnimation, cell, leeks)
+				launcher.useChip(chipAnimation, target_cell, targets)
 				this.chips.push(chipAnimation)
 			} else {
 				this.actionDone()
@@ -940,23 +946,28 @@ class Game {
 				break
 			}
 			const launcher = action.params[1]
-			const cell = this.ground.cells[action.params[2]]
-			const leeksID = action.params[5]
+			const cell = this.ground.field.cells[action.params[2]]
+			const weapon = action.params[3]
 			action.weapon = (this.leeks[launcher] as Leek).weapon_name
 
-			const leeks = new Array()
-			for (const leek of leeksID) {
-				leeks.push(this.leeks[leek])
-			}
-			(this.leeks[launcher] as Leek).useWeapon(cell, leeks)
+			// TODO take the area from the action instead of the item data when available
+			const area = LeekWars.weapons[LeekWars.weaponTemplates[weapon].item].area
+			const targets = this.ground.field.getTargets(cell, area) as FightEntity[]
+
+			(this.leeks[launcher] as Leek).useWeapon(cell, targets)
 			// Pas de cibles workaround
-			if (leeksID.length === 0) {
+			if (targets.length === 0) {
 				this.actionDone()
 			}
 			this.log(action)
 			break
 		}
-		case ActionType.LIFE_LOST: {
+		case ActionType.LIFE_LOST:
+		case ActionType.DAMAGE_RETURN:
+		case ActionType.POISON_DAMAGE:
+		case ActionType.LIFE_DAMAGE:
+		case ActionType.AFTEREFFECT:
+		{
 			const erosion = action.params.length > 3 ? action.params[3] : 0
 			this.leeks[action.params[1]].looseLife(action.params[2], erosion, this.jumping)
 			if (!this.jumping) {
@@ -966,7 +977,7 @@ class Game {
 			this.actionDone()
 			break
 		}
-		case ActionType.LOST_MAX_LIFE: {
+		case ActionType.NOVA_DAMAGE: {
 			this.leeks[action.params[1]].looseMaxLife(action.params[2], this.jumping)
 			if (!this.jumping) {
 				this.log(action)
@@ -997,7 +1008,7 @@ class Game {
 				entity.kill(false)
 				this.actionDone()
 			// } else {
-			// 	this.log(action)
+				this.log(action)
 			// 	entity.kill(true) // Animation
 			// }
 			break
@@ -1025,12 +1036,12 @@ class Game {
 		case ActionType.SUMMON: {
 			const caster = action.params[1]
 			const summonID = action.params[2]
-			const cell = this.ground.cells[action.params[3]]
+			const cell = this.ground.field.cells[action.params[3]]
 			const summon = this.leeks[summonID]
 			summon.summoner = this.leeks[caster]
 			summon.active = true
 			if (this.jumping) {
-				this.stateCells[summon.id] = cell
+				cell.setEntity(summon)
 			} else {
 				summon.setCell(cell)
 				summon.drawID = this.addDrawableElement(summon, summon.y)
@@ -1048,15 +1059,15 @@ class Game {
 		}
 		case ActionType.RESURRECTION: {
 			const target = action.params[2]
-			const cell = this.ground.cells[action.params[3]]
+			const cell = this.ground.field.cells[action.params[3]]
 			const life = action.params[4]
 			const maxLife = action.params[5]
 			const entity = this.leeks[target]
 
-			this.stateCells[entity.id] = cell
 			entity.life = life
 			entity.maxLife = maxLife
 			entity.reborn()
+			cell.setEntity(entity)
 			if (!this.jumping) {
 				entity.setCell(cell)
 				entity.drawID = this.addDrawableElement(entity, entity.y)
@@ -1071,9 +1082,9 @@ class Game {
 				this.actionDone()
 				break
 			}
-			this.showCellCell = this.ground.cells[action.params[2]]
+			this.showCellCell = this.ground.field.cells[action.params[2]]
 			this.showCellColor = '#' + action.params[3]
-			const pos = this.ground.cellToXY(this.showCellCell)
+			const pos = this.ground.field.cellToXY(this.showCellCell)
 			const xy = this.ground.xyToXYPixels(pos.x, pos.y)
 			this.showCellX = xy.x * this.ground.scale
 			this.showCellY = xy.y * this.ground.scale
@@ -1125,11 +1136,11 @@ class Game {
 	}
 
 	public addEffect(action: Action, stacked: boolean) {
-		const objectID = action.params[1]
+		const item = action.params[1]
 		const id = action.params[2]
 		const caster_id = action.params[3]
 		const target = action.params[4]
-		const effect = action.params[5]
+		const type = action.params[5]
 		const value = action.params[6]
 		const turns = action.params[7]
 		const caster = this.leeks[caster_id]
@@ -1139,24 +1150,20 @@ class Game {
 			// Search for an similar effect to stack
 			for (const i in leek.effects) {
 				const e = leek.effects[i]
-				if (e.object === objectID && e.effect === effect && e.turns === turns && e.caster === caster_id) {
+				if (e.item === item && e.type === type && e.turns === turns && e.caster === caster_id) {
 					e.value += value
 					break
 				}
 			}
 		} else {
-			// Ajout de l'effet
-			this.effects[id] = {id, object: objectID, caster: caster_id, target, effect, value, turns}
 
 			// Ajout de l'image sur le hud
 			let image: string = ''
-			if (objectID in LeekWars.chips) {
-				image = env.STATIC + "image/chip/small/" + LeekWars.chips[objectID].name + ".png"
+			if (item in LeekWars.chips) {
+				image = env.STATIC + "image/chip/small/" + LeekWars.chips[item].name + ".png"
 			} else /* weapon */ {
-
-				if (objectID in LeekWars.weapons) {
-
-					const template = LeekWars.weapons[objectID].template
+				if (item in LeekWars.weapons) {
+					const template = LeekWars.weapons[item].template
 					const img = ["pistol", "machine_gun", "double_gun", "shotgun", "magnum", "laser", "grenade_launcher", "flamme", "destroyer", "gaz_icon", "electrisor", "m_laser", "b_laser", "katana", "broadsword", "axe", "j_laser", "illicit_grenade_launcher", "mysterious_electrisor", "unbridled_gazor", "revoked_m_laser"][template - 1]
 					image = env.STATIC + "image/weapon/" + img + ".png"
 					// Gestion des états du poireau
@@ -1167,16 +1174,18 @@ class Game {
 					}
 				}
 			}
-			this.effects[id].image = image
-			this.effects[id].texture = new Image()
-			this.effects[id].texture.src = image
+			const texture = new Image()
+			texture.src = image
+
+			// Ajout de l'effet
+			this.effects[id] = { id, item, caster: caster_id, target, type, value, turns, texture }
 			leek.effects[id] = this.effects[id]
 			caster.launched_effects[id] = this.effects[id]
 		}
 
 		this.log(action)
 
-		switch (effect) {
+		switch (type) {
 		case EffectType.ABSOLUTE_SHIELD:
 		case EffectType.STEAL_ABSOLUTE_SHIELD:
 		case EffectType.RAW_ABSOLUTE_SHIELD:
@@ -1244,7 +1253,7 @@ class Game {
 
 		if (!effect) { return }
 
-		const effectID = effect.effect
+		const effectID = effect.type
 		const leek = this.leeks[effect.target]
 		const value = effect.value
 
@@ -1308,9 +1317,9 @@ class Game {
 			break
 		}
 		// Gestion des états du poireau
-		if (effect.object === 46) {
+		if (effect.item === 46) {
 			leek.stopBurn()
-		} else if (effect.object === 48) {
+		} else if (effect.item === 48) {
 			leek.stopGaz()
 		}
 		delete leek.effects[id]
@@ -1322,7 +1331,7 @@ class Game {
 		const effect = this.effects[id]
 		if (!effect) { return }
 
-		const effectID = effect.effect
+		const effectID = effect.type
 		const leek = this.leeks[effect.target]
 		const delta = new_value - effect.value
 
@@ -1385,6 +1394,7 @@ class Game {
 		}
 		effect.value = new_value // Updating the effect's value to properly remove it with `removeEffect`
 	}
+
 	public readLogs() {
 		if (this.logs == null) { return }
 		if (!(this.currentAction in this.logs)) { return }
@@ -1440,15 +1450,15 @@ class Game {
 				cx--
 			}
 		}
-		if (cx >= 0 && cy >= 0 && cx < this.ground.tilesX * 2 - 1 && cy < this.ground.tilesY * 2 - 1) {
+		if (cx >= 0 && cy >= 0 && cx < this.ground.field.tilesX * 2 - 1 && cy < this.ground.field.tilesY * 2 - 1) {
 			this.mouseTileX = cx
 			this.mouseTileY = cy
-			const cell = this.ground.xyToCell(cx, cy)
+			const cell = this.ground.field.xyToCell(cx, cy)
 			if (cell.obstacle) {
 				this.mouseCell = undefined
 			} else {
 				this.mouseCell = cell
-				const xy = this.ground.cellToXY(this.mouseCell)
+				const xy = this.ground.field.cellToXY(this.mouseCell)
 				this.mouseCellX = xy.x
 				this.mouseCellY = xy.y
 				const pos = this.ground.xyToXYPixels(xy.x, xy.y)
@@ -1492,8 +1502,8 @@ class Game {
 
 	public addMarker(owner: number, cells: number[], color: string, duration: number) {
 		for (const cell_id of cells) {
-			const cell = this.ground.cells[cell_id]
-			const pos = this.ground.cellToXY(cell)
+			const cell = this.ground.field.cells[cell_id]
+			const pos = this.ground.field.cellToXY(cell)
 			const xy = this.ground.xyToXYPixels(pos.x, pos.y)
 			const x = xy.x * this.ground.scale
 			const y = xy.y * this.ground.scale
@@ -1530,7 +1540,7 @@ class Game {
 	public createEffectAreaCells(cells: Cell[], lines: number[][], convert: {[key: number]: [number, number]}) {
 		const area = []
 		for (const cell of cells) {
-			const xy = this.ground.cellToXY(cell)
+			const xy = this.ground.field.cellToXY(cell)
 			const real = this.ground.xyToXYPixels(xy.x, xy.y)
 			const c = convert[cell.id]
 			area.push([real.x * this.ground.scale, real.y * this.ground.scale, lines[c[0]][c[1]]])
@@ -1547,7 +1557,7 @@ class Game {
 		const last = dx === 0 ? (dy > 0 ? 8 : 2) : (dx > 0 ? 4 : 1)
 		for (let c = 0; c < cells.length; ++c) {
 			const cell = cells[c]
-			const xy = this.ground.cellToXY(cell)
+			const xy = this.ground.field.cellToXY(cell)
 			const real = this.ground.xyToXYPixels(xy.x, xy.y)
 			const lines = sides + (c === 0 ? first : (c === cells.length - 1 ? last : 0))
 			this.area.push([real.x * this.ground.scale, real.y * this.ground.scale, lines])
@@ -1575,7 +1585,7 @@ class Game {
 		}
 
 		const add_cell = (x: number, y: number) => {
-			const n = this.ground.next_cell(cell, x, y)
+			const n = this.ground.field.next_cell(cell, x, y)
 			lines[c + x][c + y] = ~lines[c + x][c + y] + 16
 			if (n && !n.obstacle) {
 				if (x < c) { lines[c + x + 1][c + y] ^= 1 }
@@ -1707,7 +1717,7 @@ class Game {
 		}
 
 		const add_cell = (x: number, y: number) => {
-			const n = this.ground.next_cell(cell, x, y)
+			const n = this.ground.field.next_cell(cell, x, y)
 			lines[c + x][c + y] = ~lines[c + x][c + y] + 16
 			if (n && !n.obstacle) {
 				if (x < c) { lines[c + x + 1][c + y] ^= 1 }
@@ -1741,7 +1751,7 @@ class Game {
 		}
 	}
 
-	public selectEntity(entity: Entity | null) {
+	public selectEntity(entity: FightEntity | null) {
 		this.selectedEntity = entity
 		if (this.selectedEntity) {
 			this.selectedEntity.updateReachableCells()
@@ -2006,11 +2016,12 @@ class Game {
 
 	public jump(jumpAction: number) {
 		// Return to initial state
+		this.ground.field.resetCells()
 		for (const i in this.states) {
 			const leek = this.leeks[i] as Leek
 			leek.active = this.states[i].active
 			leek.life = this.states[i].life
-			leek.maxLife = this.states[i].max_life
+			leek.maxLife = this.states[i].maxLife
 			leek.tp = this.states[i].tp
 			leek.mp = this.states[i].mp
 			leek.agility = this.states[i].agility
@@ -2027,7 +2038,6 @@ class Game {
 			leek.gazing = 0
 			leek.bubble = new Bubble(this)
 			leek.weapon = null
-			this.stateCells[leek.id] = this.states[i].cell
 			if (leek.cell) {
 				leek.cell.entity = null
 				leek.cell = null
@@ -2041,6 +2051,9 @@ class Game {
 				if (index !== -1) {
 					this.entityOrder.splice(index, 1)
 				}
+			} else {
+				leek.setCell(this.states[i].cell)
+				this.states[i].cell!.setEntity(leek)
 			}
 			// Remove drawable element
 			if (leek.drawID) {
@@ -2087,11 +2100,10 @@ class Game {
 		this.currentAction = action
 
 		// Set cells
-		for (const e in this.stateCells) {
-			const cell = this.stateCells[e]
+		for (const e in this.leeks) {
 			const entity = this.leeks[e]
-			if (cell && entity.active) {
-				entity.setCell(cell)
+			if (entity.active && entity.cell) {
+				entity.setCell(entity.cell!)
 				if (!entity.drawID) {
 					entity.drawID = this.addDrawableElement(entity, entity.y)
 				}
@@ -2114,8 +2126,8 @@ class Game {
 
 	public getInitialOrientation(cell: Cell) {
 		const top = cell.id <= 314
-		const mod = this.ground.tilesX * 2 - 1
-		const left = ((cell.id % mod) * 2) % mod < this.ground.tilesX / 2
+		const mod = this.ground.field.tilesX * 2 - 1
+		const left = ((cell.id % mod) * 2) % mod < this.ground.field.tilesX / 2
 		if (top && left) {
 			return EntityDirection.SOUTH
 		} else if (top && !left) {

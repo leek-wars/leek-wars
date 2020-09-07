@@ -37,11 +37,11 @@
 			<leek slot="leek" :leek="leek" />
 			<b slot="value" class="color-tp">{{ $t('fight.n_tp', [action.params[2]]) }}</b>
 		</i18n>
-		<i18n v-else-if="type === ActionType.LIFE_LOST" tag="div" path="fight.leek_loose_x">
+		<i18n v-else-if="type === ActionType.LIFE_LOST || type === ActionType.DAMAGE_RETURN || type === ActionType.POISON_DAMAGE || type === ActionType.LIFE_DAMAGE || type === ActionType.AFTEREFFECT" tag="div" path="fight.leek_loose_x">
 			<leek slot="leek" :leek="leek" />
 			<b slot="value" class="color-life">{{ $t('fight.n_life', [action.params[2]]) }}</b>
 		</i18n>
-		<i18n v-else-if="type === ActionType.LOST_MAX_LIFE" tag="div" path="fight.leek_loose_x">
+		<i18n v-else-if="type === ActionType.NOVA_DAMAGE" tag="div" path="fight.leek_loose_x">
 			<leek slot="leek" :leek="leek" />
 			<b slot="value" class="color-max-life">{{ $t('fight.n_max_life', [action.params[2]]) }}</b>
 		</i18n>

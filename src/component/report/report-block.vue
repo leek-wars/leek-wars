@@ -84,7 +84,8 @@
 					<th>{{ $t('main.xp') }}</th>
 					<th class="gain">{{ $t('main.habs') }}</th>
 					<th v-if="fight.type === FightType.SOLO && fight.context != FightContext.TEST && fight.context != FightContext.CHALLENGE" class="gain">{{ $t('main.talent') }}</th>
-					<th v-if="$store.getters.admin" class="gain">Time</th>
+					<!-- <th class="gain">Opérations</th> -->
+					<!-- <th v-if="$store.getters.admin" class="gain">Time</th> -->
 				</tr>
 				<report-leek-row v-for="leek in leeks" :key="leek.id" :leek="leek" :fight="fight" />
 				<tr v-if="fight.type !== FightType.SOLO" class="total">
@@ -95,9 +96,8 @@
 					<td class="money">
 						<span>{{ totalMoney | number }} <span class="hab"></span></span>
 					</td>
-					<td v-if="$store.getters.admin" class="money">
-						<span>{{ totalTime }}&nbsp;ms</span>
-					</td>
+					<!-- <td class="gain">{{ totalOpes | number }}</td> -->
+					<!-- <td v-if="$store.getters.admin" class="gain">{{ totalTime }} s</td> -->
 				</tr>
 			</table>
 		</div>
@@ -135,8 +135,11 @@
 		get totalMoney() {
 			return this.leeks.reduce((sum: number, leek: any) => sum + leek.money, 0)
 		}
+		get totalOpes() {
+			return this.leeks.reduce((sum: number, leek: any) => sum + leek.opes, 0)
+		}
 		get totalTime() {
-			return this.leeks.reduce((sum: number, leek: any) => sum + leek.aiTime, 0).toFixed(3)
+			return Math.round(this.leeks.reduce((sum: number, leek: any) => sum + leek.time, 0) / 1000000) / 1000
 		}
 		get currentBar() {
 			const totalXP = this.team.next_xp - this.team.prev_xp

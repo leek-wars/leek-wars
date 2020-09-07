@@ -69,4 +69,16 @@ class Effect {
 	public modifiers!: number
 	public type!: number
 }
-export { Effect, EffectModifier, EffectType, EffectTypeMarket }
+
+class EntityEffect {
+	public id!: number
+	public type!: number
+	public value!: number
+	public caster!: number
+	public target!: number
+	public turns!: number
+	public item!: number
+	public texture!: HTMLImageElement
+}
+
+export { Effect, EffectModifier, EffectType, EffectTypeMarket, EntityEffect }

@@ -138,6 +138,7 @@ class FightData {
 	public leeks!: FightLeek[]
 	public team1!: number[]
 	public team2!: number[]
+	public ops!: any
 }
 
 export { Fight, FightType, FightContext, Report, ReportLeek, ReportFarmer, ReportTeam, TEAM_COLORS, FightLeek, FightMap, FightData }

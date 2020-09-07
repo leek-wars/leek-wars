@@ -1,7 +1,7 @@
 import { Game, GROUND_TEXTURE } from "@/component/player/game/game"
 import { Obstacle } from '@/component/player/game/obstacle'
+import { Field } from '@/model/field'
 import { LeekWars } from '@/model/leekwars'
-import { Cell } from './cell'
 import { Position } from './position'
 import { T, Texture } from './texture'
 
@@ -11,12 +11,10 @@ let GROUND_PADDING_TOP = 70
 let GROUND_PADDING_BOTTOM = 100
 
 class Ground {
+
+	public tileSize = 60
 	public width: number = 0
 	public height: number = 0
-	public tileSize = 60
-	public tilesX = 18
-	public tilesY = 18
-	public nb_cells = 0
 	public startX: number = 0
 	public startY: number = 0
 	public texture!: HTMLCanvasElement | null
@@ -34,42 +32,12 @@ class Ground {
 	public scale: number = 0
 	public realGridWidth: number = 0
 	public realGridHeight: number = 0
-	public coord: Cell[][] = []
-	public cells: Cell[] = []
-	private min_x = -1
-	private max_x = -1
-	private min_y = -1
-	private max_y = -1
+	public field!: Field
 
 	constructor(game: Game) {
 		this.game = game
-		this.nb_cells = (this.tilesX * 2 - 1) * this.tilesY - (this.tilesX - 1)
-		for (let id = 0; id < this.nb_cells; id++) {
-			const x1 = id % (this.tilesX * 2 - 1)
-			const y1 = Math.floor(id / (this.tilesX * 2 - 1))
-			const y = y1 - x1 % this.tilesX
-			const x = (id - (this.tilesX - 1) * y) / this.tilesX
-			const cell = new Cell(id, x, y)
-			if (this.min_x === -1 || x < this.min_x) {
-				this.min_x = x
-			}
-			if (this.max_x === -1 || x > this.max_x) {
-				this.max_x = x
-			}
-			if (this.min_y === -1 || y < this.min_y) {
-				this.min_y = y
-			}
-			if (this.max_y === -1 || y > this.max_y) {
-				this.max_y = y
-			}
-			this.cells.push(cell)
-		}
-		const sx = this.max_x - this.min_x + 1
-		const sy = this.max_y - this.min_y + 1
-		this.coord = Array.from(Array(sy), () => new Array(sx).fill(null))
-		for (const cell of this.cells) {
-			this.coord[cell.x - this.min_x][cell.y - this.min_y] = cell
-		}
+		this.field = new Field(18, 18)
+
 		if (this.game.halloween) {
 			T.pumpkin.load(this.game)
 		}
@@ -79,9 +47,9 @@ class Ground {
 		this.obstacles.push(obstacle)
 		obstacle.cell.obstacle = true
 		if (obstacle.size === 2) {
-			this.cells[obstacle.cell.id + 17].obstacle = true
-			this.cells[obstacle.cell.id + 18].obstacle = true
-			this.cells[obstacle.cell.id + 35].obstacle = true
+			this.field.cells[obstacle.cell.id + 17].obstacle = true
+			this.field.cells[obstacle.cell.id + 18].obstacle = true
+			this.field.cells[obstacle.cell.id + 35].obstacle = true
 		}
 	}
 
@@ -118,8 +86,8 @@ class Ground {
 		this.startY = GROUND_PADDING_TOP + Math.round(height - GROUND_PADDING_BOTTOM - GROUND_PADDING_TOP - this.gridHeight) / 2
 
 		// Taille des cases
-		this.tileSizeX = this.gridWidth / this.tilesX
-		this.tileSizeY = this.gridHeight / this.tilesY
+		this.tileSizeX = this.gridWidth / this.field.tilesX
+		this.tileSizeY = this.gridHeight / this.field.tilesY
 
 		// Taille "réelle" des cases
 		this.realTileSizeX = 70
@@ -173,12 +141,12 @@ class Ground {
 				this.textureCtx.fillStyle = 'black'
 				this.textureCtx.globalAlpha = 0.11
 
-				for (const cell of this.cells) {
+				for (const cell of this.field.cells) {
 
 					if (((cell.x + cell.y) % 2) || cell.obstacle) { continue }
 
 					this.textureCtx.save()
-					const xy = this.cellToXY(cell)
+					const xy = this.field.cellToXY(cell)
 					const real = this.xyToXYPixels(xy.x, xy.y)
 					this.textureCtx.translate(real.x * this.scale, real.y * this.scale)
 
@@ -210,7 +178,7 @@ class Ground {
 		ctx.strokeStyle = "rgba(0, 0, 0, " + (0.12 * this.scale) + ")"
 		ctx.lineWidth = 2
 
-		for (let i = 0; i < this.tilesX; i++) {
+		for (let i = 0; i < this.field.tilesX; i++) {
 
 			ctx.beginPath()
 			ctx.moveTo(this.tileSizeX / 2 + i * this.tileSizeX, 0)
@@ -304,10 +272,10 @@ class Ground {
 
 		let cell = 0
 
-		for (let i = 0; i < this.tilesY * 2 - 1; ++i) {
+		for (let i = 0; i < this.field.tilesY * 2 - 1; ++i) {
 
 			const big = i % 2 === 0
-			const num = big ? this.tilesX : this.tilesX - 1
+			const num = big ? this.field.tilesX : this.field.tilesX - 1
 
 			for (let j = 0; j < num; ++j) {
 				ctx.fillText('' + cell++, j * this.tileSizeX + this.tileSizeX / 2 + ((big ? 0 : 1) * this.tileSizeX / 2), i * this.tileSizeY / 2 + this.tileSizeY / 1.5)
@@ -320,47 +288,11 @@ class Ground {
 		ctx.restore()
 	}
 
-	public cellToXY(cell: Cell) {
-		const mod = this.game.ground.tilesX * 2 - 1
-		const pos = {
-			x: (cell.id % mod) * 2,
-			y: Math.floor(cell.id / mod) * 2,
-		}
-		if (pos.x > mod) {
-			pos.x = pos.x % mod
-			pos.y++
-		}
-		return pos
-	}
-
-	public xyToCell(x: number, y: number) {
-		const mod = this.game.ground.tilesX * 2 - 1
-		if (y % 2 === 0) {
-			return this.cells[(y / 2) * mod + x / 2]
-		} else {
-			return this.cells[((y - 1) / 2) * mod + this.game.ground.tilesX + (x - 1) / 2]
-		}
-	}
-
 	public xyToXYPixels(x: number, y: number) {
 		return new Position(
 			x * this.realTileSizeX / 2 + this.realTileSizeX / 2,
 			y * this.realTileSizeY / 2 + this.realTileSizeY / 2,
 		)
-	}
-
-	public getNumCells() {
-		return (this.tilesX * 2 - 1) * this.tilesY - this.tilesX - 1
-	}
-
-	public next_cell(cell: Cell | null, dx: number, dy: number) {
-		if (cell === null) { return null }
-		const x = cell.x + dx
-		const y = cell.y + dy
-		if (x < this.min_x || y < this.min_y || x > this.max_x || y > this.max_y) {
-			return null
-		}
-		return this.coord[x - this.min_x][y - this.min_y]
 	}
 }
 
