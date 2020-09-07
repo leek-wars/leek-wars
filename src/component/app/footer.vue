@@ -136,8 +136,7 @@
 		padding-right: 20px;
 		padding-top: 20px;
 		padding-bottom: 20px;
-		// background: rgba(0,0,0,0.2);
-		// height: 150px;
+		position: relative;
 		display: flex;
 		color: #666;
 		a, h4, .item {
@@ -215,7 +214,7 @@
 	.leek {
 		position: absolute;
 		bottom: 0;
-		right: 50%;
+		left: calc(50% - 115px);
 		z-index: -1;
 		opacity: 0.07;
 		height: 230px;
