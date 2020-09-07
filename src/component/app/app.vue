@@ -306,7 +306,7 @@
 	}
 	.page {
 		margin-right: -12px;
-		min-height: calc(100vh - 370px);
+		min-height: calc(100vh - 352px);
 	}
 	.dark {
 		display: none;
