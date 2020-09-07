@@ -237,13 +237,12 @@
 		flex: 1;
 	}
 	.category .title {
-		font-weight: 300;
-		font-size: 19px;
+		font-size: 18px;
 		margin-bottom: 4px;
 		color: #333;
 	}
 	.category .description {
-		color: #999;
+		color: #777;
 		font-size: 14px;
 	}
 	.category .mobile-info {

@@ -470,7 +470,6 @@
 		padding-top: 10px;
 	}
 	.profile .info {
-		margin-left: 10px;
 		.title {
 			margin-bottom: 4px;
 			font-size: 13px;
@@ -481,8 +480,6 @@
 		font-size: 15px;
 		margin-bottom: 2px;
 		white-space: nowrap;
-		max-width: 120px;
-		padding: 0 5px;
 		text-overflow: ellipsis;
 		overflow: hidden;
 	}
@@ -534,7 +531,7 @@
 		vertical-align: top;
 		text-align: left;
 		color: #444;
-		width: calc(100% - 160px);
+		width: calc(100% - 150px);
 		position: relative;
 		display: flex;
 		margin-left: 10px;

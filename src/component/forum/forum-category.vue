@@ -207,17 +207,6 @@
 		color: #666;
 		font-size: 19px;
 	}
-	.topic .issue {
-		background: #0366d6;
-		color: white;
-		border-radius: 5px;
-		font-size: 15px;
-		font-weight: 500;
-		padding: 0 4px;
-		display: inline-block;
-		margin-bottom: 2px;
-		height: auto;
-	}
 	.topic > div {
 		padding: 8px;
 		flex: 1;
@@ -236,11 +225,24 @@
 		height: 40px;
 	}
 	.topic .title {
-		font-weight: 300;
-		font-size: 19px;
+		font-size: 18px;
 		margin-bottom: 5px;
 		color: #333;
 		display: inline-block;
+		a {
+			color: #333;
+		}
+		.issue {
+			background: #0366d6;
+			color: white;
+			border-radius: 5px;
+			font-size: 15px;
+			font-weight: 500;
+			padding: 0 4px;
+			display: inline-block;
+			margin-bottom: 2px;
+			height: auto;
+		}
 	}
 	.topic .description {
 		font-size: 14px;
