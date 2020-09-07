@@ -24,7 +24,10 @@
 					<div>{{ $t('potion.effect_' + effect.type) }}</div>
 				</div>
 			</template>
-			<div v-if="!potion.consumable" v-html="$t('potion.reusable')"></div>
+			<div v-if="!potion.consumable">
+				<v-icon>mdi-autorenew</v-icon>
+				<span v-html="$t('potion.reusable')"></span>
+			</div>
 		</div>
 	</div>
 </template>

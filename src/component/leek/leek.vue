@@ -346,6 +346,9 @@
 						<b>{{ $t('potion.' + LeekWars.potions[potion.template].name) }}</b>
 						<br>
 						{{ $t('main.level_n', [LeekWars.potions[potion.template].level]) }}
+						<div v-if="!LeekWars.potions[potion.template].consumable">
+							<v-icon>mdi-autorenew</v-icon> {{ $t('main.reusable') }}
+						</div>
 					</tooltip>
 				</div>
 				<center>({{ $t('click_to_use') }})</center>
@@ -366,6 +369,9 @@
 						<b>{{ $t('potion.' + LeekWars.potions[potion.template].name) }}</b>
 						<br>
 						{{ $t('main.level_n', [LeekWars.potions[potion.template].level]) }}
+						<div v-if="!LeekWars.potions[potion.template].consumable">
+							<v-icon>mdi-autorenew</v-icon> {{ $t('main.reusable') }}
+						</div>
 					</tooltip>
 				</div>
 			</div>
