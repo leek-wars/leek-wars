@@ -276,8 +276,8 @@
 </template>
 
 <script lang="ts">
-	import { LeekWars } from '@/model/leekwars'
 	import { mixins } from '@/model/i18n'
+	import { LeekWars } from '@/model/leekwars'
 	import { Component, Vue } from 'vue-property-decorator'
 	import Breadcrumb from '../forum/breadcrumb.vue'
 
