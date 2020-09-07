@@ -113,6 +113,18 @@
 								<h4>{{ $t('no_more_fights') }}</h4>
 							</div>
 						</template>
+						<div class="title advanced" @click="advanced = !advanced">
+							{{ $t('advanced') }}
+							<v-icon v-if="advanced">mdi-chevron-up</v-icon>
+							<v-icon v-else>mdi-chevron-down</v-icon>
+						</div>
+						<div v-if="advanced" class="advanced">
+							<div>
+								<span class="title"><v-icon>mdi-seed</v-icon> {{ $t('main.seed') }}</span>
+								<span class="desc">{{ $t('main.seed_desc') }}</span>
+							</div>
+							<input v-model="seed" type="number" class="seed" min="1" max="2147483647" :placeholder="$t('main.seed_placeholder')" @input="updateSeed">
+						</div>
 					</div>
 					<div v-else>
 						<div v-if="category == 'solo'">
@@ -259,6 +271,8 @@
 		challengeLeekTarget: Leek | null = null
 		challengeFarmerTarget: Farmer | null = null
 		queue: number = 0
+		advanced: boolean = false
+		seed: number | null = null
 
 		get farmerEnabled() { return this.garden && this.garden.farmer_enabled }
 		get teamEnabled() { return this.garden && this.garden.team_enabled }
@@ -271,6 +285,8 @@
 
 		mounted() {
 			LeekWars.setTitle(this.$t('title'))
+
+			this.advanced = localStorage.getItem("editor/test/advanced") === 'true'
 
 			LeekWars.get('garden/get').then(r => {
 				this.garden = r.garden
@@ -445,13 +461,13 @@
 		}
 		startFarmerChallenge() {
 			if (!this.challengeFarmerTarget) { return }
-			LeekWars.post('garden/start-farmer-challenge', {target_id: this.challengeFarmerTarget.id}).then(data => {
+			LeekWars.post('garden/start-farmer-challenge', {target_id: this.challengeFarmerTarget.id, seed: this.seed || 0}).then(data => {
 				this.$router.push('/fight/' + data.fight)
 			}).error(error => LeekWars.toast(this.$t(error)))
 		}
 		startLeekChallenge() {
 			if (!this.challengeLeekTarget || !this.selectedLeek) { return }
-			LeekWars.post('garden/start-solo-challenge', {leek_id: this.selectedLeek.id, target_id: this.challengeLeekTarget.id}).then(data => {
+			LeekWars.post('garden/start-solo-challenge', {leek_id: this.selectedLeek.id, target_id: this.challengeLeekTarget.id, seed: this.seed || 0}).then(data => {
 				this.$router.push('/fight/' + data.fight)
 			}).error(error => LeekWars.toast(this.$t(error)))
 		}
@@ -471,6 +487,22 @@
 		updateComposition() {
 			if (this.selectedComposition) {
 				localStorage.setItem('garden/compo', '' + this.selectedComposition.id)
+			}
+		}
+
+		@Watch('advanced')
+		updateAdvanced() {
+			localStorage.setItem("editor/test/advanced", '' + this.advanced)
+		}
+		updateSeed(event: InputEvent) {
+			if (event.data === '') {
+				this.seed = null
+			} else if (this.seed) {
+				if (this.seed > 2147483647) {
+					this.seed = 2147483647
+				} else if (this.seed < 1) {
+					this.seed = 1
+				}
 			}
 		}
 	}
@@ -587,5 +619,35 @@
 			padding: 6px 0;
 			color: #555;
 		}
+	}
+	.title {
+		font-size: 16px;
+		font-weight: bold;
+		text-transform: uppercase;
+		color: #555;
+		padding-bottom: 8px;
+		text-align: left;
+		.v-icon {
+			vertical-align: middle;
+    		margin-bottom: 3px;
+		}
+		&.advanced {
+			cursor: pointer;
+			user-select: none;
+		}
+	}
+	.advanced {
+		text-align: left;
+	}
+	.desc {
+		padding-left: 6px;
+		color: #777;
+	}
+	input.seed {
+		margin-top: 4px;
+		padding: 0 6px;
+		font-size: 18px;
+		width: 100%;
+		height: 34px;
 	}
 </style>

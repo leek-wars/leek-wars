@@ -71,6 +71,19 @@
 							<div class="name">{{ $t('main.random') }}</div>
 						</div>
 					</div>
+					<br>
+					<div class="title advanced" @click="advanced = !advanced">
+						{{ $t('advanced') }}
+						<v-icon v-if="advanced">mdi-chevron-up</v-icon>
+						<v-icon v-else>mdi-chevron-down</v-icon>
+					</div>
+					<div v-if="advanced">
+						<div>
+							<span class="title"><v-icon>mdi-seed</v-icon> {{ $t('main.seed') }}</span>
+							<span class="desc">{{ $t('main.seed_desc') }}</span>
+						</div>
+						<input v-model="currentScenario.seed" type="number" class="seed" min="1" max="2147483647" :placeholder="$t('main.seed_placeholder')" @input="updateSeed">
+					</div>
 				</div>
 			</v-tab-item>
 			<v-tab-item class="tab-content">
@@ -286,6 +299,7 @@
 	import { AI } from '@/model/ai'
 	import { ChipTemplate } from '@/model/chip'
 	import { FightType } from '@/model/fight'
+	import { mixins } from '@/model/i18n'
 	import { Leek } from '@/model/leek'
 	import { LeekWars } from '@/model/leekwars'
 	import { store } from '@/model/store'
@@ -301,6 +315,7 @@
 		name!: string
 		type!: number
 		br!: boolean
+		seed!: number | null
 	}
 	class TestMap {
 		id!: number
@@ -310,7 +325,7 @@
 		cell!: number
 		team!: number
 	}
-	@Component({ components: { CharacteristicTooltip }})
+	@Component({ components: { CharacteristicTooltip }, i18n: {}, mixins })
 	export default class EditorTest extends Vue {
 		@Prop() value!: boolean
 		@Prop() ais!: {[key: number]: AI}
@@ -363,6 +378,8 @@
 		compositionTemplates: any[] = []
 		allies: {[key: number]: Leek} = {}
 		alliesAIs: {[key: number]: AI} = {}
+		advanced: boolean = false
+
 		get templates() {
 			const templates = [
 				{name: "Libre", category: "free", team1: [], team2: [], map: null, type: -1}
@@ -442,6 +459,9 @@
 
 		created() {
 			if (this.initialized) { return }
+
+			this.advanced = localStorage.getItem("editor/test/advanced") === 'true'
+
 			LeekWars.get('test-scenario/get-all').then(data => {
 				this.initialized = true
 				this.scenarios = data.scenarios
@@ -845,6 +865,27 @@
 			})
 			.error(error => LeekWars.toast(this.$t('error_' + error.error, error.params)))
 		}
+
+		@Watch('advanced')
+		updateAdvanced() {
+			localStorage.setItem("editor/test/advanced", '' + this.advanced)
+		}
+
+		updateSeed(event: InputEvent) {
+			if (this.currentScenario) {
+				if (event.data === '') {
+					this.currentScenario.seed = null
+				} else {
+					const seed = parseInt(event.data!, 10)
+					if (seed > 2147483647) {
+						this.currentScenario.seed = 2147483647
+					} else if (seed < 1) {
+						this.currentScenario.seed = 1
+					}
+				}
+				LeekWars.post('test-scenario/update', {id: this.currentScenario.id, data: JSON.stringify({ seed: this.currentScenario.seed || 0 })})
+			}
+		}
 	}
 </script>
 
@@ -948,6 +989,18 @@
 		text-transform: uppercase;
 		color: #555;
 		padding-bottom: 8px;
+		.v-icon {
+			vertical-align: middle;
+    		margin-bottom: 3px;
+		}
+		&.advanced {
+			cursor: pointer;
+			user-select: none;
+		}
+	}
+	.desc {
+		padding-left: 6px;
+		color: #777;
 	}
 	.column-scenario .team {
 		width: 810px;
@@ -1264,5 +1317,10 @@
 			flex: 0 0 170px;
 			height: 30px;
 		}
+	}
+	input.seed {
+		margin-top: 4px;
+		padding: 0 6px;
+		font-size: 18px;
 	}
 </style>
