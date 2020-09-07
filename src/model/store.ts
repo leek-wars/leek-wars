@@ -154,6 +154,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			const senderName = data.message[2]
 			const channel = 'pm-' + conversationID
 			const isNewMessage = !data.message[7]
+			const senderAvatar = data.message[6]
 			const date = data.message[7] || LeekWars.time
 			if (!state.chat[channel]) {
 				Vue.set(state.chat, channel, new Chat(channel, ChatType.PM))
@@ -182,13 +183,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 				conversation.farmers.push({id: senderID, name: senderName, avatar_changed: data.message[6]} as Farmer)
 			}
 			if (isNewMessage && conversation.last_farmer_id !== state.farmer!.id) {
-				LeekWars.squares.add({
-					image: LeekWars.getAvatar(conversation.last_farmer_id, data.message[6]),
-					title: senderName,
-					message: "► " + conversation.last_message,
-					link: "/messages/conversation/" + conversationID,
-					padding: false
-				})
+				LeekWars.squares.addFromConversation(conversation, senderAvatar)
 			}
 		},
 		'add-conversation-participant'(state: LeekWarsState, data: {id: number, farmer: Farmer}) {
@@ -267,13 +262,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			const notification = Notification.build(data, true)
 			state.notifications.unshift(notification)
 			if (data.unread) {
-				LeekWars.squares.add({
-					image: '/image/notif/' + notification.image + '.png',
-					title: i18n.t('notification.title_' + notification.type, notification.title) as string,
-					message: i18n.t('notification.message_' + notification.type, notification.message) as string,
-					link: notification.link,
-					padding: true
-				})
+				LeekWars.squares.addFromNotification(notification)
 			}
 		},
 		'new-conversation'(state: LeekWarsState, data: any) {

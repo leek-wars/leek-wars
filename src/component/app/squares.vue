@@ -1,7 +1,8 @@
 <template>
 	<div v-show="LeekWars.squares.squares.length" class="squares">
 		<router-link v-for="square in LeekWars.squares.squares" :key="square.id" v-ripple :to="square.link" class="square card">
-			<img :class="{padding: square.padding}" :src="square.image" class="image">
+			<v-icon v-if="square.icon" :class="{padding: square.padding}" class="image">{{ square.image }}</v-icon>
+			<img v-else :src="square.image" :class="{padding: square.padding}" class="image">
 			<div class="wrapper">
 				<div class="title" v-html="square.title"></div>
 				<div v-emojis class="message" v-text="square.message"></div>
@@ -32,6 +33,13 @@
 		box-shadow: 0px 11px 15px -7px rgba(0,0,0,0.2), 0px 24px 38px 3px rgba(0,0,0,0.14), 0px 9px 46px 8px rgba(0,0,0,0.12);
 		overflow: hidden;
 		animation: in-and-out 5s;
+		img.padding {
+			opacity: 0.7;
+		}
+		.v-icon {
+			font-size: 32px;
+			color: #444;
+		}
 	}
 	@keyframes in-and-out {
 		0% { transform: translate(150%, 0); }
@@ -50,7 +58,7 @@
 		height: 60px;
 		flex: 0 0 60px;
 		margin-right: 0;
-		padding: 15px 12px;
+		padding: 12px;
 	}
 	.wrapper {
 		padding: 10px 0;
