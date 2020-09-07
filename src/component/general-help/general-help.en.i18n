@@ -80,6 +80,8 @@
 	"leeks_35": "Shields reduce directs attacks following the formula :",
 	"leeks_36": "Resistance increases shields.",
 	"leeks_37": "Boost = (Initial boost) × (1 + Science / 100)",
+	"leeks_37_1": "Nova damage reduces the maximum life (not below the current life). Science increases nova damage:",
+	"leeks_37_2": "Nova damage = min(life, (Initial damage) × (1 + Science / 100))",
 	"leeks_38": "Shackle = (Initial shackle) × (1 + Magic / 100)",
 	"leeks_4": "A leek has several Attributes:",
 	"leeks_41": "Poison damage = (Initial damage) × (1 + Magic / 100)",
