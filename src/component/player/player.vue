@@ -69,7 +69,9 @@
 						<span class="content">{{ $t('fight.turn_n', [progressBarTurn]) }}</span>
 					</div>
 					<div ref="progressBar" class="progress-bar" @click="progressBarClick" @mousemove="progressBarMove">
-						<div :style="{width: progressBarWidth + '%'}" class="bar"></div><div class="circle"></div>
+						<div :style="{width: progressBarWidth + '%'}" class="bar"></div>
+						<div class="circle" :style="{left: progressBarWidth + '%'}"></div>
+						<div class="preview-bar" :style="{width: progressBarPreviewWidth + '%'}"></div>
 					</div>
 				</div>
 				<hud ref="hud" :game="game" />
@@ -182,6 +184,7 @@
 		fullscreen: boolean = false
 		progressBarTurn: any = 0
 		progressBarTooltipMargin: number = 0
+		progressBarPreviewWidth: number = 0
 		width: number = 0
 		height: number = 0
 		timeout: any = null
@@ -390,6 +393,7 @@
 		progressBarClick(e: MouseEvent) {
 			const bar = this.$refs.progressBar as HTMLElement
 			const action = Math.round(this.game.actions.length * (e.pageX - bar.getBoundingClientRect().left) / bar.offsetWidth)
+			this.progressBarPreviewWidth = 0
 			this.game.requestJump(action)
 		}
 		progressBarMove(e: MouseEvent) {
@@ -405,6 +409,7 @@
 			}
 			this.progressBarTurn = turn
 			this.progressBarTooltipMargin = Math.min(Math.max((e.pageX - barOffset) - (tooltip.clientWidth / 2), 0), bar.clientWidth - tooltip.clientWidth)
+			this.progressBarPreviewWidth = 100 * (e.pageX - barOffset) / bar.clientWidth - this.progressBarWidth
 		}
 		@Watch("game.sound") toggleSound() {
 			localStorage.setItem('fight/sound', '' + this.game.sound)
@@ -639,9 +644,21 @@
 		background: #eee;
 		transition: all 0.2s;
 		white-space: nowrap;
+		.preview-bar {
+			display: none;
+			position: absolute;
+			top: 0;
+			height: 6px;
+			background: #aaa;
+			height: 100%;
+		}
 	}
 	.progress-bar-wrapper:hover .progress-bar {
 		height: 12px;
+		bottom: -3px;
+		.preview-bar {
+			display: inline-block;
+		}
 	}
 	.progress-bar .bar {
 		height: 100%;
@@ -656,13 +673,15 @@
 		width: 16px;
 		height: 16px;
 		margin-top: -4px;
-		margin-left: -7px;
-		display: inline-block;
+		margin-left: -10px;
+		position: absolute;
+		top: 0;
 		border-radius: 50%;
 		background: #ccc;
 		vertical-align: top;
 		border: 4px solid #f2f2f2;
 		transition: all 0.2s;
+		z-index: 2;
 	}
 	.progress-bar-wrapper:hover .circle {
 		width: 22px;
