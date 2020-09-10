@@ -602,6 +602,353 @@
   - Fix arrayFold function
   - Launching of English version!
 
+159:
+  - Addition of a trophy.
+  - Wiki link in the help.
+  - Fixed avatars.
+  - Added + operator for tables.
+  - Added functions arrayMap, arrayFilter, arrayFlatten, arrayFoldLeft, arrayFoldRight, arrayPartition, arrayIter, arrayConcat and arraySort.
+  - Added the possibility to redefine the functions of the LeekScript.
+
+158:
+  - Added registers.
+  - Changes in server architecture.
+  - getPathLength() returns null if the path between the two boxes does not exist.
+
+157:
+  - Ability to change the owner of a team
+  - Multi-line input fields for chat and private messages.
+  - Tournament matchmaking is no longer based on talent.
+  - Possibility to use the getCell(s)ToUse(Weapon/Chip)OnCell functions with an obstacle in the target cell.
+  - Improvement of the pause() function that pauses at the right time with mark() and debug().
+  - Popup with the modifications when a shift is made.
+  - Corrections of missing translations in the fight.
+  - Added dates for chat messages and private messages on hover.
+  - Added icons in the fight reports during a perfect (the team wins with all its life at the end of the fight) or a "static" (when the whole team didn't move).
+  - Added functions getChipArea() and getWeaponArea() which return the type of zone of the chip or weapon, among the AREA_* constants (see in the documentation).
+  - Small corrections of the discrete mode.
+  - Various translation corrections.
+  - Correction of the farmer fight history.
+  - Correction of the total farmer level in the ranking.
+  - Functions have no more restriction at the level of hearts.
+  - Each function now has a number of operations (indicated in the documentation), advanced functions cost more in operations (all costs are not yet definitively estimated).
+  - Possibility to take off your hat.
+  - Improvement of the AI of bots.
+  - Important changes in server architecture (in view of the release of the English version).
+
+156:
+  - Adding hats
+  - Correction of bots weapons
+
+155:
+  - Changing the power formula = (level * (1 + (talent - 1000) / 5000)) ^ 3
+  - "Change of the solo matchmaking: the proposed opponents are of a closer level and talent"
+  - Fixed moveAwayFromLine
+  - "Modification of the electrifier: 6PT => 7PT and 70 to 90 => 70 to 80 damages"
+  - "Rockfall modification: 6PT => 5PT"
+  - Flame Thrower and Gas duration damage is now poisonous and is not reduced by shields.
+  - "Vaccine modification: heal 30 to 32 => 34 to 38 over 3 turns"
+  - Corrections of the chats and team forums
+
+154:
+  - Added the choice of language for the forum.
+  - Added choice of language for the chat.
+  - "The moveToward is now able to move towards a cell that is an obstacle: it gets as close as possible to that cell"
+  - Correction of blocked fights in line.
+  - Correction of Invincible Resistant trophy
+  - Improvement of the forum breadcrumb trail
+
+153:
+  - Modification of the Boosted trophy.
+  - Correction of replace() and split().
+  - Added the getObstacles() function.
+  - Trophies for level 300 and 400 passed to 250 and 300.
+  - Bug in the choice of AI in farmer test fight fixed.
+  - Zone damage distribution for Lightning and Electrifier fixed.
+  - Inversion of the constants RELATIVE_SHIELD and ABSOLUTE_SHIELD fixed.
+  - "Changes on get[Chip,Weapon]EffectiveArea(): min and max range taken into account, not lines of sight."
+  - Documentation of the pause() function added.
+  - Static trophy correction.
+  - Vertical scrolling inside popups.
+  - Choice of the available country and display of the country in the ranking.
+  - Addition of the getCooldown(chip, leek) function.
+  - Added function getCell(s)ToUse[Chip,Weapon](OnCell) with an additional parameter that corresponds to the cells to ignore.
+
+152:
+  - Display of bubbles over the leek names.
+  - The functions getPath and getPathLength now accept an array as a 3rd parameter, the array of cells to be ignored.
+  - Corrections to farmer challenge notifications.
+  - The beta tester trophy is now a bonus trophy (does not count in the trophy total).
+  - Correction of trophies related to team tournaments.
+  - Correction of the number of fights for a new leek (50 fights that go back to 20).
+
+151:
+  - The debug limit is calculated on the total length of displayed text, this limit is 1,000,000 characters.
+  - Wisdom now applies the multiplier on XP and Habs only in case of victory.
+  - Miscellaneous corrections.
+
+150:
+  - Talent display on the team page.
+  - Tournament schedule display on the buttons.
+  - Implementation of closures (see the topic on the forum).
+  - Display of tournament and fight dates on their page.
+
+149:
+  - Added 6 constants TYPE_* in the documentation.
+  - Added pumpkins for Halloween.
+  - The use of a function name for a variable name is forbidden (bug fix).
+  - The getCell(s)ToUse* functions work with non-equipped chips.
+  - Implementation of the ++i.
+  - Added the do while in the tutorial.
+  - "Modification of tournament schedules : 12-14h : solo, 18-20h : farmer, 21-23h : team."
+  - Correction of the Collector trophy.
+
+148:
+  - The maximum level goes to 300. Both weapons (Electrifier and M-Laser pass level 257 and 300).
+  - Leeks gain 5 capital points per level, and 50 at levels 100, 200 and 300. A new leek starts with 50 capital points as well.
+  - The leek starts the game with 100 health points, 10 turn points and 3 movement points.
+  - A turn point costs 80 capital points, and a movement point 50.
+  - Leeks no longer get PT/PM/heart every 100 levels.
+  - Wisdom formula changes to [XP, Habs] * 1 + Wisdom / 300.
+  - The Rockfall chip goes to 6PT instead of 7.
+  - The Lightning chip has its maximum range reduced to 5, instead of 6 before.
+  - Addition of the Inversion chip, which allows to exchange the position of two players.
+  - Addition of the Shield chip, which allows to add total life to a player (agility boosted effect as for care).
+  - Correction of the bug of the meteorite launched in the vacuum.
+  - Added an animation for teleportation.
+  - Improvement of the forum answer notifications.
+
+147:
+  - Improved matchmaking (solo, farmer and team).
+  - Talent is blocked in matchmaking beyond a certain threshold.
+  - Added functions getWeaponEffectiveArea() and getChipEffectiveArea() with a 3rd parameter to define the throw cell.
+  - The number of obstacles on the map is more random.
+  - Indicator for reusable potions in the market.
+  - Fixed the difficulty of test bots.
+
+146:
+  - Fixed bugs with team forums.
+  - EFFECT_FORCE/AGILITY/TP/MP constants renamed to EFFECT_BUFF_FORCE/AGILITY/TP/MP.
+  - Added functions getFarmerID([leek]), getFarmerName([leek]), getTeamID([leek]), getTeamName([leek]), getAIID([leek]), getAIName([leek]).
+  - Correction of test bots characteristics.
+
+145:
+  - Changed the server.
+  - Search for messages for a specific player in the forum.
+  - Button signal on a leek.
+
+144:
+  - Take into account the number of parameters when hovering over a function in the editor.
+  - Search function in the ranking.
+  - Fixed problems with teams.
+  - Correction of the forum search.
+  - Fixed bugs in tournaments.
+
+143:
+  - Unification of the team forum to the general forum.
+  - Improvement of pathfinding.
+  - Correction of small bugs of the LeekScript.
+  - Added confirmation popups for market purchases.
+  - Added a tutorial.
+  - Added preview of color potions in the market.
+
+142:
+  - Added team tournaments.
+  - Added crystals, second currency of the game, that can be bought from the bank (with PayPal or StarPass).
+  - Added skins Transparent, Multicolor, Rasta, Black, White, Apple green.
+  - Displaying the number of lines and characters of an AI.
+  - Time counters adapt to the player's time zone.
+
+141:
+  - Added farmer challenges.
+  - Explanation of several functions in the documentation.
+  - Improvement of the bots (in terms of features and equipment).
+  - Addition of 2 more bots.
+  - Notification when someone comments on your tournament.
+  - Added the getWeaponTargets(weapon, cell) function.
+  - Added function getWeaponEffectiveArea(weapon, cell).
+  - Added function canUseWeapon(weapon, leek).
+  - Added function canUseWeaponOnCell(weapon, cell).
+  - Add function getCellToUseWeapon(weapon, leek) and getCellToUseWeaponOnCell(weapon, cell).
+  - Add function getCellsToUseWeapon(weapon, leek) and getCellsToUseWeaponCell(weapon, cell).
+  - Saving the test parameters in the editor.
+  - Add the farmer test.
+
+140:
+  - Autocomplete include() from include() in the editor.
+  - isChip() and isWeapon() functions to determine if a constant is a chip or a weapon.
+  - Improvement of the counting system, and increase to 300 000 instructions maximum per turn.
+  - listen() function to retrieve an array of say() from previous players.
+  - typeOf() function to determine the type of a value.
+  - pause() function to pause the fight at a given time.
+  - Functions show(cell) and show(cell, color) to show a cell (costs 1PT).
+  - Function lineOfSight(cell1, cell2, leekToIgnore) to ignore a leek.
+  - Function getPath(cell1, cell2, leekToIgnore) to ignore a leek.
+  - Function getLeekID() to get the real id of the leek.
+  - Functions getRed(color), getGreen(color), getBlue(color) to get the red, green, blue of a color.
+  - Discrete pause option.
+  - color() becomes getColor().
+
+139:
+  - Added functions mark(cell), mark(cell, color), mark(cell, color, duration) to color boxes.
+  - Addition of the operators |= , &= and ^=.
+  - Option in the editor to enable autocompletion or not.
+  - getCurrentCooldown() becomes getCooldown().
+  - Anonymous functions tutorial.
+  - Addition of the function lineOfSight(cell1, cell2).
+
+138:
+  - Added the B-Laser.
+  - Modification of the editor, variables and user functions in autocompletion (including includes).
+  - Changed bullets and weapons ids (they don't overlap anymore).
+  - Removed the team ia slot.
+  - The power operator is now the ** operator.
+  - Added binary operators &, |, ^, <<, >> and >>>.
+  - Modification of the operation of the getWeaponEffects and getChipEffects functions.
+  - Added the link to the Wiki in the help.
+
+137:
+  - Addition of a sponsorship link (on the farmer's page).
+  - "Editor: Ctrl-Q and Ctrl-S works even if the editor is not focused."
+  - Added help on wisdom.
+  - Added a report button on the farmer page.
+  - Added teleport chip.
+  - Added anonymous functions.
+
+136:
+  - "Editor: Option to disable the automatic closing of parenthesis"
+  - "Editor: Enhanced auto close parentheses option"
+  - "Editor: Improved autocompletion: added documentation, and information about bullets and weapons."
+  - "Editor: Information about the function, weapon or chip when hovering over its name in the code."
+  - "Editor : Add shortcuts (for, if, while, ...)."
+  - "Editor : Option to choose the text size."
+  - "Editor: Dark theme (Monokai) available."
+  - "Modification of the XP, talent and Habs gain formulas (XP and Habs are calculated according to the talent): see the topic https://leekwars.com/forum/category-6/topic-1836."
+
+135:
+  - Added potions (capital reset and leek coloring).
+  - Chips are now resaleable.
+  - A chip can only be equipped on one leek at a time.
+  - "Addition of wisdom, which increases the xp and habs: xp = xp * (1 + wisdom / 100)."
+  - Addition of the inventory page.
+
+134:
+  - Updated matchmaking for levels < 100.
+
+133:
+  - Displaying the crash or warning line when running an AI.
+  - Talent is now accessible only from level 100.
+  - Rankings changes.
+  - Sort by column in the ranking.
+
+132:
+  - Display of bubbles over the scenery.
+  - Extra speed in combat.
+  - "Added the possibility to declare an associative array: [key1: value1, key2: value2]."
+  - Added functions getNearestEnemyTo(leek), getNearestEnemyToCell(cell), getNearestAllyTo(leek), getNearestAllyToCell(cell).
+  - Added functions getWeaponEffectiveArea(cell), getChipEffectiveArea(chip, cell).
+  - Added functions getCellsToUseWeapon(leek), getCellsToUseWeaponCell(cell), getCellsToUseChip(leek), getCellsToUseChipOnCell(cell).
+  - Added functions getWeaponFailure(weapon_id), getChipFailure(chip_id).
+  - Fixed priorities in ternaries.
+  - Simple arrays are now displayed without their keys.
+  - Added the Talent system.
+
+131:
+  - "Editor: display the current line"
+  - "Editor: self-closing (), [], {}, '' and \"\"."
+  - Displays unequipped chips in the warnings (in the fight report).
+  - Added function getAliveEnemiesCount.
+  - Added 'not' operator, equivalent to !.
+  - Added removeKey, assocSort and keySort functions.
+  - Added a help button for keyboard shortcuts in the editor.
+
+130:
+  - Added number and string functions, to convert to number and string.
+
+129:
+  - "Modification of the operator == : see the detailed operation in the 'Advanced' part of the tutorial."
+  - Option to mute the sound in a fight.
+
+128:
+  - Added the tutorial on reference passage.
+  - Match highlight in the editor (highlights the occurrences of the current selection).
+  - "Added include(), syntax : include(\"nom_ia\");"
+
+127:
+  - Added tutorial on the operators == and ===.
+  - Improvement of the "About" page.
+  - Display of live notification squares.
+  - Coloring of constants and functions in LeekScript.
+  - The editor becomes a simple text box on your cell phone, to facilitate quick editing (the normal editor is accessible with the "View computer version" option on your phone).
+  - Improvements on mobile (text overlays, text size).
+
+126:
+  - Added functions getCores() and getFrequency().
+  - Added the documentation of for ... in in the tutorial.
+  - Added functions getFightContext() and getFightType().
+  - Possibility to call declared functions anywhere in the code.
+  - "Hearts lower the failure rate of chips and weapons: failure = (basic failure) - (hearts - 1)."
+  - The cost of a core goes down to 10 capitals.
+
+125:
+  - Display of personal logs (debugs) directly in the fight.
+  - Button back to the editor for a team test.
+  - Display of the totals in the fight report.
+  - Line feeds are preserved in personal logs.
+  - Addition of the reference passage in the user functions via the @ operator.
+  - "Addition of the for structure (var key : var value in array) { ... }."
+  - Correction of the copy of arrays.
+
+124:
+  - Display of personal debugs with a monospace font (thanks HS).
+  - Shift, Shift, Alt and Alt Gr keys no longer mark the AI as modified.
+  - Favicon removed in discrete mode.
+  - Improved matchmaking solo, team and garden farmer.
+  - Added protection against looping attacks.
+
+123:
+  - Improvement of the discrete mode
+  - Display of the current generation of fights in white in the history.
+  - Change to 30 fights per day for levels < 50.
+  - Added a reminder about the current application for a team on the farmer page.
+  - Button revenge added at the end of a challenge.
+  - Added info in the search results (category).
+  - Display of the remaining team fights for each leek on the team page.
+  - Ctrl+C no longer marks the AI as modified.
+  - Added shortcut Ctrl+Q to test AI.
+  - "Modification of functions: getForce, getLife, getPM, getTP, getAgility, getAbsoluteShield, getRelativeShield, getTotalLife, getLevel, getName which now return null when the leek does not exist"
+  - "Modification of the getWeapon function: returns null when no weapon is equipped"
+  - It is now no longer possible to declare global files anywhere else than in the main block.
+  - Variables are no longer passed by reference in user functions.
+  - LeekScript keywords can no longer be used as variable names.
+  - Fix do/while
+
+122:
+  - Display of team farmer grades for non-member farmers.
+  - The cost of a PT or PM increases to 100 capital.
+  - The cost of a heart increases to 50 capital.
+
+121:
+  - Discrete mode option (SFW).
+
+120:
+  - Added Liberation chip animation.
+  - Fight queue display.
+  - Added Gravatar if no avatar.
+
+119:
+  - "Fixed meteorite damage (old system: damage inversely proportional to the distance to the launcher)."
+
+118:
+  - Added meteorite animation.
+  - Fixed 'getFarest*' in getFarthest*, the old version still exists but is no longer referenced in the doc.
+
+117:
+  - Improvement of IAs name edition.
+  - Cleaner dates on the forum.
+  - A leek can equip an AI too high level for him, but he will crash only at the execution of this one, with an explicit error, and not directly at the beginning of his turn. This allows to create AI for several levels, by adding conditions if (getLevel() > X) function().
+  - "Rebalancing weapons and chips : see https://leekwars.com/forum/category-6/topic-800"
+
 116:
   - Function "pinned" for forum subject.
   - Possibility to change your forum topic into solved.

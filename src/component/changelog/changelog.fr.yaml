@@ -1199,7 +1199,7 @@
   - "Éditeur : Ajout de raccourcis (for, if, while, ...)."
   - "Éditeur : Option pour choisir la taille du texte."
   - "Éditeur : Thème sombre (Monokai) disponible."
-  - "Modification des formules de gain d'XP, de talent et d'Habs (l'XP et les Habs sont calculées en fonction du talent) : voir le topic http://leekwars.com/forum/category-6/topic-1836."
+  - "Modification des formules de gain d'XP, de talent et d'Habs (l'XP et les Habs sont calculées en fonction du talent) : voir le topic https://leekwars.com/forum/category-6/topic-1836."
 
 135:
   - Ajout des potions (réinitialisation du capital et coloration du poireau).
@@ -1323,7 +1323,7 @@
   - Amélioration de l'édition des noms des IAs.
   - Dates plus propres sur le forum.
   - Un poireau peut équiper une IA trop haut level pour lui, mais il plantera uniquement à l'éxécution de celle-ci, avec une erreur explicite, et non directement au début de son tour. Cela permet de créer des IA pour plusieurs levels, en rajoutant des conditions if (getLevel() > X) fonction().
-  - "Rééquilibrage des armes et des puces : voir http://leekwars.com/forum/category-6/topic-800"
+  - "Rééquilibrage des armes et des puces : voir https://leekwars.com/forum/category-6/topic-800"
 
 116:
   - Fonction "accrocher" pour un sujet du forum.
