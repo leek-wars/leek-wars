@@ -55,6 +55,14 @@
 			<didactitiel v-if="didactitiel_enabled" v-model="didactitiel" />
 
 			<changelog-dialog v-model="changelogDialog" :changelog="changelog" />
+
+			<popup v-model="LeekWars.messagePopup" :width="500">
+				<template slot="title">
+					<v-icon>mdi-information-outline</v-icon>
+					{{ LeekWars.message ? $i18n.t(LeekWars.message.title) : '...' }}
+				</template>
+				<div v-if="LeekWars.message" v-html="$i18n.t(LeekWars.message.message, LeekWars.message.arguments)"></div>
+			</popup>
 		</div>
 	</div>
 </template>
