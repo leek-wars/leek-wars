@@ -48,7 +48,7 @@
 						<span class="label">{{ $t('change_password') }}</span>
 						<v-icon>{{ viewChangePassword ? 'mdi-menu-up' : 'mdi-menu-down' }}</v-icon>
 					</div>
-					<form v-if="viewChangePassword" class="change-password" @submit="changePassword">
+					<form v-if="viewChangePassword && $store.state.farmer" class="change-password" @submit="changePassword">
 						<h4 v-if="$store.state.farmer.pass">{{ $t('old_password') }}</h4>
 						<input v-if="$store.state.farmer.pass" v-model="password" name="password" type="password">
 						<br v-if="$store.state.farmer.pass">
@@ -80,7 +80,7 @@
 					</div>
 					<v-btn v-if="viewDeleteAccount" @click="deleteDialog = true">{{ $t('delete_account') }}</v-btn>
 
-					<v-switch v-model="settings.github_login" :disabled="!$store.state.farmer.pass" label="Autoriser la connexion via GitHub" />
+					<v-switch v-if="$store.state.farmer" v-model="settings.github_login" :disabled="!$store.state.farmer.pass" label="Autoriser la connexion via GitHub" />
 				</panel>
 			</div>
 			<div class="column6">
