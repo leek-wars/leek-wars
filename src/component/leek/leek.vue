@@ -27,7 +27,7 @@
 						<template v-slot:activator="{ on }">
 							<div class="tab" @click="updateGarden" v-on="on">
 								<span>{{ $t('garden') }}</span>
-								<v-switch v-model="leek.in_garden" hide-details />
+								<v-switch :input-value="leek.in_garden" hide-details />
 							</div>
 						</template>
 						{{ $t('authorize_agressions') }}
