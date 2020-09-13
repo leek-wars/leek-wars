@@ -212,7 +212,7 @@
 			<pre v-for="(w, i) in warnings" :key="errors.length + i" class="log warning">[{{ w.entity }}] {{ w.data }}</pre>
 		</panel>
 
-		<panel class="last" title="Actions" icon="mdi-format-list-bulleted">
+		<panel class="last" title="Actions" toggle="report/actions" icon="mdi-format-list-bulleted">
 			<loader v-if="!loaded" />
 			<div v-else>
 				<actions :actions="actions" :leeks="leeks" class="actions" />
