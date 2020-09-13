@@ -665,9 +665,7 @@
 		background-color: #5fad1b;
 		display: inline-block;
 		vertical-align: top;
-	}
-	.progress-bar:not(:hover) .bar {
-		transition: all 1s;
+		transition: all 0.2s;
 	}
 	.progress-bar .circle {
 		width: 16px;
@@ -680,8 +678,8 @@
 		background: #ccc;
 		vertical-align: top;
 		border: 4px solid #f2f2f2;
-		transition: all 0.2s;
 		z-index: 2;
+		transition: all 0.2s;
 	}
 	.progress-bar-wrapper:hover .circle {
 		width: 22px;
