@@ -24,6 +24,8 @@
 			</div>
 		</div>
 		<panel class="first last">
+			<a href="https://play.google.com/store/apps/details?id=com.leekwars.app" target="_blank" rel="noopener" class="item">Application Android <v-icon>mdi-open-in-new</v-icon></a>
+			<br>
 			<h3>{{ $t('app_installation') }}</h3>
 			<br>
 			<div v-html="$t('app_info')"></div>
