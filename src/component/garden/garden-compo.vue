@@ -1,6 +1,7 @@
 <template lang="html">
 	<div v-if="compo" class="composition">
 		<emblem :team="{id: compo.team_id, emblem_changed: compo.emblem_changed}" />
+		<div class="name">{{ compo.team_name }}</div>
 		<div class="name">{{ compo.name }}</div>
 		<talent :id="compo.team_id" :talent="compo.talent" category="team" />
 		<br>
