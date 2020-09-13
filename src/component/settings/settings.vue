@@ -91,26 +91,29 @@
 					</span>
 					<div slot="content" class="content notifications">
 						<table>
-							<template v-for="(notifications, category) in mails">
-								<tr :key="category + 1">
+							<template v-for="category in mails">
+								<tr :key="category.name + '_t'">
 									<td class="category">
-										{{ $t('mail.notif_' + category) }}
+										<v-icon>{{ category.icon }}</v-icon>
+										{{ $t('notification.category_' + category.id) }}
 									</td>
 								</tr>
-								<tr v-for="n in notifications" :key="category + n">
+								<tr :key="category.name + '_d'">
 									<td class="item">
-										{{ $t('mail.notif_' + category + '_' + n) }}
+										{{ $t('notification.category_' + category.id + '_desc') }}
 									</td>
 									<td class="push">
-										<v-checkbox v-model="settings['push_' + category + '_' + n]" :disabled="!pushNotifications" hide-details label="Push" @change="updateNotif('push_' + category + '_' + n, $event)" />
+										<v-checkbox v-model="settings['push_' + category.name]" hide-details label="Push" @change="updateNotif('push_' + category.name, $event)" />
 									</td>
 									<td class="mail">
-										<v-checkbox v-model="settings['mail_' + category + '_' + n]" hide-details label="E-mail" @change="updateNotif('mail_' + category + '_' + n, $event)" />
+										<v-checkbox v-model="settings['mail_' + category.name]" hide-details label="E-mail" @change="updateNotif('mail_' + category.name, $event)" />
 									</td>
 								</tr>
-								<tr :key="category + 2" class="separator"></tr>
 							</template>
 						</table>
+						<div class="notif-info">
+							<v-icon>mdi-information-outline</v-icon> {{ $t('notification.info') }}
+						</div>
 					</div>
 				</panel>
 			</div>
@@ -180,13 +183,18 @@
 	@Component({ name: 'settings', i18n: {}, mixins, components: {TwoFactor} })
 	export default class Settings extends Vue {
 		vapid_key = new Uint8Array([4, 92, 237, 40, 114, 162, 99, 215, 179, 242, 70, 151, 236, 60, 216, 10, 167, 186, 77, 27, 233, 193, 117, 111, 78, 20, 121, 201, 142, 186, 91, 13, 111, 26, 241, 126, 12, 216, 94, 160, 38, 110, 214, 161, 249, 147, 233, 133, 128, 210, 170, 161, 158, 57, 24, 54, 194, 103, 195, 94, 49, 182, 20, 62, 184])
-		mails: {[key: string]: string[]} = {
-			changelog: ['changelog'],
-			fight: ['solo', 'farmer', /* 'team',*/ 'solo_challenge', 'farmer_challenge'],
-			tournament: ['solo_round_finished', 'farmer_round_finished'],
-			forum: ['response'],
-			private_message: ['private_message']
-		}
+		mails = [
+			{ id: 1, icon: 'mdi-star', name: 'general' },
+			{ id: 2, icon: 'mdi-gamepad-square', name: 'game' },
+			{ id: 3, icon: 'mdi-sword-cross', name: 'fight' },
+			{ id: 4, icon: 'mdi-flag', name: 'challenge' },
+			{ id: 5, icon: 'mdi-trophy', name: 'tournament' },
+			{ id: 6, icon: 'mdi-chat', name: 'social' },
+			{ id: 7, icon: 'mdi-android-messages', name: 'private' },
+			{ id: 8, icon: 'mdi-account-multiple', name: 'team' },
+			{ id: 9, icon: 'mdi-gavel', name: 'moderation' }
+		]
+
 		settings: any = null
 		sfwMode: boolean = false
 		notifsResults: boolean = false
@@ -212,9 +220,7 @@
 		created() {
 			this.settings = {}
 			for (const category in this.mails) {
-				for (const mail of this.mails[category]) {
-					this.settings['push_' + category + '_' + mail] = false
-				}
+				this.settings['push_' + category] = false
 			}
 			this.pushNotifications = localStorage.getItem('options/push-notifs') === 'true'
 			LeekWars.setActions([
@@ -436,11 +442,16 @@
 			width: 100%;
 		}
 		.category {
-			color: #888;
 			font-size: 16px;
+			.v-icon {
+				font-size: 18px;
+				vertical-align: top;
+			}
 		}
 		.item {
-			padding-left: 18px;
+			color: #777;
+			padding-top: 2px;
+			padding-bottom: 5px;
 		}
 		.mail {
 			width: 80px;
@@ -457,6 +468,15 @@
 		}
 		.category.off {
 			opacity: 0.6;
+		}
+	}
+	.notif-info {
+		color: #777;
+		font-size: 14px;
+		padding-top: 10px;
+		.v-icon {
+			font-size: 16px;
+			vertical-align: top;
 		}
 	}
 	.v-input--switch {
