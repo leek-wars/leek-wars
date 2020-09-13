@@ -47,15 +47,17 @@
 				</div>
 			</template>
 			<div class="loading-fight">
-				<loader />
+				<loader v-if="!LeekWars.mobile" />
 				<div class="loading-bar">
 					<span :style="{width: progress + '%'}" class="bar striked"></span>
 				</div>
-				<div class="status">
-					{{ $t('loading_fight') }}
-				</div>
 				<div v-if="queue" class="queue-position">
-					<span v-if="queue.position <= 0">{{ $t('generating') }}</span>
+					<span v-if="queue.position <= 0">
+						{{ $t('generating') }}
+						<span class="status">
+							{{ progress }}%
+						</span>
+					</span>
 					<span v-else>{{ $t('position_in_queue', [queue.position + 1, queue.total]) }}</span>
 				</div>
 			</div>
@@ -616,9 +618,14 @@
 		width: 100%;
 	}
 	.queue-position {
-		padding: 6px;
+		padding: 8px;
 		font-size: 18px;
-		color: #aaa;
+		margin-bottom: 10px;
+	}
+	.status {
+		color: #555;
+		font-weight: 500;
+		padding-left: 4px;
 	}
 	.error {
 		display: none;
@@ -737,9 +744,6 @@
 		padding-bottom: 10px;
 		padding-top: 0;
 	}
-	.status {
-		margin-bottom: 10px;
-	}
 	.loading-bar {
 		height: 14px;
 		position: relative;
@@ -749,7 +753,7 @@
 		text-align: left;
 		max-width: 700px;
 		margin: 10px auto;
-		margin-bottom: 15px;
+		margin-bottom: 6px;
 		.bar {
 			height: 12px;
 			width: 0;
