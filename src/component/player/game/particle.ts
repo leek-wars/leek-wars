@@ -55,7 +55,7 @@ abstract class Particle {
 		}
 		// Sortie de terrain
 		if (!(this instanceof Laser) && !(this instanceof Meteorite)) {
-			if (this.x < -this.game.ground.startX - 50 || this.y < -this.game.ground.startY - 50 || this.x > this.game.ground.startX + this.game.ground.width + 50 || this.y > this.game.ground.startY + this.game.ground.height + 50) {
+			if (this.x < -50 || this.y < -50 || this.x > this.game.ground.width + 50 || this.y > this.game.ground.height + 50) {
 				this.onDie()
 				return true
 			}
