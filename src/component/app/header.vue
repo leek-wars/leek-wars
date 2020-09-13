@@ -330,7 +330,8 @@
 		}
 		.header .button-wrapper div {
 			width: auto;
-			display: block;
+			display: flex;
+			justify-content: center;
 			flex: 1;
 		}
 		.header .button-wrapper:first-child .header-button:before {
