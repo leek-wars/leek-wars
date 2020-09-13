@@ -13,12 +13,10 @@
 			</div>
 			<chat ref="chats" :channel="window.name" class="chat" @send="sendMessage($event, window.name)" />
 		</div>
-		<battle-royale />
 	</div>
 </template>
 
 <script lang="ts">
-	import BattleRoyale from '@/component/app/battle-royale.vue'
 	import ChatElement from '@/component/chat/chat.vue'
 	import { Chat, ChatType, ChatWindow } from '@/model/chat'
 	import { LeekWars } from '@/model/leekwars'
@@ -26,7 +24,7 @@
 	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 
 	@Component({
-		components: {BattleRoyale}
+		components: {}
 	})
 	export default class Chats extends Vue {
 		ChatType = ChatType
