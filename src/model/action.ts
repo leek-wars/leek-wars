@@ -30,6 +30,8 @@ enum ActionType {
 	REMOVE_EFFECT = 303,
 	UPDATE_EFFECT = 304,
 	ADD_STACKED_EFFECT = 305,
+	REDUCE_EFFECTS = 306,
+	REMOVE_POISONS = 307,
 	BUG = 1002,
 }
 type ActionLog = any[]

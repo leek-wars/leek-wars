@@ -31,6 +31,8 @@
 	"n_vita": "{0} vitalité",
 	"n_wisdom": "{0} sagesse",
 	"n_vulnerability": "une vulnérabilité de {0}",
+	"reduce_effects": "Les effets de {leek} sont réduits de {value}",
+	"remove_poisons": "Les poisons de {leek} sont neutralisés",
 	"start_of_fight": "Début du combat !",
 	"summon": "{leek} invoque {summon}",
 	"turn_n": "Tour {0}",

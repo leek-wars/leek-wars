@@ -144,6 +144,13 @@
 				<b slot="turns">{{ formatTurns(turns) }}</b>
 			</i18n>
 		</template>
+		<i18n v-else-if="type === ActionType.REDUCE_EFFECTS" tag="div" path="fight.reduce_effects">
+			<leek slot="leek" :leek="leek" />
+			<b slot="value">{{ action.params[2] }}%</b>
+		</i18n>
+		<i18n v-else-if="type === ActionType.REMOVE_POISONS" tag="div" path="fight.remove_poisons">
+			<leek slot="leek" :leek="leek" />
+		</i18n>
 		<i18n v-else-if="type === ActionType.SAY" tag="div" path="fight.leek_speak">
 			<leek slot="leek" :leek="leek" />
 			<i slot="text">{{ (leeks[action.params[1]].farmer && leeks[action.params[1]].farmer.muted) ? "@*%#$€" : action.params[2] }}</i>

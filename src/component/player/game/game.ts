@@ -1111,6 +1111,16 @@ class Game {
 			this.actionDone()
 			break
 		}
+		case ActionType.REDUCE_EFFECTS : {
+			this.log(action)
+			this.actionDone()
+			break
+		}
+		case ActionType.REMOVE_POISONS : {
+			this.log(action)
+			this.actionDone()
+			break
+		}
 		case ActionType.BUG: {
 			if (!this.jumping) {
 				this.leeks[action.params[1]].bug()
