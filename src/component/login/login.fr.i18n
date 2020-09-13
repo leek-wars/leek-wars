@@ -1,8 +1,9 @@
 {
 	"connection": "Connexion",
-	"error_farmer_banned": "Votre compte a été banni",
-	"error_farmer_inactive": "Votre compte n'a pas été activé, veuillez vous rendre sur le lien envoyé par mail.",
+	"error_banned": "Votre compte a été banni",
+	"error_inactive": "Votre compte n'a pas été activé, veuillez vous rendre sur le lien envoyé par mail.",
 	"error_invalid": "Les identifiants sont incorrects.",
+	"error_server": "Erreur du serveur. Veuillez réessayer dans quelques minutes",
 	"forgot_password": "Mot de passe oublié ?",
 	"incorrect_login": "Login ou mot de passe incorrect.",
 	"keep_connected": "Rester connecté",
