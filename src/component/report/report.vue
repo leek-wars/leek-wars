@@ -79,7 +79,7 @@
 								</v-btn>
 							</router-link>
 							<v-btn @click="refight">
-								<v-icon>mdi-undo</v-icon>
+								<v-icon>mdi-sync</v-icon>
 								{{ $t('refight') }}
 							</v-btn>
 						</span>
