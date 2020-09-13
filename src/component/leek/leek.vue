@@ -1096,14 +1096,14 @@
 			display: inline-block;
 			img {
 				margin-right: 7px;
-				width: 23px;
+				width: 22px;
 				margin-top: 3px;
 			}
 			span {
 				font-size: 18px;
 				vertical-align: top;
 				display: inline-block;
-				margin-top: 5px;
+				margin-top: 4px;
 				font-weight: bold;
 			}
 		}
