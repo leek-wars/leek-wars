@@ -1,9 +1,9 @@
 <template lang="html">
-	<span class="talent" v-on="on">
-		<div class="icon">
+	<span class="talent" v-on="on" @click.stop="LeekWars.goToRanking(category, 'talent', id)">
+		<div v-ripple class="icon">
 			<img src="/image/talent.png">
 		</div>
-		<div class="value">{{ talent }}</div>
+		<div v-ripple class="value">{{ talent }}</div>
 	</span>
 </template>
 
@@ -12,6 +12,8 @@
 	@Component({ name: "talent" })
 	export default class Talent extends Vue {
 		@Prop() talent!: number
+		@Prop() id!: number
+		@Prop() category!: string
 		@Prop() on!: any
 	}
 </script>
@@ -20,6 +22,7 @@
 	span {
 		display: inline-flex;
 		align-items: center;
+		cursor: pointer;
 	}
 	.icon {
 		z-index: 2;

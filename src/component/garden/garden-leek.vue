@@ -5,7 +5,7 @@
 				<leek-image :leek="leek" :scale="0.70" />
 			</div>
 			<div class="name">{{ leek.name }}</div>
-			<talent :talent="leek.talent" />
+			<talent :id="leek.id" :talent="leek.talent" category="leek" />
 			<br>
 			<span class="level">{{ $t('main.level_n', [leek.level]) }}</span>
 		</div>

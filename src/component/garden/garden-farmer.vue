@@ -3,7 +3,7 @@
 		<div class="elem" v-on="on">
 			<avatar :farmer="farmer" />
 			<div class="name">{{ farmer.name }}</div>
-			<talent :talent="farmer.talent" />
+			<talent :id="farmer.id" :talent="farmer.talent" category="farmer" />
 			<br>
 			<span class="level">
 				{{ $t('main.n_leeks', [farmer.leek_count]) }}

@@ -34,7 +34,7 @@
 						</div>
 					</div>
 				</div>
-				<talent :talent="farmer.talent" />
+				<talent :id="farmer.id" :talent="farmer.talent" category="farmer" />
 				<span class="talent-more">({{ farmer.talent_more >= 0 ? '+' + farmer.talent_more : farmer.talent_more }})</span>
 				<span class="level">• {{ $t('main.level_n', [farmer.total_level]) }}</span>
 				<v-btn class="expand" icon small @click="expand_leeks = !expand_leeks">

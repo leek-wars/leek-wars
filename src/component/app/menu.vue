@@ -121,7 +121,7 @@
 						<div v-for="leek in LeekWars.battleRoyale.leeks" :key="leek.id" class="leek">
 							<leek-image :leek="leek" :scale="0.4" /><br>
 							<div>{{ leek.name }}</div>
-							<talent :talent="leek.talent" />
+							<talent :id="leek.id" :talent="leek.talent" category="leek" />
 							<div class="level">{{ $t('main.level_n', [leek.level]) }}</div>
 						</div>
 					</div>

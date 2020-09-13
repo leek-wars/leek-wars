@@ -89,7 +89,7 @@
 					<div class="talent-wrapper">
 						<tooltip>
 							<template v-slot:activator="{ on }">
-								<talent :talent="leek ? leek.talent : '...'" :on="on" />
+								<talent :id="leek ? leek.id : 0" :talent="leek ? leek.talent : '...'" category="leek" :on="on" />
 							</template>
 							<div>{{ $t('talent') }}</div>
 						</tooltip>

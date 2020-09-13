@@ -53,10 +53,10 @@
 					<pagination :current="page" :total="pages" :url="url" />
 					<div v-if="$store.state.farmer" class="me-buttons">
 						<template v-if="category === 'leek'">
-							<v-btn v-for="leek in $store.state.farmer.leeks" :key="leek.id" @click="goToRanking('leek', leek.id)">{{ leek.name }}</v-btn>
+							<v-btn v-for="leek in $store.state.farmer.leeks" :key="leek.id" @click="LeekWars.goToRanking('leek', order, leek.id)">{{ leek.name }}</v-btn>
 						</template>
-						<v-btn v-else-if="category === 'farmer'" @click="goToRanking('farmer', $store.state.farmer.id)">{{ $t('my_farmer') }}</v-btn>
-						<v-btn v-else-if="category === 'team' && $store.state.farmer.team" @click="goToRanking('team', $store.state.farmer.team.id)">{{ $t('my_team') }}</v-btn>
+						<v-btn v-else-if="category === 'farmer'" @click="LeekWars.goToRanking('farmer', order, $store.state.farmer.id)">{{ $t('my_farmer') }}</v-btn>
+						<v-btn v-else-if="category === 'team' && $store.state.farmer.team" @click="LeekWars.goToRanking('team', order, $store.state.farmer.team.id)">{{ $t('my_team') }}</v-btn>
 					</div>
 					<v-switch v-model="activeSwitch" :label="$t('hide_inactives')" class="inactives" @change="toggleInactives" />
 				</div>
@@ -92,7 +92,7 @@
 							<th>{{ $t('country') }}</th>
 							<th class="column-team">{{ $t('main.team') }}</th>
 						</tr>
-						<ranking-leek-row v-for="row in ranking" :key="row.id" :row="row" :class="{highlight: searchResult == row.id}" />
+						<ranking-leek-row v-for="row in ranking" :key="row.id" :row="row" :class="{highlight: searchResult == row.rank}" />
 					</table>
 					<table v-else-if="category == 'farmer'" class="ranking large">
 						<tr class="header">
@@ -125,7 +125,7 @@
 							<th>{{ $t('country') }}</th>
 							<th>{{ $t('main.team') }}</th>
 						</tr>
-						<ranking-farmer-row v-for="row in ranking" :key="row.id" :row="row" :class="{highlight: searchResult == row.id}" />
+						<ranking-farmer-row v-for="row in ranking" :key="row.id" :row="row" :class="{highlight: searchResult == row.rank}" />
 					</table>
 					<table v-else class="ranking large">
 						<tr class="header">
@@ -173,7 +173,7 @@
 								</router-link>
 							</th>
 						</tr>
-						<ranking-team-row v-for="row in ranking" :key="row.id" :row="row" :class="{highlight: searchResult == row.id}" />
+						<ranking-team-row v-for="row in ranking" :key="row.id" :row="row" :class="{highlight: searchResult == row.rank}" />
 					</table>
 					<loader v-if="!ranking" />
 				</div>
@@ -196,7 +196,7 @@
 			<loader v-if="!searchResults && searchQuery.length" />
 			<h4 v-if="searchResults">{{ $t('results') }}</h4>
 			<div v-if="searchResults && searchResults.length === 0" class="center">{{ $t('no_results') }}</div>
-			<ranking-search-result v-for="result in searchResults" :key="result.id" :result="result" @gotoresult="goToRanking($event.type, $event.id)" />
+			<ranking-search-result v-for="result in searchResults" :key="result.id" :result="result" @gotoresult="goToResult" />
 		</popup>
 	</div>
 </template>
@@ -206,12 +206,13 @@
 	import RankingLeekRowElement from '@/component/ranking/ranking-leek-row.vue'
 	import RankingSearchResult from '@/component/ranking/ranking-search-result.vue'
 	import RankingTeamRowElement from '@/component/ranking/ranking-team-row.vue'
+	import { mixins } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import { Ranking } from '@/model/ranking'
 	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 
 	@Component({
-		name: 'ranking', i18n: {},
+		name: 'ranking', i18n: {}, mixins,
 		components: { 'ranking-leek-row': RankingLeekRowElement, 'ranking-farmer-row': RankingFarmerRowElement, 'ranking-team-row': RankingTeamRowElement, 'ranking-search-result': RankingSearchResult }
 	})
 	export default class RankingPage extends Vue {
@@ -230,8 +231,6 @@
 		searchResults: any[] | null = null
 		@Prop() active!: boolean
 		activeSwitch: boolean = false
-		searchResult: number = -1
-		searchResultType: string | null = null
 
 		get url() {
 			return '/ranking' + (this.category !== 'leek' || this.order !== 'talent' || this.active ? '/' + this.category : '') + (this.order !== 'talent' || this.active ? '/' + this.order : '') + (this.activeSwitch ? '/active' : '')
@@ -245,17 +244,25 @@
 		get rankingTeamURL() {
 			return '/ranking/team' + (LeekWars.rankingActive ? '/active' : '')
 		}
+		get searchResult() {
+			return parseInt(this.$route.hash.replace('#rank-', ''), 10)
+		}
 
 		@Watch('$route.params', {immediate: true})
 		update() {
 			this.category = 'category' in this.$route.params ? this.$route.params.category : 'leek'
-			if (this.category !== this.searchResultType) {
-				this.searchResult = 0
-			}
 			this.activeSwitch = this.active
-			if (this.ranking) {
-				this.ranking = null
+			if (this.category !== 'fun') {
+				this.order = 'order' in this.$route.params ? this.$route.params.order : 'talent'
+				this.page = 'page' in this.$route.params ? parseInt(this.$route.params.page, 10) : 1
 			}
+		}
+
+		@Watch('active', {immediate: true})
+		@Watch('category')
+		@Watch('order')
+		@Watch('page')
+		updateRanking() {
 			if (this.category === 'fun') {
 				this.rankings = null
 				LeekWars.get('ranking/fun').then(data => {
@@ -280,8 +287,7 @@
 					this.$root.$emit('loaded')
 				})
 			} else {
-				this.order = 'order' in this.$route.params ? this.$route.params.order : 'talent'
-				this.page = 'page' in this.$route.params ? parseInt(this.$route.params.page, 10) : 1
+				this.ranking = null
 				const service = this.active ? 'get-active' : 'get'
 				LeekWars.get('ranking/' + service + '/' + this.category + '/' + this.order + '/' + this.page).then(data => {
 					const ranking = data.ranking as Ranking
@@ -316,27 +322,12 @@
 				})
 			}
 		}
-		goToRanking(type: string, param: number = 0) {
+
+		goToResult(event: any) {
 			this.searchDialog = false
-			let url = ''
-			const active = this.active ? '-active' : ''
-			if (type === 'leek') {
-				url = 'ranking/get-leek-rank' + active + '/' + param + '/' + this.order
-			} else if (type === 'farmer') {
-				url = 'ranking/get-farmer-rank' + active + '/' + param + '/' + this.order
-			} else if (type === 'team' && this.$store.state.farmer.team !== null) {
-				url = 'ranking/get-team-rank' + active + '/' + param + '/' + this.order
-			}
-			this.searchResult = param
-			this.searchResultType = type
-			LeekWars.get(url).then(data => {
-				const page = 1 + Math.floor((data.rank - 1) / 50)
-				if (page !== this.page || type !== this.category || data.active !== this.active) {
-					const active_url = this.active && data.active ? '/active' : ''
-					this.$router.push('/ranking/' + type + '/' + this.order + active_url + '/page-' + page)
-				}
-			})
+			LeekWars.goToRanking(event.type, 'talent', event.id)
 		}
+
 		openSearch() {
 			this.searchDialog = true
 			this.searchQuery = ''
