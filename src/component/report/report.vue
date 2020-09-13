@@ -31,19 +31,21 @@
 				<div class="report-general">
 					<div v-if="fight.type === FightType.BATTLE_ROYALE">
 						<h3>Poireaux</h3>
-						<table class="report">
-							<tr>
-								<th>{{ $t('main.leek') }}</th>
-								<th>{{ $t('main.level') }}</th>
-								<th v-if="$store.getters.admin" class="power">Power</th>
-								<th>{{ $t('main.xp') }}</th>
-								<th class="gain">{{ $t('main.habs') }}</th>
-								<th v-if="fight.type === FightType.SOLO" class="gain">{{ $t('main.talent') }}</th>
-								<!-- <th>Opérations</th> -->
-								<!-- <th v-if="$store.getters.admin" class="gain">Time</th> -->
-							</tr>
-							<report-leek-row v-for="leek in report.leeks" v-if="!leek.summon" :key="leek.id" :leek="leek" :fight="fight" />
-						</table>
+						<div class="scroll-x">
+							<table class="report">
+								<tr>
+									<th>{{ $t('main.leek') }}</th>
+									<th>{{ $t('main.level') }}</th>
+									<th v-if="$store.getters.admin" class="power">Power</th>
+									<th>{{ $t('main.xp') }}</th>
+									<th class="gain">{{ $t('main.habs') }}</th>
+									<th v-if="fight.type === FightType.SOLO" class="gain">{{ $t('main.talent') }}</th>
+									<!-- <th>Opérations</th> -->
+									<!-- <th v-if="$store.getters.admin" class="gain">Time</th> -->
+								</tr>
+								<report-leek-row v-for="leek in report.leeks" v-if="!leek.summon" :key="leek.id" :leek="leek" :fight="fight" />
+							</table>
+						</div>
 					</div>
 					<div v-else>
 						<div v-if="report.win === 1">
