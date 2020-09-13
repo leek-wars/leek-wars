@@ -511,6 +511,15 @@ const LeekWars = {
 	characteristics: Object.freeze(['life', 'strength', 'wisdom', 'agility', 'resistance', 'science', 'magic', 'frequency', 'mp', 'tp']),
 	characteristics_table: Object.freeze(['life', 'science', 'strength', 'magic', 'wisdom', 'frequency', 'agility', 'mp', 'resistance', 'tp']),
 	effectRawOpened: false,
+	message: null as string | null,
+	messagePopup: false,
+	displayMessage: function(message: any) {
+		if (message) {
+			console.log("Display message", message)
+			LeekWars.message = message
+			LeekWars.messagePopup = true
+		}
+	}
 }
 
 function setTitle(title: string | TranslateResult | null, subtitle: string | TranslateResult | null = null) {
