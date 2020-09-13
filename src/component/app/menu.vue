@@ -105,6 +105,31 @@
 					<v-icon>mdi-security</v-icon>
 					<div class="text">{{ $t('main.admin') }}</div>
 				</router-link>
+
+				<div v-if="LeekWars.battleRoyale.enabled" class="separator"></div>
+
+				<span v-if="LeekWars.battleRoyale.enabled" v-ripple :label="LeekWars.battleRoyale.progress + '/10'" class="section" @click="battleRoyaleDialog = !battleRoyaleDialog">
+					<v-icon>mdi-sword-cross</v-icon>
+					<div class="text">{{ $t('main.battle_royale') }}</div>
+				</span>
+
+				<popup v-model="battleRoyaleDialog" :width="600">
+					<v-icon slot="icon">mdi-sword-cross</v-icon>
+					<template slot="title">{{ $t('main.battle_royale') }}</template>
+					<loader v-if="LeekWars.battleRoyale.progress == 0" />
+					<div class="br-leeks">
+						<div v-for="leek in LeekWars.battleRoyale.leeks" :key="leek.id" class="leek">
+							<leek-image :leek="leek" :scale="0.4" /><br>
+							<div>{{ leek.name }}</div>
+							<talent :talent="leek.talent" />
+							<div class="level">{{ $t('main.level_n', [leek.level]) }}</div>
+						</div>
+					</div>
+					<br>
+					<center>
+						<v-btn @click="quit"><v-icon>mdi-keyboard-backspace</v-icon>&nbsp;Quitter</v-btn>
+					</center>
+				</popup>
 			</div>
 		</div>
 	</div>
@@ -119,6 +144,7 @@
 		name: 'lw-menu'
 	})
 	export default class Menu extends Vue {
+		battleRoyaleDialog: boolean = false
 		get isHomePage() {
 			return this.$route.path === '/'
 		}
@@ -215,6 +241,11 @@
 			localStorage.setItem('main/menu-collapsed', '' + LeekWars.menuCollapsed)
 			this.$root.$emit('resize')
 		}
+		quit(e: Event) {
+			LeekWars.battleRoyale.leave()
+			this.battleRoyaleDialog = false
+			e.stopPropagation()
+		}
 	}
 </script>
 
@@ -280,6 +311,7 @@
 		white-space: nowrap;
 		display: block;
 		background: #222;
+		cursor: pointer;
 	}
 	.menu a div {
 		overflow: hidden;
@@ -317,13 +349,13 @@
 		margin: 14px 0;
 		margin-right: 4px;
 	}
-	#app.menu-collapsed .menu a {
+	#app.menu-collapsed .menu .section {
 		height: 46px;
 	}
-	.menu-center a:not(.router-link-active):hover {
+	.menu-center .section:not(.router-link-active):hover {
 		background: rgba(150, 150, 150, 0.2);
 	}
-	.menu-center a.router-link-active {
+	.menu-center .section.router-link-active {
 		background: #5fad1b;
 		color: white;
 		text-shadow: 0px 2px 3px rgba(0, 0, 0, 0.3), 0px 1px 3px rgba(0, 0, 0, 0.3), 0px 2px 6px rgba(0, 0, 0, 0.3);
@@ -340,7 +372,7 @@
 			border-color: #5fad1b transparent transparent transparent;
 		}
 	}
-	#app.menu-collapsed .menu-center a {
+	#app.menu-collapsed .menu-center .section {
 		.text {
 			display: none;
 		}
@@ -357,23 +389,23 @@
 			border-color: #5fad1b transparent transparent transparent;
 		}
 	}
-	.menu-center a img {
+	.menu-center .section img {
 		height: 24px;
 		width: 24px;
 		float: left;
 		margin: 8px;
 	}
-	.menu-center a i {
+	.menu-center .section i {
 		float: left;
 		margin: 6px;
 		font-size: 28px;
 	}
-	#app.menu-collapsed .menu-center a img {
+	#app.menu-collapsed .menu-center .section img {
 		height: 30px;
 		width: 30px;
 		margin-left: 10px;
 	}
-	#app.menu-collapsed .menu-center a i {
+	#app.menu-collapsed .menu-center a.section i {
 		font-size: 34px;
 		margin-left: 10px;
 	}
@@ -479,5 +511,46 @@
 	}
 	#app.app .menu .section.about {
 		display: block;
+	}
+
+	.br-leeks {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+		align-items: baseline;
+
+		.leek {
+			text-align: center;
+			font-size: 15px;
+			font-weight: 500;
+			margin: 0 3px;
+		}
+		.talent {
+			margin: 2px 0;
+		}
+		.header {
+			background: #2a2a2a;
+			color: white;
+			display: flex;
+			border-top-left-radius: 6px;
+			border-top-right-radius: 6px;
+			user-select: none;
+			cursor: pointer;
+			.title {
+				padding: 10px;
+				font-size: 18px;
+				flex: 1;
+				overflow: hidden;
+				text-overflow: ellipsis;
+			}
+			.v-icon {
+				color: white;
+				padding: 0;
+				margin-right: 2px;
+				margin-bottom: 1px;
+			}
+			.close {
+				padding: 8px;
+			}
+		}
 	}
 </style>
