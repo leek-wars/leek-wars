@@ -21,9 +21,9 @@
 		<div class="column">
 			<h4>Développeurs</h4>
 			<router-link to="/changelog" class="item">{{ $t('main.changelog') }}</router-link>
-			<router-link to="/changelog" class="item">
+			<a href="https://github.com/leek-wars/leek-wars" target="_blank" rel="noopener" class="item">
 				GitHub <v-icon>mdi-open-in-new</v-icon>
-			</router-link>
+			</a>
 			<a href="https://github.com/leek-wars/leek-wars/issues" target="_blank" rel="noopener" class="item">
 				Tickets <v-icon>mdi-open-in-new</v-icon>
 			</a>
