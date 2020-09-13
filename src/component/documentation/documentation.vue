@@ -29,7 +29,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="documentation">
+		<div class="container documentation last">
 			<div v-show="!LeekWars.mobile || !LeekWars.splitBack" class="column3">
 				<panel class="first">
 					<div slot="content">
@@ -237,8 +237,7 @@
 
 <style lang="scss" scoped>
 	.documentation {
-		height: calc(100vh - 128px);
-		padding-bottom: 12px;
+		height: calc(100vh - 140px);
 	}
 	#app.app .documentation {
 		height: calc(100vh - 56px);

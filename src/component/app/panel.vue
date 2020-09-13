@@ -55,14 +55,13 @@
 		background: #f2f2f2;
 		border-radius: 4px;
 		box-shadow: 0px 10px 11px -11px rgba(0,0,0,0.75);
-		margin-right: 12px;
-		margin-bottom: 12px;
 		display: flex;
 		flex-direction: column;
+		width: 100%;
+		margin-bottom: 12px;
 	}
 	#app.app .panel {
 		border-radius: 0;
-		margin-right: 0;
 	}
 	.panel.last {
 		margin-bottom: 0;

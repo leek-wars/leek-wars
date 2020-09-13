@@ -3,83 +3,79 @@
 		<div class="page-header page-bar">
 			<h1>{{ $t('title') }}</h1>
 		</div>
-		<div class="top">
-			<div :class="env.SIGN_UP ? 'column6' : 'column12'">
-				<panel class="first">
-					<div class="desc introduction" v-html="$t('intro')"></div>
-					<div class="leek-rect">
-						<img class="leeks" src="/image/signup_illustration.png">
-						<div v-if="leek_count" class="desc" v-html="$t('n_leeks_already', [LeekWars.formatNumber(leek_count)])"></div>
-					</div>
-				</panel>
-			</div>
-			<div v-if="env.SIGN_UP" class="column6">
-				<panel title="Inscription">
-					<form class="signup-form" method="post" @submit="submit">
-						<table>
-							<tr>
-								<td class="align-right">{{ $t('your_farmer_name') }}</td>
-								<td class="align-left">
-									<input v-model="login" :status="status('login')" name="login" type="text" required>
-									<div v-for="e in errors.login" :key="e" class="error-msg">{{ e }}</div>
-								</td>
-							</tr>
-							<tr>
-								<td class="align-right">{{ $t('your_leek_name') }}</td>
-								<td class="align-left">
-									<input v-model="leek" :status="status('leek')" name="leek" type="text" required>
-									<div v-for="e in errors.leek" :key="e" class="error-msg">{{ e }}</div>
-								</td>
-							</tr>
-							<tr>
-								<td class="align-right"><i>{{ $t('godfather') }}</i></td>
-								<td class="align-left">
-									<input v-model="godfather" :status="status('godfather')" type="text">
-									<div v-for="e in errors.godfather" :key="e" class="error-msg">{{ e }}</div>
-								</td>
-							</tr>
-							<tr>
-								<td><div class="space"></div></td>
-							</tr>
-							<tr>
-								<td colspan="2">
-									<v-radio-group v-model="signupMethod" class="radio" :row="true" :dense="true" :hide-details="true">
-										<v-radio label="Email / mot de passe" :value="1" />
-										<v-radio label="GitHub" :value="2" />
-									</v-radio-group>
-								</td>
-							</tr>
-							<tr v-if="signupMethod === 1">
-								<td class="align-right">{{ $t('your_email') }}</td>
-								<td class="align-left">
-									<input v-model="email" :status="status('email')" name="email" type="text" required>
-									<div v-for="e in errors.email" :key="e" class="error-msg">{{ e }}</div>
-								</td>
-							</tr>
-							<tr v-if="signupMethod === 1">
-								<td class="align-right">{{ $t('password') }}</td>
-								<td class="align-left">
-									<input v-model="password1" :status="status('password1')" name="password" type="password" required>
-									<div v-for="e in errors.password1" :key="e" class="error-msg">{{ e }}</div>
-								</td>
-							</tr>
-							<tr>
-								<td><div class="space"></div></td>
-							</tr>
-							<tr v-if="signupMethod === 2">
-								<td><div class="space"></div></td>
-							</tr>
-						</table>
-						<i18n class="cgu" tag="div" path="conditions">
-							<router-link slot="link" to="/conditions">{{ $t('conditions_name') }}</router-link>
-						</i18n>
-						<center>
-							<v-btn v-if="signupMethod === 2" color="black" type="submit" class="gh-button"> <img src="/image/github_black.png"> {{ $t('signup_gh') }}</v-btn>
-							<v-btn v-if="signupMethod === 1" large color="primary" type="submit">{{ $t('signup') }}</v-btn>
-						</center>
-					</form>
-				</panel>
-			</div>
+		<div class="container grid large top">
+			<panel class="first">
+				<div class="desc introduction" v-html="$t('intro')"></div>
+				<div class="leek-rect">
+					<img class="leeks" src="/image/signup_illustration.png">
+					<div v-if="leek_count" class="desc" v-html="$t('n_leeks_already', [LeekWars.formatNumber(leek_count)])"></div>
+				</div>
+			</panel>
+			<panel v-if="env.SIGN_UP" title="Inscription">
+				<form class="signup-form" method="post" @submit="submit">
+					<table>
+						<tr>
+							<td class="align-right">{{ $t('your_farmer_name') }}</td>
+							<td class="align-left">
+								<input v-model="login" :status="status('login')" name="login" type="text" required>
+								<div v-for="e in errors.login" :key="e" class="error-msg">{{ e }}</div>
+							</td>
+						</tr>
+						<tr>
+							<td class="align-right">{{ $t('your_leek_name') }}</td>
+							<td class="align-left">
+								<input v-model="leek" :status="status('leek')" name="leek" type="text" required>
+								<div v-for="e in errors.leek" :key="e" class="error-msg">{{ e }}</div>
+							</td>
+						</tr>
+						<tr>
+							<td class="align-right"><i>{{ $t('godfather') }}</i></td>
+							<td class="align-left">
+								<input v-model="godfather" :status="status('godfather')" type="text">
+								<div v-for="e in errors.godfather" :key="e" class="error-msg">{{ e }}</div>
+							</td>
+						</tr>
+						<tr>
+							<td><div class="space"></div></td>
+						</tr>
+						<tr>
+							<td colspan="2">
+								<v-radio-group v-model="signupMethod" class="radio" :row="true" :dense="true" :hide-details="true">
+									<v-radio label="Email / mot de passe" :value="1" />
+									<v-radio label="GitHub" :value="2" />
+								</v-radio-group>
+							</td>
+						</tr>
+						<tr v-if="signupMethod === 1">
+							<td class="align-right">{{ $t('your_email') }}</td>
+							<td class="align-left">
+								<input v-model="email" :status="status('email')" name="email" type="text" required>
+								<div v-for="e in errors.email" :key="e" class="error-msg">{{ e }}</div>
+							</td>
+						</tr>
+						<tr v-if="signupMethod === 1">
+							<td class="align-right">{{ $t('password') }}</td>
+							<td class="align-left">
+								<input v-model="password1" :status="status('password1')" name="password" type="password" required>
+								<div v-for="e in errors.password1" :key="e" class="error-msg">{{ e }}</div>
+							</td>
+						</tr>
+						<tr>
+							<td><div class="space"></div></td>
+						</tr>
+						<tr v-if="signupMethod === 2">
+							<td><div class="space"></div></td>
+						</tr>
+					</table>
+					<i18n class="cgu" tag="div" path="conditions">
+						<router-link slot="link" to="/conditions">{{ $t('conditions_name') }}</router-link>
+					</i18n>
+					<center>
+						<v-btn v-if="signupMethod === 2" color="black" type="submit" class="gh-button"> <img src="/image/github_black.png"> {{ $t('signup_gh') }}</v-btn>
+						<v-btn v-if="signupMethod === 1" large color="primary" type="submit">{{ $t('signup') }}</v-btn>
+					</center>
+				</form>
+			</panel>
 		</div>
 
 		<h1>{{ $t('ranking') }}</h1>
@@ -326,9 +322,6 @@
 </script>
 
 <style lang="scss" scoped>
-	.top .panel {
-		margin-right: 12px;
-	}
 	@media screen and (max-width: 900px) {
 		.top .column6:nth-child(2) .panel {
 			margin-top: 12px;

@@ -56,53 +56,49 @@
 			</div>
 		</div>
 
-		<div class="container">
-			<div v-show="!LeekWars.mobile || !LeekWars.splitBack" :style="{width: LeekWars.mobile ? '100%' : panelWidth + 'px'}" class="column3">
-				<panel class="editor-left first last">
-					<div slot="content" class="full">
-						<loader v-if="!rootFolder" />
+		<div class="container last">
+			<panel v-show="!LeekWars.mobile || !LeekWars.splitBack" :style="{width: LeekWars.mobile ? '100%' : panelWidth + 'px', flex: 'none', display: panelWidth ? 'block' : 'none'}" class="editor-left first">
+				<div slot="content" class="full">
+					<loader v-if="!rootFolder" />
 
-						<div v-if="rootFolder" v-autostopscroll class="ai-list">
-							<editor-folder :folder="rootFolder" :level="0" />
-						</div>
-						<div v-if="currentEditor && currentEditor.loaded" class="ai-stats">
-							<div class="line-count-wrapper">{{ $tc('main.n_lines', currentEditor.lines) }}</div>
-							<div class="char-count-wrapper">{{ $tc('main.n_characters', currentEditor.characters) }}</div>
-							<div v-if="currentAI.included_lines !== 0" class="line-count-wrapper">{{ $tc('main.n_total_lines', currentEditor.lines + currentAI.included_lines) }}</div>
-							<div v-if="currentAI.included_chars !== 0" class="char-count-wrapper">{{ $tc('main.n_total_chars', currentEditor.characters + currentAI.included_chars) }}</div>
-						</div>
-						<br>
-						<!--
-						<div id='export-button' class="button" title="{export_desc}">▼ {{ $t('export') }}</div>
-						<div id='import-button' class="button" title="{import_desc}">▲ {{ $t('import') }}</div>
-						-->
+					<div v-if="rootFolder" v-autostopscroll class="ai-list">
+						<editor-folder :folder="rootFolder" :level="0" />
 					</div>
-				</panel>
-				<div class="resizer" @mousedown="resizerMousedown"></div>
-			</div>
+					<div v-if="currentEditor && currentEditor.loaded" class="ai-stats">
+						<div class="line-count-wrapper">{{ $tc('main.n_lines', currentEditor.lines) }}</div>
+						<div class="char-count-wrapper">{{ $tc('main.n_characters', currentEditor.characters) }}</div>
+						<div v-if="currentAI.included_lines !== 0" class="line-count-wrapper">{{ $tc('main.n_total_lines', currentEditor.lines + currentAI.included_lines) }}</div>
+						<div v-if="currentAI.included_chars !== 0" class="char-count-wrapper">{{ $tc('main.n_total_chars', currentEditor.characters + currentAI.included_chars) }}</div>
+					</div>
+					<br>
+					<!--
+					<div id='export-button' class="button" title="{export_desc}">▼ {{ $t('export') }}</div>
+					<div id='import-button' class="button" title="{import_desc}">▲ {{ $t('import') }}</div>
+					-->
+				</div>
+			</panel>
 
-			<div v-show="!LeekWars.mobile || LeekWars.splitBack" :style="{width: 'calc(100% - ' + (LeekWars.mobile ? 0 : panelWidth) + 'px)'}" class="column9">
-				<panel class="last">
-					<div slot="content" class="full">
-						<editor-tabs v-if="!LeekWars.mobile" ref="tabs" :current="currentID" :ais="ais" />
-						<div :class="{tabs: $refs.tabs && $refs.tabs.tabs.length > 1}" class="editors">
-							<ai-view v-for="ai in activeAIs" ref="editors" :key="ai.id" :ai="ai" :ais="ais" :editors="$refs.editors" :visible="currentAI === ai" :font-size="fontSize" :line-height="lineHeight" :popups="popups" :auto-closing="autoClosing" :autocomplete-option="autocomplete" @jump="jump" @load="load" />
+			<panel v-show="!LeekWars.mobile || LeekWars.splitBack" :style="{width: 'calc(100% - ' + (LeekWars.mobile ? 0 : panelWidth) + 'px)'}">
+				<div slot="content" class="full">
+					<div class="resizer" @mousedown="resizerMousedown"></div>
+					<editor-tabs v-if="!LeekWars.mobile" ref="tabs" :current="currentID" :ais="ais" />
+					<div :class="{tabs: $refs.tabs && $refs.tabs.tabs.length > 1}" class="editors">
+						<ai-view v-for="ai in activeAIs" ref="editors" :key="ai.id" :ai="ai" :ais="ais" :editors="$refs.editors" :visible="currentAI === ai" :font-size="fontSize" :line-height="lineHeight" :popups="popups" :auto-closing="autoClosing" :autocomplete-option="autocomplete" @jump="jump" @load="load" />
+					</div>
+					<div v-if="currentEditor" class="compilation">
+						<div v-if="currentEditor.saving" class="compiling">
+							<loader :size="15" /> {{ $t('saving') }}
 						</div>
-						<div v-if="currentEditor" class="compilation">
-							<div v-if="currentEditor.saving" class="compiling">
-								<loader :size="15" /> {{ $t('saving') }}
-							</div>
-							<div class="results">
-								<div v-for="(good, g) in goods" :key="g" class="good" v-html="'✓ ' + (good.ai !== currentAI ? currentAI.name + ' ➞ ' : '') + $t('valid_ai', [good.ai.name])"></div>
-								<div v-if="currentEditor.serverError" class="error">× <i>{{ $t('server_error') }}</i></div>
-								<div v-for="(error, e) in errors" :key="e" class="error" @click="errors.splice(e, 1)">
-									× <span v-html="$t('ai_error', [error.ai, error.line])"></span> ▶ {{ error.message }}
-								</div>
+						<div class="results">
+							<div v-for="(good, g) in goods" :key="g" class="good" v-html="'✓ ' + (good.ai !== currentAI ? currentAI.name + ' ➞ ' : '') + $t('valid_ai', [good.ai.name])"></div>
+							<div v-if="currentEditor.serverError" class="error">× <i>{{ $t('server_error') }}</i></div>
+							<div v-for="(error, e) in errors" :key="e" class="error" @click="errors.splice(e, 1)">
+								× <span v-html="$t('ai_error', [error.ai, error.line])"></span> ▶ {{ error.message }}
 							</div>
 						</div>
 					</div>
-				</panel>
-			</div>
+				</div>
+			</panel>
 		</div>
 		<div class="error-tooltip"></div>
 
@@ -701,6 +697,9 @@
 </script>
 
 <style lang="scss" scoped>
+	.full {
+		position: relative;
+	}
 	.v-list__tile__content {
 		padding-left: 8px;
 	}
@@ -880,7 +879,7 @@
 	}
 	.resizer {
 		position: absolute;
-		right: 0;
+		left: -15px;
 		top: 0;
 		bottom: 10px;
 		cursor: ew-resize;

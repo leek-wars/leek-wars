@@ -68,12 +68,11 @@
 		display: grid;
 		grid-gap: 10px;
 		padding: 10px;
-		grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+		grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
 	}
 	#app.app .packs {
 		padding: 0;
 		padding-top: 10px;
-		grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
 	}
 	.pack {
 		padding: 10px;
@@ -93,17 +92,21 @@
 		margin-top: 5px;
 		object-fit: contain;
 	}
-	.pack .buy div {
-		border-radius: 2px;
-		padding: 5px 10px;
-		margin: 5px 0;
-		margin-right: 8px;
-		display: inline-block;
-		border: 1px solid #aaa;
-		border-radius: 4px;
-	}
-	.pack .buy div:hover {
-		background: #eee;
+	.pack .buy {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 8px;
+		div {
+			border-radius: 2px;
+			padding: 5px 10px;
+			margin: 5px 0;
+			display: inline-flex;
+			border: 1px solid #aaa;
+			border-radius: 4px;
+			&:hover {
+				background: #eee;
+			}
+		}
 	}
 	.pack .price {
 		font-weight: 400;
@@ -113,7 +116,6 @@
 	.pack .buy img {
 		margin-left: 5px;
 		vertical-align: middle;
-		margin-top: -10px;
 		height: 30px;
 	}
 </style>

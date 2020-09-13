@@ -9,114 +9,109 @@
 				</div>
 			</div>
 		</div>
-		<div class="flex-container">
-			<div class="column6">
-				<panel :title="$t('language')" class="languages" icon="mdi-translate">
-					<div v-for="language in LeekWars.languages" :key="language.code" v-ripple :class="{selected: language.code == $i18n.locale}" :lang="language.code" class="language" @click="LeekWars.setLocale(language.code)">
-						<img :src="language.flag">
-						<br>
-						{{ language.name }} ({{ language.code }})
-					</div>
-				</panel>
-			</div>
-			<div class="column6">
-				<panel :title="$t('misc_options')" icon="mdi-settings-outline">
-					<table class="misc-settings">
-						<tr id="sfw-button">
-							<td><h4>{{ $t('activate_discrete_mode') }}</h4></td>
-							<td><v-switch v-model="sfwMode" hide-details /></td>
-						</tr>
-						<tr id="notifs-results-button">
-							<td><h4>{{ $t('notifs_results') }}</h4></td>
-							<td><v-switch v-model="notifsResults" hide-details /></td>
-						</tr>
-						<tr v-if="LeekWars.mobile">
-							<td><h4>{{ $t('chat_first') }}</h4></td>
-							<td><v-switch v-model="chatFirst" hide-details /></td>
-						</tr>
-						<tr v-if="!LeekWars.mobile">
-							<td><h4>{{ $t('leek_theme') }}</h4></td>
-							<td><v-switch v-model="LeekWars.leekTheme" hide-details /></td>
-						</tr>
+		<div class="container grid large">
+			<panel :title="$t('language')" class="languages" icon="mdi-translate">
+				<div v-for="language in LeekWars.languages" :key="language.code" v-ripple :class="{selected: language.code == $i18n.locale}" :lang="language.code" class="language" @click="LeekWars.setLocale(language.code)">
+					<img :src="language.flag">
+					<br>
+					{{ language.name }} ({{ language.code }})
+				</div>
+			</panel>
+
+			<panel :title="$t('misc_options')" icon="mdi-settings-outline">
+				<table class="misc-settings">
+					<tr id="sfw-button">
+						<td><h4>{{ $t('activate_discrete_mode') }}</h4></td>
+						<td><v-switch v-model="sfwMode" hide-details /></td>
+					</tr>
+					<tr id="notifs-results-button">
+						<td><h4>{{ $t('notifs_results') }}</h4></td>
+						<td><v-switch v-model="notifsResults" hide-details /></td>
+					</tr>
+					<tr v-if="LeekWars.mobile">
+						<td><h4>{{ $t('chat_first') }}</h4></td>
+						<td><v-switch v-model="chatFirst" hide-details /></td>
+					</tr>
+					<tr v-if="!LeekWars.mobile">
+						<td><h4>{{ $t('leek_theme') }}</h4></td>
+						<td><v-switch v-model="LeekWars.leekTheme" hide-details /></td>
+					</tr>
+				</table>
+			</panel>
+
+			<panel :title="$t('account')" icon="mdi-account" class="account">
+				<div v-ripple class="list-item card" @click="viewChangePassword = !viewChangePassword">
+					<v-icon>mdi-lock-open-outline</v-icon>
+					<span class="label">{{ $t('change_password') }}</span>
+					<v-icon>{{ viewChangePassword ? 'mdi-menu-up' : 'mdi-menu-down' }}</v-icon>
+				</div>
+				<form v-if="viewChangePassword && $store.state.farmer" class="change-password" @submit="changePassword">
+					<h4 v-if="$store.state.farmer.pass">{{ $t('old_password') }}</h4>
+					<input v-if="$store.state.farmer.pass" v-model="password" name="password" type="password">
+					<br v-if="$store.state.farmer.pass">
+					<h4>{{ $t('new_password') }}</h4>
+					<input v-model="newPassword1" name="new_password1" type="password" required> <br>
+					<h4>{{ $t('confirm_password') }}</h4>
+					<input v-model="newPassword2" name="new_password2" type="password" required> <br>
+					<center><v-btn type="submit">{{ $t('change') }}</v-btn></center>
+				</form>
+
+				<div v-ripple class="list-item card" @click="viewChangeEmail = !viewChangeEmail">
+					<v-icon>mdi-email-outline</v-icon>
+					<span class="label">{{ $t('change_email') }}</span>
+					<v-icon>{{ viewChangeEmail ? 'mdi-menu-up' : 'mdi-menu-down' }}</v-icon>
+				</div>
+				<v-btn v-if="viewChangeEmail" :disabled="changeEmailSent" @click="sendChangeEmail()">{{ $t('change_email_send') }}</v-btn>
+
+				<div v-ripple class="list-item card" @click="view2FA = !view2FA">
+					<v-icon>mdi-security</v-icon>
+					<span class="label">Two factor authentication</span>
+					<v-icon>{{ view2FA ? 'mdi-menu-up' : 'mdi-menu-down' }}</v-icon>
+				</div>
+				<two-factor v-if="view2FA" />
+
+				<div v-ripple class="list-item card" @click="viewDeleteAccount = !viewDeleteAccount">
+					<v-icon>mdi-delete-forever</v-icon>
+					<span class="label">{{ $t('delete_account') }}</span>
+					<v-icon>{{ viewDeleteAccount ? 'mdi-menu-up' : 'mdi-menu-down' }}</v-icon>
+				</div>
+				<v-btn v-if="viewDeleteAccount" @click="deleteDialog = true">{{ $t('delete_account') }}</v-btn>
+
+				<v-switch v-if="$store.state.farmer" v-model="settings.github_login" :disabled="!$store.state.farmer.pass" label="Autoriser la connexion via GitHub" />
+			</panel>
+
+			<panel title="Notifications" icon="mdi-bell-outline">
+				<span slot="actions" class="push-notifs-button" @click="updatePushNotifications">
+					<span>{{ $t('push_notifications') }}</span>
+					<v-switch :input-value="pushNotifications" hide-details />
+				</span>
+				<div slot="content" class="content notifications">
+					<table>
+						<template v-for="category in mails">
+							<tr :key="category.name + '_t'">
+								<td class="category">
+									<v-icon>{{ category.icon }}</v-icon>
+									{{ $t('notification.category_' + category.id) }}
+								</td>
+							</tr>
+							<tr :key="category.name + '_d'">
+								<td class="item">
+									{{ $t('notification.category_' + category.id + '_desc') }}
+								</td>
+								<td class="push">
+									<v-checkbox v-model="settings['push_' + category.name]" hide-details label="Push" @change="updateNotif('push_' + category.name, $event)" />
+								</td>
+								<td class="mail">
+									<v-checkbox v-model="settings['mail_' + category.name]" hide-details label="E-mail" @change="updateNotif('mail_' + category.name, $event)" />
+								</td>
+							</tr>
+						</template>
 					</table>
-				</panel>
-			</div>
-			<div class="column6">
-				<panel :title="$t('account')" icon="mdi-account" class="account">
-					<div v-ripple class="list-item card" @click="viewChangePassword = !viewChangePassword">
-						<v-icon>mdi-lock-open-outline</v-icon>
-						<span class="label">{{ $t('change_password') }}</span>
-						<v-icon>{{ viewChangePassword ? 'mdi-menu-up' : 'mdi-menu-down' }}</v-icon>
+					<div class="notif-info">
+						<v-icon>mdi-information-outline</v-icon> {{ $t('notification.info') }}
 					</div>
-					<form v-if="viewChangePassword && $store.state.farmer" class="change-password" @submit="changePassword">
-						<h4 v-if="$store.state.farmer.pass">{{ $t('old_password') }}</h4>
-						<input v-if="$store.state.farmer.pass" v-model="password" name="password" type="password">
-						<br v-if="$store.state.farmer.pass">
-						<h4>{{ $t('new_password') }}</h4>
-						<input v-model="newPassword1" name="new_password1" type="password" required> <br>
-						<h4>{{ $t('confirm_password') }}</h4>
-						<input v-model="newPassword2" name="new_password2" type="password" required> <br>
-						<center><v-btn type="submit">{{ $t('change') }}</v-btn></center>
-					</form>
-
-					<div v-ripple class="list-item card" @click="viewChangeEmail = !viewChangeEmail">
-						<v-icon>mdi-email-outline</v-icon>
-						<span class="label">{{ $t('change_email') }}</span>
-						<v-icon>{{ viewChangeEmail ? 'mdi-menu-up' : 'mdi-menu-down' }}</v-icon>
-					</div>
-					<v-btn v-if="viewChangeEmail" :disabled="changeEmailSent" @click="sendChangeEmail()">{{ $t('change_email_send') }}</v-btn>
-
-					<div v-ripple class="list-item card" @click="view2FA = !view2FA">
-						<v-icon>mdi-security</v-icon>
-						<span class="label">Two factor authentication</span>
-						<v-icon>{{ view2FA ? 'mdi-menu-up' : 'mdi-menu-down' }}</v-icon>
-					</div>
-					<two-factor v-if="view2FA" />
-
-					<div v-ripple class="list-item card" @click="viewDeleteAccount = !viewDeleteAccount">
-						<v-icon>mdi-delete-forever</v-icon>
-						<span class="label">{{ $t('delete_account') }}</span>
-						<v-icon>{{ viewDeleteAccount ? 'mdi-menu-up' : 'mdi-menu-down' }}</v-icon>
-					</div>
-					<v-btn v-if="viewDeleteAccount" @click="deleteDialog = true">{{ $t('delete_account') }}</v-btn>
-
-					<v-switch v-if="$store.state.farmer" v-model="settings.github_login" :disabled="!$store.state.farmer.pass" label="Autoriser la connexion via GitHub" />
-				</panel>
-			</div>
-			<div class="column6">
-				<panel title="Notifications" icon="mdi-bell-outline">
-					<span slot="actions" class="push-notifs-button" @click="updatePushNotifications">
-						<span>{{ $t('push_notifications') }}</span>
-						<v-switch :input-value="pushNotifications" hide-details />
-					</span>
-					<div slot="content" class="content notifications">
-						<table>
-							<template v-for="category in mails">
-								<tr :key="category.name + '_t'">
-									<td class="category">
-										<v-icon>{{ category.icon }}</v-icon>
-										{{ $t('notification.category_' + category.id) }}
-									</td>
-								</tr>
-								<tr :key="category.name + '_d'">
-									<td class="item">
-										{{ $t('notification.category_' + category.id + '_desc') }}
-									</td>
-									<td class="push">
-										<v-checkbox v-model="settings['push_' + category.name]" hide-details label="Push" @change="updateNotif('push_' + category.name, $event)" />
-									</td>
-									<td class="mail">
-										<v-checkbox v-model="settings['mail_' + category.name]" hide-details label="E-mail" @change="updateNotif('mail_' + category.name, $event)" />
-									</td>
-								</tr>
-							</template>
-						</table>
-						<div class="notif-info">
-							<v-icon>mdi-information-outline</v-icon> {{ $t('notification.info') }}
-						</div>
-					</div>
-				</panel>
-			</div>
+				</div>
+			</panel>
 		</div>
 
 		<center>
@@ -127,13 +122,10 @@
 			</div>
 		</center>
 
-		<div v-if="advanced" class="flex-container">
-			<div class="column6">
-				<panel :title="$t('empty_localstorage')" class="last" icon="mdi-eraser">
-					<v-btn class="clear-localstorage" @click="clearLocalStorage">{{ $t('empty') }}</v-btn>
-				</panel>
-			</div>
-			<div class="column6"></div>
+		<div v-if="advanced" class="container grid large">
+			<panel :title="$t('empty_localstorage')" class="last" icon="mdi-eraser">
+				<v-btn class="clear-localstorage" @click="clearLocalStorage">{{ $t('empty') }}</v-btn>
+			</panel>
 		</div>
 
 		<popup v-model="deleteDialog" :width="600">

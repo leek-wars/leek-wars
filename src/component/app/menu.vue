@@ -505,6 +505,9 @@
 	#app.app .menu .section {
 		line-height: 42px;
 		background: transparent;
+		&:before {
+			display: none;
+		}
 	}
 	.menu .section.about {
 		display: none;

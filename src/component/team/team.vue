@@ -23,109 +23,103 @@
 			</div>
 		</div>
 
-		<div class="flex-container">
-			<div class="column4">
-				<panel class="team-emblem first">
-					<div v-if="team" slot="content" class="content">
-						<template v-if="member">
-							<tooltip>
-								<template v-slot:activator="{ on }">
-									<div class="emblem-input" v-on="on">
-										<input ref="emblemInput" type="file" @change="changeEmblem">
-										<emblem ref="emblem" :team="team" @click.native="$refs.emblemInput.click()" />
-									</div>
-								</template>
-								{{ $t('change_emblem') }}
-							</tooltip>
-						</template>
-						<emblem v-else :team="team" />
-						<div v-if="team.description || member" class="description">
-							<span class="guillemet">«</span>
-							<span v-if="owner" ref="descriptionElement" :class="{empty: !team.description && !editingDescription}" class="team-status text" contenteditable @click="startEditingDescription" @blur="saveDescription" @keydown.enter.prevent="saveDescription">{{ team.description }}</span>
-							<span v-else class="text team-status">{{ team.description }}</span>
-							<span class="guillemet">»</span>
-							<span class="edit-pen"></span>
-						</div>
-					</div>
-				</panel>
-			</div>
-
-			<div class="column4">
-				<panel>
-					<h4 class="team-level">{{ $t('level_n', [team ? team.level : '...']) }}</h4>
-					<tooltip v-if="team">
-						<template v-slot:activator="{ on }">
-							<div class="bar" v-on="on">
-								<span :class="{blue: max_level}" :style="{width: xp_bar_width + '%'}" class="xp-bar striked"></span>
-							</div>
-						</template>
-						<template v-if="max_level">
-							<b>{{ $t('max_level') }}</b>
-							<br>
-							{{ $t('xp', [LeekWars.formatNumber(team.xp)]) }}
-						</template>
-						<template v-else>
-							<b>{{ $t('remaining_xp', [LeekWars.formatNumber(team.remaining_xp)]) }}</b>
-							<br>
-							{{ $t('xp', [LeekWars.formatNumber(team.xp) + " / " + LeekWars.formatNumber(team.up_xp)]) }}
-						</template>
-					</tooltip>
-
-					<center>
-						<br>
+		<div class="container">
+			<panel class="team-emblem first">
+				<div v-if="team" slot="content" class="content">
+					<template v-if="member">
 						<tooltip>
 							<template v-slot:activator="{ on }">
-								<talent :id="team ? team.id : ''" :talent="team ? team.talent : '...'" category="team" :on="on" />
+								<div class="emblem-input" v-on="on">
+									<input ref="emblemInput" type="file" @change="changeEmblem">
+									<emblem ref="emblem" :team="team" @click.native="$refs.emblemInput.click()" />
+								</div>
 							</template>
-							{{ $t('talent') }}
+							{{ $t('change_emblem') }}
 						</tooltip>
-					</center>
+					</template>
+					<emblem v-else :team="team" />
+					<div v-if="team.description || member" class="description">
+						<span class="guillemet">«</span>
+						<span v-if="owner" ref="descriptionElement" :class="{empty: !team.description && !editingDescription}" class="team-status text" contenteditable @click="startEditingDescription" @blur="saveDescription" @keydown.enter.prevent="saveDescription">{{ team.description }}</span>
+						<span v-else class="text team-status">{{ team.description }}</span>
+						<span class="guillemet">»</span>
+						<span class="edit-pen"></span>
+					</div>
+				</div>
+			</panel>
 
-					<br>
-					<tooltip v-if="team">
-						<template v-slot:activator="{ on }">
-							<table class="fights" v-on="on">
-								<tr>
-									<td class="big">{{ team.victories | number }}</td>
-									<td class="big">{{ team.draws | number }}</td>
-									<td class="big">{{ team.defeats | number }}</td>
-								</tr>
-								<tr>
-									<td class="grey">{{ $t('victories') }}</td>
-									<td class="grey">{{ $t('draws') }}</td>
-									<td class="grey">{{ $t('defeats') }}</td>
-								</tr>
-							</table>
-						</template>
-						{{ $t('ratio', [team.ratio]) }}
-					</tooltip>
-
-					<center v-if="$store.state.farmer && !member && $store.state.farmer.team == null">
+			<panel>
+				<h4 class="team-level">{{ $t('level_n', [team ? team.level : '...']) }}</h4>
+				<tooltip v-if="team">
+					<template v-slot:activator="{ on }">
+						<div class="bar" v-on="on">
+							<span :class="{blue: max_level}" :style="{width: xp_bar_width + '%'}" class="xp-bar striked"></span>
+						</div>
+					</template>
+					<template v-if="max_level">
+						<b>{{ $t('max_level') }}</b>
 						<br>
-						<v-btn v-if="team.candidacy" @click="cancelCandidacy">{{ $t('cancel_candidacy') }}</v-btn>
-						<v-btn v-if="team.opened && !team.candidacy" @click="sendCandidacy">{{ $t('join_team') }}</v-btn>
-						<i v-else-if="!team.opened">{{ $t('closed_team') }}</i>
-					</center>
-				</panel>
-			</div>
+						{{ $t('xp', [LeekWars.formatNumber(team.xp)]) }}
+					</template>
+					<template v-else>
+						<b>{{ $t('remaining_xp', [LeekWars.formatNumber(team.remaining_xp)]) }}</b>
+						<br>
+						{{ $t('xp', [LeekWars.formatNumber(team.xp) + " / " + LeekWars.formatNumber(team.up_xp)]) }}
+					</template>
+				</tooltip>
 
-			<div class="column4">
-				<panel class="description">
-					<div v-if="team" slot="content" class="turret-wrapper">
-						<div class="turret">
-							<turret-image :level="team.level" :skin="1" :scale="0.32" @click.native="turretDialog = true" />
+				<center>
+					<br>
+					<tooltip>
+						<template v-slot:activator="{ on }">
+							<talent :id="team ? team.id : ''" :talent="team ? team.talent : '...'" category="team" :on="on" />
+						</template>
+						{{ $t('talent') }}
+					</tooltip>
+				</center>
 
-							<div class="infos">
-								<h4>{{ $t('turret') }}</h4>
-								<div class="level">{{ $t('level_n', [team.level]) }}</div>
+				<br>
+				<tooltip v-if="team">
+					<template v-slot:activator="{ on }">
+						<table class="fights" v-on="on">
+							<tr>
+								<td class="big">{{ team.victories | number }}</td>
+								<td class="big">{{ team.draws | number }}</td>
+								<td class="big">{{ team.defeats | number }}</td>
+							</tr>
+							<tr>
+								<td class="grey">{{ $t('victories') }}</td>
+								<td class="grey">{{ $t('draws') }}</td>
+								<td class="grey">{{ $t('defeats') }}</td>
+							</tr>
+						</table>
+					</template>
+					{{ $t('ratio', [team.ratio]) }}
+				</tooltip>
 
-								<ai v-if="team.turret_ai" :ai="team.turret_ai" :class="{active: member}" @click.native="turretAiDialog = true" />
-								<div v-else-if="member" class="no-ai" @click="turretAiDialog = true">{{ $t('no_ai') }}</div>
-							</div>
+				<center v-if="$store.state.farmer && !member && $store.state.farmer.team == null">
+					<br>
+					<v-btn v-if="team.candidacy" @click="cancelCandidacy">{{ $t('cancel_candidacy') }}</v-btn>
+					<v-btn v-if="team.opened && !team.candidacy" @click="sendCandidacy">{{ $t('join_team') }}</v-btn>
+					<i v-else-if="!team.opened">{{ $t('closed_team') }}</i>
+				</center>
+			</panel>
+
+			<panel class="description">
+				<div v-if="team" slot="content" class="turret-wrapper">
+					<div class="turret">
+						<turret-image :level="team.level" :skin="1" :scale="0.32" @click.native="turretDialog = true" />
+
+						<div class="infos">
+							<h4>{{ $t('turret') }}</h4>
+							<div class="level">{{ $t('level_n', [team.level]) }}</div>
+
+							<ai v-if="team.turret_ai" :ai="team.turret_ai" :class="{active: member}" @click.native="turretAiDialog = true" />
+							<div v-else-if="member" class="no-ai" @click="turretAiDialog = true">{{ $t('no_ai') }}</div>
 						</div>
 					</div>
-				</panel>
-			</div>
+				</div>
+			</panel>
 		</div>
 
 		<panel v-if="member" :title="$t('chat')" toggle="team/chat" icon="mdi-chat-outline">
@@ -289,23 +283,20 @@
 			</div>
 		</panel>
 
-		<div>
-			<div class="column6">
-				<panel v-if="team && team.fights.length > 0" :title="$t('history')" icon="mdi-sword-cross">
-					<template slot="actions">
-						<router-link :to="'/team/' + id + '/history'" class="button flat">
-							<v-icon class="list-icon">mdi-history</v-icon>
-							<span>{{ $t('history') }}</span>
-						</router-link>
-					</template>
-					<fights-history v-if="team" slot="content" :fights="team.fights" />
-				</panel>
-			</div>
-			<div class="column6">
-				<panel v-if="team && team.tournaments.length > 0" :title="$t('main.tournaments')" icon="mdi-trophy">
-					<tournaments-history v-if="team" slot="content" :tournaments="team.tournaments" />
-				</panel>
-			</div>
+		<div class="container grid large">
+			<panel v-if="team && team.fights.length > 0" :title="$t('history')" icon="mdi-sword-cross">
+				<template slot="actions">
+					<router-link :to="'/team/' + id + '/history'" class="button flat">
+						<v-icon class="list-icon">mdi-history</v-icon>
+						<span>{{ $t('history') }}</span>
+					</router-link>
+				</template>
+				<fights-history v-if="team" slot="content" :fights="team.fights" />
+			</panel>
+
+			<panel v-if="team && team.tournaments.length > 0" :title="$t('main.tournaments')" icon="mdi-trophy">
+				<tournaments-history v-if="team" slot="content" :tournaments="team.tournaments" />
+			</panel>
 		</div>
 
 		<div class="page-footer page-bar">

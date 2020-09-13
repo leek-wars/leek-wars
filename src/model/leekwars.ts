@@ -290,7 +290,13 @@ const LeekWars = {
 		return number.toPrecision(precision)
 	},
 	isMobile() {
-		return /Android|webOS|iPhone||iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
+		// console.log(window.innerWidth, window.innerHeight, window.screen.orientation)
+		const orientation = window.screen.orientation
+		let width = window.innerWidth
+		if (orientation.angle === 90 && (orientation.type === "landscape-primary" || orientation.type === "landscape-secondary")) {
+			width = window.innerHeight
+		}
+		return width < 900
 	},
 	contenteditable_paste_protect(element: HTMLElement) {
 		// Paste : keep the pure text of the element

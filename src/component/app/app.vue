@@ -23,13 +23,6 @@
 
 			<lw-bar v-if="LeekWars.mobile" />
 
-			<div v-if="!LeekWars.mobile" class="big-leeks" :class="{flex: LeekWars.flex || LeekWars.large}">
-				<div class="wrapper">
-					<img class="big-leek-1" :src="LeekWars.leekTheme ? '/image/big_leek_1_white.png' : '/image/big_leek_1.png'">
-					<img class="big-leek-2" :src="LeekWars.leekTheme ? '/image/big_leek_2_white.png' : '/image/big_leek_2.png'">
-				</div>
-			</div>
-
 			<div class="app-center">
 				<div :class="{large: LeekWars.large || LeekWars.flex, flex: LeekWars.flex}" class="app-wrapper">
 					<lw-header />
@@ -39,6 +32,13 @@
 						</div>
 					</div>
 					<lw-footer v-if="LeekWars.footer" />
+				</div>
+			</div>
+
+			<div v-if="!LeekWars.mobile" class="big-leeks" :class="{flex: LeekWars.flex || LeekWars.large}">
+				<div class="wrapper">
+					<img class="big-leek-1" :src="LeekWars.leekTheme ? '/image/big_leek_1_white.png' : '/image/big_leek_1.png'">
+					<img class="big-leek-2" :src="LeekWars.leekTheme ? '/image/big_leek_2_white.png' : '/image/big_leek_2.png'">
 				</div>
 			</div>
 
@@ -229,7 +229,6 @@
 	}
 	#app.app .page {
 		padding-bottom: 0;
-		margin-right: 0;
 	}
 	#app.app .notifications-button img, #app.app .messages-button img {
 		margin: 0;
@@ -246,7 +245,7 @@
 		padding: 0 20px;
 		display: flex;
 	}
-	#app.connected .app-center {
+	#app.connected:not(.app) .app-center {
 		margin-left: 170px;
 	}
 	#app.menu-collapsed:not(.app) .app-center {
@@ -264,7 +263,6 @@
 	.app-wrapper.flex {
 		display: inline-block;
 		flex: 0;
-		flex-basis: 1100px;
 	}
 	.big-leeks {
 		z-index: -10;
@@ -313,7 +311,6 @@
 		padding: 0;
 	}
 	.page {
-		margin-right: -12px;
 		min-height: calc(100vh - 352px);
 	}
 	.dark {
