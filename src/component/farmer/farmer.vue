@@ -55,205 +55,239 @@
 				</div>
 			</div>
 		</div>
-		<div class="flex-container">
-			<div class="column4">
-				<panel class="first">
-					<div slot="content" class="content avatar-td">
-						<div v-if="myFarmer">
-							<tooltip>
-								<template v-slot:activator="{ on }">
-									<div class="avatar-input" v-on="on">
-										<input ref="avatarInput" type="file" @change="changeAvatar">
-										<avatar ref="avatar" :farmer="farmer" @click.native="$refs.avatarInput.click()" />
-									</div>
-								</template>
-								{{ $t('click_to_change_avatar') }}
-							</tooltip>
-						</div>
-						<div v-else>
-							<avatar :farmer="farmer" />
-						</div>
-						<lw-title v-if="farmer && farmer.title.length" class="info title" :class="{me: myFarmer}" :title="farmer.title" @click.native="titleDialog = myFarmer" />
-						<div v-if="farmer" class="infos">
-							<div v-if="!farmer.title.length && myFarmer" class="add add-title" :class="{locked: !farmerTitleEnabled}" @click="titleDialog = farmerTitleEnabled">
-								<tooltip :disabled="farmerTitleEnabled">
-									<template v-slot:activator="{ on }">
-										<span v-on="on">
-											<img class="image" src="/image/pomp/farmer_title.png">
-											{{ $t('add_title') }}
-										</span>
-									</template>
-									<v-icon>mdi-lock</v-icon> {{ $t('pomp.farmer_title') }}
-								</tooltip>
-							</div>
-							<router-link v-if="farmer.forum_messages" :to="'/search?farmer=' + farmer.name + '&order=date'">
-								<div class="info">
-									<img class="flag" src="/image/forum.png"><span class="label">{{ $t('forum_messages', [farmer.forum_messages]) }}</span>
+		<div class="grid container">
+			<panel class="first">
+				<div slot="content" class="content avatar-td">
+					<div v-if="myFarmer">
+						<tooltip>
+							<template v-slot:activator="{ on }">
+								<div class="avatar-input" v-on="on">
+									<input ref="avatarInput" type="file" @change="changeAvatar">
+									<avatar ref="avatar" :farmer="farmer" @click.native="$refs.avatarInput.click()" />
 								</div>
-							</router-link>
-							<div class="info country">
-								<span v-if="farmer.country">
-									<img :src="'/image/flag/' + farmer.country + '.png'" class="flag"><span class="country label">{{ $t('country.' + farmer.country) }}</span>
-								</span>
-								<span v-else>
-									<img class="flag" src="/image/flag/_.png"><span class="country no label">{{ $t('no_country') }}</span>
-								</span>
-								<span v-if="myFarmer" class="edit" @click="countryDialog = true"></span>
-							</div>
-							<div v-if="farmer.website" class="info website">
-								<img src="/image/website.png"><a :href="farmer.website" target="_blank" rel="noopener"><span class="text label">{{ farmer.website }}</span></a>
-								<span v-if="myFarmer" class="edit" @click="websiteDialog = true"></span>
-							</div>
-							<div v-else-if="myFarmer" class="add add-website" @click="websiteDialog = true">{{ $t('add_website') }}</div>
-							<div v-if="farmer.github" class="info github">
-								<img src="/image/github.png"><a :href="'https://github.com/' + farmer.github" target="_blank" rel="noopener"><span class="text label">{{ farmer.github }}</span></a>
-								<span v-if="myFarmer" class="edit" @click="githubDialog = true"></span>
-							</div>
-							<div v-else-if="myFarmer" class="add add-github" @click="githubDialog = true">{{ $t('add_github') }}</div>
-						</div>
+							</template>
+							{{ $t('click_to_change_avatar') }}
+						</tooltip>
 					</div>
-				</panel>
-			</div>
-
-			<div class="column4">
-				<panel>
-					<div slot="content" class="content stats">
-						<div class="talent-wrapper">
-							<tooltip>
+					<div v-else>
+						<avatar :farmer="farmer" />
+					</div>
+					<lw-title v-if="farmer && farmer.title.length" class="info title" :class="{me: myFarmer}" :title="farmer.title" @click.native="titleDialog = myFarmer" />
+					<div v-if="farmer" class="infos">
+						<div v-if="!farmer.title.length && myFarmer" class="add add-title" :class="{locked: !farmerTitleEnabled}" @click="titleDialog = farmerTitleEnabled">
+							<tooltip :disabled="farmerTitleEnabled">
 								<template v-slot:activator="{ on }">
-									<talent :id="farmer ? farmer.id : 0" :talent="farmer ? farmer.talent : '...'" category="farmer" :on="on" />
+									<span v-on="on">
+										<img class="image" src="/image/pomp/farmer_title.png">
+										{{ $t('add_title') }}
+									</span>
 								</template>
-								<div>{{ $t('talent') }}</div>
-							</tooltip>
-							<tooltip v-if="farmer">
-								<template v-slot:activator="{ on }">
-									<div class="talent-more" v-on="on">({{ farmer.talent_more >= 0 ? '+' + farmer.talent_more : farmer.talent_more }})</div>
-								</template>
-								<template v-if="farmer.talent_more > 0">
-									<span v-html="$t('main.talent_difference_farmer', [farmer.name, farmer.talent_more, talent_gains + '%'])"></span>
-								</template>
-								<div v-else v-html="$t('main.talent_difference_farmer_no_gains', [farmer.name])"></div>
+								<v-icon>mdi-lock</v-icon> {{ $t('pomp.farmer_title') }}
 							</tooltip>
 						</div>
+						<router-link v-if="farmer.forum_messages" :to="'/search?farmer=' + farmer.name + '&order=date'">
+							<div class="info">
+								<img class="flag" src="/image/forum.png"><span class="label">{{ $t('forum_messages', [farmer.forum_messages]) }}</span>
+							</div>
+						</router-link>
+						<div class="info country">
+							<span v-if="farmer.country">
+								<img :src="'/image/flag/' + farmer.country + '.png'" class="flag"><span class="country label">{{ $t('country.' + farmer.country) }}</span>
+							</span>
+							<span v-else>
+								<img class="flag" src="/image/flag/_.png"><span class="country no label">{{ $t('no_country') }}</span>
+							</span>
+							<span v-if="myFarmer" class="edit" @click="countryDialog = true"></span>
+						</div>
+						<div v-if="farmer.website" class="info website">
+							<img src="/image/website.png"><a :href="farmer.website" target="_blank" rel="noopener"><span class="text label">{{ farmer.website }}</span></a>
+							<span v-if="myFarmer" class="edit" @click="websiteDialog = true"></span>
+						</div>
+						<div v-else-if="myFarmer" class="add add-website" @click="websiteDialog = true">{{ $t('add_website') }}</div>
+						<div v-if="farmer.github" class="info github">
+							<img src="/image/github.png"><a :href="'https://github.com/' + farmer.github" target="_blank" rel="noopener"><span class="text label">{{ farmer.github }}</span></a>
+							<span v-if="myFarmer" class="edit" @click="githubDialog = true"></span>
+						</div>
+						<div v-else-if="myFarmer" class="add add-github" @click="githubDialog = true">{{ $t('add_github') }}</div>
+					</div>
+				</div>
+			</panel>
+
+			<panel>
+				<div slot="content" class="content stats">
+					<div class="talent-wrapper">
+						<tooltip>
+							<template v-slot:activator="{ on }">
+								<talent :id="farmer ? farmer.id : 0" :talent="farmer ? farmer.talent : '...'" category="farmer" :on="on" />
+							</template>
+							<div>{{ $t('talent') }}</div>
+						</tooltip>
 						<tooltip v-if="farmer">
 							<template v-slot:activator="{ on }">
-								<table v-on="on">
-									<tr>
-										<td class="big">{{ farmer.victories | number }}</td>
-										<td class="big">{{ farmer.draws | number }}</td>
-										<td class="big">{{ farmer.defeats | number }}</td>
-									</tr>
-									<tr>
-										<td class="grey">{{ $t('victories') }}</td>
-										<td class="grey">{{ $t('draws') }}</td>
-										<td class="grey">{{ $t('defeats') }}</td>
-									</tr>
-								</table>
+								<div class="talent-more" v-on="on">({{ farmer.talent_more >= 0 ? '+' + farmer.talent_more : farmer.talent_more }})</div>
 							</template>
-							{{ $t('ratio') }} : {{ farmer.ratio }}
+							<template v-if="farmer.talent_more > 0">
+								<span v-html="$t('main.talent_difference_farmer', [farmer.name, farmer.talent_more, talent_gains + '%'])"></span>
+							</template>
+							<div v-else v-html="$t('main.talent_difference_farmer_no_gains', [farmer.name])"></div>
 						</tooltip>
-
-						<table v-if="farmer && farmer.won_solo_tournaments + farmer.won_farmer_tournaments + farmer.won_team_tournaments > 0" class="tournaments">
-							<tr>
-								<td class="grey">Tournois</td>
-								<td width="25%"><span class="big">{{ farmer.won_solo_tournaments }}</span><br><span class="small grey">solo</span></td>
-								<td width="25%"><span class="big">{{ farmer.won_farmer_tournaments }}</span><br><span class="small grey">éleveur</span></td>
-								<td width="25%"><span class="big">{{ farmer.won_team_tournaments }}</span><br><span class="small grey">équipe</span></td>
-							</tr>
-						</table>
-
-						<div v-if="farmer" class="log-time grey">
-							<span v-if="$store.getters.moderator">{{ $t('registered_the', [LeekWars.formatDateTime(farmer.register_date)]) }}</span>
-							<span v-else>{{ $t('registered_the', [LeekWars.formatDate(farmer.register_date)]) }}</span>
-							<br>
-							<span v-if="farmer.connected">{{ $t('connected') }}</span>
-							<span v-else>{{ $t('last_connection', [LeekWars.formatDuration(farmer.last_connection)]) }}</span>
-						</div>
-						<div v-if="farmer" class="grades">
-							<div v-if="farmer.admin" class="grade admin">{{ $t('admin') }}</div>
-							<div v-else-if="farmer.moderator" class="grade moderator">{{ $t('moderator') }}</div>
-							<div v-if="farmer.contributor" class="grade contributor">{{ $t('contributor') }}</div>
-						</div>
-						<div v-if="farmer" class="godfather grey">
-							<div v-if="farmer.godfather">
-								<i18n path="godson_of" tag="div">
-									<router-link slot="farmer" :to="'/farmer/' + farmer.godfather.id">
-										<rich-tooltip-farmer :id="farmer.godfather.id">
-											{{ farmer.godfather.name }}
-										</rich-tooltip-farmer>
-									</router-link>
-								</i18n>
-							</div>
-							<div v-if="farmer.godsons.length">
-								<i18n path="godfather_of" tag="div">
-									<span slot="farmers">
-										<template v-for="(godson, i) in farmer.godsons">
-											<router-link :key="i" :to="'/farmer/' + godson.id">
-												<rich-tooltip-farmer :id="godson.id" v-slot="{ on }">
-													<span v-on="on">{{ godson.name }}</span>
-												</rich-tooltip-farmer>
-											</router-link>
-											<span v-if="i < farmer.godsons.length - 1" :key="i + '_'">, </span>
-										</template>
-									</span>
-								</i18n>
-							</div>
-							<div v-if="myFarmer" class="godfather-link" @click="openGodfatherDialog"><br>{{ $t('godfather_link') }}</div>
-						</div>
 					</div>
-				</panel>
-			</div>
-			<div class="column4">
-				<panel>
-					<div slot="content" class="content team center">
-						<loader v-if="!farmer" />
-						<div v-else-if="farmer.team">
-							<router-link :to="'/team/' + farmer.team.id">
-								<emblem :team="farmer.team" />
-								<br>
-								<h2>{{ farmer.team.name }}</h2>
-								{{ $t('main.level_n', [farmer.team.level]) }}
-							</router-link>
+					<tooltip v-if="farmer">
+						<template v-slot:activator="{ on }">
+							<table v-on="on">
+								<tr>
+									<td class="big">{{ farmer.victories | number }}</td>
+									<td class="big">{{ farmer.draws | number }}</td>
+									<td class="big">{{ farmer.defeats | number }}</td>
+								</tr>
+								<tr>
+									<td class="grey">{{ $t('victories') }}</td>
+									<td class="grey">{{ $t('draws') }}</td>
+									<td class="grey">{{ $t('defeats') }}</td>
+								</tr>
+							</table>
+						</template>
+						{{ $t('ratio') }} : {{ farmer.ratio }}
+					</tooltip>
+
+					<table v-if="farmer && farmer.won_solo_tournaments + farmer.won_farmer_tournaments + farmer.won_team_tournaments > 0" class="tournaments">
+						<tr>
+							<td class="grey">Tournois</td>
+							<td width="25%"><span class="big">{{ farmer.won_solo_tournaments }}</span><br><span class="small grey">solo</span></td>
+							<td width="25%"><span class="big">{{ farmer.won_farmer_tournaments }}</span><br><span class="small grey">éleveur</span></td>
+							<td width="25%"><span class="big">{{ farmer.won_team_tournaments }}</span><br><span class="small grey">équipe</span></td>
+						</tr>
+					</table>
+
+					<div v-if="farmer" class="log-time grey">
+						<span v-if="$store.getters.moderator">{{ $t('registered_the', [LeekWars.formatDateTime(farmer.register_date)]) }}</span>
+						<span v-else>{{ $t('registered_the', [LeekWars.formatDate(farmer.register_date)]) }}</span>
+						<br>
+						<span v-if="farmer.connected">{{ $t('connected') }}</span>
+						<span v-else>{{ $t('last_connection', [LeekWars.formatDuration(farmer.last_connection)]) }}</span>
+					</div>
+					<div v-if="farmer" class="grades">
+						<div v-if="farmer.admin" class="grade admin">{{ $t('admin') }}</div>
+						<div v-else-if="farmer.moderator" class="grade moderator">{{ $t('moderator') }}</div>
+						<div v-if="farmer.contributor" class="grade contributor">{{ $t('contributor') }}</div>
+					</div>
+					<div v-if="farmer" class="godfather grey">
+						<div v-if="farmer.godfather">
+							<i18n path="godson_of" tag="div">
+								<router-link slot="farmer" :to="'/farmer/' + farmer.godfather.id">
+									<rich-tooltip-farmer :id="farmer.godfather.id">
+										{{ farmer.godfather.name }}
+									</rich-tooltip-farmer>
+								</router-link>
+							</i18n>
+						</div>
+						<div v-if="farmer.godsons.length">
+							<i18n path="godfather_of" tag="div">
+								<span slot="farmers">
+									<template v-for="(godson, i) in farmer.godsons">
+										<router-link :key="i" :to="'/farmer/' + godson.id">
+											<rich-tooltip-farmer :id="godson.id" v-slot="{ on }">
+												<span v-on="on">{{ godson.name }}</span>
+											</rich-tooltip-farmer>
+										</router-link>
+										<span v-if="i < farmer.godsons.length - 1" :key="i + '_'">, </span>
+									</template>
+								</span>
+							</i18n>
+						</div>
+						<div v-if="myFarmer" class="godfather-link" @click="openGodfatherDialog"><br>{{ $t('godfather_link') }}</div>
+					</div>
+				</div>
+			</panel>
+
+			<panel>
+				<div slot="content" class="content team center">
+					<loader v-if="!farmer" />
+					<div v-else-if="farmer.team">
+						<router-link :to="'/team/' + farmer.team.id">
+							<emblem :team="farmer.team" />
+							<br>
+							<h2>{{ farmer.team.name }}</h2>
+							{{ $t('main.level_n', [farmer.team.level]) }}
+						</router-link>
+					</div>
+					<div v-else>
+						<div v-if="myFarmer">
+							<v-btn @click="createTeamDialog = true">{{ $t('create_team') }}</v-btn>
+							<div v-if="farmer.candidacy">
+								<br><br><br>
+								<i18n path="candidacy_for_team" class="candidacy">
+									<a slot="team" :href="'/team/' + farmer.candidacy.team_id">{{ farmer.candidacy.team_name }}</a>
+								</i18n>
+								<br><br>
+								<v-btn @click="cancelCandidacy">{{ $t('cancel_candidacy') }}</v-btn>
+							</div>
 						</div>
 						<div v-else>
-							<div v-if="myFarmer">
-								<v-btn @click="createTeamDialog = true">{{ $t('create_team') }}</v-btn>
-								<div v-if="farmer.candidacy">
-									<br><br><br>
-									<i18n path="candidacy_for_team" class="candidacy">
-										<a slot="team" :href="'/team/' + farmer.candidacy.team_id">{{ farmer.candidacy.team_name }}</a>
-									</i18n>
-									<br><br>
-									<v-btn @click="cancelCandidacy">{{ $t('cancel_candidacy') }}</v-btn>
-								</div>
-							</div>
-							<div v-else>
-								<span class="grey">{{ $t('no_team') }}</span>
-							</div>
+							<span class="grey">{{ $t('no_team') }}</span>
 						</div>
 					</div>
-				</panel>
-			</div>
+				</div>
+			</panel>
 		</div>
-		<div class="column12">
-			<panel>
-				<template slot="title"><img src="/image/icon/trophy.png">{{ $t('trophies') }} <span v-if="farmer">({{ farmer.trophies }})</span></template>
-				<template slot="actions">
-					<router-link :to="'/trophies/' + id" class="button flat">
-						<img src="/image/icon/trophy.png">
-						<span>{{ $t('see_all_trophies') }}</span>
-					</router-link>
-					<div class="button flat" @click="trophiesModeButton">
-						<v-icon>{{ (trophiesMode === 'grid' ? 'mdi-format-list-bulleted-square' : 'mdi-view-module') }}</v-icon>
+		<panel>
+			<template slot="title"><img src="/image/icon/trophy.png">{{ $t('trophies') }} <span v-if="farmer">({{ farmer.trophies }})</span></template>
+			<template slot="actions">
+				<router-link :to="'/trophies/' + id" class="button flat">
+					<img src="/image/icon/trophy.png">
+					<span>{{ $t('see_all_trophies') }}</span>
+				</router-link>
+				<div class="button flat" @click="trophiesModeButton">
+					<v-icon>{{ (trophiesMode === 'grid' ? 'mdi-format-list-bulleted-square' : 'mdi-view-module') }}</v-icon>
+				</div>
+			</template>
+			<div slot="content" class="trophies">
+				<loader v-if="!farmer || !trophies" />
+				<template v-else-if="farmer.trophies > 0 && trophies_list && trophies_grid">
+					<div v-show="trophiesMode == 'list'" class="list trophies-container">
+						<tooltip v-for="(trophy, t) in trophies_list" v-if="trophy != null" :key="t">
+							<template v-slot:activator="{ on }">
+								<div class="trophy" v-on="on">
+									<img :src="'/image/trophy/' + trophy.code + '.png'">
+								</div>
+							</template>
+							<b>{{ trophy.name }}</b>
+							<span v-if="myFarmer">
+								<br>{{ trophy.description }}
+							</span>
+							<br><span class="trophy-date">{{ LeekWars.formatDuration(trophy.date) }}</span>
+						</tooltip>
 					</div>
-				</template>
-				<div slot="content" class="trophies">
-					<loader v-if="!farmer || !trophies" />
-					<template v-else-if="farmer.trophies > 0 && trophies_list && trophies_grid">
-						<div v-show="trophiesMode == 'list'" class="list trophies-container">
-							<tooltip v-for="(trophy, t) in trophies_list" v-if="trophy != null" :key="t">
+					<div v-show="trophiesMode == 'grid'" class="grid trophies-container">
+						<tooltip v-for="(trophy, t) in trophies_grid" :key="t" :disabled="!trophy">
+							<template v-slot:activator="{ on }">
+								<span v-on="on">
+									<div v-if="trophy != null" class="trophy card">
+										<img :src="'/image/trophy/' + trophy.code + '.png'">
+									</div>
+									<div v-else class="trophy locked">
+										<img src="/image/unknown.png">
+									</div>
+								</span>
+							</template>
+							<span v-if="trophy">
+								<b>{{ trophy.name }}</b>
+								<span v-if="trophy.description">
+									<br>{{ trophy.description }}
+								</span>
+								<br>
+								<i18n tag="span" class="trophy-date" path="main.unlocked_the">
+									<span slot="date">{{ trophy.date | date }}</span>
+								</i18n>
+							</span>
+						</tooltip>
+					</div>
+					<div v-if="bonus_trophies && bonus_trophies.length > 0">
+						<h4 class="trophies-bonus">{{ $t('bonus_trophies') }}</h4>
+						<div class="trophies-container">
+							<tooltip v-for="trophy in bonus_trophies" :key="trophy.id">
 								<template v-slot:activator="{ on }">
-									<div class="trophy" v-on="on">
+									<div :class="{card: trophiesMode == 'grid'}" class="trophy" v-on="on">
 										<img :src="'/image/trophy/' + trophy.code + '.png'">
 									</div>
 								</template>
@@ -261,93 +295,48 @@
 								<span v-if="myFarmer">
 									<br>{{ trophy.description }}
 								</span>
-								<br><span class="trophy-date">{{ LeekWars.formatDuration(trophy.date) }}</span>
+								<br><span class="date">{{ LeekWars.formatDuration(trophy.date) }}</span>
 							</tooltip>
 						</div>
-						<div v-show="trophiesMode == 'grid'" class="grid trophies-container">
-							<tooltip v-for="(trophy, t) in trophies_grid" :key="t" :disabled="!trophy">
-								<template v-slot:activator="{ on }">
-									<span v-on="on">
-										<div v-if="trophy != null" class="trophy card">
-											<img :src="'/image/trophy/' + trophy.code + '.png'">
-										</div>
-										<div v-else class="trophy locked">
-											<img src="/image/unknown.png">
-										</div>
-									</span>
-								</template>
-								<span v-if="trophy">
-									<b>{{ trophy.name }}</b>
-									<span v-if="trophy.description">
-										<br>{{ trophy.description }}
-									</span>
-									<br>
-									<i18n tag="span" class="trophy-date" path="main.unlocked_the">
-										<span slot="date">{{ trophy.date | date }}</span>
-									</i18n>
-								</span>
-							</tooltip>
+					</div>
+				</template>
+				<div v-else-if="farmer.trophies == 0" class="grey">{{ $t('no_trophies_yet') }}</div>
+			</div>
+		</panel>
+
+		<panel :title="$t('leeks')">
+			<loader v-if="!farmer" />
+			<div v-else class="leeks">
+				<rich-tooltip-leek v-for="leek in farmer.leeks" :id="leek.id" :key="leek.id" v-slot="{ on }">
+					<router-link v-ripple :to="'/leek/' + leek.id" class="leek">
+						<div v-on="on">
+							<leek-image :leek="leek" :scale="0.9" />
+							<div class="name">{{ leek.name }}</div>
+							<lw-title v-if="leek.title.length" :title="leek.title" />
+							<talent :id="leek.id" :talent="leek.talent" category="leek" />
+							<br>
+							<span class="level">{{ $t('main.level_n', [leek.level]) }}</span>
 						</div>
-						<div v-if="bonus_trophies && bonus_trophies.length > 0">
-							<h4 class="trophies-bonus">{{ $t('bonus_trophies') }}</h4>
-							<div class="trophies-container">
-								<tooltip v-for="trophy in bonus_trophies" :key="trophy.id">
-									<template v-slot:activator="{ on }">
-										<div :class="{card: trophiesMode == 'grid'}" class="trophy" v-on="on">
-											<img :src="'/image/trophy/' + trophy.code + '.png'">
-										</div>
-									</template>
-									<b>{{ trophy.name }}</b>
-									<span v-if="myFarmer">
-										<br>{{ trophy.description }}
-									</span>
-									<br><span class="date">{{ LeekWars.formatDuration(trophy.date) }}</span>
-								</tooltip>
-							</div>
-						</div>
-					</template>
-					<div v-else-if="farmer.trophies == 0" class="grey">{{ $t('no_trophies_yet') }}</div>
-				</div>
-			</panel>
-		</div>
-		<div class="column12">
-			<panel :title="$t('leeks')">
+					</router-link>
+				</rich-tooltip-leek>
+			</div>
+		</panel>
+
+		<div class="container grid large last">
+			<panel v-if="!farmer || farmer.fight_history.length > 0" :title="$t('fights')" icon="mdi-sword-cross">
+				<template slot="actions">
+					<router-link :to="'/farmer/' + id + '/history'" class="button flat">
+						<v-icon class="list-icon">mdi-history</v-icon>
+						<span>{{ $t('history') }}</span>
+					</router-link>
+				</template>
 				<loader v-if="!farmer" />
-				<div v-else class="leeks">
-					<rich-tooltip-leek v-for="leek in farmer.leeks" :id="leek.id" :key="leek.id" v-slot="{ on }">
-						<router-link v-ripple :to="'/leek/' + leek.id" class="leek">
-							<div v-on="on">
-								<leek-image :leek="leek" :scale="0.9" />
-								<div class="name">{{ leek.name }}</div>
-								<lw-title v-if="leek.title.length" :title="leek.title" />
-								<talent :id="leek.id" :talent="leek.talent" category="leek" />
-								<br>
-								<span class="level">{{ $t('main.level_n', [leek.level]) }}</span>
-							</div>
-						</router-link>
-					</rich-tooltip-leek>
-				</div>
+				<fights-history v-else slot="content" :fights="farmer.fight_history" />
 			</panel>
-		</div>
-		<div class="flex-container">
-			<div class="column6">
-				<panel v-if="!farmer || farmer.fight_history.length > 0" :title="$t('fights')" icon="mdi-sword-cross">
-					<template slot="actions">
-						<router-link :to="'/farmer/' + id + '/history'" class="button flat">
-							<v-icon class="list-icon">mdi-history</v-icon>
-							<span>{{ $t('history') }}</span>
-						</router-link>
-					</template>
-					<loader v-if="!farmer" />
-					<fights-history v-else slot="content" :fights="farmer.fight_history" />
-				</panel>
-			</div>
-			<div class="column6">
-				<panel v-if="!farmer || farmer.tournaments.length > 0" :title="$t('main.tournaments')" icon="mdi-trophy">
-					<loader v-if="!farmer" />
-					<tournaments-history v-else slot="content" :tournaments="farmer.tournaments" />
-				</panel>
-			</div>
+			<panel v-if="!farmer || farmer.tournaments.length > 0" :title="$t('main.tournaments')" icon="mdi-trophy">
+				<loader v-if="!farmer" />
+				<tournaments-history v-else slot="content" :tournaments="farmer.tournaments" />
+			</panel>
 		</div>
 		<panel v-if="farmer && farmer.warnings && farmer.warnings.length" :title="$t('warnings')">
 			<div slot="content" class="content warnings">
@@ -541,7 +530,7 @@
 			LeekWars.setTitle(farmer.name, this.$t('n_trophies', [farmer.trophies]) as string)
 			if (this.myFarmer) {
 				LeekWars.setActions([
-					{icon: 'mdi-settings-outline', click: () => this.logout()}
+					{icon: 'mdi-power', click: () => this.logout()}
 				])
 			} else {
 				LeekWars.setActions([

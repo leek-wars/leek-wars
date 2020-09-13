@@ -11,7 +11,7 @@
 				</router-link>
 			</div>
 		</div>
-		<div class="container">
+		<div class="container last">
 			<div v-show="!LeekWars.mobile || !LeekWars.splitBack" class="column8">
 				<panel :title="$t('fights')" icon="mdi-sword-cross">
 					<loader v-if="!fight_packs.length" slot="content" />
@@ -736,7 +736,6 @@
 		grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
 		grid-gap: 8px;
 		margin-top: 8px;
-		margin-right: 12px;
 		user-select: none;
 		flex: 0 0 auto;
 		.item {

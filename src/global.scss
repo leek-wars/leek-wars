@@ -628,85 +628,37 @@ img.emoji {
 	display: flex;
 	align-items: center;
 }
-.flex-container {
-	display: flex;
-	flex-wrap: wrap;
-}
-.flex-container .panel {
-	width: 100%;
-}
+
 .container {
 	padding: 0;
 	max-width: none;
-}
-.column2 {
-	width: 16.666666%;
-	display: inline-block;
-	vertical-align: top;
-}
-.column3 {
-	width: 25%;
-	display: inline-block;
-	vertical-align: top;
-}
-.column4 {
-	width: 33.333333%;
-	display: inline-block;
-	vertical-align: top;
-}
-.column5 {
-	width: 41.6666666%;
-	display: inline-block;
-	vertical-align: top;
-}
-.column6 {
-	width: 50%;
-	display: inline-block;
-	vertical-align: top;
-}
-.column7 {
-	width: 58.3333333%;
-	display: inline-block;
-}
-.column8 {
-	width: 66.6666666%;
-	display: inline-block;
-	vertical-align: top;
-}
-.column9 {
-	width: 75%;
-	display: inline-block;
-	vertical-align: top;
-}
-.column10 {
-	width: 83.33333333%;
-	display: inline-block;
-	vertical-align: top;
-}
-.column12 {
-	width: 100%;
-	vertical-align: top;
-}
-.flex-container .column2,
-.flex-container .column3,
-.flex-container .column4,
-.flex-container .column5,
-.flex-container .column6,
-.flex-container .column7,
-.flex-container .column8,
-.flex-container .column9,
-.flex-container .column10 {
 	display: flex;
-}
-@media screen and (max-width: 1199px) {
-	.column4, .column8 {
-		width: 50%;
+	justify-content: stretch;
+	margin-bottom: 12px;
+	gap: 12px;
+	&.grid {
+		display: grid;
+		grid-gap: 12px;
+		grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+
+		&.large {
+			grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+		}
+	}
+	& > .panel {
+		margin-bottom: 0;
+	}
+	.column3 { flex: 3; }
+	.column4 { flex: 4; }
+	.column5 { flex: 5; }
+	.column7 { flex: 7; }
+	.column8 { flex: 8; }
+	.column9 { flex: 9; }
+	&.last {
+		margin-bottom: 0;
 	}
 }
-#app.app .column2, #app.app .column3, #app.app .column4, #app.app .column5,
-#app.app .column6, #app.app .column7, #app.app .column8, #app.app .column9, #app.app .column10 {
-	width: 100%;
-}
+
 .striked {
 	position: absolute;
 }

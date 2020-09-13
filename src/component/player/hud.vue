@@ -208,9 +208,6 @@
 	.life-bar .wrapper :last-child {
 		border-bottom-right-radius: 10px;
 	}
-	#app.app .life-bar .wrapper {
-		height: 12px;
-	}
 	.actions {
 		text-align: left;
 		padding: 6px;

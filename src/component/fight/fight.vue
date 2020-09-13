@@ -131,17 +131,13 @@
 			return leeks
 		}
 
-		created() {
-			this.update()
-			this.$root.$on('resize', () => this.resize())
+		mounted() {
+			LeekWars.flex = true
+			this.$root.$on('resize', this.resize)
 			setTimeout(() => this.resize(), 50)
 		}
 
-		mounted() {
-			LeekWars.flex = true
-		}
-
-		@Watch('$route.params.id')
+		@Watch('$route.params.id', {immediate: true})
 		update() {
 			this.fight_id = this.$route.params.id
 		}
@@ -149,16 +145,17 @@
 		resize() {
 			Vue.nextTick(() => {
 				const RATIO = 1.7
-				const reference = document.querySelector(LeekWars.flex ? '.app-center' : '.app-wrapper') as HTMLElement
-				const offset = LeekWars.flex ? 40 + 24 : 24
+				const reference = document.querySelector('.app-center') as HTMLElement
+				const offset = 40 + 24
 				if (reference) {
 					if (!LeekWars.mobile) {
 						const height = Math.min(window.innerHeight - 128, Math.round((reference.offsetWidth - offset) / RATIO))
 						this.playerWidth = Math.round(height * RATIO)
 						this.playerHeight = height
 					} else {
-						this.playerWidth = window.innerWidth
-						this.playerHeight = this.playerWidth / RATIO + 60
+						const height = Math.min(window.innerHeight - 56, Math.round((reference.offsetWidth) / RATIO))
+						this.playerWidth = Math.round(height * RATIO)
+						this.playerHeight = height
 					}
 				}
 			})
@@ -166,6 +163,7 @@
 
 		destroyed() {
 			LeekWars.flex = false
+			this.$root.$off('resize', this.resize)
 		}
 
 		fightLoaded(fight: Fight) {

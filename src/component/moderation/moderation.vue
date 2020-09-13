@@ -12,119 +12,121 @@
 				</router-link>
 			</div>
 		</div>
-		<div v-show="!LeekWars.mobile || !LeekWars.splitBack" class="column7 split-list">
-			<panel>
-				<template slot="title">Derniers signalements ({{ faults ? faults.length : '...' }})</template>
-				<div slot="content" class="faults">
-					<loader v-if="!faults" />
-					<div v-else>
-						<div v-if="faults.length == 0" class="empty">
-							<v-icon>mdi-check-outline</v-icon>
-							<div>Aucun signalement, noice !</div>
-						</div>
-						<router-link v-for="fault in faults" :key="fault.id" v-ripple :to="'/moderation/fault/' + fault.id" class="fault">
-
-							<avatar :farmer="fault.target" />
-
-							<div class="target-name">{{ fault.target.name }}</div>
-							<div>Motif : <b class="reason">{{ $t('warning.reason_' + fault.reason_text) }}</b></div>
-
-							<div class="reporting-count"><b>{{ fault.reportings.length }}</b> rapports</div>
-
-							<div v-for="reporting in fault.reportings" :key="reporting.id" class="reporting">
-								<div class="reporter">● Signalé par <router-link :to="'/farmer/' + reporting.farmer_id">{{ reporting.farmer_name }}</router-link>
-									{{ LeekWars.formatDuration(reporting.date) }}
-								</div>
-								<div v-if="reporting.message.length > 0" class="message">&nbsp; « {{ reporting.message }} »</div>
+		<div class="container">
+			<div v-show="!LeekWars.mobile || !LeekWars.splitBack" class="column7 split-list">
+				<panel>
+					<template slot="title">Derniers signalements ({{ faults ? faults.length : '...' }})</template>
+					<div slot="content" class="faults">
+						<loader v-if="!faults" />
+						<div v-else>
+							<div v-if="faults.length == 0" class="empty">
+								<v-icon>mdi-check-outline</v-icon>
+								<div>Aucun signalement, noice !</div>
 							</div>
-						</router-link>
-					</div>
-				</div>
-			</panel>
-		</div>
-		<div v-show="!LeekWars.mobile || LeekWars.splitBack" class="column5 split-content">
-			<panel v-if="selectedFault" title="Donner un avertissement">
-				<div class="card farmer">
-					<div class="title">Éleveur ciblé</div>
-					<div class="flex">
-						<rich-tooltip-farmer :id="selectedFault.target.id" v-slot="{ on }" :instant="true">
-							<avatar :farmer="selectedFault.target" :on="on" />
-						</rich-tooltip-farmer>
-						<div class="infos">
-							<router-link :to="'/farmer/' + selectedFault.target.id">
-								<div class="name">{{ selectedFault.target.name }}</div>
+							<router-link v-for="fault in faults" :key="fault.id" v-ripple :to="'/moderation/fault/' + fault.id" class="fault">
+
+								<avatar :farmer="fault.target" />
+
+								<div class="target-name">{{ fault.target.name }}</div>
+								<div>Motif : <b class="reason">{{ $t('warning.reason_' + fault.reason_text) }}</b></div>
+
+								<div class="reporting-count"><b>{{ fault.reportings.length }}</b> rapports</div>
+
+								<div v-for="reporting in fault.reportings" :key="reporting.id" class="reporting">
+									<div class="reporter">● Signalé par <router-link :to="'/farmer/' + reporting.farmer_id">{{ reporting.farmer_name }}</router-link>
+										{{ LeekWars.formatDuration(reporting.date) }}
+									</div>
+									<div v-if="reporting.message.length > 0" class="message">&nbsp; « {{ reporting.message }} »</div>
+								</div>
 							</router-link>
-							<div class="info"><v-icon>mdi-account-plus</v-icon> Inscrit le <b>{{ selectedFault.target.register_time | date }}</b></div>
-							<div class="info"><v-icon>mdi-power</v-icon> Connecté <b>{{ selectedFault.target.last_time | duration }}</b></div>
-							<div class="info"><v-icon>mdi-sword</v-icon> Niveau total : {{ selectedFault.target.total_level }}</div>
-							<div class="info"><img src="/image/icon/black/trophy.png"> {{ selectedFault.target.trophies }} trophées</div>
-							<div v-if="selectedFault.target.messages" class="info">
-								<router-link :to="'/search?farmer=' + selectedFault.target.name + '&order=date'">
-									<v-icon>mdi-forum</v-icon> {{ selectedFault.target.messages }} messages
-								</router-link>
-							</div>
 						</div>
 					</div>
-				</div>
-				<div class="card warning">
-					<div class="title">Motif</div>
-					<div class="reason">Motif d'origine : <b>{{ $t('warning.reason_' + selectedFault.reason_text) }}</b></div>
-					<div v-if="selectedFault.fight" class="details">Combat : <router-link :to="'/fight/' + selectedFault.fight">{{ selectedFault.fight }}</router-link></div>
-					<v-select v-model="finalReason" :items="reasons" class="select" label="Changer de motif" item-value="id" item-text="t" hide-details :eager="true" dense outlined>
-						<template v-slot:selection>
-							{{ $t('warning.reason_' + finalReason) }}
-						</template>
-						<template slot="item" slot-scope="data">
-							<v-list-item-content>
-								<v-list-item-title class="select-item">
-									<div class="name">{{ $t('warning.reason_' + data.item) }}</div>
-									<div v-if="$root.$te('warning.reason_' + data.item + '_action', 'fr')" class="desc">{{ $t('warning.reason_' + data.item + '_action') }}</div>
-								</v-list-item-title>
-							</v-list-item-content>
-						</template>
-					</v-select>
-					<div class="details">
-						<div v-if="selectedFault.reason === finalReason">
-							<div v-if="selectedFault.reason === Warning.INCORRECT_LEEK_NAME">
-								Poireau :
-								<rich-tooltip-leek :id="selectedFault.parameter" v-slot="{ on }" :instant="true">
-									<router-link :to="'/leek/' + selectedFault.parameter">
-										<span v-on="on">{{ selectedFault.data }}</span>
+				</panel>
+			</div>
+			<div v-show="!LeekWars.mobile || LeekWars.splitBack" class="column5 split-content">
+				<panel v-if="selectedFault" title="Donner un avertissement">
+					<div class="card farmer">
+						<div class="title">Éleveur ciblé</div>
+						<div class="flex">
+							<rich-tooltip-farmer :id="selectedFault.target.id" v-slot="{ on }" :instant="true">
+								<avatar :farmer="selectedFault.target" :on="on" />
+							</rich-tooltip-farmer>
+							<div class="infos">
+								<router-link :to="'/farmer/' + selectedFault.target.id">
+									<div class="name">{{ selectedFault.target.name }}</div>
+								</router-link>
+								<div class="info"><v-icon>mdi-account-plus</v-icon> Inscrit le <b>{{ selectedFault.target.register_time | date }}</b></div>
+								<div class="info"><v-icon>mdi-power</v-icon> Connecté <b>{{ selectedFault.target.last_time | duration }}</b></div>
+								<div class="info"><v-icon>mdi-sword</v-icon> Niveau total : {{ selectedFault.target.total_level }}</div>
+								<div class="info"><img src="/image/icon/black/trophy.png"> {{ selectedFault.target.trophies }} trophées</div>
+								<div v-if="selectedFault.target.messages" class="info">
+									<router-link :to="'/search?farmer=' + selectedFault.target.name + '&order=date'">
+										<v-icon>mdi-forum</v-icon> {{ selectedFault.target.messages }} messages
 									</router-link>
-								</rich-tooltip-leek>
-							</div>
-							<div v-else-if="selectedFault.reason === Warning.INCORRECT_AI_NAME">
-								IA #{{ selectedFault.parameter }} : <b>{{ selectedFault.data }}</b>
-							</div>
-							<div v-else-if="selectedFault.reason === Warning.INCORRECT_WEBSITE">
-								Site web : <b>{{ selectedFault.data }}</b>
-							</div>
-							<div v-else-if="selectedFault.reason === Warning.FLOOD_CHAT || selectedFault.reason === Warning.RUDE_CHAT">
-								Message : {{ selectedFault.parameter }}
-							</div>
-							<div v-else-if="selectedFault.reason === Warning.RUDE_SAY && selectedFault.fight">
-								Says de <b>{{ selectedFault.target.name }}</b> dans ce combat
-								<div class="says">
-									<div v-for="(say, s) in selectedFault.data" :key="s">{{ say[0] }} : « <i>{{ say[1] }}</i> »</div>
 								</div>
 							</div>
 						</div>
 					</div>
-					<div v-if="$root.$te('warning.reason_' + finalReason + '_action')" class="warn-action">Action prise : <span class="text">{{ $t('warning.reason_' + finalReason + '_action') }}</span></div>
-				</div>
-				<div class="card warning">
-					<div class="title">Gravité</div>
-					<input v-model="severity" type="number" min="1" max="10" value="1"> (entre 1 et 10)
-				</div>
-				<div class="card warning">
-					<div class="title">Message (facultatif)</div>
-					<textarea v-model="message" class="warning-message" placeholder="Précisions sur l'avertissement, contexte etc."></textarea>
-				</div>
-				<center class="buttons">
-					<v-btn color="primary" @click="archiveReporting"><v-icon>mdi-thumb-up-outline</v-icon> Archiver</v-btn>
-					<v-btn color="error" @click="warningConfirmDialog = true"><v-icon>mdi-gavel</v-icon> Sanctionner</v-btn>
-				</center>
-			</panel>
+					<div class="card warning">
+						<div class="title">Motif</div>
+						<div class="reason">Motif d'origine : <b>{{ $t('warning.reason_' + selectedFault.reason_text) }}</b></div>
+						<div v-if="selectedFault.fight" class="details">Combat : <router-link :to="'/fight/' + selectedFault.fight">{{ selectedFault.fight }}</router-link></div>
+						<v-select v-model="finalReason" :items="reasons" class="select" label="Changer de motif" item-value="id" item-text="t" hide-details :eager="true" dense outlined>
+							<template v-slot:selection>
+								{{ $t('warning.reason_' + finalReason) }}
+							</template>
+							<template slot="item" slot-scope="data">
+								<v-list-item-content>
+									<v-list-item-title class="select-item">
+										<div class="name">{{ $t('warning.reason_' + data.item) }}</div>
+										<div v-if="$root.$te('warning.reason_' + data.item + '_action', 'fr')" class="desc">{{ $t('warning.reason_' + data.item + '_action') }}</div>
+									</v-list-item-title>
+								</v-list-item-content>
+							</template>
+						</v-select>
+						<div class="details">
+							<div v-if="selectedFault.reason === finalReason">
+								<div v-if="selectedFault.reason === Warning.INCORRECT_LEEK_NAME">
+									Poireau :
+									<rich-tooltip-leek :id="selectedFault.parameter" v-slot="{ on }" :instant="true">
+										<router-link :to="'/leek/' + selectedFault.parameter">
+											<span v-on="on">{{ selectedFault.data }}</span>
+										</router-link>
+									</rich-tooltip-leek>
+								</div>
+								<div v-else-if="selectedFault.reason === Warning.INCORRECT_AI_NAME">
+									IA #{{ selectedFault.parameter }} : <b>{{ selectedFault.data }}</b>
+								</div>
+								<div v-else-if="selectedFault.reason === Warning.INCORRECT_WEBSITE">
+									Site web : <b>{{ selectedFault.data }}</b>
+								</div>
+								<div v-else-if="selectedFault.reason === Warning.FLOOD_CHAT || selectedFault.reason === Warning.RUDE_CHAT">
+									Message : {{ selectedFault.parameter }}
+								</div>
+								<div v-else-if="selectedFault.reason === Warning.RUDE_SAY && selectedFault.fight">
+									Says de <b>{{ selectedFault.target.name }}</b> dans ce combat
+									<div class="says">
+										<div v-for="(say, s) in selectedFault.data" :key="s">{{ say[0] }} : « <i>{{ say[1] }}</i> »</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div v-if="$root.$te('warning.reason_' + finalReason + '_action')" class="warn-action">Action prise : <span class="text">{{ $t('warning.reason_' + finalReason + '_action') }}</span></div>
+					</div>
+					<div class="card warning">
+						<div class="title">Gravité</div>
+						<input v-model="severity" type="number" min="1" max="10" value="1"> (entre 1 et 10)
+					</div>
+					<div class="card warning">
+						<div class="title">Message (facultatif)</div>
+						<textarea v-model="message" class="warning-message" placeholder="Précisions sur l'avertissement, contexte etc."></textarea>
+					</div>
+					<center class="buttons">
+						<v-btn color="primary" @click="archiveReporting"><v-icon>mdi-thumb-up-outline</v-icon> Archiver</v-btn>
+						<v-btn color="error" @click="warningConfirmDialog = true"><v-icon>mdi-gavel</v-icon> Sanctionner</v-btn>
+					</center>
+				</panel>
+			</div>
 		</div>
 
 		<popup v-if="selectedFault" v-model="warningConfirmDialog" :width="600">

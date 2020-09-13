@@ -12,26 +12,29 @@
 				</div>
 			</div>
 		</div>
-		<div v-show="!LeekWars.mobile || !LeekWars.splitBack" class="column4">
-			<panel v-autostopscroll="'bottom'" class="conversations last first">
-				<div slot="content">
-					<router-link v-if="newConversation && !newConversationSent" :to="'/messages/new/' + newFarmer.id + '/' + newFarmer.name + '/' + newFarmer.avatar_changed">
-						<conversation :conversation="newConversation" />
-					</router-link>
-					<router-link v-for="conversation in $store.state.conversationsList" :key="conversation.id" :to="'/messages/conversation/' + conversation.id">
-						<conversation :conversation="conversation" />
-					</router-link>
-				</div>
-			</panel>
+		<div class="container last">
+			<div v-show="!LeekWars.mobile || !LeekWars.splitBack" class="column4">
+				<panel v-autostopscroll="'bottom'" class="conversations last first">
+					<div slot="content">
+						<router-link v-if="newConversation && !newConversationSent" :to="'/messages/new/' + newFarmer.id + '/' + newFarmer.name + '/' + newFarmer.avatar_changed">
+							<conversation :conversation="newConversation" />
+						</router-link>
+						<router-link v-for="conversation in $store.state.conversationsList" :key="conversation.id" :to="'/messages/conversation/' + conversation.id">
+							<conversation :conversation="conversation" />
+						</router-link>
+					</div>
+				</panel>
+			</div>
+			<div v-show="!LeekWars.mobile || LeekWars.splitBack" class="column8">
+				<panel class="last">
+					<div slot="content">
+						<chat v-if="currentConversation && currentConversation.id !== 0" :channel="'pm-' + currentConversation.id" @send="sendMessage" />
+						<chat v-else @send="sendMessage" />
+					</div>
+				</panel>
+			</div>
 		</div>
-		<div v-show="!LeekWars.mobile || LeekWars.splitBack" class="column8">
-			<panel class="last">
-				<div slot="content">
-					<chat v-if="currentConversation && currentConversation.id !== 0" :channel="'pm-' + currentConversation.id" @send="sendMessage" />
-					<chat v-else @send="sendMessage" />
-				</div>
-			</panel>
-		</div>
+
 		<popup v-model="quitDialog" :width="500">
 			<v-icon slot="icon">mdi-delete</v-icon>
 			<span slot="title">{{ $t('quit_conversation') }}</span>

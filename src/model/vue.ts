@@ -230,10 +230,10 @@ const vueMain = new Vue({
 		window.addEventListener('keyup', (event) => {
 			this.$emit('keyup', event)
 		})
-		LeekWars.mobile = window.innerWidth < 850
+		LeekWars.mobile = LeekWars.isMobile()
 		window.addEventListener('resize', () => {
 			this.$emit('resize')
-			LeekWars.mobile = window.innerWidth < 850
+			LeekWars.mobile = LeekWars.isMobile()
 		})
 		window.addEventListener('focus', () => {
 			this.$emit('focus')

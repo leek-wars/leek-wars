@@ -8,64 +8,57 @@
 				</div>
 			</div>
 		</div>
-		<div class="flex-container">
-			<div class="column6">
-				<panel v-ripple class="first">
-					<router-link to="/help/general">
-						<div>
-							<h2>Leek Wars</h2>
-							<img src="/image/help/help_general.png">
-							<br>
-							<span class="description">{{ $t('general_help') }}</span>
-						</div>
-					</router-link>
-				</panel>
-			</div>
-			<div class="column6">
-				<panel v-ripple>
-					<router-link to="/help/tutorial">
-						<div>
-							<h2>{{ $t('tutorial') }}</h2>
-							<img src="/image/help/interface.png">
-							<br>
-							<span class="description" v-html="$t('tutorial_desc')"></span>
-						</div>
-					</router-link>
-				</panel>
-			</div>
-		</div>
-		<div class="flex-container">
-			<div class="column6">
-				<panel v-ripple>
-					<router-link to="/help/documentation">
-						<div>
-							<h2>{{ $t('documentation') }}</h2>
-							<img src="/image/help/presentation.png">
-							<br>
-							<span class="description" v-html="$t('documentation_desc')"></span>
-						</div>
-					</router-link>
-				</panel>
-			</div>
-			<div class="column6">
-				<panel v-ripple>
-					<a href="http://leekwarswiki.net/" target="_blank" rel="noopener">
-						<div>
-							<h2>{{ $t('wiki') }} <v-icon>mdi-open-in-new</v-icon></h2>
-							<img src="/image/help/wiki.png">
-						</div>
-						<span class="description">{{ $t('wiki_desc') }}</span>
-					</a>
-					<!--
-					<router-link to="/encyclopedia/Guide_du_débutant">
-						<div v-ripple class="card">
-							<h2>{{ $t('wiki') }} <span class="label-beta">bêta <v-icon>mdi-info</v-icon></span></h2>
-							<img src="/image/help/wiki.png">
-						</div>
-					</router-link>
-					-->
-				</panel>
-			</div>
+		<div class="container grid large">
+			<panel v-ripple class="first">
+				<router-link to="/help/general">
+					<div>
+						<h2>Leek Wars</h2>
+						<img src="/image/help/help_general.png">
+						<br>
+						<span class="description">{{ $t('general_help') }}</span>
+					</div>
+				</router-link>
+			</panel>
+
+			<panel v-ripple>
+				<router-link to="/help/tutorial">
+					<div>
+						<h2>{{ $t('tutorial') }}</h2>
+						<img src="/image/help/interface.png">
+						<br>
+						<span class="description" v-html="$t('tutorial_desc')"></span>
+					</div>
+				</router-link>
+			</panel>
+
+			<panel v-ripple>
+				<router-link to="/help/documentation">
+					<div>
+						<h2>{{ $t('documentation') }}</h2>
+						<img src="/image/help/presentation.png">
+						<br>
+						<span class="description" v-html="$t('documentation_desc')"></span>
+					</div>
+				</router-link>
+			</panel>
+
+			<panel v-ripple>
+				<a href="http://leekwarswiki.net/" target="_blank" rel="noopener">
+					<div>
+						<h2>{{ $t('wiki') }} <v-icon>mdi-open-in-new</v-icon></h2>
+						<img src="/image/help/wiki.png">
+					</div>
+					<span class="description">{{ $t('wiki_desc') }}</span>
+				</a>
+				<!--
+				<router-link to="/encyclopedia/Guide_du_débutant">
+					<div v-ripple class="card">
+						<h2>{{ $t('wiki') }} <span class="label-beta">bêta <v-icon>mdi-info</v-icon></span></h2>
+						<img src="/image/help/wiki.png">
+					</div>
+				</router-link>
+				-->
+			</panel>
 		</div>
 		<center>
 			<div class="advanced-button" @click="advanced = !advanced">
@@ -74,27 +67,24 @@
 				<v-icon v-else>mdi-chevron-down</v-icon>
 			</div>
 		</center>
-		<div v-if="advanced" class="flex-container advanced">
-			<div class="column6">
-				<panel title="Leek Wars API">
-					<router-link to="/help/api">
-						<h2>API documentation</h2>
-						<img src="/image/help/advanced.png">
-						<br>
-						<span class="description">Complete API services documentation</span>
-					</router-link>
-				</panel>
-			</div>
-			<div class="column6">
-				<panel title="Line Of Sight" class="last">
-					<router-link to="/help/line-of-sight">
-						<h2>Line Of Sight</h2>
-						<v-icon class="bigicon">mdi-grid</v-icon>
-						<br>
-						<span class="description">Little demo for line of sight function</span>
-					</router-link>
-				</panel>
-			</div>
+		<div v-if="advanced" class="container grid large advanced">
+			<panel title="Leek Wars API">
+				<router-link to="/help/api">
+					<h2>API documentation</h2>
+					<img src="/image/help/advanced.png">
+					<br>
+					<span class="description">Complete API services documentation</span>
+				</router-link>
+			</panel>
+
+			<panel title="Line Of Sight" class="last">
+				<router-link to="/help/line-of-sight">
+					<h2>Line Of Sight</h2>
+					<v-icon class="bigicon">mdi-grid</v-icon>
+					<br>
+					<span class="description">Little demo for line of sight function</span>
+				</router-link>
+			</panel>
 		</div>
 		<didactitiel v-if="didactitiel_enabled" v-model="didactitiel" />
 	</div>

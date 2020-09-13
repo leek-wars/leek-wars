@@ -43,204 +43,189 @@
 			</div>
 		</div>
 
-		<div class="flex-container">
-			<div class="column4">
-				<panel>
-					<i18n slot="title" path="farmed_by">
-						<router-link slot="farmer" :to="'/farmer/' + (leek ? leek.farmer.id : 0)">
-							<rich-tooltip-farmer :id="(leek ? leek.farmer.id : 0)" v-slot="{ on }" :bottom="true">
-								<span v-on="on">{{ leek ? leek.farmer.name : '...' }}</span>
-							</rich-tooltip-farmer>
-						</router-link>
-					</i18n>
-					<template v-if="my_leek" slot="actions">
-						<div class="button flat hat-button" @click="customizeDialog = true">
-							<v-icon>mdi-auto-fix</v-icon>
+		<div class="grid container">
+			<panel>
+				<i18n slot="title" path="farmed_by">
+					<router-link slot="farmer" :to="'/farmer/' + (leek ? leek.farmer.id : 0)">
+						<rich-tooltip-farmer :id="(leek ? leek.farmer.id : 0)" v-slot="{ on }" :bottom="true">
+							<span v-on="on">{{ leek ? leek.farmer.name : '...' }}</span>
+						</rich-tooltip-farmer>
+					</router-link>
+				</i18n>
+				<template v-if="my_leek" slot="actions">
+					<div class="button flat hat-button" @click="customizeDialog = true">
+						<v-icon>mdi-auto-fix</v-icon>
+					</div>
+				</template>
+				<div slot="content" class="leek-image">
+					<leek-image v-if="leek" :scale="0.95" :leek="leek" />
+					<loader v-else />
+					<lw-title v-if="leek && leek.title.length" :title="leek.title" :class="{pointer: my_leek}" @click.native="titleDialog = true" />
+				</div>
+			</panel>
+
+			<panel :title="$t('statistics')">
+				<h4 class="level">{{ $t('main.level_n', [leek ? leek.level : '...']) }}</h4>
+
+				<tooltip>
+					<template v-slot:activator="{ on }">
+						<div class="bar" v-on="on">
+							<span :class="{ blue: blue_xp_bar }" :style="{width: xp_bar_width + '%'}" class="xp-bar striked"></span>
 						</div>
 					</template>
-					<div slot="content" class="leek-image">
-						<leek-image v-if="leek" :scale="0.95" :leek="leek" />
-						<loader v-else />
-						<lw-title v-if="leek && leek.title.length" :title="leek.title" :class="{pointer: my_leek}" @click.native="titleDialog = true" />
-					</div>
-				</panel>
-			</div>
-			<div class="column4">
-				<panel :title="$t('statistics')">
-					<h4 class="level">{{ $t('main.level_n', [leek ? leek.level : '...']) }}</h4>
+					<template v-if="leek && leek.isMaxLevel">
+						<b>{{ $t('max_level') }}</b> <br>
+						{{ $t('xp', [LeekWars.formatNumber(leek.xp)]) }}
+					</template>
+					<template v-else-if="leek">
+						<b>{{ $t('remaining_xp', [LeekWars.formatNumber(leek.remaining_xp)]) }}</b>
+						<br>
+						{{ $t('xp', [LeekWars.formatNumber(leek.xp) + " / " + LeekWars.formatNumber(leek.up_xp)]) }}
+					</template>
+				</tooltip>
 
+				<div class="talent-wrapper">
 					<tooltip>
 						<template v-slot:activator="{ on }">
-							<div class="bar" v-on="on">
-								<span :class="{ blue: blue_xp_bar }" :style="{width: xp_bar_width + '%'}" class="xp-bar striked"></span>
-							</div>
+							<talent :id="leek ? leek.id : 0" :talent="leek ? leek.talent : '...'" category="leek" :on="on" />
 						</template>
-						<template v-if="leek && leek.isMaxLevel">
-							<b>{{ $t('max_level') }}</b> <br>
-							{{ $t('xp', [LeekWars.formatNumber(leek.xp)]) }}
-						</template>
-						<template v-else-if="leek">
-							<b>{{ $t('remaining_xp', [LeekWars.formatNumber(leek.remaining_xp)]) }}</b>
-							<br>
-							{{ $t('xp', [LeekWars.formatNumber(leek.xp) + " / " + LeekWars.formatNumber(leek.up_xp)]) }}
-						</template>
+						<div>{{ $t('talent') }}</div>
 					</tooltip>
-
-					<div class="talent-wrapper">
-						<tooltip>
-							<template v-slot:activator="{ on }">
-								<talent :id="leek ? leek.id : 0" :talent="leek ? leek.talent : '...'" category="leek" :on="on" />
-							</template>
-							<div>{{ $t('talent') }}</div>
-						</tooltip>
-						<tooltip v-if="leek">
-							<template v-slot:activator="{ on }">
-								<div class="talent-more" v-on="on">({{ leek.talent_more >= 0 ? '+' + leek.talent_more : leek.talent_more }})</div>
-							</template>
-							<template v-if="leek.talent_more > 0">
-								<span v-html="$t('main.talent_difference', [leek.name, leek.talent_more, leek.talentGains + '%'])"></span>
-							</template>
-							<template v-else>
-								<span v-html="$t('main.talent_difference_no_gains', [leek.name])"></span>
-							</template>
-						</tooltip>
-					</div>
-
 					<tooltip v-if="leek">
 						<template v-slot:activator="{ on }">
-							<table class="fights" v-on="on">
-								<tr>
-									<td class="big">{{ (leek ? leek.victories : '...') | number }}</td>
-									<td class="big">{{ (leek ? leek.draws : '...') | number }}</td>
-									<td class="big">{{ (leek ? leek.defeats : '...') | number }}</td>
-								</tr>
-								<tr>
-									<td class="grey">{{ $t('victories') }}</td>
-									<td class="grey">{{ $t('draws') }}</td>
-									<td class="grey">{{ $t('defeats') }}</td>
-								</tr>
-							</table>
+							<div class="talent-more" v-on="on">({{ leek.talent_more >= 0 ? '+' + leek.talent_more : leek.talent_more }})</div>
 						</template>
-						{{ $t('ratio', [leek ? leek.ratio : 0]) }}
+						<template v-if="leek.talent_more > 0">
+							<span v-html="$t('main.talent_difference', [leek.name, leek.talent_more, leek.talentGains + '%'])"></span>
+						</template>
+						<template v-else>
+							<span v-html="$t('main.talent_difference_no_gains', [leek.name])"></span>
+						</template>
 					</tooltip>
+				</div>
 
-					<template v-if="leek && leek.level >= 100">
-						<chartist ref="chart" :data="chartData" :options="chartOptions" :events="chartEvents" ratio="ct-major-eleventh" class="talent-history" type="Line" />
-						<div v-show="chartTooltipValue" ref="chartTooltip" :style="{top: chartTooltipY + 'px', left: chartTooltipX + 'px'}" class="chart-tooltip v-tooltip__content top">{{ chartTooltipValue }}</div>
+				<tooltip v-if="leek">
+					<template v-slot:activator="{ on }">
+						<table class="fights" v-on="on">
+							<tr>
+								<td class="big">{{ (leek ? leek.victories : '...') | number }}</td>
+								<td class="big">{{ (leek ? leek.draws : '...') | number }}</td>
+								<td class="big">{{ (leek ? leek.defeats : '...') | number }}</td>
+							</tr>
+							<tr>
+								<td class="grey">{{ $t('victories') }}</td>
+								<td class="grey">{{ $t('draws') }}</td>
+								<td class="grey">{{ $t('defeats') }}</td>
+							</tr>
+						</table>
 					</template>
-				</panel>
-			</div>
+					{{ $t('ratio', [leek ? leek.ratio : 0]) }}
+				</tooltip>
 
-			<div class="column4">
-				<panel :title="$t('characteristic.characteristics')">
-					<template v-if="leek && my_leek && leek.capital == 0" slot="actions">
-						<div class="button flat" @click="capitalDialog = true">
-							<v-icon>mdi-star-outline</v-icon>
+				<template v-if="leek && leek.level >= 100">
+					<chartist ref="chart" :data="chartData" :options="chartOptions" :events="chartEvents" ratio="ct-major-eleventh" class="talent-history" type="Line" />
+					<div v-show="chartTooltipValue" ref="chartTooltip" :style="{top: chartTooltipY + 'px', left: chartTooltipX + 'px'}" class="chart-tooltip v-tooltip__content top">{{ chartTooltipValue }}</div>
+				</template>
+			</panel>
+
+			<panel :title="$t('characteristic.characteristics')">
+				<template v-if="leek && my_leek && leek.capital == 0" slot="actions">
+					<div class="button flat" @click="capitalDialog = true">
+						<v-icon>mdi-star-outline</v-icon>
+					</div>
+				</template>
+				<div slot="content" class="characteristics">
+					<characteristic-tooltip v-for="c in LeekWars.characteristics_table" :key="c" v-slot="{ on }" :characteristic="c" :value="leek ? leek[c] : 0" :leek="leek" :test="false">
+						<div class="characteristic" v-on="on">
+							<img :src="'/image/charac/' + c + '.png'">
+							<span :class="'color-' + c">{{ leek ? leek[c] : '...' }}</span>
 						</div>
-					</template>
-					<div slot="content" class="characteristics">
-						<characteristic-tooltip v-for="c in LeekWars.characteristics_table" :key="c" v-slot="{ on }" :characteristic="c" :value="leek ? leek[c] : 0" :leek="leek" :test="false">
-							<div class="characteristic" v-on="on">
-								<img :src="'/image/charac/' + c + '.png'">
-								<span :class="'color-' + c">{{ leek ? leek[c] : '...' }}</span>
+					</characteristic-tooltip>
+					<center v-if="leek && my_leek">
+						<br>
+						<v-btn v-if="leek.capital > 0" color="primary" @click="capitalDialog = true">{{ $t('main.n_capital', [leek.capital]) }}</v-btn>&nbsp;
+						<v-btn class="potions-button" @click="potionDialog = true">
+							<img src="/image/icon/black/potion.png">
+							{{ $t('potions') }}
+						</v-btn>
+					</center>
+				</div>
+			</panel>
+
+			<panel>
+				<template slot="title">{{ $t('weapons') }} <span v-if="leek && leek.weapons" class="weapon-count">[{{ leek.weapons.length }}/{{ leek.max_weapons }}]</span></template>
+				<template v-if="leek && my_leek" slot="actions">
+					<div class="button flat" @click="weaponsDialog = true">
+						<v-icon>mdi-pencil</v-icon>
+					</div>
+				</template>
+				<div slot="content" class="weapons-wrapper center">
+					<loader v-if="!leek" />
+					<div v-else-if="leek.weapons.length === 0" class="empty">{{ $t('no_weapons') }}</div>
+					<template v-else>
+						<rich-tooltip-weapon v-for="weapon in leek.orderedWeapons" :key="weapon.id" v-slot="{ on }" :instant="true" :weapon="LeekWars.weapons[weapon.template]" :bottom="true">
+							<div class="weapon" v-on="on">
+								<img :src="'/image/weapon/' + LeekWars.weapons[weapon.template].name + '.png'" @click="setWeapon(weapon.template)">
 							</div>
-						</characteristic-tooltip>
-						<center v-if="leek && my_leek">
-							<br>
-							<v-btn v-if="leek.capital > 0" color="primary" @click="capitalDialog = true">{{ $t('main.n_capital', [leek.capital]) }}</v-btn>&nbsp;
-							<v-btn class="potions-button" @click="potionDialog = true">
-								<img src="/image/icon/black/potion.png">
-								{{ $t('potions') }}
-							</v-btn>
-						</center>
-					</div>
-				</panel>
-			</div>
-
-			<div class="column4">
-				<panel>
-					<template slot="title">{{ $t('weapons') }} <span v-if="leek && leek.weapons" class="weapon-count">[{{ leek.weapons.length }}/{{ leek.max_weapons }}]</span></template>
-					<template v-if="leek && my_leek" slot="actions">
-						<div class="button flat" @click="weaponsDialog = true">
-							<v-icon>mdi-pencil</v-icon>
-						</div>
+						</rich-tooltip-weapon>
 					</template>
-					<div slot="content" class="weapons-wrapper center">
-						<loader v-if="!leek" />
-						<div v-else-if="leek.weapons.length === 0" class="empty">{{ $t('no_weapons') }}</div>
-						<template v-else>
-							<rich-tooltip-weapon v-for="weapon in leek.orderedWeapons" :key="weapon.id" v-slot="{ on }" :instant="true" :weapon="LeekWars.weapons[weapon.template]" :bottom="true">
-								<div class="weapon" v-on="on">
-									<img :src="'/image/weapon/' + LeekWars.weapons[weapon.template].name + '.png'" @click="setWeapon(weapon.template)">
-								</div>
-							</rich-tooltip-weapon>
+				</div>
+			</panel>
+
+			<panel icon="mdi-chip">
+				<template slot="title">{{ $t('main.chips') }} <span v-if="leek && leek.chips" class="chip-count">[{{ leek.chips.length }}/{{ leek.max_chips }}]</span></template>
+				<template v-if="leek && my_leek" slot="actions">
+					<div class="button flat" @click="chipsDialog = true">
+						<v-icon>mdi-pencil</v-icon>
+					</div>
+				</template>
+				<div slot="content" class="chips-wrapper center">
+					<loader v-if="!leek" />
+					<div v-else-if="leek.chips.length === 0" class="empty">{{ $t('no_chips') }}</div>
+					<div v-else class="chips">
+						<rich-tooltip-chip v-for="chip in leek.orderedChips" :key="chip.id" v-slot="{ on }" :chip="LeekWars.chips[chip.template]" :bottom="true" :instant="true">
+							<div class="chip" v-on="on">
+								<img :src="'/image/chip/small/' + LeekWars.chips[chip.template].name + '.png'">
+							</div>
+						</rich-tooltip-chip>
+					</div>
+				</div>
+			</panel>
+
+			<panel :title="$t('ai')" icon="mdi-code-braces">
+				<template v-if="leek && my_leek" slot="actions">
+					<div class="button flat" @click="aiDialog = true">
+						<v-icon>mdi-pencil</v-icon>
+					</div>
+				</template>
+				<div slot="content" class="leek-ai">
+					<loader v-if="!leek" />
+					<template v-else>
+						<template v-if="leek.ai">
+							<router-link v-if="my_leek" :to="'/editor/' + leek.ai.id">
+								<ai :ai="leek.ai" />
+							</router-link>
+							<ai v-else :ai="leek.ai" />
 						</template>
-					</div>
-				</panel>
-			</div>
-
-			<div class="column4">
-				<panel icon="mdi-chip">
-					<template slot="title">{{ $t('main.chips') }} <span v-if="leek && leek.chips" class="chip-count">[{{ leek.chips.length }}/{{ leek.max_chips }}]</span></template>
-					<template v-if="leek && my_leek" slot="actions">
-						<div class="button flat" @click="chipsDialog = true">
-							<v-icon>mdi-pencil</v-icon>
-						</div>
+						<span v-else class="empty">{{ $t('no_ai') }}</span>
 					</template>
-					<div slot="content" class="chips-wrapper center">
-						<loader v-if="!leek" />
-						<div v-else-if="leek.chips.length === 0" class="empty">{{ $t('no_chips') }}</div>
-						<div v-else class="chips">
-							<rich-tooltip-chip v-for="chip in leek.orderedChips" :key="chip.id" v-slot="{ on }" :chip="LeekWars.chips[chip.template]" :bottom="true" :instant="true">
-								<div class="chip" v-on="on">
-									<img :src="'/image/chip/small/' + LeekWars.chips[chip.template].name + '.png'">
-								</div>
-							</rich-tooltip-chip>
-						</div>
-					</div>
-				</panel>
-			</div>
-
-			<div class="column4">
-				<panel :title="$t('ai')" icon="mdi-code-braces">
-					<template v-if="leek && my_leek" slot="actions">
-						<div class="button flat" @click="aiDialog = true">
-							<v-icon>mdi-pencil</v-icon>
-						</div>
-					</template>
-					<div slot="content" class="leek-ai">
-						<loader v-if="!leek" />
-						<template v-else>
-							<template v-if="leek.ai">
-								<router-link v-if="my_leek" :to="'/editor/' + leek.ai.id">
-									<ai :ai="leek.ai" />
-								</router-link>
-								<ai v-else :ai="leek.ai" />
-							</template>
-							<span v-else class="empty">{{ $t('no_ai') }}</span>
-						</template>
-					</div>
-				</panel>
-			</div>
+				</div>
+			</panel>
 		</div>
 
-		<div class="flex-container">
-			<div class="column6">
-				<panel v-if="leek && leek.fights && leek.fights.length > 0" :title="$t('fights')" icon="mdi-sword-cross">
-					<template v-if="leek" slot="actions">
-						<router-link :to="'/leek/' + leek.id + '/history'" class="button flat">
-							<v-icon>mdi-history</v-icon>
-							<span>{{ $t('history') }}</span>
-						</router-link>
-					</template>
-					<fights-history slot="content" :fights="leek.fights" />
-				</panel>
-			</div>
-			<div class="column6">
-				<panel v-if="leek && leek.tournaments && leek.tournaments.length > 0" :title="$t('main.tournaments')" icon="mdi-trophy">
-					<tournaments-history slot="content" :tournaments="leek.tournaments" />
-				</panel>
-			</div>
+		<div class="grid container large">
+			<panel v-if="leek && leek.fights && leek.fights.length > 0" :title="$t('fights')" icon="mdi-sword-cross">
+				<template v-if="leek" slot="actions">
+					<router-link :to="'/leek/' + leek.id + '/history'" class="button flat">
+						<v-icon>mdi-history</v-icon>
+						<span>{{ $t('history') }}</span>
+					</router-link>
+				</template>
+				<fights-history slot="content" :fights="leek.fights" />
+			</panel>
+			<panel v-if="leek && leek.tournaments && leek.tournaments.length > 0" :title="$t('main.tournaments')" icon="mdi-trophy">
+				<tournaments-history slot="content" :tournaments="leek.tournaments" />
+			</panel>
 		</div>
 
 		<panel v-if="leek && my_leek && leek.registers && leek.registers.length > 0" toggle="leek/registers" icon="mdi-database">
