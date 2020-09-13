@@ -230,7 +230,6 @@ router.beforeEach((to: Route, from: Route, next: any) => {
 			store.commit('connected', token)
 			LeekWars.get('farmer/get-from-token').then(data => {
 				store.commit('connect', {farmer: data.farmer, farmers: data.farmers, token})
-				LeekWars.displayMessage(data.message)
 			}).error(() => {
 				store.commit('disconnect')
 				router.push('/')
@@ -238,7 +237,6 @@ router.beforeEach((to: Route, from: Route, next: any) => {
 		} else if (localStorage.getItem('login-attempt') === 'true') {
 			LeekWars.get('farmer/get-from-token').then(data => {
 				store.commit('connect', {farmer: data.farmer, farmers: data.farmers, token})
-				LeekWars.displayMessage(data.message)
 			})
 		}
 	}

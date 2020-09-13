@@ -278,6 +278,11 @@ const vueMain = new Vue({
 				store.commit('connected-count', data.farmers)
 			})
 		}, 59 * 1000)
+
+		// Message ?
+		LeekWars.get('farmer/get-message').then(data => {
+			LeekWars.displayMessage(data.message)
+		})
 	}
 }).$mount('#app')
 
