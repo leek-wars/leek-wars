@@ -168,6 +168,7 @@
 }
 .farmer-avatar {
 	width: 30px;
+	height: 30px;
 }
 .stat {
 	display: inline-block;

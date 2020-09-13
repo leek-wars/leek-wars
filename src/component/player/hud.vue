@@ -44,7 +44,7 @@
 			</tooltip>
 		</div>
 		<template v-if="!LeekWars.mobile">
-			<entity-details v-if="game.hoverEntity" :entity="game.hoverEntity" />
+			<entity-details v-if="game.mouseEntity" :entity="game.mouseEntity" />
 			<entity-details v-else-if="game.selectedEntity" :entity="game.selectedEntity" />
 			<entity-details v-else-if="game.currentPlayer in game.leeks" :entity="game.leeks[game.currentPlayer]" />
 		</template>
