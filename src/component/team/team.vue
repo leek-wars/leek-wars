@@ -75,7 +75,7 @@
 						<br>
 						<tooltip>
 							<template v-slot:activator="{ on }">
-								<talent :talent="team ? team.talent : '...'" :on="on" />
+								<talent :id="team ? team.id : ''" :talent="team ? team.talent : '...'" category="team" :on="on" />
 							</template>
 							{{ $t('talent') }}
 						</tooltip>
@@ -181,7 +181,7 @@
 									<img v-if="member.connected" class="status" src="/image/connected.png">
 									<img v-else class="status" src="/image/disconnected.png">
 								</div>
-								<talent :talent="member.talent" />
+								<talent :id="member.id" :talent="member.talent" category="farmer" />
 							</div>
 						</rich-tooltip-farmer>
 					</router-link>
@@ -213,7 +213,7 @@
 				<template slot="actions">
 					<div class="level-talent">
 						<span class="level">{{ $t('level_n', [composition.total_level]) }}</span>
-						<talent :talent="composition.talent" />
+						<talent :id="team.id" :talent="composition.talent" category="team" />
 					</div>
 					<router-link v-if="composition.tournament.current" :to="'/tournament/' + composition.tournament.current" class="view-tournament button flat">{{ $t('see_tournament') }}</router-link>
 					<tooltip v-if="captain">
@@ -239,7 +239,7 @@
 							<leek-image :leek="leek" :scale="0.6" />
 							<br>
 							<div class="name">{{ leek.name }}</div>
-							<talent :talent="leek.talent" />
+							<talent :id="leek.id" :talent="leek.talent" category="leek" />
 							<div>{{ $t('main.level_n', [leek.level]) }}</div>
 							<div class="fights">
 								<img src="/image/icon/grey/garden.png">
@@ -262,7 +262,7 @@
 						<leek-image :leek="leek" :scale="0.6" />
 						<br>
 						<div class="name">{{ leek.name }} ({{ leek.level }})</div>
-						<talent :talent="leek.talent" />
+						<talent :id="leek.id" :talent="leek.talent" category="leek" />
 						<div class="fights">
 							<img src="/image/icon/grey/garden.png">
 							<span>{{ leek.team_fights }}</span>
@@ -281,7 +281,7 @@
 							<leek-image :leek="leek" :scale="0.6" />
 							<br>
 							<div class="name">{{ leek.name }}</div>
-							<talent :talent="leek.talent" />
+							<talent :id="leek.id" :talent="leek.talent" category="leek" />
 							<div>{{ $t('main.level_n', [leek.level]) }}</div>
 						</div>
 					</router-link>

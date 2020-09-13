@@ -23,7 +23,7 @@
 							</router-link>
 							<lw-title v-if="leek.title.length" :title="leek.title" />
 						</span>
-						<talent :talent="leek.talent" />
+						<talent :id="leek.id" :talent="leek.talent" category="leek" />
 						<span class="talent-more">({{ leek.talent_more >= 0 ? '+' + leek.talent_more : leek.talent_more }})</span>
 						<span class="level">• {{ $t('main.level_n', [leek.level]) }}</span>
 						<v-btn class="expand" icon small @click="expand_items = !expand_items">

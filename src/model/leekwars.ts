@@ -15,6 +15,7 @@ import { TranslateResult } from 'vue-i18n'
 import { ChatType, ChatWindow } from './chat'
 import { i18n, loadLanguageAsync } from './i18n'
 import { PotionEffect, PotionTemplate } from './potion'
+import router from '@/router'
 
 const MONTHS: { [key: string]: string[] } = {
 	fr: ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'],
@@ -487,6 +488,7 @@ const LeekWars = {
 	clover: false, cloverTop: 0, cloverLeft: 0, lucky,
 	playSound, setFavicon,
 	linkify, toChatLink,
+	goToRanking,
 	socket: new Socket(),
 	EFFECT_TYPES: Object.freeze(EFFECT_TYPES),
 	constants: Object.freeze(CONSTANTS),
@@ -882,6 +884,28 @@ function detectNativeEmojis() {
 
 function shadeColor(color: string, amount: number) {
 	return '#' + color.replace(/^#/, '').replace(/../g, c => ('0' + Math.min(255, Math.max(0, parseInt(c, 16) + amount)).toString(16)).substr(-2))
+}
+
+function goToRanking(type: string, order: string, id: number = 0) {
+	// console.log("goToRanking", type, order, id)
+	const activeRanking = localStorage.getItem('options/ranking-active') === 'true'
+	let url = ''
+	const active = activeRanking ? '-active' : ''
+	if (type === 'leek') {
+		url = 'ranking/get-leek-rank' + active + '/' + id + '/' + order
+	} else if (type === 'farmer') {
+		url = 'ranking/get-farmer-rank' + active + '/' + id + '/' + order
+	} else if (type === 'team') {
+		url = 'ranking/get-team-rank' + active + '/' + id + '/' + order
+	}
+	LeekWars.get(url).then(data => {
+		const page = 1 + Math.floor((data.rank - 1) / 50)
+		const active_url = activeRanking && data.active ? '/active' : ''
+		const newRoute = '/ranking/' + type + '/' + order + active_url + '/page-' + page + '#rank-' + data.rank
+		if (router.currentRoute.fullPath !== newRoute) {
+			router.push(newRoute)
+		}
+	})
 }
 
 Commands.addDocumentationCommands()

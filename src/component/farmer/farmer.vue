@@ -121,7 +121,7 @@
 						<div class="talent-wrapper">
 							<tooltip>
 								<template v-slot:activator="{ on }">
-									<talent :talent="farmer ? farmer.talent : '...'" :on="on" />
+									<talent :id="farmer ? farmer.id : 0" :talent="farmer ? farmer.talent : '...'" category="farmer" :on="on" />
 								</template>
 								<div>{{ $t('talent') }}</div>
 							</tooltip>
@@ -320,7 +320,7 @@
 								<leek-image :leek="leek" :scale="0.9" />
 								<div class="name">{{ leek.name }}</div>
 								<lw-title v-if="leek.title.length" :title="leek.title" />
-								<talent :talent="leek.talent" />
+								<talent :id="leek.id" :talent="leek.talent" category="leek" />
 								<br>
 								<span class="level">{{ $t('main.level_n', [leek.level]) }}</span>
 							</div>

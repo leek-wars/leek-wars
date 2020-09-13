@@ -2,7 +2,7 @@
 	<div v-if="compo" class="composition">
 		<emblem :team="{id: compo.team_id, emblem_changed: compo.emblem_changed}" />
 		<div class="name">{{ compo.name }}</div>
-		<talent :talent="compo.talent" />
+		<talent :id="compo.team_id" :talent="compo.talent" category="team" />
 		<br>
 		<span class="level">
 			{{ $t('main.level_n', [compo.level]) }}
