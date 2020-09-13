@@ -24,7 +24,9 @@
 			</div>
 		</div>
 		<panel class="first last">
-			<a href="https://play.google.com/store/apps/details?id=com.leekwars.app" target="_blank" rel="noopener" class="item">Application Android <v-icon>mdi-open-in-new</v-icon></a>
+			<a href="https://play.google.com/store/apps/details?id=com.leekwars.app&hl=fr" target="_blank" rel="noopener">
+				<img width="200" alt="Disponible sur Google Play" :src="'https://play.google.com/intl/en_us/badges/static/images/badges/' + locale + '_badge_web_generic.png'">
+			</a>
 			<br>
 			<h3>{{ $t('app_installation') }}</h3>
 			<br>
@@ -47,11 +49,13 @@
 </template>
 
 <script lang="ts">
+	import { locale } from '@/locale'
 	import { LeekWars } from '@/model/leekwars'
 	import { Component, Vue } from 'vue-property-decorator'
 
 	@Component({ name: 'mobile_app', i18n: {} })
 	export default class MobileApp extends Vue {
+		locale = locale
 		created() {
 			LeekWars.setTitle(this.$t('title'))
 		}
