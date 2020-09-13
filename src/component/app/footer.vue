@@ -6,7 +6,9 @@
 			<router-link to="/statistics" class="item">{{ $t('main.statistics') }}</router-link>
 			<router-link to="/ranking/fun" class="item">Classements fun</router-link>
 			<router-link to="/app" class="item">{{ $t('main.app') }}</router-link>
-			<a href="https://play.google.com/store/apps/details?id=com.leekwars.app" target="_blank" rel="noopener" class="item">Application Android <v-icon>mdi-open-in-new</v-icon></a>
+			<router-link to="/bank" class="item">
+				Faire un don <v-icon>mdi-currency-eur</v-icon>
+			</router-link>
 		</div>
 		<div class="column">
 			<h4>Ressources et aide</h4>
@@ -40,15 +42,15 @@
 			<a class="item" target="_blank" rel="noopener" href="https://www.facebook.com/LeekWars">
 				<v-icon>mdi-facebook</v-icon> Facebook
 			</a>
+			<a class="item" target="_blank" rel="noopener" href="https://www.instagram.com/leekwars/">
+				<v-icon>mdi-instagram</v-icon> Instagram
+			</a>
 			<a class="item" target="_blank" rel="noopener" href="https://www.linkedin.com/company/43355938">
 				<v-icon>mdi-linkedin</v-icon> LinkedIn
 			</a>
 			<a class="item" target="_blank" rel="noopener" href="mailto:contact@leekwars.com">
 				<v-icon>mdi-email-outline</v-icon> E-mail
 			</a>
-			<router-link to="/bank" class="item">
-				<v-icon>mdi-currency-eur</v-icon> Faire un don
-			</router-link>
 		</div>
 		<div class="column">
 			<h4>Légal</h4>
