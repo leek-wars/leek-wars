@@ -72,28 +72,24 @@ abstract class CollideParticle extends Particle {
 	public targets: FightEntity[]
 	constructor(game: Game, x: number, y: number, z: number, life: number, targets: FightEntity[]) {
 		super(game, x, y, z, life)
-		this.targets = targets
+		this.targets = [...targets] // copy
 	}
 	public update(dt: number): boolean {
+		let hit = false
 		for (let t = 0; t < this.targets.length; ++t) {
 			const target = this.targets[t]
 			if (!target) { continue }
 			if (target.collide(this.x, this.y, this.z)) {
 				target.hurt(this.x, this.y, this.z, this.dx, this.dy, this.dz)
-				if (this instanceof Bullet) {
-					this.game.actionDone()
-				}
 				this.targets.splice(t, 1)
 				t--
+				hit = true
 			}
 		}
-		if (this.targets.length === 0) {
+		if (hit && this.targets.length === 0) {
 			return true
 		}
 		return super.update(dt)
-	}
-	public onDie() {
-		this.game.actionDone()
 	}
 }
 
@@ -303,7 +299,6 @@ class Grenade extends FallingParticle {
 		for (const target of this.targets) {
 			target.hurt(this.x, this.y, this.z, this.dx, this.dy, this.dz)
 		}
-		this.game.actionDone()
 	}
 	public draw(ctx: CanvasRenderingContext2D) {
 		ctx.drawImage(this.texture.texture, -this.texture.texture.width / 2 , -this.texture.texture.height / 2)

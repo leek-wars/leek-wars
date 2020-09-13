@@ -954,11 +954,9 @@ class Game {
 			const area = LeekWars.weapons[LeekWars.weaponTemplates[weapon].item].area
 			const targets = this.ground.field.getTargets(cell, area) as FightEntity[]
 
-			(this.leeks[launcher] as Leek).useWeapon(cell, targets)
-			// Pas de cibles workaround
-			if (targets.length === 0) {
-				this.actionDone()
-			}
+			const duration = (this.leeks[launcher] as Leek).useWeapon(cell, targets)
+			this.actionDone(Math.max(6, duration))
+
 			this.log(action)
 			break
 		}
@@ -2095,10 +2093,6 @@ class Game {
 			action++
 		}
 
-		// End
-		this.jumping = false
-		this.currentAction = action
-
 		// Set cells
 		for (const e in this.leeks) {
 			const entity = this.leeks[e]
@@ -2110,6 +2104,11 @@ class Game {
 			}
 		}
 		this.updateReachableCells()
+
+		// End
+		this.jumping = false
+		this.currentAction = action
+		this.actionDone() // Start new action
 
 		this.requestPause = this.paused
 		this.draw()

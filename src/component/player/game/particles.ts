@@ -27,7 +27,6 @@ class Particles {
 			const dist2 = Math.sqrt(dx2 * dx2 + dy2 * dy2)
 			if (dist2 > dist) { // la balle recule
 				leek.hurt(leek.ox, leek.oy, z, bullet.dx, bullet.dy, 0)
-				this.game.actionDone()
 				return
 			}
 		}

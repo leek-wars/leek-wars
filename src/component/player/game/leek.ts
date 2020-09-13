@@ -79,24 +79,25 @@ class Leek extends FightEntity {
 
 	public useWeapon(cell: Cell, targets: FightEntity[]) {
 
-		if (this.weapon != null) {
-
-			const pos = this.game.ground.field.cellToXY(cell)
-			const x = pos.x
-			const y = pos.y
-
-			// Angle
-			const south = this.y > y
-			const east = this.x > x
-
-			this.setOrientation(south ? (east ? EntityDirection.NORTH : EntityDirection.EAST) : (east ? EntityDirection.WEST : EntityDirection.SOUTH))
-
-			this.angle = Math.atan2(Math.abs(this.x - x), (this.y - y) / 2) - Math.PI / 2
-
-			const position = this.game.ground.xyToXYPixels(x, y)
-
-			this.weapon.shoot(this.ox, this.oy, this.handPos + this.z, this.angle, this.direction, position, targets, this, cell)
+		if (this.weapon == null) {
+			return 0 // Il n'y aura pas d'anim
 		}
+
+		const pos = this.game.ground.field.cellToXY(cell)
+		const x = pos.x
+		const y = pos.y
+
+		// Angle
+		const south = this.y > y
+		const east = this.x > x
+
+		this.setOrientation(south ? (east ? EntityDirection.NORTH : EntityDirection.EAST) : (east ? EntityDirection.WEST : EntityDirection.SOUTH))
+
+		this.angle = Math.atan2(Math.abs(this.x - x), (this.y - y) / 2) - Math.PI / 2
+
+		const position = this.game.ground.xyToXYPixels(x, y)
+
+		return this.weapon.shoot(this.ox, this.oy, this.handPos + this.z, this.angle, this.direction, position, targets, this, cell)
 	}
 
 	public draw(ctx: CanvasRenderingContext2D) {
