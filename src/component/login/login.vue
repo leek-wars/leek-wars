@@ -16,7 +16,10 @@
 						<br><br>
 						<center><v-btn large color="primary" type="submit">{{ $t('connection') }}</v-btn></center>
 						<br>
-						<div v-if="error" class="error">{{ $t('incorrect_login') }}</div>
+						<div v-if="error" class="error">
+							<span v-if="error.error">{{ $t('error_' + error.error) }}</span>
+							<span v-else>{{ $t('error_server') }}</span>
+						</div>
 						<br>
 						<router-link class="forgot-password" to="/forgot-password">{{ $t('forgot_password') }}</router-link>
 					</form>
@@ -39,7 +42,7 @@
 
 	@Component({ name: 'login', i18n: {} })
 	export default class Login extends Vue {
-		error: boolean = false
+		error: any = null
 		form = {
 			login: '',
 			password: '',
@@ -58,7 +61,7 @@
 				this.$store.commit('connect', {farmer: data.farmer, farmers: data.farmers, token})
 				this.$router.push('/')
 			}).error(error => {
-				this.error = true
+				this.error = error
 			})
 		}
 
