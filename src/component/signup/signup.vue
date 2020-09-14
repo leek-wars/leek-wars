@@ -81,7 +81,7 @@
 		<h1>{{ $t('ranking') }}</h1>
 
 		<panel class="first">
-			<div class="container">
+			<div class="container grid">
 				<div class="column4">
 					<router-link to="/ranking/active">
 						<h4>{{ $t('main.leek') }} <span class="arrow">▶</span></h4>
