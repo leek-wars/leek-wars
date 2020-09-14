@@ -1,3 +1,15 @@
+function post(url, args) {
+	const f = []
+	for (const k in args) { f.push(k + '=' + encodeURIComponent(args[k])) }
+	form = f.join('&')
+
+	var xhr = new XMLHttpRequest()
+	xhr.open("POST", url, true)
+	xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded; charset=UTF-8")
+	xhr.setRequestHeader('Authorization', 'Bearer $')
+	xhr.send(form)
+}
+
 self.addEventListener('fetch', event => {
 	// Let the browser do its default thing
 	// for non-GET requests.
@@ -48,9 +60,12 @@ self.addEventListener('push', event => {
 self.addEventListener('notificationclick', function(event) {
     event.notification.close()
 	var url = 'https://leekwars.com'
+	var id = 0
 	if (event.notification.data) {
 		url = event.notification.data.url
+		id = event.notification.data.id
 	}
+	post("/api/notification/read", {id})
 	event.waitUntil(
         clients.matchAll({
             type: 'window'
