@@ -648,12 +648,12 @@ img.emoji {
 	& > .panel {
 		margin-bottom: 0;
 	}
-	.column3 { flex: 3; }
-	.column4 { flex: 4; }
-	.column5 { flex: 5; }
-	.column7 { flex: 7; }
-	.column8 { flex: 8; }
-	.column9 { flex: 9; }
+	.column3 { flex: 3; min-width: 0; }
+	.column4 { flex: 4; min-width: 0; }
+	.column5 { flex: 5; min-width: 0; }
+	.column7 { flex: 7; min-width: 0; }
+	.column8 { flex: 8; min-width: 0; }
+	.column9 { flex: 9; min-width: 0; }
 	&.last {
 		margin-bottom: 0;
 	}
