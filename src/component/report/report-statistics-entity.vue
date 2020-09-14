@@ -26,11 +26,11 @@
 	td {
 		border: 1px solid #ddd;
 		text-align: center;
-		padding: 4px 8px;
+		padding: 4px;
+		font-size: 14px;
 	}
 	.best {
 		font-weight: bold;
-		font-size: 16px;
 		background: white;
 	}
 	.name {
@@ -41,17 +41,17 @@
 		white-space: nowrap;
 	}
 	.summon .name .text {
-		padding-left: 20px;
+		padding-left: 15px;
 	}
 	.alive {
-		margin-left: 27px;
+		margin-left: 21px;
 	}
 	.dead {
 		background-image: url("/image/cross.png");
 		width: 15px;
 		height: 20px;
 		display: inline-block;
-		margin-right: 12px;
+		margin-right: 6px;
 		vertical-align: bottom;
 	}
 </style>

@@ -50,7 +50,7 @@
 	export default class ReportStatistics extends Vue {
 		@Prop({required: true}) fight!: any
 		@Prop({required: true}) statistics!: FightStatistics
-		stats = ['dmg_out', 'dmg_in', 'heal_in', 'heal_out', 'kills', 'operations', 'operations_per_turn', 'usedPT', 'usedPTperTurn', 'usedPM', 'roundsPlayed', 'actionsWeapon', 'actionsChip', 'invocation', 'resurrection', 'critical', 'crashes']
+		stats = ['dmg_out', 'dmg_in', 'heal_out', 'heal_in', 'kills', 'ops_format', 'ops_per_turn_format', 'usedPT', 'usedPTperTurn', 'usedPM', 'roundsPlayed', 'actionsWeapon', 'actionsChip', 'invocation', 'resurrection', 'critical', 'crashes']
 		TEAM_COLORS = TEAM_COLORS
 
 		get best() {
@@ -58,9 +58,10 @@
 			for (const stat of this.stats) {
 				let best = 0
 				let bestEntity = null
+				const real_stat = stat === 'ops_format' ? 'operations' : (stat === 'ops_per_turn_format' ? 'operations_per_turn' : stat)
 				for (const e in this.statistics.entities) {
-					if ((this.statistics.entities[e] as any)[stat] > best) {
-						best = (this.statistics.entities[e] as any)[stat]
+					if ((this.statistics.entities[e] as any)[real_stat] > best) {
+						best = (this.statistics.entities[e] as any)[real_stat]
 						bestEntity = this.statistics.entities[e].leek.id
 					}
 				}
@@ -80,7 +81,7 @@
 	}
 	th {
 		border: 1px solid #ddd;
-		padding: 6px;
+		padding: 4px;
 		background: white;
 		font-weight: normal;
 		color: #777;
@@ -89,6 +90,6 @@
 	td {
 		border: 1px solid #ddd;
 		text-align: center;
-		padding: 4px 8px;
+		padding: 4px;
 	}
 </style>
