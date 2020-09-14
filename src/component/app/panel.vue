@@ -103,6 +103,7 @@
 		border-top-left-radius: 3px;
 		text-overflow: ellipsis;
 		overflow: hidden;
+		width: 100%;
 	}
 	.panel > .header h2 a, .panel > .header h2 a:visited {
 		color: white;
