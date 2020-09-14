@@ -1,3 +1,41 @@
+215:
+  title: Improvement of the emails, click on the talent, markText() function.
+  added:
+    - Ability to click on the talent of a leek/farmer/team to see them in the ranking.
+    - Ability to fold the fight actions to the report (allows faster loading).
+    - Notification lists allowing to group emails and manage subscriptions more easily.
+    - Unsubscribe from an email list with a single click.
+    - All notifications can now be sent by email and push.
+    - Re-implementation of notifications when you are not taken for a tournament.
+    - "#ai Added the markText() function, to display a text on the court."
+  improved:
+    - Sending a notification by email only after 10 minutes and if it is not already read.
+    - Improved email design.
+    - Improvement of the progress bar in combat.
+    - Added the last missing changelogs in English.
+    - Display the percentage of progress of the current fight next to the loading bar.
+    - Changed the icon of the redo fight button in the report.
+    - Improved synchronization of weapon animations in combat.
+    - "Removed Google Analytics: we will be less tracked by Google."
+    - Added actions "effects are reduced by X%" and "poisons are neutralized" in combat.
+    - Added the Instagram page in the footer.
+    - "Tournaments : display how the leeks looked like at the time of the tournament."
+    - Added a button 'available on Google Play' on the /app page.
+    - Display of the names of the compositions in the vegetable garden.
+    - Display of unread conversations in green.
+    - Improved the design of the statistics table to remove the horizontal scroll.
+  fixed:
+    - Full translation of emails.
+    - It is no longer possible to see the unlocked trophy fights.
+    - Displaying details of an entity flown over in combat even when paused.
+    - Added a horizontal scroll on the BR fight report table.
+    - Corrected the leek page aggression deactivation switch.
+    - Fixed a bug where particles disappeared on the edges of the fight.
+    - "Login page: more accurate error messages when logging in."
+    - Fixed responsive design issues, especially on mobile.
+    - If two of his compositions meet in tournament, two notifications are sent.
+    - Fixed bugs in private message notifications.
+
 214:
   title: Scenario seeds, damage distribution, operations and accurate life graph.
   added:
