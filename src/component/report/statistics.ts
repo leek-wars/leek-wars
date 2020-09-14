@@ -55,7 +55,9 @@ class StatisticsEntity extends Entity {
 
 	// Other stats
 	public operations: number = 0
+	public ops_format: string = ''
 	public operations_per_turn: number = 0
+	public ops_per_turn_format: string = ''
 	public kills: number = 0
 	public usedPT: number = 0
 	public usedPTperTurn: number = 0
@@ -515,6 +517,8 @@ class FightStatistics {
 			leek.dmg_in = leek.direct_dmg_in + leek.poison_in + leek.return_in + leek.nova_in + leek.life_dmg_in
 			leek.dmg_out = leek.direct_dmg_out + leek.poison_out + leek.return_out + leek.nova_out + leek.life_dmg_out
 			leek.operations_per_turn = Math.round(leek.operations / leek.roundsPlayed)
+			leek.ops_format = this.formatOps(leek.operations)
+			leek.ops_per_turn_format = this.formatOps(leek.operations_per_turn)
 
 			if (leek.leek.summon) { continue }
 			if (fight.winner === 0) {
@@ -574,6 +578,16 @@ class FightStatistics {
 			}
 			this.lives.push(lives)
 			this.lives_percent.push(lives_percent)
+		}
+	}
+
+	private formatOps(operations: number) {
+		if (operations >= 1000000) {
+			return Math.round(operations / 100000) / 10 + 'M'
+		} else if (operations >= 1000) {
+			return Math.round(operations / 100) / 10 + 'k'
+		} else {
+			return '' + operations
 		}
 	}
 
