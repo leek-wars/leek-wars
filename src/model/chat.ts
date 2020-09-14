@@ -2,6 +2,7 @@ import { Commands } from '@/model/commands'
 import { Farmer } from '@/model/farmer'
 import { i18n } from '@/model/i18n'
 import { LeekWars } from '@/model/leekwars'
+import { Conversation } from './conversation'
 
 enum ChatType { GLOBAL, TEAM, PM }
 
@@ -23,10 +24,12 @@ class Chat {
 	type: ChatType
 	messages: ChatMessage[] = []
 	invalidated: boolean = false
+	conversation: Conversation | null = null
 
-	constructor(name: string, type: ChatType) {
+	constructor(name: string, type: ChatType, conversation: Conversation | null = null) {
 		this.name = name
 		this.type = type
+		this.conversation = conversation
 	}
 	add(authorID: number, authorName: string, authorAvatarChanged: number, authorGrade: string, messageRaw: string, time: number) {
 		const message = this.formatMessage(messageRaw, authorName)

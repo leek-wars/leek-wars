@@ -127,20 +127,30 @@
 		get chat() {
 			return this.channel ? store.state.chat[this.channel] : null
 		}
+		get privateMessages() {
+			return this.channel && this.channel.startsWith('pm-')
+		}
 
 		created() {
-			this.$root.$on('chat', (e: any) => {
-				if (e[0] === this.channel) {
-					this.updateScroll()
-					if (!this.scrollBottom()) { this.unread = true }
-				}
-			})
+			this.$root.$on('chat', this.newMessage)
 			this.$root.$on('resize', this.updateScroll)
 			this.$root.$on('wsconnected', this.update)
 		}
+
 		beforeDestroy() {
+			this.$root.$off('chat', this.newMessage)
 			this.$root.$off('resize', this.updateScroll)
 			this.$root.$off('wsconnected', this.update)
+		}
+
+		newMessage(e: any) {
+			if (e[0] === this.channel) {
+				this.updateScroll()
+				if (!this.scrollBottom()) { this.unread = true }
+
+				// On reçoit un message sur un chat de conversation privée, il est lu tout de suite
+				this.read()
+			}
 		}
 
 		scrollBottom() {
@@ -148,9 +158,11 @@
 			if (!messages) { return true }
 			return messages && Math.abs((messages.scrollTop + messages.offsetHeight) - messages.scrollHeight) < 3
 		}
+
 		mounted() {
 			this.updateScroll()
 		}
+
 		scroll() {
 			if (this.scrollBottom()) {
 				this.userScroll = false
@@ -159,9 +171,11 @@
 				this.userScroll = true
 			}
 		}
+
 		updated() {
 			this.updateScroll()
 		}
+
 		updateScroll(force: boolean = false) {
 			if (!this.userScroll || force) {
 				const messages = this.$refs.messages as HTMLElement
@@ -193,9 +207,9 @@
 						for (const farmer of data.farmers) {
 							this.$store.commit('add-conversation-participant', {id, farmer})
 						}
-						LeekWars.socket.send([SocketMessage.MP_READ, id])
 					})
 				}
+				this.read()
 			} else {
 				if (this.channel in this.$store.state.chat && this.$store.state.chat[this.channel].invalidated) {
 					this.$store.commit('clear-chat', this.channel)
@@ -203,6 +217,7 @@
 				LeekWars.socket.enableChannel(this.channel)
 			}
 		}
+
 		sendMessage(message: any) {
 			if (message.startsWith('/ping')) {
 				this.$store.commit('last-ping', Date.now())
@@ -215,33 +230,42 @@
 				LeekWars.socket.send([SocketMessage.FORUM_CHAT_SEND, this.channel, message])
 			}
 		}
+
 		report(message: ChatMessage) {
 			this.reportDialog = true
 			this.reportFarmer = message.author
 			this.reportContent = message.texts.reduce((a, b) => a + b + "\n", "")
 		}
+
 		mute(farmer: Farmer) {
 			this.muteDialog = true
 			this.muteFarmer = farmer
 		}
+
 		muteConfirm() {
 			if (!this.muteFarmer) { return }
 			LeekWars.socket.send([SocketMessage.CHAT_REQUEST_MUTE, this.channel, this.muteFarmer.id])
 			this.muteFarmer.muted = true
 			this.muteDialog = false
 		}
+
 		unmute(farmer: Farmer) {
 			this.unmuteDialog = true
 			this.muteFarmer = farmer
 		}
+
 		unmuteConfirm() {
 			if (!this.muteFarmer) { return }
 			LeekWars.socket.send([SocketMessage.CHAT_REQUEST_UNMUTE, this.channel, this.muteFarmer.id])
 			this.muteFarmer.muted = false
 			this.unmuteDialog = false
 		}
-		get privateMessages() {
-			return this.channel && this.channel.startsWith('pm-')
+
+		read() {
+			if (this.chat && this.chat.conversation) {
+				LeekWars.socket.send([SocketMessage.MP_READ, this.chat.conversation.id])
+				this.chat.conversation.unread = false
+			}
 		}
 		// TODO
 		// ChatController.prototype.mute_user = function(data) {

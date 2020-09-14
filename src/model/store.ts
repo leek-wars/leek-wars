@@ -153,14 +153,11 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			const senderID = data.message[1]
 			const senderName = data.message[2]
 			const channel = 'pm-' + conversationID
-			const isNewMessage = !data.message[7]
+			const isNewMessage = !data.message[7] // Date (sent by chat component, not WS)
 			const senderAvatar = data.message[6]
 			const date = data.message[7] || LeekWars.time
-			if (!state.chat[channel]) {
-				Vue.set(state.chat, channel, new Chat(channel, ChatType.PM))
-			}
-			state.chat[channel].add(senderID, senderName, data.message[6], data.message[5], data.message[3], date)
-			vueMain.$emit('chat', [channel])
+
+			// Get or create conversation
 			let conversation = state.conversations[conversationID]
 			if (!conversation) {
 				conversation = {id: conversationID,	farmers: [], unread: false} as any
@@ -182,6 +179,15 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			if (!conversation.farmers.find(f => f.id === senderID)) {
 				conversation.farmers.push({id: senderID, name: senderName, avatar_changed: data.message[6]} as Farmer)
 			}
+
+			// Update or create chat
+			if (!state.chat[channel]) {
+				Vue.set(state.chat, channel, new Chat(channel, ChatType.PM, conversation))
+			}
+			state.chat[channel].add(senderID, senderName, data.message[6], data.message[5], data.message[3], date)
+			vueMain.$emit('chat', [channel])
+
+			// Square
 			if (isNewMessage && conversation.last_farmer_id !== state.farmer!.id) {
 				LeekWars.squares.addFromConversation(conversation, senderAvatar)
 			}
