@@ -103,7 +103,7 @@
 		border-top-left-radius: 3px;
 		text-overflow: ellipsis;
 		overflow: hidden;
-		width: 100%;
+		flex: 1;
 	}
 	.panel > .header h2 a, .panel > .header h2 a:visited {
 		color: white;
@@ -123,7 +123,6 @@
 		height: 36px;
 		display: flex;
 		justify-content: flex-end;
-		flex: 1;
 	}
 	.header > .actions ::v-deep .button {
 		height: 36px;
