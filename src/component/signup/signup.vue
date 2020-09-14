@@ -474,7 +474,7 @@
 	.tiles {
 		display: grid;
 		grid-gap: 12px;
-		width: calc(100% - 12px);
+		width: 100%;
 		grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
 		margin-bottom: 12px;
 		line-height: 44px;
