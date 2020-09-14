@@ -496,6 +496,7 @@
 	#app.app .profile .avatar {
 		width: 80px;
 		height: 80px;
+		margin-right: 10px;
 	}
 	.grade {
 		border-radius: 5px;
