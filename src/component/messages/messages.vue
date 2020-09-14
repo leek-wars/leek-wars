@@ -72,18 +72,19 @@
 			}
 			LeekWars.setTitle(this.$t('title'))
 			this.update()
-			this.$root.$on('back', () => {
-				this.$router.push('/messages')
-			})
-			this.$root.$on('focus', () => {
-				this.conversationRead()
-			})
 		}
 		mounted() {
 			LeekWars.footer = false
+			this.$root.$on('back', this.back)
+			this.$root.$on('focus', this.conversationRead)
 		}
 		destroyed() {
 			LeekWars.footer = true
+			this.$root.$off('back', this.back)
+			this.$root.$off('focus', this.conversationRead)
+		}
+		back() {
+			this.$router.push('/messages')
 		}
 		get currentConversation() {
 			return (this.currentID === 0) ? this.newConversation : (this.currentID ? this.$store.state.conversations[this.currentID] : null)
