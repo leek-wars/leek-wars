@@ -29,6 +29,11 @@ enum NotificationType {
 	REPORTING_PROCESSED = 24, // Signalement traité par un modérateur
 	FARMER_CHALLENGE = 25, // Défi éleveur
 	BATTLE_ROYALE_STARTED = 26, // Battle royale
+	NEW_LEEKWARS_VERSION = 27, // Nouvelle version de Leek Wars
+	PRIVATE_MESSAGE = 28, // Message privé (pas en notif mais pour les push & mails)
+	NO_TOURNAMENT_FARMER = 29, // Pas de place pour le tournoi d'éleveur
+	NO_TOURNAMENT_TEAM = 30, // Pas de place pour le tournoi d'équipe
+	NO_BR = 31, // Pas de place pour la BR
 }
 
 class Notification {
@@ -90,14 +95,14 @@ class Notification {
 		} else if (type === NotificationType.TOURNAMENT_WINNER) {
 			const tournamentID = params[0]
 			const leekName = params[1]
-			return new Notification(data, "/tournament/" + tournamentID, "tournament_win", [leekName])
+			return new Notification(data, "/tournament/" + tournamentID, "tournament_win_white.png", [leekName])
 		} else if (type === NotificationType.NO_TOURNAMENT) {
-			return new Notification(data, "/farmer", "tournament_fail")
+			return new Notification(data, "/farmer", "tournament_fail.png")
 		} else if (type === NotificationType.TROPHY_UNLOCKED) {
 			const trophyID = parseInt(params[0], 10)
 			const trophy = LeekWars.trophies[trophyID - 1]
 			const trophyName = i18n.t('trophy.' + trophy.code) as string
-			return new Notification(data, "/farmer", "trophy/" + trophy.code + '.png', [trophyName])
+			return new Notification(data, "/trophies", "trophy/" + trophy.code + '.png', [trophyName])
 		} else if (type === NotificationType.FIGHT_COMMENT) {
 			const farmerName = params[0]
 			const fightID = params[1]
@@ -163,6 +168,12 @@ class Notification {
 		} else if (type === NotificationType.BATTLE_ROYALE_STARTED) {
 			const fightID = params[0]
 			return new Notification(data, "/fight/" + fightID, "mdi-sword-cross")
+		} else if (type === NotificationType.NO_TOURNAMENT_FARMER) {
+			return new Notification(data, "/farmer", "tournament_fail.png")
+		} else if (type === NotificationType.NO_TOURNAMENT_TEAM) {
+			return new Notification(data, "/farmer", "tournament_fail.png")
+		} else if (type === NotificationType.NO_BR) {
+			return new Notification(data, "/farmer", "tournament_fail.png")
 		} else {
 			return new Notification(data, null, null, ["? type " + type])
 		}
