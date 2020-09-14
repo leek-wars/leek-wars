@@ -226,6 +226,7 @@ class Game {
 	public currentLog = 0
 	// Marqueurs
 	public markers = new Array()
+	public markersText = new Array()
 	// Map
 	public map!: Map
 	public drawArea = 0
@@ -848,6 +849,15 @@ class Game {
 						}
 					}
 				}
+				for (const m in this.markersText) {
+					const marker = this.markersText[m]
+					if (marker.owner === this.currentPlayer) {
+						marker.duration--
+						if (marker.duration === 0) {
+							delete this.markersText[m]
+						}
+					}
+				}
 			}
 			this.actionDone()
 			break
@@ -1416,6 +1426,8 @@ class Game {
 				return true
 			} else if (type === 4) {
 				this.addMarker(log[0], log[2], log[3], log[4])
+			} else if (type === 9) {
+				this.addTextMarker(log[0], log[2], log[3], log[4], log[5])
 			} else {
 				this.addConsoleLine({id: 'l' + this.currentAction + '-' + this.currentLog, log})
 			}
@@ -1517,6 +1529,18 @@ class Game {
 			const y = xy.y * this.ground.scale
 			if (color.length === 8) { color = color.substr(2) }
 			this.markers[cell.id] = {owner, color: '#' + color, duration, x, y}
+		}
+	}
+
+	public addTextMarker(owner: number, cells: number[], text: string, color: string, duration: number) {
+		for (const cell_id of cells) {
+			const cell = this.ground.field.cells[cell_id]
+			const pos = this.ground.field.cellToXY(cell)
+			const xy = this.ground.xyToXYPixels(pos.x, pos.y)
+			const x = xy.x * this.ground.scale
+			const y = xy.y * this.ground.scale
+			if (color.length === 8) { color = color.substr(2) }
+			this.markersText[cell.id] = {owner, text, color: '#' + color, duration, x, y}
 		}
 	}
 
@@ -1852,6 +1876,23 @@ class Game {
 		this.ctx.restore()
 	}
 
+	public drawTextMarker(x: number, y: number, text: string, color: string) {
+
+		this.ctx.save()
+
+		this.ctx.translate(x, y)
+		this.ctx.scale(this.ground.scale, this.ground.scale)
+
+		this.ctx.globalAlpha = 1
+		this.ctx.font = "8pt Roboto"
+		this.ctx.fillStyle = color
+		this.ctx.textAlign = "center"
+		this.ctx.textBaseline = "middle"
+		this.ctx.fillText(text, 0, 0)
+
+		this.ctx.restore()
+	}
+
 	public showCell() {
 
 		const alpha = (50 - this.showCellTime) / 50
@@ -1937,6 +1978,10 @@ class Game {
 		for (const m in this.markers) {
 			const marker = this.markers[m]
 			this.drawMarker(marker.x, marker.y, marker.color)
+		}
+		for (const m in this.markersText) {
+			const marker = this.markersText[m]
+			this.drawTextMarker(marker.x, marker.y, marker.text, marker.color)
 		}
 		// Show pointer cell
 		this.drawPointerCell()
