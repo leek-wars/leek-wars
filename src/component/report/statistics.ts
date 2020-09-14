@@ -582,6 +582,7 @@ class FightStatistics {
 	}
 
 	private formatOps(operations: number) {
+		if (operations === 0) { return '' + operations }
 		if (operations >= 1000000) {
 			return Math.round(operations / 100000) / 10 + 'M'
 		} else if (operations >= 1000) {
