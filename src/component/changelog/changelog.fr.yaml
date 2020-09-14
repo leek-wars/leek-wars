@@ -1,3 +1,41 @@
+215:
+  title: Amélioration des emails, clic sur le talent, fonction markText().
+  added:
+    - Possibilité de cliquer sur le talent d'un poireau/éleveur/équipe pour les voir dans le classement.
+    - Possibilité de rabattre les actions du combat sur le rapport (permet un chargement plus rapide).
+    - Listes de notifications permettant de grouper les emails et gérer plus facilement ses abonnements.
+    - Désinscription d'une liste d'emails en un seul clic.
+    - Toutes les notifications peuvent maintenant être envoyées par email et push.
+    - Ré-implémentation des notifications quand on est pas pris pour un tournoi.
+    - "#ai Ajout de la fonction markText(), pour afficher un texte sur le terrain."
+  improved:
+    - Envoi d'une notification par email uniquement après 10 minutes et si elle n'est pas déjà lue.
+    - Amélioration du design des emails.
+    - Amélioration de la barre de progression en combat.
+    - Ajout des derniers changelogs manquants en Anglais.
+    - Afficher le pourcentage de progression du combat actuel à côté de la barre de chargement.
+    - Changement de l'icone du bouton refaire un combat dans le rapport.
+    - Amélioration de synchronisation des animations d'armes en combat.
+    - "Suppression de Google Analytics : nous serons moins traqués par Google."
+    - Ajout des actions "les effets sont réduits de X%" et "les poisons sont neutralisés" en combat.
+    - Ajout de la page Instagram dans le pied de page.
+    - "Tournois : affichage de l'apparence qu'avaient les poireaux au moment du tournoi."
+    - Ajout d'un bouton 'disponible sur Google Play' sur la page /app.
+    - Affichage des noms des compositions dans le potager.
+    - Affichage des conversations non lues en vert.
+    - Amélioration du design du tableau de statistiques pour supprimer le scroll horizontal.
+  fixed:
+    - Traduction complète des emails.
+    - Il n'est plus possible de voir les combats des trophées que l'on a pas débloqué.
+    - Affichage des détails d'une entité survolée en combat même en pause.
+    - Ajout d'un scroll horizontal sur le tableau du rapport de combat en BR.
+    - Correction du switch de désactivation des agressions page poireau.
+    - Correction d'un bug de disparition de particules sur les bords du combat.
+    - "Page de connexion : messages d'erreurs plus précis lors de la connexion."
+    - Corrections de problème de responsive design, surtout sur mobile.
+    - Si deux de ses compositions se rencontrent en tournoi, deux notifications sont bien envoyées.
+    - Corrections de bugs de notifications de messages privés.
+
 214:
   title: Graines de scénario, répartition des dommages, opérations et graphique de vie précis.
   added:
