@@ -11,11 +11,11 @@ import { Squares } from '@/model/squares'
 import { store } from '@/model/store'
 import { vueMain } from '@/model/vue'
 import { WeaponTemplate } from '@/model/weapon'
+import router from '@/router'
 import { TranslateResult } from 'vue-i18n'
 import { ChatType, ChatWindow } from './chat'
 import { i18n, loadLanguageAsync } from './i18n'
 import { PotionEffect, PotionTemplate } from './potion'
-import router from '@/router'
 
 const MONTHS: { [key: string]: string[] } = {
 	fr: ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'],
@@ -519,9 +519,9 @@ const LeekWars = {
 	effectRawOpened: false,
 	message: null as string | null,
 	messagePopup: false,
-	displayMessage: function(message: any) {
+	displayMessage: (message: any) => {
 		if (message) {
-			console.log("Display message", message)
+			// console.log("Display message", message)
 			LeekWars.message = message
 			LeekWars.messagePopup = true
 		}
