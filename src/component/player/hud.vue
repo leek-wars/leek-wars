@@ -117,6 +117,9 @@
 		left: 500px; right: 0;
 		text-align: center;
 		white-space: nowrap;
+		display: flex;
+		justify-content: center;
+		align-items: flex-end;
 	}
 	.timeline .entity {
 		display: inline-flex;
@@ -130,6 +133,7 @@
 		border-top-right-radius: 3px;
 		align-items: flex-end;
 		cursor: pointer;
+		min-width: 0;
 	}
 	.timeline .entity.current {
 		border-top: 5px solid black;
