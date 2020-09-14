@@ -1,5 +1,5 @@
 <template>
-	<div v-if="conversation" v-ripple class="conversation">
+	<div v-if="conversation" v-ripple class="conversation" :class="{unread: conversation.unread}">
 		<rich-tooltip-farmer :id="farmer ? farmer.id : 0" v-slot="{ on }">
 			<avatar v-if="farmer" :farmer="farmer" :on="on" />
 		</rich-tooltip-farmer>
@@ -41,6 +41,9 @@
 		margin-bottom: 3px;
 		white-space: nowrap;
 		position: relative;
+		&.unread {
+			background-color: rgba(95, 173, 27, 0.15);
+		}
 	}
 	.selected {
 		background: #ddd;
