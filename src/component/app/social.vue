@@ -130,7 +130,6 @@
 		top: 80px;
 		bottom: 0;
 		right: 0;
-		padding-right: 3px;
 	}
 	#app:not(.connected) .social-panel {
 		display: none;
@@ -162,7 +161,6 @@
 		padding-top: 12px;
 		padding-left: 12px;
 		padding-bottom: 12px;
-		margin-right: -15px;
 		position: relative;
 	}
 	.resizer {
