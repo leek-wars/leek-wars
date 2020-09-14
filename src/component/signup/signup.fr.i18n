@@ -1,4 +1,5 @@
 {
+	"android_app": "Application Android",
 	"conditions": "En cliquant sur le bouton s'inscrire, vous acceptez les {link}.",
 	"conditions_name": "conditions générales d'utilisation",
 	"confirm_password": "Confirmation",

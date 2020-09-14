@@ -1,4 +1,5 @@
 {
+	"android_app": "Android Application",
 	"conditions": "By clicking on the register button, you accept the {link}.",
 	"conditions_name": "terms of use",
 	"confirm_password": "Confirmation",
