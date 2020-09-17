@@ -72,10 +72,21 @@
 			<div v-show="!LeekWars.mobile || !LeekWars.splitBack" :style="{width: LeekWars.mobile ? '100%' : panelWidth + 'px'}" class="column3">
 				<panel class="editor-left first">
 					<div slot="content" class="full">
-						<loader v-if="!fileSystem.rootFolder" />
+						<div v-if="fileSystem.rootFolder" v-autostopscroll class="ai-list">
+							<explorer ref="explorer" :current-ai="currentAI" :selected-folder="currentFolder" @test="test" @delete-ai="deleteAI" />
+						</div>
 
-					<div v-if="fileSystem.rootFolder" v-autostopscroll class="ai-list">
-						<explorer ref="explorer" :current-ai="currentAI" :selected-folder="currentFolder" @test="test" @delete-ai="deleteAI" />
+						<div v-if="currentEditor && currentEditor.loaded && panelWidth" class="ai-stats">
+							<div class="line-count-wrapper">{{ $tc('main.n_lines', currentEditor.lines) }}</div>
+							<div class="char-count-wrapper">{{ $tc('main.n_characters', currentEditor.characters) }}</div>
+							<div v-if="currentAI.included_lines !== 0" class="line-count-wrapper">{{ $tc('main.n_total_lines', currentEditor.lines + currentAI.included_lines) }}</div>
+							<div v-if="currentAI.included_chars !== 0" class="char-count-wrapper">{{ $tc('main.n_total_chars', currentEditor.characters + currentAI.included_chars) }}</div>
+						</div>
+						<br>
+						<!--
+						<div id='export-button' class="button" title="{export_desc}">▼ {{ $t('export') }}</div>
+						<div id='import-button' class="button" title="{import_desc}">▲ {{ $t('import') }}</div>
+						-->
 					</div>
 				</panel>
 			</div>
@@ -150,30 +161,10 @@
 							</div>
 						</div>
 					</div>
-				</div>
-				<div v-if="enableAnalyzer" class="status">
-					<div v-ripple class="problems" @click="showProblemsDetails = !showProblemsDetails">
-						<span v-if="LeekWars.analyzer.error_count + LeekWars.analyzer.warning_count === 0" class="no-error">
-							<v-icon>mdi-check-circle</v-icon> Aucun problème
-						</span>
-						<span v-if="LeekWars.analyzer.warning_count" class="warnings">
-							<v-icon>mdi-alert-circle</v-icon> {{ LeekWars.analyzer.warning_count }} warnings
-						</span>
-					</div>
-				</div>
-				<div class="filler"></div>
-				<div class="state">
-					<div v-if="LeekWars.analyzer.running == 0" class="ready">
-						Prêt
-						<v-icon>mdi-check</v-icon>
-					</div>
-					<div v-else class="running">
-						En cours d'analyse
-						<v-icon>mdi-sync</v-icon>
-					</div>
-				</div>
-			</panel>
+				</panel>
+			</div>
 		</div>
+
 		<div class="error-tooltip"></div>
 
 		<popup v-model="settingsDialog" :width="620">
@@ -795,6 +786,7 @@
 	.container {
 		flex: 1;
 		min-height: 0;
+		gap: 0;
 	}
 	.menu {
 		flex-shrink: 0;
