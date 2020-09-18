@@ -516,7 +516,7 @@ class FightStatistics {
 
 			leek.dmg_in = leek.direct_dmg_in + leek.poison_in + leek.return_in + leek.nova_in + leek.life_dmg_in
 			leek.dmg_out = leek.direct_dmg_out + leek.poison_out + leek.return_out + leek.nova_out + leek.life_dmg_out
-			leek.operations_per_turn = Math.round(leek.operations / leek.roundsPlayed)
+			leek.operations_per_turn = Math.round(leek.operations / Math.max(1, leek.roundsPlayed))
 			leek.ops_format = this.formatOps(leek.operations)
 			leek.ops_per_turn_format = this.formatOps(leek.operations_per_turn)
 
