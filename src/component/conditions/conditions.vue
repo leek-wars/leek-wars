@@ -62,7 +62,6 @@
 		margin-left: 20px;
 		margin-right: 20px;
 		text-align: justify;
-		height: 100%;
 	}
 	#app.app p {
 		margin-left: 0;
