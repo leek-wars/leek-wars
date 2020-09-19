@@ -97,7 +97,8 @@ class Notification {
 			const leekName = params[1]
 			return new Notification(data, "/tournament/" + tournamentID, "tournament_win_white.png", [leekName])
 		} else if (type === NotificationType.NO_TOURNAMENT) {
-			return new Notification(data, "/farmer", "tournament_fail.png")
+			const name = params[0]
+			return new Notification(data, "/farmer", "tournament_fail.png", [name])
 		} else if (type === NotificationType.TROPHY_UNLOCKED) {
 			const trophyID = parseInt(params[0], 10)
 			const trophy = LeekWars.trophies[trophyID - 1]
@@ -171,9 +172,11 @@ class Notification {
 		} else if (type === NotificationType.NO_TOURNAMENT_FARMER) {
 			return new Notification(data, "/farmer", "tournament_fail.png")
 		} else if (type === NotificationType.NO_TOURNAMENT_TEAM) {
-			return new Notification(data, "/farmer", "tournament_fail.png")
+			const name = params[0]
+			return new Notification(data, "/farmer", "tournament_fail.png", [name])
 		} else if (type === NotificationType.NO_BR) {
-			return new Notification(data, "/farmer", "tournament_fail.png")
+			const name = params[0]
+			return new Notification(data, "/farmer", "tournament_fail.png", [name])
 		} else {
 			return new Notification(data, null, null, ["? type " + type])
 		}
