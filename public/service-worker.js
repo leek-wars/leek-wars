@@ -3,11 +3,20 @@ function post(url, args) {
 	for (const k in args) { f.push(k + '=' + encodeURIComponent(args[k])) }
 	form = f.join('&')
 
-	var xhr = new XMLHttpRequest()
-	xhr.open("POST", url, true)
-	xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded; charset=UTF-8")
-	xhr.setRequestHeader('Authorization', 'Bearer $')
-	xhr.send(form)
+	fetch(url, {
+		method: 'post',
+		headers: {
+		  "Content-type": "application/x-www-form-urlencoded; charset=UTF-8",
+		  "Authorization": "Bearer $"
+		},
+		body: form
+	  })
+	//   .then(function (data) {
+	// 	console.log('Request succeeded with JSON response', data);
+	//   })
+	//   .catch(function (error) {
+	// 	console.log('Request failed', error);
+	//   });
 }
 
 self.addEventListener('fetch', event => {
