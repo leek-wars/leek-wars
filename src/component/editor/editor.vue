@@ -126,7 +126,7 @@
 										<v-icon v-else-if="problem[4] === 1" class="warning">mdi-alert-circle-outline</v-icon>
 										<v-icon v-else class="todo">mdi-format-list-checks</v-icon>
 										{{ $t('ls_error.' + problem[5], problem[6]) }}
-										<span class="line">ligne {{ problem[0] }}</span>
+										<span class="line">ligne {{ problem[0] }} [{{ problem[1] }} : {{ problem[3] }}]</span>
 									</div>
 								</div>
 							</div>
