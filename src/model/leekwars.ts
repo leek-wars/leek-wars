@@ -290,13 +290,18 @@ const LeekWars = {
 		return number.toPrecision(precision)
 	},
 	isMobile() {
+		return /Mobi/i.test(window.navigator.userAgent)
+		/*
 		// console.log(window.innerWidth, window.innerHeight, window.screen.orientation)
-		const orientation = window.screen.orientation
+		const type = (screen.orientation || {}).type || (screen as any).mozOrientation || (screen as any).msOrientation;
+		const angle = (screen.orientation || {}).type || (screen as any).mozOrientation || (screen as any).msOrientation;
+
 		let width = window.innerWidth
-		if (orientation.angle === 90 && (orientation.type === "landscape-primary" || orientation.type === "landscape-secondary")) {
+		if (orientation.angle === 90 && (orientation === "landscape-primary" || orientation === "landscape-secondary")) {
 			width = window.innerHeight
 		}
 		return width < 900
+		*/
 	},
 	contenteditable_paste_protect(element: HTMLElement) {
 		// Paste : keep the pure text of the element
