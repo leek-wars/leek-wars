@@ -201,7 +201,6 @@
 		}
 	}
 	.category-bar-wrapper {
-		width: 70%;
 		text-align: right;
 		white-space: nowrap;
 		.stats {
