@@ -152,6 +152,13 @@
 
 				<p>{{ $t('weapons_2') }}</p>
 				<p>{{ $t('weapons_3') }}</p>
+				
+				<center>
+					<img src="/image/help/forgotten_weapon.png"> &nbsp; &nbsp;
+				</center>
+
+				<p>{{ $t('weapons_4') }}</p>
+				<p>{{ $t('weapons_5') }}</p>
 			</div>
 		</panel>
 
@@ -209,11 +216,16 @@
 
 				<h3>{{ $t('fights_14') }}</h3>
 				<p v-html="$t('fights_15')"></p>
-				<p>{{ $t('fights_16') }}</p>
-
-				<h3>{{ $t('fights_17') }}</h3>
+				<center>
+					<img height="240" src="/image/help/turret.png"> &nbsp;
+				</center>
+				<p v-html="$t('fights_16')"></p>
+				<p v-html="$t('fights_17')"></p>
 				<p>{{ $t('fights_18') }}</p>
-				<p>{{ $t('fights_19') }}</p>
+
+				<h3>{{ $t('fights_19') }}</h3>
+				<p>{{ $t('fights_20') }}</p>
+				<p>{{ $t('fights_21') }}</p>
 			</div>
 		</panel>
 
