@@ -646,7 +646,7 @@
 				team.opened = true
 				store.commit('create-team', team)
 			}).error(error => {
-				LeekWars.toast(this.$i18n.t(error))
+				LeekWars.toast(this.$i18n.t(error.error))
 			})
 		}
 		cancelCandidacy() {
