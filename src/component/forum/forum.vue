@@ -56,13 +56,13 @@
 							<div class="description">{{ $t('team_forum_description') }}</div>
 						</div>
 						<div v-if="LeekWars.mobile" class="mobile-info">
-							<span>{{ $t('n_topics', [LeekWars.formatNumber(category.topics)]) }}</span>
+							<span>{{ $t('n_topics', [LeekWars.formatNumber(category.topics || 0)]) }}</span>
 							•
-							<span>{{ $t('n_messages', [LeekWars.formatNumber(category.messages)]) }}</span>
+							<span>{{ $t('n_messages', [LeekWars.formatNumber(category.messages || 0)]) }}</span>
 						</div>
 					</div>
-					<div v-if="!LeekWars.mobile" class="num-topics">{{ category.topics | number }}</div>
-					<div v-if="!LeekWars.mobile" class="num-messages">{{ category.messages | number }}</div>
+					<div v-if="!LeekWars.mobile" class="num-topics">{{ category.topics || 0 | number }}</div>
+					<div v-if="!LeekWars.mobile" class="num-messages">{{ category.messages || 0 | number }}</div>
 				</router-link>
 			</template>
 		</panel>
