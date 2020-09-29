@@ -14,6 +14,7 @@ The project is very easy to install and deploy in 10s:
 ```shell
 git clone https://github.com/leek-wars/leek-wars.git
 cd leek-wars
+git submodule update --init --recursive
 npm i
 npm start
 ```
