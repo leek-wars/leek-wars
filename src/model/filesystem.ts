@@ -11,7 +11,7 @@ class FileSystem {
 	public aiByFullPath: {[key: string]: AI} = {}
 	public aiCount: number = 0
 	private initialized: boolean = false
-    private leekAIs: any = {}
+	private leekAIs: any = {}
 	private items: {[key: string]: AI | Folder} = {}
 	private rootFolder!: Folder
 	private promise!: Promise<void>
