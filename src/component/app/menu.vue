@@ -154,7 +154,7 @@
 		get new_leek_condition() {
 			const leeks = store.state.farmer!.leeks
 			if (Object.keys(leeks).length === 4) { return false }
-			return LeekWars.first(leeks)!.level >= 20
+			return LeekWars.first(leeks)!.level >= 50
 		}
 
 		mounted() {
