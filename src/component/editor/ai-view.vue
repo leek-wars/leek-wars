@@ -229,8 +229,8 @@
 						"Ctrl-K": () => this.removeLine(),
 						"Ctrl-Space": () => this.autocomplete(wrapper.CodeMirror, true),
 						"Shift-Ctrl-F": () => this.formatCode(),
-						"Alt-Left": () => {},
-						"Alt-Right": () => {}
+						"Alt-Left": () => null,
+						"Alt-Right": () => null
 					},
 				} as any)
 
@@ -645,11 +645,11 @@
 			this.updateMouseAndCtrl()
 		}
 
-		private stringRealSize(str: string) {
+		public stringRealSize(str: string) {
 			let s = 0
-			for (let c = 0; c < str.length; ++c) {
-				if (str[c] === '\t') s += 4;
-				else s++;
+			for (const c of str) {
+				if (c === '\t') { s += 4 }
+				else { s++ }
 			}
 			return s
 		}
@@ -1046,39 +1046,47 @@
 			const code = this.editor.getValue()
 			this.ai.functions = []
 			let match
-			const regex = /(?:\/\*(.*?)\*\/\s*)?function\s+(\w+)\s*\((.*?)\)\s*{/gms
+
+			// Search /* */ comments first
+			const comments: {[key: number]: string} = {}
+			const comment_regex = /\/\*(.*?)\*\/\s*/gms
+			while ((match = comment_regex.exec(code)) != null) {
+				comments[match.index + match[0].length] = match[1]
+			}
+
+			const regex = /function\s+(\w+)\s*\((.*?)\)\s*{/gms
 			// Match [ full_match, javadoc, nom, arguments ]
 
 			while ((match = regex.exec(code)) != null) {
 
 				const line = code.substring(0, match.index).split("\n").length
-				let args = match[3].split(",")
+				let args = match[2].split(",")
 				if (args.length === 1 && args[0].trim() === '') { args = [] }
 				for (let arg of args) {
 					arg = arg.trim()
 				}
-				const fullName = match[2] + "(" + args.join(", ") + ")"
+				const fullName = match[1] + "(" + args.join(", ") + ")"
 				let description = "<h4>" + i18n.t('leekscript.function_f', [fullName]) + "</h4><br>"
 				description += i18n.t('leekscript.defined_in', [this.ai.name, line])
 
-				const javadoc_comment = match[1]
+				const comment = comments[match.index]
 				let javadoc = null
-				if (javadoc_comment) {
+				if (comment) {
 					javadoc = {
 						name: fullName,
 						description: "",
 						items: [] as any[]
 					}
-					const javadoc_lines = javadoc_comment.split("\n")
+					const javadoc_lines = comment.split("\n")
 					const javadoc_regex = /^\s*\*\s*@(\w+)(?:\s+([a-zA-Z\u00C0-\u024F\u1E00-\u1EFF]+)\s*:\s*)?(?:\s*:\s*)?(.*)$/
 					let match_javadoc
-					for (const line of javadoc_lines) {
-						if (match_javadoc = javadoc_regex.exec(line)) {
+					for (const jline of javadoc_lines) {
+						if (match_javadoc = javadoc_regex.exec(jline)) {
 							// console.log(match_javadoc)
 							javadoc.items.push({ type: match_javadoc[1], name: match_javadoc[2], text: match_javadoc[3] })
 						} else {
-							let star = line.indexOf("*")
-							const formatted_line = line.substring(star + 1).trim()
+							const star = jline.indexOf("*")
+							const formatted_line = jline.substring(star + 1).trim()
 							if (formatted_line.length) {
 								javadoc.description += formatted_line + "\n"
 							}
@@ -1088,7 +1096,7 @@
 				}
 
 				const fun = {
-					name: match[2],
+					name: match[1],
 					fullName,
 					details: description,
 					type: 'user-function',
