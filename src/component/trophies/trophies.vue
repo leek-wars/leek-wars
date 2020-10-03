@@ -200,9 +200,14 @@
 			border-radius: 6px;
 		}
 	}
+	.panel ::v-deep .actions {
+		flex: 1;
+	}
 	.category-bar-wrapper {
 		text-align: right;
 		white-space: nowrap;
+		display: flex;
+		width: 100%;
 		.stats {
 			display: inline-block;
 			color: white;
@@ -211,13 +216,11 @@
 		}
 	}
 	.category-bar {
-		display: inline-block;
 		height: 12px;
 		position: relative;
 		background: white;
 		border-radius: 6px;
-		width: calc(80% - 100px);
-		max-width: 300px;
+		flex: 1;
 		margin-top: 12px;
 		.bar {
 			height: 12px;
