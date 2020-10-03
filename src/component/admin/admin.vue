@@ -5,34 +5,16 @@
 		</div>
 		<panel class="first last">
 			<div slot="content" class="admin">
-				<router-link to="/admin/services">
-					<div v-ripple class="section card">
-						<img src="/image/admin/services.png">
-						<h2>Services</h2>
-					</div>
-				</router-link>
-				<router-link to="/admin/errors">
-					<div v-ripple class="section card">
-						<img src="/image/admin/error_manager.png">
-						<h2>Gestionnaire d'erreur</h2>
-					</div>
-				</router-link>
-				<router-link to="/admin/emails">
-					<div v-ripple class="section card">
-						<img src="/image/admin/mails.png">
-						<h2>Mails d'activation</h2>
-					</div>
-				</router-link>
 				<router-link to="/admin/servers">
 					<div v-ripple class="section card">
 						<img src="/image/admin/server.png">
 						<h2>État des serveurs</h2>
 					</div>
 				</router-link>
-				<router-link to="/admin/trophies">
+				<router-link to="/admin/errors">
 					<div v-ripple class="section card">
-						<img src="/image/admin/trophies.png">
-						<h2>Trophées</h2>
+						<img src="/image/admin/error_manager.png">
+						<h2>Erreurs ({{ $store.state.farmer.errors }})</h2>
 					</div>
 				</router-link>
 				<a href="http://admin.leekwars.com/memcached/index.php" target="_blank" rel="noopener">
@@ -41,6 +23,24 @@
 						<h2>Memcached <v-icon>mdi-open-in-new</v-icon></h2>
 					</div>
 				</a>
+				<router-link to="/admin/services">
+					<div v-ripple class="section card">
+						<img src="/image/admin/services.png">
+						<h2>Services</h2>
+					</div>
+				</router-link>
+				<router-link to="/admin/emails">
+					<div v-ripple class="section card">
+						<img src="/image/admin/mails.png">
+						<h2>Mails d'activation</h2>
+					</div>
+				</router-link>
+				<router-link to="/admin/trophies">
+					<div v-ripple class="section card">
+						<img src="/image/admin/trophies.png">
+						<h2>Trophées</h2>
+					</div>
+				</router-link>
 				<a target="_blank" rel="noopener" href="http://mx.leekwars.com/mail">
 					<div v-ripple class="section card">
 						<img src="/image/admin/webmail.png">
