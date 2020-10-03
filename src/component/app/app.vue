@@ -5,9 +5,9 @@
 
 			<lw-menu v-if="$store.state.connected" />
 
-			<div class="console-button" @click="leekscriptConsole">
+			<!-- <div class="console-button" @click="leekscriptConsole">
 				<img src="/image/console.png">
-			</div>
+			</div> -->
 			<div v-if="console" :style="{top: consoleY + 'px', left: consoleX + 'px'}" class="console v-dialog draggable">
 				<div class="title" @mousedown="consoleMouseDown">
 					Console LeekScript V2

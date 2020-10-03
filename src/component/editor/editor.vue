@@ -17,7 +17,7 @@
 								<v-list-item-title>{{ $t('new_ai') }}</v-list-item-title>
 							</v-list-item-content>
 						</v-list-item>
-						<v-list-item v-ripple @click="openNewAI(true)">
+						<!-- <v-list-item v-ripple @click="openNewAI(true)">
 							<v-icon class="list-icon">mdi-file-star-outline</v-icon>
 							<v-list-item-content>
 								<v-list-item-title>{{ $t('new_v2') }}
@@ -29,7 +29,7 @@
 									</tooltip>
 								</v-list-item-title>
 							</v-list-item-content>
-						</v-list-item>
+						</v-list-item> -->
 						<v-list-item v-ripple @click="openNewFolder()">
 							<v-icon class="list-icon">mdi-folder-outline</v-icon>
 							<v-list-item-content>
