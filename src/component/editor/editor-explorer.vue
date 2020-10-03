@@ -113,10 +113,10 @@
 
 <script lang="ts">
 	import { AI } from '@/model/ai'
+	import { fileSystem } from '@/model/filesystem'
 	import { i18n, mixins } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
-	import { fileSystem } from '@/model/filesystem'
 	import EditorFolder from './editor-folder.vue'
 	import { Folder } from './editor-item'
 
