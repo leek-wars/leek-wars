@@ -387,7 +387,7 @@
 	"func_getCellY": "Détermine la position en Y de la cellule <b>cell</b>.",
 	"func_getCellY_arg_1": "La cellule dont la position en Y sera déterminée.",
 	"func_getCellY_return": "La position en Y de la cellule.",
-	"func_getChipArea": "Renvoie le type de zone d'effet de de la puce <b>weapon</b>.",
+	"func_getChipArea": "Renvoie le type de zone d'effet de de la puce <b>chip</b>.",
 	"func_getChipArea_arg_1": "La puce dont le type de zone sera renvoyé.",
 	"func_getChipArea_return": "Le type de zone de la puce <b>chip</b> parmi les constantes AREA_* :\n<ul>\n<li>#AREA_POINT : zone d'une seule case</li>\n<li>#AREA_LASER_LINE : ligne d'un laser</li>\n<li>#AREA_CIRCLE_1 : zone circulaire de 3 cases de diamètre</li>\n<li>#AREA_CIRCLE_2 : zone circulaire de 5 cases de diamètre</li>\n<li>#AREA_CIRCLE_3 : zone circulaire de 7 cases de diamètre</li>\n</ul>",
 	"func_getChipCooldown": "Renvoie le temps de récupération de la puce <b>chip</b>, issu du marché.",
