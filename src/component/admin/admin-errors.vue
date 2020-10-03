@@ -9,15 +9,20 @@
 				<div v-else>
 					<h2 v-if="errors.length === 0">Aucune erreur !</h2>
 					<div v-else>
-						<div v-for="(error, e) in errors" :key="e" class="error card" ai="{error.ai}">
-							Error #{{ error.id }} - <b>{{ LeekWars.formatDateTime(error.time) }}</b> - Type {{ error.type }} - Severity {{ error.severity }}
-							<br>
-							<code>{{ error.trace }}</code>
-							Fight : {{ error.fight }} - IA : {{ error.ai }}
-							<br>
-							File {{ error.file }} line {{ error.line }}
-							<br>
-							<v-btn v-if="error.ai" color="primary" @click="seeAI(error.ai)">See AI code</v-btn>
+						<div v-for="(error, e) in errors" :key="e" class="error">
+							<div class="card">
+								Error #{{ error.id }} - <b>{{ LeekWars.formatDateTime(error.time) }}</b> - Type {{ error.type }} - Severity {{ error.severity }}
+								<br>
+								<code>{{ error.trace }}</code>
+								Fight : {{ error.fight }} - IA : {{ error.ai }}
+								<br>
+								File {{ error.file }} line {{ error.line }}
+								<br>
+								<v-btn v-if="error.ai" color="primary" @click="seeAI(error.ai)">See AI code</v-btn>
+							</div>
+							<div class="buttons">
+								<v-btn @click="removeError(error.id)">Supprimer</v-btn>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -46,7 +51,7 @@
 
 	@Component({})
 	export default class AdminErrors extends Vue {
-		errors: any = null
+		errors: any[] | null = null
 		created() {
 			LeekWars.get('error/get-latest').then(data => {
 				this.errors = data.errors
@@ -78,15 +83,27 @@
 				// elem.css('font-weight', 'bold')
 			})
 		}
+
+		removeError(id: number) {
+			LeekWars.post('error/delete', { id })
+			this.errors = this.errors!.filter(e => e.id !== id)
+		}
 	}
 </script>
 
 <style lang="scss" scoped>
 	.error {
-		padding: 10px;
-		margin: 10px 0;
-		background: white;
-		box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
+		margin-bottom: 20px;
+		.card {
+			padding: 10px;
+		}
+		.buttons {
+			display: flex;
+			justify-content: flex-end;
+			.v-btn {
+				margin-right: 0;
+			}
+		}
 	}
 	.error code {
 		margin: 8px 0;

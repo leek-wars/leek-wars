@@ -101,7 +101,7 @@
 					<div class="text">{{ $t('main.moderation') }}</div>
 				</router-link>
 
-				<router-link v-if="$store.getters.admin" v-ripple to="/admin" class="section" tab="admin" @click.native="clickItem">
+				<router-link v-if="$store.getters.admin" v-ripple :label="$store.state.farmer.errors || null" to="/admin" class="section" tab="admin" @click.native="clickItem">
 					<v-icon>mdi-security</v-icon>
 					<div class="text">{{ $t('main.admin') }}</div>
 				</router-link>
