@@ -11,17 +11,14 @@
 					<div v-else>
 						<div v-for="(error, e) in errors" :key="e" class="error">
 							<div class="card">
-								Error #{{ error.id }} - <b>{{ LeekWars.formatDateTime(error.time) }}</b> - Type {{ error.type }} - Severity {{ error.severity }}
-								<br>
-								<code>{{ error.trace }}</code>
-								Fight : {{ error.fight }} - IA : {{ error.ai }}
-								<br>
-								File {{ error.file }} line {{ error.line }}
-								<br>
-								<v-btn v-if="error.ai" color="primary" @click="seeAI(error.ai)">See AI code</v-btn>
+								<div>Erreur #{{ error.id }} - <b>{{ LeekWars.formatDateTime(error.time) }}</b> - Type {{ error.type }} - Gravité {{ error.severity }}</div>
+								<code>{{ error.trace.substring(0, 8000) }}</code>
+								<div v-if="error.file || error.line">Fichier <b>{{ error.file }}</b> ligne <b>{{ error.line }}</b></div>
 							</div>
 							<div class="buttons">
-								<v-btn @click="removeError(error.id)">Supprimer</v-btn>
+								<v-btn v-if="error.ai" color="primary">IA {{ error.ai }}</v-btn>
+								<router-link :to="'/fight/' + error.fight"><v-btn v-if="error.fight">Combat {{ error.fight }}</v-btn></router-link>
+								<v-btn color="error" @click="removeError(error.id)">Supprimer</v-btn>
 							</div>
 						</div>
 					</div>
@@ -47,6 +44,7 @@
 
 <script lang="ts">
 	import { LeekWars } from '@/model/leekwars'
+	import { store } from '@/model/store'
 	import { Component, Vue } from 'vue-property-decorator'
 
 	@Component({})
@@ -55,7 +53,7 @@
 		created() {
 			LeekWars.get('error/get-latest').then(data => {
 				this.errors = data.errors
-				LeekWars.setTitle("Gestionnaire d'erreur")
+				LeekWars.setTitle("Gestionnaire d'erreur (" + store.state.farmer!.errors + ")")
 
 				// $('#errors .error code').each(function() {
 				// 	var content = $(this).text()
@@ -93,7 +91,7 @@
 
 <style lang="scss" scoped>
 	.error {
-		margin-bottom: 20px;
+		margin-bottom: 10px;
 		.card {
 			padding: 10px;
 		}
@@ -102,12 +100,14 @@
 			justify-content: flex-end;
 			.v-btn {
 				margin-right: 0;
+				margin-left: 10px;
 			}
 		}
 	}
 	.error code {
 		margin: 8px 0;
 		display: block;
+		word-break: break-word;
 	}
 	.errors td a {
 		color: #0a0;
