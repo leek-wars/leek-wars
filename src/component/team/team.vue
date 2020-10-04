@@ -910,6 +910,9 @@
 		.grey {
 			color: #999;
 		}
+		tr > td:nth-child(n+2) {
+			border-left: 2px solid #ddd;
+		}
 	}
 	.candidacies .farmer {
 		text-align: center;
