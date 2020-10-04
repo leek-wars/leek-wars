@@ -222,7 +222,7 @@ class Game {
 	// Chips
 	public chips: ChipAnimation[] = []
 	// Logs
-	public logs = new Array()
+	public logs: {[key: number]: any} = {}
 	public currentLog = 0
 	// Marqueurs
 	public markers = new Array()
@@ -569,7 +569,17 @@ class Game {
 	}
 
 	public setLogs(logs: any) {
-		this.logs = logs
+		// Merge logs
+		for (const farmer in logs) {
+			const farmerLogs = logs[farmer]
+			for (const action in farmerLogs) {
+				const actionI = parseInt(action, 10)
+				if (!(action in this.logs)) {
+					Vue.set(this.logs, actionI, [])
+				}
+				this.logs[actionI].push(...farmerLogs[action])
+			}
+		}
 	}
 
 	/*
