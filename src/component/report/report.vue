@@ -9,7 +9,7 @@
 		<div class="page-header page-bar">
 			<div>
 				<h1>{{ $t('title') }}</h1>
-				<div class="info">{{ fight.date | date }}</div>
+				<div v-if="fight" class="info">{{ fight.date | date }}</div>
 			</div>
 			<div class="tabs">
 				<div v-if="report && $store.getters.admin" class="tab disabled">
@@ -215,10 +215,14 @@
 			<pre v-for="(w, i) in warnings" :key="errors.length + i" class="log warning">[{{ w.entity }}] {{ w.data }}</pre>
 		</panel>
 
-		<panel class="last" title="Actions" toggle="report/actions" icon="mdi-format-list-bulleted">
+		<panel class="last actions" title="Actions" toggle="report/actions" icon="mdi-format-list-bulleted">
+			<div v-if="hasPersonalLogs" class="actions-options">
+				<div class="spacer"></div>
+				<v-switch v-model="actionsDisplayLogs" :label="$t('display_logs')" :hide-details="true" />
+			</div>
 			<loader v-if="!loaded" />
 			<div v-else>
-				<actions :actions="actions" :leeks="leeks" class="actions" />
+				<actions :actions="actions" :leeks="leeks" :display-logs="actionsDisplayLogs" class="actions" />
 			</div>
 		</panel>
 	</div>
@@ -271,6 +275,7 @@
 		chartScale: number = 1
 		chart: any
 		chartDisplaySummons: boolean = false
+		actionsDisplayLogs: boolean = true
 		generating: boolean = false
 		error: boolean = false
 		damageEntities: any = null
@@ -331,6 +336,8 @@
 			this.actions = null
 			this.smooth = localStorage.getItem('report/graph-type') === 'smooth'
 			this.log = localStorage.getItem('report/log') === 'true'
+			if (localStorage.getItem('fight/logs') === null) { localStorage.setItem('fight/logs', 'true') }
+			this.actionsDisplayLogs = localStorage.getItem('report/logs') === 'true'
 			const id = this.$route.params.id
 			const url = this.$store.getters.admin ? 'fight/get-private/' + id : 'fight/get/' + id
 			LeekWars.get<Fight>(url).then(data => {
@@ -407,6 +414,14 @@
 					}
 				}
 			}
+		}
+		get hasPersonalLogs() {
+			if (this.logs) {
+				for (const farmer in this.logs) {
+					for (const _ in this.logs[farmer]) { return true }
+				}
+			}
+			return false
 		}
 		warningsErrors() {
 			this.errors = []
@@ -700,6 +715,11 @@
 			// }, 500)
 		}
 
+		@Watch("actionsDisplayLogs")
+		toggleLogs() {
+			localStorage.setItem('report/logs', '' + this.actionsDisplayLogs)
+		}
+
 		walkedCells(fid: number) {
 			this.cells = this.statistics.entities[fid].walkedCells
 		}
@@ -767,9 +787,6 @@
 		background: white;
 		font-weight: normal;
 		color: #777;
-	}
-	.actions {
-		padding: 0 30px;
 	}
 	.turn {
 		font-size: 18px;
@@ -1004,6 +1021,23 @@
 		color: #333;
 		.v-icon {
 			font-size: 20px;
+		}
+	}
+	.panel.actions {
+		.actions {
+			padding: 0 15px;
+		}
+	}
+	.actions-options {
+		display: flex;
+		background: #f2f2f2;
+		position: sticky;
+		height: 45px;
+		top: 0;
+		padding-top: 10px;
+		padding-bottom: 10px;
+		.spacer {
+			flex: 1;
 		}
 	}
 </style>

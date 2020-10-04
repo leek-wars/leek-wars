@@ -23,7 +23,7 @@
 		<div v-if="!LeekWars.mobile" ref="leftPart" class="left-part">
 			<div ref="actions" :style="{'margin-top': actionsMargin + 'px'}" class="actions">
 				<template v-for="line of game.consoleLines">
-					<action-element v-if="line.action" :key="line.id" :action="line.action" :leeks="game.leeks" turn="1" class="action" />
+					<action-element v-if="line.action" :key="line.id" :action="line.action" :leeks="game.leeks" :display-logs="true" turn="1" class="action" />
 					<pre v-else :key="line.id" :class="logClass(line.log)" :style="{color: logColor(line.log)}" class="log">[<leek :leek="game.leeks[line.log[0]]" />] {{ logText(line.log) }}</pre>
 				</template>
 			</div>

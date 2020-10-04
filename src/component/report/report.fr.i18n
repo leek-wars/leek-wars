@@ -3,6 +3,7 @@
 	"back_to_garden": "Retour au potager",
 	"back_to_tournament": "Retour au tournoi",
 	"damages_title": "Répartition des dommages, soins et tank",
+	"display_logs": "Affichage des logs personnels",
 	"display_summons": "Afficher les invocations",
 	"duration": "Durée : {0} tours",
 	"error_reading_actions": "Un problème est survenu dans la lecture des actions du combat :(",

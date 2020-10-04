@@ -1,7 +1,7 @@
 <template>
 	<div>
 		{{ resetCounter() }}
-		<action v-for="(action, a) in actions" :key="a" :action="action" :logs="[]" :leeks="leeks" :turn="turnCounter(action)" class="action" />
+		<action v-for="(action, a) in actions" :key="a" :action="action" :logs="[]" :leeks="leeks" :turn="turnCounter(action)" :display-logs="displayLogs" class="action" :class="{turn: action.params[0] === ActionType.NEW_TURN || action.params[0] === ActionType.START_FIGHT}" />
 	</div>
 </template>
 
@@ -17,6 +17,10 @@
 	export default class ActionsElement extends Vue {
 		@Prop({required: true}) actions!: number[][]
 		@Prop({required: true}) leeks!: {[key: number]: any}
+		@Prop({required: true}) displayLogs!: boolean
+
+		ActionType = ActionType
+
 		resetCounter() {
 			turn = 1
 		}
@@ -26,3 +30,14 @@
 		}
 	}
 </script>
+
+<style lang="scss" scoped>
+	.turn {
+		position: sticky;
+		top: 0;
+		background: #f2f2f2;
+		width: 50%;
+		padding: 7px 0;
+		margin: 0;
+	}
+</style>
