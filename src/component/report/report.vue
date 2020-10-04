@@ -7,7 +7,10 @@
 	</error>
 	<div v-else>
 		<div class="page-header page-bar">
-			<h1>{{ $t('title') }}</h1>
+			<div>
+				<h1>{{ $t('title') }}</h1>
+				<div class="info">{{ fight.date | date }}</div>
+			</div>
 			<div class="tabs">
 				<div v-if="report && $store.getters.admin" class="tab disabled">
 					{{ fight.size | number }} Ko
