@@ -29,6 +29,7 @@
 	"function_only_in_main_block": "Impossible de déclarer une fonction ailleurs que dans le bloc principal",
 	"global_only_in_main_block": "Vous ne pouvez déclarer une variable globale que dans le bloc principal",
 	"include_only_in_main_block": "Impossible d'include une IA ailleurs que dans le bloc principal",
+	"invalid_ai": "IA invalide : {0}",
 	"invalid_char": "Caractère invalide",
 	"invalid_number": "Nombre invalide",
 	"invalid_parameter_count": "Nombre de paramètres incorrect",

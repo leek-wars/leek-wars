@@ -396,24 +396,32 @@
 		processLogs() {
 			if (!this.actions || !this.logs) { return }
 			for (const a in this.actions) {
-				const i = parseInt(a, 10) + 1
-				if (i in this.logs) {
-					this.actions[a].logs.push(...this.logs[i].filter(l => l[1] !== 4))
+				const i = parseInt(a, 10)
+				for (const farmer in this.logs) {
+					const farmerLogs = this.logs[farmer]
+					if (i in farmerLogs) {
+						this.actions[a].logs.push(...farmerLogs[i].filter(l => l[1] !== 4))
+					}
 				}
 			}
 		}
 		warningsErrors() {
 			this.errors = []
 			this.warnings = []
-			for (const a in this.logs) {
-				const action = this.logs[a]
-				for (const log of action) {
-					const leek = log[0]
-					const type = log[1]
-					if (type === 2) {
-						this.warnings.push({entity: this.leeks[leek].name, data: log[2]})
-					} else if (type === 3) {
-						this.errors.push({entity: this.leeks[leek].name, data: log[2]})
+			for (const farmer in this.logs) {
+				if (parseInt(farmer, 10) !== this.$store.state.farmer.id) { continue }
+				const farmerLogs = this.logs[farmer]
+				for (const a in farmerLogs) {
+					const action = farmerLogs[a]
+					for (const log of action) {
+						const leek = log[0]
+						const type = log[1]
+						const message = (type >= 6 && type <= 8) ? i18n.t('leekscript.' + log[3], log[4]) : log[2]
+						if (type === 2 || type === 7) {
+							this.warnings.push({entity: this.leeks[leek].name, data: message})
+						} else if (type === 3 || type === 8) {
+							this.errors.push({entity: this.leeks[leek].name, data: message})
+						}
 					}
 				}
 			}

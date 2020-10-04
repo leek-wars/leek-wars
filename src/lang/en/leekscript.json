@@ -29,6 +29,7 @@
 	"function_only_in_main_block": "Function can't be declared elsewhere than in the main scope",
 	"global_only_in_main_block": "Global variable can only be declared in the main scope",
 	"include_only_in_main_block": "It's not possible to include an AI elsewhere than in the main scope",
+	"invalid_ai": "Invalid AI: {0}",
 	"invalid_char": "Invalid character",
 	"invalid_number": "Invalid number",
 	"invalid_parameter_count": "Invalid number of arguments",

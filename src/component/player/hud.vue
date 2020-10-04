@@ -56,6 +56,7 @@
 	import ActionLeekElement from '@/component/report/action-leek.vue'
 	import ActionElement from '@/component/report/action.vue'
 	import { Effect, EffectType } from '@/model/effect'
+	import { i18n } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 	import { Game } from './game/game'
@@ -96,8 +97,8 @@
 		}
 
 		logClass(log: any[]) {
-			if (log[1] === 2) { return "warning" }
-			else if (log[1] === 3) { return "error" }
+			if (log[1] === 2 || log[1] === 7) { return "warning" }
+			else if (log[1] === 3 || log[1] === 8) { return "error" }
 			else if (log[1] === 5) { return "pause" }
 		}
 		logColor(log: any[]) {
@@ -105,6 +106,7 @@
 		}
 		logText(log: any[]) {
 			if (log[1] === 5) {	return "pause()" }
+			if (log[1] >= 6 && log[1] <= 8) { return i18n.t('leekscript.' + log[3], log[4]) }
 			return log[2]
 		}
 	}
