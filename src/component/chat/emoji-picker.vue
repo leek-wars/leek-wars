@@ -2,7 +2,7 @@
 	<v-menu :close-on-content-click="false" :nudge-width="width" :left="true" :nudge-top="0" :min-width="width" :max-width="width" top offset-y>
 		<template v-slot:activator="{ on }">
 			<div v-ripple class="chat-input-emoji" v-on="on">
-				<img src="https://twemoji.maxcdn.com/2/svg/1f603.svg">
+				<div :class="{'emoji-font': !LeekWars.nativeEmojis}">😀</div>
 			</div>
 		</template>
 		<v-tabs :key="categories.length" class="tabs" grow :show-arrows="false">
@@ -26,7 +26,7 @@
 	import { Emojis } from '@/model/emojis'
 	import { LeekWars } from '@/model/leekwars'
 	import { Component, Prop, Vue } from 'vue-property-decorator'
-	
+
 	@Component({})
 	export default class EmojiPicker extends Vue {
 		width: number = 352
@@ -44,6 +44,9 @@
 		right: 0;
 		top: 0;
 		cursor: pointer;
+		div {
+			font-size: 20px;
+		}
 	}
 	.tab ::v-deep .emoji {
 		font-size: 20px;
