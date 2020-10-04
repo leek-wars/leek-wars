@@ -5,12 +5,9 @@
 	"deleted_leek": "poireau supprimé",
 	"deleted_team": "équipe supprimée",
 	"end_of_fight": "Fin du combat !",
-	"error_generating_fight": "Une erreur s'est produite à la génération du combat",
 	"n_views": "pas de vue | 1 vue | {n} vues",
 	"not_found": "Combat introuvable :(",
 	"not_found_id": "Combat d'id <b>{0}</b> introuvable :(",
-	"no_data_received": "Aucune donnée reçue",
 	"pause_message": "Cliquer ou appuyez sur 'P' pour reprendre",
-	"see_report": "Voir le rapport",
 	"starter": "Lanceur du combat"
 }
