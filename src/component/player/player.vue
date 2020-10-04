@@ -186,7 +186,7 @@
 		fullscreen: boolean = false
 		progressBarTurn: any = 0
 		progressBarTooltipMargin: number = 0
-		progressBarPreviewWidth: number = 0
+		progressBarPreviewMouse: number = 0
 		width: number = 0
 		height: number = 0
 		timeout: any = null
@@ -400,8 +400,9 @@
 		progressBarClick(e: MouseEvent) {
 			const bar = this.$refs.progressBar as HTMLElement
 			const action = Math.round(this.game.actions.length * (e.pageX - bar.getBoundingClientRect().left) / bar.offsetWidth)
-			this.progressBarPreviewWidth = 0
 			this.game.requestJump(action)
+			const barOffset = bar.getBoundingClientRect().left
+			this.progressBarPreviewMouse = 100 * (e.pageX - barOffset) / bar.clientWidth
 		}
 		progressBarMove(e: MouseEvent) {
 			const bar = this.$refs.progressBar as HTMLElement
@@ -416,7 +417,10 @@
 			}
 			this.progressBarTurn = turn
 			this.progressBarTooltipMargin = Math.min(Math.max((e.pageX - barOffset) - (tooltip.clientWidth / 2), 0), bar.clientWidth - tooltip.clientWidth)
-			this.progressBarPreviewWidth = 100 * (e.pageX - barOffset) / bar.clientWidth - this.progressBarWidth
+			this.progressBarPreviewMouse = 100 * (e.pageX - barOffset) / bar.clientWidth
+		}
+		get progressBarPreviewWidth() {
+			return Math.max(0, this.progressBarPreviewMouse - this.progressBarWidth)
 		}
 		@Watch("game.sound") toggleSound() {
 			localStorage.setItem('fight/sound', '' + this.game.sound)
