@@ -68,7 +68,7 @@
 		display: grid;
 		grid-gap: 10px;
 		padding: 10px;
-		grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+		grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
 	}
 	#app.app .packs {
 		padding: 0;
