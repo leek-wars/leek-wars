@@ -203,9 +203,9 @@
 					<template v-else>
 						<template v-if="leek.ai">
 							<router-link v-if="my_leek" :to="'/editor/' + leek.ai.id">
-								<ai :ai="leek.ai" />
+								<ai :ai="leek.ai" :library="false" />
 							</router-link>
-							<ai v-else :ai="leek.ai" />
+							<ai v-else :ai="leek.ai" :library="false" />
 						</template>
 						<span v-else class="empty">{{ $t('no_ai') }}</span>
 					</template>
@@ -510,13 +510,13 @@
 			<span slot="title">{{ $t('ai_of', [leek.name]) }}</span>
 			<div class="ai_popup">
 				<div :class="{dashed: draggedAI && (!leek.ai || draggedAI.id !== leek.ai.id)}" class="leek-ai" @dragover="dragOver" @drop="aiDrop('leek', $event)">
-					<ai v-if="leek.ai" :ai="leek.ai" @click.native="removeAI()" @dragstart.native="aiDragStart(leek.ai, $event)" @dragend.native="aiDragEnd(leek.ai, $event)" />
+					<ai v-if="leek.ai" :ai="leek.ai" :library="true" @click.native="removeAI()" @dragstart.native="aiDragStart(leek.ai, $event)" @dragend.native="aiDragEnd(leek.ai, $event)" />
 				</div>
 				<br><br>
 				<h2>{{ $t('all_my_ais') }}</h2>
 				<br>
 				<div :class="{dashed: draggedAI && leek.ai && draggedAI.id === leek.ai.id}" class="farmer-ais" @dragover="dragOver" @drop="aiDrop('farmer', $event)">
-					<ai v-for="ai in $store.state.farmer.ais" v-if="!leek.ai || ai.id !== leek.ai.id" :key="ai.id" :ai="ai" @click.native="selectAI(ai)" @dragstart.native="aiDragStart(ai, $event)" @dragend.native="aiDragEnd(ai, $event)" />
+					<ai v-for="ai in $store.state.farmer.ais" v-if="!leek.ai || ai.id !== leek.ai.id" :key="ai.id" :ai="ai" :library="true" @click.native="selectAI(ai)" @dragstart.native="aiDragStart(ai, $event)" @dragend.native="aiDragEnd(ai, $event)" />
 				</div>
 			</div>
 		</popup>
