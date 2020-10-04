@@ -150,12 +150,20 @@
 						{{ $t('ratio') }} : {{ farmer.ratio }}
 					</tooltip>
 
-					<table v-if="farmer && farmer.won_solo_tournaments + farmer.won_farmer_tournaments + farmer.won_team_tournaments > 0" class="tournaments">
+					<table v-if="farmer && farmer.won_solo_tournaments + farmer.won_farmer_tournaments + farmer.won_team_tournaments + farmer.won_battle_royale > 0" class="tournaments">
 						<tr>
-							<td class="grey">Tournois</td>
+							<td class="grey">
+								<tooltip>
+									<template v-slot:activator="{ on }">
+										<v-icon v-on="on">mdi-trophy-outline</v-icon>
+									</template>
+									{{ $t('tournaments') }}
+								</tooltip>
+							</td>
 							<td width="25%"><span class="big">{{ farmer.won_solo_tournaments }}</span><br><span class="small grey">solo</span></td>
 							<td width="25%"><span class="big">{{ farmer.won_farmer_tournaments }}</span><br><span class="small grey">éleveur</span></td>
 							<td width="25%"><span class="big">{{ farmer.won_team_tournaments }}</span><br><span class="small grey">équipe</span></td>
+							<td width="25%"><span class="big">{{ farmer.won_battle_royale }}</span><br><span class="small grey">BR</span></td>
 						</tr>
 					</table>
 
@@ -833,6 +841,7 @@
 		}
 		table {
 			margin: 10px auto;
+			margin-bottom: 15px;
 		}
 		tr > td:nth-child(n+2) {
 			border-left: 2px solid #ddd;
@@ -848,6 +857,9 @@
 		}
 		.grey {
 			color: #999;
+		}
+		.v-icon {
+			color: #777;
 		}
 		.log-time, .godfather {
 			margin-top: 10px;
