@@ -46,5 +46,6 @@ class Farmer {
 	public show_ai_lines!: boolean
 	public pomps!: number[]
 	public pass!: boolean
+	public errors!: number
 }
 export { Farmer }
