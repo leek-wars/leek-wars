@@ -114,7 +114,7 @@
 							<h4>{{ $t('turret') }}</h4>
 							<div class="level">{{ $t('level_n', [team.level]) }}</div>
 
-							<ai v-if="team.turret_ai" :ai="team.turret_ai" :class="{active: member}" @click.native="turretAiDialog = true" />
+							<ai v-if="team.turret_ai" :ai="team.turret_ai" :library="false" :class="{active: member}" @click.native="turretAiDialog = true" />
 							<div v-else-if="member" class="no-ai" @click="turretAiDialog = true">{{ $t('no_ai') }}</div>
 						</div>
 					</div>
@@ -449,7 +449,7 @@
 			<span slot="title">{{ $t('fight.turret') }} [{{ $t('level_n', [team.level]) }}]</span>
 			<div class="turret-ai-dialog">
 				<div class="farmer-ais">
-					<ai v-for="ai in $store.state.farmer.ais" v-if="!team.turret_ai || ai.id !== team.turret_ai.id" :key="ai.id" :ai="ai" @click.native="selectAI(ai)" />
+					<ai v-for="ai in $store.state.farmer.ais" v-if="!team.turret_ai || ai.id !== team.turret_ai.id" :key="ai.id" :ai="ai" :library="true" @click.native="selectAI(ai)" />
 				</div>
 			</div>
 		</popup>
@@ -1162,7 +1162,7 @@
 	}
 	.turret-ai-dialog .farmer-ais {
 		min-height: 80px;
-		max-height: 400px;
+		max-height: 600px;
 		.ai {
 			cursor: pointer;
 		}
