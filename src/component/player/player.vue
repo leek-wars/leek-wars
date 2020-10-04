@@ -1,14 +1,14 @@
 <template lang="html">
 	<div :style="{width: width + 'px', height: height + 36 + 'px'}">
 		<div v-if="error" class="error">
-			<h2>{{ $t('fight.error_generating_fight') }}</h2>
+			<h2>{{ $t('error_generating_fight') }}</h2>
 			<br>
 			<img src="/image/notgood.png">
 			<br><br>
-			<h4><i>{{ $t('fight.no_data_received') }}</i></h4>
+			<h4><i>{{ $t('no_data_received') }}</i></h4>
 			<br>
 			<router-link v-if="fight" :to="'/report/' + fight.id">
-				<v-btn>{{ $t('fight.see_report') }}</v-btn>
+				<v-btn>{{ $t('see_report') }}</v-btn>
 			</router-link>
 			<br><br>
 		</div>
@@ -320,8 +320,12 @@
 				this.fight = fight
 				this.$emit('fight', fight)
 				if (fight.status >= 1) {
-					this.getLogs()
-					this.game.init(fight)
+					if (fight.data) {
+						this.getLogs()
+						this.game.init(fight)
+					} else {
+						this.error = true
+					}
 				} else {
 					if (first) {
 						LeekWars.socket.send([SocketMessage.FIGHT_PROGRESS_REGISTER, this.fight.id])
@@ -629,9 +633,12 @@
 		padding-left: 4px;
 	}
 	.error {
-		display: none;
-		padding-top: 70px;
 		text-align: center;
+		height: 100%;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
 	}
 	.progress-bar-wrapper {
 		height: 20px;
