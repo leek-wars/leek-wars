@@ -170,7 +170,7 @@
 			<leek slot="leek" :leek="leek" />
 			<leek slot="target" :leek="leeks[action.params[2]]" />
 		</i18n>
-		<div v-if="action.logs.length" class="logs">
+		<div v-if="displayLogs && action.logs.length" class="logs">
 			<pre v-for="(log, l) in action.logs" :key="l" :class="logClass(log)" :style="{color: logColor(log)}" class="log">[<leek :leek="leeks[log[0]]" />] {{ logText(log) }}</pre>
 		</div>
 	</div>
@@ -189,6 +189,7 @@
 		@Prop({required: true}) action!: Action
 		@Prop({required: true}) leeks!: {[key: number]: any}
 		@Prop({required: true}) turn!: number
+		@Prop({required: true}) displayLogs!: boolean
 		ActionType = ActionType
 		EffectType = EffectType
 		get type() { return this.action.params[0] }
@@ -218,10 +219,13 @@
 
 <style lang="scss" scoped>
 	.turn {
-		font-size: 18px;
-		color: #888;
-		margin: 10px 0;
-		margin-left: -20px;
+		font-size: 16px;
+		background: #333;
+		color: #eee;
+		font-weight: 500;
+		display: inline-block;
+		padding: 5px 10px;
+		border-radius: 4px;
 	}
 	.action {
 		padding-top: 2px;
