@@ -230,7 +230,7 @@
 	import { Action, ActionType } from '@/model/action'
 	import { Comment } from '@/model/comment'
 	import { Fight, FightContext, FightLeek, FightType, Report, ReportFarmer, ReportLeek, TEAM_COLORS } from '@/model/fight'
-	import { mixins } from '@/model/i18n'
+	import { i18n, mixins } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import Chartist from 'chartist'
 	import { Component, Vue, Watch } from 'vue-property-decorator'
@@ -403,7 +403,7 @@
 				for (const farmer in this.logs) {
 					const farmerLogs = this.logs[farmer]
 					if (i in farmerLogs) {
-						this.actions[a].logs.push(...farmerLogs[i].filter(l => l[1] !== 4))
+						this.actions[a].logs.push(...farmerLogs[i].filter(l => l[1] !== 4 && l[1] !== 9))
 					}
 				}
 			}
