@@ -106,7 +106,7 @@
 		}
 		logText(log: any[]) {
 			if (log[1] === 5) {	return "pause()" }
-			if (log[1] >= 6 && log[1] <= 8) { return i18n.t('leekscript.' + log[3], log[4]) }
+			if (log[1] >= 6 && log[1] <= 8) { return log[2] + i18n.t('leekscript.' + log[3], log[4]) }
 			return log[2]
 		}
 	}
