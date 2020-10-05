@@ -14,11 +14,12 @@ class Cell {
 	}
 
 	public setEntity(entity: Entity | null) {
-		if (this.entity === entity) {
-			return
-		}
 		if (entity === null) {
 			this.entity = null
+			return
+		}
+		if (this.entity === entity) {
+			entity.cell = this
 			return
 		}
 		if (this.entity) {
