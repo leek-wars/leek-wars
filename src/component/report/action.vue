@@ -158,6 +158,7 @@
 		<i18n v-else-if="type === ActionType.SUMMON" tag="div" path="fight.summon">
 			<leek slot="leek" :leek="leek" />
 			<leek slot="summon" :leek="leeks[action.params[2]]" />
+			<span v-if="action.params[4] === 2">... {{ $t('effect.critical') }}</span>
 		</i18n>
 		<i18n v-else-if="type === ActionType.SHOW" tag="div" path="fight.leek_show_cell">
 			<leek slot="leek" :leek="leek" />
@@ -169,6 +170,7 @@
 		<i18n v-else-if="type === ActionType.RESURRECTION" tag="div" path="fight.leek_resurrect">
 			<leek slot="leek" :leek="leek" />
 			<leek slot="target" :leek="leeks[action.params[2]]" />
+			<span v-if="action.params[4] === 2">... {{ $t('effect.critical') }}</span>
 		</i18n>
 		<div v-if="displayLogs && action.logs.length" class="logs">
 			<pre v-for="(log, l) in action.logs" :key="l" :class="logClass(log)" :style="{color: logColor(log)}" class="log">[<leek :leek="leeks[log[0]]" />] {{ logText(log) }}</pre>

@@ -542,11 +542,15 @@ class FightEntity extends Entity {
 		}
 	}
 
-	public useChip(chip: ChipAnimation, cell: Cell, targets: FightEntity[]) {
+	public useChip(chip: ChipAnimation, cell: Cell, targets: FightEntity[], result: number) {
 		const pos = this.game.ground.field.cellToXY(cell)
 		const cellPixels = this.game.ground.xyToXYPixels(pos.x, pos.y)
 		this.watch(cell)
 		chip.launch({x: this.ox, y: this.oy}, cellPixels, targets, cell, this)
+
+		if (result === 2) {
+			this.addCritical()
+		}
 	}
 
 	// Inclinaison du poireau vers la cellule cible
@@ -617,6 +621,10 @@ class FightEntity extends Entity {
 		this.dead = false
 		this.bubble = new Bubble(this.game)
 		this.active = true
+	}
+
+	public addCritical() {
+		this.game.particles.addCritical(this.ox + 30 * this.direction, this.oy, this.getHeight() - (this.front ? 80 : 60))
 	}
 
 	public draw(ctx: CanvasRenderingContext2D) {

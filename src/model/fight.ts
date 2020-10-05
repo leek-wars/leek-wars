@@ -118,6 +118,7 @@ class FightLeek {
 	public pm!: number
 	public name!: string
 	public owner!: number
+	public critical!: boolean
 	public resistance!: number
 	public science!: number
 	public skin!: number

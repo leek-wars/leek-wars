@@ -421,6 +421,17 @@ class ImageParticle extends Particle {
 		ctx.globalAlpha = 1
 	}
 }
+class CriticalParticle extends Particle {
+	static LIFE = 40
+	constructor(game: Game, x: number, y: number, z: number) {
+		super(game, x, y, z, CriticalParticle.LIFE)
+	}
+	public draw(ctx: CanvasRenderingContext2D) {
+		const x = this.life / CriticalParticle.LIFE
+		const size = (1 - 2000 * Math.pow(Math.abs(x - 0.5), 12)) * 50
+		ctx.drawImage(T.critical.texture, -size / 2, -size / 2, size, size)
+	}
+}
 class SpikeParticle extends Particle {
 	public totalLife: any
 	public flip: boolean
@@ -547,4 +558,4 @@ class SpinningParticle extends Particle {
 	}
 }
 
-export { Particle, Bullet, Laser, Lightning, Fire, SimpleFire, Gaz, Meteorite, Grenade, Shot, Explosion, Cartridge, Garbage, ImageParticle, Plasma, Rectangle, Blood, SpikeParticle, SpinningParticle, NUM_BLOOD_SPRITES }
+export { Particle, Bullet, CriticalParticle, Laser, Lightning, Fire, SimpleFire, Gaz, Meteorite, Grenade, Shot, Explosion, Cartridge, Garbage, ImageParticle, Plasma, Rectangle, Blood, SpikeParticle, SpinningParticle, NUM_BLOOD_SPRITES }

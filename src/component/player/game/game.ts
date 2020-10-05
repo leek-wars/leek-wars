@@ -13,6 +13,7 @@ import { S, Sound } from '@/component/player/game/sound'
 import { T, Texture } from '@/component/player/game/texture'
 import { Axe, BLaser, Broadsword, Destroyer, DoubleGun, Electrisor, FlameThrower, Gazor, GrenadeLauncher, IllicitGrenadeLauncher, JLaser, Katana, Laser, MachineGun, Magnum, MLaser, MysteriousElectrisor, Pistol, RevokedMLaser, Shotgun, UnbridledGazor } from '@/component/player/game/weapons'
 import { env } from '@/env'
+import { locale } from '@/locale'
 import { Action, ActionType } from '@/model/action'
 import { Area } from '@/model/area'
 import { Cell } from '@/model/cell'
@@ -461,6 +462,9 @@ class Game {
 			} else if (entity instanceof Bulb) {
 
 				entity.name = i18n.t('entity.' + entity.name) as string
+				if (e.critical) {
+					entity.name += (locale === 'fr' ? ' !' : '!')
+				}
 				entity.setSkin(e.skin)
 
 			} else if (entity instanceof Turret) {
@@ -530,6 +534,7 @@ class Game {
 		// Load common textures
 		T.tp.load(this)
 		T.mp.load(this)
+		T.critical.load(this)
 
 		const textures = new Set<Texture>()
 		const sounds = new Set<Sound>()
@@ -929,6 +934,7 @@ class Game {
 			const launcher = this.leeks[launcher_id]
 			const target_cell = this.ground.field.cells[action.params[2]]
 			const chip = action.params[3]
+			const result = action.params[4]
 
 			// TODO take the area from the action instead of the item data when available
 			const area = LeekWars.chips[LeekWars.chipTemplates[chip].item].area
@@ -952,7 +958,7 @@ class Game {
 			}
 			if (CHIPS[chip - 1] !== null) {
 				const chipAnimation: any = new CHIPS[chip - 1]!(this)
-				launcher.useChip(chipAnimation, target_cell, targets)
+				launcher.useChip(chipAnimation, target_cell, targets, result)
 				this.chips.push(chipAnimation)
 			} else {
 				this.actionDone()
@@ -969,12 +975,13 @@ class Game {
 			const cell = this.ground.field.cells[action.params[2]]
 			const weapon = action.params[3]
 			action.weapon = (this.leeks[launcher] as Leek).weapon_name
+			const result = action.params[4]
 
 			// TODO take the area from the action instead of the item data when available
 			const area = LeekWars.weapons[LeekWars.weaponTemplates[weapon].item].area
 			const targets = this.ground.field.getTargets(cell, area) as FightEntity[]
 
-			const duration = (this.leeks[launcher] as Leek).useWeapon(cell, targets)
+			const duration = (this.leeks[launcher] as Leek).useWeapon(cell, targets, result)
 			this.actionDone(Math.max(6, duration))
 
 			this.log(action)
@@ -1055,6 +1062,7 @@ class Game {
 			const caster = action.params[1]
 			const summonID = action.params[2]
 			const cell = this.ground.field.cells[action.params[3]]
+			const result = action.params[4]
 			const summon = this.leeks[summonID]
 			summon.summoner = this.leeks[caster]
 			summon.active = true
@@ -1071,6 +1079,9 @@ class Game {
 				this.log(action)
 				S.bulb.play(this)
 				this.leeks[caster].watch(cell)
+				if (result === 2) {
+					this.leeks[caster].addCritical()
+				}
 			}
 			this.actionDone()
 			break

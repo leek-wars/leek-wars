@@ -77,7 +77,7 @@ class Leek extends FightEntity {
 		}
 	}
 
-	public useWeapon(cell: Cell, targets: FightEntity[]) {
+	public useWeapon(cell: Cell, targets: FightEntity[], result: number) {
 
 		if (this.weapon == null) {
 			return 0 // Il n'y aura pas d'anim
@@ -92,6 +92,10 @@ class Leek extends FightEntity {
 		const east = this.x > x
 
 		this.setOrientation(south ? (east ? EntityDirection.NORTH : EntityDirection.EAST) : (east ? EntityDirection.WEST : EntityDirection.SOUTH))
+
+		if (result === 2) {
+			this.addCritical()
+		}
 
 		this.angle = Math.atan2(Math.abs(this.x - x), (this.y - y) / 2) - Math.PI / 2
 
