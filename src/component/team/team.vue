@@ -23,7 +23,7 @@
 			</div>
 		</div>
 
-		<div class="container">
+		<div class="grid container">
 			<panel class="team-emblem first">
 				<div v-if="team" slot="content" class="content">
 					<template v-if="member">
