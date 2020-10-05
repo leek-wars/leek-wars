@@ -79,6 +79,7 @@ class T {
 	public static tp = new Texture(env.STATIC + 'image/charac/small/tp.png')
 	public static mp = new Texture(env.STATIC + 'image/charac/small/mp.png')
 	public static leek_hand = new Texture(env.STATIC + "image/fight/leek_hand.png", true, SHADOW_QUALITY)
+	public static critical = new Texture(env.STATIC + "image/fight/critical.png", true, SHADOW_QUALITY)
 
 	// Armes
 	public static machine_gun = new Texture(env.STATIC + "image/weapon/machine_gun.png", true, SHADOW_QUALITY)
