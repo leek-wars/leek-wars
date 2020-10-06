@@ -216,7 +216,6 @@ class Game {
 	public currentAction: number = -1
 	public actionToDo = true
 	public actionDelay = 0
-	public fightEnd = false
 	public turn = 1
 	public turnPosition: {[key: number]: number} = {}
 	public effects: EntityEffect[] = []
@@ -721,25 +720,22 @@ class Game {
 
 			// Actions
 			if (!needPause) {
-				if (!this.fightEnd) {
-					if (this.actionToDo) {
-						this.actionDelay -= dt
-						if (this.actionDelay <= 0) {
+				if (this.actionToDo) {
+					this.actionDelay -= dt
+					if (this.actionDelay <= 0) {
 
-							this.actionDelay = 0
-							this.actionToDo = false
-							this.currentAction++
+						this.actionDelay = 0
+						this.actionToDo = false
+						this.currentAction++
 
-							const action = this.actions[this.currentAction]
+						const action = this.actions[this.currentAction]
 
-							if (action === undefined) {
-								// this.log(i18n.t('fight.end_of_fight') as string)
-								this.fightEnd = true
-								this.reportTimer = setTimeout(() => this.showReport(), 2500)
-								return
-							}
-							this.doAction(action)
+						if (action === undefined) {
+							// this.log(i18n.t('fight.end_of_fight') as string)
+							this.reportTimer = setTimeout(() => this.showReport(), 2500)
+							return
 						}
+						this.doAction(action)
 					}
 				}
 				this.drawArea -= dt
@@ -1161,7 +1157,7 @@ class Game {
 			break
 		}
 		case ActionType.END_FIGHT: {
-			this.fightEnd = true
+
 			break
 		}
 		default: {
@@ -2081,6 +2077,7 @@ class Game {
 	}
 
 	public requestJump(jumpAction: number) {
+		clearTimeout(this.reportTimer)
 		if (this.paused) {
 			this.jump(jumpAction)
 		} else {
