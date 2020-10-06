@@ -4,7 +4,7 @@ import { env } from '@/env'
 // var _iOS = navigator.userAgent.match(/(iPad|iPhone|iPod)/g) ? true : false;
 
 // Sound volume constant
-const VOL_MAP_SOUND = 0.05 // atmosphere sound
+const VOL_MAP_SOUND = 0.03 // atmosphere sound
 const VOL_DEFFENSIVE_SOUND = 0.4 // heal, buff, shield, ...
 const VOL_OFFENSIVE_SOUND = 0.5 // weapons and offensive chips
 const VOL_SPECIAL_SOUND = 0.5 // liberation, teleportation, summon, resurection, ...
@@ -109,7 +109,7 @@ class S {
 	public static map_forest = new Sound(env.STATIC + "sound/map_forest.mp3", VOL_MAP_SOUND)
 	public static map_beach = new Sound(env.STATIC + "sound/map_beach.mp3", VOL_MAP_SOUND)
 	public static map_desert = new Sound(env.STATIC + "sound/map_desert.mp3", VOL_MAP_SOUND)
-	public static map_factory = new Sound(env.STATIC + "sound/map_factory.mp3", VOL_MAP_SOUND / 2)
+	public static map_factory = new Sound(env.STATIC + "sound/map_factory.mp3", VOL_MAP_SOUND)
 	public static map_glacier = new Sound(env.STATIC + "sound/map_glacier.mp3", VOL_MAP_SOUND)
 	public static map_nexus = new Sound(env.STATIC + "sound/map_nexus.mp3", VOL_MAP_SOUND)
 
