@@ -364,6 +364,7 @@ class Game {
 			// Life
 			entity.life = e.life
 			entity.maxLife = entity.life
+			entity.initialMaxLife = entity.maxLife
 
 			// Strength
 			entity.strength = 0
@@ -463,6 +464,8 @@ class Game {
 				entity.name = i18n.t('entity.' + entity.name) as string
 				if (e.critical) {
 					entity.name += (locale === 'fr' ? ' !' : '!')
+					entity.initialMaxLife = entity.initialMaxLife / 1.2
+					entity.updateGrowth()
 				}
 				entity.setSkin(e.skin)
 

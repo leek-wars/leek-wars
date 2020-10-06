@@ -140,7 +140,7 @@ abstract class RangeWeapon extends WeaponAnimation {
 		// Coordonnées sans rotation (par rapport au centre)
 		const x = this.x + this.sx - this.recoil
 		const y = 0
-		const z = this.cz + this.z + this.sz + handPos
+		const z = this.cz * Leek.SCALE + this.z + this.sz + handPos
 		// Rotation
 		const X = leekX + (this.cx + x * cos - y * sin) * orientation
 		const Y = leekY + (y * cos + x * sin)
@@ -292,7 +292,7 @@ class Electrisor extends WeaponAnimation {
 		const cos = Math.cos(angle)
 		const sin = Math.sin(angle)
 		const x = this.x + this.sx
-		const z = this.cz + this.z + this.sz - (caster.front ? 5 : -5)
+		const z = this.cz * Leek.SCALE + this.z + this.sz - (caster.front ? 5 : -5)
 		this.lightningX = leekX + (this.cx + x * cos) * orientation
 		this.lightningY = leekY + x * sin
 		this.lightningZ = z
@@ -418,7 +418,7 @@ class Gazor extends WeaponAnimation {
 		const cos = Math.cos(angle)
 		const sin = Math.sin(angle)
 		const x = this.x + this.sx
-		const z = this.cz + this.z + this.sz + handPos
+		const z = this.cz * Leek.SCALE + this.z + this.sz + handPos
 		this.bulletX = leekX + (this.cx + x * cos) * orientation
 		this.bulletY = leekY + x * sin
 		this.bulletZ = z
