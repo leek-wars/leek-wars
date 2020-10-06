@@ -797,7 +797,6 @@
 		padding: 2px 0;
 		font-size: 11px;
 		margin: 0;
-		white-space: normal;
 	}
 	.warning {
 		color: #ff5f00;
