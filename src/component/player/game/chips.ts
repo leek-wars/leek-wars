@@ -366,6 +366,7 @@ class Iceberg extends ChipAnimation {
 		super(game, S.ice, 40)
 	}
 	public launch(launchPos: Position, targetPos: Position, targets: FightEntity[], targetCell: Cell) {
+		super.launch(launchPos, targetPos, targets, targetCell)
 		this.game.particles.addGarbage(targetPos.x, targetPos.y, 180, 0, 0, 3, T.iceberg, 1, 0)
 		this.game.setEffectArea(targetCell, Area.CIRCLE2, 'white')
 	}
