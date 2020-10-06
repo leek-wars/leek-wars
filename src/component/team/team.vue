@@ -166,6 +166,8 @@
 							<div v-on="on">
 								<avatar :farmer="member" />
 								<div class="name">
+									<img v-if="member.connected" class="status" src="/image/connected.png">
+									<img v-else class="status" src="/image/disconnected.png">
 									<tooltip v-if="member.grade == 'owner'">
 										<template v-slot:activator="{ on }">
 											<span v-on="on">★</span>
@@ -178,9 +180,7 @@
 										</template>
 										<div class="grade">{{ $t('captain') }}</div>
 									</tooltip>
-									{{ member.name }}
-									<img v-if="member.connected" class="status" src="/image/connected.png">
-									<img v-else class="status" src="/image/disconnected.png">
+									<span :title="member.name">{{ member.name }}</span>
 								</div>
 								<talent :id="member.id" :talent="member.talent" category="farmer" />
 							</div>
@@ -974,18 +974,21 @@
 		margin-right: 6px;
 	}
 	.farmer .name, .popup.change_owner_popup .farmer .name {
-		font-weight: 300;
 		font-size: 17px;
 		text-align: center;
-		color: #555;
 		text-overflow: ellipsis;
 		overflow: hidden;
 		white-space: nowrap;
 		width: 114px;
+		margin: 2px 0;
+		span {
+			padding-left: 2px;
+		}
 	}
 	.farmer .status {
 		width: 15px;
-		vertical-align: middle;
+		vertical-align: bottom;
+		margin-bottom: 2px;
 	}
 	.change_owner_popup .farmer {
 		padding: 4px;
