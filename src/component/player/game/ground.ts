@@ -65,7 +65,7 @@ class Ground {
 		} else {
 			GROUND_PADDING_LEFT = 210
 			GROUND_PADDING_RIGHT = 20
-			GROUND_PADDING_TOP = 20
+			GROUND_PADDING_TOP = 40
 			GROUND_PADDING_BOTTOM = 50
 		}
 		this.width = width
