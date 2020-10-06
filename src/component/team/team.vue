@@ -132,7 +132,7 @@
 		</panel>
 
 		<panel v-if="team && member && team.candidacies && team.candidacies.length > 0">
-			<h2 slot="title">{{ $t('candidacies') }} ({{ team.candidacies.length }})</h2>
+			<template slot="title">{{ $t('candidacies') }} ({{ team.candidacies.length }})</template>
 			<div slot="content" class="content candidacies">
 				<div v-for="candidacy in team.candidacies" :key="candidacy.id" class="farmer">
 					<rich-tooltip-farmer :id="candidacy.farmer.id" v-slot="{ on }">
@@ -149,8 +149,15 @@
 			</div>
 		</panel>
 
-		<panel icon="mdi-account-supervisor">
-			<template slot="title"><span v-if="team">{{ $t('farmers', [team.member_count]) }}</span></template>
+		<panel v-if="team" icon="mdi-account-supervisor" :title="$t('farmers', [ team.member_count])">
+			<template slot="actions">
+				<div v-if="owner && !editMembers" class="button flat" @click="editMembers = true">
+					<v-icon>mdi-pencil</v-icon>
+				</div>
+				<div v-if="owner && editMembers" class="button flat" @click="editMembers = false">
+					<v-icon>mdi-check</v-icon>
+				</div>
+			</template>
 			<loader v-if="!team" slot="content" />
 			<div v-else slot="content" class="members">
 				<div v-for="member in team.members" :key="member.id" class="farmer">
@@ -163,13 +170,13 @@
 										<template v-slot:activator="{ on }">
 											<span v-on="on">★</span>
 										</template>
-										{{ $t('owner') }}
+										<div class="grade">{{ $t('owner') }}</div>
 									</tooltip>
 									<tooltip v-else-if="member.grade == 'captain'">
 										<template v-slot:activator="{ on }">
 											<span v-on="on">☆</span>
 										</template>
-										{{ $t('captain') }}
+										<div class="grade">{{ $t('captain') }}</div>
 									</tooltip>
 									{{ member.name }}
 									<img v-if="member.connected" class="status" src="/image/connected.png">
@@ -179,14 +186,16 @@
 							</div>
 						</rich-tooltip-farmer>
 					</router-link>
-					<template v-if="owner">
-						<i v-if="member.grade == 'owner'">{{ $t('owner') }}</i>
+					<template v-if="owner && editMembers">
+						<i v-if="member.grade == 'owner'" class="grade">{{ $t('owner') }}</i>
 						<select v-else v-model="member.grade" class="level" @change="changeLevel(member, $event)">
 							<option value="captain">{{ $t('captain') }}</option>
 							<option value="member">{{ $t('member') }}</option>
 						</select>
-						<br>
-						<v-btn class="ban" small @click="banMemberStart(member)">{{ $t('ban') }}</v-btn>
+						<v-btn v-if="member.id !== $store.state.farmer.id" class="ban" small @click="banMemberStart(member)">
+							<v-icon>mdi-hand-pointing-right</v-icon>
+							{{ $t('ban') }}
+						</v-btn>
 					</template>
 				</div>
 			</div>
@@ -203,7 +212,7 @@
 
 		<div v-if="member && team && team.compositions" class="compos">
 			<panel v-for="composition in team.compositions" :key="composition.id" :class="{'in-tournament': composition.tournament.registered}" class="compo">
-				<h2 slot="title">{{ composition.name }}</h2>
+				<template slot="title">{{ composition.name }}</template>
 				<template slot="actions">
 					<div class="level-talent">
 						<span class="level">{{ $t('level_n', [composition.total_level]) }}</span>
@@ -364,7 +373,7 @@
 			{{ $t('ban_confirm', [banMemberTarget.name]) }}
 			<div slot="actions">
 				<div @click="banDialog = false">{{ $t('ban_cancel') }}</div>
-				<div class="red" @click="banMember">{{ $t('ban_ban') }}</div>
+				<div class="red" @click="banMember"><v-icon>mdi-hand-pointing-right</v-icon>{{ $t('ban_ban') }}</div>
 			</div>
 		</popup>
 
@@ -461,13 +470,14 @@
 	import { ChatType } from '@/model/chat'
 	import { Farmer } from '@/model/farmer'
 	import { Leek } from '@/model/leek'
+	import { i18n, mixins } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import { Warning } from '@/model/moderation'
 	import { SocketMessage } from '@/model/socket'
 	import { Composition, Team, TeamMember } from '@/model/team'
 	import { Component, Vue, Watch } from 'vue-property-decorator'
 
-	@Component({ name: 'team', i18n: {}, components: { CharacteristicTooltip }})
+	@Component({ name: 'team', i18n: {}, mixins, components: { CharacteristicTooltip }})
 	export default class TeamPage extends Vue {
 		ChatType = ChatType
 		team: Team | null = null
@@ -492,6 +502,7 @@
 		draggedLeekComposition: Composition | null = null
 		turretDialog: boolean = false
 		turretAiDialog: boolean = false
+		editMembers: boolean = false
 
 		get id() { return 'id' in this.$route.params ? parseInt(this.$route.params.id, 10) : (this.$store.state.farmer && this.$store.state.farmer.team !== null ? this.$store.state.farmer.team.id : null) }
 		get max_level() { return this.team && this.team.level === 100 }
@@ -937,6 +948,16 @@
 		grid-template-columns: repeat(auto-fill, minmax(105px, 1fr));
 		grid-gap: 10px;
 		padding: 10px;
+		.grade {
+			margin: 4px 0;
+			display: block;
+		}
+		.level {
+			margin: 4px 0;
+		}
+		.farmer:hover .edit {
+			display: block;
+		}
 	}
 	.chat {
 		height: 250px;
@@ -1014,7 +1035,6 @@
 		transition: transform 0.4s;
 		transform: scale(1);
 		cursor: pointer;
-		width: 100%;
 		.name {
 			font-size: 16px;
 			text-align: center;
