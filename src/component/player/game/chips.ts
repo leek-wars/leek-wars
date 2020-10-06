@@ -41,7 +41,7 @@ abstract class ChipAnimation {
 		for (const target of targets) {
 			const x = target.ox
 			const y = target.oy
-			const z = target.getHeight() + 20
+			const z = target.height + 20
 			this.game.particles.addImage(x, y, z, 0, 0, -0.6, 0, texture, 60)
 		}
 	}
@@ -49,7 +49,7 @@ abstract class ChipAnimation {
 		for (const target of targets) {
 			const x = target.ox
 			const y = target.oy
-			const z = target.getHeight() + 40
+			const z = target.height + 40
 			this.game.particles.addImage(x, y, z, 0, 0, 0.2, 0, texture, 70)
 		}
 	}

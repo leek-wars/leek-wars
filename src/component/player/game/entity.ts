@@ -24,7 +24,7 @@ enum EntityDirection {
 }
 const MOVE_DELAY = 3
 const MOVE_DURATION = 25
-const MOVE_HEIGHT = 17
+const MOVE_HEIGHT = 15
 
 class FightEntity extends Entity {
 	// Infos générales
@@ -46,6 +46,7 @@ class FightEntity extends Entity {
 	public tp = 0
 	public mp = 0
 	public maxLife = 0
+	public initialMaxLife = 0
 	public maxTP = 0
 	public maxMP = 0
 	public absoluteShield = 0
@@ -81,7 +82,8 @@ class FightEntity extends Entity {
 	public jumpHeight = 0
 	// Drawing
 	public drawID: number | null = null
-	public height: number = 100
+	public height: number = 0
+	public baseHeight: number = 0
 	// States
 	public dead = false
 	public flash = 0
@@ -99,6 +101,7 @@ class FightEntity extends Entity {
 	// Animation
 	public oscillation = 1
 	public frame: number
+	public growth: number = 1.0
 	// Effects
 	public effects: {[key: number]: EntityEffect} = {}
 	public launched_effects: {[key: number]: EntityEffect} = {}
@@ -150,12 +153,10 @@ class FightEntity extends Entity {
 
 		this.z = this.baseZ
 
-		this.isTop = this.y <= 4
-
 		const xy = this.game.ground.xyToXYPixels(this.x, this.y)
 		this.ox = xy.x
 		this.oy = xy.y
-		this.isTop = this.y <= 4
+		this.isTop = false
 
 		if (oldY !== this.y && this.drawID != null) {
 			this.game.moveDrawableElement(this, this.drawID, oldY, this.y)
@@ -264,7 +265,7 @@ class FightEntity extends Entity {
 		this.mp -= mp
 		if (!jump) {
 			const info = new InfoText()
-			info.init("-" + mp, Colors.MP_COLOR, -this.getHeight(), this.isTop)
+			info.init("-" + mp, Colors.MP_COLOR, -this.height, this.isTop)
 			this.infoText.push(info)
 
 			// Update reachable cells when loosing MPs
@@ -278,7 +279,7 @@ class FightEntity extends Entity {
 		this.mp += mp
 		if (!jump) {
 			const info = new InfoText()
-			info.init("+" + mp, Colors.MP_COLOR, -this.getHeight(), this.isTop)
+			info.init("+" + mp, Colors.MP_COLOR, -this.height, this.isTop)
 			this.infoText.push(info)
 
 			// Update reachable cells when earning MPs
@@ -292,7 +293,7 @@ class FightEntity extends Entity {
 		this.wisdom += wisdom
 		if (!jump) {
 			const info = new InfoText()
-			info.init("+" + wisdom, Colors.WISDOM_COLOR, -this.getHeight(), this.isTop)
+			info.init("+" + wisdom, Colors.WISDOM_COLOR, -this.height, this.isTop)
 			this.infoText.push(info)
 		}
 	}
@@ -301,7 +302,7 @@ class FightEntity extends Entity {
 		this.resistance += resistance
 		if (!jump) {
 			const info = new InfoText()
-			info.init("+" + resistance, Colors.RESISTANCE_COLOR, -this.getHeight(), this.isTop)
+			info.init("+" + resistance, Colors.RESISTANCE_COLOR, -this.height, this.isTop)
 			this.infoText.push(info)
 		}
 	}
@@ -312,10 +313,11 @@ class FightEntity extends Entity {
 
 		this.maxLife -= erosion
 		if (this.maxLife < 0) { this.maxLife = 0 }
+		this.updateGrowth()
 
 		if (!jump) {
 			const info = new InfoText()
-			info.init("-" + life, Colors.LIFE_COLOR, -this.getHeight(), this.isTop)
+			info.init("-" + life, Colors.LIFE_COLOR, -this.height, this.isTop)
 			this.infoText.push(info)
 		}
 	}
@@ -323,12 +325,18 @@ class FightEntity extends Entity {
 	public looseMaxLife(life: number, jump: boolean) {
 		this.maxLife -= life
 		if (this.maxLife < 0) { this.maxLife = 0 }
+		this.updateGrowth()
 
 		if (!jump) {
 			const info = new InfoText()
-			info.init("-" + life, Colors.MAX_LIFE_COLOR, -this.getHeight(), this.isTop)
+			info.init("-" + life, Colors.MAX_LIFE_COLOR, -this.height, this.isTop)
 			this.infoText.push(info)
 		}
+	}
+
+	public updateGrowth() {
+		this.growth = 1.0 + Math.log10(Math.max(1, this.maxLife / this.initialMaxLife))
+		this.height = this.baseHeight * this.growth
 	}
 
 	public looseStrength(strength: number, jump: boolean) {
@@ -337,7 +345,7 @@ class FightEntity extends Entity {
 
 		if (!jump) {
 			const info = new InfoText()
-			info.init("-" + strength, Colors.STRENGTH_COLOR, -this.getHeight(), this.isTop)
+			info.init("-" + strength, Colors.STRENGTH_COLOR, -this.height, this.isTop)
 			this.infoText.push(info)
 		}
 	}
@@ -348,7 +356,7 @@ class FightEntity extends Entity {
 
 		if (!jump) {
 			const info = new InfoText()
-			info.init("-" + magic, Colors.MAGIC_COLOR, -this.getHeight(), this.isTop)
+			info.init("-" + magic, Colors.MAGIC_COLOR, -this.height, this.isTop)
 			this.infoText.push(info)
 		}
 	}
@@ -359,7 +367,7 @@ class FightEntity extends Entity {
 
 		if (!jump) {
 			const info = new InfoText()
-			info.init("+" + life, Colors.LIFE_COLOR, -this.getHeight(), this.isTop)
+			info.init("+" + life, Colors.LIFE_COLOR, -this.height, this.isTop)
 			this.infoText.push(info)
 		}
 	}
@@ -368,10 +376,11 @@ class FightEntity extends Entity {
 
 		this.life += life
 		this.maxLife += life
+		this.updateGrowth()
 
 		if (!jump) {
 			const info = new InfoText()
-			info.init("+" + life, Colors.LIFE_COLOR, -this.getHeight(), this.isTop)
+			info.init("+" + life, Colors.LIFE_COLOR, -this.height, this.isTop)
 			this.infoText.push(info)
 		}
 	}
@@ -382,7 +391,7 @@ class FightEntity extends Entity {
 
 		if (!jump) {
 			const info = new InfoText()
-			info.init("-" + tp, Colors.TP_COLOR, -this.getHeight(), this.isTop)
+			info.init("-" + tp, Colors.TP_COLOR, -this.height, this.isTop)
 			this.infoText.push(info)
 		}
 	}
@@ -393,7 +402,7 @@ class FightEntity extends Entity {
 
 		if (!jump) {
 			const info = new InfoText()
-			info.init("+" + tp, Colors.TP_COLOR, -this.getHeight(), this.isTop)
+			info.init("+" + tp, Colors.TP_COLOR, -this.height, this.isTop)
 			this.infoText.push(info)
 		}
 	}
@@ -443,7 +452,7 @@ class FightEntity extends Entity {
 
 	public newInfoText(text: string, color: string) {
 		const info = new InfoText()
-		info.init(text, color, -this.getHeight(), this.isTop)
+		info.init(text, color, -this.height, this.isTop)
 		this.infoText.push(info)
 	}
 
@@ -684,7 +693,7 @@ class FightEntity extends Entity {
 			ctx.textBaseline = "middle"
 			ctx.textAlign = "center"
 			ctx.lineWidth = 2
-			ctx.font = "bold 22pt Roboto"
+			ctx.font = "bold 18pt Roboto"
 
 			for (const infoText of this.infoText) {
 				infoText.draw(ctx)
@@ -732,18 +741,16 @@ class FightEntity extends Entity {
 		ctx.save()
 		ctx.scale(this.game.ground.scale, this.game.ground.scale)
 
-		if (this.isTop) {
-			ctx.translate(this.ox, this.oy)
-		} else {
-			ctx.translate(this.ox, this.oy - this.height * 0.85)
-		}
+		const z = LeekWars.objectSize(this.effects) > 0 ? 48 : 25
+		const y = Math.max(-this.game.ground.startY / this.game.ground.scale + 20, this.oy - this.height - z)
+		ctx.translate(this.ox, y)
 
-		ctx.font = "11pt Roboto"
+		ctx.font = "500 10pt Roboto"
 
 		let text = this.name + " (" + this.life + ")"
 		if (this.game.showIDs) { text = '#' + this.id + ' • ' + text }
-		const width = Math.max(140, ctx.measureText(text).width + 14)
-		const height = 19
+		const width = Math.max(120, ctx.measureText(text).width + 14)
+		const height = 18
 		const barHeight = 8
 
 		const active = this === this.game.selectedEntity || this === this.game.hoverEntity || this === this.game.mouseEntity
@@ -770,12 +777,13 @@ class FightEntity extends Entity {
 
 		// Effects
 		const count = LeekWars.objectSize(this.effects)
-		let x = -count * 28 / 2
-		ctx.font = "bold 8pt Roboto"
+		const effect_size = 25
+		let x = -count * effect_size / 2
+		ctx.font = "bold 7.5pt Roboto"
 		ctx.textAlign = "left"
 		for (const e in this.effects) {
 			const effect = this.effects[e]
-			ctx.drawImage(effect.texture, x, 25, 28, 28)
+			ctx.drawImage(effect.texture, x, effect_size, effect_size, effect_size)
 			let effect_message = '' + effect.value
 			if (effect.type === EffectType.SHACKLE_MAGIC || effect.type === EffectType.SHACKLE_MP || effect.type === EffectType.SHACKLE_TP || effect.type === EffectType.SHACKLE_STRENGTH || effect.type === EffectType.VULNERABILITY || effect.type === EffectType.ABSOLUTE_VULNERABILITY) {
 				effect_message = '-' + effect_message
@@ -788,13 +796,13 @@ class FightEntity extends Entity {
 			const w2 = ctx.measureText(effect_duration).width
 			ctx.globalAlpha = 0.5
 			ctx.fillStyle = 'black'
-			ctx.fillRect(x + 1, 25 + 17, w + 2, 10)
-			ctx.fillRect(x + 19, 26.5, w2 + 2, 11)
+			ctx.fillRect(x + 1, 25 + 15, w + 2, 10)
+			ctx.fillRect(x + 17, 26.5, w2 + 2, 11)
 			ctx.globalAlpha = 1
 			ctx.fillStyle = 'white'
-			ctx.fillText(effect_message, x + 2, 25 + 23)
-			ctx.fillText(effect_duration, x + 20, 32)
-			x += 28
+			ctx.fillText(effect_message, x + 2, 46)
+			ctx.fillText(effect_duration, x + 18, 32)
+			x += effect_size
 		}
 
 		if (this.id === this.game.currentPlayer) {
@@ -845,7 +853,7 @@ class FightEntity extends Entity {
 			ctx.save()
 			ctx.scale(this.game.ground.scale, this.game.ground.scale)
 			ctx.translate(this.ox, this.oy)
-			this.bubble.draw(ctx, 0, this.getHeight() + 40, this.isTop)
+			this.bubble.draw(ctx, 0, this.height + 40, this.isTop)
 			ctx.restore()
 		}
 	}
@@ -858,9 +866,7 @@ class FightEntity extends Entity {
 		const hex = this.getLifeColorRGB()
 		return LeekWars.rgbToHex(Math.round(hex[0] * 0.7), Math.round(hex[1] * 0.7), Math.round(hex[2] * 0.7))
 	}
-	public getHeight() {
-		return this.bodyTexFront.texture.height / 1.5
-	}
+
 	public hurt(x: number, y: number, z: number, dx: number, dy: number, dz: number) {
 		const dir = Math.random()
 		dx *= dir / 10

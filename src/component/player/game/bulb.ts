@@ -4,6 +4,9 @@ import { LeekWars } from '@/model/leekwars'
 import { SHADOW_QUALITY, T } from './texture'
 
 class Bulb extends FightEntity {
+
+	public static SCALE: number = 0.40
+
 	public skin!: number
 	public bulbName!: string
 	public heightAnim!: number
@@ -44,9 +47,11 @@ class Bulb extends FightEntity {
 			this.bodyTexFront = T.get(this.game, 'image/bulb/wizard_bulb_front.png', true, SHADOW_QUALITY)
 			this.bodyTexBack = T.get(this.game, 'image/bulb/wizard_bulb_back.png', true, SHADOW_QUALITY)
 		}
-		this.height = this.bodyTexFront.texture.height * 0.65
+		this.baseHeight = this.bodyTexFront.texture.height * Bulb.SCALE
+		this.updateGrowth()
 		this.bodyTexFront.texture.addEventListener('load', () => {
-			this.height = this.bodyTexFront.texture.height * 0.65
+			this.baseHeight = this.bodyTexFront.texture.height * Bulb.SCALE
+			this.updateGrowth()
 		})
 	}
 
@@ -95,18 +100,7 @@ class Bulb extends FightEntity {
 
 	public drawNormal(ctx: CanvasRenderingContext2D) {
 		const texture = this.front ? this.bodyTexFront : this.bodyTexBack
-		if (!this.dead) {
-			this.drawBody(ctx, texture.texture)
-		} else if (this.heightAnim > 0) {
-			ctx.save()
-			ctx.scale(this.direction, 1)
-			const realHeight = this.getHeight() * 0.7
-			this.heightAnim = Math.min(1, this.deadAnim * 1.5)
-			const cropHeight = realHeight * this.heightAnim
-			const scaledWidth = (texture.texture.width * 0.7 / 1.5) * Math.max(0.5, this.deadAnim)
-			ctx.drawImage(texture.texture, 0, 0, texture.texture.width, texture.texture.height * this.heightAnim, -scaledWidth / 2, -cropHeight, scaledWidth, cropHeight)
-			ctx.restore()
-		}
+		this.drawBody(ctx, texture.texture)
 	}
 
 	public drawShadow(ctx: CanvasRenderingContext2D) {
@@ -126,10 +120,9 @@ class Bulb extends FightEntity {
 		if (this.flash > 0 && (Math.random() > 0.5 || this.flash < 2)) {
 			ctx.globalCompositeOperation = 'lighter'
 		}
-		ctx.scale(this.direction, this.oscillation)
+		ctx.scale(this.direction * Bulb.SCALE * this.growth, this.oscillation * Bulb.SCALE * this.growth)
 		// Body
-		const realHeight = this.getHeight() * 0.7
-		ctx.drawImage(texture, -this.bodyTexFront.texture.width * 0.7 / 1.5 / 2, -realHeight, this.bodyTexFront.texture.width * 0.7 / 1.5, realHeight)
+		ctx.drawImage(texture, -this.bodyTexFront.texture.width / 2, -this.bodyTexFront.texture.height, this.bodyTexFront.texture.width, this.bodyTexFront.texture.height)
 		ctx.restore()
 	}
 }
