@@ -535,6 +535,7 @@ class Game {
 		T.tp.load(this)
 		T.mp.load(this)
 		T.critical.load(this)
+		S.critical.load(this)
 
 		const textures = new Set<Texture>()
 		const sounds = new Set<Sound>()
