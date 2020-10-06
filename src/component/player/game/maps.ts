@@ -127,7 +127,7 @@ class Glacier extends Map {
 	constructor(game: Game) {
 		super(game, S.map_glacier, "#2effff", T.glacier,
 			[T.ice_small, T.ice_small, T.ice_small],
-			[T.snowman, T.fir, T.ice], "#fff")
+			[T.snowman, T.fir, T.ice], "#333")
 		T.fir.offset = 1.5
 		T.snowman.offset = 0.8
 	}
