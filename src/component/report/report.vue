@@ -219,10 +219,11 @@
 			<div v-if="hasPersonalLogs" class="actions-options">
 				<div class="spacer"></div>
 				<v-switch v-model="actionsDisplayLogs" :label="$t('display_logs')" :hide-details="true" />
+				<v-switch v-model="actionsDisplayAlliesLogs" :label="$t('display_allies_logs')" :hide-details="true" />
 			</div>
 			<loader v-if="!loaded" />
 			<div v-else>
-				<actions :actions="actions" :leeks="leeks" :display-logs="actionsDisplayLogs" class="actions" />
+				<actions :actions="actions" :leeks="leeks" :display-logs="actionsDisplayLogs" :display-allies-logs="actionsDisplayAlliesLogs" class="actions" />
 			</div>
 		</panel>
 	</div>
@@ -236,6 +237,7 @@
 	import { Fight, FightContext, FightLeek, FightType, Report, ReportFarmer, ReportLeek, TEAM_COLORS } from '@/model/fight'
 	import { i18n, mixins } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
+	import { store } from '@/model/store'
 	import Chartist from 'chartist'
 	import { Component, Vue, Watch } from 'vue-property-decorator'
 	import ActionsElement from './report-actions.vue'
@@ -275,6 +277,7 @@
 		chartScale: number = 1
 		chart: any
 		chartDisplaySummons: boolean = false
+		actionsDisplayAlliesLogs: boolean = true
 		actionsDisplayLogs: boolean = true
 		generating: boolean = false
 		error: boolean = false
@@ -336,8 +339,12 @@
 			this.actions = null
 			this.smooth = localStorage.getItem('report/graph-type') === 'smooth'
 			this.log = localStorage.getItem('report/log') === 'true'
+
 			if (localStorage.getItem('fight/logs') === null) { localStorage.setItem('fight/logs', 'true') }
+			if (localStorage.getItem('fight/allies-logs') === null) { localStorage.setItem('fight/allies-logs', 'true') }
 			this.actionsDisplayLogs = localStorage.getItem('report/logs') === 'true'
+			this.actionsDisplayAlliesLogs = localStorage.getItem('report/allies-logs') === 'true'
+
 			const id = this.$route.params.id
 			const url = this.$store.getters.admin ? 'fight/get-private/' + id : 'fight/get/' + id
 			LeekWars.get<Fight>(url).then(data => {
@@ -410,6 +417,7 @@
 				for (const farmer in this.logs) {
 					const farmerLogs = this.logs[farmer]
 					if (i in farmerLogs) {
+						this.actions[a].me = parseInt(farmer, 10) === store.state.farmer!.id
 						this.actions[a].logs.push(...farmerLogs[i].filter(l => l[1] !== 4 && l[1] !== 9))
 					}
 				}
@@ -718,6 +726,10 @@
 		@Watch("actionsDisplayLogs")
 		toggleLogs() {
 			localStorage.setItem('report/logs', '' + this.actionsDisplayLogs)
+		}
+		@Watch("actionsDisplayAlliesLogs")
+		toggleAlliesLogs() {
+			localStorage.setItem('report/allies-logs', '' + this.actionsDisplayAlliesLogs)
 		}
 
 		walkedCells(fid: number) {
@@ -1037,6 +1049,9 @@
 		padding-bottom: 10px;
 		.spacer {
 			flex: 1;
+		}
+		& > * {
+			margin-left: 15px;
 		}
 	}
 </style>

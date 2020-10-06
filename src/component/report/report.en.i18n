@@ -3,6 +3,7 @@
 	"back_to_garden": "Back to the garden",
 	"back_to_tournament": "Back to the tournament",
 	"damages_title": "Damage repartition, heal and tank",
+	"display_allies_logs": "Display allies' logs",
 	"display_logs": "Display personal logs",
 	"display_summons": "Display summons",
 	"duration": "Duration: {0} turns",
