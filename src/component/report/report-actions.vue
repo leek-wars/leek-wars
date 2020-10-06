@@ -1,7 +1,7 @@
 <template>
 	<div>
 		{{ resetCounter() }}
-		<action v-for="(action, a) in actions" :key="a" :action="action" :logs="[]" :leeks="leeks" :turn="turnCounter(action)" :display-logs="displayLogs" class="action" :class="{turn: action.params[0] === ActionType.NEW_TURN || action.params[0] === ActionType.START_FIGHT}" />
+		<action v-for="(action, a) in actions" :key="a" :action="action" :logs="[]" :leeks="leeks" :turn="turnCounter(action)" :display-logs="displayLogs && (displayAlliesLogs || action.me)" class="action" :class="{turn: action.params[0] === ActionType.NEW_TURN || action.params[0] === ActionType.START_FIGHT}" />
 	</div>
 </template>
 
@@ -18,6 +18,7 @@
 		@Prop({required: true}) actions!: number[][]
 		@Prop({required: true}) leeks!: {[key: number]: any}
 		@Prop({required: true}) displayLogs!: boolean
+		@Prop({required: true}) displayAlliesLogs!: boolean
 
 		ActionType = ActionType
 
@@ -36,7 +37,6 @@
 		position: sticky;
 		top: 0;
 		background: #f2f2f2;
-		width: 50%;
 		padding: 7px 0;
 		margin: 0;
 	}
