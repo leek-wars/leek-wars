@@ -25,6 +25,7 @@ class Team {
 
 class TeamMember extends Farmer {
 	public grade!: string
+	public logs_level!: number
 }
 
 class Composition {
