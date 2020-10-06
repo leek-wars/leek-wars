@@ -624,7 +624,9 @@ class FightEntity extends Entity {
 	}
 
 	public addCritical() {
-		this.game.particles.addCritical(this.ox + 30 * this.direction, this.oy, this.getHeight() - (this.front ? 80 : 60))
+		const z = Math.max(30, this.height - (this.front ? 80 : 60))
+		this.game.particles.addCritical(this.ox + 30 * this.direction, this.oy, z)
+		S.critical.play(this.game)
 	}
 
 	public draw(ctx: CanvasRenderingContext2D) {

@@ -105,10 +105,11 @@ class S {
 	public static move = new Sound(env.STATIC + "sound/move.mp3", VOL_OTHER_SOUND)
 	public static lama = new Sound(env.STATIC + "sound/lama.mp3", VOL_OTHER_SOUND)
 	public static bulb = new Sound(env.STATIC + "sound/bulb.mp3", VOL_SPECIAL_SOUND)
+	public static critical = new Sound(env.STATIC + "sound/crit.wav", VOL_SPECIAL_SOUND)
 	public static map_forest = new Sound(env.STATIC + "sound/map_forest.mp3", VOL_MAP_SOUND)
 	public static map_beach = new Sound(env.STATIC + "sound/map_beach.mp3", VOL_MAP_SOUND)
 	public static map_desert = new Sound(env.STATIC + "sound/map_desert.mp3", VOL_MAP_SOUND)
-	public static map_factory = new Sound(env.STATIC + "sound/map_factory.mp3", VOL_MAP_SOUND)
+	public static map_factory = new Sound(env.STATIC + "sound/map_factory.mp3", VOL_MAP_SOUND / 2)
 	public static map_glacier = new Sound(env.STATIC + "sound/map_glacier.mp3", VOL_MAP_SOUND)
 	public static map_nexus = new Sound(env.STATIC + "sound/map_nexus.mp3", VOL_MAP_SOUND)
 
