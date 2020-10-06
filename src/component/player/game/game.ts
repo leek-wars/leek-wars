@@ -21,6 +21,7 @@ import { EffectType, EntityEffect } from '@/model/effect'
 import { Fight, FightData, FightType, TEAM_COLORS } from '@/model/fight'
 import { i18n } from '@/model/i18n'
 import { LeekWars } from '@/model/leekwars'
+import { store } from '@/model/store'
 import Vue from 'vue'
 import { Turret } from './turret'
 
@@ -580,12 +581,17 @@ class Game {
 		// Merge logs
 		for (const farmer in logs) {
 			const farmerLogs = logs[farmer]
+			const me = parseInt(farmer, 10) === store.state.farmer!.id
 			for (const action in farmerLogs) {
 				const actionI = parseInt(action, 10)
 				if (!(action in this.logs)) {
 					Vue.set(this.logs, actionI, [])
 				}
-				this.logs[actionI].push(...farmerLogs[action])
+				for (const log of farmerLogs[action]) {
+					if (me || (log[1] !== 4 && log[1] !== 9)) {
+						this.logs[actionI].push(log)
+					}
+				}
 			}
 		}
 	}
