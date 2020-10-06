@@ -186,6 +186,14 @@
 							</div>
 						</rich-tooltip-farmer>
 					</router-link>
+					<template v-if="member">
+						<div class="logs" :class="{hidden: member.logs_level === 0, me: member.id === $store.state.farmer.id}" @click="logsDialog = (member.id === $store.state.farmer.id)">
+							<v-icon v-if="member.logs_level > 0" class="activated">mdi-playlist-check</v-icon>
+							<v-icon v-else>mdi-playlist-remove</v-icon>
+							<span :title="$t('log_level_' + member.logs_level) + ' : ' + $t('log_level_' + member.logs_level + '_desc')"> {{ $t('log_level_' + member.logs_level) }} </span>
+							<v-icon v-if="member.id === $store.state.farmer.id" class="edit">mdi-pencil</v-icon>
+						</div>
+					</template>
 					<template v-if="owner && editMembers">
 						<i v-if="member.grade == 'owner'" class="grade">{{ $t('owner') }}</i>
 						<select v-else v-model="member.grade" class="level" @change="changeLevel(member, $event)">
@@ -462,6 +470,18 @@
 				</div>
 			</div>
 		</popup>
+
+		<popup v-if="team && member" v-model="logsDialog" :width="600">
+			<v-icon slot="icon">mdi-playlist-check</v-icon>
+			<span slot="title">{{ $t('log_change') }}</span>
+			<div>{{ $t('log_change_text') }}</div>
+			<br>
+			<v-radio-group v-model="my_member.logs_level" hide-details>
+				<v-radio :label="$t('log_level_0') + ' : ' + $t('log_level_0_desc')" />
+				<v-radio :label="$t('log_level_1') + ' : ' + $t('log_level_1_desc')" />
+				<v-radio :label="$t('log_level_2') + ' : ' + $t('log_level_2_desc')" />
+			</v-radio-group>
+		</popup>
 	</div>
 </template>
 
@@ -502,12 +522,15 @@
 		draggedLeekComposition: Composition | null = null
 		turretDialog: boolean = false
 		turretAiDialog: boolean = false
+		logsDialog: boolean = false
 		editMembers: boolean = false
+		logsLevel: number = 0
 
 		get id() { return 'id' in this.$route.params ? parseInt(this.$route.params.id, 10) : (this.$store.state.farmer && this.$store.state.farmer.team !== null ? this.$store.state.farmer.team.id : null) }
 		get max_level() { return this.team && this.team.level === 100 }
 		get xp_bar_width() { return this.team ? this.team.level === 100 ? 100 : Math.floor(100 * (this.team.xp - this.team.down_xp) / (this.team.up_xp - this.team.down_xp)) : 0 }
 		get member() { return !this.$route.params.id || (this.team && this.$store.state.farmer && this.$store.state.farmer.team !== null && this.team.id === this.$store.state.farmer.team.id) }
+		get my_member() { return this.member ? this.team!.membersById[this.$store.state.farmer.id] : null }
 
 		get turret() {
 			if (!this.team) { return {} }
@@ -570,6 +593,7 @@
 				LeekWars.setTitle(this.team.name)
 				LeekWars.setSubTitle(this.$t('main.n_farmers', [team.members.length]) + " • " + this.$t('main.n_leeks', [team.leek_count]))
 				if (this.member) {
+					this.logsLevel = this.my_member!.logs_level
 					LeekWars.setActions([
 						{icon: 'mdi-chat-outline', click: () => this.$router.push('/forum/category-' + team.forum)}
 					])
@@ -955,8 +979,30 @@
 		.level {
 			margin: 4px 0;
 		}
-		.farmer:hover .edit {
-			display: block;
+		.logs {
+			font-size: 14px;
+			margin-top: 3px;
+			padding-top: 2px;
+			border-radius: 3px;
+			&.me {
+				cursor: pointer;
+				&:hover {
+					background: #ddd;
+				}
+			}
+			&.hidden {
+				color: #777;
+			}
+			.v-icon {
+				font-size: 22px;
+			}
+			.activated {
+				color: green;
+			}
+			.edit {
+				font-size: 18px;
+				vertical-align: top;
+			}
 		}
 	}
 	.chat {
