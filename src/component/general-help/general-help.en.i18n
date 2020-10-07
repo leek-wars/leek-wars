@@ -40,7 +40,7 @@
 	"fights_13": "Although all your leeks fight, it counts only as one fight.",
 	"fights_14": "Team Fights",
 	"fights_15": "Team Fights oppose a composition of up to 6 of your leeks against an opposing composition. Each team also has a turret (static) that they must absolutely defend. You can win by either : destroying the enemy turret, or eliminating all enemy leeks.",
-	"fights_16": "<b>The turret : </b> It's AI is written by the team and assigned by any of the captains. Its characteristics depends on the team level and on the level of the leeks in the composition. It possesses 8 lower level chips, but with its good characteristics, it can be really efficient if anything comes in its range.",
+	"fights_16": "<b>The turret: </b> It's AI is written by the team and assigned by any of the captains. Its characteristics depends on the team level and on the level of the leeks in the composition. It possesses 8 lower level chips, but with its good characteristics, it can be really efficient if anything comes in its range.",
 	"fights_17": "Each of your leek can do <b>10</b> team fights with its composition, apart from your daily fights. A composition can fight only if all its leeks have at least 1 team fight left.",
 	"fights_17": "Each of your leek is allowed to do <b>10</b> team fights with its composition, apart from your daily fights. A composition is allowed to fight only if all its leeks have at least 1 team fight left.",
 	"fights_18": "Team fights do not add up to the total of your wins, draws and losses (ratio).",
