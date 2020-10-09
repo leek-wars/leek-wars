@@ -2006,9 +2006,11 @@ class Game {
 			const marker = this.markers[m]
 			this.drawMarker(marker.x, marker.y, marker.color)
 		}
-		for (const m in this.markersText) {
-			const marker = this.markersText[m]
-			this.drawTextMarker(marker.x, marker.y, marker.text, marker.color)
+		if (!this.showCells) {
+			for (const m in this.markersText) {
+				const marker = this.markersText[m]
+				this.drawTextMarker(marker.x, marker.y, marker.text, marker.color)
+			}
 		}
 		// Show pointer cell
 		this.drawPointerCell()
