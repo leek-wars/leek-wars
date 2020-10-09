@@ -267,7 +267,7 @@ class Ground {
 
 		ctx.globalAlpha = 0.8
 		ctx.fillStyle = 'black'
-		ctx.font = Math.floor(this.tileSizeX / 6) + "pt Roboto"
+		ctx.font = Math.floor(this.tileSizeX / 7) + "pt Roboto"
 		ctx.textAlign = "center"
 
 		let cell = 0
