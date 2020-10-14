@@ -85,6 +85,15 @@
 					<span class="description">Little demo for line of sight function</span>
 				</router-link>
 			</panel>
+
+			<panel title="Advanced Fight description">
+				<router-link to="/help/advanced-fight-description">
+					<h2>Fight Description</h2>
+					<img src="/image/help/fight_tuto.png">
+					<br>
+					<span class="description">Advanced description of combat rules and order.</span>
+				</router-link>
+			</panel>
 		</div>
 		<didactitiel v-if="didactitiel_enabled" v-model="didactitiel" />
 	</div>
