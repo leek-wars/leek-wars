@@ -202,7 +202,7 @@ class FightEntity extends Entity {
 		this.dx = pos.x
 		this.dy = pos.y
 
-		this.moveDuration = distance * MOVE_DURATION
+		this.moveDuration = Math.sqrt(distance) * MOVE_DURATION
 		this.moveAnim = this.moveDuration
 
 		// Jump
