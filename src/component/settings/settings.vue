@@ -63,12 +63,12 @@
 				</div>
 				<v-btn v-if="viewChangeEmail" :disabled="changeEmailSent" @click="sendChangeEmail()">{{ $t('change_email_send') }}</v-btn>
 
-				<div v-ripple class="list-item card" @click="view2FA = !view2FA">
+				<!-- <div v-ripple class="list-item card" @click="view2FA = !view2FA">
 					<v-icon>mdi-security</v-icon>
 					<span class="label">Two factor authentication</span>
 					<v-icon>{{ view2FA ? 'mdi-menu-up' : 'mdi-menu-down' }}</v-icon>
 				</div>
-				<two-factor v-if="view2FA" />
+				<two-factor v-if="view2FA" /> -->
 
 				<div v-ripple class="list-item card" @click="viewDeleteAccount = !viewDeleteAccount">
 					<v-icon>mdi-delete-forever</v-icon>
