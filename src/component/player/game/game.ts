@@ -588,7 +588,8 @@ class Game {
 					Vue.set(this.logs, actionI, [])
 				}
 				for (const log of farmerLogs[action]) {
-					if (me || (log[1] !== 4 && log[1] !== 9)) {
+					const type = log[1]
+					if (me || (type !== 4 && type !== 9 && type !== 5)) {
 						this.logs[actionI].push(log)
 					}
 				}
