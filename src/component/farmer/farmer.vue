@@ -252,9 +252,7 @@
 								</div>
 							</template>
 							<b>{{ trophy.name }}</b>
-							<span v-if="myFarmer">
-								<br>{{ trophy.description }}
-							</span>
+							<br>{{ trophy.description }}
 							<br><span class="trophy-date">{{ LeekWars.formatDuration(trophy.date) }}</span>
 						</tooltip>
 					</div>
@@ -292,9 +290,7 @@
 									</div>
 								</template>
 								<b>{{ trophy.name }}</b>
-								<span v-if="myFarmer">
-									<br>{{ trophy.description }}
-								</span>
+								<br>{{ trophy.description }}
 								<br><span class="date">{{ LeekWars.formatDuration(trophy.date) }}</span>
 							</tooltip>
 						</div>
