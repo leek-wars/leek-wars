@@ -1,7 +1,11 @@
 <template lang="html">
 	<router-link :to="'/tournament/' + tournament.id">
-		<div class="tournament">{{ $t('main.tournament_of', [LeekWars.formatDate(tournament.date)]) }}
-			<div class="date">{{ tournament.date | duration }}</div>
+		<div class="tournament">
+			<div v-for="(round, r) of tournament.rounds" :key="r" class="round" :class="{win: round === 1, lose: round === -1}"></div>
+			<div class="foreground">
+				{{ $t('main.tournament_of', [LeekWars.formatDate(tournament.date)]) }}
+				<div class="date">{{ tournament.date | duration }}</div>
+			</div>
 		</div>
 	</router-link>
 </template>
@@ -25,9 +29,27 @@
 		text-align: center;
 		color: #333;
 		border-radius: 3px;
-		background-color: #dcdcdc;
-		&:hover {
-			background-color: #ccc;
+		position: relative;
+		display: flex;
+		background: #ddd;
+		&:hover .foreground {
+			background: #7772;
+		}
+		.foreground {
+			position: absolute;
+			top: 0;
+			left: 0;
+			right: 0;
+			bottom: 0;
+		}
+		.round {
+			width: 20%;
+			&.win {
+				background: #b6f182;
+			}
+			&.lose {
+				background: #ffb3ae;
+			}
 		}
 		.date {
 			font-size: 10px;
@@ -35,7 +57,7 @@
 			color: #888;
 			line-height: normal;
 			margin-right: 5px;
-			margin-top: -15px;
+			margin-top: -13px;
 		}
 	}
 </style>
