@@ -1,3 +1,40 @@
+216:
+  title: Logs visible in team, new animations and change of farmer's name
+  added:
+    - Added an option to make your fight debug traces visible to your teammates.
+    - Animation and sound effects during a critical move.
+    - Leeks and bulbs grow according to the maximum life gained.
+    - "Critical hits are added on bulbs: their characteristics are boosted by 40%."
+    - Added the possibility to rename the farmer's name.
+    - Display of Battle Royales won on a farmer's profile.
+    - "Report : Added an option to display personal logs + current turn number stays on top."
+    - "Critical hits are added on resurrection: 70% of life max instead of 50%."
+    - "2 new trophies: Maestro (get all trophies) and Pioneer (be first). Bravo Taga!"
+    - Rounds history display in the tournament history.
+    - "#ai Rebalancing on several items (punishment, electrifier) (see forum topic)."
+  improved:
+    - Re-display of AI compilation errors in combat and on the report.
+    - Restore error page if a fight did not occur.
+    - Display of the fight date on the report page.
+    - Displays invalid AI and number of rows in the AI list.
+    - Smaller leeks and bulbs for a better reading in combat.
+    - Clicking on the progress bar cancels the redirection to the fight report.
+    - "Team page: improved member management for the owner."
+    - Path display in black on clear maps.
+    - "#ai Passive damage effects and nova damage are now activated on life damage."
+  fixed:
+    - "Forgotten password: email case is now ignored."
+    - Fixed "Notifications" title on Firefox in the right pane.
+    - Fixed Team tournament bug if a compo is deleted.
+    - Disabled LS2 console and AI v2 for the moment.
+    - Fixed an error message on the farmer page (thanks to valkheim).
+    - Correction of the breadcrumb alignment on Firefox (thanks to valkheim).
+    - Correction of a typo in the getChipArea doc (thanks to HARTAriihau).
+    - PT is used after using say() in the combat actions.
+    - Fixed log formatting in the error section of the report page (thanks to BadTresor).
+    - Random bots weapons and chips are generated according to the chosen seed.
+    - AIs containing / work again but it is no longer possible to put them.
+
 215:
   title: Improvement of the emails, click on the talent, markText() function.
   added:
