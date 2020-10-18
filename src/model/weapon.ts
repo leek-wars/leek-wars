@@ -66,7 +66,7 @@ const WeaponsData = {
 	// Gazor
 	10: { w: 160, h: 77, cx: 15, cz: 60, ocx: 0, x: -43, z: -12, mx1: 28, mz1: 52, mx2: 74, mz2: 50, top: 22, bottom: 40, white: false },
 	// Electrisor
-	11: { w: 149, h: 53, cx: 5, cz: 52, ocx: 0, x: -30, z: 0, mx1: 42, mz1: 31, mx2: 72, mz2: 34, top: 3, bottom: 33, white: false },
+	11: { w: 149, h: 53, cx: 5, cz: 52, ocx: 0, x: -30, z: 0, mx1: 42, mz1: 31, mx2: 72, mz2: 34, sx: 89, sz: -15, top: 3, bottom: 33, white: false },
 	// MLaser
 	12: { w: 190, h: 52, cx: 15, cz: 38, ocx: 0, x: -70, z: -20, mx1: 69, mz1: 33, mx2: 114, mz2: 33, sx: 126, sz: 25, cartX: 60, cartZ: 20, cartAngle: Math.PI / 2, recoilForce: 18, top: 3, bottom: 33, white: false },
 	// BLaser
