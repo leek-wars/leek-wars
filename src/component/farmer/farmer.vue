@@ -326,7 +326,7 @@
 			</div>
 		</panel>
 
-		<div class="container grid large last">
+		<div class="container grid large">
 			<panel v-if="!farmer || farmer.fight_history.length > 0" :title="$t('fights')" icon="mdi-sword-cross">
 				<template slot="actions">
 					<router-link :to="'/farmer/' + id + '/history'" class="button flat">
@@ -366,6 +366,12 @@
 						<span>{{ $t('report') }}</span>
 					</div>
 				</div>
+				<template v-if="myFarmer">
+					<div class="tab" @click="renameDialog = true">
+						<v-icon>mdi-pencil-outline</v-icon>
+						{{ $t('rename') }}
+					</div>
+				</template>
 			</div>
 		</div>
 
@@ -440,6 +446,25 @@
 				<div class="green" @click="pickTitle($refs.picker.getTitle())">{{ $t('validate') }}</div>
 			</div>
 		</popup>
+
+		<popup v-if="farmer" v-model="renameDialog" :width="600">
+			<v-icon slot="icon">mdi-pencil-outline</v-icon>
+			<template slot="title">{{ $t('rename') }}</template>
+			{{ $t('rename_description') }}
+			<br>
+			<br>
+			{{ $t('rename_info') }}
+			<br>
+			<br>
+			{{ $t('rename_new_name') }} : <input v-model="renameName" type="text">
+			<br>
+			<br>
+			<center>
+				<v-btn class="rename-button" @click="rename('habs')">{{ $t('rename_pay_habs') }} :&nbsp;<b>{{ rename_price_habs }}</b>&nbsp;<img src="/image/hab.png"></v-btn>
+				&nbsp;
+				<v-btn class="rename-button" @click="rename('crystals')">{{ $t('rename_pay_crystals') }} :&nbsp;<b>{{ rename_price_crystals }}</b> &nbsp;<span class="crystal"></span></v-btn>
+			</center>
+		</popup>
 	</div>
 </template>
 
@@ -468,6 +493,10 @@
 		newGitHub: string = ''
 		notfound: boolean = false
 		titleDialog: boolean = false
+		renameDialog: boolean = false
+		renameName: string = ''
+		rename_price_habs: number = 2000000
+		rename_price_crystals: number = 200
 
 		get id(): any {
 			return this.$route.params.id ? parseInt(this.$route.params.id, 10) : (this.$store.state.farmer ? this.$store.state.farmer.id : null)
@@ -528,6 +557,7 @@
 		}
 		init(farmer: Farmer) {
 			this.farmer = farmer
+			this.renameName = this.farmer.name
 			if (this.farmer.banned || this.farmer.deleted) {
 				return
 			}
@@ -690,6 +720,25 @@
 			this.titleDialog = false
 			LeekWars.put('farmer/set-title', {icon: title[0] || 0, noun: title[1] || 0, gender: title[2] || 0, adjective: title[3] || 0})
 			this.$store.commit('set-title', title)
+		}
+
+		rename(currency: string) {
+			if (!this.farmer) { return }
+			const method = currency === 'habs' ? 'farmer/rename-habs' : 'farmer/rename-crystals'
+			LeekWars.post(method, {name: this.renameName}).then(data => {
+				if (this.farmer) {
+					this.farmer.name = this.renameName
+					store.commit('rename-farmer', {name: this.renameName})
+					if (currency === 'habs') {
+						store.commit('update-habs', -this.rename_price_habs)
+					} else {
+						store.commit('update-crystals', -this.rename_price_crystals)
+					}
+					this.renameDialog = false
+					LeekWars.toast(this.$t('rename_done'))
+				}
+			})
+			.error(error => LeekWars.toast(this.$t('error_' + error.error, error.params)))
 		}
 	}
 </script>
@@ -1005,5 +1054,10 @@
 	}
 	.candidacy {
 		color: #999;
+	}
+	.rename-button {
+		b {
+			padding-right: 4px;
+		}
 	}
 </style>
