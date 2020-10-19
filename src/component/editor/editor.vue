@@ -567,6 +567,7 @@
 					this.newAIName = ''
 				}
 			})
+			.error(error => LeekWars.toast(this.$t(error.error, error.parameters)))
 		}
 		newFolder(name: string) {
 			if (!this.currentFolder) { return }
@@ -580,6 +581,7 @@
 					this.newFolderName = ''
 				}
 			})
+			.error(error => LeekWars.toast(this.$t(error.error, error.parameters)))
 		}
 		startDelete() {
 			this.deleteDialog = true
