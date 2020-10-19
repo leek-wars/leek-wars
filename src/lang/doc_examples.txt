@@ -1,0 +1,310 @@
+## abs
+
+abs(10) // 10
+
+abs(-10) // 10
+
+abs(-x) // x
+
+## acos
+acos(0) // PI / 2
+
+acos(0.5) // PI / 3
+
+acos(-0.5) // 2 * PI / 3
+
+## asin
+asin(0) // 0
+
+asin(0.5) // PI / 6
+
+asin(1) // PI / 2
+
+## atan
+atan(0) // 0
+
+atan(sqrt(3) / 3) // PI / 6
+
+atan(1) // PI / 4
+
+atan(-1) // -PI / 4
+
+## atan2
+atan2(1, 1) // PI / 4
+
+atan2(-1, 1) // -PI / 4
+
+atan2(1, -1) // 3 * PI / 4
+
+atan2(-1, -1) // -3 * PI / 4
+
+## cbrt
+cbrt(1) // 1
+
+cbrt(8) // 2
+
+cbrt(27) // 3
+
+cbrt(125) // 5
+
+## ceil
+ceil(1) // 1
+
+ceil(1.8) // 2
+
+ceil(2.3) // 3
+
+ceil(3.5) // 4
+
+ceil(-12.79) // -12
+
+## cos
+cos(0) // 1
+
+cos(PI / 2) // 0
+
+cos(PI / 3) // 0.5
+
+cos(PI / 6) // sqrt(3) / 2
+
+## exp
+exp(0) // 1
+
+exp(1) // E
+
+exp(12) // 162754.791419
+
+## floor
+floor(1) // 1
+
+floor(1.8) // 1
+
+floor(2.3) // 2
+
+floor(3.5) // 3
+
+floor(-12.79) // -13
+
+## hypot
+hypot(1, 1) // sqrt(2)
+
+hypot(3, 4) // 5
+
+## log
+log(1) // 0
+
+log(e) // 1
+
+log(1000000) // 13.815510558
+
+## log10
+log10(1) // 0
+
+log10(10) // 1
+
+log10(1000000) // 6
+
+## max
+max(2, 5) // 5
+
+max(-2, -5) // -2
+
+## min
+max(2, 5) // 2
+
+max(-2, -5) // -5
+
+## number
+number("12345") // 12345
+
+number("3.14159") // 3.14159
+
+## pow
+pow(2, 10) // 1024
+
+pow(10, 6) // 1000000
+
+## rand
+rand() // 0.0315627088835804
+
+rand() // 0.2746200479206138
+
+rand() // 0.3811411548987587
+
+## randFloat
+randFloat(10, 20) // 17.551965161250713
+
+randFloat(1000, 2000) // 1610.705920097898
+
+## randInt
+randFloat(10, 20) // 14
+
+randFloat(1000, 2000) // 1680
+
+## round
+round(1) // 1
+
+round(1.8) // 2
+
+round(2.3) // 2
+
+round(3.5) // 4
+
+round(-12.79) // -13
+
+## signum
+signum(0) // 0
+
+signum(50) // 1
+
+signum(-12) // -1
+
+## sin
+sin(0) // 0
+
+sin(PI / 2) // 1
+
+sin(PI / 3) // sqrt(3) / 2
+
+sin(PI / 6) // 0.5
+
+## sqrt
+sqrt(1) // 1
+
+sqrt(2) // 1.41421356237
+
+sqrt(4) // 2
+
+sqrt(31329) // 177
+
+## tan
+tan(0) // 0
+
+tan(PI / 6) // sqrt(3) / 3
+
+tan(PI / 4) // 1
+
+tan(-PI / 4) // -1
+
+## toDegrees
+toDegrees(0) // 0
+
+toDegrees(PI / 4) // 45
+
+toDegrees(PI / 3) // 60
+
+toDegrees(PI / 2) // 90
+
+toDegrees(PI) // 180
+
+toDegrees(2 * PI) // 360
+
+## toRadians
+toRadians(0) // 0
+
+toRadians(45) // PI / 4
+
+toRadians(60) // PI / 3
+
+toRadians(90) // PI / 2
+
+toRadians(180) // PI
+
+toRadians(360) // 2 * PI
+
+## E
+E // 2.71828188459
+
+log(E) // 1
+
+E^12 // = exp(12) = 162754.791419
+
+## PI
+PI // 3.14159265359
+
+cos(PI) // -1
+
+sin(PI / 6) // 0.5
+
+tan(PI / 4) // 1
+
+
+
+## charAt
+charAt("Bonjour", 3) // "j"
+
+charAt("Bonjour", 999) // ""
+
+## contains
+contains("Bonjour", "jour") // true
+
+contains("Bonjour", "zzz") // false
+
+## endsWith
+endsWith("Bonjour", "jour") // true
+
+endsWith("Bonjour", "Bon") // false
+
+## indexOf
+indexOf("Bonjour", "jour") // 3
+
+indexOf("Bonjour", "zzz") // -1
+
+indexOf("Bonjour tout le monde", "on", 0) // 1
+
+indexOf("Bonjour tout le monde", "on", 10) // 17
+
+## length
+length("") // 0
+
+length("a") // 1
+
+length("Bonjour") // 7
+
+## replace
+replace("Banana", "n", "t") // "Batata"
+
+replace("a,b,c,d,e,f", ",", "+") // "a+b+c+d+e+f"
+
+replace("Bonjour tout le monde", "Bonjour", "Bonsoir") // "Bonsoir tout le monde"
+
+## split
+split("456-789-123", "-") // ["456", "789", "123"]
+
+split("Hello", "") // ["H", "e", "l", "l", "o"]
+
+split("Hello", "zzz") // ["Hello"]
+
+split("456-789-123", "-", 2) // ["456", "789-123"]
+
+## startsWith
+startsWith("Bonjour", "Bon") // true
+
+startsWith("Bonjour", "Poireau") // false
+
+## string
+string(12345) // "12345"
+
+string([1, 2, 3]) // "[1, 2, 3]"
+
+string("hello") // "hello"
+
+## substring
+substring("Bonjour", 3) // "jour"
+
+substring("Bonjour tout le monde", 3, 9) // "jour tout"
+
+## toLower
+toLower("BONJOUR") // "bonjour"
+
+toLower("Bonjour") // "bonjour"
+
+toLower("hello") // "hello"
+
+## toUpper
+toUpper("bonjour") // "BONJOUR"
+
+toUpper("Bonjour") // "BONJOUR"
+
+toUpper("HELLO") // "HELLO"
+}
