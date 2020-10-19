@@ -7,7 +7,7 @@
 	"forgot_password": "Mot de passe oublié ?",
 	"incorrect_login": "Login ou mot de passe incorrect.",
 	"keep_connected": "Rester connecté",
-	"login": "Identifiant",
+	"login": "Nom d'éleveur ou email",
 	"password": "Mot de passe",
 	"success": "Vous êtes connecté",
 	"title": "Connexion"

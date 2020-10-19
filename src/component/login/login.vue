@@ -6,10 +6,10 @@
 				<div class="column">
 					<form @submit.prevent="login">
 						<br>
-						<h4>{{ $t('login') }}</h4>
+						<div class="title">{{ $t('login') }}</div>
 						<input v-model="form.login" type="text" name="login">
 						<br><br>
-						<h4>{{ $t('password') }}</h4>
+						<div class="title">{{ $t('password') }}</div>
 						<input v-model="form.password" type="password" name="password">
 						<br><br>
 						<v-checkbox v-model="form.keep_connected" :label="$t('keep_connected')" hide-details />
@@ -132,5 +132,9 @@
 			height: 20px;
 			margin-right: 5px;
 		}
+	}
+	.title {
+		color: #333;
+		font-size: 16px;
 	}
 </style>
