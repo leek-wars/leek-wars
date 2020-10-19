@@ -156,7 +156,7 @@ class FightEntity extends Entity {
 		const xy = this.game.ground.xyToXYPixels(this.x, this.y)
 		this.ox = xy.x
 		this.oy = xy.y
-		this.isTop = false
+		this.isTop = this.y <= 4
 
 		if (oldY !== this.y && this.drawID != null) {
 			this.game.moveDrawableElement(this, this.drawID, oldY, this.y)
