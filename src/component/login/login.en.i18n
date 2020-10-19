@@ -7,7 +7,7 @@
 	"forgot_password": "Forgot your password?",
 	"incorrect_login": "Make sure your username and password were typed correctly, you can also request a new password by clicking the \"Forgot your password?\" button.",
 	"keep_connected": "Remember me.",
-	"login": "Login",
+	"login": "Farmer name or email",
 	"password": "Password",
 	"success": "You have successfully logged in!",
 	"title": "Connection"
