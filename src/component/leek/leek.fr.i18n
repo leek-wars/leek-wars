@@ -56,7 +56,7 @@
 	"register_to_br": "S'inscrire aux BR",
 	"register_value": "Valeur",
 	"remaining_xp": "XP restante : {0}",
-	"rename_description": "Cette opération va vous permettre de renommer votre poireau, vous pouvez payer avec des Habs ou bien avec des cristaux.",
+	"rename_description": "Cette opération va vous permettre de renommer votre poireau, vous pouvez payer avec des Habs ou bien avec des cristaux. Il est possible de le faire une fois par jour.",
 	"rename_done": "Poireau renommé !",
 	"rename_error_delay": "Vous devez attendre un jour entre deux renommages de votre poireau.",
 	"rename_leek": "Renommer le poireau",
