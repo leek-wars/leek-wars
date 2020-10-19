@@ -1,3 +1,40 @@
+216:
+  title: Traces visibles en équipe, nouvelles animations et changement de nom d'éleveur
+  added:
+    - Ajout d'une option pour rendre ses traces de debug de combat visibles à ses coéquipiers.
+    - Animation et bruitage lors d'un coup critique.
+    - Les poireaux et les bulbes grandissent en fonction de la vie max gagnée.
+    - "Les coups critiques sont ajoutés sur les bulbes : leurs caractéristiques sont boostées de 40%."
+    - Ajout de la possibilité de renommer son nom d'éleveur.
+    - Affichage des Battle Royales gagnées sur le profil d'un éleveur.
+    - "Rapport : Ajout d'une option pour afficher les logs personnels + n° de tour actuel reste en haut."
+    - "Les coups critiques sont ajoutés sur la résurrection : 70% de la vie max au lieu de 50%."
+    - "2 nouveaux trophées : Maestro (obtenir tous les trophées) et Pionnier (être premier). Bravo Taga !"
+    - Affichage de l'historique des rounds dans l'historique des tournois.
+    - "#ai Rééquilibrage sur plusieurs items (châtiment, électriseur) (voir le sujet forum)."
+  improved:
+    - Ré-affichage des erreurs de compilation d'IA en combat et sur le rapport.
+    - Restauration de la page d'erreur si un combat ne s'est pas généré.
+    - Affichage de la date du combat sur la page rapport.
+    - Affichage des IA invalides et du nombre de lignes dans la liste des IA.
+    - Poireaux et bulbes plus petits pour une meilleure lecture en combat.
+    - Le clic sur la barre de progression annule la redirection vers le rapport de combat.
+    - "Page équipe : amélioration de la gestion des membres pour le propriétaire."
+    - Affichage des chemins en noir sur les cartes claires.
+    - "#ai Les effets passifs de dégâts et dégâts nova s'activent désormais sur les dégâts de vie."
+  fixed:
+    - "Mot de passe oublié : la casse de l'email est maintenant ignorée."
+    - Correction du titre "Notifications" sur Firefox dans le panneau de droite.
+    - Correction d'un bug de tournoi d'équipe si une compo est supprimée.
+    - Désactivation de la console LS2 et des IA v2 pour le moment.
+    - Correction d'un message d'erreur sur la page éleveur (merci à valkheim).
+    - Correction de l'alignement des fils d'ariane sur Firefox (merci à valkheim).
+    - Correction d'une typo dans la doc de getChipArea (merci à HARTAriihau).
+    - Le PT est utilisé après avoir utilisé say() dans les actions du combat.
+    - Correction du formattage des logs dans la section erreurs page rapport (merci à BadTresor).
+    - Les armes et puces aléatoires des bots sont générés selon la graine choisie.
+    - Les IA contenant des / fonctionnent à nouveau mais il n'est plus possible d'en mettre.
+
 215:
   title: Amélioration des emails, clic sur le talent, fonction markText().
   added:
