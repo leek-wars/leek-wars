@@ -24,6 +24,9 @@ abstract class WeaponAnimation {
 	public mz1: number
 	public mx2: number
 	public mz2: number
+	// Position du tir
+	public sx: number
+	public sz: number
 	public recoil: number = 0
 	public id: number
 
@@ -40,10 +43,12 @@ abstract class WeaponAnimation {
 		this.mz1 = data.mz1
 		this.mx2 = data.mx2
 		this.mz2 = data.mz2
+		this.sx = data.sx!
+		this.sz = data.sz!
 		this.id = LeekWars.weaponTemplates[id].item
 	}
 	public abstract update(dt: number): void
-	public abstract shoot(leekX: number, leekY: number, handPos: number, angle: number, orientation: number, targetPos: Position, targets: FightEntity[], caster: FightEntity, cell: Cell): number
+	public abstract shoot(leekX: number, leekY: number, handPos: number, angle: number, orientation: number, targetPos: Position, targets: FightEntity[], caster: FightEntity, cell: Cell, scale: number): number
 }
 
 class WhiteWeaponAnimation extends WeaponAnimation {
@@ -60,7 +65,7 @@ class WhiteWeaponAnimation extends WeaponAnimation {
 		super(game, texture, id)
 	}
 
-	public shoot(leekX: number, leekY: number, handPos: number, angle: number, orientation: number, pos: Position, targets: FightEntity[]) {
+	public shoot(leekX: number, leekY: number, handPos: number, angle: number, orientation: number, pos: Position, targets: FightEntity[], caster: FightEntity, cell: Cell, scale: number) {
 		this.step = 1
 		this.inte = 0.001
 		this.leekX = leekX
@@ -134,13 +139,14 @@ abstract class RangeWeapon extends WeaponAnimation {
 		this.cartAngle = data.cartAngle!
 		this.recoilForce = data.recoilForce!
 	}
-	public shoot(leekX: number, leekY: number, handPos: number, angle: number, orientation: number, targetPos: Position, targets: FightEntity[], caster: FightEntity, cell: Cell) {
+
+	public shoot(leekX: number, leekY: number, handPos: number, angle: number, orientation: number, targetPos: Position, targets: FightEntity[], caster: FightEntity, cell: Cell, scale: number) {
 		const cos = Math.cos(angle)
 		const sin = Math.sin(angle)
 		// Coordonnées sans rotation (par rapport au centre)
 		const x = this.x + this.sx - this.recoil
 		const y = 0
-		const z = this.cz * Leek.SCALE + this.z + this.sz + handPos
+		const z = this.cz * scale + this.z + this.sz + handPos
 		// Rotation
 		const X = leekX + (this.cx + x * cos - y * sin) * orientation
 		const Y = leekY + (y * cos + x * sin)
@@ -276,8 +282,6 @@ class Electrisor extends WeaponAnimation {
 	public lightningZ: number = 0
 	public lightningAngle: number = 0
 	public lightningPosition!: Position
-	public sx: number = 89
-	public sz: number = -15
 	public caster!: Leek
 	public lightning!: Texture
 	public areaColor!: string
@@ -288,11 +292,11 @@ class Electrisor extends WeaponAnimation {
 		this.areaColor = '#0263f4'
 	}
 
-	public shoot(leekX: number, leekY: number, handPos: number, angle: number, orientation: number, targetPos: Position, targets: FightEntity[], caster: Leek, cell: Cell) {
+	public shoot(leekX: number, leekY: number, handPos: number, angle: number, orientation: number, targetPos: Position, targets: FightEntity[], caster: Leek, cell: Cell, scale: number) {
 		const cos = Math.cos(angle)
 		const sin = Math.sin(angle)
 		const x = this.x + this.sx
-		const z = this.cz * Leek.SCALE + this.z + this.sz - (caster.front ? 5 : -5)
+		const z = this.cz * scale + this.z + this.sz - (caster.front ? 5 : -5)
 		this.lightningX = leekX + (this.cx + x * cos) * orientation
 		this.lightningY = leekY + x * sin
 		this.lightningZ = z
@@ -413,12 +417,12 @@ class Gazor extends WeaponAnimation {
 		this.gaz = T.gaz
 	}
 
-	public shoot(leekX: number, leekY: number, handPos: number, angle: number, orientation: number, targetPos: Position, targets: FightEntity[], caster: FightEntity, cell: Cell) {
+	public shoot(leekX: number, leekY: number, handPos: number, angle: number, orientation: number, targetPos: Position, targets: FightEntity[], caster: FightEntity, cell: Cell, scale: number) {
 		this.targetPos = targetPos
 		const cos = Math.cos(angle)
 		const sin = Math.sin(angle)
 		const x = this.x + this.sx
-		const z = this.cz * Leek.SCALE + this.z + this.sz + handPos
+		const z = this.cz * scale + this.z + this.sz + handPos
 		this.bulletX = leekX + (this.cx + x * cos) * orientation
 		this.bulletY = leekY + x * sin
 		this.bulletZ = z
@@ -451,10 +455,10 @@ class UnbridledGazor extends Gazor {
 		this.gaz = T.orange_gaz
 		this.color = '#ff5c00'
 	}
-	public shoot(leekX: number, leekY: number, handPos: number, angle: number, orientation: number, targetPos: Position, targets: FightEntity[], caster: FightEntity, cell: Cell) {
+	public shoot(leekX: number, leekY: number, handPos: number, angle: number, orientation: number, targetPos: Position, targets: FightEntity[], caster: FightEntity, cell: Cell, scale: number) {
 		this.explosions = 4
 		this.delay = 40
-		return super.shoot(leekX, leekY, handPos, angle, orientation, targetPos, targets, caster, cell)
+		return super.shoot(leekX, leekY, handPos, angle, orientation, targetPos, targets, caster, cell, scale)
 	}
 	public update(dt: number) {
 		super.update(dt)
@@ -531,9 +535,9 @@ class RevokedMLaser extends LaserWeapon {
 	constructor(game: Game) {
 		super(game, T.revoked_m_laser, T.revoked_m_laser_bullet, T.cart_revoked_m_laser, S.laser, 21, 8, 5, "#c500e6")
 	}
-	public shoot(leekX: number, leekY: number, handPos: number, angle: number, orientation: number, targetPos: Position, targets: FightEntity[], caster: FightEntity, cell: Cell) {
+	public shoot(leekX: number, leekY: number, handPos: number, angle: number, orientation: number, targetPos: Position, targets: FightEntity[], caster: FightEntity, cell: Cell, scale: number) {
 		S.poison.play(this.game)
-		return super.shoot(leekX, leekY, handPos, angle, orientation, targetPos, targets, caster, cell)
+		return super.shoot(leekX, leekY, handPos, angle, orientation, targetPos, targets, caster, cell, scale)
 	}
 }
 class JLaser extends LaserWeapon {

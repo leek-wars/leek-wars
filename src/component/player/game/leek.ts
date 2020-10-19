@@ -109,7 +109,7 @@ class Leek extends FightEntity {
 
 		const position = this.game.ground.xyToXYPixels(x, y)
 
-		return this.weapon.shoot(this.ox, this.oy, this.handPos + this.z, this.angle, this.direction, position, targets, this, cell)
+		return this.weapon.shoot(this.ox, this.oy, this.handPos + this.z, this.angle, this.direction, position, targets, this, cell, Leek.WEAPON_SCALE * this.growth)
 	}
 
 	public draw(ctx: CanvasRenderingContext2D) {
