@@ -629,20 +629,34 @@
 					}
 				}
 			}
-			if (this.ai.functions) {
-				for (const fun of this.ai.functions) {
-					if (token === fun.name) {
-						return fun
+			return this.searchSymbolInAI(this.ai, token)
+		}
+
+		public searchSymbolInAI(startAI: AI, startSymbol: string): Keyword | null {
+
+			const visited = new Set<number>()
+
+			const aux = (ai: AI, symbol: string): Keyword | null => {
+				visited.add(ai.id)
+				if (ai.functions) {
+					for (const fun of ai.functions) {
+						if (symbol === fun.name) {
+							return fun
+						}
 					}
 				}
-			}
-			if (this.ai.includes) {
-				for (const include of this.ai.includes) {
-					if (include.functions) {
-						return include.functions.find(f => token === f.name)
+				if (ai.includes) {
+					for (const include of ai.includes) {
+						if (visited.has(include.id)) { continue }
+						const found = aux(include, symbol)
+						if (found) {
+							return found
+						}
 					}
 				}
+				return null
 			}
+			return aux(startAI, startSymbol)
 		}
 		public mousemove(e: any) {
 			this.mouseX = e.pageX
