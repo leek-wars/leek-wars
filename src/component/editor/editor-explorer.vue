@@ -264,7 +264,7 @@
 		}
 
 		keyup(e: KeyboardEvent) {
-			if (e.which === 46) {
+			if (e.which === 46) { // Suppr
 				if (this.currentAi) {
 					this.ai = this.currentAi
 					this.deleteDialog = true

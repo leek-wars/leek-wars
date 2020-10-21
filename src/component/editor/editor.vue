@@ -390,6 +390,7 @@
 				}
 			})
 			this.$root.$on('keyup', (e: KeyboardEvent) => {
+				// console.log("editor keyup", e)
 				if (this.currentEditor) {
 					this.currentEditor.editorKeyUp(e)
 				}
