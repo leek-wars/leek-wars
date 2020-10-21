@@ -49,21 +49,21 @@
 				<documentation-constant v-else-if="detailDialogContent.keyword.type === 'constant'" :constant="detailDialogContent.keyword.constant" class="main" />
 				<weapon-preview v-else-if="detailDialogContent.keyword.details.type === 'weapon'" :weapon="detailDialogContent.keyword.details.weapon" class="main" />
 				<chip-preview v-else-if="detailDialogContent.keyword.details.type === 'chip'" :chip="detailDialogContent.keyword.details.chip" class="main" />
-				<javadoc v-if="detailDialogContent.keyword.javadoc" :javadoc="detailDialogContent.keyword.javadoc" />
-				<div class="divider"></div>
+				<javadoc v-if="detailDialogContent.keyword.javadoc" :javadoc="detailDialogContent.keyword.javadoc" class="main" />
 			</template>
-			<template v-if="detailDialogContent.details.defined">
-				<i18n class="defined" path="leekscript.defined_in">
-					<b slot="0">{{ detailDialogContent.details.defined[0] }}</b>
-					<b slot="1">{{ detailDialogContent.details.defined[1] }}</b>
-				</i18n>
-				<div class="divider"></div>
-			</template>
-			<template v-if="detailDialogContent.details.alias && !detailDialogContent.details.op">
+			<div v-if="detailDialogContent.details.defined" class="definition">
+				<v-icon>mdi-file-outline</v-icon>
+				<span @click="$emit('jump', detailDialogContent.keyword.ai, hoverData.defined[1])">
+					<i18n class="defined" path="leekscript.defined_in">
+						<b slot="0">{{ detailDialogContent.details.defined[0] }}</b>
+						<b slot="1">{{ detailDialogContent.details.defined[1] }}</b>
+					</i18n>
+				</span>
+			</div>
+			<div v-if="detailDialogContent.details.alias && !detailDialogContent.details.op">
 				<lw-code :code="detailDialogContent.details.alias" :single="true" />
-				<div class="divider"></div>
-			</template>
-			<template v-if="detailDialogContent.details.type">
+			</div>
+			<div v-if="detailDialogContent.details.type">
 				<div v-if="detailDialogContent.details.op">
 					<lw-type :type="detailDialogContent.details.type.args[0]" />
 					{{ detailDialogContent.details.alias }}
@@ -72,12 +72,11 @@
 					<lw-type :type="detailDialogContent.details.type.return" />
 				</div>
 				<lw-type v-else :type="detailDialogContent.details.type" />
-			</template>
-			<template v-if="errorTooltip">
-				<div class="divider"></div>
+			</div>
+			<div v-if="errorTooltip">
 				<div v-if="errorLevel === 0" class="error"><v-icon class="error">mdi-close-circle-outline</v-icon> {{ errorTooltipText }}</div>
 				<div v-else class="warning"><v-icon class="warning">mdi-alert-circle-outline</v-icon> {{ errorTooltipText }}</div>
-			</template>
+			</div>
 		</div>
 		<loader v-if="loading" />
 	</div>
@@ -658,6 +657,7 @@
 			}
 			return aux(startAI, startSymbol)
 		}
+
 		public mousemove(e: any) {
 			this.mouseX = e.pageX
 			this.mouseY = e.pageY
@@ -748,12 +748,19 @@
 					// console.log("cannot hover", token, editorPos)
 
 					if (keyword) {
-						this.showHoverDetails(editorPos2, keyword, {
+						const data = {
 							location: [
 								[editorPos2.line + 1, token.start],
 								[editorPos2.line + 1, token.end - 1]
+							],
+						} as any
+						if (keyword.ai) {
+							data.defined = [
+								keyword.ai ? keyword.ai.path : '',
+								keyword.line
 							]
-						})
+						}
+						this.showHoverDetails(editorPos2, keyword, data)
 					}
 				})
 			}, this.ctrl ? 0 : 200)
@@ -776,6 +783,7 @@
 
 				const fixPosition = () => {
 					const detailDialog = this.$refs.detailDialog as HTMLElement
+					if (!detailDialog) { return }
 					const height = detailDialog.scrollHeight
 					const top = window.innerHeight - this.detailDialogTop
 					this.detailDialogMaxHeight = window.innerHeight - this.detailDialogTop
@@ -1089,29 +1097,37 @@
 				description += i18n.t('leekscript.defined_in', [this.ai.name, line])
 
 				const comment = comments[match.index]
-				let javadoc = null
+				const javadoc = {
+					name: fullName,
+					description: "",
+					items: [] as any[]
+				}
 				if (comment) {
-					javadoc = {
-						name: fullName,
-						description: "",
-						items: [] as any[]
-					}
 					const javadoc_lines = comment.split("\n")
 					const javadoc_regex = /^\s*\*\s*@(\w+)(?:\s+([a-zA-Z\u00C0-\u024F\u1E00-\u1EFF]+)\s*:\s*)?(?:\s*:\s*)?(.*)$/
 					let match_javadoc
-					for (const jline of javadoc_lines) {
+					for (let l = 0; l < javadoc_lines.length; ++l) {
+						const jline = javadoc_lines[l]
 						if (match_javadoc = javadoc_regex.exec(jline)) {
 							// console.log(match_javadoc)
 							javadoc.items.push({ type: match_javadoc[1], name: match_javadoc[2], text: match_javadoc[3] })
 						} else {
 							const star = jline.indexOf("*")
-							const formatted_line = jline.substring(star + 1).trim()
+							let formatted_line = jline.substring(star + 1)
+							if (l === javadoc_lines.length - 1) {
+								formatted_line = formatted_line.trim()
+							}
 							if (formatted_line.length) {
 								javadoc.description += formatted_line + "\n"
 							}
 						}
 					}
 					// console.log("javadoc", javadoc)
+				} else {
+					// No javadoc comment
+					for (const arg of args) {
+						javadoc.items.push({ type: 'param', name: arg, text: null})
+					}
 				}
 
 				const fun = {
@@ -1357,6 +1373,9 @@
 		> * {
 			display: block;
 			padding: 5px 8px;
+			&:not(:last-child) {
+				border-bottom: 1px solid #ccc;
+			}
 		}
 		.main {
 			overflow-y: auto;
@@ -1380,11 +1399,6 @@
 			color: #ff7f00;
 			font-weight: bold;
 			margin: 10px 0;
-		}
-		.divider {
-			padding: 0;
-			height: 1px;
-			background: #ccc;
 		}
 		> .error, > .warning {
 			display: flex;
@@ -1410,6 +1424,21 @@
 		}
 		code.single {
 			border: none;
+		}
+		.definition {
+			cursor: pointer;
+			span {
+				color: #5fad1b;
+				// font-weight: 500;
+			}
+			span:hover {
+				text-decoration: underline;
+			}
+			.v-icon {
+				font-size: 16px;
+				vertical-align: top;
+				margin-right: 4px;
+			}
 		}
 	}
 	.search-panel {
