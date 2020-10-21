@@ -275,6 +275,11 @@
 
 				this.editor.on('change', (_, changes) => this.change(wrapper.CodeMirror, changes))
 				this.editor.on('cursorActivity', (_) => this.cursorChange())
+				this.editor.on('keyup', (i: any, e: any) => {
+					if (e.which === 46) {
+						e.stopPropagation()
+					}
+				})
 
 				this.show()
 
