@@ -12,11 +12,13 @@
 
 		<h4 v-if="return_">{{ $t('doc.return') }}</h4>
 		<ul v-if="return_">
-			<li>{{ return_.name }} : <span v-dochash v-code v-html="return_.text"></span>
+			<li>{{ return_.name }} <span v-if="return_.name">:</span> <span v-dochash v-code v-html="return_.text"></span>
 			</li>
 		</ul>
 
-		<div v-for="(item, i) in other" :key="i">{{ item.type }} {{ item.name }} <span v-if="item.name">:</span> <span v-dochash v-code v-html="item.text"></span></div>
+		<div v-for="(item, i) in other" :key="i">
+			<b>{{ item.type }}</b> {{ item.name }} <span v-if="item.name">:</span> <span v-dochash v-code v-html="item.text"></span>
+		</div>
 	</div>
 </template>
 
@@ -46,7 +48,7 @@
 
 <style lang="scss" scoped>
 	.description {
-		white-space: pre;
+		white-space: pre-wrap;
 	}
 	h2 {
 		margin-bottom: 12px;
