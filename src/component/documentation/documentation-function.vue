@@ -1,6 +1,6 @@
 <template lang="html">
 	<div v-if="fun" class="doc-function" :class="{deprecated: fun.deprecated}">
-		<h2 class="content">
+		<h2>
 			{{ fun.name }}(<span v-for="(arg, i) in fun.arguments_names" :key="i"><span v-if="fun.arguments_types[i] != -1" class="argument">{{ $t('doc.arg_type_' + fun.arguments_types[i]) }}</span><span v-else class="argument">?</span>&nbsp;{{ arg }}<span v-if="i < fun.arguments_names.length - 1">, </span>
 			</span>)
 			<span v-if="fun.return_type != 0">
@@ -43,8 +43,12 @@
 <style lang="scss" scoped>
 	h2 {
 		margin-bottom: 12px;
-		font-size: 18px;
+		font-size: 17px;
 		color: #111;
+		font-family: monospace;
+	}
+	.content {
+		color: #444;
 	}
 	h4 {
 		font-weight: 500;
@@ -63,7 +67,7 @@
 	}
 	.arrow {
 		font-size: 30px;
-		line-height: 15px;
+		line-height: 17px;
 		vertical-align: top;
 	}
 	::v-deep a {

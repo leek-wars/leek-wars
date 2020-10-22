@@ -1133,7 +1133,7 @@
 				} else {
 					// No javadoc comment
 					for (const arg of args) {
-						javadoc.items.push({ type: 'param', name: arg, text: null})
+						javadoc.items.push({ type: 'param', name: null, text: arg})
 					}
 				}
 

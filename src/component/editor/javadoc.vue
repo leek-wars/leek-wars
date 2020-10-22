@@ -1,6 +1,6 @@
 <template lang="html">
 	<div>
-		<h2>{{ javadoc.name }}</h2>
+		<h2>{{ javadoc.name }} <span v-if="return_ && return_.name" class="arrow">→</span> <span v-if="return_ && return_.name">{{ return_.name }}</span></h2>
 		<div class="description" v-html="javadoc.description"></div>
 
 		<template v-if="args.length > 0">
@@ -49,11 +49,13 @@
 <style lang="scss" scoped>
 	.description {
 		white-space: pre-wrap;
+		color: #444;
 	}
 	h2 {
 		margin-bottom: 12px;
-		font-size: 18px;
+		font-size: 17px;
 		color: #111;
+		font-family: monospace;
 	}
 	h4 {
 		font-weight: 500;
@@ -72,5 +74,10 @@
 	}
 	::v-deep ul {
 		margin: 5px 0;
+	}
+	.arrow {
+		font-size: 30px;
+		line-height: 17px;
+		vertical-align: top;
 	}
 </style>
