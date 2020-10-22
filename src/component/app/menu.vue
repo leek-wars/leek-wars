@@ -108,9 +108,10 @@
 
 				<div v-if="LeekWars.battleRoyale.enabled" class="separator"></div>
 
-				<span v-if="LeekWars.battleRoyale.enabled" v-ripple :label="LeekWars.battleRoyale.progress + '/10'" class="section" @click="battleRoyaleDialog = !battleRoyaleDialog">
+				<span v-if="LeekWars.battleRoyale.enabled" v-ripple :label="LeekWars.battleRoyale.progress" class="section" @click="battleRoyaleDialog = !battleRoyaleDialog">
 					<v-icon>mdi-sword-cross</v-icon>
 					<div class="text">{{ $t('main.battle_royale') }}</div>
+					<div class="progress-bar" :style="{width: (LeekWars.battleRoyale.progress * 10) + '%'}"></div>
 				</span>
 
 				<popup v-model="battleRoyaleDialog" :width="600">
@@ -516,6 +517,12 @@
 		display: block;
 	}
 
+	.progress-bar {
+		height: 3px;
+		background: #5fad1b;
+		transition: width ease 500ms;
+		margin-top: -2px;
+	}
 	.br-leeks {
 		display: grid;
 		grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
