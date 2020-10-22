@@ -110,7 +110,7 @@
 							</div>
 						</div>
 
-						<div v-if="enableAnalyzer && showProblemsDetails && problemsHeight && (LeekWars.analyzer.error_count || LeekWars.analyzer.warning_count || LeekWars.analyzer.todo_count)" class="problems-details" :style="{height: problemsHeight + 'px'}">
+						<div v-if="showProblemsDetails && problemsHeight && (LeekWars.analyzer.error_count || LeekWars.analyzer.warning_count || LeekWars.analyzer.todo_count)" class="problems-details" :style="{height: problemsHeight + 'px'}">
 							<div class="problems-resizer" @mousedown="problemsResizerMousedown"></div>
 							<div v-for="(problems, ai) in LeekWars.analyzer.problems" v-if="problems.length" :key="ai">
 								<div class="file" @click="toggleProblemFile(ai)">
@@ -125,13 +125,14 @@
 										<v-icon v-if="problem[4] === 0" class="error">mdi-close-circle-outline</v-icon>
 										<v-icon v-else-if="problem[4] === 1" class="warning">mdi-alert-circle-outline</v-icon>
 										<v-icon v-else class="todo">mdi-format-list-checks</v-icon>
-										{{ $t('ls_error.' + problem[5], problem[6]) }}
+										<!-- {{ $t('ls_error.' + problem[5], problem[6]) }} -->
+										{{ problem[5] }}
 										<span class="line">ligne {{ problem[0] }} [{{ problem[1] }} : {{ problem[3] }}]</span>
 									</div>
 								</div>
 							</div>
 						</div>
-						<div v-if="enableAnalyzer" class="status">
+						<div class="status">
 							<div v-ripple class="problems" @click="toggleProblems">
 								<span v-if="LeekWars.analyzer.error_count + LeekWars.analyzer.warning_count + LeekWars.analyzer.todo_count === 0" class="no-error">
 									<v-icon>mdi-check-circle</v-icon> Aucun problème
@@ -149,7 +150,7 @@
 								</span>
 							</div>
 							<div class="filler"></div>
-							<div class="state">
+							<div v-if="enableAnalyzer" class="state">
 								<div v-if="LeekWars.analyzer.running == 0" class="ready">
 									Prêt
 									<v-icon>mdi-check</v-icon>
@@ -547,15 +548,17 @@
 					}
 					this.errors = []
 					this.goods = []
+					LeekWars.analyzer.clearProblems()
+
 					for (const res of data.result) {
 						const code = res[0]
 						const ai = fileSystem.ais[res[1]]
 						const ai_name = ai ? ai.name : 'AI #' + res[1]
-						const editor = (this.$refs.editors as AIView[]).find(e => e.ai === ai)
+						const editor = this.getAiView(ai)!
+						editor.removeErrors()
 						if (code === 2) {
 							this.goods.push({ai})
 							ai.valid = true
-							if (editor) { editor.removeErrors() }
 						} else if (code === 1) {
 							this.errors.push({ai: ai_name, error: res[2], line: res[3]})
 							ai.valid = false
@@ -568,9 +571,17 @@
 								info = this.$t('leekscript.' + res[5])
 							}
 							info = '(' + res[4] + ') ' + info
-							this.errors.push({ai: ai_name, message: info, line})
+							// this.errors.push({ai: ai_name, message: info, line})
 							ai.valid = false
-							if (editor) { editor.showError(line) }
+							// if (editor) { editor.showError(line) }
+
+							const token = editor.editor.getTokenAt({line: line - 1, ch: res[3] - 1})
+							const problems = [
+								[line, token.start, line, token.end - 1, 0, info]
+							]
+							LeekWars.analyzer.setAIProblems(ai.path, problems)
+							LeekWars.analyzer.updateCount()
+							this.problems({ [ai.path]: problems })
 						}
 					}
 					setTimeout(() => this.goods = [], 2000)

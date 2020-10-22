@@ -68,6 +68,14 @@ class Analyzer {
 		this.todo_count = todos
 	}
 
+	public clearProblems() {
+		for (const ai in this.problems) {
+			this.setAIProblems(ai, [])
+			delete this.problems[ai]
+		}
+		this.updateCount()
+	}
+
 	public hover(ai: AI, position: number) {
 
 		if (!this.enabled) { return Promise.reject() }
@@ -206,7 +214,7 @@ class Analyzer {
 		})
 	}
 
-	private registerEntrypoints(ai: AI) {
+	public registerEntrypoints(ai: AI) {
 		for (const entrypoint_id of ai.entrypoints) {
 			const entrypoint = fileSystem.ais[entrypoint_id]
 			if (entrypoint) {
@@ -216,7 +224,8 @@ class Analyzer {
 		}
 	}
 
-	private setAIProblems(ai: string, problems: any) {
+	public setAIProblems(ai: string, problems: any) {
+		// console.log("set ai problems")
 
 		Vue.set(this.problems, ai, problems)
 		const aiObject = fileSystem.aiByFullPath[ai]
