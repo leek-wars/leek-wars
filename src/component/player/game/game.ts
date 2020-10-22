@@ -2132,6 +2132,7 @@ class Game {
 			leek.path = []
 			leek.moveDelay = 0
 			leek.moveAnim = 0
+			leek.updateGrowth()
 
 			if (leek.summon) {
 				const index = this.entityOrder.indexOf(leek)
