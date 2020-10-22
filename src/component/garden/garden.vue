@@ -82,11 +82,13 @@
 
 					<div v-else-if="category === 'challenge'">
 						<template v-if="challengeType == 'leek'">
+							<div class="info"><v-icon>mdi-arrow-down</v-icon> {{ $t('select_leek') }}</div>
 							<router-link v-for="leek in $store.state.farmer.leeks" :key="leek.id" :to="'/garden/challenge/leek/' + challengeTarget + '/' + leek.id" class="my-leek leek">
 								<garden-leek :leek="leek" />
 							</router-link>
 							<div class="versus">VS</div>
 							<div v-if="challengeFights" class="enemies">
+								<div class="info"><v-icon>mdi-arrow-down</v-icon> {{ $t('click_opponent') }}</div>
 								<div class="leek" @click="startLeekChallenge">
 									<garden-leek :leek="challengeLeekTarget" />
 								</div>
@@ -102,6 +104,7 @@
 							</span>
 							<div class="versus">VS</div>
 							<div v-if="challengeFights" class="enemies">
+								<div class="info"><v-icon>mdi-arrow-down</v-icon> {{ $t('click_opponent') }}</div>
 								<loader v-if="!challengeFarmerTarget" />
 								<div v-else class="opponents">
 									<span v-ripple class="farmer" @click="startFarmerChallenge">
@@ -129,11 +132,13 @@
 					</div>
 					<div v-else>
 						<div v-if="category == 'solo'">
+							<div class="info"><v-icon>mdi-arrow-down</v-icon> {{ $t('select_leek') }}</div>
 							<router-link v-for="leek in $store.state.farmer.leeks" :key="leek.id" v-ripple :to="'/garden/solo/' + leek.id" class="my-leek leek">
 								<garden-leek :leek="leek" />
 							</router-link>
 							<div class="versus">VS</div>
 							<div v-if="selectedLeek && garden.fights">
+								<div class="info"><v-icon>mdi-arrow-down</v-icon> {{ $t('click_opponent') }}</div>
 								<loader v-if="!leekOpponents[selectedLeek.id] && !leekErrors[selectedLeek.id]" />
 								<div v-else-if="leekOpponents[selectedLeek.id]" class="opponents">
 									<span v-for="leek in leekOpponents[selectedLeek.id]" :key="leek.id" v-ripple class="leek" @click="clickSoloOpponent(leek)">
@@ -160,6 +165,7 @@
 							</span>
 							<div class="versus">VS</div>
 							<div v-if="garden.fights" class="enemies">
+								<div class="info"><v-icon>mdi-arrow-down</v-icon> {{ $t('click_opponent') }}</div>
 								<loader v-if="!farmerOpponents" />
 								<div v-else class="opponents">
 									<span v-for="farmer in farmerOpponents" :key="farmer.id" v-ripple class="farmer" @click="clickFarmerOpponent(farmer)">
@@ -177,6 +183,7 @@
 							</div>
 						</div>
 						<div v-if="category == 'team'">
+							<div class="info"><v-icon>mdi-arrow-down</v-icon> {{ $t('select_compo') }}</div>
 							<router-link v-for="composition in garden.my_compositions" :key="composition.id" v-ripple :to="'/garden/team/' + composition.id" class="composition-wrapper my-composition">
 								<garden-compo :compo="composition" />
 								<span class="fights">
@@ -185,6 +192,7 @@
 							</router-link>
 							<div class="versus">VS</div>
 							<div v-if="selectedComposition">
+								<div class="info"><v-icon>mdi-arrow-down</v-icon> {{ $t('click_opponent') }}</div>
 								<div v-if="selectedComposition.fights === 0">
 									<img src="/image/notgood.png"><br>
 									<h4>{{ $t('no_more_fights') }}</h4>
@@ -201,6 +209,7 @@
 						</div>
 						<div v-if="category == 'battle-royale'">
 							<div v-if="!LeekWars.battleRoyale.enabled">
+								<div class="info"><v-icon>mdi-arrow-down</v-icon> {{ $t('select_leek') }}</div>
 								<tooltip v-for="leek in $store.state.farmer.leeks" :key="leek.id" :disabled="leek.level >= 50">
 									<template v-slot:activator="{ on }">
 										<router-link v-ripple :to="'/garden/battle-royale/' + leek.id" :class="{disabled: leek.level < 50}" :event="leek.level < 50 ? null : 'click'" class="leek my-leek" v-on="on">
@@ -601,7 +610,8 @@
 	.versus {
 		font-size: 25px;
 		font-weight: bold;
-		margin: 10px;
+		margin-top: 15px;
+		margin-bottom: 5px;
 		color: #666;
 	}
 	a.my-leek.disabled {
@@ -653,5 +663,12 @@
 		font-size: 18px;
 		width: 100%;
 		height: 34px;
+	}
+	.info {
+		padding: 10px;
+		color: #777;
+		.v-icon {
+			margin-bottom: 2px;
+		}
 	}
 </style>
