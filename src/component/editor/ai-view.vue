@@ -10,7 +10,8 @@
 					<v-icon v-if="error[4] === 0" class="tooltip error">mdi-close-circle-outline</v-icon>
 					<v-icon v-else-if="error[4] === 1" class="tooltip warning">mdi-alert-circle-outline</v-icon>
 					<v-icon v-else class="tooltip todo">mdi-format-list-checks</v-icon>
-					{{ $i18n.t('ls_error.' + error[5], error[6]) }}
+					<!-- {{ $i18n.t('ls_error.' + error[5], error[6]) }} -->
+					{{ error[5] }}
 				</tooltip>
 			</div>
 		</div>
@@ -73,10 +74,10 @@
 				</div>
 				<lw-type v-else :type="detailDialogContent.details.type" />
 			</div>
-			<div v-if="errorTooltip">
+			<template v-if="errorTooltip">
 				<div v-if="errorLevel === 0" class="error"><v-icon class="error">mdi-close-circle-outline</v-icon> {{ errorTooltipText }}</div>
 				<div v-else class="warning"><v-icon class="warning">mdi-alert-circle-outline</v-icon> {{ errorTooltipText }}</div>
-			</div>
+			</template>
 		</div>
 		<loader v-if="loading" />
 	</div>
@@ -358,16 +359,15 @@
 				})
 			}
 		}
-		public showError(line: number) {
-			// const codemirror = this.$refs.codemirror as HTMLElement
-			// const l = codemirror.querySelectorAll('.CodeMirror-lines .CodeMirror-code > div')[line - 1].querySelector('pre')
-			// if (l) { l.classList.add('line-error') }
-		}
 		public removeErrors() {
-			// const codemirror = this.$refs.codemirror as HTMLElement
-			// codemirror.querySelectorAll('.line-error').forEach((line: any) => {
-			// 	line.classList.remove('line-error')
-			// })
+			// console.log("remove errors", this.ai.name)
+			if (this.errorOverlay) {
+				this.editor.removeOverlay(this.errorOverlay)
+				this.errorOverlay = null
+			}
+			this.errors = []
+			this.errorTooltip = false
+			this.errorTooltipText = ''
 		}
 		public cursorChange() {
 			const cursor = this.document.getCursor()
@@ -747,14 +747,15 @@
 				.catch(() => {
 					// console.log("cannot hover", token, editorPos)
 
-					if (keyword) {
+					const error = this.showErrorDetails(editorPos2)
+					if (keyword || error) {
 						const data = {
 							location: [
 								[editorPos2.line + 1, token.start],
 								[editorPos2.line + 1, token.end - 1]
 							],
 						} as any
-						if (keyword.ai) {
+						if (keyword && keyword.ai) {
 							data.defined = [
 								keyword.ai ? keyword.ai.path : '',
 								keyword.line
@@ -764,6 +765,26 @@
 					}
 				})
 			}, this.ctrl ? 0 : 200)
+		}
+
+		public showErrorDetails(editorPos: any) {
+			// console.log("showErrorDetails", this.errors, editorPos)
+			// Display error?
+			// const tooltip = this.$refs.tooltip
+			let shown = false
+			for (const er in this.errors) {
+				const error = this.errors[er]
+				if (error[0] === editorPos.line + 1 && error[1] <= editorPos.ch && error[3] >= editorPos.ch) {
+					// this.errorTooltipText = i18n.t('ls_error.' + error[5], error[6]) as string
+					this.errorTooltipText = error[5]
+					this.errorTooltip = true
+					this.errorLevel = error[4]
+					shown = true
+					return true
+				}
+			}
+			if (!shown) { this.errorTooltip = false }
+			return false
 		}
 
 		public showHoverDetails(editorPos: any, keyword: any, raw_data: any) {
@@ -832,20 +853,6 @@
 				this.hoverOverlay = overlay
 				this.editor.addOverlay(overlay)
 
-				// Display error?
-				const tooltip = this.$refs.tooltip
-				let shown = false
-				for (const er in this.errors) {
-					const error = this.errors[er]
-					if (error[0] === editorPos.line + 1 && error[1] <= editorPos.ch && error[3] >= editorPos.ch) {
-						this.errorTooltipText = i18n.t('ls_error.' + error[5], error[6]) as string
-						this.errorTooltip = true
-						this.errorLevel = error[4]
-						shown = true
-						break
-					}
-				}
-				if (!shown) { this.errorTooltip = false }
 			} else {
 				this.hoverData = null
 				this.removeUnderlineMarker()
@@ -1410,7 +1417,7 @@
 				background: none;
 			}
 		}
-		> .error {
+		.error {
 			background: rgba(255, 0, 0, 0.1);
 			.v-icon {
 				color: red;
