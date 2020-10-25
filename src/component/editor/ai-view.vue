@@ -230,7 +230,9 @@
 						"Ctrl-Space": () => this.autocomplete(wrapper.CodeMirror, true),
 						"Shift-Ctrl-F": () => this.formatCode(),
 						"Alt-Left": () => null,
-						"Alt-Right": () => null
+						"Alt-Right": () => null,
+						"Alt-Up": () => this.invert(true),
+						"Alt-Down": () => this.invert(false),
 					},
 				} as any)
 
@@ -592,6 +594,17 @@
 				this.document.replaceRange(line + "\n" + line, {line: start, ch: 0}, {line: start, ch: line.length})
 			}
 		}
+
+		public invert(up: boolean) {
+			const cursor = this.document.getCursor("start")
+			const offset = up ? (-1) : 1
+			const line1 = this.document.getLine(cursor.line)
+			const line2 = this.document.getLine(cursor.line + offset)
+			this.editor.replaceRange(line2, {line: cursor.line, ch: 0}, {line: cursor.line, ch: line1.length})
+			this.editor.replaceRange(line1, {line: cursor.line + offset, ch: 0}, {line: cursor.line + offset, ch: line2.length})
+			this.document.setCursor(cursor.line + offset, cursor.ch)
+		}
+
 		public getTokenInformation(token: string, pos: CodeMirror.Position | null = null) {
 			if (token.startsWith('@')) { token = token.substring(1) }
 			let wrong_arguments = false
