@@ -7,7 +7,7 @@ class Analyzer {
 
 	public enabled: boolean = false
 	public running: number = 0
-	public problems: {[key: string]: any[]} = {}
+	public problems: {[key: number]: {[key: string]: any[]}} = {}
 	public error_count: number = 0
 	public warning_count: number = 0
 	public todo_count: number = 0
@@ -55,12 +55,15 @@ class Analyzer {
 		let errors = 0
 		let warnings = 0
 		let todos = 0
-		for (const ai in this.problems) {
-			// console.log(this.problems[ai])
-			for (const problem of this.problems[ai]) {
-				if (problem[4] === 0) { errors++ }
-				else if (problem[4] === 1) { warnings++ }
-				else if (problem[4] === 2) { todos++ }
+		for (const entrypoint in this.problems) {
+			for (const ai in this.problems[entrypoint]) {
+				const problems = this.problems[entrypoint][ai]
+				// console.log(this.problems[ai])
+				for (const problem of problems) {
+					if (problem[4] === 0) { errors++ }
+					else if (problem[4] === 1) { warnings++ }
+					else if (problem[4] === 2) { todos++ }
+				}
 			}
 		}
 		this.error_count = errors
@@ -68,10 +71,18 @@ class Analyzer {
 		this.todo_count = todos
 	}
 
-	public clearProblems() {
-		for (const ai in this.problems) {
-			this.setAIProblems(ai, [])
-			delete this.problems[ai]
+	public clearProblems(mainAI: AI) {
+		// console.log("clearProblems", mainAI)
+		const aux = (ai: AI) => {
+			const ais = this.problems[ai.id]
+			delete this.problems[ai.id]
+			for (const ai in ais) {
+				this.updateAiErrors(ai)
+			}
+		}
+		aux(mainAI)
+		for (const entrypoint of mainAI.entrypoints) {
+			aux(fileSystem.ais[entrypoint])
 		}
 		this.updateCount()
 	}
@@ -118,12 +129,12 @@ class Analyzer {
 						problems.sort((a: any, b: any) => {
 							return a[0] - b[0]
 						})
-						this.setAIProblems(path, problems)
+						// this.setAIProblems(path, problems)
 					}
 					return resolve(result)
 				} catch (e) {
 					const problems = [ [0, 0, 0, 0, 1, "ANALYZER_CRASHED"] ]
-					this.setAIProblems(ai.path, problems)
+					// this.setAIProblems(ai.path, problems)
 					try {
 						// console.error(this.getExceptionMessage(e))
 					} catch (e2) {
@@ -193,12 +204,12 @@ class Analyzer {
 						problems.sort((a: any, b: any) => {
 							return a[0] - b[0]
 						})
-						this.setAIProblems(path, problems)
+						// this.setAIProblems(path, problems)
 					}
 					return resolve(result)
 				} catch (e) {
 					const problems = [ [0, 0, 0, 0, 1, "ANALYZER_CRASHED"] ]
-					this.setAIProblems(ai.path, problems)
+					// this.setAIProblems(ai.path, problems)
 					try {
 						// console.error(this.getExceptionMessage(e))
 					} catch (e2) {
@@ -224,14 +235,33 @@ class Analyzer {
 		}
 	}
 
-	public setAIProblems(ai: string, problems: any) {
-		// console.log("set ai problems")
+	public setAIProblems(entrypoint: number, ai: string, problems: any) {
+		// console.log("set ai problems", entrypoint, ai, problems)
 
-		Vue.set(this.problems, ai, problems)
+		if (!(entrypoint in this.problems)) {
+			Vue.set(this.problems, entrypoint, {})
+		}
+		Vue.set(this.problems[entrypoint], ai, problems)
+		this.updateAiErrors(ai)
+	}
+
+	public updateAiErrors(ai: string) {
+		// console.log("update ai errors", ai)
 		const aiObject = fileSystem.aiByFullPath[ai]
-		Vue.set(aiObject, "errors", problems.filter((p: any) => p[4] === 0).length)
-		Vue.set(aiObject, "warnings", problems.filter((p: any) => p[4] === 1).length)
-		Vue.set(aiObject, "todos", problems.filter((p: any) => p[4] === 2).length)
+		let errors = 0
+		let warnings = 0
+		let todos = 0
+		for (const entrypoint in this.problems) {
+			const problems = this.problems[entrypoint][ai]
+			if (problems) {
+				errors += problems.filter((p: any) => p[4] === 0).length
+				warnings += problems.filter((p: any) => p[4] === 1).length
+				todos += problems.filter((p: any) => p[4] === 2).length
+			}
+		}
+		Vue.set(aiObject, "errors", errors)
+		Vue.set(aiObject, "warnings", warnings)
+		Vue.set(aiObject, "todos", todos)
 
 		// Update parent folders
 		let current = fileSystem.folderById[aiObject.folder] as Folder | null
