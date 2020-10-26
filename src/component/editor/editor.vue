@@ -112,22 +112,25 @@
 
 						<div v-if="showProblemsDetails && problemsHeight && (LeekWars.analyzer.error_count || LeekWars.analyzer.warning_count || LeekWars.analyzer.todo_count)" class="problems-details" :style="{height: problemsHeight + 'px'}">
 							<div class="problems-resizer" @mousedown="problemsResizerMousedown"></div>
-							<div v-for="(problems, ai) in LeekWars.analyzer.problems" v-if="problems.length" :key="ai">
-								<div class="file" @click="toggleProblemFile(ai)">
-									<v-icon>{{ problemsCollapsed[ai] ? 'mdi-chevron-right' : 'mdi-chevron-down' }}</v-icon>
-									{{ ai }}
-									<span v-if="fileSystem.aiByFullPath[ai].errors" class="count error">{{ fileSystem.aiByFullPath[ai].errors }}</span>
-									<span v-if="fileSystem.aiByFullPath[ai].warnings" class="count warning">{{ fileSystem.aiByFullPath[ai].warnings }}</span>
-									<span v-if="fileSystem.aiByFullPath[ai].todos" class="count todo">{{ fileSystem.aiByFullPath[ai].todos }}</span>
-								</div>
-								<div v-if="!problemsCollapsed[ai]">
-									<div v-for="(problem, p) in problems" :key="p" class="problem" @click="jumpProblem(ai, problem)">
-										<v-icon v-if="problem[4] === 0" class="error">mdi-close-circle-outline</v-icon>
-										<v-icon v-else-if="problem[4] === 1" class="warning">mdi-alert-circle-outline</v-icon>
-										<v-icon v-else class="todo">mdi-format-list-checks</v-icon>
-										<!-- {{ $t('ls_error.' + problem[5], problem[6]) }} -->
-										{{ problem[5] }}
-										<span class="line">ligne {{ problem[0] }} [{{ problem[1] }} : {{ problem[3] }}]</span>
+							<div v-for="(ais, entrypoint) in LeekWars.analyzer.problems" :key="entrypoint">
+								<div v-for="(problems, ai) in ais" v-if="problems.length" :key="ai">
+									<div class="file" @click="toggleProblemFile(entrypoint + ai)">
+										<v-icon>{{ problemsCollapsed[entrypoint + ai] ? 'mdi-chevron-right' : 'mdi-chevron-down' }}</v-icon>
+										<span v-if="fileSystem.aiByFullPath[ai].entrypoints.length > 1">{{ fileSystem.ais[entrypoint].name }} {{ ' ➞ ' }}</span>
+										{{ ai }}
+										<span v-if="fileSystem.aiByFullPath[ai].errors" class="count error">{{ fileSystem.aiByFullPath[ai].errors }}</span>
+										<span v-if="fileSystem.aiByFullPath[ai].warnings" class="count warning">{{ fileSystem.aiByFullPath[ai].warnings }}</span>
+										<span v-if="fileSystem.aiByFullPath[ai].todos" class="count todo">{{ fileSystem.aiByFullPath[ai].todos }}</span>
+									</div>
+									<div v-if="!problemsCollapsed[entrypoint + ai]">
+										<div v-for="(problem, p) in problems" :key="p" class="problem" @click="jumpProblem(ai, problem)">
+											<v-icon v-if="problem[4] === 0" class="error">mdi-close-circle-outline</v-icon>
+											<v-icon v-else-if="problem[4] === 1" class="warning">mdi-alert-circle-outline</v-icon>
+											<v-icon v-else class="todo">mdi-format-list-checks</v-icon>
+											<!-- {{ $t('ls_error.' + problem[5], problem[6]) }} -->
+											{{ problem[5] }}
+											<span class="line">ligne {{ problem[0] }} [{{ problem[1] }} : {{ problem[3] }}]</span>
+										</div>
 									</div>
 								</div>
 							</div>
@@ -549,42 +552,48 @@
 					}
 					this.errors = []
 					this.goods = []
-					LeekWars.analyzer.clearProblems()
+					LeekWars.analyzer.clearProblems(this.currentAI!)
 
-					for (const res of data.result) {
-						const code = res[0]
-						const ai = fileSystem.ais[res[1]]
-						const ai_name = ai ? ai.name : 'AI #' + res[1]
-						const editor = this.getAiView(ai)!
-						editor.removeErrors()
-						if (code === 2) {
-							this.goods.push({ai})
-							ai.valid = true
-						} else if (code === 1) {
-							this.errors.push({ai: ai_name, error: res[2], line: res[3]})
-							ai.valid = false
-						} else if (code === 0) {
-							const line = res[2]
-							let info = res[4]
-							if (res.length === 7) {
-								info = this.$t('leekscript.' + res[5], res[6])
-							} else {
-								info = this.$t('leekscript.' + res[5])
+					for (const entrypoint in data.result) {
+						const entrypoint_id = parseInt(entrypoint, 10)
+						for (const res of data.result[entrypoint]) {
+							const code = res[0]
+							const ai = fileSystem.ais[res[1]]
+							const ai_name = ai ? ai.name : 'AI #' + res[1]
+							const editor = this.getAiView(ai)
+							if (code === 2) {
+								this.goods.push({ai})
+								ai.valid = true
+								if (editor) { editor.removeErrors(entrypoint_id) }
+								LeekWars.analyzer.setAIProblems(entrypoint_id, ai.path, [])
+							} else if (code === 1) {
+								this.errors.push({ai: ai_name, error: res[2], line: res[3]})
+								ai.valid = false
+							} else if (code === 0) {
+								const line = res[2]
+								let info = res[4]
+								if (res.length === 7) {
+									info = this.$t('leekscript.' + res[5], res[6])
+								} else {
+									info = this.$t('leekscript.' + res[5])
+								}
+								info = '(' + res[4] + ') ' + info
+								ai.valid = false
+
+								let problem = null
+								if (editor) {
+									const token = editor.editor.getTokenAt({line: line - 1, ch: res[3] - 1})
+									problem = [line, token.start, line, token.end - 1, 0, info]
+								} else {
+									problem = [line, 0, line, 12, 0, info]
+								}
+								const problems = [ problem ]
+								LeekWars.analyzer.setAIProblems(entrypoint_id, ai.path, problems)
+								this.problems(entrypoint_id, ai, problems)
 							}
-							info = '(' + res[4] + ') ' + info
-							// this.errors.push({ai: ai_name, message: info, line})
-							ai.valid = false
-							// if (editor) { editor.showError(line) }
-
-							const token = editor.editor.getTokenAt({line: line - 1, ch: res[3] - 1})
-							const problems = [
-								[line, token.start, line, token.end - 1, 0, info]
-							]
-							LeekWars.analyzer.setAIProblems(ai.path, problems)
-							LeekWars.analyzer.updateCount()
-							this.problems({ [ai.path]: problems })
 						}
 					}
+					LeekWars.analyzer.updateCount()
 					setTimeout(() => this.goods = [], 2000)
 				}
 				this.currentEditor.updateFunctions()
@@ -732,25 +741,12 @@
 			Vue.set(this.problemsCollapsed, ai, !this.problemsCollapsed[ai])
 		}
 
-		problems(problems: any) {
-			for (const ai in problems) {
+		problems(entrypoint: number, ai: AI, problems: any) {
 
-				const errors = problems[ai]
-				const editor = this.getAiView(fileSystem.aiByFullPath[ai])
-				if (!editor) { continue }
+			const editor = this.getAiView(ai)
+			if (!editor) { return }
 
-				// console.log("errors", errors)
-				editor.addErrorOverlay(errors)
-				// if (!errors || errors.length === 0) {
-				// 	this.ai.valid = true
-				// 	this.error = false
-				// 	this.errors = []
-				// 	return true
-				// } else {
-				// 	this.addErrorOverlay(errors)
-				// 	return false
-				// }
-			}
+			editor.addErrorOverlay(entrypoint, problems)
 		}
 
 		deleteAI(ai: AI) {

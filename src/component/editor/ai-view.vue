@@ -3,16 +3,18 @@
 		<div class="codemirror-wrapper">
 			<div v-show="!loading" ref="codemirror" :style="{'font-size': fontSize + 'px', 'line-height': lineHeight + 'px'}" :class="{search: searchEnabled}" class="codemirror"></div>
 			<div v-if="errors" class="errors-band">
-				<tooltip v-for="(error, e) of errors" :key="e">
-					<template v-slot:activator="{ on }">
-						<div :style="{top: (100 * error[0] / (ai.total_lines - ai.included_lines)) + '%'}" :class="{warning: error[4] === 1, todo: error[4] === 2}" class="error" v-on="on" @click="$emit('jump', ai, error[0])"></div>
-					</template>
-					<v-icon v-if="error[4] === 0" class="tooltip error">mdi-close-circle-outline</v-icon>
-					<v-icon v-else-if="error[4] === 1" class="tooltip warning">mdi-alert-circle-outline</v-icon>
-					<v-icon v-else class="tooltip todo">mdi-format-list-checks</v-icon>
-					<!-- {{ $i18n.t('ls_error.' + error[5], error[6]) }} -->
-					{{ error[5] }}
-				</tooltip>
+				<template v-for="(problems, entrypoint) of errors">
+					<tooltip v-for="(error, p) of problems" :key="entrypoint + p">
+						<template v-slot:activator="{ on }">
+							<div :style="{top: (100 * error[0] / (ai.total_lines - ai.included_lines)) + '%'}" :class="{warning: error[4] === 1, todo: error[4] === 2}" class="error" v-on="on" @click="$emit('jump', ai, error[0])"></div>
+						</template>
+						<v-icon v-if="error[4] === 0" class="tooltip error">mdi-close-circle-outline</v-icon>
+						<v-icon v-else-if="error[4] === 1" class="tooltip warning">mdi-alert-circle-outline</v-icon>
+						<v-icon v-else class="tooltip todo">mdi-format-list-checks</v-icon>
+						<!-- {{ $i18n.t('ls_error.' + error[5], error[6]) }} -->
+						{{ error[5] }}
+					</tooltip>
+				</template>
 			</div>
 		</div>
 		<div v-show="searchEnabled" class="search-panel">
@@ -173,8 +175,8 @@
 		public detailEnd: number = 0
 		public searchOverlay: any = null
 		public hoverOverlay: any = null
-		public errorOverlay: any = null
-		public errors: any[] = []
+		public errorOverlays: {[key: number]: any} = {}
+		public errors: {[key: number]: any} = {}
 		public errorTooltip: boolean = false
 		public errorTooltipText: string = ''
 		public errorLevel: number = 0
@@ -191,7 +193,7 @@
 		private hoverLineWidth: number = 0
 		private hoverEditorOrigin: number = 0
 		private codemirror!: any
-		private hoverData!: any
+		private hoverData: any = null
 		private ctrl: boolean = false
 		private CodeMirrorLines!: HTMLElement
 
@@ -336,7 +338,7 @@
 		}
 		public hasBeenModified() {
 			this.ai.modified = true
-			this.removeErrors()
+			this.removeAllErrors()
 		}
 		public show() {
 			if (this.loaded) {
@@ -361,16 +363,28 @@
 				})
 			}
 		}
-		public removeErrors() {
+
+		public removeErrors(entrypoint: number) {
 			// console.log("remove errors", this.ai.name)
-			if (this.errorOverlay) {
-				this.editor.removeOverlay(this.errorOverlay)
-				this.errorOverlay = null
+			if (this.errorOverlays[entrypoint]) {
+				this.editor.removeOverlay(this.errorOverlays[entrypoint])
+				delete this.errorOverlays[entrypoint]
 			}
-			this.errors = []
+			Vue.delete(this.errors, entrypoint)
 			this.errorTooltip = false
 			this.errorTooltipText = ''
 		}
+
+		public removeAllErrors() {
+			for (const entrypoint in this.errorOverlays) {
+				this.editor.removeOverlay(this.errorOverlays[entrypoint])
+				Vue.delete(this.errorOverlays, entrypoint)
+				Vue.delete(this.errors, entrypoint)
+			}
+			this.errorTooltip = false
+			this.errorTooltipText = ''
+		}
+
 		public cursorChange() {
 			const cursor = this.document.getCursor()
 			if (!this.pos) {
@@ -383,13 +397,16 @@
 			this.activeLine = this.editor.addLineClass(cursor.line, "background", "activeline")
 		}
 
-		public addErrorOverlay(errors: any) {
-			if (this.errorOverlay) {
-				this.editor.removeOverlay(this.errorOverlay)
-				this.errorOverlay = null
+		public addErrorOverlay(entrypoint: number, errors: any) {
+			if (this.errorOverlays[entrypoint]) {
+				this.editor.removeOverlay(this.errorOverlays[entrypoint])
+				Vue.delete(this.errorOverlays, entrypoint)
 			}
-			this.errors = errors
-			if (this.errors.length === 0) { return }
+			if (errors.length === 0) {
+				Vue.delete(this.errors, entrypoint)
+				return
+			}
+			Vue.set(this.errors, entrypoint, errors)
 			const error_by_line = {} as any
 			for (const error of errors) {
 				if (error[4] >= 2) { continue }
@@ -404,7 +421,7 @@
 					// console.log("line", line, pos, error_by_line[line])
 					for (const error of error_by_line[line]) {
 						if (pos === error[0]) {
-							let len = Math.max(1, error[1] - error[0])
+							let len = Math.max(0, error[1] - error[0])
 							stream.eatWhile(() => len-- >= 0)
 							return error[2] === 0 ? "error" : "warning"
 						}
@@ -419,7 +436,7 @@
 					stream.skipToEnd()
 				}
 			}}
-			this.errorOverlay = overlay
+			this.errorOverlays[entrypoint] = overlay
 			this.editor.addOverlay(overlay, {priority: 12})
 			this.error = true
 		}
@@ -438,9 +455,9 @@
 				this.$emit('problems', problems)
 			})
 			.catch(() => {
-				if (this.errorOverlay) {
-					this.editor.removeOverlay(this.errorOverlay)
-					this.errorOverlay = null
+				for (const entrypoint in this.errorOverlays) {
+					this.editor.removeOverlay(this.errorOverlays[entrypoint])
+					Vue.delete(this.errorOverlays, entrypoint)
 				}
 			})
 		}
@@ -722,10 +739,10 @@
 			// console.log("origin", origin)
 			const position = this.document.indexFromPos(editorPos)
 			const pos_in_line = pos.left - this.hoverEditorOrigin
-			// console.log("line width", line_length, pos_in_line)
 
 			// Leave the hover area?
 			if (this.hoverData) {
+				// console.log(position, this.hoverData.location[0][2], this.hoverData.location[1][2], pos_in_line, this.hoverLineWidth)
 				if (position < this.hoverData.location[0][2] || position > this.hoverData.location[1][2] || pos_in_line > this.hoverLineWidth) {
 					clearTimeout(this.detailTimer)
 					this.hoverData = null
@@ -760,12 +777,13 @@
 				.catch(() => {
 					// console.log("cannot hover", token, editorPos)
 
-					const error = this.showErrorDetails(editorPos2)
+					const error = this.showErrorDetails(editorPos)
 					if (keyword || error) {
+						const index = this.document.indexFromPos({line: editorPos.line, ch: token.start})
 						const data = {
 							location: [
-								[editorPos2.line + 1, token.start],
-								[editorPos2.line + 1, token.end - 1]
+								[editorPos2.line + 1, token.start, index],
+								[editorPos2.line + 1, token.end - 1, index + token.string.length - 1]
 							],
 						} as any
 						if (keyword && keyword.ai) {
@@ -785,15 +803,16 @@
 			// Display error?
 			// const tooltip = this.$refs.tooltip
 			let shown = false
-			for (const er in this.errors) {
-				const error = this.errors[er]
-				if (error[0] === editorPos.line + 1 && error[1] <= editorPos.ch && error[3] >= editorPos.ch) {
-					// this.errorTooltipText = i18n.t('ls_error.' + error[5], error[6]) as string
-					this.errorTooltipText = error[5]
-					this.errorTooltip = true
-					this.errorLevel = error[4]
-					shown = true
-					return true
+			for (const entrypoint in this.errors) {
+				for (const error of this.errors[entrypoint]) {
+					if (error[0] === editorPos.line + 1 && error[1] <= editorPos.ch && error[3] >= editorPos.ch) {
+						// this.errorTooltipText = i18n.t('ls_error.' + error[5], error[6]) as string
+						this.errorTooltipText = error[5]
+						this.errorTooltip = true
+						this.errorLevel = error[4]
+						shown = true
+						return true
+					}
 				}
 			}
 			if (!shown) { this.errorTooltip = false }
