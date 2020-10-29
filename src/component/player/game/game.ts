@@ -1209,7 +1209,7 @@ class Game {
 			// Ajout de l'image sur le hud
 			let image: string = ''
 			if (item in LeekWars.chips) {
-				image = env.STATIC + "image/chip/small/" + LeekWars.chips[item].name + ".png"
+				image = env.STATIC + "image/chip/" + LeekWars.chips[item].name + ".png"
 			} else /* weapon */ {
 				if (item in LeekWars.weapons) {
 					const template = LeekWars.weapons[item].template

@@ -152,7 +152,7 @@
 
 				<p>{{ $t('weapons_2') }}</p>
 				<p>{{ $t('weapons_3') }}</p>
-				
+
 				<center>
 					<img src="/image/help/forgotten_weapon.png"> &nbsp; &nbsp;
 				</center>
@@ -167,10 +167,10 @@
 				<p>{{ $t('chips_1') }}</p>
 
 				<center>
-					<img width="60" src="/image/chip/small/flash.png"> &nbsp;
-					<img width="60" src="/image/chip/small/cure.png"> &nbsp;
-					<img width="60" src="/image/chip/small/fortress.png"> &nbsp;
-					<img width="60" src="/image/chip/small/doping.png">
+					<img width="60" src="/image/chip/flash.png"> &nbsp;
+					<img width="60" src="/image/chip/cure.png"> &nbsp;
+					<img width="60" src="/image/chip/fortress.png"> &nbsp;
+					<img width="60" src="/image/chip/doping.png">
 				</center>
 
 				<p>{{ $t('chips_2') }}</p>

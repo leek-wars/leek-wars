@@ -38,7 +38,7 @@
 					<loader v-if="!chips.length" slot="content" />
 					<div v-else-if="chipMode === 'level'" slot="content" class="items chips">
 						<router-link v-for="chip in chips" :key="chip.id" v-ripple :to="'/market/' + chip.name" :farmer-count="items[chip.id].farmer_count" :leek-count="items[chip.id].leek_count" class="item chip">
-							<img :src="'/image/chip/small/' + chip.name + '.png'">
+							<img :src="'/image/chip/' + chip.name + '.png'">
 						</router-link>
 					</div>
 					<div v-else slot="content">
@@ -46,7 +46,7 @@
 							<h4 :class="{first: type === EffectTypeMarket.ATTACK}">{{ $t('effect.effect_type_' + type) }}</h4>
 							<div class="items chips">
 								<router-link v-for="chip in chipsByType[type]" :key="chip.id" v-ripple :to="'/market/' + chip.name" :farmer-count="items[chip.id].farmer_count" :leek-count="items[chip.id].leek_count" class="item chip">
-									<img :src="'/image/chip/small/' + chip.name + '.png'">
+									<img :src="'/image/chip/' + chip.name + '.png'">
 								</router-link>
 							</div>
 						</div>

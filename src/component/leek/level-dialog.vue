@@ -61,7 +61,7 @@
 					<h2>{{ $t('new_chips') }}</h2>
 					<div class="available-market">{{ $t('available_on_market') }}</div>
 					<div v-for="chip of data.chips" :key="chip" class="weapon">
-						<img :src="'/image/chip/small/' + chip + '.png'"><br>
+						<img :src="'/image/chip/' + chip + '.png'"><br>
 						<div class="name">{{ $t('chip.' + chip) }}</div>
 					</div>
 				</template>

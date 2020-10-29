@@ -6,7 +6,7 @@
 		</div>
 		<div class="constant">{{ "CHIP_" + chip.name.toUpperCase() }}</div>
 		<div class="image sound">
-			<img :src="'/image/chip/small/' + chip.name + '.png'" @click="LeekWars.playSound(chip, 'chip')">
+			<img :src="'/image/chip/' + chip.name + '.png'" @click="LeekWars.playSound(chip, 'chip')">
 		</div>
 		<div v-if="$te('chip.' + chip.name + '_desc')" class="desc">{{ $t('chip.' + chip.name + "_desc") }}</div>
 		<div class="stats">
@@ -26,7 +26,7 @@
 			<div>
 				<img src="/image/charac/small/tp.png">{{ chip.cost }}
 			</div>
-			<area-view v-if="chip.area != Area.SINGLE_CELL" :area="chip.area" />		
+			<area-view v-if="chip.area != Area.SINGLE_CELL" :area="chip.area" />
 			<div v-if="chip.cooldown != 0">
 				<i18n path="effect.cooldown">
 					<span slot="turns" v-html="$tc('effect.n_turns', chip.cooldown >= 0 ? chip.cooldown : '∞')"></span>
