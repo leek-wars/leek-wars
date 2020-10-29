@@ -539,6 +539,9 @@ class Game {
 		T.mp.load(this)
 		T.critical.load(this)
 		S.critical.load(this)
+		if (this.halloween) {
+			T.pumpkin.load(this)
+		}
 
 		const textures = new Set<Texture>()
 		const sounds = new Set<Sound>()
