@@ -134,7 +134,7 @@
 						<div class="chips">
 							<div class="container">
 								<rich-tooltip-chip v-for="chip in currentLeek.chips" :key="chip.id" v-slot="{ on }" :chip="LeekWars.chips[chip]" :instant="true">
-									<img :src="'/image/chip/small/' + LeekWars.chips[chip].name + '.png'" class="chip" v-on="on" @click="removeLeekChip(chip)">
+									<img :src="'/image/chip/' + LeekWars.chips[chip].name + '.png'" class="chip" v-on="on" @click="removeLeekChip(chip)">
 								</rich-tooltip-chip>
 								<div v-if="currentLeek.chips.length < 20" class="add" @click="chipsDialog = true">+</div>
 							</div>
@@ -285,7 +285,7 @@
 			<span slot="title">{{ $t('select_chip') }}</span>
 			<div v-if="currentLeek" class="padding chips-dialog">
 				<rich-tooltip-chip v-for="chip of availableChips" :key="chip.id" v-slot="{ on }" :chip="LeekWars.chips[chip.id]" :bottom="true" :instant="true">
-					<img :src="'/image/chip/small/' + chip.name + '.png'" class="chip" v-on="on" @click="addLeekChip(chip.id)">
+					<img :src="'/image/chip/' + chip.name + '.png'" class="chip" v-on="on" @click="addLeekChip(chip.id)">
 				</rich-tooltip-chip>
 			</div>
 		</popup>

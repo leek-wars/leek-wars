@@ -185,7 +185,7 @@
 					<div v-else class="chips">
 						<rich-tooltip-chip v-for="chip in leek.orderedChips" :key="chip.id" v-slot="{ on }" :chip="LeekWars.chips[chip.template]" :bottom="true" :instant="true">
 							<div class="chip" v-on="on">
-								<img :src="'/image/chip/small/' + LeekWars.chips[chip.template].name + '.png'">
+								<img :src="'/image/chip/' + LeekWars.chips[chip.template].name + '.png'">
 							</div>
 						</rich-tooltip-chip>
 					</div>
@@ -528,7 +528,7 @@
 				<div :class="{dashed: draggedChip && draggedChipLocation === 'farmer'}" class="leek-chips" @dragover="dragOver" @drop="chipsDrop('leek', $event)">
 					<rich-tooltip-chip v-for="chip in leek.orderedChips" :key="chip.id" v-slot="{ on }" :chip="LeekWars.chips[chip.template]" :bottom="true" :instant="true">
 						<div :class="{dragging: draggedChip && draggedChip.template === chip.template && draggedChipLocation === 'leek'}" class="chip" draggable="true" v-on="on" @dragstart="chipDragStart('leek', chip, $event)" @dragend="chipDragEnd(chip)" @click="removeChip(chip)">
-							<img :src="'/image/chip/small/' + LeekWars.chips[chip.template].name + '.png'" draggable="false">
+							<img :src="'/image/chip/' + LeekWars.chips[chip.template].name + '.png'" draggable="false">
 						</div>
 					</rich-tooltip-chip>
 				</div>
@@ -538,7 +538,7 @@
 				<div :class="{dashed: draggedChip && draggedChipLocation === 'leek'}" class="farmer-chips" @dragover="dragOver" @drop="chipsDrop('farmer', $event)">
 					<rich-tooltip-chip v-for="chip in farmer_chips" :key="chip.id" v-slot="{ on }" :chip="LeekWars.chips[chip.template]" :bottom="true" :instant="true">
 						<div :quantity="chip.quantity" :class="{dragging: draggedChip && draggedChip.template === chip.template && draggedChipLocation === 'farmer', locked: LeekWars.chips[chip.template].level > leek.level || leek.chips.find(c => c.template === chip.template) }" :draggable="LeekWars.chips[chip.template].level <= leek.level" class="chip" v-on="on" @dragstart="chipDragStart('farmer', chip, $event)" @dragend="chipDragEnd(chip)" @click="addChip(chip)">
-							<img :src="'/image/chip/small/' + LeekWars.chips[chip.template].name + '.png'" draggable="false">
+							<img :src="'/image/chip/' + LeekWars.chips[chip.template].name + '.png'" draggable="false">
 						</div>
 					</rich-tooltip-chip>
 				</div>

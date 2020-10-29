@@ -55,7 +55,7 @@
 						</div>
 						<div class="chips">
 							<rich-tooltip-chip v-for="chip in leek.orderedChips" :key="chip.id" v-slot="{ on }" :chip="LeekWars.chips[chip.template]" :bottom="true" :instant="true" @input="locked = $event">
-								<img :src="'/image/chip/small/' + LeekWars.chips[chip.template].name + '.png'" class="chip" v-on="on">
+								<img :src="'/image/chip/' + LeekWars.chips[chip.template].name + '.png'" class="chip" v-on="on">
 							</rich-tooltip-chip>
 						</div>
 					</div>

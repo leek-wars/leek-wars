@@ -12,7 +12,7 @@
 		<h4 v-if="chips.length + weapons.length">{{ $t('doc.items') }} ({{ chips.length + weapons.length }})</h4>
 		<router-link v-for="chip of chips" :key="chip.id" :to="'/help/documentation/CHIP_' + chip.name.toUpperCase()">
 			<rich-tooltip-chip v-slot="{ on }" :chip="chip" :bottom="true" :instant="true" @input="$emit('input', $event)">
-				<img :src="'/image/chip/small/' + chip.name + '.png'" class="item" v-on="on">
+				<img :src="'/image/chip/' + chip.name + '.png'" class="item" v-on="on">
 			</rich-tooltip-chip>
 		</router-link>
 		<router-link v-for="weapon of weapons" :key="weapon.id" :to="'/help/documentation/WEAPON_' + weapon.name.toUpperCase()">
