@@ -1,3 +1,34 @@
+217:
+  title: Editor interface improvement
+  added:
+    - Added IA quick release panel, can be activated with Ctrl + P.
+    - Navigation between recently opened AI with Alt + &lt;/&gt;.
+    - Added Added an option to hide the top banner in the editor to save space.
+    - Taking into account the documentation in the comment above the functions (Javadoc style).
+    - Added a "problems" section at the bottom that lists all AI errors.
+    - Display of errors in the scrollbar for a quick preview and navigation.
+    - Display of total errors in the explorer and tabs.
+    - Added multi-selection in the editor.
+    - Added Alt + up/down shortcuts to move the current line.
+    - "#ai Added the for syntax (@key: @var) to save a lot of operations."
+    - "#ai Added function getBulbChips(bulb_chip) which returns the theoretical bulb chips."
+  improved:
+    - "Improvement of the editor interface: tabs, menus in the explorer."
+    - Improvement of the tabs behavior and style.
+    - Ctrl + Click on a function works every time.
+    - "Tooltips when hovering over a symbol: smart position, vertical scrolling and locking."
+    - The position of errors is more precise within a line.
+    - "Comments on several lines: uncomments only if all lines are commented."
+    - Use the "Delete" key to delete an AI or folder faster.
+    - When you pass a line in a comment, the comment continues automatically.
+    - Optimization of AI validation at backup, much faster with many includes.
+    - Moving the progress bar of the Battle Royale under the menu.
+    - Added hints in the vegetable garden for opponent selection.
+    - Added tabs with active status on bank/market pages and ranking.
+  fixed:
+    - It is now impossible to equip weapons and chips on test bots.
+    - "#ai Passive gassing effect now applies well on nova NOVA_DAMAGE damage (like Alteration)."
+
 216:
   title: Logs visible in team, new animations and change of farmer's name
   added:

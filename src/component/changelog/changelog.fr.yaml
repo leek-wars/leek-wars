@@ -1,3 +1,34 @@
+217:
+  title: Amélioration de l'interface de l'éditeur
+  added:
+    - Ajout d'un panneau d'ouverture rapide d'IA, activable avec Ctrl + P.
+    - Navigation entre les IA récemment ouvertes avec Alt + &lt;/&gt;.
+    - Ajout d'une option pour cacher le bandeau supérieur dans l'éditeur pour gagner de la place.
+    - Prise en compte de la documentation dans le commentaire au dessus des fonctions (style Javadoc).
+    - Ajout d'une section "problèmes" en bas qui liste toutes les erreurs des IA.
+    - Affichage des erreurs au niveau de la barre de défilement pour un aperçu et une navigation rapide.
+    - Affichage du total des erreurs au niveau de l'explorateur et des onglets.
+    - Ajout de la multi-sélection dans l'éditeur.
+    - Ajout des raccourcis Alt + haut/bas pour déplacer la ligne courante.
+    - "#ai Ajout de la syntaxe for (@key : @var) permettant de gagner beaucoup d'opérations."
+    - "#ai Ajout de la fonction getBulbChips(bulb_chip) qui renvoie les puces théoriques d'un bulbe."
+  improved:
+    - "Amélioration de l'interface de l'éditeur : onglets, menus dans l'explorateur."
+    - Amélioration du comportement et du style des onglets.
+    - L'option Ctrl + Clic sur une fonction fonctionne à tous les coups.
+    - "Tooltips au survol d'un symbole : position intelligente, défilement vertical et verrouillage."
+    - La position des erreurs est plus précise au sein d'une ligne.
+    - "Commentaires sur plusieurs lignes : décommente uniquement si toutes les lignes sont commentées."
+    - Utilisation de la touche "Suppr" pour supprimer une IA ou un dossier plus rapidement.
+    - Lorsque l'on passe un ligne dans un commentaire, le commentaire continue automatiquement.
+    - Optimisation de la validation d'IA à la sauvegarde, beaucoup plus rapide avec beaucoup d'includes.
+    - Déplacement de la barre de progression de la Battle Royale sous le menu.
+    - Ajout d'indications dans le potager pour la sélection d'adversaire.
+    - Ajout d'onglets avec état actif sur les pages banque/marché et classement.
+  fixed:
+    - Il est désormais impossible d'équiper des armes et des puces sur les bots de test.
+    - "#ai L'effet passif du gazeur s'applique bien sur les dégâts nova NOVA_DAMAGE (comme Altération)."
+
 216:
   title: Traces visibles en équipe, nouvelles animations et changement de nom d'éleveur
   added:
