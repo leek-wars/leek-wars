@@ -146,6 +146,8 @@ class FileSystem {
 	}
 
 	private getFolderPath(folder: Folder): string {
+		// TODO temporary fix
+		if (!folder) { return "##folder_error##" }
 		if (folder.parent !== 0) {
 			return this.getFolderPath(this.folderById[folder.parent]) + folder.name + '/'
 		}
