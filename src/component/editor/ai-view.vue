@@ -1247,6 +1247,7 @@
 						args[a] = args[a].substring(1)
 					}
 				}
+				// console.log(args)
 				let fullName = match[1] + "(" + args.join(", ") + ")"
 				let description = "<h4>" + i18n.t('leekscript.function_f', [fullName]) + "</h4><br>"
 				description += i18n.t('leekscript.defined_in', [this.ai.name, line])
@@ -1261,9 +1262,10 @@
 				for (const arg of args) {
 					javadoc.items.push({ type: 'param', name: null, text: arg})
 				}
+				// console.log(javadoc.items)
 				if (comment) {
 					const javadoc_lines = comment.split("\n")
-					const javadoc_regex = /^\s*\*\s*@(\w+)(?:\s+([a-zA-Z\u00C0-\u024F\u1E00-\u1EFF]+)\s*:?\s*)?(?:\s*:\s*)?(.*)$/
+					const javadoc_regex = /^\s*\*\s*@(\w+)(?:\s+([a-zA-Z_\u00C0-\u024F\u1E00-\u1EFF]+)\s*:?\s*)?(?:\s*:\s*)?(.*)$/
 					let match_javadoc
 					for (let l = 0; l < javadoc_lines.length; ++l) {
 						const jline = javadoc_lines[l]
@@ -1286,7 +1288,9 @@
 									text = text.trim().substring(1)
 								}
 								if (args.includes(name) || args.includes(text)) {
-									const existing = javadoc.items.find(i => i.type === 'param' && (i.text === name || i.text === text))
+									// console.log('arg', name, text)
+									const existing = javadoc.items.find(i => i.type === 'param' && ((name.length && i.text === name) || (text.length && i.text === text)))
+									// console.log('existing', existing)
 									existing.name = existing.text
 									existing.text = text
 									continue
@@ -1295,12 +1299,15 @@
 							javadoc.items.push({ type, name, text })
 						} else {
 							const star = jline.indexOf("*")
-							let formatted_line = jline.substring(star + 1)
+							let formatted_line = jline.substring(star + 2)
 							if (l === javadoc_lines.length - 1) {
 								formatted_line = formatted_line.trim()
 							}
 							if (formatted_line.length) {
-								javadoc.description += formatted_line + "\n"
+								if (javadoc.description.length) {
+									javadoc.description += "\n"
+								}
+								javadoc.description += formatted_line
 							}
 						}
 					}

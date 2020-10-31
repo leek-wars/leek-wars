@@ -6,7 +6,7 @@
 		<template v-if="args.length > 0">
 			<h4>{{ $t('doc.parameters') }}</h4>
 			<ul>
-				<li v-for="(arg, i) in args" :key="i">{{ arg.name }} <span v-if="arg.name">:</span> <span v-dochash v-code v-html="arg.text"></span></li>
+				<li v-for="(arg, i) in args" :key="i">{{ arg.name }} <span v-if="arg.name && arg.text">:</span> <span v-dochash v-code v-html="arg.text"></span></li>
 			</ul>
 		</template>
 
