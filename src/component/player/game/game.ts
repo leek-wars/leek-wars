@@ -323,6 +323,9 @@ class Game {
 		this.atmosphere = this.map.sound
 
 		// Obstacles
+		if (this.halloween) {
+			T.pumpkin.load(this)
+		}
 		this.obstacles = this.data.map.obstacles
 		for (const i in this.obstacles) {
 			const o = this.obstacles[i]
@@ -539,9 +542,6 @@ class Game {
 		T.mp.load(this)
 		T.critical.load(this)
 		S.critical.load(this)
-		if (this.halloween) {
-			T.pumpkin.load(this)
-		}
 
 		const textures = new Set<Texture>()
 		const sounds = new Set<Sound>()
