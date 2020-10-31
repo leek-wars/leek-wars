@@ -193,6 +193,10 @@
 </script>
 
 <style lang="scss" scoped>
+	.container {
+		flex: 1;
+		min-height: 0;
+	}
 	.column4, .column8 {
 		height: 100%;
 		.panel {
