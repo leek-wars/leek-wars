@@ -8,7 +8,7 @@
 		<panel class="first">
 			<div slot="content" class="wrapper">
 				<center>
-					<img src="/image/Help/AdvancedFightDescription.png">
+					<img src="/image/help/AdvancedFightDescription.png">
 					<br><br>
 					<h2>{{ $t('main_title') }}</h2>
 					<br>
