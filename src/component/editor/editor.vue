@@ -498,7 +498,7 @@
 			}
 		}
 
-		destroyed() {
+		beforeDestroy() {
 			this.$root.$off('ctrlS')
 			this.$root.$off('ctrlQ')
 			this.$root.$off('ctrlF')
