@@ -49,8 +49,8 @@
 					</table>
 					<div class="items">
 						<div class="weapons">
-							<rich-tooltip-weapon v-for="weapon in leek.orderedWeapons" :key="weapon.id" v-slot="{ on }" :weapon="LeekWars.weapons[weapon.template]" :bottom="true" :instant="true" @input="locked = $event">
-								<img :src="'/image/weapon/' + LeekWars.weapons[weapon.template].name + '.png'" class="weapon" v-on="on">
+							<rich-tooltip-weapon v-for="weapon in leek.orderedWeapons" :key="weapon.id" v-slot="{ on }" :weapon="LeekWars.weapons[LeekWars.items[weapon.template].params]" :bottom="true" :instant="true" @input="locked = $event">
+								<img :src="'/image/' + LeekWars.items[weapon.template].name.replace('_', '/') + '.png'" class="weapon" v-on="on">
 							</rich-tooltip-weapon>
 						</div>
 						<div class="chips">

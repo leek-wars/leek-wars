@@ -1,11 +1,12 @@
 import packageJson from '@/../package.json'
 import Analyzer from '@/component/editor/analyzer'
+import { Item } from '@/component/editor/editor-item'
 import { Keyword } from '@/component/editor/keywords'
 import { env } from '@/env'
 import { BattleRoyale } from '@/model/battle-royale'
 import { ChipTemplate } from '@/model/chip'
 import { Commands } from '@/model/commands'
-import { CHIP_TEMPLATES, CHIPS, CONSTANTS, FUNCTIONS, HAT_TEMPLATES, HATS, POMPS, POTIONS, SUMMON_TEMPLATES, TROPHIES, TROPHY_CATEGORIES, WEAPON_TEMPLATES, WEAPONS } from '@/model/data'
+import { CHIP_TEMPLATES, CHIPS, CONSTANTS, FUNCTIONS, HAT_TEMPLATES, HATS, ITEMS, POMPS, POTIONS, SUMMON_TEMPLATES, TROPHIES, TROPHY_CATEGORIES, WEAPONS } from '@/model/data'
 import { Emojis } from '@/model/emojis'
 import { Socket } from '@/model/socket'
 import { Squares } from '@/model/squares'
@@ -16,6 +17,7 @@ import router from '@/router'
 import { TranslateResult } from 'vue-i18n'
 import { ChatType, ChatWindow } from './chat'
 import { i18n, loadLanguageAsync } from './i18n'
+import { ItemType } from './item'
 import { PotionEffect, PotionTemplate } from './potion'
 
 const MONTHS: { [key: string]: string[] } = {
@@ -364,6 +366,11 @@ const LeekWars = {
 		}
 		return LeekWars._countries
 	},
+	itemTypes: {
+		[ItemType.WEAPON]: 'weapon',
+		[ItemType.HAT]: 'hat',
+		[ItemType.POTION]: 'potion',
+	},
 	uploadCheck(file: File) {
 		if (!file) {
 			return false
@@ -510,11 +517,11 @@ const LeekWars = {
 	hats: Object.freeze(HATS),
 	pomps: Object.freeze(POMPS),
 	weapons: Object.freeze(WEAPONS),
+	items: Object.freeze(ITEMS),
 	chips: Object.freeze(CHIPS),
 	trophies: Object.freeze(TROPHIES),
 	chipTemplates: Object.freeze(CHIP_TEMPLATES),
 	trophyCategories: Object.freeze(TROPHY_CATEGORIES),
-	weaponTemplates: Object.freeze(WEAPON_TEMPLATES),
 	functions: Object.freeze(FUNCTIONS),
 	summonTemplates: Object.freeze(SUMMON_TEMPLATES),
 	potions: Object.freeze(POTIONS),

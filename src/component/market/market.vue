@@ -29,8 +29,8 @@
 				<panel :title="$t('weapons') + ' [' + weapons.length + ']'" icon="mdi-pistol">
 					<loader v-if="!weapons.length" slot="content" />
 					<div v-else slot="content" class="items weapons">
-						<router-link v-for="weapon in weapons" :key="weapon.id" v-ripple :to="'/market/' + weapon.name" :farmer-count="items[weapon.id].farmer_count" :leek-count="items[weapon.id].leek_count" class="item weapon">
-							<img :src="'/image/weapon/' + weapon.name + '.png'">
+						<router-link v-for="weapon in weapons" :key="weapon.id" v-ripple :to="'/market/' + weapon.name.replace('weapon_', '')" :farmer-count="items[weapon.id].farmer_count" :leek-count="items[weapon.id].leek_count" class="item weapon">
+							<img :src="'/image/' + weapon.name.replace('_', '/') + '.png'">
 						</router-link>
 					</div>
 				</panel>
@@ -85,7 +85,7 @@
 				<panel :title="$t('characteristic.characteristics')" class="preview-panel" icon="mdi-information-outline">
 					<loader v-if="!selectedItem" slot="content" />
 					<div v-else slot="content" class="preview center">
-						<weapon-preview v-if="selectedItem.type == ItemType.WEAPON" :weapon="LeekWars.weapons[selectedItem.id]" />
+						<weapon-preview v-if="selectedItem.type == ItemType.WEAPON" :weapon="LeekWars.weapons[LeekWars.items[selectedItem.id].params]" />
 						<chip-preview v-else-if="selectedItem.type == ItemType.CHIP" :chip="LeekWars.chips[selectedItem.id]" />
 						<potion-preview v-else-if="selectedItem.type == ItemType.POTION && LeekWars.potions[selectedItem.id]" :potion="LeekWars.potions[selectedItem.id]" />
 						<fight-pack-preview v-else-if="selectedItem.type == ItemType.FIGHT_PACK" :pack="selectedItem" />
@@ -105,11 +105,11 @@
 							</div>
 							<div v-if="selectedItem.buyable">
 								<h4 class="buy-label">{{ $t('buy') }}</h4>
-								<v-btn :disabled="($store.state.farmer && $store.state.farmer.habs < selectedItem.price_habs) || (selectedItem.singleton && (selectedItem.farmer_count > 0 || selectedItem.leek_count > 0))" class="buy-button" @click="openBuyHabs">{{ selectedItem.price_habs | number }}<img src="/image/hab.png"></v-btn>
+								<v-btn :disabled="($store.state.farmer && $store.state.farmer.habs < selectedItem.price) || (selectedItem.singleton && (selectedItem.farmer_count > 0 || selectedItem.leek_count > 0))" class="buy-button" @click="openBuyHabs">{{ selectedItem.price | number }}<img src="/image/hab.png"></v-btn>
 							</div>
 							<div v-if="env.BANK && selectedItem.buyable_crystals">
 								<h4 class="buy-label">{{ $t('buy') }}</h4>
-								<v-btn :disabled="($store.state.farmer && $store.state.farmer.crystals < selectedItem.price_crystals) || (selectedItem.singleton && (selectedItem.farmer_count > 0 || selectedItem.leek_count > 0))" class="buy-crystals-button" @click="openBuyCrystals">{{ selectedItem.price_crystals | number }}<img src="/image/crystal.png"></v-btn>
+								<v-btn :disabled="($store.state.farmer && $store.state.farmer.crystals < selectedItem.crystals) || (selectedItem.singleton && (selectedItem.farmer_count > 0 || selectedItem.leek_count > 0))" class="buy-crystals-button" @click="openBuyCrystals">{{ selectedItem.crystals | number }}<img src="/image/crystal.png"></v-btn>
 							</div>
 							<div v-if="selectedItem.singleton && (selectedItem.farmer_count > 0 || selectedItem.leek_count > 0)" class="already-have">
 								{{ $t('already_have') }}
@@ -165,11 +165,11 @@
 					<b slot="item">{{ translateName(selectedItem) }}</b>
 				</i18n>
 				<br>
-				<b>{{ $t('price') }}</b> : {{ selectedItem.price_habs | number }} <span class="hab"></span>
+				<b>{{ $t('price') }}</b> : {{ selectedItem.price | number }} <span class="hab"></span>
 				<br>
 				<b>{{ $t('habs_before_purchase') }}</b> : {{ $store.state.farmer.habs | number }} <span class="hab"></span>
 				<br>
-				<b>{{ $t('habs_after_purchase') }}</b> : {{ $store.state.farmer.habs - selectedItem.price_habs | number }} <span class="hab"></span>
+				<b>{{ $t('habs_after_purchase') }}</b> : {{ $store.state.farmer.habs - selectedItem.price | number }} <span class="hab"></span>
 			</div>
 			<div slot="actions">
 				<div @click="buyDialog = false">{{ $t('cancel') }}</div>
@@ -185,11 +185,11 @@
 					<b slot="item">{{ translateName(selectedItem) }}</b>
 				</i18n>
 				<br>
-				<b>{{ $t('price') }}</b> : {{ selectedItem.price_crystals }} <span class="crystal"></span>
+				<b>{{ $t('price') }}</b> : {{ selectedItem.crystals }} <span class="crystal"></span>
 				<br>
 				<b>{{ $t('crystals_before_purchase') }}</b> : {{ $store.state.farmer.crystals | number }} <span class="crystal"></span>
 				<br>
-				<b>{{ $t('crystals_after_purchase') }}</b> : {{ $store.state.farmer.crystals - selectedItem.price_crystals | number }} <span class="crystal"></span>
+				<b>{{ $t('crystals_after_purchase') }}</b> : {{ $store.state.farmer.crystals - selectedItem.crystals | number }} <span class="crystal"></span>
 			</div>
 			<div slot="actions">
 				<div @click="buyCrystalsDialog = false">{{ $t('cancel') }}</div>
@@ -221,7 +221,7 @@
 			<v-icon slot="icon">mdi-new-box</v-icon>
 			<span slot="title">{{ $t('new_item_unlocked') }}</span>
 			<div v-if="unseenItem" class="unseen-dialog">
-				<weapon-preview v-if="unseenItem.type == ItemType.WEAPON" :weapon="LeekWars.weapons[unseenItem.id]" />
+				<weapon-preview v-if="unseenItem.type == ItemType.WEAPON" :weapon="LeekWars.weapons[LeekWars.items[unseenItem.id].params]" />
 				<chip-preview v-else-if="unseenItem.type == ItemType.CHIP" :chip="LeekWars.chips[unseenItem.id]" />
 				<potion-preview v-else-if="unseenItem.type == ItemType.POTION" :potion="LeekWars.potions[unseenItem.id]" />
 				<hat-preview v-else-if="unseenItem.type == ItemType.HAT" :hat="LeekWars.hats[unseenItem.id]" />
@@ -272,7 +272,7 @@
 	export default class Market extends Vue {
 		selectedItem: ItemTemplate | null = null
 		items: {[key: string]: ItemTemplate} = {}
-		weapons: WeaponTemplate[] = []
+		weapons: ItemTemplate[] = []
 		chips: ChipTemplate[] = []
 		chipsByType: ChipTemplate[][] = []
 		potions: PotionTemplate[] = []
@@ -299,8 +299,9 @@
 					const item = items[i]
 					this.items[item.id] = item
 					if (item.type === ItemType.WEAPON) {
-						this.weapons.push(LeekWars.weapons[item.id])
-						this.items_by_name[LeekWars.weapons[item.id].name] = item
+						const w = LeekWars.items[item.id]
+						this.weapons.push(w)
+						this.items_by_name[w.name.replace('weapon_', '')] = item
 					} else if (item.type === ItemType.CHIP) {
 						const chip = LeekWars.chips[item.id]
 						this.chips.push(chip)
@@ -339,7 +340,7 @@
 					}
 					item.leek_objs = []
 					if (this.$store.state.farmer) {
-						for (const leek of item.leeks) {
+						for (const leek of item.leeks!) {
 							if (leek in this.$store.state.farmer.leeks) {
 								item.leek_objs.push(this.$store.state.farmer.leeks[leek])
 							}
@@ -400,12 +401,12 @@
 			return this.$t(type + '.' + item.name.replace(type + '_', ''))
 		}
 		openBuyHabs() {
-			if (this.selectedItem && this.selectedItem.price_habs <= this.$store.state.farmer.habs) {
+			if (this.selectedItem && this.selectedItem.price! <= this.$store.state.farmer.habs) {
 				this.buyDialog = true
 			}
 		}
 		openBuyCrystals() {
-			if (this.selectedItem && this.selectedItem.price_crystals <= this.$store.state.farmer.crystals) {
+			if (this.selectedItem && this.selectedItem.crystals! <= this.$store.state.farmer.crystals) {
 				this.buyCrystalsDialog = true
 			}
 		}
@@ -425,12 +426,12 @@
 				// 	_.lang.get('market', 'fights_bought')
 				// ][type - 1])
 				if (item.type !== ItemType.FIGHT_PACK) {
-					item.farmer_count++
+					item.farmer_count!++
 				}
 				if (currency === 'habs') {
-					this.$store.commit('update-habs', -item.price_habs)
+					this.$store.commit('update-habs', -item.price!)
 				} else {
-					this.$store.commit('update-crystals', -item.price_crystals)
+					this.$store.commit('update-crystals', -item.crystals!)
 				}
 				if (item.type === ItemType.FIGHT_PACK) {
 					this.$store.commit('update-fights', data.fights)
@@ -451,7 +452,7 @@
 				// 	_.lang.get('market', 'potion_selled'),
 				// 	_.lang.get('market', 'hat_selled')
 				// ][type - 1])
-				item.farmer_count--
+				item.farmer_count!--
 				this.$store.commit('update-habs', item.sell_price)
 				this.$store.commit('remove-inventory', {type: item.type, item_template: data.item})
 				this.updateSubtitle()
@@ -471,8 +472,8 @@
 					id: 1000000 + fights[p],
 					name: count + '-fights',
 					title: this.$t('n_fights', [count]),
-					price_habs: p === '0' ? 100000 : 0,
-					price_crystals: costs[p] * 100,
+					price: p === '0' ? 100000 : 0,
+					crystals: costs[p] * 100,
 					buyable: p === '0',
 					buyable_crystals: true,
 					sellable: false,
@@ -484,7 +485,13 @@
 					farmer_count: 0,
 					sell_price: 0,
 					fights: count,
-					seen: true
+					seen: true,
+					singleton: false,
+					trophy: null,
+					market: true,
+					level: 1,
+					params: null,
+					public: true
 				} as ItemTemplate
 				this.fight_packs.push(pack)
 				this.items[pack.id] = pack
@@ -494,7 +501,7 @@
 		setFightPackPrice(farmer: Farmer) {
 			const ratio = store.state.farmer!.total_level / 1204
 			const priceHabs = Math.round(100000 + Math.pow(ratio, 3) * 4900000)
-			this.items_by_name['100-fights'].price_habs = priceHabs
+			this.items_by_name['100-fights'].price! = priceHabs
 		}
 
 		@Watch('unseenItemDialog')

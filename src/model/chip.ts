@@ -3,6 +3,7 @@ import { Area } from './area'
 class Chip {
 	public id!: number
 	public template!: number
+	public quantity!: number
 }
 export { Chip }
 

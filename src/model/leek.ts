@@ -78,7 +78,7 @@ class Leek {
 	}
 	get orderedWeapons() {
 		return [...this.weapons].sort((weaponA, weaponB) => {
-			return LeekWars.weapons[weaponA.template].level - LeekWars.weapons[weaponB.template].level
+			return LeekWars.items[weaponA.template].level - LeekWars.items[weaponB.template].level
 		})
 	}
 	get talentGains() {

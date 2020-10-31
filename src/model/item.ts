@@ -14,14 +14,23 @@ class ItemTemplate {
 	public id!: number
 	public name!: string
 	public type!: ItemType
-	public leeks!: number[]
-	public leek_objs!: Leek[]
-	public leek_count!: number
-	public farmer_count!: number
-	public price_habs!: number
-	public price_crystals!: number
+	public price!: number | null
+	public crystals!: number | null
 	public sellable!: boolean
-	public sell_price!: number
-	public seen!: boolean
+	public level!: number
+	public params!: any
+	public buyable!: boolean
+	public public!: boolean
+	public singleton!: boolean
+	public trophy!: number | null
+	public market!: boolean
+	public buyable_crystals!: boolean
+
+	public leeks?: number[]
+	public leek_objs?: Leek[]
+	public leek_count?: number
+	public farmer_count?: number
+	public sell_price?: number
+	public seen?: boolean
 }
 export { ItemTemplate }

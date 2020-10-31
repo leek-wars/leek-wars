@@ -88,12 +88,12 @@
 			}
 			return this.leek.weapon ? ((this.leek.weapon as any).id as number) : 0
 		}
-		get weaponTemplate() { return this.weapon ? LeekWars.weapons[this.weapon].template : null }
+		get weaponTemplate() { return this.weapon ? LeekWars.items[this.weapon].params : null }
 		get weaponScale() { return 0.9 * this.scale }
 		get weaponData() { return this.weaponTemplate ? WeaponsData[this.weaponTemplate] : null }
 		get weaponRadianAngle() { return (this.weaponData && this.weaponData.white) ? -Math.PI / 2.7 : Math.PI / 7 }
 		get weaponAngle() { return this.weaponRadianAngle * (180 / Math.PI) }
-		get weaponImage() { return '/image/weapon/' + LeekWars.weapons[this.weapon].name + '.png' }
+		get weaponImage() { return '/image/' + LeekWars.items[this.weapon].name.replace('_', '/') + '.png' }
 		get weaponWidth() { return this.weaponData ? this.weaponData.w : 0 }
 		get weaponHeight() { return this.weaponData ? this.weaponData.h : 0 }
 		get weaponCX() { return this.weaponData ? (this.weaponData.cx + 15) * this.scale : 0 }

@@ -417,8 +417,8 @@ class FightStatistics {
 					itemCaster = entity
 
 					const cell = this.field.cells[action[2]]
-					const weapon = LeekWars.weapons[LeekWars.weaponTemplates[action[3]].item]
-					const area = weapon.area
+					// const weapon = LeekWars.weapons[LeekWars.weaponTemplates[action[3]].item]
+					// const area = weapon.area
 					// targets = this.field.getTargets(cell, area)
 					// console.log("weapon", weapon.name, "area", area, "targets", targets)
 

@@ -10,12 +10,12 @@ const values = [
 	['weapons', 'weapons', 'weapon/get-all', '{[key: string]: WeaponTemplate}'],
 	['pomps', 'pomps', 'pomp/get-all', '{[key: string]: PompTemplate}'],
 	['potions', 'potions', 'potion/get-all', '{[key: string]: PotionTemplate}'],
-	['hatTemplates', 'hat_templates', 'hat/get-templates', '{[key: string]: {id: number, item: number}}'],
-	['weaponTemplates', 'weapon_templates', 'weapon/get-templates', '{[key: string]: {id: number, item: number}}'],
-	['chipTemplates', 'chip_templates', 'chip/get-templates', '{[key: string]: {id: number, item: number}}'],
-	['summonTemplates', "summon_templates", 'summon/get-templates', '{[key: string]: SummonTemplate}'],
+	['hat_templates', 'hat_templates', 'hat/get-templates', '{[key: string]: {id: number, item: number}}'],
+	['chip_templates', 'chip_templates', 'chip/get-templates', '{[key: string]: {id: number, item: number}}'],
+	['summon_templates', "summon_templates", 'summon/get-templates', '{[key: string]: SummonTemplate}'],
 	['trophies', 'trophies', 'trophy/get-all'],
-	['trophyCategories', 'trophy_categories', 'trophy/get-categories']
+	['trophy_categories', 'trophy_categories', 'trophy/get-categories'],
+	['items', null, 'item/get-all', '{[key: string]: ItemTemplate}'],
 ]
 const promises = []
 
@@ -24,11 +24,12 @@ for (const value of values) {
 	const host = 'https://leekwars.com/'
 	const p = request(host + 'api/' + value[2])
 	promises.push(p.then((data) => {
+		const json = JSON.parse(data)
 		console.log('received', value[0])
-		return "const " + value[1].toUpperCase()
+		return "const " + value[0].toUpperCase()
 			+ (value[3] ? ': ' + value[3] : '')
-			+ " = " + util.inspect(JSON.parse(data)[value[1]], {depth: Infinity, breakLength: Infinity, maxArrayLength: Infinity})
-			+ "\nexport { " + value[1].toUpperCase() + " }"
+			+ " = " + util.inspect(value[1] ? json[value[1]] : json, {depth: Infinity, breakLength: Infinity, maxArrayLength: Infinity})
+			+ "\nexport { " + value[0].toUpperCase() + " }"
 	}))
 	p.catch((err) => {
 		console.log("ERROR request failed for", value[0])
@@ -42,6 +43,7 @@ import { ChipTemplate } from '@/model/chip'
 import { Constant } from '@/model/constant'
 import { Function } from '@/model/function'
 import { HatTemplate } from '@/model/hat'
+import { ItemTemplate } from '@/model/item'
 import { PompTemplate } from '@/model/pomp'
 import { PotionTemplate } from '@/model/potion'
 import { SummonTemplate } from '@/model/summon'
