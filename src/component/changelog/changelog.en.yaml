@@ -12,6 +12,7 @@
     - Added Alt + up/down shortcuts to move the current line.
     - "#ai Added the for syntax (@key: @var) to save a lot of operations."
     - "#ai Added function getBulbChips(bulb_chip) which returns the theoretical bulb chips."
+    - Added a help page on fighting formulas (thanks to CoachArtyMorty).
   improved:
     - "Improvement of the editor interface: tabs, menus in the explorer."
     - Improvement of the tabs behavior and style.
@@ -28,6 +29,7 @@
   fixed:
     - It is now impossible to equip weapons and chips on test bots.
     - "#ai Passive gassing effect now applies well on nova NOVA_DAMAGE damage (like Alteration)."
+    - Correction of the lineOfSight doc (thanks to CoachArtyMorty).
 
 216:
   title: Logs visible in team, new animations and change of farmer's name
