@@ -3,6 +3,10 @@
 		<div class="page-header page-bar">
 			<h1>{{ $t('title') }}</h1>
 			<div class="tabs">
+				<div class="tab action active" icon="account_balance" link="/bank">
+					<v-icon>mdi-bank</v-icon>
+					<span>{{ $t('main.bank') }}</span>
+				</div>
 				<router-link to="/market">
 					<div class="tab action" image="icon/market.png" link="/market">
 						<img src="/image/icon/market.png">

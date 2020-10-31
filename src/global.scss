@@ -387,6 +387,22 @@ ul {
 .page-bar .tabs .tab.green:not(.disabled):hover:after {
 	border-color: transparent transparent transparent rgba(95,173,27,0.9);
 }
+.page-bar .tabs .tab.active {
+	background: #f2f2f2;
+	color: #333;
+	&:hover {
+		background: #f2f2f2;
+	}
+	&:after, &:hover:after {
+		border-color: transparent transparent transparent #f2f2f2;
+	}
+	&:before, &:hover:before {
+		border-color: transparent #f2f2f2 transparent transparent;
+	}
+	.v-icon {
+		color: #333;
+	}
+}
 .page-footer {
 	margin-bottom: 12px;
 }

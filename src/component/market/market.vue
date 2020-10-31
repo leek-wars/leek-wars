@@ -9,6 +9,10 @@
 						<span>{{ $t('main.bank') }}</span>
 					</div>
 				</router-link>
+				<div class="tab action active" image="icon/market.png" link="/market">
+					<img src="/image/icon/black/market.png">
+					<span>{{ $t('main.market') }}</span>
+				</div>
 			</div>
 		</div>
 		<div class="container last">
