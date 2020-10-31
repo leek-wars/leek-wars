@@ -833,9 +833,10 @@
 			if (raw_data.location[0][2] !== 0 || raw_data.location[1][2] !== 0) { // Not position [0:0]
 				this.hoverData = raw_data
 				this.detailDialogContent = { details: raw_data, keyword }
+				const offset = (this.$refs.codemirror as HTMLElement).getBoundingClientRect()
 				const p = this.editor.cursorCoords(startPos, "page")
-				const left = p.left
-				this.detailDialogTop = window.innerHeight - p.top
+				const left = p.left - offset.left
+				this.detailDialogTop = - p.top + offset.bottom - (this.lineHeight - this.fontSize * 1.2) / 2 + 2
 				this.detailDialogLeft = left
 				this.detailDialogAtBottom = false
 				this.detailDialogMaxHeight = 999999
@@ -846,16 +847,15 @@
 					if (!detailDialog) { return }
 					const height = detailDialog.scrollHeight
 					const top = window.innerHeight - this.detailDialogTop
-					this.detailDialogMaxHeight = window.innerHeight - this.detailDialogTop
-					if (top - height < 0 && top + this.lineHeight + height <= window.innerHeight) { // Y'a moyen de positionner le dialogue en bas
+					this.detailDialogMaxHeight = window.innerHeight - this.detailDialogTop - (window.innerHeight - offset.bottom)
+					if (top - height - (window.innerHeight - offset.bottom) < 0 && top + this.fontSize + height <= window.innerHeight) { // Y'a moyen de positionner le dialogue en bas
 						this.detailDialogAtBottom = true
-						this.detailDialogTop = top + this.lineHeight
-						this.detailDialogMaxHeight = window.innerHeight - top - this.lineHeight
+						this.detailDialogTop = p.top - offset.top + this.lineHeight - (this.lineHeight - this.fontSize * 1.2) / 2 + 2
+						this.detailDialogMaxHeight = window.innerHeight - top
 					}
-
 					const width = detailDialog.clientWidth
-					if (left + width > window.innerWidth - 20) {
-						this.detailDialogLeft = window.innerWidth - width - 20
+					if (left + width + offset.left > window.innerWidth - 20) {
+						this.detailDialogLeft = window.innerWidth - width - offset.left - 20
 					}
 				}
 				Vue.nextTick(fixPosition)
@@ -1075,8 +1075,8 @@
 				const left = pos.left, top = pos.bottom
 				const offset = (this.$refs.codemirror as HTMLElement).getBoundingClientRect()
 
-				this.hintDialogTop = top
-				this.hintDialogLeft = left
+				this.hintDialogTop = top - offset.top
+				this.hintDialogLeft = left - offset.left
 
 				this.hints = completions
 				this.selectHint(0)
@@ -1444,10 +1444,10 @@
 
 <style lang="scss" scoped>
 	.ai {
-		// position: relative;
 		height: 100%;
 		display: flex;
 		flex-direction: column;
+		position: relative;
 	}
 	.codemirror-wrapper {
 		height: 100%;
@@ -1501,6 +1501,7 @@
 	}
 	.hint-dialog .hints {
 		min-width: 400px;
+		max-width: 600px;
 		background: white;
 		font-family: monospace;
 		overflow-y: auto;
@@ -1628,7 +1629,8 @@
 		.definition {
 			cursor: pointer;
 			span {
-				color: #5fad1b;
+				// color: #5fad1b;
+				color: #0000D0;
 				// font-weight: 500;
 			}
 			span:hover {
