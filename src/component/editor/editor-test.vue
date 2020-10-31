@@ -123,8 +123,8 @@
 						<div class="title">{{ $t('main.weapons') }} [{{ currentLeek.weapons.length }}]</div>
 						<div class="weapons">
 							<div class="container">
-								<rich-tooltip-weapon v-for="weapon of currentLeek.weapons" :key="weapon" v-slot="{ on }" :weapon="LeekWars.weapons[weapon]" :instant="true">
-									<img :src="'/image/weapon/' + LeekWars.weapons[weapon].name + '.png'" class="weapon" v-on="on" @click="removeLeekWeapon(weapon)">
+								<rich-tooltip-weapon v-for="weapon of currentLeek.weapons" :key="weapon" v-slot="{ on }" :weapon="LeekWars.weapons[LeekWars.items[weapon].params]" :instant="true">
+									<img :src="'/image/' + LeekWars.items[weapon].name.replace('_', '/') + '.png'" class="weapon" v-on="on" @click="removeLeekWeapon(weapon)">
 								</rich-tooltip-weapon>
 								<div v-if="currentLeek.weapons.length < 4" class="add" @click="weaponsDialog = true">+</div>
 							</div>
@@ -294,8 +294,8 @@
 			<img slot="icon" src="/image/icon/garden.png">
 			<span slot="title">{{ $t('select_weapon') }}</span>
 			<div v-if="currentLeek" class="padding weapons-dialog">
-				<rich-tooltip-weapon v-for="weapon of availableWeapons" :key="weapon.id" v-slot="{ on }" :weapon="LeekWars.weapons[weapon.id]" :bottom="true" :instant="true">
-					<img :src="'/image/weapon/' + weapon.name + '.png'" class="weapon" v-on="on" @click="addLeekWeapon(weapon.id)">
+				<rich-tooltip-weapon v-for="weapon of availableWeapons" :key="weapon.id" v-slot="{ on }" :weapon="LeekWars.weapons[LeekWars.items[weapon.id].params]" :bottom="true" :instant="true">
+					<img :src="'/image/weapon/' + weapon.name + '.png'" class="weapon" v-on="on" @click="addLeekWeapon(weapon.item)">
 				</rich-tooltip-weapon>
 			</div>
 		</popup>
@@ -458,7 +458,7 @@
 		}
 		get availableWeapons() {
 			if (!this.currentLeek) { return [] }
-			return Object.values(LeekWars.weapons).filter((w: WeaponTemplate) => (this.currentLeek!.weapons as any).indexOf(w.id) === -1)
+			return Object.values(LeekWars.weapons).filter((w: WeaponTemplate) => (this.currentLeek!.weapons as any).indexOf(w.item) === -1)
 		}
 		get availableChips() {
 			if (!this.currentLeek) { return [] }

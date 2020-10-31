@@ -1211,8 +1211,8 @@ class Game {
 			if (item in LeekWars.chips) {
 				image = env.STATIC + "image/chip/" + LeekWars.chips[item].name + ".png"
 			} else /* weapon */ {
-				if (item in LeekWars.weapons) {
-					const template = LeekWars.weapons[item].template
+				if (item in LeekWars.items) {
+					const template = LeekWars.items[item].params
 					const img = ["pistol", "machine_gun", "double_gun", "shotgun", "magnum", "laser", "grenade_launcher", "flamme", "destroyer", "gaz_icon", "electrisor", "m_laser", "b_laser", "katana", "broadsword", "axe", "j_laser", "illicit_grenade_launcher", "mysterious_electrisor", "unbridled_gazor", "revoked_m_laser"][template - 1]
 					image = env.STATIC + "image/weapon/" + img + ".png"
 					// Gestion des états du poireau

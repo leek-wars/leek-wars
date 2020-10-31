@@ -19,7 +19,7 @@
 		</div>
 		<i18n v-else-if="type === ActionType.SET_WEAPON" path="fight.leek_take_weapon" tag="div">
 			<leek slot="leek" :leek="leek" />
-			<b slot="weapon">{{ $t('weapon.' + LeekWars.weapons[LeekWars.weaponTemplates[action.params[2]].item].name) }}</b>
+			<b slot="weapon">{{ $t('weapon.' + LeekWars.weapons[action.params[2]].name) }}</b>
 		</i18n>
 		<div v-else-if="type === ActionType.END_FIGHT">
 			{{ $t('fight.end_of_fight') }}
