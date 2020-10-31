@@ -509,6 +509,7 @@
 			this.$root.$off('keyup')
 			this.$root.$off('previous')
 			this.$root.$off('next')
+			this.$root.$off('back')
 			LeekWars.large = false
 			LeekWars.header = true
 			LeekWars.footer = true
