@@ -3,6 +3,7 @@ import { Effect } from './effect'
 class Weapon {
 	public id!: number
 	public template!: number
+	public quantity!: number
 }
 
 class WeaponTemplate {
@@ -19,6 +20,7 @@ class WeaponTemplate {
 	public template!: number
 	public passive_effects!: Effect[]
 	public forgotten!: boolean
+	public item!: number
 }
 
 class WeaponData {

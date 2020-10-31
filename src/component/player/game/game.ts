@@ -932,7 +932,7 @@ class Game {
 		case ActionType.SET_WEAPON: {
 			const leek = this.leeks[action.params[1]] as Leek
 			leek.setWeapon(new WEAPONS[action.params[2] - 1](this))
-			leek.weapon_name = LeekWars.weapons[LeekWars.weaponTemplates[action.params[2]].item].name
+			leek.weapon_name = LeekWars.weapons[action.params[2]].name
 
 			this.log(action)
 			this.actionDone()
@@ -988,7 +988,7 @@ class Game {
 			const result = action.params[4]
 
 			// TODO take the area from the action instead of the item data when available
-			const area = LeekWars.weapons[LeekWars.weaponTemplates[weapon].item].area
+			const area = LeekWars.weapons[weapon].area
 			const targets = this.ground.field.getTargets(cell, area) as FightEntity[]
 
 			const duration = (this.leeks[launcher] as Leek).useWeapon(cell, targets, result)

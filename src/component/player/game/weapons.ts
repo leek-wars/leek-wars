@@ -45,7 +45,7 @@ abstract class WeaponAnimation {
 		this.mz2 = data.mz2
 		this.sx = data.sx!
 		this.sz = data.sz!
-		this.id = LeekWars.weaponTemplates[id].item
+		this.id = LeekWars.weapons[id].item
 	}
 	public abstract update(dt: number): void
 	public abstract shoot(leekX: number, leekY: number, handPos: number, angle: number, orientation: number, targetPos: Position, targets: FightEntity[], caster: FightEntity, cell: Cell, scale: number): number

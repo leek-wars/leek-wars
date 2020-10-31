@@ -375,7 +375,7 @@
 				}
 				for (const action of this.actions) {
 					if (action.params[0] === ActionType.SET_WEAPON) {
-						this.leeks[action.params[1]].weapon_name = LeekWars.weapons[LeekWars.weaponTemplates[action.params[2]].item].name
+						this.leeks[action.params[1]].weapon_name = LeekWars.weapons[action.params[2]].name
 					} else if (action.params[0] === ActionType.USE_WEAPON) {
 						action.weapon = this.leeks[action.params[1]].weapon_name
 					}

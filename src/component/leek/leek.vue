@@ -163,9 +163,9 @@
 					<loader v-if="!leek" />
 					<div v-else-if="leek.weapons.length === 0" class="empty">{{ $t('no_weapons') }}</div>
 					<template v-else>
-						<rich-tooltip-weapon v-for="weapon in leek.orderedWeapons" :key="weapon.id" v-slot="{ on }" :instant="true" :weapon="LeekWars.weapons[weapon.template]" :bottom="true">
+						<rich-tooltip-weapon v-for="weapon in leek.orderedWeapons" :key="weapon.id" v-slot="{ on }" :instant="true" :weapon="LeekWars.weapons[LeekWars.items[weapon.template].params]" :bottom="true">
 							<div class="weapon" v-on="on">
-								<img :src="'/image/weapon/' + LeekWars.weapons[weapon.template].name + '.png'" @click="setWeapon(weapon.template)">
+								<img :src="'/image/' + LeekWars.items[weapon.template].name.replace('_', '/') + '.png'" @click="setWeapon(weapon.template)">
 							</div>
 						</rich-tooltip-weapon>
 					</template>
@@ -279,9 +279,9 @@
 			</template>
 			<div class="weapons-popup">
 				<div :class="{dashed: draggedWeapon && draggedWeaponLocation === 'farmer'}" class="leek-weapons" @dragover="dragOver" @drop="weaponsDrop('leek', $event)">
-					<rich-tooltip-weapon v-for="(weapon, i) in leek.orderedWeapons" :key="i" v-slot="{ on }" :instant="true" :weapon="LeekWars.weapons[weapon.template]" :bottom="true">
+					<rich-tooltip-weapon v-for="(weapon, i) in leek.orderedWeapons" :key="i" v-slot="{ on }" :instant="true" :weapon="LeekWars.weapons[LeekWars.items[weapon.template].params]" :bottom="true">
 						<div :class="{dragging: draggedWeapon && draggedWeapon.template === weapon.template && draggedWeaponLocation === 'leek'}" class="weapon" draggable="true" v-on="on" @dragstart="weaponDragStart('leek', weapon, $event)" @dragend="weaponDragEnd(weapon)" @click="removeWeapon(weapon)">
-							<img :src="'/image/weapon/' + LeekWars.weapons[weapon.template].name + '.png'" draggable="false">
+							<img :src="'/image/' + LeekWars.items[weapon.template].name.replace('_', '/') + '.png'" draggable="false">
 						</div>
 					</rich-tooltip-weapon>
 				</div>
@@ -289,9 +289,9 @@
 				<h2>{{ $t('all_my_weapons') }}</h2>
 				<br>
 				<div :class="{dashed: draggedWeapon && draggedWeaponLocation === 'leek'}" class="farmer-weapons" @dragover="dragOver" @drop="weaponsDrop('farmer', $event)">
-					<rich-tooltip-weapon v-for="(weapon, i) in farmer_weapons" :key="i" v-slot="{ on }" :instant="true" :weapon="LeekWars.weapons[weapon.template]" :bottom="true">
-						<div :quantity="weapon.quantity" :class="{dragging: draggedWeapon && draggedWeapon.template === weapon.template && draggedWeaponLocation === 'farmer', locked: LeekWars.weapons[weapon.template].level > leek.level || (LeekWars.weapons[weapon.template].forgotten && hasForgottenWeapon) || leek.weapons.find(w => w.template === weapon.template) }" :draggable="LeekWars.weapons[weapon.template].level <= leek.level" class="weapon" v-on="on" @dragstart="weaponDragStart('farmer', weapon, $event)" @dragend="weaponDragEnd(weapon)" @click="addWeapon(weapon)">
-							<img :src="'/image/weapon/' + LeekWars.weapons[weapon.template].name + '.png'" draggable="false">
+					<rich-tooltip-weapon v-for="(weapon, i) in farmer_weapons" :key="i" v-slot="{ on }" :instant="true" :weapon="LeekWars.weapons[LeekWars.items[weapon.template].params]" :bottom="true">
+						<div :quantity="weapon.quantity" :class="{dragging: draggedWeapon && draggedWeapon.template === weapon.template && draggedWeaponLocation === 'farmer', locked: LeekWars.items[weapon.template].level > leek.level || (LeekWars.weapons[LeekWars.items[weapon.template].params].forgotten && hasForgottenWeapon) || leek.weapons.find(w => w.template === weapon.template) }" :draggable="LeekWars.items[weapon.template].level <= leek.level" class="weapon" v-on="on" @dragstart="weaponDragStart('farmer', weapon, $event)" @dragend="weaponDragEnd(weapon)" @click="addWeapon(weapon)">
+							<img :src="'/image/' + LeekWars.items[weapon.template].name.replace('_', '/') + '.png'" draggable="false">
 						</div>
 					</rich-tooltip-weapon>
 				</div>
@@ -406,9 +406,9 @@
 						</template>
 						<b>{{ $t('no_weapon') }}</b>
 					</tooltip>
-					<rich-tooltip-weapon v-for="(weapon, i) in leek.orderedWeapons" :key="i" v-slot="{ on }" :instant="true" :weapon="LeekWars.weapons[weapon.template]" :bottom="true">
+					<rich-tooltip-weapon v-for="(weapon, i) in leek.orderedWeapons" :key="i" v-slot="{ on }" :instant="true" :weapon="LeekWars.weapons[LeekWars.items[weapon.template].params]" :bottom="true">
 						<div class="weapon" v-on="on" @click="setWeapon(weapon.template)">
-							<img :src="'/image/weapon/' + LeekWars.weapons[weapon.template].name + '.png'">
+							<img :src="'/image/' + LeekWars.items[weapon.template].name.replace('_', '/') + '.png'">
 						</div>
 					</rich-tooltip-weapon>
 				</div>
@@ -449,9 +449,9 @@
 							{{ $t('weapon') }}
 						</div>
 						<template v-if="holdWeaponEnabled">
-							<img v-if="leek.weapon" class="image" :src="'/image/weapon/' + LeekWars.weapons[leek.weapon].name + '.png'">
+							<img v-if="leek.weapon" class="image" :src="'/image/' + LeekWars.items[leek.weapon].name.replace('_', '/') + '.png'">
 							<img v-else class="image" src="/image/weapon/no_weapon.png">
-							<div v-if="leek.weapon" class="name">{{ $t('weapon.' + LeekWars.weapons[leek.weapon].name) }}</div>
+							<div v-if="leek.weapon" class="name">{{ $t('weapon.' + LeekWars.weapons[LeekWars.items[leek.weapon].params].name) }}</div>
 						</template>
 						<template v-else>
 							<img class="image" src="/image/pomp/hold_weapon.png">
@@ -630,58 +630,22 @@
 			return this.leek.level === 301
 		}
 		get farmer_weapons() {
-			const groupedFarmerWeapons: {[key: number]: any} = {}
-			if (store.state.farmer) {
-				for (const weapon of store.state.farmer.weapons) {
-					if (groupedFarmerWeapons[weapon.template] === undefined) {
-						groupedFarmerWeapons[weapon.template] = LeekWars.clone(weapon)
-						groupedFarmerWeapons[weapon.template].quantity = 0
-					}
-					groupedFarmerWeapons[weapon.template].quantity++
-				}
-			}
-			const weapons = []
-			for (const w in groupedFarmerWeapons) {
-				weapons.push(groupedFarmerWeapons[w])
-			}
-			return weapons.sort((weaponA, weaponB) => {
-				return LeekWars.weapons[weaponA.template].level - LeekWars.weapons[weaponB.template].level
+			return store.state.farmer!.weapons.sort((weaponA, weaponB) => {
+				return LeekWars.items[weaponA.template].level - LeekWars.items[weaponB.template].level
 			})
 		}
 		get farmer_chips() {
-			const groupedFarmerChips: {[key: number]: any} = {}
-			for (const chip of this.$store.state.farmer.chips) {
-				if (groupedFarmerChips[chip.template] === undefined) {
-					groupedFarmerChips[chip.template] = LeekWars.clone(chip)
-					groupedFarmerChips[chip.template].quantity = 0
-				}
-				groupedFarmerChips[chip.template].quantity++
-			}
-			const chips = []
-			for (const c in groupedFarmerChips) {
-				chips.push(groupedFarmerChips[c])
-			}
-			return chips.sort((chipA, chipB) => {
+			return store.state.farmer!.chips.sort((chipA, chipB) => {
 				return LeekWars.orderedChips[chipA.template] - LeekWars.orderedChips[chipB.template]
 			})
 		}
 		get farmer_hats() {
-			const groupedFarmerHats: {[key: number]: any} = {}
-			if (store.state.farmer) {
-				for (const hat of store.state.farmer.hats) {
-					if (groupedFarmerHats[hat.hat_template] === undefined) {
-						groupedFarmerHats[hat.hat_template] = LeekWars.clone(hat)
-						groupedFarmerHats[hat.hat_template].quantity = 0
-					}
-					groupedFarmerHats[hat.hat_template].quantity++
-				}
-			}
-			return groupedFarmerHats
+			return store.state.farmer!.hats
 		}
 		get hasForgottenWeapon() {
 			if (!this.leek) { return false }
 			for (const weapon of this.leek.weapons) {
-				if (LeekWars.weapons[weapon.template].forgotten) { return true }
+				if (LeekWars.weapons[LeekWars.items[weapon.template].params].forgotten) { return true }
 			}
 			return false
 		}
@@ -953,7 +917,7 @@
 		}
 		addWeapon(weapon: Weapon) {
 			if (!this.leek) { return }
-			const template = LeekWars.weapons[weapon.template]
+			const template = LeekWars.items[weapon.template]
 			if (this.leek.weapons.length >= this.leek.max_weapons) {
 				return LeekWars.toast(this.$i18n.t('error_max_weapon', [this.leek.name]))
 			}
@@ -963,12 +927,12 @@
 			if (this.leek.weapons.some((w) => w.template === template.id)) {
 				return LeekWars.toast(this.$i18n.t('error_weapon_already_equipped', [this.leek.name]))
 			}
-			if (this.hasForgottenWeapon && LeekWars.weapons[weapon.template].forgotten) {
+			if (this.hasForgottenWeapon && LeekWars.weapons[LeekWars.items[weapon.template].params].forgotten) {
 				return LeekWars.toast(this.$i18n.t('error_weapon_two_forgotten', [this.leek.name]))
 			}
 			LeekWars.post('leek/add-weapon', {leek_id: this.leek.id, weapon_id: weapon.id}).then(data => {
 				if (this.leek) {
-					this.leek.weapons.push({id: data.id, template: weapon.template})
+					this.leek.weapons.push({id: data.id, template: weapon.template, quantity: 1})
 					this.$store.commit('remove-weapon', weapon)
 				}
 			}).error(error => {
@@ -1015,7 +979,7 @@
 			}
 			LeekWars.post('leek/add-chip', {leek_id: this.leek.id, chip_id: chip.id}).then(data => {
 				if (this.leek) {
-					this.leek.chips.push({id: data.id, template: chip.template})
+					this.leek.chips.push({id: data.id, template: chip.template, quantity: 1})
 					this.$store.commit('remove-chip', chip)
 				}
 			}).error(error => {

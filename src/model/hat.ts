@@ -4,6 +4,7 @@ class Hat {
 	public hat_template!: number
 	public name!: string
 	public level!: number
+	public quantity!: number
 }
 
 class HatTemplate {

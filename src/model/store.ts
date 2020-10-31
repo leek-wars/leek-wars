@@ -11,6 +11,7 @@ import Vue from 'vue'
 import Vuex, { Store } from 'vuex'
 import { AI } from './ai'
 import { vueMain } from './vue'
+import { Weapon } from './weapon'
 
 class LeekWarsState {
 	public token: string | null = null
@@ -246,21 +247,35 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 				if (data.hat) {
 					for (let h = 0; h < state.farmer.hats.length; ++h) {
 						if (state.farmer.hats[h].hat_template === data.hat) {
-							state.farmer.hats.splice(h, 1)
+							state.farmer.hats[h].quantity--
+							if (state.farmer.hats[h].quantity === 0) {
+								state.farmer.hats.splice(h, 1)
+							}
 							break
 						}
 					}
 				}
 				if (leek.hat) {
 					const template = LeekWars.hats[LeekWars.hatTemplates[leek.hat].item]
-					const newHat = {
-						template: LeekWars.hatTemplates[leek.hat].item,
-						id: 0,
-						name: template.name,
-						level: template.level,
-						hat_template: leek.hat
+					let found = false
+					for (const hat of state.farmer.hats) {
+						if (hat.template === template.id) {
+							hat.quantity++
+							found = true
+							break
+						}
 					}
-					state.farmer.hats.push(newHat)
+					if (!found) {
+						const newHat = {
+							template: LeekWars.hatTemplates[leek.hat].item,
+							id: 0,
+							name: template.name,
+							level: template.level,
+							hat_template: leek.hat,
+							quantity: 1
+						}
+						state.farmer.hats.push(newHat)
+					}
 				}
 				leek.hat = data.hat
 			}
@@ -318,12 +333,12 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 		'add-inventory'(state: LeekWarsState, data) {
 			if (!state.farmer) { return }
 			if (data.type === ItemType.WEAPON) {
-				state.farmer.weapons.push({id: data.item_id, template: data.item_template})
+				state.farmer.weapons.push({id: data.item_id, template: data.item_template, quantity: 1})
 			} else if (data.type === ItemType.CHIP) {
-				state.farmer.chips.push({id: data.item_id, template: data.item_template})
+				state.farmer.chips.push({id: data.item_id, template: data.item_template, quantity: 1})
 			} else if (data.type === ItemType.HAT) {
 				const hat_template = LeekWars.getHatTemplate(data.item_template)
-				state.farmer.hats.push({id: data.item_id, name: LeekWars.hats[data.item_template].name, level: LeekWars.hats[data.item_template].level, template: data.item_template, hat_template})
+				state.farmer.hats.push({id: data.item_id, name: LeekWars.hats[data.item_template].name, level: LeekWars.hats[data.item_template].level, template: data.item_template, hat_template, quantity: 1})
 			} else if (data.type === ItemType.POTION) {
 				const potion = LeekWars.selectWhere(state.farmer.potions, 'id', data.item_id)
 				if (potion !== null) {
@@ -357,21 +372,30 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			if (!state.farmer) { return }
 			for (const w of state.farmer.weapons) {
 				if (w.template === weapon.template) {
-					state.farmer.weapons.push({id: w.id, template: weapon.template})
+					w.quantity++
 					return
 				}
 			}
 			state.farmer.weapons.push(weapon)
 		},
-		'remove-weapon'(state: LeekWarsState, weapon) {
+		'remove-weapon'(state: LeekWarsState, weapon: Weapon) {
 			if (!state.farmer) { return }
-			state.farmer.weapons.splice(state.farmer.weapons.findIndex((w) => w.id === weapon.id), 1)
+			for (let w = 0; w < store.state.farmer!.weapons.length; ++w) {
+				const f_weapon = store.state.farmer!.weapons[w]
+				if (f_weapon.template === weapon.template) {
+					f_weapon.quantity--
+					if (f_weapon.quantity === 0) {
+						state.farmer.weapons.splice(w, 1)
+					}
+					return
+				}
+			}
 		},
 		'add-chip'(state: LeekWarsState, chip) {
 			if (!state.farmer) { return }
-			for (const c of state.farmer.chips) {
-				if (c.template === chip.template) {
-					state.farmer.chips.push({id: c.id, template: chip.template})
+			for (const w of state.farmer.chips) {
+				if (w.template === chip.template) {
+					w.quantity++
 					return
 				}
 			}
@@ -379,7 +403,16 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 		},
 		'remove-chip'(state: LeekWarsState, chip) {
 			if (!state.farmer) { return }
-			state.farmer.chips.splice(state.farmer.chips.findIndex((c) => c.id === chip.id), 1)
+			for (let w = 0; w < store.state.farmer!.chips.length; ++w) {
+				const f_chip = store.state.farmer!.chips[w]
+				if (f_chip.template === chip.template) {
+					f_chip.quantity--
+					if (f_chip.quantity === 0) {
+						state.farmer.chips.splice(w, 1)
+					}
+					return
+				}
+			}
 		},
 		'last-connection'(state: LeekWarsState, time: number) {
 			if (!state.farmer) { return }
