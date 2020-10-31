@@ -76,8 +76,8 @@ class Analyzer {
 		const aux = (ai: AI) => {
 			const ais = this.problems[ai.id]
 			delete this.problems[ai.id]
-			for (const ai in ais) {
-				this.updateAiErrors(ai)
+			for (const a in ais) {
+				this.updateAiErrors(a)
 			}
 		}
 		aux(mainAI)
