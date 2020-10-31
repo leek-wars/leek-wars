@@ -3,7 +3,7 @@
 		<h2 v-if="!is_weapon && !is_chip">{{ constant.name }}</h2>
 		<div v-if="constant.deprecated" class="deprecated-message">Cette constante est dépréciée.</div>
 		<chip-preview v-if="is_chip" :chip="LeekWars.chips[constant.value]" />
-		<weapon-preview v-else-if="is_weapon" :weapon="LeekWars.weapons[constant.value]" />
+		<weapon-preview v-else-if="is_weapon" :weapon="LeekWars.weapons[LeekWars.items[constant.value].params]" />
 		<div v-else-if="$te('doc.const_' + constant.name)" v-dochash v-code class="content" v-html="$t('doc.const_' + constant.name)"></div>
 		<h4>{{ $t('doc.value') }}</h4>
 		<ul>
@@ -15,7 +15,7 @@
 				<img :src="'/image/chip/' + chip.name + '.png'" class="item" v-on="on">
 			</rich-tooltip-chip>
 		</router-link>
-		<router-link v-for="weapon of weapons" :key="weapon.id" :to="'/help/documentation/WEAPON_' + weapon.name.toUpperCase()">
+		<router-link v-for="weapon of weapons" :key="'w' + weapon.id" :to="'/help/documentation/WEAPON_' + weapon.name.toUpperCase()">
 			<rich-tooltip-weapon v-slot="{ on }" :weapon="weapon" :bottom="true" :instant="true" @input="$emit('input', $event)">
 				<img :src="'/image/weapon/' + weapon.name + '.png'" class="item weapon" v-on="on">
 			</rich-tooltip-weapon>
