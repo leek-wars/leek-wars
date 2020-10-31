@@ -25,17 +25,23 @@
 			<v-icon class="arrow" @click="searchNext">mdi-chevron-right</v-icon>
 		</div>
 		<div v-show="hintDialog" ref="hintDialog" :style="{left: hintDialogLeft + 'px', top: hintDialogTop + 'px'}" class="hint-dialog">
-			<div v-if="completionType" class="type">
+			<!-- <div v-if="completionType" class="type">
 				<lw-type :type="completionType" />
-			</div>
+			</div> -->
 			<div ref="hints" class="hints">
 				<div v-for="(hint, index) of hints" :key="index" :class="{active: selectedCompletion === index}" class="hint" @click="clickHint($event, index)">
-					<v-icon v-if="hint.category === 0" class="function">mdi-alpha-m-circle-outline</v-icon>
+					<v-icon v-if="hint.category === 0" class="method">mdi-alpha-m-circle-outline</v-icon>
 					<v-icon v-else-if="hint.category === 1" class="field">mdi-cube-outline</v-icon>
-					<v-icon v-else class="variable">mdi-variable-box</v-icon>
+					<v-icon v-else-if="hint.category === 2" class="function">mdi-function</v-icon>
+					<v-icon v-else-if="hint.category === 3" class="constant">mdi-pi</v-icon>
+					<v-icon v-else-if="hint.category === 4" class="user-function">mdi-function-variant</v-icon>
+					<v-icon v-else-if="hint.category === 5" class="shortcut">mdi-flash-outline</v-icon>
+					<v-icon v-else-if="hint.category === 6" class="variable">mdi-variable</v-icon>
+					<v-icon v-else-if="hint.category === 7" class="argument">mdi-alpha</v-icon>
+					<v-icon v-else-if="hint.category === 8" class="global">mdi-google</v-icon>
 					<!-- <v-icon v-else class="variable">mdi-function</v-icon> -->
 					{{ hint.fullName }}
-					<lw-type :type="hint.lstype" />
+					<!-- <lw-type :type="hint.lstype" /> -->
 				</div>
 			</div>
 			<div v-if="selectedHint" class="details">
@@ -43,6 +49,7 @@
 				<documentation-constant v-else-if="selectedHint.type === 'constant'" :constant="selectedHint.constant" />
 				<weapon-preview v-else-if="selectedHint.details.type === 'weapon'" :weapon="selectedHint.details.weapon" />
 				<chip-preview v-else-if="selectedHint.details.type === 'chip'" :chip="selectedHint.details.chip" />
+				<javadoc v-else-if="selectedHint.javadoc" :javadoc="selectedHint.javadoc" class="main" />
 				<span v-else v-html="selectedHint.details"></span>
 			</div>
 		</div>
@@ -934,15 +941,112 @@
 			const cursor = this.document.getCursor()
 			const position = this.document.indexFromPos(cursor)
 
-			return
+			// return
+			const cur = this.document.getCursor()
+			const token = this.editor.getTokenAt(cur)
+			let startPos = token.start
+
+			const previousLength = token.string.length
+			token.string = token.string.trim()
+			startPos += previousLength - token.string.length
+
+			if (!force && token.string.length === 0) {
+				this.close()
+				return
+			}
+			token.state = CodeMirror.innerMode(this.document.getMode(), token.state).state
+			const completions: Keyword[] = []
+			const start = token.string
+
+			const maybeAdd = (data: string | Keyword) => {
+				if (typeof data === 'string') {
+					if (data.toLowerCase().indexOf(start.toLowerCase()) === 0) {
+						completions.push({name: data, fullName: data, details: i18n.t('leekscript.keyword', [data]) as string, type: 'keyword', category: 3})
+					}
+				} else {
+					if (data.name.toLowerCase().indexOf(start.toLowerCase()) === 0) {
+						completions.push(data)
+					}
+				}
+			}
+			// Ajout des variables locales du code
+			// console.log(token)
+			for (let v = token.state.localVars; v; v = v.next) {
+				if (v.name !== "this" && v.name !== "arguments" && v.name.toLowerCase().indexOf(start.toLowerCase()) === 0) {
+					completions.push({name: v.name, fullName: v.name, details: i18n.t('leekscript.variable', [v.name]) as string, type: 'keyword', category: 6})
+				}
+			}
+			if (token.state.context) {
+				for (let v = token.state.context.vars; v; v = v.next) {
+					if (v.name !== "this" && v.name !== "arguments" && v.name.toLowerCase().indexOf(start.toLowerCase()) === 0) {
+						completions.push({name: v.name, fullName: v.name, details: i18n.t('leekscript.argument', [v.name]) as string, type: 'keyword', category: 7})
+					}
+				}
+			}
+			// Variables globales
+			const vars = {[this.id]: token.state.globalVars}
+			const globalVars = this.getGlobalVars(vars)
+			for (const i in globalVars) {
+				const file = vars[parseInt(i, 10)]
+				for (let v = file; v; v = v.next) {
+					if (v.name.toLowerCase().indexOf(start.toLowerCase()) === 0) {
+						const keyword = this.getTokenInformation(v.name)
+						if (!keyword) {
+							let text = "Variable <b>" + v.name + "</b>"
+							if (parseInt(i, 10) !== this.id) { text += "<br><br>" + this.$i18n.t('leekscript.variable_defined_in_ai', [this.ais[parseInt(i, 10)].name]) }
+							completions.push({name: v.name, fullName: v.name, details: text, type: 'variable', category: 8})
+						}
+					}
+				}
+			}
+			// File functions
+			for (const fun of this.ai.functions) {
+				if (fun.name.toLowerCase().indexOf(start.toLowerCase()) === 0) {
+					completions.push(fun)
+				}
+			}
+			// Include functions
+			for (const include of this.ai.includes) {
+				const functions = this.ais[include.id].functions
+				if (functions) {
+					for (const fun of functions) {
+						if (fun.name.toLowerCase().indexOf(start.toLowerCase()) === 0) {
+							completions.push(fun)
+						}
+					}
+				}
+			}
+			// Ajout des fonctions
+			LeekWars.keywords.forEach(maybeAdd)
+
+			// Raccourcis
+			for (const r in AUTO_SHORTCUTS) {
+				if (AUTO_SHORTCUTS[r][0].indexOf(start.toLowerCase()) === 0) {
+					completions.push({name: AUTO_SHORTCUTS[r][0], fullName: AUTO_SHORTCUTS[r][0], details: AUTO_SHORTCUTS[r][3], type: 'shortcut', shortcut: parseInt(r, 10), category: 5})
+				}
+			}
+			this.completions = completions
+			this.completionFrom = {line: cur.line, ch: startPos}
+			this.completionTo = {line: cur.line, ch: token.end}
+
+			if (completions.length === 0) {
+				this.close()
+			} else {
+				this.hintDialog = true
+				this.detailDialog = false
+			}
+
+			this.openCompletions(this.completions, cursor)
+
+			return null
 
 			LeekWars.analyzer.complete(this.ai, position).then(raw_data => {
 
 				const raw_completions = raw_data.items
 				this.completionType = raw_data.type
-				console.log(raw_data)
+				// console.log(raw_data)
 
-				const completions = raw_completions.sort().map((data: any) => {
+				const new_completions = raw_completions.sort().map((data: any) => {
 					return {
 						name: data.name,
 						fullName: data.name,
@@ -954,35 +1058,32 @@
 					}
 				})
 
-				// if (!force && token.string.length === 0) {
-				// 	this.close()
-				// 	return
-				// }
-
-				this.completions = completions
-				// this.completionFrom = {line: cursor.line, ch: startPos}
-				// this.completionTo = {line: cur.line, ch: token.end}
-
-				if (completions.length === 0) {
-					this.close()
-				} else {
-					this.hintDialog = true
-					this.detailDialog = false
-
-					const pos = this.editor.cursorCoords({line: cursor.line, ch: cursor.ch })
-					const left = pos.left, top = pos.bottom
-					const offset = (this.$refs.codemirror as HTMLElement).getBoundingClientRect()
-
-					this.hintDialogTop = top
-					this.hintDialogLeft = left
-
-					this.hints = completions
-					this.selectHint(0)
-
-					this.editor.removeKeyMap(this.dialogKeyMap)
-					this.editor.addKeyMap(this.dialogKeyMap)
-				}
+				this.completions = new_completions
+				this.openCompletions(new_completions, cursor)
 			})
+		}
+
+		public openCompletions(completions: any[], cursor: any) {
+
+			if (completions.length === 0) {
+				this.close()
+			} else {
+				this.hintDialog = true
+				this.detailDialog = false
+
+				const pos = this.editor.cursorCoords({line: cursor.line, ch: cursor.ch })
+				const left = pos.left, top = pos.bottom
+				const offset = (this.$refs.codemirror as HTMLElement).getBoundingClientRect()
+
+				this.hintDialogTop = top
+				this.hintDialogLeft = left
+
+				this.hints = completions
+				this.selectHint(0)
+
+				this.editor.removeKeyMap(this.dialogKeyMap)
+				this.editor.addKeyMap(this.dialogKeyMap)
+			}
 		}
 
 		public clickHint(e: Event, index: number) {
@@ -1022,26 +1123,38 @@
 		}
 		public pick() {
 			const completion = this.completions[this.selectedCompletion]
-			console.log("Pick completion", completion)
+			// console.log("Pick completion", completion)
 
-			const completion_start = completion.location[0]
-			const completion_end = completion.location[1]
+			// const completion_start = completion.location[0]
+			// const completion_end = completion.location[1]
+			const cursor = this.document.getCursor()
+			const completion_start = this.completionFrom
+			const completion_end = this.completionTo
 
 			if (completion.type === 'function' || completion.type === 'user-function') {
-				let name = completion.fullName + "()"
+				let name = completion.fullName
 				if (name.indexOf(':') > -1) {
 					name = name.substring(0, name.indexOf(':') - 1)
 				}
-				this.document.replaceRange(name, {line: completion_start[0] - 1, ch: completion_start[1]}, {line: completion_end[0] - 1, ch: completion_end[1]})
+				this.document.replaceRange(name, this.completionFrom, this.completionTo)
+				// this.document.replaceRange(name, {line: completion_start[0] - 1, ch: completion_start[1]}, {line: completion_end[0] - 1, ch: completion_end[1]})
 				const pos = this.document.getCursor()
-				const argCount = completion.lstype.args ? completion.lstype.args.length : 0
+
+				let argCount = name.split(',').length
+				if (argCount === 1) {
+					if (name.indexOf(')') - name.indexOf('(') === 1) { argCount = 0 }
+				}
+				if (completion.lstype && completion.lstype.args) {
+					argCount = completion.lstype.args.length
+				}
+
 				if (argCount > 0) {
-					this.document.setCursor({line: pos.line, ch: completion_start[1] + name.length - 1})
-					setTimeout(() => {
-						this.autocomplete(this.codemirror)
-					})
-					// const firstArgLength = (argCount > 1 ? name.indexOf(',') : name.indexOf(')')) - name.indexOf('(') - 1
-					// this.document.setSelection({line: pos.line, ch: this.completionFrom.ch + completion.name.length + 1}, {line: pos.line, ch: this.completionFrom.ch + completion.name.length + 1 + firstArgLength})
+					// this.document.setCursor({line: pos.line, ch: completion_start[1] + name.length - 1})
+					// setTimeout(() => {
+					// 	this.autocomplete(this.codemirror)
+					// })
+					const firstArgLength = (argCount > 1 ? name.indexOf(',') : name.indexOf(')')) - name.indexOf('(') - 1
+					this.document.setSelection({line: pos.line, ch: this.completionFrom.ch + completion.name.length + 1}, {line: pos.line, ch: this.completionFrom.ch + completion.name.length + 1 + firstArgLength})
 				}
 			} else if (completion.type === 'shortcut') {
 
@@ -1338,7 +1451,7 @@
 		z-index: 100;
 		margin: 0;
 		display: flex;
-		align-items: flex-end;
+		align-items: flex-start;
 		> .type {
 			position: absolute;
 			top: 0;
@@ -1375,13 +1488,28 @@
 		line-height: 20px;
 		.v-icon {
 			transition: none;
-			font-size: 18px;
+			font-size: 20px;
 			margin-top: -2px;
 			&.field {
 				color: #074f86;
 			}
+			&.variable {
+				color: #b12f2f;
+			}
 			&.function {
-				color: #b12f83;
+				color: #b12fa0;
+			}
+			&.constant {
+				color: #cc7b2f;
+			}
+			&.user-function {
+				color: #074f86;
+			}
+			&.shortcut {
+				color: #1a8607;
+			}
+			&.argument {
+				color: #078675;
 			}
 		}
 		&.active {
@@ -1393,7 +1521,7 @@
 		overflow-y: auto;
 		background: #f7f7f7;
 		border: 1px solid #ccc;
-		border-left: none;
+		margin-left: -1px;
 		max-height: 600px;
 		padding: 8px;
 	}
