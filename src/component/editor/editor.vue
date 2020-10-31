@@ -69,7 +69,7 @@
 		</div>
 
 		<div class="container">
-			<div v-show="!LeekWars.mobile || !LeekWars.splitBack" :style="{width: LeekWars.mobile ? '100%' : panelWidth + 'px'}" class="column3">
+			<div v-show="!LeekWars.mobile || !LeekWars.splitBack" :style="{width: LeekWars.mobile ? '100%' : panelWidth + 'px'}">
 				<panel class="editor-left first">
 					<div slot="content" class="full">
 						<div v-if="fileSystem.rootFolder" v-autostopscroll class="ai-list">
@@ -91,9 +91,10 @@
 				</panel>
 			</div>
 
-			<div v-show="!LeekWars.mobile || LeekWars.splitBack" :style="{width: 'calc(100% - ' + (LeekWars.mobile ? 0 : panelWidth) + 'px)'}" class="column9">
+			<div v-show="!LeekWars.mobile || LeekWars.splitBack" :style="{width: 'calc(100% - ' + (LeekWars.mobile ? 0 : panelWidth) + 'px)'}" class="editor-column">
 				<panel>
 					<div slot="content" class="editor-left">
+						<div class="resizer" @mousedown="resizerMousedown"></div>
 						<div :class="{tabs: $refs.tabs && $refs.tabs.tabs.length > 1}" class="editors">
 							<ai-view v-for="ai in activeAIs" ref="editors" :key="ai.id" :ai="ai" :ais="fileSystem.ais" :editors="$refs.editors" :visible="currentAI === ai" :font-size="fontSize" :line-height="lineHeight" :popups="popups" :auto-closing="autoClosing" :autocomplete-option="autocomplete" @jump="jump" @load="load" @problems="problems" />
 						</div>
@@ -195,7 +196,7 @@
 				<div class="title">{{ $t('settings_editor') }}</div>
 
 				<v-checkbox v-model="autoClosing" :label="$t('auto_closing')" hide-details />
-				<v-checkbox v-model="enableAnalyzer" :label="$t('analyzer')" hide-details />
+				<!-- <v-checkbox v-model="enableAnalyzer" :label="$t('analyzer')" hide-details /> -->
 				<v-checkbox v-model="autocomplete" :label="$t('autocompletion')" hide-details />
 				<v-checkbox v-model="popups" :label="$t('popups')" hide-details />
 
@@ -940,11 +941,13 @@
 		padding: 0;
 		display: flex;
 		flex-direction: column;
+		border-bottom-right-radius: 0px;
 	}
-	.column9 {
+	.editor-column {
 		height: 100%;
+		position: relative;
 	}
-	.column9 .panel, .column3 .panel {
+	.editor-column .panel, .column3 .panel {
 		margin-bottom: 0;
 		height: 100%;
 		border-radius: 0;
