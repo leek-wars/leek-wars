@@ -86,7 +86,9 @@
 	background-position: left bottom;
 }
 .cm-hover {
-	background: rgba(119, 255, 0, 0.5);
+	// background: rgba(119, 255, 0, 0.5);
+	background: rgba(0, 204, 255, 0.5);
+	// background: #d2e9ff;
 	padding: 3px 0;
 }
 div.CodeMirror span.CodeMirror-matchingbracket {
@@ -99,7 +101,7 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {
 }
 
 .cm-underlined {
-	color: #407710;
+	color: #3169b1;
 	position: relative;
 	padding: 3px 0;
 }
@@ -124,7 +126,7 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {
 	right: 0;
 	content: "";
 	width: 100%;
-	border-bottom: 1.5px solid #407710;
+	border-bottom: 1.5px solid #3169b1;
 }
 .CodeMirror-foldmarker {
 	color: blue;
