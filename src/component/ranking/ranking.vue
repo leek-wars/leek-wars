@@ -4,10 +4,10 @@
 			<h1>{{ $t('title') }}</h1>
 			<div class="tabs">
 				<!-- TODO tabs active classes -->
-				<router-link :to="rankingLeekURL"><div class="tab {$leek_tab_class}">{{ $t('leeks') }}</div></router-link>
-				<router-link :to="rankingFarmerURL"><div class="tab {$farmer_tab_class}">{{ $t('farmers') }}</div></router-link>
-				<router-link :to="rankingTeamURL"><div class="tab {$team_tab_class}">{{ $t('teams') }}</div></router-link>
-				<router-link to="/ranking/fun"><div class="tab {$fun_tab_class}">{{ $t('fun') }}</div></router-link>
+				<router-link :to="rankingLeekURL"><div class="tab" :class="{active: category === 'leek'}">{{ $t('leeks') }}</div></router-link>
+				<router-link :to="rankingFarmerURL"><div class="tab" :class="{active: category === 'farmer'}">{{ $t('farmers') }}</div></router-link>
+				<router-link :to="rankingTeamURL"><div class="tab" :class="{active: category === 'team'}">{{ $t('teams') }}</div></router-link>
+				<router-link to="/ranking/fun"><div class="tab" :class="{active: category === 'fun'}">{{ $t('fun') }}</div></router-link>
 				<router-link to="/statistics"><div class="tab">{{ $t('statistics') }}</div></router-link>
 				<div class="tab action" icon="search" @click="openSearch">
 					<img src="/image/search.png">
