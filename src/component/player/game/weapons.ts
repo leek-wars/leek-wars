@@ -445,7 +445,7 @@ class Gazor extends WeaponAnimation {
 	}
 }
 class UnbridledGazor extends Gazor {
-	static textures = [T.unbridled_gazor, T.orange_gaz]
+	static textures = [T.unbridled_gazor, T.orange_gaz, T.explosion]
 	static sounds = [S.gazor]
 	explosions: number = 0
 	delay: number = 0
