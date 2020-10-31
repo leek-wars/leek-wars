@@ -59,11 +59,7 @@
 
 				<router-link v-ripple to="/garden" class="section" :label="($store.state.farmer && $store.state.farmer.fights) || null" @click.native="clickItem">
 					<img src="/image/icon/garden.png">
-					<div class="text">{{ $t("main.garden") }}
-						<span class="right">
-							<img src="/image/icon/garden.png">
-						</span>
-					</div>
+					<div class="text">{{ $t("main.garden") }}</div>
 				</router-link>
 
 				<router-link v-ripple to="/market" class="section" @click.native="clickItem">
