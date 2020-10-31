@@ -640,7 +640,7 @@
 			})
 		}
 		get farmer_hats() {
-			return store.state.farmer!.hats
+			return store.state.farmer ? store.state.farmer!.hats : []
 		}
 		get hasForgottenWeapon() {
 			if (!this.leek) { return false }
