@@ -310,8 +310,12 @@
 			this.$root.$on('garden-queue', (data: number) => this.queue = data)
 		}
 		back() {
+			if (this.category === 'challenge') {
+				this.$router.back()
+			} else {
+				this.$router.push('/garden')
+			}
 			localStorage.removeItem('garden/category')
-			this.$router.back()
 		}
 		beforeDestroy() {
 			this.$root.$off('back')
