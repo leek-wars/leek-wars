@@ -314,7 +314,7 @@
 			this.$router.back()
 		}
 		beforeDestroy() {
-			this.$root.$off('back', this.back)
+			this.$root.$off('back')
 			LeekWars.socket.send([SocketMessage.GARDEN_QUEUE_UNREGISTER])
 		}
 
