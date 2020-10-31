@@ -154,7 +154,7 @@ class Analyzer {
 
 		if (!this.enabled) { return Promise.reject() }
 
-		console.log("Register", ai.path)
+		// console.log("Register", ai.path)
 
 		return this.promise.then(() => {
 

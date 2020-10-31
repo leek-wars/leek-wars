@@ -333,7 +333,7 @@
 			this.panelWidth = parseInt(localStorage.getItem('editor/panel-width') || '', 10) || 200
 
 			if (this.enableAnalyzer) {
-				LeekWars.analyzer.init()
+				// LeekWars.analyzer.init()
 			}
 
 			fileSystem.init().then(() => {
@@ -941,6 +941,7 @@
 		padding: 0;
 		display: flex;
 		flex-direction: column;
+		border-top-right-radius: 0px;
 		border-bottom-right-radius: 0px;
 	}
 	.editor-column {
