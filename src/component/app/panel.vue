@@ -59,6 +59,9 @@
 		flex-direction: column;
 		width: 100%;
 		margin-bottom: 12px;
+		&.last {
+			margin-bottom: 0;
+		}
 	}
 	#app.app .panel {
 		border-radius: 0;

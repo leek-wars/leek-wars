@@ -96,7 +96,7 @@
 			</div>
 		</panel>
 
-		<panel icon="mdi-chat-outline">
+		<panel icon="mdi-chat-outline" class="last">
 			<span slot="title">
 				<router-link to="/chat">{{ $t('main.chat') }}</router-link>
 				<v-menu offset-y>

@@ -72,7 +72,7 @@
 						</router-link>
 					</div>
 				</panel>
-				<panel :title="$t('pomps') + ' [' + pomps.length + ']'" icon="mdi-auto-fix">
+				<panel :title="$t('pomps') + ' [' + pomps.length + ']'" icon="mdi-auto-fix" class="last">
 					<loader v-if="!pomps.length" slot="content" />
 					<div v-else slot="content" class="items pomps">
 						<router-link v-for="pomp in pomps" :key="pomp.id" :to="'/market/' + pomp.name" :farmer-count="items[pomp.id].farmer_count" :leek-count="items[pomp.id].leek_count" class="item pomp">

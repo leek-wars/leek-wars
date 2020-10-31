@@ -16,7 +16,7 @@
 				</tooltip>
 			</div>
 		</div>
-		<div class="container">
+		<div class="container last">
 			<div v-show="!LeekWars.mobile || !LeekWars.splitBack" class="column3">
 				<panel class="garden-left first last">
 					<div slot="content">
