@@ -17,6 +17,7 @@ class Keyword {
 	constant?: Constant
 	lstype?: any
 	location?: any
+	category!: number
 }
 
 function generateKeywords() {
@@ -49,7 +50,7 @@ function generateKeywords() {
 		}
 
 		(fun as any).real_name = functionName
-		keywords.push({name: text, fullName: name, details: '', type: 'function', argumentCount: fun.arguments_names.length, function: fun})
+		keywords.push({name: text, fullName: name, details: '', type: 'function', argumentCount: fun.arguments_names.length, function: fun, category: 2})
 		last = fun.name
 	}
 
@@ -75,7 +76,7 @@ function generateKeywords() {
 		} else {
 			details = ''
 		}
-		keywords.push({name: constant.name, fullName: constant.name, details, type: 'constant', constant})
+		keywords.push({name: constant.name, fullName: constant.name, details, type: 'constant', constant, category: 3})
 	}
 	return keywords
 }

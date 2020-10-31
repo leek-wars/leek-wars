@@ -1,4 +1,5 @@
 {
+	"argument": "Argument <b>{0}</b>",
 	"leekscript": "Leekscript",
 	"ls_function_definitions": "La fonction \"{0}\" propose {1} définitions.",
 	"ls_function_information": "Informations sur la fonction \"{0}\".",
