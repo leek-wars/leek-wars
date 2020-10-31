@@ -861,7 +861,7 @@
 	"func_lineOfSight_2": "Vérifie la ligne de vue entre la cellule <b>start</b> et la cellule <b>end</b>, en ignorant les entités <b>ignoredEntities</b>.",
 	"func_lineOfSight_2_arg_1": "Cellule de départ.",
 	"func_lineOfSight_2_arg_2": "Cellule cible.",
-	"func_lineOfSight_2_arg_3": "La liste des entités à ignorer.",
+	"func_lineOfSight_2_arg_3": "Une entité ou liste d'entités à ignorer.",
 	"func_lineOfSight_2_return": "Retourne <i>vrai</i> si la ligne de vue est dégagée.",
 	"func_lineOfSight_arg_1": "Cellule de départ.",
 	"func_lineOfSight_arg_2": "Cellule cible.",

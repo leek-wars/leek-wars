@@ -854,7 +854,7 @@
 	"func_lineOfSight_2": "Checks whether an entity on <b>start</b> cell can see <b>end</b> cell, ignoring given <b>ignoredEntities</b>.",
 	"func_lineOfSight_2_arg_1": "Cell id of starting point.",
 	"func_lineOfSight_2_arg_2": "Cell id of target.",
-	"func_lineOfSight_2_arg_3": "Ignored entities (those entities will not block a line of sight).",
+	"func_lineOfSight_2_arg_3": "Ignored entity or list of ignored entities (those entities will not block a line of sight).",
 	"func_lineOfSight_2_return": "<i>true</i> if the line of sight is clear, <i>false</i> otherwise.",
 	"func_lineOfSight_arg_1": "Cell id of starting point.",
 	"func_lineOfSight_arg_2": "Cell id of target.",
