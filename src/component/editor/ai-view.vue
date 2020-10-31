@@ -1241,10 +1241,13 @@
 				const line = code.substring(0, match.index).split("\n").length
 				let args = match[2].split(",")
 				if (args.length === 1 && args[0].trim() === '') { args = [] }
-				for (let arg of args) {
-					arg = arg.trim()
+				for (const a in args) {
+					args[a] = args[a].trim()
+					if (args[a].startsWith('@')) {
+						args[a] = args[a].substring(1)
+					}
 				}
-				const fullName = match[1] + "(" + args.join(", ") + ")"
+				let fullName = match[1] + "(" + args.join(", ") + ")"
 				let description = "<h4>" + i18n.t('leekscript.function_f', [fullName]) + "</h4><br>"
 				description += i18n.t('leekscript.defined_in', [this.ai.name, line])
 
@@ -1254,15 +1257,42 @@
 					description: "",
 					items: [] as any[]
 				}
+				// Add arguments from signature
+				for (const arg of args) {
+					javadoc.items.push({ type: 'param', name: null, text: arg})
+				}
 				if (comment) {
 					const javadoc_lines = comment.split("\n")
-					const javadoc_regex = /^\s*\*\s*@(\w+)(?:\s+([a-zA-Z\u00C0-\u024F\u1E00-\u1EFF]+)\s*:\s*)?(?:\s*:\s*)?(.*)$/
+					const javadoc_regex = /^\s*\*\s*@(\w+)(?:\s+([a-zA-Z\u00C0-\u024F\u1E00-\u1EFF]+)\s*:?\s*)?(?:\s*:\s*)?(.*)$/
 					let match_javadoc
 					for (let l = 0; l < javadoc_lines.length; ++l) {
 						const jline = javadoc_lines[l]
 						if (match_javadoc = javadoc_regex.exec(jline)) {
 							// console.log(match_javadoc)
-							javadoc.items.push({ type: match_javadoc[1], name: match_javadoc[2], text: match_javadoc[3] })
+							const type = match_javadoc[1]
+							let name = match_javadoc[2]
+							let text = match_javadoc[3]
+							if (type === 'return') {
+								fullName += ' : ' + text
+							} else if (type === 'param') {
+								if (name) {
+									name = name.trim()
+									if (name.startsWith('@')) {
+										name = name.substring(1)
+									}
+								}
+								text = text.trim()
+								if (text.startsWith('@')) {
+									text = text.trim().substring(1)
+								}
+								if (args.includes(name) || args.includes(text)) {
+									const existing = javadoc.items.find(i => i.type === 'param' && (i.text === name || i.text === text))
+									existing.name = existing.text
+									existing.text = text
+									continue
+								}
+							}
+							javadoc.items.push({ type, name, text })
 						} else {
 							const star = jline.indexOf("*")
 							let formatted_line = jline.substring(star + 1)
@@ -1275,11 +1305,6 @@
 						}
 					}
 					// console.log("javadoc", javadoc)
-				} else {
-					// No javadoc comment
-					for (const arg of args) {
-						javadoc.items.push({ type: 'param', name: null, text: arg})
-					}
 				}
 
 				const fun = {
@@ -1291,7 +1316,8 @@
 					arguments: args,
 					ai: this.ai,
 					line,
-					javadoc
+					javadoc,
+					category: 4
 				}
 				// console.log(fun)
 				this.ai.functions.push(fun)
