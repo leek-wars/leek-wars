@@ -12,6 +12,7 @@
     - Ajout des raccourcis Alt + haut/bas pour déplacer la ligne courante.
     - "#ai Ajout de la syntaxe for (@key : @var) permettant de gagner beaucoup d'opérations."
     - "#ai Ajout de la fonction getBulbChips(bulb_chip) qui renvoie les puces théoriques d'un bulbe."
+    - "Ajout d'une page d'aide sur les formules en combat (merci à CoachArtyMorty)."
   improved:
     - "Amélioration de l'interface de l'éditeur : onglets, menus dans l'explorateur."
     - Amélioration du comportement et du style des onglets.
@@ -28,6 +29,7 @@
   fixed:
     - Il est désormais impossible d'équiper des armes et des puces sur les bots de test.
     - "#ai L'effet passif du gazeur s'applique bien sur les dégâts nova NOVA_DAMAGE (comme Altération)."
+    - Correction de la doc de lineOfSight (merci à CoachArtyMorty).
 
 216:
   title: Traces visibles en équipe, nouvelles animations et changement de nom d'éleveur
