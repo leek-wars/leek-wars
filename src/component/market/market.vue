@@ -29,7 +29,7 @@
 				<panel :title="$t('weapons') + ' [' + weapons.length + ']'" icon="mdi-pistol">
 					<loader v-if="!weapons.length" slot="content" />
 					<div v-else slot="content" class="items weapons">
-						<router-link v-for="weapon in weapons" :key="weapon.id" v-ripple :to="'/market/' + weapon.name.replace('weapon_', '')" :farmer-count="items[weapon.id].farmer_count" :leek-count="items[weapon.id].leek_count" class="item weapon">
+						<router-link v-for="weapon in weapons" :key="weapon.id" v-ripple :to="'/market/' + weapon.name.replace('weapon_', '')" :farmer-count="items[weapon.id].farmer_count" :leek-count="items[weapon.id].leek_count" class="item weapon" :class="{toohigh: weapon.level > max_level}">
 							<img :src="'/image/' + weapon.name.replace('_', '/') + '.png'">
 						</router-link>
 					</div>
@@ -41,7 +41,7 @@
 					</div>
 					<loader v-if="!chips.length" slot="content" />
 					<div v-else-if="chipMode === 'level'" slot="content" class="items chips">
-						<router-link v-for="chip in chips" :key="chip.id" v-ripple :to="'/market/' + chip.name" :farmer-count="items[chip.id].farmer_count" :leek-count="items[chip.id].leek_count" class="item chip">
+						<router-link v-for="chip in chips" :key="chip.id" v-ripple :to="'/market/' + chip.name" :farmer-count="items[chip.id].farmer_count" :leek-count="items[chip.id].leek_count" class="item chip" :class="{toohigh: chip.level > max_level}">
 							<img :src="'/image/chip/' + chip.name + '.png'">
 						</router-link>
 					</div>
@@ -49,7 +49,7 @@
 						<div v-for="type in EffectTypeMarket" v-if="!isNaN(type)" :key="type">
 							<h4 :class="{first: type === EffectTypeMarket.ATTACK}">{{ $t('effect.effect_type_' + type) }}</h4>
 							<div class="items chips">
-								<router-link v-for="chip in chipsByType[type]" :key="chip.id" v-ripple :to="'/market/' + chip.name" :farmer-count="items[chip.id].farmer_count" :leek-count="items[chip.id].leek_count" class="item chip">
+								<router-link v-for="chip in chipsByType[type]" :key="chip.id" v-ripple :to="'/market/' + chip.name" :farmer-count="items[chip.id].farmer_count" :leek-count="items[chip.id].leek_count" class="item chip" :class="{toohigh: chip.level > max_level}">
 									<img :src="'/image/chip/' + chip.name + '.png'">
 								</router-link>
 							</div>
@@ -59,7 +59,7 @@
 				<panel :title="$t('potions') + ' [' + potions.length + ']'" icon="mdi-bottle-tonic-plus-outline">
 					<loader v-if="!potions.length" slot="content" />
 					<div v-else slot="content" class="items potions">
-						<router-link v-for="potion in potions" :key="potion.id" v-ripple :to="'/market/' + potion.name" :farmer-count="items[potion.id].farmer_count" :leek-count="items[potion.id].leek_count" class="item potion">
+						<router-link v-for="potion in potions" :key="potion.id" v-ripple :to="'/market/' + potion.name" :farmer-count="items[potion.id].farmer_count" :leek-count="items[potion.id].leek_count" class="item potion" :class="{toohigh: potion.level > max_level}">
 							<img :src="'/image/potion/' + potion.name + '.png'">
 						</router-link>
 					</div>
@@ -67,7 +67,7 @@
 				<panel :title="$t('hats') + ' [' + hats.length + ']'" icon="mdi-hat-fedora">
 					<loader v-if="!hats.length" slot="content" />
 					<div v-else slot="content" class="items hats">
-						<router-link v-for="hat in hats" :key="hat.id" v-ripple :to="'/market/' + hat.name" :farmer-count="items[hat.id].farmer_count" :leek-count="items[hat.id].leek_count" class="item hat">
+						<router-link v-for="hat in hats" :key="hat.id" v-ripple :to="'/market/' + hat.name" :farmer-count="items[hat.id].farmer_count" :leek-count="items[hat.id].leek_count" class="item hat" :class="{toohigh: hat.level > max_level}">
 							<img :src="'/image/hat/' + hat.name + '.png'">
 						</router-link>
 					</div>
@@ -75,7 +75,7 @@
 				<panel :title="$t('pomps') + ' [' + pomps.length + ']'" icon="mdi-auto-fix" class="last">
 					<loader v-if="!pomps.length" slot="content" />
 					<div v-else slot="content" class="items pomps">
-						<router-link v-for="pomp in pomps" :key="pomp.id" :to="'/market/' + pomp.name" :farmer-count="items[pomp.id].farmer_count" :leek-count="items[pomp.id].leek_count" class="item pomp">
+						<router-link v-for="pomp in pomps" :key="pomp.id" :to="'/market/' + pomp.name" :farmer-count="items[pomp.id].farmer_count" :leek-count="items[pomp.id].leek_count" class="item pomp" :class="{toohigh: pomp.level > max_level}">
 							<img :src="'/image/pomp/' + pomp.name + '.png'">
 						</router-link>
 					</div>
@@ -290,6 +290,13 @@
 		unseenItem: ItemTemplate | null = null
 		unseenItemDialog: boolean = false
 		pomps: PompTemplate[] = []
+
+		get max_level() {
+			if (store.state.farmer) {
+				return Object.values(store.state.farmer!.leeks).reduce((s, l) => s + l.level, 0)
+			}
+			return 0
+		}
 
 		created() {
 			this.actions = [{icon: 'mdi-bank', click: () => this.$router.push('/bank')}]
@@ -589,6 +596,9 @@
 		cursor: pointer;
 		position: relative;
 		text-align: center;
+		&.toohigh {
+			opacity: 0.4;
+		}
 	}
 	.items .item.router-link-active {
 		background: white;
