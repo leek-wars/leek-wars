@@ -67,9 +67,6 @@
 				</template>
 			</div>
 		</div>
-		<div slot="actions">
-			<div class="action" @click="$emit('input', false)">{{ $t('main.ok') }}</div>
-		</div>
 	</popup>
 </template>
 
