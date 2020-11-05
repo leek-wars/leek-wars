@@ -33,6 +33,7 @@ const Help = () => import(/* webpackChunkName: "[request]" */ `@/component/help/
 const LineOfSight = () => import(/* webpackChunkName: "[request]" */ `@/component/line-of-sight/line-of-sight.${locale}.i18n`)
 const AdvancedFightDescription = () => import(/* webpackChunkName: "[request]" */ `@/component/advanced-fight-description/advanced-fight-description.${locale}.i18n`)
 const History = () => import(/* webpackChunkName: "[request]" */ `@/component/history/history.${locale}.i18n`)
+const Items = () => import(/* webpackChunkName: "[request]" */ `@/component/items/items.${locale}.i18n`)
 const Leek = () => import(/* webpackChunkName: "[request]" */ `@/component/leek/leek.${locale}.i18n`)
 const Legal = () => import(/* webpackChunkName: "[request]" */ `@/component/legal/legal.${locale}.i18n`)
 const Login = () => import(/* webpackChunkName: "[request]" */ `@/component/login/login.${locale}.i18n`)
@@ -128,6 +129,7 @@ const routes = [
 	{ path: '/help/api', component: Api },
 	{ path: '/help/documentation', component: Documentation },
 	{ path: '/help/documentation/:item', component: Documentation },
+	{ path: '/help/items', component: Items },
 	{ path: '/help/line-of-sight', component: LineOfSight },
 	{ path: '/help/advanced-fight-description', component: AdvancedFightDescription },
 	{ path: '/help/general', component: GeneralHelp },
