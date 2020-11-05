@@ -81,7 +81,6 @@
 		border-top-right-radius: 3px;
 		display: flex;
 		i {
-			margin-bottom: 3px;
 			margin-right: 7px;
 		}
 	}
@@ -94,7 +93,8 @@
 	.panel > .header h2 {
 		color: #eee;
 		font-size: 18px;
-		display: inline-block;
+		display: inline-flex;
+		align-items: center;
 		height: 36px;
 		line-height: 36px;
 		padding: 0 12px;
