@@ -36,7 +36,7 @@
 			<i18n v-if="chip.initial_cooldown > 0" tag="div" path="effect.initial_cooldown">
 				<span slot="turns" v-html="$tc('effect.n_turns', chip.initial_cooldown)"></span>
 			</i18n>
-			<effect-view v-for="(effect, e) in chip.effects" :key="e" :effect="effect" />
+			<effect-view v-for="(effect, e) in chip.effects" :key="chip.id + '_' + e" :effect="effect" />
 		</div>
 		<summon-view v-if="summon" :summon="summon" @input="$emit('input', $event)" />
 	</div>
