@@ -72,7 +72,7 @@
 						</router-link>
 					</div>
 				</panel>
-				<panel :title="$t('pomps') + ' [' + pomps.length + ']'" icon="mdi-auto-fix" class="last">
+				<panel :title="$t('pomps') + ' [' + pomps.length + ']'" icon="mdi-auto-fix">
 					<loader v-if="!pomps.length" slot="content" />
 					<div v-else slot="content" class="items pomps">
 						<router-link v-for="pomp in pomps" :key="pomp.id" :to="'/market/' + pomp.name" :farmer-count="items[pomp.id].farmer_count" :leek-count="items[pomp.id].leek_count" class="item pomp" :class="{toohigh: pomp.level > max_level}">
@@ -154,6 +154,16 @@
 						<v-icon>mdi-auto-fix</v-icon> {{ $t('pomps') }}
 					</div>
 				</div>
+			</div>
+		</div>
+
+
+		<div class="page-footer page-bar">
+			<div class="tabs">
+				<router-link to="/help/items" class="tab">
+					<v-icon>mdi-chart-timeline-variant</v-icon>
+					<span class="report-button">Progression des items</span>
+				</router-link>
 			</div>
 		</div>
 
@@ -756,7 +766,6 @@
 		display: grid;
 		grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
 		grid-gap: 8px;
-		margin-top: 8px;
 		user-select: none;
 		flex: 0 0 auto;
 		.item {

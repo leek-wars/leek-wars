@@ -100,6 +100,17 @@
 					</div>
 				</router-link>
 			</panel>
+
+			<panel v-ripple title="Items">
+				<router-link to="/help/items">
+					<div>
+						<h2>Items</h2>
+						<v-icon class="bigicon">mdi-chip</v-icon>
+						<br>
+						<span class="description">Items</span>
+					</div>
+				</router-link>
+			</panel>
 		</div>
 		<didactitiel v-if="didactitiel_enabled" v-model="didactitiel" />
 	</div>
