@@ -68,30 +68,36 @@
 			</div>
 		</center>
 		<div v-if="advanced" class="container grid large advanced">
-			<panel title="Leek Wars API">
+			<panel v-ripple title="Leek Wars API">
 				<router-link to="/help/api">
-					<h2>API documentation</h2>
-					<img src="/image/help/advanced.png">
-					<br>
-					<span class="description">Complete API services documentation</span>
+					<div>
+						<h2>API documentation</h2>
+						<img src="/image/help/advanced.png">
+						<br>
+						<span class="description">Complete API services documentation</span>
+					</div>
 				</router-link>
 			</panel>
 
-			<panel title="Line Of Sight" class="last">
+			<panel v-ripple title="Line Of Sight" class="last">
 				<router-link to="/help/line-of-sight">
-					<h2>Line Of Sight</h2>
-					<v-icon class="bigicon">mdi-grid</v-icon>
-					<br>
-					<span class="description">Little demo for line of sight function</span>
+					<div>
+						<h2>Line Of Sight</h2>
+						<v-icon class="bigicon">mdi-grid</v-icon>
+						<br>
+						<span class="description">Little demo for line of sight function</span>
+					</div>
 				</router-link>
 			</panel>
 
-			<panel title="Advanced Fight description">
+			<panel v-ripple title="Advanced Fight description">
 				<router-link to="/help/advanced-fight-description">
-					<h2>Fight Description</h2>
-					<img src="/image/help/fight_tuto.png">
-					<br>
-					<span class="description">Advanced description of combat rules and order.</span>
+					<div>
+						<h2>Fight Description</h2>
+						<img src="/image/help/fight_tuto.png">
+						<br>
+						<span class="description">Advanced description of combat rules and order.</span>
+					</div>
 				</router-link>
 			</panel>
 		</div>
