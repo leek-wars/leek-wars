@@ -465,9 +465,7 @@
 			<v-icon slot="icon">mdi-code-braces</v-icon>
 			<span slot="title">{{ $t('main.turret') }} [{{ $t('level_n', [team.level]) }}]</span>
 			<div class="turret-ai-dialog">
-				<div class="farmer-ais">
-					<ai v-for="ai in $store.state.farmer.ais" v-if="!team.turret_ai || ai.id !== team.turret_ai.id" :key="ai.id" :ai="ai" :library="true" @click.native="selectAI(ai)" />
-				</div>
+				<explorer class="explorer" @select="selectAI($event)" />
 			</div>
 		</popup>
 
@@ -486,9 +484,11 @@
 </template>
 
 <script lang="ts">
+	import Explorer from '@/component/explorer/explorer.vue'
 	import CharacteristicTooltip from '@/component/leek/characteristic-tooltip.vue'
 	import { ChatType } from '@/model/chat'
 	import { Farmer } from '@/model/farmer'
+	import { fileSystem } from '@/model/filesystem'
 	import { i18n, mixins } from '@/model/i18n'
 	import { Leek } from '@/model/leek'
 	import { LeekWars } from '@/model/leekwars'
@@ -497,7 +497,7 @@
 	import { Composition, Team, TeamMember } from '@/model/team'
 	import { Component, Vue, Watch } from 'vue-property-decorator'
 
-	@Component({ name: 'team', i18n: {}, mixins, components: { CharacteristicTooltip }})
+	@Component({ name: 'team', i18n: {}, mixins, components: { CharacteristicTooltip, Explorer }})
 	export default class TeamPage extends Vue {
 		ChatType = ChatType
 		team: Team | null = null
@@ -551,6 +551,10 @@
 				tp: Math.floor(12 * team_ratio),
 				mp: 0
 			}
+		}
+
+		created() {
+			fileSystem.init()
 		}
 
 		@Watch('id', {immediate: true})
@@ -1244,5 +1248,8 @@
 		.ai {
 			cursor: pointer;
 		}
+	}
+	.explorer {
+		height: 460px;
 	}
 </style>
