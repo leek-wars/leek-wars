@@ -60,7 +60,7 @@
 			color: white;
 		}
 		.name {
-			font-size: 17px;
+			font-size: 16px;
 			font-weight: bold;
 			width: 100%;
 		}
