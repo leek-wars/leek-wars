@@ -281,13 +281,7 @@
 					</ul>
 				</div>
 			</div>
-			<div v-if="aiDialogBot" class="title"><v-icon>mdi-file-outline</v-icon> {{ $t('my_ais') }}</div>
-			<div class="ai-dialog">
-				<div v-for="ai of sortedAis" :key="ai.id" class="ai" @click="clickDialogAI(ai)">
-					<div class="image"></div>
-					<div class="name">{{ ai.path }}</div>
-				</div>
-			</div>
+			<explorer class="explorer" @select="clickDialogAI($event)" />
 		</popup>
 
 		<popup v-model="chipsDialog" :width="767">
@@ -313,6 +307,7 @@
 </template>
 
 <script lang="ts">
+	import Explorer from '@/component/explorer/explorer.vue'
 	import CharacteristicTooltip from '@/component/leek/characteristic-tooltip.vue'
 	import { AI } from '@/model/ai'
 	import { ChipTemplate } from '@/model/chip'
@@ -343,7 +338,7 @@
 		cell!: number
 		team!: number
 	}
-	@Component({ components: { CharacteristicTooltip }, i18n: {}, mixins })
+	@Component({ components: { CharacteristicTooltip, 'explorer': Explorer }, i18n: {}, mixins })
 	export default class EditorTest extends Vue {
 		@Prop() value!: boolean
 		@Prop() ais!: {[key: number]: AI}
@@ -1075,17 +1070,8 @@
 	.column-scenario .leek .ai {
 		cursor: pointer;
 	}
-	.ai-dialog {
-		height: 400px;
-	}
-	.ai-dialog .ai {
-		padding: 5px 10px;
-		cursor: pointer;
-		border-radius: 3px;
-	}
-	.ai-dialog .ai:hover {
-		background: white;
-		color: #5fad1b;
+	.explorer {
+		height: 460px;
 	}
 	.column-scenario .leek svg {
 		height: 100px;
@@ -1332,7 +1318,6 @@
 		width: 100%;
 		display: flex;
 		gap: 10px;
-		margin-top: 5px;
 		margin-bottom: 20px;
 		& > .ai {
 			padding: 6px;

@@ -512,12 +512,8 @@
 				<div :class="{dashed: draggedAI && (!leek.ai || draggedAI.id !== leek.ai.id)}" class="leek-ai" @dragover="dragOver" @drop="aiDrop('leek', $event)">
 					<ai v-if="leek.ai" :ai="leek.ai" :library="true" @click.native="removeAI()" @dragstart.native="aiDragStart(leek.ai, $event)" @dragend.native="aiDragEnd(leek.ai, $event)" />
 				</div>
-				<br><br>
-				<h2>{{ $t('all_my_ais') }}</h2>
 				<br>
-				<div :class="{dashed: draggedAI && leek.ai && draggedAI.id === leek.ai.id}" class="farmer-ais" @dragover="dragOver" @drop="aiDrop('farmer', $event)">
-					<ai v-for="ai in $store.state.farmer.ais" v-if="!leek.ai || ai.id !== leek.ai.id" :key="ai.id" :ai="ai" :library="true" @click.native="selectAI(ai)" @dragstart.native="aiDragStart(ai, $event)" @dragend.native="aiDragEnd(ai, $event)" />
-				</div>
+				<explorer class="explorer" @select="selectAI($event)" />
 			</div>
 		</popup>
 
@@ -566,8 +562,10 @@
 	import CharacteristicTooltip from './characteristic-tooltip.vue'
 	const LevelDialog = () => import(/* webpackChunkName: "[request]" */ `@/component/leek/level-dialog.${locale}.i18n`)
 	import(/* webpackChunkName: "chartist" */ /* webpackMode: "eager" */ "@/chartist-wrapper")
+	const Explorer = () => import(/* webpackChunkName: "[request]" */ `@/component/explorer/explorer.${locale}.i18n`)
+	import { fileSystem } from '@/model/filesystem'
 
-	@Component({ name: "leek", i18n: {}, mixins, components: { CapitalDialog, LevelDialog, CharacteristicTooltip } })
+	@Component({ name: "leek", i18n: {}, mixins, components: { CapitalDialog, LevelDialog, CharacteristicTooltip, Explorer } })
 	export default class LeekPage extends Vue {
 		leek: Leek | null = null
 		error: boolean = false
@@ -660,6 +658,10 @@
 		}
 		get skinPotions() {
 			return store.state.farmer!.potions.filter(p => LeekWars.potions[p.template].effects.some(e => e.type === PotionEffect.CHANGE_SKIN))
+		}
+
+		created() {
+			fileSystem.init()
 		}
 
 		@Watch('id', {immediate: true})
@@ -858,6 +860,7 @@
 			if (!this.leek) { return }
 			this.leek.ai = ai
 			LeekWars.post('leek/set-ai', {leek_id: this.leek.id, ai_id: ai.id})
+			this.aiDialog = false
 		}
 		aiDragStart(ai: AI, e: DragEvent) {
 			e.dataTransfer!.setData('text/plain', 'drag !!!')
@@ -1237,7 +1240,6 @@
 		display: flex;
 		justify-content: center;
 		align-items: center;
-		padding: 10px;
 	}
 	.ai_popup .leek-ai {
 		text-align: center;
@@ -1447,5 +1449,8 @@
 	}
 	.empty {
 		color: #999;
+	}
+	.explorer {
+		height: 460px;
 	}
 </style>

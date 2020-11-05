@@ -10,10 +10,10 @@ class FileSystem {
 	public folderById: {[key: number]: Folder} = {}
 	public aiByFullPath: {[key: string]: AI} = {}
 	public aiCount: number = 0
+	public rootFolder!: Folder
 	private initialized: boolean = false
 	private leekAIs: any = {}
 	private items: {[key: string]: AI | Folder} = {}
-	private rootFolder!: Folder
 	private promise!: Promise<void>
 	private botAIs = [
 		{id: -1, name: 'lambda', path: '/lambda', bot: true, valid: true, color: 'green', specs: [
