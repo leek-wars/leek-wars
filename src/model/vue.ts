@@ -15,6 +15,7 @@ import FightHistory from '@/component/history/fight-history.vue'
 import FightsHistory from '@/component/history/fights-history.vue'
 import TournamentHistory from '@/component/history/tournament-history.vue'
 import TournamentsHistory from '@/component/history/tournaments-history.vue'
+import ItemElement from '@/component/item.vue'
 import LeekImage from '@/component/leek-image.vue'
 import ConversationElement from '@/component/messages/conversation.vue'
 import ReportDialog from '@/component/moderation/report-dialog.vue'
@@ -97,6 +98,7 @@ Vue.component('loader', LWLoader)
 Vue.component('lw-title', LWTitle)
 Vue.component('title-picker', TitlePicker)
 Vue.component('lw-type', Type)
+Vue.component('item', ItemElement)
 
 Vue.directive('autostopscroll', {
 	inserted: (el, binding) => {
