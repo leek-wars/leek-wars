@@ -1,7 +1,7 @@
 <template lang="html">
-	<div draggable="true" class="ai">
+	<div draggable="true" class="ai" :class="{[ai.color]: true, small}">
 		<div class="name">
-			{{ ai.name }}
+			{{ ai.bot ? $t('leekscript.' + ai.name) : ai.name }}
 			<v-icon v-if="!ai.valid">mdi-close-circle</v-icon>
 		</div>
 		<div v-if="show_lines" class="lines">{{ $tc('main.n_lines', ai.total_lines) }}</div>
@@ -15,9 +15,11 @@
 	@Component({ name: "ai" })
 	export default class AIElement extends Vue {
 		@Prop({required: true}) ai!: AI
-		@Prop({required: true}) library!: boolean
+		@Prop() library!: boolean
+		@Prop() small!: boolean
 
 		get show_lines() {
+			if (this.small) { return false }
 			if (this.library) { return true }
 			const my_ai = this.$store.state.farmer && this.$store.state.farmer.ais.some((ai: AI) => ai.id === this.ai.id)
 			return this.ai.total_lines !== undefined && (!my_ai || this.$store.state.farmer.show_ai_lines)
@@ -28,7 +30,7 @@
 <style lang="scss" scoped>
 	.ai {
 		vertical-align: bottom;
-		background-image: url("/image/ai.png");
+		background-image: url("/image/ai/ai.png");
 		background-size: 100% 100%;
 		display: inline-flex;
 		flex-direction: column;
@@ -41,10 +43,37 @@
 		word-wrap: break-word;
 		color: #888;
 		text-align: center;
+		&.blue {
+			background-image: url("/image/ai/ai_blue.png");
+			color: white;
+		}
+		&.green {
+			background-image: url("/image/ai/ai_green.png");
+			color: white;
+		}
+		&.black {
+			background-image: url("/image/ai/ai_black.png");
+			color: white;
+		}
+		&.red {
+			background-image: url("/image/ai/ai_red.png");
+			color: white;
+		}
 		.name {
 			font-size: 17px;
 			font-weight: bold;
 			width: 100%;
+		}
+		&.small {
+			vertical-align: top;
+			width: 65px;
+			height: 87px;
+			margin-top: 10px;
+			margin-left: -30px;
+			padding: 6px;
+			.name {
+				font-size: 12px;
+			}
 		}
 		.v-icon {
 			font-size: 15px;

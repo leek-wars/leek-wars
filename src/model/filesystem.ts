@@ -15,6 +15,20 @@ class FileSystem {
 	private items: {[key: string]: AI | Folder} = {}
 	private rootFolder!: Folder
 	private promise!: Promise<void>
+	private botAIs = [
+		{id: -1, name: 'lambda', path: '/lambda', bot: true, valid: true, color: 'green', specs: [
+			"basic_items", "basic_strategy", "reachable_cells", "combos"
+		]},
+		{id: -2, name: 'normal', path: '/normal', bot: true, valid: true, color: 'blue', specs: [
+			"liberation", "antidote", "hide_and_seek", "bulbs"
+		]},
+		{id: -3, name: 'confirmed', path: 'confirmed', bot: true, valid: true, color: 'red', specs: [
+			"advanced_items", "aoe", "inversion", "resurrection"
+		]},
+		{id: -4, name: 'expert', path: '/expert', bot: true, valid: true, color: 'black', specs: [
+			"advanced_strategy", "teleportation", "jump", "blocking"
+		]},
+	]
 
 	public init() {
 		if (this.initialized) { return Promise.resolve() }
@@ -56,6 +70,10 @@ class FileSystem {
 					Vue.set(this.ais, '' + ai.id, ai)
 					Vue.set(this.aiByFullPath, ai.path, ai)
 					this.items[ai.name] = ai
+				}
+				// Add bot AIs
+				for (const ai of this.botAIs) {
+					Vue.set(this.ais, '' + ai.id, ai)
 				}
 				this.initialized = true
 				resolve()
