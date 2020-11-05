@@ -40,7 +40,7 @@
 									<leek-image :leek="allLeeks[leek.id]" :scale="0.4" />
 									<div>{{ allLeeks[leek.id].name }}</div>
 								</div>
-								<div v-ripple class="ai" @click="clickLeekAI(leek)">{{ leek.ai && leek.ai in allAis ? allAis[leek.ai].path : '?' }}</div>
+								<ai v-if="leek.ai && leek.ai in allAis" v-ripple :ai="allAis[leek.ai]" :small="true" @click.native="clickLeekAI(leek)" />
 							</div>
 							<div v-if="!currentScenario.base && LeekWars.objectSize(currentScenario.team1) < getLimit(currentScenario.type)" class="add" @click="addLeekTeam = currentScenario.team1; leekDialog = true">+</div>
 						</div>
@@ -54,7 +54,7 @@
 									<leek-image :leek="allLeeks[leek.id]" :scale="0.4" />
 									<div>{{ allLeeks[leek.id].name }}</div>
 								</div>
-								<div v-ripple class="ai" @click="clickLeekAI(leek)">{{ leek.ai && leek.ai in allAis ? allAis[leek.ai].path : '?' }}</div>
+								<ai v-if="leek.ai && leek.ai in allAis" v-ripple :ai="allAis[leek.ai]" :small="true" @click.native="clickLeekAI(leek)" />
 							</div>
 							<div v-if="!currentScenario.base && LeekWars.objectSize(currentScenario.team2) < getLimit(currentScenario.type)" class="add" @click="addLeekTeam = currentScenario.team2; leekDialog = true">+</div>
 						</div>
@@ -272,6 +272,16 @@
 		<popup v-model="aiDialog" :width="800">
 			<v-icon slot="icon">mdi-code-braces</v-icon>
 			<span slot="title">{{ $t('select_ai') }}</span>
+			<div v-if="aiDialogBot" class="title"><v-icon>mdi-file</v-icon> {{ $t('bot_ais') }}</div>
+			<div v-if="aiDialogBot" class="bot-ai">
+				<div v-for="ai in fileSystem.botAIs" :key="ai.id" v-ripple class="ai" @click="clickDialogAI(ai)">
+					<ai :ai="ai" />
+					<ul>
+						<li v-for="(spec, s) in ai.specs" :key="s">{{ $t(spec) }}</li>
+					</ul>
+				</div>
+			</div>
+			<div v-if="aiDialogBot" class="title"><v-icon>mdi-file-outline</v-icon> {{ $t('my_ais') }}</div>
 			<div class="ai-dialog">
 				<div v-for="ai of sortedAis" :key="ai.id" class="ai" @click="clickDialogAI(ai)">
 					<div class="image"></div>
@@ -356,6 +366,7 @@
 		leekDialog: boolean = false
 		addLeekTeam: any = null
 		aiDialog: boolean = false
+		aiDialogBot: boolean = false
 		aiLeek: Leek | null = null
 		chipsDialog: boolean = false
 		weaponsDialog: boolean = false
@@ -363,12 +374,12 @@
 		map_down = false
 		map_add = false
 		timeout: number | null = null
-		domingo = {id: -1, name: "Domingo", bot: true, level: 150, skin: 1, hat: null, tp: "10 to 20", mp: "3 to 8", frequency: 100, life: "100 to 3000", strength: "50 to 1500", wisdom: 0, agility: 0, resistance: 0, science: 0, magic: 0}
-		tisma = {id: -2, name: "Tisma", bot: true, level: 150, skin: 2, hat: null, tp: "10 to 20", mp: "3 to 8", frequency: 100, life: "100 to 3000", strength: 0, wisdom: "50 to 1500", agility: 0, resistance: 0, science: 0, magic: 0}
-		rioupi = {id: -3, name: "Rioupi", bot: true, level: 150, skin: 3, hat: null, tp: "10 to 20", mp: "3 to 8", frequency: 100, life: "100 to 3000", strength: 0, wisdom: 0, agility: "50 to 1500", resistance: 0, science: 0, magic: 0}
-		guj = {id: -4, name: "Guj", bot: true, level: 150, skin: 4, hat: null, tp: "10 to 20", mp: "3 to 8", frequency: 100, life: "100 to 3000", strength: 0, wisdom: 0, agility: 0, resistance: "50 to 1500", science: 0, magic: 0}
-		hachess = {id: -5, name: "Hachess", bot: true, level: 150, skin: 5, hat: null, tp: "10 to 20", mp: "3 to 8", frequency: 100, life: "100 to 3000", strength: 0, wisdom: 0, agility: 0, resistance: 0, science: "50 to 1500", magic: 0}
-		betalpha = {id: -6, name: "Betalpha", bot: true, level: 150, skin: 6, hat: null, tp: "10 to 20", mp: "3 to 8", frequency: 100, life: "100 to 3000", strength: 0, wisdom: 0, agility: 0, resistance: 0, science: 0, magic: "50 to 1500"}
+		domingo = {id: -1, name: "Domingo", ai: -1, bot: true, level: 150, skin: 1, hat: null, tp: "10 to 20", mp: "3 to 8", frequency: 100, life: "100 to 3000", strength: "50 to 1500", wisdom: 0, agility: 0, resistance: 0, science: 0, magic: 0}
+		tisma = {id: -2, name: "Tisma", ai: -1, bot: true, level: 150, skin: 2, hat: null, tp: "10 to 20", mp: "3 to 8", frequency: 100, life: "100 to 3000", strength: 0, wisdom: "50 to 1500", agility: 0, resistance: 0, science: 0, magic: 0}
+		rioupi = {id: -3, name: "Rioupi", ai: -1, bot: true, level: 150, skin: 3, hat: null, tp: "10 to 20", mp: "3 to 8", frequency: 100, life: "100 to 3000", strength: 0, wisdom: 0, agility: "50 to 1500", resistance: 0, science: 0, magic: 0}
+		guj = {id: -4, name: "Guj", ai: -1, bot: true, level: 150, skin: 4, hat: null, tp: "10 to 20", mp: "3 to 8", frequency: 100, life: "100 to 3000", strength: 0, wisdom: 0, agility: 0, resistance: "50 to 1500", science: 0, magic: 0}
+		hachess = {id: -5, name: "Hachess", ai: -1, bot: true, level: 150, skin: 5, hat: null, tp: "10 to 20", mp: "3 to 8", frequency: 100, life: "100 to 3000", strength: 0, wisdom: 0, agility: 0, resistance: 0, science: "50 to 1500", magic: 0}
+		betalpha = {id: -6, name: "Betalpha", ai: -1, bot: true, level: 150, skin: 6, hat: null, tp: "10 to 20", mp: "3 to 8", frequency: 100, life: "100 to 3000", strength: 0, wisdom: 0, agility: 0, resistance: 0, science: 0, magic: "50 to 1500"}
 		bots = [this.domingo, this.tisma, this.rioupi, this.guj, this.hachess, this.betalpha]
 		characsLimits: {[key: string]: any} = {
 			life: {min: 1, max: 100000},
@@ -655,8 +666,9 @@
 		get sortedAis() {
 			return Object.values(this.ais).sort((a, b) => a.path.toLowerCase().localeCompare(b.path.toLowerCase()))
 		}
-		clickLeekAI(leek: Leek) {
+		clickLeekAI(leek: any) {
 			this.aiDialog = true
+			this.aiDialogBot = this.allLeeks[leek.id].bot
 			this.aiLeek = leek
 		}
 		clickDialogAI(ai: AI) {
@@ -909,7 +921,7 @@
 	}
 	.tabs {
 		::v-deep .tab-content {
-			min-height: 550px;
+			min-height: 600px;
 		}
 	}
 	.tabs .tab {
@@ -1059,23 +1071,8 @@
 		display: inline-block;
 		text-align: center;
 		padding: 5px;
-		cursor: pointer;
 	}
 	.column-scenario .leek .ai {
-		display: inline-block;
-		vertical-align: top;
-		background-image: url("/image/ai.png");
-		background-size: cover;
-		width: 65px;
-		height: 87px;
-		margin-top: 10px;
-		margin-left: -30px;
-		padding: 6px;
-		word-wrap: break-word;
-		color: #888;
-		font-size: 12px;
-		padding-top: 20px;
-		font-weight: bold;
 		cursor: pointer;
 	}
 	.ai-dialog {
@@ -1330,5 +1327,30 @@
 		margin-top: 4px;
 		padding: 0 6px;
 		font-size: 18px;
+	}
+	.bot-ai {
+		width: 100%;
+		display: flex;
+		gap: 10px;
+		margin-top: 5px;
+		margin-bottom: 20px;
+		& > .ai {
+			padding: 6px;
+			cursor: pointer;
+			border-radius: 4px;
+			border: 1px solid #ccc;
+			&:hover {
+				background: white;
+				box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
+			}
+		}
+		& > * {
+			flex: 1;
+		}
+		ul {
+			margin: 3px 0;
+			padding-left: 23px;
+			font-size: 14px;
+		}
 	}
 </style>
