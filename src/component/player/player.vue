@@ -585,6 +585,9 @@
 		padding: 5px 12px;
 		cursor: pointer;
 		color: white;
+		::v-deep &.v-icon::after {
+			display: none;
+		}
 	}
 	.controls .control:hover {
 		background: rgba(255,255,255, 0.2);
