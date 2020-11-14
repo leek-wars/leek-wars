@@ -16,7 +16,7 @@
 			if (this.farmer) {
 				if (this.farmer.id > 0) {
 					if (this.farmer.avatar_changed > 0) {
-						return env.AVATAR + 'avatar/' + this.farmer.id + '.png?' + this.farmer.avatar_changed
+						return LeekWars.AVATAR + 'avatar/' + this.farmer.id + '.png?' + this.farmer.avatar_changed
 					}
 				} else {
 					return '/image/lw_avatar.png'

@@ -54,10 +54,11 @@ class Socket {
 		if (!store.state.farmer || this.connecting() || this.connected()) {
 			return
 		}
-		this.socket = new WebSocket(env.WEBSOCKET)
+		const url = LeekWars.LOCAL ? "ws://localhost:1213/" : "wss://leekwars.com/ws"
+		this.socket = new WebSocket(url)
 
 		this.socket.onopen = () => {
-			if (env.DEV) {
+			if (LeekWars.DEV) {
 				// In dev mode, auth via a AUTH message
 				this.send([SocketMessage.AUTH, store.state.token])
 			}

@@ -4,8 +4,8 @@
 			<router-link to="/">
 				<div class="logo-wrapper">
 					<img class="logo" src="/image/logo.png">
-					<span v-if="env.LOCAL" class="local-label">local</span>
-					<span v-else-if="env.DEV" class="dev-label">dev</span>
+					<span v-if="LeekWars.LOCAL" class="local-label">local</span>
+					<span v-else-if="LeekWars.DEV" class="dev-label">dev</span>
 					<span v-if="env.BETA" class="beta-label">Bêta</span>
 				</div>
 			</router-link>

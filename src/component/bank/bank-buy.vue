@@ -55,7 +55,7 @@
 					offerID: this.offer
 				}
 				if (vendor === 'StarPass') {
-					obj.id = env.LOCAL ? offer.id[1] : offer.id[0]
+					obj.id = LeekWars.LOCAL ? offer.id[1] : offer.id[0]
 					LeekWars.post('bank/begin-starpass-payment', {pack_id: this.pack, offer_id: this.offer}).then(() => {
 						this.data = obj
 						setTimeout(() => this.createStarPass())

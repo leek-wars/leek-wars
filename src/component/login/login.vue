@@ -55,9 +55,9 @@
 		}
 
 		login() {
-			const url = env.DEV ? 'farmer/login-token' : 'farmer/login'
+			const url = LeekWars.DEV ? 'farmer/login-token' : 'farmer/login'
 			LeekWars.post(url, this.form).then(data => {
-				const token = env.DEV ? data.token : '$'
+				const token = LeekWars.DEV ? data.token : '$'
 				this.$store.commit('connect', {farmer: data.farmer, farmers: data.farmers, token})
 				this.$router.push('/')
 			}).error(error => {
@@ -72,7 +72,7 @@
 
 		githubStart() {
 			localStorage.setItem('login-attempt', 'true')
-			document.location.href = env.API + "farmer/start-github-login"
+			document.location.href = LeekWars.API + "farmer/start-github-login"
 		}
 	}
 </script>
