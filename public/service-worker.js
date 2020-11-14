@@ -74,7 +74,9 @@ self.addEventListener('notificationclick', function(event) {
 		url = event.notification.data.url
 		id = event.notification.data.id
 	}
-	post("/api/notification/read", {id})
+	try {
+		post("/api/notification/read", {id})
+	} catch (e) {}
 	event.waitUntil(
         clients.matchAll({
             type: 'window'
