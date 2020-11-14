@@ -359,6 +359,7 @@
 					this.editor.getDoc().clearHistory()
 					this.editor.refresh()
 					this.updateFunctions()
+					this.updateGlobalVars()
 					this.loaded = true
 					this.loading = false
 					setTimeout(() => this.editor.refresh())
@@ -978,26 +979,28 @@
 					completions.push({name: v.name, fullName: v.name, details: i18n.t('leekscript.variable', [v.name]) as string, type: 'keyword', category: 6})
 				}
 			}
-			if (token.state.context) {
-				for (let v = token.state.context.vars; v; v = v.next) {
+			for (let context = token.state.context; context; context = context.prev) {
+				for (let v = context.vars; v; v = v.next) {
 					if (v.name !== "this" && v.name !== "arguments" && v.name.toLowerCase().indexOf(start.toLowerCase()) === 0) {
 						completions.push({name: v.name, fullName: v.name, details: i18n.t('leekscript.argument', [v.name]) as string, type: 'keyword', category: 7})
 					}
 				}
 			}
+
 			// Variables globales
-			const vars = {[this.id]: token.state.globalVars}
-			const globalVars = this.getGlobalVars(vars)
-			for (const i in globalVars) {
-				const file = vars[parseInt(i, 10)]
-				for (let v = file; v; v = v.next) {
-					if (v.name.toLowerCase().indexOf(start.toLowerCase()) === 0) {
-						const keyword = this.getTokenInformation(v.name)
-						if (!keyword) {
-							let text = "Variable <b>" + v.name + "</b>"
-							if (parseInt(i, 10) !== this.id) { text += "<br><br>" + this.$i18n.t('leekscript.variable_defined_in_ai', [this.ais[parseInt(i, 10)].name]) }
-							completions.push({name: v.name, fullName: v.name, details: text, type: 'variable', category: 8})
-						}
+			for (const variable in this.ai.globals) {
+				if (variable.toLowerCase().indexOf(start.toLowerCase()) === 0) {
+					const keyword = this.ai.globals[variable]
+					completions.push(keyword)
+				}
+			}
+			// Includes globals
+			for (const include of this.ai.includes) {
+				const globals = this.ais[include.id].globals
+				for (const variable in globals) {
+					if (variable.toLowerCase().indexOf(start.toLowerCase()) === 0) {
+						const keyword = globals[variable]
+						completions.push(keyword)
 					}
 				}
 			}
@@ -1007,7 +1010,7 @@
 					completions.push(fun)
 				}
 			}
-			// Include functions
+			// Includes functions
 			for (const include of this.ai.includes) {
 				const functions = this.ais[include.id].functions
 				if (functions) {
@@ -1332,28 +1335,30 @@
 				this.ai.functions.push(fun)
 			}
 		}
-		public getGlobalVars(vars: any) {
-			vars = vars || []
-			if (!(this.id in vars)) {
-				const lines = this.editor.getDoc().lineCount()
-				const pos = {line: lines - 1, ch: this.document.getLine(lines - 1).length}
-				const token = this.editor.getTokenAt(pos)
-				vars[this.id] = token.state.globalVars
-			}
-			this.updateIncludes()
-			for (const include of this.ai.includes) {
-				if (!(include.id in vars)) {
-					const editor = this.editors.find(e => e.id === include.id)
-					if (editor) {
-						const vars2 = editor.getGlobalVars(vars)
-						for (const v in vars2) {
-							vars[v] = vars2[v]
-						}
-					}
+
+		public updateGlobalVars() {
+
+			const code = this.editor.getValue()
+			this.ai.globals = {}
+			let match
+
+			// Search global bars
+			const global_regex = /global\s+(\w+)/gm
+			while ((match = global_regex.exec(code)) != null) {
+				const name = match[1]
+
+				this.ai.globals[name] = {
+					name,
+					fullName: name,
+					details: "Variable <b>" + name + "</b>",
+					type: 'variable',
+					ai: this.ai,
+					line: 1,
+					category: 8
 				}
 			}
-			return vars
 		}
+
 		public search() {
 			const selection = this.document.getSelection()
 			if (!this.searchEnabled || selection) {

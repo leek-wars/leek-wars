@@ -544,6 +544,7 @@
 			const content = this.currentEditor.editor.getValue()
 
 			this.currentEditor.updateIncludes()
+			this.currentEditor.updateGlobalVars()
 
 			LeekWars.post('ai/save', {ai_id: saveID, code: content}).then(data => {
 				if (this.currentEditor === null) { return }
@@ -601,7 +602,6 @@
 					LeekWars.analyzer.updateCount()
 					setTimeout(() => this.goods = [], 2000)
 				}
-				this.currentEditor.updateFunctions()
 				if (this.currentEditor.needTest) {
 					this.currentEditor.needTest = false
 					if (this.currentEditor.ai.valid) {

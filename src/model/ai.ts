@@ -13,6 +13,7 @@ class AI {
 	public folderpath!: string
 	public includes: AI[] = []
 	public functions: Keyword[] = []
+	public globals: {[key: string]: Keyword} = {}
 	public total_lines!: number
 	public total_chars!: number
 	public included_lines!: number
