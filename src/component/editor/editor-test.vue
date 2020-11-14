@@ -307,7 +307,8 @@
 </template>
 
 <script lang="ts">
-	import Explorer from '@/component/explorer/explorer.vue'
+	import { locale } from '@/locale'
+	const Explorer = () => import(/* webpackChunkName: "[request]" */ `@/component/explorer/explorer.${locale}.i18n`)
 	import CharacteristicTooltip from '@/component/leek/characteristic-tooltip.vue'
 	import { AI } from '@/model/ai'
 	import { ChipTemplate } from '@/model/chip'
