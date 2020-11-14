@@ -71,7 +71,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			state.connected_farmers = data.farmers
 			localStorage.setItem('connected', 'true')
 			localStorage.removeItem('login-attempt')
-			if (env.DEV) {
+			if (LeekWars.DEV) {
 				localStorage.setItem('token', data.token)
 			}
 			loadNotifications(state)

@@ -71,7 +71,7 @@ function post<T = any>(url: any, form: any = {}) {
 		for (const k in form) { f.push(k + '=' + encodeURIComponent(form[k])) }
 		form = f.join('&')
 	}
-	return request<T>('POST', env.API + url, form)
+	return request<T>('POST', LeekWars.API + url, form)
 }
 function put<T = any>(url: any, form: any = {}) {
 	if (!(form instanceof FormData)) {
@@ -79,7 +79,7 @@ function put<T = any>(url: any, form: any = {}) {
 		for (const k in form) { f.push(k + '=' + encodeURIComponent(form[k])) }
 		form = f.join('&')
 	}
-	return request<T>('PUT', env.API + url, form)
+	return request<T>('PUT', LeekWars.API + url, form)
 }
 function del<T = any>(url: any, form: any = {}) {
 	if (!(form instanceof FormData)) {
@@ -87,10 +87,10 @@ function del<T = any>(url: any, form: any = {}) {
 		for (const k in form) { f.push(k + '=' + encodeURIComponent(form[k])) }
 		form = f.join('&')
 	}
-	return request<T>('DELETE', env.API + url, form)
+	return request<T>('DELETE', LeekWars.API + url, form)
 }
 function get<T = any>(url: any) {
-	return request<T>('GET', env.API + url)
+	return request<T>('GET', LeekWars.API + url)
 }
 
 enum EFFECT_TYPES {
@@ -157,10 +157,18 @@ class Language {
 	public flag!: string
 }
 
+const DEV = window.location.port === '8080'
+const LOCAL = window.location.port === '5000'
+
 const LeekWars = {
 	version: packageJson.version,
 	normal_version: packageJson.version.replace(/\.\d+$/, ''),
 	smart_version: packageJson.version.replace(/\.0$/, ''),
+	DEV,
+	LOCAL,
+	API: LOCAL ? 'http://localhost:5000/api/' : 'https://leekwars.com/api/',
+	AVATAR: DEV ? 'https://leekwars.com/image/' : '/image/',
+	STATIC: '/',
 	post,
 	get,
 	put,
@@ -354,7 +362,7 @@ const LeekWars = {
 		LeekWars.actions = actions
 	},
 	getAvatar(farmerID: number, avatarChanged: number) {
-		return avatarChanged === 0 ? '/image/no_avatar.png' : env.AVATAR + 'avatar/' + farmerID + '.png'
+		return avatarChanged === 0 ? '/image/no_avatar.png' : LeekWars.AVATAR + 'avatar/' + farmerID + '.png'
 	},
 	_countries: null as any,
 	get countries() {
@@ -584,9 +592,9 @@ function updateTitle() {
 function setFavicon(reset: boolean = false) {
 	if (env.BETA) {
 		LeekWars.favicon('/image/favicon_beta.png')
-	} else if (env.DEV) {
+	} else if (LeekWars.DEV) {
 		LeekWars.favicon('/image/favicon_dev.png')
-	} else if (env.LOCAL) {
+	} else if (LeekWars.LOCAL) {
 		LeekWars.favicon('/image/favicon_local.png')
 	} else if (reset) {
 		LeekWars.favicon('/image/favicon.png')

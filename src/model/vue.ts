@@ -197,7 +197,7 @@ const vueMain = new Vue({
 	vuetify: new Vuetify(),
 	methods: {
 		onLanguageLoaded: () => {
-			if (!env.DEV) {
+			if (!LeekWars.DEV) {
 				const style = "color: black; font-size: 13px; font-weight: bold;"
 				const styleRed = "color: red; font-size: 14px; font-weight: bold;"
 				console.log("%c" + i18n.t('main.console_alert_1'), style)

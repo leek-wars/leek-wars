@@ -12,7 +12,7 @@
 		@Prop() team!: Team
 		get url() {
 			if (this.team.emblem_changed > 0) {
-				return env.AVATAR + 'emblem/' + this.team.id + '.png?' + this.team.emblem_changed
+				return LeekWars.AVATAR + 'emblem/' + this.team.id + '.png?' + this.team.emblem_changed
 			}
 			return '/image/no_emblem.png'
 		}
