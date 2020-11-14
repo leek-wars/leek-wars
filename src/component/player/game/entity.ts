@@ -1,6 +1,6 @@
 import { Bubble } from '@/component/player/game/bubble'
 import { ChipAnimation } from '@/component/player/game/chips'
-import { Colors, Game, TEAM_COLORS } from '@/component/player/game/game'
+import { Colors, Game } from '@/component/player/game/game'
 import { InfoText } from '@/component/player/game/infotext'
 import { T, Texture } from '@/component/player/game/texture'
 import { Cell } from '@/model/cell'
@@ -9,6 +9,7 @@ import { Entity } from '@/model/entity'
 import { Farmer } from '@/model/farmer'
 import { i18n } from '@/model/i18n'
 import { LeekWars } from '@/model/leekwars'
+import { TEAM_COLORS } from '@/model/team'
 import { S } from './sound'
 
 enum EntityType {

@@ -81,21 +81,6 @@ class Fight {
 	public queue!: number
 }
 
-const TEAM_COLORS = [
-	"#0b30ea", // blue
-	"#dd0d0d", // red
-	"#4FBF1C", // green
-	"#FDED00", // yellow
-	"#B02D20", // brown
-	"#A2A2A2", // grey
-	"#9800AE", // purple
-	"#FF7D00", // orange
-	"#14D7E4", // cyan
-	"#E414C9", // pink
-	"#000000", // black
-	"#ffffff", // white
-]
-
 class FightMap {
 	public width!: number
 	public height!: number
@@ -142,4 +127,4 @@ class FightData {
 	public ops!: any
 }
 
-export { Fight, FightType, FightContext, Report, ReportLeek, ReportFarmer, ReportTeam, TEAM_COLORS, FightLeek, FightMap, FightData }
+export { Fight, FightType, FightContext, Report, ReportLeek, ReportFarmer, ReportTeam, FightLeek, FightMap, FightData }

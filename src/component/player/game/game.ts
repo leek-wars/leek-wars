@@ -18,7 +18,7 @@ import { Action, ActionType } from '@/model/action'
 import { Area } from '@/model/area'
 import { Cell } from '@/model/cell'
 import { EffectType, EntityEffect } from '@/model/effect'
-import { Fight, FightData, FightType, TEAM_COLORS } from '@/model/fight'
+import { Fight, FightData, FightType } from '@/model/fight'
 import { i18n } from '@/model/i18n'
 import { LeekWars } from '@/model/leekwars'
 import { store } from '@/model/store'
@@ -2229,4 +2229,4 @@ class Game {
 	}
 }
 
-export { Game, Colors, TEAM_COLORS, SHADOW_SCALE, SHADOW_ALPHA, GROUND_TEXTURE }
+export { Game, Colors, SHADOW_SCALE, SHADOW_ALPHA, GROUND_TEXTURE }

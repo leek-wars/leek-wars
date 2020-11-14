@@ -2,7 +2,7 @@
 	<div class="map" oncontextmenu="return false;">
 		<div class="map-wrapper">
 			<div v-for="(line, l) of map" :key="l" class="line">
-				<span v-for="(cell, c) of line" :key="c" :class="{disabled: !cell.enabled, obstacle: cell.obstacle}" class="cell"></span>
+				<span v-for="(cell, c) of line" :key="c" :class="{enabled: cell.enabled, obstacle: cell.obstacle, ...cell.teams}" :style="{background: cell.color}" class="cell"></span>
 			</div>
 		</div>
 	</div>
@@ -12,14 +12,17 @@
 	import { env } from '@/env'
 	import { Farmer } from '@/model/farmer'
 	import { LeekWars } from '@/model/leekwars'
+	import { TEAM_COLORS } from '@/model/team'
 	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 
 	@Component({ name: "lw-map" })
 	export default class Map extends Vue {
-		@Prop() cells!: Set<number>
+		@Prop() obstacles!: Set<number>
+		@Prop() teams!: {[key: number]: Set<number>}
 		map: any = []
 
-		@Watch('cells', {immediate: true})
+		@Watch('obstacles', {immediate: true})
+		@Watch('teams')
 		update() {
 			const size = 34
 			this.map = []
@@ -29,10 +32,20 @@
 					const y = i - Math.floor(size / 2)
 					const x = j - Math.floor(size / 2)
 					const enabled = Math.abs(x) + Math.abs(y) <= size / 2
-					const team = j < (size * (5 / 6) - i) ? 1 : (j > (size * (7 / 6) - i) ? 2 : 0)
 					const cell = 306 + 18 * y - 17 * x
-					const obstacle = this.cells.has(cell)
-					line.push({enabled, cell, team, obstacle})
+					let obstacle = false
+					const teams = {} as any
+					let color = ""
+					if (enabled) {
+						obstacle = this.obstacles.has(cell)
+						for (const team in this.teams) {
+							if (this.teams[team].has(cell)) {
+								teams['t' + team] = true
+								color = TEAM_COLORS[parseInt(team, 10) - 1]
+							}
+						}
+					}
+					line.push({enabled, cell, teams, obstacle, color})
 				}
 				this.map.push(line)
 			}
@@ -42,35 +55,35 @@
 
 <style lang="scss" scoped>
 	.map {
-		height: 430px;
-		width: 800px;
+		width: 100%;
 		overflow: hidden;
-		margin-top: -20px;
 	}
 	.map-wrapper {
-		transform: scale(1, 0.5) rotate(-45deg);
-		margin-top: -300px;
-		margin-left: -110px;
+		transform: scale(1.38, 0.724) rotate(-45deg);
+		margin: -23.2% 0;
 	}
 	.map .line {
-		white-space: nowrap;
+		display: flex;
+		width: 100%;
 	}
 	.map .cell {
-		width: 27px;
-		height: 27px;
+		width: calc(2.45%);
+		padding-bottom: calc(2.45% - 2px);
 		display: inline-block;
-		border: 1px solid #888;
-		margin: 2px;
+		margin: 0.2%;
 		cursor: pointer;
 		border-radius: 2px;
-		background: white;
 		vertical-align: top;
-	}
-	.map .cell.disabled {
 		border: 1px solid transparent;
-		background: transparent;
-	}
-	.map .cell:not(.disabled).obstacle {
-		background: #666;
+		&.enabled {
+			background: white;
+			border: 1px solid #888;
+		}
+		&.obstacle {
+			background: #333;
+		}
+		&.t1.t2 {
+			background: rgb(200, 0, 255) !important;
+		}
 	}
 </style>

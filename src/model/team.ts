@@ -1,6 +1,21 @@
 import { Farmer } from '@/model/farmer'
 import { Leek } from '@/model/leek'
 
+const TEAM_COLORS = [
+	"#0b30ea", // blue
+	"#dd0d0d", // red
+	"#4FBF1C", // green
+	"#FDED00", // yellow
+	"#B02D20", // brown
+	"#A2A2A2", // grey
+	"#9800AE", // purple
+	"#FF7D00", // orange
+	"#14D7E4", // cyan
+	"#E414C9", // pink
+	"#000000", // black
+	"#ffffff", // white
+]
+
 class Team {
 	public id!: number
 	public name!: string
@@ -37,4 +52,4 @@ class Composition {
 	public fights!: number
 }
 
-export { Composition, Team, TeamMember }
+export { Composition, Team, TeamMember, TEAM_COLORS }

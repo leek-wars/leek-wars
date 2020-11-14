@@ -1,4 +1,5 @@
 {
+	"all": "All",
 	"back_to_editor": "Back to the editor",
 	"back_to_garden": "Back to the garden",
 	"back_to_tournament": "Back to the tournament",
@@ -13,6 +14,7 @@
 	"inflicted_damage": "Inflicted damage",
 	"life_chart": "Life evolution",
 	"loosers": "Losers",
+	"movements": "Movements",
 	"not_found": "Fight not found :(",
 	"not_generated_yet": "The fight is not yet generated...",
 	"received_damage": "Received damage",
