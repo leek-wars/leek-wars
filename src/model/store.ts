@@ -5,7 +5,7 @@ import { Farmer } from '@/model/farmer'
 import { i18n } from '@/model/i18n'
 import { ItemType } from '@/model/item'
 import { LeekWars } from '@/model/leekwars'
-import { Notification } from '@/model/notification'
+import { Notification, NotificationType } from '@/model/notification'
 import { Team } from '@/model/team'
 import Vue from 'vue'
 import Vuex, { Store } from 'vuex'
@@ -284,6 +284,11 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			if (data.unread) {
 				state.unreadNotifications = data.unread
 				updateTitle(state)
+
+				// Received a new trophy, invalidate farmer trophies
+				if (state.farmer && data.type === NotificationType.TROPHY_UNLOCKED) {
+					Vue.delete(state.farmer, 'trophies_list')
+				}
 			}
 			const notification = Notification.build(data, true)
 			state.notifications.unshift(notification)
