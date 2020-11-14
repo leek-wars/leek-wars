@@ -333,12 +333,27 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 		'add-inventory'(state: LeekWarsState, data) {
 			if (!state.farmer) { return }
 			if (data.type === ItemType.WEAPON) {
-				state.farmer.weapons.push({id: data.item_id, template: data.item_template, quantity: 1})
+				const weapon = LeekWars.selectWhere(state.farmer.weapons, 'id', data.item_id)
+				if (weapon !== null) {
+					weapon.quantity++
+				} else {
+					state.farmer.weapons.push({id: data.item_id, template: data.item_template, quantity: 1})
+				}
 			} else if (data.type === ItemType.CHIP) {
-				state.farmer.chips.push({id: data.item_id, template: data.item_template, quantity: 1})
+				const chip = LeekWars.selectWhere(state.farmer.chips, 'id', data.item_id)
+				if (chip !== null) {
+					chip.quantity++
+				} else {
+					state.farmer.chips.push({id: data.item_id, template: data.item_template, quantity: 1})
+				}
 			} else if (data.type === ItemType.HAT) {
+				const hat = LeekWars.selectWhere(state.farmer.hats, 'id', data.item_id)
 				const hat_template = LeekWars.getHatTemplate(data.item_template)
-				state.farmer.hats.push({id: data.item_id, name: LeekWars.hats[data.item_template].name, level: LeekWars.hats[data.item_template].level, template: data.item_template, hat_template, quantity: 1})
+				if (hat !== null) {
+					hat.quantity++
+				} else {
+					state.farmer.hats.push({id: data.item_id, template: data.item_template, name: LeekWars.hats[data.item_template].name, level: LeekWars.hats[data.item_template].level, hat_template, quantity: 1})
+				}
 			} else if (data.type === ItemType.POTION) {
 				const potion = LeekWars.selectWhere(state.farmer.potions, 'id', data.item_id)
 				if (potion !== null) {
@@ -352,10 +367,21 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 		},
 		'remove-inventory'(state: LeekWarsState, data) {
 			if (!state.farmer) { return }
+			console.log(data)
 			if (data.type === ItemType.WEAPON) {
-				LeekWars.removeOneWhere(state.farmer.weapons, 'template', data.item_template)
+				const weapon = LeekWars.selectWhere(state.farmer.weapons, 'template', data.item_template)
+				if (weapon !== null) {
+					weapon.quantity--
+				} else {
+					LeekWars.removeOneWhere(state.farmer.weapons, 'template', data.item_template)
+				}
 			} else if (data.type === ItemType.CHIP) {
-				LeekWars.removeOneWhere(state.farmer.chips, 'template', data.item_template)
+				const chip = LeekWars.selectWhere(state.farmer.chips, 'template', data.item_template)
+				if (chip !== null) {
+					chip.quantity--
+				} else {
+					LeekWars.removeOneWhere(state.farmer.chips, 'template', data.item_template)
+				}
 			} else if (data.type === ItemType.POTION) {
 				const potion = LeekWars.selectWhere(state.farmer.potions, 'template', data.item_template)
 				if (potion !== null) {
@@ -376,7 +402,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 					return
 				}
 			}
-			state.farmer.weapons.push(weapon)
+			state.farmer.weapons.push({id: weapon.id, quantity: 1, template: weapon.template})
 		},
 		'remove-weapon'(state: LeekWarsState, weapon: Weapon) {
 			if (!state.farmer) { return }
@@ -393,13 +419,13 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 		},
 		'add-chip'(state: LeekWarsState, chip) {
 			if (!state.farmer) { return }
-			for (const w of state.farmer.chips) {
-				if (w.template === chip.template) {
-					w.quantity++
+			for (const c of state.farmer.chips) {
+				if (c.template === chip.template) {
+					c.quantity++
 					return
 				}
 			}
-			state.farmer.chips.push(chip)
+			state.farmer.chips.push({id: chip.id, quantity: 1, template: chip.template})
 		},
 		'remove-chip'(state: LeekWarsState, chip) {
 			if (!state.farmer) { return }

@@ -471,7 +471,7 @@
 				// ][type - 1])
 				item.farmer_count!--
 				this.$store.commit('update-habs', item.sell_price)
-				this.$store.commit('remove-inventory', {type: item.type, item_template: data.item})
+				this.$store.commit('remove-inventory', {type: item.type, item_template: item.id})
 				this.updateSubtitle()
 			})
 			.error(error => LeekWars.toast(this.$t('error_' + error.error, error.params)))
