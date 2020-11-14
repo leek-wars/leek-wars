@@ -3,7 +3,8 @@
 </template>
 
 <script lang="ts">
-	import { FightLeek, TEAM_COLORS } from '@/model/fight'
+	import { FightLeek } from '@/model/fight'
+	import { TEAM_COLORS } from '@/model/team'
 	import { Component, Prop, Vue } from 'vue-property-decorator'
 	@Component({})
 	export default class ActionLeekElement extends Vue {

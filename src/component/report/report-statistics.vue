@@ -41,7 +41,7 @@
 <script lang="ts">
 	import { Action, ActionType } from '@/model/action'
 	import { EffectType } from '@/model/effect'
-	import { TEAM_COLORS } from '@/model/fight'
+	import { TEAM_COLORS } from '@/model/team'
 	import { Component, Prop, Vue } from 'vue-property-decorator'
 	import ReportStatisticsEntity from './report-statistics-entity.vue'
 	import { FightStatistics } from './statistics'

@@ -196,16 +196,21 @@
 			</div>
 		</panel>
 
-		<!-- <panel :title="$t('statistics')" toggle="report/statistics" icon="mdi-table-large">
+		<panel :title="$t('movements')" toggle="report/movements" icon="mdi-map-outline">
 			<loader v-if="!loaded" />
-			<div v-else>
-				<lw-map v-if="cells" :cells="cells" />
+			<div v-else class="movements">
+				<lw-map v-if="map_obstacles" :teams="map_teams" :obstacles="map_obstacles" />
 
+				<v-btn class="all" @click="walkedCells(999)">{{ $t('all') }}</v-btn>
+				<template v-if="fight.type !== FightType.BATTLE_ROYALE">
+					<v-btn :style="{background: TEAM_COLORS[0]}" @click="walkedCells(-1)">{{ $t('team1') }}</v-btn>
+					<v-btn :style="{background: TEAM_COLORS[1]}" @click="walkedCells(-2)">{{ $t('team2') }}</v-btn>
+				</template>
 				<span v-for="(entity, e) in fight.data.leeks" :key="e">
-					<v-btn @click="walkedCells(entity.id)">{{ entity.name }}</v-btn>
+					<v-btn :style="{background: TEAM_COLORS[entity.team - 1]}" :class="'t' + entity.team" @click="walkedCells(entity.id)">{{ entity.name }}</v-btn>
 				</span>
 			</div>
-		</panel> -->
+		</panel>
 
 		<panel v-if="errors.length > 0 || warnings.length > 0" id="errors" class="warnings-error" toggle="report/warnings-errors" icon="mdi-alert">
 			<template slot="title">Erreurs et avertissements ({{ errors.length + warnings.length }})</template>
@@ -234,10 +239,11 @@
 	import { locale } from '@/locale'
 	import { Action, ActionType } from '@/model/action'
 	import { Comment } from '@/model/comment'
-	import { Fight, FightContext, FightLeek, FightType, Report, ReportFarmer, ReportLeek, TEAM_COLORS } from '@/model/fight'
+	import { Fight, FightContext, FightLeek, FightType, Report, ReportFarmer, ReportLeek } from '@/model/fight'
 	import { i18n, mixins } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import { store } from '@/model/store'
+	import { TEAM_COLORS } from '@/model/team'
 	import Chartist from 'chartist'
 	import { Component, Vue, Watch } from 'vue-property-decorator'
 	import ActionsElement from './report-actions.vue'
@@ -250,6 +256,7 @@
 
 	@Component({ name: 'report', i18n: {}, mixins, components: { actions: ActionsElement, ReportLeekRow, ReportBlock, ReportStatistics, 'lw-map': Map } })
 	export default class ReportPage extends Vue {
+		TEAM_COLORS = TEAM_COLORS
 		fight: Fight | null = null
 		report: Report | null = null
 		actions: Action[] | null = null
@@ -306,7 +313,8 @@
 		damagesBarsHeight: number = 0
 		damagesBarsEvents: any
 		damagesDisplaySummons: boolean = false
-		cells: any = null
+		map_obstacles: Set<number> = new Set<number>()
+		map_teams: any = null
 		legends: any
 
 		get id() {
@@ -400,6 +408,8 @@
 				})
 				this.updateChart()
 				this.getChartDamage()
+				this.updateMap()
+				this.walkedCells(999)
 				if (this.fight.context === FightContext.CHALLENGE) {
 					this.challenge()
 				}
@@ -732,8 +742,27 @@
 			localStorage.setItem('report/allies-logs', '' + this.actionsDisplayAlliesLogs)
 		}
 
+		updateMap() {
+			for (const obstacle in this.fight!.data.map.obstacles) {
+				const obstacle_cell = parseInt(obstacle, 10)
+				this.map_obstacles.add(obstacle_cell)
+				const obs = this.fight!.data.map.obstacles[obstacle]
+				if (obs[1] === 2) {
+					this.map_obstacles.add(obstacle_cell + 17)
+					this.map_obstacles.add(obstacle_cell + 18)
+					this.map_obstacles.add(obstacle_cell + 35)
+				}
+			}
+		}
+
 		walkedCells(fid: number) {
-			this.cells = this.statistics.entities[fid].walkedCells
+			if (fid === 999) {
+				this.map_teams = this.statistics.teams
+			} else if (fid < 0) {
+				this.map_teams = {[-fid]: this.statistics.teams[-fid]}
+			} else {
+				this.map_teams = {[this.statistics.entities[fid].team]: this.statistics.entities[fid].walkedCells}
+			}
 		}
 
 		// walkedCells(fid: number) {
@@ -1052,6 +1081,17 @@
 		}
 		& > * {
 			margin-left: 15px;
+		}
+	}
+	.movements {
+		.map {
+			margin-bottom: 10px;
+		}
+		.v-btn {
+			margin-bottom: 6px;
+			&:not(.all):not(.t4) {
+				color: white;
+			}
 		}
 	}
 </style>

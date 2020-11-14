@@ -1,4 +1,5 @@
 {
+	"all": "Tout",
 	"back_to_editor": "Retour à l'éditeur",
 	"back_to_garden": "Retour au potager",
 	"back_to_tournament": "Retour au tournoi",
@@ -13,6 +14,7 @@
 	"inflicted_damage": "Dégâts infligés",
 	"life_chart": "Évolution des points de vie",
 	"loosers": "Perdants",
+	"movements": "Déplacements",
 	"not_found": "Combat introuvable :(",
 	"not_generated_yet": "Le combat n'est pas encore généré...",
 	"received_damage": "Dégâts reçus",

@@ -11,6 +11,7 @@ class StatisticsEntity extends Entity {
 	public alive: boolean = true
 	public name!: string
 	public level!: number
+	public team!: number
 
 	public tp: number = 0
 	public mp: number = 0
@@ -79,6 +80,7 @@ class StatisticsEntity extends Entity {
 		this.leek = leek
 		this.name = leek.name
 		this.level = leek.level
+		this.team = leek.team
 		this.life = leek.life
 		this.max_life = leek.life
 		this.walkedCells.add(leek.cellPos)
@@ -124,6 +126,7 @@ class FightStatistics {
 	public lives_turns: boolean[] = []
 	public team1: StatisticsEntity[] = []
 	public team2: StatisticsEntity[] = []
+	public teams: {[key: number]: any} = {}
 	public best: any[] = []
 	public effects: any[] = []
 	public field!: Field
@@ -145,6 +148,9 @@ class FightStatistics {
 			}
 			if (fight.data.ops && leek.id in fight.data.ops) {
 				entities[leek.id].operations = fight.data.ops[leek.id]
+			}
+			if (!(leek.team in this.teams)) {
+				this.teams[leek.team] = new Set<number>()
 			}
 		}
 		let currentEntity!: StatisticsEntity
@@ -502,12 +508,16 @@ class FightStatistics {
 		}
 		this.updateLifes()
 		this.finalizeLifes()
+
 		for (const j in entities) {
 			const leek = entities[j]
 			leek.usedPTperTurn = Math.round(leek.usedPT / leek.roundsPlayed * 10) / 10
 			leek.summons = []
 			if (leek.leek.summon) {
 				entities[leek.leek.owner].summons.push(leek)
+			}
+			for (const cell of leek.walkedCells) {
+				this.teams[leek.team].add(cell)
 			}
 		}
 
