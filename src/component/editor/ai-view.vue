@@ -1228,12 +1228,12 @@
 
 			// Search /* */ comments first
 			const comments: {[key: number]: string} = {}
-			const comment_regex = /\/\*(.*?)\*\/\s*/gms
+			const comment_regex = /\/\*([^]*?)\*\/\s*/gm
 			while ((match = comment_regex.exec(code)) != null) {
 				comments[match.index + match[0].length] = match[1]
 			}
 
-			const regex = /function\s+(\w+)\s*\((.*?)\)\s*{/gms
+			const regex = /function\s+(\w+)\s*\(([^]*?)\)\s*{/gm
 			// Match [ full_match, javadoc, nom, arguments ]
 
 			while ((match = regex.exec(code)) != null) {
