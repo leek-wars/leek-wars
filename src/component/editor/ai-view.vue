@@ -931,7 +931,9 @@
 			if (!this.detailsDialogActive) {
 				this.detailDialog = false
 			}
-			this.editor.removeOverlay(this.hoverOverlay)
+			if (this.hoverOverlay) {
+				this.editor.removeOverlay(this.hoverOverlay)
+			}
 			this.hoverOverlay = null
 		}
 
