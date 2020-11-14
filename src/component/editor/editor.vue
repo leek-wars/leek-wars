@@ -384,27 +384,8 @@
 				}
 				(this.$refs.finder as EditorFinder).close()
 			})
-			this.$root.$on('keydown', (e: KeyboardEvent) => {
-				if (this.currentEditor) {
-					this.currentEditor.editorKeyDown(e)
-				}
-				// Up and down arrows while Alt + Left/right
-				const finder = this.$refs.finder as EditorFinder
-				if (e.altKey && finder.value) {
-					if (e.which === 40) { finder.previous() }
-					else if (e.which === 38) { finder.next() }
-				}
-			})
-			this.$root.$on('keyup', (e: KeyboardEvent) => {
-				// console.log("editor keyup", e)
-				if (this.currentEditor) {
-					this.currentEditor.editorKeyUp(e)
-				}
-				if (e.which === 18) {
-					const finder = this.$refs.finder as EditorFinder
-					finder.go(this.history[finder.selected])
-				}
-			})
+			this.$root.$on('keydown', this.keydown)
+			this.$root.$on('keyup', this.keyup)
 			this.$root.$on('previous', (event: Event) => {
 				const finder = this.$refs.finder as EditorFinder
 				finder.search = false
@@ -445,6 +426,28 @@
 				current = fileSystem.folderById[current.parent]
 			}
 			return false
+		}
+
+		keydown(e: KeyboardEvent) {
+			if (this.currentEditor) {
+				this.currentEditor.editorKeyDown(e)
+			}
+			// Up and down arrows while Alt + Left/right
+			const finder = this.$refs.finder as EditorFinder
+			if (e.altKey && finder.value) {
+				if (e.which === 40) { finder.previous() }
+				else if (e.which === 38) { finder.next() }
+			}
+		}
+
+		keyup(e: KeyboardEvent) {
+			if (this.currentEditor) {
+				this.currentEditor.editorKeyUp(e)
+			}
+			if (e.which === 18) {
+				const finder = this.$refs.finder as EditorFinder
+				finder.go(this.history[finder.selected])
+			}
 		}
 
 		@Watch('$route.params.id')
@@ -505,8 +508,8 @@
 			this.$root.$off('ctrlP')
 			this.$root.$off('escape')
 			this.$root.$off('htmlclick')
-			this.$root.$off('keydown')
-			this.$root.$off('keyup')
+			this.$root.$off('keydown', this.keydown)
+			this.$root.$off('keyup', this.keyup)
 			this.$root.$off('previous')
 			this.$root.$off('next')
 			this.$root.$off('back')
