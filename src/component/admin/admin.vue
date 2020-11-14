@@ -17,7 +17,7 @@
 						<h2>Erreurs ({{ $store.state.farmer.errors }})</h2>
 					</div>
 				</router-link>
-				<a href="http://admin.leekwars.com/memcached/index.php" target="_blank" rel="noopener">
+				<a href="/memcached.php" target="_blank" rel="noopener">
 					<div v-ripple class="section card">
 						<img src="/image/admin/cache.png">
 						<h2>Memcached <v-icon>mdi-open-in-new</v-icon></h2>
