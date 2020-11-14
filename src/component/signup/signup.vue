@@ -11,7 +11,7 @@
 					<div v-if="leek_count" class="desc" v-html="$t('n_leeks_already', [LeekWars.formatNumber(leek_count)])"></div>
 				</div>
 			</panel>
-			<panel v-if="env.SIGN_UP" title="Inscription">
+			<panel v-if="env.SIGN_UP" :title="$t('main.signup')" icon="mdi-bell-outline">
 				<form class="signup-form" method="post" @submit="submit">
 					<table>
 						<tr>
