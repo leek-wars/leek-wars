@@ -6,19 +6,19 @@
 				<router-link to="/about">
 					<div class="tab">
 						<v-icon>mdi-information-variant</v-icon>
-						{{ $t('main.about') }}
+						<span>{{ $t('main.about') }}</span>
 					</div>
 				</router-link>
 				<router-link to="/changelog">
 					<div class="tab">
 						<v-icon>mdi-format-list-bulleted-square</v-icon>
-						{{ $t('main.changelog') }}
+						<span>{{ $t('main.changelog') }}</span>
 					</div>
 				</router-link>
 				<router-link to="/statistics">
 					<div class="tab">
 						<v-icon>mdi-chart-timeline-variant</v-icon>
-						{{ $t('main.stats') }}
+						<span>{{ $t('main.stats') }}</span>
 					</div>
 				</router-link>
 			</div>
