@@ -1,5 +1,5 @@
 <template>
-	<popup :value="value" :width="800" :full="true" persistent @input="$emit('input', $event)">
+	<popup :value="value" :width="800" :full="true" persistent @input="input">
 		<v-icon slot="icon">mdi-human-greeting</v-icon>
 		<span slot="title">{{ $t("title") }}</span>
 
@@ -122,10 +122,11 @@
 </template>
 
 <script lang="ts">
+	import { mixins } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 
-	@Component({ name: 'didactitiel', i18n: {} })
+	@Component({ name: 'didactitiel', i18n: {}, mixins })
 	export default class Didactitiel extends Vue {
 		@Prop() value!: boolean
 		page: number = 1
@@ -137,10 +138,19 @@
 		get farmerFirstLeek() {
 			return this.$store.state.farmer ? LeekWars.first(this.$store.state.farmer.leeks).name : ''
 		}
+
+		input(event: any) {
+			this.$emit('input', event)
+			this.updateHeight()
+		}
+		created() {
+			this.updateHeight()
+		}
+
 		next() {
 			if (this.page < 8) {
 				this.page++
-				setTimeout(() => this.height = (this.$refs.content as any).querySelector('.page.active').offsetHeight + 30, 10)
+				this.updateHeight()
 			} else {
 				this.close()
 			}
@@ -148,10 +158,15 @@
 		previous() {
 			if (this.page > 1) {
 				this.page--
-				setTimeout(() => this.height = (this.$refs.content as any).querySelector('.page.active').offsetHeight + 30, 10)
+				this.updateHeight()
 			} else {
 				this.close()
 			}
+		}
+		updateHeight() {
+			setTimeout(() => {
+				this.height = (this.$refs.content as any).querySelector('.page.active').offsetHeight + 30
+			}, 50)
 		}
 		getClass(page: number) {
 			if (page === this.page) { return 'active' }
@@ -174,7 +189,7 @@
 	.page {
 		position: absolute;
 		top: 20px;
-		width: 760px;
+		width: calc(100% - 40px);
 		left: -780px;
 		padding-bottom: 25px;
 		transition: left 0.5s ease;
@@ -188,11 +203,12 @@
 	.page .bigimage {
 		margin-left: -20px;
 		margin-bottom: 20px;
+		width: calc(100% + 40px);
 	}
 	h2 {
 		margin: 0;
 		margin-bottom: 20px;
-		font-size: 40px;
+		font-size: 28px;
 	}
 	.text {
 		font-size: 17px;
@@ -200,7 +216,7 @@
 		margin-bottom: 16px;
 	}
 	td {
-		padding: 5px 20px;
+		padding: 5px 10px;
 	}
 	.pagination {
 		position: absolute;
@@ -213,6 +229,8 @@
 	}
 	.stats {
 		margin: 0 auto;
+		margin-left: -10px;
+		width: calc(100% + 20px);
 	}
 	.stats td {
 		padding: 6px;
@@ -222,6 +240,15 @@
 	}
 	.stats td img {
 		width: 50px;
+	}
+	#app.app {
+		.stats td img {
+			width: 30px;
+		}
+		.stats td {
+			font-size: 14px;
+			padding: 3px;
+		}
 	}
 	.text ::v-deep a {
 		color: #5fad1b;

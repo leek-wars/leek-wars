@@ -491,9 +491,12 @@ ul {
 .v-dialog .content {
 	background: rgba(240,240,240, 0.95);
 	padding: 15px;
-	max-height: 75vh;
+	max-height: calc(100vh - 104px);
 	overflow-y: auto;
 	overflow-x: hidden;
+}
+.v-dialog:not(.v-dialog--fullscreen) {
+	max-height: 100%;
 }
 .v-dialog.no-actions .content {
 	border-bottom-left-radius: 3px;
