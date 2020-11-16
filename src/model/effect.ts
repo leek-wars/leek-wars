@@ -40,12 +40,16 @@ enum EffectType {
 	RAW_BUFF_MAGIC = 39,
 	RAW_BUFF_SCIENCE = 40,
 	RAW_BUFF_AGILITY = 41,
+	RAW_BUFF_RESISTANCE = 42,
+	PROPAGATION = 43,
+	RAW_BUFF_WISDOM = 44,
 }
 
 enum EffectModifier {
 	STACKABLE = 1,
 	MULTIPLIED_BY_TARGETS = 2,
 	ON_CASTER = 4,
+	NOT_REPLACEABLE = 8,
 }
 
 enum EffectTypeMarket {

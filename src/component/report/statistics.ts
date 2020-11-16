@@ -668,9 +668,11 @@ class FightStatistics {
 			leek.mp += value
 			break
 		case EffectType.BUFF_WISDOM:
+		case EffectType.RAW_BUFF_WISDOM:
 			leek.wisdom += value
 			break
 		case EffectType.BUFF_RESISTANCE:
+		case EffectType.RAW_BUFF_RESISTANCE:
 			leek.resistance += value
 			break
 		case EffectType.SHACKLE_MP:

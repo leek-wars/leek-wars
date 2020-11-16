@@ -85,6 +85,13 @@
 	"type_35_fixed": "Gives <b>{0}%</b> of received damage in strength",
 	"type_36_fixed": "Gives <b>{0}%</b> of received nova damage in magic",
 	"type_41_fixed": "Increases agility by <b>{0}</b>",
+	"type_38": "Increases strength by <b>{0}</b> to <b>{1}</b>",
+	"type_38_fixed": "Increases strength by <b>{0}</b>",
+	"type_39": "Increases magic by <b>{0}</b> to <b>{1}</b>",
+	"type_41": "Increases agility by <b>{0}</b> to <b>{1}</b>",
+	"type_42": "Increases resistance by <b>{0}</b> to <b>{1}</b>",
+	"type_43_fixed": "At the end of the target's turn, the effect propagates to neighboring entities up to <b>{0}</b> distance cells.",
+	"type_44": "Increases wisdom by <b>{0}</b> to <b>{1}</b>",
 	"effect_type_1": "Attacks",
 	"effect_type_2": "Heals",
 	"effect_type_3": "Boosts",
@@ -98,5 +105,6 @@
 	"infinite": " endlessly",
 	"stackable": "stackable",
 	"the_caster": "the caster",
-	"to_the_caster": "to the caster"
+	"to_the_caster": "to the caster",
+	"not_replaceable": "non replaceable"
 }

@@ -88,12 +88,12 @@
 				<b slot="value" class="color-strength">{{ $t('fight.n_strength', [value]) }}</b>
 				<b slot="turns">{{ formatTurns(turns) }}</b>
 			</i18n>
-			<i18n v-else-if="effect === EffectType.BUFF_RESISTANCE" path="fight.leek_win_x_turns">
+			<i18n v-else-if="effect === EffectType.BUFF_RESISTANCE || effect === EffectType.RAW_BUFF_RESISTANCE" path="fight.leek_win_x_turns">
 				<leek slot="leek" :leek="target" />
 				<b slot="value" class="color-resistance">{{ $t('fight.n_resistance', [value]) }}</b>
 				<b slot="turns">{{ formatTurns(turns) }}</b>
 			</i18n>
-			<i18n v-else-if="effect === EffectType.BUFF_WISDOM" path="fight.leek_win_x_turns">
+			<i18n v-else-if="effect === EffectType.BUFF_WISDOM || effect === EffectType.RAW_BUFF_WISDOM" path="fight.leek_win_x_turns">
 				<leek slot="leek" :leek="target" />
 				<b slot="value" class="color-wisdom">{{ $t('fight.n_wisdom', [value]) }}</b>
 				<b slot="turns">{{ formatTurns(turns) }}</b>

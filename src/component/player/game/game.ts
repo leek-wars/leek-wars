@@ -1272,9 +1272,11 @@ class Game {
 			leek.buffMP(value, this.jumping)
 			break
 		case EffectType.BUFF_WISDOM:
+		case EffectType.RAW_BUFF_WISDOM:
 			leek.buffWisdom(value, this.jumping)
 			break
 		case EffectType.BUFF_RESISTANCE:
+		case EffectType.RAW_BUFF_RESISTANCE:
 			leek.buffResistance(value, this.jumping)
 			break
 		case EffectType.SHACKLE_MP:
@@ -1342,6 +1344,7 @@ class Game {
 			leek.strength -= value
 			break
 		case EffectType.BUFF_WISDOM:
+		case EffectType.RAW_BUFF_WISDOM:
 			leek.wisdom -= value
 			break
 		case EffectType.RAW_BUFF_MAGIC:
@@ -1351,6 +1354,7 @@ class Game {
 			leek.science -= value
 			break
 		case EffectType.BUFF_RESISTANCE:
+		case EffectType.RAW_BUFF_RESISTANCE:
 			leek.resistance -= value
 			break
 		case EffectType.DAMAGE_RETURN:
@@ -1418,6 +1422,7 @@ class Game {
 			leek.strength += delta
 			break
 		case EffectType.BUFF_WISDOM:
+		case EffectType.RAW_BUFF_WISDOM:
 			leek.wisdom += delta
 			break
 		case EffectType.RAW_BUFF_MAGIC:
@@ -1427,6 +1432,7 @@ class Game {
 			leek.science += delta
 			break
 		case EffectType.BUFF_RESISTANCE:
+		case EffectType.RAW_BUFF_RESISTANCE:
 			leek.resistance += delta
 			break
 		case EffectType.DAMAGE_RETURN:
