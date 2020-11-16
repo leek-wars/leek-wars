@@ -32,6 +32,9 @@
 		<span v-if="effect.modifiers & EffectModifier.STACKABLE">
 			(<b>{{ $t('effect.stackable') }}</b>)
 		</span>
+		<span v-if="effect.modifiers & EffectModifier.NOT_REPLACEABLE">
+			(<b>{{ $t('effect.not_replaceable') }}</b>)
+		</span>
 
 		<tooltip v-if="enemies && !allies">
 			<template v-slot:activator="{ on }">
@@ -75,6 +78,7 @@
 <script lang="ts">
 	import { Effect, EffectModifier, EffectType } from '@/model/effect'
 	import { Component, Prop, Vue } from 'vue-property-decorator'
+
 	@Component({ name: 'effect-view' })
 	export default class EffectView extends Vue {
 		@Prop() effect!: Effect
