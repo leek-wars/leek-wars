@@ -1,5 +1,5 @@
 <template>
-	<div v-show="visible" class="ai" @mousemove="mousemove" @mouseleave="mouseleave">
+	<div v-show="visible" ref="ai" class="ai" @mousemove="mousemove" @mouseleave="mouseleave">
 		<div class="codemirror-wrapper">
 			<div v-show="!loading" ref="codemirror" :style="{'font-size': fontSize + 'px', 'line-height': lineHeight + 'px'}" :class="{search: searchEnabled}" class="codemirror"></div>
 			<div v-if="errors" class="errors-band">
@@ -834,7 +834,7 @@
 			if (raw_data.location[0][2] !== 0 || raw_data.location[1][2] !== 0) { // Not position [0:0]
 				this.hoverData = raw_data
 				this.detailDialogContent = { details: raw_data, keyword }
-				const offset = (this.$refs.codemirror as HTMLElement).getBoundingClientRect()
+				const offset = (this.$refs.ai as HTMLElement).getBoundingClientRect()
 				const p = this.editor.cursorCoords(startPos, "page")
 				const left = p.left - offset.left
 				this.detailDialogTop = - p.top + offset.bottom - (this.lineHeight - this.fontSize * 1.2) / 2 + 2
@@ -1078,7 +1078,7 @@
 
 				const pos = this.editor.cursorCoords({line: cursor.line, ch: cursor.ch })
 				const left = pos.left, top = pos.bottom
-				const offset = (this.$refs.codemirror as HTMLElement).getBoundingClientRect()
+				const offset = (this.$refs.ai as HTMLElement).getBoundingClientRect()
 
 				this.hintDialogTop = top - offset.top
 				this.hintDialogLeft = left - offset.left
@@ -1366,7 +1366,9 @@
 				this.searchQuery = selection
 				this.searchUpdate()
 				Vue.nextTick(() => {
-					(this.$refs.searchInput as HTMLElement).focus()
+					if (this.$refs.searchInput) {
+						(this.$refs.searchInput as HTMLElement).focus()
+					}
 				})
 			} else {
 				this.closeSearch()
@@ -1457,14 +1459,12 @@
 		position: relative;
 	}
 	.codemirror-wrapper {
-		height: 100%;
+		flex: 1;
+		min-height: 0;
 		position: relative;
 	}
 	.codemirror {
 		height: 100%;
-	}
-	.codemirror.search {
-		height: calc(100% - 40px);
 	}
 	.loader {
 		position: absolute;
