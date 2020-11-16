@@ -139,7 +139,7 @@ class Notification {
 			return new Notification(data, "/team/" + teamID, "team_accepted.png", [farmerName])
 		} else if (type === NotificationType.FARMER_TOURNAMENT_WIN) {
 			const tournamentID = params[0]
-			return new Notification(data, "/tournament/" + tournamentID, "tournament_win.png")
+			return new Notification(data, "/tournament/" + tournamentID, "tournament_win_white.png")
 		} else if (type === NotificationType.NEW_GODSON) {
 			const godsonID = params[0]
 			const godsonName = params[1]
@@ -155,7 +155,7 @@ class Notification {
 		} else if (type === NotificationType.TEAM_TOURNAMENT_WIN) {
 			const tournamentID = params[0]
 			const compoName = params[1]
-			return new Notification(data, "/tournament/" + tournamentID, "tournament_win.png", [compoName])
+			return new Notification(data, "/tournament/" + tournamentID, "tournament_win_white.png", [compoName])
 		} else if (type === NotificationType.TEAM_TOURNAMENT_END) {
 			const tournamentID = params[0]
 			const lastRound = parseInt(params[1], 10)
