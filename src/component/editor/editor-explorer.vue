@@ -29,6 +29,41 @@
 						<v-list-item-title>{{ $t('delete') }}</v-list-item-title>
 					</v-list-item-content>
 				</v-list-item>
+				<template v-if="ai && ai.includes.length">
+					<v-menu offset-x open-on-hover>
+						<template v-slot:activator="{ on, attrs }">
+							<v-list-item v-ripple v-bind="attrs" v-on="on">
+								<v-icon>mdi-download</v-icon>
+								<v-list-item-content>
+									<v-list-item-title>{{ $t('download') }}</v-list-item-title>
+								</v-list-item-content>
+								<v-list-item-icon>
+									<v-icon>mdi-menu-right</v-icon>
+								</v-list-item-icon>
+							</v-list-item>
+						</template>
+						<v-list class="menu" :dense="true">
+							<v-list-item v-ripple @click="downloadSimple()">
+								<v-icon>mdi-file-outline</v-icon>
+								<v-list-item-content>
+									<v-list-item-title>{{ $t('download_simple') }}</v-list-item-title>
+								</v-list-item-content>
+							</v-list-item>
+							<v-list-item v-ripple @click="downloadIncludes()">
+								<v-icon>mdi-file-multiple-outline</v-icon>
+								<v-list-item-content>
+									<v-list-item-title>{{ $t('download_includes') }}</v-list-item-title>
+								</v-list-item-content>
+							</v-list-item>
+						</v-list>
+					</v-menu>
+				</template>
+				<v-list-item v-else v-ripple @click="downloadSimple()">
+					<v-icon>mdi-download</v-icon>
+					<v-list-item-content>
+						<v-list-item-title>{{ $t('download') }}</v-list-item-title>
+					</v-list-item-content>
+				</v-list-item>
 			</v-list>
 		</v-menu>
 
@@ -273,6 +308,42 @@
 					this.deleteDialog = true
 				}
 			}
+		}
+
+		downloadSimple() {
+			this.download(this.ai!.name, this.ai!.code)
+		}
+
+		downloadIncludes() {
+			if (!this.ai) { return }
+
+			const regex = /include\s*\(\s*["'](.*?)["']\s*\)\s*;/gm
+			const included_ais = new Set<AI>()
+			const fun = (ai: AI): string => "/** " + ai.path + " **/\n\n" + ai.code.replace(regex, (a, path) => {
+				const included = fileSystem.find(path, ai.folder)
+				if (included && !included_ais.has(included)) {
+					included_ais.add(included)
+					return fun(included)
+				} else {
+					return ""
+				}
+			})
+			const code = fun(this.ai!)
+
+			this.download(this.ai!.name, code)
+		}
+
+		download(filename: string, text: string) {
+			if (!filename.includes(".")) {
+				filename += ".leek"
+			}
+			const element = document.createElement('a')
+			element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text))
+			element.setAttribute('download', filename)
+			element.style.display = 'none'
+			document.body.appendChild(element)
+			element.click()
+			document.body.removeChild(element)
 		}
 	}
 </script>
