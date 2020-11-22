@@ -13,10 +13,13 @@
 	"carapace_desc": "La carapace permet d'appliquer une armure très résistante sur vos invocations.",
 	"collar": "Collier",
 	"covetousness": "Convoitise",
+	"covid": "La Covid-19",
+	"covid_desc": "Lavez-vous très régulièrement les mains avec du savon ou utilisez une solution hydro-alcoolique. Toussez ou éternuez dans votre coude ou dans un mouchoir. Saluez sans serrer la main et arrêtez les embrassades. Respectez un mètre de distance avec toute personne.",
 	"cure": "Guérison",
 	"devil_strike": "Frappe du démon",
 	"doping": "Dopage",
 	"drip": "Perfusion",
+	"elevation": "Élévation",
 	"ferocity": "Férocité",
 	"fertilizer": "Fertilisant",
 	"fire_bulb": "Bulbe Enflammé",
@@ -31,6 +34,7 @@
 	"iced_bulb": "Bulbe Glacé",
 	"inversion": "Inversion",
 	"jump": "Saut",
+	"knowledge": "Connaissance",
 	"leather_boots": "Bottes de cuir",
 	"liberation": "Libération",
 	"lightning": "Foudre",
@@ -78,5 +82,6 @@
 	"warm_up": "Échauffement",
 	"whip": "Fouet",
 	"winged_boots": "Bottes ailées",
-	"wizard_bulb": "Bulbe magicien"
+	"wizard_bulb": "Bulbe magicien",
+	"wizardry": "Sorcellerie"
 }

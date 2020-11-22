@@ -841,7 +841,8 @@ function chipSound(id: number) {
 		51: ['buff'], 52: ['heal'], 53: ['heal'], 54: ['buff'], 55: ['debuff'], 56: ['debuff'], 57: ['debuff'],
 		58: ['debuff'], 59: ['debuff'], 60: ['buff'], 61: ['poison'], 62: ['poison'], 63: ['poison'],
 		64: ['buff'], 65: ['buff'], 66: ['buff'], 67: ['buff'], 68: ['buff'], 69: ['fire'], 70: ['liberation'],
-		71: ['sword'], 72: ['buff'], 73: ['heal'], 74: ['buff'], 75: ['alteration.wav'], 76: ['lightning', 0, 'electrisor'], 77: ['bulb'], 78: ['move']
+		71: ['sword'], 72: ['buff'], 73: ['heal'], 74: ['buff'], 75: ['alteration.wav'], 76: ['lightning', 0, 'electrisor'], 77: ['bulb'], 78: ['move'],
+		79: ['poison'], 80: ['heal'], 81: ['buff'], 82: ['buff']
 	} as {[key: number]: any})[id]
 }
 function playSound(item: any, type: string) {
