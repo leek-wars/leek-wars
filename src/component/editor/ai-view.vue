@@ -224,7 +224,6 @@
 					lineNumbers: true,
 					lineWrapping: true,
 					continueComments: true,
-					undoDepth: 200,
 					autofocus: true,
 					smartIndent: true,
 					cursorHeight: 1,
