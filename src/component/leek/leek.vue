@@ -1453,4 +1453,7 @@
 	.explorer {
 		height: 460px;
 	}
+	.weapon-count, .chip-count, .register-count {
+		padding-left: 5px;
+	}
 </style>
