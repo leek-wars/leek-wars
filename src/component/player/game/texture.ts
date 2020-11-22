@@ -130,6 +130,10 @@ class T {
 	public static j_laser = new Texture(LeekWars.STATIC + 'image/weapon/j_laser.png', true, SHADOW_QUALITY)
 	public static j_laser_bullet = new Texture(LeekWars.STATIC + 'image/weapon/j_laser_bullet.png', true, SHADOW_QUALITY)
 	public static cart_j_laser = new Texture(LeekWars.STATIC + 'image/weapon/cart_j_laser.png')
+	public static rifle = new Texture(LeekWars.STATIC + 'image/weapon/rifle.png', true, SHADOW_QUALITY)
+	public static rifle_cartridge = new Texture(LeekWars.STATIC + 'image/weapon/rifle_cartridge.png')
+	public static rhino = new Texture(LeekWars.STATIC + 'image/weapon/rhino.png', true, SHADOW_QUALITY)
+	public static rhino_cartridge = new Texture(LeekWars.STATIC + 'image/weapon/rhino_cartridge.png')
 
 	// Cartes
 	public static box = new Texture(LeekWars.STATIC + 'image/map/box.png', true, 1)

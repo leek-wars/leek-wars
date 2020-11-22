@@ -126,6 +126,14 @@ abstract class RangeWeapon extends WeaponAnimation {
 	public recoilForce: number
 	public cartTexture: Texture | null
 	public sound: Sound
+	public bulletX!: number
+	public bulletY!: number
+	public bulletZ!: number
+	public bulletAngle!: number
+	public targetPos!: Position
+	public targets!: FightEntity[]
+	public caster!: FightEntity
+	public cell!: Cell
 
 	constructor(game: Game, texture: Texture, cartTexture: Texture | null, sound: Sound, id: number) {
 		super(game, texture, id)
@@ -146,19 +154,23 @@ abstract class RangeWeapon extends WeaponAnimation {
 		// Coordonnées sans rotation (par rapport au centre)
 		const x = this.x + this.sx - this.recoil
 		const y = 0
-		const z = this.cz * scale + this.z + this.sz + handPos
+		this.bulletZ = this.cz * scale + this.z + this.sz + handPos
 		// Rotation
-		const X = leekX + (this.cx + x * cos - y * sin) * orientation
-		const Y = leekY + (y * cos + x * sin)
-		const realAngle = (angle + Math.PI / 2) * orientation - Math.PI / 2
-		const duration = this.throwBullet(X, Y, z, realAngle, targetPos, targets, caster, cell)
+		this.bulletX = leekX + (this.cx + x * cos - y * sin) * orientation
+		this.bulletY = leekY + (y * cos + x * sin)
+		this.bulletAngle = (angle + Math.PI / 2) * orientation - Math.PI / 2
+		this.targetPos = targetPos
+		this.targets = targets
+		this.caster = caster
+		this.cell = cell
+		const duration = this.throwBullet(this.bulletX, this.bulletY, this.bulletZ, this.bulletAngle, targetPos, targets, caster, cell)
 		// Cartridges
 		if (this.cartTexture) {
 			const cx = this.x + this.cartX - this.recoil
 			const cz = this.cz + this.z + this.cartZ + handPos
 			const CX = leekX + (this.cx + cx * cos) * orientation
 			const CY = leekY + cx * sin
-			const cartAngle = realAngle - this.cartAngle + (Math.random() * Math.PI / 4 - Math.PI / 8)
+			const cartAngle = this.bulletAngle - this.cartAngle + (Math.random() * Math.PI / 4 - Math.PI / 8)
 			const dx = Math.cos(cartAngle) * 3 * orientation
 			const dy = Math.random() - 0.5
 			const dz = 4 + Math.random() * 2
@@ -540,6 +552,34 @@ class RevokedMLaser extends LaserWeapon {
 		return super.shoot(leekX, leekY, handPos, angle, orientation, targetPos, targets, caster, cell, scale)
 	}
 }
+
+class Rifle extends Firegun {
+	static textures = [T.shots, T.bullet, T.rifle, T.rifle_cartridge]
+	static sounds = [S.rifle]
+	static SHOTS = 2
+	static DELAY = 10
+	shoots: number = 0
+	delay: number = Rifle.DELAY
+	constructor(game: Game) {
+		super(game, T.rifle, T.rifle_cartridge, S.rifle, 22)
+	}
+
+	public shoot(leekX: number, leekY: number, handPos: number, angle: number, orientation: number, targetPos: Position, targets: FightEntity[], caster: FightEntity, cell: Cell, scale: number) {
+		this.shoots = Rifle.SHOTS
+		return super.shoot(leekX, leekY, handPos, angle, orientation, targetPos, targets, caster, cell, scale)
+	}
+	public update(dt: number) {
+		if (this.shoots > 0) {
+			this.delay -= dt
+			if (this.delay <= 0) {
+				S.rifle.play(this.game)
+				this.throwBullet(this.bulletX, this.bulletY, this.bulletZ, this.bulletAngle, this.targetPos, this.targets, this.caster, this.cell)
+				this.delay = Rifle.DELAY
+				this.shoots--
+			}
+		}
+	}
+}
 class JLaser extends LaserWeapon {
 	static textures = [T.j_laser, T.j_laser_bullet, T.cart_j_laser]
 	static sounds = [S.laser]
@@ -578,6 +618,13 @@ class Pistol extends Firegun {
 		super(game, T.pistol, T.cart_pistol, S.double_gun, 1)
 	}
 }
+class Rhino extends Firegun {
+	static textures = [T.shots, T.bullet, T.rhino, T.rhino_cartridge]
+	static sounds = [S.double_gun]
+	constructor(game: Game) {
+		super(game, T.rhino, T.rhino_cartridge, S.double_gun, 23)
+	}
+}
 class Shotgun extends Firegun {
 	static textures = [T.shots, T.bullet, T.shotgun, T.cart_shotgun]
 	static sounds = [S.shotgun]
@@ -593,4 +640,4 @@ class Shotgun extends Firegun {
 	}
 }
 
-export { WeaponAnimation, WhiteWeaponAnimation, Axe, BLaser, Broadsword, Destroyer, DoubleGun, Electrisor, FlameThrower, Gazor, GrenadeLauncher, IllicitGrenadeLauncher, JLaser, Katana, Laser, MachineGun, Magnum, MLaser, MysteriousElectrisor, Pistol, RevokedMLaser, Shotgun, UnbridledGazor }
+export { WeaponAnimation, WhiteWeaponAnimation, Axe, BLaser, Broadsword, Destroyer, DoubleGun, Electrisor, FlameThrower, Gazor, GrenadeLauncher, IllicitGrenadeLauncher, JLaser, Katana, Laser, MachineGun, Magnum, Rhino, MLaser, MysteriousElectrisor, Pistol, RevokedMLaser, Rifle, Shotgun, UnbridledGazor }
