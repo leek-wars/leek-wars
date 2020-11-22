@@ -198,9 +198,10 @@
 				}
 			} else if (this.channel.startsWith('pm-')) {
 				const id = parseInt(this.channel.replace('pm-', ''), 10)
-				if (!this.$store.state.chat['pm-' + id]) {
+				if (!this.$store.state.chat['pm-' + id] || this.$store.state.chat['pm-' + id].messages.length < 50) {
 					if (id === 0) { return }
 					LeekWars.get('message/get-messages/' + id + '/' + 50 + '/' + 1).then(data => {
+						this.$store.commit('clear-chat', 'pm-' + id)
 						for (const message of data.messages.reverse()) {
 							this.$store.commit('pm-receive', {message: [id, message.farmer_id, message.farmer_name, message.content, false, message.farmer_color, message.avatar_changed, message.date]})
 						}
