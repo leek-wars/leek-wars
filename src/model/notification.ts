@@ -103,7 +103,7 @@ class Notification {
 			const trophyID = parseInt(params[0], 10)
 			const trophy = LeekWars.trophies[trophyID - 1]
 			const trophyName = i18n.t('trophy.' + trophy.code) as string
-			return new Notification(data, "/trophies", "trophy/" + trophy.code + '.png', [trophyName])
+			return new Notification(data, "/farmer", "trophy/" + trophy.code + '.png', [trophyName])
 		} else if (type === NotificationType.FIGHT_COMMENT) {
 			const farmerName = params[0]
 			const fightID = params[1]
