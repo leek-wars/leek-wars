@@ -30,7 +30,7 @@
 			</div>
 		</div>
 
-		<panel class="first">
+		<panel class="first last">
 			<div slot="content" class="content">
 				<breadcrumb v-if="LeekWars.mobile" :items="breadcrumb_items" />
 				<pagination v-if="topic" :current="page" :total="pages" :url="'/forum/category-' + category.id + '/topic-' + topic.id" />

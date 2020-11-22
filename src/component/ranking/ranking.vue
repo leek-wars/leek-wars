@@ -14,7 +14,7 @@
 				</div>
 			</div>
 		</div>
-		<panel class="first">
+		<panel class="first last">
 			<div v-if="category === 'fun'" slot="content" class="fun-rankings">
 				<loader v-if="!rankings" />
 				<div v-for="funRanking in rankings" :key="funRanking.title" class="fun-ranking">
