@@ -1,3 +1,38 @@
+218:
+  title: 2 new weapons, 4 new chips, AI from Bots, AI export, Movement statistics
+  added:
+    - The test leeks (bots) have a new AI with 4 levels of difficulty.
+    - "#ai Rebalancing many items, especially the boost chips: see the forum topic."
+    - "#ai Added a new high level weapon with good range: the rifle."
+    - "#ai Added a new weapon with a short range: the Rhino."
+    - "#ai Added a new spreading poison chip: the Covid-19."
+    - "#ai MODIFY_NOT_REPLACEABLE modifier for effects that do not replace an existing one."
+    - "#ai Adding an effect: EFFECT_PROPAGATION which propagates an effect to the neighboring entities at the end of the turn."
+    - "#ai Added a new chip: Elevation, which increases the max life by 100 boosted by wisdom."
+    - "#ai Added new chip: Wisdom Boost, Knowledge."
+    - "#ai Added new chip: Boost Magic, Witchcraft."
+    - Possibility to download an AI with or without its includes from the editor.
+    - "#ai Added ~ operator in LeekScript (binary negation)."
+    - Added move statistics on the fight report page.
+  improved:
+    - The characteristics and equipment of the test leeks is much more diverse.
+    - Items that are too high level in the market are indicated visually.
+    - "Improved: Solo matchmaking: opponents are closer to his level."
+    - "Added a page that lists weapons and chips by level: /help/items."
+    - Added colors on boost and special chips.
+    - Improvement of the shotgun image.
+    - Improvement of the AI selection interface on the leek, team and editor page.
+    - "New trophy notification: redirection to the farmer page and trophy update."
+    - Notifications of non-participation in tournaments are sent only if a tournament has taken place.
+    - Completion of global variables in the editor.
+  fixed:
+    - Return of the Experienced trophy, unlockable by beating an Expert level bot in solo testing.
+    - Test leeks appear correctly in the fight report.
+    - The level of the test leeks is correctly calculated according to the average of the real leeks.
+    - "#ai The getChipTargets() function works even if the chip in question is not equipped."
+    - Teleports and inversions are taken into account for the cardinal and explorer trophies.
+    - "#ai getPath: if the last cell is ignored and contains an entity, it is added to the path."
+
 217:
   title: Editor interface improvement
   added:
