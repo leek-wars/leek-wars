@@ -47,5 +47,6 @@ class Farmer {
 	public pomps!: number[]
 	public pass!: boolean
 	public errors!: number
+	public contributor!: boolean
 }
 export { Farmer }

@@ -549,7 +549,9 @@ const LeekWars = {
 			LeekWars.message = message
 			LeekWars.messagePopup = true
 		}
-	}
+	},
+	encyclopedia: {} as {[key: string]: any},
+	encyclopediaById: {} as {[key: number]: any}
 }
 
 function setTitle(title: string | TranslateResult | null, subtitle: string | TranslateResult | null = null) {
