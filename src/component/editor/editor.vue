@@ -542,6 +542,7 @@
 
 			const saveID = this.currentEditor.id > 0 ? this.currentEditor.id : 0
 			const content = this.currentEditor.editor.getValue()
+			this.currentAI!.code = content
 
 			this.currentEditor.updateIncludes()
 			this.currentEditor.updateGlobalVars()
