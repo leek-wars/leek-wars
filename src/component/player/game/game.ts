@@ -2,7 +2,7 @@
 import Player from '@/component/player.vue'
 import { Bubble } from '@/component/player/game/bubble'
 import { Bulb } from '@/component/player/game/bulb'
-import { Acceleration, Adrenaline, Alteration, Antidote, Armor, Armoring, BallAndChain, Bandage, Bark, Burning, Carapace, ChipAnimation, Collar, Covetousness, Cure, DevilStrike, Doping, Drip, Ferocity, Fertilizer, Flame, Flash, Fortress, Fracture, Helmet, Ice, Iceberg, Inversion, Jump, LeatherBoots, Liberation, Lightning, Loam, Meteorite, Mirror, Motivation, Pebble, Plague, Plasma, Precipitation, Protein, Punishment, Rage, Rampart, Reflexes, Regeneration, Remission, Rock, Rockfall, SevenLeagueBoots, Shield, Shock, SlowDown, Solidification, Soporific, Spark, Stalactite, Steroid, Stretching, Teleportation, Thorn, Toxin, Tranquilizer, Vaccine, Vampirization, Venom, Wall, WarmUp, Whip, WingedBoots } from '@/component/player/game/chips'
+import { Acceleration, Adrenaline, Alteration, Antidote, Armor, Armoring, BallAndChain, Bandage, Bark, Burning, Carapace, ChipAnimation, Collar, Covetousness, Covid, Cure, DevilStrike, Doping, Drip, Elevation, Ferocity, Fertilizer, Flame, Flash, Fortress, Fracture, Helmet, Ice, Iceberg, Inversion, Jump, Knowledge, LeatherBoots, Liberation, Lightning, Loam, Meteorite, Mirror, Motivation, Pebble, Plague, Plasma, Precipitation, Protein, Punishment, Rage, Rampart, Reflexes, Regeneration, Remission, Rock, Rockfall, SevenLeagueBoots, Shield, Shock, SlowDown, Solidification, Soporific, Spark, Stalactite, Steroid, Stretching, Teleportation, Thorn, Toxin, Tranquilizer, Vaccine, Vampirization, Venom, Wall, WarmUp, Whip, WingedBoots, Wizardry } from '@/component/player/game/chips'
 import { EntityDirection, EntityType, FightEntity } from '@/component/player/game/entity'
 import { Ground } from '@/component/player/game/ground'
 import { Leek } from '@/component/player/game/leek'
@@ -186,6 +186,10 @@ const CHIPS = [
 	Plasma, // 76
 	null, // 77
 	Jump, // 78
+	Covid, // 79
+	Elevation, // 80
+	Knowledge, // 81
+	Wizardry, // 82
 ]
 
 class Game {

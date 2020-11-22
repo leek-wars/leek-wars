@@ -270,7 +270,7 @@ class DevilStrike extends ChipAnimation {
 class Doping extends ChipBoostAnimation {
 	static textures = [T.buff_aureol, T.halo, T.chip_doping]
 	static sounds = [S.buff]
-	constructor(game: Game) { super(game, T.chip_doping) }
+	constructor(game: Game) { super(game, T.chip_doping, Area.CIRCLE2) }
 }
 class Drip extends ChipHealAnimation {
 	static textures = [T.cure_aureol, T.heal_cross, T.chip_drip]
@@ -538,7 +538,7 @@ class Protein extends ChipBoostAnimation {
 class Rage extends ChipBoostAnimation {
 	static textures = [T.buff_aureol, T.halo, T.chip_rage]
 	static sounds = [S.buff]
-	constructor(game: Game) { super(game, T.chip_rage) }
+	constructor(game: Game) { super(game, T.chip_rage, Area.CIRCLE3) }
 }
 class Rampart extends ChipShieldAnimation {
 	static textures = [T.shield_aureol, T.chip_rampart]
@@ -548,7 +548,7 @@ class Rampart extends ChipShieldAnimation {
 class Reflexes extends ChipBoostAnimation {
 	static textures = [T.buff_aureol, T.halo, T.chip_reflexes]
 	static sounds = [S.buff]
-	constructor(game: Game) { super(game, T.chip_reflexes) }
+	constructor(game: Game) { super(game, T.chip_reflexes, Area.PLUS_3) }
 }
 class Regeneration extends ChipHealAnimation {
 	static textures = [T.cure_aureol, T.heal_cross, T.chip_regeneration]
@@ -556,6 +556,11 @@ class Regeneration extends ChipHealAnimation {
 	constructor(game: Game) { super(game, T.chip_regeneration) }
 }
 class Remission extends ChipHealAnimation {
+	static textures = [T.cure_aureol, T.heal_cross, T.chip_remission]
+	static sounds = [S.heal]
+	constructor(game: Game) { super(game, T.chip_remission) }
+}
+class Elevation extends ChipHealAnimation {
 	static textures = [T.cure_aureol, T.heal_cross, T.chip_remission]
 	static sounds = [S.heal]
 	constructor(game: Game) { super(game, T.chip_remission) }
@@ -595,7 +600,7 @@ class Rockfall extends ChipAnimation {
 class SevenLeagueBoots extends ChipBoostAnimation {
 	static textures = [T.buff_aureol, T.halo, T.chip_seven_league_boots]
 	static sounds = [S.buff]
-	constructor(game: Game) { super(game, T.chip_seven_league_boots) }
+	constructor(game: Game) { super(game, T.chip_seven_league_boots, Area.PLUS_2) }
 }
 class Shield extends ChipShieldAnimation {
 	static textures = [T.shield_aureol, T.chip_shield]
@@ -800,6 +805,11 @@ class Plague extends ChipPoisonAnimation {
 	static sounds = [S.poison]
 	constructor(game: Game) { super(game, T.chip_plague, Area.CIRCLE3) }
 }
+class Covid extends ChipPoisonAnimation {
+	static textures = [T.poison_aureol, T.chip_plague]
+	static sounds = [S.poison]
+	constructor(game: Game) { super(game, T.chip_plague) }
+}
 class Thorn extends ChipDamageReturnAnimation {
 	static textures = [T.damage_return_aureol, T.chip_thorn]
 	static sounds = [S.buff]
@@ -824,6 +834,16 @@ class Bark extends ChipBoostAnimation {
 	static textures = [T.buff_aureol, T.halo, T.chip_bark]
 	static sounds = [S.buff]
 	constructor(game: Game) { super(game, T.chip_bark) }
+}
+class Wizardry extends ChipBoostAnimation {
+	static textures = [T.buff_aureol, T.halo, T.chip_ferocity]
+	static sounds = [S.buff]
+	constructor(game: Game) { super(game, T.chip_ferocity) }
+}
+class Knowledge extends ChipBoostAnimation {
+	static textures = [T.buff_aureol, T.halo, T.chip_ferocity]
+	static sounds = [S.buff]
+	constructor(game: Game) { super(game, T.chip_ferocity) }
 }
 class Burning extends ChipAnimation {
 	static textures = [T.chip_burning]
@@ -1046,4 +1066,4 @@ class Jump extends ChipAnimation {
 	}
 }
 
-export { Alteration, ChipAnimation, Adrenaline, Armor, Acceleration, Antidote, Armoring, BallAndChain, Bandage, Bark, Burning, Carapace, Collar, Covetousness, Cure, DevilStrike, Doping, Drip, Ferocity, Fertilizer, Flame, Flash, Fortress, Fracture, Helmet, Ice, Iceberg, Inversion, Jump, LeatherBoots, Liberation, Lightning, Loam, Meteorite, Mirror, Motivation, Pebble, Plague, Plasma, Precipitation, Protein, Punishment, Rage, Rampart, Reflexes, Regeneration, Remission, Rock, Rockfall, SevenLeagueBoots, Shield, Shock, SlowDown, Solidification, Soporific, Spark, Stalactite, Steroid, Stretching, Teleportation, Thorn, Toxin, Tranquilizer, Vaccine, Vampirization, Venom, Wall, WarmUp, Whip, WingedBoots }
+export { Alteration, Covid, ChipAnimation, Adrenaline, Armor, Acceleration, Antidote, Armoring, BallAndChain, Bandage, Bark, Burning, Carapace, Collar, Covetousness, Cure, DevilStrike, Doping, Drip, Elevation, Ferocity, Fertilizer, Flame, Flash, Fortress, Fracture, Helmet, Ice, Iceberg, Inversion, Jump, Knowledge, LeatherBoots, Liberation, Lightning, Loam, Meteorite, Mirror, Motivation, Pebble, Plague, Plasma, Precipitation, Protein, Punishment, Rage, Rampart, Reflexes, Regeneration, Remission, Rock, Rockfall, SevenLeagueBoots, Shield, Shock, SlowDown, Solidification, Soporific, Spark, Stalactite, Steroid, Stretching, Teleportation, Thorn, Toxin, Tranquilizer, Vaccine, Vampirization, Venom, Wall, WarmUp, Whip, WingedBoots, Wizardry }

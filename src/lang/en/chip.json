@@ -13,10 +13,12 @@
 	"carapace_desc": "",
 	"collar": "Collar",
 	"covetousness": "Covetousness",
+	"covid": "The Covid-19",
 	"cure": "Cure",
 	"devil_strike": "Devil strike",
 	"doping": "Doping",
 	"drip": "Drip",
+	"elevation": "Elevation",
 	"ferocity": "Ferocity",
 	"fertilizer": "Fertilizer",
 	"fire_bulb": "Fire Bulb",
@@ -31,6 +33,7 @@
 	"iced_bulb": "Iced Bulb",
 	"inversion": "Inversion",
 	"jump": "Jump",
+	"knowledge": "Knowledge",
 	"leather_boots": "Leather boots",
 	"liberation": "Liberation",
 	"lightning": "Lightning",
@@ -78,5 +81,6 @@
 	"warm_up": "Warm up",
 	"whip": "Whip",
 	"winged_boots": "Winged boots",
-	"wizard_bulb": "Wizard bulb"
+	"wizard_bulb": "Wizard bulb",
+	"wizardry": "Wizardry"
 }
