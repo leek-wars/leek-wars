@@ -33,20 +33,33 @@
 		@Prop({required: true}) scale!: number
 		@Prop() on!: any
 		@Prop() invert!: boolean
+		@Prop() ai!: number
+
+		botHats = [ null, 8, 12, 13 ]
+
 		get leekImage(): string {
 			return 'leek/leek' + this.appearance + '_front_' + LeekWars.getLeekSkinName(this.leek.skin) + '.png'
 		}
+		get hat() {
+			let hat = this.leek.hat
+			if (!hat && (!this.leek.real || this.leek.bot)) {
+				hat = this.botHats[-this.ai! as number - 1]
+			}
+			return hat
+		}
 		get hatImage(): string {
-			if (!this.leek.hat) { return '' }
-			const hatName = LeekWars.hats[LeekWars.hatTemplates[this.leek.hat].item].name
-			return 'hat/' + hatName + '.png'
+			if (this.hat) {
+				const hatName = LeekWars.hats[LeekWars.hatTemplates[this.hat].item].name
+				return 'hat/' + hatName + '.png'
+			}
+			return ''
 		}
 		get hatTemplate(): HatTemplate | null {
-			return this.leek.hat ? LeekWars.hats[LeekWars.hatTemplates[this.leek.hat].item] : null
+			return this.hat ? LeekWars.hats[LeekWars.hatTemplates[this.hat].item] : null
 		}
 		get hatWidth() { return this.hatTemplate ? this.leekWidth * this.hatTemplate.width : 0 }
 		get hatHeight() { return this.hatSize ? this.hatWidth * (this.hatSize.height / this.hatSize.width) : 0 }
-		get hasHat(): boolean { return this.leek.hat !== null }
+		get hasHat(): boolean { return this.hat !== null }
 		get leekWidth(): number { return this.leekSize ? this.leekSize.width * this.scale : 0 }
 		get leekHeight(): number { return this.leekSize ? this.leekSize.height * this.scale : 0 }
 		get width(): number {
@@ -67,7 +80,7 @@
 		}
 		get height(): number {
 			let height = this.leekHeight
-			if (this.leek.hat != null && this.hatTemplate) {
+			if (this.hat != null && this.hatTemplate) {
 				height += this.hatHeight - this.leekHeight * this.hatTemplate.height
 			}
 			const weapon_offset = (Math.sin(this.weaponRadianAngle) * (this.weaponWidth + this.weaponX)
@@ -79,8 +92,8 @@
 			return height
 		}
 		get leekX() { return 0 }
-		get leekY() { return this.leek.hat !== null && this.hatTemplate ? this.hatHeight - this.leekHeight * this.hatTemplate.height : 0 }
-		get hatX() { return this.leek.hat !== null ? this.leekWidth / 2 - this.hatWidth / 2 - (this.leekWidth / 25) : 0 }
+		get leekY() { return this.hat !== null && this.hatTemplate ? this.hatHeight - this.leekHeight * this.hatTemplate.height : 0 }
+		get hatX() { return this.hat !== null ? this.leekWidth / 2 - this.hatWidth / 2 - (this.leekWidth / 25) : 0 }
 
 		get weapon() {
 			if (typeof this.leek.weapon === 'number') {
@@ -107,7 +120,7 @@
 		get handSize() { return 16 * this.scale / this.weaponScale }
 		get appearance() { return LeekWars.getLeekAppearance(this.leek.level) }
 		get leekSize() { return LeekWars.leekSizes[this.appearance] }
-		get hatSize() { return this.leek.hat ? LeekWars.hatSizes[this.leek.hat] : null }
+		get hatSize() { return this.hat ? LeekWars.hatSizes[this.hat] : null }
 	}
 </script>
 
