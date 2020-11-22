@@ -10,37 +10,50 @@
 		</div>
 		<div class="container grid large">
 			<panel v-ripple class="first">
-				<router-link to="/help/general">
-					<div>
-						<h2>Leek Wars</h2>
-						<img src="/image/help/help_general.png">
-						<br>
-						<span class="description">{{ $t('general_help') }}</span>
-					</div>
+				<router-link slot="content" to="/help/general">
+					<h2>Leek Wars</h2>
+					<img src="/image/help/help_general.png">
+					<br>
+					<span class="description">{{ $t('general_help') }}</span>
 				</router-link>
 			</panel>
 
 			<panel v-ripple>
-				<router-link to="/help/tutorial">
-					<div>
-						<h2>{{ $t('tutorial') }}</h2>
-						<img src="/image/help/interface.png">
-						<br>
-						<span class="description" v-html="$t('tutorial_desc')"></span>
-					</div>
+				<router-link slot="content" to="/help/tutorial">
+					<h2>{{ $t('tutorial') }}</h2>
+					<img src="/image/help/interface.png">
+					<br>
+					<span class="description" v-html="$t('tutorial_desc')"></span>
 				</router-link>
 			</panel>
 
 			<panel v-ripple>
-				<router-link to="/help/documentation">
-					<div>
-						<h2>{{ $t('documentation') }}</h2>
-						<img src="/image/help/presentation.png">
-						<br>
-						<span class="description" v-html="$t('documentation_desc')"></span>
-					</div>
+				<router-link slot="content" to="/help/documentation">
+					<h2>{{ $t('documentation') }}</h2>
+					<img src="/image/help/presentation.png">
+					<br>
+					<span class="description" v-html="$t('documentation_desc')"></span>
 				</router-link>
 			</panel>
+
+			<panel v-ripple>
+				<router-link slot="content" to="/encyclopedia">
+					<h2>Encyclopédie</h2>
+					<v-icon class="bigicon">mdi-book-open-page-variant</v-icon>
+					<br>
+					<span class="description">Encyclopédie de Leek Wars</span>
+				</router-link>
+			</panel>
+
+		</div>
+		<center>
+			<div class="advanced-button" @click="advanced = !advanced">
+				<span>Avancé</span>
+				<v-icon v-if="advanced">mdi-chevron-up</v-icon>
+				<v-icon v-else>mdi-chevron-down</v-icon>
+			</div>
+		</center>
+		<div v-if="advanced" class="container grid large advanced">
 
 			<panel v-ripple>
 				<a href="http://leekwarswiki.net/" target="_blank" rel="noopener">
@@ -59,16 +72,8 @@
 				</router-link>
 				-->
 			</panel>
-		</div>
-		<center>
-			<div class="advanced-button" @click="advanced = !advanced">
-				<span>Avancé</span>
-				<v-icon v-if="advanced">mdi-chevron-up</v-icon>
-				<v-icon v-else>mdi-chevron-down</v-icon>
-			</div>
-		</center>
-		<div v-if="advanced" class="container grid large advanced">
-			<panel v-ripple title="Leek Wars API">
+
+			<panel v-ripple>
 				<router-link to="/help/api">
 					<div>
 						<h2>API documentation</h2>
@@ -79,7 +84,7 @@
 				</router-link>
 			</panel>
 
-			<panel v-ripple title="Line Of Sight" class="last">
+			<panel v-ripple class="last">
 				<router-link to="/help/line-of-sight">
 					<div>
 						<h2>Line Of Sight</h2>
@@ -90,7 +95,7 @@
 				</router-link>
 			</panel>
 
-			<panel v-ripple title="Advanced Fight description">
+			<panel v-ripple>
 				<router-link to="/help/advanced-fight-description">
 					<div>
 						<h2>Fight Description</h2>
@@ -101,7 +106,7 @@
 				</router-link>
 			</panel>
 
-			<panel v-ripple title="Items">
+			<panel v-ripple>
 				<router-link to="/help/items">
 					<div>
 						<h2>Items</h2>
@@ -111,6 +116,7 @@
 					</div>
 				</router-link>
 			</panel>
+
 		</div>
 		<didactitiel v-if="didactitiel_enabled" v-model="didactitiel" />
 	</div>
@@ -145,8 +151,11 @@
 <style lang="scss" scoped>
 	.panel {
 		text-align: center;
-		.content {
-			height: 100%;
+		a {
+			padding: 15px;
+		}
+		h2 {
+			color: #444;
 		}
 	}
 	.description {
@@ -157,9 +166,9 @@
 		width: 90px;
 	}
 	i.bigicon {
-		font-size: 55px;
+		font-size: 74px;
 		color: #228b22;
-		margin: 5px;
+		margin: 10px;
 	}
 	h2 i {
 		vertical-align: bottom;

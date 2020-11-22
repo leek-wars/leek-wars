@@ -18,7 +18,7 @@
 
 <style lang="scss" scoped>
 	.breadcrumb {
-		display: flex;
+		display: inline-flex;
 		margin: 0 -6px;
 		height: 100%;
 		.item {

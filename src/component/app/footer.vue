@@ -15,8 +15,9 @@
 			<router-link to="/help/general" class="item">Découverte</router-link>
 			<router-link to="/help/tutorial" class="item">Tutoriel</router-link>
 			<router-link to="/help/documentation" class="item">Documentation</router-link>
+			<router-link to="/encyclopedia" class="item">Encyclopédie <v-icon>mdi-book-open-page-variant</v-icon></router-link>
+			<!-- <a href="https://leekwarswiki.net" target="_blank" rel="noopener" class="item">Wiki <v-icon>mdi-open-in-new</v-icon></a> -->
 			<a class="item" @click="show_didactitiel">Didactitiel <v-icon>mdi-dock-window</v-icon></a>
-			<a href="https://leekwarswiki.net" target="_blank" rel="noopener" class="item">Wiki <v-icon>mdi-open-in-new</v-icon></a>
 		</div>
 		<div class="column">
 			<h4>Développeurs</h4>
