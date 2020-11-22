@@ -1,3 +1,38 @@
+218:
+  title: 2 nouvelles armes, 4 nouvelles puces, IA des Bots, Export d'IA, Statistiques déplacement
+  added:
+    - Les poireaux de tests (bots) ont une nouvelle IA avec 4 niveaux de difficulité.
+    - "#ai Rééquilibrage de nombreux items, particulièrement les puces de boost : voir le topic forum."
+    - "#ai Ajout d'une nouvelle arme de haut niveau et bonne portée : le fusil."
+    - "#ai Ajout d'une nouvelle arme de courte portée : le Rhino."
+    - "#ai Ajout d'une nouvelle puce de poison qui se propage : la Covid-19."
+    - "#ai Modificateur MODIFIER_NOT_REPLACEABLE pour les effets ne remplaçant pas un existant."
+    - "#ai Ajout d'un effet : EFFECT_PROPAGATION qui propage un effet aux entités voisines à la fin du tour."
+    - "#ai Ajout d'une nouvelle puce : Élévation, qui augmente la vie max de 100 boosté par la sagesse."
+    - "#ai Ajout d'une nouvelle puce de boost sagesse, Connaissance."
+    - "#ai Ajout d'une nouvelle puce de boost magie, Sorcellerie."
+    - Possibilité de télécharger une IA avec ou sans ses includes depuis l'éditeur.
+    - "#ai Ajout de l'opérateur ~ en LeekScript (négation binaire)."
+    - Ajout de statistiques de déplacements sur la page rapport de combat.
+  improved:
+    - Les caractéristiques et l'équipement des poireaux de test est beaucoup plus diversifié.
+    - Les items trop haut niveau dans le marché sont indiqués visuellement.
+    - "Amélioration du matchmaking solo : les adversaires sont plus proches de son niveau."
+    - "Ajout d'une page qui récapitule les armes et les puces par niveau : /help/items."
+    - Ajout de couleurs sur les puces de boost et puces spéciales.
+    - Amélioration de l'image du fusil à pompe.
+    - Amélioration de l'interface de sélection d'IA sur la page poireau, équipe et éditeur.
+    - "Notification nouveau trophée : redirection vers la page éleveur et mise à jour des trophées."
+    - Les notifications de non participation aux tournois sont envoyées seulement si un tournoi s'est déroulé.
+    - Complétion des variables globales dans l'éditeur.
+  fixed:
+    - Retour du trophée Expérimenté, déblocable en battant un bot de niveau Expert en test solo.
+    - Les poireaux de test apparaissent correctement dans le rapport de combat.
+    - Le niveau des poireaux de test est correctement calculé selon la moyenne des poireaux rééls.
+    - "#ai La fonction getChipTargets() fonctionne même si la puce en question n'est pas équipée."
+    - Les téléportations et inversions sont prises en compte pour les trophées cardinal et explorateur.
+    - "#ai getPath : si la dernière cellule est ignorée et contient une entité, elle est bien ajoutée au chemin."
+
 217:
   title: Amélioration de l'interface de l'éditeur
   added:
