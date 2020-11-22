@@ -37,7 +37,7 @@
 							<div v-for="leek of currentScenario.team1" :key="leek.id" class="leek">
 								<div v-if="!currentScenario.base" v-ripple class="delete" @click="deleteLeek(leek, 0)">×</div>
 								<div v-if="leek.id in allLeeks" class="card">
-									<leek-image :leek="allLeeks[leek.id]" :scale="0.4" />
+									<leek-image :leek="allLeeks[leek.id]" :ai="leek.ai" :scale="0.4" />
 									<div>{{ allLeeks[leek.id].name }}</div>
 								</div>
 								<ai v-if="leek.ai && leek.ai in allAis" v-ripple :ai="allAis[leek.ai]" :small="true" @click.native="clickLeekAI(leek)" />
@@ -51,7 +51,7 @@
 							<div v-for="leek of currentScenario.team2" :key="leek.id" class="leek">
 								<div v-if="!currentScenario.base" v-ripple class="delete" @click="deleteLeek(leek, 1)">×</div>
 								<div v-if="leek.id in allLeeks" class="card">
-									<leek-image :leek="allLeeks[leek.id]" :scale="0.4" />
+									<leek-image :leek="allLeeks[leek.id]" :ai="leek.ai" :scale="0.4" />
 									<div>{{ allLeeks[leek.id].name }}</div>
 								</div>
 								<ai v-if="leek.ai && leek.ai in allAis" v-ripple :ai="allAis[leek.ai]" :small="true" @click.native="clickLeekAI(leek)" />
@@ -298,7 +298,7 @@
 			<img slot="icon" src="/image/icon/garden.png">
 			<span slot="title">{{ $t('select_weapon') }}</span>
 			<div v-if="currentLeek" class="padding weapons-dialog">
-				<rich-tooltip-weapon v-for="weapon of availableWeapons" :key="weapon.id" v-slot="{ on }" :weapon="LeekWars.weapons[LeekWars.items[weapon.id].params]" :bottom="true" :instant="true">
+				<rich-tooltip-weapon v-for="weapon of availableWeapons" :key="weapon.id" v-slot="{ on }" :weapon="LeekWars.weapons[weapon.id]" :bottom="true" :instant="true">
 					<img :src="'/image/weapon/' + weapon.name + '.png'" class="weapon" v-on="on" @click="addLeekWeapon(weapon.item)">
 				</rich-tooltip-weapon>
 			</div>
@@ -320,10 +320,15 @@
 	import { WeaponTemplate } from '@/model/weapon'
 	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 
+	class TestScenarioLeek {
+		id!: number
+		ai!: number | null
+	}
+
 	class TestScenario {
 		id!: any
-		team1!: any[]
-		team2!: any[]
+		team1!: TestScenarioLeek[]
+		team2!: TestScenarioLeek[]
 		map!: number | null
 		base!: boolean
 		name!: string
@@ -347,7 +352,7 @@
 		FightType = FightType
 		initialized: boolean = false
 		scenarios: {[key: string]: TestScenario} = {}
-		leeks: {[key: number]: Leek} = {}
+		leeks: Leek[] = []
 		maps: {[key: number]: TestMap} = {}
 		currentScenario: TestScenario | null = null
 		currentLeek: Leek | null = null
@@ -370,13 +375,95 @@
 		map_down = false
 		map_add = false
 		timeout: number | null = null
-		domingo = {id: -1, name: "Domingo", ai: -1, bot: true, level: 150, skin: 1, hat: null, tp: "10 to 20", mp: "3 to 8", frequency: 100, life: "100 to 3000", strength: "50 to 1500", wisdom: 0, agility: 0, resistance: 0, science: 0, magic: 0}
-		tisma = {id: -2, name: "Tisma", ai: -1, bot: true, level: 150, skin: 2, hat: null, tp: "10 to 20", mp: "3 to 8", frequency: 100, life: "100 to 3000", strength: 0, wisdom: "50 to 1500", agility: 0, resistance: 0, science: 0, magic: 0}
-		rioupi = {id: -3, name: "Rioupi", ai: -1, bot: true, level: 150, skin: 3, hat: null, tp: "10 to 20", mp: "3 to 8", frequency: 100, life: "100 to 3000", strength: 0, wisdom: 0, agility: "50 to 1500", resistance: 0, science: 0, magic: 0}
-		guj = {id: -4, name: "Guj", ai: -1, bot: true, level: 150, skin: 4, hat: null, tp: "10 to 20", mp: "3 to 8", frequency: 100, life: "100 to 3000", strength: 0, wisdom: 0, agility: 0, resistance: "50 to 1500", science: 0, magic: 0}
-		hachess = {id: -5, name: "Hachess", ai: -1, bot: true, level: 150, skin: 5, hat: null, tp: "10 to 20", mp: "3 to 8", frequency: 100, life: "100 to 3000", strength: 0, wisdom: 0, agility: 0, resistance: 0, science: "50 to 1500", magic: 0}
-		betalpha = {id: -6, name: "Betalpha", ai: -1, bot: true, level: 150, skin: 6, hat: null, tp: "10 to 20", mp: "3 to 8", frequency: 100, life: "100 to 3000", strength: 0, wisdom: 0, agility: 0, resistance: 0, science: 0, magic: "50 to 1500"}
-		bots = [this.domingo, this.tisma, this.rioupi, this.guj, this.hachess, this.betalpha]
+
+		domingo = {
+			id: -1, name: "Domingo", ai: -1, bot: true, level: 150, skin: 1, hat: null,
+			tp: "10 → 22",
+			mp: "3 → 9",
+			frequency: 100,
+			life: "100 → 2500",
+			strength: "0 → 700",
+			wisdom: "0 → 300",
+			agility: "0 → 200",
+			resistance: "0 → 300",
+			science: 0,
+			magic: 0
+		}
+		betalpha = {
+			id: -2, name: "Betalpha", ai: -1, bot: true, level: 150, skin: 8, hat: null,
+			tp: "10 → 22",
+			mp: "3 → 9",
+			frequency: 100,
+			life: "100 → 2500",
+			strength: 0,
+			wisdom: "0 → 300",
+			agility: "0 → 200",
+			resistance: "0 → 300",
+			science: 0,
+			magic: "0 → 700"
+		}
+		tisma = {
+			id: -3, name: "Tisma", ai: -1, bot: true, level: 150, skin: 14, hat: null,
+			tp: "10 → 22",
+			mp: "3 → 9",
+			frequency: 100,
+			life: "100 → 2500",
+			strength: 0,
+			wisdom: "0 → 700",
+			agility: "0 → 200",
+			resistance: "0 → 300",
+			science: "0 → 300",
+			magic: 0
+		}
+		guj = {
+			id: -4, name: "Guj", ai: -1, bot: true, level: 150, skin: 4, hat: null,
+			tp: "10 → 22",
+			mp: "3 → 9",
+			frequency: 100,
+			life: "100 → 5000",
+			strength: 0,
+			wisdom: "0 → 300",
+			agility: "0 → 200",
+			resistance: "0 → 300",
+			science: 0,
+			magic: 0
+		}
+		hachess = {
+			id: -5, name: "Hachess", ai: -1, bot: true, level: 150, skin: 5, hat: null,
+			tp: "10 → 22",
+			mp: "3 → 9",
+			frequency: 100,
+			life: "100 → 2500",
+			strength: 0,
+			wisdom: "0 → 300",
+			agility: "0 → 200",
+			resistance: "0 → 700",
+			science: 0,
+			magic: 0
+		}
+		rex = {
+			id: -6, name: "Rex", ai: -1, bot: true, level: 150, skin: 2, hat: null,
+			tp: "10 → 22",
+			mp: "3 → 9",
+			frequency: 100,
+			life: "100 → 2500",
+			strength: 0,
+			wisdom: "0 → 300",
+			agility: "0 → 200",
+			resistance: "0 → 300",
+			science: "0 → 700",
+			magic: 0
+		}
+
+		bots = [
+			this.domingo,
+			this.betalpha,
+			this.tisma,
+			this.guj,
+			this.hachess,
+			this.rex,
+		]
+
 		characsLimits: {[key: string]: any} = {
 			life: {min: 1, max: 100000},
 			strength: {min: 0, max: 3000},
@@ -409,13 +496,13 @@
 				if (!ai) { continue }
 				templates.push({
 					name: "Solo " + leek.name, category: "solo", map: null, type: 0,
-					team1: [{id: leek.id, ai}], team2: [{id: -1, ai: null}]
+					team1: [{id: leek.id, ai}], team2: [{id: -1, ai: -2}]
 				})
 			}
 			const generate_bots = (count: number) => {
 				const result = []
 				for (let i = 0; i < count; ++i) {
-					result.push({id: -i - 1, ai: null})
+					result.push({id: -i - 1, ai: -1})
 				}
 				return result
 			}
@@ -423,7 +510,7 @@
 			const team2 = generate_bots(leek_count)
 			const team1 = []
 			for (const leek in store.state.farmer.leeks) {
-				team1.push({id: leek, ai: store.state.farmer.leeks[leek].ai})
+				team1.push({id: parseInt(leek, 10), ai: store.state.farmer.leeks[leek].ai})
 			}
 			if (LeekWars.objectSize(store.state.farmer.leeks) > 1) {
 				templates.push({
@@ -443,8 +530,8 @@
 		}
 		get allLeeks() {
 			const leeks: {[key: number]: Leek} = {}
-			for (const l in this.leeks) {
-				leeks[l] = this.leeks[l]
+			for (const leek of this.leeks) {
+				leeks[leek.id] = leek
 			}
 			if (store.state.farmer) {
 				for (const l in store.state.farmer.leeks) {
@@ -490,18 +577,22 @@
 			.error(error => LeekWars.toast(this.$t('error_' + error.error, error.params)))
 
 			LeekWars.get('test-leek/get-all').then(data => {
-				this.leeks = data.leeks
+				for (const id in data.leeks) {
+					this.leeks.push(data.leeks[id])
+				}
 				this.generateBots()
 				for (const l in this.leeks) {
 					const leek = this.leeks[l]
 					if (!leek.chips) { leek.chips = [] }
 					if (!leek.weapons) { leek.weapons = [] }
+					leek.real = false
+					leek.ai = -1 as any
 				}
 				const startLeekID = parseInt(localStorage.getItem('editor/leek') || '', 10)
 				if (startLeekID && startLeekID in this.leeks) {
-					this.selectLeek(this.leeks[startLeekID])
+					this.selectLeek(this.leeks.find(l => l.id === startLeekID))
 				} else if (LeekWars.objectSize(this.leeks)) {
-					this.selectLeek(LeekWars.first(this.leeks)!)
+					this.selectLeek(this.leeks[0])
 				}
 			})
 			.error(error => LeekWars.toast(this.$t('error_' + error.error, error.params)))
@@ -523,11 +614,12 @@
 		}
 		generateBots() {
 			for (const bot of this.bots) {
-				this.leeks[bot.id] = bot as any
+				this.leeks.push(bot as any)
 			}
 		}
 		selectScenario(scenario: TestScenario) {
 			this.currentScenario = scenario
+			this.updateScenarioBotsLevels()
 			localStorage.setItem('editor/scenario', '' + scenario.id)
 		}
 		selectLeek(leek: any) {
@@ -539,6 +631,7 @@
 			const team = teamID === 0 ? this.currentScenario.team1 : this.currentScenario.team2
 			team.splice(team.findIndex(l => l.id === leek.id), 1)
 			LeekWars.post('test-scenario/delete-leek', {scenario: this.currentScenario.id, leek: leek.id})
+			this.updateScenarioBotsLevels()
 		}
 		saveLeek() {
 			if (!this.currentLeek) { return }
@@ -664,7 +757,7 @@
 		}
 		clickLeekAI(leek: any) {
 			this.aiDialog = true
-			this.aiDialogBot = this.allLeeks[leek.id].bot
+			this.aiDialogBot = leek.id < 0
 			this.aiLeek = leek
 		}
 		clickDialogAI(ai: AI) {
@@ -707,13 +800,36 @@
 			})
 			.error(error => LeekWars.toast(this.$t('error_' + error.error, error.params)))
 		}
+
 		addScenarioLeek(leek: Leek) {
 			if (!this.currentScenario || !this.addLeekTeam) { return }
 			this.addLeekTeam.push({id: leek.id, ai: leek.ai})
 			const teamID = this.addLeekTeam === this.currentScenario.team1 ? 0 : 1
 			LeekWars.post('test-scenario/add-leek', {scenario: this.currentScenario.id, leek: leek.id, team: teamID, ai: leek.ai ? leek.ai : null})
 			this.leekDialog = false
+			this.updateScenarioBotsLevels()
 		}
+
+		updateScenarioBotsLevels() {
+			let total_level = 0
+			let count = 0
+			const all_leeks = this.currentScenario!.team1.concat(this.currentScenario!.team2)
+			for (const entity of all_leeks) {
+				if (entity.id > 0 || entity.id < -6) {
+					if (!(entity.id in this.allLeeks)) { continue }
+					total_level += this.allLeeks[entity.id].level
+					count++
+				}
+			}
+			const average_level = count === 0 ? 1 : Math.round(total_level / count)
+			for (const entity of all_leeks) {
+				if (entity.id < 0 && entity.id >= -6) {
+					if (!(entity.id in this.allLeeks)) { continue }
+					this.allLeeks[entity.id].level = average_level
+				}
+			}
+		}
+
 		get availableLeeks() {
 			if (!this.currentScenario) { return {} }
 			const available_leeks: {[key: string]: Leek} = {}
@@ -732,8 +848,8 @@
 		}
 		updateLeekLevel(leek: any) {
 			leek.level = Math.max(
-				leek.weapons.reduce((m: number, e: any) => Math.max(m, LeekWars.weapons[e].level), 1),
-				leek.chips.reduce((m: number, e: any) => Math.max(m, LeekWars.chips[e].level), 1)
+				leek.weapons.reduce((m: number, e: any) => Math.max(m, LeekWars.items[e].level), 1),
+				leek.chips.reduce((m: number, e: any) => Math.max(m, LeekWars.items[e].level), 1)
 			)
 		}
 		removeLeekChip(chip: any) {
@@ -764,13 +880,14 @@
 		}
 		createLeek() {
 			LeekWars.post('test-leek/new', {name: this.newLeekName}).then(data => {
-				Vue.set(this.leeks, data.id, {name: this.newLeekName, id: data.id})
+				const leek = {name: this.newLeekName, id: data.id}
+				this.leeks.push(leek as any)
 				for (const k in data.data) {
-					Vue.set(this.leeks[data.id], k, data.data[k])
+					Vue.set(leek, k, data.data[k])
 				}
 				this.newLeekDialog = false
 				this.newLeekName = ''
-				this.currentLeek = this.leeks[data.id]
+				this.currentLeek = leek as any
 			})
 			.error(error => LeekWars.toast(this.$t('error_' + error.error, error.params)))
 		}
@@ -798,14 +915,14 @@
 		}
 		deleteTestLeek(leek: Leek) {
 			LeekWars.post('test-leek/delete', {id: leek.id})
-			Vue.delete(this.$data.leeks, leek.id)
+			this.leeks.splice(this.leeks.findIndex(l => l.id === leek.id), 1)
 			// Delete in scenarios
 			for (const s in this.scenarios) {
 				this.scenarios[s].team1 = this.scenarios[s].team1.filter(l => l.id !== leek.id)
 				this.scenarios[s].team2 = this.scenarios[s].team2.filter(l => l.id !== leek.id)
 			}
-			if (!LeekWars.isEmptyObj(this.leeks)) {
-				this.selectLeek(LeekWars.first(this.leeks)!)
+			if (this.leeks.length) {
+				this.selectLeek(this.leeks[0])
 			}
 		}
 		launchTest() {
@@ -972,7 +1089,7 @@
 		display: block;
 	}
 	.item {
-		padding: 8px;
+		padding: 9px;
 		cursor: pointer;
 		position: relative;
 	}
@@ -1139,7 +1256,7 @@
 		margin-left: 5px;
 		position: absolute;
 		right: 7px;
-		top: 5px;
+		top: 8px;
 	}
 	.leek-column {
 		width: 820px;
