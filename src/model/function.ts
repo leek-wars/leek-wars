@@ -13,5 +13,6 @@ class Function extends LeekScriptItem {
 	public return_name!: string | null
 	public return_type!: number
 	public deprecated!: number
+	public replacement!: number | null
 }
 export { Function, LeekScriptItem }
