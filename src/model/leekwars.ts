@@ -821,7 +821,9 @@ function weaponSound(id: number) {
 		5: ['double_gun'], 6: ['laser'], 7: ['grenade_shoot', 0.7, 'explosion'],
 		8: ['flame_thrower'], 9: ['double_gun'], 10: ['gazor'], 11: ['electrisor'],
 		12: ['laser'], 13: ['laser'], 14: ['sword'], 15: ['sword'], 16: ['sword'], 17: ['laser'],
-		18: ['grenade_shoot', 0.7, 'explosion'], 19: ['electrisor'], 20: ['gazor', 1.2, 'explosion'], 21: ['laser', 0.1, 'poison']
+		18: ['grenade_shoot', 0.7, 'explosion'], 19: ['electrisor'], 20: ['gazor', 1.2, 'explosion'], 21: ['laser', 0.1, 'poison'],
+		22: ['rifle.wav', 0.15, 'rifle.wav', 0.15, 'rifle.wav'],
+		23: ['double_gun'],
 	} as {[key: number]: any})[id]
 }
 function chipSound(id: number) {

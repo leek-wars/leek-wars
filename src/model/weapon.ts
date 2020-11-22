@@ -89,6 +89,10 @@ const WeaponsData = {
 	20: { w: 164, h: 81, cx: 15, cz: 60, ocx: 0, x: -43, z: -12, mx1: 28, mz1: 52, mx2: 74, mz2: 50, top: 17, bottom: 45, white: false },
 	// RevokedMLaser
 	21: { w: 194, h: 56, cx: 15, cz: 38, ocx: 0, x: -70, z: -20, mx1: 70, mz1: 34, mx2: 115, mz2: 34, sx: 126, sz: 25, cartX: 60, cartZ: 20, cartAngle: Math.PI / 2, recoilForce: 18, top: 4, bottom: 34, white: false },
+	// Rifle
+	22: { w: 180, h: 51, cx: 15, cz: 30, ocx: 0, x: -50, z: -20, mx1: 36, mz1: 34, mx2: 74, mz2: 32, sx: 50, sz: 25, cartX: 60, cartZ: 20, cartAngle: Math.PI / 2, recoilForce: 18, top: 4, bottom: 34, white: false },
+	// Mini
+	23: { w: 90, h: 51, cx: 12, cz: 40, ocx: 0, x: 15, z: -15, mx1: 24, mz1: 27, mx2: 11, mz2: 35, sx: 90, sz: 22, cartX: 60, cartZ: 20, cartAngle: Math.PI / 2, recoilForce: 18, top: 3, bottom: 15, white: false },
 } as {[key: number]: WeaponData}
 
 export { Weapon, WeaponsData, WeaponTemplate }
