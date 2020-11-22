@@ -7,7 +7,9 @@
 				<span class="arrow">→</span> <span v-if="fun.return_type != -1" class="argument"> {{ $t('doc.arg_type_' + fun.return_type) }}</span><span v-else class="argument">?</span>&nbsp;{{ fun.return_name }}
 			</span>
 		</h2>
-		<div v-if="fun.deprecated" class="deprecated-message">Cette fonction est dépréciée.</div>
+		<div v-if="fun.deprecated" v-dochash class="deprecated-message">
+			Cette fonction est dépréciée. <span v-if="fun.replacement">Elle est remplacée par la fonction #{{ LeekWars.functions[fun.replacement - 1].name }}.</span>
+		</div>
 		<div v-dochash v-code class="content" v-html="$t('doc.func_' + fun.real_name)"></div>
 
 		<template v-if="fun.arguments_names.length > 0">
