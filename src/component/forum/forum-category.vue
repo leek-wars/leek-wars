@@ -16,7 +16,7 @@
 			</div>
 		</div>
 
-		<panel class="first">
+		<panel class="first last">
 			<div slot="content" class="content">
 				<breadcrumb v-if="LeekWars.mobile" :items="breadcrumb_items" />
 
