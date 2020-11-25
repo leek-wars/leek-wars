@@ -2222,7 +2222,7 @@ class Game {
 
 		// End
 		this.jumping = false
-		this.currentAction = action
+		this.currentAction = action - 1
 		this.actionDone() // Start new action
 
 		this.requestPause = this.paused
