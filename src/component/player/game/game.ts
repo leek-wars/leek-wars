@@ -598,7 +598,7 @@ class Game {
 				}
 				for (const log of farmerLogs[action]) {
 					const type = log[1]
-					if (me || (type !== 4 && type !== 9 && type !== 5)) {
+					if (me || (type !== 4 && type !== 9 && type !== 10 && type !== 5)) {
 						this.logs[actionI].push(log)
 					}
 				}
@@ -1471,6 +1471,8 @@ class Game {
 				this.addMarker(log[0], log[2], log[3], log[4])
 			} else if (type === 9) {
 				this.addTextMarker(log[0], log[2], log[3], log[4], log[5])
+			} else if (type === 10) {
+				this.clearMarks()
 			} else {
 				this.addConsoleLine({id: 'l' + this.currentAction + '-' + this.currentLog, log})
 			}
@@ -1585,6 +1587,17 @@ class Game {
 			if (color.length === 8) { color = color.substr(2) }
 			this.markersText[cell.id] = {owner, text, color: '#' + color, duration, x, y}
 		}
+	}
+
+	public clearMarks() {
+		for (const m in this.markers) {
+			delete this.markers[m]
+		}
+		this.markers = []
+		for (const m in this.markersText) {
+			delete this.markersText[m]
+		}
+		this.markersText = []
 	}
 
 	public addDrawableElement(element: any, line: number): number {
