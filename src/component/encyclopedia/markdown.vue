@@ -14,7 +14,7 @@
 			html: true,
 			breaks: true,
 			linkify: true,
-  		})
+		})
 		html: string = ''
 
 		@Watch('content', {immediate: true})
