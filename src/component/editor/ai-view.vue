@@ -1318,6 +1318,13 @@
 					// console.log("javadoc", javadoc)
 				}
 
+				// Escape
+				javadoc.description = LeekWars.protect(javadoc.description)
+				for (const item of javadoc.items) {
+					item.name = LeekWars.protect(item.name)
+					item.text = LeekWars.protect(item.text)
+				}
+
 				const fun = {
 					name: match[1],
 					fullName,
