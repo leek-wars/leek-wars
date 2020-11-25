@@ -6,7 +6,10 @@
 		</div>
 		<div v-if="chat && chat.messages.length" ref="messages" v-autostopscroll class="messages" @scroll="scroll">
 			<template v-for="(message, m) in $store.state.chat[channel].messages">
-				<div v-if="message.author.id === 0" :key="m" class="message">
+				<div v-if="message.author.id === -1" :key="m" class="separator">
+					{{ message.time | date }}
+				</div>
+				<div v-else-if="message.author.id === 0" :key="m" class="message">
 					<img class="avatar" src="/image/favicon.png">
 					<router-link :to="'/fight/' + message.texts[0].split('|')[1]">
 						<div class="bubble br-notification">
@@ -404,5 +407,24 @@
 		position: absolute;
 		top: 0;
 		width: 100%;
+	}
+	.separator {
+		text-align: center;
+		color: #777;
+		display: flex;
+		align-items: center;
+		margin: 12px 0;
+		&:before, &:after {
+			border-bottom: 1px dashed #aaa;
+			width: 100%;
+			content: " ";
+			flex: 1;
+		}
+		&:before {
+			margin-right: 10px;
+		}
+		&:after {
+			margin-left: 10px;
+		}
 	}
 </style>
