@@ -9,7 +9,7 @@
 			<explorer-folder v-if="currentFolder !== fileSystem.rootFolder" v-ripple :folder="{id: -1}" @click.native="currentFolder = fileSystem.folderById[currentFolder.parent]" />
 			<template v-for="(item, i) in currentFolder.items">
 				<explorer-folder v-if="item.folder" :key="i" v-ripple :folder="item" @click.native="currentFolder = item" />
-				<ai v-else :key="i" v-ripple :ai="item.ai" @click.native="$emit('select', item.ai)" />
+				<ai v-else :key="i" v-ripple :ai="item.ai" :small="false" :library="false" @click.native="$emit('select', item.ai)" />
 			</template>
 		</div>
 	</div>

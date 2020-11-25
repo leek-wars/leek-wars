@@ -40,7 +40,7 @@
 									<leek-image :leek="allLeeks[leek.id]" :ai="leek.ai" :scale="0.4" />
 									<div>{{ allLeeks[leek.id].name }}</div>
 								</div>
-								<ai v-if="leek.ai && leek.ai in allAis" v-ripple :ai="allAis[leek.ai]" :small="true" @click.native="clickLeekAI(leek)" />
+								<ai v-if="leek.ai && leek.ai in allAis" v-ripple :ai="allAis[leek.ai]" :small="true" :library="false" @click.native="clickLeekAI(leek)" />
 							</div>
 							<div v-if="!currentScenario.base && LeekWars.objectSize(currentScenario.team1) < getLimit(currentScenario.type)" class="add" @click="addLeekTeam = currentScenario.team1; leekDialog = true">+</div>
 						</div>
@@ -54,7 +54,7 @@
 									<leek-image :leek="allLeeks[leek.id]" :ai="leek.ai" :scale="0.4" />
 									<div>{{ allLeeks[leek.id].name }}</div>
 								</div>
-								<ai v-if="leek.ai && leek.ai in allAis" v-ripple :ai="allAis[leek.ai]" :small="true" @click.native="clickLeekAI(leek)" />
+								<ai v-if="leek.ai && leek.ai in allAis" v-ripple :ai="allAis[leek.ai]" :small="true" :library="false" @click.native="clickLeekAI(leek)" />
 							</div>
 							<div v-if="!currentScenario.base && LeekWars.objectSize(currentScenario.team2) < getLimit(currentScenario.type)" class="add" @click="addLeekTeam = currentScenario.team2; leekDialog = true">+</div>
 						</div>
@@ -275,7 +275,7 @@
 			<div v-if="aiDialogBot" class="title"><v-icon>mdi-file</v-icon> {{ $t('bot_ais') }}</div>
 			<div v-if="aiDialogBot" class="bot-ai">
 				<div v-for="ai in fileSystem.botAIs" :key="ai.id" v-ripple class="ai" @click="clickDialogAI(ai)">
-					<ai :ai="ai" />
+					<ai :ai="ai" :small="false" :library="false" />
 					<ul>
 						<li v-for="(spec, s) in ai.specs" :key="s">{{ $t(spec) }}</li>
 					</ul>
