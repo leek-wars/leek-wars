@@ -132,16 +132,15 @@
 				if (this.code !== 'Encyclopédie') {
 					parts.push({name: this.code, link: '/encyclopedia/' + this.code})
 				}
-				return parts;
+				return parts
 			}
 		}
 		get contributor() {
 			return store.state.farmer ? store.state.farmer.contributor || store.state.farmer.moderator : false
 		}
 		get parents() {
-			let parents = []
-			let current = this.page
-			let visited = new Set<number>()
+			const parents = []
+			const visited = new Set<number>()
 			for (let current = this.page; current; current = LeekWars.encyclopediaById[current.parent]) {
 				if (visited.has(current.id)) { break }
 				visited.add(current.id)
@@ -150,8 +149,6 @@
 			return parents.reverse()
 		}
 
-		created() {
-		}
 		beforeDestroy() {
 			this.$root.$off('ctrlS')
 			LeekWars.large = false
@@ -264,7 +261,7 @@
 
 						const generation = (editor.getDoc() as any).history.generation
 						// console.log("generation", generation, this.editor.doc)
-						this.modified = generation != this.initialGeneration
+						this.modified = generation !== this.initialGeneration
 
 						Vue.nextTick(() => {
 							const title = (this.$refs.markdown as HTMLElement).querySelector('h1')
