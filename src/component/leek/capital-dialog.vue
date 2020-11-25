@@ -100,14 +100,14 @@
 		],
 		mp : [
 			{step : 0, capital : 20, sup : 1},
-			{step : 1, capital : 30, sup : 1},
-			{step : 2, capital : 40, sup : 1},
-			{step : 3, capital : 50, sup : 1},
-			{step : 4, capital : 60, sup : 1},
-			{step : 5, capital : 70, sup : 1},
-			{step : 6, capital : 80, sup : 1},
-			{step : 7, capital : 90, sup : 1},
-			{step : 8, capital : 100, sup : 1}
+			{step : 1, capital : 40, sup : 1},
+			{step : 2, capital : 60, sup : 1},
+			{step : 3, capital : 80, sup : 1},
+			{step : 4, capital : 100, sup : 1},
+			{step : 5, capital : 120, sup : 1},
+			{step : 6, capital : 140, sup : 1},
+			{step : 7, capital : 160, sup : 1},
+			{step : 8, capital : 180, sup : 1}
 		]
 	}
 

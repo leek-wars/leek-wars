@@ -68,7 +68,7 @@
 				const added = amount - 3
 				const progression = added <= 8 ? added : 8
 				const leftover = added > 8 ? added - 8 : 0
-				return added > 0 ? 10 * progression + progression * (progression + 1) * 10 / 2 + leftover * 100 : 0
+				return added > 0 ? progression * (progression + 1) * 20 / 2 + leftover * 180 : 0
 			}
 			case 'frequency':
 				return amount - 100
