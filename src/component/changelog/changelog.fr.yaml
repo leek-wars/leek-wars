@@ -1,3 +1,30 @@
+219:
+  title: Encyclopédie et nouvelles fonctions
+  added:
+    - L'encyclopédie de Leek Wars est ouverte et remplace l'ancien wiki.
+    - "#ai Ajout des fonctions getAlliedTurret() et getEnemyTurret() pour récupérer les ID des tourelles."
+    - "#ai Ajout de la fonction getAllChips() pour récupérer toutes les puces du jeu."
+    - "#ai Ajout de la fonction getAllWeapons() pour récupérer toutes les armes du jeu."
+    - "#ai Ajout de la fonction getAllEffects() pour récupérer tous les effets du jeu."
+    - "#ai Ajout de la fonction getFightID() pour récupérer l'ID du combat courant."
+    - "#ai Ajout des fonctions getTime(), getDate() get getTimestamp() pour récupérer la date du combat."
+    - "#ai Ajout de la fonction clearMarks() pour effacer tous les mark() et markText() courants."
+  improved:
+    - Léger rééquilibrage de plusieurs items suite à la précédente màj, voir le message forum.
+    - Le cout d'un PM passe de +10 par PM à +20 par PM.
+    - Le niveau Lambda des bots est maintenant une IA beaucoup plus basique.
+    - Réduction des caractéristiques des bots à bas niveau.
+    - Mélange des participants de même niveau en tournoi et BR (merci à Lmare).
+    - "#ai Les fonctions isLeek, getLeek, getLeekOnCell, move{Away/Toward}FromLeeks sont renommées."
+    - "#ai La constante CELL_PLAYER est remplacée par CELL_ENTITY."
+    - Affichage de la fonction/constante de remplacement des fonctions/constantes dépréciées dans la doc.
+    - Ajout d'une description sur le retour de la fonction getCellContent.
+  fixed:
+    - Ajout des cartouches manquantes pour le Fusil et le Rhino.
+    - Correction de la limite de taille d'une IA et passage à 50 caractères au lieu de 30.
+    - La vulnérabilité de l'électriseur mystérieux redevient bien cumulable (merci à taga).
+    - Correction d'un bug de chargement et de duplication de messages privés.
+
 218:
   title: 2 nouvelles armes, 4 nouvelles puces, IA des Bots, Export d'IA, Statistiques déplacement
   added:

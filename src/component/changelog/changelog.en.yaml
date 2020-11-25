@@ -1,3 +1,30 @@
+219:
+  title: Encyclopedia and new features
+  added:
+    - The Leek Wars encyclopedia is open and replaces the old wiki.
+    - "#ai Added functions getAlliedTurret() and getEnemyTurret() to retrieve turret IDs."
+    - "#ai Added the getAllChips() function to retrieve all chips in the game."
+    - "#ai Added function getAllWeapons() to retrieve all weapons in the game."
+    - "#ai Added function getAllEffects() to retrieve all the effects of the game."
+    - "#ai Added function getFightID() to retrieve the ID of the current fight."
+    - "#ai Added functions getTime(), getDate() get getTimestamp() to retrieve the date of the fight."
+    - "#ai Added function clearMarks() to clear all current mark() and markText()."
+  improved:
+    - Slight rebalancing of several items after the previous update, see the forum message.
+    - The cost of a PM goes from +10 per PM to +20 per PM.
+    - The Lambda level of bots is now a much more basic AI.
+    - Reduced the characteristics of low level bots.
+    - Mix of participants of the same level in tournament and BR (thanks to Lmare).
+    - "#ai Functions isLeek, getLeek, getLeekOnCell, move{Away/Toward}FromLeeks are renamed."
+    - "#ai The constant CELL_PLAYER is replaced by CELL_ENTITY."
+    - Display of the function or constant to replace deprecated functions and constants in the doc.
+    - Added a description on the return of the getCellContent function.
+  fixed:
+    - Added missing cartridges for the Rifle and the Rhino.
+    - Fixed the size limit of an AI and changed it to 50 characters instead of 30.
+    - The vulnerability of the mysterious electrifier becomes cumulable again (thanks to taga).
+    - Fixed a bug in loading and duplicating private messages.
+
 218:
   title: 2 new weapons, 4 new chips, AI from Bots, AI export, Movement statistics
   added:
