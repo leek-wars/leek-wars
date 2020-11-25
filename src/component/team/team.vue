@@ -114,7 +114,7 @@
 							<h4>{{ $t('turret') }}</h4>
 							<div class="level">{{ $t('level_n', [team.level]) }}</div>
 
-							<ai v-if="team.turret_ai" v-ripple :ai="team.turret_ai" :library="false" :class="{active: member}" @click.native="turretAiDialog = true" />
+							<ai v-if="team.turret_ai" v-ripple :ai="team.turret_ai" :library="false" :small="false" :class="{active: member}" @click.native="turretAiDialog = true" />
 							<div v-else-if="member" class="no-ai" @click="turretAiDialog = true">{{ $t('no_ai') }}</div>
 						</div>
 					</div>

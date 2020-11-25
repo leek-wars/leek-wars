@@ -203,9 +203,9 @@
 					<template v-else>
 						<template v-if="leek.ai">
 							<router-link v-if="my_leek" :to="'/editor/' + leek.ai.id">
-								<ai :ai="leek.ai" :library="false" />
+								<ai :ai="leek.ai" :library="false" :small="false" />
 							</router-link>
-							<ai v-else :ai="leek.ai" :library="false" />
+							<ai v-else :ai="leek.ai" :library="false" :small="false" />
 						</template>
 						<span v-else class="empty">{{ $t('no_ai') }}</span>
 					</template>
@@ -510,7 +510,7 @@
 			<span slot="title">{{ $t('ai_of', [leek.name]) }}</span>
 			<div class="ai_popup">
 				<div :class="{dashed: draggedAI && (!leek.ai || draggedAI.id !== leek.ai.id)}" class="leek-ai" @dragover="dragOver" @drop="aiDrop('leek', $event)">
-					<ai v-if="leek.ai" :ai="leek.ai" :library="true" @click.native="removeAI()" @dragstart.native="aiDragStart(leek.ai, $event)" @dragend.native="aiDragEnd(leek.ai, $event)" />
+					<ai v-if="leek.ai" :ai="leek.ai" :library="true" :small="false" @click.native="removeAI()" @dragstart.native="aiDragStart(leek.ai, $event)" @dragend.native="aiDragEnd(leek.ai, $event)" />
 				</div>
 				<br>
 				<explorer class="explorer" @select="selectAI($event)" />

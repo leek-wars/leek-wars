@@ -15,8 +15,8 @@
 	@Component({ name: "ai" })
 	export default class AIElement extends Vue {
 		@Prop({required: true}) ai!: AI
-		@Prop() library!: boolean
-		@Prop() small!: boolean
+		@Prop({required: true}) library!: boolean
+		@Prop({required: true}) small!: boolean
 
 		get show_lines() {
 			if (this.small) { return false }
