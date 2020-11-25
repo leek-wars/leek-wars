@@ -111,30 +111,9 @@
 							</div>
 						</div>
 
-						<div v-if="showProblemsDetails && problemsHeight && (LeekWars.analyzer.error_count || LeekWars.analyzer.warning_count || LeekWars.analyzer.todo_count)" class="problems-details" :style="{height: problemsHeight + 'px'}">
+						<div v-if="showProblemsDetails && problemsHeight && (LeekWars.analyzer.error_count || LeekWars.analyzer.warning_count || LeekWars.analyzer.todo_count)" :style="{height: problemsHeight + 'px'}">
 							<div class="problems-resizer" @mousedown="problemsResizerMousedown"></div>
-							<div v-for="(ais, entrypoint) in LeekWars.analyzer.problems" :key="entrypoint">
-								<div v-for="(problems, ai) in ais" v-if="problems.length" :key="ai">
-									<div class="file" @click="toggleProblemFile(entrypoint + ai)">
-										<v-icon>{{ problemsCollapsed[entrypoint + ai] ? 'mdi-chevron-right' : 'mdi-chevron-down' }}</v-icon>
-										<span v-if="fileSystem.aiByFullPath[ai].entrypoints.length > 1">{{ fileSystem.ais[entrypoint].name }} {{ ' ➞ ' }}</span>
-										{{ ai }}
-										<span v-if="fileSystem.aiByFullPath[ai].errors" class="count error">{{ fileSystem.aiByFullPath[ai].errors }}</span>
-										<span v-if="fileSystem.aiByFullPath[ai].warnings" class="count warning">{{ fileSystem.aiByFullPath[ai].warnings }}</span>
-										<span v-if="fileSystem.aiByFullPath[ai].todos" class="count todo">{{ fileSystem.aiByFullPath[ai].todos }}</span>
-									</div>
-									<div v-if="!problemsCollapsed[entrypoint + ai]">
-										<div v-for="(problem, p) in problems" :key="p" class="problem" @click="jumpProblem(ai, problem)">
-											<v-icon v-if="problem[4] === 0" class="error">mdi-close-circle-outline</v-icon>
-											<v-icon v-else-if="problem[4] === 1" class="warning">mdi-alert-circle-outline</v-icon>
-											<v-icon v-else class="todo">mdi-format-list-checks</v-icon>
-											<!-- {{ $t('ls_error.' + problem[5], problem[6]) }} -->
-											{{ problem[5] }}
-											<span class="line">ligne {{ problem[0] }} [{{ problem[1] }} : {{ problem[3] }}]</span>
-										</div>
-									</div>
-								</div>
-							</div>
+							<editor-problems />
 						</div>
 						<div class="status">
 							<div v-ripple class="problems" @click="toggleProblems">
@@ -252,6 +231,7 @@
 	const Explorer = () => import(/* webpackChunkName: "[request]" */ `@/component/editor/editor-explorer.${locale}.i18n`)
 	const EditorTabs = () => import(/* webpackChunkName: "[request]" */ `@/component/editor/editor-tabs.${locale}.i18n`)
 	const EditorTest = () => import(/* webpackChunkName: "[request]" */ `@/component/editor/editor-test.${locale}.i18n`)
+	const EditorProblems = () => import(/* webpackChunkName: "[request]" */ `@/component/editor/editor-problems.${locale}.i18n`)
 	import { generateKeywords } from './keywords'
 	import './leekscript-monokai.scss'
 	import(/* webpackChunkName: "[request]" */ /* webpackMode: "eager" */ `@/lang/doc.${locale}.lang`)
@@ -262,7 +242,14 @@
 
 	@Component({
 		name: 'editor', i18n: {},
-		components: { 'ai-view': AIView, 'editor-test': EditorTest, 'editor-tabs': EditorTabs, 'explorer': Explorer, 'editor-finder': EditorFinder },
+		components: {
+			'ai-view': AIView,
+			'editor-test': EditorTest,
+			'editor-tabs': EditorTabs,
+			'explorer': Explorer,
+			'editor-finder': EditorFinder,
+			'editor-problems': EditorProblems
+		},
 		mixins
 	})
 	export default class EditorPage extends Vue {
@@ -293,7 +280,6 @@
 		problemsHeight: number = 200
 		newAIv2Dialog: boolean = false
 		showProblemsDetails: boolean = true
-		problemsCollapsed: {[key: string]: boolean} = {}
 		fileSystem = fileSystem
 		fileMenu: boolean = false
 		history: AI[] = []
@@ -743,10 +729,6 @@
 			}
 		}
 
-		toggleProblemFile(ai: string) {
-			Vue.set(this.problemsCollapsed, ai, !this.problemsCollapsed[ai])
-		}
-
 		problems(entrypoint: number, ai: AI, problems: any) {
 
 			const editor = this.getAiView(ai)
@@ -1011,64 +993,6 @@
 		position: absolute;
 		left: 0;
 		right: 0;
-	}
-
-	.problems-details {
-		background: white;
-		border-top: 1px solid #ddd;
-		overflow-y: auto;
-		position: relative;
-		.v-icon {
-			font-size: 20px;
-		}
-		.file {
-			display: flex;
-			align-items: center;
-			padding: 5px 0;
-			cursor: pointer;
-			user-select: none;
-			&:hover {
-				background: #eee;
-			}
-			.count {
-				padding: 1px 6px;
-				margin-left: 5px;
-				border-radius: 10px;
-				font-size: 13px;
-				border-width: 1px;
-				border-style: solid;
-				font-weight: 500;
-			}
-		}
-		.problem {
-			display: flex;
-			align-items: center;
-			padding: 5px 0;
-			padding-left: 20px;
-			cursor: pointer;
-			&:hover {
-				background: #eee;
-			}
-			.line {
-				padding-left: 6px;
-				color: #999;
-				user-select: none;
-				flex-shrink: 0;
-				padding-right: 8px;
-			}
-		}
-		.error {
-			color: red;
-			margin-right: 4px;
-		}
-		.warning {
-			color: #ff9100;
-			margin-right: 4px;
-		}
-		.todo {
-			color: #0099ff;
-			margin-right: 4px;
-		}
 	}
 	.status {
 		flex: 0 0 36px;
