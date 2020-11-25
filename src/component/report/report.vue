@@ -428,7 +428,7 @@
 					const farmerLogs = this.logs[farmer]
 					if (i in farmerLogs) {
 						this.actions[a].me = parseInt(farmer, 10) === store.state.farmer!.id
-						this.actions[a].logs.push(...farmerLogs[i].filter(l => l[1] !== 4 && l[1] !== 9))
+						this.actions[a].logs.push(...farmerLogs[i].filter(l => l[1] !== 4 && l[1] !== 9 && l[1] !== 10))
 					}
 				}
 			}
