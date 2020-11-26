@@ -19,8 +19,6 @@
 	"n_challenges": "{0} défis",
 	"n_remaining_fights": "{0} combats restants",
 	"n_fights": "1 combat | {count} combats",
-	"next_fight_in": "Prochain combat dans {0}",
-	"no_more_fights": "Plus de combats",
 	"no_opponent_of_your_size": "Pas d'adversaire à ta taille !",
 	"no_team_of_your_size": "Pas d'équipe à votre taille !",
 	"select_compo": "Sélectionnez votre composition",
