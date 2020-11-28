@@ -1,6 +1,6 @@
 <template>
 	<div v-show="LeekWars.squares.squares.length" class="squares">
-		<router-link v-for="square in LeekWars.squares.squares" :key="square.id" v-ripple :to="square.link" class="square card">
+		<router-link v-for="square in LeekWars.squares.squares" :key="square.id" v-ripple :to="square.link" class="square card" :class="{[square.clazz]: square.clazz}">
 			<v-icon v-if="square.icon" :class="{padding: square.padding}" class="image">{{ square.image }}</v-icon>
 			<img v-else :src="square.image" :class="{padding: square.padding}" class="image">
 			<div class="wrapper">
