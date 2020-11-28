@@ -191,6 +191,7 @@ class Notification {
 	public result!: number | null
 	public read!: boolean
 	public icon!: boolean
+	public clazz!: string
 
 	constructor(data: any, link: string | null, image: string | null, title: string[] = [], message: string[] = [], result: number | null = null) {
 		this.id = data.id
@@ -211,6 +212,14 @@ class Notification {
 		this.message = message.map(LeekWars.protect)
 		this.result = result
 		this.read = data.read
+
+		this.clazz = ''
+		if (this.type === NotificationType.TROPHY_UNLOCKED) {
+			this.clazz = 'notif-trophy'
+		}
+		if (this.type === NotificationType.TEAM_TOURNAMENT_WIN || this.type === NotificationType.FARMER_TOURNAMENT_WIN || this.type === NotificationType.TOURNAMENT_WINNER) {
+			this.clazz = 'notif-bigwin'
+		}
 	}
 }
 

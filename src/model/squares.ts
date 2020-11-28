@@ -11,6 +11,7 @@ class Square {
 	title!: string
 	link!: string | null
 	padding!: boolean
+	clazz!: string
 }
 
 class Squares {
@@ -30,7 +31,8 @@ class Squares {
 			title: i18n.t('notification.title_' + notification.type, notification.title) as string,
 			message: i18n.t('notification.message_' + notification.type, notification.message) as string,
 			link: notification.link,
-			padding: true
+			padding: true,
+			clazz: notification.clazz
 		})
 	}
 
@@ -41,7 +43,8 @@ class Squares {
 			title: conversation.last_farmer_name,
 			message: "► " + conversation.last_message,
 			link: "/messages/conversation/" + conversation.id,
-			padding: false
+			padding: false,
+			clazz: ''
 		})
 	}
 }

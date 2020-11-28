@@ -879,3 +879,23 @@ body {
 .pointer {
 	cursor: pointer;
 }
+
+.notif-trophy {
+	background: linear-gradient(0deg, #ffb029, #ffdc3a);
+	border-radius: 2px;
+	border: 1px solid #ffb430;
+	.large-icon {
+		color: white;
+	}
+}
+.notif-bigwin {
+	background: linear-gradient(0deg, #0d2ad3, #329cff);
+	border-radius: 2px;
+	border: 1px solid #329cff;
+	&, .date, .message {
+		color: white;
+	}
+	.large-icon {
+		color: white;
+	}
+}

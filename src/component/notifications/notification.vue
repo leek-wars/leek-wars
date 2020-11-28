@@ -1,5 +1,5 @@
 <template>
-	<router-link v-if="notification" v-ripple :to="link" :notif="notification.id" :type="notification.type" :class="{unread: !notification.read, [clazz]: clazz }" class="notification" @click.native="click">
+	<router-link v-if="notification" v-ripple :to="link" :notif="notification.id" :type="notification.type" :class="{unread: !notification.read, [notification.clazz]: notification.clazz }" class="notification" @click.native="click">
 		<v-icon v-if="notification.icon" class="image">{{ notification.image }}</v-icon>
 		<img v-else :src="'/image/' + notification.image" class="image">
 		<div class="title" v-html="$t('notification.title_' + notification.type, notification.title)"></div>
@@ -8,8 +8,8 @@
 		<span v-if="resultIcon && LeekWars.notifsResults" class="result">
 			<v-icon :class="resultIcon">{{ resultIcon }}</v-icon>
 		</span>
-		<v-icon v-if="clazz === 'bigwin'" class="large-icon">mdi-crown</v-icon>
-		<v-icon v-else-if="clazz === 'trophy'" class="large-icon">mdi-trophy</v-icon>
+		<v-icon v-if="notification.clazz === 'notif-bigwin'" class="large-icon">mdi-crown</v-icon>
+		<v-icon v-else-if="notification.clazz === 'notif-trophy'" class="large-icon">mdi-trophy</v-icon>
 	</router-link>
 </template>
 
@@ -25,15 +25,6 @@
 		get link() { return this.notification.link ? this.notification.link : '' }
 		get resultIcon() {
 			return this.notification.result === null ? '' : this.notification.result === 1 ? 'mdi-check' : this.notification.result === 0 ? 'mdi-equal' : 'mdi-close'
-		}
-		get clazz() {
-			if (this.notification.type === NotificationType.TROPHY_UNLOCKED) {
-				return 'trophy'
-			}
-			if (this.notification.type === NotificationType.TEAM_TOURNAMENT_WIN || this.notification.type === NotificationType.FARMER_TOURNAMENT_WIN || this.notification.type === NotificationType.TOURNAMENT_WINNER) {
-				return 'bigwin'
-			}
-			return ''
 		}
 
 		click() {
@@ -52,25 +43,6 @@
 			background-color: rgba(95, 173, 27, 0.15);
 		}
 		margin-bottom: 1px;
-		&.trophy {
-			background: linear-gradient(0deg, #ffb029, #ffdc3a);
-			border-radius: 2px;
-			border: 1px solid #ffb430;
-			.large-icon {
-				color: white;
-			}
-		}
-		&.bigwin {
-			background: linear-gradient(0deg, #0d2ad3, #329cff);
-			border-radius: 2px;
-			border: 1px solid #329cff;
-			&, .date, .message {
-				color: white;
-			}
-			.large-icon {
-				color: white;
-			}
-		}
 	}
 	.notification:hover {
 		background-color: white;
