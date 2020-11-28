@@ -22,6 +22,7 @@ import ReportDialog from '@/component/moderation/report-dialog.vue'
 import NotificationElement from '@/component/notifications/notification.vue'
 import Pagination from '@/component/pagination.vue'
 import Popup from '@/component/popup.vue'
+import RankingBadge from '@/component/ranking-badge.vue'
 import RichTooltipChip from '@/component/rich-tooltip/rich-tooltip-chip.vue'
 import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 import RichTooltipLeek from '@/component/rich-tooltip/rich-tooltip-leek.vue'
@@ -73,6 +74,7 @@ Vue.component('turret-image', TurretImage)
 Vue.component('avatar', Avatar)
 Vue.component('emblem', Emblem)
 Vue.component('talent', Talent)
+Vue.component('ranking-badge', RankingBadge)
 Vue.component('chat', ChatElement)
 Vue.component('comments', Comments)
 Vue.component('report-dialog', ReportDialog)

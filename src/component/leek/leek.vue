@@ -102,6 +102,7 @@
 							<span v-html="$t('main.talent_difference_no_gains', [leek.name])"></span>
 						</template>
 					</tooltip>
+					<ranking-badge v-if="leek && leek.ranking <= 1000 && leek.in_garden" :id="leek.id" :ranking="leek.ranking" category="leek" />
 				</div>
 
 				<tooltip v-if="leek">

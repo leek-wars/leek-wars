@@ -68,15 +68,15 @@
 					</template>
 				</tooltip>
 
-				<center>
-					<br>
+				<div class="info-talent">
 					<tooltip>
 						<template v-slot:activator="{ on }">
 							<talent :id="team ? team.id : ''" :talent="team ? team.talent : '...'" category="team" :on="on" />
 						</template>
 						{{ $t('talent') }}
 					</tooltip>
-				</center>
+					<ranking-badge v-if="team && team.ranking <= 1000" :id="team.id" :ranking="team.ranking" category="team" />
+				</div>
 
 				<br>
 				<tooltip v-if="team">
@@ -943,6 +943,12 @@
 	}
 	.xp-bar.blue {
 		background: #008fbb;
+	}
+	.info-talent {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		margin-top: 15px;
 	}
 	.fights {
 		width: 100%;
