@@ -131,6 +131,7 @@
 							</template>
 							<div v-else v-html="$t('main.talent_difference_farmer_no_gains', [farmer.name])"></div>
 						</tooltip>
+						<ranking-badge v-if="farmer && farmer.ranking <= 1000 && farmer.in_garden" :id="farmer.id" :ranking="farmer.ranking" category="farmer" />
 					</div>
 					<tooltip v-if="farmer">
 						<template v-slot:activator="{ on }">

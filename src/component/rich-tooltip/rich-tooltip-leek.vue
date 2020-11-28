@@ -25,6 +25,7 @@
 						</span>
 						<talent :id="leek.id" :talent="leek.talent" category="leek" />
 						<span class="talent-more">({{ leek.talent_more >= 0 ? '+' + leek.talent_more : leek.talent_more }})</span>
+						<ranking-badge v-if="leek && leek.ranking <= 1000 && leek.in_garden" :id="leek.id" :ranking="leek.ranking" category="leek" />
 						<span class="level">• {{ $t('main.level_n', [leek.level]) }}</span>
 						<v-btn class="expand" icon small @click="expand_items = !expand_items">
 							<v-icon v-if="expand_items">mdi-chevron-up</v-icon>
@@ -152,6 +153,11 @@
 		.title {
 			font-size: 14px;
 		}
+		.badge {
+			margin-bottom: 2px;
+			vertical-align: bottom;
+			margin-right: 3px;
+		}
 	}
 	.name {
 		display: flex;
@@ -193,7 +199,7 @@
 		display: inline-block;
 		font-size: 15px;
 		font-weight: 500;
-		margin-left: 5px;
+		margin-left: 3px;
 		vertical-align: top;
 		margin-top: 10px;
 		color: #555;
@@ -245,11 +251,11 @@
 		width: 600px;
 	}
 	.weapons {
-		flex: 0.85;
-		padding: 10px;
+		flex: 0.8;
+		padding: 4px;
 		.weapon {
-			width: 115px;
-			max-height: 46px;
+			width: 110px;
+			max-height: 35px;
 			margin: 8px;
 			vertical-align: middle;
 			object-fit: contain;
@@ -259,7 +265,7 @@
 		flex: 1;
 		padding: 4px;
 		.chip {
-			width: 40px;
+			width: 32px;
 			margin: 2px;
 			vertical-align: top;
 		}

@@ -3,7 +3,7 @@
 		<div class="page-header page-bar">
 			<h1>{{ $t('title') }}</h1>
 			<div v-if="garden" class="tabs">
-				<div class="tab action hidden" v-on="on">
+				<div class="tab action hidden disabled">
 					<img src="/image/icon/garden.png">
 					<span>{{ garden.fights }}</span>
 				</div>
