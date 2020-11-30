@@ -9,6 +9,10 @@
 					<span>{{ $t('hide_unlocked') }}</span>
 					<v-switch :input-value="hide_unlocked" hide-details />
 				</div>
+				<div class="tab" @click="sort_by_rarity = !sort_by_rarity">
+					<span>{{ $t('sort_by_rarity') }}</span>
+					<v-switch :input-value="sort_by_rarity" hide-details />
+				</div>
 			</div>
 		</div>
 		<panel class="first">
@@ -82,6 +86,7 @@
 		title: any = null
 		loaded: boolean = false
 		hide_unlocked: boolean = localStorage.getItem('options/hide-unlocked-trophies') === 'true'
+		sort_by_rarity: boolean = localStorage.getItem('options/sort-by-rarity-trophies') === 'true'
 		farmer_name: string = '...'
 		icons = [
 			'mdi-trophy-variant-outline',
@@ -104,6 +109,9 @@
 			const result: {[key: number]: any} = {}
 			for (const category in this.raw_trophies) {
 				result[category] = this.raw_trophies[category].filter((t: any) => (category !== '6' || t.unlocked) && (!this.hide_unlocked || !t.unlocked))
+				if(this.sort_by_rarity){
+					result[category] = result[category].sort(function(a,b){ return a.rarity < b.rarity })
+				}
 			}
 			return result
 		}
