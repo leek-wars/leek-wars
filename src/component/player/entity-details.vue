@@ -35,22 +35,23 @@
 						<img src="/image/charac/small/mp.png">
 						<div class="mp color-mp">{{ entity.mp }}</div>
 					</div>
-					<div :class="{zero: entity.absoluteShield === 0}" class="stat">
+					<div :class="{zero: entity.absoluteShield === 0, dark}" class="stat black">
 						<img src="/image/charac/small/absolute_shield.png">
 						<div class="absolute-shield">{{ entity.absoluteShield }}</div>
 					</div>
-					<div :class="{zero: entity.relativeShield === 0}" class="stat">
+					<div :class="{zero: entity.relativeShield === 0, dark}" class="stat black">
 						<img src="/image/charac/small/relative_shield.png">
 						<div class="relative-shield">{{ entity.relativeShield }}%</div>
 					</div>
-					<div :class="{zero: entity.damageReturn === 0}" class="stat">
+					<div :class="{zero: entity.damageReturn === 0, dark}" class="stat black">
 						<img src="/image/charac/small/damage_return.png">
 						<div class="damage-return">{{ entity.damageReturn }}%</div>
 					</div>
-					<br>
+				</div>
+				<div class="stats">
 					<div :class="{zero: entity.strength === 0}" class="stat">
-						<img src="/image/charac/small/strength.png">
-						<div class="strength color-strength">{{ entity.strength }}</div>
+						<img src="/image/charac/small/strength.png" :class="{dark}">
+						<div class="strength color-strength" :class="{dark}">{{ entity.strength }}</div>
 					</div>
 					<div :class="{zero: entity.wisdom === 0}" class="stat">
 						<img src="/image/charac/small/wisdom.png">
@@ -64,15 +65,15 @@
 						<img src="/image/charac/small/resistance.png">
 						<div class="resistance color-resistance">{{ entity.resistance }}</div>
 					</div>
-					<div :class="{zero: entity.science === 0}" class="stat">
+					<div :class="{zero: entity.science === 0, dark}" class="stat">
 						<img src="/image/charac/small/science.png">
 						<div class="science color-science">{{ entity.science }}</div>
 					</div>
-					<div :class="{zero: entity.magic === 0}" class="stat">
+					<div :class="{zero: entity.magic === 0, dark}" class="stat">
 						<img src="/image/charac/small/magic.png">
 						<div class="magic color-magic">{{ entity.magic }}</div>
 					</div>
-					<div :class="{zero: entity.frequency === 0}" class="stat">
+					<div :class="{zero: entity.frequency === 0, dark}" class="stat black">
 						<img src="/image/charac/small/frequency.png">
 						<div class="frequency color-frequency">{{ entity.frequency }}</div>
 					</div>
@@ -112,21 +113,23 @@
 .details-wrapper {
 	position: absolute;
 	bottom: 6px;
-	left: 0;
-	width: 490px;
+	right: 0;
+	width: 395px;
 }
 .details {
 	width: 100%;
-	padding: 4px 10px;
-	padding-left: 5px;
+	padding: 4px 5px;
 	background-color: #fff;
 	box-shadow: 0px 2px 4px -1px rgba(0,0,0,0.2), 0px 4px 5px 0px rgba(0,0,0,0.14), 0px 1px 10px 0px rgba(0,0,0,0.12);
-	border-radius: 3px;
+	border-top-left-radius: 5px;
 	display: flex;
 	align-items: center;
 	&.dark {
 		background-color: #222;
 		color: #eee;
+	}
+	& > * {
+		flex: 1;
 	}
 }
 .details.dead {
@@ -174,13 +177,17 @@
 	width: 30px;
 	height: 30px;
 }
+.stats {
+	display: flex;
+	width: 100%;
+	margin-top: 4px;
+	gap: 2px;
+}
 .stat {
+	flex: 1;
 	display: inline-block;
-	margin-left: 2px;
-	font-size: 16px;
+	font-size: 14px;
 	font-weight: bold;
-	width: 58px;
-	margin-bottom: 3px;
 	white-space: nowrap;
 	div {
 		display: inline-block;
@@ -188,15 +195,30 @@
 		margin-bottom: 2px;
 	}
 	img {
-		width: 17px;
+		width: 14px;
 		margin-right: 3px;
+	}
+	&.dark {
+		filter: brightness(180%);
+	}
+	&.black {
+		color: black;
+		&.dark {
+			filter: invert(100%);
+		}
+	}
+	&.zero {
+		opacity: 0.25;
+		&.dark {
+			opacity: 0.9;
+		}
+		&.black.dark {
+			opacity: 0.3;
+		}
 	}
 }
 .stat.life {
-	width: 118px;
-}
-.zero {
-	opacity: 0.25;
+	flex: 2;
 }
 .small {
 	font-size: 14px;
@@ -204,6 +226,7 @@
 }
 .effects {
 	padding: 4px;
+	right: 0;
 	white-space: nowrap;
 	display: inline-block;
 	position: absolute;
@@ -215,7 +238,7 @@
 	img {
 		width: 36px;
 		height: 36px;
-		margin-right: 4px;
+		margin-left: 4px;
 		vertical-align: bottom;
 		object-fit: fill;
 	}
@@ -223,7 +246,7 @@
 .effects .effect:after {
 	position: absolute;
 	bottom: 0;
-	left: 0;
+	left: 4px;
 	padding: 1px 2px;
 	content: attr(value);
 	color: white;

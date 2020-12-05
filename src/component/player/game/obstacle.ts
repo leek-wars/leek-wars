@@ -27,7 +27,9 @@ class Obstacle {
 		}
 		// Caractéristiques
 		this.size = size
-		this.type = type
+		// this.type = type
+		const types = this.size === 2 ? this.game.map.options.largeObstacles.length : this.game.map.options.smallObstacles.length
+		this.type = game.map.random.next() * types | 0
 		// Position
 		const pos = game.ground.field.cellToXY(cell)
 		this.x = pos.x

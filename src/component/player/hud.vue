@@ -1,5 +1,5 @@
 <template>
-	<div class="hud" :class="{dark: game.map && game.map.options.dark}">
+	<div class="hud" :class="{dark: game.autoDark ? (game.map && game.map.options.dark) : game.dark}">
 		<div class="life-bar">
 			<div class="wrapper">
 				<template v-for="team in game.teams">
@@ -20,15 +20,7 @@
 			<div>FPS : {{ game.fps }}, avg: {{ game.avgFPS }}</div>
 			<div>Resources : {{ game.numData }}</div>
 		</div>
-		<div v-if="!LeekWars.mobile" ref="leftPart" class="left-part">
-			<div ref="actions" :style="{'margin-top': actionsMargin + 'px'}" class="actions">
-				<template v-for="line of game.consoleLines">
-					<action-element v-if="line.action" :key="line.id" :action="line.action" :leeks="game.leeks" :display-logs="true" turn="1" class="action" />
-					<pre v-else :key="line.id" :class="logClass(line.log)" :style="{color: logColor(line.log)}" class="log">[<leek :leek="game.leeks[line.log[0]]" />] {{ logText(line.log) }}</pre>
-				</template>
-			</div>
-		</div>
-		<div v-if="!LeekWars.mobile" class="timeline">
+		<div v-if="!LeekWars.mobile" class="timeline" :class="{large: !game.showActions}" :style="{left: (game.showActions ? (game.largeActions ? actionsWidth + 5 : 400) : 0) + 'px'}">
 			<tooltip v-for="(entity, e) of game.entityOrder" :key="e" top>
 				<template v-slot:activator="{ on }">
 					<div :class="{summon: entity.summon, current: entity.id === game.currentPlayer, dead: entity.dead}" :style="{background: entity === game.selectedEntity || entity === game.mouseEntity ? '#fffc' : (entity.id === game.currentPlayer ? entity.color : entity.gradient)}" class="entity" v-on="on" @mouseenter="entity_enter(entity)" @mouseleave="entity_leave(entity)" @click="entity_click(entity)">
@@ -43,10 +35,17 @@
 				{{ entity.name }}
 			</tooltip>
 		</div>
+		<div v-if="!LeekWars.mobile && game.showActions && actionsWidth > 0" ref="actions" class="actions" :class="{large: game.largeActions}" :style="{'width': game.largeActions ? actionsWidth + 'px' : null, 'max-width': game.largeActions ? Math.max(600, actionsWidth) + 'px' : null}">
+			<template v-for="line of game.consoleLines">
+				<action-element v-if="line.action" :key="line.id" :action="line.action" :leeks="game.leeks" :display-logs="true" turn="1" class="action" />
+				<pre v-else :key="line.id" :class="logClass(line.log)" :style="{color: logColor(line.log)}" class="log">[<leek :leek="game.leeks[line.log[0]]" />] {{ logText(line.log) }}</pre>
+			</template>
+		</div>
+		<div v-if="game.largeActions" class="resizer" :style="{left: actionsWidth + 'px'}" @mousedown="resizerMousedown"></div>
 		<template v-if="!LeekWars.mobile">
-			<entity-details v-if="game.mouseEntity" :entity="game.mouseEntity" :dark="game.map && game.map.options.dark" />
-			<entity-details v-else-if="game.selectedEntity" :entity="game.selectedEntity" :dark="game.map && game.map.options.dark" />
-			<entity-details v-else-if="game.currentPlayer in game.leeks" :entity="game.leeks[game.currentPlayer]" :dark="game.map && game.map.options.dark" />
+			<entity-details v-if="game.mouseEntity" :entity="game.mouseEntity" :dark="game.autoDark ? (game.map && game.map.options.dark) : game.dark" />
+			<entity-details v-else-if="game.selectedEntity" :entity="game.selectedEntity" :dark="game.autoDark ? (game.map && game.map.options.dark) : game.dark" />
+			<entity-details v-else-if="game.currentPlayer in game.leeks" :entity="game.leeks[game.currentPlayer]" :dark="game.autoDark ? (game.map && game.map.options.dark) : game.dark" />
 		</template>
 	</div>
 </template>
@@ -66,25 +65,24 @@
 	export default class Hud extends Vue {
 		@Prop({required: true}) game!: Game
 		debug: boolean = false
-		actionsMargin: number = 0
 		hover_entity: any | null = null
 		Turret = Turret
+		actionsWidth: number = 395
+
 		get barWidth() {
 			return LeekWars.mobile ? 300 : 500
 		}
 		get totalLife() {
 			return this.game.leeks.reduce((total, e) => total + (!e.summon ? e.life : 0), 0)
 		}
-		@Watch("game.consoleLines")
-		updateActions() {
-			Vue.nextTick(() => {
-				const actions = this.$refs.actions as HTMLElement
-				if (actions) {
-					const leftPart = this.$refs.leftPart as HTMLElement
-					this.actionsMargin = Math.min(0, leftPart.offsetHeight - actions.offsetHeight - 135)
-				}
-			})
+		get darkEnabledtest() {
+			return this.game.dark
 		}
+
+		created() {
+			this.actionsWidth = this.game.actionsWidth
+		}
+
 		entity_enter(entity: any) {
 			this.game.hoverEntity = entity
 			this.game.hoverEntity!.updateReachableCells()
@@ -109,6 +107,31 @@
 			if (log[1] >= 6 && log[1] <= 8) { return log[2] + i18n.t('leekscript.' + log[3], log[4]) }
 			return log[2]
 		}
+
+		resizerMousedown(e: MouseEvent) {
+			const startWidth = this.actionsWidth
+			const startX = e.clientX
+			const visible = this.actionsWidth > 0
+			const mousemove: any = (ev: MouseEvent) => {
+				let panelWidth = Math.max(0, Math.min(1000, startWidth + ev.clientX - startX))
+				if (visible && panelWidth < 60) {
+					panelWidth = 0
+				}
+				this.actionsWidth = panelWidth
+			}
+			const mouseup: any = (ev: MouseEvent) => {
+				document.documentElement!.removeEventListener('mousemove', mousemove)
+				document.documentElement!.removeEventListener('mouseup', mouseup)
+				this.game.actionsWidth = this.actionsWidth
+				if (this.game.actionsWidth === 0) {
+					this.game.largeActions = false
+					this.actionsWidth = 395
+				}
+			}
+			document.documentElement!.addEventListener('mousemove', mousemove, false)
+			document.documentElement!.addEventListener('mouseup', mouseup, false)
+			e.preventDefault()
+		}
 	}
 </script>
 
@@ -116,12 +139,16 @@
 	.timeline {
 		position: absolute;
 		bottom: 5px;
-		left: 500px; right: 0;
+		left: 400px; right: 400px;
 		text-align: center;
 		white-space: nowrap;
 		display: flex;
 		justify-content: center;
 		align-items: flex-end;
+		gap: 2px;
+		&.large {
+			left: 0;
+		}
 	}
 	.timeline .entity {
 		display: inline-flex;
@@ -208,34 +235,80 @@
 	}
 	.actions {
 		text-align: left;
-		padding: 6px;
-		width: 240px;
+		max-height: 120px;
+		width: 395px;
 		overflow: hidden;
-		background-color: rgba(255,255,255, 0.5);
+		position: absolute;
+		background: #fff;
+		border-top-right-radius: 5px;
+		box-shadow: 0px 2px 4px -1px rgba(0,0,0,0.2), 0px 4px 5px 0px rgba(0,0,0,0.14), 0px 1px 10px 0px rgba(0,0,0,0.12);
+		left: 0;
+		bottom: 0;
+		padding: 6px;
+		padding-bottom: 10px;
+		display: flex;
+		flex-direction: column;
+		justify-content: flex-end;
+		&::-webkit-scrollbar {
+			width: 4px;
+		}
+		&:not(.large) {
+			&:hover {
+				max-height: 100%;
+				height: auto;
+				width: 600px !important;
+				background-color: #f2f2f2ee;
+				border-top-right-radius: 0;
+			}
+			.log {
+				width: 600px;
+			}
+		}
+		&.large {
+			height: 100%;
+			max-height: 100%;
+			max-width: 1000px;
+			border-top-right-radius: 0;
+			background-color: #fff;
+			&:hover {
+				width: max(100%, 600px) !important;
+				background-color: #f2f2f2dd;
+			}
+		}
 		.action {
-			white-space: nowrap;
 			padding: 1px 0;
 			font-size: 14px;
-		}
-	}
-	.actions:hover {
-		width: auto;
-		background-color: rgba(255,255,255, 1);
-		.action {
-			width: auto;
-			max-width: 600px;
+			width: max(588px, 100%);
 		}
 		.log {
-			width: auto;
-			max-width: 600px;
+			padding: 2px 0;
+			font-size: 11px;
+			margin: 0;
+			font-family: monospace;
+			word-break: break-all;
+			white-space: pre-wrap;
+			width: max(588px, 100%);
+		}
+	}
+	.resizer {
+		position: absolute;
+		width: 30px;
+		margin-left: -15px;
+		bottom: 0;
+		top: 0;
+		cursor: ew-resize;
+		z-index: 5;
+		user-select: none;
+		&:hover {
+			background: #7773;
 		}
 	}
 	.hud.dark {
 		.actions {
-			background-color: rgba(20,20,20, 0.6);
+			background-color: #222;
 			color: #eee;
 			&:hover {
-				background-color: rgba(20,20,20, 0.9);
+				background-color: #222d;
 			}
 		}
 	}
@@ -247,21 +320,6 @@
 		background: rgba(255,255,255,0.9);
 		padding: 5px;
 		pointer-events: none;
-	}
-	.left-part {
-		position: absolute;
-		top: 0; left: 0; bottom: 0;
-		text-align: left;
-		overflow: hidden;
-	}
-	.log {
-		padding: 2px 0;
-		font-size: 11px;
-		margin: 0;
-		font-family: monospace;
-		word-break: break-all;
-		white-space: pre-wrap;
-		width: 600px;
 	}
 	.pause {
 		color: #999;

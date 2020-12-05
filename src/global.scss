@@ -710,6 +710,9 @@ img.emoji {
 }
 .color-strength {
 	color: #833100;
+	&.dark {
+		color: #c05415;
+	}
 }
 .color-wisdom {
 	color: #5ebe00;
@@ -725,9 +728,15 @@ img.emoji {
 }
 .color-science {
 	color: #0000a2;
+	&.dark {
+		color: #2a63ff;
+	}
 }
 .color-magic {
 	color: #b800b6;
+	&.dark {
+		color: #d810d5;
+	}
 }
 .color-tp {
 	color: #ff7f01;

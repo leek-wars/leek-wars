@@ -138,6 +138,10 @@ class T {
 	// Cartes
 	public static box = new Texture(LeekWars.STATIC + 'image/map/box.png', true, 1)
 	public static big_box = new Texture(LeekWars.STATIC + 'image/map/big_box.png', true, 1)
+	public static box_new = new Texture(LeekWars.STATIC + 'image/map/box_new.png', true, 1)
+	public static box_stack = new Texture(LeekWars.STATIC + 'image/map/box_stack.png', true, 1)
+	public static metal_box = new Texture(LeekWars.STATIC + 'image/map/metal_box.png', true, 1)
+	public static metal_box_stack = new Texture(LeekWars.STATIC + 'image/map/metal_box_stack.png', true, 1)
 	public static factory = new Texture(LeekWars.STATIC + 'image/map/factory_bg.png')
 	public static desert = new Texture(LeekWars.STATIC + 'image/map/desert.png')
 	public static desert_rock2_small = new Texture(LeekWars.STATIC + 'image/map/rock2_small.png', true, 1)
@@ -169,7 +173,8 @@ class T {
 	public static ice = new Texture(LeekWars.STATIC + 'image/map/ice.png', true, 1)
 	public static ice_small = new Texture(LeekWars.STATIC + 'image/map/ice_small.png', true, 1)
 	public static barrel = new Texture(LeekWars.STATIC + 'image/map/barrel.png', true, 1)
-	public static cone = new Texture(LeekWars.STATIC + 'image/map/cone.png', true, 1)
+	public static cone = new Texture(LeekWars.STATIC + 'image/map/factory_cone.png', true, 1)
+	public static cone_yellow = new Texture(LeekWars.STATIC + 'image/map/factory_cone_yellow.png', true, 1)
 	public static cone_big = new Texture(LeekWars.STATIC + 'image/map/cone_big.png', true, 1)
 	public static fire = new Texture(LeekWars.STATIC + 'image/weapon/fire.png')
 	public static gaz = new Texture(LeekWars.STATIC + 'image/weapon/gaz.png')
@@ -213,6 +218,8 @@ class T {
 	public static arrows = new Texture(LeekWars.STATIC + 'image/map/arrows.png')
 	public static forest_flower = new Texture(LeekWars.STATIC + 'image/map/forest_flower.png', true, 1)
 	public static factory_bolt = new Texture(LeekWars.STATIC + 'image/map/factory_bolt.png', true, 1)
+	public static factory_wrench = new Texture(LeekWars.STATIC + 'image/map/wrench.png', true, 1)
+	public static pipes = new Texture(LeekWars.STATIC + 'image/map/pipes.png', true, 1)
 	public static forest_branch = new Texture(LeekWars.STATIC + 'image/map/forest_branch.png')
 
 	// Chips
