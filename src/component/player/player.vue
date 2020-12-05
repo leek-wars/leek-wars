@@ -136,46 +136,46 @@
 								<div class="section">INTERFACE</div>
 								<v-list-item v-ripple @click="game.showLifes = !game.showLifes">
 									<v-icon>mdi-heart-half-full</v-icon>
-									<v-switch :input-value="game.showLifes" :label="$t('display_life_bars')" hide-details />
+									<v-switch :input-value="game.showLifes" :label="$t('display_life_bars') + ' (L)'" hide-details />
 								</v-list-item>
 								<v-list-item :ripple="game.showLifes" :class="{disabled: !game.showLifes}" @click="game.showLifes ? (game.showEffects = !game.showEffects) : null">
 									<v-icon>mdi-flare</v-icon>
-									<v-switch :input-value="game.showEffects" :disabled="!game.showLifes" :label="$t('display_effects')" hide-details />
+									<v-switch :input-value="game.showEffects" :disabled="!game.showLifes" :label="$t('display_effects') + ' (E)'" hide-details />
 								</v-list-item>
 								<v-list-item v-ripple @click="game.showActions = !game.showActions">
 									<v-icon>mdi-format-list-bulleted</v-icon>
-									<v-switch :input-value="game.showActions" :label="$t('show_actions')" hide-details />
+									<v-switch :input-value="game.showActions" :label="$t('show_actions') + ' (A)'" hide-details />
 								</v-list-item>
 								<v-list-item :ripple="game.showActions" :class="{disabled: !game.showActions}" @click="game.showActions ? (game.largeActions = !game.largeActions) : null">
 									<v-icon>mdi-view-split-vertical</v-icon>
-									<v-switch :input-value="game.largeActions" :disabled="!game.showActions" :label="$t('large_actions')" hide-details />
+									<v-switch :input-value="game.largeActions" :disabled="!game.showActions" :label="$t('large_actions') + ' (G)'" hide-details />
 								</v-list-item>
 								<div class="section">GRAPHISMES</div>
 								<v-list-item v-ripple @click="game.shadows = !game.shadows">
 									<v-icon>mdi-box-shadow</v-icon>
-									<v-switch :input-value="game.shadows" :label="$t('display_shadows')" hide-details />
+									<v-switch :input-value="game.shadows" :label="$t('display_shadows') + ' (O)'" hide-details />
 								</v-list-item>
 								<v-list-item>
 									<v-icon>mdi-weather-night</v-icon>
-									<v-switch v-if="!game.autoDark" v-model="game.dark" :label="$t('dark_mode')" class="night" hide-details />
+									<v-switch v-if="!game.autoDark" v-model="game.dark" :label="$t('dark_mode') + ' (D)'" class="night" hide-details />
 									<v-checkbox v-model="game.autoDark" label="Auto" hide-details />
 								</v-list-item>
 								<div class="section">DEVELOPEMENT</div>
 								<v-list-item v-ripple @click="game.tactic = !game.tactic">
 									<v-icon>mdi-view-comfy</v-icon>
-									<v-switch :input-value="game.tactic" :label="$t('tactic_mode')" hide-details />
+									<v-switch :input-value="game.tactic" :label="$t('tactic_mode') + ' (T)'" hide-details />
 								</v-list-item>
 								<v-list-item v-ripple @click="game.plainBackground = !game.plainBackground">
 									<v-icon>mdi-format-color-fill</v-icon>
-									<v-switch :input-value="game.plainBackground" :label="$t('plain_background')" hide-details />
+									<v-switch :input-value="game.plainBackground" :label="$t('plain_background') + ' (U)'" hide-details />
 								</v-list-item>
 								<v-list-item v-ripple @click="game.showCells = !game.showCells">
 									<v-icon>mdi-numeric-1-box</v-icon>
-									<v-switch :input-value="game.showCells" :label="$t('display_cell_numbers')" hide-details />
+									<v-switch :input-value="game.showCells" :label="$t('display_cell_numbers') + ' (C)'" hide-details />
 								</v-list-item>
 								<v-list-item :ripple="game.showLifes" :class="{disabled: !game.showLifes}" @click="game.showLifes ? (game.showIDs = !game.showIDs) : null">
 									<v-icon>mdi-key</v-icon>
-									<v-switch :input-value="game.showIDs" :disabled="!game.showLifes" :label="$t('show_ids')" hide-details />
+									<v-switch :input-value="game.showIDs" :disabled="!game.showLifes" :label="$t('show_ids') + ' (I)'" hide-details />
 								</v-list-item>
 							</v-list>
 						</v-menu>
@@ -331,7 +331,37 @@
 			}
 		}
 		keyup(e: KeyboardEvent) {
-			if (e.keyCode === 81) { // Q
+			if (e.keyCode === 65) { // A
+				this.game.showActions = !this.game.showActions
+				e.preventDefault()
+			} else if (e.keyCode === 69) { // E
+				this.game.showEffects = !this.game.showEffects
+				e.preventDefault()
+			} else if (e.keyCode === 76) { // L
+				this.game.showLifes = !this.game.showLifes
+				e.preventDefault()
+			} else if (e.keyCode === 79) { // O
+				this.game.shadows = !this.game.shadows
+				e.preventDefault()
+			} else if (e.keyCode === 71) { // G
+				this.game.largeActions = !this.game.largeActions
+				e.preventDefault()
+			} else if (e.keyCode === 84) { // T
+				this.game.tactic = !this.game.tactic
+				e.preventDefault()
+			} else if (e.keyCode === 68) { // D
+				this.game.dark = !this.game.dark
+				e.preventDefault()
+			} else if (e.keyCode === 85) { // U
+				this.game.plainBackground = !this.game.plainBackground
+				e.preventDefault()
+			} else if (e.keyCode === 67) { // C
+				this.game.showCells = !this.game.showCells
+				e.preventDefault()
+			} else if (e.keyCode === 73) { // I
+				this.game.showIDs = !this.game.showIDs
+				e.preventDefault()
+			} else if (e.keyCode === 81) { // Q
 				if (this.fullscreen) {
 					this.toggleFullscreen()
 				}
@@ -493,6 +523,10 @@
 		}
 		@Watch("game.showLifes") toggleLifes() {
 			localStorage.setItem('fight/lifes', '' + this.game.showLifes)
+			this.game.redraw()
+		}
+		@Watch("game.showEffects") toggleEffects() {
+			localStorage.setItem('fight/effects', '' + this.game.showEffects)
 			this.game.redraw()
 		}
 		@Watch("game.showIDs") toggleIDs() {
