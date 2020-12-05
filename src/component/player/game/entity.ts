@@ -742,7 +742,7 @@ class FightEntity extends Entity {
 		ctx.save()
 		ctx.scale(this.game.ground.scale, this.game.ground.scale)
 
-		const z = LeekWars.objectSize(this.effects) > 0 ? 48 : 25
+		const z = LeekWars.objectSize(this.effects) > 0 && this.game.showEffects ? 48 : 25
 		const y = Math.max(-this.game.ground.startY / this.game.ground.scale + 20, this.oy - this.height - z)
 		ctx.translate(this.ox, y)
 
@@ -777,33 +777,35 @@ class FightEntity extends Entity {
 		ctx.strokeRect(-width / 2 + 1, height, barWidth - 2, barHeight - 2)
 
 		// Effects
-		const count = LeekWars.objectSize(this.effects)
-		const effect_size = 25
-		let x = -count * effect_size / 2
-		ctx.font = "bold 7.5pt Roboto"
-		ctx.textAlign = "left"
-		for (const e in this.effects) {
-			const effect = this.effects[e]
-			ctx.drawImage(effect.texture, x, effect_size, effect_size, effect_size)
-			let effect_message = '' + effect.value
-			if (effect.type === EffectType.SHACKLE_MAGIC || effect.type === EffectType.SHACKLE_MP || effect.type === EffectType.SHACKLE_TP || effect.type === EffectType.SHACKLE_STRENGTH || effect.type === EffectType.VULNERABILITY || effect.type === EffectType.ABSOLUTE_VULNERABILITY) {
-				effect_message = '-' + effect_message
+		if (this.game.showEffects) {
+			const count = LeekWars.objectSize(this.effects)
+			const effect_size = 25
+			let x = -count * effect_size / 2
+			ctx.font = "bold 7.5pt Roboto"
+			ctx.textAlign = "left"
+			for (const e in this.effects) {
+				const effect = this.effects[e]
+				ctx.drawImage(effect.texture, x, effect_size, effect_size, effect_size)
+				let effect_message = '' + effect.value
+				if (effect.type === EffectType.SHACKLE_MAGIC || effect.type === EffectType.SHACKLE_MP || effect.type === EffectType.SHACKLE_TP || effect.type === EffectType.SHACKLE_STRENGTH || effect.type === EffectType.VULNERABILITY || effect.type === EffectType.ABSOLUTE_VULNERABILITY) {
+					effect_message = '-' + effect_message
+				}
+				if (effect.type === EffectType.RELATIVE_SHIELD || effect.type === EffectType.DAMAGE_RETURN || effect.type === EffectType.VULNERABILITY) {
+					effect_message = effect_message + '%'
+				}
+				const effect_duration = effect.turns === -1 ? '∞' : '' + effect.turns
+				const w = ctx.measureText(effect_message).width
+				const w2 = ctx.measureText(effect_duration).width
+				ctx.globalAlpha = 0.5
+				ctx.fillStyle = 'black'
+				ctx.fillRect(x + 1, 25 + 15, w + 2, 10)
+				ctx.fillRect(x + 17, 26.5, w2 + 2, 11)
+				ctx.globalAlpha = 1
+				ctx.fillStyle = 'white'
+				ctx.fillText(effect_message, x + 2, 46)
+				ctx.fillText(effect_duration, x + 18, 32)
+				x += effect_size
 			}
-			if (effect.type === EffectType.RELATIVE_SHIELD || effect.type === EffectType.DAMAGE_RETURN || effect.type === EffectType.VULNERABILITY) {
-				effect_message = effect_message + '%'
-			}
-			const effect_duration = effect.turns === -1 ? '∞' : '' + effect.turns
-			const w = ctx.measureText(effect_message).width
-			const w2 = ctx.measureText(effect_duration).width
-			ctx.globalAlpha = 0.5
-			ctx.fillStyle = 'black'
-			ctx.fillRect(x + 1, 25 + 15, w + 2, 10)
-			ctx.fillRect(x + 17, 26.5, w2 + 2, 11)
-			ctx.globalAlpha = 1
-			ctx.fillStyle = 'white'
-			ctx.fillText(effect_message, x + 2, 46)
-			ctx.fillText(effect_duration, x + 18, 32)
-			x += effect_size
 		}
 
 		if (this.id === this.game.currentPlayer) {

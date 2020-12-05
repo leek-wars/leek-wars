@@ -22,7 +22,10 @@ class Field {
 			const y1 = Math.floor(id / (this.tilesX * 2 - 1))
 			const y = y1 - x1 % this.tilesX
 			const x = (id - (this.tilesX - 1) * y) / this.tilesX
-			const cell = new Cell(id, x, y)
+
+			const color = Math.cos((Math.pow(x, 2) + Math.pow(y, 2)) / 1.4) > 0.25
+			const cell = new Cell(id, x, y, color)
+
 			if (this.min_x === -1 || x < this.min_x) {
 				this.min_x = x
 			}

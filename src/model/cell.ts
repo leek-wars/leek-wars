@@ -8,10 +8,11 @@ class Cell {
 	public entity: Entity | null = null
 	public color: boolean
 
-	constructor(id: number, x: number, y: number) {
+	constructor(id: number, x: number, y: number, color: boolean) {
 		this.id = id
 		this.x = x
 		this.y = y
+		this.color = color
 	}
 
 	public setEntity(entity: Entity | null) {

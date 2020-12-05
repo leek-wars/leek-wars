@@ -144,17 +144,28 @@
 
 		resize() {
 			Vue.nextTick(() => {
-				const RATIO = 1.7
+				const RATIO = 1.67
 				const reference = document.querySelector('.app-center') as HTMLElement
 				const offset = 40 + 24
 				if (reference) {
-					if (!LeekWars.mobile) {
-						const height = Math.min(window.innerHeight - 128, Math.round((reference.offsetWidth - offset) / RATIO))
-						this.playerWidth = Math.round(height * RATIO)
-						this.playerHeight = height
+					if (LeekWars.mobile) {
+						if (window.innerWidth > window.innerHeight) {
+							// Landscape
+							const height = Math.min(window.innerHeight - 56, Math.round((reference.offsetWidth) / RATIO))
+							this.playerWidth = Math.round(height * RATIO)
+							this.playerHeight = height
+						} else {
+							// Portrait
+							const ratio = 1.3
+							const width = Math.min(reference.offsetWidth, Math.round((window.innerHeight - 56) * ratio))
+							this.playerWidth = width
+							this.playerHeight = Math.round(width / ratio)
+						}
 					} else {
-						const height = Math.min(window.innerHeight - 56, Math.round((reference.offsetWidth) / RATIO))
-						this.playerWidth = Math.round(height * RATIO)
+						// Desktop
+						const maxWidth = reference.offsetWidth - offset
+						const height = Math.min(window.innerHeight - 128, Math.round(maxWidth / RATIO))
+						this.playerWidth = maxWidth
 						this.playerHeight = height
 					}
 				}
@@ -241,8 +252,7 @@
 		display: inline-block;
 		text-align: center;
 		color: #eee;
-		margin-top: 8px;
-		margin-bottom: 16px;
+		margin-bottom: 10px;
 		margin-left: 5px;
 		margin-right: 5px;
 		font-size: 13px;

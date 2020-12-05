@@ -44,7 +44,7 @@ const FPS = 60
 const MAX_DT = 8
 const GROUND_TEXTURE = true
 const SHADOW_SCALE = 0.5
-const SHADOW_ALPHA = 0.4
+const SHADOW_ALPHA = 0.55
 
 let lastTime = new Date().getTime()
 let dt = 0
@@ -255,7 +255,14 @@ class Game {
 	public shadows = true
 	public showCells: boolean = false
 	public showLifes: boolean = true
+	public showEffects: boolean = true
 	public showIDs: boolean = false
+	public showActions: boolean = true
+	public dark: boolean = false
+	public autoDark: boolean = true
+	public largeActions: boolean = false
+	public actionsWidth: number = 400
+	public plainBackground: boolean = false
 	public sound: boolean = false
 	public atmosphere!: Sound
 	public obstacles!: {[key: number]: number[]}
@@ -1498,7 +1505,7 @@ class Game {
 	}
 	public addConsoleLine(line: any) {
 		this.consoleLines.push(line)
-		if (this.consoleLines.length > 55) {
+		if (this.consoleLines.length > 80) {
 			this.consoleLines.shift()
 		}
 	}
@@ -2057,6 +2064,10 @@ class Game {
 			for (const j in line) {
 				line[j].draw(this.ctx)
 			}
+		}
+		// Draw cells numbers
+		if (this.showCells) {
+			this.ground.drawCellNumbers(this.ctx)
 		}
 
 		// Show cell

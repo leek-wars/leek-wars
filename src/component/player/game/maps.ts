@@ -10,14 +10,16 @@ class MapOptions {
 	public patternTexture!: Texture
 	public margin!: number
 	public radius!: number
-	public smallObstacles!: (Texture | null)[]
-	public largeObstacles!: (Texture | null)[]
+	public smallObstacles!: Array<Texture | null>
+	public largeObstacles!: Array<Texture | null>
 	public tacticSmallColor!: string
 	public tacticLargeColor!: string
 	public gridColor!: string
 	public smoothPattern!: boolean
 	public dark!: boolean
 	public reachableColor!: string
+	public backgroundColor!: string
+	public patternColor!: string
 }
 
 class RandomGenerator {
@@ -94,7 +96,9 @@ class Beach extends Map {
 			gridColor: '#000',
 			smoothPattern: true,
 			dark: false,
-			reachableColor: '#333'
+			reachableColor: '#333',
+			backgroundColor: '#ffff52',
+			patternColor: '#fff'
 		})
 		T.starfish.offset = 1.2
 		T.starfish2.offset = 1.2
@@ -112,12 +116,14 @@ class Desert extends Map {
 			radius: 10,
 			smallObstacles: [T.desert_rock2_small, T.desert_grass, T.cactus],
 			largeObstacles: [T.desert_rock1_big, T.desert_rock2_big, T.desert_rock3_big],
-			tacticSmallColor: "#ffc000",
-			tacticLargeColor: "#ffc000",
+			tacticSmallColor: "#007015",
+			tacticLargeColor: "#666",
 			gridColor: '#000',
 			smoothPattern: true,
 			dark: false,
-			reachableColor: '#333'
+			reachableColor: '#333',
+			backgroundColor: '#fdb100',
+			patternColor: '#fcfa00'
 		})
 		T.cactus.offset = 2.0
 		T.desert_grass.offset = 2.0
@@ -152,24 +158,31 @@ class Factory extends Map {
 			patternTexture: T.factory_metal,
 			margin: 8,
 			radius: 3,
-			smallObstacles: [T.cone, T.barrel, T.cone],
-			largeObstacles: [T.cone, T.cone, T.barrel],
-			tacticSmallColor: "#1072ce",
-			tacticLargeColor: "#bb0000",
+			smallObstacles: [T.cone, T.barrel, T.cone_yellow, T.box_new, T.metal_box],
+			largeObstacles: [T.box_new, T.box_stack, T.metal_box, T.metal_box_stack, T.pipes],
+			tacticSmallColor: "#0f64db",
+			tacticLargeColor: "#e05a00",
 			gridColor: '#fff',
 			smoothPattern: true,
 			dark: true,
-			reachableColor: '#fff'
+			reachableColor: '#fff',
+			backgroundColor: '#555',
+			patternColor: '#aaa'
 		})
 		T.barrel.offset = 0.9
 		T.cone.offset = 1.15
 		T.box.offset = 1.2
+		T.metal_box.offset = 0.95
+		T.box_new.offset = 0.9
+		T.box_stack.offset = 1
+		T.pipes.offset = 0.9
 	}
 
 	public create() {
 		super.create()
 		T.arrows.load(this.game)
 		T.factory_bolt.load(this.game)
+		T.factory_wrench.load(this.game)
 	}
 
 	public drawDetails(ctx: CanvasRenderingContext2D) {
@@ -202,11 +215,11 @@ class Factory extends Map {
 			ctx.restore()
 		}
 
-		const numB = 50 + this.random.next() * 100
+		const numB = 40 + this.random.next() * 60
 		const r = T.factory_bolt.texture.height / T.factory_bolt.texture.width
 
 		for (let i = 0; i < numB; ++i) {
-			const s = this.random.next() > 0.8 ? 20 : 14
+			const s = this.random.next() > 0.8 ? 18 : 12
 			const x = -100 + this.random.next() * (200 + this.game.ground.gridWidth / this.game.ground.scale)
 			const y = -100 + this.random.next() * (200 + this.game.ground.gridHeight / this.game.ground.scale)
 			ctx.save()
@@ -223,25 +236,44 @@ class Factory extends Map {
 			ctx.drawImage(T.factory_bolt.texture, -s / 2, -s * r, s, s * r)
 			ctx.restore()
 		}
+
+		const numW = 4 + this.random.next() * 6
+		const rw = T.factory_wrench.texture.height / T.factory_wrench.texture.width
+
+		for (let i = 0; i < numW; ++i) {
+			const s = 35 + this.random.next() * 15
+			const x = -100 + this.random.next() * (200 + this.game.ground.gridWidth / this.game.ground.scale)
+			const y = -100 + this.random.next() * (200 + this.game.ground.gridHeight / this.game.ground.scale)
+			const scale = this.random.next() > 0.5 ? -1 : 1
+			ctx.save()
+			ctx.translate(x, y)
+			ctx.scale(scale, 1)
+
+			ctx.drawImage(T.factory_wrench.texture, -s / 2, -s * r, s, s * rw)
+			ctx.restore()
+		}
 	}
 
 	public drawDecor(ctx: CanvasRenderingContext2D) {
+		// return;
 		ctx.save()
 		ctx.scale(this.game.ground.scale, this.game.ground.scale)
-		for (let i = 0; i < 14; ++i) {
-			const s = (80 + this.random.next() * 50)
-			const t = this.options.smallObstacles[this.random.next() * this.options.largeObstacles.length | 0]
+		ctx.filter = "brightness(20%)"
+		for (let i = 0; i < 20; ++i) {
+			const small = this.random.next() > 0.5
+			const s = ((small ? 50 : 70) + this.random.next() * 50)
+			const t = small ? this.options.smallObstacles[this.random.next() * this.options.smallObstacles.length | 0] : this.options.largeObstacles[this.random.next() * this.options.largeObstacles.length | 0]
 			if (t) {
 				const h = s * (t.texture.height / t.texture.width)
-				ctx.drawImage(t.texture, -150 + i * 100 + this.random.next() * 40, - 10 - h + this.random.next() * 40, s, h)
+				ctx.drawImage(t.texture, -150 + i * 80 + this.random.next() * 40, - 40 - h + this.random.next() * 40, s, h)
 			}
 		}
 		ctx.filter = "brightness(10%)"
-		for (let i = 0; i < 12; ++i) {
+		for (let i = 0; i < 15; ++i) {
 			const s = 60 + this.random.next() * 100
 			const t = this.options.smallObstacles[this.random.next() * this.options.largeObstacles.length | 0]
 			if (t) {
-				ctx.drawImage(t.texture, -200 + i * 120 + this.random.next() * 60, (this.game.ground.gridHeight / this.game.ground.scale) + this.random.next() * 40, s, s * (t.texture.height / t.texture.width))
+				ctx.drawImage(t.texture, -200 + i * 100 + this.random.next() * 60, (this.game.ground.gridHeight / this.game.ground.scale) + this.random.next() * 40, s, s * (t.texture.height / t.texture.width))
 			}
 		}
 		// Côté
@@ -263,16 +295,18 @@ class Forest extends Map {
 			sound: S.map_forest,
 			groundTexture: T.dirt,
 			patternTexture: T.forest_grass,
-			margin: 12,
+			margin: 8,
 			radius: 20,
 			smallObstacles: [T.forest_rock_small, T.forest_flower, T.mushroom],
 			largeObstacles: [T.forest_rock, T.stump, T.fern],
-			tacticSmallColor: "#8f520b",
-			tacticLargeColor: "#1c6000",
+			tacticSmallColor: "#888888",
+			tacticLargeColor: "#a8480d",
 			gridColor: '#fff',
 			smoothPattern: false,
 			dark: true,
-			reachableColor: '#fff'
+			reachableColor: '#fff',
+			backgroundColor: '#3b1802',
+			patternColor: '#3b940f'
 		})
 		T.stump.offset = 1.3
 		T.fern.offset = 1.1
@@ -282,6 +316,7 @@ class Forest extends Map {
 
 	public create() {
 		super.create()
+		T.caillou.load(this.game)
 		T.little_grass.load(this.game)
 		T.little_grass_2.load(this.game)
 		T.branch.load(this.game)
@@ -325,7 +360,8 @@ class Forest extends Map {
 	}
 
 	public drawDetails(ctx: CanvasRenderingContext2D) {
-		const num = 50 + this.random.next() * 100
+		// return
+		const num = 20 + this.random.next() * 20
 
 		for (let i = 0; i < num; i++) {
 
@@ -355,21 +391,31 @@ class Forest extends Map {
 				ctx.drawImage(t.texture, -150 + i * 100 + this.random.next() * 40, - 10 - dh + this.random.next() * 20, s, dh)
 			}
 		}
-		ctx.filter = "brightness(10%)"
-		for (let i = 0; i < 12; ++i) {
-			const s = 150 + this.random.next() * 130
-			const t = this.options.largeObstacles[this.random.next() * this.options.largeObstacles.length | 0]
-			if (t) {
-				ctx.drawImage(t.texture, -200 + i * 120 + this.random.next() * 60, (this.game.ground.gridHeight / this.game.ground.scale) + this.random.next() * 20, s, s * (t.texture.height / t.texture.width))
+		// Devant
+		const freeSpace = (this.game.ground.height - this.game.ground.gridHeight - this.game.ground.startY) / this.game.ground.scale
+		for (let h = 0; h < freeSpace; h += 150) {
+			ctx.filter = "brightness(10%)"
+			for (let i = 0; i < 12; ++i) {
+				const s = 150 + this.random.next() * 130
+				const t = this.options.largeObstacles[this.random.next() * this.options.largeObstacles.length | 0]
+				if (t) {
+					ctx.drawImage(t.texture, -200 + i * 120 + this.random.next() * 60, h + (this.game.ground.gridHeight / this.game.ground.scale) + this.random.next() * 20, s, s * (t.texture.height / t.texture.width))
+				}
 			}
 		}
 		// Côté
-		// for (let i = 0; i < 12; ++i) {
-		// 	ctx.filter = "brightness(" + (100 - (i / 12) * 100) + "%)"
-		// 	const s = 150 + this.random.next() * (80 + i * 8)
-		// 	const t = this.random.next() > 0.4 ? T.fern : T.stump
-		// 	ctx.drawImage(t.texture, 160 - s + this.random.next() * 30, i * 70 - 10 + this.random.next() * 20, s, s * (t.texture.height / t.texture.width))
-		// }
+		for (let i = 0; i < 12; ++i) {
+			ctx.filter = "brightness(" + (100 - (i / 12) * 100) + "%)"
+			const s = 150 + this.random.next() * (80 + i * 8)
+			const t = this.options.largeObstacles[this.random.next() * this.options.largeObstacles.length | 0]!
+			ctx.drawImage(t.texture, -s - 60 + this.random.next() * 80, -80 + i * 70 - 10 + this.random.next() * 20, s, s * (t.texture.height / t.texture.width))
+		}
+		for (let i = 0; i < 12; ++i) {
+			ctx.filter = "brightness(" + (100 - (i / 12) * 100) + "%)"
+			const s = 150 + this.random.next() * (80 + i * 8)
+			const t = this.options.largeObstacles[this.random.next() * this.options.largeObstacles.length | 0]!
+			ctx.drawImage(t.texture, this.game.ground.gridWidth / this.game.ground.scale - 20 + this.random.next() * 60, -80 + i * 70 - 10 + this.random.next() * 20, s, s * (t.texture.height / t.texture.width))
+		}
 		// Branches
 		const brightness = 40
 		ctx.filter = "brightness(" + brightness  + "%)"
@@ -395,7 +441,9 @@ class Glacier extends Map {
 			gridColor: '#000',
 			smoothPattern: true,
 			dark: false,
-			reachableColor: '#333'
+			reachableColor: '#333',
+			backgroundColor: '#eee',
+			patternColor: '#2effff'
 		})
 		T.fir.offset = 1.5
 		T.snowman.offset = 0.8
@@ -412,12 +460,14 @@ class Nexus extends Map {
 			radius: 10,
 			smallObstacles: [T.nexus_block_small, T.nexus_block_small, T.nexus_block_small],
 			largeObstacles: [T.nexus_block, T.nexus_block, T.nexus_block],
-			tacticSmallColor: "#dddddd",
-			tacticLargeColor: "#eeeeee",
+			tacticSmallColor: "#222222",
+			tacticLargeColor: "#666666",
 			gridColor: '#000',
 			smoothPattern: true,
 			dark: false,
-			reachableColor: '#333'
+			reachableColor: '#333',
+			backgroundColor: '#fff',
+			patternColor: '#fff'
 		})
 		T.nexus_block.offset = 1.177
 		T.nexus_block_small.offset = 1.18
@@ -434,15 +484,17 @@ class Arena extends Map {
 			radius: 10,
 			smallObstacles: [T.grass, T.pillar, T.small_cube],
 			largeObstacles: [T.pyramid, T.cube, T.square],
-			tacticSmallColor: "#aca28b",
-			tacticLargeColor: "#aca28b",
+			tacticSmallColor: "#497a06",
+			tacticLargeColor: "#3b362d",
 			gridColor: '#000',
 			smoothPattern: true,
-			dark: false,
-			reachableColor: '#fff'
+			dark: true,
+			reachableColor: '#fff',
+			backgroundColor: '#aca28b',
+			patternColor: '#90a15a'
 		})
 		T.grass.offset = 1.5
-		T.pillar.offset = 1.3
+		T.pillar.offset = 1.1
 		T.cube.offset = 1.0
 		T.small_cube.offset = 0.9
 		T.square.offset = 1.1
