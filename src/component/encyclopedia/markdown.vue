@@ -5,6 +5,7 @@
 <script lang="ts">
 	import { LeekWars } from '@/model/leekwars'
 	import markdown from 'markdown-it'
+	import sanitizeHtml from 'sanitize-html'
 	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 
 	@Component({ name: 'markdown' })
@@ -19,8 +20,12 @@
 
 		@Watch('content', {immediate: true})
 		update() {
-			this.html = this.links(this.markdown.render(this.content))
-			// this.html = this.markdown(this.content)
+
+			sanitizeHtml.defaults.allowedAttributes['*'] = ['style', 'class']
+			this.html = this.links(sanitizeHtml(this.markdown.render(this.content), {
+				allowedTags: sanitizeHtml.defaults.allowedTags.concat([ 'img', 'center' ])
+			}))
+
 			Vue.nextTick(() => {
 				(this.$refs.md as HTMLElement).querySelectorAll('pre code').forEach((item) => {
 					const content = ('' + item.textContent).trim()

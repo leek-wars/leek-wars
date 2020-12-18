@@ -29,6 +29,10 @@ declare module 'markdown-it' {
 	const markdown: any
 	export = markdown
 }
+declare module 'sanitize-html' {
+	const sanitizeHtml: any
+	export = sanitizeHtml
+}
 declare module 'vue-awesome-swiper' {
 	const VueAwesomeSwiper: any
 	export = VueAwesomeSwiper
