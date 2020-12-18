@@ -5,6 +5,7 @@
 <script lang="ts">
 	import { i18n } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
+	import { vueMain } from '@/model/vue'
 	import { Weapon } from '@/model/weapon'
 	import markdown from 'markdown-it'
 	import sanitizeHtml from 'sanitize-html'
@@ -30,7 +31,7 @@
 		@Watch('content', {immediate: true})
 		update() {
 
-			sanitizeHtml.defaults.allowedAttributes['*'] = ['style', 'class']
+			sanitizeHtml.defaults.allowedAttributes['*'] = ['style', 'class', 'width', 'height']
 			this.html = this.links(sanitizeHtml(this.markdown.render(this.content), {
 				allowedTags: sanitizeHtml.defaults.allowedTags.concat([ 'img', 'center' ])
 			}))
@@ -39,28 +40,28 @@
 			const stack = [this.summary] as any[]
 
 			Vue.nextTick(() => {
-				const markdown = this.$refs.md as HTMLElement
-				markdown.querySelectorAll('h1, h2, h3, h4, h5').forEach((item: any) => {
+				const md = this.$refs.md as HTMLElement
+				md.querySelectorAll('h1, h2, h3, h4, h5').forEach((item: any) => {
 					const level = parseInt(item.tagName.substring(1), 10)
 					if (level >= 2) {
 						// console.log("element", level, item)
-						const node = {level: level, title: item.innerText, children: []}
+						const node = {level, title: item.innerText, children: []}
 						const parent = stack[level - 2] || this.summary
 						stack[level - 1] = node
 						parent.children.push(node)
 					}
 					item.id = this.encodeID(item.innerText)
 				})
-				markdown.querySelectorAll('.encyclopedia-summary').forEach((item) => {
+				md.querySelectorAll('.encyclopedia-summary').forEach((item) => {
 					const depth = parseInt(item.getAttribute('depth') || '3', 10)
 					item.innerHTML = this.generateSummary(depth)
 				})
-				markdown.querySelectorAll('pre code').forEach((item) => {
+				md.querySelectorAll('pre code').forEach((item) => {
 					const content = ('' + item.textContent).trim()
 					item.classList.add('multi')
 					LeekWars.createCodeArea(content, item as HTMLElement)
 				})
-				markdown.querySelectorAll('code:not(.multi)').forEach((item) => {
+				md.querySelectorAll('code:not(.multi)').forEach((item) => {
 					const content = ('' + item.textContent).trim()
 					LeekWars.createCodeAreaSimple(content, item as HTMLElement)
 				})
@@ -79,38 +80,38 @@
 						}
 					}
 				}
-				markdown.querySelectorAll('a').forEach(linkify)
+				md.querySelectorAll('a').forEach(linkify)
 
 				// Armes
-				markdown.querySelectorAll('.encyclopedia-weapon').forEach((item) => {
+				md.querySelectorAll('.encyclopedia-weapon').forEach((item) => {
 					const weapon = LeekWars.weaponByName[item.getAttribute('weapon')!]
 					if (weapon) {
-						new WeaponPreview({ propsData: { weapon }, i18n }).$mount(item)
+						new WeaponPreview({ propsData: { weapon }, parent: vueMain }).$mount(item)
 					}
 				})
 				// Puces
-				markdown.querySelectorAll('.encyclopedia-chip').forEach((item) => {
+				md.querySelectorAll('.encyclopedia-chip').forEach((item) => {
 					const chip = LeekWars.chipByName[item.getAttribute('chip')!]
 					if (chip) {
-						new ChipPreview({ propsData: { chip }, i18n }).$mount(item)
+						new ChipPreview({ propsData: { chip }, parent: vueMain }).$mount(item)
 					}
 				})
 				// Potions
-				markdown.querySelectorAll('.encyclopedia-potion').forEach((item) => {
+				md.querySelectorAll('.encyclopedia-potion').forEach((item) => {
 					const potion = LeekWars.potionByName[item.getAttribute('potion')!]
 					if (potion) {
-						new PotionPreview({ propsData: { potion }, i18n }).$mount(item)
+						new PotionPreview({ propsData: { potion }, parent: vueMain }).$mount(item)
 					}
 				})
 				// Locked pages
-				markdown.querySelectorAll('.encyclopedia-locked-pages').forEach((item) => {
+				md.querySelectorAll('.encyclopedia-locked-pages').forEach((item) => {
 					LeekWars.post<any[]>('encyclopedia/get-locked-pages').then(pages => {
 						item.innerHTML = '<ul>' + pages.map(p => '<li><a href="/encyclopedia/' + p.title + '">' + p.title + '</a>, verrouillée par <b>' + p.name + '</b></li>').join('') + '</ul>'
 						item.querySelectorAll('a').forEach(linkify)
 					})
 				})
 				// Last edited pages
-				markdown.querySelectorAll('.encyclopedia-last-modifications').forEach((item) => {
+				md.querySelectorAll('.encyclopedia-last-modifications').forEach((item) => {
 					LeekWars.post<any[]>('encyclopedia/get-last-pages').then(pages => {
 						item.innerHTML = '<ul>' + pages.map(p => '<li><a href="/encyclopedia/' + p.title + '">' + p.title + '</a>, par <b>' + p.name + '</b> ' + LeekWars.formatDuration(p.time) + '</li>').join('') + '</ul>'
 						item.querySelectorAll('a').forEach(linkify)

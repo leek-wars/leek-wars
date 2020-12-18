@@ -260,12 +260,16 @@ const vueMain = new Vue({
 		}, 1000 * 60)
 
 		this.$on('loaded', () => {
-			if (this.$data.savedPosition > 0) {
-				setTimeout(() => {
+			Vue.nextTick(() => {
+				// console.log("loaded", this.$data.savedPosition)
+				if (this.$data.savedPosition > 0) {
 					window.scrollTo(0, this.$data.savedPosition)
-					this.$data.savedPosition = 0
-				}, 100)
-			}
+					setTimeout(() => {
+						window.scrollTo(0, this.$data.savedPosition)
+						this.$data.savedPosition = 0
+					}, 100)
+				}
+			})
 		})
 		this.$on('connected', () => {
 			LeekWars.socket.connect()
