@@ -1,3 +1,4 @@
+/*
 function post(url, args) {
 	const f = []
 	for (const k in args) { f.push(k + '=' + encodeURIComponent(args[k])) }
@@ -18,6 +19,7 @@ function post(url, args) {
 	// 	console.log('Request failed', error);
 	//   });
 }
+*/
 
 self.addEventListener('fetch', event => {
 	// Let the browser do its default thing
@@ -69,14 +71,14 @@ self.addEventListener('push', event => {
 self.addEventListener('notificationclick', function(event) {
     event.notification.close()
 	var url = 'https://leekwars.com'
-	var id = 0
+	// var id = 0
 	if (event.notification.data) {
 		url = event.notification.data.url
-		id = event.notification.data.id
+		// id = event.notification.data.id
 	}
-	try {
-		post("/api/notification/read", {id})
-	} catch (e) {}
+	// try {
+	// 	post("/api/notification/read", {id})
+	// } catch (e) {}
 	event.waitUntil(
         clients.matchAll({
             type: 'window'
