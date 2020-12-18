@@ -63,6 +63,44 @@
 				</template>
 				<div v-if="LeekWars.message" v-html="$i18n.t(LeekWars.message.message, LeekWars.message.arguments)"></div>
 			</popup>
+
+			<popup v-model="annonce" :width="500">
+				<template slot="title"><v-icon>mdi-bullhorn-outline</v-icon> Annonce de concours !</template>
+				<div class="annonce">
+					<h2>Reverse-Engineering : LW101</h2>
+					<h4>Examen pratique</h4>
+					<br>
+					Organisé par <rich-tooltip-farmer :id="50023" v-slot="{ on }" :bottom="true">
+						<avatar :farmer="{id: 50023, avatar_changed: 12}" />
+						<b v-on="on">Oimat</b>
+					</rich-tooltip-farmer>
+					<div class="annonce-message">
+						<br>
+						Zplop les poireaux ! <s>Et les bulbes.</s>
+						<br>
+						<br>
+						Votre très cher Animacteur vous propose le premier concours officiel LeekWars !!
+						<br>
+						<br>
+						<i>La foule est en délire, les poireaux du monde entier se regroupent en masse devant la LeekWars Arena pour assister à ce spectacle épatant ! Et c'est normal, car cette mise à mort végan aura, pour la première fois, des subventions du poireau à la plus grande pilowsité au monde !</i>
+						<br>
+						<br>
+						Ce concours est ouvert aux nouveaux comme aux vétérans. L'avancée de vos IAs ne jouera pas dans le classement ! Il s'agira de découvrir ce que MOI, votre cher Animacteur, a mis dans mon IA. <i>D'où le titre Reverse-Engineering, logique.</i>
+						<br>
+						<br>
+						Ce concours s'effectuera en plusieurs manches, dont la première commence <b>dès aujourd'hui</b>, et finira au <b>nouvel an</b>.
+						Les prix seront répartis comme suit : <b>300</b> cristaux pour le premier, <b>200</b> cristaux pour le second, <b>100</b> cristaux pour le troisième.
+						<br>
+						<br>
+						Pour plus d'informations, rendez-vous sur le topic !
+						<br>
+						<br>
+						<v-btn>
+							<router-link to="/forum/category-5/topic-10033">https://leekwars.com/forum/category-5/topic-10033</router-link>
+						</v-btn>
+					</div>
+				</div>
+			</popup>
 		</div>
 	</div>
 </template>
@@ -103,6 +141,7 @@
 		changelog: any = null
 		changelogDialog: boolean = false
 		konami: string = ''
+		annonce: boolean = false
 
 		created() {
 			this.$root.$on('connected', () => {
@@ -131,6 +170,11 @@
 				}
 				if (this.konami.length > 12) { this.konami = this.konami.substring(1) }
 			})
+
+			if (this.$store.state.connected && !localStorage.getItem('annonce')) {
+				this.annonce = true
+				localStorage.setItem('annonce', 'true')
+			}
 		}
 		changelogShow() {
 			LeekWars.get('changelog/get-last/' + this.$i18n.locale).then(data => {
@@ -400,6 +444,17 @@
 		}
 		.big-leeks {
 			display: none;
+		}
+	}
+	.annonce {
+		.avatar {
+			width: 25px;
+			vertical-align: middle;
+			margin-left: 6px;
+		}
+		a {
+			font-weight: 500;
+			color: #5fad1b;
 		}
 	}
 </style>
