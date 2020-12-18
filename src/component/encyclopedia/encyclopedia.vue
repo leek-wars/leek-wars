@@ -22,7 +22,7 @@
 					<v-icon>mdi-lock</v-icon>
 					En cours d'édition par {{ page.locker_name }}
 				</div>
-				<div v-else class="tab" @click="editStart">
+				<div v-else-if="!LeekWars.mobile" class="tab" @click="editStart">
 					<v-icon>mdi-pencil-outline</v-icon>
 					Modifier
 				</div>
@@ -33,6 +33,7 @@
 				<div v-if="edition" ref="codemirror" class="codemirror" :style="{lineHeight: 1.6, fontSize: 14}"></div>
 				<div ref="markdown" class="markdown" @scroll="markdownScroll">
 					<!-- {{ parents }} -->
+
 					<markdown :content="page.content" :pages="pages" />
 
 					<div v-if="page.new && !edition" class="nopage">
@@ -55,6 +56,7 @@
 									</router-link>
 								</rich-tooltip-farmer>
 							</div>
+							<div class="views"><b>{{ page.views | number }}</b> vues</div>
 							<div class="fill"></div>
 							<v-icon @click="statsExpanded = !statsExpanded">{{ statsExpanded ? 'mdi-chevron-up' : 'mdi-chevron-down' }}</v-icon>
 						</div>
@@ -113,6 +115,9 @@
 		modified: boolean = false
 		initialGeneration: number = 0
 		statsExpanded: boolean = false
+		actions = [
+			{icon: 'mdi-pencil', click: () => this.editStart()},
+		]
 
 		get code() {
 			return this.$route.params.page ? this.$route.params.page.replace(/_/g, ' ') : 'Encyclopédie'
@@ -123,14 +128,14 @@
 		get breadcrumb_items() {
 			if (this.page && !this.page.new) {
 				return this.parents.map(p => {
-					return {name: p.title, link: p.title === 'Encyclopédie' ? '/encyclopedia' : '/encyclopedia/' + p.title}
+					return {name: p.title, link: p.title === 'Encyclopédie' ? '/encyclopedia' : '/encyclopedia/' + p.title.replace(/ /g, '_')}
 				})
 			} else {
 				const parts = [
 					{name: 'Encyclopédie', link: '/encyclopedia'}
 				]
 				if (this.code !== 'Encyclopédie') {
-					parts.push({name: this.code, link: '/encyclopedia/' + this.code})
+					parts.push({name: this.code, link: '/encyclopedia/' + this.code.replace(/ /g, '_')})
 				}
 				return parts
 			}
@@ -172,11 +177,17 @@
 			this.$root.$on('ctrlS', () => {
 				this.save()
 			})
+			LeekWars.setActions(this.actions)
 		}
 
 		@Watch('code', {immediate: true})
 		update() {
-			LeekWars.setTitle(this.title)
+
+			if (this.code === 'Page au hasard') {
+				const pages = Object.values(LeekWars.encyclopedia)
+				this.$router.replace('/encyclopedia/' + pages[Math.random() * pages.length | 0].title)
+				return
+			}
 
 			LeekWars.get<any>('encyclopedia/get/' + this.code).then(page => {
 				if (this.edition) {
@@ -188,6 +199,8 @@
 					this.editStart()
 					this.setEditorContent()
 				}
+				LeekWars.setTitle(this.title)
+				this.$root.$emit('loaded')
 			})
 			.error(() => {
 				// Pas de page
@@ -447,6 +460,9 @@ h1 {
 				margin-left: 5px;
 			}
 		}
+	}
+	.views {
+		margin-left: 10px;
 	}
 	.expanded-stats {
 		display: flex;
