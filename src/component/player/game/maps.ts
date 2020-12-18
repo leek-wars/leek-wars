@@ -20,6 +20,8 @@ class MapOptions {
 	public reachableColor!: string
 	public backgroundColor!: string
 	public patternColor!: string
+	public backgroundTileSize!: number
+	public patternTileSize!: number
 }
 
 class RandomGenerator {
@@ -70,6 +72,9 @@ abstract class Map {
 			}
 		}
 	}
+	createPattern() {
+		// nothing by default
+	}
 	drawDecor(ctx: CanvasRenderingContext2D) {
 		// nothing by default
 	}
@@ -89,7 +94,7 @@ class Beach extends Map {
 			patternTexture: T.desert,
 			margin: 10,
 			radius: 10,
-			smallObstacles: [T.starfish, T.starfish2, T.palm],
+			smallObstacles: [T.starfish, T.starfish2],
 			largeObstacles: [T.pebble, T.pebble, T.pebble],
 			tacticSmallColor: '#aaaaaa',
 			tacticLargeColor: '#ffff00',
@@ -98,11 +103,34 @@ class Beach extends Map {
 			dark: false,
 			reachableColor: '#333',
 			backgroundColor: '#ffff52',
-			patternColor: '#fff'
+			patternColor: '#fff',
+			backgroundTileSize: 8,
+			patternTileSize: 8
 		})
 		T.starfish.offset = 1.2
 		T.starfish2.offset = 1.2
 		T.palm.offset = 4.0
+	}
+
+	public createPattern() {
+		for (const cell of this.game.ground.field.cells) {
+			cell.color = false
+		}
+		const circles = 20 + this.game.map.random.next() * 25
+		for (let c = 0; c < circles; ++c) {
+			const radius = 1 + this.game.map.random.next() * (this.game.map.random.next() > 0.1 ? 2.5 : 6)
+			const cx = -17 + this.game.map.random.next() * 34 | 0
+			const cy = -17 + this.game.map.random.next() * 34 | 0
+			if (Math.abs(cx) + Math.abs(cy) >= 17) { continue }
+			for (let x = cx - radius | 0; x <= cx + radius; ++x) {
+				for (let y = cy - radius | 0; y <= cy + radius; ++y) {
+					if (Math.abs(x) + Math.abs(y) <= 17 && Math.round(Math.sqrt(Math.pow(x - cx, 2) + Math.pow(y - cy, 2))) <= radius) {
+						const cell = this.game.ground.field.getCell(x, y)
+						if (cell) { cell.color = true }
+					}
+				}
+			}
+		}
 	}
 }
 
@@ -111,11 +139,11 @@ class Desert extends Map {
 		super(game, {
 			sound: S.map_desert,
 			groundTexture: T.desert,
-			patternTexture: T.beach,
+			patternTexture: T.desert_pattern,
 			margin: 10,
-			radius: 10,
-			smallObstacles: [T.desert_rock2_small, T.desert_grass, T.cactus],
-			largeObstacles: [T.desert_rock1_big, T.desert_rock2_big, T.desert_rock3_big],
+			radius: 30,
+			smallObstacles: [T.cactus, T.cactus_2, T.desert_rock1_big],
+			largeObstacles: [T.desert_rock1_big, T.desert_grass, T.dead_tree],
 			tacticSmallColor: "#007015",
 			tacticLargeColor: "#666",
 			gridColor: '#000',
@@ -123,28 +151,108 @@ class Desert extends Map {
 			dark: false,
 			reachableColor: '#333',
 			backgroundColor: '#fdb100',
-			patternColor: '#fcfa00'
+			patternColor: '#fcfa00',
+			backgroundTileSize: 8,
+			patternTileSize: 4
 		})
-		T.cactus.offset = 2.0
-		T.desert_grass.offset = 2.0
+		T.cactus.offset = 1.6
+		T.desert_grass.offset = 0.85
+		T.dead_tree.offset = 0.9
 	}
+
 	public create() {
 		super.create()
 		T.skull.load(this.game)
+		T.caillou.load(this.game)
+		T.cracks.load(this.game)
 	}
-	public drawDecor(ctx: CanvasRenderingContext2D) {
-		const num = 3 + Math.random() * 3
-		for (let i = 0; i < num; i++) {
-			const scale = Math.random() + 0.5
-			const padding = Math.max(T.skull.texture.width * scale, T.skull.texture.height * scale) / 2
-			const x = padding + Math.random() * (this.game.ground.realGridWidth - 2 * padding)
-			const y = padding + Math.random() * (this.game.ground.realGridHeight - 2 * padding)
-			const angle = Math.random() * 2 * Math.PI
+
+	public createPattern() {
+		for (const cell of this.game.ground.field.cells) {
+			cell.color = false
+		}
+		const circles = 15 + this.game.map.random.next() * 25
+		for (let c = 0; c < circles; ++c) {
+			const radius = 1 + this.game.map.random.next() * 2
+			const cx = -17 + this.game.map.random.next() * 34 | 0
+			const cy = -17 + this.game.map.random.next() * 34 | 0
+			if (Math.abs(cx) + Math.abs(cy) >= 17) { continue }
+			for (let x = cx - radius | 0; x <= cx + radius; ++x) {
+				for (let y = cy - radius | 0; y <= cy + radius; ++y) {
+					if (Math.abs(x) + Math.abs(y) <= 17 && Math.round(Math.sqrt(Math.pow(x - cx, 2) + Math.pow(y - cy, 2))) <= radius) {
+						const cell = this.game.ground.field.getCell(x, y)
+						if (cell) { cell.color = true }
+					}
+				}
+			}
+		}
+	}
+
+	public drawCellDetails(ctx: CanvasRenderingContext2D, cell: Cell) {
+
+		const w = this.game.ground.tileSizeX * 0.8
+		const h = this.game.ground.tileSizeY * 0.8
+
+		if (!cell.color) { return }
+
+		const tex =  T.caillou
+		const count = this.random.next() * 4 | 0
+		const minS = 2
+		const maxS = 9
+
+		for (let i = 0; i < count; ++i) {
+			// const lum = Math.floor(90 + Math.random() * 10)
+			// ctx.filter = "brightness(" + lum + "%)"
+			const s = (minS + this.random.next() * maxS) * this.game.ground.scale
+			const angle = this.random.next() * Math.PI * 2
+			const dist = this.random.next()
+			const x = Math.cos(angle) * w * dist * 0.5
+			const y = Math.sin(angle) * h * dist * 0.5
 			ctx.save()
 			ctx.translate(x, y)
-			ctx.scale(scale, scale)
+
+			// if (tex.shadow) {
+			// 	ctx.save()
+			// 	ctx.scale(1, -SHADOW_SCALE)
+			// 	ctx.rotate(-Math.PI / 4)
+			// 	ctx.translate(0, -s)
+			// 	ctx.globalAlpha = SHADOW_ALPHA
+			// 	ctx.drawImage(tex.shadow, -s / 2, 0, s, s)
+			// 	ctx.restore()
+			// }
+
+			ctx.drawImage(tex.texture, -s / 2, -s, s, s)
+			ctx.restore()
+		}
+	}
+
+	public drawDecor(ctx: CanvasRenderingContext2D) {
+		const num = 4 + this.random.next() * 6
+		for (let i = 0; i < num; i++) {
+			const scale = this.random.next() + 0.5
+			const x = this.random.next() * (this.game.ground.gridWidth / this.game.ground.scale)
+			const y = this.random.next() * (this.game.ground.gridHeight / this.game.ground.scale)
+			const angle = this.random.next() * 2 * Math.PI
+			ctx.save()
+			ctx.translate(x, y)
+			ctx.scale(scale, scale * 0.5)
 			ctx.rotate(angle)
 			ctx.drawImage(T.skull.texture, 0, 0)
+			ctx.restore()
+		}
+
+		const numC = 4 + this.random.next() * 6
+		for (let i = 0; i < numC; i++) {
+			const scale = 100 + this.random.next() * 80
+			const x = this.random.next() * (this.game.ground.gridWidth / this.game.ground.scale)
+			const y = this.random.next() * (this.game.ground.gridHeight / this.game.ground.scale)
+			const angle = this.random.next() * 2 * Math.PI
+			ctx.save()
+			ctx.globalAlpha = 0.2 + this.random.next() * 0.5
+			ctx.translate(x, y)
+			ctx.scale(1, 0.5)
+			ctx.rotate(angle)
+			ctx.drawImage(T.cracks.texture, 0, 0, scale, scale)
 			ctx.restore()
 		}
 	}
@@ -167,7 +275,9 @@ class Factory extends Map {
 			dark: true,
 			reachableColor: '#fff',
 			backgroundColor: '#555',
-			patternColor: '#aaa'
+			patternColor: '#aaa',
+			backgroundTileSize: 4,
+			patternTileSize: 4
 		})
 		T.barrel.offset = 0.9
 		T.cone.offset = 1.15
@@ -183,6 +293,14 @@ class Factory extends Map {
 		T.arrows.load(this.game)
 		T.factory_bolt.load(this.game)
 		T.factory_wrench.load(this.game)
+	}
+
+	public createPattern() {
+		const threshold = this.game.map.random.next() * 0.9
+		const divider = 0.5 + this.game.map.random.next() * 3
+		for (const cell of this.game.ground.field.cells) {
+			cell.color = Math.cos((Math.pow(cell.x, 2) + Math.pow(cell.y, 2)) / divider) > threshold
+		}
 	}
 
 	public drawDetails(ctx: CanvasRenderingContext2D) {
@@ -257,7 +375,7 @@ class Factory extends Map {
 	public drawDecor(ctx: CanvasRenderingContext2D) {
 		// return;
 		ctx.save()
-		ctx.scale(this.game.ground.scale, this.game.ground.scale)
+		// ctx.scale(this.game.ground.scale, this.game.ground.scale)
 		ctx.filter = "brightness(20%)"
 		for (let i = 0; i < 20; ++i) {
 			const small = this.random.next() > 0.5
@@ -297,7 +415,7 @@ class Forest extends Map {
 			patternTexture: T.forest_grass,
 			margin: 8,
 			radius: 20,
-			smallObstacles: [T.forest_rock_small, T.forest_flower, T.mushroom],
+			smallObstacles: [T.daisy, T.daisy, T.mushroom],
 			largeObstacles: [T.forest_rock, T.stump, T.fern],
 			tacticSmallColor: "#888888",
 			tacticLargeColor: "#a8480d",
@@ -306,7 +424,9 @@ class Forest extends Map {
 			dark: true,
 			reachableColor: '#fff',
 			backgroundColor: '#3b1802',
-			patternColor: '#3b940f'
+			patternColor: '#3b940f',
+			backgroundTileSize: 4,
+			patternTileSize: 4
 		})
 		T.stump.offset = 1.3
 		T.fern.offset = 1.1
@@ -323,15 +443,38 @@ class Forest extends Map {
 		T.forest_branch.load(this.game)
 	}
 
+	public createPattern() {
+		for (const cell of this.game.ground.field.cells) {
+			cell.color = false
+		}
+		const circles = 20 + this.game.map.random.next() * 25
+		for (let c = 0; c < circles; ++c) {
+			const radius = 1 + this.game.map.random.next() * (this.game.map.random.next() > 0.1 ? 2.5 : 6)
+			const cx = -17 + this.game.map.random.next() * 34 | 0
+			const cy = -17 + this.game.map.random.next() * 34 | 0
+			if (Math.abs(cx) + Math.abs(cy) >= 17) continue
+			for (let x = cx - radius | 0; x <= cx + radius; ++x) {
+				for (let y = cy - radius | 0; y <= cy + radius; ++y) {
+					if (Math.abs(x) + Math.abs(y) <= 17 && Math.round(Math.sqrt(Math.pow(x - cx, 2) + Math.pow(y - cy, 2))) <= radius) {
+						const cell = this.game.ground.field.getCell(x, y)
+						if (cell) cell.color = true
+					}
+				}
+			}
+		}
+	}
+
 	public drawCellDetails(ctx: CanvasRenderingContext2D, cell: Cell) {
 
 		const w = this.game.ground.tileSizeX * 0.8
 		const h = this.game.ground.tileSizeY * 0.8
 
-		const tex = cell.color ? T.caillou : (this.random.next() > 0.5 ? T.little_grass : T.little_grass_2)
-		const count = cell.color ? this.random.next() * 0 : this.random.next() * 10
-		const minS = cell.color ? 2 : 8
-		const maxS = cell.color ? 8 : 16
+		if (!cell.color) { return }
+
+		const tex = this.random.next() > 0.5 ? T.little_grass : T.little_grass_2
+		const count = this.random.next() * 10
+		const minS = 8
+		const maxS = 16
 
 		for (let i = 0; i < count; ++i) {
 			// const lum = Math.floor(90 + Math.random() * 10)
@@ -419,7 +562,7 @@ class Forest extends Map {
 		// Branches
 		const brightness = 40
 		ctx.filter = "brightness(" + brightness  + "%)"
-		const h = this.game.ground.startY / this.game.ground.scale + Math.random() * 80
+		const h = this.game.ground.startY / this.game.ground.scale + this.random.next() * 80
 		const w = h * (T.forest_branch.texture.width / T.forest_branch.texture.height)
 		ctx.drawImage(T.forest_branch.texture, 0, -h, w, h)
 		ctx.restore()
@@ -432,10 +575,10 @@ class Glacier extends Map {
 			sound: S.map_glacier,
 			groundTexture: T.glacier_snow,
 			patternTexture: T.glacier,
-			margin: 5,
+			margin: 7,
 			radius: 20,
-			smallObstacles: [T.ice_small, T.ice_small, T.ice_small],
-			largeObstacles: [T.snowman, T.fir, T.ice],
+			smallObstacles: [T.ice, T.snow_ball, T.snowman, T.bush_snow],
+			largeObstacles: [T.rock_snow, T.fir],
 			tacticSmallColor: "#777777",
 			tacticLargeColor: "#333333",
 			gridColor: '#000',
@@ -443,10 +586,67 @@ class Glacier extends Map {
 			dark: false,
 			reachableColor: '#333',
 			backgroundColor: '#eee',
-			patternColor: '#2effff'
+			patternColor: '#2effff',
+			backgroundTileSize: 6,
+			patternTileSize: 6
 		})
-		T.fir.offset = 1.5
-		T.snowman.offset = 0.8
+		T.ice.offset = 0.9
+		T.fir.offset = 1.1
+		T.snowman.offset = 0.9
+		T.snow_ball.offset = 0.75
+		T.rock_snow.offset = 0.9
+		T.bush_snow.offset = 1.05
+	}
+
+	public create() {
+		super.create()
+		T.snowflake.load(this.game)
+	}
+
+	public createPattern() {
+		for (const cell of this.game.ground.field.cells) {
+			cell.color = false
+		}
+		const circles = 20 + this.game.map.random.next() * 25
+		for (let c = 0; c < circles; ++c) {
+			const radius = 1 + this.game.map.random.next() * (this.game.map.random.next() > 0.1 ? 2.5 : 6)
+			const cx = -17 + this.game.map.random.next() * 34 | 0
+			const cy = -17 + this.game.map.random.next() * 34 | 0
+			if (Math.abs(cx) + Math.abs(cy) >= 17) { continue }
+			for (let x = cx - radius | 0; x <= cx + radius; ++x) {
+				for (let y = cy - radius | 0; y <= cy + radius; ++y) {
+					if (Math.abs(x) + Math.abs(y) <= 17 && Math.round(Math.sqrt(Math.pow(x - cx, 2) + Math.pow(y - cy, 2))) <= radius) {
+						const cell = this.game.ground.field.getCell(x, y)
+						if (cell) { cell.color = true }
+					}
+				}
+			}
+		}
+	}
+
+	public drawDetails(ctx: CanvasRenderingContext2D) {
+
+		const numB = 50 + this.random.next() * 100
+		const r = T.snowflake.texture.height / T.snowflake.texture.width
+
+		for (let i = 0; i < numB; ++i) {
+			const s = 25 + this.random.next() * 25
+			const x = -100 + this.random.next() * (200 + this.game.ground.gridWidth / this.game.ground.scale)
+			const y = -100 + this.random.next() * (200 + this.game.ground.gridHeight / this.game.ground.scale)
+			ctx.save()
+			ctx.translate(x, y)
+
+			// ctx.save()
+			// ctx.scale(1, -SHADOW_SCALE)
+			// ctx.rotate(-Math.PI / 4)
+			// ctx.translate(0, -s * r)
+			// ctx.globalAlpha = SHADOW_ALPHA
+			// ctx.drawImage(T.snowflake.shadow!, -s / 2, 0, s, s * r)
+			// ctx.restore()
+
+			ctx.drawImage(T.snowflake.texture, -s / 2, -s * r, s, s * r)
+			ctx.restore()
+		}
 	}
 }
 
@@ -467,7 +667,9 @@ class Nexus extends Map {
 			dark: false,
 			reachableColor: '#333',
 			backgroundColor: '#fff',
-			patternColor: '#fff'
+			patternColor: '#fff',
+			backgroundTileSize: 8,
+			patternTileSize: 8
 		})
 		T.nexus_block.offset = 1.177
 		T.nexus_block_small.offset = 1.18
@@ -479,9 +681,9 @@ class Arena extends Map {
 		super(game, {
 			sound: S.map_desert,
 			groundTexture: T.arena,
-			patternTexture: T.arena,
+			patternTexture: T.arena_pattern,
 			margin: 5,
-			radius: 10,
+			radius: 20,
 			smallObstacles: [T.grass, T.pillar, T.small_cube],
 			largeObstacles: [T.pyramid, T.cube, T.square],
 			tacticSmallColor: "#497a06",
@@ -491,13 +693,80 @@ class Arena extends Map {
 			dark: true,
 			reachableColor: '#fff',
 			backgroundColor: '#aca28b',
-			patternColor: '#90a15a'
+			patternColor: '#90a15a',
+			backgroundTileSize: 4,
+			patternTileSize: 4
 		})
 		T.grass.offset = 1.5
 		T.pillar.offset = 1.1
 		T.cube.offset = 1.0
 		T.small_cube.offset = 0.9
 		T.square.offset = 1.1
+	}
+
+	public create() {
+		super.create()
+		T.little_grass.load(this.game)
+		T.little_grass_2.load(this.game)
+	}
+
+	public createPattern() {
+		for (const cell of this.game.ground.field.cells) {
+			cell.color = false
+		}
+		const circles = 20 + this.game.map.random.next() * 25
+		for (let c = 0; c < circles; ++c) {
+			const radius = 1 + this.game.map.random.next() * (this.game.map.random.next() > 0.1 ? 2.5 : 6)
+			const cx = -17 + this.game.map.random.next() * 34 | 0
+			const cy = -17 + this.game.map.random.next() * 34 | 0
+			if (Math.abs(cx) + Math.abs(cy) >= 17) { continue }
+			for (let x = cx - radius | 0; x <= cx + radius; ++x) {
+				for (let y = cy - radius | 0; y <= cy + radius; ++y) {
+					if (Math.abs(x) + Math.abs(y) <= 17 && Math.round(Math.sqrt(Math.pow(x - cx, 2) + Math.pow(y - cy, 2))) <= radius) {
+						const cell = this.game.ground.field.getCell(x, y)
+						if (cell) { cell.color = true }
+					}
+				}
+			}
+		}
+	}
+
+	public drawCellDetails(ctx: CanvasRenderingContext2D, cell: Cell) {
+
+		const w = this.game.ground.tileSizeX * 0.8
+		const h = this.game.ground.tileSizeY * 0.8
+
+		if (!cell.color) { return }
+
+		const tex = this.random.next() > 0.5 ? T.little_grass : T.little_grass_2
+		const count = this.random.next() * 4 | 0
+		const minS = 8
+		const maxS = 16
+
+		for (let i = 0; i < count; ++i) {
+			// const lum = Math.floor(90 + Math.random() * 10)
+			// ctx.filter = "brightness(" + lum + "%)"
+			const s = (minS + this.random.next() * maxS) * this.game.ground.scale
+			const angle = this.random.next() * Math.PI * 2
+			const dist = this.random.next()
+			const x = Math.cos(angle) * w * dist * 0.5
+			const y = Math.sin(angle) * h * dist * 0.5
+			ctx.save()
+			ctx.translate(x, y)
+
+			if (tex.shadow) {
+				ctx.save()
+				ctx.scale(1, -SHADOW_SCALE)
+				ctx.rotate(-Math.PI / 4)
+				ctx.translate(0, -s)
+				ctx.globalAlpha = SHADOW_ALPHA
+				ctx.drawImage(tex.shadow, -s / 2, 0, s, s)
+				ctx.restore()
+			}
+
+			ctx.drawImage(tex.texture, -s / 2, -s, s, s)
+			ctx.restore()
+		}
 	}
 
 	public drawDecor(ctx: CanvasRenderingContext2D) {

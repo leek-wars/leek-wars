@@ -5,7 +5,7 @@ import { Cell } from '@/model/cell'
 class Obstacle {
 	public game: Game
 	public size: number
-	public type: number
+	public type!: number
 	public x: number
 	public y: number
 	public baseTexture!: Texture | null
@@ -27,14 +27,17 @@ class Obstacle {
 		}
 		// Caractéristiques
 		this.size = size
-		// this.type = type
-		const types = this.size === 2 ? this.game.map.options.largeObstacles.length : this.game.map.options.smallObstacles.length
-		this.type = game.map.random.next() * types | 0
+		this.updateType()
 		// Position
 		const pos = game.ground.field.cellToXY(cell)
 		this.x = pos.x
 		this.y = pos.y
 		this.cell = cell
+	}
+
+	public updateType() {
+		const types = this.size === 2 ? this.game.map.options.largeObstacles.length : this.game.map.options.smallObstacles.length
+		this.type = this.game.map.random.next() * types | 0
 	}
 
 	public resize() {

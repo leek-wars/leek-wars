@@ -17,28 +17,28 @@ class Field {
 		this.tilesX = tilesX
 		this.tilesY = tilesY
 		this.nb_cells = (this.tilesX * 2 - 1) * this.tilesY - (this.tilesX - 1)
-		for (let id = 0; id < this.nb_cells; id++) {
-			const x1 = id % (this.tilesX * 2 - 1)
-			const y1 = Math.floor(id / (this.tilesX * 2 - 1))
-			const y = y1 - x1 % this.tilesX
-			const x = (id - (this.tilesX - 1) * y) / this.tilesX
+		this.cells = new Array(this.nb_cells)
 
-			const color = Math.cos((Math.pow(x, 2) + Math.pow(y, 2)) / 1.4) > 0.25
-			const cell = new Cell(id, x, y, color)
+		for (let x = -tilesX + 1; x < tilesX; x++) {
+			for (let y = -tilesX + 1; y < tilesX; y++) {
+				if (Math.abs(x) + Math.abs(y) >= tilesX) { continue }
+				const id = tilesX * (tilesX - 1) + tilesX * x + (tilesX - 1) * y
+				const cell = new Cell(id, x, y)
 
-			if (this.min_x === -1 || x < this.min_x) {
-				this.min_x = x
+				if (this.min_x === -1 || x < this.min_x) {
+					this.min_x = x
+				}
+				if (this.max_x === -1 || x > this.max_x) {
+					this.max_x = x
+				}
+				if (this.min_y === -1 || y < this.min_y) {
+					this.min_y = y
+				}
+				if (this.max_y === -1 || y > this.max_y) {
+					this.max_y = y
+				}
+				this.cells[id] = cell
 			}
-			if (this.max_x === -1 || x > this.max_x) {
-				this.max_x = x
-			}
-			if (this.min_y === -1 || y < this.min_y) {
-				this.min_y = y
-			}
-			if (this.max_y === -1 || y > this.max_y) {
-				this.max_y = y
-			}
-			this.cells.push(cell)
 		}
 		const sx = this.max_x - this.min_x + 1
 		const sy = this.max_y - this.min_y + 1
@@ -199,6 +199,10 @@ class Field {
 		if (x < this.min_x || y < this.min_y || x > this.max_x || y > this.max_y) {
 			return null
 		}
+		return this.coord[x - this.min_x][y - this.min_y]
+	}
+
+	public getCell(x: number, y: number) {
 		return this.coord[x - this.min_x][y - this.min_y]
 	}
 }
