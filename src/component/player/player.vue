@@ -383,6 +383,10 @@
 			} else if (e.keyCode === 86) { // V
 				this.game.sound = !this.game.sound
 				e.preventDefault()
+			} else if (e.keyCode === 88) { // X
+				this.game.map.seed = Math.random() * 10000000 | 0
+				this.game.mapLoaded()
+				e.preventDefault()
 			}
 		}
 		beforeDestroy() {

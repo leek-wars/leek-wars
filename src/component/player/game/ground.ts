@@ -53,6 +53,14 @@ class Ground {
 		}
 	}
 
+	public updateMap() {
+		this.game.map.random.seed(this.game.map.seed)
+		// Set obstacles types
+		for (const o in this.obstacles) {
+			this.obstacles[o].updateType()
+		}
+	}
+
 	public resize(width: number, height: number, shadows: boolean) {
 
 		if (!this.game.initialized) { return  }
@@ -69,7 +77,7 @@ class Ground {
 				GROUND_PADDING_RIGHT = 20
 			}
 			GROUND_PADDING_BOTTOM = 132
-			GROUND_PADDING_TOP = 132
+			GROUND_PADDING_TOP = 100
 		}
 		this.width = width
 		this.height = height
@@ -122,7 +130,12 @@ class Ground {
 			this.textureCtx.translate(this.startX, this.startY)
 
 			// Draw pattern
+			this.game.map.random.seed(this.game.map.seed)
+			this.game.map.createPattern()
 			this.drawPattern(this.textureCtx)
+
+			// Draw lines
+			this.drawGrid(this.textureCtx)
 
 			// Détails spécifiques à la carte
 			if (!this.game.plainBackground && this.game.map.drawDetails) {
@@ -133,8 +146,6 @@ class Ground {
 				this.textureCtx.restore()
 			}
 
-			// Draw lines
-			this.drawGrid(this.textureCtx)
 
 			// Draw checkerboard
 			if (this.game.tactic) {
@@ -171,7 +182,10 @@ class Ground {
 			// Draw map decor
 			if (this.game.map.drawDecor) {
 				this.game.map.random.seed(this.game.map.seed)
+				this.textureCtx.save()
+				this.textureCtx.scale(this.game.ground.scale, this.game.ground.scale)
 				this.game.map.drawDecor(this.textureCtx)
+				this.textureCtx.restore()
 			}
 
 			// Obstacles shadows
@@ -180,6 +194,15 @@ class Ground {
 					obstacle.drawShadow(this.textureCtx)
 				}
 			}
+
+			// Black stripes
+			// this.textureCtx.fillStyle = '#000'
+			// const topHeight = this.startY - 110 * this.scale
+			// this.textureCtx.fillRect(-this.startX, -this.startY, this.width, topHeight)
+			// const bottomFree = this.height - (this.startY + this.gridHeight)
+			// const bottomHeight = Math.max(0, bottomFree - 110 * this.scale)
+			// this.textureCtx.fillRect(-this.startX, this.gridHeight + (bottomFree - bottomHeight), this.width, bottomHeight)
+
 			this.textureCtx.scale(this.scale, this.scale)
 		}
 	}
@@ -187,29 +210,29 @@ class Ground {
 	public drawPattern(ctx: CanvasRenderingContext2D) {
 
 		ctx.save()
-		const TILE_SIZE = 4
-		const w = TILE_SIZE * this.tileSizeX
-		const h = TILE_SIZE * this.tileSizeY
-		const d = w / Math.sqrt(2)
-		const W = this.texture!.width / w + 2
-		const H = this.texture!.height / h + 1
+		const TILE_SIZE = this.game.map.options.backgroundTileSize
+		const gw = TILE_SIZE * this.tileSizeX
+		const gh = TILE_SIZE * this.tileSizeY
+		const d = gw / Math.sqrt(2)
+		const W = this.texture!.width / gw + 2
+		const H = this.texture!.height / gh + 1
 
 		if (this.game.plainBackground) {
 			ctx.fillStyle = this.game.map.options.backgroundColor
 			ctx.fillRect(-this.startX, -this.startY, this.width, this.height)
 		} else {
-			ctx.translate(-this.startX, -this.startY - h)
+			ctx.translate(-this.startX, -this.startY - gh)
 			for (let y = 0; y < H; ++y) {
 				for (let x = 0; x < W; ++x) {
 					ctx.save()
-					ctx.translate(x * w, y * h)
+					ctx.translate(x * gw, y * gh)
 					ctx.save()
 					ctx.scale(1.01, 0.501)
 					ctx.rotate(Math.PI / 4)
 					ctx.drawImage(this.game.map.options.groundTexture.texture, 0, 0, d, d)
 					ctx.restore()
 
-					ctx.translate(w / 2, h / 2)
+					ctx.translate(gw / 2, gh / 2)
 					ctx.scale(1.01, 0.501)
 					ctx.rotate(Math.PI / 4)
 					ctx.drawImage(this.game.map.options.groundTexture.texture, 0, 0, d, d)
@@ -224,6 +247,12 @@ class Ground {
 		pattern.width = this.gridWidth
 		pattern.height = this.gridHeight
 		const pctx = pattern.getContext('2d')!
+		const PATTERN_TILE_SIZE = this.game.map.options.patternTileSize
+		const pw = PATTERN_TILE_SIZE * this.tileSizeX
+		const ph = PATTERN_TILE_SIZE * this.tileSizeY
+		const PW = this.texture!.width / pw + 2
+		const PH = this.texture!.height / ph + 1
+		const pd = pw / Math.sqrt(2)
 
 		if (!this.game.map.options.smoothPattern) {
 			ctx.imageSmoothingEnabled = false
@@ -233,21 +262,21 @@ class Ground {
 			pctx.fillRect(-this.startX, -this.startY, this.width, this.height)
 		} else {
 			pctx.save()
-			pctx.translate(0, -h)
-			for (let y = 0; y < H; ++y) {
-				for (let x = 0; x < W; ++x) {
+			pctx.translate(0, -ph)
+			for (let y = 0; y < PH; ++y) {
+				for (let x = 0; x < PW; ++x) {
 					pctx.save()
-					pctx.translate(x * w, y * h)
+					pctx.translate(x * pw, y * ph)
 					pctx.save()
 					pctx.scale(1, 0.5)
 					pctx.rotate(Math.PI / 4)
-					pctx.drawImage(this.game.map.options.patternTexture.texture, 0, 0, d, d)
+					pctx.drawImage(this.game.map.options.patternTexture.texture, 0, 0, pd, pd)
 					pctx.restore()
 
-					pctx.translate(w / 2, h / 2)
+					pctx.translate(pw / 2, ph / 2)
 					pctx.scale(1, 0.5)
 					pctx.rotate(Math.PI / 4)
-					pctx.drawImage(this.game.map.options.patternTexture.texture, 0, 0, d, d)
+					pctx.drawImage(this.game.map.options.patternTexture.texture, 0, 0, pd, pd)
 					pctx.restore()
 				}
 			}
@@ -328,7 +357,7 @@ class Ground {
 			pctx.scale(1, 0.5)
 			pctx.rotate(Math.PI / 4)
 
-			if (cell.color) {
+			if (!cell.color) {
 				pctx.beginPath()
 				pctx.moveTo(-cw, cw)
 				pctx.lineTo(cw, cw)
@@ -351,14 +380,14 @@ class Ground {
 				const n7 = this.field.next_cell(cell, 1, -1)
 				const n8 = this.field.next_cell(cell, -1, -1)
 
-				const a1 = n1 && !n1.color
-				const a2 = n2 && !n2.color
-				const a3 = n3 && !n3.color
-				const a4 = n4 && !n4.color
-				const a5 = n5 && !n5.color
-				const a6 = n6 && !n6.color
-				const a7 = n7 && !n7.color
-				const a8 = n8 && !n8.color
+				const a1 = n1 && n1.color
+				const a2 = n2 && n2.color
+				const a3 = n3 && n3.color
+				const a4 = n4 && n4.color
+				const a5 = n5 && n5.color
+				const a6 = n6 && n6.color
+				const a7 = n7 && n7.color
+				const a8 = n8 && n8.color
 
 				// Côtés
 				if (!a1) { pctx.fillRect(-cw, -cw + M, M, 2 * cw - 2 * M) }
@@ -573,11 +602,13 @@ class Ground {
 
 	public drawCellNumbers(ctx: CanvasRenderingContext2D) {
 
-		ctx.strokeStyle = '#000'
+		ctx.save()
+		ctx.strokeStyle = '#333'
 		ctx.lineWidth = 1.5
 		ctx.fillStyle = '#fff'
-		ctx.font = "bold " + Math.floor(9 * this.scale) + "pt Roboto"
+		ctx.font = "bold " + Math.floor(8 * this.scale) + "pt Roboto"
 		ctx.textAlign = "center"
+		ctx.textBaseline = "middle"
 
 		let cell = 0
 
@@ -587,13 +618,14 @@ class Ground {
 			const num = big ? this.field.tilesX : this.field.tilesX - 1
 
 			for (let j = 0; j < num; ++j) {
-				ctx.strokeText('' + cell, j * this.tileSizeX + this.tileSizeX / 2 + ((big ? 0 : 1) * this.tileSizeX / 2), i * this.tileSizeY / 2 + this.tileSizeY / 1.5)
-				ctx.fillText('' + cell, j * this.tileSizeX + this.tileSizeX / 2 + ((big ? 0 : 1) * this.tileSizeX / 2), i * this.tileSizeY / 2 + this.tileSizeY / 1.5)
+				ctx.strokeText('' + cell, j * this.tileSizeX + this.tileSizeX / 2 + ((big ? 0 : 1) * this.tileSizeX / 2), i * this.tileSizeY / 2 + this.tileSizeY / 2)
+				ctx.fillText('' + cell, j * this.tileSizeX + this.tileSizeX / 2 + ((big ? 0 : 1) * this.tileSizeX / 2), i * this.tileSizeY / 2 + this.tileSizeY / 2)
 				cell++
 			}
 		}
 		ctx.globalAlpha = 1
 		ctx.lineWidth = 1
+		ctx.restore()
 	}
 
 	public endDraw(ctx: CanvasRenderingContext2D) {

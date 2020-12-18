@@ -6,13 +6,12 @@ class Cell {
 	public readonly y: number
 	public obstacle: boolean = false
 	public entity: Entity | null = null
-	public color: boolean
+	public color: boolean = false
 
-	constructor(id: number, x: number, y: number, color: boolean) {
+	constructor(id: number, x: number, y: number) {
 		this.id = id
 		this.x = x
 		this.y = y
-		this.color = color
 	}
 
 	public setEntity(entity: Entity | null) {

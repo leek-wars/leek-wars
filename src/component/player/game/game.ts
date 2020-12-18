@@ -603,6 +603,7 @@ class Game {
 
 	public setLogs(logs: any) {
 		// Merge logs
+		// return
 		for (const farmer in logs) {
 			const farmerLogs = logs[farmer]
 			const me = parseInt(farmer, 10) === store.state.farmer!.id
@@ -1955,10 +1956,13 @@ class Game {
 		this.ctx.scale(this.ground.scale, this.ground.scale)
 
 		this.ctx.globalAlpha = 1
-		this.ctx.font = "8pt Roboto"
+		this.ctx.font = "bold 8pt Roboto"
 		this.ctx.fillStyle = color
+		this.ctx.lineWidth = 1
+		this.ctx.strokeStyle = '#333'
 		this.ctx.textAlign = "center"
 		this.ctx.textBaseline = "middle"
+		this.ctx.strokeText(text, 0, 0)
 		this.ctx.fillText(text, 0, 0)
 
 		this.ctx.restore()
@@ -2050,12 +2054,6 @@ class Game {
 			const marker = this.markers[m]
 			this.drawMarker(marker.x, marker.y, marker.color)
 		}
-		if (!this.showCells) {
-			for (const m in this.markersText) {
-				const marker = this.markersText[m]
-				this.drawTextMarker(marker.x, marker.y, marker.text, marker.color)
-			}
-		}
 		// Show pointer cell
 		this.drawPointerCell()
 
@@ -2068,6 +2066,11 @@ class Game {
 		// Draw cells numbers
 		if (this.showCells) {
 			this.ground.drawCellNumbers(this.ctx)
+		} else {
+			for (const m in this.markersText) {
+				const marker = this.markersText[m]
+				this.drawTextMarker(marker.x, marker.y, marker.text, marker.color)
+			}
 		}
 
 		// Show cell
@@ -2283,6 +2286,7 @@ class Game {
 	}
 
 	public mapLoaded() {
+		this.ground.updateMap()
 		this.ground.resize(this.width, this.height, this.shadows)
 		this.redraw()
 	}
