@@ -108,8 +108,8 @@ const routes = [
 	{ path: '/conditions', component: Conditions },
 	{ path: '/changelog', component: Changelog },
 	{ path: '/change-email/:state/:token', component: ChangeEmail },
-	{ path: '/encyclopedia', component: Encyclopedia },
-	{ path: '/encyclopedia/:page', component: Encyclopedia },
+	{ path: '/encyclopedia', component: Encyclopedia, meta: {scrollOffset: 45} },
+	{ path: '/encyclopedia/:page', component: Encyclopedia, meta: {scrollOffset: 45} },
 	{ path: '/editor', component: Editor, beforeEnter: connected },
 	{ path: '/editor/:id', component: Editor, beforeEnter: connected },
 	{ path: '/error/:message', component: Error },
@@ -196,12 +196,29 @@ if (process.env.VUE_APP_BANK === 'true') {
 	)
 }
 
+function scroll_to_hash(hash: string, route: Route) {
+	const id = decodeURIComponent(hash).replace(/'/g, '~').substring(1)
+	const element = document.getElementById(id)
+	// console.log("scroll element", id, element, route.meta)
+	if (element) {
+		const offset = (LeekWars.mobile ? 56 : 0) + route.meta.scrollOffset
+		setTimeout(() => {
+			window.scrollTo(0, element.getBoundingClientRect().top + window.scrollY - offset)
+		})
+	}
+}
+
 const router = new Router({
 	mode: 'history',
 	base: process.env.BASE_URL,
 	routes,
 	scrollBehavior(to, from, savedPosition) {
+		// console.log("scrollBehavior", to, from, savedPosition)
 		vueMain.$data.savedPosition = 0
+		if (to.hash) {
+			scroll_to_hash(to.hash, to)
+			return null
+		}
 		if (savedPosition && !from.hash) {
 			vueMain.$data.savedPosition = savedPosition.y
 		} else if (!to.meta.noscroll) {
@@ -214,12 +231,8 @@ router.afterEach((to: Route) => {
 	if (to.hash) {
 		vueMain.$once('loaded', () => {
 			setTimeout(() => {
-				const element = document.querySelector(to.hash)
-				if (element) {
-					const offset = LeekWars.mobile ? 56 : 0
-					window.scrollTo(0, element.getBoundingClientRect().top + window.scrollY - offset)
-				}
-			})
+				scroll_to_hash(to.hash, to)
+			}, 100)
 		})
 	}
 })
