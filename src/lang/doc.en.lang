@@ -262,7 +262,7 @@
 	"func_getAliveEnemiesCount": "Counts the alive enemies in the fight.",
 	"func_getAliveEnemiesCount_return": "The number of alive enemies.",
 	"func_getAliveEnemies_return": "An array containing all all of your alive enemies in a fight.",
-	"func_getAllChips": "Returns a list of all chips in the game,
+	"func_getAllChips": "Returns a list of all chips in the game.",
 	"func_getAllChips_return": "The list of all chips in the game.",
 	"func_getAllEffects": "Returns a list of all effects in the game.",
 	"func_getAllEffects_return": "The list of all effects in the game.",
