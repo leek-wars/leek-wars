@@ -150,6 +150,9 @@ const HAT_SIZES: { [key: number]: {width: number, height: number} } = {
 const ORDERED_CHIPS = orderChips(CHIPS)
 const ORDERED_WEAPONS = orderWeapons(WEAPONS)
 const POTIONS_BY_SKIN = potionsBySkin(POTIONS)
+const POTION_BY_NAME = potionByName(POTIONS)
+const WEAPON_BY_NAME = weaponByName(WEAPONS)
+const CHIP_BY_NAME = chipByName(CHIPS)
 
 class Language {
 	public code!: string
@@ -525,14 +528,17 @@ const LeekWars = {
 	hats: Object.freeze(HATS),
 	pomps: Object.freeze(POMPS),
 	weapons: Object.freeze(WEAPONS),
+	weaponByName: Object.freeze(WEAPON_BY_NAME),
 	items: Object.freeze(ITEMS),
 	chips: Object.freeze(CHIPS),
+	chipByName: Object.freeze(CHIP_BY_NAME),
 	trophies: Object.freeze(TROPHIES),
 	chipTemplates: Object.freeze(CHIP_TEMPLATES),
 	trophyCategories: Object.freeze(TROPHY_CATEGORIES),
 	functions: Object.freeze(FUNCTIONS),
 	summonTemplates: Object.freeze(SUMMON_TEMPLATES),
 	potions: Object.freeze(POTIONS),
+	potionByName: Object.freeze(POTION_BY_NAME),
 	hatTemplates: Object.freeze(HAT_TEMPLATES),
 	orderedChips: Object.freeze(ORDERED_CHIPS),
 	orderedWeapons: Object.freeze(ORDERED_WEAPONS),
@@ -650,7 +656,34 @@ function potionsBySkin(potions: {[key: string]: PotionTemplate}) {
 	return result
 }
 
-function formatDuration(timestamp: number, capital: boolean) {
+function potionByName(potions: {[key: string]: PotionTemplate}) {
+	const result: { [key: string]: PotionTemplate } = {}
+	for (const w in potions) {
+		const potion = potions[w]
+		result[potion.name] = potion
+	}
+	return result
+}
+
+function weaponByName(weapons: {[key: string]: WeaponTemplate}) {
+	const result: { [key: string]: WeaponTemplate } = {}
+	for (const w in weapons) {
+		const weapon = weapons[w]
+		result[weapon.name] = weapon
+	}
+	return result
+}
+
+function chipByName(chips: {[key: string]: ChipTemplate}) {
+	const result: { [key: string]: ChipTemplate } = {}
+	for (const c in chips) {
+		const chip = chips[c]
+		result[chip.name] = chip
+	}
+	return result
+}
+
+function formatDuration(timestamp: number, capital: boolean = false) {
 
 	if (timestamp === 0 || timestamp == null) { return "-" }
 

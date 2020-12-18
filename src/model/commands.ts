@@ -1,8 +1,7 @@
 import { LeekWars } from "@/model/leekwars"
 
-// URLs for /wiki and /doc
-const URL_WIKI = "http://leekwarswiki.net"
-const URL_WIKI_PAGE = "http://leekwarswiki.net/index.php?title="
+// URLs for /encyclo and /doc
+const URL_ENCYCLOPEDIA = "/encyclopedia"
 const URL_DOC = "/help/documentation"
 const URL_MARKET = "/market"
 const URL_TUTO = "/help/tutorial"
@@ -137,20 +136,20 @@ const COMMANDS = [
 			return " " + LeekWars.toChatLink(URL_UPDATE + localStorage.getItem('changelog_forum_topic'), "LA MÀJJJJJ", "target='_blank' rel='noopener'") + " "
 		}
 	}, {
-		name: "wiki",
-		description: "Lien vers le wiki (avec une page et une ancre)",
-		regex: /(?:^|(\s))\/wiki(?::([^\s#]+)(?:#([^\s]+))?)?(?=\s|$)/gi,
+		name: "encyclo",
+		description: "Lien vers l'encyclopédie (avec une page et une ancre)",
+		regex: /(?:^|(\s))\/encyclo(?::([^\s#]+)(?:#([^\s]+))?)?(?=\s|$)/gi,
 		replacement: (a: any, b: any, page: string, anchor: string) => {
-			const name = page ? page + (anchor ? '#' + anchor : '') : "Wiki"
-			const link = page ? URL_WIKI_PAGE + page + (anchor ? '#' + anchor : '') : URL_WIKI
-			return  " " + LeekWars.toChatLink(link, name, "target='_blank' rel='noopener'") + " "
+			const name = page ? page + (anchor ? '#' + anchor : '') : "Encyclopédie"
+			const link = page ? URL_ENCYCLOPEDIA + '/' + page + (anchor ? '#' + anchor : '') : URL_ENCYCLOPEDIA
+			return  " <i class='v-icon notranslate book mdi mdi-book-open-page-variant theme--light'></i>" + LeekWars.toChatLink(link, name, "target='_blank' rel='noopener'") + " "
 		},
 		options: []
 	}, {
-		name: "wiki!",
-		description: "Lien vers le wiki, de manière appuyée",
-		regex: /(?:^|(\s))\/wiki!(?=\s|$)/gi,
-		replacement: () => " " + LeekWars.toChatLink(URL_WIKI, "LE WIKIIIII", "target='_blank' rel='noopener'") + " "
+		name: "encyclo!",
+		description: "Lien vers l'encyclopédie, de manière appuyée",
+		regex: /(?:^|(\s))\/encyclo!(?=\s|$)/gi,
+		replacement: () => " " + LeekWars.toChatLink(URL_ENCYCLOPEDIA, "L'ENCYCLOPÉDIIIIIIE", "target='_blank' rel='noopener'") + " "
 	}
 ] as Command[]
 
