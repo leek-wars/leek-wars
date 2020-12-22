@@ -561,9 +561,9 @@ class Remission extends ChipHealAnimation {
 	constructor(game: Game) { super(game, T.chip_remission) }
 }
 class Elevation extends ChipHealAnimation {
-	static textures = [T.cure_aureol, T.heal_cross, T.chip_remission]
+	static textures = [T.cure_aureol, T.heal_cross, T.chip_elevation]
 	static sounds = [S.heal]
-	constructor(game: Game) { super(game, T.chip_remission) }
+	constructor(game: Game) { super(game, T.chip_elevation) }
 }
 class Rock extends ChipAnimation {
 	static textures = [T.rock]
@@ -806,9 +806,9 @@ class Plague extends ChipPoisonAnimation {
 	constructor(game: Game) { super(game, T.chip_plague, Area.CIRCLE3) }
 }
 class Covid extends ChipPoisonAnimation {
-	static textures = [T.poison_aureol, T.chip_plague]
+	static textures = [T.poison_aureol, T.chip_covid]
 	static sounds = [S.poison]
-	constructor(game: Game) { super(game, T.chip_plague) }
+	constructor(game: Game) { super(game, T.chip_covid) }
 }
 class Thorn extends ChipDamageReturnAnimation {
 	static textures = [T.damage_return_aureol, T.chip_thorn]
@@ -836,14 +836,14 @@ class Bark extends ChipBoostAnimation {
 	constructor(game: Game) { super(game, T.chip_bark) }
 }
 class Wizardry extends ChipBoostAnimation {
-	static textures = [T.buff_aureol, T.halo, T.chip_ferocity]
+	static textures = [T.buff_aureol, T.halo, T.chip_wizardry]
 	static sounds = [S.buff]
-	constructor(game: Game) { super(game, T.chip_ferocity) }
+	constructor(game: Game) { super(game, T.chip_wizardry) }
 }
 class Knowledge extends ChipBoostAnimation {
-	static textures = [T.buff_aureol, T.halo, T.chip_ferocity]
+	static textures = [T.buff_aureol, T.halo, T.chip_knowledge]
 	static sounds = [S.buff]
-	constructor(game: Game) { super(game, T.chip_ferocity) }
+	constructor(game: Game) { super(game, T.chip_knowledge) }
 }
 class Burning extends ChipAnimation {
 	static textures = [T.chip_burning]
