@@ -171,10 +171,10 @@
 				if (this.konami.length > 12) { this.konami = this.konami.substring(1) }
 			})
 
-			if (this.$store.state.connected && !localStorage.getItem('annonce')) {
-				this.annonce = true
-				localStorage.setItem('annonce', 'true')
-			}
+			// if (this.$store.state.connected && !localStorage.getItem('annonce')) {
+			// 	this.annonce = true
+			// 	localStorage.setItem('annonce', 'true')
+			// }
 		}
 		changelogShow() {
 			LeekWars.get('changelog/get-last/' + this.$i18n.locale).then(data => {
