@@ -91,8 +91,8 @@ class ChipShieldAnimation extends ChipAnimation {
 	}
 	public launch(launchCell: Cell, targetPos: Position, targets: FightEntity[], targetCell: Cell) {
 		super.launch(launchCell, targetPos, targets, targetCell)
-		this.createChipImage(targets, this.texture)
 		this.createChipAureol(targets, T.shield_aureol)
+		this.createChipImage(targets, this.texture)
 	}
 }
 
@@ -107,8 +107,8 @@ class ChipBoostAnimation extends ChipAnimation {
 	}
 	public launch(launchCell: Cell, targetPos: Position, targets: FightEntity[], targetCell: Cell) {
 		super.launch(launchCell, targetPos, targets, targetCell)
-		this.createChipImage(targets, this.texture)
 		this.createChipAureol(targets, T.buff_aureol)
+		this.createChipImage(targets, this.texture)
 		if (this.area !== Area.SINGLE_CELL) {
 			this.game.setEffectArea(targetCell, this.area, 'blue')
 		}
@@ -136,8 +136,8 @@ class ChipHealAnimation extends ChipAnimation {
 	}
 	public launch(launchCell: Cell, targetPos: Position, targets: FightEntity[], targetCell: Cell) {
 		super.launch(launchCell, targetPos, targets, targetCell)
-		this.createChipImage(targets, this.texture)
 		this.createChipAureol(targets, T.cure_aureol)
+		this.createChipImage(targets, this.texture)
 		if (this.area !== Area.SINGLE_CELL) {
 			this.game.setEffectArea(targetCell, this.area, 'green')
 		}
@@ -164,8 +164,8 @@ class ChipDebuffAnimation extends ChipAnimation {
 	}
 	public launch(launchCell: Cell, targetPos: Position, targets: FightEntity[], targetCell: Cell) {
 		super.launch(launchCell, targetPos, targets, targetCell)
-		this.createChipImage(targets, this.texture)
 		this.createChipAureol(targets, T.shackle_aureol)
+		this.createChipImage(targets, this.texture)
 		if (this.area !== Area.SINGLE_CELL) {
 			this.game.setEffectArea(targetCell, this.area, '#9f00ef')
 		}
@@ -182,8 +182,8 @@ class ChipPoisonAnimation extends ChipAnimation {
 	}
 	public launch(launchCell: Cell, targetPos: Cell, targets: FightEntity[], targetCell: Cell) {
 		super.launch(launchCell, targetPos, targets, targetCell)
-		this.createChipImage(targets, this.texture)
 		this.createChipAureol(targets, T.poison_aureol)
+		this.createChipImage(targets, this.texture)
 		if (this.area !== Area.SINGLE_CELL) {
 			this.game.setEffectArea(targetCell, this.area, '#ea5ef9')
 		}
@@ -200,8 +200,8 @@ class ChipDamageReturnAnimation extends ChipAnimation {
 	}
 	public launch(launchCell: Cell, targetPos: Position, targets: FightEntity[], targetCell: Cell) {
 		super.launch(launchCell, targetPos, targets, targetCell)
-		this.createChipImage(targets, this.texture)
 		this.createChipAureol(targets, T.damage_return_aureol)
+		this.createChipImage(targets, this.texture)
 		if (this.area !== Area.SINGLE_CELL) {
 			this.game.setEffectArea(targetCell, this.area, Colors.AGILITY_COLOR)
 		}
