@@ -255,6 +255,8 @@ class T {
 	public static chip_precipitation = new Texture(LeekWars.STATIC + 'image/chip/glyph/precipitation.png')
 	public static chip_covetousness = new Texture(LeekWars.STATIC + 'image/chip/glyph/covetousness.png')
 	public static chip_vampirization = new Texture(LeekWars.STATIC + 'image/chip/glyph/vampirization.png')
+	public static chip_knowledge = new Texture(LeekWars.STATIC + 'image/chip/glyph/knowledge.png')
+	public static chip_wizardry = new Texture(LeekWars.STATIC + 'image/chip/glyph/wizardry.png')
 
 	// Shield
 	public static chip_helmet = new Texture(LeekWars.STATIC + 'image/chip/glyph/helmet.png')
@@ -275,6 +277,7 @@ class T {
 	public static chip_remission = new Texture(LeekWars.STATIC + 'image/chip/glyph/remission.png')
 	public static chip_loam = new Texture(LeekWars.STATIC + 'image/chip/glyph/loam.png')
 	public static chip_fertilizer = new Texture(LeekWars.STATIC + 'image/chip/glyph/fertilizer.png')
+	public static chip_elevation = new Texture(LeekWars.STATIC + 'image/chip/glyph/elevation.png')
 
 	// Damage return
 	public static chip_thorn = new Texture(LeekWars.STATIC + 'image/chip/glyph/thorn.png')
@@ -284,6 +287,7 @@ class T {
 	public static chip_venom = new Texture(LeekWars.STATIC + 'image/chip/glyph/venom.png')
 	public static chip_toxin = new Texture(LeekWars.STATIC + 'image/chip/glyph/toxin.png')
 	public static chip_plague = new Texture(LeekWars.STATIC + 'image/chip/glyph/plague.png')
+	public static chip_covid = new Texture(LeekWars.STATIC + 'image/chip/glyph/covid.png')
 
 	// Shackles
 	public static chip_slow_down = new Texture(LeekWars.STATIC + 'image/chip/glyph/slow_down.png')
