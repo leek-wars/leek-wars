@@ -802,7 +802,7 @@
 						this.showHoverDetails(editorPos2, keyword, data)
 					}
 				})
-			}, this.ctrl ? 0 : 200)
+			}, this.ctrl ? 0 : 400)
 		}
 
 		public showErrorDetails(editorPos: any) {
