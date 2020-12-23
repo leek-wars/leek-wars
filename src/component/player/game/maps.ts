@@ -375,7 +375,7 @@ class Factory extends Map {
 	public drawDecor(ctx: CanvasRenderingContext2D) {
 		// return;
 		ctx.save()
-		// ctx.scale(this.game.ground.scale, this.game.ground.scale)
+
 		ctx.filter = "brightness(20%)"
 		for (let i = 0; i < 20; ++i) {
 			const small = this.random.next() > 0.5
@@ -525,7 +525,6 @@ class Forest extends Map {
 
 	public drawDecor(ctx: CanvasRenderingContext2D) {
 		ctx.save()
-		ctx.scale(this.game.ground.scale, this.game.ground.scale)
 		for (let i = 0; i < 14; ++i) {
 			const s = (120 + this.random.next() * 120)
 			const t = this.options.largeObstacles[this.random.next() * this.options.largeObstacles.length | 0]
@@ -771,8 +770,6 @@ class Arena extends Map {
 
 	public drawDecor(ctx: CanvasRenderingContext2D) {
 		ctx.save()
-		ctx.scale(this.game.ground.scale, this.game.ground.scale)
-
 		ctx.filter = "brightness(60%)"
 		for (let i = 0; i < 12; ++i) {
 			const s = 150 + this.random.next() * 130
