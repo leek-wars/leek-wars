@@ -36,7 +36,7 @@
 			</template>
 			<loader v-show="!loaded" slot="content" />
 			<div v-if="loaded" slot="content" class="trophies">
-				<div v-for="trophy in trophies[category.id]" :key="trophy.id" :class="{unlocked: trophy.unlocked, locked: !trophy.unlocked, card: trophy.unlocked}" class="trophy">
+				<div v-for="(trophy, t) in trophies[category.id]" :key="t" :class="{unlocked: trophy.unlocked, locked: !trophy.unlocked, card: trophy.unlocked}" class="trophy">
 					<div class="flex">
 						<img :src="'/image/trophy/big/' + trophy.code + '.png'" class="image">
 						<div class="info">
@@ -109,8 +109,8 @@
 			const result: {[key: number]: any} = {}
 			for (const category in this.raw_trophies) {
 				result[category] = this.raw_trophies[category].filter((t: any) => (category !== '6' || t.unlocked) && (!this.hide_unlocked || !t.unlocked))
-				if(this.sort_by_rarity){
-					result[category] = result[category].sort(function(a,b){ return a.rarity < b.rarity })
+				if (this.sort_by_rarity) {
+					result[category].sort((a: any, b: any) => a.rarity - b.rarity)
 				}
 			}
 			return result
@@ -169,6 +169,10 @@
 		@Watch('hide_unlocked')
 		public updateHideUnlocked() {
 			localStorage.setItem('options/hide-unlocked-trophies', this.hide_unlocked ? 'true' : 'false')
+		}
+		@Watch('sort_by_rarity')
+		public updateSort() {
+			localStorage.setItem('options/sort_by_rarity-trophies', this.sort_by_rarity ? 'true' : 'false')
 		}
 	}
 </script>
