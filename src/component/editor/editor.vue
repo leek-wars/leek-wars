@@ -440,7 +440,7 @@
 		update() {
 			if (this.$route.params.id) {
 				const id = parseInt(this.$route.params.id, 10)
-				if (id in fileSystem.ais) {
+				if (id > 0 && id in fileSystem.ais) {
 					const ai = fileSystem.ais[id]
 					this.currentAI = ai
 					this.currentType = 'ai'
@@ -474,11 +474,15 @@
 
 			} else if (!LeekWars.mobile) {
 				const lastCode = localStorage.getItem('editor/last_code')
-				if (lastCode && lastCode in fileSystem.ais) {
+				if (lastCode && parseInt(lastCode, 10) > 0 && lastCode in fileSystem.ais) {
 					this.$router.replace('/editor/' + localStorage.getItem('editor/last_code'))
-				} else if (LeekWars.objectSize(fileSystem.ais) > 0) {
-					this.$router.replace('/editor/' + LeekWars.firstKey(fileSystem.ais))
 				} else {
+					for (const ai in fileSystem.ais) {
+						if (parseInt(ai, 10) > 0) { // Not bot ai
+							this.$router.replace('/editor/' + ai)
+							return
+						}
+					}
 					this.$router.replace('/editor/0') // Go to root folder to be able to create a new AI
 				}
 			} else {
@@ -748,11 +752,13 @@
 			(this.$refs.editorTest as any).onAIDeleted(ai.id)
 
 			// Open a new one
-			if (!LeekWars.isEmptyObj(fileSystem.ais)) {
-				this.$router.replace('/editor/' + LeekWars.firstKey(fileSystem.ais))
-			} else {
-				this.$router.replace('/editor')
+			for (const ai in fileSystem.ais) {
+				if (parseInt(ai, 10) > 0) { // Not bot ai
+					this.$router.replace('/editor/' + ai)
+					return
+				}
 			}
+			this.$router.replace('/editor')
 		}
 
 		close(ai: AI) {
