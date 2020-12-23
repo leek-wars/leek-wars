@@ -100,6 +100,7 @@
 	import { LeekWars } from '@/model/leekwars'
 	import { Warning } from '@/model/moderation'
 	import { Component, Vue, Watch } from 'vue-property-decorator'
+	import { GROUND_PADDING_BOTTOM, GROUND_PADDING_LEFT, GROUND_PADDING_RIGHT, GROUND_PADDING_TOP } from '../player/game/ground'
 	const Player = () => import(/* webpackChunkName: "[request]" */ `@/component/player/player.${locale}.i18n`)
 
 	@Component({ name: "fight", components: {
@@ -144,15 +145,15 @@
 
 		resize() {
 			Vue.nextTick(() => {
-				const RATIO = 1.67
 				const reference = document.querySelector('.app-center') as HTMLElement
 				const offset = 40 + 24
+				const controls = 36
 				if (reference) {
 					if (LeekWars.mobile) {
 						if (window.innerWidth > window.innerHeight) {
 							// Landscape
-							const height = Math.min(window.innerHeight - 56, Math.round((reference.offsetWidth) / RATIO))
-							this.playerWidth = Math.round(height * RATIO)
+							const height = Math.min(window.innerHeight - 56, Math.round(reference.offsetWidth / 2))
+							this.playerWidth = Math.round((height - controls - GROUND_PADDING_TOP / window.devicePixelRatio) * 2)
 							this.playerHeight = height
 						} else {
 							// Portrait
@@ -164,7 +165,8 @@
 					} else {
 						// Desktop
 						const maxWidth = reference.offsetWidth - offset
-						const height = Math.min(window.innerHeight - 128, Math.round(maxWidth / RATIO))
+						const theoricalHeight = Math.round((maxWidth - GROUND_PADDING_RIGHT - GROUND_PADDING_LEFT) / 2 + GROUND_PADDING_BOTTOM + GROUND_PADDING_TOP / window.devicePixelRatio + controls)
+						const height = Math.min(window.innerHeight - 128, theoricalHeight)
 						this.playerWidth = maxWidth
 						this.playerHeight = height
 					}
