@@ -1,9 +1,78 @@
 <template>
 	<div class="details-wrapper">
 		<div class="effects">
-			<div v-for="effect in entity.effects" :key="effect.id" :value="effectText(effect)" class="effect">
-				<img :src="effect.texture.src">
-			</div>
+			<tooltip v-for="effect in entity.effects" :key="effect.id" :left="true">
+				<template v-slot:activator="{ on }">
+					<div :value="effectText(effect)" :turns="effect.turns === -1 ? '∞' : effect.turns" class="effect" v-on="on">
+						<img :src="effect.texture.src">
+					</div>
+				</template>
+				<div><b>{{ $t(LeekWars.items[effect.item].name.replace('_', '.')) }}</b></div>
+				<div>Lancé par <b>{{ game.leeks[effect.caster].name }}</b></div>
+				<div>
+					<b>
+						<b v-if="effect.type === EffectType.ABSOLUTE_SHIELD || effect.type === EffectType.STEAL_ABSOLUTE_SHIELD || effect.type === EffectType.RAW_ABSOLUTE_SHIELD" class="color-resistance">
+							{{ $t('fight.n_absolute_shield', [effect.value]) }}
+						</b>
+						<b v-else-if="effect.type === EffectType.RELATIVE_SHIELD" class="color-resistance">
+							{{ $t('fight.n_relative_shield', [effect.value + '%']) }}
+						</b>
+						<b v-else-if="effect.type === EffectType.VULNERABILITY" class="color-resistance">
+							{{ $t('fight.n_vulnerability', [effect.value + '%']) }}
+						</b>
+						<b v-else-if="effect.type === EffectType.ABSOLUTE_VULNERABILITY" class="color-resistance">
+							{{ $t('fight.n_vulnerability', [effect.value]) }}
+						</b>
+						<b v-else-if="effect.type === EffectType.BUFF_AGILITY || effect.type === EffectType.RAW_BUFF_AGILITY" class="color-agility dark">
+							{{ $t('fight.n_agility', [effect.value]) }}
+						</b>
+						<b v-else-if="effect.type === EffectType.BUFF_STRENGTH || effect.type === EffectType.RAW_BUFF_STRENGTH" class="color-strength dark">
+							{{ $t('fight.n_strength', [effect.value]) }}
+						</b>
+						<b v-else-if="effect.type === EffectType.BUFF_RESISTANCE || effect.type === EffectType.RAW_BUFF_RESISTANCE" class="color-resistance">
+							{{ $t('fight.n_resistance', [effect.value]) }}
+						</b>
+						<b v-else-if="effect.type === EffectType.BUFF_WISDOM || effect.type === EffectType.RAW_BUFF_WISDOM" class="color-wisdom">
+							{{ $t('fight.n_wisdom', [effect.value]) }}
+						</b>
+						<b v-else-if="effect.type === EffectType.RAW_BUFF_MAGIC" class="color-magic">
+							{{ $t('fight.n_magic', [effect.value]) }}
+						</b>
+						<b v-else-if="effect.type === EffectType.RAW_BUFF_SCIENCE" class="color-science">
+							{{ $t('fight.n_science', [effect.value]) }}
+						</b>
+						<b v-else-if="effect.type === EffectType.BUFF_MP || effect.type === EffectType.RAW_BUFF_MP" class="color-mp">
+							{{ $t('fight.n_mp', [effect.value]) }}
+						</b>
+						<b v-else-if="effect.type === EffectType.BUFF_TP || effect.type === EffectType.RAW_BUFF_TP" class="color-tp">
+							{{ $t('fight.n_tp', [effect.value]) }}
+						</b>
+						<b v-else-if="effect.type === EffectType.SHACKLE_TP" class="color-tp">
+							{{ $t('fight.n_tp', [effect.value]) }}
+						</b>
+						<b v-else-if="effect.type === EffectType.SHACKLE_MP" class="color-mp">
+							{{ $t('fight.n_mp', [effect.value]) }}
+						</b>
+						<b v-else-if="effect.type === EffectType.SHACKLE_STRENGTH" class="color-strength">
+							{{ $t('fight.n_strength', [effect.value]) }}
+						</b>
+						<b v-else-if="effect.type === EffectType.SHACKLE_MAGIC" class="color-magic">
+							{{ $t('fight.n_magic', [effect.value]) }}
+						</b>
+						<b v-else-if="effect.type === EffectType.DAMAGE_RETURN">
+							{{ $t('fight.n_damage_return', [effect.value + '%']) }}
+						</b>
+						<b v-else-if="effect.type === EffectType.HEAL" class="color-wisdom">
+							{{ $t('fight.n_heal', [effect.value]) }}
+						</b>
+						<b v-else-if="effect.type === EffectType.DAMAGE" class="color-life">
+							{{ $t('fight.n_damage', [effect.value]) }}
+						</b>
+					</b>
+					<span v-if="effect.turns === -1">{{ $t('effect.infinite') }}</span>
+					<span v-else v-html="$t('effect.on_n_turns', {turns: $tc('effect.n_turns', [effect.turns])})"></span>
+				</div>
+			</tooltip>
 		</div>
 		<div :class="{dead: entity.dead, dark}" class="details">
 			<div class="image">
@@ -93,15 +162,17 @@
 	@Component({ name: 'entity-details' })
 	export default class EntityDetails extends Vue {
 		@Prop({required: true}) entity!: FightEntity
+		@Prop({required: true}) game!: Game
 		@Prop({required: true}) dark!: boolean
 		Turret = Turret
+		EffectType = EffectType
 
 		effectText(effect: any) {
 			let r = '' + effect.value
-			if (effect.effect === EffectType.SHACKLE_MAGIC || effect.effect === EffectType.SHACKLE_MP || effect.effect === EffectType.SHACKLE_TP || effect.effect === EffectType.SHACKLE_STRENGTH || effect.effect === EffectType.VULNERABILITY || effect.effect === EffectType.ABSOLUTE_VULNERABILITY) {
+			if (effect.type === EffectType.SHACKLE_MAGIC || effect.type === EffectType.SHACKLE_MP || effect.type === EffectType.SHACKLE_TP || effect.type === EffectType.SHACKLE_STRENGTH || effect.type === EffectType.VULNERABILITY || effect.type === EffectType.ABSOLUTE_VULNERABILITY) {
 				r = '-' + r
 			}
-			if (effect.effect === EffectType.RELATIVE_SHIELD || effect.effect === EffectType.DAMAGE_RETURN || effect.effect === EffectType.VULNERABILITY) {
+			if (effect.type === EffectType.RELATIVE_SHIELD || effect.type === EffectType.DAMAGE_RETURN || effect.type === EffectType.VULNERABILITY) {
 				r += '%'
 			}
 			return r
@@ -118,6 +189,7 @@
 }
 .details {
 	width: 100%;
+	height: 100px;
 	padding: 4px 5px;
 	background-color: #fff;
 	box-shadow: 0px 2px 4px -1px rgba(0,0,0,0.2), 0px 4px 5px 0px rgba(0,0,0,0.14), 0px 1px 10px 0px rgba(0,0,0,0.12);
@@ -137,7 +209,7 @@
 }
 .image {
 	flex: 45px 0 0;
-	margin-right: 5px;
+	margin-right: 3px;
 	display: flex;
 	align-items: flex-end;
 	max-height: 78px;
@@ -180,7 +252,7 @@
 .stats {
 	display: flex;
 	width: 100%;
-	margin-top: 4px;
+	margin: 8px 4px;
 	gap: 2px;
 }
 .stat {
@@ -225,12 +297,13 @@
 	padding-bottom: 2px;
 }
 .effects {
-	padding: 4px;
+	padding-right: 4px;
 	right: 0;
 	white-space: nowrap;
-	display: inline-block;
+	display: flex;
+	flex-direction: column-reverse;
 	position: absolute;
-	top: -44px;
+	bottom: 100%;
 }
 .effects .effect {
 	position: relative;
@@ -238,15 +311,15 @@
 	img {
 		width: 36px;
 		height: 36px;
-		margin-left: 4px;
+		margin-bottom: 4px;
 		vertical-align: bottom;
 		object-fit: fill;
 	}
 }
 .effects .effect:after {
 	position: absolute;
-	bottom: 0;
-	left: 4px;
+	left: 0;
+	bottom: 4px;
 	padding: 1px 2px;
 	content: attr(value);
 	color: white;
@@ -254,6 +327,19 @@
 	background: rgba(0,0,0,0.5);
 	border-top-right-radius: 7px;
 	border-bottom-left-radius: 10px;
+	font-size: 12px;
+}
+.effects .effect:before {
+	position: absolute;
+	right: 0;
+	top: 0;
+	padding: 1px 2px;
+	content: attr(turns);
+	color: white;
+	font-weight: bold;
+	background: rgba(0,0,0,0.5);
+	border-bottom-left-radius: 7px;
+	border-top-right-radius: 10px;
 	font-size: 12px;
 }
 </style>

@@ -24,7 +24,15 @@ export default mixins(Colorable, Delayable, Dependent, Detachable, Menuable, Tog
   props: {
     bottom: {
       type: Boolean,
-      default: true
+      default: false
+    },
+    left: {
+      type: Boolean,
+      default: false
+    },
+    right: {
+      type: Boolean,
+      default: false
     },
     closeDelay: {
       type: [Number, String],
@@ -86,14 +94,15 @@ export default mixins(Colorable, Delayable, Dependent, Detachable, Menuable, Tog
     },
     calculatedTop () {
       const { activator, content } = this.dimensions
+      const unknown = !this.bottom && !this.left && !this.top && !this.right
       const activatorTop = this.attach !== false ? activator.offsetTop : activator.top
       let top = 0
 
-      if (this.top || this.bottom) {
+      if (this.top || this.bottom || unknown) {
         top = (
           activatorTop +
-          (this.bottom ? activator.height : -content.height) +
-          (this.bottom ? 10 : -10)
+          (this.bottom || unknown ? activator.height : -content.height) +
+          (this.bottom || unknown ? 10 : -10)
         )
       } else if (this.left || this.right) {
         top = (
@@ -104,15 +113,16 @@ export default mixins(Colorable, Delayable, Dependent, Detachable, Menuable, Tog
       }
 
       if (this.nudgeTop) top -= parseInt(this.nudgeTop)
-      if (this.nudgeBottom) top += parseInt(this.nudgeBottom)
+      if (this.nudgeBottom || unknown) top += parseInt(this.nudgeBottom)
 
       return `${this.calcYOverflow(top + this.pageYOffset)}px`
     },
     classes () {
+	  const unknown = !this.bottom && !this.left && !this.top && !this.right
       return {
         'v-tooltip--top': this.top,
         'v-tooltip--right': this.right,
-        'v-tooltip--bottom': this.bottom,
+        'v-tooltip--bottom': this.bottom || unknown,
         'v-tooltip--left': this.left,
         'v-tooltip--attached':
           this.attach === '' ||
@@ -203,7 +213,9 @@ export default mixins(Colorable, Delayable, Dependent, Detachable, Menuable, Tog
         this.setBackgroundColor(this.color, {
           staticClass: 'v-tooltip__content',
           class: {
-            [this.contentClass]: true,
+			[this.contentClass]: true,
+			'left': this.left,
+			'top': this.top,
             menuable__content__active: this.isActive,
             'v-tooltip__content--fixed': this.activatorFixed,
           },

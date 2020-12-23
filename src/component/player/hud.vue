@@ -3,7 +3,7 @@
 		<div class="life-bar">
 			<div class="wrapper">
 				<template v-for="team in game.teams">
-					<tooltip v-for="entity in team" v-if="!entity.dead" :key="entity.id">
+					<tooltip v-for="entity in team" v-if="!entity.dead" :key="entity.id" top>
 						<template v-slot:activator="{ on }">
 							<div :style="{background: entity.lifeBarGadient, width: Math.max(1, barWidth * (entity.life / totalLife) - 3) + 'px'}" class="bar" v-on="on"></div>
 						</template>
@@ -43,9 +43,9 @@
 		</div>
 		<div v-if="game.largeActions" class="resizer" :style="{left: actionsWidth + 'px'}" @mousedown="resizerMousedown"></div>
 		<template v-if="!LeekWars.mobile">
-			<entity-details v-if="game.mouseEntity" :entity="game.mouseEntity" :dark="game.autoDark ? (game.map && game.map.options.dark) : game.dark" />
-			<entity-details v-else-if="game.selectedEntity" :entity="game.selectedEntity" :dark="game.autoDark ? (game.map && game.map.options.dark) : game.dark" />
-			<entity-details v-else-if="game.currentPlayer in game.leeks" :entity="game.leeks[game.currentPlayer]" :dark="game.autoDark ? (game.map && game.map.options.dark) : game.dark" />
+			<entity-details v-if="game.mouseEntity" :entity="game.mouseEntity" :game="game" :dark="game.autoDark ? (game.map && game.map.options.dark) : game.dark" />
+			<entity-details v-else-if="game.selectedEntity" :entity="game.selectedEntity" :game="game" :dark="game.autoDark ? (game.map && game.map.options.dark) : game.dark" />
+			<entity-details v-else-if="game.currentPlayer in game.leeks" :entity="game.leeks[game.currentPlayer]" :game="game" :dark="game.autoDark ? (game.map && game.map.options.dark) : game.dark" />
 		</template>
 	</div>
 </template>
@@ -154,7 +154,7 @@
 		display: inline-flex;
 		vertical-align: bottom;
 		flex: 0 1 65px;
-		height: 86px;
+		height: 100px;
 		min-width: 0;
 		padding: 3px 0;
 		position: relative;
@@ -235,7 +235,7 @@
 	}
 	.actions {
 		text-align: left;
-		max-height: 120px;
+		max-height: 100px;
 		width: 395px;
 		overflow: hidden;
 		position: absolute;
@@ -243,7 +243,7 @@
 		border-top-right-radius: 5px;
 		box-shadow: 0px 2px 4px -1px rgba(0,0,0,0.2), 0px 4px 5px 0px rgba(0,0,0,0.14), 0px 1px 10px 0px rgba(0,0,0,0.12);
 		left: 0;
-		bottom: 0;
+		bottom: 5px;
 		padding: 6px;
 		padding-bottom: 10px;
 		display: flex;

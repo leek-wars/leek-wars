@@ -40,7 +40,17 @@
 	top: auto;
 	bottom: -7px;
 	border-bottom: none;
-	border-top: 7px solid rgba(0,0,0, 0.7);
+	border-top: 7px solid rgba(51,51,51, 0.9);
+}
+.v-tooltip__content.left::before {
+	left: auto;
+	right: -11px;
+	margin-top: -4px;
+	top: 50%;
+	border-bottom: none;
+	border-top: 4px solid transparent;
+	border-left: 7px solid rgba(51,51,51, 0.9);
+	border-bottom: 4px solid transparent;
 }
 .v-dialog {
 	margin: 12px !important;
