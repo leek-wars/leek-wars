@@ -56,12 +56,18 @@
 			const tabs = JSON.parse(localStorage.getItem('editor/tabs') || '[]')
 			for (const t of tabs) {
 				if (t in this.ais) {
-					this.tabs.push(this.ais[t])
+					const ai_id = parseInt(t, 10)
+					if (ai_id > 0) {
+						this.tabs.push(this.ais[t])
+					}
 				}
 			}
 			if (tabs.length === 0) {
 				if (this.$route.params.id in this.ais) {
-					this.tabs.push(this.ais[parseInt(this.$route.params.id, 10)])
+					const ai_id = parseInt(this.$route.params.id, 10)
+					if (ai_id > 0) {
+						this.tabs.push(this.ais[ai_id])
+					}
 				}
 			}
 			this.update()
