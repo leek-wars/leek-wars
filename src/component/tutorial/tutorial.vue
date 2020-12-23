@@ -910,6 +910,7 @@
 		created() {
 			LeekWars.setTitle(this.$t('title'))
 			window.addEventListener('scroll', this.scroll)
+			this.$root.$emit('loaded')
 		}
 		scroll(e: Event) {
 			if (window.scrollY + window.innerHeight + 300 > document.body.clientHeight) {
