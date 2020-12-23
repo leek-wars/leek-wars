@@ -302,9 +302,6 @@
 		margin: 6px 8px;
 		color: #aaa;
 	}
-	.message a {
-		color: #aaa;
-	}
 	.avatar-wrapper {
 		position: sticky;
 		top: 8px;
@@ -337,6 +334,7 @@
 		display: block;
 		padding-bottom: 2px;
 		padding-right: 60px;
+		color: #777;
 	}
 	.text {
 		word-break: break-word;
@@ -373,6 +371,12 @@
 	}
 	.text ::v-deep a {
 		color: #5fad1b;
+	}
+	.text ::v-deep .v-icon {
+		color: #5fad1b;
+		font-size: 18px;
+		margin-right: 4px;
+		vertical-align: baseline;
 	}
 	.br-notification {
 		background: #5fad1b;
