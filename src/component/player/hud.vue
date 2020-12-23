@@ -254,7 +254,7 @@
 		}
 		&:not(.large) {
 			&:hover {
-				max-height: 100%;
+				max-height: calc(100% - 5px);
 				height: auto;
 				width: 600px !important;
 				background-color: #f2f2f2ee;
@@ -265,8 +265,8 @@
 			}
 		}
 		&.large {
-			height: 100%;
-			max-height: 100%;
+			height: calc(100% - 5px);
+			max-height: calc(100% - 5px);
 			max-width: 1000px;
 			border-top-right-radius: 0;
 			background-color: #fff;

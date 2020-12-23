@@ -5,10 +5,10 @@ import { LeekWars } from '@/model/leekwars'
 import { Position } from './position'
 import { T, Texture } from './texture'
 
-let GROUND_PADDING_LEFT = 260
-let GROUND_PADDING_RIGHT = 20
+let GROUND_PADDING_RIGHT = 50
+let GROUND_PADDING_LEFT = 50
 let GROUND_PADDING_TOP = 100
-let GROUND_PADDING_BOTTOM = 100
+let GROUND_PADDING_BOTTOM = 105
 
 class Ground {
 
@@ -66,25 +66,25 @@ class Ground {
 		if (!this.game.initialized) { return  }
 
 		if (LeekWars.mobile) {
-			GROUND_PADDING_LEFT = 10 * window.devicePixelRatio
-			GROUND_PADDING_RIGHT = 10 * window.devicePixelRatio
-			GROUND_PADDING_BOTTOM = 20 * window.devicePixelRatio
+			GROUND_PADDING_LEFT = 10
+			GROUND_PADDING_RIGHT = 10
+			GROUND_PADDING_BOTTOM = 5
 		} else {
-			GROUND_PADDING_RIGHT = 50 * window.devicePixelRatio
-			GROUND_PADDING_LEFT = 50 * window.devicePixelRatio
+			GROUND_PADDING_RIGHT = 50
+			GROUND_PADDING_LEFT = 50
 			if (this.game.showActions && this.game.largeActions) {
-				GROUND_PADDING_LEFT = (this.game.actionsWidth + 20) * window.devicePixelRatio
-				GROUND_PADDING_RIGHT = 45 * window.devicePixelRatio
+				GROUND_PADDING_LEFT = (this.game.actionsWidth + 20)
+				GROUND_PADDING_RIGHT = 45
 			}
-			GROUND_PADDING_BOTTOM = 105 * window.devicePixelRatio
+			GROUND_PADDING_BOTTOM = 105
 			GROUND_PADDING_TOP = 100
 		}
 		this.width = width
 		this.height = height
 
 		// Taille de la grille centrale
-		this.gridHeight = Math.round(height - GROUND_PADDING_BOTTOM - GROUND_PADDING_TOP)
-		this.gridWidth = Math.round(width - GROUND_PADDING_LEFT - GROUND_PADDING_RIGHT)
+		this.gridHeight = Math.round(height - GROUND_PADDING_BOTTOM * window.devicePixelRatio - GROUND_PADDING_TOP)
+		this.gridWidth = Math.round(width - GROUND_PADDING_LEFT * window.devicePixelRatio - GROUND_PADDING_RIGHT * window.devicePixelRatio)
 		if (this.gridHeight * 2 > this.gridWidth) {
 			this.gridHeight = Math.round(this.gridWidth / 2)
 		}
@@ -93,8 +93,8 @@ class Ground {
 		}
 
 		// Calculate start position
-		this.startX = GROUND_PADDING_LEFT + Math.round(width - GROUND_PADDING_LEFT - GROUND_PADDING_RIGHT - this.gridWidth) / 2
-		this.startY = GROUND_PADDING_TOP + (height - this.gridHeight - GROUND_PADDING_BOTTOM - GROUND_PADDING_TOP) / 2
+		this.startX = GROUND_PADDING_LEFT * window.devicePixelRatio + Math.round(width - GROUND_PADDING_LEFT * window.devicePixelRatio - GROUND_PADDING_RIGHT * window.devicePixelRatio - this.gridWidth) / 2
+		this.startY = GROUND_PADDING_TOP + (height - this.gridHeight - GROUND_PADDING_BOTTOM * window.devicePixelRatio - GROUND_PADDING_TOP) / 2
 
 		// Taille des cases
 		this.tileSizeX = this.gridWidth / this.field.tilesX
@@ -640,4 +640,4 @@ class Ground {
 	}
 }
 
-export { Ground, GROUND_PADDING_BOTTOM, GROUND_PADDING_RIGHT, GROUND_PADDING_LEFT }
+export { Ground, GROUND_PADDING_TOP, GROUND_PADDING_BOTTOM, GROUND_PADDING_RIGHT, GROUND_PADDING_LEFT }
