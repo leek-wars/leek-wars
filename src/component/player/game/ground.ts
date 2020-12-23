@@ -66,17 +66,17 @@ class Ground {
 		if (!this.game.initialized) { return  }
 
 		if (LeekWars.mobile) {
-			GROUND_PADDING_LEFT = 10
-			GROUND_PADDING_RIGHT = 10
-			GROUND_PADDING_BOTTOM = 20
+			GROUND_PADDING_LEFT = 10 * window.devicePixelRatio
+			GROUND_PADDING_RIGHT = 10 * window.devicePixelRatio
+			GROUND_PADDING_BOTTOM = 20 * window.devicePixelRatio
 		} else {
-			GROUND_PADDING_RIGHT = 50
-			GROUND_PADDING_LEFT = 50
+			GROUND_PADDING_RIGHT = 50 * window.devicePixelRatio
+			GROUND_PADDING_LEFT = 50 * window.devicePixelRatio
 			if (this.game.showActions && this.game.largeActions) {
-				GROUND_PADDING_LEFT = this.game.actionsWidth + 20
-				GROUND_PADDING_RIGHT = 20
+				GROUND_PADDING_LEFT = (this.game.actionsWidth + 20) * window.devicePixelRatio
+				GROUND_PADDING_RIGHT = 45 * window.devicePixelRatio
 			}
-			GROUND_PADDING_BOTTOM = 132
+			GROUND_PADDING_BOTTOM = 105 * window.devicePixelRatio
 			GROUND_PADDING_TOP = 100
 		}
 		this.width = width
