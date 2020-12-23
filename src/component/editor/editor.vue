@@ -752,9 +752,9 @@
 			(this.$refs.editorTest as any).onAIDeleted(ai.id)
 
 			// Open a new one
-			for (const ai in fileSystem.ais) {
-				if (parseInt(ai, 10) > 0) { // Not bot ai
-					this.$router.replace('/editor/' + ai)
+			for (const fai in fileSystem.ais) {
+				if (parseInt(fai, 10) > 0) { // Not bot ai
+					this.$router.replace('/editor/' + fai)
 					return
 				}
 			}
