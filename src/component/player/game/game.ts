@@ -974,7 +974,7 @@ class Game {
 
 			if (this.jumping) {
 				// Update leek cell after teleportation
-				if (chip === 37) {
+				if (chip === 37 || chip === 78) {
 					target_cell.setEntity(launcher)
 				}
 				// Update leeks cells after inversion
