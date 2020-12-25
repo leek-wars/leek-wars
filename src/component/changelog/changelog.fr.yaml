@@ -1,3 +1,34 @@
+220:
+  title : Refonte des cartes, classements sur profil et options en combat
+  added:
+    - Refonte de toutes les cartes du jeu avec une meilleure qualité.
+    - Affichage du classement sur le profil des poireaux, éleveur et équipe si position < 1000.
+    - Ajout d'une option en combat pour afficher ou non les actions.
+    - Ajout d'une option mode nuit en combat pour les actions et infos d'entité.
+    - Ajout d'une option pour afficher ou non les effets des entités sous les barres de vie.
+    - Ajout d'une option pour afficher un fond uni en combat.
+    - "Encyclopédie : ajout d'un compteur de vue."
+    - "Encyclopédie : fonctionnalité 'Page au hasard'."
+    - "Encyclopédie : commande pour faire un lien dans le chat."
+    - "Encyclopédie : table des matières automatique ({{ summary }})."
+    - "Encyclopédie : fiches d'items (armes, puces, potions)."
+    - "Combat : ajout de tooltips sur les effets pour afficher leur détails."
+  improved:
+    - Ajout d'un séparateur de jours dans le chat, comme avant.
+    - Ajout d'un message pour acheter des combats dans le potager.
+    - Couleurs spéciales pour les alertes de notifications de trophée et tournois gagnés.
+    - Ajout de raccourcis clavier pour toutes les options en combat.
+    - Amélioration de la visibilité des markText() et des numéros de cellules en combat.
+    - Le panneau latéral des actions est maintenant redimensionnable et ne se superpose plus au combat.
+    - Amélioration du style des obstacles en mode tactique.
+    - Ajout d'un tri par rareté sur la page des trophées (merci à BougeLeGrosOrteil).
+    - La taille du lecteur de combat est mieux calculée et prend plus de place, surtout sur mobile.
+  fixed:
+    - "Correction d'un crash du LeekScript lié aux tableaux (merci à Nmnnm)."
+    - Correction d'un bug de lancement des combats de tests sur certains scénarios.
+    - Correction d'un bug lorsqu'il n'y a plus d'IA dans l'éditeur.
+    - Correction d'un bug de saut dans le combat.
+
 219:
   title: Encyclopédie et nouvelles fonctions
   added:
