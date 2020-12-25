@@ -1,3 +1,34 @@
+220:
+  title: Maps redesign, profile rankings and combat options
+  added:
+    - Redesign of all the cards of the game with a better quality.
+    - Display of the ranking on the profile of leeks, breeder and team if position < 1000.
+    - Added an option in combat to display or not the actions.
+    - Added a night mode option in combat for actions and entity info.
+    - Added an option to display or not the effects of entities under the life bars.
+    - Added an option to display a plain background in combat.
+    - "Encyclopedia : added a view counter."
+    - "Encyclopedia : 'Random page' feature."
+    - "Encyclopedia : command to make a link in the chat."
+    - "Encyclopedia: automatic table of contents ({{ summary }})."
+    - "Encyclopedia: item cards (weapons, bullets, potions)."
+    - "Combat: added tooltips on effects to display their details."
+  improved:
+    - Added a day separator in the chat, like before.
+    - Added a message to buy fights in the vegetable garden.
+    - Special colors for trophy and tournament won notifications alerts.
+    - Added keyboard shortcuts for all options in the fight.
+    - Improved visibility of markText() and cell numbers in fights.
+    - The actions side panel is now resizable and no longer overlaps the combat.
+    - Improved obstacle style in tactical mode.
+    - Added a sorting by rarity on the trophies page (thanks to BougeLeGrosOrteil).
+    - The size of the combat player is better calculated and takes more space, especially on mobile.
+  fixed:
+    - "Fixed a crash of the LeekScript linked to the tables (thanks to Nmnnm)."
+    - "Fixed a bug with the launch of test fights on some scenarios."
+    - Fixed a bug when there is no more AI in the editor.
+    - Fixed a bug when jumping in the fight.
+
 219:
   title: Encyclopedia and new features
   added:

@@ -1,6 +1,6 @@
 <template lang="html">
 	<div class="version">
-		<img v-if="version.image" :src="'/image/mail/mail_' + version.version + '.png'" class="image">
+		<img v-if="version.image" :src="'/image/mail/mail_' + version.version + '.' + extension" class="image">
 		<div class="wrapper">
 			<div v-for="(changes, s) in sections" :key="s" class="section">
 				<h4 v-if="sections.length > 1" v-emojis :class="{first: s === 0}">{{ $t('changelog.title_' + s) }}</h4>
@@ -50,6 +50,10 @@
 				}
 			}
 			return changes.map((cat: any) => cat.map((c: any) => c.replace('# ', '').replace('#ai', '<span class="ai" title="' + this.$t('changelog.need_ai_change') + '">AI</span>')))
+		}
+
+		get extension() {
+			return this.version.version === 220 ? 'jpg' : 'png'
 		}
 	}
 </script>
