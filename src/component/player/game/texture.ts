@@ -168,11 +168,13 @@ class T {
 	public static mushroom = new Texture(LeekWars.STATIC + 'image/map/mushroom.png', true, 1)
 	public static glacier = new Texture(LeekWars.STATIC + 'image/map/glacier.png')
 	public static beach = new Texture(LeekWars.STATIC + 'image/map/beach.png')
+	public static water = new Texture(LeekWars.STATIC + 'image/map/water.png')
+	public static ball = new Texture(LeekWars.STATIC + 'image/map/ball.png', true, 1)
 	public static starfish = new Texture(LeekWars.STATIC + 'image/map/starfish.png', false, 0)
-	public static starfish2 = new Texture(LeekWars.STATIC + 'image/map/starfish2.png', false, 0)
+	public static beach_grass = new Texture(LeekWars.STATIC + 'image/map/beach_grass.png')
 	public static palm = new Texture(LeekWars.STATIC + 'image/map/palm.png', true, 1)
 	public static pebble = new Texture(LeekWars.STATIC + 'image/map/pebble.png', true, 1)
-	public static pebble_small = new Texture(LeekWars.STATIC + 'image/map/pebble_small.png')
+	public static pebble_small = new Texture(LeekWars.STATIC + 'image/map/pebble_small.png', true, 1)
 	public static snowman = new Texture(LeekWars.STATIC + 'image/map/snowman.png', true, 1)
 	public static fir = new Texture(LeekWars.STATIC + 'image/map/fir.png', true, 1)
 	public static ice = new Texture(LeekWars.STATIC + 'image/map/ice.png', true, 1)
@@ -231,6 +233,7 @@ class T {
 	public static factory_wrench = new Texture(LeekWars.STATIC + 'image/map/wrench.png', true, 1)
 	public static pipes = new Texture(LeekWars.STATIC + 'image/map/pipes.png', true, 1)
 	public static forest_branch = new Texture(LeekWars.STATIC + 'image/map/forest_branch.png')
+	public static forest_branch_2 = new Texture(LeekWars.STATIC + 'image/map/forest_branch_2.png')
 
 	// Chips
 	public static cure_aureol = new Texture(LeekWars.STATIC + 'image/fight/cure_aureol.png')
