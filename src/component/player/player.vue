@@ -196,8 +196,8 @@
 <script lang="ts">
 	import { locale } from '@/locale'
 	import { Farmer } from '@/model/farmer'
-	import { mixins } from '@/model/i18n'
 	import { Fight, FightType, Report } from '@/model/fight'
+	import { mixins } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import { SocketMessage } from '@/model/socket'
 	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
@@ -207,7 +207,6 @@
 
 	@Component({
 		name: 'player',
-		mixins,
 		components: { Hud }
 	})
 	export default class Player extends Vue {

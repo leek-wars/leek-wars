@@ -65,6 +65,7 @@ class Ground {
 
 		if (!this.game.initialized) { return  }
 
+		let padding_left = GROUND_PADDING_LEFT
 		if (LeekWars.mobile) {
 			GROUND_PADDING_LEFT = 10
 			GROUND_PADDING_RIGHT = 10
@@ -73,7 +74,7 @@ class Ground {
 			GROUND_PADDING_RIGHT = 50
 			GROUND_PADDING_LEFT = 50
 			if (this.game.showActions && this.game.largeActions) {
-				GROUND_PADDING_LEFT = (this.game.actionsWidth + 20)
+				padding_left = (this.game.actionsWidth + 20)
 				GROUND_PADDING_RIGHT = 45
 			}
 			GROUND_PADDING_BOTTOM = 105
@@ -84,7 +85,7 @@ class Ground {
 
 		// Taille de la grille centrale
 		this.gridHeight = Math.round(height - GROUND_PADDING_BOTTOM * window.devicePixelRatio - GROUND_PADDING_TOP)
-		this.gridWidth = Math.round(width - GROUND_PADDING_LEFT * window.devicePixelRatio - GROUND_PADDING_RIGHT * window.devicePixelRatio)
+		this.gridWidth = Math.round(width - padding_left * window.devicePixelRatio - GROUND_PADDING_RIGHT * window.devicePixelRatio)
 		if (this.gridHeight * 2 > this.gridWidth) {
 			this.gridHeight = Math.round(this.gridWidth / 2)
 		}
@@ -93,7 +94,7 @@ class Ground {
 		}
 
 		// Calculate start position
-		this.startX = GROUND_PADDING_LEFT * window.devicePixelRatio + Math.round(width - GROUND_PADDING_LEFT * window.devicePixelRatio - GROUND_PADDING_RIGHT * window.devicePixelRatio - this.gridWidth) / 2
+		this.startX = padding_left * window.devicePixelRatio + Math.round(width - padding_left * window.devicePixelRatio - GROUND_PADDING_RIGHT * window.devicePixelRatio - this.gridWidth) / 2
 		this.startY = GROUND_PADDING_TOP + (height - this.gridHeight - GROUND_PADDING_BOTTOM * window.devicePixelRatio - GROUND_PADDING_TOP) / 2
 
 		// Taille des cases
