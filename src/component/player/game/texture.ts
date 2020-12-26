@@ -14,7 +14,7 @@ class Texture {
 	private cache: {[key: number]: HTMLCanvasElement} = {}
 
 	constructor(path: string, buildShadow: boolean = false, quality: number = 1) {
-		this.path = path
+		this.path = path + '?0'
 		this.buildShadow = buildShadow
 		this.shadowQuality = quality
 	}
