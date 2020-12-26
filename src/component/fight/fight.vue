@@ -153,7 +153,8 @@
 						if (window.innerWidth > window.innerHeight) {
 							// Landscape
 							const height = Math.min(window.innerHeight - 56, Math.round(reference.offsetWidth / 2))
-							this.playerWidth = Math.round((height - controls - GROUND_PADDING_TOP / window.devicePixelRatio) * 2)
+							const padding_top = (height - controls - GROUND_PADDING_BOTTOM) * GROUND_PADDING_TOP
+							this.playerWidth = Math.round((height - controls - GROUND_PADDING_BOTTOM - padding_top) * 2)
 							this.playerHeight = height
 						} else {
 							// Portrait
@@ -165,7 +166,9 @@
 					} else {
 						// Desktop
 						const maxWidth = reference.offsetWidth - offset
-						const theoricalHeight = Math.round((maxWidth - GROUND_PADDING_RIGHT - GROUND_PADDING_LEFT) / 2 + GROUND_PADDING_BOTTOM + GROUND_PADDING_TOP / window.devicePixelRatio + controls)
+						const theoricalHeight1 = (maxWidth - GROUND_PADDING_RIGHT - GROUND_PADDING_LEFT) / 2
+						const padding_top = theoricalHeight1 / (1 - GROUND_PADDING_TOP) - theoricalHeight1
+						const theoricalHeight = Math.round(theoricalHeight1 + GROUND_PADDING_BOTTOM + padding_top + controls)
 						const height = Math.min(window.innerHeight - 128, theoricalHeight)
 						this.playerWidth = maxWidth
 						this.playerHeight = height
