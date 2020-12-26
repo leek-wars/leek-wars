@@ -7,7 +7,7 @@ import { T, Texture } from './texture'
 
 let GROUND_PADDING_RIGHT = 50
 let GROUND_PADDING_LEFT = 50
-let GROUND_PADDING_TOP = 100
+const GROUND_PADDING_TOP = 0.10
 let GROUND_PADDING_BOTTOM = 105
 
 class Ground {
@@ -70,6 +70,7 @@ class Ground {
 			GROUND_PADDING_LEFT = 10
 			GROUND_PADDING_RIGHT = 10
 			GROUND_PADDING_BOTTOM = 5
+			padding_left = GROUND_PADDING_LEFT
 		} else {
 			GROUND_PADDING_RIGHT = 50
 			GROUND_PADDING_LEFT = 50
@@ -78,13 +79,13 @@ class Ground {
 				GROUND_PADDING_RIGHT = 45
 			}
 			GROUND_PADDING_BOTTOM = 105
-			GROUND_PADDING_TOP = 100
 		}
 		this.width = width
 		this.height = height
 
 		// Taille de la grille centrale
-		this.gridHeight = Math.round(height - GROUND_PADDING_BOTTOM * window.devicePixelRatio - GROUND_PADDING_TOP)
+		const padding_top = (height - GROUND_PADDING_BOTTOM * window.devicePixelRatio) * GROUND_PADDING_TOP
+		this.gridHeight = Math.round(height - GROUND_PADDING_BOTTOM * window.devicePixelRatio - padding_top)
 		this.gridWidth = Math.round(width - padding_left * window.devicePixelRatio - GROUND_PADDING_RIGHT * window.devicePixelRatio)
 		if (this.gridHeight * 2 > this.gridWidth) {
 			this.gridHeight = Math.round(this.gridWidth / 2)
@@ -95,7 +96,7 @@ class Ground {
 
 		// Calculate start position
 		this.startX = padding_left * window.devicePixelRatio + Math.round(width - padding_left * window.devicePixelRatio - GROUND_PADDING_RIGHT * window.devicePixelRatio - this.gridWidth) / 2
-		this.startY = GROUND_PADDING_TOP + (height - this.gridHeight - GROUND_PADDING_BOTTOM * window.devicePixelRatio - GROUND_PADDING_TOP) / 2
+		this.startY = padding_top + (height - this.gridHeight - GROUND_PADDING_BOTTOM * window.devicePixelRatio - padding_top) / 2
 
 		// Taille des cases
 		this.tileSizeX = this.gridWidth / this.field.tilesX
@@ -607,7 +608,8 @@ class Ground {
 		ctx.strokeStyle = '#333'
 		ctx.lineWidth = 1.5
 		ctx.fillStyle = '#fff'
-		ctx.font = "bold " + Math.floor(8 * this.scale) + "pt Roboto"
+		const size = Math.max(6, Math.floor(8 * this.scale))
+		ctx.font = "bold " + size + "pt Roboto"
 		ctx.textAlign = "center"
 		ctx.textBaseline = "middle"
 
