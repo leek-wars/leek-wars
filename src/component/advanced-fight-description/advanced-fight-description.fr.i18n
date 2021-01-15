@@ -69,7 +69,7 @@
 	"special_title": "Interractions avancées",
 	"special_1": "Coups Critiques",
 	"special_2": "Lorsque un coup critique se produit, tous les effets de l'item sont multipliés par 1,3 (les dégats compris). Cette multiplication est réalisé au moment de tirer les dégats de l'arme ou de la puce (donc pendant l'étape 1). Un critique sur un effet de dégât augmente aussi de 10% l'érosion. Un critique sur un bulbe augmente ses statistiques de 20%. Un critique sur un effet de déplacement n'a aucun effet particulier.",
-	"special_3": "arme(constante CRITICAL_FACTORs)  oubliées",
+	"special_3": "Passifs des armes oubliées",
 	"special_4": "Les armes oubliées possèdent un passif qui peut influer lors des attaques. Par exemple, l'effet <b>EFFECT_DAMAGE_TO_ABSOLUTE_SHIELD</b> donne 5% des dégats subis en bouclier absolu. L'effet se déclenche immédiatement après que le poireau ait subit des dégats. Ainis, si un poireau équipé de cette arme subit une attaque multiple (devil strike, machine-gun, ...), alors il gagnera de l'armure entre la première instance de dégats et la seconde.",
 
 	"credits": "Page réalisée par <b>ArtyMorty</b>, avec l'aide de <b>Magestik</b>."
