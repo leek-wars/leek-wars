@@ -10,6 +10,7 @@ import { Team } from '@/model/team'
 import Vue from 'vue'
 import Vuex, { Store } from 'vuex'
 import { AI } from './ai'
+import { Leek } from './leek'
 import { vueMain } from './vue'
 import { Weapon } from './weapon'
 
@@ -519,6 +520,11 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 		},
 		'connected-count'(state: LeekWarsState, farmers) {
 			state.connected_farmers = farmers
+		},
+		'new-leek'(state: LeekWarsState, leek: Leek) {
+			if (state.farmer) {
+				Vue.set(state.farmer.leeks, leek.id, leek)
+			}
 		}
 	},
 })
