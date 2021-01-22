@@ -29,6 +29,7 @@
 
 <script lang="ts">
 	import { LeekWars } from '@/model/leekwars'
+	import { store } from '@/model/store'
 	import { Component, Vue } from 'vue-property-decorator'
 
 	@Component({ name: 'new_leek', i18n: {} })
@@ -47,8 +48,9 @@
 			})
 		}
 		createLeek() {
-			LeekWars.post('leek/create', {name: this.leekName}).then(data => {
-				this.$router.push('/leek/' + data.id)
+			LeekWars.post('leek/create', {name: this.leekName}).then(leek => {
+				store.commit('new-leek', leek)
+				this.$router.push('/leek/' + leek.id)
 			}).error(error => {
 				this.error = this.$t('error_' + error.error, error.params) as string
 			})
