@@ -30,11 +30,10 @@ for (const value of values) {
 			+ (value[3] ? ': ' + value[3] : '')
 			+ " = " + util.inspect(value[1] ? json[value[1]] : json, {depth: Infinity, breakLength: Infinity, maxArrayLength: Infinity})
 			+ "\nexport { " + value[0].toUpperCase() + " }"
-	}))
-	p.catch((err) => {
+	}).catch((err) => {
 		console.log("ERROR request failed for", value[0])
 		process.exit()
-	})
+	}))
 }
 Promise.all(promises).then((result) => {
 	let data = `/** This file is auto-generated from script/generate_data.js **/
