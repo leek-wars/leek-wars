@@ -113,7 +113,7 @@
 
 						<div v-if="showProblemsDetails && problemsHeight && (LeekWars.analyzer.error_count || LeekWars.analyzer.warning_count || LeekWars.analyzer.todo_count)" :style="{height: problemsHeight + 'px'}">
 							<div class="problems-resizer" @mousedown="problemsResizerMousedown"></div>
-							<editor-problems />
+							<editor-problems @jump="jump" />
 						</div>
 						<div class="status">
 							<div v-ripple class="problems" @click="toggleProblems">
@@ -674,10 +674,6 @@
 				const editor = this.getAiView(ai)
 				if (editor) { editor.scrollToLine(line - 1) }
 			})
-		}
-		jumpProblem(path: string, problem: any) {
-			const ai = fileSystem.aiByFullPath[path]
-			this.jump(ai, problem[0])
 		}
 		load(ai: AI) {
 			if (!(ai.id in this.activeAIs)) {

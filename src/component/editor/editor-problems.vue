@@ -42,6 +42,11 @@
 		toggleProblemFile(ai: string) {
 			Vue.set(this.problemsCollapsed, ai, !this.problemsCollapsed[ai])
 		}
+
+		jumpProblem(path: string, problem: any) {
+			const ai = fileSystem.aiByFullPath[path]
+			this.$emit('jump', ai, problem[0])
+		}
 	}
 </script>
 
