@@ -20,7 +20,7 @@ class Obstacle {
 	public cell: Cell
 	public pumpkin: boolean = false
 
-	constructor(game: Game, type: number, size: number, cell: Cell) {
+	constructor(game: Game, size: number, cell: Cell) {
 		this.game = game
 		if (game.halloween) {
 			this.pumpkin = Math.random() > 0.7

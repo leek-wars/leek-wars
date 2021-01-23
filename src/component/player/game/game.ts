@@ -345,10 +345,9 @@ class Game {
 		this.obstacles = this.data.map.obstacles
 		for (const i in this.obstacles) {
 			const o = this.obstacles[i]
-			const type = o[0]
-			const size = o[1]
+			const size = o instanceof Array ? o[1] : o // Before the obstacle was an array [type, size]
 			if (size !== -1) {
-				const obstacle = new Obstacle(this, type, size, this.ground.field.cells[parseInt(i, 10)])
+				const obstacle = new Obstacle(this, size, this.ground.field.cells[parseInt(i, 10)])
 				obstacle.resize()
 				this.ground.addObstacle(obstacle)
 			}
