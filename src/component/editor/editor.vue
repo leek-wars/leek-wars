@@ -82,11 +82,6 @@
 							<div v-if="currentAI.included_lines !== 0" class="line-count-wrapper">{{ $tc('main.n_total_lines', currentEditor.lines + currentAI.included_lines) }}</div>
 							<div v-if="currentAI.included_chars !== 0" class="char-count-wrapper">{{ $tc('main.n_total_chars', currentEditor.characters + currentAI.included_chars) }}</div>
 						</div>
-						<br>
-						<!--
-						<div id='export-button' class="button" title="{export_desc}">▼ {{ $t('export') }}</div>
-						<div id='import-button' class="button" title="{import_desc}">▲ {{ $t('import') }}</div>
-						-->
 					</div>
 				</panel>
 			</div>
@@ -786,6 +781,9 @@
 		flex: 1;
 		min-height: 0;
 		gap: 0;
+	}
+	#app.app .container {
+		margin-bottom: 0;
 	}
 	.menu {
 		flex-shrink: 0;

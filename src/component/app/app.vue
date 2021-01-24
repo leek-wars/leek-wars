@@ -277,6 +277,9 @@
 	#app.app .notifications-button img, #app.app .messages-button img {
 		margin: 0;
 	}
+	#app.app .v-application--wrap {
+		min-height: calc(100% - 56px);
+	}
 	#app.app .app-center {
 		transition: transform ease 200ms;
 		margin: 0;
@@ -324,6 +327,9 @@
 				}
 			}
 		}
+	}
+	#app.app .app-wrapper.box {
+		height: calc(100vh - 56px);
 	}
 	.big-leeks {
 		z-index: -10;
