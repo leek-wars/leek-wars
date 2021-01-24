@@ -1,9 +1,9 @@
 <template>
-	<v-menu ref="menu" :close-on-content-click="false" offset-overflow :disabled="disabled" :nudge-top="bottom ? 0 : 6" :open-delay="_open_delay" :close-delay="_close_delay" :top="!bottom" :bottom="bottom" :transition="instant ? 'none' : 'my-transition'" :open-on-hover="!locked" offset-y @input="open($event)">
+	<v-menu ref="menu" v-model="value" :close-on-content-click="false" offset-overflow :disabled="disabled" :nudge-top="bottom ? 0 : 6" :open-delay="_open_delay" :close-delay="_close_delay" :top="!bottom" :bottom="bottom" :transition="instant ? 'none' : 'my-transition'" :open-on-hover="!locked" offset-y @input="open($event)">
 		<template v-slot:activator="{ on }">
 			<slot :on="on"></slot>
 		</template>
-		<div :class="{expanded: expand_items}" class="card">
+		<div :class="{expanded: expand_items}" class="card" @mouseenter="mouse = true" @mouseleave="mouse = false">
 			<loader v-if="!leek" :size="30" />
 			<template v-else>
 				<div class="flex">
@@ -50,12 +50,12 @@
 					</table>
 					<div class="items">
 						<div class="weapons">
-							<rich-tooltip-weapon v-for="weapon in leek.orderedWeapons" :key="weapon.id" v-slot="{ on }" :weapon="LeekWars.weapons[LeekWars.items[weapon.template].params]" :bottom="true" :instant="true" @input="locked = $event">
+							<rich-tooltip-weapon v-for="weapon in leek.orderedWeapons" :key="weapon.id" v-slot="{ on }" :weapon="LeekWars.weapons[LeekWars.items[weapon.template].params]" :bottom="true" :instant="true" @input="setParent">
 								<img :src="'/image/' + LeekWars.items[weapon.template].name.replace('_', '/') + '.png'" class="weapon" v-on="on">
 							</rich-tooltip-weapon>
 						</div>
 						<div class="chips">
-							<rich-tooltip-chip v-for="chip in leek.orderedChips" :key="chip.id" v-slot="{ on }" :chip="LeekWars.chips[chip.template]" :bottom="true" :instant="true" @input="locked = $event">
+							<rich-tooltip-chip v-for="chip in leek.orderedChips" :key="chip.id" v-slot="{ on }" :chip="LeekWars.chips[chip.template]" :bottom="true" :instant="true" @input="setParent">
 								<img :src="'/image/chip/' + LeekWars.chips[chip.template].name + '.png'" class="chip" v-on="on">
 							</rich-tooltip-chip>
 						</div>
@@ -81,6 +81,8 @@
 		leek: Leek | null = null
 		expand_items: boolean = false
 		locked: boolean = false
+		mouse: boolean = false
+		value: boolean = false
 
 		get _open_delay() {
 			return this.instant ? 0 : 200
@@ -110,6 +112,14 @@
 		@Watch('expand_items')
 		updateExpand() {
 			localStorage.setItem('richtooltipleek/expanded', this.expand_items ? 'true' : 'false')
+		}
+
+		setParent(event: boolean) {
+			this.locked = event
+			if (!event && !this.mouse) {
+				this.value = false
+				this.$emit('input', false)
+			}
 		}
 	}
 </script>
