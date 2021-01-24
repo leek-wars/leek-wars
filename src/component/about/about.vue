@@ -186,7 +186,6 @@
 				{ name: "PHP", link: "http://www.php.net/", image: "php.png" },
 				{ name: "Memcached", link: "https://memcached.org/", image: "memcached.svg" },
 				{ name: "Python", link: "https://www.python.org/", image: "python.svg" },
-				{ name: "Swift Mailer", link: "https://swiftmailer.symfony.com/", image: "swiftmailer.png" },
 			]},
 			{ name: "leekscript", items: [
 				{ name: "C++", link: "https://fr.cppreference.com/w/", image: "cpp.png" },
