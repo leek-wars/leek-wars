@@ -382,7 +382,7 @@
 			LeekWars.setActions(this.actions)
 		}
 		back() {
-			this.$router.push('/market')
+			this.$router.back()
 		}
 		destroyed() {
 			this.$root.$off('back', this.back)
@@ -395,12 +395,14 @@
 				this.selectedItem = this.items_by_name[item]
 				LeekWars.setTitle(this.translateName(this.selectedItem))
 				LeekWars.splitShowContent()
+				this.$root.$emit('loaded')
 			} else if (!LeekWars.mobile) {
 				this.$router.replace('/market/pistol')
 			} else {
 				this.selectedItem = null
 				LeekWars.setTitle(this.$t('title'))
 				LeekWars.splitShowList()
+				this.$root.$emit('loaded')
 			}
 			this.updateSubtitle()
 			LeekWars.setActions(this.actions)
