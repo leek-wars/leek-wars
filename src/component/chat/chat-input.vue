@@ -50,7 +50,7 @@
 		keyUp(e: KeyboardEvent) {
 			this.updateCursor()
 			const input = this.$refs.input as HTMLElement
-			this.message = input.innerText
+			this.message = input.innerText.trim()
 			this.updateCommands()
 
 			if (e.which === 13 && this.commandsEnabled) {
