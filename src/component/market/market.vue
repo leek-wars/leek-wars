@@ -303,7 +303,7 @@
 
 		get max_level() {
 			if (store.state.farmer) {
-				return Object.values(store.state.farmer!.leeks).reduce((s, l) => s + l.level, 0)
+				return LeekWars.first(store.state.farmer.leeks)!.level
 			}
 			return 0
 		}
