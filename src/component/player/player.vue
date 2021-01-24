@@ -273,6 +273,7 @@
 			})
 		}
 		@Watch('requiredWidth')
+		@Watch('requiredHeight')
 		requiredWidthChange() {
 			this.resize()
 		}
