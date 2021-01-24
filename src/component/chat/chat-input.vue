@@ -50,7 +50,7 @@
 		keyUp(e: KeyboardEvent) {
 			this.updateCursor()
 			const input = this.$refs.input as HTMLElement
-			this.message = input.innerText.trim()
+			this.message = input.innerText
 			this.updateCommands()
 
 			if (e.which === 13 && this.commandsEnabled) {
@@ -68,7 +68,7 @@
 				if (this.message === '/ping') {
 					// LW.chat.last_ping = Date.now()
 				}
-				this.$emit('message', this.message)
+				this.$emit('message', this.message.trim())
 				input.textContent = ''
 				this.commandsEnabled = false
 			}
