@@ -790,7 +790,8 @@ function createCodeArea(code: string, element: HTMLElement) {
 	import(/* webpackChunkName: "codemirror" */ "@/codemirror-wrapper").then(wrapper => {
 		wrapper.CodeMirror.runMode(code, "leekscript", element)
 		element.innerHTML = '<span class="line-number"></span><pre>' + element.innerHTML + '</pre>'
-		const num = element.innerHTML.split(/\n/).length
+
+		const num = code.split(/\n/).length
 		for (let j = 0; j < num; j++) {
 			const line_num = element.getElementsByTagName('span')[0]
 			line_num.innerHTML += '<span>' + (j + 1) + '</span>'
