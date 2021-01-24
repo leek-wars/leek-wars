@@ -139,8 +139,8 @@ const routes = [
 	{ path: '/login', component: Login, beforeEnter: disconnected },
 	{ path: '/leek/:id', name: 'leek', component: Leek },
 	{ path: '/leek/:id/history', component: History, props: {type: 'leek'} },
-	{ path: '/market', name: 'market', component: Market, beforeEnter: connected },
-	{ path: '/market/:item', component: Market, beforeEnter: connected },
+	{ path: '/market', name: 'market', component: Market, meta: {noscrollapp: true}, beforeEnter: connected },
+	{ path: '/market/:item', component: Market, meta: {noscrollapp: true}, beforeEnter: connected },
 	{ path: '/messages', component: Messages, beforeEnter: connected },
 	{ path: '/messages/conversation/:id', component: Messages, beforeEnter: connected },
 	{ path: '/messages/new/:id/:name/:avatar_changed', component: Messages, beforeEnter: connected },
@@ -223,7 +223,9 @@ const router = new Router({
 		}
 		if (savedPosition && !from.hash) {
 			vueMain.$data.savedPosition = savedPosition.y
-		} else if (!to.meta.noscroll) {
+		} else if (LeekWars.mobile && !to.meta.noscrollapp) {
+			return { x: 0, y: 0 }
+		} else if (!to.meta.noscrollapp && !to.meta.noscroll) {
 			return { x: 0, y: 0 }
 		}
 	},
