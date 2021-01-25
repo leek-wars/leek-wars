@@ -742,8 +742,9 @@ class FightEntity extends Entity {
 		ctx.save()
 		ctx.scale(this.game.ground.scale, this.game.ground.scale)
 
+		const effect_size = 30
 		const reverse = this.game.textRatio / this.game.ground.scale
-		const z = LeekWars.objectSize(this.effects) > 0 && this.game.showEffects ? 48 : 25
+		const z = LeekWars.objectSize(this.effects) > 0 && this.game.showEffects ? effect_size + 23 : effect_size
 		const y = Math.max(-this.game.ground.startY / this.game.ground.scale + 20, this.oy - this.height - z * reverse)
 		ctx.translate(this.ox, y)
 
@@ -754,8 +755,8 @@ class FightEntity extends Entity {
 		let text = this.name + " (" + this.life + ")"
 		if (this.game.showIDs) { text = '#' + this.id + ' • ' + text }
 		const width = Math.max(120, ctx.measureText(text).width + 14)
-		const height = 20
-		const barHeight = 8
+		const height = 22
+		const barHeight = 9
 
 		const active = this === this.game.selectedEntity || this === this.game.hoverEntity || this === this.game.mouseEntity
 
@@ -769,7 +770,7 @@ class FightEntity extends Entity {
 		ctx.fillStyle = active ? 'black' : 'white'
 		ctx.textBaseline = "middle"
 		ctx.textAlign = "center"
-		ctx.fillText(text, 0, 10)
+		ctx.fillText(text, 0, 12)
 
 		// Barre de vie
 		const life = this.life / this.maxLife
@@ -780,11 +781,11 @@ class FightEntity extends Entity {
 		ctx.strokeRect(-width / 2 + 1, height, barWidth - 2, barHeight - 2)
 
 		// Effects
+		const text_size = 9
 		if (this.game.showEffects) {
 			const count = LeekWars.objectSize(this.effects)
-			const effect_size = 25
 			let x = -count * effect_size / 2
-			ctx.font = "bold 8pt Roboto"
+			ctx.font = "bold 9pt Roboto"
 			ctx.textAlign = "left"
 			for (const e in this.effects) {
 				const effect = this.effects[e]
@@ -801,12 +802,12 @@ class FightEntity extends Entity {
 				const w2 = ctx.measureText(effect_duration).width
 				ctx.globalAlpha = 0.5
 				ctx.fillStyle = 'black'
-				ctx.fillRect(x + 1, 25 + 15, w + 2, 10)
-				ctx.fillRect(x + 17, 26.5, w2 + 2, 11)
+				ctx.fillRect(x + 1, 2 * effect_size - text_size - 5, w + 3, text_size + 4)
+				ctx.fillRect(x + effect_size - 11, effect_size + 1.5, w2 + 3, 12)
 				ctx.globalAlpha = 1
 				ctx.fillStyle = 'white'
-				ctx.fillText(effect_message, x + 2, 46)
-				ctx.fillText(effect_duration, x + 18, 32)
+				ctx.fillText(effect_message, x + 2, 2 * effect_size - 6)
+				ctx.fillText(effect_duration, x + effect_size - 9, effect_size + 8)
 				x += effect_size
 			}
 		}
