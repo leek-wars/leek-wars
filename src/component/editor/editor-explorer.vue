@@ -311,7 +311,7 @@
 		}
 
 		downloadSimple() {
-			this.download(this.ai!.name, this.ai!.code)
+			this.download(this.ai!.name, "/** " + this.ai!.path + " **/\n\n" + this.ai!.code)
 		}
 
 		downloadIncludes() {
@@ -334,11 +334,12 @@
 		}
 
 		download(filename: string, text: string) {
+			const data = "/** Exporté le " + new Date().toLocaleString() + " **/\n\n" + text
 			if (!filename.includes(".")) {
 				filename += ".leek"
 			}
 			const element = document.createElement('a')
-			element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text))
+			element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(data))
 			element.setAttribute('download', filename)
 			element.style.display = 'none'
 			document.body.appendChild(element)
