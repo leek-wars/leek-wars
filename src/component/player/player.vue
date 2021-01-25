@@ -307,7 +307,7 @@
 		setOrigin() {
 			setTimeout(() => {
 				const p = this.$el.getBoundingClientRect()
-				this.game.setOrigin(p.left, p.top)
+				this.game.setOrigin(p.left, p.top + window.pageYOffset)
 			}, 50)
 		}
 		mousemove(e: MouseEvent) {
