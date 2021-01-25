@@ -209,14 +209,17 @@
 	}
 	.life-bar .wrapper {
 		display: inline-block;
-		background: rgba(255,255,255,0.2);
+		background: #fffa;
 		border-bottom-left-radius: 12px;
 		border-bottom-right-radius: 12px;
 		padding-top: 3px;
 		padding-left: 4px;
 		padding-bottom: 0px;
 		padding-right: 1px;
-		height: 15px;
+		height: 16px;
+	}
+	.hud.dark .life-bar .wrapper {
+		background: #000a;
 	}
 	.life-bar .bar {
 		display: inline-block;
@@ -227,10 +230,10 @@
 	.life-bar .bar.dead {
 		margin-right: 0px;
 	}
-	.life-bar .wrapper :first-child {
+	.life-bar .wrapper :first-of-type {
 		border-bottom-left-radius: 10px;
 	}
-	.life-bar .wrapper :last-child {
+	.life-bar .wrapper :last-of-type {
 		border-bottom-right-radius: 10px;
 	}
 	.actions {
