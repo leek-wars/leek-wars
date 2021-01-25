@@ -187,7 +187,10 @@
 			</a>
 		</div>
 
-		<h1>{{ $t('screenshots') }}</h1>
+		<div class="flex carousel-title">
+			<h1>{{ $t('screenshots') }}</h1>
+			<div class="info"><v-icon>mdi-gesture-swipe-horizontal</v-icon> {{ $t('drag') }}</div>
+		</div>
 
 		<panel class="first screenshots">
 			<div slot="content" class="carousel">
@@ -538,5 +541,11 @@
 	.radio {
 		width: 100%;
 		margin-bottom: 6px;
+	}
+	.carousel-title {
+		align-items: center;
+	}
+	.info {
+		color: #eee;
 	}
 </style>

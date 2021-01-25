@@ -4,6 +4,7 @@
 	"conditions_name": "terms of use",
 	"confirm_password": "Confirmation",
 	"country": "Country",
+	"drag": "Drag to scroll",
 	"error_forbidden_name": "This name is forbidden",
 	"error_invalid_godfather": "This player doesn't exist",
 	"error_invalid_length": "The password shall contain {0} to {1} characters",

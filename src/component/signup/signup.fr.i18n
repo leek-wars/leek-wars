@@ -4,6 +4,7 @@
 	"conditions_name": "conditions générales d'utilisation",
 	"confirm_password": "Confirmation",
 	"country": "Pays",
+	"drag": "Glisser pour faire défiler",
 	"error_forbidden_name": "Ce nom est interdit",
 	"error_invalid_godfather": "Ce joueur n'existe pas",
 	"error_invalid_length": "Le mot de passe doit contenir entre {0} et {1} caractères",

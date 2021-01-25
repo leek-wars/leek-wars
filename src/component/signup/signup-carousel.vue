@@ -53,8 +53,7 @@
 			freeMode: true,
 			loop: true,
 			autoplay: {
-				delay: 3000,
-				disableOnInteraction: true
+				delay: 2000
 			}
 		}
 
