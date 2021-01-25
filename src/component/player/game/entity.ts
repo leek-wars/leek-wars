@@ -742,16 +742,19 @@ class FightEntity extends Entity {
 		ctx.save()
 		ctx.scale(this.game.ground.scale, this.game.ground.scale)
 
+		const reverse = this.game.textRatio / this.game.ground.scale
 		const z = LeekWars.objectSize(this.effects) > 0 && this.game.showEffects ? 48 : 25
-		const y = Math.max(-this.game.ground.startY / this.game.ground.scale + 20, this.oy - this.height - z)
+		const y = Math.max(-this.game.ground.startY / this.game.ground.scale + 20, this.oy - this.height - z * reverse)
 		ctx.translate(this.ox, y)
 
-		ctx.font = "500 10pt Roboto"
+		ctx.scale(reverse, reverse)
+
+		ctx.font = "500 11pt Roboto"
 
 		let text = this.name + " (" + this.life + ")"
 		if (this.game.showIDs) { text = '#' + this.id + ' • ' + text }
 		const width = Math.max(120, ctx.measureText(text).width + 14)
-		const height = 18
+		const height = 20
 		const barHeight = 8
 
 		const active = this === this.game.selectedEntity || this === this.game.hoverEntity || this === this.game.mouseEntity
@@ -781,7 +784,7 @@ class FightEntity extends Entity {
 			const count = LeekWars.objectSize(this.effects)
 			const effect_size = 25
 			let x = -count * effect_size / 2
-			ctx.font = "bold 7.5pt Roboto"
+			ctx.font = "bold 8pt Roboto"
 			ctx.textAlign = "left"
 			for (const e in this.effects) {
 				const effect = this.effects[e]
