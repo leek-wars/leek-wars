@@ -293,6 +293,7 @@ class Game {
 	public cancelled: boolean = false
 	public player!: Player
 	public halloween: boolean = false
+	public textRatio: number = 1
 
 	public maps: Map[] = [
 		new Nexus(this),
@@ -673,6 +674,7 @@ class Game {
 		this.width = width
 		this.height = height
 		this.ground.resize(width, height, this.shadows)
+		this.textRatio = Math.sqrt(window.devicePixelRatio)
 	}
 	public setOrigin(originX: number, originY: number) {
 		this.mouseOriginX = originX + Math.round(this.ground.startX / this.ratio)
