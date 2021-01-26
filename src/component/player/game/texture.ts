@@ -80,6 +80,7 @@ class T {
 	public static tp = new Texture(LeekWars.STATIC + 'image/charac/small/tp.png')
 	public static mp = new Texture(LeekWars.STATIC + 'image/charac/small/mp.png')
 	public static leek_hand = new Texture(LeekWars.STATIC + "image/fight/leek_hand.png", true, SHADOW_QUALITY)
+	public static leek_hand_gold = new Texture(LeekWars.STATIC + "image/fight/leek_hand_gold.png", true, SHADOW_QUALITY)
 	public static critical = new Texture(LeekWars.STATIC + "image/fight/critical.png", true, SHADOW_QUALITY)
 
 	// Armes
