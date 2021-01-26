@@ -5,22 +5,30 @@
 
 		<center><div v-if="totalCapital" :class="{zero: capital == 0}" class="capital rounded4">{{ $t('main.n_capital', [capital]) }}</div></center>
 
-		<div v-for="c in LeekWars.characteristics" :key="c" class="charac">
-			<characteristic-tooltip v-slot="{ on }" :characteristic="c" :value="leek[c] + bonuses[c]" :leek="leek" :test="false">
-				<template v-on="on">
-					<img :src="'/image/charac/' + c + '.png'" v-on="on">
-				</template>
-			</characteristic-tooltip>
-			<div>
-				<span :class="'stat color-' + c">{{ leek[c] + bonuses[c] }}</span>
-				<span v-if="bonuses[c]" class="sup">&nbsp;(+{{ bonuses[c] }})</span>
-				<div class="add-wrapper">
-					<tooltip v-for="cost in [1, 10, 100]" :key="cost">
-						<template v-slot:activator="{ on }">
-							<span :q="cost" :class="{locked: costs[c + cost].cost > capital}" class="add" @click="add(c, cost)" v-on="on"></span>
-						</template>
-						{{ costs[c + cost].cost + ' capital ⇔ ' + costs[c + cost].bonus + ' ' + $t('characteristic.' + c) }}
-					</tooltip>
+		<div class="characteristics">
+			<div v-for="c in LeekWars.characteristics" :key="c" class="charac">
+				<characteristic-tooltip v-slot="{ on }" :characteristic="c" :value="leek[c] + bonuses[c]" :leek="leek" :test="false">
+					<template v-on="on">
+						<img :src="'/image/charac/' + c + '.png'" v-on="on">
+					</template>
+				</characteristic-tooltip>
+				<div>
+					<span :class="'stat color-' + c">{{ leek[c] + bonuses[c] }}</span>
+					<span v-if="bonuses[c]" class="sup">&nbsp;(+{{ bonuses[c] }})</span>
+					<div class="add-wrapper">
+						<tooltip v-for="cost in [1, 10, 100]" :key="cost">
+							<template v-slot:activator="{ on }">
+								<span :q="cost" :class="{locked: costs[c + cost].cost > capital}" class="add" @click="add(c, cost)" v-on="on"></span>
+							</template>
+							{{ costs[c + cost].cost + ' capital ⇔ ' + costs[c + cost].bonus + ' ' + $t('characteristic.' + c) }}
+						</tooltip>
+						<tooltip v-if="bonuses[c]">
+							<template v-slot:activator="{ on }">
+								<span q="0" class="add" @click="clear(c)" v-on="on"></span>
+							</template>
+							{{ $t('leek.clear') }}
+						</tooltip>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -119,25 +127,39 @@
 		COSTS = COSTS
 		bonuses: {[key: string]: any} = {}
 		base: {[key: string]: any} = {}
+		added: {[key: string]: any} = {}
 		costs: {[key: string]: any} = {}
 		capital: number = 0
 
 		created() {
 			this.reset()
 		}
+
 		reset() {
 			this.capital = this.leek.capital
 			this.base = {
-				life: this.leek.life - 100 - (this.leek.level - 1) * 3,
+				life: 100 + (this.leek.level - 1) * 3,
+				strength: 0,
+				wisdom: 0,
+				agility: 0,
+				resistance: 0,
+				science: 0,
+				magic: 0,
+				frequency: 100,
+				tp: 10,
+				mp: 3
+			}
+			this.added = {
+				life: this.leek.life - this.base.life,
 				strength: this.leek.strength,
 				wisdom: this.leek.wisdom,
 				agility: this.leek.agility,
 				resistance: this.leek.resistance,
 				science: this.leek.science,
 				magic: this.leek.magic,
-				frequency: this.leek.frequency - 100,
-				tp: this.leek.tp - 10,
-				mp: this.leek.mp - 3
+				frequency: this.leek.frequency - this.base.frequency,
+				tp: this.leek.tp - this.base.tp,
+				mp: this.leek.mp - this.base.mp
 			}
 			this.bonuses = {
 				life: 0, strength: 0, wisdom: 0, agility: 0, resistance: 0,
@@ -145,13 +167,14 @@
 			}
 			this.update()
 		}
+
 		buttonCost(capital: number, charac: string) {
 			let tmpCapital = this.capital
 			let tmpBonus = this.bonuses[charac]
 			Vue.set(this.costs, charac + capital, {cost: 0, bonus: 0})
 			let q = capital
 			while (q > 0) {
-				const total = this.base[charac] + tmpBonus
+				const total = this.added[charac] + tmpBonus
 				let step = 0
 				for (; step < COSTS[charac].length; ++step) {
 					if (COSTS[charac][step].step > total) { break }
@@ -166,6 +189,7 @@
 				this.costs[charac + capital].bonus += bonus
 			}
 		}
+
 		update() {
 			for (const charac in this.bonuses) {
 				for (const q of [1, 10, 100]) {
@@ -173,6 +197,7 @@
 				}
 			}
 		}
+
 		add(charac: string, q: number) {
 			const cost = this.costs[charac + q]
 			if (this.capital >= cost.cost) {
@@ -181,6 +206,26 @@
 			}
 			this.update()
 		}
+
+		clear(charac: string) {
+			let added = this.added[charac]
+			let invested = this.bonuses[charac]
+			let current = 0
+			let capital = 0
+			while (current < invested) {
+				let step = COSTS[charac].length - 1
+				for (; step >= 0; --step) {
+					if (COSTS[charac][step].step <= added + current) { break }
+				}
+				const cost = COSTS[charac][step]
+				capital += cost.capital
+				current += cost.sup
+			}
+			this.capital += capital
+			this.bonuses[charac] = 0
+			this.update()
+		}
+
 		validate() {
 			LeekWars.post('leek/spend-capital', {leek: this.leek.id, characteristics: JSON.stringify(this.bonuses)}).then(data => {
 				for (const stat in this.bonuses) {
@@ -193,6 +238,7 @@
 				LeekWars.toast(error)
 			})
 		}
+
 		close() {
 			this.reset()
 			this.$emit('input', false)
@@ -215,6 +261,11 @@
 	}
 	.capital.zero {
 		background: #888;
+	}
+	.characteristics {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+		padding: 20px 0;
 	}
 	.sup {
 		color: #555;
@@ -241,6 +292,10 @@
 		width: 30px;
 		background-image: url("/image/add100.png");
 	}
+	.add[q="0"] {
+		width: 25px;
+		background-image: url("/image/sub.png");
+	}
 	.add.locked {
 		cursor: auto;
 		opacity: 0.2;
@@ -255,7 +310,6 @@
 		font-size: 19px;
 		vertical-align: top;
 		display: inline-block;
-		margin-top: 2px;
 		font-weight: 500;
 	}
 </style>
