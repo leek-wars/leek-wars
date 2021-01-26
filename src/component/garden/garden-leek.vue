@@ -7,7 +7,7 @@
 			<div class="name">{{ leek.name }}</div>
 			<talent :id="leek.id" :talent="leek.talent" category="leek" />
 			<br>
-			<span class="level">{{ $t('main.level_n', [leek.level]) }}</span>
+			<div class="level">{{ $t('main.level_n', [leek.level]) }}</div>
 		</div>
 	</rich-tooltip-leek>
 </template>
@@ -26,11 +26,14 @@
 		width: 100%;
 		padding: 10px 0;
 	}
+	.image svg {
+		vertical-align: bottom;
+	}
 	.name {
-		font-size: 20px;
+		font-size: 18px;
 		font-weight: 500;
-		padding: 0 5px;
-		padding-top: 4px;
+		padding: 5px;
+		padding-bottom: 3px;
 		text-overflow: ellipsis;
 		overflow: hidden;
 		white-space: nowrap;
@@ -39,7 +42,8 @@
 		margin: 5px 0;
 	}
 	.level {
-		font-size: 17px;
+		padding-top: 3px;
+		font-size: 16px;
 		color: #555;
 		font-weight: 500;
 	}

@@ -4,12 +4,9 @@
 			<avatar :farmer="farmer" />
 			<div class="name">{{ farmer.name }}</div>
 			<talent :id="farmer.id" :talent="farmer.talent" category="farmer" />
-			<br>
-			<span class="level">
-				{{ $t('main.n_leeks', [farmer.leek_count]) }}
-			</span>
-			<br>
-			<span class="level">{{ $t('main.total_level_n', [farmer.total_level]) }}</span>
+			<div class="level">
+				{{ farmer.leek_count }} <img src="/image/icon/black/leek.png"> • {{ $t('main.level_n', [farmer.total_level]) }}
+			</div>
 		</div>
 	</rich-tooltip-farmer>
 </template>
@@ -38,11 +35,25 @@
 		margin: 5px 0;
 	}
 	.name {
-		font-size: 19px;
+		font-size: 18px;
 		font-weight: 500;
-		padding: 0 5px;
-		padding-top: 4px;
+		padding: 5px;
+		padding-bottom: 3px;
 		text-overflow: ellipsis;
 		overflow: hidden;
+	}
+	.level {
+		font-size: 15px;
+		padding-top: 3px;
+		color: #555;
+		font-weight: 500;
+		display: flex;
+		align-items: flex-start;
+		justify-content: center;
+		img {
+			width: 16px;
+			opacity: 0.5;
+			margin: 0 3px;
+		}
 	}
 </style>
