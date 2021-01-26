@@ -173,9 +173,9 @@
 							<div class="info"><v-icon>mdi-arrow-down</v-icon> {{ $t('select_compo') }}</div>
 							<router-link v-for="composition in garden.my_compositions" :key="composition.id" v-ripple :to="'/garden/team/' + composition.id" class="composition-wrapper my-composition">
 								<garden-compo :compo="composition" />
-								<span class="fights">
+								<div class="fights">
 									<img class="sword" src="/image/icon/grey/garden.png">{{ composition.fights }}
-								</span>
+								</div>
 							</router-link>
 							<div class="versus">VS</div>
 							<div v-if="selectedComposition">
@@ -538,11 +538,12 @@
 	.fights {
 		font-size: 20px;
 		color: #444;
+		margin-top: 8px;
 		img {
 			vertical-align: middle;
 			margin-right: 3px;
 			margin-bottom: 4px;
-			width: 24px;
+			width: 20px;
 		}
 	}
 	.player-count {
