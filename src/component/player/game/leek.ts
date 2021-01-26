@@ -7,7 +7,7 @@ import { HatTemplate } from '@/model/hat'
 import { LeekWars } from '@/model/leekwars'
 import { S } from './sound'
 
-const handSize = 14
+const handSize = 20
 const handSize2 = handSize / 2
 
 class Leek extends FightEntity {
@@ -67,7 +67,8 @@ class Leek extends FightEntity {
 			this.hatBack = T.get(this.game, "image/hat/" +  this.hatName + "_back.png", true, SHADOW_QUALITY)
 			this.hatX = 0
 		}
-		this.handTex = T.leek_hand.load(this.game)
+		const handTex = this.skin === 15 ? T.leek_hand_gold : T.leek_hand
+		this.handTex = handTex.load(this.game)
 		this.bloodTex = T.leek_blood.load(this.game)
 		S.move.load(this.game)
 	}
@@ -78,7 +79,7 @@ class Leek extends FightEntity {
 
 	public update(dt: number) {
 		super.update(dt)
-		this.handPos = Math.cos(this.frame / 17 - Math.PI / 6) * 3
+		this.handPos = Math.cos(this.frame / 17 - Math.PI / 6) * 2.5
 		// Update weapon
 		if (this.weapon != null) {
 			this.weapon.update(dt)
@@ -127,6 +128,9 @@ class Leek extends FightEntity {
 		const texture = this.front ? this.bodyTexFront : this.bodyTexBack
 		const hatTexture = this.front ? this.hatFront : this.hatBack
 
+		ctx.save()
+		ctx.scale(this.direction, 1)
+
 		if (this.weapon != null) {
 			// Weapon !
 			if (this.front) {
@@ -138,10 +142,12 @@ class Leek extends FightEntity {
 			}
 		} else {
 			// No weapon
-			ctx.drawImage(this.handTex.texture, 12 - 5, -20 - this.handPos - 5, 10, 10) // back hand
+			const front = this.front ? 1 : -1
+			ctx.drawImage(this.handTex.texture, 10 * front - 7, -23 - this.handPos - 3, 10, 10) // back hand
 			this.drawBody(ctx, texture.texture, hatTexture ? hatTexture.texture : null)
-			ctx.drawImage(this.handTex.texture, -12 - 7, -20 - this.handPos - 7, 14, 14) // front hand
+			ctx.drawImage(this.handTex.texture, -12 * front - 7, -23 - this.handPos + 1, 13, 13) // front hand
 		}
+		ctx.restore()
 	}
 
 	public drawWeapon(ctx: CanvasRenderingContext2D, texture: HTMLImageElement | HTMLCanvasElement, shadow: boolean = false) {
@@ -149,11 +155,14 @@ class Leek extends FightEntity {
 
 		ctx.save()
 
+		if (shadow) {
+			ctx.scale(this.direction, 1)
+		}
 		// Translate to center
-		ctx.translate((this.weapon.cx + (this.front ? 0 : -this.weapon.ocx)) * this.direction, - this.weapon.cz * 0.8 * this.growth - this.handPos + (this.front ? 5 : -5))
+		ctx.translate((this.weapon.cx + (this.front ? 0 : -this.weapon.ocx)), - this.weapon.cz * 0.8 * this.growth - this.handPos + (this.front ? 5 : -5))
 
 		// Inverse
-		ctx.scale(this.direction * Leek.WEAPON_SCALE * this.growth, Leek.WEAPON_SCALE * this.growth)
+		ctx.scale(Leek.WEAPON_SCALE * this.growth, Leek.WEAPON_SCALE * this.growth)
 
 		// Rotate
 		if (shadow) {
@@ -210,7 +219,7 @@ class Leek extends FightEntity {
 			ctx.globalCompositeOperation = 'lighter'
 		}
 
-		ctx.scale(this.direction * this.scale * this.growth, this.oscillation * this.scale * this.growth)
+		ctx.scale(this.scale * this.growth, this.oscillation * this.scale * this.growth)
 
 		const leekWidth = this.bodyTexFront.texture.width
 

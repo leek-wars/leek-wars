@@ -9,8 +9,8 @@
 					<g :transform="'rotate(' + weaponAngle + ')'" transform-box="fill-box">
 						<g :transform="'translate(' + weaponX + ',' + weaponY + ')'">
 							<image :xlink:href="weaponImage" :width="weaponWidth" :height="weaponHeight" />
-							<image xlink:href="/image/fight/leek_hand.png" :width="handSize" :height="handSize" :x="hand1.x - handSize / 2" :y="hand1.y - handSize / 2" />
-							<image xlink:href="/image/fight/leek_hand.png" :width="handSize" :height="handSize" :x="hand2.x - handSize / 2" :y="hand2.y - handSize / 2" />
+							<image :xlink:href="handImage" :width="handSize" :height="handSize" :x="hand1.x - handSize / 2" :y="hand1.y - handSize / 2" />
+							<image :xlink:href="handImage" :width="handSize" :height="handSize" :x="hand2.x - handSize / 2" :y="hand2.y - handSize / 2" />
 						</g>
 					</g>
 				</g>
@@ -117,10 +117,13 @@
 		get weaponTop() { return this.weaponData ? this.weaponData.top : 0 }
 		get hand1() { return this.weaponData ? { x: this.weaponData.mx1, y: this.weaponData.mz1 } : null }
 		get hand2() { return this.weaponData ? { x: this.weaponData.mx2, y: this.weaponData.mz2 } : null }
-		get handSize() { return 16 * this.scale / this.weaponScale }
+		get handSize() { return 19 * this.scale / this.weaponScale }
 		get appearance() { return LeekWars.getLeekAppearance(this.leek.level) }
 		get leekSize() { return LeekWars.leekSizes[this.appearance] }
 		get hatSize() { return this.hat ? LeekWars.hatSizes[this.hat] : null }
+		get handImage() {
+			return "/image/fight/leek_hand" + (this.leek.skin === 15 ? "_gold" : "") + ".png"
+		}
 	}
 </script>
 
