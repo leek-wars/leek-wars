@@ -2,7 +2,7 @@
 import Player from '@/component/player.vue'
 import { Bubble } from '@/component/player/game/bubble'
 import { Bulb } from '@/component/player/game/bulb'
-import { Acceleration, Adrenaline, Alteration, Antidote, Armor, Armoring, BallAndChain, Bandage, Bark, Burning, Carapace, ChipAnimation, Collar, Covetousness, Covid, Cure, DevilStrike, Doping, Drip, Elevation, Ferocity, Fertilizer, Flame, Flash, Fortress, Fracture, Helmet, Ice, Iceberg, Inversion, Jump, Knowledge, LeatherBoots, Liberation, Lightning, Loam, Meteorite, Mirror, Motivation, Pebble, Plague, Plasma, Precipitation, Protein, Punishment, Rage, Rampart, Reflexes, Regeneration, Remission, Rock, Rockfall, SevenLeagueBoots, Shield, Shock, SlowDown, Solidification, Soporific, Spark, Stalactite, Steroid, Stretching, Teleportation, Thorn, Toxin, Tranquilizer, Vaccine, Vampirization, Venom, Wall, WarmUp, Whip, WingedBoots, Wizardry } from '@/component/player/game/chips'
+import { Acceleration, Adrenaline, Alteration, Antidote, Armor, Armoring, Arsenic, BallAndChain, Bandage, Bark, BoxingGlove, Brainwashing, Bramble, Burning, Carapace, ChipAnimation, Collar, Covetousness, Covid, Crushing, Cure, Desintegration, DevilStrike, Dome, Doping, Drip, Elevation, Ferocity, Fertilizer, Flame, Flash, Fortress, Fracture, Grapple, Helmet, Ice, Iceberg, Inversion, Jump, Knowledge, LeatherBoots, Liberation, Lightning, Loam, Manumission, Meteorite, Mirror, Motivation, Mutation, Pebble, Plague, Plasma, Precipitation, Protein, Punishment, Rage, Rampart, Reflexes, Regeneration, Remission, Repotting, Resurrection, Rock, Rockfall, Serum, SevenLeagueBoots, Shield, Shock, SlowDown, Solidification, Soporific, Spark, Stalactite, Steroid, Stretching, Teleportation, Therapy, Thorn, Toxin, Tranquilizer, Transmutation, Vaccine, Vampirization, Venom, Wall, WarmUp, Whip, WingedBoots, Wizardry } from '@/component/player/game/chips'
 import { EntityDirection, EntityType, FightEntity } from '@/component/player/game/entity'
 import { Ground } from '@/component/player/game/ground'
 import { Leek } from '@/component/player/game/leek'
@@ -156,7 +156,7 @@ const CHIPS = [
 	null, // 46
 	Remission, // 47
 	Carapace, // 48
-	null, // 49
+	Resurrection, // 49
 	DevilStrike, // 50
 	Whip, // 51
 	Loam, // 52
@@ -184,12 +184,30 @@ const CHIPS = [
 	Precipitation, // 74
 	Alteration, // 75
 	Plasma, // 76
-	null, // 77
+	null, // 77 bulb
 	Jump, // 78
 	Covid, // 79
 	Elevation, // 80
 	Knowledge, // 81
 	Wizardry, // 82
+	Repotting, // 83
+	Therapy, // 84
+	Mutation, // 85
+	Desintegration, // 86
+	Transmutation, // 87
+	Grapple, // 88
+	BoxingGlove, // 89
+	null, // 90
+	null, // 91
+	null, // 92 bulb
+	null, // 93 bulb
+	Serum, // 94
+	Crushing, // 95
+	Brainwashing, // 96
+	Arsenic, // 97
+	Bramble, // 98
+	Dome, // 99
+	Manumission, // 100
 ]
 
 class Game {
