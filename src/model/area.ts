@@ -9,5 +9,7 @@ enum Area {
 	X_1 = 8,
 	X_2 = 9,
 	X_3 = 10,
+	SQUARE_1 = 11,
+	SQUARE_2 = 12,
 }
 export { Area }

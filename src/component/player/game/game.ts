@@ -1803,6 +1803,20 @@ class Game {
 				add_cell(-i, i)
 				add_cell(-i, -i)
 			}
+		} else if (area === Area.SQUARE_1) {
+			init_lines(3)
+			for (let i = -1; i <= 1; ++i) {
+				for (let j = -1; j <= 1; ++j) {
+					add_cell(i, j)
+				}
+			}
+		} else if (area === Area.SQUARE_2) {
+			init_lines(5)
+			for (let i = -2; i <= 2; ++i) {
+				for (let j = -2; j <= 2; ++j) {
+					add_cell(i, j)
+				}
+			}
 		}
 		return this.createEffectAreaCells(cells, lines, convert)
 	}

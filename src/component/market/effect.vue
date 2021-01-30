@@ -106,8 +106,8 @@
 			if ([EffectType.HEAL, EffectType.VITALITY].includes(this.effect.id)) { return 'wisdom' }
 			if ([EffectType.ABSOLUTE_SHIELD, EffectType.RELATIVE_SHIELD].includes(this.effect.id)) { return 'resistance' }
 			if ([EffectType.DAMAGE_RETURN].includes(this.effect.id)) { return 'agility' }
-			if ([EffectType.BUFF_STRENGTH, EffectType.BUFF_RESISTANCE, EffectType.BUFF_WISDOM, EffectType.BUFF_AGILITY, EffectType.BUFF_MP, EffectType.BUFF_TP, EffectType.AFTEREFFECT, EffectType.NOVA_DAMAGE].includes(this.effect.id)) { return 'science' }
-			if ([EffectType.POISON, EffectType.SHACKLE_MP, EffectType.SHACKLE_TP, EffectType.SHACKLE_STRENGTH, EffectType.SHACKLE_MAGIC].includes(this.effect.id)) { return 'magic' }
+			if ([EffectType.BUFF_STRENGTH, EffectType.BUFF_RESISTANCE, EffectType.BUFF_WISDOM, EffectType.BUFF_AGILITY, EffectType.BUFF_MP, EffectType.BUFF_TP, EffectType.AFTEREFFECT, EffectType.NOVA_DAMAGE, EffectType.NOVA_VITALITY].includes(this.effect.id)) { return 'science' }
+			if ([EffectType.POISON, EffectType.SHACKLE_MP, EffectType.SHACKLE_TP, EffectType.SHACKLE_STRENGTH, EffectType.SHACKLE_MAGIC, EffectType.SHACKLE_AGILITY, EffectType.SHACKLE_WISDOM].includes(this.effect.id)) { return 'magic' }
 		}
 	}
 </script>
