@@ -10,6 +10,7 @@ import { Team } from '@/model/team'
 import Vue from 'vue'
 import Vuex, { Store } from 'vuex'
 import { AI } from './ai'
+import { fileSystem } from './filesystem'
 import { Leek } from './leek'
 import { vueMain } from './vue'
 import { Weapon } from './weapon'
@@ -97,6 +98,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			state.unreadMessages = 0
 			state.unreadNotifications = 0
 			state.chat = {}
+			fileSystem.clear()
 			console.clear()
 		},
 		"wsconnected"(state: LeekWarsState) {
