@@ -987,11 +987,12 @@
 	}
 
 	.problems-resizer {
-		height: 8px;
+		height: 10px;
 		cursor: ns-resize;
 		position: absolute;
 		left: 0;
 		right: 0;
+		z-index: 1;
 	}
 	.status {
 		flex: 0 0 36px;
