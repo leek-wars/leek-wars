@@ -74,7 +74,7 @@
 				<lw-code :code="detailDialogContent.details.alias" :single="true" />
 			</div>
 			<div v-if="detailDialogContent.details.type">
-				<div v-if="detailDialogContent.details.op">
+				<div v-if="detailDialogContent.details.op && detailDialogContent.details.type.args">
 					<lw-type :type="detailDialogContent.details.type.args[0]" />
 					{{ detailDialogContent.details.alias }}
 					<lw-type :type="detailDialogContent.details.type.args[1]" />
