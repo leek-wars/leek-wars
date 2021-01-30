@@ -4,44 +4,32 @@
 			<slot :on="on"></slot>
 		</template>
 		<div class="card" @mouseenter="mouse = true" @mouseleave="mouse = false">
-			<loader v-if="!farmer" :size="30" />
+			<loader v-if="!composition" :size="30" />
 			<template v-else>
 				<div class="flex">
-					<router-link :to="'/farmer/' + farmer.id">
-						<avatar :farmer="farmer" />
+					<router-link :to="'/team/' + composition.team.id">
+						<emblem :team="composition.team" />
 					</router-link>
 					<div class="info">
 						<span class="name">
-							<img :src="farmer.connected ? '/image/connected.png' : '/image/disconnected.png'">
-							<router-link :to="'/farmer/' + farmer.id" :class="farmer.color" class="text">{{ farmer.name }}</router-link>
-							<router-link v-if="farmer.team" :to="'/team/' + farmer.team.id">
+							<router-link :to="'/team/' + composition.team.id" class="text">{{ composition.team.name }} • {{ composition.name }}</router-link>
+							<!-- <router-link v-if="farmer.team" :to="'/team/' + farmer.team.id">
 								<emblem :team="farmer.team" :title="farmer.team.name" />
-							</router-link>
-							<img v-if="farmer.country" :src="'/image/flag/' + farmer.country + '.png'" :title="$t('country.' + farmer.country)" class="country">
-							<lw-title v-if="farmer.title.length" :title="farmer.title" />
-							<div class="spacer"></div>
-							<v-btn v-if="!$store.state.farmer || id != $store.state.farmer.id" icon small @click="sendMessage()">
-								<v-icon>mdi-chat</v-icon>
-							</v-btn>
+							</router-link> -->
 						</span>
-						<div>
-							<router-link :to="'/trophies/' + farmer.id" class="stat">
-								<img class="icon" src="/image/icon/grey/trophy.png">{{ $t('main.n_trophies', [farmer.trophies]) }}
-							</router-link>
-							<router-link v-if="farmer.forum_messages" :to="'/search?farmer=' + farmer.name + '&order=date'" class="stat">
-								<img class="icon" src="/image/forum.png">{{ $t('main.n_messages', [farmer.forum_messages]) }}
-							</router-link>
-						</div>
+						<talent :id="composition.id" :talent="composition.talent" category="team" />
+						<ranking-badge v-if="composition && composition.ranking <= 1000 && composition.in_garden" :id="composition.id" :ranking="composition.ranking" category="team" />
+						<span class="level">
+							• {{ composition.leeks.length }} <img src="/image/icon/black/leek.png">
+							• {{ $t('main.level_n', [composition.total_level]) }}
+						</span>
+						<v-btn class="expand" icon small @click="expand_leeks = !expand_leeks">
+							<v-icon v-if="expand_leeks">mdi-chevron-up</v-icon>
+							<v-icon v-else>mdi-chevron-down</v-icon>
+						</v-btn>
 					</div>
 				</div>
-				<talent :id="farmer.id" :talent="farmer.talent" category="farmer" />
-				<span class="talent-more">({{ farmer.talent_more >= 0 ? '+' + farmer.talent_more : farmer.talent_more }})</span>
-				<ranking-badge v-if="farmer && farmer.ranking <= 1000 && farmer.in_garden" :id="farmer.id" :ranking="farmer.ranking" category="farmer" />
-				<span class="level">• {{ $t('main.level_n', [farmer.total_level]) }}</span>
-				<v-btn class="expand" icon small @click="expand_leeks = !expand_leeks">
-					<v-icon v-if="expand_leeks">mdi-chevron-up</v-icon>
-					<v-icon v-else>mdi-chevron-down</v-icon>
-				</v-btn>
+
 				<table v-if="expand_leeks" class="leeks">
 					<tr>
 						<th>{{ $t('main.name') }}</th>
@@ -49,7 +37,7 @@
 						<th><img src="/image/talent.png"></th>
 						<th v-for="c in LeekWars.characteristics" :key="c" class="c"><img :src="'/image/charac/small/' + c + '.png'" :class="{zero: sums[c] === 0}"></th>
 					</tr>
-					<tr v-for="leek in farmer.leeks" :key="leek.id">
+					<tr v-for="leek in composition.leeks" :key="leek.id">
 						<td class="leek-name">
 							<rich-tooltip-leek :id="leek.id" v-slot="{ on }" :bottom="true" @input="setParent">
 								<router-link :to="'/leek/' + leek.id">
@@ -72,15 +60,17 @@
 	import { Leek } from '@/model/leek'
 	import { LeekWars } from '@/model/leekwars'
 	import { store } from '@/model/store'
+	import { Composition } from '@/model/team'
 	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
+
 	@Component({})
-	export default class RichTooltipFarmer extends Vue {
+	export default class RichTooltipComposition extends Vue {
 		@Prop({required: true}) id!: number
 		@Prop() disabled!: boolean
 		@Prop() bottom!: boolean
 		@Prop() instant!: boolean
 		content_created: boolean = false
-		farmer: Farmer | null = null
+		composition: Composition | null = null
 		expand_leeks: boolean = false
 		sums: {[key: string]: number} = {}
 		locked: boolean = false
@@ -91,23 +81,22 @@
 			return this.instant ? 0 : 200
 		}
 		get _close_delay() {
-			return this.instant ? 0 : 200
+			return this.instant ? 0 : 20000
 		}
 		@Watch('id')
 		update() {
-			this.farmer = null
+			this.composition = null
 			this.content_created = false
 		}
 		open(v: boolean) {
-			this.$emit('input', v)
-			this.expand_leeks = localStorage.getItem('richtooltipfarmer/expanded') === 'true'
+			this.expand_leeks = localStorage.getItem('rich-tooltip-composition/expanded') === 'true'
 			if (this.content_created) { return }
 			this.content_created = true
-			if (this.id > 0 && !this.farmer) {
-				LeekWars.get<Farmer>('farmer/rich-tooltip/' + this.id).then(farmer => {
-					this.farmer = farmer
+			if (this.id > 0 && !this.composition) {
+				LeekWars.get<Composition>('team/composition-rich-tooltip/' + this.id).then(composition => {
+					this.composition = composition
 					for (const c of LeekWars.characteristics) {
-						Vue.set(this.sums, c, Object.values(this.farmer.leeks).reduce((sum: number, leek: any) => sum + leek[c], 0))
+						Vue.set(this.sums, c, Object.values(this.composition.leeks).reduce((sum: number, leek: any) => sum + leek[c], 0))
 					}
 					if (this.expand_leeks) {
 						(this.$refs.menu as any).onResize()
@@ -115,19 +104,9 @@
 				})
 			}
 		}
-		sendMessage() {
-			if (!this.farmer) { return }
-			LeekWars.get('message/find-conversation/' + this.farmer.id).then(conversation => {
-				store.commit('new-conversation', conversation)
-				this.$router.push('/messages/conversation/' + conversation.id)
-			}).error(() => {
-				if (!this.farmer) { return }
-				this.$router.push('/messages/new/' + this.farmer.id + '/' + this.farmer.name + '/' + this.farmer.avatar_changed)
-			})
-		}
 		@Watch('expand_leeks')
 		updateExpand() {
-			localStorage.setItem('richtooltipfarmer/expanded', this.expand_leeks ? 'true' : 'false')
+			localStorage.setItem('rich-tooltip-composition/expanded', this.expand_leeks ? 'true' : 'false')
 		}
 
 		setParent(event: boolean) {
@@ -144,11 +123,12 @@
 	.card {
 		padding: 8px;
 	}
-	.avatar {
-		width: 50px;
-		height: 50px;
+	.emblem {
+		width: 60px;
+		height: 60px;
 		flex-grow: 0;
-		flex-basis: 50px;
+		flex-basis: 60px;
+		vertical-align: bottom;
 	}
 	.spacer {
 		flex: 1;
@@ -178,8 +158,6 @@
 		align-items: center;
 		font-size: 16px;
 		height: 25px;
-		margin-right: -4px;
-		margin-bottom: 6px;
 		img {
 			width: 17px;
 			margin-right: 3px;
@@ -217,6 +195,12 @@
 		vertical-align: top;
 		margin-top: 10px;
 		color: #555;
+		img {
+			width: 16px;
+			opacity: 0.5;
+			margin: 0 3px;
+			vertical-align: top;
+		}
 	}
 	.expand {
 		vertical-align: top;

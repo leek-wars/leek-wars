@@ -20,7 +20,9 @@
 				</rich-tooltip-farmer>
 			</router-link>
 			<router-link v-else-if="fight.type == FightType.TEAM" :to="'/team/' + fight.team1" class="fighter">
-				<div>[{{ fight.team1_name }}]</div>
+				<rich-tooltip-composition :id="fight.composition1" v-slot="{ on }">
+					<div v-on="on">[{{ fight.team1_name }}]</div>
+				</rich-tooltip-composition>
 			</router-link>
 			<router-link :to="'/fight/' + fight.id" class="center">
 				<v-icon v-if="fight.status == 0" class="timersand">mdi-timer-sand-empty</v-icon>
@@ -39,7 +41,9 @@
 				</rich-tooltip-farmer>
 			</router-link>
 			<router-link v-else-if="fight.type == FightType.TEAM" :to="'/team/' + fight.team2" class="fighter">
-				<div>[{{ fight.team2_name }}]</div>
+				<rich-tooltip-composition :id="fight.composition2" v-slot="{ on }">
+					<div v-on="on">[{{ fight.team2_name }}]</div>
+				</rich-tooltip-composition>
 			</router-link>
 		</div>
 		<div class="time">{{ LeekWars.formatDuration(fight.date) }}</div>

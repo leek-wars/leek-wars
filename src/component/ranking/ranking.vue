@@ -132,7 +132,7 @@
 							<th class="ranking-column">{{ $t('place') }}</th>
 							<th>
 								<router-link :to="'/ranking/team/name' + (active ? '/active' : '') + '/page-' + page">
-									<span>{{ $t('leek') }}</span>
+									<span>{{ $t('main.team') }}</span>
 									<v-icon v-if="order === 'name'">mdi-chevron-up</v-icon>
 								</router-link>
 							</th>

@@ -213,12 +213,16 @@
 				<div slot="content" class="content team center">
 					<loader v-if="!farmer" />
 					<div v-else-if="farmer.team">
-						<router-link :to="'/team/' + farmer.team.id">
-							<emblem :team="farmer.team" />
-							<br>
-							<h2>{{ farmer.team.name }}</h2>
-							{{ $t('main.level_n', [farmer.team.level]) }}
-						</router-link>
+						<rich-tooltip-team :id="farmer.team.id" v-slot="{ on }" :bottom="true">
+							<router-link :to="'/team/' + farmer.team.id">
+								<div v-on="on">
+									<emblem :team="farmer.team" />
+									<br>
+									<h2>{{ farmer.team.name }}</h2>
+									{{ $t('main.level_n', [farmer.team.level]) }}
+								</div>
+							</router-link>
+						</rich-tooltip-team>
 					</div>
 					<div v-else>
 						<div v-if="myFarmer">
