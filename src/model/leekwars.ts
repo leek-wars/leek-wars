@@ -873,12 +873,15 @@ function chipSound(id: number) {
 		29: ['buff'], 30: ['buff'], 31: ['buff'], 32: ['buff'], 33: ['buff'], 34: ['buff'],
 		35: ['buff'], 36: ['liberation'], 37: ['teleportation'], 38: ['heal'], 39: ['teleportation'],
 		40: ['bulb'], 41: ['bulb'], 42: ['bulb'], 43: ['bulb'], 44: ['bulb'], 45: ['bulb'], 46: ['bulb'],
-		47: ['heal'], 48: ['shield'], 49: ['heal'], 50: ['fire', 0, 'rock', 0.25, 'rock', 0.2, 'rock', 0.3, 'rock', 0.2, 'rock'],
+		47: ['heal'], 48: ['shield'], 49: ['resurrection'], 50: ['fire', 0, 'rock', 0.25, 'rock', 0.2, 'rock', 0.3, 'rock', 0.2, 'rock'],
 		51: ['buff'], 52: ['heal'], 53: ['heal'], 54: ['buff'], 55: ['debuff'], 56: ['debuff'], 57: ['debuff'],
 		58: ['debuff'], 59: ['debuff'], 60: ['buff'], 61: ['poison'], 62: ['poison'], 63: ['poison'],
 		64: ['buff'], 65: ['buff'], 66: ['buff'], 67: ['buff'], 68: ['buff'], 69: ['fire'], 70: ['liberation'],
 		71: ['sword'], 72: ['buff'], 73: ['heal'], 74: ['buff'], 75: ['alteration.wav'], 76: ['lightning', 0, 'electrisor'], 77: ['bulb'], 78: ['move'],
-		79: ['poison'], 80: ['heal'], 81: ['buff'], 82: ['buff']
+		79: ['poison'], 80: ['heal'], 81: ['buff'], 82: ['buff'],
+		83: ['teleportation'], 84: ['heal'], 85: ['alteration.wav'], 86: ['alteration.wav'], 87: ['alteration.wav'],
+		88: [], 89: [], 92: ['bulb'], 93: ['bulb'], 94: ['heal'], 95: ['debuff'], 96: ['debuff'], 97: ['poison'],
+		98: ['buff'], 99: ['shield'], 100: ['liberation'],
 	} as {[key: number]: any})[id]
 }
 function playSound(item: any, type: string) {
