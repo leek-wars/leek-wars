@@ -13,9 +13,9 @@ class FileSystem {
 	public rootFolder!: Folder
 	public bin!: Folder
 	private initialized: boolean = false
-	private leekAIs: any = {}
+	private leekAIs: any = {} // Used in test dialog
 	private items: {[key: string]: AI | Folder} = {}
-	private promise!: Promise<void>
+	private promise: Promise<void> | null = null
 	private botAIs = [
 		{id: -1, name: 'lambda', path: '/lambda', bot: true, valid: true, color: 'green', specs: [
 			"basic_items", "basic_strategy", "reachable_cells", "combos"
@@ -213,6 +213,16 @@ class FileSystem {
 			return this.getFolderPath(this.folderById[folder.parent]) + folder.name + '/'
 		}
 		return folder.name + '/'
+	}
+
+	public clear() {
+		this.ais = {}
+		this.folderById = {}
+		this.aiByFullPath = {}
+		this.leekAIs = {}
+		this.items = {}
+		this.promise = null
+		this.initialized = false
 	}
 }
 
