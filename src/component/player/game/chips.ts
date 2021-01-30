@@ -1246,6 +1246,21 @@ class Manumission extends ChipAnimation {
 	}
 }
 
+class Resurrection extends ChipAnimation {
+	static textures = [T.cloud, T.ray]
+	static sounds = [S.resurrection]
+	public delay = 1
+	constructor(game: Game) { super(game, S.resurrection, 35) }
+	public launch(launchPos: Position, targetPos: Position, targets: FightEntity[], targetCell: Cell) {
+		super.launch(launchPos, targetPos, targets, targetCell)
+		this.game.particles.addImage(targetPos.x, targetPos.y, 70, 0, 0, 0, 0, T.ray, 80)
+		this.game.particles.addImage(targetPos.x - 50, targetPos.y, 150, 0.5, 0, 0, 0, T.cloud, 80)
+		this.game.particles.addImage(targetPos.x + 50, targetPos.y, 150, -0.5, 0, 0, 0, T.cloud, 80)
+		this.game.particles.addImage(targetPos.x + 10, targetPos.y, 160, 0.2, 0, 0, 0, T.cloud, 80)
+		this.game.particles.addImage(targetPos.x - 10, targetPos.y, 160, -0.2, 0, 0, 0, T.cloud, 80)
+	}
+}
+
 class Grapple extends ChipAnimation {
 	static textures = []
 	static sounds = []

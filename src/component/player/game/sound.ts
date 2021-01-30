@@ -103,6 +103,7 @@ class S {
 	public static teleportation = new Sound(LeekWars.STATIC + "sound/teleportation.mp3", VOL_SPECIAL_SOUND)
 	public static debuff = new Sound(LeekWars.STATIC + "sound/debuff.mp3", VOL_OFFENSIVE_SOUND)
 	public static alteration = new Sound(LeekWars.STATIC + "sound/alteration.wav", VOL_OFFENSIVE_SOUND)
+	public static resurrection = new Sound(LeekWars.STATIC + "sound/resurrection.mp3", VOL_OFFENSIVE_SOUND)
 	// other
 	public static move = new Sound(LeekWars.STATIC + "sound/move.mp3", VOL_OTHER_SOUND)
 	public static lama = new Sound(LeekWars.STATIC + "sound/lama.mp3", VOL_OTHER_SOUND)
