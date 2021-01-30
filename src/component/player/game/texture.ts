@@ -243,11 +243,14 @@ class T {
 	public static halo = new Texture(LeekWars.STATIC + 'image/fight/halo.png')
 	public static halo_green = new Texture(LeekWars.STATIC + 'image/fight/halo_green.png')
 	public static heal_cross = new Texture(LeekWars.STATIC + 'image/fight/heal_cross.png')
+	public static nova_particle = new Texture(LeekWars.STATIC + 'image/fight/nova_particle.png')
 	public static liberation_halo = new Texture(LeekWars.STATIC + 'image/fight/liberation.png')
 	public static antidote_halo = new Texture(LeekWars.STATIC + 'image/fight/antidote.png')
+	public static manumission_halo = new Texture(LeekWars.STATIC + 'image/fight/manumission.png')
 	public static poison_aureol = new Texture(LeekWars.STATIC + 'image/fight/poison_aureol.png')
 	public static shackle_aureol = new Texture(LeekWars.STATIC + 'image/fight/shackle_aureol.png')
 	public static damage_return_aureol = new Texture(LeekWars.STATIC + 'image/fight/damage_return_aureol.png')
+	public static nova_aureol = new Texture(LeekWars.STATIC + 'image/fight/nova_aureol.png')
 	public static chip_burning = new Texture(LeekWars.STATIC + 'image/chip/glyph/burning.png')
 	public static spike1 = new Texture(LeekWars.STATIC + 'image/fight/spike1.png', true, 1)
 	public static spike2 = new Texture(LeekWars.STATIC + 'image/fight/spike2.png', true, 1)
@@ -287,6 +290,7 @@ class T {
 	public static chip_fortress = new Texture(LeekWars.STATIC + 'image/chip/glyph/fortress.png')
 	public static chip_rampart = new Texture(LeekWars.STATIC + 'image/chip/glyph/rampart.png')
 	public static chip_carapace = new Texture(LeekWars.STATIC + 'image/chip/glyph/carapace.png')
+	public static chip_dome = new Texture(LeekWars.STATIC + 'image/chip/glyph/dome.png')
 
 	// Heal
 	public static chip_bandage = new Texture(LeekWars.STATIC + 'image/chip/glyph/bandage.png')
@@ -296,6 +300,8 @@ class T {
 	public static chip_drip = new Texture(LeekWars.STATIC + 'image/chip/glyph/drip.png')
 	public static chip_armoring = new Texture(LeekWars.STATIC + 'image/chip/glyph/armoring.png')
 	public static chip_remission = new Texture(LeekWars.STATIC + 'image/chip/glyph/remission.png')
+	public static chip_therapy = new Texture(LeekWars.STATIC + 'image/chip/glyph/therapy.png')
+	public static chip_serum = new Texture(LeekWars.STATIC + 'image/chip/glyph/serum.png')
 	public static chip_loam = new Texture(LeekWars.STATIC + 'image/chip/glyph/loam.png')
 	public static chip_fertilizer = new Texture(LeekWars.STATIC + 'image/chip/glyph/fertilizer.png')
 	public static chip_elevation = new Texture(LeekWars.STATIC + 'image/chip/glyph/elevation.png')
@@ -303,12 +309,14 @@ class T {
 	// Damage return
 	public static chip_thorn = new Texture(LeekWars.STATIC + 'image/chip/glyph/thorn.png')
 	public static chip_mirror = new Texture(LeekWars.STATIC + 'image/chip/glyph/mirror.png')
+	public static chip_bramble = new Texture(LeekWars.STATIC + 'image/chip/glyph/bramble.png')
 
 	// Poison
 	public static chip_venom = new Texture(LeekWars.STATIC + 'image/chip/glyph/venom.png')
 	public static chip_toxin = new Texture(LeekWars.STATIC + 'image/chip/glyph/toxin.png')
 	public static chip_plague = new Texture(LeekWars.STATIC + 'image/chip/glyph/plague.png')
 	public static chip_covid = new Texture(LeekWars.STATIC + 'image/chip/glyph/covid.png')
+	public static chip_arsenic = new Texture(LeekWars.STATIC + 'image/chip/glyph/arsenic.png')
 
 	// Shackles
 	public static chip_slow_down = new Texture(LeekWars.STATIC + 'image/chip/glyph/slow_down.png')
@@ -316,6 +324,12 @@ class T {
 	public static chip_tranquilizer = new Texture(LeekWars.STATIC + 'image/chip/glyph/tranquilizer.png')
 	public static chip_soporific = new Texture(LeekWars.STATIC + 'image/chip/glyph/soporific.png')
 	public static chip_fracture = new Texture(LeekWars.STATIC + 'image/chip/glyph/fracture.png')
+	public static chip_brainwashing = new Texture(LeekWars.STATIC + 'image/chip/glyph/brainwashing.png')
+	public static chip_crushing = new Texture(LeekWars.STATIC + 'image/chip/glyph/crushing.png')
+
+	// Nova
+	public static chip_mutation = new Texture(LeekWars.STATIC + 'image/chip/glyph/mutation.png')
+	public static chip_transmutation = new Texture(LeekWars.STATIC + 'image/chip/glyph/transmutation.png')
 
 	// Lama
 	public static lama = new Texture(LeekWars.STATIC + 'image/fight/lama_big.png')

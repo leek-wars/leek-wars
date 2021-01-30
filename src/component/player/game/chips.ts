@@ -81,18 +81,37 @@ abstract class ChipAnimation {
 			this.createChipHealEntity(target)
 		}
 	}
+	public createChipNovaEntity(target: FightEntity) {
+		const dx = Math.random() * 100 - 50
+		const x = target.ox + dx
+		const y = target.oy + Math.random() * 30 - 15
+		const z = Math.random() * 10
+		const speed = 1.5 + (50 - Math.abs(dx)) / 50
+		const life = 80 - Math.abs(dx)
+		this.game.particles.addImage(x, y, z, 0, 0, speed, 0, T.nova_particle, life)
+	}
+	public createChipNova(targets: FightEntity[]) {
+		for (const target of targets) {
+			this.createChipHealEntity(target)
+		}
+	}
 }
 
 class ChipShieldAnimation extends ChipAnimation {
 	public texture: Texture
-	constructor(game: Game, texture: Texture) {
+	public area: Area
+	constructor(game: Game, texture: Texture, area: Area = Area.SINGLE_CELL) {
 		super(game, S.shield, 60)
 		this.texture = texture
+		this.area = area
 	}
 	public launch(launchCell: Cell, targetPos: Position, targets: FightEntity[], targetCell: Cell) {
 		super.launch(launchCell, targetPos, targets, targetCell)
 		this.createChipAureol(targets, T.shield_aureol)
 		this.createChipImage(targets, this.texture)
+		if (this.area !== Area.SINGLE_CELL) {
+			this.game.setEffectArea(targetCell, this.area, 'orange')
+		}
 	}
 }
 
@@ -148,6 +167,35 @@ class ChipHealAnimation extends ChipAnimation {
 		if (this.delay <= 0) {
 			if (this.targets) {
 				this.createChipHeal(this.targets)
+			}
+			this.delay = 2
+		}
+	}
+}
+
+class ChipNovaVitalityAnimation extends ChipAnimation {
+	public texture: Texture
+	public delay: number = 2
+	public area: Area
+	constructor(game: Game, texture: any, area: Area = Area.SINGLE_CELL) {
+		super(game, S.alteration, 45)
+		this.texture = texture
+		this.area = area
+	}
+	public launch(launchCell: Cell, targetPos: Position, targets: FightEntity[], targetCell: Cell) {
+		super.launch(launchCell, targetPos, targets, targetCell)
+		this.createChipAureol(targets, T.nova_aureol)
+		this.createChipImage(targets, this.texture)
+		if (this.area !== Area.SINGLE_CELL) {
+			this.game.setEffectArea(targetCell, this.area, '#26ffba')
+		}
+	}
+	public update(dt: number) {
+		super.update(dt)
+		this.delay -= dt
+		if (this.delay <= 0) {
+			if (this.targets) {
+				this.createChipNova(this.targets)
 			}
 			this.delay = 2
 		}
@@ -211,7 +259,7 @@ class ChipDamageReturnAnimation extends ChipAnimation {
 class Adrenaline extends ChipBoostAnimation {
 	static textures = [T.buff_aureol, T.halo, T.chip_adrenaline]
 	static sounds = [S.buff]
-	constructor(game: Game) { super(game, T.chip_adrenaline, Area.CIRCLE1) }
+	constructor(game: Game) { super(game, T.chip_adrenaline) }
 }
 class Armor extends ChipShieldAnimation {
 	static textures = [T.shield_aureol, T.chip_armor]
@@ -346,6 +394,11 @@ class Helmet extends ChipShieldAnimation {
 	static textures = [T.shield_aureol, T.chip_helmet]
 	constructor(game: Game) { super(game, T.chip_helmet) }
 }
+class Dome extends ChipShieldAnimation {
+	static sounds = [S.shield]
+	static textures = [T.shield_aureol, T.chip_dome]
+	constructor(game: Game) { super(game, T.chip_dome, Area.CIRCLE3) }
+}
 
 class Ice extends ChipAnimation {
 	static textures = [T.ice_small]
@@ -419,6 +472,55 @@ class Inversion extends ChipAnimation {
 		}
 	}
 }
+
+class Repotting extends ChipAnimation {
+	static textures = []
+	static sounds = [S.teleportation]
+
+	public inverted = false
+	public launchPos!: Position
+	public target: any
+	constructor(game: Game) {
+		super(game, S.teleportation, 120)
+	}
+	public launch(launchPos: Position, targetPos: Position, targets: FightEntity[], targetCell: Cell, launcher: FightEntity) {
+		super.launch(launchPos, targetPos, targets, targetCell, launcher)
+		this.target = targets[0]
+		this.launchPos = launchPos
+	}
+	public update(dt: number) {
+		super.update(dt)
+		if (Math.random() > 0.8 && this.duration > 40) {
+			const xx = Math.random() * 60 - 30
+			const x1 = this.launchPos.x + xx
+			const y1 = this.launchPos.y
+			const x2 = this.position.x + xx
+			const y2 = this.position.y
+			const z = 0
+			const dz = 1.7
+			const dx = 0
+			const dy = 0
+			const angle = 0
+			const sx = 10
+			const sy = 10
+			const dsx = 0
+			const dsy = 0.6
+			const color = ['#0a0', '#0f0', '#7f7'][Math.floor(Math.random() * 3)]
+			const life = 50
+			const alpha = 0.4
+			this.game.particles.addRectangle(x1, y1, z, dx, dy, dz, angle, sx, sy, dsx, dsy, color, alpha, life)
+			this.game.particles.addRectangle(x2, y2, z, dx, dy, dz, angle, sx, sy, dsx, dsy, color, alpha, life)
+		}
+		if (!this.inverted && this.duration < 40 && this.launcher) {
+			const cell = this.launcher.cell
+			this.launcher.setCell(this.target.cell)
+			this.target.setCell(cell)
+			this.game.updateReachableCells()
+			this.inverted = true
+		}
+	}
+}
+
 class LeatherBoots extends ChipBoostAnimation {
 	static textures = [T.buff_aureol, T.halo, T.chip_leather_boots]
 	static sounds = [S.buff]
@@ -522,12 +624,12 @@ class Motivation extends ChipBoostAnimation {
 	constructor(game: Game) { super(game, T.chip_motivation) }
 }
 class Pebble extends ChipAnimation {
-	static textures = [T.pebble_small]
+	static textures = [T.forest_rock_small]
 	static sounds = [S.rock]
 	constructor(game: Game) { super(game, S.rock, 30) }
 	public launch(launchPos: Position, targetPos: Position, targets: FightEntity[], targetCell: Cell) {
 		super.launch(launchPos, targetPos, targets, targetCell)
-		this.game.particles.addGarbage(targetPos.x, targetPos.y, 100, 0, 0, 2, T.pebble_small, 1, 0)
+		this.game.particles.addGarbage(targetPos.x, targetPos.y, 100, 0, 0, 2, T.forest_rock_small, 1, 0, 0.5)
 	}
 }
 class Protein extends ChipBoostAnimation {
@@ -559,6 +661,16 @@ class Remission extends ChipHealAnimation {
 	static textures = [T.cure_aureol, T.heal_cross, T.chip_remission]
 	static sounds = [S.heal]
 	constructor(game: Game) { super(game, T.chip_remission) }
+}
+class Therapy extends ChipHealAnimation {
+	static textures = [T.cure_aureol, T.heal_cross, T.chip_therapy]
+	static sounds = [S.heal]
+	constructor(game: Game) { super(game, T.chip_therapy) }
+}
+class Serum extends ChipHealAnimation {
+	static textures = [T.cure_aureol, T.heal_cross, T.chip_serum]
+	static sounds = [S.heal]
+	constructor(game: Game) { super(game, T.chip_serum) }
 }
 class Elevation extends ChipHealAnimation {
 	static textures = [T.cure_aureol, T.heal_cross, T.chip_elevation]
@@ -785,6 +897,17 @@ class Fracture extends ChipDebuffAnimation {
 	static sounds = [S.debuff]
 	constructor(game: Game) { super(game, T.chip_fracture) }
 }
+class Crushing extends ChipDebuffAnimation {
+	static textures = [T.shackle_aureol, T.chip_crushing]
+	static sounds = [S.debuff]
+	constructor(game: Game) { super(game, T.chip_crushing) }
+}
+class Brainwashing extends ChipDebuffAnimation {
+	static textures = [T.shackle_aureol, T.chip_brainwashing]
+	static sounds = [S.debuff]
+	constructor(game: Game) { super(game, T.chip_brainwashing) }
+}
+
 class Solidification extends ChipBoostAnimation {
 	static textures = [T.buff_aureol, T.halo, T.chip_solidification]
 	static sounds = [S.buff]
@@ -810,6 +933,12 @@ class Covid extends ChipPoisonAnimation {
 	static sounds = [S.poison]
 	constructor(game: Game) { super(game, T.chip_covid) }
 }
+class Arsenic extends ChipPoisonAnimation {
+	static textures = [T.poison_aureol, T.chip_arsenic]
+	static sounds = [S.poison]
+	constructor(game: Game) { super(game, T.chip_arsenic) }
+}
+
 class Thorn extends ChipDamageReturnAnimation {
 	static textures = [T.damage_return_aureol, T.chip_thorn]
 	static sounds = [S.buff]
@@ -820,6 +949,12 @@ class Mirror extends ChipDamageReturnAnimation {
 	static sounds = [S.buff]
 	constructor(game: Game) { super(game, T.chip_mirror, Area.CIRCLE2) }
 }
+class Bramble extends ChipDamageReturnAnimation {
+	static textures = [T.damage_return_aureol, T.chip_bramble]
+	static sounds = [S.buff]
+	constructor(game: Game) { super(game, T.chip_bramble) }
+}
+
 class Ferocity extends ChipBoostAnimation {
 	static textures = [T.buff_aureol, T.halo, T.chip_ferocity]
 	static sounds = [S.buff]
@@ -1003,13 +1138,14 @@ class Plasma extends ChipAnimation {
 	}
 }
 
-class Alteration extends ChipAnimation {
+class NovaDamageChip extends ChipAnimation {
 	static textures = [T.alteration]
 	static sounds = [S.alteration]
+	static DURATION = 60
 	public delay = 2
 	public directions: number[] = []
 	constructor(game: Game) {
-		super(game, S.alteration, 60)
+		super(game, S.alteration, NovaDamageChip.DURATION)
 	}
 	public launch(launchPos: Position, position: Position, targets: FightEntity[], targetCell: Cell) {
 		super.launch(launchPos, position, targets, targetCell)
@@ -1034,6 +1170,15 @@ class Alteration extends ChipAnimation {
 			}
 			this.delay = 4
 		}
+	}
+}
+
+class Alteration extends NovaDamageChip {
+}
+class Desintegration extends NovaDamageChip {
+	public launch(launchPos: Position, position: Position, targets: FightEntity[], targetCell: Cell) {
+		super.launch(launchPos, position, targets, targetCell)
+		this.game.setEffectArea(targetCell, Area.SQUARE_1, '#26ffba', NovaDamageChip.DURATION)
 	}
 }
 
@@ -1066,4 +1211,49 @@ class Jump extends ChipAnimation {
 	}
 }
 
-export { Alteration, Covid, ChipAnimation, Adrenaline, Armor, Acceleration, Antidote, Armoring, BallAndChain, Bandage, Bark, Burning, Carapace, Collar, Covetousness, Cure, DevilStrike, Doping, Drip, Elevation, Ferocity, Fertilizer, Flame, Flash, Fortress, Fracture, Helmet, Ice, Iceberg, Inversion, Jump, Knowledge, LeatherBoots, Liberation, Lightning, Loam, Meteorite, Mirror, Motivation, Pebble, Plague, Plasma, Precipitation, Protein, Punishment, Rage, Rampart, Reflexes, Regeneration, Remission, Rock, Rockfall, SevenLeagueBoots, Shield, Shock, SlowDown, Solidification, Soporific, Spark, Stalactite, Steroid, Stretching, Teleportation, Thorn, Toxin, Tranquilizer, Vaccine, Vampirization, Venom, Wall, WarmUp, Whip, WingedBoots, Wizardry }
+class Mutation extends ChipNovaVitalityAnimation {
+	static textures = [T.nova_aureol, T.nova_particle, T.chip_mutation]
+	static sounds = [S.alteration]
+	constructor(game: Game) { super(game, T.chip_mutation, Area.SQUARE_2) }
+}
+
+class Transmutation extends ChipNovaVitalityAnimation {
+	static textures = [T.nova_aureol, T.nova_particle, T.chip_transmutation]
+	static sounds = [S.alteration]
+	constructor(game: Game) { super(game, T.chip_transmutation, Area.SQUARE_1) }
+}
+
+class Manumission extends ChipAnimation {
+	static textures = [T.manumission_halo]
+	static sounds = [S.liberation]
+	public delay = 2
+	constructor(game: Game) {
+		super(game, S.liberation, 60)
+	}
+	public update(dt: number) {
+		super.update(dt)
+		if (!this.targets) { return  }
+		if (Math.random() > 0.5) {
+			let angle = Math.random() * Math.PI * 2
+			const dx = Math.cos(angle) * 2
+			const dy = Math.sin(angle)
+			angle = Math.atan2(dy, dx)
+			const x = this.position.x + dx * 10
+			const y = this.position.y + dy * 10
+			const z = 50
+			this.game.particles.addImage(x, y, z, dx, dy, 0, angle, T.manumission_halo, 60)
+		}
+	}
+}
+
+class Grapple extends ChipAnimation {
+	static textures = []
+	static sounds = []
+}
+
+class BoxingGlove extends ChipAnimation {
+	static textures = []
+	static sounds = []
+}
+
+export { Alteration, Arsenic, Adrenaline, Armor, Acceleration, Antidote, Armoring, BallAndChain, Bandage, Bark, BoxingGlove, Brainwashing, Bramble, Burning, Covid, ChipAnimation, Carapace, Collar, Covetousness, Crushing, Cure, Desintegration, DevilStrike, Dome, Doping, Drip, Elevation, Ferocity, Fertilizer, Flame, Flash, Fortress, Fracture, Grapple, Helmet, Ice, Iceberg, Inversion, Jump, Knowledge, LeatherBoots, Liberation, Lightning, Loam, Manumission, Meteorite, Mirror, Motivation, Mutation, Pebble, Plague, Plasma, Precipitation, Protein, Punishment, Rage, Rampart, Reflexes, Regeneration, Remission, Repotting, Resurrection, Rock, Rockfall, Serum, SevenLeagueBoots, Shield, Shock, SlowDown, Solidification, Soporific, Spark, Stalactite, Steroid, Stretching, Teleportation, Therapy, Thorn, Toxin, Tranquilizer, Transmutation, Vaccine, Vampirization, Venom, Wall, WarmUp, Whip, WingedBoots, Wizardry }
