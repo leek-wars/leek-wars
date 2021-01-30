@@ -173,7 +173,7 @@ Vue.directive('chat-code-latex', {
 		})
 		el.querySelectorAll('code').forEach((c) => {
 			if (c.innerHTML.indexOf("<br>") !== -1) {
-				const code = c.innerHTML.replace(/<br>/gi, "\n").trim()
+				const code = c.innerHTML.replace(/<br>/gi, "\n").replace(/&nbsp;/gi, "\t").trim()
 				LeekWars.createCodeArea(code, c)
 			} else {
 				c.classList.add('single')
