@@ -197,7 +197,7 @@
 			if (this.channel === 'team') {
 				if (!this.$store.state.chat.team) {
 					this.$store.commit('init-team-chat')
-					LeekWars.socket.send([SocketMessage.TEAM_CHAT_ENABLE])
+					LeekWars.socket.send([SocketMessage.TEAM_CHAT_ENABLE_FAST])
 				}
 			} else if (this.channel.startsWith('pm-')) {
 				const id = parseInt(this.channel.replace('pm-', ''), 10)

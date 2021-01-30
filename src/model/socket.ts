@@ -42,6 +42,8 @@ enum SocketMessage {
 	FIGHT_PROGRESS_REGISTER = 40,
 	FIGHT_PROGRESS = 41,
 	FIGHT_PROGRESS_UNREGISTER = 42,
+	TEAM_CHAT_ENABLE_FAST = 43,
+	TEAM_CHAT_RECEIVE_PACK = 44,
 }
 
 class Socket {
@@ -93,6 +95,10 @@ class Socket {
 				}
 				case SocketMessage.TEAM_CHAT_RECEIVE : {
 					store.commit('chat-team-receive', {message: data})
+					break
+				}
+				case SocketMessage.TEAM_CHAT_RECEIVE_PACK : {
+					store.commit('team-chat-receive-pack', data)
 					break
 				}
 				case SocketMessage.PONG: {
