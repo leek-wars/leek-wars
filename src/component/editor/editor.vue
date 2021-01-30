@@ -10,10 +10,10 @@
 					</div>
 					<v-menu v-model="fileMenu" :activator="LeekWars.mobile ? addMenuActivator : $refs.fileButton" offset-y>
 						<v-list>
-							<div v-if="currentFolder && currentFolder.id !== 0" class="menu-title">
+							<div v-if="currentFolder && currentFolder.id > 0" class="menu-title">
 								<v-icon>mdi-folder-outline</v-icon> {{ currentFolder.name }}
 							</div>
-							<v-list-item v-ripple @click="$refs.explorer.openNewAI(currentFolder)">
+							<v-list-item v-if="currentFolder && currentFolder.id !== -1" v-ripple @click="$refs.explorer.openNewAI(currentFolder)">
 								<v-icon class="list-icon">mdi-file-plus-outline</v-icon>
 								<v-list-item-content>
 									<v-list-item-title>{{ $t('new_ai') }}</v-list-item-title>
@@ -32,7 +32,7 @@
 									</v-list-item-title>
 								</v-list-item-content>
 							</v-list-item> -->
-							<v-list-item v-ripple @click="$refs.explorer.openNewFolder(currentFolder)">
+							<v-list-item v-if="currentFolder && currentFolder.id !== -1" v-ripple @click="$refs.explorer.openNewFolder(currentFolder)">
 								<v-icon class="list-icon">mdi-folder-plus-outline</v-icon>
 								<v-list-item-content>
 									<v-list-item-title>{{ $t('new_folder') }}</v-list-item-title>
@@ -813,7 +813,6 @@
 		margin: 10px;
 		background-color: white;
 		font-size: 14px;
-		margin-bottom: -6px;
 		box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
 	}
 	#app.app .ai-stats {

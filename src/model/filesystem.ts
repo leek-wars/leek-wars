@@ -11,6 +11,7 @@ class FileSystem {
 	public aiByFullPath: {[key: string]: AI} = {}
 	public aiCount: number = 0
 	public rootFolder!: Folder
+	public bin!: Folder
 	private initialized: boolean = false
 	private leekAIs: any = {}
 	private items: {[key: string]: AI | Folder} = {}
@@ -35,7 +36,7 @@ class FileSystem {
 		if (this.promise) { return this.promise }
 
 		return this.promise = new Promise((resolve, reject) => {
-			LeekWars.get<{ais: AI[], folders: any[], leek_ais: {[key: number]: number}}>('ai/get-farmer-ais').then(data => {
+			LeekWars.get<{ais: AI[], folders: any[], leek_ais: {[key: number]: number}, bin: AI[]}>('ai/get-farmer-ais').then(data => {
 				const folders: {[key: number]: any} = {}
 				for (const folder of data.folders) {
 					folders[folder.id] = folder
@@ -75,6 +76,17 @@ class FileSystem {
 				for (const ai of this.botAIs) {
 					Vue.set(this.ais, '' + ai.id, ai)
 				}
+				this.bin = new Folder(-1, 'recycle_bin', 0)
+				this.bin.items = []
+				for (const ai of data.bin) {
+					this.bin.items.push(new AIItem(ai, this.bin.id))
+					ai.path = this.getAIFullPath(ai)
+					ai.folderpath = this.getFolderPath(this.folderById[ai.folder])
+					Vue.set(this.aiByFullPath, ai.path, ai)
+					Vue.set(this.ais, '' + ai.id, ai)
+					this.items[ai.name] = ai
+				}
+				Vue.set(this.folderById, -1, this.bin)
 				this.initialized = true
 				resolve()
 			})
@@ -134,12 +146,43 @@ class FileSystem {
 
 	public deleteAI(ai: AI) {
 		const folder = this.folderById[ai.folder]
-		folder.items.splice(folder.items.findIndex((i) => !i.folder && (i as AIItem).ai === ai), 1)
-		Vue.delete(this.ais, '' + ai.id)
+		const item = folder.items.splice(folder.items.findIndex((i) => !i.folder && (i as AIItem).ai === ai), 1)
+		Vue.delete(this.aiByFullPath, ai.path)
 		store.commit('delete-ai', ai.id)
 		LeekWars.delete('ai/delete', {ai_id: ai.id}).error(error => LeekWars.toast(error))
-
 		LeekWars.analyzer.delete(ai)
+		// Ajout dans la corbeille
+		ai.folder = -1
+		this.bin.items.push(...item)
+	}
+
+	public destroyAI(ai: AI) {
+		const folder = this.folderById[ai.folder]
+		folder.items.splice(folder.items.findIndex((i) => !i.folder && (i as AIItem).ai === ai), 1)
+		Vue.delete(this.ais, '' + ai.id)
+		Vue.delete(this.aiByFullPath, ai.path)
+		LeekWars.delete('ai/destroy', {ai: ai.id}).error(error => LeekWars.toast(error))
+	}
+
+	public emptyBin() {
+		for (const item of this.bin.items) {
+			Vue.delete(this.ais, '' + (item as AIItem).ai.id)
+			Vue.delete(this.aiByFullPath, (item as AIItem).ai.path)
+		}
+		this.bin.items = []
+		LeekWars.delete('ai/bin').error(error => LeekWars.toast(error))
+	}
+
+	public restore(ai: AI) {
+		// Remove from bin
+		const item = this.bin.items.splice(this.bin.items.findIndex((i) => !i.folder && (i as AIItem).ai === ai), 1)
+		ai.folder = 0 // Move to root folder
+		ai.path = this.getAIFullPath(ai)
+		ai.folderpath = this.getFolderPath(this.folderById[ai.folder])
+		Vue.set(this.ais, '' + ai.id, ai)
+		Vue.set(this.aiByFullPath, ai.path, ai)
+		this.rootFolder.items.push(...item)
+		LeekWars.delete('ai/restore', {ai: ai.id}).error(error => LeekWars.toast(error))
 	}
 
 	public deleteFolder(folder: Folder) {
