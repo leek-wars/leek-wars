@@ -199,6 +199,16 @@ class FileSystem {
 		Vue.set(this.aiByFullPath, ai.path, ai)
 	}
 
+	public clear() {
+		this.ais = {}
+		this.folderById = {}
+		this.aiByFullPath = {}
+		this.leekAIs = {}
+		this.items = {}
+		this.promise = null
+		this.initialized = false
+	}
+
 	private getAIFullPath(ai: AI) {
 		if (ai.folder > 0 && ai.folder in this.folderById) {
 			return this.getFolderPath(this.folderById[ai.folder]) + ai.name
@@ -213,16 +223,6 @@ class FileSystem {
 			return this.getFolderPath(this.folderById[folder.parent]) + folder.name + '/'
 		}
 		return folder.name + '/'
-	}
-
-	public clear() {
-		this.ais = {}
-		this.folderById = {}
-		this.aiByFullPath = {}
-		this.leekAIs = {}
-		this.items = {}
-		this.promise = null
-		this.initialized = false
 	}
 }
 
