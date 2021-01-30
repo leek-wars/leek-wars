@@ -87,6 +87,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			localStorage.removeItem('login-attempt')
 			localStorage.removeItem('token')
 			localStorage.removeItem('editor/tabs')
+			localStorage.removeItem('garden/category') // On revient à la catégorie potager par défaut
 			state.token = null
 			state.farmer = null
 			LeekWars.socket.disconnect()
