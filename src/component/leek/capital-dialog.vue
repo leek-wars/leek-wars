@@ -208,8 +208,8 @@
 		}
 
 		clear(charac: string) {
-			let added = this.added[charac]
-			let invested = this.bonuses[charac]
+			const added = this.added[charac]
+			const invested = this.bonuses[charac]
 			let current = 0
 			let capital = 0
 			while (current < invested) {
