@@ -24,8 +24,10 @@ import Pagination from '@/component/pagination.vue'
 import Popup from '@/component/popup.vue'
 import RankingBadge from '@/component/ranking-badge.vue'
 import RichTooltipChip from '@/component/rich-tooltip/rich-tooltip-chip.vue'
+import RichTooltipComposition from '@/component/rich-tooltip/rich-tooltip-composition.vue'
 import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 import RichTooltipLeek from '@/component/rich-tooltip/rich-tooltip-leek.vue'
+import RichTooltipTeam from '@/component/rich-tooltip/rich-tooltip-team.vue'
 import RichTooltipWeapon from '@/component/rich-tooltip/rich-tooltip-weapon.vue'
 import Talent from '@/component/talent.vue'
 import TitlePicker from '@/component/title/title-picker.vue'
@@ -95,8 +97,10 @@ Vue.component('panel', Panel)
 Vue.component('popup', Popup)
 Vue.component('rich-tooltip-farmer', RichTooltipFarmer)
 Vue.component('rich-tooltip-leek', RichTooltipLeek)
+Vue.component('rich-tooltip-composition', RichTooltipComposition)
 Vue.component('rich-tooltip-weapon', RichTooltipWeapon)
 Vue.component('rich-tooltip-chip', RichTooltipChip)
+Vue.component('rich-tooltip-team', RichTooltipTeam)
 Vue.component('loader', LWLoader)
 Vue.component('lw-title', LWTitle)
 Vue.component('title-picker', TitlePicker)

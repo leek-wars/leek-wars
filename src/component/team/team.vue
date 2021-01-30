@@ -2,7 +2,10 @@
 	<div>
 		<div class="page-header page-bar">
 
-			<h1>{{ team ? team.name : '...' }}</h1>
+			<rich-tooltip-team v-if="team" :id="team.id" v-slot="{ on }" :bottom="true">
+				<h1 v-on="on">{{ team.name }}</h1>
+			</rich-tooltip-team>
+			<h1 v-else>...</h1>
 
 			<div v-if="member && team" class="tabs">
 				<router-link :to="'/forum/category-' + team.forum">
@@ -220,7 +223,11 @@
 
 		<div v-if="member && team && team.compositions" class="compos">
 			<panel v-for="composition in team.compositions" :key="composition.id" :class="{'in-tournament': composition.tournament.registered}" class="compo">
-				<template slot="title">{{ composition.name }}</template>
+				<template slot="title">
+					<rich-tooltip-composition :id="composition.id" v-slot="{ on }">
+						<div v-on="on">{{ composition.name }}</div>
+					</rich-tooltip-composition>
+				</template>
 				<template slot="actions">
 					<div class="level-talent">
 						<span class="level">{{ $t('level_n', [composition.total_level]) }}</span>

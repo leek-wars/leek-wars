@@ -24,7 +24,11 @@
 			</div>
 		</td>
 		<td>
-			<router-link v-if="row.team" :to="'/team/' + row.team_id">{{ row.team }}</router-link>
+			<router-link v-if="row.team" :to="'/team/' + row.team_id">
+				<rich-tooltip-team :id="row.team_id" v-slot="{ on }" :bottom="true">
+					<span v-on="on">{{ row.team }}</span>
+				</rich-tooltip-team>
+			</router-link>
 		</td>
 	</tr>
 </template>

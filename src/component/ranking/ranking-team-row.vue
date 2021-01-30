@@ -2,7 +2,11 @@
 	<tr :class="{me: row.me, inactive: !row.active}">
 		<td>{{ row.rank }}</td>
 		<td :class="row.style">
-			<router-link :to="'/team/' + row.id">{{ row.name }}</router-link>
+			<router-link :to="'/team/' + row.id">
+				<rich-tooltip-team :id="row.id" v-slot="{ on }" :bottom="true">
+					<span v-on="on">{{ row.name }}</span>
+				</rich-tooltip-team>
+			</router-link>
 		</td>
 		<td>{{ row.talent }}</td>
 		<td>{{ row.level }}</td>
