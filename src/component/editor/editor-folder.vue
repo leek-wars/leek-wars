@@ -1,10 +1,14 @@
 <template lang="html">
-	<div :class="{root: level === 0}" @click="click" @contextmenu.prevent.stop="$root.$emit('editor-menu', folder, false, $event)">
+	<div :class="{root: folder.id === 0}" @click="click" @contextmenu.prevent.stop="$root.$emit('editor-menu', folder, false, $event)">
 		<div :class="{empty: !folder.items.length, 'dragover': dragOver > 0, expanded: folder.expanded, root: level === 0, selected: folder.selected}" :draggable="level > 0" class="item folder" @dragenter="dragenter" @dragleave="dragleave" @dragover="dragover" @drop="drop" @dragstart="dragstart" @dragend="dragend">
-			<div v-if="level != 0" :style="{'padding-left': ((level - 1) * 15 + 10) + 'px'}" class="label" :class="{error: folder.errors, warning: folder.warnings}" @click="toggle(folder)">
+			<div v-if="folder.id != 0" :style="{'padding-left': ((level - 1) * 15 + 10) + 'px'}" class="label" :class="{error: folder.errors, warning: folder.warnings}" @click="toggle(folder)">
 				<div class="triangle"></div>
-				<v-icon class="icon">mdi-folder-outline</v-icon>
-				<span ref="name" class="text">{{ folder.name }}</span>
+				<v-icon v-if="folder.id === -1" class="icon">mdi-delete-outline</v-icon>
+				<v-icon v-else class="icon">mdi-folder-outline</v-icon>
+				<span v-if="folder.id === -1" ref="name" class="text">{{ $parent.$t(folder.name) }}
+					<span v-if="folder.id === -1">({{ folder.items.length }})</span>
+				</span>
+				<span v-else ref="name" class="text">{{ folder.name }}</span>
 				<span v-if="folder.errors" class="count error">{{ folder.errors }}</span>
 				<span v-if="folder.warnings" class="count warning">{{ folder.warnings }}</span>
 				<span v-if="folder.todos" class="count todo">{{ folder.todos }}</span>
@@ -83,7 +87,10 @@
 		display: block;
 	}
 	.root {
-		height: calc(100% - 2px);
+		flex: 1;
+		.item {
+			height: 100%;
+		}
 	}
 	.item .label {
 		padding: 7px 10px;
