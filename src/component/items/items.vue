@@ -16,7 +16,7 @@
 		<panel class="first">
 			<div slot="content" class="levels">
 				<span v-for="(items, l) in levels" :key="l" class="level">
-					<span class="title">{{ l + 1 }}</span>
+					<span class="title" :class="{bold: (l + 1) % 10 === 0}">{{ l + 1 }}</span>
 					<item v-for="item in items" :key="item.id" :item="{template: item.id}" />
 				</span>
 			</div>
@@ -89,6 +89,9 @@
 	.title {
 		margin-bottom: 1px;
 		display: block;
+		&.bold {
+			font-weight: bold;
+		}
 	}
 	.levels ::v-deep .item {
 		display: block;
