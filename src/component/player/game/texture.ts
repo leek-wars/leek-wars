@@ -235,6 +235,7 @@ class T {
 	public static pipes = new Texture(LeekWars.STATIC + 'image/map/pipes.png', true, 1)
 	public static forest_branch = new Texture(LeekWars.STATIC + 'image/map/forest_branch.png')
 	public static forest_branch_2 = new Texture(LeekWars.STATIC + 'image/map/forest_branch_2.png')
+	public static ray = new Texture(LeekWars.STATIC + 'image/fight/ray.png')
 
 	// Chips
 	public static cure_aureol = new Texture(LeekWars.STATIC + 'image/fight/cure_aureol.png')

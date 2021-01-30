@@ -145,6 +145,12 @@
 			<br>
 			<router-link to="/app" class="green">{{ $t('main.app') }}</router-link>
 		</panel>
+
+		<panel title="Licenses">
+			<ul>
+				<li>Angel_chorus2.mp3, Taira Komori, edited, CC-BY3 license.</li>
+			</ul>
+		</panel>
 	</div>
 </template>
 
