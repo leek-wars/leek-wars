@@ -838,6 +838,8 @@
 		padding: 2px 0;
 		font-size: 11px;
 		margin: 0;
+		word-break: break-all;
+		white-space: pre-wrap;
 	}
 	.warning {
 		color: #ff5f00;
