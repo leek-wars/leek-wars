@@ -46,9 +46,29 @@
 								</div>
 							</rich-tooltip-farmer>
 						</router-link>
+						<router-link v-if="fight.type === FightType.TEAM" :to="'/team/' + fight.team1.id">
+							<rich-tooltip-team :id="fight.team1.id" v-slot="{ on: rich }">
+								<div class="farmer" v-on="rich">
+									<emblem :team="fight.team1" /><br>
+									<span class="name">
+										{{ fight.team1.name }}
+									</span>
+								</div>
+							</rich-tooltip-team>
+						</router-link>
 					</td>
 					<td class="versus">VS</td>
 					<td>
+						<router-link v-if="fight.type === FightType.TEAM" :to="'/team/' + fight.team2.id">
+							<rich-tooltip-team :id="fight.team2.id" v-slot="{ on: rich }">
+								<div class="farmer" v-on="rich">
+									<emblem :team="fight.team2" /><br>
+									<span class="name">
+										{{ fight.team2.name }}
+									</span>
+								</div>
+							</rich-tooltip-team>
+						</router-link>
 						<router-link v-for="farmer in fight.farmers2" :key="farmer.id" :event="farmer.id > 0 ? 'click' : ''" :to="'/farmer/' + farmer.id">
 							<rich-tooltip-farmer :id="farmer.id" v-slot="{ on: rich }">
 								<div class="farmer" v-on="rich">
@@ -261,6 +281,7 @@
 		margin-left: 5px;
 		margin-right: 5px;
 		font-size: 13px;
+		cursor: pointer;
 	}
 	.fight-info .farmer .name {
 		max-width: 75px;
