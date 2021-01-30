@@ -43,6 +43,12 @@ enum EffectType {
 	RAW_BUFF_RESISTANCE = 42,
 	PROPAGATION = 43,
 	RAW_BUFF_WISDOM = 44,
+	NOVA_VITALITY = 45,
+	ATTRACT = 46,
+	PUSH = 47,
+	SHACKLE_AGILITY = 48,
+	SHACKLE_WISDOM = 49,
+	REMOVE_SHACKLE = 50,
 }
 
 enum EffectModifier {
@@ -55,13 +61,13 @@ enum EffectModifier {
 enum EffectTypeMarket {
 	ATTACK = 1,
 	HEAL = 2,
-	BOOST = 3,
+	DAMAGE_RETURN = 3,
 	SHIELD = 4,
-	TACTIC = 5,
-	DAMAGE_RETURN = 6,
-	POISON = 7,
+	BOOST = 5,
+	POISON = 6,
+	SHACKLE = 7,
 	BULB = 8,
-	SHACKLE = 9
+	TACTIC = 9,
 }
 
 class Effect {
