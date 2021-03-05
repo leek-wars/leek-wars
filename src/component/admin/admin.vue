@@ -96,7 +96,8 @@
 		}
 
 		squareTrophy() {
-			const data = { date: 1482046364, id: 32098724, parameters: ["167"], read: true, type: 11 }
+			const trophy = LeekWars.trophies[Math.random() * LeekWars.trophies.length | 0]
+			const data = { date: 1482046364, id: 32098724, parameters: [trophy.id], read: true, type: 11 }
 			const notification = Notification.build(data, true)
 			LeekWars.squares.addFromNotification(notification)
 		}
