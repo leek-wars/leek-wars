@@ -1,4 +1,8 @@
 {
+	"change_email_subject_1": "Change your e-mail address (Step 1/2)",
+	"change_email_subject_2": "Change your e-mail address (Step 2/2)",
+	"change_email_text": "In order to validate your change your email address, click on this link : %s.",
+	"change_email_html": "In order to change your email address, please click on <a href=\"%1$s\">this link</a>.",
 	"hello": "Hello {0}",
 	"notif_count": "You have {0} new {1} notifications",
 	"no_answer": "This email was sent automatically. Please do not reply to it.",
