@@ -78,6 +78,8 @@
 			</panel>
 		</div>
 
+		<signup-features ref="features" />
+
 		<h1>{{ $t('ranking') }}</h1>
 
 		<panel class="first">
@@ -114,7 +116,7 @@
 							<th class="p15">{{ $t('place') }}</th>
 							<th class="p35">{{ $t('main.farmer') }}</th>
 							<th class="p20">{{ $t('main.talent') }}</th>
-							<th class="p5">{{ $t('country') }}</th>
+							<th class="p5">{{ $t('main.country') }}</th>
 						</tr>
 						<tr v-for="(farmer, i) in farmer_ranking" :key="i" :class="farmer ? farmer.style : ''">
 							<td>{{ parseInt(i) + 1 }}</td>
@@ -216,16 +218,17 @@
 <script lang="ts">
 	import ChangelogVersion from '@/component/changelog/changelog-version.vue'
 	import { locale } from '@/locale'
-	import { i18n, mixins } from '@/model/i18n'
+	import { i18n, loadComponentLanguage, mixins } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
-	import { Component, Vue } from 'vue-property-decorator'
+	import { Component, Vue, Watch } from 'vue-property-decorator'
 	const SignupCarousel = () => import(/* webpackChunkName: "[request]" */ `@/component/signup/signup-carousel.${locale}.i18n`)
+	const SignupFeatures = () => import(/* webpackChunkName: "[request]" */ `@/component/signup/signup-features.${locale}.i18n`)
 
 	import 'swiper/css/swiper.css'
 	import VueAwesomeSwiper from 'vue-awesome-swiper'
 	Vue.use(VueAwesomeSwiper)
 
-	@Component({ name: 'signup', i18n: {}, mixins, components: { ChangelogVersion, SignupCarousel } })
+	@Component({ name: 'signup', i18n: {}, mixins, components: { ChangelogVersion, SignupCarousel, SignupFeatures } })
 	export default class Signup extends Vue {
 		godfather: string = ''
 		leek_count: number = 0
