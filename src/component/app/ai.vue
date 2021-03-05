@@ -5,6 +5,7 @@
 			<v-icon v-if="!ai.valid">mdi-close-circle</v-icon>
 		</div>
 		<div v-if="show_lines" class="lines">{{ $tc('main.n_lines', ai.total_lines) }}</div>
+		<div v-if="ai.version" class="version">{{ ('' + ai.version).split('').join('.') }}</div>
 	</div>
 </template>
 
@@ -41,7 +42,7 @@
 		height: 135px;
 		position: relative;
 		word-wrap: break-word;
-		color: #888;
+		color: #555;
 		text-align: center;
 		&.blue {
 			background-image: url("/image/ai/ai_blue.png");
@@ -83,6 +84,17 @@
 			font-size: 13px;
 			margin-top: 5px;
 			font-weight: normal;
+		}
+		.version {
+			font-size: 10px;
+			border-radius: 5px;
+			padding: 1px 3px;
+			font-weight: 500;
+			position: absolute;
+			border: 1px solid #aaa;
+			color: #555;
+			bottom: 10px;
+			right: 10px;
 		}
 	}
 </style>

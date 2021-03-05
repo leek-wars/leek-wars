@@ -71,11 +71,12 @@
 </template>
 
 <script lang="ts">
+	import { mixins } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import { Component, Vue, Watch } from 'vue-property-decorator'
 	import Breadcrumb from '../forum/breadcrumb.vue'
 
-	@Component({ name: 'trophies', i18n: {}, components: { Breadcrumb } })
+	@Component({ name: 'trophies', i18n: {}, mixins, components: { Breadcrumb } })
 	export default class Trophies extends Vue {
 		raw_trophies: {[key: number]: any} = {}
 		progressions: {[key: number]: number} = {}
@@ -172,7 +173,7 @@
 		}
 		@Watch('sort_by_rarity')
 		public updateSort() {
-			localStorage.setItem('options/sort_by_rarity-trophies', this.sort_by_rarity ? 'true' : 'false')
+			localStorage.setItem('options/sort-by-rarity-trophies', this.sort_by_rarity ? 'true' : 'false')
 		}
 	}
 </script>

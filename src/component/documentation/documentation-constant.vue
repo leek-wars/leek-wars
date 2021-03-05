@@ -2,7 +2,7 @@
 	<div v-if="constant" class="doc-constant" :class="{item: is_weapon || is_chip, deprecated: constant.deprecated}">
 		<h2 v-if="!is_weapon && !is_chip">{{ constant.name }}</h2>
 		<div v-if="constant.deprecated" v-dochash class="deprecated-message">
-			Cette constante est dépréciée. <span v-if="constant.replacement">Elle est remplacée par la constante #{{ LeekWars.constants[constant.replacement - 1].name }}.</span>
+			Cette constante est dépréciée. <span v-if="constant.replacement">Elle est remplacée par la constante #{{ LeekWars.constantById[constant.replacement].name }}.</span>
 		</div>
 		<chip-preview v-if="is_chip" :chip="LeekWars.chips[constant.value]" />
 		<weapon-preview v-else-if="is_weapon" :weapon="LeekWars.weapons[LeekWars.items[constant.value].params]" />

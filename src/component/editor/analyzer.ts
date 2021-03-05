@@ -96,7 +96,7 @@ class Analyzer {
 		// console.time("hover")
 		return this.promise.then(() => {
 			try {
-				const data = this.GeneratorHover(!ai.v2, ai.path, position, ai.entrypoint)
+				const data = this.GeneratorHover(ai.version, ai.path, position, ai.entrypoint)
 				const result = JSON.parse(data)
 				// console.log(result)
 				return Promise.resolve(result)
@@ -122,7 +122,7 @@ class Analyzer {
 			return new Promise((resolve, reject) => setTimeout(() => {
 				try {
 					console.time("analyze")
-					const result = JSON.parse(this.GeneratorAnalyze(!ai.v2, ai.path, code, ai.entrypoint))
+					const result = JSON.parse(this.GeneratorAnalyze(ai.version, ai.path, code, ai.entrypoint))
 					console.log(result)
 					for (const path in result) {
 						const problems = result[path]
@@ -158,7 +158,7 @@ class Analyzer {
 
 		return this.promise.then(() => {
 
-			this.GeneratorRegister(!ai.v2, ai.path)
+			this.GeneratorRegister(ai.version, ai.path)
 
 			this.registerEntrypoints(ai)
 
@@ -173,7 +173,7 @@ class Analyzer {
 		// console.log("Complete", ai.path)
 
 		console.time("complete")
-		const data = this.GeneratorComplete(!ai.v2, ai.path, position)
+		const data = this.GeneratorComplete(ai.version, ai.path, position)
 		console.timeEnd("complete")
 		// console.log("complete", data)
 		const result = JSON.parse(data)
@@ -230,7 +230,7 @@ class Analyzer {
 			const entrypoint = fileSystem.ais[entrypoint_id]
 			if (entrypoint) {
 				// console.log("Add entrypoint", ai.path, "==>", entrypoint.path)
-				this.GeneratorAddEntrypoint(!ai.v2, ai.path, !entrypoint.v2, entrypoint.path)
+				this.GeneratorAddEntrypoint(ai.version, ai.path, entrypoint.version, entrypoint.path)
 			}
 		}
 	}

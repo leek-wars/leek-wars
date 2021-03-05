@@ -8,7 +8,7 @@
 			</span>
 		</h2>
 		<div v-if="fun.deprecated" v-dochash class="deprecated-message">
-			Cette fonction est dépréciée. <span v-if="fun.replacement">Elle est remplacée par la fonction #{{ LeekWars.functions[fun.replacement - 1].name }}.</span>
+			Cette fonction est dépréciée. <span v-if="fun.replacement">Elle est remplacée par la fonction #{{ LeekWars.functionById[fun.replacement].name }}.</span>
 		</div>
 		<div v-dochash v-code class="content" v-html="$t('doc.func_' + fun.real_name)"></div>
 

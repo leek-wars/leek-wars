@@ -19,15 +19,18 @@ var keywords = function() {
     var A = kw("keyword a"), B = kw("keyword b"), C = kw("keyword c");
 
     var atom = {type: "atom", style: "atom"};
-    var variableDeclaration = {type: "var", style: 'variable-declaration'};
-    var functionDeclaration = {type: "function", style: 'function-declaration'};
+    var variable = {type: "var", style: 'variable-declaration'};
+    var fun = {type: "function", style: 'function-declaration'};
 
     var jsKeywords = {
         "if": kw('if'), "while": A, "else": B, "do": B,
         "return": C, "break": C, "continue": C, "and": kw('and'), "or": kw('or'), "xor": kw('xor'), "not": kw('not'), "is": kw('is'),
+        "new": kw('new'), "extends": A, "this": A, "constructor": A, "super": A, "public": A, "private": A, "protected": A, "abstract": A,
+        "virtual": A, "catch": A, "enum": A, "finally": A, "goto": A, "import": A, "export": A, "interface": A, "assert": A, "instanceof": A,
+        "static": A, "switch": A, "throw": A, "try": A, "yield": A, "case": A, "default": A, "implements": A, "throws": A, "match": A,
         "&&": kw('&&'),
         "for": kw('for'), "in": kw('operator'),
-        "var": variableDeclaration, "global": variableDeclaration, "function": functionDeclaration,
+        "var": variable, "let": variable, "const": variable, "global": variable, "function": fun, "class": variable,
         "true": atom, "false": atom, "null": atom
     };
     for (const constant of LeekWars.constants) {

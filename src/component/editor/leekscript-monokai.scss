@@ -31,6 +31,9 @@
 	.cm-variable-2 {
 		color: #f8f8f2;
 	}
+	.cm-property {
+		color: #74abff;
+	}
 	.CodeMirror-lines .activeline {
 		background: #222;
 	}
@@ -114,9 +117,6 @@
 	}
 	.problem:hover {
 		background: #444 !important;
-	}
-	.count {
-		color: #eee !important;
 	}
 }
 
