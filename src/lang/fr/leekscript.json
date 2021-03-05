@@ -81,5 +81,15 @@
 	"default_name": "Sans Titre",
 	"example_code": "//--------------------------------\n//------- Code de base -----------\n//--------------------------------\n\n// On prend le pistolet\nsetWeapon(WEAPON_PISTOL); // Attention : coûte 1 PT\n\n// On récupère l'ennemi le plus proche\nvar enemy = getNearestEnemy();\n\n// On avance vers l'ennemi\nmoveToward(enemy);\n\n// On essaye de lui tirer dessus !\nuseWeapon(enemy);",
 	"example_code_v2": "let divisors = n -> [1..n.sqrt()].filter(x -> !(n % x))\ndivisors(1989)",
-	"random": "Code aléatoire"
+	"random": "Code aléatoire",
+	"unknown_method": "Méthode \"{1}\" inconnue dans la classe \"{0}\"",
+	"unknown_static_method": "Méthode statique \"{1}\" inconnue dans la classe \"{0}\"",
+	"unknown_field": "Champ \"{1}\" inconnu dans la classe \"{0}\"",
+	"this_not_allowed_here": "Le mot clé this est autorisé uniquement dans les constructeurs et méthodes non statiques",
+	"internal_error": "Erreur interne, déjà transférée à un administrateur",
+	"keyword_must_be_in_class": "Ce mot-clé doit être dans une classe",
+	"class_static_member_does_not_exist": "Membre statique \"{1}\" inconnu dans la classe \"{0}\"",
+	"class_member_does_not_exist": "Ce membre \"{1}\" n'existe pas dans la classe \"{0}\"",
+	"extends_loop": "La chaîne d'héritage de cette classe boucle",
+	"reference_deprecated": "Déprécié : les valeurs sont déjà passées par référence à partir du LeekScript 1.1"
 }

@@ -5,7 +5,7 @@ class AI {
 	public name!: string
 	public code!: string
 	public valid!: boolean
-	public v2!: boolean
+	public version!: number
 	public modified: boolean = false
 	public dragging: boolean = false
 	public folder!: number
@@ -14,6 +14,7 @@ class AI {
 	public includes: AI[] = []
 	public functions: Keyword[] = []
 	public globals: {[key: string]: Keyword} = {}
+	public classes: {[key: string]: Keyword} = {}
 	public total_lines!: number
 	public total_chars!: number
 	public included_lines!: number
@@ -24,6 +25,7 @@ class AI {
 	public todos: number = 0
 	public equipped: boolean = false
 	public entrypoints: number[] = []
+	public comments: { [key: number]: string } = {}
 
 	constructor(data: any) {
 		Object.assign(this, data)

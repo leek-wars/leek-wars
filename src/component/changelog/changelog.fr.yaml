@@ -1,3 +1,29 @@
+222:
+  title: "LeekScript 1.1 : Programmation Orientée Objet et améliorations du langage"
+  added:
+    - "#ai Ajout du LeekScript version 1.1."
+    - "#ai Ajout de la programmation orientée objet : classes et objets (LS 1.1)."
+    - "#ai Passage par référence par défaut (fonctions, foreach, tableaux) (LS 1.1)."
+    - "#ai Ajout de la fonction clone() pour dupliquer une valeur."
+    - "LeekScript : les erreurs renvoyées ont maintenant une pile d'appels complète."
+    - "Rapport de combat : possibilité de naviguer dans les tours facilement."
+  improved:
+    - "Éditeur : plusieurs erreurs sont renvoyées au lieu d'une seule."
+    - "#ai Les points-virgules ne sont plus obligatoires."
+    - Ajout de la javadoc sur les globales et les classes.
+    - Mise à jour de la javadoc sans avoir à rafraîchir la page.
+    - Amélioration du modèle de l'IA de base (merci à Oimat).
+    - Les ternaires coûtent désormais 1 opération, comme les conditions normales.
+  fixed:
+    - "#ai Correction de arrayFilter qui retournait un tableau associatif (LS 1.1)."
+    - "#ai Correction d'échappement des chaînes '\\\\' (LS 1.1)."
+    - Correction d'un bug de chargement du combat avec des tabulations dans les say().
+    - Correction des effets de NOVA_VITALITY dans le rapport de combat (merci à Ref).
+    - "#ai Correction de l'opérateur ^= qui devient bien l'assignement xor (LS 1.1)."
+    - Correction de l'affichage de "null" dans la javadoc certaines fonctions.
+    - La fonction shuffle est maintenant déterministe (pour une même graine).
+    - Correction de traductions dans la documentation.
+
 221:
   title: "16 nouvelles puces, Pousser/Attirer, Tooltips d'équipe, Corbeille d'IA, Fusil de l'explorateur"
   added:

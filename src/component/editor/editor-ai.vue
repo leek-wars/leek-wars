@@ -1,7 +1,7 @@
 <template lang="html">
 	<div>
 		<div ref="ai" :class="{modified: ai.modified, selected: ai.selected}" class="item ai" @click="click" @contextmenu.prevent.stop="$root.$emit('editor-menu', ai, true, $event)">
-			<div :style="{'padding-left': (level * 15 + 15) + 'px'}" class="label" :class="{error: ai.errors, warning: ai.warnings}" draggable="true" @dragstart="dragstart">
+			<div :style="{'padding-left': (level * 15 + 15) + 'px'}" class="label" :class="{error: ai.errors, warning: ai.warnings}" :draggable="ai.folder !== -1" @dragstart="dragstart">
 				<v-icon v-if="ai.errors" class="icon error">mdi-close-circle</v-icon>
 				<v-icon v-else-if="ai.warnings" class="icon warning">mdi-alert-circle</v-icon>
 				<v-icon v-else class="icon valid">mdi-check-bold</v-icon>
@@ -34,6 +34,7 @@
 		get ai() { return this.item.ai }
 
 		dragstart(e: DragEvent) {
+			if (this.ai.folder === -1) { e.stopPropagation(); return }
 			e.dataTransfer!.setData('text/plain', 'drag !!!')
 			this.$root.$emit('editor-drag', this.item)
 			e.stopPropagation()

@@ -6,7 +6,7 @@
 				<template v-for="(problems, entrypoint) of errors">
 					<tooltip v-for="(error, p) of problems" :key="entrypoint + p">
 						<template v-slot:activator="{ on }">
-							<div :style="{top: (100 * error[0] / (ai.total_lines - ai.included_lines)) + '%'}" :class="{warning: error[4] === 1, todo: error[4] === 2}" class="error" v-on="on" @click="$emit('jump', ai, error[0])"></div>
+							<div :style="{top: (100 * error[0] / lines) + '%'}" :class="{warning: error[4] === 1, todo: error[4] === 2}" class="error" v-on="on" @click="$emit('jump', ai, error[0])"></div>
 						</template>
 						<v-icon v-if="error[4] === 0" class="tooltip error">mdi-close-circle-outline</v-icon>
 						<v-icon v-else-if="error[4] === 1" class="tooltip warning">mdi-alert-circle-outline</v-icon>
@@ -39,6 +39,7 @@
 					<v-icon v-else-if="hint.category === 6" class="variable">mdi-variable</v-icon>
 					<v-icon v-else-if="hint.category === 7" class="argument">mdi-alpha</v-icon>
 					<v-icon v-else-if="hint.category === 8" class="global">mdi-google</v-icon>
+					<v-icon v-else-if="hint.category === 9" class="class">mdi-copyright</v-icon>
 					<!-- <v-icon v-else class="variable">mdi-function</v-icon> -->
 					{{ hint.fullName }}
 					<!-- <lw-type :type="hint.lstype" /> -->
@@ -214,7 +215,7 @@
 				this.codemirror = wrapper.CodeMirror
 				this.editor = wrapper.CodeMirror(codeMirrorElement, {
 					value: "",
-					mode: this.ai.v2 ? "leekscript-v2" : "leekscript",
+					mode: "leekscript",
 					theme: "leekwars",
 					tabSize: 4,
 					indentUnit: 4,
@@ -353,12 +354,10 @@
 				this.loading = true
 				LeekWars.get('ai/get/' + this.id).then(data => {
 					this.ai.code = data.ai.code
-					this.updateIncludes()
 					this.editor.setValue(this.ai.code)
 					this.editor.getDoc().clearHistory()
 					this.editor.refresh()
-					this.updateFunctions()
-					this.updateGlobalVars()
+					this.analyzeV1()
 					this.loaded = true
 					this.loading = false
 					setTimeout(() => this.editor.refresh())
@@ -452,8 +451,8 @@
 			// this.analyze()
 			clearTimeout(this.analyzerTimeout)
 			this.analyzerTimeout = setTimeout(() => {
-				this.analyze()
-			}, 40)
+				this.analyzeV1()
+			}, 500)
 		}
 
 		analyze() {
@@ -467,6 +466,25 @@
 					Vue.delete(this.errorOverlays, entrypoint)
 				}
 			})
+		}
+
+		public analyzeV1() {
+
+			this.updateIncludes()
+
+			// Search /* */ comments first
+			let match
+			const code = this.editor.getValue()
+			const comments: {[key: number]: string} = {}
+			const comment_regex = /\/\*([^]*?)\*\/\s*/gm
+			while ((match = comment_regex.exec(code)) != null) {
+				const content = match[1].trim().split("\n").map(line => line.replace(/^\s*\*\s?/, '')).join("\n").trim()
+				comments[match.index + match[0].length] = content
+			}
+			this.ai.comments = comments
+
+			this.updateFunctions()
+			this.updateGlobalVars()
 		}
 
 		public change(CodeMirror: any, changes: CodeMirror.EditorChange) {
@@ -483,6 +501,7 @@
 			this.lines = this.editor.getDoc().lineCount()
 			this.characters = this.editor.getDoc().getValue().length
 			LeekWars.setSubTitle(this.$i18n.tc('main.n_lines', this.lines))
+			this.mouseleave()
 
 			if (changes.origin === "setValue") {
 				this.analyze()
@@ -679,6 +698,16 @@
 						if (symbol === fun.name) {
 							return fun
 						}
+					}
+				}
+				for (const g in ai.globals) {
+					if (symbol === g) {
+						return ai.globals[g]
+					}
+				}
+				for (const s in ai.classes) {
+					if (symbol === s) {
+						return ai.classes[s]
 					}
 				}
 				if (ai.includes) {
@@ -993,6 +1022,13 @@
 					completions.push(keyword)
 				}
 			}
+			// Classes
+			for (const variable in this.ai.classes) {
+				if (variable.toLowerCase().indexOf(start.toLowerCase()) === 0) {
+					const keyword = this.ai.classes[variable]
+					completions.push(keyword)
+				}
+			}
 			// Includes globals
 			for (const include of this.ai.includes) {
 				const globals = this.ais[include.id].globals
@@ -1230,13 +1266,6 @@
 			this.ai.functions = []
 			let match
 
-			// Search /* */ comments first
-			const comments: {[key: number]: string} = {}
-			const comment_regex = /\/\*([^]*?)\*\/\s*/gm
-			while ((match = comment_regex.exec(code)) != null) {
-				comments[match.index + match[0].length] = match[1]
-			}
-
 			const regex = /function\s+(\w+)\s*\(([^]*?)\)\s*{/gm
 			// Match [ full_match, javadoc, nom, arguments ]
 
@@ -1256,7 +1285,7 @@
 				let description = "<h4>" + i18n.t('leekscript.function_f', [fullName]) + "</h4><br>"
 				description += i18n.t('leekscript.defined_in', [this.ai.name, line])
 
-				const comment = comments[match.index]
+				const comment = this.ai.comments[match.index]
 				const javadoc = {
 					name: fullName,
 					description: "",
@@ -1264,15 +1293,14 @@
 				}
 				// Add arguments from signature
 				for (const arg of args) {
-					javadoc.items.push({ type: 'param', name: null, text: arg})
+					javadoc.items.push({ type: 'param', name: arg, text: null})
 				}
 				// console.log(javadoc.items)
 				if (comment) {
 					const javadoc_lines = comment.split("\n")
-					const javadoc_regex = /^\s*\*\s*@(\w+)(?:\s+([a-zA-Z_\u00C0-\u024F\u1E00-\u1EFF]+)\s*:?\s*)?(?:\s*:\s*)?(.*)$/
+					const javadoc_regex = /^\s*@(\w+)(?:\s+([a-zA-Z_\u00C0-\u024F\u1E00-\u1EFF]+)\s*:?\s*)?(?:\s*:\s*)?(.*)$/
 					let match_javadoc
-					for (let l = 0; l < javadoc_lines.length; ++l) {
-						const jline = javadoc_lines[l]
+					for (const jline of javadoc_lines) {
 						if (match_javadoc = javadoc_regex.exec(jline)) {
 							// console.log(match_javadoc)
 							const type = match_javadoc[1]
@@ -1293,25 +1321,25 @@
 								}
 								if (args.includes(name) || args.includes(text)) {
 									// console.log('arg', name, text)
-									const existing = javadoc.items.find(i => i.type === 'param' && ((name.length && i.text === name) || (text.length && i.text === text)))
+									const existing = javadoc.items.find(i => i.type === 'param' && ((name.length && i.name === name) || (text.length && i.name === text)))
 									// console.log('existing', existing)
-									existing.name = existing.text
+									// existing.name = existing.text
 									existing.text = text
 									continue
 								}
 							}
 							javadoc.items.push({ type, name, text })
 						} else {
-							const star = jline.indexOf("*")
-							let formatted_line = jline.substring(star + 2)
-							if (l === javadoc_lines.length - 1) {
-								formatted_line = formatted_line.trim()
-							}
-							if (formatted_line.length) {
+							// const star = jline.indexOf("*")
+							// let formatted_line = jline.substring(star + 2)
+							// if (l === javadoc_lines.length - 1) {
+							// 	formatted_line = formatted_line.trim()
+							// }
+							if (jline.length) {
 								if (javadoc.description.length) {
 									javadoc.description += "\n"
 								}
-								javadoc.description += formatted_line
+								javadoc.description += jline
 							}
 						}
 					}
@@ -1321,8 +1349,8 @@
 				// Escape
 				javadoc.description = LeekWars.protect(javadoc.description)
 				for (const item of javadoc.items) {
-					item.name = LeekWars.protect(item.name)
-					item.text = LeekWars.protect(item.text)
+					item.name = item.name ? LeekWars.protect(item.name) : item.name
+					item.text = item.text ? LeekWars.protect(item.text) : item.text
 				}
 
 				const fun = {
@@ -1348,19 +1376,40 @@
 			this.ai.globals = {}
 			let match
 
-			// Search global bars
+			// Search global vars
 			const global_regex = /global\s+(\w+)/gm
 			while ((match = global_regex.exec(code)) != null) {
+				const line = code.substring(0, match.index).split("\n").length
 				const name = match[1]
-
+				const comment = this.ai.comments[match.index]
+				const javadoc = { name, description: comment, items: [] }
 				this.ai.globals[name] = {
 					name,
 					fullName: name,
 					details: "Variable <b>" + name + "</b>",
 					type: 'variable',
 					ai: this.ai,
-					line: 1,
-					category: 8
+					line,
+					category: 8,
+					javadoc,
+				}
+			}
+			// Search classes
+			const class_regex = /class\s+(\w+)/gm
+			while ((match = class_regex.exec(code)) != null) {
+				const line = code.substring(0, match.index).split("\n").length
+				const name = match[1]
+				const comment = this.ai.comments[match.index]
+				const javadoc = { name, description: comment, items: [] }
+				this.ai.classes[name] = {
+					name,
+					fullName: name,
+					details: "Classe <b>" + name + "</b>",
+					type: 'class',
+					ai: this.ai,
+					line,
+					category: 9,
+					javadoc,
 				}
 			}
 		}

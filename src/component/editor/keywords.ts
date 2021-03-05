@@ -18,6 +18,7 @@ class Keyword {
 	lstype?: any
 	location?: any
 	category!: number
+	javadoc?: any
 }
 
 function generateKeywords() {

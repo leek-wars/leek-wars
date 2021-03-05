@@ -111,6 +111,42 @@
 							<editor-problems @jump="jump" />
 						</div>
 						<div class="status">
+							<v-menu v-if="currentAI" top :offset-y="true" :nudge-top="1" :max-width="600">
+								<template v-slot:activator="{ on, attrs }">
+									<div v-ripple class="version" v-bind="attrs" v-on="on">
+										LeekScript {{ ("" + currentAI.version).split('').join('.') }}
+									</div>
+								</template>
+								<v-list :dense="true" class="version-menu">
+									<v-list-item v-ripple @click="setVersion(11)">
+										<v-icon v-if="currentAI.version === 11" class="list-icon">mdi-star</v-icon>
+										<v-icon v-else class="list-icon">mdi-star-outline</v-icon>
+										<v-list-item-content>
+											<v-list-item-title>LeekScript 1.1 <span class="green">Recommandé</span></v-list-item-title>
+											<v-list-item-subtitle>
+												<ul>
+													<li>Ajout des classes et objets.</li>
+													<li>Passage par référence par défaut pour les valeurs non-primitives dans les fonctions, les boucles foreach et les tableaux.</li>
+													<li>Corrections mineures (arrayFilter, opérateur ^=, et autres).</li>
+												</ul>
+											</v-list-item-subtitle>
+										</v-list-item-content>
+									</v-list-item>
+									<router-link class="link" to="/encyclopedia/LeekScript_1.1"><v-icon>mdi-book-open-page-variant</v-icon> Toutes les informations sur le LeekScript 1.1</router-link>
+									<v-list-item v-ripple @click="setVersion(10)">
+										<v-icon v-if="currentAI.version === 10" class="list-icon">mdi-star</v-icon>
+										<v-icon v-else class="list-icon">mdi-star-outline</v-icon>
+										<v-list-item-content>
+											<v-list-item-title>LeekScript 1.0</v-list-item-title>
+											<v-list-item-subtitle>
+												<ul>
+													<li>Version initiale</li>
+												</ul>
+											</v-list-item-subtitle>
+										</v-list-item-content>
+									</v-list-item>
+								</v-list>
+							</v-menu>
 							<div v-ripple class="problems" @click="toggleProblems">
 								<span v-if="LeekWars.analyzer.error_count + LeekWars.analyzer.warning_count + LeekWars.analyzer.todo_count === 0" class="no-error">
 									<v-icon>mdi-check-circle</v-icon> Aucun problème
@@ -529,65 +565,38 @@
 			const content = this.currentEditor.editor.getValue()
 			this.currentAI!.code = content
 
-			this.currentEditor.updateIncludes()
-			this.currentEditor.updateGlobalVars()
+			// this.currentEditor.updateIncludes()
+			// this.currentEditor.updateGlobalVars()
 
 			LeekWars.post('ai/save', {ai_id: saveID, code: content}).then(data => {
 				if (this.currentEditor === null) { return }
 				this.currentEditor.saving = false
-				if (this.currentEditor.ai.v2) {
-					//
-				} else {
-					if (!data.result || data.result.length === 0) {
-						this.currentEditor.serverError = true
-						return
-					}
-					this.errors = []
-					this.goods = []
-					LeekWars.analyzer.clearProblems(this.currentAI!)
-
-					for (const entrypoint in data.result) {
-						const entrypoint_id = parseInt(entrypoint, 10)
-						for (const res of data.result[entrypoint]) {
-							const code = res[0]
-							const ai = fileSystem.ais[res[1]]
-							const ai_name = ai ? ai.name : 'AI #' + res[1]
-							const editor = this.getAiView(ai)
-							if (code === 2) {
-								this.goods.push({ai})
-								ai.valid = true
-								if (editor) { editor.removeErrors(entrypoint_id) }
-								LeekWars.analyzer.setAIProblems(entrypoint_id, ai.path, [])
-							} else if (code === 1) {
-								this.errors.push({ai: ai_name, error: res[2], line: res[3]})
-								ai.valid = false
-							} else if (code === 0) {
-								const line = res[2]
-								let info = res[4]
-								if (res.length === 7) {
-									info = this.$t('leekscript.' + res[5], res[6])
-								} else {
-									info = this.$t('leekscript.' + res[5])
-								}
-								info = '(' + res[4] + ') ' + info
-								ai.valid = false
-
-								let problem = null
-								if (editor) {
-									const token = editor.editor.getTokenAt({line: line - 1, ch: res[3] - 1})
-									problem = [line, token.start, line, token.end - 1, 0, info]
-								} else {
-									problem = [line, 0, line, 12, 0, info]
-								}
-								const problems = [ problem ]
-								LeekWars.analyzer.setAIProblems(entrypoint_id, ai.path, problems)
-								this.problems(entrypoint_id, ai, problems)
-							}
-						}
-					}
-					LeekWars.analyzer.updateCount()
-					setTimeout(() => this.goods = [], 2000)
+				if (!data.result || data.result.length === 0) {
+					this.currentEditor.serverError = true
+					return
 				}
+				this.errors = []
+				this.goods = []
+				LeekWars.analyzer.clearProblems(this.currentAI!)
+
+				for (const entrypoint in data.result) {
+					const entrypoint_id = parseInt(entrypoint, 10)
+					const ai = fileSystem.ais[entrypoint_id]
+					const editor = this.getAiView(ai)
+					const problems = []
+					// Good
+					if (!data.result[entrypoint].length) {
+						this.goods.push({ai})
+						ai.valid = true
+						if (editor) { editor.removeErrors(entrypoint_id) }
+						LeekWars.analyzer.setAIProblems(entrypoint_id, ai.path, [])
+						continue
+					}
+					this.handleProblems(ai, data.result[entrypoint])
+				}
+				LeekWars.analyzer.updateCount()
+				setTimeout(() => this.goods = [], 2000)
+
 				if (this.currentEditor.needTest) {
 					this.currentEditor.needTest = false
 					if (this.currentEditor.ai.valid) {
@@ -600,6 +609,46 @@
 				this.currentEditor.saving = false
 			})
 		}
+
+		handleProblems(entrypoint: AI, problems: any[]) {
+			// Group problems by ai
+			const problemsByAI = {} as {[key: number]: any[]}
+			for (const problem of problems) {
+				const level = problem[0]
+				const ai_id = problem[1]
+				if (!(ai_id in problemsByAI)) {
+					problemsByAI[ai_id] = []
+				}
+				const ai = fileSystem.ais[ai_id]
+				const ai_name = ai ? ai.name : 'AI #' + problem[1]
+				const editor = this.getAiView(ai)
+				const line = problem[2]
+				let info = problem[4]
+				if (problem.length === 7) {
+					info = this.$t('leekscript.' + problem[5], problem[6])
+				} else {
+					info = this.$t('leekscript.' + problem[5])
+				}
+				info = '(' + problem[4] + ') ' + info
+				ai.valid = false
+				let new_problem = null
+				if (editor) {
+					const token = editor.editor.getTokenAt({line: line - 1, ch: problem[3] - 1})
+					new_problem = [line, token.start, line, token.end - 1, level, info]
+				} else {
+					new_problem = [line, 0, line, 12, level, info]
+				}
+				problemsByAI[ai_id].push(new_problem)
+			}
+			for (const ai_id in problemsByAI) {
+				const ai = fileSystem.ais[ai_id]
+				const ai_problems = problemsByAI[ai_id]
+				// console.log("ai", ai.path, "problems", ai_problems)
+				LeekWars.analyzer.setAIProblems(entrypoint.id, ai.path, ai_problems)
+				this.problems(entrypoint.id, ai, ai_problems)
+			}
+		}
+
 		startDelete() {
 			(this.$refs.explorer as any).deleteDialog = true
 		}
@@ -764,6 +813,14 @@
 		updateHistory() {
 			localStorage.setItem('editor/history', JSON.stringify(this.history.map(ai => ai.id)))
 		}
+
+		setVersion(version: number) {
+			if (this.currentAI) {
+				this.currentAI.version = version
+				LeekWars.put('ai/version', {ai: this.currentAI.id, version})
+				this.save()
+			}
+		}
 	}
 </script>
 
@@ -776,6 +833,7 @@
 	.page-header {
 		flex-wrap: nowrap;
 		position: relative;
+		padding-right: 0;
 	}
 	.container {
 		flex: 1;
@@ -999,6 +1057,14 @@
 		display: flex;
 		align-items: center;
 		border-top: 1px solid #ddd;
+		.version {
+			line-height: 36px;
+			user-select: none;
+			cursor: pointer;
+			padding: 0 10px;
+			font-weight: 500;
+			color: #555;
+		}
 		.problems {
 			height: 100%;
 			line-height: 36px;
@@ -1067,6 +1133,38 @@
 		.v-icon {
 			font-size: 16px;
 			vertical-align: bottom;
+		}
+	}
+	.version-menu {
+		.v-list-item__subtitle {
+			white-space: initial;
+			font-weight: 400;
+			> ul {
+				padding-left: 20px;
+			}
+			ul {
+				margin: 4px 0;
+			}
+		}
+		.green {
+			background: #5fad1b;
+			color: white;
+			padding: 0 6px;
+			border-radius: 20px;
+		}
+		.link {
+			padding: 5px;
+			padding-left: 50px;
+			color: #5fad1b;
+			font-weight: 500;
+			display: block;
+			i {
+				font-size: 16px;
+				vertical-align: top;
+			}
+			&:hover {
+				text-decoration: underline;
+			}
 		}
 	}
 </style>

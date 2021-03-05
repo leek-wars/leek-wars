@@ -1,3 +1,29 @@
+222:
+  title: "LeekScript 1.1 : Object Oriented Programming and language improvements"
+  added:
+    - "#ai Added LeekScript version 1.1."
+    - "#ai Added object-oriented programming: classes and objects (LS 1.1)."
+    - "#ai Switch to default reference (functions, foreach, arrays) (LS 1.1)."
+    - "#ai Added the clone() function to duplicate a value."
+    - "LeekScript: returned errors now have a complete call stack."
+    - "Fight report: ability to navigate through towers easily."
+  improved:
+    - "Editor: several errors are returned instead of just one."
+    - "#ai Semicolons are no longer required."
+    - Added javadoc on global and classes.
+    - Updated the javadoc without having to refresh the page.
+    - Improvement of the basic AI model (thanks to Oimat).
+    - Ternaries now cost 1 operation, like normal conditions.
+  fixed:
+    - "#ai Fixed arrayFilter returning an associative array (LS 1.1)."
+    - "#ai Fixed escape of '\\\\' strings (LS 1.1)."
+    - Fixed a bug loading the fight with tabs in the say().
+    - Correction of NOVA_VITALITY effects in the fight report (thanks to Ref).
+    - "#ai Correction of the operator ^= which becomes well the xor assignment (LS 1.1)."
+    - Correction of the display of "null" in the javadoc some functions.
+    - The shuffle function is now deterministic (for the same seed).
+    - Correction of translations in the documentation.
+
 221:
   title: "16 new chips, Push/Pull, Team Tooltips, AI Trashcan, Explorer Rifle"
   added:
@@ -43,7 +69,7 @@
   title: Maps redesign, profile rankings and combat options
   added:
     - Redesign of all the cards of the game with a better quality.
-    - Display of the ranking on the profile of leeks, breeder and team if position < 1000.
+    - Display of the ranking on the profile of leeks, farmer and team if position < 1000.
     - Added an option in combat to display or not the actions.
     - Added a night mode option in combat for actions and entity info.
     - Added an option to display or not the effects of entities under the life bars.

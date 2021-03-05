@@ -27,6 +27,9 @@
 .cm-attribute {
 	color: #00c;
 }
+.cm-property {
+	color: #2d70d9;
+}
 .CodeMirror-lines .activeline {
 	background: #f2f2f2;
 }
@@ -75,7 +78,7 @@
 	background-position: left bottom;
 }
 .cm-warning {
-	background: #ffe3be;
+	background: rgba(255, 127, 0, 0.15);
 	padding: 3px 0;
 	position: relative;
 }

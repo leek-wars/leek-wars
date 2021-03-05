@@ -1,6 +1,6 @@
 <template lang="html">
 	<div :class="{root: folder.id === 0}" @click="click" @contextmenu.prevent.stop="$root.$emit('editor-menu', folder, false, $event)">
-		<div :class="{empty: !folder.items.length, 'dragover': dragOver > 0, expanded: folder.expanded, root: level === 0, selected: folder.selected}" :draggable="level > 0" class="item folder" @dragenter="dragenter" @dragleave="dragleave" @dragover="dragover" @drop="drop" @dragstart="dragstart" @dragend="dragend">
+		<div :class="{empty: !folder.items.length, 'dragover': dragOver > 0, expanded: folder.expanded, root: level === 0, selected: folder.selected}" :draggable="level > 0 && folder.id !== -1" class="item folder" @dragenter="dragenter" @dragleave="dragleave" @dragover="dragover" @drop="drop" @dragstart="dragstart" @dragend="dragend">
 			<div v-if="folder.id != 0" :style="{'padding-left': ((level - 1) * 15 + 10) + 'px'}" class="label" :class="{error: folder.errors, warning: folder.warnings}" @click="toggle(folder)">
 				<div class="triangle"></div>
 				<v-icon v-if="folder.id === -1" class="icon">mdi-delete-outline</v-icon>
@@ -43,6 +43,7 @@
 			explorer.setExpanded(folder, !folder.expanded)
 		}
 		drop(e: DragEvent) {
+			if (this.folder.id === -1) { return }
 			this.$root.$emit('editor-drop', this.folder)
 			e.preventDefault()
 			e.stopPropagation()
@@ -51,6 +52,7 @@
 			return false
 		}
 		dragenter(e: DragEvent) {
+			if (this.folder.id === -1) { return }
 			this.dragOver++
 			e.stopPropagation()
 		}
@@ -63,6 +65,7 @@
 			e.stopPropagation()
 		}
 		dragstart(e: DragEvent) {
+			if (this.folder.id === -1) { return }
 			e.dataTransfer!.setData('text/plain', 'drag !!!')
 			this.dragging = true
 			this.$root.$emit('editor-drag', this.folder)

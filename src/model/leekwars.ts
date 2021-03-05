@@ -8,6 +8,7 @@ import { ChipTemplate } from '@/model/chip'
 import { Commands } from '@/model/commands'
 import { CHIP_TEMPLATES, CHIPS, CONSTANTS, FUNCTIONS, HAT_TEMPLATES, HATS, ITEMS, POMPS, POTIONS, SUMMON_TEMPLATES, TROPHIES, TROPHY_CATEGORIES, WEAPONS } from '@/model/data'
 import { Emojis } from '@/model/emojis'
+import { Function } from '@/model/function'
 import { Socket } from '@/model/socket'
 import { Squares } from '@/model/squares'
 import { store } from '@/model/store'
@@ -16,6 +17,7 @@ import { WeaponTemplate } from '@/model/weapon'
 import router from '@/router'
 import { TranslateResult } from 'vue-i18n'
 import { ChatType, ChatWindow } from './chat'
+import { Constant } from './constant'
 import { i18n, loadLanguageAsync } from './i18n'
 import { ItemType } from './item'
 import { PotionEffect, PotionTemplate } from './potion'
@@ -153,6 +155,8 @@ const POTIONS_BY_SKIN = potionsBySkin(POTIONS)
 const POTION_BY_NAME = potionByName(POTIONS)
 const WEAPON_BY_NAME = weaponByName(WEAPONS)
 const CHIP_BY_NAME = chipByName(CHIPS)
+const FUNCTION_BY_ID = functionById(FUNCTIONS)
+const CONSTANT_BY_ID = constantById(CONSTANTS)
 
 class Language {
 	public code!: string
@@ -170,7 +174,7 @@ const LeekWars = {
 	DEV,
 	LOCAL,
 	API: LOCAL ? 'http://localhost:5000/api/' : 'https://leekwars.com/api/',
-	AVATAR: DEV ? 'https://leekwars.com/image/' : '/image/',
+	AVATAR: DEV ? 'https://leekwars.com/image/' : 'https://leekwars.com/image/',
 	STATIC: '/',
 	post,
 	get,
@@ -209,7 +213,9 @@ const LeekWars = {
 	leekTheme: localStorage.getItem('leek-theme') === 'true',
 	setLocale(locale: string) {
 		loadLanguageAsync(vueMain, locale)
-		LeekWars.post('farmer/set-language', {language: locale})
+		if (store.state.connected) {
+			LeekWars.post('farmer/set-language', {language: locale})
+		}
 	},
 	getLeekAppearance: (level: number): number => {
 		if (level < 10) { return 1 } else if (level < 20) { return 2 } else if (level < 50) { return 3 } else if (level < 80) { return 4 } else if (level < 100) { return 5 } else if (level < 150) { return 6 } else if (level < 200) { return 7 } else if (level < 250) { return 8 } else if (level < 300) { return 9 } else if (level < 301) { return 10 }
@@ -475,7 +481,7 @@ const LeekWars = {
 		LeekWars.sfw = false
 		LeekWars.setFavicon(true)
 	},
-	toast(message: string | TranslateResult, durationOrCallback: number | Function = 1800) {
+	toast(message: string | TranslateResult, durationOrCallback: number | any = 1800) {
 		const d = typeof(durationOrCallback) === "number" ? durationOrCallback : 1800
 		const callback = typeof(durationOrCallback) === "function" ? durationOrCallback : null
 
@@ -537,6 +543,8 @@ const LeekWars = {
 	items: Object.freeze(ITEMS),
 	chips: Object.freeze(CHIPS),
 	chipByName: Object.freeze(CHIP_BY_NAME),
+	functionById: Object.freeze(FUNCTION_BY_ID),
+	constantById: Object.freeze(CONSTANT_BY_ID),
 	trophies: Object.freeze(TROPHIES),
 	chipTemplates: Object.freeze(CHIP_TEMPLATES),
 	trophyCategories: Object.freeze(TROPHY_CATEGORIES),
@@ -684,6 +692,22 @@ function chipByName(chips: {[key: string]: ChipTemplate}) {
 	for (const c in chips) {
 		const chip = chips[c]
 		result[chip.name] = chip
+	}
+	return result
+}
+
+function functionById(functions: Function[]) {
+	const result: { [key: number]: Function } = {}
+	for (const f of functions) {
+		result[f.id] = f
+	}
+	return result
+}
+
+function constantById(constants: Constant[]) {
+	const result: { [key: number]: Constant } = {}
+	for (const c of constants) {
+		result[c.id] = c
 	}
 	return result
 }
