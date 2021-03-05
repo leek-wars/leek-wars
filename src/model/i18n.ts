@@ -13,9 +13,23 @@ const loadedLanguages: string[] = [locale]
 const mixins = [{
 	beforeCreate() {
 		// Reload translations because in case of hot reloading, they are lost
-		if (!(this as any).$options.i18n.messages) {
+		// Missing messages or messages for the current locale
+		if (!(this as any).$options.i18n.messages || !(this as any).$options.i18n.messages[i18n.locale]) {
 			// console.log("reload translations...")
 			loadInstanceTranslations(i18n.locale, this)
+		}
+	},
+	watch: {
+		'$i18n.locale'() {
+			const name = (this as any).$options.name!
+			console.log("Reload translations of component", name)
+			const newLocale = i18n.locale
+			const folder = name.startsWith('signup-') ? 'signup' : name
+			return import(/* webpackChunkName: "locale-[request]" */ `!json-loader!@/component/${folder}/${name}.${newLocale}.i18n`).then((module: any) => {
+				i18n.mergeLocaleMessage(newLocale, { [name]: module })
+				const instanceI18n = (this as any).$i18n
+				instanceI18n.setLocaleMessage(newLocale, module)
+			})
 		}
 	}
 }]
@@ -46,6 +60,7 @@ function loadLanguageAsync(vue: any, newLocale: string) {
 }
 
 function loadInstanceTranslations(newLocale: string, instance: any) {
+	// console.log("load instance translations", instance)
 	if (!instance.$options.name) {
 		return
 	}
@@ -69,6 +84,7 @@ function loadComponentLanguage(newLocale: string, component: any, instance: Comp
 	if (!component.options) { return }
 	let name = (component as any).options.name.toLowerCase().replace(/_/g, '-')
 	if (name === "bankbuy" || name === "bankvalidate") { name = "bank" }
+	if (name === "home") { name = "signup" }
 
 	if (component === undefined) {
 		return

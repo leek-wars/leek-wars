@@ -15,7 +15,7 @@
 
 <script lang="ts">
 	import { LeekWars } from '@/model/leekwars'
-	import { Component, Prop, Vue } from 'vue-property-decorator'
+	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 
 	@Component({ name: 'changelog-version', i18n: {} })
 	export default class ChangelogVersion extends Vue {
@@ -23,7 +23,12 @@
 		changelog: any = null
 
 		created() {
-			import(/* webpackChunkName: "changelog-[request]" */ `json-loader!yaml-loader!@/component/changelog/changelog.${this.$i18n.locale}.yaml`).then((changelog) => {
+			this.update()
+		}
+
+		@Watch('$i18n.locale')
+		update() {
+import(/* webpackChunkName: "changelog-[request]" */ `json-loader!yaml-loader!@/component/changelog/changelog.${this.$i18n.locale}.yaml`).then((changelog) => {
 				this.changelog = changelog
 			})
 		}
