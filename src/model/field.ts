@@ -205,6 +205,20 @@ class Field {
 	public getCell(x: number, y: number) {
 		return this.coord[x - this.min_x][y - this.min_y]
 	}
+
+	public getLastAvailableCell(from: Cell, target: Cell) {
+		const dx = Math.sign(target.x - from.x)
+		const dy = Math.sign(target.y - from.y)
+		let current = from
+		while (current !== target) {
+			const next = this.next_cell(current, dx, dy)!
+			if (next.obstacle || !!next.entity) {
+				return current
+			}
+			current = next
+		}
+		return current
+	}
 }
 
 export { Field }

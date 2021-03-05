@@ -335,6 +335,16 @@ class FightEntity extends Entity {
 		}
 	}
 
+	public winMaxLife(life: number, jump: boolean) {
+		this.maxLife += life
+		this.updateGrowth()
+		if (!jump) {
+			const info = new InfoText()
+			info.init("+" + life, Colors.MAX_LIFE_COLOR, -this.height, this.isTop)
+			this.infoText.push(info)
+		}
+	}
+
 	public updateGrowth() {
 		this.growth = 1.0 + Math.log10(Math.max(1, this.maxLife / this.initialMaxLife)) / 3
 		this.height = this.baseHeight * this.growth
@@ -358,6 +368,24 @@ class FightEntity extends Entity {
 		if (!jump) {
 			const info = new InfoText()
 			info.init("-" + magic, Colors.MAGIC_COLOR, -this.height, this.isTop)
+			this.infoText.push(info)
+		}
+	}
+
+	public looseAgility(agility: number, jump: boolean) {
+		this.agility -= agility
+		if (!jump) {
+			const info = new InfoText()
+			info.init("-" + agility, Colors.AGILITY_COLOR, -this.height, this.isTop)
+			this.infoText.push(info)
+		}
+	}
+
+	public looseWisdom(wisdom: number, jump: boolean) {
+		this.wisdom -= wisdom
+		if (!jump) {
+			const info = new InfoText()
+			info.init("-" + wisdom, Colors.WISDOM_COLOR, -this.height, this.isTop)
 			this.infoText.push(info)
 		}
 	}

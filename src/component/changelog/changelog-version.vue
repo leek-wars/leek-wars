@@ -53,7 +53,7 @@
 		}
 
 		get extension() {
-			return this.version.version === 220 ? 'jpg' : 'png'
+			return this.version.version >= 220 ? 'jpg' : 'png'
 		}
 	}
 </script>

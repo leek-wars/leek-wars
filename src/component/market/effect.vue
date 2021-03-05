@@ -103,7 +103,7 @@
 		get icon() {
 			if ([EffectType.DAMAGE].includes(this.effect.id)) { return 'strength' }
 			if ([EffectType.LIFE_DAMAGE].includes(this.effect.id)) { return 'life' }
-			if ([EffectType.HEAL, EffectType.VITALITY].includes(this.effect.id)) { return 'wisdom' }
+			if ([EffectType.HEAL, EffectType.BOOST_MAX_LIFE].includes(this.effect.id)) { return 'wisdom' }
 			if ([EffectType.ABSOLUTE_SHIELD, EffectType.RELATIVE_SHIELD].includes(this.effect.id)) { return 'resistance' }
 			if ([EffectType.DAMAGE_RETURN].includes(this.effect.id)) { return 'agility' }
 			if ([EffectType.BUFF_STRENGTH, EffectType.BUFF_RESISTANCE, EffectType.BUFF_WISDOM, EffectType.BUFF_AGILITY, EffectType.BUFF_MP, EffectType.BUFF_TP, EffectType.AFTEREFFECT, EffectType.NOVA_DAMAGE, EffectType.NOVA_VITALITY].includes(this.effect.id)) { return 'science' }

@@ -580,6 +580,35 @@ class Rifle extends Firegun {
 		}
 	}
 }
+
+class ExplorerRifle extends Firegun {
+	static textures = [T.shots, T.bullet, T.explorer_rifle, T.explorer_rifle_cartridge]
+	static sounds = [S.rifle]
+	static SHOTS = 2
+	static DELAY = 10
+	shoots: number = 0
+	delay: number = Rifle.DELAY
+	constructor(game: Game) {
+		super(game, T.explorer_rifle, T.explorer_rifle_cartridge, S.rifle, 22)
+	}
+
+	public shoot(leekX: number, leekY: number, handPos: number, angle: number, orientation: number, targetPos: Position, targets: FightEntity[], caster: FightEntity, cell: Cell, scale: number) {
+		this.shoots = Rifle.SHOTS
+		return super.shoot(leekX, leekY, handPos, angle, orientation, targetPos, targets, caster, cell, scale)
+	}
+	public update(dt: number) {
+		if (this.shoots > 0) {
+			this.delay -= dt
+			if (this.delay <= 0) {
+				S.rifle.play(this.game)
+				this.throwBullet(this.bulletX, this.bulletY, this.bulletZ, this.bulletAngle, this.targetPos, this.targets, this.caster, this.cell)
+				this.delay = Rifle.DELAY
+				this.shoots--
+			}
+		}
+	}
+}
+
 class JLaser extends LaserWeapon {
 	static textures = [T.j_laser, T.j_laser_bullet, T.cart_j_laser]
 	static sounds = [S.laser]
@@ -640,4 +669,4 @@ class Shotgun extends Firegun {
 	}
 }
 
-export { WeaponAnimation, WhiteWeaponAnimation, Axe, BLaser, Broadsword, Destroyer, DoubleGun, Electrisor, FlameThrower, Gazor, GrenadeLauncher, IllicitGrenadeLauncher, JLaser, Katana, Laser, MachineGun, Magnum, Rhino, MLaser, MysteriousElectrisor, Pistol, RevokedMLaser, Rifle, Shotgun, UnbridledGazor }
+export { WeaponAnimation, WhiteWeaponAnimation, Axe, BLaser, Broadsword, Destroyer, DoubleGun, Electrisor, ExplorerRifle, FlameThrower, Gazor, GrenadeLauncher, IllicitGrenadeLauncher, JLaser, Katana, Laser, MachineGun, Magnum, Rhino, MLaser, MysteriousElectrisor, Pistol, RevokedMLaser, Rifle, Shotgun, UnbridledGazor }

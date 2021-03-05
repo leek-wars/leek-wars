@@ -135,6 +135,8 @@ class T {
 	public static rifle_cartridge = new Texture(LeekWars.STATIC + 'image/weapon/rifle_cartridge.png')
 	public static rhino = new Texture(LeekWars.STATIC + 'image/weapon/rhino.png', true, SHADOW_QUALITY)
 	public static rhino_cartridge = new Texture(LeekWars.STATIC + 'image/weapon/rhino_cartridge.png')
+	public static explorer_rifle = new Texture(LeekWars.STATIC + 'image/weapon/explorer_rifle.png', true, SHADOW_QUALITY)
+	public static explorer_rifle_cartridge = new Texture(LeekWars.STATIC + 'image/weapon/explorer_rifle_cartridge.png')
 
 	// Cartes
 	public static box = new Texture(LeekWars.STATIC + 'image/map/box.png', true, 1)
@@ -253,10 +255,18 @@ class T {
 	public static damage_return_aureol = new Texture(LeekWars.STATIC + 'image/fight/damage_return_aureol.png')
 	public static nova_aureol = new Texture(LeekWars.STATIC + 'image/fight/nova_aureol.png')
 	public static chip_burning = new Texture(LeekWars.STATIC + 'image/chip/glyph/burning.png')
-	public static spike1 = new Texture(LeekWars.STATIC + 'image/fight/spike1.png', true, 1)
-	public static spike2 = new Texture(LeekWars.STATIC + 'image/fight/spike2.png', true, 1)
-	public static plasma = new Texture(LeekWars.STATIC + 'image/fight/plasma.png', true, 1)
-	public static alteration = new Texture(LeekWars.STATIC + 'image/fight/alteration.png', true, 1)
+	public static spike1 = new Texture(LeekWars.STATIC + 'image/fight/spike1.png')
+	public static spike2 = new Texture(LeekWars.STATIC + 'image/fight/spike2.png')
+	public static plasma = new Texture(LeekWars.STATIC + 'image/fight/plasma.png')
+	public static alteration = new Texture(LeekWars.STATIC + 'image/fight/alteration.png')
+	public static glove = new Texture(LeekWars.STATIC + 'image/fight/glove.png')
+	public static glove_back = new Texture(LeekWars.STATIC + 'image/fight/glove_back.png')
+	public static chain = new Texture(LeekWars.STATIC + 'image/fight/chain.png')
+	public static chain_back = new Texture(LeekWars.STATIC + 'image/fight/chain_back.png')
+	public static grapple_1 = new Texture(LeekWars.STATIC + 'image/fight/grapple_1.png')
+	public static grapple_2 = new Texture(LeekWars.STATIC + 'image/fight/grapple_2.png')
+	public static grapple_back_1 = new Texture(LeekWars.STATIC + 'image/fight/grapple_back_1.png')
+	public static grapple_back_2 = new Texture(LeekWars.STATIC + 'image/fight/grapple_back_2.png')
 
 	// Buff
 	public static chip_steroid = new Texture(LeekWars.STATIC + 'image/chip/glyph/steroid.png')

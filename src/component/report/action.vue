@@ -1,7 +1,9 @@
 <template>
 	<div>
-		<div v-if="type === ActionType.START_FIGHT || type === ActionType.NEW_TURN" class="turn">
-			{{ $t('fight.turn_n', [turn]) }}
+		<div v-if="type === ActionType.START_FIGHT || type === ActionType.NEW_TURN" :id="'turn-' + turn" class="turn">
+			<span class="label" @click="goToTurn(turn)">{{ $t('fight.turn_n', [turn]) }}</span>
+			<v-icon v-if="report" :class="{disabled: turn === 1}" @click="goToTurn(turn - 1)">mdi-chevron-left</v-icon>
+			<v-icon v-if="report" :class="{disabled: turn === report.duration}" @click="goToTurn(turn + 1)">mdi-chevron-right</v-icon>
 		</div>
 		<div v-else-if="type === ActionType.USE_WEAPON">
 			<i18n path="fight.leek_shoot">
@@ -42,6 +44,10 @@
 			<b slot="value" class="color-life">{{ $t('fight.n_life', [action.params[2]]) }}</b>
 		</i18n>
 		<i18n v-else-if="type === ActionType.NOVA_DAMAGE" tag="div" path="fight.leek_loose_x">
+			<leek slot="leek" :leek="leek" />
+			<b slot="value" class="color-max-life">{{ $t('fight.n_max_life', [action.params[2]]) }}</b>
+		</i18n>
+		<i18n v-else-if="type === ActionType.NOVA_VITALITY" tag="div" path="fight.leek_win_x">
 			<leek slot="leek" :leek="leek" />
 			<b slot="value" class="color-max-life">{{ $t('fight.n_max_life', [action.params[2]]) }}</b>
 		</i18n>
@@ -138,6 +144,16 @@
 				<b slot="value" class="color-magic">{{ $t('fight.n_magic', [value]) }}</b>
 				<b slot="turns">{{ formatTurns(turns) }}</b>
 			</i18n>
+			<i18n v-else-if="effect === EffectType.SHACKLE_AGILITY" path="fight.leek_loose_x">
+				<leek slot="leek" :leek="target" />
+				<b slot="value" class="color-agility">{{ $t('fight.n_agility', [value]) }}</b>
+				<b slot="turns">{{ formatTurns(turns) }}</b>
+			</i18n>
+			<i18n v-else-if="effect === EffectType.SHACKLE_WISDOM" path="fight.leek_loose_x">
+				<leek slot="leek" :leek="target" />
+				<b slot="value" class="color-wisdom">{{ $t('fight.n_wisdom', [value]) }}</b>
+				<b slot="turns">{{ formatTurns(turns) }}</b>
+			</i18n>
 			<i18n v-else-if="effect === EffectType.DAMAGE_RETURN" path="fight.leek_win_x_turns">
 				<leek slot="leek" :leek="target" />
 				<b slot="value">{{ $t('fight.n_damage_return', [value + '%']) }}</b>
@@ -149,6 +165,9 @@
 			<b slot="value">{{ action.params[2] }}%</b>
 		</i18n>
 		<i18n v-else-if="type === ActionType.REMOVE_POISONS" tag="div" path="fight.remove_poisons">
+			<leek slot="leek" :leek="leek" />
+		</i18n>
+		<i18n v-else-if="type === ActionType.REMOVE_SHACKLES" tag="div" path="fight.remove_shackles">
 			<leek slot="leek" :leek="leek" />
 		</i18n>
 		<i18n v-else-if="type === ActionType.SAY" tag="div" path="fight.leek_speak">
@@ -181,6 +200,7 @@
 <script lang="ts">
 	import { Action, ActionType } from '@/model/action'
 	import { EffectType } from '@/model/effect'
+import { Fight, Report } from '@/model/fight'
 	import { i18n } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import { Component, Prop, Vue } from 'vue-property-decorator'
@@ -188,6 +208,7 @@
 
 	@Component({ components: {leek: ActionLeekElement} })
 	export default class ActionElement extends Vue {
+		@Prop() report!: Report
 		@Prop({required: true}) action!: Action
 		@Prop({required: true}) leeks!: {[key: number]: any}
 		@Prop({required: true}) turn!: number
@@ -210,11 +231,18 @@
 		}
 		logText(log: any[]) {
 			if (log[1] === 5) {	return "pause()" }
-			if (log[1] >= 6 && log[1] <= 8) { return log[2] + i18n.t('leekscript.' + log[3], log[4]) }
+			if (log[1] >= 6 && log[1] <= 8) { return i18n.t('leekscript.' + log[3], log[4]) + "\n" + log[2] }
 			return log[2]
 		}
 		formatTurns(turns: number) {
 			return turns === -1 ? '∞' : turns
+		}
+		goToTurn(turn: number) {
+			const element = document.getElementById('turn-' + turn)!
+			console.log(element)
+			const sibling = element.parentElement!.nextElementSibling!
+			console.log(sibling, sibling.getBoundingClientRect())
+			window.scrollTo(0, sibling.getBoundingClientRect().top + window.scrollY - 48)
 		}
 	}
 </script>
@@ -225,9 +253,20 @@
 		background: #333;
 		color: #eee;
 		font-weight: 500;
-		display: inline-block;
-		padding: 5px 10px;
+		display: inline-flex;
+		padding: 3px 10px;
+		padding-right: 3px;
 		border-radius: 4px;
+		align-items: center;
+		.label {
+			padding-right: 5px;
+			cursor: pointer;
+		}
+		.v-icon.disabled {
+			opacity: 0.3;
+			pointer-events: none;
+			cursor: initial;
+		}
 	}
 	.action {
 		padding-top: 2px;

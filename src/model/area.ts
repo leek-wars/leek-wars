@@ -11,5 +11,6 @@ enum Area {
 	X_3 = 10,
 	SQUARE_1 = 11,
 	SQUARE_2 = 12,
+	FIRST_INLINE = 13,
 }
 export { Area }

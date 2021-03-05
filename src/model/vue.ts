@@ -162,18 +162,18 @@ Vue.directive('latex', {
 })
 Vue.directive('chat-code-latex', {
 	inserted: (el) => {
-		el.innerHTML = el.innerHTML.replace(/\$(.*?)\$/, (str: string) => {
+		el.innerHTML = el.innerHTML.replace(/\$(.*?)\$/g, (str: string) => {
 			return "<latex>" + str.replace(/`/g, "") + "</latex>"
 		})
-		el.innerHTML = el.innerHTML.replace(/```(.*?)```/, (str: string, code: string) => {
+		el.innerHTML = el.innerHTML.replace(/```(.*?)```/g, (str: string, code: string) => {
 			return "<code>" + code + "</code>"
 		})
-		el.innerHTML = el.innerHTML.replace(/`(.*?)`/, (str: string, code: string) => {
+		el.innerHTML = el.innerHTML.replace(/`(.*?)`/g, (str: string, code: string) => {
 			return "<code>" + code + "</code>"
 		})
 		el.querySelectorAll('code').forEach((c) => {
 			if (c.innerHTML.indexOf("<br>") !== -1) {
-				const code = c.innerHTML.replace(/<br>/gi, "\n").replace(/&nbsp;/gi, "\t").trim()
+				const code = LeekWars.decodehtmlentities(c.innerHTML).replace(/<br>/gi, "\n").trim()
 				LeekWars.createCodeArea(code, c)
 			} else {
 				c.classList.add('single')

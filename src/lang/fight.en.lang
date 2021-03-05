@@ -33,6 +33,7 @@
 	"n_vita": "{0} total health",
 	"reduce_effects": "The effects on {leek} are reduced by {value}",
 	"remove_poisons": "The poisons of {leek} are neutralized",
+	"remove_shackles": "The shackles of {leek} are destroyed",
 	"start_of_fight": "Starting fight!",
 	"summon": "{leek} summons {summon}",
 	"turn_n": "Turn {0}",

@@ -21,6 +21,7 @@ enum ActionType {
 	LIFE_DAMAGE = 109,
 	POISON_DAMAGE = 110,
 	AFTEREFFECT = 111,
+	NOVA_VITALITY = 112,
 
 	SAY = 200,
 	LAMA = 201,
@@ -32,6 +33,7 @@ enum ActionType {
 	ADD_STACKED_EFFECT = 305,
 	REDUCE_EFFECTS = 306,
 	REMOVE_POISONS = 307,
+	REMOVE_SHACKLES = 308,
 	BUG = 1002,
 }
 type ActionLog = any[]

@@ -228,7 +228,7 @@
 			</div>
 			<loader v-if="!loaded" />
 			<div v-else>
-				<actions :actions="actions" :leeks="leeks" :display-logs="actionsDisplayLogs" :display-allies-logs="actionsDisplayAlliesLogs" class="actions" />
+				<actions :report="report" :actions="actions" :leeks="leeks" :display-logs="actionsDisplayLogs" :display-allies-logs="actionsDisplayAlliesLogs" class="actions" />
 			</div>
 		</panel>
 	</div>
@@ -452,7 +452,7 @@
 					for (const log of action) {
 						const leek = log[0]
 						const type = log[1]
-						const message = (type >= 6 && type <= 8) ? log[2] + i18n.t('leekscript.' + log[3], log[4]) : log[2]
+						const message = (type >= 6 && type <= 8) ? i18n.t('leekscript.' + log[3], log[4]) + "\n" + log[2] : log[2]
 						if (type === 2 || type === 7) {
 							this.warnings.push({entity: this.leeks[leek].name, data: message})
 						} else if (type === 3 || type === 8) {
