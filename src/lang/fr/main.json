@@ -30,6 +30,7 @@
 	"console_alert_2": "il s'agit d'une tentative de piratage de votre compte sur Leek Wars.",
 	"console_alert_3": "Entrez du code ici seulement si vous savez exactement ce que vous faites.",
 	"console_github": "Dépôt GitHub du site : https://github.com/leek-wars/leek-wars-client",
+	"country": "Pays",
 	"create": "Créer",
 	"date_format": "%d %B %Y",
 	"date_time_format": "%d %B %Y à %R",
