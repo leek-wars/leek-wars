@@ -12,13 +12,21 @@
 		</div>
 		<div class="header-right">
 			<div v-if="!$store.state.connected" class="header-signin buttons">
-				<!--
-				<div class="button-wrapper">
-					<div class="header-button" @click="LeekWars.setLocale($i18n.locale === 'fr' ? 'en' : 'fr')">
-						{{ $i18n.locale }}
-					</div>
-				</div>
-				-->
+				<v-menu offset-y>
+					<template v-slot:activator="{ on }">
+						<div class="button-wrapper" v-on="on">
+							<div class="header-button">
+								<img :src="'/image/flag/' + ($i18n.locale === 'fr' ? 'fr' : 'gb') + '.png'" class="language-button">
+							</div>
+						</div>
+					</template>
+					<v-list :dense="true">
+						<v-list-item v-for="(language, i) in LeekWars.languages" :key="i" class="language" @click="LeekWars.setLocale(language.code)">
+							<img :src="language.flag" class="flag">
+							<span class="name">{{ language.name }}</span>
+						</v-list-item>
+					</v-list>
+				</v-menu>
 				<div class="button-wrapper">
 					<router-link to="/login">
 						<div class="header-button">
@@ -354,5 +362,12 @@
 			padding-left: 20px;
 			padding-right: 20px;
 		}
+	}
+	.language-button {
+		height: 26px;
+	}
+	.language .flag {
+		height: 26px;
+		margin-right: 8px;
 	}
 </style>
