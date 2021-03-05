@@ -300,6 +300,11 @@ const LeekWars = {
 			.replace(/>/g, "&gt;").replace(/</g, "&lt;")
 			.replace(/"/g, "&quot;").replace(/'/g, "&#39;")
 	},
+	decodehtmlentities(string: any) {
+		return ('' + string).replace(/&amp;/g, "&")
+			.replace(/&gt;/g, ">").replace(/&lt;/g, "<")
+			.replace(/&nbsp;/g, "\t")
+	},
 	formatNumber(n: number) {
 		return ("" + n).replace(/\B(?=(\d{3})+(?!\d))/g, " ")
 	},
@@ -860,6 +865,7 @@ function weaponSound(id: number) {
 		18: ['grenade_shoot', 0.7, 'explosion'], 19: ['electrisor'], 20: ['gazor', 1.2, 'explosion'], 21: ['laser', 0.1, 'poison'],
 		22: ['rifle.wav', 0.15, 'rifle.wav', 0.15, 'rifle.wav'],
 		23: ['double_gun'],
+		24: ['rifle.wav', 0.15, 'rifle.wav', 0.15, 'rifle.wav'],
 	} as {[key: number]: any})[id]
 }
 function chipSound(id: number) {

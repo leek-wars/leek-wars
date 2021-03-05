@@ -1,3 +1,44 @@
+221:
+  title: "16 nouvelles puces, Pousser/Attirer, Tooltips d'équipe, Corbeille d'IA, Fusil de l'explorateur"
+  added:
+    - "#ai Ajout de 16 nouvelles puces, dans beaucoup de catégories."
+    - "#ai Ajout d'une mécanique de pousser/attirer."
+    - "#ai Ajout des effets NOVA_VITALITY, SLIDE_TO, SHACKLE_AGILITY/WISDOM, REMOVE_SHACKLES."
+    - "#ai Ajout des zones SQUARE_1, SQUARE_2 et FIRST_IN_LINE."
+    - "#ai Ajout de l'arme Fusil de l'explorateur."
+    - Ajout d'une animation pour la puce Résurrection.
+    - Ajout d'une corbeille d'IA supprimées dans l'éditeur.
+    - Tooltips avancées d'équipes et de compositions.
+  improved:
+    - Le nombre d'obstacles d'une carte est plus variable.
+    - Plus d'items aux niveaux multiples de 10.
+    - Accélération du chargement des historiques de combat.
+    - Ajout de la date d'export lors d'un téléchargement d'IA.
+    - Ajout d'une mention "glisser pour défiler" sur la page d'inscription.
+    - La taille du texte en combat varie selon l'écran et la densité de pixels.
+    - Amélioration de la visibilité des barres de vie en haut en combat (et dark mode).
+    - "Fenêtre capital : ajout d'un bouton pour retirer tout le capital d'une caractéristique."
+    - Ajout de mains dorées pour le skin doré.
+    - "Potager : amélioration de l'affichage des niveaux + nombre de poireaux d'une compo."
+    - Affichage des emblèmes d'équipes sous les combats d'équipe.
+    - Augmentation du prix en Habs des items s'achetant aussi en cristaux (x2).
+    - Accélération du chargement de la page équipe.
+    - Réorganisation des catégories de puces dans le marché.
+    - La puce Fracture ne réduit plus la magie (uniquement la force).
+  fixed:
+    - Correction de la description du trophée Sniper.
+    - Correction du message d'erreur lors d'un include erroné.
+    - Quand un nouveau poireau est créé, il apparaît bien dans le menu.
+    - Correction de l'état valide ou non d'une IA (affichage d'une icone).
+    - Correction de l'affichage de code sur le chat sur Firefox (trop de retours à la ligne).
+    - Possibilité de cliquer quand même sur les items quand la tooltip passe par dessus.
+    - Correction du bug de fermeture des tooltips avancées.
+    - "Marché : affichage des items trop haut niveau même avec plusieurs poireaux."
+    - Correction d'un décalage de la souris lors d'un survol avec le combat.
+    - Correction de la position des mains en combat.
+    - Actualisation des IA lors d'un changement de compte.
+    - Correction d'un problème de cache dans l'éditeur quand une IA est supprimée.
+
 220:
   title : Refonte des cartes, classements sur profil et options en combat
   added:

@@ -11,7 +11,7 @@ import { Obstacle } from '@/component/player/game/obstacle'
 import { Particles } from '@/component/player/game/particles'
 import { S, Sound } from '@/component/player/game/sound'
 import { T, Texture } from '@/component/player/game/texture'
-import { Axe, BLaser, Broadsword, Destroyer, DoubleGun, Electrisor, FlameThrower, Gazor, GrenadeLauncher, IllicitGrenadeLauncher, JLaser, Katana, Laser, MachineGun, Magnum, MLaser, MysteriousElectrisor, Pistol, RevokedMLaser, Rhino, Rifle, Shotgun, UnbridledGazor } from '@/component/player/game/weapons'
+import { Axe, BLaser, Broadsword, Destroyer, DoubleGun, Electrisor, ExplorerRifle, FlameThrower, Gazor, GrenadeLauncher, IllicitGrenadeLauncher, JLaser, Katana, Laser, MachineGun, Magnum, MLaser, MysteriousElectrisor, Pistol, RevokedMLaser, Rhino, Rifle, Shotgun, UnbridledGazor } from '@/component/player/game/weapons'
 import { env } from '@/env'
 import { locale } from '@/locale'
 import { Action, ActionType } from '@/model/action'
@@ -105,6 +105,7 @@ const WEAPONS = [
 	RevokedMLaser, // 21
 	Rifle, // 22
 	Rhino, // 23
+	ExplorerRifle, // 24
 ]
 
 const CHIPS = [
@@ -570,9 +571,9 @@ class Game {
 					break
 			}
 		}
-		console.log("used chips", chipsUsed)
-		console.log("weapons taken", weaponsTaken)
-		console.log("weapons used", weaponsUsed)
+		// console.log("used chips", chipsUsed)
+		// console.log("weapons taken", weaponsTaken)
+		// console.log("weapons used", weaponsUsed)
 
 		// Load common textures
 		T.tp.load(this)
@@ -601,8 +602,8 @@ class Game {
 				sounds.add(sound)
 			}
 		}
-		console.log("textures to load", textures)
-		console.log("sounds to load", sounds)
+		// console.log("textures to load", textures)
+		// console.log("sounds to load", sounds)
 		for (const texture of textures) {
 			texture.load(this)
 		}
@@ -986,18 +987,26 @@ class Game {
 			const target_cell = this.ground.field.cells[action.params[2]]
 			const chip = action.params[3]
 			const result = action.params[4]
+			const targets_ids = action.params[5] as number[]
 
 			// TODO take the area from the action instead of the item data when available
-			const area = LeekWars.chips[LeekWars.chipTemplates[chip].item].area
-			const targets = this.ground.field.getTargets(target_cell, area) as FightEntity[]
+			// const area = LeekWars.chips[LeekWars.chipTemplates[chip].item].area
+			// const targets = this.ground.field.getTargets(target_cell, area) as FightEntity[]
+			const targets = targets_ids.map(id => this.leeks.find(l => l.id === id)!)
+			// console.log("ids", targets_ids, "targets", targets, "target_cell", target_cell)
 
 			if (this.jumping) {
 				// Update leek cell after teleportation
 				if (chip === 37 || chip === 78) {
 					target_cell.setEntity(launcher)
 				}
-				// Update leeks cells after inversion
-				if (chip === 39) {
+				if (chip === 88 || chip === 89) { // boxing glove & grapple
+					if (targets.length) {
+						target_cell.setEntity(targets[0])
+					}
+				}
+				// Update leeks cells after inversion / repotting
+				if (chip === 39 || chip === 83) {
 					if (targets.length) { // C'est possible de lancer dans le vide
 						const launcher_cell = launcher.cell!
 						target_cell.setEntity(launcher)
@@ -1055,6 +1064,15 @@ class Game {
 		}
 		case ActionType.NOVA_DAMAGE: {
 			this.leeks[action.params[1]].looseMaxLife(action.params[2], this.jumping)
+			if (!this.jumping) {
+				this.log(action)
+				this.leeks[action.params[1]].randomHurt()
+			}
+			this.actionDone()
+			break
+		}
+		case ActionType.NOVA_VITALITY: {
+			this.leeks[action.params[1]].winMaxLife(action.params[2], this.jumping)
 			if (!this.jumping) {
 				this.log(action)
 				this.leeks[action.params[1]].randomHurt()
@@ -1203,6 +1221,11 @@ class Game {
 			this.actionDone()
 			break
 		}
+		case ActionType.REMOVE_SHACKLES : {
+			this.log(action)
+			this.actionDone()
+			break
+		}
 		case ActionType.BUG: {
 			if (!this.jumping) {
 				this.leeks[action.params[1]].bug()
@@ -1254,7 +1277,7 @@ class Game {
 			} else /* weapon */ {
 				if (item in LeekWars.items) {
 					const template = LeekWars.items[item].params
-					const img = ["pistol", "machine_gun", "double_gun", "shotgun", "magnum", "laser", "grenade_launcher", "flamme", "destroyer", "gaz_icon", "electrisor", "m_laser", "b_laser", "katana", "broadsword", "axe", "j_laser", "illicit_grenade_launcher", "mysterious_electrisor", "unbridled_gazor", "revoked_m_laser"][template - 1]
+					const img = ["pistol", "machine_gun", "double_gun", "shotgun", "magnum", "laser", "grenade_launcher", "flamme", "destroyer", "gaz_icon", "electrisor", "m_laser", "b_laser", "katana", "broadsword", "axe", "j_laser", "illicit_grenade_launcher", "mysterious_electrisor", "unbridled_gazor", "revoked_m_laser", "rifle", "rhino", "explorer_rifle"][template - 1]
 					image = LeekWars.STATIC + "image/weapon/" + img + ".png"
 					// Gestion des états du poireau
 					if (template === 8) {
@@ -1332,6 +1355,12 @@ class Game {
 		case EffectType.SHACKLE_MAGIC:
 			leek.looseMagic(value, this.jumping)
 			break
+		case EffectType.SHACKLE_AGILITY:
+			leek.looseAgility(value, this.jumping)
+			break
+		case EffectType.SHACKLE_WISDOM:
+			leek.looseWisdom(value, this.jumping)
+			break
 		case EffectType.DAMAGE_RETURN:
 			leek.buffDamageReturn(value, this.jumping)
 			break
@@ -1361,6 +1390,12 @@ class Game {
 			break
 		case EffectType.SHACKLE_MAGIC:
 			leek.magic += value
+			break
+		case EffectType.SHACKLE_AGILITY:
+			leek.agility += value
+			break
+		case EffectType.SHACKLE_WISDOM:
+			leek.wisdom += value
 			break
 		case EffectType.STEAL_ABSOLUTE_SHIELD:
 		case EffectType.ABSOLUTE_SHIELD:
@@ -2090,12 +2125,21 @@ class Game {
 		// Show pointer cell
 		this.drawPointerCell()
 
+		// Chips (back)
+		this.ctx.save()
+		this.ctx.scale(this.ground.scale, this.ground.scale)
+		for (const chip of this.chips) {
+			chip.drawBack(this.ctx)
+		}
+		this.ctx.restore()
+
 		// Draw elements
 		for (const line of this.drawableElements) {
 			for (const j in line) {
 				line[j].draw(this.ctx)
 			}
 		}
+
 		// Draw cells numbers
 		if (this.showCells) {
 			this.ground.drawCellNumbers(this.ctx)
@@ -2113,6 +2157,14 @@ class Game {
 
 		// Draw air particles
 		this.particles.drawAir(this.ctx)
+
+		// Chips
+		this.ctx.save()
+		this.ctx.scale(this.ground.scale, this.ground.scale)
+		for (const chip of this.chips) {
+			chip.draw(this.ctx)
+		}
+		this.ctx.restore()
 
 		// Life bars
 		for (const entity of this.leeks) {

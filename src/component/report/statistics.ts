@@ -143,7 +143,7 @@ class FightStatistics {
 		for (const leek of fight.data.leeks) {
 			entities[leek.id] = new StatisticsEntity(leek)
 			if (!leek.summon) {
-				this.field.cells[leek.cellPos].entity = entities[leek.id]
+				entities[leek.id].move(this.field.cells[leek.cellPos])
 				leek_count++
 			}
 			if (fight.data.ops && leek.id in fight.data.ops) {
@@ -265,6 +265,19 @@ class FightStatistics {
 					entity.life += boost
 					entity.max_life += boost
 
+					entity.max_life_in += boost
+					currentEntity.max_life_out += boost
+
+					if (preciseLives) {
+						this.updateLifes()
+					}
+					this.addTime()
+					break
+				}
+				case ActionType.NOVA_VITALITY: {
+					const entity = entities[action[1]]
+					const boost = action[2]
+					entity.max_life += boost
 					entity.max_life_in += boost
 					currentEntity.max_life_out += boost
 
@@ -443,8 +456,10 @@ class FightStatistics {
 					const cell = this.field.cells[action[2]]
 					const chipID = action[3]
 					const chip = LeekWars.chips[LeekWars.chipTemplates[chipID].item]
-					const area = chip.area
-					const targets = this.field.getTargets(cell, area) as StatisticsEntity[]
+					// TODO
+					// const area = chip.area
+					// const targets = this.field.getTargets(cell, area) as StatisticsEntity[]
+					const targets = action[5].map((id: number) => entities[id])
 					// console.log("chip", chip.name, "area", area, "targets", targets)
 
 					entity.actionsChip++
@@ -452,11 +467,17 @@ class FightStatistics {
 						entity.critical++
 					}
 					// Update leek cell after teleportation
-					if (chipID === 37) {
+					if (chipID === 37 || chipID === 78) {
 						entity.move(cell)
 					}
+					// Grapple and Boxing glove
+					else if (chipID === 88 || chipID === 89) {
+						if (targets.length) {
+							targets[0].move(cell)
+						}
+					}
 					// Update leeks cells after inversion
-					if (chipID === 39) {
+					else if (chipID === 39 || chipID === 83) {
 						if (targets.length) {
 							targets[0].move(entity.cell!)
 							entity.move(cell)
@@ -467,12 +488,18 @@ class FightStatistics {
 				}
 				case ActionType.SUMMON: {
 					entities[action[1]].invocation++
+					const summonID = action[2]
+					const summon = entities[summonID]
+					const cell = this.field.cells[action[3]]
+					summon.move(cell)
 					this.addTime()
 					break
 				}
 				case ActionType.RESURRECTION: {
 					entities[action[2]].resurrection++
 					entities[action[2]].life = action[4]
+					const cell = this.field.cells[action[3]]
+					entities[action[2]].move(cell)
 					if (preciseLives) {
 						this.updateLifes()
 					}

@@ -1,3 +1,44 @@
+221:
+  title: "16 new chips, Push/Pull, Team Tooltips, AI Trashcan, Explorer Rifle"
+  added:
+    - "#ai Added 16 new bullets, in many categories."
+    - "#ai Added a push/pull mechanism."
+    - "#ai Added NOVA_VITALITY, SLIDE_TO, SHACKLE_AGILITY/WISDOM, REMOVE_SHACKLES effects."
+    - "#ai Added SQUARE_1, SQUARE_2 and FIRST_IN_LINE areas."
+    - "#ai Added the Explorer Rifle weapon."
+    - Added animation for the Resurrection chip.
+    - Adding a trashcan of deleted AI in the editor.
+    - Advanced team and composition tooltips.
+  improved:
+    - The number of obstacles in a map is more variable.
+    - More items at levels multiple of 10.
+    - Faster loading of battle histories.
+    - Added export date when downloading AI.
+    - Added a "drag to scroll" mention on the registration page.
+    - The size of text in combat varies depending on the screen and pixel density.
+    - Improved the visibility of the top life bars in combat (and dark mode).
+    - "Capital window: added a button to remove all the capital of a feature."
+    - Added golden hands for the golden skin.
+    - "Vegetable garden : improvement of the display of levels + number of leeks of a compo."
+    - Display of team emblems under team fights.
+    - Price increase in Habs for items also purchased in crystals (x2).
+    - Acceleration of the loading of the team page.
+    - Reorganization of chip categories in the market.
+    - The Fracture chip no longer reduces magic (only strength).
+  fixed:
+    - Correction of the description of the Sniper trophy.
+    - "Fixed: Fixed the error message when using an erroneous include."
+    - When a new leek is created, it appears in the menu.
+    - "Fixed: Fixed the status of an AI (display of an icon)."
+    - Correction of the display of code on the chat in Firefox (too many line feeds).
+    - Ability to click on items anyway when the tooltip passes over them.
+    - Corrected the closing bug of advanced tooltips.
+    - "Market: display of items too high level even with several leeks."
+    - Correction of a mouse shift when hovering with the fight.
+    - Correction of the position of the hands in combat.
+    - Update AI when changing account.
+    - Fixed a cache problem in the editor when an AI is deleted.
+
 220:
   title: Maps redesign, profile rankings and combat options
   added:

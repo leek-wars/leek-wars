@@ -46,6 +46,16 @@ class Bulb extends FightEntity {
 		} else if (skin === 8) {
 			this.bodyTexFront = T.get(this.game, 'image/bulb/wizard_bulb_front.png', true, SHADOW_QUALITY)
 			this.bodyTexBack = T.get(this.game, 'image/bulb/wizard_bulb_back.png', true, SHADOW_QUALITY)
+		} else if (skin === 9) {
+			//
+		} else if (skin === 10) {
+			//
+		} else if (skin === 11) {
+			this.bodyTexFront = T.get(this.game, 'image/bulb/tactician_bulb_front.png', true, SHADOW_QUALITY)
+			this.bodyTexBack = T.get(this.game, 'image/bulb/tactician_bulb_back.png', true, SHADOW_QUALITY)
+		} else if (skin === 12) {
+			this.bodyTexFront = T.get(this.game, 'image/bulb/savant_bulb_front.png', true, SHADOW_QUALITY)
+			this.bodyTexBack = T.get(this.game, 'image/bulb/savant_bulb_back.png', true, SHADOW_QUALITY)
 		}
 		this.baseHeight = this.bodyTexFront.texture.height * Bulb.SCALE
 		this.updateGrowth()

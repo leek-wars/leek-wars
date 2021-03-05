@@ -186,7 +186,9 @@
 								</div>
 								<loader v-else-if="!teamOpponents[selectedComposition.id]" />
 								<div v-else class="opponents">
-									<garden-compo v-for="compo in teamOpponents[selectedComposition.id]" :key="compo.id" v-ripple :compo="compo" class="composition-wrapper" @click.native="clickCompositionOpponent(compo)" />
+									<span v-for="compo in teamOpponents[selectedComposition.id]" :key="compo.id" v-ripple class="composition-wrapper" @click="clickCompositionOpponent(compo)">
+										<garden-compo :compo="compo" />
+									</span>
 									<div v-if="!teamOpponents[selectedComposition.id].length">
 										<img src="/image/notgood.png">
 										<h4>{{ $t('no_opponent_of_your_size') }}</h4>
@@ -571,9 +573,6 @@
 		width: calc(20% - 2px);
 		min-width: 150px;
 		border: 1px solid rgba(0, 0, 0, 0.1);
-	}
-	.composition-wrapper {
-		padding: 10px 0;
 	}
 	.leek, .composition, .composition-wrapper, .opponents .farmer {
 		cursor: pointer;
