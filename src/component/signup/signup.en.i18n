@@ -21,7 +21,7 @@
 	"error_password_length": "The password shall contain {0} to {1} characters",
 	"godfather": "Referrer (Optional)",
 	"help_tutorial_doc": "Help, tutorial, doc",
-	"intro": "In <b>Leek Wars</b>, create the most powerful leek in the world and destroy your enemies!<br><br>\nDevelop your own artificial intelligence thanks to <b>LeekScript</b>, an easy to learn language and become the best farmer!",
+	"intro": "<b>Leek Wars</b> is a programming game in which you have to create the most powerful leek and destroy your enemies!<br><br>\nDevelop your own artificial intelligence thanks to <b>LeekScript</b>, an easy to learn language and become the best farmer!",
 	"last_update": "Last update",
 	"login": "Sign in",
 	"n_leeks_already": "Already <b>{0}</b> leeks ready to fight!",
