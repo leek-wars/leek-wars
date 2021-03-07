@@ -56,10 +56,7 @@
 </template>
 
 <script lang="ts">
-	import { Farmer } from '@/model/farmer'
-	import { Leek } from '@/model/leek'
 	import { LeekWars } from '@/model/leekwars'
-	import { store } from '@/model/store'
 	import { Composition } from '@/model/team'
 	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 
@@ -81,7 +78,7 @@
 			return this.instant ? 0 : 200
 		}
 		get _close_delay() {
-			return this.instant ? 0 : 20000
+			return this.instant ? 0 : 200
 		}
 		@Watch('id')
 		update() {
