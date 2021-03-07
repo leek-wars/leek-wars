@@ -59,6 +59,12 @@
 						items.push(LeekWars.chips[i])
 					}
 				}
+			} else if (this.constant.name.startsWith("AREA_")) {
+				for (const i in LeekWars.chips) {
+					if (LeekWars.chips[i].area === this.value_int) {
+						items.push(LeekWars.chips[i])
+					}
+				}
 			}
 			return items
 		}
@@ -73,6 +79,12 @@
 			} else if (this.constant.name.startsWith("EFFECT_") && !this.constant.name.startsWith("EFFECT_TARGET_")) {
 				for (const i in LeekWars.weapons) {
 					if (LeekWars.weapons[i].effects.some((e) => e.id === this.value_int) || LeekWars.weapons[i].passive_effects.some((e) => e.id === this.value_int)) {
+						items.push(LeekWars.weapons[i])
+					}
+				}
+			} else if (this.constant.name.startsWith("AREA_")) {
+				for (const i in LeekWars.weapons) {
+					if (LeekWars.weapons[i].area === this.value_int) {
 						items.push(LeekWars.weapons[i])
 					}
 				}
