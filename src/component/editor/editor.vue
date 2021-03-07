@@ -319,9 +319,9 @@
 			{icon: 'mdi-cogs', click: () => this.settings() }
 		]
 		actions_content = [
-			{icon: 'mdi-content-save', click: () => this.save()},
+			{icon: 'mdi-content-save', click: () => this.save(this.currentEditor)},
 			{icon: 'mdi-delete', click: () => this.startDelete()},
-			{icon: 'mdi-play', click: () => this.test()},
+			{icon: 'mdi-play', click: () => this.test(this.currentEditor)},
 		]
 		get currentID() {
 			if (this.currentType === 'ai' && this.currentAI) { return this.currentAI.id }
@@ -372,7 +372,10 @@
 			LeekWars.footer = false
 			LeekWars.box = true
 			this.$root.$on('ctrlS', () => {
-				this.save()
+				this.save(this.currentEditor)
+			})
+			this.$root.$on('ctrlShiftS', () => {
+				this.saveAll()
 			})
 			this.$root.$on('ctrlQ', () => {
 				this.testDialog = true
@@ -553,31 +556,31 @@
 			}
 		}
 
-		save() {
-			if (!this.currentEditor) { return }
-			if (this.currentEditor.saving || !this.currentEditor.loaded) { return }
-			this.currentEditor.saving = true
-			this.currentEditor.ai.modified = false
-			this.currentEditor.serverError = false
+		save(aiEditor: AIView | null) {
+			if (!aiEditor) { return }
+			if (aiEditor.saving || !aiEditor.loaded) { return }
+			aiEditor.saving = true
+			aiEditor.ai.modified = false
+			aiEditor.serverError = false
 			this.errors = []
 
-			const saveID = this.currentEditor.id > 0 ? this.currentEditor.id : 0
-			const content = this.currentEditor.editor.getValue()
-			this.currentAI!.code = content
+			const saveID = aiEditor.id > 0 ? aiEditor.id : 0
+			const content = aiEditor.editor.getValue()
+			aiEditor.ai!.code = content
 
 			// this.currentEditor.updateIncludes()
 			// this.currentEditor.updateGlobalVars()
 
 			LeekWars.post('ai/save', {ai_id: saveID, code: content}).then(data => {
-				if (this.currentEditor === null) { return }
-				this.currentEditor.saving = false
+				if (aiEditor === null) { return }
+				aiEditor.saving = false
 				if (!data.result || data.result.length === 0) {
-					this.currentEditor.serverError = true
+					aiEditor.serverError = true
 					return
 				}
 				this.errors = []
 				this.goods = []
-				LeekWars.analyzer.clearProblems(this.currentAI!)
+				LeekWars.analyzer.clearProblems(aiEditor.ai!)
 
 				for (const entrypoint in data.result) {
 					const entrypoint_id = parseInt(entrypoint, 10)
@@ -597,17 +600,23 @@
 				LeekWars.analyzer.updateCount()
 				setTimeout(() => this.goods = [], 2000)
 
-				if (this.currentEditor.needTest) {
-					this.currentEditor.needTest = false
-					if (this.currentEditor.ai.valid) {
-						this.test()
+				if (aiEditor.needTest) {
+					aiEditor.needTest = false
+					if (aiEditor.ai.valid) {
+						this.test(aiEditor)
 					}
 				}
 			}).error(() => {
-				if (this.currentEditor === null) { return }
-				this.currentEditor.serverError = true
-				this.currentEditor.saving = false
+				if (aiEditor === null) { return }
+				aiEditor.serverError = true
+				aiEditor.saving = false
 			})
+		}
+
+		saveAll() {
+			for (const aiEditor of (this.$refs.editors as AIView[])) {
+				this.save(aiEditor)
+			}
 		}
 
 		handleProblems(entrypoint: AI, problems: any[]) {
@@ -652,11 +661,11 @@
 		startDelete() {
 			(this.$refs.explorer as any).deleteDialog = true
 		}
-		test() {
-			if (!this.currentAI || !this.currentEditor) { return }
-			if (this.currentAI.modified) {
-				this.currentEditor.needTest = true
-				this.save()
+		test(aiEditor: AIView | null) {
+			if (!aiEditor || !aiEditor.ai) { return }
+			if (aiEditor.ai.modified) {
+				aiEditor.needTest = true
+				this.save(aiEditor)
 				return
 			}
 			this.testDialog = true
@@ -818,7 +827,7 @@
 			if (this.currentAI) {
 				this.currentAI.version = version
 				LeekWars.put('ai/version', {ai: this.currentAI.id, version})
-				this.save()
+				this.save(this.currentEditor)
 			}
 		}
 	}

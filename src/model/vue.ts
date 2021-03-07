@@ -227,8 +227,10 @@ const vueMain = new Vue({
 	},
 	created() {
 		window.addEventListener('keydown', (event) => {
-			this.$emit('keydown', event)
-			if (event.ctrlKey && event.keyCode === 83) {
+			this.$emit('keydown', event) 
+			if (event.ctrlKey && event.shiftKey && event.keyCode === 83) {
+				this.$emit('ctrlShiftS')
+			} else if (event.ctrlKey && event.keyCode === 83) {
 				this.$emit('ctrlS')
 				event.preventDefault()
 			} else if (event.ctrlKey && event.keyCode === 81) {
