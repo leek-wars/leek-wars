@@ -528,6 +528,7 @@
 
 		beforeDestroy() {
 			this.$root.$off('ctrlS')
+			this.$root.$off('ctrlShiftS')
 			this.$root.$off('ctrlQ')
 			this.$root.$off('ctrlF')
 			this.$root.$off('ctrlP')
