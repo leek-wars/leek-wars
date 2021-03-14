@@ -2,17 +2,17 @@
   title: "LeekScript 1.1 : Programmation Orientée Objet et améliorations du langage"
   added:
     - "#ai Ajout du LeekScript version 1.1."
-    - "#ai Ajout de la programmation orientée objet : classes et objets (LS 1.1)."
+    - "#ai Ajout de la programmation orientée objet : classes et objets (LS 1.1). #img_222_poo"
     - "#ai Passage par référence par défaut (fonctions, foreach, tableaux) (LS 1.1)."
     - "#ai Ajout de la fonction clone() pour dupliquer une valeur."
-    - "LeekScript : les erreurs renvoyées ont maintenant une pile d'appels complète."
-    - "Rapport de combat : possibilité de naviguer dans les tours facilement."
+    - "LeekScript : les erreurs renvoyées ont maintenant une pile d'appels complète. #img_222_stacktrace"
+    - "Rapport de combat : possibilité de naviguer dans les tours facilement. #img_222_turns"
   improved:
-    - "Éditeur : plusieurs erreurs sont renvoyées au lieu d'une seule."
+    - "Éditeur : plusieurs erreurs sont renvoyées au lieu d'une seule. #img_222_errors_1 #img_222_errors_2"
     - "#ai Les points-virgules ne sont plus obligatoires."
     - Ajout de la javadoc sur les globales et les classes.
     - Mise à jour de la javadoc sans avoir à rafraîchir la page.
-    - Amélioration du modèle de l'IA de base (merci à Oimat).
+    - "Amélioration du modèle de l'IA de base (merci à Oimat). #img_222_template"
     - Les ternaires coûtent désormais 1 opération, comme les conditions normales.
   fixed:
     - "#ai Correction de arrayFilter qui retournait un tableau associatif (LS 1.1)."
@@ -27,26 +27,26 @@
 221:
   title: "16 nouvelles puces, Pousser/Attirer, Tooltips d'équipe, Corbeille d'IA, Fusil de l'explorateur"
   added:
-    - "#ai Ajout de 16 nouvelles puces, dans beaucoup de catégories."
-    - "#ai Ajout d'une mécanique de pousser/attirer."
+    - "#ai Ajout de 16 nouvelles puces, dans beaucoup de catégories. #img_221_chips"
+    - "#ai Ajout d'une mécanique de pousser/attirer. #img_221_push_pull"
     - "#ai Ajout des effets NOVA_VITALITY, SLIDE_TO, SHACKLE_AGILITY/WISDOM, REMOVE_SHACKLES."
     - "#ai Ajout des zones SQUARE_1, SQUARE_2 et FIRST_IN_LINE."
-    - "#ai Ajout de l'arme Fusil de l'explorateur."
-    - Ajout d'une animation pour la puce Résurrection.
-    - Ajout d'une corbeille d'IA supprimées dans l'éditeur.
-    - Tooltips avancées d'équipes et de compositions.
+    - "#ai Ajout de l'arme Fusil de l'explorateur. #img_221_rifle"
+    - "Ajout d'une animation pour la puce Résurrection. #img_221_resu"
+    - "Ajout d'une corbeille d'IA supprimées dans l'éditeur. #img_221_bin"
+    - "Tooltips avancées d'équipes et de compositions. #img_221_tooltip"
   improved:
     - Le nombre d'obstacles d'une carte est plus variable.
     - Plus d'items aux niveaux multiples de 10.
     - Accélération du chargement des historiques de combat.
-    - Ajout de la date d'export lors d'un téléchargement d'IA.
+    - "Ajout de la date d'export lors d'un téléchargement d'IA. #img_221_export"
     - Ajout d'une mention "glisser pour défiler" sur la page d'inscription.
     - La taille du texte en combat varie selon l'écran et la densité de pixels.
     - Amélioration de la visibilité des barres de vie en haut en combat (et dark mode).
-    - "Fenêtre capital : ajout d'un bouton pour retirer tout le capital d'une caractéristique."
-    - Ajout de mains dorées pour le skin doré.
-    - "Potager : amélioration de l'affichage des niveaux + nombre de poireaux d'une compo."
-    - Affichage des emblèmes d'équipes sous les combats d'équipe.
+    - "Fenêtre capital : ajout d'un bouton pour retirer tout le capital d'une caractéristique. #img_221_clear"
+    - "Ajout de mains dorées pour le skin doré. #img_221_gold"
+    - "Potager : amélioration de l'affichage des niveaux + nombre de poireaux d'une compo. #img_221_garden"
+    - "Affichage des emblèmes d'équipes sous les combats d'équipe. #img_221_emblems"
     - Augmentation du prix en Habs des items s'achetant aussi en cristaux (x2).
     - Accélération du chargement de la page équipe.
     - Réorganisation des catégories de puces dans le marché.
@@ -68,26 +68,26 @@
 220:
   title : Refonte des cartes, classements sur profil et options en combat
   added:
-    - Refonte de toutes les cartes du jeu avec une meilleure qualité.
-    - Affichage du classement sur le profil des poireaux, éleveur et équipe si position < 1000.
-    - Ajout d'une option en combat pour afficher ou non les actions.
-    - Ajout d'une option mode nuit en combat pour les actions et infos d'entité.
-    - Ajout d'une option pour afficher ou non les effets des entités sous les barres de vie.
-    - Ajout d'une option pour afficher un fond uni en combat.
+    - "Refonte de toutes les cartes du jeu avec une meilleure qualité. #img_220_factory #img_220_forest #img_220_desert #img_220_glacier #img_220_beach #img_220_temple"
+    - "Affichage du classement sur le profil des poireaux, éleveur et équipe si position < 1000. #img_220_ranking"
+    - "Ajout d'une option en combat pour afficher ou non les actions. #img_220_settings"
+    - "Ajout d'une option mode nuit en combat pour les actions et infos d'entité. #img_220_dark"
+    - "Ajout d'une option pour afficher ou non les effets des entités sous les barres de vie. #img_220_lifebar"
+    - "Ajout d'une option pour afficher un fond uni en combat. #img_220_uni"
     - "Encyclopédie : ajout d'un compteur de vue."
     - "Encyclopédie : fonctionnalité 'Page au hasard'."
     - "Encyclopédie : commande pour faire un lien dans le chat."
-    - "Encyclopédie : table des matières automatique ({{ summary }})."
+    - "Encyclopédie : table des matières automatique ({{ summary }}). #img_220_summary"
     - "Encyclopédie : fiches d'items (armes, puces, potions)."
-    - "Combat : ajout de tooltips sur les effets pour afficher leur détails."
+    - "Combat : ajout de tooltips sur les effets pour afficher leur détails. #img_220_effects"
   improved:
-    - Ajout d'un séparateur de jours dans le chat, comme avant.
-    - Ajout d'un message pour acheter des combats dans le potager.
-    - Couleurs spéciales pour les alertes de notifications de trophée et tournois gagnés.
+    - "Ajout d'un séparateur de jours dans le chat, comme avant. #img_220_separator"
+    - "Ajout d'un message pour acheter des combats dans le potager. #img_220_nofight"
+    - "Couleurs spéciales pour les alertes de notifications de trophée et tournois gagnés."
     - Ajout de raccourcis clavier pour toutes les options en combat.
-    - Amélioration de la visibilité des markText() et des numéros de cellules en combat.
-    - Le panneau latéral des actions est maintenant redimensionnable et ne se superpose plus au combat.
-    - Amélioration du style des obstacles en mode tactique.
+    - "Amélioration de la visibilité des markText() et des numéros de cellules en combat. #img_220_mark"
+    - "Le panneau latéral des actions est redimensionnable et ne se superpose plus au combat. #img_220_actions"
+    - "Amélioration du style des obstacles en mode tactique. #img_220_obstacles"
     - Ajout d'un tri par rareté sur la page des trophées (merci à BougeLeGrosOrteil).
     - La taille du lecteur de combat est mieux calculée et prend plus de place, surtout sur mobile.
   fixed:
@@ -99,8 +99,8 @@
 219:
   title: Encyclopédie et nouvelles fonctions
   added:
-    - L'encyclopédie de Leek Wars est ouverte et remplace l'ancien wiki.
-    - "#ai Ajout des fonctions getAlliedTurret() et getEnemyTurret() pour récupérer les ID des tourelles."
+    - "L'encyclopédie de Leek Wars est ouverte et remplace l'ancien wiki. #img_219_encyclo #img_219_encyclo_2 #img_219_encyclo_3"
+    - "#ai Ajout des fonctions getAlliedTurret() et getEnemyTurret() pour récupérer les ID des tourelles. #img_219_functions"
     - "#ai Ajout de la fonction getAllChips() pour récupérer toutes les puces du jeu."
     - "#ai Ajout de la fonction getAllWeapons() pour récupérer toutes les armes du jeu."
     - "#ai Ajout de la fonction getAllEffects() pour récupérer tous les effets du jeu."
@@ -115,7 +115,7 @@
     - Mélange des participants de même niveau en tournoi et BR (merci à Lmare).
     - "#ai Les fonctions isLeek, getLeek, getLeekOnCell, move{Away/Toward}FromLeeks sont renommées."
     - "#ai La constante CELL_PLAYER est remplacée par CELL_ENTITY."
-    - Affichage de la fonction/constante de remplacement des fonctions/constantes dépréciées dans la doc.
+    - "Affichage du remplacement des fonctions/constantes dépréciées dans la doc. #img_219_deprecated"
     - Ajout d'une description sur le retour de la fonction getCellContent.
   fixed:
     - Ajout des cartouches manquantes pour le Fusil et le Rhino.
@@ -126,30 +126,30 @@
 218:
   title: 2 nouvelles armes, 4 nouvelles puces, IA des Bots, Export d'IA, Statistiques déplacement
   added:
-    - Les poireaux de tests (bots) ont une nouvelle IA avec 4 niveaux de difficulité.
+    - "Les poireaux de tests (bots) ont une nouvelle IA avec 4 niveaux de difficulité. #img_218_ais #img_218_bots"
     - "#ai Rééquilibrage de nombreux items, particulièrement les puces de boost : voir le topic forum."
-    - "#ai Ajout d'une nouvelle arme de haut niveau et bonne portée : le fusil."
-    - "#ai Ajout d'une nouvelle arme de courte portée : le Rhino."
-    - "#ai Ajout d'une nouvelle puce de poison qui se propage : la Covid-19."
+    - "#ai Ajout d'une nouvelle arme de haut niveau et bonne portée : le fusil. #img_218_rifle"
+    - "#ai Ajout d'une nouvelle arme de courte portée : le Rhino. #img_218_rhino"
+    - "#ai Ajout d'une nouvelle puce de poison qui se propage : la Covid-19. #img_218_covid"
     - "#ai Modificateur MODIFIER_NOT_REPLACEABLE pour les effets ne remplaçant pas un existant."
     - "#ai Ajout d'un effet : EFFECT_PROPAGATION qui propage un effet aux entités voisines à la fin du tour."
-    - "#ai Ajout d'une nouvelle puce : Élévation, qui augmente la vie max de 100 boosté par la sagesse."
-    - "#ai Ajout d'une nouvelle puce de boost sagesse, Connaissance."
-    - "#ai Ajout d'une nouvelle puce de boost magie, Sorcellerie."
-    - Possibilité de télécharger une IA avec ou sans ses includes depuis l'éditeur.
+    - "#ai Ajout d'une nouvelle puce : Élévation, qui augmente la vie max de 100 boosté par la sagesse. #img_218_elevation"
+    - "#ai Ajout d'une nouvelle puce de boost sagesse, Connaissance. #img_218_knowledge"
+    - "#ai Ajout d'une nouvelle puce de boost magie, Sorcellerie. #img_218_wizardry"
+    - "Possibilité de télécharger une IA avec ou sans ses includes depuis l'éditeur. #img_218_export"
     - "#ai Ajout de l'opérateur ~ en LeekScript (négation binaire)."
-    - Ajout de statistiques de déplacements sur la page rapport de combat.
+    - "Ajout de statistiques de déplacements sur la page rapport de combat. #img_218_map"
   improved:
-    - Les caractéristiques et l'équipement des poireaux de test est beaucoup plus diversifié.
+    - "Les caractéristiques et l'équipement des poireaux de test est beaucoup plus diversifié. #img_218_bot_stats"
     - Les items trop haut niveau dans le marché sont indiqués visuellement.
     - "Amélioration du matchmaking solo : les adversaires sont plus proches de son niveau."
-    - "Ajout d'une page qui récapitule les armes et les puces par niveau : /help/items."
-    - Ajout de couleurs sur les puces de boost et puces spéciales.
-    - Amélioration de l'image du fusil à pompe.
-    - Amélioration de l'interface de sélection d'IA sur la page poireau, équipe et éditeur.
+    - "Ajout d'une page qui récapitule les armes et les puces par niveau : /help/items. #img_218_items"
+    - "Ajout de couleurs sur les puces de boost et puces spéciales. #img_218_boosts"
+    - "Amélioration de l'image du fusil à pompe. #img_218_shotgun"
+    - "Amélioration de l'interface de sélection d'IA sur la page poireau, équipe et éditeur. #img_218_ai_picker"
     - "Notification nouveau trophée : redirection vers la page éleveur et mise à jour des trophées."
     - Les notifications de non participation aux tournois sont envoyées seulement si un tournoi s'est déroulé.
-    - Complétion des variables globales dans l'éditeur.
+    - "Complétion des variables globales dans l'éditeur. #img_218_completion"
   fixed:
     - Retour du trophée Expérimenté, déblocable en battant un bot de niveau Expert en test solo.
     - Les poireaux de test apparaissent correctement dans le rapport de combat.
@@ -161,29 +161,29 @@
 217:
   title: Amélioration de l'interface de l'éditeur
   added:
-    - Ajout d'un panneau d'ouverture rapide d'IA, activable avec Ctrl + P.
+    - "Ajout d'un panneau d'ouverture rapide d'IA, activable avec Ctrl + P. #img_217_finder"
     - Navigation entre les IA récemment ouvertes avec Alt + &lt;/&gt;.
-    - Ajout d'une option pour cacher le bandeau supérieur dans l'éditeur pour gagner de la place.
-    - Prise en compte de la documentation dans le commentaire au dessus des fonctions (style Javadoc).
-    - Ajout d'une section "problèmes" en bas qui liste toutes les erreurs des IA.
-    - Affichage des erreurs au niveau de la barre de défilement pour un aperçu et une navigation rapide.
-    - Affichage du total des erreurs au niveau de l'explorateur et des onglets.
-    - Ajout de la multi-sélection dans l'éditeur.
+    - "Ajout d'une option pour cacher le bandeau supérieur dans l'éditeur pour gagner de la place. #img_217_hidebar"
+    - "Prise en compte de la documentation dans le commentaire au dessus des fonctions (Javadoc). #img_217_javadoc"
+    - "Ajout d'une section 'problèmes' en bas qui liste toutes les erreurs des IA. #img_217_errors"
+    - "Affichage des erreurs au niveau de la barre de défilement pour un aperçu et une navigation rapide. #img_217_barerrors"
+    - "Affichage du total des erreurs au niveau de l'explorateur et des onglets. #img_217_explorererrors #img_217_taberrors"
+    - "Ajout de la multi-sélection dans l'éditeur. #img_217_multisel"
     - Ajout des raccourcis Alt + haut/bas pour déplacer la ligne courante.
     - "#ai Ajout de la syntaxe for (@key : @var) permettant de gagner beaucoup d'opérations."
     - "#ai Ajout de la fonction getBulbChips(bulb_chip) qui renvoie les puces théoriques d'un bulbe."
-    - "Ajout d'une page d'aide sur les formules en combat (merci à CoachArtyMorty)."
+    - "Ajout d'une page d'aide sur les formules en combat (merci à CoachArtyMorty). #img_217_advancedfight"
   improved:
-    - "Amélioration de l'interface de l'éditeur : onglets, menus dans l'explorateur."
-    - Amélioration du comportement et du style des onglets.
+    - "Amélioration de l'interface de l'éditeur : onglets, menus dans l'explorateur. #img_217_explorer"
+    - "Amélioration du comportement et du style des onglets. #img_217_tabs"
     - L'option Ctrl + Clic sur une fonction fonctionne à tous les coups.
-    - "Tooltips au survol d'un symbole : position intelligente, défilement vertical et verrouillage."
-    - La position des erreurs est plus précise au sein d'une ligne.
+    - "Tooltips au survol d'un symbole : position intelligente, défilement vertical et verrouillage. #img_217_tooltips"
+    - "La position des erreurs est plus précise au sein d'une ligne. #img_217_error"
     - "Commentaires sur plusieurs lignes : décommente uniquement si toutes les lignes sont commentées."
     - Utilisation de la touche "Suppr" pour supprimer une IA ou un dossier plus rapidement.
     - Lorsque l'on passe un ligne dans un commentaire, le commentaire continue automatiquement.
     - Optimisation de la validation d'IA à la sauvegarde, beaucoup plus rapide avec beaucoup d'includes.
-    - Déplacement de la barre de progression de la Battle Royale sous le menu.
+    - "Déplacement de la barre de progression de la Battle Royale sous le menu. #img_217_br"
     - Ajout d'indications dans le potager pour la sélection d'adversaire.
     - Ajout d'onglets avec état actif sur les pages banque/marché et classement.
   fixed:
@@ -194,16 +194,16 @@
 216:
   title: Traces visibles en équipe, nouvelles animations et changement de nom d'éleveur
   added:
-    - Ajout d'une option pour rendre ses traces de debug de combat visibles à ses coéquipiers.
-    - Animation et bruitage lors d'un coup critique.
+    - "Ajout d'une option pour rendre ses traces de debug de combat visibles à ses coéquipiers. #img_216_teamlogs"
+    - "Animation et bruitage lors d'un coup critique. #img_216_critical"
     - Les poireaux et les bulbes grandissent en fonction de la vie max gagnée.
     - "Les coups critiques sont ajoutés sur les bulbes : leurs caractéristiques sont boostées de 40%."
-    - Ajout de la possibilité de renommer son nom d'éleveur.
+    - "Ajout de la possibilité de renommer son nom d'éleveur. #img_216_rename"
     - Affichage des Battle Royales gagnées sur le profil d'un éleveur.
     - "Rapport : Ajout d'une option pour afficher les logs personnels + n° de tour actuel reste en haut."
     - "Les coups critiques sont ajoutés sur la résurrection : 70% de la vie max au lieu de 50%."
-    - "2 nouveaux trophées : Maestro (obtenir tous les trophées) et Pionnier (être premier). Bravo Taga !"
-    - Affichage de l'historique des rounds dans l'historique des tournois.
+    - "2 nouveaux trophées : Maestro (obtenir tous les trophées) et Pionnier (être premier). Bravo Taga ! #img_216_maestro"
+    - "Affichage de l'historique des rounds dans l'historique des tournois. #img_216_tournament"
     - "#ai Rééquilibrage sur plusieurs items (châtiment, électriseur) (voir le sujet forum)."
     - Ajout de documentation sur les tourelles et les armes oubliées (merci à CoachArtyMorty).
   improved:
@@ -213,7 +213,7 @@
     - Affichage des IA invalides et du nombre de lignes dans la liste des IA.
     - Poireaux et bulbes plus petits pour une meilleure lecture en combat.
     - Le clic sur la barre de progression annule la redirection vers le rapport de combat.
-    - "Page équipe : amélioration de la gestion des membres pour le propriétaire."
+    - "Page équipe : amélioration de la gestion des membres pour le propriétaire. #img_216_team"
     - Affichage des chemins en noir sur les cartes claires.
     - "#ai Les effets passifs de dégâts et dégâts nova s'activent désormais sur les dégâts de vie."
   fixed:
@@ -232,19 +232,19 @@
 215:
   title: Amélioration des emails, clic sur le talent, fonction markText().
   added:
-    - Possibilité de cliquer sur le talent d'un poireau/éleveur/équipe pour les voir dans le classement.
+    - "Possibilité de cliquer sur le talent d'un poireau/éleveur/équipe pour voir leur classement. #img_215_talent #img_215_ranking"
     - Possibilité de rabattre les actions du combat sur le rapport (permet un chargement plus rapide).
-    - Listes de notifications permettant de grouper les emails et gérer plus facilement ses abonnements.
+    - "Listes de notifications pour grouper les emails et gérer plus facilement ses abonnements. #img_215_notifs"
     - Désinscription d'une liste d'emails en un seul clic.
     - Toutes les notifications peuvent maintenant être envoyées par email et push.
-    - Ré-implémentation des notifications quand on est pas pris pour un tournoi.
-    - "#ai Ajout de la fonction markText(), pour afficher un texte sur le terrain."
+    - "Ré-implémentation des notifications quand on est pas pris pour un tournoi. #img_215_tournament_notif"
+    - "#ai Ajout de la fonction markText(), pour afficher un texte sur le terrain. #img_215_marktext #img_215_marktext_2"
   improved:
     - Envoi d'une notification par email uniquement après 10 minutes et si elle n'est pas déjà lue.
-    - Amélioration du design des emails.
+    - "Amélioration du design des emails. #img_215_email"
     - Amélioration de la barre de progression en combat.
     - Ajout des derniers changelogs manquants en Anglais.
-    - Afficher le pourcentage de progression du combat actuel à côté de la barre de chargement.
+    - "Afficher le pourcentage de progression du combat actuel à côté de la barre de chargement. #img_215_bar"
     - Changement de l'icone du bouton refaire un combat dans le rapport.
     - Amélioration de synchronisation des animations d'armes en combat.
     - "Suppression de Google Analytics : nous serons moins traqués par Google."
@@ -252,7 +252,7 @@
     - Ajout de la page Instagram dans le pied de page.
     - "Tournois : affichage de l'apparence qu'avaient les poireaux au moment du tournoi."
     - Ajout d'un bouton 'disponible sur Google Play' sur la page /app.
-    - Affichage des noms des compositions dans le potager.
+    - "$Affichage des noms des compositions dans le potager. #img_215_compo"
     - Affichage des conversations non lues en vert.
     - Amélioration du design du tableau de statistiques pour supprimer le scroll horizontal.
   fixed:
@@ -270,29 +270,29 @@
 214:
   title: Graines de scénario, répartition des dommages, opérations et graphique de vie précis.
   added:
-    - Possibilité d'entrer une graine pour le générateur de nombres aléatoires dans un scénario de test.
-    - Ajout d'un graphique détaillé des statistiques de dégâts, soins et tank dans le rapport de combat.
-    - Affichage de la consommation en opérations de chaque poireau dans le rapport de combat.
-    - Graphique de l'évolution des points de vie plus précis.
-    - Ajout d'un menu de navigation rapide entre catégories dans le marché.
-    - Ajout d'une option pour afficher les grands poireaux en lignes blanches sur les côtés.
+    - "Possibilité d'entrer une graine pour le générateur de nombres aléatoires dans un scénario de test. #img_214_seed"
+    - "Ajout d'un graphique détaillé des statistiques de dégâts, soins et tank dans le rapport de combat. #img_214_report"
+    - "Affichage de la consommation en opérations de chaque poireau dans le rapport de combat. #img_214_ops"
+    - "Graphique de l'évolution des points de vie plus précis. #img_214_graph"
+    - "Ajout d'un menu de navigation rapide entre catégories dans le marché. #img_214_market"
+    - "Ajout d'une option pour afficher les grands poireaux en lignes blanches sur les côtés. #img_214_leeks"
     - Affichage du nombre d'erreurs et d'avertissement tout en haut du rapport.
   improved:
     - "Documentation : recherche dans les descriptions des constantes."
     - "Marché : ajout d'un défilement vertical sur les détails d'un item si l'écran est trop petit."
     - "Combat de test : le damier est toujours affiché même en mode non tactique."
-    - Amélioration des icônes des notifications.
-    - "Notifications : affichage de l'icone du trophée gagné."
-    - "Notifications : mise en valeur des notifications de trophées et de victoires de tournoi."
-    - Amélioration du design du pied de page.
+    - "Amélioration des icônes des notifications. #img_214_notifs"
+    - "Notifications : affichage de l'icone du trophée gagné. #img_214_trophy"
+    - "Notifications : mise en valeur des notifications de trophées et de victoires de tournoi. #img_214_notif_color"
+    - "Amélioration du design du pied de page. #img_214_footer"
     - "Combat : possibilité de survoler les entités même en pause."
     - Ajout de la formule des dégâts nova dans l'aide générale.
     - Plus de drapeau "Perfect" en cas d'égalité.
     - Plus de bandeau "déconnecté" sur le chat avant la première connexion.
-    - Ajout de son avatar dans la barre de saisie des chats, pour ne pas se tromper de compte.
+    - "Ajout de son avatar dans la barre de saisie des chats, pour ne pas se tromper de compte. #img_214_chat"
     - Le propriétaire d'un sujet sur le forum peut maintenant le passer en résolu.
-    - "Page poireau : affichage d'une mention 'Réutilisable' sur les potions concernées."
-    - "Sélection de l'équipement : les puces et armes déjà équipées sont grisées."
+    - "Page poireau : affichage d'une mention 'Réutilisable' sur les potions concernées. #img_214_potion"
+    - "Sélection de l'équipement : les puces et armes déjà équipées sont grisées. #img_214_items"
     - La barre de progression du combat passe bien à 100% quand la génération est terminée.
   fixed:
     - "Combat : les textes au dessus des entités sont effacés lors d'un saut dans le combat."
@@ -306,9 +306,9 @@
 213:
   title: Inscription via GitHub, cellules accessibles et damier
   added:
-    - Ajout de l'inscription et de la connexion via GitHub.
-    - Affichage des cellules accessibles au survol d'une entité en combat.
-    - "Combat : ajout d'un motif damier en mode tactique."
+    - "Ajout de l'inscription et de la connexion via GitHub. #img_213_github"
+    - "Affichage des cellules accessibles au survol d'une entité en combat. #img_213_reachable"
+    - "Combat : ajout d'un motif damier en mode tactique. #img_213_checkerboard"
   improved:
     - "#ai Les coups critiques sont désormais actifs sur la puce Libération : de -60% à -84% d'effets en CC."
     - La couleur de sélection dans l'éditeur est grise au lieu de mauve clair.
@@ -340,17 +340,17 @@
 212:
   title: Inscription auto aux tournois, Battle Royales auto, Docker et nouveau serveur.
   added:
-    - Inscription automatique au tournoi suivant tant que l'éleveur s'est connecté dans les dernières 24h.
-    - Battle Royales automatiques toutes les heures de 9h à 23h.
-    - Historiques d'équipe.
+    - "Inscription automatique au tournoi suivant tant que l'éleveur s'est connecté dans les dernières 24h. #img_212_tournament"
+    - "Battle Royales automatiques toutes les heures de 9h à 23h. #img_212_br"
+    - "Historiques d'équipe. #img_212_history"
     - Option pour utiliser une échelle logarithmique pour le graphique page rapport de combat.
-    - Affichage du total de joueurs connectés sur le chat latéral.
-    - Ajout de la modération des site web sur la page éleveur.
+    - "Affichage du total de joueurs connectés sur le chat latéral. #img_212_chat"
+    - "Ajout de la modération des site web sur la page éleveur. #img_212_website"
   improved:
-    - Migration vers un nouveau serveur et utilisation de Docker.
+    - "Migration vers un nouveau serveur et utilisation de Docker. #img_212_server"
     - Amélioration de l'affichage la documentation dans l'éditeur (autocomplétion et infobulles).
     - Ajout d'un fil d'ariane et d'une roue de chargement sur les pages historique.
-    - "Carte de test (nexus) : fond entièrement blanc et obstacles plus jolis."
+    - "Carte de test (nexus) : fond entièrement blanc et obstacles plus jolis. #img_212_nexus"
     - Affichage des nouveautés de la dernière version sur la page d'inscription.
     - Fourchette matchmaking équipe resserée pour avoir des compositions plus proches en talent.
     - "Page poireau : ajout des messages 'aucune arme' et 'aucune puce'."
@@ -381,30 +381,30 @@
 211:
   title: 4 nouvelles puces, 4 couleurs, modération des combats et nouvelles icônes.
   added:
-    - "4 nouvelles couleurs : rose (l'ancien -> magenta), gris, turquoise (l'ancien -> cyan) et bleu céleste."
-    - Affichage du compteur de combat sur la section potager du menu.
+    - "4 nouvelles couleurs : rose (l'ancien -> magenta), gris, turquoise (l'ancien -> cyan) et bleu céleste. #img_211_potions"
+    - "Affichage du compteur de combat sur la section potager du menu. #img_211_menu"
     - Ajout d'icônes sur toutes les fenêtres contextuelles du jeu et sur de nombreux panneaux.
-    - "#ai La vie maximale de la tourelle passe de 20 000 à 12 000."
-    - "#ai Ajout du bulbe magicien : puces poison et entraves avec 300 de magie au niveau max."
-    - "#ai Ajout de la puce Plasma, qui inflige des dégâts en zone PLUS_2, multiplié par le nombre de cibles."
-    - "#ai Ajout de la puce Altération, qui inflige des dégâts nova à grande portée."
-    - "#ai Ajout de la puce Saut, qui permet de sauter jusqu'à 3 cellules."
-    - "Ajout de la modération des say() en combat : signalement et traitement par les modérateurs."
+    - "#ai La vie maximale de la tourelle passe de 20 000 à 12 000. #img_211_turret"
+    - "#ai Ajout du bulbe magicien : puces poison et entraves avec 300 de magie au niveau max. #img_211_wizard"
+    - "#ai Ajout de la puce Plasma, dégâts en zone PLUS_2, multiplié par le nombre de cibles. #img_211_plasma #img_211_chips"
+    - "#ai Ajout de la puce Altération, qui inflige des dégâts nova à grande portée. #img_211_alteration"
+    - "#ai Ajout de la puce Saut, qui permet de sauter jusqu'à 3 cellules. #img_211_jump"
+    - "Ajout de la modération des say() en combat : signalement et traitement par les modérateurs. #img_211_censor"
   improved:
-    - "Marché : affichage de la caractéristique qui augmente l'effet sur chaque description d'item."
+    - "Marché : affichage de la caractéristique qui augmente l'effet sur chaque description d'item. #img_211_charac"
     - Changement de l'icône paramètres dans la barre du haut.
     - "Corrections de style sur : fenêtre renommage poireau, info-bulle poireau, barre de vie en combat."
     - Ratio infini (∞) si les défaites sont égales à 0.
     - Les trophées verrouillés sont davantage visibles sur la page trophées.
     - Chargement plus rapide des images de poireaux.
     - "Marché : affichage du total des items de chaque catégorie."
-    - "Documentation : ajout des items possédant des modificateurs dans les descriptions de ces derniers."
+    - "Documentation : ajout des items possédant des modificateurs dans la description de ces derniers. #img_211_modifiers"
     - Amélioration des temps de chargement du site, grâce au chargement des composants à la demande.
     - "Changelog : titres, images plus grandes, fenêtres et réorganisation des màjs précédentes."
     - Le paramètre d'agrandissement de la documentation est sauvegardé définitivement.
-    - "Pages aide : ajout d'onglets pour naviguer entre les pages facilement."
-    - "Pages à propos / changelog / statistiques / appli mobile : ajout d'onglets de navigation."
-    - "Page à propos : mise à jour des technologies."
+    - "Pages aide : ajout d'onglets pour naviguer entre les pages facilement. #img_211_help"
+    - "Pages à propos / changelog / statistiques / appli mobile : ajout d'onglets de navigation. #img_211_aboutmenu"
+    - "Page à propos : mise à jour des technologies. #img_211_about"
     - Affichage des poireaux en grille page éleveur sur version mobile.
     - Élargissement de la fourchette de niveau dans le potager éleveur pour plus d'aversaires.
     - Il n'est plus possible de s'auto-signaler sur le chat (merci à Ref).
@@ -421,35 +421,34 @@
 210:
   title: Apparats, nouveaux chapeaux, documentation, barre de chargement de combat
   added:
-    - Affichage des détails des items pour le contenu des constantes dans la documentation.
-    - Ajout des classements d'XP pour poireaux et équipes.
-    - Affichage des lignes et caractères totaux de l'IA dans l'éditeur.
-    - 10 nouveaux chapeaux (variations de chapeaux existants), certains achetables qu'en cristaux.
-    - "Ajout d'une interface regroupant toute la personnalisation d'un poireau : couleur, chapeau, arme, titre."
-    - Affichage des lignes et caractères totaux de l'IA dans l'éditeur (en incluant les IAs).
-    - Affichage des effets bruts d'un item dans son aperçu (en cliquant sur les effets).
-    - Ajout du système d'apparats, éléments de personalisation achetables au marché en habs et cristaux.
-    - Ajout des apparats "Titre d'éleveur" / "Titre de poireau" pour créer un titre à partir des mots de trophées.
-    - Ajout de l'apparat "Tenir une arme" qui permet à votre poireau se s'afficher une arme dans les mains.
-    - Ajout de l'apparat "Afficher nombre de lignes de l'IA".
+    - "Affichage des détails des items pour le contenu des constantes dans la documentation. #img_210_katana"
+    - "Ajout des classements d'XP pour poireaux et équipes. #img_210_ranking"
+    - "Affichage des lignes et caractères totaux de l'IA dans l'éditeur. #img_210_lines #img_210_ailines"
+    - "10 nouveaux chapeaux (variations de chapeaux existants), certains achetables qu'en cristaux. #img_210_hats"
+    - "Ajout d'une interface regroupant la personnalisation d'un poireau : couleur, chapeau, arme, titre. #img_210_customize"
+    - "Affichage des effets bruts d'un item dans son aperçu (en cliquant sur les effets). #img_210_raw"
+    - "Ajout d'apparats, éléments de personalisation achetables au marché en habs et cristaux. #img_210_pomps"
+    - "Ajout des apparats 'Titre d'éleveur' / 'Titre de poireau' pour créer un titre à partir des mots de trophées. #img_210_title"
+    - "Ajout de l'apparat 'Tenir une arme' qui permet à votre poireau se s'afficher une arme dans les mains. #img_210_pomp_weapon"
+    - "Ajout de l'apparat 'Afficher nombre de lignes de l'IA'. #img_210_pomp_lines"
     - Ajout de tooltips avancées sur les titres des pages poireau et éleveur.
-    - "Page trophées : affichage de la rareté du trophée (en %) et du nombre de personnes l'ayant débloqué."
-    - "Documentation : affichage des items liés aux effets sur les constantes d'effets."
-    - Ajout d'une barre de progression de la génération du combat.
+    - "Page trophées : affichage de la rareté du trophée (en %) et du nombre de personnes l'ayant débloqué. #img_210_trophy"
+    - "Documentation : affichage des items liés aux effets sur les constantes d'effets. #img_210_constant"
+    - "Ajout d'une barre de progression de la génération du combat. #img_210_bar"
   improved:
     - "Page inscription : liens vers les classements poireau, éleveur et team."
     - Ajout de tooltips avancées sur les puces d'un bulbe.
-    - "Historiques de combat : affichage d'un sablier animé pour les combats en cours de génération."
+    - "Historiques de combat : affichage d'un sablier animé pour les combats en cours de génération. #img_210_history"
     - "Rapport de combat : amélioration de la visibilité des labels de tours sur le graphique (merci à Ref)."
-    - Affichage d'un aperçu du chapeau dans les détails de sa fiche.
+    - "Affichage d'un aperçu du chapeau dans les détails de sa fiche. #img_210_hat"
     - "Potager solo : la formule est légèrement revue pour prendre des talents plus proches."
     - Le prix des objets achetables qu'une fois est tout de même affiché.
     - Légères améliorations de design général (panels, cadres, armes d'un poireau, titre topic forum).
     - Utilisation de tooltips avancées pour afficher les puces de la tourelle.
-    - Afficher les chapeaux et des armes sur la page tournoi, et les poireaux sont orientés correctement.
-    - Amélioration des tooltips avancées imbriquées.
+    - "Afficher les chapeaux et des armes sur la page tournoi, et les poireaux sont orientés correctement. #img_210_tournament"
+    - "Amélioration des tooltips avancées imbriquées. #img_210_tooltips"
     - "Amélioration de la page documentation : affichage et recherche plus rapides."
-    - Amélioration de l'interface de chargement du combat.
+    - "Amélioration de l'interface de chargement du combat. #img_210_fight"
   fixed:
     - Lors d'un saut dans le combat, la zone d'effet affichée est correctement effacée.
     - Correction d'un bug de notifications s'affichant parfois dans le désordre.
@@ -462,8 +461,8 @@
 209:
   title: 3 nouvelles puces, zones en croix, armes oubliées, effets passifs, tooltips avancées pour armes et puces
   added:
-    - "Ajout de 3 nouvelles puces : Précipitation, Vampirisation, Convoitise."
-    - "Ajout des armes oubliées : Lance-grenades illicite, Électriseur mystérieux, Gazeur débridé, M-Laser révoqué."
+    - "Ajout de 3 nouvelles puces : Précipitation, Vampirisation, Convoitise. #img_209_chips #img_209_precipitation #img_209_vampirization #img_209_covetousness #img_209_fight_preci"
+    - "Ajout des armes oubliées : Lance-grenades illicite, Électriseur mystérieux, Gazeur débridé, M-Laser révoqué. #img_209_weapons #img_209_illicit #img_209_mysterious #img_209_unbridled #img_209_revoked"
     - "#ai Ajout des effets passifs (3 nouvelles armes) et des fonctions getPassiveEffects et getWeaponPassiveEffects."
     - "#ai Ajout de modificateurs d'effets : cumulable, sur le lanceur, multiplié par le nombre de cible."
     - "#ai Nouvelles zones en forme de + et X."
@@ -471,10 +470,10 @@
     - Affichage de la file d'attente actuelle dans le potager.
     - Affichage dans le marché des objets déblocables via un trophée.
     - Ajout de ses propres tooltips avancées dans le potager.
-    - Affichage des PT et PM courants de l'entité qui joue.
-    - Ajout du classement des éleveurs par trophées.
-    - Ajout de tooltips riches pour les armes et les puces.
-    - "Lecteur de combat : ajout d'une option pour afficher les IDs des entités."
+    - "Affichage des PT et PM courants de l'entité qui joue. #img_209_tpmp"
+    - "Ajout du classement des éleveurs par trophées. #img_209_ranking"
+    - "Ajout de tooltips riches pour les armes et les puces. #img_209_tooltips"
+    - "Lecteur de combat : ajout d'une option pour afficher les IDs des entités. #img_209_id"
     - Passage de 15 à 20 puces maximum au niveau 300 (12 au niveau 1).
     - "Changelog : affichage des modifications nécessitant peut être des modifications dans votre IA."
   improved:
@@ -489,7 +488,7 @@
     - "Combat : Affichage des barres de vie par défaut."
     - Affichage des talents sur les poireaux et éleveurs sur la page équipe.
     - Élargissement de la fourchette de talent éleveur pour trouver plus d'adversaires en éleveur.
-    - Nouvelles icônes pour les packs de combats dans le marché.
+    - "Nouvelles icônes pour les packs de combats dans le marché. #img_209_pack"
     - Affichage des noms des entités au survol dans le fil du combat.
     - Amélioration de la recherche de notre position dans le classement quand on est pas actif.
   fixed:
@@ -501,34 +500,35 @@
     - Correction de certains arrondis dans les tooltips de caractéristiques (signalé par rayman26).
     - "Classement éleveur actif : les éleveurs ayant désactivé les agressions sont bien ignorés."
     - Correction de deux bugs sur les messages d'erreur dans l'éditeur et les logs en combat.
+
 208:
   title: J-Laser, zones d'effets, combat des trophées et plein d'améliorations
   added:
-    - Affichage de la date d'obtention du trophée et du combat sur la page éleveur en mode grille.
-    - Affichage des trophées obtenus pendant le combat sur la page rapport. #268
-    - Ajout de la syntaxe `code` et ```code``` dans les chats et les messages privés pour afficher du code. #120
+    - "Affichage de la date d'obtention du trophée et du combat sur la page éleveur en mode grille. #img_208_trophy"
+    - "Affichage des trophées obtenus pendant le combat sur la page rapport. #268 #img_208_trophy"
+    - "Ajout de la syntaxe `code` et ```code``` dans les chats et les MP pour afficher du code. #120 #img_208_chatcode"
     - Affichage des commentaires du combat sur la page rapport.
     - Affichage des notifications non lues en vert, cliquer dessus pour la lire.
-    - Ajout des commandes /update, /issue et /pr dans le chat.
+    - "Ajout des commandes /update, /issue et /pr dans le chat. #img_208_command"
     - Ajout d'un onglet marché dans la banque.
-    - "Page trophées : affiche si un trophée est déblocable en combat ou non."
+    - "Page trophées : affiche si un trophée est déblocable en combat ou non. #img_208_trophyfight"
     - "Changelog : ajout de sections Nouveautés, Améliorations, Corrections."
     - Ajout de la fonction getSummons() pour récupérer la liste des invocations d'une entité.
-    - "#ai Ajout de l'arme J-Laser : vole du bouclier absolu en zone."
+    - "#ai Ajout de l'arme J-Laser : vole du bouclier absolu en zone. #img_208_jlaser"
   improved:
     - Amélioration du défilement des actions et des logs personnels en combat.
     - Affichage de l'animation de la puce Antidote en vert pour différencier de Libération.
     - Affichage des effets négatifs avec un '-' devant.
     - Envoi des notifications de fin de round de tournoi quand tout le round est entièrement terminé.
     - "Combat : les effets qui tombent à 0 après une libération sont supprimés."
-    - Affichage de la zone d'effet des lasers et du lance-flammes.
+    - "Affichage de la zone d'effet des lasers et du lance-flammes. #img_208_laser"
     - Les classements de la page d'inscription sont désormais des classements actifs.
     - Au début du combat, les poireaux sont correctement orientés en regardant le centre de la carte.
     - Amélioration du style de la fenêtre de choix des armes sur mobile.
     - Amélioration de la fluidité de l'animation de chargement.
     - Retrait du lien vers Google+ dans le footer.
     - Ajout d'un icône sur le bouton potions sur la page poireau.
-    - Affichage du contour des zones d'effet en combat + ajustement des couleurs de ces zones.
+    - "Affichage du contour des zones d'effet en combat + ajustement des couleurs de ces zones. #img_208_area"
     - Les barres de vie sont maintenant bleues et rouges pour améliorer la lecture du combat.
     - Le poireau se tourne vers son invocation quand il l'invoque.
     - Affichage de la barre de vie globale sur mobile.
@@ -615,7 +615,7 @@
     - "Classement : les boutons pour afficher notre position fonctionnent avec les classements actifs."
     - "Combat : affichage de l'arme dans l'action '<poireau> attaque avec <arme>'."
     - Optimisation générale des performances du site (pages plus rapides à charger).
-    - Infobulles avancées des caractéristiques au survol des éleveurs et poireaux.
+    - "Infobulles avancées des caractéristiques au survol des éleveurs et poireaux. #img_205_tooltip"
     - Amélioration de l'affichage des détails d'une entité en combat et possibilité de les verrouiller en cliquant.
   fixed:
     - "Documentation : correction de quelques erreurs (include, weaponNeedLos et isInlineWeapon)."
