@@ -155,8 +155,8 @@
 			<span slot="title">{{ $t('do_you_want_to_delete_message') }}</span>
 			{{ $t('undoable_action') }}
 			<div slot="actions">
-				<div @click="deleteMessageDialog = false">{{ $t('cancel') }}</div>
-				<div class="red" @click="deleteMessage">{{ $t('delete') }}</div>
+				<div v-ripple @click="deleteMessageDialog = false">{{ $t('cancel') }}</div>
+				<div v-ripple class="red" @click="deleteMessage">{{ $t('delete') }}</div>
 			</div>
 		</popup>
 
@@ -165,8 +165,8 @@
 			<span slot="title">{{ $t('do_you_want_to_delete_topic') }}</span>
 			{{ $t('undoable_action') }}
 			<div slot="actions">
-				<div @click="deleteTopicDialog = false">{{ $t('cancel') }}</div>
-				<div class="red" @click="deleteTopic">{{ $t('delete') }}</div>
+				<div v-ripple @click="deleteTopicDialog = false">{{ $t('cancel') }}</div>
+				<div v-ripple class="red" @click="deleteTopic">{{ $t('delete') }}</div>
 			</div>
 		</popup>
 	</div>

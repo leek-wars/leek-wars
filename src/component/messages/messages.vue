@@ -38,8 +38,8 @@
 			<span slot="title">{{ $t('quit_conversation') }}</span>
 			{{ $t('quit_confirm') }}
 			<div slot="actions">
-				<div @click="quitDialog = false">{{ $t('cancel') }}</div>
-				<div class="red" @click="quitConversation">{{ $t('quit') }}</div>
+				<div v-ripple @click="quitDialog = false">{{ $t('cancel') }}</div>
+				<div v-ripple class="red" @click="quitConversation">{{ $t('quit') }}</div>
 			</div>
 		</popup>
 	</div>

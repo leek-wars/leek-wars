@@ -33,9 +33,9 @@
 			</div>
 		</div>
 		<div v-if="!leeks || selectedTarget" slot="actions">
-			<div v-if="leeks" class="dismiss" @click="back">◄ {{ $t('main.back') }}</div>
-			<div v-else class="dismiss" @click="close">{{ $t('main.cancel') }}</div>
-			<div class="report-validate red" @click="report"><v-icon slot="icon">mdi-flag</v-icon> {{ $t('warning.report') }}</div>
+			<div v-if="leeks" v-ripple class="dismiss" @click="back">◄ {{ $t('main.back') }}</div>
+			<div v-else v-ripple class="dismiss" @click="close">{{ $t('main.cancel') }}</div>
+			<div v-ripple class="report-validate red" @click="report"><v-icon slot="icon">mdi-flag</v-icon> {{ $t('warning.report') }}</div>
 		</div>
 	</popup>
 </template>

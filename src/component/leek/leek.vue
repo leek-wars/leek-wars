@@ -499,8 +499,8 @@
 				<title-picker ref="picker" :title="leek.title" />
 			</div>
 			<div slot="actions">
-				<div @click="titleDialog = false">{{ $t('cancel') }}</div>
-				<div class="green" @click="pickTitle($refs.picker.getTitle())">{{ $t('validate') }}</div>
+				<div v-ripple @click="titleDialog = false">{{ $t('cancel') }}</div>
+				<div v-ripple class="green" @click="pickTitle($refs.picker.getTitle())">{{ $t('validate') }}</div>
 			</div>
 		</popup>
 

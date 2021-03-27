@@ -109,11 +109,11 @@
 		</div>
 
 		<div slot="actions">
-			<div class="skip-previous" @click="previous">
+			<div v-ripple class="skip-previous" @click="previous">
 				<span v-if="page === 1">❌&nbsp; {{ $t("dismiss") }}</span>
 				<span v-else>◄ {{ $t("previous") }}</span>
 			</div>
-			<div class="next" @click="next">
+			<div v-ripple class="next" @click="next">
 				<span v-if="page < 8">{{ $t("next") }} &nbsp;▶</span>
 				<span v-else>{{ $t("play") }}</span>
 			</div>

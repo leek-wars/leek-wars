@@ -140,8 +140,8 @@
 			<span v-if="message">Message : "{{ message }}"</span>
 			<div v-if="$root.$te('warning.reason_' + finalReason + '_action')" class="warn-action">Action prise : <span class="text">{{ $t('warning.reason_' + finalReason + '_action') }}</span></div>
 			<div slot="actions">
-				<div class="dismiss" @click="warningConfirmDialog = false">Annuler</div>
-				<div class="red" @click="sendWarning"><v-icon>mdi-gavel</v-icon> Sanctionner</div>
+				<div v-ripple class="dismiss" @click="warningConfirmDialog = false">Annuler</div>
+				<div v-ripple class="red" @click="sendWarning"><v-icon>mdi-gavel</v-icon> Sanctionner</div>
 			</div>
 		</popup>
 	</div>
