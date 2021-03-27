@@ -90,6 +90,7 @@
     - Improved obstacle style in tactical mode.
     - Added a sorting by rarity on the trophies page (thanks to BougeLeGrosOrteil).
     - The size of the combat player is better calculated and takes more space, especially on mobile.
+    - "#ai Critical hits increase effects by 30% instead of 40%."
   fixed:
     - "Fixed a crash of the LeekScript linked to the tables (thanks to Nmnnm)."
     - "Fixed a bug with the launch of test fights on some scenarios."

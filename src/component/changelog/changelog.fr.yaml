@@ -90,6 +90,7 @@
     - "Amélioration du style des obstacles en mode tactique. #img_220_obstacles"
     - Ajout d'un tri par rareté sur la page des trophées (merci à BougeLeGrosOrteil).
     - La taille du lecteur de combat est mieux calculée et prend plus de place, surtout sur mobile.
+    - "#ai Les coups critiques augmentes les effets de 30% au lieu de 40%."
   fixed:
     - "Correction d'un crash du LeekScript lié aux tableaux (merci à Nmnnm)."
     - Correction d'un bug de lancement des combats de tests sur certains scénarios.
