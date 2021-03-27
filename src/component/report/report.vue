@@ -137,6 +137,10 @@
 
 		<panel :title="$t('life_chart')" toggle="report/graph" icon="mdi-chart-line">
 			<div slot="actions">
+				<div v-if="fight && fight.type === FightType.TEAM" class="button flat" @click="toggleTurrets">
+					<img v-if="turrets" src="/image/icon/turret.png">
+					<img v-else src="/image/icon/turret_off.png">
+				</div>
 				<div class="button flat" @click="toggleLog">
 					<v-icon>mdi-percent-outline</v-icon>
 				</div>
@@ -273,6 +277,7 @@
 		enemy: any = null
 		smooth: boolean = false
 		log: boolean = false
+		turrets: boolean = false
 		statistics!: FightStatistics
 		chartData: any = null
 		chartOptions: any = null
@@ -345,13 +350,16 @@
 			this.fight = null
 			this.report = null
 			this.actions = null
-			this.smooth = localStorage.getItem('report/graph-type') === 'smooth'
-			this.log = localStorage.getItem('report/log') === 'true'
 
+			if (localStorage.getItem('fight/turrets') === null) { localStorage.setItem('fight/turrets', 'true') }
 			if (localStorage.getItem('fight/logs') === null) { localStorage.setItem('fight/logs', 'true') }
+			if (localStorage.getItem('fight/turrets') === null) { localStorage.setItem('fight/turrets', 'true') }
 			if (localStorage.getItem('fight/allies-logs') === null) { localStorage.setItem('fight/allies-logs', 'true') }
 			this.actionsDisplayLogs = localStorage.getItem('report/logs') === 'true'
 			this.actionsDisplayAlliesLogs = localStorage.getItem('report/allies-logs') === 'true'
+			this.smooth = localStorage.getItem('report/graph-type') === 'smooth'
+			this.log = localStorage.getItem('report/log') === 'true'
+			this.turrets = localStorage.getItem('report/turrets') === 'true'
 
 			const id = this.$route.params.id
 			const url = this.$store.getters.admin ? 'fight/get-private/' + id : 'fight/get/' + id
@@ -517,6 +525,11 @@
 			localStorage.setItem('report/log', '' + this.log)
 			this.updateChart()
 		}
+		toggleTurrets() {
+			this.turrets = !this.turrets
+			localStorage.setItem('report/turrets', '' + this.turrets)
+			this.updateChart()
+		}
 		chartGetY(line: number, x: number) {
 			const path = (this.$refs.chart as Vue).$el.querySelectorAll('.ct-series path')[line] as any
 			x = Math.max(path.getPointAtLength(0).x, x)
@@ -542,6 +555,9 @@
 			let series = this.log ? this.statistics.lives_percent : this.statistics.lives
 			if (!this.chartDisplaySummons) {
 				series = series.filter((value, index) => !this.statistics.entities[index].leek.summon)
+			}
+			if (!this.turrets) {
+				series = series.filter((value, index) => this.statistics.entities[index].leek.name !== 'turret')
 			}
 			this.chartData = {
 				series
