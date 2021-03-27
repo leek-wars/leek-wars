@@ -345,8 +345,8 @@
 			<h4>{{ $t('compo_name') }}</h4>
 			<input v-model="createCompoName" type="text" @keyup.enter="createComposition">
 			<div slot="actions">
-				<div @click="createCompoDialog = false">{{ $t('compo_cancel') }}</div>
-				<div class="green" @click="createComposition">{{ $t('compo_create') }}</div>
+				<div v-ripple @click="createCompoDialog = false">{{ $t('compo_cancel') }}</div>
+				<div v-ripple class="green" @click="createComposition">{{ $t('compo_create') }}</div>
 			</div>
 		</popup>
 
@@ -357,8 +357,8 @@
 				{{ $t('delete_compo_confirm', [compositionToDelete.name]) }}
 			</div>
 			<div slot="actions">
-				<div @click="deleteCompoDialog = false">{{ $t('delete_cancel') }}</div>
-				<div class="red" @click="deleteComposition(compositionToDelete)">{{ $t('delete_confirm') }}</div>
+				<div v-ripple @click="deleteCompoDialog = false">{{ $t('delete_cancel') }}</div>
+				<div v-ripple class="red" @click="deleteComposition(compositionToDelete)">{{ $t('delete_confirm') }}</div>
 			</div>
 		</popup>
 
@@ -367,8 +367,8 @@
 			<span slot="title">{{ $t('quit_team_confirm_title', [team.name]) }}</span>
 			{{ $t('quit_team_confirm') }}
 			<div slot="actions">
-				<div @click="quitTeamDialog = false">{{ $t('quit_cancel') }}</div>
-				<div class="red" @click="quitTeam">{{ $t('quit_confirm') }}</div>
+				<div v-ripple @click="quitTeamDialog = false">{{ $t('quit_cancel') }}</div>
+				<div v-ripple class="red" @click="quitTeam">{{ $t('quit_confirm') }}</div>
 			</div>
 		</popup>
 
@@ -377,8 +377,8 @@
 			<span slot="title">{{ $t('disolve_confirm_title', [team.name]) }}</span>
 			{{ $t('disolve_confirm') }}
 			<div slot="actions">
-				<div @click="dissolveDialog = false">{{ $t('disolve_cancel') }}</div>
-				<div class="red" @click="dissolveTeam">{{ $t('disolve_disolve') }}</div>
+				<div v-ripple @click="dissolveDialog = false">{{ $t('disolve_cancel') }}</div>
+				<div v-ripple class="red" @click="dissolveTeam">{{ $t('disolve_disolve') }}</div>
 			</div>
 		</popup>
 
@@ -387,8 +387,8 @@
 			<span slot="title">{{ $t('ban_confirm_title', [banMemberTarget.name]) }}</span>
 			{{ $t('ban_confirm', [banMemberTarget.name]) }}
 			<div slot="actions">
-				<div @click="banDialog = false">{{ $t('ban_cancel') }}</div>
-				<div class="red" @click="banMember"><v-icon>mdi-hand-pointing-right</v-icon>{{ $t('ban_ban') }}</div>
+				<div v-ripple @click="banDialog = false">{{ $t('ban_cancel') }}</div>
+				<div v-ripple class="red" @click="banMember"><v-icon>mdi-hand-pointing-right</v-icon>{{ $t('ban_ban') }}</div>
 			</div>
 		</popup>
 
@@ -420,8 +420,8 @@
 				</rich-tooltip-farmer>
 			</div>
 			<div slot="actions">
-				<div @click="changeOwnerDialog = false">{{ $t('change_owner_cancel') }}</div>
-				<div class="green" @click="changeOwnerSelect(changeOwnerSelected)">{{ $t('change_owner_change') }}</div>
+				<div v-ripple @click="changeOwnerDialog = false">{{ $t('change_owner_cancel') }}</div>
+				<div v-ripple class="green" @click="changeOwnerSelect(changeOwnerSelected)">{{ $t('change_owner_change') }}</div>
 			</div>
 		</popup>
 
@@ -436,8 +436,8 @@
 			<br><br>
 			<input v-model="changeOwnerPassword" type="password">
 			<div slot="actions">
-				<div @click="changeOwnerConfirmDialog = false">{{ $t('change_owner_cancel') }}</div>
-				<div class="green" @click="changeOwner">{{ $t('change_owner_change') }}</div>
+				<div v-ripple @click="changeOwnerConfirmDialog = false">{{ $t('change_owner_cancel') }}</div>
+				<div v-ripple class="green" @click="changeOwner">{{ $t('change_owner_change') }}</div>
 			</div>
 		</popup>
 

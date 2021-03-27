@@ -13,7 +13,7 @@
 			</div>
 		</div>
 		<div slot="actions">
-			<div @click="$emit('input', false)">{{ $t('main.ok') }} :)</div>
+			<div v-ripple @click="$emit('input', false)">{{ $t('main.ok') }} :)</div>
 		</div>
 	</popup>
 </template>

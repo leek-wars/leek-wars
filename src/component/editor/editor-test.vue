@@ -174,11 +174,11 @@
 			</v-tab-item>
 		</v-tabs>
 		<div slot="actions">
-			<div @click="$emit('input', false)">
+			<div v-ripple @click="$emit('input', false)">
 				<v-icon>mdi-close</v-icon>
 				<span>{{ $t('main.cancel') }}</span>
 			</div>
-			<div class="green" @click="launchTest">
+			<div v-ripple class="green" @click="launchTest">
 				<v-icon>mdi-play</v-icon>
 				<span>{{ $t('test_validate') }}</span>
 			</div>
@@ -214,8 +214,8 @@
 				</div>
 			</div>
 			<div slot="actions">
-				<div @click="newScenarioDialog = false">{{ $t('main.cancel') }}</div>
-				<div class="green" @click="createScenario">{{ $t('main.create') }}</div>
+				<div v-ripple @click="newScenarioDialog = false">{{ $t('main.cancel') }}</div>
+				<div v-ripple class="green" @click="createScenario">{{ $t('main.create') }}</div>
 			</div>
 		</popup>
 
@@ -226,8 +226,8 @@
 				<input v-model="newLeekName" :placeholder="$t('leek_name')" type="text" class="input" @keyup.enter="createLeek">
 			</div>
 			<div slot="actions">
-				<div @click="newLeekDialog = false">{{ $t('main.cancel') }}</div>
-				<div class="green" @click="createLeek">{{ $t('main.create') }}</div>
+				<div v-ripple @click="newLeekDialog = false">{{ $t('main.cancel') }}</div>
+				<div v-ripple class="green" @click="createLeek">{{ $t('main.create') }}</div>
 			</div>
 		</popup>
 

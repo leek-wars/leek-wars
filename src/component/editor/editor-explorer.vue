@@ -130,8 +130,8 @@
 				<input ref="nameInput" v-model="newName" type="text" class="input dialog-input" @keyup.enter="rename()">
 			</div>
 			<div slot="actions">
-				<div @click="renameDialog = false">{{ $t('main.cancel') }}</div>
-				<div class="green" @click="rename()">{{ $t('rename') }}</div>
+				<div v-ripple @click="renameDialog = false">{{ $t('main.cancel') }}</div>
+				<div v-ripple class="green" @click="rename()">{{ $t('rename') }}</div>
 			</div>
 		</popup>
 
@@ -141,8 +141,8 @@
 			<span v-else-if="folder" slot="title">{{ $t('delete_folder', [folder.name]) }}</span>
 			{{ $t('delete_warning') }}
 			<div slot="actions">
-				<div @click="deleteDialog = false">{{ $t('delete_cancel') }}</div>
-				<div class="red" @click="deleteItem">{{ $t('delete_validate') }}</div>
+				<div v-ripple @click="deleteDialog = false">{{ $t('delete_cancel') }}</div>
+				<div v-ripple class="red" @click="deleteItem">{{ $t('delete_validate') }}</div>
 			</div>
 		</popup>
 
@@ -151,8 +151,8 @@
 			<span v-if="ai" slot="title">{{ $t('destroy_ai', [ai.name]) }}</span>
 			{{ $t('destroy_warning') }}
 			<div slot="actions">
-				<div @click="destroyDialog = false">{{ $t('delete_cancel') }}</div>
-				<div class="red" @click="destroyAI">{{ $t('destroy_validate') }}</div>
+				<div v-ripple @click="destroyDialog = false">{{ $t('delete_cancel') }}</div>
+				<div v-ripple class="red" @click="destroyAI">{{ $t('destroy_validate') }}</div>
 			</div>
 		</popup>
 
@@ -161,8 +161,8 @@
 			<span slot="title">{{ $t('empty_bin') }}</span>
 			{{ $t('empty_warning') }}
 			<div slot="actions">
-				<div @click="emptyDialog = false">{{ $t('delete_cancel') }}</div>
-				<div class="red" @click="emptyBin">{{ $t('empty_bin') }}</div>
+				<div v-ripple @click="emptyDialog = false">{{ $t('delete_cancel') }}</div>
+				<div v-ripple class="red" @click="emptyBin">{{ $t('empty_bin') }}</div>
 			</div>
 		</popup>
 
@@ -173,8 +173,8 @@
 				<input ref="newAIInput" v-model="newAIName" :placeholder="$t('ai_name')" type="text" class="input dialog-input" @keyup.enter="newAI(false, newAIName)">
 			</div>
 			<div slot="actions">
-				<div @click="newAIDialog = false">{{ $t('main.cancel') }}</div>
-				<div class="green" @click="newAI(false, newAIName)">{{ $t('main.create') }}</div>
+				<div v-ripple @click="newAIDialog = false">{{ $t('main.cancel') }}</div>
+				<div v-ripple class="green" @click="newAI(false, newAIName)">{{ $t('main.create') }}</div>
 			</div>
 		</popup>
 
@@ -185,8 +185,8 @@
 				<input ref="newFolderInput" v-model="newFolderName" :placeholder="$t('folder_name')" type="text" class="input dialog-input" @keyup.enter="newFolder(newFolderName)">
 			</div>
 			<div slot="actions">
-				<div @click="newFolderDialog = false">{{ $t('main.cancel') }}</div>
-				<div class="green" @click="newFolder(newFolderName)">{{ $t('main.create') }}</div>
+				<div v-ripple @click="newFolderDialog = false">{{ $t('main.cancel') }}</div>
+				<div v-ripple class="green" @click="newFolder(newFolderName)">{{ $t('main.create') }}</div>
 			</div>
 		</popup>
 	</div>

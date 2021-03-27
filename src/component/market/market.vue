@@ -182,8 +182,8 @@
 				<b>{{ $t('habs_after_purchase') }}</b> : {{ $store.state.farmer.habs - selectedItem.price | number }} <span class="hab"></span>
 			</div>
 			<div slot="actions">
-				<div @click="buyDialog = false">{{ $t('cancel') }}</div>
-				<div class="buy green" @click="buy('habs')">{{ $t('buy') }}</div>
+				<div v-ripple @click="buyDialog = false">{{ $t('cancel') }}</div>
+				<div v-ripple class="buy green" @click="buy('habs')">{{ $t('buy') }}</div>
 			</div>
 		</popup>
 
@@ -202,8 +202,8 @@
 				<b>{{ $t('crystals_after_purchase') }}</b> : {{ $store.state.farmer.crystals - selectedItem.crystals | number }} <span class="crystal"></span>
 			</div>
 			<div slot="actions">
-				<div @click="buyCrystalsDialog = false">{{ $t('cancel') }}</div>
-				<div class="buy green" @click="buy('crystals')">{{ $t('buy') }}</div>
+				<div v-ripple @click="buyCrystalsDialog = false">{{ $t('cancel') }}</div>
+				<div v-ripple class="buy green" @click="buy('crystals')">{{ $t('buy') }}</div>
 			</div>
 		</popup>
 
@@ -222,8 +222,8 @@
 				<b>{{ $t('habs_after_sell') }}</b> : {{ $store.state.farmer.habs + selectedItem.sell_price | number }} <span class="hab"></span>
 			</div>
 			<div slot="actions">
-				<div @click="sellDialog = false">{{ $t('cancel') }}</div>
-				<div class="sell red" @click="sell">{{ $t('sell') }}</div>
+				<div v-ripple @click="sellDialog = false">{{ $t('cancel') }}</div>
+				<div v-ripple class="sell red" @click="sell">{{ $t('sell') }}</div>
 			</div>
 		</popup>
 

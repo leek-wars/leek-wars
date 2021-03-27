@@ -385,8 +385,8 @@
 			<span slot="title">{{ $t('create_team') }}</span>
 			{{ $t('team_name') }} <input v-model="createTeamName" type="text">
 			<div slot="actions">
-				<div class="dismiss">{{ $t('cancel') }}</div>
-				<div @click="createTeam">{{ $t('create') }}</div>
+				<div v-ripple class="dismiss">{{ $t('cancel') }}</div>
+				<div v-ripple @click="createTeam">{{ $t('create') }}</div>
 			</div>
 		</popup>
 
@@ -423,8 +423,8 @@
 				<input v-model="newWebsite" type="text" class="input">
 			</div>
 			<div slot="actions">
-				<div @click="websiteDialog = false">{{ $t('cancel') }}</div>
-				<div class="green" @click="changeWebsite">{{ $t('validate') }}</div>
+				<div v-ripple @click="websiteDialog = false">{{ $t('cancel') }}</div>
+				<div v-ripple class="green" @click="changeWebsite">{{ $t('validate') }}</div>
 			</div>
 		</popup>
 
@@ -435,8 +435,8 @@
 				<input v-model="newGitHub" type="text" class="input">
 			</div>
 			<div slot="actions">
-				<div @click="githubDialog = false">{{ $t('cancel') }}</div>
-				<div class="green" @click="changeGithub">{{ $t('validate') }}</div>
+				<div v-ripple @click="githubDialog = false">{{ $t('cancel') }}</div>
+				<div v-ripple class="green" @click="changeGithub">{{ $t('validate') }}</div>
 			</div>
 		</popup>
 
@@ -447,8 +447,8 @@
 				<title-picker ref="picker" :title="farmer.title" />
 			</div>
 			<div slot="actions">
-				<div @click="titleDialog = false">{{ $t('cancel') }}</div>
-				<div class="green" @click="pickTitle($refs.picker.getTitle())">{{ $t('validate') }}</div>
+				<div v-ripple @click="titleDialog = false">{{ $t('cancel') }}</div>
+				<div v-ripple class="green" @click="pickTitle($refs.picker.getTitle())">{{ $t('validate') }}</div>
 			</div>
 		</popup>
 

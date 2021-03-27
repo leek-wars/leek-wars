@@ -42,7 +42,7 @@
 				<br><br>
 				<loader v-if="validating" :size="40" />
 				<input v-else v-model="code" class="code" type="text" autocomplete="off" autocorrect="off" autocapitalize="off" placeholder="XXX XXX" @keydown.enter="validateCode">
-			
+
 				<div class="buttons">
 					<div class="back" @click="previousStep">Back</div>
 					<div class="back" @click="validateCode">Validate</div>
@@ -60,8 +60,8 @@
 			<span slot="title">Enter your password to validate</span>
 			Password : <input id="two-factor-confirm-password" type="password">
 			<div slot="actions">
-				<div class="action dismiss">Cancel</div>
-				<div class="action green">Validate</div>
+				<div v-ripple class="action dismiss">Cancel</div>
+				<div v-ripple class="action green">Validate</div>
 			</div>
 		</popup>
 	</div>

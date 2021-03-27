@@ -135,8 +135,8 @@
 			<br>
 			<v-switch v-model="deleteForumMessages" :label="$t('delete_forum_messages')" hide-details />
 			<div slot="actions">
-				<div class="action dismiss" @click="deleteDialog = false">{{ $t('delete_cancel') }}</div>
-				<div class="action red" @click="deleteAccountConfirm">{{ $t('delete_confirm') }}</div>
+				<div v-ripple class="action dismiss" @click="deleteDialog = false">{{ $t('delete_cancel') }}</div>
+				<div v-ripple class="action red" @click="deleteAccountConfirm">{{ $t('delete_confirm') }}</div>
 			</div>
 		</popup>
 
@@ -146,8 +146,8 @@
 			{{ $t('delete_confirmation_password') }} : <br><br>
 			{{ $t('delete_password') }} : <input v-model="deleteConfirmPassword" type="password">
 			<div slot="actions">
-				<div class="action dismiss" @click="deleteConfirmDialog = false">{{ $t('delete_cancel') }}</div>
-				<div class="action red" @click="deleteAccountFinal">{{ $t('delete_finalize') }}</div>
+				<div v-ripple class="action dismiss" @click="deleteConfirmDialog = false">{{ $t('delete_cancel') }}</div>
+				<div v-ripple class="action red" @click="deleteAccountFinal">{{ $t('delete_finalize') }}</div>
 			</div>
 		</popup>
 

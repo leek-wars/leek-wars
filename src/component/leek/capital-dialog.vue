@@ -33,11 +33,11 @@
 			</div>
 		</div>
 		<div v-if="totalCapital" slot="actions">
-			<div class="action" @click="reset">
+			<div v-ripple class="action" @click="reset">
 				<v-icon>mdi-refresh</v-icon>
 				<span>{{ $t('main.reset') }}</span>
 			</div>
-			<div class="action green" @click="validate">
+			<div v-ripple class="action green" @click="validate">
 				<v-icon>mdi-check</v-icon>
 				<span>{{ $t('main.validate') }}</span>
 			</div>

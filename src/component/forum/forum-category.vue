@@ -97,8 +97,8 @@
 				<formatting-rules />
 			</div>
 			<div slot="actions">
-				<div class="action" @click="createDialog = false">{{ $t('cancel') }}</div>
-				<div class="action green" @click="create">{{ $t('create_topic') }}</div>
+				<div v-ripple class="action" @click="createDialog = false">{{ $t('cancel') }}</div>
+				<div v-ripple class="action green" @click="create">{{ $t('create_topic') }}</div>
 			</div>
 		</popup>
 	</div>

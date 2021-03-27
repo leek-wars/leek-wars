@@ -74,8 +74,8 @@
 				</i18n>
 			</template>
 			<div slot="actions">
-				<div @click="muteDialog = false">{{ $t('main.cancel') }}</div>
-				<div class="mute red" @click="muteConfirm">{{ $t('warning.confirm_mute') }}</div>
+				<div v-ripple @click="muteDialog = false">{{ $t('main.cancel') }}</div>
+				<div v-ripple class="mute red" @click="muteConfirm">{{ $t('warning.confirm_mute') }}</div>
 			</div>
 		</popup>
 		<popup v-model="unmuteDialog" :width="600">
@@ -87,8 +87,8 @@
 				</i18n>
 			</div>
 			<div slot="actions">
-				<div @click="unmuteDialog = false">{{ $t('main.cancel') }}</div>
-				<div class="unmute red" @click="unmuteConfirm">{{ $t('warning.unmute') }}</div>
+				<div v-ripple @click="unmuteDialog = false">{{ $t('main.cancel') }}</div>
+				<div v-ripple class="unmute red" @click="unmuteConfirm">{{ $t('warning.unmute') }}</div>
 			</div>
 		</popup>
 	</div>
