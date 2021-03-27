@@ -2,22 +2,19 @@
 	<div class="map" oncontextmenu="return false;">
 		<div class="map-wrapper">
 			<div v-for="(line, l) of map" :key="l" class="line">
-				<span v-for="(cell, c) of line" :key="c" :class="{enabled: cell.enabled, obstacle: cell.obstacle, ...cell.teams}" :style="{background: cell.color}" class="cell"></span>
+				<span v-for="(cell, c) of line" :key="c" :class="{enabled: cell.enabled, obstacle: cell.obstacle, ...cell.teams, big: cell.big}" :style="{background: cell.color}" class="cell"></span>
 			</div>
 		</div>
 	</div>
 </template>
 
 <script lang="ts">
-	import { env } from '@/env'
-	import { Farmer } from '@/model/farmer'
-	import { LeekWars } from '@/model/leekwars'
 	import { TEAM_COLORS } from '@/model/team'
 	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 
 	@Component({ name: "lw-map" })
 	export default class Map extends Vue {
-		@Prop() obstacles!: Set<number>
+		@Prop() obstacles!: any
 		@Prop() teams!: {[key: number]: Set<number>}
 		map: any = []
 
@@ -36,8 +33,12 @@
 					let obstacle = false
 					const teams = {} as any
 					let color = ""
+					let obstacleSize = 1
 					if (enabled) {
-						obstacle = this.obstacles.has(cell)
+						if (cell in this.obstacles) {
+							obstacle = true
+							obstacleSize = this.obstacles[cell]
+						}
 						for (const team in this.teams) {
 							if (this.teams[team].has(cell)) {
 								teams['t' + team] = true
@@ -45,7 +46,7 @@
 							}
 						}
 					}
-					line.push({enabled, cell, teams, obstacle, color})
+					line.push({enabled, cell, teams, obstacle, color, big: obstacleSize === 2})
 				}
 				this.map.push(line)
 			}
@@ -84,6 +85,12 @@
 		}
 		&.t1.t2 {
 			background: rgb(200, 0, 255) !important;
+		}
+		&.big {
+			width: calc(5.4%);
+			margin-bottom: -2.7%;
+			margin-left: -2.7%;
+			z-index: 1;
 		}
 	}
 </style>

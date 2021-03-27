@@ -318,7 +318,7 @@
 		damagesBarsHeight: number = 0
 		damagesBarsEvents: any
 		damagesDisplaySummons: boolean = false
-		map_obstacles: Set<number> = new Set<number>()
+		map_obstacles: any
 		map_teams: any = null
 		legends: any
 
@@ -759,16 +759,7 @@
 		}
 
 		updateMap() {
-			for (const obstacle in this.fight!.data.map.obstacles) {
-				const obstacle_cell = parseInt(obstacle, 10)
-				this.map_obstacles.add(obstacle_cell)
-				const obs = this.fight!.data.map.obstacles[obstacle]
-				if (obs[1] === 2) {
-					this.map_obstacles.add(obstacle_cell + 17)
-					this.map_obstacles.add(obstacle_cell + 18)
-					this.map_obstacles.add(obstacle_cell + 35)
-				}
-			}
+			this.map_obstacles = this.fight!.data.map.obstacles
 		}
 
 		walkedCells(fid: number) {
