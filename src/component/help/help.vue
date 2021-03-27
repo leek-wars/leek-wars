@@ -123,8 +123,8 @@
 </template>
 
 <script lang="ts">
-	import { mixins } from '@/model/i18n'
 	import { locale } from '@/locale'
+	import { mixins } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import { Component, Vue } from 'vue-property-decorator'
 	const Didactitiel = () => import(/* webpackChunkName: "[request]" */ `@/component/didactitiel/didactitiel.${locale}.i18n`)
