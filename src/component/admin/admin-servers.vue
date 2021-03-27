@@ -127,7 +127,6 @@
 		display: inline-block;
 		text-align: center;
 		vertical-align: top;
-		width: 420px;
 	}
 	.server .load {
 		position: absolute;

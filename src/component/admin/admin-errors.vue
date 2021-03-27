@@ -137,4 +137,7 @@
 	button {
 		margin-top: 10px;
 	}
+	#app.app .error code {
+		font-size: 10px;
+	}
 </style>
