@@ -14,7 +14,7 @@
 				<router-link to="/admin/errors">
 					<div v-ripple class="section card">
 						<img src="/image/admin/error_manager.png">
-						<h2>Erreurs ({{ $store.state.farmer.errors }})</h2>
+						<h2 v-if="$store.state.farmer">Erreurs ({{ $store.state.farmer.errors }})</h2>
 					</div>
 				</router-link>
 				<a href="/memcached.php" target="_blank" rel="noopener">
