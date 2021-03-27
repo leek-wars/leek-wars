@@ -13,7 +13,7 @@
 	"heal": "Soins",
 	"invested_capital": "Capital investi",
 	"life": "Points de vie",
-	"life_desc": "Dégâts que peut encaisser le poireau avant de mourir",
+	"life_desc": "Dégâts que peut encaisser une entité avant de mourir",
 	"life_steal": "Vol de vie",
 	"magic": "Magie",
 	"magic_desc": "La magie augmente les entraves et les dégâts des poisons",
