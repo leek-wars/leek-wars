@@ -111,9 +111,7 @@
 		vertical-align: top;
 	}
 	.panel > .header h2 img {
-		vertical-align: top;
 		height: 25px;
-		margin-top: 6px;
 		margin-right: 8px;
 	}
 	.panel.first > .header h2 {
