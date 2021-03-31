@@ -57,15 +57,6 @@
 		<div v-if="advanced" class="container grid large advanced">
 
 			<panel v-ripple>
-				<a slot="content" href="http://leekwarswiki.net/" target="_blank" rel="noopener">
-					<h2>{{ $t('wiki') }} <v-icon>mdi-open-in-new</v-icon></h2>
-					<img src="/image/help/wiki.png">
-					<br>
-					<span class="description">{{ $t('wiki_desc') }}</span>
-				</a>
-			</panel>
-
-			<panel v-ripple>
 				<router-link slot="content" to="/help/api">
 					<h2>API documentation</h2>
 					<v-icon class="bigicon">mdi-api</v-icon>
