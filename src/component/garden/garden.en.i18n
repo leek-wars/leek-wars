@@ -7,6 +7,7 @@
 	"challenge": "Challenge",
 	"click_opponent": "Click on an opponent to start a fight",
 	"error_fight_not_enough_leeks": "Not enough leeks in the team",
+	"error_fight_you_need_at_least_2_leeks": "You need at least two leeks.",
 	"farmer_fight": "Farmer fight",
 	"garden_solo": "Solo garden",
 	"garden_farmer": "Farmer garden",
