@@ -59,26 +59,46 @@
 						<h2>StarPass <v-icon>mdi-open-in-new</v-icon></h2>
 					</div>
 				</a>
+			</div>
+		</panel>
+		<panel>
+			<div slot="content" class="admin">
 				<v-btn @click="square">Square notif image</v-btn>
 				<v-btn @click="squareIcon">Square notif icon</v-btn>
 				<v-btn @click="squareTrophy">Square notif trophy</v-btn>
 				<v-btn @click="squareTournament">Notif tournament</v-btn>
 				<v-btn @click="squareMP">Square MP</v-btn>
+				<v-btn @click="show_didactitiel">Didactitiel</v-btn>
+				<v-btn @click="showLevelDialog(2)">Level Dialog 2</v-btn>
+				<v-btn @click="showLevelDialog(50)">Level Dialog 50</v-btn>
+				<v-btn @click="showLevelDialog(97)">Level Dialog 97</v-btn>
+				<v-btn @click="showLevelDialog(200)">Level Dialog 200</v-btn>
+				<v-btn @click="showLevelDialog(211)">Level Dialog 211</v-btn>
+				<v-btn @click="showLevelDialog(301)">Level Dialog 301</v-btn>
 			</div>
 		</panel>
+		<didactitiel v-if="didactitiel_enabled" v-model="didactitiel" />
+		<level-dialog v-if="levelPopupData" v-model="levelPopup" :leek="leek" :data="levelPopupData" />
 	</div>
 </template>
 
 <script lang="ts">
+	import { locale } from '@/locale'
 	import { Conversation } from '@/model/conversation'
-	import { i18n } from '@/model/i18n'
-	import { Leek } from '@/model/leek'
 	import { LeekWars } from '@/model/leekwars'
 	import { Notification } from '@/model/notification'
 	import { Component, Vue } from 'vue-property-decorator'
+	const Didactitiel = () => import(/* webpackChunkName: "[request]" */ `@/component/didactitiel/didactitiel.${locale}.i18n`)
+	const LevelDialog = () => import(/* webpackChunkName: "[request]" */ `@/component/leek/level-dialog.${locale}.i18n`)
 
-	@Component({})
+	@Component({ components: { Didactitiel, LevelDialog } })
 	export default class Admin extends Vue {
+		didactitiel: boolean = false
+		didactitiel_enabled: boolean = false
+		leek: any = null
+		levelPopup: boolean = false
+		levelPopupData: any = null
+
 		created() {
 			LeekWars.setTitle('Admin')
 		}
@@ -110,6 +130,23 @@
 		squareMP() {
 			const conversation = { id: 1212, farmers: [{}, {}], last_farmer_id: 48, last_farmer_name: "Skouarniek", last_message: "Salut ça va ?" } as Conversation
 			LeekWars.squares.addFromConversation(conversation, 123456789)
+		}
+
+		show_didactitiel() {
+			this.didactitiel_enabled = true
+			Vue.nextTick(() => {
+				this.didactitiel = true
+			})
+		}
+
+		showLevelDialog(level: number) {
+			LeekWars.get('leek/random-by-level/' + level).then(leek => {
+				this.leek = leek
+				LeekWars.get('leek/get-level-popup/' + this.leek.id).then(data => {
+					this.levelPopup = true
+					this.levelPopupData = data.popup
+				})
+			})
 		}
 	}
 </script>
