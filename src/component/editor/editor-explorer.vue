@@ -390,7 +390,7 @@
 		downloadIncludes() {
 			if (!this.ai) { return }
 
-			const regex = /include\s*\(\s*["'](.*?)["']\s*\)\s*;/gm
+			const regex = /include\s*\(\s*["'](.*?)["']\s*\)\s*;?/gm
 			const included_ais = new Set<AI>()
 			const fun = (ai: AI): string => "/** " + ai.path + " **/\n\n" + ai.code.replace(regex, (a, path) => {
 				const included = fileSystem.find(path, ai.folder)
