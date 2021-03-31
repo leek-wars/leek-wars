@@ -53,67 +53,60 @@
 				<v-icon v-else>mdi-chevron-down</v-icon>
 			</div>
 		</center>
+
 		<div v-if="advanced" class="container grid large advanced">
 
 			<panel v-ripple>
-				<a href="http://leekwarswiki.net/" target="_blank" rel="noopener">
-					<div>
-						<h2>{{ $t('wiki') }} <v-icon>mdi-open-in-new</v-icon></h2>
-						<img src="/image/help/wiki.png">
-					</div>
+				<a slot="content" href="http://leekwarswiki.net/" target="_blank" rel="noopener">
+					<h2>{{ $t('wiki') }} <v-icon>mdi-open-in-new</v-icon></h2>
+					<img src="/image/help/wiki.png">
+					<br>
 					<span class="description">{{ $t('wiki_desc') }}</span>
 				</a>
-				<!--
-				<router-link to="/encyclopedia/Guide_du_débutant">
-					<div v-ripple class="card">
-						<h2>{{ $t('wiki') }} <span class="label-beta">bêta <v-icon>mdi-info</v-icon></span></h2>
-						<img src="/image/help/wiki.png">
-					</div>
-				</router-link>
-				-->
 			</panel>
 
 			<panel v-ripple>
-				<router-link to="/help/api">
-					<div>
-						<h2>API documentation</h2>
-						<img src="/image/help/advanced.png">
-						<br>
-						<span class="description">Complete API services documentation</span>
-					</div>
+				<router-link slot="content" to="/help/api">
+					<h2>API documentation</h2>
+					<v-icon class="bigicon">mdi-api</v-icon>
+					<br>
+					<span class="description">Complete API services documentation</span>
 				</router-link>
 			</panel>
 
 			<panel v-ripple class="last">
-				<router-link to="/help/line-of-sight">
-					<div>
-						<h2>Line Of Sight</h2>
-						<v-icon class="bigicon">mdi-grid</v-icon>
-						<br>
-						<span class="description">Little demo for line of sight function</span>
-					</div>
+				<router-link slot="content" to="/help/line-of-sight">
+					<h2>Line Of Sight</h2>
+					<v-icon class="bigicon">mdi-grid</v-icon>
+					<br>
+					<span class="description">Little demo for line of sight function</span>
 				</router-link>
 			</panel>
 
 			<panel v-ripple>
-				<router-link to="/help/advanced-fight-description">
-					<div>
-						<h2>Fight Description</h2>
-						<img src="/image/help/fight_tuto.png">
-						<br>
-						<span class="description">Advanced description of combat rules and order.</span>
-					</div>
+				<router-link slot="content" to="/help/advanced-fight-description">
+					<h2>Fight Description</h2>
+					<v-icon class="bigicon">mdi-sword-cross</v-icon>
+					<br>
+					<span class="description">Advanced description of combat rules and order.</span>
 				</router-link>
 			</panel>
 
 			<panel v-ripple>
-				<router-link to="/help/items">
-					<div>
-						<h2>Items</h2>
-						<v-icon class="bigicon">mdi-chip</v-icon>
-						<br>
-						<span class="description">Items</span>
-					</div>
+				<router-link slot="content" to="/help/items">
+					<h2>Items</h2>
+					<v-icon class="bigicon">mdi-chip</v-icon>
+					<br>
+					<span class="description">Items</span>
+				</router-link>
+			</panel>
+
+			<panel v-ripple>
+				<router-link slot="content" to="/talent">
+					<h2>Talents</h2>
+					<v-icon class="bigicon">mdi-chart-line</v-icon>
+					<br>
+					<span class="description">Talents</span>
 				</router-link>
 			</panel>
 
