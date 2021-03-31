@@ -50,6 +50,7 @@ const Settings = () => import(/* webpackChunkName: "[request]" */ `@/component/s
 const Signup = () => import(/* webpackChunkName: "[request]" */ `@/component/signup/signup.${locale}.i18n`)
 const Statistics = () => import(/* webpackChunkName: "[request]" */ `@/component/statistics/statistics.${locale}.i18n`)
 const SignupResult = () => import(/* webpackChunkName: "[request]" */ `@/component/signup/signup-result.${locale}.i18n`)
+const TalentPage = () => import(/* webpackChunkName: "[request]" */ `@/component/talent/talent.${locale}.i18n`)
 const Team = () => import(/* webpackChunkName: "[request]" */ `@/component/team/team.${locale}.i18n`)
 const Tournament = () => import(/* webpackChunkName: "[request]" */ `@/component/tournament/tournament.${locale}.i18n`)
 const Trophies = () => import(/* webpackChunkName: "[request]" */ `@/component/trophies/trophies.${locale}.i18n`)
@@ -166,6 +167,7 @@ const routes = [
 	{ path: '/signup/success/:farmer', component: SignupResult, props: { result: 'success' } },
 	{ path: '/signup/failed', component: SignupResult, props: { result: 'failed' } },
 	{ path: '/statistics', component: Statistics },
+	{ path: '/talent', component: TalentPage },
 	{ path: '/team', component: Team, beforeEnter: connected },
 	{ path: '/team/:id', component: Team },
 	{ path: '/team/:id/history', component: History, props: {type: 'team'} },
