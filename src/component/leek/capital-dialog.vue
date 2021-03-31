@@ -26,7 +26,7 @@
 							<template v-slot:activator="{ on }">
 								<span q="0" class="add" @click="clear(c)" v-on="on"></span>
 							</template>
-							{{ $t('leek.clear') }}
+							{{ $t('main.clear') }}
 						</tooltip>
 					</div>
 				</div>
