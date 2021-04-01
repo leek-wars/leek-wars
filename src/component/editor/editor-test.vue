@@ -772,7 +772,11 @@
 				.error(error => LeekWars.toast(this.$t('error_' + error.error, error.params)))
 
 			Vue.delete(this.scenarios, scenario.id)
-			this.selectScenario(LeekWars.first(this.scenarios)!)
+			if (!LeekWars.isEmptyObj(this.scenarios)) {
+				this.selectScenario(LeekWars.first(this.scenarios)!)
+			} else {
+				this.currentScenario = null
+			}
 		}
 		createScenario() {
 			LeekWars.post('test-scenario/new', {name: this.newScenarioName}).then(data => {
@@ -811,6 +815,7 @@
 		}
 
 		updateScenarioBotsLevels() {
+			if (!this.currentScenario) { return }
 			let total_level = 0
 			let count = 0
 			const all_leeks = this.currentScenario!.team1.concat(this.currentScenario!.team2)
@@ -880,7 +885,7 @@
 		}
 		createLeek() {
 			LeekWars.post('test-leek/new', {name: this.newLeekName}).then(data => {
-				const leek = {name: this.newLeekName, id: data.id}
+				const leek = {name: this.newLeekName, id: data.id, ai: -1}
 				this.leeks.push(leek as any)
 				for (const k in data.data) {
 					Vue.set(leek, k, data.data[k])
