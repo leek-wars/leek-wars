@@ -780,15 +780,15 @@ class Arena extends Map {
 		for (const cell of this.game.ground.field.cells) {
 			cell.color = false
 		}
-		const circles = 20 + this.game.map.random.next() * 25
+		const circles = 100 + this.game.map.random.next() * 100
 		for (let c = 0; c < circles; ++c) {
-			const radius = 1 + this.game.map.random.next() * (this.game.map.random.next() > 0.1 ? 2.5 : 6)
+			const radius = 0 + this.game.map.random.next() * 1.5
 			const cx = -17 + this.game.map.random.next() * 34 | 0
 			const cy = -17 + this.game.map.random.next() * 34 | 0
 			if (Math.abs(cx) + Math.abs(cy) >= 17) { continue }
 			for (let x = cx - radius | 0; x <= cx + radius; ++x) {
 				for (let y = cy - radius | 0; y <= cy + radius; ++y) {
-					if (Math.abs(x) + Math.abs(y) <= 17 && Math.round(Math.sqrt(Math.pow(x - cx, 2) + Math.pow(y - cy, 2))) <= radius) {
+					if (Math.abs(x) + Math.abs(y) <= 17 && Math.round(Math.sqrt(Math.pow(x - cx, 2) + Math.pow(y - cy, 2))) < radius) {
 						const cell = this.game.ground.field.getCell(x, y)
 						if (cell) { cell.color = true }
 					}
