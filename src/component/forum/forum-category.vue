@@ -20,7 +20,7 @@
 			<div slot="content" class="content">
 				<breadcrumb v-if="LeekWars.mobile" :items="breadcrumb_items" />
 
-				<pagination v-if="category" :current="page" :total="pages" :url="'/forum/category-' + category.id" />
+				<pagination v-if="categories" :current="page" :total="pages" :url="'/forum/category-' + category_ids" />
 
 				<div v-if="!LeekWars.mobile" class="topic header forum-header">
 					<div class="seen"></div>
@@ -29,9 +29,9 @@
 					<div class="last-message">{{ $t('last') }}</div>
 				</div>
 
-				<loader v-if="!category || !category.topics" />
+				<loader v-if="!categories || !topics" />
 				<div v-else class="topics">
-					<div v-for="topic in category.topics" :key="topic.id" :class="{pinned: topic.pinned}" class="topic">
+					<div v-for="topic in topics" :key="topic.id" :class="{pinned: topic.pinned}" class="topic">
 						<div class="seen">
 							<img v-if="topic.seen" src="/image/forum_seen.png">
 							<img v-else src="/image/forum_unseen.png">
@@ -44,7 +44,8 @@
 								<a v-if="topic.issue" :href="'https://github.com/leek-wars/leek-wars-client/issues/' + topic.issue" class="attr issue" target="_blank" rel="noopener">
 									#{{ topic.issue }}
 								</a>
-								<router-link :to="'/forum/category-' + category.id + '/topic-' + topic.id">{{ topic.title }}</router-link>
+								<router-link :to="'/forum/category-' + topic.category + '/topic-' + topic.id">{{ topic.title }}</router-link>
+								<img v-if="forumLanguages.length >= 2" class="flag" :src="LeekWars.languages[topic.lang].flag">
 							</span>
 							<div class="description grey">
 								<i18n path="by_x_the_d">
@@ -60,7 +61,7 @@
 								<span class="messages"><v-icon>mdi-message-outline</v-icon> {{ topic.messages }} • </span>
 								<i18n v-if="LeekWars.mobile" tag="span" path="last_message">
 									<span slot="date">{{ LeekWars.formatDuration(topic.last_message_date) }}</span>
-									<router-link slot="farmer" :to="'/forum/category-' + category.id + '/topic-' + topic.id + '/page-' + topic.last_message_page + '#message-' + topic.last_message_id">
+									<router-link slot="farmer" :to="'/forum/category-' + topic.category + '/topic-' + topic.id + '/page-' + topic.last_message_page + '#message-' + topic.last_message_id">
 										{{ topic.last_message_writer }} ►
 									</router-link>
 								</i18n>
@@ -71,7 +72,7 @@
 							<div>
 								<span>{{ LeekWars.formatDuration(topic.last_message_date) }}</span>
 								<i18n tag="div" path="last_by_x">
-									<router-link slot="author" :to="'/forum/category-' + category.id + '/topic-' + topic.id + '/page-' + topic.last_message_page + '#message-' + topic.last_message_id">
+									<router-link slot="author" :to="'/forum/category-' + topic.category + '/topic-' + topic.id + '/page-' + topic.last_message_page + '#message-' + topic.last_message_id">
 										<rich-tooltip-farmer :id="topic.last_message_writer_id">
 											{{ topic.last_message_writer }} ►
 										</rich-tooltip-farmer>
@@ -81,7 +82,7 @@
 						</div>
 					</div>
 				</div>
-				<pagination v-if="category" :current="page" :total="pages" :url="'/forum/category-' + category.id" />
+				<pagination v-if="categories" :current="page" :total="pages" :url="'/forum/category-' + category_ids" />
 				<breadcrumb :items="breadcrumb_items" />
 			</div>
 		</panel>
@@ -94,6 +95,9 @@
 				<input v-model="createTitle" class="topic-name card" type="text">
 				<h3>{{ $t('new_topic_message') }}</h3>
 				<textarea v-model="createMessage" class="topic-message card"></textarea>
+				<v-radio-group v-model="createMessageLang">
+					<v-radio v-for="lang in forumLanguages" :key="lang" :value="lang" :label="LeekWars.languages[lang].name" />
+				</v-radio-group>
 				<formatting-rules />
 			</div>
 			<div slot="actions">
@@ -105,26 +109,32 @@
 </template>
 
 <script lang="ts">
-	import { ForumCategory } from '@/model/forum'
+	import { ForumCategory, ForumTopic } from '@/model/forum'
 	import { LeekWars } from '@/model/leekwars'
 	import { Component, Vue, Watch } from 'vue-property-decorator'
 	import Breadcrumb from './breadcrumb.vue'
 
 	@Component({ name: 'forum_category', i18n: {}, components: { Breadcrumb } })
 	export default class ForumCategoryPage extends Vue {
-		category: ForumCategory | null = null
+		categories: ForumCategory[] | null = null
+		topics: ForumTopic[] | null = null
 		page: number = 0
 		pages: number = 0
 		createDialog: boolean = false
 		createTitle: string = ''
 		createMessage: string = ''
 		query: string = ''
+		forumLanguages: any[] = []
+		createMessageLang: string = 'fr'
 
 		get breadcrumb_items() {
 			return [
 				{name: this.$t('main.forum'), link: '/forum'},
-				{name: this.category ? this.category.name : '...', link: '/forum/category-' + (this.category ? this.category.id : 0)}
+				{name: this.categories ? this.categories[0].name : '...', link: '/forum/category-' + (this.categories ? this.category_ids : 0)}
 			]
+		}
+		get category_ids() {
+			return this.categories ? this.categories.map(c => c.id).join(',') : ''
 		}
 
 		@Watch("$route.params", {immediate: true})
@@ -135,35 +145,37 @@
 				{icon: 'mdi-pencil', click: () => this.createDialog = true},
 				{icon: 'mdi-magnify', click: () => this.$router.push('/search?category=' + category) }
 			])
-			if (this.category) { this.category.topics = null }
+			if (this.topics) { this.topics = null }
 			LeekWars.get('forum/get-topics/' + category + '/' + this.page).then(data => {
-				this.category = data.category
-				if (this.category) {
-					this.category.name = this.category.team > 0 ? this.category.name : this.$t('forum-category.' + this.category.name) as string
-					this.category.topics = data.topics
+				this.categories = data.categories
+				if (this.categories) {
+					this.categories[0].name = this.categories[0].team > 0 ? this.categories[0].name : this.$t('forum-category.' + this.categories[0].name) as string
+					this.topics = data.topics
 					this.pages = data.pages
 
-					LeekWars.setTitle(this.category.name, this.$t('n_topic_n_messages', [data.total_topics, data.total_messages]))
+					LeekWars.setTitle(this.categories[0].name, this.$t('n_topic_n_messages', [data.total_topics, data.total_messages]))
 					this.$root.$emit('loaded')
 				}
 			})
+			this.forumLanguages = (localStorage.getItem('forum/languages') as string || this.$i18n.locale).split(',')
+			this.createMessageLang = this.forumLanguages[0]
 		}
 		create() {
-			if (!this.category) { return }
-			LeekWars.post('forum/create-topic', {category_id: this.category.id,	title: this.createTitle, message: this.createMessage, issue: 0}).then(data => {
+			if (!this.categories) { return }
+			LeekWars.post('forum/create-topic', {category_id: this.categories[0].id, title: this.createTitle, message: this.createMessage, issue: 0, lang: this.createMessageLang}).then(data => {
 				this.createDialog = false
-				if (this.category) {
-					this.$router.push("/forum/category-" + this.category.id + "/topic-" + data.topic_id)
+				if (this.categories) {
+					this.$router.push("/forum/category-" + this.category_ids + "/topic-" + data.topic_id)
 				}
 			}).error(error => {
 				LeekWars.toast(this.$i18n.t('error_' + error.error, error.params))
 			})
 		}
 		search() {
-			if (!this.category) { return }
+			if (!this.categories) { return }
 			const options = []
 			if (this.query) { options.push('query=' + this.query.replace(' ', '+')) }
-			options.push('category=' + this.category.id)
+			options.push('category=' + this.category_ids)
 			this.$router.push('/search?' + options.join('&'))
 		}
 	}
@@ -223,6 +235,12 @@
 	}
 	.topic .seen img {
 		height: 40px;
+	}
+	.topic .flag {
+		height: 18px;
+		vertical-align: bottom;
+		margin-left: 6px;
+		margin-bottom: 1px;
 	}
 	.topic .title {
 		font-size: 18px;
