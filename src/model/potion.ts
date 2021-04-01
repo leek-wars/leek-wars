@@ -1,6 +1,7 @@
 enum PotionEffect {
 	RESTAT = 1,
 	CHANGE_SKIN = 2,
+	BOOST_CHARACTERISTIC = 3,
 }
 class Potion {
 	public id!: number
@@ -13,5 +14,6 @@ class PotionTemplate {
 	public level!: number
 	public consumable!: number
 	public effects!: any[]
+	public duration!: number
 }
 export { PotionEffect, Potion, PotionTemplate }

@@ -1,6 +1,7 @@
 {
 	"effect_1": "Réinitialise les points de capital du poireau",
 	"effect_2": "Colore le poireau en <b>{0}</b>",
+	"effect_3": "<b>+{0} {1}</b> pendant <b>{2}</b> combats",
 	"restat": "Potion de réinitialisation",
 	"restat_admin": "Potion de réinitialisation",
 	"restat_admin_desc": "Une nouvelle vie ! Offerte par vos admin préférés !",
@@ -55,5 +56,6 @@
 	"skin_magenta": "Potion magenta",
 	"skin_grey": "Potion grise",
 	"skin_celestial_blue": "Potion bleu céleste",
-	"skin_turquoise": "Potion turquoise"
+	"skin_turquoise": "Potion turquoise",
+	"strength": "Potion de force"
 }

@@ -137,6 +137,9 @@ class T {
 	public static rhino_cartridge = new Texture(LeekWars.STATIC + 'image/weapon/rhino_cartridge.png')
 	public static explorer_rifle = new Texture(LeekWars.STATIC + 'image/weapon/explorer_rifle.png', true, SHADOW_QUALITY)
 	public static explorer_rifle_cartridge = new Texture(LeekWars.STATIC + 'image/weapon/explorer_rifle_cartridge.png')
+	public static fish = new Texture(LeekWars.STATIC + 'image/weapon/fish.png', true, SHADOW_QUALITY)
+	public static fish_cartridge = new Texture(LeekWars.STATIC + 'image/weapon/fish_cartridge.png')
+	public static bubble = new Texture(LeekWars.STATIC + 'image/weapon/bubble.png')
 
 	// Cartes
 	public static box = new Texture(LeekWars.STATIC + 'image/map/box.png', true, 1)

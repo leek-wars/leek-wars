@@ -743,12 +743,15 @@
 						const skin = effect.params[0]
 						this.leek.skin = skin
 						store.commit('change-skin', {leek: this.leek.id, skin})
+					} else if (effect.type === 3) {
+						this.leek.fish = !this.leek.fish
+						store.commit('change-fish', {leek: this.leek.id, fish: this.leek.fish})
 					}
 				}
 				this.potionDialog = false
 				this.skinPotionDialog = false
 				LeekWars.post('leek/use-potion', {leek_id: this.leek.id, potion_id: potion.id}).then(data => {
-					if (template.consumable) {
+					if (template.consumable && template.id !== 176) {
 						this.$store.commit('remove-inventory', {type: ItemType.POTION, item_template: potion.template})
 					}
 					if (update) { this.update() }

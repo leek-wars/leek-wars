@@ -11,7 +11,7 @@ import { Obstacle } from '@/component/player/game/obstacle'
 import { Particles } from '@/component/player/game/particles'
 import { S, Sound } from '@/component/player/game/sound'
 import { T, Texture } from '@/component/player/game/texture'
-import { Axe, BLaser, Broadsword, Destroyer, DoubleGun, Electrisor, ExplorerRifle, FlameThrower, Gazor, GrenadeLauncher, IllicitGrenadeLauncher, JLaser, Katana, Laser, MachineGun, Magnum, MLaser, MysteriousElectrisor, Pistol, RevokedMLaser, Rhino, Rifle, Shotgun, UnbridledGazor } from '@/component/player/game/weapons'
+import { Axe, BLaser, Broadsword, Destroyer, DoubleGun, Electrisor, ExplorerRifle, Fish, FlameThrower, Gazor, GrenadeLauncher, IllicitGrenadeLauncher, JLaser, Katana, Laser, MachineGun, Magnum, MLaser, MysteriousElectrisor, Pistol, RevokedMLaser, Rhino, Rifle, Shotgun, UnbridledGazor } from '@/component/player/game/weapons'
 import { env } from '@/env'
 import { locale } from '@/locale'
 import { Action, ActionType } from '@/model/action'
@@ -362,6 +362,7 @@ class Game {
 		if (this.halloween) {
 			T.pumpkin.load(this)
 		}
+
 		this.obstacles = this.data.map.obstacles
 		for (const i in this.obstacles) {
 			const o = this.obstacles[i]
@@ -498,6 +499,11 @@ class Game {
 				entity.active = true
 				entity.drawID = this.addDrawableElement(entity, entity.y)
 
+				const l1 = fight.leeks1.find(l => l.name === entity.name)
+				if (l1) { entity.fish = l1.fish }
+				const l2 = fight.leeks2.find(l => l.name === entity.name)
+				if (l2) { entity.fish = l2.fish }
+
 			} else if (entity instanceof Bulb) {
 
 				entity.name = i18n.t('entity.' + entity.name) as string
@@ -601,6 +607,12 @@ class Game {
 			for (const sound of weaponAnimation.sounds) {
 				sounds.add(sound)
 			}
+		}
+		for (const texture of Fish.textures) {
+			textures.add(texture)
+		}
+		for (const sound of Fish.sounds) {
+			sounds.add(sound)
 		}
 		// console.log("textures to load", textures)
 		// console.log("sounds to load", sounds)
@@ -973,7 +985,11 @@ class Game {
 		}
 		case ActionType.SET_WEAPON: {
 			const leek = this.leeks[action.params[1]] as Leek
-			leek.setWeapon(new WEAPONS[action.params[2] - 1](this))
+			if (leek.fish) {
+				leek.setWeapon(new Fish(this))
+			} else {
+				leek.setWeapon(new WEAPONS[action.params[2] - 1](this))
+			}
 			leek.weapon_name = LeekWars.weapons[action.params[2]].name
 
 			this.log(action)

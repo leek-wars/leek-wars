@@ -88,6 +88,7 @@ class S {
 	public static flame_thrower = new Sound(LeekWars.STATIC + "sound/flame_thrower.mp3", VOL_OFFENSIVE_SOUND)
 	public static gazor = new Sound(LeekWars.STATIC + "sound/gazor.mp3", VOL_OFFENSIVE_SOUND)
 	public static rifle = new Sound(LeekWars.STATIC + "sound/rifle.wav", VOL_OFFENSIVE_SOUND)
+	public static bubble = new Sound(LeekWars.STATIC + "sound/bubble.wav", VOL_OFFENSIVE_SOUND)
 	// chips
 	public static heal = new Sound(LeekWars.STATIC + "sound/heal.mp3", VOL_DEFFENSIVE_SOUND)
 	public static buff = new Sound(LeekWars.STATIC + "sound/buff.mp3", VOL_DEFFENSIVE_SOUND)
