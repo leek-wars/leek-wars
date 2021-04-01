@@ -79,11 +79,12 @@
 </template>
 
 <script lang="ts">
+	import { mixins } from '@/model/i18n'
 	import { Leek } from '@/model/leek'
 	import { LeekWars } from '@/model/leekwars'
 	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 
-	@Component({ name: 'level-dialog' })
+	@Component({ name: 'level-dialog', i18n: {}, mixins })
 	export default class LevelDialog extends Vue {
 		@Prop() value!: boolean
 		@Prop() leek!: Leek
