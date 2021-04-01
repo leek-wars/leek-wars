@@ -493,7 +493,7 @@
 					this.myFight = true
 					this.iWin = this.fight.report.win === 2
 					if (this.fight.type === FightType.SOLO) {
-						this.enemy = this.fight.report.leeks1[0].id
+						this.enemy = this.fight.report.leeks1.length ? this.fight.report.leeks1[0].id : -1
 					} else if (this.fight.type === FightType.FARMER) {
 						this.enemy = this.fight.farmer1
 					}
