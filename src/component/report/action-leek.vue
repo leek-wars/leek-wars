@@ -1,14 +1,17 @@
 <template>
-	<span :style="{color: TEAM_COLORS[leek.team - 1]}">{{ leek.name }}</span>
+	<span :style="{color}">{{ leek.name }}</span>
 </template>
 
 <script lang="ts">
 	import { FightLeek } from '@/model/fight'
-	import { TEAM_COLORS } from '@/model/team'
+	import { TEAM_COLORS, TEAM_COLORS_DARK } from '@/model/team'
 	import { Component, Prop, Vue } from 'vue-property-decorator'
 	@Component({})
 	export default class ActionLeekElement extends Vue {
 		@Prop({required: true}) leek!: FightLeek
-		TEAM_COLORS = TEAM_COLORS
+		@Prop() dark!: boolean
+		get color() {
+			return this.dark ? TEAM_COLORS_DARK[this.leek.team - 1] : TEAM_COLORS[this.leek.team - 1]
+		}
 	}
 </script>
