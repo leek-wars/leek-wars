@@ -244,7 +244,9 @@
 			</panel>
 		</div>
 		<panel>
-			<template v-if="farmer" slot="title"><img src="/image/icon/trophy.png">{{ $t('trophies') }} ({{ farmer.trophies }})</template>
+			<template slot="title">
+				<img src="/image/icon/trophy.png">{{ $t('trophies') }} <span v-if="farmer" class="trophy-count">({{ farmer.trophies }})</span>
+			</template>
 			<template slot="actions">
 				<router-link :to="'/trophies/' + id" class="button flat">
 					<img src="/image/icon/trophy.png">
@@ -1064,5 +1066,8 @@
 		b {
 			padding-right: 4px;
 		}
+	}
+	.trophy-count {
+		margin-left: 5px;
 	}
 </style>
