@@ -6,12 +6,13 @@
 				<v-menu offset-y>
 					<template v-slot:activator="{ on }">
 						<div class="forum-language info" v-on="on">
-							<img :src="forumLanguage.flag" class="flag">
+							<img v-for="l in activeLanguages" :key="l" :src="LeekWars.languages[l].flag" class="flag">
 							<img width="10" src="/image/selector.png">
 						</div>
 					</template>
 					<v-list :dense="true">
 						<v-list-item v-for="(language, i) in LeekWars.languages" :key="i" class="language" @click="setForumLanguage(language)">
+							<v-checkbox v-model="forumLanguages[language.code]" hide-details @click.stop="pickForumLanguage(language)" />
 							<img :src="language.flag" class="flag">
 							<span class="name">{{ language.name }}</span>
 						</v-list-item>
@@ -133,15 +134,20 @@
 		categories: any = null
 		connected_farmers: Farmer[] = []
 		chatLanguage: Language | null = null
-		forumLanguage: Language | null = null
+		forumLanguages: {[key: string]: boolean} = {}
 		expandFarmers: boolean = false
 		searchQuery: string = ''
 
 		created() {
-			const lang = localStorage.getItem('forum/language') as string || this.$i18n.locale
-			this.forumLanguage = LeekWars.languages[lang]
+			const languages = (localStorage.getItem('forum/languages') as string || this.$i18n.locale).split(',')
+			for (const l in LeekWars.languages) {
+				Vue.set(this.forumLanguages, l, false)
+			}
+			for (const l of languages) {
+				Vue.set(this.forumLanguages, l, true)
+			}
 			this.chatLanguage = LeekWars.languages[this.$i18n.locale]
-			LeekWars.get('forum/get-categories/' + this.forumLanguage.code).then(data => {
+			LeekWars.get('forum/get-categories/' + this.activeLanguages).then(data => {
 				this.categories = data.categories
 				this.$root.$emit('loaded')
 			})
@@ -156,10 +162,16 @@
 			])
 		}
 		setForumLanguage(language: Language) {
-			this.forumLanguage = language
+			this.forumLanguages = {[language.code]: true}
 			this.categories = null
-			localStorage.setItem('forum/language', language.code)
+			localStorage.setItem('forum/languages', language.code)
 			LeekWars.get('forum/get-categories/' + language.code).then(data => {
+				this.categories = data.categories
+			})
+		}
+		pickForumLanguage(language: Language) {
+			localStorage.setItem('forum/languages', this.activeLanguages.join(','))
+			LeekWars.get('forum/get-categories/' + this.activeLanguages).then(data => {
 				this.categories = data.categories
 			})
 		}
@@ -170,6 +182,9 @@
 			} else {
 				this.$router.push('/search')
 			}
+		}
+		get activeLanguages() {
+			return Object.entries(this.forumLanguages).filter(e => e[1]).map(e => e[0])
 		}
 	}
 </script>
