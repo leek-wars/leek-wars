@@ -200,7 +200,7 @@
 <script lang="ts">
 	import { Action, ActionType } from '@/model/action'
 	import { EffectType } from '@/model/effect'
-import { Fight, Report } from '@/model/fight'
+	import { Fight, Report } from '@/model/fight'
 	import { i18n } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import { Component, Prop, Vue } from 'vue-property-decorator'
@@ -227,11 +227,11 @@ import { Fight, Report } from '@/model/fight'
 			else if (log[1] === 5) { return "pause" }
 		}
 		logColor(log: any[]) {
-			return log.length > 3 ? LeekWars.colorToHex(log[3]) : ''
+			return log[1] === 1 && log.length > 3 ? LeekWars.colorToHex(log[3]) : ''
 		}
 		logText(log: any[]) {
 			if (log[1] === 5) {	return "pause()" }
-			if (log[1] >= 6 && log[1] <= 8) { return i18n.t('leekscript.' + log[3], log[4]) + "\n" + log[2] }
+			if (log[1] >= 6 && log[1] <= 8) { return i18n.t('leekscript.error_' + log[3], log[4]) + "\n" + log[2] }
 			return log[2]
 		}
 		formatTurns(turns: number) {
