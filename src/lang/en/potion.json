@@ -1,6 +1,7 @@
 {
 	"effect_1": "Resets the leek's capital points",
 	"effect_2": "Makes your leek <b>{0}</b>",
+	"effect_3": "<b>+{0} {1}</b> during <b>{2}</b> fights",
 	"restat": "Reset potion",
 	"restat_admin": "Reset potion",
 	"restat_admin_desc": "A new life! Offered by your favorite admins!",
@@ -57,5 +58,6 @@
 	"skin_magenta": "Magenta potion",
 	"skin_grey": "Grey potion",
 	"skin_celestial_blue": "Celestial blue potion",
-	"skin_turquoise": "Turquoise potion"
+	"skin_turquoise": "Turquoise potion",
+	"strength": "Strength potion"
 }

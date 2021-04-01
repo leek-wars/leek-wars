@@ -20,8 +20,14 @@
 						<leek-image :leek="{level: 250, skin: effect.params[0]}" :scale="0.7" />
 					</div>
 				</template>
-				<div v-else :key="e">
+				<div v-else-if="effect.type == PotionEffect.RESTAT" :key="e">
 					<div>{{ $t('potion.effect_' + effect.type) }}</div>
+				</div>
+				<div v-else :key="e">
+					<div>
+						<img class="icon" :src="'/image/charac/small/strength.png'">
+						<span v-html="$t('potion.effect_' + effect.type, [ effect.params[1], $t('characteristic.strength'), potion.duration ])"></span>
+					</div>
 				</div>
 			</template>
 			<div v-if="!potion.consumable">

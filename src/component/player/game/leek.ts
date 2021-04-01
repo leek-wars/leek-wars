@@ -35,6 +35,7 @@ class Leek extends FightEntity {
 	public hatY: number = 0
 	public heightAnim: number = 0
 	public scale: number = 1
+	public fish: boolean = false
 
 	constructor(game: Game, team: number, level: number) {
 		super(game, EntityType.LEEK, team)

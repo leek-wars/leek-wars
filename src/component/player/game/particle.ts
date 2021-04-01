@@ -7,12 +7,13 @@ const NUM_SHOTS_SPRITES = 4
 const NUM_BLOOD_SPRITES = 4
 
 const BULLET_SPEED = 25
+const BUBBLE_SPEED = 2
 const FIRE_SPEED_MIN = 3
 const FIRE_SPEED_MAX = 5
 const GAZ_SPEED_MIN = 4
 const GAZ_SPEED_MAX = 7
 
-const BULLET_LIFE = 300
+const BULLET_LIFE = 100
 const FIRE_LIFE = 100
 const SHOT_LIFE = 10
 const GAZ_LIFE = 100
@@ -121,6 +122,27 @@ class Bullet extends CollideParticle {
 		ctx.drawImage(T.bullet.texture, -T.bullet.texture.width / 2 , -T.bullet.texture.height / 2)
 	}
 }
+
+class Bubble extends Particle {
+	size = 10
+	constructor(game: Game, x: number, y: number, z: number, angle: number) {
+		super(game, x, y, z, BULLET_LIFE)
+		const speed = BUBBLE_SPEED + Math.random()
+		this.dx = Math.cos(angle + Math.random() * 0.05) * speed
+		this.dy = Math.sin(angle + Math.random() * 0.05) * speed
+		this.dz = 0
+		this.angle = angle
+		this.size = 10 + Math.random() * 10
+	}
+	public update(dt: number): boolean {
+		this.dz += Math.random() * 0.1 * dt
+		return super.update(dt)
+	}
+	public draw(ctx: CanvasRenderingContext2D) {
+		ctx.drawImage(T.bubble.texture, -this.size / 2 , -this.size / 2, this.size, this.size)
+	}
+}
+
 class Laser extends Particle {
 	public width = 0
 	public texture: HTMLImageElement
@@ -558,4 +580,4 @@ class SpinningParticle extends Particle {
 	}
 }
 
-export { Particle, Bullet, CriticalParticle, Laser, Lightning, Fire, SimpleFire, Gaz, Meteorite, Grenade, Shot, Explosion, Cartridge, Garbage, ImageParticle, Plasma, Rectangle, Blood, SpikeParticle, SpinningParticle, NUM_BLOOD_SPRITES }
+export { Particle, Bubble, Bullet, CriticalParticle, Laser, Lightning, Fire, SimpleFire, Gaz, Meteorite, Grenade, Shot, Explosion, Cartridge, Garbage, ImageParticle, Plasma, Rectangle, Blood, SpikeParticle, SpinningParticle, NUM_BLOOD_SPRITES }

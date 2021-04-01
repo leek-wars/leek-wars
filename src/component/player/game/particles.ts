@@ -1,6 +1,6 @@
 import { FightEntity } from '@/component/player/game/entity'
 import { Game } from "@/component/player/game/game"
-import { Blood, Bullet, Cartridge, CriticalParticle, Explosion, Fire, Garbage, Gaz, Grenade, ImageParticle, Laser, Lightning, Meteorite, NUM_BLOOD_SPRITES, Particle, Plasma, Rectangle, Shot, SimpleFire, SpikeParticle, SpinningParticle } from '@/component/player/game/particle'
+import { Blood, Bubble, Bullet, Cartridge, CriticalParticle, Explosion, Fire, Garbage, Gaz, Grenade, ImageParticle, Laser, Lightning, Meteorite, NUM_BLOOD_SPRITES, Particle, Plasma, Rectangle, Shot, SimpleFire, SpikeParticle, SpinningParticle } from '@/component/player/game/particle'
 import { Position } from '@/component/player/game/position'
 import { Texture } from '@/component/player/game/texture'
 import { S } from './sound'
@@ -30,6 +30,11 @@ class Particles {
 				return
 			}
 		}
+		this.add(bullet)
+	}
+
+	public addBubble(x: number, y: number, z: number, angle: number) {
+		const bullet = new Bubble(this.game, x, y, z, angle)
 		this.add(bullet)
 	}
 

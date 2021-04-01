@@ -4,7 +4,7 @@
 			<image v-if="leekImage" :x="leekX" :y="leekY" :width="leekWidth" :height="leekHeight" :xlink:href="'/image/' + leekImage" />
 			<image v-if="hasHat && hatImage" :x="hatX" :width="hatWidth" :height="hatHeight" :xlink:href="'/image/' + hatImage" y="0" />
 
-			<g v-if="weapon" :transform="'translate(' + (leekWidth / 2 + weaponCX) + ',' + (leekY + leekHeight - weaponCY) + ')'">
+			<g v-if="weapon || leek.fish" :transform="'translate(' + (leekWidth / 2 + weaponCX) + ',' + (leekY + leekHeight - weaponCY) + ')'">
 				<g :transform="'scale(' + weaponScale + ')'">
 					<g :transform="'rotate(' + weaponAngle + ')'" transform-box="fill-box">
 						<g :transform="'translate(' + weaponX + ',' + weaponY + ')'">
@@ -24,7 +24,7 @@
 	import { HatTemplate } from '@/model/hat'
 	import { Leek } from '@/model/leek'
 	import { LeekWars } from '@/model/leekwars'
-	import { WeaponsData } from '@/model/weapon'
+	import { FishData, WeaponsData } from '@/model/weapon'
 	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 
 	@Component({})
@@ -103,10 +103,19 @@
 		}
 		get weaponTemplate() { return this.weapon ? LeekWars.items[this.weapon].params : null }
 		get weaponScale() { return 0.9 * this.scale }
-		get weaponData() { return this.weaponTemplate ? WeaponsData[this.weaponTemplate] : null }
+		get weaponData() {
+			if (this.leek.fish) {
+				return FishData
+			}
+			return this.weaponTemplate ? WeaponsData[this.weaponTemplate] : null
+		}
 		get weaponRadianAngle() { return (this.weaponData && this.weaponData.white) ? -Math.PI / 2.7 : Math.PI / 7 }
 		get weaponAngle() { return this.weaponRadianAngle * (180 / Math.PI) }
-		get weaponImage() { return '/image/' + LeekWars.items[this.weapon].name.replace('_', '/') + '.png' }
+		get weaponImage() {
+			if (this.leek.fish) {
+				return '/image/weapon/fish.png'
+			}
+			return '/image/' + LeekWars.items[this.weapon].name.replace('_', '/') + '.png' }
 		get weaponWidth() { return this.weaponData ? this.weaponData.w : 0 }
 		get weaponHeight() { return this.weaponData ? this.weaponData.h : 0 }
 		get weaponCX() { return this.weaponData ? (this.weaponData.cx + 15) * this.scale : 0 }
@@ -115,8 +124,12 @@
 		get weaponY() { return this.weaponData ? this.weaponData.z : 0 }
 		get weaponBottom() { return this.weaponData ? this.weaponData.bottom : 0 }
 		get weaponTop() { return this.weaponData ? this.weaponData.top : 0 }
-		get hand1() { return this.weaponData ? { x: this.weaponData.mx1, y: this.weaponData.mz1 } : null }
-		get hand2() { return this.weaponData ? { x: this.weaponData.mx2, y: this.weaponData.mz2 } : null }
+		get hand1() {
+			return this.weaponData ? { x: this.weaponData.mx1, y: this.weaponData.mz1 } : null
+		}
+		get hand2() {
+			return this.weaponData ? { x: this.weaponData.mx2, y: this.weaponData.mz2 } : null
+		}
 		get handSize() { return 19 * this.scale / this.weaponScale }
 		get appearance() { return LeekWars.getLeekAppearance(this.leek.level) }
 		get leekSize() { return LeekWars.leekSizes[this.appearance] }

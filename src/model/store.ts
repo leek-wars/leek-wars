@@ -256,6 +256,11 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 				state.farmer.leeks[data.leek].skin = data.skin
 			}
 		},
+		'change-fish'(state: LeekWarsState, data: any) {
+			if (state.farmer) {
+				state.farmer.leeks[data.leek].fish = data.fish
+			}
+		},
 		'change-hat'(state: LeekWarsState, data: any) {
 			if (state.farmer) {
 				const leek = state.farmer.leeks[data.leek]

@@ -337,7 +337,7 @@
 							this.potions.push(potion)
 							this.items_by_name[LeekWars.potions[item.id].name] = item
 						} else {
-							const fakePotion = {...item, name: item.name.replace(/^potion_/, ''), level: 1, consumable: 0, effects: [], template: item.id}
+							const fakePotion = {...item, name: item.name.replace(/^potion_/, ''), level: 1, consumable: 0, effects: [], template: item.id, duration: 0}
 							this.potions.push(fakePotion)
 							this.items_by_name[fakePotion.name] = fakePotion
 						}
