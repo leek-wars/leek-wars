@@ -5,5 +5,9 @@
 	"no_news": "No new item for this level.",
 	"title": "<b>{0}</b> reaches level <b>{1}</b>!",
 	"301_title": "Congratulations!",
-	"301_message": "You have reached the highest level in Leek Wars, your leek is at the ultimate stage of its evolution! <br>You get a <b>gold potion</b> as well as <b>a crown</b> as a reward."
+	"301_message": "You have reached the highest level in Leek Wars, your leek is at the ultimate stage of its evolution! <br>You get a <b>gold potion</b> as well as <b>a crown</b> as a reward.",
+	"new_weapon": "New weapon slot",
+	"new_chip": "New chip slot",
+	"total_weapons": "{0} total weapons",
+	"total_chips": "{0} total chips"
 }

@@ -45,26 +45,34 @@
 			</table>
 			<br>
 
-			<div v-if="data.weapons.length + data.chips.length == 0">
+			<div v-if="data.weapons.length == 0 && data.chips.length == 0 && !data.new_chip && !data.new_weapon">
 				<center>{{ $t('no_news') }}</center>
 			</div>
 			<div v-else>
-				<template v-if="data.weapons.length > 0">
-					<h2>{{ $t('new_weapons') }}</h2>
+				<div v-if="data.weapons.length > 0" class="new">
+					<h4><v-icon>mdi-pistol</v-icon> {{ $t('new_weapons') }}</h4>
 					<div class="available-market">{{ $t('available_on_market') }}</div>
 					<div v-for="weapon of data.weapons" :key="weapon" class="weapon">
 						<img :src="'/image/weapon/' + weapon + '.png'"><br>
 						<div class="name">{{ $t('weapon.' + weapon) }}</div>
 					</div>
-				</template>
-				<template v-if="data.chips.length > 0">
-					<h2>{{ $t('new_chips') }}</h2>
+				</div>
+				<div v-if="data.chips.length > 0" class="new">
+					<h4><v-icon>mdi-chip</v-icon> {{ $t('new_chips') }}</h4>
 					<div class="available-market">{{ $t('available_on_market') }}</div>
 					<div v-for="chip of data.chips" :key="chip" class="weapon">
 						<img :src="'/image/chip/' + chip + '.png'"><br>
 						<div class="name">{{ $t('chip.' + chip) }}</div>
 					</div>
-				</template>
+				</div>
+				<div v-if="data.new_weapon" class="new">
+					<h4><v-icon>mdi-shape-square-plus</v-icon> {{ $t('new_weapon') }}</h4>
+					<div class="available-market">{{ $t('total_weapons', [leek.max_weapons]) }}</div>
+				</div>
+				<div v-if="data.new_chip" class="new">
+					<h4><v-icon>mdi-shape-square-plus</v-icon> {{ $t('new_chip') }}</h4>
+					<div class="available-market">{{ $t('total_chips', [leek.max_chips]) }}</div>
+				</div>
 			</div>
 		</div>
 	</popup>
@@ -76,7 +84,7 @@
 	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 
 	@Component({ name: 'level-dialog' })
-	export default class CapitalDialog extends Vue {
+	export default class LevelDialog extends Vue {
 		@Prop() value!: boolean
 		@Prop() leek!: Leek
 		@Prop() data!: any
@@ -92,6 +100,15 @@
 	h1 {
 		margin: 0;
 	}
+	h4 {
+		display: flex;
+		align-items: center;
+		color: #333;
+		.v-icon {
+			margin-right: 5px;
+			font-size: 26px;
+		}
+	}
 	.weapon, .chip {
 		display: inline-block;
 		text-align: center;
@@ -101,8 +118,8 @@
 		width: 80px;
 	}
 	.available-market {
-		color: #777;
-		font-size: 13px;
+		color: #666;
+		font-size: 15px;
 	}
 	.function, .weapon .name, .chip .name {
 		font-size: 18px;
@@ -122,5 +139,8 @@
 	.capital .name, .life .name {
 		color: red;
 		margin-left: 6px;
+	}
+	.new {
+		padding: 5px 0;
 	}
 </style>
