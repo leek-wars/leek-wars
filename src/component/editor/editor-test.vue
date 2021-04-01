@@ -192,7 +192,7 @@
 				<br><br>
 				<div class="title">{{ $t('templates') }}</div>
 				<div class="templates">
-					<div v-for="(template, t) of templates" :key="t" v-ripple :class="{selected: selectedTemplate === t}" class="template card" @click="selectedTemplate = t; newScenarioName = template.name">
+					<div v-for="(template, t) of templates" :key="t" v-ripple :class="{selected: selectedTemplate === t}" class="template card" @click="selectedTemplate = t">
 						<div v-if="template.category == 'free'">
 							<v-icon>mdi-wrench</v-icon>
 						</div>
