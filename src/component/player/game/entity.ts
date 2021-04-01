@@ -771,7 +771,7 @@ class FightEntity extends Entity {
 		ctx.scale(this.game.ground.scale, this.game.ground.scale)
 
 		const effect_size = 30
-		const reverse = this.game.textRatio / this.game.ground.scale
+		const reverse = Math.min(0.7, this.game.textRatio / this.game.ground.scale)
 		const z = LeekWars.objectSize(this.effects) > 0 && this.game.showEffects ? effect_size + 23 : effect_size
 		const y = Math.max(-this.game.ground.startY / this.game.ground.scale + 20, this.oy - this.height - z * reverse)
 		ctx.translate(this.ox, y)
