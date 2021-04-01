@@ -636,9 +636,9 @@
 				const line = problem[2]
 				let info = problem[4]
 				if (problem.length === 7) {
-					info = this.$t('leekscript.' + problem[5], problem[6])
+					info = this.$t('leekscript.error_' + problem[5], problem[6])
 				} else {
-					info = this.$t('leekscript.' + problem[5])
+					info = this.$t('leekscript.error_' + problem[5])
 				}
 				info = '(' + problem[4] + ') ' + info
 				ai.valid = false
