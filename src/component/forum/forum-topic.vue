@@ -7,7 +7,7 @@
 					<v-icon>mdi-chevron-right</v-icon>
 					<router-link v-if="topic" :to="'/forum/category-' + category.id">{{ categoryName }}</router-link>
 					<v-icon>mdi-chevron-right</v-icon>
-					<img v-if="category && forumLanguages.length >= 2" class="flag" :src="LeekWars.languages[category.lang].flag">
+					<img v-if="category && forumLanguages.length >= 2 && category.lang" class="flag" :src="LeekWars.languages[category.lang].flag">
 					<span ref="topicTitle" :contenteditable="topicEditing" class="topic-title">{{ topic ? topic.name : '...' }}</span>
 					<div v-if="topic" class="info attrs">
 						<v-icon v-if="topic.resolved" :title="$t('resolved')" class="attr">mdi-check-circle</v-icon>
