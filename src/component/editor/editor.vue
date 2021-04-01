@@ -214,7 +214,7 @@
 
 				<ul class="shortcuts">
 					<li v-html="$t('shortcut.shortcut_1')"></li>
-					<li v-html="$t('shortcut.shortcut_13')"></li>
+					<!-- <li v-html="$t('shortcut.shortcut_13')"></li> -->
 					<li v-html="$t('shortcut.shortcut_2')"></li>
 					<li v-html="$t('shortcut.shortcut_3')"></li>
 					<li v-html="$t('shortcut.shortcut_4')"></li>
@@ -376,7 +376,8 @@
 				this.save(this.currentEditor)
 			})
 			this.$root.$on('ctrlShiftS', () => {
-				this.saveAll()
+				// TODO save all but analyze only entrypoints
+				// this.saveAll()
 			})
 			this.$root.$on('ctrlQ', () => {
 				this.testDialog = true
