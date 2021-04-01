@@ -68,4 +68,7 @@
 	.content.full {
 		padding: 0;
 	}
+	.actions ::v-deep > * {
+		user-select: none;
+	}
 </style>
