@@ -1,3 +1,43 @@
+223:
+  title: Fonctionnalités page inscription, forum multi-langue et plein d'améliorations.
+  added:
+    - "Ajout d'une section présentant les fonctionnalités principales du jeu sur la page d'accueil. #img_223_features"
+    - "Affichage des items correspondant à une aire d'effet dans la documentation. #img_223_areas"
+    - "Ajout d'une option pour masquer les tourelles dans le rapport de combat d'équipe. #img_223_turret"
+    - Ajout d'images supplémentaires pour certaines modifications dans le changelog.
+    - "Possibilité de sélectionner plusieurs langues dans le forum pour compiler les topics. #img_223_forum #img_223_forum2"
+  improved:
+    - "Ajout d'un menu pour changer de langue sur la page d'inscription. #img_223_lang"
+    - "Amélioration des couleurs des actions en mode sombre en combat. #img_223_dark"
+    - Chargement de plus de conversations de MP en scrollant vers le bas.
+    - Ajout d'un message d'erreur quand on appelle une valeur qui n'est pas une fonction.
+    - "Possibilité d'utiliser n'importe quel caractère unicode dans les say (dont les emojis). #img_223_say"
+    - "La couleur de l'équipe qui a tué l'entité est affichée sur l'action de mort de celle-ci. #img_223_kill"
+    - Les gains d'XP en BR sont augmentés pour le gagnant et diminués en cas d'égalité.
+    - "Ajout d'un message pour acheter des équipements dans les tooltips de la page poireau. #img_223_buy"
+    - "Amélioration du lissage du talent moyen éleveur et ajout d'une page /talent. #img_223_talent"
+    - "Affichage des emplacements d'arme et puce gagnés lors d'un passage de niveau. #img_223_leek"
+    - Ajout d'une erreur lors d'une boucle for sur une valeur non itérable.
+    - Ajout d'erreurs dans l'éditeur pour un constructeur ou une méthode statique inconnue.
+    - Les opérateurs <, <=, > et >= ne coûtent maintenant plus que 1 opération au lieu de 3.
+    - "Amélioration de Vampirisation : 38 à 40 -> 42 à 44 et Thérapie : 70 à 75 -> 75 à 80."
+  fixed:
+    - Correction d'un bug lors du changement de langue.
+    - Correction d'un bug de fermeture des tooltips d'équipe.
+    - "Correction de l'affichage des obstacles 2x2 dans le rapport. #img_223_map"
+    - Correction d'un bug quand on créé son premier scénario dans l'éditeur.
+    - Quand on créé un poireau de test, il a bien une IA lambda de base.
+    - Ajout de traductions d'erreurs manquantes dans le potager.
+    - typeOf(objet) retourne TYPE_OBJET et non 0.
+    - Correction du grappin qui pouvait pousser.
+    - Correction du bug de certains caractères dans les say() et correction de la censure.
+    - "Correction d'un bug de commentaires #377."
+    - Ajout d'une erreur quand deux points sont détectés dans un nombre flottant.
+    - "Traduction du nom 'Tourelle' dans le rapport de combat."
+    - "Correction du coup en opérations des boucles for (var k : var v in array)."
+    - Correction des effets SHACKLE_AGILITY and SHACKLE_WISDOM et getAllEffects().
+    - Correction d'un bug de compilation avec des '\'.
+
 222:
   title: "LeekScript 1.1 : Programmation Orientée Objet et améliorations du langage"
   added:
