@@ -287,8 +287,8 @@
 					</rich-tooltip-weapon>
 				</div>
 				<br>
-				<h2>{{ $t('all_my_weapons') }}</h2>
-				<br>
+				<h4>{{ $t('all_my_weapons') }} ({{ farmer_weapons.length }})</h4>
+				<div v-if="farmer_weapons.length" class="info">{{ $t('equip_item') }}</div>
 				<div :class="{dashed: draggedWeapon && draggedWeaponLocation === 'leek'}" class="farmer-weapons" @dragover="dragOver" @drop="weaponsDrop('farmer', $event)">
 					<rich-tooltip-weapon v-for="(weapon, i) in farmer_weapons" :key="i" v-slot="{ on }" :instant="true" :weapon="LeekWars.weapons[LeekWars.items[weapon.template].params]" :bottom="true">
 						<div :quantity="weapon.quantity" :class="{dragging: draggedWeapon && draggedWeapon.template === weapon.template && draggedWeaponLocation === 'farmer', locked: LeekWars.items[weapon.template].level > leek.level || (LeekWars.weapons[LeekWars.items[weapon.template].params].forgotten && hasForgottenWeapon) || leek.weapons.find(w => w.template === weapon.template) }" :draggable="LeekWars.items[weapon.template].level <= leek.level" class="weapon" v-on="on" @dragstart="weaponDragStart('farmer', weapon, $event)" @dragend="weaponDragEnd(weapon)" @click="addWeapon(weapon)">
@@ -296,6 +296,10 @@
 						</div>
 					</rich-tooltip-weapon>
 				</div>
+				<i18n class="buy-hint" tag="div" path="buy_hint">
+					<span slot="hab"><b>{{ $store.state.farmer.habs | number }}</b> <span class="hab"></span></span>
+					<router-link slot="market" to="/market">{{ $t('main.market') }}</router-link>
+				</i18n>
 			</div>
 		</popup>
 
@@ -530,8 +534,8 @@
 					</rich-tooltip-chip>
 				</div>
 				<br>
-				<h2>{{ $t('all_my_chips') }}</h2>
-				<br>
+				<h4>{{ $t('all_my_chips') }} ({{ farmer_chips.length }})</h4>
+				<div v-if="farmer_chips.length" class="info">{{ $t('equip_item') }}</div>
 				<div :class="{dashed: draggedChip && draggedChipLocation === 'leek'}" class="farmer-chips" @dragover="dragOver" @drop="chipsDrop('farmer', $event)">
 					<rich-tooltip-chip v-for="chip in farmer_chips" :key="chip.id" v-slot="{ on }" :chip="LeekWars.chips[chip.template]" :bottom="true" :instant="true">
 						<div :quantity="chip.quantity" :class="{dragging: draggedChip && draggedChip.template === chip.template && draggedChipLocation === 'farmer', locked: LeekWars.chips[chip.template].level > leek.level || leek.chips.find(c => c.template === chip.template) }" :draggable="LeekWars.chips[chip.template].level <= leek.level" class="chip" v-on="on" @dragstart="chipDragStart('farmer', chip, $event)" @dragend="chipDragEnd(chip)" @click="addChip(chip)">
@@ -539,6 +543,10 @@
 						</div>
 					</rich-tooltip-chip>
 				</div>
+				<i18n class="buy-hint" tag="div" path="buy_hint">
+					<span slot="hab"><b>{{ $store.state.farmer.habs | number }}</b> <span class="hab"></span></span>
+					<router-link slot="market" to="/market">{{ $t('main.market') }}</router-link>
+				</i18n>
 			</div>
 		</popup>
 		<capital-dialog v-if="leek && my_leek" v-model="capitalDialog" :leek="leek" :total-capital="leek.capital" />
@@ -1456,5 +1464,16 @@
 	}
 	.weapon-count, .chip-count, .register-count {
 		padding-left: 5px;
+	}
+	.info {
+		margin: 8px 0;
+		color: #777;
+	}
+	.buy-hint {
+		margin-top: 15px;
+		a {
+			color: #4caf50;
+			font-weight: 500;
+		}
 	}
 </style>
