@@ -89,7 +89,7 @@
 				</tr>
 				<report-leek-row v-for="leek in leeks" :key="leek.id" :leek="leek" :fight="fight" />
 				<tr v-if="fight.type !== FightType.SOLO" class="total">
-					<td class="name"><span class="alive">{{ $t('total') }}</span></td>
+					<td class="name"><span class="alive">{{ $t('main.total') }}</span></td>
 					<td class="level">{{ totalLevel }}</td>
 					<td v-if="$store.getters.admin" class="power">{{ totalPower | number }}</td>
 					<td class="xp"><div class="bar"></div>{{ totalXP | number }}</td>
