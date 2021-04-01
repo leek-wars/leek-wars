@@ -30,6 +30,7 @@ class LeekWarsState {
 	public conversationsList: Conversation[] = []
 	public last_ping: number = 0
 	public connected_farmers: number = 0
+	public loadingConversations: boolean = false
 }
 
 function updateTitle(state: LeekWarsState) {
@@ -45,12 +46,14 @@ function loadNotifications(state: LeekWarsState) {
 	})
 }
 function loadMessages(state: LeekWarsState) {
-	LeekWars.get('message/get-latest-conversations/20').then(data => {
+	state.loadingConversations = true
+	LeekWars.get('message/get-latest-conversations/25').then(data => {
 		state.unreadMessages = data.unread
 		updateTitle(state)
 		for (const conversation of data.conversations) {
 			store.commit('new-conversation', conversation)
 		}
+		state.loadingConversations = false
 	})
 }
 
@@ -536,6 +539,15 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			if (state.farmer) {
 				Vue.set(state.farmer.leeks, leek.id, leek)
 			}
+		},
+		'load-conversations'(state: LeekWarsState) {
+			state.loadingConversations = true
+			LeekWars.get('message/get-conversations/' + state.conversationsList.length + '/25').then(data => {
+				for (const conversation of data.conversations) {
+					store.commit('new-conversation', conversation)
+				}
+				state.loadingConversations = false
+			})
 		}
 	},
 })

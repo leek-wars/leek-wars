@@ -14,7 +14,7 @@
 		</div>
 		<div class="container last">
 			<div v-show="!LeekWars.mobile || !LeekWars.splitBack" class="column4">
-				<panel v-autostopscroll="'bottom'" class="conversations first">
+				<panel v-autostopscroll="'bottom'" class="conversations first" @scroll.native="conversationsScroll">
 					<div slot="content">
 						<router-link v-if="newConversation && !newConversationSent" :to="'/messages/new/' + newFarmer.id + '/' + newFarmer.name + '/' + newFarmer.avatar_changed">
 							<conversation :conversation="newConversation" />
@@ -46,11 +46,11 @@
 </template>
 
 <script lang="ts">
-	import { Chat, ChatType } from '@/model/chat'
+	import { ChatType } from '@/model/chat'
 	import { Conversation } from '@/model/conversation'
-	import { Farmer } from '@/model/farmer'
 	import { LeekWars } from '@/model/leekwars'
 	import { SocketMessage } from '@/model/socket'
+	import { store } from '@/model/store'
 	import { Component, Vue, Watch } from 'vue-property-decorator'
 
 	@Component({ name: 'messages', i18n: {} })
@@ -62,6 +62,7 @@
 		currentID: number | null = null
 		quitDialog: boolean = false
 		actions = [{icon: 'mdi-delete', click: () => this.showQuitDialog()}]
+		loadingConversations: boolean = false
 
 		created() {
 			if (!this.env.SOCIAL) {
@@ -187,6 +188,13 @@
 		conversationRead() {
 			if (this.currentConversation) {
 				LeekWars.socket.send([SocketMessage.MP_READ, this.currentConversation.id])
+			}
+		}
+
+		conversationsScroll(e: MouseEvent) {
+			const target = e.target as HTMLElement
+			if (target.scrollTop + target.clientHeight >= target.scrollHeight - 5 && !store.state.loadingConversations) {
+				store.commit('load-conversations')
 			}
 		}
 	}
