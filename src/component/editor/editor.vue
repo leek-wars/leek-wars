@@ -41,7 +41,7 @@
 							<div v-if="currentAI" class="menu-title">
 								<v-icon>mdi-file-outline</v-icon> {{ currentAI.name }}
 							</div>
-							<v-list-item v-if="currentAI" v-ripple @click="save">
+							<v-list-item v-if="currentAI" v-ripple @click="save(currentEditor)">
 								<v-icon class="list-icon">mdi-content-save</v-icon>
 								<v-list-item-content>
 									<v-list-item-title>{{ $t('save') }}</v-list-item-title>
@@ -58,7 +58,7 @@
 					<div ref="settingsButton" class="tab action" icon="settings" @click="settingsDialog = true">
 						<v-icon>mdi-cogs</v-icon>
 					</div>
-					<div :title="$t('test_desc')" class="action content tab" icon="play_arrow" @click="test">
+					<div :title="$t('test_desc')" class="action content tab" icon="play_arrow" @click="test(currentEditor)">
 						<v-icon class="list-icon">mdi-play</v-icon><span>{{ $t('test') }}</span>
 					</div>
 				</div>
