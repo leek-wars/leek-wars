@@ -45,7 +45,7 @@
 									#{{ topic.issue }}
 								</a>
 								<router-link :to="'/forum/category-' + topic.category + '/topic-' + topic.id">{{ topic.title }}</router-link>
-								<img v-if="forumLanguages.length >= 2" class="flag" :src="LeekWars.languages[topic.lang].flag">
+								<img v-if="forumLanguages.length >= 2 && topic.lang" class="flag" :src="LeekWars.languages[topic.lang].flag">
 							</span>
 							<div class="description grey">
 								<i18n path="by_x_the_d">
@@ -95,7 +95,7 @@
 				<input v-model="createTitle" class="topic-name card" type="text">
 				<h3>{{ $t('new_topic_message') }}</h3>
 				<textarea v-model="createMessage" class="topic-message card"></textarea>
-				<v-radio-group v-model="createMessageLang">
+				<v-radio-group v-if="categories && categories[0].lang" v-model="createMessageLang">
 					<v-radio v-for="lang in forumLanguages" :key="lang" :value="lang" :label="LeekWars.languages[lang].name" />
 				</v-radio-group>
 				<formatting-rules />
