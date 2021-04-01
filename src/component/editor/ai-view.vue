@@ -1374,6 +1374,7 @@
 
 			const code = this.editor.getValue()
 			this.ai.globals = {}
+			this.ai.classes = {}
 			let match
 
 			// Search global vars
