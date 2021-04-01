@@ -39,11 +39,9 @@
 		}
 		mounted() {
 			LeekWars.large = true
-			LeekWars.footer = false
 		}
 		beforeDestroy() {
 			LeekWars.large = false
-			LeekWars.footer = true
 		}
 		get breadcrumb_items() {
 			return [
