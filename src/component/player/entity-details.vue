@@ -135,12 +135,12 @@
 						<div class="resistance color-resistance">{{ entity.resistance }}</div>
 					</div>
 					<div :class="{zero: entity.science === 0, dark}" class="stat">
-						<img src="/image/charac/small/science.png">
-						<div class="science color-science">{{ entity.science }}</div>
+						<img src="/image/charac/small/science.png" :class="{dark}">
+						<div class="science color-science" :class="{dark}">{{ entity.science }}</div>
 					</div>
 					<div :class="{zero: entity.magic === 0, dark}" class="stat">
 						<img src="/image/charac/small/magic.png">
-						<div class="magic color-magic">{{ entity.magic }}</div>
+						<div class="magic color-magic" :class="{dark}">{{ entity.magic }}</div>
 					</div>
 					<div :class="{zero: entity.frequency === 0, dark}" class="stat black">
 						<img src="/image/charac/small/frequency.png">
@@ -269,9 +269,9 @@
 	img {
 		width: 14px;
 		margin-right: 3px;
-	}
-	&.dark {
-		filter: brightness(180%);
+		&.dark {
+			filter: brightness(180%);
+		}
 	}
 	&.black {
 		color: black;
