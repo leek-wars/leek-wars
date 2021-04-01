@@ -384,7 +384,7 @@
 
 				for (const leek of this.fight.data.leeks) {
 					this.leeks[leek.id] = leek as any
-					if (leek.summon) {
+					if (leek.type !== 0) {
 						leek.name = this.$i18n.t('entity.' + leek.name) as string
 					}
 					leek.farmer = this.farmers[leek.farmer]
@@ -645,7 +645,7 @@
 				const entity = this.statistics.entities[e]
 				let total = 0
 				let stats: any[] = []
-				const name = entity.leek.summon ? this.$t('entity.' + entity.name) : entity.name
+				const name = entity.leek.type !== 0 ? this.$t('entity.' + entity.name) : entity.name
 				if (this.damageChartType === 0) {
 					total = entity.dmg_out
 					stats = [name, entity.leek.id, entity.leek.team, total, entity.direct_dmg_out, entity.poison_out, entity.return_out, entity.nova_out, entity.life_dmg_out]
