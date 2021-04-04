@@ -2,12 +2,12 @@
 	<div>
 		<div v-if="type === ActionType.START_FIGHT" id="turn-1" class="turn">
 			<span class="label" @click="goToTurn(1)">{{ $t('fight.turn_n', [1]) }}</span>
-			<v-icon v-if="report" class="disabled">mdi-chevron-left</v-icon>
+			<v-icon v-if="report" :class="{disabled: !hasErrWarn}" @click="goToTurn(0)">mdi-chevron-left</v-icon>
 			<v-icon v-if="report" :class="{disabled: 1 === report.duration}" @click="goToTurn(2)">mdi-chevron-right</v-icon>
 		</div>
 		<div v-else-if="type === ActionType.NEW_TURN" :id="'turn-' + action.params[1]" class="turn">
 			<span class="label" @click="goToTurn(action.params[1])">{{ $t('fight.turn_n', [action.params[1]]) }}</span>
-			<v-icon v-if="report" :class="{disabled: action.params[1] === 1}" @click="goToTurn(action.params[1] - 1)">mdi-chevron-left</v-icon>
+			<v-icon v-if="report" :class="{disabled: action.params[1] === 1 && !hasErrWarn}" @click="goToTurn(action.params[1] - 1)">mdi-chevron-left</v-icon>
 			<v-icon v-if="report" :class="{disabled: action.params[1] === report.duration}" @click="goToTurn(action.params[1] + 1)">mdi-chevron-right</v-icon>
 		</div>
 		<div v-else-if="type === ActionType.USE_WEAPON">
@@ -224,6 +224,7 @@
 		@Prop({required: true}) action!: Action
 		@Prop({required: true}) leeks!: {[key: number]: any}
 		@Prop({required: true}) displayLogs!: boolean
+		@Prop() hasErrWarn!: boolean
 		ActionType = ActionType
 		EffectType = EffectType
 		TEAM_COLORS = TEAM_COLORS
@@ -252,9 +253,7 @@
 		}
 		goToTurn(turn: number) {
 			const element = document.getElementById('turn-' + turn)!
-			console.log(element)
 			const sibling = element.parentElement!.nextElementSibling!
-			console.log(sibling, sibling.getBoundingClientRect())
 			window.scrollTo(0, sibling.getBoundingClientRect().top + window.scrollY - 48)
 		}
 	}
