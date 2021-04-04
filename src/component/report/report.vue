@@ -216,12 +216,21 @@
 			</div>
 		</panel>
 
-		<panel v-if="errors.length > 0 || warnings.length > 0" id="errors" class="warnings-error" toggle="report/warnings-errors" icon="mdi-alert">
+		<panel v-if="hasErrWarn" id="errors" class="warnings-error" toggle="report/warnings-errors" icon="mdi-alert">
 			<template slot="title">Erreurs et avertissements ({{ errors.length + warnings.length }})</template>
-			<div v-if="errors.length" class="title"><b>{{ errors.length }}</b> erreurs</div>
-			<pre v-for="(e, i) in errors" :key="i" class="log error">[{{ e.entity }}] {{ e.data }}</pre>
-			<div v-if="warnings.length" class="title"><b>{{ warnings.length }}</b> avertissements</div>
-			<pre v-for="(w, i) in warnings" :key="errors.length + i" class="log warning">[{{ w.entity }}] {{ w.data }}</pre>
+			<div class="logs">
+				<div class="turn">
+					<div id="turn-0" class="turn">
+						<span class="label" @click="goToTurn(0)">{{ $t('errors') }}</span>
+						<v-icon v-if="report" class="disabled">mdi-chevron-left</v-icon>
+						<v-icon v-if="report" @click="goToTurn(1)">mdi-chevron-right</v-icon>
+					</div>				
+				</div>
+				<div v-if="errors.length" class="title"><b>{{ errors.length }}</b> erreurs</div>
+				<pre v-for="(e, i) in errors" :key="i" class="log error">[{{ e.entity }}] {{ e.data }}</pre>
+				<div v-if="warnings.length" class="title"><b>{{ warnings.length }}</b> avertissements</div>
+				<pre v-for="(w, i) in warnings" :key="errors.length + i" class="log warning">[{{ w.entity }}] {{ w.data }}</pre>
+			</div>
 		</panel>
 
 		<panel class="last actions" title="Actions" toggle="report/actions" icon="mdi-format-list-bulleted">
@@ -232,7 +241,7 @@
 			</div>
 			<loader v-if="!loaded" />
 			<div v-else>
-				<actions :report="report" :actions="actions" :leeks="leeks" :display-logs="actionsDisplayLogs" :display-allies-logs="actionsDisplayAlliesLogs" class="actions" />
+				<actions :has-err-warn="hasErrWarn" :report="report" :actions="actions" :leeks="leeks" :display-logs="actionsDisplayLogs" :display-allies-logs="actionsDisplayAlliesLogs" class="actions" />
 			</div>
 		</panel>
 	</div>
@@ -272,6 +281,7 @@
 		loaded: boolean = false
 		errors: any[] = []
 		warnings: any[] = []
+		hasErrWarn: boolean = false
 		myFight: boolean = false
 		iWin: boolean = false
 		enemy: any = null
@@ -469,6 +479,7 @@
 					}
 				}
 			}
+			this.hasErrWarn = this.errors.length > 0 || this.warnings.length > 0
 		}
 
 		searchMyLeek(myLeek: any, leeks: ReportLeek[]) {
@@ -770,6 +781,15 @@
 			} else {
 				this.map_teams = {[this.statistics.entities[fid].team]: this.statistics.entities[fid].walkedCells}
 			}
+		}
+
+		goToTurn(turn: number) {
+			const element = document.getElementById('turn-' + turn)!
+			console.log(element)
+			const sibling = element.parentElement!.nextElementSibling!
+			console.log(sibling)
+			console.log(sibling, sibling.getBoundingClientRect())
+			window.scrollTo(0, sibling.getBoundingClientRect().top + window.scrollY - 48)
 		}
 
 		// walkedCells(fid: number) {
@@ -1077,6 +1097,11 @@
 			padding: 0 15px;
 		}
 	}
+	.panel.warnings-error {
+		.logs {
+			padding: 0 15px;
+		}
+	}
 	.actions-options {
 		display: flex;
 		background: #f2f2f2;
@@ -1100,6 +1125,33 @@
 			margin-bottom: 6px;
 			&:not(.all):not(.t4) {
 				color: white;
+			}
+		}
+	}
+	.turn {
+		position: sticky;
+		top: 0;
+		background: #f2f2f2;
+		padding: 7px 0;
+		margin: 0;
+		.turn {
+			font-size: 16px;
+			background: #333;
+			color: #eee;
+			font-weight: 500;
+			display: inline-flex;
+			padding: 3px 10px;
+			padding-right: 3px;
+			border-radius: 4px;
+			align-items: center;
+			.label {
+				padding-right: 5px;
+				cursor: pointer;
+			}
+			.v-icon.disabled {
+				opacity: 0.3;
+				pointer-events: none;
+				cursor: initial;
 			}
 		}
 	}

@@ -2,7 +2,7 @@
 	<div>
 		<div v-if="type === ActionType.START_FIGHT || type === ActionType.NEW_TURN" :id="'turn-' + turn" class="turn">
 			<span class="label" @click="goToTurn(turn)">{{ $t('fight.turn_n', [turn]) }}</span>
-			<v-icon v-if="report" :class="{disabled: turn === 1}" @click="goToTurn(turn - 1)">mdi-chevron-left</v-icon>
+			<v-icon v-if="report" :class="{disabled: turn === 1 && !hasErrWarn}" @click="goToTurn(turn - 1)">mdi-chevron-left</v-icon>
 			<v-icon v-if="report" :class="{disabled: turn === report.duration}" @click="goToTurn(turn + 1)">mdi-chevron-right</v-icon>
 		</div>
 		<div v-else-if="type === ActionType.USE_WEAPON">
@@ -215,6 +215,7 @@
 		@Prop({required: true}) leeks!: {[key: number]: any}
 		@Prop({required: true}) turn!: number
 		@Prop({required: true}) displayLogs!: boolean
+		@Prop({required: true}) hasErrWarn!: boolean
 		ActionType = ActionType
 		EffectType = EffectType
 		TEAM_COLORS = TEAM_COLORS
