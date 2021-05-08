@@ -68,7 +68,7 @@ module.exports = {
 }
 
 if (process.env.VUE_MODE === 'build') {
-	module.exports.configureWebpack.plugins.push(
-		new BundleAnalyzerPlugin()
-	)
+	// module.exports.configureWebpack.plugins.push(
+	// 	new BundleAnalyzerPlugin()
+	// )
 }
