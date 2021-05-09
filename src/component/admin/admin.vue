@@ -41,6 +41,12 @@
 						<h2>Trophées</h2>
 					</div>
 				</router-link>
+				<router-link to="/admin/newsletters">
+					<div v-ripple class="section card">
+						<img src="/image/admin/mails.png">
+						<h2>Lettres d'informations</h2>
+					</div>
+				</router-link>
 				<a target="_blank" rel="noopener" href="http://mx.leekwars.com/mail">
 					<div v-ripple class="section card">
 						<img src="/image/admin/webmail.png">
