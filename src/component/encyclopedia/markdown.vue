@@ -3,10 +3,8 @@
 </template>
 
 <script lang="ts">
-	import { i18n } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import { vueMain } from '@/model/vue'
-	import { Weapon } from '@/model/weapon'
 	import markdown from 'markdown-it'
 	import sanitizeHtml from 'sanitize-html'
 	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
