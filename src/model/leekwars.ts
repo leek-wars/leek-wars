@@ -426,7 +426,7 @@ const LeekWars = {
 		const top = ((height / 2) - (h / 2)) + dualScreenTop
 		const newWindow = window.open(url, title, 'scrollbars=no, width=' + w + ', height=' + h + ', top=' + top + ', left=' + left)
 		// Puts focus on the newWindow
-		if (window.focus && newWindow) {
+		if (newWindow && newWindow.focus) {
 			newWindow.focus()
 		}
 	},
