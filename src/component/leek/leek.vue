@@ -744,8 +744,8 @@
 						this.leek.skin = skin
 						store.commit('change-skin', {leek: this.leek.id, skin})
 					} else if (effect.type === 3) {
-						this.leek.fish = !this.leek.fish
-						store.commit('change-fish', {leek: this.leek.id, fish: this.leek.fish})
+						// this.leek.fish = !this.leek.fish
+						// store.commit('change-fish', {leek: this.leek.id, fish: this.leek.fish})
 					}
 				}
 				this.potionDialog = false
