@@ -105,7 +105,7 @@
 						</div>
 						<div v-else-if="myFarmer" class="add add-website" @click="websiteDialog = true">{{ $t('add_website') }}</div>
 						<div v-if="farmer.github" class="info github">
-							<img src="/image/github.png"><a :href="'https://github.com/' + farmer.github" target="_blank" rel="noopener"><span class="text label">{{ farmer.github }}</span></a>
+							<img src="/image/github.png"><a :href="'https://github.com/' + farmer.github" target="_blank" rel="noopener"><span class="text label">github.com/{{ farmer.github }}</span></a>
 							<span v-if="myFarmer" class="edit" @click="githubDialog = true"></span>
 						</div>
 						<div v-else-if="myFarmer" class="add add-github" @click="githubDialog = true">{{ $t('add_github') }}</div>
