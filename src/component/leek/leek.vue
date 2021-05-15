@@ -858,8 +858,8 @@
 		showLevelPopup() {
 			if (!this.leek) { return }
 			LeekWars.get('leek/get-level-popup/' + this.leek.id).then(data => {
-				this.levelPopup = true
 				this.levelPopupData = data.popup
+				Vue.nextTick(() => this.levelPopup = true)
 			})
 		}
 
