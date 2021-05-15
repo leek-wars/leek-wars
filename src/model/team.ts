@@ -64,6 +64,8 @@ class Composition {
 	public leeks!: Leek[]
 	public tournament!: any
 	public fights!: number
+	public tournamentRange!: any
+	public tournamentRangeLoading!: any
 }
 
 export { Composition, Team, TeamMember, TEAM_COLORS, TEAM_COLORS_DARK }

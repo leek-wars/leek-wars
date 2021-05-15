@@ -61,6 +61,7 @@
 	"legal": "Mentions légales",
 	"level": "Niveau",
 	"level_n": "Niveau {0}",
+	"level_x_to_y": "Niveau {min} à {max}",
 	"loading": "Chargement...",
 	"locale_xx_XX": "fr_FR",
 	"login_gh": "Connexion via GitHub",

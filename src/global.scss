@@ -52,6 +52,9 @@
 	border-left: 7px solid rgba(51,51,51, 0.9);
 	border-bottom: 4px solid transparent;
 }
+.v-tooltip__content.fluid {
+	max-width: none !important;
+}
 .v-dialog {
 	margin: 12px !important;
 }
