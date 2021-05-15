@@ -489,7 +489,7 @@
 						this.enemy = this.fight.farmer2
 					}
 				}
-				if (this.searchMyLeek(this.$store.state.farmer.leeks[ml], this.fight.report.leeks2)) {
+				else if (this.searchMyLeek(this.$store.state.farmer.leeks[ml], this.fight.report.leeks2)) {
 					this.myFight = true
 					this.iWin = this.fight.report.win === 2
 					if (this.fight.type === FightType.SOLO) {
