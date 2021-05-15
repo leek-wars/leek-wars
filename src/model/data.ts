@@ -698,7 +698,7 @@ const TROPHIES = [
   { id: 105, code: 'wise', noun_gender: 0, adj_gender: 1, noun_translation: 0, adj_translation: 3 },         { id: 106, code: 'ingenious', noun_gender: 0, adj_gender: 1, noun_translation: 0, adj_translation: 3 },
   { id: 107, code: 'adapted', noun_gender: 0, adj_gender: 1, noun_translation: 0, adj_translation: 3 },      { id: 108, code: 'organized', noun_gender: 0, adj_gender: 1, noun_translation: 0, adj_translation: 3 },
   { id: 109, code: 'coordinate', noun_gender: 0, adj_gender: 1, noun_translation: 0, adj_translation: 3 },   { id: 110, code: 'synchronized', noun_gender: 0, adj_gender: 1, noun_translation: 0, adj_translation: 3 },
-  { id: 111, code: 'translator', noun_gender: 1, adj_gender: 1, noun_translation: 3, adj_translation: 3 },   { id: 112, code: 'unused', noun_gender: 1, adj_gender: 1, noun_translation: 3, adj_translation: 3 },
+  { id: 111, code: 'translator', noun_gender: 1, adj_gender: 1, noun_translation: 3, adj_translation: 3 },   { id: 112, code: 'fish', noun_gender: 1, adj_gender: 1, noun_translation: 3, adj_translation: 3 },
   { id: 113, code: 'konami', noun_gender: 0, adj_gender: 0, noun_translation: 0, adj_translation: 0 },       { id: 114, code: 'legend', noun_gender: 2, adj_gender: 0, noun_translation: 2, adj_translation: 0 },
   { id: 115, code: 'mythical', noun_gender: 0, adj_gender: 3, noun_translation: 0, adj_translation: 3 },     { id: 116, code: 'gifted', noun_gender: 0, adj_gender: 1, noun_translation: 0, adj_translation: 3 },
   { id: 117, code: 'talented', noun_gender: 0, adj_gender: 1, noun_translation: 0, adj_translation: 3 },     { id: 118, code: 'brillant', noun_gender: 0, adj_gender: 1, noun_translation: 0, adj_translation: 3 },
