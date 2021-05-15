@@ -61,6 +61,7 @@
 	"legal": "Legal",
 	"level": "Level",
 	"level_n": "Level {0}",
+	"level_x_to_y": "Level {min} to {max}",
 	"loading": "Loading...",
 	"locale_xx_XX": "en_US",
 	"login_gh": "Sign in via GitHub",

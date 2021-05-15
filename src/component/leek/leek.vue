@@ -13,7 +13,7 @@
 							<div class="tab green">{{ $t('see_tournament') }}</div>
 						</router-link>
 					</template>
-					<tooltip v-if="leek.tournament">
+					<tooltip v-if="leek.tournament" content-class="fluid" @input="loadTournamentRange">
 						<template v-slot:activator="{ on }">
 							<div class="tab" @click="registerTournament" v-on="on">
 								<v-icon>mdi-trophy</v-icon>
@@ -22,6 +22,10 @@
 							</div>
 						</template>
 						{{ $t('tournament_time') }}
+						<i18n v-if="tournamentRange" tag="div" path="main.level_x_to_y">
+							<b slot="min">{{ tournamentRange.min }}</b>
+							<b slot="max">{{ tournamentRange.max }}</b>
+						</i18n>
 					</tooltip>
 					<tooltip>
 						<template v-slot:activator="{ on }">
@@ -259,7 +263,7 @@
 						{{ $t('rename_leek') }}
 					</div>
 				</template>
-				<tooltip v-if="leek && my_leek && leek.level >= 50">
+				<tooltip v-if="leek && my_leek && leek.level >= 50" @input="loadBRRange">
 					<template v-slot:activator="{ on }">
 						<div class="tab" @click="registerAutoBr" v-on="on">
 							<v-icon>mdi-trophy</v-icon>
@@ -268,6 +272,10 @@
 						</div>
 					</template>
 					{{ $t('br_time') }}
+					<i18n v-if="brRange" tag="div" path="main.level_x_to_y">
+						<b slot="min">{{ brRange.min }}</b>
+						<b slot="max">{{ brRange.max }}</b>
+					</i18n>
 				</tooltip>
 			</div>
 		</div>
@@ -611,6 +619,10 @@
 		skinWeaponDialog: boolean = false
 		titleDialog: boolean = false
 		skinPotionDialog: boolean = false
+		tournamentRangeLoading: boolean = false
+		tournamentRange: any = null
+		brRangeLoading: boolean = false
+		brRange: any = null
 
 		get id(): number {
 			return parseInt(this.$route.params.id, 10) || (this.$store.state.farmer && LeekWars.first(this.$store.state.farmer.leeks).id)
@@ -676,6 +688,10 @@
 		@Watch('id', {immediate: true})
 		update() {
 			this.leek = null
+			this.tournamentRange = null
+			this.tournamentRangeLoading = false
+			this.brRange = null
+			this.brRangeLoading = false
 			this.error = false
 			if (!this.id) { return }
 			const method = this.my_leek ? 'leek/get-private/' + this.id : 'leek/get/' + this.id
@@ -1036,6 +1052,17 @@
 		changeShowAiLines() {
 			store.commit('toggle-show-ai-lines')
 			LeekWars.put('farmer/set-show-ai-lines', {show_ai_lines: store.state.farmer!.show_ai_lines})
+		}
+
+		loadTournamentRange() {
+			if (this.tournamentRange || this.tournamentRangeLoading) { return }
+			this.tournamentRangeLoading = true
+			LeekWars.post('tournament/range-leek', {level: this.leek.level}).then(d => this.tournamentRange = d)
+		}
+		loadBRRange() {
+			if (this.brRange || this.brRangeLoading) { return }
+			this.brRangeLoading = true
+			LeekWars.post('tournament/range-br', {level: this.leek.level}).then(d => this.brRange = d)
 		}
 	}
 </script>

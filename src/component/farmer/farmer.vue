@@ -21,7 +21,7 @@
 							<div class="tab green">{{ $t('see_tournament') }}</div>
 						</router-link>
 					</template>
-					<tooltip>
+					<tooltip content-class="fluid" @input="loadTournamentRange()">
 						<template v-slot:activator="{ on }">
 							<div class="tab" v-on="on">
 								<v-icon>mdi-trophy</v-icon>
@@ -30,6 +30,10 @@
 							</div>
 						</template>
 						{{ $t('tournament_time') }}
+						<i18n v-if="tournamentRange" tag="div" path="main.level_x_to_y">
+							<b slot="min">{{ tournamentRange.min }}</b>
+							<b slot="max">{{ tournamentRange.max }}</b>
+						</i18n>
 					</tooltip>
 					<div class="tab" @click="updateGarden">
 						<span>{{ $t('garden') }}</span>
@@ -504,6 +508,8 @@
 		renameName: string = ''
 		rename_price_habs: number = 2000000
 		rename_price_crystals: number = 200
+		tournamentRangeLoading: boolean = false
+		tournamentRange: any = null
 
 		get id(): any {
 			return this.$route.params.id ? parseInt(this.$route.params.id, 10) : (this.$store.state.farmer ? this.$store.state.farmer.id : null)
@@ -551,6 +557,7 @@
 			this.farmer = null
 			this.trophies = null
 			this.notfound = false
+			this.tournamentRangeLoading = false
 			if (this.id === null) { return }
 			if (this.myFarmer) {
 				this.init(store.state.farmer!)
@@ -746,6 +753,13 @@
 				}
 			})
 			.error(error => LeekWars.toast(this.$t('error_' + error.error, error.params)))
+		}
+
+		loadTournamentRange() {
+			if (this.tournamentRange || this.tournamentRangeLoading) { return }
+			this.tournamentRangeLoading = true
+			const power = Math.round(Object.values(this.farmer.leeks).reduce((p, l) => p + l.level ** LeekWars.POWER_FACTOR, 0))
+			LeekWars.post('tournament/range-farmer', {power}).then(d => this.tournamentRange = d)
 		}
 	}
 </script>

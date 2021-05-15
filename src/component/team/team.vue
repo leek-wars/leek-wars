@@ -234,7 +234,7 @@
 						<talent :id="team.id" :talent="composition.talent" category="team" />
 					</div>
 					<router-link v-if="composition.tournament.current" :to="'/tournament/' + composition.tournament.current" class="view-tournament button flat">{{ $t('see_tournament') }}</router-link>
-					<tooltip v-if="captain">
+					<tooltip v-if="captain" content-class="fluid" @input="loadTournamentRange(composition)">
 						<template v-slot:activator="{ on }">
 							<div class="button flat" v-on="on" @click="registerTournament(composition)">
 								<v-icon>mdi-trophy</v-icon>
@@ -243,6 +243,10 @@
 							</div>
 						</template>
 						{{ $t('tournament_time') }}
+						<i18n v-if="composition.tournamentRange" tag="div" path="main.level_x_to_y">
+							<b slot="min">{{ composition.tournamentRange.min }}</b>
+							<b slot="max">{{ composition.tournamentRange.max }}</b>
+						</i18n>
 					</tooltip>
 					<div v-if="captain" class="delete-compo button flat" @click="compositionToDelete = composition; deleteCompoDialog = true">
 						<v-icon>mdi-close</v-icon>
@@ -884,6 +888,13 @@
 		updateLogsLevel() {
 			this.my_member!.logs_level = this.logsLevel
 			LeekWars.post('team/set-logs-level', {level: this.logsLevel})
+		}
+
+		loadTournamentRange(composition: Composition) {
+			if (composition.tournamentRange || composition.tournamentRangeLoading) { return }
+			composition.tournamentRangeLoading = true
+			const power = Math.round(composition.leeks.reduce((p, l) => p + l.level ** LeekWars.POWER_FACTOR, 0))
+			LeekWars.post('tournament/range-compo', {power}).then(d => Vue.set(composition, 'tournamentRange', d))
 		}
 	}
 </script>
