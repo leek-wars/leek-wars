@@ -47,7 +47,7 @@
 						<h2>Lettres d'informations</h2>
 					</div>
 				</router-link>
-				<a target="_blank" rel="noopener" href="http://mx.leekwars.com/mail">
+				<a target="_blank" rel="noopener" href="https://roundcube.leekwars.com">
 					<div v-ripple class="section card">
 						<img src="/image/admin/webmail.png">
 						<h2>Webmail <v-icon>mdi-open-in-new</v-icon></h2>
