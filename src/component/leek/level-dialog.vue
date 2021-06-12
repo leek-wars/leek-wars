@@ -1,10 +1,10 @@
 <template>
 	<popup :value="value" :width="700" @input="$emit('input', $event)">
 		<v-icon slot="icon">mdi-new-box</v-icon>
-		<span slot="title" v-html="$t('title', [leek.name, data.level])"></span>
+		<span v-if="levelData && leek2" slot="title" v-html="$t('title', [leek2.name, levelData.level])"></span>
 
-		<div class="level-popup">
-			<div v-if="leek.level == 301">
+		<div v-if="levelData && leek2" class="level-popup">
+			<div v-if="leek2.level == 301">
 				<h2>{{ $t('301_title') }}</h2>
 				<br>
 				<div v-html="$t('301_message')"></div>
@@ -29,15 +29,15 @@
 			<table class="gains-table">
 				<tr>
 					<td class="leek-image">
-						<leek-image :leek="leek" :scale="0.8" />
+						<leek-image :leek="leek2" :scale="0.8" />
 					</td>
 					<td>
 						<div class="gains">
 							<div class="life">
-								<img src="/image/charac/small/life.png"><span class="name">{{ $t('characteristic.life') }}</span> &nbsp;<b>+ {{ data.gains.life }}</b>
+								<img src="/image/charac/small/life.png"><span class="name">{{ $t('characteristic.life') }}</span> &nbsp;<b>+ {{ levelData.gains.life }}</b>
 							</div>
 							<div class="capital">
-								<img src="/image/add.png"><span class="name">{{ $t('main.capital') }}</span> &nbsp;<b>+ {{ data.gains.capital }}</b>
+								<img src="/image/add.png"><span class="name">{{ $t('main.capital') }}</span> &nbsp;<b>+ {{ levelData.gains.capital }}</b>
 							</div>
 						</div>
 					</td>
@@ -45,33 +45,33 @@
 			</table>
 			<br>
 
-			<div v-if="data.weapons.length == 0 && data.chips.length == 0 && !data.new_chip && !data.new_weapon">
+			<div v-if="levelData.weapons.length == 0 && levelData.chips.length == 0 && !levelData.new_chip && !levelData.new_weapon">
 				<center>{{ $t('no_news') }}</center>
 			</div>
 			<div v-else>
-				<div v-if="data.weapons.length > 0" class="new">
+				<div v-if="levelData.weapons.length > 0" class="new">
 					<h4><v-icon>mdi-pistol</v-icon> {{ $t('new_weapons') }}</h4>
 					<div class="available-market">{{ $t('available_on_market') }}</div>
-					<div v-for="weapon of data.weapons" :key="weapon" class="weapon">
+					<div v-for="weapon of levelData.weapons" :key="weapon" class="weapon">
 						<img :src="'/image/weapon/' + weapon + '.png'"><br>
 						<div class="name">{{ $t('weapon.' + weapon) }}</div>
 					</div>
 				</div>
-				<div v-if="data.chips.length > 0" class="new">
+				<div v-if="levelData.chips.length > 0" class="new">
 					<h4><v-icon>mdi-chip</v-icon> {{ $t('new_chips') }}</h4>
 					<div class="available-market">{{ $t('available_on_market') }}</div>
-					<div v-for="chip of data.chips" :key="chip" class="weapon">
+					<div v-for="chip of levelData.chips" :key="chip" class="weapon">
 						<img :src="'/image/chip/' + chip + '.png'"><br>
 						<div class="name">{{ $t('chip.' + chip) }}</div>
 					</div>
 				</div>
-				<div v-if="data.new_weapon" class="new">
+				<div v-if="levelData.new_weapon" class="new">
 					<h4><v-icon>mdi-shape-square-plus</v-icon> {{ $t('new_weapon') }}</h4>
-					<div class="available-market">{{ $t('total_weapons', [leek.max_weapons]) }}</div>
+					<div class="available-market">{{ $t('total_weapons', [leek2.max_weapons]) }}</div>
 				</div>
-				<div v-if="data.new_chip" class="new">
+				<div v-if="levelData.new_chip" class="new">
 					<h4><v-icon>mdi-shape-square-plus</v-icon> {{ $t('new_chip') }}</h4>
-					<div class="available-market">{{ $t('total_chips', [leek.max_chips]) }}</div>
+					<div class="available-market">{{ $t('total_chips', [leek2.max_chips]) }}</div>
 				</div>
 			</div>
 		</div>
@@ -86,13 +86,13 @@
 
 	@Component({ name: 'level-dialog', i18n: {}, mixins })
 	export default class LevelDialog extends Vue {
-		@Prop() value!: boolean
-		@Prop() leek!: Leek
-		@Prop() data!: any
+		@Prop({required: true}) value!: boolean
+		@Prop({required: true}) leek2!: Leek
+		@Prop({required: true}) levelData!: any
 
 		@Watch('value')
 		close() {
-			LeekWars.post('leek/set-popup-level-seen', {leek_id: this.leek.id})
+			LeekWars.post('leek/set-popup-level-seen', {leek_id: this.leek2.id})
 		}
 	}
 </script>
