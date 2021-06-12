@@ -659,7 +659,9 @@
 						total_level: 0,
 						tournament: {current: null, registered: false},
 						captain: this.captain,
-						fights: 10
+						fights: 10,
+						tournamentRange: [],
+						tournamentRangeLoading: false
 					} as Composition
 					this.team.compositions.push(compo)
 					this.team.compositionsById[compo.id] = compo
