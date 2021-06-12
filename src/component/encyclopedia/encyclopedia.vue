@@ -22,11 +22,11 @@
 					<v-icon>mdi-check</v-icon>
 					Terminer l'édition
 				</div>
-				<div v-else-if="page.locker && (!$store.state.farmer || page.locker !== $store.state.farmer.id)" class="tab disabled">
+				<div v-else-if="page.locker" class="tab disabled">
 					<v-icon>mdi-lock</v-icon>
 					En cours d'édition par {{ page.locker_name }}
 				</div>
-				<div v-else-if="!LeekWars.mobile" class="tab" @click="editStart">
+				<div v-if="!LeekWars.mobile && (!page.locker || !$store.state.farmer || page.locker === $store.state.farmer.id)" class="tab" @click="editStart">
 					<v-icon>mdi-pencil-outline</v-icon>
 					Modifier
 				</div>
