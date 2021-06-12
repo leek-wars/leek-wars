@@ -28,7 +28,7 @@
 				</router-link>
 				<div class="tab action disabled" icon="search" link="/search">
 					<img class="search-icon" src="image/search.png" @click="search">
-					<input v-model="searchQuery" type="text" @keyup.enter="search">
+					<input v-model="searchQuery" type="text" class="search-input" @keyup.enter="search">
 				</div>
 			</div>
 		</div>
