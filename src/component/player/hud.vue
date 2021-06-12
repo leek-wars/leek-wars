@@ -38,7 +38,7 @@
 		<div v-if="!LeekWars.mobile && game.showActions && actionsWidth > 0" ref="actions" class="actions" :class="{large: game.largeActions}" :style="{'width': game.largeActions ? actionsWidth + 'px' : null, 'max-width': game.largeActions ? Math.max(600, actionsWidth) + 'px' : null}">
 			<template v-for="line of game.consoleLines">
 				<action-element v-if="line.action" :key="line.id" :action="line.action" :leeks="game.leeks" :display-logs="true" :dark="dark" turn="1" class="action" />
-				<pre v-else :key="line.id" :class="logClass(line.log)" :style="{color: logColor(line.log)}" class="log">[<leek :leek="game.leeks[line.log[0]]" :dark="dark" />] {{ logText(line.log) }}</pre>
+				<pre v-else-if="game.displayDebugs && (game.displayAllyDebugs || line.log[5])" :key="line.id" :class="logClass(line.log)" :style="{color: logColor(line.log)}" class="log">[<leek :leek="game.leeks[line.log[0]]" :dark="dark" />] {{ logText(line.log) }}</pre>
 			</template>
 		</div>
 		<div v-if="game.showActions && game.largeActions" class="resizer" :style="{left: actionsWidth + 'px'}" @mousedown="resizerMousedown"></div>

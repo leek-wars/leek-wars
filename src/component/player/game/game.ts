@@ -281,6 +281,8 @@ class Game {
 	public autoDark: boolean = true
 	public largeActions: boolean = false
 	public actionsWidth: number = 400
+	public displayDebugs: boolean = true
+	public displayAllyDebugs: boolean = true
 	public plainBackground: boolean = false
 	public sound: boolean = false
 	public atmosphere!: Sound
@@ -645,6 +647,7 @@ class Game {
 				}
 				for (const log of farmerLogs[action]) {
 					const type = log[1]
+					log[5] = me
 					if (me || (type !== 4 && type !== 9 && type !== 10 && type !== 5)) {
 						this.logs[actionI].push(log)
 					}

@@ -150,6 +150,11 @@
 									<v-icon>mdi-view-split-vertical</v-icon>
 									<v-switch :input-value="game.largeActions" :disabled="!game.showActions" :label="$t('large_actions') + ' (G)'" hide-details />
 								</v-list-item>
+								<v-list-item :ripple="game.displayDebugs" :class="{disabled: !game.showActions}" @click="game.showActions ? (game.displayDebugs = !game.displayDebugs) : null">
+									<v-icon>mdi-math-log</v-icon>
+									<v-switch :input-value="game.displayDebugs" :disabled="!game.showActions" :label="$t('display_logs') + ' (D)'" hide-details />
+									<v-checkbox v-model="game.displayAllyDebugs" :disabled="!game.showActions || !game.displayDebugs" :class="{disabled: !game.showActions || !game.displayDebugs}" label="Alliés" hide-details class="ally-debug" @click.stop />
+								</v-list-item>
 								<div class="section">GRAPHISMES</div>
 								<v-list-item v-ripple @click="game.shadows = !game.shadows">
 									<v-icon>mdi-box-shadow</v-icon>
@@ -346,11 +351,14 @@
 			} else if (e.keyCode === 71) { // G
 				this.game.largeActions = !this.game.largeActions
 				e.preventDefault()
+			} else if (e.keyCode === 78) { // N
+				this.game.dark = !this.game.dark
+				e.preventDefault()
 			} else if (e.keyCode === 84) { // T
 				this.game.tactic = !this.game.tactic
 				e.preventDefault()
 			} else if (e.keyCode === 68) { // D
-				this.game.dark = !this.game.dark
+				this.game.displayDebugs = !this.game.displayDebugs
 				e.preventDefault()
 			} else if (e.keyCode === 85) { // U
 				this.game.plainBackground = !this.game.plainBackground
@@ -885,15 +893,21 @@
 	.settings-menu ::v-deep .v-input--switch.v-input--is-dirty.v-input--is-disabled {
 		opacity: 1;
 	}
+	.settings-menu ::v-deep .theme--light.v-input--selection-controls.v-input--is-disabled:not(.v-input--indeterminate) .v-icon {
+		color: hsla(0,0%,100%,.7) !important;
+	}
 	.settings-menu .v-input--checkbox {
 		color: hsla(0,0%,100%,.7);
 	}
 	.settings-menu .night {
 		margin-right: 10px;
 	}
-	.v-list-item.disabled {
+	.settings-menu .disabled {
 		opacity: 0.45;
 		cursor: default;
+	}
+	.ally-debug {
+		margin-left: 8px;
 	}
 	.loader {
 		padding-bottom: 10px;
