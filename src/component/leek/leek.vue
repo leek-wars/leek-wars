@@ -516,7 +516,7 @@
 			</div>
 		</popup>
 
-		<level-dialog v-if="leek && levelPopupData" v-model="levelPopup" :leek="leek" :data="levelPopupData" />
+		<level-dialog v-if="leek" v-model="levelPopup" :leek2="leek" :level-data="levelPopupData" />
 
 		<popup v-if="leek && my_leek" v-model="aiDialog" :width="870">
 			<v-icon slot="icon">mdi-code-braces</v-icon>
@@ -557,6 +557,7 @@
 				</i18n>
 			</div>
 		</popup>
+
 		<capital-dialog v-if="leek && my_leek" v-model="capitalDialog" :leek="leek" :total-capital="leek.capital" />
 	</div>
 </template>
