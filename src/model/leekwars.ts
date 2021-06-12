@@ -15,6 +15,7 @@ import { store } from '@/model/store'
 import { vueMain } from '@/model/vue'
 import { WeaponTemplate } from '@/model/weapon'
 import router from '@/router'
+import Vue from 'vue'
 import { TranslateResult } from 'vue-i18n'
 import { ChatType, ChatWindow } from './chat'
 import { Constant } from './constant'
@@ -388,6 +389,19 @@ const LeekWars = {
 			})
 		}
 		return LeekWars._countries
+	},
+	_documentation: {} as any,
+	_documentationPromises: {} as any,
+	documentation(locale: string): Promise<any> {
+		if (!(locale in LeekWars._documentationPromises)) {
+			const promise = get<any>('function/doc/' + locale)
+			Vue.set(LeekWars._documentationPromises, locale, promise)
+			promise.then((data) => {
+				Vue.set(LeekWars._documentation, locale, data)
+			})
+			return promise as any
+		}
+		return LeekWars._documentationPromises[locale]
 	},
 	itemTypes: {
 		[ItemType.WEAPON]: 'weapon',
