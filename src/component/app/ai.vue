@@ -19,11 +19,17 @@
 		@Prop({required: true}) library!: boolean
 		@Prop({required: true}) small!: boolean
 
+		get my_ai() {
+			return this.$store.state.farmer && this.$store.state.farmer.ais.some((ai: AI) => ai.id === this.ai.id)
+		}
+
 		get show_lines() {
 			if (this.small) { return false }
 			if (this.library) { return true }
-			const my_ai = this.$store.state.farmer && this.$store.state.farmer.ais.some((ai: AI) => ai.id === this.ai.id)
-			return this.ai.total_lines !== undefined && (!my_ai || this.$store.state.farmer.show_ai_lines)
+			if (this.my_ai) {
+				return this.$store.state.farmer.show_ai_lines
+			}
+			return this.ai.total_lines !== undefined
 		}
 	}
 </script>
