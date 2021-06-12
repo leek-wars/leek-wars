@@ -5,8 +5,6 @@ import CodeMirror from 'codemirror'
 
   CodeMirror.defineMode("markdown", function(cmCfg, modeCfg) {
 
-    console.log("define markdown")
-
     var htmlMode = CodeMirror.getMode(cmCfg, "text/html");
     var htmlModeMissing = htmlMode.name == "null"
 
