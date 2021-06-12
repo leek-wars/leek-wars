@@ -1055,12 +1055,12 @@
 		}
 
 		loadTournamentRange() {
-			if (this.tournamentRange || this.tournamentRangeLoading) { return }
+			if (!this.leek || this.tournamentRange || this.tournamentRangeLoading) { return }
 			this.tournamentRangeLoading = true
 			LeekWars.post('tournament/range-leek', {level: this.leek.level}).then(d => this.tournamentRange = d)
 		}
 		loadBRRange() {
-			if (this.brRange || this.brRangeLoading) { return }
+			if (!this.leek || this.brRange || this.brRangeLoading) { return }
 			this.brRangeLoading = true
 			LeekWars.post('tournament/range-br', {level: this.leek.level}).then(d => this.brRange = d)
 		}
