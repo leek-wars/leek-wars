@@ -21,6 +21,7 @@ const Conditions = () => import(/* webpackChunkName: "[request]" */ `@/component
 const Documentation = () => import(/* webpackChunkName: "[request]" */ `@/component/documentation/documentation.${locale}.i18n`)
 const Editor = () => import(/* webpackChunkName: "[request]" */ `@/component/editor/editor.${locale}.i18n`)
 const Encyclopedia = () => import(/* webpackChunkName: "encyclopedia" */ `@/component/encyclopedia/encyclopedia.${locale}.i18n`)
+const EncyclopediaSearch = () => import(/* webpackChunkName: "[request]" */ `@/component/encyclopedia/encyclopedia-search.${locale}.i18n`)
 const Farmer = () => import(/* webpackChunkName: "[request]" */ `@/component/farmer/farmer.${locale}.i18n`)
 const Fight = () => import(/* webpackChunkName: "[request]" */ `@/component/fight/fight.${locale}.i18n`)
 const ForgotPassword = () => import(/* webpackChunkName: "[request]" */ `@/component/forgot-password/forgot-password.${locale}.i18n`)
@@ -113,6 +114,7 @@ const routes = [
 	{ path: '/change-email/:state/:token', component: ChangeEmail },
 	{ path: '/encyclopedia', component: Encyclopedia, meta: {scrollOffset: 45} },
 	{ path: '/encyclopedia/:page', component: Encyclopedia, meta: {scrollOffset: 45} },
+	{ path: '/encyclopedia-search', component: EncyclopediaSearch },
 	{ path: '/editor', component: Editor, beforeEnter: connected },
 	{ path: '/editor/:id', component: Editor, beforeEnter: connected },
 	{ path: '/error/:message', component: Error },

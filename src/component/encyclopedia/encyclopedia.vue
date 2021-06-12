@@ -7,6 +7,10 @@
 				<v-icon v-if="modified" class="modified">mdi-record</v-icon>
 			</h1>
 			<div v-if="page && contributor" class="tabs">
+				<div v-if="page.id === 1" class="tab action disabled" icon="search" link="/search">
+					<img class="search-icon" src="image/search.png" @click="search">
+					<input v-model="searchQuery" type="text" @keyup.enter="search">
+				</div>
 				<!-- <router-link :to="'/encyclopedia/' + english">
 					<div class="tab">English</div>
 				</router-link> -->
@@ -115,6 +119,7 @@
 		modified: boolean = false
 		initialGeneration: number = 0
 		statsExpanded: boolean = false
+		searchQuery: string = ''
 		actions = [
 			{icon: 'mdi-pencil', click: () => this.editStart()},
 		]
@@ -384,6 +389,15 @@
 		comment(comment: Comment) {
 			this.page.comments.push(comment)
 		}
+
+		search() {
+			const query = this.searchQuery.replace(/ /g, '+')
+			if (query) {
+				this.$router.push('/encyclopedia-search?query=' + query)
+			} else {
+				this.$router.push('/encyclopedia-search')
+			}
+		}
 	}
 </script>
 
@@ -491,5 +505,7 @@ h1 {
 		font-size: 150px;
 	}
 }
-
+.search-icon {
+	cursor: pointer;
+}
 </style>
