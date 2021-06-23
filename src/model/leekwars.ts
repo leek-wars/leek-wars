@@ -148,6 +148,9 @@ const HAT_SIZES: { [key: number]: {width: number, height: number} } = {
 	18: {width: 200, height: 169}, // wizard
 	19: {width: 200, height: 169}, // wizard
 	20: {width: 150, height: 80}, // chinese
+	21: {width: 300, height: 199}, // crystal crown
+	22: {width: 300, height: 199}, // crystal crown
+	23: {width: 300, height: 199}, // crystal crown
 }
 
 const ORDERED_CHIPS = orderChips(CHIPS)
