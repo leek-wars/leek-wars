@@ -81,7 +81,7 @@
 		get height(): number {
 			let height = this.leekHeight
 			if (this.hat != null && this.hatTemplate) {
-				height += this.hatHeight - this.leekHeight * this.hatTemplate.height
+				height += Math.max(0, this.hatHeight - this.leekHeight * this.hatTemplate.height)
 			}
 			const weapon_offset = (Math.sin(this.weaponRadianAngle) * (this.weaponWidth + this.weaponX)
 								+ Math.cos(this.weaponRadianAngle) * (this.weaponHeight + this.weaponY)
@@ -92,7 +92,7 @@
 			return height
 		}
 		get leekX() { return 0 }
-		get leekY() { return this.hat !== null && this.hatTemplate ? this.hatHeight - this.leekHeight * this.hatTemplate.height : 0 }
+		get leekY() { return this.hat !== null && this.hatTemplate ? Math.max(0, this.hatHeight - this.leekHeight * this.hatTemplate.height) : 0 }
 		get hatX() { return this.hat !== null ? this.leekWidth / 2 - this.hatWidth / 2 - (this.leekWidth / 25) : 0 }
 
 		get weapon() {
