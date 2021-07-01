@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   version="1.0"
+   width="138.000000pt"
+   height="138.000000pt"
+   viewBox="0 0 138.000000 138.000000"
+   preserveAspectRatio="xMidYMid meet"
+   id="svg10"
+   sodipodi:docname="fortunate.svg"
+   inkscape:version="1.1 (ce6663b3b7, 2021-05-25)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs14" />
+  <sodipodi:namedview
+     id="namedview12"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:document-units="pt"
+     showgrid="false"
+     inkscape:zoom="4.7445652"
+     inkscape:cx="91.894616"
+     inkscape:cy="92"
+     inkscape:window-width="2488"
+     inkscape:window-height="1376"
+     inkscape:window-x="2632"
+     inkscape:window-y="27"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg10" />
+  <metadata
+     id="metadata2">
+Created by potrace 1.16, written by Peter Selinger 2001-2019
+</metadata>
+  <g
+     transform="translate(0.000000,138.000000) scale(0.100000,-0.100000)"
+     fill="#444444"
+     stroke="none"
+     id="g8">
+    <path
+       d="M177 1013 c-4 -3 -7 -28 -7 -54 l0 -48 -77 -3 -78 -3 0 -215 0 -215 77 -3 77 -3 3 -52 3 -52 600 0 600 0 0 325 0 325 -596 3 c-327 1 -599 -1 -602 -5z m1093 -323 l0 -220 -490 0 -490 0 0 220 0 220 490 0 490 0 0 -220z"
+       id="path4" />
+    <path
+       d="M1030 695 l0 -185 100 0 100 0 0 185 0 185 -100 0 -100 0 0 -185z"
+       id="path6"
+       style="fill:#00aa00;fill-opacity:1" />
+  </g>
+</svg>

@@ -24,8 +24,8 @@
 			</div>
 		</panel>
 		<panel v-for="category in categories" :key="category.id" :icon="icons[category.id - 1]">
-			<template slot="title">{{ $t('category_' + category.name) }}</template>
-			<template v-if="category.id != 6" slot="actions">
+			<template slot="title">{{ $t('category_' + category.name) }} ({{ category.id }})</template>
+			<template slot="actions">
 				<div class="category-bar-wrapper">
 					<div class="stats">{{ progressions[category.id] }} / {{ totals[category.id] }}</div>
 					<div class="category-bar">
@@ -38,17 +38,17 @@
 			<div v-if="loaded" slot="content" class="trophies">
 				<div v-for="(trophy, t) in trophies[category.id]" :key="t" :class="{unlocked: trophy.unlocked, locked: !trophy.unlocked, card: trophy.unlocked}" class="trophy">
 					<div class="flex">
-						<img :src="'/image/trophy/big/' + trophy.code + '.png'" class="image">
+						<img :src="'/image/trophy/' + trophy.code + '.svg'" class="image">
 						<div class="info">
 							<div class="name">{{ trophy.name }}</div>
 							<div class="description">{{ trophy.description }}</div>
-							<tooltip v-if="!trophy.unlocked && trophy.progression != null">
+							<tooltip v-if="trophy.progression != null">
 								<template v-slot:activator="{ on }">
-									<div class="trophy-bar" v-on="on">
-										<div :style="{width: Math.floor(100 * trophy.progression / trophy.threshold) + '%'}" class="bar striked"></div>
+									<div class="trophy-bar" :class="{full: trophy.unlocked}" v-on="on">
+										<div :style="{width: Math.floor(100 * Math.min(trophy.threshold, trophy.progression) / trophy.threshold) + '%'}" class="bar striked"></div>
 									</div>
 								</template>
-								{{ trophy.progression }} / {{ trophy.threshold }}
+								{{ trophy.progression | number }} / {{ trophy.threshold | number }}
 							</tooltip>
 						</div>
 					</div>
@@ -62,7 +62,7 @@
 								<span slot="date">{{ trophy.date | date }}</span>
 							</i18n>
 						</template>
-						<span class="rarity"> • {{ trophy.total }} • {{ (trophy.rarity * 100).toPrecision(2) }}%</span>
+						<span class="rarity"><span v-if="trophy.unlocked"> • </span>{{ trophy.total }} • {{ (trophy.rarity * 100).toPrecision(2) }}%</span>
 					</div>
 				</div>
 			</div>
@@ -104,12 +104,13 @@
 			return this.$route.params.id || (this.$store.state.farmer ? this.$store.state.farmer.id : null)
 		}
 		get categories() {
-			return this.raw_categories.filter(c => (c.id !== 6 || this.progressions[6] !== 0) && (!this.loaded || this.trophies[c.id].length))
+			return this.raw_categories.filter(c => (c.id !== 6666 || this.progressions[6666] !== 0) && (!this.loaded || this.trophies[c.id].length)
+			)
 		}
 		get trophies() {
 			const result: {[key: number]: any} = {}
 			for (const category in this.raw_trophies) {
-				result[category] = this.raw_trophies[category].filter((t: any) => (category !== '6' || t.unlocked) && (!this.hide_unlocked || !t.unlocked))
+				result[category] = this.raw_trophies[category].filter((t: any) => (category !== '6666' || t.unlocked) && (!this.hide_unlocked || !t.unlocked))
 				if (this.sort_by_rarity) {
 					result[category].sort((a: any, b: any) => a.rarity - b.rarity)
 				}
@@ -246,14 +247,14 @@
 	.trophies {
 		display: grid;
 		grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-		grid-gap: 10px;
-		padding: 10px;
+		grid-gap: 8px;
+		padding: 8px;
 	}
 	#app.app .trophies {
 		grid-template-columns: repeat(auto-fill, minmax(165px, 1fr));
 	}
 	.trophy {
-		padding: 5px 8px;
+		padding: 5px;
 		.image {
 			width: 50px;
 			height: 50px;
@@ -290,6 +291,9 @@
 				border-radius: 6px;
 				position: absolute;
 				background: #30bb00;
+			}
+			&.full .bar {
+				background: #ddd;
 			}
 		}
 		.unlock {

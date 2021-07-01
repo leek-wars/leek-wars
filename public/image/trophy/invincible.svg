@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   version="1.0"
+   width="220.000000pt"
+   height="220.000000pt"
+   viewBox="0 0 220.000000 220.000000"
+   preserveAspectRatio="xMidYMid meet"
+   id="svg10"
+   sodipodi:docname="invincible.svg"
+   inkscape:version="1.1 (ce6663b3b7, 2021-05-25)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs14" />
+  <sodipodi:namedview
+     id="namedview12"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:document-units="pt"
+     showgrid="false"
+     inkscape:zoom="2.9761364"
+     inkscape:cx="146.66667"
+     inkscape:cy="146.66667"
+     inkscape:window-width="2488"
+     inkscape:window-height="1376"
+     inkscape:window-x="2632"
+     inkscape:window-y="27"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg10" />
+  <metadata
+     id="metadata2">
+Created by potrace 1.16, written by Peter Selinger 2001-2019
+</metadata>
+  <g
+     transform="translate(0.000000,220.000000) scale(0.100000,-0.100000)"
+     fill="#444444"
+     stroke="none"
+     id="g8">
+    <path
+       d="M980 2154 c-147 -70 -355 -149 -445 -169 -62 -14 -115 -25 -155 -32 l-45 -8 -6 -80 c-3 -44 -5 -208 -4 -365 2 -298 5 -333 54 -500 24 -81 27 -91 60 -163 11 -26 21 -52 21 -57 0 -8 98 -195 135 -258 28 -48 60 -98 70 -109 5 -6 33 -39 60 -73 78 -96 251 -259 333 -315 l43 -29 32 19 c75 44 288 247 359 342 23 32 45 60 48 63 8 6 52 70 65 92 6 9 35 59 65 110 31 51 64 116 74 143 10 28 22 59 26 70 15 33 47 136 69 220 36 135 44 250 37 530 -3 143 -6 286 -6 318 0 54 -1 57 -24 57 -14 0 -37 5 -53 11 -15 6 -40 12 -55 14 -99 13 -339 91 -550 179 -48 20 -93 36 -100 36 -7 -1 -56 -21 -108 -46z m158 -79 c24 -9 60 -24 80 -34 53 -27 281 -104 387 -131 50 -13 99 -29 110 -36 11 -8 27 -14 37 -14 15 0 18 -9 19 -52 1 -29 4 -105 7 -168 10 -200 6 -351 -12 -440 -20 -104 -54 -234 -71 -275 -6 -16 -22 -57 -35 -90 -12 -33 -31 -78 -42 -100 -24 -52 -131 -219 -166 -261 -15 -18 -54 -65 -87 -106 -33 -40 -76 -88 -95 -106 -71 -65 -163 -142 -171 -142 -14 0 -279 261 -323 318 -165 215 -290 501 -340 777 -19 108 -19 88 -17 375 2 281 2 280 65 280 31 0 57 6 141 35 28 9 70 22 95 29 46 14 244 97 315 133 50 26 51 26 103 8z"
+       id="path4"
+       style="fill:#0090ff;fill-opacity:1" />
+    <path
+       d="M985 1938 c-60 -27 -123 -54 -140 -60 -16 -6 -71 -26 -122 -44 -51 -19 -102 -34 -114 -34 -13 0 -37 -5 -55 -12 l-32 -11 -7 -145 c-14 -270 11 -463 86 -672 20 -56 99 -231 109 -240 5 -5 18 -27 59 -100 14 -25 38 -63 54 -85 41 -58 181 -208 232 -251 l45 -36 49 37 c108 83 301 331 380 490 74 149 118 293 147 485 14 92 15 146 10 285 -10 236 -13 247 -56 258 -139 36 -339 103 -500 170 -34 14 -38 13 -145 -35z"
+       id="path6" />
+  </g>
+</svg>

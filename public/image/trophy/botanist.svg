@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   version="1.0"
+   width="250.000000pt"
+   height="250.000000pt"
+   viewBox="0 0 250.000000 250.000000"
+   preserveAspectRatio="xMidYMid meet"
+   id="svg14"
+   sodipodi:docname="botanist.svg"
+   inkscape:version="1.1 (ce6663b3b7, 2021-05-25)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs18" />
+  <sodipodi:namedview
+     id="namedview16"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:document-units="pt"
+     showgrid="false"
+     inkscape:zoom="2.619"
+     inkscape:cx="166.47575"
+     inkscape:cy="166.66667"
+     inkscape:window-width="2488"
+     inkscape:window-height="1376"
+     inkscape:window-x="2632"
+     inkscape:window-y="27"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg14" />
+  <metadata
+     id="metadata2">
+Created by potrace 1.16, written by Peter Selinger 2001-2019
+</metadata>
+  <g
+     transform="translate(0.000000,250.000000) scale(0.100000,-0.100000)"
+     fill="#444444"
+     stroke="none"
+     id="g12">
+    <path
+       d="M881 2473 c-29 -15 -69 -41 -87 -59 -29 -27 -34 -37 -28 -61 4 -15 12 -35 19 -43 6 -8 22 -37 34 -65 12 -27 27 -58 32 -67 5 -10 15 -35 23 -55 7 -21 30 -83 50 -138 21 -55 48 -134 62 -175 13 -41 31 -95 40 -120 8 -25 18 -76 21 -115 6 -66 9 -73 55 -127 28 -32 54 -58 58 -58 4 0 27 30 51 67 l44 67 1 136 c1 225 -24 398 -88 600 -31 98 -51 139 -101 203 -27 34 -32 37 -80 36 -35 0 -70 -9 -106 -26z"
+       id="path4"
+       style="fill:#00aa00;fill-opacity:1" />
+    <path
+       d="M1198 2445 l-46 -25 35 -97 c39 -110 78 -263 88 -348 4 -31 11 -53 15 -48 4 4 20 37 36 73 16 36 45 95 66 132 36 64 37 69 28 118 -5 28 -14 59 -20 70 -5 10 -10 26 -10 34 0 31 -45 86 -83 101 -48 19 -53 19 -109 -10z"
+       id="path6"
+       style="fill:#00aa00;fill-opacity:1" />
+    <path
+       d="M1570 2275 c-71 -39 -101 -74 -157 -182 -99 -190 -105 -211 -114 -437 l-7 -200 27 -54 28 -55 51 74 c32 44 52 83 52 100 0 39 66 193 115 269 53 80 119 151 209 220 67 53 68 54 63 93 -9 68 -122 181 -192 192 -20 3 -45 -4 -75 -20z"
+       id="path8"
+       style="fill:#00aa00;fill-opacity:1" />
+    <path
+       d="M1050 1409 c0 -18 -51 -119 -95 -189 -34 -55 -89 -123 -169 -209 -132 -144 -180 -257 -181 -426 0 -95 2 -104 36 -175 112 -233 303 -367 572 -400 218 -28 419 30 542 155 97 99 142 233 132 398 -10 166 -63 283 -203 443 -102 116 -175 223 -203 300 -12 30 -21 59 -21 64 0 29 -24 11 -71 -51 l-53 -72 -40 82 c-22 44 -43 81 -47 81 -3 0 -23 -26 -44 -57 l-38 -57 -58 64 c-34 38 -59 58 -59 49z m650 -754 c16 -20 16 -61 -1 -81 -40 -48 -119 -30 -119 28 0 17 7 40 17 50 20 22 85 24 103 3z m-321 -50 c48 -24 54 -63 16 -100 -18 -19 -35 -25 -68 -25 -76 0 -114 62 -64 107 39 36 72 41 116 18z m339 -206 c4 -23 -42 -75 -92 -104 -23 -14 -75 -32 -114 -41 -60 -13 -83 -14 -139 -4 -80 14 -103 25 -103 49 0 28 19 31 86 14 47 -13 72 -14 121 -5 77 12 148 47 175 85 22 31 60 34 66 6z"
+       id="path10" />
+  </g>
+</svg>

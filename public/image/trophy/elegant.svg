@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   version="1.0"
+   width="103.000000pt"
+   height="103.000000pt"
+   viewBox="0 0 103.000000 103.000000"
+   preserveAspectRatio="xMidYMid meet"
+   id="svg12"
+   sodipodi:docname="elegant.svg"
+   inkscape:version="1.1 (ce6663b3b7, 2021-05-25)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs16" />
+  <sodipodi:namedview
+     id="namedview14"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:document-units="pt"
+     showgrid="false"
+     inkscape:zoom="6.3567961"
+     inkscape:cx="68.588011"
+     inkscape:cy="68.666667"
+     inkscape:window-width="2488"
+     inkscape:window-height="1376"
+     inkscape:window-x="2632"
+     inkscape:window-y="27"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg12" />
+  <metadata
+     id="metadata2">
+Created by potrace 1.16, written by Peter Selinger 2001-2019
+</metadata>
+  <g
+     transform="translate(0.000000,103.000000) scale(0.100000,-0.100000)"
+     fill="#444444"
+     stroke="none"
+     id="g10">
+    <path
+       d="M485 933 c-169 -21 -284 -93 -338 -213 -16 -36 -31 -80 -33 -98 -2 -31 1 -35 39 -52 82 -36 322 -51 371 -23 13 7 10 18 -25 71 -23 35 -39 65 -37 68 10 9 275 -285 322 -358 l17 -27 36 25 c20 13 42 24 49 24 19 0 19 131 0 193 -18 61 -131 263 -170 305 -61 66 -144 96 -231 85z"
+       id="path4" />
+    <path
+       d="M31 571 c-56 -56 -30 -153 56 -208 102 -65 138 -76 233 -69 71 5 96 3 144 -14 33 -11 74 -20 93 -20 41 0 99 28 135 67 l27 28 -69 86 -69 87 -58 -14 c-75 -18 -136 -17 -260 1 -107 16 -161 34 -183 59 -16 21 -26 20 -49 -3z"
+       id="path6"
+       style="fill:#f8ac00;fill-opacity:1" />
+    <path
+       d="M875 311 c-40 -18 -60 -51 -60 -102 0 -40 5 -54 28 -76 23 -23 36 -28 77 -28 70 0 105 35 105 105 0 40 -5 55 -26 76 -28 28 -89 40 -124 25z"
+       id="path8" />
+  </g>
+</svg>

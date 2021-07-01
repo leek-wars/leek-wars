@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   version="1.0"
+   width="239.000000pt"
+   height="239.000000pt"
+   viewBox="0 0 239.000000 239.000000"
+   preserveAspectRatio="xMidYMid meet"
+   id="svg16"
+   sodipodi:docname="stacker.svg"
+   inkscape:version="1.1 (ce6663b3b7, 2021-05-25)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs20" />
+  <sodipodi:namedview
+     id="namedview18"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:document-units="pt"
+     showgrid="false"
+     inkscape:zoom="2.7395397"
+     inkscape:cx="159.15082"
+     inkscape:cy="159.33333"
+     inkscape:window-width="2488"
+     inkscape:window-height="1376"
+     inkscape:window-x="2632"
+     inkscape:window-y="27"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg16" />
+  <metadata
+     id="metadata2">
+Created by potrace 1.16, written by Peter Selinger 2001-2019
+</metadata>
+  <g
+     transform="translate(0.000000,239.000000) scale(0.100000,-0.100000)"
+     fill="#444444"
+     stroke="none"
+     id="g14">
+    <path
+       d="M919 2295 c-41 -52 -75 -101 -77 -108 -3 -14 1070 -871 1097 -875 22 -4 161 165 161 195 0 14 -160 147 -540 449 -297 236 -546 430 -553 432 -7 1 -47 -40 -88 -93z"
+       id="path4"
+       style="fill:#0090ff;fill-opacity:1" />
+    <path
+       d="M611 1808 c-5 -13 -25 -59 -45 -103 -20 -44 -36 -90 -34 -103 3 -20 79 -56 636 -303 348 -154 639 -278 646 -276 16 6 108 214 104 234 -3 15 -1250 573 -1281 573 -10 0 -21 -10 -26 -22z"
+       id="path6"
+       style="fill:#0090ff;fill-opacity:1" />
+    <path
+       d="M396 1272 c-15 -24 -56 -236 -47 -245 10 -10 1312 -316 1349 -317 28 0 34 15 63 143 19 84 20 100 8 111 -15 14 -1300 316 -1343 316 -14 0 -27 -4 -30 -8z"
+       id="path8" />
+    <path
+       d="M303 698 c-6 -7 -13 -67 -14 -132 -3 -98 -1 -120 11 -127 27 -14 1383 -78 1396 -65 16 15 25 243 10 255 -6 5 -299 23 -651 40 -352 17 -663 34 -691 37 -35 3 -54 1 -61 -8z"
+       id="path10" />
+    <path
+       d="M304 257 c-2 -7 -3 -67 -2 -133 l3 -119 705 0 705 0 0 130 0 130 -703 3 c-573 2 -704 0 -708 -11z"
+       id="path12" />
+  </g>
+</svg>

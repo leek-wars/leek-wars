@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   version="1.0"
+   width="218.000000pt"
+   height="218.000000pt"
+   viewBox="0 0 218.000000 218.000000"
+   preserveAspectRatio="xMidYMid meet"
+   id="svg12"
+   sodipodi:docname="baron.svg"
+   inkscape:version="1.1 (ce6663b3b7, 2021-05-25)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs16" />
+  <sodipodi:namedview
+     id="namedview14"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:document-units="pt"
+     showgrid="false"
+     inkscape:zoom="3.0034404"
+     inkscape:cx="145.16686"
+     inkscape:cy="145.33333"
+     inkscape:window-width="2488"
+     inkscape:window-height="1376"
+     inkscape:window-x="2632"
+     inkscape:window-y="27"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg12" />
+  <metadata
+     id="metadata2">
+Created by potrace 1.16, written by Peter Selinger 2001-2019
+</metadata>
+  <g
+     transform="translate(0.000000,218.000000) scale(0.100000,-0.100000)"
+     fill="#444444"
+     stroke="none"
+     id="g10">
+    <path
+       d="M10 2168 c0 -33 41 -237 59 -293 50 -156 151 -349 279 -535 70 -102 188 -254 219 -282 18 -17 19 -15 11 55 -4 40 -7 81 -7 93 -1 12 -28 54 -62 95 -164 201 -313 513 -326 686 -7 88 4 108 55 99 28 -4 42 1 79 29 l45 35 -28 11 c-16 7 -95 14 -176 17 -124 4 -148 2 -148 -10z"
+       id="path4"
+       style="fill:#00aa00;fill-opacity:1" />
+    <path
+       d="M1902 2169 c-64 -12 -66 -18 -19 -54 37 -28 51 -33 79 -29 51 9 62 -11 55 -99 -13 -173 -162 -485 -326 -686 -34 -41 -61 -83 -62 -95 0 -12 -3 -53 -7 -93 -8 -70 -7 -72 11 -55 66 59 251 318 346 484 123 214 201 446 201 596 l0 42 -117 -1 c-65 -1 -137 -5 -161 -10z"
+       id="path6"
+       style="fill:#00aa00;fill-opacity:1" />
+    <path
+       d="M381 2042 l-43 -38 46 -80 c25 -43 68 -133 95 -200 64 -154 161 -481 166 -559 2 -33 7 -94 11 -135 l7 -75 70 -77 c158 -174 227 -286 227 -368 0 -102 -50 -163 -146 -181 -75 -14 -143 -51 -210 -114 -91 -87 -82 -130 35 -165 188 -55 734 -55 922 0 117 35 126 78 35 165 -67 63 -135 100 -210 114 -96 18 -146 79 -146 181 0 82 69 194 227 368 l70 77 7 75 c4 41 9 102 11 135 5 78 102 405 166 559 27 67 69 156 94 198 25 43 45 79 45 82 0 2 -19 19 -43 38 -41 35 -43 35 -102 27 -157 -20 -1219 -17 -1275 5 -9 3 -33 -10 -59 -32z"
+       id="path8" />
+  </g>
+</svg>

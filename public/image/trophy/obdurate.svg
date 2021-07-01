@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   version="1.0"
+   width="180.000000pt"
+   height="180.000000pt"
+   viewBox="0 0 180.000000 180.000000"
+   preserveAspectRatio="xMidYMid meet"
+   id="svg16"
+   sodipodi:docname="obdurate.svg"
+   inkscape:version="1.1 (ce6663b3b7, 2021-05-25)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs20" />
+  <sodipodi:namedview
+     id="namedview18"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:document-units="pt"
+     showgrid="false"
+     inkscape:zoom="3.6375"
+     inkscape:cx="119.86254"
+     inkscape:cy="120"
+     inkscape:window-width="2488"
+     inkscape:window-height="1376"
+     inkscape:window-x="2632"
+     inkscape:window-y="27"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg16" />
+  <metadata
+     id="metadata2">
+Created by potrace 1.16, written by Peter Selinger 2001-2019
+</metadata>
+  <g
+     transform="translate(0.000000,180.000000) scale(0.100000,-0.100000)"
+     fill="#444444"
+     stroke="none"
+     id="g14">
+    <path
+       d="M798 1668 c-194 -253 -528 -698 -528 -703 0 -3 81 -5 180 -5 l180 0 0 -80 0 -80 270 0 270 0 0 80 0 80 180 0 c99 0 180 3 179 8 -1 13 -614 815 -626 819 -6 2 -54 -51 -105 -119z"
+       id="path4" />
+    <path
+       d="M630 710 l0 -50 270 0 270 0 0 50 0 50 -270 0 -270 0 0 -50z"
+       id="path6"
+       style="fill:#ff0000;fill-opacity:1" />
+    <path
+       d="M630 550 l0 -60 270 0 270 0 0 60 0 60 -270 0 -270 0 0 -60z"
+       id="path8"
+       style="fill:#ff0000;fill-opacity:1" />
+    <path
+       d="M630 330 l0 -80 270 0 270 0 0 80 0 80 -270 0 -270 0 0 -80z"
+       id="path10"
+       style="fill:#ff0000;fill-opacity:1" />
+    <path
+       d="M630 90 l0 -90 270 0 270 0 0 90 0 90 -270 0 -270 0 0 -90z"
+       id="path12"
+       style="fill:#ff0000;fill-opacity:1" />
+  </g>
+</svg>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   version="1.0"
+   width="194.000000pt"
+   height="194.000000pt"
+   viewBox="0 0 194.000000 194.000000"
+   preserveAspectRatio="xMidYMid meet"
+   id="svg12"
+   sodipodi:docname="schizophrenic.svg"
+   inkscape:version="1.1 (ce6663b3b7, 2021-05-25)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs16" />
+  <sodipodi:namedview
+     id="namedview14"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:document-units="pt"
+     showgrid="false"
+     inkscape:zoom="3.375"
+     inkscape:cx="129.18519"
+     inkscape:cy="129.33333"
+     inkscape:window-width="2488"
+     inkscape:window-height="1376"
+     inkscape:window-x="2632"
+     inkscape:window-y="27"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg12" />
+  <metadata
+     id="metadata2">
+Created by potrace 1.16, written by Peter Selinger 2001-2019
+</metadata>
+  <g
+     transform="translate(0.000000,194.000000) scale(0.100000,-0.100000)"
+     fill="#444444"
+     stroke="none"
+     id="g10">
+    <path
+       d="M1585 1931 c-25 -6 -91 -36 -103 -46 -2 -2 11 -31 28 -65 l31 -61 29 25 c55 46 133 46 170 -1 36 -46 24 -82 -60 -179 -89 -104 -119 -193 -90 -268 9 -24 14 -26 70 -26 l60 0 -6 39 c-9 55 22 117 101 201 76 81 95 119 95 190 0 122 -91 200 -230 199 -36 -1 -78 -4 -95 -8z"
+       id="path4"
+       style="fill:#c21aff;fill-opacity:1" />
+    <path
+       d="M616 1814 c-7 -24 -9 -25 -55 -19 l-48 6 -17 -40 -16 -41 -56 6 c-64 8 -74 1 -74 -58 l0 -38 -69 0 c-76 0 -81 -4 -81 -67 l0 -35 -65 7 c-58 7 -65 5 -65 -11 0 -29 98 -203 165 -294 62 -83 206 -232 295 -306 45 -37 45 -37 46 -103 0 -36 6 -154 14 -261 12 -181 12 -201 -5 -275 -29 -127 -30 -185 -6 -217 53 -67 293 -59 331 11 17 32 12 61 -27 171 l-37 105 2 229 c1 126 4 238 8 249 4 12 40 35 103 64 138 63 186 89 277 150 99 66 248 193 252 215 3 13 -14 22 -73 39 -73 21 -76 23 -70 49 5 23 1 28 -42 46 -44 19 -48 23 -48 54 0 33 -2 35 -52 49 l-52 14 -3 56 c-3 56 -3 56 -40 65 -29 7 -38 15 -40 35 -3 26 -12 29 -171 56 -33 5 -37 8 -31 30 5 20 2 25 -23 31 -15 3 -59 14 -98 24 -127 33 -122 33 -129 4z"
+       id="path6" />
+    <path
+       d="M1599 1201 c-64 -65 -20 -171 71 -171 58 0 100 42 100 100 0 91 -106 135 -171 71z"
+       id="path8"
+       style="fill:#c21aff;fill-opacity:1" />
+  </g>
+</svg>
