@@ -59,25 +59,21 @@
 							</div>
 						</rich-tooltip-farmer>
 						<div class="message card">
-							<div class="wrapper">
-								<template v-if="!message.editing">
-									<a v-if="message.id != -1" :href="'#message-' + message.id" class="link">#</a>
-									<router-link v-else to="" class="link">#</router-link>
-								</template>
 
-								<textarea v-if="message.editing" ref="textarea" v-model="message.message" :style="{height: message.height + 'px'}" class="original"></textarea>
-								<div v-else v-emojis v-code class="text" v-html="message.html"></div>
-								<emoji-picker v-if="message.editing" class="emoji-picker" @pick="addEmoji(message, $event, $refs.textarea[0])" />
+							<template v-if="!message.editing">
+								<a v-if="message.id != -1" :href="'#message-' + message.id" class="link">#</a>
+								<router-link v-else to="" class="link">#</router-link>
+							</template>
 
-								<div class="date">
-									{{ LeekWars.formatDateTime(message.date) }}
-									<br>
-									<span v-if="message.edition_date != null">
-										{{ $t('edited_the', [LeekWars.formatDateTime(message.edition_date)]) }}
-									</span>
-								</div>
+							<textarea v-if="message.editing" ref="textarea" v-model="message.message" :style="{height: message.height + 'px'}" class="original"></textarea>
+							<div v-else-if="message.html" v-emojis v-code class="text" v-html="message.html"></div>
+							<markdown v-else :content="message.message" mode="forum" />
 
-								<div v-if="!message.editing" class="edit-wrapper">
+							<emoji-picker v-if="message.editing" class="emoji-picker" @pick="addEmoji(message, $event, $refs.textarea[0])" />
+
+							<div class="bottom">
+
+								<div class="edit-wrapper">
 									<div class="votes">
 										<v-tooltip :key="votes_up_names[message.id] ? message.id * 101 + votes_up_names[message.id].length : message.id * 101" :open-delay="0" :close-delay="0" :disabled="message.votes_up === 0" bottom @input="loadVotesUp(message)">
 											<template v-slot:activator="{ on }">
@@ -123,14 +119,24 @@
 										<span class="resolve" @click="resolve">{{ topic.resolved ? $t('unsolved') : $t('solved') }}</span>
 									</template>
 								</div>
-								<div v-else class="edit-buttons">
-									<v-btn color="primary" class="confirm-edit" @click="confirmEdit(message)">{{ $t('main.send') }}</v-btn>
-									<v-btn class="cancel-edit" @click="endEdit(message)">{{ $t('main.cancel') }}</v-btn>
-									<span v-if="message.id == -1">
-										&nbsp;GitHub Issue <input v-model.number="topic.issue" type="number">
-									</span>
+								<div class="spacer"></div>
+								<div class="date">
+									<div>{{ LeekWars.formatDateTime(message.date) }}</div>
+									<div v-if="message.edition_date != null">
+										{{ $t('edited_the', [LeekWars.formatDateTime(message.edition_date)]) }}
+									</div>
 								</div>
 							</div>
+
+							<div v-if="message.editing" class="edit-buttons">
+								<v-btn color="primary" class="confirm-edit" @click="confirmEdit(message)">{{ $t('main.send') }}</v-btn>
+								<v-btn class="cancel-edit" @click="endEdit(message)">{{ $t('main.cancel') }}</v-btn>
+								<span v-if="message.id == -1">
+									&nbsp;GitHub Issue <input v-model.number="topic.issue" type="number">
+								</span>
+							</div>
+
+							<formatting-rules v-if="message.editing" />
 						</div>
 					</div>
 				</div>
@@ -174,13 +180,16 @@
 </template>
 
 <script lang="ts">
+	import Markdown from '@/component/encyclopedia/markdown.vue'
+	import { locale } from '@/locale'
 	import { ForumCategory, ForumMessage, ForumTopic } from '@/model/forum'
 	import { LeekWars } from '@/model/leekwars'
 	import { Component, Vue, Watch } from 'vue-property-decorator'
 	import EmojiPicker from '../chat/emoji-picker.vue'
 	import Breadcrumb from './breadcrumb.vue'
+	const FormattingRules = () => import(/* webpackChunkName: "[request]" */ `@/component/forum/forum-formatting-rules.${locale}.i18n`)
 
-	@Component({ name: 'forum_topic', i18n: {}, components: { Breadcrumb, EmojiPicker } })
+	@Component({ name: 'forum_topic', i18n: {}, components: { Breadcrumb, EmojiPicker, Markdown, FormattingRules } })
 	export default class ForumTopicPage extends Vue {
 		topic: ForumTopic | null = null
 		category: ForumCategory | null = null
@@ -390,7 +399,7 @@
 		confirmEdit(message: ForumMessage) {
 			if (!this.topic) { return }
 			const callback = (data: any) => {
-				message.html = data.html
+				message.html = null
 				message.editing = false
 				message.edition_date = LeekWars.time
 				if (message.id === -1) {
@@ -546,11 +555,12 @@
 		width: calc(100% - 150px);
 		position: relative;
 		display: flex;
+		flex-direction: column;
 		margin-left: 10px;
 	}
 	#app.app .message {
 		width: calc(100% - 20px);
-		padding: 5px;
+		padding: 7px;
 	}
 	.message .deleted {
 		font-style: italic;
@@ -559,11 +569,7 @@
 	.message a {
 		word-break: break-all;
 	}
-	.message .wrapper {
-		height: 100%;
-		width: 100%;
-	}
-	.message .wrapper .link {
+	.message .link {
 		position: absolute;
 		top: 5px;
 		right: 7px;
@@ -571,47 +577,52 @@
 		font-size: 18px;
 		display: none;
 	}
-	.message:hover .wrapper .link {
+	.message:hover .link {
 		display: block;
 	}
 	.edit-wrapper > span:hover {
-		color: #777;
+		color: black;
 	}
 	.message .text {
 		padding: 5px;
-		margin-bottom: 40px;
 		word-break: break-word;
+		min-height: 110px;
+		flex: 1;
+		margin-bottom: 10px;
 	}
 	.message .text ::v-deep a {
 		color: #5fad1b;
 	}
+	.message .md {
+		padding: 5px;
+		margin-bottom: 10px;
+		word-break: break-word;
+		font-size: 15px;
+		flex: 1;
+		::v-deep p {
+			font-size: 15px;
+		}
+	}
 	.message .original {
 		padding: 4px;
-		min-width: calc(100% - 10px);
-		max-width: calc(100% - 10px);
-		min-height: 120px;
-		margin-bottom: 40px;
+		min-width: 100%;
+		max-width: 100%;
+		min-height: 250px;
+		margin-bottom: 15px;
+	}
+	.message .bottom {
+		display: flex;
+		align-items: center;
 	}
 	.message .date {
-		position: absolute;
-		bottom: 10px;
-		right: 10px;
 		color: #aaa;
 		font-size: 12px;
 		text-align: right;
 	}
 	.edit-wrapper {
-		position: absolute;
-		bottom: 10px;
-		left: 15px;
 		color: #aaa;
 		font-size: 14px;
 		cursor: pointer;
-	}
-	.edit-buttons {
-		position: absolute;
-		bottom: 10px;
-		left: 10px;
 	}
 	.editor {
 		margin-left: 140px;
@@ -710,6 +721,9 @@
 		margin: 3px 40px;
 		display: block;
 	}
+	.edit-buttons {
+		margin: 15px 0;
+	}
 	.message ::v-deep h1 {
 		margin-left: 0;
 		margin-bottom: 10px;
@@ -750,9 +764,10 @@
 	.message ::v-deep h3:before {
 		display: none;
 	}
-	.emoji-picker ::v-deep .chat-input-emoji {
+	.message ::v-deep .chat-input-emoji {
 		position: absolute;
 		right: 10px;
 		top: 10px;
+		user-select: none;
 	}
 </style>

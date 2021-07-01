@@ -19,7 +19,7 @@ class ForumTopic {
 class ForumMessage {
 	public id!: number
 	public message!: string
-	public html!: string
+	public html!: string | null
 	public votes_up!: number
 	public votes_down!: number
 	public my_vote!: number

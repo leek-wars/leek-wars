@@ -38,7 +38,7 @@
 				<div ref="markdown" class="markdown" @scroll="markdownScroll">
 					<!-- {{ parents }} -->
 
-					<markdown :content="page.content" :pages="pages" />
+					<markdown :content="page.content" mode="encyclopedia" />
 
 					<div v-if="page.new && !edition" class="nopage">
 						<v-icon>mdi-book-open-page-variant</v-icon>

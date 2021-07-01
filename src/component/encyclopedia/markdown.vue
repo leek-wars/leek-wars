@@ -15,6 +15,7 @@
 	@Component({ name: 'markdown' })
 	export default class Markdown extends Vue {
 		@Prop({required: true}) content!: string
+		@Prop({required: true}) mode!: string
 		markdown: any = new markdown({
 			html: true,
 			breaks: true,
@@ -29,10 +30,28 @@
 		@Watch('content', {immediate: true})
 		update() {
 
-			sanitizeHtml.defaults.allowedAttributes['*'] = ['style', 'class', 'width', 'height']
-			this.html = this.links(sanitizeHtml(this.markdown.render(this.content), {
-				allowedTags: sanitizeHtml.defaults.allowedTags.concat([ 'img', 'center' ])
-			}))
+			const options = this.mode === 'encyclopedia' ? {
+				allowedTags: sanitizeHtml.defaults.allowedTags.concat([ 'img', 'center' ]),
+				allowedAttributes: { '*': ['style', 'class', 'width', 'height'] },
+			} : {
+				allowedTags: sanitizeHtml.defaults.allowedTags.concat([ 'center' ]),
+				allowedAttributes: { '*': ['style', 'class', 'width', 'height'] },
+				allowedStyles: {
+					'*': {
+						'padding': [/^.*$/],
+						'margin': [/^.*$/],
+						'color': [/^.*$/],
+						'background': [/^.*$/],
+						'border': [/^.*$/],
+						'text-align': [/^.*$/],
+						'font-size': [/^.*$/],
+						'font-weight': [/^.*$/],
+						'width': [/^.*$/],
+						'height': [/^.*$/],
+					}
+				}
+			}
+			this.html = this.links(sanitizeHtml(this.markdown.render(this.content), options))
 
 			this.summary = {children: []}
 			const stack = [this.summary] as any[]

@@ -10,7 +10,6 @@ import ChatElement from '@/component/chat/chat.vue'
 import Comments from '@/component/comment/comments.vue'
 import '@/component/editor/leekscript.scss'
 import Emblem from '@/component/emblem.vue'
-import FormattingRules from '@/component/forum/formatting-rules.vue'
 import FightHistory from '@/component/history/fight-history.vue'
 import FightsHistory from '@/component/history/fights-history.vue'
 import TournamentHistory from '@/component/history/tournament-history.vue'
@@ -81,9 +80,6 @@ Vue.component('chat', ChatElement)
 Vue.component('comments', Comments)
 Vue.component('report-dialog', ReportDialog)
 Vue.component('pagination', Pagination)
-if (process.env.VUE_APP_SOCIAL === 'true') {
-	Vue.component('formatting-rules', FormattingRules)
-}
 Vue.component('fight-history', FightHistory)
 Vue.component('fights-history', FightsHistory)
 Vue.component('tournament-history', TournamentHistory)
@@ -227,7 +223,7 @@ const vueMain = new Vue({
 	},
 	created() {
 		window.addEventListener('keydown', (event) => {
-			this.$emit('keydown', event) 
+			this.$emit('keydown', event)
 			if (event.ctrlKey && event.shiftKey && event.keyCode === 83) {
 				this.$emit('ctrlShiftS')
 			} else if (event.ctrlKey && event.keyCode === 83) {
