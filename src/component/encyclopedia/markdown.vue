@@ -32,7 +32,7 @@
 
 			const options = this.mode === 'encyclopedia' ? {
 				allowedTags: sanitizeHtml.defaults.allowedTags.concat([ 'img', 'center' ]),
-				allowedAttributes: { '*': ['style', 'class', 'width', 'height'] },
+				allowedAttributes: { '*': ['style', 'class', 'width', 'height', 'src', 'href'] },
 			} : {
 				allowedTags: sanitizeHtml.defaults.allowedTags.concat([ 'center' ]),
 				allowedAttributes: { '*': ['style', 'class', 'width', 'height'] },
