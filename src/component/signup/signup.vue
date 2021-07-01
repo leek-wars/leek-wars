@@ -224,10 +224,6 @@
 	const SignupCarousel = () => import(/* webpackChunkName: "[request]" */ `@/component/signup/signup-carousel.${locale}.i18n`)
 	const SignupFeatures = () => import(/* webpackChunkName: "[request]" */ `@/component/signup/signup-features.${locale}.i18n`)
 
-	import 'swiper/css/swiper.css'
-	import VueAwesomeSwiper from 'vue-awesome-swiper'
-	Vue.use(VueAwesomeSwiper)
-
 	@Component({ name: 'signup', i18n: {}, mixins, components: { ChangelogVersion, SignupCarousel, SignupFeatures } })
 	export default class Signup extends Vue {
 		godfather: string = ''

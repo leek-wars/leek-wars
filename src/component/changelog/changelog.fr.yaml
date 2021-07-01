@@ -1,3 +1,39 @@
+224:
+  title: "Accélération du LeekScript, Recherche Enclyclopédie, Lien documentation-encyclopédie."
+  added:
+    - "Affichage de la fourchette de niveau estimée sur le bouton d'inscription aux tournois. #img_224_tournament"
+    - "Encyclopédie : ajout d'une fonction pour rerchercher. #img_224_search"
+    - "Encyclopédie : pages fonctions reliées à la documentation pour plus d'informations. #img_224_fun"
+    - "Ajout d'exemples pour les fonctions mathématiques et chaînes dans la doc, plus à venir. #img_224_doc"
+    - "Optimisation du LeekScript : exécution plus rapide de 30%."
+    - "Ajout de 3 nouveaux chapeaux : les couronnes de cristaux. #img_224_crowns"
+  improved:
+    - Ajout de 'github.com/' devant le lien GitHub de la page éleveur.
+    - "Ajout de CI sur les projets client, leekscript et generator. #img_224_ci"
+    - Affichage des actions précédentes lors d'un saut dans le combat.
+    - "#ai Les nombres flottants sont affichés avec un point et plus de chiffres après la virgule en LS1.1."
+    - "Ajout d'une option pour afficher ses logs / ceux des alliés en combat. #img_224_logs"
+    - "Forum : utilisation du Markdown pour formatter les nouveaux messages. #img_224_forum"
+    - "#ai L'opérateur + sur un tableau ajoute un élément au tableau (LS1.0 et 1.1)."
+    - "#ai Les opérateurs sur des flottants (/, %, etc.) renvoient NaN et Infinity au lieu de null (LS1.1)."
+    - "Ajout de plus d'erreurs de POO détectées directement dans l'éditeur (LS1.1)."
+  fixed:
+    - "#ai Correction de l'opérateur **=, qui n'était pas reconnu."
+    - Corrections des trophées Calme, Passif, Inerte qui étaient obtenus après la série d'égalités.
+    - Correction des combats d'éleveur schizophrènes.
+    - Correction du trophée Planqué.
+    - Correction d'un bug de compilation d'IA en cas de variable dupliquée.
+    - Correction des trophée Merlin et Fortifié.
+    - "Encyclopédie : affichage d'une info si une page est vérrouillée par le joueur."
+    - "Forum : traduction des règles de formattage en Anglais."
+    - "#ai Correction de l'aléatoire de la fonction shuffle() (Merci à Grim)."
+    - "#ai Correction de la syntaxe `objet['methode']()` (LS1.1)."
+    - "#ai Correction des niveaux d'accès (public, protected, private) (LS1.1)."
+    - "#ai Correction de la syntaxe `super.methode()` dans certains cas (LS1.1) (Merci à oliezekat)."
+    - "#ai Correction de l'initialisation des champs normaux et statiques avec une expression complexe (LS1.1)."
+    - Une IA est considérée comme valide même si elle possède des avertissements (warnings).
+    - Correction de la position des chapeaux sur les petits poireaux.
+
 223:
   title: Fonctionnalités page inscription, forum multi-langue et plein d'améliorations.
   added:

@@ -1,6 +1,6 @@
 {
 	"name": "leek-wars-client",
-	"version": "2.23.0",
+	"version": "2.24.0",
 	"scripts": {
 		"start": "vue-cli-service serve --mode dev",
 		"serve": "vue-cli-service serve --mode dev",
@@ -21,7 +21,7 @@
 		"markdown-it": "^11.0.1",
 		"register-service-worker": "^1.7.1",
 		"sanitize-html": "^2.2.0",
-		"swiper": "^5.4.5",
+		"swiper": "^6.5.1",
 		"vue": "^2.6.12",
 		"vue-awesome-swiper": "^4.1.1",
 		"vue-chartist": "^2.3.1",
