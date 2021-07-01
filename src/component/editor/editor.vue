@@ -589,15 +589,18 @@
 					const entrypoint_id = parseInt(entrypoint, 10)
 					const ai = fileSystem.ais[entrypoint_id]
 					const editor = this.getAiView(ai)
-					const problems = []
-					// Good
-					if (!data.result[entrypoint].length) {
-						this.goods.push({ai})
-						ai.valid = true
-						if (editor) { editor.removeErrors(entrypoint_id) }
-						LeekWars.analyzer.setAIProblems(entrypoint_id, ai.path, [])
-						continue
+
+					// Valid?
+					let valid = true
+					for (const problem of data.result[entrypoint]) {
+						if (problem[0] === 0) { valid = false; break }
 					}
+					if (valid) {
+						this.goods.push({ai})
+					}
+					ai.valid = valid
+					if (editor) { editor.removeErrors(entrypoint_id) }
+					LeekWars.analyzer.setAIProblems(entrypoint_id, ai.path, [])
 					this.handleProblems(ai, data.result[entrypoint])
 				}
 				LeekWars.analyzer.updateCount()
@@ -642,7 +645,6 @@
 					info = this.$t('leekscript.error_' + problem[5])
 				}
 				info = '(' + problem[4] + ') ' + info
-				ai.valid = false
 				let new_problem = null
 				if (editor) {
 					const token = editor.editor.getTokenAt({line: line - 1, ch: problem[3] - 1})
