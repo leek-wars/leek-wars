@@ -102,7 +102,9 @@
 	"error_73": "Constructeur inconnu",
 	"error_74": "Le second opérateur de instanceof doit être une classe",
 	"error_75": "Cette valeur \"{0}\" n'est pas itérable (pas un tableau)",
-	"error_76": "Stack Overflow",
+	"error_77": "Opérateur invalide",
+	"error_78": "Ce champ \"{1}\" est privé dans la classe \"{0}\".",
+	"error_79": "Ce champ \"{1}\" est protégé dans la classe \"{0}\".",
 	"error_1000": "Aucune arme équipée",
 	"error_1001": "Cette puce {0} {1} n'est pas équipée",
 	"error_1002": "Cette puce {0} {1} n'existe pas"
