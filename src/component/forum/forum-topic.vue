@@ -547,6 +547,9 @@
 		vertical-align: middle;
 		margin-bottom: 2px;
 	}
+	.spacer {
+		flex: 1;
+	}
 	.message {
 		padding: 10px;
 		vertical-align: top;
