@@ -267,7 +267,7 @@
 						<tooltip v-for="(trophy, t) in trophies_list" v-if="trophy != null" :key="t">
 							<template v-slot:activator="{ on }">
 								<div class="trophy" v-on="on">
-									<img :src="'/image/trophy/' + trophy.code + '.png'">
+									<img :src="'/image/trophy/' + trophy.code + '.svg'">
 								</div>
 							</template>
 							<b>{{ trophy.name }}</b>
@@ -280,7 +280,7 @@
 							<template v-slot:activator="{ on }">
 								<span v-on="on">
 									<div v-if="trophy != null" class="trophy card">
-										<img :src="'/image/trophy/' + trophy.code + '.png'">
+										<img :src="'/image/trophy/' + trophy.code + '.svg'">
 									</div>
 									<div v-else class="trophy locked">
 										<img src="/image/unknown.png">
@@ -305,7 +305,7 @@
 							<tooltip v-for="trophy in bonus_trophies" :key="trophy.id">
 								<template v-slot:activator="{ on }">
 									<div :class="{card: trophiesMode == 'grid'}" class="trophy" v-on="on">
-										<img :src="'/image/trophy/' + trophy.code + '.png'">
+										<img :src="'/image/trophy/' + trophy.code + '.svg'">
 									</div>
 								</template>
 								<b>{{ trophy.name }}</b>
@@ -1002,15 +1002,15 @@
 	}
 	.trophies-container {
 		display: grid;
-		grid-template-columns: repeat(auto-fill, minmax(42px, 1fr));
-		grid-gap: 5px;
-		padding: 5px;
+		grid-template-columns: repeat(auto-fill, minmax(34px, 1fr));
+		grid-gap: 3px;
+		padding: 6px;
 	}
 	#app.app .trophies-container {
-		grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
+		grid-template-columns: repeat(auto-fill, minmax(36px, 1fr));
 	}
 	.trophy {
-		padding: 4px;
+		padding: 3px;
 		border: 1px solid transparent;
 		text-align: center;
 		img {
