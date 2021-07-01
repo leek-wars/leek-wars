@@ -18,7 +18,7 @@
 	import { LeekWars } from '@/model/leekwars'
 	import { Component, Vue, Watch } from 'vue-property-decorator'
 
-	import 'swiper/css/swiper.css'
+	import 'swiper/swiper-bundle.css'
 	import VueAwesomeSwiper from 'vue-awesome-swiper'
 	Vue.use(VueAwesomeSwiper)
 

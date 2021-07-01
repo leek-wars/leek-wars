@@ -1,3 +1,39 @@
+224:
+  title: "LeekScript acceleration, Enclyclopedia search, Documentation-encyclopedia link."
+  added:
+    - "Displaying estimated level range on the tournament registration button. #img_224_tournament"
+    - "Encyclopedia: added a function to search. #img_224_search"
+    - "Encyclopedia: function pages linked to documentation for more information. #img_224_fun"
+    - "Added examples for math and string functions in doc, more to come. #img_224_doc"
+    - "LeekScript optimization: run 30% faster."
+    - "Added 3 new hats: crystal crowns. #img_224_crowns"
+  improved:
+    - Added 'github.com/' in front of the GitHub link on the farmer page.
+    - "Added CI on client, leekscript and generator projects. #img_224_ci"
+    - Displayed previous actions when jumping into the fight.
+    - "#ai Floating numbers are displayed with a period and more digits after the decimal point in LS1.1."
+    - "Added an option to display one's logs/allies' logs in combat. #img_224_logs"
+    - "Forum: using Markdown to format new posts. #img_224_forum"
+    - "#ai The + operator on an array adds an element to the array (LS1.0 and 1.1)."
+    - "#ai Operators on floats (/, %, etc.) return NaN and Infinity instead of null (LS1.1)."
+    - "Added more OOP errors detected directly in the editor (LS1.1)."
+  fixed:
+    - "#ai Fixed the **= operator, which was not recognized."
+    - Fixed Calm, Passive, Inert trophies that were obtained after the series of ties.
+    - Fixed schizophrenic farmer fights.
+    - Corrected the trophy Stashed.
+    - Fixed AI compilation bug in case of duplicated variable.
+    - Fixed Merlin and Fortified trophy.
+    - "Encyclopedia: display an info if a page is locked by the player."
+    - "Forum: translation of formatting rules to English."
+    - "#ai Fixed randomness of shuffle() function (Thanks to Grim)."
+    - "#ai Fixed `object['method']()` syntax (LS1.1)."
+    - "#ai Fixed access levels (public, protected, private) (LS1.1)."
+    - "#ai Fixed `super.methode()` syntax in some cases (LS1.1) (Thanks to oliezekat)."
+    - "#ai Fixed the initialization of normal and static fields with a complex expression (LS1.1)."
+    - An AI is considered valid even if it has warnings.
+    - Fixed the position of caps on small leeks.
+
 223:
   title: Features registration page, multi-language forum and many improvements.
   added:
