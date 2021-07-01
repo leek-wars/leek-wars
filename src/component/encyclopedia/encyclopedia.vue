@@ -6,7 +6,7 @@
 				<breadcrumb :items="breadcrumb_items" :raw="true" />
 				<v-icon v-if="modified" class="modified">mdi-record</v-icon>
 			</h1>
-			<div v-if="page && contributor" class="tabs">
+			<div v-if="page" class="tabs">
 				<div v-if="page.id === 1" class="tab action disabled" icon="search" link="/search">
 					<img class="search-icon" src="image/search.png" @click="search">
 					<input v-model="searchQuery" type="text" @keyup.enter="search">
@@ -14,11 +14,11 @@
 				<!-- <router-link :to="'/encyclopedia/' + english">
 					<div class="tab">English</div>
 				</router-link> -->
-				<div v-if="edition && modified" class="tab" @click="save">
+				<div v-if="contributor && edition && modified" class="tab" @click="save">
 					<v-icon>mdi-content-save</v-icon>
 					Sauvegarder
 				</div>
-				<div v-if="edition" class="tab" @click="editEnd">
+				<div v-if="contributor && edition" class="tab" @click="editEnd">
 					<v-icon>mdi-check</v-icon>
 					Terminer l'édition
 				</div>
@@ -26,7 +26,7 @@
 					<v-icon>mdi-lock</v-icon>
 					En cours d'édition par {{ page.locker_name }}
 				</div>
-				<div v-if="!LeekWars.mobile && (!page.locker || !$store.state.farmer || page.locker === $store.state.farmer.id)" class="tab" @click="editStart">
+				<div v-if="contributor && !LeekWars.mobile && (!page.locker || !$store.state.farmer || page.locker === $store.state.farmer.id)" class="tab" @click="editStart">
 					<v-icon>mdi-pencil-outline</v-icon>
 					Modifier
 				</div>
