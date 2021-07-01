@@ -1,0 +1,19 @@
+{
+	"source_code": "Code source",
+	"source_code_ex": "mon code source",
+	"big_title": "Grand titre",
+	"big_title_ex": "Titre principal",
+	"sub_title": "Sous-titre",
+	"sub_title_ex": "Sous-titre",
+	"sub_sub_title": "Sous-sous-titre",
+	"sub_sub_title_ex": "Sous-sous-titre",
+	"bold": "Gras",
+	"bold_ex": "gras",
+	"italic": "Italique",
+	"italic_ex": "italique",
+	"underlined": "Souligné",
+	"underlined_ex": "souligné",
+	"striked": "Barré",
+	"striked_ex": "barré",
+	"basic_html": "HTML basique autorisé"
+}
