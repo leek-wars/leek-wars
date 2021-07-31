@@ -117,7 +117,7 @@
 					<h3 class="trophies-title">{{ $t('trophies') }}</h3>
 					<div class="trophies">
 						<div v-for="(trophy, t) in fight.trophies" :key="t" class="trophy card">
-							<img :src="'/image/trophy/big/' + trophy.name + '.png'" class="image">
+							<img :src="'/image/trophy/' + trophy.name + '.svg'" class="image">
 							<div class="info">
 								<div class="name">{{ $t('trophy.' + trophy.name) }}</div>
 								<div class="farmer">

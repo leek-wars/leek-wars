@@ -5,10 +5,10 @@
 			<tooltip v-for="flag in flags" :key="flag">
 				<template v-slot:activator="{ on }">
 					<div class="flag card" v-on="on">
-						<img :src="'/image/fight_flag/' + flag + '.png'">
+						<img :src="'/image/fight_flag/flag_' + flag + '.svg'">
 					</div>
 				</template>
-				{{ $t('flag.' + flag) }}
+				{{ $t('flag.flag_' + flag) }}
 			</tooltip>
 		</div>
 
