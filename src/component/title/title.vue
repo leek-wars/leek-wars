@@ -1,7 +1,7 @@
 <template lang="html">
 	<span class="title">
 		<span class="quote">«</span>
-		<img v-if="icon" :src="'/image/trophy/' + TROPHIES[icon - 1].code + '.png'" :class="{notext: !noun}">
+		<img v-if="icon" :src="'/image/trophy/' + TROPHIES[icon - 1].code + '.svg'" :class="{notext: !noun}">
 		<span v-if="$i18n.locale === 'fr'">{{ word1 }} {{ word2 }}</span>
 		<span v-else>{{ word2 }} {{ word1 }}</span>
 		<span class="quote">»</span>
