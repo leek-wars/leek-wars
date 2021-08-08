@@ -139,6 +139,7 @@
 					this.items.push(item)
 					; (item as any).lower_name = item.name.toLowerCase()
 					; (item as any).id = id++
+					last = item
 
 					LeekWars.documentation(locale).then(functions => {
 						if (item.name in functions) {
@@ -155,7 +156,6 @@
 							}
 							item_data += (this.$t('doc.func_' + (item as any).real_name + '_return') as any).toLowerCase()
 							; (item as any).data = item_data
-							last = item
 						}
 					})
 				}
