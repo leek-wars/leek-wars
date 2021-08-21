@@ -1002,7 +1002,7 @@
 	}
 	.trophies-container {
 		display: grid;
-		grid-template-columns: repeat(auto-fill, minmax(34px, 1fr));
+		grid-template-columns: repeat(auto-fill, minmax(38px, 1fr));
 		grid-gap: 3px;
 		padding: 6px;
 	}
@@ -1010,7 +1010,7 @@
 		grid-template-columns: repeat(auto-fill, minmax(36px, 1fr));
 	}
 	.trophy {
-		padding: 3px;
+		padding: 4px;
 		border: 1px solid transparent;
 		text-align: center;
 		img {
