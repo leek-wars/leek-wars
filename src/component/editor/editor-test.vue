@@ -378,11 +378,11 @@
 
 		domingo = {
 			id: -1, name: "Domingo", ai: -1, bot: true, level: 150, skin: 1, hat: null,
-			tp: "10 → 22",
-			mp: "3 → 9",
+			tp: "10 → 21",
+			mp: "3 → 8",
 			frequency: 100,
 			life: "100 → 2500",
-			strength: "0 → 700",
+			strength: "0 → 600",
 			wisdom: "0 → 300",
 			agility: "0 → 200",
 			resistance: "0 → 300",
@@ -391,8 +391,8 @@
 		}
 		betalpha = {
 			id: -2, name: "Betalpha", ai: -1, bot: true, level: 150, skin: 8, hat: null,
-			tp: "10 → 22",
-			mp: "3 → 9",
+			tp: "10 → 21",
+			mp: "3 → 8",
 			frequency: 100,
 			life: "100 → 2500",
 			strength: 0,
@@ -400,16 +400,16 @@
 			agility: "0 → 200",
 			resistance: "0 → 300",
 			science: 0,
-			magic: "0 → 700"
+			magic: "0 → 600"
 		}
 		tisma = {
 			id: -3, name: "Tisma", ai: -1, bot: true, level: 150, skin: 14, hat: null,
-			tp: "10 → 22",
-			mp: "3 → 9",
+			tp: "10 → 21",
+			mp: "3 → 8",
 			frequency: 100,
 			life: "100 → 2500",
 			strength: 0,
-			wisdom: "0 → 700",
+			wisdom: "0 → 600",
 			agility: "0 → 200",
 			resistance: "0 → 300",
 			science: "0 → 300",
@@ -417,8 +417,8 @@
 		}
 		guj = {
 			id: -4, name: "Guj", ai: -1, bot: true, level: 150, skin: 4, hat: null,
-			tp: "10 → 22",
-			mp: "3 → 9",
+			tp: "10 → 21",
+			mp: "3 → 8",
 			frequency: 100,
 			life: "100 → 5000",
 			strength: 0,
@@ -430,28 +430,28 @@
 		}
 		hachess = {
 			id: -5, name: "Hachess", ai: -1, bot: true, level: 150, skin: 5, hat: null,
-			tp: "10 → 22",
-			mp: "3 → 9",
+			tp: "10 → 21",
+			mp: "3 → 8",
 			frequency: 100,
 			life: "100 → 2500",
 			strength: 0,
 			wisdom: "0 → 300",
 			agility: "0 → 200",
-			resistance: "0 → 700",
+			resistance: "0 → 600",
 			science: 0,
 			magic: 0
 		}
 		rex = {
 			id: -6, name: "Rex", ai: -1, bot: true, level: 150, skin: 2, hat: null,
-			tp: "10 → 22",
-			mp: "3 → 9",
+			tp: "10 → 21",
+			mp: "3 → 8",
 			frequency: 100,
 			life: "100 → 2500",
 			strength: 0,
 			wisdom: "0 → 300",
 			agility: "0 → 200",
 			resistance: "0 → 300",
-			science: "0 → 700",
+			science: "0 → 600",
 			magic: 0
 		}
 
