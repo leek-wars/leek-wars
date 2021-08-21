@@ -192,6 +192,7 @@ const LeekWars = {
 	menuExpanded: false,
 	splitBack: false,
 	actions: [],
+	lightBar: true,
 	dark: 0,
 	title: '',
 	subtitle: '',
