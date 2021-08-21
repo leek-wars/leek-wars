@@ -142,15 +142,15 @@
 									<v-icon>mdi-flare</v-icon>
 									<v-switch :input-value="game.showEffects" :disabled="!game.showLifes" :label="$t('display_effects') + ' (E)'" hide-details />
 								</v-list-item>
-								<v-list-item v-ripple @click="game.showActions = !game.showActions">
+								<v-list-item v-if="!LeekWars.mobile" v-ripple @click="game.showActions = !game.showActions">
 									<v-icon>mdi-format-list-bulleted</v-icon>
 									<v-switch :input-value="game.showActions" :label="$t('show_actions') + ' (A)'" hide-details />
 								</v-list-item>
-								<v-list-item :ripple="game.showActions" :class="{disabled: !game.showActions}" @click="game.showActions ? (game.largeActions = !game.largeActions) : null">
+								<v-list-item v-if="!LeekWars.mobile" :ripple="game.showActions" :class="{disabled: !game.showActions}" @click="game.showActions ? (game.largeActions = !game.largeActions) : null">
 									<v-icon>mdi-view-split-vertical</v-icon>
 									<v-switch :input-value="game.largeActions" :disabled="!game.showActions" :label="$t('large_actions') + ' (G)'" hide-details />
 								</v-list-item>
-								<v-list-item :ripple="game.displayDebugs" :class="{disabled: !game.showActions}" @click="game.showActions ? (game.displayDebugs = !game.displayDebugs) : null">
+								<v-list-item v-if="!LeekWars.mobile" :ripple="game.displayDebugs" :class="{disabled: !game.showActions}" @click="game.showActions ? (game.displayDebugs = !game.displayDebugs) : null">
 									<v-icon>mdi-math-log</v-icon>
 									<v-switch :input-value="game.displayDebugs" :disabled="!game.showActions" :label="$t('display_logs') + ' (D)'" hide-details />
 									<v-checkbox v-model="game.displayAllyDebugs" :disabled="!game.showActions || !game.displayDebugs" :class="{disabled: !game.showActions || !game.displayDebugs}" label="Alliés" hide-details class="ally-debug" @click.stop />
@@ -178,7 +178,7 @@
 									<v-icon>mdi-numeric-1-box</v-icon>
 									<v-switch :input-value="game.showCells" :label="$t('display_cell_numbers') + ' (C)'" hide-details />
 								</v-list-item>
-								<v-list-item :ripple="game.showLifes" :class="{disabled: !game.showLifes}" @click="game.showLifes ? (game.showIDs = !game.showIDs) : null">
+								<v-list-item v-if="!LeekWars.mobile" :ripple="game.showLifes" :class="{disabled: !game.showLifes}" @click="game.showLifes ? (game.showIDs = !game.showIDs) : null">
 									<v-icon>mdi-key</v-icon>
 									<v-switch :input-value="game.showIDs" :disabled="!game.showLifes" :label="$t('show_ids') + ' (I)'" hide-details />
 								</v-list-item>
