@@ -3,7 +3,7 @@
 		<div v-ripple class="icon">
 			<img src="/image/talent.png">
 		</div>
-		<div v-ripple class="value">{{ talent }}</div>
+		<div v-ripple class="value">{{ talent | number }}</div>
 	</span>
 </template>
 

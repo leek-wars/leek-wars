@@ -5,10 +5,10 @@
 			<div class="select-icon select">
 				<v-select v-model="icon" :items="icons" item-value="id" hide-details dense solo light>
 					<template v-slot:selection>
-						<img v-if="icon" slot="prepend" :src="'/image/trophy/' + TROPHIES[icon - 1].code + '.png'">
+						<img v-if="icon" slot="prepend" :src="'/image/trophy/' + TROPHIES[icon - 1].code + '.svg'">
 					</template>
 					<template slot="item" slot-scope="data">
-						<img v-if="data.item.id" class="icon" :src="'/image/trophy/' + data.item.code + '.png'">
+						<img v-if="data.item.id" class="icon" :src="'/image/trophy/' + data.item.code + '.svg'">
 						<span v-else>{{ $t('main.none') }}</span>
 						<v-list-item-content>
 							<v-list-item-title class="word">
@@ -23,7 +23,7 @@
 				<div class="select-word select">
 					<v-select v-model="noun" :items="nouns" :label="$t('select_noun')" item-value="id" item-text="t" hide-details dense solo @change="changeNoun">
 						<template slot="item" slot-scope="data">
-							<img class="icon" :src="'/image/trophy/' + data.item.code + '.png'">
+							<img class="icon" :src="'/image/trophy/' + data.item.code + '.svg'">
 							<v-list-item-content>
 								<v-list-item-title class="word">
 									<div class="name">{{ data.item.t }}</div>
@@ -47,7 +47,7 @@
 					<v-select v-model="adjective" :items="adjectives" :label="$t('select_adjective')" item-value="id" item-text="t" hide-details :eager="true" dense solo>
 						<template slot="item" slot-scope="data">
 							<template v-if="data.item.id">
-								<img class="icon" :src="'/image/trophy/' + data.item.code + '.png'">
+								<img class="icon" :src="'/image/trophy/' + data.item.code + '.svg'">
 								<v-list-item-content>
 									<v-list-item-title class="word">
 										<div class="name">{{ data.item.t }}</div>
@@ -95,7 +95,7 @@
 				return w.id !== this.adjective
 			}).map((w: any) => {
 				const trophy = TROPHIES[w.id - 1]
-				const gender_code = this.gender === 2 && (trophy.noun_translation & 2) && ((trophy.noun_gender & 2) === 0) && this.$te('trophy.' + w.code + '_f') ? '_f' : ''
+				const gender_code = this.gender === 2 && (trophy.noun_translation & 2) && ((trophy.noun_gender & 2) === 0) ? '_f' : ''
 				return {code: w.code, id: w.id, t: this.$t('trophy.' + w.code + gender_code) as string, rarity: w.rarity}
 			}).sort((a: any, b: any) => a.t.localeCompare(b.t))
 		}
@@ -104,7 +104,7 @@
 				return w.id !== this.noun
 			}).map((w: any) => {
 				const trophy = TROPHIES[w.id - 1]
-				const gender_code = this.gender === 2 && (trophy.adj_translation & 2) && ((trophy.adj_gender & 2) === 0) && this.$te('trophy.' + w.code + '_f') ? '_f' : ''
+				const gender_code = this.gender === 2 && (trophy.adj_translation & 2) && ((trophy.adj_gender & 2) === 0) ? '_f' : ''
 				return {code: w.code, id: w.id, t: this.$t('trophy.' + w.code + gender_code) as string, rarity: w.rarity}
 			}).sort((a: any, b: any) => a.t.localeCompare(b.t)))
 		}

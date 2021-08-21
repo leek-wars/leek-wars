@@ -8,7 +8,7 @@
 				</rich-tooltip-leek>
 			</router-link>
 		</td>
-		<td>{{ row.talent }}</td>
+		<td>{{ row.talent | number }}</td>
 		<td>{{ row.level }}</td>
 		<td>{{ row.xp | number }}</td>
 		<td>

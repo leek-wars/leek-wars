@@ -128,7 +128,7 @@
 						</tooltip>
 						<tooltip v-if="farmer">
 							<template v-slot:activator="{ on }">
-								<div class="talent-more" v-on="on">({{ farmer.talent_more >= 0 ? '+' + farmer.talent_more : farmer.talent_more }})</div>
+								<div class="talent-more" v-on="on">({{ farmer.talent_more >= 0 ? '+' : '' }} {{ farmer.talent_more | number }})</div>
 							</template>
 							<template v-if="farmer.talent_more > 0">
 								<span v-html="$t('main.talent_difference_farmer', [farmer.name, farmer.talent_more, talent_gains + '%'])"></span>
@@ -249,7 +249,7 @@
 		</div>
 		<panel>
 			<template slot="title">
-				<img src="/image/icon/trophy.png">{{ $t('trophies') }} <span v-if="farmer" class="trophy-count">({{ farmer.trophies }})</span>
+				<img src="/image/icon/trophy.png">{{ $t('trophies') }} <span v-if="farmer" class="trophy-count">({{ farmer.points | number }})</span>
 			</template>
 			<template slot="actions">
 				<router-link :to="'/trophies/' + id" class="button flat">
@@ -266,33 +266,40 @@
 					<div v-show="trophiesMode == 'list'" class="list trophies-container">
 						<tooltip v-for="(trophy, t) in trophies_list" v-if="trophy != null" :key="t">
 							<template v-slot:activator="{ on }">
-								<div class="trophy" v-on="on">
-									<img :src="'/image/trophy/' + trophy.code + '.svg'">
-								</div>
+								<router-link :to="'/trophy/' + trophy.code">
+									<span class="trophy" v-on="on">
+										<img :src="'/image/trophy/' + trophy.code + '.svg'">
+									</span>
+								</router-link>
 							</template>
-							<b>{{ trophy.name }}</b>
-							<br>{{ trophy.description }}
-							<br><span class="trophy-date">{{ LeekWars.formatDuration(trophy.date) }}</span>
+							<div class="header">
+								<b>{{ trophy.name }}</b>
+								<b>{{ trophy.points }}</b>
+							</div>
+							<div>{{ trophy.description }}</div>
+							<span class="trophy-date">{{ LeekWars.formatDuration(trophy.date) }}</span>
 						</tooltip>
 					</div>
 					<div v-show="trophiesMode == 'grid'" class="grid trophies-container">
 						<tooltip v-for="(trophy, t) in trophies_grid" :key="t" :disabled="!trophy">
 							<template v-slot:activator="{ on }">
 								<span v-on="on">
-									<div v-if="trophy != null" class="trophy card">
+									<router-link v-if="trophy != null" :to="'/trophy/' + trophy.code" class="trophy card">
 										<img :src="'/image/trophy/' + trophy.code + '.svg'">
-									</div>
+									</router-link>
 									<div v-else class="trophy locked">
 										<img src="/image/unknown.png">
 									</div>
 								</span>
 							</template>
 							<span v-if="trophy">
-								<b>{{ trophy.name }}</b>
-								<span v-if="trophy.description">
-									<br>{{ trophy.description }}
-								</span>
-								<br>
+								<div class="header">
+									<b>{{ trophy.name }}</b>
+									<b>{{ trophy.points }}</b>
+								</div>
+								<div v-if="trophy.description">
+									{{ trophy.description }}
+								</div>
 								<i18n tag="span" class="trophy-date" path="main.unlocked_the">
 									<span slot="date">{{ trophy.date | date }}</span>
 								</i18n>
@@ -304,13 +311,18 @@
 						<div class="trophies-container">
 							<tooltip v-for="trophy in bonus_trophies" :key="trophy.id">
 								<template v-slot:activator="{ on }">
-									<div :class="{card: trophiesMode == 'grid'}" class="trophy" v-on="on">
-										<img :src="'/image/trophy/' + trophy.code + '.svg'">
-									</div>
+									<router-link :to="'/trophy/' + trophy.code" :class="{card: trophiesMode == 'grid'}">
+										<span class="trophy" v-on="on">
+											<img :src="'/image/trophy/' + trophy.code + '.svg'">
+										</span>
+									</router-link>
 								</template>
-								<b>{{ trophy.name }}</b>
-								<br>{{ trophy.description }}
-								<br><span class="date">{{ LeekWars.formatDuration(trophy.date) }}</span>
+								<div class="header">
+									<b>{{ trophy.name }}</b>
+									<b v-if="trophy.points">{{ trophy.points }}</b>
+								</div>
+								<div>{{ trophy.description }}</div>
+								<span class="date">{{ LeekWars.formatDuration(trophy.date) }}</span>
 							</tooltip>
 						</div>
 					</div>
@@ -964,7 +976,7 @@
 	}
 	#app.app .leeks {
 		display: grid;
-		grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+		grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
 		align-items: flex-end;
 	}
 	.leek {
@@ -1013,6 +1025,10 @@
 		padding: 4px;
 		border: 1px solid transparent;
 		text-align: center;
+		display: block;
+		span {
+			width: 100%;
+		}
 		img {
 			width: 100%;
 			vertical-align: bottom;
@@ -1083,5 +1099,10 @@
 	}
 	.trophy-count {
 		margin-left: 5px;
+	}
+	.header {
+		display: flex;
+		justify-content: space-between;
+		gap: 20px;
 	}
 </style>

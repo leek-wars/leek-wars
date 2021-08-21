@@ -56,6 +56,7 @@ const TalentPage = () => import(/* webpackChunkName: "[request]" */ `@/component
 const Team = () => import(/* webpackChunkName: "[request]" */ `@/component/team/team.${locale}.i18n`)
 const Tournament = () => import(/* webpackChunkName: "[request]" */ `@/component/tournament/tournament.${locale}.i18n`)
 const Trophies = () => import(/* webpackChunkName: "[request]" */ `@/component/trophies/trophies.${locale}.i18n`)
+const TrophyPage = () => import(/* webpackChunkName: "[request]" */ `@/component/trophy/trophy.${locale}.i18n`)
 const Tutorial = () => import(/* webpackChunkName: "[request]" */ `@/component/tutorial/tutorial.${locale}.i18n`)
 import { env } from '@/env'
 import { LeekWars } from '@/model/leekwars'
@@ -178,6 +179,7 @@ const routes = [
 	{ path: '/tournament/:id', component: Tournament },
 	{ path: '/trophies', component: Trophies, beforeEnter: connected },
 	{ path: '/trophies/:id', component: Trophies },
+	{ path: '/trophy/:code', component: TrophyPage },
 	{ path: '*', component: Error },
 ] as RouteConfig[]
 

@@ -257,7 +257,7 @@ h3::after {
 }
 h4 {
 	font-size: 18px;
-	color: #666;
+	color: #555;
 	font-weight: bold
 }
 a {
@@ -920,3 +920,9 @@ body {
 		color: white;
 	}
 }
+.difficulty-0 { background: #444 }
+.difficulty-1 { background: #00aa00 }
+.difficulty-2 { background: #0090ff }
+.difficulty-3 { background: #c21aff }
+.difficulty-4 { background: #f8ac00 }
+.difficulty-5 { background: red }
