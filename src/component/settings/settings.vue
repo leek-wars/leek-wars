@@ -274,6 +274,9 @@
 		updateSfwMode() {
 			localStorage.setItem('sfw', '' + this.sfwMode)
 			this.sfwMode ? LeekWars.sfwOn() : LeekWars.sfwOff()
+			if (this.sfwMode) {
+				LeekWars.post('trophy/unlock', {trophy_id: 234}) // Trophée On me voit on me voit plus
+			}
 		}
 		@Watch('notifsResults')
 		updateNotifsResults() {

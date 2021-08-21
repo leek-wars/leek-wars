@@ -116,7 +116,7 @@
 				<template v-if="fight.trophies.length">
 					<h3 class="trophies-title">{{ $t('trophies') }}</h3>
 					<div class="trophies">
-						<div v-for="(trophy, t) in fight.trophies" :key="t" class="trophy card">
+						<router-link v-for="(trophy, t) in fight.trophies" :key="t" v-ripple :to="'/trophy/' + trophy.name" class="trophy card">
 							<img :src="'/image/trophy/' + trophy.name + '.svg'" class="image">
 							<div class="info">
 								<div class="name">{{ $t('trophy.' + trophy.name) }}</div>
@@ -125,7 +125,7 @@
 									{{ trophy.farmer.name }}
 								</div>
 							</div>
-						</div>
+						</router-link>
 					</div>
 				</template>
 			</div>

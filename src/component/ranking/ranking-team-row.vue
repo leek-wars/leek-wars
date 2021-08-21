@@ -8,9 +8,9 @@
 				</rich-tooltip-team>
 			</router-link>
 		</td>
-		<td>{{ row.talent }}</td>
+		<td>{{ row.talent | number }}</td>
 		<td>{{ row.level }}</td>
-		<td>{{ row.total_level }}</td>
+		<td>{{ row.total_level | number }}</td>
 		<td>{{ row.xp | number }}</td>
 		<td>{{ row.farmer_count }}</td>
 		<td>{{ row.leek_count }}</td>

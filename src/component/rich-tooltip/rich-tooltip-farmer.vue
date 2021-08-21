@@ -26,7 +26,7 @@
 						</span>
 						<div>
 							<router-link :to="'/trophies/' + farmer.id" class="stat">
-								<img class="icon" src="/image/icon/grey/trophy.png">{{ $t('main.n_trophies', [farmer.trophies]) }}
+								<img class="icon" src="/image/icon/grey/trophy.png">{{ farmer.points | number }}
 							</router-link>
 							<router-link v-if="farmer.forum_messages" :to="'/search?farmer=' + farmer.name + '&order=date'" class="stat">
 								<img class="icon" src="/image/forum.png">{{ $t('main.n_messages', [farmer.forum_messages]) }}

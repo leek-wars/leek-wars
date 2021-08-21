@@ -54,7 +54,7 @@
 									<div v-else-if="message.writer.color == 'contributor'" class="grade contributor">{{ $t('main.grade_contributor') }}</div>
 									<lw-title v-if="message.writer.title.length" :title="message.writer.title" />
 									<div class="messages-count"><b>{{ message.writer.messages }}</b> messages</div>
-									<div class="trophy-count"><b>{{ message.writer.trophies }}</b> trophées</div>
+									<div class="trophy-count"><b>{{ message.writer.points | number }}</b> trophées</div>
 								</div>
 							</div>
 						</rich-tooltip-farmer>
