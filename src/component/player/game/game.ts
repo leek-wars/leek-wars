@@ -353,7 +353,7 @@ class Game {
 		}
 
 		this.mapType = this.data.map.type + 1
-		this.map = this.maps[this.data.map.type + 1]
+		this.map = this.maps[this.mapType]
 		this.map.seed = fight.id
 		this.map.create()
 
