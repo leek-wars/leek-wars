@@ -346,7 +346,7 @@ class FightEntity extends Entity {
 	}
 
 	public updateGrowth() {
-		this.growth = 1.0 + Math.log10(Math.max(1, this.maxLife / this.initialMaxLife)) / 3
+		this.growth = 1.0 + Math.log10(Math.max(0.0316227766, this.maxLife / this.initialMaxLife)) / 3
 		this.height = this.baseHeight * this.growth
 	}
 
