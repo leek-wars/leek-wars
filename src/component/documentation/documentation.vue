@@ -139,6 +139,8 @@
 					this.items.push(item)
 					; (item as any).lower_name = item.name.toLowerCase()
 					; (item as any).id = id++
+					; (item as any).data = ''
+
 					last = item
 
 					LeekWars.documentation(locale).then(functions => {
