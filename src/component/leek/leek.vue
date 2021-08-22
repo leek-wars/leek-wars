@@ -685,6 +685,18 @@
 		created() {
 			fileSystem.init()
 		}
+		mounted() {
+			this.$root.$on('update-leek-talent', (message: any) => {
+				if (this.leek && message.leek === this.leek.id) {
+					this.leek.talent += message.talent
+				}
+			})
+			this.$root.$on('update-leek-xp', (message: any) => {
+				if (this.leek && message.leek === this.leek.id) {
+					this.leek.xp += message.xp
+				}
+			})
+		}
 
 		@Watch('id', {immediate: true})
 		update() {
@@ -729,6 +741,12 @@
 				this.error = true
 			})
 		}
+
+		beforeDestroy() {
+			this.$root.$off('update-leek-talent')
+			this.$root.$off('update-leek-xp')
+		}
+
 		rename(currency: string) {
 			if (!this.leek) { return }
 			const method = currency === 'habs' ? 'leek/rename-habs' : 'leek/rename-crystals'

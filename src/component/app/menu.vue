@@ -129,6 +129,34 @@
 				</popup>
 			</div>
 		</div>
+
+		<v-menu v-if="$store.state.farmer && $store.state.farmer.rewards.length" offset-x :nudge-right="15" :max-height="500" :close-on-content-click="false">
+			<template v-slot:activator="{ on }">
+				<div v-ripple class="rewards-button notif-trophy" v-on="on">
+					<img src="/image/icon/chest.svg">
+				</div>
+			</template>
+			<div class="reward-dialog">
+				<div class="title">
+					<div>
+						<h4>Récompenses ({{ $store.state.farmer.rewards.length }})</h4>
+						<div>{{ $store.state.farmer.rewards.reduce((s, r) => s + r.habs, 0) | number }} <span class="hab"></span></div>
+					</div>
+					<v-btn class="get-all notif-trophy" @click.stop="retrieveAll()"><span v-if="!LeekWars.mobile">Tout récupérer</span> <img src="/image/icon/black/arrow-down-right-bold.svg"></v-btn>
+				</div>
+				<div class="rewards">
+					<div v-for="reward in $store.state.farmer.rewards" :key="reward.trophy" class="reward">
+						<router-link :to="'/trophy/' + LeekWars.trophies[reward.trophy - 1].code">
+							<img :src="'/image/trophy/' + LeekWars.trophies[reward.trophy - 1].code + '.svg'">
+							{{ $t('trophy.' + LeekWars.trophies[reward.trophy - 1].code) }}
+							<div class="spacer"></div>
+							<div>{{ reward.habs | number }} <span class="hab"></span></div>
+						</router-link>
+						<v-btn class="get notif-trophy" @click.stop="retrieve(reward)"><img src="/image/icon/arrow-down-right-bold.svg"></v-btn>
+					</div>
+				</div>
+			</div>
+		</v-menu>
 	</div>
 </template>
 
@@ -229,19 +257,35 @@
 				}, {passive: true})
 			}, 800)
 		}
+
 		clickItem() {
 			LeekWars.menuExpanded = false
 			LeekWars.dark = 0
 		}
+
 		@Watch('LeekWars.menuCollapsed')
 		update() {
 			localStorage.setItem('main/menu-collapsed', '' + LeekWars.menuCollapsed)
 			this.$root.$emit('resize')
 		}
+
 		quit(e: Event) {
 			LeekWars.battleRoyale.leave()
 			this.battleRoyaleDialog = false
 			e.stopPropagation()
+		}
+
+		retrieve(reward: any) {
+			LeekWars.post('trophy/retrieve-reward', { trophy: reward.trophy })
+			store.commit('remove-reward', reward.trophy)
+			store.commit('update-habs', reward.habs)
+		}
+
+		retrieveAll(trophy: number) {
+			LeekWars.post('trophy/retrieve-all-rewards', { trophy })
+			const total = store.state.farmer!.rewards.reduce((s, r) => s + r.habs, 0)
+			store.commit('remove-all-rewards')
+			store.commit('update-habs', total)
 		}
 	}
 </script>
@@ -260,7 +304,7 @@
 		left: 0;
 		transform: translateX(-250px);
 		bottom: 0;
-		background: rgba(0, 0, 0, 0.5);
+		background: #222;
 		z-index: 5;
 		transition: transform ease 200ms;
 		padding: 0;
@@ -313,7 +357,7 @@
 	.menu a div {
 		overflow: hidden;
 	}
-	.menu .section[label]:after {
+	.menu .section[label]:after, .awards:after {
 		position: absolute;
 		background: #333;
 		right: -10px;
@@ -479,10 +523,11 @@
 	}
 	#app.app .menu .menu-wrapper {
 		padding: 0;
-		background: #222;
 		width: 250px;
 		overflow-y: auto;
+		background: none;
 		height: 100%;
+		max-height: calc(100vh - 140px);
 	}
 	.menu .section.console {
 		display: none;
@@ -558,5 +603,79 @@
 				padding: 8px;
 			}
 		}
+	}
+	.rewards-button {
+		padding: 10px;
+		border-radius: 4px;
+		cursor: pointer;
+		display: inline-block;
+		margin: 15px;
+		position: relative;
+		img {
+			width: 42px;
+			height: 42px;
+			vertical-align: bottom;
+		}
+	}
+	#app.app .awards {
+		margin: 10px;
+	}
+	.awards:after {
+		top: 0;
+		background: #5fad1b;
+		display: none;
+	}
+	#app.menu-collapsed .awards {
+		margin-left: 0;
+	}
+	.get-all {
+		font-weight: 500;
+		img {
+			margin-left: 8px;
+		}
+	}
+	.reward-dialog {
+		.title {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			padding: 12px 10px;
+			background: #2a2a2a;
+			color: white;
+			h4 {
+				color: white;
+				margin-bottom: 5px;
+			}
+		}
+		.rewards {
+			max-height: 315px;
+			width: 450px;
+			overflow-y: scroll;
+			.reward {
+				display: flex;
+				align-items: center;
+				padding: 4px 8px;
+				gap: 8px;
+				font-weight: 500;
+				a {
+					flex: 1;
+					display: flex;
+					align-items: center;
+					gap: 8px;
+				}
+				& > a > img {
+					width: 34px;
+				}
+				.v-btn {
+					padding: 0;
+					width: 40px;
+					min-width: 40px;
+				}
+			}
+		}
+	}
+	#app.app .reward-dialog .rewards {
+		width: auto;
+		max-width: 350px;
 	}
 </style>

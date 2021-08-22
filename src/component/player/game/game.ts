@@ -315,6 +315,8 @@ class Game {
 	public player!: Player
 	public halloween: boolean = false
 	public textRatio: number = 1
+	public trophies: any[] = []
+	public trophiesToSend: any[] = []
 
 	public maps: Map[] = [
 		new Nexus(this),
@@ -344,6 +346,8 @@ class Game {
 
 	public init(fight: Fight) {
 		this.data = fight.data
+		this.trophies = fight.trophies
+		this.trophiesToSend = [...fight.trophies]
 
 		// Check data
 		if (this.data == null) {
@@ -793,6 +797,8 @@ class Game {
 				if (this.actionToDo) {
 					this.actionDelay -= dt
 					if (this.actionDelay <= 0) {
+
+						this.readTrophies() // Sur l'action qui vient de finir
 
 						this.actionDelay = 0
 						this.actionToDo = false
@@ -1552,22 +1558,42 @@ class Game {
 			this.currentLog++
 			const log = this.logs[this.currentAction][l]
 			const type = log[1]
-			if (type === 5) {
-				this.pause()
-				this.addConsoleLine({id: 'l' + this.currentAction + '-' + this.currentLog, log})
-				return true
-			} else if (type === 4) {
-				this.addMarker(log[0], log[2], log[3], log[4])
-			} else if (type === 9) {
-				this.addTextMarker(log[0], log[2], log[3], log[4], log[5])
-			} else if (type === 10) {
-				this.clearMarks()
-			} else {
-				this.addConsoleLine({id: 'l' + this.currentAction + '-' + this.currentLog, log})
+			if (this.displayDebugs && (this.displayAllyDebugs || log[5])) {
+				if (type === 5) {
+					this.pause()
+					this.addConsoleLine({id: 'l' + this.currentAction + '-' + this.currentLog, log})
+					return true
+				} else if (type === 4) {
+					this.addMarker(log[0], log[2], log[3], log[4])
+				} else if (type === 9) {
+					this.addTextMarker(log[0], log[2], log[3], log[4], log[5])
+				} else if (type === 10) {
+					this.clearMarks()
+				} else {
+					this.addConsoleLine({id: 'l' + this.currentAction + '-' + this.currentLog, log})
+				}
 			}
 		}
 		return false
 	}
+
+	public readTrophies() {
+		for (let t = 0; t < this.trophiesToSend.length; ++t) {
+			const trophy = this.trophiesToSend[t]
+			if (this.currentAction >= trophy.action) {
+				this.player.$emit('unlock-trophy', trophy.trophy)
+				this.trophiesToSend.splice(t, 1)
+				t--
+			}
+		}
+		for (let t = 0; t < this.trophies.length; ++t) {
+			const trophy = this.trophies[t]
+			if (this.currentAction === trophy.action) {
+				this.addConsoleLine({id: 't' + t, trophy})
+			}
+		}
+	}
+
 	public actionDone(delay: number = 6) {
 		this.actionToDo = true
 		this.actionDelay = delay
