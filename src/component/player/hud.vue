@@ -40,7 +40,10 @@
 				<action-element v-if="line.action" :key="line.id" :action="line.action" :leeks="game.leeks" :display-logs="true" :dark="dark" turn="1" class="action" />
 				<div v-else-if="line.trophy" :key="line.id" class="notif-trophy">
 					<img :src="'/image/trophy/' + line.trophy.name + '.svg'">
-					{{ line.trophy.farmer.name + ' débloque le trophée ' }} <b>{{ $t('trophy.' + line.trophy.name) }}</b>
+					<i18n path="trophy.x_unlocks_t">
+						<template slot="farmer">{{ line.trophy.farmer.name }}</template>
+						<b slot="trophy">{{ $t('trophy.' + line.trophy.name) }}</b>
+					</i18n>
 				</div>
 				<pre v-else :key="line.id" :class="logClass(line.log)" :style="{color: logColor(line.log)}" class="log">[<leek :leek="game.leeks[line.log[0]]" :dark="dark" />] {{ logText(line.log) }}</pre>
 			</template>
@@ -345,6 +348,7 @@
 		padding: 4px;
 		display: flex;
 		align-items: center;
+		white-space: nowrap;
 		gap: 6px;
 		margin: 5px 0;
 		img {
