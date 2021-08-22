@@ -50,8 +50,9 @@ class Notification {
 			const leekId = parseInt(params[0], 10)
 			const leekName = leeks[leekId].name
 			const level = params[1]
+			const capital = parseInt(params[2], 10)
 			if (isNew) {
-				store.commit('level-up', {leek: leekId, level})
+				store.commit('level-up', {leek: leekId, level, capital})
 			}
 			return new Notification(data, "/leek/" + leekId, "mdi-transfer-up", [leekName, level], [leekName])
 		} else if (type === NotificationType.FIGHT_REPORT) {

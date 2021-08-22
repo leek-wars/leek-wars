@@ -535,6 +535,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 		'level-up'(state: LeekWarsState, data: any) {
 			if (state.farmer) {
 				state.farmer.leeks[data.leek].level = data.level
+				state.farmer.leeks[data.leek].capital = data.capital
 			}
 		},
 		'add-ai'(state: LeekWarsState, ai: AI) {
