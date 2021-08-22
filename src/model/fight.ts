@@ -79,6 +79,7 @@ class Fight {
 	public report!: Report
 	public winner!: number
 	public queue!: number
+	public trophies!: any[]
 }
 
 class FightMap {

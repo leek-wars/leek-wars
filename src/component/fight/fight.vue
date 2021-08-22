@@ -9,7 +9,7 @@
 
 		<panel class="first">
 			<div slot="content" class="fight">
-				<player :key="fight_id" :fight-id="fight_id" :required-width="playerWidth" :required-height="playerHeight" @fight="fightLoaded" @resize="resize" />
+				<player :key="fight_id" :fight-id="fight_id" :required-width="playerWidth" :required-height="playerHeight" @unlock-trophy="unlockTrophy" @fight="fightLoaded" @resize="resize" />
 			</div>
 		</panel>
 
@@ -119,6 +119,7 @@
 	import { Leek } from '@/model/leek'
 	import { LeekWars } from '@/model/leekwars'
 	import { Warning } from '@/model/moderation'
+	import { store } from '@/model/store'
 	import { Component, Vue, Watch } from 'vue-property-decorator'
 	import { GROUND_PADDING_LEFT, GROUND_PADDING_RIGHT, GROUND_PADDING_TOP } from '../player/game/ground'
 	const Player = () => import(/* webpackChunkName: "[request]" */ `@/component/player/player.${locale}.i18n`)
@@ -139,6 +140,7 @@
 		large: boolean = false
 		reportDialog: boolean = false
 		reasons = [Warning.RUDE_SAY, Warning.INCORRECT_LEEK_NAME, Warning.INCORRECT_FARMER_NAME, Warning.INCORRECT_AVATAR]
+		trophyQueue: any[] = []
 
 		get reportLeeks() {
 			if (!this.fight) { return [] }
@@ -156,6 +158,8 @@
 			LeekWars.flex = true
 			this.$root.$on('resize', this.resize)
 			setTimeout(() => this.resize(), 50)
+
+			this.$root.$on('trophy', this.onTrophy)
 		}
 
 		@Watch('$route.params.id', {immediate: true})
@@ -204,6 +208,12 @@
 			LeekWars.flex = false
 			LeekWars.lightBar = false
 			this.$root.$off('resize', this.resize)
+			this.$root.$off('trophy', this.onTrophy)
+
+			// Notifications de trophées restants
+			for (const message of this.trophyQueue) {
+				store.commit('notification', message)
+			}
 		}
 
 		fightLoaded(fight: Fight) {
@@ -223,6 +233,24 @@
 				leeks[leek.id] = leek
 			}
 		}
+
+		// Réception des notifications de trophées pour les mettre en attente
+		onTrophy(trophy: any) {
+			this.trophyQueue.push(trophy)
+		}
+
+		// Le player a joué un trophée, on peut l'afficher
+		unlockTrophy(trophy: number) {
+			for (let m = 0; m < this.trophyQueue.length; ++m) {
+				const message = this.trophyQueue[m]
+				if (parseInt(message.parameters[0], 10) === trophy) {
+					store.commit('notification', message)
+					this.trophyQueue.splice(m, 1)
+					m--
+				}
+			}
+		}
+
 		comment(comment: Comment) {
 			if (this.fight) {
 				LeekWars.post('fight/comment', {fight_id: this.fight.id, comment: comment.comment}).then(data => {

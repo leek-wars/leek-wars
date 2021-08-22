@@ -66,6 +66,7 @@ class Composition {
 	public fights!: number
 	public tournamentRange!: any
 	public tournamentRangeLoading!: any
+	public talent!: number
 }
 
 export { Composition, Team, TeamMember, TEAM_COLORS, TEAM_COLORS_DARK }

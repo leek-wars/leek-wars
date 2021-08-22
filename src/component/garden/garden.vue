@@ -293,6 +293,12 @@
 			this.$root.$on('back', this.back)
 			LeekWars.socket.send([SocketMessage.GARDEN_QUEUE_REGISTER])
 			this.$root.$on('garden-queue', (data: number) => this.queue = data)
+
+			this.$root.$on('update-team-talent', (message: any) => {
+				if (message.composition in this.compositions_by_id) {
+					this.compositions_by_id[message.composition].talent += message.talent
+				}
+			})
 		}
 		back() {
 			if (this.category === 'challenge') {

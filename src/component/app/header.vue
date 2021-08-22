@@ -54,17 +54,21 @@
 				-->
 				<div v-if="env.BANK" class="button-wrapper">
 					<router-link to="/bank">
-						<div class="header-button">
-							<span v-if="$store.state.farmer" class="farmer-crystals text">{{ $store.state.farmer.crystals | number }}</span>
+						<div v-if="$store.state.farmer" class="header-button">
+							<span class="farmer-crystals text">{{ Math.round($store.state.farmer.animated_crystals) | number }}</span>
 							<span class="crystal text"></span>
+							<span v-if="$store.state.farmer.animated_crystals < $store.state.farmer.crystals" class="crystal win"></span>
+							<span v-else-if="$store.state.farmer.animated_crystals > $store.state.farmer.crystals" class="crystal lose"></span>
 						</div>
 					</router-link>
 				</div>
 				<div class="button-wrapper">
 					<router-link to="/market">
-						<div class="header-button">
-							<span v-if="$store.state.farmer" class="farmer-habs text">{{ $store.state.farmer.habs | number }}</span>
+						<div v-if="$store.state.farmer" class="header-button">
+							<span class="farmer-habs text">{{ Math.round($store.state.farmer.animated_habs) | number }}</span>
 							<span class="hab text"></span>
+							<span v-if="$store.state.farmer.animated_habs < $store.state.farmer.habs" class="hab win"></span>
+							<span v-else-if="$store.state.farmer.animated_habs > $store.state.farmer.habs" class="hab lose"></span>
 						</div>
 					</router-link>
 				</div>
@@ -369,5 +373,25 @@
 	.language .flag {
 		height: 26px;
 		margin-right: 8px;
+	}
+	.win {
+		position: absolute;
+		animation: win 0.15s infinite;
+		margin-top: 0;
+		right: 4px;
+	}
+	@keyframes win {
+		0% { margin-top: -120px; }
+		100% { margin-top: 0; }
+	}
+	.lose {
+		position: absolute;
+		animation: lose 0.25s infinite;
+		margin-top: 0;
+		right: 4px;
+	}
+	@keyframes lose {
+		0% { margin-top: 0; opacity: 1; }
+		100% { margin-top: 100px; opacity: 0; }
 	}
 </style>

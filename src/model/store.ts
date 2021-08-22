@@ -31,6 +31,8 @@ class LeekWarsState {
 	public last_ping: number = 0
 	public connected_farmers: number = 0
 	public loadingConversations: boolean = false
+	public habs_timer: any = null
+	public crystals_timer: any = null
 }
 
 function updateTitle(state: LeekWarsState) {
@@ -71,6 +73,8 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 		},
 		"connect"(state: LeekWarsState, data: {farmer: Farmer, farmers: number, token: string}) {
 			state.farmer = data.farmer
+			Vue.set(state.farmer, 'animated_habs', state.farmer.habs)
+			Vue.set(state.farmer, 'animated_crystals', state.farmer.crystals)
 			state.token = data.token
 			state.connected = true
 			state.connected_farmers = data.farmers
@@ -215,13 +219,41 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			}
 		},
 		'update-crystals'(state: LeekWarsState, crystals: number) {
-			if (state.farmer) { state.farmer.crystals += crystals }
+			if (state.farmer) {
+				state.farmer.crystals += crystals
+				clearTimeout(state.crystals_timer)
+				const increment = (state.farmer!.crystals - state.farmer!.animated_crystals) / 23
+				const update = () => {
+					state.farmer!.animated_crystals = state.farmer!.animated_crystals + increment
+					if (Math.abs(state.farmer!.animated_crystals - state.farmer!.crystals) > 0.4) {
+						state.crystals_timer = setTimeout(update, 41)
+					} else {
+						state.farmer!.animated_crystals = state.farmer!.crystals
+					}
+				}
+				update()
+			}
 		},
 		'set-habs'(state: LeekWarsState, habs: number) {
-			if (state.farmer) { state.farmer.habs = habs }
+			if (state.farmer) {
+				state.farmer.habs = habs
+			}
 		},
 		'update-habs'(state: LeekWarsState, habs: number) {
-			if (state.farmer) { state.farmer.habs += habs }
+			if (state.farmer) {
+				state.farmer.habs += habs
+				clearTimeout(state.habs_timer)
+				const increment = (state.farmer!.habs - state.farmer!.animated_habs) / 23
+				const update = () => {
+					state.farmer!.animated_habs = state.farmer!.animated_habs + increment
+					if (Math.abs(state.farmer!.animated_habs - state.farmer!.habs) > 0.4) {
+						state.habs_timer = setTimeout(update, 41)
+					} else {
+						state.farmer!.animated_habs = state.farmer!.habs
+					}
+				}
+				update()
+			}
 		},
 		'update-fights'(state: LeekWarsState, fights: number) {
 			if (state.farmer) { state.farmer.fights += fights }
@@ -305,9 +337,14 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 				state.unreadNotifications = data.unread
 				updateTitle(state)
 
-				// Received a new trophy, invalidate farmer trophies
+				// Received a new trophy, invalidate farmer trophies, add to rewards
 				if (state.farmer && data.type === NotificationType.TROPHY_UNLOCKED) {
 					Vue.delete(state.farmer, 'trophies_list')
+					const trophy = parseInt(data.parameters[0], 10)
+					state.farmer.rewards.push({
+						trophy,
+						habs: LeekWars.trophies[trophy - 1].habs
+					})
 				}
 			}
 			const notification = Notification.build(data, true)
@@ -553,7 +590,32 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 				}
 				state.loadingConversations = false
 			})
-		}
+		},
+		'remove-reward'(state: LeekWarsState, trophy: number) {
+			if (state.farmer) {
+				state.farmer.rewards = state.farmer.rewards.filter(r => r.trophy !== trophy)
+			}
+		},
+		'remove-all-rewards'(state: LeekWarsState) {
+			if (state.farmer) {
+				state.farmer.rewards = []
+			}
+		},
+		'update-xp'(state: LeekWarsState, data: any) {
+			if (state.farmer) {
+				state.farmer.leeks[data.leek].xp += data.xp
+			}
+		},
+		'update-leek-talent'(state: LeekWarsState, data: any) {
+			if (state.farmer) {
+				state.farmer.leeks[data.leek].talent += data.talent
+			}
+		},
+		'update-farmer-talent'(state: LeekWarsState, talent: number) {
+			if (state.farmer) {
+				state.farmer.talent += talent
+			}
+		},
 	},
 })
 export { store }

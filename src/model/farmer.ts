@@ -10,7 +10,9 @@ class Farmer {
 	public id!: number
 	public name!: string
 	public habs!: number
+	public animated_habs!: number
 	public crystals!: number
+	public animated_crystals!: number
 	public banned!: boolean
 	public deleted!: boolean
 	public tournaments!: any[]
@@ -48,5 +50,12 @@ class Farmer {
 	public pass!: boolean
 	public errors!: number
 	public contributor!: boolean
+	public rewards!: Reward[]
 }
-export { Farmer }
+
+class Reward {
+	public trophy!: number
+	public habs!: number
+}
+
+export { Farmer, Reward }

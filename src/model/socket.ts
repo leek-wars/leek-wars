@@ -1,6 +1,8 @@
 import { env } from '@/env'
 import { LeekWars } from '@/model/leekwars'
 import { vueMain } from '@/model/vue'
+import router from '@/router'
+import { NotificationType } from './notification'
 import { store } from './store'
 
 enum SocketMessage {
@@ -44,6 +46,11 @@ enum SocketMessage {
 	FIGHT_PROGRESS_UNREGISTER = 42,
 	TEAM_CHAT_ENABLE_FAST = 43,
 	TEAM_CHAT_RECEIVE_PACK = 44,
+	UPDATE_LEEK_TALENT = 45,
+	UPDATE_FARMER_TALENT = 46,
+	UPDATE_TEAM_TALENT = 47,
+	UPDATE_HABS = 48,
+	UPDATE_LEEK_XP = 49
 }
 
 class Socket {
@@ -127,7 +134,14 @@ class Socket {
 					break
 				}
 				case SocketMessage.NOTIFICATION_RECEIVE : {
-					store.commit('notification', {id: data[0], unread: data[1], type: data[2], date: LeekWars.time, parameters: data[3]})
+
+					const message = {id: data[0], unread: data[1], type: data[2], date: LeekWars.time, parameters: data[3]}
+					// Envoie de la notif sur la page du combat pour la mettre en file d'attente
+					if (message.type === NotificationType.TROPHY_UNLOCKED && router.currentRoute.path.startsWith('/fight/' + message.parameters[1])) {
+						vueMain.$emit('trophy', message)
+					} else {
+						store.commit('notification', message)
+					}
 					break
 				}
 				case SocketMessage.UPDATE_NOTIFICATIONS : {
@@ -168,6 +182,31 @@ class Socket {
 				}
 				case SocketMessage.FIGHT_PROGRESS: {
 					vueMain.$emit('fight-progress', data)
+					break
+				}
+				case SocketMessage.UPDATE_HABS: {
+					store.commit('update-habs', data[0])
+					break
+				}
+				case SocketMessage.UPDATE_LEEK_XP: {
+					const message = { leek: data[0], xp: data[1] }
+					store.commit('update-xp', message)
+					vueMain.$emit('update-leek-xp', message)
+					break
+				}
+				case SocketMessage.UPDATE_LEEK_TALENT: {
+					const message = { leek: data[0], talent: data[1] }
+					store.commit('update-leek-talent', message)
+					vueMain.$emit('update-leek-talent', message)
+					break
+				}
+				case SocketMessage.UPDATE_FARMER_TALENT: {
+					store.commit('update-farmer-talent', data[0])
+					break
+				}
+				case SocketMessage.UPDATE_TEAM_TALENT: {
+					const message = { composition: data[0], talent: data[1] }
+					vueMain.$emit('update-team-talent', message)
 					break
 				}
 			}

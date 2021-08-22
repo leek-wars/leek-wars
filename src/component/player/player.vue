@@ -451,7 +451,8 @@
 						tournament: 0, type: 0, winner: 1, year: 2019,
 						data: report.default.fight as any,
 						comments: [],
-						result: 'win', queue: 0
+						result: 'win', queue: 0,
+						trophies: []
 					} as Fight
 					fightLoaded(local_fight)
 					this.game.setLogs((report.default as any).logs[this.$store.state.farmer.id])
@@ -467,9 +468,6 @@
 			if (this.$store.state.farmer) {
 				LeekWars.post('fight/get-logs', {fight_id: this.fightId}).then(data => {
 					this.game.setLogs(data.logs)
-					this.$store.commit('set-habs', data.habs)
-					this.$store.commit('set-talent', data.talent)
-					this.$store.commit('set-leek-talents', data.leek_talents)
 				})
 			}
 		}

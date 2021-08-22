@@ -7,12 +7,16 @@
 			<div class="flex">
 				<img class="image" :src="'/image/trophy/' + code + '.svg'">
 				<div class="right">
-					<div class="name">{{ $t('trophy.' + code) }}</div>
+					<div class="name">
+						{{ $t('trophy.' + code) }}
+						<div v-if="trophy.points" class="points">{{ trophy.points }} points</div>
+					</div>
 					<div class="description">{{ trophy.description }}</div>
 					<div class="badges">
 						<div class="in-fight"><v-icon>{{ LeekWars.trophyCategoriesIcons[trophy.category - 1] }}</v-icon> {{ $t('trophy.category_' + LeekWars.trophyCategoriesById[trophy.category - 1].name) }}</div>
 						<div class="difficulty" :class="'difficulty-' + trophy.difficulty"><v-icon v-for="i in trophy.difficulty" :key="i">mdi-star-outline</v-icon> {{ $t('main.difficulty_' + trophy.difficulty) }}</div>
 						<div v-if="trophy.in_fight" class="in-fight"><v-icon>mdi-sword-cross</v-icon> {{ $t('trophy.unlockable_fight') }}</div>
+						<div v-if="trophy.secret" class="in-fight"><v-icon>mdi-eye-off-outline</v-icon> {{ $t('trophy.secret') }}</div>
 					</div>
 				</div>
 			</div>
@@ -21,7 +25,7 @@
 					<h4><v-icon>mdi-treasure-chest</v-icon> Récompenses</h4>
 					<div class="rarity">
 						<ul>
-							<li><span class="hab"></span> {{ trophy.habs | number }} habs</li>
+							<li v-if="trophy.habs"><span class="hab"></span> {{ trophy.habs | number }} habs</li>
 							<li v-for="item in items" :key="item.id">
 								<rich-tooltip-weapon v-if="item.type === ItemType.WEAPON" v-slot="{ on }" :bottom="true" :instant="true" :weapon="LeekWars.weapons[item.params]">
 									<div v-on="on">{{ $t('weapon.' + LeekWars.weapons[item.params].name) }}</div>
@@ -54,8 +58,8 @@
 				</div>
 			</div>
 		</panel>
-		<div v-if="trophy && trophy.total" class="grid container large">
-			<panel title="Premiers éleveurs" icon="mdi-sort-descending">
+		<div v-if="trophy" class="grid container large">
+			<panel v-if="trophy.first_farmers.length" title="Premiers éleveurs" icon="mdi-sort-descending">
 				<router-link v-for="(farmer, f) in trophy.first_farmers" :key="f" v-ripple :to="'/farmer/' + farmer.id" class="farmer">
 					<avatar :farmer="farmer" />
 					{{ farmer.name }}
@@ -63,7 +67,7 @@
 					{{ farmer.time | date }}
 				</router-link>
 			</panel>
-			<panel title="Derniers éleveurs" icon="mdi-sort-ascending">
+			<panel v-if="trophy.last_farmers.length" title="Derniers éleveurs" icon="mdi-sort-ascending">
 				<router-link v-for="(farmer, f) in trophy.last_farmers" :key="f" v-ripple :to="'/farmer/' + farmer.id" class="farmer">
 					<avatar :farmer="farmer" />
 					{{ farmer.name }}
@@ -105,11 +109,18 @@
 		margin: 0 20px;
 		margin-right: 30px;
 	}
+	#app.app .image {
+		margin: 0;
+		margin-right: 20px;
+	}
 	.flex {
 		justify-content: flex-start;
 		align-items: flex-start;
 		margin-top: 5px;
 		margin-bottom: 25px;
+	}
+	#app.app .flex {
+		margin-bottom: 15px;
 	}
 	.right {
 		flex: 1;
@@ -125,11 +136,23 @@
 	.name {
 		font-size: 28px;
 		font-weight: 500;
+		display: flex;
+		align-items: center;
+	}
+	.points {
+		border: 1px solid #aaa;
+		display: inline-block;
+		margin: 0 10px;
+		padding: 2px 5px;
+		border-radius: 5px;
+		font-size: 16px;
+		margin-top: 2px;
+		color: #555;
 	}
 	.description {
 		font-size: 17px;
 		font-weight: 500;
-		padding: 10px 0;
+		padding: 12px 0;
 	}
 	.rarity {
 		color: #666;
@@ -142,6 +165,9 @@
 	.badges {
 		display: flex;
 		align-items: flex;
+	}
+	#app.app .badges {
+		flex-wrap: wrap;
 	}
 	.difficulty, .in-fight {
 		display: inline-flex;
@@ -198,6 +224,10 @@
 		& > * {
 			flex: 1;
 		}
+	}
+	#app.app .stats {
+		flex-direction: column;
+		gap: 10px;
 	}
 	.farmer {
 		display: flex;
