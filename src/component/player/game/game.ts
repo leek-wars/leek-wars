@@ -295,6 +295,7 @@ class Game {
 	public selectedEntity: FightEntity | null = null
 	public hoverEntity: FightEntity | null = null
 	public jumping: any
+	public logging: any = true
 	public jumpRequested: boolean = false
 	public jumpAction: number = 0
 	public currentTurn: number = 0
@@ -926,7 +927,7 @@ class Game {
 				}
 			}
 
-			if (!this.jumping) {
+			if (this.logging) {
 				// Update markers
 				for (const m in this.markers) {
 					const marker = this.markers[m]
@@ -1020,6 +1021,8 @@ class Game {
 			const targets = targets_ids.map(id => this.leeks.find(l => l.id === id)!)
 			// console.log("ids", targets_ids, "targets", targets, "target_cell", target_cell)
 
+			this.log(action)
+
 			if (this.jumping) {
 				// Update leek cell after teleportation
 				if (chip === 37 || chip === 78) {
@@ -1048,18 +1051,19 @@ class Game {
 			} else {
 				this.actionDone()
 			}
-			this.log(action)
 			break
 		}
 		case ActionType.USE_WEAPON: {
+			const launcher = action.params[1]
+			action.weapon = (this.leeks[launcher] as Leek).weapon_name
+			this.log(action)
+
 			if (this.jumping) {
 				this.actionDone()
 				break
 			}
-			const launcher = action.params[1]
 			const cell = this.ground.field.cells[action.params[2]]
 			const weapon = action.params[3]
-			action.weapon = (this.leeks[launcher] as Leek).weapon_name
 			const result = action.params[4]
 
 			// TODO take the area from the action instead of the item data when available
@@ -1069,7 +1073,6 @@ class Game {
 			const duration = (this.leeks[launcher] as Leek).useWeapon(cell, targets, result)
 			this.actionDone(Math.max(6, duration))
 
-			this.log(action)
 			break
 		}
 		case ActionType.LIFE_LOST:
@@ -1080,8 +1083,8 @@ class Game {
 		{
 			const erosion = action.params.length > 3 ? action.params[3] : 0
 			this.leeks[action.params[1]].looseLife(action.params[2], erosion, this.jumping)
+			this.log(action)
 			if (!this.jumping) {
-				this.log(action)
 				this.leeks[action.params[1]].randomHurt()
 			}
 			this.actionDone()
@@ -1089,8 +1092,8 @@ class Game {
 		}
 		case ActionType.NOVA_DAMAGE: {
 			this.leeks[action.params[1]].looseMaxLife(action.params[2], this.jumping)
+			this.log(action)
 			if (!this.jumping) {
-				this.log(action)
 				this.leeks[action.params[1]].randomHurt()
 			}
 			this.actionDone()
@@ -1098,8 +1101,8 @@ class Game {
 		}
 		case ActionType.NOVA_VITALITY: {
 			this.leeks[action.params[1]].winMaxLife(action.params[2], this.jumping)
+			this.log(action)
 			if (!this.jumping) {
-				this.log(action)
 				this.leeks[action.params[1]].randomHurt()
 			}
 			this.actionDone()
@@ -1133,8 +1136,8 @@ class Game {
 			break
 		}
 		case ActionType.SAY: {
+			this.log(action)
 			if (!this.jumping) {
-				this.log(action)
 				const entity = this.leeks[action.params[1]]
 				let message = action.params[2]
 				if (entity.farmer && entity.farmer.muted) {
@@ -1169,8 +1172,8 @@ class Game {
 			}
 			const index = this.entityOrder.findIndex((e) => e.id === caster)
 			this.entityOrder.splice(index + 1, 0, summon)
+			this.log(action)
 			if (!this.jumping) {
-				this.log(action)
 				S.bulb.play(this)
 				this.leeks[caster].watch(cell)
 				if (result === 2) {
@@ -1201,6 +1204,7 @@ class Game {
 			break
 		}
 		case ActionType.SHOW: {
+			this.log(action)
 			if (this.jumping) {
 				this.actionDone()
 				break
@@ -1212,7 +1216,6 @@ class Game {
 			this.showCellX = xy.x * this.ground.scale
 			this.showCellY = xy.y * this.ground.scale
 			this.showCellTime = 50
-			this.log(action)
 			break
 		}
 		case ActionType.ADD_WEAPON_EFFECT:
@@ -1599,7 +1602,7 @@ class Game {
 		this.actionDelay = delay
 	}
 	public log(action: any) {
-		if (!this.jumping) {
+		if (this.logging) {
 			this.addConsoleLine({id: 'a' + this.currentAction, action})
 		}
 	}
@@ -2354,10 +2357,20 @@ class Game {
 
 		// Do actions
 		this.jumping = true
-		let action = 1
-		while (action < jumpAction) {
-			this.doAction(this.actions[action])
-			action++
+		this.logging = false
+		this.currentAction = 1
+		const loggingAction = Math.max(0, jumpAction - 150)
+		while (this.currentAction < loggingAction) {
+			this.doAction(this.actions[this.currentAction])
+			this.currentAction++
+		}
+		this.logging = true
+		while (this.currentAction < jumpAction) {
+			this.doAction(this.actions[this.currentAction])
+			this.currentLog = 0
+			this.readLogs()
+			this.readTrophies()
+			this.currentAction++
 		}
 
 		// Set cells
@@ -2374,7 +2387,7 @@ class Game {
 
 		// End
 		this.jumping = false
-		this.currentAction = action - 1
+		this.currentAction = this.currentAction - 1
 		this.actionDone() // Start new action
 
 		this.requestPause = this.paused
