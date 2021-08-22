@@ -2,11 +2,11 @@
 	<div class="nofight">
 		<img src="/image/notgood.png"><br>
 		<h4 class="next">{{ $t('no_more_fights') }}</h4>
-		<i18n class="next" tag="div" path="next_fight_in">
+		<i18n v-if="canbuy" class="next" tag="div" path="next_fight_in">
 			<b slot="fights">{{ 50 }}</b>
 			<b slot="time">{{ remainingTime }}</b>
 		</i18n>
-		<i18n class="buy" tag="div" path="buy_fights">
+		<i18n v-if="canbuy" class="buy" tag="div" path="buy_fights">
 			<span slot="hab" class="hab"></span>
 			<span slot="crystal" class="crystal"></span>
 			<router-link slot="market" to="/market/100-fights">{{ $t('main.market') }}</router-link>
@@ -20,6 +20,8 @@
 	import { Component, Prop, Vue } from 'vue-property-decorator'
 	@Component({ mixins })
 	export default class GardenNoFights extends Vue {
+
+		@Prop() canbuy!: boolean
 
 		get remainingTime() {
 			const midnignt = new Date(LeekWars.timeSeconds * 1000)
