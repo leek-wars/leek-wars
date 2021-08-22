@@ -245,6 +245,7 @@
 			if (localStorage.getItem('fight/effects') === null) { localStorage.setItem('fight/effects', 'true') }
 			if (localStorage.getItem('fight/actions') === null) { localStorage.setItem('fight/actions', 'true') }
 			if (localStorage.getItem('fight/auto-dark') === null) { localStorage.setItem('fight/auto-dark', 'true') }
+			if (localStorage.getItem('fight/debugs') === null) { localStorage.setItem('fight/debugs', 'true') }
 			this.game.shadows = localStorage.getItem('fight/shadows') === 'true'
 			this.game.tactic = localStorage.getItem('fight/tactic') === 'true'
 			this.game.showCells = localStorage.getItem('fight/cells') === 'true'
@@ -258,6 +259,8 @@
 			this.game.autoDark = localStorage.getItem('fight/auto-dark') === 'true'
 			this.game.dark = localStorage.getItem('fight/dark') === 'true'
 			this.game.plainBackground = localStorage.getItem('fight/plain-background') === 'true'
+			this.game.displayDebugs = localStorage.getItem('fight/debugs') === 'true'
+			this.game.displayAllyDebugs = localStorage.getItem('fight/ally-debugs') === 'true'
 			this.game.player = this
 			this.getFight(true)
 			this.resize()
@@ -572,6 +575,12 @@
 		@Watch("game.plainBackground") updatePlainBackground() {
 			localStorage.setItem('fight/plain-background', '' + this.game.plainBackground)
 			this.resize()
+		}
+		@Watch("game.displayDebugs") updateDebugs() {
+			localStorage.setItem('fight/debugs', '' + this.game.displayDebugs)
+		}
+		@Watch("game.displayAllyDebugs") updateAllyDebugs() {
+			localStorage.setItem('fight/ally-debugs', '' + this.game.displayAllyDebugs)
 		}
 		canvasClick() {
 			this.game.selectEntity(this.game.click())
