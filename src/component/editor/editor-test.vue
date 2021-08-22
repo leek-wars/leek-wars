@@ -466,15 +466,15 @@
 
 		characsLimits: {[key: string]: any} = {
 			life: {min: 1, max: 100000},
-			strength: {min: 0, max: 3000},
-			wisdom: {min: 0, max: 3000},
-			agility: {min: 0, max: 3000},
-			resistance: {min: 0, max: 3000},
-			science: {min: 0, max: 3000},
-			magic: {min: 0, max: 3000},
-			frequency: {min: 100, max: 3000},
-			tp: {min: 0, max: 100},
-			mp: {min: 0, max: 50}
+			strength: {min: 0, max: 9999},
+			wisdom: {min: 0, max: 9999},
+			agility: {min: 0, max: 9999},
+			resistance: {min: 0, max: 9999},
+			science: {min: 0, max: 9999},
+			magic: {min: 0, max: 9999},
+			frequency: {min: 100, max: 9999},
+			tp: {min: 0, max: 1000},
+			mp: {min: 0, max: 100}
 		}
 		selectedTemplate: number = 0
 		compositionTemplates: any[] = []
