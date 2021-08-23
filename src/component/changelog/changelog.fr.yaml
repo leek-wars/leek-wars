@@ -1,3 +1,39 @@
+225:
+  title: 160 nouveaux trophées, Points et récompenses de trophées, Système de puissance en BR.
+  added:
+    - "Ajout de 160 nouveaux trophées. #img_225_trophies"
+    - "Nouvelles couleurs pour les trophées selon la difficulté : vert, bleu, violet, jaune et rouge. #img_225_trophy_color"
+    - "#ai Mécanisme anti-égalité de gain de Puissance en BR (voir les règles dans le sujet forum). #img_225_br_power"
+    - "Ajout de récompenses en Habs pour les trophées. #img_225_rewards"
+    - "Chaque trophée a désormais un score en points et chaque éleveur a un score de points de trophées. #img_225_trophy_point"
+    - "Nouveaux drapeaux de combat dans le rapport : Ruée, Patient, Magicien, Chasseur, Pacifiste, Épéiste, Évasif, Couteau suisse, Intouchable."
+    - "Ajout d'une section en haut de la page trophées avec un résumé des trophées obtenus. #img_225_trophies_page"
+    - "Ajout d'une section statistiques sur la page trophées pour consulter ses statistiques brutes. #img_225_trophy_stats"
+    - "Création d'une page pour chaque trophée avec beaucoup d'informations spécifiques. #img_225_trophy_page"
+    - "Affichage des trophées débloqués dans les actions du combat. #img_225_fight_trophy"
+    - "#ai Fonction getPower() pour récupérer la puissance d'une entité. #img_225_get_power"
+    - "#ai Ajout d'effets irréductibles (résistants à Libération) avec le modificateur MODIFIER_IRREDUCTIBLE."
+  improved:
+    - "Page trophées : affichage de la progression même si le trophée est déjà débloqué. #img_225_trophy_progress"
+    - Pas de clone en LeekScript 1.1 pour certaines fonctions comme insert, unshift, fill etc.
+    - "Combat plus grand sur mobile en mode paysage (barre du haut cachée). #img_225_fight_mobile"
+    - Les entités en combat peuvent être réduites si leur vie maximum diminue avec les dégâts nova.
+    - Légère baisse des caractéristiques des bots de test.
+    - Actualisation des talents, xp et Habs améliorées.
+    - Les notifications de trophées sont affichées au moment exact où ils sont débloqués dans le combat.
+    - La limite haute des caractéristiques des bots est augmentée.
+    - Ajout d'une animation lors du gain ou la parte d'Habs ou de cristaux.
+    - Logo principal du site en plus haute qualité.
+    - Ajout d'un avertissement lors du dépassement de la limite de debug().
+    - "Possibilté d'afficher les détails d'une entité en combat en cliquant dessus dans la version mobile. #img_225_fight_mobile"
+    - Reconnexion plus rapide en version mobile après un verrouillage du téléphone.
+  fixed:
+    - Correction d'un bug d'expression dans le LeekScript (merci à Gelbaz).
+    - Les paramètres d'affichage des logs en combat sont correctement sauvegardés.
+    - Les points de capital sont actualisés directement quand un poireau gagne un niveau.
+    - Correction des constantes TYPE_OBJECT et TYPE_CLASS pour le retour de getType() (Merci à Grim).
+    - Correction d'un bug dans l'initialisation des champs et champs statiques de classes.
+
 224:
   title: "Accélération du LeekScript, Recherche Enclyclopédie, Lien documentation-encyclopédie."
   added:
