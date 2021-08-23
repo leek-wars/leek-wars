@@ -959,6 +959,7 @@ function playSound(item: any, type: string) {
 		}
 	}
 	play((type === 'weapon') ? weaponSound(item.template) : chipSound(item.template))
+	LeekWars.post('market/sound-played')
 }
 
 function toChatLink(url: string, text: string, blank: string) {
