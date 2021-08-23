@@ -59,7 +59,7 @@
 					</td>
 					<td class="versus">VS</td>
 					<td>
-						<router-link v-if="fight.type === FightType.TEAM" :to="'/team/' + fight.team2.id">
+						<router-link v-if="fight.team2 && fight.type === FightType.TEAM" :to="'/team/' + fight.team2.id">
 							<rich-tooltip-team :id="fight.team2.id" v-slot="{ on: rich }">
 								<div class="farmer" v-on="rich">
 									<emblem :team="fight.team2" /><br>
