@@ -67,13 +67,14 @@ class Socket {
 		this.socket = new WebSocket(url)
 
 		this.socket.onopen = () => {
+			// console.log("[ws] onopen")
 			if (LeekWars.DEV) {
 				// In dev mode, auth via a AUTH message
 				this.send([SocketMessage.AUTH, store.state.token])
 			}
 			store.commit('wsconnected')
 			this.retry_count = 10
-			this.retry_delay = 5000
+			this.retry_delay = 0
 			for (const p of this.queue) {
 				this.send(p)
 			}
@@ -82,10 +83,12 @@ class Socket {
 			LeekWars.battleRoyale.init()
 		}
 		this.socket.onclose = () => {
+			// console.log("[ws] onclose")
 			store.commit('wsclose')
 			this.retry()
 		}
 		this.socket.onmessage = (msg: any) => {
+			// console.log("[ws] onmessage", msg)
 			const json = JSON.parse(msg.data)
 			const id = json[0]
 			const data = json[1]
@@ -215,8 +218,9 @@ class Socket {
 	public retry() {
 		if (this.retry_count > 0) {
 			this.retry_count--
+			// console.log("[ws] retry in", this.retry_delay)
 			setTimeout(() => this.connect(), this.retry_delay)
-			this.retry_delay += 500
+			this.retry_delay += 1000
 		}
 	}
 
