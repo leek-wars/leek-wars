@@ -1,3 +1,39 @@
+225:
+  title: 160 new trophies, Trophy points and rewards, BR power system.
+  added:
+    - "160 new trophies added. #img_225_trophies"
+    - "New colours for trophies depending on difficulty: green, blue, purple, yellow and red. #img_225_trophy_color"
+    - "#ai Power gain anti-equality mechanism in BR (see rules in forum topic). #img_225_br_power"
+    - "Added rewards in Habs for trophies. #img_225_rewards"
+    - "Each trophy now has a points score and each farmer has a trophy points score. #img_225_trophy_point"
+    - "New combat flags in the report: Rush, Patient, Wizard, Hunter, Pacifist, Swordsman, Evasive, Swiss Knife, Untouchable."
+    - "Added a section at the top of the trophies page with a summary of trophies earned. #img_225_trophies_page"
+    - "Added a statistics section to the trophies page to view his raw stats. #img_225_trophy_stats"
+    - "Created a page for each trophy with lots of specific information. #img_225_trophy_page"
+    - "Displaying the trophies unlocked in the battle actions. #img_225_fight_trophy"
+    - "#ai Function getPower() to get the power of an entity. #img_225_get_power"
+    - "#ai Added irreducible effects (resistant to Liberation) with the MODIFIER_IRREDUCTIBLE modifier."
+  improved:
+    - "Trophies page: display progress even if the trophy is already unlocked. #img_225_trophy_progress"
+    - No clone in LeekScript 1.1 for some functions like insert, unshift, fill etc.
+    - "Larger fight on mobile in landscape mode (top bar hidden). #img_225_fight_mobile"
+    - Entities in combat can be reduced if their max life decreases with nova damage.
+    - Slightly lowered the characteristics of test bots.
+    - Improved talent, xp and habs updates.
+    - Trophy notifications are displayed at the exact moment they are unlocked in battle.
+    - Increased the high limit of the bots' characteristics.
+    - Added an animation when earning or leaving Habs or crystals.
+    - Higher quality main site logo.
+    - Added a warning when the debug() limit is exceeded.
+    - "Possibility to display the details of an entity in combat by clicking on it in the mobile version. #img_225_fight_mobile"
+    - Faster reconnection in mobile version after a phone lock.
+  fixed:
+    - Fixed an expression bug in LeekScript (thanks to Gelbaz).
+    - Log display settings in combat are correctly saved.
+    - Capital points are updated directly when a leek gains a level.
+    - Fixed TYPE_OBJECT and TYPE_CLASS constants for getType() return (thanks to Grim).
+    - Fixed a bug in the initialization of fields and static fields of classes.
+
 224:
   title: "LeekScript acceleration, Enclyclopedia search, Documentation-encyclopedia link."
   added:
