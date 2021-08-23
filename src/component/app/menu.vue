@@ -527,7 +527,7 @@
 		overflow-y: auto;
 		background: none;
 		height: 100%;
-		max-height: calc(100vh - 140px);
+		max-height: calc(100vh - 150px);
 	}
 	.menu .section.console {
 		display: none;
