@@ -50,6 +50,7 @@ enum EffectType {
 	REMOVE_SHACKLE = 49,
 	MOVED_TO_MP = 50,
 	PUSH = 51,
+	RAW_BUFF_POWER = 52,
 }
 
 enum EffectModifier {
@@ -57,6 +58,7 @@ enum EffectModifier {
 	MULTIPLIED_BY_TARGETS = 2,
 	ON_CASTER = 4,
 	NOT_REPLACEABLE = 8,
+	IRREDUCTIBLE = 16,
 }
 
 enum EffectTypeMarket {
@@ -90,6 +92,7 @@ class EntityEffect {
 	public turns!: number
 	public item!: number
 	public texture!: HTMLImageElement
+	public modifiers!: number
 }
 
 export { Effect, EffectModifier, EffectType, EffectTypeMarket, EntityEffect }

@@ -905,6 +905,7 @@ class Game {
 		switch (action.type) {
 		case ActionType.NEW_TURN: {
 			this.turn = action.params[1]
+			this.log(action)
 			this.actionDone()
 			break
 		}
@@ -1284,6 +1285,7 @@ class Game {
 		const type = action.params[5]
 		const value = action.params[6]
 		const turns = action.params[7]
+		const modifiers = action.params[8]
 		const caster = this.leeks[caster_id]
 		const leek = this.leeks[target]
 
@@ -1300,7 +1302,9 @@ class Game {
 
 			// Ajout de l'image sur le hud
 			let image: string = ''
-			if (item in LeekWars.chips) {
+			if (item === 0) {
+				image = LeekWars.STATIC + "image/fight/power.png"
+			} else if (item in LeekWars.chips) {
 				image = LeekWars.STATIC + "image/chip/" + LeekWars.chips[item].name + ".png"
 			} else /* weapon */ {
 				if (item in LeekWars.items) {
@@ -1319,7 +1323,7 @@ class Game {
 			texture.src = image
 
 			// Ajout de l'effet
-			this.effects[id] = { id, item, caster: caster_id, target, type, value, turns, texture }
+			this.effects[id] = { id, item, caster: caster_id, target, type, value, turns, texture, modifiers }
 			leek.effects[id] = this.effects[id]
 			caster.launched_effects[id] = this.effects[id]
 		}
@@ -1393,6 +1397,9 @@ class Game {
 			leek.buffDamageReturn(value, this.jumping)
 			break
 		case EffectType.POISON:
+			break
+		case EffectType.RAW_BUFF_POWER:
+			leek.buffPower(value, this.jumping)
 			break
 		}
 	}
@@ -1472,6 +1479,9 @@ class Game {
 		case EffectType.RAW_BUFF_TP:
 			leek.tp -= value
 			break
+		case EffectType.RAW_BUFF_POWER:
+			leek.power -= value
+			break
 		}
 		// Gestion des états du poireau
 		if (effect.item === 46) {
@@ -1549,6 +1559,9 @@ class Game {
 		case EffectType.BUFF_TP:
 		case EffectType.RAW_BUFF_TP:
 			leek.tp += delta
+			break
+		case EffectType.RAW_BUFF_POWER:
+			leek.power += delta
 			break
 		}
 		effect.value = new_value // Updating the effect's value to properly remove it with `removeEffect`

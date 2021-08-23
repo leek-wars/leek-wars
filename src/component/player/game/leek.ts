@@ -15,8 +15,6 @@ class Leek extends FightEntity {
 	public static SCALE: number = 0.55
 	private static WEAPON_SCALE: number = 0.55
 
-	public bodyTexFront!: Texture
-	public bodyTexBack!: Texture
 	public handTex!: Texture
 	public hatFront!: Texture
 	public hatBack!: Texture
