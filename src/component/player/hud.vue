@@ -105,7 +105,7 @@
 		}
 
 		logClass(log: any[]) {
-			if (log[1] === 2 || log[1] === 7) { return "warning" }
+			if (log[1] === 2 || log[1] === 7 || log[1] === 11) { return "warning" }
 			else if (log[1] === 3 || log[1] === 8) { return "error" }
 			else if (log[1] === 5) { return "pause" }
 		}
@@ -114,6 +114,7 @@
 		}
 		logText(log: any[]) {
 			if (log[1] === 5) {	return "pause()" }
+			if (log[1] === 11) { return this.$t('leekscript.too_much_debug') }
 			if (log[1] >= 6 && log[1] <= 8) { return i18n.t('leekscript.error_' + log[3], log[4]) + "\n" + log[2] }
 			return log[2]
 		}
