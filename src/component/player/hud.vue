@@ -37,7 +37,7 @@
 		</div>
 		<div v-if="!LeekWars.mobile && game.showActions && actionsWidth > 0" ref="actions" class="actions" :class="{large: game.largeActions}" :style="{'width': game.largeActions ? actionsWidth + 'px' : null, 'max-width': game.largeActions ? Math.max(600, actionsWidth) + 'px' : null}">
 			<template v-for="line of game.consoleLines">
-				<action-element v-if="line.action" :key="line.id" :action="line.action" :leeks="game.leeks" :display-logs="true" :dark="dark" turn="1" class="action" />
+				<action-element v-if="line.action" :key="line.id" :action="line.action" :leeks="game.leeks" :display-logs="true" :dark="dark" :turn="game.turn" class="action" />
 				<div v-else-if="line.trophy" :key="line.id" class="notif-trophy">
 					<img :src="'/image/trophy/' + line.trophy.name + '.svg'">
 					<i18n path="trophy.x_unlocks_t">
@@ -49,10 +49,10 @@
 			</template>
 		</div>
 		<div v-if="game.showActions && game.largeActions" class="resizer" :style="{left: actionsWidth + 'px'}" @mousedown="resizerMousedown"></div>
-		<template v-if="!LeekWars.mobile">
+		<template>
 			<entity-details v-if="game.mouseEntity" :entity="game.mouseEntity" :game="game" :dark="game.autoDark ? (game.map && game.map.options.dark) : game.dark" />
 			<entity-details v-else-if="game.selectedEntity" :entity="game.selectedEntity" :game="game" :dark="game.autoDark ? (game.map && game.map.options.dark) : game.dark" />
-			<entity-details v-else-if="game.currentPlayer in game.leeks" :entity="game.leeks[game.currentPlayer]" :game="game" :dark="game.autoDark ? (game.map && game.map.options.dark) : game.dark" />
+			<entity-details v-else-if="!LeekWars.mobile && game.currentPlayer in game.leeks" :entity="game.leeks[game.currentPlayer]" :game="game" :dark="game.autoDark ? (game.map && game.map.options.dark) : game.dark" />
 		</template>
 	</div>
 </template>
@@ -218,6 +218,10 @@
 		top: 0; left: 0; right: 0;
 		text-align: center;
 	}
+	#app.app .life-bar {
+		transform: scale(0.7);
+		transform-origin: top;
+	}
 	.life-bar .wrapper {
 		display: inline-block;
 		background: #fffa;
@@ -355,5 +359,9 @@
 		img {
 			width: 36px;
 		}
+	}
+	#app.app .details-wrapper {
+		transform: scale(0.5);
+		transform-origin: bottom right;
 	}
 </style>
