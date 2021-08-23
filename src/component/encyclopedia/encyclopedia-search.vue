@@ -32,7 +32,7 @@
 						<router-link v-for="(result, r) in results" :key="r" :to="'/encyclopedia/' + result.title">
 							<div v-ripple class="result card">
 								<div class="title" v-html="result.title_headline"></div>
-								<markdown :content="result.content" :pages="{}" />
+								<markdown :content="result.content" :pages="{}" mode="encyclopedia" />
 							</div>
 						</router-link>
 					</div>

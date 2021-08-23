@@ -16,12 +16,12 @@
 				<v-icon class="book">mdi-book-open-page-variant</v-icon>
 			</router-link>
 			<!-- <div v-dochash v-code class="content" v-html="new_fun.description"></div> -->
-			<markdown :content="new_fun.description" :pages="{}" />
+			<markdown :content="new_fun.description" :pages="{}" mode="encyclopedia" />
 
 			<div v-for="(section, s) in new_fun.primary" :key="s">
 				<h4>{{ s }}</h4>
-				<markdown v-if="s === 'Paramètres'" :content="new_arguments" :pages="{}" />
-				<markdown v-else :content="section" :pages="{}" />
+				<markdown v-if="s === 'Paramètres'" :content="new_arguments" :pages="{}" mode="encyclopedia" />
+				<markdown v-else :content="section" :pages="{}" mode="encyclopedia" />
 			</div>
 			<div class="operations">
 				<b v-if="fun.operations == -1" v-html="$t('doc.variable_operations')"></b>
@@ -31,7 +31,7 @@
 			<div v-if="expanded" class="secondary">
 				<div v-for="(section, s) in new_fun.secondary" :key="s">
 					<h4>{{ s }}</h4>
-					<markdown :content="section" :pages="{}" />
+					<markdown :content="section" :pages="{}" mode="encyclopedia" />
 				</div>
 			</div>
 		</div>
@@ -65,7 +65,7 @@
 	import { locale } from '@/locale'
 	import { Function } from '@/model/function'
 	import { LeekWars } from '@/model/leekwars'
-	import { Component, Prop, Vue } from 'vue-property-decorator'
+	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 
 	@Component({ name: 'documentation-function', components: { Markdown } })
 	export default class DocumentationFunction extends Vue {
@@ -73,8 +73,11 @@
 		expanded: boolean = false
 		new_fun: any = null
 
-		created() {
-			LeekWars.documentation(locale).then((functions) => this.new_fun = functions[this.fun.name])
+		@Watch('fun', {immediate: true})
+		updateFun() {
+			LeekWars.documentation(locale).then((functions) => {
+				this.new_fun = functions[this.fun.name]
+			})
 		}
 
 		get new_arguments() {
