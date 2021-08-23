@@ -1,9 +1,14 @@
 <template>
 	<div>
-		<div v-if="type === ActionType.START_FIGHT || type === ActionType.NEW_TURN" :id="'turn-' + turn" class="turn">
-			<span class="label" @click="goToTurn(turn)">{{ $t('fight.turn_n', [turn]) }}</span>
-			<v-icon v-if="report" :class="{disabled: turn === 1}" @click="goToTurn(turn - 1)">mdi-chevron-left</v-icon>
-			<v-icon v-if="report" :class="{disabled: turn === report.duration}" @click="goToTurn(turn + 1)">mdi-chevron-right</v-icon>
+		<div v-if="type === ActionType.START_FIGHT" id="turn-1" class="turn">
+			<span class="label" @click="goToTurn(1)">{{ $t('fight.turn_n', [1]) }}</span>
+			<v-icon v-if="report" class="disabled">mdi-chevron-left</v-icon>
+			<v-icon v-if="report" :class="{disabled: 1 === report.duration}" @click="goToTurn(2)">mdi-chevron-right</v-icon>
+		</div>
+		<div v-else-if="type === ActionType.NEW_TURN" :id="'turn-' + action.params[1]" class="turn">
+			<span class="label" @click="goToTurn(action.params[1])">{{ $t('fight.turn_n', [action.params[1]]) }}</span>
+			<v-icon v-if="report" :class="{disabled: action.params[1] === 1}" @click="goToTurn(action.params[1] - 1)">mdi-chevron-left</v-icon>
+			<v-icon v-if="report" :class="{disabled: action.params[1] === report.duration}" @click="goToTurn(action.params[1] + 1)">mdi-chevron-right</v-icon>
 		</div>
 		<div v-else-if="type === ActionType.USE_WEAPON">
 			<i18n path="fight.leek_shoot">
@@ -159,6 +164,11 @@
 				<b slot="value">{{ $t('fight.n_damage_return', [value + '%']) }}</b>
 				<b slot="turns">{{ formatTurns(turns) }}</b>
 			</i18n>
+			<i18n v-else-if="effect === EffectType.RAW_BUFF_POWER" path="fight.leek_win_x_turns">
+				<leek slot="leek" :leek="target" :dark="dark" />
+				<b slot="value">{{ $t('fight.n_power', [value]) }}</b>
+				<b slot="turns">{{ formatTurns(turns) }}</b>
+			</i18n>
 		</template>
 		<i18n v-else-if="type === ActionType.REDUCE_EFFECTS" tag="div" path="fight.reduce_effects">
 			<leek slot="leek" :leek="leek" :dark="dark" />
@@ -213,7 +223,6 @@
 		@Prop() dark!: boolean
 		@Prop({required: true}) action!: Action
 		@Prop({required: true}) leeks!: {[key: number]: any}
-		@Prop({required: true}) turn!: number
 		@Prop({required: true}) displayLogs!: boolean
 		ActionType = ActionType
 		EffectType = EffectType
@@ -225,7 +234,7 @@
 		get value() { return this.action.params[6] }
 		get turns() { return this.action.params[7] }
 		logClass(log: any[]) {
-			if (log[1] === 2 || log[1] === 7) { return "warning" }
+			if (log[1] === 2 || log[1] === 7 || log[1] === 11) { return "warning" }
 			else if (log[1] === 3 || log[1] === 8) { return "error" }
 			else if (log[1] === 5) { return "pause" }
 		}
@@ -234,6 +243,7 @@
 		}
 		logText(log: any[]) {
 			if (log[1] === 5) {	return "pause()" }
+			if (log[1] === 11) { return this.$t('leekscript.too_much_debug') }
 			if (log[1] >= 6 && log[1] <= 8) { return i18n.t('leekscript.error_' + log[3], log[4]) + "\n" + log[2] }
 			return log[2]
 		}
