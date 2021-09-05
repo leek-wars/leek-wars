@@ -111,25 +111,25 @@
 
 		square() {
 			const data = { id: 51568168, type: 2, parameters: ["192","32139522","Mimi25","-1"], date: 1599731275 }
-			const notification = Notification.build(data, true)
+			const notification = Notification.build(data)
 			LeekWars.squares.addFromNotification(notification)
 		}
 
 		squareIcon() {
 			const data = { date: 1599731298, id: 51568182, parameters: ["Magestik25", "32139522"], read: true, type: 12 }
-			const notification = Notification.build(data, true)
+			const notification = Notification.build(data)
 			LeekWars.squares.addFromNotification(notification)
 		}
 
 		squareTrophy() {
 			const trophy = LeekWars.trophies[Math.random() * LeekWars.trophies.length | 0]
 			const data = { date: 1482046364, id: 32098724, parameters: [trophy.id], read: true, type: 11 }
-			const notification = Notification.build(data, true)
+			const notification = Notification.build(data)
 			LeekWars.squares.addFromNotification(notification)
 		}
 		squareTournament() {
 			const data = { date: 1584795604, id: 49519956, parameters: ["59339","Gorglucks"], read: true, type: 9 }
-			const notification = Notification.build(data, true)
+			const notification = Notification.build(data)
 			LeekWars.squares.addFromNotification(notification)
 		}
 
