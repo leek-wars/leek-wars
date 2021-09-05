@@ -209,7 +209,7 @@ function scroll_to_hash(hash: string, route: Route) {
 	const element = document.getElementById(id)
 	// console.log("scroll element", id, element, route.meta)
 	if (element) {
-		const offset = (LeekWars.mobile ? 56 : 0) + route.meta.scrollOffset || 0
+		const offset = (LeekWars.mobile ? 56 : 0) + route.meta!.scrollOffset || 0
 		setTimeout(() => {
 			window.scrollTo(0, element.getBoundingClientRect().top + window.scrollY - offset)
 		})
@@ -231,9 +231,9 @@ const router = new Router({
 		}
 		if (savedPosition && !from.hash) {
 			vueMain.$data.savedPosition = savedPosition.y
-		} else if (LeekWars.mobile && !to.meta.noscrollapp) {
+		} else if (LeekWars.mobile && !to.meta!.noscrollapp) {
 			return { x: 0, y: 0 }
-		} else if (!to.meta.noscrollapp && !to.meta.noscroll) {
+		} else if (!to.meta!.noscrollapp && !to.meta!.noscroll) {
 			return { x: 0, y: 0 }
 		}
 	},
