@@ -246,6 +246,8 @@
 			this.loaded = false
 			this.count = 0
 			this.total = 0
+			this.point = 0
+			this.totalPoint = 0
 			this.title = null
 			if (!this.id) { return }
 			LeekWars.trophyCategories.forEach((c) => {
