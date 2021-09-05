@@ -382,6 +382,9 @@
 		background: #5fad1b;
 		color: white;
 		display: inline-block;
+		.author {
+			color: white;
+		}
 	}
 	.no-messages {
 		height: calc(100% - 60px);
