@@ -1,6 +1,6 @@
 # Leek Wars
 
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/5e418e53905e486c95a57df49c047cee)](https://app.codacy.com/app/5pilow/leek-wars-client?utm_source=github.com&utm_medium=referral&utm_content=leek-wars/leek-wars-client&utm_campaign=Badge_Grade_Dashboard)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/5e418e53905e486c95a57df49c047cee)](https://app.codacy.com/app/leek-wars/leek-wars?utm_source=github.com&utm_medium=referral&utm_content=leek-wars/leek-wars&utm_campaign=Badge_Grade_Dashboard)
 [![CI](https://github.com/leek-wars/leek-wars/actions/workflows/build.yml/badge.svg)](https://github.com/leek-wars/leek-wars/actions/workflows/build.yml)
 
 The Leek Wars website frontend, in Vue.js + TypeScript. This is the frontend repository, altough it also contains all the information about the whole Leek Wars projet.
