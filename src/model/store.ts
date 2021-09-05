@@ -347,7 +347,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 					})
 				}
 			}
-			const notification = Notification.build(data, true)
+			const notification = Notification.build(data)
 			state.notifications.unshift(notification)
 			if (data.unread) {
 				LeekWars.squares.addFromNotification(notification)
