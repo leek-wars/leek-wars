@@ -98,7 +98,7 @@
 	"type_42": "Increases resistance by <b>{0}</b> to <b>{1}</b>",
 	"type_43_fixed": "At the end of the target's turn, the effect propagates to neighboring entities up to <b>{0}</b> distance cells.",
 	"type_44": "Increases wisdom by <b>{0}</b> to <b>{1}</b>",
-	"type_45": "Augmente la vie maximum de <b>{0}</b> à <b>{1}</b>",
+	"type_45": "Increases maximum life by <b>{0}</b> to <b>{1}</b>",
 	"type_46_fixed": "Attracts to the target cell",
 	"type_47": "Removes <b>{0}</b> to <b>{1}</b> agility",
 	"type_48": "Removes <b>{0}</b> to <b>{1}</b> wisdom",
