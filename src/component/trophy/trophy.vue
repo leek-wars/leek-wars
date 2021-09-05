@@ -54,7 +54,7 @@
 				</div>
 				<div>
 					<h4><v-icon>mdi-chart-line</v-icon> Statistiques</h4>
-					<div class="rarity">{{ Math.floor(trophy.rarity * 10000) / 100 }}% • {{ trophy.total | number }} possesseurs</div>
+					<div class="rarity">{{ (trophy.rarity * 100).toPrecision(2) }}% • {{ trophy.total | number }} possesseurs</div>
 				</div>
 			</div>
 		</panel>
