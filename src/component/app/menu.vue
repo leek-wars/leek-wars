@@ -144,7 +144,7 @@
 					</div>
 					<v-btn class="get-all notif-trophy" @click.stop="retrieveAll()"><span v-if="!LeekWars.mobile">Tout récupérer</span> <img src="/image/icon/black/arrow-down-right-bold.svg"></v-btn>
 				</div>
-				<div class="rewards">
+				<div v-autostopscroll class="rewards">
 					<div v-for="reward in $store.state.farmer.rewards" :key="reward.trophy" class="reward">
 						<router-link :to="'/trophy/' + LeekWars.trophies[reward.trophy - 1].code">
 							<img :src="'/image/trophy/' + LeekWars.trophies[reward.trophy - 1].code + '.svg'">
