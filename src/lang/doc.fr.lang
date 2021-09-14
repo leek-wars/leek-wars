@@ -114,7 +114,7 @@
 	"func_arrayFilter_arg_2": "Fonction appelée pour chaque élément.",
 	"func_arrayFilter_return": "Nouveau tableau.",
 	"func_arrayFlatten": "Retourne un nouveau tableau contenant tous les éléments du tableau source. Tous les éléments contenus dans un sous tableau sont extraits dans le nouveau tableau.\n<code>var tableau = [1, 2, [3, 4], 5, [6]];\ndebug(arrayFlatten(tableau)); // [1,2,3,4,5,6]</code>",
-	"func_arrayFlatten_2": "Retourne un nouveau tableau contenant tous les éléments du tableau source. Tous les éléments contenus dans un sous tableau sont extraits dans le nouveau tableau.L'argument depth détermine la profondeur maximale de sous tableau à extraire.\n<code>var tableau = [1, 2, [3, 4], 5, [6]];\ndebug(arrayFlatten(tableau)); // [1,2,3,4,5,6]</code>",
+	"func_arrayFlatten_2": "Retourne un nouveau tableau contenant tous les éléments du tableau source. Tous les éléments contenus dans un sous tableau sont extraits dans le nouveau tableau.L'argument depth détermine la profondeur maximale de sous tableau à extraire.\n<code>var tableau = [1, 2, [[3, 4], 5], [6]];\ndebug(arrayFlatten(tableau, 1)); // [1,2,[3,4],5,6]</code>",
 	"func_arrayFlatten_2_arg_1": "Tableau d'origine.",
 	"func_arrayFlatten_2_arg_2": "Profondeur maximale.",
 	"func_arrayFlatten_2_return": "Nouveau tableau.",
