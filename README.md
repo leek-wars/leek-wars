@@ -45,7 +45,6 @@ I gladly accept pull requests to Leek Wars. Before starting work on a feature, s
 - Twitter : https://twitter.com/LeekWars
 - Facebook : https://www.facebook.com/LeekWars/
 - GitHub (this repo) : https://github.com/leek-wars/leek-wars
-- Wiki : http://leekwarswiki.net
 
 ## License
 
