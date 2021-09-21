@@ -199,7 +199,7 @@ const LeekWars = {
 	titleCounter: 0,
 	titleTag: null,
 	notifsResults: localStorage.getItem('options/notifs-results') === 'true',
-	rankingActive: localStorage.getItem('options/ranking-active') === 'true',
+	rankingActive: localStorage.getItem('options/ranking-active') !== 'false',
 	service_worker: null as ServiceWorkerRegistration | null,
 	battleRoyale: new BattleRoyale(),
 	squares: new Squares(),
