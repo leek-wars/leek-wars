@@ -178,7 +178,7 @@ const LeekWars = {
 	DEV,
 	LOCAL,
 	API: LOCAL ? 'http://localhost:5000/api/' : 'https://leekwars.com/api/',
-	AVATAR: DEV ? 'https://leekwars.com/image/' : 'https://leekwars.com/image/',
+	AVATAR: DEV ? 'https://leekwars.com/' : 'https://leekwars.com/',
 	STATIC: '/',
 	POWER_FACTOR: 4.2,
 	post,
