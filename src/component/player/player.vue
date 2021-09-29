@@ -1,5 +1,5 @@
 <template lang="html">
-	<div :style="{width: width + 'px', height: height + BAR_HEIGHT + 'px'}">
+	<div ref="player" :style="{width: width + 'px', height: height + BAR_HEIGHT + 'px'}">
 		<div v-if="error" class="error">
 			<h2>{{ $t('error_generating_fight') }}</h2>
 			<br>
@@ -85,19 +85,19 @@
 				</transition>
 			</div>
 			<div class="controls">
-				<v-tooltip :open-delay="0" :close-delay="0" top content-class="top">
+				<v-tooltip :open-delay="0" :close-delay="0" top content-class="top" :attach="$refs.player">
 					<template v-slot:activator="{ on }">
 						<v-icon v-ripple class="control" @click="pause" v-on="on">{{ game.paused ? 'mdi-play' : 'mdi-pause' }}</v-icon>
 					</template>
 					{{ $t('pause') }} (P)
 				</v-tooltip>
-				<v-tooltip :open-delay="0" :close-delay="0" top content-class="top">
+				<v-tooltip :open-delay="0" :close-delay="0" top content-class="top" :attach="$refs.player">
 					<template v-slot:activator="{ on }">
 						<v-icon v-ripple class="control" :style="{opacity: game.speedButtonVisible ? 1 : 0}" v-on="on" @click="game.speedUp()">mdi-fast-forward</v-icon>
 					</template>
 					{{ $t('accelerate') }} (S)
 				</v-tooltip>
-				<v-tooltip :open-delay="0" :close-delay="0" top content-class="top">
+				<v-tooltip :open-delay="0" :close-delay="0" top content-class="top" :attach="$refs.player">
 					<template v-slot:activator="{ on }">
 						<v-icon v-ripple class="control" v-on="on" @click="game.sound = !game.sound">{{ game.sound ? 'mdi-volume-high' : 'mdi-volume-low' }}</v-icon>
 					</template>
@@ -106,7 +106,7 @@
 				<div class="turn">{{ $t('fight.turn_n', [game.turn]) }}</div>
 				<div class="filler"></div>
 
-				<v-tooltip v-if="$store.state.farmer && $store.state.farmer.admin" :open-delay="0" :close-delay="0" top content-class="top">
+				<v-tooltip v-if="$store.state.farmer && $store.state.farmer.admin" :open-delay="0" :close-delay="0" top content-class="top" :attach="$refs.player">
 					<template v-slot:activator="{ on: tooltip }">
 						<v-menu :close-on-content-click="false" top offset-y left>
 							<template v-slot:activator="{ on: menu }">
@@ -120,15 +120,15 @@
 					Carte
 				</v-tooltip>
 
-				<v-tooltip :open-delay="0" :close-delay="0" top content-class="top">
+				<v-tooltip :open-delay="0" :close-delay="0" top content-class="top" :attach="$refs.player">
 					<template v-slot:activator="{ on }">
 						<v-icon v-ripple class="control" v-on="on" @click="toggleFullscreen">mdi-aspect-ratio</v-icon>
 					</template>
 					{{ $t('fullscreen') }}
 				</v-tooltip>
-				<v-tooltip :open-delay="0" :close-delay="0" top content-class="top">
+				<v-tooltip :open-delay="0" :close-delay="0" top content-class="top" :attach="$refs.player">
 					<template v-slot:activator="{ on: tooltip }">
-						<v-menu :close-on-content-click="false" top offset-y left>
+						<v-menu :close-on-content-click="false" top offset-y left :attach="$refs.player">
 							<template v-slot:activator="{ on: menu }">
 								<v-icon v-ripple class="control" v-on="{...tooltip, ...menu}">mdi-settings-outline</v-icon>
 							</template>
@@ -187,7 +187,7 @@
 					</template>
 					{{ $t('settings') }}
 				</v-tooltip>
-				<v-tooltip :open-delay="0" :close-delay="0" top content-class="top">
+				<v-tooltip :open-delay="0" :close-delay="0" top content-class="top" :attach="$refs.player">
 					<template v-slot:activator="{ on }">
 						<v-icon v-ripple class="control" v-on="on" @click="quit">mdi-exit-to-app</v-icon>
 					</template>
