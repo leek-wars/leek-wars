@@ -1028,9 +1028,8 @@ function shadeColor(color: string, amount: number) {
 
 function goToRanking(type: string, order: string, id: number = 0) {
 	// console.log("goToRanking", type, order, id)
-	const activeRanking = localStorage.getItem('options/ranking-active') === 'true'
 	let url = ''
-	const active = activeRanking ? '-active' : ''
+	const active = LeekWars.rankingActive ? '-active' : ''
 	if (type === 'leek') {
 		url = 'ranking/get-leek-rank' + active + '/' + id + '/' + order
 	} else if (type === 'farmer') {
@@ -1040,7 +1039,7 @@ function goToRanking(type: string, order: string, id: number = 0) {
 	}
 	LeekWars.get(url).then(data => {
 		const page = 1 + Math.floor((data.rank - 1) / 50)
-		const active_url = activeRanking && data.active ? '/active' : ''
+		const active_url = LeekWars.rankingActive && data.active ? '/active' : ''
 		const newRoute = '/ranking/' + type + '/' + order + active_url + '/page-' + page + '#rank-' + data.rank
 		if (router.currentRoute.fullPath !== newRoute) {
 			router.push(newRoute)
