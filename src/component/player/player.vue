@@ -466,8 +466,9 @@
 		}
 		getLogs() {
 			if (this.$store.state.farmer) {
-				LeekWars.post('fight/get-logs', {fight_id: this.fightId}).then(data => {
-					this.game.setLogs(data.logs)
+				this.game.numData++
+				LeekWars.post('fight/get-logs', {fight_id: this.fightId}).then(logs => {
+					this.game.setLogs(logs)
 				})
 			}
 		}

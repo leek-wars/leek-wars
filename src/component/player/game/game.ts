@@ -659,6 +659,7 @@ class Game {
 				}
 			}
 		}
+		this.loadedData++
 	}
 
 	/*
