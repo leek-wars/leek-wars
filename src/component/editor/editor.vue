@@ -41,7 +41,7 @@
 							<div v-if="currentAI" class="menu-title">
 								<v-icon>mdi-file-outline</v-icon> {{ currentAI.name }}
 							</div>
-							<v-list-item v-if="currentAI" v-ripple @click="save(currentEditor)">
+							<v-list-item v-if="currentAI" v-ripple @click="save()">
 								<v-icon class="list-icon">mdi-content-save</v-icon>
 								<v-list-item-content>
 									<v-list-item-title>{{ $t('save') }}</v-list-item-title>
@@ -58,7 +58,7 @@
 					<div ref="settingsButton" class="tab action" icon="settings" @click="settingsDialog = true">
 						<v-icon>mdi-cogs</v-icon>
 					</div>
-					<div :title="$t('test_desc')" class="action content tab" icon="play_arrow" @click="test(currentEditor)">
+					<div :title="$t('test_desc')" class="action content tab" icon="play_arrow" @click="startTest()">
 						<v-icon class="list-icon">mdi-play</v-icon><span>{{ $t('test') }}</span>
 					</div>
 				</div>
@@ -73,7 +73,7 @@
 				<panel class="editor-left first">
 					<div slot="content" class="full">
 						<div v-if="fileSystem.rootFolder" v-autostopscroll class="ai-list">
-							<explorer ref="explorer" :current-ai="currentAI" :selected-folder="currentFolder" @test="test" @delete-ai="deleteAI" />
+							<explorer ref="explorer" :current-ai="currentAI" :selected-folder="currentFolder" @test="startTest" @delete-ai="deleteAI" />
 						</div>
 
 						<div v-if="currentEditor && currentEditor.loaded && panelWidth" class="ai-stats">
@@ -320,9 +320,9 @@
 			{icon: 'mdi-cogs', click: () => this.settings() }
 		]
 		actions_content = [
-			{icon: 'mdi-content-save', click: () => this.save(this.currentEditor)},
+			{icon: 'mdi-content-save', click: () => this.save()},
 			{icon: 'mdi-delete', click: () => this.startDelete()},
-			{icon: 'mdi-play', click: () => this.test(this.currentEditor)},
+			{icon: 'mdi-play', click: () => this.startTest()},
 		]
 		get currentID() {
 			if (this.currentType === 'ai' && this.currentAI) { return this.currentAI.id }
@@ -373,7 +373,7 @@
 			LeekWars.footer = false
 			LeekWars.box = true
 			this.$root.$on('ctrlS', () => {
-				this.save(this.currentEditor)
+				this.save()
 			})
 			this.$root.$on('ctrlShiftS', () => {
 				// TODO save all but analyze only entrypoints
@@ -559,7 +559,7 @@
 			}
 		}
 
-		save(aiEditor: AIView | null) {
+		save(aiEditor: AIView | null = this.currentEditor) {
 			if (!aiEditor) { return }
 			if (aiEditor.saving || !aiEditor.loaded) { return }
 			aiEditor.saving = true
@@ -609,7 +609,7 @@
 				if (aiEditor.needTest) {
 					aiEditor.needTest = false
 					if (aiEditor.ai.valid) {
-						this.test(aiEditor)
+						this.startTest()
 					}
 				}
 			}).error(() => {
@@ -666,11 +666,11 @@
 		startDelete() {
 			(this.$refs.explorer as any).deleteDialog = true
 		}
-		test(aiEditor: AIView | null) {
-			if (!aiEditor || !aiEditor.ai) { return }
-			if (aiEditor.ai.modified) {
-				aiEditor.needTest = true
-				this.save(aiEditor)
+		startTest(editor = this.currentEditor) {
+			if (!editor || !editor.ai) { return }
+			if (editor.ai.modified) {
+				editor.needTest = true
+				this.save(editor)
 				return
 			}
 			this.testDialog = true
