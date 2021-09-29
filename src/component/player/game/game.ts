@@ -914,11 +914,6 @@ class Game {
 			this.currentPlayer = action.params[1]
 			const entity = this.leeks[action.params[1]]
 
-			if (typeof(action.params[2]) !== 'undefined' && typeof(action.params[3]) !== 'undefined') {
-				entity.tp = action.params[2]
-				entity.mp = action.params[3]
-			}
-
 			for (const effect_id in entity.launched_effects) {
 				const effect = entity.launched_effects[effect_id]
 				if (effect.turns === 1) {
@@ -957,8 +952,6 @@ class Game {
 			// Reinitialisation of characteristics
 			this.leeks[action.params[1]].tp = action.params[2]
 			this.leeks[action.params[1]].mp = action.params[3]
-			if (action.params.length > 4) { this.leeks[action.params[1]].strength = action.params[4] }
-			if (action.params.length > 5) { this.leeks[action.params[1]].magic = action.params[5] }
 			this.actionDone(0)
 			break
 		}
