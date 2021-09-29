@@ -355,7 +355,7 @@
 			if (localStorage.getItem('fight/logs') === null) { localStorage.setItem('fight/logs', 'true') }
 			if (localStorage.getItem('fight/turrets') === null) { localStorage.setItem('fight/turrets', 'true') }
 			if (localStorage.getItem('fight/allies-logs') === null) { localStorage.setItem('fight/allies-logs', 'true') }
-			this.actionsDisplayLogs = localStorage.getItem('report/logs') === 'true'
+			this.actionsDisplayLogs = localStorage.getItem('report/logs') !== 'false'
 			this.actionsDisplayAlliesLogs = localStorage.getItem('report/allies-logs') === 'true'
 			this.smooth = localStorage.getItem('report/graph-type') === 'smooth'
 			this.log = localStorage.getItem('report/log') === 'true'
