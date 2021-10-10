@@ -22,5 +22,6 @@
 	"unsubscribe": "Unsubscribe to topic",
 	"unlock": "Unlock",
 	"unpin": "Unpin",
-	"unsolved": "Unresolved"
+	"unsolved": "Unresolved",
+	"not_last_page": "You are not on the last page of the topic"
 }
