@@ -22,5 +22,6 @@
 	"unsubscribe": "Se désabonner du sujet",
 	"unlock": "Déverrouiller",
 	"unpin": "Décrocher",
-	"unsolved": "Non résolu"
+	"unsolved": "Non résolu",
+	"not_last_page": "Vous n'êtes pas sur la dernière page du sujet"
 }

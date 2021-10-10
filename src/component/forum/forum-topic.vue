@@ -147,6 +147,9 @@
 					<h4>{{ $t('answer') }}</h4>
 					<textarea v-model="newMessage" class="response card" @keyup="updateDraft"></textarea>
 					<center>
+						<span v-if="page != pages" class="warning"><v-icon>mdi-alert</v-icon> {{ $t('not_last_page') }} </span>
+					</center>
+					<center>
 						<v-btn color="primary" @click="send">{{ $t('send') }}</v-btn>
 					</center>
 					<formatting-rules />
@@ -772,5 +775,8 @@
 		right: 10px;
 		top: 10px;
 		user-select: none;
+	}
+	.warning {
+		color: #ff5f00;
 	}
 </style>
