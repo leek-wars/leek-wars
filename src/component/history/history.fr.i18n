@@ -11,13 +11,13 @@
 	"defeats": "défaites",
 	"ratio": "ratio",
 	"not_found_id": "Poireau d'id {0} introuvable",
-	"fight_type": "Type de combat :",
-	"fight_context": "Contexte de combat :",
+	"fight_type": "Types de combat",
+	"fight_context": "Contextes de combat",
 	"solo": "Solo",
 	"farmer": "Éleveur",
 	"team": "Équipe",
 	"battle_royale": "Battle Royale",
 	"challenge": "Défi",
 	"garden": "Potager",
-	"tournament": "Tournois"
+	"tournament": "Tournoi"
 }
