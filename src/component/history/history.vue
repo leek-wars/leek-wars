@@ -15,27 +15,6 @@
 					<div v-ripple :class="{selected: period === '1week'}" class="period card" @click="select_period('1week')">{{ $t('1week') }}</div>
 				</div>
 			</div>
-			
-			<div class="history-options">
-				<!--<v-switch v-model="displayChallenges" :label="$t('display_challenges')" :hide-details="true" @change="created()" />-->
-				<div v-if="type !== 'team'" class="fight-type">
-					<span class="category">
-						{{ $t('fight_type') }}
-					</span>
-					<v-checkbox v-model="displayTypes.solo" hide-details class="option-checkbox" :label="$t('solo')" />
-					<v-checkbox v-model="displayTypes.farmer" hide-details class="option-checkbox" :label="$t('farmer')" />
-					<v-checkbox v-model="displayTypes.team" hide-details class="option-checkbox" :label="$t('team')" />
-					<v-checkbox v-model="displayTypes.battleRoyale" hide-details class="option-checkbox" :label="$t('battle_royale')" />
-				</div>
-				<div class="fight-context">
-					<span class="category">
-						{{ $t('fight_context') }}
-					</span>
-					<v-checkbox v-if="type !== 'team'" v-model="displayContexts.challenge" hide-details class="option-checkbox" :label="$t('challenge')" />
-					<v-checkbox v-model="displayContexts.garden" hide-details class="option-checkbox" :label="$t('garden')" />
-					<v-checkbox v-model="displayContexts.tournament" hide-details class="option-checkbox" :label="$t('tournament')" />
-				</div>
-			</div>
 
 			<loader v-if="!entity" />
 			<div v-else>
@@ -77,6 +56,26 @@
 				<br>
 				<div class="n-fights">{{ $t('n_fights', [filteredFights.length]) }}</div>
 
+				<div class="history-options">
+					<div class="fight-context">
+						<span class="category">
+							{{ $t('fight_context') }}
+						</span>
+						<v-checkbox v-if="type !== 'team'" v-model="displayContexts.challenge" hide-details class="option-checkbox" :label="$t('challenge')" />
+						<v-checkbox v-model="displayContexts.garden" hide-details class="option-checkbox" :label="$t('garden')" />
+						<v-checkbox v-model="displayContexts.tournament" hide-details class="option-checkbox" :label="$t('tournament')" />
+					</div>
+					<div v-if="type !== 'team'" class="fight-type">
+						<span class="category">
+							{{ $t('fight_type') }}
+						</span>
+						<v-checkbox v-model="displayTypes.solo" hide-details class="option-checkbox" :label="$t('solo')" />
+						<v-checkbox v-model="displayTypes.farmer" hide-details class="option-checkbox" :label="$t('farmer')" />
+						<v-checkbox v-model="displayTypes.team" hide-details class="option-checkbox" :label="$t('team')" />
+						<v-checkbox v-model="displayTypes.battleRoyale" hide-details class="option-checkbox" :label="$t('battle_royale')" />
+					</div>
+				</div>
+
 				<fights-history :fights="filteredFights" />
 			</div>
 		</panel>
@@ -88,10 +87,11 @@
 	import { Fight, FightContext, FightType } from '@/model/fight'
 	import { Leek } from '@/model/leek'
 	import { LeekWars } from '@/model/leekwars'
-	import { Component, Prop, Vue } from 'vue-property-decorator'
+	import { mixins } from '@/model/i18n'
+	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 	import Breadcrumb from '../forum/breadcrumb.vue'
 
-	@Component({ name: 'history', i18n: {}, components: { Breadcrumb } })
+	@Component({ name: 'history', i18n: {}, mixins: [...mixins], components: { Breadcrumb } })
 	export default class History extends Vue {
 		@Prop({required: true}) type!: string
 		fights!: Fight[]
@@ -109,14 +109,17 @@
 		}
 		get filteredFights() {
 			return this.fights.filter((fight) => {
-				return fight.date >= this.start_date &&
-					(this.displayContexts.challenge || fight.context !== FightContext.CHALLENGE) &&
-					(this.displayContexts.garden || fight.context !== FightContext.GARDEN) &&
-					(this.displayContexts.tournament || fight.context !== FightContext.TOURNAMENT) &&
-					(this.displayTypes.solo || fight.type !== FightType.SOLO) &&
-					(this.displayTypes.farmer || fight.type !== FightType.FARMER) &&
-					(this.displayTypes.team || fight.type !== FightType.TEAM) &&
-					(this.displayTypes.battleRoyale || fight.type !== FightType.BATTLE_ROYALE)
+				return fight.date >= this.start_date && (
+						(this.displayContexts.challenge && fight.context === FightContext.CHALLENGE) ||
+						(this.displayContexts.garden && fight.context === FightContext.GARDEN) ||
+						(this.displayContexts.tournament && fight.context === FightContext.TOURNAMENT) ||
+						(this.displayContexts.garden && this.displayTypes.battleRoyale && fight.context === FightContext.BATTLE_ROYALE) // TODO temporary, BR context is removed
+					) && (
+						(this.displayTypes.solo && fight.type === FightType.SOLO) ||
+						(this.displayTypes.farmer && fight.type === FightType.FARMER) ||
+						(this.displayTypes.team && fight.type === FightType.TEAM) ||
+						(this.displayTypes.battleRoyale && fight.type === FightType.BATTLE_ROYALE)
+					)
 			})
 		}
 		get victories() {
@@ -135,6 +138,8 @@
 		created() {
 			const id = this.$route.params.id
 			const period = localStorage.getItem('options/history-period') || '1week'
+			this.displayContexts = JSON.parse(localStorage.getItem('options/history-contexts') || '{"challenge": true, "garden": true, "tournament": true }')
+			this.displayTypes = JSON.parse(localStorage.getItem('options/history-types') || '{"solo": true, "farmer": true, "team": true, "battleRoyale": true }')
 			this.select_period(period)
 			LeekWars.get('history/get-' + this.type + '-history/' + id).then(data => {
 				this.fights = data.fights
@@ -157,6 +162,16 @@
 				return now - 7 * day
 			})()
 			localStorage.setItem('options/history-period', period)
+		}
+
+		@Watch('displayContexts', { deep: true })
+		updateContexts() {
+			localStorage.setItem('options/history-contexts', JSON.stringify(this.displayContexts))
+		}
+
+		@Watch('displayTypes', { deep: true })
+		updateTypes() {
+			localStorage.setItem('options/history-types', JSON.stringify(this.displayTypes))
 		}
 	}
 </script>
@@ -236,6 +251,9 @@
 	.category {
 		vertical-align: top;
 		font-size: 16px
+	}
+	.history-options {
+		margin: 10px;
 	}
 	.option-checkbox {
 		display: inline-block;
