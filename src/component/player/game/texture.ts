@@ -140,6 +140,8 @@ class T {
 	public static fish = new Texture(LeekWars.STATIC + 'image/weapon/fish.png', true, SHADOW_QUALITY)
 	public static fish_cartridge = new Texture(LeekWars.STATIC + 'image/weapon/fish_cartridge.png')
 	public static bubble = new Texture(LeekWars.STATIC + 'image/weapon/bubble.png')
+	public static lightninger = new Texture(LeekWars.STATIC + 'image/weapon/lightninger.png', true, SHADOW_QUALITY)
+	public static bazooka = new Texture(LeekWars.STATIC + 'image/weapon/bazooka.png', true, SHADOW_QUALITY)
 
 	// Cartes
 	public static box = new Texture(LeekWars.STATIC + 'image/map/box.png', true, 1)

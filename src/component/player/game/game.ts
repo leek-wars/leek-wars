@@ -11,7 +11,7 @@ import { Obstacle } from '@/component/player/game/obstacle'
 import { Particles } from '@/component/player/game/particles'
 import { S, Sound } from '@/component/player/game/sound'
 import { T, Texture } from '@/component/player/game/texture'
-import { Axe, BLaser, Broadsword, Destroyer, DoubleGun, Electrisor, ExplorerRifle, Fish, FlameThrower, Gazor, GrenadeLauncher, IllicitGrenadeLauncher, JLaser, Katana, Laser, MachineGun, Magnum, MLaser, MysteriousElectrisor, Pistol, RevokedMLaser, Rhino, Rifle, Shotgun, UnbridledGazor } from '@/component/player/game/weapons'
+import { Axe, Bazooka, BLaser, Broadsword, Destroyer, DoubleGun, Electrisor, ExplorerRifle, Fish, FlameThrower, Gazor, GrenadeLauncher, IllicitGrenadeLauncher, JLaser, Katana, Laser, Lightninger, MachineGun, Magnum, MLaser, MysteriousElectrisor, Pistol, RevokedMLaser, Rhino, Rifle, Shotgun, UnbridledGazor } from '@/component/player/game/weapons'
 import { env } from '@/env'
 import { locale } from '@/locale'
 import { Action, ActionType } from '@/model/action'
@@ -106,6 +106,11 @@ const WEAPONS = [
 	Rifle, // 22
 	Rhino, // 23
 	ExplorerRifle, // 24
+	Lightninger, // 25
+	null,
+	null,
+	null,
+	Bazooka, // 29
 ]
 
 const CHIPS = [
