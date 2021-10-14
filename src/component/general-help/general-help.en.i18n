@@ -7,7 +7,7 @@
 	"chips_1": "Chips have different purposes: damage, healing, boost, shields, shackles, moving...",
 	"chips_2": "Each chip requires a minimum level to be used. The use of a chip costs a specific amount of Turn Points. Each type of chip has a specific failure percentage, a specific range and a specific cooldown preventing the chip from being used again during the next Turn(s).",
 	"chips_3": "If a chip effect is \"Reduces 15 damage for 3 turns\", the protection is active for the current turn (when the chip is activated) and the next 2 turns.",
-	"chips_4": "Some chips have an area of effect. See CHIP_LIGHTNING for example. Damage will decrease linearly from the center cell (100% damage) to the border cells (50% damage).",
+	"chips_4": "Some chips have an area of effect. See CHIP_LIGHTNING for example. Damage will decrease linearly: 100% damage from the center cell and -20% by cell.",
 	"credits": "This help page was written thanks to the help of <router-link to='/farmer/284'>PadiSson</router-link>, <router-link to='/farmer/273'>McNalYoo</router-link> and <router-link to='/farmer/14762'>Mmonsanto</router-link>",
 	"editor": "The Editor",
 	"editor_1": "You can change the name of your Artificial Intelligences. Click on the name (upper left), modify, then click on the \"Save\" button.",
