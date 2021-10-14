@@ -5,11 +5,11 @@
 			<div class="no-messages">{{ $t('main.no_messages_yet') }}</div>
 		</div>
 		<div v-if="chat && chat.messages.length" ref="messages" v-autostopscroll class="messages" @scroll="scroll">
-			<template v-for="(message, m) in $store.state.chat[channel].messages">
-				<div v-if="message.author.id === -1" :key="m" class="separator">
-					{{ message.time | date }}
+			<template v-for="(message, m) in $store.state.chat[id].messages">
+				<div v-if="message.farmer.id === -1" :key="m" class="separator">
+					{{ message.date | date }}
 				</div>
-				<div v-else-if="message.author.id === 0" :key="m" class="message">
+				<div v-else-if="message.farmer.id === 0" :key="m" class="message">
 					<img class="avatar" src="/image/favicon.png">
 					<router-link :to="'/fight/' + message.texts[0].split('|')[1]">
 						<div class="bubble br-notification">
@@ -19,21 +19,21 @@
 					</router-link>
 				</div>
 				<div v-else :key="m" class="message">
-					<router-link :to="'/farmer/' + message.author.id" class="avatar-wrapper">
-						<rich-tooltip-farmer :id="message.author.id" v-slot="{ on }">
-							<avatar :farmer="message.author" :on="on" />
+					<router-link :to="'/farmer/' + message.farmer.id" class="avatar-wrapper">
+						<rich-tooltip-farmer :id="message.farmer.id" v-slot="{ on }">
+							<avatar :farmer="message.farmer" :on="on" />
 						</rich-tooltip-farmer>
 					</router-link>
 					<div class="bubble">
-						<router-link :to="'/farmer/' + message.author.id" class="author">
-							<rich-tooltip-farmer :id="message.author.id" v-slot="{ on }">
-								<span :class="message.author.grade" v-on="on">{{ message.author.name }}</span>
+						<router-link :to="'/farmer/' + message.farmer.id" class="author">
+							<rich-tooltip-farmer :id="message.farmer.id" v-slot="{ on }">
+								<span :class="message.farmer.color" v-on="on">{{ message.farmer.name }}</span>
 							</rich-tooltip-farmer>
 						</router-link>
-						<div v-for="(text, i) in message.texts" :key="i" v-large-emojis v-chat-code-latex class="text" v-html="text"></div>
+						<div v-for="(text, i) in message.contents" :key="i" v-large-emojis v-chat-code-latex class="text" v-html="text"></div>
 						<div class="right">
-							<span :title="LeekWars.formatDateTime(message.time)" class="time">{{ LeekWars.formatTime(message.time) }}</span>
-							<v-menu v-if="!privateMessages && !($store.state.farmer && message.author.id === $store.state.farmer.id)" offset-y>
+							<span :title="LeekWars.formatDateTime(message.date)" class="time">{{ LeekWars.formatTime(message.date) }}</span>
+							<v-menu v-if="!privateMessages && !($store.state.farmer && message.farmer.id === $store.state.farmer.id)" offset-y>
 								<template v-slot:activator="{ on }">
 									<v-btn text small icon color="grey" v-on="on">
 										<v-icon>mdi-dots-vertical</v-icon>
@@ -44,11 +44,11 @@
 										<v-icon>mdi-flag</v-icon>
 										<span>Signaler</span>
 									</v-list-item>
-									<v-list-item v-if="$store.getters.moderator && !message.author.muted" v-ripple @click="mute(message.author)">
+									<v-list-item v-if="$store.getters.moderator && !message.farmer.muted" v-ripple @click="mute(message.farmer)">
 										<v-icon>mdi-volume-off</v-icon>
 										<span>Mute</span>
 									</v-list-item>
-									<v-list-item v-if="$store.getters.moderator && message.author.muted" v-ripple @click="unmute(message.author)">
+									<v-list-item v-if="$store.getters.moderator && message.farmer.muted" v-ripple @click="unmute(message.farmer)">
 										<v-icon>mdi-volume-high</v-icon>
 										<span>Unmute</span>
 									</v-list-item>
@@ -105,10 +105,13 @@
 	import ChatInput from './chat-input.vue'
 
 	@Component({
+		name: "Chat",
 		components: { 'chat-input': ChatInput }
 	})
 	export default class ChatElement extends Vue {
-		@Prop() channel!: string
+		@Prop() id!: number
+		@Prop() newFarmer!: any
+		@Prop() newConversation!: any
 		muteDialog: boolean = false
 		unmuteDialog: boolean = false
 		muteFarmer: Farmer | null = null
@@ -125,13 +128,13 @@
 			Warning.PROMO_CHAT
 		]
 		get loading() {
-			return !!this.channel && !store.state.chat[this.channel]
+			return !!this.id && !store.state.chat[this.id]
 		}
 		get chat() {
-			return this.channel ? store.state.chat[this.channel] : null
+			return this.id ? store.state.chat[this.id] : null
 		}
 		get privateMessages() {
-			return this.channel && this.channel.startsWith('pm-')
+			return this.id
 		}
 
 		created() {
@@ -147,7 +150,7 @@
 		}
 
 		newMessage(e: any) {
-			if (e[0] === this.channel) {
+			if (e[0] === this.id) {
 				this.updateScroll()
 				if (!this.scrollBottom()) { this.unread = true }
 
@@ -191,54 +194,46 @@
 			}
 		}
 
-		@Watch('channel', {immediate: true})
+		@Watch('id', {immediate: true})
 		update() {
-			if (!this.channel) { return }
-			if (this.channel === 'team') {
-				if (!this.$store.state.chat.team) {
-					this.$store.commit('init-team-chat')
-					LeekWars.socket.send([SocketMessage.TEAM_CHAT_ENABLE_FAST])
-				}
-			} else if (this.channel.startsWith('pm-')) {
-				const id = parseInt(this.channel.replace('pm-', ''), 10)
-				if (!this.$store.state.chat['pm-' + id] || this.$store.state.chat['pm-' + id].messages.length < 50) {
-					if (id === 0) { return }
-					LeekWars.get('message/get-messages/' + id + '/' + 50 + '/' + 1).then(data => {
-						this.$store.commit('clear-chat', 'pm-' + id)
-						for (const message of data.messages.reverse()) {
-							this.$store.commit('pm-receive', {message: [id, message.farmer_id, message.farmer_name, message.content, false, message.farmer_color, message.avatar_changed, message.date]})
-						}
-						for (const farmer of data.farmers) {
-							this.$store.commit('add-conversation-participant', {id, farmer})
-						}
-					})
-				}
-				this.read()
-			} else {
-				if (this.channel in this.$store.state.chat && this.$store.state.chat[this.channel].invalidated) {
-					this.$store.commit('clear-chat', this.channel)
-				}
-				LeekWars.socket.enableChannel(this.channel)
+			if (!this.id) { return }
+			LeekWars.socket.enableChannel(this.id)
+			if (!this.$store.state.chat[this.id] || this.$store.state.chat[this.id].messages.length < 50) {
+				LeekWars.get('message/get-messages/' + this.id + '/' + 50 + '/' + 1).then(data => {
+					this.$store.commit('clear-chat', this.id)
+					for (const message of data.messages.reverse()) {
+						this.$store.commit('pm-receive', {id: this.id, message: message})
+					}
+					for (const farmer of data.farmers) {
+						this.$store.commit('add-conversation-participant', {id: this.id, farmer})
+					}
+				})
 			}
+			this.read()
 		}
 
 		sendMessage(message: any) {
 			if (message.startsWith('/ping')) {
 				this.$store.commit('last-ping', Date.now())
 			}
-			if (this.channel === 'team') {
-				LeekWars.socket.send([SocketMessage.TEAM_CHAT_SEND, message])
-			} else if (!this.channel || this.privateMessages) {
-				this.$emit('send', message)
+			if (this.chat === null) {
+				LeekWars.post('message/create-conversation', {farmer_id: this.newFarmer.id, message}).then(data => {
+					if (this.newConversation) {
+						this.newConversation.id = data.conversation_id
+						this.$store.commit('new-conversation', this.newConversation)
+					}
+					this.$router.replace('/messages/conversation/' + data.conversation_id)
+					// this.newConversationSent = true
+				})
 			} else {
-				LeekWars.socket.send([SocketMessage.FORUM_CHAT_SEND, this.channel, message])
+				LeekWars.post('message/send-message', {conversation_id: this.chat.id, message})
 			}
 		}
 
 		report(message: ChatMessage) {
 			this.reportDialog = true
-			this.reportFarmer = message.author
-			this.reportContent = message.texts.reduce((a, b) => a + b + "\n", "")
+			this.reportFarmer = message.farmer
+			this.reportContent = message.contents.reduce((a, b) => a + b + "\n", "")
 		}
 
 		mute(farmer: Farmer) {
@@ -248,7 +243,7 @@
 
 		muteConfirm() {
 			if (!this.muteFarmer) { return }
-			LeekWars.socket.send([SocketMessage.CHAT_REQUEST_MUTE, this.channel, this.muteFarmer.id])
+			LeekWars.socket.send([SocketMessage.CHAT_REQUEST_MUTE, this.id, this.muteFarmer.id])
 			this.muteFarmer.muted = true
 			this.muteDialog = false
 		}
@@ -260,7 +255,7 @@
 
 		unmuteConfirm() {
 			if (!this.muteFarmer) { return }
-			LeekWars.socket.send([SocketMessage.CHAT_REQUEST_UNMUTE, this.channel, this.muteFarmer.id])
+			LeekWars.socket.send([SocketMessage.CHAT_REQUEST_UNMUTE, this.id, this.muteFarmer.id])
 			this.muteFarmer.muted = false
 			this.unmuteDialog = false
 		}

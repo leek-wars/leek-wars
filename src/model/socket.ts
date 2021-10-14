@@ -7,15 +7,15 @@ import { store } from './store'
 
 enum SocketMessage {
 	AUTH = 0,
-	TEAM_CHAT_SEND = 1,
-	TEAM_CHAT_RECEIVE = 2,
-	TEAM_CHAT_MEMBERS = 3,
-	TEAM_CHAT_ENABLE = 4,
+	// TEAM_CHAT_SEND = 1, // Deprecated
+	// TEAM_CHAT_RECEIVE = 2, // Deprecated
+	// TEAM_CHAT_MEMBERS = 3, // Deprecated
+	// TEAM_CHAT_ENABLE = 4, // Deprecated
 	MP_RECEIVE = 5,
 	NOTIFICATION_RECEIVE = 6,
-	FORUM_CHAT_ENABLE = 7,
-	FORUM_CHAT_SEND = 8,
-	FORUM_CHAT_RECEIVE = 9,
+	// CHAT_ENABLE = 7, // Deprecated
+	CHAT_SEND = 8,
+	CHAT_RECEIVE = 9,
 	MP_UNREAD_MESSAGES = 10,
 	MP_READ = 11,
 	FIGHT_LISTEN = 12,
@@ -36,7 +36,7 @@ enum SocketMessage {
 	BATTLE_ROYALE_LEAVE = 31,
 	BATTLE_ROYALE_CHAT_NOTIF = 32,
 	PONG = 33,
-	CHAT_ENABLE_FAST = 34,
+	CHAT_ENABLE = 34,
 	CHAT_RECEIVE_PACK = 35,
 	GARDEN_QUEUE_REGISTER = 37,
 	GARDEN_QUEUE = 38,
@@ -95,20 +95,12 @@ class Socket {
 			vueMain.$emit('wsmessage', {type: id, data})
 
 			switch (id) {
-				case SocketMessage.FORUM_CHAT_RECEIVE : {
-					store.commit('chat-receive', {message: data})
+				case SocketMessage.CHAT_RECEIVE : {
+					store.commit('chat-receive', data)
 					break
 				}
 				case SocketMessage.CHAT_RECEIVE_PACK : {
 					store.commit('chat-receive-pack', data)
-					break
-				}
-				case SocketMessage.TEAM_CHAT_RECEIVE : {
-					store.commit('chat-team-receive', {message: data})
-					break
-				}
-				case SocketMessage.TEAM_CHAT_RECEIVE_PACK : {
-					store.commit('team-chat-receive-pack', data)
 					break
 				}
 				case SocketMessage.PONG: {
@@ -236,8 +228,8 @@ class Socket {
 			this.queue.push(message)
 		}
 	}
-	public enableChannel(channel: string) {
-		this.send([SocketMessage.CHAT_ENABLE_FAST, channel])
+	public enableChannel(id: number) {
+		this.send([SocketMessage.CHAT_ENABLE, id])
 	}
 	public disconnect() {
 		if (this.socket) { this.socket.close() }

@@ -131,7 +131,7 @@
 					<v-icon>mdi-picture-in-picture-bottom-right</v-icon>
 				</div>
 			</div>
-			<chat slot="content" channel="team" />
+			<chat v-if="team" slot="content" :id="team.chat" />
 		</panel>
 
 		<panel v-if="team && member && team.candidacies && team.candidacies.length > 0">

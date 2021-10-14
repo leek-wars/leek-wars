@@ -2,14 +2,18 @@ import { Commands } from '@/model/commands'
 import { Farmer } from '@/model/farmer'
 import { i18n } from '@/model/i18n'
 import { LeekWars } from '@/model/leekwars'
+import Vue from 'vue'
 import { Conversation } from './conversation'
 
 enum ChatType { GLOBAL, TEAM, PM }
 
 class ChatMessage {
-	author!: Farmer
-	texts: string[] = []
-	time!: number
+	id!: number
+	chat!: number
+	farmer!: Farmer
+	content!: string
+	contents: string[] = []
+	date!: number
 	day!: number
 }
 
@@ -21,25 +25,27 @@ class ChatWindow {
 }
 
 class Chat {
-	name: string
+	id: number
 	type: ChatType
 	messages: ChatMessage[] = []
 	invalidated: boolean = false
 	conversation: Conversation | null = null
 
-	constructor(name: string, type: ChatType, conversation: Conversation | null = null) {
-		this.name = name
+	constructor(id: number, type: ChatType, conversation: Conversation | null = null) {
+		this.id = id
 		this.type = type
 		this.conversation = conversation
 	}
-	add(authorID: number, authorName: string, authorAvatarChanged: number, authorGrade: string, messageRaw: string, time: number) {
-		const message = this.formatMessage(messageRaw, authorName)
-		const day = new Date(time * 1000).getDate()
+
+	add(message: ChatMessage) {
+		console.log("chat add", message, this)
+		const content = this.formatMessage(message.content, message.farmer.name)
+		const day = new Date(message.date * 1000).getDate()
 		let separator = false
 		if (this.messages.length) {
 			const lastMessage = this.messages[this.messages.length - 1]
-			if (lastMessage.author.id === authorID && time - lastMessage.time < 120) {
-				lastMessage.texts.push(message)
+			if (lastMessage.farmer.id === message.farmer.id && message.date - lastMessage.date < 120) {
+				lastMessage.contents.push(content)
 				return
 			}
 			if (lastMessage.day !== day) {
@@ -51,18 +57,15 @@ class Chat {
 		// Separator
 		if (separator) {
 			this.messages.push({
-				author: { id: -1, name: '', avatar_changed: 0, grade: '' },
-				texts: [''],
-				time,
+				farmer: { id: -1, name: '', avatar_changed: 0, grade: '' },
+				contents: [''],
+				date: message.date,
 				day
 			} as ChatMessage)
 		}
-		this.messages.push({
-			author: { id: authorID, name: authorName, avatar_changed: authorAvatarChanged, grade: authorGrade },
-			texts: [message],
-			time,
-			day
-		} as ChatMessage)
+		Vue.set(message, 'contents', [content])
+		this.messages.push(message)
+		console.log("message pushed", message)
 	}
 
 	set_messages(messages: any[]) {
@@ -96,9 +99,12 @@ class Chat {
 
 	battleRoyale(fightID: number, time: number) {
 		this.messages.push({
-			author: { id: 0, name: "Leek Wars" } as Farmer,
-			texts: [i18n.t('main.br_started_message') as string, '' + fightID],
-			time,
+			id: 0,
+			chat: this.id,
+			farmer: { id: 0, name: "Leek Wars" } as Farmer,
+			content: '',
+			contents: [i18n.t('main.br_started_message') as string, '' + fightID],
+			date: time,
 			day: new Date(time * 1000).getDate()
 		})
 	}
