@@ -192,9 +192,9 @@
 					<v-checkbox v-model="hideHeader" :label="$t('hide_header')" hide-details />
 					<br>
 				</template>
-				{{ $t('font_size') }} : <input v-model="fontSize" type="number" min="6" max="30">
+				{{ $t('font_size') }} : <input v-model="fontSize" type="number" min="6" max="30" @keyup.stop>
 				<br>
-				{{ $t('line_height') }} : <input v-model="lineHeight" type="number" min="10" max="50">
+				{{ $t('line_height') }} : <input v-model="lineHeight" type="number" min="10" max="50" @keyup.stop>
 
 				<div class="title">Thème</div>
 

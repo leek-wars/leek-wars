@@ -82,7 +82,7 @@
 							<span class="title"><v-icon>mdi-seed</v-icon> {{ $t('main.seed') }}</span>
 							<span class="desc">{{ $t('main.seed_desc') }}</span>
 						</div>
-						<input v-model="currentScenario.seed" type="number" class="seed" min="1" max="2147483647" :placeholder="$t('main.seed_placeholder')" @input="updateSeed">
+						<input v-model="currentScenario.seed" type="number" class="seed" min="1" max="2147483647" :placeholder="$t('main.seed_placeholder')" @keyup.stop @input="updateSeed">
 					</div>
 				</div>
 			</v-tab-item>
@@ -188,7 +188,7 @@
 			<v-icon slot="icon">mdi-plus-circle-outline</v-icon>
 			<span slot="title">{{ $t('create_new_scenario') }}</span>
 			<div class="padding">
-				<input v-model="newScenarioName" :placeholder="$t('scenario_name')" type="text" class="input" @keyup.enter="createScenario">
+				<input v-model="newScenarioName" :placeholder="$t('scenario_name')" type="text" class="input" @keyup.stop @keyup.enter="createScenario">
 				<br><br>
 				<div class="title">{{ $t('templates') }}</div>
 				<div class="templates">
@@ -223,7 +223,7 @@
 			<v-icon slot="icon">mdi-plus-circle-outline</v-icon>
 			<span slot="title">{{ $t('create_new_leek') }}</span>
 			<div class="padding">
-				<input v-model="newLeekName" :placeholder="$t('leek_name')" type="text" class="input" @keyup.enter="createLeek">
+				<input v-model="newLeekName" :placeholder="$t('leek_name')" type="text" class="input" @keyup.stop @keyup.enter="createLeek">
 			</div>
 			<div slot="actions">
 				<div v-ripple @click="newLeekDialog = false">{{ $t('main.cancel') }}</div>
@@ -235,7 +235,7 @@
 			<v-icon slot="icon">mdi-plus-circle-outline</v-icon>
 			<span slot="title">{{ $t('create_new_map') }}</span>
 			<div class="padding">
-				<input v-model="newMapName" :placeholder="$t('map_name')" type="text" class="input" @keyup.enter="createMap">
+				<input v-model="newMapName" :placeholder="$t('map_name')" type="text" class="input" @keyup.stop @keyup.enter="createMap">
 			</div>
 			<div slot="actions">
 				<div @click="newMapDialog = false">{{ $t('main.cancel') }}</div>
