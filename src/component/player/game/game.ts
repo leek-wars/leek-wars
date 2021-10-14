@@ -227,7 +227,7 @@ class Game {
 	public height: number = 0
 	public particles = new Particles(this)
 	public ground = new Ground(this)
-	public drawableElements: Array<{[key: number]: any}> = []
+	public drawableElements: {[key: number]: any}[] = []
 	public drawableElementCurrentId: number = 0
 	// Players
 	public teams = new Array()
