@@ -665,9 +665,9 @@
 	}
 	.weapons .weapon {
 		padding: 10px;
-		height: 70px;
+		height: 66px;
 		img {
-			max-height: 60px;
+			max-height: 54px;
 			max-width: 150px;
 			position: absolute;
 			top: 0;

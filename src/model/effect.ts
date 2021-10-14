@@ -51,6 +51,9 @@ enum EffectType {
 	MOVED_TO_MP = 50,
 	PUSH = 51,
 	RAW_BUFF_POWER = 52,
+	REPEL = 53,
+	RAW_RELATIVE_SHIELD = 54,
+	ALLY_KILLED_TO_AGILITY = 55
 }
 
 enum EffectModifier {

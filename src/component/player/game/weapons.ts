@@ -706,4 +706,35 @@ class Fish extends Firegun {
 	}
 }
 
-export { WeaponAnimation, WhiteWeaponAnimation, Axe, BLaser, Broadsword, Destroyer, DoubleGun, Electrisor, ExplorerRifle, Fish, FlameThrower, Gazor, GrenadeLauncher, IllicitGrenadeLauncher, JLaser, Katana, Laser, MachineGun, Magnum, Rhino, MLaser, MysteriousElectrisor, Pistol, RevokedMLaser, Rifle, Shotgun, UnbridledGazor }
+class Lightninger extends Firegun {
+	static textures = [T.shots, T.bullet, T.lightninger, T.cart_shotgun]
+	static sounds = [S.shotgun]
+
+	constructor(game: Game) {
+		super(game, T.lightninger, T.cart_shotgun, S.shotgun, 25)
+	}
+	public throwBullet(x: number, y: number, z: number, angle: number, position: Position, targets: FightEntity[], caster: FightEntity, cell: Cell) {
+		for (let i = 0; i < 5; i++) {
+			this.game.particles.addBullet(x, y, z, angle + Math.random() * Math.PI / 4 - Math.PI / 8, targets)
+		}
+		return Firegun.FIREGUN_DURATION
+	}
+}
+
+class Bazooka extends Firegun {
+	static textures = [T.shots, T.bullet, T.bazooka, T.cart_shotgun]
+	static sounds = [S.shotgun]
+
+	constructor(game: Game) {
+		super(game, T.bazooka, T.cart_shotgun, S.shotgun, 29)
+	}
+	public throwBullet(x: number, y: number, z: number, angle: number, position: Position, targets: FightEntity[], caster: FightEntity, cell: Cell) {
+		this.game.setEffectArea(cell, Area.CIRCLE3, 'red')
+		for (let i = 0; i < 5; i++) {
+			this.game.particles.addBullet(x, y, z, angle + Math.random() * Math.PI / 4 - Math.PI / 8, targets)
+		}
+		return Firegun.FIREGUN_DURATION
+	}
+}
+
+export { WeaponAnimation, WhiteWeaponAnimation, Axe, Bazooka, BLaser, Broadsword, Destroyer, DoubleGun, Electrisor, ExplorerRifle, Fish, FlameThrower, Gazor, GrenadeLauncher, IllicitGrenadeLauncher, JLaser, Katana, Laser, Lightninger, MachineGun, Magnum, Rhino, MLaser, MysteriousElectrisor, Pistol, RevokedMLaser, Rifle, Shotgun, UnbridledGazor }

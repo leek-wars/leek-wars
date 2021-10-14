@@ -95,6 +95,14 @@ const WeaponsData = {
 	23: { w: 90, h: 51, cx: 12, cz: 40, ocx: 0, x: 15, z: -15, mx1: 24, mz1: 27, mx2: 11, mz2: 35, sx: 90, sz: 22, cartX: 60, cartZ: 20, cartAngle: Math.PI / 2, recoilForce: 18, top: 3, bottom: 15, white: false },
 	// Explorer's Rifle
 	24: { w: 184, h: 55, cx: 15, cz: 30, ocx: 0, x: -50, z: -20, mx1: 37, mz1: 35, mx2: 75, mz2: 33, sx: 150, sz: 25, cartX: 60, cartZ: 20, cartAngle: Math.PI / 2, recoilForce: 18, top: 4, bottom: 34, white: false },
+	// Foudroyeur
+	25: { w: 175, h: 65, cx: 28, cz: 30, ocx: 0, x: -50, z: -20, mx1: 29, mz1: 46, mx2: 64, mz2: 46, sx: 150, sz: 25, cartX: 60, cartZ: 20, cartAngle: Math.PI / 2, recoilForce: 18, top: 4, bottom: 40, white: false },
+	// Neutrino
+	27: { w: 100, h: 50, cx: 50, cz: 15, ocx: 0, x: -50, z: -20, mx1: 25, mz1: 33, mx2: 18, mz2: 40, sx: 150, sz: 25, cartX: 60, cartZ: 20, cartAngle: Math.PI / 2, recoilForce: 18, top: 4, bottom: 40, white: false },
+	// Bazooka
+	29: { w: 190, h: 81, cx: -25, cz: 85, ocx: 10, x: 15, z: -15, mx1: 37, mz1: 65, mx2: 70, mz2: 68, top: 0, bottom: 70, white: false },
+	// Katana sombre
+	32: { w: 256, h: 31, cx: 5, cz: 30, ocx: 10, x: 15, z: -15, mx1: 32, mz1: 14, mx2: 44, mz2: 14, top: 0, bottom: 20, white: true },
 } as {[key: number]: WeaponData}
 
 const FishData = { w: 150, h: 65, cx: 25, cz: 45, ocx: 0, x: -35, z: -15, mx1: 12, mz1: 44, mx2: 53, mz2: 57, sx: 110, sz: 10, cartX: 60, cartZ: 20, cartAngle: Math.PI / 2, recoilForce: 18, top: 7, bottom: 50, white: false } as WeaponData
