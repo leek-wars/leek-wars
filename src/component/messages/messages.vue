@@ -17,17 +17,17 @@
 				<panel v-autostopscroll="'bottom'" class="conversations first" @scroll.native="conversationsScroll">
 					<div slot="content">
 						<router-link v-if="newConversation && !newConversationSent" :to="'/messages/new/' + newFarmer.id + '/' + newFarmer.name + '/' + newFarmer.avatar_changed">
-							<conversation :conversation="newConversation" />
+							<conversation :chat="newConversation" />
 						</router-link>
 						<router-link v-for="conversation in $store.state.conversationsList" :key="conversation.id" :to="'/messages/conversation/' + conversation.id">
-							<conversation :conversation="conversation" />
+							<conversation :chat="conversation" />
 						</router-link>
 					</div>
 				</panel>
 			</div>
 			<div v-show="!LeekWars.mobile || LeekWars.splitBack" class="column8">
 				<panel>
-					<chat v-if="currentConversation && currentConversation.id !== 0" slot="content" :id="currentConversation.id" />
+					<chat v-if="currentConversation && currentConversation.id !== 0" :id="currentConversation.id" slot="content" />
 					<chat v-else slot="content" :new-farmer="newFarmer" :new-conversation="newConversation_" />
 				</panel>
 			</div>

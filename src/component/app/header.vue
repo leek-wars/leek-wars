@@ -90,8 +90,8 @@
 						</template>
 						<div class="dialog">
 							<div class="dialog-items">
-								<router-link v-for="conversation in $store.state.conversationsList" :key="conversation.id" :to="'/messages/conversation/' + conversation.id">
-									<conversation :conversation="conversation" />
+								<router-link v-for="chat in $store.state.conversationsList" :key="chat.id" :to="'/messages/conversation/' + chat.id">
+									<conversation :chat="chat" />
 								</router-link>
 							</div>
 							<router-link to="/messages" class="see-all">{{ $t('main.all_private_messages') }}</router-link>

@@ -202,7 +202,7 @@
 				LeekWars.get('message/get-messages/' + this.id + '/' + 50 + '/' + 1).then(data => {
 					this.$store.commit('clear-chat', this.id)
 					for (const message of data.messages.reverse()) {
-						this.$store.commit('pm-receive', {id: this.id, message: message})
+						this.$store.commit('chat-receive', {chat: this.id, message: message})
 					}
 					for (const farmer of data.farmers) {
 						this.$store.commit('add-conversation-participant', {id: this.id, farmer})

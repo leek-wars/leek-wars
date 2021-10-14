@@ -117,7 +117,7 @@
 					<v-icon>mdi-picture-in-picture-bottom-right</v-icon>
 				</div>
 			</div>
-			<chat slot="content" :id="chatLanguage.chat" />
+			<chat :id="chatLanguage.chat" slot="content" />
 		</panel>
 	</div>
 </template>

@@ -10,7 +10,7 @@
 
 				<div class="resizer" @mousedown="resizerMousedown"></div>
 
-				<panel toggle="social/notifications" icon="mdi-bell-outline">
+				<panel v-if="$store.state.notifications.length" toggle="social/notifications" icon="mdi-bell-outline">
 					<template slot="title">
 						<div v-ripple class="title">
 							<router-link to="/notifications">{{ $t('main.notifications') }}</router-link>
@@ -22,7 +22,7 @@
 					</div>
 				</panel>
 
-				<panel v-if="env.SOCIAL" toggle="social/messages" icon="mdi-email-outline">
+				<panel v-if="env.SOCIAL && $store.state.conversationsList.length" toggle="social/messages" icon="mdi-email-outline">
 					<template slot="title">
 						<div v-ripple class="title">
 							<router-link to="/messages">{{ $t('main.messages') }}</router-link>
@@ -30,8 +30,8 @@
 						</div>
 					</template>
 					<div slot="content" v-autostopscroll class="content-limit">
-						<router-link v-for="conversation in $store.state.conversationsList" :key="conversation.id" :to="'/messages/conversation/' + conversation.id">
-							<conversation :conversation="conversation" />
+						<router-link v-for="chat in $store.state.conversationsList" :key="chat.id" :to="'/messages/conversation/' + chat.id">
+							<conversation :chat="chat" />
 						</router-link>
 					</div>
 				</panel>
@@ -61,7 +61,7 @@
 							<v-icon>mdi-picture-in-picture-bottom-right</v-icon>
 						</div>
 					</div>
-					<chat slot="content" :channel="chatLanguage.code" />
+					<chat :id="chatLanguage.chat" slot="content" />
 				</panel>
 			</div>
 		</div>
