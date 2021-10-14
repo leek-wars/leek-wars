@@ -127,7 +127,7 @@
 			<v-icon slot="icon">mdi-pencil</v-icon>
 			<span slot="title">{{ $t('rename') }}</span>
 			<div class="padding">
-				<input ref="nameInput" v-model="newName" type="text" class="input dialog-input" @keyup.enter="rename()">
+				<input ref="nameInput" v-model="newName" type="text" class="input dialog-input" @keyup.stop @keyup.enter="rename()">
 			</div>
 			<div slot="actions">
 				<div v-ripple @click="renameDialog = false">{{ $t('main.cancel') }}</div>
@@ -170,7 +170,7 @@
 			<v-icon slot="icon">mdi-plus-circle-outline</v-icon>
 			<span slot="title">{{ $t('new_desc') }}</span>
 			<div class="padding">
-				<input ref="newAIInput" v-model="newAIName" :placeholder="$t('ai_name')" type="text" class="input dialog-input" @keyup.enter="newAI(false, newAIName)">
+				<input ref="newAIInput" v-model="newAIName" :placeholder="$t('ai_name')" type="text" class="input dialog-input" @keyup.stop @keyup.enter="newAI(false, newAIName)">
 			</div>
 			<div slot="actions">
 				<div v-ripple @click="newAIDialog = false">{{ $t('main.cancel') }}</div>
@@ -182,7 +182,7 @@
 			<v-icon slot="icon">mdi-folder-plus</v-icon>
 			<span slot="title">{{ $t('new_folder') }}</span>
 			<div class="padding">
-				<input ref="newFolderInput" v-model="newFolderName" :placeholder="$t('folder_name')" type="text" class="input dialog-input" @keyup.enter="newFolder(newFolderName)">
+				<input ref="newFolderInput" v-model="newFolderName" :placeholder="$t('folder_name')" type="text" class="input dialog-input" @keyup.stop @keyup.enter="newFolder(newFolderName)">
 			</div>
 			<div slot="actions">
 				<div v-ripple @click="newFolderDialog = false">{{ $t('main.cancel') }}</div>
