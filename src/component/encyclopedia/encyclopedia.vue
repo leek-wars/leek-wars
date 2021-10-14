@@ -125,7 +125,7 @@
 		]
 
 		get code() {
-			return this.$route.params.page ? this.$route.params.page.replace(/_/g, ' ') : 'Encyclopédie'
+			return 'page' in this.$route.params ? this.$route.params.page.replace(/_/g, ' ') : 'Encyclopédie'
 		}
 		get title() {
 			return this.page ? this.page.title : 'Encyclopedia'
