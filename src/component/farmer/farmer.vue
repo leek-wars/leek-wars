@@ -383,16 +383,20 @@
 
 		<div class="page-footer page-bar">
 			<div class="tabs">
-				<div v-if="farmer && $store.state.connected && !myFarmer && !farmer.admin">
-					<div class="report-button tab" @click="reportDialog = true">
-						<img src="/image/icon/flag.png">
-						<span>{{ $t('report') }}</span>
-					</div>
+				<div v-if="farmer && $store.state.connected && !myFarmer && !farmer.admin" class="report-button tab" @click="reportDialog = true">
+					<img src="/image/icon/flag.png">
+					<span>{{ $t('report') }}</span>
 				</div>
 				<template v-if="myFarmer">
 					<div class="tab" @click="renameDialog = true">
 						<v-icon>mdi-pencil-outline</v-icon>
 						{{ $t('rename') }}
+					</div>
+				</template>
+				<template v-if="$store.getters.admin">
+					<div class="tab" @click="trophyDialog = true">
+						<v-icon>mdi-trophy-outline</v-icon>
+						Donner trophée
 					</div>
 				</template>
 			</div>
@@ -488,6 +492,23 @@
 				<v-btn class="rename-button" @click="rename('crystals')">{{ $t('rename_pay_crystals') }} :&nbsp;<b>{{ rename_price_crystals }}</b> &nbsp;<span class="crystal"></span></v-btn>
 			</center>
 		</popup>
+
+		<popup v-if="farmer" v-model="trophyDialog" :width="600">
+			<v-icon slot="icon">mdi-trophy-outline</v-icon>
+			<template slot="title">Donner un trophée</template>
+
+			<div>
+				ID de trophée : <input v-model="giveTrophyID" type="number">
+				Combat : <input v-model="giveTrophyFight" type="number">
+			</div>
+			<br>
+			<img v-for="trophy in giveTrophies" :key="trophy.id" :src="'/image/trophy/' + trophy.code + '.svg'" :title="trophy.code" class="give-trophy" @click="giveTrophyID = trophy.id">
+
+			<div slot="actions">
+				<div v-ripple @click="trophyDialog = false">{{ $t('cancel') }}</div>
+				<div v-ripple class="green" @click="giveTrophy()">Donner</div>
+			</div>
+		</popup>
 	</div>
 </template>
 
@@ -522,6 +543,15 @@
 		rename_price_crystals: number = 200
 		tournamentRangeLoading: boolean = false
 		tournamentRange: any = null
+		trophyDialog: boolean = false
+		giveTrophyID: number | null = null
+		giveTrophyFight: number | null = null
+		giveTrophies = [
+			LeekWars.trophies[173 - 1],
+			LeekWars.trophies[177 - 1],
+			LeekWars.trophies[166 - 1],
+			LeekWars.trophies[194 - 1],
+		]
 
 		get id(): any {
 			return this.$route.params.id ? parseInt(this.$route.params.id, 10) : (this.$store.state.farmer ? this.$store.state.farmer.id : null)
@@ -772,6 +802,17 @@
 			this.tournamentRangeLoading = true
 			const power = Math.round(Object.values(this.farmer.leeks).reduce((p, l) => p + l.level ** LeekWars.POWER_FACTOR, 0))
 			LeekWars.post('tournament/range-farmer', {power}).then(d => this.tournamentRange = d)
+		}
+
+		giveTrophy() {
+			if (this.giveTrophyID) {
+				LeekWars.post('trophy/give', { trophy: this.giveTrophyID, farmer: this.farmer.id, fight: this.giveTrophyFight || 0 })
+				.then(() => {
+					this.trophyDialog = false
+					LeekWars.toast("Trophée donné !")
+				})
+				.error(error => LeekWars.toast(this.$t('error_' + error.error, error.params)))
+			}
 		}
 	}
 </script>
@@ -1104,5 +1145,9 @@
 		display: flex;
 		justify-content: space-between;
 		gap: 20px;
+	}
+	.give-trophy {
+		width: 30px;
+		margin: 0 5px;
 	}
 </style>
