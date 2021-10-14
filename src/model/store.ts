@@ -1,5 +1,5 @@
 import { env } from '@/env'
-import { Chat, ChatType } from '@/model/chat'
+import { Chat, ChatMessage, ChatType } from '@/model/chat'
 import { Conversation } from '@/model/conversation'
 import { Farmer } from '@/model/farmer'
 import { i18n } from '@/model/i18n'
@@ -121,21 +121,16 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			state.wsconnected = false
 			state.wsdisconnected = true
 		},
-		'clear-chat'(state: LeekWarsState, chat: string) {
+		'clear-chat'(state: LeekWarsState, chat: number) {
 			Vue.delete(state.chat, chat)
+			Vue.set(state.chat, chat, new Chat(chat, ChatType.GLOBAL))
 		},
-		'init-team-chat'(state: LeekWarsState) {
-			if (!state.chat.team) {
-				Vue.set(state.chat, 'team', new Chat('team', ChatType.TEAM))
+		'chat-receive'(state: LeekWarsState, message: ChatMessage) {
+			if (!state.chat[message.chat]) {
+				Vue.set(state.chat, message.chat, new Chat(message.chat, ChatType.GLOBAL))
 			}
-		},
-		'chat-receive'(state: LeekWarsState, data: any) {
-			const channel = data.message[0]
-			if (!state.chat[channel]) {
-				Vue.set(state.chat, channel, new Chat(channel, ChatType.GLOBAL))
-			}
-			state.chat[channel].add(data.message[1], data.message[2], data.message[6], data.message[5], data.message[3], data.message[4])
-			vueMain.$emit('chat', [channel])
+			state.chat[message.chat].add(message)
+			vueMain.$emit('chat', [message.chat])
 		},
 		'chat-receive-pack'(state: LeekWarsState, pack: any) {
 			if (!pack.length) { return }
@@ -146,21 +141,6 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			state.chat[channel].set_messages(pack)
 			vueMain.$emit('chat', [channel])
 		},
-		'chat-team-receive'(state: LeekWarsState, data: any) {
-			if (!state.chat.team) {
-				Vue.set(state.chat, 'team', new Chat("team", ChatType.TEAM))
-			}
-			state.chat.team.add(data.message[0], data.message[1], data.message[5], data.message[4], data.message[2], data.message[3])
-			vueMain.$emit('chat', ['team'])
-		},
-		'team-chat-receive-pack'(state: LeekWarsState, pack: any) {
-			if (!pack.length) { return }
-			if (!state.chat.team) {
-				Vue.set(state.chat, 'team', new Chat("team", ChatType.TEAM))
-			}
-			state.chat.team.set_messages(pack.map((m: any) => ['team', m[0], m[1], m[2], m[3], m[4], m[5]]))
-			vueMain.$emit('chat', ['team'])
-		},
 		'br'(state: LeekWarsState, data: any) {
 			const channel = data[0]
 			if (!state.chat[channel]) {
@@ -169,13 +149,11 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			state.chat[channel].battleRoyale(data[1], data[2])
 		},
 		'pm-receive'(state: LeekWarsState, data: any) {
-			const conversationID = data.message[0]
+			const conversationID = data.id
 			const senderID = data.message[1]
 			const senderName = data.message[2]
-			const channel = 'pm-' + conversationID
 			const isNewMessage = !data.message[7] // Date (sent by chat component, not WS)
 			const senderAvatar = data.message[6]
-			const date = data.message[7] || LeekWars.time
 
 			// Get or create conversation
 			let conversation = state.conversations[conversationID]
@@ -201,11 +179,11 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			}
 
 			// Update or create chat
-			if (!state.chat[channel]) {
-				Vue.set(state.chat, channel, new Chat(channel, ChatType.PM, conversation))
+			if (!state.chat[conversationID]) {
+				Vue.set(state.chat, conversationID, new Chat(conversationID, ChatType.PM, conversation))
 			}
-			state.chat[channel].add(senderID, senderName, data.message[6], data.message[5], data.message[3], date)
-			vueMain.$emit('chat', [channel])
+			state.chat[conversationID].add(data.message)
+			vueMain.$emit('chat', [conversationID])
 
 			// Square
 			if (isNewMessage && conversation.last_farmer_id !== state.farmer!.id) {
@@ -514,7 +492,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			if (!state.chat[channel]) {
 				Vue.set(state.chat, channel, new Chat(channel, ChatType.GLOBAL))
 			}
-			state.chat[channel].add(state.farmer!.id, state.farmer!.name, state.farmer!.avatar_changed, state.farmer!.grade, "pong ! " + (Date.now() - state.last_ping) + "ms", Date.now() / 1000)
+			// state.chat[channel].add(state.farmer!.id, state.farmer!.name, state.farmer!.avatar_changed, state.farmer!.grade, "pong ! " + (Date.now() - state.last_ping) + "ms", Date.now() / 1000)
 			vueMain.$emit('chat', [channel])
 		},
 		'create-team'(state: LeekWarsState, team: Team) {

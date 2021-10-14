@@ -204,8 +204,8 @@ const LeekWars = {
 	battleRoyale: new BattleRoyale(),
 	squares: new Squares(),
 	languages: Object.freeze({
-		fr: { code: 'fr', name: 'Français', flag: '/image/flag/fr.png' } as Language,
-		en: { code: 'en', name: 'English', flag: '/image/flag/gb.png' } as Language,
+		fr: { code: 'fr', name: 'Français', flag: '/image/flag/fr.png', chat: 1 } as Language,
+		en: { code: 'en', name: 'English', flag: '/image/flag/gb.png', chat: 2 } as Language,
 	} as { [key: string]: Language }),
 	timeDelta: 0, // (Date.now() / 1000 | 0) - __SERVER_TIME,
 	time: (Date.now() / 1000) | 0,

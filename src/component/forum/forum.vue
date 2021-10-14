@@ -113,11 +113,11 @@
 				</v-menu>
 			</span>
 			<div slot="actions">
-				<div v-if="!LeekWars.mobile" class="button flat" @click="LeekWars.addChat(chatLanguage.code, ChatType.GLOBAL, 'Chat ' + chatLanguage.code.toUpperCase())">
+				<div v-if="!LeekWars.mobile" class="button flat" @click="LeekWars.addChat(chatLanguage.chat, ChatType.GLOBAL, 'Chat ' + chatLanguage.code.toUpperCase())">
 					<v-icon>mdi-picture-in-picture-bottom-right</v-icon>
 				</div>
 			</div>
-			<chat slot="content" :channel="chatLanguage.code" />
+			<chat slot="content" :id="chatLanguage.chat" />
 		</panel>
 	</div>
 </template>

@@ -27,8 +27,8 @@
 			</div>
 			<div v-show="!LeekWars.mobile || LeekWars.splitBack" class="column8">
 				<panel>
-					<chat v-if="currentConversation && currentConversation.id !== 0" slot="content" :channel="'pm-' + currentConversation.id" @send="sendMessage" />
-					<chat v-else slot="content" @send="sendMessage" />
+					<chat v-if="currentConversation && currentConversation.id !== 0" slot="content" :id="currentConversation.id" />
+					<chat v-else slot="content" :new-farmer="newFarmer" :new-conversation="newConversation_" />
 				</panel>
 			</div>
 		</div>
@@ -154,21 +154,6 @@
 				if (!this.$store.state.farmer || farmer.id !== this.$store.state.farmer.id) {
 					return farmer.name
 				}
-			}
-		}
-		sendMessage(message: string) {
-			if (!this.currentConversation) { return }
-			if (this.currentConversation.id === 0) {
-				LeekWars.post('message/create-conversation', {farmer_id: this.newFarmer.id, message}).then(data => {
-					if (this.newConversation_) {
-						this.newConversation_.id = data.conversation_id
-						this.$store.commit('new-conversation', this.newConversation_)
-					}
-					this.$router.replace('/messages/conversation/' + data.conversation_id)
-					this.newConversationSent = true
-				})
-			} else {
-				LeekWars.post('message/send-message', {conversation_id: this.currentConversation.id, message})
 			}
 		}
 		showQuitDialog() {
