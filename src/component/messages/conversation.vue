@@ -1,31 +1,34 @@
 <template>
-	<div v-if="conversation" v-ripple class="conversation" :class="{unread: conversation.unread}">
+	<div v-if="chat" v-ripple class="conversation" :class="{unread: chat.unread}">
 		<rich-tooltip-farmer :id="farmer ? farmer.id : 0" v-slot="{ on }">
 			<avatar v-if="farmer" :farmer="farmer" :on="on" />
 		</rich-tooltip-farmer>
 		<div class="content">
-			<rich-tooltip-farmer v-if="farmer" :id="farmer.id" v-slot="{ on }">
-				<div class="name" v-on="on">{{ farmer.name }}</div>
-			</rich-tooltip-farmer>
+			<div class="name">{{ farmer.name }}</div>
 			<div class="last-message">
-				<b v-if="$store.state.farmer && conversation.last_farmer_id === $store.state.farmer.id">{{ $t('main.me') }} ►</b>
-				<span v-emojis v-text="conversation.last_message"></span>
+				<b v-if="$store.state.farmer && chat.last_farmer.id === $store.state.farmer.id">{{ $t('main.me') }} ►</b>
+				<span v-emojis v-text="chat.last_message"></span>
 			</div>
-			<div class="date">{{ LeekWars.formatDuration(conversation.last_date) }}</div>
+			<div class="date">{{ LeekWars.formatDuration(chat.last_date) }}</div>
 		</div>
 	</div>
 </template>
 
 <script lang="ts">
-	import { Conversation } from '@/model/conversation'
-	import { LeekWars } from '@/model/leekwars'
+	import { Chat } from '@/model/chat'
 	import { Component, Prop, Vue } from 'vue-property-decorator'
 
 	@Component({})
 	export default class ConversationElement extends Vue {
-		@Prop({required: true}) conversation!: Conversation
+
+		@Prop({required: true}) chat!: Chat
+
+		created() {
+			console.log("conversation", this.chat)
+		}
+
 		get farmer() {
-			for (const farmer of this.conversation.farmers) {
+			for (const farmer of this.chat.farmers) {
 				if (!this.$store.state.farmer || farmer.id !== this.$store.state.farmer.id) {
 					return farmer
 				}

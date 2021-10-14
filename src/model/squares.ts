@@ -1,4 +1,5 @@
 import { Notification } from '@/model/notification'
+import { ChatMessage } from './chat'
 import { Conversation } from './conversation'
 import { i18n } from './i18n'
 import { LeekWars } from './leekwars'
@@ -36,13 +37,13 @@ class Squares {
 		})
 	}
 
-	addFromConversation(conversation: Conversation, senderAvatar: number) {
+	addFromConversation(message: ChatMessage) {
 		this.add({
-			image: LeekWars.getAvatar(conversation.last_farmer_id, senderAvatar),
+			image: LeekWars.getAvatar(message.farmer.id, message.farmer.avatar_changed),
 			icon: false,
-			title: conversation.last_farmer_name,
-			message: "► " + conversation.last_message,
-			link: "/messages/conversation/" + conversation.id,
+			title: message.farmer.name,
+			message: "► " + message.content,
+			link: "/messages/conversation/" + message.chat,
 			padding: false,
 			clazz: ''
 		})

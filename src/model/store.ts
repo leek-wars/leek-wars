@@ -26,8 +26,7 @@ class LeekWarsState {
 	public unreadMessages: number = 0
 	public unreadNotifications: number = 0
 	public notifications: Notification[] = []
-	public conversations: {[key: number]: Conversation} = {}
-	public conversationsList: Conversation[] = []
+	public conversationsList: Chat[] = []
 	public last_ping: number = 0
 	public connected_farmers: number = 0
 	public loadingConversations: boolean = false
@@ -101,7 +100,6 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			LeekWars.setTitleCounter(0)
 			LeekWars.battleRoyale.leave()
 			state.notifications = []
-			state.conversations = {}
 			state.conversationsList = []
 			state.unreadMessages = 0
 			state.unreadNotifications = 0
@@ -125,13 +123,6 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			Vue.delete(state.chat, chat)
 			Vue.set(state.chat, chat, new Chat(chat, ChatType.GLOBAL))
 		},
-		'chat-receive'(state: LeekWarsState, message: ChatMessage) {
-			if (!state.chat[message.chat]) {
-				Vue.set(state.chat, message.chat, new Chat(message.chat, ChatType.GLOBAL))
-			}
-			state.chat[message.chat].add(message)
-			vueMain.$emit('chat', [message.chat])
-		},
 		'chat-receive-pack'(state: LeekWarsState, pack: any) {
 			if (!pack.length) { return }
 			const channel = pack[0][0]
@@ -148,47 +139,42 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			}
 			state.chat[channel].battleRoyale(data[1], data[2])
 		},
-		'pm-receive'(state: LeekWarsState, data: any) {
-			const conversationID = data.id
-			const senderID = data.message[1]
-			const senderName = data.message[2]
-			const isNewMessage = !data.message[7] // Date (sent by chat component, not WS)
-			const senderAvatar = data.message[6]
+		'chat-receive'(state: LeekWarsState, data: {chat: number, message: ChatMessage}) {
 
-			// Get or create conversation
-			let conversation = state.conversations[conversationID]
-			if (!conversation) {
-				conversation = {id: conversationID,	farmers: [], unread: false} as any
-				Vue.set(state.conversations, conversationID, conversation)
-				state.conversationsList.unshift(conversation)
-			} else if (isNewMessage) {
-				const index = state.conversationsList.findIndex((c) => c.id === conversationID)
-				state.conversationsList.splice(index, 1)
-				state.conversationsList.unshift(conversation)
-				if (!conversation.unread && senderID !== state.farmer!.id) {
-					conversation.unread = true
-					state.unreadMessages++
-					updateTitle(state)
-				}
-			}
-			conversation.last_message = data.message[3]
-			conversation.last_farmer_id = senderID
-			conversation.last_farmer_name = senderName
-			if (!conversation.farmers.find(f => f.id === senderID)) {
-				conversation.farmers.push({id: senderID, name: senderName, avatar_changed: data.message[6]} as Farmer)
-			}
+			// console.log("chat-receive message", data.message)
+			const chatID = data.chat
+			const message = data.message
+
+			const publicChat = chatID === 1 || chatID === 2 || chatID === 25518
+			const newChat = !!state.chat[chatID]
 
 			// Update or create chat
-			if (!state.chat[conversationID]) {
-				Vue.set(state.chat, conversationID, new Chat(conversationID, ChatType.PM, conversation))
+			if (!state.chat[chatID]) {
+				Vue.set(state.chat, chatID, new Chat(chatID, ChatType.PM))
 			}
-			state.chat[conversationID].add(data.message)
-			vueMain.$emit('chat', [conversationID])
+			const chat = state.chat[chatID]
 
-			// Square
-			if (isNewMessage && conversation.last_farmer_id !== state.farmer!.id) {
-				LeekWars.squares.addFromConversation(conversation, senderAvatar)
+			if (!publicChat) {
+				if (newChat) {
+					state.conversationsList.unshift(chat)
+				} else {
+					const index = state.conversationsList.findIndex((c) => c.id === chatID)
+					state.conversationsList.splice(index, 1)
+					state.conversationsList.unshift(chat)
+					if (!chat.unread && message.farmer.id !== state.farmer!.id) {
+						chat.unread = true
+						state.unreadMessages++
+						updateTitle(state)
+					}
+				}
 			}
+			chat.last_message = message.content
+			chat.last_farmer = message.farmer
+			if (!chat.farmers.find(f => f.id === message.farmer.id)) {
+				chat.farmers.push(message.farmer)
+			}
+			chat.add(message)
+			vueMain.$emit('chat', [chatID])
 		},
 		'add-conversation-participant'(state: LeekWarsState, data: {id: number, farmer: Farmer}) {
 			const conversation = state.conversations[data.id]

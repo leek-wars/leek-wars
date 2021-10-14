@@ -2,6 +2,7 @@ import { env } from '@/env'
 import { LeekWars } from '@/model/leekwars'
 import { vueMain } from '@/model/vue'
 import router from '@/router'
+import { ChatMessage } from './chat'
 import { NotificationType } from './notification'
 import { store } from './store'
 
@@ -11,7 +12,7 @@ enum SocketMessage {
 	// TEAM_CHAT_RECEIVE = 2, // Deprecated
 	// TEAM_CHAT_MEMBERS = 3, // Deprecated
 	// TEAM_CHAT_ENABLE = 4, // Deprecated
-	MP_RECEIVE = 5,
+	// MP_RECEIVE = 5,
 	NOTIFICATION_RECEIVE = 6,
 	// CHAT_ENABLE = 7, // Deprecated
 	CHAT_SEND = 8,
@@ -95,14 +96,6 @@ class Socket {
 			vueMain.$emit('wsmessage', {type: id, data})
 
 			switch (id) {
-				case SocketMessage.CHAT_RECEIVE : {
-					store.commit('chat-receive', data)
-					break
-				}
-				case SocketMessage.CHAT_RECEIVE_PACK : {
-					store.commit('chat-receive-pack', data)
-					break
-				}
 				case SocketMessage.PONG: {
 					store.commit('receive-pong', data)
 					break
@@ -148,8 +141,18 @@ class Socket {
 					store.commit('unread-notifications', data[0])
 					break
 				}
-				case SocketMessage.MP_RECEIVE : {
-					store.commit('pm-receive', {message: data})
+				case SocketMessage.CHAT_RECEIVE : {
+
+					const message = data as ChatMessage
+					store.commit('chat-receive', { chat: message.chat, message })
+
+					if (store.state.farmer!.id !== message.farmer!.id) {
+						LeekWars.squares.addFromConversation(message)
+					}
+					break
+				}
+				case SocketMessage.CHAT_RECEIVE_PACK : {
+					store.commit('chat-receive-pack', data)
 					break
 				}
 				case SocketMessage.MP_UNREAD_MESSAGES : {

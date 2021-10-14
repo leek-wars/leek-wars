@@ -30,6 +30,10 @@ class Chat {
 	messages: ChatMessage[] = []
 	invalidated: boolean = false
 	conversation: Conversation | null = null
+	unread: boolean = false
+	last_message: string | null = null
+	last_farmer: Farmer | null = null
+	farmers: Farmer[] = []
 
 	constructor(id: number, type: ChatType, conversation: Conversation | null = null) {
 		this.id = id
@@ -38,9 +42,10 @@ class Chat {
 	}
 
 	add(message: ChatMessage) {
-		console.log("chat add", message, this)
+		// console.log("chat add", message, this)
 		const content = this.formatMessage(message.content, message.farmer.name)
 		const day = new Date(message.date * 1000).getDate()
+		Vue.set(message, 'day', day)
 		let separator = false
 		if (this.messages.length) {
 			const lastMessage = this.messages[this.messages.length - 1]
@@ -65,7 +70,6 @@ class Chat {
 		}
 		Vue.set(message, 'contents', [content])
 		this.messages.push(message)
-		console.log("message pushed", message)
 	}
 
 	set_messages(messages: any[]) {
@@ -110,11 +114,13 @@ class Chat {
 	}
 
 	formatMessage(messageRaw: string, authorName: string): string {
+		// console.log("raw", messageRaw)
 		let message = LeekWars.protect(messageRaw)
 		message = LeekWars.linkify(message)
 		message = LeekWars.formatEmojis(message)
 		message = Commands.execute(message, authorName)
 		message = message.replace(/\n/g, '<br>')
+		// console.log("res", message)
 		return message
 	}
 }
