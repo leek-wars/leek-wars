@@ -32,6 +32,6 @@
 	"title": "Tutorial",
 	"weapons_chips": "Weapons and chips",
 	"weapons_chips_1": "A leek can use <b>weapons</b> to shoot other leeks. It can equip up to <b>2</b> weapons at the same time, up to <b>4</b> by leveling up.",
-	"weapons_chips_2": "But it can also use <b>chips</b> (from <b>8</b> to <b>15</b> at the same time), that allow it to perform various actions in combat, like attacking, healing, protecting, and even teleporting...",
+	"weapons_chips_2": "But it can also use <b>chips</b> (from <b>12</b> to <b>20</b> at the same time), that allow it to perform various actions in combat, like attacking, healing, protecting, and even teleporting...",
 	"welcome": "Welcome to Leek Wars!"
 }
