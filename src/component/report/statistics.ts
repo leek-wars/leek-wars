@@ -92,6 +92,7 @@ class StatisticsEntity extends Entity {
 		}
 		this.cell = cell
 		cell.entity = this
+		this.walkedCells.add(cell.id)
 	}
 }
 
