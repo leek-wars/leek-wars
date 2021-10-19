@@ -3,7 +3,6 @@ import { Farmer } from '@/model/farmer'
 import { i18n } from '@/model/i18n'
 import { LeekWars } from '@/model/leekwars'
 import Vue from 'vue'
-import { Conversation } from './conversation'
 
 enum ChatType { GLOBAL, TEAM, PM }
 
@@ -15,10 +14,14 @@ class ChatMessage {
 	contents: string[] = []
 	date!: number
 	day!: number
+	subMessages: ChatMessage[] = []
+	censored!: number
+	censored_by!: Farmer | null
+	read!: boolean
 }
 
 class ChatWindow {
-	name!: string
+	id!: number
 	type!: ChatType
 	title!: string
 	expanded: boolean = true
@@ -29,16 +32,16 @@ class Chat {
 	type: ChatType
 	messages: ChatMessage[] = []
 	invalidated: boolean = false
-	conversation: Conversation | null = null
-	unread: boolean = false
+	read: boolean = true
 	last_message: string | null = null
 	last_farmer: Farmer | null = null
+	last_date: number | null = null
 	farmers: Farmer[] = []
+	loaded: boolean = false
 
-	constructor(id: number, type: ChatType, conversation: Conversation | null = null) {
+	constructor(id: number, type: ChatType) {
 		this.id = id
 		this.type = type
-		this.conversation = conversation
 	}
 
 	add(message: ChatMessage) {
@@ -46,11 +49,15 @@ class Chat {
 		const content = this.formatMessage(message.content, message.farmer.name)
 		const day = new Date(message.date * 1000).getDate()
 		Vue.set(message, 'day', day)
+		if (!('censored' in message)) {
+			Vue.set(message, 'censored', 0)
+		}
 		let separator = false
 		if (this.messages.length) {
 			const lastMessage = this.messages[this.messages.length - 1]
 			if (lastMessage.farmer.id === message.farmer.id && message.date - lastMessage.date < 120) {
 				lastMessage.contents.push(content)
+				lastMessage.subMessages.push(message)
 				return
 			}
 			if (lastMessage.day !== day) {
@@ -65,14 +72,21 @@ class Chat {
 				farmer: { id: -1, name: '', avatar_changed: 0, grade: '' },
 				contents: [''],
 				date: message.date,
-				day
+				day,
+				subMessages: [] as ChatMessage[]
 			} as ChatMessage)
 		}
 		Vue.set(message, 'contents', [content])
+		Vue.set(message, 'subMessages', [])
+		Vue.set(this, 'last_message', content)
 		this.messages.push(message)
+		if (!message.read) {
+			this.read = false
+		}
 	}
 
 	set_messages(messages: any[]) {
+		// console.log("[chat] set_messages", messages)
 		const prepared_messages: any[] = []
 		if (messages.length) {
 			prepared_messages.push({
@@ -108,8 +122,12 @@ class Chat {
 			farmer: { id: 0, name: "Leek Wars" } as Farmer,
 			content: '',
 			contents: [i18n.t('main.br_started_message') as string, '' + fightID],
+			subMessages: [],
 			date: time,
-			day: new Date(time * 1000).getDate()
+			day: new Date(time * 1000).getDate(),
+			censored: 0,
+			censored_by: null,
+			read: false
 		})
 	}
 

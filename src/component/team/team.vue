@@ -127,7 +127,7 @@
 
 		<panel v-if="member" :title="$t('chat')" toggle="team/chat" icon="mdi-chat-outline">
 			<div slot="actions">
-				<div v-if="!LeekWars.mobile" class="button flat" @click="LeekWars.addChat('team', ChatType.TEAM, team.name)">
+				<div v-if="!LeekWars.mobile" class="button flat" @click="LeekWars.addChat(team.chat, ChatType.TEAM, team.name)">
 					<v-icon>mdi-picture-in-picture-bottom-right</v-icon>
 				</div>
 			</div>

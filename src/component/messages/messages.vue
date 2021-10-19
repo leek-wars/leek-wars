@@ -3,7 +3,7 @@
 		<div class="page-header page-bar">
 			<h1>{{ $t('title') }}</h1>
 			<div class="tabs">
-				<div class="tab action content" icon="delete" @click="LeekWars.addChat('pm-' + currentID, ChatType.PM, getConversationName())">
+				<div class="tab action content" icon="delete" @click="LeekWars.addChat(id, ChatType.PM, getConversationName())">
 					<v-icon>mdi-picture-in-picture-bottom-right</v-icon>
 				</div>
 				<div class="tab action content" icon="delete" @click="quitDialog = true">
@@ -14,8 +14,8 @@
 		</div>
 		<div class="container last">
 			<div v-show="!LeekWars.mobile || !LeekWars.splitBack" class="column4">
-				<panel v-autostopscroll="'bottom'" class="conversations first" @scroll.native="conversationsScroll">
-					<div slot="content">
+				<panel v-autostopscroll="'bottom'" class="first" @scroll.native="conversationsScroll">
+					<div slot="content" class="conversations">
 						<router-link v-if="newConversation && !newConversationSent" :to="'/messages/new/' + newFarmer.id + '/' + newFarmer.name + '/' + newFarmer.avatar_changed">
 							<conversation :chat="newConversation" />
 						</router-link>
@@ -87,78 +87,78 @@
 		back() {
 			this.$router.push('/messages')
 		}
+
 		get currentConversation() {
-			return (this.currentID === 0) ? this.newConversation : (this.currentID ? this.$store.state.conversations[this.currentID] : null)
+			return (this.currentID === 0) ? this.newConversation : (this.currentID ? this.$store.state.chat[this.currentID] : null)
 		}
+
 		isNewConversation(): boolean {
 			return 'name' in this.$route.params
 		}
+
 		get newConversation(): Conversation | null {
 			if (!this.newConversation_ && 'name' in this.$route.params) {
 				this.newConversation_ = {id: 0, last_message: this.$t('new_message') as string, farmers: [this.newFarmer]} as Conversation
 			}
 			return this.newConversation_
 		}
+
 		get newFarmer(): any {
 			if (!this.newFarmer_ && 'name' in this.$route.params) {
 				this.newFarmer_ = {id: parseInt(this.$route.params.id, 10), name: this.$route.params.name, avatar_changed: this.$route.params.avatar_changed}
 			}
 			return this.newFarmer_
 		}
+
+		get id() {
+			return 'id' in this.$route.params ? parseInt(this.$route.params.id, 10) : null
+		}
+
+		get chat() {
+			return this.id ? this.$store.state.chat[this.id] : null
+		}
+
 		@Watch('$route.params')
 		update() {
-			const id = 'id' in this.$route.params ? parseInt(this.$route.params.id, 10) : null
-			if (this.isNewConversation()) {
-				let found = false
-				for (const conversation of this.$store.state.conversationsList) {
-					if (conversation.id === 0) { continue }
-					for (const farmer of conversation.farmers) {
-						if (farmer.id === this.newFarmer.id) {
-							this.$router.replace('/messages/conversation/' + conversation.id)
-							found = true
-							break
-						}
-					}
-				}
-				if (!found) {
-					this.selectConversation(0)
-				}
+
+			if (this.id !== null) {
+				this.selectConversation(this.id)
 			} else {
-				if (id !== null) {
-					this.selectConversation(id)
-				} else {
-					if (LeekWars.mobile) {
-						LeekWars.splitShowList()
-						LeekWars.setTitle(this.$i18n.t('title'))
-					} else if (this.$store.state.conversationsList.length) {
-						this.$router.replace('/messages/conversation/' + this.$store.state.conversationsList[0].id)
-					}
+				if (LeekWars.mobile) {
+					LeekWars.splitShowList()
+					LeekWars.setTitle(this.$i18n.t('title'))
+				} else if (this.$store.state.conversationsList.length) {
+					this.$router.replace('/messages/conversation/' + this.$store.state.conversationsList[0].id)
 				}
 			}
 		}
+
 		selectConversation(id: number) {
 			this.currentID = id
 			LeekWars.splitShowContent()
 			LeekWars.setActions(this.actions)
 			if (id === 0) {
 				LeekWars.setTitle(this.$i18n.t('new_message'))
-			} else if (this.currentID in this.$store.state.conversations) {
+			} else if (this.currentID in this.$store.state.chat) {
 				LeekWars.setTitle(this.getConversationName())
 			} else {
 				LeekWars.setTitle(this.$i18n.t('title'))
 			}
 		}
+
 		getConversationName() {
-			if (!this.currentID) { return }
-			for (const farmer of this.$store.state.conversations[this.currentID].farmers) {
+			if (!this.chat) { return }
+			for (const farmer of this.chat.farmers) {
 				if (!this.$store.state.farmer || farmer.id !== this.$store.state.farmer.id) {
 					return farmer.name
 				}
 			}
 		}
+
 		showQuitDialog() {
 			this.quitDialog = true
 		}
+
 		quitConversation() {
 			if (!this.currentConversation) { return }
 			LeekWars.post('message/quit-conversation', {conversation_id: this.currentConversation.id})
@@ -170,6 +170,7 @@
 			}
 			this.quitDialog = false
 		}
+
 		conversationRead() {
 			if (this.currentConversation) {
 				LeekWars.socket.send([SocketMessage.MP_READ, this.currentConversation.id])

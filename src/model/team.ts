@@ -50,11 +50,19 @@ class Team {
 	public candidacy!: boolean
 	public talent!: number
 	public turret_ai!: any
+	public chat!: number
+	public member_level!: number
 }
 
 class TeamMember extends Farmer {
 	public grade!: string
 	public logs_level!: number
+}
+
+enum TeamMemberLevel {
+	MEMBER = 1,
+	CAPTAIN = 2,
+	OWNER = 3,
 }
 
 class Composition {
@@ -69,4 +77,4 @@ class Composition {
 	public talent!: number
 }
 
-export { Composition, Team, TeamMember, TEAM_COLORS, TEAM_COLORS_DARK }
+export { Composition, Team, TeamMember, TeamMemberLevel, TEAM_COLORS, TEAM_COLORS_DARK }

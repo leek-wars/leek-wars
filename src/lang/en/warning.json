@@ -1,4 +1,5 @@
 {
+	"censor": "Censor",
 	"confirm_mute": "Mute",
 	"given_by_x_the_d": "Given by {farmer} the {date}",
 	"mute": "Mute",
@@ -12,7 +13,7 @@
 	"reason_5": "Incorrect team description ",
 	"reason_6": "Incorrect words on fight",
 	"reason_6_action": "All the say() of all the farmer's leeks will be hidden",
-	"reason_7": "Incorrect words on the forum",
+	"reason_7": "Incorrect content on the forum",
 	"reason_8": "Incorrect words on the chat",
 	"reason_9": "Misconduct against a moderator",
 	"reason_10": "Misconduct against an administrator",

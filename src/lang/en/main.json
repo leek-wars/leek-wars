@@ -40,6 +40,7 @@
 	"eighth_final": "8th-finals",
 	"error": "Error",
 	"error_x": "Error: {0}",
+	"error_muted": "You are muted for {0} seconds",
 	"farmer": "Farmer",
 	"fight": "Fight",
 	"final": "Finals",

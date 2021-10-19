@@ -118,7 +118,6 @@
 		sendMessage() {
 			if (!this.farmer) { return }
 			LeekWars.get('message/find-conversation/' + this.farmer.id).then(conversation => {
-				store.commit('new-conversation', conversation)
 				this.$router.push('/messages/conversation/' + conversation.id)
 			}).error(() => {
 				if (!this.farmer) { return }
