@@ -982,7 +982,7 @@ function linkify(html: string) {
 		if (html[i] === '/') {
 			while (i < html.length) {
 				const c = html[i]
-				if (c === ' ' || c === '\n') { break }
+				if (c === ' ' || c === ' ' || c === '\n') { break }
 				if (c === '(') { par++ }
 				if (c === '[') { square++ }
 				if (c === '{') { curly++ }
