@@ -39,27 +39,25 @@
 				<div v-else>
 					<div v-for="message in topic.messages" :id="'message-' + message.id" :key="message.id" class="message-wrapper">
 						<div class="profile">
-							<div v-if="!message.writer.deleted">
-								<rich-tooltip-farmer :id="message.writer.id" v-slot="{ on }">
-									<div v-on="on">
-										<router-link :to="'/farmer/' + message.writer.id" class="">
-											<avatar :farmer="message.writer" />
-										</router-link>
-									</div>
-								</rich-tooltip-farmer>
-								<div class="info">
-									<div class="pseudo">
-										{{ message.writer.name }}
-										<img v-if="message.writer.connected" class="status" src="/image/connected.png">
-										<img v-else class="status" src="/image/disconnected.png">
-									</div>
-									<div v-if="message.writer.color == 'admin'" class="grade admin">{{ $t('main.grade_admin') }}</div>
-									<div v-else-if="message.writer.color == 'moderator'" class="grade moderator">{{ $t('main.grade_moderator') }}</div>
-									<div v-else-if="message.writer.color == 'contributor'" class="grade contributor">{{ $t('main.grade_contributor') }}</div>
-									<lw-title v-if="message.writer.title.length" :title="message.writer.title" />
-									<div class="messages-count"><b>{{ message.writer.messages }}</b> messages</div>
-									<div class="trophy-count"><b>{{ message.writer.points | number }}</b> trophées</div>
+							<rich-tooltip-farmer v-if="!message.writer.deleted" :id="message.writer.id" v-slot="{ on }">
+								<div v-on="on">
+									<router-link :to="'/farmer/' + message.writer.id" class="">
+										<avatar :farmer="message.writer" />
+									</router-link>
 								</div>
+							</rich-tooltip-farmer>
+							<div v-if="!message.writer.deleted" class="info">
+								<div class="pseudo">
+									{{ message.writer.name }}
+									<img v-if="message.writer.connected" class="status" src="/image/connected.png">
+									<img v-else class="status" src="/image/disconnected.png">
+								</div>
+								<div v-if="message.writer.color == 'admin'" class="grade admin">{{ $t('main.grade_admin') }}</div>
+								<div v-else-if="message.writer.color == 'moderator'" class="grade moderator">{{ $t('main.grade_moderator') }}</div>
+								<div v-else-if="message.writer.color == 'contributor'" class="grade contributor">{{ $t('main.grade_contributor') }}</div>
+								<lw-title v-if="message.writer.title.length" :title="message.writer.title" />
+								<div class="messages-count"><b>{{ message.writer.messages }}</b> messages</div>
+								<div class="trophy-count"><b>{{ message.writer.points | number }}</b> trophées</div>
 							</div>
 						</div>
 						<div class="message card">
@@ -107,14 +105,13 @@
 									</div>
 
 									<template v-if="message.id == -1 && $store.state.connected && category.moderator">
-										&nbsp;&nbsp;-&nbsp;&nbsp;
-										<span class="lock" @click="lock">{{ topic.locked ? $t('unlock') : $t('lock') }}</span>
-										&nbsp;&nbsp;-&nbsp;&nbsp;
-										<span class="pin" @click="pin">{{ topic.pinned ? $t('unpin') : $t('pin') }}</span>
+										<span class="lock" @click="lock"><v-icon>mdi-lock</v-icon> {{ topic.locked ? $t('unlock') : $t('lock') }}</span>
+										&nbsp;&nbsp;
+										<span class="pin" @click="pin"><v-icon>mdi-pin</v-icon> {{ topic.pinned ? $t('unpin') : $t('pin') }}</span>
 									</template>
 									<template v-if="message.id == -1 && $store.state.connected && (topic.owner === $store.state.farmer.id || category.moderator)">
-										&nbsp;&nbsp;-&nbsp;&nbsp;
-										<span class="resolve" @click="resolve">{{ topic.resolved ? $t('unsolved') : $t('solved') }}</span>
+										&nbsp;&nbsp;
+										<span class="resolve" @click="resolve"><v-icon>mdi-check</v-icon> {{ topic.resolved ? $t('unsolved') : $t('solved') }}</span>
 									</template>
 								</div>
 								<div class="spacer"></div>
@@ -236,11 +233,11 @@
 		reportFarmer: Farmer | null = null
 		reportContent: string = ''
 		reasons = [
+			Warning.RUDE_FORUM,
+			Warning.FLOOD_FORUM,
+			Warning.PROMO_FORUM,
 			Warning.INCORRECT_FARMER_NAME,
 			Warning.INCORRECT_AVATAR,
-			Warning.FLOOD_FORUM,
-			Warning.RUDE_FORUM,
-			Warning.PROMO_FORUM,
 		]
 
 		get categoryName() {
@@ -458,7 +455,7 @@
 
 		report(message: ForumMessage) {
 			this.reportFarmer = message.writer
-			this.reportContent = '' + message.id
+			this.reportContent = message.id === -1 ? 't' + this.topic!.id : 'm' + message.id
 			this.reportDialog = true
 		}
 	}
@@ -506,10 +503,12 @@
 		height: 100%;
 		flex-wrap: nowrap;
 		display: flex;
+		gap: 15px;
 	}
 	#app.app .message-wrapper {
 		flex-direction: column;
-		margin-bottom: 5px;
+		margin: 10px;
+		margin-bottom: 20px;
 	}
 	.profile {
 		width: 130px;
@@ -520,28 +519,31 @@
 		top: 15px;
 		align-self: flex-start;
 		text-align: center;
-		margin-right: 8px;
-		padding-bottom: 8px;
-		height: 100%;
 	}
 	#app.app .profile {
 		width: auto;
 		flex-direction: row;
 		align-items: center;
-		margin-left: 10px;
 		text-align: left;
-		padding-top: 10px;
+		align-self: stretch;
+		flex: 0;
 	}
 	.profile .info {
 		.title {
-			margin-bottom: 4px;
+			margin-bottom: 2px;
 			font-size: 13px;
 			font-weight: normal;
+			&::v-deep .quote:first-child {
+				padding-left: 0;
+			}
+			&::v-deep .quote:last-child {
+				padding-right: 0;
+			}
 		}
 	}
 	.profile .pseudo {
 		font-size: 15px;
-		margin-bottom: 2px;
+		margin-bottom: 1px;
 		white-space: nowrap;
 		text-overflow: ellipsis;
 		overflow: hidden;
@@ -594,23 +596,23 @@
 		flex: 1;
 	}
 	.message {
-		padding: 10px;
+		padding: 15px;
 		vertical-align: top;
 		text-align: left;
-		color: #444;
-		width: calc(100% - 150px);
+		color: #252525;
+		width: 100%;
 		position: relative;
 		display: flex;
 		flex-direction: column;
-		margin-left: 10px;
 	}
 	#app.app .message {
-		width: calc(100% - 20px);
 		padding: 7px;
+		width: calc(100% - 20px);
 	}
-	.message .deleted {
+	.message .deleted.text {
 		font-style: italic;
 		color: #aaa;
+		margin-bottom: 0;
 	}
 	.message a {
 		word-break: break-all;
@@ -630,22 +632,26 @@
 		color: black;
 	}
 	.message .text {
-		padding: 5px;
 		word-break: break-word;
 		flex: 1;
-		margin-bottom: 10px;
+		line-height: 1.6;
 	}
 	.message .text ::v-deep a {
 		color: #5fad1b;
 	}
 	.message .md {
-		padding: 5px;
-		margin-bottom: 10px;
+		padding: 0;
 		word-break: break-word;
 		font-size: 15px;
 		flex: 1;
 		::v-deep p {
 			font-size: 15px;
+		}
+		::v-deep > p:last-child {
+			margin-bottom: 0;
+		}
+		::v-deep ul, ::v-deep ol {
+			margin-left: 15px;
 		}
 	}
 	.message .original {
@@ -658,6 +664,7 @@
 	.message .bottom {
 		display: flex;
 		align-items: center;
+		margin-top: 10px;
 	}
 	.message .date {
 		color: #aaa;
@@ -674,6 +681,10 @@
 		color: #aaa;
 		font-size: 14px;
 		cursor: pointer;
+		span .v-icon {
+			font-size: 17px;
+			vertical-align: bottom;
+		}
 	}
 	.editor {
 		margin-left: 140px;

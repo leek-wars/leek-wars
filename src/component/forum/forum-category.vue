@@ -128,13 +128,15 @@
 </template>
 
 <script lang="ts">
+	import { locale } from '@/locale'
 	import { ForumCategory, ForumTopic } from '@/model/forum'
 	import { mixins } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import { Component, Vue, Watch } from 'vue-property-decorator'
 	import Breadcrumb from './breadcrumb.vue'
+	const FormattingRules = () => import(/* webpackChunkName: "[request]" */ `@/component/forum/forum-formatting-rules.${locale}.i18n`)
 
-	@Component({ name: 'forum_category', i18n: {}, mixins: [...mixins], components: { Breadcrumb } })
+	@Component({ name: 'forum_category', i18n: {}, mixins: [...mixins], components: { Breadcrumb, FormattingRules } })
 	export default class ForumCategoryPage extends Vue {
 		categories: ForumCategory[] | null = null
 		topics: ForumTopic[] | null = null
