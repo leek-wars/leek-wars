@@ -6,7 +6,7 @@
 		<div class="content">
 			<div class="name">{{ farmer.name }}</div>
 			<div class="last-message">
-				<b v-if="$store.state.farmer && chat.last_farmer.id === $store.state.farmer.id">{{ $t('main.me') }} ►</b>
+				<b v-if="chat.last_farmer && $store.state.farmer && chat.last_farmer.id === $store.state.farmer.id">{{ $t('main.me') }} ►</b>
 				<span v-emojis v-text="chat.last_message"></span>
 			</div>
 			<div class="date">{{ LeekWars.formatDuration(chat.last_date) }}</div>
@@ -24,7 +24,7 @@
 		@Prop({required: true}) chat!: Chat
 
 		created() {
-			console.log("conversation", this.chat)
+			// console.log("chat", this.chat)
 		}
 
 		get farmer() {
@@ -41,7 +41,6 @@
 	.conversation {
 		cursor: pointer;
 		height: 52px;
-		margin-bottom: 3px;
 		white-space: nowrap;
 		position: relative;
 		&.unread {
@@ -53,8 +52,7 @@
 		color: white;
 	}
 	.conversation:hover {
-		background: white;
-		box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
+		background: #ddd;
 	}
 	.selected:hover {
 		background: #999;

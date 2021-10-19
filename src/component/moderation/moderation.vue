@@ -85,29 +85,37 @@
 							</template>
 						</v-select>
 						<div class="details">
-							<div v-if="selectedFault.reason === finalReason">
-								<div v-if="selectedFault.reason === Warning.INCORRECT_LEEK_NAME">
-									Poireau :
-									<rich-tooltip-leek :id="selectedFault.parameter" v-slot="{ on }" :instant="true">
-										<router-link :to="'/leek/' + selectedFault.parameter">
-											<span v-on="on">{{ selectedFault.data }}</span>
-										</router-link>
-									</rich-tooltip-leek>
+							<div v-if="finalReason === Warning.INCORRECT_LEEK_NAME">
+								Poireau :
+								<rich-tooltip-leek :id="selectedFault.parameter" v-slot="{ on }" :instant="true">
+									<router-link :to="'/leek/' + selectedFault.parameter">
+										<span v-on="on">{{ selectedFault.data }}</span>
+									</router-link>
+								</rich-tooltip-leek>
+							</div>
+							<div v-else-if="finalReason === Warning.INCORRECT_AI_NAME">
+								IA #{{ selectedFault.parameter }} : <b>{{ selectedFault.data }}</b>
+							</div>
+							<div v-else-if="finalReason === Warning.INCORRECT_WEBSITE">
+								Site web : <b>{{ selectedFault.data }}</b>
+							</div>
+							<div v-else-if="finalReason === Warning.FLOOD_CHAT || finalReason === Warning.RUDE_CHAT || finalReason === Warning.PROMO_CHAT">
+								Messages chat :
+								<ul class="forum-message">
+									<li v-for="(message, i) in selectedFault.data" :key="i">{{ message }}</li>
+								</ul>
+							</div>
+							<div v-if="finalReason === Warning.FLOOD_FORUM || finalReason === Warning.RUDE_FORUM || finalReason === Warning.PROMO_FORUM">
+								Message forum :
+								<markdown v-if="selectedFault.data" :content="selectedFault.data.message" mode="forum" class="forum-message" />
+								<div v-if="selectedFault.data">
+									Lien : <router-link :to="'/forum/category-' + selectedFault.data.category + '/topic-' + selectedFault.data.topic + (selectedFault.data.id ? '#message-' + selectedFault.parameter : '')">/forum/category-{{ selectedFault.data.category }}/topic-{{ selectedFault.data.topic }}{{ selectedFault.data.id ? '#message-' + selectedFault.parameter : '' }}</router-link>
 								</div>
-								<div v-else-if="selectedFault.reason === Warning.INCORRECT_AI_NAME">
-									IA #{{ selectedFault.parameter }} : <b>{{ selectedFault.data }}</b>
-								</div>
-								<div v-else-if="selectedFault.reason === Warning.INCORRECT_WEBSITE">
-									Site web : <b>{{ selectedFault.data }}</b>
-								</div>
-								<div v-else-if="selectedFault.reason === Warning.FLOOD_CHAT || selectedFault.reason === Warning.RUDE_CHAT">
-									Message : {{ selectedFault.parameter }}
-								</div>
-								<div v-else-if="selectedFault.reason === Warning.RUDE_SAY && selectedFault.fight">
-									Says de <b>{{ selectedFault.target.name }}</b> dans ce combat
-									<div class="says">
-										<div v-for="(say, s) in selectedFault.data" :key="s">{{ say[0] }} : « <i>{{ say[1] }}</i> »</div>
-									</div>
+							</div>
+							<div v-else-if="finalReason === Warning.RUDE_SAY && selectedFault.fight">
+								Says de <b>{{ selectedFault.target.name }}</b> dans ce combat
+								<div class="says">
+									<div v-for="(say, s) in selectedFault.data" :key="s">{{ say[0] }} : « <i>{{ say[1] }}</i> »</div>
 								</div>
 							</div>
 						</div>
@@ -148,6 +156,7 @@
 </template>
 
 <script lang="ts">
+	import Markdown from '@/component/encyclopedia/markdown.vue'
 	import { Farmer } from '@/model/farmer'
 	import { i18n } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
@@ -160,7 +169,7 @@
 		thugs!: Farmer[]
 	}
 
-	@Component({ name: "moderation", i18n: {} })
+	@Component({ name: "moderation", i18n: {}, components: { Markdown } })
 	export default class Moderation extends Vue {
 		faults: Fault[] | null = null
 		faultsById: {[key: number]: Fault} = {}
@@ -227,6 +236,7 @@
 			} else if (!LeekWars.mobile && this.faults && this.faults.length) {
 				this.$router.push('/moderation/fault/' + this.faults[0].id)
 			} else {
+				this.selectedFault = null
 				LeekWars.splitShowList()
 			}
 		}
@@ -460,5 +470,13 @@
 		i {
 			margin-right: 5px;
 		}
+	}
+	.forum-message {
+		border: 1px solid #aaa;
+		margin: 5px 0;
+		border-radius: 4px;
+		background: #efefef;
+		max-height: 250px;
+		overflow-y: auto;
 	}
 </style>

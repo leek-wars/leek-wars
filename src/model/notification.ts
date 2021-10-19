@@ -162,7 +162,7 @@ class Notification {
 			return new Notification(data, "/tournament/" + tournamentID, "tournament_end.png", [compoName, i18n.t('main.' + lastRoundName) as string])
 		} else if (type === NotificationType.REPORTING_PROCESSED) {
 			const targetName = params[0]
-			return new Notification(data, null, "reporting_processed.png", [targetName])
+			return new Notification(data, "/farmer", "reporting_processed.png", [targetName])
 		} else if (type === NotificationType.BATTLE_ROYALE_STARTED) {
 			const fightID = params[0]
 			return new Notification(data, "/fight/" + fightID, "mdi-sword-cross")

@@ -2,7 +2,7 @@ import { env } from '@/env'
 import { LeekWars } from '@/model/leekwars'
 import { vueMain } from '@/model/vue'
 import router from '@/router'
-import { ChatMessage } from './chat'
+import { ChatMessage, ChatType } from './chat'
 import { NotificationType } from './notification'
 import { store } from './store'
 
@@ -45,13 +45,14 @@ enum SocketMessage {
 	FIGHT_PROGRESS_REGISTER = 40,
 	FIGHT_PROGRESS = 41,
 	FIGHT_PROGRESS_UNREGISTER = 42,
-	TEAM_CHAT_ENABLE_FAST = 43,
-	TEAM_CHAT_RECEIVE_PACK = 44,
+	// TEAM_CHAT_ENABLE_FAST = 43,
+	// TEAM_CHAT_RECEIVE_PACK = 44,
 	UPDATE_LEEK_TALENT = 45,
 	UPDATE_FARMER_TALENT = 46,
 	UPDATE_TEAM_TALENT = 47,
 	UPDATE_HABS = 48,
-	UPDATE_LEEK_XP = 49
+	UPDATE_LEEK_XP = 49,
+	CHAT_CENSOR = 50,
 }
 
 class Socket {
@@ -143,10 +144,13 @@ class Socket {
 				}
 				case SocketMessage.CHAT_RECEIVE : {
 
+					// console.log("socket chat receive")
 					const message = data as ChatMessage
+					const chat = store.state.chat[message.chat]
+
 					store.commit('chat-receive', { chat: message.chat, message })
 
-					if (store.state.farmer!.id !== message.farmer!.id) {
+					if (chat.type === ChatType.PM && store.state.farmer!.id !== message.farmer!.id) {
 						LeekWars.squares.addFromConversation(message)
 					}
 					break
@@ -210,6 +214,11 @@ class Socket {
 				case SocketMessage.UPDATE_TEAM_TALENT: {
 					const message = { composition: data[0], talent: data[1] }
 					vueMain.$emit('update-team-talent', message)
+					break
+				}
+				case SocketMessage.CHAT_CENSOR: {
+					console.log("socket censor", data)
+					store.commit('chat-censor', { chat: data[0], messages: data[1], censorer: data[2] })
 					break
 				}
 			}

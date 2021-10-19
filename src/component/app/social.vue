@@ -57,7 +57,7 @@
 						</v-menu>
 					</template>
 					<div slot="actions">
-						<div class="button text" @click="LeekWars.addChat(chatLanguage.code, ChatType.GLOBAL, 'Chat ' + chatLanguage.code.toUpperCase())">
+						<div class="button text" @click="LeekWars.addChat(chatLanguage.chat, ChatType.GLOBAL, 'Chat ' + chatLanguage.code.toUpperCase())">
 							<v-icon>mdi-picture-in-picture-bottom-right</v-icon>
 						</div>
 					</div>

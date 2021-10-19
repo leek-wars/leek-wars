@@ -17,7 +17,7 @@ import { WeaponTemplate } from '@/model/weapon'
 import router from '@/router'
 import Vue from 'vue'
 import { TranslateResult } from 'vue-i18n'
-import { ChatType, ChatWindow } from './chat'
+import { Chat, ChatType, ChatWindow } from './chat'
 import { Constant } from './constant'
 import { i18n, loadLanguageAsync } from './i18n'
 import { ItemType } from './item'
@@ -529,14 +529,14 @@ const LeekWars = {
 	initChats() {
 		LeekWars.chatWindows = JSON.parse(localStorage.getItem('chats') || '[]')
 	},
-	addChat(name: string, type: ChatType, title: string) {
+	addChat(id: number, type: ChatType, title: string) {
 		for (const window of LeekWars.chatWindows) {
-			if (window.name === name) {
+			if (window.id === id) {
 				window.expanded = true
 				return
 			}
 		}
-		LeekWars.chatWindows.push({name, type, title, expanded: true})
+		LeekWars.chatWindows.push({ id, type, title, expanded: true})
 	},
 	removeChat(i: number) {
 		LeekWars.chatWindows.splice(i, 1)

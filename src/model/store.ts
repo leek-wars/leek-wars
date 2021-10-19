@@ -70,6 +70,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			state.connected = true
 			state.token = token
 		},
+
 		"connect"(state: LeekWarsState, data: {farmer: Farmer, farmers: number, token: string}) {
 			state.farmer = data.farmer
 			Vue.set(state.farmer, 'animated_habs', state.farmer.habs)
@@ -86,6 +87,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			loadMessages(state)
 			vueMain.$emit('connected', state.farmer)
 		},
+
 		"disconnect"(state: LeekWarsState) {
 			LeekWars.post('farmer/disconnect')
 			state.connected = false
@@ -107,11 +109,13 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			fileSystem.clear()
 			console.clear()
 		},
+
 		"wsconnected"(state: LeekWarsState) {
 			state.wsconnected = true
 			state.wsdisconnected = false
 			vueMain.$emit('wsconnected')
 		},
+
 		"wsclose"(state: LeekWarsState) {
 			for (const chat in state.chat) {
 				state.chat[chat].invalidated = true
@@ -119,10 +123,15 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			state.wsconnected = false
 			state.wsdisconnected = true
 		},
-		'clear-chat'(state: LeekWarsState, chat: number) {
-			Vue.delete(state.chat, chat)
-			Vue.set(state.chat, chat, new Chat(chat, ChatType.GLOBAL))
+
+		'clear-chat'(state: LeekWarsState, chatID: number) {
+			const chat = state.chat[chatID]
+			if (chat) {
+				Vue.delete(state.chat, chatID)
+				Vue.set(state.chat, chatID, new Chat(chatID, chat.type))
+			}
 		},
+
 		'chat-receive-pack'(state: LeekWarsState, pack: any) {
 			if (!pack.length) { return }
 			const channel = pack[0][0]
@@ -132,6 +141,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			state.chat[channel].set_messages(pack)
 			vueMain.$emit('chat', [channel])
 		},
+
 		'br'(state: LeekWarsState, data: any) {
 			const channel = data[0]
 			if (!state.chat[channel]) {
@@ -139,35 +149,21 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			}
 			state.chat[channel].battleRoyale(data[1], data[2])
 		},
+
 		'chat-receive'(state: LeekWarsState, data: {chat: number, message: ChatMessage}) {
 
-			// console.log("chat-receive message", data.message)
+			// console.log("chat-receive message", data.chat, data.message)
 			const chatID = data.chat
 			const message = data.message
-
-			const publicChat = chatID === 1 || chatID === 2 || chatID === 25518
-			const newChat = !!state.chat[chatID]
+			const newChat = !state.chat[chatID]
+			const type = chatID === 1 || chatID === 2 ? ChatType.GLOBAL : (state.farmer!.team && chatID === state.farmer!.team.chat ? ChatType.TEAM : ChatType.PM)
 
 			// Update or create chat
 			if (!state.chat[chatID]) {
-				Vue.set(state.chat, chatID, new Chat(chatID, ChatType.PM))
+				Vue.set(state.chat, chatID, new Chat(chatID, type))
 			}
 			const chat = state.chat[chatID]
 
-			if (!publicChat) {
-				if (newChat) {
-					state.conversationsList.unshift(chat)
-				} else {
-					const index = state.conversationsList.findIndex((c) => c.id === chatID)
-					state.conversationsList.splice(index, 1)
-					state.conversationsList.unshift(chat)
-					if (!chat.unread && message.farmer.id !== state.farmer!.id) {
-						chat.unread = true
-						state.unreadMessages++
-						updateTitle(state)
-					}
-				}
-			}
 			chat.last_message = message.content
 			chat.last_farmer = message.farmer
 			if (!chat.farmers.find(f => f.id === message.farmer.id)) {
@@ -175,13 +171,27 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			}
 			chat.add(message)
 			vueMain.$emit('chat', [chatID])
-		},
-		'add-conversation-participant'(state: LeekWarsState, data: {id: number, farmer: Farmer}) {
-			const conversation = state.conversations[data.id]
-			if (conversation && !conversation.farmers.find(f => f.id === data.farmer.id)) {
-				conversation.farmers.push(data.farmer)
+
+			if (chat.type === ChatType.PM) {
+				if (newChat) {
+					state.conversationsList.unshift(chat)
+				} else if (!chat.read && message.farmer.id !== state.farmer!.id) {
+					const index = state.conversationsList.findIndex((c) => c.id === chatID)
+					state.conversationsList.splice(index, 1)
+					state.conversationsList.unshift(chat)
+					state.unreadMessages++
+					updateTitle(state)
+				}
 			}
 		},
+
+		'add-conversation-participant'(state: LeekWarsState, data: {id: number, farmer: Farmer}) {
+			const chat = state.chat[data.id]
+			if (chat && !chat.farmers.find(f => f.id === data.farmer.id)) {
+				chat.farmers.push(data.farmer)
+			}
+		},
+
 		'update-crystals'(state: LeekWarsState, crystals: number) {
 			if (state.farmer) {
 				state.farmer.crystals += crystals
@@ -198,11 +208,13 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 				update()
 			}
 		},
+
 		'set-habs'(state: LeekWarsState, habs: number) {
 			if (state.farmer) {
 				state.farmer.habs = habs
 			}
 		},
+
 		'update-habs'(state: LeekWarsState, habs: number) {
 			if (state.farmer) {
 				state.farmer.habs += habs
@@ -219,12 +231,15 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 				update()
 			}
 		},
+
 		'update-fights'(state: LeekWarsState, fights: number) {
 			if (state.farmer) { state.farmer.fights += fights }
 		},
+
 		'set-talent'(state: LeekWarsState, talent: number) {
 			if (state.farmer) { state.farmer.talent = talent }
 		},
+
 		'set-leek-talents'(state: LeekWarsState, talents: any) {
 			if (state.farmer) {
 				for (const i in talents) {
@@ -232,26 +247,31 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 				}
 			}
 		},
+
 		'rename-leek'(state: LeekWarsState, data: any) {
 			if (state.farmer) {
 				state.farmer.leeks[data.leek].name = data.name
 			}
 		},
+
 		'rename-farmer'(state: LeekWarsState, data: any) {
 			if (state.farmer) {
 				state.farmer.name = data.name
 			}
 		},
+
 		'update-capital'(state: LeekWarsState, data: any) {
 			if (state.farmer) {
 				state.farmer.leeks[data.leek].capital = data.capital
 			}
 		},
+
 		'change-skin'(state: LeekWarsState, data: any) {
 			if (state.farmer) {
 				state.farmer.leeks[data.leek].skin = data.skin
 			}
 		},
+
 		'change-fish'(state: LeekWarsState, data: any) {
 			if (state.farmer) {
 				state.farmer.leeks[data.leek].fish = data.fish
@@ -317,19 +337,48 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 				LeekWars.squares.addFromNotification(notification)
 			}
 		},
+
+		'chat-censor'(state: LeekWarsState, data: {chat: number, messages: number[], censorer: Farmer}) {
+			const chat = state.chat[data.chat]
+			// console.log("censor chat", chat)
+			if (chat) {
+				for (const messageID of data.messages) {
+					for (const message of chat.messages) {
+						if (message.id === messageID) {
+							message.censored = Date.now() / 1000
+							message.censored_by = data.censorer
+							break
+						}
+						for (const sub of message.subMessages) {
+							if (sub.id === messageID) {
+								sub.censored = Date.now() / 1000
+								sub.censored_by = data.censorer
+							}
+						}
+					}
+				}
+			}
+		},
+
 		'new-conversation'(state: LeekWarsState, data: any) {
-			const conversation = state.conversations[data.id]
-			if (!conversation) {
-				Vue.set(state.conversations, data.id, data)
-				state.conversationsList.push(data)
+			// console.log("new-conversation", data)
+			let chat = state.chat[data.id]
+			if (!chat) {
+				chat = new Chat(data.id, ChatType.PM)
+				Vue.set(chat, 'last_date', data.last_date)
+				Vue.set(chat, 'farmers', data.farmers)
+				Vue.set(chat, 'last_farmer', data.farmers[data.last_farmer_id])
+				Vue.set(chat, 'last_message', data.last_message)
+				Vue.set(state.chat, data.id, chat)
+				state.conversationsList.push(chat)
 			} else {
-				conversation.farmers.push(data.farmers[0])
+				// conversation.farmers.push(data.farmers[0])
 			}
 		},
 		'quit-conversation'(state: LeekWarsState, id: number) {
-			if (id in state.conversations) {
-				Vue.delete(state.conversations, '' + id)
-				const index = state.conversationsList.findIndex((conversation) => conversation.id === id)
+			if (id in state.chat) {
+				Vue.delete(state.chat, '' + id)
+				const index = state.conversationsList.findIndex((chat) => chat.id === id)
 				state.conversationsList.splice(index, 1)
 			}
 		},

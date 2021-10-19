@@ -18,7 +18,7 @@
 						</div>
 					</router-link>
 				</div>
-				<div v-else :key="m" class="message">
+				<div v-else :key="m" class="message" :class="{me: message.farmer.id === $store.state.farmer.id}">
 					<router-link :to="'/farmer/' + message.farmer.id" class="avatar-wrapper">
 						<rich-tooltip-farmer :id="message.farmer.id" v-slot="{ on }">
 							<avatar :farmer="message.farmer" :on="on" />
@@ -30,27 +30,32 @@
 								<span :class="message.farmer.color" v-on="on">{{ message.farmer.name }}</span>
 							</rich-tooltip-farmer>
 						</router-link>
-						<div v-for="(text, i) in message.contents" :key="i" v-large-emojis v-chat-code-latex class="text" v-html="text"></div>
+						<div v-if="message.censored" class="censored">Censuré par {{ message.censored_by.name }}</div>
+						<div v-else v-large-emojis v-chat-code-latex class="text" v-html="message.content"></div>
+						<template v-for="(sub, i) in message.subMessages">
+							<div v-if="sub.censored" :key="i" class="censored">Censuré par {{ sub.censored_by.name }}</div>
+							<div v-else :key="i" v-large-emojis v-chat-code-latex class="text" v-html="sub.content"></div>
+						</template>
 						<div class="right">
 							<span :title="LeekWars.formatDateTime(message.date)" class="time">{{ LeekWars.formatTime(message.date) }}</span>
-							<v-menu v-if="!privateMessages && !($store.state.farmer && message.farmer.id === $store.state.farmer.id)" offset-y>
+							<v-menu v-if="!privateMessages && !($store.state.farmer && message.farmer.id === $store.state.farmer.id) && message.farmer.color !== 'admin'" offset-y>
 								<template v-slot:activator="{ on }">
 									<v-btn text small icon color="grey" v-on="on">
 										<v-icon>mdi-dots-vertical</v-icon>
 									</v-btn>
 								</template>
 								<v-list dense class="message-actions">
-									<v-list-item v-ripple @click="report(message)">
+									<v-list-item v-if="chat.type === ChatType.GLOBAL && message.farmer.color !== 'admin'" v-ripple @click="report(message)">
 										<v-icon>mdi-flag</v-icon>
-										<span>Signaler</span>
+										<span>{{ $t('warning.report') }}</span>
 									</v-list-item>
-									<v-list-item v-if="$store.getters.moderator && !message.farmer.muted" v-ripple @click="mute(message.farmer)">
+									<v-list-item v-if="isModerator && chat.type !== ChatType.PM" v-ripple @click="censor(message)">
+										<v-icon>mdi-gavel</v-icon>
+										<span>{{ $t('warning.censor') }}</span>
+									</v-list-item>
+									<v-list-item v-if="isModerator && chat.type !== ChatType.PM" v-ripple @click="mute(message.farmer)">
 										<v-icon>mdi-volume-off</v-icon>
 										<span>Mute</span>
-									</v-list-item>
-									<v-list-item v-if="$store.getters.moderator && message.farmer.muted" v-ripple @click="unmute(message.farmer)">
-										<v-icon>mdi-volume-high</v-icon>
-										<span>Unmute</span>
 									</v-list-item>
 								</v-list>
 							</v-menu>
@@ -65,19 +70,46 @@
 
 		<report-dialog v-if="reportFarmer" v-model="reportDialog" :target="reportFarmer" :reasons="reasons" :parameter="reportContent" class="report-dialog" />
 
-		<popup v-model="muteDialog" :width="600">
-			<v-icon slot="icon">mdi-volume-off</v-icon>
-			<span slot="title">{{ $t('warning.mute') }}</span>
-			<template v-if="muteFarmer">
-				<i18n path="moderation.mute_popup">
+		<popup v-model="censorDialog" :width="500">
+			<v-icon slot="icon">mdi-gavel</v-icon>
+			<span slot="title">Censurer</span>
+			<div v-if="muteFarmer" class="censor">
+				<i18n path="warning.censor_farmer">
 					<b slot="farmer">{{ muteFarmer.name }}</b>
 				</i18n>
-			</template>
+				<div class="flex">
+					<avatar :farmer="muteFarmer" />
+					<div class="messages">
+						<div v-for="message in censorMessages" :key="message.id" class="bubble">
+							<v-checkbox v-if="message.censored === 0" v-model="censoredMessages[message.id]" :label="message.content" :hide-details="true" />
+							<div v-for="sub in message.subMessages" :key="sub.id">
+								<v-checkbox v-if="sub.censored === 0" v-model="censoredMessages[sub.id]" :label="sub.content" :hide-details="true" />
+							</div>
+						</div>
+					</div>
+				</div>
+				<v-checkbox v-model="censorMute" label="Mettre en sourdine pour 1h" :hide-details="true" />
+			</div>
 			<div slot="actions">
-				<div v-ripple @click="muteDialog = false">{{ $t('main.cancel') }}</div>
-				<div v-ripple class="mute red" @click="muteConfirm">{{ $t('warning.confirm_mute') }}</div>
+				<div v-ripple @click="censorDialog = false">{{ $t('main.cancel') }}</div>
+				<div v-ripple class="mute red" @click="censorConfirm"><v-icon>mdi-gavel</v-icon> Censurer</div>
 			</div>
 		</popup>
+
+		<popup v-model="muteDialog" :width="500">
+			<v-icon slot="icon">mdi-gavel</v-icon>
+			<span slot="title">Censurer</span>
+			<div v-if="muteFarmer" class="censor">
+				<i18n path="warning.mute_popup">
+					<b slot="farmer">{{ muteFarmer.name }}</b>
+				</i18n>
+			</div>
+			<div slot="actions">
+				<div v-ripple @click="muteDialog = false">{{ $t('main.cancel') }}</div>
+				<div v-ripple class="mute red" @click="muteConfirm"><v-icon>mdi-gavel</v-icon> Censurer</div>
+			</div>
+		</popup>
+
 		<popup v-model="unmuteDialog" :width="600">
 			<v-icon slot="icon">mdi-volume-high</v-icon>
 			<span slot="title">{{ $t('warning.unmute') }}</span>
@@ -95,12 +127,13 @@
 </template>
 
 <script lang="ts">
-	import { Chat, ChatMessage } from '@/model/chat'
+	import { Chat, ChatMessage, ChatType } from '@/model/chat'
 	import { Farmer } from '@/model/farmer'
 	import { LeekWars } from '@/model/leekwars'
 	import { Warning } from '@/model/moderation'
 	import { SocketMessage } from '@/model/socket'
 	import { store } from '@/model/store'
+	import { TeamMember, TeamMemberLevel } from '@/model/team'
 	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 	import ChatInput from './chat-input.vue'
 
@@ -109,10 +142,16 @@
 		components: { 'chat-input': ChatInput }
 	})
 	export default class ChatElement extends Vue {
+		ChatType = ChatType
 		@Prop() id!: number
 		@Prop() newFarmer!: any
 		@Prop() newConversation!: any
 		muteDialog: boolean = false
+		censorDialog: boolean = false
+		censorMessage: ChatMessage | null = null
+		censoredMessages: {[key: number]: boolean} = {}
+		censorMute: boolean = false
+		censorFarmer: Farmer | null = null
 		unmuteDialog: boolean = false
 		muteFarmer: Farmer | null = null
 		reportDialog: boolean = false
@@ -134,7 +173,15 @@
 			return this.id ? store.state.chat[this.id] : null
 		}
 		get privateMessages() {
-			return this.id
+			return this.chat && this.chat.type === ChatType.PM
+		}
+
+		get censorMessages() {
+			return this.chat && this.censorFarmer ? this.chat.messages.filter(m => (m.censored === 0 || (m.subMessages && m.subMessages.some(s => s.censored === 0))) && m.farmer.id === this.censorFarmer!.id) : []
+		}
+
+		get isModerator() {
+			return this.$store.getters.moderator || (this.chat && this.chat.type === ChatType.TEAM && this.$store.state.farmer.team.member_level >= TeamMemberLevel.CAPTAIN)
 		}
 
 		created() {
@@ -198,15 +245,16 @@
 		update() {
 			if (!this.id) { return }
 			LeekWars.socket.enableChannel(this.id)
-			if (!this.$store.state.chat[this.id] || this.$store.state.chat[this.id].messages.length < 50) {
+			if (!this.chat || !this.chat.loaded) {
 				LeekWars.get('message/get-messages/' + this.id + '/' + 50 + '/' + 1).then(data => {
 					this.$store.commit('clear-chat', this.id)
-					for (const message of data.messages.reverse()) {
+					for (const message of data.messages) {
 						this.$store.commit('chat-receive', {chat: this.id, message: message})
 					}
 					for (const farmer of data.farmers) {
 						this.$store.commit('add-conversation-participant', {id: this.id, farmer})
 					}
+					this.chat!.loaded = true
 				})
 			}
 			this.read()
@@ -220,20 +268,38 @@
 				LeekWars.post('message/create-conversation', {farmer_id: this.newFarmer.id, message}).then(data => {
 					if (this.newConversation) {
 						this.newConversation.id = data.conversation_id
-						this.$store.commit('new-conversation', this.newConversation)
+						// this.$store.commit('new-conversation', this.newConversation)
 					}
 					this.$router.replace('/messages/conversation/' + data.conversation_id)
 					// this.newConversationSent = true
 				})
 			} else {
-				LeekWars.post('message/send-message', {conversation_id: this.chat.id, message})
+				LeekWars.post('message/send-message', {conversation_id: this.chat.id, message}).then(() => {}).error(data => {
+					LeekWars.toast(this.$t('main.error_' + data.error, data.params))
+				})
 			}
 		}
 
 		report(message: ChatMessage) {
 			this.reportDialog = true
 			this.reportFarmer = message.farmer
-			this.reportContent = message.contents.reduce((a, b) => a + b + "\n", "")
+			this.reportContent = [message.id, ...message.subMessages.map(s => s.id)].join(',')
+		}
+
+		censor(message: ChatMessage) {
+			this.censorDialog = true
+			this.censorMessage = message
+			this.censorFarmer = message.farmer
+			this.muteFarmer = message.farmer
+			this.censoredMessages = {}
+			if (message.censored === 0) {
+				Vue.set(this.censoredMessages, message.id, true)
+			}
+			for (const sub of message.subMessages) {
+				if (sub.censored === 0) {
+					Vue.set(this.censoredMessages, sub.id, true)
+				}
+			}
 		}
 
 		mute(farmer: Farmer) {
@@ -241,9 +307,17 @@
 			this.muteFarmer = farmer
 		}
 
+		censorConfirm() {
+			this.censorDialog = false
+			if (this.censorMessage) {
+				const ids = Object.entries(this.censoredMessages).filter(e => e[1]).map(e => e[0]).join(',')
+				LeekWars.post('message/censor', { messages: ids, mute: this.censorMute })
+			}
+		}
+
 		muteConfirm() {
 			if (!this.muteFarmer) { return }
-			LeekWars.socket.send([SocketMessage.CHAT_REQUEST_MUTE, this.id, this.muteFarmer.id])
+			LeekWars.post('message/mute', { farmer: this.muteFarmer.id, chat: this.id, duration: 3600 })
 			this.muteFarmer.muted = true
 			this.muteDialog = false
 		}
@@ -261,9 +335,9 @@
 		}
 
 		read() {
-			if (this.chat && this.chat.conversation) {
-				LeekWars.socket.send([SocketMessage.MP_READ, this.chat.conversation.id])
-				this.chat.conversation.unread = false
+			if (this.chat) {
+				// LeekWars.socket.send([SocketMessage.MP_READ, this.chat.id])
+				this.chat.read = true
 			}
 		}
 		// TODO
@@ -296,6 +370,10 @@
 		align-items: flex-start;
 		margin: 6px 8px;
 		color: #aaa;
+		gap: 8px;
+		&.me {
+			flex-direction: row-reverse;
+		}
 	}
 	.avatar-wrapper {
 		position: sticky;
@@ -307,7 +385,6 @@
 		flex: 0 0 42px;
 	}
 	.bubble {
-		margin-left: 8px;
 		padding: 3px 7px;
 		border-radius: 4px;
 		background: white;
@@ -338,8 +415,8 @@
 	.text.large-emojis ::v-deep .emoji {
 		font-size: 26px;
 		line-height: 34px;
-		width: 30px;
-		height: 30px;
+		width: 26px;
+		height: 26px;
 	}
 	.right {
 		font-size: 13px;
@@ -362,7 +439,7 @@
 		}
 	}
 	.message-actions .v-icon {
-		margin-right: 4px;
+		margin-right: 6px;
 	}
 	.text ::v-deep a {
 		color: #5fad1b;
@@ -428,5 +505,23 @@
 		&:after {
 			margin-left: 10px;
 		}
+	}
+	.censor {
+		.messages {
+			flex: 1;
+		}
+		.bubble {
+			margin-bottom: 10px;
+			padding: 8px;
+		}
+	}
+	.censor .flex {
+		gap: 8px;
+		margin: 10px 0;
+	}
+	.censored {
+		font-size: 15px;
+		color: #777;
+		font-style: italic;
 	}
 </style>
