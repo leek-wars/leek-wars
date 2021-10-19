@@ -81,7 +81,7 @@
 					</router-link>
 				</div>
 				<div class="button-wrapper">
-					<v-menu v-if="env.SOCIAL" :nudge-bottom="3" :max-width="400" :max-height="400" bottom offset-y @input="readNotifications">
+					<v-menu v-if="env.SOCIAL" :nudge-bottom="3" :width="400" :max-height="400" bottom offset-y @input="readNotifications">
 						<template v-slot:activator="{ on }">
 							<div class="header-button messages-button" v-on="on">
 								<v-icon>mdi-email-outline</v-icon>
@@ -99,7 +99,7 @@
 					</v-menu>
 				</div>
 				<div class="button-wrapper">
-					<v-menu :nudge-bottom="3" :max-width="400" :max-height="400" bottom offset-y @input="readNotifications">
+					<v-menu :nudge-bottom="3" :width="400" :max-height="400" bottom offset-y @input="readNotifications">
 						<template v-slot:activator="{ on }">
 							<div class="header-button notifications-button" v-on="on">
 								<v-icon>mdi-bell-outline</v-icon>
@@ -315,6 +315,7 @@
 		background: #f2f2f2;
 	}
 	.dialog-items {
+		width: 400px;
 		max-height: 350px;
 		overflow-y: auto;
 		overflow-x: hidden;
