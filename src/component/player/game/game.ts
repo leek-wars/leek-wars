@@ -664,7 +664,7 @@ class Game {
 				}
 			}
 		}
-		this.loadedData++
+		this.resourceLoaded('logs')
 	}
 
 	/*
