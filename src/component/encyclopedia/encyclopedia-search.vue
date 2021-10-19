@@ -54,7 +54,7 @@
 	import { Component, Vue, Watch } from 'vue-property-decorator'
 	import Breadcrumb from '../forum/breadcrumb.vue'
 
-	@Component({ name: 'encyclopedia-search', i18n: {}, mixins, components: { Breadcrumb, Markdown } })
+	@Component({ name: 'encyclopedia-search', i18n: {}, mixins: [...mixins], components: { Breadcrumb, Markdown } })
 	export default class EncyclopediaSearch extends Vue {
 		options = {
 			query: '',

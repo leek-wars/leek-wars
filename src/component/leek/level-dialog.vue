@@ -84,7 +84,7 @@
 	import { LeekWars } from '@/model/leekwars'
 	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 
-	@Component({ name: 'level-dialog', i18n: {}, mixins })
+	@Component({ name: 'level-dialog', i18n: {}, mixins: [...mixins] })
 	export default class LevelDialog extends Vue {
 		@Prop({required: true}) value!: boolean
 		@Prop({required: true}) leek2!: Leek

@@ -110,11 +110,12 @@
 
 <script lang="ts">
 	import { ForumCategory, ForumTopic } from '@/model/forum'
+	import { mixins } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import { Component, Vue, Watch } from 'vue-property-decorator'
 	import Breadcrumb from './breadcrumb.vue'
 
-	@Component({ name: 'forum_category', i18n: {}, components: { Breadcrumb } })
+	@Component({ name: 'forum_category', i18n: {}, mixins: [...mixins], components: { Breadcrumb } })
 	export default class ForumCategoryPage extends Vue {
 		categories: ForumCategory[] | null = null
 		topics: ForumTopic[] | null = null

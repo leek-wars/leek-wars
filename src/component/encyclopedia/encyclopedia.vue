@@ -106,7 +106,7 @@
 	import { Route } from 'vue-router'
 	import Breadcrumb from '../forum/breadcrumb.vue'
 
-	@Component({ name: 'encyclopedia', i18n: {}, mixins, components: { Markdown, Breadcrumb } })
+	@Component({ name: 'encyclopedia', i18n: {}, mixins: [...mixins], components: { Markdown, Breadcrumb } })
 	export default class Encyclopedia extends Vue {
 		content: string = ''
 		english: string = ''

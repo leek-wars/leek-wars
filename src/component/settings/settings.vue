@@ -172,7 +172,7 @@
 	import { store } from '@/model/store'
 	import { Component, Vue, Watch } from 'vue-property-decorator'
 
-	@Component({ name: 'settings', i18n: {}, mixins, components: {TwoFactor} })
+	@Component({ name: 'settings', i18n: {}, mixins: [...mixins], components: {TwoFactor} })
 	export default class Settings extends Vue {
 		vapid_key = new Uint8Array([4, 92, 237, 40, 114, 162, 99, 215, 179, 242, 70, 151, 236, 60, 216, 10, 167, 186, 77, 27, 233, 193, 117, 111, 78, 20, 121, 201, 142, 186, 91, 13, 111, 26, 241, 126, 12, 216, 94, 160, 38, 110, 214, 161, 249, 147, 233, 133, 128, 210, 170, 161, 158, 57, 24, 54, 194, 103, 195, 94, 49, 182, 20, 62, 184])
 		mails = [

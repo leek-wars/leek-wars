@@ -212,7 +212,7 @@
 	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 
 	@Component({
-		name: 'ranking', i18n: {}, mixins,
+		name: 'ranking', i18n: {}, mixins: [...mixins],
 		components: { 'ranking-leek-row': RankingLeekRowElement, 'ranking-farmer-row': RankingFarmerRowElement, 'ranking-team-row': RankingTeamRowElement, 'ranking-search-result': RankingSearchResult }
 	})
 	export default class RankingPage extends Vue {

@@ -182,6 +182,7 @@
 <script lang="ts">
 	import Markdown from '@/component/encyclopedia/markdown.vue'
 	import { locale } from '@/locale'
+	import { mixins } from '@/model/i18n'
 	import { ForumCategory, ForumMessage, ForumTopic } from '@/model/forum'
 	import { LeekWars } from '@/model/leekwars'
 	import { Component, Vue, Watch } from 'vue-property-decorator'
@@ -189,7 +190,7 @@
 	import Breadcrumb from './breadcrumb.vue'
 	const FormattingRules = () => import(/* webpackChunkName: "[request]" */ `@/component/forum/forum-formatting-rules.${locale}.i18n`)
 
-	@Component({ name: 'forum_topic', i18n: {}, components: { Breadcrumb, EmojiPicker, Markdown, FormattingRules } })
+	@Component({ name: 'forum_topic', i18n: {}, mixins: [...mixins], components: { Breadcrumb, EmojiPicker, Markdown, FormattingRules } })
 	export default class ForumTopicPage extends Vue {
 		topic: ForumTopic | null = null
 		category: ForumCategory | null = null

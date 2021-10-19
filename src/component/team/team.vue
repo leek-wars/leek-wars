@@ -509,7 +509,7 @@
 	import { Composition, Team, TeamMember } from '@/model/team'
 	import { Component, Vue, Watch } from 'vue-property-decorator'
 
-	@Component({ name: 'team', i18n: {}, mixins, components: { CharacteristicTooltip, Explorer }})
+	@Component({ name: 'team', i18n: {}, mixins: [...mixins], components: { CharacteristicTooltip, Explorer }})
 	export default class TeamPage extends Vue {
 		ChatType = ChatType
 		team: Team | null = null

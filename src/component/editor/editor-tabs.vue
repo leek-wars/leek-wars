@@ -39,7 +39,7 @@
 	import { LeekWars } from '@/model/leekwars'
 	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 
-	@Component({ name: 'editor-tabs', i18n: {}, mixins })
+	@Component({ name: 'editor-tabs', i18n: {}, mixins: [...mixins] })
 	export default class EditorTabs extends Vue {
 		@Prop({required: true}) ais!: AI[]
 		loaded: boolean = false

@@ -583,7 +583,7 @@
 	const Explorer = () => import(/* webpackChunkName: "[request]" */ `@/component/explorer/explorer.${locale}.i18n`)
 	import { fileSystem } from '@/model/filesystem'
 
-	@Component({ name: "leek", i18n: {}, mixins, components: { CapitalDialog, LevelDialog, CharacteristicTooltip, Explorer } })
+	@Component({ name: "leek", i18n: {}, mixins: [...mixins], components: { CapitalDialog, LevelDialog, CharacteristicTooltip, Explorer } })
 	export default class LeekPage extends Vue {
 		leek: Leek | null = null
 		error: boolean = false
