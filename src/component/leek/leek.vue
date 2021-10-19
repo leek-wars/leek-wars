@@ -1414,6 +1414,9 @@
 		justify-content: center;
 		display: flex;
 		flex-direction: column;
+		.weapon img {
+			vertical-align: bottom;
+		}
 	}
 	.farmer-weapons .weapon, .farmer-chips .chip, .hat-dialog .hat {
 		position: relative;
