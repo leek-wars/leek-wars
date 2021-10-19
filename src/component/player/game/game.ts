@@ -1720,13 +1720,7 @@ class Game {
 	}
 
 	public clearMarks() {
-		for (const m in this.markers) {
-			delete this.markers[m]
-		}
 		this.markers = []
-		for (const m in this.markersText) {
-			delete this.markersText[m]
-		}
 		this.markersText = []
 	}
 
@@ -2356,7 +2350,7 @@ class Game {
 			i--
 		}
 
-		this.markers = []
+		this.clearMarks()
 		this.currentTurn = 0
 		this.turn = 1
 		this.currentPlayer = null
