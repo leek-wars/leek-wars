@@ -1331,8 +1331,9 @@ class Game {
 
 		switch (type) {
 		case EffectType.ABSOLUTE_SHIELD:
-		case EffectType.STEAL_ABSOLUTE_SHIELD:
+		case EffectType.DAMAGE_TO_ABSOLUTE_SHIELD:
 		case EffectType.RAW_ABSOLUTE_SHIELD:
+		case EffectType.STEAL_ABSOLUTE_SHIELD:
 			leek.buffAbsoluteShield(value, this.jumping)
 			break
 		case EffectType.RELATIVE_SHIELD:
@@ -1431,9 +1432,10 @@ class Game {
 		case EffectType.SHACKLE_WISDOM:
 			leek.wisdom += value
 			break
-		case EffectType.STEAL_ABSOLUTE_SHIELD:
 		case EffectType.ABSOLUTE_SHIELD:
+		case EffectType.STEAL_ABSOLUTE_SHIELD:
 		case EffectType.RAW_ABSOLUTE_SHIELD:
+		case EffectType.DAMAGE_TO_ABSOLUTE_SHIELD:
 			leek.absoluteShield -= value
 			break
 		case EffectType.RELATIVE_SHIELD:
@@ -1515,6 +1517,9 @@ class Game {
 			leek.magic -= delta
 			break
 		case EffectType.ABSOLUTE_SHIELD:
+		case EffectType.DAMAGE_TO_ABSOLUTE_SHIELD:
+		case EffectType.RAW_ABSOLUTE_SHIELD:
+		case EffectType.STEAL_ABSOLUTE_SHIELD:
 			leek.absoluteShield += delta
 			break
 		case EffectType.RELATIVE_SHIELD:
