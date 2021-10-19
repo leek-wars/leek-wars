@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div v-if="type !== ActionType.REMOVE_EFFECT && type !== ActionType.UPDATE_EFFECT && type !== ActionType.REMOVE_POISONS && type !== ActionType.REMOVE_SHACKLES">
 		<div v-if="type === ActionType.START_FIGHT" id="turn-1" class="turn">
 			<span class="label" @click="goToTurn(1)">{{ $t('fight.turn_n', [1]) }}</span>
 			<v-icon v-if="report" class="disabled">mdi-chevron-left</v-icon>
