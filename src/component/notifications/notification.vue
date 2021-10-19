@@ -42,7 +42,6 @@
 		&.unread {
 			background-color: rgba(95, 173, 27, 0.15);
 		}
-		margin-bottom: 1px;
 	}
 	.notification:hover {
 		background-color: white;

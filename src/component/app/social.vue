@@ -192,6 +192,9 @@
 		max-height: 200px;
 		overflow-y: auto;
 		overflow-x: hidden;
+		display: flex;
+		flex-direction: column;
+		gap: 2px;
 	}
 	.chat {
 		height: 300px;
