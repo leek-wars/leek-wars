@@ -621,7 +621,7 @@
 			this.chartTooltipX = x - tooltip.offsetWidth / 2 - 10,
 			this.chartTooltipY = top - 40
 
-			const value = Math.round((this.chart.chartRect.y1 - top) * (this.chartScale / (this.chart.chartRect.y1 - this.chart.chartRect.y2)))
+			const value = Math.round(this.chart.bounds.low + (this.chart.chartRect.y1 - top) * (this.chartScale / (this.chart.chartRect.y1 - this.chart.chartRect.y2)))
 			this.chartTooltipValue = this.statistics.entities[this.chartTooltipLeek].leek.name + '<br>' + value + (this.log ? '%' : '') + ' PV'
 		}
 
