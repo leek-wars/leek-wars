@@ -84,7 +84,7 @@
 			</div>
 		</panel>
 		<didactitiel v-if="didactitiel_enabled" v-model="didactitiel" />
-		<level-dialog v-if="levelPopupData" v-model="levelPopup" :leek="leek" :data="levelPopupData" />
+		<level-dialog v-if="levelPopupData" v-model="levelPopup" :leek="leek" :level-data="levelPopupData" />
 	</div>
 </template>
 
