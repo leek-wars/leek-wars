@@ -641,7 +641,7 @@
 			if (!this.leek) {
 				return this.xp_bar
 			}
-			return this.xp_bar = this.leek.level === 301 ? 100 : Math.floor(100 * (this.leek.xp - this.leek.down_xp) / (this.leek.up_xp - this.leek.down_xp))
+			return this.xp_bar = this.leek.level === 301 ? 100 : Math.min(100, Math.floor(100 * (this.leek.xp - this.leek.down_xp) / (this.leek.up_xp - this.leek.down_xp)))
 		}
 		get blue_xp_bar() {
 			if (!this.leek) {
