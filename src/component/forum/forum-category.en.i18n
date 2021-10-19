@@ -14,5 +14,7 @@
 	"new_topic_title": "Topic title",
 	"pinned": "Topic pinned",
 	"resolved": "Topic solved",
-	"topic": "Subject"
+	"topic": "Subject",
+	"mark_as_read": "Mark as read",
+	"mark_as_read_text": "All topics in all forum categories will be marked as read. After this action, only new topics or replies will be marked."
 }
