@@ -222,7 +222,7 @@
 		<div v-if="member && team && team.compositions && team.compositions.length == 0" class="no-compos">{{ $t('no_compositions') }}</div>
 
 		<div v-if="member && team && team.compositions" class="compos">
-			<panel v-for="composition in team.compositions" :key="composition.id" :class="{'in-tournament': composition.tournament.registered}" class="compo">
+			<panel v-for="composition in team.compositions" :key="composition.id" :class="{'in-tournament': composition.tournament.registered}" :toggle="'team/compo/toggle/' + composition.id" class="compo">
 				<template slot="title">
 					<rich-tooltip-composition :id="composition.id" v-slot="{ on }">
 						<div v-on="on">{{ composition.name }}</div>
@@ -273,8 +273,8 @@
 			</panel>
 		</div>
 
-		<panel v-if="member && team && team.unengaged_leeks" class="compo">
-			<h2 slot="title" class="compo-title">{{ $t('unsorted_leeks') }}</h2>
+		<panel v-if="member && team && team.unengaged_leeks" class="compo" toggle="team/no-compo">
+			<template slot="title">{{ $t('unsorted_leeks') }}</template>
 
 			<div slot="content" :class="{dashed: draggedLeek != null}" class="leeks" @dragover="leeksDragover" @drop="leeksDrop(null, $event)">
 				<div v-if="team.unengaged_leeks.length == 0" class="empty">{{ $t('empty_compo') }}</div>
@@ -1121,6 +1121,7 @@
 		transition: transform 0.4s;
 		transform: scale(1);
 		cursor: pointer;
+		width: 96px;
 		.name {
 			font-size: 16px;
 			text-align: center;
