@@ -34,8 +34,8 @@
 				allowedTags: sanitizeHtml.defaults.allowedTags.concat([ 'img', 'center' ]),
 				allowedAttributes: { '*': ['style', 'class', 'width', 'height', 'href', 'src'] },
 			} : {
-				allowedTags: sanitizeHtml.defaults.allowedTags.concat([ 'center' ]),
-				allowedAttributes: { '*': ['style', 'class', 'width', 'height', 'href'] },
+				allowedTags: sanitizeHtml.defaults.allowedTags.concat([ 'img', 'center' ]),
+				allowedAttributes: { '*': ['style', 'class', 'width', 'height', 'href', 'src'] },
 				allowedStyles: {
 					'*': {
 						'padding': [/^.*$/],
