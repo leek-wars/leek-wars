@@ -344,7 +344,7 @@
 		cell!: number
 		team!: number
 	}
-	@Component({ components: { CharacteristicTooltip, 'explorer': Explorer }, i18n: {}, mixins })
+	@Component({ components: { CharacteristicTooltip, 'explorer': Explorer }, i18n: {}, mixins: [...mixins] })
 	export default class EditorTest extends Vue {
 		@Prop() value!: boolean
 		@Prop() ais!: {[key: number]: AI}

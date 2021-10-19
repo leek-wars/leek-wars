@@ -25,7 +25,7 @@
 	import { i18n, loadComponentLanguage, mixins } from '@/model/i18n'
 	import { Component, Vue, Watch } from 'vue-property-decorator'
 
-	@Component({ name: 'signup-features', i18n: {}, mixins })
+	@Component({ name: 'signup-features', i18n: {}, mixins: [...mixins] })
 	export default class SignupFeatures extends Vue {
 		bigImage: string = ''
 

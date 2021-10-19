@@ -85,7 +85,7 @@
 	import { LeekWars } from '@/model/leekwars'
 	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 
-	@Component({ name: 'trophy', i18n: {}, mixins })
+	@Component({ name: 'trophy', i18n: {}, mixins: [...mixins] })
 	export default class Trophy extends Vue {
 		code: any = null
 		trophy: any = null

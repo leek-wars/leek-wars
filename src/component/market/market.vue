@@ -269,7 +269,7 @@
 	import WeaponPreview from './weapon-preview.vue'
 
 	@Component({
-		name: 'market', i18n: {}, mixins,
+		name: 'market', i18n: {}, mixins: [...mixins],
 		components: {
 			'weapon-preview': WeaponPreview,
 			'chip-preview': ChipPreview,

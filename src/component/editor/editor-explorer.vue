@@ -201,7 +201,7 @@
 	import EditorFolder from './editor-folder.vue'
 	import { Folder } from './editor-item'
 
-	@Component({ name: 'editor-explorer', i18n: {}, mixins, components: { 'editor-folder': EditorFolder } })
+	@Component({ name: 'editor-explorer', i18n: {}, mixins: [...mixins], components: { 'editor-folder': EditorFolder } })
 	export default class Explorer extends Vue {
 		@Prop({required: true}) currentAi!: AI
 		@Prop({required: true}) selectedFolder!: Folder
