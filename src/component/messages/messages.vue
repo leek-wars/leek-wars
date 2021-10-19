@@ -201,6 +201,9 @@
 		overflow-y: auto;
 		overflow-x: hidden;
 		height: 100%;
+		display: flex;
+		flex-direction: column;
+		gap: 2px;
 	}
 	.chat {
 		height: 100%;
