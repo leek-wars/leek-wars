@@ -717,7 +717,7 @@
 			})
 		}
 		warnings() {
-			if (!this.farmer) { return }
+			if (!this.farmer || !this.$store.getters.moderator) { return }
 			LeekWars.get('moderation/get-warnings/' + this.farmer.id).then(data => {
 				if (this.farmer) {
 					Vue.set(this.farmer, 'warnings', data.warnings)
