@@ -232,7 +232,7 @@ class Game {
 	public height: number = 0
 	public particles = new Particles(this)
 	public ground = new Ground(this)
-	public drawableElements: {[key: number]: any}[] = []
+	public drawableElements: Array<{[key: number]: any}> = []
 	public drawableElementCurrentId: number = 0
 	// Players
 	public teams = new Array()
@@ -613,6 +613,7 @@ class Game {
 		}
 		for (const weapon of weaponsTaken) {
 			const weaponAnimation = WEAPONS[weapon - 1]
+			if (!weaponAnimation) { continue }
 			for (const texture of weaponAnimation.textures) {
 				textures.add(texture)
 			}
@@ -998,7 +999,7 @@ class Game {
 			if (leek.fish) {
 				leek.setWeapon(new Fish(this))
 			} else {
-				leek.setWeapon(new WEAPONS[action.params[2] - 1](this))
+				leek.setWeapon(new WEAPONS[action.params[2] - 1]!(this))
 			}
 			leek.weapon_name = LeekWars.weapons[action.params[2]].name
 

@@ -203,14 +203,14 @@
 <script lang="ts">
 	import Markdown from '@/component/encyclopedia/markdown.vue'
 	import { locale } from '@/locale'
-	import { mixins } from '@/model/i18n'
+	import { Farmer } from '@/model/farmer'
 	import { ForumCategory, ForumMessage, ForumTopic } from '@/model/forum'
+	import { mixins } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
+	import { Warning } from '@/model/moderation'
 	import { Component, Vue, Watch } from 'vue-property-decorator'
 	import EmojiPicker from '../chat/emoji-picker.vue'
 	import Breadcrumb from './breadcrumb.vue'
-	import { Warning } from '@/model/moderation'
-	import { Farmer } from '@/model/farmer'
 	const FormattingRules = () => import(/* webpackChunkName: "[request]" */ `@/component/forum/forum-formatting-rules.${locale}.i18n`)
 
 	@Component({ name: 'forum_topic', i18n: {}, mixins: [...mixins], components: { Breadcrumb, EmojiPicker, Markdown, FormattingRules } })

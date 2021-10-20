@@ -10,8 +10,8 @@ class MapOptions {
 	public patternTexture!: Texture
 	public margin!: number
 	public radius!: number
-	public smallObstacles!: (Texture | null)[]
-	public largeObstacles!: (Texture | null)[]
+	public smallObstacles!: Array<Texture | null>
+	public largeObstacles!: Array<Texture | null>
 	public tacticSmallColor!: string
 	public tacticLargeColor!: string
 	public gridColor!: string

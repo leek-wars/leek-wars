@@ -85,9 +85,9 @@
 </template>
 
 <script lang="ts">
+	import { Effect, EffectModifier, EffectType } from '@/model/effect'
 	import { LeekWars } from '@/model/leekwars'
 	import { store } from '@/model/store'
-	import { Effect, EffectModifier, EffectType } from '@/model/effect'
 	import { Component, Prop, Vue } from 'vue-property-decorator'
 
 	@Component({ name: 'effect-view' })
