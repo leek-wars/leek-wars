@@ -101,7 +101,7 @@
 							<span v-else>
 								<img class="flag" src="/image/flag/_.png"><span class="country no label">{{ $t('no_country') }}</span>
 							</span>
-							<span v-if="myFarmer" class="edit" @click="countryDialog = true"></span>
+							<span v-if="myFarmer" class="edit" @click="openCountryDialog()"></span>
 						</div>
 						<div v-if="farmer.website" class="info website">
 							<img src="/image/website.png"><a :href="farmer.website" target="_blank" rel="noopener"><span class="text label">{{ farmer.website }}</span></a>
@@ -429,7 +429,7 @@
 					<img src="/image/flag/_.png">
 					<h4>{{ $t('no_country') }}</h4>
 				</div>
-				<div v-for="country in LeekWars.countries" :key="country.code" class="country" @click="selectCountry(country.code)">
+				<div v-for="country in countries" :key="country.code" class="country" @click="selectCountry(country.code)">
 					<img :src="'/image/flag/' + country.code + '.png'">
 					<h4>{{ $t('country.' + country.code) }}</h4>
 				</div>
@@ -552,6 +552,7 @@
 			LeekWars.trophies[166 - 1],
 			LeekWars.trophies[194 - 1],
 		]
+		countries: string[] = []
 
 		get id(): any {
 			return this.$route.params.id ? parseInt(this.$route.params.id, 10) : (this.$store.state.farmer ? this.$store.state.farmer.id : null)
@@ -828,6 +829,15 @@
 					LeekWars.toast("Trophée donné !")
 				})
 				.error(error => LeekWars.toast(this.$t('error_' + error.error, error.params)))
+			}
+		}
+
+		openCountryDialog() {
+			this.countryDialog = true
+			if (!this.countries.length) {
+				LeekWars.get<any>('country/get-all').then((data) => {
+					this.countries = Object.freeze(data.countries)
+				})
 			}
 		}
 	}

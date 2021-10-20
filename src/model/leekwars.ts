@@ -381,16 +381,6 @@ const LeekWars = {
 	getAvatar(farmerID: number, avatarChanged: number) {
 		return avatarChanged === 0 ? '/image/no_avatar.png' : LeekWars.AVATAR + 'avatar/' + farmerID + '.png'
 	},
-	_countries: null as any,
-	get countries() {
-		if (LeekWars._countries === null) {
-			LeekWars._countries = []
-			get<any>('country/get-all').then((data) => {
-				LeekWars._countries = Object.freeze(data.countries)
-			})
-		}
-		return LeekWars._countries
-	},
 	_documentation: {} as any,
 	_documentationPromises: {} as any,
 	documentation(locale: string): Promise<any> {
