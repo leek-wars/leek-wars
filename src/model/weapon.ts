@@ -96,7 +96,7 @@ const WeaponsData = {
 	// Explorer's Rifle
 	24: { w: 184, h: 55, cx: 15, cz: 30, ocx: 0, x: -50, z: -20, mx1: 37, mz1: 35, mx2: 75, mz2: 33, sx: 150, sz: 25, cartX: 60, cartZ: 20, cartAngle: Math.PI / 2, recoilForce: 18, top: 4, bottom: 34, white: false },
 	// Foudroyeur
-	25: { w: 175, h: 65, cx: 28, cz: 30, ocx: 0, x: -50, z: -20, mx1: 29, mz1: 46, mx2: 64, mz2: 46, sx: 150, sz: 25, cartX: 60, cartZ: 20, cartAngle: Math.PI / 2, recoilForce: 18, top: 4, bottom: 40, white: false },
+	25: { w: 175, h: 65, cx: 28, cz: 35, ocx: 0, x: -50, z: -20, mx1: 29, mz1: 46, mx2: 64, mz2: 46, sx: 150, sz: 25, cartX: 60, cartZ: 20, cartAngle: Math.PI / 2, recoilForce: 18, top: 4, bottom: 40, white: false },
 	// Neutrino
 	27: { w: 100, h: 50, cx: 50, cz: 15, ocx: 0, x: -50, z: -20, mx1: 25, mz1: 33, mx2: 18, mz2: 40, sx: 150, sz: 25, cartX: 60, cartZ: 20, cartAngle: Math.PI / 2, recoilForce: 18, top: 4, bottom: 40, white: false },
 	// Bazooka
