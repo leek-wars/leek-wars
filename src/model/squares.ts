@@ -37,7 +37,7 @@ class Squares {
 		})
 	}
 
-	addFromConversation(message: ChatMessage) {
+	addFromMessage(message: ChatMessage) {
 		this.add({
 			image: LeekWars.getAvatar(message.farmer.id, message.farmer.avatar_changed),
 			icon: false,

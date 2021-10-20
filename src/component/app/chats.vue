@@ -40,9 +40,9 @@
 		}
 
 		getFarmer(window: ChatWindow) {
-			const conversation = store.state.chat[window.id]
-			if (conversation) {
-				return conversation.farmers.find(f => f.id !== store.state.farmer!.id)
+			const chat = store.state.chat[window.id]
+			if (chat) {
+				return chat.farmers.find(f => f.id !== store.state.farmer!.id)
 			}
 			return {id: -1}
 		}

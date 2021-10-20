@@ -611,6 +611,7 @@
 				})
 			}
 		}
+
 		init(farmer: Farmer) {
 			this.farmer = farmer
 			this.renameName = this.farmer.name
@@ -634,10 +635,12 @@
 			this.newGitHub = this.farmer.github
 			this.$root.$emit('loaded')
 		}
+
 		logout() {
 			this.$store.commit('disconnect')
 			this.$router.push('/')
 		}
+
 		trophiesModeButton() {
 			if (this.trophiesMode === 'list') {
 				this.trophiesMode = 'grid'
@@ -647,6 +650,7 @@
 				localStorage.setItem('farmer/trophies-mode', 'list')
 			}
 		}
+
 		getTrophies() {
 			if (!this.farmer) {	return }
 			if (!('farmer/trophies-mode' in localStorage)) {
@@ -664,6 +668,7 @@
 				})
 			}
 		}
+
 		registerTournament() {
 			if (this.farmer) {
 				if (this.farmer.tournament.registered) {
@@ -675,16 +680,19 @@
 				}
 			}
 		}
+
 		updateGarden() {
 			if (this.farmer) {
 				this.farmer.in_garden = !this.farmer.in_garden
 				LeekWars.post('farmer/set-in-garden', {leek_id: this.farmer.id, in_garden: this.farmer.in_garden})
 			}
 		}
+
 		openGodfatherDialog() {
 			this.godfatherDialog = true
 			LeekWars.selectText(this.$refs.godfatherLink)
 		}
+
 		selectCountry(code: string) {
 			if (this.farmer) {
 				this.farmer.country = code
@@ -692,6 +700,7 @@
 				LeekWars.post('farmer/change-country', {country_code: code})
 			}
 		}
+
 		changeAvatar(e: Event) {
 			if (!e || !e.target) { return }
 			const input = e.target as HTMLInputElement
@@ -716,6 +725,7 @@
 				LeekWars.toast(this.$t('upload_failed', [error]) as string)
 			})
 		}
+
 		warnings() {
 			if (!this.farmer || !this.$store.getters.moderator) { return }
 			LeekWars.get('moderation/get-warnings/' + this.farmer.id).then(data => {
@@ -724,6 +734,7 @@
 				}
 			})
 		}
+
 		createTeam() {
 			LeekWars.post('team/create', {team_name: this.createTeamName}).then(data => {
 				LeekWars.toast(this.$i18n.t('team_created'))
@@ -739,6 +750,7 @@
 				LeekWars.toast(this.$i18n.t(error.error))
 			})
 		}
+
 		cancelCandidacy() {
 			LeekWars.post('team/cancel-candidacy').then(data => {
 				if (this.farmer) {
@@ -749,27 +761,32 @@
 				LeekWars.toast(error)
 			})
 		}
+
 		changeWebsite() {
 			if (!this.farmer) { return }
 			this.farmer.website = this.newWebsite
 			LeekWars.post('farmer/set-website', {website: this.newWebsite})
 			this.websiteDialog = false
 		}
+
 		changeGithub() {
 			if (!this.farmer) { return }
 			this.farmer.github = this.newGitHub
 			LeekWars.post('farmer/set-github', {github: this.newGitHub})
 			this.githubDialog = false
 		}
+
 		sendMessage() {
 			if (!this.farmer) { return }
 			LeekWars.get('message/find-conversation/' + this.farmer.id).then(conversation => {
+				store.commit('new-conversation', conversation)
 				this.$router.push('/messages/conversation/' + conversation.id)
 			}).error(() => {
 				if (!this.farmer) { return }
 				this.$router.push('/messages/new/' + this.farmer.id + '/' + this.farmer.name + '/' + this.farmer.avatar_changed)
 			})
 		}
+
 		pickTitle(title: number[]) {
 			this.farmer!.title = title
 			this.titleDialog = false
