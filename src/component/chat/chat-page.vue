@@ -29,7 +29,7 @@
 			</div>
 		</div>
 		<panel class="first last">
-			<chat slot="content" :chat="$store.state.chat[chatLanguage.code]" :channel="chatLanguage.code" />
+			<chat slot="content" :chat="$store.state.chat[chatLanguage.code]" :id="chatLanguage.chat" />
 		</panel>
 	</div>
 </template>

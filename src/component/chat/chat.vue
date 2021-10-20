@@ -9,15 +9,6 @@
 				<div v-if="message.farmer.id === -1" :key="m" class="separator">
 					{{ message.date | date }}
 				</div>
-				<div v-else-if="message.farmer.id === 0" :key="m" class="message">
-					<img class="avatar" src="/image/favicon.png">
-					<router-link :to="'/fight/' + message.texts[0].split('|')[1]">
-						<div class="bubble br-notification">
-							<div class="author">Leek Wars</div>
-							{{ $t(message.texts[0].split('|')[0]) }}
-						</div>
-					</router-link>
-				</div>
 				<chat-message v-else :key="m" :message="message" :chat="chat" />
 			</template>
 			<div v-show="unread" v-ripple class="chat-new-messages" @click="updateScroll(true)">{{ $t('main.unread_messages') }}</div>
@@ -183,15 +174,6 @@
 	.messages {
 		height: calc(100% - 40px);
 		overflow-y: scroll;
-	}
-
-	.br-notification {
-		background: #5fad1b;
-		color: white;
-		display: inline-block;
-		.author {
-			color: white;
-		}
 	}
 	.no-messages {
 		height: calc(100% - 60px);
