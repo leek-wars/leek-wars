@@ -24,17 +24,17 @@ class WeaponTemplate {
 }
 
 class WeaponData {
-	w!: number
-	h!: number
-	cx!: number
-	cz!: number
+	width!: number
+	height!: number
+	centerX!: number
+	centerZ!: number
 	ocx!: number
 	x!: number
 	z!: number
-	mx1!: number
-	mz1!: number
-	mx2!: number
-	mz2!: number
+	hand1x!: number
+	hand1z!: number
+	hand2x!: number
+	hand2z!: number
 	sx?: number
 	sz?: number
 	cartX?: number
@@ -44,67 +44,68 @@ class WeaponData {
 	top!: number
 	bottom!: number
 	white!: boolean
+	right?: number
 }
 
 const WeaponsData = {
 	// Pistol
-	1: { w: 70, h: 42, cx: 12, cz: 40, ocx: 0, x: 15, z: -15, mx1: 10, mz1: 26, mx2: 19, mz2: 18, sx: 90, sz: 22, cartX: 60, cartZ: 20, cartAngle: Math.PI / 2, recoilForce: 18, top: 3, bottom: 15, white: false },
+	1: { width: 70, height: 42, centerX: 15, centerZ: 40, ocx: 0, x: 15, z: -15, hand1x: 10, hand1z: 26, hand2x: 19, hand2z: 18, sx: 90, sz: 22, cartX: 60, cartZ: 20, cartAngle: Math.PI / 2, recoilForce: 18, top: 3, bottom: 15, white: false },
 	// Machine gun
-	2: { w: 140, h: 57, cx: 15, cz: 45, ocx: 0, x: -35, z: -15, mx1: 20, mz1: 40, mx2: 63, mz2: 40, sx: 160, sz: 14, cartX: 60, cartZ: 20, cartAngle: Math.PI / 2, recoilForce: 18, top: 7, bottom: 32, white: false },
+	2: { width: 140, height: 57, centerX: 15, centerZ: 45, ocx: 0, x: -35, z: -15, hand1x: 20, hand1z: 40, hand2x: 63, hand2z: 40, sx: 160, sz: 14, cartX: 60, cartZ: 20, cartAngle: Math.PI / 2, recoilForce: 18, top: 7, bottom: 32, white: false },
 	// DoubleGun
-	3: { w: 140, h: 52, cx: 15, cz: 35, ocx: 0, x: -10, z: -15, mx1: 11, mz1: 30, mx2: 32, mz2: 31, sx: 160, sz: 14, cartX: 60, cartZ: 20, cartAngle: Math.PI / 2, recoilForce: 18, top: 7, bottom: 35, white: false },
+	3: { width: 140, height: 52, centerX: 15, centerZ: 35, ocx: 0, x: 0, z: -20, hand1x: 11, hand1z: 30, hand2x: 32, hand2z: 31, sx: 160, sz: 14, cartX: 60, cartZ: 20, cartAngle: Math.PI / 2, recoilForce: 18, top: 7, bottom: 35, white: false },
 	// Shotgun
-	4: { w: 160, h: 52, cx: 15, cz: 45, ocx: 0, x: -35, z: -15, mx1: 17, mz1: 30, mx2: 63, mz2: 30, sx: 160, sz: 14, cartX: 60, cartZ: 20, cartAngle: Math.PI / 2, recoilForce: 18, top: 9, bottom: 23, white: false },
+	4: { width: 160, height: 52, centerX: 15, centerZ: 45, ocx: 0, x: -35, z: -15, hand1x: 17, hand1z: 30, hand2x: 63, hand2z: 30, sx: 160, sz: 14, cartX: 60, cartZ: 20, cartAngle: Math.PI / 2, recoilForce: 18, top: 9, bottom: 23, white: false },
 	// Magnum
-	5: { w: 80, h: 38, cx: 12, cz: 40, ocx: 0, x: 15, z: -15, mx1: 22, mz1: 32, mx2: 25, mz2: 23, sx: 94, sz: 22, cartX: 60, cartZ: 20, cartAngle: Math.PI / 2, recoilForce: 18, top: 2, bottom: 20, white: false },
+	5: { width: 80, height: 38, centerX: 12, centerZ: 40, ocx: 0, x: 15, z: -15, hand1x: 22, hand1z: 32, hand2x: 25, hand2z: 23, sx: 94, sz: 22, cartX: 60, cartZ: 20, cartAngle: Math.PI / 2, recoilForce: 18, top: 2, bottom: 20, white: false },
 	// Laser
-	6: { w: 160, h: 53, cx: 15, cz: 42, ocx: 0, x: -50, z: -15, mx1: 30, mz1: 34, mx2: 79, mz2: 39, sx: 106, sz: 15, cartX: 60, cartZ: 20, cartAngle: Math.PI / 2, recoilForce: 18, top: 8, bottom: 31, white: false },
+	6: { width: 160, height: 53, centerX: 15, centerZ: 42, ocx: 0, x: -40, z: -20, hand1x: 30, hand1z: 34, hand2x: 79, hand2z: 39, sx: 106, sz: 15, cartX: 60, cartZ: 20, cartAngle: Math.PI / 2, recoilForce: 18, top: 8, bottom: 31, white: false },
 	// GrenadeLauncher
-	7: { w: 130, h: 45, cx: 0, cz: 40, ocx: 0, x: -35, z: -15, mx1: 38, mz1: 28, mx2: 66, mz2: 29, sx: 150, sz: 14, cartX: 60, cartZ: 20, cartAngle: Math.PI / 2, recoilForce: 18, top: 7, bottom: 27, white: false },
+	7: { width: 130, height: 45, centerX: 0, centerZ: 40, ocx: 0, x: -5, z: -25, hand1x: 38, hand1z: 28, hand2x: 66, hand2z: 29, sx: 150, sz: 14, cartX: 60, cartZ: 20, cartAngle: Math.PI / 2, recoilForce: 18, top: 7, bottom: 27, white: false },
 	// FlameThrower
-	8: { w: 174, h: 71, cx: 25, cz: 60, ocx: 0, x: -60, z: -15, mx1: 31, mz1: 51, mx2: 80, mz2: 50, top: 24, bottom: 39, white: false },
+	8: { width: 174, height: 71, centerX: 25, centerZ: 60, ocx: 0, x: -40, z: -15, hand1x: 31, hand1z: 51, hand2x: 80, hand2z: 50, top: 24, bottom: 39, white: false },
 	// Destroyer
-	9: { w: 150, h: 61, cx: 15, cz: 38, ocx: 0, x: -50, z: -15, mx1: 47, mz1: 39, mx2: 88, mz2: 42, sx: 182, sz: 14, cartX: 60, cartZ: 20, cartAngle: Math.PI / 2, recoilForce: 18, top: 11, bottom: 35, white: false },
+	9: { width: 150, height: 61, centerX: 15, centerZ: 38, ocx: 0, x: -30, z: -30, hand1x: 47, hand1z: 39, hand2x: 88, hand2z: 42, sx: 182, sz: 14, cartX: 60, cartZ: 20, cartAngle: Math.PI / 2, recoilForce: 18, top: 11, bottom: 35, white: false },
 	// Gazor
-	10: { w: 160, h: 77, cx: 15, cz: 60, ocx: 0, x: -43, z: -12, mx1: 28, mz1: 52, mx2: 74, mz2: 50, top: 22, bottom: 40, white: false },
+	10: { width: 160, height: 77, centerX: 15, centerZ: 60, ocx: 0, x: -43, z: -12, hand1x: 28, hand1z: 52, hand2x: 74, hand2z: 50, top: 22, bottom: 40, white: false },
 	// Electrisor
-	11: { w: 149, h: 53, cx: 5, cz: 52, ocx: 0, x: -30, z: 0, mx1: 42, mz1: 31, mx2: 72, mz2: 34, sx: 89, sz: -15, top: 3, bottom: 33, white: false },
+	11: { width: 149, height: 53, centerX: 5, centerZ: 52, ocx: 0, x: -22, z: -15, hand1x: 42, hand1z: 31, hand2x: 72, hand2z: 34, sx: 89, sz: -15, top: 3, bottom: 33, white: false },
 	// MLaser
-	12: { w: 190, h: 52, cx: 15, cz: 38, ocx: 0, x: -70, z: -20, mx1: 69, mz1: 33, mx2: 114, mz2: 33, sx: 126, sz: 25, cartX: 60, cartZ: 20, cartAngle: Math.PI / 2, recoilForce: 18, top: 3, bottom: 33, white: false },
+	12: { width: 190, height: 52, centerX: 15, centerZ: 38, ocx: 0, x: -65, z: -20, hand1x: 69, hand1z: 33, hand2x: 114, hand2z: 33, sx: 126, sz: 25, cartX: 60, cartZ: 20, cartAngle: Math.PI / 2, recoilForce: 18, top: 3, bottom: 33, white: false },
 	// BLaser
-	13: { w: 170, h: 45, cx: 15, cz: 38, ocx: 0, x: -70, z: -20, mx1: 33, mz1: 33, mx2: 80, mz2: 33, sx: 123, sz: 25, cartX: 60, cartZ: 20, cartAngle: Math.PI / 2, recoilForce: 18, top: 3, bottom: 35, white: false },
+	13: { width: 170, height: 45, centerX: 15, centerZ: 38, ocx: 0, x: -50, z: -20, hand1x: 33, hand1z: 33, hand2x: 80, hand2z: 33, sx: 123, sz: 25, cartX: 60, cartZ: 20, cartAngle: Math.PI / 2, recoilForce: 18, top: 3, bottom: 35, white: false },
 	// Katana
-	14: { w: 250, h: 26, cx: 5, cz: 30, ocx: 10, x: 15, z: -15, mx1: 30, mz1: 12, mx2: 42, mz2: 12, top: 0, bottom: 20, white: true },
+	14: { width: 250, height: 26, centerX: 40, centerZ: 30, ocx: 10, x: -40, z: -15, hand1x: 30, hand1z: 12, hand2x: 42, hand2z: 12, top: 5, bottom: 8, right: 82, white: true },
 	// Broadsword
-	15: { w: 160, h: 29, cx: 5, cz: 40, ocx: 15, x: 15, z: -16, mx1: 14, mz1: 14, mx2: 30, mz2: 14, top: 0, bottom: 20, white: true },
+	15: { width: 160, height: 29, centerX: 25, centerZ: -5, ocx: 15, x: 15, z: -16, hand1x: 14, hand1z: 14, hand2x: 30, hand2z: 14, top: 0, bottom: 0, right: 72, white: true },
 	// Axe
-	16: { w: 170, h: 64, cx: 5, cz: 40, ocx: 25, x: 15, z: -35, mx1: 32, mz1: 32, mx2: 55, mz2: 32, top: 0, bottom: 20, white: true },
+	16: { width: 170, height: 64, centerX: 20, centerZ: -15, ocx: 25, x: 15, z: -35, hand1x: 32, hand1z: 32, hand2x: 55, hand2z: 32, top: 0, bottom: 0, right: 100, white: true },
 	// JLaser
-	17: { w: 180, h: 41, cx: 15, cz: 35, ocx: 0, x: -70, z: -20, mx1: 49, mz1: 29, mx2: 75, mz2: 33, sx: 126, sz: 25, cartX: 60, cartZ: 20, cartAngle: Math.PI / 2, recoilForce: 18, top: 0, bottom: 37, white: false },
+	17: { width: 180, height: 41, centerX: 15, centerZ: 35, ocx: 0, x: -50, z: -20, hand1x: 49, hand1z: 29, hand2x: 75, hand2z: 33, sx: 126, sz: 25, cartX: 60, cartZ: 20, cartAngle: Math.PI / 2, recoilForce: 18, top: 0, bottom: 37, white: false },
 	// IllicitGrenadeLauncher
-	18: { w: 134, h: 49, cx: 0, cz: 40, ocx: 0, x: -35, z: -15, mx1: 38, mz1: 28, mx2: 66, mz2: 29, sx: 150, sz: 14, cartX: 60, cartZ: 20, cartAngle: Math.PI / 2, recoilForce: 18, top: 7, bottom: 31, white: false },
+	18: { width: 134, height: 49, centerX: 0, centerZ: 40, ocx: 0, x: -35, z: -15, hand1x: 38, hand1z: 28, hand2x: 66, hand2z: 29, sx: 150, sz: 14, cartX: 60, cartZ: 20, cartAngle: Math.PI / 2, recoilForce: 18, top: 7, bottom: 31, white: false },
 	// MysteriousElectrisor
-	19: { w: 153, h: 57, cx: 5, cz: 52, ocx: 0, x: -30, z: 0, mx1: 42, mz1: 31, mx2: 72, mz2: 34, top: 9, bottom: 33, white: false },
+	19: { width: 153, height: 57, centerX: 5, centerZ: 52, ocx: 0, x: -30, z: 0, hand1x: 42, hand1z: 31, hand2x: 72, hand2z: 34, top: 9, bottom: 33, white: false },
 	// UnbridledGazor
-	20: { w: 164, h: 81, cx: 15, cz: 60, ocx: 0, x: -43, z: -12, mx1: 28, mz1: 52, mx2: 74, mz2: 50, top: 17, bottom: 45, white: false },
+	20: { width: 164, height: 81, centerX: 15, centerZ: 60, ocx: 0, x: -43, z: -12, hand1x: 28, hand1z: 52, hand2x: 74, hand2z: 50, top: 17, bottom: 45, white: false },
 	// RevokedMLaser
-	21: { w: 194, h: 56, cx: 15, cz: 38, ocx: 0, x: -70, z: -20, mx1: 70, mz1: 34, mx2: 115, mz2: 34, sx: 126, sz: 25, cartX: 60, cartZ: 20, cartAngle: Math.PI / 2, recoilForce: 18, top: 4, bottom: 34, white: false },
+	21: { width: 194, height: 56, centerX: 15, centerZ: 38, ocx: 0, x: -70, z: -20, hand1x: 70, hand1z: 34, hand2x: 115, hand2z: 34, sx: 126, sz: 25, cartX: 60, cartZ: 20, cartAngle: Math.PI / 2, recoilForce: 18, top: 4, bottom: 34, white: false },
 	// Rifle
-	22: { w: 180, h: 51, cx: 15, cz: 30, ocx: 0, x: -50, z: -20, mx1: 36, mz1: 34, mx2: 74, mz2: 32, sx: 150, sz: 25, cartX: 60, cartZ: 20, cartAngle: Math.PI / 2, recoilForce: 18, top: 4, bottom: 34, white: false },
-	// Mini
-	23: { w: 90, h: 51, cx: 12, cz: 40, ocx: 0, x: 15, z: -15, mx1: 24, mz1: 27, mx2: 11, mz2: 35, sx: 90, sz: 22, cartX: 60, cartZ: 20, cartAngle: Math.PI / 2, recoilForce: 18, top: 3, bottom: 15, white: false },
+	22: { width: 180, height: 51, centerX: 15, centerZ: 30, ocx: 0, x: -45, z: -20, hand1x: 36, hand1z: 34, hand2x: 74, hand2z: 32, sx: 150, sz: 25, cartX: 60, cartZ: 20, cartAngle: Math.PI / 2, recoilForce: 18, top: 4, bottom: 34, white: false },
+	// Rhino
+	23: { width: 90, height: 51, centerX: 12, centerZ: 40, ocx: 0, x: 15, z: -15, hand1x: 24, hand1z: 27, hand2x: 11, hand2z: 35, sx: 90, sz: 22, cartX: 60, cartZ: 20, cartAngle: Math.PI / 2, recoilForce: 18, top: 3, bottom: 30, white: false },
 	// Explorer's Rifle
-	24: { w: 184, h: 55, cx: 15, cz: 30, ocx: 0, x: -50, z: -20, mx1: 37, mz1: 35, mx2: 75, mz2: 33, sx: 150, sz: 25, cartX: 60, cartZ: 20, cartAngle: Math.PI / 2, recoilForce: 18, top: 4, bottom: 34, white: false },
+	24: { width: 184, height: 55, centerX: 15, centerZ: 30, ocx: 0, x: -50, z: -20, hand1x: 37, hand1z: 35, hand2x: 75, hand2z: 33, sx: 150, sz: 25, cartX: 60, cartZ: 20, cartAngle: Math.PI / 2, recoilForce: 18, top: 4, bottom: 34, white: false },
 	// Foudroyeur
-	25: { w: 175, h: 65, cx: 28, cz: 35, ocx: 0, x: -50, z: -20, mx1: 29, mz1: 46, mx2: 64, mz2: 46, sx: 150, sz: 25, cartX: 60, cartZ: 20, cartAngle: Math.PI / 2, recoilForce: 18, top: 4, bottom: 40, white: false },
+	25: { width: 175, height: 65, centerX: 15, centerZ: 35, ocx: 0, x: -40, z: -35, hand1x: 29, hand1z: 46, hand2x: 64, hand2z: 46, sx: 150, sz: 25, cartX: 60, cartZ: 20, cartAngle: Math.PI / 2, recoilForce: 18, top: 4, bottom: 40, white: false },
 	// Neutrino
-	27: { w: 100, h: 50, cx: 50, cz: 15, ocx: 0, x: -50, z: -20, mx1: 25, mz1: 33, mx2: 18, mz2: 40, sx: 150, sz: 25, cartX: 60, cartZ: 20, cartAngle: Math.PI / 2, recoilForce: 18, top: 4, bottom: 40, white: false },
+	27: { width: 100, height: 50, centerX: 5, centerZ: 25, ocx: 0, x: 10, z: -35, hand1x: 25, hand1z: 33, hand2x: 18, hand2z: 40, sx: 150, sz: 25, cartX: 60, cartZ: 20, cartAngle: Math.PI / 2, recoilForce: 18, top: 4, bottom: 40, white: false },
 	// Bazooka
-	29: { w: 190, h: 81, cx: -25, cz: 85, ocx: 10, x: 15, z: -15, mx1: 37, mz1: 65, mx2: 70, mz2: 68, top: 0, bottom: 70, white: false },
+	29: { width: 190, height: 81, centerX: 15, centerZ: 50, ocx: 0, x: -50, z: -40, hand1x: 37, hand1z: 65, hand2x: 70, hand2z: 68, sx: 150, sz: 25, cartX: 60, cartZ: 20, cartAngle: Math.PI / 2, recoilForce: 18, top: 0, bottom: 70, white: false },
 	// Katana sombre
-	32: { w: 256, h: 31, cx: 5, cz: 30, ocx: 10, x: 15, z: -15, mx1: 32, mz1: 14, mx2: 44, mz2: 14, top: 0, bottom: 20, white: true },
+	32: { width: 256, height: 31, centerX: 15, centerZ: 30, ocx: 10, x: 15, z: -15, hand1x: 32, hand1z: 14, hand2x: 44, hand2z: 14, top: 0, bottom: 20, white: true },
 } as {[key: number]: WeaponData}
 
-const FishData = { w: 150, h: 65, cx: 25, cz: 45, ocx: 0, x: -35, z: -15, mx1: 12, mz1: 44, mx2: 53, mz2: 57, sx: 110, sz: 10, cartX: 60, cartZ: 20, cartAngle: Math.PI / 2, recoilForce: 18, top: 7, bottom: 50, white: false } as WeaponData
+const FishData = { width: 150, height: 65, centerX: 25, centerZ: 45, ocx: 0, x: -35, z: -15, hand1x: 12, hand1z: 44, hand2x: 53, hand2z: 57, sx: 110, sz: 10, cartX: 60, cartZ: 20, cartAngle: Math.PI / 2, recoilForce: 18, top: 7, bottom: 50, white: false } as WeaponData
 
 export { FishData, Weapon, WeaponsData, WeaponTemplate }
