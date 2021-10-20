@@ -410,7 +410,7 @@
 				// 	}
 				// }
 				LeekWars.get('fight/get-logs/' + id).then(d => {
-					this.logs = d.logs
+					this.logs = d
 					this.processLogs()
 					this.warningsErrors()
 				})
