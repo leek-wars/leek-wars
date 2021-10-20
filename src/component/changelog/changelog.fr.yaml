@@ -1,3 +1,44 @@
+226:
+  title: 4 nouvelles armes, Réactions chat, Modération chat et forum, Amélioration documentation
+  added:
+    - "#ai Ajout de 4 nouvelles armes : Neutrino, Bazooka, Foudroyeur, Katana sombre. #img_226_weapons"
+    - "#ai Nouveaux modes de lancés pour les armes et puces : fonctions getChip/WeaponLaunchType() et constantes LAUNCH_TYPE_* (7 au total). #img_226_launch_type"
+    - "Ajout de réactions aux messages des chats. #img_226_chat_reactions"
+    - "Fonctionnalité pour signaler et modérer les messages forum. #img_226_forum_report"
+    - "#ai Léger rééquilibrage de quelques items : voir le sujet forum de la màj."
+    - "Affichage des valeurs finales des effets augmentées par les caractéristiques de votre poireau. #img_226_preview"
+    - "Fonctionnalité pour marquer comme lu tout le forum. #img_226_forum_read"
+    - "Ajout de filtres sur la page historique sur les types et contextes des combats (merci à Efflam). #288 #img_226_history"
+  improved:
+    - "#ai Les erreurs de l'IA coûtent plus cher en opérations de manière à générer les combats plus rapidement."
+    - "#ai Correction d'un bug d'initialisation de champs statiques avec des fonctions de combat."
+    - Remplacement des fonctions getLeek* par getEntity* dans le tutoriel (merci à Turbigo).
+    - "Les fonctions dans la documentation sont maintenant regroupées avec des arguments optionnels. #img_226_doc"
+    - Les classements sont les classements actifs par défaut.
+    - Limite de say() 2 par tour et 200 caractères et show() à 5 par tour.
+    - Les fonctions getWeapon/ChipEffectiveArea retournent la zone même si vous êtes hors de portée.
+    - "Possibilité de ouvrir/refermer les compositions sur la page d'équipe. #img_226_team"
+    - "Les messages forum supprimés sont affichés dans les sujets pour une meilleure compréhension. #img_226_forum_deleted"
+    - Amélioration de la modération des messages du chat (censure permanente et mise en sourdine séparés).
+    - Possibilité d'ajouter des images aux messages sur le forum.
+    - "#ai Le contexte BR potager/auto devient FIGHT_CONTEXT_GARDEN/FIGHT_CONTEXT_TOURNAMENT."
+    - Amélioration de la synchronisation des notifications/messages sur plusieurs onglets.
+    - Correction de la position des armes et des animations de tir + animation de recul.
+    - "Refonte de l'animation d'explosion + effet sonore. #img_226_explosion"
+  fixed:
+    - Correction de la catégorie de certaines constantes EFFECT_* dans la documentation.
+    - Correction du bug lien + emoji dans le chat.
+    - Un saut dans le combat efface aussi les markText().
+    - Les items non débloqués ne sont plus visibles sur la page /help/items.
+    - Correction des message vides dans les emails de réponses forum.
+    - Correction du bug de la touche Suppr dans un champ texte de l'éditeur qui veut supprimer l'IA.
+    - Correction du bug d'IA de tourelle quand deux compositions d'une même équipe se rencontrent en tournoi.
+    - Correction du bug d'affichage PT/PM en combat.
+    - Possibilité d'accéder aux options du combat en mode plein écran.
+    - "Correction du bug de chargement des logs au début du combat. #435"
+    - Correction d'un bug d'initialisation des champs statiques (merci à Taga).
+    - Correction d'un bug de modification de certains messages forum.
+
 225:
   title: 160 nouveaux trophées, Points et récompenses de trophées, Système de puissance en BR.
   added:
