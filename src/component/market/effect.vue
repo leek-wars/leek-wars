@@ -9,10 +9,9 @@
 			</i18n>
 			<div>
 				{{ charac }} {{ $t('characteristic.' + icon) }} :
-				<span v-if="Math.floor(effect.value1 * boost) == Math.floor((effect.value1 + effect.value2) * boost)" v-html="$t('effect.type_' + effect.id + '_fixed', [Math.floor(effect.value1 * boost)])"></span>
-				<span v-else v-html="$t('effect.type_' + effect.id, [Math.floor(effect.value1 * boost), Math.floor((effect.value1 + effect.value2) * boost)])"></span>
+				<span v-if="Math.round(effect.value1 * boost) == Math.round((effect.value1 + effect.value2) * boost)" v-html="$t('effect.type_' + effect.id + '_fixed', [Math.round(effect.value1 * boost)])"></span>
+				<span v-else v-html="$t('effect.type_' + effect.id, [Math.round(effect.value1 * boost), Math.round((effect.value1 + effect.value2) * boost)])"></span>
 			</div>
-			<!-- <b>{{ Math.round(effect.value1 * boost) }} à {{ Math.round((effect.value1 + effect.value2) * boost) }}</b> -->
 		</tooltip>
 
 		<span v-if="passive">{{ $t('effect.passive') }}</span>
@@ -47,38 +46,46 @@
 
 		<tooltip v-if="enemies && !allies">
 			<template v-slot:activator="{ on }">
-				<span class="ennemies" v-on="on"></span>
+				<span class="ennemies" v-on="on" />
 			</template>
 			<span>{{ $t('effect.target_enemies') }}</span>
 		</tooltip>
 
-		<tooltip v-if="allies && !enemies">
-			<template v-slot:activator="{ on }">
-				<span class="allies" v-on="on"></span>
-			</template>
-			<span>{{ $t('effect.target_allies') }}</span>
-		</tooltip>
+		<span>
+			<tooltip v-if="allies && !enemies">
+				<template v-slot:activator="{ on }">
+					<span class="allies" v-on="on"></span>
+				</template>
+				<span>{{ $t('effect.target_allies') }}</span>
+			</tooltip>
+		</span>
 
-		<tooltip v-if="!caster">
-			<template v-slot:activator="{ on }">
-				<span class="not-player" v-on="on"></span>
-			</template>
-			<span>{{ $t('effect.target_not_player') }}</span>
-		</tooltip>
+		<span>
+			<tooltip v-if="!caster">
+				<template v-slot:activator="{ on }">
+					<span class="not-player" v-on="on"></span>
+				</template>
+				<span>{{ $t('effect.target_not_player') }}</span>
+			</tooltip>
+		</span>
 
-		<tooltip v-if="!nonSummons">
-			<template v-slot:activator="{ on }">
-				<span class="summons" v-on="on"></span>
-			</template>
-			<span>{{ $t('effect.target_summons') }}</span>
-		</tooltip>
+		<span>
+			<tooltip v-if="!nonSummons">
+				<template v-slot:activator="{ on }">
+					<span class="summons" v-on="on"></span>
+				</template>
+				<span>{{ $t('effect.target_summons') }}</span>
+			</tooltip>
+		</span>
 
-		<tooltip v-if="!summons">
-			<template v-slot:activator="{ on }">
-				<span class="not-summons" v-on="on"></span>
-			</template>
-			<span>{{ $t('effect.target_not_summons') }}</span>
-		</tooltip>
+		<span>
+			<tooltip v-if="!summons">
+				<template v-slot:activator="{ on }">
+					<span class="not-summons" v-on="on"></span>
+				</template>
+				<span>{{ $t('effect.target_not_summons') }}</span>
+			</tooltip>
+		</span>
 
 		<lw-code v-if="LeekWars.effectRawOpened" :single="true" :code="'[' + effect.id + ' ' + EffectType[effect.id] + ', ' + format(effect.value1) + ', ' + format(effect.value1 + effect.value2) + ', ' + effect.turns + ', ' + effect.targets + ', ' + effect.modifiers + ']'" class="raw" />
 	</div>
@@ -129,7 +136,7 @@
 		}
 		get boost() {
 			if (this.icon === 'life') {
-				return this.charac
+				return this.charac / 100
 			} else {
 				return 1 + this.charac / 100
 			}
