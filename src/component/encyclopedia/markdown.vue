@@ -252,7 +252,7 @@
 	.md ::v-deep a:hover {
 		text-decoration: underline;
 	}
-	.md ::v-deep ul {
+	.md ::v-deep ul, .md ::v-deep ol {
 		line-height: 1.6;
 	}
 	.md ::v-deep blockquote {
