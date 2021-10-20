@@ -1,5 +1,5 @@
 <template lang="html">
-	<svg :viewBox="'0 0 ' + width + ' ' + height" :width="width" :height="height" v-on="on">
+	<svg :viewBox="'0 0 ' + width + ' ' + height" :width="width * scale" :height="height * scale" v-on="on">
 		<g :class="{invert}">
 			<image v-if="leekImage" :x="leekX" :y="leekY" :width="leekWidth" :height="leekHeight" :xlink:href="'/image/' + leekImage" />
 			<image v-if="hasHat && hatImage" :x="hatX" :y="hatY" :width="hatWidth" :height="hatHeight" :xlink:href="'/image/' + hatImage" />
@@ -65,8 +65,8 @@
 		get hatWidth() { return this.hatTemplate ? this.leekWidth * this.hatTemplate.width : 0 }
 		get hatHeight() { return this.hatSize ? this.hatWidth * (this.hatSize.height / this.hatSize.width) : 0 }
 		get hasHat(): boolean { return this.hat !== null }
-		get leekWidth(): number { return this.leekSize ? this.leekSize.width * this.scale : 0 }
-		get leekHeight(): number { return this.leekSize ? this.leekSize.height * this.scale : 0 }
+		get leekWidth(): number { return this.leekSize ? this.leekSize.width : 0 }
+		get leekHeight(): number { return this.leekSize ? this.leekSize.height : 0 }
 		get width(): number {
 			let width = Math.max(this.leekWidth, this.hatWidth)
 			const weapon_offset = this.weaponCX + (this.weaponData && this.weaponData.white ? (
@@ -87,7 +87,7 @@
 				height += Math.max(0, this.hatHeight - this.leekHeight * this.hatTemplate.height)
 			}
 			if (this.weaponData && this.weaponData.white) {
-				height += this.weaponData.bottom * this.scale
+				height += this.weaponData.bottom
 			} else {
 				const weapon_offset = Math.sin(this.weaponRadianAngle) * (this.weaponWidth + this.weaponX)
 									+ Math.cos(this.weaponRadianAngle) * (this.weaponHeight + this.weaponY)
@@ -100,8 +100,8 @@
 		}
 		get offsetTop() {
 			return this.weaponData && this.weaponData.white ? Math.max(0,
-				this.scale * this.weaponData.top - this.leekHeight - (this.hat !== null && this.hatTemplate ? Math.max(0, this.hatHeight - this.leekHeight * this.hatTemplate.height) : 0) + this.scale * this.weaponData.centerZ +
-				this.scale * Math.abs(Math.sin(this.weaponRadianAngle)) * (this.weaponData.width + this.weaponData.x)
+				this.weaponData.top - this.leekHeight - (this.hat !== null && this.hatTemplate ? Math.max(0, this.hatHeight - this.leekHeight * this.hatTemplate.height) : 0) + this.weaponData.centerZ +
+				Math.abs(Math.sin(this.weaponRadianAngle)) * (this.weaponData.width + this.weaponData.x)
 			 ) : 0
 		}
 		get leekX() { return 0 }
@@ -116,7 +116,7 @@
 			return this.leek.weapon ? ((this.leek.weapon as any).id as number) : 0
 		}
 		get weaponTemplate() { return this.weapon ? LeekWars.items[this.weapon].params : null }
-		get weaponScale() { return 1.0 * this.scale }
+		get weaponScale() { return 1.0 }
 		get weaponData() {
 			if (this.leek.fish) {
 				return FishData
@@ -132,8 +132,8 @@
 			return '/image/' + LeekWars.items[this.weapon].name.replace('_', '/') + '.png' }
 		get weaponWidth() { return this.weaponData ? this.weaponData.width : 0 }
 		get weaponHeight() { return this.weaponData ? this.weaponData.height : 0 }
-		get weaponCX() { return this.weaponData ? this.weaponData.centerX * this.scale : 0 }
-		get weaponCY() { return this.weaponData ? this.weaponData.centerZ * this.scale : 0 }
+		get weaponCX() { return this.weaponData ? this.weaponData.centerX : 0 }
+		get weaponCY() { return this.weaponData ? this.weaponData.centerZ : 0 }
 		get weaponX() { return this.weaponData ? this.weaponData.x : 0 }
 		get weaponY() { return this.weaponData ? this.weaponData.z : 0 }
 		get weaponBottom() { return this.weaponData ? this.weaponData.bottom : 0 }
@@ -145,7 +145,7 @@
 		get hand2() {
 			return this.weaponData ? { x: this.weaponData.hand2x, y: this.weaponData.hand2z } : null
 		}
-		get handSize() { return 20 * this.scale / this.weaponScale }
+		get handSize() { return 20 / this.weaponScale }
 		get appearance() { return LeekWars.getLeekAppearance(this.leek.level) }
 		get leekSize() { return LeekWars.leekSizes[this.appearance] }
 		get hatSize() { return this.hat ? LeekWars.hatSizes[this.hat] : null }
