@@ -501,13 +501,13 @@
 	import { ChatType } from '@/model/chat'
 	import { Farmer } from '@/model/farmer'
 	import { fileSystem } from '@/model/filesystem'
-	import { i18n, mixins } from '@/model/i18n'
+	import { mixins } from '@/model/i18n'
 	import { Leek } from '@/model/leek'
 	import { LeekWars } from '@/model/leekwars'
 	import { Warning } from '@/model/moderation'
-	import { SocketMessage } from '@/model/socket'
 	import { Composition, Team, TeamMember } from '@/model/team'
 	import { Component, Vue, Watch } from 'vue-property-decorator'
+	import { store } from '@/model/store'
 
 	@Component({ name: 'team', i18n: {}, mixins: [...mixins], components: { CharacteristicTooltip, Explorer }})
 	export default class TeamPage extends Vue {
@@ -613,6 +613,7 @@
 					LeekWars.setActions([
 						{icon: 'mdi-chat-outline', click: () => this.$router.push('/forum/category-' + team.forum)}
 					])
+					store.commit('new-conversation', { id: team.chat, farmers: [], read: true, type: ChatType.TEAM })
 				}
 				this.$root.$emit('loaded')
 			})
