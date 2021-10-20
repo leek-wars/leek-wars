@@ -1,6 +1,6 @@
 import { AI } from '@/model/ai'
 import { Constant } from '@/model/constant'
-import { Function } from '@/model/function'
+import { LSFunction } from '@/model/function'
 import { LeekWars } from "@/model/leekwars"
 
 class Keyword {
@@ -13,7 +13,7 @@ class Keyword {
 	ai?: AI
 	line?: number
 	shortcut?: number
-	function?: Function
+	function?: LSFunction
 	constant?: Constant
 	lstype?: any
 	location?: any

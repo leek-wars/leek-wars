@@ -58,7 +58,6 @@
 
 <script lang="ts">
 	import { locale } from '@/locale'
-	import { Function } from '@/model/function'
 	import { LeekWars } from '@/model/leekwars'
 	import { Component, Vue, Watch } from 'vue-property-decorator'
 	import Breadcrumb from '../forum/breadcrumb.vue'
@@ -75,7 +74,6 @@
 		categories: any[] = []
 		items: any[] = []
 		query: string = ''
-		Function = Function
 		lazy_start: number = 0
 		lazy_end: number = 10
 

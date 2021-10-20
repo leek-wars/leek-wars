@@ -591,7 +591,7 @@
 				const startLeekID = parseInt(localStorage.getItem('editor/leek') || '', 10)
 				if (startLeekID && startLeekID in this.leeks) {
 					this.selectLeek(this.leeks.find(l => l.id === startLeekID))
-				} else if (LeekWars.objectSize(this.leeks)) {
+				} else if (this.leeks.length) {
 					this.selectLeek(this.leeks[0])
 				}
 			})

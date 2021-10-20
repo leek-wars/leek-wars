@@ -3,9 +3,10 @@ import { LeekWars } from '@/model/leekwars'
 import { SocketMessage } from '@/model/socket'
 import { store } from '@/model/store'
 import router from '@/router'
+import { Leek } from './leek'
 
 class BattleRoyale {
-	leeks = []
+	leeks: {[key: number]: Leek} = {}
 	progress: number = 0
 	enabled: boolean = false
 

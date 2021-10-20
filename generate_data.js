@@ -5,7 +5,7 @@ const util = require('util')
 const values = [
 	['chips', 'chips', 'chip/get-all', '{[key: string]: ChipTemplate}'],
 	['constants', 'constants', 'constant/get-all', 'Constant[]'],
-	['functions', 'functions', 'function/get-all', 'Function[]'],
+	['functions', 'functions', 'function/get-all', 'LSFunction[]'],
 	['hats', 'hats', 'hat/get-all', '{[key: string]: HatTemplate}'],
 	['weapons', 'weapons', 'weapon/get-all', '{[key: string]: WeaponTemplate}'],
 	['pomps', 'pomps', 'pomp/get-all', '{[key: string]: PompTemplate}'],
@@ -40,7 +40,7 @@ Promise.all(promises).then((result) => {
 /* tslint:disable */
 import { ChipTemplate } from '@/model/chip'
 import { Constant } from '@/model/constant'
-import { Function } from '@/model/function'
+import { LSFunction } from '@/model/function'
 import { HatTemplate } from '@/model/hat'
 import { ItemTemplate } from '@/model/item'
 import { PompTemplate } from '@/model/pomp'

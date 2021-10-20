@@ -2,7 +2,7 @@
 /* tslint:disable */
 import { ChipTemplate } from '@/model/chip'
 import { Constant } from '@/model/constant'
-import { Function } from '@/model/function'
+import { LSFunction } from '@/model/function'
 import { HatTemplate } from '@/model/hat'
 import { ItemTemplate } from '@/model/item'
 import { PompTemplate } from '@/model/pomp'
@@ -256,7 +256,7 @@ const CONSTANTS: Constant[] = [
 ]
 export { CONSTANTS }
 
-const FUNCTIONS: Function[] = [
+const FUNCTIONS: LSFunction[] = [
   { id: 1, name: 'abs', level: 1, category: 1, operations: 6, arguments_names: [ 'number' ], arguments_types: [ '1' ], return_type: 1, return_name: 'result', deprecated: 0, replacement: null, optional: [] },                                                                                   { id: 7, name: 'acos', level: 1, category: 1, operations: 12, arguments_names: [ 'argument' ], arguments_types: [ '1' ], return_type: 1, return_name: 'result', deprecated: 0, replacement: null, optional: [] },
   { id: 287, name: 'arrayConcat', level: 1, category: 3, operations: -1, arguments_names: [ 'array1', 'array2' ], arguments_types: [ '4', '4' ], return_type: 4, return_name: 'newArray', deprecated: 0, replacement: null, optional: [] },                                                       { id: 280, name: 'arrayFilter', level: 1, category: 3, operations: -1, arguments_names: [ 'array', 'callback' ], arguments_types: [ '4', '5' ], return_type: 4, return_name: 'newArray', deprecated: 0, replacement: null, optional: [] },
   { id: 282, name: 'arrayFlatten', level: 1, category: 3, operations: -1, arguments_names: [ 'array', 'depth' ], arguments_types: [ '4', '1' ], return_type: 4, return_name: 'newArray', deprecated: 0, replacement: null, optional: [ false, true ] },                                           { id: 283, name: 'arrayFoldLeft', level: 1, category: 3, operations: -1, arguments_names: [ 'array', 'f', 'v0' ], arguments_types: [ '4', '5', '-1' ], return_type: -1, return_name: 'result', deprecated: 0, replacement: null, optional: [] },
