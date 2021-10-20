@@ -404,7 +404,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			// console.log("new-conversation", data)
 			let chat = state.chat[data.id]
 			if (!chat) {
-				chat = new Chat(data.id, ChatType.PM)
+				chat = new Chat(data.id, data.type ? data.type : ChatType.PM)
 				chat.last_date = data.last_date
 				chat.last_message = data.last_message
 				chat.last_farmer = data.farmers.find((f: any) => f.id === data.last_farmer_id)

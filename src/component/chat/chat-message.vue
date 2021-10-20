@@ -1,17 +1,22 @@
 <template lang="html">
-	<div class="message" :class="{ me: message.farmer.id === $store.state.farmer.id, react: reactionDialog, reactions: !LeekWars.isEmptyObj(message.reactions) }">
-		<router-link :to="'/farmer/' + message.farmer.id" class="avatar-wrapper">
+	<div class="message" :class="{ me: $store.state.farmer && message.farmer.id === $store.state.farmer.id, react: reactionDialog, reactions: !LeekWars.isEmptyObj(message.reactions) }">
+		<router-link v-if="message.farmer.id !== 0" :to="'/farmer/' + message.farmer.id" class="avatar-wrapper">
 			<rich-tooltip-farmer :id="message.farmer.id" v-slot="{ on }">
 				<avatar :farmer="message.farmer" :on="on" />
 			</rich-tooltip-farmer>
 		</router-link>
-		<div class="bubble">
-			<router-link :to="'/farmer/' + message.farmer.id" class="author">
+		<img v-else class="avatar" src="/image/favicon.png">
+		<div class="bubble" :class="{'br-notification': message.farmer.id === 0}">
+			<router-link v-if="message.farmer.id !== 0" :to="'/farmer/' + message.farmer.id" class="author">
 				<rich-tooltip-farmer :id="message.farmer.id" v-slot="{ on }">
 					<span :class="message.farmer.color" v-on="on">{{ message.farmer.name }}</span>
 				</rich-tooltip-farmer>
 			</router-link>
-			<div v-if="message.censored" class="censored">Censuré par {{ message.censored_by.name }}</div>
+			<div v-else class="author">Leek Wars</div>
+			<router-link v-if="message.farmer.id === 0" :to="'/fight/' + message.content.split('|')[1]">
+				{{ $t(message.content.split('|')[0]) }}
+			</router-link>
+			<div v-else-if="message.censored" class="censored">Censuré par {{ message.censored_by.name }}</div>
 			<div v-else v-large-emojis v-chat-code-latex class="text" v-html="message.content"></div>
 			<template v-for="(sub, i) in message.subMessages">
 				<div v-if="sub.censored" :key="i" class="censored">Censuré par {{ sub.censored_by.name }}</div>
@@ -19,7 +24,7 @@
 			</template>
 			<div class="right">
 				<span :title="LeekWars.formatDateTime(message.date)" class="time">{{ LeekWars.formatTime(message.date) }}</span>
-				<v-menu v-if="!privateMessages && !($store.state.farmer && message.farmer.id === $store.state.farmer.id) && message.farmer.color !== 'admin'" offset-y>
+				<v-menu v-if="!privateMessages && !($store.state.farmer && message.farmer.id === $store.state.farmer.id) && message.farmer.color !== 'admin' && message.farmer.id !== 0" offset-y>
 					<template v-slot:activator="{ on }">
 						<v-btn text small icon color="grey" v-on="on">
 							<v-icon>mdi-dots-vertical</v-icon>
@@ -402,6 +407,16 @@
 			&.me {
 				border: 1px solid #555;
 			}
+		}
+	}
+	.br-notification {
+		background: #5fad1b;
+		padding: 3px 7px;
+		border-radius: 4px;
+		color: white;
+		display: inline-block;
+		.author, a {
+			color: white;
 		}
 	}
 </style>
