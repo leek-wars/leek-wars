@@ -12,9 +12,6 @@ const handSize2 = handSize / 2
 
 class Leek extends FightEntity {
 
-	public static SCALE: number = 0.55
-	private static WEAPON_SCALE: number = 0.55
-
 	public handTex!: Texture
 	public hatFront!: Texture
 	public hatBack!: Texture
@@ -25,7 +22,7 @@ class Leek extends FightEntity {
 	// Weapon
 	public weapon: WeaponAnimation | null = null
 	public weapon_name: string | null = null
-	public skin: any
+	public skin!: number
 	public hatTemplate!: HatTemplate
 	public hatX: number = 0
 	public hatWidth: number = 0
@@ -47,6 +44,7 @@ class Leek extends FightEntity {
 
 		// if (this.id === 1) { appearance = 1 }
 		this.scale = 0.68 - appearance * 0.01
+		// this.scale = 1
 		this.skin = skin
 		this.bodyTexFront = T.get(this.game, "image/leek/leek" + appearance + "_front_" + LeekWars.skins[skin] + ".png", true, SHADOW_QUALITY)
 		this.bodyTexBack = T.get(this.game, "image/leek/leek" + appearance + "_back_" + LeekWars.skins[skin] + ".png", true, SHADOW_QUALITY)
@@ -72,20 +70,21 @@ class Leek extends FightEntity {
 		S.move.load(this.game)
 	}
 
-	public setWeapon(weapon: WeaponAnimation) {
+	public setWeapon(weapon: WeaponAnimation): void {
 		this.weapon = weapon
 	}
 
-	public update(dt: number) {
+	public update(dt: number): void {
 		super.update(dt)
 		this.handPos = Math.cos(this.frame / 17 - Math.PI / 6) * 2.5
+		this.handPos += (this.front ? 0 : 10)
 		// Update weapon
 		if (this.weapon != null) {
 			this.weapon.update(dt)
 		}
 	}
 
-	public useWeapon(cell: Cell, targets: FightEntity[], result: number) {
+	public useWeapon(cell: Cell, targets: FightEntity[], result: number): number {
 
 		if (this.weapon == null) {
 			return 0 // Il n'y aura pas d'anim
@@ -109,26 +108,59 @@ class Leek extends FightEntity {
 
 		const position = this.game.ground.xyToXYPixels(x, y)
 
-		return this.weapon.shoot(this.ox, this.oy, this.handPos + this.z, this.angle, this.direction, position, targets, this, cell, Leek.WEAPON_SCALE * this.growth)
+		return this.weapon.shoot(this.ox, this.oy - this.z, this.handPos, this.angle, this.direction, position, targets, this, cell, this.scale)
 	}
 
-	public draw(ctx: CanvasRenderingContext2D) {
+	public draw(ctx: CanvasRenderingContext2D): void {
 		super.draw(ctx)
+
+		ctx.save()
+		ctx.scale(this.scale, this.scale)
+
 		// Draw shadow
 		if (this.game.shadows && !this.dead) {
 			this.drawShadow(ctx)
 		}
 		// Draw normal
+		ctx.scale(this.direction, 1)
 		this.drawNormal(ctx)
+
+		/*
+		if (this.weapon) {
+			// Center (debug)
+			ctx.save()
+			ctx.translate(this.weapon.cx, -this.weapon.cz - this.handPos)
+			ctx.fillStyle = 'red'
+			ctx.beginPath();
+			ctx.arc(0, 0, 7, 0, 2 * Math.PI);
+			ctx.closePath();
+			ctx.fill();
+			ctx.restore()
+		}
+		*/
+
+		ctx.restore()
+
 		super.endDraw(ctx)
+
+		/*
+		if (this.weapon && !(this.weapon instanceof WhiteWeaponAnimation)) {
+			// Shoot point (debug)
+			const coord = this.weapon.getShootPoint(this.angle, this.handPos)
+			const sx = (this.ox + coord.x * this.scale * this.direction ) * this.game.ground.scale
+			const sy = (this.oy - this.z + (coord.y - coord.z) * this.scale) * this.game.ground.scale
+			ctx.fillStyle = 'blue'
+			ctx.beginPath();
+			ctx.arc(sx, sy, 4, 0, 2 * Math.PI);
+			ctx.closePath();
+			ctx.fill();
+		}
+		*/
 	}
 
-	public drawNormal(ctx: CanvasRenderingContext2D) {
+	public drawNormal(ctx: CanvasRenderingContext2D): void {
 		const texture = this.front ? this.bodyTexFront : this.bodyTexBack
 		const hatTexture = this.front ? this.hatFront : this.hatBack
-
-		ctx.save()
-		ctx.scale(this.direction, 1)
 
 		if (this.weapon != null) {
 			// Weapon !
@@ -142,14 +174,13 @@ class Leek extends FightEntity {
 		} else {
 			// No weapon
 			const front = this.front ? 1 : -1
-			ctx.drawImage(this.handTex.texture, 10 * front - 7, -23 - this.handPos - 3, 10, 10) // back hand
+			ctx.drawImage(this.handTex.texture, 15 * front - 7, -32 - this.handPos - 3, handSize * 0.8, handSize * 0.8) // back hand
 			this.drawBody(ctx, texture.texture, hatTexture ? hatTexture.texture : null)
-			ctx.drawImage(this.handTex.texture, -12 * front - 7, -23 - this.handPos + 1, 13, 13) // front hand
+			ctx.drawImage(this.handTex.texture, -18 * front - 7, -32 - this.handPos + 1, handSize, handSize) // front hand
 		}
-		ctx.restore()
 	}
 
-	public drawWeapon(ctx: CanvasRenderingContext2D, texture: HTMLImageElement | HTMLCanvasElement, shadow: boolean = false) {
+	public drawWeapon(ctx: CanvasRenderingContext2D, texture: HTMLImageElement | HTMLCanvasElement, shadow: boolean = false): void {
 		if (!this.weapon) { return  }
 
 		ctx.save()
@@ -157,24 +188,22 @@ class Leek extends FightEntity {
 		if (shadow) {
 			ctx.scale(this.direction, 1)
 		}
-		// Translate to center
-		ctx.translate((this.weapon.cx + (this.front ? 0 : -this.weapon.ocx)), - this.weapon.cz * 0.8 * this.growth - this.handPos + (this.front ? 5 : -5))
 
-		// Inverse
-		ctx.scale(Leek.WEAPON_SCALE * this.growth, Leek.WEAPON_SCALE * this.growth)
+		// Translate to center
+		ctx.translate(this.weapon.cx, -this.weapon.cz - this.handPos)
 
 		// Rotate
 		if (shadow) {
 			ctx.rotate(this.angle / 2)
 		} else {
-			ctx.rotate(this.angle)
+			ctx.rotate(this.angle - this.weapon.recoilAngle * (Math.PI / 100))
 		}
 
 		if (this.weapon instanceof WhiteWeaponAnimation) {
 			this.weapon.draw(ctx, texture, this.front)
 		} else {
 			// Translate to the weapon texture origin
-			ctx.translate(this.weapon.x - this.weapon.recoil + (this.front ? 2 : -8), this.weapon.z)
+			ctx.translate(this.weapon.x - this.weapon.recoil, this.weapon.z)
 			// Draw the weapon
 			ctx.drawImage(texture, 0, 0, this.weapon.texture.texture.width, this.weapon.texture.texture.height)
 		}
@@ -186,7 +215,7 @@ class Leek extends FightEntity {
 		ctx.restore()
 	}
 
-	public drawShadow(ctx: CanvasRenderingContext2D) {
+	public drawShadow(ctx: CanvasRenderingContext2D): void {
 
 		const texture = this.front ? this.bodyTexBack : this.bodyTexFront
 		const hatTexture = this.front ? this.hatBack : this.hatFront
@@ -208,17 +237,17 @@ class Leek extends FightEntity {
 		ctx.restore()
 	}
 
-	public drawBody(ctx: CanvasRenderingContext2D, texture: HTMLImageElement | HTMLCanvasElement, hatTexture: HTMLImageElement | HTMLCanvasElement | null) {
+	public drawBody(ctx: CanvasRenderingContext2D, texture: HTMLImageElement | HTMLCanvasElement, hatTexture: HTMLImageElement | HTMLCanvasElement | null): void {
 
 		if (texture == null) { return }
 
 		ctx.save()
 
+		ctx.scale(this.growth, this.oscillation * this.growth)
+
 		if (this.flash > 0 && (Math.random() > 0.5 || this.flash < 2)) {
 			ctx.globalCompositeOperation = 'lighter'
 		}
-
-		ctx.scale(this.scale * this.growth, this.oscillation * this.scale * this.growth)
 
 		const leekWidth = this.bodyTexFront.texture.width
 

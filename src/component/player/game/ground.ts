@@ -595,6 +595,7 @@ class Ground {
 	public draw(ctx: CanvasRenderingContext2D) {
 
 		// Clear main canvas
+		// eslint-disable-next-line no-self-assign
 		ctx.canvas.width = ctx.canvas.width
 
 		// Set origin at the start postion of the ground
