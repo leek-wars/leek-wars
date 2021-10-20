@@ -16,7 +16,7 @@
 			<div v-show="!LeekWars.mobile || !LeekWars.splitBack" class="column4">
 				<panel v-autostopscroll="'bottom'" class="first" @scroll.native="conversationsScroll">
 					<div slot="content" class="conversations">
-						<router-link v-if="newConversation && !newConversationSent" :to="'/messages/new/' + newFarmer.id + '/' + newFarmer.name + '/' + newFarmer.avatar_changed">
+						<router-link v-if="newConversation && newConversation.messages.length === 0" :to="'/messages/new/' + newFarmer.id + '/' + newFarmer.name + '/' + newFarmer.avatar_changed">
 							<conversation :chat="newConversation" />
 						</router-link>
 						<router-link v-for="conversation in $store.state.conversationsList" :key="conversation.id" :to="'/messages/conversation/' + conversation.id">
@@ -28,7 +28,7 @@
 			<div v-show="!LeekWars.mobile || LeekWars.splitBack" class="column8">
 				<panel>
 					<chat v-if="currentConversation && currentConversation.id !== 0" :id="currentConversation.id" slot="content" />
-					<chat v-else slot="content" :new-farmer="newFarmer" :new-conversation="newConversation_" />
+					<chat v-else-if="newConversation" slot="content" :new-farmer="newFarmer" :new-conversation="newConversation" />
 				</panel>
 			</div>
 		</div>
@@ -46,7 +46,7 @@
 </template>
 
 <script lang="ts">
-	import { ChatType } from '@/model/chat'
+	import { Chat, ChatType } from '@/model/chat'
 	import { Conversation } from '@/model/conversation'
 	import { LeekWars } from '@/model/leekwars'
 	import { SocketMessage } from '@/model/socket'
@@ -56,9 +56,7 @@
 	@Component({ name: 'messages', i18n: {} })
 	export default class Messages extends Vue {
 		ChatType = ChatType
-		newConversation_: Conversation | null = null
 		newFarmer_: any = null
-		newConversationSent: boolean = false
 		currentID: number | null = null
 		quitDialog: boolean = false
 		actions = [{icon: 'mdi-delete', click: () => this.showQuitDialog()}]
@@ -72,18 +70,21 @@
 			LeekWars.setTitle(this.$t('title'))
 			this.update()
 		}
+
 		mounted() {
 			LeekWars.footer = false
 			LeekWars.box = true
 			this.$root.$on('back', this.back)
 			this.$root.$on('focus', this.conversationRead)
 		}
+
 		destroyed() {
 			LeekWars.footer = true
 			LeekWars.box = false
 			this.$root.$off('back', this.back)
 			this.$root.$off('focus', this.conversationRead)
 		}
+
 		back() {
 			this.$router.push('/messages')
 		}
@@ -92,20 +93,23 @@
 			return (this.currentID === 0) ? this.newConversation : (this.currentID ? this.$store.state.chat[this.currentID] : null)
 		}
 
-		isNewConversation(): boolean {
-			return 'name' in this.$route.params
-		}
-
-		get newConversation(): Conversation | null {
-			if (!this.newConversation_ && 'name' in this.$route.params) {
-				this.newConversation_ = {id: 0, last_message: this.$t('new_message') as string, farmers: [this.newFarmer]} as Conversation
+		get newConversation(): Chat | null {
+			if ('name' in this.$route.params) {
+				const chat = new Chat(0, ChatType.PM)
+				chat.last_message = this.$t('new_message') as string
+				chat.farmers = [this.$store.state.farmer, this.newFarmer]
+				return chat
 			}
-			return this.newConversation_
+			return null
 		}
 
 		get newFarmer(): any {
 			if (!this.newFarmer_ && 'name' in this.$route.params) {
-				this.newFarmer_ = {id: parseInt(this.$route.params.id, 10), name: this.$route.params.name, avatar_changed: this.$route.params.avatar_changed}
+				this.newFarmer_ = {
+					id: parseInt(this.$route.params.farmer_id, 10),
+					name: this.$route.params.name,
+					avatar_changed: parseInt(this.$route.params.avatar_changed, 10)
+				}
 			}
 			return this.newFarmer_
 		}
@@ -120,9 +124,9 @@
 
 		@Watch('$route.params')
 		update() {
-
-			if (this.id !== null) {
-				this.selectConversation(this.id)
+			// console.log("update", this.$route.params)
+			if (this.id !== null || this.newFarmer) {
+				this.selectConversation(this.id || 0)
 			} else {
 				if (LeekWars.mobile) {
 					LeekWars.splitShowList()

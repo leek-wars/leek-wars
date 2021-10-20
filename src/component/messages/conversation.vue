@@ -1,10 +1,10 @@
 <template>
-	<div v-if="chat" v-ripple class="conversation" :class="{unread: chat.unread}">
+	<div v-if="chat" v-ripple class="conversation" :class="{unread: !chat.read}">
 		<rich-tooltip-farmer :id="farmer ? farmer.id : 0" v-slot="{ on }">
-			<avatar v-if="farmer" :farmer="farmer" :on="on" />
+			<avatar :farmer="farmer" :on="on" />
 		</rich-tooltip-farmer>
 		<div class="content">
-			<div class="name">{{ farmer.name }}</div>
+			<div class="name">{{ farmer ? farmer.name : '?' }}</div>
 			<div class="last-message">
 				<b v-if="chat.last_farmer && $store.state.farmer && chat.last_farmer.id === $store.state.farmer.id">{{ $t('main.me') }} ►</b>
 				<span v-emojis v-text="chat.last_message"></span>
@@ -23,16 +23,13 @@
 
 		@Prop({required: true}) chat!: Chat
 
-		created() {
-			// console.log("chat", this.chat)
-		}
-
 		get farmer() {
 			for (const farmer of this.chat.farmers) {
 				if (!this.$store.state.farmer || farmer.id !== this.$store.state.farmer.id) {
 					return farmer
 				}
 			}
+			return null
 		}
 	}
 </script>
@@ -44,15 +41,19 @@
 		white-space: nowrap;
 		position: relative;
 		&.unread {
-			background-color: rgba(95, 173, 27, 0.15);
+			background-color: rgba(90, 194, 0, 0.20);
+		}
+	}
+	.conversation:hover {
+		background-color: white;
+		box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
+		&.unread {
+			background-color: rgba(90, 194, 0, 0.25);
 		}
 	}
 	.selected {
 		background: #ddd;
 		color: white;
-	}
-	.conversation:hover {
-		background: #ddd;
 	}
 	.selected:hover {
 		background: #999;

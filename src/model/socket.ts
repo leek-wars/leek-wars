@@ -12,18 +12,18 @@ enum SocketMessage {
 	// TEAM_CHAT_RECEIVE = 2, // Deprecated
 	// TEAM_CHAT_MEMBERS = 3, // Deprecated
 	// TEAM_CHAT_ENABLE = 4, // Deprecated
-	// MP_RECEIVE = 5,
+	// MP_RECEIVE = 5, // Deprecated
 	NOTIFICATION_RECEIVE = 6,
 	// CHAT_ENABLE = 7, // Deprecated
 	CHAT_SEND = 8,
 	CHAT_RECEIVE = 9,
-	MP_UNREAD_MESSAGES = 10,
+	// MP_UNREAD_MESSAGES = 10, // Deprecated
 	MP_READ = 11,
 	FIGHT_LISTEN = 12,
 	FIGHT_GENERATED = 12,
 	FIGHT_WAITING_POSITION = 13,
 	FORUM_CHAT_DISABLE = 19,
-	UPDATE_NOTIFICATIONS = 20,
+	READ_ALL_NOTIFICATIONS = 20,
 	CHAT_REQUEST_MUTE = 21,
 	CHAT_MUTE_USER = 22,
 	CHAT_REQUEST_UNMUTE = 23,
@@ -45,14 +45,16 @@ enum SocketMessage {
 	FIGHT_PROGRESS_REGISTER = 40,
 	FIGHT_PROGRESS = 41,
 	FIGHT_PROGRESS_UNREGISTER = 42,
-	// TEAM_CHAT_ENABLE_FAST = 43,
-	// TEAM_CHAT_RECEIVE_PACK = 44,
+	// TEAM_CHAT_ENABLE_FAST = 43, // Deprecated
+	// TEAM_CHAT_RECEIVE_PACK = 44, // Deprecated
 	UPDATE_LEEK_TALENT = 45,
 	UPDATE_FARMER_TALENT = 46,
 	UPDATE_TEAM_TALENT = 47,
 	UPDATE_HABS = 48,
 	UPDATE_LEEK_XP = 49,
 	CHAT_CENSOR = 50,
+	CHAT_REACT = 51,
+	READ_NOTIFICATION = 52,
 }
 
 class Socket {
@@ -124,7 +126,7 @@ class Socket {
 				}
 				case SocketMessage.NOTIFICATION_RECEIVE : {
 
-					const message = {id: data[0], unread: data[1], type: data[2], date: LeekWars.time, parameters: data[3]}
+					const message = { id: data[0], type: data[1], date: LeekWars.time, parameters: data[2], new: true }
 					// Envoie de la notif sur la page du combat pour la mettre en file d'attente
 					if (message.type === NotificationType.TROPHY_UNLOCKED && router.currentRoute.path.startsWith('/fight/' + message.parameters[1])) {
 						vueMain.$emit('trophy', message)
@@ -138,29 +140,26 @@ class Socket {
 					}
 					break
 				}
-				case SocketMessage.UPDATE_NOTIFICATIONS : {
-					store.commit('unread-notifications', data[0])
+				case SocketMessage.READ_ALL_NOTIFICATIONS : {
+					store.commit('read-notifications', data[0])
+					break
+				}
+				case SocketMessage.READ_NOTIFICATION : {
+					store.commit('read-notification', data[0])
+					break
+				}
+				case SocketMessage.MP_READ : {
+					store.commit('chat-set-read', { chat: data[0], read: true })
 					break
 				}
 				case SocketMessage.CHAT_RECEIVE : {
-
-					// console.log("socket chat receive")
+					// console.log("socket chat receive", data)
 					const message = data as ChatMessage
-					const chat = store.state.chat[message.chat]
-
-					store.commit('chat-receive', { chat: message.chat, message })
-
-					if (chat.type === ChatType.PM && store.state.farmer!.id !== message.farmer!.id) {
-						LeekWars.squares.addFromConversation(message)
-					}
+					store.commit('chat-receive', { chat: message.chat, message, new: true })
 					break
 				}
 				case SocketMessage.CHAT_RECEIVE_PACK : {
 					store.commit('chat-receive-pack', data)
-					break
-				}
-				case SocketMessage.MP_UNREAD_MESSAGES : {
-					store.commit('unread-messages', data[0])
 					break
 				}
 				case SocketMessage.LUCKY: {
@@ -217,8 +216,11 @@ class Socket {
 					break
 				}
 				case SocketMessage.CHAT_CENSOR: {
-					console.log("socket censor", data)
 					store.commit('chat-censor', { chat: data[0], messages: data[1], censorer: data[2] })
+					break
+				}
+				case SocketMessage.CHAT_REACT: {
+					store.commit('chat-react', { chat: data[0], message: data[1], reaction: data[2], old: data[3] })
 					break
 				}
 			}

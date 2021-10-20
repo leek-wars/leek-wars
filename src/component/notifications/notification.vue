@@ -40,14 +40,14 @@
 		position: relative;
 		display: block;
 		&.unread {
-			background-color: rgba(95, 173, 27, 0.15);
+			background-color: rgba(90, 194, 0, 0.20);
 		}
 	}
 	.notification:hover {
 		background-color: white;
 		box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
 		&.unread {
-			background-color: rgba(95, 173, 27, 0.2);
+			background-color: rgba(90, 194, 0, 0.25);
 		}
 	}
 	.title {

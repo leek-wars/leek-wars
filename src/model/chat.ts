@@ -3,6 +3,7 @@ import { Farmer } from '@/model/farmer'
 import { i18n } from '@/model/i18n'
 import { LeekWars } from '@/model/leekwars'
 import Vue from 'vue'
+import { store } from './store'
 
 enum ChatType { GLOBAL, TEAM, PM }
 
@@ -18,6 +19,8 @@ class ChatMessage {
 	censored!: number
 	censored_by!: Farmer | null
 	read!: boolean
+	reactions!: {[key: string]: number}
+	my_reaction!: string | null
 }
 
 class ChatWindow {
@@ -46,7 +49,7 @@ class Chat {
 
 	add(message: ChatMessage) {
 		// console.log("chat add", message, this)
-		const content = this.formatMessage(message.content, message.farmer.name)
+		message.content = this.formatMessage(message.content, message.farmer.name)
 		const day = new Date(message.date * 1000).getDate()
 		Vue.set(message, 'day', day)
 		if (!('censored' in message)) {
@@ -56,7 +59,6 @@ class Chat {
 		if (this.messages.length) {
 			const lastMessage = this.messages[this.messages.length - 1]
 			if (lastMessage.farmer.id === message.farmer.id && message.date - lastMessage.date < 120) {
-				lastMessage.contents.push(content)
 				lastMessage.subMessages.push(message)
 				return
 			}
@@ -70,19 +72,20 @@ class Chat {
 		if (separator) {
 			this.messages.push({
 				farmer: { id: -1, name: '', avatar_changed: 0, grade: '' },
-				contents: [''],
+				content: '',
 				date: message.date,
 				day,
-				subMessages: [] as ChatMessage[]
+				subMessages: [] as ChatMessage[],
+				reactions: {}
 			} as ChatMessage)
 		}
-		Vue.set(message, 'contents', [content])
 		Vue.set(message, 'subMessages', [])
-		Vue.set(this, 'last_message', content)
-		this.messages.push(message)
-		if (!message.read) {
-			this.read = false
+		Vue.set(message, 'reactionDialog', false)
+		if (!message.reactions) {
+			Vue.set(message, 'reactions', {})
 		}
+		Vue.set(this, 'last_message', message.content)
+		this.messages.push(message)
 	}
 
 	set_messages(messages: any[]) {
@@ -127,7 +130,9 @@ class Chat {
 			day: new Date(time * 1000).getDate(),
 			censored: 0,
 			censored_by: null,
-			read: false
+			read: false,
+			reactions: {},
+			my_reaction: null
 		})
 	}
 

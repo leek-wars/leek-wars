@@ -149,7 +149,7 @@ const routes = [
 	{ path: '/market/:item', component: Market, meta: {noscrollapp: true}, beforeEnter: connected },
 	{ path: '/messages', component: Messages, beforeEnter: connected },
 	{ path: '/messages/conversation/:id', component: Messages, beforeEnter: connected },
-	{ path: '/messages/new/:id/:name/:avatar_changed', component: Messages, beforeEnter: connected },
+	{ path: '/messages/new/:farmer_id/:name/:avatar_changed', component: Messages, beforeEnter: connected },
 	{ path: '/moderation', component: Moderation, meta: {noscroll: true}, beforeEnter: connected },
 	{ path: '/moderation/fault/:id', component: Moderation, meta: {noscroll: true}, beforeEnter: connected },
 	{ path: '/moderation/thugs', component: ModerationThugs, meta: {noscroll: true}, beforeEnter: connected },
