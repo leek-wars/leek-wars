@@ -150,6 +150,9 @@
 							for (const section in fun.primary) {
 								new_data += fun.primary[section]
 							}
+							for (const section in fun.secondary) {
+								new_data += fun.secondary[section]
+							}
 							(item as any).data = new_data
 						} else {
 							let item_data = (this.$t('doc.func_' + (item as any).real_name) as any).toLowerCase()

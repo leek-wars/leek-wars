@@ -140,7 +140,6 @@
 		}
 		::v-deep p {
 			font-size: 15px;
-			margin-bottom: 0;
 		}
 	}
 	.expand {
