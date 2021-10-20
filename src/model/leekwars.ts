@@ -1,6 +1,5 @@
 import packageJson from '@/../package.json'
 import Analyzer from '@/component/editor/analyzer'
-import { Item } from '@/component/editor/editor-item'
 import { Keyword } from '@/component/editor/keywords'
 import { env } from '@/env'
 import { BattleRoyale } from '@/model/battle-royale'
@@ -8,7 +7,7 @@ import { ChipTemplate } from '@/model/chip'
 import { Commands } from '@/model/commands'
 import { CHIP_TEMPLATES, CHIPS, CONSTANTS, FUNCTIONS, HAT_TEMPLATES, HATS, ITEMS, POMPS, POTIONS, SUMMON_TEMPLATES, TROPHIES, TROPHY_CATEGORIES, WEAPONS } from '@/model/data'
 import { Emojis } from '@/model/emojis'
-import { Function } from '@/model/function'
+import { LSFunction } from '@/model/function'
 import { Socket } from '@/model/socket'
 import { Squares } from '@/model/squares'
 import { store } from '@/model/store'
@@ -17,7 +16,7 @@ import { WeaponTemplate } from '@/model/weapon'
 import router from '@/router'
 import Vue from 'vue'
 import { TranslateResult } from 'vue-i18n'
-import { Chat, ChatType, ChatWindow } from './chat'
+import { ChatType, ChatWindow } from './chat'
 import { Constant } from './constant'
 import { i18n, loadLanguageAsync } from './i18n'
 import { ItemType } from './item'
@@ -233,12 +232,12 @@ const LeekWars = {
 		if (!(skin in SKINS)) { return SKINS[1] }
 		return SKINS[skin]
 	},
-	objectSize(obj: object): number {
+	objectSize(obj: Record<string, unknown>): number {
 		let size = 0, key
 		for (key in obj) { if (obj.hasOwnProperty(key)) { size++ } }
 		return size
 	},
-	first<T extends object>(obj: T) {
+	first<T extends Record<string, unknown>>(obj: T) {
 		for (const e in obj) {
 			if (obj.hasOwnProperty(e)) {
 				return obj[e]
@@ -724,8 +723,8 @@ function chipByName(chips: {[key: string]: ChipTemplate}) {
 	return result
 }
 
-function functionById(functions: Function[]) {
-	const result: { [key: number]: Function } = {}
+function functionById(functions: LSFunction[]) {
+	const result: { [key: number]: LSFunction } = {}
 	for (const f of functions) {
 		result[f.id] = f
 	}
@@ -865,7 +864,7 @@ function createCodeAreaSimple(code: string, element: HTMLElement) {
 }
 
 function escapeRegExp(str: string) {
-	return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&")
+	return str.replace(/[-[\]/{}()*+?.\\^$|]/g, "\\$&")
 }
 
 function formatEmojis(data: any) {
@@ -873,7 +872,7 @@ function formatEmojis(data: any) {
 	// Custom smileys
 	for (const i in Emojis.custom) {
 		const smiley = Emojis.custom[i]
-		data = data.replace(new RegExp("(^|\\s|\>)" + escapeRegExp(i) + "(?![^\\s<>])", "gi"), '$1<img class="emoji" image="' + smiley + '" alt="' + i + '" title="' + i + '" src="/image/emoji/' + smiley + '.png">')
+		data = data.replace(new RegExp("(^|\\s|>)" + escapeRegExp(i) + "(?![^\\s<>])", "gi"), '$1<img class="emoji" image="' + smiley + '" alt="' + i + '" title="' + i + '" src="/image/emoji/' + smiley + '.png">')
 	}
 	if (LeekWars.nativeEmojis) {
 		return data // nothing more to do
@@ -984,6 +983,7 @@ function linkify(html: string) {
 	const url_regex = /((?:https?):\/\/[\w-]+\.[\w-]+(?:\.\w+)*)|((?:www\.)?leekwars\.com)/gim
 	let match
 
+	// eslint-disable-next-line no-cond-assign
 	while (match = url_regex.exec(html)) {
 		let i = match.index + match[0].length
 		let par = 0, curly = 0, square = 0
@@ -1000,12 +1000,12 @@ function linkify(html: string) {
 				i++
 			}
 			let last = html[i - 1]
-			while (/[\.,!?:]/.test(last)) {
+			while (/[.,!?:]/.test(last)) {
 				last = html[--i - 1]
 			}
 		}
 		const url = html.substring(match.index, i).replace(/\$/g, '%24')
-		const real_url = (url.indexOf('http') === -1) ? 'http://' + url : url
+		const real_url = (url.indexOf('http') === -1) ? 'http://' + url : url
 		const blank = make_blank(real_url)
 
 		html = html.substring(0, match.index) + toChatLink(real_url, url, blank) + html.substring(i)

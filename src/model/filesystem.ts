@@ -31,7 +31,7 @@ class FileSystem {
 		]},
 	]
 
-	public init() {
+	public init(): Promise<void> {
 		if (this.initialized) { return Promise.resolve() }
 		if (this.promise) { return this.promise }
 

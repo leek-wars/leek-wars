@@ -52,10 +52,11 @@ class Team {
 	public turret_ai!: any
 	public chat!: number
 	public member_level!: number
+	public forum!: number
+	public leek_count!: number
 }
 
 class TeamMember extends Farmer {
-	public grade!: string
 	public logs_level!: number
 }
 
