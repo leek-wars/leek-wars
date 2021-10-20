@@ -63,13 +63,13 @@
 <script lang="ts">
 	import Markdown from '@/component/encyclopedia/markdown.vue'
 	import { locale } from '@/locale'
-	import { Function } from '@/model/function'
+	import { LSFunction } from '@/model/function'
 	import { LeekWars } from '@/model/leekwars'
 	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 
 	@Component({ name: 'documentation-function', components: { Markdown } })
 	export default class DocumentationFunction extends Vue {
-		@Prop() fun!: Function
+		@Prop() fun!: LSFunction
 		expanded: boolean = false
 		new_fun: any = null
 
