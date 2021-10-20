@@ -105,13 +105,13 @@
 									</div>
 
 									<template v-if="message.id == -1 && $store.state.connected && category.moderator">
-										<span class="lock" @click="lock"><v-icon>mdi-lock</v-icon> {{ topic.locked ? $t('unlock') : $t('lock') }}</span>
+										<span class="action lock" @click="lock"><v-icon>mdi-lock</v-icon> {{ topic.locked ? $t('unlock') : $t('lock') }}</span>
 										&nbsp;&nbsp;
-										<span class="pin" @click="pin"><v-icon>mdi-pin</v-icon> {{ topic.pinned ? $t('unpin') : $t('pin') }}</span>
+										<span class="action pin" @click="pin"><v-icon>mdi-pin</v-icon> {{ topic.pinned ? $t('unpin') : $t('pin') }}</span>
 									</template>
 									<template v-if="message.id == -1 && $store.state.connected && (topic.owner === $store.state.farmer.id || category.moderator)">
 										&nbsp;&nbsp;
-										<span class="resolve" @click="resolve"><v-icon>mdi-check</v-icon> {{ topic.resolved ? $t('unsolved') : $t('solved') }}</span>
+										<span class="action resolve" @click="resolve"><v-icon>mdi-check</v-icon> {{ topic.resolved ? $t('unsolved') : $t('solved') }}</span>
 									</template>
 								</div>
 								<div class="spacer"></div>
@@ -511,7 +511,7 @@
 		margin-bottom: 20px;
 	}
 	.profile {
-		width: 130px;
+		flex: 130px 0 0;
 		vertical-align: top;
 		display: flex;
 		flex-direction: column;
@@ -519,6 +519,7 @@
 		top: 15px;
 		align-self: flex-start;
 		text-align: center;
+		min-width: 0;
 	}
 	#app.app .profile {
 		width: auto;
@@ -604,6 +605,7 @@
 		position: relative;
 		display: flex;
 		flex-direction: column;
+		min-width: 0;
 	}
 	#app.app .message {
 		padding: 7px;
@@ -650,9 +652,6 @@
 		::v-deep > p:last-child {
 			margin-bottom: 0;
 		}
-		::v-deep ul, ::v-deep ol {
-			margin-left: 15px;
-		}
 	}
 	.message .original {
 		padding: 4px;
@@ -665,6 +664,12 @@
 		display: flex;
 		align-items: center;
 		margin-top: 10px;
+	}
+	.message .action {
+		display: inline-flex;
+		i {
+			margin-right: 4px;
+		}
 	}
 	.message .date {
 		color: #aaa;
