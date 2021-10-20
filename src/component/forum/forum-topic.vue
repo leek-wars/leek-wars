@@ -445,7 +445,7 @@
 			} else {
 				const input = this.$refs.topicTitle as HTMLElement
 				const title = input.innerText
-				LeekWars.post("forum/edit-topic", {topic_id: this.topic.id, title, message: message.message, issue: this.topic.issue}).then(callback)
+				LeekWars.post("forum/edit-topic", {topic_id: this.topic.id, title, message: message.message, issue: this.topic.issue || 0}).then(callback)
 			}
 		}
 		addEmoji(message: ForumMessage, emoji: string, textarea: any) {
