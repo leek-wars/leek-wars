@@ -195,7 +195,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			const chat = state.chat[data.chat]
 			if (chat) {
 				chat.read = data.read
-				state.unreadMessages = state.conversationsList.reduce((sum, chat) => sum + (chat.read ? 0 : 1), 0)
+				state.unreadMessages = state.conversationsList.reduce((sum, c) => sum + (c.read ? 0 : 1), 0)
 				updateTitle(state)
 			}
 		},
@@ -349,7 +349,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			state.notifications.unshift(notification)
 
 			if (data.new) {
-				state.unreadNotifications = state.notifications.reduce((sum, notification) => sum + (notification.read ? 0 : 1), 0)
+				state.unreadNotifications = state.notifications.reduce((sum, n) => sum + (n.read ? 0 : 1), 0)
 				updateTitle(state)
 				LeekWars.squares.addFromNotification(notification)
 			}
@@ -378,7 +378,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 		},
 
 		'chat-react'(state: LeekWarsState, data: {chat: number, message: number, reaction: string, old: string}) {
-			let chat = state.chat[data.chat]
+			const chat = state.chat[data.chat]
 			if (chat) {
 				for (const message of chat.messages) {
 					if (message.id === data.message) {
@@ -435,7 +435,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			for (const notification of state.notifications) {
 				if (notification.id === id) {
 					notification.read = true
-					state.unreadNotifications = state.notifications.reduce((sum, notification) => sum + (notification.read ? 0 : 1), 0)
+					state.unreadNotifications = state.notifications.reduce((sum, n) => sum + (n.read ? 0 : 1), 0)
 					updateTitle(state)
 					break
 				}

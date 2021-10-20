@@ -128,7 +128,7 @@
 				LeekWars.get('message/get-messages/' + this.id + '/' + 50 + '/' + 1).then(data => {
 					this.$store.commit('clear-chat', this.id)
 					for (const message of data.messages) {
-						this.$store.commit('chat-receive', { chat: this.id, message: message, new: false })
+						this.$store.commit('chat-receive', { chat: this.id, message, new: false })
 					}
 					for (const farmer of data.farmers) {
 						this.$store.commit('add-conversation-participant', {id: this.id, farmer})
@@ -150,14 +150,14 @@
 					this.$router.replace('/messages/conversation/' + data.conversation_id)
 				})
 			} else {
-				LeekWars.post('message/send-message', {conversation_id: this.chat.id, message}).then(() => {}).error(data => {
+				LeekWars.post('message/send-message', {conversation_id: this.chat.id, message}).then(() => { /**/ }).error(data => {
 					LeekWars.toast(this.$t('main.error_' + data.error, data.params))
 				})
 			}
 		}
 
 		read() {
-			if (!this.chat) return ;
+			if (!this.chat) { return }
 			Vue.nextTick(() => {
 				if (this.chat!.type === ChatType.PM && !this.chat!.read) {
 					LeekWars.post('message/read', { chat: this.chat!.id })

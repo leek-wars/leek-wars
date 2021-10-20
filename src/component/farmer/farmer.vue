@@ -822,7 +822,7 @@
 
 		giveTrophy() {
 			if (this.giveTrophyID) {
-				LeekWars.post('trophy/give', { trophy: this.giveTrophyID, farmer: this.farmer.id, fight: this.giveTrophyFight || 0 })
+				LeekWars.post('trophy/give', { trophy: this.giveTrophyID, farmer: this.farmer!.id, fight: this.giveTrophyFight || 0 })
 				.then(() => {
 					this.trophyDialog = false
 					LeekWars.toast("Trophée donné !")
