@@ -149,6 +149,9 @@
 		<panel title="Licenses">
 			<ul>
 				<li>Angel_chorus2.mp3, Taira Komori, edited, CC-BY3 license.</li>
+				<li>exp_obj_large03.wav, ggctuk, CC0 1.0 license.</li>
+				<li>Rocket Launch, Jarusca, CC0 1.0 license.</li>
+				<li>Electric current.ogg, vladat, CC BY 3.0 license.</li>
 			</ul>
 		</panel>
 	</div>

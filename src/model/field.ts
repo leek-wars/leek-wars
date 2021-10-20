@@ -192,6 +192,12 @@ class Field {
 		return pos
 	}
 
+	public real_distance(cell1: Cell, cell2: Cell): number {
+		const xy1 = this.cellToXY(cell1)
+		const xy2 = this.cellToXY(cell2)
+		return Math.sqrt(Math.pow(xy1.x - xy2.x, 2) + Math.pow((xy1.y - xy2.y) / 2, 2))
+	}
+
 	public next_cell(cell: Cell | null, dx: number, dy: number) {
 		if (cell === null) { return null }
 		const x = cell.x + dx

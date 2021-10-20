@@ -911,20 +911,28 @@ function set_cursor_position(el: any, pos: number) {
 function weaponSound(id: number) {
 	return ({
 		1: ['double_gun'], 2: ['machine_gun'], 3: ['double_gun'], 4: ['shotgun'],
-		5: ['double_gun'], 6: ['laser'], 7: ['grenade_shoot', 0.7, 'explosion'],
+		5: ['double_gun'], 6: ['laser'], 7: ['grenade_shoot', 0.7, 'explosion.wav'],
 		8: ['flame_thrower'], 9: ['double_gun'], 10: ['gazor'], 11: ['electrisor'],
 		12: ['laser'], 13: ['laser'], 14: ['sword'], 15: ['sword'], 16: ['sword'], 17: ['laser'],
-		18: ['grenade_shoot', 0.7, 'explosion'], 19: ['electrisor'], 20: ['gazor', 1.2, 'explosion'], 21: ['laser', 0.1, 'poison'],
+		18: ['grenade_shoot', 0.7, 'explosion.wav'], 19: ['electrisor'], 20: ['gazor', 1.2, 'explosion.wav'], 21: ['laser', 0.1, 'poison'],
 		22: ['rifle.wav', 0.15, 'rifle.wav', 0.15, 'rifle.wav'],
 		23: ['double_gun'],
 		24: ['rifle.wav', 0.15, 'rifle.wav', 0.15, 'rifle.wav'],
+		25: ['lightninger', 0.7, 'lightninger_impact'],
+		26: [],
+		27: ['lightninger'],
+		28: [],
+		29: ['rocket', 0.7, 'explosion.wav'],
+		30: [],
+		31: [],
+		32: ['sword'],
 	} as {[key: number]: any})[id]
 }
 function chipSound(id: number) {
 	return ({
 		1: ['heal'], 2: ['heal'], 3: ['heal'], 4: ['heal'], 5: ['heal'], 6: ['lightning'],
 		7: ['lightning'], 8: ['lightning'], 9: ['fire'], 10: ['fire'],
-		11: ['meteorite', 1.8, 'explosion', 0.3, 'explosion', 0.3, 'explosion'],
+		11: ['meteorite', 1.8, 'explosion.wav', 0.3, 'explosion.wav', 0.3, 'explosion.wav'],
 		12: ['rock'], 13: ['rock'], 14: ['rockfall'], 15: ['ice'], 16: ['ice'], 17: ['ice'],
 		18: ['shield'], 19: ['shield'], 20: ['shield'], 21: ['shield'], 22: ['shield'],
 		23: ['shield'], 24: ['shield'], 25: ['buff'], 26: ['buff'], 27: ['buff'], 28: ['buff'],
@@ -950,7 +958,7 @@ function playSound(item: any, type: string) {
 		const audio = new Audio('/sound/' + sound_ext)
 		audio.volume = 0.5
 		audio.play()
-		if (sounds.length > 1) {
+		if (sounds.length > 1) {
 			setTimeout(() => {
 				play(sounds.slice(2))
 			}, parseFloat(sounds[1]) * 1000)

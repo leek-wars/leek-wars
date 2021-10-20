@@ -1,8 +1,9 @@
 import { FightEntity } from '@/component/player/game/entity'
 import { Game } from "@/component/player/game/game"
-import { Blood, Bubble, Bullet, Cartridge, CriticalParticle, Explosion, Fire, Garbage, Gaz, Grenade, ImageParticle, Laser, Lightning, Meteorite, NUM_BLOOD_SPRITES, Particle, Plasma, Rectangle, Shot, SimpleFire, SpikeParticle, SpinningParticle } from '@/component/player/game/particle'
+import { Blood, Bubble, Bullet, Cartridge, CriticalParticle, Explosion, Fire, Garbage, Gaz, Grenade, ImageParticle, Laser, LighningBall, Lightning, Meteorite, NUM_BLOOD_SPRITES, Particle, Plasma, RealisticExplosion, Rectangle, Rocket, Shot, SimpleFire, SpikeParticle, SpinningParticle } from '@/component/player/game/particle'
 import { Position } from '@/component/player/game/position'
 import { Texture } from '@/component/player/game/texture'
+import { Cell } from '@/model/cell'
 import { S } from './sound'
 
 class Particles {
@@ -14,7 +15,7 @@ class Particles {
 		this.game = game
 	}
 
-	public addBullet(x: number, y: number, z: number, angle: number, targets: FightEntity[]) {
+	public addBullet(x: number, y: number, z: number, angle: number, targets: FightEntity[]): void {
 		const bullet = new Bullet(this.game, x, y, z, angle, targets)
 		// Vérification traversée
 		if (targets.length > 0) {
@@ -64,14 +65,18 @@ class Particles {
 	public addMeteorite(x: number, y: number, z: number, angle: number, size: number, targets: FightEntity[] | undefined, actionDoneAfterDie: boolean) {
 		this.add(new Meteorite(this.game, x, y, z, size, angle, targets, actionDoneAfterDie))
 	}
-	public addGrenade(x: number, y: number, z: number, angle: number, pos: Position, targets: FightEntity[], texture: Texture, explosion: Texture) {
-		this.add(new Grenade(this.game, x, y, z, angle, pos, targets, texture, explosion))
+	public addGrenade(x: number, y: number, z: number, angle: number, pos: Position, targets: FightEntity[], texture: Texture, cell: Cell) {
+		this.add(new Grenade(this.game, x, y, z, angle, pos, targets, texture, cell))
 	}
 	public addShot(x: number, y: number, z: number, angle: number) {
 		this.add(new Shot(this.game, x, y, z, angle))
 	}
 	public addExplosion(x: number, y: number, z: number, texture: Texture, life: number = Explosion.EXPLOSION_LIFE) {
 		this.add(new Explosion(this.game, x, y, z, texture, life))
+		S.explosion.play(this.game)
+	}
+	public addRealisticExplosion(x: number, y: number, radius: number) {
+		this.add(new RealisticExplosion(this.game, x, y, radius))
 		S.explosion.play(this.game)
 	}
 	public addPlasma(x: number, y: number, z: number, texture: Texture, life: number) {
@@ -106,6 +111,13 @@ class Particles {
 	public addSpinningParticle(x: number, y: number, angle: number, texture: Texture) {
 		this.particles.unshift(new SpinningParticle(this.game, x, y, angle, texture))
 	}
+	public addRocket(x: number, y: number, z: number, angle: number, duration: number, targetCell: Cell, radius: number) {
+		this.add(new Rocket(this.game, x, y, z, angle, duration, targetCell, radius))
+	}
+	public addLighningBall(x: number, y: number, z: number, angle: number, duration: number, radius: number, texture: Texture) {
+		this.add(new LighningBall(this.game, x, y, z, angle, duration, radius, texture))
+	}
+
 	public add(particle: Particle, onground: boolean = false) {
 		if (onground) {
 			this.groundParticles.push(particle)
