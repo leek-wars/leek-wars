@@ -168,7 +168,7 @@ class Language {
 }
 
 const DEV = window.location.port === '8080'
-const LOCAL = window.location.port === '5000'
+const LOCAL = window.location.port === '5000' || window.location.port === '5100'
 
 const LeekWars = {
 	version: packageJson.version,
@@ -176,7 +176,7 @@ const LeekWars = {
 	smart_version: packageJson.version.replace(/\.0$/, ''),
 	DEV,
 	LOCAL,
-	API: LOCAL ? 'http://localhost:5000/api/' : 'https://leekwars.com/api/',
+	API: LOCAL ? window.location.origin + '/api/' : 'https://leekwars.com/api/',
 	AVATAR: DEV ? 'https://leekwars.com/' : 'https://leekwars.com/',
 	STATIC: '/',
 	POWER_FACTOR: 4.2,
