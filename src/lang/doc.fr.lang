@@ -33,7 +33,7 @@
 	"const_EFFECT_BUFF_STRENGTH": "Procure de la force à une entité. Amplifié par la science.",
 	"const_EFFECT_BUFF_TP": "Procure des points d'action à une entité. Amplifié par la science.",
 	"const_EFFECT_BUFF_WISDOM": "Procure de la sagesse à une entité. Amplifié par la science.",
-	"const_EFFECT_DAMAGE": "Retire des points de vie à une entité. Amplifié par le force. Interagit avec les boucliers (EFFECT_ABSOLUTE_SHIELD, EFFECT_RELATIVE_SHIELD, EFFECT_VULNERABILITY, EFFECT_ABSOLUTE_VULNERABILITY), le vol de vie (à l'exception du lanceur), et le retour de dégâts (EFFECT_DAMAGE_RETURN). Réduit le maximum de points de vie de 5% du montant de points de vie retiré.",
+	"const_EFFECT_DAMAGE": "Retire des points de vie à une entité. Amplifié par la force. Interagit avec les boucliers (EFFECT_ABSOLUTE_SHIELD, EFFECT_RELATIVE_SHIELD, EFFECT_VULNERABILITY, EFFECT_ABSOLUTE_VULNERABILITY), le vol de vie (à l'exception du lanceur), et le retour de dégâts (EFFECT_DAMAGE_RETURN). Réduit le maximum de points de vie de 5% du montant de points de vie retiré.",
 	"const_EFFECT_DAMAGE_RETURN": "Procure du renvoi de dégâts à une entité, permettant de retirer des points de vie aux entités infligeant des dégâts au bénéficiaire. Amplifié par l'agilité. Réduit le maximum de points de vie de 5% du montant de points de vie retiré.",
 	"const_EFFECT_DEBUFF": "Réduit la valeur de tous les effets présents sur une entité d'un pourcentage.",
 	"const_EFFECT_HEAL": "Rend des points de vie à une entité, limité par le maximum de points de vie. Amplifié par la sagesse.",
