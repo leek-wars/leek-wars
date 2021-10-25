@@ -434,7 +434,7 @@
 				LeekWars.post(this.dragging.folder ? 'ai-folder/change-folder' : 'ai/change-folder', this.dragging.folder ? {folder_id: (this.dragging as Folder).id, dest_folder_id: folder.id} : {ai_id: (this.dragging as AIItem).ai.id, folder_id: folder.id})
 				this.dragging = null
 			})
-			vueMain.$on('connected', this.connected)
+			this.$root.$on('connected', this.connected)
 		}
 
 		isChild(folder: Folder, parent: Folder): boolean {
