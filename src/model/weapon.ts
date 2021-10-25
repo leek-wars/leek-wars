@@ -91,17 +91,17 @@ const WeaponsData = {
 	// RevokedMLaser
 	21: { width: 194, height: 56, centerX: 15, centerZ: 38, x: -70, z: -20, hand1x: 70, hand1z: 34, hand2x: 115, hand2z: 34, sx: 194, sz: 25, cartX: 60, cartZ: 20, cartAngle: Math.PI / 2, recoilForce: 18, angleForce: 0, top: 4, bottom: 34, white: false },
 	// Rifle
-	22: { width: 180, height: 51, centerX: 15, centerZ: 30, x: -45, z: -20, hand1x: 36, hand1z: 34, hand2x: 74, hand2z: 32, sx: 208, sz: 20, cartX: 60, cartZ: 20, cartAngle: Math.PI / 2, recoilForce: 18, angleForce: 12, top: 4, bottom: 34, white: false },
+	22: { width: 180, height: 51, centerX: 15, centerZ: 30, x: -45, z: -20, hand1x: 36, hand1z: 34, hand2x: 74, hand2z: 32, sx: 208, sz: 20, cartX: 60, cartZ: 20, cartAngle: Math.PI / 2, recoilForce: 18, angleForce: 12, top: 4, bottom: 25, white: false },
 	// Rhino
 	23: { width: 90, height: 51, centerX: 12, centerZ: 40, x: 15, z: -15, hand1x: 24, hand1z: 27, hand2x: 11, hand2z: 35, sx: 95, sz: 15, cartX: 60, cartZ: 20, cartAngle: Math.PI / 2, recoilForce: 18, angleForce: 20, top: 3, bottom: 30, white: false },
 	// Explorer's Rifle
-	24: { width: 184, height: 55, centerX: 15, centerZ: 30, x: -50, z: -20, hand1x: 37, hand1z: 35, hand2x: 75, hand2z: 33, sx: 210, sz: 20, cartX: 60, cartZ: 20, cartAngle: Math.PI / 2, recoilForce: 18, angleForce: 12, top: 4, bottom: 34, white: false },
+	24: { width: 184, height: 55, centerX: 15, centerZ: 30, x: -50, z: -20, hand1x: 37, hand1z: 35, hand2x: 75, hand2z: 33, sx: 210, sz: 20, cartX: 60, cartZ: 20, cartAngle: Math.PI / 2, recoilForce: 18, angleForce: 12, top: 4, bottom: 27, white: false },
 	// Foudroyeur
 	25: { width: 175, height: 65, centerX: 15, centerZ: 35, x: -40, z: -35, hand1x: 29, hand1z: 46, hand2x: 64, hand2z: 46, sx: 165, sz: 26, cartX: 60, cartZ: 20, cartAngle: Math.PI / 2, recoilForce: 15, angleForce: 12, top: 4, bottom: 40, white: false },
 	// Neutrino
 	27: { width: 100, height: 50, centerX: 5, centerZ: 25, x: 10, z: -35, hand1x: 25, hand1z: 33, hand2x: 18, hand2z: 40, sx: 105, sz: 20, cartX: 60, cartZ: 20, cartAngle: Math.PI / 2, recoilForce: 18, angleForce: 20, top: 4, bottom: 40, white: false },
 	// Bazooka
-	29: { width: 190, height: 81, centerX: 15, centerZ: 50, x: -50, z: -40, hand1x: 37, hand1z: 65, hand2x: 70, hand2z: 68, sx: 190, sz: 40, cartX: 60, cartZ: 20, cartAngle: Math.PI / 2, recoilForce: 18, angleForce: 30, top: 0, bottom: 70, white: false },
+	29: { width: 190, height: 81, centerX: 15, centerZ: 50, x: -50, z: -40, hand1x: 37, hand1z: 65, hand2x: 70, hand2z: 68, sx: 190, sz: 40, cartX: 60, cartZ: 20, cartAngle: Math.PI / 2, recoilForce: 18, angleForce: 30, top: 0, bottom: 59, white: false },
 	// Katana sombre
 	32: { width: 256, height: 31, centerX: 40, centerZ: 30, x: -40, z: -15, hand1x: 32, hand1z: 14, hand2x: 44, hand2z: 14, top: 5, bottom: 10, right: 86, white: true },
 } as {[key: number]: WeaponData}
