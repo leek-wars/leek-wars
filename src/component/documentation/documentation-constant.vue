@@ -1,6 +1,9 @@
 <template lang="html">
 	<div v-if="constant" class="doc-constant" :class="{item: is_weapon || is_chip, deprecated: constant.deprecated}">
-		<h2 v-if="!is_weapon && !is_chip">{{ constant.name }}</h2>
+		<h2>
+			{{ constant.name }}
+			<span class="argument">{{ $t('doc.arg_type_' + constant.type) }}</span>
+		</h2>
 		<div v-if="constant.deprecated" v-dochash class="deprecated-message">
 			Cette constante est dépréciée. <span v-if="constant.replacement">Elle est remplacée par la constante #{{ LeekWars.constantById[constant.replacement].name }}.</span>
 		</div>
@@ -31,6 +34,7 @@
 	import { Constant } from '@/model/constant'
 	import { LeekWars } from '@/model/leekwars'
 	import { Component, Prop, Vue } from 'vue-property-decorator'
+
 	@Component({ name: 'documentation-constant', components: { WeaponPreview, ChipPreview }})
 	export default class DocumentationConstant extends Vue {
 		@Prop() constant!: Constant
@@ -97,7 +101,7 @@
 <style lang="scss" scoped>
 	h2 {
 		margin-bottom: 10px;
-		font-size: 20px;
+		font-size: 17px;
 		color: #333;
 	}
 	h4 {
@@ -115,5 +119,9 @@
 	.weapon {
 		width: 104px;
 		object-fit: contain;
+	}
+	.argument {
+		color: #0000D0;
+		font-weight: bold;
 	}
 </style>
