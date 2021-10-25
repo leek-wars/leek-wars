@@ -682,9 +682,6 @@
 			return store.state.farmer!.potions.filter(p => LeekWars.potions[p.template].effects.some(e => e.type === PotionEffect.CHANGE_SKIN))
 		}
 
-		created() {
-			fileSystem.init()
-		}
 		mounted() {
 			this.$root.$on('update-leek-talent', (message: any) => {
 				if (this.leek && message.leek === this.leek.id) {

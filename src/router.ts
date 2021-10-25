@@ -58,7 +58,6 @@ const Tournament = () => import(/* webpackChunkName: "[request]" */ `@/component
 const Trophies = () => import(/* webpackChunkName: "[request]" */ `@/component/trophies/trophies.${locale}.i18n`)
 const TrophyPage = () => import(/* webpackChunkName: "[request]" */ `@/component/trophy/trophy.${locale}.i18n`)
 const Tutorial = () => import(/* webpackChunkName: "[request]" */ `@/component/tutorial/tutorial.${locale}.i18n`)
-import { env } from '@/env'
 import { LeekWars } from '@/model/leekwars'
 import { store } from '@/model/store'
 import { vueMain } from '@/model/vue'
@@ -254,20 +253,12 @@ router.beforeEach((to: Route, from: Route, next: any) => {
 	LeekWars.splitShowList()
 	LeekWars.actions = []
 
-	if (!store.state.connected) {
+	if (window.__FARMER__) {
+		store.commit('connected', '$')
+	} else {
 		const token = LeekWars.DEV ? localStorage.getItem('token') : '$'
 		if (localStorage.getItem('connected') === 'true') {
 			store.commit('connected', token)
-			LeekWars.get('farmer/get-from-token').then(data => {
-				store.commit('connect', {farmer: data.farmer, farmers: data.farmers, token})
-			}).error(() => {
-				store.commit('disconnect')
-				router.push('/')
-			})
-		} else if (localStorage.getItem('login-attempt') === 'true') {
-			LeekWars.get('farmer/get-from-token').then(data => {
-				store.commit('connect', {farmer: data.farmer, farmers: data.farmers, token})
-			})
 		}
 	}
 

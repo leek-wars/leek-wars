@@ -150,10 +150,8 @@
 			LeekWars.get('forum/get-categories/' + this.activeLanguages).then(data => {
 				this.categories = data.categories
 				this.$root.$emit('loaded')
-			})
-			LeekWars.get('farmer/get-connected').then(data => {
 				this.connected_farmers = data.farmers
-				LeekWars.setSubTitle(this.$t('connected_farmers_subtitle', [data.count]))
+				LeekWars.setSubTitle(this.$t('connected_farmers_subtitle', [data.farmers.length]))
 			})
 			LeekWars.setTitle(this.$t('title'))
 			LeekWars.setActions([

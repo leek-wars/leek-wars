@@ -349,24 +349,18 @@
 			this.lineHeight = parseInt(localStorage.getItem('editor/line_height') || '', 10) || DEFAULT_LINE_HEIGHT
 			this.problemsHeight = parseInt(localStorage.getItem('editor/problems-height') || '', 10) || 200
 			this.panelWidth = parseInt(localStorage.getItem('editor/panel-width') || '', 10) || 200
+		}
 
-			if (this.enableAnalyzer) {
-				// LeekWars.analyzer.init()
-			}
-
-			fileSystem.init().then(() => {
-
-				// Chargement de l'historique
-				const history = JSON.parse(localStorage.getItem('editor/history') || '[]')
-				for (const id of history) {
-					if (id in fileSystem.ais) {
-						this.history.push(fileSystem.ais[id])
-					}
+		connected() {
+			// Chargement de l'historique
+			const history = JSON.parse(localStorage.getItem('editor/history') || '[]')
+			for (const id of history) {
+				if (id in fileSystem.ais) {
+					this.history.push(fileSystem.ais[id])
 				}
-
-				this.update()
-				LeekWars.setTitle(this.$t('title'), this.$t('n_ais', [fileSystem.aiCount]))
-			})
+			}
+			this.update()
+			LeekWars.setTitle(this.$t('title'), this.$t('n_ais', [fileSystem.aiCount]))
 		}
 
 		mounted() {
@@ -440,7 +434,9 @@
 				LeekWars.post(this.dragging.folder ? 'ai-folder/change-folder' : 'ai/change-folder', this.dragging.folder ? {folder_id: (this.dragging as Folder).id, dest_folder_id: folder.id} : {ai_id: (this.dragging as AIItem).ai.id, folder_id: folder.id})
 				this.dragging = null
 			})
+			vueMain.$on('connected', this.connected)
 		}
+
 		isChild(folder: Folder, parent: Folder): boolean {
 			let current = folder
 			while (current.id !== 0) {
@@ -540,6 +536,7 @@
 			this.$root.$off('previous')
 			this.$root.$off('next')
 			this.$root.$off('back')
+			this.$root.$off('connected', this.connected)
 			LeekWars.large = false
 			LeekWars.header = true
 			LeekWars.footer = true
