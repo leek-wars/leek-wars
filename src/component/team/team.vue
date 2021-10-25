@@ -547,7 +547,7 @@
 		get turret() {
 			if (!this.team) { return {} }
 			const team_ratio = 1 + (this.team.level / 100)
-			const max_life = 1000 + Math.round((6000 - 500) * team_ratio)
+			const max_life = 1000 + Math.round((4000 - 500) * team_ratio)
 			const characteristics_base_1000 = 100 + Math.round(950 * team_ratio)
 			const characteristics_base_2000 = 200 + Math.round(1900 * team_ratio)
 			const characteristics_base_500 = 50 + Math.round(475 * team_ratio)
