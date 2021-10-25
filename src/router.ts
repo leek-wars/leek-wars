@@ -131,7 +131,7 @@ const routes = [
 	{ path: '/garden/:category/:item', component: Garden, beforeEnter: connected },
 	{ path: '/garden/:category/:type/:target', component: Garden, beforeEnter: connected },
 	{ path: '/garden/:category/:type/:target/:item', component: Garden, beforeEnter: connected },
-	{ path: '/help', component: Help },
+	{ path: '/help', component: Encyclopedia },
 	{ path: '/help/api', component: Api },
 	{ path: '/help/documentation', component: Documentation },
 	{ path: '/help/documentation/:item', component: Documentation },
