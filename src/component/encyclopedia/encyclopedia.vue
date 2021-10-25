@@ -8,8 +8,8 @@
 			</h1>
 			<div v-if="page" class="tabs">
 				<div v-if="page.id === 1" class="tab action disabled" icon="search" link="/search">
-					<img class="search-icon" src="image/search.png" @click="search">
-					<input v-model="searchQuery" type="text" @keyup.enter="search">
+					<img class="search-icon" src="/image/search.png" @click="search">
+					<input v-model="searchQuery" type="text" placeholder="Rechercher une page" @keyup.enter="search">
 				</div>
 				<!-- <router-link :to="'/encyclopedia/' + english">
 					<div class="tab">English</div>
@@ -38,7 +38,7 @@
 				<div ref="markdown" class="markdown" @scroll="markdownScroll">
 					<!-- {{ parents }} -->
 
-					<markdown :content="page.content" mode="encyclopedia" />
+					<markdown :content="page.content" mode="encyclopedia" :class="{main: page.id === 1}" />
 
 					<div v-if="page.new && !edition" class="nopage">
 						<v-icon>mdi-book-open-page-variant</v-icon>
@@ -507,5 +507,8 @@ h1 {
 }
 .search-icon {
 	cursor: pointer;
+}
+::v-deep .md.main h1 {
+	display: none;
 }
 </style>
