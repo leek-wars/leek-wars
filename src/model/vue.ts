@@ -300,12 +300,25 @@ const vueMain = new Vue({
 				store.commit('connected-count', data.farmers)
 			})
 		}, 59 * 1000)
-
-		// Message ?
-		LeekWars.get('farmer/get-message').then(data => {
-			LeekWars.displayMessage(data.message)
-		})
 	}
 }).$mount('#app')
+
+if (window.__FARMER__) {
+	store.commit('connect', {...window.__FARMER__, token: '$'})
+} else {
+	const token = LeekWars.DEV ? localStorage.getItem('token') : '$'
+	if (localStorage.getItem('connected') === 'true') {
+		LeekWars.get('farmer/get-from-token').then(data => {
+			store.commit('connect', {...data, token})
+		}).error(() => {
+			store.commit('disconnect')
+			router.push('/')
+		})
+	} else if (localStorage.getItem('login-attempt') === 'true') {
+		LeekWars.get('farmer/get-from-token').then(data => {
+			store.commit('connect', {...data, token})
+		})
+	}
+}
 
 export { vueMain }

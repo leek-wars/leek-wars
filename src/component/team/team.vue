@@ -565,10 +565,6 @@
 			}
 		}
 
-		created() {
-			fileSystem.init()
-		}
-
 		@Watch('id', {immediate: true})
 		update() {
 			if (this.id === null) { return }

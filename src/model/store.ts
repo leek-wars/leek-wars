@@ -36,28 +36,8 @@ function updateTitle(state: LeekWarsState) {
 	LeekWars.setTitleCounter(state.unreadNotifications + state.unreadMessages)
 }
 
-function loadNotifications(state: LeekWarsState) {
-	LeekWars.get('notification/get-latest/20').then(data => {
-		state.unreadNotifications = data.unread
-		updateTitle(state)
-		for (const notification of data.notifications.reverse()) {
-			store.commit('notification', notification)
-		}
-	})
-}
-
-function loadMessages(state: LeekWarsState) {
-	state.loadingConversations = true
-	LeekWars.get('message/get-latest-conversations/25').then(data => {
-		updateTitle(state)
-		for (const conversation of data.conversations) {
-			store.commit('new-conversation', conversation)
-		}
-		state.loadingConversations = false
-	})
-}
-
 Vue.use(Vuex)
+
 const store: Store<LeekWarsState> = new Vuex.Store({
 	state: new LeekWarsState(),
 	getters: {
@@ -70,7 +50,15 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			state.token = token
 		},
 
-		"connect"(state: LeekWarsState, data: {farmer: Farmer, farmers: number, token: string}) {
+		"connect"(state: LeekWarsState, data: {
+				farmer: Farmer,
+				farmers: number,
+				message: string | null,
+				unread: number,
+				notifications: Notification[],
+				conversations: any[],
+				token: string
+			}) {
 			state.farmer = data.farmer
 			Vue.set(state.farmer, 'animated_habs', state.farmer.habs)
 			Vue.set(state.farmer, 'animated_crystals', state.farmer.crystals)
@@ -82,8 +70,16 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			if (LeekWars.DEV) {
 				localStorage.setItem('token', data.token)
 			}
-			loadNotifications(state)
-			loadMessages(state)
+			LeekWars.displayMessage(data.message)
+			state.unreadNotifications = data.unread
+			for (const notification of data.notifications.reverse()) {
+				store.commit('notification', notification)
+			}
+			for (const conversation of data.conversations) {
+				store.commit('new-conversation', conversation)
+			}
+			fileSystem.init(data.farmer)
+			updateTitle(state)
 			vueMain.$emit('connected', state.farmer)
 		},
 

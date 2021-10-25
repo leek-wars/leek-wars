@@ -579,7 +579,7 @@ const LeekWars = {
 	effectRawOpened: false,
 	message: null as string | null,
 	messagePopup: false,
-	displayMessage: (message: any) => {
+	displayMessage: (message: string | null) => {
 		if (message) {
 			// console.log("Display message", message)
 			LeekWars.message = message

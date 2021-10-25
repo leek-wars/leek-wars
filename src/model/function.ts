@@ -5,7 +5,6 @@ class LeekScriptItem {
 class LSFunction extends LeekScriptItem {
 	public id!: number
 	public name!: string
-	public level!: number
 	public category!: number
 	public operations!: number
 	public arguments_names!: string[]
