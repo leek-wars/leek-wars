@@ -297,6 +297,8 @@
 		top: 0;
 		bottom: 0;
 		padding-top: 46px;
+		flex-direction: column;
+    	align-items: stretch;
 	}
 	#app.app .menu {
 		position: fixed;
@@ -309,6 +311,8 @@
 		transition: transform ease 200ms;
 		padding: 0;
 		width: auto;
+		flex-direction: column;
+		justify-content: space-between;
 	}
 	#app.app.menu-expanded .menu {
 		transform: translateX(0px);
@@ -318,8 +322,11 @@
 		padding: 12px;
 		padding-left: 0;
 	}
+	#app.app .menu-wrapper {
+		flex: 1;
+	}
 	#app.connected .menu {
-		display: block;
+		display: flex;
 	}
 	#app.menu-collapsed .menu {
 		width: 64px;
@@ -526,8 +533,6 @@
 		width: 250px;
 		overflow-y: auto;
 		background: none;
-		height: 100%;
-		max-height: calc(100vh - 150px);
 	}
 	.menu .section.console {
 		display: none;
@@ -611,6 +616,7 @@
 		display: inline-block;
 		margin: 15px;
 		position: relative;
+		align-self: flex-start;
 		img {
 			width: 42px;
 			height: 42px;
