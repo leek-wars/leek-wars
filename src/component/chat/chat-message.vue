@@ -13,15 +13,21 @@
 				</rich-tooltip-farmer>
 			</router-link>
 			<div v-else class="author">Leek Wars</div>
-			<router-link v-if="message.farmer.id === 0" :to="'/fight/' + message.content.split('|')[1]">
+
+			<div v-if="message.censored" class="censored">Censuré par {{ message.censored_by.name }}</div>
+			<router-link v-else-if="message.farmer.id === 0" :to="'/fight/' + message.content.split('|')[1]">
 				{{ $t(message.content.split('|')[0]) }}
 			</router-link>
-			<div v-else-if="message.censored" class="censored">Censuré par {{ message.censored_by.name }}</div>
 			<div v-else v-large-emojis v-chat-code-latex class="text" v-html="message.content"></div>
+
 			<template v-for="(sub, i) in message.subMessages">
 				<div v-if="sub.censored" :key="i" class="censored">Censuré par {{ sub.censored_by.name }}</div>
+				<router-link v-else-if="sub.farmer.id === 0" :to="'/fight/' + sub.content.split('|')[1]">
+					{{ $t(sub.content.split('|')[0]) }}
+				</router-link>
 				<div v-else :key="i" v-large-emojis v-chat-code-latex class="text" v-html="sub.content"></div>
 			</template>
+
 			<div class="right">
 				<span :title="LeekWars.formatDateTime(message.date)" class="time">{{ LeekWars.formatTime(message.date) }}</span>
 				<v-menu v-if="!privateMessages && !($store.state.farmer && message.farmer.id === $store.state.farmer.id) && message.farmer.color !== 'admin' && message.farmer.id !== 0" offset-y>
