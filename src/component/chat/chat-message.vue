@@ -210,10 +210,10 @@
 		toggleReaction(emoji: string) {
 			this.reactionDialog = false
 			if (this.message.my_reaction === emoji) { // Remove current reaction
-				LeekWars.delete('message-reaction/delete', { message: this.message.id })
+				LeekWars.delete('message-reaction/delete', { message_id: this.message.id })
 				this.message.my_reaction = null
 			} else {
-				LeekWars.post('message-reaction/add', { reaction: emoji, message: this.message.id })
+				LeekWars.post('message-reaction/add', { reaction: emoji, message_id: this.message.id })
 				this.message.my_reaction = emoji
 			}
 		}
