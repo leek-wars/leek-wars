@@ -35,10 +35,17 @@
 					<div slot="content">
 						<div v-autostopscroll="'bottom'" class="items-list">
 							<div v-for="(category, c) of filteredCategories" :key="category.id">
-								<h2>{{ $t('doc.function_category_' + categories[c].name) }}</h2>
-								<router-link v-for="(item, i) in category" v-if="item.name === item.real_name" :key="i" :to="'/help/documentation/' + item.name" :item="item.name" class="item">
-									{{ item.name }}
-								</router-link>
+								<h2 v-ripple @click="categoryState[c] = !categoryState[c]">
+									<v-icon>{{ icons[c] }}</v-icon> {{ $t('doc.function_category_' + categories[c].name) }} <span v-if="query.length">({{ category.length }})</span>
+									<div class="spacer"></div>
+									<v-icon v-if="query.length || categoryState[c]">mdi-chevron-up</v-icon>
+									<v-icon v-else>mdi-chevron-down</v-icon>
+								</h2>
+								<div v-if="query.length || categoryState[c]">
+									<router-link v-for="(item, i) in category" v-if="item.name === item.real_name" :key="i" :to="'/help/documentation/' + item.name" :item="item.name" class="item">
+										{{ item.name }}
+									</router-link>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -76,6 +83,20 @@
 		query: string = ''
 		lazy_start: number = 0
 		lazy_end: number = 10
+		categoryState: {[key: number]: boolean} = {}
+		icons = {
+			1: 'mdi-math-integral-box',
+			2: 'mdi-code-string',
+			3: 'mdi-code-array',
+			4: 'mdi-account',
+			5: 'mdi-pistol',
+			6: 'mdi-chip',
+			7: 'mdi-grid',
+			8: 'mdi-sword-cross',
+			9: 'mdi-hammer-wrench',
+			10: 'mdi-signal-variant',
+			11: 'mdi-palette'
+		}
 
 		get breadcrumb_items() {
 			return [
@@ -102,10 +123,8 @@
 		}
 		get filteredCategories() {
 			const categories: {[key: number]: any} = {}
-			for (const category in this.categories) {
-				categories[category] = []
-			}
 			for (const item of this.filteredItems) {
+				if (!(item.category in categories)) categories[item.category] = []
 				categories[item.category].push(item)
 			}
 			return categories
@@ -124,6 +143,7 @@
 			}
 			get_categories((data: any) => {
 				this.categories = data.categories
+				for (const category in this.categories) Vue.set(this.categoryState, category, false)
 				let last: any
 				let index = 1
 				let id = 0
@@ -151,7 +171,7 @@
 							for (const section in fun.secondary) {
 								new_data += fun.secondary[section]
 							}
-							(item as any).data = new_data
+							(item as any).data = new_data.toLowerCase()
 						} else {
 							let item_data = (this.$t('doc.func_' + (item as any).real_name) as any).toLowerCase()
 							for (const i in item.arguments_names) {
@@ -255,6 +275,7 @@
 <style lang="scss" scoped>
 	.documentation {
 		min-height: 0;
+		height: 100%;
 	}
 	#app.app .documentation {
 		padding-bottom: 0;
@@ -278,26 +299,32 @@
 		height: 100%;
 	}
 	.items-list {
-		overflow-y: auto;
+		overflow-y: scroll;
 		overflow-x: hidden;
 		position: relative;
 		height: 100%;
 	}
 	.items-list h2 {
-		font-size: 13px;
+		font-size: 16px;
+		display: flex;
+		align-items: center;
+		gap: 5px;
 		font-weight: bold;
-		color: #888;
+		color: #222;
 		position: sticky;
 		top: 0;
-		padding: 6px 10px;
-		margin-bottom: 4px;
-		background: white;
-		box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
+		padding: 10px 5px;
+		margin-bottom: 6px;
+		background: #f2f2f2;
+		cursor: pointer;
 	}
 	.items-list .item {
 		cursor: pointer;
 		padding: 3px 10px;
 		display: block;
+		&:last-child {
+			margin-bottom: 6px;
+		}
 	}
 	.items-list .item:hover, .item.router-link-active {
 		font-weight: bold;
@@ -315,7 +342,7 @@
 		height: initial;
 		margin-right: 0;
 		&::last-child {
-			margin-bottom: 0;
+			margin-bottom: 5px;
 		}
 	}
 	.items .item:last-child {
