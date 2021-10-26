@@ -273,6 +273,7 @@
 	}
 	.text.large-emojis {
 		line-height: 26px;
+		font-size: 22px;
 		::v-deep .emoji {
 			width: 24px;
 			height: 24px;

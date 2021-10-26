@@ -39,7 +39,7 @@
 		shown: boolean = false
 
 		pick(emoji: string) {
-			this.$emit('pick', emoji)
+			this.$emit('pick', emoji.replace('&lt;', '<'))
 			if (this.closeOnSelected) {
 				this.shown = false
 			}
