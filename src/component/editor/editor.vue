@@ -63,7 +63,7 @@
 					</div>
 				</div>
 			</div>
-			<editor-tabs v-if="!LeekWars.mobile" ref="tabs" :current="currentID" :ais="fileSystem.ais" @close="close" @close-all="closeAll" />
+			<editor-tabs v-if="!LeekWars.mobile" ref="tabs" :current="currentID" :ais="fileSystem.ais" :history2="history" @close="close" @close-all="closeAll" />
 
 			<editor-finder ref="finder" :active="activeAIs" :history="history" />
 		</div>
@@ -253,6 +253,7 @@
 	import { fileSystem } from '@/model/filesystem'
 	import { mixins } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
+	import { store } from '@/model/store'
 	import { Component, Vue, Watch } from 'vue-property-decorator'
 	import { Route } from 'vue-router'
 	import AIView from './ai-view.vue'
@@ -435,6 +436,9 @@
 				this.dragging = null
 			})
 			this.$root.$on('connected', this.connected)
+			if (store.state.farmer) {
+				this.connected()
+			}
 		}
 
 		isChild(folder: Folder, parent: Folder): boolean {
@@ -472,6 +476,7 @@
 		update() {
 			if (this.$route.params.id) {
 				const id = parseInt(this.$route.params.id, 10)
+				// console.log("fileSystem", Object.values(fileSystem.ais).length)
 				if (id > 0 && id in fileSystem.ais) {
 					const ai = fileSystem.ais[id]
 					this.currentAI = ai
@@ -483,8 +488,8 @@
 					}
 					Vue.nextTick(() => {
 						this.currentEditor = (this.$refs.editors as AIView[]).find(editor => editor.ai === ai) || null
-						explorer.selectAI(this.currentAI!)
 					})
+					explorer.selectAI(this.currentAI!)
 					if (this.$refs.tabs) {
 						(this.$refs.tabs as any).add(this.currentAI)
 					}
@@ -508,10 +513,10 @@
 				const lastCode = localStorage.getItem('editor/last_code')
 				if (lastCode && parseInt(lastCode, 10) > 0 && lastCode in fileSystem.ais) {
 					this.$router.replace('/editor/' + localStorage.getItem('editor/last_code'))
-				} else {
-					for (const ai in fileSystem.ais) {
-						if (parseInt(ai, 10) > 0) { // Not bot ai
-							this.$router.replace('/editor/' + ai)
+				} else if (store.state.farmer) {
+					for (const ai in store.state.farmer.leek_ais) {
+						if (store.state.farmer.leek_ais[ai] in fileSystem.ais) {
+							this.$router.replace('/editor/' + store.state.farmer.leek_ais[ai])
 							return
 						}
 					}

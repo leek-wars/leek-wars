@@ -23,12 +23,8 @@
 <script lang="ts">
 	import { AI } from '@/model/ai'
 	import { fileSystem } from '@/model/filesystem'
-	import { i18n } from '@/model/i18n'
-	import { LeekWars } from '@/model/leekwars'
-	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
-	import EditorAI from './editor-ai.vue'
-	import { AIItem, Folder } from './editor-item'
-	import { explorer } from './explorer'
+	import { mixins } from '@/model/i18n'
+	import { Component, Prop, Vue } from 'vue-property-decorator'
 
 	@Component({ name: 'editor-finder', components: { } })
 	export default class EditorFinder extends Vue {
