@@ -314,6 +314,7 @@
 		position: sticky;
 		top: 0;
 		padding: 10px 5px;
+		padding-left: 10px;
 		margin-bottom: 6px;
 		background: #f2f2f2;
 		cursor: pointer;

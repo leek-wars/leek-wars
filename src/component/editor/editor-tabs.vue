@@ -35,13 +35,13 @@
 
 <script lang="ts">
 	import { AI } from '@/model/ai'
-	import { i18n, mixins } from '@/model/i18n'
-	import { LeekWars } from '@/model/leekwars'
+	import { mixins } from '@/model/i18n'
 	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 
 	@Component({ name: 'editor-tabs', i18n: {}, mixins: [...mixins] })
 	export default class EditorTabs extends Vue {
 		@Prop({required: true}) ais!: AI[]
+		@Prop({required: true}) history2!: AI[]
 		loaded: boolean = false
 		tabs: AI[] = []
 		menu: boolean = false
@@ -143,7 +143,7 @@
 			this.tabs.splice(i, 1)
 			this.save()
 			if (ai.selected) {
-				this.openOther(i)
+				this.openLast()
 			}
 			this.currentI = -1
 			this.$emit('close', ai)
@@ -159,9 +159,12 @@
 			}
 		}
 
-		openOther(i: number) {
-			const ai = this.tabs[Math.max(0, i - 1)]
-			if (this.$route.path !== '/editor/' + ai.id) {
+		openLast() {
+			if (this.history2.length >= 2) {
+				const ai = this.history2[1]
+				this.$router.push('/editor/' + ai.id)
+			} else if (this.history2.length) {
+				const ai = this.history2[0]
 				this.$router.push('/editor/' + ai.id)
 			}
 		}
@@ -203,7 +206,7 @@
 		max-width: 200px;
 		background: rgba(0, 0, 0, 0.3);
 		min-width: 0;
-		min-width: 100px;
+		min-width: 120px;
 		flex-shrink: 0;
 		overflow: hidden;
 		color: #eee;

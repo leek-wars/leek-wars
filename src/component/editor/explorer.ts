@@ -22,7 +22,7 @@ class Explorer {
 	}
 
 	public selectFolder(folder: Folder) {
-		// console.log("select folder", folder, folder.expanded)
+		// console.log("select folder", folder)
 		if (this.selectedFolder) {
 			this.selectedFolder.selected = false
 		}

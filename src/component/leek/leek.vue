@@ -1297,6 +1297,7 @@
 		display: flex;
 		justify-content: center;
 		align-items: center;
+		padding: 20px;
 	}
 	.ai_popup .leek-ai {
 		text-align: center;

@@ -19,6 +19,8 @@ class Keyword {
 	location?: any
 	category!: number
 	javadoc?: any
+	methods!: any[]
+	static_methods!: any[]
 }
 
 function generateKeywords() {
@@ -40,7 +42,9 @@ function generateKeywords() {
 
 		let i = 0
 		for (const a in fun.arguments_names) {
+			if (fun.optional[a]) name += "["
 			name += fun.arguments_names[a]
+			if (fun.optional[a]) name += "]"
 			if (i++ < fun.arguments_names.length - 1) {
 				name += ", "
 			}
