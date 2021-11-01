@@ -118,7 +118,8 @@
 						(this.displayTypes.solo && fight.type === FightType.SOLO) ||
 						(this.displayTypes.farmer && fight.type === FightType.FARMER) ||
 						(this.displayTypes.team && fight.type === FightType.TEAM) ||
-						(this.displayTypes.battleRoyale && fight.type === FightType.BATTLE_ROYALE)
+						(this.displayTypes.battleRoyale && fight.type === FightType.BATTLE_ROYALE) ||
+                        this.type === 'team'
 					)
 			})
 		}
