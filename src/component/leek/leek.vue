@@ -1507,6 +1507,9 @@
 		b {
 			padding-right: 4px;
 		}
+		img {
+			width: 20px;
+		}
 	}
 	.empty {
 		color: #999;

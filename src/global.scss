@@ -421,13 +421,14 @@ ul, ol {
 	border: none;
 }
 .hab {
-	width: 18px;
-	height: 18px;
+	width: 20px;
+	height: 20px;
 	vertical-align: bottom;
 	display: inline-block;
 	background-image: url("/image/hab.png");
 	background-repeat: no-repeat;
 	background-position: center;
+	background-size: 20px;
 }
 .crystal {
 	width: 17px;

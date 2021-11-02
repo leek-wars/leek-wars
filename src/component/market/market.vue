@@ -722,6 +722,7 @@
 			img {
 				vertical-align: top;
 				margin-left: 5px;
+				width: 20px;
 			}
 		}
 	}
