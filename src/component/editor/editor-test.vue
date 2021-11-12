@@ -40,7 +40,7 @@
 									<leek-image :leek="allLeeks[leek.id]" :ai="leek.ai" :scale="0.4" />
 									<div>{{ allLeeks[leek.id].name }}</div>
 								</div>
-								<ai v-if="leek.ai && leek.ai in allAis" v-ripple :ai="allAis[leek.ai]" :small="true" :library="false" @click.native="clickLeekAI(leek)" />
+								<ai v-if="leek.id in allLeeks && leek.ai && leek.ai in allAis" v-ripple="!allLeeks[leek.id].ally" :ai="allAis[leek.ai]" :small="true" :library="false" :locked="allLeeks[leek.id].ally" @click.native="clickLeekAI(leek)" />
 							</div>
 							<div v-if="!currentScenario.base && LeekWars.objectSize(currentScenario.team1) < getLimit(currentScenario.type)" class="add" @click="addLeekTeam = currentScenario.team1; leekDialog = true">+</div>
 						</div>
@@ -54,7 +54,7 @@
 									<leek-image :leek="allLeeks[leek.id]" :ai="leek.ai" :scale="0.4" />
 									<div>{{ allLeeks[leek.id].name }}</div>
 								</div>
-								<ai v-if="leek.ai && leek.ai in allAis" v-ripple :ai="allAis[leek.ai]" :small="true" :library="false" @click.native="clickLeekAI(leek)" />
+								<ai v-if="leek.id in allLeeks && leek.ai && leek.ai in allAis" v-ripple="!allLeeks[leek.id].ally" :ai="allAis[leek.ai]" :small="true" :library="false" :locked="allLeeks[leek.id].ally" @click.native="clickLeekAI(leek)" />
 							</div>
 							<div v-if="!currentScenario.base && LeekWars.objectSize(currentScenario.team2) < getLimit(currentScenario.type)" class="add" @click="addLeekTeam = currentScenario.team2; leekDialog = true">+</div>
 						</div>
@@ -344,7 +344,8 @@
 		cell!: number
 		team!: number
 	}
-	@Component({ components: { CharacteristicTooltip, 'explorer': Explorer }, i18n: {}, mixins: [...mixins] })
+
+	@Component({ components: { CharacteristicTooltip, 'explorer': Explorer }, name: 'editor-test', i18n: {}, mixins: [...mixins] })
 	export default class EditorTest extends Vue {
 		@Prop() value!: boolean
 		@Prop() ais!: {[key: number]: AI}
@@ -630,7 +631,7 @@
 			if (!this.currentScenario) { return }
 			const team = teamID === 0 ? this.currentScenario.team1 : this.currentScenario.team2
 			team.splice(team.findIndex(l => l.id === leek.id), 1)
-			LeekWars.post('test-scenario/delete-leek', {scenario: this.currentScenario.id, leek: leek.id})
+			LeekWars.post('test-scenario/delete-leek', {scenario_id: this.currentScenario.id, leek: leek.id})
 			this.updateScenarioBotsLevels()
 		}
 		saveLeek() {
@@ -756,6 +757,7 @@
 			return Object.values(this.ais).sort((a, b) => a.path.toLowerCase().localeCompare(b.path.toLowerCase()))
 		}
 		clickLeekAI(leek: any) {
+			if (this.allLeeks[leek.id].ally) { return }
 			this.aiDialog = true
 			this.aiDialogBot = leek.id < 0
 			this.aiLeek = leek
@@ -763,7 +765,7 @@
 		clickDialogAI(ai: AI) {
 			if (!this.currentScenario || !this.aiLeek) { return }
 			this.aiLeek.ai = ai.id as any
-			LeekWars.post('test-scenario/add-leek', {scenario: this.currentScenario.id, leek: this.aiLeek.id, team: -1, ai: ai.id})
+			LeekWars.post('test-scenario/add-leek', {scenario_id: this.currentScenario.id, leek: this.aiLeek.id, team: -1, ai: ai.id})
 			this.aiDialog = false
 		}
 		deleteScenario(scenario: TestScenario) {
@@ -793,10 +795,10 @@
 				})
 				LeekWars.post('test-scenario/update', {id: data.id, data: JSON.stringify({type: template.type})})
 				for (const leek of team1) {
-					LeekWars.post('test-scenario/add-leek', {scenario: data.id, leek: leek.id, team: 0, ai: leek.ai ? leek.ai : null})
+					LeekWars.post('test-scenario/add-leek', {scenario_id: data.id, leek: leek.id, team: 0, ai: leek.ai ? leek.ai : null})
 				}
 				for (const leek of team2) {
-					LeekWars.post('test-scenario/add-leek', {scenario: data.id, leek: leek.id, team: 1, ai: leek.ai ? leek.ai : null})
+					LeekWars.post('test-scenario/add-leek', {scenario_id: data.id, leek: leek.id, team: 1, ai: leek.ai ? leek.ai : null})
 				}
 				this.newScenarioName = ''
 				this.newScenarioDialog = false
@@ -809,7 +811,7 @@
 			if (!this.currentScenario || !this.addLeekTeam) { return }
 			this.addLeekTeam.push({id: leek.id, ai: leek.ai})
 			const teamID = this.addLeekTeam === this.currentScenario.team1 ? 0 : 1
-			LeekWars.post('test-scenario/add-leek', {scenario: this.currentScenario.id, leek: leek.id, team: teamID, ai: leek.ai ? leek.ai : null})
+			LeekWars.post('test-scenario/add-leek', {scenario_id: this.currentScenario.id, leek: leek.id, team: teamID, ai: leek.ai ? leek.ai : null})
 			this.leekDialog = false
 			this.updateScenarioBotsLevels()
 		}
@@ -954,20 +956,20 @@
 				const limit = this.getLimit(this.currentScenario.type)
 				if (this.currentScenario.team1.length > limit) {
 					for (let i = limit; i < this.currentScenario.team1.length; ++i) {
-						LeekWars.post('test-scenario/delete-leek', {scenario: this.currentScenario.id, leek: this.currentScenario.team1[i].id})
+						LeekWars.post('test-scenario/delete-leek', {scenario_id: this.currentScenario.id, leek: this.currentScenario.team1[i].id})
 					}
 					this.currentScenario.team1.length = limit
 				}
 				if (this.currentScenario.team2.length > limit) {
 					for (let i = limit; i < this.currentScenario.team2.length; ++i) {
-						LeekWars.post('test-scenario/delete-leek', {scenario: this.currentScenario.id, leek: this.currentScenario.team2[i].id})
+						LeekWars.post('test-scenario/delete-leek', {scenario_id: this.currentScenario.id, leek: this.currentScenario.team2[i].id})
 					}
 					this.currentScenario.team2.length = limit
 				}
 			} else {
 				// BR, clear team2
 				for (const leek of this.currentScenario.team2) {
-					LeekWars.post('test-scenario/delete-leek', {scenario: this.currentScenario.id, leek: leek.id})
+					LeekWars.post('test-scenario/delete-leek', {scenario_id: this.currentScenario.id, leek: leek.id})
 				}
 				this.currentScenario.team2.length = 0
 			}
@@ -988,15 +990,14 @@
 				for (const c in compositions) {
 					const compo = compositions[c]
 					for (const leek of compo.leeks) {
+						if (!(leek.ai.id in this.ais)) {
+							Vue.set(leek.ai, 'path', leek.ai.name)
+							Vue.set(this.alliesAIs, leek.ai.id, leek.ai)
+							leek.ai = leek.ai.id
+						}
 						if (!(leek.id in store.state.farmer!.leeks)) {
 							Vue.set(this.allies, leek.id, leek)
-						}
-						if (!(leek.ai in this.ais)) {
-							Vue.set(this.alliesAIs, leek.ai, {
-								id: leek.ai,
-								name: leek.ai_name,
-								path: leek.ai_name
-							})
+							Vue.set(leek, 'ally', true)
 						}
 					}
 				}
@@ -1190,7 +1191,7 @@
 		text-align: center;
 		padding: 5px;
 	}
-	.column-scenario .leek .ai {
+	.column-scenario .leek .ai:not(.locked) {
 		cursor: pointer;
 	}
 	.explorer {
