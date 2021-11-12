@@ -3,7 +3,7 @@
 		<div class="page-header page-bar">
 			<h1><router-link to="/admin">Administration</router-link> > Serveurs</h1>
 		</div>
-		<panel class="first">
+		<panel class="first last">
 			<loader v-if="loading" />
 			<div v-else>
 				<div v-if="LeekWars.objectSize(nodes) === 0" class="empty">Aucun serveur</div>
@@ -146,6 +146,7 @@
 <style lang="scss" scoped>
 	.servers {
 		display: flex;
+		flex-wrap: wrap;
 		gap: 15px;
 	}
 	.server {

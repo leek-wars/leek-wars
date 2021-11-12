@@ -62,6 +62,7 @@ class Leek {
 	public title!: number[]
 	public auto_br!: boolean
 	public fish!: boolean
+	public ally!: boolean
 
 	constructor(data: any) {
 		Object.assign(this, data)
