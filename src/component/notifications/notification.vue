@@ -2,8 +2,11 @@
 	<router-link v-if="notification" v-ripple :to="link" :notif="notification.id" :type="notification.type" :class="{unread: !notification.read, [notification.clazz]: notification.clazz }" class="notification" @click.native="click">
 		<v-icon v-if="notification.icon" class="image">{{ notification.image }}</v-icon>
 		<img v-else :src="'/image/' + notification.image" class="image">
-		<div class="title" v-html="$t('notification.title_' + notification.type, notification.title)"></div>
-		<div class="message">{{ $t('notification.message_' + notification.type, notification.message) }}</div>
+		<div class="content">
+			<div class="title" v-html="$t('notification.title_' + notification.type, notification.title)"></div>
+			<div class="message">{{ $t('notification.message_' + notification.type, notification.message) }}</div>
+		</div>
+		<div class="spacer"></div>
 		<span class="date">{{ LeekWars.formatDuration(notification.date) }}</span>
 		<span v-if="resultIcon && LeekWars.notifsResults" class="result">
 			<v-icon :class="resultIcon">{{ resultIcon }}</v-icon>
@@ -38,7 +41,8 @@
 	.notification {
 		height: 50px;
 		position: relative;
-		display: block;
+		display: flex;
+		align-items: center;
 		&.unread {
 			background-color: rgba(90, 194, 0, 0.20);
 		}
@@ -50,9 +54,11 @@
 			background-color: rgba(90, 194, 0, 0.25);
 		}
 	}
+	.content {
+		min-width: 0;
+	}
 	.title {
 		font-size: 14px;
-		padding-top: 7px;
 		text-overflow: ellipsis;
 		white-space: nowrap;
 		overflow: hidden;
@@ -97,16 +103,16 @@
 		overflow: hidden;
 	}
 	.date {
-		float: right;
+		position: absolute;
+		bottom: 5px;
+		right: 0;
 		color: #555;
 		font-size: 12px;
-		margin-top: -16px;
-		padding-right: 8px;
+		padding: 0 8px;
 	}
 	.image {
 		height: 50px;
 		width: 50px;
-		float: left;
 		padding: 10px;
 	}
 	.notification:not(.bigwin):not(.trophy) img.image {
