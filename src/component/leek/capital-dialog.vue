@@ -227,7 +227,7 @@
 		}
 
 		validate() {
-			LeekWars.post('leek/spend-capital', {leek: this.leek.id, characteristics: JSON.stringify(this.bonuses)}).then(data => {
+			LeekWars.post('leek/spend-capital', {leek_id: this.leek.id, characteristics: JSON.stringify(this.bonuses)}).then(data => {
 				for (const stat in this.bonuses) {
 					(this.leek as any)[stat] += this.bonuses[stat]
 				}
