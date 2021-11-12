@@ -247,6 +247,7 @@ class Socket {
 	}
 	public disconnect() {
 		if (this.socket) { this.socket.close() }
+		store.commit('disconnect-websocket')
 	}
 	public connected() {
 		return this.socket && this.socket.readyState === WebSocket.OPEN

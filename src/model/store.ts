@@ -695,6 +695,12 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 				state.farmer.talent += talent
 			}
 		},
+
+		'disconnect-websocket'(state: LeekWarsState) {
+			for (const chat of Object.values(state.chat)) {
+				chat.loaded = false
+			}
+		}
 	},
 })
 export { store }
