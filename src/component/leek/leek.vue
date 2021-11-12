@@ -447,9 +447,9 @@
 					</div>
 					<div v-ripple class="item card" @click="hatDialog = true">
 						<div class="title">{{ $t('hat') }}</div>
-						<img v-if="leek.hat" class="image" :src="'/image/hat/' + LeekWars.hats[LeekWars.hatTemplates[leek.hat].item].name + '.png'">
+						<img v-if="leek.hat" class="image" :src="'/image/hat/' + LeekWars.hats[LeekWars.hatTemplates[leek.hat.hat_template].item].name + '.png'">
 						<img v-else class="image" src="/image/hat/no_hat.png">
-						<div v-if="leek.hat" class="name">{{ $t('hat.' + LeekWars.hats[LeekWars.hatTemplates[leek.hat].item].name) }}</div>
+						<div v-if="leek.hat" class="name">{{ $t('hat.' + LeekWars.hats[LeekWars.hatTemplates[leek.hat.hat_template].item].name) }}</div>
 					</div>
 					<div v-ripple class="item card" :class="{disabled: !holdWeaponEnabled}" @click="skinWeaponDialog = true">
 						<div class="title">
@@ -856,6 +856,7 @@
 		hat() {
 			this.hatDialog = true
 		}
+
 		selectHat(hat: Hat) {
 			if (!this.leek) { return }
 			this.hatDialog = false
@@ -869,20 +870,21 @@
 					LeekWars.toast(error)
 				})
 			} else {
-				if (this.leek.hat === hat.hat_template) {
+				if (this.leek.hat && this.leek.hat.template === hat.template) {
 					this.hatDialog = false
 					return
 				}
-				this.leek.hat = hat.hat_template
+				this.leek.hat = hat
 				LeekWars.post('leek/set-hat', {leek_id: this.leek.id, hat_id: hat.template}).then(data => {
 					if (this.leek) {
-						store.commit('change-hat', {leek: this.leek.id, hat: hat.hat_template})
+						store.commit('change-hat', { leek: this.leek.id, hat })
 					}
 				}).error(error => {
 					LeekWars.toast(error)
 				})
 			}
 		}
+
 		potion() {
 			this.potionDialog = true
 		}

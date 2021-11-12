@@ -48,9 +48,12 @@
 		get hat() {
 			let hat = this.leek.hat
 			if (!hat && (!this.leek.real || this.leek.bot)) {
-				hat = this.botHats[-this.ai! as number - 1]
+				return this.botHats[-this.ai! as number - 1]
 			}
-			return hat
+			if (typeof(hat) === 'number') {
+				return hat
+			}
+			return hat!.hat_template
 		}
 		get hatImage(): string {
 			if (this.hat) {

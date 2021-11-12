@@ -1,8 +1,5 @@
-import { env } from '@/env'
 import { Chat, ChatMessage, ChatType } from '@/model/chat'
-import { Conversation } from '@/model/conversation'
 import { Farmer } from '@/model/farmer'
-import { i18n } from '@/model/i18n'
 import { ItemType } from '@/model/item'
 import { LeekWars } from '@/model/leekwars'
 import { Notification, NotificationType } from '@/model/notification'
@@ -11,6 +8,7 @@ import Vue from 'vue'
 import Vuex, { Store } from 'vuex'
 import { AI } from './ai'
 import { fileSystem } from './filesystem'
+import { Hat } from './hat'
 import { Leek } from './leek'
 import { vueMain } from './vue'
 import { Weapon } from './weapon'
@@ -330,12 +328,12 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			}
 		},
 
-		'change-hat'(state: LeekWarsState, data: any) {
+		'change-hat'(state: LeekWarsState, data: { leek: number, hat: Hat }) {
 			if (state.farmer) {
 				const leek = state.farmer.leeks[data.leek]
 				if (data.hat) {
 					for (let h = 0; h < state.farmer.hats.length; ++h) {
-						if (state.farmer.hats[h].hat_template === data.hat) {
+						if (state.farmer.hats[h].hat_template === data.hat.hat_template) {
 							state.farmer.hats[h].quantity--
 							if (state.farmer.hats[h].quantity === 0) {
 								state.farmer.hats.splice(h, 1)
@@ -345,7 +343,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 					}
 				}
 				if (leek.hat) {
-					const template = LeekWars.hats[LeekWars.hatTemplates[leek.hat].item]
+					const template = LeekWars.hats[leek.hat.template]
 					let found = false
 					for (const hat of state.farmer.hats) {
 						if (hat.template === template.id) {
@@ -356,11 +354,11 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 					}
 					if (!found) {
 						const newHat = {
-							template: LeekWars.hatTemplates[leek.hat].item,
-							id: 0,
+							template: leek.hat.template,
+							id: leek.hat.id,
 							name: template.name,
 							level: template.level,
-							hat_template: leek.hat,
+							hat_template: leek.hat.hat_template,
 							quantity: 1
 						}
 						state.farmer.hats.push(newHat)
