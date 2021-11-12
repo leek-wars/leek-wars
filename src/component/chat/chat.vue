@@ -115,18 +115,16 @@
 		update() {
 			if (!this.id) { return }
 			LeekWars.socket.enableChannel(this.id)
-			if (!this.chat || !this.chat.loaded) {
-				LeekWars.get('message/get-messages/' + this.id + '/' + 50 + '/' + 1).then(data => {
-					this.$store.commit('clear-chat', this.id)
-					for (const message of data.messages) {
-						this.$store.commit('chat-receive', { chat: this.id, message, new: false })
-					}
-					for (const farmer of data.farmers) {
-						this.$store.commit('add-conversation-participant', {id: this.id, farmer})
-					}
-					this.chat!.loaded = true
-				})
-			}
+			LeekWars.get('message/get-messages/' + this.id + '/' + 50 + '/' + 1).then(data => {
+				this.$store.commit('clear-chat', this.id)
+				for (const message of data.messages) {
+					this.$store.commit('chat-receive', { chat: this.id, message, new: false })
+				}
+				for (const farmer of data.farmers) {
+					this.$store.commit('add-conversation-participant', {id: this.id, farmer})
+				}
+				this.chat!.loaded = true
+			})
 			this.read()
 		}
 
