@@ -300,7 +300,7 @@
 		theme: string = DEFAULT_THEME
 		autoClosing: boolean = false
 		autocomplete: boolean = false
-		enableAnalyzer: boolean = true
+		enableAnalyzer: boolean = false
 		popups: boolean = false
 		hideHeader: boolean = false
 		fontSize: number = DEFAULT_FONT_SIZE
