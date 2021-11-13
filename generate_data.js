@@ -20,7 +20,7 @@ const values = [
 const promises = []
 
 for (const value of values) {
-	// const host = 'http://localhost:5000/'
+	// const host = 'http://localhost:8500/'
 	const host = 'https://leekwars.com/'
 	const p = request(host + 'api/' + value[2])
 	promises.push(p.then((data) => {
@@ -31,7 +31,7 @@ for (const value of values) {
 			+ " = " + util.inspect(value[1] ? json[value[1]] : json, {depth: Infinity, breakLength: Infinity, maxArrayLength: Infinity})
 			+ "\nexport { " + value[0].toUpperCase() + " }"
 	}).catch((err) => {
-		console.log("ERROR request failed for", value[0])
+		console.log("ERROR request failed for", value[0], err)
 		process.exit()
 	}))
 }

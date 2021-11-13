@@ -169,7 +169,7 @@ class Language {
 }
 
 const DEV = window.location.port === '8080'
-const LOCAL = window.location.port === '5000' || window.location.port === '5100'
+const LOCAL = window.location.port === '8500' || window.location.port === '5100'
 
 const LeekWars = {
 	version: packageJson.version,

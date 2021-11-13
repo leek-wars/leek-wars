@@ -104,9 +104,9 @@
 				</div>
 			</popup>
 
-			<popup v-if="docEverywhere" v-model="docEverywhereModel">
+			<v-dialog v-if="docEverywhere" v-model="docEverywhereModel" content-class="doc" :max-width="1400">
 				<documentation />
-			</popup>
+			</v-dialog>
 		</div>
 	</div>
 </template>
@@ -166,7 +166,7 @@
 				this.changelogShow()
 			}
 			this.$root.$on('keyup', (event: KeyboardEvent) => {
-				if (event.keyCode === 66 && event.altKey && event.ctrlKey) {
+				if (event.keyCode === 72 && event.altKey && event.ctrlKey) {
 					this.docEverywhere = true
 					Vue.nextTick(() => this.docEverywhereModel = true)
 				}
@@ -486,5 +486,12 @@
 		top: 10px;
 		left: 10px;
 		z-index: 100;
+	}
+	::v-deep .doc {
+		height: 85vh;
+		box-shadow: none;
+		.documentation-page {
+			height: 100%;
+		}
 	}
 </style>
