@@ -67,7 +67,7 @@
 			return this.instant ? 0 : 200
 		}
 		get _close_delay() {
-			return this.instant ? 0 : 200
+			return this.instant ? 0 : 0
 		}
 		@Watch('id')
 		update() {

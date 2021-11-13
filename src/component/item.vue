@@ -1,17 +1,9 @@
 <template lang="html">
-	<rich-tooltip-weapon v-if="is_weapon" v-slot="{ on }" :bottom="true" :instant="true" :weapon="LeekWars.weapons[template.params]">
+	<rich-tooltip-item v-slot="{ on }" :bottom="true" :instant="true" :item="template">
 		<div class="item" v-on="on">
-			<img :src="url" class="weapon">
+			<img :src="url" :class="{weapon: is_weapon}">
 		</div>
-	</rich-tooltip-weapon>
-	<rich-tooltip-chip v-else-if="is_chip" v-slot="{ on }" :bottom="true" :instant="true" :chip="LeekWars.chips[template.id]">
-		<div class="item" v-on="on">
-			<img :src="url">
-		</div>
-	</rich-tooltip-chip>
-	<div v-else class="item">
-		<img :src="url">
-	</div>
+	</rich-tooltip-item>
 </template>
 
 <script lang="ts">

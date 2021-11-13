@@ -38,6 +38,7 @@
 	export default class Explorer extends Vue {
 
 		problemsCollapsed: {[key: string]: boolean} = {}
+		fileSystem = fileSystem
 
 		toggleProblemFile(ai: string) {
 			Vue.set(this.problemsCollapsed, ai, !this.problemsCollapsed[ai])

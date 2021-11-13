@@ -1,15 +1,5 @@
 <template lang="html">
-	<div class="item-preview">
-		<div class="header">
-			<h2 class="name">{{ $t('potion.' + potion.name) }}</h2>
-			<div class="level">{{ $t('effect.level_n', [potion.level]) }}</div>
-		</div>
-		<div class="image">
-			<img :src="'/image/potion/' + potion.name + '.png'">
-		</div>
-		<div v-if="$te('potion.' + potion.name + '_desc')" class="desc">
-			{{ $t('potion.' + potion.name + "_desc") }}
-		</div>
+	<div>
 		<div class="stats">
 			<template v-for="(effect, e) of potion.effects">
 				<template v-if="effect.type == PotionEffect.CHANGE_SKIN">
@@ -44,6 +34,7 @@
 	import RangeView from '@/component/market/range-view.vue'
 	import { PotionEffect, PotionTemplate } from '@/model/potion'
 	import { Component, Prop, Vue } from 'vue-property-decorator'
+
 	@Component({
 		components: { 'range-view': RangeView, 'effect-view': EffectView, 'area-view': AreaView }
 	})

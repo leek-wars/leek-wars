@@ -1,14 +1,5 @@
 <template lang="html">
-	<div class="item-preview">
-		<div class="header">
-			<h2 class="name">{{ $t('chip.' + chip.name) }}</h2>
-			<div class="level">{{ $t('effect.level_n', [chip.level]) }}</div>
-		</div>
-		<div class="constant">{{ "CHIP_" + chip.name.toUpperCase() }}</div>
-		<div class="image sound">
-			<img :src="'/image/chip/' + chip.name + '.png'" @click="LeekWars.playSound(chip, 'chip')">
-		</div>
-		<div v-if="$te('chip.' + chip.name + '_desc')" class="desc">{{ $t('chip.' + chip.name + "_desc") }}</div>
+	<div>
 		<div class="stats">
 			<div>
 				<range-view :min="chip.min_range" :max="chip.max_range" :type="chip.launch_type" />

@@ -32,6 +32,7 @@ const Forum = () => import(/* webpackChunkName: "[request]" */ `@/component/foru
 const Garden = () => import(/* webpackChunkName: "[request]" */ `@/component/garden/garden.${locale}.i18n`)
 const GeneralHelp = () => import(/* webpackChunkName: "[request]" */ `@/component/general-help/general-help.${locale}.i18n`)
 const Help = () => import(/* webpackChunkName: "[request]" */ `@/component/help/help.${locale}.i18n`)
+const Inventory = () => import(/* webpackChunkName: "[request]" */ `@/component/inventory/inventory.${locale}.i18n`)
 const LineOfSight = () => import(/* webpackChunkName: "[request]" */ `@/component/line-of-sight/line-of-sight.${locale}.i18n`)
 const AdvancedFightDescription = () => import(/* webpackChunkName: "[request]" */ `@/component/advanced-fight-description/advanced-fight-description.${locale}.i18n`)
 const History = () => import(/* webpackChunkName: "[request]" */ `@/component/history/history.${locale}.i18n`)
@@ -140,6 +141,7 @@ const routes = [
 	{ path: '/help/advanced-fight-description', component: AdvancedFightDescription },
 	{ path: '/help/general', component: GeneralHelp },
 	{ path: '/help/tutorial', component: Tutorial },
+	{ path: '/inventory', component: Inventory },
 	{ path: '/legal', component: Legal },
 	{ path: '/login', component: Login, beforeEnter: disconnected },
 	{ path: '/leek/:id', name: 'leek', component: Leek },

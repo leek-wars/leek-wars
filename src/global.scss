@@ -928,6 +928,13 @@ body {
 .difficulty-4 { background: #f8ac00 }
 .difficulty-5 { background: red }
 
+// .rarity-border-0 { border-top: 3px solid #ccc !important }
+.rarity-border-1 { border-top: 1px solid #00aa00 !important }
+.rarity-border-2 { border-top: 1px solid #0090ff !important }
+.rarity-border-3 { border-top: 1px solid #c21aff !important }
+.rarity-border-4 { border-top: 1px solid #f8ac00 !important }
+.rarity-border-5 { border-top: 1px solid red !important }
+
 .spacer {
 	flex: 1;
 }

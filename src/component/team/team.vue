@@ -464,9 +464,9 @@
 
 					<h4>{{ $t('main.chips') }}</h4>
 					<div class="chips">
-						<rich-tooltip-chip v-for="chip in [4, 23, 20, 1, 15, 92, 97, 100]" :key="chip" v-slot="{ on }" :chip="LeekWars.chips[chip]" :bottom="true" :instant="true">
+						<rich-tooltip-item v-for="chip in [4, 23, 20, 1, 15, 92, 97, 100]" :key="chip" v-slot="{ on }" :chip="LeekWars.items[chip]" :bottom="true" :instant="true">
 							<img :src="'/image/chip/' + LeekWars.chips[chip].name + '.png'" class="chip" v-on="on">
-						</rich-tooltip-chip>
+						</rich-tooltip-item>
 					</div>
 				</div>
 			</div>
