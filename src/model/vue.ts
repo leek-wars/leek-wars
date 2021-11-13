@@ -22,20 +22,20 @@ import NotificationElement from '@/component/notifications/notification.vue'
 import Pagination from '@/component/pagination.vue'
 import Popup from '@/component/popup.vue'
 import RankingBadge from '@/component/ranking-badge.vue'
-import RichTooltipChip from '@/component/rich-tooltip/rich-tooltip-chip.vue'
 import RichTooltipComposition from '@/component/rich-tooltip/rich-tooltip-composition.vue'
 import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 import RichTooltipLeek from '@/component/rich-tooltip/rich-tooltip-leek.vue'
+import RichTooltipResource from '@/component/rich-tooltip/rich-tooltip-resource.vue'
 import RichTooltipTeam from '@/component/rich-tooltip/rich-tooltip-team.vue'
 import RichTooltipTrophy from '@/component/rich-tooltip/rich-tooltip-trophy.vue'
-import RichTooltipWeapon from '@/component/rich-tooltip/rich-tooltip-weapon.vue'
+import RichTooltipItem from '@/component/rich-tooltip/rich-tooltip-item.vue'
 import Talent from '@/component/talent.vue'
 import TitlePicker from '@/component/title/title-picker.vue'
 import LWTitle from '@/component/title/title.vue'
 import TurretImage from '@/component/turret-image.vue'
 import Type from '@/component/type.vue'
 import { env } from '@/env'
-import { i18n, loadInstanceTranslations } from '@/model/i18n'
+import { i18n } from '@/model/i18n'
 import { LeekWars } from '@/model/leekwars'
 import '@/model/serviceworker'
 import { store } from "@/model/store"
@@ -95,10 +95,10 @@ Vue.component('popup', Popup)
 Vue.component('rich-tooltip-farmer', RichTooltipFarmer)
 Vue.component('rich-tooltip-leek', RichTooltipLeek)
 Vue.component('rich-tooltip-composition', RichTooltipComposition)
-Vue.component('rich-tooltip-weapon', RichTooltipWeapon)
-Vue.component('rich-tooltip-chip', RichTooltipChip)
+Vue.component('rich-tooltip-resource', RichTooltipResource)
 Vue.component('rich-tooltip-trophy', RichTooltipTrophy)
 Vue.component('rich-tooltip-team', RichTooltipTeam)
+Vue.component('rich-tooltip-item', RichTooltipItem)
 Vue.component('loader', LWLoader)
 Vue.component('lw-title', LWTitle)
 Vue.component('title-picker', TitlePicker)

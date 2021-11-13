@@ -1,65 +1,75 @@
 .item-preview {
 	margin: auto;
 	text-align: center;
+	position: relative;
 	.header {
-		background-color: #ddd;
-		padding: 2px 5px;
-		height: 25px;
+		background-color: #2a2a2a;
+		color: #eee;
+		padding: 0 8px;
+		height: 36px;
+		display: flex;
+		align-items: center;
+		border-top-left-radius: 3px;
+		border-top-right-radius: 3px;
+		gap: 7px;
 	}
 	.name {
-		float: left;
-		font-size: 19px;
-		color: black;
-		margin: 0;
+		font-size: 17px;
+		color: #f2f2f2;
+		white-space: nowrap;
+	}
+	.rarity {
+		color: white;
+		font-size: 13px;
+		font-weight: 500;
+		padding: 4px;
+		border-radius: 5px;
 	}
 	.level {
-		float: right;
-		margin-top: 1px;
-		font-size: 16px;
-		color: #777;
+		font-size: 15px;
+		white-space: nowrap;
 	}
 	.image {
-		height: 90px;
-		position: relative;
+		max-height: 140px;
+		background: #f2f2f2;
+		padding: 15px;
 		img {
-			position: absolute;
-			top: 0;
-			bottom: 0;
-			left: 0; right: 0;
-			margin: auto;
-			max-height: 80px;
+			max-width: 100%;
+			max-height: 110px;
+			object-fit: contain;
 		}
 	}
-	&.fights .image {
-		height: 130px;
-		img {
-			max-height: 120px;
-		}
+	&.chip .image img {
+		max-height: 80px;
 	}
-	&.pomp .image {
-		height: 100px;
-		img {
-			max-height: 90px;
-		}
+	&.hat .image img {
+		max-height: 90px;
+	}
+	&.pomp .image img {
+		max-height: 90px;
 	}
 	.image.sound img {
 		cursor: help;
 	}
 	.desc {
+		background: #f2f2f2;
 		text-align: justify;
 		font-size: 14px;
 		color: #666;
 		padding: 8px;
 	}
 	.stats div {
-		padding: 4px;
+		padding: 5px;
 	}
-	.stats div img {
+	.stats > div > img {
 		vertical-align: bottom;
 		margin-right: 4px;
 	}
 	.stats > div:nth-child(2n+1) {
 		background-color: white;
+	}
+	.stats > div:nth-child(2n) {
+		background-color: #f2f2f2;
 	}
 	.ennemies,
 	.allies,
@@ -98,7 +108,8 @@
 		text-align: left;
 		color: #555;
 		font-size: 13px;
-		padding: 4px;
+		padding: 4px 6px;
+		background: #f2f2f2;
 	}
 	.area {
 		border-collapse: separate;

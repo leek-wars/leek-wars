@@ -13,10 +13,10 @@
 					<img src="/image/icon/black/market.png">
 					<span>{{ $t('main.market') }}</span>
 				</div>
-				<router-link to="/workshop">
-					<div class="tab action" icon="mdi-hammer-wrench" link="/workshop">
-						<v-icon>mdi-hammer-wrench</v-icon>
-						<span>{{ $t('main.workshop') }}</span>
+				<router-link to="/inventory">
+					<div class="tab action" icon="mdi-treasure-chest" link="/inventory">
+						<v-icon>mdi-treasure-chest</v-icon>
+						<span>{{ $t('main.inventory') }}</span>
 					</div>
 				</router-link>
 			</div>
@@ -88,15 +88,17 @@
 				</panel>
 			</div>
 			<div v-show="!LeekWars.mobile || LeekWars.splitBack" class="column4">
-				<panel :title="$t('characteristic.characteristics')" class="preview-panel" icon="mdi-information-outline">
+				<panel class="preview-panel" icon="mdi-information-outline">
 					<loader v-if="!selectedItem" slot="content" />
 					<div v-else slot="content" class="preview center">
-						<weapon-preview v-if="selectedItem.type == ItemType.WEAPON" :weapon="LeekWars.weapons[LeekWars.items[selectedItem.id].params]" />
+						<item-preview v-if="selectedItem.type == ItemType.FIGHT_PACK" :item="selectedItem" />
+						<item-preview v-else :item="LeekWars.items[selectedItem.id]" />
+						<!-- <weapon-preview v-if="selectedItem.type == ItemType.WEAPON" :weapon="LeekWars.weapons[LeekWars.items[selectedItem.id].params]" />
 						<chip-preview v-else-if="selectedItem.type == ItemType.CHIP" :chip="LeekWars.chips[selectedItem.id]" />
 						<potion-preview v-else-if="selectedItem.type == ItemType.POTION && LeekWars.potions[selectedItem.id]" :potion="LeekWars.potions[selectedItem.id]" />
 						<fight-pack-preview v-else-if="selectedItem.type == ItemType.FIGHT_PACK" :pack="selectedItem" />
 						<hat-preview v-else-if="selectedItem.type === ItemType.HAT && LeekWars.hats[selectedItem.id]" :hat="LeekWars.hats[selectedItem.id]" />
-						<pomp-preview v-else-if="selectedItem.type == ItemType.POMP" :pomp="LeekWars.pomps[selectedItem.id]" />
+						<pomp-preview v-else-if="selectedItem.type == ItemType.POMP" :pomp="LeekWars.pomps[selectedItem.id]" /> -->
 
 						<router-link v-if="selectedItem.trophy" :to="'/trophy/' + selectedItem.trophy.name" class="trophy">
 							<img :src="'/image/trophy/' + selectedItem.trophy.name + '.svg'">
@@ -237,11 +239,12 @@
 			<v-icon slot="icon">mdi-new-box</v-icon>
 			<span slot="title">{{ $t('new_item_unlocked') }}</span>
 			<div v-if="unseenItem" class="unseen-dialog">
-				<weapon-preview v-if="unseenItem.type == ItemType.WEAPON" :weapon="LeekWars.weapons[LeekWars.items[unseenItem.id].params]" />
+				<item-preview :item="LeekWars.items[unseenItem.id]" />
+				<!-- <weapon-preview v-if="unseenItem.type == ItemType.WEAPON" :weapon="LeekWars.weapons[LeekWars.items[unseenItem.id].params]" />
 				<chip-preview v-else-if="unseenItem.type == ItemType.CHIP" :chip="LeekWars.chips[unseenItem.id]" />
 				<potion-preview v-else-if="unseenItem.type == ItemType.POTION" :potion="LeekWars.potions[unseenItem.id]" />
 				<hat-preview v-else-if="unseenItem.type == ItemType.HAT" :hat="LeekWars.hats[unseenItem.id]" />
-				<pomp-preview v-else-if="unseenItem.type == ItemType.POMP" :hat="LeekWars.pomps[unseenItem.id]" />
+				<pomp-preview v-else-if="unseenItem.type == ItemType.POMP" :pomp="LeekWars.pomps[unseenItem.id]" /> -->
 
 				<div v-if="unseenItem.trophy" class="card trophy">
 					<img :src="'/image/trophy/' + unseenItem.trophy.name + '.svg'">
@@ -267,22 +270,13 @@
 	import { store } from '@/model/store'
 	import { WeaponTemplate } from '@/model/weapon'
 	import { Component, Vue, Watch } from 'vue-property-decorator'
-	import ChipPreview from './chip-preview.vue'
 	import FightPackPreview from './fight-pack-preview.vue'
-	import HatPreview from './hat-preview.vue'
-	import PompPreview from './pomp-preview.vue'
-	import PotionPreview from './potion-preview.vue'
-	import WeaponPreview from './weapon-preview.vue'
+	import ItemPreview from './item-preview.vue'
 
 	@Component({
 		name: 'market', i18n: {}, mixins: [...mixins],
 		components: {
-			'weapon-preview': WeaponPreview,
-			'chip-preview': ChipPreview,
-			'potion-preview': PotionPreview,
-			'fight-pack-preview': FightPackPreview,
-			'hat-preview': HatPreview,
-			'pomp-preview': PompPreview
+			'item-preview': ItemPreview
 		}
 	})
 	export default class Market extends Vue {
@@ -495,7 +489,7 @@
 				const count = fights[p]
 				const pack: ItemTemplate = {
 					id: 1000000 + fights[p],
-					name: count + '-fights',
+					name: 'fight_pack_' + count,
 					title: this.$t('n_fights', [count]),
 					price: p === '0' ? 100000 : 0,
 					crystals: costs[p] * 100,
@@ -526,7 +520,7 @@
 		setFightPackPrice(farmer: Farmer) {
 			const ratio = store.state.farmer!.total_level / 1204
 			const priceHabs = Math.round(100000 + Math.pow(ratio, 3) * 4900000)
-			this.items_by_name['100-fights'].price! = priceHabs
+			this.items_by_name['fight_pack_100'].price! = priceHabs
 		}
 
 		@Watch('unseenItemDialog')
@@ -699,25 +693,25 @@
 			margin-top: 8px;
 		}
 	}
-	.potion {
+	.item.potion {
 		padding: 6px 0;
 	}
-	.potion img {
+	.item.potion img {
 		width: 80px;
 	}
-	.hat {
+	.item.hat {
 		height: 82px;
 		padding: 6px;
-	}
-	.hat img {
-		max-width: 92px;
-		max-height: 70px;
-		position: absolute;
-		top: 0;
-		bottom: 0;
-		left: 0;
-		right: 0;
-		margin: auto;
+		img {
+			max-width: 92px;
+			max-height: 70px;
+			position: absolute;
+			top: 0;
+			bottom: 0;
+			left: 0;
+			right: 0;
+			margin: auto;
+		}
 	}
 	.buy-buttons {
 		padding-top: 10px;

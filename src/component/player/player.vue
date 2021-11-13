@@ -277,6 +277,10 @@
 			this.$root.$on('fight-progress', (data: any) => {
 				if (this.fight && data[0] === this.fight.id) {
 					this.progress = data[1]
+					if (this.progress === 100) {
+						if (this.timeout) { clearTimeout(this.timeout) }
+						this.getFight(false)
+					}
 				}
 			})
 		}

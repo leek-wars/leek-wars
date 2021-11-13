@@ -24,9 +24,9 @@
 		</div>
 		<h4>{{ $t('main.chips') }}</h4>
 		<div class="chips">
-			<rich-tooltip-chip v-for="chip of summon.chips" :key="chip.id" v-slot="{ on }" :chip="LeekWars.chips[chip]" :bottom="true" :instant="true" @input="$emit('input', $event)">
+			<rich-tooltip-item v-for="chip of summon.chips" :key="chip.id" v-slot="{ on }" :item="LeekWars.items[chip]" :bottom="true" :instant="true" @input="$emit('input', $event)">
 				<img :src="'/image/chip/' + LeekWars.chips[chip].name + '.png'" class="chip" v-on="on">
-			</rich-tooltip-chip>
+			</rich-tooltip-item>
 		</div>
 	</div>
 </template>
@@ -58,8 +58,8 @@
 	}
 	.summon-image {
 		flex: 1 0 90px;
-		margin-right: 20px;
-		margin-left: 10px;
+		// margin-right: 10px;
+		// margin-left: 10px;
 		text-align: center;
 		max-height: 120px;
 	}
@@ -73,7 +73,7 @@
 		display: inline-block;
 		margin-top: 2px;
 		vertical-align: top;
-		margin-left: 3px;
+		margin-left: 2px;
 		font-weight: bold;
 	}
 	.summon .characteristic img {

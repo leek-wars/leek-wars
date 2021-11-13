@@ -102,6 +102,8 @@
 						</v-btn>
 					</div>
 				</div>
+			</popup>
+
 			<popup v-if="docEverywhere" v-model="docEverywhereModel">
 				<documentation />
 			</popup>
@@ -476,6 +478,7 @@
 	}
 
 	.requests {
+		display: none;
 		background: rgba(0,0,0,0.8);
 		color: white;
 		padding: 10px;

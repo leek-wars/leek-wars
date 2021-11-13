@@ -14,12 +14,13 @@ import main from "@/lang/fr/main.json"
 import notification from "@/lang/fr/notification.json"
 import pomp from '@/lang/fr/pomp.json'
 import potion from '@/lang/fr/potion.json'
+import resource from '@/lang/fr/resource.json'
 import shortcut from '@/lang/fr/shortcut.json'
 import trophy from "@/lang/fr/trophy.json"
 import warning from '@/lang/fr/warning.json'
 import weapon from '@/lang/fr/weapon.json'
 
-const translations = { main, changelog, characteristic, chip, flag, 'forum-category': forum_category, weapon, potion, effect, country, entity, hat, leekscript, ls_error, mail, notification, shortcut, trophy, pomp, warning }
+const translations = { main, changelog, characteristic, chip, flag, 'forum-category': forum_category, weapon, potion, effect, country, entity, hat, leekscript, ls_error, mail, notification, resource, shortcut, trophy, pomp, warning }
 
 import { setTranslations } from "@/locale"
 // import wiki from '@/wiki/fr.wiki'

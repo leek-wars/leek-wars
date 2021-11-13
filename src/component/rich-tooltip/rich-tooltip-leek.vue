@@ -50,14 +50,14 @@
 					</table>
 					<div class="items">
 						<div class="weapons">
-							<rich-tooltip-weapon v-for="weapon in leek.orderedWeapons" :key="weapon.id" v-slot="{ on }" :weapon="LeekWars.weapons[LeekWars.items[weapon.template].params]" :bottom="true" :instant="true" @input="setParent">
+							<rich-tooltip-item v-for="weapon in leek.orderedWeapons" :key="weapon.id" v-slot="{ on }" :item="LeekWars.items[weapon.template]" :bottom="true" :instant="true" @input="setParent">
 								<img :src="'/image/' + LeekWars.items[weapon.template].name.replace('_', '/') + '.png'" class="weapon" v-on="on">
-							</rich-tooltip-weapon>
+							</rich-tooltip-item>
 						</div>
 						<div class="chips">
-							<rich-tooltip-chip v-for="chip in leek.orderedChips" :key="chip.id" v-slot="{ on }" :chip="LeekWars.chips[chip.template]" :bottom="true" :instant="true" @input="setParent">
+							<rich-tooltip-item v-for="chip in leek.orderedChips" :key="chip.id" v-slot="{ on }" :item="LeekWars.items[chip.template]" :bottom="true" :instant="true" @input="setParent">
 								<img :src="'/image/chip/' + LeekWars.chips[chip.template].name + '.png'" class="chip" v-on="on">
-							</rich-tooltip-chip>
+							</rich-tooltip-item>
 						</div>
 					</div>
 				</div>
@@ -88,7 +88,7 @@
 			return this.instant ? 0 : 200
 		}
 		get _close_delay() {
-			return this.instant ? 0 : 200
+			return this.instant ? 0 : 0
 		}
 		@Watch('id')
 		update() {

@@ -283,7 +283,7 @@
 			'editor-finder': EditorFinder,
 			'editor-problems': EditorProblems
 		},
-		mixins
+		mixins: [...mixins]
 	})
 	export default class EditorPage extends Vue {
 		activeAIs: {[key: number]: AI} = {}

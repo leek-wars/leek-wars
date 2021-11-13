@@ -13,10 +13,10 @@
 						<span>{{ $t('main.market') }}</span>
 					</div>
 				</router-link>
-				<router-link to="/workshop">
-					<div class="tab action" icon="mdi-hammer-wrench" link="/workshop">
-						<v-icon>mdi-hammer-wrench</v-icon>
-						<span>{{ $t('main.workshop') }}</span>
+				<router-link to="/inventory">
+					<div class="tab action" icon="mdi-treasure-chest" link="/inventory">
+						<v-icon>mdi-treasure-chest</v-icon>
+						<span>{{ $t('main.inventory') }}</span>
 					</div>
 				</router-link>
 			</div>

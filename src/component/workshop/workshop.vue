@@ -16,8 +16,8 @@
 					</div>
 				</router-link>
 				<div class="tab action active" icon="mdi-hammer-wrench" link="/workshop">
-					<v-icon>mdi-hammer-wrench</v-icon>
-					<span>{{ $t('main.workshop') }}</span>
+					<v-icon>mdi-treasure-chest</v-icon>
+					<span>{{ $t('main.inventory') }}</span>
 				</div>
 			</div>
 		</div>
@@ -26,15 +26,15 @@
 				<div class="forge">
 					<div class="grid">
 						<div v-for="(item, i) in forge" :key="i" class="cell" :class="{active: !!item}">
-							<div v-if="item" v-ripple class="item" :quantity="item.quantity | number" @click="remove(i, $event)">
-								<img :src="'/image/' + LeekWars.items[item.template].name.replace('_', '/') + '.png'" :type="LeekWars.items[item.template].type">
+							<div v-if="item" v-ripple class="item" :quantity="item.quantity | number" :type="LeekWars.items[item.template].type" @click="remove(i, $event)">
+								<img :src="'/image/' + LeekWars.items[item.template].name.replace('_', '/') + '.png'">
 							</div>
 						</div>
 					</div>
 					<div class="symbol">→</div>
 					<div class="cell" :class="{active: !!scheme}">
-						<div v-if="scheme" class="item" :quantity="1">
-							<img :src="'/image/' + LeekWars.items[scheme.result].name.replace('_', '/') + '.png'" :type="LeekWars.items[scheme.result].type">
+						<div v-if="scheme" class="item" :quantity="1" :type="LeekWars.items[scheme.result].type">
+							<img :src="'/image/' + LeekWars.items[scheme.result].name.replace('_', '/') + '.png'">
 						</div>
 					</div>
 				</div>
@@ -53,13 +53,7 @@
 					</div>
 				</template>
 				<div slot="content" class="inventory-content">
-					<div class="inventory">
-						<div v-for="(item, i) in inventory" :key="i" class="card active">
-							<div v-ripple class="item" :quantity="item.quantity | number" @click="pick(item, i, $event)">
-								<img :src="'/image/' + LeekWars.items[item.template].name.replace('_', '/') + '.png'" :type="LeekWars.items[item.template].type">
-							</div>
-						</div>
-					</div>
+					<inventory />
 				</div>
 			</panel>
 		</div>
@@ -80,6 +74,7 @@
 					<div v-ripple class="group result" @click="use(scheme)">
 						<div class="item" :quantity="1" :title="'#' + scheme.result + ' ' + LeekWars.items[scheme.result].name">
 							<img :src="'/image/' + LeekWars.items[scheme.result].name.replace('_', '/') + '.png'" :type="LeekWars.items[scheme.result].type">
+							<div class="id">#{{ scheme.result }}</div>
 						</div>
 					</div>
 					<div class="items">
@@ -87,9 +82,11 @@
 							<div :key="'_' + i" class="symbol">{{ i === 0 ? " = " : " + " }}</div>
 							<div :key="i" class="group">
 								<template v-for="(item, i) in group">
-									<div :key="i" class="item" :quantity="item[1] | number" :title="'#' + item[0] + ' ' + LeekWars.items[item[0]].name">
+									<div v-if="item[0] in LeekWars.items" :key="i" class="item" :quantity="item[1] | number" :title="'#' + item[0] + ' ' + LeekWars.items[item[0]].name">
 										<img :src="'/image/' + LeekWars.items[item[0]].name.replace('_', '/') + '.png'" :type="LeekWars.items[item[0]].type">
+										<div class="id">#{{ item[0] }}</div>
 									</div>
+									<div v-else :key="i" class="item">{{ item[0] }}</div>
 									<div v-if="i < group.length - 1" :key="'_' + i" class="or">ou</div>
 								</template>
 							</div>
@@ -119,26 +116,11 @@ import { Item } from '../editor/editor-item'
 		schemes: any = null
 		scheme: any = null
 		forge: any[] = [null, null, null, null, null, null, null, null, null]
-		inventory: any[] = []
+
 
 		created() {
+			// console.log("LeekWars.items", LeekWars.items)
 			LeekWars.get('scheme/get-all').then(schemes => this.schemes = schemes)
-
-			if (store.state.farmer!.habs) {
-				this.inventory.push({template: 145, quantity: store.state.farmer!.habs})
-			}
-			if (store.state.farmer!.crystals) {
-				this.inventory.push({template: 146, quantity: store.state.farmer!.crystals})
-			}
-			for (const weapon of store.state.farmer!.weapons) {
-				this.inventory.push({template: weapon.template, quantity: weapon.quantity})
-			}
-			this.inventory.push(...store.state.farmer!.chips)
-			this.inventory.push(...store.state.farmer!.hats)
-			this.inventory.push(...store.state.farmer!.potions)
-			this.inventory.push(...store.state.farmer!.pomps.map(p => {return {template: p, quantity: 1}}))
-
-			console.log(this.inventory)
 		}
 		mounted() {
 			LeekWars.footer = false
@@ -259,9 +241,6 @@ import { Item } from '../editor/editor-item'
 .panel {
 	min-height: 0;
 }
-.inventory-panel {
-	flex: 0 0 582px;
-}
 .forge {
 	display: flex;
 	align-items: center;
@@ -292,64 +271,6 @@ import { Item } from '../editor/editor-item'
 		box-shadow: 0px 2px 1px -1px rgba(0, 0, 0, 0.2), 0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 1px 3px 0px rgba(0, 0, 0, 0.12);
 	}
 }
-.inventory-content {
-	overflow-y: auto;
-	overflow-x: hidden;
-}
-.inventory {
-	display: grid;
-	grid-template-columns: repeat(auto-fill, 65px);
-	max-height: 310px;
-	gap: 5px;
-	margin: 5px;
-	.item {
-		cursor: pointer;
-		height: 60px;
-	}
-	.card {
-		padding: 3px;
-	}
-}
-.value {
-	display: inline-flex;
-	align-items: center;
-	vertical-align: bottom;
-	font-size: 14px;
-	color: #eee;
-	margin: 0 10px;
-	.hab {
-		margin-right: 5px;
-	}
-}
-
-.item {
-	padding: 5px;
-	position: relative;
-	img {
-		width: 100%;
-		height: 100%;
-		object-fit: contain;
-		vertical-align: bottom;
-		&[type="1"] {
-			transform: rotate(-40deg);
-			width: 130%;
-			height: 130%;
-			margin: -15%;
-		}
-	}
-	&:after {
-		position: absolute;
-		content: attr(quantity);
-		background: #fff;
-		border: 1px solid #aaa;
-		border-radius: 4px;
-		padding: 1px 3px;
-		right: 0;
-		bottom: 0;
-		font-size: 12px;
-		font-weight: 500;
-	}
-}
 
 .schemes {
 	overflow-y: auto;
@@ -369,6 +290,10 @@ import { Item } from '../editor/editor-item'
 	.items {
 		display: flex;
 		align-items: center;
+	}
+	.item {
+		width: 70px;
+		height: 70px;
 	}
 	.group {
 		display: flex;

@@ -7,6 +7,7 @@ enum ItemType {
 	HAT = 4,
 	POMP = 5,
 	FIGHT_PACK = 6,
+	RESOURCE = 7,
 }
 export { ItemType }
 
@@ -25,6 +26,7 @@ class ItemTemplate {
 	public trophy!: number | null
 	public market!: boolean
 	public buyable_crystals!: boolean
+	public rarity!: number
 
 	public leeks?: number[]
 	public leek_objs?: Leek[]
