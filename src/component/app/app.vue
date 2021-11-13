@@ -3,6 +3,8 @@
 		<div class="v-application--wrap">
 			<div :class="{visible: LeekWars.dark > 0}" :style="{opacity: LeekWars.dark}" class="dark" @click="darkClick"></div>
 
+			<div class="requests">{{ LeekWars.requests }} <v-btn x-small @click="LeekWars.requests = 0">reset</v-btn></div>
+
 			<lw-menu v-if="$store.state.connected" />
 
 			<!-- <div class="console-button" @click="leekscriptConsole">
@@ -462,5 +464,15 @@
 			font-weight: 500;
 			color: #5fad1b;
 		}
+	}
+
+	.requests {
+		background: rgba(0,0,0,0.8);
+		color: white;
+		padding: 10px;
+		position: fixed;
+		top: 10px;
+		left: 10px;
+		z-index: 100;
 	}
 </style>
