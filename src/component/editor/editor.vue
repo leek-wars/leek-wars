@@ -337,14 +337,14 @@
 			if (localStorage.getItem('editor/autocomplete') === null) { localStorage.setItem('editor/autocomplete', 'true') }
 			if (localStorage.getItem('editor/auto_closing') === null) { localStorage.setItem('editor/auto_closing', 'true') }
 			if (localStorage.getItem('editor/popups') === null) { localStorage.setItem('editor/popups', 'true') }
-			if (localStorage.getItem('editor/analyzer') === null) { localStorage.setItem('editor/analyzer', 'true') }
+			if (localStorage.getItem('editor/analyzer') === null) { localStorage.setItem('editor/analyzer', 'false') }
 			this.enlargeWindow = localStorage.getItem('editor/large') === 'true'
 			this.theme = localStorage.getItem('editor/theme') || DEFAULT_THEME
 			this.autoClosing = localStorage.getItem('editor/auto_closing') === 'true'
 			this.autocomplete = localStorage.getItem('editor/autocomplete') === 'true'
 			this.popups = localStorage.getItem('editor/popups') === 'true'
 			this.hideHeader = localStorage.getItem('editor/hideHeader') === 'true'
-			this.enableAnalyzer = localStorage.getItem('editor/analyzer') === 'true'
+			this.enableAnalyzer = false // localStorage.getItem('editor/analyzer') === 'true'
 			this.fontSize = parseInt(localStorage.getItem('editor/font_size') || '', 10) || DEFAULT_FONT_SIZE
 			this.lineHeight = parseInt(localStorage.getItem('editor/line_height') || '', 10) || DEFAULT_LINE_HEIGHT
 			this.problemsHeight = parseInt(localStorage.getItem('editor/problems-height') || '', 10) || 200
