@@ -56,6 +56,7 @@ function request<T = any>(method: string, url: string, params?: any) {
 		}
 		xhr.onerror = reject
 		xhr.send(params)
+		LeekWars.requests++
 	})
 	return {
 		abort: () => xhr.abort(),
@@ -197,6 +198,7 @@ const LeekWars = {
 	subtitle: '',
 	titleCounter: 0,
 	titleTag: null,
+	requests: 0,
 	notifsResults: localStorage.getItem('options/notifs-results') === 'true',
 	rankingActive: localStorage.getItem('options/ranking-active') !== 'false',
 	service_worker: null as ServiceWorkerRegistration | null,
