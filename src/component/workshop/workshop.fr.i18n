@@ -1,0 +1,14 @@
+{
+	"category_bonus": "Bonus",
+	"category_code": "Code",
+	"category_fight": "Combat",
+	"category_fun": "Fun",
+	"category_general": "Général",
+	"category_shopping": "Achats",
+	"category_social": "Social",
+	"category_tournament": "Tournois",
+	"hide_unlocked": "Cacher obtenus",
+	"title": "Trophées de {0}",
+	"title_me": "Mes trophées",
+	"trophies": "Trophées"
+}

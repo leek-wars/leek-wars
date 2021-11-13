@@ -58,6 +58,8 @@ const Tournament = () => import(/* webpackChunkName: "[request]" */ `@/component
 const Trophies = () => import(/* webpackChunkName: "[request]" */ `@/component/trophies/trophies.${locale}.i18n`)
 const TrophyPage = () => import(/* webpackChunkName: "[request]" */ `@/component/trophy/trophy.${locale}.i18n`)
 const Tutorial = () => import(/* webpackChunkName: "[request]" */ `@/component/tutorial/tutorial.${locale}.i18n`)
+// const Workshop = () => import(/* webpackChunkName: "[request]" */ `@/component/workshop/workshop.${locale}.i18n`)
+import { env } from '@/env'
 import { LeekWars } from '@/model/leekwars'
 import { store } from '@/model/store'
 import { vueMain } from '@/model/vue'
@@ -179,6 +181,7 @@ const routes = [
 	{ path: '/trophies', component: Trophies, beforeEnter: connected },
 	{ path: '/trophies/:id', component: Trophies },
 	{ path: '/trophy/:code', component: TrophyPage },
+	// { path: '/workshop', component: Workshop },
 	{ path: '*', component: Error },
 ] as RouteConfig[]
 

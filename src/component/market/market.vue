@@ -13,6 +13,12 @@
 					<img src="/image/icon/black/market.png">
 					<span>{{ $t('main.market') }}</span>
 				</div>
+				<router-link to="/workshop">
+					<div class="tab action" icon="mdi-hammer-wrench" link="/workshop">
+						<v-icon>mdi-hammer-wrench</v-icon>
+						<span>{{ $t('main.workshop') }}</span>
+					</div>
+				</router-link>
 			</div>
 		</div>
 		<div class="container last">
