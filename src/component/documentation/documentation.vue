@@ -1,5 +1,5 @@
 <template lang="html">
-	<div>
+	<div class="documentation-page">
 		<div class="page-header page-bar">
 			<div>
 				<h1>
@@ -33,7 +33,7 @@
 			<div v-show="!LeekWars.mobile || !LeekWars.splitBack" class="column3">
 				<panel class="first">
 					<div slot="content">
-						<div v-autostopscroll="'bottom'" class="items-list">
+						<div class="items-list">
 							<div v-for="(category, c) of filteredCategories" :key="category.id">
 								<h2 v-ripple @click="categoryState[c] = !categoryState[c]">
 									<v-icon>{{ icons[c] }}</v-icon> {{ $t('doc.function_category_' + categories[c].name) }} <span v-if="query.length">({{ category.length }})</span>
@@ -52,7 +52,7 @@
 				</panel>
 			</div>
 			<div v-show="!LeekWars.mobile || LeekWars.splitBack" class="column9">
-				<div ref="elements" v-autostopscroll="'bottom'" class="items" @scroll="scroll">
+				<div ref="elements" class="items" @scroll="scroll">
 					<panel v-for="item of lazy_items" :key="item.id" :item="item.name" :class="{deprecated: item.deprecated}" class="item">
 						<documentation-function v-if="'return_type' in item" :fun="item" />
 						<documentation-constant v-else :constant="item" />
@@ -65,6 +65,7 @@
 
 <script lang="ts">
 	import { locale } from '@/locale'
+	import { mixins } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import { Component, Vue, Watch } from 'vue-property-decorator'
 	import Breadcrumb from '../forum/breadcrumb.vue'
@@ -75,7 +76,8 @@
 	@Component({
 		name: 'documentation',
 		components: { DocumentationFunction, DocumentationConstant, Breadcrumb },
-		i18n: {}
+		i18n: {},
+		mixins: [...mixins]
 	})
 	export default class Documentation extends Vue {
 		categories: any[] = []
@@ -273,6 +275,10 @@
 </script>
 
 <style lang="scss" scoped>
+	.documentation-page {
+		display: flex;
+		flex-direction: column;
+	}
 	.documentation {
 		min-height: 0;
 		height: 100%;
@@ -283,15 +289,11 @@
 	.column3 {
 		position: sticky;
 		top: 12px;
-		height: 100%;
 		.panel {
 			margin-bottom: 0;
 		}
 	}
 	.column9 {
-		height: 100%;
-	}
-	.panel {
 		height: 100%;
 	}
 	.column3 .panel > div {
