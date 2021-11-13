@@ -102,6 +102,10 @@
 			this.$root.$on('wsmessage', this.update)
 		}
 
+		beforeDestroy() {
+			this.$root.$off('wsmessage', this.update)
+		}
+
 		update(message: any) {
 			const type = message.type
 			const data = message.data
