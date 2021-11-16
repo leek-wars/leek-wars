@@ -327,13 +327,13 @@
 
 	class TestScenario {
 		id!: any
+		category!: string
 		team1!: TestScenarioLeek[]
 		team2!: TestScenarioLeek[]
 		map!: number | null
 		base!: boolean
 		name!: string
 		type!: number
-		br!: boolean
 		seed!: number | null
 	}
 	class TestMap {
@@ -483,10 +483,10 @@
 		alliesAIs: {[key: number]: AI} = {}
 		advanced: boolean = false
 
-		get templates() {
+		get templates(): TestScenario[] {
 			const templates = [
-				{name: "Libre", category: "free", team1: [], team2: [], map: null, type: -1}
-			] as any[]
+				{id: 0, base: false, name: "Libre", category: "free", team1: [] as TestScenarioLeek[], team2: [] as TestScenarioLeek[], map: null, type: -1}
+			] as TestScenario[]
 			if (!store.state.farmer) { return templates }
 
 			// Scénarios solo
@@ -496,8 +496,9 @@
 				const ai = this.leekAis[leek.id]
 				if (!ai) { continue }
 				templates.push({
+					id: 0, base: false,
 					name: "Solo " + leek.name, category: "solo", map: null, type: 0,
-					team1: [{id: leek.id, ai}], team2: [{id: -1, ai: -2}]
+					team1: [{id: leek.id, ai}], team2: [{id: -1, ai: -2}], seed: 0
 				})
 			}
 			const generate_bots = (count: number) => {
@@ -509,26 +510,30 @@
 			}
 			const leek_count = LeekWars.objectSize(this.$store.state.farmer.leeks)
 			const team2 = generate_bots(leek_count)
-			const team1 = []
+			const team1 = [] as TestScenarioLeek[]
 			for (const leek in store.state.farmer.leeks) {
-				team1.push({id: parseInt(leek, 10), ai: store.state.farmer.leeks[leek].ai})
+				team1.push({id: parseInt(leek, 10), ai: store.state.farmer.leeks[leek].ai as unknown as number})
 			}
 			if (LeekWars.objectSize(store.state.farmer.leeks) > 1) {
 				templates.push({
+					id: 0, base: false, seed: 0,
 					name: "Éleveur", category: "farmer", map: null, team1, team2, type: 1
 				})
 			}
 			templates.push({
+				id: 0, base: false, seed: 0,
 				name: "Battle Royale", category: "br", map: null, team1, team2: [], type: 3
 			})
 			for (const c in this.compositionTemplates) {
 				const compo = this.compositionTemplates[c]
 				templates.push({
+					id: 0, base: false, seed: 0,
 					name: compo.name, category: "team", map: null, team1: compo.leeks, team2: generate_bots(compo.leeks.length), type: 2
 				})
 			}
 			return templates
 		}
+
 		get allLeeks() {
 			const leeks: {[key: number]: Leek} = {}
 			for (const leek of this.leeks) {
@@ -544,6 +549,7 @@
 			}
 			return leeks
 		}
+
 		get allAis() {
 			const ais = {...this.ais}
 			for (const ai in this.alliesAIs) {
