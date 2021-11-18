@@ -1,6 +1,5 @@
 {
 	"shortcut_1": "<b>Ctrl + S</b>: save the current AI",
-	"shortcut_13": "<b>Ctrl + Shift + S</b> : save all active AIs",
 	"shortcut_2": "<b>Ctrl + Q</b>: run a test",
 	"shortcut_3": "<b>Ctrl + D</b>: duplicate the line or the selected text",
 	"shortcut_4": "<b>Ctrl + K</b>: delete the current line",
