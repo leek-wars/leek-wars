@@ -102,7 +102,7 @@
 	"const_USE_NOT_ENOUGH_TP": "Valeur renvoyée par les fonctions #useWeapon, #useWeaponOnCell, #useChip et #useChipOnCell si le lanceur n'a pas assez de points d'action pour utiliser l'objet.",
 	"const_USE_RESURRECT_INVALID_ENTITY": "Valeur renvoyée par la fonction #resurrect lorsque l'entité spécifiée n'existe pas ou n'est pas encore morte.",
 	"const_USE_SUCCESS": "Valeur renvoyée par les fonctions #useWeapon, #useWeaponOnCell, #useChip et #useChipOnCell en cas de réussite.",
-	"const_USE_TOO_MANY_SUMMONS": "Erreur renvoyée par #summon lorsque vous avez déjà <b>6</b> invocations vivantes.\n",
+	"const_USE_TOO_MANY_SUMMONS": "Erreur renvoyée par #summon lorsque vous avez déjà <b>8</b> invocations vivantes.\n",
 	"func_abs": "Renvoie la valeur absolue du nombre <b>number</b>.",
 	"func_abs_arg_1": "Le nombre dont la valeur absolue sera calculée.",
 	"func_abs_return": "La valeur absolue du nombre.",
