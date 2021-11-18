@@ -90,7 +90,7 @@
 	"const_TYPE_NUMBER": "<b>number</b> type.",
 	"const_TYPE_STRING": "<b>string</b> type.",
 	"const_USE_RESURRECT_INVALID_ENTITY": "Return value of the function #resurrect when the specified entity does not exist or is not dead yet.",
-	"const_USE_TOO_MANY_SUMMONS": "Error thrown by #summon when you already have <b>6</b> alive summons.",
+	"const_USE_TOO_MANY_SUMMONS": "Error thrown by #summon when you already have <b>8</b> alive summons.",
 	"func_abs": "Returns the absolute value of given <b>number</b>.",
 	"func_abs_arg_1": "A number.",
 	"func_abs_return": "Given number's absolute value.",
