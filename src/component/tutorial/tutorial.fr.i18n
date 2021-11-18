@@ -161,7 +161,7 @@
 	"editor_shortcut_7": "<b>Ctrl + Shift + F</b> : Formatage et Indentation automatique",
 	"editor_tisma": "Tisma : IA défensive, attaque fuis et se soigne",
 	"editor_token_bool": "En turquoise : les booléens",
-	"editor_token_comments": "En rouge : les commentaires",
+	"editor_token_comments": "En gris : les commentaires",
 	"editor_token_keywords": "En bleu : les mots clés du langage (if, else, for, var, while…)",
 	"editor_token_numbers": "En vert : les valeurs numériques",
 	"editor_token_strings": "En orange : les chaînes de caractère",
