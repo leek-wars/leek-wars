@@ -252,6 +252,11 @@
 				data.leeks[0].style = data.farmers[0].style = 'first'
 				data.leeks[1].style = data.farmers[1].style = 'second'
 				data.leeks[2].style = data.farmers[2].style = 'third'
+				
+				data.teams[0].style = 'first'
+				data.teams[1].style = 'second'
+				data.teams[2].style = 'third'
+				
 				this.farmer_ranking = data.farmers
 				this.leek_ranking = data.leeks
 				this.team_ranking = data.teams
