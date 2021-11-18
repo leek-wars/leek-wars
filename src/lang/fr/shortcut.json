@@ -1,6 +1,5 @@
 {
 	"shortcut_1": "<b>Ctrl + S</b> : sauvegarder l'IA courante",
-	"shortcut_13": "<b>Ctrl + Shift + S</b> : sauvegarder toutes les IAs actives",
 	"shortcut_2": "<b>Ctrl + Q</b> : lancer un test",
 	"shortcut_3": "<b>Ctrl + D</b> : dupliquer la ligne ou la sélection courante",
 	"shortcut_4": "<b>Ctrl + K</b> : supprimer la ligne courante",
