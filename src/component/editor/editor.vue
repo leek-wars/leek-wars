@@ -230,7 +230,6 @@
 
 				<ul class="shortcuts">
 					<li v-html="$t('shortcut.shortcut_1')"></li>
-					<!-- <li v-html="$t('shortcut.shortcut_13')"></li> -->
 					<li v-html="$t('shortcut.shortcut_2')"></li>
 					<li v-html="$t('shortcut.shortcut_3')"></li>
 					<li v-html="$t('shortcut.shortcut_4')"></li>
