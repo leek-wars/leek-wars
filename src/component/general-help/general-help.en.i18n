@@ -46,7 +46,7 @@
 	"fights_18": "Team fights do not add up to the total of your wins, draws and losses (ratio).",
 	"fights_19": "Battle Royale",
 	"fights_20": "One of your leeks is fighting 9 other leeks. You can do as much battle royales as you want, but they start only when 10 leeks are registered. Battle Royales\nare available from level 50 on.",
-	"fights_21": "Battle royales reward no Experience points nor Habs. Battle royales do not add up to the total of your wins, draws and losses (ratio).",
+	"fights_21": "Battle royales reward no Experience points. Battle royales do not add up to the total of your wins, draws and losses (ratio).",
 	"habs": "Habs",
 	"habs_1": "Hab(s) {icon} is the name of the Leek Wars currency. You earn Habs through fights. You spend Habs to buy weapons and chips in the market, or to buy an additional leek.",
 	"intro": "This page will provide you with the detailed mechanisms regarding : leek evolution, fights, weapons, chips, tournaments... The tutorial about programming in LeekScript is available on the {tutorial} page.",
