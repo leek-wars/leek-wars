@@ -696,7 +696,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			}
 		},
 
-		'disconnect-websocket'(state: LeekWarsState) {
+		'invalidate-chats'(state: LeekWarsState) {
 			for (const chat of Object.values(state.chat)) {
 				chat.loaded = false
 			}
