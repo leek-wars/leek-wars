@@ -76,6 +76,7 @@ class Socket {
 				// In dev mode, auth via a AUTH message
 				this.send([SocketMessage.AUTH, store.state.token])
 			}
+			store.commit('invalidate-chats')
 			store.commit('wsconnected')
 			this.retry_count = 10
 			this.retry_delay = 0
@@ -247,7 +248,7 @@ class Socket {
 	}
 	public disconnect() {
 		if (this.socket) { this.socket.close() }
-		store.commit('disconnect-websocket')
+		store.commit('invalidate-chats')
 	}
 	public connected() {
 		return this.socket && this.socket.readyState === WebSocket.OPEN
