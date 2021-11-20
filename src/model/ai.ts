@@ -26,6 +26,7 @@ class AI {
 	public equipped: boolean = false
 	public entrypoints: number[] = []
 	public comments: { [key: number]: string } = {}
+	public scenario!: number | null
 
 	constructor(data: any) {
 		Object.assign(this, data)

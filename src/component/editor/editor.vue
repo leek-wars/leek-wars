@@ -230,7 +230,7 @@
 			</div>
 		</popup>
 
-		<editor-test ref="editorTest" v-model="testDialog" :ais="fileSystem.ais" :leek-ais="fileSystem.leekAIs" />
+		<editor-test ref="editorTest" v-model="testDialog" :ais="fileSystem.ais" :leek-ais="fileSystem.leekAIs" :currentAI="currentAI" />
 
 		<!--
 		<popup v-model="newAIv2Dialog" :width="500">
