@@ -13,7 +13,7 @@
 					<div class="items scenarios">
 						<div v-for="scenario of scenarios" :key="scenario.id" :class="{selected: scenario === currentScenario}" class="item scenario" @click="selectScenario(scenario)">
 							{{ scenario.name }}
-							<span v-if="scenario.base" class="base">{{ $t('base') }}</span>
+							<span v-if="scenario.default" class="base">{{ $t('default') }}</span>
 							<div v-else class="delete" @click.stop="deleteScenario(scenario)"></div>
 						</div>
 					</div>
@@ -319,6 +319,7 @@
 	import { store } from '@/model/store'
 	import { WeaponTemplate } from '@/model/weapon'
 	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
+	import { fileSystem } from '@/model/filesystem'
 
 	class TestScenarioLeek {
 		id!: number
@@ -335,6 +336,7 @@
 		name!: string
 		type!: number
 		seed!: number | null
+		default!: boolean
 	}
 	class TestMap {
 		id!: number
@@ -350,6 +352,8 @@
 		@Prop() value!: boolean
 		@Prop() ais!: {[key: number]: AI}
 		@Prop() leekAis!: {[key: number]: number}
+		@Prop({ required: true }) currentAI!: AI
+
 		FightType = FightType
 		initialized: boolean = false
 		scenarios: {[key: string]: TestScenario} = {}
@@ -376,6 +380,7 @@
 		map_down = false
 		map_add = false
 		timeout: number | null = null
+		fileSystem = fileSystem
 
 		domingo = {
 			id: -1, name: "Domingo", ai: -1, bot: true, level: 150, skin: 1, hat: null,
@@ -496,7 +501,7 @@
 				const ai = this.leekAis[leek.id]
 				if (!ai) { continue }
 				templates.push({
-					id: 0, base: false,
+					id: 0, base: false, default: false,
 					name: "Solo " + leek.name, category: "solo", map: null, type: 0,
 					team1: [{id: leek.id, ai}], team2: [{id: -1, ai: -2}], seed: 0
 				})
@@ -516,18 +521,18 @@
 			}
 			if (LeekWars.objectSize(store.state.farmer.leeks) > 1) {
 				templates.push({
-					id: 0, base: false, seed: 0,
+					id: 0, base: false, seed: 0, default: false,
 					name: "Éleveur", category: "farmer", map: null, team1, team2, type: 1
 				})
 			}
 			templates.push({
-				id: 0, base: false, seed: 0,
+				id: 0, base: false, seed: 0, default: false,
 				name: "Battle Royale", category: "br", map: null, team1, team2: [], type: 3
 			})
 			for (const c in this.compositionTemplates) {
 				const compo = this.compositionTemplates[c]
 				templates.push({
-					id: 0, base: false, seed: 0,
+					id: 0, base: false, seed: 0, default: false,
 					name: compo.name, category: "team", map: null, team1: compo.leeks, team2: generate_bots(compo.leeks.length), type: 2
 				})
 			}
@@ -615,10 +620,39 @@
 		mounted() {
 			this.initMap()
 		}
+
 		@Watch('value')
 		update() {
 			this.loadCompositions()
+			this.updateAI()
 		}
+
+		@Watch('currentAI')
+		updateAI() {
+			if (this.currentAI) {
+				let scenario = this.currentAI.scenario
+				if (!scenario) {
+					for (const entrypoint of this.currentAI.entrypoints) {
+						if (entrypoint in this.ais && this.ais[entrypoint].scenario) {
+							scenario = this.ais[entrypoint].scenario
+							break
+						}
+					}
+				}
+				if (scenario && scenario in this.scenarios) {
+					this.selectScenario(this.scenarios[scenario])
+				} else {
+					// Create a default scenario
+					this.scenarios[0] = {
+						id: 0, base: false, default: true,
+						name: this.$t('default') + " " + this.currentAI.name, category: "free", map: null, type: 0,
+						team1: [{id: LeekWars.first(store.state.farmer!.leeks)!.id, ai: this.currentAI.id}], team2: [{id: -1, ai: -2}], seed: 0
+					} as TestScenario
+					this.selectScenario(this.scenarios[0])
+				}
+			}
+		}
+
 		generateBots() {
 			for (const bot of this.bots) {
 				this.leeks.push(bot as any)
@@ -926,6 +960,7 @@
 			Vue.set(this.currentLeek, characteristic, value)
 			this.saveLeek()
 		}
+
 		deleteTestLeek(leek: Leek) {
 			LeekWars.post('test-leek/delete', {id: leek.id})
 			this.leeks.splice(this.leeks.findIndex(l => l.id === leek.id), 1)
@@ -938,14 +973,16 @@
 				this.selectLeek(this.leeks[0])
 			}
 		}
+
 		launchTest() {
 			if (!this.currentScenario) { return }
-			LeekWars.post('ai/test-scenario', {scenario_id: this.currentScenario.id}).then(data => {
+			LeekWars.post('ai/test-scenario', { scenario_id: this.currentScenario.id, ai_id: this.currentAI.id }).then(data => {
 				localStorage.setItem('editor/last-scenario', this.currentScenario!.id)
 				this.$router.push('/fight/' + data.fight)
 			})
 			.error(error => LeekWars.toast(this.$t('error_' + error.error, error.params)))
 		}
+
 		onAIDeleted(id: number) {
 			for (const s in this.scenarios) {
 				for (const leek of this.scenarios[s].team1) {
@@ -956,6 +993,7 @@
 				}
 			}
 		}
+
 		changeType() {
 			if (!this.currentScenario) { return }
 			if (this.currentScenario.type === FightType.FREE || this.currentScenario.type === FightType.SOLO || this.currentScenario.type === FightType.FARMER || this.currentScenario.type === FightType.TEAM) {
@@ -990,7 +1028,7 @@
 			return 6
 		}
 		loadCompositions() {
-			if (this.compositionTemplates.length) { return }
+			if (Object.values(this.compositionTemplates).length) { return }
 			LeekWars.get('team-composition/get-farmer-compositions').then(compositions => {
 				this.compositionTemplates = compositions
 				for (const c in compositions) {
@@ -1087,7 +1125,7 @@
 		vertical-align: top;
 	}
 	.lateral-column {
-		width: 180px;
+		width: 200px;
 		margin-right: 15px;
 		background: #333;
 		color: #bbb;

@@ -82,7 +82,9 @@ export default class ItemPreview extends Vue {
 </script>
 
 <style lang="scss" scoped>
-
+.item-preview {
+	background: #f2f2f2;
+}
 .get-all {
 	font-size: 15px;
 	font-weight: 500;
