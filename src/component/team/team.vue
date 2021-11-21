@@ -613,7 +613,6 @@
 					LeekWars.setActions([
 						{icon: 'mdi-chat-outline', click: () => this.$router.push('/forum/category-' + team.forum)}
 					])
-					store.commit('new-conversation', { id: team.chat, farmers: [], read: true, type: ChatType.TEAM })
 				}
 				this.$root.$emit('loaded')
 			})

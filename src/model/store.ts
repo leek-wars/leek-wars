@@ -111,8 +111,13 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 		},
 
 		"wsconnected"(state: LeekWarsState) {
+			// console.log("store wsconnected")
 			state.wsconnected = true
 			state.wsdisconnected = false
+
+			for (const chat of Object.values(state.chat)) {
+				store.commit('load-chat', chat)
+			}
 			vueMain.$emit('wsconnected')
 		},
 
@@ -124,7 +129,33 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			state.wsdisconnected = true
 		},
 
+		'register-chat'(state: LeekWarsState, id: number) {
+			// console.log("register-chat", id)
+			LeekWars.socket.enableChannel(id)
+			if (!(id in state.chat)) {
+				const teamChat = state.farmer && state.farmer.team ? state.farmer.team.chat : null
+				const type = id === 1 || id === 2 ? ChatType.GLOBAL : (id === teamChat ? ChatType.TEAM : ChatType.PM)
+				Vue.set(state.chat, id, new Chat(id, type))
+				store.commit('load-chat', state.chat[id])
+			}
+		},
+
+		'load-chat'(state: LeekWarsState, chat: Chat) {
+			// console.log("load chat", chat, chat.id)
+			LeekWars.get('message/get-messages/' + chat.id + '/' + 50 + '/' + 1).then(data => {
+				store.commit('clear-chat', chat.id)
+				for (const message of data.messages) {
+					store.commit('chat-receive', { chat: chat.id, message, new: false })
+				}
+				for (const farmer of data.farmers) {
+					store.commit('add-conversation-participant', {id: chat.id, farmer})
+				}
+				chat.loaded = true
+			})
+		},
+
 		'clear-chat'(state: LeekWarsState, chatID: number) {
+			// console.log("clear chat", chatID)
 			const chat = state.chat[chatID]
 			if (chat) {
 				Vue.delete(state.chat, chatID)
@@ -133,6 +164,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 		},
 
 		'chat-receive-pack'(state: LeekWarsState, pack: any) {
+			// console.log("chat-receive-pack", pack)
 			if (!pack.length) { return }
 			const channel = pack[0][0]
 			if (!state.chat[channel]) {
@@ -153,10 +185,11 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 		'chat-receive'(state: LeekWarsState, data: {chat: number, message: ChatMessage, new: boolean }) {
 
 			// console.log("chat-receive message", data.chat, data.message)
+
 			const chatID = data.chat
 			const message = data.message
 			const newChat = !state.chat[chatID]
-			const type = chatID === 1 || chatID === 2 ? ChatType.GLOBAL : (state.farmer!.team && chatID === state.farmer!.team.chat ? ChatType.TEAM : ChatType.PM)
+			const type = chatID === 1 || chatID === 2 ? ChatType.GLOBAL : (state.farmer && state.farmer!.team && chatID === state.farmer!.team.chat ? ChatType.TEAM : ChatType.PM)
 
 			// Update or create chat
 			if (!state.chat[chatID]) {
@@ -697,6 +730,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 		},
 
 		'invalidate-chats'(state: LeekWarsState) {
+			// console.log("invalidate chats")
 			for (const chat of Object.values(state.chat)) {
 				chat.loaded = false
 			}
