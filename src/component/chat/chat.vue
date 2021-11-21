@@ -45,7 +45,7 @@
 		unread: boolean = false
 
 		get loading() {
-			return !!this.id && !store.state.chat[this.id]
+			return !!this.id && (!store.state.chat[this.id] || !store.state.chat[this.id].loaded)
 		}
 		get chat() {
 			return this.id ? store.state.chat[this.id] : null
