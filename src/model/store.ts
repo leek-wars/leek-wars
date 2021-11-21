@@ -132,11 +132,15 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 		'register-chat'(state: LeekWarsState, id: number) {
 			// console.log("register-chat", id)
 			LeekWars.socket.enableChannel(id)
-			if (!(id in state.chat)) {
+			let chat = state.chat[id]
+			if (!chat) {
 				const teamChat = state.farmer && state.farmer.team ? state.farmer.team.chat : null
 				const type = id === 1 || id === 2 ? ChatType.GLOBAL : (id === teamChat ? ChatType.TEAM : ChatType.PM)
-				Vue.set(state.chat, id, new Chat(id, type))
-				store.commit('load-chat', state.chat[id])
+				chat = new Chat(id, type)
+				Vue.set(state.chat, id, chat)
+			}
+			if (!chat.loaded) {
+				store.commit('load-chat', chat)
 			}
 		},
 
@@ -150,7 +154,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 				for (const farmer of data.farmers) {
 					store.commit('add-conversation-participant', {id: chat.id, farmer})
 				}
-				chat.loaded = true
+				state.chat[chat.id].loaded = true
 			})
 		},
 

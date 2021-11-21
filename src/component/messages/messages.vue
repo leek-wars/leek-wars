@@ -47,7 +47,6 @@
 
 <script lang="ts">
 	import { Chat, ChatType } from '@/model/chat'
-	import { Conversation } from '@/model/conversation'
 	import { LeekWars } from '@/model/leekwars'
 	import { SocketMessage } from '@/model/socket'
 	import { store } from '@/model/store'
