@@ -42,6 +42,10 @@
 </script>
 
 <style lang="scss" scoped>
+	.summon {
+		background: #f2f2f2;
+		display: block;
+	}
 	.characteristics {
 		display: flex;
 		align-items: center;
@@ -52,7 +56,7 @@
 		padding: 2px 0;
 	}
 	.summon h4 {
-		margin: 8px;
+		padding: 8px;
 		text-align: left;
 		font-size: 15px;
 	}
