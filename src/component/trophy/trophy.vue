@@ -49,8 +49,8 @@
 						</div>
 					</div>
 					<div v-if="trophy.unlocked" class="rarity">Débloqué le {{ trophy.date | datetime }}</div>
-					<router-link v-if="trophy.fight" class="rarity" :to="'/fight/' + trophy.fight">Voir le combat</router-link>
 					<div v-else class="rarity">Pas encore débloqué</div>
+					<router-link v-if="trophy.fight" class="rarity" :to="'/fight/' + trophy.fight">Voir le combat</router-link>
 				</div>
 				<div>
 					<h4><v-icon>mdi-chart-line</v-icon> Statistiques</h4>
