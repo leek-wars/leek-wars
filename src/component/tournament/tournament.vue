@@ -308,6 +308,7 @@ Max power: {{ tournament.max_power | number }}
 	}
 	.tooltip {
 		transform: translate(-50%, 0px);
+		z-index: 1;
 	}
 	.tournament.zoomed {
 		overflow-x: auto;
