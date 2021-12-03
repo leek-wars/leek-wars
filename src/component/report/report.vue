@@ -89,16 +89,13 @@
 								{{ $t('refight') }}
 							</v-btn>
 						</span>
-						<span v-else-if="fight.context == FightContext.TOURNAMENT && fight.type != FightType.BATTLE_ROYALE">
+						<span v-else-if="fight.context == FightContext.TOURNAMENT && fight.type !== FightType.BATTLE_ROYALE">
 							<router-link :to="'/tournament/' + fight.tournament">
 								<v-btn>
 									<v-icon>mdi-trophy</v-icon>
 									{{ $t('back_to_tournament') }}
 								</v-btn>
 							</router-link>
-						</span>
-						<span v-else-if="fight.type == FightType.BATTLE_ROYALE">
-
 						</span>
 						<span v-else-if="fight.context == FightContext.CHALLENGE">
 							<router-link v-if="myFight" :to="'/garden/challenge/' + ['leek', 'farmer'][fight.type] + '/' + enemy">
@@ -112,6 +109,7 @@
 								</v-btn>
 							</router-link>
 						</span>
+						<span v-else> </span>
 					</span>
 				</center>
 
