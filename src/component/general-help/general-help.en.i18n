@@ -99,7 +99,7 @@
 	"teams": "Teams",
 	"teams_1": "You may consider joining a team. A team is made of several farmers and allows you to perform team fights.",
 	"Joining": "a team is easy: display the team page and click on the \"join the team\" button displayed in the upper right. You may join a team that way only if this team has not forbidden open applications.",
-	"teams_2": "In a team, leeks may be assigned to different compositions. Each composition is made of minimum 2 leeks and 6 leeks maximum.(Minimum <br>4</br> leeks for tournament registration.) A team is limited to 40 farmers maximum.",
+	"teams_2": "In a team, leeks may be assigned to different compositions. Each composition is made of minimum 2 leeks and 6 leeks maximum (minimum <b>4</b> leeks for tournament registration). A team is limited to 40 farmers maximum.",
 	"teams_3": "Captains",
 	"teams_4": "A team has the ability to promote some of its farmers to the rank of Captain. Captains are allowed to manage compositions (create a composition, add a leek, remove a leek, delete a composition).",
 	"On": "the team page, you can see a little white star displayed in front of every Captain's name. The star is black for the team Creator.",
