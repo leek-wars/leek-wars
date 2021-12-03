@@ -98,6 +98,7 @@
 	"report": "Fight report",
 	"reset": "Reset",
 	"reusable": "Reusable",
+	"resources": "Resources",
 	"roadmap": "Roadmap",
 	"seed": "Seed",
 	"seed_desc": "Number initializing the random number generator used throughout the fight",
