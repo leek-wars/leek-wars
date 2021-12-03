@@ -41,7 +41,7 @@
 							<div v-if="currentAI" class="menu-title">
 								<v-icon>mdi-file-outline</v-icon> {{ currentAI.name }}
 							</div>
-							<v-list-item v-if="currentAI" v-ripple @click="save(currentEditor)">
+							<v-list-item v-if="currentAI" v-ripple @click="save()">
 								<v-icon class="list-icon">mdi-content-save</v-icon>
 								<v-list-item-content>
 									<v-list-item-title>{{ $t('save') }}</v-list-item-title>
@@ -58,7 +58,7 @@
 					<div ref="settingsButton" class="tab action" icon="settings" @click="settingsDialog = true">
 						<v-icon>mdi-cogs</v-icon>
 					</div>
-					<div :title="$t('test_desc')" class="action content tab" icon="play_arrow" @click="test(currentEditor)">
+					<div :title="$t('test_desc')" class="action content tab" icon="play_arrow" @click="startTest()">
 						<v-icon class="list-icon">mdi-play</v-icon><span>{{ $t('test') }}</span>
 					</div>
 				</div>
@@ -73,7 +73,7 @@
 				<panel class="editor-left first">
 					<div slot="content" class="full">
 						<div v-if="fileSystem.rootFolder" v-autostopscroll class="ai-list">
-							<explorer ref="explorer" :current-ai="currentAI" :selected-folder="currentFolder" @test="test" @delete-ai="deleteAI" />
+							<explorer ref="explorer" :current-ai="currentAI" :selected-folder="currentFolder" @test="startTest" @delete-ai="deleteAI" />
 						</div>
 
 						<div v-if="currentEditor && currentEditor.loaded && panelWidth" class="ai-stats">
@@ -192,9 +192,9 @@
 					<v-checkbox v-model="hideHeader" :label="$t('hide_header')" hide-details />
 					<br>
 				</template>
-				{{ $t('font_size') }} : <input v-model="fontSize" type="number" min="6" max="30">
+				{{ $t('font_size') }} : <input v-model="fontSize" type="number" min="6" max="30" @keyup.stop>
 				<br>
-				{{ $t('line_height') }} : <input v-model="lineHeight" type="number" min="10" max="50">
+				{{ $t('line_height') }} : <input v-model="lineHeight" type="number" min="10" max="50" @keyup.stop>
 
 				<div class="title">Thème</div>
 
@@ -300,7 +300,7 @@
 		theme: string = DEFAULT_THEME
 		autoClosing: boolean = false
 		autocomplete: boolean = false
-		enableAnalyzer: boolean = true
+		enableAnalyzer: boolean = false
 		popups: boolean = false
 		hideHeader: boolean = false
 		fontSize: number = DEFAULT_FONT_SIZE
@@ -320,9 +320,9 @@
 			{icon: 'mdi-cogs', click: () => this.settings() }
 		]
 		actions_content = [
-			{icon: 'mdi-content-save', click: () => this.save(this.currentEditor)},
+			{icon: 'mdi-content-save', click: () => this.save()},
 			{icon: 'mdi-delete', click: () => this.startDelete()},
-			{icon: 'mdi-play', click: () => this.test(this.currentEditor)},
+			{icon: 'mdi-play', click: () => this.startTest()},
 		]
 		get currentID() {
 			if (this.currentType === 'ai' && this.currentAI) { return this.currentAI.id }
@@ -337,14 +337,14 @@
 			if (localStorage.getItem('editor/autocomplete') === null) { localStorage.setItem('editor/autocomplete', 'true') }
 			if (localStorage.getItem('editor/auto_closing') === null) { localStorage.setItem('editor/auto_closing', 'true') }
 			if (localStorage.getItem('editor/popups') === null) { localStorage.setItem('editor/popups', 'true') }
-			if (localStorage.getItem('editor/analyzer') === null) { localStorage.setItem('editor/analyzer', 'true') }
+			if (localStorage.getItem('editor/analyzer') === null) { localStorage.setItem('editor/analyzer', 'false') }
 			this.enlargeWindow = localStorage.getItem('editor/large') === 'true'
 			this.theme = localStorage.getItem('editor/theme') || DEFAULT_THEME
 			this.autoClosing = localStorage.getItem('editor/auto_closing') === 'true'
 			this.autocomplete = localStorage.getItem('editor/autocomplete') === 'true'
 			this.popups = localStorage.getItem('editor/popups') === 'true'
 			this.hideHeader = localStorage.getItem('editor/hideHeader') === 'true'
-			this.enableAnalyzer = localStorage.getItem('editor/analyzer') === 'true'
+			this.enableAnalyzer = false // localStorage.getItem('editor/analyzer') === 'true'
 			this.fontSize = parseInt(localStorage.getItem('editor/font_size') || '', 10) || DEFAULT_FONT_SIZE
 			this.lineHeight = parseInt(localStorage.getItem('editor/line_height') || '', 10) || DEFAULT_LINE_HEIGHT
 			this.problemsHeight = parseInt(localStorage.getItem('editor/problems-height') || '', 10) || 200
@@ -373,7 +373,7 @@
 			LeekWars.footer = false
 			LeekWars.box = true
 			this.$root.$on('ctrlS', () => {
-				this.save(this.currentEditor)
+				this.save()
 			})
 			this.$root.$on('ctrlShiftS', () => {
 				// TODO save all but analyze only entrypoints
@@ -559,7 +559,7 @@
 			}
 		}
 
-		save(aiEditor: AIView | null) {
+		save(aiEditor: AIView | null = this.currentEditor) {
 			if (!aiEditor) { return }
 			if (aiEditor.saving || !aiEditor.loaded) { return }
 			aiEditor.saving = true
@@ -589,15 +589,18 @@
 					const entrypoint_id = parseInt(entrypoint, 10)
 					const ai = fileSystem.ais[entrypoint_id]
 					const editor = this.getAiView(ai)
-					const problems = []
-					// Good
-					if (!data.result[entrypoint].length) {
-						this.goods.push({ai})
-						ai.valid = true
-						if (editor) { editor.removeErrors(entrypoint_id) }
-						LeekWars.analyzer.setAIProblems(entrypoint_id, ai.path, [])
-						continue
+
+					// Valid?
+					let valid = true
+					for (const problem of data.result[entrypoint]) {
+						if (problem[0] === 0) { valid = false; break }
 					}
+					if (valid) {
+						this.goods.push({ai})
+					}
+					ai.valid = valid
+					if (editor) { editor.removeErrors(entrypoint_id) }
+					LeekWars.analyzer.setAIProblems(entrypoint_id, ai.path, [])
 					this.handleProblems(ai, data.result[entrypoint])
 				}
 				LeekWars.analyzer.updateCount()
@@ -606,7 +609,7 @@
 				if (aiEditor.needTest) {
 					aiEditor.needTest = false
 					if (aiEditor.ai.valid) {
-						this.test(aiEditor)
+						this.startTest()
 					}
 				}
 			}).error(() => {
@@ -642,7 +645,6 @@
 					info = this.$t('leekscript.error_' + problem[5])
 				}
 				info = '(' + problem[4] + ') ' + info
-				ai.valid = false
 				let new_problem = null
 				if (editor) {
 					const token = editor.editor.getTokenAt({line: line - 1, ch: problem[3] - 1})
@@ -664,11 +666,11 @@
 		startDelete() {
 			(this.$refs.explorer as any).deleteDialog = true
 		}
-		test(aiEditor: AIView | null) {
-			if (!aiEditor || !aiEditor.ai) { return }
-			if (aiEditor.ai.modified) {
-				aiEditor.needTest = true
-				this.save(aiEditor)
+		startTest(editor = this.currentEditor) {
+			if (!editor || !editor.ai) { return }
+			if (editor.ai.modified) {
+				editor.needTest = true
+				this.save(editor)
 				return
 			}
 			this.testDialog = true

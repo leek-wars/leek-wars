@@ -110,18 +110,18 @@
 								</router-link>
 							</th>
 							<th>
+								<router-link :to="'/ranking/farmer/trophies' + (active ? '/active' : '') + '/page-' + page">
+									<span>{{ $t('trophies') }}</span>
+									<v-icon v-if="order === 'trophies'">mdi-chevron-up</v-icon>
+								</router-link>
+							</th>
+							<th>
 								<router-link :to="'/ranking/farmer/total-level' + (active ? '/active' : '') + '/page-' + page">
 									<span>{{ $t('total_level') }}</span>
 									<v-icon v-if="order === 'total-level'">mdi-chevron-up</v-icon>
 								</router-link>
 							</th>
 							<th>{{ $t('leeks') }}</th>
-							<th>
-								<router-link :to="'/ranking/farmer/trophies' + (active ? '/active' : '') + '/page-' + page">
-									<span>{{ $t('trophies') }}</span>
-									<v-icon v-if="order === 'trophies'">mdi-chevron-up</v-icon>
-								</router-link>
-							</th>
 							<th>{{ $t('country') }}</th>
 							<th>{{ $t('main.team') }}</th>
 						</tr>
@@ -212,7 +212,7 @@
 	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 
 	@Component({
-		name: 'ranking', i18n: {}, mixins,
+		name: 'ranking', i18n: {}, mixins: [...mixins],
 		components: { 'ranking-leek-row': RankingLeekRowElement, 'ranking-farmer-row': RankingFarmerRowElement, 'ranking-team-row': RankingTeamRowElement, 'ranking-search-result': RankingSearchResult }
 	})
 	export default class RankingPage extends Vue {

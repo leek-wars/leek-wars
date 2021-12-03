@@ -13,7 +13,7 @@
 							<div class="tab green">{{ $t('see_tournament') }}</div>
 						</router-link>
 					</template>
-					<tooltip v-if="leek.tournament">
+					<tooltip v-if="leek.tournament" content-class="fluid" @input="loadTournamentRange">
 						<template v-slot:activator="{ on }">
 							<div class="tab" @click="registerTournament" v-on="on">
 								<v-icon>mdi-trophy</v-icon>
@@ -22,6 +22,10 @@
 							</div>
 						</template>
 						{{ $t('tournament_time') }}
+						<i18n v-if="tournamentRange" tag="div" path="main.level_x_to_y">
+							<b slot="min">{{ tournamentRange.min }}</b>
+							<b slot="max">{{ tournamentRange.max }}</b>
+						</i18n>
 					</tooltip>
 					<tooltip>
 						<template v-slot:activator="{ on }">
@@ -259,7 +263,7 @@
 						{{ $t('rename_leek') }}
 					</div>
 				</template>
-				<tooltip v-if="leek && my_leek && leek.level >= 50">
+				<tooltip v-if="leek && my_leek && leek.level >= 50" @input="loadBRRange">
 					<template v-slot:activator="{ on }">
 						<div class="tab" @click="registerAutoBr" v-on="on">
 							<v-icon>mdi-trophy</v-icon>
@@ -268,6 +272,10 @@
 						</div>
 					</template>
 					{{ $t('br_time') }}
+					<i18n v-if="brRange" tag="div" path="main.level_x_to_y">
+						<b slot="min">{{ brRange.min }}</b>
+						<b slot="max">{{ brRange.max }}</b>
+					</i18n>
 				</tooltip>
 			</div>
 		</div>
@@ -508,7 +516,7 @@
 			</div>
 		</popup>
 
-		<level-dialog v-if="leek && levelPopupData" v-model="levelPopup" :leek="leek" :data="levelPopupData" />
+		<level-dialog v-if="leek" v-model="levelPopup" :leek="leek" :level-data="levelPopupData" />
 
 		<popup v-if="leek && my_leek" v-model="aiDialog" :width="870">
 			<v-icon slot="icon">mdi-code-braces</v-icon>
@@ -549,6 +557,7 @@
 				</i18n>
 			</div>
 		</popup>
+
 		<capital-dialog v-if="leek && my_leek" v-model="capitalDialog" :leek="leek" :total-capital="leek.capital" />
 	</div>
 </template>
@@ -574,7 +583,7 @@
 	const Explorer = () => import(/* webpackChunkName: "[request]" */ `@/component/explorer/explorer.${locale}.i18n`)
 	import { fileSystem } from '@/model/filesystem'
 
-	@Component({ name: "leek", i18n: {}, mixins, components: { CapitalDialog, LevelDialog, CharacteristicTooltip, Explorer } })
+	@Component({ name: "leek", i18n: {}, mixins: [...mixins], components: { CapitalDialog, LevelDialog, CharacteristicTooltip, Explorer } })
 	export default class LeekPage extends Vue {
 		leek: Leek | null = null
 		error: boolean = false
@@ -611,6 +620,10 @@
 		skinWeaponDialog: boolean = false
 		titleDialog: boolean = false
 		skinPotionDialog: boolean = false
+		tournamentRangeLoading: boolean = false
+		tournamentRange: any = null
+		brRangeLoading: boolean = false
+		brRange: any = null
 
 		get id(): number {
 			return parseInt(this.$route.params.id, 10) || (this.$store.state.farmer && LeekWars.first(this.$store.state.farmer.leeks).id)
@@ -628,7 +641,7 @@
 			if (!this.leek) {
 				return this.xp_bar
 			}
-			return this.xp_bar = this.leek.level === 301 ? 100 : Math.floor(100 * (this.leek.xp - this.leek.down_xp) / (this.leek.up_xp - this.leek.down_xp))
+			return this.xp_bar = this.leek.level === 301 ? 100 : Math.min(100, Math.floor(100 * (this.leek.xp - this.leek.down_xp) / (this.leek.up_xp - this.leek.down_xp)))
 		}
 		get blue_xp_bar() {
 			if (!this.leek) {
@@ -672,10 +685,26 @@
 		created() {
 			fileSystem.init()
 		}
+		mounted() {
+			this.$root.$on('update-leek-talent', (message: any) => {
+				if (this.leek && message.leek === this.leek.id) {
+					this.leek.talent += message.talent
+				}
+			})
+			this.$root.$on('update-leek-xp', (message: any) => {
+				if (this.leek && message.leek === this.leek.id) {
+					this.leek.xp += message.xp
+				}
+			})
+		}
 
 		@Watch('id', {immediate: true})
 		update() {
 			this.leek = null
+			this.tournamentRange = null
+			this.tournamentRangeLoading = false
+			this.brRange = null
+			this.brRangeLoading = false
 			this.error = false
 			if (!this.id) { return }
 			const method = this.my_leek ? 'leek/get-private/' + this.id : 'leek/get/' + this.id
@@ -712,6 +741,12 @@
 				this.error = true
 			})
 		}
+
+		beforeDestroy() {
+			this.$root.$off('update-leek-talent')
+			this.$root.$off('update-leek-xp')
+		}
+
 		rename(currency: string) {
 			if (!this.leek) { return }
 			const method = currency === 'habs' ? 'leek/rename-habs' : 'leek/rename-crystals'
@@ -744,8 +779,8 @@
 						this.leek.skin = skin
 						store.commit('change-skin', {leek: this.leek.id, skin})
 					} else if (effect.type === 3) {
-						this.leek.fish = !this.leek.fish
-						store.commit('change-fish', {leek: this.leek.id, fish: this.leek.fish})
+						// this.leek.fish = !this.leek.fish
+						// store.commit('change-fish', {leek: this.leek.id, fish: this.leek.fish})
 					}
 				}
 				this.potionDialog = false
@@ -858,8 +893,8 @@
 		showLevelPopup() {
 			if (!this.leek) { return }
 			LeekWars.get('leek/get-level-popup/' + this.leek.id).then(data => {
-				this.levelPopup = true
 				this.levelPopupData = data.popup
+				Vue.nextTick(() => this.levelPopup = true)
 			})
 		}
 
@@ -1036,6 +1071,17 @@
 		changeShowAiLines() {
 			store.commit('toggle-show-ai-lines')
 			LeekWars.put('farmer/set-show-ai-lines', {show_ai_lines: store.state.farmer!.show_ai_lines})
+		}
+
+		loadTournamentRange() {
+			if (!this.leek || this.tournamentRange || this.tournamentRangeLoading) { return }
+			this.tournamentRangeLoading = true
+			LeekWars.post('tournament/range-leek', {level: this.leek.level}).then(d => this.tournamentRange = d)
+		}
+		loadBRRange() {
+			if (!this.leek || this.brRange || this.brRangeLoading) { return }
+			this.brRangeLoading = true
+			LeekWars.post('tournament/range-br', {level: this.leek.level}).then(d => this.brRange = d)
 		}
 	}
 </script>
@@ -1368,6 +1414,9 @@
 		justify-content: center;
 		display: flex;
 		flex-direction: column;
+		.weapon img {
+			vertical-align: bottom;
+		}
 	}
 	.farmer-weapons .weapon, .farmer-chips .chip, .hat-dialog .hat {
 		position: relative;

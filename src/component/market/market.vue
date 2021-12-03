@@ -92,12 +92,12 @@
 						<hat-preview v-else-if="selectedItem.type === ItemType.HAT && LeekWars.hats[selectedItem.id]" :hat="LeekWars.hats[selectedItem.id]" />
 						<pomp-preview v-else-if="selectedItem.type == ItemType.POMP" :pomp="LeekWars.pomps[selectedItem.id]" />
 
-						<div v-if="selectedItem.trophy" class="trophy">
-							<img :src="'/image/trophy/' + selectedItem.trophy.name + '.png'">
+						<router-link v-if="selectedItem.trophy" :to="'/trophy/' + selectedItem.trophy.name" class="trophy">
+							<img :src="'/image/trophy/' + selectedItem.trophy.name + '.svg'">
 							<i18n path="unlocked_with">
 								<b slot="trophy">{{ $t('trophy.' + selectedItem.trophy.name) }}</b>
 							</i18n>
-						</div>
+						</router-link>
 
 						<div class="buy-buttons">
 							<div v-if="!selectedItem.buyable && !selectedItem.buyable_crystals" class="already-have">
@@ -238,7 +238,7 @@
 				<pomp-preview v-else-if="unseenItem.type == ItemType.POMP" :hat="LeekWars.pomps[unseenItem.id]" />
 
 				<div v-if="unseenItem.trophy" class="card trophy">
-					<img :src="'/image/trophy/' + unseenItem.trophy.name + '.png'">
+					<img :src="'/image/trophy/' + unseenItem.trophy.name + '.svg'">
 					<i18n path="unlocked_with">
 						<b slot="trophy">{{ $t('trophy.' + unseenItem.trophy.name) }}</b>
 					</i18n>
@@ -269,7 +269,7 @@
 	import WeaponPreview from './weapon-preview.vue'
 
 	@Component({
-		name: 'market', i18n: {}, mixins,
+		name: 'market', i18n: {}, mixins: [...mixins],
 		components: {
 			'weapon-preview': WeaponPreview,
 			'chip-preview': ChipPreview,
@@ -665,9 +665,9 @@
 	}
 	.weapons .weapon {
 		padding: 10px;
-		height: 70px;
+		height: 66px;
 		img {
-			max-height: 60px;
+			max-height: 54px;
 			max-width: 150px;
 			position: absolute;
 			top: 0;

@@ -3,43 +3,44 @@
 		<div class="page-header page-bar">
 			<h1><router-link to="/admin">Administration</router-link> > Serveurs</h1>
 		</div>
-		<panel class="first servers">
-			<loader v-if="LeekWars.objectSize(servers) == 0" />
+		<panel class="first last">
+			<loader v-if="loading" />
 			<div v-else>
-				<div v-for="(server, s) in servers" :key="s" class="server card">
-					<div class="load">
-						<div :style="{'margin-top': (server.load * 136) + 'px'}"></div>
-					</div>
-					<img src="/image/admin/server.png">
-					<br>
-					<div class="name">
-						{{ server.name }}<img src="/image/connected.png">
-					</div>
-					<div class="total-wrapper">Total : {{ server.generated | number }}</div>
-					<div class="threads">
-						<div v-for="(thread, t) in server.threads" :key="t" class="thread">
-							<div class="th-name">
-								<img v-if="thread.connected" src="/image/connected.png">
-								<img v-else src="/image/disconnected.png">
-								&nbsp;&nbsp;
-								<b>{{ thread.name }}</b>
+				<div v-if="LeekWars.objectSize(nodes) === 0" class="empty">Aucun serveur</div>
+				<div class="servers">
+					<div v-for="(node, n) in nodes" :key="n" class="server card">
+						<div class="load">
+							<div :style="{'margin-top': ((1 - node.load) * 136) + 'px'}"></div>
+						</div>
+						<img src="/image/admin/server.png">
+						<br>
+						<div class="name">
+							{{ node.name }}<img src="/image/connected.png">
+						</div>
+						<div class="total-wrapper">Total : {{ node.generated | number }}</div>
+						<div class="threads">
+							<div v-for="(runner, r) in node.runners" :key="r" class="thread">
+								<div class="th-name">
+									<img src="/image/connected.png">&nbsp;<b>{{ runners[runner.id].name }}</b>
+								</div>
+								<span class="green">✔ <span class="generated">{{ runners[runner.id].generated | number }}</span></span>&nbsp;&nbsp;
+								<span class="red">✘ <span class="error">{{ runners[runner.id].errors | number }}</span></span>
+								<br>
+								► <span class="task">{{ runners[runner.id].task }}</span>
 							</div>
-							<span class="green">✔ <span class="generated">{{ thread.generated | number }}</span></span>&nbsp;&nbsp;
-							<span class="red">✘ <span class="error">{{ thread.errors | number }}</span></span>
-							<br>
-							► <span class="task">{{ thread.task }}</span>
 						</div>
 					</div>
 				</div>
 				<div class="queue">
 					<h4>➤ Queue ({{ queue.length }})</h4>
 					<div class="farmers">
-						<div v-for="(fight, f) in queue" :key="f" class="card farmer">
-							<router-link :to="'/farmer/' + fight[0]">
-								<avatar :farmer="{id: fight[0], avatar_changed: 1}" /> {{ fight[0] }}
+						<div v-for="(task, t) in queue" :key="t" class="card farmer">
+							<router-link :to="'/farmer/' + task[1]">
+								<avatar :farmer="{id: task[1], avatar_changed: 1}" /> {{ task[1] }}
 							</router-link>
 							<div class="fight">
-								<router-link :to="'/fight/' + fight[1]">{{ fight[1] }}</router-link>
+								<router-link v-if="task[0] === 1" :to="'/fight/' + task[2]">{{ task[2] }}</router-link>
+								<router-link v-else-if="task[0] === 2" :to="'/tournament/' + task[2]">{{ task[2] }}</router-link>
 							</div>
 						</div>
 					</div>
@@ -53,96 +54,122 @@
 	import { LeekWars } from '@/model/leekwars'
 	import { Component, Vue } from 'vue-property-decorator'
 
+	const REMOVE_RUNNER = 14
 	const LISTEN_DATA = 15
-	const STATS_NEW_THREAD = 16
-	const STAT_UPDATE_THREAD = 17
-	const STAT_UPDATE_TASK = 18
+	const UPDATE_RUNNER = 16
 	const ADMIN_QUEUE = 36
+
+	class Node {
+		public name!: string
+		public generated!: number
+		public runners!: Runner[]
+		public load!: number
+	}
+
+	class Runner {
+		public id!: number
+		public node!: string
+		public generated!: number
+		public errors!: number
+		public name!: string
+		public task!: string
+	}
 
 	@Component({})
 	export default class AdminServers extends Vue {
-		servers: {[key: string]: any} = {}
-		threads: {[key: string]: any} = {}
+
+		runners: {[key: number]: Runner} = {}
 		queue: any = []
+		loading: boolean = true
+
+		get nodes() {
+			const nodes: {[key: string]: Node} = {}
+			for (const runner of Object.values(this.runners)) {
+				if (!(runner.node in nodes)) {
+					Vue.set(nodes, runner.node, { name: runner.node, generated: 0, runners: [], load: 0 } as Node)
+				}
+				const node = nodes[runner.node]
+				node.generated += runner.generated
+				node.runners.push(runner)
+				node.load = (node.load + (runner.task ? 1 : 0)) / node.runners.length
+			}
+			return Object.values(nodes).sort((a, b) => a.name.localeCompare(b.name))
+		}
 
 		created() {
 			LeekWars.socket.send([LISTEN_DATA])
 			LeekWars.setTitle("Admin serveurs")
 			this.$root.$on('wsmessage', this.update)
 		}
+
 		update(message: any) {
 			const type = message.type
 			const data = message.data
-			if (type === STATS_NEW_THREAD || type === STAT_UPDATE_THREAD) {
+			if (type === UPDATE_RUNNER) {
+				this.loading = false
 				for (const th of data) {
-					this.updateThread(th.server, th.name, th.connected, th.task, th.task_start, th.generated, th.errors)
+					this.updateRunner(th.node, th.id, th.name, th.connected, th.task, th.task_start, th.generated, th.errors)
 				}
 			}
-			if (type === STAT_UPDATE_TASK) {
-				const t = data[0]
-				this.updateThreadTask(t.name, t.task, t.task_start, t.generated, t.errors)
+			if (type === REMOVE_RUNNER) {
+				for (const th of data) {
+					this.removeRunner(th.id)
+				}
 			}
 			if (type === ADMIN_QUEUE) {
 				this.queue = data
 			}
 		}
-		updateThread(serverName: any, threadName: any, connected: any, task: any, task_start: any, generated: number, errors: number) {
-			if (!(serverName in this.servers)) {
-				Vue.set(this.servers, serverName, {name: serverName, generated: 0, threads: {}})
-			}
-			const server = this.servers[serverName]
-			if (!(threadName in server.threads)) {
-				const thread = {name: threadName, connected, server, generated, errors, task}
-				Vue.set(server.threads, threadName, thread)
-				Vue.set(this.threads, threadName, thread)
-			}
-			this.updateServer(server)
-		}
-		updateThreadTask(threadName: string, task: string, task_start: any, generated: number, errors: number) {
-			if (threadName in this.threads) {
-				const thread = this.threads[threadName]
-				thread.task = task
-				thread.generated = generated
-				thread.errors = errors
-				this.updateServer(thread.server)
+
+		updateRunner(nodeName: string, runnerID: any, runnerName: string, connected: any, task: any, task_start: any, generated: number, errors: number) {
+			const runner = this.runners[runnerID]
+			if (!runner) {
+				const runner = { id: runnerID, name: runnerName, node: nodeName, generated, errors, task } as Runner
+				Vue.set(this.runners, runnerID, runner)
+			} else {
+				runner.name = runnerName
+				runner.node = nodeName
+				runner.generated = generated
+				runner.errors = errors
+				runner.task = task
 			}
 		}
-		updateServer(server: any) {
-			let total = 0
-			let load = 0
-			for (const t in server.threads) {
-				total += server.threads[t].generated
-				load += server.threads[t].task ? 1 : 0
+
+		removeRunner(id: number) {
+			if (id in this.runners) {
+				Vue.delete(this.runners, id)
 			}
-			server.generated = total
-			server.load = 1 - (load / LeekWars.objectSize(server.threads))
 		}
 	}
 </script>
 
 <style lang="scss" scoped>
+	.servers {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 15px;
+	}
 	.server {
 		position: relative;
 		background: white;
-		margin: 4px;
 		padding: 10px;
-		display: inline-block;
 		text-align: center;
 		vertical-align: top;
+		flex: 1;
 	}
 	.server .load {
 		position: absolute;
-		top: 5px;
-		left: 5px;
-		width: 11px;
-		height: 136px;
+		top: 10px;
+		left: 10px;
+		width: 15px;
+		height: 127px;
 		background: #eee;
 		overflow: hidden;
 		border: 2px solid #eee;
 	}
 	.server .load div {
 		height: 100%;
-		width: 11px;
+		width: 13px;
 		background: #5fad1b;
 		transition: margin-top 0.4s ease;
 	}
@@ -179,6 +206,9 @@
 		color: #666;
 		font-size: 14px;
 		margin-bottom: 4px;
+		text-overflow: ellipsis;
+		overflow: hidden;
+		white-space: nowrap;
 	}
 	.server .thread img {
 		width: 16px;
@@ -191,7 +221,7 @@
 		color: green;
 	}
 	h4 {
-		margin: 6px 0;
+		margin: 12px 0;
 	}
 	.queue .farmer {
 		display: inline-block;
@@ -212,5 +242,10 @@
 	}
 	.queue .farmers {
 		min-height: 60px;
+	}
+	.empty {
+		padding: 20px;
+		text-align: center;
+		color: #777;
 	}
 </style>

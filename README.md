@@ -1,6 +1,7 @@
 # Leek Wars
 
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/5e418e53905e486c95a57df49c047cee)](https://app.codacy.com/app/5pilow/leek-wars-client?utm_source=github.com&utm_medium=referral&utm_content=leek-wars/leek-wars-client&utm_campaign=Badge_Grade_Dashboard)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/46d001bcd2944ad5b6ba45d772e6099f)](https://www.codacy.com/gh/leek-wars/leek-wars/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=leek-wars/leek-wars&amp;utm_campaign=Badge_Grade)
+[![CI](https://github.com/leek-wars/leek-wars/actions/workflows/build.yml/badge.svg)](https://github.com/leek-wars/leek-wars/actions/workflows/build.yml)
 
 The Leek Wars website frontend, in Vue.js + TypeScript. This is the frontend repository, altough it also contains all the information about the whole Leek Wars projet.
 
@@ -44,7 +45,6 @@ I gladly accept pull requests to Leek Wars. Before starting work on a feature, s
 - Twitter : https://twitter.com/LeekWars
 - Facebook : https://www.facebook.com/LeekWars/
 - GitHub (this repo) : https://github.com/leek-wars/leek-wars
-- Wiki : http://leekwarswiki.net
 
 ## License
 

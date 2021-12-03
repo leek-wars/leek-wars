@@ -1,5 +1,5 @@
 <template>
-	<div :class="{subtitle: LeekWars.subtitle}" class="app-bar">
+	<div :class="{subtitle: LeekWars.subtitle, full: !LeekWars.lightBar || LeekWars.menuExpanded}" class="app-bar">
 		<div v-ripple :class="{back: LeekWars.splitBack}" class="menu-button" @click="mainButton">
 			<div>
 				<div class="bar"></div>
@@ -7,11 +7,11 @@
 				<div class="bar"></div>
 			</div>
 		</div>
-		<div class="title-wrapper" @click="LeekWars.toggleMenu">
+		<div v-if="!LeekWars.lightBar || LeekWars.menuExpanded" class="title-wrapper" @click="LeekWars.toggleMenu">
 			<div class="title">{{ LeekWars.title }}</div>
 			<div v-show="LeekWars.subtitle" class="subtitle">{{ LeekWars.subtitle }}</div>
 		</div>
-		<div class="actions-wrapper">
+		<div v-if="!LeekWars.lightBar || LeekWars.menuExpanded" class="actions-wrapper">
 			<div class="static-actions">
 				<div v-show="LeekWars.menuExpanded || $store.state.unreadMessages > 0" v-ripple class="action header-button mobile messages-button" @click="$router.push('/messages'); LeekWars.closeMenu()">
 					<v-icon>mdi-message-outline</v-icon>
@@ -79,7 +79,6 @@
 	.app-bar {
 		position: fixed;
 		top: 0;
-		right: 0;
 		left: 0;
 		height: 56px;
 		z-index: 6;
@@ -93,6 +92,9 @@
 		white-space: nowrap;
 		display: flex;
 		box-shadow: 0 2px 2px 0 rgba(0,0,0,.07);
+		&.full {
+			right: 0;
+		}
 	}
 	#app:not(.connected) .app-bar {
 		display: none;
@@ -101,7 +103,6 @@
 		width: 61px;
 		padding: 14px 20px;
 		padding-right: 14px;
-		margin-right: 4px;
 	}
 	.app-bar .menu-button .bar {
 		width: 20px;
@@ -133,6 +134,7 @@
 		flex: 1;
 		text-overflow: ellipsis;
 		overflow-x: hidden;
+		padding-left: 4px;
 	}
 	.app-bar .title {
 		text-overflow: ellipsis;

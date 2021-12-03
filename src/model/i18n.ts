@@ -72,6 +72,7 @@ function loadInstanceTranslations(newLocale: string, instance: any) {
 	if (name.indexOf("bank-") === 0) { name = "bank" }
 	if (name.indexOf("editor-") === 0) { folder = "editor" }
 	if (name.indexOf("signup-") === 0) { folder = "signup" }
+	if (name.indexOf("encyclopedia-") === 0) { folder = "encyclopedia" }
 
 	return import(/* webpackChunkName: "locale-[request]" */ `!json-loader!@/component/${folder}/${name}.${newLocale}.i18n`).then((module: any) => {
 		const instanceI18n = (instance as any)._i18n

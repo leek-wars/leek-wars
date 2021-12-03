@@ -1,3 +1,5 @@
+import { Farmer } from "./farmer"
+
 class ForumCategory {
 	public id!: number
 	public name!: string
@@ -19,13 +21,14 @@ class ForumTopic {
 class ForumMessage {
 	public id!: number
 	public message!: string
-	public html!: string
+	public html!: string | null
 	public votes_up!: number
 	public votes_down!: number
 	public my_vote!: number
 	public editing!: boolean
 	public height!: number
 	public edition_date!: number
+	public writer!: Farmer
 }
 
 export { ForumCategory, ForumTopic, ForumMessage }

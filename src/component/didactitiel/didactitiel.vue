@@ -126,7 +126,7 @@
 	import { LeekWars } from '@/model/leekwars'
 	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 
-	@Component({ name: 'didactitiel', i18n: {}, mixins })
+	@Component({ name: 'didactitiel', i18n: {}, mixins: [...mixins] })
 	export default class Didactitiel extends Vue {
 		@Prop() value!: boolean
 		page: number = 1

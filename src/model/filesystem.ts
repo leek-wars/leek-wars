@@ -31,7 +31,7 @@ class FileSystem {
 		]},
 	]
 
-	public init() {
+	public init(): Promise<void> {
 		if (this.initialized) { return Promise.resolve() }
 		if (this.promise) { return this.promise }
 
@@ -46,7 +46,7 @@ class FileSystem {
 					data.ais[id] = new AI(data.ais[id])
 				}
 				this.leekAIs = data.leek_ais
-				this.aiCount = LeekWars.objectSize(data.ais)
+				this.aiCount = data.ais.length
 				const buildFolder = (id: number, parent: number): Folder => {
 					const folder = new Folder(id, id in folders ? folders[id].name : '<root>', parent)
 					if (id === 0) {

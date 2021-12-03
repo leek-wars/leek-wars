@@ -1,12 +1,4 @@
 {
-	"category_bonus": "Bonus",
-	"category_code": "Code",
-	"category_fight": "Fight",
-	"category_fun": "Fun",
-	"category_general": "General",
-	"category_shopping": "Shopping",
-	"category_social": "Social",
-	"category_tournament": "Tournaments",
 	"hide_unlocked": "Hide unlocked",
 	"sort_by_rarity": "Sort by rarity",
 	"title": "Trophies of {0}",

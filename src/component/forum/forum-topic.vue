@@ -38,47 +38,46 @@
 				<loader v-if="!topic || !topic.messages" />
 				<div v-else>
 					<div v-for="message in topic.messages" :id="'message-' + message.id" :key="message.id" class="message-wrapper">
-						<rich-tooltip-farmer :id="message.writer.id" v-slot="{ on }">
-							<div class="profile" v-on="on">
-								<router-link :to="'/farmer/' + message.writer.id" class="">
-									<avatar :farmer="message.writer" />
-								</router-link>
-								<div class="info">
-									<div class="pseudo">
-										{{ message.writer.name }}
-										<img v-if="message.writer.connected" class="status" src="/image/connected.png">
-										<img v-else class="status" src="/image/disconnected.png">
-									</div>
-									<div v-if="message.writer.color == 'admin'" class="grade admin">{{ $t('main.grade_admin') }}</div>
-									<div v-else-if="message.writer.color == 'moderator'" class="grade moderator">{{ $t('main.grade_moderator') }}</div>
-									<div v-else-if="message.writer.color == 'contributor'" class="grade contributor">{{ $t('main.grade_contributor') }}</div>
-									<lw-title v-if="message.writer.title.length" :title="message.writer.title" />
-									<div class="messages-count"><b>{{ message.writer.messages }}</b> messages</div>
-									<div class="trophy-count"><b>{{ message.writer.trophies }}</b> trophées</div>
+						<div class="profile">
+							<rich-tooltip-farmer v-if="!message.writer.deleted" :id="message.writer.id" v-slot="{ on }">
+								<div v-on="on">
+									<router-link :to="'/farmer/' + message.writer.id" class="">
+										<avatar :farmer="message.writer" />
+									</router-link>
 								</div>
+							</rich-tooltip-farmer>
+							<div v-if="!message.writer.deleted" class="info">
+								<div class="pseudo">
+									{{ message.writer.name }}
+									<img v-if="message.writer.connected" class="status" src="/image/connected.png">
+									<img v-else class="status" src="/image/disconnected.png">
+								</div>
+								<div v-if="message.writer.color == 'admin'" class="grade admin">{{ $t('main.grade_admin') }}</div>
+								<div v-else-if="message.writer.color == 'moderator'" class="grade moderator">{{ $t('main.grade_moderator') }}</div>
+								<div v-else-if="message.writer.color == 'contributor'" class="grade contributor">{{ $t('main.grade_contributor') }}</div>
+								<lw-title v-if="message.writer.title.length" :title="message.writer.title" />
+								<div class="messages-count"><b>{{ message.writer.messages }}</b> messages</div>
+								<div class="trophy-count"><b>{{ message.writer.points | number }}</b> trophées</div>
 							</div>
-						</rich-tooltip-farmer>
+						</div>
 						<div class="message card">
-							<div class="wrapper">
-								<template v-if="!message.editing">
-									<a v-if="message.id != -1" :href="'#message-' + message.id" class="link">#</a>
-									<router-link v-else to="" class="link">#</router-link>
-								</template>
 
-								<textarea v-if="message.editing" ref="textarea" v-model="message.message" :style="{height: message.height + 'px'}" class="original"></textarea>
-								<div v-else v-emojis v-code class="text" v-html="message.html"></div>
-								<emoji-picker v-if="message.editing" class="emoji-picker" @pick="addEmoji(message, $event, $refs.textarea[0])" />
+							<template v-if="!message.editing && !message.deleted">
+								<a v-if="message.id != -1" :href="'#message-' + message.id" class="link">#</a>
+								<router-link v-else to="" class="link">#</router-link>
+							</template>
 
-								<div class="date">
-									{{ LeekWars.formatDateTime(message.date) }}
-									<br>
-									<span v-if="message.edition_date != null">
-										{{ $t('edited_the', [LeekWars.formatDateTime(message.edition_date)]) }}
-									</span>
-								</div>
+							<div v-if="message.deleted" class="text deleted">{{ $t('deleted_message') }}</div>
+							<textarea v-else-if="message.editing" ref="textarea" v-model="message.message" :style="{height: message.height + 'px'}" class="original"></textarea>
+							<div v-else-if="message.html" v-emojis v-code class="text" v-html="message.html"></div>
+							<markdown v-else :content="message.message" mode="forum" />
 
-								<div v-if="!message.editing" class="edit-wrapper">
-									<div class="votes">
+							<emoji-picker v-if="message.editing" class="emoji-picker" @pick="addEmoji(message, $event, $refs.textarea[0])" />
+
+							<div class="bottom">
+
+								<div class="edit-wrapper">
+									<div v-if="!message.deleted" class="votes">
 										<v-tooltip :key="votes_up_names[message.id] ? message.id * 101 + votes_up_names[message.id].length : message.id * 101" :open-delay="0" :close-delay="0" :disabled="message.votes_up === 0" bottom @input="loadVotesUp(message)">
 											<template v-slot:activator="{ on }">
 												<div :class="{active: message.my_vote == 1, zero: message.votes_up === 0}" class="vote up" @click="voteUp(message)" v-on="on">
@@ -105,32 +104,58 @@
 										</v-tooltip>
 									</div>
 
-									<template v-if="$store.state.farmer && (message.writer.id == $store.state.farmer.id || category.moderator)">
-										<span class="edit" @click="edit(message)">{{ $t('edit') }}</span>
-										&nbsp;&nbsp;
-										<template v-if="$store.getters.moderator">-&nbsp;&nbsp;
-											<span class="delete" @click="deleteGeneric(message)">{{ $t('delete') }}</span>
-										</template>
-									</template>
 									<template v-if="message.id == -1 && $store.state.connected && category.moderator">
-										&nbsp;&nbsp;-&nbsp;&nbsp;
-										<span class="lock" @click="lock">{{ topic.locked ? $t('unlock') : $t('lock') }}</span>
-										&nbsp;&nbsp;-&nbsp;&nbsp;
-										<span class="pin" @click="pin">{{ topic.pinned ? $t('unpin') : $t('pin') }}</span>
+										<span class="action lock" @click="lock"><v-icon>mdi-lock</v-icon> {{ topic.locked ? $t('unlock') : $t('lock') }}</span>
+										&nbsp;&nbsp;
+										<span class="action pin" @click="pin"><v-icon>mdi-pin</v-icon> {{ topic.pinned ? $t('unpin') : $t('pin') }}</span>
 									</template>
 									<template v-if="message.id == -1 && $store.state.connected && (topic.owner === $store.state.farmer.id || category.moderator)">
-										&nbsp;&nbsp;-&nbsp;&nbsp;
-										<span class="resolve" @click="resolve">{{ topic.resolved ? $t('unsolved') : $t('solved') }}</span>
+										&nbsp;&nbsp;
+										<span class="action resolve" @click="resolve"><v-icon>mdi-check</v-icon> {{ topic.resolved ? $t('unsolved') : $t('solved') }}</span>
 									</template>
 								</div>
-								<div v-else class="edit-buttons">
-									<v-btn color="primary" class="confirm-edit" @click="confirmEdit(message)">{{ $t('main.send') }}</v-btn>
-									<v-btn class="cancel-edit" @click="endEdit(message)">{{ $t('main.cancel') }}</v-btn>
-									<span v-if="message.id == -1">
-										&nbsp;GitHub Issue <input v-model.number="topic.issue" type="number">
-									</span>
+								<div class="spacer"></div>
+								<div class="date">
+									<div>
+										<div>{{ LeekWars.formatDateTime(message.date) }}</div>
+										<div v-if="message.edition_date != null">
+											{{ $t('edited_the', [LeekWars.formatDateTime(message.edition_date)]) }}
+										</div>
+									</div>
+
+									<v-menu v-if="!message.deleted && !message.editing && (($store.state.farmer && (message.writer.id === $store.state.farmer.id || category.moderator)) || (category.team === -1 && message.writer.id !== $store.state.farmer.id && message.writer.color !== 'admin'))" offset-y>
+										<template v-slot:activator="{ on }">
+											<v-btn text small icon color="grey" v-on="on">
+												<v-icon>mdi-dots-vertical</v-icon>
+											</v-btn>
+										</template>
+										<v-list dense class="message-actions">
+											<v-list-item v-if="$store.state.farmer && (message.writer.id === $store.state.farmer.id || category.moderator)" v-ripple @click="edit(message)">
+												<v-icon>mdi-pencil</v-icon>
+												<span>{{ $t('edit') }}</span>
+											</v-list-item>
+											<v-list-item v-if="$store.state.farmer && (message.writer.id === $store.state.farmer.id || category.moderator)" v-ripple @click="deleteGeneric(message)">
+												<v-icon>mdi-delete</v-icon>
+												<span>{{ $t('delete') }}</span>
+											</v-list-item>
+											<v-list-item v-if="category.team === -1 && message.writer.id !== $store.state.farmer.id && message.writer.color !== 'admin'" v-ripple @click="report(message)">
+												<v-icon>mdi-flag</v-icon>
+												<span>{{ $t('warning.report') }}</span>
+											</v-list-item>
+										</v-list>
+									</v-menu>
 								</div>
 							</div>
+
+							<div v-if="message.editing" class="edit-buttons">
+								<v-btn color="primary" class="confirm-edit send" @click="confirmEdit(message)"><v-icon>mdi-send-outline</v-icon> {{ $t('main.send') }}</v-btn>
+								<v-btn class="cancel-edit" @click="endEdit(message)">{{ $t('main.cancel') }}</v-btn>
+								<span v-if="message.id == -1">
+									&nbsp;GitHub Issue <input v-model.number="topic.issue" type="number">
+								</span>
+							</div>
+
+							<formatting-rules v-if="message.editing" />
 						</div>
 					</div>
 				</div>
@@ -141,7 +166,7 @@
 					<h4>{{ $t('answer') }}</h4>
 					<textarea v-model="newMessage" class="response card" @keyup="updateDraft"></textarea>
 					<center>
-						<v-btn color="primary" @click="send">{{ $t('send') }}</v-btn>
+						<v-btn color="primary" class="send" @click="send"><v-icon>mdi-send-outline</v-icon> {{ $t('send') }}</v-btn>
 					</center>
 					<formatting-rules />
 					<br>
@@ -170,17 +195,25 @@
 				<div v-ripple class="red" @click="deleteTopic">{{ $t('delete') }}</div>
 			</div>
 		</popup>
+
+		<report-dialog v-if="reportFarmer" v-model="reportDialog" :target="reportFarmer" :reasons="reasons" :parameter="reportContent" class="report-dialog" />
 	</div>
 </template>
 
 <script lang="ts">
+	import Markdown from '@/component/encyclopedia/markdown.vue'
+	import { locale } from '@/locale'
+	import { Farmer } from '@/model/farmer'
 	import { ForumCategory, ForumMessage, ForumTopic } from '@/model/forum'
+	import { mixins } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
+	import { Warning } from '@/model/moderation'
 	import { Component, Vue, Watch } from 'vue-property-decorator'
 	import EmojiPicker from '../chat/emoji-picker.vue'
 	import Breadcrumb from './breadcrumb.vue'
+	const FormattingRules = () => import(/* webpackChunkName: "[request]" */ `@/component/forum/forum-formatting-rules.${locale}.i18n`)
 
-	@Component({ name: 'forum_topic', i18n: {}, components: { Breadcrumb, EmojiPicker } })
+	@Component({ name: 'forum_topic', i18n: {}, mixins: [...mixins], components: { Breadcrumb, EmojiPicker, Markdown, FormattingRules } })
 	export default class ForumTopicPage extends Vue {
 		topic: ForumTopic | null = null
 		category: ForumCategory | null = null
@@ -196,6 +229,16 @@
 		action = {icon: 'mdi-newspaper-plus', click: () => this.toggleSubscribe()}
 		sendingMessage: boolean = false
 		forumLanguages: string[] = []
+		reportDialog: boolean = false
+		reportFarmer: Farmer | null = null
+		reportContent: string = ''
+		reasons = [
+			Warning.RUDE_FORUM,
+			Warning.FLOOD_FORUM,
+			Warning.PROMO_FORUM,
+			Warning.INCORRECT_FARMER_NAME,
+			Warning.INCORRECT_AVATAR,
+		]
 
 		get categoryName() {
 			return this.category ? this.category.team > 0 ? this.category.name : this.$t('forum-category.' + this.category.name) : ''
@@ -390,7 +433,7 @@
 		confirmEdit(message: ForumMessage) {
 			if (!this.topic) { return }
 			const callback = (data: any) => {
-				message.html = data.html
+				message.html = null
 				message.editing = false
 				message.edition_date = LeekWars.time
 				if (message.id === -1) {
@@ -402,12 +445,18 @@
 			} else {
 				const input = this.$refs.topicTitle as HTMLElement
 				const title = input.innerText
-				LeekWars.post("forum/edit-topic", {topic_id: this.topic.id, title, message: message.message, issue: this.topic.issue}).then(callback)
+				LeekWars.post("forum/edit-topic", {topic_id: this.topic.id, title, message: message.message, issue: this.topic.issue || 0}).then(callback)
 			}
 		}
 		addEmoji(message: ForumMessage, emoji: string, textarea: any) {
 			const index = textarea.selectionStart
 			message.message = message.message.slice(0, index) + emoji + message.message.slice(index, message.message.length)
+		}
+
+		report(message: ForumMessage) {
+			this.reportFarmer = message.writer
+			this.reportContent = message.id === -1 ? 't' + this.topic!.id : 'm' + message.id
+			this.reportDialog = true
 		}
 	}
 </script>
@@ -454,13 +503,15 @@
 		height: 100%;
 		flex-wrap: nowrap;
 		display: flex;
+		gap: 15px;
 	}
 	#app.app .message-wrapper {
 		flex-direction: column;
-		margin-bottom: 5px;
+		margin: 10px;
+		margin-bottom: 20px;
 	}
 	.profile {
-		width: 130px;
+		flex: 130px 0 0;
 		vertical-align: top;
 		display: flex;
 		flex-direction: column;
@@ -468,28 +519,32 @@
 		top: 15px;
 		align-self: flex-start;
 		text-align: center;
-		margin-right: 8px;
-		padding-bottom: 8px;
-		height: 100%;
+		min-width: 0;
 	}
 	#app.app .profile {
 		width: auto;
 		flex-direction: row;
 		align-items: center;
-		margin-left: 10px;
 		text-align: left;
-		padding-top: 10px;
+		align-self: stretch;
+		flex: 0;
 	}
 	.profile .info {
 		.title {
-			margin-bottom: 4px;
+			margin-bottom: 2px;
 			font-size: 13px;
 			font-weight: normal;
+			&::v-deep .quote:first-child {
+				padding-left: 0;
+			}
+			&::v-deep .quote:last-child {
+				padding-right: 0;
+			}
 		}
 	}
 	.profile .pseudo {
 		font-size: 15px;
-		margin-bottom: 2px;
+		margin-bottom: 1px;
 		white-space: nowrap;
 		text-overflow: ellipsis;
 		overflow: hidden;
@@ -538,32 +593,33 @@
 		vertical-align: middle;
 		margin-bottom: 2px;
 	}
+	.spacer {
+		flex: 1;
+	}
 	.message {
-		padding: 10px;
+		padding: 15px;
 		vertical-align: top;
 		text-align: left;
-		color: #444;
-		width: calc(100% - 150px);
+		color: #252525;
+		width: 100%;
 		position: relative;
 		display: flex;
-		margin-left: 10px;
+		flex-direction: column;
+		min-width: 0;
 	}
 	#app.app .message {
+		padding: 7px;
 		width: calc(100% - 20px);
-		padding: 5px;
 	}
-	.message .deleted {
+	.message .deleted.text {
 		font-style: italic;
 		color: #aaa;
+		margin-bottom: 0;
 	}
 	.message a {
 		word-break: break-all;
 	}
-	.message .wrapper {
-		height: 100%;
-		width: 100%;
-	}
-	.message .wrapper .link {
+	.message .link {
 		position: absolute;
 		top: 5px;
 		right: 7px;
@@ -571,47 +627,69 @@
 		font-size: 18px;
 		display: none;
 	}
-	.message:hover .wrapper .link {
+	.message:hover .link {
 		display: block;
 	}
 	.edit-wrapper > span:hover {
-		color: #777;
+		color: black;
 	}
 	.message .text {
-		padding: 5px;
-		margin-bottom: 40px;
 		word-break: break-word;
+		flex: 1;
+		line-height: 1.6;
 	}
 	.message .text ::v-deep a {
 		color: #5fad1b;
 	}
+	.message .md {
+		padding: 0;
+		word-break: break-word;
+		font-size: 15px;
+		flex: 1;
+		::v-deep p {
+			font-size: 15px;
+		}
+		::v-deep > p:last-child {
+			margin-bottom: 0;
+		}
+	}
 	.message .original {
 		padding: 4px;
-		min-width: calc(100% - 10px);
-		max-width: calc(100% - 10px);
-		min-height: 120px;
-		margin-bottom: 40px;
+		min-width: 100%;
+		max-width: 100%;
+		min-height: 200px;
+		margin-bottom: 15px;
+	}
+	.message .bottom {
+		display: flex;
+		align-items: center;
+		margin-top: 10px;
+	}
+	.message .action {
+		display: inline-flex;
+		i {
+			margin-right: 4px;
+		}
 	}
 	.message .date {
-		position: absolute;
-		bottom: 10px;
-		right: 10px;
 		color: #aaa;
 		font-size: 12px;
 		text-align: right;
+		display: flex;
+		align-items: center;
+		margin-left: -5px;
+		.v-btn {
+			margin-right: 0;
+		}
 	}
 	.edit-wrapper {
-		position: absolute;
-		bottom: 10px;
-		left: 15px;
 		color: #aaa;
 		font-size: 14px;
 		cursor: pointer;
-	}
-	.edit-buttons {
-		position: absolute;
-		bottom: 10px;
-		left: 10px;
+		span .v-icon {
+			font-size: 17px;
+			vertical-align: bottom;
+		}
 	}
 	.editor {
 		margin-left: 140px;
@@ -624,6 +702,7 @@
 	.response {
 		width: 100%;
 		height: 170px;
+		min-height: 170px;
 		max-width: 100%;
 		margin-top: 5px;
 		padding: 10px;
@@ -710,6 +789,9 @@
 		margin: 3px 40px;
 		display: block;
 	}
+	.edit-buttons {
+		margin: 15px 0;
+	}
 	.message ::v-deep h1 {
 		margin-left: 0;
 		margin-bottom: 10px;
@@ -750,9 +832,16 @@
 	.message ::v-deep h3:before {
 		display: none;
 	}
-	.emoji-picker ::v-deep .chat-input-emoji {
+	.message ::v-deep .chat-input-emoji {
 		position: absolute;
 		right: 10px;
 		top: 10px;
+		user-select: none;
+	}
+	.message-actions .v-icon {
+		margin-right: 6px;
+	}
+	.v-btn.send .v-icon {
+		margin-right: 6px;
 	}
 </style>

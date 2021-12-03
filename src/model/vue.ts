@@ -10,7 +10,6 @@ import ChatElement from '@/component/chat/chat.vue'
 import Comments from '@/component/comment/comments.vue'
 import '@/component/editor/leekscript.scss'
 import Emblem from '@/component/emblem.vue'
-import FormattingRules from '@/component/forum/formatting-rules.vue'
 import FightHistory from '@/component/history/fight-history.vue'
 import FightsHistory from '@/component/history/fights-history.vue'
 import TournamentHistory from '@/component/history/tournament-history.vue'
@@ -28,6 +27,7 @@ import RichTooltipComposition from '@/component/rich-tooltip/rich-tooltip-compos
 import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 import RichTooltipLeek from '@/component/rich-tooltip/rich-tooltip-leek.vue'
 import RichTooltipTeam from '@/component/rich-tooltip/rich-tooltip-team.vue'
+import RichTooltipTrophy from '@/component/rich-tooltip/rich-tooltip-trophy.vue'
 import RichTooltipWeapon from '@/component/rich-tooltip/rich-tooltip-weapon.vue'
 import Talent from '@/component/talent.vue'
 import TitlePicker from '@/component/title/title-picker.vue'
@@ -81,9 +81,6 @@ Vue.component('chat', ChatElement)
 Vue.component('comments', Comments)
 Vue.component('report-dialog', ReportDialog)
 Vue.component('pagination', Pagination)
-if (process.env.VUE_APP_SOCIAL === 'true') {
-	Vue.component('formatting-rules', FormattingRules)
-}
 Vue.component('fight-history', FightHistory)
 Vue.component('fights-history', FightsHistory)
 Vue.component('tournament-history', TournamentHistory)
@@ -100,6 +97,7 @@ Vue.component('rich-tooltip-leek', RichTooltipLeek)
 Vue.component('rich-tooltip-composition', RichTooltipComposition)
 Vue.component('rich-tooltip-weapon', RichTooltipWeapon)
 Vue.component('rich-tooltip-chip', RichTooltipChip)
+Vue.component('rich-tooltip-trophy', RichTooltipTrophy)
 Vue.component('rich-tooltip-team', RichTooltipTeam)
 Vue.component('loader', LWLoader)
 Vue.component('lw-title', LWTitle)
@@ -227,7 +225,7 @@ const vueMain = new Vue({
 	},
 	created() {
 		window.addEventListener('keydown', (event) => {
-			this.$emit('keydown', event) 
+			this.$emit('keydown', event)
 			if (event.ctrlKey && event.shiftKey && event.keyCode === 83) {
 				this.$emit('ctrlShiftS')
 			} else if (event.ctrlKey && event.keyCode === 83) {

@@ -16,7 +16,7 @@
 			</div>
 		</div>
 
-		<panel class="first last">
+		<panel class="first">
 			<div slot="content" class="content">
 				<breadcrumb v-if="LeekWars.mobile" :items="breadcrumb_items" />
 
@@ -87,6 +87,15 @@
 			</div>
 		</panel>
 
+		<div class="page-footer page-bar">
+			<div class="tabs">
+				<div class="tab" @click="markAsReadDialog = true">
+					<v-icon>mdi-email-open</v-icon>
+					<span class="report-button">{{ $t('mark_as_read') }}</span>
+				</div>
+			</div>
+		</div>
+
 		<popup v-model="createDialog" :width="800">
 			<v-icon slot="icon">mdi-comment-edit</v-icon>
 			<span slot="title">{{ $t('create_topic') }}</span>
@@ -105,16 +114,29 @@
 				<div v-ripple class="action green" @click="create">{{ $t('create_topic') }}</div>
 			</div>
 		</popup>
+
+		<popup v-model="markAsReadDialog" :width="500">
+			<v-icon slot="icon">mdi-email-open</v-icon>
+			<span slot="title">{{ $t('mark_as_read') }}</span>
+			{{ $t('mark_as_read_text') }}
+			<div slot="actions">
+				<div v-ripple class="action" @click="markAsReadDialog = false">{{ $t('cancel') }}</div>
+				<div v-ripple class="action green" @click="markAsRead">{{ $t('mark_as_read') }}</div>
+			</div>
+		</popup>
 	</div>
 </template>
 
 <script lang="ts">
+	import { locale } from '@/locale'
 	import { ForumCategory, ForumTopic } from '@/model/forum'
+	import { mixins } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import { Component, Vue, Watch } from 'vue-property-decorator'
 	import Breadcrumb from './breadcrumb.vue'
+	const FormattingRules = () => import(/* webpackChunkName: "[request]" */ `@/component/forum/forum-formatting-rules.${locale}.i18n`)
 
-	@Component({ name: 'forum_category', i18n: {}, components: { Breadcrumb } })
+	@Component({ name: 'forum_category', i18n: {}, mixins: [...mixins], components: { Breadcrumb, FormattingRules } })
 	export default class ForumCategoryPage extends Vue {
 		categories: ForumCategory[] | null = null
 		topics: ForumTopic[] | null = null
@@ -126,6 +148,7 @@
 		query: string = ''
 		forumLanguages: any[] = []
 		createMessageLang: string = 'fr'
+		markAsReadDialog: boolean = false
 
 		get breadcrumb_items() {
 			return [
@@ -171,12 +194,22 @@
 				LeekWars.toast(this.$i18n.t('error_' + error.error, error.params))
 			})
 		}
+
 		search() {
 			if (!this.categories) { return }
 			const options = []
 			if (this.query) { options.push('query=' + this.query.replace(' ', '+')) }
 			options.push('category=' + this.category_ids)
 			this.$router.push('/search?' + options.join('&'))
+		}
+
+		markAsRead() {
+			LeekWars.post('forum/mark-as-read').then(data => {
+				this.markAsReadDialog = false
+				this.update()
+			}).error(error => {
+				LeekWars.toast(this.$i18n.t('error_' + error.error, error.params))
+			})
 		}
 	}
 </script>

@@ -18,11 +18,11 @@
 	import { LeekWars } from '@/model/leekwars'
 	import { Component, Vue, Watch } from 'vue-property-decorator'
 
-	import 'swiper/css/swiper.css'
+	import 'swiper/swiper-bundle.css'
 	import VueAwesomeSwiper from 'vue-awesome-swiper'
 	Vue.use(VueAwesomeSwiper)
 
-	@Component({ name: 'signup-carousel', i18n: {}, mixins })
+	@Component({ name: 'signup-carousel', i18n: {}, mixins: [...mixins] })
 	export default class SignupCarousel extends Vue {
 
 		bigImage: string | null = null

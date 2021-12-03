@@ -1,3 +1,116 @@
+226:
+  title: 4 nouvelles armes, Réactions chat, Modération chat et forum, Amélioration documentation
+  added:
+    - "#ai Ajout de 4 nouvelles armes : Neutrino, Bazooka, Foudroyeur, Katana sombre. #img_226_weapons"
+    - "#ai Nouveaux modes de lancés pour les armes et puces : fonctions getChip/WeaponLaunchType() et constantes LAUNCH_TYPE_* (7 au total). #img_226_launch_type"
+    - "Ajout de réactions aux messages des chats. #img_226_chat_reactions"
+    - "Fonctionnalité pour signaler et modérer les messages forum. #img_226_forum_report"
+    - "#ai Léger rééquilibrage de quelques items : voir le sujet forum de la màj."
+    - "Affichage des valeurs finales des effets augmentées par les caractéristiques de votre poireau. #img_226_preview"
+    - "Fonctionnalité pour marquer comme lu tout le forum. #img_226_forum_read"
+    - "Ajout de filtres sur la page historique sur les types et contextes des combats (merci à Efflam). #288 #img_226_history"
+  improved:
+    - "#ai Les erreurs de l'IA coûtent plus cher en opérations de manière à générer les combats plus rapidement."
+    - "#ai Correction d'un bug d'initialisation de champs statiques avec des fonctions de combat."
+    - Remplacement des fonctions getLeek* par getEntity* dans le tutoriel (merci à Turbigo).
+    - "Les fonctions dans la documentation sont maintenant regroupées avec des arguments optionnels. #img_226_doc"
+    - Les classements sont les classements actifs par défaut.
+    - Limite de say() 2 par tour et 200 caractères et show() à 5 par tour.
+    - Les fonctions getWeapon/ChipEffectiveArea retournent la zone même si vous êtes hors de portée.
+    - "Possibilité de ouvrir/refermer les compositions sur la page d'équipe. #img_226_team"
+    - "Les messages forum supprimés sont affichés dans les sujets pour une meilleure compréhension. #img_226_forum_deleted"
+    - Amélioration de la modération des messages du chat (censure permanente et mise en sourdine séparés).
+    - Possibilité d'ajouter des images aux messages sur le forum.
+    - "#ai Le contexte BR potager/auto devient FIGHT_CONTEXT_GARDEN/FIGHT_CONTEXT_TOURNAMENT."
+    - Amélioration de la synchronisation des notifications/messages sur plusieurs onglets.
+    - Correction de la position des armes et des animations de tir + animation de recul.
+    - "Refonte de l'animation d'explosion + effet sonore. #img_226_explosion"
+  fixed:
+    - Correction de la catégorie de certaines constantes EFFECT_* dans la documentation.
+    - Correction du bug lien + emoji dans le chat.
+    - Un saut dans le combat efface aussi les markText().
+    - Les items non débloqués ne sont plus visibles sur la page /help/items.
+    - Correction des message vides dans les emails de réponses forum.
+    - Correction du bug de la touche Suppr dans un champ texte de l'éditeur qui veut supprimer l'IA.
+    - Correction du bug d'IA de tourelle quand deux compositions d'une même équipe se rencontrent en tournoi.
+    - Correction du bug d'affichage PT/PM en combat.
+    - Possibilité d'accéder aux options du combat en mode plein écran.
+    - "Correction du bug de chargement des logs au début du combat. #435"
+    - Correction d'un bug d'initialisation des champs statiques (merci à Taga).
+    - Correction d'un bug de modification de certains messages forum.
+
+225:
+  title: 160 nouveaux trophées, Points et récompenses de trophées, Système de puissance en BR.
+  added:
+    - "Ajout de 160 nouveaux trophées. #img_225_trophies"
+    - "Nouvelles couleurs pour les trophées selon la difficulté : vert, bleu, violet, jaune et rouge. #img_225_trophy_color"
+    - "#ai Mécanisme anti-égalité de gain de Puissance en BR (voir les règles dans le sujet forum). #img_225_br_power"
+    - "Ajout de récompenses en Habs pour les trophées. #img_225_rewards"
+    - "Chaque trophée a désormais un score en points et chaque éleveur a un score de points de trophées. #img_225_trophy_point"
+    - "Nouveaux drapeaux de combat dans le rapport : Ruée, Patient, Magicien, Chasseur, Pacifiste, Épéiste, Évasif, Couteau suisse, Intouchable."
+    - "Ajout d'une section en haut de la page trophées avec un résumé des trophées obtenus. #img_225_trophies_page"
+    - "Ajout d'une section statistiques sur la page trophées pour consulter ses statistiques brutes. #img_225_trophy_stats"
+    - "Création d'une page pour chaque trophée avec beaucoup d'informations spécifiques. #img_225_trophy_page"
+    - "Affichage des trophées débloqués dans les actions du combat. #img_225_fight_trophy"
+    - "#ai Fonction getPower() pour récupérer la puissance d'une entité. #img_225_get_power"
+    - "#ai Ajout d'effets irréductibles (résistants à Libération) avec le modificateur MODIFIER_IRREDUCTIBLE."
+  improved:
+    - "Page trophées : affichage de la progression même si le trophée est déjà débloqué. #img_225_trophy_progress"
+    - Pas de clone en LeekScript 1.1 pour certaines fonctions comme insert, unshift, fill etc.
+    - "Combat plus grand sur mobile en mode paysage (barre du haut cachée). #img_225_fight_mobile"
+    - Les entités en combat peuvent être réduites si leur vie maximum diminue avec les dégâts nova.
+    - Légère baisse des caractéristiques des bots de test.
+    - Actualisation des talents, xp et Habs améliorées.
+    - Les notifications de trophées sont affichées au moment exact où ils sont débloqués dans le combat.
+    - La limite haute des caractéristiques des bots est augmentée.
+    - Ajout d'une animation lors du gain ou la parte d'Habs ou de cristaux.
+    - Logo principal du site en plus haute qualité.
+    - Ajout d'un avertissement lors du dépassement de la limite de debug().
+    - "Possibilté d'afficher les détails d'une entité en combat en cliquant dessus dans la version mobile. #img_225_fight_mobile"
+    - Reconnexion plus rapide en version mobile après un verrouillage du téléphone.
+  fixed:
+    - Correction d'un bug d'expression dans le LeekScript (merci à Gelbaz).
+    - Les paramètres d'affichage des logs en combat sont correctement sauvegardés.
+    - Les points de capital sont actualisés directement quand un poireau gagne un niveau.
+    - Correction des constantes TYPE_OBJECT et TYPE_CLASS pour le retour de getType() (Merci à Grim).
+    - Correction d'un bug dans l'initialisation des champs et champs statiques de classes.
+
+224:
+  title: "Accélération du LeekScript, Recherche Enclyclopédie, Lien documentation-encyclopédie."
+  added:
+    - "Affichage de la fourchette de niveau estimée sur le bouton d'inscription aux tournois. #img_224_tournament"
+    - "Encyclopédie : ajout d'une fonction pour rerchercher. #img_224_search"
+    - "Encyclopédie : pages fonctions reliées à la documentation pour plus d'informations. #img_224_fun"
+    - "Ajout d'exemples pour les fonctions mathématiques et chaînes dans la doc, plus à venir. #img_224_doc"
+    - "Optimisation du LeekScript : exécution plus rapide de 30%."
+    - "Ajout de 3 nouveaux chapeaux : les couronnes de cristaux. #img_224_crowns"
+  improved:
+    - Ajout de 'github.com/' devant le lien GitHub de la page éleveur.
+    - "Ajout de CI sur les projets client, leekscript et generator. #img_224_ci"
+    - Affichage des actions précédentes lors d'un saut dans le combat.
+    - "#ai Les nombres flottants sont affichés avec un point et plus de chiffres après la virgule en LS1.1."
+    - "Ajout d'une option pour afficher ses logs / ceux des alliés en combat. #img_224_logs"
+    - "Forum : utilisation du Markdown pour formatter les nouveaux messages. #img_224_forum"
+    - "#ai L'opérateur + sur un tableau ajoute un élément au tableau (LS1.0 et 1.1)."
+    - "#ai Les opérateurs sur des flottants (/, %, etc.) renvoient NaN et Infinity au lieu de null (LS1.1)."
+    - "Ajout de plus d'erreurs de POO détectées directement dans l'éditeur (LS1.1)."
+  fixed:
+    - "#ai Correction de l'opérateur **=, qui n'était pas reconnu."
+    - Corrections des trophées Calme, Passif, Inerte qui étaient obtenus après la série d'égalités.
+    - Correction des combats d'éleveur schizophrènes.
+    - Correction du trophée Planqué.
+    - Correction d'un bug de compilation d'IA en cas de variable dupliquée.
+    - Correction des trophée Merlin et Fortifié.
+    - "Encyclopédie : affichage d'une info si une page est vérrouillée par le joueur."
+    - "Forum : traduction des règles de formattage en Anglais."
+    - "#ai Correction de l'aléatoire de la fonction shuffle() (Merci à Grim)."
+    - "#ai Correction de la syntaxe `objet['methode']()` (LS1.1)."
+    - "#ai Correction des niveaux d'accès (public, protected, private) (LS1.1)."
+    - "#ai Correction de la syntaxe `super.methode()` dans certains cas (LS1.1) (Merci à oliezekat)."
+    - "#ai Correction de l'initialisation des champs normaux et statiques avec une expression complexe (LS1.1)."
+    - Une IA est considérée comme valide même si elle possède des avertissements (warnings).
+    - Correction de la position des chapeaux sur les petits poireaux.
+
 223:
   title: Fonctionnalités page inscription, forum multi-langue et plein d'améliorations.
   added:

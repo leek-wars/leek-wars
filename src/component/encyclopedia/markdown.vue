@@ -3,10 +3,8 @@
 </template>
 
 <script lang="ts">
-	import { i18n } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import { vueMain } from '@/model/vue'
-	import { Weapon } from '@/model/weapon'
 	import markdown from 'markdown-it'
 	import sanitizeHtml from 'sanitize-html'
 	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
@@ -17,6 +15,7 @@
 	@Component({ name: 'markdown' })
 	export default class Markdown extends Vue {
 		@Prop({required: true}) content!: string
+		@Prop({required: true}) mode!: string
 		markdown: any = new markdown({
 			html: true,
 			breaks: true,
@@ -31,10 +30,28 @@
 		@Watch('content', {immediate: true})
 		update() {
 
-			sanitizeHtml.defaults.allowedAttributes['*'] = ['style', 'class', 'width', 'height']
-			this.html = this.links(sanitizeHtml(this.markdown.render(this.content), {
-				allowedTags: sanitizeHtml.defaults.allowedTags.concat([ 'img', 'center' ])
-			}))
+			const options = this.mode === 'encyclopedia' ? {
+				allowedTags: sanitizeHtml.defaults.allowedTags.concat([ 'img', 'center' ]),
+				allowedAttributes: { '*': ['style', 'class', 'width', 'height', 'href', 'src'] },
+			} : {
+				allowedTags: sanitizeHtml.defaults.allowedTags.concat([ 'img', 'center' ]),
+				allowedAttributes: { '*': ['style', 'class', 'width', 'height', 'href', 'src'] },
+				allowedStyles: {
+					'*': {
+						'padding': [/^.*$/],
+						'margin': [/^.*$/],
+						'color': [/^.*$/],
+						'background': [/^.*$/],
+						'border': [/^.*$/],
+						'text-align': [/^.*$/],
+						'font-size': [/^.*$/],
+						'font-weight': [/^.*$/],
+						'width': [/^.*$/],
+						'height': [/^.*$/],
+					}
+				}
+			}
+			this.html = this.links(sanitizeHtml(this.markdown.render(this.content), options))
 
 			this.summary = {children: []}
 			const stack = [this.summary] as any[]
@@ -235,7 +252,7 @@
 	.md ::v-deep a:hover {
 		text-decoration: underline;
 	}
-	.md ::v-deep ul {
+	.md ::v-deep ul, .md ::v-deep ol {
 		line-height: 1.6;
 	}
 	.md ::v-deep blockquote {

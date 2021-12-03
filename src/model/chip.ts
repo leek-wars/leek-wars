@@ -22,5 +22,6 @@ class ChipTemplate {
 	public cooldown!: number
 	public team_cooldown!: number
 	public initial_cooldown!: number
+	public type!: number
 }
 export { ChipTemplate }

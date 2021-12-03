@@ -37,7 +37,7 @@ enum NotificationType {
 }
 
 class Notification {
-	public static build(data: any, isNew: boolean = false) {
+	public static build(data: any) {
 		const type = data.type
 		const params = data.parameters as string[]
 		const leeks = []
@@ -50,9 +50,6 @@ class Notification {
 			const leekId = parseInt(params[0], 10)
 			const leekName = leeks[leekId].name
 			const level = params[1]
-			if (isNew) {
-				store.commit('level-up', {leek: leekId, level})
-			}
 			return new Notification(data, "/leek/" + leekId, "mdi-transfer-up", [leekName, level], [leekName])
 		} else if (type === NotificationType.FIGHT_REPORT) {
 			let leekName = "?"
@@ -103,7 +100,7 @@ class Notification {
 			const trophyID = parseInt(params[0], 10)
 			const trophy = LeekWars.trophies[trophyID - 1]
 			const trophyName = i18n.t('trophy.' + trophy.code) as string
-			return new Notification(data, "/farmer", "trophy/" + trophy.code + '.png', [trophyName])
+			return new Notification(data, "/trophy/" + trophy.code, "trophy/" + trophy.code + '.svg', [trophyName])
 		} else if (type === NotificationType.FIGHT_COMMENT) {
 			const farmerName = params[0]
 			const fightID = params[1]
@@ -165,7 +162,7 @@ class Notification {
 			return new Notification(data, "/tournament/" + tournamentID, "tournament_end.png", [compoName, i18n.t('main.' + lastRoundName) as string])
 		} else if (type === NotificationType.REPORTING_PROCESSED) {
 			const targetName = params[0]
-			return new Notification(data, null, "reporting_processed.png", [targetName])
+			return new Notification(data, "/farmer", "reporting_processed.png", [targetName])
 		} else if (type === NotificationType.BATTLE_ROYALE_STARTED) {
 			const fightID = params[0]
 			return new Notification(data, "/fight/" + fightID, "mdi-sword-cross")

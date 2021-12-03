@@ -1,6 +1,5 @@
 import packageJson from '@/../package.json'
 import Analyzer from '@/component/editor/analyzer'
-import { Item } from '@/component/editor/editor-item'
 import { Keyword } from '@/component/editor/keywords'
 import { env } from '@/env'
 import { BattleRoyale } from '@/model/battle-royale'
@@ -8,13 +7,14 @@ import { ChipTemplate } from '@/model/chip'
 import { Commands } from '@/model/commands'
 import { CHIP_TEMPLATES, CHIPS, CONSTANTS, FUNCTIONS, HAT_TEMPLATES, HATS, ITEMS, POMPS, POTIONS, SUMMON_TEMPLATES, TROPHIES, TROPHY_CATEGORIES, WEAPONS } from '@/model/data'
 import { Emojis } from '@/model/emojis'
-import { Function } from '@/model/function'
+import { LSFunction } from '@/model/function'
 import { Socket } from '@/model/socket'
 import { Squares } from '@/model/squares'
 import { store } from '@/model/store'
 import { vueMain } from '@/model/vue'
 import { WeaponTemplate } from '@/model/weapon'
 import router from '@/router'
+import Vue from 'vue'
 import { TranslateResult } from 'vue-i18n'
 import { ChatType, ChatWindow } from './chat'
 import { Constant } from './constant'
@@ -147,6 +147,9 @@ const HAT_SIZES: { [key: number]: {width: number, height: number} } = {
 	18: {width: 200, height: 169}, // wizard
 	19: {width: 200, height: 169}, // wizard
 	20: {width: 150, height: 80}, // chinese
+	21: {width: 300, height: 199}, // crystal crown
+	22: {width: 300, height: 199}, // crystal crown
+	23: {width: 300, height: 199}, // crystal crown
 }
 
 const ORDERED_CHIPS = orderChips(CHIPS)
@@ -165,7 +168,7 @@ class Language {
 }
 
 const DEV = window.location.port === '8080'
-const LOCAL = window.location.port === '5000'
+const LOCAL = window.location.port === '5000' || window.location.port === '5100'
 
 const LeekWars = {
 	version: packageJson.version,
@@ -173,9 +176,10 @@ const LeekWars = {
 	smart_version: packageJson.version.replace(/\.0$/, ''),
 	DEV,
 	LOCAL,
-	API: LOCAL ? 'http://localhost:5000/api/' : 'https://leekwars.com/api/',
-	AVATAR: DEV ? 'https://leekwars.com/image/' : 'https://leekwars.com/image/',
+	API: LOCAL ? window.location.origin + '/api/' : 'https://leekwars.com/api/',
+	AVATAR: DEV ? 'https://leekwars.com/' : 'https://leekwars.com/',
 	STATIC: '/',
+	POWER_FACTOR: 4.2,
 	post,
 	get,
 	put,
@@ -187,19 +191,20 @@ const LeekWars = {
 	menuExpanded: false,
 	splitBack: false,
 	actions: [],
+	lightBar: false,
 	dark: 0,
 	title: '',
 	subtitle: '',
 	titleCounter: 0,
 	titleTag: null,
 	notifsResults: localStorage.getItem('options/notifs-results') === 'true',
-	rankingActive: localStorage.getItem('options/ranking-active') === 'true',
+	rankingActive: localStorage.getItem('options/ranking-active') !== 'false',
 	service_worker: null as ServiceWorkerRegistration | null,
 	battleRoyale: new BattleRoyale(),
 	squares: new Squares(),
 	languages: Object.freeze({
-		fr: { code: 'fr', name: 'Français', flag: '/image/flag/fr.png' } as Language,
-		en: { code: 'en', name: 'English', flag: '/image/flag/gb.png' } as Language,
+		fr: { code: 'fr', name: 'Français', flag: '/image/flag/fr.png', chat: 1 } as Language,
+		en: { code: 'en', name: 'English', flag: '/image/flag/gb.png', chat: 2 } as Language,
 	} as { [key: string]: Language }),
 	timeDelta: 0, // (Date.now() / 1000 | 0) - __SERVER_TIME,
 	time: (Date.now() / 1000) | 0,
@@ -213,9 +218,7 @@ const LeekWars = {
 	leekTheme: localStorage.getItem('leek-theme') === 'true',
 	setLocale(locale: string) {
 		loadLanguageAsync(vueMain, locale)
-		if (store.state.connected) {
-			LeekWars.post('farmer/set-language', {language: locale})
-		}
+		LeekWars.post('farmer/set-language', {language: locale})
 	},
 	getLeekAppearance: (level: number): number => {
 		if (level < 10) { return 1 } else if (level < 20) { return 2 } else if (level < 50) { return 3 } else if (level < 80) { return 4 } else if (level < 100) { return 5 } else if (level < 150) { return 6 } else if (level < 200) { return 7 } else if (level < 250) { return 8 } else if (level < 300) { return 9 } else if (level < 301) { return 10 }
@@ -229,12 +232,12 @@ const LeekWars = {
 		if (!(skin in SKINS)) { return SKINS[1] }
 		return SKINS[skin]
 	},
-	objectSize(obj: object): number {
+	objectSize(obj: Record<string, unknown>): number {
 		let size = 0, key
 		for (key in obj) { if (obj.hasOwnProperty(key)) { size++ } }
 		return size
 	},
-	first<T extends object>(obj: T) {
+	first<T extends Record<string, unknown>>(obj: T) {
 		for (const e in obj) {
 			if (obj.hasOwnProperty(e)) {
 				return obj[e]
@@ -378,15 +381,18 @@ const LeekWars = {
 	getAvatar(farmerID: number, avatarChanged: number) {
 		return avatarChanged === 0 ? '/image/no_avatar.png' : LeekWars.AVATAR + 'avatar/' + farmerID + '.png'
 	},
-	_countries: null as any,
-	get countries() {
-		if (LeekWars._countries === null) {
-			LeekWars._countries = []
-			get<any>('country/get-all').then((data) => {
-				LeekWars._countries = Object.freeze(data.countries)
+	_documentation: {} as any,
+	_documentationPromises: {} as any,
+	documentation(locale: string): Promise<any> {
+		if (!(locale in LeekWars._documentationPromises)) {
+			const promise = get<any>('function/doc/' + locale)
+			Vue.set(LeekWars._documentationPromises, locale, promise)
+			promise.then((data) => {
+				Vue.set(LeekWars._documentation, locale, data)
 			})
+			return promise as any
 		}
-		return LeekWars._countries
+		return LeekWars._documentationPromises[locale]
 	},
 	itemTypes: {
 		[ItemType.WEAPON]: 'weapon',
@@ -426,7 +432,7 @@ const LeekWars = {
 		const top = ((height / 2) - (h / 2)) + dualScreenTop
 		const newWindow = window.open(url, title, 'scrollbars=no, width=' + w + ', height=' + h + ', top=' + top + ', left=' + left)
 		// Puts focus on the newWindow
-		if (window.focus && newWindow) {
+		if (newWindow && newWindow.focus) {
 			newWindow.focus()
 		}
 	},
@@ -512,14 +518,14 @@ const LeekWars = {
 	initChats() {
 		LeekWars.chatWindows = JSON.parse(localStorage.getItem('chats') || '[]')
 	},
-	addChat(name: string, type: ChatType, title: string) {
+	addChat(id: number, type: ChatType, title: string) {
 		for (const window of LeekWars.chatWindows) {
-			if (window.name === name) {
+			if (window.id === id) {
 				window.expanded = true
 				return
 			}
 		}
-		LeekWars.chatWindows.push({name, type, title, expanded: true})
+		LeekWars.chatWindows.push({ id, type, title, expanded: true})
 	},
 	removeChat(i: number) {
 		LeekWars.chatWindows.splice(i, 1)
@@ -548,6 +554,17 @@ const LeekWars = {
 	trophies: Object.freeze(TROPHIES),
 	chipTemplates: Object.freeze(CHIP_TEMPLATES),
 	trophyCategories: Object.freeze(TROPHY_CATEGORIES),
+	trophyCategoriesById: Object.freeze([...TROPHY_CATEGORIES].sort((a, b) => a.id - b.id)),
+	trophyCategoriesIcons: Object.freeze([
+		'mdi-trophy-variant-outline',
+		'mdi-sword-cross',
+		'mdi-trophy-outline',
+		'mdi-emoticon-outline',
+		'mdi-chat-outline',
+		'mdi-star-outline',
+		'mdi-code-braces',
+		'mdi-basket-outline',
+	]),
 	functions: Object.freeze(FUNCTIONS),
 	summonTemplates: Object.freeze(SUMMON_TEMPLATES),
 	potions: Object.freeze(POTIONS),
@@ -696,8 +713,8 @@ function chipByName(chips: {[key: string]: ChipTemplate}) {
 	return result
 }
 
-function functionById(functions: Function[]) {
-	const result: { [key: number]: Function } = {}
+function functionById(functions: LSFunction[]) {
+	const result: { [key: number]: LSFunction } = {}
 	for (const f of functions) {
 		result[f.id] = f
 	}
@@ -837,7 +854,7 @@ function createCodeAreaSimple(code: string, element: HTMLElement) {
 }
 
 function escapeRegExp(str: string) {
-	return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&")
+	return str.replace(/[-[\]/{}()*+?.\\^$|]/g, "\\$&")
 }
 
 function formatEmojis(data: any) {
@@ -845,7 +862,7 @@ function formatEmojis(data: any) {
 	// Custom smileys
 	for (const i in Emojis.custom) {
 		const smiley = Emojis.custom[i]
-		data = data.replace(new RegExp("(^|\\s|\>)" + escapeRegExp(i) + "(?![^\\s<>])", "gi"), '$1<img class="emoji" image="' + smiley + '" alt="' + i + '" title="' + i + '" src="/image/emoji/' + smiley + '.png">')
+		data = data.replace(new RegExp("(^|\\s|>)" + escapeRegExp(i) + "(?![^\\s<>])", "gi"), '$1<img class="emoji" image="' + smiley + '" alt="' + i + '" title="' + i + '" src="/image/emoji/' + smiley + '.png">')
 	}
 	if (LeekWars.nativeEmojis) {
 		return data // nothing more to do
@@ -883,20 +900,28 @@ function set_cursor_position(el: any, pos: number) {
 function weaponSound(id: number) {
 	return ({
 		1: ['double_gun'], 2: ['machine_gun'], 3: ['double_gun'], 4: ['shotgun'],
-		5: ['double_gun'], 6: ['laser'], 7: ['grenade_shoot', 0.7, 'explosion'],
+		5: ['double_gun'], 6: ['laser'], 7: ['grenade_shoot', 0.7, 'explosion.wav'],
 		8: ['flame_thrower'], 9: ['double_gun'], 10: ['gazor'], 11: ['electrisor'],
 		12: ['laser'], 13: ['laser'], 14: ['sword'], 15: ['sword'], 16: ['sword'], 17: ['laser'],
-		18: ['grenade_shoot', 0.7, 'explosion'], 19: ['electrisor'], 20: ['gazor', 1.2, 'explosion'], 21: ['laser', 0.1, 'poison'],
+		18: ['grenade_shoot', 0.7, 'explosion.wav'], 19: ['electrisor'], 20: ['gazor', 1.2, 'explosion.wav'], 21: ['laser', 0.1, 'poison'],
 		22: ['rifle.wav', 0.15, 'rifle.wav', 0.15, 'rifle.wav'],
 		23: ['double_gun'],
 		24: ['rifle.wav', 0.15, 'rifle.wav', 0.15, 'rifle.wav'],
+		25: ['lightninger', 0.7, 'lightninger_impact'],
+		26: [],
+		27: ['lightninger'],
+		28: [],
+		29: ['rocket', 0.7, 'explosion.wav'],
+		30: [],
+		31: [],
+		32: ['sword'],
 	} as {[key: number]: any})[id]
 }
 function chipSound(id: number) {
 	return ({
 		1: ['heal'], 2: ['heal'], 3: ['heal'], 4: ['heal'], 5: ['heal'], 6: ['lightning'],
 		7: ['lightning'], 8: ['lightning'], 9: ['fire'], 10: ['fire'],
-		11: ['meteorite', 1.8, 'explosion', 0.3, 'explosion', 0.3, 'explosion'],
+		11: ['meteorite', 1.8, 'explosion.wav', 0.3, 'explosion.wav', 0.3, 'explosion.wav'],
 		12: ['rock'], 13: ['rock'], 14: ['rockfall'], 15: ['ice'], 16: ['ice'], 17: ['ice'],
 		18: ['shield'], 19: ['shield'], 20: ['shield'], 21: ['shield'], 22: ['shield'],
 		23: ['shield'], 24: ['shield'], 25: ['buff'], 26: ['buff'], 27: ['buff'], 28: ['buff'],
@@ -922,13 +947,14 @@ function playSound(item: any, type: string) {
 		const audio = new Audio('/sound/' + sound_ext)
 		audio.volume = 0.5
 		audio.play()
-		if (sounds.length > 1) {
+		if (sounds.length > 1) {
 			setTimeout(() => {
 				play(sounds.slice(2))
 			}, parseFloat(sounds[1]) * 1000)
 		}
 	}
 	play((type === 'weapon') ? weaponSound(item.template) : chipSound(item.template))
+	LeekWars.post('market/sound-played')
 }
 
 function toChatLink(url: string, text: string, blank: string) {
@@ -947,13 +973,14 @@ function linkify(html: string) {
 	const url_regex = /((?:https?):\/\/[\w-]+\.[\w-]+(?:\.\w+)*)|((?:www\.)?leekwars\.com)/gim
 	let match
 
+	// eslint-disable-next-line no-cond-assign
 	while (match = url_regex.exec(html)) {
 		let i = match.index + match[0].length
 		let par = 0, curly = 0, square = 0
 		if (html[i] === '/') {
 			while (i < html.length) {
 				const c = html[i]
-				if (c === ' ' || c === '\n') { break }
+				if (c === ' ' || c === ' ' || c === '\n') { break }
 				if (c === '(') { par++ }
 				if (c === '[') { square++ }
 				if (c === '{') { curly++ }
@@ -963,12 +990,12 @@ function linkify(html: string) {
 				i++
 			}
 			let last = html[i - 1]
-			while (/[\.,!?:]/.test(last)) {
+			while (/[.,!?:]/.test(last)) {
 				last = html[--i - 1]
 			}
 		}
 		const url = html.substring(match.index, i).replace(/\$/g, '%24')
-		const real_url = (url.indexOf('http') === -1) ? 'http://' + url : url
+		const real_url = (url.indexOf('http') === -1) ? 'http://' + url : url
 		const blank = make_blank(real_url)
 
 		html = html.substring(0, match.index) + toChatLink(real_url, url, blank) + html.substring(i)
@@ -999,9 +1026,8 @@ function shadeColor(color: string, amount: number) {
 
 function goToRanking(type: string, order: string, id: number = 0) {
 	// console.log("goToRanking", type, order, id)
-	const activeRanking = localStorage.getItem('options/ranking-active') === 'true'
 	let url = ''
-	const active = activeRanking ? '-active' : ''
+	const active = LeekWars.rankingActive ? '-active' : ''
 	if (type === 'leek') {
 		url = 'ranking/get-leek-rank' + active + '/' + id + '/' + order
 	} else if (type === 'farmer') {
@@ -1011,7 +1037,7 @@ function goToRanking(type: string, order: string, id: number = 0) {
 	}
 	LeekWars.get(url).then(data => {
 		const page = 1 + Math.floor((data.rank - 1) / 50)
-		const active_url = activeRanking && data.active ? '/active' : ''
+		const active_url = LeekWars.rankingActive && data.active ? '/active' : ''
 		const newRoute = '/ranking/' + type + '/' + order + active_url + '/page-' + page + '#rank-' + data.rank
 		if (router.currentRoute.fullPath !== newRoute) {
 			router.push(newRoute)

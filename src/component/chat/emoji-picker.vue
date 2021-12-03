@@ -1,8 +1,8 @@
 <template>
-	<v-menu :close-on-content-click="false" :nudge-width="width" :left="true" :nudge-top="0" :min-width="width" :max-width="width" top offset-y>
+	<v-menu ref="menu" v-model="shown" :close-on-content-click="false" :nudge-width="width" :left="true" :nudge-top="0" :min-width="width" :max-width="width" top offset-y>
 		<template v-slot:activator="{ on }">
 			<div v-ripple class="chat-input-emoji" v-on="on">
-				<div :class="{'emoji-font': !LeekWars.nativeEmojis}">😀</div>
+				<div :class="{'emoji-font': !LeekWars.nativeEmojis}"><slot></slot></div>
 			</div>
 		</template>
 		<v-tabs :key="categories.length" class="tabs" grow :show-arrows="false">
@@ -13,8 +13,10 @@
 			<v-tab-item v-for="(category, c) in categories" :key="c" v-autostopscroll :value="'tab-' + c" class="content">
 				<div class="grid">
 					<template v-for="(emoji, e) in category.emojis">
-						<img v-if="c == 0 && e < 11" :key="e" :src="'/image/emoji/' + Emojis.custom[emoji] + '.png'" :title="emoji" class="emoji classic" @click="$emit('pick', emoji)">
-						<div v-else :key="e" :class="{'emoji-font': !LeekWars.nativeEmojis}" class="emoji" @click="$emit('pick', emoji)">{{ emoji }}</div>
+						<template v-if="c == 0 && e < 11">
+							<img v-if="classic !== false" :key="e" :src="'/image/emoji/' + Emojis.custom[emoji] + '.png'" :title="emoji" class="emoji classic" @click="pick(emoji)">
+						</template>
+						<div v-else :key="e" :class="{'emoji-font': !LeekWars.nativeEmojis}" class="emoji" @click="pick(emoji)">{{ emoji }}</div>
 					</template>
 				</div>
 			</v-tab-item>
@@ -24,7 +26,6 @@
 
 <script lang="ts">
 	import { Emojis } from '@/model/emojis'
-	import { LeekWars } from '@/model/leekwars'
 	import { Component, Prop, Vue } from 'vue-property-decorator'
 
 	@Component({})
@@ -32,6 +33,17 @@
 		width: number = 352
 		categories = Emojis.categories
 		Emojis = Emojis
+
+		@Prop() closeOnSelected!: boolean
+		@Prop() classic!: boolean
+		shown: boolean = false
+
+		pick(emoji: string) {
+			this.$emit('pick', emoji)
+			if (this.closeOnSelected) {
+				this.shown = false
+			}
+		}
 	}
 </script>
 

@@ -1,9 +1,9 @@
 <template>
 	<div v-if="$store.state.farmer" class="chats">
-		<div v-for="(window, i) in LeekWars.chatWindows" :key="window.name" :class="{expanded: window.expanded, unread: $refs.chats && $refs.chats[i] && $refs.chats[i].unread}" class="window">
-			<div class="header">
-				<router-link v-if="window.type === ChatType.PM" v-ripple :to="'/farmer/' + getFarmer(window.name).id">
-					<avatar :farmer="getFarmer(window.name)" class="image" />
+		<div v-for="(window, i) in LeekWars.chatWindows" :key="window.name" :class="{expanded: window.expanded, unread: $refs.chats && $refs.chats[i] && !$refs.chats[i].read}" class="window">
+			<div v-if="$store.state.chat[window.id]" class="header">
+				<router-link v-if="window.type === ChatType.PM" v-ripple :to="'/farmer/' + getFarmer(window).id">
+					<avatar :farmer="getFarmer(window)" class="image" />
 				</router-link>
 				<router-link v-else-if="window.type === ChatType.TEAM" v-ripple :to="'/team/' + $store.state.farmer.team.id">
 					<emblem :team="$store.state.farmer.team" class="image" />
@@ -11,7 +11,7 @@
 				<div v-ripple class="title" @click="toggleExpanded(window, i)">{{ window.title }}</div>
 				<v-icon class="close" @click="LeekWars.removeChat(i)">mdi-close</v-icon>
 			</div>
-			<chat ref="chats" :channel="window.name" class="chat" @send="sendMessage($event, window.name)" />
+			<chat :id="window.id" ref="chats" class="chat" @send="sendMessage($event, window.name)" />
 		</div>
 	</div>
 </template>
@@ -28,27 +28,26 @@
 	})
 	export default class Chats extends Vue {
 		ChatType = ChatType
+
 		@Watch('LeekWars.chatWindows', {deep: true})
 		update() {
 			localStorage.setItem('chats', JSON.stringify(LeekWars.chatWindows))
 		}
+
 		toggleExpanded(window: ChatWindow, index: number) {
 			window.expanded = !window.expanded
 			setTimeout(() => ((this.$refs.chats as Vue[])[index] as ChatElement).updateScroll())
 		}
-		isPrivate(channel: string) {
-			return channel.startsWith('pm-')
-		}
-		getFarmer(channel: string) {
-			const id = parseInt(channel.replace('pm-', ''), 10)
-			const conversation = store.state.conversations[id]
-			if (conversation) {
-				return conversation.farmers.find(f => f.id !== store.state.farmer!.id)
+
+		getFarmer(window: ChatWindow) {
+			const chat = store.state.chat[window.id]
+			if (chat) {
+				return chat.farmers.find(f => f.id !== store.state.farmer!.id)
 			}
 			return {id: -1}
 		}
-		sendMessage(message: string, channel: string) {
-			const id = parseInt(channel.replace('pm-', ''), 10)
+
+		sendMessage(message: string, id: number) {
 			LeekWars.post('message/send-message', {conversation_id: id, message})
 		}
 	}

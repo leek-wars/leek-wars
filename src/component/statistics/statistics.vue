@@ -162,7 +162,7 @@
 					}
 				}
 				this.$root.$emit('loaded')
-				this.playing = localStorage.getItem('statistics/play') === 'true'
+				this.playing = localStorage.getItem('statistics/play') !== 'false'
 				if (this.playing) { this.play() }
 				this.resize()
 				this.loaded = true

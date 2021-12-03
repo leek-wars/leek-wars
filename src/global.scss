@@ -52,6 +52,9 @@
 	border-left: 7px solid rgba(51,51,51, 0.9);
 	border-bottom: 4px solid transparent;
 }
+.v-tooltip__content.fluid {
+	max-width: none !important;
+}
 .v-dialog {
 	margin: 12px !important;
 }
@@ -254,7 +257,7 @@ h3::after {
 }
 h4 {
 	font-size: 18px;
-	color: #666;
+	color: #555;
 	font-weight: bold
 }
 a {
@@ -271,9 +274,9 @@ textarea {
 	font-family: "Roboto";
 	font-size: 15px;
 }
-ul {
+ul, ol {
 	margin: 10px 0;
-    padding-inline-start: 40px;
+    padding-inline-start: 30px;
 }
 .center {
 	text-align: center;
@@ -372,7 +375,6 @@ ul {
 .page-bar .tabs .tab input[type="text"],
 .page-bar .tabs .tab input[type="number"] {
 	vertical-align: top;
-	margin-top: -4px;
 	background: rgba(0,0,0,0.2);
 	color: white;
 	border: none;
@@ -917,4 +919,14 @@ body {
 	.large-icon {
 		color: white;
 	}
+}
+.difficulty-0 { background: #444 }
+.difficulty-1 { background: #00aa00 }
+.difficulty-2 { background: #0090ff }
+.difficulty-3 { background: #c21aff }
+.difficulty-4 { background: #f8ac00 }
+.difficulty-5 { background: red }
+
+.spacer {
+	flex: 1;
 }

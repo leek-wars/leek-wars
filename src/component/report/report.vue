@@ -116,8 +116,8 @@
 				<template v-if="fight.trophies.length">
 					<h3 class="trophies-title">{{ $t('trophies') }}</h3>
 					<div class="trophies">
-						<div v-for="(trophy, t) in fight.trophies" :key="t" class="trophy card">
-							<img :src="'/image/trophy/big/' + trophy.name + '.png'" class="image">
+						<router-link v-for="(trophy, t) in fight.trophies" :key="t" v-ripple :to="'/trophy/' + trophy.name" class="trophy card">
+							<img :src="'/image/trophy/' + trophy.name + '.svg'" class="image">
 							<div class="info">
 								<div class="name">{{ $t('trophy.' + trophy.name) }}</div>
 								<div class="farmer">
@@ -125,7 +125,7 @@
 									{{ trophy.farmer.name }}
 								</div>
 							</div>
-						</div>
+						</router-link>
 					</div>
 				</template>
 			</div>
@@ -267,7 +267,7 @@
 	import(/* webpackChunkName: "chartist" */ /* webpackMode: "eager" */ "@/chartist-wrapper")
 	import(/* webpackChunkName: "[request]" */ /* webpackMode: "eager" */ `@/lang/fight.${locale}.lang`)
 
-	@Component({ name: 'report', i18n: {}, mixins, components: { actions: ActionsElement, ReportLeekRow, ReportBlock, ReportStatistics, 'lw-map': Map } })
+	@Component({ name: 'report', i18n: {}, mixins: [...mixins], components: { actions: ActionsElement, ReportLeekRow, ReportBlock, ReportStatistics, 'lw-map': Map } })
 	export default class ReportPage extends Vue {
 		TEAM_COLORS = TEAM_COLORS
 		fight: Fight | null = null
@@ -365,7 +365,7 @@
 			if (localStorage.getItem('fight/logs') === null) { localStorage.setItem('fight/logs', 'true') }
 			if (localStorage.getItem('fight/turrets') === null) { localStorage.setItem('fight/turrets', 'true') }
 			if (localStorage.getItem('fight/allies-logs') === null) { localStorage.setItem('fight/allies-logs', 'true') }
-			this.actionsDisplayLogs = localStorage.getItem('report/logs') === 'true'
+			this.actionsDisplayLogs = localStorage.getItem('report/logs') !== 'false'
 			this.actionsDisplayAlliesLogs = localStorage.getItem('report/allies-logs') === 'true'
 			this.smooth = localStorage.getItem('report/graph-type') === 'smooth'
 			this.log = localStorage.getItem('report/log') === 'true'
@@ -420,7 +420,7 @@
 				// 	}
 				// }
 				LeekWars.get('fight/get-logs/' + id).then(d => {
-					this.logs = d.logs
+					this.logs = d
 					this.processLogs()
 					this.warningsErrors()
 				})
@@ -500,7 +500,7 @@
 						this.enemy = this.fight.farmer2
 					}
 				}
-				if (this.searchMyLeek(this.$store.state.farmer.leeks[ml], this.fight.report.leeks2)) {
+				else if (this.searchMyLeek(this.$store.state.farmer.leeks[ml], this.fight.report.leeks2)) {
 					this.myFight = true
 					this.iWin = this.fight.report.win === 2
 					if (this.fight.type === FightType.SOLO) {
@@ -632,7 +632,7 @@
 			this.chartTooltipX = x - tooltip.offsetWidth / 2 - 10,
 			this.chartTooltipY = top - 40
 
-			const value = Math.round((this.chart.chartRect.y1 - top) * (this.chartScale / (this.chart.chartRect.y1 - this.chart.chartRect.y2)))
+			const value = Math.round(this.chart.bounds.low + (this.chart.chartRect.y1 - top) * (this.chartScale / (this.chart.chartRect.y1 - this.chart.chartRect.y2)))
 			this.chartTooltipValue = this.statistics.entities[this.chartTooltipLeek].leek.name + '<br>' + value + (this.log ? '%' : '') + ' PV'
 		}
 

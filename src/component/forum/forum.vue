@@ -28,7 +28,7 @@
 				</router-link>
 				<div class="tab action disabled" icon="search" link="/search">
 					<img class="search-icon" src="image/search.png" @click="search">
-					<input v-model="searchQuery" type="text" @keyup.enter="search">
+					<input v-model="searchQuery" type="text" class="search-input" @keyup.enter="search">
 				</div>
 			</div>
 		</div>
@@ -113,11 +113,11 @@
 				</v-menu>
 			</span>
 			<div slot="actions">
-				<div v-if="!LeekWars.mobile" class="button flat" @click="LeekWars.addChat(chatLanguage.code, ChatType.GLOBAL, 'Chat ' + chatLanguage.code.toUpperCase())">
+				<div v-if="!LeekWars.mobile" class="button flat" @click="LeekWars.addChat(chatLanguage.chat, ChatType.GLOBAL, 'Chat ' + chatLanguage.code.toUpperCase())">
 					<v-icon>mdi-picture-in-picture-bottom-right</v-icon>
 				</div>
 			</div>
-			<chat slot="content" :channel="chatLanguage.code" />
+			<chat :id="chatLanguage.chat" slot="content" />
 		</panel>
 	</div>
 </template>

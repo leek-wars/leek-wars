@@ -11,8 +11,7 @@ import { Obstacle } from '@/component/player/game/obstacle'
 import { Particles } from '@/component/player/game/particles'
 import { S, Sound } from '@/component/player/game/sound'
 import { T, Texture } from '@/component/player/game/texture'
-import { Axe, BLaser, Broadsword, Destroyer, DoubleGun, Electrisor, ExplorerRifle, Fish, FlameThrower, Gazor, GrenadeLauncher, IllicitGrenadeLauncher, JLaser, Katana, Laser, MachineGun, Magnum, MLaser, MysteriousElectrisor, Pistol, RevokedMLaser, Rhino, Rifle, Shotgun, UnbridledGazor } from '@/component/player/game/weapons'
-import { env } from '@/env'
+import { Axe, Bazooka, BLaser, Broadsword, DarkKatana, Destroyer, DoubleGun, Electrisor, ExplorerRifle, Fish, FlameThrower, Gazor, GrenadeLauncher, IllicitGrenadeLauncher, JLaser, Katana, Laser, Lightninger, MachineGun, Magnum, MLaser, MysteriousElectrisor, Neutrino, Pistol, RevokedMLaser, Rhino, Rifle, Shotgun, UnbridledGazor } from '@/component/player/game/weapons'
 import { locale } from '@/locale'
 import { Action, ActionType } from '@/model/action'
 import { Area } from '@/model/area'
@@ -49,7 +48,7 @@ const SHADOW_ALPHA = 0.55
 let lastTime = new Date().getTime()
 let dt = 0
 const frameTime = 1000 / FPS
-const lastFPS = new Array()
+const lastFPS = [] as number[]
 
 // var hidden, visibilityState, visibilityChange;
 
@@ -106,6 +105,14 @@ const WEAPONS = [
 	Rifle, // 22
 	Rhino, // 23
 	ExplorerRifle, // 24
+	Lightninger, // 25
+	null, // 26
+	Neutrino, // 27
+	null, // 28
+	Bazooka, // 29
+	null, // 30
+	null, // 31
+	DarkKatana, // 32
 ]
 
 const CHIPS = [
@@ -230,10 +237,10 @@ class Game {
 	public drawableElements: Array<{[key: number]: any}> = []
 	public drawableElementCurrentId: number = 0
 	// Players
-	public teams = new Array()
+	public teams: FightEntity[][] = []
 	public leeks: FightEntity[] = []
 	public farmers: {[key: number]: any} = {}
-	public entityOrder = new Array()
+	public entityOrder: FightEntity[] = []
 	public states: {[key: number]: any} = []
 	// Actions
 	public data!: FightData
@@ -251,8 +258,8 @@ class Game {
 	public logs: {[key: number]: any} = {}
 	public currentLog = 0
 	// Marqueurs
-	public markers = new Array()
-	public markersText = new Array()
+	public markers = [] as any[]
+	public markersText = [] as any[]
 	// Map
 	public mapType: number = -1 // -1 = pas initialisée
 	public map!: Map
@@ -281,6 +288,8 @@ class Game {
 	public autoDark: boolean = true
 	public largeActions: boolean = false
 	public actionsWidth: number = 400
+	public displayDebugs: boolean = true
+	public displayAllyDebugs: boolean = true
 	public plainBackground: boolean = false
 	public sound: boolean = false
 	public atmosphere!: Sound
@@ -293,6 +302,7 @@ class Game {
 	public selectedEntity: FightEntity | null = null
 	public hoverEntity: FightEntity | null = null
 	public jumping: any
+	public logging: any = true
 	public jumpRequested: boolean = false
 	public jumpAction: number = 0
 	public currentTurn: number = 0
@@ -313,6 +323,8 @@ class Game {
 	public player!: Player
 	public halloween: boolean = false
 	public textRatio: number = 1
+	public trophies: any[] = []
+	public trophiesToSend: any[] = []
 
 	public maps: Map[] = [
 		new Nexus(this),
@@ -342,6 +354,8 @@ class Game {
 
 	public init(fight: Fight) {
 		this.data = fight.data
+		this.trophies = fight.trophies
+		this.trophiesToSend = [...fight.trophies]
 
 		// Check data
 		if (this.data == null) {
@@ -351,7 +365,7 @@ class Game {
 		}
 
 		this.mapType = this.data.map.type + 1
-		this.map = this.maps[this.data.map.type + 1]
+		this.map = this.maps[this.mapType]
 		this.map.seed = fight.id
 		this.map.create()
 
@@ -601,6 +615,7 @@ class Game {
 		}
 		for (const weapon of weaponsTaken) {
 			const weaponAnimation = WEAPONS[weapon - 1]
+			if (!weaponAnimation) { continue }
 			for (const texture of weaponAnimation.textures) {
 				textures.add(texture)
 			}
@@ -645,12 +660,14 @@ class Game {
 				}
 				for (const log of farmerLogs[action]) {
 					const type = log[1]
+					log[5] = me
 					if (me || (type !== 4 && type !== 9 && type !== 10 && type !== 5)) {
 						this.logs[actionI].push(log)
 					}
 				}
 			}
 		}
+		this.resourceLoaded('logs')
 	}
 
 	/*
@@ -791,6 +808,8 @@ class Game {
 					this.actionDelay -= dt
 					if (this.actionDelay <= 0) {
 
+						this.readTrophies() // Sur l'action qui vient de finir
+
 						this.actionDelay = 0
 						this.actionToDo = false
 						this.currentAction++
@@ -895,6 +914,7 @@ class Game {
 		switch (action.type) {
 		case ActionType.NEW_TURN: {
 			this.turn = action.params[1]
+			this.log(action)
 			this.actionDone()
 			break
 		}
@@ -902,11 +922,6 @@ class Game {
 			this.log(action)
 			this.currentPlayer = action.params[1]
 			const entity = this.leeks[action.params[1]]
-
-			if (typeof(action.params[2]) !== 'undefined' && typeof(action.params[3]) !== 'undefined') {
-				entity.tp = action.params[2]
-				entity.mp = action.params[3]
-			}
 
 			for (const effect_id in entity.launched_effects) {
 				const effect = entity.launched_effects[effect_id]
@@ -917,7 +932,7 @@ class Game {
 				}
 			}
 
-			if (!this.jumping) {
+			if (this.logging) {
 				// Update markers
 				for (const m in this.markers) {
 					const marker = this.markers[m]
@@ -946,8 +961,6 @@ class Game {
 			// Reinitialisation of characteristics
 			this.leeks[action.params[1]].tp = action.params[2]
 			this.leeks[action.params[1]].mp = action.params[3]
-			if (action.params.length > 4) { this.leeks[action.params[1]].strength = action.params[4] }
-			if (action.params.length > 5) { this.leeks[action.params[1]].magic = action.params[5] }
 			this.actionDone(0)
 			break
 		}
@@ -988,7 +1001,7 @@ class Game {
 			if (leek.fish) {
 				leek.setWeapon(new Fish(this))
 			} else {
-				leek.setWeapon(new WEAPONS[action.params[2] - 1](this))
+				leek.setWeapon(new WEAPONS[action.params[2] - 1]!(this))
 			}
 			leek.weapon_name = LeekWars.weapons[action.params[2]].name
 
@@ -1010,6 +1023,8 @@ class Game {
 			// const targets = this.ground.field.getTargets(target_cell, area) as FightEntity[]
 			const targets = targets_ids.map(id => this.leeks.find(l => l.id === id)!)
 			// console.log("ids", targets_ids, "targets", targets, "target_cell", target_cell)
+
+			this.log(action)
 
 			if (this.jumping) {
 				// Update leek cell after teleportation
@@ -1039,18 +1054,19 @@ class Game {
 			} else {
 				this.actionDone()
 			}
-			this.log(action)
 			break
 		}
 		case ActionType.USE_WEAPON: {
+			const launcher = action.params[1]
+			action.weapon = (this.leeks[launcher] as Leek).weapon_name
+			this.log(action)
+
 			if (this.jumping) {
 				this.actionDone()
 				break
 			}
-			const launcher = action.params[1]
 			const cell = this.ground.field.cells[action.params[2]]
 			const weapon = action.params[3]
-			action.weapon = (this.leeks[launcher] as Leek).weapon_name
 			const result = action.params[4]
 
 			// TODO take the area from the action instead of the item data when available
@@ -1060,7 +1076,6 @@ class Game {
 			const duration = (this.leeks[launcher] as Leek).useWeapon(cell, targets, result)
 			this.actionDone(Math.max(6, duration))
 
-			this.log(action)
 			break
 		}
 		case ActionType.LIFE_LOST:
@@ -1071,8 +1086,8 @@ class Game {
 		{
 			const erosion = action.params.length > 3 ? action.params[3] : 0
 			this.leeks[action.params[1]].looseLife(action.params[2], erosion, this.jumping)
+			this.log(action)
 			if (!this.jumping) {
-				this.log(action)
 				this.leeks[action.params[1]].randomHurt()
 			}
 			this.actionDone()
@@ -1080,8 +1095,8 @@ class Game {
 		}
 		case ActionType.NOVA_DAMAGE: {
 			this.leeks[action.params[1]].looseMaxLife(action.params[2], this.jumping)
+			this.log(action)
 			if (!this.jumping) {
-				this.log(action)
 				this.leeks[action.params[1]].randomHurt()
 			}
 			this.actionDone()
@@ -1089,8 +1104,8 @@ class Game {
 		}
 		case ActionType.NOVA_VITALITY: {
 			this.leeks[action.params[1]].winMaxLife(action.params[2], this.jumping)
+			this.log(action)
 			if (!this.jumping) {
-				this.log(action)
 				this.leeks[action.params[1]].randomHurt()
 			}
 			this.actionDone()
@@ -1124,8 +1139,8 @@ class Game {
 			break
 		}
 		case ActionType.SAY: {
+			this.log(action)
 			if (!this.jumping) {
-				this.log(action)
 				const entity = this.leeks[action.params[1]]
 				let message = action.params[2]
 				if (entity.farmer && entity.farmer.muted) {
@@ -1160,8 +1175,8 @@ class Game {
 			}
 			const index = this.entityOrder.findIndex((e) => e.id === caster)
 			this.entityOrder.splice(index + 1, 0, summon)
+			this.log(action)
 			if (!this.jumping) {
-				this.log(action)
 				S.bulb.play(this)
 				this.leeks[caster].watch(cell)
 				if (result === 2) {
@@ -1192,6 +1207,7 @@ class Game {
 			break
 		}
 		case ActionType.SHOW: {
+			this.log(action)
 			if (this.jumping) {
 				this.actionDone()
 				break
@@ -1203,7 +1219,6 @@ class Game {
 			this.showCellX = xy.x * this.ground.scale
 			this.showCellY = xy.y * this.ground.scale
 			this.showCellTime = 50
-			this.log(action)
 			break
 		}
 		case ActionType.ADD_WEAPON_EFFECT:
@@ -1272,6 +1287,7 @@ class Game {
 		const type = action.params[5]
 		const value = action.params[6]
 		const turns = action.params[7]
+		const modifiers = action.params[8]
 		const caster = this.leeks[caster_id]
 		const leek = this.leeks[target]
 
@@ -1288,12 +1304,23 @@ class Game {
 
 			// Ajout de l'image sur le hud
 			let image: string = ''
-			if (item in LeekWars.chips) {
+			if (item === 0) {
+				image = LeekWars.STATIC + "image/fight/power.png"
+			} else if (item in LeekWars.chips) {
 				image = LeekWars.STATIC + "image/chip/" + LeekWars.chips[item].name + ".png"
 			} else /* weapon */ {
 				if (item in LeekWars.items) {
 					const template = LeekWars.items[item].params
-					const img = ["pistol", "machine_gun", "double_gun", "shotgun", "magnum", "laser", "grenade_launcher", "flamme", "destroyer", "gaz_icon", "electrisor", "m_laser", "b_laser", "katana", "broadsword", "axe", "j_laser", "illicit_grenade_launcher", "mysterious_electrisor", "unbridled_gazor", "revoked_m_laser", "rifle", "rhino", "explorer_rifle"][template - 1]
+					const img = ["pistol", "machine_gun", "double_gun", "shotgun", "magnum", "laser", "grenade_launcher", "flamme", "destroyer", "gaz_icon", "electrisor", "m_laser", "b_laser", "katana", "broadsword", "axe", "j_laser", "illicit_grenade_launcher", "mysterious_electrisor", "unbridled_gazor", "revoked_m_laser", "rifle", "rhino", "explorer_rifle",
+					"lightninger",
+					null, // 26
+					"neutrino", // 27
+					null, // 28
+					"bazooka", // 29
+					null, // 30
+					null, // 31
+					"dark_katana", // 32
+				][template - 1]
 					image = LeekWars.STATIC + "image/weapon/" + img + ".png"
 					// Gestion des états du poireau
 					if (template === 8) {
@@ -1307,7 +1334,7 @@ class Game {
 			texture.src = image
 
 			// Ajout de l'effet
-			this.effects[id] = { id, item, caster: caster_id, target, type, value, turns, texture }
+			this.effects[id] = { id, item, caster: caster_id, target, type, value, turns, texture, modifiers }
 			leek.effects[id] = this.effects[id]
 			caster.launched_effects[id] = this.effects[id]
 		}
@@ -1316,8 +1343,9 @@ class Game {
 
 		switch (type) {
 		case EffectType.ABSOLUTE_SHIELD:
-		case EffectType.STEAL_ABSOLUTE_SHIELD:
+		case EffectType.DAMAGE_TO_ABSOLUTE_SHIELD:
 		case EffectType.RAW_ABSOLUTE_SHIELD:
+		case EffectType.STEAL_ABSOLUTE_SHIELD:
 			leek.buffAbsoluteShield(value, this.jumping)
 			break
 		case EffectType.RELATIVE_SHIELD:
@@ -1382,6 +1410,9 @@ class Game {
 			break
 		case EffectType.POISON:
 			break
+		case EffectType.RAW_BUFF_POWER:
+			leek.buffPower(value, this.jumping)
+			break
 		}
 	}
 
@@ -1413,9 +1444,10 @@ class Game {
 		case EffectType.SHACKLE_WISDOM:
 			leek.wisdom += value
 			break
-		case EffectType.STEAL_ABSOLUTE_SHIELD:
 		case EffectType.ABSOLUTE_SHIELD:
+		case EffectType.STEAL_ABSOLUTE_SHIELD:
 		case EffectType.RAW_ABSOLUTE_SHIELD:
+		case EffectType.DAMAGE_TO_ABSOLUTE_SHIELD:
 			leek.absoluteShield -= value
 			break
 		case EffectType.RELATIVE_SHIELD:
@@ -1460,6 +1492,9 @@ class Game {
 		case EffectType.RAW_BUFF_TP:
 			leek.tp -= value
 			break
+		case EffectType.RAW_BUFF_POWER:
+			leek.power -= value
+			break
 		}
 		// Gestion des états du poireau
 		if (effect.item === 46) {
@@ -1494,6 +1529,9 @@ class Game {
 			leek.magic -= delta
 			break
 		case EffectType.ABSOLUTE_SHIELD:
+		case EffectType.DAMAGE_TO_ABSOLUTE_SHIELD:
+		case EffectType.RAW_ABSOLUTE_SHIELD:
+		case EffectType.STEAL_ABSOLUTE_SHIELD:
 			leek.absoluteShield += delta
 			break
 		case EffectType.RELATIVE_SHIELD:
@@ -1538,6 +1576,9 @@ class Game {
 		case EffectType.RAW_BUFF_TP:
 			leek.tp += delta
 			break
+		case EffectType.RAW_BUFF_POWER:
+			leek.power += delta
+			break
 		}
 		effect.value = new_value // Updating the effect's value to properly remove it with `removeEffect`
 	}
@@ -1549,28 +1590,48 @@ class Game {
 			this.currentLog++
 			const log = this.logs[this.currentAction][l]
 			const type = log[1]
-			if (type === 5) {
-				this.pause()
-				this.addConsoleLine({id: 'l' + this.currentAction + '-' + this.currentLog, log})
-				return true
-			} else if (type === 4) {
-				this.addMarker(log[0], log[2], log[3], log[4])
-			} else if (type === 9) {
-				this.addTextMarker(log[0], log[2], log[3], log[4], log[5])
-			} else if (type === 10) {
-				this.clearMarks()
-			} else {
-				this.addConsoleLine({id: 'l' + this.currentAction + '-' + this.currentLog, log})
+			if (this.displayDebugs && (this.displayAllyDebugs || log[5])) {
+				if (type === 5) {
+					this.pause()
+					this.addConsoleLine({id: 'l' + this.currentAction + '-' + this.currentLog, log})
+					return true
+				} else if (type === 4) {
+					this.addMarker(log[0], log[2], log[3], log[4])
+				} else if (type === 9) {
+					this.addTextMarker(log[0], log[2], log[3], log[4], log[5])
+				} else if (type === 10) {
+					this.clearMarks()
+				} else {
+					this.addConsoleLine({id: 'l' + this.currentAction + '-' + this.currentLog, log})
+				}
 			}
 		}
 		return false
 	}
+
+	public readTrophies() {
+		for (let t = 0; t < this.trophiesToSend.length; ++t) {
+			const trophy = this.trophiesToSend[t]
+			if (this.currentAction >= trophy.action) {
+				this.player.$emit('unlock-trophy', trophy.trophy)
+				this.trophiesToSend.splice(t, 1)
+				t--
+			}
+		}
+		for (let t = 0; t < this.trophies.length; ++t) {
+			const trophy = this.trophies[t]
+			if (this.currentAction === trophy.action) {
+				this.addConsoleLine({id: 't' + t, trophy})
+			}
+		}
+	}
+
 	public actionDone(delay: number = 6) {
 		this.actionToDo = true
 		this.actionDelay = delay
 	}
 	public log(action: any) {
-		if (!this.jumping) {
+		if (this.logging) {
 			this.addConsoleLine({id: 'a' + this.currentAction, action})
 		}
 	}
@@ -1676,13 +1737,7 @@ class Game {
 	}
 
 	public clearMarks() {
-		for (const m in this.markers) {
-			delete this.markers[m]
-		}
 		this.markers = []
-		for (const m in this.markersText) {
-			delete this.markersText[m]
-		}
 		this.markersText = []
 	}
 
@@ -2312,7 +2367,7 @@ class Game {
 			i--
 		}
 
-		this.markers = []
+		this.clearMarks()
 		this.currentTurn = 0
 		this.turn = 1
 		this.currentPlayer = null
@@ -2325,10 +2380,20 @@ class Game {
 
 		// Do actions
 		this.jumping = true
-		let action = 1
-		while (action < jumpAction) {
-			this.doAction(this.actions[action])
-			action++
+		this.logging = false
+		this.currentAction = 1
+		const loggingAction = Math.max(0, jumpAction - 150)
+		while (this.currentAction < loggingAction) {
+			this.doAction(this.actions[this.currentAction])
+			this.currentAction++
+		}
+		this.logging = true
+		while (this.currentAction < jumpAction) {
+			this.doAction(this.actions[this.currentAction])
+			this.currentLog = 0
+			this.readLogs()
+			this.readTrophies()
+			this.currentAction++
 		}
 
 		// Set cells
@@ -2345,7 +2410,7 @@ class Game {
 
 		// End
 		this.jumping = false
-		this.currentAction = action - 1
+		this.currentAction = this.currentAction - 1
 		this.actionDone() // Start new action
 
 		this.requestPause = this.paused

@@ -7,7 +7,7 @@
 						<img :src="effect.texture.src">
 					</div>
 				</template>
-				<div><b>{{ $t(LeekWars.items[effect.item].name.replace('_', '.')) }}</b></div>
+				<div v-if="effect.item"><b>{{ $t(LeekWars.items[effect.item].name.replace('_', '.')) }}</b></div>
 				<div>Lancé par <b>{{ game.leeks[effect.caster].name }}</b></div>
 				<div>
 					<b>

@@ -150,7 +150,7 @@
 	import { Component, Vue } from 'vue-property-decorator'
 	import Breadcrumb from '../forum/breadcrumb.vue'
 
-	@Component({ name: "general_help", i18n: {}, mixins, components: { Breadcrumb } })
+	@Component({ name: "general_help", i18n: {}, mixins: [...mixins], components: { Breadcrumb } })
 	export default class GeneralHelp extends Vue {
 		created() {
 			LeekWars.setTitle(this.$t('title'))

@@ -26,7 +26,7 @@
 						</span>
 						<div>
 							<router-link :to="'/trophies/' + farmer.id" class="stat">
-								<img class="icon" src="/image/icon/grey/trophy.png">{{ $t('main.n_trophies', [farmer.trophies]) }}
+								<img class="icon" src="/image/icon/grey/trophy.png">{{ farmer.points | number }}
 							</router-link>
 							<router-link v-if="farmer.forum_messages" :to="'/search?farmer=' + farmer.name + '&order=date'" class="stat">
 								<img class="icon" src="/image/forum.png">{{ $t('main.n_messages', [farmer.forum_messages]) }}
@@ -69,10 +69,10 @@
 
 <script lang="ts">
 	import { Farmer } from '@/model/farmer'
-	import { Leek } from '@/model/leek'
 	import { LeekWars } from '@/model/leekwars'
 	import { store } from '@/model/store'
 	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
+
 	@Component({})
 	export default class RichTooltipFarmer extends Vue {
 		@Prop({required: true}) id!: number
@@ -115,6 +115,7 @@
 				})
 			}
 		}
+
 		sendMessage() {
 			if (!this.farmer) { return }
 			LeekWars.get('message/find-conversation/' + this.farmer.id).then(conversation => {
@@ -125,6 +126,7 @@
 				this.$router.push('/messages/new/' + this.farmer.id + '/' + this.farmer.name + '/' + this.farmer.avatar_changed)
 			})
 		}
+
 		@Watch('expand_leeks')
 		updateExpand() {
 			localStorage.setItem('richtooltipfarmer/expanded', this.expand_leeks ? 'true' : 'false')

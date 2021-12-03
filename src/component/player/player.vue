@@ -1,5 +1,5 @@
 <template lang="html">
-	<div :style="{width: width + 'px', height: height + BAR_HEIGHT + 'px'}">
+	<div ref="player" :style="{width: width + 'px', height: height + BAR_HEIGHT + 'px'}">
 		<div v-if="error" class="error">
 			<h2>{{ $t('error_generating_fight') }}</h2>
 			<br>
@@ -85,19 +85,19 @@
 				</transition>
 			</div>
 			<div class="controls">
-				<v-tooltip :open-delay="0" :close-delay="0" top content-class="top">
+				<v-tooltip :open-delay="0" :close-delay="0" top content-class="top" :attach="$refs.player">
 					<template v-slot:activator="{ on }">
 						<v-icon v-ripple class="control" @click="pause" v-on="on">{{ game.paused ? 'mdi-play' : 'mdi-pause' }}</v-icon>
 					</template>
 					{{ $t('pause') }} (P)
 				</v-tooltip>
-				<v-tooltip :open-delay="0" :close-delay="0" top content-class="top">
+				<v-tooltip :open-delay="0" :close-delay="0" top content-class="top" :attach="$refs.player">
 					<template v-slot:activator="{ on }">
 						<v-icon v-ripple class="control" :style="{opacity: game.speedButtonVisible ? 1 : 0}" v-on="on" @click="game.speedUp()">mdi-fast-forward</v-icon>
 					</template>
 					{{ $t('accelerate') }} (S)
 				</v-tooltip>
-				<v-tooltip :open-delay="0" :close-delay="0" top content-class="top">
+				<v-tooltip :open-delay="0" :close-delay="0" top content-class="top" :attach="$refs.player">
 					<template v-slot:activator="{ on }">
 						<v-icon v-ripple class="control" v-on="on" @click="game.sound = !game.sound">{{ game.sound ? 'mdi-volume-high' : 'mdi-volume-low' }}</v-icon>
 					</template>
@@ -106,7 +106,7 @@
 				<div class="turn">{{ $t('fight.turn_n', [game.turn]) }}</div>
 				<div class="filler"></div>
 
-				<v-tooltip v-if="$store.state.farmer && $store.state.farmer.admin" :open-delay="0" :close-delay="0" top content-class="top">
+				<v-tooltip v-if="$store.state.farmer && $store.state.farmer.admin" :open-delay="0" :close-delay="0" top content-class="top" :attach="$refs.player">
 					<template v-slot:activator="{ on: tooltip }">
 						<v-menu :close-on-content-click="false" top offset-y left>
 							<template v-slot:activator="{ on: menu }">
@@ -120,15 +120,15 @@
 					Carte
 				</v-tooltip>
 
-				<v-tooltip :open-delay="0" :close-delay="0" top content-class="top">
+				<v-tooltip :open-delay="0" :close-delay="0" top content-class="top" :attach="$refs.player">
 					<template v-slot:activator="{ on }">
 						<v-icon v-ripple class="control" v-on="on" @click="toggleFullscreen">mdi-aspect-ratio</v-icon>
 					</template>
 					{{ $t('fullscreen') }}
 				</v-tooltip>
-				<v-tooltip :open-delay="0" :close-delay="0" top content-class="top">
+				<v-tooltip :open-delay="0" :close-delay="0" top content-class="top" :attach="$refs.player">
 					<template v-slot:activator="{ on: tooltip }">
-						<v-menu :close-on-content-click="false" top offset-y left>
+						<v-menu :close-on-content-click="false" top offset-y left :attach="$refs.player">
 							<template v-slot:activator="{ on: menu }">
 								<v-icon v-ripple class="control" v-on="{...tooltip, ...menu}">mdi-settings-outline</v-icon>
 							</template>
@@ -142,13 +142,18 @@
 									<v-icon>mdi-flare</v-icon>
 									<v-switch :input-value="game.showEffects" :disabled="!game.showLifes" :label="$t('display_effects') + ' (E)'" hide-details />
 								</v-list-item>
-								<v-list-item v-ripple @click="game.showActions = !game.showActions">
+								<v-list-item v-if="!LeekWars.mobile" v-ripple @click="game.showActions = !game.showActions">
 									<v-icon>mdi-format-list-bulleted</v-icon>
 									<v-switch :input-value="game.showActions" :label="$t('show_actions') + ' (A)'" hide-details />
 								</v-list-item>
-								<v-list-item :ripple="game.showActions" :class="{disabled: !game.showActions}" @click="game.showActions ? (game.largeActions = !game.largeActions) : null">
+								<v-list-item v-if="!LeekWars.mobile" :ripple="game.showActions" :class="{disabled: !game.showActions}" @click="game.showActions ? (game.largeActions = !game.largeActions) : null">
 									<v-icon>mdi-view-split-vertical</v-icon>
 									<v-switch :input-value="game.largeActions" :disabled="!game.showActions" :label="$t('large_actions') + ' (G)'" hide-details />
+								</v-list-item>
+								<v-list-item v-if="!LeekWars.mobile" :ripple="game.displayDebugs" :class="{disabled: !game.showActions}" @click="game.showActions ? (game.displayDebugs = !game.displayDebugs) : null">
+									<v-icon>mdi-math-log</v-icon>
+									<v-switch :input-value="game.displayDebugs" :disabled="!game.showActions" :label="$t('display_logs') + ' (D)'" hide-details />
+									<v-checkbox v-model="game.displayAllyDebugs" :disabled="!game.showActions || !game.displayDebugs" :class="{disabled: !game.showActions || !game.displayDebugs}" label="Alliés" hide-details class="ally-debug" @click.stop />
 								</v-list-item>
 								<div class="section">GRAPHISMES</div>
 								<v-list-item v-ripple @click="game.shadows = !game.shadows">
@@ -173,7 +178,7 @@
 									<v-icon>mdi-numeric-1-box</v-icon>
 									<v-switch :input-value="game.showCells" :label="$t('display_cell_numbers') + ' (C)'" hide-details />
 								</v-list-item>
-								<v-list-item :ripple="game.showLifes" :class="{disabled: !game.showLifes}" @click="game.showLifes ? (game.showIDs = !game.showIDs) : null">
+								<v-list-item v-if="!LeekWars.mobile" :ripple="game.showLifes" :class="{disabled: !game.showLifes}" @click="game.showLifes ? (game.showIDs = !game.showIDs) : null">
 									<v-icon>mdi-key</v-icon>
 									<v-switch :input-value="game.showIDs" :disabled="!game.showLifes" :label="$t('show_ids') + ' (I)'" hide-details />
 								</v-list-item>
@@ -182,7 +187,7 @@
 					</template>
 					{{ $t('settings') }}
 				</v-tooltip>
-				<v-tooltip :open-delay="0" :close-delay="0" top content-class="top">
+				<v-tooltip :open-delay="0" :close-delay="0" top content-class="top" :attach="$refs.player">
 					<template v-slot:activator="{ on }">
 						<v-icon v-ripple class="control" v-on="on" @click="quit">mdi-exit-to-app</v-icon>
 					</template>
@@ -240,6 +245,7 @@
 			if (localStorage.getItem('fight/effects') === null) { localStorage.setItem('fight/effects', 'true') }
 			if (localStorage.getItem('fight/actions') === null) { localStorage.setItem('fight/actions', 'true') }
 			if (localStorage.getItem('fight/auto-dark') === null) { localStorage.setItem('fight/auto-dark', 'true') }
+			if (localStorage.getItem('fight/debugs') === null) { localStorage.setItem('fight/debugs', 'true') }
 			this.game.shadows = localStorage.getItem('fight/shadows') === 'true'
 			this.game.tactic = localStorage.getItem('fight/tactic') === 'true'
 			this.game.showCells = localStorage.getItem('fight/cells') === 'true'
@@ -253,6 +259,8 @@
 			this.game.autoDark = localStorage.getItem('fight/auto-dark') === 'true'
 			this.game.dark = localStorage.getItem('fight/dark') === 'true'
 			this.game.plainBackground = localStorage.getItem('fight/plain-background') === 'true'
+			this.game.displayDebugs = localStorage.getItem('fight/debugs') === 'true'
+			this.game.displayAllyDebugs = localStorage.getItem('fight/ally-debugs') === 'true'
 			this.game.player = this
 			this.getFight(true)
 			this.resize()
@@ -346,11 +354,14 @@
 			} else if (e.keyCode === 71) { // G
 				this.game.largeActions = !this.game.largeActions
 				e.preventDefault()
+			} else if (e.keyCode === 78) { // N
+				this.game.dark = !this.game.dark
+				e.preventDefault()
 			} else if (e.keyCode === 84) { // T
 				this.game.tactic = !this.game.tactic
 				e.preventDefault()
 			} else if (e.keyCode === 68) { // D
-				this.game.dark = !this.game.dark
+				this.game.displayDebugs = !this.game.displayDebugs
 				e.preventDefault()
 			} else if (e.keyCode === 85) { // U
 				this.game.plainBackground = !this.game.plainBackground
@@ -440,7 +451,8 @@
 						tournament: 0, type: 0, winner: 1, year: 2019,
 						data: report.default.fight as any,
 						comments: [],
-						result: 'win', queue: 0
+						result: 'win', queue: 0,
+						trophies: []
 					} as Fight
 					fightLoaded(local_fight)
 					this.game.setLogs((report.default as any).logs[this.$store.state.farmer.id])
@@ -454,11 +466,9 @@
 		}
 		getLogs() {
 			if (this.$store.state.farmer) {
-				LeekWars.post('fight/get-logs', {fight_id: this.fightId}).then(data => {
-					this.game.setLogs(data.logs)
-					this.$store.commit('set-habs', data.habs)
-					this.$store.commit('set-talent', data.talent)
-					this.$store.commit('set-leek-talents', data.leek_talents)
+				this.game.numData++
+				LeekWars.post('fight/get-logs', {fight_id: this.fightId}).then(logs => {
+					this.game.setLogs(logs)
 				})
 			}
 		}
@@ -564,6 +574,12 @@
 		@Watch("game.plainBackground") updatePlainBackground() {
 			localStorage.setItem('fight/plain-background', '' + this.game.plainBackground)
 			this.resize()
+		}
+		@Watch("game.displayDebugs") updateDebugs() {
+			localStorage.setItem('fight/debugs', '' + this.game.displayDebugs)
+		}
+		@Watch("game.displayAllyDebugs") updateAllyDebugs() {
+			localStorage.setItem('fight/ally-debugs', '' + this.game.displayAllyDebugs)
 		}
 		canvasClick() {
 			this.game.selectEntity(this.game.click())
@@ -885,15 +901,21 @@
 	.settings-menu ::v-deep .v-input--switch.v-input--is-dirty.v-input--is-disabled {
 		opacity: 1;
 	}
+	.settings-menu ::v-deep .theme--light.v-input--selection-controls.v-input--is-disabled:not(.v-input--indeterminate) .v-icon {
+		color: hsla(0,0%,100%,.7) !important;
+	}
 	.settings-menu .v-input--checkbox {
 		color: hsla(0,0%,100%,.7);
 	}
 	.settings-menu .night {
 		margin-right: 10px;
 	}
-	.v-list-item.disabled {
+	.settings-menu .disabled {
 		opacity: 0.45;
 		cursor: default;
+	}
+	.ally-debug {
+		margin-left: 8px;
 	}
 	.loader {
 		padding-bottom: 10px;

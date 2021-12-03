@@ -15,7 +15,7 @@ enum FightContext {
 	CHALLENGE = 1,
 	GARDEN = 2,
 	TOURNAMENT = 3,
-	BATTLE_ROYALE = 4,
+	BATTLE_ROYALE = 5,
 }
 
 class ReportLeek {
@@ -79,6 +79,7 @@ class Fight {
 	public report!: Report
 	public winner!: number
 	public queue!: number
+	public trophies!: any[]
 }
 
 class FightMap {

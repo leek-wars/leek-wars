@@ -1,0 +1,19 @@
+{
+	"source_code": "Source code",
+	"source_code_ex": "my source code",
+	"big_title": "Main title",
+	"big_title_ex": "Main title",
+	"sub_title": "Sub-title",
+	"sub_title_ex": "Sub-title",
+	"sub_sub_title": "Sub-sub-title",
+	"sub_sub_title_ex": "Sub-sub-title",
+	"bold": "Bold",
+	"bold_ex": "bold",
+	"italic": "Italic",
+	"italic_ex": "italic",
+	"underlined": "Underlined",
+	"underlined_ex": "underline",
+	"striked": "Striked",
+	"striked_ex": "striked",
+	"basic_html": "Basic HTML authorized"
+}

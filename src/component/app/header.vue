@@ -3,7 +3,7 @@
 		<div class="header-left">
 			<router-link to="/">
 				<div class="logo-wrapper">
-					<img class="logo" src="/image/logo.png">
+					<img class="logo" src="/image/leekwars.svg">
 					<span v-if="LeekWars.LOCAL" class="local-label">local</span>
 					<span v-else-if="LeekWars.DEV" class="dev-label">dev</span>
 					<span v-if="env.BETA" class="beta-label">Bêta</span>
@@ -54,17 +54,21 @@
 				-->
 				<div v-if="env.BANK" class="button-wrapper">
 					<router-link to="/bank">
-						<div class="header-button">
-							<span v-if="$store.state.farmer" class="farmer-crystals text">{{ $store.state.farmer.crystals | number }}</span>
+						<div v-if="$store.state.farmer" class="header-button">
+							<span class="farmer-crystals text">{{ Math.round($store.state.farmer.animated_crystals) | number }}</span>
 							<span class="crystal text"></span>
+							<span v-if="$store.state.farmer.animated_crystals < $store.state.farmer.crystals" class="crystal win"></span>
+							<span v-else-if="$store.state.farmer.animated_crystals > $store.state.farmer.crystals" class="crystal lose"></span>
 						</div>
 					</router-link>
 				</div>
 				<div class="button-wrapper">
 					<router-link to="/market">
-						<div class="header-button">
-							<span v-if="$store.state.farmer" class="farmer-habs text">{{ $store.state.farmer.habs | number }}</span>
+						<div v-if="$store.state.farmer" class="header-button">
+							<span class="farmer-habs text">{{ Math.round($store.state.farmer.animated_habs) | number }}</span>
 							<span class="hab text"></span>
+							<span v-if="$store.state.farmer.animated_habs < $store.state.farmer.habs" class="hab win"></span>
+							<span v-else-if="$store.state.farmer.animated_habs > $store.state.farmer.habs" class="hab lose"></span>
 						</div>
 					</router-link>
 				</div>
@@ -77,7 +81,7 @@
 					</router-link>
 				</div>
 				<div class="button-wrapper">
-					<v-menu v-if="env.SOCIAL" :nudge-bottom="3" :max-width="400" :max-height="400" bottom offset-y @input="readNotifications">
+					<v-menu v-if="env.SOCIAL" :nudge-bottom="3" :width="400" :max-height="400" bottom offset-y @input="readNotifications">
 						<template v-slot:activator="{ on }">
 							<div class="header-button messages-button" v-on="on">
 								<v-icon>mdi-email-outline</v-icon>
@@ -86,8 +90,8 @@
 						</template>
 						<div class="dialog">
 							<div class="dialog-items">
-								<router-link v-for="conversation in $store.state.conversationsList" :key="conversation.id" :to="'/messages/conversation/' + conversation.id">
-									<conversation :conversation="conversation" />
+								<router-link v-for="chat in $store.state.conversationsList" :key="chat.id" :to="'/messages/conversation/' + chat.id">
+									<conversation :chat="chat" />
 								</router-link>
 							</div>
 							<router-link to="/messages" class="see-all">{{ $t('main.all_private_messages') }}</router-link>
@@ -95,7 +99,7 @@
 					</v-menu>
 				</div>
 				<div class="button-wrapper">
-					<v-menu :nudge-bottom="3" :max-width="400" :max-height="400" bottom offset-y @input="readNotifications">
+					<v-menu :nudge-bottom="3" :width="400" :max-height="400" bottom offset-y @input="readNotifications">
 						<template v-slot:activator="{ on }">
 							<div class="header-button notifications-button" v-on="on">
 								<v-icon>mdi-bell-outline</v-icon>
@@ -311,6 +315,7 @@
 		background: #f2f2f2;
 	}
 	.dialog-items {
+		width: 400px;
 		max-height: 350px;
 		overflow-y: auto;
 		overflow-x: hidden;
@@ -369,5 +374,25 @@
 	.language .flag {
 		height: 26px;
 		margin-right: 8px;
+	}
+	.win {
+		position: absolute;
+		animation: win 0.15s infinite;
+		margin-top: 0;
+		right: 4px;
+	}
+	@keyframes win {
+		0% { margin-top: -120px; }
+		100% { margin-top: 0; }
+	}
+	.lose {
+		position: absolute;
+		animation: lose 0.25s infinite;
+		margin-top: 0;
+		right: 4px;
+	}
+	@keyframes lose {
+		0% { margin-top: 0; opacity: 1; }
+		100% { margin-top: 100px; opacity: 0; }
 	}
 </style>

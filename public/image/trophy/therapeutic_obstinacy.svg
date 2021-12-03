@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   version="1.1"
+   width="24"
+   height="24"
+   viewBox="0 0 24 24"
+   id="svg4"
+   sodipodi:docname="therapeutic_obstinacy.svg"
+   inkscape:version="1.1 (ce6663b3b7, 2021-05-25)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs8" />
+  <sodipodi:namedview
+     id="namedview6"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     showgrid="false"
+     inkscape:zoom="36.375"
+     inkscape:cx="11.986254"
+     inkscape:cy="12"
+     inkscape:window-width="2488"
+     inkscape:window-height="1376"
+     inkscape:window-x="2632"
+     inkscape:window-y="27"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg4" />
+  <path
+     id="path2"
+     d="m 10.811847,12 v 2.376306 H 8.4355408 v 2.376306 h 2.3763062 v 2.376306 h 2.376306 v -2.376306 h 2.376306 V 14.376306 H 13.188153 V 12 Z"
+     style="fill:#c21aff;fill-opacity:1;stroke-width:1.18815" />
+  <path
+     id="path1049"
+     d="m 8.4355408,3.6829286 v 1.1881531 h 1.1881531 v 2.3763061 c -3.2793024,0 -5.9407653,2.6614628 -5.9407653,5.9407652 V 23.881531 H 20.317071 V 13.188153 c 0,-3.2793024 -2.661462,-5.9407652 -5.940765,-5.9407652 V 4.8710817 h 1.188153 V 3.6829286 Z m 1.1881531,5.9407653 h 4.7526121 c 1.960453,0 3.564459,1.6040071 3.564459,3.5644591 v 8.317071 H 6.0592347 v -8.317071 c 0,-1.960452 1.6040066,-3.5644591 3.5644592,-3.5644591 z M 7.4933725,11.306138 h 8.9134685 z"
+     style="fill:#444444;fill-opacity:1;stroke-width:1.18815" />
+  <path
+     id="path1047"
+     d="M 9.6236939,0.11846945 10.811847,2.4947756 h 2.376306 l 1.188153,-2.37630615 z"
+     style="fill:#444444;fill-opacity:1;stroke-width:1.18815" />
+</svg>

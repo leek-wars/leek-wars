@@ -26,7 +26,7 @@ class Turret extends FightEntity {
 		this.bodyTexFront = this.textures.base
 
 		this.pieces = TURRET_DATA[Math.floor(level / 10)].map(piece => ({t: this.textures[piece.t], z: piece.z}))
-		this.baseHeight = 120 + level * 1.2
+		this.baseHeight = this.height = 80 + level * 1.0
 	}
 
 	public update(dt: number) {

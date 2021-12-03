@@ -41,7 +41,13 @@
 						<h2>Trophées</h2>
 					</div>
 				</router-link>
-				<a target="_blank" rel="noopener" href="http://mx.leekwars.com/mail">
+				<router-link to="/admin/newsletters">
+					<div v-ripple class="section card">
+						<img src="/image/admin/mails.png">
+						<h2>Lettres d'informations</h2>
+					</div>
+				</router-link>
+				<a target="_blank" rel="noopener" href="https://roundcube.leekwars.com">
 					<div v-ripple class="section card">
 						<img src="/image/admin/webmail.png">
 						<h2>Webmail <v-icon>mdi-open-in-new</v-icon></h2>
@@ -78,13 +84,14 @@
 			</div>
 		</panel>
 		<didactitiel v-if="didactitiel_enabled" v-model="didactitiel" />
-		<level-dialog v-if="levelPopupData" v-model="levelPopup" :leek="leek" :data="levelPopupData" />
+		<level-dialog v-if="levelPopupData" v-model="levelPopup" :leek="leek" :level-data="levelPopupData" />
 	</div>
 </template>
 
 <script lang="ts">
 	import { locale } from '@/locale'
-	import { Conversation } from '@/model/conversation'
+	import { ChatMessage } from '@/model/chat'
+	import { Farmer } from '@/model/farmer'
 	import { LeekWars } from '@/model/leekwars'
 	import { Notification } from '@/model/notification'
 	import { Component, Vue } from 'vue-property-decorator'
@@ -105,31 +112,44 @@
 
 		square() {
 			const data = { id: 51568168, type: 2, parameters: ["192","32139522","Mimi25","-1"], date: 1599731275 }
-			const notification = Notification.build(data, true)
+			const notification = Notification.build(data)
 			LeekWars.squares.addFromNotification(notification)
 		}
 
 		squareIcon() {
 			const data = { date: 1599731298, id: 51568182, parameters: ["Magestik25", "32139522"], read: true, type: 12 }
-			const notification = Notification.build(data, true)
+			const notification = Notification.build(data)
 			LeekWars.squares.addFromNotification(notification)
 		}
 
 		squareTrophy() {
 			const trophy = LeekWars.trophies[Math.random() * LeekWars.trophies.length | 0]
 			const data = { date: 1482046364, id: 32098724, parameters: [trophy.id], read: true, type: 11 }
-			const notification = Notification.build(data, true)
+			const notification = Notification.build(data)
 			LeekWars.squares.addFromNotification(notification)
 		}
 		squareTournament() {
 			const data = { date: 1584795604, id: 49519956, parameters: ["59339","Gorglucks"], read: true, type: 9 }
-			const notification = Notification.build(data, true)
+			const notification = Notification.build(data)
 			LeekWars.squares.addFromNotification(notification)
 		}
 
 		squareMP() {
-			const conversation = { id: 1212, farmers: [{}, {}], last_farmer_id: 48, last_farmer_name: "Skouarniek", last_message: "Salut ça va ?" } as Conversation
-			LeekWars.squares.addFromConversation(conversation, 123456789)
+			const message = {
+				chat: 1,
+				id: 1212, farmer: { name: "Skouarniek", id: 48 } as Farmer,
+				content: "Salut ça va ?",
+				contents: [],
+				date: Date.now() / 1000,
+				censored: 0,
+				censored_by: null,
+				day: 0,
+				subMessages: [],
+				read: false,
+				reactions: {},
+				my_reaction: null
+			} as ChatMessage
+			LeekWars.squares.addFromMessage(message)
 		}
 
 		show_didactitiel() {

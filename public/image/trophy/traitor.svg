@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   version="1.0"
+   width="326.000000pt"
+   height="326.000000pt"
+   viewBox="0 0 326.000000 326.000000"
+   preserveAspectRatio="xMidYMid meet"
+   id="svg10"
+   sodipodi:docname="traitor.svg"
+   inkscape:version="1.1 (ce6663b3b7, 2021-05-25)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs14" />
+  <sodipodi:namedview
+     id="namedview12"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:document-units="pt"
+     showgrid="false"
+     inkscape:zoom="2.0084356"
+     inkscape:cx="217.08438"
+     inkscape:cy="217.33333"
+     inkscape:window-width="2488"
+     inkscape:window-height="1376"
+     inkscape:window-x="2632"
+     inkscape:window-y="27"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg10" />
+  <metadata
+     id="metadata2">
+Created by potrace 1.16, written by Peter Selinger 2001-2019
+</metadata>
+  <g
+     transform="translate(0.000000,326.000000) scale(0.100000,-0.100000)"
+     fill="#444444"
+     stroke="none"
+     id="g8">
+    <path
+       d="M1353 2668 l-260 -493 269 -3 c147 -1 389 -1 536 0 l269 3 -258 490 c-187 353 -264 491 -277 493 -16 2 -66 -86 -279 -490z"
+       id="path4"
+       style="fill:#0090ff;fill-opacity:1" />
+    <path
+       d="M796 1613 c-63 -120 -268 -508 -455 -863 l-340 -645 814 -8 c448 -5 1182 -5 1630 0 l814 8 -454 860 -454 860 -720 3 -720 2 -115 -217z"
+       id="path6" />
+  </g>
+</svg>

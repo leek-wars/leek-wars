@@ -37,15 +37,22 @@
 		</div>
 		<div v-if="!LeekWars.mobile && game.showActions && actionsWidth > 0" ref="actions" class="actions" :class="{large: game.largeActions}" :style="{'width': game.largeActions ? actionsWidth + 'px' : null, 'max-width': game.largeActions ? Math.max(600, actionsWidth) + 'px' : null}">
 			<template v-for="line of game.consoleLines">
-				<action-element v-if="line.action" :key="line.id" :action="line.action" :leeks="game.leeks" :display-logs="true" :dark="dark" turn="1" class="action" />
+				<action-element v-if="line.action" :key="line.id" :action="line.action" :leeks="game.leeks" :display-logs="true" :dark="dark" :turn="game.turn" class="action" />
+				<div v-else-if="line.trophy" :key="line.id" class="notif-trophy">
+					<img :src="'/image/trophy/' + line.trophy.name + '.svg'">
+					<i18n path="trophy.x_unlocks_t">
+						<template slot="farmer">{{ line.trophy.farmer.name }}</template>
+						<b slot="trophy">{{ $t('trophy.' + line.trophy.name) }}</b>
+					</i18n>
+				</div>
 				<pre v-else :key="line.id" :class="logClass(line.log)" :style="{color: logColor(line.log)}" class="log">[<leek :leek="game.leeks[line.log[0]]" :dark="dark" />] {{ logText(line.log) }}</pre>
 			</template>
 		</div>
 		<div v-if="game.showActions && game.largeActions" class="resizer" :style="{left: actionsWidth + 'px'}" @mousedown="resizerMousedown"></div>
-		<template v-if="!LeekWars.mobile">
+		<template>
 			<entity-details v-if="game.mouseEntity" :entity="game.mouseEntity" :game="game" :dark="game.autoDark ? (game.map && game.map.options.dark) : game.dark" />
 			<entity-details v-else-if="game.selectedEntity" :entity="game.selectedEntity" :game="game" :dark="game.autoDark ? (game.map && game.map.options.dark) : game.dark" />
-			<entity-details v-else-if="game.currentPlayer in game.leeks" :entity="game.leeks[game.currentPlayer]" :game="game" :dark="game.autoDark ? (game.map && game.map.options.dark) : game.dark" />
+			<entity-details v-else-if="!LeekWars.mobile && game.currentPlayer in game.leeks" :entity="game.leeks[game.currentPlayer]" :game="game" :dark="game.autoDark ? (game.map && game.map.options.dark) : game.dark" />
 		</template>
 	</div>
 </template>
@@ -98,7 +105,7 @@
 		}
 
 		logClass(log: any[]) {
-			if (log[1] === 2 || log[1] === 7) { return "warning" }
+			if (log[1] === 2 || log[1] === 7 || log[1] === 11) { return "warning" }
 			else if (log[1] === 3 || log[1] === 8) { return "error" }
 			else if (log[1] === 5) { return "pause" }
 		}
@@ -107,6 +114,7 @@
 		}
 		logText(log: any[]) {
 			if (log[1] === 5) {	return "pause()" }
+			if (log[1] === 11) { return this.$t('leekscript.too_much_debug') }
 			if (log[1] >= 6 && log[1] <= 8) { return i18n.t('leekscript.error_' + log[3], log[4]) + "\n" + log[2] }
 			return log[2]
 		}
@@ -209,6 +217,10 @@
 		position: absolute;
 		top: 0; left: 0; right: 0;
 		text-align: center;
+	}
+	#app.app .life-bar {
+		transform: scale(0.7);
+		transform-origin: top;
 	}
 	.life-bar .wrapper {
 		display: inline-block;
@@ -321,7 +333,7 @@
 	.debug {
 		position: absolute;
 		top: 0;
-		left: 200px;
+		left: 0;
 		text-align: left;
 		background: rgba(255,255,255,0.9);
 		padding: 5px;
@@ -335,5 +347,21 @@
 	}
 	.error {
 		color: #ff1900;
+	}
+	.notif-trophy {
+		color: black;
+		padding: 4px;
+		display: flex;
+		align-items: center;
+		white-space: nowrap;
+		gap: 6px;
+		margin: 5px 0;
+		img {
+			width: 36px;
+		}
+	}
+	#app.app .details-wrapper {
+		transform: scale(0.5);
+		transform-origin: bottom right;
 	}
 </style>

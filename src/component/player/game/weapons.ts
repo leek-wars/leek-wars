@@ -7,6 +7,7 @@ import { Cell } from '@/model/cell'
 import { LeekWars } from '@/model/leekwars'
 import { FishData, WeaponsData } from '@/model/weapon'
 import { Leek } from './leek'
+import { LighningBall, RealisticExplosion } from './particle'
 import { Position } from './position'
 
 abstract class WeaponAnimation {
@@ -15,7 +16,6 @@ abstract class WeaponAnimation {
 	// Position de l'arme par rapport au poireau (centre de rotation)
 	public cx: number
 	public cz: number
-	public ocx: number
 	// Position de l'arme par rapport au centre
 	public x: number
 	public z: number
@@ -28,27 +28,40 @@ abstract class WeaponAnimation {
 	public sx: number
 	public sz: number
 	public recoil: number = 0
+	public recoilAngle: number = 0
 	public id: number
 
 	constructor(game: Game, texture: Texture, id: number) {
 		this.game = game
 		this.texture = texture
 		const data = WeaponsData[id] || FishData
-		this.cx = data.cx
-		this.cz = data.cz
-		this.ocx = data.ocx
+		this.cz = data.centerZ
+		this.cx = data.centerX
 		this.x = data.x
 		this.z = data.z
-		this.mx1 = data.mx1
-		this.mz1 = data.mz1
-		this.mx2 = data.mx2
-		this.mz2 = data.mz2
+		this.mx1 = data.hand1x
+		this.mz1 = data.hand1z
+		this.mx2 = data.hand2x
+		this.mz2 = data.hand2z
 		this.sx = data.sx!
 		this.sz = data.sz!
 		this.id = id === 0 ? 0 : LeekWars.weapons[id].item
 	}
 	public abstract update(dt: number): void
 	public abstract shoot(leekX: number, leekY: number, handPos: number, angle: number, orientation: number, targetPos: Position, targets: FightEntity[], caster: FightEntity, cell: Cell, scale: number): number
+
+	public getShootPoint(angle: number, handZ: number): {x: number, y: number, z: number} {
+		const cos = Math.cos(angle)
+		const sin = Math.sin(angle)
+		// Coordonnées sans rotation (par rapport au centre)
+		const x = this.x + this.sx - this.recoil
+		const y = this.z + this.sz
+		// Rotation
+		const bulletX = this.cx + x * cos - y * sin
+		const bulletY = y * cos + x * sin
+		const bulletZ = this.cz
+		return { x: bulletX, y: bulletY, z: bulletZ + handZ }
+	}
 }
 
 class WhiteWeaponAnimation extends WeaponAnimation {
@@ -65,7 +78,7 @@ class WhiteWeaponAnimation extends WeaponAnimation {
 		super(game, texture, id)
 	}
 
-	public shoot(leekX: number, leekY: number, handPos: number, angle: number, orientation: number, pos: Position, targets: FightEntity[], caster: FightEntity, cell: Cell, scale: number) {
+	public shoot(leekX: number, leekY: number, handPos: number, angle: number, orientation: number, pos: Position, targets: FightEntity[], caster: FightEntity, cell: Cell, scale: number): number {
 		this.step = 1
 		this.inte = 0.001
 		this.leekX = leekX
@@ -75,11 +88,11 @@ class WhiteWeaponAnimation extends WeaponAnimation {
 		return WhiteWeaponAnimation.WHITE_WEAPON_DURATION
 	}
 
-	public update(dt: number) {
+	public update(dt: number): void {
 		if (this.inte < 1) {
 			if (this.step === 1) {
 				this.inte += dt * 0.04
-			} else {
+			} else {
 				this.inte += dt * 0.1
 			}
 			if (this.inte >= 1) {
@@ -100,12 +113,13 @@ class WhiteWeaponAnimation extends WeaponAnimation {
 		}
 	}
 
-	public draw(ctx: CanvasRenderingContext2D, texture: HTMLImageElement | HTMLCanvasElement, front: boolean = true) {
-		if (!front) { ctx.translate(0, 40) }
+	public draw(ctx: CanvasRenderingContext2D, texture: HTMLImageElement | HTMLCanvasElement, front: boolean = true): void {
+		// ctx.translate(this.cx, this.cz)
 		if (this.step === 1) {
 			ctx.translate(-this.inte * 40, -this.inte * 30)
 		}
 		ctx.rotate(front ? -Math.PI / 2 : -Math.PI / 4)
+		ctx.translate(this.x, this.z)
 		if (this.step === 1) {
 			const i = 1 - Math.min(1, (0.1 / this.inte))
 			ctx.rotate((front ? -Math.PI / 3 : -Math.PI / 3) * i)
@@ -124,6 +138,7 @@ abstract class RangeWeapon extends WeaponAnimation {
 	public cartZ: number
 	public cartAngle: number
 	public recoilForce: number
+	public angleForce: number
 	public cartTexture: Texture | null
 	public sound: Sound
 	public bulletX!: number
@@ -146,18 +161,16 @@ abstract class RangeWeapon extends WeaponAnimation {
 		this.cartZ = data.cartZ!
 		this.cartAngle = data.cartAngle!
 		this.recoilForce = data.recoilForce!
+		this.angleForce = data.angleForce!
 	}
 
 	public shoot(leekX: number, leekY: number, handPos: number, angle: number, orientation: number, targetPos: Position, targets: FightEntity[], caster: FightEntity, cell: Cell, scale: number) {
+		const coord = this.getShootPoint(angle, handPos)
 		const cos = Math.cos(angle)
 		const sin = Math.sin(angle)
-		// Coordonnées sans rotation (par rapport au centre)
-		const x = this.x + this.sx - this.recoil
-		const y = 0
-		this.bulletZ = this.cz * scale + this.z + this.sz + handPos
-		// Rotation
-		this.bulletX = leekX + (this.cx + x * cos - y * sin) * orientation
-		this.bulletY = leekY + (y * cos + x * sin)
+		this.bulletX = leekX + coord.x * scale * orientation
+		this.bulletY = leekY + coord.y * scale
+		this.bulletZ = coord.z * scale
 		this.bulletAngle = (angle + Math.PI / 2) * orientation - Math.PI / 2
 		this.targetPos = targetPos
 		this.targets = targets
@@ -178,6 +191,7 @@ abstract class RangeWeapon extends WeaponAnimation {
 		}
 		// Recoil
 		this.recoil = this.recoilForce
+		this.recoilAngle = this.angleForce
 		// Play sound
 		this.sound.play(this.game)
 
@@ -187,6 +201,10 @@ abstract class RangeWeapon extends WeaponAnimation {
 		if (this.recoil > 0) {
 			this.recoil -= 1 * dt
 			if (this.recoil < 0) { this.recoil = 0 }
+		}
+		if (this.recoilAngle > 0) {
+			this.recoilAngle -= 1 * dt
+			if (this.recoilAngle < 0) { this.recoilAngle = 0 }
 		}
 	}
 	public abstract throwBullet(X: number, Y: number, z: number, angle: number, position: Position, targets: FightEntity[], caster: FightEntity, cell: Cell): number
@@ -210,6 +228,7 @@ class LaserWeapon extends RangeWeapon {
 	public range: number
 	public min_range: number
 	public color: string
+
 	constructor(game: Game, texture: Texture, laserTexture: Texture, cartTexture: Texture, sound: Sound, id: number, range: number, min_range: number, color: string) {
 		super(game, texture, cartTexture, sound, id)
 		this.laserTexture = laserTexture
@@ -217,14 +236,15 @@ class LaserWeapon extends RangeWeapon {
 		this.min_range = min_range
 		this.color = color
 	}
-	public throwBullet(X: number, Y: number, z: number, angle: number, targetPosition: Position, targets: FightEntity[], caster: FightEntity, cell: Cell) {
+
+	public throwBullet(X: number, Y: number, z: number, angle: number, targetPosition: Position, targets: FightEntity[], caster: Leek, cell: Cell) {
 		const dx = Math.sign(cell.x - caster.cell!.x)
 		const dy = Math.sign(cell.y - caster.cell!.y)
 		let current_cell = caster.cell
 		for (let r = 0; r < this.min_range; ++r) {
 			current_cell = this.game.ground.field.next_cell(current_cell, dx, dy)
 		}
-		let length = this.min_range - 1
+		let length = this.min_range
 		const cells = [] as Cell[]
 		for (let r = 0; r < this.range; ++r) {
 			length++
@@ -232,7 +252,7 @@ class LaserWeapon extends RangeWeapon {
 			current_cell = this.game.ground.field.next_cell(current_cell, dx, dy)
 			if (!current_cell || current_cell.obstacle) { break }
 		}
-		const width = (length + 0.5) * this.game.ground.realTileLength - this.sx - this.x
+		const width = length * this.game.ground.realTileLength - (this.cx + this.x + this.sx) * caster.scale
 		const deltaX = Math.cos(angle) * width / 2
 		const deltaY = Math.sin(angle) * width / 2
 		this.game.particles.addLaser(X + deltaX, Y + deltaY, z, angle, width, this.laserTexture, targets)
@@ -277,6 +297,7 @@ class DoubleGun extends Firegun {
 		super(game, T.double_gun, T.cart_double_gun, S.double_gun, 3)
 	}
 	public throwBullet(x: number, y: number, z: number, angle: number, position: Position, targets: FightEntity[]) {
+		this.game.particles.addShot(x, y, z, angle)
 		this.game.particles.addBullet(x, y, z, angle - Math.PI / 40, targets)
 		this.game.particles.addBullet(x, y, z, angle + Math.PI / 40, [])
 		return Firegun.FIREGUN_DURATION
@@ -304,14 +325,11 @@ class Electrisor extends WeaponAnimation {
 		this.areaColor = '#0263f4'
 	}
 
-	public shoot(leekX: number, leekY: number, handPos: number, angle: number, orientation: number, targetPos: Position, targets: FightEntity[], caster: Leek, cell: Cell, scale: number) {
-		const cos = Math.cos(angle)
-		const sin = Math.sin(angle)
-		const x = this.x + this.sx
-		const z = this.cz * scale + this.z + this.sz - (caster.front ? 5 : -5)
-		this.lightningX = leekX + (this.cx + x * cos) * orientation
-		this.lightningY = leekY + x * sin
-		this.lightningZ = z
+	public shoot(leekX: number, leekY: number, handPos: number, angle: number, orientation: number, targetPos: Position, targets: FightEntity[], caster: Leek, cell: Cell, scale: number): number {
+		const coord = this.getShootPoint(angle, 0)
+		this.lightningX = leekX + coord.x * scale * orientation
+		this.lightningY = leekY + coord.y * scale
+		this.lightningZ = coord.z * scale
 		this.lightningAngle = (angle + Math.PI / 2) * orientation - Math.PI / 2
 		this.lightningPosition = targetPos
 		this.shoots = 30
@@ -321,12 +339,12 @@ class Electrisor extends WeaponAnimation {
 		return Electrisor.ELECTRISOR_DURATION
 	}
 
-	public update(dt: number) {
+	public update(dt: number): void {
 		if (this.shoots > 0) {
 			this.currentDelay -= dt
 			if (this.currentDelay <= 0) {
 				this.currentDelay = this.delay
-				this.game.particles.addLightning(this.lightningX, this.lightningY, this.lightningZ + this.caster.handPos, this.lightningAngle, this.lightningPosition, this.lightning, 42)
+				this.game.particles.addLightning(this.lightningX, this.lightningY, this.lightningZ + this.caster.handPos * this.caster.scale, this.lightningAngle, this.lightningPosition, this.lightning, 42)
 				this.shoots--
 			}
 		}
@@ -353,29 +371,26 @@ class FlameThrower extends WeaponAnimation {
 	public bulletY: number = 0
 	public bulletZ: number = 0
 	public bulletAngle: number = 0
-	public sx: number = 145
-	public sz: number = 2
 	public cartX = 60
 	public cartZ = 20
 	public cartAngle = Math.PI / 2
 	public min_range: number = 2
 	public range: number = 8
+	public caster!: Leek
 
 	constructor(game: Game) {
 		super(game, T.flame_thrower, 8)
 	}
 
-	public shoot(leekX: number, leekY: number, handPos: number, angle: number, orientation: number, targetPosition: Position, targets: FightEntity[], caster: FightEntity, cell: Cell) {
-		const cos = Math.cos(angle)
-		const sin = Math.sin(angle)
-		const x = this.x + this.sx
-		const z = this.cz + this.z + this.sz + handPos
-		this.bulletX = leekX + (this.cx + x * cos) * orientation
-		this.bulletY = leekY + x * sin
-		this.bulletZ = z
+	public shoot(leekX: number, leekY: number, handPos: number, angle: number, orientation: number, targetPosition: Position, targets: FightEntity[], caster: Leek, cell: Cell, scale: number): number {
+		const coord = this.getShootPoint(angle, 0)
+		this.bulletX = leekX + coord.x * orientation * scale
+		this.bulletY = leekY + coord.y * scale
+		this.bulletZ = coord.z * scale
 		this.bulletAngle = (angle + Math.PI / 2) * orientation - Math.PI / 2
 		this.shoots = FlameThrower.FLAMETHROWER_DURATION
 		S.flame_thrower.play(this.game)
+		this.caster = caster
 
 		const dx = Math.sign(cell.x - caster.cell!.x)
 		const dy = Math.sign(cell.y - caster.cell!.y)
@@ -389,7 +404,7 @@ class FlameThrower extends WeaponAnimation {
 			current_cell = this.game.ground.field.next_cell(current_cell, dx, dy)
 			if (!current_cell || current_cell.obstacle) { break }
 		}
-		this.game.setEffectAreaLaser(cells, "orange", dx, dy)
+		this.game.setEffectAreaLaser(cells, "orange", dx, dy, FlameThrower.FLAMETHROWER_DURATION + 40)
 		return FlameThrower.FLAMETHROWER_DURATION
 	}
 
@@ -397,7 +412,7 @@ class FlameThrower extends WeaponAnimation {
 		if (this.shoots > 0) {
 			if (this.shoots > 30) {
 				for (let i = 0; i < Math.round(3 * dt); i++) {
-					this.game.particles.addFire(this.bulletX, this.bulletY, this.bulletZ, this.bulletAngle, true)
+					this.game.particles.addFire(this.bulletX, this.bulletY, this.bulletZ + this.caster.handPos * this.caster.scale, this.bulletAngle, true)
 				}
 			}
 			this.shoots -= dt
@@ -414,14 +429,11 @@ class Gazor extends WeaponAnimation {
 	public bulletY: number = 0
 	public bulletZ: number = 0
 	public bulletAngle: number = 0
-	public sx: number = 130
-	public sz: number = 2
-	public cartX = 60
-	public cartZ = 20
 	public cartAngle = Math.PI / 2
 	public color: string
 	public gaz: Texture
 	public targetPos!: Position
+	public caster!: Leek
 
 	constructor(game: Game) {
 		super(game, T.gazor, 10)
@@ -429,35 +441,33 @@ class Gazor extends WeaponAnimation {
 		this.gaz = T.gaz
 	}
 
-	public shoot(leekX: number, leekY: number, handPos: number, angle: number, orientation: number, targetPos: Position, targets: FightEntity[], caster: FightEntity, cell: Cell, scale: number) {
+	public shoot(leekX: number, leekY: number, handPos: number, angle: number, orientation: number, targetPos: Position, targets: FightEntity[], caster: Leek, cell: Cell, scale: number): number {
 		this.targetPos = targetPos
-		const cos = Math.cos(angle)
-		const sin = Math.sin(angle)
-		const x = this.x + this.sx
-		const z = this.cz * scale + this.z + this.sz + handPos
-		this.bulletX = leekX + (this.cx + x * cos) * orientation
-		this.bulletY = leekY + x * sin
-		this.bulletZ = z
+		const coord = this.getShootPoint(angle, 0)
+		this.bulletX = leekX + coord.x * orientation * scale
+		this.bulletY = leekY + coord.y * scale
+		this.bulletZ = coord.z * scale
 		this.bulletAngle = (angle + Math.PI / 2) * orientation - Math.PI / 2
 		this.shoots = Gazor.GAZOR_DURATION
+		this.caster = caster
 		this.game.setEffectArea(cell, Area.CIRCLE3, this.color, 120)
 		S.gazor.play(this.game)
 		return Gazor.GAZOR_DURATION
 	}
 
-	public update(dt: number) {
+	public update(dt: number): void {
 		if (this.shoots > 0) {
 			if (this.shoots > 30) {
 				for (let i = 0; i < Math.round(3 * dt); i++) {
-					this.game.particles.addGaz(this.bulletX, this.bulletY, this.bulletZ, this.bulletAngle, this.gaz, true)
+					this.game.particles.addGaz(this.bulletX, this.bulletY, this.bulletZ + this.caster.handPos * this.caster.scale, this.bulletAngle, this.gaz, true)
 				}
 			}
-			this.shoots--
+			this.shoots -= dt
 		}
 	}
 }
 class UnbridledGazor extends Gazor {
-	static textures = [T.unbridled_gazor, T.orange_gaz, T.explosion]
+	static textures = [T.unbridled_gazor, T.orange_gaz]
 	static sounds = [S.gazor]
 	explosions: number = 0
 	delay: number = 0
@@ -467,19 +477,19 @@ class UnbridledGazor extends Gazor {
 		this.gaz = T.orange_gaz
 		this.color = '#ff5c00'
 	}
-	public shoot(leekX: number, leekY: number, handPos: number, angle: number, orientation: number, targetPos: Position, targets: FightEntity[], caster: FightEntity, cell: Cell, scale: number) {
+	public shoot(leekX: number, leekY: number, handPos: number, angle: number, orientation: number, targetPos: Position, targets: FightEntity[], caster: Leek, cell: Cell, scale: number): number {
 		this.explosions = 4
 		this.delay = 40
 		return super.shoot(leekX, leekY, handPos, angle, orientation, targetPos, targets, caster, cell, scale)
 	}
-	public update(dt: number) {
+	public update(dt: number): void {
 		super.update(dt)
 		if (this.explosions > 0) {
 			this.delay -= dt
 			if (this.delay < 0) {
-				this.game.particles.addExplosion(this.targetPos.x + Math.random() * 200 - 100, this.targetPos.y + Math.random() * 100 - 50, 0, T.explosion)
+				this.game.particles.addRealisticExplosion(this.targetPos.x + Math.random() * 200 - 100, this.targetPos.y + Math.random() * 100 - 50, 2)
 				this.explosions--
-				this.delay = 15 + Math.random() * 10
+				this.delay = 10 + Math.random() * 10
 			}
 		}
 	}
@@ -487,7 +497,7 @@ class UnbridledGazor extends Gazor {
 
 class GrenadeLauncher extends Firegun {
 	static GRENADE_LAUNCHER_DURATION = 50
-	static textures = [T.shots, T.grenade_launcher, T.cart_grenade_launcher, T.grenade, T.explosion]
+	static textures = [T.shots, T.grenade_launcher, T.cart_grenade_launcher, T.grenade]
 	static sounds = [S.grenade_shoot, S.explosion]
 
 	constructor(game: Game) {
@@ -495,7 +505,8 @@ class GrenadeLauncher extends Firegun {
 	}
 
 	public throwBullet(x: number, y: number, z: number, angle: number, position: Position, targets: FightEntity[], caster: FightEntity, cell: Cell) {
-		this.game.particles.addGrenade(x, y, z, angle, position, targets, T.grenade, T.explosion)
+		this.game.particles.addShot(x, y, z, angle)
+		this.game.particles.addGrenade(x, y, z, angle, position, targets, T.grenade, cell)
 		this.game.setEffectArea(cell, Area.CIRCLE2, '#0094c5')
 		return GrenadeLauncher.GRENADE_LAUNCHER_DURATION
 	}
@@ -503,7 +514,7 @@ class GrenadeLauncher extends Firegun {
 
 class IllicitGrenadeLauncher extends Firegun {
 	static GRENADE_LAUNCHER_DURATION = 50
-	static textures = [T.shots, T.illicit_grenade_launcher, T.cart_illicit_grenade_launcher, T.red_grenade, T.red_explosion]
+	static textures = [T.shots, T.illicit_grenade_launcher, T.cart_illicit_grenade_launcher, T.red_grenade]
 	static sounds = [S.grenade_shoot, S.explosion]
 
 	constructor(game: Game) {
@@ -511,7 +522,8 @@ class IllicitGrenadeLauncher extends Firegun {
 	}
 
 	public throwBullet(x: number, y: number, z: number, angle: number, position: Position, targets: FightEntity[], caster: FightEntity, cell: Cell) {
-		this.game.particles.addGrenade(x, y, z, angle, position, targets, T.red_grenade, T.red_explosion)
+		this.game.particles.addShot(x, y, z, angle)
+		this.game.particles.addGrenade(x, y, z, angle, position, targets, T.red_grenade, cell)
 		this.game.setEffectArea(cell, Area.CIRCLE2, 'red')
 		return IllicitGrenadeLauncher.GRENADE_LAUNCHER_DURATION
 	}
@@ -524,6 +536,15 @@ class Katana extends WhiteWeaponAnimation {
 		super(game, T.katana, 14)
 	}
 }
+
+class DarkKatana extends WhiteWeaponAnimation {
+	static textures = [T.slash, T.dark_katana]
+	static sounds = [S.sword]
+	constructor(game: Game) {
+		super(game, T.dark_katana, 32)
+	}
+}
+
 
 class Laser extends LaserWeapon {
 	static textures = [T.laser, T.laser_bullet, T.cart_laser]
@@ -547,7 +568,7 @@ class RevokedMLaser extends LaserWeapon {
 	constructor(game: Game) {
 		super(game, T.revoked_m_laser, T.revoked_m_laser_bullet, T.cart_revoked_m_laser, S.laser, 21, 8, 5, "#c500e6")
 	}
-	public shoot(leekX: number, leekY: number, handPos: number, angle: number, orientation: number, targetPos: Position, targets: FightEntity[], caster: FightEntity, cell: Cell, scale: number) {
+	public shoot(leekX: number, leekY: number, handPos: number, angle: number, orientation: number, targetPos: Position, targets: FightEntity[], caster: FightEntity, cell: Cell, scale: number): number {
 		S.poison.play(this.game)
 		return super.shoot(leekX, leekY, handPos, angle, orientation, targetPos, targets, caster, cell, scale)
 	}
@@ -564,16 +585,20 @@ class Rifle extends Firegun {
 		super(game, T.rifle, T.rifle_cartridge, S.rifle, 22)
 	}
 
-	public shoot(leekX: number, leekY: number, handPos: number, angle: number, orientation: number, targetPos: Position, targets: FightEntity[], caster: FightEntity, cell: Cell, scale: number) {
+	public shoot(leekX: number, leekY: number, handPos: number, angle: number, orientation: number, targetPos: Position, targets: FightEntity[], caster: FightEntity, cell: Cell, scale: number): number {
 		this.shoots = Rifle.SHOTS
 		return super.shoot(leekX, leekY, handPos, angle, orientation, targetPos, targets, caster, cell, scale)
 	}
-	public update(dt: number) {
+	public update(dt: number): void {
+		super.update(dt)
 		if (this.shoots > 0) {
 			this.delay -= dt
 			if (this.delay <= 0) {
 				S.rifle.play(this.game)
+				this.game.particles.addShot(this.bulletX, this.bulletY, this.bulletZ, this.bulletAngle)
 				this.throwBullet(this.bulletX, this.bulletY, this.bulletZ, this.bulletAngle, this.targetPos, this.targets, this.caster, this.cell)
+				this.recoil = this.recoilForce
+				this.recoilAngle = this.angleForce
 				this.delay = Rifle.DELAY
 				this.shoots--
 			}
@@ -592,16 +617,20 @@ class ExplorerRifle extends Firegun {
 		super(game, T.explorer_rifle, T.explorer_rifle_cartridge, S.rifle, 22)
 	}
 
-	public shoot(leekX: number, leekY: number, handPos: number, angle: number, orientation: number, targetPos: Position, targets: FightEntity[], caster: FightEntity, cell: Cell, scale: number) {
+	public shoot(leekX: number, leekY: number, handPos: number, angle: number, orientation: number, targetPos: Position, targets: FightEntity[], caster: FightEntity, cell: Cell, scale: number): number {
 		this.shoots = Rifle.SHOTS
 		return super.shoot(leekX, leekY, handPos, angle, orientation, targetPos, targets, caster, cell, scale)
 	}
-	public update(dt: number) {
+	public update(dt: number): void {
+		super.update(dt)
 		if (this.shoots > 0) {
 			this.delay -= dt
 			if (this.delay <= 0) {
 				S.rifle.play(this.game)
+				this.game.particles.addShot(this.bulletX, this.bulletY, this.bulletZ, this.bulletAngle)
 				this.throwBullet(this.bulletX, this.bulletY, this.bulletZ, this.bulletAngle, this.targetPos, this.targets, this.caster, this.cell)
+				this.recoil = this.recoilForce
+				this.recoilAngle = this.angleForce
 				this.delay = Rifle.DELAY
 				this.shoots--
 			}
@@ -624,7 +653,8 @@ class MachineGun extends Firegun {
 		super(game, T.machine_gun, T.cart_machine_gun, S.machine_gun, 2)
 	}
 
-	public throwBullet(x: number, y: number, z: number, angle: number, position: Position, targets: FightEntity[], caster: FightEntity, cell: Cell) {
+	public throwBullet(x: number, y: number, z: number, angle: number, position: Position, targets: FightEntity[], caster: FightEntity, cell: Cell): number {
+		this.game.particles.addShot(x, y, z, angle)
 		this.game.particles.addBullet(x, y, z, angle, targets)
 		this.game.particles.addBullet(x, y, z, angle + Math.PI / 50, [])
 		this.game.particles.addBullet(x, y, z, angle - Math.PI / 50, [])
@@ -662,6 +692,7 @@ class Shotgun extends Firegun {
 		super(game, T.shotgun, T.cart_shotgun, S.shotgun, 4)
 	}
 	public throwBullet(x: number, y: number, z: number, angle: number, position: Position, targets: FightEntity[], caster: FightEntity, cell: Cell) {
+		this.game.particles.addShot(x, y, z, angle)
 		for (let i = 0; i < 5; i++) {
 			this.game.particles.addBullet(x, y, z, angle + Math.random() * Math.PI / 4 - Math.PI / 8, targets)
 		}
@@ -694,7 +725,8 @@ class Fish extends Firegun {
 		this.shoots = 20
 		return GrenadeLauncher.GRENADE_LAUNCHER_DURATION
 	}
-	public update(dt: number) {
+	public update(dt: number): void {
+		super.update(dt)
 		if (this.shoots > 0) {
 			this.delay -= dt
 			if (this.delay <= 0) {
@@ -706,4 +738,89 @@ class Fish extends Firegun {
 	}
 }
 
-export { WeaponAnimation, WhiteWeaponAnimation, Axe, BLaser, Broadsword, Destroyer, DoubleGun, Electrisor, ExplorerRifle, Fish, FlameThrower, Gazor, GrenadeLauncher, IllicitGrenadeLauncher, JLaser, Katana, Laser, MachineGun, Magnum, Rhino, MLaser, MysteriousElectrisor, Pistol, RevokedMLaser, Rifle, Shotgun, UnbridledGazor }
+class Neutrino extends Firegun {
+	static textures = [T.shots, T.bullet, T.neutrino, T.cart_neutrino, T.green_lightning]
+	static sounds = [S.lightninger]
+
+	constructor(game: Game) {
+		super(game, T.neutrino, T.cart_neutrino, S.lightninger, 27)
+	}
+
+	public throwBullet(x: number, y: number, z: number, angle: number, position: Position, targets: FightEntity[], caster: FightEntity, cell: Cell) {
+
+		this.targets = targets
+		const distance = this.game.ground.field.real_distance(caster.cell!, cell)
+		const duration = (distance - 2) * LighningBall.SPEED * 2
+		this.game.particles.addLighningBall(x, y, z, angle, duration, 30, T.green_lightning)
+		return duration
+	}
+}
+
+class Lightninger extends Firegun {
+	static textures = [T.shots, T.bullet, T.lightninger, T.cart_lightninger, T.plasma, T.blue_lightning]
+	static sounds = [S.lightninger, S.lightning, S.electrisor, S.lightninger_impact]
+	static EXPLOSION_DURATION = 40
+	life: number = 100
+	target_z!: number
+
+	constructor(game: Game) {
+		super(game, T.lightninger, T.cart_lightninger, S.lightninger, 25)
+	}
+
+	public throwBullet(x: number, y: number, z: number, angle: number, position: Position, targets: FightEntity[], caster: FightEntity, cell: Cell) {
+
+		this.targets = targets
+		const distance = this.game.ground.field.real_distance(caster.cell!, cell)
+		const duration = (distance - 2) * LighningBall.SPEED * 2
+		this.life = duration + Lightninger.EXPLOSION_DURATION
+		this.target_z = z
+
+		this.game.particles.addLighningBall(x, y, z, angle, duration, 40, T.blue_lightning)
+		this.game.setEffectArea(cell, Area.X_1, '#0096ff', duration + Lightninger.EXPLOSION_DURATION)
+
+		return duration + Lightninger.EXPLOSION_DURATION
+	}
+
+	public update(dt: number) {
+		super.update(dt)
+		this.life -= dt
+		if (this.life > 0 && this.life < Lightninger.EXPLOSION_DURATION && this.targets) {
+			const R = 3
+			const L = 50
+			for (const target of this.targets) {
+				for (let i = 0; i < 3; ++i) {
+					const angle = Math.random() * Math.PI * 2
+					const dx = Math.cos(angle)
+					const dy = Math.sin(angle)
+					const l = L + Math.random() * 10
+					const position = {x: target.ox + dx * l, y: target.oy + dy * l}
+					this.game.particles.addLightning(target.ox + dx * R, target.oy + dy * R, this.target_z, angle, position, T.blue_lightning, 20)
+					target.electrify()
+				}
+			}
+		}
+	}
+}
+
+class Bazooka extends Firegun {
+	static textures = [T.shots, T.bullet, T.bazooka, T.cart_bazooka, T.rocket, T.fire]
+	static sounds = [S.rocket]
+
+	constructor(game: Game) {
+		super(game, T.bazooka, T.cart_bazooka, S.rocket, 29)
+	}
+
+	public throwBullet(x: number, y: number, z: number, angle: number, position: Position, targets: FightEntity[], caster: FightEntity, cell: Cell): number {
+		this.game.particles.addShot(x, y, z, angle)
+
+		const distance = this.game.ground.field.real_distance(caster.cell!, cell)
+		const duration = (distance - 1) * 4
+
+		this.game.setEffectArea(cell, Area.CIRCLE3, 'red', duration + RealisticExplosion.LIFE)
+		this.game.particles.addRocket(x, y, z, angle, duration, cell, 3)
+
+		return duration + 10
+	}
+}
+
+export { WeaponAnimation, WhiteWeaponAnimation, Axe, Bazooka, BLaser, Broadsword, DarkKatana, Destroyer, DoubleGun, Electrisor, ExplorerRifle, Fish, FlameThrower, Gazor, GrenadeLauncher, IllicitGrenadeLauncher, JLaser, Katana, Laser, Lightninger, MachineGun, Magnum, Neutrino, Rhino, MLaser, MysteriousElectrisor, Pistol, RevokedMLaser, Rifle, Shotgun, UnbridledGazor }

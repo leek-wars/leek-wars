@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   version="1.0"
+   width="195.000000pt"
+   height="195.000000pt"
+   viewBox="0 0 195.000000 195.000000"
+   preserveAspectRatio="xMidYMid meet"
+   id="svg14"
+   sodipodi:docname="destroyer.svg"
+   inkscape:version="1.1 (ce6663b3b7, 2021-05-25)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs18" />
+  <sodipodi:namedview
+     id="namedview16"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:document-units="pt"
+     showgrid="false"
+     inkscape:zoom="3.3576923"
+     inkscape:cx="129.85109"
+     inkscape:cy="130"
+     inkscape:window-width="2488"
+     inkscape:window-height="1376"
+     inkscape:window-x="2632"
+     inkscape:window-y="27"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg14" />
+  <metadata
+     id="metadata2">
+Created by potrace 1.16, written by Peter Selinger 2001-2019
+</metadata>
+  <g
+     transform="translate(0.000000,195.000000) scale(0.100000,-0.100000)"
+     fill="#444444"
+     stroke="none"
+     id="g12">
+    <path
+       d="M1105 1941 c-4 -8 -143 -11 -425 -11 l-419 0 -16 -30 c-21 -41 -62 -42 -67 -2 -3 25 -7 27 -50 30 l-48 3 0 -400 0 -401 45 0 c43 0 44 1 51 35 3 19 10 35 14 35 5 0 15 2 22 5 10 4 21 -8 33 -35 l18 -40 471 2 471 3 0 405 0 405 -47 3 c-25 2 -49 -2 -53 -7z"
+       id="path4" />
+    <path
+       d="M1301 1568 l-1 -388 65 0 c35 0 74 4 87 9 13 5 56 14 97 20 41 6 79 15 85 20 6 4 27 14 46 21 19 8 41 20 48 27 7 7 22 13 33 13 10 0 19 4 19 10 0 5 15 31 33 57 19 27 40 69 46 94 12 44 11 137 -2 188 -16 61 -113 169 -182 202 -57 27 -175 51 -277 56 -85 4 -87 5 -91 31 -2 15 -5 -147 -6 -360z"
+       id="path6" />
+    <path
+       d="M1115 811 c-4 -8 -143 -11 -425 -11 l-419 0 -16 -30 c-21 -41 -62 -42 -67 -2 -3 25 -7 27 -50 30 l-48 3 0 -400 0 -401 45 0 c43 0 44 1 51 35 3 19 10 35 14 35 5 0 15 2 22 5 10 4 21 -8 33 -35 l18 -40 471 2 471 3 0 405 0 405 -47 3 c-25 2 -49 -2 -53 -7z"
+       id="path8"
+       style="fill:#0090ff;fill-opacity:1" />
+    <path
+       d="M1311 438 l-1 -388 65 0 c35 0 74 4 87 9 13 5 56 14 97 20 41 6 79 15 85 20 6 4 27 14 46 21 19 8 41 20 48 27 7 7 22 13 33 13 10 0 19 4 19 10 0 5 15 31 33 57 19 27 40 69 46 94 12 44 11 137 -2 188 -16 61 -113 169 -182 202 -57 27 -175 51 -277 56 -85 4 -87 5 -91 31 -2 15 -5 -147 -6 -360z"
+       id="path10"
+       style="fill:#0090ff;fill-opacity:1" />
+  </g>
+</svg>

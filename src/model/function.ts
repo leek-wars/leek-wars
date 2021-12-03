@@ -2,7 +2,7 @@ class LeekScriptItem {
 
 }
 
-class Function extends LeekScriptItem {
+class LSFunction extends LeekScriptItem {
 	public id!: number
 	public name!: string
 	public level!: number
@@ -14,5 +14,6 @@ class Function extends LeekScriptItem {
 	public return_type!: number
 	public deprecated!: number
 	public replacement!: number | null
+	public optional!: boolean[]
 }
-export { Function, LeekScriptItem }
+export { LSFunction, LeekScriptItem }

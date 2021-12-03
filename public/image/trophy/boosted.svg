@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   version="1.0"
+   width="234.000000pt"
+   height="234.000000pt"
+   viewBox="0 0 234.000000 234.000000"
+   preserveAspectRatio="xMidYMid meet"
+   id="svg12"
+   sodipodi:docname="boosted.svg"
+   inkscape:version="1.1 (ce6663b3b7, 2021-05-25)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs16" />
+  <sodipodi:namedview
+     id="namedview14"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:document-units="pt"
+     showgrid="false"
+     inkscape:zoom="2.7980769"
+     inkscape:cx="220.1512"
+     inkscape:cy="165.2921"
+     inkscape:window-width="2488"
+     inkscape:window-height="1376"
+     inkscape:window-x="2632"
+     inkscape:window-y="27"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg12" />
+  <metadata
+     id="metadata2">
+Created by potrace 1.16, written by Peter Selinger 2001-2019
+</metadata>
+  <path
+     id="path2030"
+     style="fill:#444444;fill-opacity:1;stroke:none;stroke-width:0.640412"
+     inkscape:transform-center-x="2.5697032e-06"
+     inkscape:transform-center-y="-11.600152"
+     d="M 155.90039 11.328125 L 108.29688 107.78125 L 1.8554688 123.24805 L 78.876953 198.32617 L 60.695312 304.33594 L 155.90039 254.28516 L 251.10352 304.33594 L 232.92188 198.32617 L 309.94336 123.24805 L 203.50195 107.78125 L 155.90039 11.328125 z M 155.90039 70.083984 L 186.23438 131.54883 L 254.0625 141.4043 L 204.98047 189.24609 L 216.56836 256.80273 L 155.90039 224.90625 L 95.232422 256.80273 L 106.81836 189.24609 L 57.736328 141.4043 L 125.56641 131.54883 L 155.90039 70.083984 z "
+     transform="scale(0.75)" />
+</svg>

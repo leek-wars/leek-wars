@@ -127,11 +127,11 @@
 
 		<panel v-if="member" :title="$t('chat')" toggle="team/chat" icon="mdi-chat-outline">
 			<div slot="actions">
-				<div v-if="!LeekWars.mobile" class="button flat" @click="LeekWars.addChat('team', ChatType.TEAM, team.name)">
+				<div v-if="!LeekWars.mobile" class="button flat" @click="LeekWars.addChat(team.chat, ChatType.TEAM, team.name)">
 					<v-icon>mdi-picture-in-picture-bottom-right</v-icon>
 				</div>
 			</div>
-			<chat slot="content" channel="team" />
+			<chat v-if="team" :id="team.chat" slot="content" />
 		</panel>
 
 		<panel v-if="team && member && team.candidacies && team.candidacies.length > 0">
@@ -222,7 +222,7 @@
 		<div v-if="member && team && team.compositions && team.compositions.length == 0" class="no-compos">{{ $t('no_compositions') }}</div>
 
 		<div v-if="member && team && team.compositions" class="compos">
-			<panel v-for="composition in team.compositions" :key="composition.id" :class="{'in-tournament': composition.tournament.registered}" class="compo">
+			<panel v-for="composition in team.compositions" :key="composition.id" :class="{'in-tournament': composition.tournament.registered}" :toggle="'team/compo/toggle/' + composition.id" class="compo">
 				<template slot="title">
 					<rich-tooltip-composition :id="composition.id" v-slot="{ on }">
 						<div v-on="on">{{ composition.name }}</div>
@@ -234,7 +234,7 @@
 						<talent :id="team.id" :talent="composition.talent" category="team" />
 					</div>
 					<router-link v-if="composition.tournament.current" :to="'/tournament/' + composition.tournament.current" class="view-tournament button flat">{{ $t('see_tournament') }}</router-link>
-					<tooltip v-if="captain">
+					<tooltip v-if="captain" content-class="fluid" @input="loadTournamentRange(composition)">
 						<template v-slot:activator="{ on }">
 							<div class="button flat" v-on="on" @click="registerTournament(composition)">
 								<v-icon>mdi-trophy</v-icon>
@@ -243,6 +243,10 @@
 							</div>
 						</template>
 						{{ $t('tournament_time') }}
+						<i18n v-if="composition.tournamentRange" tag="div" path="main.level_x_to_y">
+							<b slot="min">{{ composition.tournamentRange.min }}</b>
+							<b slot="max">{{ composition.tournamentRange.max }}</b>
+						</i18n>
 					</tooltip>
 					<div v-if="captain" class="delete-compo button flat" @click="compositionToDelete = composition; deleteCompoDialog = true">
 						<v-icon>mdi-close</v-icon>
@@ -269,8 +273,8 @@
 			</panel>
 		</div>
 
-		<panel v-if="member && team && team.unengaged_leeks" class="compo">
-			<h2 slot="title" class="compo-title">{{ $t('unsorted_leeks') }}</h2>
+		<panel v-if="member && team && team.unengaged_leeks" class="compo" toggle="team/no-compo">
+			<template slot="title">{{ $t('unsorted_leeks') }}</template>
 
 			<div slot="content" :class="{dashed: draggedLeek != null}" class="leeks" @dragover="leeksDragover" @drop="leeksDrop(null, $event)">
 				<div v-if="team.unengaged_leeks.length == 0" class="empty">{{ $t('empty_compo') }}</div>
@@ -497,15 +501,15 @@
 	import { ChatType } from '@/model/chat'
 	import { Farmer } from '@/model/farmer'
 	import { fileSystem } from '@/model/filesystem'
-	import { i18n, mixins } from '@/model/i18n'
+	import { mixins } from '@/model/i18n'
 	import { Leek } from '@/model/leek'
 	import { LeekWars } from '@/model/leekwars'
 	import { Warning } from '@/model/moderation'
-	import { SocketMessage } from '@/model/socket'
 	import { Composition, Team, TeamMember } from '@/model/team'
 	import { Component, Vue, Watch } from 'vue-property-decorator'
+	import { store } from '@/model/store'
 
-	@Component({ name: 'team', i18n: {}, mixins, components: { CharacteristicTooltip, Explorer }})
+	@Component({ name: 'team', i18n: {}, mixins: [...mixins], components: { CharacteristicTooltip, Explorer }})
 	export default class TeamPage extends Vue {
 		ChatType = ChatType
 		team: Team | null = null
@@ -576,7 +580,7 @@
 					request = 'team/get-connected/' + this.id
 				}
 			}
-			LeekWars.get(request).then(team => {
+			LeekWars.get<Team>(request).then(team => {
 				this.team = team
 				if (!this.team) {
 					return
@@ -655,7 +659,9 @@
 						total_level: 0,
 						tournament: {current: null, registered: false},
 						captain: this.captain,
-						fights: 10
+						fights: 10,
+						tournamentRange: [],
+						tournamentRangeLoading: false
 					} as Composition
 					this.team.compositions.push(compo)
 					this.team.compositionsById[compo.id] = compo
@@ -885,6 +891,13 @@
 			this.my_member!.logs_level = this.logsLevel
 			LeekWars.post('team/set-logs-level', {level: this.logsLevel})
 		}
+
+		loadTournamentRange(composition: Composition) {
+			if (composition.tournamentRange || composition.tournamentRangeLoading) { return }
+			composition.tournamentRangeLoading = true
+			const power = Math.round(composition.leeks.reduce((p, l) => p + l.level ** LeekWars.POWER_FACTOR, 0))
+			LeekWars.post('tournament/range-compo', {power}).then(d => Vue.set(composition, 'tournamentRange', d))
+		}
 	}
 </script>
 
@@ -1108,6 +1121,7 @@
 		transition: transform 0.4s;
 		transform: scale(1);
 		cursor: pointer;
+		width: 96px;
 		.name {
 			font-size: 16px;
 			text-align: center;

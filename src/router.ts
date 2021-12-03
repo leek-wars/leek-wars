@@ -4,6 +4,7 @@ const About = () => import(/* webpackChunkName: "[request]" */ `@/component/abou
 const AcceptConditions = () => import(/* webpackChunkName: "[request]" */ `@/component/accept-conditions/accept-conditions.${locale}.i18n`)
 const AdminEmails = () => import(/* webpackChunkName: "admin" */ `@/component/admin/admin-emails.vue`)
 const AdminErrors = () => import(/* webpackChunkName: "admin" */ `@/component/admin/admin-errors.vue`)
+const AdminNewsletters = () => import(/* webpackChunkName: "admin" */ `@/component/admin/admin-newsletters.vue`)
 const AdminServers = () => import(/* webpackChunkName: "admin" */ `@/component/admin/admin-servers.vue`)
 const AdminServices = () => import(/* webpackChunkName: "admin" */ `@/component/admin/admin-services.vue`)
 const AdminTrophies = () => import(/* webpackChunkName: "admin" */ `@/component/admin/admin-trophies.vue`)
@@ -20,6 +21,7 @@ const Conditions = () => import(/* webpackChunkName: "[request]" */ `@/component
 const Documentation = () => import(/* webpackChunkName: "[request]" */ `@/component/documentation/documentation.${locale}.i18n`)
 const Editor = () => import(/* webpackChunkName: "[request]" */ `@/component/editor/editor.${locale}.i18n`)
 const Encyclopedia = () => import(/* webpackChunkName: "encyclopedia" */ `@/component/encyclopedia/encyclopedia.${locale}.i18n`)
+const EncyclopediaSearch = () => import(/* webpackChunkName: "[request]" */ `@/component/encyclopedia/encyclopedia-search.${locale}.i18n`)
 const Farmer = () => import(/* webpackChunkName: "[request]" */ `@/component/farmer/farmer.${locale}.i18n`)
 const Fight = () => import(/* webpackChunkName: "[request]" */ `@/component/fight/fight.${locale}.i18n`)
 const ForgotPassword = () => import(/* webpackChunkName: "[request]" */ `@/component/forgot-password/forgot-password.${locale}.i18n`)
@@ -54,6 +56,7 @@ const TalentPage = () => import(/* webpackChunkName: "[request]" */ `@/component
 const Team = () => import(/* webpackChunkName: "[request]" */ `@/component/team/team.${locale}.i18n`)
 const Tournament = () => import(/* webpackChunkName: "[request]" */ `@/component/tournament/tournament.${locale}.i18n`)
 const Trophies = () => import(/* webpackChunkName: "[request]" */ `@/component/trophies/trophies.${locale}.i18n`)
+const TrophyPage = () => import(/* webpackChunkName: "[request]" */ `@/component/trophy/trophy.${locale}.i18n`)
 const Tutorial = () => import(/* webpackChunkName: "[request]" */ `@/component/tutorial/tutorial.${locale}.i18n`)
 import { env } from '@/env'
 import { LeekWars } from '@/model/leekwars'
@@ -101,6 +104,7 @@ const routes = [
 	{ path: '/admin', component: Admin, beforeEnter: connected },
 	{ path: '/admin/services', component: AdminServices, beforeEnter: connected },
 	{ path: '/admin/emails', component: AdminEmails, beforeEnter: connected },
+	{ path: '/admin/newsletters', component: AdminNewsletters, beforeEnter: connected },
 	{ path: '/admin/errors', component: AdminErrors, beforeEnter: connected },
 	{ path: '/admin/servers', component: AdminServers, beforeEnter: connected },
 	{ path: '/admin/trophies', component: AdminTrophies, beforeEnter: connected },
@@ -111,6 +115,7 @@ const routes = [
 	{ path: '/change-email/:state/:token', component: ChangeEmail },
 	{ path: '/encyclopedia', component: Encyclopedia, meta: {scrollOffset: 45} },
 	{ path: '/encyclopedia/:page', component: Encyclopedia, meta: {scrollOffset: 45} },
+	{ path: '/encyclopedia-search', component: EncyclopediaSearch },
 	{ path: '/editor', component: Editor, beforeEnter: connected },
 	{ path: '/editor/:id', component: Editor, beforeEnter: connected },
 	{ path: '/error/:message', component: Error },
@@ -144,7 +149,7 @@ const routes = [
 	{ path: '/market/:item', component: Market, meta: {noscrollapp: true}, beforeEnter: connected },
 	{ path: '/messages', component: Messages, beforeEnter: connected },
 	{ path: '/messages/conversation/:id', component: Messages, beforeEnter: connected },
-	{ path: '/messages/new/:id/:name/:avatar_changed', component: Messages, beforeEnter: connected },
+	{ path: '/messages/new/:farmer_id/:name/:avatar_changed', component: Messages, beforeEnter: connected },
 	{ path: '/moderation', component: Moderation, meta: {noscroll: true}, beforeEnter: connected },
 	{ path: '/moderation/fault/:id', component: Moderation, meta: {noscroll: true}, beforeEnter: connected },
 	{ path: '/moderation/thugs', component: ModerationThugs, meta: {noscroll: true}, beforeEnter: connected },
@@ -174,6 +179,7 @@ const routes = [
 	{ path: '/tournament/:id', component: Tournament },
 	{ path: '/trophies', component: Trophies, beforeEnter: connected },
 	{ path: '/trophies/:id', component: Trophies },
+	{ path: '/trophy/:code', component: TrophyPage },
 	{ path: '*', component: Error },
 ] as RouteConfig[]
 
@@ -203,7 +209,7 @@ function scroll_to_hash(hash: string, route: Route) {
 	const element = document.getElementById(id)
 	// console.log("scroll element", id, element, route.meta)
 	if (element) {
-		const offset = (LeekWars.mobile ? 56 : 0) + route.meta.scrollOffset || 0
+		const offset = (LeekWars.mobile ? 56 : 0) + route.meta!.scrollOffset || 0
 		setTimeout(() => {
 			window.scrollTo(0, element.getBoundingClientRect().top + window.scrollY - offset)
 		})
@@ -225,9 +231,9 @@ const router = new Router({
 		}
 		if (savedPosition && !from.hash) {
 			vueMain.$data.savedPosition = savedPosition.y
-		} else if (LeekWars.mobile && !to.meta.noscrollapp) {
+		} else if (LeekWars.mobile && !to.meta!.noscrollapp) {
 			return { x: 0, y: 0 }
-		} else if (!to.meta.noscrollapp && !to.meta.noscroll) {
+		} else if (!to.meta!.noscrollapp && !to.meta!.noscroll) {
 			return { x: 0, y: 0 }
 		}
 	},

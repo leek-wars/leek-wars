@@ -2,20 +2,22 @@ import { FightEntity } from '@/component/player/game/entity'
 import { Game } from '@/component/player/game/game'
 import { Position } from '@/component/player/game/position'
 import { T, Texture } from "@/component/player/game/texture"
+import { Cell } from '@/model/cell'
+import { S } from './sound'
 
 const NUM_SHOTS_SPRITES = 4
 const NUM_BLOOD_SPRITES = 4
 
 const BULLET_SPEED = 25
 const BUBBLE_SPEED = 2
-const FIRE_SPEED_MIN = 3
-const FIRE_SPEED_MAX = 5
-const GAZ_SPEED_MIN = 4
-const GAZ_SPEED_MAX = 7
+const FIRE_SPEED_MIN = 1
+const FIRE_SPEED_MAX = 4
+const GAZ_SPEED_MIN = 1
+const GAZ_SPEED_MAX = 5
 
 const BULLET_LIFE = 100
-const FIRE_LIFE = 100
-const SHOT_LIFE = 10
+const FIRE_LIFE = 70
+const SHOT_LIFE = 15
 const GAZ_LIFE = 100
 const CARTRIDGE_LIFE = 200
 const LASER_LIFE = 25
@@ -202,6 +204,13 @@ class Lightning extends Particle {
 			ctx.translate(x1, y1)
 			ctx.rotate(angle)
 			ctx.drawImage(this.texture, 0, -this.texture.height / 2, width, this.texture.height)
+			// ctx.strokeStyle = 'white'
+			// ctx.strokeRect(0, -this.texture.height / 2, width, this.texture.height)
+			// ctx.fillStyle = 'green'
+			// ctx.beginPath();
+			// ctx.arc(0, 0, 2, 0, 2 * Math.PI);
+			// ctx.closePath();
+			// ctx.fill();
 			ctx.restore()
 		}
 		ctx.globalAlpha = 1
@@ -217,9 +226,9 @@ class Fire extends Particle {
 		this.dy = Math.sin(angle) * speed
 	}
 	public draw(ctx: CanvasRenderingContext2D) {
-		ctx.globalAlpha = this.life / 100
-		const size = 70 - this.life / 2.5
-		const textureId = 10 - Math.round(this.life / 10)
+		ctx.globalAlpha = this.life / 70
+		const size = 60 - this.life / 2.2
+		const textureId = 10 - Math.round(this.life / 7)
 		ctx.drawImage(T.fire.texture, textureId * 20, 0, 20, 20, -size / 2, -size / 2, size, size)
 		ctx.globalAlpha = 1
 	}
@@ -244,7 +253,7 @@ class Gaz extends Particle {
 	constructor(game: Game, x: number, y: number, z: number, angle: number, thrown: boolean, texture: Texture) {
 		super(game, x, y, z, GAZ_LIFE)
 		this.textureID = Math.floor(Math.random() * 5)
-		angle += (Math.random() * (Math.PI / 10)) - Math.PI / 20
+		angle += (Math.random() * (Math.PI / 6)) - Math.PI / 12
 		let speed = GAZ_SPEED_MIN + Math.random() * (GAZ_SPEED_MAX - GAZ_SPEED_MIN)
 		if (!thrown) { speed /= 3 }
 		this.dx = Math.cos(angle) * speed
@@ -263,6 +272,7 @@ class Meteorite extends Particle {
 	public originalAngle: number
 	public targets: FightEntity[]
 	public actionDoneAfterDie: boolean
+
 	constructor(game: Game, x: number, y: number, z: number, size: number, angle: number, targets: FightEntity[] = [], actionDoneAfterDie: boolean = false) {
 		super(game, x, y, z, 1000)
 		this.size = size
@@ -283,7 +293,7 @@ class Meteorite extends Particle {
 			this.game.particles.addFireSimple(x, y, this.z, (this.originalAngle) * (0.2 + Math.random() * 0.2))
 		}
 		if (this.z < 20) {
-			this.game.particles.addExplosion(this.x, this.y, this.z, T.explosion)
+			this.game.particles.addRealisticExplosion(this.x, this.y, 2)
 			for (const target of this.targets) {
 				target.hurt(this.x, this.y, this.z, this.dx, this.dy, this.dz)
 			}
@@ -304,8 +314,9 @@ class Meteorite extends Particle {
 class Grenade extends FallingParticle {
 	public targets: FightEntity[]
 	public texture: Texture
-	public explosion: Texture
-	constructor(game: Game, x: number, y: number, z: number, angle: number, pos: Position, targets: FightEntity[], texture: Texture, explosion: Texture) {
+	targetCell: Cell
+
+	constructor(game: Game, x: number, y: number, z: number, angle: number, pos: Position, targets: FightEntity[], texture: Texture, targetCell: Cell) {
 		super(game, x, y, z, GRENADE_LIFE)
 		const dist = Math.sqrt((x - pos.x) * (x - pos.x) + (y - pos.y) * (y - pos.y))
 		this.dx = Math.cos(angle) * dist * 0.033
@@ -314,15 +325,17 @@ class Grenade extends FallingParticle {
 		this.rotation = (Math.random() - 0.5) / 2
 		this.targets = targets
 		this.texture = texture
-		this.explosion = explosion
+		this.targetCell = targetCell
 	}
 	public onDie() {
-		this.game.particles.addExplosion(this.x, this.y, this.z, this.explosion)
+		let xy = this.game.ground.field.cellToXY(this.targetCell)
+		xy = this.game.ground.xyToXYPixels(xy.x, xy.y)
+		this.game.particles.addRealisticExplosion(xy.x, xy.y, 2)
 		for (const target of this.targets) {
 			target.hurt(this.x, this.y, this.z, this.dx, this.dy, this.dz)
 		}
 	}
-	public draw(ctx: CanvasRenderingContext2D) {
+	public draw(ctx: CanvasRenderingContext2D): void {
 		ctx.drawImage(this.texture.texture, -this.texture.texture.width / 2 , -this.texture.texture.height / 2)
 	}
 }
@@ -353,6 +366,105 @@ class Explosion extends Particle {
 		ctx.globalAlpha = 1
 	}
 }
+
+class RealisticExplosion extends Particle {
+	static LIFE = 65
+	static POINT_LIFE = 50
+	public sources = [] as {
+		s: number, p: number, x: number, y: number, dx: number, dy: number,
+		points: {x: number, y: number, z: number, dx: number, dy: number, dz: number, angle: number, s: number, life: number}[]
+	}[]
+	public delay = 0
+	public radius: number
+
+	constructor(game: Game, x: number, y: number, radius: number) {
+		super(game, x, y, 0, RealisticExplosion.LIFE)
+
+		this.radius = radius
+		const SOURCE_SPEED = radius / 2.5
+		const rad = radius * this.game.ground.realTileSizeY / 5
+		const RADIUS_RAND = radius * this.game.ground.realTileSizeY / 8
+		const size = radius * 2
+
+		this.sources.push({ s: size, p: 8, x: - (rad + Math.random() * RADIUS_RAND), y: - (rad + Math.random() * RADIUS_RAND) / 2 , dx: -SOURCE_SPEED, dy: -SOURCE_SPEED, points: [] })
+		this.sources.push({ s: size, p: 8, x: + (rad + Math.random() * RADIUS_RAND), y: - (rad + Math.random() * RADIUS_RAND) / 2 , dx: SOURCE_SPEED, dy: -SOURCE_SPEED, points: [] })
+		this.sources.push({ s: size * 1.6, p: 8, x: 0, y: 0, dx: 0, dy: 0, points: [] })
+		this.sources.push({ s: size, p: 8, x: + (rad + Math.random() * RADIUS_RAND), y: + (rad + Math.random() * RADIUS_RAND) / 2 , dx: SOURCE_SPEED, dy: SOURCE_SPEED, points: [] })
+		this.sources.push({ s: size, p: 8, x: - (rad + Math.random() * RADIUS_RAND), y: + (rad + Math.random() * RADIUS_RAND) / 2 , dx: -SOURCE_SPEED, dy: SOURCE_SPEED, points: [] })
+
+		const P = 5
+		for (const source of this.sources) {
+			for (let i = 0; i < Math.PI * 2; i += Math.PI * 2 / P) {
+				this.add_point(source, i)
+			}
+		}
+	}
+
+	public add_point(source: any, angle: number): void {
+		const dx = Math.cos(angle)
+		const dy = Math.sin(angle)
+		const speed = this.radius + Math.random() * (this.radius / 1.3)
+		source.points.push({
+			x: source.x,
+			y: source.y,
+			z: 0,
+			dx: (source.dx + dx) * speed,
+			dy: (source.dy + dy) * speed / 2,
+			dz: Math.random() * speed / 10,
+			angle,
+			s: source.s + Math.random() * 5,
+			life: RealisticExplosion.POINT_LIFE
+		})
+	}
+
+	public update(dt: number): boolean {
+
+		this.delay -= dt
+		if (this.life > RealisticExplosion.POINT_LIFE && this.delay <= 0) {
+			this.delay = 2
+			for (const source of this.sources) {
+				for (let i = 0; i < source.p; ++i) {
+					this.add_point(source, Math.random() * Math.PI * 2)
+				}
+			}
+		}
+
+		for (const source of this.sources) {
+			for (const point of source.points) {
+				point.x += point.dx * dt
+				point.y += point.dy * dt
+				point.z += point.dz * dt
+				point.dx += (point.dx * 0.88 - point.dx) * dt
+				point.dy += (point.dy * 0.88 - point.dy) * dt
+				point.dz += dt * 0.02
+				point.life -= dt
+				point.s += dt * 0.05
+			}
+		}
+		return super.update(dt)
+	}
+
+	public draw(ctx: CanvasRenderingContext2D): void {
+
+		for (const source of this.sources) {
+			for (const point of source.points) {
+				ctx.globalAlpha = Math.max(0, point.life / (RealisticExplosion.POINT_LIFE / 3))
+				const dir = (RealisticExplosion.POINT_LIFE / 4)
+				const blue = (point.life - 3 * RealisticExplosion.POINT_LIFE / 4) / dir
+				const green = (point.life - 2 * RealisticExplosion.POINT_LIFE / 4) / dir
+				const red = (point.life - RealisticExplosion.POINT_LIFE / 4) / dir
+				ctx.fillStyle = 'rgb(' + red * 255 + ', ' + green * 255 + ', ' + blue * 255 + ')'
+
+				ctx.beginPath()
+				ctx.arc(point.x, point.y - point.z, point.s, 0, 2 * Math.PI)
+				ctx.closePath()
+				ctx.fill()
+			}
+		}
+		ctx.globalAlpha = 1
+	}
+}
+
 class Plasma extends Particle {
 	public texture: Texture
 	constructor(game: Game, x: number, y: number, z: number, texture: Texture, life: number) {
@@ -580,4 +692,91 @@ class SpinningParticle extends Particle {
 	}
 }
 
-export { Particle, Bubble, Bullet, CriticalParticle, Laser, Lightning, Fire, SimpleFire, Gaz, Meteorite, Grenade, Shot, Explosion, Cartridge, Garbage, ImageParticle, Plasma, Rectangle, Blood, SpikeParticle, SpinningParticle, NUM_BLOOD_SPRITES }
+class Rocket extends Particle {
+	static SPEED = 8
+	static SCALE = 0.5
+	fire_x: number
+	fire_y: number
+	initial_angle: number
+	targetCell: Cell
+	radius: number
+
+	public constructor(game: Game, x: number, y: number, z: number, angle: number, duration: number, targetCell: Cell, radius: number) {
+		super(game, x, y, z, duration)
+		this.dx = Math.cos(angle) * Rocket.SPEED
+		this.dy = Math.sin(angle) * Rocket.SPEED
+		this.angle = this.initial_angle = angle
+		this.fire_x = -Math.cos(angle) * 45
+		this.fire_y = -Math.sin(angle) * 45
+		this.targetCell = targetCell
+		this.radius = radius
+	}
+
+	public update(dt: number): boolean {
+		this.angle = this.initial_angle + Math.cos(this.life * 0.2) / 10
+		this.dx = Math.cos(this.angle + Math.cos(this.life * 0.2) / 6) * Rocket.SPEED
+		this.dy = Math.sin(this.angle + Math.sin(this.life * 0.2) / 6) * Rocket.SPEED
+
+		// Add fire
+		for (let i = 0; i < 2; ++i) {
+			this.game.particles.addFire(this.x + this.fire_x, this.y + this.fire_y, this.z, this.angle, true)
+		}
+
+		if (super.update(dt)) {
+			let xy = this.game.ground.field.cellToXY(this.targetCell)
+			xy = this.game.ground.xyToXYPixels(xy.x, xy.y)
+			this.game.particles.addRealisticExplosion(xy.x, xy.y, this.radius)
+			return true
+		}
+		return false
+	}
+
+	public draw(ctx: CanvasRenderingContext2D): void {
+		ctx.drawImage(T.rocket.texture, -T.rocket.texture.width / 2 * Rocket.SCALE, -T.rocket.texture.height / 2 * Rocket.SCALE, T.rocket.texture.width * Rocket.SCALE, T.rocket.texture.height * Rocket.SCALE)
+	}
+}
+
+class LighningBall extends Particle {
+	static SPEED = 4
+	static SCALE = 0.9
+	radius: number
+	texture: Texture
+
+	public constructor(game: Game, x: number, y: number, z: number, angle: number, duration: number, radius: number, texture: Texture) {
+		super(game, x, y, z, duration)
+		this.dx = Math.cos(angle) * LighningBall.SPEED
+		this.dy = Math.sin(angle) * LighningBall.SPEED
+		this.angle = angle
+		this.radius = radius
+		this.texture = texture
+	}
+
+	public update(dt: number): boolean {
+
+		const R = 3
+		const L = this.radius
+		for (let i = 0; i < 3; ++i) {
+			const angle = Math.random() * Math.PI * 2
+			const dx = Math.cos(angle)
+			const dy = Math.sin(angle)
+			const l = L + Math.random() * 10
+			const position = {x: this.x + dx * l, y: this.y + dy * l}
+			this.game.particles.addLightning(this.x + dx * R, this.y + dy * R, this.z, angle, position, this.texture, 20)
+		}
+
+		if (super.update(dt)) {
+			if (this.texture === T.blue_lightning) {
+				S.lightninger_impact.play(this.game)
+			}
+			return true
+		}
+		return false
+	}
+
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	public draw(ctx: CanvasRenderingContext2D): void {
+		// nothing to draw
+	}
+}
+
+export { Particle, Bubble, Bullet, CriticalParticle, Laser, Lightning, Fire, SimpleFire, Gaz, Meteorite, Grenade, Shot, Explosion, Cartridge, Garbage, ImageParticle, LighningBall, Plasma, Rectangle, Blood, RealisticExplosion, Rocket, SpikeParticle, SpinningParticle, NUM_BLOOD_SPRITES }

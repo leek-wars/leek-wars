@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   version="1.1"
+   width="24"
+   height="24"
+   viewBox="0 0 24 24"
+   id="svg4"
+   sodipodi:docname="whitehat.svg"
+   inkscape:version="1.1 (ce6663b3b7, 2021-05-25)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs8" />
+  <sodipodi:namedview
+     id="namedview6"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     showgrid="false"
+     inkscape:zoom="36.375"
+     inkscape:cx="11.986254"
+     inkscape:cy="12"
+     inkscape:window-width="2488"
+     inkscape:window-height="1376"
+     inkscape:window-x="2632"
+     inkscape:window-y="27"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg4" />
+  <path
+     id="path2"
+     style="stroke-width:1.18477;fill:#444444;fill-opacity:1"
+     d="M 12.947266 20.578125 C 14.249745 20.827056 15.552636 20.96875 16.798828 20.96875 C 22.438316 20.96875 23.847656 18.422305 23.847656 16.408203 C 23.847656 14.820616 22.485798 13.019415 20.021484 11.953125 C 20.234742 12.972024 20.234375 13.078918 20.234375 13.185547 C 20.234375 14.962697 18.268209 15.921875 15.697266 15.921875 C 9.8682156 15.921875 4.7617187 12.508869 4.7617188 10.257812 C 4.7617188 9.9379251 4.8326953 9.630047 4.9511719 9.3457031 C 4.0389927 9.3869314 3.013309 9.4841931 2.1445312 9.7753906 L 12.947266 20.578125 z " />
+  <path
+     id="path1077"
+     style="stroke-width:1.18477;fill:#f8ac00;fill-opacity:1"
+     d="M 12.947266 20.578125 L 2.1445312 9.7753906 C 1.0160495 10.153636 0.15234375 10.860681 0.15234375 12.212891 C 0.15234375 15.480073 6.5600334 19.357393 12.947266 20.578125 z " />
+  <path
+     id="path1075"
+     style="stroke-width:1.18477;fill:#444444;fill-opacity:1"
+     d="M 12.224609 3.03125 C 11.501901 3.03125 11.288707 3.9667969 10.423828 3.9667969 C 9.5944915 3.9667969 8.9792113 3.2675781 8.1972656 3.2675781 C 7.4508628 3.2675781 6.9650627 3.7777182 6.5859375 4.8203125 C 6.5859375 4.8203125 5.5425626 7.7824685 5.4003906 8.2089844 C 5.3885426 8.2919184 5.3769531 8.3623789 5.3769531 8.4453125 C 5.3769531 9.5945358 9.9028762 13.363281 15.957031 13.363281 L 15.957031 13.375 C 17.520923 13.375 19.771484 13.055395 19.771484 11.195312 C 19.783334 11.05314 19.771868 10.90975 19.736328 10.767578 L 18.8125 6.7402344 C 18.599242 5.8516597 18.409595 5.4479614 16.845703 4.6660156 C 15.637242 4.0499372 13.006554 3.03125 12.224609 3.03125 z " />
+</svg>

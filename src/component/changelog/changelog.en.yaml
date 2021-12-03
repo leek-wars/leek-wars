@@ -1,3 +1,156 @@
+226:
+  title: 4 new weapons, Chat reactions, Chat and forum moderation, Documentation improvement
+  added:
+    - "#ai Added 4 new weapons: Neutrino, Bazooka, Lightninger, Dark Katana. #img_226_weapons"
+    - "#ai New launch modes for weapons and chips: getChip/WeaponLaunchType() functions and LAUNCH_TYPE_* constants (7 in total). #img_226_launch_type"
+    - "Added reactions to cat messages. #img_226_chat_reactions"
+    - "Feature to report and moderate forum posts. #img_226_forum_report"
+    - "#ai Slight rebalancing of some items: see forum topic of the update."
+    - "Displaying final effect values increased by your leek's characteristics. #img_226_preview"
+    - "Feature to mark as read the entire forum. #img_226_forum_read"
+    - "Added filters on the history page on fight types and contexts (thanks to Efflam). #288 #img_226_history"
+  improved:
+    - "#ai AI errors cost more in operations so that fights are generated faster."
+    - "#ai Fixed a bug with initializing static fields with combat functions."
+    - Replaced getLeek* functions with getEntity* in the tutorial (thanks to Turbigo).
+    - "Functions in the documentation are now grouped with optional arguments. #img_226_doc"
+    - Rankings are the default active rankings.
+    - Limit say() 2 per round and 200 characters and show() to 5 per round.
+    - GetWeapon/ChipEffectiveArea functions return the area even if you are out of range.
+    - " Ability to open/close compositions on the team page. #img_226_team"
+    - "Deleted forum posts are displayed in topics for better understanding. #img_226_forum_deleted"
+    - Improved moderation of chat messages (permanent censoring and separate mute).
+    - Possibility to add images to messages on the forum.
+    - "#ai BR vegetable/auto context becomes FIGHT_CONTEXT_GARDEN/FIGHT_CONTEXT_TOURNAMENT."
+    - Improved synchronization of notifications/messages on multiple tabs.
+    - Fixed weapon position and shooting animations + recoil animation.
+    - "Redesigned explosion animation + sound effect. #img_226_explosion"
+  fixed:
+    - Fixed the category of some EFFECT_* constants in the documentation.
+    - Fixed link + emoji bug in the chat.
+    - Jumping into the fight also erases markText().
+    - Unlocked items are no longer visible on the /help/items page.
+    - Fixed empty message in forum reply emails.
+    - Fixed bug with the Delete key in a text field in the editor that wants to delete the AI.
+    - Fixed turret AI bug when two compositions of the same team meet in tournament.
+    - Fixed PT/PM display bug in combat.
+    - Ability to access combat options in full screen mode.
+    - "Fixed the bug of loading logs at the beginning of the fight. #435"
+    - Fixed bug with initialization of static fields (thanks to Taga).
+    - Fixed a bug in editing some forum posts.
+
+225:
+  title: 160 new trophies, Trophy points and rewards, BR power system.
+  added:
+    - "160 new trophies added. #img_225_trophies"
+    - "New colours for trophies depending on difficulty: green, blue, purple, yellow and red. #img_225_trophy_color"
+    - "#ai Power gain anti-equality mechanism in BR (see rules in forum topic). #img_225_br_power"
+    - "Added rewards in Habs for trophies. #img_225_rewards"
+    - "Each trophy now has a points score and each farmer has a trophy points score. #img_225_trophy_point"
+    - "New combat flags in the report: Rush, Patient, Wizard, Hunter, Pacifist, Swordsman, Evasive, Swiss Knife, Untouchable."
+    - "Added a section at the top of the trophies page with a summary of trophies earned. #img_225_trophies_page"
+    - "Added a statistics section to the trophies page to view his raw stats. #img_225_trophy_stats"
+    - "Created a page for each trophy with lots of specific information. #img_225_trophy_page"
+    - "Displaying the trophies unlocked in the fight actions. #img_225_fight_trophy"
+    - "#ai Function getPower() to get the power of an entity. #img_225_get_power"
+    - "#ai Added irreducible effects (resistant to Liberation) with the MODIFIER_IRREDUCTIBLE modifier."
+  improved:
+    - "Trophies page: display progress even if the trophy is already unlocked. #img_225_trophy_progress"
+    - No clone in LeekScript 1.1 for some functions like insert, unshift, fill etc.
+    - "Larger fight on mobile in landscape mode (top bar hidden). #img_225_fight_mobile"
+    - Entities in combat can be reduced if their max life decreases with nova damage.
+    - Slightly lowered the characteristics of test bots.
+    - Improved talent, xp and habs updates.
+    - Trophy notifications are displayed at the exact moment they are unlocked in battle.
+    - Increased the high limit of the bots' characteristics.
+    - Added an animation when earning or leaving Habs or crystals.
+    - Higher quality main site logo.
+    - Added a warning when the debug() limit is exceeded.
+    - "Possibility to display the details of an entity in combat by clicking on it in the mobile version. #img_225_fight_mobile"
+    - Faster reconnection in mobile version after a phone lock.
+  fixed:
+    - Fixed an expression bug in LeekScript (thanks to Gelbaz).
+    - Log display settings in combat are correctly saved.
+    - Capital points are updated directly when a leek gains a level.
+    - Fixed TYPE_OBJECT and TYPE_CLASS constants for getType() return (thanks to Grim).
+    - Fixed a bug in the initialization of fields and static fields of classes.
+
+224:
+  title: "LeekScript acceleration, Enclyclopedia search, Documentation-encyclopedia link."
+  added:
+    - "Displaying estimated level range on the tournament registration button. #img_224_tournament"
+    - "Encyclopedia: added a function to search. #img_224_search"
+    - "Encyclopedia: function pages linked to documentation for more information. #img_224_fun"
+    - "Added examples for math and string functions in doc, more to come. #img_224_doc"
+    - "LeekScript optimization: run 30% faster."
+    - "Added 3 new hats: crystal crowns. #img_224_crowns"
+  improved:
+    - Added 'github.com/' in front of the GitHub link on the farmer page.
+    - "Added CI on client, leekscript and generator projects. #img_224_ci"
+    - Displayed previous actions when jumping into the fight.
+    - "#ai Floating numbers are displayed with a period and more digits after the decimal point in LS1.1."
+    - "Added an option to display one's logs/allies' logs in combat. #img_224_logs"
+    - "Forum: using Markdown to format new posts. #img_224_forum"
+    - "#ai The + operator on an array adds an element to the array (LS1.0 and 1.1)."
+    - "#ai Operators on floats (/, %, etc.) return NaN and Infinity instead of null (LS1.1)."
+    - "Added more OOP errors detected directly in the editor (LS1.1)."
+  fixed:
+    - "#ai Fixed the **= operator, which was not recognized."
+    - Fixed Calm, Passive, Inert trophies that were obtained after the series of ties.
+    - Fixed schizophrenic farmer fights.
+    - Corrected the trophy Stashed.
+    - Fixed AI compilation bug in case of duplicated variable.
+    - Fixed Merlin and Fortified trophy.
+    - "Encyclopedia: display an info if a page is locked by the player."
+    - "Forum: translation of formatting rules to English."
+    - "#ai Fixed randomness of shuffle() function (Thanks to Grim)."
+    - "#ai Fixed `object['method']()` syntax (LS1.1)."
+    - "#ai Fixed access levels (public, protected, private) (LS1.1)."
+    - "#ai Fixed `super.methode()` syntax in some cases (LS1.1) (Thanks to oliezekat)."
+    - "#ai Fixed the initialization of normal and static fields with a complex expression (LS1.1)."
+    - An AI is considered valid even if it has warnings.
+    - Fixed the position of caps on small leeks.
+
+223:
+  title: Features registration page, multi-language forum and many improvements.
+  added:
+    - "Added a section presenting the main features of the game on the homepage. #img_223_features"
+    - "Displayed items corresponding to an effect area in the documentation. #img_223_areas"
+    - "Added an option to hide turrets in the team battle report. #img_223_turret"
+    - Added additional images for some changes in the changelog.
+    - "Ability to select multiple languages in the forum to compile topics. #img_223_forum #img_223_forum2"
+  improved:
+    - "Added a menu to change language on the registration page. #img_223_lang"
+    - "Improved the colors of the actions in dark mode in combat. #img_223_dark"
+    - Loaded more PM conversations when scrolling down.
+    - Added an error message when calling a value that is not a function.
+    - "Ability to use any unicode character in says (including emojis). #img_223_say"
+    - "The color of the team that killed the entity is displayed on its death action. #img_223_kill"
+    - XP gains in BR are increased for the winner and decreased in case of a tie.
+    - "Added a message to buy equipment in the tooltips on the leek page. #img_223_buy"
+    - "Improved smoothing of the average farmer talent and added a /talent page. #img_223_talent"
+    - "Display of weapon and chip slots gained during leveling. #img_223_leek"
+    - Added error when doing a for loop on a non-iterable value.
+    - Added errors in the editor for an unknown constructor or static method.
+    - Operators <, <=, > and >= now only cost 1 operation instead of 3.
+    - "Improved Vampirization: 38 to 40 -> 42 to 44 and Therapy: 70 to 75 -> 75 to 80."
+  fixed:
+    - Fixed a bug when switching languages.
+    - Fixed a bug when closing team tooltips.
+    - "Fixed display of 2x2 obstacles in the report. #img_223_map"
+    - Fixed a bug when creating your first scenario in the editor.
+    - When you create a test leek, it does have a basic lambda AI.
+    - Added missing error translations in the vegetable garden.
+    - typeOf(object) returns TYPE_OBJET and not 0.
+    - Fixed the grapple that could grow.
+    - Fixed bug with some characters in say() and fixed censoring.
+    - "Fixed comment bug #377."
+    - Added error when two dots are detected in a floating number.
+    - "Translated the name 'Turret' in the combat report."
+    - "Fixed hit in for loop operations (var k : var v in array)."
+    - Fixed SHACKLE_AGILITY and SHACKLE_WISDOM effects and getAllEffects().
+    - Fixed compiler bug with '\'.
+
 222:
   title: "LeekScript 1.1 : Object Oriented Programming and language improvements"
   added:

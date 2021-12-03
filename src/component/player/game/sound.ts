@@ -83,12 +83,14 @@ class S {
 	public static double_gun = new Sound(LeekWars.STATIC + "sound/double_gun.mp3", VOL_OFFENSIVE_SOUND)
 	public static shotgun = new Sound(LeekWars.STATIC + "sound/shotgun.mp3", VOL_OFFENSIVE_SOUND)
 	public static grenade_shoot = new Sound(LeekWars.STATIC + "sound/grenade_shoot.mp3", VOL_OFFENSIVE_SOUND)
-	public static explosion = new Sound(LeekWars.STATIC + "sound/explosion.mp3", VOL_OFFENSIVE_SOUND)
+	public static explosion = new Sound(LeekWars.STATIC + "sound/explosion.wav", VOL_OFFENSIVE_SOUND)
 	public static sword = new Sound(LeekWars.STATIC + "sound/sword.mp3", VOL_OFFENSIVE_SOUND)
 	public static flame_thrower = new Sound(LeekWars.STATIC + "sound/flame_thrower.mp3", VOL_OFFENSIVE_SOUND)
 	public static gazor = new Sound(LeekWars.STATIC + "sound/gazor.mp3", VOL_OFFENSIVE_SOUND)
 	public static rifle = new Sound(LeekWars.STATIC + "sound/rifle.wav", VOL_OFFENSIVE_SOUND)
 	public static bubble = new Sound(LeekWars.STATIC + "sound/bubble.wav", VOL_OFFENSIVE_SOUND)
+	public static lightninger = new Sound(LeekWars.STATIC + "sound/lightninger.mp3", VOL_OFFENSIVE_SOUND)
+	public static lightninger_impact = new Sound(LeekWars.STATIC + "sound/lightninger_impact.mp3", VOL_OFFENSIVE_SOUND)
 	// chips
 	public static heal = new Sound(LeekWars.STATIC + "sound/heal.mp3", VOL_DEFFENSIVE_SOUND)
 	public static buff = new Sound(LeekWars.STATIC + "sound/buff.mp3", VOL_DEFFENSIVE_SOUND)
@@ -105,6 +107,7 @@ class S {
 	public static debuff = new Sound(LeekWars.STATIC + "sound/debuff.mp3", VOL_OFFENSIVE_SOUND)
 	public static alteration = new Sound(LeekWars.STATIC + "sound/alteration.wav", VOL_OFFENSIVE_SOUND)
 	public static resurrection = new Sound(LeekWars.STATIC + "sound/resurrection.mp3", VOL_OFFENSIVE_SOUND)
+	public static rocket = new Sound(LeekWars.STATIC + "sound/rocket.mp3", VOL_OFFENSIVE_SOUND)
 	// other
 	public static move = new Sound(LeekWars.STATIC + "sound/move.mp3", VOL_OTHER_SOUND)
 	public static lama = new Sound(LeekWars.STATIC + "sound/lama.mp3", VOL_OTHER_SOUND)

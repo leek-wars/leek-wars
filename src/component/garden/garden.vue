@@ -74,7 +74,7 @@
 					<loader v-if="!garden || !$store.state.farmer" />
 
 					<div v-else-if="category === 'challenge'">
-						<template v-if="challengeType == 'leek'">
+						<div v-if="challengeType == 'leek'">
 							<div class="info"><v-icon>mdi-arrow-down</v-icon> {{ $t('select_leek') }}</div>
 							<router-link v-for="leek in $store.state.farmer.leeks" :key="leek.id" :to="'/garden/challenge/leek/' + challengeTarget + '/' + leek.id" class="my-leek leek">
 								<garden-leek :leek="leek" />
@@ -86,12 +86,9 @@
 									<garden-leek :leek="challengeLeekTarget" />
 								</div>
 							</div>
-							<div v-else class="nofight">
-								<img src="/image/notgood.png">
-								<h4>{{ $t('no_more_fights') }}</h4>
-							</div>
-						</template>
-						<template v-else>
+							<garden-no-fights v-else :canbuy="false" />
+						</div>
+						<div v-else>
 							<span v-ripple class="my-farmer farmer">
 								<garden-farmer v-if="$store.state.farmer" :farmer="$store.state.farmer" />
 							</span>
@@ -105,11 +102,8 @@
 									</span>
 								</div>
 							</div>
-							<div v-else>
-								<img src="/image/notgood.png"><br>
-								<h4>{{ $t('no_more_fights') }}</h4>
-							</div>
-						</template>
+							<garden-no-fights v-else :canbuy="false" />
+						</div>
 						<div class="title advanced" @click="advanced = !advanced">
 							{{ $t('advanced') }}
 							<v-icon v-if="advanced">mdi-chevron-up</v-icon>
@@ -147,7 +141,7 @@
 									<h4>{{ $t(leekErrors[selectedLeek.id]) }}</h4>
 								</div>
 							</div>
-							<garden-no-fights v-else />
+							<garden-no-fights v-else :canbuy="true" />
 						</div>
 						<div v-if="category == 'farmer'">
 							<span v-ripple class="my-farmer farmer">
@@ -167,7 +161,7 @@
 									</div>
 								</div>
 							</div>
-							<garden-no-fights v-else />
+							<garden-no-fights v-else :canbuy="true" />
 						</div>
 						<div v-if="category == 'team'">
 							<div class="info"><v-icon>mdi-arrow-down</v-icon> {{ $t('select_compo') }}</div>
@@ -180,10 +174,7 @@
 							<div class="versus">VS</div>
 							<div v-if="selectedComposition">
 								<div class="info"><v-icon>mdi-arrow-down</v-icon> {{ $t('click_opponent') }}</div>
-								<div v-if="selectedComposition.fights === 0">
-									<img src="/image/notgood.png"><br>
-									<h4>{{ $t('no_more_fights') }}</h4>
-								</div>
+								<garden-no-fights v-if="selectedComposition.fights === 0" :canbuy="false" />
 								<loader v-else-if="!teamOpponents[selectedComposition.id]" />
 								<div v-else class="opponents">
 									<span v-for="compo in teamOpponents[selectedComposition.id]" :key="compo.id" v-ripple class="composition-wrapper" @click="clickCompositionOpponent(compo)">
@@ -209,7 +200,7 @@
 								</tooltip>
 								<br><br>
 								<v-btn v-if="garden.fights" color="primary" @click="battleRoyaleRegister">Sélectionner</v-btn>
-								<garden-no-fights v-else />
+								<garden-no-fights v-else :canbuy="true" />
 							</div>
 							<div v-else>
 								<loader v-if="LeekWars.battleRoyale.progress == 0" />
@@ -247,7 +238,7 @@
 	const GardenNoFights = () => import(/* webpackChunkName: "[request]" */ `@/component/garden/garden-no-fights.${locale}.i18n`)
 
 	@Component({
-		name: 'garden', i18n: {}, mixins,
+		name: 'garden', i18n: {}, mixins: [...mixins],
 		components: {
 			'garden-leek': GardenLeek,
 			'garden-farmer': GardenFarmer,
@@ -293,6 +284,12 @@
 			this.$root.$on('back', this.back)
 			LeekWars.socket.send([SocketMessage.GARDEN_QUEUE_REGISTER])
 			this.$root.$on('garden-queue', (data: number) => this.queue = data)
+
+			this.$root.$on('update-team-talent', (message: any) => {
+				if (message.composition in this.compositions_by_id) {
+					this.compositions_by_id[message.composition].talent += message.talent
+				}
+			})
 		}
 		back() {
 			if (this.category === 'challenge') {

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   version="1.0"
+   width="87.000000pt"
+   height="87.000000pt"
+   viewBox="0 0 87.000000 87.000000"
+   preserveAspectRatio="xMidYMid meet"
+   id="svg10"
+   sodipodi:docname="deserter.svg"
+   inkscape:version="1.1 (ce6663b3b7, 2021-05-25)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs14" />
+  <sodipodi:namedview
+     id="namedview12"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:document-units="pt"
+     showgrid="false"
+     inkscape:zoom="7.5258621"
+     inkscape:cx="57.933562"
+     inkscape:cy="58"
+     inkscape:window-width="2488"
+     inkscape:window-height="1376"
+     inkscape:window-x="2632"
+     inkscape:window-y="27"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg10" />
+  <metadata
+     id="metadata2">
+Created by potrace 1.16, written by Peter Selinger 2001-2019
+</metadata>
+  <g
+     transform="translate(0.000000,87.000000) scale(0.100000,-0.100000)"
+     fill="#444444"
+     stroke="none"
+     id="g8">
+    <path
+       d="M245 845 c-52 -51 -20 -145 49 -145 41 0 63 16 75 53 28 85 -64 153 -124 92z"
+       id="path4"
+       style="fill:#00aa00;fill-opacity:1" />
+    <path
+       d="M279 667 c-14 -12 -45 -46 -68 -74 -38 -47 -47 -53 -80 -53 -42 0 -61 -14 -61 -45 0 -34 20 -45 79 -45 53 0 57 2 102 50 l47 50 26 -65 c14 -36 26 -71 26 -79 0 -7 -38 -91 -84 -187 -111 -230 -108 -219 -54 -219 24 0 51 6 60 12 9 7 48 83 88 168 72 156 90 187 91 160 2 -60 18 -173 26 -181 12 -12 323 -18 323 -7 0 19 -30 66 -45 72 -9 3 -57 6 -105 6 -49 0 -91 4 -94 8 -3 5 -9 53 -15 108 -7 70 -19 121 -41 173 -16 41 -30 75 -30 77 0 2 19 4 43 4 42 0 44 -1 67 -50 28 -61 42 -74 70 -65 29 9 26 48 -12 114 -53 96 -43 91 -197 91 -127 0 -138 -2 -162 -23z"
+       id="path6" />
+  </g>
+</svg>

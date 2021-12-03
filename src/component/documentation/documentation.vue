@@ -58,7 +58,6 @@
 
 <script lang="ts">
 	import { locale } from '@/locale'
-	import { Function } from '@/model/function'
 	import { LeekWars } from '@/model/leekwars'
 	import { Component, Vue, Watch } from 'vue-property-decorator'
 	import Breadcrumb from '../forum/breadcrumb.vue'
@@ -75,7 +74,6 @@
 		categories: any[] = []
 		items: any[] = []
 		query: string = ''
-		Function = Function
 		lazy_start: number = 0
 		lazy_end: number = 10
 
@@ -114,7 +112,6 @@
 		}
 
 		created() {
-			LeekWars.large = localStorage.getItem('documentation/large') === 'true'
 			const get_categories = (callback: any) => {
 				if (localStorage.getItem('data/function_categories')) {
 					callback({categories: JSON.parse(localStorage.getItem('data/function_categories') || '[]')})
@@ -140,13 +137,30 @@
 					this.items.push(item)
 					; (item as any).lower_name = item.name.toLowerCase()
 					; (item as any).id = id++
-					let item_data = (this.$t('doc.func_' + (item as any).real_name) as any).toLowerCase()
-					for (const i in item.arguments_names) {
-						item_data += (this.$t('doc.func_' + (item as any).real_name + '_arg_' + (parseInt(i, 10) + 1)) as any).toLowerCase()
-					}
-					item_data += (this.$t('doc.func_' + (item as any).real_name + '_return') as any).toLowerCase()
-					; (item as any).data = item_data
+					; (item as any).data = ''
+
 					last = item
+
+					LeekWars.documentation(locale).then(functions => {
+						if (item.name in functions) {
+							const fun = functions[item.name]
+							let new_data = fun.description
+							for (const section in fun.primary) {
+								new_data += fun.primary[section]
+							}
+							for (const section in fun.secondary) {
+								new_data += fun.secondary[section]
+							}
+							(item as any).data = new_data
+						} else {
+							let item_data = (this.$t('doc.func_' + (item as any).real_name) as any).toLowerCase()
+							for (const i in item.arguments_names) {
+								item_data += (this.$t('doc.func_' + (item as any).real_name + '_arg_' + (parseInt(i, 10) + 1)) as any).toLowerCase()
+							}
+							item_data += (this.$t('doc.func_' + (item as any).real_name + '_return') as any).toLowerCase()
+							; (item as any).data = item_data
+						}
+					})
 				}
 				for (const item of LeekWars.constants) {
 					this.items.push(item)
@@ -161,6 +175,7 @@
 			this.$root.$on('back', this.back)
 		}
 		mounted() {
+			LeekWars.large = localStorage.getItem('documentation/large') === 'true'
 			LeekWars.footer = false
 			LeekWars.box = true
 		}

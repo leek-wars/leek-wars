@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   version="1.0"
+   width="512.000000pt"
+   height="512.000000pt"
+   viewBox="0 0 512.000000 512.000000"
+   preserveAspectRatio="xMidYMid meet"
+   id="svg14"
+   sodipodi:docname="binge_watcher.svg"
+   inkscape:version="1.1 (ce6663b3b7, 2021-05-25)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs18" />
+  <sodipodi:namedview
+     id="namedview16"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:document-units="pt"
+     showgrid="false"
+     inkscape:zoom="0.6394043"
+     inkscape:cx="451.20122"
+     inkscape:cy="349.5441"
+     inkscape:window-width="2488"
+     inkscape:window-height="1376"
+     inkscape:window-x="2632"
+     inkscape:window-y="27"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg14" />
+  <metadata
+     id="metadata2">
+Created by potrace 1.16, written by Peter Selinger 2001-2019
+</metadata>
+  <rect
+     style="fill:#0090ff;stroke-width:20"
+     id="rect1061"
+     width="314.20163"
+     height="253.18002"
+     x="62.09742"
+     y="164.85455" />
+  <g
+     transform="translate(0.000000,512.000000) scale(0.100000,-0.100000)"
+     fill="#444444"
+     stroke="none"
+     id="g12">
+    <path
+       d="M1657 5042 c-10 -10 -17 -22 -17 -26 0 -5 91 -262 201 -572 l202 -564 123 0 c68 0 124 2 124 5 0 12 -554 1142 -568 1158 -19 22 -45 22 -65 -1z"
+       id="path4" />
+    <path
+       d="M3401 5047 c-6 -8 -137 -272 -291 -588 l-280 -574 121 -3 c67 -1 124 0 127 2 7 8 402 1118 402 1132 0 35 -57 57 -79 31z"
+       id="path6" />
+    <path
+       d="M905 3723 c-278 -59 -497 -254 -588 -523 l-32 -95 -3 -850 c-2 -751 -1 -859 13 -930 62 -306 300 -546 603 -610 37 -8 118 -15 181 -15 86 0 112 -3 108 -13 -2 -6 -50 -121 -106 -254 -113 -270 -119 -297 -72 -344 23 -23 38 -29 71 -29 47 0 7 -34 433 367 l288 273 762 0 762 -1 175 -167 c506 -482 495 -472 539 -472 31 0 48 7 70 28 54 50 52 62 -68 347 l-109 260 142 7 c187 9 290 39 416 123 172 115 295 296 335 492 14 68 15 188 13 938 l-3 860 -24 70 c-98 291 -314 483 -609 541 -112 22 -3194 19 -3297 -3z m2140 -406 c184 -53 337 -178 413 -337 68 -144 67 -132 67 -765 0 -523 -2 -575 -18 -635 -25 -88 -87 -204 -142 -267 -62 -71 -179 -147 -278 -180 l-82 -28 -825 -3 c-928 -3 -903 -5 -1059 70 -169 80 -298 251 -336 444 -14 69 -16 157 -13 640 4 616 2 593 71 729 94 187 275 317 482 345 33 4 420 7 860 6 724 -2 806 -3 860 -19z m1204 -445 c93 -50 92 -185 -1 -242 -101 -61 -233 39 -204 154 8 31 53 85 80 96 35 15 90 11 125 -8z m7 -497 c123 -80 56 -265 -90 -252 -41 4 -55 10 -83 40 -37 42 -48 73 -39 121 18 96 131 144 212 91z m-5 -597 c106 -36 169 -123 169 -232 -1 -142 -99 -240 -240 -240 -78 0 -129 23 -183 83 -80 88 -77 232 6 320 65 68 168 97 248 69z"
+       id="path8" />
+    <path
+       d="M4207 1707 c-8 -13 -47 -87 -86 -166 l-72 -142 43 -19 c24 -10 49 -20 56 -22 8 -2 34 51 72 152 33 85 62 163 66 172 3 12 -4 22 -25 32 -38 20 -36 20 -54 -7z"
+       id="path10" />
+  </g>
+</svg>

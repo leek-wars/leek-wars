@@ -4,7 +4,7 @@ import { Colors, Game } from '@/component/player/game/game'
 import { InfoText } from '@/component/player/game/infotext'
 import { T, Texture } from '@/component/player/game/texture'
 import { Cell } from '@/model/cell'
-import { EffectType, EntityEffect } from '@/model/effect'
+import { EffectModifier, EffectType, EntityEffect } from '@/model/effect'
 import { Entity } from '@/model/entity'
 import { Farmer } from '@/model/farmer'
 import { i18n } from '@/model/i18n'
@@ -46,6 +46,7 @@ class FightEntity extends Entity {
 	public magic = 0
 	public tp = 0
 	public mp = 0
+	public power = 0
 	public maxLife = 0
 	public initialMaxLife = 0
 	public maxTP = 0
@@ -346,8 +347,19 @@ class FightEntity extends Entity {
 	}
 
 	public updateGrowth() {
-		this.growth = 1.0 + Math.log10(Math.max(1, this.maxLife / this.initialMaxLife)) / 3
+		this.growth = 1.0 + Math.log10(Math.max(0.0316227766, this.maxLife / this.initialMaxLife)) / 3
 		this.height = this.baseHeight * this.growth
+	}
+
+	public loosePower(power: number, jump: boolean) {
+
+		this.power -= power
+
+		if (!jump) {
+			const info = new InfoText()
+			info.init("-" + power, '#000', -this.height, this.isTop)
+			this.infoText.push(info)
+		}
 	}
 
 	public looseStrength(strength: number, jump: boolean) {
@@ -434,6 +446,11 @@ class FightEntity extends Entity {
 			info.init("+" + tp, Colors.TP_COLOR, -this.height, this.isTop)
 			this.infoText.push(info)
 		}
+	}
+
+	public buffPower(power: number, jump: boolean) {
+		this.power += power
+		if (!jump) { this.newInfoText("+" + power, '#000') }
 	}
 
 	public buffStrength(strength: number, jump: boolean) {
@@ -815,9 +832,14 @@ class FightEntity extends Entity {
 			let x = -count * effect_size / 2
 			ctx.font = "bold 9pt Roboto"
 			ctx.textAlign = "left"
+			ctx.strokeStyle = "#ffca00"
+			ctx.lineWidth = 3
 			for (const e in this.effects) {
 				const effect = this.effects[e]
 				ctx.drawImage(effect.texture, x, effect_size, effect_size, effect_size)
+				if (effect.modifiers & EffectModifier.IRREDUCTIBLE) {
+					ctx.strokeRect(x + 1.5, effect_size + 1.5, effect_size - 3, effect_size - 3)
+				}
 				let effect_message = '' + effect.value
 				if (effect.type === EffectType.SHACKLE_MAGIC || effect.type === EffectType.SHACKLE_MP || effect.type === EffectType.SHACKLE_TP || effect.type === EffectType.SHACKLE_STRENGTH || effect.type === EffectType.VULNERABILITY || effect.type === EffectType.ABSOLUTE_VULNERABILITY) {
 					effect_message = '-' + effect_message
