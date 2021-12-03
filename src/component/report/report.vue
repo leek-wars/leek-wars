@@ -109,7 +109,6 @@
 								</v-btn>
 							</router-link>
 						</span>
-						<span v-else> </span>
 					</span>
 				</center>
 
