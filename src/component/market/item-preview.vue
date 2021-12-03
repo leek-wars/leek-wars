@@ -72,7 +72,7 @@ export default class ItemPreview extends Vue {
 		if (this.item.type === ItemType.HAT) return 'hat'
 		if (this.item.type === ItemType.POMP) return 'pomp'
 		if (this.item.type === ItemType.RESOURCE) return 'resource'
-		if (this.item.type === ItemType.FIGHT_PACK) return 'resource'
+		if (this.item.type === ItemType.FIGHT_PACK) return 'fight-pack'
 	}
 
 	get name_short() {
