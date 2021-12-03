@@ -114,30 +114,46 @@
 							<v-menu v-if="currentAI" top :offset-y="true" :nudge-top="1" :max-width="600">
 								<template v-slot:activator="{ on, attrs }">
 									<div v-ripple class="version" v-bind="attrs" v-on="on">
-										LeekScript {{ ("" + currentAI.version).split('').join('.') }}
+										LeekScript {{ currentAI.version }}
 									</div>
 								</template>
 								<v-list :dense="true" class="version-menu">
-									<v-list-item v-ripple @click="setVersion(11)">
-										<v-icon v-if="currentAI.version === 11" class="list-icon">mdi-star</v-icon>
+									<v-list-item v-ripple @click="setVersion(3)">
+										<v-icon v-if="currentAI.version === 3" class="list-icon">mdi-star</v-icon>
 										<v-icon v-else class="list-icon">mdi-star-outline</v-icon>
 										<v-list-item-content>
-											<v-list-item-title>LeekScript 1.1 <span class="green">Recommandé</span></v-list-item-title>
+											<v-list-item-title>LeekScript 3 <span class="green">Recommandé</span></v-list-item-title>
+											<v-list-item-subtitle>
+												<ul>
+													<li>Littéraux d'objets <code>{a: 12}</code></li>
+													<li>Classes de base : Number, Integer, Boolean, Object, Array, Function etc.</li>
+													<li>Nouveaux mots-clés réservés.</li>
+												</ul>
+												<router-link class="link" to="/encyclopedia/LeekScript_3"><v-icon>mdi-book-open-page-variant</v-icon> Toutes les informations sur le LeekScript 3</router-link>
+											</v-list-item-subtitle>
+										</v-list-item-content>
+									</v-list-item>
+									<v-list-item v-ripple @click="setVersion(2)">
+										<v-icon v-if="currentAI.version === 2" class="list-icon">mdi-star</v-icon>
+										<v-icon v-else class="list-icon">mdi-star-outline</v-icon>
+										<v-list-item-content>
+											<v-list-item-title>LeekScript 2</v-list-item-title>
 											<v-list-item-subtitle>
 												<ul>
 													<li>Ajout des classes et objets.</li>
 													<li>Passage par référence par défaut pour les valeurs non-primitives dans les fonctions, les boucles foreach et les tableaux.</li>
 													<li>Corrections mineures (arrayFilter, opérateur ^=, et autres).</li>
 												</ul>
+												<router-link class="link" to="/encyclopedia/LeekScript_2"><v-icon>mdi-book-open-page-variant</v-icon> Toutes les informations sur le LeekScript 2</router-link>
 											</v-list-item-subtitle>
 										</v-list-item-content>
 									</v-list-item>
-									<router-link class="link" to="/encyclopedia/LeekScript_1.1"><v-icon>mdi-book-open-page-variant</v-icon> Toutes les informations sur le LeekScript 1.1</router-link>
-									<v-list-item v-ripple @click="setVersion(10)">
-										<v-icon v-if="currentAI.version === 10" class="list-icon">mdi-star</v-icon>
+
+									<v-list-item v-ripple @click="setVersion(1)">
+										<v-icon v-if="currentAI.version === 1" class="list-icon">mdi-star</v-icon>
 										<v-icon v-else class="list-icon">mdi-star-outline</v-icon>
 										<v-list-item-content>
-											<v-list-item-title>LeekScript 1.0</v-list-item-title>
+											<v-list-item-title>LeekScript 1</v-list-item-title>
 											<v-list-item-subtitle>
 												<ul>
 													<li>Version initiale</li>
@@ -571,10 +587,7 @@
 
 			const saveID = aiEditor.id > 0 ? aiEditor.id : 0
 			const content = aiEditor.editor.getValue()
-			aiEditor.ai!.code = content
-
-			// this.currentEditor.updateIncludes()
-			// this.currentEditor.updateGlobalVars()
+			Vue.set(aiEditor.ai, 'code', content)
 
 			LeekWars.post('ai/save', {ai_id: saveID, code: content}).then(data => {
 				if (aiEditor === null) { return }
@@ -833,8 +846,9 @@
 		setVersion(version: number) {
 			if (this.currentAI) {
 				this.currentAI.version = version
-				LeekWars.put('ai/version', {ai: this.currentAI.id, version})
+				LeekWars.put('ai/version', {ai_id: this.currentAI.id, version})
 				this.save(this.currentEditor)
+				this.currentEditor!.analyzeV1()
 			}
 		}
 	}
@@ -1167,20 +1181,24 @@
 			color: white;
 			padding: 0 6px;
 			border-radius: 20px;
+			margin-left: 4px;
 		}
 		.link {
 			padding: 5px;
-			padding-left: 50px;
 			color: #5fad1b;
 			font-weight: 500;
 			display: block;
 			i {
-				font-size: 16px;
+				font-size: 14px;
 				vertical-align: top;
 			}
 			&:hover {
 				text-decoration: underline;
 			}
 		}
+	}
+	code {
+		display: inline-block;
+		padding: 0;
 	}
 </style>
