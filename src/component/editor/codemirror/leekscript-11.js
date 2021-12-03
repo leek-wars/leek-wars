@@ -23,7 +23,7 @@ import { LeekWars } from '@/model/leekwars'
       const k = {
         "if": kw("if"), "while": A, "with": A, "else": B, "do": B, "try": B, "finally": B,
         "return": D, "break": D, "continue": D, "new": kw("new"), "throw": C,
-        "var": kw("var"),
+        "var": kw("var"), "global": kw("global"),
         "function": kw("function"), "catch": kw("catch"),
         "for": kw("for"), "switch": kw("switch"), "case": kw("case"), "default": kw("default"),
         "in": operator, "typeof": operator, "instanceof": operator, "and": operator, "or": operator, "xor": operator,

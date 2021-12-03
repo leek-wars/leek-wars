@@ -19,9 +19,18 @@ class Keyword {
 	location?: any
 	category!: number
 	javadoc?: any
-	methods!: any[]
-	static_methods!: any[]
 }
+
+class LSClass extends Keyword {
+	fields!: LSField[]
+	static_fields!: LSField[]
+	methods!: LSMethod[]
+	static_methods!: LSStaticMethod[]
+}
+
+class LSField extends Keyword {}
+class LSMethod extends Keyword {}
+class LSStaticMethod extends Keyword {}
 
 function generateKeywords() {
 	let last = ""
@@ -86,4 +95,4 @@ function generateKeywords() {
 	return keywords
 }
 
-export { generateKeywords, Keyword }
+export { generateKeywords, Keyword, LSClass }
