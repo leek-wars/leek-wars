@@ -265,7 +265,7 @@
 
 		@Watch('key', { immediate: true })
 		updateRanking() {
-			console.log("update", { active: this.active, category: this.category, order: this.order, page: this.page })
+			// console.log("update", { active: this.active, category: this.category, order: this.order, page: this.page })
 			if (this.category === 'fun') {
 				this.rankings = null
 				LeekWars.get('ranking/fun').then(data => {
