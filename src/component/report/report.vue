@@ -96,7 +96,6 @@
 								</v-btn>
 							</router-link>
 						</span>
-						</span>
 						<span v-else-if="fight.context == FightContext.CHALLENGE">
 							<router-link v-if="myFight" :to="'/garden/challenge/' + ['leek', 'farmer'][fight.type] + '/' + enemy">
 								<v-btn v-if="iWin">
