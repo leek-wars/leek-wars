@@ -55,6 +55,7 @@ enum SocketMessage {
 	CHAT_CENSOR = 50,
 	CHAT_REACT = 51,
 	READ_NOTIFICATION = 52,
+	ADD_RESOURCE = 53,
 }
 
 class Socket {
@@ -222,6 +223,10 @@ class Socket {
 				}
 				case SocketMessage.CHAT_REACT: {
 					store.commit('chat-react', { chat: data[0], message: data[1], reaction: data[2], old: data[3] })
+					break
+				}
+				case SocketMessage.ADD_RESOURCE: {
+					store.commit('add-resource', { template: data[0], id: data[1] })
 					break
 				}
 			}

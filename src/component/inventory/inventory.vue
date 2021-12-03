@@ -61,7 +61,7 @@
 					</div>
 				</template>
 				<template slot="actions">
-					<span class="value" title="Valeur totale">{{ Math.floor(filtered_inventory.reduce((s, i) => s + LeekWars.items[i.template].price * 0.80, 0)) | number }} <div class="hab"></div></span>
+					<span class="value" title="Valeur totale">{{ total_estimated | number }} <div class="hab"></div></span>
 					<v-menu offset-y>
 						<template v-slot:activator="{ on }">
 							<div class="button flat" v-on="on">
@@ -185,8 +185,8 @@
 		CATEGORY_RESOURCES = 2
 		category = 3
 		placeholder_count: number = 0
-		sort: Sort = Sort.DATE
-		filter: Filter = Filter.ALL
+		sort: Sort = parseInt(localStorage.getItem('inventory/sort') || '0', 10) as Sort
+		filter: Filter = parseInt(localStorage.getItem('inventory/filter') || '0', 10) as Filter
 
 		get inventory() {
 			const inventory = []
@@ -227,12 +227,16 @@
 		get sorted_inventory() {
 			if (this.sort === Sort.DATE) return this.filtered_inventory
 			return [...this.filtered_inventory].sort((a: any, b: any) => {
-				if (this.sort === Sort.PRICE) return LeekWars.items[b.template].price - LeekWars.items[a.template].price
-				if (this.sort === Sort.PRICE_LOT) return LeekWars.items[b.template].price * b.quantity - LeekWars.items[a.template].price * a.quantity
+				if (this.sort === Sort.PRICE) return LeekWars.items[b.template].price! - LeekWars.items[a.template].price!
+				if (this.sort === Sort.PRICE_LOT) return LeekWars.items[b.template].price! * b.quantity - LeekWars.items[a.template].price! * a.quantity
 				if (this.sort === Sort.QUANTITY) return b.quantity - a.quantity
 				// if (this.sort === Sort.NAME) return LeekWars.items[b.template].price - LeekWars.items[a.template].price
-				if (this.sort === Sort.LEVEL) return LeekWars.items[b.template].level - LeekWars.items[a.template].level
+				/*if (this.sort === Sort.LEVEL) */ return LeekWars.items[b.template].level - LeekWars.items[a.template].level
 			})
+		}
+
+		get total_estimated() {
+			return Math.floor(this.filtered_inventory.reduce((s, i) => s + LeekWars.items[i.template].price! * i.quantity, 0))
 		}
 
 		@Watch('filtered_inventory')
@@ -259,6 +263,15 @@
 		destroyed() {
 			LeekWars.footer = true
 			LeekWars.box = false
+		}
+
+		@Watch('sort')
+		updateSort() {
+			localStorage.setItem('inventory/sort', '' + this.sort)
+		}
+		@Watch('filter')
+		updateFilter() {
+			localStorage.setItem('inventory/filter', '' + this.filter)
 		}
 	}
 </script>

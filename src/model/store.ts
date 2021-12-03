@@ -732,6 +732,17 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			for (const chat of Object.values(state.chat)) {
 				chat.loaded = false
 			}
+		},
+
+		'add-resource'(state: LeekWarsState, data: { template: number, id: number }) {
+			console.log("add resource", data);
+			for (const resource of state.farmer!.resources) {
+				if (resource.template === data.template) {
+					resource.quantity += 1
+					return
+				}
+			}
+			state.farmer!.resources.push({ template: data.template, id: data.id, quantity: 1 })
 		}
 	},
 })

@@ -11,22 +11,35 @@
 			<span v-else>{{ leek.name }}</span>
 		</td>
 		<td class="level">{{ leek.level }}</td>
-		<td v-if="$store.getters.admin" class="power">{{ Math.round(Math.pow(leek.level, 4.2)) | number }}</td>
+		<!-- <td v-if="$store.getters.admin" class="power">{{ Math.round(Math.pow(leek.level, 4.2)) | number }}</td> -->
 		<td class="xp">
-			<tooltip>
-				<template v-slot:activator="{ on }">
-					<div class="bar" v-on="on">
-						<span :style="{width: currentBar + '%'}" class="current_xp"></span>
-						<span :style="{width: newBar + '%'}" class="new_xp"></span>
-					</div>
-				</template>
-				{{ leek.cur_xp | number }} / {{ leek.next_xp | number }}
-			</tooltip>
-			<span>{{ (leek.xp || 0) | number }}</span>
-			<span v-if="fight.report.bonus > 1" class="bonus">x{{ fight.report.bonus }}</span>
+			<div class="xp-wrapper">
+				<tooltip>
+					<template v-slot:activator="{ on }">
+						<div class="bar" v-on="on">
+							<span :style="{width: currentBar + '%'}" class="current_xp"></span>
+							<span :style="{width: newBar + '%'}" class="new_xp"></span>
+						</div>
+					</template>
+					{{ leek.cur_xp | number }} / {{ leek.next_xp | number }}
+				</tooltip>
+				<span>{{ (leek.xp || 0) | number }}</span>
+				<span v-if="fight.report.bonus > 1" class="bonus">x{{ fight.report.bonus }}</span>
+			</div>
 		</td>
 		<td class="money">
 			<span>{{ (leek.money || 0) | number }} <span class="hab"></span></span>
+		</td>
+		<td v-if="fight.context != FightContext.TEST && fight.context != FightContext.CHALLENGE" class="resources">
+			<tooltip v-for="(quantity, resource) of leek.resources" :key="resource">
+				<template v-slot:activator="{ on }">
+					<span class="resource" v-on="on">
+						<img :src="'/image/resource/' + LeekWars.items[resource].name + '.png'">
+						<span v-if="quantity > 1" class="quantity">{{ quantity }}</span>
+					</span>
+				</template>
+				{{ quantity }}x <b>{{ $t('resource.' + LeekWars.items[resource].name) }}</b>
+			</tooltip>
 		</td>
 		<td v-if="fight.context !== FightContext.CHALLENGE && leek.talent !== undefined" class="talent">
 			<img src="/image/talent.png">
@@ -93,13 +106,9 @@
 		vertical-align: top;
 	}
 	.bar {
-		width: 60%;
+		flex: 1;
 		height: 14px;
-		display: inline-block;
 		background: #ddd;
-		margin-right: 10px;
-		margin-bottom: 3px;
-		vertical-align: bottom;
 	}
 	.bar span {
 		height: 14px;
@@ -121,8 +130,12 @@
 		vertical-align: bottom;
 	}
 	.xp {
-		text-align: left;
 		min-width: 180px;
+		.xp-wrapper {
+			display: flex;
+			align-items: center;
+			gap: 10px;
+		}
 	}
 	.money {
 		min-width: 100px;
@@ -138,7 +151,6 @@
 		color: white;
 		font-weight: bold;
 		padding: 0 4px;
-		margin-left: 10px;
 		border-radius: 3px;
 	}
 	.talent-bonus {
@@ -148,5 +160,35 @@
 		padding: 0 4px;
 		margin-left: 10px;
 		border-radius: 3px;
+	}
+	.resources {
+		padding: 0 5px;
+		text-align: left;
+		height: 29px;
+	}
+	.resource {
+		position: relative;
+		padding: 1px;
+		display: inline-block;
+		vertical-align: bottom;
+		img {
+			width: 27px;
+			height: 27px;
+			object-fit: contain;
+			vertical-align: bottom;
+		}
+		.quantity {
+			position: absolute;
+			bottom: -5px;
+			right: -5px;
+			padding: 0px 3px;
+			font-size: 12px;
+			content: attr(quantity);
+			text-align: center;
+			color: #eee;
+			border-radius: 4px;
+			font-weight: bold;
+			background: rgba(0, 0, 0, 0.75);
+		}
 	}
 </style>
