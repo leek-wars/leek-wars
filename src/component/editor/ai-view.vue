@@ -1503,11 +1503,12 @@
 				}
 				if (this.ai.version >= 3) {
 					this.ai.classes[name].static_fields.push(
-						{ name: "name", fullName: "name", type: "static-field", category: 1, details: this.$t('leekscript.class_field_name') },
-						{ name: "fields", fullName: "fields", type: "static-field", category: 1, details: this.$t('leekscript.class_field_name') },
-						{ name: "staticFields", fullName: "staticFields", type: "static-field", category: 1, details: this.$t('leekscript.class_field_name') },
-						{ name: "methods", fullName: "methods", type: "static-field", category: 1, details: this.$t('leekscript.class_field_name') },
-						{ name: "staticMethods", fullName: "staticMethods", type: "static-field", category: 1, details: this.$t('leekscript.class_field_name') },
+						{ name: "name", fullName: "name", type: "static-field", category: 1, details: this.$t('leekscript.class_name') },
+						{ name: "super", fullName: "super", type: "static-field", category: 1, details: this.$t('leekscript.class_super') },
+						{ name: "fields", fullName: "fields", type: "static-field", category: 1, details: this.$t('leekscript.class_fields') },
+						{ name: "staticFields", fullName: "staticFields", type: "static-field", category: 1, details: this.$t('leekscript.class_staticFields') },
+						{ name: "methods", fullName: "methods", type: "static-field", category: 1, details: this.$t('leekscript.class_methods') },
+						{ name: "staticMethods", fullName: "staticMethods", type: "static-field", category: 1, details: this.$t('leekscript.class_staticMethods') },
 					)
 				}
 			}
