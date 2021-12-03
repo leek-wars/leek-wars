@@ -13,8 +13,8 @@
 		<div class="image sound">
 			<img :src="'/image/' + category + '/' + item.name.replace(category + '_', '') + '.png'" @click="LeekWars.playSound(item, 'chip')">
 		</div>
-		<div v-if="$te(category + '.' + item.name + '_desc')" class="desc">
-			{{ $t(category + '.' + item.name + '_desc') }}
+		<div v-if="$te(item.name.replace('_', '.') + '_desc')" class="desc">
+			{{ $t(item.name.replace('_', '.') + '_desc') }}
 		</div>
 		<weapon-preview v-if="item.type === ItemType.WEAPON" :weapon="LeekWars.weapons[item.params]" />
 		<chip-preview v-else-if="item.type === ItemType.CHIP" :chip="LeekWars.chips[item.id]" @input="$emit('input', $event)" />
@@ -31,7 +31,7 @@
 			<div v-if="quantity > 1">
 				Valeur du lot : <b>{{ item.price * quantity | number }}</b> <span class='hab'></span>
 			</div>
-			<div v-if="item.name.includes('box')">
+			<div v-if="item.name.startsWith('box')">
 				<v-btn small class="get-all notif-trophy" @click.stop="retrieveAll()">Récupérer <img src="/image/icon/black/arrow-down-right-bold.svg"></v-btn>
 			</div>
 		</div>
@@ -77,6 +77,10 @@ export default class ItemPreview extends Vue {
 
 	get name_short() {
 		return this.item.name.replace(this.category + '_', '')
+	}
+
+	retrieveAll() {
+
 	}
 }
 </script>

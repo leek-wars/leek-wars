@@ -147,7 +147,7 @@
 								<div v-on="on" class="item"  :quantity="item.quantity | number" :type="LeekWars.items[item.template].type">
 									<img v-if="item.type === ItemType.RESOURCE" class="image" :src="'/image/resource/' + LeekWars.items[item.template].name + '.png'">
 									<img v-else class="image" :class="{small: item.template === 37 || item.template === 45 || item.template === 153 || item.template === 182}" :src="'/image/' + LeekWars.items[item.template].name.replace('_', '/') + '.png'">
-									<img v-if="LeekWars.items[item.template].name.includes('box')" class="retrieve notif-trophy" src="/image/icon/black/arrow-down-right-bold.svg">
+									<img v-if="LeekWars.items[item.template].name.startsWith('box')" class="retrieve notif-trophy" src="/image/icon/black/arrow-down-right-bold.svg">
 									<div class="id">#{{ item.template }}</div>
 								</div>
 							</rich-tooltip-item>
