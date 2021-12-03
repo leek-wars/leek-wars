@@ -1029,6 +1029,7 @@
 			if (!this.currentScenario) { return }
 			LeekWars.post('ai/test-scenario', { scenario_id: this.currentScenario.id, ai_id: this.currentAI.id }).then(data => {
 				localStorage.setItem('editor/last-scenario', '' + this.currentScenario!.id)
+				localStorage.setItem('editor/last-scenario-ai', '' + this.currentAI.id)
 				this.$router.push('/fight/' + data.fight)
 			})
 			.error(error => LeekWars.toast(this.$t('error_' + error.error, error.params)))
