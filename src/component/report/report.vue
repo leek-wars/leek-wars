@@ -96,8 +96,6 @@
 								</v-btn>
 							</router-link>
 						</span>
-						<span v-else-if="fight.type == FightType.BATTLE_ROYALE">
-						
 						</span>
 						<span v-else-if="fight.context == FightContext.CHALLENGE">
 							<router-link v-if="myFight" :to="'/garden/challenge/' + ['leek', 'farmer'][fight.type] + '/' + enemy">
@@ -111,6 +109,7 @@
 								</v-btn>
 							</router-link>
 						</span>
+						<span v-else> </span>
 					</span>
 				</center>
 
