@@ -14,3 +14,9 @@
 		@Prop() hat!: HatTemplate
 	}
 </script>
+
+<style scoped lang="scss">
+.leek-preview {
+	background: white;
+}
+</style>
