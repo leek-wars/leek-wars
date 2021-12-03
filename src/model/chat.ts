@@ -41,6 +41,7 @@ class Chat {
 	last_date: number | null = null
 	farmers: Farmer[] = []
 	loaded: boolean = false
+	opened: boolean = false
 
 	constructor(id: number, type: ChatType) {
 		this.id = id

@@ -110,7 +110,9 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			state.wsdisconnected = false
 
 			for (const chat of Object.values(state.chat)) {
-				store.commit('load-chat', chat)
+				if (chat.opened) {
+					store.commit('load-chat', chat)
+				}
 			}
 			vueMain.$emit('wsconnected')
 		},
@@ -134,6 +136,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 				Vue.set(state.chat, id, chat)
 			}
 			if (!chat.loaded) {
+				chat.opened = true
 				store.commit('load-chat', chat)
 			}
 		},
