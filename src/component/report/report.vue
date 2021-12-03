@@ -39,9 +39,10 @@
 								<tr>
 									<th>{{ $t('main.leek') }}</th>
 									<th>{{ $t('main.level') }}</th>
-									<th v-if="$store.getters.admin" class="power">Power</th>
+									<!-- <th v-if="$store.getters.admin" class="power">Power</th> -->
 									<th>{{ $t('main.xp') }}</th>
 									<th class="gain">{{ $t('main.habs') }}</th>
+									<th v-if="fight.context != FightContext.TEST && fight.context != FightContext.CHALLENGE" class="resources">{{ $t('main.resources') }}</th>
 									<th v-if="fight.type === FightType.SOLO" class="gain">{{ $t('main.talent') }}</th>
 									<!-- <th>Opérations</th> -->
 									<!-- <th v-if="$store.getters.admin" class="gain">Time</th> -->
