@@ -1049,7 +1049,9 @@
 	.leek {
 		text-align: center;
 		display: inline-block;
-		padding: 5px;
+		& > div {
+			padding: 5px;
+		}
 		.name {
 			font-size: 20px;
 			font-weight: 500;
