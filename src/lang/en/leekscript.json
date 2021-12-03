@@ -110,7 +110,7 @@
 	"error_74": "The second instanceof operator must be a class",
 	"error_75": "This value \"{0}\" is not iterable (not an array)",
 	"error_76": "Stack Overflow",
-	"error_77": "Invalid operator",
+	"error_77": "Invalid operator \"{0}\"",
 	"error_78": "This field is private in class \"{0}\"",
 	"error_79": "This field is protected in class \"{0}\"",
 	"error_91": "This field \"{0}\" is reserved",
