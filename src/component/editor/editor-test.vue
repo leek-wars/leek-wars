@@ -327,7 +327,7 @@
 	}
 
 	class TestScenario {
-		id!: any
+		id!: number
 		category!: string
 		team1!: TestScenarioLeek[]
 		team2!: TestScenarioLeek[]
@@ -337,6 +337,7 @@
 		type!: number
 		seed!: number | null
 		default!: boolean
+		ai!: AI | null // AI for default scenario
 	}
 	class TestMap {
 		id!: number
@@ -501,7 +502,7 @@
 				const ai = this.leekAis[leek.id]
 				if (!ai) { continue }
 				templates.push({
-					id: 0, base: false, default: false,
+					id: 0, base: false, default: false, ai: null,
 					name: "Solo " + leek.name, category: "solo", map: null, type: 0,
 					team1: [{id: leek.id, ai}], team2: [{id: -1, ai: -2}], seed: 0
 				})
@@ -521,18 +522,18 @@
 			}
 			if (LeekWars.objectSize(store.state.farmer.leeks) > 1) {
 				templates.push({
-					id: 0, base: false, seed: 0, default: false,
+					id: 0, base: false, seed: 0, default: false, ai: null,
 					name: "Éleveur", category: "farmer", map: null, team1, team2, type: 1
 				})
 			}
 			templates.push({
-				id: 0, base: false, seed: 0, default: false,
+				id: 0, base: false, seed: 0, default: false, ai: null,
 				name: "Battle Royale", category: "br", map: null, team1, team2: [], type: 3
 			})
 			for (const c in this.compositionTemplates) {
 				const compo = this.compositionTemplates[c]
 				templates.push({
-					id: 0, base: false, seed: 0, default: false,
+					id: 0, base: false, seed: 0, default: false, ai: null,
 					name: compo.name, category: "team", map: null, team1: compo.leeks, team2: generate_bots(compo.leeks.length), type: 2
 				})
 			}
@@ -644,8 +645,8 @@
 				} else {
 					// Create a default scenario
 					this.scenarios[0] = {
-						id: 0, base: false, default: true,
-						name: this.$t('default') + " " + this.currentAI.name, category: "free", map: null, type: 0,
+						id: 0, base: false, default: true, ai: this.currentAI,
+						name: this.currentAI.name, category: "free", map: null, type: 0,
 						team1: [{id: LeekWars.first(store.state.farmer!.leeks)!.id, ai: this.currentAI.id}], team2: [{id: -1, ai: -2}], seed: 0
 					} as TestScenario
 					this.selectScenario(this.scenarios[0])
@@ -658,32 +659,57 @@
 				this.leeks.push(bot as any)
 			}
 		}
+
 		selectScenario(scenario: TestScenario) {
 			this.currentScenario = scenario
 			this.updateScenarioBotsLevels()
 			localStorage.setItem('editor/scenario', '' + scenario.id)
 		}
+
 		selectLeek(leek: any) {
 			this.currentLeek = leek
 			localStorage.setItem('editor/leek', '' + leek.id)
 		}
+
 		deleteLeek(leek: Leek, teamID: number) {
 			if (!this.currentScenario) { return }
 			const team = teamID === 0 ? this.currentScenario.team1 : this.currentScenario.team2
 			team.splice(team.findIndex(l => l.id === leek.id), 1)
-			LeekWars.post('test-scenario/delete-leek', {scenario_id: this.currentScenario.id, leek: leek.id})
+			const scenario = this.currentScenario
+			if (scenario.id === 0) {
+				LeekWars.post('test-scenario/new', { name: scenario.ai!.name }).then(r => {
+					Vue.delete(this.scenarios, 0)
+					scenario.id = r.id
+					Vue.set(this.scenarios, r.id, scenario)
+					scenario.default = false
+					scenario!.ai!.scenario = r.id
+					const json = { type: 0, ai: scenario.ai!.id }
+					LeekWars.post('test-scenario/update', { id: r.id, data: JSON.stringify(json) })
+					for (const leek of scenario.team1) {
+						LeekWars.post('test-scenario/add-leek', {scenario_id: r.id, leek: leek.id, team: 0, ai: leek.ai ? leek.ai : null})
+					}
+					for (const leek of scenario.team2) {
+						LeekWars.post('test-scenario/add-leek', {scenario_id: r.id, leek: leek.id, team: 1, ai: leek.ai ? leek.ai : null})
+					}
+				})
+			} else {
+				LeekWars.post('test-scenario/delete-leek', {scenario_id: this.currentScenario.id, leek: leek.id})
+			}
 			this.updateScenarioBotsLevels()
 		}
+
 		saveLeek() {
 			if (!this.currentLeek) { return }
 			LeekWars.post('test-leek/update', {id: this.currentLeek.id, data: JSON.stringify(this.currentLeek)})
 			.error(error => LeekWars.toast(this.$t('error_' + error.error, error.params)))
 		}
+
 		saveMap() {
 			if (!this.currentMap) { return }
 			LeekWars.post('test-map/update', {id: this.currentMap.id, data: JSON.stringify(this.currentMap.data)})
 			.error(error => LeekWars.toast(this.$t('error_' + error.error, error.params)))
 		}
+
 		selectMap(map: TestMap) {
 			if (this.currentMap && this.timeout) {
 				if (this.timeout) {
@@ -694,6 +720,7 @@
 			}
 			this.currentMap = map
 		}
+
 		initMap() {
 			const size = 34
 			for (let i = 0; i <= size; ++i) {
@@ -709,6 +736,7 @@
 				this.map.push(line)
 			}
 		}
+
 		cellRightClick(e: Event, cell: TestMapCell) {
 			if (cell.team !== 0 && this.currentMap) {
 				const team_array = cell.team === 1 ? this.currentMap.data.team1 : this.currentMap.data.team2
@@ -722,6 +750,7 @@
 			}
 			e.preventDefault()
 		}
+
 		cellMouseDown(e: MouseEvent, cell: TestMapCell) {
 			if (e.button === 0 && this.currentMap) {
 				this.map_down = true
@@ -736,6 +765,7 @@
 				this.cellRightClick(e, cell)
 			}
 		}
+
 		cellMouseEnter(e: Event, cell: TestMapCell) {
 			if (this.map_down && this.currentMap) {
 				const has_class = cell.cell in this.currentMap.data.obstacles
@@ -749,13 +779,16 @@
 				}
 			}
 		}
+
 		cellMouseUp() {
 			this.map_down = false
 		}
+
 		cellDragStart(e: Event) {
 			e.preventDefault()
 			return false
 		}
+
 		resetSaveTimeout() {
 			if (this.timeout) {
 				window.clearTimeout(this.timeout)
@@ -765,6 +798,7 @@
 				this.saveMap()
 			}, 2000)
 		}
+
 		deleteMap(map: TestMap) {
 			LeekWars.delete('test-map/delete', {id: map.id})
 				.error(error => LeekWars.toast(this.$t('error_' + error.error, error.params)))
@@ -778,11 +812,13 @@
 				this.selectMap(LeekWars.first(this.maps)!)
 			}
 		}
+
 		clearMap() {
 			if (!this.currentMap) { return }
 			this.currentMap.data.obstacles = {}
 			this.resetSaveTimeout()
 		}
+
 		randomMap() {
 			if (!this.currentMap) { return }
 			this.currentMap.data.obstacles = {}
@@ -793,21 +829,25 @@
 			}
 			this.resetSaveTimeout()
 		}
+
 		get sortedAis() {
 			return Object.values(this.ais).sort((a, b) => a.path.toLowerCase().localeCompare(b.path.toLowerCase()))
 		}
+
 		clickLeekAI(leek: any) {
 			if (this.allLeeks[leek.id].ally) { return }
 			this.aiDialog = true
 			this.aiDialogBot = leek.id < 0
 			this.aiLeek = leek
 		}
+
 		clickDialogAI(ai: AI) {
 			if (!this.currentScenario || !this.aiLeek) { return }
 			this.aiLeek.ai = ai.id as any
 			LeekWars.post('test-scenario/add-leek', {scenario_id: this.currentScenario.id, leek: this.aiLeek.id, team: -1, ai: ai.id})
 			this.aiDialog = false
 		}
+
 		deleteScenario(scenario: TestScenario) {
 			if (scenario.base) { return }
 			LeekWars.delete('test-scenario/delete', {id: scenario.id})
@@ -820,6 +860,7 @@
 				this.currentScenario = null
 			}
 		}
+
 		createScenario() {
 			LeekWars.post('test-scenario/new', {name: this.newScenarioName}).then(data => {
 				const template = LeekWars.clone(this.templates[this.selectedTemplate])
@@ -833,7 +874,8 @@
 					map: null,
 					type: template.type
 				})
-				LeekWars.post('test-scenario/update', {id: data.id, data: JSON.stringify({type: template.type})})
+				const scenario = this.scenarios[data.id]
+				this.updateScenario(scenario, { type: template.type })
 				for (const leek of team1) {
 					LeekWars.post('test-scenario/add-leek', {scenario_id: data.id, leek: leek.id, team: 0, ai: leek.ai ? leek.ai : null})
 				}
@@ -842,7 +884,7 @@
 				}
 				this.newScenarioName = ''
 				this.newScenarioDialog = false
-				this.selectScenario(this.scenarios[data.id])
+				this.selectScenario(scenario)
 			})
 			.error(error => LeekWars.toast(this.$t('error_' + error.error, error.params)))
 		}
@@ -887,30 +929,35 @@
 			}
 			return available_leeks
 		}
+
 		selectScenarioMap(map: TestMap) {
 			if (!this.currentScenario) { return }
 			this.currentScenario.map = map ? map.id : null
-			LeekWars.post('test-scenario/update', {id: this.currentScenario.id, data: JSON.stringify({map: this.currentScenario.map})})
+			this.updateScenario(this.currentScenario, { map: this.currentScenario.map })
 			this.mapDialog = false
 		}
+
 		updateLeekLevel(leek: any) {
 			leek.level = Math.max(
 				leek.weapons.reduce((m: number, e: any) => Math.max(m, LeekWars.items[e].level), 1),
 				leek.chips.reduce((m: number, e: any) => Math.max(m, LeekWars.items[e].level), 1)
 			)
 		}
+
 		removeLeekChip(chip: any) {
 			if (!this.currentLeek) { return }
 			this.currentLeek.chips.splice(this.currentLeek.chips.indexOf(chip), 1)
 			this.updateLeekLevel(this.currentLeek)
 			this.saveLeek()
 		}
+
 		removeLeekWeapon(weapon: any) {
 			if (!this.currentLeek) { return }
 			this.currentLeek.weapons.splice(this.currentLeek.weapons.indexOf(weapon), 1)
 			this.updateLeekLevel(this.currentLeek)
 			this.saveLeek()
 		}
+
 		addLeekChip(chip: any) {
 			if (!this.currentLeek) { return }
 			this.currentLeek.chips.push(chip)
@@ -918,6 +965,7 @@
 			this.updateLeekLevel(this.currentLeek)
 			this.saveLeek()
 		}
+
 		addLeekWeapon(weapon: any) {
 			if (!this.currentLeek) { return }
 			this.currentLeek.weapons.push(weapon)
@@ -925,6 +973,7 @@
 			this.updateLeekLevel(this.currentLeek)
 			this.saveLeek()
 		}
+
 		createLeek() {
 			LeekWars.post('test-leek/new', {name: this.newLeekName}).then(data => {
 				const leek = {name: this.newLeekName, id: data.id, ai: -1}
@@ -938,6 +987,7 @@
 			})
 			.error(error => LeekWars.toast(this.$t('error_' + error.error, error.params)))
 		}
+
 		createMap() {
 			LeekWars.post('test-map/new', {name: this.newMapName}).then(data => {
 				Vue.set(this.maps, data.id, {name: this.newMapName, id: data.id, data: {obstacles: {}, team1: [], team2: []}})
@@ -947,6 +997,7 @@
 			})
 			.error(error => LeekWars.toast(this.$t('error_' + error.error, error.params)))
 		}
+
 		characteristicFocusout(characteristic: string, event: FocusEvent) {
 			if (!this.currentLeek || this.currentLeek.bot || !event.target) { return }
 			const target = event.target as HTMLElement
@@ -977,7 +1028,7 @@
 		launchTest() {
 			if (!this.currentScenario) { return }
 			LeekWars.post('ai/test-scenario', { scenario_id: this.currentScenario.id, ai_id: this.currentAI.id }).then(data => {
-				localStorage.setItem('editor/last-scenario', this.currentScenario!.id)
+				localStorage.setItem('editor/last-scenario', '' + this.currentScenario!.id)
 				this.$router.push('/fight/' + data.fight)
 			})
 			.error(error => LeekWars.toast(this.$t('error_' + error.error, error.params)))
@@ -1017,8 +1068,31 @@
 				}
 				this.currentScenario.team2.length = 0
 			}
-			LeekWars.post('test-scenario/update', {id: this.currentScenario.id, data: JSON.stringify({type: this.currentScenario.type})})
+			this.updateScenario(this.currentScenario, { type: this.currentScenario.type })
 		}
+
+		updateScenario(scenario: TestScenario, data: any) {
+			if (scenario.id === 0) {
+				LeekWars.post('test-scenario/new', { name: scenario.ai!.name }).then(r => {
+					Vue.delete(this.scenarios, 0)
+					scenario.id = r.id
+					Vue.set(this.scenarios, r.id, scenario)
+					scenario.default = false
+					scenario!.ai!.scenario = r.id
+					const json = { ...data, type: 0, ai: scenario.ai!.id }
+					LeekWars.post('test-scenario/update', { id: r.id, data: JSON.stringify(json) })
+					for (const leek of scenario.team1) {
+						LeekWars.post('test-scenario/add-leek', {scenario_id: r.id, leek: leek.id, team: 0, ai: leek.ai ? leek.ai : null})
+					}
+					for (const leek of scenario.team2) {
+						LeekWars.post('test-scenario/add-leek', {scenario_id: r.id, leek: leek.id, team: 1, ai: leek.ai ? leek.ai : null})
+					}
+				})
+			} else {
+				LeekWars.post('test-scenario/update', { id: scenario.id, data: JSON.stringify(data) })
+			}
+		}
+
 		getLimit(type: FightType) {
 			if (type === FightType.FREE) { return 6 }
 			else if (type === FightType.SOLO) { return 1 }
@@ -1066,7 +1140,7 @@
 						this.currentScenario.seed = 1
 					}
 				}
-				LeekWars.post('test-scenario/update', {id: this.currentScenario.id, data: JSON.stringify({ seed: this.currentScenario.seed || 0 })})
+				this.updateScenario(this.currentScenario, { seed: this.currentScenario.seed || 0 })
 			}
 		}
 	}
@@ -1123,12 +1197,15 @@
 	.column {
 		display: inline-block;
 		vertical-align: top;
+		max-height: 670px;
 	}
 	.lateral-column {
 		width: 200px;
 		margin-right: 15px;
 		background: #333;
 		color: #bbb;
+		display: flex;
+		flex-direction: column;
 	}
 	.lateral-column h4 {
 		padding: 5px 10px;
@@ -1137,6 +1214,9 @@
 		font-size: 16px;
 		background: #555;
 		display: block;
+	}
+	.items {
+		overflow-y: auto;
 	}
 	.item {
 		padding: 9px;
