@@ -7,7 +7,7 @@
 				<v-icon v-if="modified" class="modified">mdi-record</v-icon>
 			</h1>
 			<div v-if="page" class="tabs">
-				<div v-if="page.id === 1" class="tab action disabled" icon="search" link="/search">
+				<div v-if="page.id === 1" class="tab disabled" icon="search" link="/search">
 					<img class="search-icon" src="/image/search.png" @click="search">
 					<input v-model="searchQuery" type="text" placeholder="Rechercher une page" @keyup.enter="search">
 				</div>
@@ -26,7 +26,7 @@
 					<v-icon>mdi-lock</v-icon>
 					En cours d'édition par {{ page.locker_name }}
 				</div>
-				<div v-if="contributor && !LeekWars.mobile && (!page.locker || !$store.state.farmer || page.locker === $store.state.farmer.id)" class="tab" @click="editStart">
+				<div v-if="contributor && (!page.locker || !$store.state.farmer || page.locker === $store.state.farmer.id)" class="tab" @click="editStart">
 					<v-icon>mdi-pencil-outline</v-icon>
 					Modifier
 				</div>
