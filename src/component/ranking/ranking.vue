@@ -258,11 +258,14 @@
 			}
 		}
 
-		@Watch('active', {immediate: true})
-		@Watch('category')
-		@Watch('order')
-		@Watch('page')
+		get key() {
+			if (this.category === 'fun') return 'fun'
+			return this.active + '/' + this.category + '/' + this.order + '/' + this.page
+		}
+
+		@Watch('key', { immediate: true })
 		updateRanking() {
+			console.log("update", { active: this.active, category: this.category, order: this.order, page: this.page })
 			if (this.category === 'fun') {
 				this.rankings = null
 				LeekWars.get('ranking/fun').then(data => {
