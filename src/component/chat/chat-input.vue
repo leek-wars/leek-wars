@@ -2,7 +2,7 @@
 	<div class="chat-input">
 		<avatar :farmer="$store.state.farmer" />
 		<div ref="input" :placeholder="$t('main.chat_placeholder')" class="chat-input-content" contenteditable="true" @keyup="keyUp" @keydown="keyDown" @click="updateCursor"></div>
-		<emoji-picker @pick="addEmoji" />
+		<emoji-picker @pick="addEmoji">😀</emoji-picker>
 		<chat-commands v-if="commandsEnabled" ref="commands" v-autostopscroll :filter="commandFilter" class="commands v-menu__content" @command="selectCommand" />
 	</div>
 </template>
@@ -70,10 +70,12 @@
 				}
 				this.$emit('message', this.message.trim())
 				input.textContent = ''
+				this.cursor = 0
 				this.commandsEnabled = false
 			}
 			e.stopPropagation()
 		}
+
 		addEmoji(emoji: string) {
 			const input = this.$refs.input as HTMLElement
 			let cursor_position = this.cursor
@@ -84,6 +86,7 @@
 			LeekWars.set_cursor_position(input, cursor_position)
 			this.cursor = cursor_position
 		}
+
 		updateCommands() {
 			const result = Commands.isCommand(this.message)
 			if (result === false) {

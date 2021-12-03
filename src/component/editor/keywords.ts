@@ -1,6 +1,6 @@
 import { AI } from '@/model/ai'
 import { Constant } from '@/model/constant'
-import { Function } from '@/model/function'
+import { LSFunction } from '@/model/function'
 import { LeekWars } from "@/model/leekwars"
 
 class Keyword {
@@ -13,13 +13,24 @@ class Keyword {
 	ai?: AI
 	line?: number
 	shortcut?: number
-	function?: Function
+	function?: LSFunction
 	constant?: Constant
 	lstype?: any
 	location?: any
 	category!: number
 	javadoc?: any
 }
+
+class LSClass extends Keyword {
+	fields!: LSField[]
+	static_fields!: LSField[]
+	methods!: LSMethod[]
+	static_methods!: LSStaticMethod[]
+}
+
+class LSField extends Keyword {}
+class LSMethod extends Keyword {}
+class LSStaticMethod extends Keyword {}
 
 function generateKeywords() {
 	let last = ""
@@ -40,7 +51,9 @@ function generateKeywords() {
 
 		let i = 0
 		for (const a in fun.arguments_names) {
+			if (fun.optional[a]) name += "["
 			name += fun.arguments_names[a]
+			if (fun.optional[a]) name += "]"
 			if (i++ < fun.arguments_names.length - 1) {
 				name += ", "
 			}
@@ -82,4 +95,4 @@ function generateKeywords() {
 	return keywords
 }
 
-export { generateKeywords, Keyword }
+export { generateKeywords, Keyword, LSClass }

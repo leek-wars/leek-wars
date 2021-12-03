@@ -168,11 +168,11 @@
 					<loader v-if="!leek" />
 					<div v-else-if="leek.weapons.length === 0" class="empty">{{ $t('no_weapons') }}</div>
 					<template v-else>
-						<rich-tooltip-weapon v-for="weapon in leek.orderedWeapons" :key="weapon.id" v-slot="{ on }" :instant="true" :weapon="LeekWars.weapons[LeekWars.items[weapon.template].params]" :bottom="true">
+						<rich-tooltip-item v-for="weapon in leek.orderedWeapons" :key="weapon.id" v-slot="{ on }" :instant="true" :item="LeekWars.items[weapon.template]" :bottom="true">
 							<div class="weapon" v-on="on">
 								<img :src="'/image/' + LeekWars.items[weapon.template].name.replace('_', '/') + '.png'" @click="setWeapon(weapon.template)">
 							</div>
-						</rich-tooltip-weapon>
+						</rich-tooltip-item>
 					</template>
 				</div>
 			</panel>
@@ -188,11 +188,11 @@
 					<loader v-if="!leek" />
 					<div v-else-if="leek.chips.length === 0" class="empty">{{ $t('no_chips') }}</div>
 					<div v-else class="chips">
-						<rich-tooltip-chip v-for="chip in leek.orderedChips" :key="chip.id" v-slot="{ on }" :chip="LeekWars.chips[chip.template]" :bottom="true" :instant="true">
+						<rich-tooltip-item v-for="chip in leek.orderedChips" :key="chip.id" v-slot="{ on }" :item="LeekWars.items[chip.template]" :bottom="true" :instant="true">
 							<div class="chip" v-on="on">
 								<img :src="'/image/chip/' + LeekWars.chips[chip.template].name + '.png'">
 							</div>
-						</rich-tooltip-chip>
+						</rich-tooltip-item>
 					</div>
 				</div>
 			</panel>
@@ -288,21 +288,21 @@
 			</template>
 			<div class="weapons-popup">
 				<div :class="{dashed: draggedWeapon && draggedWeaponLocation === 'farmer'}" class="leek-weapons" @dragover="dragOver" @drop="weaponsDrop('leek', $event)">
-					<rich-tooltip-weapon v-for="(weapon, i) in leek.orderedWeapons" :key="i" v-slot="{ on }" :instant="true" :weapon="LeekWars.weapons[LeekWars.items[weapon.template].params]" :bottom="true">
+					<rich-tooltip-item v-for="(weapon, i) in leek.orderedWeapons" :key="i" v-slot="{ on }" :instant="true" :item="LeekWars.items[weapon.template]" :bottom="true" :nodge="true">
 						<div :class="{dragging: draggedWeapon && draggedWeapon.template === weapon.template && draggedWeaponLocation === 'leek'}" class="weapon" draggable="true" v-on="on" @dragstart="weaponDragStart('leek', weapon, $event)" @dragend="weaponDragEnd(weapon)" @click="removeWeapon(weapon)">
 							<img :src="'/image/' + LeekWars.items[weapon.template].name.replace('_', '/') + '.png'" draggable="false">
 						</div>
-					</rich-tooltip-weapon>
+					</rich-tooltip-item>
 				</div>
 				<br>
 				<h4>{{ $t('all_my_weapons') }} ({{ farmer_weapons.length }})</h4>
 				<div v-if="farmer_weapons.length" class="info">{{ $t('equip_item') }}</div>
 				<div :class="{dashed: draggedWeapon && draggedWeaponLocation === 'leek'}" class="farmer-weapons" @dragover="dragOver" @drop="weaponsDrop('farmer', $event)">
-					<rich-tooltip-weapon v-for="(weapon, i) in farmer_weapons" :key="i" v-slot="{ on }" :instant="true" :weapon="LeekWars.weapons[LeekWars.items[weapon.template].params]" :bottom="true">
+					<rich-tooltip-item v-for="(weapon, i) in farmer_weapons" :key="i" v-slot="{ on }" :instant="true" :item="LeekWars.items[weapon.template]" :bottom="true" :nodge="true">
 						<div :quantity="weapon.quantity" :class="{dragging: draggedWeapon && draggedWeapon.template === weapon.template && draggedWeaponLocation === 'farmer', locked: LeekWars.items[weapon.template].level > leek.level || (LeekWars.weapons[LeekWars.items[weapon.template].params].forgotten && hasForgottenWeapon) || leek.weapons.find(w => w.template === weapon.template) }" :draggable="LeekWars.items[weapon.template].level <= leek.level" class="weapon" v-on="on" @dragstart="weaponDragStart('farmer', weapon, $event)" @dragend="weaponDragEnd(weapon)" @click="addWeapon(weapon)">
 							<img :src="'/image/' + LeekWars.items[weapon.template].name.replace('_', '/') + '.png'" draggable="false">
 						</div>
-					</rich-tooltip-weapon>
+					</rich-tooltip-item>
 				</div>
 				<i18n class="buy-hint" tag="div" path="buy_hint">
 					<span slot="hab"><b>{{ $store.state.farmer.habs | number }}</b> <span class="hab"></span></span>
@@ -321,9 +321,9 @@
 			<br>
 			<br>
 			<center>
-				<v-btn class="rename-button" @click="rename('habs')">{{ $t('rename_pay_habs') }} :&nbsp;<b>{{ rename_price_habs }}</b>&nbsp;<img src="/image/hab.png"></v-btn>
+				<v-btn class="rename-button" @click="rename('habs')">{{ $t('rename_pay_habs') }} :&nbsp;<b>{{ rename_price_habs }}</b><img src="/image/hab.png"></v-btn>
 				&nbsp;
-				<v-btn class="rename-button" @click="rename('crystals')">{{ $t('rename_pay_crystals') }} :&nbsp;<b>{{ rename_price_crystals }}</b> &nbsp;<span class="crystal"></span></v-btn>
+				<v-btn class="rename-button" @click="rename('crystals')">{{ $t('rename_pay_crystals') }} :&nbsp;<b>{{ rename_price_crystals }}</b><span class="crystal"></span></v-btn>
 			</center>
 		</popup>
 
@@ -419,11 +419,11 @@
 						</template>
 						<b>{{ $t('no_weapon') }}</b>
 					</tooltip>
-					<rich-tooltip-weapon v-for="(weapon, i) in leek.orderedWeapons" :key="i" v-slot="{ on }" :instant="true" :weapon="LeekWars.weapons[LeekWars.items[weapon.template].params]" :bottom="true">
+					<rich-tooltip-item v-for="(weapon, i) in leek.orderedWeapons" :key="i" v-slot="{ on }" :instant="true" :item="LeekWars.items[weapon.template]" :bottom="true">
 						<div class="weapon" v-on="on" @click="setWeapon(weapon.template)">
 							<img :src="'/image/' + LeekWars.items[weapon.template].name.replace('_', '/') + '.png'">
 						</div>
-					</rich-tooltip-weapon>
+					</rich-tooltip-item>
 				</div>
 			</div>
 		</popup>
@@ -447,9 +447,9 @@
 					</div>
 					<div v-ripple class="item card" @click="hatDialog = true">
 						<div class="title">{{ $t('hat') }}</div>
-						<img v-if="leek.hat" class="image" :src="'/image/hat/' + LeekWars.hats[LeekWars.hatTemplates[leek.hat].item].name + '.png'">
+						<img v-if="leek.hat" class="image" :src="'/image/hat/' + LeekWars.hats[LeekWars.hatTemplates[leek.hat.hat_template].item].name + '.png'">
 						<img v-else class="image" src="/image/hat/no_hat.png">
-						<div v-if="leek.hat" class="name">{{ $t('hat.' + LeekWars.hats[LeekWars.hatTemplates[leek.hat].item].name) }}</div>
+						<div v-if="leek.hat" class="name">{{ $t('hat.' + LeekWars.hats[LeekWars.hatTemplates[leek.hat.hat_template].item].name) }}</div>
 					</div>
 					<div v-ripple class="item card" :class="{disabled: !holdWeaponEnabled}" @click="skinWeaponDialog = true">
 						<div class="title">
@@ -516,7 +516,7 @@
 			</div>
 		</popup>
 
-		<level-dialog v-if="leek" v-model="levelPopup" :leek2="leek" :level-data="levelPopupData" />
+		<level-dialog v-if="leek" v-model="levelPopup" :leek="leek" :level-data="levelPopupData" />
 
 		<popup v-if="leek && my_leek" v-model="aiDialog" :width="870">
 			<v-icon slot="icon">mdi-code-braces</v-icon>
@@ -535,21 +535,21 @@
 			<template slot="title">{{ $t('chips_of', [leek.name]) }} <span class="chip-count">[{{ leek.chips.length }}/{{ leek.max_chips }}]</span></template>
 			<div class="chips-dialog">
 				<div :class="{dashed: draggedChip && draggedChipLocation === 'farmer'}" class="leek-chips" @dragover="dragOver" @drop="chipsDrop('leek', $event)">
-					<rich-tooltip-chip v-for="chip in leek.orderedChips" :key="chip.id" v-slot="{ on }" :chip="LeekWars.chips[chip.template]" :bottom="true" :instant="true">
+					<rich-tooltip-item v-for="chip in leek.orderedChips" :key="chip.id" v-slot="{ on }" :item="LeekWars.items[chip.template]" :bottom="true" :instant="true" :nodge="true">
 						<div :class="{dragging: draggedChip && draggedChip.template === chip.template && draggedChipLocation === 'leek'}" class="chip" draggable="true" v-on="on" @dragstart="chipDragStart('leek', chip, $event)" @dragend="chipDragEnd(chip)" @click="removeChip(chip)">
 							<img :src="'/image/chip/' + LeekWars.chips[chip.template].name + '.png'" draggable="false">
 						</div>
-					</rich-tooltip-chip>
+					</rich-tooltip-item>
 				</div>
 				<br>
 				<h4>{{ $t('all_my_chips') }} ({{ farmer_chips.length }})</h4>
 				<div v-if="farmer_chips.length" class="info">{{ $t('equip_item') }}</div>
 				<div :class="{dashed: draggedChip && draggedChipLocation === 'leek'}" class="farmer-chips" @dragover="dragOver" @drop="chipsDrop('farmer', $event)">
-					<rich-tooltip-chip v-for="chip in farmer_chips" :key="chip.id" v-slot="{ on }" :chip="LeekWars.chips[chip.template]" :bottom="true" :instant="true">
+					<rich-tooltip-item v-for="chip in farmer_chips" :key="chip.id" v-slot="{ on }" :item="LeekWars.items[chip.template]" :bottom="true" :instant="true" :nodge="true">
 						<div :quantity="chip.quantity" :class="{dragging: draggedChip && draggedChip.template === chip.template && draggedChipLocation === 'farmer', locked: LeekWars.chips[chip.template].level > leek.level || leek.chips.find(c => c.template === chip.template) }" :draggable="LeekWars.chips[chip.template].level <= leek.level" class="chip" v-on="on" @dragstart="chipDragStart('farmer', chip, $event)" @dragend="chipDragEnd(chip)" @click="addChip(chip)">
 							<img :src="'/image/chip/' + LeekWars.chips[chip.template].name + '.png'" draggable="false">
 						</div>
-					</rich-tooltip-chip>
+					</rich-tooltip-item>
 				</div>
 				<i18n class="buy-hint" tag="div" path="buy_hint">
 					<span slot="hab"><b>{{ $store.state.farmer.habs | number }}</b> <span class="hab"></span></span>
@@ -583,7 +583,7 @@
 	const Explorer = () => import(/* webpackChunkName: "[request]" */ `@/component/explorer/explorer.${locale}.i18n`)
 	import { fileSystem } from '@/model/filesystem'
 
-	@Component({ name: "leek", i18n: {}, mixins, components: { CapitalDialog, LevelDialog, CharacteristicTooltip, Explorer } })
+	@Component({ name: "leek", i18n: {}, mixins: [...mixins], components: { CapitalDialog, LevelDialog, CharacteristicTooltip, Explorer } })
 	export default class LeekPage extends Vue {
 		leek: Leek | null = null
 		error: boolean = false
@@ -641,7 +641,7 @@
 			if (!this.leek) {
 				return this.xp_bar
 			}
-			return this.xp_bar = this.leek.level === 301 ? 100 : Math.floor(100 * (this.leek.xp - this.leek.down_xp) / (this.leek.up_xp - this.leek.down_xp))
+			return this.xp_bar = this.leek.level === 301 ? 100 : Math.min(100, Math.floor(100 * (this.leek.xp - this.leek.down_xp) / (this.leek.up_xp - this.leek.down_xp)))
 		}
 		get blue_xp_bar() {
 			if (!this.leek) {
@@ -682,9 +682,6 @@
 			return store.state.farmer!.potions.filter(p => LeekWars.potions[p.template].effects.some(e => e.type === PotionEffect.CHANGE_SKIN))
 		}
 
-		created() {
-			fileSystem.init()
-		}
 		mounted() {
 			this.$root.$on('update-leek-talent', (message: any) => {
 				if (this.leek && message.leek === this.leek.id) {
@@ -856,6 +853,7 @@
 		hat() {
 			this.hatDialog = true
 		}
+
 		selectHat(hat: Hat) {
 			if (!this.leek) { return }
 			this.hatDialog = false
@@ -869,20 +867,21 @@
 					LeekWars.toast(error)
 				})
 			} else {
-				if (this.leek.hat === hat.hat_template) {
+				if (this.leek.hat && this.leek.hat.template === hat.template) {
 					this.hatDialog = false
 					return
 				}
-				this.leek.hat = hat.hat_template
+				this.leek.hat = hat
 				LeekWars.post('leek/set-hat', {leek_id: this.leek.id, hat_id: hat.template}).then(data => {
 					if (this.leek) {
-						store.commit('change-hat', {leek: this.leek.id, hat: hat.hat_template})
+						store.commit('change-hat', { leek: this.leek.id, hat })
 					}
 				}).error(error => {
 					LeekWars.toast(error)
 				})
 			}
 		}
+
 		potion() {
 			this.potionDialog = true
 		}
@@ -957,7 +956,7 @@
 		}
 
 		weaponDragStart(location: string, weapon: Weapon, e: DragEvent) {
-			if (this.leek && LeekWars.weapons[weapon.template].level > this.leek.level) { return }
+			if (this.leek && LeekWars.items[weapon.template].level > this.leek.level) { return }
 			if (location === 'farmer' && this.hasForgottenWeapon && LeekWars.weapons[weapon.template].forgotten) { return }
 			this.draggedWeapon = weapon
 			this.draggedWeaponLocation = location
@@ -1298,6 +1297,7 @@
 		display: flex;
 		justify-content: center;
 		align-items: center;
+		padding: 20px;
 	}
 	.ai_popup .leek-ai {
 		text-align: center;
@@ -1414,6 +1414,9 @@
 		justify-content: center;
 		display: flex;
 		flex-direction: column;
+		.weapon img {
+			vertical-align: bottom;
+		}
 	}
 	.farmer-weapons .weapon, .farmer-chips .chip, .hat-dialog .hat {
 		position: relative;
@@ -1503,6 +1506,9 @@
 	.rename-button {
 		b {
 			padding-right: 4px;
+		}
+		img {
+			width: 20px;
 		}
 	}
 	.empty {

@@ -63,7 +63,7 @@
 					</div>
 				</div>
 			</div>
-			<editor-tabs v-if="!LeekWars.mobile" ref="tabs" :current="currentID" :ais="fileSystem.ais" @close="close" @close-all="closeAll" />
+			<editor-tabs v-if="!LeekWars.mobile" ref="tabs" :current="currentID" :ais="fileSystem.ais" :history2="history" @close="close" @close-all="closeAll" />
 
 			<editor-finder ref="finder" :active="activeAIs" :history="history" />
 		</div>
@@ -114,30 +114,46 @@
 							<v-menu v-if="currentAI" top :offset-y="true" :nudge-top="1" :max-width="600">
 								<template v-slot:activator="{ on, attrs }">
 									<div v-ripple class="version" v-bind="attrs" v-on="on">
-										LeekScript {{ ("" + currentAI.version).split('').join('.') }}
+										LeekScript {{ currentAI.version }}
 									</div>
 								</template>
 								<v-list :dense="true" class="version-menu">
-									<v-list-item v-ripple @click="setVersion(11)">
-										<v-icon v-if="currentAI.version === 11" class="list-icon">mdi-star</v-icon>
+									<v-list-item v-ripple @click="setVersion(3)">
+										<v-icon v-if="currentAI.version === 3" class="list-icon">mdi-star</v-icon>
 										<v-icon v-else class="list-icon">mdi-star-outline</v-icon>
 										<v-list-item-content>
-											<v-list-item-title>LeekScript 1.1 <span class="green">Recommandé</span></v-list-item-title>
+											<v-list-item-title>LeekScript 3 <span class="green">Recommandé</span></v-list-item-title>
+											<v-list-item-subtitle>
+												<ul>
+													<li>Littéraux d'objets <code>{a: 12}</code></li>
+													<li>Classes de base : Number, Integer, Boolean, Object, Array, Function etc.</li>
+													<li>Nouveaux mots-clés réservés.</li>
+												</ul>
+												<router-link class="link" to="/encyclopedia/LeekScript_3"><v-icon>mdi-book-open-page-variant</v-icon> Toutes les informations sur le LeekScript 3</router-link>
+											</v-list-item-subtitle>
+										</v-list-item-content>
+									</v-list-item>
+									<v-list-item v-ripple @click="setVersion(2)">
+										<v-icon v-if="currentAI.version === 2" class="list-icon">mdi-star</v-icon>
+										<v-icon v-else class="list-icon">mdi-star-outline</v-icon>
+										<v-list-item-content>
+											<v-list-item-title>LeekScript 2</v-list-item-title>
 											<v-list-item-subtitle>
 												<ul>
 													<li>Ajout des classes et objets.</li>
 													<li>Passage par référence par défaut pour les valeurs non-primitives dans les fonctions, les boucles foreach et les tableaux.</li>
 													<li>Corrections mineures (arrayFilter, opérateur ^=, et autres).</li>
 												</ul>
+												<router-link class="link" to="/encyclopedia/LeekScript_2"><v-icon>mdi-book-open-page-variant</v-icon> Toutes les informations sur le LeekScript 2</router-link>
 											</v-list-item-subtitle>
 										</v-list-item-content>
 									</v-list-item>
-									<router-link class="link" to="/encyclopedia/LeekScript_1.1"><v-icon>mdi-book-open-page-variant</v-icon> Toutes les informations sur le LeekScript 1.1</router-link>
-									<v-list-item v-ripple @click="setVersion(10)">
-										<v-icon v-if="currentAI.version === 10" class="list-icon">mdi-star</v-icon>
+
+									<v-list-item v-ripple @click="setVersion(1)">
+										<v-icon v-if="currentAI.version === 1" class="list-icon">mdi-star</v-icon>
 										<v-icon v-else class="list-icon">mdi-star-outline</v-icon>
 										<v-list-item-content>
-											<v-list-item-title>LeekScript 1.0</v-list-item-title>
+											<v-list-item-title>LeekScript 1</v-list-item-title>
 											<v-list-item-subtitle>
 												<ul>
 													<li>Version initiale</li>
@@ -192,9 +208,9 @@
 					<v-checkbox v-model="hideHeader" :label="$t('hide_header')" hide-details />
 					<br>
 				</template>
-				{{ $t('font_size') }} : <input v-model="fontSize" type="number" min="6" max="30">
+				{{ $t('font_size') }} : <input v-model="fontSize" type="number" min="6" max="30" @keyup.stop>
 				<br>
-				{{ $t('line_height') }} : <input v-model="lineHeight" type="number" min="10" max="50">
+				{{ $t('line_height') }} : <input v-model="lineHeight" type="number" min="10" max="50" @keyup.stop>
 
 				<div class="title">Thème</div>
 
@@ -230,7 +246,7 @@
 			</div>
 		</popup>
 
-		<editor-test ref="editorTest" v-model="testDialog" :ais="fileSystem.ais" :leek-ais="fileSystem.leekAIs" />
+		<editor-test ref="editorTest" v-model="testDialog" :ais="fileSystem.ais" :leek-ais="fileSystem.leekAIs" :currentAI="currentAI" />
 
 		<!--
 		<popup v-model="newAIv2Dialog" :width="500">
@@ -253,6 +269,7 @@
 	import { fileSystem } from '@/model/filesystem'
 	import { mixins } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
+	import { store } from '@/model/store'
 	import { Component, Vue, Watch } from 'vue-property-decorator'
 	import { Route } from 'vue-router'
 	import AIView from './ai-view.vue'
@@ -282,7 +299,7 @@
 			'editor-finder': EditorFinder,
 			'editor-problems': EditorProblems
 		},
-		mixins
+		mixins: [...mixins]
 	})
 	export default class EditorPage extends Vue {
 		activeAIs: {[key: number]: AI} = {}
@@ -300,7 +317,7 @@
 		theme: string = DEFAULT_THEME
 		autoClosing: boolean = false
 		autocomplete: boolean = false
-		enableAnalyzer: boolean = true
+		enableAnalyzer: boolean = false
 		popups: boolean = false
 		hideHeader: boolean = false
 		fontSize: number = DEFAULT_FONT_SIZE
@@ -337,36 +354,30 @@
 			if (localStorage.getItem('editor/autocomplete') === null) { localStorage.setItem('editor/autocomplete', 'true') }
 			if (localStorage.getItem('editor/auto_closing') === null) { localStorage.setItem('editor/auto_closing', 'true') }
 			if (localStorage.getItem('editor/popups') === null) { localStorage.setItem('editor/popups', 'true') }
-			if (localStorage.getItem('editor/analyzer') === null) { localStorage.setItem('editor/analyzer', 'true') }
+			if (localStorage.getItem('editor/analyzer') === null) { localStorage.setItem('editor/analyzer', 'false') }
 			this.enlargeWindow = localStorage.getItem('editor/large') === 'true'
 			this.theme = localStorage.getItem('editor/theme') || DEFAULT_THEME
 			this.autoClosing = localStorage.getItem('editor/auto_closing') === 'true'
 			this.autocomplete = localStorage.getItem('editor/autocomplete') === 'true'
 			this.popups = localStorage.getItem('editor/popups') === 'true'
 			this.hideHeader = localStorage.getItem('editor/hideHeader') === 'true'
-			this.enableAnalyzer = localStorage.getItem('editor/analyzer') === 'true'
+			this.enableAnalyzer = false // localStorage.getItem('editor/analyzer') === 'true'
 			this.fontSize = parseInt(localStorage.getItem('editor/font_size') || '', 10) || DEFAULT_FONT_SIZE
 			this.lineHeight = parseInt(localStorage.getItem('editor/line_height') || '', 10) || DEFAULT_LINE_HEIGHT
 			this.problemsHeight = parseInt(localStorage.getItem('editor/problems-height') || '', 10) || 200
 			this.panelWidth = parseInt(localStorage.getItem('editor/panel-width') || '', 10) || 200
+		}
 
-			if (this.enableAnalyzer) {
-				// LeekWars.analyzer.init()
-			}
-
-			fileSystem.init().then(() => {
-
-				// Chargement de l'historique
-				const history = JSON.parse(localStorage.getItem('editor/history') || '[]')
-				for (const id of history) {
-					if (id in fileSystem.ais) {
-						this.history.push(fileSystem.ais[id])
-					}
+		connected() {
+			// Chargement de l'historique
+			const history = JSON.parse(localStorage.getItem('editor/history') || '[]')
+			for (const id of history) {
+				if (id in fileSystem.ais) {
+					this.history.push(fileSystem.ais[id])
 				}
-
-				this.update()
-				LeekWars.setTitle(this.$t('title'), this.$t('n_ais', [fileSystem.aiCount]))
-			})
+			}
+			this.update()
+			LeekWars.setTitle(this.$t('title'), this.$t('n_ais', [fileSystem.aiCount]))
 		}
 
 		mounted() {
@@ -440,7 +451,12 @@
 				LeekWars.post(this.dragging.folder ? 'ai-folder/change-folder' : 'ai/change-folder', this.dragging.folder ? {folder_id: (this.dragging as Folder).id, dest_folder_id: folder.id} : {ai_id: (this.dragging as AIItem).ai.id, folder_id: folder.id})
 				this.dragging = null
 			})
+			this.$root.$on('connected', this.connected)
+			if (store.state.farmer) {
+				this.connected()
+			}
 		}
+
 		isChild(folder: Folder, parent: Folder): boolean {
 			let current = folder
 			while (current.id !== 0) {
@@ -476,6 +492,7 @@
 		update() {
 			if (this.$route.params.id) {
 				const id = parseInt(this.$route.params.id, 10)
+				// console.log("fileSystem", Object.values(fileSystem.ais).length)
 				if (id > 0 && id in fileSystem.ais) {
 					const ai = fileSystem.ais[id]
 					this.currentAI = ai
@@ -487,8 +504,8 @@
 					}
 					Vue.nextTick(() => {
 						this.currentEditor = (this.$refs.editors as AIView[]).find(editor => editor.ai === ai) || null
-						explorer.selectAI(this.currentAI!)
 					})
+					explorer.selectAI(this.currentAI!)
 					if (this.$refs.tabs) {
 						(this.$refs.tabs as any).add(this.currentAI)
 					}
@@ -512,10 +529,10 @@
 				const lastCode = localStorage.getItem('editor/last_code')
 				if (lastCode && parseInt(lastCode, 10) > 0 && lastCode in fileSystem.ais) {
 					this.$router.replace('/editor/' + localStorage.getItem('editor/last_code'))
-				} else {
-					for (const ai in fileSystem.ais) {
-						if (parseInt(ai, 10) > 0) { // Not bot ai
-							this.$router.replace('/editor/' + ai)
+				} else if (store.state.farmer) {
+					for (const ai in store.state.farmer.leek_ais) {
+						if (store.state.farmer.leek_ais[ai] in fileSystem.ais) {
+							this.$router.replace('/editor/' + store.state.farmer.leek_ais[ai])
 							return
 						}
 					}
@@ -540,6 +557,7 @@
 			this.$root.$off('previous')
 			this.$root.$off('next')
 			this.$root.$off('back')
+			this.$root.$off('connected', this.connected)
 			LeekWars.large = false
 			LeekWars.header = true
 			LeekWars.footer = true
@@ -569,10 +587,7 @@
 
 			const saveID = aiEditor.id > 0 ? aiEditor.id : 0
 			const content = aiEditor.editor.getValue()
-			aiEditor.ai!.code = content
-
-			// this.currentEditor.updateIncludes()
-			// this.currentEditor.updateGlobalVars()
+			Vue.set(aiEditor.ai, 'code', content)
 
 			LeekWars.post('ai/save', {ai_id: saveID, code: content}).then(data => {
 				if (aiEditor === null) { return }
@@ -831,8 +846,9 @@
 		setVersion(version: number) {
 			if (this.currentAI) {
 				this.currentAI.version = version
-				LeekWars.put('ai/version', {ai: this.currentAI.id, version})
+				LeekWars.put('ai/version', {ai_id: this.currentAI.id, version})
 				this.save(this.currentEditor)
+				this.currentEditor!.analyzeV1()
 			}
 		}
 	}
@@ -1165,20 +1181,24 @@
 			color: white;
 			padding: 0 6px;
 			border-radius: 20px;
+			margin-left: 4px;
 		}
 		.link {
 			padding: 5px;
-			padding-left: 50px;
 			color: #5fad1b;
 			font-weight: 500;
 			display: block;
 			i {
-				font-size: 16px;
+				font-size: 14px;
 				vertical-align: top;
 			}
 			&:hover {
 				text-decoration: underline;
 			}
 		}
+	}
+	code {
+		display: inline-block;
+		padding: 0;
 	}
 </style>

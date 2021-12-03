@@ -32,6 +32,7 @@ const Forum = () => import(/* webpackChunkName: "[request]" */ `@/component/foru
 const Garden = () => import(/* webpackChunkName: "[request]" */ `@/component/garden/garden.${locale}.i18n`)
 const GeneralHelp = () => import(/* webpackChunkName: "[request]" */ `@/component/general-help/general-help.${locale}.i18n`)
 const Help = () => import(/* webpackChunkName: "[request]" */ `@/component/help/help.${locale}.i18n`)
+const Inventory = () => import(/* webpackChunkName: "[request]" */ `@/component/inventory/inventory.${locale}.i18n`)
 const LineOfSight = () => import(/* webpackChunkName: "[request]" */ `@/component/line-of-sight/line-of-sight.${locale}.i18n`)
 const AdvancedFightDescription = () => import(/* webpackChunkName: "[request]" */ `@/component/advanced-fight-description/advanced-fight-description.${locale}.i18n`)
 const History = () => import(/* webpackChunkName: "[request]" */ `@/component/history/history.${locale}.i18n`)
@@ -58,6 +59,7 @@ const Tournament = () => import(/* webpackChunkName: "[request]" */ `@/component
 const Trophies = () => import(/* webpackChunkName: "[request]" */ `@/component/trophies/trophies.${locale}.i18n`)
 const TrophyPage = () => import(/* webpackChunkName: "[request]" */ `@/component/trophy/trophy.${locale}.i18n`)
 const Tutorial = () => import(/* webpackChunkName: "[request]" */ `@/component/tutorial/tutorial.${locale}.i18n`)
+// const Workshop = () => import(/* webpackChunkName: "[request]" */ `@/component/workshop/workshop.${locale}.i18n`)
 import { env } from '@/env'
 import { LeekWars } from '@/model/leekwars'
 import { store } from '@/model/store'
@@ -132,7 +134,7 @@ const routes = [
 	{ path: '/garden/:category/:item', component: Garden, beforeEnter: connected },
 	{ path: '/garden/:category/:type/:target', component: Garden, beforeEnter: connected },
 	{ path: '/garden/:category/:type/:target/:item', component: Garden, beforeEnter: connected },
-	{ path: '/help', component: Help },
+	{ path: '/help', component: Encyclopedia },
 	{ path: '/help/api', component: Api },
 	{ path: '/help/documentation', component: Documentation },
 	{ path: '/help/documentation/:item', component: Documentation },
@@ -141,6 +143,7 @@ const routes = [
 	{ path: '/help/advanced-fight-description', component: AdvancedFightDescription },
 	{ path: '/help/general', component: GeneralHelp },
 	{ path: '/help/tutorial', component: Tutorial },
+	{ path: '/inventory', component: Inventory },
 	{ path: '/legal', component: Legal },
 	{ path: '/login', component: Login, beforeEnter: disconnected },
 	{ path: '/leek/:id', name: 'leek', component: Leek },
@@ -149,7 +152,7 @@ const routes = [
 	{ path: '/market/:item', component: Market, meta: {noscrollapp: true}, beforeEnter: connected },
 	{ path: '/messages', component: Messages, beforeEnter: connected },
 	{ path: '/messages/conversation/:id', component: Messages, beforeEnter: connected },
-	{ path: '/messages/new/:id/:name/:avatar_changed', component: Messages, beforeEnter: connected },
+	{ path: '/messages/new/:farmer_id/:name/:avatar_changed', component: Messages, beforeEnter: connected },
 	{ path: '/moderation', component: Moderation, meta: {noscroll: true}, beforeEnter: connected },
 	{ path: '/moderation/fault/:id', component: Moderation, meta: {noscroll: true}, beforeEnter: connected },
 	{ path: '/moderation/thugs', component: ModerationThugs, meta: {noscroll: true}, beforeEnter: connected },
@@ -180,6 +183,7 @@ const routes = [
 	{ path: '/trophies', component: Trophies, beforeEnter: connected },
 	{ path: '/trophies/:id', component: Trophies },
 	{ path: '/trophy/:code', component: TrophyPage },
+	// { path: '/workshop', component: Workshop },
 	{ path: '*', component: Error },
 ] as RouteConfig[]
 
@@ -254,20 +258,12 @@ router.beforeEach((to: Route, from: Route, next: any) => {
 	LeekWars.splitShowList()
 	LeekWars.actions = []
 
-	if (!store.state.connected) {
+	if (window.__FARMER__) {
+		store.commit('connected', '$')
+	} else {
 		const token = LeekWars.DEV ? localStorage.getItem('token') : '$'
 		if (localStorage.getItem('connected') === 'true') {
 			store.commit('connected', token)
-			LeekWars.get('farmer/get-from-token').then(data => {
-				store.commit('connect', {farmer: data.farmer, farmers: data.farmers, token})
-			}).error(() => {
-				store.commit('disconnect')
-				router.push('/')
-			})
-		} else if (localStorage.getItem('login-attempt') === 'true') {
-			LeekWars.get('farmer/get-from-token').then(data => {
-				store.commit('connect', {farmer: data.farmer, farmers: data.farmers, token})
-			})
 		}
 	}
 

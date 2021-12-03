@@ -151,7 +151,7 @@
 	import Breadcrumb from '../forum/breadcrumb.vue'
 	import Trophy from './trophy.vue'
 
-	@Component({ name: 'trophies', i18n: {}, mixins, components: { Breadcrumb, Trophy } })
+	@Component({ name: 'trophies', i18n: {}, mixins: [...mixins], components: { Breadcrumb, Trophy } })
 	export default class Trophies extends Vue {
 		all_trophies: any[] = []
 		raw_trophies: {[key: number]: any} = {}

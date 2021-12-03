@@ -5,7 +5,7 @@ const util = require('util')
 const values = [
 	['chips', 'chips', 'chip/get-all', '{[key: string]: ChipTemplate}'],
 	['constants', 'constants', 'constant/get-all', 'Constant[]'],
-	['functions', 'functions', 'function/get-all', 'Function[]'],
+	['functions', 'functions', 'function/get-all', 'LSFunction[]'],
 	['hats', 'hats', 'hat/get-all', '{[key: string]: HatTemplate}'],
 	['weapons', 'weapons', 'weapon/get-all', '{[key: string]: WeaponTemplate}'],
 	['pomps', 'pomps', 'pomp/get-all', '{[key: string]: PompTemplate}'],
@@ -20,7 +20,7 @@ const values = [
 const promises = []
 
 for (const value of values) {
-	// const host = 'http://localhost:5000/'
+	// const host = 'http://localhost:8500/'
 	const host = 'https://leekwars.com/'
 	const p = request(host + 'api/' + value[2])
 	promises.push(p.then((data) => {
@@ -31,7 +31,7 @@ for (const value of values) {
 			+ " = " + util.inspect(value[1] ? json[value[1]] : json, {depth: Infinity, breakLength: Infinity, maxArrayLength: Infinity})
 			+ "\nexport { " + value[0].toUpperCase() + " }"
 	}).catch((err) => {
-		console.log("ERROR request failed for", value[0])
+		console.log("ERROR request failed for", value[0], err)
 		process.exit()
 	}))
 }
@@ -40,7 +40,7 @@ Promise.all(promises).then((result) => {
 /* tslint:disable */
 import { ChipTemplate } from '@/model/chip'
 import { Constant } from '@/model/constant'
-import { Function } from '@/model/function'
+import { LSFunction } from '@/model/function'
 import { HatTemplate } from '@/model/hat'
 import { ItemTemplate } from '@/model/item'
 import { PompTemplate } from '@/model/pomp'

@@ -36,5 +36,6 @@
 	"team2": "Équipe 2",
 	"title": "Rapport de combat",
 	"trophies": "Trophées",
-	"winners": "Gagnants"
+	"winners": "Gagnants",
+	"errors": "Erreurs"
 }

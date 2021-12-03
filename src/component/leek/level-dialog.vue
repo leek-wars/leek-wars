@@ -1,10 +1,10 @@
 <template>
 	<popup :value="value" :width="700" @input="$emit('input', $event)">
 		<v-icon slot="icon">mdi-new-box</v-icon>
-		<span v-if="levelData && leek2" slot="title" v-html="$t('title', [leek2.name, levelData.level])"></span>
+		<span v-if="levelData && leek" slot="title" v-html="$t('title', [leek.name, levelData.level])"></span>
 
-		<div v-if="levelData && leek2" class="level-popup">
-			<div v-if="leek2.level == 301">
+		<div v-if="levelData && leek" class="level-popup">
+			<div v-if="leek.level == 301">
 				<h2>{{ $t('301_title') }}</h2>
 				<br>
 				<div v-html="$t('301_message')"></div>
@@ -29,7 +29,7 @@
 			<table class="gains-table">
 				<tr>
 					<td class="leek-image">
-						<leek-image :leek="leek2" :scale="0.8" />
+						<leek-image :leek="leek" :scale="0.8" />
 					</td>
 					<td>
 						<div class="gains">
@@ -67,11 +67,11 @@
 				</div>
 				<div v-if="levelData.new_weapon" class="new">
 					<h4><v-icon>mdi-shape-square-plus</v-icon> {{ $t('new_weapon') }}</h4>
-					<div class="available-market">{{ $t('total_weapons', [leek2.max_weapons]) }}</div>
+					<div class="available-market">{{ $t('total_weapons', [leek.max_weapons]) }}</div>
 				</div>
 				<div v-if="levelData.new_chip" class="new">
 					<h4><v-icon>mdi-shape-square-plus</v-icon> {{ $t('new_chip') }}</h4>
-					<div class="available-market">{{ $t('total_chips', [leek2.max_chips]) }}</div>
+					<div class="available-market">{{ $t('total_chips', [leek.max_chips]) }}</div>
 				</div>
 			</div>
 		</div>
@@ -84,15 +84,15 @@
 	import { LeekWars } from '@/model/leekwars'
 	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 
-	@Component({ name: 'level-dialog', i18n: {}, mixins })
+	@Component({ name: 'level-dialog', i18n: {}, mixins: [...mixins] })
 	export default class LevelDialog extends Vue {
 		@Prop({required: true}) value!: boolean
-		@Prop({required: true}) leek2!: Leek
+		@Prop({required: true}) leek!: Leek
 		@Prop({required: true}) levelData!: any
 
 		@Watch('value')
 		close() {
-			LeekWars.post('leek/set-popup-level-seen', {leek_id: this.leek2.id})
+			LeekWars.post('leek/set-popup-level-seen', {leek_id: this.leek.id})
 		}
 	}
 </script>

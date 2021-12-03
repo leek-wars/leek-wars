@@ -274,9 +274,9 @@ textarea {
 	font-family: "Roboto";
 	font-size: 15px;
 }
-ul {
+ul, ol {
 	margin: 10px 0;
-    padding-inline-start: 40px;
+    padding-inline-start: 30px;
 }
 .center {
 	text-align: center;
@@ -421,13 +421,14 @@ ul {
 	border: none;
 }
 .hab {
-	width: 18px;
-	height: 18px;
+	width: 20px;
+	height: 20px;
 	vertical-align: bottom;
 	display: inline-block;
 	background-image: url("/image/hab.png");
 	background-repeat: no-repeat;
 	background-position: center;
+	background-size: 20px;
 }
 .crystal {
 	width: 17px;
@@ -926,6 +927,13 @@ body {
 .difficulty-3 { background: #c21aff }
 .difficulty-4 { background: #f8ac00 }
 .difficulty-5 { background: red }
+
+// .rarity-border-0 { border-top: 3px solid #ccc !important }
+.rarity-border-1 { border-top: 1px solid #00aa00 !important }
+.rarity-border-2 { border-top: 1px solid #0090ff !important }
+.rarity-border-3 { border-top: 1px solid #c21aff !important }
+.rarity-border-4 { border-top: 1px solid #f8ac00 !important }
+.rarity-border-5 { border-top: 1px solid red !important }
 
 .spacer {
 	flex: 1;

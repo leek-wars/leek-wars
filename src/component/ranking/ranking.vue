@@ -212,7 +212,7 @@
 	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 
 	@Component({
-		name: 'ranking', i18n: {}, mixins,
+		name: 'ranking', i18n: {}, mixins: [...mixins],
 		components: { 'ranking-leek-row': RankingLeekRowElement, 'ranking-farmer-row': RankingFarmerRowElement, 'ranking-team-row': RankingTeamRowElement, 'ranking-search-result': RankingSearchResult }
 	})
 	export default class RankingPage extends Vue {
@@ -258,11 +258,14 @@
 			}
 		}
 
-		@Watch('active', {immediate: true})
-		@Watch('category')
-		@Watch('order')
-		@Watch('page')
+		get key() {
+			if (this.category === 'fun') return 'fun'
+			return this.active + '/' + this.category + '/' + this.order + '/' + this.page
+		}
+
+		@Watch('key', { immediate: true })
 		updateRanking() {
+			// console.log("update", { active: this.active, category: this.category, order: this.order, page: this.page })
 			if (this.category === 'fun') {
 				this.rankings = null
 				LeekWars.get('ranking/fun').then(data => {

@@ -22,20 +22,20 @@ import NotificationElement from '@/component/notifications/notification.vue'
 import Pagination from '@/component/pagination.vue'
 import Popup from '@/component/popup.vue'
 import RankingBadge from '@/component/ranking-badge.vue'
-import RichTooltipChip from '@/component/rich-tooltip/rich-tooltip-chip.vue'
 import RichTooltipComposition from '@/component/rich-tooltip/rich-tooltip-composition.vue'
 import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 import RichTooltipLeek from '@/component/rich-tooltip/rich-tooltip-leek.vue'
+import RichTooltipResource from '@/component/rich-tooltip/rich-tooltip-resource.vue'
 import RichTooltipTeam from '@/component/rich-tooltip/rich-tooltip-team.vue'
 import RichTooltipTrophy from '@/component/rich-tooltip/rich-tooltip-trophy.vue'
-import RichTooltipWeapon from '@/component/rich-tooltip/rich-tooltip-weapon.vue'
+import RichTooltipItem from '@/component/rich-tooltip/rich-tooltip-item.vue'
 import Talent from '@/component/talent.vue'
 import TitlePicker from '@/component/title/title-picker.vue'
 import LWTitle from '@/component/title/title.vue'
 import TurretImage from '@/component/turret-image.vue'
 import Type from '@/component/type.vue'
 import { env } from '@/env'
-import { i18n, loadInstanceTranslations } from '@/model/i18n'
+import { i18n } from '@/model/i18n'
 import { LeekWars } from '@/model/leekwars'
 import '@/model/serviceworker'
 import { store } from "@/model/store"
@@ -95,10 +95,10 @@ Vue.component('popup', Popup)
 Vue.component('rich-tooltip-farmer', RichTooltipFarmer)
 Vue.component('rich-tooltip-leek', RichTooltipLeek)
 Vue.component('rich-tooltip-composition', RichTooltipComposition)
-Vue.component('rich-tooltip-weapon', RichTooltipWeapon)
-Vue.component('rich-tooltip-chip', RichTooltipChip)
+Vue.component('rich-tooltip-resource', RichTooltipResource)
 Vue.component('rich-tooltip-trophy', RichTooltipTrophy)
 Vue.component('rich-tooltip-team', RichTooltipTeam)
+Vue.component('rich-tooltip-item', RichTooltipItem)
 Vue.component('loader', LWLoader)
 Vue.component('lw-title', LWTitle)
 Vue.component('title-picker', TitlePicker)
@@ -134,12 +134,8 @@ Vue.directive('code', (el) => {
 Vue.directive('large-emojis', {
 	inserted: (el) => {
 		if (!el.classList.contains('large-emojis')) {
-			let onlyEmojis = true
-			el.childNodes.forEach((child) => {
-				if (child.nodeType === Node.TEXT_NODE) {
-					onlyEmojis = onlyEmojis && child.textContent!.length === 0
-				}
-			})
+			const text = el.textContent || ''
+			const onlyEmojis = text.length === 0 || /^([^-\p{L}\u00-\u7F]+)$/.test(text)
 			if (onlyEmojis) {
 				el.classList.add('large-emojis')
 			}
@@ -199,24 +195,21 @@ Vue.directive('dochash', (el) => {
 	})
 })
 
+function displayWarningMessage() {
+	const style = "color: black; font-size: 13px; font-weight: bold;"
+	const styleRed = "color: red; font-size: 14px; font-weight: bold;"
+	console.log("%c" + i18n.t('main.console_alert_1'), style)
+	console.log("%c" + i18n.t('main.console_alert_2'), styleRed)
+	console.log("%c" + i18n.t('main.console_alert_3'), style)
+	console.log("")
+	console.log("%c✔️ " + i18n.t('main.console_github'), style)
+	console.log("")
+}
+
 const vueMain = new Vue({
 	router, i18n, store,
 	data: { savedPosition: 0 },
 	vuetify: new Vuetify(),
-	methods: {
-		onLanguageLoaded: () => {
-			if (!LeekWars.DEV) {
-				const style = "color: black; font-size: 13px; font-weight: bold;"
-				const styleRed = "color: red; font-size: 14px; font-weight: bold;"
-				console.log("%c" + i18n.t('main.console_alert_1'), style)
-				console.log("%c" + i18n.t('main.console_alert_2'), styleRed)
-				console.log("%c" + i18n.t('main.console_alert_3'), style)
-				console.log("")
-				console.log("%c✔️ " + i18n.t('main.console_github'), style)
-				console.log("")
-			}
-		}
-	},
 	render: (h) => {
 		if (location.pathname === '/console') {
 			return h(Console)
@@ -293,6 +286,8 @@ const vueMain = new Vue({
 		LeekWars.setFavicon()
 		LeekWars.initChats()
 
+		displayWarningMessage()
+
 		// Keep connected
 		setInterval(() => {
 			store.commit('last-connection', LeekWars.time)
@@ -300,12 +295,25 @@ const vueMain = new Vue({
 				store.commit('connected-count', data.farmers)
 			})
 		}, 59 * 1000)
-
-		// Message ?
-		LeekWars.get('farmer/get-message').then(data => {
-			LeekWars.displayMessage(data.message)
-		})
 	}
 }).$mount('#app')
+
+if (window.__FARMER__) {
+	store.commit('connect', {...window.__FARMER__, token: '$'})
+} else {
+	const token = LeekWars.DEV ? localStorage.getItem('token') : '$'
+	if (localStorage.getItem('connected') === 'true') {
+		LeekWars.get('farmer/get-from-token').then(data => {
+			store.commit('connect', {...data, token})
+		}).error(() => {
+			store.commit('disconnect')
+			router.push('/')
+		})
+	} else if (localStorage.getItem('login-attempt') === 'true') {
+		LeekWars.get('farmer/get-from-token').then(data => {
+			store.commit('connect', {...data, token})
+		})
+	}
+}
 
 export { vueMain }

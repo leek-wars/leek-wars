@@ -6,7 +6,7 @@
 	"chips_1": "Les puces ont de nombreuses fonctions : dégâts, soins, boucliers, boosts,\nentraves, déplacement...",
 	"chips_2": "Chaque puce requiert un certain niveau pour pouvoir être utilisée et a un\ncoût en points de tour. Elles comportent également\nune portée spécifique et une durée de refroidissement \"Cooldown\" pour\npouvoir être utilisée à nouveau.",
 	"chips_3": "Si une puce indique \"Protège de 15 de dégâts sur 3 tours\", elle protègera\nde 15 de dégâts sur chacun des 3 tours, le tour durant lequel elle est lancée\net les 2 suivants.",
-	"chips_4": "Certaines puces ont une zone d'effet comme pour la puce \"Foudre\". Le calcul\npour les dégâts de zone est linéaire : 100% pour la case centrale et jusqu'à\n50% pour les cases aux extrémités.",
+	"chips_4": "Certaines puces ont une zone d'effet comme pour la puce \"Foudre\". Le calcul\npour les dégâts de zone est linéaire : 100% pour la case centrale et -20% par cellule en s'éloignant.",
 	"credits": "Aide rédigée avec l'aide de <router-link to='/farmer/284'>PadiSson</router-link> et\n<router-link to='/farmer/273'>McNalYoo</router-link>.",
 	"editor": "L'éditeur",
 	"editor_1": "Vous avez la possibilité d'éditer le nom de vos intelligences artificielles.\nPour cela, il suffit de cliquer sur le crayon à côté du nom de l'IA dans la liste a gauche puis\nd'enregistrer la modification à l'aide du bouton \"Sauvegarder\".",

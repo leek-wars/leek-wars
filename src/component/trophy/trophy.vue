@@ -27,15 +27,11 @@
 						<ul>
 							<li v-if="trophy.habs"><span class="hab"></span> {{ trophy.habs | number }} habs</li>
 							<li v-for="item in items" :key="item.id">
-								<rich-tooltip-weapon v-if="item.type === ItemType.WEAPON" v-slot="{ on }" :bottom="true" :instant="true" :weapon="LeekWars.weapons[item.params]">
-									<div v-on="on">{{ $t('weapon.' + LeekWars.weapons[item.params].name) }}</div>
-								</rich-tooltip-weapon>
-								<div v-else-if="item.type === ItemType.HAT">
-									{{ $t('hat.' + LeekWars.hats[item.id].name) }}
-								</div>
-								<div v-else-if="item.type === ItemType.POTION">
-									{{ $t('potion.' + LeekWars.potions[item.id].name) }}
-								</div>
+								<rich-tooltip-item v-slot="{ on }" :bottom="true" :instant="true" :item="item">
+									<div v-if="item.type === ItemType.WEAPON" v-on="on">{{ $t('weapon.' + LeekWars.weapons[item.params].name) }}</div>
+									<div v-else-if="item.type === ItemType.HAT" v-on="on">{{ $t('hat.' + LeekWars.hats[item.id].name) }}</div>
+									<div v-else-if="item.type === ItemType.POTION" v-on="on">{{ $t('potion.' + LeekWars.potions[item.id].name) }}</div>
+								</rich-tooltip-item>
 							</li>
 						</ul>
 					</div>
@@ -85,7 +81,7 @@
 	import { LeekWars } from '@/model/leekwars'
 	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 
-	@Component({ name: 'trophy', i18n: {}, mixins })
+	@Component({ name: 'trophy', i18n: {}, mixins: [...mixins] })
 	export default class Trophy extends Vue {
 		code: any = null
 		trophy: any = null

@@ -69,10 +69,10 @@
 
 <script lang="ts">
 	import { Farmer } from '@/model/farmer'
-	import { Leek } from '@/model/leek'
 	import { LeekWars } from '@/model/leekwars'
 	import { store } from '@/model/store'
 	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
+
 	@Component({})
 	export default class RichTooltipFarmer extends Vue {
 		@Prop({required: true}) id!: number
@@ -91,7 +91,7 @@
 			return this.instant ? 0 : 200
 		}
 		get _close_delay() {
-			return this.instant ? 0 : 200
+			return this.instant ? 0 : 0
 		}
 		@Watch('id')
 		update() {
@@ -115,6 +115,7 @@
 				})
 			}
 		}
+
 		sendMessage() {
 			if (!this.farmer) { return }
 			LeekWars.get('message/find-conversation/' + this.farmer.id).then(conversation => {
@@ -125,6 +126,7 @@
 				this.$router.push('/messages/new/' + this.farmer.id + '/' + this.farmer.name + '/' + this.farmer.avatar_changed)
 			})
 		}
+
 		@Watch('expand_leeks')
 		updateExpand() {
 			localStorage.setItem('richtooltipfarmer/expanded', this.expand_leeks ? 'true' : 'false')

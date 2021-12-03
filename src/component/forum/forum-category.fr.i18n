@@ -14,5 +14,7 @@
 	"new_topic_title": "Titre du topic",
 	"pinned": "Sujet accroché",
 	"resolved": "Sujet résolu",
-	"topic": "Sujet"
+	"topic": "Sujet",
+	"mark_as_read": "Marquer comme lu",
+	"mark_as_read_text": "Tous les sujets des toutes les catégories du forum seront marqués comme lus. Après cette action, seuls les nouveaux sujets ou nouvelles réponses seront indiquées."
 }

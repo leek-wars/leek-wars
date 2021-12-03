@@ -11,8 +11,7 @@ import { Obstacle } from '@/component/player/game/obstacle'
 import { Particles } from '@/component/player/game/particles'
 import { S, Sound } from '@/component/player/game/sound'
 import { T, Texture } from '@/component/player/game/texture'
-import { Axe, BLaser, Broadsword, Destroyer, DoubleGun, Electrisor, ExplorerRifle, Fish, FlameThrower, Gazor, GrenadeLauncher, IllicitGrenadeLauncher, JLaser, Katana, Laser, MachineGun, Magnum, MLaser, MysteriousElectrisor, Pistol, RevokedMLaser, Rhino, Rifle, Shotgun, UnbridledGazor } from '@/component/player/game/weapons'
-import { env } from '@/env'
+import { Axe, Bazooka, BLaser, Broadsword, DarkKatana, Destroyer, DoubleGun, Electrisor, ExplorerRifle, Fish, FlameThrower, Gazor, GrenadeLauncher, IllicitGrenadeLauncher, JLaser, Katana, Laser, Lightninger, MachineGun, Magnum, MLaser, MysteriousElectrisor, Neutrino, Pistol, RevokedMLaser, Rhino, Rifle, Shotgun, UnbridledGazor } from '@/component/player/game/weapons'
 import { locale } from '@/locale'
 import { Action, ActionType } from '@/model/action'
 import { Area } from '@/model/area'
@@ -49,7 +48,7 @@ const SHADOW_ALPHA = 0.55
 let lastTime = new Date().getTime()
 let dt = 0
 const frameTime = 1000 / FPS
-const lastFPS = new Array()
+const lastFPS = [] as number[]
 
 // var hidden, visibilityState, visibilityChange;
 
@@ -106,6 +105,14 @@ const WEAPONS = [
 	Rifle, // 22
 	Rhino, // 23
 	ExplorerRifle, // 24
+	Lightninger, // 25
+	null, // 26
+	Neutrino, // 27
+	null, // 28
+	Bazooka, // 29
+	null, // 30
+	null, // 31
+	DarkKatana, // 32
 ]
 
 const CHIPS = [
@@ -230,10 +237,10 @@ class Game {
 	public drawableElements: Array<{[key: number]: any}> = []
 	public drawableElementCurrentId: number = 0
 	// Players
-	public teams = new Array()
+	public teams: FightEntity[][] = []
 	public leeks: FightEntity[] = []
 	public farmers: {[key: number]: any} = {}
-	public entityOrder = new Array()
+	public entityOrder: FightEntity[] = []
 	public states: {[key: number]: any} = []
 	// Actions
 	public data!: FightData
@@ -251,8 +258,8 @@ class Game {
 	public logs: {[key: number]: any} = {}
 	public currentLog = 0
 	// Marqueurs
-	public markers = new Array()
-	public markersText = new Array()
+	public markers = [] as any[]
+	public markersText = [] as any[]
 	// Map
 	public mapType: number = -1 // -1 = pas initialisée
 	public map!: Map
@@ -608,6 +615,7 @@ class Game {
 		}
 		for (const weapon of weaponsTaken) {
 			const weaponAnimation = WEAPONS[weapon - 1]
+			if (!weaponAnimation) { continue }
 			for (const texture of weaponAnimation.textures) {
 				textures.add(texture)
 			}
@@ -659,7 +667,7 @@ class Game {
 				}
 			}
 		}
-		this.loadedData++
+		this.resourceLoaded('logs')
 	}
 
 	/*
@@ -993,7 +1001,7 @@ class Game {
 			if (leek.fish) {
 				leek.setWeapon(new Fish(this))
 			} else {
-				leek.setWeapon(new WEAPONS[action.params[2] - 1](this))
+				leek.setWeapon(new WEAPONS[action.params[2] - 1]!(this))
 			}
 			leek.weapon_name = LeekWars.weapons[action.params[2]].name
 
@@ -1303,7 +1311,16 @@ class Game {
 			} else /* weapon */ {
 				if (item in LeekWars.items) {
 					const template = LeekWars.items[item].params
-					const img = ["pistol", "machine_gun", "double_gun", "shotgun", "magnum", "laser", "grenade_launcher", "flamme", "destroyer", "gaz_icon", "electrisor", "m_laser", "b_laser", "katana", "broadsword", "axe", "j_laser", "illicit_grenade_launcher", "mysterious_electrisor", "unbridled_gazor", "revoked_m_laser", "rifle", "rhino", "explorer_rifle"][template - 1]
+					const img = ["pistol", "machine_gun", "double_gun", "shotgun", "magnum", "laser", "grenade_launcher", "flamme", "destroyer", "gaz_icon", "electrisor", "m_laser", "b_laser", "katana", "broadsword", "axe", "j_laser", "illicit_grenade_launcher", "mysterious_electrisor", "unbridled_gazor", "revoked_m_laser", "rifle", "rhino", "explorer_rifle",
+					"lightninger",
+					null, // 26
+					"neutrino", // 27
+					null, // 28
+					"bazooka", // 29
+					null, // 30
+					null, // 31
+					"dark_katana", // 32
+				][template - 1]
 					image = LeekWars.STATIC + "image/weapon/" + img + ".png"
 					// Gestion des états du poireau
 					if (template === 8) {
@@ -1326,8 +1343,9 @@ class Game {
 
 		switch (type) {
 		case EffectType.ABSOLUTE_SHIELD:
-		case EffectType.STEAL_ABSOLUTE_SHIELD:
+		case EffectType.DAMAGE_TO_ABSOLUTE_SHIELD:
 		case EffectType.RAW_ABSOLUTE_SHIELD:
+		case EffectType.STEAL_ABSOLUTE_SHIELD:
 			leek.buffAbsoluteShield(value, this.jumping)
 			break
 		case EffectType.RELATIVE_SHIELD:
@@ -1426,9 +1444,10 @@ class Game {
 		case EffectType.SHACKLE_WISDOM:
 			leek.wisdom += value
 			break
-		case EffectType.STEAL_ABSOLUTE_SHIELD:
 		case EffectType.ABSOLUTE_SHIELD:
+		case EffectType.STEAL_ABSOLUTE_SHIELD:
 		case EffectType.RAW_ABSOLUTE_SHIELD:
+		case EffectType.DAMAGE_TO_ABSOLUTE_SHIELD:
 			leek.absoluteShield -= value
 			break
 		case EffectType.RELATIVE_SHIELD:
@@ -1510,6 +1529,9 @@ class Game {
 			leek.magic -= delta
 			break
 		case EffectType.ABSOLUTE_SHIELD:
+		case EffectType.DAMAGE_TO_ABSOLUTE_SHIELD:
+		case EffectType.RAW_ABSOLUTE_SHIELD:
+		case EffectType.STEAL_ABSOLUTE_SHIELD:
 			leek.absoluteShield += delta
 			break
 		case EffectType.RELATIVE_SHIELD:
@@ -1715,13 +1737,7 @@ class Game {
 	}
 
 	public clearMarks() {
-		for (const m in this.markers) {
-			delete this.markers[m]
-		}
 		this.markers = []
-		for (const m in this.markersText) {
-			delete this.markersText[m]
-		}
 		this.markersText = []
 	}
 
@@ -2351,7 +2367,7 @@ class Game {
 			i--
 		}
 
-		this.markers = []
+		this.clearMarks()
 		this.currentTurn = 0
 		this.turn = 1
 		this.currentPlayer = null

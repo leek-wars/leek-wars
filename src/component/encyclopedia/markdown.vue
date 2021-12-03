@@ -34,8 +34,8 @@
 				allowedTags: sanitizeHtml.defaults.allowedTags.concat([ 'img', 'center' ]),
 				allowedAttributes: { '*': ['style', 'class', 'width', 'height', 'href', 'src'] },
 			} : {
-				allowedTags: sanitizeHtml.defaults.allowedTags.concat([ 'center' ]),
-				allowedAttributes: { '*': ['style', 'class', 'width', 'height', 'href'] },
+				allowedTags: sanitizeHtml.defaults.allowedTags.concat([ 'img', 'center' ]),
+				allowedAttributes: { '*': ['style', 'class', 'width', 'height', 'href', 'src'] },
 				allowedStyles: {
 					'*': {
 						'padding': [/^.*$/],
@@ -252,7 +252,7 @@
 	.md ::v-deep a:hover {
 		text-decoration: underline;
 	}
-	.md ::v-deep ul {
+	.md ::v-deep ul, .md ::v-deep ol {
 		line-height: 1.6;
 	}
 	.md ::v-deep blockquote {

@@ -127,11 +127,11 @@
 
 		<panel v-if="member" :title="$t('chat')" toggle="team/chat" icon="mdi-chat-outline">
 			<div slot="actions">
-				<div v-if="!LeekWars.mobile" class="button flat" @click="LeekWars.addChat('team', ChatType.TEAM, team.name)">
+				<div v-if="!LeekWars.mobile" class="button flat" @click="LeekWars.addChat(team.chat, ChatType.TEAM, team.name)">
 					<v-icon>mdi-picture-in-picture-bottom-right</v-icon>
 				</div>
 			</div>
-			<chat slot="content" channel="team" />
+			<chat v-if="team" :id="team.chat" slot="content" />
 		</panel>
 
 		<panel v-if="team && member && team.candidacies && team.candidacies.length > 0">
@@ -222,7 +222,7 @@
 		<div v-if="member && team && team.compositions && team.compositions.length == 0" class="no-compos">{{ $t('no_compositions') }}</div>
 
 		<div v-if="member && team && team.compositions" class="compos">
-			<panel v-for="composition in team.compositions" :key="composition.id" :class="{'in-tournament': composition.tournament.registered}" class="compo">
+			<panel v-for="composition in team.compositions" :key="composition.id" :class="{'in-tournament': composition.tournament.registered}" :toggle="'team/compo/toggle/' + composition.id" class="compo">
 				<template slot="title">
 					<rich-tooltip-composition :id="composition.id" v-slot="{ on }">
 						<div v-on="on">{{ composition.name }}</div>
@@ -273,8 +273,8 @@
 			</panel>
 		</div>
 
-		<panel v-if="member && team && team.unengaged_leeks" class="compo">
-			<h2 slot="title" class="compo-title">{{ $t('unsorted_leeks') }}</h2>
+		<panel v-if="member && team && team.unengaged_leeks" class="compo" toggle="team/no-compo">
+			<template slot="title">{{ $t('unsorted_leeks') }}</template>
 
 			<div slot="content" :class="{dashed: draggedLeek != null}" class="leeks" @dragover="leeksDragover" @drop="leeksDrop(null, $event)">
 				<div v-if="team.unengaged_leeks.length == 0" class="empty">{{ $t('empty_compo') }}</div>
@@ -464,9 +464,9 @@
 
 					<h4>{{ $t('main.chips') }}</h4>
 					<div class="chips">
-						<rich-tooltip-chip v-for="chip in [4, 23, 20, 1, 15, 92, 97, 100]" :key="chip" v-slot="{ on }" :chip="LeekWars.chips[chip]" :bottom="true" :instant="true">
+						<rich-tooltip-item v-for="chip in [4, 23, 20, 1, 15, 92, 97, 100]" :key="chip" v-slot="{ on }" :chip="LeekWars.items[chip]" :bottom="true" :instant="true">
 							<img :src="'/image/chip/' + LeekWars.chips[chip].name + '.png'" class="chip" v-on="on">
-						</rich-tooltip-chip>
+						</rich-tooltip-item>
 					</div>
 				</div>
 			</div>
@@ -501,15 +501,15 @@
 	import { ChatType } from '@/model/chat'
 	import { Farmer } from '@/model/farmer'
 	import { fileSystem } from '@/model/filesystem'
-	import { i18n, mixins } from '@/model/i18n'
+	import { mixins } from '@/model/i18n'
 	import { Leek } from '@/model/leek'
 	import { LeekWars } from '@/model/leekwars'
 	import { Warning } from '@/model/moderation'
-	import { SocketMessage } from '@/model/socket'
 	import { Composition, Team, TeamMember } from '@/model/team'
 	import { Component, Vue, Watch } from 'vue-property-decorator'
+	import { store } from '@/model/store'
 
-	@Component({ name: 'team', i18n: {}, mixins, components: { CharacteristicTooltip, Explorer }})
+	@Component({ name: 'team', i18n: {}, mixins: [...mixins], components: { CharacteristicTooltip, Explorer }})
 	export default class TeamPage extends Vue {
 		ChatType = ChatType
 		team: Team | null = null
@@ -547,7 +547,7 @@
 		get turret() {
 			if (!this.team) { return {} }
 			const team_ratio = 1 + (this.team.level / 100)
-			const max_life = 1000 + Math.round((6000 - 500) * team_ratio)
+			const max_life = 1000 + Math.round((4000 - 500) * team_ratio)
 			const characteristics_base_1000 = 100 + Math.round(950 * team_ratio)
 			const characteristics_base_2000 = 200 + Math.round(1900 * team_ratio)
 			const characteristics_base_500 = 50 + Math.round(475 * team_ratio)
@@ -565,10 +565,6 @@
 			}
 		}
 
-		created() {
-			fileSystem.init()
-		}
-
 		@Watch('id', {immediate: true})
 		update() {
 			if (this.id === null) { return }
@@ -580,7 +576,7 @@
 					request = 'team/get-connected/' + this.id
 				}
 			}
-			LeekWars.get(request).then(team => {
+			LeekWars.get<Team>(request).then(team => {
 				this.team = team
 				if (!this.team) {
 					return
@@ -1121,6 +1117,7 @@
 		transition: transform 0.4s;
 		transform: scale(1);
 		cursor: pointer;
+		width: 96px;
 		.name {
 			font-size: 16px;
 			text-align: center;

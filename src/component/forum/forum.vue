@@ -113,11 +113,11 @@
 				</v-menu>
 			</span>
 			<div slot="actions">
-				<div v-if="!LeekWars.mobile" class="button flat" @click="LeekWars.addChat(chatLanguage.code, ChatType.GLOBAL, 'Chat ' + chatLanguage.code.toUpperCase())">
+				<div v-if="!LeekWars.mobile" class="button flat" @click="LeekWars.addChat(chatLanguage.chat, ChatType.GLOBAL, 'Chat ' + chatLanguage.code.toUpperCase())">
 					<v-icon>mdi-picture-in-picture-bottom-right</v-icon>
 				</div>
 			</div>
-			<chat slot="content" :channel="chatLanguage.code" />
+			<chat :id="chatLanguage.chat" slot="content" />
 		</panel>
 	</div>
 </template>
@@ -150,10 +150,8 @@
 			LeekWars.get('forum/get-categories/' + this.activeLanguages).then(data => {
 				this.categories = data.categories
 				this.$root.$emit('loaded')
-			})
-			LeekWars.get('farmer/get-connected').then(data => {
 				this.connected_farmers = data.farmers
-				LeekWars.setSubTitle(this.$t('connected_farmers_subtitle', [data.count]))
+				LeekWars.setSubTitle(this.$t('connected_farmers_subtitle', [data.farmers.length]))
 			})
 			LeekWars.setTitle(this.$t('title'))
 			LeekWars.setActions([

@@ -7,9 +7,9 @@
 				<v-icon v-if="modified" class="modified">mdi-record</v-icon>
 			</h1>
 			<div v-if="page" class="tabs">
-				<div v-if="page.id === 1" class="tab action disabled" icon="search" link="/search">
-					<img class="search-icon" src="image/search.png" @click="search">
-					<input v-model="searchQuery" type="text" @keyup.enter="search">
+				<div v-if="page.id === 1" class="tab disabled" icon="search" link="/search">
+					<img class="search-icon" src="/image/search.png" @click="search">
+					<input v-model="searchQuery" type="text" placeholder="Rechercher une page" @keyup.enter="search">
 				</div>
 				<!-- <router-link :to="'/encyclopedia/' + english">
 					<div class="tab">English</div>
@@ -26,7 +26,7 @@
 					<v-icon>mdi-lock</v-icon>
 					En cours d'édition par {{ page.locker_name }}
 				</div>
-				<div v-if="contributor && !LeekWars.mobile && (!page.locker || !$store.state.farmer || page.locker === $store.state.farmer.id)" class="tab" @click="editStart">
+				<div v-if="contributor && (!page.locker || !$store.state.farmer || page.locker === $store.state.farmer.id)" class="tab" @click="editStart">
 					<v-icon>mdi-pencil-outline</v-icon>
 					Modifier
 				</div>
@@ -38,7 +38,7 @@
 				<div ref="markdown" class="markdown" @scroll="markdownScroll">
 					<!-- {{ parents }} -->
 
-					<markdown :content="page.content" mode="encyclopedia" />
+					<markdown :content="page.content" mode="encyclopedia" :class="{main: page.id === 1}" />
 
 					<div v-if="page.new && !edition" class="nopage">
 						<v-icon>mdi-book-open-page-variant</v-icon>
@@ -106,7 +106,7 @@
 	import { Route } from 'vue-router'
 	import Breadcrumb from '../forum/breadcrumb.vue'
 
-	@Component({ name: 'encyclopedia', i18n: {}, mixins, components: { Markdown, Breadcrumb } })
+	@Component({ name: 'encyclopedia', i18n: {}, mixins: [...mixins], components: { Markdown, Breadcrumb } })
 	export default class Encyclopedia extends Vue {
 		content: string = ''
 		english: string = ''
@@ -125,7 +125,7 @@
 		]
 
 		get code() {
-			return this.$route.params.page ? this.$route.params.page.replace(/_/g, ' ') : 'Encyclopédie'
+			return 'page' in this.$route.params ? this.$route.params.page.replace(/_/g, ' ') : 'Encyclopédie'
 		}
 		get title() {
 			return this.page ? this.page.title : 'Encyclopedia'
@@ -507,5 +507,8 @@ h1 {
 }
 .search-icon {
 	cursor: pointer;
+}
+::v-deep .md.main h1 {
+	display: none;
 }
 </style>

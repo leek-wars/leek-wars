@@ -85,9 +85,9 @@
 <script lang="ts">
 	import { Farmer } from '@/model/farmer'
 	import { Fight, FightContext, FightType } from '@/model/fight'
+	import { mixins } from '@/model/i18n'
 	import { Leek } from '@/model/leek'
 	import { LeekWars } from '@/model/leekwars'
-	import { mixins } from '@/model/i18n'
 	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 	import Breadcrumb from '../forum/breadcrumb.vue'
 

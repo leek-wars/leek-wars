@@ -43,9 +43,11 @@ abstract class ChipAnimation {
 	public end() {
 		// nothing
 	}
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	public draw(ctx: CanvasRenderingContext2D) {
 		// nothing to draw
 	}
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	public drawBack(ctx: CanvasRenderingContext2D) {
 		// nothing to draw
 	}
@@ -442,8 +444,8 @@ class Inversion extends ChipAnimation {
 	static sounds = [S.teleportation]
 
 	public inverted = false
-	public launchPos!: Position
 	public target: any
+
 	constructor(game: Game) {
 		super(game, S.teleportation, 120)
 	}
@@ -490,8 +492,8 @@ class Repotting extends ChipAnimation {
 	static sounds = [S.teleportation]
 
 	public inverted = false
-	public launchPos!: Position
 	public target: any
+
 	constructor(game: Game) {
 		super(game, S.teleportation, 120)
 	}
@@ -594,7 +596,7 @@ class Lightning extends ChipAnimation {
 	}
 }
 class Meteorite extends ChipAnimation {
-	static textures = [T.meteorite, T.explosion, T.fire]
+	static textures = [T.meteorite, T.fire]
 	static sounds = [S.meteorite, S.explosion]
 
 	public willFinish = false
@@ -682,7 +684,7 @@ class Therapy extends ChipHealAnimation {
 class Serum extends ChipHealAnimation {
 	static textures = [T.cure_aureol, T.heal_cross, T.chip_serum]
 	static sounds = [S.heal]
-	constructor(game: Game) { super(game, T.chip_serum) }
+	constructor(game: Game) { super(game, T.chip_serum, Area.SQUARE_1) }
 }
 class Elevation extends ChipHealAnimation {
 	static textures = [T.cure_aureol, T.heal_cross, T.chip_elevation]
@@ -795,8 +797,6 @@ class Teleportation extends ChipAnimation {
 	static sounds = [S.teleportation]
 
 	public teleported = false
-	public cell!: Cell
-	public launchPos!: Position
 	public targetPos: any
 	public target!: FightEntity
 	constructor(game: Game) {
@@ -1051,8 +1051,8 @@ class StealChipAnimation extends ChipAnimation {
 	delta: number = 0
 	caster!: FightEntity
 	spinningTexture!: Texture
-	halo: Function
-	constructor(game: Game, sound: Sound, spinningTexture: Texture, halo: Function) {
+	halo: (entity: FightEntity) => void;
+	constructor(game: Game, sound: Sound, spinningTexture: Texture, halo: (entity: FightEntity) => void) {
 		super(game, sound, 110)
 		this.spinningTexture = spinningTexture
 		this.halo = halo
@@ -1199,10 +1199,9 @@ class Jump extends ChipAnimation {
 	static sounds = []
 
 	public teleported = false
-	public cell!: Cell
-	public launchPos!: Position
 	public targetPos: any
 	public target!: FightEntity
+
 	constructor(game: Game) {
 		super(game, S.move, 70)
 	}

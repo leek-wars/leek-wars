@@ -1,7 +1,7 @@
 <template lang="html">
 	<div v-if="fun" class="doc-function" :class="{deprecated: fun.deprecated}">
 		<h2>
-			{{ fun.name }}(<span v-for="(arg, i) in fun.arguments_names" :key="i"><span v-if="fun.arguments_types[i] != -1" class="argument">{{ $t('doc.arg_type_' + fun.arguments_types[i]) }}</span><span v-else class="argument">?</span>&nbsp;{{ arg }}<span v-if="i < fun.arguments_names.length - 1">, </span>
+			{{ fun.name }}(<span v-for="(arg, i) in fun.arguments_names" :key="i"><span v-if="fun.optional[i]">[</span><span v-if="fun.arguments_types[i] != -1" class="argument">{{ $t('doc.arg_type_' + fun.arguments_types[i]) }}</span><span v-else class="argument">?</span>&nbsp;{{ arg }}<span v-if="fun.optional[i]">]</span><span v-if="i < fun.arguments_names.length - 1">, </span>
 			</span>)
 			<span v-if="fun.return_type != 0">
 				<span class="arrow">→</span> <span v-if="fun.return_type != -1" class="argument"> {{ $t('doc.arg_type_' + fun.return_type) }}</span><span v-else class="argument">?</span>&nbsp;{{ fun.return_name }}
@@ -41,7 +41,7 @@
 			<template v-if="fun.arguments_names.length > 0">
 				<h4>{{ $t('doc.parameters') }}</h4>
 				<ul>
-					<li v-for="(arg, i) in fun.arguments_names" :key="i">{{ arg }} : <span v-dochash v-code v-html="$t('doc.func_' + fun.real_name + '_arg_' + (parseInt(i) + 1))"></span></li>
+					<li v-for="(arg, i) in fun.arguments_names" :key="i">{{ arg }} <span v-if="fun.optional[i]">(optionnel)</span> : <span v-dochash v-code v-html="$t('doc.func_' + fun.real_name + '_arg_' + (parseInt(i) + 1))"></span></li>
 				</ul>
 			</template>
 
@@ -63,13 +63,13 @@
 <script lang="ts">
 	import Markdown from '@/component/encyclopedia/markdown.vue'
 	import { locale } from '@/locale'
-	import { Function } from '@/model/function'
+	import { LSFunction } from '@/model/function'
 	import { LeekWars } from '@/model/leekwars'
 	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 
 	@Component({ name: 'documentation-function', components: { Markdown } })
 	export default class DocumentationFunction extends Vue {
-		@Prop() fun!: Function
+		@Prop() fun!: LSFunction
 		expanded: boolean = false
 		new_fun: any = null
 
@@ -140,7 +140,6 @@
 		}
 		::v-deep p {
 			font-size: 15px;
-			margin-bottom: 0;
 		}
 	}
 	.expand {

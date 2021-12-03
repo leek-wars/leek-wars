@@ -127,7 +127,7 @@
 			<v-icon slot="icon">mdi-pencil</v-icon>
 			<span slot="title">{{ $t('rename') }}</span>
 			<div class="padding">
-				<input ref="nameInput" v-model="newName" type="text" class="input dialog-input" @keyup.enter="rename()">
+				<input ref="nameInput" v-model="newName" type="text" class="input dialog-input" @keyup.stop @keyup.enter="rename()">
 			</div>
 			<div slot="actions">
 				<div v-ripple @click="renameDialog = false">{{ $t('main.cancel') }}</div>
@@ -170,7 +170,7 @@
 			<v-icon slot="icon">mdi-plus-circle-outline</v-icon>
 			<span slot="title">{{ $t('new_desc') }}</span>
 			<div class="padding">
-				<input ref="newAIInput" v-model="newAIName" :placeholder="$t('ai_name')" type="text" class="input dialog-input" @keyup.enter="newAI(false, newAIName)">
+				<input ref="newAIInput" v-model="newAIName" :placeholder="$t('ai_name')" type="text" class="input dialog-input" @keyup.stop @keyup.enter="newAI(false, newAIName)">
 			</div>
 			<div slot="actions">
 				<div v-ripple @click="newAIDialog = false">{{ $t('main.cancel') }}</div>
@@ -182,7 +182,7 @@
 			<v-icon slot="icon">mdi-folder-plus</v-icon>
 			<span slot="title">{{ $t('new_folder') }}</span>
 			<div class="padding">
-				<input ref="newFolderInput" v-model="newFolderName" :placeholder="$t('folder_name')" type="text" class="input dialog-input" @keyup.enter="newFolder(newFolderName)">
+				<input ref="newFolderInput" v-model="newFolderName" :placeholder="$t('folder_name')" type="text" class="input dialog-input" @keyup.stop @keyup.enter="newFolder(newFolderName)">
 			</div>
 			<div slot="actions">
 				<div v-ripple @click="newFolderDialog = false">{{ $t('main.cancel') }}</div>
@@ -201,7 +201,7 @@
 	import EditorFolder from './editor-folder.vue'
 	import { Folder } from './editor-item'
 
-	@Component({ name: 'editor-explorer', i18n: {}, mixins, components: { 'editor-folder': EditorFolder } })
+	@Component({ name: 'editor-explorer', i18n: {}, mixins: [...mixins], components: { 'editor-folder': EditorFolder } })
 	export default class Explorer extends Vue {
 		@Prop({required: true}) currentAi!: AI
 		@Prop({required: true}) selectedFolder!: Folder
@@ -335,10 +335,10 @@
 		}
 		newAI(v2: boolean, name: string) {
 			if (!this.folder) { return }
-			LeekWars.post('ai/new-name', {folder_id: this.folder.id, version: 11, name}).then(data => {
+			LeekWars.post('ai/new-name', {folder_id: this.folder.id, version: 3, name}).then(data => {
 				const ai = new AI(data.ai)
 				ai.valid = true
-				ai.version = 11
+				ai.version = 3
 				ai.total_chars = ai.code.length
 				ai.total_lines = ai.code.split("\n").length
 				fileSystem.add_ai(ai, this.folder!)

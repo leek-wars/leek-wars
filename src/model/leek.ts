@@ -2,6 +2,7 @@ import { AI } from '@/model/ai'
 import { Chip } from '@/model/chip'
 import { LeekWars } from '@/model/leekwars'
 import { Weapon } from '@/model/weapon'
+import { Hat } from './hat'
 
 enum Characteristic {
 	LIFE = 0,
@@ -33,7 +34,7 @@ class Leek {
 	public up_xp!: number
 	public xp!: number
 	public skin!: number
-	public hat!: number | null
+	public hat!: Hat | null
 	public tournament!: any
 	public in_garden!: boolean
 	public talent_history!: number[]
@@ -62,6 +63,7 @@ class Leek {
 	public title!: number[]
 	public auto_br!: boolean
 	public fish!: boolean
+	public ally!: boolean
 
 	constructor(data: any) {
 		Object.assign(this, data)

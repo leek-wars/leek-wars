@@ -34,10 +34,11 @@
 	import EditorFolder from './editor-folder.vue'
 	import { Folder } from './editor-item'
 
-	@Component({ name: 'editor-problems', i18n: {}, mixins })
+	@Component({ name: 'editor-problems', i18n: {}, mixins: [...mixins] })
 	export default class Explorer extends Vue {
 
 		problemsCollapsed: {[key: string]: boolean} = {}
+		fileSystem = fileSystem
 
 		toggleProblemFile(ai: string) {
 			Vue.set(this.problemsCollapsed, ai, !this.problemsCollapsed[ai])

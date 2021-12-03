@@ -1,3 +1,90 @@
+227:
+  title: Ressources en combat, Inventaire, LeekScript 3, amélioration de l'aide.
+  added:
+    - "Ajout d'une page inventaire. #img_227_inventory"
+    - "Ajout de 20 ressources obtenables en combat. #img_227_resources"
+    - "L'encyclopédie devient maintenant la principale page d'aide. #img_227_encyclo"
+    - "Documentation : affichage de la liste des items correspondant aux constantes LAUNCH_TYPE_*. #img_227_doc_launch"
+    - "Le LeekScript 1.1 est renommé en LeekScript 2 et ajout du LeekScript 3. #img_227_ls3"
+    - "#ai LS 2+ : ajout de réflexion : Object.keys, .values, Class.fields, .methods, .name, .super etc. #img_227_reflexion"
+    - "#ai LS 3+ : ajout des littéraux d'objets ou objets anonymes (`{a: 12, b: 'salut'}`). #img_227_obj"
+    - "#ai LS 3+ : ajout des classes de base : Number, Integer, Boolean, Array etc. et .class sur les valeurs. #img_227_class"
+  improved:
+    - "#ai Vie maximum d'une tourelle : 8000 au lieu de 12000."
+    - "Documentation : ajout des types 'entier' et 'réel' pour préciser le type 'nombre'. #img_227_types"
+    - "Documentation : affichage des types des constantes. #img_227_constant"
+    - Accélération du chargement des pages.
+    - "Documentation : possibilité de déplier/replier les catégories sur le côté. #img_227_doc"
+    - "Documentation : categories avec icônes, masquées si aucun résultat et nombre de résultats. #img_227_doc"
+    - "Éditeur : chargement de l'IA de votre poireau au lieu de la première IA par défaut."
+    - "Éditeur : lors de la fermeture de l'onglet ouvert, redirection vers la dernière IA."
+    - "Éditeur : lors d'une complétion d'une fonction, les arguments ne sont pas ajoutés si déjà présents."
+    - "Éditeur : scénario par défaut + sauvegarde d'un scénario par IA. #img_227_scenario"
+    - "Éditeur : complétion des méthodes sur this. et méthodes statiques + Doc sur méthodes statiques. #img_227_complete"
+    - "Icône de Hab en haute définition. #img_227_hab"
+    - "#ai LS 2+ : L'ordre des proprietés d'un objet est conservé à l'affichage depuis sa classe ou déclaration."
+    - "#ai LS 3+ : Les mots-clés sont désormais sensibles à la casse + nouveaux mots clés réservés. #img_227_keywords"
+    - "#ai LS 2+ : new Class sans parenthèses fonctionne pour créer un objet. #img_227_new"
+    - "#ai LS 3+ : Ajout d'une erreur si une fonction/méthode est appelée avec le mauvais nombre d'arguments."
+    - "#ai LS 3+ : Ajout de davantage d'erreurs sur des appels de méthodes qui n'existent pas."
+  fixed:
+    - "Corrections de certains trophées : HL, Parjure, Annihilateur."
+    - "Corrections de petits bugs dans le chat : smiley <3, sélection d'émojis, grands émojis."
+    - Correction de la catégorie de certaines constantes.
+    - "Test : correction des noms de poireau de test."
+    - "Correction des trophées Turing à bas niveau : les bots de test ont des équipements."
+    - Convertir une classe en chaîne donne bien <class Nom_classe> au lieu de null.
+    - Correction d'un bug de drag and drop d'arme sur la page poireau.
+    - "Pas possible de changer l'IA d'un allié dans un scénario de test (pour éviter un bug). #img_227_ally"
+    - Correction de bugs d'IA persistente après une suppression ou un déplacement.
+    - Il n'est plus possible d'attirer ou de pousser une tourelle ou toute entité statique.
+    - "#ai LS 2+ : Correction de arrayFilter et arrayPartition avec des objets."
+    - "#ai LS 2+ : Possibilité d'utiliser une méthode (statique ou non) comme une valeur (merci à Taga)."
+    - "#ai LS 2+ : Correction de l'accès/écriture de champs d'objets par un accès tableau obj['p'] (merci à Broco)."
+    - "#ai LS 2+ : Possibilité d'utiliser arrayMap avec une classe pour construire des objets (merci à Grim)."
+    - "#ai LS 2+ : Correcion de l'appel de fonctions natives dans une méthode du même nom."
+
+226:
+  title: 4 nouvelles armes, Réactions chat, Modération chat et forum, Amélioration documentation
+  added:
+    - "#ai Ajout de 4 nouvelles armes : Neutrino, Bazooka, Foudroyeur, Katana sombre. #img_226_weapons"
+    - "#ai Nouveaux modes de lancés pour les armes et puces : fonctions getChip/WeaponLaunchType() et constantes LAUNCH_TYPE_* (7 au total). #img_226_launch_type"
+    - "Ajout de réactions aux messages des chats. #img_226_chat_reactions"
+    - "Fonctionnalité pour signaler et modérer les messages forum. #img_226_forum_report"
+    - "#ai Léger rééquilibrage de quelques items : voir le sujet forum de la màj."
+    - "Affichage des valeurs finales des effets augmentées par les caractéristiques de votre poireau. #img_226_preview"
+    - "Fonctionnalité pour marquer comme lu tout le forum. #img_226_forum_read"
+    - "Ajout de filtres sur la page historique sur les types et contextes des combats (merci à Efflam). #288 #img_226_history"
+  improved:
+    - "#ai Les erreurs de l'IA coûtent plus cher en opérations de manière à générer les combats plus rapidement."
+    - "#ai Correction d'un bug d'initialisation de champs statiques avec des fonctions de combat."
+    - Remplacement des fonctions getLeek* par getEntity* dans le tutoriel (merci à Turbigo).
+    - "Les fonctions dans la documentation sont maintenant regroupées avec des arguments optionnels. #img_226_doc"
+    - Les classements sont les classements actifs par défaut.
+    - Limite de say() 2 par tour et 200 caractères et show() à 5 par tour.
+    - Les fonctions getWeapon/ChipEffectiveArea retournent la zone même si vous êtes hors de portée.
+    - "Possibilité de ouvrir/refermer les compositions sur la page d'équipe. #img_226_team"
+    - "Les messages forum supprimés sont affichés dans les sujets pour une meilleure compréhension. #img_226_forum_deleted"
+    - Amélioration de la modération des messages du chat (censure permanente et mise en sourdine séparés).
+    - Possibilité d'ajouter des images aux messages sur le forum.
+    - "#ai Le contexte BR potager/auto devient FIGHT_CONTEXT_GARDEN/FIGHT_CONTEXT_TOURNAMENT."
+    - Amélioration de la synchronisation des notifications/messages sur plusieurs onglets.
+    - Correction de la position des armes et des animations de tir + animation de recul.
+    - "Refonte de l'animation d'explosion + effet sonore. #img_226_explosion"
+  fixed:
+    - Correction de la catégorie de certaines constantes EFFECT_* dans la documentation.
+    - Correction du bug lien + emoji dans le chat.
+    - Un saut dans le combat efface aussi les markText().
+    - Les items non débloqués ne sont plus visibles sur la page /help/items.
+    - Correction des message vides dans les emails de réponses forum.
+    - Correction du bug de la touche Suppr dans un champ texte de l'éditeur qui veut supprimer l'IA.
+    - Correction du bug d'IA de tourelle quand deux compositions d'une même équipe se rencontrent en tournoi.
+    - Correction du bug d'affichage PT/PM en combat.
+    - Possibilité d'accéder aux options du combat en mode plein écran.
+    - "Correction du bug de chargement des logs au début du combat. #435"
+    - Correction d'un bug d'initialisation des champs statiques (merci à Taga).
+    - Correction d'un bug de modification de certains messages forum.
+
 225:
   title: 160 nouveaux trophées, Points et récompenses de trophées, Système de puissance en BR.
   added:

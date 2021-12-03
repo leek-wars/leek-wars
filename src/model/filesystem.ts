@@ -3,6 +3,7 @@ import { AI } from '@/model/ai'
 import { LeekWars } from '@/model/leekwars'
 import { store } from '@/model/store'
 import Vue from 'vue'
+import { Farmer } from './farmer'
 
 class FileSystem {
 
@@ -31,66 +32,59 @@ class FileSystem {
 		]},
 	]
 
-	public init() {
-		if (this.initialized) { return Promise.resolve() }
-		if (this.promise) { return this.promise }
-
-		return this.promise = new Promise((resolve, reject) => {
-			LeekWars.get<{ais: AI[], folders: any[], leek_ais: {[key: number]: number}, bin: AI[]}>('ai/get-farmer-ais').then(data => {
-				const folders: {[key: number]: any} = {}
-				for (const folder of data.folders) {
-					folders[folder.id] = folder
-					this.items[folder.name] = folder
-				}
-				for (const id in data.ais) {
-					data.ais[id] = new AI(data.ais[id])
-				}
-				this.leekAIs = data.leek_ais
-				this.aiCount = LeekWars.objectSize(data.ais)
-				const buildFolder = (id: number, parent: number): Folder => {
-					const folder = new Folder(id, id in folders ? folders[id].name : '<root>', parent)
-					if (id === 0) {
-						folder.expanded = true
-					} else {
-						folder.expanded = localStorage.getItem('editor/folder/' + id) === 'true'
-					}
-					folder.items = data.folders
-						.filter((f: any) => f.folder === id)
-						.map((f: any) => buildFolder(f.id, folder.id))
-					folder.items.push(...(data.ais
-						.filter((ai: any) => ai.folder === id)
-						.map((ai: any) => new AIItem(ai, folder.id))
-					))
-					Vue.set(this.folderById, folder.id, folder)
-					return folder
-				}
-				this.rootFolder = buildFolder(0, 0)
-				for (const ai of data.ais) {
-					ai.path = this.getAIFullPath(ai)
-					ai.folderpath = this.getFolderPath(this.folderById[ai.folder])
-					Vue.set(this.ais, '' + ai.id, ai)
-					Vue.set(this.aiByFullPath, ai.path, ai)
-					this.items[ai.name] = ai
-				}
-				// Add bot AIs
-				for (const ai of this.botAIs) {
-					Vue.set(this.ais, '' + ai.id, ai)
-				}
-				this.bin = new Folder(-1, 'recycle_bin', 0)
-				this.bin.items = []
-				for (const ai of data.bin) {
-					this.bin.items.push(new AIItem(ai, this.bin.id))
-					ai.path = this.getAIFullPath(ai)
-					ai.folderpath = this.getFolderPath(this.folderById[ai.folder])
-					Vue.set(this.aiByFullPath, ai.path, ai)
-					Vue.set(this.ais, '' + ai.id, ai)
-					this.items[ai.name] = ai
-				}
-				Vue.set(this.folderById, -1, this.bin)
-				this.initialized = true
-				resolve()
-			})
-		})
+	public init(farmer: Farmer) {
+		const folders: {[key: number]: any} = {}
+		for (const folder of farmer.folders) {
+			folders[folder.id] = folder
+			this.items[folder.name] = folder
+		}
+		for (const id in farmer.ais) {
+			farmer.ais[id] = new AI(farmer.ais[id])
+		}
+		this.leekAIs = farmer.leek_ais
+		this.aiCount = farmer.ais.length
+		const buildFolder = (id: number, parent: number): Folder => {
+			const folder = new Folder(id, id in folders ? folders[id].name : '<root>', parent)
+			if (id === 0) {
+				folder.expanded = true
+			} else {
+				folder.expanded = localStorage.getItem('editor/folder/' + id) === 'true'
+			}
+			folder.items = farmer.folders
+				.filter((f: any) => f.folder === id)
+				.map((f: any) => buildFolder(f.id, folder.id))
+			folder.items.push(...(farmer.ais
+				.filter((ai: any) => ai.folder === id)
+				.map((ai: any) => new AIItem(ai, folder.id))
+			))
+			Vue.set(this.folderById, folder.id, folder)
+			return folder
+		}
+		this.rootFolder = buildFolder(0, 0)
+		for (const ai of farmer.ais) {
+			ai.path = this.getAIFullPath(ai)
+			ai.folderpath = this.getFolderPath(this.folderById[ai.folder])
+			Vue.set(this.ais, '' + ai.id, ai)
+			Vue.set(this.aiByFullPath, ai.path, ai)
+			this.items[ai.name] = ai
+		}
+		// Add bot AIs
+		for (const ai of this.botAIs) {
+			Vue.set(this.ais, '' + ai.id, ai)
+		}
+		this.bin = new Folder(-1, 'recycle_bin', 0)
+		this.bin.items = []
+		Vue.set(this.folderById, -1, this.bin)
+		for (const ai of farmer.bin) {
+			this.bin.items.push(new AIItem(ai, this.bin.id))
+			ai.path = this.getAIFullPath(ai)
+			ai.folderpath = this.getFolderPath(this.folderById[ai.folder])
+			Vue.set(this.aiByFullPath, ai.path, ai)
+			Vue.set(this.ais, '' + ai.id, ai)
+			this.items[ai.name] = ai
+		}
+		Vue.set(this.folderById, -1, this.bin)
+		this.initialized = true
 	}
 
 	/**
@@ -210,7 +204,7 @@ class FileSystem {
 	}
 
 	private getAIFullPath(ai: AI) {
-		if (ai.folder > 0 && ai.folder in this.folderById) {
+		if (ai.folder !== 0 && ai.folder in this.folderById) {
 			return this.getFolderPath(this.folderById[ai.folder]) + ai.name
 		}
 		return ai.name

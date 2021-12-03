@@ -5,139 +5,63 @@
 			<div class="no-messages">{{ $t('main.no_messages_yet') }}</div>
 		</div>
 		<div v-if="chat && chat.messages.length" ref="messages" v-autostopscroll class="messages" @scroll="scroll">
-			<template v-for="(message, m) in $store.state.chat[channel].messages">
-				<div v-if="message.author.id === -1" :key="m" class="separator">
-					{{ message.time | date }}
+			<template v-for="(message, m) in $store.state.chat[id].messages">
+				<div v-if="message.farmer.id === -1" :key="m" class="separator">
+					{{ message.date | date }}
 				</div>
-				<div v-else-if="message.author.id === 0" :key="m" class="message">
-					<img class="avatar" src="/image/favicon.png">
-					<router-link :to="'/fight/' + message.texts[0].split('|')[1]">
-						<div class="bubble br-notification">
-							<div class="author">Leek Wars</div>
-							{{ $t(message.texts[0].split('|')[0]) }}
-						</div>
-					</router-link>
-				</div>
-				<div v-else :key="m" class="message">
-					<router-link :to="'/farmer/' + message.author.id" class="avatar-wrapper">
-						<rich-tooltip-farmer :id="message.author.id" v-slot="{ on }">
-							<avatar :farmer="message.author" :on="on" />
-						</rich-tooltip-farmer>
-					</router-link>
-					<div class="bubble">
-						<router-link :to="'/farmer/' + message.author.id" class="author">
-							<rich-tooltip-farmer :id="message.author.id" v-slot="{ on }">
-								<span :class="message.author.grade" v-on="on">{{ message.author.name }}</span>
-							</rich-tooltip-farmer>
-						</router-link>
-						<div v-for="(text, i) in message.texts" :key="i" v-large-emojis v-chat-code-latex class="text" v-html="text"></div>
-						<div class="right">
-							<span :title="LeekWars.formatDateTime(message.time)" class="time">{{ LeekWars.formatTime(message.time) }}</span>
-							<v-menu v-if="!privateMessages && !($store.state.farmer && message.author.id === $store.state.farmer.id)" offset-y>
-								<template v-slot:activator="{ on }">
-									<v-btn text small icon color="grey" v-on="on">
-										<v-icon>mdi-dots-vertical</v-icon>
-									</v-btn>
-								</template>
-								<v-list dense class="message-actions">
-									<v-list-item v-ripple @click="report(message)">
-										<v-icon>mdi-flag</v-icon>
-										<span>Signaler</span>
-									</v-list-item>
-									<v-list-item v-if="$store.getters.moderator && !message.author.muted" v-ripple @click="mute(message.author)">
-										<v-icon>mdi-volume-off</v-icon>
-										<span>Mute</span>
-									</v-list-item>
-									<v-list-item v-if="$store.getters.moderator && message.author.muted" v-ripple @click="unmute(message.author)">
-										<v-icon>mdi-volume-high</v-icon>
-										<span>Unmute</span>
-									</v-list-item>
-								</v-list>
-							</v-menu>
-						</div>
-					</div>
-				</div>
+				<chat-message v-else :key="m" :message="message" :chat="chat" />
 			</template>
 			<div v-show="unread" v-ripple class="chat-new-messages" @click="updateScroll(true)">{{ $t('main.unread_messages') }}</div>
 		</div>
 		<div v-if="$store.state.wsdisconnected" class="chat-disconnected">{{ $t('main.disconnected') }}</div>
 		<chat-input @message="sendMessage" />
 
-		<report-dialog v-if="reportFarmer" v-model="reportDialog" :target="reportFarmer" :reasons="reasons" :parameter="reportContent" class="report-dialog" />
-
-		<popup v-model="muteDialog" :width="600">
-			<v-icon slot="icon">mdi-volume-off</v-icon>
-			<span slot="title">{{ $t('warning.mute') }}</span>
-			<template v-if="muteFarmer">
-				<i18n path="moderation.mute_popup">
-					<b slot="farmer">{{ muteFarmer.name }}</b>
-				</i18n>
-			</template>
-			<div slot="actions">
-				<div v-ripple @click="muteDialog = false">{{ $t('main.cancel') }}</div>
-				<div v-ripple class="mute red" @click="muteConfirm">{{ $t('warning.confirm_mute') }}</div>
-			</div>
-		</popup>
-		<popup v-model="unmuteDialog" :width="600">
-			<v-icon slot="icon">mdi-volume-high</v-icon>
-			<span slot="title">{{ $t('warning.unmute') }}</span>
-			<div v-if="muteFarmer">
-				<i18n path="moderation.unmute_popup">
-					<b slot="farmer">{{ muteFarmer.name }}</b>
-				</i18n>
-			</div>
-			<div slot="actions">
-				<div v-ripple @click="unmuteDialog = false">{{ $t('main.cancel') }}</div>
-				<div v-ripple class="unmute red" @click="unmuteConfirm">{{ $t('warning.unmute') }}</div>
-			</div>
-		</popup>
 	</div>
 </template>
 
 <script lang="ts">
-	import { Chat, ChatMessage } from '@/model/chat'
+	import { Chat, ChatMessage, ChatType } from '@/model/chat'
 	import { Farmer } from '@/model/farmer'
 	import { LeekWars } from '@/model/leekwars'
 	import { Warning } from '@/model/moderation'
 	import { SocketMessage } from '@/model/socket'
 	import { store } from '@/model/store'
+	import { TeamMember, TeamMemberLevel } from '@/model/team'
 	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 	import ChatInput from './chat-input.vue'
+	import ChatMessageComponent from './chat-message.vue'
 
 	@Component({
-		components: { 'chat-input': ChatInput }
+		name: "Chat",
+		components: { 'chat-input': ChatInput, 'chat-message': ChatMessageComponent }
 	})
 	export default class ChatElement extends Vue {
-		@Prop() channel!: string
-		muteDialog: boolean = false
-		unmuteDialog: boolean = false
-		muteFarmer: Farmer | null = null
-		reportDialog: boolean = false
-		reportFarmer: Farmer | null = null
-		reportContent: string = ''
+		ChatType = ChatType
+		@Prop() id!: number
+		@Prop() newFarmer!: any
+		@Prop() newConversation!: any
+
 		userScroll: boolean = false
 		unread: boolean = false
-		reasons = [
-			Warning.INCORRECT_FARMER_NAME,
-			Warning.INCORRECT_AVATAR,
-			Warning.FLOOD_CHAT,
-			Warning.RUDE_CHAT,
-			Warning.PROMO_CHAT
-		]
+
 		get loading() {
-			return !!this.channel && !store.state.chat[this.channel]
+			return !!this.id && (!store.state.chat[this.id] || !store.state.chat[this.id].loaded)
 		}
 		get chat() {
-			return this.channel ? store.state.chat[this.channel] : null
+			return this.id ? store.state.chat[this.id] : null
 		}
 		get privateMessages() {
-			return this.channel && this.channel.startsWith('pm-')
+			return this.chat && this.chat.type === ChatType.PM
 		}
 
 		created() {
 			this.$root.$on('chat', this.newMessage)
 			this.$root.$on('resize', this.updateScroll)
-			this.$root.$on('wsconnected', this.update)
+			if (store.state.wsconnected) {
+				this.update()
+			} else {
+				this.$root.$on('wsconnected', this.update)
+			}
 		}
 
 		beforeDestroy() {
@@ -147,7 +71,7 @@
 		}
 
 		newMessage(e: any) {
-			if (e[0] === this.channel) {
+			if (e[0] === this.id) {
 				this.updateScroll()
 				if (!this.scrollBottom()) { this.unread = true }
 
@@ -191,92 +115,39 @@
 			}
 		}
 
-		@Watch('channel', {immediate: true})
+		@Watch('id')
 		update() {
-			if (!this.channel) { return }
-			if (this.channel === 'team') {
-				if (!this.$store.state.chat.team) {
-					this.$store.commit('init-team-chat')
-					LeekWars.socket.send([SocketMessage.TEAM_CHAT_ENABLE_FAST])
-				}
-			} else if (this.channel.startsWith('pm-')) {
-				const id = parseInt(this.channel.replace('pm-', ''), 10)
-				if (!this.$store.state.chat['pm-' + id] || this.$store.state.chat['pm-' + id].messages.length < 50) {
-					if (id === 0) { return }
-					LeekWars.get('message/get-messages/' + id + '/' + 50 + '/' + 1).then(data => {
-						this.$store.commit('clear-chat', 'pm-' + id)
-						for (const message of data.messages.reverse()) {
-							this.$store.commit('pm-receive', {message: [id, message.farmer_id, message.farmer_name, message.content, false, message.farmer_color, message.avatar_changed, message.date]})
-						}
-						for (const farmer of data.farmers) {
-							this.$store.commit('add-conversation-participant', {id, farmer})
-						}
-					})
-				}
-				this.read()
-			} else {
-				if (this.channel in this.$store.state.chat && this.$store.state.chat[this.channel].invalidated) {
-					this.$store.commit('clear-chat', this.channel)
-				}
-				LeekWars.socket.enableChannel(this.channel)
-			}
+			if (!this.id) { return }
+			store.commit('register-chat', this.id)
+			this.read()
 		}
 
 		sendMessage(message: any) {
 			if (message.startsWith('/ping')) {
 				this.$store.commit('last-ping', Date.now())
 			}
-			if (this.channel === 'team') {
-				LeekWars.socket.send([SocketMessage.TEAM_CHAT_SEND, message])
-			} else if (!this.channel || this.privateMessages) {
-				this.$emit('send', message)
+			if (this.chat === null) {
+				LeekWars.post('message/create-conversation', {farmer_id: this.newFarmer.id, message}).then(data => {
+					this.newConversation.id = data.conversation_id
+					this.$store.commit('new-conversation', this.newConversation)
+					this.$router.replace('/messages/conversation/' + data.conversation_id)
+				})
 			} else {
-				LeekWars.socket.send([SocketMessage.FORUM_CHAT_SEND, this.channel, message])
+				LeekWars.post('message/send-message', {conversation_id: this.chat.id, message}).then(() => { /**/ }).error(data => {
+					LeekWars.toast(this.$t('main.error_' + data.error, data.params))
+				})
 			}
-		}
-
-		report(message: ChatMessage) {
-			this.reportDialog = true
-			this.reportFarmer = message.author
-			this.reportContent = message.texts.reduce((a, b) => a + b + "\n", "")
-		}
-
-		mute(farmer: Farmer) {
-			this.muteDialog = true
-			this.muteFarmer = farmer
-		}
-
-		muteConfirm() {
-			if (!this.muteFarmer) { return }
-			LeekWars.socket.send([SocketMessage.CHAT_REQUEST_MUTE, this.channel, this.muteFarmer.id])
-			this.muteFarmer.muted = true
-			this.muteDialog = false
-		}
-
-		unmute(farmer: Farmer) {
-			this.unmuteDialog = true
-			this.muteFarmer = farmer
-		}
-
-		unmuteConfirm() {
-			if (!this.muteFarmer) { return }
-			LeekWars.socket.send([SocketMessage.CHAT_REQUEST_UNMUTE, this.channel, this.muteFarmer.id])
-			this.muteFarmer.muted = false
-			this.unmuteDialog = false
 		}
 
 		read() {
-			if (this.chat && this.chat.conversation) {
-				LeekWars.socket.send([SocketMessage.MP_READ, this.chat.conversation.id])
-				this.chat.conversation.unread = false
-			}
+			if (!this.chat) { return }
+			Vue.nextTick(() => {
+				if (this.chat!.type === ChatType.PM && !this.chat!.read) {
+					LeekWars.post('message/read', { chat: this.chat!.id })
+				}
+				store.commit('chat-set-read', { chat: this.chat!.id, read: true })
+			})
 		}
-		// TODO
-		// ChatController.prototype.mute_user = function(data) {
-		// 	var moderator_name = data[2]
-		// 	var muted = data[3]
-		// 	this.msg_elem.find('.chat-message[author=' + muted + ']').find('.chat-message-messages').html('censuré par <b>' + moderator_name + '</b>')
-		// }
 	}
 </script>
 
@@ -295,96 +166,6 @@
 	.messages {
 		height: calc(100% - 40px);
 		overflow-y: scroll;
-	}
-	.message {
-		display: flex;
-		align-items: flex-start;
-		margin: 6px 8px;
-		color: #aaa;
-	}
-	.avatar-wrapper {
-		position: sticky;
-		top: 8px;
-	}
-	.avatar {
-		width: 42px;
-		height: 42px;
-		flex: 0 0 42px;
-	}
-	.bubble {
-		margin-left: 8px;
-		padding: 3px 7px;
-		border-radius: 4px;
-		background: white;
-		position: relative;
-		box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.1), 0px 1px 1px 0px rgba(0,0,0,0.07), 0px 1px 3px 0px rgba(0,0,0,0.06);
-		min-width: 0;
-		.report, .mute, .unmute {
-			display: none;
-			cursor: pointer;
-		}
-	}
-	.bubble:hover {
-		.report, .mute, .unmute {
-			display: inline;
-		}
-	}
-	.author {
-		font-weight: 500;
-		display: block;
-		padding-bottom: 2px;
-		padding-right: 60px;
-		color: #777;
-	}
-	.text {
-		word-break: break-word;
-		color: #333;
-	}
-	.text.large-emojis ::v-deep .emoji {
-		font-size: 26px;
-		line-height: 34px;
-		width: 30px;
-		height: 30px;
-	}
-	.right {
-		font-size: 13px;
-		position: absolute;
-		top: 3px;
-		right: 0;
-		.time {
-			padding-right: 4px;
-		}
-		.v-btn {
-			margin: 0;
-			margin-top: -3px;
-			margin-left: -5px;
-			height: 24px;
-			width: 24px;
-		}
-		i.v-icon {
-			font-size: 18px;
-			color: #aaa;
-		}
-	}
-	.message-actions .v-icon {
-		margin-right: 4px;
-	}
-	.text ::v-deep a {
-		color: #5fad1b;
-	}
-	.text ::v-deep .v-icon {
-		color: #5fad1b;
-		font-size: 18px;
-		margin-right: 4px;
-		vertical-align: baseline;
-	}
-	.br-notification {
-		background: #5fad1b;
-		color: white;
-		display: inline-block;
-		.author {
-			color: white;
-		}
 	}
 	.no-messages {
 		height: calc(100% - 60px);

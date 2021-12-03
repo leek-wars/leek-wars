@@ -101,7 +101,7 @@
 							<span v-else>
 								<img class="flag" src="/image/flag/_.png"><span class="country no label">{{ $t('no_country') }}</span>
 							</span>
-							<span v-if="myFarmer" class="edit" @click="countryDialog = true"></span>
+							<span v-if="myFarmer" class="edit" @click="openCountryDialog()"></span>
 						</div>
 						<div v-if="farmer.website" class="info website">
 							<img src="/image/website.png"><a :href="farmer.website" target="_blank" rel="noopener"><span class="text label">{{ farmer.website }}</span></a>
@@ -383,16 +383,20 @@
 
 		<div class="page-footer page-bar">
 			<div class="tabs">
-				<div v-if="farmer && $store.state.connected && !myFarmer && !farmer.admin">
-					<div class="report-button tab" @click="reportDialog = true">
-						<img src="/image/icon/flag.png">
-						<span>{{ $t('report') }}</span>
-					</div>
+				<div v-if="farmer && $store.state.connected && !myFarmer && !farmer.admin" class="report-button tab" @click="reportDialog = true">
+					<img src="/image/icon/flag.png">
+					<span>{{ $t('report') }}</span>
 				</div>
 				<template v-if="myFarmer">
 					<div class="tab" @click="renameDialog = true">
 						<v-icon>mdi-pencil-outline</v-icon>
 						{{ $t('rename') }}
+					</div>
+				</template>
+				<template v-if="$store.getters.admin">
+					<div class="tab" @click="trophyDialog = true">
+						<v-icon>mdi-trophy-outline</v-icon>
+						Donner trophée
 					</div>
 				</template>
 			</div>
@@ -425,7 +429,7 @@
 					<img src="/image/flag/_.png">
 					<h4>{{ $t('no_country') }}</h4>
 				</div>
-				<div v-for="country in LeekWars.countries" :key="country.code" class="country" @click="selectCountry(country.code)">
+				<div v-for="country in countries" :key="country.code" class="country" @click="selectCountry(country.code)">
 					<img :src="'/image/flag/' + country.code + '.png'">
 					<h4>{{ $t('country.' + country.code) }}</h4>
 				</div>
@@ -488,6 +492,23 @@
 				<v-btn class="rename-button" @click="rename('crystals')">{{ $t('rename_pay_crystals') }} :&nbsp;<b>{{ rename_price_crystals }}</b> &nbsp;<span class="crystal"></span></v-btn>
 			</center>
 		</popup>
+
+		<popup v-if="farmer" v-model="trophyDialog" :width="600">
+			<v-icon slot="icon">mdi-trophy-outline</v-icon>
+			<template slot="title">Donner un trophée</template>
+
+			<div>
+				ID de trophée : <input v-model="giveTrophyID" type="number">
+				Combat : <input v-model="giveTrophyFight" type="number">
+			</div>
+			<br>
+			<img v-for="trophy in giveTrophies" :key="trophy.id" :src="'/image/trophy/' + trophy.code + '.svg'" :title="trophy.code" class="give-trophy" @click="giveTrophyID = trophy.id">
+
+			<div slot="actions">
+				<div v-ripple @click="trophyDialog = false">{{ $t('cancel') }}</div>
+				<div v-ripple class="green" @click="giveTrophy()">Donner</div>
+			</div>
+		</popup>
 	</div>
 </template>
 
@@ -522,6 +543,16 @@
 		rename_price_crystals: number = 200
 		tournamentRangeLoading: boolean = false
 		tournamentRange: any = null
+		trophyDialog: boolean = false
+		giveTrophyID: number | null = null
+		giveTrophyFight: number | null = null
+		giveTrophies = [
+			LeekWars.trophies[173 - 1],
+			LeekWars.trophies[177 - 1],
+			LeekWars.trophies[166 - 1],
+			LeekWars.trophies[194 - 1],
+		]
+		countries: string[] = []
 
 		get id(): any {
 			return this.$route.params.id ? parseInt(this.$route.params.id, 10) : (this.$store.state.farmer ? this.$store.state.farmer.id : null)
@@ -581,6 +612,7 @@
 				})
 			}
 		}
+
 		init(farmer: Farmer) {
 			this.farmer = farmer
 			this.renameName = this.farmer.name
@@ -604,10 +636,12 @@
 			this.newGitHub = this.farmer.github
 			this.$root.$emit('loaded')
 		}
+
 		logout() {
 			this.$store.commit('disconnect')
 			this.$router.push('/')
 		}
+
 		trophiesModeButton() {
 			if (this.trophiesMode === 'list') {
 				this.trophiesMode = 'grid'
@@ -617,6 +651,7 @@
 				localStorage.setItem('farmer/trophies-mode', 'list')
 			}
 		}
+
 		getTrophies() {
 			if (!this.farmer) {	return }
 			if (!('farmer/trophies-mode' in localStorage)) {
@@ -634,6 +669,7 @@
 				})
 			}
 		}
+
 		registerTournament() {
 			if (this.farmer) {
 				if (this.farmer.tournament.registered) {
@@ -645,16 +681,19 @@
 				}
 			}
 		}
+
 		updateGarden() {
 			if (this.farmer) {
 				this.farmer.in_garden = !this.farmer.in_garden
 				LeekWars.post('farmer/set-in-garden', {leek_id: this.farmer.id, in_garden: this.farmer.in_garden})
 			}
 		}
+
 		openGodfatherDialog() {
 			this.godfatherDialog = true
 			LeekWars.selectText(this.$refs.godfatherLink)
 		}
+
 		selectCountry(code: string) {
 			if (this.farmer) {
 				this.farmer.country = code
@@ -662,6 +701,7 @@
 				LeekWars.post('farmer/change-country', {country_code: code})
 			}
 		}
+
 		changeAvatar(e: Event) {
 			if (!e || !e.target) { return }
 			const input = e.target as HTMLInputElement
@@ -686,14 +726,16 @@
 				LeekWars.toast(this.$t('upload_failed', [error]) as string)
 			})
 		}
+
 		warnings() {
-			if (!this.farmer) { return }
+			if (!this.farmer || !this.$store.getters.moderator) { return }
 			LeekWars.get('moderation/get-warnings/' + this.farmer.id).then(data => {
 				if (this.farmer) {
 					Vue.set(this.farmer, 'warnings', data.warnings)
 				}
 			})
 		}
+
 		createTeam() {
 			LeekWars.post('team/create', {team_name: this.createTeamName}).then(data => {
 				LeekWars.toast(this.$i18n.t('team_created'))
@@ -709,6 +751,7 @@
 				LeekWars.toast(this.$i18n.t(error.error))
 			})
 		}
+
 		cancelCandidacy() {
 			LeekWars.post('team/cancel-candidacy').then(data => {
 				if (this.farmer) {
@@ -719,18 +762,21 @@
 				LeekWars.toast(error)
 			})
 		}
+
 		changeWebsite() {
 			if (!this.farmer) { return }
 			this.farmer.website = this.newWebsite
 			LeekWars.post('farmer/set-website', {website: this.newWebsite})
 			this.websiteDialog = false
 		}
+
 		changeGithub() {
 			if (!this.farmer) { return }
 			this.farmer.github = this.newGitHub
 			LeekWars.post('farmer/set-github', {github: this.newGitHub})
 			this.githubDialog = false
 		}
+
 		sendMessage() {
 			if (!this.farmer) { return }
 			LeekWars.get('message/find-conversation/' + this.farmer.id).then(conversation => {
@@ -741,6 +787,7 @@
 				this.$router.push('/messages/new/' + this.farmer.id + '/' + this.farmer.name + '/' + this.farmer.avatar_changed)
 			})
 		}
+
 		pickTitle(title: number[]) {
 			this.farmer!.title = title
 			this.titleDialog = false
@@ -772,6 +819,26 @@
 			this.tournamentRangeLoading = true
 			const power = Math.round(Object.values(this.farmer.leeks).reduce((p, l) => p + l.level ** LeekWars.POWER_FACTOR, 0))
 			LeekWars.post('tournament/range-farmer', {power}).then(d => this.tournamentRange = d)
+		}
+
+		giveTrophy() {
+			if (this.giveTrophyID) {
+				LeekWars.post('trophy/give', { trophy: this.giveTrophyID, farmer: this.farmer!.id, fight: this.giveTrophyFight || 0 })
+				.then(() => {
+					this.trophyDialog = false
+					LeekWars.toast("Trophée donné !")
+				})
+				.error(error => LeekWars.toast(this.$t('error_' + error.error, error.params)))
+			}
+		}
+
+		openCountryDialog() {
+			this.countryDialog = true
+			if (!this.countries.length) {
+				LeekWars.get<any>('country/get-all').then((data) => {
+					this.countries = Object.freeze(data.countries)
+				})
+			}
 		}
 	}
 </script>
@@ -1104,5 +1171,9 @@
 		display: flex;
 		justify-content: space-between;
 		gap: 20px;
+	}
+	.give-trophy {
+		width: 30px;
+		margin: 0 5px;
 	}
 </style>

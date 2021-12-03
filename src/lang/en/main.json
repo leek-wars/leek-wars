@@ -29,7 +29,7 @@
 	"console_alert_1": "Warning! If someone asks you to enter a program here,",
 	"console_alert_2": "it is a hacking attempt of your account on Leek Wars.",
 	"console_alert_3": "Enter code here only if you know exactly what you are doing.",
-	"console_github": "GitHub repository : https://github.com/leek-wars/leek-wars-client",
+	"console_github": "GitHub repository : https://github.com/leek-wars/leek-wars",
 	"country": "Country",
 	"create": "Create",
 	"date_format": "%B %d, %Y",
@@ -38,8 +38,10 @@
 	"documentation": "Documentation",
 	"editor": "Editor",
 	"eighth_final": "8th-finals",
+	"encyclopedia": "Encyclopedia",
 	"error": "Error",
 	"error_x": "Error: {0}",
+	"error_muted": "You are muted for {0} seconds",
 	"farmer": "Farmer",
 	"fight": "Fight",
 	"final": "Finals",
@@ -96,6 +98,7 @@
 	"report": "Fight report",
 	"reset": "Reset",
 	"reusable": "Reusable",
+	"resources": "Resources",
 	"roadmap": "Roadmap",
 	"seed": "Seed",
 	"seed_desc": "Number initializing the random number generator used throughout the fight",
@@ -165,5 +168,6 @@
 	"too_heavy": "",
 	"unsupported_extension": "",
 	"validate": "Validate",
-	"weapons": "Weapons"
+	"weapons": "Weapons",
+	"workshop": "Workshop"
 }

@@ -1,11 +1,11 @@
 <template lang="html">
-	<div draggable="true" class="ai" :class="{[ai.color]: true, small}">
+	<div draggable="true" class="ai" :class="{[ai.color]: true, small, locked}">
 		<div class="name">
 			{{ ai.bot ? $t('leekscript.' + ai.name) : ai.name }}
 			<v-icon v-if="!ai.valid">mdi-close-circle</v-icon>
 		</div>
 		<div v-if="show_lines" class="lines">{{ $tc('main.n_lines', ai.total_lines) }}</div>
-		<div v-if="ai.version" class="version">{{ ('' + ai.version).split('').join('.') }}</div>
+		<div v-if="ai.version" class="version">LS {{ ai.version }}</div>
 	</div>
 </template>
 
@@ -18,6 +18,7 @@
 		@Prop({required: true}) ai!: AI
 		@Prop({required: true}) library!: boolean
 		@Prop({required: true}) small!: boolean
+		@Prop() locked!: boolean
 
 		get my_ai() {
 			return this.$store.state.farmer && this.$store.state.farmer.ais.some((ai: AI) => ai.id === this.ai.id)
@@ -101,6 +102,9 @@
 			color: #555;
 			bottom: 10px;
 			right: 10px;
+		}
+		&.locked {
+			filter: brightness(85%);
 		}
 	}
 </style>

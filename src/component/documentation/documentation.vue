@@ -1,5 +1,5 @@
 <template lang="html">
-	<div>
+	<div class="documentation-page">
 		<div class="page-header page-bar">
 			<div>
 				<h1>
@@ -33,19 +33,26 @@
 			<div v-show="!LeekWars.mobile || !LeekWars.splitBack" class="column3">
 				<panel class="first">
 					<div slot="content">
-						<div v-autostopscroll="'bottom'" class="items-list">
+						<div class="items-list">
 							<div v-for="(category, c) of filteredCategories" :key="category.id">
-								<h2>{{ $t('doc.function_category_' + categories[c].name) }}</h2>
-								<router-link v-for="(item, i) in category" v-if="item.name === item.real_name" :key="i" :to="'/help/documentation/' + item.name" :item="item.name" class="item">
-									{{ item.name }}
-								</router-link>
+								<h2 v-ripple @click="categoryState[c] = !categoryState[c]">
+									<v-icon>{{ icons[c] }}</v-icon> {{ $t('doc.function_category_' + categories[c].name) }} <span v-if="query.length">({{ category.length }})</span>
+									<div class="spacer"></div>
+									<v-icon v-if="query.length || categoryState[c]">mdi-chevron-up</v-icon>
+									<v-icon v-else>mdi-chevron-down</v-icon>
+								</h2>
+								<div v-if="query.length || categoryState[c]">
+									<router-link v-for="(item, i) in category" v-if="item.name === item.real_name" :key="i" :to="'/help/documentation/' + item.name" :item="item.name" class="item">
+										{{ item.name }}
+									</router-link>
+								</div>
 							</div>
 						</div>
 					</div>
 				</panel>
 			</div>
 			<div v-show="!LeekWars.mobile || LeekWars.splitBack" class="column9">
-				<div ref="elements" v-autostopscroll="'bottom'" class="items" @scroll="scroll">
+				<div ref="elements" class="items" @scroll="scroll">
 					<panel v-for="item of lazy_items" :key="item.id" :item="item.name" :class="{deprecated: item.deprecated}" class="item">
 						<documentation-function v-if="'return_type' in item" :fun="item" />
 						<documentation-constant v-else :constant="item" />
@@ -58,7 +65,7 @@
 
 <script lang="ts">
 	import { locale } from '@/locale'
-	import { Function } from '@/model/function'
+	import { mixins } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import { Component, Vue, Watch } from 'vue-property-decorator'
 	import Breadcrumb from '../forum/breadcrumb.vue'
@@ -69,15 +76,29 @@
 	@Component({
 		name: 'documentation',
 		components: { DocumentationFunction, DocumentationConstant, Breadcrumb },
-		i18n: {}
+		i18n: {},
+		mixins: [...mixins]
 	})
 	export default class Documentation extends Vue {
 		categories: any[] = []
 		items: any[] = []
 		query: string = ''
-		Function = Function
 		lazy_start: number = 0
 		lazy_end: number = 10
+		categoryState: {[key: number]: boolean} = {}
+		icons = {
+			1: 'mdi-math-integral-box',
+			2: 'mdi-code-string',
+			3: 'mdi-code-array',
+			4: 'mdi-account',
+			5: 'mdi-pistol',
+			6: 'mdi-chip',
+			7: 'mdi-grid',
+			8: 'mdi-sword-cross',
+			9: 'mdi-hammer-wrench',
+			10: 'mdi-signal-variant',
+			11: 'mdi-palette'
+		}
 
 		get breadcrumb_items() {
 			return [
@@ -104,10 +125,8 @@
 		}
 		get filteredCategories() {
 			const categories: {[key: number]: any} = {}
-			for (const category in this.categories) {
-				categories[category] = []
-			}
 			for (const item of this.filteredItems) {
+				if (!(item.category in categories)) categories[item.category] = []
 				categories[item.category].push(item)
 			}
 			return categories
@@ -126,6 +145,7 @@
 			}
 			get_categories((data: any) => {
 				this.categories = data.categories
+				for (const category in this.categories) Vue.set(this.categoryState, category, false)
 				let last: any
 				let index = 1
 				let id = 0
@@ -150,7 +170,10 @@
 							for (const section in fun.primary) {
 								new_data += fun.primary[section]
 							}
-							(item as any).data = new_data
+							for (const section in fun.secondary) {
+								new_data += fun.secondary[section]
+							}
+							(item as any).data = new_data.toLowerCase()
 						} else {
 							let item_data = (this.$t('doc.func_' + (item as any).real_name) as any).toLowerCase()
 							for (const i in item.arguments_names) {
@@ -252,8 +275,13 @@
 </script>
 
 <style lang="scss" scoped>
+	.documentation-page {
+		display: flex;
+		flex-direction: column;
+	}
 	.documentation {
 		min-height: 0;
+		height: 100%;
 	}
 	#app.app .documentation {
 		padding-bottom: 0;
@@ -261,7 +289,6 @@
 	.column3 {
 		position: sticky;
 		top: 12px;
-		height: 100%;
 		.panel {
 			margin-bottom: 0;
 		}
@@ -269,34 +296,38 @@
 	.column9 {
 		height: 100%;
 	}
-	.panel {
-		height: 100%;
-	}
 	.column3 .panel > div {
 		padding: 0;
 		height: 100%;
 	}
 	.items-list {
-		overflow-y: auto;
+		overflow-y: scroll;
 		overflow-x: hidden;
 		position: relative;
 		height: 100%;
 	}
 	.items-list h2 {
-		font-size: 13px;
+		font-size: 16px;
+		display: flex;
+		align-items: center;
+		gap: 5px;
 		font-weight: bold;
-		color: #888;
+		color: #222;
 		position: sticky;
 		top: 0;
-		padding: 6px 10px;
-		margin-bottom: 4px;
-		background: white;
-		box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
+		padding: 10px 5px;
+		padding-left: 10px;
+		margin-bottom: 6px;
+		background: #f2f2f2;
+		cursor: pointer;
 	}
 	.items-list .item {
 		cursor: pointer;
 		padding: 3px 10px;
 		display: block;
+		&:last-child {
+			margin-bottom: 6px;
+		}
 	}
 	.items-list .item:hover, .item.router-link-active {
 		font-weight: bold;
@@ -314,7 +345,7 @@
 		height: initial;
 		margin-right: 0;
 		&::last-child {
-			margin-bottom: 0;
+			margin-bottom: 5px;
 		}
 	}
 	.items .item:last-child {

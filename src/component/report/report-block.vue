@@ -80,9 +80,10 @@
 				<tr>
 					<th>{{ $t('main.leek') }}</th>
 					<th>{{ $t('main.level') }}</th>
-					<th v-if="$store.getters.admin">Power</th>
+					<!-- <th v-if="$store.getters.admin">Power</th> -->
 					<th>{{ $t('main.xp') }}</th>
 					<th class="gain">{{ $t('main.habs') }}</th>
+					<th v-if="fight.context != FightContext.TEST && fight.context != FightContext.CHALLENGE" class="resources">{{ $t('main.resources') }}</th>
 					<th v-if="fight.type === FightType.SOLO && fight.context != FightContext.TEST && fight.context != FightContext.CHALLENGE" class="gain">{{ $t('main.talent') }}</th>
 					<!-- <th class="gain">Opérations</th> -->
 					<!-- <th v-if="$store.getters.admin" class="gain">Time</th> -->
@@ -91,11 +92,12 @@
 				<tr v-if="fight.type !== FightType.SOLO" class="total">
 					<td class="name"><span class="alive">{{ $t('main.total') }}</span></td>
 					<td class="level">{{ totalLevel }}</td>
-					<td v-if="$store.getters.admin" class="power">{{ totalPower | number }}</td>
+					<!-- <td v-if="$store.getters.admin" class="power">{{ totalPower | number }}</td> -->
 					<td class="xp"><div class="bar"></div>{{ totalXP | number }}</td>
 					<td class="money">
 						<span>{{ totalMoney | number }} <span class="hab"></span></span>
 					</td>
+					<td v-if="fight.context != FightContext.TEST && fight.context != FightContext.CHALLENGE" class="resources"></td>
 					<!-- <td class="gain">{{ totalOpes | number }}</td> -->
 					<!-- <td v-if="$store.getters.admin" class="gain">{{ totalTime }} s</td> -->
 				</tr>
@@ -198,7 +200,7 @@
 		background-color: #bdbdbd;
 	}
 	.bar {
-		width: 60%;
+		width: 70%;
 		height: 14px;
 		display: inline-block;
 		background: #ddd;
@@ -216,6 +218,9 @@
 	}
 	.gain {
 		width: 110px;
+	}
+	.resources {
+		width: 200px;
 	}
 	.alive {
 		margin-left: 27px;

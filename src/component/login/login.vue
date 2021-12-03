@@ -58,7 +58,7 @@
 			const url = LeekWars.DEV ? 'farmer/login-token' : 'farmer/login'
 			LeekWars.post(url, this.form).then(data => {
 				const token = LeekWars.DEV ? data.token : '$'
-				this.$store.commit('connect', {farmer: data.farmer, farmers: data.farmers, token})
+				this.$store.commit('connect', {...data, token})
 				this.$router.push('/')
 			}).error(error => {
 				this.error = error

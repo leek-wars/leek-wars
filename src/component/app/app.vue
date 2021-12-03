@@ -3,6 +3,8 @@
 		<div class="v-application--wrap">
 			<div :class="{visible: LeekWars.dark > 0}" :style="{opacity: LeekWars.dark}" class="dark" @click="darkClick"></div>
 
+			<div class="requests">{{ LeekWars.requests }} <v-btn x-small @click="LeekWars.requests = 0">reset</v-btn></div>
+
 			<lw-menu v-if="$store.state.connected" />
 
 			<!-- <div class="console-button" @click="leekscriptConsole">
@@ -101,6 +103,10 @@
 					</div>
 				</div>
 			</popup>
+
+			<v-dialog v-if="docEverywhere" v-model="docEverywhereModel" content-class="doc" :max-width="1400">
+				<documentation />
+			</v-dialog>
 		</div>
 	</div>
 </template>
@@ -123,9 +129,10 @@
 	import { Component, Vue } from 'vue-property-decorator'
 	import ChangelogDialog from '../changelog/changelog-dialog.vue'
 	const Didactitiel = () => import(/* webpackChunkName: "[request]" */ `@/component/didactitiel/didactitiel.${locale}.i18n`)
+	const Documentation = () => import(/* webpackChunkName: "[request]" */ `@/component/documentation/documentation.${locale}.i18n`)
 
 	@Component({
-		components: {'lw-bar': Bar, 'lw-footer': Footer, 'lw-header': Header, 'lw-menu': Menu, 'lw-social': Social, Console, Squares, Didactitiel, Chats, 'mobile-br': MobileBR, ChangelogVersion, ChangelogDialog }
+		components: {'lw-bar': Bar, 'lw-footer': Footer, 'lw-header': Header, 'lw-menu': Menu, 'lw-social': Social, Console, Squares, Didactitiel, Chats, 'mobile-br': MobileBR, ChangelogVersion, ChangelogDialog, Documentation }
 	})
 	export default class App extends Vue {
 		didactitiel: boolean = false
@@ -142,6 +149,8 @@
 		changelogDialog: boolean = false
 		konami: string = ''
 		annonce: boolean = false
+		docEverywhere: boolean = false
+		docEverywhereModel: boolean = false
 
 		created() {
 			this.$root.$on('connected', () => {
@@ -157,6 +166,10 @@
 				this.changelogShow()
 			}
 			this.$root.$on('keyup', (event: KeyboardEvent) => {
+				if (event.keyCode === 72 && event.altKey && event.ctrlKey) {
+					this.docEverywhere = true
+					Vue.nextTick(() => this.docEverywhereModel = true)
+				}
 				// Konami code
 				if (event.keyCode === 37) { this.konami += "l" }
 				else if (event.keyCode === 38) { this.konami += "u" }
@@ -461,6 +474,24 @@
 		a {
 			font-weight: 500;
 			color: #5fad1b;
+		}
+	}
+
+	.requests {
+		display: none;
+		background: rgba(0,0,0,0.8);
+		color: white;
+		padding: 10px;
+		position: fixed;
+		top: 10px;
+		left: 10px;
+		z-index: 100;
+	}
+	::v-deep .doc {
+		height: 85vh;
+		box-shadow: none;
+		.documentation-page {
+			height: 100%;
 		}
 	}
 </style>

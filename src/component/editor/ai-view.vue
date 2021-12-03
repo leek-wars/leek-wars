@@ -102,7 +102,9 @@
 	import { i18n } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import { store } from '@/model/store'
+	import CodeMirror from 'codemirror'
 	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
+	import Code from '../app/code.vue'
 	import DocumentationConstant from '../documentation/documentation-constant.vue'
 	import DocumentationFunction from '../documentation/documentation-function.vue'
 	import Javadoc from './javadoc.vue'
@@ -353,7 +355,7 @@
 			} else {
 				this.loading = true
 				LeekWars.get('ai/get/' + this.id).then(data => {
-					this.ai.code = data.ai.code
+					Vue.set(this.ai, 'code', data.ai.code)
 					this.editor.setValue(this.ai.code)
 					this.editor.getDoc().clearHistory()
 					this.editor.refresh()
@@ -483,7 +485,10 @@
 			}
 			this.ai.comments = comments
 
+			// console.log("Comments", comments)
+
 			this.updateFunctions()
+			this.updateClasses()
 			this.updateGlobalVars()
 		}
 
@@ -648,7 +653,7 @@
 			this.document.setCursor(cursor.line + offset, cursor.ch)
 		}
 
-		public getTokenInformation(token: string, pos: CodeMirror.Position | null = null) {
+		public getTokenInformation(token: string, pos: CodeMirror.Position | null = null, previousToken: CodeMirror.Token) {
 			if (token.startsWith('@')) { token = token.substring(1) }
 			let wrong_arguments = false
 			for (const keyword of LeekWars.keywords) {
@@ -684,10 +689,10 @@
 					}
 				}
 			}
-			return this.searchSymbolInAI(this.ai, token)
+			return this.searchSymbolInAI(this.ai, token, previousToken)
 		}
 
-		public searchSymbolInAI(startAI: AI, startSymbol: string): Keyword | null {
+		public searchSymbolInAI(startAI: AI, startSymbol: string, previousToken: CodeMirror.Token): Keyword | null {
 
 			const visited = new Set<number>()
 
@@ -706,8 +711,16 @@
 					}
 				}
 				for (const s in ai.classes) {
+					const clazz = ai.classes[s]
 					if (symbol === s) {
-						return ai.classes[s]
+						return clazz
+					}
+					if (previousToken.string === s && clazz.static_methods) {
+						for (const method of clazz.static_methods) {
+							if (symbol === method.name) {
+								return method
+							}
+						}
 					}
 				}
 				if (ai.includes) {
@@ -753,7 +766,8 @@
 			const editorPos = this.editor.coordsChar(pos, "window")
 			const editorPos2 = {line: editorPos.line, ch: editorPos.ch + 1}
 			const token = this.editor.getTokenAt(editorPos2, true)
-			// console.log("token", token)
+			const previousToken = this.editor.getTokenAt({line: editorPos.line, ch: token.start - 1})
+			// console.log("token", token, previousToken)
 
 			// Underline
 			if (this.ctrl && this.hoverData && this.hoverData.defined) {
@@ -799,7 +813,8 @@
 			clearTimeout(this.detailTimer)
 			this.detailTimer = setTimeout(() => {
 
-				const keyword = this.getTokenInformation(token.string, editorPos2)
+				// console.log("getTokenInformation", token, previousToken)
+				const keyword = this.getTokenInformation(token.string, editorPos2, previousToken)
 
 				// console.log("hover at", position)
 				LeekWars.analyzer.hover(this.ai, position).then((raw_data) => {
@@ -987,12 +1002,15 @@
 			}
 			token.state = CodeMirror.innerMode(this.document.getMode(), token.state).state
 			const completions: Keyword[] = []
-			const start = token.string
+			const previousToken = this.editor.getTokenAt({ ch: token.start, line: cur.line })
+			const tokenBeforeDot = token.string === '.' ? this.editor.getTokenAt({ ch: token.start, line: cur.line }) : this.editor.getTokenAt({ ch: token.start - 1, line: cur.line })
+			const isDot = token.string === '.' || previousToken.string === '.'
+			const start = token.string === '.' ? '' : token.string.toLowerCase()
 
 			const maybeAdd = (data: string | Keyword) => {
 				if (typeof data === 'string') {
 					if (data.toLowerCase().indexOf(start.toLowerCase()) === 0) {
-						completions.push({name: data, fullName: data, details: i18n.t('leekscript.keyword', [data]) as string, type: 'keyword', category: 3})
+						completions.push({ name: data, fullName: data, details: i18n.t('leekscript.keyword', [data]) as string, type: 'keyword', category: 3 })
 					}
 				} else {
 					if (data.name.toLowerCase().indexOf(start.toLowerCase()) === 0) {
@@ -1000,74 +1018,146 @@
 					}
 				}
 			}
-			// Ajout des variables locales du code
-			// console.log(token)
-			for (let v = token.state.localVars; v; v = v.next) {
-				if (v.name !== "this" && v.name !== "arguments" && v.name.toLowerCase().indexOf(start.toLowerCase()) === 0) {
-					completions.push({name: v.name, fullName: v.name, details: i18n.t('leekscript.variable', [v.name]) as string, type: 'keyword', category: 6})
-				}
-			}
-			for (let context = token.state.context; context; context = context.prev) {
-				for (let v = context.vars; v; v = v.next) {
-					if (v.name !== "this" && v.name !== "arguments" && v.name.toLowerCase().indexOf(start.toLowerCase()) === 0) {
-						completions.push({name: v.name, fullName: v.name, details: i18n.t('leekscript.argument', [v.name]) as string, type: 'keyword', category: 7})
-					}
-				}
+
+			let currentClass = null
+			for (const clazz of Object.values(this.ai.classes)) {
+				if (clazz.line! > cursor.line) break
+				currentClass = clazz
 			}
 
-			// Variables globales
-			for (const variable in this.ai.globals) {
-				if (variable.toLowerCase().indexOf(start.toLowerCase()) === 0) {
-					const keyword = this.ai.globals[variable]
-					completions.push(keyword)
-				}
-			}
-			// Classes
-			for (const variable in this.ai.classes) {
-				if (variable.toLowerCase().indexOf(start.toLowerCase()) === 0) {
-					const keyword = this.ai.classes[variable]
-					completions.push(keyword)
-				}
-			}
-			// Includes globals
-			for (const include of this.ai.includes) {
-				const globals = this.ais[include.id].globals
-				for (const variable in globals) {
-					if (variable.toLowerCase().indexOf(start.toLowerCase()) === 0) {
-						const keyword = globals[variable]
-						completions.push(keyword)
+			// console.log("autocomplete 2", { token, previousToken, tokenBeforeDot, start, isDot, cursor, currentClass })
+
+			if (isDot) {
+
+				if (tokenBeforeDot.string in this.ai.classes) {
+					const clazz = this.ai.classes[tokenBeforeDot.string]
+					for (const staticMethod of clazz.static_methods) {
+						if (staticMethod.name.toLowerCase().indexOf(start) === 0) {
+							completions.push(staticMethod)
+						}
 					}
-				}
-			}
-			// File functions
-			for (const fun of this.ai.functions) {
-				if (fun.name.toLowerCase().indexOf(start.toLowerCase()) === 0) {
-					completions.push(fun)
-				}
-			}
-			// Includes functions
-			for (const include of this.ai.includes) {
-				const functions = this.ais[include.id].functions
-				if (functions) {
-					for (const fun of functions) {
-						if (fun.name.toLowerCase().indexOf(start.toLowerCase()) === 0) {
-							completions.push(fun)
+					for (const static_field of clazz.static_fields) {
+						if (static_field.name.toLowerCase().indexOf(start) === 0) {
+							completions.push(static_field)
 						}
 					}
 				}
-			}
-			// Ajout des fonctions
-			LeekWars.keywords.forEach(maybeAdd)
+				if (currentClass) {
+					if (tokenBeforeDot.string === 'class') {
+						for (const static_field of currentClass.static_fields) {
+							if (static_field.name.toLowerCase().indexOf(start) === 0) {
+								completions.push(static_field)
+							}
+						}
+						for (const staticMethod of currentClass.static_methods) {
+							if (staticMethod.name.toLowerCase().indexOf(start) === 0) {
+								completions.push(staticMethod)
+							}
+						}
+					}
+					if (tokenBeforeDot.string === 'this') {
+						for (const method of currentClass.methods) {
+							if (method.name.toLowerCase().indexOf(start) === 0) {
+								completions.push(method)
+							}
+						}
+					}
+				}
 
-			// Raccourcis
-			for (const r in AUTO_SHORTCUTS) {
-				if (AUTO_SHORTCUTS[r][0].indexOf(start.toLowerCase()) === 0) {
-					completions.push({name: AUTO_SHORTCUTS[r][0], fullName: AUTO_SHORTCUTS[r][0], details: AUTO_SHORTCUTS[r][3], type: 'shortcut', shortcut: parseInt(r, 10), category: 5})
+			} else {
+
+				// Ajout des variables locales du code
+				for (let v = token.state.localVars; v; v = v.next) {
+					if (v.name !== "arguments" && v.name.toLowerCase().indexOf(start.toLowerCase()) === 0) {
+						completions.push({name: v.name, fullName: v.name, details: i18n.t('leekscript.variable', [v.name]) as string, type: 'keyword', category: 6})
+					}
+				}
+				if (token.state.context) {
+					for (let context = token.state.context.prev; context; context = context.prev) {
+						for (let v = context.vars; v; v = v.next) {
+							if (v.name !== "arguments" && v.name.toLowerCase().indexOf(start.toLowerCase()) === 0) {
+								completions.push({name: v.name, fullName: v.name, details: i18n.t('leekscript.variable', [v.name]) as string, type: 'keyword', category: 6})
+							}
+						}
+					}
+					for (let v = token.state.context.vars; v; v = v.next) {
+						if (v.name !== "arguments" && v.name.toLowerCase().indexOf(start.toLowerCase()) === 0) {
+							completions.push({name: v.name, fullName: v.name, details: i18n.t('leekscript.argument', [v.name]) as string, type: 'keyword', category: 7})
+						}
+					}
+				}
+
+				if (currentClass) {
+					for (const staticMethod of currentClass.static_methods) {
+						if (staticMethod.name.toLowerCase().indexOf(start) === 0) {
+							completions.push(staticMethod)
+						}
+					}
+					for (const method of currentClass.methods) {
+						if (method.name.toLowerCase().indexOf(start) === 0) {
+							completions.push(method)
+						}
+					}
+				}
+
+				// Variables globales
+				for (const variable in this.ai.globals) {
+					if (variable.toLowerCase().indexOf(start.toLowerCase()) === 0) {
+						const keyword = this.ai.globals[variable]
+						completions.push(keyword)
+					}
+				}
+				// Classes
+				for (const variable in this.ai.classes) {
+					if (variable.toLowerCase().indexOf(start.toLowerCase()) === 0) {
+						const keyword = this.ai.classes[variable]
+						completions.push(keyword)
+					}
+				}
+				// Includes globals
+				for (const include of this.ai.includes) {
+					const globals = this.ais[include.id].globals
+					for (const variable in globals) {
+						if (variable.toLowerCase().indexOf(start.toLowerCase()) === 0) {
+							const keyword = globals[variable]
+							completions.push(keyword)
+						}
+					}
+				}
+				// File functions
+				for (const fun of this.ai.functions) {
+					if (fun.name.toLowerCase().indexOf(start.toLowerCase()) === 0) {
+						completions.push(fun)
+					}
+				}
+				// Includes functions
+				for (const include of this.ai.includes) {
+					const functions = this.ais[include.id].functions
+					if (functions) {
+						for (const fun of functions) {
+							if (fun.name.toLowerCase().indexOf(start.toLowerCase()) === 0) {
+								completions.push(fun)
+							}
+						}
+					}
+				}
+				// Ajout des fonctions
+				LeekWars.keywords.forEach(maybeAdd)
+
+				// Raccourcis
+				for (const r in AUTO_SHORTCUTS) {
+					if (AUTO_SHORTCUTS[r][0].indexOf(start.toLowerCase()) === 0) {
+						completions.push({ name: AUTO_SHORTCUTS[r][0], fullName: AUTO_SHORTCUTS[r][0], details: AUTO_SHORTCUTS[r][3], type: 'shortcut', shortcut: parseInt(r, 10), category: 5 })
+					}
 				}
 			}
+
 			this.completions = completions
 			this.completionFrom = {line: cur.line, ch: startPos}
 			this.completionTo = {line: cur.line, ch: token.end}
+			if (isDot) {
+				this.completionFrom.ch++
+			}
 
 			if (completions.length === 0) {
 				this.close()
@@ -1163,18 +1253,36 @@
 		}
 		public pick() {
 			const completion = this.completions[this.selectedCompletion]
-			// console.log("Pick completion", completion)
-
-			// const completion_start = completion.location[0]
-			// const completion_end = completion.location[1]
 			const cursor = this.document.getCursor()
-			const completion_start = this.completionFrom
-			const completion_end = this.completionTo
 
-			if (completion.type === 'function' || completion.type === 'user-function') {
-				let name = completion.fullName
-				if (name.indexOf(':') > -1) {
-					name = name.substring(0, name.indexOf(':') - 1)
+			const range = this.document.getRange(cursor, {line: cursor.line, ch: cursor.ch + 1})
+			const addParameters = range !== '(' && !/\w/i.test(range)
+
+			if (completion.type === 'user-method' || completion.type === 'user-static-method') {
+
+				const pos = this.document.getCursor()
+				const name = completion.fullName
+				this.document.replaceRange(completion.fullName, {line: this.completionFrom.line, ch: this.completionFrom.ch}, this.completionTo)
+				const argCount = name.includes('()') ? 0 : name.split(',').length
+				if (addParameters && argCount > 0) {
+					const firstArgLength = (argCount > 1 ? name.indexOf(',') : name.indexOf(')')) - name.indexOf('(') - 1
+					this.document.setSelection(
+						{line: pos.line, ch: this.completionFrom.ch + completion.name.length + 1},
+						{line: pos.line, ch: this.completionFrom.ch + completion.name.length + 1 + firstArgLength}
+					)
+				}
+
+			} else if (completion.type === 'function' || completion.type === 'user-function') {
+				let name = completion.name
+				if (addParameters) {
+					name += "("
+					let a = 0, i = 0
+					for (const argument of completion.function!.arguments_names) {
+						if (completion.function!.optional[i++]) continue
+						if (a++ > 0) name += ", "
+						name += argument
+					}
+					name += ")"
 				}
 				this.document.replaceRange(name, this.completionFrom, this.completionTo)
 				// this.document.replaceRange(name, {line: completion_start[0] - 1, ch: completion_start[1]}, {line: completion_end[0] - 1, ch: completion_end[1]})
@@ -1188,11 +1296,7 @@
 					argCount = completion.lstype.args.length
 				}
 
-				if (argCount > 0) {
-					// this.document.setCursor({line: pos.line, ch: completion_start[1] + name.length - 1})
-					// setTimeout(() => {
-					// 	this.autocomplete(this.codemirror)
-					// })
+				if (addParameters && argCount > 0) {
 					const firstArgLength = (argCount > 1 ? name.indexOf(',') : name.indexOf(')')) - name.indexOf('(') - 1
 					this.document.setSelection({line: pos.line, ch: this.completionFrom.ch + completion.name.length + 1}, {line: pos.line, ch: this.completionFrom.ch + completion.name.length + 1 + firstArgLength})
 				}
@@ -1280,7 +1384,6 @@
 						args[a] = args[a].substring(1)
 					}
 				}
-				// console.log(args)
 				let fullName = match[1] + "(" + args.join(", ") + ")"
 				let description = "<h4>" + i18n.t('leekscript.function_f', [fullName]) + "</h4><br>"
 				description += i18n.t('leekscript.defined_in', [this.ai.name, line])
@@ -1370,11 +1473,167 @@
 			}
 		}
 
+		public updateClasses() {
+			const code = this.editor.getValue()
+			this.ai.classes = {}
+			let match
+
+			// Search classes
+			const class_regex = /class\s+(\w+)\s*(extends|{)/gm
+			while ((match = class_regex.exec(code)) != null) {
+				const line = code.substring(0, match.index).split("\n").length
+				const name = match[1]
+				const comment = this.ai.comments[match.index]
+				const javadoc = { name, description: comment, items: [] }
+				this.ai.classes[name] = {
+					name,
+					fullName: name,
+					details: "Classe <b>" + name + "</b>",
+					type: 'class',
+					ai: this.ai,
+					line,
+					category: 9,
+					javadoc,
+					fields: [],
+					static_fields: [
+
+					],
+					methods: [],
+					static_methods: []
+				}
+				if (this.ai.version >= 3) {
+					this.ai.classes[name].static_fields.push(
+						{ name: "name", fullName: "name", type: "static-field", category: 1, details: this.$t('leekscript.class_name') },
+						{ name: "super", fullName: "super", type: "static-field", category: 1, details: this.$t('leekscript.class_super') },
+						{ name: "fields", fullName: "fields", type: "static-field", category: 1, details: this.$t('leekscript.class_fields') },
+						{ name: "staticFields", fullName: "staticFields", type: "static-field", category: 1, details: this.$t('leekscript.class_staticFields') },
+						{ name: "methods", fullName: "methods", type: "static-field", category: 1, details: this.$t('leekscript.class_methods') },
+						{ name: "staticMethods", fullName: "staticMethods", type: "static-field", category: 1, details: this.$t('leekscript.class_staticMethods') },
+					)
+				}
+			}
+			// console.log("Classes", this.ai.classes)
+
+			// Search methods
+			const method_regex = /(?:public\s+)?(?:(static)\s+)?(\w+)\s*\(([\w\s,]*)\)\s*{/gm
+			while ((match = method_regex.exec(code)) != null) {
+
+				const name = match[2]
+				if (name === 'function' || name === 'for' || name === 'while' || name === 'if') continue
+
+				const is_static = !!match[1]
+				const line = code.substring(0, match.index).split("\n").length
+				let args = match[3].split(",")
+				if (args.length === 1 && args[0].trim() === '') { args = [] }
+				for (const a in args) {
+					args[a] = args[a].trim()
+					if (args[a].startsWith('@')) {
+						args[a] = args[a].substring(1)
+					}
+				}
+				let fullName = match[2] + "(" + args.join(", ") + ")"
+				let description = "<h4>" + i18n.t('leekscript.function_f', [fullName]) + "</h4><br>"
+				description += i18n.t('leekscript.defined_in', [this.ai.name, line])
+
+				const comment = this.ai.comments[match.index]
+				// console.log("comment", comment)
+				const javadoc = {
+					name: fullName,
+					description: "",
+					items: [] as any[]
+				}
+				// Add arguments from signature
+				for (const arg of args) {
+					javadoc.items.push({ type: 'param', name: arg, text: null})
+				}
+				// console.log(javadoc.items)
+				if (comment) {
+					const javadoc_lines = comment.split("\n")
+					const javadoc_regex = /^\s*@(\w+)(?:\s+([a-zA-Z_\u00C0-\u024F\u1E00-\u1EFF]+)\s*:?\s*)?(?:\s*:\s*)?(.*)$/
+					let match_javadoc
+					for (const jline of javadoc_lines) {
+						if (match_javadoc = javadoc_regex.exec(jline)) {
+							// console.log(match_javadoc)
+							const type = match_javadoc[1]
+							let name = match_javadoc[2]
+							let text = match_javadoc[3]
+							if (type === 'return') {
+								fullName += ' : ' + text
+							} else if (type === 'param') {
+								if (name) {
+									name = name.trim()
+									if (name.startsWith('@')) {
+										name = name.substring(1)
+									}
+								}
+								text = text.trim()
+								if (text.startsWith('@')) {
+									text = text.trim().substring(1)
+								}
+								if (args.includes(name) || args.includes(text)) {
+									// console.log('arg', name, text)
+									const existing = javadoc.items.find(i => i.type === 'param' && ((name.length && i.name === name) || (text.length && i.name === text)))
+									// console.log('existing', existing)
+									// existing.name = existing.text
+									existing.text = text
+									continue
+								}
+							}
+							javadoc.items.push({ type, name, text })
+						} else {
+							if (jline.length) {
+								if (javadoc.description.length) {
+									javadoc.description += "\n"
+								}
+								javadoc.description += jline
+							}
+						}
+					}
+					// console.log("javadoc", javadoc)
+				}
+
+				// Escape
+				javadoc.description = LeekWars.protect(javadoc.description)
+				for (const item of javadoc.items) {
+					item.name = item.name ? LeekWars.protect(item.name) : item.name
+					item.text = item.text ? LeekWars.protect(item.text) : item.text
+				}
+
+				// Find class
+				let clazz = null
+				for (const c in this.ai.classes) {
+					if (this.ai.classes[c].line! > line) break
+					clazz = this.ai.classes[c]
+				}
+				if (clazz) {
+					const method = {
+						name: match[2],
+						fullName,
+						details: description,
+						type: is_static ? 'user-static-method' : 'user-method',
+						argumentCount: args.length,
+						arguments: args,
+						ai: this.ai,
+						line,
+						javadoc,
+						category: 4
+					}
+					// console.log(fun)
+					if (is_static) {
+						clazz.static_methods.push(method)
+					} else {
+						clazz.methods.push(method)
+					}
+				}
+			}
+
+			// console.log("classes " + this.ai.name, this.ai.classes)
+		}
+
 		public updateGlobalVars() {
 
 			const code = this.editor.getValue()
 			this.ai.globals = {}
-			this.ai.classes = {}
 			let match
 
 			// Search global vars
@@ -1392,24 +1651,6 @@
 					ai: this.ai,
 					line,
 					category: 8,
-					javadoc,
-				}
-			}
-			// Search classes
-			const class_regex = /class\s+(\w+)/gm
-			while ((match = class_regex.exec(code)) != null) {
-				const line = code.substring(0, match.index).split("\n").length
-				const name = match[1]
-				const comment = this.ai.comments[match.index]
-				const javadoc = { name, description: comment, items: [] }
-				this.ai.classes[name] = {
-					name,
-					fullName: name,
-					details: "Classe <b>" + name + "</b>",
-					type: 'class',
-					ai: this.ai,
-					line,
-					category: 9,
 					javadoc,
 				}
 			}

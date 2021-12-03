@@ -39,9 +39,10 @@
 								<tr>
 									<th>{{ $t('main.leek') }}</th>
 									<th>{{ $t('main.level') }}</th>
-									<th v-if="$store.getters.admin" class="power">Power</th>
+									<!-- <th v-if="$store.getters.admin" class="power">Power</th> -->
 									<th>{{ $t('main.xp') }}</th>
 									<th class="gain">{{ $t('main.habs') }}</th>
+									<th v-if="fight.context != FightContext.TEST && fight.context != FightContext.CHALLENGE" class="resources">{{ $t('main.resources') }}</th>
 									<th v-if="fight.type === FightType.SOLO" class="gain">{{ $t('main.talent') }}</th>
 									<!-- <th>Opérations</th> -->
 									<!-- <th v-if="$store.getters.admin" class="gain">Time</th> -->
@@ -216,12 +217,21 @@
 			</div>
 		</panel>
 
-		<panel v-if="errors.length > 0 || warnings.length > 0" id="errors" class="warnings-error" toggle="report/warnings-errors" icon="mdi-alert">
+		<panel v-if="hasErrWarn" id="errors" class="warnings-error" toggle="report/warnings-errors" icon="mdi-alert">
 			<template slot="title">Erreurs et avertissements ({{ errors.length + warnings.length }})</template>
-			<div v-if="errors.length" class="title"><b>{{ errors.length }}</b> erreurs</div>
-			<pre v-for="(e, i) in errors" :key="i" class="log error">[{{ e.entity }}] {{ e.data }}</pre>
-			<div v-if="warnings.length" class="title"><b>{{ warnings.length }}</b> avertissements</div>
-			<pre v-for="(w, i) in warnings" :key="errors.length + i" class="log warning">[{{ w.entity }}] {{ w.data }}</pre>
+			<div class="logs">
+				<div class="turn">
+					<div id="turn-0" class="turn">
+						<span class="label" @click="goToTurn(0)">{{ $t('errors') }}</span>
+						<v-icon v-if="report" class="disabled">mdi-chevron-left</v-icon>
+						<v-icon v-if="report" @click="goToTurn(1)">mdi-chevron-right</v-icon>
+					</div>
+				</div>
+				<div v-if="errors.length" class="title"><b>{{ errors.length }}</b> erreurs</div>
+				<pre v-for="(e, i) in errors" :key="i" class="log error">[{{ e.entity }}] {{ e.data }}</pre>
+				<div v-if="warnings.length" class="title"><b>{{ warnings.length }}</b> avertissements</div>
+				<pre v-for="(w, i) in warnings" :key="errors.length + i" class="log warning">[{{ w.entity }}] {{ w.data }}</pre>
+			</div>
 		</panel>
 
 		<panel class="last actions" title="Actions" toggle="report/actions" icon="mdi-format-list-bulleted">
@@ -232,7 +242,7 @@
 			</div>
 			<loader v-if="!loaded" />
 			<div v-else>
-				<actions :report="report" :actions="actions" :leeks="leeks" :display-logs="actionsDisplayLogs" :display-allies-logs="actionsDisplayAlliesLogs" class="actions" />
+				<actions :has-err-warn="hasErrWarn" :report="report" :actions="actions" :leeks="leeks" :display-logs="actionsDisplayLogs" :display-allies-logs="actionsDisplayAlliesLogs" class="actions" />
 			</div>
 		</panel>
 	</div>
@@ -258,7 +268,7 @@
 	import(/* webpackChunkName: "chartist" */ /* webpackMode: "eager" */ "@/chartist-wrapper")
 	import(/* webpackChunkName: "[request]" */ /* webpackMode: "eager" */ `@/lang/fight.${locale}.lang`)
 
-	@Component({ name: 'report', i18n: {}, mixins, components: { actions: ActionsElement, ReportLeekRow, ReportBlock, ReportStatistics, 'lw-map': Map } })
+	@Component({ name: 'report', i18n: {}, mixins: [...mixins], components: { actions: ActionsElement, ReportLeekRow, ReportBlock, ReportStatistics, 'lw-map': Map } })
 	export default class ReportPage extends Vue {
 		TEAM_COLORS = TEAM_COLORS
 		fight: Fight | null = null
@@ -272,6 +282,7 @@
 		loaded: boolean = false
 		errors: any[] = []
 		warnings: any[] = []
+		hasErrWarn: boolean = false
 		myFight: boolean = false
 		iWin: boolean = false
 		enemy: any = null
@@ -410,7 +421,7 @@
 				// 	}
 				// }
 				LeekWars.get('fight/get-logs/' + id).then(d => {
-					this.logs = d.logs
+					this.logs = d
 					this.processLogs()
 					this.warningsErrors()
 				})
@@ -469,6 +480,7 @@
 					}
 				}
 			}
+			this.hasErrWarn = this.errors.length > 0 || this.warnings.length > 0
 		}
 
 		searchMyLeek(myLeek: any, leeks: ReportLeek[]) {
@@ -504,7 +516,8 @@
 		refight() {
 			if (this.fight && this.fight.context === FightContext.TEST) {
 				const last = localStorage.getItem('editor/last-scenario')
-				LeekWars.post('ai/test-scenario', {scenario_id: last}).then(data => {
+				const last_ai = localStorage.getItem('editor/last-scenario-ai')
+				LeekWars.post('ai/test-scenario', {scenario_id: last, ai_id: last_ai}).then(data => {
 					this.$router.push('/fight/' + data.fight)
 				}).error(error => {
 					LeekWars.toast("Erreur : " + error)
@@ -621,7 +634,7 @@
 			this.chartTooltipX = x - tooltip.offsetWidth / 2 - 10,
 			this.chartTooltipY = top - 40
 
-			const value = Math.round((this.chart.chartRect.y1 - top) * (this.chartScale / (this.chart.chartRect.y1 - this.chart.chartRect.y2)))
+			const value = Math.round(this.chart.bounds.low + (this.chart.chartRect.y1 - top) * (this.chartScale / (this.chart.chartRect.y1 - this.chart.chartRect.y2)))
 			this.chartTooltipValue = this.statistics.entities[this.chartTooltipLeek].leek.name + '<br>' + value + (this.log ? '%' : '') + ' PV'
 		}
 
@@ -770,6 +783,12 @@
 			} else {
 				this.map_teams = {[this.statistics.entities[fid].team]: this.statistics.entities[fid].walkedCells}
 			}
+		}
+
+		goToTurn(turn: number) {
+			const element = document.getElementById('turn-' + turn)!
+			const sibling = element.parentElement!.nextElementSibling!
+			window.scrollTo(0, sibling.getBoundingClientRect().top + window.scrollY - 48)
 		}
 
 		// walkedCells(fid: number) {
@@ -1077,6 +1096,11 @@
 			padding: 0 15px;
 		}
 	}
+	.panel.warnings-error {
+		.logs {
+			padding: 0 15px;
+		}
+	}
 	.actions-options {
 		display: flex;
 		background: #f2f2f2;
@@ -1100,6 +1124,33 @@
 			margin-bottom: 6px;
 			&:not(.all):not(.t4) {
 				color: white;
+			}
+		}
+	}
+	.turn {
+		position: sticky;
+		top: 0;
+		background: #f2f2f2;
+		padding: 7px 0;
+		margin: 0;
+		.turn {
+			font-size: 16px;
+			background: #333;
+			color: #eee;
+			font-weight: 500;
+			display: inline-flex;
+			padding: 3px 10px;
+			padding-right: 3px;
+			border-radius: 4px;
+			align-items: center;
+			.label {
+				padding-right: 5px;
+				cursor: pointer;
+			}
+			.v-icon.disabled {
+				opacity: 0.3;
+				pointer-events: none;
+				cursor: initial;
 			}
 		}
 	}

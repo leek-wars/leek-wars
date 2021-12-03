@@ -238,7 +238,7 @@
 	const GardenNoFights = () => import(/* webpackChunkName: "[request]" */ `@/component/garden/garden-no-fights.${locale}.i18n`)
 
 	@Component({
-		name: 'garden', i18n: {}, mixins,
+		name: 'garden', i18n: {}, mixins: [...mixins],
 		components: {
 			'garden-leek': GardenLeek,
 			'garden-farmer': GardenFarmer,

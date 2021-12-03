@@ -1,4 +1,5 @@
 import Vue, { VNode } from 'vue'
+import { Farmer } from './model/farmer';
 
 declare module 'vue/types/options' {
 	interface ComponentOptions<V extends Vue> {
@@ -45,5 +46,7 @@ declare global {
 	}
 	interface Window {
 		Module: any
+		__STARPASS_CODE__: string
+		__FARMER__: {farmer: Farmer, farmers: number}
 	}
 }

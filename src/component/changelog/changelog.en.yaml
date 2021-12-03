@@ -1,3 +1,90 @@
+227:
+  title: Resources in combat, LeekScript 3, editor improvement.
+  added:
+    - "Inventory page added. #img_227_inventory"
+    - "Added 20 resources obtainable in combat. #img_227_resources"
+    - "Encyclopedia now becomes the main help page. #img_227_encyclo"
+    - "Documentation: display list of items corresponding to LAUNCH_TYPE_* constants. #img_227_doc_launch"
+    - LeekScript 1.1 is renamed to LeekScript 2 and added LeekScript 3.
+    - "#ai LS 2+: added reflection: Object.keys, .values, Class.fields, .methods, .name, .super etc. #img_227_reflection"
+    - "#ai LS 3+: adding object literals or anonymous objects (`{a: 12, b: 'hello'}`). #img_227_obj"
+    - "#ai LS 3+: added basic classes: Number, Integer, Boolean, Array etc. and .class on values. #img_227_class"
+  improved:
+    - "#ai Maximum life of a turret: 8000 instead of 12000."
+    - "Documentation: added 'integer' and 'real' types to specify 'number' type. #img_227_types"
+    - "Documentation: displaying the types of constants. #img_227_constant"
+    - Acceleration of page loading.
+    - "Documentation: ability to unfold/fold categories to the side. #img_227_doc"
+    - "Documentation: categories with icons, hidden if no results and number of results. #img_227_doc"
+    - "Editor: loading your leek AI instead of the default first AI."
+    - "Editor: when closing the open tab, redirect to the last AI."
+    - "Editor: when completing a function, arguments are not added if already present."
+    - "Editor: default scenario + save one scenario per AI. #img_227_scenario"
+    - "Editor: method completion on this. and static methods + Doc on static methods. #img_227_complete"
+    - "Icon of Hab in high definition. #img_227_hab"
+    - "#ai LS 2+ : The order of the properties of an object is preserved in the display from its class or declaration."
+    - "#ai LS 3+ : Keywords are now case sensitive + new reserved keywords. #img_227_keywords"
+    - "#ai LS 2+: new Class without parentheses works to create an object. #img_227_new"
+    - "#ai LS 3+ : Added an error if a function/method is called with the wrong number of arguments."
+    - "#ai LS 3+: Added more errors on method calls that do not exist."
+  fixed:
+    - "Fixed some trophies: HL, Perjury, Annihilator."
+    - "Fixed small bugs in chat: smiley <3, emoji selection, large emojis."
+    - Fixed the category of some constants.
+    - "Testing: fixed test leek names."
+    - "Fix low-level Turing trophies: test bots have equipment."
+    - Converting a class to a string does give <class Class_name> instead of null.
+    - Fixed a weapon drag and drop bug on the leek page.
+    - "Not possible to change the AI of an ally in a test scenario (to avoid a bug). #img_227_ally"
+    - Fixed persistent AI bugs after deleting or moving.
+    - It is no longer possible to attract or push a turret or any static entity.
+    - "#ai LS 2+: Fixed arrayFilter and arrayPartition with objects."
+    - "#ai LS 2+ : Ability to use a method (static or not) as a value (thanks to Taga)."
+    - "#ai LS 2+: Fixed access/writing of object fields by an array access obj['p'] (thanks to Broco)."
+    - "#ai LS 2+: Ability to use arrayMap with a class to build objects (thanks to Grim)."
+    - "#ai LS 2+: Correcion of native function call in a method of the same name."
+
+226:
+  title: 4 new weapons, Chat reactions, Chat and forum moderation, Documentation improvement
+  added:
+    - "#ai Added 4 new weapons: Neutrino, Bazooka, Lightninger, Dark Katana. #img_226_weapons"
+    - "#ai New launch modes for weapons and chips: getChip/WeaponLaunchType() functions and LAUNCH_TYPE_* constants (7 in total). #img_226_launch_type"
+    - "Added reactions to cat messages. #img_226_chat_reactions"
+    - "Feature to report and moderate forum posts. #img_226_forum_report"
+    - "#ai Slight rebalancing of some items: see forum topic of the update."
+    - "Displaying final effect values increased by your leek's characteristics. #img_226_preview"
+    - "Feature to mark as read the entire forum. #img_226_forum_read"
+    - "Added filters on the history page on fight types and contexts (thanks to Efflam). #288 #img_226_history"
+  improved:
+    - "#ai AI errors cost more in operations so that fights are generated faster."
+    - "#ai Fixed a bug with initializing static fields with combat functions."
+    - Replaced getLeek* functions with getEntity* in the tutorial (thanks to Turbigo).
+    - "Functions in the documentation are now grouped with optional arguments. #img_226_doc"
+    - Rankings are the default active rankings.
+    - Limit say() 2 per round and 200 characters and show() to 5 per round.
+    - GetWeapon/ChipEffectiveArea functions return the area even if you are out of range.
+    - " Ability to open/close compositions on the team page. #img_226_team"
+    - "Deleted forum posts are displayed in topics for better understanding. #img_226_forum_deleted"
+    - Improved moderation of chat messages (permanent censoring and separate mute).
+    - Possibility to add images to messages on the forum.
+    - "#ai BR vegetable/auto context becomes FIGHT_CONTEXT_GARDEN/FIGHT_CONTEXT_TOURNAMENT."
+    - Improved synchronization of notifications/messages on multiple tabs.
+    - Fixed weapon position and shooting animations + recoil animation.
+    - "Redesigned explosion animation + sound effect. #img_226_explosion"
+  fixed:
+    - Fixed the category of some EFFECT_* constants in the documentation.
+    - Fixed link + emoji bug in the chat.
+    - Jumping into the fight also erases markText().
+    - Unlocked items are no longer visible on the /help/items page.
+    - Fixed empty message in forum reply emails.
+    - Fixed bug with the Delete key in a text field in the editor that wants to delete the AI.
+    - Fixed turret AI bug when two compositions of the same team meet in tournament.
+    - Fixed PT/PM display bug in combat.
+    - Ability to access combat options in full screen mode.
+    - "Fixed the bug of loading logs at the beginning of the fight. #435"
+    - Fixed bug with initialization of static fields (thanks to Taga).
+    - Fixed a bug in editing some forum posts.
+
 225:
   title: 160 new trophies, Trophy points and rewards, BR power system.
   added:
@@ -10,7 +97,7 @@
     - "Added a section at the top of the trophies page with a summary of trophies earned. #img_225_trophies_page"
     - "Added a statistics section to the trophies page to view his raw stats. #img_225_trophy_stats"
     - "Created a page for each trophy with lots of specific information. #img_225_trophy_page"
-    - "Displaying the trophies unlocked in the battle actions. #img_225_fight_trophy"
+    - "Displaying the trophies unlocked in the fight actions. #img_225_fight_trophy"
     - "#ai Function getPower() to get the power of an entity. #img_225_get_power"
     - "#ai Added irreducible effects (resistant to Liberation) with the MODIFIER_IRREDUCTIBLE modifier."
   improved:

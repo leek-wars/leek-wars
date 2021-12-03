@@ -1,11 +1,13 @@
 <template lang="html">
 	<div>
-		<swiper :options="swiperOption" @click-slide="handleClickSlide">
-			<swiper-slide v-for="image of images" :key="image.id" class="slide">
-				<img :src="'/image/' + image.image">
-				<div class="legend">{{ image.legend_tr }}</div>
-			</swiper-slide>
-		</swiper>
+		<div class="swiper">
+			<div class="swiper-wrapper">
+				<div v-for="(image, i) of images" :key="i" class="swiper-slide" :class="`slide--${i}`" @click="handleClickSlide(i)">
+					<img :src="'/image/' + image.image">
+					<div class="legend">{{ image.legend_tr }}</div>
+				</div>
+			</div>
+		</div>
 		<div v-if="bigImage" class="bigscreen" @click="bigImage = null">
 			<img :src="'/image/' + bigImage">
 			<div class="biglegend">{{ $t(bigImageLegend) }}</div>
@@ -14,15 +16,13 @@
 </template>
 
 <script lang="ts">
-	import { i18n, mixins } from '@/model/i18n'
+	import { mixins } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import { Component, Vue, Watch } from 'vue-property-decorator'
+	import { Swiper, Navigation, Pagination, Autoplay } from 'swiper'
+	import 'swiper/swiper-bundle.min.css'
 
-	import 'swiper/swiper-bundle.css'
-	import VueAwesomeSwiper from 'vue-awesome-swiper'
-	Vue.use(VueAwesomeSwiper)
-
-	@Component({ name: 'signup-carousel', i18n: {}, mixins })
+	@Component({ name: 'signup-carousel', i18n: {}, mixins: [...mixins] })
 	export default class SignupCarousel extends Vue {
 
 		bigImage: string | null = null
@@ -45,14 +45,19 @@
 			{id: 15, image: "app/preview7.jpg", legend: "android_app", legend_tr: ''},
 			{id: 16, image: "signup/new/mona.jpg", legend: "pixel_art", legend_tr: ''},
 		]
-		swiperOption = {
-			slidesPerView: 'auto',
-			spaceBetween: 15,
-			freeMode: true,
-			loop: true,
-			autoplay: {
-				delay: 2000
-			}
+
+		mounted() {
+			Swiper.use([Navigation, Pagination, Autoplay])
+			const swiper = new Swiper('.swiper', {
+				slidesPerView: 'auto',
+				spaceBetween: 15,
+				freeMode: true,
+				loop: true,
+				autoplay: {
+					delay: 2000,
+					disableOnInteraction: true
+				}
+			})
 		}
 
 		@Watch('$i18n.locale', {immediate: true})
@@ -64,7 +69,7 @@
 			}, 200)
 		}
 
-		handleClickSlide(_: number, i: number) {
+		handleClickSlide(i: number) {
 			if (LeekWars.mobile) { return }
 			const image = this.images[i]
 			this.bigImage = image.image.replace('_small', '')
@@ -78,7 +83,8 @@
 		padding-top: 15px;
 		padding-bottom: 10px;
 	}
-	.slide {
+	.swiper-slide {
+		width: auto;
 		img {
 			height: 400px;
 			cursor: zoom-in;
@@ -117,8 +123,5 @@
 		color: white;
 		font-size: 20px;
 		text-shadow: 0px 0px 20px black;
-	}
-	.slide {
-		width: auto;
 	}
 </style>

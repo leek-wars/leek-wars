@@ -13,6 +13,12 @@
 						<span>{{ $t('main.market') }}</span>
 					</div>
 				</router-link>
+				<router-link to="/inventory">
+					<div class="tab action" icon="mdi-treasure-chest" link="/inventory">
+						<v-icon>mdi-treasure-chest</v-icon>
+						<span>{{ $t('main.inventory') }}</span>
+					</div>
+				</router-link>
 			</div>
 		</div>
 		<panel class="first last">

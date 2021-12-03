@@ -1,26 +1,12 @@
 <template lang="html">
 	<div class="item-preview">
-
-		<div class="header">
-			<h2 class="name">{{ $t('weapon.' + weapon.name) }}</h2>
-			<div class="level">{{ $t('effect.level_n', [weapon.level]) }}</div>
-		</div>
-
-		<div class="constant">{{ "WEAPON_" + weapon.name.toUpperCase() }}</div>
-		<div class="image sound">
-			<img :src="'/image/weapon/' + weapon.name + '.png'" @click="LeekWars.playSound(weapon, 'weapon')">
-		</div>
-
-		<div v-if="$te('weapon.' + weapon.name + '_desc')" class="desc">{{ $t('weapon.' + weapon.name + "_desc") }}</div>
-
 		<div class="stats">
 			<div>
 				<range-view :min="weapon.min_range" :max="weapon.max_range" :type="weapon.launch_type" />
 				<span>
 					<span v-if="weapon.min_range == weapon.max_range">{{ $t('effect.range_fixed', [weapon.min_range]) }}</span>
-					<span v-else>{{ $t('effect.range', [weapon.min_range, weapon.max_range]) }}</span>
-					&nbsp;
-					<span v-if="weapon.launch_type == 0">{{ $t('effect.in_lign') }}</span>
+					<span v-else>{{ $t('effect.range', [weapon.min_range, weapon.max_range]) }}</span>&nbsp;
+					<span v-if="weapon.launch_type !== 7">{{ $t('effect.launch_' + weapon.launch_type) }}</span>
 					<template v-if="!weapon.los">
 						<br>
 						[<b>{{ $t('effect.through_obstacles') }}</b>]

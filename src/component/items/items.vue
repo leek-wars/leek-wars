@@ -17,7 +17,10 @@
 			<div slot="content" class="levels">
 				<span v-for="(items, l) in levels" :key="l" class="level">
 					<span class="title" :class="{bold: (l + 1) % 10 === 0}">{{ l + 1 }}</span>
-					<item v-for="item in items" :key="item.id" :item="{template: item.id}" />
+					<template v-for="item in items">
+						<div v-if="item.trophy && !(item.trophy in trophies)" :key="item.id" class="locked">?</div>
+						<item v-else :key="item.id" :item="{template: item.id}" />
+					</template>
 				</span>
 			</div>
 		</panel>
@@ -25,20 +28,27 @@
 </template>
 
 <script lang="ts">
-	import { locale } from '@/locale'
 	import { ItemTemplate, ItemType } from '@/model/item'
 	import { LeekWars } from '@/model/leekwars'
+	import { store } from '@/model/store'
 	import { Component, Vue } from 'vue-property-decorator'
 	import Breadcrumb from '../forum/breadcrumb.vue'
 
 	@Component({ name: 'items', i18n: {}, components: { Breadcrumb } })
 	export default class Items extends Vue {
 
+		trophies: any = []
+
 		created() {
 			LeekWars.setTitle("Items")
 		}
 		mounted() {
 			LeekWars.large = true
+			if (store.state.connected) {
+				LeekWars.get('trophy/my-trophies/' + this.$i18n.locale).then(data => {
+					this.trophies = data.trophies
+				})
+			}
 		}
 		beforeDestroy() {
 			LeekWars.large = false
@@ -95,5 +105,14 @@
 		display: block;
 		height: 67px;
 		margin-bottom: 2px;
+	}
+	.locked {
+		height: 67px;
+		background: #ddd;
+		border-radius: 4px;
+		line-height: 67px;
+		font-weight: bold;
+		font-size: 30px;
+		color: #888;
 	}
 </style>

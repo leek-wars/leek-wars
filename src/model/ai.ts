@@ -1,4 +1,4 @@
-import { Keyword } from '@/component/editor/keywords'
+import { Keyword, LSClass } from '@/component/editor/keywords'
 
 class AI {
 	public id!: number
@@ -14,7 +14,7 @@ class AI {
 	public includes: AI[] = []
 	public functions: Keyword[] = []
 	public globals: {[key: string]: Keyword} = {}
-	public classes: {[key: string]: Keyword} = {}
+	public classes: {[key: string]: LSClass} = {}
 	public total_lines!: number
 	public total_chars!: number
 	public included_lines!: number
@@ -26,6 +26,7 @@ class AI {
 	public equipped: boolean = false
 	public entrypoints: number[] = []
 	public comments: { [key: number]: string } = {}
+	public scenario!: number | null
 
 	constructor(data: any) {
 		Object.assign(this, data)

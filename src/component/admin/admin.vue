@@ -84,13 +84,14 @@
 			</div>
 		</panel>
 		<didactitiel v-if="didactitiel_enabled" v-model="didactitiel" />
-		<level-dialog v-if="levelPopupData" v-model="levelPopup" :leek="leek" :data="levelPopupData" />
+		<level-dialog v-if="levelPopupData" v-model="levelPopup" :leek="leek" :level-data="levelPopupData" />
 	</div>
 </template>
 
 <script lang="ts">
 	import { locale } from '@/locale'
-	import { Conversation } from '@/model/conversation'
+	import { ChatMessage } from '@/model/chat'
+	import { Farmer } from '@/model/farmer'
 	import { LeekWars } from '@/model/leekwars'
 	import { Notification } from '@/model/notification'
 	import { Component, Vue } from 'vue-property-decorator'
@@ -134,8 +135,21 @@
 		}
 
 		squareMP() {
-			const conversation = { id: 1212, farmers: [{}, {}], last_farmer_id: 48, last_farmer_name: "Skouarniek", last_message: "Salut ça va ?" } as Conversation
-			LeekWars.squares.addFromConversation(conversation, 123456789)
+			const message = {
+				chat: 1,
+				id: 1212, farmer: { name: "Skouarniek", id: 48 } as Farmer,
+				content: "Salut ça va ?",
+				contents: [],
+				date: Date.now() / 1000,
+				censored: 0,
+				censored_by: null,
+				day: 0,
+				subMessages: [],
+				read: false,
+				reactions: {},
+				my_reaction: null
+			} as ChatMessage
+			LeekWars.squares.addFromMessage(message)
 		}
 
 		show_didactitiel() {
