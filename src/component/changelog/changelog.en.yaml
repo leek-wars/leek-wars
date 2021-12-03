@@ -1,3 +1,49 @@
+227:
+  title: Resources in combat, LeekScript 3, editor improvement.
+  added:
+    - "Inventory page added. #img_227_inventory"
+    - "Added 20 resources obtainable in combat. #img_227_resources"
+    - "Encyclopedia now becomes the main help page. #img_227_encyclo"
+    - "Documentation: display list of items corresponding to LAUNCH_TYPE_* constants. #img_227_doc_launch"
+    - LeekScript 1.1 is renamed to LeekScript 2 and added LeekScript 3.
+    - "#ai LS 2+: added reflection: Object.keys, .values, Class.fields, .methods, .name, .super etc. #img_227_reflection"
+    - "#ai LS 3+: adding object literals or anonymous objects (`{a: 12, b: 'hello'}`). #img_227_obj"
+    - "#ai LS 3+: added basic classes: Number, Integer, Boolean, Array etc. and .class on values. #img_227_class"
+  improved:
+    - "#ai Maximum life of a turret: 8000 instead of 12000."
+    - "Documentation: added 'integer' and 'real' types to specify 'number' type. #img_227_types"
+    - "Documentation: displaying the types of constants. #img_227_constant"
+    - Acceleration of page loading.
+    - "Documentation: ability to unfold/fold categories to the side. #img_227_doc"
+    - "Documentation: categories with icons, hidden if no results and number of results. #img_227_doc"
+    - "Editor: loading your leek AI instead of the default first AI."
+    - "Editor: when closing the open tab, redirect to the last AI."
+    - "Editor: when completing a function, arguments are not added if already present."
+    - "Editor: default scenario + save one scenario per AI. #img_227_scenario"
+    - "Editor: method completion on this. and static methods + Doc on static methods. #img_227_complete"
+    - "Icon of Hab in high definition. #img_227_hab"
+    - "#ai LS 2+ : The order of the properties of an object is preserved in the display from its class or declaration."
+    - "#ai LS 3+ : Keywords are now case sensitive + new reserved keywords. #img_227_keywords"
+    - "#ai LS 2+: new Class without parentheses works to create an object. #img_227_new"
+    - "#ai LS 3+ : Added an error if a function/method is called with the wrong number of arguments."
+    - "#ai LS 3+: Added more errors on method calls that do not exist."
+  fixed:
+    - "Fixed some trophies: HL, Perjury, Annihilator."
+    - "Fixed small bugs in chat: smiley <3, emoji selection, large emojis."
+    - Fixed the category of some constants.
+    - "Testing: fixed test leek names."
+    - "Fix low-level Turing trophies: test bots have equipment."
+    - Converting a class to a string does give <class Class_name> instead of null.
+    - Fixed a weapon drag and drop bug on the leek page.
+    - "Not possible to change the AI of an ally in a test scenario (to avoid a bug). #img_227_ally"
+    - Fixed persistent AI bugs after deleting or moving.
+    - It is no longer possible to attract or push a turret or any static entity.
+    - "#ai LS 2+: Fixed arrayFilter and arrayPartition with objects."
+    - "#ai LS 2+ : Ability to use a method (static or not) as a value (thanks to Taga)."
+    - "#ai LS 2+: Fixed access/writing of object fields by an array access obj['p'] (thanks to Broco)."
+    - "#ai LS 2+: Ability to use arrayMap with a class to build objects (thanks to Grim)."
+    - "#ai LS 2+: Correcion of native function call in a method of the same name."
+
 226:
   title: 4 new weapons, Chat reactions, Chat and forum moderation, Documentation improvement
   added:
