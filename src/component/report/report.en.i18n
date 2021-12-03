@@ -36,5 +36,6 @@
 	"team2": "Team 2",
 	"title": "Fight report",
 	"trophies": "Trophies",
-	"winners": "Winners"
+	"winners": "Winners",
+	"errors": "Errors"
 }
