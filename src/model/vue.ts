@@ -25,7 +25,6 @@ import RankingBadge from '@/component/ranking-badge.vue'
 import RichTooltipComposition from '@/component/rich-tooltip/rich-tooltip-composition.vue'
 import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 import RichTooltipLeek from '@/component/rich-tooltip/rich-tooltip-leek.vue'
-import RichTooltipResource from '@/component/rich-tooltip/rich-tooltip-resource.vue'
 import RichTooltipTeam from '@/component/rich-tooltip/rich-tooltip-team.vue'
 import RichTooltipTrophy from '@/component/rich-tooltip/rich-tooltip-trophy.vue'
 import RichTooltipItem from '@/component/rich-tooltip/rich-tooltip-item.vue'
@@ -95,7 +94,6 @@ Vue.component('popup', Popup)
 Vue.component('rich-tooltip-farmer', RichTooltipFarmer)
 Vue.component('rich-tooltip-leek', RichTooltipLeek)
 Vue.component('rich-tooltip-composition', RichTooltipComposition)
-Vue.component('rich-tooltip-resource', RichTooltipResource)
 Vue.component('rich-tooltip-trophy', RichTooltipTrophy)
 Vue.component('rich-tooltip-team', RichTooltipTeam)
 Vue.component('rich-tooltip-item', RichTooltipItem)
