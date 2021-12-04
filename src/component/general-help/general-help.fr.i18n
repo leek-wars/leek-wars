@@ -94,7 +94,7 @@
 	"market_2": "La fiche d'une puce par exemple se présente sous cette forme :",
 	"teams": "Les équipes",
 	"teams_1": "Vous pouvez rejoindre à tout moment une équipe avec d’autres éleveurs, pour\npouvoir combattre en équipe contre d’autres équipes. Pour se faire, il suffit\nde se rendre sur la page de l'équipe que vous souhaitez rejoindre et de cliquer sur le bouton \"Rejoindre cette équipe\" situé en haut à droite.\nAttention, il n'est pas possible de rejoindre une équipe ayant désactivé le\nrecrutement ouvert à tous. Pour quitter votre équipe actuelle, le bouton\n\"Quitter cette équipe\" est situé en bas à droite de la fiche de votre équipe.",
- 	"teams_2": "Au sein d'une même équipe, les poireaux sont répartis en différentes\ncompositions. Chaque composition peut accueillir au minimum <b>2</b> poireaux et au maximum <b>6</b> poireaux.(Minimum <br>4</br> poireaux pour l'inscription en tournoi.)\nDe plus, une équipe peut accueillir au maximum <b>40</b> éleveurs.", 
+	"teams_2": "Au sein d'une même équipe, les poireaux sont répartis en différentes\ncompositions. Chaque composition peut accueillir au minimum <b>2</b> poireaux et au maximum <b>6</b> poireaux (minimum <b>4</b> poireaux pour l'inscription en tournoi). De plus, une équipe peut accueillir au maximum <b>40</b> éleveurs.",
 	"teams_3": "Capitaines",
 	"teams_4": "Des capitaines peuvent être nommés dans chaque équipe et ont accès à la\ngestion des compositions de l'équipe. Ils sont distingués par une petite\nétoile claire devant leurs pseudonymes sur la page de l'équipe. Le créateur\nde l'équipe a quant à lui une étoile foncée devant son pseudonyme.",
 	"teams_5": "Emblème et slogan",
