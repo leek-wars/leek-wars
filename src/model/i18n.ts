@@ -52,7 +52,7 @@ function loadLanguageAsync(vue: any, newLocale: string) {
 		return import(/* webpackChunkName: "locale-[request]" */ `@/lang/locale/${newLocale}`).then(module => {
 			i18n.mergeLocaleMessage(newLocale, module.translations)
 			loadedLanguages.push(newLocale)
-			vue.onLanguageLoaded()
+			// vue.onLanguageLoaded()
 			return setI18nLanguage(newLocale)
 		})
 	}
