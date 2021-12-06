@@ -257,6 +257,20 @@
 			this.resize()
 			this.$root.$on('resize', this.resize)
 		}
+		created() {
+			this.actions = [
+				{icon: 'mdi-bank', click: () => this.$router.push('/bank')},
+				{image: 'icon/market.png', click: () => this.$router.push('/market')},
+			]
+			LeekWars.setActions(this.actions)
+			LeekWars.setTitle(this.$i18n.t('main.inventory'))
+			this.updateSubtitle()
+		}
+		updateSubtitle() {
+			if (this.$store.state.farmer) {
+				LeekWars.setSubTitle(this.$t('main.x_habs', [LeekWars.formatNumber(this.$store.state.farmer.habs)]) + " • " + this.$t('main.x_crystals', [LeekWars.formatNumber(this.$store.state.farmer.crystals)]))
+			}
+		}
 		beforeDestroy() {
 			this.$root.$off('resize', this.resize)
 		}
