@@ -8,9 +8,7 @@
 	import markdown from 'markdown-it'
 	import sanitizeHtml from 'sanitize-html'
 	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
-	import ChipPreview from '../market/chip-preview.vue'
-	import PotionPreview from '../market/potion-preview.vue'
-	import WeaponPreview from '../market/weapon-preview.vue'
+	import ItemPreview from '../market/item-preview.vue'
 
 	@Component({ name: 'markdown' })
 	export default class Markdown extends Vue {
@@ -103,21 +101,21 @@
 				md.querySelectorAll('.encyclopedia-weapon').forEach((item) => {
 					const weapon = LeekWars.weaponByName[item.getAttribute('weapon')!]
 					if (weapon) {
-						new WeaponPreview({ propsData: { weapon }, parent: vueMain }).$mount(item)
+						new ItemPreview({ propsData: { item: LeekWars.items[weapon.item] }, parent: vueMain }).$mount(item)
 					}
 				})
 				// Puces
 				md.querySelectorAll('.encyclopedia-chip').forEach((item) => {
 					const chip = LeekWars.chipByName[item.getAttribute('chip')!]
 					if (chip) {
-						new ChipPreview({ propsData: { chip }, parent: vueMain }).$mount(item)
+						new ItemPreview({ propsData: { item: LeekWars.items[chip.id] }, parent: vueMain }).$mount(item)
 					}
 				})
 				// Potions
 				md.querySelectorAll('.encyclopedia-potion').forEach((item) => {
 					const potion = LeekWars.potionByName[item.getAttribute('potion')!]
 					if (potion) {
-						new PotionPreview({ propsData: { potion }, parent: vueMain }).$mount(item)
+						new ItemPreview({ propsData: { item: LeekWars.items[potion.id] }, parent: vueMain }).$mount(item)
 					}
 				})
 				// Locked pages
