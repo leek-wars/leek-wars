@@ -51,12 +51,19 @@
 		packs: any = null
 		created() {
 			LeekWars.setActions([
-				{image: 'icon/market.png', click: () => this.$router.push('/market')}
+				{image: 'icon/market.png', click: () => this.$router.push('/market')},
+				{icon: 'mdi-treasure-chest', click: () => this.$router.push('/inventory')},
 			])
 			LeekWars.get('bank/get-packs').then(data => {
 				this.packs = data.packs
 				LeekWars.setTitle(this.$i18n.t('title'))
 			})
+			this.updateSubtitle()
+		}
+		updateSubtitle() {
+			if (this.$store.state.farmer) {
+				LeekWars.setSubTitle(this.$t('main.x_habs', [LeekWars.formatNumber(this.$store.state.farmer.habs)]) + " • " + this.$t('main.x_crystals', [LeekWars.formatNumber(this.$store.state.farmer.crystals)]))
+			}
 		}
 	}
 </script>

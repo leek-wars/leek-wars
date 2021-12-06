@@ -309,7 +309,10 @@
 		}
 
 		created() {
-			this.actions = [{icon: 'mdi-bank', click: () => this.$router.push('/bank')}]
+			this.actions = [
+				{icon: 'mdi-bank', click: () => this.$router.push('/bank')},
+				{icon: 'mdi-treasure-chest', click: () => this.$router.push('/inventory')},
+			]
 			LeekWars.get('market/get-item-templates').then(res => {
 				const items = res.items as ItemTemplate[]
 				for (const i in items) {
