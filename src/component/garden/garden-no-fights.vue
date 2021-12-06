@@ -9,7 +9,7 @@
 		<i18n v-if="canbuy" class="buy" tag="div" path="buy_fights">
 			<span slot="hab" class="hab"></span>
 			<span slot="crystal" class="crystal"></span>
-			<router-link slot="market" to="/market/100-fights">{{ $t('main.market') }}</router-link>
+			<router-link slot="market" to="/market/fight_pack_100">{{ $t('main.market') }}</router-link>
 		</i18n>
 	</div>
 </template>
