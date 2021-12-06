@@ -24,7 +24,7 @@
 		<div class="container">
 			<panel :icon="LeekWars.mobile ? '' : 'mdi-treasure-chest'" class="inventory-panel">
 				<template slot="title">
-					<div v-if="!LeekWars.mobile">{{ $t('main.inventory') }} ({{ filtered_inventory.length }}<span v-if="filter !== Filter.ALL"> / {{ inventory.length }}</span>)</div>
+					<div><span v-if="!LeekWars.mobile">{{ $t('main.inventory') }}</span> ({{ filtered_inventory.length }}<span v-if="filter !== Filter.ALL"> / {{ inventory.length }}</span>)</div>
 					<div class="categories">
 						<!-- <tooltip top content-class="top">
 							<template v-slot:activator="{ on }">
@@ -187,6 +187,7 @@
 		placeholder_count: number = 0
 		sort: Sort = parseInt(localStorage.getItem('inventory/sort') || '0', 10) as Sort
 		filter: Filter = parseInt(localStorage.getItem('inventory/filter') || '0', 10) as Filter
+		actions: any
 
 		get inventory() {
 			const inventory = []
@@ -241,12 +242,14 @@
 
 		@Watch('filtered_inventory')
 		resize() {
+			const W = LeekWars.mobile ? 60 : 73
+			const H = LeekWars.mobile ? 78 : 63
 			const inventory = this.$refs.inventory as HTMLElement
 			const margin = 5
-			const columns = Math.floor((inventory.clientWidth - margin) / (73 + margin))
+			const columns = Math.floor((inventory.clientWidth - margin) / (W + margin))
 			const last_columns = this.filtered_inventory.length % columns
 			const column = last_columns === 0 ? 0 : columns - last_columns
-			const rows = Math.floor((inventory.clientHeight - margin) / (78 + margin))
+			const rows = Math.floor((inventory.clientHeight - margin) / (H + margin))
 			this.placeholder_count = Math.max(column, columns * rows - this.filtered_inventory.length)
 		}
 
@@ -313,6 +316,12 @@
 	margin: 5px;
 	.item {
 		height: 76px;
+	}
+}
+#app.app .inventory {
+	grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+	.item {
+		height: 61px;
 	}
 }
 .categories {
