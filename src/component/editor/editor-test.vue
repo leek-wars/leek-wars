@@ -504,7 +504,7 @@
 				templates.push({
 					id: 0, base: false, default: false, ai: null,
 					name: "Solo " + leek.name, category: "solo", map: null, type: 0,
-					team1: [{id: leek.id, ai}], team2: [{id: -1, ai: -2}], seed: 0
+					team1: [{id: leek.id, ai}], team2: [{id: -1, ai: -2}], seed: null
 				})
 			}
 			const generate_bots = (count: number) => {
@@ -522,18 +522,18 @@
 			}
 			if (LeekWars.objectSize(store.state.farmer.leeks) > 1) {
 				templates.push({
-					id: 0, base: false, seed: 0, default: false, ai: null,
+					id: 0, base: false, seed: null, default: false, ai: null,
 					name: "Éleveur", category: "farmer", map: null, team1, team2, type: 1
 				})
 			}
 			templates.push({
-				id: 0, base: false, seed: 0, default: false, ai: null,
+				id: 0, base: false, seed: null, default: false, ai: null,
 				name: "Battle Royale", category: "br", map: null, team1, team2: [], type: 3
 			})
 			for (const c in this.compositionTemplates) {
 				const compo = this.compositionTemplates[c]
 				templates.push({
-					id: 0, base: false, seed: 0, default: false, ai: null,
+					id: 0, base: false, seed: null, default: false, ai: null,
 					name: compo.name, category: "team", map: null, team1: compo.leeks, team2: generate_bots(compo.leeks.length), type: 2
 				})
 			}
@@ -647,7 +647,7 @@
 					this.scenarios[0] = {
 						id: 0, base: false, default: true, ai: this.currentAI,
 						name: this.currentAI.name, category: "free", map: null, type: 0,
-						team1: [{id: LeekWars.first(store.state.farmer!.leeks)!.id, ai: this.currentAI.id}], team2: [{id: -1, ai: -2}], seed: 0
+						team1: [{id: LeekWars.first(store.state.farmer!.leeks)!.id, ai: this.currentAI.id}], team2: [{id: -1, ai: -2}], seed: null
 					} as TestScenario
 					this.selectScenario(this.scenarios[0])
 				}
