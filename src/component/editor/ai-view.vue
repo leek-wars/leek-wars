@@ -1251,6 +1251,7 @@
 				}
 			})
 		}
+
 		public pick() {
 			const completion = this.completions[this.selectedCompletion]
 			const cursor = this.document.getCursor()
@@ -1258,7 +1259,7 @@
 			const range = this.document.getRange(cursor, {line: cursor.line, ch: cursor.ch + 1})
 			const addParameters = range !== '(' && !/\w/i.test(range)
 
-			if (completion.type === 'user-method' || completion.type === 'user-static-method') {
+			if (completion.type === 'user-method' || completion.type === 'user-static-method' || completion.type === 'user-function') {
 
 				const pos = this.document.getCursor()
 				const name = completion.fullName
@@ -1272,7 +1273,7 @@
 					)
 				}
 
-			} else if (completion.type === 'function' || completion.type === 'user-function') {
+			} else if (completion.type === 'function') {
 				let name = completion.name
 				if (addParameters) {
 					name += "("
@@ -1324,6 +1325,7 @@
 			}
 			this.close()
 		}
+
 		public close() {
 			this.hintDialog = false
 			this.editor.removeKeyMap(this.dialogKeyMap)
