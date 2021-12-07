@@ -99,7 +99,7 @@ class FightEntity extends Entity {
 	// Movement
 	public path: Cell[] = []
 	// Dead
-	public deadAnim = 1
+	public deadAnim = 0
 	// Animation
 	public oscillation = 1
 	public frame: number
@@ -507,13 +507,13 @@ class FightEntity extends Entity {
 		// Update si dead
 		if (this.dead) {
 
-			if (this.deadAnim >= 0) {
+			if (this.deadAnim < 1) {
 
-				this.deadAnim -= 0.04 * dt
+				this.deadAnim += 0.05 * dt
 
-				if (this.deadAnim <= 0) {
+				if (this.deadAnim >= 1) {
 					if (this.drawID) {
-						this.game.removeDrawableElement(this.drawID, this.dy)
+						this.game.removeDrawableElement(this.drawID, this.y)
 						this.drawID = null
 					}
 					this.game.actionDone()
@@ -660,16 +660,13 @@ class FightEntity extends Entity {
 		this.gazing--
 	}
 
-	public kill(animation: boolean) {
+	public kill(animation: boolean, dx: number, dy: number) {
 		this.dead = true
+		this.flash = 0
 		if (animation) {
-			this.deadAnim = 1
+			this.deadAnim = 0
 		}
 		this.bubble = null
-		if (this.drawID) {
-			this.game.removeDrawableElement(this.drawID, this.y)
-			this.drawID = null
-		}
 	}
 
 	public reborn() {
@@ -686,16 +683,17 @@ class FightEntity extends Entity {
 
 	public draw(ctx: CanvasRenderingContext2D) {
 
-		if (this.dead) { return  }
-
 		ctx.save()
 		ctx.scale(this.game.ground.scale, this.game.ground.scale)
 		ctx.translate(this.ox, this.oy)
+		// if (this.dead) {
+		// 	ctx.translate(0, this.deadAnim * 50)
+		// }
 
 		// Team square
 		ctx.save()
 
-		ctx.globalAlpha = this.deadAnim
+		ctx.globalAlpha = 1
 		ctx.beginPath()
 		ctx.moveTo(0, -this.game.ground.realTileSizeY / 2)
 		ctx.lineTo(this.game.ground.realTileSizeX / 2, 0)
@@ -705,11 +703,11 @@ class FightEntity extends Entity {
 
 		if (this.id === this.game.currentPlayer) {
 			ctx.fillStyle = TEAM_COLORS[this.team - 1]
-			ctx.globalAlpha = this.deadAnim * 0.5
+			ctx.globalAlpha = 0.5
 			ctx.fill()
 		}
 
-		ctx.globalAlpha = 0.8 * this.deadAnim
+		ctx.globalAlpha = 0.8 * (1 - this.deadAnim)
 		ctx.strokeStyle = TEAM_COLORS[this.team - 1]
 		ctx.lineCap = 'round'
 		ctx.lineJoin = 'round'
@@ -724,7 +722,7 @@ class FightEntity extends Entity {
 	}
 
 	public endDraw(ctx: CanvasRenderingContext2D) {
-		if (this.dead) { return  }
+		// if (this.dead) { return  }
 		ctx.restore()
 	}
 
@@ -818,12 +816,14 @@ class FightEntity extends Entity {
 		ctx.fillText(text, 0, 12)
 
 		// Barre de vie
-		const life = this.life / this.maxLife
-		const barWidth = life * width
-		ctx.fillStyle = this.lifeColor
-		ctx.strokeStyle = this.lifeColorLighter
-		ctx.fillRect(-width / 2 + 1, height, barWidth - 2, barHeight - 2)
-		ctx.strokeRect(-width / 2 + 1, height, barWidth - 2, barHeight - 2)
+			if (this.life > 0) {
+			const life = this.life / this.maxLife
+			const barWidth = life * width
+			ctx.fillStyle = this.lifeColor
+			ctx.strokeStyle = this.lifeColorLighter
+			ctx.fillRect(-width / 2 + 1, height, barWidth - 2, barHeight - 2)
+			ctx.strokeRect(-width / 2 + 1, height, barWidth - 2, barHeight - 2)
+		}
 
 		// Effects
 		const text_size = 9
@@ -938,7 +938,9 @@ class FightEntity extends Entity {
 		by = this.oy + dy * (40 + Math.random() * 60)
 		this.game.particles.addBlood(x, y, z, dx, dy, dz, this.bloodTex)
 		this.game.particles.addBloodOnGround(bx, by, this.bloodTex)
-		this.flash = 5
+		if (!this.dead) {
+			this.flash = 5
+		}
 	}
 	public randomHurt() {
 		const z = 20 + Math.random() * 40
