@@ -23,6 +23,7 @@
 	"ai_name_expected": "An AI name is expected here",
 	"ai_not_existing": "AI {0} doesn't exist",
 	"ai_renamed": "AI renamed to {0}",
+	"error_16": "AI {0} doesn't exist",
 	"error_31": "This array is an associative one, it's impossible to add a value without a key",
 	"error_12": "Keyword break can only be used inside a loop",
 	"error_36": "It's not possible to add an instruction if there is already a break, return or continue in the current block.",
