@@ -182,7 +182,22 @@ class FileSystem {
 	public deleteFolder(folder: Folder) {
 		const parent = this.folderById[folder.parent]
 		parent.items.splice(parent.items.indexOf(folder), 1)
+		this.moveToTrash(folder)
 		LeekWars.delete('ai-folder/delete', {folder_id: folder.id}).error(error => LeekWars.toast(error))
+	}
+
+	public moveToTrash(folder: Folder) {
+		for (const item of folder.items) {
+			if (item.folder) {
+				this.moveToTrash(item as Folder)
+			} else {
+				const ai = (item as AIItem).ai
+				Vue.delete(this.aiByFullPath, ai.path)
+				store.commit('delete-ai', ai.id)
+				ai.folder = -1
+				this.bin.items.push(item)
+			}
+		}
 	}
 
 	public renameAI(ai: AI, name: string) {
