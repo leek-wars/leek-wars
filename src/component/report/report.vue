@@ -166,10 +166,10 @@
 			<template v-else>
 				<div class="damage-options">
 					<v-radio-group v-model="damageChartType" :row="true" :dense="true" :hide-details="true">
-						<v-radio :label="$t('inflicted_damage')" />
-						<v-radio :label="$t('received_damage')" />
-						<v-radio :label="$t('heal')" />
-						<v-radio label="Tank" />
+						<v-radio :value="0" :label="$t('inflicted_damage')" />
+						<v-radio :value="1" :label="$t('received_damage')" />
+						<v-radio :value="2" :label="$t('heal')" />
+						<v-radio :value="3" label="Tank" />
 					</v-radio-group>
 					<div class="spacer"></div>
 					<v-radio-group v-if="fight.type !== FightType.BATTLE_ROYALE && fight.type !== FightType.SOLO" v-model="damagesTeams" :row="true" :dense="true" :hide-details="true">

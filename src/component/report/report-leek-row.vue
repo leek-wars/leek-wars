@@ -107,12 +107,12 @@
 	}
 	.bar {
 		flex: 1;
+		display: flex;
 		height: 14px;
 		background: #ddd;
 	}
 	.bar span {
 		height: 14px;
-		display: inline-block;
 		vertical-align: top;
 	}
 	.gain {
