@@ -132,7 +132,10 @@ class Bulb extends FightEntity {
 		}
 		ctx.scale(this.direction * Bulb.SCALE * this.growth, this.oscillation * Bulb.SCALE * this.growth)
 		// Body
-		ctx.drawImage(texture, -this.bodyTexFront.texture.width / 2, -this.bodyTexFront.texture.height, this.bodyTexFront.texture.width, this.bodyTexFront.texture.height)
+		const height = this.bodyTexFront.texture.height
+		const y = height * (this.deadAnim - 1)
+		ctx.drawImage(texture, 0, 0, texture.width, texture.height * (1 - this.deadAnim), -texture.width / 2, y, texture.width, -y)
+
 		ctx.restore()
 	}
 }

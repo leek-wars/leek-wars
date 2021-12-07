@@ -24,9 +24,10 @@ const LASER_LIFE = 25
 const BLOOD_LIFE = 12
 const LIGHTNING_LIFE = 10
 const GRENADE_LIFE = 10000
-const GARBAGE_LIFE = 50
 
 abstract class Particle {
+	public static GARBAGE_LIFE = 50
+
 	public game: Game
 	public x: any
 	public y: any
@@ -98,16 +99,20 @@ abstract class CollideParticle extends Particle {
 
 abstract class FallingParticle extends Particle {
 	public update(dt: number): boolean {
-		this.dz -= 0.3 * dt
-		if (this.z <= 0) {
-			this.z -= this.dz
-			this.dz = -this.dz * 0.4
-			if (this.dz < 1) {
-				this.onDie()
-				return true
+		if (this.dz !== 0) {
+			this.dz -= 0.3 * dt
+			if (this.z <= 0) {
+				this.z -= this.dz
+				this.dz = -this.dz * 0.4
+				if (this.dz < 1) {
+					this.dz = 0
+					this.dy = 0
+					this.dx = 0
+					this.rotation = 0
+				}
+				this.dx *= 0.5
+				this.dy *= 0.5
 			}
-			this.dx *= 0.5
-			this.dy *= 0.5
 		}
 		return super.update(dt)
 	}
@@ -499,19 +504,21 @@ class Cartridge extends FallingParticle {
 		ctx.drawImage(this.texture, -this.texture.width / 2 , -this.texture.height / 2)
 	}
 }
+
 class Garbage extends FallingParticle {
 	public orientation: number
 	public scale: number
 	public texture: HTMLImageElement
-	constructor(game: Game, x: number, y: number, z: number, dx: number, dy: number, dz: number, texture: Texture, orientation: number, rotation: number, scale: number | undefined) {
-		super(game, x, y, z, GARBAGE_LIFE)
+	constructor(game: Game, x: number, y: number, z: number, dx: number, dy: number, dz: number, texture: Texture, orientation: number, rotation: number, scale: number, angle: number, life: number) {
+		super(game, x, y, z, life)
 		this.texture = texture.texture
 		this.orientation = orientation
 		this.dx = dx
 		this.dy = dy
 		this.dz = dz
-		this.scale = scale || 1
+		this.scale = scale
 		this.rotation = rotation
+		this.angle = angle
 	}
 	public update(dt: number): boolean {
 		// Stalactite ou iceberg
@@ -530,10 +537,12 @@ class Garbage extends FallingParticle {
 	public draw(ctx: CanvasRenderingContext2D) {
 		ctx.globalAlpha = this.life / 5
 		ctx.scale(this.orientation, 1)
+		// ctx.rotate(this.angle)
 		ctx.drawImage(this.texture, 0, 0, this.texture.width, this.texture.height, -this.texture.width * this.scale / 2, -this.texture.height * this.scale / 2, this.texture.width * this.scale, this.texture.height * this.scale)
 		ctx.globalAlpha = 1
 	}
 }
+
 class ImageParticle extends Particle {
 	public totalLife: any
 	public alpha: number

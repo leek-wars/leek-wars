@@ -85,8 +85,8 @@ class Particles {
 	public addCartridge(x: number, y: number, z: number, dx: number, dy: number, dz: number, texture: Texture) {
 		this.add(new Cartridge(this.game, x, y, z, dx, dy, dz, texture))
 	}
-	public addGarbage(x: number, y: number, z: number, dx: number, dy: number, dz: number, texture: Texture, orientation: number, rotation: number, scale: number = 1) {
-		this.add(new Garbage(this.game, x, y, z, dx, dy, dz, texture, orientation, rotation, scale))
+	public addGarbage(x: number, y: number, z: number, dx: number, dy: number, dz: number, texture: Texture, orientation: number, rotation: number, scale: number = 1, angle: number = 0, life: number = Particle.GARBAGE_LIFE) {
+		this.add(new Garbage(this.game, x, y, z, dx, dy, dz, texture, orientation, rotation, scale, angle, life))
 	}
 	public addImage(x: number, y: number, z: number, dx: number, dy: number, dz: number, angle: number, texture: Texture, life: number, alpha: number = 1, rotation: number = 0, onground: boolean = false) {
 		this.add(new ImageParticle(this.game, x, y, z, dx, dy, dz, angle, texture, life, alpha, rotation), onground)

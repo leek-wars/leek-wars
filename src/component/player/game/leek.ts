@@ -111,6 +111,43 @@ class Leek extends FightEntity {
 		return this.weapon.shoot(this.ox, this.oy - this.z, this.handPos, this.angle, this.direction, position, targets, this, cell, this.scale)
 	}
 
+	public kill(animation: boolean, dx: number, dy: number) {
+		super.kill(animation, dx, dy)
+
+		if (animation) {
+			// Throw hat
+			if (this.hat) {
+				const leekWidth = this.bodyTexFront.texture.width
+				const height = this.bodyTexFront.texture.height
+				const hatX = -(leekWidth / 25)
+				const hatY = -height + height * this.hatTemplate.height - this.hatHeight / 2
+				const hatTexture = this.front ? this.hatFront : this.hatBack
+				const scale = this.scale * this.growth * leekWidth * this.hatTemplate.width / hatTexture.texture.width
+				const dx = Math.random() * 2 - 1
+				const dy = Math.random() * 2 - 1
+				const dz = Math.random() * 2 - 1
+				const rotation = Math.random() * 0.02 - 0.01
+				this.game.particles.addGarbage(this.ox + hatX * this.scale * this.growth, this.oy, -hatY * this.scale * this.growth, dx, dy, dz, hatTexture, this.direction, rotation, scale, 0, 80)
+			}
+			// Throw weapon
+			if (this.weapon) {
+				const wdx = dx * 3
+				const wdy = dy * 3
+				const dz = 2 + Math.random() * 3
+				const rotation = Math.random() * 0.04 - 0.02
+				const angle = this.direction === 1 ? this.angle : -this.angle
+				const cos = Math.cos(this.angle)
+				const sin = Math.sin(this.angle)
+				const cx = this.weapon.x + this.weapon.texture.texture.width / 2
+				const cz = this.weapon.z + this.weapon.texture.texture.height / 2
+				const x = (this.weapon.cx + cx * cos - cz * sin) * this.direction
+				const y = this.weapon.cz - cx * sin + cz * cos
+				const z = Math.max(1, this.handPos)
+				this.game.particles.addGarbage(this.ox + x * this.scale, this.oy - y * this.scale, z * this.scale, wdx, wdy, dz, this.weapon.texture, this.direction, rotation, this.scale, angle, 80)
+			}
+		}
+	}
+
 	public draw(ctx: CanvasRenderingContext2D): void {
 		super.draw(ctx)
 
@@ -162,7 +199,7 @@ class Leek extends FightEntity {
 		const texture = this.front ? this.bodyTexFront : this.bodyTexBack
 		const hatTexture = this.front ? this.hatFront : this.hatBack
 
-		if (this.weapon != null) {
+		if (this.weapon != null && !this.dead) {
 			// Weapon !
 			if (this.front) {
 				this.drawBody(ctx, texture.texture, hatTexture ? hatTexture.texture : null)
@@ -174,9 +211,13 @@ class Leek extends FightEntity {
 		} else {
 			// No weapon
 			const front = this.front ? 1 : -1
-			ctx.drawImage(this.handTex.texture, 15 * front - 7, -32 - this.handPos - 3, handSize * 0.8, handSize * 0.8) // back hand
+			if (!this.dead) {
+				ctx.drawImage(this.handTex.texture, 15 * front - 7, -32 - this.handPos - 3, handSize * 0.8, handSize * 0.8) // back hand
+			}
 			this.drawBody(ctx, texture.texture, hatTexture ? hatTexture.texture : null)
-			ctx.drawImage(this.handTex.texture, -18 * front - 7, -32 - this.handPos + 1, handSize, handSize) // front hand
+			if (!this.dead) {
+				ctx.drawImage(this.handTex.texture, -18 * front - 7, -32 - this.handPos + 1, handSize, handSize) // front hand
+			}
 		}
 	}
 
@@ -229,7 +270,9 @@ class Leek extends FightEntity {
 
 		if (this.weapon != null && (this.orientation === EntityDirection.SOUTH || this.orientation === EntityDirection.NORTH)) {
 			this.drawBody(ctx, texture.shadow!, hatTexture ? hatTexture.shadow : null)
-			this.drawWeapon(ctx, this.weapon.texture.shadow!, true)
+			if (!this.dead) {
+				this.drawWeapon(ctx, this.weapon.texture.shadow!, true)
+			}
 		} else {
 			this.drawBody(ctx, texture.shadow!, hatTexture ? hatTexture.shadow : null)
 		}
@@ -253,10 +296,11 @@ class Leek extends FightEntity {
 
 		// Body
 		const height = this.bodyTexFront.texture.height
-		ctx.drawImage(texture, -leekWidth / 2, -height, leekWidth, height)
+		const y = height * (this.deadAnim - 1) + (this.dead ? this.baseZ / this.scale : 0)
+		ctx.drawImage(texture, 0, 0, texture.width, texture.height * (1 - this.deadAnim), -leekWidth / 2, y, leekWidth, -height * (this.deadAnim - 1))
 
 		// Hat
-		if (hatTexture) {
+		if (hatTexture && !this.dead) {
 			if (this.hatX === 0) {
 				this.hatWidth = leekWidth * this.hatTemplate.width
 				this.hatHeight = this.hatWidth * (this.hatFront.texture.height / this.hatFront.texture.width)

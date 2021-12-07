@@ -1130,17 +1130,23 @@ class Game {
 			}
 			entity.effects = {}
 			entity.launched_effects = {}
-			entity.active = false
 			if (entity.cell) {
 				entity.cell.entity = null
 			}
-			// if (this.jumping) {
-				entity.kill(false)
+			if (this.jumping) {
+				entity.active = false
+				entity.kill(false, 0, 0)
 				this.actionDone()
-			// } else {
+			} else {
 				this.log(action)
-			// 	entity.kill(true) // Animation
-			// }
+				const killer = this.leeks[action.params[2]]
+				if (killer) {
+					const angle = Math.atan2((killer.y - entity.y), (entity.x - killer.x) / 2) - Math.PI / 2
+					entity.kill(true, Math.cos(angle), Math.sin(angle)) // Animation
+				} else {
+					entity.kill(true, 0, 0) // Animation
+				}
+			}
 			break
 		}
 		case ActionType.SAY: {
@@ -2329,6 +2335,7 @@ class Game {
 			leek.relativeShield = 0
 			leek.damageReturn = 0
 			leek.dead = false
+			leek.deadAnim = 0
 			leek.burning = 0
 			leek.gazing = 0
 			leek.bubble = new Bubble(this)
@@ -2341,6 +2348,7 @@ class Game {
 			leek.moveDelay = 0
 			leek.moveAnim = 0
 			leek.updateGrowth()
+			// leek.setOrientation(Math.random() * 4 | 0 as EntityDirection)
 
 			if (leek.summon) {
 				const index = this.entityOrder.indexOf(leek)
