@@ -32,20 +32,18 @@
 		<div class="container documentation last">
 			<div v-show="!LeekWars.mobile || !LeekWars.splitBack" class="column3">
 				<panel class="first">
-					<div slot="content">
-						<div class="items-list">
-							<div v-for="(category, c) of filteredCategories" :key="category.id">
-								<h2 v-ripple @click="categoryState[c] = !categoryState[c]">
-									<v-icon>{{ icons[c] }}</v-icon> {{ $t('doc.function_category_' + categories[c].name) }} <span v-if="query.length">({{ category.length }})</span>
-									<div class="spacer"></div>
-									<v-icon v-if="query.length || categoryState[c]">mdi-chevron-up</v-icon>
-									<v-icon v-else>mdi-chevron-down</v-icon>
-								</h2>
-								<div v-if="query.length || categoryState[c]">
-									<router-link v-for="(item, i) in category" v-if="item.name === item.real_name" :key="i" :to="'/help/documentation/' + item.name" :item="item.name" class="item">
-										{{ item.name }}
-									</router-link>
-								</div>
+					<div slot="content"class="items-list">
+						<div v-for="(category, c) of filteredCategories" :key="category.id">
+							<h2 v-ripple @click="categoryState[c] = !categoryState[c]">
+								<v-icon>{{ icons[c] }}</v-icon> {{ $t('doc.function_category_' + categories[c].name) }} <span v-if="query.length">({{ category.length }})</span>
+								<div class="spacer"></div>
+								<v-icon v-if="query.length || categoryState[c]">mdi-chevron-up</v-icon>
+								<v-icon v-else>mdi-chevron-down</v-icon>
+							</h2>
+							<div v-if="query.length || categoryState[c]">
+								<router-link v-for="(item, i) in category" v-if="item.name === item.real_name" :key="i" :to="'/help/documentation/' + item.name" :item="item.name" class="item">
+									{{ item.name }}
+								</router-link>
 							</div>
 						</div>
 					</div>
@@ -291,6 +289,7 @@
 		top: 12px;
 		.panel {
 			margin-bottom: 0;
+			max-height: 100%;
 		}
 	}
 	.column9 {
