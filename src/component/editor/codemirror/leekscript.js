@@ -34,8 +34,8 @@ import { LeekWars } from '@/model/leekwars'
         "package": X, "abstract": X, "arguments": X, "await": X, "byte": X,
         "char": X, "const": X, "constructor": X, "double": X, "enum": X, "eval": X, "final": X,
         "float": X, "goto": X, "implements": X, "int": X, "interface": X, "let": X,
-        "long": X, "native": X, "private": X, "protected": X, "public": X, "short": X,
-        "static": X, "synchronized": X, "throws": X, "transient": X, "void": X, "volatile": X, "yield": X
+        "long": X, "native": X, "private": X, "protected": X, "short": X,
+        "synchronized": X, "throws": X, "transient": X, "void": X, "volatile": X, "yield": X
       };
         for (const constant of LeekWars.constants) {
             k[constant.name] = {type: "variable", style: "lsconst"}
@@ -319,7 +319,7 @@ import { LeekWars } from '@/model/leekwars'
     }
 
     function isModifier(name) {
-      return name == "public" || name == "private" || name == "protected" || name == "abstract" || name == "readonly"
+      return name == "public" || name == "private" || name == "protected" || name == "abstract" || name == "readonly" || name == "static" || name == "constructor"
     }
 
     // Combinators
@@ -783,7 +783,7 @@ import { LeekWars } from '@/model/leekwars'
     function classBody(type, value) {
       if (type == "async" ||
           (type == "variable" &&
-           (value == "static" || value == "public" || value == "private" || value == "get" || value == "set" || (isTS && isModifier(value))) &&
+           (value == "static" || value == "public" || value == "constructor"  || value == "private" || value == "get" || value == "set" || (isTS && isModifier(value))) &&
            cx.stream.match(/^\s+[\w$\xa1-\uffff]/, false))) {
         cx.marked = "keyword";
         return cont(classBody);
@@ -810,7 +810,7 @@ import { LeekWars } from '@/model/leekwars'
       if (type == ":") return cont(typeexpr, maybeAssign)
       if (value == "=") return cont(expressionNoComma)
       // @@@
-      if (value == "public" || value == "private" || value == "static" || value == "}") return;
+      if (value == "public" || value == "private" || value == "static" || value == "constructor" || value == "}") return;
       var context = cx.state.lexical.prev, isInterface = context && context.info == "interface"
       return pass(isInterface ? functiondecl : functiondef)
     }
