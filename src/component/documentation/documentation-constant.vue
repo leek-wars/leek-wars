@@ -7,7 +7,7 @@
 			Cette constante est dépréciée. <span v-if="constant.replacement">Elle est remplacée par la constante #{{ LeekWars.constantById[constant.replacement].name }}.</span>
 		</div>
 		<item-preview v-if="is_chip" :item="LeekWars.items[constant.value]" />
-		<weapon-preview v-else-if="is_weapon" :weapon="LeekWars.weapons[LeekWars.items[constant.value].params]" />
+		<item-preview v-else-if="is_weapon" :item="LeekWars.items[constant.value]" />
 		<div v-else-if="$te('doc.const_' + constant.name)" v-dochash v-code class="content" v-html="$t('doc.const_' + constant.name)"></div>
 		<h4>{{ $t('doc.value') }}</h4>
 		<ul>
@@ -29,14 +29,12 @@
 </template>
 
 <script lang="ts">
-	import ChipPreview from '@/component/market/chip-preview.vue'
-	import WeaponPreview from '@/component/market/weapon-preview.vue'
 	import ItemPreview from '@/component/market/item-preview.vue'
 	import { Constant } from '@/model/constant'
 	import { LeekWars } from '@/model/leekwars'
 	import { Component, Prop, Vue } from 'vue-property-decorator'
 
-	@Component({ name: 'documentation-constant', components: { WeaponPreview, ChipPreview, ItemPreview }})
+	@Component({ name: 'documentation-constant', components: { ItemPreview }})
 	export default class DocumentationConstant extends Vue {
 		@Prop() constant!: Constant
 
@@ -130,7 +128,6 @@
 		margin: 0 2px;
 	}
 	.weapon {
-		width: 104px;
 		object-fit: contain;
 	}
 	.argument {
