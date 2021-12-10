@@ -8,21 +8,25 @@
 				<v-menu bottom offset-y :max-width="600">
 					<template v-slot:activator="{ on, attrs }">
 						<div class="tab" v-bind="attrs" v-on="on">
-							<v-icon>{{ sort_icon }}</v-icon> Trier par {{ $t('sort_' + sort_by) }}
+							<v-icon>{{ sort_icon }}</v-icon> {{ $t('sort_by', [$t('sort_' + sort_by).toLowerCase()]) }}
 						</div>
 					</template>
 					<v-list :dense="true" class="version-menu">
 						<v-list-item v-ripple @click="sort_by = 'index'">
 							<v-icon class="list-icon">mdi-sort-variant</v-icon>
-							<v-list-item-content>Défaut</v-list-item-content>
+							<v-list-item-content>{{ $t('sort_index') }}</v-list-item-content>
 						</v-list-item>
 						<v-list-item v-ripple @click="sort_by = 'rarity'">
 							<v-icon class="list-icon">mdi-star-outline</v-icon>
-							<v-list-item-content>Rareté</v-list-item-content>
+							<v-list-item-content>{{ $t('sort_rarity') }}</v-list-item-content>
 						</v-list-item>
 						<v-list-item v-ripple @click="sort_by = 'points'">
 							<v-icon class="list-icon">mdi-trophy-outline</v-icon>
-							<v-list-item-content>Points</v-list-item-content>
+							<v-list-item-content>{{ $t('sort_points') }}</v-list-item-content>
+						</v-list-item>
+						<v-list-item v-ripple @click="sort_by = 'date'">
+							<v-icon class="list-icon">mdi-calendar</v-icon>
+							<v-list-item-content>{{ $t('sort_date') }}</v-list-item-content>
 						</v-list-item>
 					</v-list>
 				</v-menu>
@@ -194,6 +198,8 @@
 					result[category].sort((a: any, b: any) => a.rarity - b.rarity)
 				} else if (this.sort_by === 'points') {
 					result[category].sort((a: any, b: any) => b.points - a.points)
+				} else if (this.sort_by === 'date') {
+					result[category].sort((a: any, b: any) => b.date - a.date)
 				}
 			}
 			return result
@@ -204,6 +210,8 @@
 				result.sort((a: any, b: any) => a.rarity - b.rarity)
 			} else if (this.sort_by === 'points') {
 				result.sort((a: any, b: any) => b.points - a.points)
+			} else if (this.sort_by === 'date') {
+				result.sort((a: any, b: any) => b.date - a.date)
 			}
 			return result
 		}
