@@ -1,6 +1,12 @@
 {
 	"hide_unlocked": "Hide unlocked",
-	"sort_by_rarity": "Sort by rarity",
+	"group_by_categories": "Categories",
+	"sort_by": "Sort by {0}",
+	"sort_rarity": "Rarity",
+	"sort_index": "Défaut",
+	"sort_date": "Date",
+	"sort_points": "Points",
+	"stats": "Statistics",
 	"title": "Trophies of {0}",
 	"title_me": "My trophies",
 	"trophies": "Trophies"
