@@ -48,8 +48,8 @@
 			<div v-if="selectedHint" class="details">
 				<documentation-function v-if="selectedHint.type === 'function'" :fun="selectedHint.function" />
 				<documentation-constant v-else-if="selectedHint.type === 'constant'" :constant="selectedHint.constant" />
-				<weapon-preview v-else-if="selectedHint.details.type === 'weapon'" :weapon="selectedHint.details.weapon" />
-				<chip-preview v-else-if="selectedHint.details.type === 'chip'" :chip="selectedHint.details.chip" />
+				<item-preview v-else-if="selectedHint.details.type === 'weapon'" :item="selectedHint.details.weapon" />
+				<item-preview v-else-if="selectedHint.details.type === 'chip'" :chip="selectedHint.details.chip" />
 				<javadoc v-else-if="selectedHint.javadoc" :javadoc="selectedHint.javadoc" class="main" />
 				<span v-else v-html="selectedHint.details"></span>
 			</div>
@@ -58,8 +58,8 @@
 			<template v-if="detailDialogContent.keyword">
 				<documentation-function v-if="detailDialogContent.keyword.type === 'function'" :fun="detailDialogContent.keyword.function" class="main" />
 				<documentation-constant v-else-if="detailDialogContent.keyword.type === 'constant'" :constant="detailDialogContent.keyword.constant" class="main" />
-				<weapon-preview v-else-if="detailDialogContent.keyword.details.type === 'weapon'" :weapon="detailDialogContent.keyword.details.weapon" class="main" />
-				<chip-preview v-else-if="detailDialogContent.keyword.details.type === 'chip'" :chip="detailDialogContent.keyword.details.chip" class="main" />
+				<item-preview v-else-if="detailDialogContent.keyword.details.type === 'weapon'" :weapon="detailDialogContent.keyword.details.weapon" class="main" />
+				<item-preview v-else-if="detailDialogContent.keyword.details.type === 'chip'" :chip="detailDialogContent.keyword.details.chip" class="main" />
 				<javadoc v-if="detailDialogContent.keyword.javadoc" :javadoc="detailDialogContent.keyword.javadoc" class="main" />
 			</template>
 			<div v-if="detailDialogContent.details.defined" class="definition">
@@ -95,18 +95,15 @@
 
 <script lang="ts">
 	import { Keyword } from '@/component/editor/keywords'
-	import ChipPreview from '@/component/market/chip-preview.vue'
-	import WeaponPreview from '@/component/market/weapon-preview.vue'
 	import { AI } from '@/model/ai'
 	import { fileSystem } from '@/model/filesystem'
 	import { i18n } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
-	import { store } from '@/model/store'
 	import CodeMirror from 'codemirror'
 	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
-	import Code from '../app/code.vue'
 	import DocumentationConstant from '../documentation/documentation-constant.vue'
 	import DocumentationFunction from '../documentation/documentation-function.vue'
+	import ItemPreview from '../market/item-preview.vue'
 	import Javadoc from './javadoc.vue'
 
 	const AUTO_SHORTCUTS = [
@@ -118,8 +115,7 @@
 	]
 
 	@Component({ name: 'ai-view', components: {
-		'weapon-preview': WeaponPreview,
-		'chip-preview': ChipPreview,
+		'item-preview': ItemPreview,
 		'documentation-function': DocumentationFunction,
 		'documentation-constant': DocumentationConstant,
 		'javadoc': Javadoc
