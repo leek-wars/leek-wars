@@ -1027,6 +1027,7 @@
 
 		launchTest() {
 			if (!this.currentScenario) { return }
+			Vue.set(this.currentAI, 'scenario', this.currentScenario.id)
 			LeekWars.post('ai/test-scenario', { scenario_id: this.currentScenario.id, ai_id: this.currentAI.id }).then(data => {
 				localStorage.setItem('editor/last-scenario', '' + this.currentScenario!.id)
 				localStorage.setItem('editor/last-scenario-ai', '' + this.currentAI.id)
