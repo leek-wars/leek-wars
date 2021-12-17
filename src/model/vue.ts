@@ -132,13 +132,9 @@ Vue.directive('code', (el) => {
 })
 Vue.directive('large-emojis', {
 	inserted: (el) => {
-		if (!el.classList.contains('large-emojis')) {
-			const text = el.textContent || ''
-			const onlyEmojis = text.length === 0 || /^([^-\p{L}\u00-\u7F]+)$/.test(text)
-			if (onlyEmojis) {
-				el.classList.add('large-emojis')
-			}
-		}
+		const text = el.textContent || ''
+		const onlyEmojis = text.length === 0 || /^([^-\p{L}\u00-\u7F]+)$/.test(text)
+		el.classList.toggle('large-emojis', onlyEmojis)
 	}
 })
 Vue.directive('latex', {
