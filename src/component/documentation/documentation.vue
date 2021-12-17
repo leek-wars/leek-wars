@@ -1,19 +1,20 @@
 <template lang="html">
 	<div class="documentation-page">
 		<div class="page-header page-bar">
-			<div>
+			<div v-if="!popup">
 				<h1>
 					<breadcrumb :items="breadcrumb_items" :raw="true" />
 				</h1>
 			</div>
+			<h1 v-else>{{ $t('title') }}</h1>
 			<div class="tabs">
-				<router-link v-if="!LeekWars.mobile" to="/help/general">
+				<router-link v-if="!LeekWars.mobile && !popup" to="/help/general">
 					<div class="tab">
 						<v-icon>mdi-help-circle-outline</v-icon>
 						{{ $t('main.general_help') }}
 					</div>
 				</router-link>
-				<router-link v-if="!LeekWars.mobile" to="/help/tutorial">
+				<router-link v-if="!LeekWars.mobile && !popup" to="/help/tutorial">
 					<div class="tab">
 						<v-icon>mdi-laptop</v-icon>
 						{{ $t('main.tutorial') }}
@@ -21,9 +22,9 @@
 				</router-link>
 				<div class="tab disabled search" icon="search" link="/search">
 					<img class="search-icon" src="/image/search.png">
-					<input v-model="query" type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+					<input v-model="query" ref="search" type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
 				</div>
-				<div class="tab action" icon="search" link="/search" @click="toggleLarge">
+				<div v-if="!popup" class="tab action" icon="search" link="/search" @click="toggleLarge">
 					<v-icon v-if="LeekWars.large">mdi-fullscreen-exit</v-icon>
 					<v-icon v-else>mdi-fullscreen</v-icon>
 				</div>
@@ -41,9 +42,9 @@
 								<v-icon v-else>mdi-chevron-down</v-icon>
 							</h2>
 							<div v-if="query.length || categoryState[c]">
-								<router-link v-for="(item, i) in category" v-if="item.name === item.real_name" :key="i" :to="'/help/documentation/' + item.name" :item="item.name" class="item">
+								<div v-for="(item, i) in category" v-if="item.name === item.real_name" :key="i" @click="navigate(item.name)" :item="item.name" class="item">
 									{{ item.name }}
-								</router-link>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -65,7 +66,7 @@
 	import { locale } from '@/locale'
 	import { mixins } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
-	import { Component, Vue, Watch } from 'vue-property-decorator'
+	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 	import Breadcrumb from '../forum/breadcrumb.vue'
 	import DocumentationConstant from './documentation-constant.vue'
 	import DocumentationFunction from './documentation-function.vue'
@@ -78,6 +79,7 @@
 		mixins: [...mixins]
 	})
 	export default class Documentation extends Vue {
+		@Prop({ required: true }) popup!: boolean
 		categories: any[] = []
 		items: any[] = []
 		query: string = ''
@@ -193,20 +195,28 @@
 				this.update()
 			})
 			this.$root.$on('back', this.back)
+			this.$root.$on('doc-navigate', this.navigate)
 		}
 		mounted() {
-			LeekWars.large = localStorage.getItem('documentation/large') === 'true'
-			LeekWars.footer = false
-			LeekWars.box = true
+			if (!this.popup) {
+				LeekWars.large = localStorage.getItem('documentation/large') === 'true'
+				LeekWars.footer = false
+				LeekWars.box = true
+			}
+			(this.$refs.search as HTMLElement).focus()
+		}
+		focus() {
+			(this.$refs.search as HTMLElement).focus()
 		}
 		back() {
 			this.$router.push('/help/documentation')
 		}
-		destroyed() {
+		beforeDestroy() {
 			LeekWars.large = false
 			LeekWars.footer = true
 			LeekWars.box = false
 			this.$root.$off('back', this.back)
+			this.$root.$off('doc-navigate', this.navigate)
 		}
 
 		@Watch('$route.params')
@@ -218,6 +228,15 @@
 			} else {
 				LeekWars.splitShowList()
 				LeekWars.setTitle(this.$i18n.t('title'))
+			}
+		}
+
+		navigate(item: string) {
+			// console.log("navigate", item, this.popup)
+			if (this.popup) {
+				this.selectItem(item)
+			} else {
+				this.$router.push('/help/documentation/' + item)
 			}
 		}
 
@@ -235,7 +254,7 @@
 					const element: any = document.querySelector('.items .item[item=' + item + ']')
 					const elements = this.$refs.elements as HTMLElement
 					if (element) {
-						const offset = LeekWars.mobile ? 100 : 140
+						const offset = LeekWars.mobile ? 100 : (this.popup ? 185 : 140)
 						elements.scrollTo(0, element.offsetTop - offset + 10)
 					}
 				}, 100)

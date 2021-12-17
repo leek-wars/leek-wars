@@ -50,6 +50,7 @@ Vue.component('tooltip', tooltip)
 
 import { createSimpleTransition } from 'vuetify/lib/components/transitions/createTransition'
 import '../fade-transition.sass'
+import { Route } from 'vue-router'
 const myTransition = createSimpleTransition('my-transition')
 Vue.component('my-transition', myTransition)
 
@@ -187,7 +188,7 @@ Vue.directive('dochash', (el) => {
 		a.onclick = (e: Event) => {
 			e.stopPropagation()
 			e.preventDefault()
-			router.push('/help/documentation/' + a.innerText)
+			vueMain.$emit('doc-navigate', a.innerText)
 			return false
 		}
 	})
@@ -295,6 +296,18 @@ const vueMain = new Vue({
 		}, 59 * 1000)
 	}
 }).$mount('#app')
+
+router.afterEach((to: Route) => {
+	if (to.hash) {
+		vueMain.$once('loaded', () => {
+			setTimeout(() => {
+				scroll_to_hash(to.hash, to)
+			}, 100)
+		})
+	}
+
+	vueMain.$emit('navigate')
+})
 
 if (window.__FARMER__) {
 	store.commit('connect', {...window.__FARMER__, token: '$'})

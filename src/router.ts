@@ -65,6 +65,7 @@ import { vueMain } from '@/model/vue'
 import Vue from 'vue'
 import { Component } from 'vue-property-decorator'
 import Router, { Route, RouteConfig } from 'vue-router'
+import { scroll_to_hash } from './router-functions'
 
 @Component({
 	components: { signup: Signup, leek: Leek, chat: Chat },
@@ -134,8 +135,8 @@ const routes = [
 	{ path: '/garden/:category/:type/:target/:item', component: Garden, beforeEnter: connected },
 	{ path: '/help', component: Encyclopedia },
 	{ path: '/help/api', component: Api },
-	{ path: '/help/documentation', component: Documentation },
-	{ path: '/help/documentation/:item', component: Documentation },
+	{ path: '/help/documentation', component: Documentation, props: { popup: false } },
+	{ path: '/help/documentation/:item', component: Documentation, props: { popup: false } },
 	{ path: '/help/items', component: Items },
 	{ path: '/help/line-of-sight', component: LineOfSight },
 	{ path: '/help/advanced-fight-description', component: AdvancedFightDescription },
@@ -205,18 +206,6 @@ if (process.env.VUE_APP_BANK === 'true') {
 	)
 }
 
-function scroll_to_hash(hash: string, route: Route) {
-	const id = decodeURIComponent(hash).replace(/'/g, '~').substring(1)
-	const element = document.getElementById(id)
-	// console.log("scroll element", id, element, route.meta)
-	if (element) {
-		const offset = (LeekWars.mobile ? 56 : 0) + route.meta!.scrollOffset || 0
-		setTimeout(() => {
-			window.scrollTo(0, element.getBoundingClientRect().top + window.scrollY - offset)
-		})
-	}
-}
-
 const router = new Router({
 	mode: 'history',
 	base: process.env.BASE_URL,
@@ -238,16 +227,6 @@ const router = new Router({
 			return { x: 0, y: 0 }
 		}
 	},
-})
-
-router.afterEach((to: Route) => {
-	if (to.hash) {
-		vueMain.$once('loaded', () => {
-			setTimeout(() => {
-				scroll_to_hash(to.hash, to)
-			}, 100)
-		})
-	}
 })
 
 router.beforeEach((to: Route, from: Route, next: any) => {
