@@ -136,4 +136,11 @@
 		color: #0000D0;
 		font-weight: bold;
 	}
+	::v-deep a {
+		color: #5fad1b;
+		font-weight: 500;
+		&:hover {
+			text-decoration: underline;
+		}
+	}
 </style>
