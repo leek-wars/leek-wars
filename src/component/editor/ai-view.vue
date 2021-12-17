@@ -1083,6 +1083,7 @@
 					}
 				}
 
+				// Méthodes dans la classe actuelle
 				if (currentClass) {
 					for (const staticMethod of currentClass.static_methods) {
 						if (staticMethod.name.toLowerCase().indexOf(start) === 0) {
@@ -1096,47 +1097,18 @@
 					}
 				}
 
-				// Variables globales
-				for (const variable in this.ai.globals) {
-					if (variable.toLowerCase().indexOf(start.toLowerCase()) === 0) {
-						const keyword = this.ai.globals[variable]
-						completions.push(keyword)
+				// Symbols from current AI
+				const visited = new Set<number>()
+				this.addCompletionsFromAI(start, completions, visited, this.ai)
+
+				// Symbols from included files (from all entrypoints)
+				for (const entrypoint_id of this.ai.entrypoints) {
+					const entrypoint = fileSystem.ais[entrypoint_id]
+					if (entrypoint) {
+						this.addCompletionsFromAI(start, completions, visited, entrypoint)
 					}
 				}
-				// Classes
-				for (const variable in this.ai.classes) {
-					if (variable.toLowerCase().indexOf(start.toLowerCase()) === 0) {
-						const keyword = this.ai.classes[variable]
-						completions.push(keyword)
-					}
-				}
-				// Includes globals
-				for (const include of this.ai.includes) {
-					const globals = this.ais[include.id].globals
-					for (const variable in globals) {
-						if (variable.toLowerCase().indexOf(start.toLowerCase()) === 0) {
-							const keyword = globals[variable]
-							completions.push(keyword)
-						}
-					}
-				}
-				// File functions
-				for (const fun of this.ai.functions) {
-					if (fun.name.toLowerCase().indexOf(start.toLowerCase()) === 0) {
-						completions.push(fun)
-					}
-				}
-				// Includes functions
-				for (const include of this.ai.includes) {
-					const functions = this.ais[include.id].functions
-					if (functions) {
-						for (const fun of functions) {
-							if (fun.name.toLowerCase().indexOf(start.toLowerCase()) === 0) {
-								completions.push(fun)
-							}
-						}
-					}
-				}
+
 				// Ajout des fonctions
 				LeekWars.keywords.forEach(maybeAdd)
 
@@ -1151,7 +1123,7 @@
 			this.completions = completions
 			this.completionFrom = {line: cur.line, ch: startPos}
 			this.completionTo = {line: cur.line, ch: token.end}
-			if (isDot) {
+			if (token.string === '.') {
 				this.completionFrom.ch++
 			}
 
@@ -1187,6 +1159,34 @@
 				this.completions = new_completions
 				this.openCompletions(new_completions, cursor)
 			})
+		}
+
+		public addCompletionsFromAI(start: string, completions: any[], visited: Set<number>, ai: AI) {
+			if (visited.has(ai.id)) { return }
+			visited.add(ai.id)
+			// console.log("add completions from ai", ai.id)
+			// Globales
+			for (const variable in ai.globals) {
+				if (variable.toLowerCase().indexOf(start.toLowerCase()) === 0) {
+					completions.push(ai.globals[variable])
+				}
+			}
+			// Fonctions
+			for (const fun of ai.functions) {
+				if (fun.name.toLowerCase().indexOf(start.toLowerCase()) === 0) {
+					completions.push(fun)
+				}
+			}
+			// Classes
+			for (const variable in ai.classes) {
+				if (variable.toLowerCase().indexOf(start.toLowerCase()) === 0) {
+					completions.push(ai.classes[variable])
+				}
+			}
+			// Includes of ai
+			for (const include of ai.includes) {
+				this.addCompletionsFromAI(start, completions, visited, include)
+			}
 		}
 
 		public openCompletions(completions: any[], cursor: any) {
