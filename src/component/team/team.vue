@@ -675,7 +675,7 @@
 					for (const leek of composition.leeks) {
 						this.team.unengaged_leeks.push(leek)
 					}
-					this.team.compositions.splice(this.team.compositions.indexOf(composition))
+					this.team.compositions.splice(this.team.compositions.indexOf(composition), 1)
 					this.deleteCompoDialog = false
 				}
 			}).error(error => {
