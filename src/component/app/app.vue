@@ -105,7 +105,7 @@
 			</popup>
 
 			<v-dialog v-if="docEverywhere" v-model="docEverywhereModel" content-class="doc" :max-width="1400">
-				<documentation />
+				<documentation ref="doc" :popup="true" />
 			</v-dialog>
 		</div>
 	</div>
@@ -168,7 +168,14 @@
 			this.$root.$on('keyup', (event: KeyboardEvent) => {
 				if (event.keyCode === 72 && event.altKey && event.ctrlKey) {
 					this.docEverywhere = true
-					Vue.nextTick(() => this.docEverywhereModel = true)
+					Vue.nextTick(() => {
+						this.docEverywhereModel = true
+						Vue.nextTick(() => {
+							if (this.$refs.doc) {
+								(this.$refs.doc as any).focus()
+							}
+						})
+					})
 				}
 				// Konami code
 				if (event.keyCode === 37) { this.konami += "l" }
@@ -182,6 +189,9 @@
 					this.konami = ""
 				}
 				if (this.konami.length > 12) { this.konami = this.konami.substring(1) }
+			})
+			this.$root.$on('navigate', () => {
+				this.docEverywhereModel = false
 			})
 
 			// if (this.$store.state.connected && !localStorage.getItem('annonce')) {
@@ -487,11 +497,15 @@
 		left: 10px;
 		z-index: 100;
 	}
-	::v-deep .doc {
-		height: 85vh;
+	::v-deep .v-dialog.doc {
+		height: auto;
+		display: flex;
+		max-height: 80vh;
 		box-shadow: none;
+		align-self: flex-start;
+		margin-top: 140px !important;
 		.documentation-page {
-			height: 100%;
+			max-height: 80vh;
 		}
 	}
 </style>
