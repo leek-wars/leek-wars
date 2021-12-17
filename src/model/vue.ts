@@ -51,6 +51,7 @@ Vue.component('tooltip', tooltip)
 import { createSimpleTransition } from 'vuetify/lib/components/transitions/createTransition'
 import '../fade-transition.sass'
 import { Route } from 'vue-router'
+import { scroll_to_hash } from '@/router-functions'
 const myTransition = createSimpleTransition('my-transition')
 Vue.component('my-transition', myTransition)
 
