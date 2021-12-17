@@ -300,6 +300,7 @@
 		unseenItem: ItemTemplate | null = null
 		unseenItemDialog: boolean = false
 		pomps: PompTemplate[] = []
+		request: any = null
 
 		get max_level() {
 			if (store.state.farmer) {
@@ -313,7 +314,8 @@
 				{icon: 'mdi-bank', click: () => this.$router.push('/bank')},
 				{icon: 'mdi-treasure-chest', click: () => this.$router.push('/inventory')},
 			]
-			LeekWars.get('market/get-item-templates').then(res => {
+			this.request = LeekWars.get('market/get-item-templates')
+			this.request.then((res: any) => {
 				const items = res.items as ItemTemplate[]
 				for (const i in items) {
 					const item = items[i]
@@ -386,6 +388,9 @@
 		}
 		back() {
 			this.$router.back()
+		}
+		beforeDestroy() {
+			if (this.request) { this.request.abort() }
 		}
 		destroyed() {
 			this.$root.$off('back', this.back)

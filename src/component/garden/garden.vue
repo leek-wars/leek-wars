@@ -264,6 +264,7 @@
 		queue: number = 0
 		advanced: boolean = false
 		seed: number | null = null
+		request: any = null
 
 		get farmerEnabled() { return this.garden && this.garden.farmer_enabled }
 		get teamEnabled() { return this.garden && this.garden.team_enabled }
@@ -274,7 +275,8 @@
 
 			this.advanced = localStorage.getItem("editor/test/advanced") === 'true'
 
-			LeekWars.get('garden/get').then(r => {
+			this.request = LeekWars.get('garden/get')
+			this.request.then((r: any) => {
 				this.garden = r.garden
 				for (const composition of this.garden.my_compositions) {
 					this.compositions_by_id[composition.id] = composition
@@ -301,6 +303,7 @@
 		}
 		beforeDestroy() {
 			this.$root.$off('back')
+			if (this.request) { this.request.abort() }
 			LeekWars.socket.send([SocketMessage.GARDEN_QUEUE_UNREGISTER])
 		}
 
