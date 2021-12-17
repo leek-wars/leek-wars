@@ -83,7 +83,7 @@
 				</router-link>
 
 				<router-link v-ripple to="/help" class="section" @click.native="clickItem">
-					<v-icon>mdi-book-open-page-variant</v-icon>
+					<v-icon>mdi-help-circle-outline</v-icon>
 					<div class="text">{{ $t("main.help") }}</div>
 				</router-link>
 
