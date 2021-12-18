@@ -243,7 +243,7 @@
 		@Watch('filtered_inventory')
 		resize() {
 			const W = LeekWars.mobile ? 60 : 73
-			const H = LeekWars.mobile ? 78 : 63
+			const H = LeekWars.mobile ? 63 : 76
 			const inventory = this.$refs.inventory as HTMLElement
 			const margin = 5
 			const columns = Math.floor((inventory.clientWidth - margin) / (W + margin))
@@ -420,6 +420,9 @@
 	border: 1px solid #ddd;
 	// background: linear-gradient(to bottom right, #f2f2f2, #e1e1e1);
 	height: 78px;
+}
+#app.app .placeholder {
+	height: 63px;
 }
 .menu-actions {
 	.v-icon {
