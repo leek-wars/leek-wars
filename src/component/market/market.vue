@@ -463,7 +463,7 @@
 				if (item.type === ItemType.FIGHT_PACK) {
 					this.$store.commit('update-fights', data.fights)
 				}
-				this.$store.commit('add-inventory', {type: item.type, item_id: data.item, item_template: id})
+				this.$store.commit('add-inventory', {type: item.type, id: data.item, template: id, quantity: 1})
 				this.updateSubtitle()
 			})
 			.error(error => LeekWars.toast(this.$t('error_' + error.error, error.params)))

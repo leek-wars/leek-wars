@@ -168,6 +168,12 @@ class Language {
 	public flag!: string
 }
 
+const LOCAL_DATE = new Date()
+const invdate = new Date(LOCAL_DATE.toLocaleString('en-US', {
+    timeZone: 'Europe/Paris'
+}))
+const DATE = new Date(invdate.getTime())
+
 const DEV = window.location.port === '8080'
 const LOCAL = window.location.port === '8500' || window.location.port === '5100'
 
@@ -589,7 +595,8 @@ const LeekWars = {
 		}
 	},
 	encyclopedia: {} as {[key: string]: any},
-	encyclopediaById: {} as {[key: number]: any}
+	encyclopediaById: {} as {[key: number]: any},
+	christmasPresents: DATE.getMonth() === 11 && DATE.getDate() >= 25 && DATE.getDate() <= 31
 }
 
 function setTitle(title: string | TranslateResult | null, subtitle: string | TranslateResult | null = null) {

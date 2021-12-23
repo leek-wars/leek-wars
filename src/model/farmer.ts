@@ -1,4 +1,4 @@
-import { Folder } from '@/component/editor/editor-item'
+import { Folder, Item } from '@/component/editor/editor-item'
 import { AI } from '@/model/ai'
 import { Chip } from '@/model/chip'
 import { Hat } from '@/model/hat'
@@ -48,7 +48,7 @@ class Farmer {
 	public language!: string
 	public title!: number[]
 	public show_ai_lines!: boolean
-	public pomps!: number[]
+	public pomps!: Item[]
 	public pass!: boolean
 	public errors!: number
 	public contributor!: boolean

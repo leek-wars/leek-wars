@@ -148,6 +148,7 @@
 									<img v-if="item.type === ItemType.RESOURCE" class="image" :src="'/image/resource/' + LeekWars.items[item.template].name + '.png'">
 									<img v-else class="image" :class="{small: item.template === 37 || item.template === 45 || item.template === 153 || item.template === 182}" :src="'/image/' + LeekWars.items[item.template].name.replace('_', '/') + '.png'">
 									<img v-if="LeekWars.items[item.template].name.startsWith('box')" class="retrieve notif-trophy" src="/image/icon/black/arrow-down-right-bold.svg">
+									<img v-if="LeekWars.christmasPresents && LeekWars.items[item.template].name.startsWith('present')" class="retrieve notif-trophy" src="/image/icon/black/arrow-down-right-bold.svg">
 									<div class="id">#{{ item.template }}</div>
 								</div>
 							</rich-tooltip-item>
@@ -198,7 +199,7 @@
 				inventory.push(...store.state.farmer.chips.map(chip => {return {type: ItemType.CHIP, ...chip}}))
 				inventory.push(...store.state.farmer.potions.map(potion => {return {type: ItemType.POTION, ...potion}}))
 				inventory.push(...store.state.farmer.hats.map(hat => {return {type: ItemType.HAT, ...hat}}))
-				inventory.push(...store.state.farmer.pomps.map(p => {return {type: ItemType.POMP, template: p, quantity: 1}}))
+				inventory.push(...store.state.farmer.pomps.map(pomp => {return {type: ItemType.POMP, ...pomp}}))
 				inventory.push(...store.state.farmer.resources.map(p => {return {type: ItemType.RESOURCE, ...p}}))
 			}
 			return inventory

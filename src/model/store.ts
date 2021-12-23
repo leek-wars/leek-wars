@@ -478,63 +478,72 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 
 		'add-inventory'(state: LeekWarsState, data) {
 			if (!state.farmer) { return }
+			// console.log("add-inventory", data)
 			if (data.type === ItemType.WEAPON) {
-				const weapon = LeekWars.selectWhere(state.farmer.weapons, 'id', data.item_id)
+				const weapon = LeekWars.selectWhere(state.farmer.weapons, 'id', data.id)
 				if (weapon !== null) {
 					weapon.quantity++
 				} else {
-					state.farmer.weapons.push({id: data.item_id, template: data.item_template, quantity: 1})
+					state.farmer.weapons.push({id: data.id, template: data.template, quantity: 1})
 				}
 			} else if (data.type === ItemType.CHIP) {
-				const chip = LeekWars.selectWhere(state.farmer.chips, 'id', data.item_id)
+				const chip = LeekWars.selectWhere(state.farmer.chips, 'id', data.id)
 				if (chip !== null) {
 					chip.quantity++
 				} else {
-					state.farmer.chips.push({id: data.item_id, template: data.item_template, quantity: 1})
+					state.farmer.chips.push({id: data.id, template: data.template, quantity: 1})
 				}
 			} else if (data.type === ItemType.HAT) {
-				const hat = LeekWars.selectWhere(state.farmer.hats, 'id', data.item_id)
-				const hat_template = LeekWars.getHatTemplate(data.item_template)
+				const hat = LeekWars.selectWhere(state.farmer.hats, 'id', data.id)
+				const hat_template = LeekWars.getHatTemplate(data.template)
 				if (hat !== null) {
 					hat.quantity++
 				} else {
-					state.farmer.hats.push({id: data.item_id, template: data.item_template, name: LeekWars.hats[data.item_template].name, level: LeekWars.hats[data.item_template].level, hat_template, quantity: 1})
+					state.farmer.hats.push({id: data.id, template: data.template, name: LeekWars.hats[data.template].name, level: LeekWars.hats[data.template].level, hat_template, quantity: 1})
 				}
 			} else if (data.type === ItemType.POTION) {
-				const potion = LeekWars.selectWhere(state.farmer.potions, 'id', data.item_id)
+				const potion = LeekWars.selectWhere(state.farmer.potions, 'id', data.id)
 				if (potion !== null) {
 					potion.quantity++
 				} else {
-					state.farmer.potions.push({id: data.item_id, template: data.item_template, quantity: 1})
+					state.farmer.potions.push({id: data.id, template: data.template, quantity: 1})
 				}
 			} else if (data.type === ItemType.POMP) {
-				state.farmer.pomps.push(data.item_template)
+				const pomp = LeekWars.selectWhere(state.farmer.pomps, 'id', data.id)
+				if (pomp) {
+					pomp.quantity++
+				} else {
+					state.farmer.pomps.push(data)
+				}
+			} else if (data.type === ItemType.RESOURCE) {
+				const resource = LeekWars.selectWhere(state.farmer.resources, 'id', data.id)
+				if (resource) {
+					resource.quantity++
+				} else {
+					state.farmer.resources.push(data)
+				}
 			}
 		},
 
 		'remove-inventory'(state: LeekWarsState, data) {
 			if (!state.farmer) { return }
-			console.log(data)
+			// console.log(data)
+			const quantity = data.quantity || 1
+			let list = null
 			if (data.type === ItemType.WEAPON) {
-				const weapon = LeekWars.selectWhere(state.farmer.weapons, 'template', data.item_template)
-				if (weapon !== null) {
-					weapon.quantity--
-				} else {
-					LeekWars.removeOneWhere(state.farmer.weapons, 'template', data.item_template)
-				}
+				list = state.farmer.weapons
 			} else if (data.type === ItemType.CHIP) {
-				const chip = LeekWars.selectWhere(state.farmer.chips, 'template', data.item_template)
-				if (chip !== null) {
-					chip.quantity--
-				} else {
-					LeekWars.removeOneWhere(state.farmer.chips, 'template', data.item_template)
-				}
+				list = state.farmer.chips
 			} else if (data.type === ItemType.POTION) {
-				const potion = LeekWars.selectWhere(state.farmer.potions, 'template', data.item_template)
-				if (potion !== null) {
-					potion.quantity--
-				} else {
-					LeekWars.removeOneWhere(state.farmer.potions, 'template', data.item_template)
+				list = state.farmer.potions
+			} else if (data.type === ItemType.RESOURCE) {
+				list = state.farmer.resources
+			}
+			const item = LeekWars.selectWhere(list, 'template', data.item_template)
+			if (item !== null) {
+				item.quantity -= quantity
+				if (item.quantity <= 0) {
+					LeekWars.removeOneWhere(list, 'template', data.item_template)
 				}
 			}
 		},

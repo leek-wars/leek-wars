@@ -592,7 +592,7 @@
 			return bonus
 		}
 		get farmerTitleEnabled() {
-			return this.$store.state.farmer.pomps.indexOf(126) !== -1
+			return LeekWars.selectWhere(this.$store.state.farmer.pomps, 'template', 126)
 		}
 
 		@Watch('id', {immediate: true})
