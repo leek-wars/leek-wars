@@ -1,5 +1,6 @@
 import { AI } from '@/model/ai'
 import { fileSystem } from '@/model/filesystem'
+import { LeekWars } from '@/model/leekwars'
 import Vue from 'vue'
 import { AIItem, Folder } from './editor-item'
 

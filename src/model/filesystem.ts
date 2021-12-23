@@ -87,6 +87,60 @@ class FileSystem {
 		this.initialized = true
 	}
 
+	public load(ai: AI) {
+
+		const dependencies_set = new Set<number>()
+		dependencies_set.add(ai.id)
+		if (ai.entrypoint) {
+			for (const id of ai.includes_ids) { dependencies_set.add(id) }
+		}
+		for (const entrypoint of ai.entrypoints) {
+			for (const id of fileSystem.ais[entrypoint].includes_ids) { dependencies_set.add(id) }
+		}
+		const dependencies_timestamps = {} as {[key: number]: number}
+		const new_ais = new Set<AI>()
+		for (const id of dependencies_set) {
+			const ai = fileSystem.ais[id]
+			if (ai) {
+				const timestamp = parseInt(localStorage.getItem('ai/time/' + ai.id) || '0', 10)
+				if (ai.timestamp === 0 || ai.timestamp !== timestamp) {
+					Vue.set(ai, 'timestamp', timestamp)
+					Vue.set(ai, 'code', localStorage.getItem('ai/code/' + ai.id))
+					dependencies_timestamps[id] = timestamp
+					new_ais.add(ai)
+				}
+			}
+		}
+		// console.log("timestamps", dependencies_timestamps)
+
+		if (Object.keys(dependencies_timestamps).length) {
+
+			return new Promise<void>((resolve, reject) => {
+				LeekWars.post<{id: number, modified: number, code: string}[]>('ai/sync', {ais: JSON.stringify(dependencies_timestamps)}).then(result => {
+
+					for (const entry of result) { // Nouveaux timestamp, on met à jour
+						const ai = fileSystem.ais[entry.id]
+						if (ai) {
+							Vue.set(ai, 'code', entry.code)
+							Vue.set(ai, 'timestamp', entry.modified)
+							localStorage.setItem('ai/time/' + ai.id, '' + entry.modified)
+							localStorage.setItem('ai/code/' + ai.id, '' + entry.code)
+						}
+					}
+					// console.time('analyze')
+					for (const ai of new_ais) {
+						ai.analyze()
+					}
+					// console.timeEnd('analyze')
+					resolve()
+
+				}).error(reject)
+			})
+		} else {
+			return Promise.resolve()
+		}
+	}
+
 	/**
 	 * Ajoute une nouvelle IA dans le filesystem
 	 */
