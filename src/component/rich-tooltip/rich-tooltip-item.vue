@@ -12,6 +12,7 @@
 <script lang="ts">
 	import { Component, Prop, Vue } from 'vue-property-decorator'
 	import ItemPreview from '@/component/market/item-preview.vue'
+import { LeekWars } from '@/model/leekwars'
 
 	@Component({ components: { ItemPreview } })
 	export default class RichTooltipItem extends Vue {
@@ -26,7 +27,7 @@
 		value: boolean = false
 
 		get _open_delay() {
-			return this.instant ? 0 : 500
+			return this.instant || LeekWars.mobile ? 0 : 500
 		}
 		get _close_delay() {
 			return this.instant ? 0 : 0

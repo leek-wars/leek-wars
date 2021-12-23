@@ -13,8 +13,8 @@
 		<div class="image sound">
 			<img :src="'/image/' + category + '/' + item.name.replace(category + '_', '') + '.png'" @click="LeekWars.playSound(item, 'chip')">
 		</div>
-		<div v-if="$te(item.name.replace('_', '.') + '_desc')" class="desc">
-			{{ $t(item.name.replace('_', '.') + '_desc') }}
+		<div v-if="$te(category + '.' + name_short + '_desc')" class="desc">
+			{{ $t(category + '.' + name_short + '_desc') }}
 		</div>
 		<weapon-preview v-if="item.type === ItemType.WEAPON" :weapon="LeekWars.weapons[item.params]" />
 		<chip-preview v-else-if="item.type === ItemType.CHIP" :chip="LeekWars.chips[item.id]" @input="$emit('input', $event)" />
@@ -31,8 +31,9 @@
 			<div v-if="quantity > 1">
 				Valeur du lot : <b>{{ item.price * quantity | number }}</b> <span class='hab'></span>
 			</div>
-			<div v-if="item.name.startsWith('box')">
-				<v-btn small class="get-all notif-trophy" @click.stop="retrieveAll()">Récupérer <img src="/image/icon/black/arrow-down-right-bold.svg"></v-btn>
+			<div v-if="item.name.startsWith('box') || (LeekWars.christmasPresents && item.name.startsWith('present'))">
+				<v-btn small class="get-all notif-trophy" @click.stop="retrieveN(1)">Récupérer <img src="/image/icon/black/arrow-down-right-bold.svg"></v-btn>
+				<v-btn v-if="quantity >= 10" small class="get-all notif-trophy" @click.stop="retrieveN(10)">Récupérer x10 <img src="/image/icon/black/arrow-down-right-bold.svg"></v-btn>
 			</div>
 		</div>
 	</div>
@@ -48,6 +49,8 @@ import HatPreview from '@/component/market/hat-preview.vue'
 import PompPreview from '@/component/market/pomp-preview.vue'
 import ResourcePreview from '@/component/market/resource-preview.vue'
 import FightPackPreview from '@/component/market/fight-pack-preview.vue'
+import { LeekWars } from '@/model/leekwars'
+import { store } from '@/model/store'
 
 @Component({ components: {
 	'weapon-preview': WeaponPreview,
@@ -79,8 +82,17 @@ export default class ItemPreview extends Vue {
 		return this.item.name.replace(this.category + '_', '')
 	}
 
-	retrieveAll() {
-
+	retrieveN(n: number) {
+		LeekWars.post('item/retrieve', { template: this.item.id, quantity: n }).then((data) => {
+			// console.log(data)
+			if (data.habs) {
+				store.commit('update-habs', data.habs)
+			}
+			for (const item of data.items) {
+				store.commit('add-inventory', {...item, type: LeekWars.items[item.template].type})
+			}
+			store.commit('remove-inventory', { type: ItemType.RESOURCE, item_template: this.item.id, quantity: n })
+		})
 	}
 }
 </script>
