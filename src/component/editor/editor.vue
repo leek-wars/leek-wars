@@ -595,6 +595,11 @@
 					aiEditor.serverError = true
 					return
 				}
+
+				Vue.set(aiEditor.ai, 'timestamp', data.modified)
+				localStorage.setItem('ai/time/' + aiEditor.ai.id, '' + data.modified)
+				localStorage.setItem('ai/code/' + aiEditor.ai.id, content)
+
 				this.errors = []
 				this.goods = []
 				LeekWars.analyzer.clearProblems(aiEditor.ai!)
@@ -612,7 +617,7 @@
 					if (valid) {
 						this.goods.push({ai})
 					}
-					ai.valid = valid
+					Vue.set(ai, 'valid', valid)
 					if (editor) { editor.removeErrors(entrypoint_id) }
 					LeekWars.analyzer.setAIProblems(entrypoint_id, ai.path, [])
 					this.handleProblems(ai, data.result[entrypoint])
@@ -747,6 +752,7 @@
 				if (editor) { editor.scrollToLine(line - 1) }
 			})
 		}
+
 		load(ai: AI) {
 			if (!(ai.id in this.activeAIs)) {
 				Vue.set(this.$data.activeAIs, ai.id, ai)
@@ -847,7 +853,7 @@
 				this.currentAI.version = version
 				LeekWars.put('ai/version', {ai_id: this.currentAI.id, version})
 				this.save(this.currentEditor)
-				this.currentEditor!.analyzeV1()
+				this.currentAI.analyzeV1()
 			}
 		}
 	}
