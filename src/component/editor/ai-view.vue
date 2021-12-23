@@ -51,7 +51,16 @@
 				<item-preview v-else-if="selectedHint.details.type === 'weapon'" :item="selectedHint.details.weapon" />
 				<item-preview v-else-if="selectedHint.details.type === 'chip'" :chip="selectedHint.details.chip" />
 				<javadoc v-else-if="selectedHint.javadoc" :javadoc="selectedHint.javadoc" class="main" />
-				<span v-else v-html="selectedHint.details"></span>
+				<div v-else v-html="selectedHint.details"></div>
+				<div v-if="selectedHint.ai" class="definition">
+					<v-icon>mdi-file-outline</v-icon>
+					<span @click="$emit('jump', selectedHint.keyword.ai, selectedHint.keyword.line)">
+						<i18n class="defined" path="leekscript.defined_in">
+							<b slot="0">{{ selectedHint.ai.name }}</b>
+							<b slot="1">{{ selectedHint.line }}</b>
+						</i18n>
+					</span>
+				</div>
 			</div>
 		</div>
 		<div v-show="detailDialog" v-if="detailDialogContent" ref="detailDialog" :style="{left: detailDialogLeft + 'px', bottom: (!detailDialogAtBottom ? detailDialogTop + 'px' : 'auto'), top: (detailDialogAtBottom ? detailDialogTop + 'px' : 'auto'), 'max-height': detailDialogMaxHeight + 'px'}" class="detail-dialog" :class="{active: detailsDialogActive}" @mousemove="detailsDialogEnter" @mouseleave="detailsDialogLeave">
@@ -455,6 +464,7 @@
 		setAnalyzerTimeout() {
 			clearTimeout(this.analyzerTimeout)
 			this.analyzerTimeout = setTimeout(() => {
+				this.ai.code = this.document.getValue()
 				this.ai.analyze()
 			}, 1000)
 		}
@@ -489,7 +499,8 @@
 			this.mouseleave()
 
 			if (changes.origin === "setValue") {
-				this.analyze()
+				this.ai.code = this.document.getValue()
+				this.ai.analyze()
 			} else {
 				this.setAnalyzerTimeout()
 			}
@@ -1536,7 +1547,12 @@
 		border: 1px solid #ccc;
 		margin-left: -1px;
 		max-height: 600px;
-		padding: 8px;
+		& > * {
+			padding: 5px 8px;
+		}
+		.definition {
+			border-top: 1px solid #ccc;
+		}
 	}
 	.detail-dialog {
 		position: absolute;
@@ -1605,21 +1621,21 @@
 		code.single {
 			border: none;
 		}
-		.definition {
-			cursor: pointer;
-			span {
-				// color: #5fad1b;
-				color: #0000D0;
-				// font-weight: 500;
-			}
-			span:hover {
-				text-decoration: underline;
-			}
-			.v-icon {
-				font-size: 16px;
-				vertical-align: top;
-				margin-right: 4px;
-			}
+	}
+	.definition {
+		cursor: pointer;
+		span {
+			// color: #5fad1b;
+			color: #0000D0;
+			// font-weight: 500;
+		}
+		span:hover {
+			text-decoration: underline;
+		}
+		.v-icon {
+			font-size: 16px;
+			vertical-align: top;
+			margin-right: 4px;
 		}
 	}
 	.search-panel {

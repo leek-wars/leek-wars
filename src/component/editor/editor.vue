@@ -853,7 +853,7 @@
 				this.currentAI.version = version
 				LeekWars.put('ai/version', {ai_id: this.currentAI.id, version})
 				this.save(this.currentEditor)
-				this.currentAI.analyzeV1()
+				this.currentAI.analyze()
 			}
 		}
 	}

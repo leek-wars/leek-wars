@@ -353,7 +353,7 @@ class AI {
 			}
 		}
 
-		// console.log("classes " + this.ai.name, this.ai.classes)
+		// console.log("classes " + this.name, this.classes)
 	}
 
 	public updateGlobalVars() {
