@@ -55,6 +55,9 @@
 .v-tooltip__content.fluid {
 	max-width: none !important;
 }
+.menuable__content__active {
+	transform: translateX(20px);
+}
 .v-dialog {
 	margin: 12px !important;
 }
