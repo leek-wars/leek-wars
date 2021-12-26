@@ -213,9 +213,9 @@ export default mixins(Colorable, Delayable, Dependent, Detachable, Menuable, Tog
         this.setBackgroundColor(this.color, {
           staticClass: 'v-tooltip__content',
           class: {
-			[this.contentClass]: true,
-			'left': this.left,
-			'top': this.top,
+            [this.contentClass]: true,
+            'left': this.left,
+            'top': this.top,
             menuable__content__active: this.isActive,
             'v-tooltip__content--fixed': this.activatorFixed,
           },
