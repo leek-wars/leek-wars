@@ -4,7 +4,7 @@
 			<slot :on="on"></slot>
 		</template>
 		<div class="card" @mouseenter="mouse = true" @mouseleave="mouse = false">
-			<item-preview :item="item" :quantity="quantity" :inventory="inventory" @input="setParent" />
+			<item-preview :item="item" :quantity="quantity" :inventory="inventory" @input="setParent" @retrieve="$emit('retrieve', $event)" />
 		</div>
 	</v-menu>
 </template>
