@@ -143,7 +143,7 @@
 				<div slot="content" ref="inventory" class="inventory-content">
 					<div class="inventory">
 						<div v-for="item in sorted_inventory" :key="item.template" class="cell active" :class="'rarity-border-' + LeekWars.items[item.template].rarity">
-							<rich-tooltip-item v-slot="{ on }" :bottom="true" :item="LeekWars.items[item.template]" :quantity="item.quantity" :inventory="true">
+							<rich-tooltip-item v-slot="{ on }" :bottom="true" :item="LeekWars.items[item.template]" :quantity="item.quantity" :inventory="true" @retrieve="retrieve">
 								<div v-on="on" class="item"  :quantity="item.quantity | number" :type="LeekWars.items[item.template].type">
 									<img v-if="item.type === ItemType.RESOURCE" class="image" :src="'/image/resource/' + LeekWars.items[item.template].name + '.png'">
 									<img v-else class="image" :class="{small: item.template === 37 || item.template === 45 || item.template === 153 || item.template === 182}" :src="'/image/' + LeekWars.items[item.template].name.replace('_', '/') + '.png'">
@@ -158,6 +158,24 @@
 				</div>
 			</panel>
 		</div>
+		<popup v-model="retrieveDialog" width="400">
+			<v-icon slot="title">mdi-gift-outline</v-icon>
+			<template slot="title">Objets obtenus</template>
+			<div class="inventory">
+				<div v-for="item in retrieveItems" :key="item.id" class="cell active" :class="'rarity-border-' + LeekWars.items[item.template].rarity">
+					<rich-tooltip-item v-slot="{ on }" :bottom="true" :item="LeekWars.items[item.template]" :quantity="item.quantity" :inventory="true">
+						<div v-on="on" class="item" :quantity="item.quantity" :type="LeekWars.items[item.template].type">
+							<img v-if="LeekWars.items[item.template].type === ItemType.RESOURCE" class="image" :src="'/image/resource/' + LeekWars.items[item.template].name + '.png'">
+							<img v-else class="image" :class="{small: item.template === 37 || item.template === 45 || item.template === 153 || item.template === 182}" :src="'/image/' + LeekWars.items[item.template].name.replace('_', '/') + '.png'">
+						</div>
+					</rich-tooltip-item>
+				</div>
+			</div>
+			<br>
+			<div>
+				Total estimé : <b>{{ retrieveItems.reduce((s, i) => s + i.quantity * LeekWars.items[i.template].price, 0) | number }}</b> <span class="hab"></span>
+			</div>
+		</popup>
 	</div>
 </template>
 
@@ -167,6 +185,7 @@
 	import { LeekWars } from '@/model/leekwars'
 	import { store } from '@/model/store'
 	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
+import { Item } from '../editor/editor-item'
 
 	enum Sort {
 		DATE, PRICE, PRICE_LOT, QUANTITY, /*NAME, */ LEVEL
@@ -189,6 +208,8 @@
 		sort: Sort = parseInt(localStorage.getItem('inventory/sort') || '0', 10) as Sort
 		filter: Filter = parseInt(localStorage.getItem('inventory/filter') || '0', 10) as Filter
 		actions: any
+		retrieveDialog: boolean = false
+		retrieveItems = [] as Item[]
 
 		get inventory() {
 			const inventory = []
@@ -290,6 +311,14 @@
 		@Watch('filter')
 		updateFilter() {
 			localStorage.setItem('inventory/filter', '' + this.filter)
+		}
+
+		retrieve(items: Item[]) {
+			// console.log("retrieve", items)
+			if (items.length) {
+				this.retrieveDialog = true
+				this.retrieveItems = items
+			}
 		}
 	}
 </script>

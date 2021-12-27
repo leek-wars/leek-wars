@@ -83,14 +83,15 @@ export default class ItemPreview extends Vue {
 	}
 
 	retrieveN(n: number) {
-		LeekWars.post('item/retrieve', { template: this.item.id, quantity: n }).then((data) => {
+		LeekWars.post<{habs: number, items: {[key: number]: any}}>('item/retrieve', { template: this.item.id, quantity: n }).then((data) => {
 			// console.log(data)
 			if (data.habs) {
 				store.commit('update-habs', data.habs)
 			}
-			for (const item of data.items) {
+			for (const item of Object.values(data.items)) {
 				store.commit('add-inventory', {...item, type: LeekWars.items[item.template].type})
 			}
+			this.$emit('retrieve', Object.values(data.items))
 			store.commit('remove-inventory', { type: ItemType.RESOURCE, item_template: this.item.id, quantity: n })
 		})
 	}

@@ -479,17 +479,18 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 		'add-inventory'(state: LeekWarsState, data) {
 			if (!state.farmer) { return }
 			// console.log("add-inventory", data)
+			const quantity = data.quantity || 1
 			if (data.type === ItemType.WEAPON) {
 				const weapon = LeekWars.selectWhere(state.farmer.weapons, 'id', data.id)
 				if (weapon !== null) {
-					weapon.quantity++
+					weapon.quantity += quantity
 				} else {
 					state.farmer.weapons.push({id: data.id, template: data.template, quantity: 1})
 				}
 			} else if (data.type === ItemType.CHIP) {
 				const chip = LeekWars.selectWhere(state.farmer.chips, 'id', data.id)
 				if (chip !== null) {
-					chip.quantity++
+					chip.quantity += quantity
 				} else {
 					state.farmer.chips.push({id: data.id, template: data.template, quantity: 1})
 				}
@@ -497,28 +498,28 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 				const hat = LeekWars.selectWhere(state.farmer.hats, 'id', data.id)
 				const hat_template = LeekWars.getHatTemplate(data.template)
 				if (hat !== null) {
-					hat.quantity++
+					hat.quantity += quantity
 				} else {
 					state.farmer.hats.push({id: data.id, template: data.template, name: LeekWars.hats[data.template].name, level: LeekWars.hats[data.template].level, hat_template, quantity: 1})
 				}
 			} else if (data.type === ItemType.POTION) {
 				const potion = LeekWars.selectWhere(state.farmer.potions, 'id', data.id)
 				if (potion !== null) {
-					potion.quantity++
+					potion.quantity += quantity
 				} else {
 					state.farmer.potions.push({id: data.id, template: data.template, quantity: 1})
 				}
 			} else if (data.type === ItemType.POMP) {
 				const pomp = LeekWars.selectWhere(state.farmer.pomps, 'id', data.id)
 				if (pomp) {
-					pomp.quantity++
+					pomp.quantity += quantity
 				} else {
 					state.farmer.pomps.push(data)
 				}
 			} else if (data.type === ItemType.RESOURCE) {
 				const resource = LeekWars.selectWhere(state.farmer.resources, 'id', data.id)
 				if (resource) {
-					resource.quantity++
+					resource.quantity += quantity
 				} else {
 					state.farmer.resources.push(data)
 				}
