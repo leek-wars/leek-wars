@@ -122,6 +122,7 @@
 	"error_86": "Cette méthode statique \"{1}\" est privée dans la classe \"{0}\".",
 	"error_87": "Cette méthode statique \"{1}\" est protégée dans la classe \"{0}\".",
 	"error_91": "Ce champ \"{0}\" est réservé",
+	"error_92": "Cette valeur \"{0}\" n'est pas un tableau ou un objet.",
 	"error_1000": "Aucune arme équipée",
 	"error_1001": "Cette puce {0} {1} n'est pas équipée",
 	"error_1002": "Cette puce {0} {1} n'existe pas"

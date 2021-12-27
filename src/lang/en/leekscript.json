@@ -115,7 +115,8 @@
 	"error_78": "This field is private in class \"{0}\"",
 	"error_79": "This field is protected in class \"{0}\"",
 	"error_91": "This field \"{0}\" is reserved",
+	"error_92": "This value \"{0}\" is not an array or an object.",
 	"error_1000": "No weapon equipped",
- 	"error_1001": "This {0} {1} chip is not equipped",
- 	"error_1002": "This {0} {1} chip does not exist"
+	"error_1001": "This {0} {1} chip is not equipped",
+	"error_1002": "This {0} {1} chip does not exist"
 }
