@@ -288,7 +288,7 @@
 			<v-icon slot="icon">mdi-chip</v-icon>
 			<span slot="title">{{ $t('select_chip') }}</span>
 			<div v-if="currentLeek" class="padding chips-dialog">
-				<rich-tooltip-item v-for="chip of availableChips" :key="chip.id" v-slot="{ on }" :item="LeekWars.items[LeekWars.chipTemplates[chip.template].item]" :bottom="true" :instant="true">
+				<rich-tooltip-item v-for="chip of availableChips" :key="chip.id" v-slot="{ on }" :item="LeekWars.items[LeekWars.chipTemplates[chip.template].item]" :bottom="true" :instant="true" :nodge="true">
 					<img :src="'/image/chip/' + chip.name + '.png'" class="chip" v-on="on" @click="addLeekChip(chip.id)">
 				</rich-tooltip-item>
 			</div>
@@ -298,7 +298,7 @@
 			<img slot="icon" src="/image/icon/garden.png">
 			<span slot="title">{{ $t('select_weapon') }}</span>
 			<div v-if="currentLeek" class="padding weapons-dialog">
-				<rich-tooltip-item v-for="weapon of availableWeapons" :key="weapon.id" v-slot="{ on }" :item="LeekWars.items[LeekWars.weapons[weapon.id].item]" :bottom="true" :instant="true">
+				<rich-tooltip-item v-for="weapon of availableWeapons" :key="weapon.id" v-slot="{ on }" :item="LeekWars.items[LeekWars.weapons[weapon.id].item]" :bottom="true" :instant="true" :nodge="true">
 					<img :src="'/image/weapon/' + weapon.name + '.png'" class="weapon" v-on="on" @click="addLeekWeapon(weapon.item)">
 				</rich-tooltip-item>
 			</div>
