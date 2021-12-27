@@ -1,3 +1,39 @@
+228:
+  title: Cadeaux de Noël, 6 ressources, améliorations LS / éditeur et documentation rapide.
+  added:
+    - "Documentation accessible de n'importe quelle page avec le raccourci Ctrl + Alt + H. #img_228_doc"
+    - "6 nouvelles ressources rares. #img_228_resources"
+    - "Ajout des cadeaux de Noël, obtenables entre le 1 et le 24 décembre et ouvrables entre le 25 et 31. #img_228_presents"
+  improved:
+    - Ajout d'un bouton de navigation rapide vers les erreurs et le premier tour dans le rapport (merci à Amal).
+    - "Forum : ajout d'un avertissement quand on veut répondre mais pas sur la dernière page (merci à Efflam)."
+    - Mise à jour de chiffres sur la page d'accueil (merci à Temakisushi).
+    - Possibilité de trier les trophées par date d'obtention.
+    - Tri des dossiers par ordre alphabétique dans l'éditeur.
+    - Affichage de la progression sur les familles de trophées équipé et sorcier.
+    - "Éditeur : complétion des fonctions/globales/classes depuis toutes les IA incluses."
+    - "#ai Ajout d'une erreur sur l'accès avec l'opérateur [] à une valeur qui n'est pas un tableau."
+    - "Éditeur : accélération du chargement des IAs."
+    - "Possibilité d'ouvrir les caisses d'habs. #img_228_retrieve"
+  fixed:
+    - "#ai Correction de la fonction replace avec un $ en remplacement."
+    - Correction de l'historique d'équipe vide (merci à Efflam).
+    - Correction de certaines descriptions dans l'aide et le tutoriel (merci à Temakisushi).
+    - Retrait du texte 'Pas encore débloqué' lorsqu'on a obtenu le trophée hors combat (merci à Nytope).
+    - Correction de la position des tooltips en tournoi (merci à Nytope).
+    - Correction de l'appel de méthode statiques avec le mot-clé class.
+    - "#ai getSummons() ne renvoie plus les invocations mortes."
+    - Correction d'un bug qui supprimait visuellement toutes les compositions sur la page d'équipe.
+    - Correction d'un bug de redirection infinie entre les pages Marché/Potager/Éditeur.
+    - "#ai Correction de l'utilisation de return dans un constructeur."
+    - Ajout d'une erreur à l'exécution d'une méthode sur une valeur qui n'est pas un objet.
+    - "#ai Ajout d'une erreur manquante sur l'affectation d'un champ inexistant."
+    - "#ai Correction d'un bug lors du retour d'un champ dans la méthode string() d'une classe."
+    - "#ai Ajout d'erreur à l'appel d'une méthode statique avec mauvais nombre d'arguments (Merci à Amal)."
+    - "#ai Correction de l'utilisation d'opérateur avec les accès style tableau objet['f'] et class['f']."
+    - "Documentation : affichage des liens en vert dans la description des constantes."
+    - "Éditeur : correction d'un bug de résolution d'IA après un renommage ou déplacement de dossier."
+
 227:
   title: Ressources en combat, Inventaire, LeekScript 3, amélioration de l'aide.
   added:

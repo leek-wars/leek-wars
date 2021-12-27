@@ -1,3 +1,39 @@
+228:
+  title: Christmas gifts, 6 resources, editor upgrade and quick documentation.
+  added:
+    - "Documentation accessible from any page with the shortcut Ctrl + Alt + H. #img_228_doc"
+    - "6 new rare resources. #img_228_resources"
+    - "Added Christmas gifts, obtainable between December 1 and 24 and working between 25 and 31. #img_228_presents"
+  improved:
+    - Added a quick navigation button to errors and first round in the report (thanks to Amal).
+    - Added a warning message when you want to reply on the forum but not on the last page (thanks to Efflam).
+    - Update of numbers on the home page (thanks to Temakisushi).
+    - Possibility to sort the trophies by date of obtaining.
+    - Sorting of files by alphabetical order in the editor.
+    - Display of the progress on the trophy families equipped and wizard.
+    - "Editor: completion of features/global/classes from all included AIs."
+    - "#ai Added error on access with operator [] to a value that is not an array."
+    - "Editor: speed up loading of IAs."
+    - "Ability to open habs boxes. #img_228_retrieve"
+  fixed:
+    - "#ai Fixed replace function with a $ in replacement."
+    - Fixed empty team history (thanks to Efflam).
+    - Fixed some descriptions in the help and tutorial (thanks to Temakisushi).
+    - Removed the text 'Not yet unlocked' when you got the trophy out of combat (thanks to Nytope).
+    - Fixed the position of tooltips in tournament (thanks to Nytope).
+    - Fixed static method call with class keyword.
+    - "#ai getSummons() no longer returns dead invocations."
+    - Fixed a bug that visually removed all compositions on the team page.
+    - Fixed infinite redirection bug between Marketplace/Potager/Editor pages.
+    - "#ai Fixed use of return in a constructor."
+    - Added an error when executing a method on a value that is not an object.
+    - "#ai Added a missing error on assigning a non-existent field."
+    - "#ai Fixed a bug when returning a field in the string() method of a class."
+    - "#ai Added an error when calling a static method with the wrong number of arguments (Thanks to Amal)."
+    - "#ai Fixed operator usage with object['f'] and class['f'] array style access."
+    - "Documentation: display of links in green in the description of constants."
+    - "Editor: fixed AI resolution bug after renaming or moving folder."
+
 227:
   title: Resources in combat, LeekScript 3, editor improvement.
   added:
