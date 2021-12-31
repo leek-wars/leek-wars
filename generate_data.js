@@ -31,7 +31,7 @@ for (const value of values) {
 			+ " = " + util.inspect(value[1] ? json[value[1]] : json, {depth: Infinity, breakLength: Infinity, maxArrayLength: Infinity})
 			+ "\nexport { " + value[0].toUpperCase() + " }"
 	}).catch((err) => {
-		console.log("ERROR request failed for", value[0], err)
+		console.log("ERROR request failed for", value[0])
 		process.exit()
 	}))
 }
