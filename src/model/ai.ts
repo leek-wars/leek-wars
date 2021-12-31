@@ -40,7 +40,7 @@ class AI {
 
 	public analyze() {
 
-		// console.log("analyze", this)
+		// console.log("analyze", this.path)
 
 		this.updateIncludes()
 
@@ -62,29 +62,20 @@ class AI {
 	}
 
 	public updateIncludes() {
-		// console.log("Update includes", this.ai.name)
+		// console.log("Update includes", this.path, ('' + this.code).substring(0, 100))
 		// console.time("inc")
 		this.includes = []
 		const regex = /include\s*\(\s*["'](.*?)["']\s*\)/gm
 		let m
 		while ((m = regex.exec(this.code))) {
 			const path = m[1]
+			// console.log(m)
 			const included = fileSystem.find(path, this.folder)
 			if (included) {
-				// console.log("Found included", path, this.ai.folder, included)
+				// console.log("Found included", path, this.folder, included)
 				this.includes.push(included)
-				// this.$emit("load", included)
-				// LeekWars.analyzer.register(included).catch(e => {
-					// nothing
-				// })
 			} else {
 				// console.warn("Included not found", path, this.ai.folder, included)
-			}
-		}
-		for (const entrypoint_id of this.entrypoints) {
-			const entrypoint = fileSystem.ais[entrypoint_id]
-			if (entrypoint) {
-				// this.$emit("load", entrypoint)
 			}
 		}
 		// console.timeEnd("inc")

@@ -689,12 +689,16 @@
 			return this.searchSymbolInAI(this.ai, token, previousToken)
 		}
 
-		public searchSymbolInAI(startAI: AI, startSymbol: string, previousToken: CodeMirror.Token): Keyword | null {
+		public searchSymbolInAI(startAI: AI, symbol: string, previousToken: CodeMirror.Token): Keyword | null {
+
+			// console.log("searchSymbolInAI", symbol)
 
 			const visited = new Set<number>()
 
-			const aux = (ai: AI, symbol: string): Keyword | null => {
+			const aux = (ai: AI): Keyword | null => {
+				if (visited.has(ai.id)) { return null }
 				visited.add(ai.id)
+				// console.log("aux", ai.path)
 				if (ai.functions) {
 					for (const fun of ai.functions) {
 						if (symbol === fun.name) {
@@ -723,7 +727,7 @@
 				if (ai.includes) {
 					for (const include of ai.includes) {
 						if (visited.has(include.id)) { continue }
-						const found = aux(include, symbol)
+						const found = aux(include)
 						if (found) {
 							return found
 						}
@@ -731,7 +735,21 @@
 				}
 				return null
 			}
-			return aux(startAI, startSymbol)
+
+			const result = aux(startAI)
+			if (result) { return result }
+
+			// console.log("entrypoints", startAI.entrypoints)
+			for (const entrypoint_id of startAI.entrypoints) {
+				const entrypoint = fileSystem.ais[entrypoint_id]
+				if (entrypoint) {
+					// console.log("entrypoints", entrypoint.path, entrypoint.includes)
+					const result = aux(entrypoint)
+					if (result) { return result }
+				}
+			}
+
+			return null
 		}
 
 		public mousemove(e: any) {
