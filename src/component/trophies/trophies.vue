@@ -246,7 +246,12 @@
 			return this.count === this.total
 		}
 		get sort_icon() {
-			return this.sort_by === 'index' ? 'mdi-sort-variant' : (this.sort_by === 'points' ? 'mdi-trophy-outline' : 'mdi-star-outline')
+			return {
+				index: 'mdi-sort-variant',
+				points: 'mdi-trophy-outline',
+				rarity: 'mdi-star-outline',
+				date: 'mdi-calendar'
+			}[this.sort_by]
 		}
 
 		@Watch('id', {immediate: true})
