@@ -77,7 +77,7 @@
 				</div>
 				<v-btn v-if="viewDeleteAccount" @click="deleteDialog = true">{{ $t('delete_account') }}</v-btn>
 
-				<v-switch v-if="$store.state.farmer" v-model="settings.github_login" :disabled="!$store.state.farmer.pass" label="Autoriser la connexion via GitHub" />
+				<v-switch v-if="$store.state.farmer" v-model="settings.github_login" :disabled="!$store.state.farmer.pass" label="Autoriser la connexion via GitHub" @change="updateGithubLogin" />
 			</panel>
 
 			<panel title="Notifications" icon="mdi-bell-outline">
@@ -188,10 +188,10 @@
 		]
 
 		settings: any = null
-		sfwMode: boolean = false
-		notifsResults: boolean = false
-		chatFirst: boolean = false
-		pushNotifications: boolean = false
+		sfwMode: boolean = localStorage.getItem('sfw') === 'true'
+		notifsResults: boolean = localStorage.getItem('options/notifs-results') === 'true'
+		chatFirst: boolean = localStorage.getItem('options/chat-first') === 'true'
+		pushNotifications: boolean = localStorage.getItem('options/push-notifs') === 'true'
 		deleteDialog: boolean = false
 		deleteConfirmDialog: boolean = false
 		deleteConfirmPassword: string = ''
@@ -214,15 +214,11 @@
 			for (const category in this.mails) {
 				this.settings['push_' + category] = false
 			}
-			this.pushNotifications = localStorage.getItem('options/push-notifs') === 'true'
 			LeekWars.setActions([
 				{icon: 'mdi-power', click: () => this.logout()}
 			])
 
 			LeekWars.get('settings/get-settings').then(data => {
-				this.sfwMode = localStorage.getItem('sfw') === 'true'
-				this.notifsResults = localStorage.getItem('options/notifs-results') === 'true'
-				this.chatFirst = localStorage.getItem('options/chat-first') === 'true'
 
 				this.settings = data.settings
 
@@ -270,6 +266,7 @@
 			LeekWars.toast("localstorage cleared!")
 			setTimeout(() => location.reload(), 800)
 		}
+
 		@Watch('sfwMode')
 		updateSfwMode() {
 			localStorage.setItem('sfw', '' + this.sfwMode)
@@ -278,6 +275,7 @@
 				LeekWars.post('trophy/unlock', {trophy_id: 234}) // Trophée On me voit on me voit plus
 			}
 		}
+
 		@Watch('notifsResults')
 		updateNotifsResults() {
 			localStorage.setItem('options/notifs-results', '' + this.notifsResults)
@@ -334,7 +332,6 @@
 			this.changeEmailSent = true
 		}
 
-		@Watch('settings.github_login')
 		updateGithubLogin() {
 			LeekWars.post("settings/update-setting", {setting: 'github_login', value: this.settings.github_login})
 		}
