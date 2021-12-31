@@ -75,7 +75,9 @@ class FileSystem {
 		this.bin = new Folder(-1, 'recycle_bin', 0)
 		this.bin.items = []
 		Vue.set(this.folderById, -1, this.bin)
-		for (const ai of farmer.bin) {
+		for (const id in farmer.bin) {
+			farmer.bin[id] = new AI(farmer.bin[id])
+			const ai = farmer.bin[id]
 			this.bin.items.push(new AIItem(ai, this.bin.id))
 			ai.path = this.getAIFullPath(ai)
 			ai.folderpath = this.getFolderPath(this.folderById[ai.folder])
