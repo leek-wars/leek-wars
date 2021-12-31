@@ -576,47 +576,6 @@
 			if (this.initialized) { return }
 
 			this.advanced = localStorage.getItem("editor/test/advanced") === 'true'
-
-			LeekWars.get('test-scenario/get-all').then(data => {
-				this.initialized = true
-				this.scenarios = data.scenarios
-				const startScenarioID = localStorage.getItem('editor/scenario')
-				if (startScenarioID && startScenarioID in this.scenarios) {
-					this.selectScenario(this.scenarios[startScenarioID])
-				} else if (LeekWars.objectSize(this.scenarios)) {
-					this.selectScenario(LeekWars.first(this.scenarios)!)
-				}
-			})
-			.error(error => LeekWars.toast(this.$t('error_' + error.error, error.params)))
-
-			LeekWars.get('test-leek/get-all').then(data => {
-				for (const id in data.leeks) {
-					this.leeks.push(data.leeks[id])
-				}
-				this.generateBots()
-				for (const l in this.leeks) {
-					const leek = this.leeks[l]
-					if (!leek.chips) { leek.chips = [] }
-					if (!leek.weapons) { leek.weapons = [] }
-					leek.real = false
-					leek.ai = -1 as any
-				}
-				const startLeekID = parseInt(localStorage.getItem('editor/leek') || '', 10)
-				if (startLeekID && startLeekID in this.leeks) {
-					this.selectLeek(this.leeks.find(l => l.id === startLeekID))
-				} else if (this.leeks.length) {
-					this.selectLeek(this.leeks[0])
-				}
-			})
-			.error(error => LeekWars.toast(this.$t('error_' + error.error, error.params)))
-
-			LeekWars.get('test-map/get-all').then(data => {
-				this.maps = data.maps
-				if (!LeekWars.isEmptyObj(this.maps)) {
-					this.currentMap = LeekWars.first(this.maps)
-				}
-			})
-			.error(error => LeekWars.toast(this.$t('error_' + error.error, error.params)))
 		}
 		mounted() {
 			this.initMap()
@@ -624,6 +583,7 @@
 
 		@Watch('value')
 		update() {
+			this.load()
 			this.loadCompositions()
 			this.updateAI()
 		}
@@ -1103,6 +1063,46 @@
 			else if (type === FightType.BATTLE_ROYALE) { return 10 }
 			return 6
 		}
+
+		load() {
+			if (!this.initialized) {
+				LeekWars.get('test-scenario/get-all').then(data => {
+					this.initialized = true
+					this.scenarios = data.scenarios
+					const startScenarioID = localStorage.getItem('editor/scenario')
+					if (startScenarioID && startScenarioID in this.scenarios) {
+						this.selectScenario(this.scenarios[startScenarioID])
+					} else if (LeekWars.objectSize(this.scenarios)) {
+						this.selectScenario(LeekWars.first(this.scenarios)!)
+					}
+
+					for (const id in data.leeks) {
+						this.leeks.push(data.leeks[id])
+					}
+					this.generateBots()
+					for (const l in this.leeks) {
+						const leek = this.leeks[l]
+						if (!leek.chips) { leek.chips = [] }
+						if (!leek.weapons) { leek.weapons = [] }
+						leek.real = false
+						leek.ai = -1 as any
+					}
+					const startLeekID = parseInt(localStorage.getItem('editor/leek') || '', 10)
+					if (startLeekID && startLeekID in this.leeks) {
+						this.selectLeek(this.leeks.find(l => l.id === startLeekID))
+					} else if (this.leeks.length) {
+						this.selectLeek(this.leeks[0])
+					}
+
+					this.maps = data.maps
+					if (!LeekWars.isEmptyObj(this.maps)) {
+						this.currentMap = LeekWars.first(this.maps)
+					}
+				})
+				.error(error => LeekWars.toast(this.$t('error_' + error.error, error.params)))
+			}
+		}
+
 		loadCompositions() {
 			if (Object.values(this.compositionTemplates).length) { return }
 			LeekWars.get('team-composition/get-farmer-compositions').then(compositions => {
