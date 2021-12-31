@@ -259,6 +259,9 @@ import { Item } from '../editor/editor-item'
 		}
 
 		get total_estimated() {
+			// for (const i of this.filtered_inventory) {
+			// 	if (!LeekWars.items[i.template]) { console.log("Issue with item", i) }
+			// }
 			return Math.floor(this.filtered_inventory.reduce((s, i) => s + LeekWars.items[i.template].price! * i.quantity, 0))
 		}
 
