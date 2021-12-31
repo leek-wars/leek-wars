@@ -17,6 +17,7 @@
 						<div class="difficulty" :class="'difficulty-' + trophy.difficulty"><v-icon v-for="i in trophy.difficulty" :key="i">mdi-star-outline</v-icon> {{ $t('main.difficulty_' + trophy.difficulty) }}</div>
 						<div v-if="trophy.in_fight" class="in-fight"><v-icon>mdi-sword-cross</v-icon> {{ $t('trophy.unlockable_fight') }}</div>
 						<div v-if="trophy.secret" class="in-fight"><v-icon>mdi-eye-off-outline</v-icon> {{ $t('trophy.secret') }}</div>
+						<div v-if="trophy.unique" class="in-fight"><v-icon>mdi-numeric-1-circle-outline</v-icon> {{ $t('trophy.unique') }}</div>
 					</div>
 				</div>
 			</div>
