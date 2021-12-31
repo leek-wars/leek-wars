@@ -485,10 +485,10 @@
 			<span slot="title">{{ $t('log_change') }}</span>
 			<div>{{ $t('log_change_text') }}</div>
 			<br>
-			<v-radio-group v-model="logsLevel" hide-details>
-				<v-radio :label="$t('log_level_0') + ' : ' + $t('log_level_0_desc')" />
-				<v-radio :label="$t('log_level_1') + ' : ' + $t('log_level_1_desc')" />
-				<v-radio :label="$t('log_level_2') + ' : ' + $t('log_level_2_desc')" />
+			<v-radio-group v-model="logsLevel" hide-details @change="updateLogsLevel">
+				<v-radio :value="0" :label="$t('log_level_0') + ' : ' + $t('log_level_0_desc')" />
+				<v-radio :value="1" :label="$t('log_level_1') + ' : ' + $t('log_level_1_desc')" />
+				<v-radio :value="2" :label="$t('log_level_2') + ' : ' + $t('log_level_2_desc')" />
 			</v-radio-group>
 		</popup>
 	</div>
@@ -882,7 +882,6 @@
 			this.turretAiDialog = false
 		}
 
-		@Watch("logsLevel")
 		updateLogsLevel() {
 			this.my_member!.logs_level = this.logsLevel
 			LeekWars.post('team/set-logs-level', {level: this.logsLevel})
