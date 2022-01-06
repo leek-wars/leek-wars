@@ -650,14 +650,20 @@
 			return this.leek.level === 301
 		}
 		get farmer_weapons() {
-			return store.state.farmer!.weapons.sort((weaponA, weaponB) => {
-				return LeekWars.items[weaponA.template].level - LeekWars.items[weaponB.template].level
-			})
+			if (store.state.farmer) {
+				return store.state.farmer.weapons.sort((weaponA, weaponB) => {
+					return LeekWars.items[weaponA.template].level - LeekWars.items[weaponB.template].level
+				})
+			}
+			return []
 		}
 		get farmer_chips() {
-			return store.state.farmer!.chips.sort((chipA, chipB) => {
-				return LeekWars.orderedChips[chipA.template] - LeekWars.orderedChips[chipB.template]
-			})
+			if (store.state.farmer) {
+				return store.state.farmer.chips.sort((chipA, chipB) => {
+					return LeekWars.orderedChips[chipA.template] - LeekWars.orderedChips[chipB.template]
+				})
+			}
+			return []
 		}
 		get farmer_hats() {
 			return store.state.farmer ? store.state.farmer!.hats : []
