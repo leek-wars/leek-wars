@@ -91,7 +91,7 @@
 					<table class="ranking">
 						<tr class="header">
 							<th class="p15">{{ $t('place') }}</th>
-							<th class="p35">{{ $t('leek') }}</th>
+							<th class="p35">{{ $t('main.leek') }}</th>
 							<th class="p25">{{ $t('talent') }}</th>
 						</tr>
 						<tr v-for="(leek, i) in leek_ranking" :key="i" :class="leek ? leek.style : ''">
@@ -143,7 +143,7 @@
 					<table class="ranking">
 						<tr class="header">
 							<th class="p20">{{ $t('place') }}</th>
-							<th class="p50">{{ $t('team') }}</th>
+							<th class="p50">{{ $t('main.team') }}</th>
 							<th class="p30">{{ $t('talent') }}</th>
 						</tr>
 						<tr v-for="(team, i) in team_ranking" :key="i" :class="team ? team.style : ''">
