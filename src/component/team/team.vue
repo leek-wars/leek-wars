@@ -190,11 +190,11 @@
 						</rich-tooltip-farmer>
 					</router-link>
 					<template v-if="member">
-						<div class="logs" :class="{hidden: member.logs_level === 0, me: member.id === $store.state.farmer.id}" @click="logsDialog = (member.id === $store.state.farmer.id)">
+						<div class="logs" :class="{hidden: member.logs_level === 0, me: $store.state.farmer && member.id === $store.state.farmer.id}" @click="logsDialog = ($store.state.farmer && member.id === $store.state.farmer.id)">
 							<v-icon v-if="member.logs_level > 0" class="activated">mdi-playlist-check</v-icon>
 							<v-icon v-else>mdi-playlist-remove</v-icon>
 							<span :title="$t('log_level_' + member.logs_level) + ' : ' + $t('log_level_' + member.logs_level + '_desc')"> {{ $t('log_level_' + member.logs_level) }} </span>
-							<v-icon v-if="member.id === $store.state.farmer.id" class="edit">mdi-pencil</v-icon>
+							<v-icon v-if="$store.state.farmer && member.id === $store.state.farmer.id" class="edit">mdi-pencil</v-icon>
 						</div>
 					</template>
 					<template v-if="owner && editMembers">
