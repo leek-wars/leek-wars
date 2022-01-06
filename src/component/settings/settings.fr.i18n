@@ -27,6 +27,15 @@
 	"error_not_same_password": "Les deux mots de passe entrés doivent être identiques",
 	"error_password_length": "Le mot de passe doit contenir entre {0} et {1} caractères",
 	"error_wrong_password": "Le mot de passe est incorrect",
+	"error_forbidden_name": "Ce nom est interdit",
+	"error_invalid_godfather": "Ce joueur n'existe pas",
+	"error_invalid_length": "Le mot de passe doit contenir entre {0} et {1} caractères",
+	"error_invalid_mail": "L'adresse e-mail doit être valide",
+	"error_login_already_used": "Le nom d'utilisateur est déjà utilisé",
+	"error_login_character_count": "Le nom d'utilisateur doit contenir entre {0} et {1} caractères",
+	"error_login_format": "Le nom d'utilisateur ne doit contenir que des caractères alphanumériques",
+	"error_login_length": "Le nom d'utilisateur doit contenir entre {0} et {1} caractères",
+	"error_mail_already_used": "L'adresse e-mail est déjà utilisée",
 	"language": "Langue",
 	"leek_theme": "Grands poireaux en blanc",
 	"logout": "Déconnexion",
@@ -37,5 +46,11 @@
 	"password_changed": "Mot de passe changé !",
 	"push_notifications": "Notifications push",
 	"title": "Paramètres",
-	"chat_first": "Affichage la page Chat en premier"
+	"chat_first": "Affichage la page Chat en premier",
+	"password": "Mot de passe",
+	"your_email": "Votre email",
+	"your_farmer_name": "Votre nom d'éleveur",
+	"godfather": "Parrain (Facultatif)",
+	"verify": "Vérifier le compte",
+	"verify_gh": "Vérifier avec GitHub"
 }

@@ -56,6 +56,7 @@ class Farmer {
 	public folders!: Folder[]
 	public leek_ais!: {[key: number]: number}
 	public resources!: any[]
+	public verified!: boolean
 }
 
 class Reward {

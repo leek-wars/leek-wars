@@ -52,6 +52,13 @@
 
 			<div class="toasts"></div>
 
+			<div v-if="$store.state.farmer && !$store.state.farmer.verified" class="finish-register">
+				<div class="message">
+					<v-icon>mdi-account-plus</v-icon>
+					Terminer votre inscription avec votre adresse e-mail pour ne pas perdre votre compte. <router-link class="green-link" to="/settings">Plus d'informations</router-link>
+				</div>
+			</div>
+
 			<img v-if="LeekWars.clover" :style="{top: LeekWars.cloverTop + 'px', left: LeekWars.cloverLeft + 'px'}" class="clover" src="/image/clover.png" @click="clickClover">
 
 			<didactitiel v-if="didactitiel_enabled" v-model="didactitiel" />
@@ -506,6 +513,27 @@
 		margin-top: 140px !important;
 		.documentation-page {
 			max-height: 80vh;
+		}
+	}
+	.finish-register {
+		position: fixed;
+		top: 0;
+		right: 0;
+		left: 0;
+		display: flex;
+		justify-content: center;
+		z-index: 10;
+		.message {
+			background: white;
+			box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
+			border-bottom-left-radius: 5px;
+			border-bottom-right-radius: 5px;
+			padding: 6px 12px;
+			display: flex;
+			gap: 5px;
+			i {
+				font-size: 18px;
+			}
 		}
 	}
 </style>

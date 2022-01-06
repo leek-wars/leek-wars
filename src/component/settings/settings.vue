@@ -3,12 +3,85 @@
 		<div class="page-header page-bar">
 			<h1>{{ $t('title') }}</h1>
 			<div class="tabs">
-				<div class="tab action" icon="mdi-power-settings-new" @click="logout">
+				<div v-if="$store.state.farmer && $store.state.farmer.verified" class="tab action" icon="mdi-power-settings-new" @click="logout">
 					<v-icon>mdi-power</v-icon>
 					<span>{{ $t('logout') }}</span>
 				</div>
 			</div>
 		</div>
+		<panel v-if="$store.state.farmer && !$store.state.farmer.verified" :title="$t('verify')" icon="mdi-account-plus">
+			<div class="verify">
+				<div>
+					<div><b><v-icon>mdi-information-outline</v-icon> Vous n'avez pas ajouté d'adresse email, vous pouvez perdre l'accès à votre compte si vous changer d'appareil, de navigateur.</b></div>
+					<br>
+					<div>Conseil : garder le cookie qui contient votre identifiant, si vous le perdez vous perdez complètement l'accès au compte.</div>
+					<br>
+					<div>
+						Une fois votre compte vérifié, vous pourrez :
+						<ul>
+							<li><v-icon>mdi-check</v-icon> Garder l'accès à votre compte</li>
+							<li><v-icon>mdi-check</v-icon> Se connecter sur un autre appareil</li>
+							<li><v-icon>mdi-check</v-icon> Forum, chats, messages privés</li>
+							<li><v-icon>mdi-check</v-icon> Acheter des cristaux</li>
+							<li><v-icon>mdi-check</v-icon> Battle Royales</li>
+						</ul>
+					</div>
+				</div>
+				<form method="post" @submit="submit">
+					<table>
+						<tr>
+							<td class="align-right">{{ $t('your_farmer_name') }}</td>
+							<td class="align-left">
+								<input v-model="login" :status="status('login')" name="login" type="text" required>
+								<div v-for="e in errors.login" :key="e" class="error-msg">{{ e }}</div>
+							</td>
+						</tr>
+						<tr>
+							<td class="align-right"><i>{{ $t('godfather') }}</i></td>
+							<td class="align-left">
+								<input v-model="godfather" :status="status('godfather')" type="text">
+								<div v-for="e in errors.godfather" :key="e" class="error-msg">{{ e }}</div>
+							</td>
+						</tr>
+						<tr>
+							<td><div class="space"></div></td>
+						</tr>
+						<tr>
+							<td colspan="2">
+								<v-radio-group v-model="signupMethod" class="radio" :row="true" :dense="true" :hide-details="true">
+									<v-radio label="Email / mot de passe" :value="1" />
+									<v-radio label="GitHub" :value="2" />
+								</v-radio-group>
+							</td>
+						</tr>
+						<tr v-if="signupMethod === 1">
+							<td class="align-right">{{ $t('your_email') }}</td>
+							<td class="align-left">
+								<input v-model="email" :status="status('email')" name="email" type="text" required>
+								<div v-for="e in errors.email" :key="e" class="error-msg">{{ e }}</div>
+							</td>
+						</tr>
+						<tr v-if="signupMethod === 1">
+							<td class="align-right">{{ $t('password') }}</td>
+							<td class="align-left">
+								<input v-model="password1" :status="status('password1')" name="password" type="password" required>
+								<div v-for="e in errors.password1" :key="e" class="error-msg">{{ e }}</div>
+							</td>
+						</tr>
+						<tr>
+							<td><div class="space"></div></td>
+						</tr>
+						<tr v-if="signupMethod === 2">
+							<td><div class="space"></div></td>
+						</tr>
+					</table>
+					<center>
+						<v-btn v-if="signupMethod === 1" large color="primary" type="submit">{{ $t('verify') }}</v-btn>
+						<v-btn v-else color="black" type="submit" class="gh-button"> <img src="/image/github_black.png"> {{ $t('verify_gh') }}</v-btn>
+					</center>
+				</form>
+			</div>
+		</panel>
 		<div class="container grid large">
 			<panel :title="$t('language')" class="languages" icon="mdi-translate">
 				<div v-for="language in LeekWars.languages" :key="language.code" v-ripple :class="{selected: language.code == $i18n.locale}" :lang="language.code" class="language" @click="LeekWars.setLocale(language.code)">
@@ -40,7 +113,7 @@
 			</panel>
 
 			<panel :title="$t('account')" icon="mdi-account" class="account">
-				<div v-ripple class="list-item card" @click="viewChangePassword = !viewChangePassword">
+				<div v-if="$store.state.farmer.verified" v-ripple class="list-item card" @click="viewChangePassword = !viewChangePassword">
 					<v-icon>mdi-lock-open-outline</v-icon>
 					<span class="label">{{ $t('change_password') }}</span>
 					<v-icon>{{ viewChangePassword ? 'mdi-menu-up' : 'mdi-menu-down' }}</v-icon>
@@ -56,7 +129,7 @@
 					<center><v-btn type="submit">{{ $t('change') }}</v-btn></center>
 				</form>
 
-				<div v-ripple class="list-item card" @click="viewChangeEmail = !viewChangeEmail">
+				<div v-if="$store.state.farmer.verified" v-ripple class="list-item card" @click="viewChangeEmail = !viewChangeEmail">
 					<v-icon>mdi-email-outline</v-icon>
 					<span class="label">{{ $t('change_email') }}</span>
 					<v-icon>{{ viewChangeEmail ? 'mdi-menu-up' : 'mdi-menu-down' }}</v-icon>
@@ -75,12 +148,12 @@
 					<span class="label">{{ $t('delete_account') }}</span>
 					<v-icon>{{ viewDeleteAccount ? 'mdi-menu-up' : 'mdi-menu-down' }}</v-icon>
 				</div>
-				<v-btn v-if="viewDeleteAccount" @click="deleteDialog = true">{{ $t('delete_account') }}</v-btn>
+				<v-btn v-if="viewDeleteAccount" @click="deleteDialog = true" color="error">{{ $t('delete_account') }}</v-btn>
 
-				<v-switch v-if="$store.state.farmer" v-model="settings.github_login" :disabled="!$store.state.farmer.pass" label="Autoriser la connexion via GitHub" @change="updateGithubLogin" />
+				<v-switch v-if="$store.state.farmer && $store.state.farmer.verified" v-model="settings.github_login" :disabled="!$store.state.farmer.pass" label="Autoriser la connexion via GitHub" @change="updateGithubLogin" />
 			</panel>
 
-			<panel title="Notifications" icon="mdi-bell-outline">
+			<panel v-if="$store.state.farmer && $store.state.farmer.verified" title="Notifications" icon="mdi-bell-outline">
 				<span slot="actions" class="push-notifs-button" @click="updatePushNotifications">
 					<span>{{ $t('push_notifications') }}</span>
 					<v-switch :input-value="pushNotifications" hide-details />
@@ -132,8 +205,8 @@
 			<v-icon slot="icon">mdi-delete</v-icon>
 			<span slot="title">{{ $t('delete_account') }}</span>
 			<div v-html="$t('delete_message')"></div>
-			<br>
-			<v-switch v-model="deleteForumMessages" :label="$t('delete_forum_messages')" hide-details />
+			<br v-if="$store.state.farmer.verified">
+			<v-switch v-if="$store.state.farmer.verified" v-model="deleteForumMessages" :label="$t('delete_forum_messages')" hide-details />
 			<div slot="actions">
 				<div v-ripple class="action dismiss" @click="deleteDialog = false">{{ $t('delete_cancel') }}</div>
 				<div v-ripple class="action red" @click="deleteAccountConfirm">{{ $t('delete_confirm') }}</div>
@@ -208,15 +281,23 @@
 		viewDeleteAccount: boolean = false
 		view2FA: boolean = false
 		changeEmailSent: boolean = false
+		errors: {[key: string]: string[]} = {}
+		login: string = ''
+		godfather: string = ''
+		signupMethod: number = 1
+		email: string = ''
+		password1: string = ''
 
 		created() {
 			this.settings = {}
 			for (const category in this.mails) {
 				this.settings['push_' + category] = false
 			}
-			LeekWars.setActions([
-				{icon: 'mdi-power', click: () => this.logout()}
-			])
+			if (this.$store.state.farmer && this.$store.state.farmer.verified) {
+				LeekWars.setActions([
+					{icon: 'mdi-power', click: () => this.logout()}
+				])
+			}
 
 			LeekWars.get('settings/get-settings').then(data => {
 
@@ -309,9 +390,26 @@
 		}
 
 		deleteAccountConfirm() {
-			this.deleteDialog = false
-			this.deleteConfirmDialog = true
+			if (this.$store.state.farmer.verified) {
+				this.deleteDialog = false
+				this.deleteConfirmDialog = true
+			} else {
+				LeekWars.post('farmer/unregister-fast').then(data => {
+					this.deleteDialog = false
+					this.deleteSuccessDialog = true
+					setTimeout(() => {
+						this.$store.commit('disconnect')
+						this.deleteSuccessDialog = false
+						this.$router.push('/')
+					}, 3000)
+				}).error(error => {
+					this.deleteDialog = false
+					this.deleteFailedDialog = true
+					this.deleteFailedError = error
+				})
+			}
 		}
+
 		deleteAccountFinal() {
 			LeekWars.post('farmer/unregister', {password: this.deleteConfirmPassword, delete_forum_messages: this.deleteForumMessages}).then(data => {
 				this.deleteConfirmDialog = false
@@ -342,26 +440,74 @@
 		updateLeekTheme() {
 			localStorage.setItem('leek-theme', '' + LeekWars.leekTheme)
 		}
+
+		submit(e: Event) {
+			e.preventDefault()
+			this.errors = {}
+			const service = this.signupMethod === 1 ? 'farmer/verify' : 'farmer/verify-github'
+			const args = {
+				login: this.login,
+				godfather: this.godfather,
+			} as any
+			if (this.signupMethod === 1) {
+				args.password = this.password1
+				args.email = this.email
+			}
+			LeekWars.post(service, args).then(data => {
+				console.log("post", data, this.signupMethod)
+				if (this.signupMethod === 1) {
+					this.$router.push('/signup/success/' + this.login)
+				} else {
+					const redirect_uri = document.location.origin + "/api/farmer/verify-github"
+					document.location.href = "https://github.com/login/oauth/authorize?client_id=0253d6b35d4db2a77a3b&scope=user:email&redirect_uri=" + redirect_uri + "&state=" + data.state
+				}
+			}).error(errors => {
+				for (const error of errors) {
+					const form = ['login', 'leek', 'email', 'password1', 'password2', 'godfather'][error[0]]
+					this.addError(form, this.$t('error_' + error[1], error[2]) as string)
+				}
+			})
+			return false
+		}
+
+		addError(form: string, error: string) {
+			if (!(form in this.errors)) {
+				Vue.set(this.$data.errors, form, [])
+			}
+			this.errors[form].push(error)
+		}
+
+		status(form: string) {
+			if (form in this.errors) {
+				if (Object.keys(this.errors[form]).length > 0) {
+					return 'error'
+				} else {
+					return 'valid'
+				}
+			} else {
+				return null
+			}
+		}
 	}
 </script>
 
 <style lang="scss" scoped>
-	.languages .language {
-		display: inline-block;
-		padding: 8px;
+	.languages {
 		text-align: center;
-		font-weight: 300;
-		margin: 5px;
-		cursor: pointer;
-		border: 1px solid #ddd;
-		border-radius: 2px;
+		.language {
+			display: inline-block;
+			padding: 8px;
+			text-align: center;
+			font-weight: 300;
+			margin: 5px;
+			cursor: pointer;
+			border: 1px solid #ddd;
+			border-radius: 2px;
+		}
 	}
 	.languages .language.selected {
 		background: white;
 		box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
-	}
-	.panel {
-		text-align: center;
 	}
 	.misc-settings {
 		width: 100%;
@@ -478,5 +624,50 @@
 	}
 	.account {
 		text-align: left;
+	}
+	.v-btn.gh-button {
+		height: 40px;
+		margin-right: 10px;
+		img {
+			height: 20px;
+			margin-right: 5px;
+		}
+	}
+	.align-right {
+		text-align: right;
+		padding: 10px;
+		width: 50%;
+	}
+	.align-left {
+		text-align: left;
+		width: 50%;
+	}
+	.verify {
+		display: flex;
+		padding: 10px;
+		& > * {
+			flex: 1;
+		}
+		ul {
+			margin-bottom: 0;
+			i {
+				color: #5fad1b;
+			}
+		}
+	}
+	.space {
+		height: 8px;
+	}
+	#app.app .verify {
+		flex-direction: column;
+		padding: 0;
+	}
+	input[status=error], input[status=error]:focus {
+		border: 2px solid red;
+	}
+	.error-msg {
+		color: red;
+		font-size: 12px;
+		margin: 5px 0;
 	}
 </style>

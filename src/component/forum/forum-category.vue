@@ -5,7 +5,7 @@
 				<breadcrumb :items="breadcrumb_items" :raw="true" />
 			</h1>
 			<div v-if="!LeekWars.mobile" class="tabs">
-				<div class="tab" @click="createDialog = true">
+				<div v-if="$store.state.farmer && $store.state.farmer.verified" class="tab" @click="createDialog = true">
 					<v-icon>mdi-comment-edit</v-icon>
 					<span>{{ $t('create_new_topic') }}</span>
 				</div>

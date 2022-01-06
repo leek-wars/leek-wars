@@ -35,7 +35,7 @@
 		@Prop() invert!: boolean
 		@Prop() ai!: number
 
-		botHats = [ null, 8, 12, 13 ]
+		botHats = [ null, 111, 128, 129 ]
 		randomAngle: number = 0
 
 		created() {
@@ -53,19 +53,20 @@
 			if (typeof(hat) === 'number') {
 				return hat
 			}
-			return hat!.hat_template
+			return hat!.template
 		}
 		get hatImage(): string {
 			if (this.hat) {
-				const hatName = LeekWars.hats[LeekWars.hatTemplates[this.hat].item].name
+				const hatName = LeekWars.hats[this.hat].name
 				return 'hat/' + hatName + '.png'
 			}
 			return ''
 		}
 		get hatTemplate(): HatTemplate | null {
-			return this.hat ? LeekWars.hats[LeekWars.hatTemplates[this.hat].item] : null
+			return this.hat ? LeekWars.hats[this.hat] : null
 		}
-		get hatWidth() { return this.hatTemplate ? this.leekWidth * this.hatTemplate.width : 0 }
+		get hatScale() { return 1 + (1 - this.leek.level / 301) * 0.12}
+		get hatWidth() { return this.hatTemplate ? this.leekWidth * (this.hatTemplate.width * 1.3 * this.hatScale) : 0 }
 		get hatHeight() { return this.hatSize ? this.hatWidth * (this.hatSize.height / this.hatSize.width) : 0 }
 		get hasHat(): boolean { return this.hat !== null }
 		get leekWidth(): number { return this.leekSize ? this.leekSize.width : 0 }
@@ -151,7 +152,7 @@
 		get handSize() { return 20 / this.weaponScale }
 		get appearance() { return LeekWars.getLeekAppearance(this.leek.level) }
 		get leekSize() { return LeekWars.leekSizes[this.appearance] }
-		get hatSize() { return this.hat ? LeekWars.hatSizes[this.hat] : null }
+		get hatSize() { return this.hat ? LeekWars.hatSizes[LeekWars.hats[this.hat].template] : null }
 		get handImage() {
 			return "/image/fight/leek_hand" + (this.leek.skin === 15 ? "_gold" : "") + ".png"
 		}
