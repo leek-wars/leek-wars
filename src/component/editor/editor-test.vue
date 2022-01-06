@@ -623,7 +623,6 @@
 		selectScenario(scenario: TestScenario) {
 			this.currentScenario = scenario
 			this.updateScenarioBotsLevels()
-			localStorage.setItem('editor/scenario', '' + scenario.id)
 		}
 
 		selectLeek(leek: any) {
@@ -1069,12 +1068,7 @@
 				LeekWars.get('test-scenario/get-all').then(data => {
 					this.initialized = true
 					this.scenarios = data.scenarios
-					const startScenarioID = localStorage.getItem('editor/scenario')
-					if (startScenarioID && startScenarioID in this.scenarios) {
-						this.selectScenario(this.scenarios[startScenarioID])
-					} else if (LeekWars.objectSize(this.scenarios)) {
-						this.selectScenario(LeekWars.first(this.scenarios)!)
-					}
+					this.updateAI()
 
 					for (const id in data.leeks) {
 						this.leeks.push(data.leeks[id])
