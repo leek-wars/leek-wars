@@ -620,6 +620,7 @@
 				this.errors = []
 				this.goods = []
 				LeekWars.analyzer.clearProblems(aiEditor.ai!)
+				aiEditor.removeAllErrors()
 
 				for (const entrypoint in data.result) {
 					const entrypoint_id = parseInt(entrypoint, 10)
