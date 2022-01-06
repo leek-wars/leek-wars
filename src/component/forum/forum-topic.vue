@@ -109,7 +109,7 @@
 										&nbsp;&nbsp;
 										<span class="action pin" @click="pin"><v-icon>mdi-pin</v-icon> {{ topic.pinned ? $t('unpin') : $t('pin') }}</span>
 									</template>
-									<template v-if="message.id == -1 && $store.state.connected && (topic.owner === $store.state.farmer.id || category.moderator)">
+									<template v-if="message.id == -1 && $store.state.connected && (($store.state.farmer && topic.owner === $store.state.farmer.id) || category.moderator)">
 										&nbsp;&nbsp;
 										<span class="action resolve" @click="resolve"><v-icon>mdi-check</v-icon> {{ topic.resolved ? $t('unsolved') : $t('solved') }}</span>
 									</template>
@@ -123,7 +123,7 @@
 										</div>
 									</div>
 
-									<v-menu v-if="!message.deleted && !message.editing && (($store.state.farmer && (message.writer.id === $store.state.farmer.id || category.moderator)) || (category.team === -1 && message.writer.id !== $store.state.farmer.id && message.writer.color !== 'admin'))" offset-y>
+									<v-menu v-if="$store.state.farmer && !message.deleted && !message.editing && ((message.writer.id === $store.state.farmer.id || category.moderator) || (category.team === -1 && message.writer.id !== $store.state.farmer.id && message.writer.color !== 'admin'))" offset-y>
 										<template v-slot:activator="{ on }">
 											<v-btn text small icon color="grey" v-on="on">
 												<v-icon>mdi-dots-vertical</v-icon>
