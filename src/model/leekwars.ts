@@ -224,6 +224,7 @@ const LeekWars = {
 	box: false,
 	nativeEmojis: detectNativeEmojis(),
 	leekTheme: localStorage.getItem('leek-theme') === 'true',
+	keepConnected: null as NodeJS.Timeout | null,
 	setLocale(locale: string) {
 		loadLanguageAsync(vueMain, locale)
 		LeekWars.post('farmer/set-language', {language: locale})
