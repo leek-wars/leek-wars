@@ -222,7 +222,9 @@
 
 				this.settings = data.settings
 
-				LeekWars.setTitle(this.$t('title'), this.$store.state.farmer.name)
+				if (this.$store.state.farmer) {
+					LeekWars.setTitle(this.$t('title'), this.$store.state.farmer.name)
+				}
 
 				if (LeekWars.service_worker) {
 					// Check the push notifs switch if we have a valid subscription
