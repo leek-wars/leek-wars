@@ -487,9 +487,9 @@
 			<br>
 			<br>
 			<center>
-				<v-btn class="rename-button" @click="rename('habs')">{{ $t('rename_pay_habs') }} :&nbsp;<b>{{ rename_price_habs }}</b>&nbsp;<img src="/image/hab.png"></v-btn>
+				<v-btn class="rename-button" @click="rename('habs')">{{ $t('rename_pay_habs') }} :&nbsp;<b>{{ rename_price_habs | number }}</b><span class="hab"></span></v-btn>
 				&nbsp;
-				<v-btn class="rename-button" @click="rename('crystals')">{{ $t('rename_pay_crystals') }} :&nbsp;<b>{{ rename_price_crystals }}</b> &nbsp;<span class="crystal"></span></v-btn>
+				<v-btn class="rename-button" @click="rename('crystals')">{{ $t('rename_pay_crystals') }} :&nbsp;<b>{{ rename_price_crystals }}</b> <span class="crystal"></span></v-btn>
 			</center>
 		</popup>
 
