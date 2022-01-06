@@ -283,14 +283,6 @@ const vueMain = new Vue({
 		LeekWars.initChats()
 
 		displayWarningMessage()
-
-		// Keep connected
-		setInterval(() => {
-			store.commit('last-connection', LeekWars.time)
-			LeekWars.post('farmer/update').then(data => {
-				store.commit('connected-count', data.farmers)
-			})
-		}, 59 * 1000)
 	}
 }).$mount('#app')
 
