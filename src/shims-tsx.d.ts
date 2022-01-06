@@ -47,6 +47,6 @@ declare global {
 	interface Window {
 		Module: any
 		__STARPASS_CODE__: string
-		__FARMER__: {farmer: Farmer, farmers: number}
+		__FARMER__: {farmer: Farmer, farmers: number} | null
 	}
 }
