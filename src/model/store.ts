@@ -759,7 +759,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 		},
 
 		'add-resource'(state: LeekWarsState, data: { template: number, id: number }) {
-			console.log("add resource", data);
+			// console.log("add resource", data);
 			for (const resource of state.farmer!.resources) {
 				if (resource.template === data.template) {
 					resource.quantity += 1
