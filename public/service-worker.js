@@ -21,6 +21,19 @@ function post(url, args) {
 }
 */
 
+const broadcast = new BroadcastChannel('channel')
+broadcast.onmessage = (event) => {
+	if (event.data && event.data.type === 'editor-opened') {
+		self.clients.matchAll({
+			type: 'window',
+		}).then((clients) => {
+			const opened = clients.filter(client => client.url.includes('/editor/')).length >= 2
+			// const urls = clients.map(client => client.url)
+			broadcast.postMessage({ opened })
+		})
+	}
+}
+
 self.addEventListener('fetch', event => {
 	// Let the browser do its default thing
 	// for non-GET requests.

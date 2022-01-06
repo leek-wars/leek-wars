@@ -245,6 +245,13 @@
 			</div>
 		</popup>
 
+		<popup v-model="alreadyOpenedDialog" :width="500">
+			<v-icon slot="icon">mdi-alert-outline</v-icon>
+			<span slot="title">Avertissement</span>
+
+			L'éditeur est déjà ouvert dans un autre onglet !
+		</popup>
+
 		<editor-test ref="editorTest" v-model="testDialog" :ais="fileSystem.ais" :leek-ais="fileSystem.leekAIs" :currentAI="currentAI" />
 
 		<!--
@@ -331,6 +338,7 @@
 		fileSystem = fileSystem
 		fileMenu: boolean = false
 		history: AI[] = []
+		alreadyOpenedDialog: boolean = false
 		actions_list = [
 			{icon: 'mdi-plus', click: (e: any) => this.add(e)},
 			{icon: 'mdi-cogs', click: () => this.settings() }
@@ -454,6 +462,15 @@
 			if (store.state.farmer) {
 				this.connected()
 			}
+
+			const broadcast = new BroadcastChannel('channel')
+			broadcast.onmessage = (event) => {
+				if (event.data.opened) {
+					this.alreadyOpenedDialog = true
+				}
+				broadcast.close()
+			}
+			broadcast.postMessage({ type: 'editor-opened' })
 		}
 
 		isChild(folder: Folder, parent: Folder): boolean {
