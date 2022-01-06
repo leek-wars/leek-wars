@@ -14,12 +14,13 @@
 
 <script lang="ts">
 	import NotificationElement from '@/component/notifications/notification.vue'
+	import { mixins } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import { Notification } from '@/model/notification'
 	import { Component, Vue } from 'vue-property-decorator'
 
 	@Component({
-		name: 'notifications', i18n: {},
+		name: 'notifications', i18n: {}, mixins: [...mixins],
 		components: { notification: NotificationElement }
 	})
 	export default class Notifications extends Vue {
@@ -33,7 +34,6 @@
 					this.notifications.push(notif)
 				}
 				LeekWars.setTitle(this.$t('title'))
-				LeekWars.post('notification/read-all')
 				this.$store.commit('read-notifications')
 			})
 		}
