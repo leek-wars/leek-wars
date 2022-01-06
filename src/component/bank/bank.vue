@@ -43,10 +43,11 @@
 </template>
 
 <script lang="ts">
+	import { mixins } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import { Component, Vue } from 'vue-property-decorator'
 
-	@Component({ name: 'bank', i18n: {} })
+	@Component({ name: 'bank', i18n: {}, mixins: [...mixins] })
 	export default class Bank extends Vue {
 		packs: any = null
 		created() {
