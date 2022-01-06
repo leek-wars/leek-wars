@@ -76,7 +76,7 @@ class Analyzer {
 		// console.log("clearProblems", mainAI)
 		const aux = (ai: AI) => {
 			const ais = this.problems[ai.id]
-			delete this.problems[ai.id]
+			Vue.delete(this.problems, ai.id)
 			for (const a in ais) {
 				this.updateAiErrors(a)
 			}
