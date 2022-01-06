@@ -93,6 +93,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			localStorage.removeItem('garden/category') // On revient à la catégorie potager par défaut
 			state.token = null
 			state.farmer = null
+			window.__FARMER__ = null
 			LeekWars.socket.disconnect()
 			LeekWars.setTitleCounter(0)
 			LeekWars.battleRoyale.leave()
