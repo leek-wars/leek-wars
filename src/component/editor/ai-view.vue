@@ -385,8 +385,9 @@
 		}
 
 		public removeErrors(entrypoint: number) {
-			// console.log("remove errors", this.ai.name)
+			// console.log("remove errors", entrypoint, this.ai.name)
 			if (this.errorOverlays[entrypoint]) {
+				// console.log("removeOverlays")
 				this.editor.removeOverlay(this.errorOverlays[entrypoint])
 				delete this.errorOverlays[entrypoint]
 			}
