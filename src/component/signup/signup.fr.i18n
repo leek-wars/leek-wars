@@ -35,5 +35,8 @@
 	"total_level": "Niveau total",
 	"your_email": "Votre email",
 	"your_farmer_name": "Votre nom d'éleveur",
-	"your_leek_name": "Nom de votre poireau"
+	"your_leek_name": "Nom de votre poireau",
+	"skin": "Couleur",
+	"hat": "Chapeau",
+	"play": "Jouer"
 }

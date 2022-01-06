@@ -44,7 +44,7 @@
 					</router-link>
 				</div>
 			</div>
-			<div v-if="$store.state.connected" class="header-farmer buttons">
+			<div v-if="$store.state.farmer" class="header-farmer buttons">
 				<!--
 				<div class="button-wrapper">
 					<div class="header-button" @click="LeekWars.setLocale($i18n.locale === 'fr' ? 'en' : 'fr')">
@@ -52,7 +52,7 @@
 					</div>
 				</div>
 				-->
-				<div v-if="env.BANK" class="button-wrapper">
+				<div v-if="env.BANK && $store.state.farmer.verified" class="button-wrapper">
 					<router-link to="/bank">
 						<div v-if="$store.state.farmer" class="header-button">
 							<span class="farmer-crystals text">{{ Math.round($store.state.farmer.animated_crystals) | number }}</span>

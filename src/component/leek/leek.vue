@@ -304,7 +304,7 @@
 						</div>
 					</rich-tooltip-item>
 				</div>
-				<i18n class="buy-hint" tag="div" path="buy_hint">
+				<i18n v-if="$store.state.farmer" class="buy-hint" tag="div" path="buy_hint">
 					<span slot="hab"><b>{{ $store.state.farmer.habs | number }}</b> <span class="hab"></span></span>
 					<router-link slot="market" to="/market">{{ $t('main.market') }}</router-link>
 				</i18n>
@@ -447,9 +447,9 @@
 					</div>
 					<div v-ripple class="item card" @click="hatDialog = true">
 						<div class="title">{{ $t('hat') }}</div>
-						<img v-if="leek.hat" class="image" :src="'/image/hat/' + LeekWars.hats[LeekWars.hatTemplates[leek.hat.hat_template].item].name + '.png'">
+						<img v-if="leek.hat" class="image" :src="'/image/hat/' + LeekWars.hats[leek.hat.template].name + '.png'">
 						<img v-else class="image" src="/image/hat/no_hat.png">
-						<div v-if="leek.hat" class="name">{{ $t('hat.' + LeekWars.hats[LeekWars.hatTemplates[leek.hat.hat_template].item].name) }}</div>
+						<div v-if="leek.hat" class="name">{{ $t('hat.' + LeekWars.hats[leek.hat.template].name) }}</div>
 					</div>
 					<div v-ripple class="item card" :class="{disabled: !holdWeaponEnabled}" @click="skinWeaponDialog = true">
 						<div class="title">
@@ -551,7 +551,7 @@
 						</div>
 					</rich-tooltip-item>
 				</div>
-				<i18n class="buy-hint" tag="div" path="buy_hint">
+				<i18n v-if="$store.state.farmer" class="buy-hint" tag="div" path="buy_hint">
 					<span slot="hab"><b>{{ $store.state.farmer.habs | number }}</b> <span class="hab"></span></span>
 					<router-link slot="market" to="/market">{{ $t('main.market') }}</router-link>
 				</i18n>

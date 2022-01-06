@@ -938,3 +938,20 @@ body {
 .spacer {
 	flex: 1;
 }
+
+.skin-1 { background: #00aa00 }
+.skin-2 { background: #0090ff }
+.skin-3 { background: #f8d300 }
+.skin-4 { background: red }
+.skin-5 { background: #f88400 }
+.skin-6 { background: #f800c2 }
+.skin-7 { background: #03ebeb }
+.skin-8 { background: #9d00f8 }
+
+a.green-link {
+	color: #5fad1b;
+	font-weight: 500;
+	&:hover {
+		text-decoration: underline;
+	}
+}

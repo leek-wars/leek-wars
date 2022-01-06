@@ -268,7 +268,7 @@
 
 		get farmerEnabled() { return this.garden && this.garden.farmer_enabled }
 		get teamEnabled() { return this.garden && this.garden.team_enabled }
-		get battleRoyaleEnabled() { return this.garden && this.garden.battle_royale_enabled }
+		get battleRoyaleEnabled() { return this.garden && this.garden.battle_royale_enabled && this.$store.state.farmer && this.$store.state.farmer.verified }
 
 		mounted() {
 			LeekWars.setTitle(this.$t('title'))

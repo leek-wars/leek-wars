@@ -14,7 +14,10 @@
 			<div v-show="unread" v-ripple class="chat-new-messages" @click="updateScroll(true)">{{ $t('main.unread_messages') }}</div>
 		</div>
 		<div v-if="$store.state.wsdisconnected" class="chat-disconnected">{{ $t('main.disconnected') }}</div>
-		<chat-input @message="sendMessage" />
+		<div v-if="$store.state.farmer && !$store.state.farmer.verified" class="verify">
+			<router-link class="green-link" to="/settings">Vérifiez votre compte pour discuter</router-link>
+		</div>
+		<chat-input v-else @message="sendMessage" />
 
 	</div>
 </template>
@@ -217,5 +220,11 @@
 		&:after {
 			margin-left: 10px;
 		}
+	}
+	.verify {
+		display: flex;
+		height: 40px;
+		align-items: center;
+		justify-content: center;
 	}
 </style>

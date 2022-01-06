@@ -11,21 +11,48 @@
 					<div v-if="leek_count" class="desc" v-html="$t('n_leeks_already', [LeekWars.formatNumber(leek_count)])"></div>
 				</div>
 			</panel>
-			<panel v-if="env.SIGN_UP" :title="$t('main.signup')" icon="mdi-bell-outline">
+			<panel v-if="env.SIGN_UP" :title="fastRegister ? $t('play') : $t('main.signup')" :icon="fastRegister ? 'mdi-sword-cross' : 'mdi-account-plus'">
+				<div slot="actions">
+					<div v-if="fastRegister" class="button" @click="fastRegister = false"><v-icon>mdi-account-plus</v-icon><span>Inscription classique</span></div>
+					<div v-else class="button" @click="fastRegister = true"><v-icon>mdi-flash-outline</v-icon><span>Inscription rapide</span></div>
+				</div>
 				<form class="signup-form" method="post" @submit="submit">
-					<table>
+
+					<div class="leek-creator" :class="{fast: fastRegister}">
+
+						<div class="leek">
+							<leek-image :leek="{level: 1, skin: leekSkin, hat: {template: leekHat}}" :scale="1" />
+							<div class="name card">{{ leek ? leek : '?' }}</div>
+						</div>
+
+						<div class="infos">
+							<div>
+								<div class="title">{{ $t('your_leek_name') }}</div>
+								<input v-model="leek" :status="status('leek')" name="leek" type="text" required>
+								<div v-for="e in errors.leek" :key="e" class="error-msg">{{ e }}</div>
+							</div>
+							<div>
+								<div class="title">{{ $t('skin') }}</div>
+								<div class="skins">
+									<div v-for="skin in [1, 2, 3, 4, 5, 6, 7, 8]" :key="skin" class="skin" :class="{['skin-' + skin]: true}" @click="leekSkin = skin"></div>
+								</div>
+							</div>
+							<div>
+								<div class="title">{{ $t('hat') }}</div>
+								<div class="hats">
+									<img src="/image/hat/no_hat.png" class="hat" @click="leekHat = null">
+									<img v-for="hat in [69, 70, 112, 87]" :key="hat" :src="'/image/hat/' + LeekWars.hats[hat].name + '.png'" class="hat" @click="leekHat = hat">
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<table v-if="!fastRegister">
 						<tr>
 							<td class="align-right">{{ $t('your_farmer_name') }}</td>
 							<td class="align-left">
 								<input v-model="login" :status="status('login')" name="login" type="text" required>
 								<div v-for="e in errors.login" :key="e" class="error-msg">{{ e }}</div>
-							</td>
-						</tr>
-						<tr>
-							<td class="align-right">{{ $t('your_leek_name') }}</td>
-							<td class="align-left">
-								<input v-model="leek" :status="status('leek')" name="leek" type="text" required>
-								<div v-for="e in errors.leek" :key="e" class="error-msg">{{ e }}</div>
 							</td>
 						</tr>
 						<tr>
@@ -71,8 +98,9 @@
 						<router-link slot="link" to="/conditions">{{ $t('conditions_name') }}</router-link>
 					</i18n>
 					<center>
-						<v-btn v-if="signupMethod === 2" color="black" type="submit" class="gh-button"> <img src="/image/github_black.png"> {{ $t('signup_gh') }}</v-btn>
-						<v-btn v-if="signupMethod === 1" large color="primary" type="submit">{{ $t('signup') }}</v-btn>
+						<v-btn v-if="fastRegister" large color="primary" type="submit">Jouer !</v-btn>
+						<v-btn v-else-if="signupMethod === 1" large color="primary" type="submit">{{ $t('signup') }}</v-btn>
+						<v-btn v-else color="black" type="submit" class="gh-button"> <img src="/image/github_black.png"> {{ $t('signup_gh') }}</v-btn>
 					</center>
 				</form>
 			</panel>
@@ -241,6 +269,9 @@
 		signupMethod: number = 1
 		last_version: any = null
 		translations: any = {}
+		leekSkin: number = 1
+		leekHat: number = 0
+		fastRegister: boolean = true
 
 		created() {
 			LeekWars.setTitle("Leek Wars : online leek programming game")
@@ -268,18 +299,25 @@
 		submit(e: Event) {
 			e.preventDefault()
 			this.errors = {}
-			const service = this.signupMethod === 1 ? 'farmer/register' : 'farmer/register-github'
+			const service = this.fastRegister ? 'farmer/register-fast' : (this.signupMethod === 1 ? 'farmer/register' : 'farmer/register-github')
 			const args = {
-				login: this.login,
 				leek_name: this.leek,
-				godfather: this.godfather
+				hat: this.leekHat,
+				skin: this.leekSkin
 			} as any
+			if (!this.fastRegister) {
+				args.login = this.login
+				args.godfather = this.godfather
+			}
 			if (this.signupMethod === 1) {
-				args.password = this.password1,
+				args.password = this.password1
 				args.email = this.email
 			}
 			LeekWars.post(service, args).then(data => {
-				if (this.signupMethod === 1) {
+				if (this.fastRegister) {
+					this.$store.commit('connect', data)
+					this.$router.push('/')
+				} else if (this.signupMethod === 1) {
 					localStorage.setItem('login-attempt', 'true')
 					this.$router.push('/signup/success/' + this.login)
 				} else {
@@ -378,7 +416,7 @@
 		vertical-align: top;
 	}
 	input[type=text], input[type=password] {
-		width: 170px;
+		width: 100%;
 		padding: 0 7px;
 		background: white;
 	}
@@ -547,5 +585,65 @@
 	}
 	.info {
 		color: #eee;
+	}
+	.leek-creator {
+		display: flex;
+		padding: 10px;
+		gap: 20px;
+		align-items: flex-end;
+		&.fast {
+			margin-bottom: 15px;
+		}
+		.leek {
+			flex: 1;
+			text-align: center;
+			flex: 120px 0 0;
+			.name {
+				margin-top: 5px;
+				font-weight: 500;
+				background: white;
+				height: 24px;
+				padding: 3px 5px;
+				max-width: 120px;
+				text-overflow: ellipsis;
+				overflow: hidden;
+			}
+		}
+		.infos {
+			display: flex;
+			flex-direction: column;
+			gap: 8px;
+			flex: 3;
+			min-width: 0;
+			.title {
+				font-weight: 500;
+				margin-bottom: 4px;
+			}
+		}
+		.skins, .hats {
+			display: flex;
+			justify-content: space-between;
+		}
+		.skin {
+			width: 30px;
+			height: 30px;
+			border-radius: 50%;
+			border: 2px solid white;
+			box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
+			cursor: pointer;
+		}
+		.hat {
+			max-width: 70px;
+			max-height: 50px;
+			object-fit: contain;
+			cursor: pointer;
+		}
+	}
+	#app.app .leek-creator {
+		padding: 0;
+		gap: 10px;
+	}
+	#app.app .leek {
+		margin: 0;
 	}
 </style>

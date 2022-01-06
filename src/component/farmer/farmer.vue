@@ -39,13 +39,13 @@
 						<span>{{ $t('garden') }}</span>
 						<v-switch :input-value="farmer.in_garden" hide-details />
 					</div>
-					<div class="tab action" @click="logout">
+					<div v-if="$store.state.farmer && $store.state.farmer.verified" class="tab action" @click="logout">
 						<v-icon>mdi-power</v-icon>
 						<span>{{ $t('logout') }}</span>
 					</div>
 				</div>
 				<div v-else>
-					<div v-if="env.SOCIAL" class="tab action" @click="sendMessage">
+					<div v-if="env.SOCIAL && $store.state.connected && $store.state.farmer.verified" class="tab action" @click="sendMessage">
 						<v-icon>mdi-email-outline</v-icon>
 						<span>{{ $t('send_private_message') }}</span>
 					</div>
@@ -387,7 +387,7 @@
 					<img src="/image/icon/flag.png">
 					<span>{{ $t('report') }}</span>
 				</div>
-				<template v-if="myFarmer">
+				<template v-if="myFarmer && $store.state.farmer && $store.state.farmer.verified">
 					<div class="tab" @click="renameDialog = true">
 						<v-icon>mdi-pencil-outline</v-icon>
 						{{ $t('rename') }}

@@ -1,6 +1,6 @@
 <template>
-	<div v-show="!LeekWars.mobile">
-		<div v-if="$store.state.connected" class="social-button" @click="toggleSocial">
+	<div v-if="$store.state.farmer" v-show="!LeekWars.mobile">
+		<div class="social-button" @click="toggleSocial">
 			<v-icon v-if="LeekWars.socialCollapsed">mdi-chevron-left</v-icon>
 			<v-icon v-else>mdi-chevron-right</v-icon>
 		</div>
@@ -22,7 +22,7 @@
 					</div>
 				</panel>
 
-				<panel v-if="env.SOCIAL && $store.state.conversationsList.length" toggle="social/messages" icon="mdi-email-outline">
+				<panel v-if="env.SOCIAL && $store.state.farmer.verified && $store.state.conversationsList.length" toggle="social/messages" icon="mdi-email-outline">
 					<template slot="title">
 						<div v-ripple class="title">
 							<router-link to="/messages">{{ $t('main.messages') }}</router-link>

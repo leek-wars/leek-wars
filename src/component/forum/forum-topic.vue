@@ -162,7 +162,7 @@
 
 				<pagination v-if="topic" :current="page" :total="pages" :url="'/forum/category-' + category.id + '/topic-' + topic.id" />
 
-				<div v-if="topic && !topic.locked" class="editor">
+				<div v-if="topic && !topic.locked && $store.state.farmer && $store.state.farmer.verified" class="editor">
 					<h4>{{ $t('answer') }}</h4>
 					<textarea v-model="newMessage" class="response card" @keyup="updateDraft"></textarea>
 					<center>
@@ -172,6 +172,8 @@
 					<formatting-rules />
 					<br>
 				</div>
+
+				<div v-if="$store.state.farmer && !$store.state.farmer.verified" class="green-link editor"><router-link class="green-link" to="/settings">Vérifiez votre compte pour répondre sur le forum</router-link><br><br></div>
 
 				<breadcrumb :items="breadcrumb_items" />
 			</div>
