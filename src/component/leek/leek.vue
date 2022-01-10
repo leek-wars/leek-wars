@@ -943,7 +943,7 @@
 			if (register.value !== value) {
 				register.value = value
 				LeekWars.post('leek/set-register', {leek_id: this.leek.id, key: register.key, value}).then(data => {
-					LeekWars.toast("Register saved")
+					LeekWars.toast(this.$i18n.t('registed_saved'))
 				})
 			}
 		}
@@ -951,7 +951,7 @@
 			if (!this.leek) { return }
 			this.leek.registers.splice(this.leek.registers.indexOf(register), 1)
 			LeekWars.delete('leek/delete-register', {leek_id: this.leek.id, key: register.key}).then(data => {
-				LeekWars.toast("Register deleted")
+				LeekWars.toast(this.$i18n.t('registed_deleted'))
 			})
 		}
 
