@@ -162,7 +162,7 @@
 								</v-list-item>
 								<v-list-item>
 									<v-icon>mdi-weather-night</v-icon>
-									<v-switch v-if="!game.autoDark" v-model="game.dark" :label="$t('dark_mode') + ' (D)'" class="night" hide-details />
+									<v-switch v-if="!game.autoDark" v-model="game.dark" :label="$t('dark_mode') + ' (N)'" class="night" hide-details />
 									<v-checkbox v-model="game.autoDark" label="Auto" hide-details />
 								</v-list-item>
 								<div class="section">DEVELOPEMENT</div>
