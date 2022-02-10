@@ -3,7 +3,7 @@ import { Cell } from '@/model/cell'
 import { EffectType, EntityEffect } from '@/model/effect'
 import { Entity } from '@/model/entity'
 import { Field } from '@/model/field'
-import { Fight, FightLeek } from "@/model/fight"
+import { Fight, FightLeek, FightType } from "@/model/fight"
 import { LeekWars } from '@/model/leekwars'
 
 class StatisticsEntity extends Entity {
@@ -559,11 +559,16 @@ class FightStatistics {
 			leek.ops_per_turn_format = this.formatOps(leek.operations_per_turn)
 
 			if (leek.leek.summon) { continue }
-			if (fight.winner === 0) {
-				if (leek.leek.team === 1) { this.team1.push(leek) }
-				else { this.team2.push(leek) }
+			if (fight.type === FightType.BATTLE_ROYALE) {
+				if (fight.winner === 0) {
+					if (leek.leek.team === 1) { this.team1.push(leek) }
+					else { this.team2.push(leek) }
+				} else {
+					if (leek.leek.team === fight.winner) { this.team1.push(leek) }
+					else { this.team2.push(leek) }
+				}
 			} else {
-				if (leek.leek.team === fight.winner) { this.team1.push(leek) }
+				if (leek.leek.team === 1) { this.team1.push(leek) }
 				else { this.team2.push(leek) }
 			}
 		}
