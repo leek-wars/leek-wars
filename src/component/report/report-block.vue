@@ -44,7 +44,7 @@
 					<th>{{ $t('main.team') }}</th>
 					<th>{{ $t('main.level') }}</th>
 					<th>{{ $t('main.xp') }}</th>
-					<th v-if="fight.context !== FightContext.CHALLENGE" class="gain">{{ $t('main.talent') }}</th>
+					<th v-if="fight.context !== FightContext.TEST && fight.context !== FightContext.CHALLENGE" class="gain">{{ $t('main.talent') }}</th>
 				</tr>
 				<tr>
 					<td class="name">
@@ -65,7 +65,7 @@
 						</tooltip>
 						<span>{{ team.xp | number }}</span>
 					</td>
-					<td v-if="fight.context !== FightContext.CHALLENGE" class="talent">
+					<td v-if="fight.context !== FightContext.TEST && fight.context !== FightContext.CHALLENGE" class="talent">
 						<img src="/image/talent.png">
 						{{ team.talent }}
 						<span v-if="team.talent_gain >= 0">+ {{ team.talent_gain }}</span>
