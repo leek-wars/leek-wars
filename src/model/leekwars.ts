@@ -963,7 +963,7 @@ function playSound(item: any, type: string) {
 			}, parseFloat(sounds[1]) * 1000)
 		}
 	}
-	play((type === 'weapon') ? weaponSound(item.template) : chipSound(item.template))
+	play((type === 'weapon') ? weaponSound(item.params) : chipSound(item.params))
 	LeekWars.post('market/sound-played')
 }
 
