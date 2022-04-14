@@ -19,24 +19,28 @@ const values = [
 ]
 const promises = []
 
+let r = 0
 for (const value of values) {
-	// const host = 'http://localhost:8500/'
-	const host = 'https://leekwars.com/'
-	const p = request(host + 'api/' + value[2])
-	promises.push(p.then((data) => {
-		const json = JSON.parse(data)
-		console.log('received', value[0])
-		return "const " + value[0].toUpperCase()
-			+ (value[3] ? ': ' + value[3] : '')
-			+ " = " + util.inspect(value[1] ? json[value[1]] : json, {depth: Infinity, breakLength: Infinity, maxArrayLength: Infinity})
-			+ "\nexport { " + value[0].toUpperCase() + " }"
-	}).catch((err) => {
-		console.log("ERROR request failed for", value[0])
-		process.exit()
-	}))
+	const host = 'http://localhost:8500/'
+	// const host = 'https://leekwars.com/'
+	setTimeout(() => {
+		const p = request(host + 'api/' + value[2])
+		promises.push(p.then((data) => {
+			const json = JSON.parse(data)
+			console.log('received', value[0])
+			return "const " + value[0].toUpperCase()
+				+ (value[3] ? ': ' + value[3] : '')
+				+ " = " + util.inspect(value[1] ? json[value[1]] : json, {depth: Infinity, breakLength: Infinity, maxArrayLength: Infinity})
+				+ "\nexport { " + value[0].toUpperCase() + " }"
+		}).catch((err) => {
+			console.log("ERROR request failed for", value[0], ":", err.statusCode, err.error)
+			process.exit()
+	})) }, r += 200)
 }
-Promise.all(promises).then((result) => {
-	let data = `/** This file is auto-generated from script/generate_data.js **/
+
+setTimeout(() => {
+	Promise.all(promises).then((result) => {
+		let data = `/** This file is auto-generated from script/generate_data.js **/
 /* tslint:disable */
 import { ChipTemplate } from '@/model/chip'
 import { Constant } from '@/model/constant'
@@ -48,10 +52,11 @@ import { PotionTemplate } from '@/model/potion'
 import { SummonTemplate } from '@/model/summon'
 import { WeaponTemplate } from '@/model/weapon'
 \n`
-	for (const v of result) {
-		data += v + "\n\n"
-	}
-	const file = 'src/model/data.ts'
-	fs.writeFileSync(file, data)
-	console.log(file + ' created successfully!')
-})
+		for (const v of result) {
+			data += v + "\n\n"
+		}
+		const file = 'src/model/data.ts'
+		fs.writeFileSync(file, data)
+		console.log(file + ' created successfully!')
+	})
+}, r)
