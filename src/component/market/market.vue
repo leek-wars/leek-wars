@@ -88,83 +88,84 @@
 				</panel>
 			</div>
 			<div v-show="!LeekWars.mobile || LeekWars.splitBack" class="column4">
-				<panel class="preview-panel" icon="mdi-information-outline">
-					<loader v-if="!selectedItem" slot="content" />
-					<div v-else slot="content" class="preview center">
-						<item-preview v-if="selectedItem.type == ItemType.FIGHT_PACK" :item="selectedItem" />
-						<item-preview v-else :item="LeekWars.items[selectedItem.id]" />
-						<!-- <weapon-preview v-if="selectedItem.type == ItemType.WEAPON" :weapon="LeekWars.weapons[LeekWars.items[selectedItem.id].params]" />
-						<chip-preview v-else-if="selectedItem.type == ItemType.CHIP" :chip="LeekWars.chips[selectedItem.id]" />
-						<potion-preview v-else-if="selectedItem.type == ItemType.POTION && LeekWars.potions[selectedItem.id]" :potion="LeekWars.potions[selectedItem.id]" />
-						<fight-pack-preview v-else-if="selectedItem.type == ItemType.FIGHT_PACK" :pack="selectedItem" />
-						<hat-preview v-else-if="selectedItem.type === ItemType.HAT && LeekWars.hats[selectedItem.id]" :hat="LeekWars.hats[selectedItem.id]" />
-						<pomp-preview v-else-if="selectedItem.type == ItemType.POMP" :pomp="LeekWars.pomps[selectedItem.id]" /> -->
+				<div class="column4-wrapper">
+					<panel class="preview-panel" icon="mdi-information-outline">
+						<loader v-if="!selectedItem" slot="content" />
+						<div v-else slot="content" class="preview center">
+							<item-preview v-if="selectedItem.type == ItemType.FIGHT_PACK" :item="selectedItem" />
+							<item-preview v-else :item="LeekWars.items[selectedItem.id]" />
+							<!-- <weapon-preview v-if="selectedItem.type == ItemType.WEAPON" :weapon="LeekWars.weapons[LeekWars.items[selectedItem.id].params]" />
+							<chip-preview v-else-if="selectedItem.type == ItemType.CHIP" :chip="LeekWars.chips[selectedItem.id]" />
+							<potion-preview v-else-if="selectedItem.type == ItemType.POTION && LeekWars.potions[selectedItem.id]" :potion="LeekWars.potions[selectedItem.id]" />
+							<fight-pack-preview v-else-if="selectedItem.type == ItemType.FIGHT_PACK" :pack="selectedItem" />
+							<hat-preview v-else-if="selectedItem.type === ItemType.HAT && LeekWars.hats[selectedItem.id]" :hat="LeekWars.hats[selectedItem.id]" />
+							<pomp-preview v-else-if="selectedItem.type == ItemType.POMP" :pomp="LeekWars.pomps[selectedItem.id]" /> -->
 
-						<router-link v-if="selectedItem.trophy" :to="'/trophy/' + selectedItem.trophy.name" class="trophy">
-							<img :src="'/image/trophy/' + selectedItem.trophy.name + '.svg'">
-							<i18n path="unlocked_with">
-								<b slot="trophy">{{ $t('trophy.' + selectedItem.trophy.name) }}</b>
-							</i18n>
-						</router-link>
+							<router-link v-if="selectedItem.trophy" :to="'/trophy/' + selectedItem.trophy.name" class="trophy">
+								<img :src="'/image/trophy/' + selectedItem.trophy.name + '.svg'">
+								<i18n path="unlocked_with">
+									<b slot="trophy">{{ $t('trophy.' + selectedItem.trophy.name) }}</b>
+								</i18n>
+							</router-link>
 
-						<div class="buy-buttons">
-							<div v-if="!selectedItem.buyable && !selectedItem.buyable_crystals" class="already-have">
-								{{ $t('cannot_buy') }}
-							</div>
-							<div v-if="selectedItem.buyable">
-								<h4 class="buy-label">{{ $t('buy') }}</h4>
-								<v-btn :disabled="($store.state.farmer && $store.state.farmer.habs < selectedItem.price) || (selectedItem.singleton && (selectedItem.farmer_count > 0 || selectedItem.leek_count > 0))" class="buy-button" @click="openBuyHabs">{{ selectedItem.price | number }}<img src="/image/hab.png"></v-btn>
-							</div>
-							<div v-if="env.BANK && selectedItem.buyable_crystals">
-								<h4 class="buy-label">{{ $t('buy') }}</h4>
-								<v-btn :disabled="($store.state.farmer && $store.state.farmer.crystals < selectedItem.crystals) || (selectedItem.singleton && (selectedItem.farmer_count > 0 || selectedItem.leek_count > 0))" class="buy-crystals-button" @click="openBuyCrystals">{{ selectedItem.crystals | number }}<img src="/image/crystal.png"></v-btn>
-							</div>
-							<div v-if="selectedItem.singleton && (selectedItem.farmer_count > 0 || selectedItem.leek_count > 0)" class="already-have">
-								{{ $t('already_have') }}
-							</div>
-							<template v-if="selectedItem.sellable && selectedItem.farmer_count > 0">
-								<div class="sell">
-									<h4 class="buy-label">{{ $t('resell') }}</h4>&nbsp;
-									<v-btn class="sell-button" @click="sellDialog = true">{{ selectedItem.sell_price | number }} <img src="/image/hab.png"></v-btn>
+							<div class="buy-buttons">
+								<div v-if="!selectedItem.buyable && !selectedItem.buyable_crystals" class="already-have">
+									{{ $t('cannot_buy') }}
 								</div>
-							</template>
-						</div>
-						<div v-if="selectedItem.leek_objs && selectedItem.leek_objs.length">
-							<div><b>{{ $t('equipped_on') }}</b></div>
-							<div class="leeks">
-								<router-link v-for="leek in selectedItem.leek_objs" :key="leek.id" :to="'/leek/' + leek.id">
-									<rich-tooltip-leek :id="leek.id" v-slot="{ on }">
-										<div class="leek" v-on="on">{{ leek.name }}</div>
-									</rich-tooltip-leek>
-								</router-link>
+								<div v-if="selectedItem.buyable">
+									<h4 class="buy-label">{{ $t('buy') }}</h4>
+									<v-btn :disabled="($store.state.farmer && $store.state.farmer.habs < selectedItem.price) || (selectedItem.singleton && (selectedItem.farmer_count > 0 || selectedItem.leek_count > 0))" class="buy-button" @click="openBuyHabs">{{ selectedItem.price | number }}<img src="/image/hab.png"></v-btn>
+								</div>
+								<div v-if="env.BANK && selectedItem.buyable_crystals">
+									<h4 class="buy-label">{{ $t('buy') }}</h4>
+									<v-btn :disabled="($store.state.farmer && $store.state.farmer.crystals < selectedItem.crystals) || (selectedItem.singleton && (selectedItem.farmer_count > 0 || selectedItem.leek_count > 0))" class="buy-crystals-button" @click="openBuyCrystals">{{ selectedItem.crystals | number }}<img src="/image/crystal.png"></v-btn>
+								</div>
+								<div v-if="selectedItem.singleton && (selectedItem.farmer_count > 0 || selectedItem.leek_count > 0)" class="already-have">
+									{{ $t('already_have') }}
+								</div>
+								<template v-if="selectedItem.sellable && selectedItem.farmer_count > 0">
+									<div class="sell">
+										<h4 class="buy-label">{{ $t('resell') }}</h4>&nbsp;
+										<v-btn class="sell-button" @click="sellDialog = true">{{ selectedItem.sell_price | number }} <img src="/image/hab.png"></v-btn>
+									</div>
+								</template>
+							</div>
+							<div v-if="selectedItem.leek_objs && selectedItem.leek_objs.length">
+								<div><b>{{ $t('equipped_on') }}</b></div>
+								<div class="leeks">
+									<router-link v-for="leek in selectedItem.leek_objs" :key="leek.id" :to="'/leek/' + leek.id">
+										<rich-tooltip-leek :id="leek.id" v-slot="{ on }">
+											<div class="leek" v-on="on">{{ leek.name }}</div>
+										</rich-tooltip-leek>
+									</router-link>
+								</div>
 							</div>
 						</div>
-					</div>
-				</panel>
+					</panel>
 
-				<div v-if="!LeekWars.mobile" class="menu">
-					<div v-ripple class="item" @click="scroll(0)">
-						<v-icon>mdi-sword-cross</v-icon> {{ $t('fights') }}
-					</div>
-					<div v-ripple class="item" @click="scroll(1)">
-						<v-icon>mdi-pistol</v-icon> {{ $t('weapons') }}
-					</div>
-					<div v-ripple class="item" @click="scroll(2)">
-						<v-icon>mdi-chip</v-icon> {{ $t('chips') }}
-					</div>
-					<div v-ripple class="item" @click="scroll(3)">
-						<v-icon>mdi-bottle-tonic-plus-outline</v-icon> {{ $t('potions') }}
-					</div>
-					<div v-ripple class="item" @click="scroll(4)">
-						<v-icon>mdi-hat-fedora</v-icon> {{ $t('hats') }}
-					</div>
-					<div v-ripple class="item" @click="scroll(5)">
-						<v-icon>mdi-auto-fix</v-icon> {{ $t('pomps') }}
+					<div v-if="!LeekWars.mobile" class="menu">
+						<div v-ripple class="item" @click="scroll(0)">
+							<v-icon>mdi-sword-cross</v-icon> {{ $t('fights') }}
+						</div>
+						<div v-ripple class="item" @click="scroll(1)">
+							<v-icon>mdi-pistol</v-icon> {{ $t('weapons') }}
+						</div>
+						<div v-ripple class="item" @click="scroll(2)">
+							<v-icon>mdi-chip</v-icon> {{ $t('chips') }}
+						</div>
+						<div v-ripple class="item" @click="scroll(3)">
+							<v-icon>mdi-bottle-tonic-plus-outline</v-icon> {{ $t('potions') }}
+						</div>
+						<div v-ripple class="item" @click="scroll(4)">
+							<v-icon>mdi-hat-fedora</v-icon> {{ $t('hats') }}
+						</div>
+						<div v-ripple class="item" @click="scroll(5)">
+							<v-icon>mdi-auto-fix</v-icon> {{ $t('pomps') }}
+						</div>
 					</div>
 				</div>
 			</div>
 		</div>
-
 
 		<div class="page-footer page-bar">
 			<div class="tabs">
@@ -557,11 +558,12 @@
 	.preview-panel .loader {
 		padding: 80px 0;
 	}
-	.column4 {
+	.column4-wrapper {
+		flex: 1;
 		position: sticky;
 		top: 12px;
 		max-height: calc(100vh - 24px);
-		display: inline-flex;
+		display: flex;
 		flex-direction: column;
 		& > * {
 			min-height: 0;
