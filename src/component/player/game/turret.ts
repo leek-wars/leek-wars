@@ -1,6 +1,8 @@
 import { EntityType, FightEntity } from "@/component/player/game/entity"
 import { Game, SHADOW_ALPHA, SHADOW_SCALE } from '@/component/player/game/game'
+import { Cell } from "@/model/cell"
 import { TURRET_DATA } from '@/model/turret-data'
+import { ChipAnimation } from "./chips"
 import { SHADOW_QUALITY, T, Texture } from './texture'
 
 class Piece {
@@ -10,8 +12,12 @@ class Piece {
 
 class Turret extends FightEntity {
 
+	private static ANIMATION_DURATION = 50
+
 	textures: {[key: string]: Texture} = {}
 	pieces: Piece[]
+	chip_animation: number = 10
+	chip_animation_z: number = 0
 
 	constructor(game: Game, team: number, level: number) {
 		super(game, EntityType.TURRET, team)
@@ -31,6 +37,17 @@ class Turret extends FightEntity {
 
 	public update(dt: number) {
 		super.update(dt)
+
+		if (this.chip_animation > 0) {
+			this.chip_animation -= dt
+			this.chip_animation_z = Math.sin(Math.PI * this.chip_animation / Turret.ANIMATION_DURATION) * 10
+		}
+	}
+
+	public useChip(chip: ChipAnimation, cell: Cell, targets: FightEntity[], result: number) {
+		super.useChip(chip, cell, targets, result)
+
+		this.chip_animation = Turret.ANIMATION_DURATION
 	}
 
 	public draw(ctx: CanvasRenderingContext2D) {
@@ -47,7 +64,8 @@ class Turret extends FightEntity {
 	public drawNormal(ctx: CanvasRenderingContext2D) {
 		let z = 0
 		for (const piece of this.pieces) {
-			this.drawPiece(ctx, piece.t, z -= piece.z, false)
+			this.drawPiece(ctx, piece.t, z -= (piece.z), false)
+			z -= this.chip_animation_z
 		}
 	}
 

@@ -46,6 +46,7 @@
 			return 'leek/leek' + this.appearance + '_front_' + LeekWars.getLeekSkinName(this.leek.skin) + '.png'
 		}
 		get hat() {
+			// if (true) return 27
 			let hat = this.leek.hat
 			if (!hat && (!this.leek.real || this.leek.bot)) {
 				return this.botHats[-this.ai! as number - 1]
@@ -65,30 +66,34 @@
 		get hatTemplate(): HatTemplate | null {
 			return this.hat ? LeekWars.hats[this.hat] : null
 		}
-		get hatScale() { return 1 + (1 - this.leek.level / 301) * 0.12}
-		get hatWidth() { return this.hatTemplate ? this.leekWidth * (this.hatTemplate.width * 1.3 * this.hatScale) : 0 }
+		get hatWidth() { return this.hatTemplate ? this.leekHeight * 0.8 * this.hatTemplate.width : 0 }
 		get hatHeight() { return this.hatSize ? this.hatWidth * (this.hatSize.height / this.hatSize.width) : 0 }
 		get hasHat(): boolean { return this.hat !== null }
 		get leekWidth(): number { return this.leekSize ? this.leekSize.width : 0 }
 		get leekHeight(): number { return this.leekSize ? this.leekSize.height : 0 }
+		get weaponOffset(): number {
+			return this.weaponCX + (this.weaponData && this.weaponData.white ? (
+						this.weaponRight
+					) : (
+						(Math.cos(this.weaponRadianAngle) * (this.weaponX + this.weaponWidth)
+						+ Math.sin(this.weaponRadianAngle) * (-this.weaponY)
+						- Math.sin(this.weaponRadianAngle) * (this.weaponTop))
+					)) * this.weaponScale
+		}
 		get width(): number {
-			let width = Math.max(this.leekWidth, this.hatWidth)
-			const weapon_offset = this.weaponCX + (this.weaponData && this.weaponData.white ? (
-								this.weaponRight
-							) : (
-								(Math.cos(this.weaponRadianAngle) * (this.weaponX + this.weaponWidth)
-								+ Math.sin(this.weaponRadianAngle) * (-this.weaponY)
-								- Math.sin(this.weaponRadianAngle) * (this.weaponTop))
-							)) * this.weaponScale
-			if (weapon_offset > width / 2) {
-				width = width / 2 + weapon_offset
+			let width = this.leekWidth
+			if (this.hatWidth > this.leekWidth) {
+				width += this.hatWidth / 2 - this.leekWidth / 2
+			}
+			if (this.weaponOffset > this.leekWidth / 2) {
+				width += this.weaponOffset - this.leekWidth / 2
 			}
 			return width
 		}
 		get height(): number {
 			let height = this.leekHeight + this.offsetTop
 			if (this.hat != null && this.hatTemplate) {
-				height += Math.max(0, this.hatHeight - this.leekHeight * this.hatTemplate.height)
+				height += Math.max(0, this.hatHeight - this.hatHeight * this.hatTemplate.height)
 			}
 			if (this.weaponData && this.weaponData.white) {
 				height += this.weaponData.bottom
@@ -108,9 +113,9 @@
 				Math.abs(Math.sin(this.weaponRadianAngle)) * (this.weaponData.width + this.weaponData.x)
 			 ) : 0
 		}
-		get leekX() { return 0 }
-		get leekY() { return this.offsetTop + (this.hat !== null && this.hatTemplate ? Math.max(0, this.hatHeight - this.leekHeight * this.hatTemplate.height) : 0) }
-		get hatX() { return this.hat !== null ? this.leekWidth / 2 - this.hatWidth / 2 - (this.leekWidth / 25) : 0 }
+		get leekX() { return Math.max(0, this.hatWidth / 2 - this.leekWidth / 2) }
+		get leekY() { return this.offsetTop + (this.hat !== null && this.hatTemplate ? Math.max(0, this.hatHeight - this.hatHeight * this.hatTemplate.height) : 0) }
+		get hatX() { return this.hat !== null ? Math.max(0, this.leekWidth / 2 - this.hatWidth / 2) : 0 }
 		get hatY() { return this.offsetTop }
 
 		get weapon() {
@@ -136,7 +141,7 @@
 			return '/image/' + LeekWars.items[this.weapon].name.replace('_', '/') + '.png' }
 		get weaponWidth() { return this.weaponData ? this.weaponData.width : 0 }
 		get weaponHeight() { return this.weaponData ? this.weaponData.height : 0 }
-		get weaponCX() { return this.weaponData ? this.weaponData.centerX : 0 }
+		get weaponCX() { return this.weaponData ? this.leekX + this.weaponData.centerX : 0 }
 		get weaponCY() { return this.weaponData ? this.weaponData.centerZ : 0 }
 		get weaponX() { return this.weaponData ? this.weaponData.x : 0 }
 		get weaponY() { return this.weaponData ? this.weaponData.z : 0 }
