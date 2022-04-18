@@ -56,6 +56,7 @@ class Leek extends FightEntity {
 			this.updateGrowth()
 		})
 
+		// hat = 29
 		if (hat) {
 			this.hat = hat
 			this.hatTemplate = LeekWars.hats[LeekWars.hatTemplates[hat].item]
@@ -304,8 +305,8 @@ class Leek extends FightEntity {
 			if (this.hatX === 0) {
 				this.hatWidth = leekWidth * this.hatTemplate.width
 				this.hatHeight = this.hatWidth * (this.hatFront.texture.height / this.hatFront.texture.width)
-				this.hatX = - this.hatWidth / 2 - (leekWidth / 25)
-				this.hatY = -height + height * this.hatTemplate.height - this.hatHeight
+				this.hatX = - this.hatWidth / 2
+				this.hatY = -height + this.hatHeight * this.hatTemplate.height - this.hatHeight
 			}
 			ctx.drawImage(hatTexture, this.hatX, this.hatY, this.hatWidth, this.hatHeight)
 		}

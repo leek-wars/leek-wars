@@ -318,6 +318,7 @@
 			this.request = LeekWars.get('market/get-item-templates')
 			this.request.then((res: any) => {
 				const items = res.items as ItemTemplate[]
+
 				for (const i in items) {
 					const item = items[i]
 					this.items[item.id] = item
@@ -381,6 +382,13 @@
 					this.unseenItem = this.unseen_items[0]
 					this.unseenItemDialog = true
 				}
+
+				this.hats = this.hats.sort((a, b) => {
+					const ap = (LeekWars.items[a.id].buyable || LeekWars.items[a.id].buyable_crystals) ? (LeekWars.items[a.id].buyable_crystals ? (LeekWars.items[a.id].crystals * 50000) : LeekWars.items[a.id].price) : 999999999
+					const bp = (LeekWars.items[b.id].buyable || LeekWars.items[b.id].buyable_crystals) ? (LeekWars.items[b.id].buyable_crystals ? (LeekWars.items[b.id].crystals * 50000) : LeekWars.items[b.id].price) : 999999999
+					return ap - bp
+				})
+				console.log(this.hats)
 
 				this.update()
 			})
@@ -712,10 +720,10 @@
 	}
 	.item.hat {
 		height: 82px;
-		padding: 6px;
+		padding: 4px;
 		img {
 			max-width: 92px;
-			max-height: 70px;
+			max-height: 74px;
 			position: absolute;
 			top: 0;
 			bottom: 0;

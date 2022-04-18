@@ -124,7 +124,7 @@ const LEEK_SIZES: { [key: number]: {width: number, height: number} } = {
 	8: {width: 148, height: 189},
 	9: {width: 145, height: 196},
 	10: {width: 159, height: 204},
-	11: {width: 161, height: 211}
+	11: {width: 161, height: 211},
 }
 
 const HAT_SIZES: { [key: number]: {width: number, height: number} } = {
@@ -151,6 +151,12 @@ const HAT_SIZES: { [key: number]: {width: number, height: number} } = {
 	21: {width: 300, height: 199}, // crystal crown
 	22: {width: 300, height: 199}, // crystal crown
 	23: {width: 300, height: 199}, // crystal crown
+	24: {width: 302, height: 209}, // bicorn
+	25: {width: 300, height: 201}, // sombrero
+	26: {width: 300, height: 302}, // pirate hat
+	27: {width: 300, height: 201}, // bicorn
+	28: {width: 300, height: 206}, // lareul
+	29: {width: 300, height: 206}, // lareul
 }
 
 const ORDERED_CHIPS = orderChips(CHIPS)
