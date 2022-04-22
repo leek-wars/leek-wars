@@ -1124,6 +1124,11 @@ class Game {
 					this.entityOrder.splice(index, 1)
 				}
 			}
+			for (const id in entity.effects) {
+				delete this.leeks[entity.effects[id].caster].launched_effects[id]
+				this.removeEffect(parseInt(id, 10))
+			}
+			entity.effects = {}
 			entity.launched_effects = {}
 			entity.active = false
 			if (entity.cell) {
