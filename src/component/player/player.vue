@@ -277,7 +277,7 @@
 			this.$root.$on('fight-progress', (data: any) => {
 				if (this.fight && data[0] === this.fight.id) {
 					this.progress = data[1]
-					if (this.progress === 100) {
+					if (this.progress === 100 && this.request === null) {
 						if (this.timeout) { clearTimeout(this.timeout) }
 						this.getFight(false)
 					}
@@ -331,6 +331,7 @@
 			this.game.canvas = this.canvas
 			this.game.ctx = this.canvas.getContext('2d')
 		}
+
 		keydown(e: KeyboardEvent) {
 			if (e.keyCode === 32) {
 				if (this.game.paused) {
@@ -342,6 +343,7 @@
 				return false
 			}
 		}
+
 		keyup(e: KeyboardEvent) {
 			if (e.keyCode === 65) { // A
 				this.game.showActions = !this.game.showActions
@@ -404,6 +406,7 @@
 				e.preventDefault()
 			}
 		}
+
 		beforeDestroy() {
 			this.game.pause()
 			this.game.cancelled = true
@@ -415,6 +418,7 @@
 			if (this.request) { this.request.abort() }
 			LeekWars.socket.send([SocketMessage.FIGHT_PROGRESS_UNREGISTER, this.fightId])
 		}
+
 		getFight(first: boolean) {
 			const fightLoaded = (fight: Fight) => {
 				this.fight = fight
@@ -464,6 +468,7 @@
 			} else {
 				this.request = LeekWars.get('fight/get/' + this.fightId)
 				this.request.then((fight: any) => {
+					this.request = null
 					fightLoaded(fight)
 				}).error(() => this.error = true)
 			}
