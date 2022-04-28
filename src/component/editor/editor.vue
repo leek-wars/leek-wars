@@ -241,6 +241,9 @@
 					<li v-html="$t('shortcut.shortcut_10')"></li>
 					<li v-html="$t('shortcut.shortcut_11')"></li>
 					<li v-html="$t('shortcut.shortcut_12')"></li>
+					<li v-html="$t('shortcut.shortcut_13')"></li>
+					<li v-html="$t('shortcut.shortcut_14')"></li>
+					<li v-html="$t('shortcut.shortcut_15')"></li>
 				</ul>
 			</div>
 		</popup>
