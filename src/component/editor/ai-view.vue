@@ -250,6 +250,9 @@
 						"Alt-Right": () => null,
 						"Alt-Up": () => this.invert(true),
 						"Alt-Down": () => this.invert(false),
+						"Ctrl-U": () => this.editor.execCommand('toggleFold'),
+						"Ctrl-Y": () => this.editor.execCommand('foldAll'),
+						"Ctrl-I": () => this.editor.execCommand('unfoldAll'),
 					},
 				} as any)
 
