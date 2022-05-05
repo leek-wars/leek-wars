@@ -21,7 +21,7 @@
 					<div class="leek-creator" :class="{fast: fastRegister}">
 
 						<div class="leek">
-							<leek-image :leek="{level: 1, skin: leekSkin, hat: {template: leekHat}}" :scale="1" />
+							<leek-image :leek="{level: 1, skin: leekSkin, hat: leekHat}" :scale="1" />
 							<div class="name card">{{ leek ? leek : '?' }}</div>
 						</div>
 
@@ -41,7 +41,7 @@
 								<div class="title">{{ $t('hat') }}</div>
 								<div class="hats">
 									<img src="/image/hat/no_hat.png" class="hat" @click="leekHat = null">
-									<img v-for="hat in [69, 70, 112, 87]" :key="hat" :src="'/image/hat/' + LeekWars.hats[hat].name + '.png'" class="hat" @click="leekHat = hat">
+									<img v-for="hat in [1, 2, 9, 7]" :key="hat" :src="'/image/hat/' + LeekWars.hats[hat].name + '.png'" class="hat" @click="leekHat = hat">
 								</div>
 							</div>
 						</div>

@@ -1,4 +1,4 @@
-import { EntityDirection, EntityType, FightEntity } from "@/component/player/game/entity"
+import { DamageType, EntityDirection, EntityType, FightEntity } from "@/component/player/game/entity"
 import { Game, SHADOW_ALPHA, SHADOW_SCALE } from '@/component/player/game/game'
 import { SHADOW_QUALITY, T, Texture } from '@/component/player/game/texture'
 import { WeaponAnimation, WhiteWeaponAnimation } from '@/component/player/game/weapons'
@@ -29,7 +29,6 @@ class Leek extends FightEntity {
 	public hatHeight: number = 0
 	public hatY: number = 0
 	public heightAnim: number = 0
-	public scale: number = 1
 	public fish: boolean = false
 
 	constructor(game: Game, team: number, level: number) {
@@ -42,24 +41,24 @@ class Leek extends FightEntity {
 
 		if (typeof LeekWars.skins[skin] === 'undefined') { skin = 1 }
 
-		// if (this.id === 1) { appearance = 1 }
 		this.scale = 0.68 - appearance * 0.01
-		// this.scale = 1
 		this.skin = skin
 		this.bodyTexFront = T.get(this.game, "image/leek/leek" + appearance + "_front_" + LeekWars.skins[skin] + ".png", true, SHADOW_QUALITY)
 		this.bodyTexBack = T.get(this.game, "image/leek/leek" + appearance + "_back_" + LeekWars.skins[skin] + ".png", true, SHADOW_QUALITY)
 
-		this.baseHeight = this.bodyTexFront.texture.height * this.scale
+		this.baseHeight = this.bodyTexFront.texture.height
+		this.baseWidth = this.bodyTexFront.texture.width
 		this.updateGrowth()
 		this.bodyTexFront.texture.addEventListener('load', () => {
-			this.baseHeight = this.bodyTexFront.texture.height * this.scale
+			this.baseHeight = this.bodyTexFront.texture.height
+			this.baseWidth = this.bodyTexFront.texture.width
 			this.updateGrowth()
 		})
 
 		// hat = 29
 		if (hat) {
 			this.hat = hat
-			this.hatTemplate = LeekWars.hats[LeekWars.hatTemplates[hat].item]
+			this.hatTemplate = LeekWars.hats[hat]
 			this.hatName = this.hatTemplate.name
 			this.hatFront = T.get(this.game, "image/hat/" + this.hatName + ".png", true, SHADOW_QUALITY)
 			this.hatBack = T.get(this.game, "image/hat/" +  this.hatName + "_back.png", true, SHADOW_QUALITY)
@@ -112,31 +111,72 @@ class Leek extends FightEntity {
 		return this.weapon.shoot(this.ox, this.oy - this.z, this.handPos, this.angle, this.direction, position, targets, this, cell, this.scale)
 	}
 
-	public kill(animation: boolean, dx: number, dy: number) {
-		super.kill(animation, dx, dy)
+
+
+	public frameTexture(includeHat: boolean): Texture {
+
+		const canvas = document.createElement('canvas')
+		canvas.width = this.baseWidth
+		canvas.height = this.baseHeight * this.oscillation
+		const textureCtx = canvas.getContext('2d')!
+		const texture = new Texture('')
+		texture.texture = canvas
+
+		// Debug
+		// textureCtx.strokeStyle = 'red'
+		// textureCtx.lineWidth = 2
+		// textureCtx.strokeRect(0, 0, canvas.width, canvas.height)
+
+		const savedScale = this.scale
+		const savedGrowth = this.growth
+		this.scale = 1
+		this.growth = 1
+
+		textureCtx.save()
+		textureCtx.translate(canvas.width / 2, canvas.height)
+		textureCtx.translate(0, - this.z)
+		textureCtx.scale(this.scale * this.direction, this.scale)
+		const bodyTexture = this.front ? this.bodyTexFront : this.bodyTexBack
+		const hatTexture = this.front ? this.hatFront : this.hatBack
+		this.drawBody(textureCtx, bodyTexture.texture, includeHat ? hatTexture.texture : null)
+		textureCtx.restore()
+
+		this.scale = savedScale
+		this.growth = savedGrowth
+
+		return texture
+	}
+
+	public kill(animation: boolean, damageType: DamageType, dx: number, dy: number) {
+		super.kill(animation, damageType, dx, dy)
+
+		// console.log("kill", "dx", dx, "dy", dy)
 
 		if (animation) {
 			// Throw hat
-			if (this.hat) {
+			if (this.hat && damageType === DamageType.DEFAULT) {
 				const leekWidth = this.bodyTexFront.texture.width
 				const height = this.bodyTexFront.texture.height
 				const hatX = -(leekWidth / 25)
-				const hatY = -height + height * this.hatTemplate.height - this.hatHeight / 2
+				const hatZ = height - this.hatHeight * this.hatTemplate.height + this.hatHeight / 2
 				const hatTexture = this.front ? this.hatFront : this.hatBack
 				const scale = this.scale * this.growth * leekWidth * this.hatTemplate.width / hatTexture.texture.width
-				const dx = Math.random() * 2 - 1
-				const dy = Math.random() * 2 - 1
-				const dz = Math.random() * 2 - 1
+				const hdx = dx * 1.5 + Math.random() * 2 - 1
+				const hdy = dy * 1.5 + Math.random() * 2 - 1
+				const hdz = Math.random() * 2
+				// const dx = 0
+				// const dy = 0
+				// const dz = 0
 				const rotation = Math.random() * 0.02 - 0.01
-				this.game.particles.addGarbage(this.ox + hatX * this.scale * this.growth, this.oy, -hatY * this.scale * this.growth, dx, dy, dz, hatTexture, this.direction, rotation, scale, 0, 80)
+				this.game.particles.addGarbage(this.ox + hatX * this.scale * this.growth, this.oy, hatZ * this.scale * this.growth, hdx, hdy, hdz, hatTexture, this.direction, rotation, scale, 0, 70)
 			}
 			// Throw weapon
 			if (this.weapon) {
-				const wdx = dx * 3
-				const wdy = dy * 3
+				const wdx = dx * 1.5
+				const wdy = dy * 1.5
 				const dz = 2 + Math.random() * 3
 				const rotation = Math.random() * 0.04 - 0.02
-				const angle = this.direction === 1 ? this.angle : -this.angle
+				const angle = this.weapon instanceof WhiteWeaponAnimation ? (this.direction === 1 ? -Math.PI / 3 : Math.PI / 3) : (this.direction === 1 ? this.angle : -this.angle)
 				const cos = Math.cos(this.angle)
 				const sin = Math.sin(this.angle)
 				const cx = this.weapon.x + this.weapon.texture.texture.width / 2
@@ -144,7 +184,7 @@ class Leek extends FightEntity {
 				const x = (this.weapon.cx + cx * cos - cz * sin) * this.direction
 				const y = this.weapon.cz - cx * sin + cz * cos
 				const z = Math.max(1, this.handPos)
-				this.game.particles.addGarbage(this.ox + x * this.scale, this.oy - y * this.scale, z * this.scale, wdx, wdy, dz, this.weapon.texture, this.direction, rotation, this.scale, angle, 80)
+				this.game.particles.addGarbage(this.ox + x * this.scale, this.oy - y * this.scale, z * this.scale, wdx, wdy, dz, this.weapon.texture, this.direction, rotation, this.scale, angle, 70)
 			}
 		}
 	}
@@ -152,32 +192,35 @@ class Leek extends FightEntity {
 	public draw(ctx: CanvasRenderingContext2D): void {
 		super.draw(ctx)
 
-		ctx.save()
-		ctx.scale(this.scale, this.scale)
+		if (!this.dead) {
 
-		// Draw shadow
-		if (this.game.shadows && !this.dead) {
-			this.drawShadow(ctx)
-		}
-		// Draw normal
-		ctx.scale(this.direction, 1)
-		this.drawNormal(ctx)
-
-		/*
-		if (this.weapon) {
-			// Center (debug)
 			ctx.save()
-			ctx.translate(this.weapon.cx, -this.weapon.cz - this.handPos)
-			ctx.fillStyle = 'red'
-			ctx.beginPath();
-			ctx.arc(0, 0, 7, 0, 2 * Math.PI);
-			ctx.closePath();
-			ctx.fill();
+			ctx.scale(this.scale, this.scale)
+
+			// Draw shadow
+			if (this.game.shadows && !this.dead) {
+				this.drawShadow(ctx)
+			}
+			// Draw normal
+			ctx.scale(this.direction, 1)
+			this.drawNormal(ctx)
+
+			/*
+			if (this.weapon) {
+				// Center (debug)
+				ctx.save()
+				ctx.translate(this.weapon.cx, -this.weapon.cz - this.handPos)
+				ctx.fillStyle = 'red'
+				ctx.beginPath();
+				ctx.arc(0, 0, 7, 0, 2 * Math.PI);
+				ctx.closePath();
+				ctx.fill();
+				ctx.restore()
+			}
+			*/
+
 			ctx.restore()
 		}
-		*/
-
-		ctx.restore()
 
 		super.endDraw(ctx)
 
@@ -297,16 +340,16 @@ class Leek extends FightEntity {
 
 		// Body
 		const height = this.bodyTexFront.texture.height
-		const y = height * (this.deadAnim - 1) + (this.dead ? this.baseZ / this.scale : 0)
-		ctx.drawImage(texture, 0, 0, texture.width, texture.height * (1 - this.deadAnim), -leekWidth / 2, y, leekWidth, -height * (this.deadAnim - 1))
+		const y = -height + (this.dead ? this.baseZ / this.scale : 0)
+		ctx.drawImage(texture, 0, 0, texture.width, texture.height, -leekWidth / 2, y, leekWidth, height)
 
 		// Hat
-		if (hatTexture && !this.dead) {
+		if (hatTexture) {
 			if (this.hatX === 0) {
 				this.hatWidth = leekWidth * this.hatTemplate.width
 				this.hatHeight = this.hatWidth * (this.hatFront.texture.height / this.hatFront.texture.width)
 				this.hatX = - this.hatWidth / 2
-				this.hatY = -height + this.hatHeight * this.hatTemplate.height - this.hatHeight
+				this.hatY = -height * (1 - this.deadAnim) + this.hatHeight * this.hatTemplate.height - this.hatHeight
 			}
 			ctx.drawImage(hatTexture, this.hatX, this.hatY, this.hatWidth, this.hatHeight)
 		}

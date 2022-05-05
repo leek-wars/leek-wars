@@ -1,4 +1,4 @@
-import { EntityDirection, FightEntity } from '@/component/player/game/entity'
+import { DamageType, EntityDirection, FightEntity } from '@/component/player/game/entity'
 import { Game } from "@/component/player/game/game"
 import { S, Sound } from '@/component/player/game/sound'
 import { T, Texture } from '@/component/player/game/texture'
@@ -30,8 +30,10 @@ abstract class WeaponAnimation {
 	public recoil: number = 0
 	public recoilAngle: number = 0
 	public id: number
+	// Type de dégât
+	public damageType: DamageType
 
-	constructor(game: Game, texture: Texture, id: number) {
+	constructor(game: Game, texture: Texture, id: number, damageType: DamageType) {
 		this.game = game
 		this.texture = texture
 		const data = WeaponsData[id] || FishData
@@ -46,6 +48,7 @@ abstract class WeaponAnimation {
 		this.sx = data.sx!
 		this.sz = data.sz!
 		this.id = id === 0 ? 0 : LeekWars.weapons[id].item
+		this.damageType = damageType
 	}
 	public abstract update(dt: number): void
 	public abstract shoot(leekX: number, leekY: number, handPos: number, angle: number, orientation: number, targetPos: Position, targets: FightEntity[], caster: FightEntity, cell: Cell, scale: number): number
@@ -75,7 +78,7 @@ class WhiteWeaponAnimation extends WeaponAnimation {
 	public direction!: number
 
 	constructor(game: Game, texture: Texture, id: number) {
-		super(game, texture, id)
+		super(game, texture, id, DamageType.SLICE)
 	}
 
 	public shoot(leekX: number, leekY: number, handPos: number, angle: number, orientation: number, pos: Position, targets: FightEntity[], caster: FightEntity, cell: Cell, scale: number): number {
@@ -150,8 +153,8 @@ abstract class RangeWeapon extends WeaponAnimation {
 	public caster!: FightEntity
 	public cell!: Cell
 
-	constructor(game: Game, texture: Texture, cartTexture: Texture | null, sound: Sound, id: number) {
-		super(game, texture, id)
+	constructor(game: Game, texture: Texture, cartTexture: Texture | null, sound: Sound, id: number, damageType: DamageType) {
+		super(game, texture, id, damageType)
 		this.cartTexture = cartTexture
 		this.sound = sound
 		const data = WeaponsData[id] || FishData
@@ -213,7 +216,7 @@ abstract class RangeWeapon extends WeaponAnimation {
 class Firegun extends RangeWeapon {
 	static FIREGUN_DURATION = 20
 	constructor(game: Game, texture: Texture, cartTexture: Texture | null, sound: Sound, id: number) {
-		super(game, texture, cartTexture, sound, id)
+		super(game, texture, cartTexture, sound, id, DamageType.DEFAULT)
 	}
 	public throwBullet(x: number, y: number, z: number, angle: number, position: Position, targets: FightEntity[], caster: FightEntity, cell: Cell) {
 		this.game.particles.addShot(x, y, z, angle)
@@ -230,7 +233,7 @@ class LaserWeapon extends RangeWeapon {
 	public color: string
 
 	constructor(game: Game, texture: Texture, laserTexture: Texture, cartTexture: Texture, sound: Sound, id: number, range: number, min_range: number, color: string) {
-		super(game, texture, cartTexture, sound, id)
+		super(game, texture, cartTexture, sound, id, DamageType.EXPLOSION)
 		this.laserTexture = laserTexture
 		this.range = range
 		this.min_range = min_range
@@ -303,6 +306,7 @@ class DoubleGun extends Firegun {
 		return Firegun.FIREGUN_DURATION
 	}
 }
+
 class Electrisor extends WeaponAnimation {
 	static ELECTRISOR_DURATION = 60
 	static textures = [T.lightning, T.electrisor]
@@ -320,7 +324,7 @@ class Electrisor extends WeaponAnimation {
 	public areaColor!: string
 
 	constructor(game: Game) {
-		super(game, T.electrisor, 11)
+		super(game, T.electrisor, 11, DamageType.DEFAULT)
 		this.lightning = T.lightning
 		this.areaColor = '#0263f4'
 	}
@@ -379,7 +383,7 @@ class FlameThrower extends WeaponAnimation {
 	public caster!: Leek
 
 	constructor(game: Game) {
-		super(game, T.flame_thrower, 8)
+		super(game, T.flame_thrower, 8, DamageType.FIRE)
 	}
 
 	public shoot(leekX: number, leekY: number, handPos: number, angle: number, orientation: number, targetPosition: Position, targets: FightEntity[], caster: Leek, cell: Cell, scale: number): number {
@@ -419,10 +423,9 @@ class FlameThrower extends WeaponAnimation {
 		}
 	}
 }
-class Gazor extends WeaponAnimation {
+
+class GenericGazor extends WeaponAnimation {
 	static GAZOR_DURATION = 80
-	static textures = [T.gazor, T.gaz]
-	static sounds = [S.gazor]
 
 	public shoots: number = 0
 	public bulletX: number = 0
@@ -435,10 +438,10 @@ class Gazor extends WeaponAnimation {
 	public targetPos!: Position
 	public caster!: Leek
 
-	constructor(game: Game) {
-		super(game, T.gazor, 10)
-		this.color = '#04e513'
-		this.gaz = T.gaz
+	constructor(game: Game, id: number, texture: Texture, color: string, gaz: Texture, damageType: DamageType) {
+		super(game, texture, id, damageType)
+		this.color = color
+		this.gaz = gaz
 	}
 
 	public shoot(leekX: number, leekY: number, handPos: number, angle: number, orientation: number, targetPos: Position, targets: FightEntity[], caster: Leek, cell: Cell, scale: number): number {
@@ -466,22 +469,32 @@ class Gazor extends WeaponAnimation {
 		}
 	}
 }
-class UnbridledGazor extends Gazor {
+
+class Gazor extends GenericGazor {
+	static textures = [T.gazor, T.gaz]
+	static sounds = [S.gazor]
+
+	constructor(game: Game) {
+		super(game, 10, T.gazor, '#04e513', T.gaz, DamageType.DEFAULT)
+	}
+}
+
+class UnbridledGazor extends GenericGazor {
 	static textures = [T.unbridled_gazor, T.orange_gaz]
 	static sounds = [S.gazor]
 	explosions: number = 0
 	delay: number = 0
+
 	constructor(game: Game) {
-		super(game)
-		this.texture = T.unbridled_gazor
-		this.gaz = T.orange_gaz
-		this.color = '#ff5c00'
+		super(game, 20, T.unbridled_gazor, '#ff5c00', T.orange_gaz, DamageType.EXPLOSION)
 	}
+
 	public shoot(leekX: number, leekY: number, handPos: number, angle: number, orientation: number, targetPos: Position, targets: FightEntity[], caster: Leek, cell: Cell, scale: number): number {
 		this.explosions = 4
 		this.delay = 40
 		return super.shoot(leekX, leekY, handPos, angle, orientation, targetPos, targets, caster, cell, scale)
 	}
+
 	public update(dt: number): void {
 		super.update(dt)
 		if (this.explosions > 0) {

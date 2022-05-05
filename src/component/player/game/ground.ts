@@ -550,7 +550,7 @@ class Ground {
 		this.game.addDrawableElement(obstacle, obstacle.y + obstacle.size - 1)
 	}
 
-	public drawTexture(image: HTMLImageElement, x: number, y: number, angle: number) {
+	public drawTexture(image: HTMLImageElement | HTMLCanvasElement, x: number, y: number, angle: number) {
 		if (GROUND_TEXTURE && this.textureCtx) {
 			this.textureCtx.save()
 			this.textureCtx.translate(x, y)
@@ -581,7 +581,7 @@ class Ground {
 		}
 	}
 
-	public drawTextureCropScale(image: HTMLImageElement, x: number, y: number, angle: number, ox: number, oy: number, w: number, h: number, scaleX: number, scaleY: number) {
+	public drawTextureCropScale(image: HTMLImageElement | HTMLCanvasElement, x: number, y: number, angle: number, ox: number, oy: number, w: number, h: number, scaleX: number, scaleY: number) {
 		if (GROUND_TEXTURE && this.textureCtx) {
 			this.textureCtx.save()
 			this.textureCtx.translate(x, y)

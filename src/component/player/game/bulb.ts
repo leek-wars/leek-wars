@@ -58,9 +58,11 @@ class Bulb extends FightEntity {
 			this.bodyTexBack = T.get(this.game, 'image/bulb/savant_bulb_back.png', true, SHADOW_QUALITY)
 		}
 		this.baseHeight = this.bodyTexFront.texture.height * Bulb.SCALE
+		this.baseWidth = this.bodyTexFront.texture.width * Bulb.SCALE
 		this.updateGrowth()
 		this.bodyTexFront.texture.addEventListener('load', () => {
 			this.baseHeight = this.bodyTexFront.texture.height * Bulb.SCALE
+			this.baseWidth = this.bodyTexFront.texture.width * Bulb.SCALE
 			this.updateGrowth()
 		})
 	}
@@ -99,12 +101,14 @@ class Bulb extends FightEntity {
 
 	public draw(ctx: CanvasRenderingContext2D) {
 		super.draw(ctx)
-		// Draw shadow
-		if (this.game.shadows && !this.dead) {
-			this.drawShadow(ctx)
+		if (!this.dead) {
+			// Draw shadow
+			if (this.game.shadows) {
+				this.drawShadow(ctx)
+			}
+			// Draw normal
+			this.drawNormal(ctx)
 		}
-		// Draw normal
-		this.drawNormal(ctx)
 		super.endDraw(ctx)
 	}
 

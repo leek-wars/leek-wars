@@ -6,7 +6,7 @@ const SHADOW_QUALITY = 0.3
 
 class Texture {
 	public path: string
-	public texture!: HTMLImageElement
+	public texture!: HTMLImageElement | HTMLCanvasElement
 	public offset: number = 1
 	public shadow: HTMLCanvasElement | null = null
 	public buildShadow: boolean

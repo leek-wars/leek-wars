@@ -1,6 +1,6 @@
 import { FightEntity } from '@/component/player/game/entity'
 import { Game } from "@/component/player/game/game"
-import { Blood, Bubble, Bullet, Cartridge, CriticalParticle, Explosion, Fire, Garbage, Gaz, Grenade, ImageParticle, Laser, LighningBall, Lightning, Meteorite, NUM_BLOOD_SPRITES, Particle, Plasma, RealisticExplosion, Rectangle, Rocket, Shot, SimpleFire, SpikeParticle, SpinningParticle } from '@/component/player/game/particle'
+import { Blood, Bubble, Bullet, BuryParticle, Cartridge, CriticalParticle, Explosion, Fire, Garbage, Gaz, Grenade, ImageParticle, Laser, LighningBall, Lightning, LineParticle, Meteorite, NUM_BLOOD_SPRITES, Particle, Plasma, RealisticExplosion, Rectangle, Rocket, Shot, SimpleFire, SpikeParticle, SpinningParticle } from '@/component/player/game/particle'
 import { Position } from '@/component/player/game/position'
 import { Texture } from '@/component/player/game/texture'
 import { Cell } from '@/model/cell'
@@ -116,6 +116,12 @@ class Particles {
 	}
 	public addLighningBall(x: number, y: number, z: number, angle: number, duration: number, radius: number, texture: Texture) {
 		this.add(new LighningBall(this.game, x, y, z, angle, duration, radius, texture))
+	}
+	public addBuryParticle(x: number, y: number, texture: Texture, scale: number) {
+		this.add(new BuryParticle(this.game, x, y, texture, scale))
+	}
+	public addLineParticle(x1: number, y1: number, x2: number, y2: number) {
+		this.add(new LineParticle(this.game, x1, y1, x2, y2))
 	}
 
 	public add(particle: Particle, onground: boolean = false) {

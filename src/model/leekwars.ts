@@ -931,6 +931,8 @@ function weaponSound(id: number) {
 		30: [],
 		31: [],
 		32: ['sword'],
+		33: ['lightninger', 0.7, 'lightninger_impact'],
+		34: ['double_gun'],
 	} as {[key: number]: any})[id]
 }
 function chipSound(id: number) {

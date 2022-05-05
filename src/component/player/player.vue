@@ -103,7 +103,28 @@
 					</template>
 					{{ $t(game.sound ? 'sound_activated' : 'sound_disactivated') }} (V)
 				</v-tooltip>
-				<div class="turn">{{ $t('fight.turn_n', [game.turn]) }}</div>
+				<v-tooltip :open-delay="0" :close-delay="0" top content-class="top" :attach="$refs.player">
+					<template v-slot:activator="{ on: tooltip }">
+						<v-menu :close-on-content-click="false" :min-width="390" top offset-y right :attach="$refs.player">
+							<template v-slot:activator="{ on: menu }">
+								<div v-ripple class="control turn" v-on="{...tooltip, ...menu}">{{ $t('fight.turn_n', [game.turn]) }}</div>
+								<!-- <v-icon class="control" >mdi-settings-outline</v-icon> -->
+							</template>
+							<v-list :dense="true" class="settings-menu">
+								<div class="section">{{ $t('fight.share') }}</div>
+								<v-list-item>
+									<v-icon>mdi-share-variant</v-icon>
+									<input type="text" :value="document.location.host + '/fight/' + fightId + '?action=' + game.currentAction" @keyup.stop></input>
+								</v-list-item>
+								<v-list-item>
+									<v-icon>mdi-share-variant</v-icon>
+									<input type="text" :value="document.location.host + '/fight/' + fightId + '?turn=' + game.turn" @keyup.stop></input>
+								</v-list-item>
+							</v-list>
+						</v-menu>
+					</template>
+					{{ $t('fight.share') }}
+				</v-tooltip>
 				<div class="filler"></div>
 
 				<v-tooltip v-if="$store.state.farmer && $store.state.farmer.admin" :open-delay="0" :close-delay="0" top content-class="top" :attach="$refs.player">
@@ -219,6 +240,8 @@
 		@Prop() fightId!: string
 		@Prop() requiredWidth!: number
 		@Prop() requiredHeight!: number
+		@Prop() startTurn!: number
+		@Prop() startAction!: number
 		FightType = FightType
 		fight: Fight | null = null
 		canvas: any
@@ -237,6 +260,7 @@
 		request: any = null
 		progress: number = 0
 		maps = ["Nexus", "Usine", "Désert", "Forêt", "Glacier", "Plage", "Temple"]
+		document = document
 
 		created() {
 			if (localStorage.getItem('fight/shadows') === null) { localStorage.setItem('fight/shadows', 'true') }
@@ -426,6 +450,8 @@
 				if (fight.status >= 1) {
 					if (fight.data) {
 						this.getLogs()
+						this.game.startTurn = this.startTurn
+						this.game.startAction = this.startAction
 						this.game.init(fight)
 					} else {
 						this.error = true
@@ -899,6 +925,9 @@
 		i {
 			padding-right: 10px;
 			color: #eee;
+		}
+		input[type="text"] {
+			width: 100%
 		}
 	}
 	.settings-menu ::v-deep label {

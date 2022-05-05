@@ -35,7 +35,7 @@
 		@Prop() invert!: boolean
 		@Prop() ai!: number
 
-		botHats = [ null, 111, 128, 129 ]
+		botHats = [ null, 8, 12, 13 ]
 		randomAngle: number = 0
 
 		created() {
@@ -46,7 +46,6 @@
 			return 'leek/leek' + this.appearance + '_front_' + LeekWars.getLeekSkinName(this.leek.skin) + '.png'
 		}
 		get hat() {
-			// if (true) return 27
 			let hat = this.leek.hat
 			if (!hat && (!this.leek.real || this.leek.bot)) {
 				return this.botHats[-this.ai! as number - 1]
@@ -54,17 +53,16 @@
 			if (typeof(hat) === 'number') {
 				return hat
 			}
-			return hat!.template
-		}
-		get hatImage(): string {
-			if (this.hat) {
-				const hatName = LeekWars.hats[this.hat].name
-				return 'hat/' + hatName + '.png'
-			}
-			return ''
+			return LeekWars.items[hat!.template].params
 		}
 		get hatTemplate(): HatTemplate | null {
 			return this.hat ? LeekWars.hats[this.hat] : null
+		}
+		get hatImage(): string {
+			if (this.hatTemplate) {
+				return 'hat/' + this.hatTemplate.name + '.png'
+			}
+			return ''
 		}
 		get hatWidth() { return this.hatTemplate ? this.leekHeight * 0.8 * this.hatTemplate.width : 0 }
 		get hatHeight() { return this.hatSize ? this.hatWidth * (this.hatSize.height / this.hatSize.width) : 0 }
@@ -83,10 +81,10 @@
 		get width(): number {
 			let width = this.leekWidth
 			if (this.hatWidth > this.leekWidth) {
-				width += this.hatWidth / 2 - this.leekWidth / 2
+				width = this.hatWidth
 			}
-			if (this.weaponOffset > this.leekWidth / 2) {
-				width += this.weaponOffset - this.leekWidth / 2
+			if (this.weaponOffset > width / 2) {
+				width = this.leekWidth / 2 + this.weaponOffset
 			}
 			return width
 		}
@@ -157,7 +155,7 @@
 		get handSize() { return 20 / this.weaponScale }
 		get appearance() { return LeekWars.getLeekAppearance(this.leek.level) }
 		get leekSize() { return LeekWars.leekSizes[this.appearance] }
-		get hatSize() { return this.hat ? LeekWars.hatSizes[LeekWars.hats[this.hat].template] : null }
+		get hatSize() { return this.hat ? LeekWars.hatSizes[this.hat] : null }
 		get handImage() {
 			return "/image/fight/leek_hand" + (this.leek.skin === 15 ? "_gold" : "") + ".png"
 		}

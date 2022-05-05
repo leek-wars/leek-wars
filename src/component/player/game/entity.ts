@@ -10,6 +10,7 @@ import { Farmer } from '@/model/farmer'
 import { i18n } from '@/model/i18n'
 import { LeekWars } from '@/model/leekwars'
 import { TEAM_COLORS } from '@/model/team'
+import { Path } from './path'
 import { S } from './sound'
 
 enum EntityType {
@@ -26,6 +27,13 @@ enum EntityDirection {
 const MOVE_DELAY = 3
 const MOVE_DURATION = 25
 const MOVE_HEIGHT = 15
+
+enum DamageType {
+	DEFAULT,
+	FIRE,
+	EXPLOSION,
+	SLICE
+}
 
 class FightEntity extends Entity {
 	// Infos générales
@@ -84,8 +92,11 @@ class FightEntity extends Entity {
 	public jumpHeight = 0
 	// Drawing
 	public drawID: number | null = null
+	public width: number = 0
 	public height: number = 0
 	public baseHeight: number = 0
+	public baseWidth: number = 0
+	public scale: number = 1
 	// States
 	public dead = false
 	public flash = 0
@@ -104,6 +115,7 @@ class FightEntity extends Entity {
 	public oscillation = 1
 	public frame: number
 	public growth: number = 1.0
+	public lastDamageType: DamageType = DamageType.DEFAULT
 	// Effects
 	public effects: {[key: number]: EntityEffect} = {}
 	public launched_effects: {[key: number]: EntityEffect} = {}
@@ -348,7 +360,8 @@ class FightEntity extends Entity {
 
 	public updateGrowth() {
 		this.growth = 1.0 + Math.log10(Math.max(0.0316227766, this.maxLife / this.initialMaxLife)) / 3
-		this.height = this.baseHeight * this.growth
+		this.width = this.baseWidth * this.scale * this.growth
+		this.height = this.baseHeight * this.scale * this.growth
 	}
 
 	public loosePower(power: number, jump: boolean) {
@@ -509,14 +522,10 @@ class FightEntity extends Entity {
 
 			if (this.deadAnim < 1) {
 
-				this.deadAnim += 0.05 * dt
+				this.deadAnim += 0.035 * dt
 
 				if (this.deadAnim >= 1) {
-					if (this.drawID) {
-						this.game.removeDrawableElement(this.drawID, this.y)
-						this.drawID = null
-					}
-					this.game.actionDone()
+					this.finishDeath()
 				}
 			}
 		}
@@ -597,6 +606,22 @@ class FightEntity extends Entity {
 		}
 	}
 
+	public finishDeath() {
+		if (this.drawID) {
+			this.game.removeDrawableElement(this.drawID, this.y)
+			this.drawID = null
+		}
+		this.active = false
+
+		for (const id in this.effects) {
+			delete this.game.leeks[this.effects[id].caster].launched_effects[id]
+			this.game.removeEffect(parseInt(id, 10))
+		}
+		this.effects = {}
+		this.launched_effects = {}
+		this.game.actionDone()
+	}
+
 	public useChip(chip: ChipAnimation, cell: Cell, targets: FightEntity[], result: number) {
 		const pos = this.game.ground.field.cellToXY(cell)
 		const cellPixels = this.game.ground.xyToXYPixels(pos.x, pos.y)
@@ -660,19 +685,208 @@ class FightEntity extends Entity {
 		this.gazing--
 	}
 
-	public kill(animation: boolean, dx: number, dy: number) {
+	public kill(animation: boolean, damageType: DamageType, dx: number, dy: number) {
+		if (animation) {
+			if (damageType === DamageType.DEFAULT) {
+				this.bury()
+			} else if (damageType === DamageType.SLICE) {
+				this.slice()
+			} else if (damageType === DamageType.EXPLOSION) {
+				this.explode(dx, dy)
+			}
+		}
 		this.dead = true
 		this.flash = 0
-		if (animation) {
-			this.deadAnim = 0
-		}
 		this.bubble = null
+	}
+
+	public bury() {
+
+		const texture = this.frameTexture(false)
+
+		const f_scale = this.scale * this.growth
+		this.game.particles.addBuryParticle(this.ox, this.oy, texture, f_scale)
+	}
+
+	public slice() {
+
+		const texture = this.frameTexture(true)
+
+		const w = texture.texture.width
+		const h = texture.texture.height
+		const s = Math.max(w, h) * 1.3
+		const cx = w * 0.5
+		const cy = h * (0.5 + Math.random() * 0.3)
+		const angle = - Math.PI / 2 - 0.35 + Math.random() * 0.7
+		const f_scale = this.scale * this.growth
+
+		const topX = cx + Math.cos(angle) * s
+		const topY = cy + Math.sin(angle) * s
+		const bottomX = cx - Math.cos(angle) * s
+		const bottomY = cy - Math.sin(angle) * s
+
+		const path1 = new Path(0, 0, w, h)
+		path1.moveTo(topX, topY)
+		path1.lineTo(bottomX, bottomY)
+		path1.lineTo(0, h)
+		path1.lineTo(0, 0)
+		path1.closePath()
+
+		const path2 = new Path(0, 0, w, h)
+		path2.moveTo(topX, topY)
+		path2.lineTo(bottomX, bottomY)
+		path2.lineTo(w, h)
+		path2.lineTo(w, 0)
+		path2.closePath()
+
+		const canvas1 = document.createElement('canvas')
+		canvas1.width = w
+		canvas1.height = h
+		const fragmentCtx = canvas1.getContext('2d')!
+		const fragment1 = new Texture('')
+		fragment1.texture = canvas1
+		fragmentCtx.translate(-path1.x1, -path1.y1)
+		fragmentCtx.drawImage(texture.texture, 0, 0)
+		fragmentCtx.globalCompositeOperation = 'destination-in'
+		fragmentCtx.fill(path1)
+		fragmentCtx.globalCompositeOperation = 'source-over'
+
+		// Debug
+		// fragmentCtx.fillStyle = 'red'
+		// fragmentCtx.fillRect(cx, cy, 10, 10)
+
+		const canvas2 = document.createElement('canvas')
+		canvas2.width = w
+		canvas2.height = h
+		const fragment2Ctx = canvas2.getContext('2d')!
+		const fragment2 = new Texture('')
+		fragment2.texture = canvas2
+		fragmentCtx.translate(-path2.x1, -path2.y1)
+		fragment2Ctx.drawImage(texture.texture, 0, 0)
+		fragment2Ctx.globalCompositeOperation = 'destination-in'
+		fragment2Ctx.fill(path2)
+		fragment2Ctx.globalCompositeOperation = 'source-over'
+
+		const f_x = this.ox + (-w / 2 + (path1.x1 + path1.x2) / 2) * f_scale
+		const f_z = (h - (path1.y1 + path1.y2) / 2) * f_scale + this.z
+		const fdx = -1.3
+		const rotation = -0.023
+		const fdy = 0
+		const fdz = 2 + Math.random() * 1
+		this.game.particles.addGarbage(f_x, this.oy - 15, f_z - 15, fdx, fdy, fdz, fragment1, 1, rotation, f_scale, 0, 70)
+
+		const f2_x = this.ox + (-w / 2 + (path2.x1 + path2.x2) / 2) * f_scale
+		const f2_z = (h - (path2.y1 + path2.y2) / 2) * f_scale + this.z
+		const f2dx = 1.3
+		const rotation2 = 0.023
+		const f2dy = 0
+		this.game.particles.addGarbage(f2_x, this.oy - 15, f2_z - 15, f2dx, f2dy, fdz, fragment2, 1, rotation2, f_scale, 0, 70)
+
+		console.log({ topX, topY, bottomX, bottomY, cx, cy })
+
+		const s_top = s * (1 + cy / h - 0.5)
+		this.game.particles.addLineParticle(
+			this.ox - Math.cos(angle) * s * f_scale,
+			this.oy - (h - cy + Math.sin(angle) * s) * f_scale,
+			this.ox + Math.cos(angle) * s_top * f_scale,
+			this.oy - (h - cy - Math.sin(angle) * s_top) * f_scale,
+		)
+	}
+
+	public explode(dx: number, dy: number) {
+
+		const texture = this.frameTexture(true)
+
+		const w = texture.texture.width
+		const h = texture.texture.height
+		const s = Math.max(w, h)
+		const cx = w * (0.3 + Math.random() * 0.4)
+		const cy = h * (0.3 + Math.random() * 0.4)
+		const startAngle = Math.random() * Math.PI
+		const lines = 10 + Math.random() * 12 | 0
+		const f_scale = this.scale * this.growth
+
+		for (let f = 0; f < lines; ++f) {
+
+			const angle1 = startAngle + (f / lines) * Math.PI * 2
+			const angle3 = startAngle + ((f + 1) / lines) * Math.PI * 2
+			const angle2 = (angle1 + angle3) / 2
+
+			const path = new Path(0, 0, w, h)
+			path.moveTo(cx, cy)
+			path.lineTo(cx + Math.cos(angle1) * s, cy + Math.sin(angle1) * s)
+			path.lineTo(cx + Math.cos(angle3) * s, cy + Math.sin(angle3) * s)
+			path.closePath()
+
+			const canvas = document.createElement('canvas')
+			canvas.width = path.x2 - path.x1
+			canvas.height = path.y2 - path.y1
+			const fragmentCtx = canvas.getContext('2d')!
+			const fragment = new Texture('')
+			fragment.texture = canvas
+
+			fragmentCtx.translate(-path.x1, -path.y1)
+			fragmentCtx.drawImage(texture.texture, 0, 0)
+			fragmentCtx.globalCompositeOperation = 'destination-in'
+			fragmentCtx.fill(path)
+			fragmentCtx.globalCompositeOperation = 'source-over'
+
+			// fragmentCtx.strokeStyle = 'red'
+			// fragmentCtx.lineWidth = 2
+			// fragmentCtx.strokeRect(0, 0, canvas.width, canvas.height)
+			// fragmentCtx.fillStyle = 'red'
+			// fragmentCtx.font = '20pt Roboto'
+			// fragmentCtx.fillText('' + f, path.x1 + 10, path.y1 + 25)
+
+			const f_x = this.ox + (-w / 2 + (path.x1 + path.x2) / 2) * f_scale
+			const f_z = (h - (path.y1 + path.y2) / 2) * f_scale + this.z
+			const fdx = dx * 2 + Math.cos(angle2) * 3
+			const fdy = dy * 2 + Math.random() * 2
+			const rotation = -0.05 + Math.random() * 0.1
+			// const dx = 0
+			// const dz = 0
+			// const rotation = 0
+			this.game.particles.addGarbage(f_x, this.oy, f_z, fdx, 0, fdy, fragment, 1, rotation, f_scale, 0, 70)
+		}
+	}
+
+	public frameTexture(includeHat: boolean): Texture {
+
+		const canvas = document.createElement('canvas')
+		canvas.width = this.baseWidth
+		canvas.height = this.baseHeight * this.oscillation
+		const textureCtx = canvas.getContext('2d')!
+		const texture = new Texture('')
+		texture.texture = canvas
+
+		// Debug
+		// textureCtx.strokeStyle = 'red'
+		// textureCtx.lineWidth = 2
+		// textureCtx.strokeRect(0, 0, canvas.width, canvas.height)
+
+		const savedScale = this.scale
+		const savedGrowth = this.growth
+		this.scale = 1
+		this.growth = 1
+
+		textureCtx.save()
+		textureCtx.translate(canvas.width / 2, canvas.height)
+		textureCtx.translate(0, - this.z)
+		textureCtx.scale(this.scale * this.direction, this.scale)
+		this.drawNormal(textureCtx)
+		textureCtx.restore()
+
+		this.scale = savedScale
+		this.growth = savedGrowth
+
+		return texture
 	}
 
 	public reborn() {
 		this.dead = false
 		this.bubble = new Bubble(this.game)
 		this.active = true
+		this.updateGrowth()
 	}
 
 	public addCritical() {
@@ -686,9 +900,6 @@ class FightEntity extends Entity {
 		ctx.save()
 		ctx.scale(this.game.ground.scale, this.game.ground.scale)
 		ctx.translate(this.ox, this.oy)
-		// if (this.dead) {
-		// 	ctx.translate(0, this.deadAnim * 50)
-		// }
 
 		// Team square
 		ctx.save()
@@ -804,12 +1015,12 @@ class FightEntity extends Entity {
 		const active = this === this.game.selectedEntity || this === this.game.hoverEntity || this === this.game.mouseEntity
 
 		// Fond
-		ctx.globalAlpha = active ? 0.8 : 0.6
+		ctx.globalAlpha = (active ? 0.8 : 0.6) * (1 - this.deadAnim)
 		ctx.fillStyle = active ? 'white' : 'black'
 		ctx.fillRect(-width / 2, 0, width, height + barHeight - 1)
 
 		// Nom
-		ctx.globalAlpha = 1
+		ctx.globalAlpha = (1 - this.deadAnim)
 		ctx.fillStyle = active ? 'black' : 'white'
 		ctx.textBaseline = "middle"
 		ctx.textAlign = "center"
@@ -850,11 +1061,11 @@ class FightEntity extends Entity {
 				const effect_duration = effect.turns === -1 ? '∞' : '' + effect.turns
 				const w = ctx.measureText(effect_message).width
 				const w2 = ctx.measureText(effect_duration).width
-				ctx.globalAlpha = 0.5
+				ctx.globalAlpha = 0.5 * (1 - this.deadAnim)
 				ctx.fillStyle = 'black'
 				ctx.fillRect(x + 1, 2 * effect_size - text_size - 5, w + 3, text_size + 4)
 				ctx.fillRect(x + effect_size - 11, effect_size + 1.5, w2 + 3, 12)
-				ctx.globalAlpha = 1
+				ctx.globalAlpha = (1 - this.deadAnim)
 				ctx.fillStyle = 'white'
 				ctx.fillText(effect_message, x + 2, 2 * effect_size - 6)
 				ctx.fillText(effect_duration, x + effect_size - 9, effect_size + 8)
@@ -972,4 +1183,4 @@ class FightEntity extends Entity {
 	}
 }
 
-export { EntityType, EntityDirection, FightEntity }
+export { DamageType, EntityType, EntityDirection, FightEntity }

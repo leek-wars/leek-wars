@@ -9,7 +9,7 @@
 
 		<panel class="first">
 			<div slot="content" class="fight">
-				<player :key="fight_id" :fight-id="fight_id" :required-width="playerWidth" :required-height="playerHeight" @unlock-trophy="unlockTrophy" @fight="fightLoaded" @resize="resize" />
+				<player :key="fight_id" :fight-id="fight_id" :required-width="playerWidth" :required-height="playerHeight" :start-turn="startTurn" :start-action="startAction" @unlock-trophy="unlockTrophy" @fight="fightLoaded" @resize="resize" />
 			</div>
 		</panel>
 
@@ -152,6 +152,13 @@
 				leeks.push({...leek, farmer: this.fight.farmers2[leek.farmer]})
 			}
 			return leeks
+		}
+
+		get startTurn() {
+			return parseInt(this.$route.query.turn, 10) || parseInt(this.$route.query.t, 10) || 1
+		}
+		get startAction() {
+			return parseInt(this.$route.query.action, 10) || parseInt(this.$route.query.a, 10) || 0
 		}
 
 		mounted() {

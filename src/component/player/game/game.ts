@@ -3,7 +3,7 @@ import Player from '@/component/player.vue'
 import { Bubble } from '@/component/player/game/bubble'
 import { Bulb } from '@/component/player/game/bulb'
 import { Acceleration, Adrenaline, Alteration, Antidote, Armor, Armoring, Arsenic, BallAndChain, Bandage, Bark, BoxingGlove, Brainwashing, Bramble, Burning, Carapace, ChipAnimation, Collar, Covetousness, Covid, Crushing, Cure, Desintegration, DevilStrike, Dome, Doping, Drip, Elevation, Ferocity, Fertilizer, Flame, Flash, Fortress, Fracture, Grapple, Helmet, Ice, Iceberg, Inversion, Jump, Knowledge, LeatherBoots, Liberation, Lightning, Loam, Manumission, Meteorite, Mirror, Motivation, Mutation, Pebble, Plague, Plasma, Precipitation, Protein, Punishment, Rage, Rampart, Reflexes, Regeneration, Remission, Repotting, Resurrection, Rock, Rockfall, Serum, SevenLeagueBoots, Shield, Shock, SlowDown, Solidification, Soporific, Spark, Stalactite, Steroid, Stretching, Teleportation, Therapy, Thorn, Toxin, Tranquilizer, Transmutation, Vaccine, Vampirization, Venom, Wall, WarmUp, Whip, WingedBoots, Wizardry } from '@/component/player/game/chips'
-import { EntityDirection, EntityType, FightEntity } from '@/component/player/game/entity'
+import { DamageType, EntityDirection, EntityType, FightEntity } from '@/component/player/game/entity'
 import { Ground } from '@/component/player/game/ground'
 import { Leek } from '@/component/player/game/leek'
 import { Arena, Beach, Desert, Factory, Forest, Glacier, Map, Nexus } from '@/component/player/game/maps'
@@ -252,6 +252,8 @@ class Game {
 	public turn = 1
 	public turnPosition: {[key: number]: number} = {}
 	public effects: EntityEffect[] = []
+	public startTurn: number = 1
+	public startAction: number = 0
 	// Chips
 	public chips: ChipAnimation[] = []
 	// Logs
@@ -305,7 +307,6 @@ class Game {
 	public logging: any = true
 	public jumpRequested: boolean = false
 	public jumpAction: number = 0
-	public currentTurn: number = 0
 	public ratio: number = 1
 	public areaColor: any
 	public area!: any[]
@@ -716,6 +717,19 @@ class Game {
 		this.launched = true
 		this.player.$emit('game-launched')
 		this.updateFrame()
+
+		if (this.startAction) {
+			if (this.startAction >= 0 && this.startAction < this.actions.length) {
+				this.jump(this.startAction)
+			}
+		} else if (this.startTurn !== 1) {
+			for (let a = 0; a < this.actions.length; ++a) {
+				const action = this.actions[a]
+				if (action.type === ActionType.NEW_TURN && action.params[1] === this.startTurn) {
+					this.jump(a)
+				}
+			}
+		}
 	}
 
 	public resize(width: number, height: number) {
@@ -1057,9 +1071,11 @@ class Game {
 			break
 		}
 		case ActionType.USE_WEAPON: {
-			const launcher = action.params[1]
-			action.weapon = (this.leeks[launcher] as Leek).weapon_name
+			const leek = this.leeks[action.params[1]] as Leek
+			action.weapon = leek.weapon_name
 			this.log(action)
+
+			leek.lastDamageType = leek.weapon!.damageType
 
 			if (this.jumping) {
 				this.actionDone()
@@ -1073,7 +1089,7 @@ class Game {
 			const area = LeekWars.weapons[weapon].area
 			const targets = this.ground.field.getTargets(cell, area) as FightEntity[]
 
-			const duration = (this.leeks[launcher] as Leek).useWeapon(cell, targets, result)
+			const duration = leek.useWeapon(cell, targets, result)
 			this.actionDone(Math.max(6, duration))
 
 			break
@@ -1124,27 +1140,24 @@ class Game {
 					this.entityOrder.splice(index, 1)
 				}
 			}
-			for (const id in entity.effects) {
-				delete this.leeks[entity.effects[id].caster].launched_effects[id]
-				this.removeEffect(parseInt(id, 10))
-			}
-			entity.effects = {}
-			entity.launched_effects = {}
 			if (entity.cell) {
 				entity.cell.entity = null
 			}
 			if (this.jumping) {
 				entity.active = false
-				entity.kill(false, 0, 0)
+				entity.kill(false, DamageType.DEFAULT, 0, 0)
 				this.actionDone()
 			} else {
 				this.log(action)
 				const killer = this.leeks[action.params[2]]
 				if (killer) {
-					const angle = Math.atan2((killer.y - entity.y), (entity.x - killer.x) / 2) - Math.PI / 2
-					entity.kill(true, Math.cos(angle), Math.sin(angle)) // Animation
+					const dx = (entity.x - killer.x)
+					const dy = (entity.y - killer.y) / 2
+					const angle = Math.atan2(dy, dx)
+					// console.log("dx", dx, "dy", dy, "angle", angle)
+					entity.kill(true, killer.lastDamageType, Math.cos(angle), Math.sin(angle)) // Animation
 				} else {
-					entity.kill(true, 0, 0) // Animation
+					entity.kill(true, DamageType.DEFAULT, 0, 0) // Animation
 				}
 			}
 			break
@@ -2250,7 +2263,7 @@ class Game {
 
 		// Life bars
 		for (const entity of this.leeks) {
-			if (entity.isDead() || !entity.active) { continue }
+			if (!entity.active) { continue }
 			if ((this.showLifes && (this.mouseEntity == null || this.distance2(entity.x, entity.y, this.mouseTileX!, this.mouseTileY!) > 8)) || this.mouseCell === entity.cell) {
 				entity.drawName(this.ctx)
 			}
@@ -2381,7 +2394,6 @@ class Game {
 		}
 
 		this.clearMarks()
-		this.currentTurn = 0
 		this.turn = 1
 		this.currentPlayer = null
 
