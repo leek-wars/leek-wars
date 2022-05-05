@@ -383,12 +383,11 @@
 					this.unseenItemDialog = true
 				}
 
-				this.hats = this.hats.sort((a, b) => {
-					const ap = (LeekWars.items[a.id].buyable || LeekWars.items[a.id].buyable_crystals) ? (LeekWars.items[a.id].buyable_crystals ? (LeekWars.items[a.id].crystals * 50000) : LeekWars.items[a.id].price) : 999999999
-					const bp = (LeekWars.items[b.id].buyable || LeekWars.items[b.id].buyable_crystals) ? (LeekWars.items[b.id].buyable_crystals ? (LeekWars.items[b.id].crystals * 50000) : LeekWars.items[b.id].price) : 999999999
-					return ap - bp
-				})
-				console.log(this.hats)
+				// this.hats = this.hats.sort((a, b) => {
+				// 	const ap = (LeekWars.items[a.id].buyable || LeekWars.items[a.id].buyable_crystals) ? (LeekWars.items[a.id].buyable_crystals ? (LeekWars.items[a.id].crystals * 50000) : LeekWars.items[a.id].price) : 999999999
+				// 	const bp = (LeekWars.items[b.id].buyable || LeekWars.items[b.id].buyable_crystals) ? (LeekWars.items[b.id].buyable_crystals ? (LeekWars.items[b.id].crystals * 50000) : LeekWars.items[b.id].price) : 999999999
+				// 	return ap - bp
+				// })
 
 				this.update()
 			})

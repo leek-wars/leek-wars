@@ -37,6 +37,7 @@
 	"reduce_effects": "Les effets de {leek} sont réduits de {value}",
 	"remove_poisons": "Les poisons de {leek} sont neutralisés",
 	"remove_shackles": "Les entraves de {leek} sont détruites",
+	"share": "Partager",
 	"start_of_fight": "Début du combat !",
 	"summon": "{leek} invoque {summon}",
 	"turn_n": "Tour {0}",

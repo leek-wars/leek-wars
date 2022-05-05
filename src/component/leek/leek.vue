@@ -447,9 +447,9 @@
 					</div>
 					<div v-ripple class="item card" @click="hatDialog = true">
 						<div class="title">{{ $t('hat') }}</div>
-						<img v-if="leek.hat" class="image" :src="'/image/hat/' + LeekWars.hats[leek.hat.template].name + '.png'">
+						<img v-if="leek.hat" class="image" :src="'/image/hat/' + LeekWars.hats[LeekWars.items[leek.hat.template].params].name + '.png'">
 						<img v-else class="image" src="/image/hat/no_hat.png">
-						<div v-if="leek.hat" class="name">{{ $t('hat.' + LeekWars.hats[leek.hat.template].name) }}</div>
+						<div v-if="leek.hat" class="name">{{ $t('hat.' + LeekWars.hats[LeekWars.items[leek.hat.template].params].name) }}</div>
 					</div>
 					<div v-ripple class="item card" :class="{disabled: !holdWeaponEnabled}" @click="skinWeaponDialog = true">
 						<div class="title">
@@ -1062,7 +1062,7 @@
 			this.skinWeaponDialog = false
 			if (!this.leek || !this.my_leek) { return }
 			if (this.holdWeaponEnabled) {
-				LeekWars.put('leek/set-weapon', {leek: this.leek.id, weapon})
+				LeekWars.put('leek/set-weapon', {leek_id: this.leek.id, weapon})
 				this.leek.weapon = weapon
 				store.commit('set-leek-weapon', {leek: this.leek.id, weapon})
 			}

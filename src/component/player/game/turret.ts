@@ -8,6 +8,7 @@ import { SHADOW_QUALITY, T, Texture } from './texture'
 class Piece {
 	t!: Texture
 	z!: number
+	w!: number
 }
 
 class Turret extends FightEntity {
@@ -31,8 +32,9 @@ class Turret extends FightEntity {
 		this.textures.pyramid_down = T.get(this.game, 'image/turret/pyramid_down_' + color + '.png', true, SHADOW_QUALITY)
 		this.bodyTexFront = this.textures.base
 
-		this.pieces = TURRET_DATA[Math.floor(level / 10)].map(piece => ({t: this.textures[piece.t], z: piece.z}))
+		this.pieces = TURRET_DATA[Math.floor(level / 10)].map(piece => ({t: this.textures[piece.t], z: piece.z, w: this.textures[piece.t].texture.width }))
 		this.baseHeight = this.height = 80 + level * 1.0
+		this.baseWidth = this.pieces.reduce((max, piece) => Math.max(max, piece.w), 0)
 	}
 
 	public update(dt: number) {

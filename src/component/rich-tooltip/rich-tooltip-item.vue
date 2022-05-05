@@ -12,7 +12,7 @@
 <script lang="ts">
 	import { Component, Prop, Vue } from 'vue-property-decorator'
 	import ItemPreview from '@/component/market/item-preview.vue'
-import { LeekWars } from '@/model/leekwars'
+	import { LeekWars } from '@/model/leekwars'
 
 	@Component({ components: { ItemPreview } })
 	export default class RichTooltipItem extends Vue {

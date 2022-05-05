@@ -152,7 +152,7 @@ class Bubble extends Particle {
 
 class Laser extends Particle {
 	public width = 0
-	public texture: HTMLImageElement
+	public texture: HTMLImageElement | HTMLCanvasElement
 	constructor(game: Game, texture: Texture, x: number, y: number, z: number, width: number, angle: number) {
 		super(game, x, y, z, LASER_LIFE)
 		this.texture = texture.texture
@@ -168,7 +168,7 @@ class Laser extends Particle {
 }
 class Lightning extends Particle {
 	public vertices: number[]
-	public texture: HTMLImageElement
+	public texture: HTMLImageElement | HTMLCanvasElement
 	constructor(game: Game, texture: Texture, x: number, y: number, z: number, angle: number, position: Position, threshold: number = 50) {
 		super(game, x, y, z, LIGHTNING_LIFE)
 		this.texture = texture.texture
@@ -487,7 +487,7 @@ class Plasma extends Particle {
 	}
 }
 class Cartridge extends FallingParticle {
-	public texture: HTMLImageElement
+	public texture: HTMLImageElement | HTMLCanvasElement
 	constructor(game: Game, x: number, y: number, z: number, dx: number, dy: number, dz: number, texture: Texture) {
 		super(game, x, y, z, CARTRIDGE_LIFE)
 		this.texture = texture.texture
@@ -508,7 +508,7 @@ class Cartridge extends FallingParticle {
 class Garbage extends FallingParticle {
 	public orientation: number
 	public scale: number
-	public texture: HTMLImageElement
+	public texture: HTMLImageElement | HTMLCanvasElement
 	constructor(game: Game, x: number, y: number, z: number, dx: number, dy: number, dz: number, texture: Texture, orientation: number, rotation: number, scale: number, angle: number, life: number) {
 		super(game, x, y, z, life)
 		this.texture = texture.texture
@@ -546,7 +546,7 @@ class Garbage extends FallingParticle {
 class ImageParticle extends Particle {
 	public totalLife: any
 	public alpha: number
-	public texture: HTMLImageElement
+	public texture: HTMLImageElement | HTMLCanvasElement
 	constructor(game: Game, x: number, y: number, z: number, dx: number, dy: number, dz: number, angle: number, texture: Texture, life: number, alpha: number, rotation: number) {
 		super(game, x, y, z, life)
 		this.texture = texture.texture
@@ -580,7 +580,7 @@ class SpikeParticle extends Particle {
 	public flip: boolean
 	public ix: number
 	public iy: number
-	public texture: HTMLImageElement
+	public texture: HTMLImageElement | HTMLCanvasElement
 	constructor(game: Game, x: number, y: number, z: number, dx: number, dy: number, texture: Texture, life: number, flip: boolean) {
 		super(game, x, y, z, life)
 		this.texture = texture.texture
@@ -656,7 +656,7 @@ class Rectangle extends Particle {
 }
 class Blood extends Particle {
 	public textureID: number
-	public texture: HTMLImageElement
+	public texture: HTMLImageElement | HTMLCanvasElement
 	constructor(game: Game, x: number, y: number, z: number, dx: number, dy: number, dz: number, texture: Texture) {
 		super(game, x, y, z, BLOOD_LIFE)
 		this.texture = texture.texture
@@ -788,4 +788,43 @@ class LighningBall extends Particle {
 	}
 }
 
-export { Particle, Bubble, Bullet, CriticalParticle, Laser, Lightning, Fire, SimpleFire, Gaz, Meteorite, Grenade, Shot, Explosion, Cartridge, Garbage, ImageParticle, LighningBall, Plasma, Rectangle, Blood, RealisticExplosion, Rocket, SpikeParticle, SpinningParticle, NUM_BLOOD_SPRITES }
+class BuryParticle extends Particle {
+	static LIFE = 25
+	texture: Texture
+	scale: number
+	public constructor(game: Game, x: number, y: number, texture: Texture, scale: number) {
+		super(game, x, y, 0, BuryParticle.LIFE)
+		this.texture = texture
+		this.scale = scale
+		// console.log("texture", game, x, y, texture, texture.texture.width, texture.texture.height)
+	}
+
+	public draw(ctx: CanvasRenderingContext2D): void {
+		const w = this.texture.texture.width
+		const h = (this.life / BuryParticle.LIFE) * this.texture.texture.height
+		// console.log("draw", this.x, this.y, w, h)
+		ctx.drawImage(this.texture.texture, 0, 0, w, h, - w / 2 * this.scale, - h * this.scale, w * this.scale, h * this.scale)
+	}
+}
+
+class LineParticle extends Particle {
+	static LIFE = 15
+	path: Path2D
+
+	public constructor(game: Game, x1: number, y1: number, x2: number, y2: number) {
+		super(game, x1, y1, 0, LineParticle.LIFE)
+		this.path = new Path2D()
+		this.path.moveTo(0, 0)
+		this.path.lineTo(x2 - x1, y2 - y1)
+	}
+
+	public draw(ctx: CanvasRenderingContext2D): void {
+		ctx.globalAlpha = this.life / 10
+		ctx.strokeStyle = '#fff'
+		ctx.lineWidth = 4 * (this.life / 10)
+		ctx.lineCap = 'round'
+		ctx.stroke(this.path)
+	}
+}
+
+export { Particle, Bubble, Bullet, BuryParticle, CriticalParticle, Laser, Lightning, Fire, SimpleFire, Gaz, Meteorite, Grenade, Shot, Explosion, Cartridge, Garbage, ImageParticle, LighningBall, LineParticle, Plasma, Rectangle, Blood, RealisticExplosion, Rocket, SpikeParticle, SpinningParticle, NUM_BLOOD_SPRITES }

@@ -110,7 +110,7 @@
 		get nonSummons(): boolean { return (this.effect.targets & (1 << 3)) !== 0 }
 		get summons(): boolean { return (this.effect.targets & (1 << 4)) !== 0 }
 		get effectThe(): boolean {
-			return this.effect.id === EffectType.HEAL
+			return this.effect.id === EffectType.HEAL || this.effect.id === EffectType.RAW_HEAL
 		}
 		format(n: number) {
 			if (Math.floor(n) !== n) {
