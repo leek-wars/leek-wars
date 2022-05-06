@@ -1041,24 +1041,23 @@
 				currentClass = clazz
 			}
 
-			// console.log("autocomplete 2", { token, previousToken, tokenBeforeDot, start, isDot, cursor, currentClass })
+			// console.log("autocomplete 2", { token, previousToken, tokenBeforeDot, start, isDot, cursor, currentClass, ai: this.ai })
 
 			if (isDot) {
 
-				if (tokenBeforeDot.string in this.ai.classes) {
-					const clazz = this.ai.classes[tokenBeforeDot.string]
-					for (const staticMethod of clazz.static_methods) {
-						if (staticMethod.name.toLowerCase().indexOf(start) === 0) {
-							completions.push(staticMethod)
-						}
-					}
-					for (const static_field of clazz.static_fields) {
-						if (static_field.name.toLowerCase().indexOf(start) === 0) {
-							completions.push(static_field)
-						}
+				// ClassName.<field>
+				const visited = new Set<number>()
+				this.addDotCompletionsFromAI(tokenBeforeDot, start, completions, visited, this.ai)
+
+				for (const entrypoint_id of this.ai.entrypoints) {
+					const entrypoint = fileSystem.ais[entrypoint_id]
+					if (entrypoint) {
+						this.addDotCompletionsFromAI(tokenBeforeDot, start, completions, visited, entrypoint)
 					}
 				}
+
 				if (currentClass) {
+					// class.<field>
 					if (tokenBeforeDot.string === 'class') {
 						for (const static_field of currentClass.static_fields) {
 							if (static_field.name.toLowerCase().indexOf(start) === 0) {
@@ -1071,6 +1070,7 @@
 							}
 						}
 					}
+					// this.<field>
 					if (tokenBeforeDot.string === 'this') {
 						for (const method of currentClass.methods) {
 							if (method.name.toLowerCase().indexOf(start) === 0) {
@@ -1209,6 +1209,30 @@
 			}
 		}
 
+		public addDotCompletionsFromAI(tokenBeforeDot: CodeMirror.Token, start: string, completions: any[], visited: Set<number>, ai: AI) {
+
+			if (visited.has(ai.id)) { return }
+			visited.add(ai.id)
+
+			if (tokenBeforeDot.string in ai.classes) {
+				const clazz = ai.classes[tokenBeforeDot.string]
+				for (const staticMethod of clazz.static_methods) {
+					if (staticMethod.name.toLowerCase().indexOf(start) === 0) {
+						completions.push(staticMethod)
+					}
+				}
+				for (const static_field of clazz.static_fields) {
+					if (static_field.name.toLowerCase().indexOf(start) === 0) {
+						completions.push(static_field)
+					}
+				}
+			}
+			// Includes of ai
+			for (const include of ai.includes) {
+				this.addDotCompletionsFromAI(tokenBeforeDot, start, completions, visited, include)
+			}
+		}
+
 		public openCompletions(completions: any[], cursor: any) {
 
 			if (completions.length === 0) {
@@ -1275,11 +1299,16 @@
 			const range = this.document.getRange(cursor, {line: cursor.line, ch: cursor.ch + 1})
 			const addParameters = range !== '(' && !/\w/i.test(range)
 
+			// console.log("pick", completion)
+
 			if (completion.type === 'user-method' || completion.type === 'user-static-method' || completion.type === 'user-function') {
 
 				const pos = this.document.getCursor()
-				const name = completion.fullName
-				this.document.replaceRange(completion.fullName, {line: this.completionFrom.line, ch: this.completionFrom.ch}, this.completionTo)
+				let name = completion.fullName
+				if (name.includes(':')) {
+					name = name.split(':')[0].trim()
+				}
+				this.document.replaceRange(name, {line: this.completionFrom.line, ch: this.completionFrom.ch}, this.completionTo)
 				const argCount = name.includes('()') ? 0 : name.split(',').length
 				if (addParameters && argCount > 0) {
 					const firstArgLength = (argCount > 1 ? name.indexOf(',') : name.indexOf(')')) - name.indexOf('(') - 1
