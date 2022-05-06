@@ -27,7 +27,7 @@ import { LeekWars } from '@/model/leekwars'
         "var": kw("var"), "global": kw("global"),
         "function": kw("function"), "catch": kw("catch"),
         "for": kw("for"), "switch": kw("switch"), "case": kw("case"), "default": kw("default"),
-        "in": operator, "typeof": operator, "instanceof": operator, "and": operator, "or": operator, "xor": operator,
+        "in": operator, "typeof": operator, "instanceof": operator, "and": operator, "or": operator, "xor": operator, "not": operator,
         "true": atom, "false": atom, "null": atom, "undefined": atom, "NaN": atom, "Infinity": atom,
         "this": kw("this"), "class": kw("class"), "super": kw("atom"),
         "export": kw("export"), "import": kw("import"), "extends": C,
