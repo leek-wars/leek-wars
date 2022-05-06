@@ -127,7 +127,7 @@ class AI {
 						let name = match_javadoc[2]
 						let text = match_javadoc[3]
 						if (type === 'return') {
-							fullName += ' : ' + text
+							fullName += ' : ' + name
 						} else if (type === 'param') {
 							if (name) {
 								name = name.trim()
