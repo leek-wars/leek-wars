@@ -11,7 +11,7 @@
 				<div class="column lateral-column">
 					<h4>{{ $t('test_scenario') }}</h4>
 					<div class="items scenarios">
-						<div v-for="scenario of scenarios" :key="scenario.id" :class="{selected: scenario === currentScenario}" class="item scenario" @click="selectScenario(scenario)">
+						<div v-for="scenario of scenarioList" :key="scenario.id" :class="{selected: scenario === currentScenario}" class="item scenario" @click="selectScenario(scenario)">
 							{{ scenario.name }}
 							<span v-if="scenario.default" class="base">{{ $t('default') }}</span>
 							<div v-else class="delete" @click.stop="deleteScenario(scenario)"></div>
@@ -570,6 +570,10 @@
 		get availableChips() {
 			if (!this.currentLeek) { return [] }
 			return Object.values(LeekWars.chips).filter((c: ChipTemplate) => (this.currentLeek!.chips as any).indexOf(c.id) === -1)
+		}
+
+		get scenarioList() {
+			return Object.values(this.scenarios).sort((a, b) => a.name.localeCompare(b.name))
 		}
 
 		created() {
