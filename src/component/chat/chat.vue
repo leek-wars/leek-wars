@@ -9,7 +9,7 @@
 				<div v-if="message.farmer.id === -1" :key="m" class="separator">
 					{{ message.date | date }}
 				</div>
-				<chat-message v-else :key="m" :message="message" :chat="chat" />
+				<chat-message v-else :key="m" :message="message" :chat="chat" @scroll="updateScroll" />
 			</template>
 			<div v-show="unread" v-ripple class="chat-new-messages" @click="updateScroll(true)">{{ $t('main.unread_messages') }}</div>
 		</div>
@@ -106,10 +106,11 @@
 		updateScroll(force: boolean = false) {
 			if (!this.userScroll || force) {
 				const messages = this.$refs.messages as HTMLElement
+				messages.scrollTop = messages.scrollHeight + 1000
+				this.unread = false
 				setTimeout(() => {
 					if (messages) {
 						messages.scrollTop = messages.scrollHeight + 1000
-						this.unread = false
 					}
 				}, 60)
 			}

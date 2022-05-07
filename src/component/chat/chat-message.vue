@@ -122,7 +122,7 @@
 	import { LeekWars } from '@/model/leekwars'
 	import { Warning } from '@/model/moderation'
 	import { TeamMemberLevel } from '@/model/team'
-	import { Component, Prop, Vue } from 'vue-property-decorator'
+	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 	import EmojiPicker from './emoji-picker.vue'
 
 	@Component({ name: 'ChatMessage', components: { 'emoji-picker': EmojiPicker } })
@@ -163,6 +163,11 @@
 		}
 		get me() {
 			return this.message.farmer.id === this.$store.state.farmer.id
+		}
+
+		@Watch('message.reactions')
+		updateReactions() {
+			this.$emit('scroll')
 		}
 
 		report(message: ChatMessage) {
