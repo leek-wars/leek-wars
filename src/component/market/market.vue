@@ -112,20 +112,20 @@
 								<div v-if="!selectedItem.buyable && !selectedItem.buyable_crystals" class="already-have">
 									{{ $t('cannot_buy') }}
 								</div>
-								<div v-if="selectedItem.buyable">
+								<div v-if="selectedItem.buyable || selectedItem.buyable_crystals" class="buy">
 									<h4 class="buy-label">{{ $t('buy') }}</h4>
-									<v-btn :disabled="($store.state.farmer && $store.state.farmer.habs < selectedItem.price) || (selectedItem.singleton && (selectedItem.farmer_count > 0 || selectedItem.leek_count > 0))" class="buy-button" @click="openBuyHabs">{{ selectedItem.price | number }}<img src="/image/hab.png"></v-btn>
-								</div>
-								<div v-if="env.BANK && selectedItem.buyable_crystals">
-									<h4 class="buy-label">{{ $t('buy') }}</h4>
-									<v-btn :disabled="($store.state.farmer && $store.state.farmer.crystals < selectedItem.crystals) || (selectedItem.singleton && (selectedItem.farmer_count > 0 || selectedItem.leek_count > 0))" class="buy-crystals-button" @click="openBuyCrystals">{{ selectedItem.crystals | number }}<img src="/image/crystal.png"></v-btn>
+									<v-btn v-if="selectedItem.buyable" :disabled="($store.state.farmer && $store.state.farmer.habs < selectedItem.price) || (selectedItem.singleton && (selectedItem.farmer_count > 0 || selectedItem.leek_count > 0))" class="buy-button" @click="openBuyHabs">{{ selectedItem.price | number }}<img src="/image/hab.png"></v-btn>
+									<v-btn v-if="selectedItem.buyable_crystals" :disabled="($store.state.farmer && $store.state.farmer.crystals < selectedItem.crystals) || (selectedItem.singleton && (selectedItem.farmer_count > 0 || selectedItem.leek_count > 0))" class="buy-crystals-button" @click="openBuyCrystals">{{ selectedItem.crystals | number }}<img src="/image/crystal.png"></v-btn>
 								</div>
 								<div v-if="selectedItem.singleton && (selectedItem.farmer_count > 0 || selectedItem.leek_count > 0)" class="already-have">
 									{{ $t('already_have') }}
 								</div>
+								<div v-if="!selectedItem.sellable" class="already-have">
+									{{ $t('not_sellable') }}
+								</div>
 								<template v-if="selectedItem.sellable && selectedItem.farmer_count > 0">
 									<div class="sell">
-										<h4 class="buy-label">{{ $t('resell') }}</h4>&nbsp;
+										<h4 class="buy-label">{{ $t('resell') }}</h4>
 										<v-btn class="sell-button" @click="sellDialog = true">{{ selectedItem.sell_price | number }} <img src="/image/hab.png"></v-btn>
 									</div>
 								</template>
@@ -752,7 +752,7 @@
 		height: 40px;
 	}
 	.trophy {
-		padding: 6px;
+		padding: 8px;
 		display: flex;
 		align-items: center;
 		justify-content: center;
@@ -797,5 +797,8 @@
 				color: black;
 			}
 		}
+	}
+	.buy {
+		margin: 5px 0;
 	}
 </style>
