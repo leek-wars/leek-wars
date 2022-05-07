@@ -862,7 +862,7 @@ class WarmUp extends ChipBoostAnimation {
 class WingedBoots extends ChipBoostAnimation {
 	static textures = [T.buff_aureol, T.halo, T.chip_winged_boots]
 	static sounds = [S.buff]
-	constructor(game: Game) { super(game, T.chip_winged_boots, Area.CIRCLE1) }
+	constructor(game: Game) { super(game, T.chip_winged_boots) }
 }
 class Whip extends ChipBoostAnimation {
 	static textures = [T.buff_aureol, T.halo, T.chip_whip]
@@ -954,7 +954,7 @@ class Arsenic extends ChipPoisonAnimation {
 class Thorn extends ChipDamageReturnAnimation {
 	static textures = [T.damage_return_aureol, T.chip_thorn]
 	static sounds = [S.buff]
-	constructor(game: Game) { super(game, T.chip_thorn, Area.CIRCLE2) }
+	constructor(game: Game) { super(game, T.chip_thorn, Area.CIRCLE1) }
 }
 class Mirror extends ChipDamageReturnAnimation {
 	static textures = [T.damage_return_aureol, T.chip_mirror]
