@@ -551,6 +551,7 @@
 			LeekWars.trophies[177 - 1],
 			LeekWars.trophies[166 - 1],
 			LeekWars.trophies[194 - 1],
+			LeekWars.trophies[322 - 1],
 		]
 		countries: string[] = []
 
@@ -823,7 +824,7 @@
 
 		giveTrophy() {
 			if (this.giveTrophyID) {
-				LeekWars.post('trophy/give', { trophy: this.giveTrophyID, farmer: this.farmer!.id, fight: this.giveTrophyFight || 0 })
+				LeekWars.post('trophy/give', { trophy: this.giveTrophyID, farmer_id: this.farmer!.id, fight_id: this.giveTrophyFight || 0 })
 				.then(() => {
 					this.trophyDialog = false
 					LeekWars.toast("Trophée donné !")
