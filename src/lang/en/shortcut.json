@@ -12,6 +12,6 @@
 	"shortcut_11": "<b>Ctrl + Click</b>: go to symbol definition",
 	"shortcut_12": "<b>Ctrl + Shift + F</b>: automatic code indenting/formatting",
 	"shortcut_13": "<b>Ctrl + U</b> : fold/unfold the current code bloc",
-	"shortcut_14": "<b>Ctrl + Y</b> : fold all code blocs",
+	"shortcut_14": "<b>Ctrl + J</b> : fold all code blocs",
 	"shortcut_15": "<b>Ctrl + I</b> : unfold all code blocs"
 }
