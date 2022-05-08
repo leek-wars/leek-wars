@@ -106,13 +106,15 @@
 		updateScroll(force: boolean = false) {
 			if (!this.userScroll || force) {
 				const messages = this.$refs.messages as HTMLElement
-				messages.scrollTop = messages.scrollHeight + 1000
-				this.unread = false
-				setTimeout(() => {
-					if (messages) {
-						messages.scrollTop = messages.scrollHeight + 1000
-					}
-				}, 60)
+				if (messages) {
+					messages.scrollTop = messages.scrollHeight + 1000
+					this.unread = false
+					setTimeout(() => {
+						if (messages) {
+							messages.scrollTop = messages.scrollHeight + 1000
+						}
+					}, 60)
+				}
 			}
 		}
 
