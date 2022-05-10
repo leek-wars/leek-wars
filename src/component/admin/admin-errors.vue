@@ -7,38 +7,32 @@
 			<div class="errors content">
 				<loader v-if="!errors" />
 				<div v-else>
+					<div class="delete">
+						Supprimer par mot-clé
+						<input type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" v-model="deleteQuery">
+						<v-btn small @click="deleteErrors">Supprimer</v-btn>
+					</div>
+
 					<h2 v-if="errors.length === 0">Aucune erreur !</h2>
 					<div v-else>
 						<div v-for="(error, e) in errors" :key="e" class="error">
 							<div class="card">
-								<div>Erreur #{{ error.id }} - <b>{{ LeekWars.formatDateTime(error.time) }}</b> - Type {{ error.type }} - Gravité {{ error.severity }}</div>
+								<div class="header">
+									<div>Erreur #{{ error.id }} - <b>{{ LeekWars.formatDateTime(error.time) }}</b> - Type {{ error.type }} - Gravité {{ error.severity }}</div>
+									<div class="buttons">
+										<v-btn v-if="error.ai" color="primary" small>IA {{ error.ai }}</v-btn>
+										<router-link :to="'/fight/' + error.fight"><v-btn v-if="error.fight" small>Combat {{ error.fight }}</v-btn></router-link>
+										<v-icon color="error" @click="removeError(error.id)">mdi-delete</v-icon>
+									</div>
+								</div>
 								<code>{{ error.trace.substring(0, 8000) }}</code>
 								<div v-if="error.file || error.line">Fichier <b>{{ error.file }}</b> ligne <b>{{ error.line }}</b></div>
-							</div>
-							<div class="buttons">
-								<v-btn v-if="error.ai" color="primary">IA {{ error.ai }}</v-btn>
-								<router-link :to="'/fight/' + error.fight"><v-btn v-if="error.fight">Combat {{ error.fight }}</v-btn></router-link>
-								<v-btn color="error" @click="removeError(error.id)">Supprimer</v-btn>
 							</div>
 						</div>
 					</div>
 				</div>
 			</div>
 		</panel>
-		<!--
-		@view (ai_popup)
-		<div class="title">
-			AI <b>{ai.name}</b> #{ai.id}
-		</div>
-		<div class="content">
-			<a href="/farmer/{ai.owner}">Auteur</a>
-			<code>{ai.java}</code>
-		</div>
-		<div class="actions">
-			<div class="action dismiss">OK</div>
-		</div>
-		@endview
-		-->
 	</div>
 </template>
 
@@ -50,41 +44,22 @@
 	@Component({})
 	export default class AdminErrors extends Vue {
 		errors: any[] | null = null
+		deleteQuery: string = ''
+
 		created() {
 			LeekWars.get('error/get-latest').then(data => {
 				this.errors = data.errors
-				LeekWars.setTitle("Gestionnaire d'erreur (" + store.state.farmer!.errors + ")")
-
-				// $('#errors .error code').each(function() {
-				// 	var content = $(this).text()
-				// 	$(this).html("<pre>" + content + "</pre>")
-				// 	LW.util.createCodeArea(content, $(this).find('pre')[0])
-				// })
-
-				// $('.error .code').click(function(e) {
-
-				// 	_.get('ai/get/' + $(this).parent().attr('ai') + '/$', function(data) {
-
-				// 		var popup = new _.popup.new('admin_error_manager.ai_popup', {ai: data.ai}, 1000)
-				// 		popup.show(e)
-
-				// 		var content = popup.find('code').text()
-				// 		popup.find('code').html("<pre>" + content + "</pre>")
-				// 		LW.util.createCodeArea(content, popup.find('code').find('pre')[0])
-				// 	})
-				// })
-
-				// var line = __ERROR_LINE
-
-				// var elem = $($($('#codes td')[1]).find('.line-number span')[line - 1])
-				// elem.css('color', 'red')
-				// elem.css('font-weight', 'bold')
+				LeekWars.setTitle("Gestionnaire d'erreur (" + (store.state.farmer ? store.state.farmer!.errors : 0) + ")")
 			})
 		}
 
 		removeError(id: number) {
 			LeekWars.post('error/delete', { id })
 			this.errors = this.errors!.filter(e => e.id !== id)
+		}
+
+		deleteErrors() {
+			LeekWars.post('error/delete-query', { query: this.deleteQuery })
 		}
 	}
 </script>
@@ -95,13 +70,18 @@
 		.card {
 			padding: 10px;
 		}
+		.header {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+		}
 		.buttons {
 			display: flex;
 			justify-content: flex-end;
-			.v-btn {
-				margin-right: 0;
-				margin-left: 10px;
-			}
+			align-items: center;
+			top: 8px;
+			right: 8px;
+			gap: 8px;
 		}
 	}
 	.error code {
@@ -134,10 +114,15 @@
 	.codes td pre {
 		margin: 0;
 	}
-	button {
-		margin-top: 10px;
-	}
 	#app.app .error code {
 		font-size: 10px;
+	}
+	.delete {
+		display: flex;
+		gap: 10px;
+		width: 100%;
+		justify-content: flex-end;
+		align-items: center;
+		margin-bottom: 10px;
 	}
 </style>
