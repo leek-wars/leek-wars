@@ -12,7 +12,7 @@ class PotionTemplate {
 	public id!: number
 	public name!: string
 	public level!: number
-	public consumable!: number
+	public consumable!: boolean
 	public effects!: any[]
 	public duration!: number
 }

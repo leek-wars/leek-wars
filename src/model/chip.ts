@@ -17,10 +17,10 @@ class ChipTemplate {
 	public effects!: any[]
 	public cost!: number
 	public area!: Area
-	public los!: number
+	public los!: boolean
 	public template!: number
 	public cooldown!: number
-	public team_cooldown!: number
+	public team_cooldown!: boolean
 	public initial_cooldown!: number
 	public type!: number
 }

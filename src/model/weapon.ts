@@ -16,7 +16,7 @@ class WeaponTemplate {
 	public effects!: Effect[]
 	public cost!: number
 	public area!: number
-	public los!: number
+	public los!: boolean
 	public template!: number
 	public passive_effects!: Effect[]
 	public forgotten!: boolean

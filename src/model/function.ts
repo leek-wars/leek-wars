@@ -11,7 +11,7 @@ class LSFunction extends LeekScriptItem {
 	public arguments_types!: string[]
 	public return_name!: string | null
 	public return_type!: number
-	public deprecated!: number
+	public deprecated!: boolean
 	public replacement!: number | null
 	public optional!: boolean[]
 }
