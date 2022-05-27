@@ -24,10 +24,6 @@ class Leek extends FightEntity {
 	public weapon_name: string | null = null
 	public skin!: number
 	public hatTemplate!: HatTemplate
-	public hatX: number = 0
-	public hatWidth: number = 0
-	public hatHeight: number = 0
-	public hatY: number = 0
 	public heightAnim: number = 0
 	public fish: boolean = false
 
@@ -55,14 +51,12 @@ class Leek extends FightEntity {
 			this.updateGrowth()
 		})
 
-		// hat = 29
 		if (hat) {
 			this.hat = hat
 			this.hatTemplate = LeekWars.hats[hat]
 			this.hatName = this.hatTemplate.name
 			this.hatFront = T.get(this.game, "image/hat/" + this.hatName + ".png", true, SHADOW_QUALITY)
 			this.hatBack = T.get(this.game, "image/hat/" +  this.hatName + "_back.png", true, SHADOW_QUALITY)
-			this.hatX = 0
 		}
 		const handTex = this.skin === 15 ? T.leek_hand_gold : T.leek_hand
 		this.handTex = handTex.load(this.game)
@@ -345,13 +339,9 @@ class Leek extends FightEntity {
 
 		// Hat
 		if (hatTexture) {
-			if (this.hatX === 0) {
-				this.hatWidth = leekWidth * this.hatTemplate.width
-				this.hatHeight = this.hatWidth * (this.hatFront.texture.height / this.hatFront.texture.width)
-				this.hatX = - this.hatWidth / 2
-				this.hatY = -height * (1 - this.deadAnim) + this.hatHeight * this.hatTemplate.height - this.hatHeight
-			}
-			ctx.drawImage(hatTexture, this.hatX, this.hatY, this.hatWidth, this.hatHeight)
+			const hatWidth = leekWidth * this.hatTemplate.width
+			const hatHeight = hatWidth * (hatTexture.height / hatTexture.width)
+			ctx.drawImage(hatTexture, -hatWidth / 2, -height + hatHeight * this.hatTemplate.height - hatHeight, hatWidth, hatHeight)
 		}
 		ctx.restore()
 	}
