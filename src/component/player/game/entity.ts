@@ -884,6 +884,7 @@ class FightEntity extends Entity {
 
 	public reborn() {
 		this.dead = false
+		this.deadAnim = 0
 		this.bubble = new Bubble(this.game)
 		this.active = true
 		this.updateGrowth()
