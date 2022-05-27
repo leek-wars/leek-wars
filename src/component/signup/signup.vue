@@ -41,7 +41,7 @@
 								<div class="title">{{ $t('hat') }}</div>
 								<div class="hats">
 									<img src="/image/hat/no_hat.png" class="hat" @click="leekHat = null">
-									<img v-for="hat in [1, 2, 9, 7]" :key="hat" :src="'/image/hat/' + LeekWars.hats[hat].name + '.png'" class="hat" @click="leekHat = hat">
+									<img v-for="hat in [2, 9, 7, 1]" :key="hat" :src="'/image/hat/' + LeekWars.hats[hat].name + '.png'" class="hat" @click="leekHat = hat">
 								</div>
 							</div>
 						</div>
@@ -617,7 +617,7 @@
 			min-width: 0;
 			.title {
 				font-weight: 500;
-				margin-bottom: 4px;
+				margin-bottom: 5px;
 			}
 		}
 		.skins, .hats {
@@ -625,12 +625,15 @@
 			justify-content: space-between;
 		}
 		.skin {
-			width: 30px;
-			height: 30px;
+			width: 35px;
+			height: 35px;
 			border-radius: 50%;
 			border: 2px solid white;
 			box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
 			cursor: pointer;
+		}
+		.hats {
+			margin-right: -10px;
 		}
 		.hat {
 			max-width: 70px;
