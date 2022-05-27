@@ -155,10 +155,10 @@
 		}
 
 		get startTurn() {
-			return parseInt(this.$route.query.turn, 10) || parseInt(this.$route.query.t, 10) || 1
+			return parseInt('' + this.$route.query.turn, 10) || parseInt('' + this.$route.query.t, 10) || 1
 		}
 		get startAction() {
-			return parseInt(this.$route.query.action, 10) || parseInt(this.$route.query.a, 10) || 0
+			return parseInt('' + this.$route.query.action, 10) || parseInt('' + this.$route.query.a, 10) || 0
 		}
 
 		mounted() {
