@@ -104,7 +104,7 @@ const WeaponsData = {
 	29: { width: 190, height: 81, centerX: 15, centerZ: 50, x: -50, z: -40, hand1x: 37, hand1z: 65, hand2x: 70, hand2z: 68, sx: 190, sz: 40, cartX: 60, cartZ: 20, cartAngle: Math.PI / 2, recoilForce: 18, angleForce: 30, top: 0, bottom: 59, white: false },
 	// Katana sombre
 	32: { width: 256, height: 31, centerX: 40, centerZ: 30, x: -40, z: -15, hand1x: 32, hand1z: 14, hand2x: 44, hand2z: 14, top: 5, bottom: 10, right: 86, white: true },
-	// Foudroyeur
+	// Foudroyeur amélioré
 	33: { width: 179, height: 69, centerX: 15, centerZ: 35, x: -40, z: -35, hand1x: 31, hand1z: 48, hand2x: 66, hand2z: 48, sx: 167, sz: 28, cartX: 60, cartZ: 20, cartAngle: Math.PI / 2, recoilForce: 15, angleForce: 12, top: 4, bottom: 40, white: false },
 	// Destroyer instable
 	34: { width: 154, height: 65, centerX: 15, centerZ: 38, x: -30, z: -30, hand1x: 49, hand1z: 41, hand2x: 90, hand2z: 44, sx: 172, sz: 18, cartX: 60, cartZ: 20, cartAngle: Math.PI / 2, recoilForce: 18, angleForce: 20, top: 11, bottom: 39, white: false },

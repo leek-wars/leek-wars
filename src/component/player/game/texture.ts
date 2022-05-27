@@ -150,6 +150,10 @@ class T {
 	public static neutrino = new Texture(LeekWars.STATIC + 'image/weapon/neutrino.png', true, SHADOW_QUALITY)
 	public static cart_neutrino = new Texture(LeekWars.STATIC + 'image/weapon/cart_neutrino.png')
 	public static dark_katana = new Texture(LeekWars.STATIC + 'image/weapon/dark_katana.png', true, SHADOW_QUALITY)
+	public static enhanced_lightninger = new Texture(LeekWars.STATIC + 'image/weapon/enhanced_lightninger.png', true, SHADOW_QUALITY)
+	public static cart_enhanced_lightninger = new Texture(LeekWars.STATIC + 'image/weapon/cart_enhanced_lightninger.png')
+	public static unstable_destroyer = new Texture(LeekWars.STATIC + 'image/weapon/unstable_destroyer.png', true, SHADOW_QUALITY)
+	public static cart_unstable_destroyer = new Texture(LeekWars.STATIC + 'image/weapon/cart_unstable_destroyer.png')
 
 	// Cartes
 	public static box = new Texture(LeekWars.STATIC + 'image/map/box.png', true, 1)

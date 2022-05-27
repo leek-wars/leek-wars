@@ -55,7 +55,8 @@ enum EffectType {
 	RAW_RELATIVE_SHIELD = 54,
 	ALLY_KILLED_TO_AGILITY = 55,
 	KILL_TO_TP = 56,
-	RAW_HEAL = 57
+	RAW_HEAL = 57,
+	CRITICAL_TO_HEAL = 58,
 }
 
 enum EffectModifier {

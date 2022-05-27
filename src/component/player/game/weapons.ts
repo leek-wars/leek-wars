@@ -293,6 +293,13 @@ class Destroyer extends Firegun {
 		super(game, T.destroyer, T.cart_destroyer, S.double_gun, 9)
 	}
 }
+class UnstableDestroyer extends Firegun {
+	static textures = [T.shots, T.bullet, T.unstable_destroyer, T.cart_unstable_destroyer]
+	static sounds = [S.double_gun]
+	constructor(game: Game) {
+		super(game, T.unstable_destroyer, T.cart_unstable_destroyer, S.double_gun, 9)
+	}
+}
 class DoubleGun extends Firegun {
 	static textures = [T.shots, T.bullet, T.double_gun, T.cart_double_gun]
 	static sounds = [S.double_gun]
@@ -815,6 +822,53 @@ class Lightninger extends Firegun {
 	}
 }
 
+
+class EnhancedLightninger extends Firegun {
+	static textures = [T.shots, T.bullet, T.enhanced_lightninger, T.cart_enhanced_lightninger, T.plasma, T.blue_lightning]
+	static sounds = [S.lightninger, S.lightning, S.electrisor, S.lightninger_impact]
+	static EXPLOSION_DURATION = 40
+	life: number = 100
+	target_z!: number
+
+	constructor(game: Game) {
+		super(game, T.enhanced_lightninger, T.cart_enhanced_lightninger, S.lightninger, 25)
+	}
+
+	public throwBullet(x: number, y: number, z: number, angle: number, position: Position, targets: FightEntity[], caster: FightEntity, cell: Cell) {
+
+		this.targets = targets
+		const distance = this.game.ground.field.real_distance(caster.cell!, cell)
+		const duration = (distance - 2) * LighningBall.SPEED * 2
+		this.life = duration + Lightninger.EXPLOSION_DURATION
+		this.target_z = z
+
+		this.game.particles.addLighningBall(x, y, z, angle, duration, 40, T.red_lightning)
+		this.game.setEffectArea(cell, Area.SQUARE_1, '#ff2d02', duration + Lightninger.EXPLOSION_DURATION)
+
+		return duration + Lightninger.EXPLOSION_DURATION
+	}
+
+	public update(dt: number) {
+		super.update(dt)
+		this.life -= dt
+		if (this.life > 0 && this.life < Lightninger.EXPLOSION_DURATION && this.targets) {
+			const R = 3
+			const L = 50
+			for (const target of this.targets) {
+				for (let i = 0; i < 3; ++i) {
+					const angle = Math.random() * Math.PI * 2
+					const dx = Math.cos(angle)
+					const dy = Math.sin(angle)
+					const l = L + Math.random() * 10
+					const position = {x: target.ox + dx * l, y: target.oy + dy * l}
+					this.game.particles.addLightning(target.ox + dx * R, target.oy + dy * R, this.target_z, angle, position, T.red_lightning, 20)
+					target.electrify()
+				}
+			}
+		}
+	}
+}
+
 class Bazooka extends Firegun {
 	static textures = [T.shots, T.bullet, T.bazooka, T.cart_bazooka, T.rocket, T.fire]
 	static sounds = [S.rocket]
@@ -836,4 +890,4 @@ class Bazooka extends Firegun {
 	}
 }
 
-export { WeaponAnimation, WhiteWeaponAnimation, Axe, Bazooka, BLaser, Broadsword, DarkKatana, Destroyer, DoubleGun, Electrisor, ExplorerRifle, Fish, FlameThrower, Gazor, GrenadeLauncher, IllicitGrenadeLauncher, JLaser, Katana, Laser, Lightninger, MachineGun, Magnum, Neutrino, Rhino, MLaser, MysteriousElectrisor, Pistol, RevokedMLaser, Rifle, Shotgun, UnbridledGazor }
+export { WeaponAnimation, WhiteWeaponAnimation, Axe, Bazooka, BLaser, Broadsword, DarkKatana, Destroyer, DoubleGun, Electrisor, EnhancedLightninger, ExplorerRifle, Fish, FlameThrower, Gazor, GrenadeLauncher, IllicitGrenadeLauncher, JLaser, Katana, Laser, Lightninger, MachineGun, Magnum, Neutrino, Rhino, MLaser, MysteriousElectrisor, Pistol, RevokedMLaser, Rifle, Shotgun, UnbridledGazor, UnstableDestroyer }

@@ -152,6 +152,12 @@ class Field {
 				add_cell(-i, i)
 				add_cell(-i, -i)
 			}
+		} else if (area === Area.SQUARE_1) {
+			for (let i = -1; i <= 1; ++i) {
+				for (let j = -1; j <= 1; ++j) {
+					add_cell(i, j)
+				}
+			}
 		}
 		return cells
 	}
