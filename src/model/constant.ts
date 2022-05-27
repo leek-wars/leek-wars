@@ -6,7 +6,7 @@ class Constant extends LeekScriptItem {
 	public value!: string
 	public type!: number
 	public category!: number
-	public deprecated!: number
+	public deprecated!: boolean
 	public replacement!: number | null
 }
 export { Constant }
