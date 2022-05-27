@@ -552,6 +552,7 @@
 			LeekWars.trophies[166 - 1],
 			LeekWars.trophies[194 - 1],
 			LeekWars.trophies[322 - 1],
+			LeekWars.trophies[320 - 1],
 		]
 		countries: string[] = []
 
