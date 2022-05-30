@@ -59,7 +59,7 @@
 			</div>
 		</div>
 
-		<v-menu v-model="reactionDialog" offset-y top :nudge-top="10" content-class="emojis-dialog">
+		<v-menu v-if="$store.state.farmer.verified" v-model="reactionDialog" offset-y top :nudge-top="10" content-class="emojis-dialog">
 			<template v-slot:activator="{ on }">
 				<div v-ripple class="add" v-on="on">
 					<v-icon>mdi-emoticon-outline</v-icon> +

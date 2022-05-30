@@ -1,4 +1,4 @@
-import { FightEntity } from '@/component/player/game/entity'
+import { DamageType, FightEntity } from '@/component/player/game/entity'
 import { Colors, Game } from "@/component/player/game/game"
 import { S, Sound } from '@/component/player/game/sound'
 import { T, Texture } from '@/component/player/game/texture'
@@ -17,11 +17,14 @@ abstract class ChipAnimation {
 	public launchPos!: Position
 	public position!: Position
 	public launcher!: FightEntity | undefined
+	// Type de dégât
+	public damageType: DamageType
 
-	constructor(game: Game, sound: Sound | null, duration: number) {
+	constructor(game: Game, sound: Sound | null, duration: number, damageType: DamageType) {
 		this.game = game
 		this.sound = sound
 		this.duration = duration
+		this.damageType = damageType
 	}
 	public launch(launchPos: Position, position: Position, targets: FightEntity[], targetCell: Cell, launcher?: FightEntity) {
 		this.launchPos = launchPos
@@ -111,11 +114,58 @@ abstract class ChipAnimation {
 	}
 }
 
+class Summon extends ChipAnimation {
+	static textures = [T.summon_leaf]
+	static sounds = [S.bulb]
+
+	public summon!: FightEntity
+	public summoned: boolean = false
+
+	constructor(game: Game) {
+		super(game, null, 70, DamageType.DEFAULT)
+	}
+
+	public launch(launchCell: Cell, targetPos: Position, targets: FightEntity[], targetCell: Cell, launcher: FightEntity) {
+		super.launch(launchCell, targetPos, targets, targetCell, launcher)
+
+		const s = 2.0
+		const life = 70
+		const y = targetPos.y - 2
+		this.game.particles.addImage(targetPos.x, y + 2, 0, -0.08 * s, -0.1 * s, 0, 0, T.summon_leaf, life, 1, -0.003, false, 0.6, 1)
+		this.game.particles.addImage(targetPos.x, y + 2, 0, 0.08 * s, -0.1 * s, 0, 0, T.summon_leaf, life, 1, 0.003, false, 0.6, -1)
+		this.game.particles.addImage(targetPos.x, y, 0, 0, -0.01 * s, 0, Math.PI / 6, T.summon_leaf, life, 1, -0.004, false, 0.7, 1)
+		this.game.particles.addImage(targetPos.x - 5, y + 2, 0, -0.1 * s, 0.01 * s, 0, -Math.PI / 12, T.summon_leaf, life, 1, -0.003, false, 0.7, 1)
+		this.game.particles.addImage(targetPos.x + 5, y + 2, 0, 0.1 * s, 0.01 * s, 0, Math.PI / 12, T.summon_leaf, life, 1, 0.003, false, 0.7, -1)
+		this.game.particles.addImage(targetPos.x - 5, y + 5, 0, -0.05 * s, 0.01 * s, 0, -Math.PI / 12, T.summon_leaf, life, 1, -0.003, false, 0.5, 1)
+		this.game.particles.addImage(targetPos.x + 5, y + 5, 0, 0.05 * s, 0.01 * s, 0, Math.PI / 12, T.summon_leaf, life, 1, 0.003, false, 0.5, -1)
+	}
+
+	public update(dt: number) {
+		super.update(dt)
+
+		if (this.duration < 40 && !this.summoned) {
+
+			S.bulb.play(this.game)
+			this.summon.active = true
+			this.summon.blooming = true
+			this.summon.deadAnim = 1
+			const index = this.game.entityOrder.findIndex((e) => e.id === this.launcher!.id)
+			this.game.entityOrder.splice(index + 1, 0, this.summon)
+
+			this.summon.setCell(this.cell)
+			this.summon.drawID = this.game.addDrawableElement(this.summon, this.summon.y)
+			this.game.updateReachableCells()
+
+			this.summoned = true
+		}
+	}
+}
+
 class ChipShieldAnimation extends ChipAnimation {
 	public texture: Texture
 	public area: Area
 	constructor(game: Game, texture: Texture, area: Area = Area.SINGLE_CELL) {
-		super(game, S.shield, 60)
+		super(game, S.shield, 60, DamageType.DEFAULT)
 		this.texture = texture
 		this.area = area
 	}
@@ -134,7 +184,7 @@ class ChipBoostAnimation extends ChipAnimation {
 	public delay: number = 2
 	public area: Area
 	constructor(game: Game, texture: any, area: Area = Area.SINGLE_CELL) {
-		super(game, S.buff, 60)
+		super(game, S.buff, 60, DamageType.DEFAULT)
 		this.texture = texture
 		this.area = area
 	}
@@ -163,7 +213,7 @@ class ChipHealAnimation extends ChipAnimation {
 	public delay: number = 2
 	public area: Area
 	constructor(game: Game, texture: any, area: Area = Area.SINGLE_CELL) {
-		super(game, S.heal, 45)
+		super(game, S.heal, 45, DamageType.DEFAULT)
 		this.texture = texture
 		this.area = area
 	}
@@ -192,7 +242,7 @@ class ChipNovaVitalityAnimation extends ChipAnimation {
 	public delay: number = 2
 	public area: Area
 	constructor(game: Game, texture: any, area: Area = Area.SINGLE_CELL) {
-		super(game, S.alteration, 45)
+		super(game, S.alteration, 45, DamageType.DEFAULT)
 		this.texture = texture
 		this.area = area
 	}
@@ -220,7 +270,7 @@ class ChipDebuffAnimation extends ChipAnimation {
 	public texture: Texture
 	public area: Area
 	constructor(game: Game, texture: any, area: Area = Area.SINGLE_CELL) {
-		super(game, S.debuff, 60)
+		super(game, S.debuff, 60, DamageType.DEFAULT)
 		this.texture = texture
 		this.area = area
 	}
@@ -238,7 +288,7 @@ class ChipPoisonAnimation extends ChipAnimation {
 	public texture: Texture
 	public area: Area
 	constructor(game: Game, texture: any, area: Area = Area.SINGLE_CELL) {
-		super(game, S.poison, 60)
+		super(game, S.poison, 60, DamageType.DEFAULT)
 		this.texture = texture
 		this.area = area
 	}
@@ -256,7 +306,7 @@ class ChipDamageReturnAnimation extends ChipAnimation {
 	public texture: Texture
 	public area: Area
 	constructor(game: Game, texture: any, area: Area = Area.SINGLE_CELL) {
-		super(game, S.buff, 60)
+		super(game, S.buff, 60, DamageType.DEFAULT)
 		this.texture = texture
 		this.area = area
 	}
@@ -300,6 +350,7 @@ class Cure extends ChipHealAnimation {
 	static sounds = [S.heal]
 	constructor(game: Game) { super(game, T.chip_cure) }
 }
+
 class DevilStrike extends ChipAnimation {
 	static textures = [T.red_circle, T.daemon_shadow, T.m_laser_bullet]
 	static sounds = [S.fire, S.rock]
@@ -307,7 +358,7 @@ class DevilStrike extends ChipAnimation {
 	public x!: number
 	public y!: number
 	constructor(game: Game) {
-		super(game, S.fire, 100)
+		super(game, S.fire, 100, DamageType.EXPLOSION)
 	}
 	public launch(launchPos: Position, targetPos: Position, targets: FightEntity[], targetCell: Cell) {
 		super.launch(launchPos, targetPos, targets, targetCell)
@@ -329,6 +380,7 @@ class DevilStrike extends ChipAnimation {
 		}
 	}
 }
+
 class Doping extends ChipBoostAnimation {
 	static textures = [T.buff_aureol, T.halo, T.chip_doping]
 	static sounds = [S.buff]
@@ -339,11 +391,12 @@ class Drip extends ChipHealAnimation {
 	static sounds = [S.heal]
 	constructor(game: Game) { super(game, T.chip_drip, Area.CIRCLE2) }
 }
+
 class Flame extends ChipAnimation {
 	static textures = [T.fire]
 	static sounds = [S.fire]
 	public delay = 2
-	constructor(game: Game) { super(game, S.fire, 70) }
+	constructor(game: Game) { super(game, S.fire, 70, DamageType.FIRE) }
 	public launch(launchPos: Position, targetPos: Position, targets: FightEntity[], targetCell: Cell) {
 		super.launch(launchPos, targetPos, targets, targetCell)
 		for (const target of targets) {
@@ -368,11 +421,12 @@ class Flame extends ChipAnimation {
 		}
 	}
 }
+
 class Flash extends ChipAnimation {
 	static textures = [T.grey_cloud, T.purple_lightning]
 	static sounds = [S.lightning]
 	public delay = 1
-	constructor(game: Game) { super(game, S.lightning, 70) }
+	constructor(game: Game) { super(game, S.lightning, 70, DamageType.DEFAULT) }
 	public launch(launchPos: Position, targetPos: Position, targets: FightEntity[], targetCell: Cell) {
 		super.launch(launchPos, targetPos, targets, targetCell)
 		this.game.particles.addImage(targetPos.x - 50, targetPos.y, 220, 0.5, 0, 0, 0, T.grey_cloud, 80)
@@ -418,7 +472,7 @@ class Ice extends ChipAnimation {
 	static textures = [T.ice_small]
 	static sounds = [S.ice]
 	constructor(game: Game) {
-		super(game, S.ice, 30)
+		super(game, S.ice, 30, DamageType.DEFAULT)
 	}
 	public launch(launchPos: Position, targetPos: Position, targets: FightEntity[], targetCell: Cell) {
 		super.launch(launchPos, targetPos, targets, targetCell)
@@ -430,7 +484,7 @@ class Iceberg extends ChipAnimation {
 	static textures = [T.iceberg, T.ice_part, T.ice_part2]
 	static sounds = [S.ice]
 	constructor(game: Game) {
-		super(game, S.ice, 40)
+		super(game, S.ice, 40, DamageType.EXPLOSION)
 	}
 	public launch(launchPos: Position, targetPos: Position, targets: FightEntity[], targetCell: Cell) {
 		super.launch(launchPos, targetPos, targets, targetCell)
@@ -447,7 +501,7 @@ class Inversion extends ChipAnimation {
 	public target: any
 
 	constructor(game: Game) {
-		super(game, S.teleportation, 120)
+		super(game, S.teleportation, 120, DamageType.DEFAULT)
 	}
 	public launch(launchPos: Position, targetPos: Position, targets: FightEntity[], targetCell: Cell, launcher: FightEntity) {
 		super.launch(launchPos, targetPos, targets, targetCell, launcher)
@@ -495,7 +549,7 @@ class Repotting extends ChipAnimation {
 	public target: any
 
 	constructor(game: Game) {
-		super(game, S.teleportation, 120)
+		super(game, S.teleportation, 120, DamageType.DEFAULT)
 	}
 	public launch(launchPos: Position, targetPos: Position, targets: FightEntity[], targetCell: Cell, launcher: FightEntity) {
 		super.launch(launchPos, targetPos, targets, targetCell, launcher)
@@ -545,7 +599,7 @@ class Liberation extends ChipAnimation {
 	static sounds = [S.liberation]
 	public delay = 2
 	constructor(game: Game) {
-		super(game, S.liberation, 60)
+		super(game, S.liberation, 60, DamageType.DEFAULT)
 	}
 	public update(dt: number) {
 		super.update(dt)
@@ -562,12 +616,13 @@ class Liberation extends ChipAnimation {
 		}
 	}
 }
+
 class Lightning extends ChipAnimation {
 	static textures = [T.black_cloud, T.red_lightning]
 	static sounds = [S.lightning]
 	public delay = 1
 	constructor(game: Game) {
-		super(game, S.lightning, 80)
+		super(game, S.lightning, 80, DamageType.EXPLOSION)
 	}
 	public launch(launchPos: Position, position: Position, targets: FightEntity[], targetCell: Cell) {
 		super.launch(launchPos, position, targets, targetCell)
@@ -595,8 +650,9 @@ class Lightning extends ChipAnimation {
 		}
 	}
 }
+
 class Meteorite extends ChipAnimation {
-	static textures = [T.meteorite, T.fire]
+	static textures = [T.meteorite, T.fire, T.explosion_mark, T.explosion_rock, T.explosion_rock2]
 	static sounds = [S.meteorite, S.explosion]
 
 	public willFinish = false
@@ -604,7 +660,7 @@ class Meteorite extends ChipAnimation {
 	public delay = 0
 	public vx: number = 0
 	constructor(game: Game) {
-		super(game, S.meteorite, 100)
+		super(game, S.meteorite, 100, DamageType.FIRE)
 	}
 	public launch(launchPos: Position, position: Position, targets: FightEntity[], targetCell: Cell) {
 		super.launch(launchPos, position, targets, targetCell)
@@ -640,7 +696,7 @@ class Motivation extends ChipBoostAnimation {
 class Pebble extends ChipAnimation {
 	static textures = [T.forest_rock_small]
 	static sounds = [S.rock]
-	constructor(game: Game) { super(game, S.rock, 30) }
+	constructor(game: Game) { super(game, S.rock, 30, DamageType.DEFAULT) }
 	public launch(launchPos: Position, targetPos: Position, targets: FightEntity[], targetCell: Cell) {
 		super.launch(launchPos, targetPos, targets, targetCell)
 		this.game.particles.addGarbage(targetPos.x, targetPos.y, 100, 0, 0, 2, T.forest_rock_small, 1, 0, 0.5)
@@ -691,20 +747,22 @@ class Elevation extends ChipHealAnimation {
 	static sounds = [S.heal]
 	constructor(game: Game) { super(game, T.chip_elevation) }
 }
+
 class Rock extends ChipAnimation {
 	static textures = [T.rock]
 	static sounds = [S.rock]
-	constructor(game: Game) { super(game, S.rock, 40) }
+	constructor(game: Game) { super(game, S.rock, 40, DamageType.DEFAULT) }
 	public launch(launchPos: Position, targetPos: Position, targets: FightEntity[], targetCell: Cell) {
 		super.launch(launchPos, targetPos, targets, targetCell)
 		this.game.particles.addGarbage(targetPos.x, targetPos.y, 150, 0, 0, 2, T.rock, 1, 0)
 	}
 }
+
 class Rockfall extends ChipAnimation {
 	static textures = [T.rock]
 	static sounds = [S.rockfall]
 	public delay = 0
-	constructor(game: Game) { super(game, S.rockfall, 70) }
+	constructor(game: Game) { super(game, S.rockfall, 70, DamageType.EXPLOSION) }
 	public launch(launchPos: Position, position: Position, targets: FightEntity[], targetCell: Cell) {
 		super.launch(launchPos, position, targets, targetCell)
 		this.game.setEffectArea(targetCell, Area.CIRCLE2, '#c5c2c6', 100)
@@ -733,11 +791,12 @@ class Shield extends ChipShieldAnimation {
 	static sounds = [S.shield]
 	constructor(game: Game) { super(game, T.chip_shield) }
 }
+
 class Shock extends ChipAnimation {
 	static textures = [T.cloud, T.lightning]
 	static sounds = [S.lightning]
 	public delay = 2
-	constructor(game: Game) { super(game, S.lightning, 60) }
+	constructor(game: Game) { super(game, S.lightning, 60, DamageType.DEFAULT) }
 	public launch(launchPos: Position, position: Position, targets: FightEntity[], targetCell: Cell) {
 		super.launch(launchPos, position, targets, targetCell)
 		this.game.particles.addImage(this.position.x - 50, this.position.y, 220, 0.5, 0, 0, 0, T.cloud, 70)
@@ -762,10 +821,11 @@ class Shock extends ChipAnimation {
 		}
 	}
 }
+
 class Spark extends ChipAnimation {
 	static textures = [T.fire]
 	static sounds = [S.fire]
-	constructor(game: Game) { super(game, S.fire, 40) }
+	constructor(game: Game) { super(game, S.fire, 40, DamageType.FIRE) }
 	public launch(launchPos: Position, targetPos: Position, targets: FightEntity[], targetCell: Cell) {
 		super.launch(launchPos, targetPos, targets, targetCell)
 		for (const target of targets) {
@@ -773,10 +833,11 @@ class Spark extends ChipAnimation {
 		}
 	}
 }
+
 class Stalactite extends ChipAnimation {
 	static textures = [T.stalactite, T.ice_part, T.ice_part2]
 	static sounds = [S.ice]
-	constructor(game: Game) { super(game, S.ice, 40) }
+	constructor(game: Game) { super(game, S.ice, 40, DamageType.SLICE) }
 	public launch(launchPos: Position, targetPos: Position, targets: FightEntity[], targetCell: Cell) {
 		super.launch(launchPos, targetPos, targets, targetCell)
 		this.game.particles.addGarbage(targetPos.x, targetPos.y, 180, 0, 0, 3, T.stalactite, 1, 0)
@@ -792,6 +853,7 @@ class Stretching extends ChipBoostAnimation {
 	static sounds = [S.buff]
 	constructor(game: Game) { super(game, T.chip_stretching) }
 }
+
 class Teleportation extends ChipAnimation {
 	static textures = []
 	static sounds = [S.teleportation]
@@ -800,7 +862,7 @@ class Teleportation extends ChipAnimation {
 	public targetPos: any
 	public target!: FightEntity
 	constructor(game: Game) {
-		super(game, S.teleportation, 140)
+		super(game, S.teleportation, 140, DamageType.DEFAULT)
 	}
 	public launch(launchPos: Position, targetPos: Position, targets: FightEntity[], targetCell: Cell, launcher: FightEntity) {
 		super.launch(launchPos, targetPos, targets, targetCell, launcher)
@@ -992,21 +1054,42 @@ class Knowledge extends ChipBoostAnimation {
 	static sounds = [S.buff]
 	constructor(game: Game) { super(game, T.chip_knowledge) }
 }
+
 class Burning extends ChipAnimation {
-	static textures = [T.chip_burning]
+	static textures = [T.chip_burning, T.fire]
 	static sounds = [S.fire]
-	constructor(game: Game) { super(game, S.fire, 60) }
+	fires = [] as any[]
+
+	constructor(game: Game) { super(game, S.fire, 60, DamageType.FIRE) }
+
 	public launch(launchPos: Position, targetPos: Position, targets: FightEntity[], targetCell: Cell) {
 		super.launch(launchPos, targetPos, targets, targetCell)
 		this.createChipImage(targets, T.chip_burning)
 		this.game.setEffectArea(targetCell, Area.CIRCLE3, 'red')
+
+		const area = 220
+		for (let i = 0; i < 15; ++i) {
+			this.fires.push({ x: targetPos.x + Math.random() * area - area / 2, y: targetPos.y + Math.random() * area / 2 - area / 4 })
+		}
+		this.fires.sort((a, b) => a.y - b.y)
+	}
+
+	public update(dt: number) {
+		super.update(dt)
+		const area = 30
+		for (const fire of this.fires) {
+			for (let i = 0; i < dt * 0.2; i++) {
+				this.game.particles.addFire(fire.x + Math.random() * area - area / 2, fire.y + Math.random() * area / 2 - area / 4, 0, -Math.PI / 2)
+			}
+		}
 	}
 }
+
 class Antidote extends ChipAnimation {
 	static textures = [T.antidote_halo]
 	static sounds = [S.liberation]
 	public delay = 2
-	constructor(game: Game) { super(game, S.liberation, 60) }
+	constructor(game: Game) { super(game, S.liberation, 60, DamageType.DEFAULT) }
 	public update(dt: number) {
 		super.update(dt)
 		if (Math.random() > 0.5) {
@@ -1021,12 +1104,13 @@ class Antidote extends ChipAnimation {
 		}
 	}
 }
+
 class Punishment extends ChipAnimation {
 	static textures = [T.spike1, T.spike2]
 	static sounds = [S.sword]
 	public soundPlayed = false
 	constructor(game: Game) {
-		super(game, null, 35)
+		super(game, null, 35, DamageType.EXPLOSION)
 	}
 	public launch(launchPos: Position, position: Position, targets: FightEntity[], targetCell: Cell) {
 		super.launch(launchPos, position, targets, targetCell)
@@ -1047,13 +1131,14 @@ class Punishment extends ChipAnimation {
 		}
 	}
 }
+
 class StealChipAnimation extends ChipAnimation {
 	delta: number = 0
 	caster!: FightEntity
 	spinningTexture!: Texture
 	halo: (entity: FightEntity) => void;
 	constructor(game: Game, sound: Sound, spinningTexture: Texture, halo: (entity: FightEntity) => void) {
-		super(game, sound, 110)
+		super(game, sound, 110, DamageType.DEFAULT)
 		this.spinningTexture = spinningTexture
 		this.halo = halo
 	}
@@ -1115,6 +1200,7 @@ class Vampirization extends StealChipAnimation {
 		this.createChipAureol([caster], T.heal_cross)
 	}
 }
+
 class Plasma extends ChipAnimation {
 	static textures = [T.plasma, T.lightning, T.purple_lightning, T.halo_green]
 	static sounds = [S.lightning, S.electrisor]
@@ -1122,7 +1208,7 @@ class Plasma extends ChipAnimation {
 	static DURATION = 120
 	public delay: number = 0
 	constructor(game: Game) {
-		super(game, null, Plasma.DURATION)
+		super(game, null, Plasma.DURATION, DamageType.EXPLOSION)
 	}
 	public launch(launchPos: Position, position: Position, targets: FightEntity[], targetCell: Cell) {
 		super.launch(launchPos, position, targets, targetCell)
@@ -1157,7 +1243,7 @@ class NovaDamageChip extends ChipAnimation {
 	public delay = 2
 	public directions: number[] = []
 	constructor(game: Game) {
-		super(game, S.alteration, NovaDamageChip.DURATION)
+		super(game, S.alteration, NovaDamageChip.DURATION, DamageType.DEFAULT)
 	}
 	public launch(launchPos: Position, position: Position, targets: FightEntity[], targetCell: Cell) {
 		super.launch(launchPos, position, targets, targetCell)
@@ -1203,7 +1289,7 @@ class Jump extends ChipAnimation {
 	public target!: FightEntity
 
 	constructor(game: Game) {
-		super(game, S.move, 70)
+		super(game, S.move, 70, DamageType.DEFAULT)
 	}
 	public launch(launchPos: Position, targetPos: Position, targets: FightEntity[], targetCell: Cell, caster: FightEntity) {
 		super.launch(launchPos, targetPos, targets, targetCell)
@@ -1239,7 +1325,7 @@ class Manumission extends ChipAnimation {
 	static sounds = [S.liberation]
 	public delay = 2
 	constructor(game: Game) {
-		super(game, S.liberation, 60)
+		super(game, S.liberation, 60, DamageType.DEFAULT)
 	}
 	public update(dt: number) {
 		super.update(dt)
@@ -1261,7 +1347,7 @@ class Resurrection extends ChipAnimation {
 	static textures = [T.cloud, T.ray]
 	static sounds = [S.resurrection]
 	public delay = 1
-	constructor(game: Game) { super(game, S.resurrection, 35) }
+	constructor(game: Game) { super(game, S.resurrection, 35, DamageType.DEFAULT) }
 	public launch(launchPos: Position, targetPos: Position, targets: FightEntity[], targetCell: Cell) {
 		super.launch(launchPos, targetPos, targets, targetCell)
 		this.game.particles.addImage(targetPos.x, targetPos.y, 70, 0, 0, 0, 0, T.ray, 80)
@@ -1295,7 +1381,7 @@ class Grapple extends ChipAnimation {
 	chain_sy!: number
 	target: FightEntity | null = null
 	move_end: number = 0
-	constructor(game: Game) { super(game, S.resurrection, Grapple.DURATION) }
+	constructor(game: Game) { super(game, S.resurrection, Grapple.DURATION, DamageType.DEFAULT) }
 
 	public launch(launchPos: Position, targetPos: Position, targets: FightEntity[], targetCell: Cell) {
 		super.launch(launchPos, targetPos, targets, targetCell)
@@ -1426,7 +1512,7 @@ class BoxingGlove extends ChipAnimation {
 	target: FightEntity | null = null
 	moved: boolean = false
 	move_start: number = 0
-	constructor(game: Game) { super(game, S.resurrection, BoxingGlove.DURATION) }
+	constructor(game: Game) { super(game, S.resurrection, BoxingGlove.DURATION, DamageType.DEFAULT) }
 
 	public launch(launchPos: Position, targetPos: Position, targets: FightEntity[], targetCell: Cell, launcher: FightEntity) {
 		super.launch(launchPos, targetPos, targets, targetCell)
@@ -1528,4 +1614,4 @@ class BoxingGlove extends ChipAnimation {
 	}
 }
 
-export { Alteration, Arsenic, Adrenaline, Armor, Acceleration, Antidote, Armoring, BallAndChain, Bandage, Bark, BoxingGlove, Brainwashing, Bramble, Burning, Covid, ChipAnimation, Carapace, Collar, Covetousness, Crushing, Cure, Desintegration, DevilStrike, Dome, Doping, Drip, Elevation, Ferocity, Fertilizer, Flame, Flash, Fortress, Fracture, Grapple, Helmet, Ice, Iceberg, Inversion, Jump, Knowledge, LeatherBoots, Liberation, Lightning, Loam, Manumission, Meteorite, Mirror, Motivation, Mutation, Pebble, Plague, Plasma, Precipitation, Protein, Punishment, Rage, Rampart, Reflexes, Regeneration, Remission, Repotting, Resurrection, Rock, Rockfall, Serum, SevenLeagueBoots, Shield, Shock, SlowDown, Solidification, Soporific, Spark, Stalactite, Steroid, Stretching, Teleportation, Therapy, Thorn, Toxin, Tranquilizer, Transmutation, Vaccine, Vampirization, Venom, Wall, WarmUp, Whip, WingedBoots, Wizardry }
+export { Alteration, Arsenic, Adrenaline, Armor, Acceleration, Antidote, Armoring, BallAndChain, Bandage, Bark, BoxingGlove, Brainwashing, Bramble, Burning, Covid, ChipAnimation, Carapace, Collar, Covetousness, Crushing, Cure, Desintegration, DevilStrike, Dome, Doping, Drip, Elevation, Ferocity, Fertilizer, Flame, Flash, Fortress, Fracture, Grapple, Helmet, Ice, Iceberg, Inversion, Jump, Knowledge, LeatherBoots, Liberation, Lightning, Loam, Manumission, Meteorite, Mirror, Motivation, Mutation, Pebble, Plague, Plasma, Precipitation, Protein, Punishment, Rage, Rampart, Reflexes, Regeneration, Remission, Repotting, Resurrection, Rock, Rockfall, Serum, SevenLeagueBoots, Shield, Shock, SlowDown, Solidification, Soporific, Spark, Stalactite, Steroid, Stretching, Summon, Teleportation, Therapy, Thorn, Toxin, Tranquilizer, Transmutation, Vaccine, Vampirization, Venom, Wall, WarmUp, Whip, WingedBoots, Wizardry }

@@ -42,11 +42,11 @@ class Leek extends FightEntity {
 		this.bodyTexFront = T.get(this.game, "image/leek/leek" + appearance + "_front_" + LeekWars.skins[skin] + ".png", true, SHADOW_QUALITY)
 		this.bodyTexBack = T.get(this.game, "image/leek/leek" + appearance + "_back_" + LeekWars.skins[skin] + ".png", true, SHADOW_QUALITY)
 
-		this.baseHeight = this.bodyTexFront.texture.height
+		this.baseHeight = this.bodyTexFront.texture.height + 30
 		this.baseWidth = this.bodyTexFront.texture.width
 		this.updateGrowth()
 		this.bodyTexFront.texture.addEventListener('load', () => {
-			this.baseHeight = this.bodyTexFront.texture.height
+			this.baseHeight = this.bodyTexFront.texture.height + 30
 			this.baseWidth = this.bodyTexFront.texture.width
 			this.updateGrowth()
 		})
@@ -105,16 +105,17 @@ class Leek extends FightEntity {
 		return this.weapon.shoot(this.ox, this.oy - this.z, this.handPos, this.angle, this.direction, position, targets, this, cell, this.scale)
 	}
 
-
-
 	public frameTexture(includeHat: boolean): Texture {
 
 		const canvas = document.createElement('canvas')
 		canvas.width = this.baseWidth
-		canvas.height = this.baseHeight * this.oscillation
+		const hatTexture = this.front ? this.hatFront : this.hatBack
+		const height = this.baseHeight + (this.hatTemplate ? ((this.bodyTexFront.texture.width * this.hatTemplate.width) * (hatTexture.texture.height / hatTexture.texture.width)) * (1 - this.hatTemplate.height) : 0)
+		canvas.height = height * this.oscillation
 		const textureCtx = canvas.getContext('2d')!
 		const texture = new Texture('')
 		texture.texture = canvas
+		texture.ctx = textureCtx
 
 		// Debug
 		// textureCtx.strokeStyle = 'red'
@@ -128,11 +129,9 @@ class Leek extends FightEntity {
 
 		textureCtx.save()
 		textureCtx.translate(canvas.width / 2, canvas.height)
-		textureCtx.translate(0, - this.z)
 		textureCtx.scale(this.scale * this.direction, this.scale)
 		const bodyTexture = this.front ? this.bodyTexFront : this.bodyTexBack
-		const hatTexture = this.front ? this.hatFront : this.hatBack
-		this.drawBody(textureCtx, bodyTexture.texture, includeHat ? hatTexture.texture : null)
+		this.drawBody(textureCtx, bodyTexture.texture, includeHat && hatTexture ? hatTexture.texture : null)
 		textureCtx.restore()
 
 		this.scale = savedScale
@@ -152,8 +151,10 @@ class Leek extends FightEntity {
 				const leekWidth = this.bodyTexFront.texture.width
 				const height = this.bodyTexFront.texture.height
 				const hatX = -(leekWidth / 25)
-				const hatZ = height - this.hatHeight * this.hatTemplate.height + this.hatHeight / 2
 				const hatTexture = this.front ? this.hatFront : this.hatBack
+				const hatWidth = leekWidth * this.hatTemplate.width
+				const hatHeight = hatWidth * (hatTexture.texture.height / hatTexture.texture.width)
+				const hatZ = height - hatHeight * this.hatTemplate.height + hatHeight / 2
 				const scale = this.scale * this.growth * leekWidth * this.hatTemplate.width / hatTexture.texture.width
 				const hdx = dx * 1.5 + Math.random() * 2 - 1
 				const hdy = dy * 1.5 + Math.random() * 2 - 1

@@ -487,8 +487,8 @@ class Gazor extends GenericGazor {
 }
 
 class UnbridledGazor extends GenericGazor {
-	static textures = [T.unbridled_gazor, T.orange_gaz]
-	static sounds = [S.gazor]
+	static textures = [T.unbridled_gazor, T.orange_gaz, T.explosion_mark, T.explosion_rock, T.explosion_rock2]
+	static sounds = [S.gazor, S.explosion]
 	explosions: number = 0
 	delay: number = 0
 
@@ -517,7 +517,7 @@ class UnbridledGazor extends GenericGazor {
 
 class GrenadeLauncher extends Firegun {
 	static GRENADE_LAUNCHER_DURATION = 50
-	static textures = [T.shots, T.grenade_launcher, T.cart_grenade_launcher, T.grenade]
+	static textures = [T.shots, T.grenade_launcher, T.cart_grenade_launcher, T.grenade, T.explosion_mark, T.explosion_rock, T.explosion_rock2]
 	static sounds = [S.grenade_shoot, S.explosion]
 
 	constructor(game: Game) {
@@ -534,7 +534,7 @@ class GrenadeLauncher extends Firegun {
 
 class IllicitGrenadeLauncher extends Firegun {
 	static GRENADE_LAUNCHER_DURATION = 50
-	static textures = [T.shots, T.illicit_grenade_launcher, T.cart_illicit_grenade_launcher, T.red_grenade]
+	static textures = [T.shots, T.illicit_grenade_launcher, T.cart_illicit_grenade_launcher, T.red_grenade, T.explosion_mark, T.explosion_rock, T.explosion_rock2]
 	static sounds = [S.grenade_shoot, S.explosion]
 
 	constructor(game: Game) {
@@ -824,7 +824,7 @@ class Lightninger extends Firegun {
 
 
 class EnhancedLightninger extends Firegun {
-	static textures = [T.shots, T.bullet, T.enhanced_lightninger, T.cart_enhanced_lightninger, T.plasma, T.blue_lightning]
+	static textures = [T.shots, T.bullet, T.enhanced_lightninger, T.cart_enhanced_lightninger, T.plasma, T.red_lightning]
 	static sounds = [S.lightninger, S.lightning, S.electrisor, S.lightninger_impact]
 	static EXPLOSION_DURATION = 40
 	life: number = 100
@@ -870,8 +870,8 @@ class EnhancedLightninger extends Firegun {
 }
 
 class Bazooka extends Firegun {
-	static textures = [T.shots, T.bullet, T.bazooka, T.cart_bazooka, T.rocket, T.fire]
-	static sounds = [S.rocket]
+	static textures = [T.shots, T.bullet, T.bazooka, T.cart_bazooka, T.rocket, T.fire, T.explosion_mark, T.explosion_rock, T.explosion_rock2]
+	static sounds = [S.rocket, S.explosion]
 
 	constructor(game: Game) {
 		super(game, T.bazooka, T.cart_bazooka, S.rocket, 29)

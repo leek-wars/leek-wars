@@ -40,7 +40,7 @@
 							<div>
 								<div class="title">{{ $t('hat') }}</div>
 								<div class="hats">
-									<img src="/image/hat/no_hat.png" class="hat" @click="leekHat = null">
+									<img src="/image/hat/no_hat.png" class="hat" @click="leekHat = 0">
 									<img v-for="hat in [2, 9, 7, 1]" :key="hat" :src="'/image/hat/' + LeekWars.hats[hat].name + '.png'" class="hat" @click="leekHat = hat">
 								</div>
 							</div>
@@ -248,6 +248,7 @@
 	import { locale } from '@/locale'
 	import { i18n, loadComponentLanguage, mixins } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
+	import { store } from '@/model/store'
 	import { Component, Vue, Watch } from 'vue-property-decorator'
 	const SignupCarousel = () => import(/* webpackChunkName: "[request]" */ `@/component/signup/signup-carousel.${locale}.i18n`)
 	const SignupFeatures = () => import(/* webpackChunkName: "[request]" */ `@/component/signup/signup-features.${locale}.i18n`)
@@ -315,7 +316,8 @@
 			}
 			LeekWars.post(service, args).then(data => {
 				if (this.fastRegister) {
-					this.$store.commit('connect', data)
+					store.commit('connect', data)
+					store.commit('connected', '$')
 					this.$router.push('/')
 				} else if (this.signupMethod === 1) {
 					localStorage.setItem('login-attempt', 'true')

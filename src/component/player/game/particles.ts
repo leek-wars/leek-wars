@@ -1,8 +1,8 @@
 import { FightEntity } from '@/component/player/game/entity'
 import { Game } from "@/component/player/game/game"
-import { Blood, Bubble, Bullet, BuryParticle, Cartridge, CriticalParticle, Explosion, Fire, Garbage, Gaz, Grenade, ImageParticle, Laser, LighningBall, Lightning, LineParticle, Meteorite, NUM_BLOOD_SPRITES, Particle, Plasma, RealisticExplosion, Rectangle, Rocket, Shot, SimpleFire, SpikeParticle, SpinningParticle } from '@/component/player/game/particle'
+import { Blood, Bubble, Bullet, BuryParticle, Cartridge, CriticalParticle, Explosion, Fire, Garbage, Gaz, Grenade, ImageParticle, Laser, LighningBall, Lightning, LineParticle, Meteorite, NUM_BLOOD_SPRITES, Particle, Plasma, RealisticExplosion, Rectangle, Rocket, Shot, SimpleFire, SmallExplosion, SpikeParticle, SpinningParticle } from '@/component/player/game/particle'
 import { Position } from '@/component/player/game/position'
-import { Texture } from '@/component/player/game/texture'
+import { T, Texture } from '@/component/player/game/texture'
 import { Cell } from '@/model/cell'
 import { S } from './sound'
 
@@ -76,8 +76,25 @@ class Particles {
 		S.explosion.play(this.game)
 	}
 	public addRealisticExplosion(x: number, y: number, radius: number) {
+		// Explosion
 		this.add(new RealisticExplosion(this.game, x, y, radius))
+		// Sound
 		S.explosion.play(this.game)
+		// Mark
+		this.game.ground.drawTextureScale(T.explosion_mark.texture, x, y, 0, 0.5, 0.5, 0.5)
+		// Debrits
+		const count = (3 + Math.random() * 5) * radius
+		for (let p = 0; p < count; ++p) {
+			const scale = 0.15 + Math.random() * 0.35
+			const dx = -4 + Math.random() * 8
+			const dy = -2 + Math.random() * 4
+			const dz = 1 + Math.random() * 6
+			const texture = Math.random() > 0.5 ? T.explosion_rock : T.explosion_rock2
+			this.addGarbage(x, y, 5, dx, dy, dz, texture, 1, Math.random() * 0.2, scale, Math.random() * Math.PI, 70)
+		}
+	}
+	public addSmallExplosion(x: number, y: number, radius: number) {
+		this.add(new SmallExplosion(this.game, x, y, radius))
 	}
 	public addPlasma(x: number, y: number, z: number, texture: Texture, life: number) {
 		this.add(new Plasma(this.game, x, y, z, texture, life))
@@ -88,8 +105,8 @@ class Particles {
 	public addGarbage(x: number, y: number, z: number, dx: number, dy: number, dz: number, texture: Texture, orientation: number, rotation: number, scale: number = 1, angle: number = 0, life: number = Particle.GARBAGE_LIFE) {
 		this.add(new Garbage(this.game, x, y, z, dx, dy, dz, texture, orientation, rotation, scale, angle, life))
 	}
-	public addImage(x: number, y: number, z: number, dx: number, dy: number, dz: number, angle: number, texture: Texture, life: number, alpha: number = 1, rotation: number = 0, onground: boolean = false) {
-		this.add(new ImageParticle(this.game, x, y, z, dx, dy, dz, angle, texture, life, alpha, rotation), onground)
+	public addImage(x: number, y: number, z: number, dx: number, dy: number, dz: number, angle: number, texture: Texture, life: number, alpha: number = 1, rotation: number = 0, onground: boolean = false, scale: number = 1, orientation: number = 1) {
+		this.add(new ImageParticle(this.game, x, y, z, dx, dy, dz, angle, texture, life, alpha, rotation, scale, orientation), onground)
 	}
 	public addCritical(x: number, y: number, z: number) {
 		this.add(new CriticalParticle(this.game, x, y, z))

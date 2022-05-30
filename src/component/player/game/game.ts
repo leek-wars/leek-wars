@@ -2,7 +2,7 @@
 import Player from '@/component/player.vue'
 import { Bubble } from '@/component/player/game/bubble'
 import { Bulb } from '@/component/player/game/bulb'
-import { Acceleration, Adrenaline, Alteration, Antidote, Armor, Armoring, Arsenic, BallAndChain, Bandage, Bark, BoxingGlove, Brainwashing, Bramble, Burning, Carapace, ChipAnimation, Collar, Covetousness, Covid, Crushing, Cure, Desintegration, DevilStrike, Dome, Doping, Drip, Elevation, Ferocity, Fertilizer, Flame, Flash, Fortress, Fracture, Grapple, Helmet, Ice, Iceberg, Inversion, Jump, Knowledge, LeatherBoots, Liberation, Lightning, Loam, Manumission, Meteorite, Mirror, Motivation, Mutation, Pebble, Plague, Plasma, Precipitation, Protein, Punishment, Rage, Rampart, Reflexes, Regeneration, Remission, Repotting, Resurrection, Rock, Rockfall, Serum, SevenLeagueBoots, Shield, Shock, SlowDown, Solidification, Soporific, Spark, Stalactite, Steroid, Stretching, Teleportation, Therapy, Thorn, Toxin, Tranquilizer, Transmutation, Vaccine, Vampirization, Venom, Wall, WarmUp, Whip, WingedBoots, Wizardry } from '@/component/player/game/chips'
+import { Acceleration, Adrenaline, Alteration, Antidote, Armor, Armoring, Arsenic, BallAndChain, Bandage, Bark, BoxingGlove, Brainwashing, Bramble, Burning, Carapace, ChipAnimation, Collar, Covetousness, Covid, Crushing, Cure, Desintegration, DevilStrike, Dome, Doping, Drip, Elevation, Ferocity, Fertilizer, Flame, Flash, Fortress, Fracture, Grapple, Helmet, Ice, Iceberg, Inversion, Jump, Knowledge, LeatherBoots, Liberation, Lightning, Loam, Manumission, Meteorite, Mirror, Motivation, Mutation, Pebble, Plague, Plasma, Precipitation, Protein, Punishment, Rage, Rampart, Reflexes, Regeneration, Remission, Repotting, Resurrection, Rock, Rockfall, Serum, SevenLeagueBoots, Shield, Shock, SlowDown, Solidification, Soporific, Spark, Stalactite, Steroid, Stretching, Summon, Teleportation, Therapy, Thorn, Toxin, Tranquilizer, Transmutation, Vaccine, Vampirization, Venom, Wall, WarmUp, Whip, WingedBoots, Wizardry } from '@/component/player/game/chips'
 import { DamageType, EntityDirection, EntityType, FightEntity } from '@/component/player/game/entity'
 import { Ground } from '@/component/player/game/ground'
 import { Leek } from '@/component/player/game/leek'
@@ -157,7 +157,7 @@ const CHIPS = [
 	Teleportation, // 37
 	Armoring, // 38
 	Inversion, // 39
-	null, // 40
+	Summon, // 40 summon
 	null, // 41
 	null, // 42
 	null, // 43
@@ -588,9 +588,10 @@ class Game {
 					break
 				case ActionType.BUG:
 					T.bug.load(this)
+					S.crash.load(this)
 					break
 				case ActionType.SUMMON:
-					S.bulb.load(this)
+					chipsUsed.add(40)
 					break
 			}
 		}
@@ -603,6 +604,16 @@ class Game {
 		T.mp.load(this)
 		T.critical.load(this)
 		S.critical.load(this)
+		S.leek_explosion.load(this)
+		S.leek_slice.load(this)
+		S.bury.load(this)
+		T.smoke.load(this)
+		S.burn.load(this)
+		if (chipsUsed.size > 0) {
+			S.chip.load(this)
+			T.chip_one.load(this)
+			T.chip_zero.load(this)
+		}
 
 		const textures = new Set<Texture>()
 		const sounds = new Set<Sound>()
@@ -1063,10 +1074,11 @@ class Game {
 				this.actionDone()
 				break
 			}
-			if (CHIPS[chip - 1] !== null) {
-				const chipAnimation: any = new CHIPS[chip - 1]!(this)
+			if (CHIPS[chip - 1] !== null && chip !== 40) {
+				const chipAnimation: ChipAnimation = new CHIPS[chip - 1]!(this)
 				launcher.useChip(chipAnimation, target_cell, targets, result)
 				this.chips.push(chipAnimation)
+				launcher.lastDamageType = chipAnimation.damageType
 			} else {
 				this.actionDone()
 			}
@@ -1156,8 +1168,10 @@ class Game {
 					const dx = (entity.x - killer.x)
 					const dy = (entity.y - killer.y) / 2
 					const angle = Math.atan2(dy, dx)
-					// console.log("dx", dx, "dy", dy, "angle", angle)
-					entity.kill(true, killer.lastDamageType, Math.cos(angle), Math.sin(angle)) // Animation
+					const ndx = Math.cos(angle)
+					const ndy = Math.sin(angle)
+					// console.log("dx", dx, "dy", dy, "angle", angle, "ndx", ndx, "ndy", ndy)
+					entity.kill(true, killer.lastDamageType, ndx, ndy) // Animation
 				} else {
 					entity.kill(true, DamageType.DEFAULT, 0, 0) // Animation
 				}
@@ -1191,25 +1205,19 @@ class Game {
 			const result = action.params[4]
 			const summon = this.leeks[summonID]
 			summon.summoner = this.leeks[caster]
-			summon.active = true
+			this.log(action)
 			if (this.jumping) {
 				cell.setEntity(summon)
+				summon.active = true
+				const index = this.entityOrder.findIndex((e) => e.id === caster)
+				this.entityOrder.splice(index + 1, 0, summon)
+				this.actionDone()
 			} else {
-				summon.setCell(cell)
-				summon.drawID = this.addDrawableElement(summon, summon.y)
-				this.updateReachableCells()
+				const chipAnimation: Summon = new Summon(this)
+				chipAnimation.summon = summon
+				;(summon.summoner as Leek).useChip(chipAnimation, cell, [summon], result)
+				this.chips.push(chipAnimation)
 			}
-			const index = this.entityOrder.findIndex((e) => e.id === caster)
-			this.entityOrder.splice(index + 1, 0, summon)
-			this.log(action)
-			if (!this.jumping) {
-				S.bulb.play(this)
-				this.leeks[caster].watch(cell)
-				if (result === 2) {
-					this.leeks[caster].addCritical()
-				}
-			}
-			this.actionDone()
 			break
 		}
 		case ActionType.RESURRECTION: {
@@ -1284,10 +1292,12 @@ class Game {
 			break
 		}
 		case ActionType.BUG: {
-			if (!this.jumping) {
+			this.log(action)
+			if (this.jumping) {
+				this.actionDone()
+			} else {
 				this.leeks[action.params[1]].bug()
 			}
-			this.actionDone()
 			break
 		}
 		case ActionType.END_FIGHT: {
@@ -1346,6 +1356,8 @@ class Game {
 					null, // 30
 					null, // 31
 					"dark_katana", // 32
+					"enhanced_lightninger", // 33
+					"unstable_destroyer", // 34
 				][template - 1]
 					image = LeekWars.STATIC + "image/weapon/" + img + ".png"
 					// Gestion des états du poireau
@@ -2353,6 +2365,7 @@ class Game {
 			leek.deadAnim = 0
 			leek.burning = 0
 			leek.gazing = 0
+			leek.crashAnim = 0
 			leek.bubble = new Bubble(this)
 			leek.weapon = null
 			if (leek.cell) {

@@ -152,6 +152,10 @@
 				<li>exp_obj_large03.wav, ggctuk, CC0 1.0 license.</li>
 				<li>Rocket Launch, Jarusca, CC0 1.0 license.</li>
 				<li>Electric current.ogg, vladat, CC BY 3.0 license.</li>
+				<li>Headshot 1.wav, SilverIllusionist, CC BY 4.0 license.</li>
+				<li>Cut Through Armor / Slice / Clang, SypherZent, CC BY 4.0 license.</li>
+				<li>Explosion Power Central, Tritus, CC BY 3.0 license.</li>
+				<li>Flamethrower, pugaeme, CC BY 3.0 license.</li>
 			</ul>
 		</panel>
 	</div>

@@ -35,7 +35,7 @@ enum DamageType {
 	SLICE
 }
 
-class FightEntity extends Entity {
+abstract class FightEntity extends Entity {
 	// Infos générales
 	public game: Game
 	public farmer!: Farmer | null
@@ -109,13 +109,15 @@ class FightEntity extends Entity {
 	public infoText: InfoText[] = []
 	// Movement
 	public path: Cell[] = []
-	// Dead
-	public deadAnim = 0
 	// Animation
 	public oscillation = 1
 	public frame: number
 	public growth: number = 1.0
 	public lastDamageType: DamageType = DamageType.DEFAULT
+	public crashAnim: number = 0
+	public carbonizeAnim: number = 0
+	public deadAnim: number = 0
+	public blooming: boolean = false
 	// Effects
 	public effects: {[key: number]: EntityEffect} = {}
 	public launched_effects: {[key: number]: EntityEffect} = {}
@@ -535,6 +537,20 @@ class FightEntity extends Entity {
 			// Animation
 			this.frame += dt / Math.max(1, this.game.speed / 6)
 			this.oscillation = 1 + Math.cos(this.frame / 17) / 40
+			if (this.crashAnim > 0) {
+				this.crashAnim -= dt
+				if (this.crashAnim < 0) {
+					this.crashAnim = 0
+					this.game.actionDone()
+				}
+			}
+			if (this.blooming && this.deadAnim > 0) {
+				this.deadAnim -= 0.025 * dt
+				if (this.deadAnim <= 0) {
+					this.deadAnim = 0
+					this.blooming = false
+				}
+			}
 
 			// Déplacement
 			if (this.moveDelay > 0) {
@@ -607,6 +623,7 @@ class FightEntity extends Entity {
 	}
 
 	public finishDeath() {
+		this.deadAnim = 0
 		if (this.drawID) {
 			this.game.removeDrawableElement(this.drawID, this.y)
 			this.drawID = null
@@ -627,6 +644,19 @@ class FightEntity extends Entity {
 		const cellPixels = this.game.ground.xyToXYPixels(pos.x, pos.y)
 		this.watch(cell)
 		chip.launch({x: this.ox, y: this.oy}, cellPixels, targets, cell, this)
+
+		// One and zeros animation
+		S.chip.play(this.game)
+		const target_angle = cell.angle(this.game, this.cell!)
+		const distance = this.game.ground.field.real_distance(cell, this.cell!)
+		for (let p = 0; p < 40; ++p) {
+			const angle_delta = Math.PI / 4 / distance
+			const angle = cell === this.cell ? Math.random() * Math.PI * 2 : target_angle - angle_delta / 2 + Math.random() * angle_delta
+			const texture = p % 2 ? T.chip_one : T.chip_zero
+			const d = cell === this.cell ? (0.5 + Math.random() / 2) : (0.2 + distance * Math.random())
+			const life = 50
+			this.game.particles.addImage(this.ox - 10 + Math.random() * 20, this.oy - 10 + Math.random() * 20, 15, Math.cos(angle) * d, Math.sin(angle) * d / 2, 0, 0, texture, life, 1, 0, false, 0.35)
+		}
 
 		if (result === 2) {
 			this.addCritical()
@@ -660,7 +690,10 @@ class FightEntity extends Entity {
 	public bug() {
 		if (!this.dead && this.bubble) {
 			this.bubble.setBug()
-			this.bubble.show(10)
+			this.bubble.show(6)
+			this.crashAnim = 50
+			S.crash.play(this.game)
+			this.game.particles.addSmallExplosion(this.ox, this.oy - this.height + 40, 2)
 		}
 	}
 	public collide(x: number, y: number, z: number) {
@@ -693,6 +726,8 @@ class FightEntity extends Entity {
 				this.slice()
 			} else if (damageType === DamageType.EXPLOSION) {
 				this.explode(dx, dy)
+			} else if (damageType === DamageType.FIRE) {
+				this.carbonize()
 			}
 		}
 		this.dead = true
@@ -706,6 +741,29 @@ class FightEntity extends Entity {
 
 		const f_scale = this.scale * this.growth
 		this.game.particles.addBuryParticle(this.ox, this.oy, texture, f_scale)
+		S.bury.play(this.game)
+	}
+
+	public carbonize() {
+
+		S.burn.play(this.game)
+
+		const texture = this.frameTexture(true)
+		const f_scale = this.scale * this.growth
+
+		const data = texture.ctx.getImageData(0, 0, texture.texture.width, texture.texture.height)
+		const wind_y = Math.random() > 0.5 ? 0.7 : -0.7
+		const wind_x = Math.random() > 0.5 ? 0.5 : -0.5
+		const inc = (data.width * f_scale) / 10 | 0
+		for (let x = 0; x < data.width; x += inc) {
+			for (let y = 0; y < data.height; y += inc) {
+				if (data.data[y * data.width * 4 + x * 4 + 3] > 50) {
+					const dx = wind_x * (0.7 + Math.random() * 3)
+					const dy = wind_y - 0.2 + Math.random() * 0.4
+					this.game.particles.addImage(this.ox - texture.texture.width * f_scale / 2 + x * f_scale, this.oy, this.z + texture.texture.height * f_scale - y * f_scale, dx, dy, 0, 0, T.smoke, 40 + Math.random() * 20, 1, 0, false, 1.2)
+				}
+			}
+		}
 	}
 
 	public slice() {
@@ -782,7 +840,7 @@ class FightEntity extends Entity {
 		const f2dy = 0
 		this.game.particles.addGarbage(f2_x, this.oy - 15, f2_z - 15, f2dx, f2dy, fdz, fragment2, 1, rotation2, f_scale, 0, 70)
 
-		console.log({ topX, topY, bottomX, bottomY, cx, cy })
+		// console.log({ topX, topY, bottomX, bottomY, cx, cy })
 
 		const s_top = s * (1 + cy / h - 0.5)
 		this.game.particles.addLineParticle(
@@ -791,6 +849,8 @@ class FightEntity extends Entity {
 			this.ox + Math.cos(angle) * s_top * f_scale,
 			this.oy - (h - cy - Math.sin(angle) * s_top) * f_scale,
 		)
+
+		S.leek_slice.play(this.game)
 	}
 
 	public explode(dx: number, dy: number) {
@@ -840,46 +900,16 @@ class FightEntity extends Entity {
 
 			const f_x = this.ox + (-w / 2 + (path.x1 + path.x2) / 2) * f_scale
 			const f_z = (h - (path.y1 + path.y2) / 2) * f_scale + this.z
-			const fdx = dx * 2 + Math.cos(angle2) * 3
-			const fdy = dy * 2 + Math.random() * 2
+			const fdx = dx * 3 + Math.cos(angle2) * 3
+			const fdy = dy * 3 + Math.random() * 2
 			const rotation = -0.05 + Math.random() * 0.1
 			// const dx = 0
 			// const dz = 0
 			// const rotation = 0
 			this.game.particles.addGarbage(f_x, this.oy, f_z, fdx, 0, fdy, fragment, 1, rotation, f_scale, 0, 70)
 		}
-	}
 
-	public frameTexture(includeHat: boolean): Texture {
-
-		const canvas = document.createElement('canvas')
-		canvas.width = this.baseWidth
-		canvas.height = this.baseHeight * this.oscillation
-		const textureCtx = canvas.getContext('2d')!
-		const texture = new Texture('')
-		texture.texture = canvas
-
-		// Debug
-		// textureCtx.strokeStyle = 'red'
-		// textureCtx.lineWidth = 2
-		// textureCtx.strokeRect(0, 0, canvas.width, canvas.height)
-
-		const savedScale = this.scale
-		const savedGrowth = this.growth
-		this.scale = 1
-		this.growth = 1
-
-		textureCtx.save()
-		textureCtx.translate(canvas.width / 2, canvas.height)
-		textureCtx.translate(0, - this.z)
-		textureCtx.scale(this.scale * this.direction, this.scale)
-		this.drawNormal(textureCtx)
-		textureCtx.restore()
-
-		this.scale = savedScale
-		this.growth = savedGrowth
-
-		return texture
+		S.leek_explosion.play(this.game)
 	}
 
 	public reborn() {
@@ -895,6 +925,8 @@ class FightEntity extends Entity {
 		this.game.particles.addCritical(this.ox + 30 * this.direction, this.oy, z)
 		S.critical.play(this.game)
 	}
+
+	public abstract frameTexture(includeHat: boolean): Texture
 
 	public draw(ctx: CanvasRenderingContext2D) {
 
@@ -928,6 +960,11 @@ class FightEntity extends Entity {
 
 		ctx.globalAlpha = 1
 		ctx.restore()
+
+		if (this.crashAnim) {
+			const brightness = Math.min(100, Math.abs(this.crashAnim - 25))
+			ctx.filter = 'brightness(' + brightness + '%)'
+		}
 
 		// Integrate z pos
 		ctx.translate(0, - this.z)
@@ -999,8 +1036,8 @@ class FightEntity extends Entity {
 
 		const effect_size = 30
 		const reverse = Math.min(0.7, this.game.textRatio / this.game.ground.scale)
-		const z = LeekWars.objectSize(this.effects) > 0 && this.game.showEffects ? effect_size + 23 : effect_size
-		const y = Math.max(-this.game.ground.startY / this.game.ground.scale + 20, this.oy - this.height - z * reverse)
+		const z = LeekWars.objectSize(this.effects) > 0 && this.game.showEffects ? effect_size : 0
+		const y = Math.max(-this.game.ground.startY / this.game.ground.scale + 20, this.oy - this.height - this.baseZ - z * reverse)
 		ctx.translate(this.ox, y)
 
 		ctx.scale(reverse, reverse)

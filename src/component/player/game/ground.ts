@@ -570,9 +570,10 @@ class Ground {
 		}
 	}
 
-	public drawTextureScale(image: HTMLImageElement, x: number, y: number, angle: number, scaleX: number, scaleY: number) {
+	public drawTextureScale(image: HTMLImageElement | HTMLCanvasElement, x: number, y: number, angle: number, scaleX: number, scaleY: number, alpha: number = 1) {
 		if (GROUND_TEXTURE && this.textureCtx) {
 			this.textureCtx.save()
+			this.textureCtx.globalAlpha = alpha
 			this.textureCtx.translate(x, y)
 			this.textureCtx.scale(scaleX, scaleY)
 			this.textureCtx.rotate(angle)

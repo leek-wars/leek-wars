@@ -114,6 +114,7 @@ class Bubble {
 		if (this.lama) {
 			ctx.drawImage(T.lama.texture, -45, -45, 90, 90)
 		} else if (this.bug) {
+			ctx.imageSmoothingEnabled = false
 			ctx.drawImage(T.bug.texture, -20, -20, 40, 40)
 		} else {
 			ctx.fillStyle = 'black'
