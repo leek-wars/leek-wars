@@ -46,7 +46,7 @@
 					<th>{{ $t('main.xp') }}</th>
 					<th v-if="fight.context !== FightContext.TEST && fight.context !== FightContext.CHALLENGE" class="gain">{{ $t('main.talent') }}</th>
 				</tr>
-				<tr>
+				<tr v-if="team">
 					<td class="name">
 						<span class="alive">
 							<router-link :to="'/team/' + team.id">{{ team.name }}</router-link>

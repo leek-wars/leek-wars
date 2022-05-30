@@ -1,5 +1,6 @@
 import { Game } from '@/component/player/game/game'
 import { env } from '@/env'
+import { Leek } from '@/model/leek'
 import { LeekWars } from '@/model/leekwars'
 
 const SHADOW_QUALITY = 0.3
@@ -12,6 +13,8 @@ class Texture {
 	public buildShadow: boolean
 	public shadowQuality: number
 	private cache: {[key: number]: HTMLCanvasElement} = {}
+	public ctx!: CanvasRenderingContext2D
+	public loaded: boolean = false
 
 	constructor(path: string, buildShadow: boolean = false, quality: number = 1) {
 		this.path = path + '?0'
@@ -37,6 +40,7 @@ class Texture {
 				buildTextureShadow(this, this.shadowQuality)
 			}
 			game.resourceLoaded(this.path)
+			this.loaded = true
 		}
 		this.texture.onerror = () => {
 			console.warn("Error loading : " + this.path)
@@ -63,20 +67,29 @@ class Texture {
 			canvas.height = this.texture.height * (width / this.texture.width)
 			const ctx = canvas.getContext('2d')!
 			ctx.drawImage(this.texture, 0, 0, width, canvas.height)
-			if (isFinite(width) && isFinite(canvas.height)) {
-				ctx.putImageData(ctx.getImageData(0, 0, width, canvas.height), 0, 0)
-			}
 			this.cache[width] = canvas
 			return canvas
 		} catch (e) {
 			return this.texture
 		}
 	}
+
+	getScaledTexture(width: number) {
+		const result = new Texture('')
+		const canvas = document.createElement('canvas')
+		canvas.width = width
+		canvas.height = this.texture.height * (width / this.texture.width)
+		const ctx = canvas.getContext('2d')!
+		ctx.drawImage(this.texture, 0, 0, width, canvas.height)
+		result.texture = canvas
+		result.ctx = ctx
+		return result
+	}
 }
 
 class T {
 	// Textures communes
-	public static bug = new Texture(LeekWars.STATIC + 'image/fight/leek_bug.png')
+	public static bug = new Texture(LeekWars.STATIC + 'image/fight/crash.png')
 	public static tp = new Texture(LeekWars.STATIC + 'image/charac/small/tp.png')
 	public static mp = new Texture(LeekWars.STATIC + 'image/charac/small/mp.png')
 	public static leek_hand = new Texture(LeekWars.STATIC + "image/fight/leek_hand.png", true, SHADOW_QUALITY)
@@ -253,8 +266,15 @@ class T {
 	public static forest_branch = new Texture(LeekWars.STATIC + 'image/map/forest_branch.png')
 	public static forest_branch_2 = new Texture(LeekWars.STATIC + 'image/map/forest_branch_2.png')
 	public static ray = new Texture(LeekWars.STATIC + 'image/fight/ray.png')
+	public static smoke = new Texture(LeekWars.STATIC + 'image/fight/smoke.png')
+	public static explosion_mark = new Texture(LeekWars.STATIC + 'image/fight/explosion_mark.png')
+	public static explosion_rock = new Texture(LeekWars.STATIC + 'image/fight/explosion_rock.png')
+	public static explosion_rock2 = new Texture(LeekWars.STATIC + 'image/fight/explosion_rock2.png')
+	public static summon_leaf = new Texture(LeekWars.STATIC + 'image/fight/summon_leaf.png')
 
 	// Chips
+	public static chip_zero = new Texture(LeekWars.STATIC + 'image/fight/chip_zero.png')
+	public static chip_one = new Texture(LeekWars.STATIC + 'image/fight/chip_one.png')
 	public static cure_aureol = new Texture(LeekWars.STATIC + 'image/fight/cure_aureol.png')
 	public static shield_aureol = new Texture(LeekWars.STATIC + 'image/fight/shield_aureol.png')
 	public static buff_aureol = new Texture(LeekWars.STATIC + 'image/fight/buff_aureol.png')

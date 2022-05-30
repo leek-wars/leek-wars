@@ -1,7 +1,7 @@
 import { EntityType, FightEntity } from "@/component/player/game/entity"
 import { Game, SHADOW_ALPHA, SHADOW_SCALE } from '@/component/player/game/game'
 import { LeekWars } from '@/model/leekwars'
-import { SHADOW_QUALITY, T } from './texture'
+import { SHADOW_QUALITY, T, Texture } from './texture'
 
 class Bulb extends FightEntity {
 
@@ -57,11 +57,11 @@ class Bulb extends FightEntity {
 			this.bodyTexFront = T.get(this.game, 'image/bulb/savant_bulb_front.png', true, SHADOW_QUALITY)
 			this.bodyTexBack = T.get(this.game, 'image/bulb/savant_bulb_back.png', true, SHADOW_QUALITY)
 		}
-		this.baseHeight = this.bodyTexFront.texture.height * Bulb.SCALE
+		this.baseHeight = this.bodyTexFront.texture.height * Bulb.SCALE + 10
 		this.baseWidth = this.bodyTexFront.texture.width * Bulb.SCALE
 		this.updateGrowth()
 		this.bodyTexFront.texture.addEventListener('load', () => {
-			this.baseHeight = this.bodyTexFront.texture.height * Bulb.SCALE
+			this.baseHeight = this.bodyTexFront.texture.height * Bulb.SCALE + 10
 			this.baseWidth = this.bodyTexFront.texture.width * Bulb.SCALE
 			this.updateGrowth()
 		})
@@ -99,6 +99,11 @@ class Bulb extends FightEntity {
 		this.flash = 5
 	}
 
+	public frameTexture(includeHat: boolean): Texture {
+		const texture = this.front ? this.bodyTexFront : this.bodyTexBack
+		return texture.getScaledTexture(texture.texture.width * Bulb.SCALE)
+	}
+
 	public draw(ctx: CanvasRenderingContext2D) {
 		super.draw(ctx)
 		if (!this.dead) {
@@ -120,8 +125,8 @@ class Bulb extends FightEntity {
 	public drawShadow(ctx: CanvasRenderingContext2D) {
 		const texture = this.front ? this.bodyTexBack : this.bodyTexFront
 		ctx.save()
-		ctx.scale(1, -SHADOW_SCALE)
 		ctx.globalAlpha = SHADOW_ALPHA
+		ctx.scale(1, -SHADOW_SCALE)
 		ctx.translate(0, - this.z)
 		ctx.rotate(-Math.PI / 4)
 		this.drawBody(ctx, texture.shadow!)
@@ -136,9 +141,10 @@ class Bulb extends FightEntity {
 		}
 		ctx.scale(this.direction * Bulb.SCALE * this.growth, this.oscillation * Bulb.SCALE * this.growth)
 		// Body
+		const width = this.bodyTexFront.texture.width
 		const height = this.bodyTexFront.texture.height
 		const y = height * (this.deadAnim - 1)
-		ctx.drawImage(texture, 0, 0, texture.width, texture.height * (1 - this.deadAnim), -texture.width / 2, y, texture.width, -y)
+		ctx.drawImage(texture, 0, 0, texture.width, texture.height * (1 - this.deadAnim), -width / 2, y, width, -y)
 
 		ctx.restore()
 	}

@@ -353,10 +353,10 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 					}
 				}
 				if (leek.hat) {
-					const template = LeekWars.hats[leek.hat.template]
+					const template = LeekWars.hats[leek.hat.hat_template]
 					let found = false
 					for (const hat of state.farmer.hats) {
-						if (hat.template === template.id) {
+						if (hat.template === leek.hat.template) {
 							hat.quantity++
 							found = true
 							break

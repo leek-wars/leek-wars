@@ -1,3 +1,4 @@
+import { Game } from '@/component/player/game/game'
 import { Entity } from './entity'
 
 class Cell {
@@ -31,6 +32,14 @@ class Cell {
 		}
 		entity.cell = this
 		this.entity = entity
+	}
+
+	public angle(game: Game, cell: Cell) {
+		const pos1 = game.ground.field.cellToXY(this)
+		const pos2 = game.ground.field.cellToXY(cell)
+		const dx = (pos1.x - pos2.x)
+		const dy = (pos1.y - pos2.y)
+		return Math.atan2(dy, dx)
 	}
 }
 

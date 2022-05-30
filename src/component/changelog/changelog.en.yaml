@@ -1,3 +1,51 @@
+229:
+  title: Quick registration, New animations, 6 New hats and 2 weapons.
+  added:
+    - "Ability to register without email address (add email later). #img_229_fast_register"
+    - "Added new animations: entity death, summoning, attack, crash. #img_229_anim_explode #img_229_anim_slice #img_229_anim_burn #img_229_anim_explosion #img_229_anim_summon #img_229_anim_crash"
+    - "Added 6 new hats. #img_229_hats"
+    - "Added 2 new forgotten weapons. #img_229_weapons"
+    - Added Expert (win all trophies) and Prompt (do it first, kudos to Magestik25) trophies.
+    - Ability to use accents in leek and farmer names.
+    - "Ability to share a fight at a given turn or time. #img_229_share"
+    - Added the Worried trophy, for players who reported a bug.
+    - "Editor: added Ctrl+U/J/I shortcuts to unfold/fold blocks (thanks to Grapha)."
+  improved:
+    - "#ai LS2+: Error on calling a this.method() with the wrong number of arguments."
+    - "#ai LS2+ : Better errors on calling a static method with the wrong number of arguments."
+    - "#ai LS: Added error when assigning a constant, class, this, class and super."
+    - "Editor: Added a warning message if the editor is opened in another tab."
+    - Added a limit on API requests to 5 per second.
+    - Added missing advanced tooltip on teams in the ranking.
+    - The "this value is not iterable" errors is active only in LS2+.
+    - Increased the price of hats and potions in habs by 2.5x.
+    - "#ai LS: cost of min/max/abs/floor/round/ceil increases to 2."
+    - "Editor: sorted test cases by name."
+    - Added "not resellable" to the items in question in the marketplace.
+    - "Editor: completion of methods and static fields in external classes."
+    - "Added log2 function to documentation. #img_229_log2"
+  fixed:
+    - "#ai Fixed .staticMethods field of classes."
+    - "#ai Function and class values are now equivalent to true."
+    - "Editor: fixed completion bug on trash AIs."
+    - "Editor: improved search on symbol hover."
+    - "Editor: fixed persistent errors."
+    - "LS: fixed a bug requiring a semicolon on the last line."
+    - "Marketplace: fixed right column scroll at bottom of page."
+    - Fixed position of caps on young leeks.
+    - Fixed the bug of duplicating leeks visually in combat.
+    - Fixed register limit (5000 instead of 4999).
+    - Fixed autocompletion bug of functions.
+    - Fixed boxing glove when an entity is on the first cell.
+    - Fixed a flaw in the random generator (kudos to Karang).
+    - Fixed some effect areas in the combat display (thanks to nytope).
+    - Fixed the Roxxor trophy.
+    - Correction of the display of some pages of some forum topics.
+    - Correction of coloring of some keywords in the editor.
+    - "Report: correction of the color of the teams in the stats table (thanks to nytope)."
+    - "Report: removed talent display in test reports (thanks to nytope)."
+    - "Combat: fixed night mode shortcut (thanks to nytope)."
+
 228:
   title: Christmas gifts, 6 resources, editor upgrade and quick documentation.
   added:

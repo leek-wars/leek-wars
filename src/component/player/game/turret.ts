@@ -6,6 +6,7 @@ import { ChipAnimation } from "./chips"
 import { SHADOW_QUALITY, T, Texture } from './texture'
 
 class Piece {
+	i!: number
 	t!: Texture
 	z!: number
 	w!: number
@@ -14,6 +15,7 @@ class Piece {
 class Turret extends FightEntity {
 
 	private static ANIMATION_DURATION = 50
+	private static SCALE = 0.3
 
 	textures: {[key: string]: Texture} = {}
 	pieces: Piece[]
@@ -22,6 +24,7 @@ class Turret extends FightEntity {
 
 	constructor(game: Game, team: number, level: number) {
 		super(game, EntityType.TURRET, team)
+		this.baseZ = 0
 		const color = team === 1 ? 'blue' : 'red'
 		this.textures.base = T.get(this.game, 'image/turret/base_' + color + '.png', true, SHADOW_QUALITY)
 		this.textures.core = T.get(this.game, 'image/turret/core_' + color + '.png', true, SHADOW_QUALITY)
@@ -32,9 +35,25 @@ class Turret extends FightEntity {
 		this.textures.pyramid_down = T.get(this.game, 'image/turret/pyramid_down_' + color + '.png', true, SHADOW_QUALITY)
 		this.bodyTexFront = this.textures.base
 
-		this.pieces = TURRET_DATA[Math.floor(level / 10)].map(piece => ({t: this.textures[piece.t], z: piece.z, w: this.textures[piece.t].texture.width }))
-		this.baseHeight = this.height = 80 + level * 1.0
-		this.baseWidth = this.pieces.reduce((max, piece) => Math.max(max, piece.w), 0)
+		this.pieces = TURRET_DATA[Math.floor(level / 10)].map((piece, i) => ({i, t: this.textures[piece.t], z: piece.z, w: this.textures[piece.t].texture.width }))
+
+		const load_piece = (piece: Piece) => {
+			this.baseWidth = Math.max(this.baseWidth, piece.t.texture.width * Turret.SCALE)
+			if (piece.i === this.pieces.length - 1) {
+				this.baseHeight += piece.t.texture.height * Turret.SCALE
+				this.height += piece.t.texture.height * Turret.SCALE
+			} else {
+				this.baseHeight += piece.z
+				this.height += piece.z
+			}
+		}
+		for (const piece of this.pieces) {
+			if (piece.t.loaded) {
+				load_piece(piece)
+			} else {
+				piece.t.texture.addEventListener('load', () => load_piece(piece))
+			}
+		}
 	}
 
 	public update(dt: number) {
@@ -52,19 +71,53 @@ class Turret extends FightEntity {
 		this.chip_animation = Turret.ANIMATION_DURATION
 	}
 
+	public frameTexture(includeHat: boolean): Texture {
+
+		const canvas = document.createElement('canvas')
+		canvas.width = this.baseWidth
+		canvas.height = this.baseHeight
+		const textureCtx = canvas.getContext('2d')!
+		const texture = new Texture('')
+		texture.texture = canvas
+		texture.ctx = textureCtx
+
+		// Debug
+		// textureCtx.strokeStyle = 'red'
+		// textureCtx.lineWidth = 2
+		// textureCtx.strokeRect(0, 0, canvas.width, canvas.height)
+
+		const savedScale = this.scale
+		const savedGrowth = this.growth
+		this.scale = 1
+		this.growth = 1
+
+		textureCtx.save()
+		textureCtx.translate(canvas.width / 2, this.baseZ + canvas.height - (this.pieces[0].t.texture.height * Turret.SCALE - this.pieces[0].z))
+		textureCtx.scale(this.scale * this.direction, this.scale)
+		this.drawNormal(textureCtx)
+		textureCtx.restore()
+
+		this.scale = savedScale
+		this.growth = savedGrowth
+
+		return texture
+	}
+
 	public draw(ctx: CanvasRenderingContext2D) {
 		super.draw(ctx)
-		// Draw shadow
-		if (this.game.shadows && !this.dead) {
-			this.drawShadow(ctx)
+		if (!this.dead) {
+			// Draw shadow
+			if (this.game.shadows && !this.dead) {
+				this.drawShadow(ctx)
+			}
+			// Draw normal
+			this.drawNormal(ctx)
 		}
-		// Draw normal
-		this.drawNormal(ctx)
 		super.endDraw(ctx)
 	}
 
 	public drawNormal(ctx: CanvasRenderingContext2D) {
-		let z = 0
+		let z = this.baseZ
 		for (const piece of this.pieces) {
 			this.drawPiece(ctx, piece.t, z -= (piece.z), false)
 			z -= this.chip_animation_z
@@ -72,8 +125,8 @@ class Turret extends FightEntity {
 	}
 
 	public drawPiece(ctx: CanvasRenderingContext2D, texture: Texture, z: number, shadow: boolean) {
-		const scale = 0.3
-		ctx.drawImage(shadow ? texture.shadow! : texture.texture, -texture.texture.width * scale / 2, z, texture.texture.width * scale, texture.texture.height * scale)
+
+		ctx.drawImage(shadow ? texture.shadow! : texture.texture, -texture.texture.width * Turret.SCALE / 2, z, texture.texture.width * Turret.SCALE, texture.texture.height * Turret.SCALE)
 	}
 
 	public drawShadow(ctx: CanvasRenderingContext2D) {

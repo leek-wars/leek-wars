@@ -1,3 +1,51 @@
+229:
+  title: Inscription rapide, Nouvelles animations, 6 Nouveaux chapeaux et 2 armes.
+  added:
+    - "Possibilité de s'inscrire sans adresse email (ajout de l'email plus tard). #img_229_fast_register"
+    - "Ajout de nouvelles animations : mort d'entité, invocation, attaque, crash. #img_229_anim_explode #img_229_anim_slice #img_229_anim_burn #img_229_anim_explosion #img_229_anim_summon #img_229_anim_crash"
+    - "Ajout de 6 nouveaux chapeaux. #img_229_hats"
+    - "Ajout de 2 nouvelles armes oubliées. #img_229_weapons"
+    - Ajout des trophées Expert (gagner tous les trophées) et Prompt (le faire en premier, bravo à Magestik25).
+    - Possibilité d'utiliser des accents dans les noms de poireaux et d'éleveur.
+    - "Possibilité de partager un combat à un tour ou un instant donné. #img_229_share"
+    - Ajout du trophée Soucieux, pour les joueurs ayant rapporté un bug.
+    - "Éditeur : ajout des raccourcis Ctrl+U/J/I pour déplier/replier les blocs (merci à Grapha)."
+  improved:
+    - "#ai LS2+ : Erreur sur l'appel d'une méthode this.méthode() avec le mauvais nombre d'arguments."
+    - "#ai LS2+ : Meilleures erreurs lors de l'appel d'une méthode statique avec le mauvais nombre d'arguments."
+    - "#ai LS : Ajout d'une erreur lors de l'assignation d'une constante, d'une classe, de this, class et super."
+    - "Éditeur : Ajout d'un message d'avertissement si l'editeur est ouvert dans un autre onglet."
+    - Ajout d'une limite de requêtes sur l'API à 5 par seconde.
+    - Ajout d'une tooltip avancée manquante sur les équipes dans le classement.
+    - Les erreurs "cette valeur n'est pas itérable" est active uniquement en LS2+.
+    - Augmentation du prix des chapeaux et potions en habs de 2,5x.
+    - "#ai LS : le coût de min/max/abs/floor/round/ceil passe à 2."
+    - "Éditeur : tri des scénarios de test par nom."
+    - Ajout d'une mention "non revendable" sur les items en question dans le marché.
+    - "Éditeur : complétion des méthodes et champs statiques des classes externes."
+    - "Ajout de la fonction log2 dans la documentation. #img_229_log2"
+  fixed:
+    - "#ai Correction du champ .staticMethods des classes."
+    - "#ai Les valeurs fonction et classe sont maintenant équivalentes à true."
+    - "Éditeur : correction d'un bug de complétion sur les IA de la corbeille."
+    - "Éditeur : amélioration de la recherche au survol d'un symbole."
+    - "Éditeur : corrections d'erreurs persistentes."
+    - "LS : correction d'un bug nécessitant un point virgule sur la dernière ligne."
+    - "Marché : correction du scroll de la colonne de droite en bas de page."
+    - Correction de la position des chapeaux sur les jeunes poireaux.
+    - Correction du bug de duplication des poireaux visuellement en combat.
+    - Correction de la limite des registres (5000 au lieu de 4999).
+    - Correction d'un bug d'autocomplétion des fonctions.
+    - Correction du gant de boxe quand une entité se trouve sur la première cellule.
+    - Correction d'une faille du générateur aléatoire (bravo à Karang).
+    - Correction de certaines zones d'effets dans l'affichage du combat (merci à nytope).
+    - Correction du trophée Roxxor.
+    - Correction de l'affichage de pages de certains sujets forum.
+    - Correction de coloration de certains mot-clés dans l'éditeur.
+    - "Rapport : correction de la couleur des équipes dans le tableau des stats (merci à nytope)."
+    - "Rapport : suppression de l'affichage du talent dans les rapports de test (merci à nytope)."
+    - "Combat : correction du raccourci du mode nuit (merci à nytope)."
+
 228:
   title: Cadeaux de Noël, 6 ressources, améliorations LS / éditeur et documentation rapide.
   added:
