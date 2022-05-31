@@ -38,5 +38,9 @@
 	"your_leek_name": "Nom de votre poireau",
 	"skin": "Couleur",
 	"hat": "Chapeau",
-	"play": "Jouer"
+	"play": "Jouer",
+	"play_button": "Jouer !",
+	"fast_register": "Inscription rapide",
+	"classic_register": "Inscription classique",
+	"email_password": "Email / mot de passe"
 }

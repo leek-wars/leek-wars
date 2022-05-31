@@ -35,5 +35,12 @@
 	"total_level": "Total level",
 	"your_email": "Your email",
 	"your_farmer_name": "Your farmer's name",
-	"your_leek_name": "Your leek's name"
+	"your_leek_name": "Your leek's name",
+	"skin": "Color",
+	"hat": "Hat",
+	"play": "Play",
+	"play_button": "Play!",
+	"fast_register": "Fast sign up",
+	"classic_register": "Classic sign up",
+	"email_password": "Email / password"
 }

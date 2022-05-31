@@ -13,8 +13,8 @@
 			</panel>
 			<panel v-if="env.SIGN_UP" :title="fastRegister ? $t('play') : $t('main.signup')" :icon="fastRegister ? 'mdi-sword-cross' : 'mdi-account-plus'">
 				<div slot="actions">
-					<div v-if="fastRegister" class="button" @click="fastRegister = false"><v-icon>mdi-account-plus</v-icon><span>Inscription classique</span></div>
-					<div v-else class="button" @click="fastRegister = true"><v-icon>mdi-flash-outline</v-icon><span>Inscription rapide</span></div>
+					<div v-if="fastRegister" class="button" @click="fastRegister = false"><v-icon>mdi-account-plus</v-icon><span>{{ $t('classic_register') }}</span></div>
+					<div v-else class="button" @click="fastRegister = true"><v-icon>mdi-flash-outline</v-icon><span>{{ $t('fast_register') }}</span></div>
 				</div>
 				<form class="signup-form" method="post" @submit="submit">
 
@@ -68,7 +68,7 @@
 						<tr>
 							<td colspan="2">
 								<v-radio-group v-model="signupMethod" class="radio" :row="true" :dense="true" :hide-details="true">
-									<v-radio label="Email / mot de passe" :value="1" />
+									<v-radio :label="$t('email_password')" :value="1" />
 									<v-radio label="GitHub" :value="2" />
 								</v-radio-group>
 							</td>
@@ -98,7 +98,7 @@
 						<router-link slot="link" to="/conditions">{{ $t('conditions_name') }}</router-link>
 					</i18n>
 					<center>
-						<v-btn v-if="fastRegister" large color="primary" type="submit">Jouer !</v-btn>
+						<v-btn v-if="fastRegister" large color="primary" type="submit">{{ $t('play_button') }}</v-btn>
 						<v-btn v-else-if="signupMethod === 1" large color="primary" type="submit">{{ $t('signup') }}</v-btn>
 						<v-btn v-else color="black" type="submit" class="gh-button"> <img src="/image/github_black.png"> {{ $t('signup_gh') }}</v-btn>
 					</center>
