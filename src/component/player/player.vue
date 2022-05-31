@@ -72,6 +72,9 @@
 					</div>
 					<div ref="progressBar" class="progress-bar" @click="progressBarClick" @mousemove="progressBarMove">
 						<div :style="{width: progressBarWidth + '%'}" class="bar"></div>
+						<span v-for="marker in progressBarMarkers">
+							<div class="marker" :style="{left: marker.left + '%', background: marker.background, outline: marker.resurrect?'2px solid #0F0':'none'}"></div>
+						</span>
 						<div class="circle" :style="{left: progressBarWidth + '%'}"></div>
 						<div class="preview-bar" :style="{width: progressBarPreviewWidth + '%'}"></div>
 					</div>
@@ -200,6 +203,7 @@
 
 <script lang="ts">
 	import { locale } from '@/locale'
+	import { ActionType } from '@/model/action'
 	import { Farmer } from '@/model/farmer'
 	import { Fight, FightType, Report } from '@/model/fight'
 	import { mixins } from '@/model/i18n'
@@ -231,6 +235,7 @@
 		progressBarTurn: any = 0
 		progressBarTooltipMargin: number = 0
 		progressBarPreviewMouse: number = 0
+		progressBarMarkers: any = []
 		width: number = 0
 		height: number = 0
 		timeout: any = null
@@ -427,6 +432,16 @@
 					if (fight.data) {
 						this.getLogs()
 						this.game.init(fight)
+
+						const totalActions = fight.data.actions.length
+						for (let action = 0; action < totalActions; action++) {
+							const resurrect = fight.data.actions[action][0] == ActionType.RESURRECTION
+							if (fight.data.actions[action][0] == ActionType.PLAYER_DEAD || resurrect) {
+								const e = this.game.leeks[fight.data.actions[action][1]]
+								if (e.summon) continue
+								this.progressBarMarkers.push({left: action / totalActions * 100, background: e.lifeColor, resurrect})
+							}
+						}
 					} else {
 						this.error = true
 					}
@@ -838,6 +853,19 @@
 		vertical-align: top;
 		transition: all 0.2s;
 	}
+	.progress-bar .marker {
+		width: 6px;
+		height: 6px;
+		position: absolute;
+		top: 0;
+		z-index: 2;
+		transition: all 0.2s;
+	}
+	.progress-bar-wrapper:hover .marker {
+		width: 6px;
+		height: 12px;
+	}
+
 	.progress-bar .circle {
 		width: 16px;
 		height: 16px;
