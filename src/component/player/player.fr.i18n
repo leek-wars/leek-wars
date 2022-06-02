@@ -1,6 +1,8 @@
 {
 	"accelerate": "Accélérer",
 	"accelerate_again": "Accélérer encore",
+	"prev_action": "Action précédente",
+	"next_action": "Action suivante",
 	"allies": "Alliés",
 	"dark_mode": "Mode nuit",
 	"decelerate": "Décélérer",

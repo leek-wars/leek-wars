@@ -1,6 +1,8 @@
 {
 	"accelerate": "Speed up",
 	"accelerate_again": "Speed up (x2)",
+	"prev_action": "Previous action",
+	"next_action": "Next action",
 	"allies": "Allies",
 	"dark_mode": "Dark mode",
 	"decelerate": "Slow down",

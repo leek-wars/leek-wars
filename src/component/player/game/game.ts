@@ -2422,6 +2422,26 @@ class Game {
 		this.draw()
 	}
 
+	public prevAction() {
+		let i = this.currentAction
+		for (; i>=0; i--) {
+			if (this.actions[i].type !== ActionType.TP_LOST &&
+				this.actions[i].type !== ActionType.MP_LOST &&
+				this.actions[i].type !== ActionType.END_TURN) break;
+		}
+		this.requestJump(i)
+	}
+
+	public nextAction() {
+		let i = this.currentAction + 2
+		for (; i<this.actions.length; i++) {
+			if (this.actions[i].type !== ActionType.TP_LOST &&
+				this.actions[i].type !== ActionType.MP_LOST &&
+				this.actions[i].type !== ActionType.END_TURN) break;
+		}
+		this.requestJump(i)
+	}
+
 	public resourceLoaded(res: string) { // variable "res" utile pour débug
 		this.loadedData++
 		if (this.cancelled) { return }

@@ -96,6 +96,18 @@
 				</v-tooltip>
 				<v-tooltip :open-delay="0" :close-delay="0" top content-class="top" :attach="$refs.player">
 					<template v-slot:activator="{ on }">
+						<v-icon v-ripple class="control" v-on="on" @click="game.prevAction()">mdi-skip-previous</v-icon>
+					</template>
+					{{ $t('prev_action') }} (←)
+				</v-tooltip>
+				<v-tooltip :open-delay="0" :close-delay="0" top content-class="top" :attach="$refs.player">
+					<template v-slot:activator="{ on }">
+						<v-icon v-ripple class="control" v-on="on" @click="game.nextAction()">mdi-skip-next</v-icon>
+					</template>
+					{{ $t('next_action') }} (→)
+				</v-tooltip>
+				<v-tooltip :open-delay="0" :close-delay="0" top content-class="top" :attach="$refs.player">
+					<template v-slot:activator="{ on }">
 						<v-icon v-ripple class="control" :style="{opacity: game.speedButtonVisible ? 1 : 0}" v-on="on" @click="game.speedUp()">mdi-fast-forward</v-icon>
 					</template>
 					{{ $t('accelerate') }} (S)
@@ -399,6 +411,10 @@
 			} else if (e.keyCode === 83) { // S
 				this.game.speedUp()
 				e.preventDefault()
+			} else if (e.keyCode === 37) { // left arrow
+				this.game.prevAction()
+			} else if (e.keyCode === 39) { // right arrow
+				this.game.nextAction()
 			} else if (e.keyCode === 70) { // F
 				this.toggleFullscreen()
 				e.preventDefault()
