@@ -73,7 +73,7 @@
 					<div ref="progressBar" class="progress-bar" @click="progressBarClick" @mousemove="progressBarMove">
 						<div :style="{width: progressBarWidth + '%'}" class="bar"></div>
 						<span v-for="marker in progressBarMarkers">
-							<div class="marker" :style="{left: marker.left + '%', background: marker.background, outline: marker.resurrect?'2px solid #0F0':'none'}"></div>
+							<div class="marker" :style="{left: marker.left + '%', width:marker.right + '%', background: marker.background, outline: marker.outline}"></div>
 						</span>
 						<div class="circle" :style="{left: progressBarWidth + '%'}"></div>
 						<div class="preview-bar" :style="{width: progressBarPreviewWidth + '%'}"></div>
@@ -435,11 +435,16 @@
 
 						const totalActions = fight.data.actions.length
 						for (let action = 0; action < totalActions; action++) {
-							const resurrect = fight.data.actions[action][0] == ActionType.RESURRECTION
-							if (fight.data.actions[action][0] == ActionType.PLAYER_DEAD || resurrect) {
+							const isDeath = fight.data.actions[action][0] == ActionType.PLAYER_DEAD
+							const isResurrect = fight.data.actions[action][0] == ActionType.RESURRECTION
+							if (isDeath || isResurrect) {
 								const e = this.game.leeks[fight.data.actions[action][1]]
-								if (e.summon) continue
-								this.progressBarMarkers.push({left: action / totalActions * 100, background: e.lifeColor, resurrect})
+								let left = action / totalActions * 100
+								let width = Math.max(100 / totalActions, 0.5)
+								if (left + width > 100) left -= left + width - 100
+								const background =  e.summon ? e.lifeColorLighter : e.lifeColor
+								const outline = isResurrect ? '2px solid #0F0' : '2px solid #000'
+								this.progressBarMarkers.unshift({left, width, background, outline})
 							}
 						}
 					} else {
