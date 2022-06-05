@@ -339,7 +339,6 @@
 	}
 	.app-wrapper.flex {
 		display: inline-block;
-		min-width: 1100px;
 		flex: 0;
 	}
 	.app-wrapper.box {
