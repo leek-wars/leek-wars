@@ -24,8 +24,8 @@
 				<markdown v-else :content="section" :pages="{}" mode="encyclopedia" />
 			</div>
 			<div class="operations">
-				<b v-if="fun.operations == -1" v-html="$t('doc.variable_operations')"></b>
-				<span v-else><b>{{ fun.operations }}</b> opérations</span>
+				<span v-if="fun.complexity == 1"><b>{{ fun.operations }}</b> opérations</span>
+				<span v-else>Complexité <b>{{ LeekWars.complexities[fun.complexity] }}</b></span>
 			</div>
 			<div v-if="Object.values(new_fun.secondary).length" class="expand" @click="expanded = !expanded">Détails ({{ Object.values(new_fun.secondary).length }})<v-icon v-if="expanded">mdi-chevron-up</v-icon><v-icon v-else>mdi-chevron-down</v-icon></div>
 			<div v-if="expanded" class="secondary">
@@ -53,8 +53,8 @@
 				</ul>
 			</div>
 			<div class="operations">
-				<b v-if="fun.operations == -1" v-html="$t('doc.variable_operations')"></b>
-				<span v-else><b>{{ fun.operations }}</b> opérations</span>
+				<span v-if="fun.complexity == 1"><b>{{ fun.operations }}</b> opérations</span>
+				<span v-else>Complexité <b>{{ LeekWars.complexities[fun.complexity] }}</b></span>
 			</div>
 		</div>
 	</div>
@@ -146,7 +146,7 @@
 		cursor: pointer;
 		display: inline-flex;
 		align-items: center;
-		padding-top: 8px;
+		padding-top: 12px;
 		user-select: none;
 	}
 	.encyclo {

@@ -5,7 +5,7 @@ import { env } from '@/env'
 import { BattleRoyale } from '@/model/battle-royale'
 import { ChipTemplate } from '@/model/chip'
 import { Commands } from '@/model/commands'
-import { CHIP_TEMPLATES, CHIPS, CONSTANTS, FUNCTIONS, HAT_TEMPLATES, HATS, ITEMS, POMPS, POTIONS, SUMMON_TEMPLATES, TROPHIES, TROPHY_CATEGORIES, WEAPONS } from '@/model/data'
+import { CHIP_TEMPLATES, CHIPS, CONSTANTS, FUNCTIONS, HAT_TEMPLATES, HATS, ITEMS, POMPS, POTIONS, SUMMON_TEMPLATES, TROPHIES, TROPHY_CATEGORIES, WEAPONS, COMPLEXITIES } from '@/model/data'
 import { Emojis } from '@/model/emojis'
 import { LSFunction } from '@/model/function'
 import { Socket } from '@/model/socket'
@@ -594,6 +594,7 @@ const LeekWars = {
 	orderedChips: Object.freeze(ORDERED_CHIPS),
 	orderedWeapons: Object.freeze(ORDERED_WEAPONS),
 	potionsBySkin: Object.freeze(POTIONS_BY_SKIN),
+	complexities: Object.freeze(COMPLEXITIES),
 	keywords: [] as Keyword[],
 	characteristics: Object.freeze(['life', 'strength', 'wisdom', 'agility', 'resistance', 'science', 'magic', 'frequency', 'mp', 'tp']),
 	characteristics_table: Object.freeze(['life', 'science', 'strength', 'magic', 'wisdom', 'frequency', 'agility', 'mp', 'resistance', 'tp']),
