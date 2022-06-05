@@ -16,6 +16,7 @@ const values = [
 	['trophies', 'trophies', 'trophy/get-all'],
 	['trophy_categories', 'trophy_categories', 'trophy/get-categories'],
 	['items', null, 'item/get-all', '{[key: string]: ItemTemplate}'],
+	['complexities', null, 'complexity/get-all', '{[key: string]: string}'],
 ]
 const promises = []
 
