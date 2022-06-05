@@ -55,7 +55,7 @@
 			<div v-if="$store.state.farmer && !$store.state.farmer.verified" class="finish-register">
 				<div class="message">
 					<v-icon>mdi-account-plus</v-icon>
-					Terminer votre inscription avec votre adresse e-mail pour ne pas perdre votre compte. <router-link class="green-link" to="/settings">Plus d'informations</router-link>
+					{{ $t('verify_message') }} <router-link class="green-link" to="/settings">{{ $t('verify_info') }}</router-link>
 				</div>
 			</div>
 

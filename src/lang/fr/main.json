@@ -174,5 +174,7 @@
 	"too_heavy": "",
 	"unsupported_extension": "",
 	"validate": "Valider",
-	"weapons": "Armes"
+	"weapons": "Armes",
+	"verify_message": "Terminer votre inscription avec votre adresse e-mail pour ne pas perdre votre compte.",
+	"verify_info": "Plus d'informations"
 }
