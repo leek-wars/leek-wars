@@ -21,8 +21,8 @@ const promises = []
 
 let r = 0
 for (const value of values) {
-	const host = 'http://localhost:8500/'
-	// const host = 'https://leekwars.com/'
+	// const host = 'http://localhost:8500/'
+	const host = 'https://leekwars.com/'
 	setTimeout(() => {
 		const p = request(host + 'api/' + value[2])
 		promises.push(p.then((data) => {
