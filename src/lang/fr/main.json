@@ -186,5 +186,8 @@
 	"didactitial": "Didactitiel",
 	"no_cookies": "Pas de cookies tiers",
 	"made_in_france": "Fait en France",
-	"add_capital_title": "Ajouter des points de capital"
+	"add_capital_title": "Ajouter des points de capital",
+	"retrieve": "Récupérer",
+	"estimated_value": "Valeur estimée",
+	"lot_value": "Valeur du lot"
 }

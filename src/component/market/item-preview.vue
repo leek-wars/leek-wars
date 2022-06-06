@@ -26,14 +26,14 @@
 
 		<div v-if="inventory" class="stats inventory">
 			<div>
-				Valeur estimée : <b>{{ item.price | number }}</b> <span class='hab'></span>
+				{{ $t('main.estimated_value') }} : <b>{{ item.price | number }}</b> <span class='hab'></span>
 			</div>
 			<div v-if="quantity > 1">
-				Valeur du lot : <b>{{ item.price * quantity | number }}</b> <span class='hab'></span>
+				{{ $t('main.lot_value') }} : <b>{{ item.price * quantity | number }}</b> <span class='hab'></span>
 			</div>
 			<div v-if="item.name.startsWith('box') || (LeekWars.christmasPresents && item.name.startsWith('present'))">
-				<v-btn small class="get-all notif-trophy" @click.stop="retrieveN(1)">Récupérer <img src="/image/icon/black/arrow-down-right-bold.svg"></v-btn>
-				<v-btn v-if="quantity >= 10" small class="get-all notif-trophy" @click.stop="retrieveN(10)">Récupérer x10 <img src="/image/icon/black/arrow-down-right-bold.svg"></v-btn>
+				<v-btn small class="get-all notif-trophy" @click.stop="retrieveN(1)">{{ $t('main.retrieve') }} <img src="/image/icon/black/arrow-down-right-bold.svg"></v-btn>
+				<v-btn v-if="quantity >= 10" small class="get-all notif-trophy" @click.stop="retrieveN(10)">{{ $t('main.retrieve') }} x10 <img src="/image/icon/black/arrow-down-right-bold.svg"></v-btn>
 			</div>
 		</div>
 	</div>
