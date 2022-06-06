@@ -7,7 +7,7 @@
 				<v-icon v-if="modified" class="modified">mdi-record</v-icon>
 			</h1>
 			<div v-if="page" class="tabs">
-				<div v-if="page.id === 1" class="tab disabled" icon="search" link="/search">
+				<div v-if="page.id === 1 || page.id === 326" class="tab disabled" icon="search" link="/search">
 					<img class="search-icon" src="/image/search.png" @click="search">
 					<input v-model="searchQuery" type="text" :placeholder="$t('search')" @keyup.enter="search">
 				</div>
@@ -98,6 +98,7 @@
 
 <script lang="ts">
 	import Markdown from '@/component/encyclopedia/markdown.vue'
+import { locale } from '@/locale'
 	import { mixins } from '@/model/i18n'
 	import { Leek } from '@/model/leek'
 	import { LeekWars } from '@/model/leekwars'
@@ -125,7 +126,7 @@
 		]
 
 		get code() {
-			return 'page' in this.$route.params ? this.$route.params.page.replace(/_/g, ' ') : 'Encyclopédie'
+			return 'page' in this.$route.params ? this.$route.params.page.replace(/_/g, ' ') : (locale == 'fr' ? 'Accueil en Français' : 'Encyclopédie')
 		}
 		get title() {
 			return this.page ? this.page.title : 'Encyclopedia'
