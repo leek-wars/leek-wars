@@ -60,28 +60,33 @@
 									</router-link>
 								</rich-tooltip-farmer>
 							</div>
-							<div class="views"><b>{{ page.views | number }}</b> vues</div>
+							<i18n tag="div" path="n_views" class="views"><b slot="v">{{ page.views | number }}</b></i18n>
 							<div class="fill"></div>
 							<v-icon @click="statsExpanded = !statsExpanded">{{ statsExpanded ? 'mdi-chevron-up' : 'mdi-chevron-down' }}</v-icon>
 						</div>
 
 						<div v-if="statsExpanded" class="expanded-stats">
 							<div>
-								Créée par <rich-tooltip-farmer :id="page.creator" v-slot="{ on }">
-									<router-link :to="'/farmer/' + page.creator"><span v-on="on">{{ page.creator_name }}</span></router-link>
-								</rich-tooltip-farmer>
-								le {{ page.creation_time | datetime }}
+								<i18n path="created_by_x_the_y">
+									<template slot="farmer">
+										<rich-tooltip-farmer :id="page.creator" v-slot="{ on }">
+											<router-link :to="'/farmer/' + page.creator"><span v-on="on">{{ page.creator_name }}</span></router-link>
+										</rich-tooltip-farmer>
+									</template>
+									<span slot="date">{{ page.creation_time | datetime }}</span>
+								</i18n>
 
-								<div v-if="page.last_editor">
-									Éditée par <rich-tooltip-farmer :id="page.last_editor" v-slot="{ on }">
-										<router-link :to="'/farmer/' + page.last_editor"><span v-on="on">{{ page.last_editor_name }}</span></router-link>
-									</rich-tooltip-farmer>
-									le {{ page.last_edition_time | datetime }}
-								</div>
+								<i18n path="edited_by_x_the_y" tag="div" v-if="page.last_editor">
+									<template slot="farmer">
+										<rich-tooltip-farmer :id="page.last_editor" v-slot="{ on }">
+											<router-link :to="'/farmer/' + page.last_editor"><span v-on="on">{{ page.last_editor_name }}</span></router-link>
+										</rich-tooltip-farmer>
+									</template>
+									<span slot="date">{{ page.last_edition_time | datetime }}</span>
+								</i18n>
 							</div>
 							<div>
-								<b>{{ page.contributions | number }}</b> modifications
-								<br>
+								<i18n tag="div" path="n_contributions"><b slot="n">{{ page.contributions | number }}</b></i18n>
 								<b>{{ page.content.split('\n').length }}</b> lignes — <b>{{ page.content.split(' ').length }}</b> mots — <b>{{ page.content.length }}</b> caractères
 							</div>
 						</div>

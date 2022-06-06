@@ -1,4 +1,8 @@
 {
     "n_contributors": "Aucun contributeur | <b>{n}</b> contributeur | <b>{n}</b> contributeurs",
-    "search": "Rechercher une page"
+    "search": "Rechercher une page",
+    "created_by_x_the_y": "Créée par {farmer} le {date}",
+    "edited_by_x_the_y": "Éditée par {farmer} le {date}",
+    "n_views": "{v} vues",
+    "n_contributions": "{n} contributions"
 }

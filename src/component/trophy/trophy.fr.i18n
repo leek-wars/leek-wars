@@ -16,5 +16,9 @@
 	"title": "Trophées de {0}",
 	"title_me": "Mes trophées",
 	"trophies": "Trophées",
-	"unique": "Unique"
+	"unique": "Unique",
+	"trophy": "Trophée",
+	"n_points": "{p} points",
+	"rewards": "Récompenses",
+	"stats": "Statistiques"
 }

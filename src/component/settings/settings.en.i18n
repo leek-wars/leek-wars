@@ -51,5 +51,6 @@
 	"your_email": "Your email address",
 	"password": "Password",
 	"verify": "Verify account",
-	"verify_gh": "Verify with GitHub"
+	"verify_gh": "Verify with GitHub",
+	"allow_github": "Allow connection via GitHub"
 }

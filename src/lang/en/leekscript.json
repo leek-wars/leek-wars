@@ -116,7 +116,9 @@
 	"error_79": "This field is protected in class \"{0}\"",
 	"error_91": "This field \"{0}\" is reserved",
 	"error_92": "This value \"{0}\" is not an array or an object.",
-	"error_1000": "No weapon equipped",
-	"error_1001": "This {0} {1} chip is not equipped",
-	"error_1002": "This {0} {1} chip does not exist"
+	"error_1000": "No weapon equipped. You must first equip a weapon with setWeapon(WEAPON_*).",
+	"error_1001": "This chip {1} (id {0}) is not equipped. You must first equip it on the page of your leek.",
+	"error_1002": "This chip {0} does not exist. Use the CHIP_* constants to retrieve a valid chip.",
+	"error_1003": "This weapon {0} does not exist. Use the WEAPON_* constants to retrieve a valid weapon.",
+	"error_1004": "This weapon {1} (id {0}) is not equipped. You must first equip it on the page of your leek."
 }

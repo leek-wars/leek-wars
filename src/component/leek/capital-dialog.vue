@@ -1,7 +1,7 @@
 <template>
 	<popup :value="value" :width="800" @input="$emit('input', $event)">
 		<v-icon slot="icon">mdi-star-outline</v-icon>
-		<span slot="title">Ajouter des points de capital ({{ totalCapital }})</span>
+		<span slot="title">{{ $t('main.add_capital_title') }} ({{ totalCapital }})</span>
 
 		<center><div v-if="totalCapital" :class="{zero: capital == 0}" class="capital rounded4">{{ $t('main.n_capital', [capital]) }}</div></center>
 
