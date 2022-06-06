@@ -69,5 +69,6 @@
 	"test_desc": "Tester une IA",
 	"title": "Éditeur",
 	"v2_beta_message": "[bêta] Le LeekScript V2 est uniquement disponible pour les combats de test, pas encore pour les combats 'classés'.",
-	"valid_ai": "<b>{0}</b> valide"
+	"valid_ai": "<b>{0}</b> valide",
+	"file": "Fichier"
 }

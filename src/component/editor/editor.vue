@@ -6,7 +6,7 @@
 				<!-- <div v-if="currentAI" class="info">{{ currentAI.name }}</div> -->
 				<div class="tabs">
 					<div ref="fileButton" class="tab first action" icon="settings">
-						<v-icon>mdi-file-outline</v-icon> Fichier
+						<v-icon>mdi-file-outline</v-icon> {{ $t('file') }}
 					</div>
 					<v-menu v-model="fileMenu" :activator="LeekWars.mobile ? addMenuActivator : $refs.fileButton" offset-y>
 						<v-list>

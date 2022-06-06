@@ -178,6 +178,9 @@
 						<br>
 						<span v-if="farmer.connected">{{ $t('connected') }}</span>
 						<span v-else>{{ $t('last_connection', [LeekWars.formatDuration(farmer.last_connection)]) }}</span>
+						<br>
+						<span v-if="farmer.verified">{{ $t('verified') }}</span>
+						<span v-else>{{ $t('not_verified') }}</span>
 					</div>
 					<div v-if="farmer" class="grades">
 						<div v-if="farmer.admin" class="grade admin">{{ $t('admin') }}</div>
@@ -518,9 +521,10 @@
 	import { Warning } from '@/model/moderation'
 	import { store } from '@/model/store'
 	import { Team } from '@/model/team'
+	import { mixins } from '@/model/i18n'
 	import { Component, Vue, Watch } from 'vue-property-decorator'
 
-	@Component({ name: "farmer", i18n: {} })
+	@Component({ name: "farmer", i18n: {}, mixins })
 	export default class FarmerPage extends Vue {
 		farmer: Farmer | null = null
 		trophies: any = null
