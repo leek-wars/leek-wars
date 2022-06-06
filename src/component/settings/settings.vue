@@ -148,9 +148,12 @@
 					<span class="label">{{ $t('delete_account') }}</span>
 					<v-icon>{{ viewDeleteAccount ? 'mdi-menu-up' : 'mdi-menu-down' }}</v-icon>
 				</div>
-				<v-btn v-if="viewDeleteAccount" @click="deleteDialog = true" color="error">{{ $t('delete_account') }}</v-btn>
+				<div v-if="viewDeleteAccount">
+					<v-btn @click="deleteDialog = true" color="error">{{ $t('delete_account') }}</v-btn>
+					<br><br>
+				</div>
 
-				<v-switch v-if="$store.state.farmer && $store.state.farmer.verified" v-model="settings.github_login" :disabled="!$store.state.farmer.pass" label="Autoriser la connexion via GitHub" @change="updateGithubLogin" />
+				<v-switch v-if="$store.state.farmer && $store.state.farmer.verified" v-model="settings.github_login" :disabled="!$store.state.farmer.pass" :label="$t('allow_github')" @change="updateGithubLogin" />
 			</panel>
 
 			<panel v-if="$store.state.farmer && $store.state.farmer.verified" title="Notifications" icon="mdi-bell-outline">

@@ -66,5 +66,6 @@
 	"your_email": "Votre adresse email",
 	"password": "Mot de passe",
 	"Vérifier" : "Vérifier le compte",
-	"verify_gh" : "Vérifier avec GitHub"
+	"verify_gh" : "Vérifier avec GitHub",
+	"allow_github": "Autoriser la connexion via GitHub"
 }

@@ -12,5 +12,9 @@
 	"title": "Trophies of {0}",
 	"title_me": "My trophies",
 	"trophies": "Trophies",
-	"unique": "Unique"
+	"unique": "Unique",
+	"trophy": "Trophy",
+	"n_points": "{p} points",
+	"rewards": "Rewards",
+	"stats": "Statistics"
 }

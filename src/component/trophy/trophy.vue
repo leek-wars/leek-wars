@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<div class="page-bar page-header">
-			<h1>Trophée « {{ $t('trophy.' + code) }} »</h1>
+			<h1>{{ $t('trophy') }} « {{ $t('trophy.' + code) }} »</h1>
 		</div>
 		<panel v-if="trophy" class="first">
 			<div class="flex">
@@ -9,7 +9,9 @@
 				<div class="right">
 					<div class="name">
 						{{ $t('trophy.' + code) }}
-						<div v-if="trophy.points" class="points">{{ trophy.points }} points</div>
+						<i18n tag="div" path="n_points" v-if="trophy.points" class="points">
+							<template slot="p">{{ trophy.points }}</template>
+						</i18n>
 					</div>
 					<div class="description">{{ trophy.description }}</div>
 					<div class="badges">
@@ -23,7 +25,7 @@
 			</div>
 			<div class="stats">
 				<div>
-					<h4><v-icon>mdi-treasure-chest</v-icon> Récompenses</h4>
+					<h4><v-icon>mdi-treasure-chest</v-icon> {{ $t('rewards') }}</h4>
 					<div class="rarity">
 						<ul>
 							<li v-if="trophy.habs"><span class="hab"></span> {{ trophy.habs | number }} habs</li>
@@ -50,7 +52,7 @@
 					<router-link v-if="trophy.fight" class="rarity" :to="'/fight/' + trophy.fight">Voir le combat</router-link>
 				</div>
 				<div>
-					<h4><v-icon>mdi-chart-line</v-icon> Statistiques</h4>
+					<h4><v-icon>mdi-chart-line</v-icon> {{ $t('stats') }}</h4>
 					<div class="rarity">{{ (trophy.rarity * 100).toPrecision(2) }}% • {{ trophy.total | number }} possesseurs</div>
 				</div>
 			</div>
@@ -80,7 +82,7 @@
 	import { mixins } from '@/model/i18n'
 	import { ItemType } from '@/model/item'
 	import { LeekWars } from '@/model/leekwars'
-	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
+	import { Component, Vue, Watch } from 'vue-property-decorator'
 
 	@Component({ name: 'trophy', i18n: {}, mixins: [...mixins] })
 	export default class Trophy extends Vue {
