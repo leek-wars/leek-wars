@@ -8,10 +8,7 @@
 					<span v-else>{{ $t('effect.range', [chip.min_range, chip.max_range]) }}</span>
 					&nbsp;
 					<span v-if="chip.launch_type == 0">{{ $t('effect.in_lign') }}</span>
-					<div v-if="chip.los === 0">
-						[<b>{{ $t('effect.through_obstacles') }}</b>]
-					</div>
-					<div v-else-if="!chip.los === 2">
+					<div v-if="!chip.los">
 						[<b>{{ $t('effect.through_obstacles') }}</b>]
 					</div>
 				</span>
