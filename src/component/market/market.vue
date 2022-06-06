@@ -171,7 +171,7 @@
 			<div class="tabs">
 				<router-link to="/help/items" class="tab">
 					<v-icon>mdi-chart-timeline-variant</v-icon>
-					<span class="report-button">Progression des items</span>
+					<span class="report-button">{{ $t('item_progress') }}</span>
 				</router-link>
 			</div>
 		</div>
@@ -513,7 +513,6 @@
 					buyable_crystals: true,
 					sellable: false,
 					type: ItemType.FIGHT_PACK,
-					description: this.$t('n_fights_desc', [count]),
 					leeks: [],
 					leek_objs: [],
 					leek_count: 0,
