@@ -87,7 +87,7 @@ const WeaponsData = {
 	// MysteriousElectrisor
 	19: { width: 153, height: 57, centerX: 5, centerZ: 52, x: -22, z: -15, hand1x: 42, hand1z: 31, hand2x: 72, hand2z: 34, sx: 170, sz: 30, top: 9, bottom: 33, white: false },
 	// UnbridledGazor
-	20: { width: 164, height: 81, centerX: 15, centerZ: 40, x: -30, z: -35, hand1x: 28, hand1z: 52, hand2x: 74, hand2z: 50, top: 17, bottom: 45, white: false },
+	20: { width: 164, height: 81, centerX: 15, centerZ: 40, x: -30, z: -35, hand1x: 28, hand1z: 52, hand2x: 74, hand2z: 50, sx: 170, sz: 30, top: 17, bottom: 45, white: false },
 	// RevokedMLaser
 	21: { width: 194, height: 56, centerX: 15, centerZ: 38, x: -70, z: -20, hand1x: 70, hand1z: 34, hand2x: 115, hand2z: 34, sx: 194, sz: 25, cartX: 60, cartZ: 20, cartAngle: Math.PI / 2, recoilForce: 18, angleForce: 0, top: 4, bottom: 34, white: false },
 	// Rifle
