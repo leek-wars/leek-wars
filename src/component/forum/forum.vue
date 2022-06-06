@@ -73,9 +73,9 @@
 				<span v-if="connected_farmers.length">{{ $t('connected_farmers', [$store.state.connected_farmers]) }}</span>
 			</span>
 			<div slot="actions">
-				<div class="button flat">
-					<v-icon v-if="expandFarmers" @click="expandFarmers = !expandFarmers">mdi-chevron-down</v-icon>
-					<v-icon v-else @click="expandFarmers = !expandFarmers">mdi-chevron-up</v-icon>
+				<div class="button flat" @click="expandFarmers = !expandFarmers">
+					<v-icon v-if="expandFarmers">mdi-chevron-down</v-icon>
+					<v-icon v-else>mdi-chevron-up</v-icon>
 				</div>
 			</div>
 			<loader v-if="!connected_farmers.length" />
