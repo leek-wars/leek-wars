@@ -1,3 +1,4 @@
 {
-    "n_contributors": "Aucun contributeur | <b>{n}</b> contributeur | <b>{n}</b> contributeurs"
+    "n_contributors": "Aucun contributeur | <b>{n}</b> contributeur | <b>{n}</b> contributeurs",
+    "search": "Rechercher une page"
 }

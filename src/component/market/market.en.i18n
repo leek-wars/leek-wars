@@ -28,7 +28,6 @@
 	"hats": "Hats",
 	"hat_selled": "Hat sold!",
 	"n_fights": "{0} fights",
-	"n_fights_desc": "Pack of {0} fights to be used immediately",
 	"new_item_unlocked": "New object unlocked!",
 	"not_sellable": "Item not sellable",
 	"pomps": "Pomps",
@@ -46,5 +45,6 @@
 	"weapon": "Weapon",
 	"weapon_bought": "Weapon bought!",
 	"weapons": "Weapons",
-	"weapon_selled": "Weapon sold!"
+	"weapon_selled": "Weapon sold!",
+	"item_progress": "Item progress"
 }

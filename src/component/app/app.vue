@@ -55,7 +55,7 @@
 			<div v-if="$store.state.farmer && !$store.state.farmer.verified" class="finish-register">
 				<div class="message">
 					<v-icon>mdi-account-plus</v-icon>
-					{{ $t('verify_message') }} <router-link class="green-link" to="/settings">{{ $t('verify_info') }}</router-link>
+					{{ $t('main.verify_message') }} <router-link class="green-link" to="/settings">{{ $t('main.verify_info') }}</router-link>
 				</div>
 			</div>
 

@@ -176,5 +176,14 @@
 	"validate": "Valider",
 	"weapons": "Armes",
 	"verify_message": "Terminer votre inscription avec votre adresse e-mail pour ne pas perdre votre compte.",
-	"verify_info": "Plus d'informations"
+	"verify_info": "Plus d'informations",
+	"verify_chat": "Vérifiez votre compte pour discuter",
+	"donation": "Faire un don",
+	"discover": "Découverte",
+	"resources_help": "Ressources et aide",
+	"developers": "Développeurs",
+	"fun_ranking": "Classements fun",
+	"didactitial": "Didactitiel",
+	"no_cookies": "Pas de cookies tiers",
+	"made_in_france": "Fait en France"
 }

@@ -28,7 +28,6 @@
 	"hats": "Chapeaux",
 	"hat_selled": "Chapeau revendu !",
 	"n_fights": "{0} combats",
-	"n_fights_desc": "Pack de {0} combats à utiliser immédiatement",
 	"new_item_unlocked": "Nouvel objet débloqué !",
 	"not_sellable": "Item non revendable",
 	"pomps": "Apparats",
@@ -46,5 +45,6 @@
 	"weapon": "Arme",
 	"weapon_bought": "Arme achetée !",
 	"weapons": "Armes",
-	"weapon_selled": "Arme revendue !"
+	"weapon_selled": "Arme revendue !",
+	"item_progress": "Progression des items"
 }

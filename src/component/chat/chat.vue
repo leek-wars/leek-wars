@@ -15,7 +15,7 @@
 		</div>
 		<div v-if="$store.state.wsdisconnected" class="chat-disconnected">{{ $t('main.disconnected') }}</div>
 		<div v-if="$store.state.farmer && !$store.state.farmer.verified" class="verify">
-			<router-link class="green-link" to="/settings">Vérifiez votre compte pour discuter</router-link>
+			<router-link class="green-link" to="/settings">{{ $t('main.verify_chat') }}</router-link>
 		</div>
 		<chat-input v-else @message="sendMessage" />
 
