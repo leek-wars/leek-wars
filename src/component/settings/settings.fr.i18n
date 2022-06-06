@@ -52,5 +52,19 @@
 	"your_farmer_name": "Votre nom d'éleveur",
 	"godfather": "Parrain (Facultatif)",
 	"verify": "Vérifier le compte",
-	"verify_gh": "Vérifier avec GitHub"
+	"verify_gh": "Vérifier avec GitHub",
+	"verify_message": "Vous n'avez pas ajouté d'adresse email, vous pouvez perdre l'accès à votre compte si vous changer d'appareil, de navigateur.",
+	"verify_tip": "Conseil : garder le cookie qui contient votre identifiant, si vous le perdez vous perdez complètement l'accès au compte.",
+	"verify_pros": "Une fois votre compte vérifié, vous pourrez : ",
+	"verify_pro1": "Garder l'accès à votre compte",
+	"verify_pro2": "Se connecter sur un autre appareil",
+	"verify_pro3": "Forum, chats, messages privés",
+	"verify_pro4": "Acheter des cristaux",
+	"verify_pro5": "Battle Royales",
+	"your_farmer_name": "Votre nom d'éleveur",
+	"godfather": "Votre parrain (facultatif)",
+	"your_email": "Votre adresse email",
+	"password": "Mot de passe",
+	"Vérifier" : "Vérifier le compte",
+	"verify_gh" : "Vérifier avec GitHub"
 }

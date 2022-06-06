@@ -12,18 +12,18 @@
 		<panel v-if="$store.state.farmer && !$store.state.farmer.verified" :title="$t('verify')" icon="mdi-account-plus">
 			<div class="verify">
 				<div>
-					<div><b><v-icon>mdi-information-outline</v-icon> Vous n'avez pas ajouté d'adresse email, vous pouvez perdre l'accès à votre compte si vous changer d'appareil, de navigateur.</b></div>
+					<div><b><v-icon>mdi-information-outline</v-icon> {{ $t('verify_message') }}</b></div>
 					<br>
-					<div>Conseil : garder le cookie qui contient votre identifiant, si vous le perdez vous perdez complètement l'accès au compte.</div>
+					<div>{{ $t('verify_tip') }}</div>
 					<br>
 					<div>
-						Une fois votre compte vérifié, vous pourrez :
+						{{ $t('verify_pros') }}
 						<ul>
-							<li><v-icon>mdi-check</v-icon> Garder l'accès à votre compte</li>
-							<li><v-icon>mdi-check</v-icon> Se connecter sur un autre appareil</li>
-							<li><v-icon>mdi-check</v-icon> Forum, chats, messages privés</li>
-							<li><v-icon>mdi-check</v-icon> Acheter des cristaux</li>
-							<li><v-icon>mdi-check</v-icon> Battle Royales</li>
+							<li><v-icon>mdi-check</v-icon> {{ $t('verify_pro1') }}</li>
+							<li><v-icon>mdi-check</v-icon> {{ $t('verify_pro2') }}</li>
+							<li><v-icon>mdi-check</v-icon> {{ $t('verify_pro3') }}</li>
+							<li><v-icon>mdi-check</v-icon> {{ $t('verify_pro4') }}</li>
+							<li><v-icon>mdi-check</v-icon> {{ $t('verify_pro5') }}</li>
 						</ul>
 					</div>
 				</div>

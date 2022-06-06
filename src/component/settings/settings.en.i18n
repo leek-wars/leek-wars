@@ -37,5 +37,19 @@
 	"password_changed": "Password changed!",
 	"push_notifications": "Push notifications",
 	"title": "Settings",
-	"chat_first": "Display the Chat page first"
+	"chat_first": "Display the Chat page first",
+	"verify_message": "You have not added an email address, you may lose access to your account if you change device, browser.",
+	"verify_tip": "Tip: keep the cookie that contains your login, if you lose it you completely lose access to the account.",
+	"verify_pros": "Once your account is verified, you will be able to:",
+	"verify_pro1": "Keep access to your account",
+	"verify_pro2": "Log in on another device",
+	"verify_pro3": "Forum, chats, private messages",
+	"verify_pro4": "Buy crystals",
+	"verify_pro5": "Battle Royales",
+	"your_farmer_name": "Your farmer name",
+	"godfather": "Your godfather (optional)",
+	"your_email": "Your email address",
+	"password": "Password",
+	"verify": "Verify account",
+	"verify_gh": "Verify with GitHub"
 }

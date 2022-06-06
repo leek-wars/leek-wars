@@ -175,5 +175,16 @@
 	"unsupported_extension": "",
 	"validate": "Validate",
 	"weapons": "Weapons",
-	"workshop": "Workshop"
+	"workshop": "Workshop",
+	"verify_message": "Complete your registration with your email address so you don't lose your account.",
+	"verify_info": "More information",
+	"verify_chat": "Verify your account to chat",
+	"donation": "Make a donation",
+	"discover": "Discover",
+	"resources_help": "Resources and help",
+	"developers": "Developers",
+	"fun_ranking": "Fun rankings",
+	"didactitial": "Didactial",
+	"no_cookies": "No third party cookies",
+	"made_in_france": "Made in France"
 }

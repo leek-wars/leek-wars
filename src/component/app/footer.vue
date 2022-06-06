@@ -4,23 +4,22 @@
 			<h4 class="version">Leek Wars {{ LeekWars.smart_version }}</h4>
 			<router-link to="/about" class="item">{{ $t('main.about') }}</router-link>
 			<router-link to="/statistics" class="item">{{ $t('main.statistics') }}</router-link>
-			<router-link to="/ranking/fun" class="item">Classements fun</router-link>
+			<router-link to="/ranking/fun" class="item">{{ $t('main.fun_ranking') }}</router-link>
 			<router-link to="/app" class="item">{{ $t('main.app') }}</router-link>
 			<router-link to="/bank" class="item">
-				Faire un don <v-icon>mdi-currency-eur</v-icon>
+				{{ $t('main.donation') }} <v-icon>mdi-currency-eur</v-icon>
 			</router-link>
 		</div>
 		<div class="column">
-			<h4>Ressources et aide</h4>
-			<router-link to="/help/general" class="item">Découverte</router-link>
-			<router-link to="/help/tutorial" class="item">Tutoriel</router-link>
-			<router-link to="/help/documentation" class="item">Documentation</router-link>
-			<router-link to="/encyclopedia" class="item">Encyclopédie <v-icon>mdi-book-open-page-variant</v-icon></router-link>
-			<!-- <a href="https://leekwarswiki.net" target="_blank" rel="noopener" class="item">Wiki <v-icon>mdi-open-in-new</v-icon></a> -->
-			<a class="item" @click="show_didactitiel">Didactitiel <v-icon>mdi-dock-window</v-icon></a>
+			<h4>{{ $t('main.resources_help') }}</h4>
+			<router-link to="/help/general" class="item">{{ $t('main.discover') }}</router-link>
+			<router-link to="/help/tutorial" class="item">{{ $t('main.tutorial') }}</router-link>
+			<router-link to="/help/documentation" class="item">{{ $t('main.documentation') }}</router-link>
+			<router-link to="/encyclopedia" class="item">{{ $t('main.encyclopedia') }} <v-icon>mdi-book-open-page-variant</v-icon></router-link>
+			<a class="item" @click="show_didactitiel">{{ $t('main.didactitial') }} <v-icon>mdi-dock-window</v-icon></a>
 		</div>
 		<div class="column">
-			<h4>Développeurs</h4>
+			<h4>{{ $t('main.developers') }}</h4>
 			<router-link to="/changelog" class="item">{{ $t('main.changelog') }}</router-link>
 			<a href="https://github.com/leek-wars/leek-wars" target="_blank" rel="noopener" class="item">
 				GitHub <v-icon>mdi-open-in-new</v-icon>
@@ -54,41 +53,15 @@
 			</a>
 		</div>
 		<div class="column">
-			<h4>Légal</h4>
+			<h4>{{ $t('main.legal') }}</h4>
 			<router-link to="/legal" class="item">{{ $t('main.legal') }}</router-link>
 			<router-link to="/conditions" class="item">{{ $t('main.conditions') }}</router-link>
 			<span class="item">
-				<span class="color cookie-button" @click="throwCookies">🍪</span> Pas de cookies tiers
+				<span class="color cookie-button" @click="throwCookies">🍪</span> {{ $t('main.no_cookies') }}
 			</span>
-			<span class="item"><span class="color">🇫🇷</span> Fait en France</span>
+			<span class="item"><span class="color">🇫🇷</span> {{ $t('main.made_in_france') }}</span>
 			<span class="item">Copyright © 2013 - 3012</span>
 		</div>
-		<!--
-		<table><tr>
-			<td width="50%">
-				<router-link to="/"><h4>Leek Wars {{ LeekWars.version }}</h4></router-link>
-				<br>
-				<div class="social">
-
-					<a target="_blank" rel="noopener" href="https://www.facebook.com/LeekWars" title="Facebook">
-						<img src="/image/footer/facebook.png">
-					</a>
-					<a target="_blank" rel="noopener" href="https://twitter.com/LeekWars">
-						<img src="/image/footer/twitter.png" title="Twitter">
-					</a>
-					<a target="_blank" rel="noopener" href="https://github.com/leek-wars" title="GitHub">
-						<img src="/image/footer/github.png">
-					</a>
-				</div>
-			</td>
-			<td><img src="/image/footer_leek.png"></td>
-			<td width="50%" align="right">
-				<router-link to="/legal">{{ $t('main.legal') }}</router-link> -
-				<router-link to="/conditions">{{ $t('main.conditions') }}</router-link><br>
-				<span class="copy">Copyright © 2013 - 3012</span>
-			</td>
-		</tr></table>
-		-->
 		<img class="leek" src="/image/big_leek_1_white.png">
 		<didactitiel v-if="didactitiel_enabled" v-model="didactitiel" />
 		<div class="cookies">
