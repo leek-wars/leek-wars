@@ -18,7 +18,7 @@
 	import { mixins } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import { Component, Prop, Vue } from 'vue-property-decorator'
-	@Component({ mixins })
+	@Component({ mixins: [...mixins] })
 	export default class GardenNoFights extends Vue {
 
 		@Prop() canbuy!: boolean

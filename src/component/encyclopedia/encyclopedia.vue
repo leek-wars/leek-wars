@@ -14,6 +14,20 @@
 				<!-- <router-link :to="'/encyclopedia/' + english">
 					<div class="tab">English</div>
 				</router-link> -->
+				<v-menu v-if="contributor && edition" offset-y>
+					<template v-slot:activator="{ on }">
+						<div class="page-language info" v-on="on">
+							<img :src="LeekWars.languages[page.language].flag" class="flag">
+							<img width="10" src="/image/selector.png">
+						</div>
+					</template>
+					<v-list :dense="true">
+						<v-list-item v-for="(language, i) in LeekWars.languages" :key="i" class="language" @click="setPageLanguage(language.code)">
+							<img :src="language.flag" class="flag">
+							<span class="name">{{ language.name }}</span>
+						</v-list-item>
+					</v-list>
+				</v-menu>
 				<div v-if="contributor && edition && modified" class="tab" @click="save">
 					<v-icon>mdi-content-save</v-icon>
 					Sauvegarder
@@ -26,7 +40,7 @@
 					<v-icon>mdi-lock</v-icon>
 					En cours d'édition par {{ page.locker_name }}
 				</div>
-				<div v-if="contributor && (!page.locker || !$store.state.farmer || page.locker === $store.state.farmer.id)" class="tab" @click="editStart">
+				<div v-if="contributor && !edition && (!page.locker || !$store.state.farmer || page.locker === $store.state.farmer.id)" class="tab" @click="editStart">
 					<v-icon>mdi-pencil-outline</v-icon>
 					Modifier
 				</div>
@@ -43,9 +57,11 @@
 					<div v-if="page.new && !edition" class="nopage">
 						<v-icon>mdi-book-open-page-variant</v-icon>
 						<br><br>
-						<div class="message">La page « {{ code }} » est inexistante sur l'encyclopédie.</div>
+						<i18n path="not_found" tag="div" class="message">
+							<template slot="name">{{ page.code }}</template>
+						</i18n>
 						<br>
-						<div v-if="contributor">Vous êtes un contributeur 😎 Cliquez sur <b>Modifier</b> pour commencer la rédaction de cette page</div>
+						<div v-if="contributor">{{ $t('contributor_create') }}</div>
 					</div>
 
 					<div v-if="page.creator" class="stats">
@@ -131,21 +147,24 @@ import { locale } from '@/locale'
 		]
 
 		get code() {
-			return 'page' in this.$route.params ? this.$route.params.page.replace(/_/g, ' ') : (locale == 'fr' ? 'Accueil en Français' : 'Encyclopédie')
+			return 'page' in this.$route.params ? this.$route.params.page.replace(/_/g, ' ') : this.main_title
 		}
 		get title() {
 			return this.page ? this.page.title : 'Encyclopedia'
 		}
+		get main_title() {
+			return locale == 'fr' ? 'Encyclopédie' : 'Encyclopedia'
+		}
 		get breadcrumb_items() {
 			if (this.page && !this.page.new) {
 				return this.parents.map(p => {
-					return {name: p.title, link: p.title === 'Encyclopédie' ? '/encyclopedia' : '/encyclopedia/' + p.title.replace(/ /g, '_')}
+					return {name: p.title, link: p.title === this.main_title ? '/encyclopedia' : '/encyclopedia/' + p.title.replace(/ /g, '_')}
 				})
 			} else {
 				const parts = [
-					{name: 'Encyclopédie', link: '/encyclopedia'}
+					{name: this.main_title, link: '/encyclopedia'}
 				]
-				if (this.code !== 'Encyclopédie') {
+				if (this.code !== this.main_title) {
 					parts.push({name: this.code, link: '/encyclopedia/' + this.code.replace(/ /g, '_')})
 				}
 				return parts
@@ -337,7 +356,13 @@ import { locale } from '@/locale'
 			LeekWars.box = false
 			LeekWars.footer = true
 			this.editor = null
+			this.page.locker = null
 			this.releasePage()
+		}
+
+		setPageLanguage(language: string) {
+			this.page.language = language
+			LeekWars.post('encyclopedia/set-language', {page_id: this.page.id, language })
 		}
 
 		releasePage() {
@@ -375,11 +400,10 @@ import { locale } from '@/locale'
 		}
 
 		save() {
-
-			console.log("Save", {title: this.page.title, parent: this.page.parent})
 			LeekWars.post('encyclopedia/update', {page_id: this.page.id, title: this.page.title, content: this.page.content, parent: this.page.parent || 1}).then((result) => {
 				LeekWars.toast("Sauvegardé !")
 				if (this.page.id === 0) {
+					this.page.new = false
 					this.page.id = result.id
 				}
 			})
@@ -516,5 +540,29 @@ h1 {
 }
 ::v-deep .md.main h1 {
 	display: none;
+}
+.page-language {
+	display: inline-block;
+	padding: 0 4px;
+	border-radius: 2px;
+	cursor: pointer;
+	vertical-align: bottom;
+	margin-right: 15px;
+	margin-left: 5px;
+	img.flag {
+		vertical-align: top;
+		height: 32px;
+	}
+	img:not(.flag) {
+		vertical-align: middle;
+		margin-bottom: 3px;
+		margin-left: 6px;
+	}
+}
+.flag {
+	height: 28px;
+}
+.language .name {
+	padding-left: 8px;
 }
 </style>

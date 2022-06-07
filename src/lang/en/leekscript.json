@@ -33,7 +33,7 @@
 	"error_13": "Keyword continue can only be used into a loop",
 	"error_11": "End of instruction expected here",
 	"error_10": "Unexpected end of file",
-	"defined_in": "Defined in <b>{0}</b> at line <b>{1}</b>",
+	"defined_in": "Defined in {0} at line {1}",
 	"folder_renamed": "Folder renamed to {0}",
 	"function_f": "Function {0}",
 	"error_6": "A function name was required",

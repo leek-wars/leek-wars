@@ -602,7 +602,7 @@
 		grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
 	}
 	.items.chips {
-		grid-template-columns: repeat(auto-fill, minmax(76px, 1fr));
+		grid-template-columns: repeat(auto-fill, minmax(66px, 1fr));
 	}
 	.items.weapons {
 		grid-template-columns: repeat(auto-fill, minmax(165px, 1fr));
@@ -695,10 +695,10 @@
 		}
 	}
 	.chips .chip {
-		padding: 6px;
+		padding: 7px;
 	}
 	.chips .chip img {
-		width: 62px;
+		width: 100%;
 		vertical-align: bottom;
 	}
 	.panel h4 {

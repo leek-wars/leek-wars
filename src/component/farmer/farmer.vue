@@ -524,7 +524,7 @@
 	import { mixins } from '@/model/i18n'
 	import { Component, Vue, Watch } from 'vue-property-decorator'
 
-	@Component({ name: "farmer", i18n: {}, mixins })
+	@Component({ name: "farmer", i18n: {}, mixins: [...mixins] })
 	export default class FarmerPage extends Vue {
 		farmer: Farmer | null = null
 		trophies: any = null

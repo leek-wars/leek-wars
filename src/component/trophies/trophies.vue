@@ -78,7 +78,7 @@
 				</div>
 				<div class="closet">
 					<div>
-						<h4><v-icon>mdi-trophy-outline</v-icon> Meilleurs trophées</h4>
+						<h4><v-icon>mdi-trophy-outline</v-icon> {{ $t('best_trophies') }}</h4>
 						<div class="trophies">
 							<rich-tooltip-trophy v-for="(trophy, t) in best_trophies" :key="t" v-slot="{ on }" :trophy="trophy" :bottom="true" :instant="true" @input="$emit('input', $event)">
 								<router-link :to="'/trophy/' + trophy.code">
@@ -88,7 +88,7 @@
 						</div>
 					</div>
 					<div>
-						<h4><v-icon>mdi-star-outline</v-icon> Trophées les plus rares</h4>
+						<h4><v-icon>mdi-star-outline</v-icon> {{ $t('rarest_trophies') }}</h4>
 						<div class="trophies">
 							<rich-tooltip-trophy v-for="(trophy, t) in rarest_trophies" :key="t" v-slot="{ on }" :trophy="trophy" :bottom="true" :instant="true" @input="$emit('input', $event)">
 								<router-link :to="'/trophy/' + trophy.code">
@@ -98,7 +98,7 @@
 						</div>
 					</div>
 					<div>
-						<h4><v-icon>mdi-history</v-icon> Derniers trophées</h4>
+						<h4><v-icon>mdi-history</v-icon> {{ $t('latest_trophies') }}</h4>
 						<div class="trophies">
 							<rich-tooltip-trophy v-for="(trophy, t) in latest_trophies" :key="t" v-slot="{ on }" :trophy="trophy" :bottom="true" :instant="true" @input="$emit('input', $event)">
 								<router-link :to="'/trophy/' + trophy.code">
@@ -188,7 +188,7 @@
 			return this.$route.params.id || (this.$store.state.farmer ? this.$store.state.farmer.id : null)
 		}
 		get categories() {
-			return this.raw_categories.filter(c => (c.id !== 6 || this.progressions[6] !== 0) && (!this.loaded || this.trophies[c.id].length))
+			return this.raw_categories.filter(c => (c.id !== 6 || this.progressions[6] !== 0) && (!this.loaded || !this.trophies[c.id] || this.trophies[c.id].length))
 		}
 		get trophies() {
 			const result: {[key: number]: any} = {}

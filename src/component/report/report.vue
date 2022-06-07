@@ -173,8 +173,8 @@
 					</v-radio-group>
 					<div class="spacer"></div>
 					<v-radio-group v-if="fight.type !== FightType.BATTLE_ROYALE && fight.type !== FightType.SOLO" v-model="damagesTeams" :row="true" :dense="true" :hide-details="true">
-						<v-radio label="Entités" />
-						<v-radio label="Équipes" />
+						<v-radio :value="0" label="Entités" />
+						<v-radio :value="1" label="Équipes" />
 					</v-radio-group>
 					<v-switch v-model="damagesDisplaySummons" :disabled="damagesTeams === 1" :label="$t('display_summons')" :hide-details="true" />
 				</div>
