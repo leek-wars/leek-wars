@@ -40,25 +40,29 @@
 					</div>
 				</div>
 				<div>
-					<h4><v-icon>mdi-chart-line-variant</v-icon> Progression</h4>
+					<h4><v-icon>mdi-chart-line-variant</v-icon> {{ $t('progress') }}</h4>
 					<div v-if="trophy.variable" class="bar-wrapper">
 						{{ trophy.progression | number }} / {{ trophy.threshold | number }}
 						<div class="trophy-bar" :class="{full: trophy.unlocked}">
 							<div :style="{width: Math.floor(100 * Math.min(trophy.threshold, trophy.progression) / trophy.threshold) + '%'}" class="bar striked"></div>
 						</div>
 					</div>
-					<div v-if="trophy.unlocked" class="rarity">Débloqué le {{ trophy.date | datetime }}</div>
-					<div v-else class="rarity">Pas encore débloqué</div>
-					<router-link v-if="trophy.fight" class="rarity" :to="'/fight/' + trophy.fight">Voir le combat</router-link>
+					<i18n v-if="trophy.unlocked" path="unlocked_the_x" tag="div" class="rarity">
+						<template slot="date">{{ trophy.date | datetime }}</template>
+					</i18n>
+					<div v-else class="rarity">{{ $t('not_unlocked') }}</div>
+					<router-link v-if="trophy.fight" class="rarity" :to="'/fight/' + trophy.fight">{{ $t('see_fight') }}</router-link>
 				</div>
 				<div>
 					<h4><v-icon>mdi-chart-line</v-icon> {{ $t('stats') }}</h4>
-					<div class="rarity">{{ (trophy.rarity * 100).toPrecision(2) }}% • {{ trophy.total | number }} possesseurs</div>
+					<div class="rarity">{{ (trophy.rarity * 100).toPrecision(2) }}% • <i18n tag="span" path="n_pocessors">
+						<template slot="n">{{ trophy.total | number }}</template>
+					</i18n></div>
 				</div>
 			</div>
 		</panel>
 		<div v-if="trophy" class="grid container large">
-			<panel v-if="trophy.first_farmers.length" title="Premiers éleveurs" icon="mdi-sort-descending">
+			<panel v-if="trophy.first_farmers.length" :title="$t('first_farmers')" icon="mdi-sort-descending">
 				<router-link v-for="(farmer, f) in trophy.first_farmers" :key="f" v-ripple :to="'/farmer/' + farmer.id" class="farmer">
 					<avatar :farmer="farmer" />
 					{{ farmer.name }}
@@ -66,7 +70,7 @@
 					{{ farmer.time | date }}
 				</router-link>
 			</panel>
-			<panel v-if="trophy.last_farmers.length" title="Derniers éleveurs" icon="mdi-sort-ascending">
+			<panel v-if="trophy.last_farmers.length" :title="$t('last_farmers')" icon="mdi-sort-ascending">
 				<router-link v-for="(farmer, f) in trophy.last_farmers" :key="f" v-ripple :to="'/farmer/' + farmer.id" class="farmer">
 					<avatar :farmer="farmer" />
 					{{ farmer.name }}

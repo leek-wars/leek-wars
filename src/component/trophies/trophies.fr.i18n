@@ -9,5 +9,8 @@
 	"stats": "Statistiques",
 	"title": "Trophées de {0}",
 	"title_me": "Mes trophées",
-	"trophies": "Trophées"
+	"trophies": "Trophées",
+	"best_trophies": "Meilleurs trophées",
+	"latest_trophies": "Derniers trophées",
+	"rarest_trophies": "Trophées les plus rares"
 }

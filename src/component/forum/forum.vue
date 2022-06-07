@@ -105,7 +105,7 @@
 						<img :src="chatLanguage.flag" class="language-button" v-on="on">
 					</template>
 					<v-list :dense="true">
-						<v-list-item v-for="(language, i) in LeekWars.languages" :key="i" class="language" @click="chatLanguage = language">
+						<v-list-item v-for="(language, i) in LeekWars.languages" :key="i" class="language" @click="setChatLanguage(language)">
 							<img :src="language.flag" class="flag">
 							<span class="name">{{ language.name }}</span>
 						</v-list-item>
@@ -146,7 +146,8 @@
 			for (const l of languages) {
 				Vue.set(this.forumLanguages, l, true)
 			}
-			this.chatLanguage = LeekWars.languages[this.$i18n.locale]
+			const lang = localStorage.getItem('forum/chat-language') || this.$i18n.locale
+			this.chatLanguage = LeekWars.languages[lang]
 			LeekWars.get('forum/get-categories/' + this.activeLanguages).then(data => {
 				this.categories = data.categories
 				this.$root.$emit('loaded')
@@ -183,6 +184,10 @@
 		}
 		get activeLanguages() {
 			return Object.entries(this.forumLanguages).filter(e => e[1]).map(e => e[0])
+		}
+		setChatLanguage(language: Language) {
+			this.chatLanguage = language
+			localStorage.setItem('forum/chat-language', language.code)
 		}
 	}
 </script>

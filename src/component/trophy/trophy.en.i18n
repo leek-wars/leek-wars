@@ -16,5 +16,12 @@
 	"trophy": "Trophy",
 	"n_points": "{p} points",
 	"rewards": "Rewards",
-	"stats": "Statistics"
+	"stats": "Statistics",
+	"not_unlocked": "Not yet unlocked",
+	"unlocked_the_x": "Unlocked on {date}",
+	"see_fight": "See the fight",
+	"progress": "Progress",
+	"n_pocessors": "{n} possessors",
+	"first_farmers": "First farmers",
+	"last_farmers": "Last farmers"
 }

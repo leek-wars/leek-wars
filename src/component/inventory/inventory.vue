@@ -185,7 +185,7 @@
 	import { LeekWars } from '@/model/leekwars'
 	import { store } from '@/model/store'
 	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
-import { Item } from '../editor/editor-item'
+	import { Item } from '../editor/editor-item'
 
 	enum Sort {
 		DATE, PRICE, PRICE_LOT, QUANTITY, /*NAME, */ LEVEL
@@ -194,7 +194,7 @@ import { Item } from '../editor/editor-item'
 		ALL, WEAPONS, CHIPS, POTIONS, HATS, POMPS, RESOURCES
 	}
 
-	@Component({ name: 'inventory', i18n: {}, mixins })
+	@Component({ name: 'inventory', i18n: {}, mixins: [...mixins] })
 	export default class Inventory extends Vue {
 
 		ItemType = ItemType

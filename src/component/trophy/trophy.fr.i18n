@@ -20,5 +20,12 @@
 	"trophy": "Trophée",
 	"n_points": "{p} points",
 	"rewards": "Récompenses",
-	"stats": "Statistiques"
+	"stats": "Statistiques",
+	"not_unlocked": "Pas encore débloqué",
+	"unlocked_the_x": "Débloqué le {date}",
+	"see_fight": "Voir le combat",
+	"progress": "Progression",
+	"n_pocessors": "{n} possesseurs",
+	"first_farmers": "Premiers éleveurs",
+	"last_farmers": "Derniers éleveurs"
 }

@@ -49,7 +49,7 @@
 								<img :src="chatLanguage.flag" class="language-button" v-on="on">
 							</template>
 							<v-list :dense="true">
-								<v-list-item v-for="(language, i) in LeekWars.languages" :key="i" class="language" @click="chatLanguage = language">
+								<v-list-item v-for="(language, i) in LeekWars.languages" :key="i" class="language" @click="setChatLanguage(language)">
 									<img :src="language.flag" class="flag">
 									<span class="name">{{ language.name }}</span>
 								</v-list-item>
@@ -76,11 +76,14 @@
 
 	@Component({ name: 'lw-social' })
 	export default class Social extends Vue {
+
 		ChatType = ChatType
 		chatLanguage: Language | null = null
 		panelWidth: number = 400
+
 		created() {
-			this.chatLanguage = LeekWars.languages[this.$i18n.locale]
+			const lang = localStorage.getItem('social/chat-language') || this.$i18n.locale
+			this.chatLanguage = LeekWars.languages[lang]
 			if (localStorage.getItem('main/social-collapsed') === 'true') {
 				LeekWars.socialCollapsed = true
 			}
@@ -89,11 +92,13 @@
 				this.panelWidth = parseInt(width, 10)
 			}
 		}
+
 		toggleSocial() {
 			LeekWars.socialCollapsed = !LeekWars.socialCollapsed
 			localStorage.setItem('main/social-collapsed', '' + LeekWars.socialCollapsed)
 			this.$root.$emit('resize')
 		}
+
 		resizerMousedown(e: MouseEvent) {
 			const startWidth = this.panelWidth
 			const startX = e.clientX
@@ -109,8 +114,14 @@
 			document.documentElement!.addEventListener('mouseup', mouseup, false)
 			e.preventDefault()
 		}
+
 		readNotification(notification: Notification) {
 			LeekWars.post('notification/read', {notification_id: notification.id})
+		}
+
+		setChatLanguage(language: Language) {
+			this.chatLanguage = language
+			localStorage.setItem('social/chat-language', language.code)
 		}
 	}
 </script>

@@ -14,7 +14,7 @@
 	"editor_2": "A limit of 20 millions operations maximum per turn is defined for the execution of your Artificial Intelligence.",
 	"editor_3": "For more information about the Editor or the LeekScript language, go and visit the {tutorial}.",
 	"editor_tuto": "Tutorial page",
-	"farmer": "Being a Farmer",
+	"farmer": "Farmer",
 	"farmer_1": "In Leek Wars you play as a Farmer.",
 	"As": "soon as you register you get a level 1 leek. Your goal is to defeat other leeks thanks to the coding and improvement of your AI using LeekScript.",
 	"farmer_2": "Your leeks will earn Experience points after each fight. These Experience points will determine the level of your leeks. The higher your level, the better the chips and weapons you can use. When your level increases, you can spend new capital points to upgrade your leek.",
