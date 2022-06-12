@@ -15,18 +15,31 @@
 						<img src="/image/admin/server.png">
 						<br>
 						<div class="name">
-							{{ node.name }}<img src="/image/connected.png">
+							{{ node.name }}<img class="status" src="/image/connected.png">
 						</div>
 						<div class="total-wrapper">Total : {{ node.generated | number }}</div>
 						<div class="threads">
 							<div v-for="(runner, r) in node.runners" :key="r" class="thread">
 								<div class="th-name">
-									<img src="/image/connected.png">&nbsp;<b>{{ runners[runner.id].name }}</b>
+									<img class="status" src="/image/connected.png">&nbsp;<b>{{ runner.name }}</b>
 								</div>
-								<span class="green">✔ <span class="generated">{{ runners[runner.id].generated | number }}</span></span>&nbsp;&nbsp;
-								<span class="red">✘ <span class="error">{{ runners[runner.id].errors | number }}</span></span>
+								<span class="green">✔ <span class="generated">{{ runner.generated | number }}</span></span>&nbsp;&nbsp;
+								<span v-if="runner.errors > 0" class="red">✘ <span class="error">{{ runner.errors | number }}</span></span>
 								<br>
-								► <span class="task">{{ runners[runner.id].task }}</span>
+								<div class="task">
+									<span v-if="runner.task && runner.task.type === 1">
+										<router-link :to="'/fight/' + runner.task.fight">► Combat {{ runner.task.fight }}</router-link>
+										<router-link :to="'/farmer/' + runner.task.farmer.id">
+											<avatar :farmer="runner.task.farmer" />
+										</router-link>
+										<router-link :to="'/farmer/' + runner.task.farmer.id">
+											{{ runner.task.farmer.name }}
+										</router-link>
+									</span>
+									<span v-else-if="runner.task && runner.task.type === 2">
+										<router-link :to="'/tournament/' + runner.task.tournament">► Tournoi {{ runner.task.tournament }}</router-link>
+									</span>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -35,8 +48,8 @@
 					<h4>➤ Queue ({{ queue.length }})</h4>
 					<div class="farmers">
 						<div v-for="(task, t) in queue" :key="t" class="card farmer">
-							<router-link :to="'/farmer/' + task[1]">
-								<avatar :farmer="{id: task[1], avatar_changed: 1}" /> {{ task[1] }}
+							<router-link :to="'/farmer/' + task[1].id">
+								<avatar :farmer="task[1]" /> {{ task[1].name }}
 							</router-link>
 							<div class="fight">
 								<router-link v-if="task[0] === 1" :to="'/fight/' + task[2]">{{ task[2] }}</router-link>
@@ -182,7 +195,7 @@
 		font-weight: 300;
 		margin: 5px;
 	}
-	.servers .name img {
+	.servers .name .status {
 		vertical-align: middle;
 		margin-left: 8px;
 		width: 16px;
@@ -205,6 +218,7 @@
 		padding-right: 5px;
 		display: inline-block;
 		width: 50%;
+		vertical-align: top;
 	}
 	.server .thread .th-name {
 		color: #666;
@@ -214,22 +228,24 @@
 		overflow: hidden;
 		white-space: nowrap;
 	}
-	.server .thread img {
+	.server .thread .status {
 		width: 16px;
 		vertical-align: bottom;
 	}
 	.server .red {
 		color: red;
+		font-weight: 500;
 	}
 	.server .green {
 		color: green;
+		font-weight: 500;
 	}
 	h4 {
 		margin: 12px 0;
 	}
 	.queue .farmer {
 		display: inline-block;
-		width: 68px;
+		width: 80px;
 		text-align: center;
 		padding: 4px 4px;
 		margin-right: 6px;
@@ -239,6 +255,7 @@
 		}
 		.fight {
 			font-size: 13px;
+			margin-top: 2px;
 			a {
 				color: #777;
 			}
@@ -251,5 +268,28 @@
 		padding: 20px;
 		text-align: center;
 		color: #777;
+	}
+	.task {
+		display: flex;
+		align-items: center;
+		margin: 2px 0;
+		height: 20px;
+		color: black;
+		gap: 5px;
+		flex-wrap: nowrap;
+		span {
+			display: flex;
+			align-items: center;
+			gap: 5px;
+			flex-wrap: nowrap;
+			white-space: nowrap;
+			text-overflow: ellipsis;
+			overflow: hidden;
+		}
+		.avatar {
+			width: 25px;
+			flex-basis: 25px 0 0;
+			height: 25px;
+		}
 	}
 </style>
