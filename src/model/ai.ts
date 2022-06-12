@@ -231,6 +231,84 @@ class AI {
 		}
 		// console.log("Classes", this.ai.classes)
 
+		// Search static fields
+		const field_regex = /(?:public\s+)?(?:(static)\s+)?(\w+)\s*/gm
+		while ((match = field_regex.exec(this.code)) != null) {
+
+			const name = match[2]
+			if (name === 'function' || name === 'for' || name === 'while' || name === 'if') continue
+
+			const is_static = !!match[1]
+			const line = this.code.substring(0, match.index).split("\n").length
+
+			const fullName = match[2]
+			let description = "<h4>" + i18n.t('leekscript.function_f', [fullName]) + "</h4><br>"
+			description += i18n.t('leekscript.defined_in', [this.name, line])
+
+			const comment = this.comments[match.index]
+			// console.log("comment", comment)
+			const javadoc = {
+				name: fullName,
+				description: "",
+				items: [] as any[]
+			}
+			// console.log(javadoc.items)
+			if (comment) {
+				const javadoc_lines = comment.split("\n")
+				const javadoc_regex = /^\s*@(\w+)(?:\s+([a-zA-Z_\u00C0-\u024F\u1E00-\u1EFF]+)\s*:?\s*)?(?:\s*:\s*)?(.*)$/
+				let match_javadoc
+				for (const jline of javadoc_lines) {
+					if ((match_javadoc = javadoc_regex.exec(jline))) {
+						// console.log(match_javadoc)
+						const type = match_javadoc[1]
+						const name = match_javadoc[2]
+						const text = match_javadoc[3]
+						javadoc.items.push({ type, name, text })
+					} else {
+						if (jline.length) {
+							if (javadoc.description.length) {
+								javadoc.description += "\n"
+							}
+							javadoc.description += jline
+						}
+					}
+				}
+				// console.log("javadoc", javadoc)
+			}
+
+			// Escape
+			javadoc.description = LeekWars.protect(javadoc.description)
+			for (const item of javadoc.items) {
+				item.name = item.name ? LeekWars.protect(item.name) : item.name
+				item.text = item.text ? LeekWars.protect(item.text) : item.text
+			}
+
+			// Find class
+			let clazz = null
+			for (const c in this.classes) {
+				if (this.classes[c].line! > line) break
+				clazz = this.classes[c]
+			}
+			if (clazz) {
+				const field = {
+					name: match[2],
+					fullName,
+					details: description,
+					type: is_static ? 'user-static-field' : 'user-field',
+					ai: this,
+					line,
+					javadoc,
+					category: 1,
+					clazz
+				}
+				if (is_static) {
+					clazz.static_fields.push(field)
+				} else {
+					clazz.fields.push(field)
+				}
+			}
+		}
+
 		// Search methods
 		const method_regex = /(?:public\s+)?(?:(static)\s+)?(\w+)\s*\(([\w\s,]*)\)\s*{/gm
 		while ((match = method_regex.exec(this.code)) != null) {
@@ -333,7 +411,8 @@ class AI {
 					ai: this,
 					line,
 					javadoc,
-					category: 4
+					category: 4,
+					clazz
 				}
 				// console.log(fun)
 				if (is_static) {

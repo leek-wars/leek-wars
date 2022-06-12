@@ -1,6 +1,8 @@
 <template lang="html">
 	<div>
-		<h2>{{ javadoc.name }} <span v-if="return_ && return_.name" class="arrow">→</span> <span v-if="return_ && return_.name">{{ return_.name }}</span></h2>
+		<h2>
+			<span v-if="keyword.type === 'user-static-method' || keyword.type === 'user-static-field'">{{ keyword.clazz.name }}.</span>{{ javadoc.name }} <span v-if="return_ && return_.name" class="arrow">→</span> <span v-if="return_ && return_.name">{{ return_.name }}</span>
+		</h2>
 		<div class="description" v-html="javadoc.description"></div>
 
 		<template v-if="args.length > 0">
@@ -23,14 +25,12 @@
 </template>
 
 <script lang="ts">
-	import { env } from '@/env'
-	import { Farmer } from '@/model/farmer'
-	import { LeekWars } from '@/model/leekwars'
 	import { Component, Prop, Vue } from 'vue-property-decorator'
 
 	@Component({ name: "javadoc" })
 	export default class Javadoc extends Vue {
 		@Prop() javadoc!: any
+		@Prop() keyword!: any
 
 		get args() {
 			return this.javadoc.items.filter((i: any) => i.type === 'param')

@@ -50,11 +50,11 @@
 				<documentation-constant v-else-if="selectedHint.type === 'constant'" :constant="selectedHint.constant" />
 				<item-preview v-else-if="selectedHint.details.type === 'weapon'" :item="selectedHint.details.weapon" />
 				<item-preview v-else-if="selectedHint.details.type === 'chip'" :chip="selectedHint.details.chip" />
-				<javadoc v-else-if="selectedHint.javadoc" :javadoc="selectedHint.javadoc" class="main" />
+				<javadoc v-else-if="selectedHint.javadoc" :javadoc="selectedHint.javadoc" :keyword="selectedHint" class="main" />
 				<div v-else v-html="selectedHint.details"></div>
 				<div v-if="selectedHint.ai" class="definition">
 					<v-icon>mdi-file-outline</v-icon>
-					<span @click="$emit('jump', selectedHint.keyword.ai, selectedHint.keyword.line)">
+					<span @click="$emit('jump', selectedHint.ai, selectedHint.line)">
 						<i18n class="defined" path="leekscript.defined_in">
 							<b slot="0">{{ selectedHint.ai.name }}</b>
 							<b slot="1">{{ selectedHint.line }}</b>
@@ -69,7 +69,7 @@
 				<documentation-constant v-else-if="detailDialogContent.keyword.type === 'constant'" :constant="detailDialogContent.keyword.constant" class="main" />
 				<item-preview v-else-if="detailDialogContent.keyword.details.type === 'weapon'" :weapon="detailDialogContent.keyword.details.weapon" class="main" />
 				<item-preview v-else-if="detailDialogContent.keyword.details.type === 'chip'" :chip="detailDialogContent.keyword.details.chip" class="main" />
-				<javadoc v-if="detailDialogContent.keyword.javadoc" :javadoc="detailDialogContent.keyword.javadoc" class="main" />
+				<javadoc v-if="detailDialogContent.keyword.javadoc" :javadoc="detailDialogContent.keyword.javadoc" :keyword="detailDialogContent.keyword" class="main" />
 			</template>
 			<div v-if="detailDialogContent.details.defined" class="definition">
 				<v-icon>mdi-file-outline</v-icon>
@@ -727,6 +727,13 @@
 							}
 						}
 					}
+					if (previousToken.string === s && clazz.static_fields) {
+						for (const field of clazz.static_fields) {
+							if (symbol === field.name) {
+								return field
+							}
+						}
+					}
 				}
 				if (ai.includes) {
 					for (const include of ai.includes) {
@@ -1108,6 +1115,11 @@
 
 				// Méthodes dans la classe actuelle
 				if (currentClass) {
+					for (const staticField of currentClass.static_fields) {
+						if (staticField.name.toLowerCase().indexOf(start) === 0) {
+							completions.push(staticField)
+						}
+					}
 					for (const staticMethod of currentClass.static_methods) {
 						if (staticMethod.name.toLowerCase().indexOf(start) === 0) {
 							completions.push(staticMethod)
