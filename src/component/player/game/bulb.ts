@@ -57,14 +57,17 @@ class Bulb extends FightEntity {
 			this.bodyTexFront = T.get(this.game, 'image/bulb/savant_bulb_front.png', true, SHADOW_QUALITY)
 			this.bodyTexBack = T.get(this.game, 'image/bulb/savant_bulb_back.png', true, SHADOW_QUALITY)
 		}
-		this.baseHeight = this.bodyTexFront.texture.height * Bulb.SCALE + 10
-		this.baseWidth = this.bodyTexFront.texture.width * Bulb.SCALE
-		this.updateGrowth()
-		this.bodyTexFront.texture.addEventListener('load', () => {
+		if (this.bodyTexFront.loaded) {
 			this.baseHeight = this.bodyTexFront.texture.height * Bulb.SCALE + 10
 			this.baseWidth = this.bodyTexFront.texture.width * Bulb.SCALE
 			this.updateGrowth()
-		})
+		} else {
+			this.bodyTexFront.texture.addEventListener('load', () => {
+				this.baseHeight = this.bodyTexFront.texture.height * Bulb.SCALE + 10
+				this.baseWidth = this.bodyTexFront.texture.width * Bulb.SCALE
+				this.updateGrowth()
+			}, { once: true })
+		}
 	}
 
 	public update(dt: number) {
