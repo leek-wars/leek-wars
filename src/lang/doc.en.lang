@@ -495,7 +495,7 @@
 	"func_getMessageType_return": "Given <b>message</b>'s type.",
 	"func_getMP": "Returns given <b>entity</b>'s MP count.",
 	"func_getMP_arg_1": "Desired entity.",
-	"func_getMP_return": "Given <b>entity</b>'s name.",
+	"func_getMP_return": "Given <b>entity</b>'s MP count.",
 	"func_getName": "Returns given <b>entity</b>'s name.",
 	"func_getName_arg_1": "Desired entity.",
 	"func_getName_return": "Given <b>entity</b>'s name.",
