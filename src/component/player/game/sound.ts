@@ -34,15 +34,17 @@ class Sound {
 		game.numData++
 		this.sound = document.createElement('audio')
 		this.sound.controls = true
-		this.sound.addEventListener("loadeddata", () => {
+
+		const listener = () => {
 			game.resourceLoaded(this.src)
-		}, true)
-		this.sound.addEventListener("error", () => {
-			game.resourceLoaded(this.src)
-		}, true)
-		this.sound.addEventListener("abort", () => {
-			game.resourceLoaded(this.src)
-		}, true)
+			this.sound.removeEventListener('loadeddata', listener)
+			this.sound.removeEventListener('error', listener)
+			this.sound.removeEventListener('abort', listener)
+		}
+		this.sound.addEventListener("loadeddata", listener)
+		this.sound.addEventListener("error", listener)
+		this.sound.addEventListener("abort", listener)
+
 		this.sound.volume = this.volume
 		this.sound.src = this.src
 		this.sound.load()

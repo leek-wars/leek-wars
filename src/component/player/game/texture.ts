@@ -1,6 +1,4 @@
 import { Game } from '@/component/player/game/game'
-import { env } from '@/env'
-import { Leek } from '@/model/leek'
 import { LeekWars } from '@/model/leekwars'
 
 const SHADOW_QUALITY = 0.3
@@ -35,21 +33,24 @@ class Texture {
 		game.numData++
 		this.texture = new Image()
 		this.texture.crossOrigin = "anonymous"
-		this.texture.onload = () => {
+
+		const onload = () => {
 			if (this.buildShadow) {
 				buildTextureShadow(this, this.shadowQuality)
 			}
 			game.resourceLoaded(this.path)
 			this.loaded = true
+			this.texture.removeEventListener('error', onerror)
 		}
-		this.texture.onerror = () => {
+		const onerror = () => () => {
 			console.warn("Error loading : " + this.path)
 			game.resourceLoaded(this.path)
+			this.texture.removeEventListener('load', onload)
 		}
-		this.texture.onabort = () => {
-			console.warn("Error loading : " + this.path)
-			game.resourceLoaded(this.path)
-		}
+		this.texture.addEventListener('load', onload)
+		this.texture.addEventListener('error', onerror)
+		this.texture.addEventListener('abort', onerror)
+
 		this.texture.src = this.path // Start loading
 		return this
 	}

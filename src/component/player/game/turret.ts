@@ -51,7 +51,7 @@ class Turret extends FightEntity {
 			if (piece.t.loaded) {
 				load_piece(piece)
 			} else {
-				piece.t.texture.addEventListener('load', () => load_piece(piece))
+				piece.t.texture.addEventListener('load', () => load_piece(piece), { once: true })
 			}
 		}
 	}

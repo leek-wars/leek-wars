@@ -42,14 +42,17 @@ class Leek extends FightEntity {
 		this.bodyTexFront = T.get(this.game, "image/leek/leek" + appearance + "_front_" + LeekWars.skins[skin] + ".png", true, SHADOW_QUALITY)
 		this.bodyTexBack = T.get(this.game, "image/leek/leek" + appearance + "_back_" + LeekWars.skins[skin] + ".png", true, SHADOW_QUALITY)
 
-		this.baseHeight = this.bodyTexFront.texture.height + 30
-		this.baseWidth = this.bodyTexFront.texture.width
-		this.updateGrowth()
-		this.bodyTexFront.texture.addEventListener('load', () => {
+		if (this.bodyTexFront.loaded) {
 			this.baseHeight = this.bodyTexFront.texture.height + 30
 			this.baseWidth = this.bodyTexFront.texture.width
 			this.updateGrowth()
-		})
+		} else {
+			this.bodyTexFront.texture.addEventListener('load', () => {
+				this.baseHeight = this.bodyTexFront.texture.height + 30
+				this.baseWidth = this.bodyTexFront.texture.width
+				this.updateGrowth()
+			}, { once: true })
+		}
 
 		if (hat) {
 			this.hat = hat
