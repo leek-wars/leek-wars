@@ -129,10 +129,10 @@
 		}
 
 		get my_leek() {
-			return LeekWars.first(store.state.farmer!.leeks)!
+			return store.state.farmer ? LeekWars.first(store.state.farmer!.leeks) : null
 		}
 		get charac() {
-			return this.icon ? this.my_leek[this.icon] : 0
+			return this.icon && this.my_leek ? this.my_leek[this.icon] : 0
 		}
 		get boost() {
 			if (this.icon === 'life') {

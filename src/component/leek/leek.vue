@@ -676,13 +676,13 @@
 			return false
 		}
 		get holdWeaponEnabled() {
-			return this.$store.state.farmer && LeekWars.selectWhere(this.$store.state.farmer.pomps, 'template', 123)
+			return this.$store.state.farmer && LeekWars.selectWhere(this.$store.state.farmer.pomps, 'template', 123) !== null
 		}
 		get leekTitleEnabled() {
-			return this.$store.state.farmer && LeekWars.selectWhere(this.$store.state.farmer.pomps, 'template', 125)
+			return this.$store.state.farmer && LeekWars.selectWhere(this.$store.state.farmer.pomps, 'template', 125) !== null
 		}
 		get showAiLinesEnabled() {
-			return this.$store.state.farmer && LeekWars.selectWhere(this.$store.state.farmer.pomps, 'template', 124)
+			return this.$store.state.farmer && LeekWars.selectWhere(this.$store.state.farmer.pomps, 'template', 124) !== null
 		}
 		get skinPotions() {
 			return store.state.farmer!.potions.filter(p => LeekWars.potions[p.template].effects.some(e => e.type === PotionEffect.CHANGE_SKIN))
