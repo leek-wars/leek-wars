@@ -58,7 +58,7 @@
 						<v-icon>mdi-book-open-page-variant</v-icon>
 						<br><br>
 						<i18n path="not_found" tag="div" class="message">
-							<template slot="name">{{ page.code }}</template>
+							<template slot="name">{{ code }}</template>
 						</i18n>
 						<br>
 						<div v-if="contributor">{{ $t('contributor_create') }}</div>

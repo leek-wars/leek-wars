@@ -139,8 +139,8 @@
 			return html.replace(/\[\[(.*?)\]\]/g, (m, link) => {
 				link = link.trim()
 				const clazz = (LeekWars.isEmptyObj(LeekWars.encyclopedia) || (link in LeekWars.encyclopedia)) ? "" : "new"
-				const text = link.replace(/_/g, ' ')
-				return "<a href='/encyclopedia/" + link.replace(/ /g, '_') + "' class='" + clazz + "'>" + text + "</a>"
+				const text = link.replace(/_/g, ' ').replace(/'/g, '&apos;')
+				return "<a href='/encyclopedia/" + text + "' class='" + clazz + "'>" + text + "</a>"
 			}).replace(/{{(.*?)}}/g, (m, tag) => {
 				tag = tag.trim().toLowerCase()
 				if (tag.startsWith('summary')) {
