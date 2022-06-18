@@ -3,7 +3,8 @@
 </template>
 
 <script lang="ts">
-	import { LeekWars } from '@/model/leekwars'
+	import { i18n } from '@/model/i18n'
+import { LeekWars } from '@/model/leekwars'
 	import { vueMain } from '@/model/vue'
 	import markdown from 'markdown-it'
 	import sanitizeHtml from 'sanitize-html'
@@ -121,7 +122,7 @@
 				// Locked pages
 				md.querySelectorAll('.encyclopedia-locked-pages').forEach((item) => {
 					LeekWars.post<any[]>('encyclopedia/get-locked-pages').then(pages => {
-						item.innerHTML = '<ul>' + pages.map(p => '<li><a href="/encyclopedia/' + p.title + '">' + p.title + '</a>, verrouillée par <b>' + p.name + '</b></li>').join('') + '</ul>'
+						item.innerHTML = '<ul>' + pages.map(p => '<li><a href="/encyclopedia/' + i18n.locale + '/' + p.title + '">' + p.title + '</a>, verrouillée par <b>' + p.name + '</b></li>').join('') + '</ul>'
 						item.querySelectorAll('a').forEach(linkify)
 					})
 				})
@@ -140,7 +141,7 @@
 				link = link.trim()
 				const clazz = (LeekWars.isEmptyObj(LeekWars.encyclopedia) || (link in LeekWars.encyclopedia)) ? "" : "new"
 				const text = link.replace(/_/g, ' ').replace(/'/g, '&apos;')
-				return "<a href='/encyclopedia/" + text + "' class='" + clazz + "'>" + text + "</a>"
+				return "<a href='/encyclopedia/" + i18n.locale + '/' + text + "' class='" + clazz + "'>" + text + "</a>"
 			}).replace(/{{(.*?)}}/g, (m, tag) => {
 				tag = tag.trim().toLowerCase()
 				if (tag.startsWith('summary')) {

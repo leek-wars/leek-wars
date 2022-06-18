@@ -146,6 +146,9 @@ import { locale } from '@/locale'
 			{icon: 'mdi-pencil', click: () => this.editStart()},
 		]
 
+		get language() {
+			return this.$route.params && this.$route.params.lang ? this.$route.params.lang : this.$i18n.locale
+		}
 		get code() {
 			return 'page' in this.$route.params ? this.$route.params.page.replace(/_/g, ' ') : this.main_title
 		}
@@ -153,19 +156,19 @@ import { locale } from '@/locale'
 			return this.page ? this.page.title : 'Encyclopedia'
 		}
 		get main_title() {
-			return locale == 'fr' ? 'Encyclopédie' : 'Encyclopedia'
+			return this.$i18n.locale == 'fr' ? 'Encyclopédie' : 'Encyclopedia'
 		}
 		get breadcrumb_items() {
 			if (this.page && !this.page.new) {
 				return this.parents.map(p => {
-					return {name: p.title, link: p.title === this.main_title ? '/encyclopedia' : '/encyclopedia/' + p.title.replace(/ /g, '_')}
+					return {name: p.title, link: p.title === this.main_title ? '/encyclopedia' : '/encyclopedia/' + this.$i18n.locale + '/' + p.title.replace(/ /g, '_')}
 				})
 			} else {
 				const parts = [
 					{name: this.main_title, link: '/encyclopedia'}
 				]
 				if (this.code !== this.main_title) {
-					parts.push({name: this.code, link: '/encyclopedia/' + this.code.replace(/ /g, '_')})
+					parts.push({name: this.code, link: '/encyclopedia/' + this.$i18n.locale + '/' + this.code.replace(/ /g, '_')})
 				}
 				return parts
 			}
@@ -215,11 +218,11 @@ import { locale } from '@/locale'
 
 			if (this.code === 'Page au hasard') {
 				const pages = Object.values(LeekWars.encyclopedia)
-				this.$router.replace('/encyclopedia/' + pages[Math.random() * pages.length | 0].title)
+				this.$router.replace('/encyclopedia/' + this.$i18n.locale + '/' + pages[Math.random() * pages.length | 0].title)
 				return
 			}
 
-			LeekWars.get<any>('encyclopedia/get/' + this.code).then(page => {
+			LeekWars.get<any>('encyclopedia/get/' + this.language + '/' + this.code).then(page => {
 				if (this.edition) {
 					// Previous page was in edition
 					this.releasePage()

@@ -29,7 +29,7 @@
 
 				<div v-else class="results-wrapper">
 					<div v-if="results.length" class="results">
-						<router-link v-for="(result, r) in results" :key="r" :to="'/encyclopedia/' + result.title">
+						<router-link v-for="(result, r) in results" :key="r" :to="'/encyclopedia/' + this.$i18n.locale + '/' + + result.title">
 							<div v-ripple class="result card">
 								<div class="title" v-html="result.title_headline"></div>
 								<markdown :content="result.content" :pages="{}" mode="encyclopedia" />
@@ -49,7 +49,7 @@
 
 <script lang="ts">
 	import Markdown from '@/component/encyclopedia/markdown.vue'
-	import { mixins } from '@/model/i18n'
+	import { i18n, mixins } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import { Component, Vue, Watch } from 'vue-property-decorator'
 	import Breadcrumb from '../forum/breadcrumb.vue'
@@ -87,7 +87,7 @@
 			this.results = null
 			if (this.canSearch) {
 				this.searchStarted = true
-				LeekWars.get('encyclopedia/search/' + this.options.query.replace(/ /g, '+') + '/' + this.options.page).then(data => {
+				LeekWars.get('encyclopedia/search/' + i18n.locale + '/' + this.options.query.replace(/ /g, '+') + '/' + this.options.page).then(data => {
 					this.results = data.results
 					this.pages = data.pages
 					this.count = data.count
