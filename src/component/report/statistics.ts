@@ -431,54 +431,63 @@ class FightStatistics {
 					this.addTime()
 					break
 				}
-				case ActionType.USE_WEAPON: {
-					const entity = entities[action[1]]
+				case ActionType.USE_WEAPON:
+				case ActionType.USE_WEAPON_OLD: {
+
+					let result: number
+					if (action.length === 3) { // Nouveau format [ type, cell, result ]
+						result = action[2]
+					} else { // Ancien format [ type, caster, cell, targets, result ]
+						result = action[4]
+					}
+					const entity = currentEntity
 					state = StatisticsState.USE_ITEM
 					itemCaster = entity
 
-					const cell = this.field.cells[action[2]]
-					// const weapon = LeekWars.weapons[LeekWars.weaponTemplates[action[3]].item]
-					// const area = weapon.area
-					// targets = this.field.getTargets(cell, area)
-					// console.log("weapon", weapon.name, "area", area, "targets", targets)
-
 					entity.actionsWeapon++
-					if (action[4] === 2) { // CC
+					if (result === 2) { // CC
 						entity.critical++
 					}
 					this.addTime(50)
 					break
 				}
-				case ActionType.USE_CHIP: {
-					const entity = entities[action[1]]
+				case ActionType.USE_CHIP:
+				case ActionType.USE_CHIP_OLD: {
+
+					let chip: number, cell: Cell, result: number
+					if (action.length === 4) { // Nouveau format [type, chip, cell, result]
+						chip = action[1]
+						cell = this.field.cells[action[2]]
+						result = action[3]
+					} else {
+						cell = this.field.cells[action[2]]
+						chip = action[3]
+						result = action[4]
+					}
+
+					const entity = currentEntity
 					state = StatisticsState.USE_ITEM
 					itemCaster = entity
 
-					const cell = this.field.cells[action[2]]
-					const chipID = action[3]
-					const chip = LeekWars.chips[LeekWars.chipTemplates[chipID].item]
-					// TODO
-					// const area = chip.area
-					// const targets = this.field.getTargets(cell, area) as StatisticsEntity[]
-					const targets = action[5].map((id: number) => entities[id])
-					// console.log("chip", chip.name, "area", area, "targets", targets)
+					const chip_template = LeekWars.chips[LeekWars.chipTemplates[chip].item]
+					const targets = this.field.getTargets(cell, chip_template.area) as StatisticsEntity[]
 
 					entity.actionsChip++
-					if (action[4] === 2) { // CC
+					if (result === 2) { // CC
 						entity.critical++
 					}
 					// Update leek cell after teleportation
-					if (chipID === 37 || chipID === 78) {
+					if (chip === 37 || chip === 78) {
 						entity.move(cell)
 					}
 					// Grapple and Boxing glove
-					else if (chipID === 88 || chipID === 89) {
+					else if (chip === 88 || chip === 89) {
 						if (targets.length) {
 							targets[0].move(cell)
 						}
 					}
 					// Update leeks cells after inversion
-					else if (chipID === 39 || chipID === 83) {
+					else if (chip === 39 || chip === 83) {
 						if (targets.length) {
 							targets[0].move(entity.cell!)
 							entity.move(cell)

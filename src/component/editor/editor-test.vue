@@ -32,7 +32,7 @@
 						</select>
 					</div>
 					<br>
-					<div class="team team1">
+					<div class="team">
 						<div class="leeks">
 							<div v-for="leek of currentScenario.team1" :key="leek.id" class="leek">
 								<div v-if="!currentScenario.base" v-ripple class="delete" @click="deleteLeek(leek, 0)">×</div>
@@ -47,7 +47,7 @@
 						</div>
 					</div>
 					<div v-if="currentScenario.type !== FightType.BATTLE_ROYALE" class="vs">VS</div>
-					<div v-if="currentScenario.type !== FightType.BATTLE_ROYALE" class="team team2">
+					<div v-if="currentScenario.type !== FightType.BATTLE_ROYALE" class="team">
 						<div class="leeks">
 							<div v-for="leek of currentScenario.team2" :key="leek.id" class="leek">
 								<div v-if="!currentScenario.base" v-ripple class="delete" @click="deleteLeek(leek, 1)">×</div>

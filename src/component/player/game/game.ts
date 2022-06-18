@@ -17,7 +17,7 @@ import { Action, ActionType } from '@/model/action'
 import { Area } from '@/model/area'
 import { Cell } from '@/model/cell'
 import { EffectType, EntityEffect } from '@/model/effect'
-import { Fight, FightData, FightType } from '@/model/fight'
+import { Fight, FightData, FightLeek, FightType } from '@/model/fight'
 import { i18n } from '@/model/i18n'
 import { LeekWars } from '@/model/leekwars'
 import { store } from '@/model/store'
@@ -569,19 +569,21 @@ class Game {
 		// Lecture des actions pour déterminer les puces et armes utilisées
 		const chipsUsed = new Set<number>()
 		const weaponsTaken = new Set<number>()
-		const weaponsUsed = new Set<number>()
-		const weapons: {[key: number]: number} = {}
 		for (const action of this.actions) {
 			switch (action.type) {
-				case ActionType.USE_CHIP:
+				case ActionType.USE_CHIP_OLD: {
 					chipsUsed.add(action.params[3])
 					break
-				case ActionType.SET_WEAPON:
-					weaponsTaken.add(action.params[2])
-					weapons[action.params[1] as number] = action.params[2]
+				}
+				case ActionType.USE_CHIP: {
+					chipsUsed.add(action.params[1])
 					break
-				case ActionType.USE_WEAPON:
-					weaponsUsed.add(weapons[action.params[1]])
+				}
+				case ActionType.SET_WEAPON_OLD:
+					weaponsTaken.add(action.params[2])
+					break
+				case ActionType.SET_WEAPON:
+					weaponsTaken.add(action.params[1])
 					break
 				case ActionType.LAMA:
 					S.lama.load(this)
@@ -1024,88 +1026,122 @@ class Game {
 			this.actionDone()
 			break
 		}
-		case ActionType.SET_WEAPON: {
+		case ActionType.SET_WEAPON_OLD: {
 			const leek = this.leeks[action.params[1]] as Leek
 			if (leek.fish) {
 				leek.setWeapon(new Fish(this))
 			} else {
 				leek.setWeapon(new WEAPONS[action.params[2] - 1]!(this))
 			}
-			leek.weapon_name = LeekWars.weapons[action.params[2]].name
-
 			this.log(action)
 			this.actionDone()
 			break
 		}
-		case ActionType.USE_CHIP: {
+		case ActionType.SET_WEAPON: {
+			const leek = this.leeks[this.currentPlayer!] as Leek
+			if (leek.fish) {
+				leek.setWeapon(new Fish(this))
+			} else {
+				leek.setWeapon(new WEAPONS[action.params[1] - 1]!(this))
+			}
+			action.entity = leek
+			this.log(action)
+			this.actionDone()
+			break
+		}
+		case ActionType.USE_CHIP:
+		case ActionType.USE_CHIP_OLD: {
 
-			const launcher_id = action.params[1] as number
-			const launcher = this.leeks[launcher_id]
-			const target_cell = this.ground.field.cells[action.params[2]]
-			const chip = action.params[3]
-			const result = action.params[4]
-			const targets_ids = action.params[5] as number[]
+			let chip: number, cell: Cell, result: number, new_format: boolean = false
+			if (action.params.length === 4) { // Nouveau format [ type, chip, cell, result ]
+				chip = action.params[1]
+				cell = this.ground.field.cells[action.params[2]]
+				result = action.params[3]
+				new_format = true
+			} else { // Nouveau format [ type, caster, cell, chip, result, targets ]
+				cell = this.ground.field.cells[action.params[2]]
+				chip = action.params[3]
+				result = action.params[4]
+			}
 
-			// TODO take the area from the action instead of the item data when available
-			// const area = LeekWars.chips[LeekWars.chipTemplates[chip].item].area
-			// const targets = this.ground.field.getTargets(target_cell, area) as FightEntity[]
-			const targets = targets_ids.map(id => this.leeks.find(l => l.id === id)!)
-			// console.log("ids", targets_ids, "targets", targets, "target_cell", target_cell)
+			const caster = this.leeks[this.currentPlayer!]
+			const chip_template = LeekWars.chips[LeekWars.chipTemplates[chip].item]
+			const targets = this.ground.field.getTargets(cell, chip_template.area) as FightEntity[]
 
+			action.entity = caster
+			action.item = chip_template
 			this.log(action)
 
 			if (this.jumping) {
 				// Update leek cell after teleportation
 				if (chip === 37 || chip === 78) {
-					target_cell.setEntity(launcher)
+					cell.setEntity(caster)
 				}
 				if (chip === 88 || chip === 89) { // boxing glove & grapple
 					if (targets.length) {
-						target_cell.setEntity(targets[0])
+						cell.setEntity(targets[0])
 					}
 				}
 				// Update leeks cells after inversion / repotting
 				if (chip === 39 || chip === 83) {
 					if (targets.length) { // C'est possible de lancer dans le vide
-						const launcher_cell = launcher.cell!
-						target_cell.setEntity(launcher)
+						const launcher_cell = caster.cell!
+						cell.setEntity(caster)
 						launcher_cell.setEntity(targets[0])
 					}
 				}
 				this.actionDone()
 				break
 			}
+
+			if (new_format) {
+				caster.looseTP(chip_template.cost, this.jumping)
+			}
+
 			if (CHIPS[chip - 1] !== null && chip !== 40) {
 				const chipAnimation: ChipAnimation = new CHIPS[chip - 1]!(this)
-				launcher.useChip(chipAnimation, target_cell, targets, result)
+				caster.useChip(chipAnimation, cell, targets, result)
 				this.chips.push(chipAnimation)
-				launcher.lastDamageType = chipAnimation.damageType
+				caster.lastDamageType = chipAnimation.damageType
 			} else {
 				this.actionDone()
 			}
 			break
 		}
-		case ActionType.USE_WEAPON: {
-			const leek = this.leeks[action.params[1]] as Leek
-			action.weapon = leek.weapon_name
-			this.log(action)
+		case ActionType.USE_WEAPON:
+		case ActionType.USE_WEAPON_OLD: {
 
+			let cell: Cell, result: number, new_format: boolean = false
+			if (action.params.length === 3) { // Nouveau format [ type, cell, result ]
+				cell = this.ground.field.cells[action.params[1]]
+				result = action.params[2]
+				new_format = true
+			} else { // Ancien format [ type, caster, cell, targets, result ]
+				cell = this.ground.field.cells[action.params[2]]
+				result = action.params[4]
+			}
+
+			const leek = this.leeks[this.currentPlayer!] as Leek
+			const weapon_template = LeekWars.weapons[LeekWars.items[leek.weapon!.id].params]
 			leek.lastDamageType = leek.weapon!.damageType
+			action.entity = leek
+			action.item = weapon_template
+			this.log(action)
 
 			if (this.jumping) {
 				this.actionDone()
 				break
 			}
-			const cell = this.ground.field.cells[action.params[2]]
-			const weapon = action.params[3]
-			const result = action.params[4]
 
-			// TODO take the area from the action instead of the item data when available
-			const area = LeekWars.weapons[weapon].area
-			const targets = this.ground.field.getTargets(cell, area) as FightEntity[]
+			// console.log(leek.weapon, weapon_template)
+			const targets = this.ground.field.getTargets(cell, weapon_template.area) as FightEntity[]
 
 			const duration = leek.useWeapon(cell, targets, result)
 			this.actionDone(Math.max(6, duration))
+
+			if (new_format) {
+				leek.looseTP(weapon_template.cost, this.jumping)
+			}
 
 			break
 		}
@@ -1179,7 +1215,8 @@ class Game {
 			}
 			break
 		}
-		case ActionType.SAY: {
+		case ActionType.SAY_OLD: {
+			action.entity = this.leeks[this.currentPlayer!]
 			this.log(action)
 			if (!this.jumping) {
 				const entity = this.leeks[action.params[1]]
@@ -1189,14 +1226,29 @@ class Game {
 				}
 				entity.say(this.ctx, message)
 			}
-			this.actionDone()
+			this.actionDone(40)
+			break
+		}
+		case ActionType.SAY: {
+			action.entity = this.leeks[this.currentPlayer!]
+			this.log(action)
+			if (!this.jumping) {
+				let message = action.params[1]
+				if (action.entity.farmer && action.entity.farmer.muted) {
+					message = "@*%#$€"
+				}
+				action.entity.say(this.ctx, message)
+			}
+			this.actionDone(40)
 			break
 		}
 		case ActionType.LAMA: {
+			action.entity = this.leeks[this.currentPlayer!]
+			this.log(action)
 			if (!this.jumping) {
-				this.leeks[action.params[1]].sayLama()
+				this.leeks[this.currentPlayer!].sayLama()
 			}
-			this.actionDone()
+			this.actionDone(40)
 			break
 		}
 		case ActionType.SUMMON: {
@@ -1241,7 +1293,8 @@ class Game {
 			this.actionDone()
 			break
 		}
-		case ActionType.SHOW: {
+		case ActionType.SHOW_OLD: {
+			action.entity = this.leeks[this.currentPlayer!]
 			this.log(action)
 			if (this.jumping) {
 				this.actionDone()
@@ -1249,6 +1302,22 @@ class Game {
 			}
 			this.showCellCell = this.ground.field.cells[action.params[2]]
 			this.showCellColor = '#' + action.params[3]
+			const pos = this.ground.field.cellToXY(this.showCellCell)
+			const xy = this.ground.xyToXYPixels(pos.x, pos.y)
+			this.showCellX = xy.x * this.ground.scale
+			this.showCellY = xy.y * this.ground.scale
+			this.showCellTime = 50
+			break
+		}
+		case ActionType.SHOW: {
+			action.entity = this.leeks[this.currentPlayer!]
+			this.log(action)
+			if (this.jumping) {
+				this.actionDone()
+				break
+			}
+			this.showCellCell = this.ground.field.cells[action.params[1]]
+			this.showCellColor = '#' + action.params[2]
 			const pos = this.ground.field.cellToXY(this.showCellCell)
 			const xy = this.ground.xyToXYPixels(pos.x, pos.y)
 			this.showCellX = xy.x * this.ground.scale

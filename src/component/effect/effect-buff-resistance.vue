@@ -3,7 +3,7 @@
 	<i18n path="fight.leek_win_x_turns" tag="div">
 		<leek slot="leek" :leek="props.leek" />
 		<template v-slot:value>
-			<b class="color-strength">{{ parent.$t('fight.n_strength', [props.value]) }}</b>
+			<b class="color-resistance">{{ parent.$t('fight.n_resistance', [props.value]) }}</b>
 		</template>
 		<template v-slot:turns>
 			<b>{{ parent.formatTurns(props.turns) }}</b>
@@ -17,7 +17,7 @@
 	import ActionLeekElement from '../report/action-leek.vue'
 
 	@Component({ components: { leek: ActionLeekElement } })
-	export default class EffectBuffStrength extends Vue {
+	export default class EffectBuffResistance extends Vue {
 		@Prop() leek!: FightLeek
 		@Prop() value!: number
 		@Prop() turns!: number

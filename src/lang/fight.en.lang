@@ -2,6 +2,7 @@
 	"fail": "Failure",
 	"leek_bug": "{0} has crashed",
 	"leek_cast": "{leek} uses {chip}",
+	"leek_cast_cost": "{leek} uses {chip} ({cost})",
 	"leek_hit": "{leek} hits",
 	"leek_is_dead": "{leek} is dead!",
 	"leek_level": "Level {0}",
@@ -10,9 +11,11 @@
 	"leek_resurrect": "{leek} resurrects {target}",
 	"leek_move": "{leek} moves",
 	"leek_shoot": "{leek} attacks with {weapon}",
-	"leek_show_cell": "{leek} indicates cell {cell}",
-	"leek_speak": "{leek} says : « {text} »",
+	"leek_shoot_cost": "{leek} attacks with {weapon} ({cost})",
+	"leek_show_cell": "{leek} indicates cell {cell} ({cost})",
+	"leek_speak": "{leek} says : « {text} » ({cost})",
 	"leek_take_weapon": "{leek} takes weapon {weapon}",
+	"leek_take_weapon_cost": "{leek} takes weapon {weapon} ({cost})",
 	"leek_win_x": "{leek} gains {value}",
 	"leek_win_x_turns": "{leek} gains {value} ({turns} turns)",
 	"leek_receives_x": "{leek} receives {value} ({turns} turns)",
@@ -44,5 +47,5 @@
 	"turn_of_leek": "{leek}'s turn",
 	"turret": "Turret",
 	"end_of_fight": "End of fight!",
-	"lama": "{0} calls upon the powers of the 🦙"
+	"lama": "{leek} calls upon the powers of the 🦙 ({cost})"
 }

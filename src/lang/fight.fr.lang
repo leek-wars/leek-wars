@@ -2,6 +2,7 @@
 	"fail": "Échec",
 	"leek_bug": "{leek} a planté !",
 	"leek_cast": "{leek} lance {chip}",
+	"leek_cast_cost": "{leek} lance {chip} ({cost})",
 	"leek_hit": "{leek} frappe",
 	"leek_is_dead": "{leek} est mort !",
 	"leek_level": "Niveau {0}",
@@ -10,9 +11,11 @@
 	"leek_resurrect": "{leek} ressucite {target}",
 	"leek_move": "{leek} se déplace",
 	"leek_shoot": "{leek} attaque avec {weapon}",
-	"leek_show_cell": "{leek} montre la cellule {cell}",
-	"leek_speak": "{leek} dit : « {text} »",
+	"leek_shoot_cost": "{leek} attaque avec {weapon} ({cost})",
+	"leek_show_cell": "{leek} montre la cellule {cell} ({cost})",
+	"leek_speak": "{leek} dit : « {text} » ({cost})",
 	"leek_take_weapon": "{leek} prend l'arme {weapon}",
+	"leek_take_weapon_cost": "{leek} prend l'arme {weapon} ({cost})",
 	"leek_win_x": "{leek} gagne {value}",
 	"leek_win_x_turns": "{leek} gagne {value} ({turns} tours)",
 	"leek_receives_x": "{leek} reçoit {value} ({turns} tours)",
@@ -44,5 +47,5 @@
 	"turn_of_leek": "Tour de {leek}",
 	"turret": "Tourelle",
 	"end_of_fight": "Fin du combat !",
-	"lama": "{0} fait appel aux pouvoirs du 🦙"
+	"lama": "{leek} fait appel aux pouvoirs du 🦙 ({cost})"
 }

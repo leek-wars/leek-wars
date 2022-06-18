@@ -1,8 +1,10 @@
+import { FightLeek, ReportLeek } from "./fight"
+
 enum ActionType {
 	START_FIGHT = 0,
-	USE_WEAPON = 1,
-	USE_CHIP = 2,
-	SET_WEAPON = 3,
+	USE_WEAPON_OLD = 1,
+	USE_CHIP_OLD = 2,
+	SET_WEAPON_OLD = 3,
 	END_FIGHT = 4,
 	PLAYER_DEAD = 5,
 	NEW_TURN = 6,
@@ -10,6 +12,9 @@ enum ActionType {
 	END_TURN = 8,
 	SUMMON = 9,
 	MOVE_TO = 10,
+	USE_WEAPON = 11,
+	USE_CHIP = 12,
+	SET_WEAPON = 13,
 	TP_LOST = 100,
 	LIFE_LOST = 101,
 	MP_LOST = 102,
@@ -22,10 +27,11 @@ enum ActionType {
 	POISON_DAMAGE = 110,
 	AFTEREFFECT = 111,
 	NOVA_VITALITY = 112,
-
-	SAY = 200,
+	SAY_OLD = 200,
 	LAMA = 201,
-	SHOW = 202,
+	SHOW_OLD = 202,
+	SAY = 203,
+	SHOW = 205,
 	ADD_WEAPON_EFFECT = 301,
 	ADD_CHIP_EFFECT = 302,
 	REMOVE_EFFECT = 303,
@@ -41,7 +47,8 @@ type ActionLog = any[]
 class Action {
 	params!: any[]
 	logs: ActionLog[] = []
-	weapon: string | null = null
+	item: any | null = null
+	entity: any | null = null
 	me: boolean = false
 
 	get type() { return this.params[0] }

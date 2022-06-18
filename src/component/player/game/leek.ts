@@ -21,7 +21,7 @@ class Leek extends FightEntity {
 	public handPos = 0
 	// Weapon
 	public weapon: WeaponAnimation | null = null
-	public weapon_name: string | null = null
+	// public weapon_name: string | null = null
 	public skin!: number
 	public hatTemplate!: HatTemplate
 	public heightAnim: number = 0

@@ -13,7 +13,7 @@
 			</div>
 			<div class="tabs">
 				<div v-if="report && $store.getters.admin" class="tab disabled">
-					{{ fight.size | number }} Ko
+					{{ (fight.size / 1000) | number }} Ko
 				</div>
 				<a v-if="report && (errors.length > 0 || warnings.length > 0)" href="#errors" class="tab">
 					<span v-if="errors.length > 0"><v-icon class="error">mdi-alert-circle</v-icon> {{ errors.length }} </span>
@@ -258,6 +258,7 @@
 	import { TEAM_COLORS } from '@/model/team'
 	import Chartist from 'chartist'
 	import { Component, Vue, Watch } from 'vue-property-decorator'
+import ActionLeekTurn from '../action/action-leek-turn.vue'
 	import ActionsElement from './report-actions.vue'
 	import ReportBlock from './report-block.vue'
 	import ReportLeekRow from './report-leek-row.vue'
@@ -271,7 +272,7 @@
 		TEAM_COLORS = TEAM_COLORS
 		fight: Fight | null = null
 		report: Report | null = null
-		actions: readonly any[] | null = null
+		actions: readonly Action[] | null = null
 		leeks: {[key: number]: ReportLeek} = {}
 		farmers: {[key: number]: any} = {}
 		logs: {[key: number]: any[][]} = {}
@@ -386,16 +387,49 @@
 					}
 					leek.farmer = this.farmers[leek.farmer]
 				}
+
+				let currentPlayer: ReportLeek | null = null
 				this.actions = this.fight.data.actions.map((a: any) => {
 					const action = new Action(a)
-					if (a[0] === ActionType.SET_WEAPON) {
-						this.leeks[a[1]].weapon_name = LeekWars.weapons[a[2]].name
-					} else if (a[0] === ActionType.USE_WEAPON) {
-						action.weapon = this.leeks[a[1]].weapon_name
+					if (a[0] === ActionType.LEEK_TURN) {
+						currentPlayer = this.leeks[a[1]]
+					} else if (a[0] === ActionType.SET_WEAPON_OLD) {
+						this.leeks[a[1]].weapon = LeekWars.weapons[a[2]]
+					} else if (a[0] === ActionType.SET_WEAPON) {
+						currentPlayer!.weapon = LeekWars.weapons[a[1]]
+					} else if (a[0] === ActionType.USE_WEAPON || a[0] === ActionType.USE_WEAPON_OLD) {
+						action.item = currentPlayer!.weapon
+					} else if (a[0] === ActionType.USE_CHIP) {
+						action.item = LeekWars.chips[LeekWars.chipTemplates[a[1]].item]
 					}
+					action.entity = currentPlayer
 					return action
 				})
 				// console.log(this.actions)
+
+				if (false) {
+					const s = (n: any) => {
+						if (typeof n === 'number')
+							return (1 + Math.log10(n)) | 0
+						return 2 + n.length
+					}
+					let sizes = {} as any
+					let count = {} as any
+					let total = 0
+					for (const action of this.actions) {
+						const size = 1 + action.params.reduce((t, p) => t + s(p), 0) + (action.params.length - 1) + 1
+						if (!(action.type in sizes)) {
+							count[action.type] = sizes[action.type] = 0
+						}
+						sizes[action.type] += size
+						count[action.type]++
+						total += size
+					}
+					let result = Object.entries(sizes).map((v) => [ ActionType[v[0]], v[1], count[v[0]] ])
+					result.sort((a, b) => b[1] - a[1])
+					console.log(result, total)
+				}
+
 				this.statistics = new FightStatistics()
 				this.statistics.generate(this.fight)
 				// console.log(this.statistics)
