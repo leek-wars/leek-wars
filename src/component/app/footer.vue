@@ -1,5 +1,5 @@
 <template lang="html">
-	<div class="footer">
+	<footer class="footer">
 		<div class="column">
 			<h4 class="version">Leek Wars {{ LeekWars.smart_version }}</h4>
 			<router-link to="/about" class="item">{{ $t('main.about') }}</router-link>
@@ -67,7 +67,7 @@
 		<div class="cookies">
 			<div v-for="(cookie, c) in cookies" :key="c" class="cookie" :style="{left: cookie[0] + 'px', top: cookie[1] + 'px', 'font-size': cookie[2] + 'px', 'transform': 'rotate(' + cookie[3] + 'deg)'}">🍪</div>
 		</div>
-	</div>
+	</footer>
 </template>
 
 <script lang="ts">
