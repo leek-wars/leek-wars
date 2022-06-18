@@ -35,9 +35,9 @@
 				{{ entity.name }}
 			</tooltip>
 		</div>
-		<div v-if="!LeekWars.mobile && game.showActions && actionsWidth > 0" ref="actions" class="actions" :class="{large: game.largeActions}" :style="{'width': game.largeActions ? actionsWidth + 'px' : null, 'max-width': game.largeActions ? Math.max(600, actionsWidth) + 'px' : null}">
+		<div v-if="!LeekWars.mobile && game.showActions && actionsWidth > 0" ref="actions" class="fight-actions" :class="{large: game.largeActions}" :style="{'width': game.largeActions ? actionsWidth + 'px' : null, 'max-width': game.largeActions ? Math.max(600, actionsWidth) + 'px' : null}">
 			<template v-for="line of game.consoleLines">
-				<action-element v-if="line.action" :key="line.id" :action="line.action" :leeks="game.leeks" :display-logs="true" :dark="dark" :turn="game.turn" class="action" />
+				<component :is="ActionComponents[line.action.type]" v-if="line.action" :key="line.id" :action="line.action" />
 				<div v-else-if="line.trophy" :key="line.id" class="notif-trophy">
 					<img :src="'/image/trophy/' + line.trophy.name + '.svg'">
 					<i18n path="trophy.x_unlocks_t">
@@ -45,7 +45,7 @@
 						<b slot="trophy">{{ $t('trophy.' + line.trophy.name) }}</b>
 					</i18n>
 				</div>
-				<pre v-else :key="line.id" :class="logClass(line.log)" :style="{color: logColor(line.log)}" class="log">[<leek :leek="game.leeks[line.log[0]]" :dark="dark" />] {{ logText(line.log) }}</pre>
+				<pre v-else :key="line.id" :class="logClass(line.log)" :style="{color: logColor(line.log)}">[<leek :leek="game.leeks[line.log[0]]" />] {{ logText(line.log) }}</pre>
 			</template>
 		</div>
 		<div v-if="game.showActions && game.largeActions" class="resizer" :style="{left: actionsWidth + 'px'}" @mousedown="resizerMousedown"></div>
@@ -60,21 +60,22 @@
 <script lang="ts">
 	import EntityDetails from '@/component/player/entity-details.vue'
 	import ActionLeekElement from '@/component/report/action-leek.vue'
-	import ActionElement from '@/component/report/action.vue'
-	import { Effect, EffectType } from '@/model/effect'
+	import { ActionComponents, EffectComponents } from '@/model/action-components'
 	import { i18n } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 	import { Game } from './game/game'
 	import { Turret } from './game/turret'
 
-	@Component({ name: 'hud', components: { ActionElement, EntityDetails, leek: ActionLeekElement } })
+	@Component({ name: 'hud', components: { EntityDetails, leek: ActionLeekElement } })
 	export default class Hud extends Vue {
 		@Prop({required: true}) game!: Game
 		debug: boolean = false
 		hover_entity: any | null = null
 		Turret = Turret
 		actionsWidth: number = 395
+		ActionComponents = ActionComponents
+		EffectComponents = EffectComponents
 
 		get barWidth() {
 			return LeekWars.mobile ? 300 : 500
@@ -87,6 +88,9 @@
 		}
 		get dark() {
 			return this.game.autoDark ? (this.game.map && this.game.map.options.dark) : this.game.dark
+		}
+		get leeks() {
+			return this.game.leeks
 		}
 
 		created() {
@@ -104,6 +108,9 @@
 			this.game.selectEntity(entity)
 		}
 
+		formatTurns(turns: number) {
+			return turns === -1 ? '∞' : turns
+		}
 		logClass(log: any[]) {
 			if (log[1] === 2 || log[1] === 7 || log[1] === 11) { return "warning" }
 			else if (log[1] === 3 || log[1] === 8) { return "error" }
@@ -251,7 +258,7 @@
 	.life-bar .wrapper :last-of-type {
 		border-bottom-right-radius: 10px;
 	}
-	.actions {
+	.fight-actions {
 		text-align: left;
 		max-height: 100px;
 		width: 395px;
@@ -293,18 +300,12 @@
 				background-color: #f2f2f2dd;
 			}
 		}
-		.action {
+		& > div {
 			padding: 1px 0;
 			font-size: 14px;
 			width: max(588px, 100%);
 		}
-		.log {
-			padding: 2px 0;
-			font-size: 11px;
-			margin: 0;
-			font-family: monospace;
-			word-break: break-all;
-			white-space: pre-wrap;
+		pre {
 			width: max(588px, 100%);
 		}
 	}
@@ -322,7 +323,7 @@
 		}
 	}
 	.hud.dark {
-		.actions {
+		.fight-actions {
 			background-color: #222;
 			color: #eee;
 			&:hover {

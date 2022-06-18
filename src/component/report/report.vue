@@ -156,7 +156,7 @@
 					<div class="spacer"></div>
 					<v-switch v-model="chartDisplaySummons" :label="$t('display_summons')" :hide-details="true" />
 				</div>
-				<chartist ref="chart" :data="chartData" :options="chartOptions" :event-handlers="chartEvents" ratio="ct-major-eleventh" class="chart" :class="{long: statistics.lives.length >= 30}" type="Line" />
+				<chartist ref="chart" :data="chartData" :options="chartOptions" :event-handlers="chartEvents" ratio="ct-major-eleventh" class="chart" :class="{long: statistics && statistics.lives.length >= 30}" type="Line" />
 				<div v-show="chartTooltipValue" ref="chartTooltip" :style="{top: chartTooltipY + 'px', left: chartTooltipX + 'px'}" class="chart-tooltip v-tooltip__content top" v-html="chartTooltipValue"></div>
 			</div>
 		</panel>
@@ -195,7 +195,7 @@
 		</panel>
 
 		<panel :title="$t('statistics')" toggle="report/statistics" icon="mdi-table-large">
-			<loader v-if="!report" />
+			<loader v-if="!statistics" />
 			<div v-else class="scroll-x">
 				<report-statistics :fight="fight" :statistics="statistics" />
 			</div>
@@ -221,7 +221,7 @@
 			<template slot="title">Erreurs et avertissements ({{ errors.length + warnings.length }})</template>
 			<div class="logs">
 				<div class="turn">
-					<div id="turn-0" class="turn">
+					<div id="turn-0" class="black">
 						<span class="label" @click="goToTurn(0)">{{ $t('errors') }}</span>
 						<v-icon v-if="report" class="disabled">mdi-chevron-left</v-icon>
 						<v-icon v-if="report" @click="goToTurn(1)">mdi-chevron-right</v-icon>
@@ -241,9 +241,7 @@
 				<v-switch v-model="actionsDisplayAlliesLogs" :label="$t('display_allies_logs')" :hide-details="true" />
 			</div>
 			<loader v-if="!loaded" />
-			<div v-else>
-				<actions :has-err-warn="hasErrWarn" :report="report" :actions="actions" :leeks="leeks" :display-logs="actionsDisplayLogs" :display-allies-logs="actionsDisplayAlliesLogs" class="actions" />
-			</div>
+			<actions v-else :has-err-warn="hasErrWarn" :report="report" :actions="actions" :leeks="leeks" :display-logs="actionsDisplayLogs" :display-allies-logs="actionsDisplayAlliesLogs" class="actions" />
 		</panel>
 	</div>
 </template>
@@ -273,7 +271,7 @@
 		TEAM_COLORS = TEAM_COLORS
 		fight: Fight | null = null
 		report: Report | null = null
-		actions: Action[] | null = null
+		actions: readonly any[] | null = null
 		leeks: {[key: number]: ReportLeek} = {}
 		farmers: {[key: number]: any} = {}
 		logs: {[key: number]: any[][]} = {}
@@ -289,7 +287,7 @@
 		smooth: boolean = false
 		log: boolean = false
 		turrets: boolean = false
-		statistics!: FightStatistics
+		statistics: FightStatistics | null = null
 		chartData: any = null
 		chartOptions: any = null
 		chartEvents: any = []
@@ -379,9 +377,25 @@
 					this.generating = true
 					return
 				}
-				this.fight = data
+				this.fight = Object.freeze(data)
 				this.report = this.fight.report
-				this.actions = this.fight.data.actions.map(a => new Action(a))
+				for (const leek of this.fight.data.leeks) {
+					this.leeks[leek.id] = leek as any
+					if (leek.type !== 0) {
+						leek.name = this.$i18n.t('entity.' + leek.name) as string
+					}
+					leek.farmer = this.farmers[leek.farmer]
+				}
+				this.actions = this.fight.data.actions.map((a: any) => {
+					const action = new Action(a)
+					if (a[0] === ActionType.SET_WEAPON) {
+						this.leeks[a[1]].weapon_name = LeekWars.weapons[a[2]].name
+					} else if (a[0] === ActionType.USE_WEAPON) {
+						action.weapon = this.leeks[a[1]].weapon_name
+					}
+					return action
+				})
+				// console.log(this.actions)
 				this.statistics = new FightStatistics()
 				this.statistics.generate(this.fight)
 				// console.log(this.statistics)
@@ -393,35 +407,8 @@
 					this.farmers[fid] = this.fight.farmers2[fid]
 				}
 
-				for (const leek of this.fight.data.leeks) {
-					this.leeks[leek.id] = leek as any
-					if (leek.type !== 0) {
-						leek.name = this.$i18n.t('entity.' + leek.name) as string
-					}
-					leek.farmer = this.farmers[leek.farmer]
-				}
-				for (const action of this.actions) {
-					if (action.params[0] === ActionType.SET_WEAPON) {
-						this.leeks[action.params[1]].weapon_name = LeekWars.weapons[action.params[2]].name
-					} else if (action.params[0] === ActionType.USE_WEAPON) {
-						action.weapon = this.leeks[action.params[1]].weapon_name
-					}
-				}
-				// if (this.$store.getters.admin && this.fight.data.times) {
-				// 	for (const l in this.fight.data.times) {
-				// 		const id = parseInt(l, 10)
-				// 		const leek = this.report.leeks1.find(x => x.id === id)
-				// 		if (leek) {
-				// 			leek.time = this.fight.data.times[l]
-				// 		}
-				// 		const leek2 = this.report.leeks2.find(x => x.id === id)
-				// 		if (leek2) {
-				// 			leek2.time = this.fight.data.times[l]
-				// 		}
-				// 	}
-				// }
 				LeekWars.get('fight/get-logs/' + id).then(d => {
-					this.logs = d
+					this.logs = Object.freeze(d)
 					this.processLogs()
 					this.warningsErrors()
 				})
@@ -564,13 +551,13 @@
 
 		@Watch('chartDisplaySummons')
 		updateChart() {
-			if (!this.fight) { return }
+			if (!this.fight || !this.statistics) { return }
 			let series = this.log ? this.statistics.lives_percent : this.statistics.lives
 			if (!this.chartDisplaySummons) {
-				series = series.filter((value, index) => !this.statistics.entities[index].leek.summon)
+				series = series.filter((value, index) => !this.statistics!.entities[index].leek.summon)
 			}
 			if (!this.turrets) {
-				series = series.filter((value, index) => this.statistics.entities[index].leek.name !== 'turret')
+				series = series.filter((value, index) => this.statistics!.entities[index].leek.name !== 'turret')
 			}
 			this.chartData = {
 				series
@@ -589,7 +576,7 @@
 				event: 'draw', fn: (context: any) => {
 					if (context.type === 'line') {
 						context.element.attr({
-							style: 'stroke: ' + (TEAM_COLORS[this.statistics.entities[context.index].leek.team - 1])
+							style: 'stroke: ' + (TEAM_COLORS[this.statistics!.entities[context.index].leek.team - 1])
 						})
 					}
 					if (context.type === 'label') {
@@ -635,7 +622,7 @@
 			this.chartTooltipY = top - 40
 
 			const value = Math.round(this.chart.bounds.low + (this.chart.chartRect.y1 - top) * (this.chartScale / (this.chart.chartRect.y1 - this.chart.chartRect.y2)))
-			this.chartTooltipValue = this.statistics.entities[this.chartTooltipLeek].leek.name + '<br>' + value + (this.log ? '%' : '') + ' PV'
+			this.chartTooltipValue = this.statistics!.entities[this.chartTooltipLeek].leek.name + '<br>' + value + (this.log ? '%' : '') + ' PV'
 		}
 
 		comment(comment: Comment) {
@@ -654,8 +641,8 @@
 		getChartDamage() {
 			const entities: any[][] = [] // Entities or teams
 
-			for (const e in this.statistics.entities) {
-				const entity = this.statistics.entities[e]
+			for (const e in this.statistics!.entities) {
+				const entity = this.statistics!.entities[e]
 				let total = 0
 				let stats: any[] = []
 				const name = entity.leek.type !== 0 ? this.$t('entity.' + entity.name) : entity.name
@@ -694,8 +681,8 @@
 				}
 			}
 			entities.sort((a: any, b: any) => {
-				const team1 = this.statistics.entities[a[1]].leek.team
-				const team2 = this.statistics.entities[b[1]].leek.team
+				const team1 = this.statistics!.entities[a[1]].leek.team
+				const team2 = this.statistics!.entities[b[1]].leek.team
 				if (this.fight!.type !== FightType.BATTLE_ROYALE && team1 !== team2) {
 					return team2 - team1
 				}
@@ -777,11 +764,11 @@
 
 		walkedCells(fid: number) {
 			if (fid === 999) {
-				this.map_teams = this.statistics.teams
+				this.map_teams = this.statistics!.teams
 			} else if (fid < 0) {
-				this.map_teams = {[-fid]: this.statistics.teams[-fid]}
+				this.map_teams = {[-fid]: this.statistics!.teams[-fid]}
 			} else {
-				this.map_teams = {[this.statistics.entities[fid].team]: this.statistics.entities[fid].walkedCells}
+				this.map_teams = {[this.statistics!.entities[fid].team]: this.statistics!.entities[fid].walkedCells}
 			}
 		}
 
@@ -1127,13 +1114,14 @@
 			}
 		}
 	}
-	.turn {
+	::v-deep .turn {
 		position: sticky;
 		top: 0;
 		background: #f2f2f2;
 		padding: 7px 0;
 		margin: 0;
-		.turn {
+		display: inline-block;
+		.black {
 			font-size: 16px;
 			background: #333;
 			color: #eee;
