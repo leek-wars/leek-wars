@@ -18,7 +18,7 @@
 				<span v-for="(items, l) in levels" :key="l" class="level">
 					<span class="title" :class="{bold: (l + 1) % 10 === 0}">{{ l + 1 }}</span>
 					<template v-for="item in items">
-						<div v-if="item.trophy && !(item.trophy in trophies)" :key="item.id" class="locked">?</div>
+						<div v-if="item.trophy && (!(item.trophy in trophies) || !trophies[item.trophy].unlocked)" :key="item.id" class="locked">?</div>
 						<item v-else :key="item.id" :item="{template: item.id}" />
 					</template>
 				</span>
@@ -37,7 +37,7 @@
 	@Component({ name: 'items', i18n: {}, components: { Breadcrumb } })
 	export default class Items extends Vue {
 
-		trophies: any = []
+		trophies: any = {}
 
 		created() {
 			LeekWars.setTitle("Items")
@@ -46,7 +46,9 @@
 			LeekWars.large = true
 			if (store.state.connected) {
 				LeekWars.get('trophy/my-trophies/' + this.$i18n.locale).then(data => {
-					this.trophies = data.trophies
+					for (const trophy of data.trophies) {
+						Vue.set(this.trophies, trophy.id, trophy)
+					}
 				})
 			}
 		}
