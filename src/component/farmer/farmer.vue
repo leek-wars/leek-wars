@@ -270,9 +270,7 @@
 						<tooltip v-for="(trophy, t) in trophies_list" v-if="trophy != null" :key="t">
 							<template v-slot:activator="{ on }">
 								<router-link :to="'/trophy/' + trophy.code">
-									<span class="trophy" v-on="on">
-										<img :src="'/image/trophy/' + trophy.code + '.svg'">
-									</span>
+									<img class="trophy" v-on="on" :src="'/image/trophy/' + trophy.code + '.svg'">
 								</router-link>
 							</template>
 							<div class="header">
@@ -286,14 +284,12 @@
 					<div v-show="trophiesMode == 'grid'" class="grid trophies-container">
 						<tooltip v-for="(trophy, t) in trophies_grid" :key="t" :disabled="!trophy">
 							<template v-slot:activator="{ on }">
-								<span v-on="on">
-									<router-link v-if="trophy != null" :to="'/trophy/' + trophy.code" class="trophy card">
-										<img :src="'/image/trophy/' + trophy.code + '.svg'">
-									</router-link>
-									<div v-else class="trophy locked">
-										<img src="/image/unknown.png">
-									</div>
-								</span>
+								<router-link v-if="trophy != null" :to="'/trophy/' + trophy.code" class="card">
+									<img :src="'/image/trophy/' + trophy.code + '.svg'" v-on="on" class="trophy">
+								</router-link>
+								<div v-else class="locked" v-on="on">
+									<img class="trophy" src="/image/unknown.png">
+								</div>
 							</template>
 							<span v-if="trophy">
 								<div class="header">
@@ -315,9 +311,7 @@
 							<tooltip v-for="trophy in bonus_trophies" :key="trophy.id">
 								<template v-slot:activator="{ on }">
 									<router-link :to="'/trophy/' + trophy.code" :class="{card: trophiesMode == 'grid'}">
-										<span class="trophy" v-on="on">
-											<img :src="'/image/trophy/' + trophy.code + '.svg'">
-										</span>
+										<img class="trophy" :src="'/image/trophy/' + trophy.code + '.svg'" v-on="on">
 									</router-link>
 								</template>
 								<div class="header">
@@ -1101,13 +1095,8 @@
 		border: 1px solid transparent;
 		text-align: center;
 		display: block;
-		span {
-			width: 100%;
-		}
-		img {
-			width: 100%;
-			vertical-align: bottom;
-		}
+		width: 100%;
+		vertical-align: bottom;
 	}
 	.trophy-date {
 		padding-top: 4px;
