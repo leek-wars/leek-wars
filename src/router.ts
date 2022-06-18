@@ -117,7 +117,7 @@ const routes = [
 	{ path: '/changelog', component: Changelog },
 	{ path: '/change-email/:state/:token', component: ChangeEmail },
 	{ path: '/encyclopedia', component: Encyclopedia, meta: {scrollOffset: 45} },
-	{ path: '/encyclopedia/:page', component: Encyclopedia, meta: {scrollOffset: 45} },
+	{ path: '/encyclopedia/:lang/:page', component: Encyclopedia, meta: {scrollOffset: 45} },
 	{ path: '/encyclopedia-search', component: EncyclopediaSearch },
 	{ path: '/editor', component: Editor, beforeEnter: connected },
 	{ path: '/editor/:id', component: Editor, beforeEnter: connected },
