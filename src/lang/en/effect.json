@@ -48,7 +48,7 @@
 	"through_obstacles": "through obstacles",
 	"type_1": "Deals <b>{0}</b> to <b>{1}</b> damage",
 	"type_1_fixed": "Deals <b>{0}</b> damage",
-	"type_2": "Restores <b>{0}</b> to <b>{0}</b> HP",
+	"type_2": "Restores <b>{0}</b> to <b>{1}</b> HP",
 	"type_2_fixed": "Restores <b>{0}</b> HP",
 	"type_3": "Increases strength by <b>{0}</b> to <b>{1}</b>",
 	"type_3_fixed": "Increases strength by <b>{0}</b>",

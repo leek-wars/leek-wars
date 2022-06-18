@@ -3,7 +3,7 @@
 		<i18n path="fight.leek_shoot">
 			<leek slot="leek" :leek="parent.leeks[props.action.params[1]]" />
 			<template v-slot:weapon>
-				<b>{{ parent.$t('weapon.' + props.action.weapon) }}</b>
+				<b>{{ parent.$t('weapon.' + props.action.item.name) }}</b>
 			</template>
 		</i18n>
 		<span v-if="props.action.params[4] === 2">... {{ parent.$t('effect.critical') }}</span>

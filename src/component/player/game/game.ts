@@ -999,6 +999,7 @@ class Game {
 			const end_cell = action.params[3][action.params[3].length - 1]
 			if (this.jumping) {
 				this.ground.field.cells[end_cell].setEntity(this.leeks[entity])
+				this.leeks[action.params[1]].looseMP(action.params[3].length, this.jumping)
 				this.actionDone()
 			} else {
 				const cells = [] as Cell[]
@@ -1010,7 +1011,7 @@ class Game {
 			break
 		}
 		case ActionType.MP_LOST: {
-			this.leeks[action.params[1]].looseMP(action.params[2], this.jumping)
+			// this.leeks[action.params[1]].looseMP(action.params[2], this.jumping)
 			this.actionDone()
 			break
 		}
@@ -1336,6 +1337,11 @@ class Game {
 			this.actionDone()
 			break
 		}
+		case ActionType.STACK_EFFECT: {
+			this.stackEffect(action)
+			this.actionDone()
+			break
+		}
 		case ActionType.REMOVE_EFFECT : {
 			this.removeEffect(action.params[1])
 			this.actionDone()
@@ -1385,7 +1391,23 @@ class Game {
 		}
 	}
 
+	public stackEffect(action: Action) {
+		const id = action.params[1]
+		const value = action.params[2]
+
+		const effect = this.effects[id]
+		if (effect) {
+			effect.value += value
+			const leek = this.leeks[effect.target]
+			this.updateCharacteristics(leek, effect.type, value)
+
+			action.item = effect
+			this.log(action)
+		}
+	}
+
 	public addEffect(action: Action, stacked: boolean) {
+
 		const item = action.params[1]
 		const id = action.params[2]
 		const caster_id = action.params[3]
@@ -1393,7 +1415,7 @@ class Game {
 		const type = action.params[5]
 		const value = action.params[6]
 		const turns = action.params[7]
-		const modifiers = action.params[8]
+
 		const caster = this.leeks[caster_id]
 		const leek = this.leeks[target]
 
@@ -1407,6 +1429,8 @@ class Game {
 				}
 			}
 		} else {
+
+			const modifiers = action.params[8]
 
 			// Ajout de l'image sur le hud
 			let image: string = ''
@@ -1449,78 +1473,82 @@ class Game {
 
 		this.log(action)
 
+		this.updateCharacteristics(leek, type, value)
+	}
+
+	public updateCharacteristics(leek: FightEntity, type: number, value: number) {
 		switch (type) {
-		case EffectType.ABSOLUTE_SHIELD:
-		case EffectType.DAMAGE_TO_ABSOLUTE_SHIELD:
-		case EffectType.RAW_ABSOLUTE_SHIELD:
-		case EffectType.STEAL_ABSOLUTE_SHIELD:
-			leek.buffAbsoluteShield(value, this.jumping)
-			break
-		case EffectType.RELATIVE_SHIELD:
-			leek.buffRelativeShield(value, this.jumping)
-			break
-		case EffectType.VULNERABILITY:
-			leek.buffRelativeShield(-value, this.jumping)
-			break
-		case EffectType.ABSOLUTE_VULNERABILITY:
-			leek.buffAbsoluteShield(-value, this.jumping)
-			break
-		case EffectType.BUFF_AGILITY:
-		case EffectType.RAW_BUFF_AGILITY:
-			leek.buffAgility(value, this.jumping)
-			break
-		case EffectType.RAW_BUFF_MAGIC:
-			leek.buffMagic(value, this.jumping)
-			break
-		case EffectType.RAW_BUFF_SCIENCE:
-			leek.buffScience(value, this.jumping)
-			break
-		case EffectType.BUFF_STRENGTH:
-		case EffectType.RAW_BUFF_STRENGTH:
-			leek.buffStrength(value, this.jumping)
-			break
-		case EffectType.BUFF_TP:
-		case EffectType.RAW_BUFF_TP:
-			leek.buffTP(value, this.jumping)
-			break
-		case EffectType.BUFF_MP:
-		case EffectType.RAW_BUFF_MP:
-			leek.buffMP(value, this.jumping)
-			break
-		case EffectType.BUFF_WISDOM:
-		case EffectType.RAW_BUFF_WISDOM:
-			leek.buffWisdom(value, this.jumping)
-			break
-		case EffectType.BUFF_RESISTANCE:
-		case EffectType.RAW_BUFF_RESISTANCE:
-			leek.buffResistance(value, this.jumping)
-			break
-		case EffectType.SHACKLE_MP:
-			leek.looseMP(value, this.jumping)
-			break
-		case EffectType.SHACKLE_TP:
-			leek.looseTP(value, this.jumping)
-			break
-		case EffectType.SHACKLE_STRENGTH:
-			leek.looseStrength(value, this.jumping)
-			break
-		case EffectType.SHACKLE_MAGIC:
-			leek.looseMagic(value, this.jumping)
-			break
-		case EffectType.SHACKLE_AGILITY:
-			leek.looseAgility(value, this.jumping)
-			break
-		case EffectType.SHACKLE_WISDOM:
-			leek.looseWisdom(value, this.jumping)
-			break
-		case EffectType.DAMAGE_RETURN:
-			leek.buffDamageReturn(value, this.jumping)
-			break
-		case EffectType.POISON:
-			break
-		case EffectType.RAW_BUFF_POWER:
-			leek.buffPower(value, this.jumping)
-			break
+			case EffectType.ABSOLUTE_SHIELD:
+			case EffectType.DAMAGE_TO_ABSOLUTE_SHIELD:
+			case EffectType.RAW_ABSOLUTE_SHIELD:
+			case EffectType.STEAL_ABSOLUTE_SHIELD:
+				leek.buffAbsoluteShield(value, this.jumping)
+				break
+			case EffectType.RELATIVE_SHIELD:
+				leek.buffRelativeShield(value, this.jumping)
+				break
+			case EffectType.VULNERABILITY:
+				leek.buffRelativeShield(-value, this.jumping)
+				break
+			case EffectType.ABSOLUTE_VULNERABILITY:
+				leek.buffAbsoluteShield(-value, this.jumping)
+				break
+			case EffectType.BUFF_AGILITY:
+			case EffectType.RAW_BUFF_AGILITY:
+				leek.buffAgility(value, this.jumping)
+				break
+			case EffectType.RAW_BUFF_MAGIC:
+				leek.buffMagic(value, this.jumping)
+				break
+			case EffectType.RAW_BUFF_SCIENCE:
+				leek.buffScience(value, this.jumping)
+				break
+			case EffectType.BUFF_STRENGTH:
+			case EffectType.RAW_BUFF_STRENGTH:
+				leek.buffStrength(value, this.jumping)
+				break
+			case EffectType.BUFF_TP:
+			case EffectType.RAW_BUFF_TP:
+				leek.buffTP(value, this.jumping)
+				break
+			case EffectType.BUFF_MP:
+			case EffectType.RAW_BUFF_MP:
+				leek.buffMP(value, this.jumping)
+				break
+			case EffectType.BUFF_WISDOM:
+			case EffectType.RAW_BUFF_WISDOM:
+				leek.buffWisdom(value, this.jumping)
+				break
+			case EffectType.BUFF_RESISTANCE:
+			case EffectType.RAW_BUFF_RESISTANCE:
+				leek.buffResistance(value, this.jumping)
+				break
+			case EffectType.SHACKLE_MP:
+				leek.looseMP(value, this.jumping)
+				break
+			case EffectType.SHACKLE_TP:
+				leek.looseTP(value, this.jumping)
+				break
+			case EffectType.SHACKLE_STRENGTH:
+				leek.looseStrength(value, this.jumping)
+				break
+			case EffectType.SHACKLE_MAGIC:
+				leek.looseMagic(value, this.jumping)
+				break
+			case EffectType.SHACKLE_AGILITY:
+				leek.looseAgility(value, this.jumping)
+				break
+			case EffectType.SHACKLE_WISDOM:
+				leek.looseWisdom(value, this.jumping)
+				break
+			case EffectType.DAMAGE_RETURN:
+				leek.buffDamageReturn(value, this.jumping)
+				break
+			case EffectType.POISON:
+				break
+			case EffectType.RAW_BUFF_POWER:
+				leek.buffPower(value, this.jumping)
+				break
 		}
 	}
 
