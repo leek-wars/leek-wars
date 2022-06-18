@@ -389,6 +389,7 @@ import ActionLeekTurn from '../action/action-leek-turn.vue'
 				}
 
 				let currentPlayer: ReportLeek | null = null
+				const effects = {} as any
 				this.actions = this.fight.data.actions.map((a: any) => {
 					const action = new Action(a)
 					if (a[0] === ActionType.LEEK_TURN) {
@@ -401,32 +402,39 @@ import ActionLeekTurn from '../action/action-leek-turn.vue'
 						action.item = currentPlayer!.weapon
 					} else if (a[0] === ActionType.USE_CHIP) {
 						action.item = LeekWars.chips[LeekWars.chipTemplates[a[1]].item]
+					} else if (a[0] === ActionType.ADD_CHIP_EFFECT || a[0] === ActionType.ADD_WEAPON_EFFECT) {
+						effects[a[2]] = { turns: a[7], value: a[6], type: a[5], target: a[4] }
+					} else if (a[0] === ActionType.STACK_EFFECT) {
+						action.item = effects[a[1]]
 					}
 					action.entity = currentPlayer
 					return action
 				})
 				// console.log(this.actions)
 
-				if (false) {
+				if (store.state.farmer && store.state.farmer.admin) {
 					const s = (n: any) => {
-						if (typeof n === 'number')
-							return (1 + Math.log10(n)) | 0
+						if (typeof n === 'number') return (1 + Math.log10(n)) | 0
 						return 2 + n.length
 					}
-					let sizes = {} as any
-					let count = {} as any
+					let sizes = {} as {[key: string]: number}
+					let count = {} as {[key: string]: number}
 					let total = 0
-					for (const action of this.actions) {
-						const size = 1 + action.params.reduce((t, p) => t + s(p), 0) + (action.params.length - 1) + 1
-						if (!(action.type in sizes)) {
-							count[action.type] = sizes[action.type] = 0
-						}
+					for (const action of this.actions!) {
+						const size = 2 + action.params.reduce((t, p) => t + s(p), 0) + action.params.length
+						if (!(action.type in sizes)) count[action.type] = sizes[action.type] = 0
 						sizes[action.type] += size
 						count[action.type]++
 						total += size
 					}
-					let result = Object.entries(sizes).map((v) => [ ActionType[v[0]], v[1], count[v[0]] ])
-					result.sort((a, b) => b[1] - a[1])
+					let result = Object.entries(sizes).map((v) => [
+						ActionType[parseInt(v[0])],
+						v[1],
+						count[v[0]],
+						Math.round(v[1] / count[v[0]]) + '/u',
+						Math.round(100 * v[1] / total) + '%'
+					])
+					result.sort((a, b) => b[1] as number - (a[1] as number))
 					console.log(result, total)
 				}
 

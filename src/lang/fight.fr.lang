@@ -9,7 +9,7 @@
 	"leek_loose_x": "{leek} perd {value}",
 	"leek_loose_x_turns": "{leek} perd {value} ({turns} tours)",
 	"leek_resurrect": "{leek} ressucite {target}",
-	"leek_move": "{leek} se déplace",
+	"leek_move": "{leek} se déplace ({cost})",
 	"leek_shoot": "{leek} attaque avec {weapon}",
 	"leek_shoot_cost": "{leek} attaque avec {weapon} ({cost})",
 	"leek_show_cell": "{leek} montre la cellule {cell} ({cost})",

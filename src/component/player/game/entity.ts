@@ -108,6 +108,7 @@ abstract class FightEntity extends Entity {
 	// Info text
 	public infoText: InfoText[] = []
 	// Movement
+	public fullPath: Cell[] = []
 	public path: Cell[] = []
 	// Animation
 	public oscillation = 1
@@ -188,6 +189,7 @@ abstract class FightEntity extends Entity {
 
 	public move(path: Cell[]) { // Move along a path
 		this.path = [] as Cell[]
+		this.fullPath = [...path]
 		for (const cell of path) {
 			this.path.push(cell)
 		}
@@ -196,10 +198,12 @@ abstract class FightEntity extends Entity {
 
 	public pathNext() {
 		if (this.path.length === 0) {
+			this.looseMP(this.fullPath.length, false, true)
 			this.game.actionDone()
 		} else {
 			const cell = this.path[0]
 			this.jumpToCell(cell)
+			this.mp--
 			this.path.shift() // Supprime la première case
 		}
 	}
@@ -277,8 +281,10 @@ abstract class FightEntity extends Entity {
 		this.reachableCellsArea = this.game.createReachableAreaOutline(this.mp, this.cell!, this.reachableCells)
 	}
 
-	public looseMP(mp: number, jump: boolean) {
-		this.mp -= mp
+	public looseMP(mp: number, jump: boolean, info_only: boolean = false) {
+		if (!info_only) {
+			this.mp -= mp
+		}
 		if (!jump) {
 			const info = new InfoText()
 			info.init("-" + mp, Colors.MP_COLOR, -this.height, this.isTop)

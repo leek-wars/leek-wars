@@ -1,6 +1,6 @@
 {
 	"fail": "Failure",
-	"leek_bug": "{0} has crashed",
+	"leek_bug": "{leek} has crashed!",
 	"leek_cast": "{leek} uses {chip}",
 	"leek_cast_cost": "{leek} uses {chip} ({cost})",
 	"leek_hit": "{leek} hits",
@@ -9,7 +9,7 @@
 	"leek_loose_x": "{leek} loses {value}",
 	"leek_loose_x_turns": "{leek} loses {value} ({turns} turns)",
 	"leek_resurrect": "{leek} resurrects {target}",
-	"leek_move": "{leek} moves",
+	"leek_move": "{leek} moves ({cost})",
 	"leek_shoot": "{leek} attacks with {weapon}",
 	"leek_shoot_cost": "{leek} attacks with {weapon} ({cost})",
 	"leek_show_cell": "{leek} indicates cell {cell} ({cost})",

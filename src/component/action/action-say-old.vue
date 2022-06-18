@@ -5,6 +5,9 @@
 		<template v-slot:text>
 			<i slot="text">{{ (parent.leeks[props.action.params[1]].farmer && parent.leeks[props.action.params[1]].farmer.muted) ? "@*%#$€" : props.action.params[2] }}</i>
 		</template>
+		<template v-slot:cost>
+			<b class="color-tp">{{ parent.$t('fight.n_tp', [1]) }}</b>
+		</template>
 	</i18n>
 </template>
 

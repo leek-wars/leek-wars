@@ -1,11 +1,7 @@
 
 <template functional>
-	<i18n tag="div" path="fight.leek_loose_x">
-		<leek slot="leek" :leek="parent.leeks[props.action.params[1]]" />
-		<template v-slot:value>
-			<b class="color-mp">{{ parent.$t('fight.n_mp', [props.action.params[2]]) }}</b>
-		</template>
-	</i18n>
+	<component :is="parent.EffectComponents[props.action.item.type]" :leek="parent.leeks[props.action.item.target]" :value="props.action.params[2]" :turns="props.action.item.turns" />
+	<!-- <div>stack {{ props.action }} {{ props.action.item }}</div> -->
 </template>
 
 <script lang="ts">
@@ -14,7 +10,7 @@
 	import ActionLeekElement from '../report/action-leek.vue'
 
 	@Component({ components: { leek: ActionLeekElement } })
-	export default class ActionMPLost extends Vue {
+	export default class ActionStackEffect extends Vue {
 		@Prop() action!: Action
 	}
 </script>
