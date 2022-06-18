@@ -551,11 +551,12 @@ class Game {
 		this.currentAction = 0
 
 		// Check first action
-		if (this.actions.length === 0 || this.actions[this.currentAction].type !== ActionType.START_FIGHT) {
+		if (this.actions.length === 0 || this.actions[0].type !== ActionType.START_FIGHT) {
 			console.warn("Error ! no action START_FIGHT")
 			this.setError()
 			return
 		}
+		this.log(this.actions[0])
 
 		// Get the relative position of the turns in the actions
 		this.turnPosition = {1: 0}

@@ -11,7 +11,7 @@
 	"leek_move": "{leek} moves",
 	"leek_shoot": "{leek} attacks with {weapon}",
 	"leek_show_cell": "{leek} indicates cell {cell}",
-	"leek_speak": "{leek} says : ''{text}''",
+	"leek_speak": "{leek} says : « {text} »",
 	"leek_take_weapon": "{leek} takes weapon {weapon}",
 	"leek_win_x": "{leek} gains {value}",
 	"leek_win_x_turns": "{leek} gains {value} ({turns} turns)",
@@ -42,5 +42,7 @@
 	"summon": "{leek} summons {summon}",
 	"turn_n": "Turn {0}",
 	"turn_of_leek": "{leek}'s turn",
-	"turret": "Turret"
+	"turret": "Turret",
+	"end_of_fight": "End of fight!",
+	"lama": "{0} calls upon the powers of the 🦙"
 }

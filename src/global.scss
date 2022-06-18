@@ -715,41 +715,25 @@ img.emoji {
 .rounded4 {
 	border-radius: 4px;
 }
-.color-life {
-	color: red;
-}
-.color-max-life {
-	color: #00d5b5;
-}
-.color-strength {
-	color: #833100;
-	&.dark {
-		color: #c05415;
-	}
-}
-.color-wisdom {
-	color: #5ebe00;
-}
-.color-agility {
-	color: #0080f7;
-}
+.color-life { color: red; }
+.color-max-life { color: #00d5b5; }
+.color-strength { color: #833100; }
+.dark .color-strength {	color: #c05415; }
+.color-wisdom {	color: #5ebe00; }
+.color-agility { color: #0080f7; }
 .color-resistance {
 	color: #ff4a01;
 }
 .color-frequency {
 	color: black;
 }
-.color-science {
-	color: #0000a2;
-	&.dark {
-		color: #2a63ff;
-	}
-}
+.color-science { color: #0000a2; }
+.dark .color-science { color: #2a63ff; }
 .color-magic {
 	color: #b800b6;
-	&.dark {
-		color: #d810d5;
-	}
+}
+.dark .color-magic {
+	color: #d810d5;
 }
 .color-tp {
 	color: #ff7f01;
@@ -953,5 +937,56 @@ a.green-link {
 	font-weight: 500;
 	&:hover {
 		text-decoration: underline;
+	}
+}
+
+.team1	{ color: #0b30ea; }
+.team2	{ color: #dd0d0d; }
+.team3	{ color: #4FBF1C; }
+.team4	{ color: #FDED00; }
+.team5	{ color: #B02D20; }
+.team6	{ color: #A2A2A2; }
+.team7	{ color: #9800AE; }
+.team8	{ color: #FF7D00; }
+.team9	{ color: #14D7E4; }
+.team10	{ color: #E414C9; }
+.team11	{ color: #000000; }
+.team12	{ color: #ffffff; }
+
+.dark {
+	.team1 { color:	#6e86ff; }
+	.team2 { color: #ff3838; }
+	.team3 { color: #4FBF1C; }
+	.team4 { color: #FDED00; }
+	.team5 { color: #B02D20; }
+	.team6 { color: #A2A2A2; }
+	.team7 { color: #ac4cba; }
+	.team8 { color: #FF7D00; }
+	.team9 { color: #14D7E4; }
+	.team10 { color: #ff99f2; }
+	.team11 { color: #000000; }
+	.team12 { color: #ffffff; }
+}
+
+.fight-actions {
+	> div {
+		padding: 1px 0;
+	}
+	> pre {
+		padding: 2px 12px;
+		font-size: 11px;
+		margin: 0;
+		font-family: monospace;
+		word-break: break-all;
+		white-space: pre-wrap;
+	}
+	.pause {
+		color: #999;
+	}
+	.warning {
+		color: #ff5f00;
+	}
+	.error {
+		color: #ff1900;
 	}
 }

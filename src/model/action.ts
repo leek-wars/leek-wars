@@ -36,15 +36,19 @@ enum ActionType {
 	REMOVE_SHACKLES = 308,
 	BUG = 1002,
 }
+
 type ActionLog = any[]
 class Action {
 	params!: any[]
 	logs: ActionLog[] = []
 	weapon: string | null = null
 	me: boolean = false
+
 	get type() { return this.params[0] }
+
 	constructor(params: any[]) {
 		this.params = params
 	}
 }
+
 export { Action, ActionLog, ActionType }
