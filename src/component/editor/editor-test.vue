@@ -40,7 +40,8 @@
 									<leek-image :leek="allLeeks[leek.id]" :ai="leek.ai" :scale="0.4" />
 									<div>{{ allLeeks[leek.id].name }}</div>
 								</div>
-								<ai v-if="leek.id in allLeeks && leek.ai && leek.ai in allAis" v-ripple="!allLeeks[leek.id].ally" :ai="allAis[leek.ai]" :small="true" :library="false" :locked="allLeeks[leek.id].ally" @click.native="clickLeekAI(leek)" />
+								<ai v-if="leek.id in allLeeks && leek.ai && leek.ai in allAis && (leek.id < 0 || leek.ai !== -1)" v-ripple="!allLeeks[leek.id].ally" :ai="allAis[leek.ai]" :small="true" :library="false" :locked="allLeeks[leek.id].ally" @click.native="clickLeekAI(leek)" />
+								<div v-else v-ripple class="ai-placeholder" @click="clickLeekAI(leek)"></div>
 							</div>
 							<div v-if="!currentScenario.base && LeekWars.objectSize(currentScenario.team1) < getLimit(currentScenario.type)" class="add" @click="addLeekTeam = currentScenario.team1; leekDialog = true">+</div>
 						</div>
@@ -54,7 +55,8 @@
 									<leek-image :leek="allLeeks[leek.id]" :ai="leek.ai" :scale="0.4" />
 									<div>{{ allLeeks[leek.id].name }}</div>
 								</div>
-								<ai v-if="leek.id in allLeeks && leek.ai && leek.ai in allAis" v-ripple="!allLeeks[leek.id].ally" :ai="allAis[leek.ai]" :small="true" :library="false" :locked="allLeeks[leek.id].ally" @click.native="clickLeekAI(leek)" />
+								<ai v-if="leek.id in allLeeks && leek.ai && leek.ai in allAis && (leek.id < 0 || leek.ai !== -1)" v-ripple="!allLeeks[leek.id].ally" :ai="allAis[leek.ai]" :small="true" :library="false" :locked="allLeeks[leek.id].ally" @click.native="clickLeekAI(leek)" />
+								<div v-else v-ripple class="ai-placeholder" @click="clickLeekAI(leek)"></div>
 							</div>
 							<div v-if="!currentScenario.base && LeekWars.objectSize(currentScenario.team2) < getLimit(currentScenario.type)" class="add" @click="addLeekTeam = currentScenario.team2; leekDialog = true">+</div>
 						</div>
@@ -1585,5 +1587,17 @@
 			padding-left: 23px;
 			font-size: 14px;
 		}
+	}
+	.ai-placeholder {
+		display: inline-flex;
+		width: 65px;
+		height: 87px;
+		border: 2px dashed #777;
+		margin-top: 10px;
+		margin-left: -30px;
+		vertical-align: top;
+		background: white;
+		border-radius: 4px;
+		cursor: pointer;
 	}
 </style>
