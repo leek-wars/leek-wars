@@ -1,12 +1,9 @@
 
 <template functional>
 	<i18n tag="div" path="fight.leek_speak">
-		<leek slot="leek" :leek="props.action.entity" />
+		<leek slot="leek" :leek="parent.leeks[props.action.params[1]]" />
 		<template v-slot:text>
-			<i slot="text">{{ (props.action.entity.farmer && props.action.entity.farmer.muted) ? "@*%#$€" : props.action.params[1] }}</i>
-		</template>
-		<template v-slot:cost>
-			<b class="color-tp">{{ parent.$t('fight.n_tp', [1]) }}</b>
+			<i slot="text">{{ (parent.leeks[props.action.params[1]].farmer && parent.leeks[props.action.params[1]].farmer.muted) ? "@*%#$€" : props.action.params[2] }}</i>
 		</template>
 	</i18n>
 </template>
@@ -17,7 +14,7 @@
 	import ActionLeekElement from '../report/action-leek.vue'
 
 	@Component({ components: { leek: ActionLeekElement } })
-	export default class ActionSay extends Vue {
+	export default class ActionSayOld extends Vue {
 		@Prop() action!: Action
 	}
 </script>

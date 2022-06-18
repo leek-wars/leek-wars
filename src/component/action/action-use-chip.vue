@@ -1,12 +1,15 @@
 <template functional>
 	<div>
-		<i18n path="fight.leek_cast">
-			<leek slot="leek" :leek="parent.leeks[props.action.params[1]]" />
+		<i18n path="fight.leek_cast_cost">
+			<leek slot="leek" :leek="props.action.entity" />
 			<template v-slot:chip>
-				<b>{{ parent.$t('chip.' + parent.LeekWars.chips[parent.LeekWars.chipTemplates[props.action.params[3]].item].name) }}</b>
+				<b>{{ parent.$t('chip.' + props.action.item.name) }}</b>
+			</template>
+			<template v-slot:cost>
+				<b class="color-tp">{{ parent.$t('fight.n_tp', [props.action.item.cost]) }}</b>
 			</template>
 		</i18n>
-		<span v-if="props.action.params[4] === 2">... {{ parent.$t('effect.critical') }}</span>
+		<span v-if="props.action.params[3] === 2">... {{ parent.$t('effect.critical') }}</span>
 	</div>
 </template>
 

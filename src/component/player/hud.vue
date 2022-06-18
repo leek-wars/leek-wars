@@ -63,6 +63,7 @@
 	import { ActionComponents, EffectComponents } from '@/model/action-components'
 	import { i18n } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
+import { TEAM_COLORS } from '@/model/team'
 	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 	import { Game } from './game/game'
 	import { Turret } from './game/turret'
@@ -76,6 +77,7 @@
 		actionsWidth: number = 395
 		ActionComponents = ActionComponents
 		EffectComponents = EffectComponents
+		TEAM_COLORS = TEAM_COLORS
 
 		get barWidth() {
 			return LeekWars.mobile ? 300 : 500

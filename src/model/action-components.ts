@@ -6,18 +6,23 @@ import ActionMove from '@/component/action/action-move.vue'
 import ActionNewTurn from '@/component/action/action-new-turn.vue'
 import ActionNovaDamage from '@/component/action/action-nova-damage.vue'
 import ActionPlayerDead from '@/component/action/action-player-dead.vue'
+import ActionSetWeaponOld from '@/component/action/action-set-weapon-old.vue'
 import ActionSetWeapon from '@/component/action/action-set-weapon.vue'
 import ActionSummon from '@/component/action/action-summon.vue'
 import ActionTPLost from '@/component/action/action-tp-lost.vue'
 import ActionMPLost from '@/component/action/action-mp-lost.vue'
+import ActionUseChipOld from '@/component/action/action-use-chip-old.vue'
+import ActionUseWeaponOld from '@/component/action/action-use-weapon-old.vue'
 import ActionUseChip from '@/component/action/action-use-chip.vue'
 import ActionUseWeapon from '@/component/action/action-use-weapon.vue'
 import ActionEndFight from '@/component/action/action-end-fight.vue'
 import ActionCare from '@/component/action/action-care.vue'
+import ActionSayOld from '@/component/action/action-say-old.vue'
 import ActionSay from '@/component/action/action-say.vue'
 import ActionResurrection from '@/component/action/action-resurrection.vue'
 import ActionVitality from '@/component/action/action-vitality.vue'
 import ActionNovaVitality from '@/component/action/action-nova-vitality.vue'
+import ActionShowOld from '@/component/action/action-show-old.vue'
 import ActionLama from '@/component/action/action-lama.vue'
 import ActionShow from '@/component/action/action-show.vue'
 import ActionAddEffect from '@/component/action/action-add-effect.vue'
@@ -50,8 +55,11 @@ import EffectShackleMP from '@/component/effect/effect-shackle-mp.vue'
 
 const ActionComponents = {
 	[ActionType.START_FIGHT]: ActionNewTurn,
+	[ActionType.USE_WEAPON_OLD]: ActionUseWeaponOld,
+	[ActionType.USE_CHIP_OLD]: ActionUseChipOld,
 	[ActionType.USE_WEAPON]: ActionUseWeapon,
 	[ActionType.USE_CHIP]: ActionUseChip,
+	[ActionType.SET_WEAPON_OLD]: ActionSetWeaponOld,
 	[ActionType.SET_WEAPON]: ActionSetWeapon,
 	[ActionType.END_FIGHT]: ActionEndFight,
 	[ActionType.PLAYER_DEAD]: ActionPlayerDead,
@@ -71,6 +79,8 @@ const ActionComponents = {
 	[ActionType.POISON_DAMAGE]: ActionLifeLost,
 	[ActionType.AFTEREFFECT]: ActionLifeLost,
 	[ActionType.NOVA_VITALITY]: ActionNovaVitality,
+	[ActionType.SAY_OLD]: ActionSayOld,
+	[ActionType.SHOW_OLD]: ActionShowOld,
 	[ActionType.SAY]: ActionSay,
 	[ActionType.LAMA]: ActionLama,
 	[ActionType.SHOW]: ActionShow,

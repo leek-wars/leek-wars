@@ -1,12 +1,8 @@
-
 <template functional>
-	<i18n tag="div" path="fight.leek_show_cell">
-		<leek slot="leek" :leek="props.action.entity" />
-		<template v-slot:cell>
-			<b>{{ props.action.params[1] }}</b>
-		</template>
-		<template v-slot:cost>
-			<b class="color-tp">{{ parent.$t('fight.n_tp', [1]) }}</b>
+	<i18n path="fight.leek_take_weapon" tag="div">
+		<leek slot="leek" :leek="parent.leeks[props.action.params[1]]" />
+		<template v-slot:weapon>
+			<b>{{ parent.$t('weapon.' + parent.LeekWars.weapons[props.action.params[2]].name) }}</b>
 		</template>
 	</i18n>
 </template>
@@ -17,7 +13,7 @@
 	import ActionLeekElement from '../report/action-leek.vue'
 
 	@Component({ components: { leek: ActionLeekElement } })
-	export default class ActionShow extends Vue {
+	export default class ActionSetWeaponOld extends Vue {
 		@Prop() action!: Action
 	}
 </script>
