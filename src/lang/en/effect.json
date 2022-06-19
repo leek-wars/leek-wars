@@ -22,7 +22,7 @@
 	"launch_5": "in reverse diagonal",
 	"launch_6": "in inverted line",
 	"level_n": "Level {0}",
-	"line_until_obstacle": "all the line up to an osbtacle",
+	"line_until_obstacle": "all the line up to an obstacle",
 	"multiplied_target": "per target hit",
 	"n_turns": "<b>1</b> turn | <b>{n}</b> turns",
 	"on_n_turns": " for {turns}",
