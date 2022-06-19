@@ -26,6 +26,19 @@
 								<img class="sword" src="/image/icon/grey/garden.png">
 								<img class="player" src="/image/player.png">
 							</router-link>
+
+							<tooltip :disabled="battleRoyaleEnabled">
+								<template v-slot:activator="{ on }">
+									<router-link v-ripple :class="{ enabled: battleRoyaleEnabled }" :event="battleRoyaleEnabled ? 'click' : ''" to="/garden/battle-royale" class="tab">
+										<div v-on="on">
+											<h2>{{ $t('category_battle_royale') }}</h2>
+											<span class="player-count">10</span>&nbsp;<img class="player" src="/image/player.png">
+										</div>
+									</router-link>
+								</template>
+								{{ $t('you_must_be_level_20') }}
+							</tooltip>
+
 							<tooltip :disabled="farmerEnabled">
 								<template v-slot:activator="{ on }">
 									<router-link v-ripple :class="{ enabled: farmerEnabled }" :event="farmerEnabled ? 'click' : ''" to="/garden/farmer" class="tab">
@@ -52,18 +65,6 @@
 									</router-link>
 								</template>
 								{{ $t('you_must_have_a_team') }}
-							</tooltip>
-
-							<tooltip :disabled="battleRoyaleEnabled">
-								<template v-slot:activator="{ on }">
-									<router-link v-ripple :class="{ enabled: battleRoyaleEnabled }" :event="battleRoyaleEnabled ? 'click' : ''" to="/garden/battle-royale" class="tab">
-										<div v-on="on">
-											<h2>{{ $t('category_battle_royale') }}</h2>
-											<span class="player-count">10</span>&nbsp;<img class="player" src="/image/player.png">
-										</div>
-									</router-link>
-								</template>
-								{{ $t('you_must_be_level_20') }}
 							</tooltip>
 
 							<div v-if="queue > 0" class="queue">
@@ -531,13 +532,23 @@
 			display: block;
 			border: 1px solid #ddd;
 			border-radius: 2px;
+			h2 {
+				color: #555;
+			}
+			.player-count {
+				font-size: 20px;
+				color: #555;
+				padding: 2px;
+			}
 		}
 		.tab.router-link-active {
 			background: white;
 			box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
 		}
 		.tab:not(.enabled) {
-			opacity: 0.5;
+			opacity: 0.4;
+			background: #ccc;
+			cursor: default;
 		}
 		.tab h2 {
 			margin: 0;
@@ -555,10 +566,6 @@
 			margin-bottom: 4px;
 			width: 20px;
 		}
-	}
-	.player-count {
-		font-size: 20px;
-		color: #999;
 	}
 	.sword {
 		height: 20px;
