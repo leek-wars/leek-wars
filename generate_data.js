@@ -35,7 +35,7 @@ for (const value of values) {
 		}).catch((err) => {
 			console.log("ERROR request failed for", value[0], ":", err.statusCode, err.error)
 			process.exit()
-	})) }, r += 0)
+	})) }, r += 500)
 }
 
 setTimeout(() => {
