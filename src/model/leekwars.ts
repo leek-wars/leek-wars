@@ -157,6 +157,7 @@ const HAT_SIZES: { [key: number]: {width: number, height: number} } = {
 	27: {width: 300, height: 201}, // bicorn
 	28: {width: 300, height: 206}, // lareul
 	29: {width: 300, height: 206}, // lareul
+	30: {width: 130, height: 140}, // topper
 }
 
 const ORDERED_CHIPS = orderChips(CHIPS)
