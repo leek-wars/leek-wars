@@ -431,19 +431,29 @@
 				return
 			}
 			Vue.set(this.errors, entrypoint, errors)
-			const error_by_line = {} as any
+			const error_by_line = {} as {[key: number]: any[][]}
 			for (const error of errors) {
-				if (error[4] >= 2) { continue }
-				if (!(error[0] in error_by_line)) { error_by_line[error[0]] = [] }
+				if (error[4] >= 2) {
+					continue
+				}
+				if (!(error[0] in error_by_line)) {
+					error_by_line[error[0]] = []
+				}
 				error_by_line[error[0]].push([error[1], error[3], error[4]])
+			}
+			// Sort errors on each line
+			for (const line in error_by_line) {
+				if (error_by_line[line].length > 1) {
+					error_by_line[line].sort(function(a, b) { return a[0] - b[0] })
+				}
 			}
 			// console.log(error_by_line)
 			const overlay = { token: (stream: any) => {
 				const line = stream.lineOracle.line + 1
 				const pos = stream.pos
 				if (line in error_by_line) {
-					// console.log("line", line, pos, error_by_line[line])
 					for (const error of error_by_line[line]) {
+						// console.log("line", line, pos, error_by_line[line])
 						if (pos === error[0]) {
 							let len = Math.max(0, error[1] - error[0])
 							stream.eatWhile(() => len-- >= 0)
@@ -504,7 +514,7 @@
 
 			if (changes.origin === "setValue") {
 				this.ai.code = this.document.getValue()
-				this.ai.analyze()
+				// this.ai.analyze()
 			} else {
 				this.setAnalyzerTimeout()
 			}

@@ -192,6 +192,8 @@ class AI {
 
 	public updateClasses() {
 
+		// console.time('classes')
+
 		this.classes = {}
 		let match
 
@@ -230,9 +232,12 @@ class AI {
 			}
 		}
 		// console.log("Classes", this.ai.classes)
+		// console.timeEnd('classes')
+
+		// console.time('static_fields')
 
 		// Search static fields
-		const field_regex = /(?:public\s+)?(?:(static)\s+)?(\w+)\s*/gm
+		const field_regex = /^\s*(?:public\s+)?(?:(static)\s+)?(\w+)\s*$/gm
 		while ((match = field_regex.exec(this.code)) != null) {
 
 			const name = match[2]
@@ -309,8 +314,12 @@ class AI {
 			}
 		}
 
+		// console.timeEnd('static_fields')
+
+		// console.time('methods')
+
 		// Search methods
-		const method_regex = /(?:public\s+)?(?:(static)\s+)?(\w+)\s*\(([\w\s,]*)\)\s*{/gm
+		const method_regex = /^\s*(?:public\s+)?(?:(static)\s+)?(\w+)\s*\(([\w\s,]*)\)\s*{/gm
 		while ((match = method_regex.exec(this.code)) != null) {
 
 			const name = match[2]
@@ -424,6 +433,8 @@ class AI {
 		}
 
 		// console.log("classes " + this.name, this.classes)
+		// console.timeEnd('methods')
+		// console.trace()
 	}
 
 	public updateGlobalVars() {
