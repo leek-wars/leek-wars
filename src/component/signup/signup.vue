@@ -208,13 +208,13 @@
 					</div>
 				</panel>
 			</router-link>
-			<a href="http://leekwarswiki.net/index.php?title=Accueil" target="_blank">
+			<!-- <a href="http://leekwarswiki.net/index.php?title=Accueil" target="_blank">
 				<panel v-ripple class="github">
 					<div slot="content">
 						<img src="/image/wiki.png"> Leek Wars Wiki
 					</div>
 				</panel>
-			</a>
+			</a> -->
 		</div>
 
 		<div class="flex carousel-title">
