@@ -29,7 +29,7 @@
 
 				<div v-else class="results-wrapper">
 					<div v-if="results.length" class="results">
-						<router-link v-for="(result, r) in results" :key="r" :to="'/encyclopedia/' + this.$i18n.locale + '/' + + result.title">
+						<router-link v-for="(result, r) in results" :key="r" :to="'/encyclopedia/' + $i18n.locale + '/' + result.title">
 							<div v-ripple class="result card">
 								<div class="title" v-html="result.title_headline"></div>
 								<markdown :content="result.content" :pages="{}" mode="encyclopedia" />

@@ -52,7 +52,7 @@
 				<div ref="markdown" class="markdown" @scroll="markdownScroll">
 					<!-- {{ parents }} -->
 
-					<markdown :content="page.content" mode="encyclopedia" :class="{main: page.id === 1}" />
+					<markdown :content="page.content" mode="encyclopedia" :class="{main: page.id === 1}" :locale="page.language" />
 
 					<div v-if="page.new && !edition" class="nopage">
 						<v-icon>mdi-book-open-page-variant</v-icon>

@@ -104,7 +104,7 @@
 				<input v-model="createTitle" class="topic-name card" type="text">
 				<h3>{{ $t('new_topic_message') }}</h3>
 				<textarea v-model="createMessage" class="topic-message card"></textarea>
-				<v-radio-group v-if="categories && categories[0].lang" v-model="createMessageLang">
+				<v-radio-group v-if="forumLanguages.length > 1" v-model="createMessageLang">
 					<v-radio v-for="lang in forumLanguages" :key="lang" :value="lang" :label="LeekWars.languages[lang].name" />
 				</v-radio-group>
 				<formatting-rules />

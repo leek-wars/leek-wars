@@ -13,8 +13,11 @@ import { LeekWars } from '@/model/leekwars'
 
 	@Component({ name: 'markdown' })
 	export default class Markdown extends Vue {
+
 		@Prop({required: true}) content!: string
 		@Prop({required: true}) mode!: string
+		@Prop() locale!: string
+
 		markdown: any = new markdown({
 			html: true,
 			breaks: true,
@@ -25,6 +28,10 @@ import { LeekWars } from '@/model/leekwars'
 
 		encodeURL = (s: string) => s.trim().replace(/\s+/g, '_')
 		encodeID = (s: string) => s.trim().replace(/\s+/g, '_').replace(/'/g, '~')
+
+		get language() {
+			return this.locale || this.$i18n.locale
+		}
 
 		@Watch('content', {immediate: true})
 		update() {
@@ -122,14 +129,14 @@ import { LeekWars } from '@/model/leekwars'
 				// Locked pages
 				md.querySelectorAll('.encyclopedia-locked-pages').forEach((item) => {
 					LeekWars.post<any[]>('encyclopedia/get-locked-pages').then(pages => {
-						item.innerHTML = '<ul>' + pages.map(p => '<li><a href="/encyclopedia/' + i18n.locale + '/' + p.title + '">' + p.title + '</a>, verrouillée par <b>' + p.name + '</b></li>').join('') + '</ul>'
+						item.innerHTML = '<ul>' + pages.map(p => '<li><a href="/encyclopedia/' + this.language + '/' + p.title + '">' + p.title + '</a>, verrouillée par <b>' + p.name + '</b></li>').join('') + '</ul>'
 						item.querySelectorAll('a').forEach(linkify)
 					})
 				})
 				// Last edited pages
 				md.querySelectorAll('.encyclopedia-last-modifications').forEach((item) => {
 					LeekWars.post<any[]>('encyclopedia/get-last-pages').then(pages => {
-						item.innerHTML = '<ul>' + pages.map(p => '<li><a href="/encyclopedia/' + p.title + '">' + p.title + '</a>, <b>' + p.name + '</b> ' + LeekWars.formatDuration(p.time) + '</li>').join('') + '</ul>'
+						item.innerHTML = '<ul>' + pages.map(p => '<li><a href="/encyclopedia/' + this.language + '/' + p.title + '">' + p.title + '</a>, <b>' + p.name + '</b> ' + LeekWars.formatDuration(p.time) + '</li>').join('') + '</ul>'
 						item.querySelectorAll('a').forEach(linkify)
 					})
 				})
@@ -141,7 +148,7 @@ import { LeekWars } from '@/model/leekwars'
 				link = link.trim()
 				const clazz = (LeekWars.isEmptyObj(LeekWars.encyclopedia) || (link in LeekWars.encyclopedia)) ? "" : "new"
 				const text = link.replace(/_/g, ' ').replace(/'/g, '&apos;')
-				return "<a href='/encyclopedia/" + i18n.locale + '/' + text + "' class='" + clazz + "'>" + text + "</a>"
+				return "<a href='/encyclopedia/" + this.language + '/' + text + "' class='" + clazz + "'>" + text + "</a>"
 			}).replace(/{{(.*?)}}/g, (m, tag) => {
 				tag = tag.trim().toLowerCase()
 				if (tag.startsWith('summary')) {
