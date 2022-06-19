@@ -470,7 +470,7 @@ class FightStatistics {
 					itemCaster = entity
 
 					const chip_template = LeekWars.chips[LeekWars.chipTemplates[chip].item]
-					const targets = this.field.getTargets(cell, chip_template.area) as StatisticsEntity[]
+					const targets = this.field.getTargets(cell, chip_template.area, entity.cell!) as StatisticsEntity[]
 
 					entity.actionsChip++
 					if (result === 2) { // CC
