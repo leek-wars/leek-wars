@@ -162,7 +162,14 @@ class Field {
 		return cells
 	}
 
-	public getTargets(center: Cell, area: Area) {
+	public getTargets(center: Cell, area: Area, caster_cell: Cell): Entity[] {
+		// console.log("getTargets", center, area, caster_cell)
+		if (area === Area.FIRST_INLINE) {
+			const cell = this.getFirstWithEntity(caster_cell, center)
+			if (cell) {
+				return [cell.entity!]
+			}
+		}
 		const entities: Entity[] = []
 		for (const cell of this.getAreaCells(center, area)) {
 			if (cell.entity) {
@@ -170,6 +177,19 @@ class Field {
 			}
 		}
 		return entities
+	}
+
+	public getFirstWithEntity(from: Cell, target: Cell): Cell | null {
+		const dx = Math.sign(target.x - from.x)
+		const dy = Math.sign(target.y - from.y)
+		let current = this.next_cell(from, dx, dy)
+		while (current != null && !current.obstacle) {
+			if (current.entity != null) {
+				return current
+			}
+			current = this.next_cell(current, dx, dy)
+		}
+		return null
 	}
 
 	public getNumCells() {

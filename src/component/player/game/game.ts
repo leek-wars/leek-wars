@@ -17,7 +17,7 @@ import { Action, ActionType } from '@/model/action'
 import { Area } from '@/model/area'
 import { Cell } from '@/model/cell'
 import { EffectType, EntityEffect } from '@/model/effect'
-import { Fight, FightData, FightLeek, FightType } from '@/model/fight'
+import { Fight, FightData, FightType } from '@/model/fight'
 import { i18n } from '@/model/i18n'
 import { LeekWars } from '@/model/leekwars'
 import { store } from '@/model/store'
@@ -1067,7 +1067,7 @@ class Game {
 
 			const caster = this.leeks[this.currentPlayer!]
 			const chip_template = LeekWars.chips[LeekWars.chipTemplates[chip].item]
-			const targets = this.ground.field.getTargets(cell, chip_template.area) as FightEntity[]
+			const targets = this.ground.field.getTargets(cell, chip_template.area, caster.cell!) as FightEntity[]
 
 			action.entity = caster
 			action.item = chip_template
@@ -1135,7 +1135,7 @@ class Game {
 			}
 
 			// console.log(leek.weapon, weapon_template)
-			const targets = this.ground.field.getTargets(cell, weapon_template.area) as FightEntity[]
+			const targets = this.ground.field.getTargets(cell, weapon_template.area, leek.cell!) as FightEntity[]
 
 			const duration = leek.useWeapon(cell, targets, result)
 			this.actionDone(Math.max(6, duration))
