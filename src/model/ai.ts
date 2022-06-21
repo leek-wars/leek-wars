@@ -1,4 +1,5 @@
 import { Keyword, LSClass } from '@/component/editor/keywords'
+import { Problem } from '@/component/editor/problem'
 import { fileSystem } from './filesystem'
 import { i18n } from './i18n'
 import { LeekWars } from './leekwars'
@@ -33,6 +34,7 @@ class AI {
 	public entrypoints: number[] = []
 	public comments: { [key: number]: string } = {}
 	public scenario!: number | null
+	public problems: { [key: number]: Problem[] } = {}
 
 	constructor(data: any) {
 		Object.assign(this, data)

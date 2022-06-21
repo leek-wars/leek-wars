@@ -2,17 +2,17 @@
 	<div v-show="visible" ref="ai" class="ai" @mousemove="mousemove" @mouseleave="mouseleave">
 		<div class="codemirror-wrapper">
 			<div v-show="!loading" ref="codemirror" :style="{'font-size': fontSize + 'px', 'line-height': lineHeight + 'px'}" :class="{search: searchEnabled}" class="codemirror"></div>
-			<div v-if="errors" class="errors-band">
-				<template v-for="(problems, entrypoint) of errors">
+			<div v-if="ai.problems" class="errors-band">
+				<template v-for="(problems, entrypoint) of ai.problems">
 					<tooltip v-for="(error, p) of problems" :key="entrypoint + p">
 						<template v-slot:activator="{ on }">
-							<div :style="{top: (100 * error[0] / lines) + '%'}" :class="{warning: error[4] === 1, todo: error[4] === 2}" class="error" v-on="on" @click="$emit('jump', ai, error[0])"></div>
+							<div :style="{top: (100 * error.start_line / lines) + '%'}" :class="{warning: error.level === 1, todo: error.level === 2}" class="error" v-on="on" @click="$emit('jump', ai, error.start_line)"></div>
 						</template>
-						<v-icon v-if="error[4] === 0" class="tooltip error">mdi-close-circle-outline</v-icon>
-						<v-icon v-else-if="error[4] === 1" class="tooltip warning">mdi-alert-circle-outline</v-icon>
+						<v-icon v-if="error.level === 0" class="tooltip error">mdi-close-circle-outline</v-icon>
+						<v-icon v-else-if="error.level === 1" class="tooltip warning">mdi-alert-circle-outline</v-icon>
 						<v-icon v-else class="tooltip todo">mdi-format-list-checks</v-icon>
 						<!-- {{ $i18n.t('ls_error.' + error[5], error[6]) }} -->
-						{{ error[5] }}
+						{{ error.info }}
 					</tooltip>
 				</template>
 			</div>
@@ -114,6 +114,7 @@
 	import DocumentationFunction from '../documentation/documentation-function.vue'
 	import ItemPreview from '../market/item-preview.vue'
 	import Javadoc from './javadoc.vue'
+import { Problem } from './problem'
 
 	const AUTO_SHORTCUTS = [
 		["lama", "#LamaSwag", "", "Le pouvoir du lama"],
@@ -191,7 +192,6 @@
 		public searchOverlay: any = null
 		public hoverOverlay: any = null
 		public errorOverlays: {[key: number]: any} = {}
-		public errors: {[key: number]: any} = {}
 		public errorTooltip: boolean = false
 		public errorTooltipText: string = ''
 		public errorLevel: number = 0
@@ -289,6 +289,7 @@
 					}
 					return null
 				}}
+				this.updateProblems()
 				this.editor.addOverlay(overlay_javadoc)
 				this.editor.addOverlay(overlay_ref)
 				this.editor.addOverlay(overlay_todo)
@@ -334,12 +335,14 @@
 				this.editor.on("mousedown", this.editorMousedown as any)
 			})
 		}
+
 		@Watch('visible')
 		visibilityChanged() {
 			if (this.visible) {
 				setTimeout(() => this.editor.refresh())
 			}
 		}
+
 		public editorMousedown(editor: CodeMirror.Editor, e: MouseEvent) {
 			if (e.ctrlKey && this.hoverData && this.hoverData.defined) {
 				this.detailDialog = false
@@ -387,27 +390,27 @@
 			}
 		}
 
-		public removeErrors(entrypoint: number) {
-			// console.log("remove errors", entrypoint, this.ai.name)
-			if (this.errorOverlays[entrypoint]) {
-				// console.log("removeOverlays")
-				this.editor.removeOverlay(this.errorOverlays[entrypoint])
-				delete this.errorOverlays[entrypoint]
-			}
-			Vue.delete(this.errors, entrypoint)
-			this.errorTooltip = false
-			this.errorTooltipText = ''
-		}
+		// public removeErrors(entrypoint: number) {
+		// 	// console.log("remove errors", entrypoint, this.ai.name)
+		// 	if (this.errorOverlays[entrypoint]) {
+		// 		// console.log("removeOverlays")
+		// 		this.editor.removeOverlay(this.errorOverlays[entrypoint])
+		// 		delete this.errorOverlays[entrypoint]
+		// 	}
+		// 	Vue.delete(this.errors, entrypoint)
+		// 	this.errorTooltip = false
+		// 	this.errorTooltipText = ''
+		// }
 
-		public removeAllErrors() {
-			for (const entrypoint in this.errorOverlays) {
-				this.editor.removeOverlay(this.errorOverlays[entrypoint])
-				Vue.delete(this.errorOverlays, entrypoint)
-				Vue.delete(this.errors, entrypoint)
-			}
-			this.errorTooltip = false
-			this.errorTooltipText = ''
-		}
+		// public removeAllErrors() {
+		// 	for (const entrypoint in this.errorOverlays) {
+		// 		this.editor.removeOverlay(this.errorOverlays[entrypoint])
+		// 		Vue.delete(this.errorOverlays, entrypoint)
+		// 		Vue.delete(this.errors, entrypoint)
+		// 	}
+		// 	this.errorTooltip = false
+		// 	this.errorTooltipText = ''
+		// }
 
 		public cursorChange() {
 			const cursor = this.document.getCursor()
@@ -421,58 +424,67 @@
 			this.activeLine = this.editor.addLineClass(cursor.line, "background", "activeline")
 		}
 
-		public addErrorOverlay(entrypoint: number, errors: any) {
-			if (this.errorOverlays[entrypoint]) {
-				this.editor.removeOverlay(this.errorOverlays[entrypoint])
-				Vue.delete(this.errorOverlays, entrypoint)
-			}
-			if (errors.length === 0) {
-				Vue.delete(this.errors, entrypoint)
-				return
-			}
-			Vue.set(this.errors, entrypoint, errors)
-			const error_by_line = {} as {[key: number]: any[][]}
-			for (const error of errors) {
-				if (error[4] >= 2) {
-					continue
-				}
-				if (!(error[0] in error_by_line)) {
-					error_by_line[error[0]] = []
-				}
-				error_by_line[error[0]].push([error[1], error[3], error[4]])
-			}
-			// Sort errors on each line
-			for (const line in error_by_line) {
-				if (error_by_line[line].length > 1) {
-					error_by_line[line].sort(function(a, b) { return a[0] - b[0] })
+		@Watch('ai.problems')
+		public updateProblems() {
+			// console.log("[ai-view] updateProblems problems=", this.ai.problems)
+
+			// Delete old overlays
+			for (const entrypoint in this.errorOverlays) {
+				if (!this.ai.problems[entrypoint]) {
+					this.editor.removeOverlay(this.errorOverlays[entrypoint])
+					Vue.delete(this.errorOverlays, entrypoint)
 				}
 			}
-			// console.log(error_by_line)
-			const overlay = { token: (stream: any) => {
-				const line = stream.lineOracle.line + 1
-				const pos = stream.pos
-				if (line in error_by_line) {
-					for (const error of error_by_line[line]) {
-						// console.log("line", line, pos, error_by_line[line])
-						if (pos === error[0]) {
-							let len = Math.max(0, error[1] - error[0])
-							stream.eatWhile(() => len-- >= 0)
-							return error[2] === 0 ? "error" : "warning"
-						}
-						if (pos <= error[1]) {
-							let len = error[0] - pos
-							stream.eatWhile(() => len-- > 0)
-							return null
-						}
+
+			for (const entrypoint in this.ai.problems) {
+				const problems = this.ai.problems[entrypoint]
+
+				if (this.errorOverlays[entrypoint]) {
+					this.editor.removeOverlay(this.errorOverlays[entrypoint])
+					Vue.delete(this.errorOverlays, entrypoint)
+				}
+				const error_by_line = {} as {[key: number]: Problem[]}
+				for (const error of problems) {
+					if (error.level >= 2) {
+						continue
 					}
-					stream.skipToEnd()
-				} else {
-					stream.skipToEnd()
+					if (!(error.start_line in error_by_line)) {
+						error_by_line[error.start_line] = []
+					}
+					error_by_line[error.start_line].push(error)
 				}
-			}}
-			this.errorOverlays[entrypoint] = overlay
-			this.editor.addOverlay(overlay, {priority: 12})
-			this.error = true
+				// Sort errors on each line
+				for (const line in error_by_line) {
+					if (error_by_line[line].length > 1) {
+						error_by_line[line].sort(function(a, b) { return a.start_column - b.start_column })
+					}
+				}
+				const overlay = { token: (stream: any) => {
+					const line = stream.lineOracle.line + 1
+					const pos = stream.pos
+					if (line in error_by_line) {
+						for (const error of error_by_line[line]) {
+							// console.log("line", line, pos, error_by_line[line])
+							if (pos === error.start_column) {
+								let len = Math.max(0, error.end_column - error.start_column)
+								stream.eatWhile(() => len-- >= 0)
+								return error.level === 0 ? "error" : "warning"
+							}
+							if (pos <= error.end_column) {
+								let len = error.start_column - pos
+								stream.eatWhile(() => len-- > 0)
+								return null
+							}
+						}
+						stream.skipToEnd()
+					} else {
+						stream.skipToEnd()
+					}
+				}}
+				this.errorOverlays[entrypoint] = overlay
+				this.editor.addOverlay(overlay, {priority: 12})
+				this.error = true
+			}
 		}
 
 		setAnalyzerTimeout() {
@@ -901,13 +913,13 @@
 			// Display error?
 			// const tooltip = this.$refs.tooltip
 			let shown = false
-			for (const entrypoint in this.errors) {
-				for (const error of this.errors[entrypoint]) {
-					if (error[0] === editorPos.line + 1 && error[1] <= editorPos.ch && error[3] >= editorPos.ch) {
+			for (const entrypoint in this.ai.problems) {
+				for (const error of this.ai.problems[entrypoint]) {
+					if (error.start_line === editorPos.line + 1 && error.start_column <= editorPos.ch && error.end_column >= editorPos.ch) {
 						// this.errorTooltipText = i18n.t('ls_error.' + error[5], error[6]) as string
-						this.errorTooltipText = error[5]
+						this.errorTooltipText = error.info
 						this.errorTooltip = true
-						this.errorLevel = error[4]
+						this.errorLevel = error.level
 						shown = true
 						return true
 					}

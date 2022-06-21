@@ -3,12 +3,13 @@ import { fileSystem } from '@/model/filesystem'
 import { LeekWars } from '@/model/leekwars'
 import Vue from 'vue'
 import { AIItem, Folder } from './editor-item'
+import { Problem } from './problem'
 
 class Analyzer {
 
 	public enabled: boolean = false
 	public running: number = 0
-	public problems: {[key: number]: {[key: string]: any[]}} = {}
+	public problems: {[key: number]: {[key: string]: Problem[]}} = {}
 	public error_count: number = 0
 	public warning_count: number = 0
 	public todo_count: number = 0
@@ -61,31 +62,15 @@ class Analyzer {
 				const problems = this.problems[entrypoint][ai]
 				// console.log(this.problems[ai])
 				for (const problem of problems) {
-					if (problem[4] === 0) { errors++ }
-					else if (problem[4] === 1) { warnings++ }
-					else if (problem[4] === 2) { todos++ }
+					if (problem.level === 0) { errors++ }
+					else if (problem.level === 1) { warnings++ }
+					else if (problem.level === 2) { todos++ }
 				}
 			}
 		}
 		this.error_count = errors
 		this.warning_count = warnings
 		this.todo_count = todos
-	}
-
-	public clearProblems(mainAI: AI) {
-		// console.log("clearProblems", mainAI)
-		const aux = (ai: AI) => {
-			const ais = this.problems[ai.id]
-			Vue.delete(this.problems, ai.id)
-			for (const a in ais) {
-				this.updateAiErrors(a)
-			}
-		}
-		aux(mainAI)
-		for (const entrypoint of mainAI.entrypoints) {
-			aux(fileSystem.ais[entrypoint])
-		}
-		this.updateCount()
 	}
 
 	public hover(ai: AI, position: number) {
@@ -236,36 +221,42 @@ class Analyzer {
 		}
 	}
 
-	public setAIProblems(entrypoint: number, ai: string, problems: any) {
-		// console.log("set ai problems", entrypoint, ai, problems)
-
+	public setProblems(entrypoint: number, ai: AI, problems: any) {
+		// console.log("[Analyzer] set ai problems", entrypoint, ai, problems)
 		if (!(entrypoint in this.problems)) {
 			Vue.set(this.problems, entrypoint, {})
 		}
-		Vue.set(this.problems[entrypoint], ai, problems)
+		Vue.set(this.problems[entrypoint], ai.path, problems)
+		Vue.set(ai.problems, entrypoint, problems)
 		this.updateAiErrors(ai)
 	}
 
-	public updateAiErrors(ai: string) {
+	public removeProblems(entrypoint: AI) {
+		for (const ai_id in fileSystem.ais) {
+			const ai = fileSystem.ais[ai_id]
+			if (ai.problems) {
+				Vue.delete(ai.problems, entrypoint.id)
+			}
+		}
+		Vue.delete(this.problems, entrypoint.id)
+	}
+
+	public updateAiErrors(ai: AI) {
 		// console.log("update ai errors", ai)
-		const aiObject = fileSystem.aiByFullPath[ai]
 		let errors = 0
 		let warnings = 0
 		let todos = 0
-		for (const entrypoint in this.problems) {
-			const problems = this.problems[entrypoint][ai]
-			if (problems) {
-				errors += problems.filter((p: any) => p[4] === 0).length
-				warnings += problems.filter((p: any) => p[4] === 1).length
-				todos += problems.filter((p: any) => p[4] === 2).length
-			}
+		for (const entrypoint in ai.problems) {
+			errors += ai.problems[entrypoint].filter(p => p.level === 0).length
+			warnings += ai.problems[entrypoint].filter(p => p.level === 1).length
+			todos += ai.problems[entrypoint].filter(p => p.level === 2).length
 		}
-		Vue.set(aiObject, "errors", errors)
-		Vue.set(aiObject, "warnings", warnings)
-		Vue.set(aiObject, "todos", todos)
+		Vue.set(ai, "errors", errors)
+		Vue.set(ai, "warnings", warnings)
+		Vue.set(ai, "todos", todos)
 
 		// Update parent folders
-		let current = fileSystem.folderById[aiObject.folder] as Folder | null
+		let current = fileSystem.folderById[ai.folder] as Folder | null
 		while (current) {
 			current.errors = current.items.reduce((s, i) => s + (i.folder ? (i as Folder).errors : (i as AIItem).ai.errors), 0)
 			current.warnings = current.items.reduce((s, i) => s + (i.folder ? (i as Folder).warnings : (i as AIItem).ai.warnings), 0)

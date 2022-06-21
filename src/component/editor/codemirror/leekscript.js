@@ -33,7 +33,9 @@ import { LeekWars } from '@/model/leekwars'
         "export": kw("export"), "import": kw("import"), "extends": C,
         "package": X, "abstract": X, "arguments": X, "await": X, "byte": X,
         "char": X, "const": X, "constructor": X, "double": X, "enum": X, "eval": X, "final": X,
-        "float": X, "goto": X, "implements": X, "int": X, "interface": X, "let": X,
+        "float": X, "goto": X, "implements": X,
+        "int": X, "real": X, "bool": X, "string": X, "any": X, "array": X, "map": X, "number": X,
+        "interface": X, "let": X,
         "long": X, "native": X, "private": X, "protected": X, "short": X,
         "synchronized": X, "throws": X, "transient": X, "void": X, "volatile": X, "yield": X
       };
@@ -41,6 +43,7 @@ import { LeekWars } from '@/model/leekwars'
             k[constant.name] = {type: "variable", style: "lsconst"}
         }
         for (const fun of LeekWars.functions) {
+          if (fun.name === 'string' || fun.name === 'number') continue
             var style = fun.deprecated ? 'lsfunc-deprec' : 'lsfunc'
             k[fun.name] = {type: "variable", style: style}
         }
