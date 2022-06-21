@@ -12,12 +12,12 @@
 				</div>
 				<div v-if="!problemsCollapsed[entrypoint + ai]">
 					<div v-for="(problem, p) in problems" :key="p" class="problem" @click="jumpProblem(ai, problem)">
-						<v-icon v-if="problem[4] === 0" class="error">mdi-close-circle-outline</v-icon>
-						<v-icon v-else-if="problem[4] === 1" class="warning">mdi-alert-circle-outline</v-icon>
+						<v-icon v-if="problem.level === 0" class="error">mdi-close-circle-outline</v-icon>
+						<v-icon v-else-if="problem.level === 1" class="warning">mdi-alert-circle-outline</v-icon>
 						<v-icon v-else class="todo">mdi-format-list-checks</v-icon>
 						<!-- {{ $t('ls_error.' + problem[5], problem[6]) }} -->
-						{{ problem[5] }}
-						<span class="line">ligne {{ problem[0] }} [{{ problem[1] }} : {{ problem[3] }}]</span>
+						{{ problem.info }}
+						<span class="line">ligne {{ problem.start_line }} [{{ problem.start_column }} : {{ problem.end_column }}]</span>
 					</div>
 				</div>
 			</div>
@@ -46,7 +46,7 @@
 
 		jumpProblem(path: string, problem: any) {
 			const ai = fileSystem.aiByFullPath[path]
-			this.$emit('jump', ai, problem[0])
+			this.$emit('jump', ai, problem.start_line)
 		}
 	}
 </script>

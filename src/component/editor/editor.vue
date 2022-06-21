@@ -91,7 +91,7 @@
 					<div slot="content" class="editor-left">
 						<div class="resizer" @mousedown="resizerMousedown"></div>
 						<div :class="{tabs: $refs.tabs && $refs.tabs.tabs.length > 1}" class="editors">
-							<ai-view v-for="ai in activeAIs" ref="editors" :key="ai.id" :ai="ai" :ais="fileSystem.ais" :editors="$refs.editors" :visible="currentAI === ai" :font-size="fontSize" :line-height="lineHeight" :popups="popups" :auto-closing="autoClosing" :autocomplete-option="autocomplete" @jump="jump" @load="load" @problems="problems" />
+							<ai-view v-for="ai in activeAIs" ref="editors" :key="ai.id" :ai="ai" :ais="fileSystem.ais" :editors="$refs.editors" :visible="currentAI === ai" :font-size="fontSize" :line-height="lineHeight" :popups="popups" :auto-closing="autoClosing" :autocomplete-option="autocomplete" @jump="jump" @load="load" />
 						</div>
 						<div v-if="currentEditor" class="compilation">
 							<div v-if="currentEditor.saving" class="compiling">
@@ -190,6 +190,7 @@
 								</span>
 							</div>
 							<div class="filler"></div>
+							<div v-if="currentEditor && currentEditor.editor" class="version">L {{ currentEditor.editor.getCursor().line + 1 }}, C {{ currentEditor.editor.getCursor().ch }}</div>
 							<div v-if="enableAnalyzer" class="state">
 								<div v-if="LeekWars.analyzer.running == 0" class="ready">
 									Prêt
@@ -293,6 +294,7 @@
 	import { Route } from 'vue-router'
 	import AIView from './ai-view.vue'
 	import Analyzer from './analyzer'
+	import { Problem } from './problem'
 	import EditorFinder from './editor-finder.vue'
 	import { AIItem, Folder, Item } from './editor-item'
 	import { explorer } from './explorer'
@@ -612,7 +614,6 @@
 			aiEditor.saving = true
 			aiEditor.ai.modified = false
 			aiEditor.serverError = false
-			aiEditor.removeAllErrors()
 			this.errors = []
 
 			const saveID = aiEditor.id > 0 ? aiEditor.id : 0
@@ -633,13 +634,10 @@
 
 				this.errors = []
 				this.goods = []
-				LeekWars.analyzer.clearProblems(aiEditor.ai!)
-				aiEditor.removeAllErrors()
 
 				for (const entrypoint in data.result) {
 					const entrypoint_id = parseInt(entrypoint, 10)
 					const ai = fileSystem.ais[entrypoint_id]
-					const editor = this.getAiView(ai)
 
 					// Valid?
 					let valid = true
@@ -650,8 +648,6 @@
 						this.goods.push({ai})
 					}
 					Vue.set(ai, 'valid', valid)
-					if (editor) { editor.removeErrors(entrypoint_id) }
-					LeekWars.analyzer.setAIProblems(entrypoint_id, ai.path, [])
 					this.handleProblems(ai, data.result[entrypoint])
 				}
 				LeekWars.analyzer.updateCount()
@@ -676,41 +672,32 @@
 			}
 		}
 
-		handleProblems(entrypoint: AI, problems: any[]) {
+		handleProblems(entrypoint: AI, problems: any[][]) {
+			// console.log("handleProblems", entrypoint, problems)
+
+			LeekWars.analyzer.removeProblems(entrypoint)
+
 			// Group problems by ai
-			const problemsByAI = {} as {[key: number]: any[]}
+			const problemsByAI = {} as {[key: number]: Problem[]}
 			for (const problem of problems) {
 				const level = problem[0]
 				const ai_id = problem[1]
-				if (!(ai_id in problemsByAI)) {
-					problemsByAI[ai_id] = []
-				}
-				const ai = fileSystem.ais[ai_id]
-				const ai_name = ai ? ai.name : 'AI #' + problem[1]
-				const editor = this.getAiView(ai)
 				const line = problem[2]
 				let info = problem[4]
-				if (problem.length === 7) {
-					info = this.$t('leekscript.error_' + problem[5], problem[6])
+				if (problem.length === 8) {
+					info = this.$t('leekscript.error_' + problem[6], problem[7])
 				} else {
-					info = this.$t('leekscript.error_' + problem[5])
+					info = this.$t('leekscript.error_' + problem[6])
 				}
-				info = '(' + problem[4] + ') ' + info
-				let new_problem = null
-				if (editor) {
-					const token = editor.editor.getTokenAt({line: line - 1, ch: problem[3] - 1})
-					new_problem = [line, token.start, line, token.end - 1, level, info]
-				} else {
-					new_problem = [line, 0, line, 12, level, info]
-				}
-				problemsByAI[ai_id].push(new_problem)
+				const problemObject = new Problem(line, problem[3], line, problem[5], level, info)
+				if (!problemsByAI[ai_id]) { problemsByAI[ai_id] = [] }
+				problemsByAI[ai_id].push(problemObject)
 			}
 			for (const ai_id in problemsByAI) {
 				const ai = fileSystem.ais[ai_id]
 				const ai_problems = problemsByAI[ai_id]
 				// console.log("ai", ai.path, "problems", ai_problems)
-				LeekWars.analyzer.setAIProblems(entrypoint.id, ai.path, ai_problems)
-				this.problems(entrypoint.id, ai, ai_problems)
+				LeekWars.analyzer.setProblems(entrypoint.id, ai, ai_problems)
 			}
 		}
 
@@ -839,13 +826,13 @@
 			}
 		}
 
-		problems(entrypoint: number, ai: AI, problems: any) {
+		// problems(entrypoint: number, ai: AI, problems: Problem[]) {
 
-			const editor = this.getAiView(ai)
-			if (!editor) { return }
+		// 	const editor = this.getAiView(ai)
+		// 	if (!editor) { return }
 
-			editor.addErrorOverlay(entrypoint, problems)
-		}
+		// 	editor.addErrorOverlay(entrypoint, problems)
+		// }
 
 		deleteAI(ai: AI) {
 			// Remove from active AIs
