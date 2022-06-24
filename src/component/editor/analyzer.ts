@@ -1,6 +1,7 @@
 import { AI } from '@/model/ai'
 import { fileSystem } from '@/model/filesystem'
 import { LeekWars } from '@/model/leekwars'
+import { SocketMessage } from '@/model/socket'
 import Vue from 'vue'
 import { AIItem, Folder } from './editor-item'
 import { Problem } from './problem'
@@ -14,6 +15,7 @@ class Analyzer {
 	public warning_count: number = 0
 	public todo_count: number = 0
 	public promise!: Promise<any>
+	public hoverResolve!: (value: unknown) => any
 
 	private initialized: boolean = false
 	private GeneratorAnalyze!: Function
@@ -73,7 +75,24 @@ class Analyzer {
 		this.todo_count = todos
 	}
 
-	public hover(ai: AI, position: number) {
+	public hover(ai: AI, line: number, column: number) {
+		// console.log("🔥 Hover", ai.path, line, column)
+		// console.time('hover')
+		LeekWars.socket.send([SocketMessage.EDITOR_HOVER, ai.id, line, column])
+
+		return new Promise<any>((resolve, reject) => {
+			this.hoverResolve = resolve
+		})
+	}
+
+	public hoverResult(data: any[]) {
+		if (this.hoverResolve) {
+			// console.timeEnd('hover')
+			this.hoverResolve(data)
+		}
+	}
+
+	public hover_old(ai: AI, position: number) {
 
 		if (!this.enabled) { return Promise.reject() }
 

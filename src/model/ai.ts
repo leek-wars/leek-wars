@@ -252,7 +252,7 @@ class AI {
 			let description = "<h4>" + i18n.t('leekscript.function_f', [fullName]) + "</h4><br>"
 			description += i18n.t('leekscript.defined_in', [this.name, line])
 
-			const comment = this.comments[match.index]
+			const comment = this.comments[match.index] || this.comments[match.index + 1]
 			// console.log("comment", comment)
 			const javadoc = {
 				name: fullName,
@@ -341,8 +341,8 @@ class AI {
 			let description = "<h4>" + i18n.t('leekscript.function_f', [fullName]) + "</h4><br>"
 			description += i18n.t('leekscript.defined_in', [this.name, line])
 
-			const comment = this.comments[match.index]
-			// console.log("comment", comment)
+			const comment = this.comments[match.index] || this.comments[match.index + 1]
+			// console.log("comment", comment, this.comments, match)
 			const javadoc = {
 				name: fullName,
 				description: "",

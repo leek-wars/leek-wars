@@ -498,9 +498,6 @@
 		}
 
 		keydown(e: KeyboardEvent) {
-			if (this.currentEditor) {
-				this.currentEditor.editorKeyDown(e)
-			}
 			// Up and down arrows while Alt + Left/right
 			const finder = this.$refs.finder as EditorFinder
 			if (e.altKey && finder.value) {
@@ -510,9 +507,6 @@
 		}
 
 		keyup(e: KeyboardEvent) {
-			if (this.currentEditor) {
-				this.currentEditor.editorKeyUp(e)
-			}
 			if (e.which === 18) {
 				const finder = this.$refs.finder as EditorFinder
 				finder.go(this.history[finder.selected])

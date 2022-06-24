@@ -71,17 +71,19 @@
 				<item-preview v-else-if="detailDialogContent.keyword.details.type === 'chip'" :chip="detailDialogContent.keyword.details.chip" class="main" />
 				<javadoc v-if="detailDialogContent.keyword.javadoc" :javadoc="detailDialogContent.keyword.javadoc" :keyword="detailDialogContent.keyword" class="main" />
 			</template>
+
+			<div v-if="detailDialogContent.details.alias && !detailDialogContent.details.op" class="alias">
+				<lw-code :code="detailDialogContent.details.alias" :single="true" />
+				<span v-if="detailDialogContent.details.size">Taille : {{ detailDialogContent.details.size }}</span>
+			</div>
 			<div v-if="detailDialogContent.details.defined" class="definition">
 				<v-icon>mdi-file-outline</v-icon>
-				<span @click="$emit('jump', detailDialogContent.keyword.ai, hoverData.defined[1])">
+				<span @click="$emit('jump', ais[detailDialogContent.details.defined[0]], detailDialogContent.details.defined[1])">
 					<i18n class="defined" path="leekscript.defined_in">
-						<b slot="0">{{ detailDialogContent.details.defined[0] }}</b>
+						<b slot="0">{{ ais[detailDialogContent.details.defined[0]].name }}</b>
 						<b slot="1">{{ detailDialogContent.details.defined[1] }}</b>
 					</i18n>
 				</span>
-			</div>
-			<div v-if="detailDialogContent.details.alias && !detailDialogContent.details.op">
-				<lw-code :code="detailDialogContent.details.alias" :single="true" />
 			</div>
 			<div v-if="detailDialogContent.details.type">
 				<div v-if="detailDialogContent.details.op && detailDialogContent.details.type.args">
@@ -93,6 +95,7 @@
 				</div>
 				<lw-type v-else :type="detailDialogContent.details.type" />
 			</div>
+
 			<template v-if="errorTooltip">
 				<div v-if="errorLevel === 0" class="error"><v-icon class="error">mdi-close-circle-outline</v-icon> {{ errorTooltipText }}</div>
 				<div v-else class="warning"><v-icon class="warning">mdi-alert-circle-outline</v-icon> {{ errorTooltipText }}</div>
@@ -334,6 +337,14 @@ import { Problem } from './problem'
 				}
 				this.editor.on("mousedown", this.editorMousedown as any)
 			})
+
+			this.$root.$on('keydown', this.keydown)
+			this.$root.$on('keyup', this.keyup)
+		}
+
+		beforeDestroy() {
+			this.$root.$off('keydown', this.keydown)
+			this.$root.$off('keyup', this.keyup)
 		}
 
 		@Watch('visible')
@@ -346,24 +357,26 @@ import { Problem } from './problem'
 		public editorMousedown(editor: CodeMirror.Editor, e: MouseEvent) {
 			if (e.ctrlKey && this.hoverData && this.hoverData.defined) {
 				this.detailDialog = false
-				const ai = fileSystem.aiByFullPath[this.hoverData.defined[0]]
+				const ai = fileSystem.ais[this.hoverData.defined[0]]
 				this.$emit('jump', ai, this.hoverData.defined[1])
-				this.ctrl = false
 				e.preventDefault()
 			}
 		}
-		public editorKeyDown(e: KeyboardEvent) {
-			if (e.keyCode === 17) {
+
+		public keydown(e: KeyboardEvent) {
+			if (e.ctrlKey) {
 				this.ctrl = true
 				this.updateMouseAndCtrl()
 			}
 		}
-		public editorKeyUp(e: KeyboardEvent) {
-			if (e.keyCode === 17) {
+
+		public keyup(e: KeyboardEvent) {
+			if (e.key === "Control") {
 				this.ctrl = false
 				this.updateMouseAndCtrl()
 			}
 		}
+
 		public hasBeenModified() {
 			this.ai.modified = true
 			// this.removeAllErrors()
@@ -812,6 +825,7 @@ import { Problem } from './problem'
 		}
 
 		public updateMouseAndCtrl() {
+			// console.log("updateMouseAndCtrl", {ctrl : this.ctrl })
 			if (!this.popups || !this.editor) { return null }
 			if (this.hintDialog) { return null }
 
@@ -876,13 +890,14 @@ import { Problem } from './problem'
 				const keyword = this.getTokenInformation(token.string, editorPos2, previousToken)
 
 				// console.log("hover at", position)
-				LeekWars.analyzer.hover(this.ai, position).then((raw_data) => {
+				LeekWars.analyzer.hover(this.ai, editorPos.line + 1, editorPos.ch).then((raw_data) => {
 
-					// console.log(JSON.stringify(raw_data))
+					// console.log("Hover result", JSON.stringify(raw_data))
 					// console.log(raw_data.location[0], raw_data.location[1])
-					// console.log(raw_data)
+					// console.log("Hover result", raw_data)
 
 					this.showHoverDetails(editorPos, keyword, raw_data)
+					this.showErrorDetails(editorPos)
 				})
 				.catch(() => {
 					// console.log("cannot hover", token, editorPos)
@@ -931,7 +946,7 @@ import { Problem } from './problem'
 
 		public showHoverDetails(editorPos: any, keyword: any, raw_data: any) {
 
-			const startPos = { ch: raw_data.location[0][1], line: raw_data.location[0][0] - 1 }
+			const startPos = { ch: raw_data.location[2], line: raw_data.location[1] - 1 }
 
 			if (raw_data.location[0][2] !== 0 || raw_data.location[1][2] !== 0) { // Not position [0:0]
 				this.hoverData = raw_data
@@ -963,10 +978,12 @@ import { Problem } from './problem'
 				}
 				Vue.nextTick(fixPosition)
 
-				const start_line = raw_data.location[0][0] - 1
-				const start_char = raw_data.location[0][1]
-				const end_line = raw_data.location[1][0] - 1
-				const end_char = raw_data.location[1][1]
+				const start_line = raw_data.location[1] - 1
+				const start_char = raw_data.location[2]
+				const end_line = raw_data.location[3] - 1
+				const end_char = raw_data.location[4]
+
+				// console.log("[ai-view] hover ", {start_line, start_char, end_line, end_char})
 
 				const overlay = {token: (stream: any) => {
 					const lineNo = stream.lineOracle.line
@@ -1716,6 +1733,15 @@ import { Problem } from './problem'
 		}
 		code.single {
 			border: none;
+		}
+		.alias {
+			display: flex;
+			align-items: center;
+			overflow-y: auto;
+			flex-wrap: wrap;
+			span {
+				white-space: nowrap;
+			}
 		}
 	}
 	.definition {
