@@ -1,11 +1,11 @@
 <template>
 	<div v-if="$store.state.farmer" v-show="!LeekWars.mobile">
-		<div class="social-button" @click="toggleSocial">
+		<div class="blabla-button" @click="toggleSocial">
 			<v-icon v-if="LeekWars.socialCollapsed">mdi-chevron-left</v-icon>
 			<v-icon v-else>mdi-chevron-right</v-icon>
 		</div>
 
-		<div :style="{width: panelWidth + 'px'}" class="social-panel">
+		<div :style="{width: panelWidth + 'px'}" class="blabla-panel">
 			<div class="content">
 
 				<div class="resizer" @mousedown="resizerMousedown"></div>
@@ -36,7 +36,7 @@
 					</div>
 				</panel>
 
-				<panel v-if="env.SOCIAL" class="social-chat" toggle="social/chat" icon="mdi-chat-outline">
+				<panel v-if="env.SOCIAL" class="blabla-chat" toggle="social/chat" icon="mdi-chat-outline">
 					<template slot="title">
 						<router-link v-ripple to="/chat" class="title">
 							Chat
@@ -128,27 +128,27 @@
 
 <style lang='scss' scoped>
 	@media screen and (max-width: 1599px) {
-		.social-panel {
+		.blabla-panel {
 			display: none;
 		}
-		.social-button {
+		.blabla-button {
 			display: none;
 		}
 	}
-	.social-panel {
+	.blabla-panel {
 		width: 380px;
 		position: fixed;
 		top: 80px;
 		bottom: 0;
 		right: 0;
 	}
-	#app:not(.connected) .social-panel {
+	#app:not(.connected) .blabla-panel {
 		display: none;
 	}
-	#app.social-collapsed .social-panel {
+	#app.social-collapsed .blabla-panel {
 		display: none;
 	}
-	.social-button {
+	.blabla-button {
 		position: fixed;
 		top: 46px;
 		right: 0;
@@ -164,10 +164,10 @@
 			font-size: 30px;
 		}
 	}
-	.social-button:hover {
+	.blabla-button:hover {
 		background: rgba(200, 200, 200, 0.4);
 	}
-	.social-panel > .content {
+	.blabla-panel > .content {
 		background: rgba(80, 80, 80, 0.6);
 		padding-top: 12px;
 		padding-left: 12px;
@@ -210,13 +210,13 @@
 	.chat {
 		height: 300px;
 	}
-	.social-chat .content {
+	.blabla-chat .content {
 		padding: 0;
 	}
-	.social-chat .panel {
+	.blabla-chat .panel {
 		margin-bottom: 0;
 	}
-	.social-chat .language-button {
+	.blabla-chat .language-button {
 		cursor: pointer;
 		height: 36px;
 		max-height: 36px;
@@ -225,7 +225,7 @@
 		margin-left: 4px;
 		vertical-align: bottom;
 	}
-	.social-chat .languages {
+	.blabla-chat .languages {
 		padding: 0 5px;
 	}
 	.flag {
@@ -238,10 +238,10 @@
 	.language .name {
 		padding-left: 8px;
 	}
-	.social-panel > .content > div {
+	.blabla-panel > .content > div {
 		margin-bottom: 12px;
 	}
-	.social-panel .content > div:last-child {
+	.blabla-panel .content > div:last-child {
 		margin-bottom: 0;
 	}
 	.farmer-count {
