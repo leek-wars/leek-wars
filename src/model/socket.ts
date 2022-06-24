@@ -56,6 +56,7 @@ enum SocketMessage {
 	CHAT_REACT = 51,
 	READ_NOTIFICATION = 52,
 	ADD_RESOURCE = 53,
+	EDITOR_HOVER = 54,
 }
 
 class Socket {
@@ -106,10 +107,11 @@ class Socket {
 			}
 		}
 		this.socket.onmessage = (msg: any) => {
-			// console.log("[ws] onmessage", msg)
 			const json = JSON.parse(msg.data)
 			const id = json[0]
 			const data = json[1]
+			// console.log("[WS] onmessage", id, data)
+
 			vueMain.$emit('wsmessage', {type: id, data})
 
 			switch (id) {
@@ -241,6 +243,10 @@ class Socket {
 					store.commit('add-resource', { template: data[0], id: data[1] })
 					break
 				}
+				case SocketMessage.EDITOR_HOVER: {
+					LeekWars.analyzer.hoverResult(data)
+					break
+				}
 			}
 		}
 	}
@@ -255,6 +261,7 @@ class Socket {
 
 	public send(message: any) {
 		if (this.socket && this.socket.readyState === WebSocket.OPEN) {
+			// console.log("[WS] send", message)
 			this.socket.send(JSON.stringify(message))
 		} else {
 			this.queue.push(message)
