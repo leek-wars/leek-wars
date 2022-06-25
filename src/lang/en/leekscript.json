@@ -13,7 +13,7 @@
 	"lstype_int": "int",
 	"lstype_number": "number",
 	"lstype_string": "string",
-	"too_much_debug": "debug() limit reached! (500 000 characters)",
+	"too_much_debug": "debug() / mark() limit reached! (500 000 characters)",
 	"class_name": "Class name",
 	"class_super": "Class super class",
 	"class_fields": "Class fields",
