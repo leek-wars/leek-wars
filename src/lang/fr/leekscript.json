@@ -13,7 +13,7 @@
 	"lstype_int": "entier",
 	"lstype_number": "nombre",
 	"lstype_string": "chaine",
-	"too_much_debug": "Limite de debug() atteinte ! (500 000 caractères)",
+	"too_much_debug": "Limite de debug() / mark() atteinte ! (500 000 caractères)",
 	"class_name": "Nom de la classe",
 	"class_super": "Super classe de la classe",
 	"class_fields": "Champs de la classe",
