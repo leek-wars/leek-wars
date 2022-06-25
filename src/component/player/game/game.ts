@@ -1046,6 +1046,7 @@ class Game {
 				leek.setWeapon(new WEAPONS[action.params[1] - 1]!(this))
 			}
 			action.entity = leek
+			leek.looseTP(1, this.jumping)
 			this.log(action)
 			this.actionDone()
 			break
@@ -1239,6 +1240,7 @@ class Game {
 					message = "@*%#$€"
 				}
 				action.entity.say(this.ctx, message)
+				action.entity.looseTP(1, this.jumping)
 			}
 			this.actionDone(40)
 			break
@@ -1246,6 +1248,7 @@ class Game {
 		case ActionType.LAMA: {
 			action.entity = this.leeks[this.currentPlayer!]
 			this.log(action)
+			action.entity.looseTP(1, this.jumping)
 			if (!this.jumping) {
 				this.leeks[this.currentPlayer!].sayLama()
 			}
@@ -1313,6 +1316,7 @@ class Game {
 		case ActionType.SHOW: {
 			action.entity = this.leeks[this.currentPlayer!]
 			this.log(action)
+			action.entity.looseTP(1, this.jumping)
 			if (this.jumping) {
 				this.actionDone()
 				break
