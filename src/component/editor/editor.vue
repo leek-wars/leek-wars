@@ -69,7 +69,7 @@
 		</div>
 
 		<div class="container">
-			<div v-show="!LeekWars.mobile || !LeekWars.splitBack" :style="{width: LeekWars.mobile ? '100%' : panelWidth + 'px'}">
+			<div v-show="!LeekWars.mobile || !LeekWars.splitBack" :style="{width: LeekWars.mobile ? '100%' : panelWidth + 'px'}" class="resize-panel">
 				<panel class="editor-left first">
 					<div slot="content" class="full">
 						<div v-if="fileSystem.rootFolder" v-autostopscroll class="ai-list">
@@ -908,6 +908,9 @@
 		height: 100%;
 		display: flex;
 		flex-direction: column;
+	}
+	.resize-panel {
+		max-height: 100%;
 	}
 	.ai-list {
 		overflow-y: auto;
