@@ -61,7 +61,7 @@
 				</div>
 			</div>
 		</panel>
-		<div v-if="trophy" class="grid container large">
+		<div v-if="trophy" class="container large">
 			<panel v-if="trophy.first_farmers.length" :title="$t('first_farmers')" icon="mdi-sort-descending">
 				<router-link v-for="(farmer, f) in trophy.first_farmers" :key="f" v-ripple :to="'/farmer/' + farmer.id" class="farmer">
 					<avatar :farmer="farmer" />

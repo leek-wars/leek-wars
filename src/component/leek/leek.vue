@@ -47,7 +47,7 @@
 			</div>
 		</div>
 
-		<div class="grid container">
+		<div class="container">
 			<panel>
 				<i18n slot="title" path="farmed_by">
 					<router-link slot="farmer" :to="'/farmer/' + (leek ? leek.farmer.id : 0)">
@@ -218,7 +218,7 @@
 			</panel>
 		</div>
 
-		<div class="grid container large">
+		<div class="container large">
 			<panel v-if="leek && leek.fights && leek.fights.length > 0" :title="$t('fights')" icon="mdi-sword-cross">
 				<template v-if="leek" slot="actions">
 					<router-link :to="'/leek/' + leek.id + '/history'" class="button flat">

@@ -59,7 +59,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="grid container">
+		<div class="container">
 			<panel class="first">
 				<div slot="content" class="content avatar-td">
 					<div v-if="myFarmer">

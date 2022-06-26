@@ -667,20 +667,16 @@ img.emoji {
 	padding: 0;
 	max-width: none;
 	display: flex;
+	flex-wrap: wrap;
 	justify-content: stretch;
 	margin-bottom: 12px;
 	gap: 12px;
-	&.grid {
-		display: grid;
-		grid-gap: 12px;
-		grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-
-		&.large {
-			grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
-		}
-	}
 	& > .panel {
 		margin-bottom: 0;
+		flex: 1 1 320px;
+	}
+	&.large > .panel {
+		flex: 1 1 400px;
 	}
 	.column3 { flex: 3; min-width: 0; }
 	.column4 { flex: 4; min-width: 0; }
