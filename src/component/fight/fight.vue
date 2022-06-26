@@ -113,6 +113,7 @@
 
 <script lang="ts">
 	import { locale } from '@/locale'
+	import { mixins } from '@/model/i18n'
 	import { Comment } from '@/model/comment'
 	import { Farmer } from '@/model/farmer'
 	import { Fight, FightType, Report } from '@/model/fight'
@@ -124,9 +125,7 @@
 	import { GROUND_PADDING_LEFT, GROUND_PADDING_RIGHT, GROUND_PADDING_TOP } from '../player/game/ground'
 	const Player = () => import(/* webpackChunkName: "[request]" */ `@/component/player/player.${locale}.i18n`)
 
-	@Component({ name: "fight", components: {
-		Player
-	}})
+	@Component({ name: "fight", components: { Player }, i18n: {}, mixins: [...mixins] })
 	export default class FightPage extends Vue {
 		fight_id: string | null = null
 		fight: Fight | null = null
