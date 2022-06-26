@@ -107,12 +107,12 @@
 							<leek-image :leek="currentLeek" :scale="1" />
 						</div>
 						<div class="card characteristics">
-							<characteristic-tooltip v-for="c in LeekWars.characteristics_table" :key="c" v-slot="{ on }" :characteristic="c" :value="currentLeek[c]" :leek="currentLeek" :test="true">
-								<div class="characteristic" v-on="on">
-									<img :src="'/image/charac/' + c + '.png'">
-									<span :contenteditable="!currentLeek.bot" class="stat" :class="'color-' + c" @focusout="characteristicFocusout(c, $event)" v-html="currentLeek[c]"></span>
-								</div>
-							</characteristic-tooltip>
+							<div v-for="c in LeekWars.characteristics_table" :key="c" class="characteristic">
+								<characteristic-tooltip  v-slot="{ on }" :characteristic="c" :value="currentLeek[c]" :leek="currentLeek" :test="true">
+									<img v-on="on" :src="'/image/charac/' + c + '.png'">
+								</characteristic-tooltip>
+								<span :contenteditable="!currentLeek.bot" class="stat" :class="'color-' + c" @focusout="characteristicFocusout(c, $event)" v-html="currentLeek[c]"></span>
+							</div>
 						</div>
 					</div>
 					<div v-if="currentLeek.bot">
@@ -1410,22 +1410,31 @@
 		.characteristic {
 			width: 50%;
 			padding: 5px 20px;
-			display: inline-block;
+			display: inline-flex;
+			align-items: center;
+			gap: 5px;
 			img {
 				vertical-align: top;
-				margin-right: 7px;
 				width: 25px;
 			}
 			.stat {
 				font-size: 18px;
 				vertical-align: top;
 				display: inline-block;
-				margin-top: 3px;
 				font-weight: bold;
+				padding: 2px 4px;
+				border-radius: 4px;
+				min-width: 72px;
+				&[contenteditable="true"] {
+					border: 1px solid #ccc;
+				}
+				&:hover {
+					border: 1px solid #777;
+				}
 			}
 		}
-		.characteristic:nth-child(8n+6),
-		.characteristic:nth-child(8n+8) {
+		.characteristic:nth-child(4n+3),
+		.characteristic:nth-child(4n+4) {
 			background: #eee;
 		}
 	}
