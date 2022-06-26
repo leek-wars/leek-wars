@@ -233,7 +233,9 @@
 
 	@Component({
 		name: 'player',
-		components: { Hud }
+		components: { Hud },
+		i18n: {},
+		mixins: [...mixins]
 	})
 	export default class Player extends Vue {
 		BAR_HEIGHT = 42
