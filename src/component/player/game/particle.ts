@@ -104,11 +104,13 @@ abstract class FallingParticle extends Particle {
 			if (this.z <= 0) {
 				this.z -= this.dz
 				this.dz = -this.dz * 0.4
-				if (this.dz < 1) {
+				if (this.dz < 0.8) {
 					this.dz = 0
 					this.dy = 0
 					this.dx = 0
 					this.rotation = 0
+					this.onDie()
+					return true
 				}
 				this.dx *= 0.5
 				this.dy *= 0.5
@@ -330,12 +332,14 @@ class Grenade extends FallingParticle {
 		const dist = Math.sqrt((x - pos.x) * (x - pos.x) + (y - pos.y) * (y - pos.y))
 		this.dx = Math.cos(angle) * dist * 0.033
 		this.dy = Math.sin(angle) * dist * 0.033
+		this.dz = 0.1
 		this.angle = angle
 		this.rotation = (Math.random() - 0.5) / 2
 		this.targets = targets
 		this.texture = texture
 		this.targetCell = targetCell
 	}
+
 	public onDie() {
 		let xy = this.game.ground.field.cellToXY(this.targetCell)
 		xy = this.game.ground.xyToXYPixels(xy.x, xy.y)
@@ -344,10 +348,12 @@ class Grenade extends FallingParticle {
 			target.hurt(this.x, this.y, this.z, this.dx, this.dy, this.dz)
 		}
 	}
+
 	public draw(ctx: CanvasRenderingContext2D): void {
 		ctx.drawImage(this.texture.texture, -this.texture.texture.width / 2 , -this.texture.texture.height / 2)
 	}
 }
+
 class Shot extends Particle {
 	public textureID: number
 	constructor(game: Game, x: number, y: number, z: number, angle: number) {
@@ -588,6 +594,7 @@ class Plasma extends Particle {
 		ctx.globalAlpha = 1
 	}
 }
+
 class Cartridge extends FallingParticle {
 	public texture: HTMLImageElement | HTMLCanvasElement
 	constructor(game: Game, x: number, y: number, z: number, dx: number, dy: number, dz: number, texture: Texture) {

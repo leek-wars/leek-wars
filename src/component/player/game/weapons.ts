@@ -343,7 +343,7 @@ class Electrisor extends WeaponAnimation {
 		this.lightningZ = coord.z * scale
 		this.lightningAngle = (angle + Math.PI / 2) * orientation - Math.PI / 2
 		this.lightningPosition = targetPos
-		this.shoots = 30
+		this.shoots = 40
 		this.game.setEffectArea(cell, Area.CIRCLE1, this.areaColor, 110)
 		S.electrisor.play(this.game)
 		this.caster = caster
@@ -356,7 +356,7 @@ class Electrisor extends WeaponAnimation {
 			if (this.currentDelay <= 0) {
 				this.currentDelay = this.delay
 				this.game.particles.addLightning(this.lightningX, this.lightningY, this.lightningZ + this.caster.handPos * this.caster.scale, this.lightningAngle, this.lightningPosition, this.lightning, 42)
-				this.shoots--
+				this.shoots -= dt
 			}
 		}
 	}
