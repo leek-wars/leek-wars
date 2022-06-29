@@ -363,7 +363,7 @@
 		}
 		public hasBeenModified() {
 			this.ai.modified = true
-			this.removeAllErrors()
+			// this.removeAllErrors()
 		}
 
 		public show() {
