@@ -32,7 +32,7 @@
 							<li v-for="item in items" :key="item.id">
 								<rich-tooltip-item v-slot="{ on }" :bottom="true" :instant="true" :item="item">
 									<div v-if="item.type === ItemType.WEAPON" v-on="on">{{ $t('weapon.' + LeekWars.weapons[item.params].name) }}</div>
-									<div v-else-if="item.type === ItemType.HAT" v-on="on">{{ $t('hat.' + LeekWars.hats[item.id].name) }}</div>
+									<div v-else-if="item.type === ItemType.HAT" v-on="on">{{ $t('hat.' + LeekWars.hats[item.params].name) }}</div>
 									<div v-else-if="item.type === ItemType.POTION" v-on="on">{{ $t('potion.' + LeekWars.potions[item.id].name) }}</div>
 								</rich-tooltip-item>
 							</li>
