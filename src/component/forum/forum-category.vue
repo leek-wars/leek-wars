@@ -1,9 +1,26 @@
 <template>
 	<div>
 		<div class="page-header page-bar">
-			<h1>
-				<breadcrumb :items="breadcrumb_items" :raw="true" />
-			</h1>
+			<div>
+				<h1>
+					<breadcrumb :items="breadcrumb_items" :raw="true" />
+				</h1>
+				<v-menu offset-y>
+					<template v-slot:activator="{ on }">
+						<div class="forum-language info" v-on="on">
+							<img v-for="l in activeLanguages" :key="l" :src="LeekWars.languages[l].flag" class="flag">
+							<img width="10" src="/image/selector.png">
+						</div>
+					</template>
+					<v-list :dense="true">
+						<v-list-item v-for="(language, i) in LeekWars.languages" :key="i" class="language" @click="setForumLanguage(language)" :disabled="forumLanguages[language.code] && activeLanguages.length === 1">
+							<v-checkbox v-model="forumLanguages[language.code]" :disabled="forumLanguages[language.code] && activeLanguages.length === 1" hide-details @click.stop="updateCategories" />
+							<img :src="language.flag" class="flag">
+							<span class="name">{{ language.name }}</span>
+						</v-list-item>
+					</v-list>
+				</v-menu>
+			</div>
 			<div v-if="!LeekWars.mobile" class="tabs">
 				<div v-if="$store.state.farmer && $store.state.farmer.verified" class="tab" @click="createDialog = true">
 					<v-icon>mdi-comment-edit</v-icon>
@@ -45,7 +62,7 @@
 									#{{ topic.issue }}
 								</a>
 								<router-link :to="'/forum/category-' + topic.category + '/topic-' + topic.id">{{ topic.title }}</router-link>
-								<img v-if="forumLanguages.length >= 2 && topic.lang" class="flag" :src="LeekWars.languages[topic.lang].flag">
+								<img v-if="activeLanguages.length >= 2 && topic.lang" class="flag" :src="LeekWars.languages[topic.lang].flag">
 							</span>
 							<div class="description grey">
 								<i18n path="by_x_the_d">
@@ -104,8 +121,8 @@
 				<input v-model="createTitle" class="topic-name card" type="text">
 				<h3>{{ $t('new_topic_message') }}</h3>
 				<textarea v-model="createMessage" class="topic-message card"></textarea>
-				<v-radio-group v-if="forumLanguages.length > 1" v-model="createMessageLang">
-					<v-radio v-for="lang in forumLanguages" :key="lang" :value="lang" :label="LeekWars.languages[lang].name" />
+				<v-radio-group v-if="Object.values(forumLanguages).length > 1" v-model="createMessageLang">
+					<v-radio v-for="(_, lang) in forumLanguages" :key="lang" :value="lang" :label="LeekWars.languages[lang].name" />
 				</v-radio-group>
 				<formatting-rules />
 			</div>
@@ -131,7 +148,7 @@
 	import { locale } from '@/locale'
 	import { ForumCategory, ForumTopic } from '@/model/forum'
 	import { mixins } from '@/model/i18n'
-	import { LeekWars } from '@/model/leekwars'
+	import { Language, LeekWars } from '@/model/leekwars'
 	import { Component, Vue, Watch } from 'vue-property-decorator'
 	import Breadcrumb from './breadcrumb.vue'
 	const FormattingRules = () => import(/* webpackChunkName: "[request]" */ `@/component/forum/forum-formatting-rules.${locale}.i18n`)
@@ -146,10 +163,14 @@
 		createTitle: string = ''
 		createMessage: string = ''
 		query: string = ''
-		forumLanguages: any[] = []
 		createMessageLang: string = 'fr'
 		markAsReadDialog: boolean = false
+		forumLanguages: {[key: string]: boolean} = {}
+		translations: any[] = []
 
+		get activeLanguages() {
+			return Object.entries(this.forumLanguages).filter(e => e[1]).map(e => e[0])
+		}
 		get breadcrumb_items() {
 			return [
 				{name: this.$t('main.forum'), link: '/forum'},
@@ -175,13 +196,20 @@
 					this.categories[0].name = this.categories[0].team > 0 ? this.categories[0].name : this.$t('forum-category.' + this.categories[0].name) as string
 					this.topics = data.topics
 					this.pages = data.pages
+					this.translations = data.translations
 
 					LeekWars.setTitle(this.categories[0].name, this.$t('n_topic_n_messages', [data.total_topics, data.total_messages]))
 					this.$root.$emit('loaded')
 				}
 			})
-			this.forumLanguages = (localStorage.getItem('forum/languages') as string || this.$i18n.locale).split(',')
-			this.createMessageLang = this.forumLanguages[0]
+			const languages = (localStorage.getItem('forum/languages') as string || this.$i18n.locale).split(',')
+			for (const l in LeekWars.languages) {
+				Vue.set(this.forumLanguages, l, false)
+			}
+			for (const l of languages) {
+				Vue.set(this.forumLanguages, l, true)
+			}
+			// this.forumLanguages = (localStorage.getItem('forum/languages') as string || this.$i18n.locale).split(',')
 		}
 		create() {
 			if (!this.categories) { return }
@@ -211,10 +239,46 @@
 				LeekWars.toast(this.$i18n.t('error_' + error.error, error.params))
 			})
 		}
+
+		setForumLanguage(language: Language) {
+			this.forumLanguages = {[language.code]: true}
+			this.updateCategories()
+		}
+
+		updateCategories() {
+			localStorage.setItem('forum/languages', this.activeLanguages.join(','))
+			this.$router.replace('/forum/category-' + this.translations.filter(t => this.forumLanguages[t.lang]).map(t => t.id).join(','))
+		}
 	}
 </script>
 
 <style lang="scss" scoped>
+	.forum-language {
+		display: inline-block;
+		padding: 0 4px;
+		border-radius: 2px;
+		cursor: pointer;
+		vertical-align: bottom;
+		img.flag {
+			vertical-align: top;
+			height: 32px;
+		}
+		img:not(.flag) {
+			vertical-align: middle;
+			margin-bottom: 3px;
+			margin-left: 6px;
+		}
+	}
+	.flag {
+		height: 28px;
+	}
+	.language {
+		display: flex;
+		align-items: center;
+	}
+	.language .name {
+		padding-left: 8px;
+	}
 	.forum-header {
 		font-size: 20px;
 		font-weight: 300;
