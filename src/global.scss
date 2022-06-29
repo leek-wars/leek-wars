@@ -1,6 +1,6 @@
 @font-face {
 	font-family: 'Noto Color Emoji';
-	src: url("/font/NotoColorEmoji.ttf");
+	src: url("../public/font/NotoColorEmoji.ttf");
 }
 .theme--light.v-icon {
 	color: inherit;
@@ -425,7 +425,7 @@ ul, ol {
 	height: 20px;
 	vertical-align: bottom;
 	display: inline-block;
-	background-image: url("/image/hab.png");
+	background-image: url("../public/image/hab.png");
 	background-repeat: no-repeat;
 	background-position: center;
 	background-size: 20px;
@@ -437,7 +437,7 @@ ul, ol {
 	margin-top: -15px;
 	margin-bottom: -10px;
 	display: inline-block;
-	background-image: url("/image/crystal.png");
+	background-image: url("../public/image/crystal.png");
 	background-repeat: no-repeat;
 	background-position: center;
 	background-size: contain;
@@ -633,21 +633,6 @@ img.emoji {
 .contributor, a.contributor {
 	color: #009c1d;
 	font-weight: bold;
-}
-.editable {
-	display: inline-block;
-}
-.editable:after {
-	content: "";
-	display: inline-block;
-	opacity: 0.3;
-	margin-left: 8px;
-	width: 20px;
-	height: 20px;
-	background-image: url("/image/edit_pen.png");
-}
-.editable:hover:after {
-	opacity: 1;
 }
 .card {
 	background: white;

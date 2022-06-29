@@ -1241,7 +1241,7 @@
 		top: 10px;
 		width: 15px;
 		height: 15px;
-		background-image: url("/image/delete_new.png");
+		background-image: url("../../../public/image/delete_new.png");
 		background-size: cover;
 		opacity: 0.6;
 	}
