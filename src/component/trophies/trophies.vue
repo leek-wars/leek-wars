@@ -409,6 +409,7 @@
 			padding: 10px;
 			.trophy {
 				width: 43px;
+				vertical-align: bottom;
 			}
 		}
 	}
