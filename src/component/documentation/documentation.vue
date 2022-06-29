@@ -42,7 +42,7 @@
 								<v-icon v-else>mdi-chevron-down</v-icon>
 							</h2>
 							<div v-if="query.length || categoryState[c]">
-								<div v-for="(item, i) in category" v-if="item.name === item.real_name" :key="i" @click="navigate(item.name)" :item="item.name" class="item">
+								<div v-for="(item, i) in category" :key="i" @click="navigate(item.name)" :item="item.name" class="item">
 									{{ item.name }}
 								</div>
 							</div>
@@ -64,6 +64,8 @@
 
 <script lang="ts">
 	import { locale } from '@/locale'
+	import { Constant } from '@/model/constant'
+	import { LSFunction } from '@/model/function'
 	import { mixins } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
@@ -81,7 +83,7 @@
 	export default class Documentation extends Vue {
 		@Prop({ required: true }) popup!: boolean
 		categories: any[] = []
-		items: any[] = []
+		items: (LSFunction | Constant)[] = []
 		query: string = ''
 		lazy_start: number = 0
 		lazy_end: number = 10
@@ -113,8 +115,8 @@
 		get filteredItems() {
 			if (this.lower_query.length) {
 				return this.items.filter(item => {
-					return item.lower_name.indexOf(this.lower_query) !== -1
-						|| item.data.indexOf(this.lower_query) !== -1
+					return item.lower_name!.indexOf(this.lower_query) !== -1
+						|| item.data!.indexOf(this.lower_query) !== -1
 				})
 			} else {
 				return [...this.items]
@@ -126,6 +128,7 @@
 		get filteredCategories() {
 			const categories: {[key: number]: any} = {}
 			for (const item of this.filteredItems) {
+				if (item.deprecated) continue
 				if (!(item.category in categories)) categories[item.category] = []
 				categories[item.category].push(item)
 			}
@@ -150,16 +153,21 @@
 				let index = 1
 				let id = 0
 				for (const item of LeekWars.functions) {
-					(item as any).real_name = item.name
+					if (item.replacement) {
+						LeekWars.functionById[item.replacement].replacer = item
+					}
+				}
+				for (const item of LeekWars.functions) {
+					item.real_name = item.name
 					if (last != null && last.name === item.name) {
-						(item as any).real_name = last.name + '_' + (++index)
+						item.real_name = last.name + '_' + (++index)
 					} else {
 						index = 1
 					}
 					this.items.push(item)
-					; (item as any).lower_name = item.name.toLowerCase()
-					; (item as any).id = id++
-					; (item as any).data = ''
+					item.lower_name = item.name.toLowerCase()
+					item.id = id++
+					item.data = ''
 
 					last = item
 
@@ -173,23 +181,34 @@
 							for (const section in fun.secondary) {
 								new_data += fun.secondary[section]
 							}
-							(item as any).data = new_data.toLowerCase()
+							item.data = new_data.toLowerCase()
 						} else {
 							let item_data = (this.$t('doc.func_' + (item as any).real_name) as any).toLowerCase()
 							for (const i in item.arguments_names) {
 								item_data += (this.$t('doc.func_' + (item as any).real_name + '_arg_' + (parseInt(i, 10) + 1)) as any).toLowerCase()
 							}
 							item_data += (this.$t('doc.func_' + (item as any).real_name + '_return') as any).toLowerCase()
-							; (item as any).data = item_data
+							item.data = item_data
+						}
+						if (item.replacer) {
+							item.data += item.replacer.lower_name!
 						}
 					})
 				}
 				for (const item of LeekWars.constants) {
+					if (item.replacement) {
+						LeekWars.constantById[item.replacement].replacer = item
+					}
+				}
+				for (const item of LeekWars.constants) {
 					this.items.push(item)
-					; (item as any).lower_name = item.name.toLowerCase()
-					; (item as any).real_name = item.name
-					; (item as any).id = id++
-					; (item as any).data = (this.$t('doc.const_' + item.name) as string).toLowerCase()
+					item.lower_name = item.name.toLowerCase()
+					item.real_name = item.name
+					item.id = id++
+					item.data = (this.$t('doc.const_' + item.name) as string).toLowerCase()
+					if (item.replacer) {
+						item.data += item.replacer.lower_name!
+					}
 				}
 				LeekWars.setTitle(this.$i18n.t('title'))
 				this.update()
