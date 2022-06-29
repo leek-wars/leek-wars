@@ -21,7 +21,7 @@
 							<div class="tab green">{{ $t('see_tournament') }}</div>
 						</router-link>
 					</template>
-					<tooltip content-class="fluid" @input="loadTournamentRange()">
+					<tooltip v-if="$store.getters.leek_count >= 2" content-class="fluid" @input="loadTournamentRange()">
 						<template v-slot:activator="{ on }">
 							<div class="tab" v-on="on">
 								<v-icon>mdi-trophy</v-icon>
@@ -35,7 +35,7 @@
 							<b slot="max">{{ tournamentRange.max }}</b>
 						</i18n>
 					</tooltip>
-					<div class="tab" @click="updateGarden">
+					<div class="tab" v-if="$store.getters.leek_count >= 2" @click="updateGarden">
 						<span>{{ $t('garden') }}</span>
 						<v-switch :input-value="farmer.in_garden" hide-details />
 					</div>
@@ -49,7 +49,7 @@
 						<v-icon>mdi-email-outline</v-icon>
 						<span>{{ $t('send_private_message') }}</span>
 					</div>
-					<router-link v-if="$store.state.connected" :to="'/garden/challenge/farmer/' + farmer.id">
+					<router-link v-if="$store.state.connected && $store.getters.leek_count >= 2" :to="'/garden/challenge/farmer/' + farmer.id">
 						<div :link="'/garden/challenge/farmer/' + farmer.id" class="tab action">
 							<img src="/image/icon/garden.png">
 							<span>{{ $t('challenge') }}</span>

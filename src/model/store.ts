@@ -43,6 +43,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 	getters: {
 		moderator: (state: LeekWarsState) => state.farmer && state.farmer.moderator,
 		admin: (state: LeekWarsState) => state.farmer && state.farmer.admin,
+		leek_count: (state: LeekWarsState) => state.farmer ? Object.values(state.farmer.leeks).length : 0,
 	},
 	mutations: {
 		"connected"(state: LeekWarsState, token: string) {
