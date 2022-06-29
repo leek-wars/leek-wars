@@ -5,7 +5,7 @@
 			<img v-else :src="square.image" :class="{padding: square.padding}" class="image">
 			<div class="wrapper">
 				<div class="title" v-html="square.title"></div>
-				<div v-emojis class="message" v-text="square.message"></div>
+				<div v-emojis class="message" v-html="square.message"></div>
 			</div>
 		</router-link>
 	</div>
