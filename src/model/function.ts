@@ -14,5 +14,10 @@ class LSFunction extends LeekScriptItem {
 	public deprecated!: boolean
 	public replacement!: number | null
 	public optional!: boolean[]
+	public real_name?: string
+	public lower_name?: string
+	public data?: string
+	public replacer?: LSFunction
 }
+
 export { LSFunction, LeekScriptItem }
