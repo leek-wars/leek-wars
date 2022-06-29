@@ -118,6 +118,16 @@
 									</div>
 								</template>
 								<v-list :dense="true" class="version-menu">
+									<v-list-item v-ripple @click="setVersion(4)">
+										<v-icon v-if="currentAI.version === 4" class="list-icon">mdi-star</v-icon>
+										<v-icon v-else class="list-icon">mdi-star-outline</v-icon>
+										<v-list-item-content>
+											<v-list-item-title>LeekScript 4</v-list-item-title>
+											<v-list-item-subtitle>
+
+											</v-list-item-subtitle>
+										</v-list-item-content>
+									</v-list-item>
 									<v-list-item v-ripple @click="setVersion(3)">
 										<v-icon v-if="currentAI.version === 3" class="list-icon">mdi-star</v-icon>
 										<v-icon v-else class="list-icon">mdi-star-outline</v-icon>
@@ -602,6 +612,7 @@
 			aiEditor.saving = true
 			aiEditor.ai.modified = false
 			aiEditor.serverError = false
+			aiEditor.removeAllErrors()
 			this.errors = []
 
 			const saveID = aiEditor.id > 0 ? aiEditor.id : 0
