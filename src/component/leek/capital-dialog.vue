@@ -279,22 +279,22 @@
 		vertical-align: top;
 		width: 20px;
 		height: 27px;
-		background-image: url("/image/add.png");
+		background-image: url("../../../public/image/add.png");
 		cursor: pointer;
 		opacity: 0.5;
 		user-select: none;
 	}
 	.add[q="10"] {
 		width: 25px;
-		background-image: url("/image/add10.png");
+		background-image: url("../../../public/image/add10.png");
 	}
 	.add[q="100"] {
 		width: 30px;
-		background-image: url("/image/add100.png");
+		background-image: url("../../../public/image/add100.png");
 	}
 	.add[q="0"] {
 		width: 25px;
-		background-image: url("/image/sub.png");
+		background-image: url("../../../public/image/sub.png");
 	}
 	.add.locked {
 		cursor: auto;

@@ -929,7 +929,7 @@
 		font-weight: bold;
 	}
 	.infos .info .edit {
-		background-image: url("/image/edit_pen.png");
+		background-image: url("../../../public/image/edit_pen.png");
 		background-size: cover;
 		cursor: pointer;
 		width: 12px;

@@ -1567,21 +1567,6 @@ import { Problem } from './problem'
 		top: calc(50% - 35px);
 		left: calc(50% - 35px);
 	}
-	.codemirror ::v-deep .line-error {
-		position: relative;
-	}
-	.codemirror ::v-deep .line-error:after {
-		position: absolute;
-		bottom: -3px;
-		left: 0;
-		content: "";
-		height: 20px;
-		width: 100%;
-		background-image: url("/image/squiggle.gif");
-		background-repeat: repeat-x;
-		background-position: left bottom;
-		vertical-align: text-top;
-	}
 	.hint-dialog {
 		position: absolute;
 		z-index: 100;

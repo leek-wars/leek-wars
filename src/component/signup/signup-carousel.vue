@@ -20,7 +20,7 @@
 	import { LeekWars } from '@/model/leekwars'
 	import { Component, Vue, Watch } from 'vue-property-decorator'
 	import { Swiper, Navigation, Pagination, Autoplay } from 'swiper'
-	import 'swiper/swiper-bundle.min.css'
+	import 'swiper/css'
 
 	@Component({ name: 'signup-carousel', i18n: {}, mixins: [...mixins] })
 	export default class SignupCarousel extends Vue {

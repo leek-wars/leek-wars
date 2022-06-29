@@ -38,7 +38,7 @@
 <style lang="scss" scoped>
 	.ai {
 		vertical-align: bottom;
-		background-image: url("/image/ai/ai.png");
+		background-image: url("../../../public/image/ai/ai.png");
 		background-size: 100% 100%;
 		display: inline-flex;
 		flex-direction: column;
@@ -52,19 +52,19 @@
 		color: #555;
 		text-align: center;
 		&.blue {
-			background-image: url("/image/ai/ai_blue.png");
+			background-image: url("../../../public/image/ai/ai_blue.png");
 			color: white;
 		}
 		&.green {
-			background-image: url("/image/ai/ai_green.png");
+			background-image: url("../../../public/image/ai/ai_green.png");
 			color: white;
 		}
 		&.black {
-			background-image: url("/image/ai/ai_black.png");
+			background-image: url("../../../public/image/ai/ai_black.png");
 			color: white;
 		}
 		&.red {
-			background-image: url("/image/ai/ai_red.png");
+			background-image: url("../../../public/image/ai/ai_red.png");
 			color: white;
 		}
 		.name {

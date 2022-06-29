@@ -132,7 +132,6 @@
 	import { locale } from '@/locale'
 	import { LeekWars } from '@/model/leekwars'
 	import { SocketMessage } from '@/model/socket'
-	import { setTimeout } from 'timers'
 	import { Component, Vue } from 'vue-property-decorator'
 	import ChangelogDialog from '../changelog/changelog-dialog.vue'
 	const Didactitiel = () => import(/* webpackChunkName: "[request]" */ `@/component/didactitiel/didactitiel.${locale}.i18n`)
