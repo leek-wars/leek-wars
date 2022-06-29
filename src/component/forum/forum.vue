@@ -11,8 +11,8 @@
 						</div>
 					</template>
 					<v-list :dense="true">
-						<v-list-item v-for="(language, i) in LeekWars.languages" :key="i" class="language" @click="setForumLanguage(language)">
-							<v-checkbox v-model="forumLanguages[language.code]" hide-details @click.stop="pickForumLanguage(language)" />
+						<v-list-item v-for="(language, i) in LeekWars.languages" :key="i" class="language" :disabled="forumLanguages[language.code] && activeLanguages.length === 1" @click="setForumLanguage(language)">
+							<v-checkbox v-model="forumLanguages[language.code]" :disabled="forumLanguages[language.code] && activeLanguages.length === 1" hide-details @click.stop="pickForumLanguage(language)" />
 							<img :src="language.flag" class="flag">
 							<span class="name">{{ language.name }}</span>
 						</v-list-item>
@@ -97,7 +97,7 @@
 			</div>
 		</panel>
 
-		<panel icon="mdi-chat-outline" class="last">
+		<panel icon="mdi-chat-outline">
 			<span slot="title">
 				<router-link to="/chat">{{ $t('main.chat') }}</router-link>
 				<v-menu offset-y>
