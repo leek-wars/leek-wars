@@ -89,17 +89,18 @@
 		lazy_end: number = 10
 		categoryState: {[key: number]: boolean} = {}
 		icons = {
-			1: 'mdi-math-integral-box',
-			2: 'mdi-code-string',
+			1: 'mdi-numeric',
+			2: 'mdi-format-text',
 			3: 'mdi-code-array',
-			4: 'mdi-account',
-			5: 'mdi-pistol',
-			6: 'mdi-chip',
-			7: 'mdi-grid',
-			8: 'mdi-sword-cross',
-			9: 'mdi-hammer-wrench',
-			10: 'mdi-signal-variant',
-			11: 'mdi-palette'
+			4: 'mdi-code-braces-box',
+			5: 'mdi-account',
+			6: 'mdi-sword',
+			7: 'mdi-chip',
+			8: 'mdi-grid',
+			9: 'mdi-sword-cross',
+			10: 'mdi-hammer-wrench',
+			11: 'mdi-signal-variant',
+			12: 'mdi-palette'
 		}
 
 		get breadcrumb_items() {
@@ -137,11 +138,11 @@
 
 		created() {
 			const get_categories = (callback: any) => {
-				if (localStorage.getItem('data/function_categories')) {
-					callback({categories: JSON.parse(localStorage.getItem('data/function_categories') || '[]')})
+				if (localStorage.getItem('data/function_categories_v2')) {
+					callback({categories: JSON.parse(localStorage.getItem('data/function_categories_v2') || '[]')})
 				} else {
 					LeekWars.get('function/get-categories').then(data => {
-						localStorage.setItem('data/function_categories', JSON.stringify(data.categories))
+						localStorage.setItem('data/function_categories_v2', JSON.stringify(data.categories))
 						callback(data)
 					})
 				}
