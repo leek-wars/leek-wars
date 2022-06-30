@@ -90,8 +90,20 @@ class Socket {
 		}
 		this.socket.onclose = () => {
 			// console.log("[ws] onclose")
+			if (store.getters.admin || LeekWars.LOCAL || LeekWars.DEV || (window.__FARMER__ && window.__FARMER__.farmer.id === 1)) {
+				const message = "[WS] fermée"
+				console.error(message)
+				LeekWars.toast(message, 5000)
+			}
 			store.commit('wsclose')
 			this.retry()
+		}
+		this.socket.onerror = (event) => {
+			if (store.getters.admin || LeekWars.LOCAL || LeekWars.DEV || (window.__FARMER__ && window.__FARMER__.farmer.id === 1)) {
+				const message = "[WS] erreur"
+				console.error(message, event)
+				LeekWars.toast(message, 5000)
+			}
 		}
 		this.socket.onmessage = (msg: any) => {
 			// console.log("[ws] onmessage", msg)
