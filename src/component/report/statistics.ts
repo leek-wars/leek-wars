@@ -12,6 +12,7 @@ class StatisticsEntity extends Entity {
 	public name!: string
 	public level!: number
 	public team!: number
+	public weapon!: number
 
 	public tp: number = 0
 	public mp: number = 0
@@ -230,6 +231,7 @@ class FightStatistics {
 						entity.walkedCells.add(cell)
 					}
 					entity.move(end_cell)
+					entity.usedPM += action[3].length
 					this.addTime(action[3].length * 25)
 					break
 				}
@@ -416,11 +418,6 @@ class FightStatistics {
 					this.addTime()
 					break
 				}
-				case ActionType.TP_LOST: {
-					entities[action[1]].usedPT += action[2]
-					this.addTime()
-					break
-				}
 				case ActionType.PLAYER_DEAD: {
 					const entity = entities[action[1]]
 					entity.alive = false
@@ -429,6 +426,25 @@ class FightStatistics {
 					if (killer) { killer.kills++ }
 					entity.life = 0
 					this.addTime()
+					break
+				}
+				case ActionType.LAMA:
+				case ActionType.SHOW:
+				case ActionType.SHOW_OLD:
+				case ActionType.SAY_OLD:
+				case ActionType.SAY: {
+					currentEntity.usedPT++
+					this.addTime()
+					break
+				}
+				case ActionType.SET_WEAPON: {
+					currentEntity.weapon = action[1]
+					currentEntity.usedPT++
+					break
+				}
+				case ActionType.SET_WEAPON_OLD: {
+					currentEntity.weapon = action[2]
+					currentEntity.usedPT++
 					break
 				}
 				case ActionType.USE_WEAPON:
@@ -444,6 +460,9 @@ class FightStatistics {
 					state = StatisticsState.USE_ITEM
 					itemCaster = entity
 
+					const weapon_template = LeekWars.weapons[LeekWars.items[entity.weapon!].params]
+
+					entity.usedPT += weapon_template.cost
 					entity.actionsWeapon++
 					if (result === 2) { // CC
 						entity.critical++
@@ -472,6 +491,7 @@ class FightStatistics {
 					const chip_template = LeekWars.chips[LeekWars.chipTemplates[chip].item]
 					const targets = this.field.getTargets(cell, chip_template.area, entity.cell!) as StatisticsEntity[]
 
+					entity.usedPT += chip_template.cost
 					entity.actionsChip++
 					if (result === 2) { // CC
 						entity.critical++
