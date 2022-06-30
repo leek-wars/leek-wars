@@ -111,7 +111,7 @@
 	import { fileSystem } from '@/model/filesystem'
 	import { i18n } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
-	import CodeMirror from 'codemirror'
+	import CodeMirror, { Token } from 'codemirror'
 	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 	import DocumentationConstant from '../documentation/documentation-constant.vue'
 	import DocumentationFunction from '../documentation/documentation-function.vue'
@@ -160,7 +160,7 @@ import { Problem } from './problem'
 		public completionSelected: any
 		public completionFrom: any
 		public completionTo: any
-		public hoverToken!: string
+		public hoverToken: Token | null = null
 		public detailTimer: any
 		public serverError: boolean = false
 		public selectedCompletion: number = 0
@@ -212,6 +212,7 @@ import { Problem } from './problem'
 		private hoverEditorOrigin: number = 0
 		private codemirror!: any
 		private hoverData: any = null
+		private hoverLocation: any = null
 		private ctrl: boolean = false
 		private CodeMirrorLines!: HTMLElement
 		private jumpToLine: number | null = null
@@ -332,6 +333,8 @@ import { Problem } from './problem'
 						if (this.hoverOverlay) {
 							this.editor.removeOverlay(this.hoverOverlay)
 							this.hoverOverlay = null
+							this.hoverLocation = null
+							this.hoverToken = null
 						}
 					})
 				}
@@ -839,8 +842,7 @@ import { Problem } from './problem'
 			const editorPos = this.editor.coordsChar(pos, "window")
 			const editorPos2 = {line: editorPos.line, ch: editorPos.ch + 1}
 			const token = this.editor.getTokenAt(editorPos2, true)
-			const previousToken = this.editor.getTokenAt({line: editorPos.line, ch: token.start - 1})
-			// console.log("token", token, previousToken)
+			// console.log("pos", editorPos, "token", token)
 
 			// Underline
 			if (this.ctrl && this.hoverData && this.hoverData.defined) {
@@ -861,27 +863,39 @@ import { Problem } from './problem'
 
 			// console.log("origin", origin)
 			const position = this.document.indexFromPos(editorPos)
-			const pos_in_line = pos.left - this.hoverEditorOrigin
+			// const pos_in_line = pos.left - this.hoverEditorOrigin
 
 			// Leave the hover area?
 			if (this.hoverData) {
-				// console.log(position, this.hoverData.location[0][2], this.hoverData.location[1][2], pos_in_line, this.hoverLineWidth)
-				if (position < this.hoverData.location[0][2] || position > this.hoverData.location[1][2] || pos_in_line > this.hoverLineWidth) {
+				// console.log("hover", editorPos.ch, this.hoverData.location[2], this.hoverData.location[4], editorPos.line + 1, this.hoverData.location[1], this.hoverData.location[3], pos_in_line, this.hoverLineWidth)
+				if (editorPos.line + 1 < this.hoverData.location[1] || editorPos.ch < this.hoverData.location[2] || editorPos.line + 1 < this.hoverData.location[3] ||editorPos.ch > this.hoverData.location[4] /*|| pos_in_line > this.hoverLineWidth*/) {
 					clearTimeout(this.detailTimer)
 					this.hoverData = null
 					this.removeUnderlineMarker()
 					if (this.hoverOverlay) {
 						this.editor.removeOverlay(this.hoverOverlay)
 						this.hoverOverlay = null
+						this.hoverLocation = null
+						this.hoverToken = null
 					}
 					this.detailDialog = false
 				}
 			}
-			// console.log(this.hoverPosition, position)
-			if (this.hoverPosition === position || pos_in_line > this.hoverLineWidth) {
+
+			// console.log(this.hoverPosition, position, pos_in_line, this.hoverLineWidth)
+			if (this.hoverToken && token && this.hoverToken.start === token.start && this.hoverToken.end === token.end && this.hoverToken.string === token.string) {
+				// console.log("same token", token)
 				return
 			}
+			// console.log("set hoverToken", token)
+			this.hoverToken = token
+			this.hoverLocation = null
+			// if (this.hoverPosition === position || pos_in_line > this.hoverLineWidth) {
+			// 	return
+			// }
 			this.hoverPosition = position
+
+			const previousToken = this.editor.getTokenAt({line: editorPos.line, ch: token.start - 1})
 
 			clearTimeout(this.detailTimer)
 			this.detailTimer = setTimeout(() => {
@@ -889,14 +903,14 @@ import { Problem } from './problem'
 				// console.log("getTokenInformation", token, previousToken)
 				const keyword = this.getTokenInformation(token.string, editorPos2, previousToken)
 
-				// console.log("hover at", position)
+				// console.log("hover at", editorPos.line + 1, editorPos.ch)
 				LeekWars.analyzer.hover(this.ai, editorPos.line + 1, editorPos.ch).then((raw_data) => {
 
 					// console.log("Hover result", JSON.stringify(raw_data))
 					// console.log(raw_data.location[0], raw_data.location[1])
 					// console.log("Hover result", raw_data)
 
-					this.showHoverDetails(editorPos, keyword, raw_data)
+					this.showHoverDetails(keyword, raw_data)
 					this.showErrorDetails(editorPos)
 				})
 				.catch(() => {
@@ -917,7 +931,7 @@ import { Problem } from './problem'
 								keyword.line
 							]
 						}
-						this.showHoverDetails(editorPos2, keyword, data)
+						this.showHoverDetails(keyword, data)
 					}
 				})
 			}, this.ctrl ? 0 : 400)
@@ -944,84 +958,83 @@ import { Problem } from './problem'
 			return false
 		}
 
-		public showHoverDetails(editorPos: any, keyword: any, raw_data: any) {
+		public showHoverDetails(keyword: any, raw_data: any) {
+
+			if (this.hoverLocation &&
+				raw_data.location[1] === this.hoverLocation[1] &&
+				raw_data.location[2] === this.hoverLocation[2] &&
+				raw_data.location[3] === this.hoverLocation[3] &&
+				raw_data.location[4] === this.hoverLocation[4]) {
+				console.log("showHoverDetails same location")
+				return // Same position
+			}
+
+			this.hoverLocation = raw_data.location
 
 			const startPos = { ch: raw_data.location[2], line: raw_data.location[1] - 1 }
 
-			if (raw_data.location[0][2] !== 0 || raw_data.location[1][2] !== 0) { // Not position [0:0]
-				this.hoverData = raw_data
-				this.detailDialogContent = { details: raw_data, keyword }
-				const offset = (this.$refs.ai as HTMLElement).getBoundingClientRect()
-				const p = this.editor.cursorCoords(startPos, "page")
-				const left = p.left - offset.left
-				this.detailDialogTop = - p.top + offset.bottom - (this.lineHeight - this.fontSize * 1.2) / 2 + 2
-				this.detailDialogLeft = left
-				this.detailDialogAtBottom = false
-				this.detailDialogMaxHeight = 999999
-				this.detailDialog = true
+			this.hoverData = raw_data
+			this.detailDialogContent = { details: raw_data, keyword }
+			const offset = (this.$refs.ai as HTMLElement).getBoundingClientRect()
+			const p = this.editor.cursorCoords(startPos, "page")
+			const left = p.left - offset.left
+			this.detailDialogTop = - p.top + offset.bottom - (this.lineHeight - this.fontSize * 1.2) / 2 + 2
+			this.detailDialogLeft = left
+			this.detailDialogAtBottom = false
+			this.detailDialogMaxHeight = 999999
+			this.detailDialog = true
 
-				const fixPosition = () => {
-					const detailDialog = this.$refs.detailDialog as HTMLElement
-					if (!detailDialog) { return }
-					const height = detailDialog.scrollHeight
-					const top = window.innerHeight - this.detailDialogTop
-					this.detailDialogMaxHeight = window.innerHeight - this.detailDialogTop - (window.innerHeight - offset.bottom)
-					if (top - height - (window.innerHeight - offset.bottom) < 0 && top + this.fontSize + height <= window.innerHeight) { // Y'a moyen de positionner le dialogue en bas
-						this.detailDialogAtBottom = true
-						this.detailDialogTop = p.top - offset.top + this.lineHeight - (this.lineHeight - this.fontSize * 1.2) / 2 + 2
-						this.detailDialogMaxHeight = window.innerHeight - top
-					}
-					const width = detailDialog.clientWidth
-					if (left + width + offset.left > window.innerWidth - 20) {
-						this.detailDialogLeft = window.innerWidth - width - offset.left - 20
-					}
+			const fixPosition = () => {
+				const detailDialog = this.$refs.detailDialog as HTMLElement
+				if (!detailDialog) { return }
+				const height = detailDialog.scrollHeight
+				const top = window.innerHeight - this.detailDialogTop
+				this.detailDialogMaxHeight = window.innerHeight - this.detailDialogTop - (window.innerHeight - offset.bottom)
+				if (top - height - (window.innerHeight - offset.bottom) < 0 && top + this.fontSize + height <= window.innerHeight) { // Y'a moyen de positionner le dialogue en bas
+					this.detailDialogAtBottom = true
+					this.detailDialogTop = p.top - offset.top + this.lineHeight - (this.lineHeight - this.fontSize * 1.2) / 2 + 2
+					this.detailDialogMaxHeight = window.innerHeight - top
 				}
-				Vue.nextTick(fixPosition)
+				const width = detailDialog.clientWidth
+				if (left + width + offset.left > window.innerWidth - 20) {
+					this.detailDialogLeft = window.innerWidth - width - offset.left - 20
+				}
+			}
+			Vue.nextTick(fixPosition)
 
-				const start_line = raw_data.location[1] - 1
-				const start_char = raw_data.location[2]
-				const end_line = raw_data.location[3] - 1
-				const end_char = raw_data.location[4]
+			const start_line = raw_data.location[1] - 1
+			const start_char = raw_data.location[2]
+			const end_line = raw_data.location[3] - 1
+			const end_char = raw_data.location[4]
 
-				// console.log("[ai-view] hover ", {start_line, start_char, end_line, end_char})
+			// console.log("[ai-view] hover ", {start_line, start_char, end_line, end_char})
 
-				const overlay = {token: (stream: any) => {
-					const lineNo = stream.lineOracle.line
-					if (lineNo >= start_line && lineNo <= end_line) {
-						if (lineNo === start_line) {
-							if (stream.pos < start_char) {
-								stream.next()
-								return
-							} else if (lineNo !== end_line || stream.pos <= end_char) {
-								stream.next()
-								return "hover"
-							}
-						} else if (lineNo === end_line && stream.pos <= end_char) {
+			const overlay = {token: (stream: any) => {
+				const lineNo = stream.lineOracle.line
+				if (lineNo >= start_line && lineNo <= end_line) {
+					if (lineNo === start_line) {
+						if (stream.pos < start_char) {
+							stream.next()
+							return
+						} else if (lineNo !== end_line || stream.pos <= end_char) {
 							stream.next()
 							return "hover"
-						} else {
-							stream.skipToEnd()
-							return "hover"
 						}
+					} else if (lineNo === end_line && stream.pos <= end_char) {
+						stream.next()
+						return "hover"
+					} else {
+						stream.skipToEnd()
+						return "hover"
 					}
-					stream.skipToEnd()
-				}}
-				if (this.hoverOverlay) {
-					this.editor.removeOverlay(this.hoverOverlay)
 				}
-				this.hoverOverlay = overlay
-				this.editor.addOverlay(overlay)
-
-			} else {
-				this.hoverData = null
-				this.removeUnderlineMarker()
-				if (this.hoverOverlay) {
-					this.editor.removeOverlay(this.hoverOverlay)
-					this.hoverOverlay = null
-				}
-				// clearTimeout(this.detailTimer)
-				this.detailDialog = false
+				stream.skipToEnd()
+			}}
+			if (this.hoverOverlay) {
+				this.editor.removeOverlay(this.hoverOverlay)
 			}
+			this.hoverOverlay = overlay
+			this.editor.addOverlay(overlay)
 		}
 
 		public detailsDialogEnter() {
@@ -1054,7 +1067,9 @@ import { Problem } from './problem'
 			if (this.hoverOverlay) {
 				this.editor.removeOverlay(this.hoverOverlay)
 			}
+			this.hoverToken = null
 			this.hoverOverlay = null
+			this.hoverLocation = null
 		}
 
 		public autocomplete(CodeMirror: any, force: boolean = false) {
