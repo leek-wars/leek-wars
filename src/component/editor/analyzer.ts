@@ -253,15 +253,15 @@ class Analyzer {
 	public removeProblems(entrypoint: AI) {
 		for (const ai_id in fileSystem.ais) {
 			const ai = fileSystem.ais[ai_id]
-			if (ai.problems) {
+			if (ai.problems && Object.values(ai.problems).length) {
 				Vue.delete(ai.problems, entrypoint.id)
+				this.updateAiErrors(ai)
 			}
 		}
 		Vue.delete(this.problems, entrypoint.id)
 	}
 
 	public updateAiErrors(ai: AI) {
-		// console.log("update ai errors", ai)
 		let errors = 0
 		let warnings = 0
 		let todos = 0

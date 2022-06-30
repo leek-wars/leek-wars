@@ -22,22 +22,23 @@ import { LeekWars } from '@/model/leekwars'
       var operator = kw("operator"), atom = {type: "atom", style: "atom"};
 
       const k = {
-        "if": kw("if"), "while": A, "with": A, "else": B, "do": B, "try": B, "finally": B,
-        "return": D, "break": D, "continue": D, "new": kw("new"), "throw": C,
+        "if": kw("if"), "while": A, "else": B, "do": B,
+        // "with": A, "try": B, "finally": B, "throw": C, "catch": kw("catch"),
+        "return": D, "break": D, "continue": D, "new": kw("new"),
         "var": kw("var"), "global": kw("global"),
-        "function": kw("function"), "catch": kw("catch"),
-        "for": kw("for"), "switch": kw("switch"), "case": kw("case"), "default": kw("default"),
-        "in": operator, "typeof": operator, "instanceof": operator, "and": operator, "or": operator, "xor": operator, "not": operator,
-        "true": atom, "false": atom, "null": atom, "undefined": atom, "NaN": atom, "Infinity": atom,
+        "function": kw("function"),
+        "for": kw("for"),
+        // "switch": kw("switch"), "case": kw("case"), "default": kw("default"), "typeof": operator, "undefined": atom,
+        "in": operator, "instanceof": operator, "and": operator, "or": operator, "xor": operator, "not": operator,
+        "true": atom, "false": atom, "null": atom, "NaN": atom, "Infinity": atom,
         "this": kw("this"), "class": kw("class"), "super": kw("atom"),
-        "export": kw("export"), "import": kw("import"), "extends": C,
-        "package": X, "abstract": X, "arguments": X, "await": X, "byte": X,
-        "char": X, "const": X, "constructor": X, "double": X, "enum": X, "eval": X, "final": X,
-        "float": X, "goto": X, "implements": X,
-        "int": X, "real": X, "bool": X, "string": X, "any": X, "array": X, "map": X, "number": X,
-        "interface": X, "let": X,
-        "long": X, "native": X, "private": X, "protected": X, "short": X,
-        "synchronized": X, "throws": X, "transient": X, "void": X, "volatile": X, "yield": X
+        "private": kw("variable"), "protected": kw("variable"), "final": kw("variable"), "static": kw("variable"), "extends": C,
+        // "export": kw("export"), "import": kw("import"),
+        // "package": X, "abstract": X, "arguments": X, "await": X, "byte": X,
+        // "char": X, "const": X, "constructor": X, "double": X, "enum": X, "eval": X,
+        // "float": X, "goto": X, "implements": X, "let": X, "interface": X, "short": X, "long": X, "native": X,
+        // "int": X, "real": X, "bool": X, "string": X, "any": X, "array": X, "map": X, "number": X,
+        // "synchronized": X, "throws": X, "transient": X, "void": X, "volatile": X, "yield": X
       };
         for (const constant of LeekWars.constants) {
             k[constant.name] = {type: "variable", style: "lsconst"}
@@ -322,7 +323,7 @@ import { LeekWars } from '@/model/leekwars'
     }
 
     function isModifier(name) {
-      return name == "public" || name == "private" || name == "protected" || name == "abstract" || name == "readonly" || name == "static" || name == "constructor"
+      return name === "public" || name === "private" || name === "protected" || name === "final" || name === "protected" || name === "abstract" || name === "readonly" || name === "static" || name === "constructor"
     }
 
     // Combinators
@@ -786,7 +787,7 @@ import { LeekWars } from '@/model/leekwars'
     function classBody(type, value) {
       if (type == "async" ||
           (type == "variable" &&
-           (value == "static" || value == "public" || value == "constructor"  || value == "private" || value == "get" || value == "set" || (isTS && isModifier(value))) &&
+           (value === "static" || value === "public" || value === "protected" || value === "final" || value === "constructor"  || value === "private" || value === "get" || value == "set" || (isTS && isModifier(value))) &&
            cx.stream.match(/^\s+[\w$\xa1-\uffff]/, false))) {
         cx.marked = "keyword";
         return cont(classBody);
@@ -812,8 +813,7 @@ import { LeekWars } from '@/model/leekwars'
       if (value == "?") return cont(classfield)
       if (type == ":") return cont(typeexpr, maybeAssign)
       if (value == "=") return cont(expressionNoComma)
-      // @@@
-      if (value == "public" || value == "private" || value == "static" || value == "constructor" || value == "}") return;
+      if (value === "public" || value === "private" || value === "protected" || value === "static" || value === "constructor" || value == "}") return;
       var context = cx.state.lexical.prev, isInterface = context && context.info == "interface"
       return pass(isInterface ? functiondecl : functiondef)
     }

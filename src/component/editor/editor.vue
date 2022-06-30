@@ -190,7 +190,7 @@
 								</span>
 							</div>
 							<div class="filler"></div>
-							<div v-if="currentEditor && currentEditor.editor" class="version">L {{ currentEditor.editor.getCursor().line + 1 }}, C {{ currentEditor.editor.getCursor().ch }}</div>
+							<div v-if="currentEditor && currentEditor.editor" class="version">L {{ currentEditor.editor.getCursor().line + 1 }}, C {{ currentEditor.editor.getCursor().ch }} <span v-if="currentEditor.editor.getSelection()">({{ currentEditor.editor.getSelection().length }} Select.)</span></div>
 							<div v-if="enableAnalyzer" class="state">
 								<div v-if="LeekWars.analyzer.running == 0" class="ready">
 									Prêt
