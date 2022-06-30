@@ -258,7 +258,6 @@
 	import { TEAM_COLORS } from '@/model/team'
 	import Chartist from 'chartist'
 	import { Component, Vue, Watch } from 'vue-property-decorator'
-import ActionLeekTurn from '../action/action-leek-turn.vue'
 	import ActionsElement from './report-actions.vue'
 	import ReportBlock from './report-block.vue'
 	import ReportLeekRow from './report-leek-row.vue'
@@ -599,7 +598,7 @@ import ActionLeekTurn from '../action/action-leek-turn.vue'
 				series = series.filter((value, index) => !this.statistics!.entities[index].leek.summon)
 			}
 			if (!this.turrets) {
-				series = series.filter((value, index) => this.statistics!.entities[index].leek.name !== 'turret')
+				series = series.filter((value, index) => this.statistics!.entities[index].leek.type !== 2)
 			}
 			this.chartData = {
 				series
@@ -687,7 +686,7 @@ import ActionLeekTurn from '../action/action-leek-turn.vue'
 				const entity = this.statistics!.entities[e]
 				let total = 0
 				let stats: any[] = []
-				const name = entity.leek.type !== 0 ? this.$t('entity.' + entity.name) : entity.name
+				const name = entity.name
 				if (this.damageChartType === 0) {
 					total = entity.dmg_out
 					stats = [name, entity.leek.id, entity.leek.team, total, entity.direct_dmg_out, entity.poison_out, entity.return_out, entity.nova_out, entity.life_dmg_out]
@@ -921,9 +920,10 @@ import ActionLeekTurn from '../action/action-leek-turn.vue'
 		.ct-label.ct-horizontal {
 			text-align: center;
 		}
-		.tooltip {
-			pointer-events: none;
-		}
+	}
+	.chart-tooltip {
+		pointer-events: none;
+		opacity: 1;
 	}
 	.warnings-errors .title {
 		font-size: 18px;

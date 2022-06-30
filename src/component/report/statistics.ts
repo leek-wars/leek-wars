@@ -13,6 +13,7 @@ class StatisticsEntity extends Entity {
 	public level!: number
 	public team!: number
 	public weapon!: number
+	public type: number
 
 	public tp: number = 0
 	public mp: number = 0
@@ -85,6 +86,7 @@ class StatisticsEntity extends Entity {
 		this.life = leek.life
 		this.max_life = leek.life
 		this.walkedCells.add(leek.cellPos)
+		this.type = leek.type
 	}
 
 	public move(cell: Cell) {
@@ -460,7 +462,7 @@ class FightStatistics {
 					state = StatisticsState.USE_ITEM
 					itemCaster = entity
 
-					const weapon_template = LeekWars.weapons[LeekWars.items[entity.weapon!].params]
+					const weapon_template = LeekWars.weapons[entity.weapon!]
 
 					entity.usedPT += weapon_template.cost
 					entity.actionsWeapon++
