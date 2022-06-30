@@ -1193,6 +1193,12 @@ class Game {
 					this.entityOrder.splice(index, 1)
 				}
 			}
+
+			// Remove all effects
+			for (const effect in entity.effects) {
+				this.removeEffect(parseInt(effect))
+			}
+
 			if (entity.cell) {
 				entity.cell.entity = null
 			}
@@ -1642,7 +1648,7 @@ class Game {
 		} else if (effect.item === 48) {
 			leek.stopGaz()
 		}
-		delete leek.effects[id]
+		Vue.delete(leek.effects, id)
 		delete this.effects[id]
 	}
 
