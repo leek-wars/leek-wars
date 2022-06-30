@@ -49,7 +49,7 @@
 						<v-icon>mdi-email-outline</v-icon>
 						<span>{{ $t('send_private_message') }}</span>
 					</div>
-					<router-link v-if="$store.state.connected && $store.getters.leek_count >= 2" :to="'/garden/challenge/farmer/' + farmer.id">
+					<router-link v-if="$store.state.connected && $store.getters.leek_count >= 2 && farmer.leeks.length >= 2" :to="'/garden/challenge/farmer/' + farmer.id">
 						<div :link="'/garden/challenge/farmer/' + farmer.id" class="tab action">
 							<img src="/image/icon/garden.png">
 							<span>{{ $t('challenge') }}</span>
