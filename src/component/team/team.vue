@@ -1140,6 +1140,9 @@
 				font-size: 17px;
 			}
 		}
+		.talent {
+			margin-bottom: 4px;
+		}
 	}
 	.leek.dragging {
 		opacity: 0.2;
