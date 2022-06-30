@@ -22,6 +22,9 @@ import { i18n, loadLanguageAsync } from './i18n'
 import { ItemType } from './item'
 import { PotionEffect, PotionTemplate } from './potion'
 
+const DEV = window.location.port === '8080'
+const LOCAL = window.location.port === '8500' || window.location.port === '5100'
+
 const MONTHS: { [key: string]: string[] } = {
 	fr: ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'],
 	en: ['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december'],
@@ -51,6 +54,11 @@ function request<T = any>(method: string, url: string, params?: any) {
 			if (e.target.status === 200) {
 				resolve(e.target.response)
 			} else {
+				if (store.getters.admin || LOCAL || DEV || (window.__FARMER__ && window.__FARMER__.farmer.id === 1)) {
+					const message = "[" + e.target.status + "] " + method + " " + url
+					console.error(message)
+					LeekWars.toast(message, 5000)
+				}
 				reject(e.target.response)
 			}
 		}
@@ -180,9 +188,6 @@ const invdate = new Date(LOCAL_DATE.toLocaleString('en-US', {
     timeZone: 'Europe/Paris'
 }))
 const DATE = new Date(invdate.getTime())
-
-const DEV = window.location.port === '8080'
-const LOCAL = window.location.port === '8500' || window.location.port === '5100'
 
 const LeekWars = {
 	version: packageJson.version,
