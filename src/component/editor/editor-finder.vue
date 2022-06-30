@@ -13,6 +13,7 @@
 				</span>
 				<span v-if="result.type === 1" class="path">{{ result.ai.folderpath }}</span>
 				<div class="fill"></div>
+				<v-icon v-if="result.ai.modified" class="modified">mdi-record</v-icon>
 				<!-- <v-icon class="icon">mdi-close</v-icon> -->
 			</div>
 			<div v-if="results.length === 0" class="result">Aucun résultat</div>
