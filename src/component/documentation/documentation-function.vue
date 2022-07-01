@@ -11,10 +11,11 @@
 			Cette fonction est dépréciée. <span v-if="fun.replacement">Elle est remplacée par la fonction #{{ LeekWars.functionById[fun.replacement].name }}.</span>
 		</div>
 
+		<router-link class="encyclo" :to="'/encyclopedia/' + $i18n.locale + '/' + fun.name" :title="'Encyclopédie > ' + fun.name + '()'">
+			<v-icon class="book">mdi-book-open-page-variant</v-icon>
+		</router-link>
+
 		<div v-if="new_fun">
-			<router-link class="encyclo" :to="'/encyclopedia/' + fun.name" :title="'Encyclopédie > ' + fun.name + '()'">
-				<v-icon class="book">mdi-book-open-page-variant</v-icon>
-			</router-link>
 			<!-- <div v-dochash v-code class="content" v-html="new_fun.description"></div> -->
 			<markdown :content="new_fun.description" :pages="{}" mode="encyclopedia" />
 
@@ -53,8 +54,10 @@
 				</ul>
 			</div>
 			<div class="operations">
-				<span v-if="fun.complexity == 1"><b>{{ fun.operations }}</b> opérations</span>
-				<span v-else>Complexité <b>{{ LeekWars.complexities[fun.complexity] }}</b></span>
+				<i18n v-if="fun.complexity == 1" path="doc.operations"><b slot="o">{{ fun.operations }}</b></i18n>
+				<i18n v-else path="doc.complexity">
+					<b slot="c">{{ LeekWars.complexities[fun.complexity] }}</b>
+				</i18n>
 			</div>
 		</div>
 	</div>

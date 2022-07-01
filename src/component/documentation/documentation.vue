@@ -326,6 +326,7 @@
 	.column3 {
 		position: sticky;
 		top: 12px;
+		height: 100%;
 		.panel {
 			margin-bottom: 0;
 			max-height: 100%;
