@@ -3,8 +3,7 @@
 </template>
 
 <script lang="ts">
-	import { i18n } from '@/model/i18n'
-import { LeekWars } from '@/model/leekwars'
+	import { LeekWars } from '@/model/leekwars'
 	import { vueMain } from '@/model/vue'
 	import markdown from 'markdown-it'
 	import sanitizeHtml from 'sanitize-html'

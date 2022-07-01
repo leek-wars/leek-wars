@@ -15,6 +15,8 @@
 	"arg_type_7": "réel",
 	"arg_type_8": "table",
 	"arg_type_806": "table<?, entier>",
+	"complexity": "Complexité {c}",
+	"operations": "{o} opérations",
 	"const_AREA_CIRCLE_1": "Zone circulaire de 3 cases de diamètre (croix).",
 	"const_AREA_CIRCLE_2": "Zone circulaire de 5 cases de diamètre.",
 	"const_AREA_CIRCLE_3": "Zone circulaire de 7 cases de diamètre.",

@@ -119,7 +119,7 @@
 
 <script lang="ts">
 	import Markdown from '@/component/encyclopedia/markdown.vue'
-import { locale } from '@/locale'
+	import { locale } from '@/locale'
 	import { mixins } from '@/model/i18n'
 	import { Leek } from '@/model/leek'
 	import { LeekWars } from '@/model/leekwars'
@@ -127,6 +127,7 @@ import { locale } from '@/locale'
 	import { Component, Vue, Watch } from 'vue-property-decorator'
 	import { Route } from 'vue-router'
 	import Breadcrumb from '../forum/breadcrumb.vue'
+	import(/* webpackChunkName: "[request]" */ /* webpackMode: "eager" */ `@/lang/doc.${locale}.lang`)
 
 	@Component({ name: 'encyclopedia', i18n: {}, mixins: [...mixins], components: { Markdown, Breadcrumb } })
 	export default class Encyclopedia extends Vue {
@@ -237,11 +238,39 @@ import { locale } from '@/locale'
 			})
 			.error(() => {
 				// Pas de page
+				let fun = null as any
+				let args = ''
+				let ret = ''
+				let description = ''
+				for (const funct of LeekWars.functions) {
+					if (funct.name === this.code) {
+						fun = funct
+						description = this.$te('doc.func_' + fun.name) ? this.$t('doc.func_' + fun.name) as string : ''
+						args = funct.arguments_names.map((a, i) => '- **' + a + '** : ' + (this.$te('doc.func_' + fun.name + '_arg_' + (i + 1)) ? this.$t('doc.func_' + fun.name + '_arg_' + (i + 1)) : '')).join('\n')
+						if (fun.return_name) {
+							ret = '#### Retour\n\n- **' + fun.return_name + '** : ' + (this.$te('doc.func_' + fun.name + '_return') ? this.$t('doc.func_' + fun.name + '_return') : '')
+						}
+						break
+					}
+				}
 				this.page = {
 					new: true,
 					id: 0,
 					title: this.code,
-					content: '# ' + this.code + '\n\n'
+					language: this.language,
+					content: fun ?  `# ${this.code}
+> Fonctions
+
+${description}
+
+#### Paramètres
+
+${args}
+
+${ret}
+
+
+` : '# ' + this.code + '\n\n'
 				}
 				this.setEditorContent()
 			})
@@ -403,7 +432,7 @@ import { locale } from '@/locale'
 		}
 
 		save() {
-			LeekWars.post('encyclopedia/update', {page_id: this.page.id, title: this.page.title, content: this.page.content, parent: this.page.parent || 1}).then((result) => {
+			LeekWars.post('encyclopedia/update', {page_id: this.page.id, language: this.page.language, title: this.page.title, content: this.page.content, parent: this.page.parent || 1}).then((result) => {
 				LeekWars.toast("Sauvegardé !")
 				if (this.page.id === 0) {
 					this.page.new = false
