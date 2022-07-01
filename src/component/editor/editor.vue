@@ -122,9 +122,9 @@
 										<v-icon v-if="currentAI.version === 4" class="list-icon">mdi-star</v-icon>
 										<v-icon v-else class="list-icon">mdi-star-outline</v-icon>
 										<v-list-item-content>
-											<v-list-item-title>LeekScript 4</v-list-item-title>
+											<v-list-item-title>LeekScript 4 <span class="green">{{ $t('recommanded') }}</span></v-list-item-title>
 											<v-list-item-subtitle>
-
+												<router-link class="link" to="/encyclopedia/LeekScript_4"><v-icon>mdi-book-open-page-variant</v-icon> {{ $t('all_info_ls', ['LeekScript 4']) }}</router-link>
 											</v-list-item-subtitle>
 										</v-list-item-content>
 									</v-list-item>
@@ -132,14 +132,14 @@
 										<v-icon v-if="currentAI.version === 3" class="list-icon">mdi-star</v-icon>
 										<v-icon v-else class="list-icon">mdi-star-outline</v-icon>
 										<v-list-item-content>
-											<v-list-item-title>LeekScript 3 <span class="green">Recommandé</span></v-list-item-title>
+											<v-list-item-title>LeekScript 3</v-list-item-title>
 											<v-list-item-subtitle>
-												<ul>
+												<!-- <ul>
 													<li>Littéraux d'objets <code>{a: 12}</code></li>
 													<li>Classes de base : Number, Integer, Boolean, Object, Array, Function etc.</li>
 													<li>Nouveaux mots-clés réservés.</li>
-												</ul>
-												<router-link class="link" to="/encyclopedia/LeekScript_3"><v-icon>mdi-book-open-page-variant</v-icon> Toutes les informations sur le LeekScript 3</router-link>
+												</ul> -->
+												<router-link class="link" to="/encyclopedia/LeekScript_3"><v-icon>mdi-book-open-page-variant</v-icon> {{ $t('all_info_ls', ['LeekScript 3']) }}</router-link>
 											</v-list-item-subtitle>
 										</v-list-item-content>
 									</v-list-item>
@@ -149,12 +149,12 @@
 										<v-list-item-content>
 											<v-list-item-title>LeekScript 2</v-list-item-title>
 											<v-list-item-subtitle>
-												<ul>
+												<!-- <ul>
 													<li>Ajout des classes et objets.</li>
 													<li>Passage par référence par défaut pour les valeurs non-primitives dans les fonctions, les boucles foreach et les tableaux.</li>
 													<li>Corrections mineures (arrayFilter, opérateur ^=, et autres).</li>
-												</ul>
-												<router-link class="link" to="/encyclopedia/LeekScript_2"><v-icon>mdi-book-open-page-variant</v-icon> Toutes les informations sur le LeekScript 2</router-link>
+												</ul> -->
+												<router-link class="link" to="/encyclopedia/LeekScript_2"><v-icon>mdi-book-open-page-variant</v-icon> {{ $t('all_info_ls', ['LeekScript 2']) }}</router-link>
 											</v-list-item-subtitle>
 										</v-list-item-content>
 									</v-list-item>

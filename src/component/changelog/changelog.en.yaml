@@ -1,3 +1,37 @@
+230:
+  title: LeekScript 4 and various improvements
+  added:
+    - "#ai LeekScript 4: Arrays and Maps, 64-bit Integers, Default Settings, 56 Functions and more. #img_230_map #img_230_number #img_230_function"
+    - Battles Royales are available from level 20 instead of 50.
+    - "Added two new emojis. #img_230_emoji"
+  improved:
+    - "Money earned from trophies and Habs boxes is counted in stats."
+    - "Improved the English version of the encyclopedia."
+    - "Improved single player matchmaking and small fix for farmer matchmaking."
+    - "Editor: Completion of static class fields."
+    - "Editor: Ability to add an AI on a test leek if it doesn't have one. #img_230_test_ai"
+    - "Acceleration (x2) of the loading of the combat report page."
+    - "Combat: display cost of actions (walking, weapon/chip use, etc.) on the same line."
+    - "The debug() limit message also mentions mark()."
+    - "Being able to change the characteristics of test leeks is more visible."
+    - "Editor: when opening an AI, directly displays existing errors."
+    - "Solo ranking by level: sort by talent afterwards instead of XP."
+    - "Documentation: display replacement function/constant in search results."
+    - "Documentation: deprecated functions/constants are hidden in the left list."
+    - "Increased winnings in Battle Royale."
+    - "Farmer page: tournament, challenge and aggression buttons hidden if you only have one leek."
+    - "Forum: language selection on a forum category."
+    - "Farmer limit in a team increases from 40 to 50."
+    - "Editor: display of unsaved AIs in the Ctrl+P menu. #img_230_finder"
+    - "Editor: reserved keywords are no longer colored, private is correctly."
+  fixed:
+    - "Added missing translations all over the site."
+    - "Fixed two memory leaks: RAM consumption is now lower."
+    - "Trophy XII is no longer unlockable in test or challenge."
+    - "Fixed the animation of the grenade launcher and the electrifier in accelerated mode."
+    - "Fixed turret filter on report page."
+    - "Combat report: fixed tooltips on hit point graph."
+
 229:
   title: Quick registration, New animations, 6 New hats and 2 weapons.
   added:

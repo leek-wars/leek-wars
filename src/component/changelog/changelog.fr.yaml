@@ -1,3 +1,37 @@
+230:
+  title: LeekScript 4 et améliorations diverses
+  added:
+    - "#ai LeekScript 4 : Listes et Tables, Entiers 64 bits, Paramètres par défaut, 56 Fonctions et +. #img_230_map #img_230_number #img_230_function"
+    - Les Battles Royales sont disponibles à partir du niveau 20 au lieu de 50.
+    - "Ajout de deux nouveaux emojis. #img_230_emoji"
+  improved:
+    - "L'argent gagné par les trophées et les boîtes d'Habs est compté dans les statistiques."
+    - "Amélioration de la version Anglaise de l'encyclopédie."
+    - "Amélioration du matchmaking solo et petite correction du matchmaking éleveur."
+    - "Éditeur : complétion des champs statiques des classes."
+    - "Éditeur : Possibilité d'ajouter une IA sur un poireau de test si il n'en a pas. #img_230_test_ai"
+    - "Accélération (x2) du chargement de la page rapport de combat."
+    - "Combat : affichage du coût des actions (marcher, utilisation arme/puce, etc.) sur la même ligne."
+    - "Le message de limite de debug() mentionne également mark()."
+    - "Le fait de pouvoir modifier les caractéristiques des poireaux de test est plus visible."
+    - "Editeur : à l'ouverture d'une IA, affiche directement les erreurs existantes."
+    - "Classement solo par niveau : tri par talent ensuite au lieu de l'XP."
+    - "Documentation : affichage de la fonction/constante de remplacement dans les résultats de recherche."
+    - "Documentation : les fonctions/constantes dépréciées sont masquées dans la liste de gauche."
+    - "Augmentation des gains en Battle Royale."
+    - "Page éleveur : boutons tournoi, défi et agressions masqués si l'on a qu'un seul poireau."
+    - "Forum : sélection de la langue sur une categorie du forum."
+    - "La limite d'éleveurs dans une équipe passe de 40 à 50."
+    - "Éditeur : affichage des IA non sauvegardées dans le menu Ctrl+P. #img_230_finder"
+    - "Éditeur : les mots-clés réservés sont ne sont plus colorés, private l'est correctement."
+  fixed:
+    - "Ajout de traductions manquantes un peu partout sur le site."
+    - "Corrections de deux fuites mémoires : la consommation de RAM est maintenant plus faible."
+    - "Le trophée XII n'est plus déblocable en test ou défi."
+    - "Correction de l'animation du lance grenades et de l'électriseur en accéléré."
+    - "Correction du filtre de tourelle sur la page rapport."
+    - "Rapport de combat : correction des tooltips sur le graphique des points de vie."
+
 229:
   title: Inscription rapide, Nouvelles animations, 6 Nouveaux chapeaux et 2 armes.
   added:
