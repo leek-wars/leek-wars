@@ -84,7 +84,7 @@ import { LeekWars } from '@/model/leekwars'
         return ret("spread", "meta");
       } else if (/[\[\]{}\(\),;\:\.]/.test(ch)) {
         return ret(ch);
-      } else if (ch == "=" && stream.eat(">")) {
+      } else if ((ch == "=" || ch == "-") && stream.eat(">")) {
         return ret("=>", "operator");
       } else if (ch == "0" && stream.match(/^(?:x[\dA-Fa-f_\.p]+|o[0-7_]+|b[01_]+)n?/)) {
         return ret("number", "number");
