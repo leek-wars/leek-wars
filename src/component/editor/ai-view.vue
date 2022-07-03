@@ -594,7 +594,6 @@ import { Problem } from './problem'
 
 		public formatCode() {
 			import(/* webpackChunkName: "js-beautify" */ "js-beautify").then(js_beautify => {
-				console.log(js_beautify)
 
 				const hex_literals = this.editor.getValue().matchAll(/0(?:x[\dA-Fa-f_\.p]+|o[0-7_]+|b[01_]+)/g)
 				let formatted = js_beautify.default.js_beautify(this.editor.getValue(), {indent_size: 1, indent_char: '\t'})
