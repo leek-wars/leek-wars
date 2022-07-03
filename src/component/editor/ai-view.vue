@@ -567,7 +567,18 @@
 		public formatCode() {
 			import(/* webpackChunkName: "js-beautify" */ "js-beautify").then(js_beautify => {
 				console.log(js_beautify)
-				this.editor.setValue(js_beautify.js_beautify(this.editor.getValue(), {indent_size: 1, indent_char: '\t'}))
+
+				const hex_literals = this.editor.getValue().matchAll(/0(?:x[\dA-Fa-f_\.p]+|o[0-7_]+|b[01_]+)/g)
+				let formatted = js_beautify.js_beautify(this.editor.getValue(), {indent_size: 1, indent_char: '\t'})
+
+				// js-beautify doesn't recognize hexadecimal floating point, and will split them as:
+				// 0x1 .0 p53
+				// this code restore the correct litteral after the formatting:
+				for (const lit of hex_literals) {
+					let fLit = lit[0].replace(/\./, ' .').replace(/p/, ' p')
+					formatted = formatted.replace(fLit, lit[0])
+				}
+				this.editor.setValue(formatted)
 			})
 		}
 
