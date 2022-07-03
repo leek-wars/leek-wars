@@ -82,7 +82,7 @@ import { LeekWars } from '@/model/leekwars'
         return ret(ch);
       } else if (ch == "=" && stream.eat(">")) {
         return ret("=>", "operator");
-      } else if (ch == "0" && stream.match(/^(?:x[\dA-Fa-f_]+|o[0-7_]+|b[01_]+)n?/)) {
+      } else if (ch == "0" && stream.match(/^(?:x[\dA-Fa-f_\.p]+|o[0-7_]+|b[01_]+)n?/)) {
         return ret("number", "number");
       } else if (/\d/.test(ch)) {
         stream.match(/^[\d_]*(?:n|(?:\.[\d_]*)?(?:[eE][+\-]?[\d_]+)?)?/);
