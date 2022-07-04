@@ -610,7 +610,8 @@ const LeekWars = {
 	},
 	encyclopedia: {} as {[key: string]: any},
 	encyclopediaById: {} as {[key: number]: any},
-	christmasPresents: DATE.getMonth() === 11 && DATE.getDate() >= 25 && DATE.getDate() <= 31
+	christmasPresents: DATE.getMonth() === 11 && DATE.getDate() >= 25 && DATE.getDate() <= 31,
+	LATEST_LEEKSCRIPT_VERSION: 4
 }
 
 function setTitle(title: string | TranslateResult | null, subtitle: string | TranslateResult | null = null) {

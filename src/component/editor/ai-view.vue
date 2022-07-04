@@ -597,7 +597,7 @@ import { Problem } from './problem'
 				console.log(js_beautify)
 
 				const hex_literals = this.editor.getValue().matchAll(/0(?:x[\dA-Fa-f_\.p]+|o[0-7_]+|b[01_]+)/g)
-				let formatted = js_beautify.js_beautify(this.editor.getValue(), {indent_size: 1, indent_char: '\t'})
+				let formatted = js_beautify.default.js_beautify(this.editor.getValue(), {indent_size: 1, indent_char: '\t'})
 
 				// js-beautify doesn't recognize hexadecimal floating point, and will split them as:
 				// 0x1 .0 p53
@@ -882,6 +882,8 @@ import { Problem } from './problem'
 				}
 			}
 
+			if (this.editor.getSelection().length > 0) { return }
+
 			// console.log(this.hoverPosition, position, pos_in_line, this.hoverLineWidth)
 			if (this.hoverToken && token && this.hoverToken.start === token.start && this.hoverToken.end === token.end && this.hoverToken.string === token.string) {
 				// console.log("same token", token)
@@ -965,7 +967,7 @@ import { Problem } from './problem'
 				raw_data.location[2] === this.hoverLocation[2] &&
 				raw_data.location[3] === this.hoverLocation[3] &&
 				raw_data.location[4] === this.hoverLocation[4]) {
-				console.log("showHoverDetails same location")
+				// console.log("showHoverDetails same location")
 				return // Same position
 			}
 
