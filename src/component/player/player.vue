@@ -442,7 +442,9 @@
 			this.$root.$off('fight-progress')
 			if (this.timeout) { clearTimeout(this.timeout) }
 			if (this.request) { this.request.abort() }
-			LeekWars.socket.send([SocketMessage.FIGHT_PROGRESS_UNREGISTER, this.fightId])
+			if (this.fightId !== 'local') {
+				LeekWars.socket.send([SocketMessage.FIGHT_PROGRESS_UNREGISTER, this.fightId])
+			}
 		}
 
 		getFight(first: boolean) {
