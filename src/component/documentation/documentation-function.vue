@@ -136,8 +136,8 @@
 	::v-deep ul {
 		margin: 5px 0;
 	}
-	.md {
-		padding: 0;
+	.doc-function .md {
+		padding: 0 !important;
 		::v-deep pre code {
 			margin-bottom: 0;
 		}
