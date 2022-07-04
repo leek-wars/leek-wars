@@ -335,10 +335,10 @@
 		}
 		newAI(v2: boolean, name: string) {
 			if (!this.folder) { return }
-			LeekWars.post('ai/new-name', {folder_id: this.folder.id, version: 3, name}).then(data => {
+			LeekWars.post('ai/new-name', {folder_id: this.folder.id, version: LeekWars.LATEST_LEEKSCRIPT_VERSION, name}).then(data => {
 				const ai = new AI(data.ai)
 				ai.valid = true
-				ai.version = 3
+				ai.version = LeekWars.LATEST_LEEKSCRIPT_VERSION
 				ai.total_chars = ai.code.length
 				ai.total_lines = ai.code.split("\n").length
 				fileSystem.add_ai(ai, this.folder!)
