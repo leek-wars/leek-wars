@@ -97,7 +97,7 @@
 				parameter = this.selectedLeek!.id
 			}
 			const fight = this.fight ? this.fight : 0
-			LeekWars.post('moderation/report', {target, reason: this.selectedReason, message: this.additionalMessage, parameter, fight}).then(data => {
+			LeekWars.post('moderation/report', {target_id: target, reason: this.selectedReason, message: this.additionalMessage, parameter, fight}).then(data => {
 				LeekWars.toast(i18n.t('warning.thank_you_for_reporting') as string)
 				this.close()
 			}).error(error => {
