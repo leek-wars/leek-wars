@@ -245,10 +245,10 @@
 				for (const funct of LeekWars.functions) {
 					if (funct.name === this.code) {
 						fun = funct
-						description = this.$te('doc.func_' + fun.name) ? this.$t('doc.func_' + fun.name) as string : ''
-						args = funct.arguments_names.map((a, i) => '- **' + a + '** : ' + (this.$te('doc.func_' + fun.name + '_arg_' + (i + 1)) ? this.$t('doc.func_' + fun.name + '_arg_' + (i + 1)) : '')).join('\n')
+						description = this.$t('doc.func_' + fun.name) as string
+						args = funct.arguments_names.map((a, i) => '- **' + a + '** : ' + (this.$t('doc.func_' + fun.name + '_arg_' + (i + 1)))).join('\n')
 						if (fun.return_name) {
-							ret = '#### Retour\n\n- **' + fun.return_name + '** : ' + (this.$te('doc.func_' + fun.name + '_return') ? this.$t('doc.func_' + fun.name + '_return') : '')
+							ret = '#### Retour\n\n- **' + fun.return_name + '** : ' + (this.$t('doc.func_' + fun.name + '_return'))
 						}
 						break
 					}
