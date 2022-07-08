@@ -9,9 +9,6 @@ import { LeekWars } from '@/model/leekwars'
 class StatisticsEntity extends Entity {
 	public leek!: FightLeek
 	public alive: boolean = true
-	public name!: string
-	public level!: number
-	public team!: number
 	public weapon!: number
 	public type: number
 

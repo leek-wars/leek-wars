@@ -109,7 +109,7 @@ Vue.directive('autostopscroll', {
 	inserted: (el, binding) => {
 		const top = binding.value === 'top' || !binding.value
 		const bottom = binding.value === 'bottom' || !binding.value
-		el.addEventListener("wheel", (e: MouseWheelEvent) => {
+		el.addEventListener("wheel", (e: WheelEvent) => {
 			if ((top && e.deltaY < 0 && el.scrollTop === 0) || (bottom && e.deltaY > 0 && Math.abs(el.scrollTop - (el.scrollHeight - el.offsetHeight)) < 1)) {
 				e.preventDefault()
 			}

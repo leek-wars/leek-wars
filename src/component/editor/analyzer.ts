@@ -47,7 +47,7 @@ class Analyzer {
 					// console.log(this.GeneratorAnalyze(false, "Fight.toto"))
 					// console.log(this.GeneratorComplete(false, "Fight.getEntity().name", 18))
 
-					resolve()
+					resolve(null)
 				}
 			}
 			window.Module = Module
@@ -288,7 +288,7 @@ class Analyzer {
 		return new Promise((resolve, reject) => {
 			if (document.querySelector(`head > script[ src = "${url}" ]`) !== null) {
 				console.warn(`script already loaded: ${url}`)
-				resolve()
+				resolve(null)
 			}
 			const script = document.createElement("script")
 			script.src = url
