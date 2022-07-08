@@ -35,7 +35,7 @@
 				<panel class="first">
 					<div slot="content"class="items-list">
 						<div v-for="(category, c) of filteredCategories" :key="category.id">
-							<h2 v-ripple @click="categoryState[c] = !categoryState[c]">
+							<h2 v-ripple @click="toggleCategory(c)">
 								<v-icon>{{ icons[c] }}</v-icon> {{ $t('doc.function_category_' + categories[c].name) }} <span v-if="query.length">({{ category.length }})</span>
 								<div class="spacer"></div>
 								<v-icon v-if="query.length || categoryState[c]">mdi-chevron-up</v-icon>
@@ -149,7 +149,9 @@
 			}
 			get_categories((data: any) => {
 				this.categories = data.categories
-				for (const category in this.categories) Vue.set(this.categoryState, category, false)
+				for (const category in this.categories) {
+					Vue.set(this.categoryState, category, localStorage.getItem('documentation/category-' + category) === 'true')
+				}
 				let last: any
 				let index = 1
 				let id = 0
@@ -307,6 +309,11 @@
 		toggleLarge() {
 			LeekWars.large = !LeekWars.large
 			localStorage.setItem('documentation/large', '' + LeekWars.large)
+		}
+
+		toggleCategory(c: number) {
+			this.categoryState[c] = !this.categoryState[c]
+			localStorage.setItem('documentation/category-' + c, '' + this.categoryState[c])
 		}
 	}
 </script>
