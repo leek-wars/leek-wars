@@ -189,5 +189,6 @@
 	"add_capital_title": "Ajouter des points de capital",
 	"retrieve": "Récupérer",
 	"estimated_value": "Valeur estimée",
-	"lot_value": "Valeur du lot"
+	"lot_value": "Valeur du lot",
+	"resource_not_used": "Toutes les ressources ne sont pas utilisables pour l'instant. Peut être trouveront-elles une utilité dans le futur ?"
 }

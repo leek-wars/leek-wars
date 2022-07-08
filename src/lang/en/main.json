@@ -189,5 +189,6 @@
 	"add_capital_title": "Add capital points",
 	"retrieve": "Retrieve",
 	"estimated_value": "Estimated value",
-	"lot_value": "Lot value"
+	"lot_value": "Lot value",
+	"resource_not_used": "All the resources are unusable at the moment. Maybe they will find a use in the future?"
 }
