@@ -276,6 +276,7 @@
 		padding: 4px;
 		.chip {
 			width: 32px;
+			height: 32px;
 			margin: 2px;
 			vertical-align: top;
 		}
