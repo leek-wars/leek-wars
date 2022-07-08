@@ -16,7 +16,7 @@
 		<div v-if="$te(category + '.' + name_short + '_desc')" class="desc">
 			{{ $t(category + '.' + name_short + '_desc') }}
 		</div>
-		<div v-if="item.type === ItemType.RESOURCE && (!item.name.startsWith('box') && !(LeekWars.christmasPresents && item.name.startsWith('present')))" class="desc">
+		<div v-if="item.type === ItemType.RESOURCE && !item.name.startsWith('box') && !item.name.startsWith('present')" class="desc">
 			<i>{{ $t('main.resource_not_used') }}</i>
 		</div>
 		<weapon-preview v-if="item.type === ItemType.WEAPON" :weapon="LeekWars.weapons[item.params]" />

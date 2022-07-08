@@ -121,14 +121,14 @@ class FightStatistics {
 	public says: number = 0
 	public saysLength: number = 0
 	public entities: {[key: number]: StatisticsEntity} = {}
-	public lives_raw: any[][][][] = []
-	public lives: any[][] = []
-	public lives_percent: any[][] = []
+	public lives_raw: (number | null)[][][][] = []
+	public lives: {x: number, y: number | null}[][] = []
+	public lives_percent: {x: number, y: number | null}[][] = []
 	public lives_turns: boolean[] = []
 	public team1: StatisticsEntity[] = []
 	public team2: StatisticsEntity[] = []
-	public teams: {[key: number]: any} = {}
-	public best: any[] = []
+	public teams: {[key: number]: Set<number>} = {}
+	// public best: any[] = []
 	public effects: any[] = []
 	public field!: Field
 	public newGlobalTurn: boolean = true
@@ -459,9 +459,10 @@ class FightStatistics {
 					state = StatisticsState.USE_ITEM
 					itemCaster = entity
 
-					const weapon_template = LeekWars.weapons[entity.weapon!]
-
-					entity.usedPT += weapon_template.cost
+					if (entity.weapon != null) {
+						const weapon_template = LeekWars.weapons[entity.weapon]
+						entity.usedPT += weapon_template.cost
+					}
 					entity.actionsWeapon++
 					if (result === 2) { // CC
 						entity.critical++
@@ -611,7 +612,7 @@ class FightStatistics {
 		const lives = []
 		const lives_percent = []
 		for (const j in this.entities) {
-			let previous_life = -1
+			let previous_life = -1 as number | null
 			if (current_turn.length) {
 				previous_life = current_turn[current_turn.length - 1][0][j]
 			} else if (this.lives_raw.length > 1) {

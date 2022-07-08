@@ -144,7 +144,7 @@ Vue.directive('latex', {
 			return "<latex>" + str + "</latex>"
 		})
 		el.querySelectorAll('latex').forEach((c) => {
-			Latex.latexify(c.innerHTML).then((result: any) => {
+			Latex.latexify(c.innerHTML).then(result => {
 				c.innerHTML = result
 			})
 		})
@@ -171,7 +171,7 @@ Vue.directive('chat-code-latex', {
 			}
 		})
 		el.querySelectorAll('latex').forEach((c) => {
-			Latex.latexify(c.innerHTML).then((result: any) => {
+			Latex.latexify(c.innerHTML).then(result => {
 				c.innerHTML = result
 			})
 		})
@@ -181,7 +181,7 @@ Vue.directive('dochash', (el) => {
 	el.innerHTML = el.innerHTML.replace(/#(\w+)/g, (a, b) => {
 		return "<a href='/help/documentation/" + b + "'>" + b + "</a>"
 	})
-	el.querySelectorAll('a').forEach((a: any) => {
+	el.querySelectorAll('a').forEach(a => {
 		a.onclick = (e: Event) => {
 			e.stopPropagation()
 			e.preventDefault()
