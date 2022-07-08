@@ -760,21 +760,7 @@
 
 				<lw-code :code="$t('advanced_order_5')" />
 
-				<h3>{{ $t('advanced_ref') }}</h3>
 
-				<p>{{ $t('advanced_ref_1') }}</p>
-
-				<lw-code :code="$t('advanced_ref_2')" />
-
-				<p v-html="$t('advanced_ref_3')"></p>
-
-				<lw-code :code="$t('advanced_ref_4')" />
-
-				<p>{{ $t('advanced_ref_5') }}</p>
-
-				<p>{{ $t('advanced_ref_6') }}</p>
-
-				<lw-code :code="$t('advanced_ref_7')" />
 
 				<h3>{{ $t('advanced_tern') }}</h3>
 
@@ -821,48 +807,6 @@
 
 				<lw-code :code="$t('advanced_include_13')" />
 
-				<br>
-				<h3 id="triple_equals">{{ $t('advanced_triple_equal') }}</h3>
-
-				<p v-html="$t('advanced_triple_equal_1')"></p>
-
-				<table v-html="$t('advanced_triple_equal_2')"></table>
-
-				<p v-html="$t('advanced_triple_equal_3')"></p>
-
-				<table class="sign-table">
-					<tr>
-						<td>===</td>
-						<td v-for="value in values" :key="value">{{ value }}</td>
-					</tr>
-					<tr v-for="value1 in values" :key="value1">
-						<td>{{ value1 }}</td>
-						<td v-for="(value2, j) in values" :key="j">
-							<div v-if="value1 === value2" class="X"></div>
-						</td>
-					</tr>
-				</table>
-
-				<p v-html="$t('advanced_triple_equal_4')"></p>
-
-				<table class="sign-table">
-					<tr>
-						<td>==</td>
-						<td v-for="value in values" :key="value">{{ value }}</td>
-					</tr>
-					<tr v-for="(value1, i) in values" :key="i">
-						<td>{{ value1 }}</td>
-						<td v-for="(value2, j) in values" :key="j">
-							<div v-if="equalEqual[i][j] === 'X'" class="X"></div>
-						</td>
-					</tr>
-				</table>
-
-				<p v-html="$t('advanced_triple_equal_5')"></p>
-
-				<p v-html="$t('advanced_triple_equal_6')"></p>
-
-				<p v-html="$t('advanced_triple_equal_7')"></p>
 			</div>
 		</panel>
 	</div>
@@ -876,28 +820,7 @@
 
 	@Component({ name: 'tutorial', i18n: {}, components: { Screen, Breadcrumb } })
 	export default class Tutorial extends Vue {
-		values = ['false', 'true', '0', '1', '12', '" "', '"0"', '"1"', '"12"', '"lama"',
-					'"true"', '"false"', '[]', '[0]', '[1]', '[12]', '[1,2,3]', 'null']
-		equalEqual = [
-			'X X  XX    XXX    ', // false
-			' X XX  XXXX   XXX ', // true
-			'X X  XX    XXX    ', // 0
-			' X X   X XX   X   ', // 1
-			' X  X   X X    X  ', // 12
-			'X X  X      XX    ', // " "
-			'X X   X      X    ', // "0"
-			' X X   X      X   ', // "1"
-			' X  X   X      X  ', // "12"
-			' X X     X        ', // "lama"
-			' X XX     X   XXX ', // "true"
-			'X X        XXX    ', // "false"
-			'X X  X     XX     ', // []
-			'X X  XX    X X    ', // [0]
-			' X X   X  X   X   ', // [1]
-			' X  X   X X    X  ', // [12]
-			' X        X     X ', // [1,2,3]
-			'                 X', // null
-		]
+
 		trophy: boolean = false
 
 		get breadcrumb_items() {
