@@ -43,7 +43,12 @@ import Vue from 'vue'
 import { Latex } from './latex'
 
 import Vuetify from 'vuetify/lib'
-Vue.use(Vuetify)
+import Ripple from 'vuetify/lib/directives/ripple'
+Vue.use(Vuetify, {
+  directives: {
+    Ripple,
+  },
+})
 
 import tooltip from '@/vtooltip-fast'
 Vue.component('tooltip', tooltip)

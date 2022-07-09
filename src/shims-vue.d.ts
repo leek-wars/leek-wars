@@ -6,6 +6,7 @@ declare module '*.vue' {
 declare let ga: Function
 
 declare module 'vuetify/lib/framework';
+declare module 'vuetify/lib/directives/ripple';
 declare module 'vuetify/lib/components/transitions/createTransition';
 declare module '@/vtooltip-fast';
 
