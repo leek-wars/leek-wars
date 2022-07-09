@@ -146,12 +146,13 @@ class Socket {
 					// Envoie de la notif sur la page du combat pour la mettre en file d'attente
 					if (message.type === NotificationType.TROPHY_UNLOCKED && router.currentRoute.path.startsWith('/fight/' + message.parameters[1])) {
 						vueMain.$emit('trophy', message)
-					} else if (message.type === NotificationType.UP_LEVEL) {
-						const leek = parseInt(message.parameters[0], 10)
-						const level = parseInt(message.parameters[1], 10)
-						const capital = parseInt(message.parameters[2], 10)
-						store.commit('level-up', {leek, level, capital})
 					} else {
+						if (message.type === NotificationType.UP_LEVEL) {
+							const leek = parseInt(message.parameters[0], 10)
+							const level = parseInt(message.parameters[1], 10)
+							const capital = parseInt(message.parameters[2], 10)
+							store.commit('level-up', {leek, level, capital})
+						}
 						store.commit('notification', message)
 					}
 					break
