@@ -186,6 +186,17 @@
 		align-items: flex-end;
 		cursor: pointer;
 		min-width: 0;
+		&.current:before {
+			content: "";
+			position: absolute;
+			z-index: 1;
+			left: calc(50% - 18px);
+			top: -10px;
+			width: 36px;
+			height: 20px;
+			background-image: url('../../../public/image/fight/arrow.svg');
+			background-size: cover;
+		}
 	}
 	.timeline .entity.dead {
 		opacity: 0.3;
