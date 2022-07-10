@@ -1,18 +1,6 @@
 <template lang="html">
 	<div ref="player" :style="{width: width + 'px', height: height + BAR_HEIGHT + 'px'}">
-		<div v-if="error" class="error">
-			<h2>{{ $t('error_generating_fight') }}</h2>
-			<br>
-			<img src="/image/notgood.png">
-			<br><br>
-			<h4><i>{{ $t('no_data_received') }}</i></h4>
-			<br>
-			<router-link v-if="fight" :to="'/report/' + fight.id">
-				<v-btn>{{ $t('see_report') }}</v-btn>
-			</router-link>
-			<br><br>
-		</div>
-		<div v-else-if="!loaded" class="loading">
+		<div v-if="!loaded" class="loading">
 			<template v-if="fight">
 				<div v-if="fight.type === FightType.BATTLE_ROYALE" class="table br">
 					<template v-for="(leek, i) in fight.leeks1">
@@ -46,7 +34,14 @@
 					</div>
 				</div>
 			</template>
-			<div class="loading-fight">
+			<div v-if="error" class="error">
+				<img src="/image/notgood.png">
+				<br>
+				<h4>{{ $t('error_generating_fight') }}</h4>
+				<br>
+				<h4><i>{{ $t('admin_noticed') }}</i></h4>
+			</div>
+			<div v-else class="loading-fight">
 				<loader v-if="!LeekWars.mobile" />
 				<div class="loading-bar">
 					<span :style="{width: progress + '%'}" class="bar striked"></span>
@@ -820,7 +815,6 @@
 	}
 	.error {
 		text-align: center;
-		height: 100%;
 		display: flex;
 		flex-direction: column;
 		align-items: center;

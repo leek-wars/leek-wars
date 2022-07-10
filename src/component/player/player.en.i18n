@@ -12,6 +12,7 @@
 	"display_shadows": "Display shadows",
 	"enlarge_fight": "Enlarge fight screen",
 	"error_generating_fight": "An error occured during fight generation",
+	"admin_noticed": "An administrator has already been notified",
 	"fullscreen": "Fullscreen (F)",
 	"generating": "Generation in progress...",
 	"large_actions": "Large actions",
