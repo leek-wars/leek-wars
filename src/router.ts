@@ -10,7 +10,6 @@ const AdminServers = () => import(/* webpackChunkName: "admin" */ `@/component/a
 const AdminServices = () => import(/* webpackChunkName: "admin" */ `@/component/admin/admin-services.vue`)
 const AdminTrophies = () => import(/* webpackChunkName: "admin" */ `@/component/admin/admin-trophies.vue`)
 const Admin = () => import(/* webpackChunkName: "admin" */ `@/component/admin/admin.vue`)
-const Api = () => import(/* webpackChunkName: "[request]" */ `@/component/api/api.${locale}.i18n`)
 import Error from '@/component/app/error.vue'
 const BankBuy = () => import(/* webpackChunkName: "[request]" */ `@/component/bank/bank-buy.${locale}.i18n`)
 const BankValidate = () => import(/* webpackChunkName: "[request]" */ `@/component/bank/bank-validate.${locale}.i18n`)
@@ -137,7 +136,6 @@ const routes = [
 	{ path: '/garden/:category/:type/:target', component: Garden, beforeEnter: connected },
 	{ path: '/garden/:category/:type/:target/:item', component: Garden, beforeEnter: connected },
 	{ path: '/help', component: Encyclopedia },
-	{ path: '/help/api', component: Api },
 	{ path: '/help/documentation', component: Documentation, props: { popup: false } },
 	{ path: '/help/documentation/:item', component: Documentation, props: { popup: false } },
 	{ path: '/help/items', component: Items },
