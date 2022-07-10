@@ -241,6 +241,7 @@ import { Problem } from './problem'
 					smartIndent: true,
 					cursorHeight: 1,
 					foldGutter: true,
+					undoDepth: 500,
 					gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"],
 					extraKeys: {
 						"Shift-Tab": () => this.unindentCode(),
