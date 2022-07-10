@@ -377,7 +377,8 @@
 					this.generating = true
 					return
 				}
-				this.fight = Object.freeze(data)
+				Object.freeze(data.data)
+				this.fight = data
 				this.report = this.fight.report
 				for (const leek of this.fight.data.leeks) {
 					this.leeks[leek.id] = leek as any
