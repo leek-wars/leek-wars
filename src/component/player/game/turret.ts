@@ -22,8 +22,8 @@ class Turret extends FightEntity {
 	chip_animation: number = 10
 	chip_animation_z: number = 0
 
-	constructor(game: Game, team: number, level: number) {
-		super(game, EntityType.TURRET, team)
+	constructor(game: Game, team: number, level: number, name: string) {
+		super(game, EntityType.TURRET, team, name)
 		this.baseZ = 0
 		const color = team === 1 ? 'blue' : 'red'
 		this.textures.base = T.get(this.game, 'image/turret/base_' + color + '.png', true, SHADOW_QUALITY)
@@ -35,7 +35,9 @@ class Turret extends FightEntity {
 		this.textures.pyramid_down = T.get(this.game, 'image/turret/pyramid_down_' + color + '.png', true, SHADOW_QUALITY)
 		this.bodyTexFront = this.textures.base
 
-		this.pieces = TURRET_DATA[Math.floor(level / 10)].map((piece, i) => ({i, t: this.textures[piece.t], z: piece.z, w: this.textures[piece.t].texture.width }))
+		this.pieces = TURRET_DATA[Math.floor(level / 10)].map((piece, i) => (
+			{i, t: this.textures[piece.t], z: piece.z, w: this.textures[piece.t].texture.width }
+		))
 
 		const load_piece = (piece: Piece) => {
 			this.baseWidth = Math.max(this.baseWidth, piece.t.texture.width * Turret.SCALE)
@@ -43,8 +45,8 @@ class Turret extends FightEntity {
 				this.baseHeight += piece.t.texture.height * Turret.SCALE
 				this.height += piece.t.texture.height * Turret.SCALE
 			} else {
-				this.baseHeight += piece.z
-				this.height += piece.z
+				this.baseHeight += (piece.t.texture.height * Turret.SCALE - piece.z)
+				this.height += (piece.t.texture.height * Turret.SCALE - piece.z)
 			}
 		}
 		for (const piece of this.pieces) {

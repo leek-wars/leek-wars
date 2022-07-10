@@ -34,11 +34,11 @@
 			<tooltip v-for="(quantity, resource) of leek.resources" :key="resource">
 				<template v-slot:activator="{ on }">
 					<span class="resource" v-on="on">
-						<img :src="'/image/resource/' + LeekWars.items[resource].name + '.png'">
+						<img v-if="LeekWars.items[resource]" :src="'/image/resource/' + LeekWars.items[resource].name + '.png'">
 						<span v-if="quantity > 1" class="quantity">{{ quantity }}</span>
 					</span>
 				</template>
-				{{ quantity }}x <b>{{ $t('resource.' + LeekWars.items[resource].name) }}</b>
+				{{ quantity }}x <b v-if="LeekWars.items[resource]">{{ $t('resource.' + LeekWars.items[resource].name) }}</b>
 			</tooltip>
 		</td>
 		<td v-if="fight.context !== FightContext.CHALLENGE && leek.talent !== undefined" class="talent">

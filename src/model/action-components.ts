@@ -29,6 +29,7 @@ import ActionReduceEffects from '@/component/action/action-reduce-effects.vue'
 import ActionRemovePoisons from '@/component/action/action-remove-poisons.vue'
 import ActionRemoveShackles from '@/component/action/action-remove-shackles.vue'
 import ActionBug from '@/component/action/action-bug.vue'
+import ActionOpenChest from '@/component/action/action-open-chest.vue'
 import { EffectType } from "./effect"
 
 import EffectAbsoluteShield from '@/component/effect/effect-absolute-shield.vue'
@@ -89,6 +90,7 @@ const ActionComponents = {
 	[ActionType.REMOVE_POISONS]: ActionRemovePoisons,
 	[ActionType.REMOVE_SHACKLES]: ActionRemoveShackles,
 	[ActionType.BUG]: ActionBug,
+	[ActionType.OPEN_CHEST]: ActionOpenChest,
 }
 
 const EffectComponents = {

@@ -923,6 +923,7 @@ class BuryParticle extends Particle {
 	public draw(ctx: CanvasRenderingContext2D): void {
 		const w = this.texture.texture.width
 		const h = (this.life / BuryParticle.LIFE) * this.texture.texture.height
+		// const h = this.texture.texture.height
 		// console.log("draw", this.x, this.y, w, h)
 		ctx.drawImage(this.texture.texture, 0, 0, w, h, - w / 2 * this.scale, - h * this.scale, w * this.scale, h * this.scale)
 	}

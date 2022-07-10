@@ -28,6 +28,7 @@
 						<div class="image">
 							<img v-if="entity.summon" :src="'/image/bulb/' + entity.bulbName + '_front.png'">
 							<turret-image v-else-if="(entity instanceof Turret)" :level="entity.level" :skin="entity.team" :scale="1" />
+							<img v-else-if="(entity instanceof Chest)" :src="'/image/chest/' + entity.rawName + '.png'">
 							<leek-image v-else :leek="entity" :scale="1" />
 						</div>
 					</div>
@@ -63,8 +64,9 @@
 	import { ActionComponents, EffectComponents } from '@/model/action-components'
 	import { i18n } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
-import { TEAM_COLORS } from '@/model/team'
+	import { TEAM_COLORS } from '@/model/team'
 	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
+	import { Chest } from './game/chest'
 	import { Game } from './game/game'
 	import { Turret } from './game/turret'
 
@@ -74,6 +76,7 @@ import { TEAM_COLORS } from '@/model/team'
 		debug: boolean = false
 		hover_entity: any | null = null
 		Turret = Turret
+		Chest = Chest
 		actionsWidth: number = 395
 		ActionComponents = ActionComponents
 		EffectComponents = EffectComponents
@@ -200,7 +203,7 @@ import { TEAM_COLORS } from '@/model/team'
 		overflow: hidden;
 		padding: 0 4px;
 	}
-	.timeline .entity .image svg {
+	.timeline .entity .image svg, .timeline .entity .image img {
 		max-width: 50px;
 		max-height: 80px;
 	}

@@ -37,5 +37,9 @@
 	"carrot": "Carotte",
 	"gold_nugget": "Pépite d'or",
 	"raw_ruby": "Rubis brut",
-	"shell": "Coquillage"
+	"shell": "Coquillage",
+	"wood_chest": "Coffre en bois",
+	"iron_chest": "Coffre en fer",
+	"diamond_chest": "Coffre en diamant",
+	"flower": "Fleur"
 }

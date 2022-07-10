@@ -11,8 +11,8 @@ class Bulb extends FightEntity {
 	public bulbName!: string
 	public heightAnim!: number
 
-	constructor(game: Game, team: number, level: number) {
-		super(game, EntityType.BULB, team)
+	constructor(game: Game, team: number, level: number, name: string) {
+		super(game, EntityType.BULB, team, name)
 		this.baseZ = -6
 		this.z = this.baseZ
 		this.bloodTex = T.leek_blood
@@ -72,34 +72,6 @@ class Bulb extends FightEntity {
 
 	public update(dt: number) {
 		super.update(dt)
-	}
-
-	public randomHurt() {
-		const z = 20 + Math.random() * 40
-		const dx = Math.random() * 30 - 15
-		const dy = Math.random() * 30 - 15
-		const dz = Math.random() * 30 - 15
-		const x = this.ox + Math.random() * 40 - 20
-		const y = this.oy + Math.random() * 40 - 20
-		this.hurt(x, y, z, dx, dy, dz)
-	}
-
-	public hurt(x: number, y: number, z: number, dx: number, dy: number, dz: number) {
-		// Blood
-		const dir = Math.random()
-		dx *= dir / 10
-		dy *= dir / 10
-		let bx = this.ox + dx * (40 + Math.random() * 60)
-		let by = this.oy + dy *  (40 + Math.random() * 60)
-		this.game.particles.addBlood(x, y, z, dx, dy, dz, this.bloodTex)
-		this.game.particles.addBloodOnGround(bx, by, this.bloodTex)
-		dx = -dx
-		dy = -dy
-		bx = this.ox + dx * (40 + Math.random() * 60)
-		by = this.oy + dy * (40 + Math.random() * 60)
-		this.game.particles.addBlood(x, y, z, dx, dy, dz, this.bloodTex)
-		this.game.particles.addBloodOnGround(bx, by, this.bloodTex)
-		this.flash = 5
 	}
 
 	public frameTexture(includeHat: boolean): Texture {

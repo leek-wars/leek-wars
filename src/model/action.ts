@@ -16,6 +16,7 @@ enum ActionType {
 	USE_CHIP = 12,
 	SET_WEAPON = 13,
 	STACK_EFFECT = 14,
+	OPEN_CHEST = 15,
 	USE_WEAPON = 16,
 	TP_LOST = 100,
 	LIFE_LOST = 101,

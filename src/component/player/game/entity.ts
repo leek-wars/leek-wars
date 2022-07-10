@@ -16,7 +16,8 @@ import { S } from './sound'
 enum EntityType {
 	LEEK = 0,
 	BULB = 1,
-	TURRET = 2
+	TURRET = 2,
+	CHEST = 3,
 }
 enum EntityDirection {
 	NORTH = 0,
@@ -43,6 +44,7 @@ abstract class FightEntity extends Entity {
 	public summon = false
 	public summoner!: Entity
 	public active = false
+	public rawName!: string
 	// Caractéristiques
 	public life = 0
 	public strength = 0
@@ -55,8 +57,8 @@ abstract class FightEntity extends Entity {
 	public tp = 0
 	public mp = 0
 	public power = 0
-	public maxLife = 0
-	public initialMaxLife = 0
+	public maxLife = 1
+	public initialMaxLife = 1
 	public maxTP = 0
 	public maxMP = 0
 	public absoluteShield = 0
@@ -132,11 +134,13 @@ abstract class FightEntity extends Entity {
 	public reachableCells: Set<Cell> = new Set<Cell>()
 	public reachableCellsArea: any
 
-	constructor(game: Game, type: EntityType, team: number) {
+	constructor(game: Game, type: EntityType, team: number, name: string) {
 		super()
 		this.game = game
 		this.type = type
 		this.team = team
+		this.name = name
+		this.rawName = name
 		this.bubble = new Bubble(game)
 		this.path = []
 		this.frame = Math.random() * 100
@@ -368,6 +372,7 @@ abstract class FightEntity extends Entity {
 
 	public updateGrowth() {
 		this.growth = 1.0 + Math.log10(Math.max(0.0316227766, this.maxLife / this.initialMaxLife)) / 3
+		// console.log("update growth", this.name, this.growth)
 		this.width = this.baseWidth * this.scale * this.growth
 		this.height = this.baseHeight * this.scale * this.growth
 	}
@@ -1043,7 +1048,7 @@ abstract class FightEntity extends Entity {
 		const effect_size = 30
 		const reverse = Math.min(0.7, this.game.textRatio / this.game.ground.scale)
 		const z = LeekWars.objectSize(this.effects) > 0 && this.game.showEffects ? effect_size : 0
-		const y = Math.max(-this.game.ground.startY / this.game.ground.scale + 20, this.oy - this.height - this.baseZ - z * reverse)
+		const y = Math.max(-this.game.ground.startY / this.game.ground.scale + 20, this.oy - this.height - this.baseZ - 30 - z * reverse)
 		ctx.translate(this.ox, y)
 
 		ctx.scale(reverse, reverse)
@@ -1180,6 +1185,9 @@ abstract class FightEntity extends Entity {
 	}
 
 	public hurt(x: number, y: number, z: number, dx: number, dy: number, dz: number) {
+
+		if (this.type === EntityType.TURRET || this.type === EntityType.CHEST) { return }
+
 		const dir = Math.random()
 		dx *= dir / 10
 		dy *= dir / 10

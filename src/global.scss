@@ -970,4 +970,13 @@ a.green-link {
 	.error {
 		color: #ff1900;
 	}
+	img {
+		width: 30px;
+		margin-left: 3px;
+	}
+	.res {
+		display: inline-flex;
+		align-items: center;
+		margin: 4px;
+	}
 }

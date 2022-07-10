@@ -22,6 +22,7 @@ import { i18n } from '@/model/i18n'
 import { LeekWars } from '@/model/leekwars'
 import { store } from '@/model/store'
 import Vue from 'vue'
+import { Chest } from './chest'
 import { Turret } from './turret'
 
 enum Colors {
@@ -77,7 +78,8 @@ const lastFPS = [] as number[]
 const ENTITY_CLASSES = [
 	Leek,
 	Bulb,
-	Turret
+	Turret,
+	Chest,
 ]
 
 const WEAPONS = [
@@ -398,11 +400,10 @@ class Game {
 
 			const type = typeof(e.type) === 'undefined' ? EntityType.LEEK : e.type
 
-			const entity = new ENTITY_CLASSES[type](this, e.team, e.level)
+			const entity = new ENTITY_CLASSES[type](this, e.team, e.level, e.name)
 
 			// Infos vitales
 			entity.id = e.id
-			entity.name = e.name
 			entity.level = e.level
 			entity.team = e.team
 			entity.type = type
@@ -540,6 +541,20 @@ class Game {
 				}
 				this.teams[entity.team - 1].push(entity)
 				this.entityOrder.push(entity)
+
+				entity.active = true
+				entity.drawID = this.addDrawableElement(entity, entity.y)
+
+			} else if (entity instanceof Chest) {
+
+				entity.name = i18n.t('entity.' + entity.name) as string
+
+				if (this.teams[entity.team - 1] === undefined) {
+					this.teams[entity.team - 1] = []
+				}
+				this.teams[entity.team - 1].push(entity)
+				this.entityOrder.push(entity)
+				entity.setOrientation(EntityDirection.SOUTH)
 
 				entity.active = true
 				entity.drawID = this.addDrawableElement(entity, entity.y)
@@ -1386,12 +1401,16 @@ class Game {
 			}
 			break
 		}
+		case ActionType.OPEN_CHEST: {
+			this.log(action)
+			this.actionDone()
+			break
+		}
 		case ActionType.END_FIGHT: {
-
 			break
 		}
 		default: {
-			console.warn("Error : unknown action", action)
+			console.warn("Erreur : action inconnue", action)
 			this.actionDone()
 		}
 		}

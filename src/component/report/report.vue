@@ -413,8 +413,9 @@
 				// console.log(this.actions)
 
 				if (store.state.farmer && store.state.farmer.admin) {
-					const s = (n: any) => {
+					const s = (n: any): number => {
 						if (typeof n === 'number') return (1 + Math.log10(n)) | 0
+						if (typeof n === 'object' && !Array.isArray(n)) return 2 + Object.values(n).reduce((x: number, y: any) => x + s(y), 0) + Object.keys(n).reduce((x: number, y: any) => x + s(y), 0) + Object.values(n).length * 2
 						return 2 + n.length
 					}
 					let sizes = {} as {[key: string]: number}

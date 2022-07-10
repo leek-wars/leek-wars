@@ -27,8 +27,8 @@ class Leek extends FightEntity {
 	public heightAnim: number = 0
 	public fish: boolean = false
 
-	constructor(game: Game, team: number, level: number) {
-		super(game, EntityType.LEEK, team)
+	constructor(game: Game, team: number, level: number, name: string) {
+		super(game, EntityType.LEEK, team, name)
 		this.baseZ = -5
 		this.z = this.baseZ
 	}
@@ -43,12 +43,12 @@ class Leek extends FightEntity {
 		this.bodyTexBack = T.get(this.game, "image/leek/leek" + appearance + "_back_" + LeekWars.skins[skin] + ".png", true, SHADOW_QUALITY)
 
 		if (this.bodyTexFront.loaded) {
-			this.baseHeight = this.bodyTexFront.texture.height + 30
+			this.baseHeight = this.bodyTexFront.texture.height
 			this.baseWidth = this.bodyTexFront.texture.width
 			this.updateGrowth()
 		} else {
 			this.bodyTexFront.texture.addEventListener('load', () => {
-				this.baseHeight = this.bodyTexFront.texture.height + 30
+				this.baseHeight = this.bodyTexFront.texture.height
 				this.baseWidth = this.bodyTexFront.texture.width
 				this.updateGrowth()
 			}, { once: true })

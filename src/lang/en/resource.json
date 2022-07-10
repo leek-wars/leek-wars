@@ -37,5 +37,9 @@
 	"carrot": "Carott",
 	"gold_nugget": "Gold nugget",
 	"raw_ruby": "Raw ruby",
-	"shell": "Shell"
+	"shell": "Shell",
+	"wood_chest": "Wooden chest",
+	"iron_chest": "Iron chest",
+	"diamond_chest": "Diamond chest",
+	"flower": "Flower"
 }
