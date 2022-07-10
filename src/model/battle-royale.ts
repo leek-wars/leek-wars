@@ -41,7 +41,11 @@ class BattleRoyale {
 			this.progress = 0
 			localStorage.removeItem('battle-royale')
 			store.commit('update-fights', -1)
-			router.push('/fight/' + data[0])
+
+			// Redirect if on the garden page
+			if (router.currentRoute.path.startsWith("/garden/")) {
+				router.push('/fight/' + data[0])
+			}
 		}
 	}
 }
