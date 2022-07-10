@@ -118,9 +118,9 @@
 			<span slot="title">{{ $t('create_topic') }}</span>
 			<div class="create-popup">
 				<h3>{{ $t('new_topic_title') }}</h3>
-				<input v-model="createTitle" class="topic-name card" type="text">
+				<input v-model="createTitle" @keyup="updateDraftTitle" class="topic-name card" type="text">
 				<h3>{{ $t('new_topic_message') }}</h3>
-				<textarea v-model="createMessage" class="topic-message card"></textarea>
+				<textarea v-model="createMessage" @keyup="updateDraft" class="topic-message card"></textarea>
 				<v-radio-group v-if="Object.values(forumLanguages).length > 1" v-model="createMessageLang">
 					<v-radio v-for="(_, lang) in forumLanguages" :key="lang" :value="lang" :label="LeekWars.languages[lang].name" />
 				</v-radio-group>
@@ -209,6 +209,8 @@
 			for (const l of languages) {
 				Vue.set(this.forumLanguages, l, true)
 			}
+			this.createMessage = localStorage.getItem('forum/draft') as string
+			this.createTitle = localStorage.getItem('forum/draft-title') as string
 			// this.forumLanguages = (localStorage.getItem('forum/languages') as string || this.$i18n.locale).split(',')
 		}
 		create() {
@@ -248,6 +250,12 @@
 		updateCategories() {
 			localStorage.setItem('forum/languages', this.activeLanguages.join(','))
 			this.$router.replace('/forum/category-' + this.translations.filter(t => this.forumLanguages[t.lang]).map(t => t.id).join(','))
+		}
+		updateDraft() {
+			localStorage.setItem('forum/draft', this.createMessage)
+		}
+		updateDraftTitle() {
+			localStorage.setItem('forum/draft-title', this.createTitle)
 		}
 	}
 </script>
