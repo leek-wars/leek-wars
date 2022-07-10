@@ -94,12 +94,6 @@
 						<div v-else slot="content" class="preview center">
 							<item-preview v-if="selectedItem.type == ItemType.FIGHT_PACK" :item="selectedItem" />
 							<item-preview v-else :item="LeekWars.items[selectedItem.id]" />
-							<!-- <weapon-preview v-if="selectedItem.type == ItemType.WEAPON" :weapon="LeekWars.weapons[LeekWars.items[selectedItem.id].params]" />
-							<chip-preview v-else-if="selectedItem.type == ItemType.CHIP" :chip="LeekWars.chips[selectedItem.id]" />
-							<potion-preview v-else-if="selectedItem.type == ItemType.POTION && LeekWars.potions[selectedItem.id]" :potion="LeekWars.potions[selectedItem.id]" />
-							<fight-pack-preview v-else-if="selectedItem.type == ItemType.FIGHT_PACK" :pack="selectedItem" />
-							<hat-preview v-else-if="selectedItem.type === ItemType.HAT && LeekWars.hats[selectedItem.id]" :hat="LeekWars.hats[selectedItem.id]" />
-							<pomp-preview v-else-if="selectedItem.type == ItemType.POMP" :pomp="LeekWars.pomps[selectedItem.id]" /> -->
 
 							<router-link v-if="selectedItem.trophy" :to="'/trophy/' + selectedItem.trophy.name" class="trophy">
 								<img :src="'/image/trophy/' + selectedItem.trophy.name + '.svg'">
@@ -241,11 +235,6 @@
 			<span slot="title">{{ $t('new_item_unlocked') }}</span>
 			<div v-if="unseenItem" class="unseen-dialog">
 				<item-preview :item="LeekWars.items[unseenItem.id]" />
-				<!-- <weapon-preview v-if="unseenItem.type == ItemType.WEAPON" :weapon="LeekWars.weapons[LeekWars.items[unseenItem.id].params]" />
-				<chip-preview v-else-if="unseenItem.type == ItemType.CHIP" :chip="LeekWars.chips[unseenItem.id]" />
-				<potion-preview v-else-if="unseenItem.type == ItemType.POTION" :potion="LeekWars.potions[unseenItem.id]" />
-				<hat-preview v-else-if="unseenItem.type == ItemType.HAT" :hat="LeekWars.hats[unseenItem.id]" />
-				<pomp-preview v-else-if="unseenItem.type == ItemType.POMP" :pomp="LeekWars.pomps[unseenItem.id]" /> -->
 
 				<div v-if="unseenItem.trophy" class="card trophy">
 					<img :src="'/image/trophy/' + unseenItem.trophy.name + '.svg'">
@@ -383,12 +372,6 @@
 					this.unseenItemDialog = true
 				}
 
-				// this.hats = this.hats.sort((a, b) => {
-				// 	const ap = (LeekWars.items[a.id].buyable || LeekWars.items[a.id].buyable_crystals) ? (LeekWars.items[a.id].buyable_crystals ? (LeekWars.items[a.id].crystals * 50000) : LeekWars.items[a.id].price) : 999999999
-				// 	const bp = (LeekWars.items[b.id].buyable || LeekWars.items[b.id].buyable_crystals) ? (LeekWars.items[b.id].buyable_crystals ? (LeekWars.items[b.id].crystals * 50000) : LeekWars.items[b.id].price) : 999999999
-				// 	return ap - bp
-				// })
-
 				this.update()
 			})
 			this.$root.$on('back', this.back)
@@ -453,15 +436,9 @@
 			LeekWars.post(method, {item_id: id}).then(data => {
 				this.buyDialog = false
 				this.buyCrystalsDialog = false
-				// _.toast([
-				// 	_.lang.get('market', 'weapon_bought'),
-				// 	_.lang.get('market', 'chip_bought'),
-				// 	_.lang.get('market', 'potion_bought'),
-				// 	_.lang.get('market', 'hat_bought'),
-				// 	_.lang.get('market', 'fights_bought')
-				// ][type - 1])
+
 				if (item.type !== ItemType.FIGHT_PACK) {
-					item.farmer_count!++
+					this.items[item.id].farmer_count!++
 				}
 				if (currency === 'habs') {
 					this.$store.commit('update-habs', -item.price!)
@@ -481,12 +458,6 @@
 			const item = this.selectedItem
 			LeekWars.post('market/sell-habs', {item_id: item.id}).then(data => {
 				this.sellDialog = false
-				// _.toast([
-				// 	_.lang.get('market', 'weapon_selled'),
-				// 	_.lang.get('market', 'chip_selled'),
-				// 	_.lang.get('market', 'potion_selled'),
-				// 	_.lang.get('market', 'hat_selled')
-				// ][type - 1])
 				item.farmer_count!--
 				this.$store.commit('update-habs', item.sell_price)
 				this.$store.commit('remove-inventory', {type: item.type, item_template: item.id})
@@ -494,10 +465,12 @@
 			})
 			.error(error => LeekWars.toast(this.$t('error_' + error.error, error.params)))
 		}
+
 		updateChipMode() {
 			this.chipMode = this.chipMode === 'level' ? 'type' : 'level'
 			localStorage.setItem('market/sort_mode', this.chipMode)
 		}
+
 		createFightPacks() {
 			const fights = [100, 200, 500, 1000]
 			const costs = [1, 1.8, 4, 7]
