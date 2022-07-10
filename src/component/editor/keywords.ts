@@ -33,18 +33,10 @@ class LSMethod extends Keyword {}
 class LSStaticMethod extends Keyword {}
 
 function generateKeywords() {
-	let last = ""
-	let overloading = 0
 	const keywords: Keyword[] = []
 
 	for (const fun of LeekWars.functions) {
-		let functionName = fun.name
-		if (last === fun.name) {
-			overloading++
-			functionName += "_" + (overloading + 1)
-		} else {
-			overloading = 0
-		}
+
 		const text = fun.name
 		let name = fun.name
 		name += "("
@@ -63,9 +55,7 @@ function generateKeywords() {
 			name += " : " + fun.return_name
 		}
 
-		(fun as any).real_name = functionName
 		keywords.push({name: text, fullName: name, details: '', type: 'function', argumentCount: fun.arguments_names.length, function: fun, category: 2})
-		last = fun.name
 	}
 
 	// Constantes

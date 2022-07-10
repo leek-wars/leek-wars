@@ -1,5 +1,6 @@
 {
 	"1_operation": "<b>1</b> opération",
+	"arg_type_-1": "?",
 	"arg_type_1": "nombre",
 	"arg_type_2": "chaîne",
 	"arg_type_3": "booléen",

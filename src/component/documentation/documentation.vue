@@ -31,7 +31,7 @@
 			</div>
 		</div>
 		<div class="container documentation last">
-			<div v-show="!LeekWars.mobile || !LeekWars.splitBack" class="column3">
+			<div v-show="!LeekWars.mobile || !LeekWars.splitBack" class="column4">
 				<panel class="first">
 					<div slot="content"class="items-list">
 						<div v-for="(category, c) of filteredCategories" :key="category.id">
@@ -43,14 +43,17 @@
 							</h2>
 							<div v-if="query.length || categoryState[c]">
 								<div v-for="(item, i) in category" :key="i" @click="navigate(item.name)" :item="item.name" class="item">
-									{{ item.name }}
+									{{ item.name }}<span class="arguments" v-if="item.arguments_types">(<span v-for="(arg, i) in item.arguments_names" :key="i"><span v-if="item.optional[i]">[</span><span class="argument">{{ $t('doc.arg_type_' + item.arguments_types[i]) }}</span>&nbsp;{{ arg }}<span v-if="item.optional[i]">]</span><span v-if="i < item.arguments_names.length - 1">, </span></span>)
+									<span v-if="item.return_type != 0">
+										<span class="arrow">→</span> <span class="argument"> {{ $t('doc.arg_type_' + item.return_type) }}</span>&nbsp;{{ item.return_name }}
+									</span></span>
 								</div>
 							</div>
 						</div>
 					</div>
 				</panel>
 			</div>
-			<div v-show="!LeekWars.mobile || LeekWars.splitBack" class="column9">
+			<div v-show="!LeekWars.mobile || LeekWars.splitBack" class="column8">
 				<div ref="elements" class="items" @scroll="scroll">
 					<panel v-for="item of lazy_items" :key="item.id" :item="item.name" :class="{deprecated: item.deprecated}" class="item">
 						<documentation-function v-if="'return_type' in item" :fun="item" />
@@ -152,8 +155,6 @@
 				for (const category in this.categories) {
 					Vue.set(this.categoryState, category, localStorage.getItem('documentation/category-' + category) === 'true')
 				}
-				let last: any
-				let index = 1
 				let id = 0
 				for (const item of LeekWars.functions) {
 					if (item.replacement) {
@@ -161,18 +162,10 @@
 					}
 				}
 				for (const item of LeekWars.functions) {
-					item.real_name = item.name
-					if (last != null && last.name === item.name) {
-						item.real_name = last.name + '_' + (++index)
-					} else {
-						index = 1
-					}
 					this.items.push(item)
 					item.lower_name = item.name.toLowerCase()
 					item.id = id++
 					item.data = ''
-
-					last = item
 
 					LeekWars.documentation(locale).then(functions => {
 						if (item.name in functions) {
@@ -186,11 +179,11 @@
 							}
 							item.data = new_data.toLowerCase()
 						} else {
-							let item_data = (this.$t('doc.func_' + (item as any).real_name) as any).toLowerCase()
+							let item_data = (this.$t('doc.func_' + item.name) as any).toLowerCase()
 							for (const i in item.arguments_names) {
-								item_data += (this.$t('doc.func_' + (item as any).real_name + '_arg_' + (parseInt(i, 10) + 1)) as any).toLowerCase()
+								item_data += (this.$t('doc.func_' + item.name + '_arg_' + (parseInt(i, 10) + 1)) as any).toLowerCase()
 							}
-							item_data += (this.$t('doc.func_' + (item as any).real_name + '_return') as any).toLowerCase()
+							item_data += (this.$t('doc.func_' + item.name + '_return') as any).toLowerCase()
 							item.data = item_data
 						}
 						if (item.replacer) {
@@ -206,7 +199,6 @@
 				for (const item of LeekWars.constants) {
 					this.items.push(item)
 					item.lower_name = item.name.toLowerCase()
-					item.real_name = item.name
 					item.id = id++
 					item.data = (this.$t('doc.const_' + item.name) as string).toLowerCase()
 					if (item.replacer) {
@@ -330,20 +322,20 @@
 	#app.app .documentation {
 		padding-bottom: 0;
 	}
-	.column3 {
+	.column4 {
 		position: sticky;
 		top: 12px;
 		height: 100%;
 		.panel {
 			margin-bottom: 0;
 			max-height: 100%;
+			& > div {
+				padding: 0;
+				height: 100%;
+			}
 		}
 	}
-	.column9 {
-		height: 100%;
-	}
-	.column3 .panel > div {
-		padding: 0;
+	.column8 {
 		height: 100%;
 	}
 	.items-list {
@@ -371,8 +363,19 @@
 		cursor: pointer;
 		padding: 3px 10px;
 		display: block;
+		white-space: nowrap;
+		text-overflow: ellipsis;
+		overflow: hidden;
 		&:last-child {
 			margin-bottom: 6px;
+		}
+		.argument {
+			color: #0000D0;
+			font-weight: 500;
+		}
+		.arrow {
+			font-size: 22px;
+			line-height: 14px;
 		}
 	}
 	.items-list .item:hover, .item.router-link-active {

@@ -1,10 +1,10 @@
 <template lang="html">
 	<div v-if="fun" class="doc-function" :class="{deprecated: fun.deprecated}">
 		<h2>
-			{{ fun.name }}(<span v-for="(arg, i) in fun.arguments_names" :key="i"><span v-if="fun.optional[i]">[</span><span v-if="fun.arguments_types[i] != -1" class="argument">{{ $t('doc.arg_type_' + fun.arguments_types[i]) }}</span><span v-else class="argument">?</span>&nbsp;{{ arg }}<span v-if="fun.optional[i]">]</span><span v-if="i < fun.arguments_names.length - 1">, </span>
+			{{ fun.name }}(<span v-for="(arg, i) in fun.arguments_names" :key="i"><span v-if="fun.optional[i]">[</span><span class="argument">{{ $t('doc.arg_type_' + fun.arguments_types[i]) }}</span>&nbsp;{{ arg }}<span v-if="fun.optional[i]">]</span><span v-if="i < fun.arguments_names.length - 1">, </span>
 			</span>)
 			<span v-if="fun.return_type != 0">
-				<span class="arrow">→</span> <span v-if="fun.return_type != -1" class="argument"> {{ $t('doc.arg_type_' + fun.return_type) }}</span><span v-else class="argument">?</span>&nbsp;{{ fun.return_name }}
+				<span class="arrow">→</span> <span class="argument"> {{ $t('doc.arg_type_' + fun.return_type) }}</span>&nbsp;{{ fun.return_name }}
 			</span>
 		</h2>
 		<div v-if="fun.deprecated" v-dochash class="deprecated-message">
@@ -37,19 +37,19 @@
 			</div>
 		</div>
 		<div v-else>
-			<div v-dochash v-code class="content" v-html="$t('doc.func_' + fun.real_name)"></div>
+			<div v-dochash v-code class="content" v-html="$t('doc.func_' + fun.name)"></div>
 
 			<template v-if="fun.arguments_names.length > 0">
 				<h4>{{ $t('doc.parameters') }}</h4>
 				<ul>
-					<li v-for="(arg, i) in fun.arguments_names" :key="i">{{ arg }} <span v-if="fun.optional[i]">(optionnel)</span> : <span v-dochash v-code v-html="$t('doc.func_' + fun.real_name + '_arg_' + (parseInt(i) + 1))"></span></li>
+					<li v-for="(arg, i) in fun.arguments_names" :key="i">{{ arg }} <span v-if="fun.optional[i]">(optionnel)</span> : <span v-dochash v-code v-html="$t('doc.func_' + fun.name + '_arg_' + (parseInt(i) + 1))"></span></li>
 				</ul>
 			</template>
 
 			<div v-if="fun.return_type != 0">
 				<h4>{{ $t('doc.return') }}</h4>
 				<ul>
-					<li>{{ fun.return_name }} : <span v-dochash v-code v-html="$t('doc.func_' + fun.real_name + '_return')"></span>
+					<li>{{ fun.return_name }} : <span v-dochash v-code v-html="$t('doc.func_' + fun.name + '_return')"></span>
 					</li>
 				</ul>
 			</div>

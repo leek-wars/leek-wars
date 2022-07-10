@@ -1,5 +1,6 @@
 {
 	"1_operation": "<b>1</b> operation",
+	"arg_type_-1": "any",
 	"arg_type_1": "number",
 	"arg_type_2": "string",
 	"arg_type_3": "boolean",
