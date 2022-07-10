@@ -165,6 +165,7 @@ import { Problem } from './problem'
 		public serverError: boolean = false
 		public selectedCompletion: number = 0
 		public completions: Keyword[] = []
+		public initialGeneration: number = 0
 		public dialogKeyMap: CodeMirror.KeyMap = {
 			Up: this.up,
 			Down: this.down,
@@ -381,11 +382,6 @@ import { Problem } from './problem'
 			}
 		}
 
-		public hasBeenModified() {
-			this.ai.modified = true
-			// this.removeAllErrors()
-		}
-
 		public show() {
 			if (this.loaded) {
 				this.editor.refresh()
@@ -525,11 +521,21 @@ import { Problem } from './problem'
 			})
 		}
 
+		public save() {
+			this.ai.modified = false
+			this.initialGeneration = (this.editor as any).doc.history.generation
+		}
+
 		public change(CodeMirror: any, changes: CodeMirror.EditorChange) {
 			const userChange = changes.origin === "+input" || changes.origin === "+delete"
-			if (changes.origin !== "setValue") {
-				this.hasBeenModified()
+
+			if (changes.origin === "setValue") {
+				this.initialGeneration = (this.editor as any).doc.history.generation
+			} else {
+				const generation = (this.editor.getDoc() as any).history.generation
+				this.ai.modified = generation !== this.initialGeneration
 			}
+
 			if (changes.origin === "+input" || (this.hintDialog && changes.origin === "+delete")) {
 				// console.log(changes)
 				if (changes.text.length === 1) { // One line of changes (no enter)

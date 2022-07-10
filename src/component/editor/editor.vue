@@ -606,7 +606,7 @@
 			if (!aiEditor) { return }
 			if (aiEditor.saving || !aiEditor.loaded) { return }
 			aiEditor.saving = true
-			aiEditor.ai.modified = false
+			aiEditor.save()
 			aiEditor.serverError = false
 			this.errors = []
 
