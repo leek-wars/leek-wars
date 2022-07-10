@@ -162,10 +162,11 @@
 </template>
 
 <script lang="ts">
+	import { mixins } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import { Component, Vue } from 'vue-property-decorator'
 
-	@Component({ name: 'about', i18n: {} })
+	@Component({ name: 'about', i18n: {}, mixins: [...mixins] })
 	export default class About extends Vue {
 		links = [
 			["Korben", "http://korben.info/leek-wars.html"],
@@ -183,7 +184,7 @@
 				{ name: "Sass", link: "https://sass-lang.com/", image: "sass.svg" },
 				{ name: "JavaScript", link: "http://www.w3schools.com/js/DEFAULT.asp", image: "javascript.png" },
 				{ name: "TypeScript", link: "https://www.typescriptlang.org/", image: "typescript.svg" },
-				{ name: "Code Mirror", link: "http://www.java.com/fr/about/", image: "codemirror.png" },
+				{ name: "CodeMirror", link: "https://codemirror.net/", image: "codemirror.svg" },
 				{ name: "Vue", link: "https://vuejs.org/", image: "vue.png" },
 				{ name: "Chartist", link: "https://gionkunz.github.io/chartist-js/", image: "chartist.png" },
 				{ name: "KaTeX", link: "https://katex.org/", image: "katex.png" },
@@ -199,15 +200,16 @@
 				{ name: "PHP", link: "http://www.php.net/", image: "php.png" },
 				{ name: "Memcached", link: "https://memcached.org/", image: "memcached.svg" },
 				{ name: "Python", link: "https://www.python.org/", image: "python.svg" },
+				{ name: "Docker", link: "https://www.docker.com/", image: "docker.webp" },
 			]},
-			{ name: "leekscript", items: [
-				{ name: "C++", link: "https://fr.cppreference.com/w/", image: "cpp.png" },
-				{ name: "LLVM", link: "https://llvm.org/", image: "llvm.png" },
-				{ name: "GCC", link: "https://gcc.gnu.org/", image: "gcc.svg" },
-				{ name: "GMP", link: "https://gmplib.org/", image: "gmp.png" },
-				{ name: "Valgrind", link: "https://valgrind.org/", image: "valgrind.png" },
-				{ name: "gcov", link: "https://gcc.gnu.org/onlinedocs/gcc/Gcov.html", image: "gcov.png" },
-			]},
+			// { name: "leekscript", items: [
+			// 	{ name: "C++", link: "https://fr.cppreference.com/w/", image: "cpp.png" },
+			// 	{ name: "LLVM", link: "https://llvm.org/", image: "llvm.png" },
+			// 	{ name: "GCC", link: "https://gcc.gnu.org/", image: "gcc.svg" },
+			// 	{ name: "GMP", link: "https://gmplib.org/", image: "gmp.png" },
+			// 	{ name: "Valgrind", link: "https://valgrind.org/", image: "valgrind.png" },
+			// 	{ name: "gcov", link: "https://gcc.gnu.org/onlinedocs/gcc/Gcov.html", image: "gcov.png" },
+			// ]},
 			{ name: "tools", items: [
 				{ name: "git", link: "http://git-scm.com/", image: "git.png" },
 				{ name: "GitHub", link: "https://github.com/", image: "github.svg" },
@@ -216,7 +218,7 @@
 				{ name: "Inkscape", link: "https://inkscape.org/fr/", image: "inkscape.svg" },
 				{ name: "Blender", link: "https://www.blender.org/", image: "blender.svg" },
 				{ name: "Codacy", link: "https://www.codacy.com/", image: "codacy.svg" },
-				{ name: "FileZilla", link: "https://filezilla-project.org/", image: "filezilla.svg" },
+				// { name: "FileZilla", link: "https://filezilla-project.org/", image: "filezilla.svg" },
 			]},
 		]
 
