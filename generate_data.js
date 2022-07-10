@@ -1,6 +1,7 @@
 const fs = require('fs')
 const request = require('request-promise')
 const util = require('util')
+const { execSync } = require('child_process')
 
 const values = [
 	['chips', 'chips', 'chip/get-all', '{[key: string]: ChipTemplate}'],
@@ -20,10 +21,11 @@ const values = [
 ]
 const promises = []
 
+const master = execSync('git rev-parse --abbrev-ref HEAD').toString().trim() === 'master'
+
 let r = 0
 for (const value of values) {
-	// const host = 'http://localhost:8500/'
-	const host = 'https://leekwars.com/'
+	const host = master ? 'https://leekwars.com/' : 'http://localhost:8500/'
 	setTimeout(() => {
 		const p = request(host + 'api/' + value[2])
 		promises.push(p.then((data) => {
@@ -36,7 +38,7 @@ for (const value of values) {
 		}).catch((err) => {
 			console.log("ERROR request failed for", value[0], ":", err.statusCode, err.error)
 			process.exit()
-	})) }, r += 500)
+	})) }, r += (master ? 250 : 0))
 }
 
 setTimeout(() => {
