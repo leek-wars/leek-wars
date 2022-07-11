@@ -624,7 +624,8 @@
 		}
 		.skins, .hats {
 			display: flex;
-			justify-content: space-between;
+			flex-wrap: wrap;
+			gap: 3px;
 		}
 		.skin {
 			width: 35px;
