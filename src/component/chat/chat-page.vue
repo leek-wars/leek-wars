@@ -40,10 +40,20 @@
 
 	@Component({ name: 'chat-page' })
 	export default class ChatPage extends Vue {
+
 		chatLanguage: Language | null = null
+
 		created() {
 			this.chatLanguage = LeekWars.languages[this.$i18n.locale]
 			LeekWars.setTitle(this.$i18n.t('main.chat'))
+		}
+
+		mounted() {
+			LeekWars.footer = false
+		}
+
+		beforeDestroy() {
+			LeekWars.footer = true
 		}
 	}
 </script>

@@ -67,6 +67,10 @@
 			}
 		}
 
+		mounted() {
+			this.updateScroll()
+		}
+
 		beforeDestroy() {
 			this.$root.$off('chat', this.newMessage)
 			this.$root.$off('resize', this.updateScroll)
@@ -87,10 +91,6 @@
 			const messages = this.$refs.messages as HTMLElement
 			if (!messages) { return true }
 			return messages && Math.abs((messages.scrollTop + messages.offsetHeight) - messages.scrollHeight) < 3
-		}
-
-		mounted() {
-			this.updateScroll()
 		}
 
 		scroll() {

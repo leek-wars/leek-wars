@@ -1,19 +1,22 @@
 <template>
-	<router-link v-if="notification" v-ripple :to="link" :notif="notification.id" :type="notification.type" :class="{unread: !notification.read, [notification.clazz]: notification.clazz }" class="notification" @click.native="click">
-		<v-icon v-if="notification.icon" class="image">{{ notification.image }}</v-icon>
-		<img v-else :src="'/image/' + notification.image" class="image">
-		<div class="content">
-			<div class="title" v-html="$t('notification.title_' + notification.type, notification.title)"></div>
-			<div class="message">{{ $t('notification.message_' + notification.type, notification.message) }}</div>
-		</div>
-		<div class="spacer"></div>
-		<span class="date">{{ LeekWars.formatDuration(notification.date) }}</span>
-		<span v-if="resultIcon && LeekWars.notifsResults" class="result">
-			<v-icon :class="resultIcon">{{ resultIcon }}</v-icon>
-		</span>
-		<v-icon v-if="notification.clazz === 'notif-bigwin'" class="large-icon">mdi-crown</v-icon>
-		<v-icon v-else-if="notification.clazz === 'notif-trophy'" class="large-icon">mdi-trophy</v-icon>
-	</router-link>
+	<div v-if="notification" v-ripple :notif="notification.id" :type="notification.type" :class="{unread: !notification.read, [notification.clazz]: notification.clazz }" class="notification" @click="click">
+		<router-link :to="link">
+			<v-icon v-if="notification.icon" class="image">{{ notification.image }}</v-icon>
+			<img v-else :src="'/image/' + notification.image" class="image">
+			<div class="content">
+				<div class="title" v-html="$t('notification.title_' + notification.type, notification.title)"></div>
+				<div class="message">{{ $t('notification.message_' + notification.type, notification.message) }}</div>
+			</div>
+			<div class="spacer"></div>
+			<span class="date">{{ LeekWars.formatDuration(notification.date) }}</span>
+			<span v-if="resultIcon && LeekWars.notifsResults" class="result">
+				<v-icon :class="resultIcon">{{ resultIcon }}</v-icon>
+			</span>
+			<v-icon v-if="notification.clazz === 'notif-bigwin'" class="large-icon">mdi-crown</v-icon>
+			<v-icon v-else-if="notification.clazz === 'notif-trophy'" class="large-icon">mdi-trophy</v-icon>
+		</router-link>
+		<v-btn v-if="!notification.read" class="read" small color="primary" @click.stop="read"><v-icon>mdi-check</v-icon></v-btn>
+	</div>
 </template>
 
 <script lang="ts">
@@ -31,8 +34,12 @@
 		}
 
 		click() {
-			LeekWars.post('notification/read', {notification_id: this.notification.id})
+			LeekWars.post('notification/read', { notification_id: this.notification.id })
 			this.$store.commit('read-notification', this.notification.id)
+		}
+
+		read() {
+			LeekWars.post('notification/read', { notification_id: this.notification.id })
 		}
 	}
 </script>
@@ -40,11 +47,25 @@
 <style lang="scss" scoped>
 	.notification {
 		height: 50px;
-		position: relative;
 		display: flex;
+		min-width: 0;
 		align-items: center;
+		a {
+			align-items: center;
+			position: relative;
+			flex: 1;
+			min-width: 0;
+			display: flex;
+		}
 		&.unread {
 			background-color: rgba(90, 194, 0, 0.20);
+		}
+		.read {
+			display: none;
+			margin-right: 10px;
+		}
+		&:hover .read {
+			display: block;
 		}
 	}
 	.notification:hover {

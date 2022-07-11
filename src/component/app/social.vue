@@ -12,11 +12,16 @@
 
 				<panel v-if="$store.state.notifications.length" toggle="social/notifications" icon="mdi-bell-outline">
 					<template slot="title">
-						<div v-ripple class="title">
-							<router-link to="/notifications">{{ $t('main.notifications') }}</router-link>
+						<router-link v-ripple class="title" to="/notifications">
+							{{ $t('main.notifications') }}
 							<span v-show="$store.state.unreadNotifications" class="label">{{ $store.state.unreadNotifications }}</span>
-						</div>
+						</router-link>
 					</template>
+					<div slot="actions" class="actions">
+						<div v-if="$store.state.unreadNotifications" class="button text" @click="readAllNotifications">
+							<v-icon>mdi-check-all</v-icon>
+						</div>
+					</div>
 					<div slot="content" v-autostopscroll class="content-limit">
 						<notification v-for="notification in $store.state.notifications" :key="notification.id" :notification="notification" @click.native="readNotification(notification)" />
 					</div>
@@ -24,10 +29,10 @@
 
 				<panel v-if="env.SOCIAL && $store.state.farmer.verified && $store.state.conversationsList.length" toggle="social/messages" icon="mdi-email-outline">
 					<template slot="title">
-						<div v-ripple class="title">
-							<router-link to="/messages">{{ $t('main.messages') }}</router-link>
+						<router-link v-ripple class="title" to="/messages">
+							{{ $t('main.messages') }}
 							<span v-show="$store.state.unreadMessages" class="label">{{ $store.state.unreadMessages }}</span>
-						</div>
+						</router-link>
 					</template>
 					<div slot="content" v-autostopscroll class="content-limit">
 						<router-link v-for="chat in $store.state.conversationsList" :key="chat.id" :to="'/messages/conversation/' + chat.id">
@@ -44,9 +49,13 @@
 								<span class="count">({{ $store.state.connected_farmers }} <v-icon class="icon">mdi-account-multiple</v-icon>)</span>
 							</span>
 						</router-link>
+					</template>
+					<div slot="actions" class="actions">
 						<v-menu offset-y>
 							<template v-slot:activator="{ on }">
-								<img :src="chatLanguage.flag" class="language-button" v-on="on">
+								<div class="language-button" v-ripple v-on="on">
+									<img :src="chatLanguage.flag">
+								</div>
 							</template>
 							<v-list :dense="true">
 								<v-list-item v-for="(language, i) in LeekWars.languages" :key="i" class="language" @click="setChatLanguage(language)">
@@ -55,8 +64,6 @@
 								</v-list-item>
 							</v-list>
 						</v-menu>
-					</template>
-					<div slot="actions">
 						<div class="button text" @click="LeekWars.addChat(chatLanguage.chat, ChatType.GLOBAL, 'Chat ' + chatLanguage.code.toUpperCase())">
 							<v-icon>mdi-picture-in-picture-bottom-right</v-icon>
 						</div>
@@ -117,6 +124,10 @@
 
 		readNotification(notification: Notification) {
 			LeekWars.post('notification/read', {notification_id: notification.id})
+		}
+
+		readAllNotifications() {
+			LeekWars.post('notification/read-all')
 		}
 
 		setChatLanguage(language: Language) {
@@ -196,7 +207,14 @@
 		vertical-align: middle;
 	}
 	.header .title {
-		display: inline-block;
+		display: flex;
+		align-items: center;
+		gap: 5px;
+		flex: 1;
+		padding-right: 0;
+	}
+	.header .actions {
+		display: flex;
 	}
 	.content-limit {
 		padding: 0;
@@ -218,12 +236,11 @@
 	}
 	.blabla-chat .language-button {
 		cursor: pointer;
-		height: 36px;
 		max-height: 36px;
-		max-width: none;
-		padding: 5px;
-		margin-left: 4px;
-		vertical-align: bottom;
+		padding: 5px 10px;
+		img {
+			height: 26px;
+		}
 	}
 	.blabla-chat .languages {
 		padding: 0 5px;

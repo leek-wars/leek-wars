@@ -401,7 +401,7 @@
 	.page-wrapper {
 		background: rgba(255, 255, 255, 0.1);
 		padding: 12px;
-		padding-bottom: 1px;
+		padding-bottom: 0;
 	}
 	#app.app .page-wrapper {
 		background: none;
