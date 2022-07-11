@@ -221,7 +221,7 @@
 								<br>
 								<div class="leek-count">{{ LeekWars.battleRoyale.progress }} / 10</div>
 								<br>
-								<v-btn @click="battleRoyaleLeave"><v-icon>mdi-keyboard-backspace</v-icon>&nbsp;Quitter</v-btn>
+								<v-btn @click="battleRoyaleLeave"><v-icon>mdi-keyboard-backspace</v-icon>&nbsp;{{ $t('quit') }}</v-btn>
 							</div>
 						</div>
 					</div>
@@ -330,12 +330,12 @@
 					return
 				}
 			}
-			if (this.category === 'solo' && !params.item) {
+			if ((this.category === 'solo' || this.category === 'battle-royale') && !params.item) {
 				let defaultLeek = parseInt(localStorage.getItem('garden/leek') || '0', 10)
 				if (!(defaultLeek in store.state.farmer!.leeks)) {
 					defaultLeek = LeekWars.first(store.state.farmer!.leeks)!.id
 				}
-				this.$router.replace('/garden/solo/' + defaultLeek)
+				this.$router.replace('/garden/' + this.category + '/' + defaultLeek)
 				return
 			}
 			if (this.category === 'team' && !params.item) {
@@ -366,7 +366,7 @@
 				} else if (this.category === 'team') {
 					this.selectComposition(this.compositions_by_id[item])
 				} else if (this.category === 'battle-royale') {
-					this.selectBattleRoyale()
+					this.selectBattleRoyale(store.state.farmer.leeks[item])
 				} else if (this.category === 'challenge') {
 					this.selectChallenge()
 				}
@@ -408,12 +408,8 @@
 				LeekWars.toast(error)
 			})
 		}
-		selectBattleRoyale() {
-			if (!this.$route.params.item) {
-				this.$router.replace('/garden/battle-royale/' + LeekWars.first(store.state.farmer!.leeks)!.id)
-				return
-			}
-			this.selectedLeek = store.state.farmer!.leeks[parseInt(this.$route.params.item, 10)]
+		selectBattleRoyale(leek: Leek) {
+			this.selectedLeek = leek
 		}
 		battleRoyaleRegister() {
 			if (!this.selectedLeek) { return }
