@@ -507,8 +507,8 @@
 			}
 		}
 		setFightPackPrice(farmer: Farmer) {
-			const ratio = store.state.farmer!.total_level / 1204
-			const priceHabs = Math.round(100000 + Math.pow(ratio, 3) * 4900000)
+			const x = store.state.farmer!.total_level
+			const priceHabs = Math.round(10000 + Math.pow((x - 1) / 1203, 1.5) * (10000000 - 10000))
 			this.items_by_name['fight_pack_100'].price! = priceHabs
 		}
 

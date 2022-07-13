@@ -32,7 +32,7 @@
 		<panel v-if="!loaded">
 			<loader />
 		</panel>
-		<panel v-for="(category, category_id) in statistics" v-else :key="category_id">
+		<panel v-for="(category, category_id) in statistics" v-else :key="category_id" :class="{first: category_id == 1}">
 			<h2>{{ $t('category_' + category_id) }}</h2>
 			<div :class="{ai: category_id == 3, code: category_id == 6}" class="category">
 				<chartist v-if="category_id == 2" :data="chartFightType" :options="chartOptions" class="chart left" type="Pie" />
@@ -40,7 +40,7 @@
 				<chartist v-if="category_id == 3" :data="chartAI" :options="chartOptions" class="chart left" type="Pie" />
 				<chartist v-if="category_id == 6" ref="languageChart" :data="chartLanguages" :options="chartOptions" class="chart left" type="Pie" />
 				<template v-for="(statistic, name, i) in category" v-if="statistic.visible">
-					<div :key="name" :class="{private: statistic.private, show_today: statistic.show_today}" class="statistic" @click="statistic.today_state = statistic.show_today && !statistic.today_state" @mouseenter="category_id == 6 && hoverLanguage(i)" @mouseleave="category_id == 6 && hoverLeave()">
+					<div :key="name" :class="{private: statistic.private, show_today: statistic.show_today}" class="statistic card" @click="statistic.today_state = statistic.show_today && !statistic.today_state" @mouseenter="category_id == 6 && hoverLanguage(i)" @mouseleave="category_id == 6 && hoverLeave()">
 						<div class="label">{{ $t(name) }}</div>
 						<div v-if="!statistic.today_state" :style="{color: category_id == 6 && selectedLanguage === i ? selectedLanguageColor : null}" class="value total">{{ Math.floor(statistic.value).toLocaleString('fr-FR') }}</div>
 						<div v-else class="value today">{{ Math.floor(statistic.today).toLocaleString('fr-FR') }}</div>
@@ -55,6 +55,7 @@
 </template>
 
 <script lang="ts">
+	import { mixins } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import { Component, Vue, Watch } from 'vue-property-decorator'
 	import(/* webpackChunkName: "chartist" */ "@/chartist-wrapper")
@@ -74,7 +75,7 @@
 		today_state!: boolean
 	}
 
-	@Component({ name: 'statistics', i18n: {} })
+	@Component({ name: 'statistics', i18n: {}, mixins: [...mixins] })
 	export default class Statistics extends Vue {
 		loaded: boolean = false
 		statistics: Array<{[key: string]: Statistic}> = []
@@ -86,11 +87,12 @@
 		chartDamage: any = {}
 		chartOptions = {
 			donut: true,
-			donutWidth: 38,
+			donutWidth: 50,
 			startAngle: 90,
 			showLabel: true
 		}
 		actions = [{icon: 'mdi-play', click: () => this.toggleAction()}]
+
 		get chartFightType() {
 			const statistics = this.statistics[FIGHT_CATEGORY]
 			if (!statistics) { return {} }
@@ -98,8 +100,10 @@
 			stats[this.$i18n.t('fight_solo') as string] = statistics.fight_solo.value
 			stats[this.$i18n.t('fight_farmer') as string] = statistics.fight_farmer.value
 			stats[this.$i18n.t('fight_team') as string] = statistics.fight_team.value
-			return {labels: Object.keys(stats),	series: Object.values(stats)}
+			stats[this.$i18n.t('fight_br') as string] = statistics.fight_br.value
+			return { labels: Object.keys(stats), series: Object.values(stats) }
 		}
+
 		get chartFightContext() {
 			const statistics = this.statistics[FIGHT_CATEGORY]
 			if (!statistics) { return {} }
@@ -110,46 +114,51 @@
 			stats[this.$i18n.t('fight_challenge') as string] = statistics.fight_challenge.value
 			return {labels: Object.keys(stats),	series: Object.values(stats)}
 		}
+
 		get chartAI() {
 			const statistics = this.statistics[AI_CATEGORY]
 			if (!statistics) { return {} }
 			let v1 = statistics.ais_v1.value
 			let v2 = statistics.ais_v2.value
-			const sum = v1 + v2
-			v1 = v1 / sum
-			v2 = Math.max(0.04, v2 / sum)
-			return {labels: ['V1', 'V2'], series: [v1, v2]}
+			let v3 = statistics.ais_v3.value
+			let v4 = statistics.ais_v4.value
+			return {labels: ['V1', 'V2', 'V3', 'V4'], series: [v1, v2, v3, v4]}
 		}
+
 		get chartLanguages() {
 			const statistics = this.statistics[CODE_CATEGORY]
 			if (!statistics) { return {} }
 			const stats = {
 				'Java': statistics.lw_code_java,
-				'C++': statistics.lw_code_cpp,
 				'JavaScript': statistics.lw_code_javascript,
 				'PHP': statistics.lw_code_php,
 				'CSS': statistics.lw_code_css,
 				'HTML': statistics.lw_code_html,
 			}
-			const short_names: any = {'Java': 'Java', 'C++': 'C++', 'JavaScript': 'JS', 'PHP': 'PHP', 'CSS': 'CSS', 'HTML': 'HTML'}
+			const short_names: any = {'Java': 'Java', 'JavaScript': 'JS', 'PHP': 'PHP', 'CSS': 'CSS', 'HTML': 'HTML'}
 			const names = Object.keys(stats)
 			for (const n in names) {
 				names[n] = short_names[names[n]]
 			}
 			return {labels: names, series: Object.values(stats)}
 		}
+
 		created() {
 			LeekWars.get('statistic/get-all').then(data => {
 				LeekWars.setTitle(this.$i18n.t('title'))
 				LeekWars.setActions(this.actions)
+
 				this.statistics = data.statistics
+
 				this.statistics[3].operations.value *= 1000000
 				this.statistics[3].operations.speed *= 1000000
 				this.statistics[3].operations.today *= 1000000
 				this.statistics[3].operations.value += Math.floor(Math.random() * 1000000)
 				this.statistics[3].operations.today += Math.floor(Math.random() * 1000000)
 				this.statistics[3].operations.speed += Math.floor(Math.random() * 10000)
+
 				this.getChartDamage()
+
 				for (const c in this.statistics) {
 					for (const s in this.statistics[c]) {
 						const statistic = this.statistics[c][s]
@@ -161,17 +170,21 @@
 						}
 					}
 				}
+
 				this.$root.$emit('loaded')
 				this.playing = localStorage.getItem('statistics/play') !== 'false'
 				if (this.playing) { this.play() }
+
 				this.resize()
 				this.loaded = true
 				this.$root.$on('resize', () => this.resize())
 			})
 		}
+
 		beforeDestroy() {
 			clearInterval(this.interval)
 		}
+
 		resize() {
 			setTimeout(() => {
 				this.$el.querySelectorAll('.chart').forEach((chart, i) => {
@@ -192,14 +205,17 @@
 				})
 			}, 500)
 		}
+
 		toggleAction() {
 			this.playing = !this.playing
 		}
+
 		@Watch('playing')
 		toggle() {
 			localStorage.setItem('statistics/play', '' + this.playing)
 			this.playing ? this.play() : this.pause()
 		}
+
 		play() {
 			this.actions[0].icon = 'mdi-pause'
 			this.interval = setInterval(() => {
@@ -209,10 +225,12 @@
 				}
 			}, DELAY)
 		}
+
 		pause() {
 			this.actions[0].icon = 'mdi-play'
 			if (this.interval) { clearInterval(this.interval) }
 		}
+
 		getChartDamage() {
 			const statistics = this.statistics[FIGHT_CATEGORY]
 			if (!statistics) { return {} }
@@ -220,23 +238,22 @@
 			let direct = statistics.damage.value - statistics.damage_poison.value - statistics.damage_return.value
 			let poison = statistics.damage_poison.value
 			let back = statistics.damage_return.value
-			const sum = direct + poison + back
-			direct = direct / sum
-			poison = poison / sum
-			back = Math.max(0.04, back / sum)
 			stats[this.$i18n.t('chart_damage_direct') as string] = direct
 			stats[this.$i18n.t('chart_damage_poison') as string] = poison
 			stats[this.$i18n.t('chart_damage_return') as string] = back
+			stats[this.$i18n.t('chart_damage_life') as string] = statistics.damage_life.value
 			this.chartDamage = {labels: Object.keys(stats), series: Object.values(stats)}
 		}
+
 		hoverLanguage(i: number) {
-			if (i > 0 && i < 7) {
+			if (i < 7) {
 				const series = (this.$refs.languageChart as Vue[])[0].$el.querySelectorAll('.ct-series')
-				series.forEach((s, j) => s.classList.toggle('selected', j === i - 1))
+				series.forEach((s, j) => s.classList.toggle('selected', j === i))
 				this.selectedLanguage = i
 				this.selectedLanguageColor = getComputedStyle(series[i - 1].querySelector('path')!).stroke
 			}
 		}
+
 		hoverLeave() {
 			this.selectedLanguage = -1
 			;(this.$refs.languageChart as Vue[])[0].$el.querySelectorAll('.ct-series').forEach((s, j) => s.classList.remove('selected'))
@@ -246,14 +263,14 @@
 
 <style lang="scss" scoped>
 	.panel {
-		padding-top: 10px;
 		text-align: center;
 	}
 	h2 {
 		text-align: center;
 		font-weight: 500;
-		font-size: 28px;
 		margin-bottom: 10px;
+		font-size: 22px;
+		color: #111;
 	}
 	h2:before, h2:after {
 		height: 5px;
@@ -263,12 +280,12 @@
 		content: "";
 	}
 	h2:before {
-		background: linear-gradient(to left, #aaa, rgba(0,0,0,0));
-		margin-right: 5px;
+		background: linear-gradient(to left, #777, rgba(0,0,0,0));
+		margin-right: 10px;
 	}
 	h2:after {
-		background: linear-gradient(to right, #aaa, rgba(0,0,0,0));
-		margin-left: 5px;
+		background: linear-gradient(to right, #777, rgba(0,0,0,0));
+		margin-left: 10px;
 	}
 	#app.app h2 {
 		font-size: 22px;
@@ -277,11 +294,6 @@
 		padding-top: 10px;
 		padding-bottom: 20px;
 		text-align: center;
-	}
-	.category {
-		vertical-align: top;
-		padding: 5px 15px;
-		margin-bottom: 10px;
 	}
 	.category.ai {
 		max-width: 850px;
@@ -292,40 +304,39 @@
 		margin: 0 auto;
 	}
 	.statistic {
-		text-align: center;
+		text-align: left;
 		height: 100%;
 		vertical-align: top;
 		display: inline-block;
 		padding: 6px 10px;
-		margin: 10px;
+		margin: 8px;
 		background: white;
-		border-radius: 3px;
-		border-bottom: 2px solid #ddd;
-		padding-bottom: 4px;
-		min-width: 120px;
+		min-width: 130px;
+		.label {
+			margin-bottom: 4px;
+			font-weight: 500;
+		}
+		.unit {
+			display: inline-block;
+			margin-left: 4px;
+		}
+		.type {
+			font-size: 14px;
+			font-weight: 300;
+			text-align: right;
+		}
+		.value {
+			font-size: 20px;
+			display: block;
+			color: #777;
+			text-align: right;
+		}
 	}
 	#app.app .statistic {
 		margin: 5px;
 	}
 	.statistic.private {
 		background: #eee;
-	}
-	.unit {
-		display: inline-block;
-		margin-left: 4px;
-	}
-	.type {
-		font-size: 14px;
-		color: #888;
-		font-weight: 300;
-		text-align: right;
-		margin-top: -3px;
-	}
-	.value {
-		font-size: 21px;
-		display: block;
-		color: #888;
-		text-align: right;
 	}
 	.statistic.show_today {
 		cursor: pointer;
@@ -336,18 +347,11 @@
 	.value.today {
 		color: #00c0e5;
 	}
-	.label {
-		text-align: left;
-		font-size: 16px;
-		color: #888;
-		display: block;
-		font-weight: 300;
-		margin: 0 auto;
-	}
 	.chart {
 		width: 180px;
 		height: 180px;
 		display: inline-block;
+		margin: 5px;
 	}
 	.chart.left {
 		float: left;
@@ -357,36 +361,35 @@
 	}
 	.chart ::v-deep .ct-label {
 		font-size: 13px;
-		fill: rgba(0,0,0,.7);
+		fill: white;
 		font-weight: bold;
 		pointer-events: none;
 	}
 	.chart ::v-deep .ct-series path {
-		cursor: pointer;
-		stroke-width: 38px;
+		stroke-width: 50px;
 		transition: stroke-width 0.1s ease;
 	}
 	.chart ::v-deep .ct-series.selected path {
-		stroke-width: 48px;
+		stroke-width: 57px;
 	}
 	.chart ::v-deep .ct-series-a path {
-		stroke: #55e055;
+		stroke: #003f5c;
 	}
 	.chart ::v-deep .ct-series-b path {
-		stroke: #ffd45d;
+		stroke: #58508d;
 	}
 	.chart ::v-deep .ct-series-c path {
-		stroke: #ff5c5c;
+		stroke: #bc5090;
 	}
 	.chart ::v-deep .ct-series-d path {
-		stroke: #ff61c6;
+		stroke: #ff6361;
 	}
 	.chart ::v-deep .ct-series-e path {
-		stroke: #6179ff;
+		stroke: #ffa600;
 	}
-	.chart ::v-deep .ct-series-f path {
-		stroke: #65e5ff;
-	}
+	// .chart ::v-deep .ct-series-f path {
+	// 	stroke: #ffa600;
+	// }
 	.category[category="6"] {
 		max-width: 650px;
 	}
