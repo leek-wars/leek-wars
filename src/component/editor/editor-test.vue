@@ -111,7 +111,7 @@
 								<characteristic-tooltip  v-slot="{ on }" :characteristic="c" :value="currentLeek[c]" :leek="currentLeek" :test="true">
 									<img v-on="on" :src="'/image/charac/' + c + '.png'">
 								</characteristic-tooltip>
-								<span :contenteditable="!currentLeek.bot" class="stat" :class="'color-' + c" @focusout="characteristicFocusout(c, $event)" v-html="currentLeek[c]"></span>
+								<span :contenteditable="!currentLeek.bot" class="stat" :class="'color-' + c" @keyup.stop @focusout="characteristicFocusout(c, $event)" v-html="currentLeek[c]"></span>
 							</div>
 						</div>
 					</div>
