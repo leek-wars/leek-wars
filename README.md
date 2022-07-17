@@ -26,8 +26,8 @@ production server. When you log into this local version, you will use your real 
 ## Architecture
 ![Banner](https://github.com/leek-wars/leek-wars-meta/blob/master/doc/architecture.svg)
 - Client : this repository
-- Generator : https://github.com/leek-wars/leek-wars-generator-v1
-- LeekScript : https://github.com/leek-wars/leekscript-v1
+- Generator : https://github.com/leek-wars/leek-wars-generator
+- LeekScript : https://github.com/leek-wars/leekscript
 
 ## Hacking
 I gladly accept pull requests to Leek Wars. Before starting work on a feature, see the [contribution guidelines](https://github.com/leek-wars/leek-wars-client/blob/master/CONTRIBUTING.md).
