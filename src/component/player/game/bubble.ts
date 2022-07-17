@@ -4,8 +4,8 @@ import { T } from './texture'
 const round = 10
 const arrowWidth = 10
 const arrowHeight = 10
-const padding = 15
-const font = "12pt Roboto"
+const padding = 11
+const font = "10pt Roboto"
 
 class Bubble {
 	public message!: string
@@ -37,7 +37,7 @@ class Bubble {
 		ctx.font = font
 		const metrics = ctx.measureText(this.message)
 		this.rx = metrics.width / 2 + padding
-		this.ry = 22
+		this.ry = 16
 	}
 
 	public setLama() {
@@ -121,7 +121,7 @@ class Bubble {
 			ctx.textBaseline = "middle"
 			ctx.textAlign = "left"
 			ctx.font = font
-			ctx.fillText(this.message, -this.rx + padding, 0)
+			ctx.fillText(this.message, -this.rx + padding, 1)
 		}
 		ctx.globalAlpha = 1
 		ctx.restore()
