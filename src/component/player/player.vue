@@ -775,6 +775,7 @@
 		display: inline-block;
 		vertical-align: top;
 		padding: 0 8px;
+		white-space: nowrap;
 	}
 	.controls.large .turn {
 		line-height: 50px;
