@@ -215,8 +215,8 @@ abstract class RangeWeapon extends WeaponAnimation {
 
 class Firegun extends RangeWeapon {
 	static FIREGUN_DURATION = 20
-	constructor(game: Game, texture: Texture, cartTexture: Texture | null, sound: Sound, id: number) {
-		super(game, texture, cartTexture, sound, id, DamageType.DEFAULT)
+	constructor(game: Game, texture: Texture, cartTexture: Texture | null, sound: Sound, id: number, damageType: DamageType) {
+		super(game, texture, cartTexture, sound, id, damageType)
 	}
 	public throwBullet(x: number, y: number, z: number, angle: number, position: Position, targets: FightEntity[], caster: FightEntity, cell: Cell) {
 		this.game.particles.addShot(x, y, z, angle)
@@ -290,21 +290,21 @@ class Destroyer extends Firegun {
 	static textures = [T.shots, T.bullet, T.destroyer, T.cart_destroyer]
 	static sounds = [S.double_gun]
 	constructor(game: Game) {
-		super(game, T.destroyer, T.cart_destroyer, S.double_gun, 9)
+		super(game, T.destroyer, T.cart_destroyer, S.double_gun, 9, DamageType.DEFAULT)
 	}
 }
 class UnstableDestroyer extends Firegun {
 	static textures = [T.shots, T.bullet, T.unstable_destroyer, T.cart_unstable_destroyer]
 	static sounds = [S.double_gun]
 	constructor(game: Game) {
-		super(game, T.unstable_destroyer, T.cart_unstable_destroyer, S.double_gun, 9)
+		super(game, T.unstable_destroyer, T.cart_unstable_destroyer, S.double_gun, 9, DamageType.EXPLOSION)
 	}
 }
 class DoubleGun extends Firegun {
 	static textures = [T.shots, T.bullet, T.double_gun, T.cart_double_gun]
 	static sounds = [S.double_gun]
 	constructor(game: Game) {
-		super(game, T.double_gun, T.cart_double_gun, S.double_gun, 3)
+		super(game, T.double_gun, T.cart_double_gun, S.double_gun, 3, DamageType.DEFAULT)
 	}
 	public throwBullet(x: number, y: number, z: number, angle: number, position: Position, targets: FightEntity[]) {
 		this.game.particles.addShot(x, y, z, angle)
@@ -521,7 +521,7 @@ class GrenadeLauncher extends Firegun {
 	static sounds = [S.grenade_shoot, S.explosion]
 
 	constructor(game: Game) {
-		super(game, T.grenade_launcher, T.cart_grenade_launcher, S.grenade_shoot, 7)
+		super(game, T.grenade_launcher, T.cart_grenade_launcher, S.grenade_shoot, 7, DamageType.EXPLOSION)
 	}
 
 	public throwBullet(x: number, y: number, z: number, angle: number, position: Position, targets: FightEntity[], caster: FightEntity, cell: Cell) {
@@ -538,7 +538,7 @@ class IllicitGrenadeLauncher extends Firegun {
 	static sounds = [S.grenade_shoot, S.explosion]
 
 	constructor(game: Game) {
-		super(game, T.illicit_grenade_launcher, T.cart_illicit_grenade_launcher, S.grenade_shoot, 18)
+		super(game, T.illicit_grenade_launcher, T.cart_illicit_grenade_launcher, S.grenade_shoot, 18, DamageType.EXPLOSION)
 	}
 
 	public throwBullet(x: number, y: number, z: number, angle: number, position: Position, targets: FightEntity[], caster: FightEntity, cell: Cell) {
@@ -602,7 +602,7 @@ class Rifle extends Firegun {
 	shoots: number = 0
 	delay: number = Rifle.DELAY
 	constructor(game: Game) {
-		super(game, T.rifle, T.rifle_cartridge, S.rifle, 22)
+		super(game, T.rifle, T.rifle_cartridge, S.rifle, 22, DamageType.DEFAULT)
 	}
 
 	public shoot(leekX: number, leekY: number, handPos: number, angle: number, orientation: number, targetPos: Position, targets: FightEntity[], caster: FightEntity, cell: Cell, scale: number): number {
@@ -634,7 +634,7 @@ class ExplorerRifle extends Firegun {
 	shoots: number = 0
 	delay: number = Rifle.DELAY
 	constructor(game: Game) {
-		super(game, T.explorer_rifle, T.explorer_rifle_cartridge, S.rifle, 22)
+		super(game, T.explorer_rifle, T.explorer_rifle_cartridge, S.rifle, 22, DamageType.DEFAULT)
 	}
 
 	public shoot(leekX: number, leekY: number, handPos: number, angle: number, orientation: number, targetPos: Position, targets: FightEntity[], caster: FightEntity, cell: Cell, scale: number): number {
@@ -670,7 +670,7 @@ class MachineGun extends Firegun {
 	static sounds = [S.machine_gun]
 
 	constructor(game: Game) {
-		super(game, T.machine_gun, T.cart_machine_gun, S.machine_gun, 2)
+		super(game, T.machine_gun, T.cart_machine_gun, S.machine_gun, 2, DamageType.DEFAULT)
 	}
 
 	public throwBullet(x: number, y: number, z: number, angle: number, position: Position, targets: FightEntity[], caster: FightEntity, cell: Cell): number {
@@ -687,21 +687,21 @@ class Magnum extends Firegun {
 	static textures = [T.shots, T.bullet, T.magnum, T.cart_magnum]
 	static sounds = [S.double_gun]
 	constructor(game: Game) {
-		super(game, T.magnum, T.cart_magnum, S.double_gun, 5)
+		super(game, T.magnum, T.cart_magnum, S.double_gun, 5, DamageType.DEFAULT)
 	}
 }
 class Pistol extends Firegun {
 	static textures = [T.shots, T.bullet, T.pistol, T.cart_pistol]
 	static sounds = [S.double_gun]
 	constructor(game: Game) {
-		super(game, T.pistol, T.cart_pistol, S.double_gun, 1)
+		super(game, T.pistol, T.cart_pistol, S.double_gun, 1, DamageType.DEFAULT)
 	}
 }
 class Rhino extends Firegun {
 	static textures = [T.shots, T.bullet, T.rhino, T.rhino_cartridge]
 	static sounds = [S.double_gun]
 	constructor(game: Game) {
-		super(game, T.rhino, T.rhino_cartridge, S.double_gun, 23)
+		super(game, T.rhino, T.rhino_cartridge, S.double_gun, 23, DamageType.DEFAULT)
 	}
 }
 class Shotgun extends Firegun {
@@ -709,7 +709,7 @@ class Shotgun extends Firegun {
 	static sounds = [S.shotgun]
 
 	constructor(game: Game) {
-		super(game, T.shotgun, T.cart_shotgun, S.shotgun, 4)
+		super(game, T.shotgun, T.cart_shotgun, S.shotgun, 4, DamageType.EXPLOSION)
 	}
 	public throwBullet(x: number, y: number, z: number, angle: number, position: Position, targets: FightEntity[], caster: FightEntity, cell: Cell) {
 		this.game.particles.addShot(x, y, z, angle)
@@ -734,7 +734,7 @@ class Fish extends Firegun {
 	private bubbleAngle = 0
 
 	constructor(game: Game) {
-		super(game, T.fish, T.fish_cartridge, S.bubble, 0)
+		super(game, T.fish, T.fish_cartridge, S.bubble, 0, DamageType.DEFAULT)
 	}
 
 	public throwBullet(x: number, y: number, z: number, angle: number, position: Position, targets: FightEntity[], caster: FightEntity, cell: Cell) {
@@ -763,7 +763,7 @@ class Neutrino extends Firegun {
 	static sounds = [S.lightninger]
 
 	constructor(game: Game) {
-		super(game, T.neutrino, T.cart_neutrino, S.lightninger, 27)
+		super(game, T.neutrino, T.cart_neutrino, S.lightninger, 27, DamageType.DEFAULT)
 	}
 
 	public throwBullet(x: number, y: number, z: number, angle: number, position: Position, targets: FightEntity[], caster: FightEntity, cell: Cell) {
@@ -784,7 +784,7 @@ class Lightninger extends Firegun {
 	target_z!: number
 
 	constructor(game: Game) {
-		super(game, T.lightninger, T.cart_lightninger, S.lightninger, 25)
+		super(game, T.lightninger, T.cart_lightninger, S.lightninger, 25, DamageType.DEFAULT)
 	}
 
 	public throwBullet(x: number, y: number, z: number, angle: number, position: Position, targets: FightEntity[], caster: FightEntity, cell: Cell) {
@@ -831,7 +831,7 @@ class EnhancedLightninger extends Firegun {
 	target_z!: number
 
 	constructor(game: Game) {
-		super(game, T.enhanced_lightninger, T.cart_enhanced_lightninger, S.lightninger, 25)
+		super(game, T.enhanced_lightninger, T.cart_enhanced_lightninger, S.lightninger, 25, DamageType.DEFAULT)
 	}
 
 	public throwBullet(x: number, y: number, z: number, angle: number, position: Position, targets: FightEntity[], caster: FightEntity, cell: Cell) {
@@ -874,7 +874,7 @@ class Bazooka extends Firegun {
 	static sounds = [S.rocket, S.explosion]
 
 	constructor(game: Game) {
-		super(game, T.bazooka, T.cart_bazooka, S.rocket, 29)
+		super(game, T.bazooka, T.cart_bazooka, S.rocket, 29, DamageType.EXPLOSION)
 	}
 
 	public throwBullet(x: number, y: number, z: number, angle: number, position: Position, targets: FightEntity[], caster: FightEntity, cell: Cell): number {
