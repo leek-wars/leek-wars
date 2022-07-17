@@ -381,6 +381,9 @@
 			display: flex;
 		}
 	}
+	.column4 {
+		flex: 1 1 320px;
+	}
 	.introduction {
 		text-align: justify;
 	}
