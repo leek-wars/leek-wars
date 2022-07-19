@@ -334,6 +334,9 @@
 	flex: 1;
 	min-height: 0;
 }
+.inventory-panel {
+	height: 100%;
+}
 #app.app .container {
 	margin-bottom: 0;
 }
