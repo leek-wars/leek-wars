@@ -35,12 +35,19 @@
 		@Watch('content', {immediate: true})
 		update() {
 
+			const re = /^((https:\/\/leekwars\.com)?\/image\/|https:\/\/(i\.)?imgur\.com\/)/
 			const options = this.mode === 'encyclopedia' ? {
 				allowedTags: sanitizeHtml.defaults.allowedTags.concat([ 'img', 'center' ]),
 				allowedAttributes: { '*': ['style', 'class', 'width', 'height', 'href', 'src'] },
+				exclusiveFilter: function(frame: any) {
+					return frame.tag === 'img' && !re.test(frame.attribs.src)
+				}
 			} : {
 				allowedTags: sanitizeHtml.defaults.allowedTags.concat([ 'img', 'center' ]),
 				allowedAttributes: { '*': ['style', 'class', 'width', 'height', 'href', 'src'] },
+				exclusiveFilter: function(frame: any) {
+					return frame.tag === 'img' && !re.test(frame.attribs.src)
+				},
 				allowedStyles: {
 					'*': {
 						'padding': [/^.*$/],
