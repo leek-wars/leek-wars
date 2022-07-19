@@ -58,7 +58,7 @@
 	import { mixins } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import { Component, Vue, Watch } from 'vue-property-decorator'
-	import(/* webpackChunkName: "chartist" */ "@/chartist-wrapper")
+	import(/* webpackChunkName: "chartist" */ /* webpackMode: "eager" */ "@/chartist-wrapper")
 
 	const FIGHT_CATEGORY = 2
 	const AI_CATEGORY = 3
