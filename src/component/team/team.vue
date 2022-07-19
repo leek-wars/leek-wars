@@ -29,7 +29,7 @@
 		<div class="container">
 			<panel class="team-emblem first">
 				<div v-if="team" slot="content" class="content">
-					<template v-if="is_member">
+					<template v-if="owner">
 						<tooltip>
 							<template v-slot:activator="{ on }">
 								<div class="emblem-input" v-on="on">
@@ -117,7 +117,7 @@
 							<h4>{{ $t('turret') }}</h4>
 							<div class="level">{{ $t('level_n', [team.level]) }}</div>
 
-							<ai v-if="team.turret_ai" v-ripple :ai="team.turret_ai" :library="false" :small="false" :class="{active: is_member}" @click.native="turretAiDialog = true" />
+							<ai v-if="team.turret_ai" v-ripple :ai="team.turret_ai" :library="false" :small="false" :class="{active: captain}" @click.native="turretAiDialog = captain" />
 							<div v-else-if="is_member" class="no-ai" @click="turretAiDialog = true">{{ $t('no_ai') }}</div>
 						</div>
 					</div>
