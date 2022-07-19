@@ -3,7 +3,7 @@
 	<i18n path="fight.leek_win_x_turns" tag="div">
 		<leek slot="leek" :leek="props.leek" />
 		<template v-slot:value>
-			<b class="color-resistance">{{ parent.$t('fight.n_absolute_shield', [props.value + '%']) }}</b>
+			<b class="color-resistance">{{ parent.$t('fight.n_relative_shield', [props.value + '%']) }}</b>
 		</template>
 		<template v-slot:turns>
 			<b>{{ parent.formatTurns(props.turns) }}</b>
