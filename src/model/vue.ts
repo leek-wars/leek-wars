@@ -74,6 +74,7 @@ Vue.mixin({
 Vue.filter('number', LeekWars.formatNumber)
 Vue.filter('date', LeekWars.formatDate)
 Vue.filter('datetime', LeekWars.formatDateTime)
+Vue.filter('time', LeekWars.formatTimeSeconds)
 Vue.filter('emojis', LeekWars.formatEmojis)
 Vue.filter('duration', LeekWars.formatDuration)
 
