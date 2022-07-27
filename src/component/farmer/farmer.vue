@@ -103,7 +103,7 @@
 							</span>
 							<span v-if="myFarmer" class="edit" @click="openCountryDialog()"></span>
 						</div>
-						<div v-if="farmer.website" class="info website">
+						<div v-if="farmer.website && !/^(https:\/\/leekwars.\w+)?\/api\//.test(farmer.website.trim())" class="info website">
 							<img src="/image/website.png"><a :href="farmer.website" target="_blank" rel="noopener"><span class="text label">{{ farmer.website }}</span></a>
 							<span v-if="myFarmer" class="edit" @click="websiteDialog = true"></span>
 						</div>
