@@ -29,7 +29,7 @@
 	"lw_code_php": "PHP",
 	"lw_code_javascript": "JavaScript",
 	"lw_code_css": "CSS",
-	"lw_code_html": "HTML",
+	"lw_code_vue": "Vue",
 	"lw_code_all": "Total",
 	"damage": "Damage",
 	"heal": "Heal",
@@ -77,5 +77,10 @@
 	"pause": "Pause",
 	"play": "Play",
 	"total": "total",
-	"today": "today"
+	"today": "today",
+	"chart_fight_type": "Fight types",
+	"chart_fight_context": "Fight contexts",
+	"chart_ai_version": "AI versions",
+	"chart_damage_type": "Damage types",
+	"chart_languages": "Languages used in Leek Wars"
 }

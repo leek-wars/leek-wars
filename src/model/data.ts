@@ -751,7 +751,7 @@ const TROPHIES = [
   { id: 313, code: 'weird', noun_gender: 1, adj_gender: 1, noun_translation: 3, adj_translation: 3, habs: 1060900 },                { id: 314, code: 'unbalanced', noun_gender: 1, adj_gender: 1, noun_translation: 3, adj_translation: 3, habs: 160000 },           { id: 315, code: 'unpredictable', noun_gender: 1, adj_gender: 1, noun_translation: 3, adj_translation: 3, habs: 160000 },
   { id: 316, code: 'glacial', noun_gender: 1, adj_gender: 1, noun_translation: 3, adj_translation: 3, habs: 90000 },                { id: 317, code: 'breach', noun_gender: 2, adj_gender: 1, noun_translation: 2, adj_translation: 3, habs: 160000 },               { id: 318, code: 'archivist', noun_gender: 3, adj_gender: 3, noun_translation: 3, adj_translation: 3, habs: 10000 },
   { id: 319, code: 'nice_catch_up', noun_gender: 1, adj_gender: 1, noun_translation: 3, adj_translation: 3, habs: 3240000 },        { id: 320, code: 'expert', noun_gender: 1, adj_gender: 1, noun_translation: 3, adj_translation: 3, habs: 0 },                    { id: 321, code: 'prompt', noun_gender: 1, adj_gender: 1, noun_translation: 3, adj_translation: 3, habs: 0 },
-  { id: 322, code: 'concerned', noun_gender: 1, adj_gender: 1, noun_translation: 3, adj_translation: 3, habs: 0 }
+  { id: 322, code: 'concerned', noun_gender: 1, adj_gender: 1, noun_translation: 3, adj_translation: 3, habs: 0 },                  { id: 323, code: 'lost', noun_gender: 1, adj_gender: 1, noun_translation: 3, adj_translation: 3, habs: 93939 }
 ]
 export { TROPHIES }
 

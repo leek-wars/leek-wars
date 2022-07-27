@@ -35,19 +35,46 @@
 		<panel v-for="(category, category_id) in statistics" v-else :key="category_id" :class="{first: category_id == 1}">
 			<h2>{{ $t('category_' + category_id) }}</h2>
 			<div :class="{ai: category_id == 3, code: category_id == 6}" class="category">
-				<chartist v-if="category_id == 2" :data="chartFightType" :options="chartOptions" class="chart left" type="Pie" />
-				<chartist v-if="category_id == 2" :data="chartFightContext" :options="chartOptions" class="chart left" type="Pie" />
-				<chartist v-if="category_id == 3" :data="chartAI" :options="chartOptions" class="chart left" type="Pie" />
-				<chartist v-if="category_id == 6" ref="languageChart" :data="chartLanguages" :options="chartOptions" class="chart left" type="Pie" />
-				<template v-for="(statistic, name, i) in category" v-if="statistic.visible">
-					<div :key="name" :class="{private: statistic.private, show_today: statistic.show_today}" class="statistic card" @click="statistic.today_state = statistic.show_today && !statistic.today_state" @mouseenter="category_id == 6 && hoverLanguage(i)" @mouseleave="category_id == 6 && hoverLeave()">
-						<div class="label">{{ $t(name) }}</div>
-						<div v-if="!statistic.today_state" :style="{color: category_id == 6 && selectedLanguage === i ? selectedLanguageColor : null}" class="value total">{{ Math.floor(statistic.value).toLocaleString('fr-FR') }}</div>
+				<div v-if="category_id == 1" class="chart-wrap left">
+					<chartist ref="charts" :data="chartLanguage" :options="chartOptions" class="chart" type="Pie" />
+					<div class="title">{{ $t('chart_language') }}</div>
+				</div>
+				<div v-if="category_id == 2" class="chart-wrap left">
+					<chartist ref="charts" :data="chartFightType" :options="chartOptions" class="chart" type="Pie" />
+					<div class="title">{{ $t('chart_fight_type') }}</div>
+				</div>
+				<div v-if="category_id == 3" class="chart-wrap left">
+					<chartist ref="charts" :data="chartAI" :options="chartOptions" class="chart" type="Pie" />
+					<div class="title">{{ $t('chart_ai_version') }}</div>
+				</div>
+				<div v-if="category_id == 6" class="chart-wrap left">
+					<chartist ref="charts" :data="chartLanguages" :options="chartOptions" class="chart" type="Pie" />
+					<div class="title">{{ $t('chart_languages') }}</div>
+				</div>
+				<div v-if="category_id == 7" class="chart-wrap right">
+					<chartist ref="charts" :data="chartItems" :options="chartOptions" class="chart" type="Pie" />
+					<div class="title">{{ $t('chart_items') }}</div>
+				</div>
+				<div v-if="category_id == 8" class="chart-wrap left">
+					<chartist ref="charts" :data="chartChests" :options="chartOptions" class="chart left" type="Pie" />
+					<div class="title">{{ $t('chart_chests') }}</div>
+				</div>
+				<template v-for="(statistic, name) in category">
+					<div v-if="statistic.visible" :key="name" :class="{private: statistic.private, show_today: statistic.show_today, color: selectedStatistic === name && !!selectedStatisticColor}" class="statistic card" :style="{background: selectedStatistic === name ? selectedStatisticColor : null}" @click="statistic.today_state = statistic.show_today && !statistic.today_state" @mouseenter="hoverStat(name)" @mouseleave="hoverLeave">
+						<div class="label"><v-icon v-if="statistic.icon">{{ 'mdi-' + statistic.icon }}</v-icon> {{ $t(name) }}</div>
+						<div v-if="!statistic.today_state" class="value total">{{ Math.floor(statistic.value).toLocaleString('fr-FR') }}</div>
 						<div v-else class="value today">{{ Math.floor(statistic.today).toLocaleString('fr-FR') }}</div>
 						<div class="type">{{ $t(statistic.today_state ? 'today' : 'total') }}</div>
 					</div>
-					<div v-if="name === 'resurrects' || name === 'ai_characters'" :key="name + '1'" class="delimiter"></div>
-					<chartist v-if="name === 'resurrects'" :key="name + '2'" :data="chartDamage" :options="chartOptions" class="chart right" type="Pie" />
+					<div v-if="name === 'fight_tournament' || name === 'says_length' || name === 'ais_v4' || name === 'lang_en'" :key="name + '1'" class="delimiter"></div>
+					<div v-if="name === 'damage'" class="chart-wrap left"  :key="name + '2'">
+						<chartist ref="charts" :data="chartDamage" :options="chartOptions" class="chart" type="Pie" />
+						<div class="title">{{ $t('chart_damage_type') }}</div>
+					</div>
+					<div v-if="name === 'fight_tournament'" class="chart-wrap right" :key="name + '2'">
+						<chartist ref="charts" :data="chartFightContext" :options="chartOptions" class="chart" type="Pie" />
+						<div class="title">{{ $t('chart_fight_context') }}</div>
+					</div>
 				</template>
 			</div>
 		</panel>
@@ -60,9 +87,12 @@
 	import { Component, Vue, Watch } from 'vue-property-decorator'
 	import(/* webpackChunkName: "chartist" */ /* webpackMode: "eager" */ "@/chartist-wrapper")
 
+	const GENERAL_CATEGORY = 1
 	const FIGHT_CATEGORY = 2
 	const AI_CATEGORY = 3
 	const CODE_CATEGORY = 6
+	const ITEM_CATEGORY = 7
+	const CHEST_CATEGORY = 8
 	const DELAY = 80
 
 	class Statistic {
@@ -82,9 +112,8 @@
 		interpolated: Statistic[] = []
 		interval: any = null
 		playing: boolean = true
-		selectedLanguage: number = -1
-		selectedLanguageColor: string | null = null
-		chartDamage: any = {}
+		selectedStatistic: string = ''
+		selectedStatisticColor: string = ''
 		chartOptions = {
 			donut: true,
 			donutWidth: 50,
@@ -94,53 +123,40 @@
 		actions = [{icon: 'mdi-play', click: () => this.toggleAction()}]
 
 		get chartFightType() {
-			const statistics = this.statistics[FIGHT_CATEGORY]
-			if (!statistics) { return {} }
-			const stats: any = {}
-			stats[this.$i18n.t('fight_solo') as string] = statistics.fight_solo.value
-			stats[this.$i18n.t('fight_farmer') as string] = statistics.fight_farmer.value
-			stats[this.$i18n.t('fight_team') as string] = statistics.fight_team.value
-			stats[this.$i18n.t('fight_br') as string] = statistics.fight_br.value
-			return { labels: Object.keys(stats), series: Object.values(stats) }
+			return this.makeChartData(FIGHT_CATEGORY, ['fight_solo', 'fight_farmer', 'fight_team', 'fight_br'])
 		}
-
 		get chartFightContext() {
-			const statistics = this.statistics[FIGHT_CATEGORY]
-			if (!statistics) { return {} }
-			const stats: any = {}
-			stats[this.$i18n.t('fight_garden') as string] = statistics.fight_garden.value
-			stats[this.$i18n.t('fight_test') as string] = statistics.fight_test.value
-			stats[this.$i18n.t('fight_tournament') as string] = statistics.fight_tournament.value
-			stats[this.$i18n.t('fight_challenge') as string] = statistics.fight_challenge.value
-			return {labels: Object.keys(stats),	series: Object.values(stats)}
+			return this.makeChartData(FIGHT_CATEGORY, ['fight_garden', 'fight_test', 'fight_tournament', 'fight_challenge'])
 		}
-
+		get chartDamage() {
+			return this.makeChartData(FIGHT_CATEGORY, ['damage_direct', 'damage_poison', 'damage_return', 'damage_life'])
+		}
 		get chartAI() {
-			const statistics = this.statistics[AI_CATEGORY]
-			if (!statistics) { return {} }
-			let v1 = statistics.ais_v1.value
-			let v2 = statistics.ais_v2.value
-			let v3 = statistics.ais_v3.value
-			let v4 = statistics.ais_v4.value
-			return {labels: ['V1', 'V2', 'V3', 'V4'], series: [v1, v2, v3, v4]}
+			return this.makeChartData(AI_CATEGORY, ['ais_v1', 'ais_v2', 'ais_v3', 'ais_v4'])
+		}
+		get chartLanguage() {
+			return this.makeChartData(GENERAL_CATEGORY, ['lang_fr', 'lang_en'])
+		}
+		get chartLanguages() {
+			return this.makeChartData(CODE_CATEGORY, ['lw_code_java', 'lw_code_javascript', 'lw_code_php', 'lw_code_css', 'lw_code_vue'])
+		}
+		get chartItems() {
+			return this.makeChartData(ITEM_CATEGORY, [ 'item_resource', 'item_weapon', 'item_chip', 'item_potion', 'item_hat', 'item_pomp' ])
+		}
+		get chartChests() {
+			return this.makeChartData(CHEST_CATEGORY, [ 'chest_wood', 'chest_iron', 'chest_diamond' ])
 		}
 
-		get chartLanguages() {
-			const statistics = this.statistics[CODE_CATEGORY]
+		makeChartData(category: number, values: string[]) {
+			const statistics = this.statistics[category]
 			if (!statistics) { return {} }
-			const stats = {
-				'Java': statistics.lw_code_java,
-				'JavaScript': statistics.lw_code_javascript,
-				'PHP': statistics.lw_code_php,
-				'CSS': statistics.lw_code_css,
-				'HTML': statistics.lw_code_html,
+			const total = values.reduce((t, s) => t + statistics[s].value, 0)
+			const filtered_values = values.filter(s => statistics[s].value / total > 0.01)
+			filtered_values.sort((a, b) => statistics[b].value - statistics[a].value)
+			return {
+				labels: filtered_values.map(s => this.$i18n.te(s + '_chart') ? this.$i18n.t(s + '_chart') : this.$i18n.t(s)),
+				series: filtered_values.map(s => { return { value: statistics[s].value, meta: s } })
 			}
-			const short_names: any = {'Java': 'Java', 'JavaScript': 'JS', 'PHP': 'PHP', 'CSS': 'CSS', 'HTML': 'HTML'}
-			const names = Object.keys(stats)
-			for (const n in names) {
-				names[n] = short_names[names[n]]
-			}
-			return {labels: names, series: Object.values(stats)}
 		}
 
 		created() {
@@ -156,8 +172,6 @@
 				this.statistics[3].operations.value += Math.floor(Math.random() * 1000000)
 				this.statistics[3].operations.today += Math.floor(Math.random() * 1000000)
 				this.statistics[3].operations.speed += Math.floor(Math.random() * 10000)
-
-				this.getChartDamage()
 
 				for (const c in this.statistics) {
 					for (const s in this.statistics[c]) {
@@ -192,14 +206,14 @@
 					chart.querySelectorAll('.ct-series').forEach((e, j) => {
 						e.addEventListener('mouseenter', () => {
 							e.classList.add('selected')
-							if (i === 4) {
-								this.selectedLanguage = j + 1
-								this.selectedLanguageColor = getComputedStyle(e.querySelector('path')!).stroke
-							}
+							const path = e.querySelector('path')!
+							this.selectedStatistic = path.attributes.getNamedItem('ct:meta')!.value
+							this.selectedStatisticColor = getComputedStyle(path).stroke
 						})
 						e.addEventListener('mouseleave', () => {
 							e.classList.remove('selected')
-							this.selectedLanguage = -1
+							this.selectedStatistic = ''
+							this.selectedStatisticColor = ''
 						})
 					})
 				})
@@ -231,32 +245,31 @@
 			if (this.interval) { clearInterval(this.interval) }
 		}
 
-		getChartDamage() {
-			const statistics = this.statistics[FIGHT_CATEGORY]
-			if (!statistics) { return {} }
-			const stats: any = {}
-			let direct = statistics.damage.value - statistics.damage_poison.value - statistics.damage_return.value
-			let poison = statistics.damage_poison.value
-			let back = statistics.damage_return.value
-			stats[this.$i18n.t('chart_damage_direct') as string] = direct
-			stats[this.$i18n.t('chart_damage_poison') as string] = poison
-			stats[this.$i18n.t('chart_damage_return') as string] = back
-			stats[this.$i18n.t('chart_damage_life') as string] = statistics.damage_life.value
-			this.chartDamage = {labels: Object.keys(stats), series: Object.values(stats)}
-		}
-
-		hoverLanguage(i: number) {
-			if (i < 7) {
-				const series = (this.$refs.languageChart as Vue[])[0].$el.querySelectorAll('.ct-series')
-				series.forEach((s, j) => s.classList.toggle('selected', j === i))
-				this.selectedLanguage = i
-				this.selectedLanguageColor = getComputedStyle(series[i - 1].querySelector('path')!).stroke
-			}
+		hoverStat(stat: string) {
+			// console.log("hoverStat", stat)
+			;(this.$refs.charts as Vue[]).forEach(chart => {
+				const series = chart.$el.querySelectorAll('.ct-series')
+				series.forEach(s => {
+					const path = s.querySelector('path')!
+					const name = path.attributes.getNamedItem('ct:meta')
+					if (name && name.value === stat) {
+						s.classList.add('selected')
+						this.selectedStatisticColor = getComputedStyle(path).stroke
+					}
+				})
+			})
+			this.selectedStatistic = stat
 		}
 
 		hoverLeave() {
-			this.selectedLanguage = -1
-			;(this.$refs.languageChart as Vue[])[0].$el.querySelectorAll('.ct-series').forEach((s, j) => s.classList.remove('selected'))
+			this.selectedStatistic = ''
+			this.selectedStatisticColor = ''
+			;(this.$refs.charts as Vue[]).forEach(chart => {
+				const series = chart.$el.querySelectorAll('.ct-series')
+				series.forEach(s => {
+					s.classList.remove('selected')
+				})
+			})
 		}
 	}
 </script>
@@ -315,6 +328,13 @@
 		.label {
 			margin-bottom: 4px;
 			font-weight: 500;
+			display: flex;
+			align-items: center;
+			gap: 4px;
+			.v-icon {
+				font-size: 16px;
+				transition: none;
+			}
 		}
 		.unit {
 			display: inline-block;
@@ -330,6 +350,20 @@
 			display: block;
 			color: #777;
 			text-align: right;
+			&.today {
+				color: #00c0e5;
+			}
+		}
+		&.show_today:hover .value.total {
+			color: #222;
+		}
+		&.color {
+			.value, .value.total, .label, .type {
+				color: white;
+			}
+		}
+		&.show_today.color:hover .value {
+			color: white;
 		}
 	}
 	#app.app .statistic {
@@ -341,23 +375,25 @@
 	.statistic.show_today {
 		cursor: pointer;
 	}
-	.statistic.show_today:hover .value.total {
-		color: #222;
-	}
-	.value.today {
-		color: #00c0e5;
+	.chart-wrap {
+		display: inline-flex;
+		flex-direction: column;
+		align-items: center;
+		margin-top: -6px;
+		&.left {
+			float: left;
+		}
+		&.right {
+			float: right;
+		}
+		.title {
+			font-weight: 500;
+		}
 	}
 	.chart {
 		width: 180px;
 		height: 180px;
-		display: inline-block;
 		margin: 5px;
-	}
-	.chart.left {
-		float: left;
-	}
-	.chart.right {
-		float: right;
 	}
 	.chart ::v-deep .ct-label {
 		font-size: 13px;
@@ -370,7 +406,7 @@
 		transition: stroke-width 0.1s ease;
 	}
 	.chart ::v-deep .ct-series.selected path {
-		stroke-width: 57px;
+		stroke-width: 60px !important;
 	}
 	.chart ::v-deep .ct-series-a path {
 		stroke: #003f5c;
@@ -402,6 +438,6 @@
 		vertical-align: top;
 	}
 	.delimiter {
-		margin: 20px;
+		margin: 35px;
 	}
 </style>
