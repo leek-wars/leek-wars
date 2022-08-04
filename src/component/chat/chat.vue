@@ -370,7 +370,7 @@
 			this.deleteDialog = false
 			if (this.deletedMessage) {
 				const ids = Object.entries(this.deletedMessages).filter(e => e[1]).map(e => e[0]).join(',')
-				LeekWars.post('message/delete', { messages: ids, mute: this.censorMute })
+				LeekWars.delete('message/delete', { messages: ids, mute: this.censorMute })
 			}
 		}
 
