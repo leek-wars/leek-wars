@@ -25,7 +25,7 @@
 							<div class="name">
 								<v-icon v-if="category.icon">{{ category.icon }}</v-icon>
 								<img v-else :src="category.image">
-								{{ $t('cat_' + category.name) }}
+								{{ category.name }}
 							</div>
 							<div v-for="chat in category.chats" :key="chat.id" class="conversation chat-preview" :class="{unread: $store.state.chat[chat.id] && !$store.state.chat[chat.id].read, notifications: $store.state.chat[chat.id] && $store.state.chat[chat.id].notifications}">
 								<router-link class="wrapper" :to="'/chat/' + chat.id" v-ripple>
@@ -101,19 +101,19 @@
 
 		get chats() {
 			const chats = [
-				{ name: 'fr', image: '/image/flag/fr.png', chats: [
+				{ name: 'Français', image: '/image/flag/fr.png', chats: [
 					{ id: 1, name: 'Général', icon: 'mdi-chat-outline' },
 					{ id: 32506, name: 'Aide', icon: 'mdi-help-circle-outline' },
 					{ id: 32507, name: 'Programmation', icon: 'mdi-code-braces' },
 				]},
-				{ name: 'en', image: '/image/flag/gb.png', chats: [
+				{ name: 'English', image: '/image/flag/gb.png', chats: [
 					{ id: 2, name: 'General', icon: 'mdi-chat-outline' },
 					{ id: 32508, name: 'Help', icon: 'mdi-help-circle-outline' },
 					{ id: 32509, name: 'Programming', icon: 'mdi-code-braces' },
 				]}
 			] as any[]
 			if (this.$store.state.farmer && this.$store.state.farmer.team) {
-				chats.push({name: 'team', icon: 'mdi-account-multiple', chats: [
+				chats.push({name: this.$t('cat_team'), icon: 'mdi-account-multiple', chats: [
 					{ id: this.$store.state.farmer.team.chat, name: this.$store.state.farmer.team.name, icon: 'mdi-chat-outline' },
 				]})
 			}

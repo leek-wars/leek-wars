@@ -6,5 +6,10 @@
 	"quit_confirm": "Do you want to quit this conversation? You will not be able to see the previous messages.",
 	"quit_conversation": "Quit conversation",
 	"send": "Send",
-	"title": "Chats"
+	"title": "Chats",
+	"cat_team": "Team",
+	"cat_private": "Private Messages",
+	"team": "Team",
+	"enable_notifications": "Enable notifications",
+	"disable_notifications": "Disable notifications"
 }
