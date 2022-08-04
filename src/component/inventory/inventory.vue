@@ -21,7 +21,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="container">
+		<div class="container last">
 			<panel :icon="LeekWars.mobile ? '' : 'mdi-treasure-chest'" class="inventory-panel last">
 				<template slot="title">
 					<div><span v-if="!LeekWars.mobile">{{ $t('main.inventory') }}</span> ({{ filtered_inventory.length }}<span v-if="filter !== Filter.ALL"> / {{ inventory.length }}</span>)</div>

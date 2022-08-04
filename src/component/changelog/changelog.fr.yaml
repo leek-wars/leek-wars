@@ -1,5 +1,52 @@
+231:
+  title: Chats, coffres, 12 ressources, 1 trophée, statistiques et classements fun.
+  added:
+    - "Ajout de coffres apparaissant aléatoirement en combat. #img_231_chests"
+    - "Chat : ajout de canaux, chargement des anciens messages en scrollant. #img_231_chats"
+    - "Chat : complétion des pseudos, notification si quelqu'un vous mentionne. #img_231_pseudo #img_231_mention #img_231_mention_notif"
+    - "Chat : bouton pour revenir en bas du chat, pastille non lu sur les chats (avec option pour les activer). #img_231_chat_unread"
+    - "Nouveaux classements fun : trèfles, combats totaux, BR gagnées. #img_231_fun_ranking"
+    - "Ajout de 12 nouvelles ressources. #img_231_resources"
+    - "1 nouveau trophée + réajustement des points d'une dizaine de trophées. #img_231_trophy"
+  improved:
+    - "Amélioration de la page statistiques et ajout de nombreuses statistiques. #img_231_stats"
+    - "Documentation : les états ouvert/fermé des catégories sont conservés."
+    - "Ajout de statistiques sur la page trophées + séparation Habs gagnés combat/trophées/boîtes. #img_231_earned"
+    - "Documentation : ajout des types d'arguments et de retour dans la liste de gauche. #img_231_doc"
+    - Ajout d'un brouillon sur l'écriture de topics dans le forum.
+    - "Mise à jour des technologies sur la page à propos. #img_231_about"
+    - La taille de l'historique de l'éditeur passe de 200 à 500.
+    - "Ajout de useChip sans second argument pour lancer la puce sur soi-même. #img_231_usechip"
+    - Arrêt de l'IA quand l'utilisation d'une arme ou d'une puce a engendré la mort du lanceur.
+    - L'éditeur ne marque plus une IA comme modifée après une modification suivie d'une annulation.
+    - "Combat : l'entité qui joue actuellement est davantage visible dans la chronologie en bas. #img_231_player"
+    - "Battle Royale : redirection vers le combat qui se lance seulement si on est sur la page potager."
+    - "Battle Royale : le poireau sélectionné dans le potager est conservé entre plusieurs combats."
+    - "Ajout d'un bouton pour marquer comme lu une ou toutes les notifications. #img_231_notif"
+    - "La limite de taille de say() passe de 200 à 100 + style de bulle plus petit. #img_231_say"
+    - Plus possible de changer l'IA de la tourelle quand l'on est pas capitaine.
+    - Accélération du chargement du classement fun.
+    - Les trophées en combat ne sont pas affichés si ils sont secrets et non débloqués.
+    - "Forum : chat directement sous le forum."
+    - "Chat : accélération du chargement de nombreux messages."
+    - "Chat : liste des noms des réactions + clic sur une réaction pour ajouter la même. #img_231_reactions"
+    - "Chat : sélection des commandes avec flèches haut/bas."
+    - "Chat : bouton pour fermer les blocs de code. #img_231_chat_code"
+    - "Chat : possibilité de supprimer un message #img_231_delete"
+  fixed:
+    - "Documentation : indexOf dupliquée, argument manquant mapMap, retour de search."
+    - "LS : inArray, search et mapSearch trouvent bien les listes ou tables identiques."
+    - Correction de la notification de montée de niveau qui n'arrivait pas en direct.
+    - Correction de la mise à jour des commentaires sur la page rapport de combat.
+    - Ajout d'une erreur explicite lors d'un combat échoué au lieu d'un chargement infini.
+    - Correction du trophée Délocaliseur (deux conditions).
+    - Correction d'un décalage sur le décompte du potager du à l'heure d'été.
+    - "Chat : corrections sur les commandes."
+    - "Chat : correction du bug de grand texte."
+    - Correction du trophée "Chérie, j'ai rétréci le poireau" (merci à Gandhi et nytope).
+
 230:
-  title: LeekScript 4 et améliorations diverses
+  title: LeekScript 4 et améliorations diverses.
   added:
     - "#ai LeekScript 4 : Listes et Tables, Entiers 64 bits, Paramètres par défaut, 56 Fonctions et +. #img_230_map #img_230_number #img_230_function"
     - Les Battles Royales sont disponibles à partir du niveau 20 au lieu de 50.

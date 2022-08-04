@@ -1,5 +1,5 @@
 <template lang="html">
-	<div class="changelog-page">
+	<div class="page changelog-page">
 		<div class="page-header page-bar">
 			<h1>{{ $t('main.changelog') }}</h1>
 			<div class="tabs">

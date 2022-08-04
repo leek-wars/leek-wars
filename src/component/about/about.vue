@@ -217,7 +217,7 @@
 				{ name: "GIMP", link: "https://www.gimp.org/fr/", image: "gimp.svg" },
 				{ name: "Inkscape", link: "https://inkscape.org/fr/", image: "inkscape.svg" },
 				{ name: "Blender", link: "https://www.blender.org/", image: "blender.svg" },
-				{ name: "Codacy", link: "https://www.codacy.com/", image: "codacy.svg" },
+				// { name: "Codacy", link: "https://www.codacy.com/", image: "codacy.svg" },
 				// { name: "FileZilla", link: "https://filezilla-project.org/", image: "filezilla.svg" },
 			]},
 		]

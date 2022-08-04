@@ -1,3 +1,50 @@
+231:
+  title: Chats, chests, 12 resources, 1 trophy, statistics and fun rankings.
+  added:
+    - "Added randomly appearing chests in fights. #img_231_chests"
+    - "Chat: added channels, load old messages when scrolling. #img_231_chats"
+    - "Chat: pseudo completion, notification if someone mentions you. #img_231_pseudo #img_231_mention #img_231_mention_notif"
+    - "Chat: button to return to bottom of chat, unread markers (with option to turn them on). #img_231_chat_unread"
+    - "New fun leaderboards: clovers, total fights, BR won. #img_231_fun_ranking"
+    - "Added 12 new resources. #img_231_resources"
+    - "1 new trophy + readjustment of points for about 10 trophies. #img_231_trophy"
+  improved:
+    - "Improved stats page and added many stats. #img_231_stats"
+    - "Documentation: open/closed states of categories are kept."
+    - "Added stats on the trophies page + separation Habs won combat/trophies/boxes. #img_231_earned"
+    - "Documentation: added argument and return types to the list on the left. #img_231_doc"
+    - Added a draft on writing topics in the forum.
+    - "Updated technologies on the about page. #img_231_about"
+    - Increased editor history size from 200 to 500.
+    - "Added useChip without second argument to launch the chip on itself. #img_231_usechip"
+    - Stopped the AI when the use of a weapon or a chip caused the death of the launcher.
+    - The editor no longer marks an AI as modified after a modification followed by a cancellation.
+    - "Combat: the entity currently playing is more visible in the timeline at the bottom. #img_231_player"
+    - "Battle Royale: redirection to the battle that only launches if you are on the garden page."
+    - "Battle Royale: the selected leek in the vegetable garden is kept between several fights."
+    - "Added a button to mark as read one or all notifications. #img_231_notif"
+    - "say() size limit decreased from 200 to 100 + smaller bubble style. #img_231_say"
+    - No longer possible to change the turret AI when you are not a captain.
+    - Loading of the fun rankings has been accelerated.
+    - Trophies in battle are not displayed if they are secret and not unlocked.
+    - "Forum : chat directly under the forum."
+    - "Chat: speed up loading of many messages."
+    - "Chat: list of reaction names + click on a reaction to add the same. #img_231_reactions"
+    - "Chat : selection of commands with up/down arrows."
+    - "Chat: button to close code blocks. #img_231_chat_code"
+    - "Chat: possibility to delete a message. #img_231_delete"
+  fixed:
+    - "Documentation: duplicate indexOf, missing argument mapMap, return from search."
+    - "LS: inArray, search and mapSearch find identical lists or tables correctly."
+    - Fixed level up notification not coming live.
+    - Fixed comment update on the battle report page.
+    - Added an explicit error when a fight failed instead of infinite loading.
+    - Fixed trophy delocalizer (two conditions).
+    - Fixed a lag on the vegetable garden countdown due to daylight saving time.
+    - "Chat: corrections on the commands."
+    - "Chat: fixed large text bug."
+    - "Honey, I shrunk the leek trophy fixed (thanks to Gandhi and nytope)."
+
 230:
   title: LeekScript 4 and various improvements
   added:
