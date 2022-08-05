@@ -5,7 +5,7 @@
 			<v-icon>mdi-refresh</v-icon>&nbsp;<span>{{ $t('refresh') }}</span>
 		</v-btn>
 	</error>
-	<div v-else>
+	<div class="page" v-else>
 		<div class="page-header page-bar">
 			<div>
 				<h1>{{ $t('title') }}</h1>
@@ -463,7 +463,13 @@
 					this.challenge()
 				}
 				LeekWars.setActions([{icon: 'mdi-undo', click: () => this.$router.push('/fight/' + id)}])
-				LeekWars.setTitle(this.$i18n.t('title') + " - " + this.fight.team1_name + " vs " + this.fight.team2_name)
+				let title = this.$i18n.t('title') + " - "
+				if (this.fight.type === FightType.BATTLE_ROYALE) {
+					title += "Battle Royale"
+				} else {
+					title += this.fight.team1_name + " vs " + this.fight.team2_name
+				}
+				LeekWars.setTitle(title)
 				this.$root.$emit('loaded')
 				this.loaded = true
 			})

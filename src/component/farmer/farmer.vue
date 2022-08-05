@@ -818,7 +818,7 @@
 			if (!this.farmer || this.tournamentRange || this.tournamentRangeLoading) { return }
 			this.tournamentRangeLoading = true
 			const power = Math.round(Object.values(this.farmer.leeks).reduce((p, l) => p + l.level ** LeekWars.POWER_FACTOR, 0))
-			LeekWars.post('tournament/range-farmer', {power}).then(d => this.tournamentRange = d)
+			LeekWars.get('tournament/range-farmer/' + power).then(d => this.tournamentRange = d)
 		}
 
 		giveTrophy() {

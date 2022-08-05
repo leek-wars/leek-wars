@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div class="page">
 		<div class="page-header page-bar">
 			<h1><router-link to="/admin">Administration</router-link> > Chapeaux</h1>
 		</div>
@@ -21,7 +21,7 @@
 	export default class AdminHats extends Vue {
 
 		created() {
-			console.log("created", LeekWars.weapons, LeekWars.weapons[1 + Math.random() * 20 | 0].item)
+			// console.log("created", LeekWars.weapons, LeekWars.weapons[1 + Math.random() * 20 | 0].item)
 		}
 
 		get all_weapons() {

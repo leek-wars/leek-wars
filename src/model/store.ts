@@ -523,7 +523,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			if (!chat) {
 				const last_farmer = data.farmers.find((f: any) => f.id === data.last_farmer_id)
 				const other_farmer = data.farmers.find((f: any) => f.id !== state.farmer!.id)
-				chat = new Chat(data.id, data.type ? data.type : ChatType.PM, other_farmer.name, true)
+				chat = new Chat(data.id, data.type ? data.type : ChatType.PM, other_farmer ? other_farmer.name : '?', true)
 				chat.last_date = data.last_date
 				chat.last_farmer = last_farmer
 				chat.last_message = data.last_message

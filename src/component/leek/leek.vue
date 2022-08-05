@@ -1081,12 +1081,12 @@
 		loadTournamentRange() {
 			if (!this.leek || this.tournamentRange || this.tournamentRangeLoading) { return }
 			this.tournamentRangeLoading = true
-			LeekWars.post('tournament/range-leek', {level: this.leek.level}).then(d => this.tournamentRange = d)
+			LeekWars.get('tournament/range-leek/' + this.leek.level).then(d => this.tournamentRange = d)
 		}
 		loadBRRange() {
 			if (!this.leek || this.brRange || this.brRangeLoading) { return }
 			this.brRangeLoading = true
-			LeekWars.post('tournament/range-br', {level: this.leek.level}).then(d => this.brRange = d)
+			LeekWars.get('tournament/range-br/' + this.leek.level).then(d => this.brRange = d)
 		}
 	}
 </script>

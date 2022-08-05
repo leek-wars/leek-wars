@@ -189,7 +189,6 @@
 		&.current:before {
 			content: "";
 			position: absolute;
-			z-index: 1;
 			left: calc(50% - 18px);
 			top: -10px;
 			width: 36px;

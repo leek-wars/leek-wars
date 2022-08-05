@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div class="page">
 		<div class="page-header page-bar">
 			<h1><router-link to="/admin">Administration</router-link> > Gestionnaire d'erreur</h1>
 		</div>
@@ -62,13 +62,13 @@
 		}
 
 		removeError(id: number) {
-			LeekWars.post('error/delete', { id })
+			LeekWars.delete('error/delete', { id })
 			this.errors = this.errors!.filter(e => e.id !== id)
 			this.$store.commit('remove-error')
 		}
 
 		deleteErrors() {
-			LeekWars.post('error/delete-query', { query: this.deleteQuery }).then(() => {
+			LeekWars.delete('error/delete-query', { query: this.deleteQuery }).then(() => {
 				this.update()
 			})
 		}

@@ -33,6 +33,9 @@
     - "Chat : selection of commands with up/down arrows."
     - "Chat: button to close code blocks. #img_231_chat_code"
     - "Chat: possibility to delete a message. #img_231_delete"
+    - "Inventory: added a button to get 100 boxes at once."
+    - "Fight Pack: price decrease at level 1 and increase at max level."
+    - The Battle Royales are shifted by 15min to not fall with the tournaments.
   fixed:
     - "Documentation: duplicate indexOf, missing argument mapMap, return from search."
     - "LS: inArray, search and mapSearch find identical lists or tables correctly."

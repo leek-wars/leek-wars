@@ -658,7 +658,7 @@
 					}
 				})
 			} else {
-				LeekWars.post('test-scenario/delete-leek', {scenario_id: this.currentScenario.id, leek: leek.id})
+				LeekWars.delete('test-scenario/delete-leek', {scenario_id: this.currentScenario.id, leek: leek.id})
 			}
 			this.updateScenarioBotsLevels()
 		}
@@ -978,7 +978,7 @@
 		}
 
 		deleteTestLeek(leek: Leek) {
-			LeekWars.post('test-leek/delete', {id: leek.id})
+			LeekWars.delete('test-leek/delete', {id: leek.id})
 			this.leeks.splice(this.leeks.findIndex(l => l.id === leek.id), 1)
 			// Delete in scenarios
 			for (const s in this.scenarios) {
@@ -1018,20 +1018,20 @@
 				const limit = this.getLimit(this.currentScenario.type)
 				if (this.currentScenario.team1.length > limit) {
 					for (let i = limit; i < this.currentScenario.team1.length; ++i) {
-						LeekWars.post('test-scenario/delete-leek', {scenario_id: this.currentScenario.id, leek: this.currentScenario.team1[i].id})
+						LeekWars.delete('test-scenario/delete-leek', {scenario_id: this.currentScenario.id, leek: this.currentScenario.team1[i].id})
 					}
 					this.currentScenario.team1.length = limit
 				}
 				if (this.currentScenario.team2.length > limit) {
 					for (let i = limit; i < this.currentScenario.team2.length; ++i) {
-						LeekWars.post('test-scenario/delete-leek', {scenario_id: this.currentScenario.id, leek: this.currentScenario.team2[i].id})
+						LeekWars.delete('test-scenario/delete-leek', {scenario_id: this.currentScenario.id, leek: this.currentScenario.team2[i].id})
 					}
 					this.currentScenario.team2.length = limit
 				}
 			} else {
 				// BR, clear team2
 				for (const leek of this.currentScenario.team2) {
-					LeekWars.post('test-scenario/delete-leek', {scenario_id: this.currentScenario.id, leek: leek.id})
+					LeekWars.delete('test-scenario/delete-leek', {scenario_id: this.currentScenario.id, leek: leek.id})
 				}
 				this.currentScenario.team2.length = 0
 			}

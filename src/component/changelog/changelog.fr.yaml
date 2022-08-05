@@ -33,6 +33,9 @@
     - "Chat : sélection des commandes avec flèches haut/bas."
     - "Chat : bouton pour fermer les blocs de code. #img_231_chat_code"
     - "Chat : possibilité de supprimer un message #img_231_delete"
+    - "Inventaire : ajout d'un bouton pour récupérer 100 boîtes d'un coup."
+    - "Pack de combats : diminution du prix au niveau 1 et augmentation au niveau max."
+    - Les Battle Royales sont décalées de 15min pour ne pas tomber avec les tournois.
   fixed:
     - "Documentation : indexOf dupliquée, argument manquant mapMap, retour de search."
     - "LS : inArray, search et mapSearch trouvent bien les listes ou tables identiques."

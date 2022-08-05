@@ -891,7 +891,7 @@
 			if (composition.tournamentRange || composition.tournamentRangeLoading) { return }
 			composition.tournamentRangeLoading = true
 			const power = Math.round(composition.leeks.reduce((p, l) => p + l.level ** LeekWars.POWER_FACTOR, 0))
-			LeekWars.post('tournament/range-compo', {power}).then(d => Vue.set(composition, 'tournamentRange', d))
+			LeekWars.get('tournament/range-compo/' + power).then(d => Vue.set(composition, 'tournamentRange', d))
 		}
 	}
 </script>

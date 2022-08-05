@@ -16,7 +16,6 @@ const BankValidate = () => import(/* webpackChunkName: "[request]" */ `@/compone
 const Bank = () => import(/* webpackChunkName: "[request]" */ `@/component/bank/bank.${locale}.i18n`)
 const ChangeEmail = () => import(/* webpackChunkName: "[request]" */ `@/component/change-email/change-email.${locale}.i18n`)
 const Changelog = () => import(/* webpackChunkName: "[request]" */ `@/component/changelog/changelog.${locale}.i18n`)
-const Chat = () => import(/* webpackChunkName: "[request]" */ `@/component/chat/chat-page.${locale}.i18n`)
 const Conditions = () => import(/* webpackChunkName: "[request]" */ `@/component/conditions/conditions.${locale}.i18n`)
 const Documentation = () => import(/* webpackChunkName: "[request]" */ `@/component/documentation/documentation.${locale}.i18n`)
 const Editor = () => import(/* webpackChunkName: "[request]" */ `@/component/editor/editor.${locale}.i18n`)
@@ -68,7 +67,7 @@ import Router, { Route, RouteConfig } from 'vue-router'
 import { scroll_to_hash } from './router-functions'
 
 @Component({
-	components: { signup: Signup, leek: Leek, chat: Chat },
+	components: { signup: Signup, leek: Leek, messages: Messages },
 })
 class Home extends Vue {
 	public functional = true
@@ -76,7 +75,7 @@ class Home extends Vue {
 		return LeekWars.mobile && localStorage.getItem('options/chat-first') === 'true'
 	}
 	public render(h: any) {
-		return this.$store.state.connected ? (this.chatFirst ? h('chat') : h('leek')) : h('signup')
+		return this.$store.state.connected ? (this.chatFirst ? h('messages') : h('leek')) : h('signup')
 	}
 }
 

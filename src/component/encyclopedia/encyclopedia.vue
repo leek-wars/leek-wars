@@ -1,5 +1,5 @@
 <template lang="html">
-	<div>
+	<div class="page">
 		<div class="page-bar page-header">
 			<h1 :class="{small: breadcrumb_items.length >= 3}">
 				<v-icon class="book">mdi-book-open-page-variant</v-icon>
@@ -40,7 +40,7 @@
 					<v-icon>mdi-lock</v-icon>
 					En cours d'édition par {{ page.locker_name }}
 				</div>
-				<div v-if="contributor && !edition && (!page.locker || !$store.state.farmer || page.locker === $store.state.farmer.id)" class="tab" @click="editStart">
+				<div v-if="contributor && !edition && (!page.locker || !$store.state.farmer || page.locker === $store.state.farmer.id)" class="tab action" @click="editStart">
 					<v-icon>mdi-pencil-outline</v-icon>
 					Modifier
 				</div>
@@ -201,7 +201,7 @@
 
 		mounted() {
 			// this.editStart()
-			LeekWars.post('encyclopedia/get-all').then(pages => {
+			LeekWars.get('encyclopedia/get-all').then(pages => {
 				LeekWars.encyclopedia = pages
 				for (const page in pages) {
 					Vue.set(LeekWars.encyclopediaById, pages[page].id, pages[page])
@@ -432,7 +432,7 @@ ${ret}
 		}
 
 		save() {
-			LeekWars.post('encyclopedia/update', {page_id: this.page.id, language: this.page.language, title: this.page.title, content: this.page.content, parent: this.page.parent || 1}).then((result) => {
+			LeekWars.put('encyclopedia/update', {page_id: this.page.id, language: this.page.language, title: this.page.title, content: this.page.content, parent: this.page.parent || 1}).then((result) => {
 				LeekWars.toast("Sauvegardé !")
 				if (this.page.id === 0) {
 					this.page.new = false

@@ -141,7 +141,7 @@
 				})
 				// Last edited pages
 				md.querySelectorAll('.encyclopedia-last-modifications').forEach((item) => {
-					LeekWars.post<any[]>('encyclopedia/get-last-pages').then(pages => {
+					LeekWars.get<any[]>('encyclopedia/get-last-pages').then(pages => {
 						item.innerHTML = '<ul>' + pages.map(p => '<li><a href="/encyclopedia/' + this.language + '/' + p.title + '">' + p.title + '</a>, <b>' + p.name + '</b> ' + LeekWars.formatDuration(p.time) + '</li>').join('') + '</ul>'
 						item.querySelectorAll('a').forEach(linkify)
 					})

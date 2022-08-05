@@ -14,14 +14,18 @@
 				<div v-for="newsletter in newsletters" :key="newsletter.id" class="newsletter card">
 					<div class="main">
 						<b>Version {{ newsletter.version }}</b>
-						<div>{{ newsletter.title }}</div>
+						<div>FR : {{ newsletter.title_fr }}</div>
+						<div>EN : {{ newsletter.title_en }}</div>
 						<div class="spacer"></div>
 						<v-btn v-if="newsletter.sent === 0" @click="test(newsletter)"><v-icon>mdi-cog-outline</v-icon> Test</v-btn>
 						<v-btn v-if="newsletter.sent === 0" color="primary" @click="send(newsletter)"><v-icon>mdi-send-outline</v-icon> Envoyer</v-btn>
 						<div v-else>Envoyé le {{ newsletter.sent | date }}</div>
 					</div>
 					<div class="content">
-						<div v-html="html(newsletter.content)"></div>
+						FR :
+						<div v-html="html(newsletter.content_fr)"></div>
+						EN :
+						<div v-html="html(newsletter.content_en)"></div>
 					</div>
 				</div>
 			</div>
