@@ -109,6 +109,7 @@
 	export default class Statistics extends Vue {
 		loaded: boolean = false
 		statistics: Array<{[key: string]: Statistic}> = []
+		statistics_cloned: Array<{[key: string]: Statistic}> = []
 		interpolated: Statistic[] = []
 		interval: any = null
 		playing: boolean = true
@@ -138,7 +139,7 @@
 			return this.makeChartData(GENERAL_CATEGORY, ['lang_fr', 'lang_en'])
 		}
 		get chartLanguages() {
-			return this.makeChartData(CODE_CATEGORY, ['lw_code_java', 'lw_code_javascript', 'lw_code_php', 'lw_code_css', 'lw_code_vue'])
+			return this.makeChartData(CODE_CATEGORY, ['lw_code_java', 'lw_code_javascript', 'lw_code_php', 'lw_code_css', 'lw_code_vue', 'lw_code_json'])
 		}
 		get chartItems() {
 			return this.makeChartData(ITEM_CATEGORY, [ 'item_resource', 'item_weapon', 'item_chip', 'item_potion', 'item_hat', 'item_pomp' ])
@@ -148,7 +149,7 @@
 		}
 
 		makeChartData(category: number, values: string[]) {
-			const statistics = this.statistics[category]
+			const statistics = this.statistics_cloned[category]
 			if (!statistics) { return {} }
 			const total = values.reduce((t, s) => t + statistics[s].value, 0)
 			const filtered_values = values.filter(s => statistics[s].value / total > 0.01)
@@ -172,6 +173,8 @@
 				this.statistics[3].operations.value += Math.floor(Math.random() * 1000000)
 				this.statistics[3].operations.today += Math.floor(Math.random() * 1000000)
 				this.statistics[3].operations.speed += Math.floor(Math.random() * 10000)
+
+				this.statistics_cloned = JSON.parse(JSON.stringify(this.statistics))
 
 				for (const c in this.statistics) {
 					for (const s in this.statistics[c]) {

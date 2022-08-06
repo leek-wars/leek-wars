@@ -41,6 +41,7 @@
 	"lw_code_javascript_chart": "JS",
 	"lw_code_css": "CSS",
 	"lw_code_vue": "Vue",
+	"lw_code_json": "JSON",
 	"lw_code_all": "Total",
 	"damage": "Dommages",
 	"heal": "Soin",
