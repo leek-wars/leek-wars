@@ -3,7 +3,7 @@
 		<div class="swiper">
 			<div class="swiper-wrapper">
 				<div v-for="(image, i) of images" :key="i" class="swiper-slide" :class="`slide--${i}`" @click="handleClickSlide(i)">
-					<img :src="'/image/' + image.image">
+					<img height="400" :src="'/image/' + image.image">
 					<div class="legend">{{ image.legend_tr }}</div>
 				</div>
 			</div>

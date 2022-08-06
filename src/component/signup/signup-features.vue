@@ -3,7 +3,7 @@
 		<div v-for="(feature, f) in features" :key="f" class="feature">
 			<div class="images">
 				<div v-for="(image, i) in feature.images" :key="i" class="image-wrapper">
-					<img :src="'/image/feature/small_' + image + '.webp'" @click="zoom">
+					<img height="300" :src="'/image/feature/small_' + image + '.webp'" @click="zoom">
 				</div>
 			</div>
 			<div class="description">

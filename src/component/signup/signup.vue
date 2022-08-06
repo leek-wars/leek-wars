@@ -7,8 +7,8 @@
 			<panel class="first">
 				<div class="desc introduction" v-html="$t('intro')"></div>
 				<div class="leek-rect">
-					<img class="leeks" src="/image/signup_illustration.png">
-					<div v-if="leek_count" class="desc" v-html="$t('n_leeks_already', [LeekWars.formatNumber(leek_count)])"></div>
+					<img class="leeks" height="165" width="223" src="/image/signup_illustration.png">
+					<div class="desc" v-html="$t('n_leeks_already', [LeekWars.formatNumber(leek_count)])"></div>
 				</div>
 			</panel>
 			<panel v-if="env.SIGN_UP" :title="fastRegister ? $t('play') : $t('main.signup')" :icon="fastRegister ? 'mdi-sword-cross' : 'mdi-account-plus'">
@@ -41,7 +41,7 @@
 								<div class="title">{{ $t('hat') }}</div>
 								<div class="hats">
 									<img src="/image/hat/no_hat.png" class="hat" @click="leekHat = 0">
-									<img v-for="hat in [2, 9, 7, 1]" :key="hat" :src="'/image/hat/' + LeekWars.hats[hat].name + '.png'" class="hat" @click="leekHat = hat">
+									<img v-for="hat in [2, 9, 7, 1]" :key="hat" height="50" :src="'/image/hat/' + LeekWars.hats[hat].name + '.png'" class="hat" @click="leekHat = hat">
 								</div>
 							</div>
 						</div>
@@ -256,7 +256,7 @@
 	@Component({ name: 'signup', i18n: {}, mixins: [...mixins], components: { ChangelogVersion, SignupCarousel, SignupFeatures } })
 	export default class Signup extends Vue {
 		godfather: string = ''
-		leek_count: number = 0
+		leek_count: number = 85290
 		farmer_ranking: any = new Array(10)
 		leek_ranking: any = new Array(10)
 		team_ranking: any = new Array(10)
@@ -394,9 +394,6 @@
 		b {
 			font-weight: 400;
 		}
-	}
-	.leeks {
-		height: 165px;
 	}
 	.leek-rect {
 		text-align: center;
