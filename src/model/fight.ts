@@ -28,6 +28,7 @@ class ReportLeek {
 	prev_xp!: number
 	aiTime!: number
 	weapon!: any
+	resources!: {[key: number]: number}
 }
 
 class ReportFarmer {

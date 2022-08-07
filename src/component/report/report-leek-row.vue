@@ -31,14 +31,14 @@
 			<span>{{ (leek.money || 0) | number }} <span class="hab"></span></span>
 		</td>
 		<td v-if="fight.context != FightContext.TEST && fight.context != FightContext.CHALLENGE" class="resources">
-			<tooltip v-for="(quantity, resource) of leek.resources" :key="resource">
+			<tooltip v-for="resource of sorted_resources" :key="resource[0]">
 				<template v-slot:activator="{ on }">
 					<span class="resource" v-on="on">
-						<img v-if="LeekWars.items[resource]" :src="'/image/resource/' + LeekWars.items[resource].name + '.png'">
-						<span v-if="quantity > 1" class="quantity">{{ quantity }}</span>
+						<img v-if="LeekWars.items[resource[0]]" :src="'/image/resource/' + LeekWars.items[resource[0]].name + '.png'">
+						<span v-if="resource[1] > 1" class="quantity">{{ resource[1] }}</span>
 					</span>
 				</template>
-				{{ quantity }}x <b v-if="LeekWars.items[resource]">{{ $t('resource.' + LeekWars.items[resource].name) }}</b>
+				{{ resource[1] }}x <b v-if="LeekWars.items[resource[0]]">{{ $t('resource.' + LeekWars.items[resource[0]].name) }}</b>
 			</tooltip>
 		</td>
 		<td v-if="fight.context !== FightContext.CHALLENGE && leek.talent !== undefined" class="talent">
@@ -58,6 +58,7 @@
 
 <script lang="ts">
 	import { Fight, FightContext, ReportLeek } from '@/model/fight'
+import { LeekWars } from '@/model/leekwars'
 	import { Component, Prop, Vue } from 'vue-property-decorator'
 	@Component({})
 	export default class ReportLeekRow extends Vue {
@@ -76,6 +77,10 @@
 			const newLevel = this.leek.cur_xp - this.leek.xp < this.leek.prev_xp
 			const newXPInCurrentLevel = newLevel ? this.leek.cur_xp - this.leek.prev_xp : this.leek.xp
 			return Math.floor(100 * newXPInCurrentLevel / totalXP)
+		}
+
+		get sorted_resources() {
+			return Object.entries(this.leek.resources).sort((a, b) => LeekWars.items[b[0]].price! - LeekWars.items[a[0]].price!)
 		}
 	}
 </script>

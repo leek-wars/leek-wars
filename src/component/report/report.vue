@@ -451,11 +451,13 @@
 					this.farmers[fid] = this.fight.farmers2[fid]
 				}
 
-				LeekWars.get('fight/get-logs/' + id).then(d => {
-					this.logs = Object.freeze(d)
-					this.processLogs()
-					this.warningsErrors()
-				})
+				if (this.$store.state.connected) {
+					LeekWars.get('fight/get-logs/' + id).then(d => {
+						this.logs = Object.freeze(d)
+						this.processLogs()
+						this.warningsErrors()
+					})
+				}
 				this.updateChart()
 				this.getChartDamage()
 				this.updateMap()
