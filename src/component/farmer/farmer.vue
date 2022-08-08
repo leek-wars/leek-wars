@@ -45,7 +45,7 @@
 					</div>
 				</div>
 				<div v-else>
-					<div v-if="env.SOCIAL && $store.state.connected && $store.state.farmer.verified" class="tab action" @click="sendMessage">
+					<div v-if="env.SOCIAL && $store.state.farmer && $store.state.farmer.verified" class="tab action" @click="sendMessage">
 						<v-icon>mdi-email-outline</v-icon>
 						<span>{{ $t('send_private_message') }}</span>
 					</div>
