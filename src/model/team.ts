@@ -14,6 +14,9 @@ const TEAM_COLORS = [
 	"#E414C9", // pink
 	"#000000", // black
 	"#ffffff", // white
+	"#00ff80", // turquoise
+	"#a33000", // brown
+	"#158f00", // darkgreen
 ]
 const TEAM_COLORS_DARK = [
 	"#6e86ff", // blue
@@ -28,6 +31,9 @@ const TEAM_COLORS_DARK = [
 	"#ff99f2", // pink
 	"#000000", // black
 	"#ffffff", // white
+	"#00ae57", // turquoise
+	"#6b2000", // brown
+	"#0c5100", // darkgreen
 ]
 
 class Team {
