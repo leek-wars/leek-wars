@@ -155,7 +155,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 
 		'load-chat'(state: LeekWarsState, chat: Chat) {
 			// console.log("load chat", chat, chat.id)
-			LeekWars.get('message/get-messages/' + chat.id + '/' + 50 + '/' + 1).then(data => {
+			LeekWars.get('message/get-messages/' + chat.id + '/' + 50 + '/' + 0).then(data => {
 				store.commit('clear-chat', chat.id)
 				for (const message of data.messages) {
 					store.commit('chat-receive', { chat: chat.id, message, new: false })
