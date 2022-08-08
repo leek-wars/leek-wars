@@ -1,5 +1,5 @@
 <template lang="html">
-	<div>
+	<div class="page">
 		<loader v-if="loading" />
 		<template v-else-if="success">
 			<div class="page-header page-bar">

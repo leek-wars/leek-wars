@@ -16,7 +16,7 @@ import { WeaponTemplate } from '@/model/weapon'
 import router from '@/router'
 import Vue from 'vue'
 import { TranslateResult } from 'vue-i18n'
-import { ChatType, ChatWindow } from './chat'
+import { Chat, ChatType, ChatWindow } from './chat'
 import { Constant } from './constant'
 import { i18n, loadLanguageAsync } from './i18n'
 import { ItemType } from './item'
@@ -57,7 +57,7 @@ function request<T = any>(method: string, url: string, params?: any) {
 				if (store.getters.admin || LOCAL || DEV || (window.__FARMER__ && window.__FARMER__.farmer.id === 1)) {
 					const message = "[" + e.target.status + "] " + method + " " + url
 					console.error(message)
-					LeekWars.toast(message, 5000)
+					// LeekWars.toast(message, 5000)
 				}
 				reject(e.target.response)
 			}
@@ -249,6 +249,15 @@ const LeekWars = {
 	leekSizes: Object.freeze(LEEK_SIZES),
 	hatSizes: Object.freeze(HAT_SIZES),
 	analyzer: new Analyzer(),
+	isPublicChat: (id: number) => id === 1 || id === 2 || id === 32506 || id === 32507 || id === 32508 || id === 32509,
+	chatNames: {
+		1: 'Général',
+		32506: 'Aide',
+		32507: 'Programmation',
+		2: 'General',
+		32508: 'Help',
+		32509: 'Programming',
+	} as {[key: number]: string},
 	getLeekSkinName: (skin: number) => {
 		if (!(skin in SKINS)) { return SKINS[1] }
 		return SKINS[skin]
@@ -539,14 +548,14 @@ const LeekWars = {
 	initChats() {
 		LeekWars.chatWindows = JSON.parse(localStorage.getItem('chats') || '[]')
 	},
-	addChat(id: number, type: ChatType, title: string) {
+	addChat(chat: Chat) {
 		for (const window of LeekWars.chatWindows) {
-			if (window.id === id) {
+			if (window.id === chat.id) {
 				window.expanded = true
 				return
 			}
 		}
-		LeekWars.chatWindows.push({ id, type, title, expanded: true})
+		LeekWars.chatWindows.push({ id: chat.id, type: chat.type, title: chat.name, expanded: true})
 	},
 	removeChat(i: number) {
 		LeekWars.chatWindows.splice(i, 1)

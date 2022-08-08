@@ -11,11 +11,7 @@
 	"cat_en": "Anglais",
 	"cat_team": "Équipe",
 	"cat_private": "Messages privés",
-	"fr_general": "Principal",
-	"fr_help": "Aide",
-	"fr_programming": "Programmation",
-	"en_general": "Main",
-	"en_help": "Help",
-	"en_programming": "Programming",
-	"team": "Équipe"
+	"team": "Équipe",
+	"enable_notifications": "Activer les notifications",
+	"disable_notifications": "Désactiver les notifications"
 }

@@ -1,5 +1,5 @@
 <template lang="html">
-	<div>
+	<div class="page">
 		<div class="page-header page-bar">
 			<div v-if="fight">
 				<h1>{{ fight.title }}</h1>

@@ -19,7 +19,7 @@
 				</div>
 			</div>
 		</div>
-		<chat-input @message="send" />
+		<chat-input @message="send" :chat="0" />
 	</div>
 </template>
 
@@ -31,9 +31,9 @@
 	import { store } from '@/model/store'
 	import { Component, Prop, Vue } from 'vue-property-decorator'
 
-	@Component({ 
-		name: 'comments', 
-		components: { 'chat-input': ChatInput } 
+	@Component({
+		name: 'comments',
+		components: { 'chat-input': ChatInput }
 	})
 	export default class Comments extends Vue {
 		@Prop({required: true}) comments!: Comment[]

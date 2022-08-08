@@ -88,6 +88,7 @@
 	"title_28": "New message(s) from {0}",
 	"title_29": "You have not been selected for the tournament",
 	"title_30": "{0} was not selected for the tournament",
-	"title_31": "{0} has not been selected for the BR"
-
+	"title_31": "{0} has not been selected for the BR",
+	"title_32": "{0} mentioned you on #{1}",
+	"message_32": "See the chat"
 }

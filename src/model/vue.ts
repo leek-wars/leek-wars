@@ -21,6 +21,7 @@ import ReportDialog from '@/component/moderation/report-dialog.vue'
 import NotificationElement from '@/component/notifications/notification.vue'
 import Pagination from '@/component/pagination.vue'
 import Popup from '@/component/popup.vue'
+import Pseudo from '@/component/app/pseudo.vue'
 import RankingBadge from '@/component/ranking-badge.vue'
 import RichTooltipComposition from '@/component/rich-tooltip/rich-tooltip-composition.vue'
 import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
@@ -94,6 +95,7 @@ Vue.component('tournament-history', TournamentHistory)
 Vue.component('tournaments-history', TournamentsHistory)
 Vue.component('notification', NotificationElement)
 Vue.component('lw-code', Code)
+Vue.component('lw-pseudo', Pseudo)
 Vue.component('conversation', ConversationElement)
 Vue.component('ai', AIElement)
 Vue.component('error', Error)
@@ -132,18 +134,14 @@ Vue.directive('emojis', (el) => {
 		}
 	})
 })
-Vue.directive('code', (el) => {
-	el.querySelectorAll('code:not(.formatted)').forEach((c) => {
-		LeekWars.createCodeArea((c as HTMLElement).innerText, c as HTMLElement)
-	})
-})
-Vue.directive('large-emojis', {
+Vue.directive('code', {
 	inserted: (el) => {
-		const text = el.textContent || ''
-		const onlyEmojis = text.length === 0 || /^([^-\p{L}\u00-\u7F]+)$/.test(text)
-		el.classList.toggle('large-emojis', onlyEmojis)
+		el.querySelectorAll('code').forEach((c) => {
+			new Code({ propsData: { code: (c as HTMLElement).innerText }, parent: vueMain }).$mount(c)
+		})
 	}
 })
+
 Vue.directive('latex', {
 	inserted: (el) => {
 		el.innerHTML = el.innerHTML.replace(/\$(.*?)\$/, (str: string) => {
@@ -170,10 +168,9 @@ Vue.directive('chat-code-latex', {
 		el.querySelectorAll('code').forEach((c) => {
 			if (c.innerHTML.indexOf("<br>") !== -1) {
 				const code = LeekWars.decodehtmlentities(c.innerHTML).replace(/<br>/gi, "\n").trim()
-				LeekWars.createCodeArea(code, c)
+				new Code({ propsData: { code, expandable: true }, parent: vueMain }).$mount(c)
 			} else {
-				c.classList.add('single')
-				LeekWars.createCodeAreaSimple(c.innerText, c)
+				new Code({ propsData: { code: c.innerText, single: true }, parent: vueMain }).$mount(c)
 			}
 		})
 		el.querySelectorAll('latex').forEach((c) => {

@@ -1,5 +1,5 @@
 <template>
-	<div class="tournament-page">
+	<div class="tournament-page page">
 		<div class="page-header page-bar">
 			<h1>{{ tournament ? title : '...' }}</h1>
 			<div v-if="!LeekWars.mobile" class="tabs">

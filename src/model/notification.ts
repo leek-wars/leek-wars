@@ -34,6 +34,7 @@ enum NotificationType {
 	NO_TOURNAMENT_FARMER = 29, // Pas de place pour le tournoi d'éleveur
 	NO_TOURNAMENT_TEAM = 30, // Pas de place pour le tournoi d'équipe
 	NO_BR = 31, // Pas de place pour la BR
+	CHAT_MENTION = 32, // Mention sur un chat publique
 }
 
 class Notification {
@@ -174,6 +175,12 @@ class Notification {
 		} else if (type === NotificationType.NO_BR) {
 			const name = params[0]
 			return new Notification(data, "/farmer", "tournament_fail.png", [name])
+		} else if (type === NotificationType.CHAT_MENTION) {
+			const farmer_name = params[0]
+			const conversation_id = params[1]
+			const conversation_name = params[2]
+			// const message_id = params[3]
+			return new Notification(data, "/chat/" + conversation_id, "mdi-at", [farmer_name, conversation_name])
 		} else {
 			return new Notification(data, null, null, ["? type " + type])
 		}

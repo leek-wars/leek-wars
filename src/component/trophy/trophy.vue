@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div class="page">
 		<div class="page-bar page-header">
 			<h1>{{ $t('trophy') }} « {{ $t('trophy.' + code) }} »</h1>
 		</div>

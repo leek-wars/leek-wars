@@ -54,17 +54,21 @@
 						<v-menu offset-y>
 							<template v-slot:activator="{ on }">
 								<div class="language-button" v-ripple v-on="on">
-									<img :src="chatLanguage.flag">
+									<div class="wrapper">
+										<img :src="chatLanguage.flag">
+										<div class="unread-circle" v-if="Object.values(LeekWars.languages).some(l => $store.state.chat[l.chat] && !$store.state.chat[l.chat].read)"></div>
+									</div>
 								</div>
 							</template>
 							<v-list :dense="true">
 								<v-list-item v-for="(language, i) in LeekWars.languages" :key="i" class="language" @click="setChatLanguage(language)">
 									<img :src="language.flag" class="flag">
 									<span class="name">{{ language.name }}</span>
+									<span class="unread-circle" v-if="$store.state.chat[language.chat] && !$store.state.chat[language.chat].read"></span>
 								</v-list-item>
 							</v-list>
 						</v-menu>
-						<div class="button text" @click="LeekWars.addChat(chatLanguage.chat, ChatType.GLOBAL, 'Chat ' + chatLanguage.code.toUpperCase())">
+						<div v-if="$store.state.chat[chatLanguage.chat]" class="button text" @click="LeekWars.addChat($store.state.chat[chatLanguage.chat])">
 							<v-icon>mdi-picture-in-picture-bottom-right</v-icon>
 						</div>
 					</div>
@@ -238,9 +242,24 @@
 		cursor: pointer;
 		max-height: 36px;
 		padding: 5px 10px;
-		img {
-			height: 26px;
+		.wrapper {
+			position: relative;
+			img {
+				height: 26px;
+			}
 		}
+	}
+	.unread-circle {
+		background: #5fad1b;
+		border-radius: 50%;
+		width: 10px;
+		height: 10px;
+		margin-left: 8px;
+	}
+	.wrapper .unread-circle {
+		position: absolute;
+		top: 0;
+		right: -5px;
 	}
 	.blabla-chat .languages {
 		padding: 0 5px;

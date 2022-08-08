@@ -7,7 +7,7 @@
 			<div class="name">{{ farmer ? farmer.name : '?' }}</div>
 			<div class="last-message">
 				<b v-if="chat.last_farmer && $store.state.farmer && chat.last_farmer.id === $store.state.farmer.id">{{ $t('main.me') }} ►</b>
-				<span v-emojis v-html="chat.last_message"></span>
+				<span v-html="chat.last_message"></span>
 			</div>
 			<div class="date">{{ LeekWars.formatDuration(chat.last_date) }}</div>
 		</div>
@@ -36,6 +36,7 @@
 
 <style lang="scss" scoped>
 	.conversation {
+		display: flex;
 		cursor: pointer;
 		height: 52px;
 		white-space: nowrap;
@@ -59,7 +60,8 @@
 		background: #999;
 	}
 	.content {
-		display: inline-block;
+		flex: 1;
+		min-width: 0;
 		vertical-align: top;
 		padding: 5px;
 	}

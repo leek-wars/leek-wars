@@ -22,7 +22,7 @@
 }
 .sbl-circ-path {
 	display: inline-block;
-	color: rgba(90, 90, 90, 0.1);
+	color: #ddd;
 	position: relative;
 	border-style: solid;
 	border-radius: 50%;

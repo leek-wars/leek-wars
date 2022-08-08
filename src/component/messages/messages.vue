@@ -1,9 +1,14 @@
 <template>
 	<div class="page">
 		<div class="page-header page-bar">
-			<h1>{{ $t('title') }}</h1>
+			<div>
+				<h1>{{ $t('title') }}</h1>
+				<div class="info">
+					<v-icon v-if="isPrivate">mdi-at</v-icon><v-icon v-else>mdi-pound</v-icon> {{ chat_name }}
+				</div>
+			</div>
 			<div class="tabs">
-				<div class="tab action content" icon="delete" @click="LeekWars.addChat(id, ChatType.PM, getConversationName())">
+				<div v-if="chat" class="tab action content" icon="delete" @click="LeekWars.addChat(chat)">
 					<v-icon>mdi-picture-in-picture-bottom-right</v-icon>
 				</div>
 				<div class="tab action content" icon="delete" @click="quitDialog = true">
@@ -17,25 +22,25 @@
 				<panel class="first">
 					<div slot="content" class="conversations" @scroll="conversationsScroll">
 						<div v-for="category in chats" :key="category.name" class="category">
-							<div class="name">{{ $t('cat_' + category.name) }}</div>
-							<router-link v-for="chat in category.chats" :key="chat.id" :to="'/chat/' + chat.id">
-								<div class="conversation chat-preview" v-ripple>
+							<div class="name">
+								<v-icon v-if="category.icon">{{ category.icon }}</v-icon>
+								<img v-else :src="category.image">
+								{{ $t('cat_' + category.name) }}
+							</div>
+							<div v-for="chat in category.chats" :key="chat.id" class="conversation chat-preview" :class="{unread: $store.state.chat[chat.id] && !$store.state.chat[chat.id].read, notifications: $store.state.chat[chat.id] && $store.state.chat[chat.id].notifications}">
+								<router-link class="wrapper" :to="'/chat/' + chat.id" v-ripple>
 									<v-icon>{{ chat.icon }}</v-icon>
 									{{ $t(chat.name) }}
-								</div>
-							</router-link>
-						</div>
-						<div v-if="$store.state.farmer && $store.state.farmer.team" class="category">
-							<div class="name">
-								<v-icon>mdi-account-multiple</v-icon>
-								{{ $t('cat_team') }}
+									<div class="unread"></div>
+								</router-link>
+								<tooltip>
+									<template v-slot:activator="{ on }">
+										<v-icon v-if="$store.state.chat[chat.id] && $store.state.chat[chat.id].notifications" v-on="on" class="bell" @click.stop="toggleNotifications(chat.id)">mdi-bell</v-icon>
+										<v-icon v-else v-on="on" class="bell" @click.stop="toggleNotifications(chat.id)">mdi-bell-off</v-icon>
+									</template>
+									{{ $store.state.chat[chat.id] && $store.state.chat[chat.id].notifications ? $t('disable_notifications') : $t('enable_notifications') }}
+								</tooltip>
 							</div>
-							<router-link :to="'/chat/' + $store.state.farmer.team.chat">
-								<div class="conversation chat-preview" @click="currentChat = $store.state.farmer.team.chat">
-									<v-icon>mdi-chat-outline</v-icon>
-									{{ $t('team') }}
-								</div>
-							</router-link>
 						</div>
 						<div class="category">
 							<div class="name">
@@ -54,15 +59,15 @@
 			</div>
 			<div v-show="!LeekWars.mobile || LeekWars.splitBack" class="main-column">
 				<panel>
-					<chat v-if="currentConversation && currentConversation.id !== 0" :id="currentConversation.id" :large="true" slot="content" />
-					<chat v-else-if="newConversation" slot="content" :new-farmer="newFarmer" :large="true" :new-conversation="newConversation" />
+					<chat v-if="newConversation" slot="content" :new-farmer="newFarmer" :large="true" :new-conversation="newConversation" />
+					<chat v-else :id="currentID" :large="true" slot="content" />
 				</panel>
 			</div>
-			<div v-show="!LeekWars.mobile" class="right-column">
+			<!-- <div v-show="!LeekWars.mobile" class="right-column">
 				<panel>
 
 				</panel>
-			</div>
+			</div> -->
 		</div>
 
 		<popup v-model="quitDialog" :width="500">
@@ -94,18 +99,26 @@
 		actions = [{icon: 'mdi-delete', click: () => this.showQuitDialog()}]
 		loadingConversations: boolean = false
 
-		chats = [
-			{ name: 'fr', chats: [
-				{ id: 1, name: 'fr_general', icon: 'mdi-chat-outline' },
-				{ id: 32506, name: 'fr_help', icon: 'mdi-help-circle-outline' },
-				{ id: 32507, name: 'fr_programming', icon: 'mdi-code-braces' },
-			]},
-			{ name: 'en' , chats: [
-				{ id: 2, name: 'en_general', icon: 'mdi-chat-outline' },
-				{ id: 32508, name: 'en_help', icon: 'mdi-help-circle-outline' },
-				{ id: 32509, name: 'en_programming', icon: 'mdi-code-braces' },
-			]},
-		]
+		get chats() {
+			const chats = [
+				{ name: 'fr', image: '/image/flag/fr.png', chats: [
+					{ id: 1, name: 'Général', icon: 'mdi-chat-outline' },
+					{ id: 32506, name: 'Aide', icon: 'mdi-help-circle-outline' },
+					{ id: 32507, name: 'Programmation', icon: 'mdi-code-braces' },
+				]},
+				{ name: 'en', image: '/image/flag/gb.png', chats: [
+					{ id: 2, name: 'General', icon: 'mdi-chat-outline' },
+					{ id: 32508, name: 'Help', icon: 'mdi-help-circle-outline' },
+					{ id: 32509, name: 'Programming', icon: 'mdi-code-braces' },
+				]}
+			] as any[]
+			if (this.$store.state.farmer && this.$store.state.farmer.team) {
+				chats.push({name: 'team', icon: 'mdi-account-multiple', chats: [
+					{ id: this.$store.state.farmer.team.chat, name: this.$store.state.farmer.team.name, icon: 'mdi-chat-outline' },
+				]})
+			}
+			return chats
+		}
 
 		created() {
 			if (!this.env.SOCIAL) {
@@ -142,7 +155,7 @@
 
 		get newConversation(): Chat | null {
 			if ('name' in this.$route.params) {
-				const chat = new Chat(0, ChatType.PM)
+				const chat = new Chat(0, ChatType.PM, this.$route.params.name, true)
 				chat.last_message = this.$t('new_message') as string
 				chat.farmers = [this.$store.state.farmer, this.newFarmer]
 				return chat
@@ -167,6 +180,14 @@
 
 		get chat() {
 			return this.id ? this.$store.state.chat[this.id] : null
+		}
+
+		get chat_name() {
+			return this.chat ? this.chat.name : ''
+		}
+
+		get isPrivate() {
+			return this.chat && this.chat.type === ChatType.PM
 		}
 
 		@Watch('$route.params')
@@ -234,16 +255,30 @@
 				store.commit('load-conversations')
 			}
 		}
+
+		toggleNotifications(chatID: number) {
+			store.commit('toggle-chat-notifications', chatID)
+		}
 	}
 </script>
 
 <style lang="scss" scoped>
+	.page-header .info {
+		display: inline-flex;
+		align-items: center;
+		gap: 5px;
+		font-size: 20px;
+		line-height: 32px;
+		font-weight: 500;
+	}
 	.container {
 		flex: 1;
 		min-height: 0;
+		flex-wrap: nowrap;
 	}
 	.main-column, .side-column, .right-column {
 		height: 100%;
+		min-width: 0;
 		.panel {
 			height: 100%;
 			margin-bottom: 0;
@@ -274,27 +309,72 @@
 	.conversations .content {
 		padding: 0;
 	}
-	.router-link-active .conversation {
-		background: white;
-		box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
+	.router-link-active {
+		background: #ccc;
+		color: black;
 	}
 	.chats {
 		padding: 10px 0;
 	}
 	.category {
-		.name {
+		& > .name {
+			display: flex;
+			gap: 6px;
+			align-items: center;
 			padding: 10px;
+			img {
+				height: 22px;
+			}
 		}
 	}
 	.chat-preview {
-		padding: 6px;
-		padding-left: 20px;
 		color: #555;
-		display: block;
+		display: flex;
+		position: relative;
+		.wrapper {
+			flex: 1;
+			display: flex;
+			gap: 8px;
+			align-items: center;
+			padding: 6px;
+			padding-left: 20px;
+			padding-right: 15px;
+		}
+		.name {
+			flex: 1;
+		}
+		.bell {
+			display: none;
+			font-size: 18px;
+			position: absolute;
+			right: 10px;
+			top: 5px;
+			padding: 4px;
+		}
+		&.notifications .bell {
+			display: inline-flex;
+		}
 		&:hover {
 			background: white;
 			color: black;
 			cursor: pointer;
+			.bell {
+				display: inline-flex;
+			}
+		}
+		.unread {
+			background: #5fad1b;
+			border-radius: 50%;
+			width: 10px;
+			height: 10px;
+			display: none;
+		}
+		&.unread {
+			font-weight: bold;
+			color: black;
+			.unread {
+				display: inline-block;
+			}
 		}
 	}
 </style>

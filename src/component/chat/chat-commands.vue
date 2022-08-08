@@ -1,6 +1,6 @@
 <template lang="html">
 	<v-list v-if="filterOptions === null" dense>
-		<v-list-item v-for="command of commands" :key="command.name" v-ripple class="command" @click="$emit('command', command.name)">
+		<v-list-item v-for="(command, c) of commands" :key="command.name" v-ripple class="command" :class="{selected: index === c}" @click="$emit('command', command.name)">
 			<v-list-item-content>
 				<v-list-item-title>/{{ command.name }}</v-list-item-title>
 				<v-list-item-subtitle>{{ command.description }}</v-list-item-subtitle>
@@ -27,8 +27,9 @@
 		commands = Commands.commands
 		options: any[] = []
 		filterOptions: string | null = null
+		index: number = 0
 
-		@Watch('filter')
+		@Watch('filter', {immediate: true})
 		update() {
 			const parts = this.filter.toLowerCase().split(':')
 			const filterCommand = parts[0]
@@ -49,23 +50,30 @@
 			}
 		}
 		getSelected(): Command {
-			return this.commands[0]
+			return this.commands[this.index]
 		}
 		getSelectedOption() {
-			return this.commands[0].options ? this.options[0] : null
+			return this.commands[this.index].options ? this.options[this.index] : null
 		}
 		selectFirst() {
-			let command = this.commands[0].name
+			let command = this.commands[this.index].name
 			if (this.options.length) {
 				command += ':' + this.options[0].name
 			}
 			this.$emit('command', command)
 		}
+		up() {
+			this.index--
+			if (this.index < 0) this.index = this.commands.length - 1
+		}
+		down() {
+			this.index = (this.index + 1) % this.commands.length
+		}
 	}
 </script>
 
 <style lang="scss" scoped>
-	.command:first-child {
+	.command.selected {
 		background: #eee;
 	}
 </style>

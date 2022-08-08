@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div class="page">
 		<div class="page-header page-bar">
 
 			<rich-tooltip-team v-if="team" :id="team.id" v-slot="{ on }" :bottom="true">
@@ -127,7 +127,7 @@
 
 		<panel v-if="is_member" :title="$t('chat')" toggle="team/chat" icon="mdi-chat-outline">
 			<div slot="actions">
-				<div v-if="!LeekWars.mobile" class="button flat" @click="LeekWars.addChat(team.chat, ChatType.TEAM, team.name)">
+				<div v-if="!LeekWars.mobile && $store.state.chat[team.chat]" class="button flat" @click="LeekWars.addChat($store.state.chat[team.chat])">
 					<v-icon>mdi-picture-in-picture-bottom-right</v-icon>
 				</div>
 			</div>

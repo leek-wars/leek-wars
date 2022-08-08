@@ -71,6 +71,7 @@ class Socket {
 		}
 		const url = LeekWars.LOCAL ? "ws://localhost:1213/" : "wss://leekwars.com/ws"
 		this.socket = new WebSocket(url)
+		// console.log("[socket] socket", this.socket)
 
 		this.socket.onopen = () => {
 			// console.log("[ws] onopen")

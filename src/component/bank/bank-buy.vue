@@ -1,5 +1,5 @@
 <template lang="html">
-	<div>
+	<div class="page">
 		<div class="page-header page-bar">
 			<h1>
 				<router-link to="/bank">{{ $t('title') }}</router-link> >

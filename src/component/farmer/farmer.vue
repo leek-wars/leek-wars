@@ -55,7 +55,7 @@
 							<span>{{ $t('challenge') }}</span>
 						</div>
 					</router-link>
-					<div class="action" icon="question_answer" link="/messages/new/{farmer.id}/{farmer.name}/{farmer.avatar_changed}"></div>
+					<div class="action" icon="question_answer" link="/chat/new/{farmer.id}/{farmer.name}/{farmer.avatar_changed}"></div>
 				</div>
 			</div>
 		</div>
@@ -627,7 +627,7 @@
 			} else {
 				LeekWars.setActions([
 					{image: 'icon/garden.png', click: () => this.$router.push('/garden/challenge/farmer/' + farmer.id)},
-					{icon: 'mdi-email-outline', click: () => this.$router.push('/messages/new/' + farmer.id + '/' + farmer.name + '/'+ farmer.avatar_changed)}
+					{icon: 'mdi-email-outline', click: () => this.$router.push('/chat/new/' + farmer.id + '/' + farmer.name + '/'+ farmer.avatar_changed)}
 				])
 			}
 			this.getTrophies()
@@ -781,10 +781,10 @@
 			if (!this.farmer) { return }
 			LeekWars.get('message/find-conversation/' + this.farmer.id).then(conversation => {
 				store.commit('new-conversation', conversation)
-				this.$router.push('/messages/conversation/' + conversation.id)
+				this.$router.push('/chat/' + conversation.id)
 			}).error(() => {
 				if (!this.farmer) { return }
-				this.$router.push('/messages/new/' + this.farmer.id + '/' + this.farmer.name + '/' + this.farmer.avatar_changed)
+				this.$router.push('/chat/new/' + this.farmer.id + '/' + this.farmer.name + '/' + this.farmer.avatar_changed)
 			})
 		}
 

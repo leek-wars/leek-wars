@@ -23,7 +23,7 @@
 		value: boolean = false
 
 		get _open_delay() {
-			return this.instant ? 0 : 200
+			return this.instant ? 0 : 500
 		}
 		get _close_delay() {
 			return this.instant ? 0 : 0

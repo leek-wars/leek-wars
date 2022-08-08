@@ -1,5 +1,5 @@
 <template lang="html">
-	<div class="message" :class="{ me: chat.type === 2 && $store.state.farmer && message.farmer.id === $store.state.farmer.id, react: reactionDialog, reactions: !LeekWars.isEmptyObj(message.reactions) }">
+	<div class="message" :class="{ me: chat.type === 2 && $store.state.farmer && message.farmer.id === $store.state.farmer.id, react: false, reactions: !LeekWars.isEmptyObj(message.reactions) }">
 		<router-link v-if="message.farmer.id !== 0" :to="'/farmer/' + message.farmer.id" class="avatar-wrapper">
 			<rich-tooltip-farmer :id="message.farmer.id" v-slot="{ on }">
 				<avatar :farmer="message.farmer" :on="on" />
@@ -18,142 +18,50 @@
 			<router-link v-else-if="message.farmer.id === 0" :to="'/fight/' + message.content.split('|')[1]">
 				{{ $t(message.content.split('|')[0]) }}
 			</router-link>
-			<div v-else v-large-emojis v-chat-code-latex class="text" v-html="message.content"></div>
+			<div v-else @click="clickMessage" v-chat-code-latex class="text" :class="{'large-emojis': message.only_emojis}" v-html="message.content"></div>
 
 			<template v-for="(sub, i) in message.subMessages">
 				<div v-if="sub.censored" :key="i" class="censored">Censuré par {{ sub.censored_by.name }}</div>
 				<router-link v-else-if="sub.farmer.id === 0" :to="'/fight/' + sub.content.split('|')[1]">
 					{{ $t(sub.content.split('|')[0]) }}
 				</router-link>
-				<div v-else :key="i" v-large-emojis v-chat-code-latex class="text" v-html="sub.content"></div>
+				<div v-else :key="i" @click="clickMessage" v-chat-code-latex class="text" :class="{'large-emojis': sub.only_emojis, ['m-' + sub.id]: true}" v-html="sub.content"></div>
 			</template>
 
 			<div class="right">
 				<span :title="LeekWars.formatDateTime(message.date)" class="time">{{ LeekWars.formatTime(message.date) }}</span>
-				<v-menu v-if="!privateMessages && (message.farmer.color !== 'admin' || $store.getters.admin) && message.farmer.id !== 0" offset-y>
-					<template v-slot:activator="{ on }">
-						<v-btn text small icon color="grey" v-on="on">
-							<v-icon>mdi-dots-vertical</v-icon>
-						</v-btn>
-					</template>
-					<v-list dense class="message-actions">
-						<v-list-item v-if="chat.type === ChatType.GLOBAL && message.farmer.id !== $store.state.farmer.id && message.farmer.color !== 'admin'" v-ripple @click="report(message)">
-							<v-icon>mdi-flag</v-icon>
-							<span>{{ $t('warning.report') }}</span>
-						</v-list-item>
-						<v-list-item v-if="isModerator && chat.type !== ChatType.PM && message.farmer.color !== 'admin'" v-ripple @click="mute(message.farmer)">
-							<v-icon>mdi-volume-off</v-icon>
-							<span>Mute</span>
-						</v-list-item>
-						<v-list-item v-if="isModerator && chat.type !== ChatType.PM && message.farmer.color !== 'admin'" v-ripple @click="censor(message)">
-							<v-icon>mdi-gavel</v-icon>
-							<span>{{ $t('warning.censor') }}</span>
-						</v-list-item>
-						<v-list-item v-if="chat.type !== ChatType.PM && (message.farmer.id === $store.state.farmer.id || $store.getters.admin)" v-ripple @click="deleteMessage(message)">
-							<v-icon>mdi-delete</v-icon>
-							<span>{{ $t('warning.delete') }}</span>
-						</v-list-item>
-					</v-list>
-				</v-menu>
+
+				<v-btn v-if="!privateMessages && (message.farmer.color !== 'admin' || $store.getters.admin) && message.farmer.id !== 0"  text small icon color="grey" @click="$emit('menu', $event)">
+					<v-icon>mdi-dots-vertical</v-icon>
+				</v-btn>
 			</div>
 			<div class="reactions">
-				<div v-for="(reaction, emoji) in message.reactions" :key="emoji" class="reaction" :class="{me: emoji === message.my_reaction}">
-					{{ emoji }} <span v-if="reaction.count > 1" class="count">{{ reaction.count }}</span>
-				</div>
+				<v-tooltip v-for="(reaction, emoji) in message.reactions" :key="emoji" :open-delay="500" :close-delay="0" bottom>
+					<template v-slot:activator="{ on }">
+						<div v-on="on" class="reaction" v-ripple :class="{me: emoji === message.my_reaction}" @click="toggleReaction(emoji)">
+							{{ emoji }} <span v-if="reaction.count > 1" class="count">{{ reaction.count }}</span>
+						</div>
+					</template>
+					{{ reaction.farmers.join(', ') }}
+				</v-tooltip>
 			</div>
 		</div>
 
-		<v-menu v-if="$store.state.farmer.verified" v-model="reactionDialog" offset-y top :nudge-top="10" content-class="emojis-dialog">
-			<template v-slot:activator="{ on }">
-				<div v-ripple class="add" v-on="on">
-					<v-icon>mdi-emoticon-outline</v-icon> +
-				</div>
-			</template>
-			<div class="emojis">
-				<span v-for="(emoji, e) in emojis" :key="e" class="emoji" :class="{selected: emoji === message.my_reaction}" @click="toggleReaction(emoji)">{{ emoji }}</span>
-				<span v-if="message.my_reaction && !emojis.includes(message.my_reaction)" class="emoji selected" @click="toggleReaction(message.my_reaction)">{{ message.my_reaction }}</span>
-				<emoji-picker @pick="toggleReaction" :close-on-selected="true" :classic="false"><v-icon class="more">mdi-dots-horizontal</v-icon></emoji-picker>
-			</div>
-		</v-menu>
-
-		<report-dialog v-if="reportFarmer" v-model="reportDialog" :target="reportFarmer" :reasons="reasons" :parameter="reportContent" class="report-dialog" />
-
-		<popup v-model="censorDialog" :width="500">
-			<v-icon slot="icon">mdi-gavel</v-icon>
-			<span slot="title">Censurer</span>
-			<div v-if="muteFarmer" class="censor">
-				<i18n path="warning.censor_farmer">
-					<b slot="farmer">{{ muteFarmer.name }}</b>
-				</i18n>
-				<div class="flex">
-					<avatar :farmer="muteFarmer" />
-					<div class="messages">
-						<div v-for="message in censorMessages" :key="message.id" class="bubble">
-							<v-checkbox v-if="message.censored === 0" v-model="censoredMessages[message.id]" :label="message.content" :hide-details="true" />
-							<div v-for="sub in message.subMessages" :key="sub.id">
-								<v-checkbox v-if="sub.censored === 0" v-model="censoredMessages[sub.id]" :label="sub.content" :hide-details="true" />
-							</div>
-						</div>
-					</div>
-				</div>
-				<v-checkbox v-model="censorMute" label="Mettre en sourdine pour 1h" :hide-details="true" />
-			</div>
-			<div slot="actions">
-				<div v-ripple @click="censorDialog = false">{{ $t('main.cancel') }}</div>
-				<div v-ripple class="mute red" @click="censorConfirm"><v-icon>mdi-gavel</v-icon> Censurer</div>
-			</div>
-		</popup>
-
-		<popup v-model="deleteDialog" :width="500">
-			<v-icon slot="icon">mdi-delete</v-icon>
-			<span slot="title">Supprimer</span>
-			<div v-if="muteFarmer" class="censor">
-				<i18n path="warning.delete_farmer"></i18n>
-				<div class="flex">
-					<avatar :farmer="muteFarmer" />
-					<div class="messages">
-						<div v-for="message in deleteMessages" :key="message.id" class="bubble">
-							<v-checkbox v-model="deletedMessages[message.id]" :label="message.content" :hide-details="true" />
-							<div v-for="sub in message.subMessages" :key="sub.id">
-								<v-checkbox v-model="deletedMessages[sub.id]" :label="sub.content" :hide-details="true" />
-							</div>
-						</div>
-					</div>
-				</div>
-				<v-checkbox v-if="isModerator && muteFarmer.color !== 'admin'" v-model="censorMute" label="Mettre en sourdine pour 1h" :hide-details="true" />
-			</div>
-			<div slot="actions">
-				<div v-ripple @click="deleteDialog = false">{{ $t('main.cancel') }}</div>
-				<div v-ripple class="mute red" @click="deleteConfirm"><v-icon>mdi-delete</v-icon> Supprimer</div>
-			</div>
-		</popup>
-
-		<popup v-model="muteDialog" :width="500">
-			<v-icon slot="icon">mdi-gavel</v-icon>
-			<span slot="title">Censurer</span>
-			<div v-if="muteFarmer" class="censor">
-				<i18n path="warning.mute_popup">
-					<b slot="farmer">{{ muteFarmer.name }}</b>
-				</i18n>
-			</div>
-			<div slot="actions">
-				<div v-ripple @click="muteDialog = false">{{ $t('main.cancel') }}</div>
-				<div v-ripple class="mute red" @click="muteConfirm"><v-icon>mdi-gavel</v-icon> Censurer</div>
-			</div>
-		</popup>
+		<div v-if="$store.state.farmer.verified" v-ripple class="add" @click="$emit('emoji', $event)">
+			<v-icon>mdi-emoticon-outline</v-icon> +
+		</div>
 	</div>
 </template>
 
 <script lang="ts">
 	import { Chat, ChatMessage, ChatType } from '@/model/chat'
-	import { Farmer } from '@/model/farmer'
 	import { LeekWars } from '@/model/leekwars'
-	import { Warning } from '@/model/moderation'
-	import { TeamMemberLevel } from '@/model/team'
+import { store } from '@/model/store'
+import { vueMain } from '@/model/vue'
 	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
-	import EmojiPicker from './emoji-picker.vue'
+import Pseudo from '../app/pseudo.vue'
 
-	@Component({ name: 'ChatMessage', components: { 'emoji-picker': EmojiPicker } })
+	@Component({ name: 'ChatMessage' })
 	export default class ChatMessageComponent extends Vue {
 
 		@Prop({ required: true }) message!: ChatMessage
@@ -161,46 +69,22 @@
 		@Prop() large!: boolean
 
 		ChatType = ChatType
-		muteDialog: boolean = false
-		muteFarmer: Farmer | null = null
 
-		censorDialog: boolean = false
-		censorMessage: ChatMessage | null = null
-		censoredMessages: {[key: number]: boolean} = {}
-		censorMute: boolean = false
-
-		deleteDialog: boolean = false
-		deletedMessage: ChatMessage | null = null
-		deletedMessages: {[key: number]: boolean} = {}
-
-		reportDialog: boolean = false
-		reportFarmer: Farmer | null = null
-		reportContent: string = ''
-		reasons = [
-			Warning.RUDE_CHAT,
-			Warning.FLOOD_CHAT,
-			Warning.PROMO_CHAT,
-			Warning.INCORRECT_FARMER_NAME,
-			Warning.INCORRECT_AVATAR,
-		]
-
-		reactionDialog: boolean = false
-		emojis = ['❤️', '👍', '👎', '👏', '😂', '😀', '😮', '😱']
-
+		get me() {
+			return this.message.farmer.id === this.$store.state.farmer.id
+		}
 		get privateMessages() {
 			return this.chat && this.chat.type === ChatType.PM
 		}
-		get isModerator() {
-			return this.$store.getters.moderator || (this.chat && this.chat.type === ChatType.TEAM && this.$store.state.farmer.team.member_level >= TeamMemberLevel.CAPTAIN)
-		}
-		get censorMessages() {
-			return this.chat && this.muteFarmer ? this.chat.messages.filter(m => (m.censored === 0 || (m.subMessages && m.subMessages.some(s => s.censored === 0))) && m.farmer.id === this.muteFarmer!.id) : []
-		}
-		get deleteMessages() {
-			return this.chat && this.muteFarmer ? this.chat.messages.filter(m => m.farmer.id === this.muteFarmer!.id) : []
-		}
-		get me() {
-			return this.message.farmer.id === this.$store.state.farmer.id
+
+		mounted() {
+			this.$el.querySelectorAll('.pseudo').forEach((c) => {
+				const name = (c as HTMLElement).innerText
+				const farmer = store.state.farmer_by_name[name]
+				if (farmer) {
+					new Pseudo({ propsData: { farmer }, parent: vueMain }).$mount(c)
+				}
+			})
 		}
 
 		@Watch('message.reactions')
@@ -208,68 +92,7 @@
 			this.$emit('scroll')
 		}
 
-		report(message: ChatMessage) {
-			this.reportDialog = true
-			this.reportFarmer = message.farmer
-			this.reportContent = [message.id, ...message.subMessages.map(s => s.id)].join(',')
-		}
-
-		censor(message: ChatMessage) {
-			this.censorDialog = true
-			this.censorMessage = message
-			this.muteFarmer = message.farmer
-			this.censoredMessages = {}
-			if (message.censored === 0) {
-				Vue.set(this.censoredMessages, message.id, true)
-			}
-			for (const sub of message.subMessages) {
-				if (sub.censored === 0) {
-					Vue.set(this.censoredMessages, sub.id, true)
-				}
-			}
-		}
-
-		deleteMessage(message: ChatMessage) {
-			this.deleteDialog = true
-			this.deletedMessage = message
-			this.muteFarmer = message.farmer
-			this.deletedMessages = {}
-			Vue.set(this.deletedMessages, message.id, true)
-			for (const sub of message.subMessages) {
-				Vue.set(this.deletedMessages, sub.id, true)
-			}
-		}
-
-		mute(farmer: Farmer) {
-			this.muteDialog = true
-			this.muteFarmer = farmer
-		}
-
-		censorConfirm() {
-			this.censorDialog = false
-			if (this.censorMessage) {
-				const ids = Object.entries(this.censoredMessages).filter(e => e[1]).map(e => e[0]).join(',')
-				LeekWars.post('message/censor', { messages: ids, mute: this.censorMute })
-			}
-		}
-
-		deleteConfirm() {
-			this.deleteDialog = false
-			if (this.deletedMessage) {
-				const ids = Object.entries(this.deletedMessages).filter(e => e[1]).map(e => e[0]).join(',')
-				LeekWars.post('message/delete', { messages: ids, mute: this.censorMute })
-			}
-		}
-
-		muteConfirm() {
-			if (!this.muteFarmer || !this.chat) { return }
-			LeekWars.post('message/mute', { farmer: this.muteFarmer.id, chat: this.chat.id, duration: 3600 })
-			this.muteFarmer.muted = true
-			this.muteDialog = false
-		}
-
 		toggleReaction(emoji: string) {
-			this.reactionDialog = false
 			if (this.message.my_reaction === emoji) { // Remove current reaction
 				LeekWars.delete('message-reaction/delete', { message_id: this.message.id })
 				this.message.my_reaction = null
@@ -277,6 +100,16 @@
 				LeekWars.post('message-reaction/add', { reaction: emoji, message_id: this.message.id })
 				this.message.my_reaction = emoji
 			}
+		}
+
+		clickMessage(e: MouseEvent) {
+			// console.log("click", e)
+			// const target = e.target as HTMLElement
+			// console.log(target)
+			// if (target.classList.contains('pseudo')) {
+			// 	const farmer = store.state.farmer_by_name[target.innerText]
+			// 	console.log("click on farmer", farmer)
+			// }
 		}
 	}
 </script>
@@ -316,7 +149,7 @@
 			word-break: break-word;
 			color: #333;
 		}
-		.text.large-emojis {
+		.text.large-emojis, &.large .text.large-emojis {
 			line-height: 26px;
 			font-size: 22px;
 			::v-deep .emoji {
@@ -369,9 +202,6 @@
 			color: #aaa;
 		}
 	}
-	.message-actions .v-icon {
-		margin-right: 6px;
-	}
 	.text ::v-deep a {
 		color: #5fad1b;
 	}
@@ -380,19 +210,6 @@
 		font-size: 18px;
 		margin-right: 4px;
 		vertical-align: baseline;
-	}
-	.censor {
-		.messages {
-			flex: 1;
-		}
-		.bubble {
-			margin-bottom: 10px;
-			padding: 8px;
-		}
-	}
-	.censor .flex {
-		gap: 8px;
-		margin: 10px 0;
 	}
 	.censored {
 		font-size: 15px;
@@ -420,40 +237,6 @@
 	.message:hover .add, .message.react .add {
 		opacity: 1;
 	}
-	.emojis {
-		padding: 6px;
-		font-size: 22px;
-		user-select: none;
-		.emoji {
-			display: inline-block;
-			width: 36px;
-			height: 36px;
-			cursor: pointer;
-			transition: all 150ms ease;
-			line-height: 36px;
-			text-align: center;
-		}
-		.emoji:hover {
-			transform: scale(1.6) translateY(-6px);
-		}
-		.emoji.selected {
-			border: 1px solid #777;
-			background: #eee;
-			border-radius: 50%;
-		}
-		.more {
-			font-size: 23px;
-			color: #777;
-		}
-	}
-	.emojis-dialog {
-		contain: inherit;
-		overflow: inherit;
-	}
-	::v-deep .chat-input-emoji {
-		position: relative;
-		display: inline-flex;
-	}
 	.message {
 		.reactions {
 			display: flex;
@@ -477,6 +260,7 @@
 			font-size: 18px;
 			display: flex;
 			align-items: center;
+			cursor: pointer;
 			.count {
 				font-size: 15px;
 				margin-left: 4px;

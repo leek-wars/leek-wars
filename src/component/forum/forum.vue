@@ -84,7 +84,7 @@
 				</v-menu>
 			</span>
 			<div slot="actions">
-				<div v-if="!LeekWars.mobile" class="button flat" @click="LeekWars.addChat(chatLanguage.chat, ChatType.GLOBAL, 'Chat ' + chatLanguage.code.toUpperCase())">
+				<div v-if="!LeekWars.mobile && $store.state.chat[chatLanguage.chat]" class="button flat" @click="LeekWars.addChat($store.state.chat[chatLanguage.chat])">
 					<v-icon>mdi-picture-in-picture-bottom-right</v-icon>
 				</div>
 			</div>
