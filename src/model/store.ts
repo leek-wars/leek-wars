@@ -785,14 +785,22 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 
 		'add-resource'(state: LeekWarsState, data: { template: number, id: number }) {
 			// console.log("add resource", data);
-			for (const resource of state.farmer!.resources) {
-				if (resource.template === data.template) {
-					resource.quantity += 1
-					return
+			if (state.farmer) {
+				for (const resource of state.farmer.resources) {
+					if (resource.template === data.template) {
+						resource.quantity += 1
+						return
+					}
 				}
+				state.farmer.resources.push({ template: data.template, id: data.id, quantity: 1 })
 			}
-			state.farmer!.resources.push({ template: data.template, id: data.id, quantity: 1 })
-		}
+		},
+
+		'remove-error'(state: LeekWarsState, data: any) {
+			if (state.farmer) {
+				state.farmer.errors--
+			}
+		},
 	},
 })
 export { store }

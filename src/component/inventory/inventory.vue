@@ -93,6 +93,10 @@
 								<span>{{ $t('level') }}</span>
 								<v-icon v-if="sort === Sort.LEVEL">mdi-check</v-icon>
 							</v-list-item>
+							<v-list-item v-ripple @click="sort = Sort.RARITY">
+								<span>{{ $t('rarity') }}</span>
+								<v-icon v-if="sort === Sort.RARITY">mdi-check</v-icon>
+							</v-list-item>
 						</v-list>
 					</v-menu>
 					<v-menu offset-y>
@@ -188,7 +192,7 @@
 	import { Item } from '../editor/editor-item'
 
 	enum Sort {
-		DATE, PRICE, PRICE_LOT, QUANTITY, /*NAME, */ LEVEL
+		DATE, PRICE, PRICE_LOT, QUANTITY, /*NAME, */ LEVEL, RARITY
 	}
 	enum Filter {
 		ALL, WEAPONS, CHIPS, POTIONS, HATS, POMPS, RESOURCES
@@ -253,6 +257,7 @@
 				if (this.sort === Sort.PRICE) return LeekWars.items[b.template].price! - LeekWars.items[a.template].price!
 				if (this.sort === Sort.PRICE_LOT) return LeekWars.items[b.template].price! * b.quantity - LeekWars.items[a.template].price! * a.quantity
 				if (this.sort === Sort.QUANTITY) return b.quantity - a.quantity
+				if (this.sort === Sort.RARITY) return LeekWars.items[b.template].rarity - LeekWars.items[a.template].rarity
 				// if (this.sort === Sort.NAME) return LeekWars.items[b.template].price - LeekWars.items[a.template].price
 				/*if (this.sort === Sort.LEVEL) */ return LeekWars.items[b.template].level - LeekWars.items[a.template].level
 			})

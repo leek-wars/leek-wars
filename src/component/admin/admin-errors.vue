@@ -19,11 +19,15 @@
 							<div class="card">
 								<div class="header">
 									<div>Erreur #{{ error.id }} - <b>{{ LeekWars.formatDateTime(error.time) }}</b> - Type {{ error.type }} - Gravité {{ error.severity }}</div>
-									<div class="buttons">
-										<v-btn v-if="error.ai" color="primary" small>IA {{ error.ai }}</v-btn>
-										<router-link :to="'/fight/' + error.fight"><v-btn v-if="error.fight" small>Combat {{ error.fight }}</v-btn></router-link>
-										<v-icon color="error" @click="removeError(error.id)">mdi-delete</v-icon>
-									</div>
+									<div class="spacer"></div>
+									<router-link v-if="error.farmer" :to="'/farmer/' + error.farmer.id" class="farmer" v-ripple>
+										{{ error.farmer.name }}
+										<avatar :farmer="error.farmer" />
+									</router-link>
+									<span class="ip" v-if="error.ip">{{ error.ip }}</span>
+									<a :href="LeekWars.API + 'ai/download/' + error.ai" target="_blank"><v-btn v-if="error.ai" color="primary" small>IA {{ error.ai }}</v-btn></a>
+									<router-link :to="'/fight/' + error.fight"><v-btn v-if="error.fight" small>Combat {{ error.fight }}</v-btn></router-link>
+									<v-icon color="error" @click="removeError(error.id)">mdi-delete</v-icon>
 								</div>
 								<code>{{ error.trace.substring(0, 8000) }}</code>
 								<div v-if="error.file || error.line">Fichier <b>{{ error.file }}</b> ligne <b>{{ error.line }}</b></div>
@@ -47,6 +51,10 @@
 		deleteQuery: string = ''
 
 		created() {
+			this.update()
+		}
+
+		update() {
 			LeekWars.get('error/get-latest').then(data => {
 				this.errors = data.errors
 				LeekWars.setTitle("Gestionnaire d'erreur (" + (store.state.farmer ? store.state.farmer!.errors : 0) + ")")
@@ -56,10 +64,13 @@
 		removeError(id: number) {
 			LeekWars.post('error/delete', { id })
 			this.errors = this.errors!.filter(e => e.id !== id)
+			this.$store.commit('remove-error')
 		}
 
 		deleteErrors() {
-			LeekWars.post('error/delete-query', { query: this.deleteQuery })
+			LeekWars.post('error/delete-query', { query: this.deleteQuery }).then(() => {
+				this.update()
+			})
 		}
 	}
 </script>
@@ -73,21 +84,31 @@
 		.header {
 			display: flex;
 			align-items: center;
-			justify-content: space-between;
-		}
-		.buttons {
-			display: flex;
-			justify-content: flex-end;
-			align-items: center;
-			top: 8px;
-			right: 8px;
+			flex-wrap: wrap;
 			gap: 8px;
+		}
+		.farmer {
+			display: flex;
+			align-items: center;
+			gap: 8px;
+			border: 1px solid #aaa;
+			padding: 2px 6px;
+			border-radius: 4px;
+			.avatar {
+				width: 26px;
+				height: 26px;
+			}
+		}
+		.ip {
+			font-family: monospace;
+			font-size: 13px;
 		}
 	}
 	.error code {
 		margin: 8px 0;
 		display: block;
 		word-break: break-word;
+		font-size: 14px;
 	}
 	.errors td a {
 		color: #0a0;

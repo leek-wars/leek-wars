@@ -41,5 +41,14 @@
 	"wood_chest": "Coffre en bois",
 	"iron_chest": "Coffre en fer",
 	"diamond_chest": "Coffre en diamant",
-	"flower": "Fleur"
+	"flower": "Fleur",
+	"leaf": "Feuille",
+	"metal_plate": "Plaque de métal",
+	"sand": "Sable",
+	"salt": "Sel",
+	"ivy": "Lierre",
+	"statuette": "Statuette",
+	"skull": "Crâne",
+	"sea_water": "Eau de mer",
+	"pine_ball": "Boule de pin"
 }

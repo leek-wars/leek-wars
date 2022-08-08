@@ -36,7 +36,8 @@
 			</div>
 			<div v-if="item.name.startsWith('box') || (LeekWars.christmasPresents && item.name.startsWith('present'))">
 				<v-btn small class="get-all notif-trophy" @click.stop="retrieveN(1)">{{ $t('main.retrieve') }} <img src="/image/icon/black/arrow-down-right-bold.svg"></v-btn>
-				<v-btn v-if="quantity >= 10" small class="get-all notif-trophy" @click.stop="retrieveN(10)">{{ $t('main.retrieve') }} x10 <img src="/image/icon/black/arrow-down-right-bold.svg"></v-btn>
+				<v-btn v-if="quantity >= 10" small class="get-all notif-trophy" @click.stop="retrieveN(10)">x10 <img src="/image/icon/black/arrow-down-right-bold.svg"></v-btn>
+				<v-btn v-if="quantity >= 100" small class="get-all notif-trophy" @click.stop="retrieveN(100)">x100 <img src="/image/icon/black/arrow-down-right-bold.svg"></v-btn>
 			</div>
 		</div>
 	</div>
@@ -102,14 +103,15 @@ export default class ItemPreview extends Vue {
 </script>
 
 <style lang="scss" scoped>
-.get-all {
+.get-all.v-size--small {
 	font-size: 15px;
 	font-weight: 500;
-	margin: 5px;
+	padding: 7px;
+	margin: 6px 4px;
 	img {
 		margin-left: 4px;
 		margin-right: 0;
-		width: 20px;
+		width: 18px;
 	}
 }
 .rarity-band {
