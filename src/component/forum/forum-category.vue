@@ -217,6 +217,8 @@
 			if (!this.categories) { return }
 			LeekWars.post('forum/create-topic', {category_id: this.categories[0].id, title: this.createTitle, message: this.createMessage, issue: 0, lang: this.createMessageLang}).then(data => {
 				this.createDialog = false
+				localStorage.setItem('forum/draft', '')
+				localStorage.setItem('forum/draft-title', '')
 				if (this.categories) {
 					this.$router.push("/forum/category-" + this.category_ids + "/topic-" + data.topic_id)
 				}
