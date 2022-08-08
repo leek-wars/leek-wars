@@ -1,8 +1,7 @@
-import { env } from '@/env'
 import { LeekWars } from '@/model/leekwars'
 import { vueMain } from '@/model/vue'
 import router from '@/router'
-import { ChatMessage, ChatType } from './chat'
+import { ChatMessage } from './chat'
 import { NotificationType } from './notification'
 import { store } from './store'
 
@@ -237,7 +236,7 @@ class Socket {
 					break
 				}
 				case SocketMessage.CHAT_REACT: {
-					store.commit('chat-react', { chat: data[0], message: data[1], reaction: data[2], old: data[3] })
+					store.commit('chat-react', { chat: data[0], message: data[1], reaction: data[2], old: data[3], farmer: data[4] })
 					break
 				}
 				case SocketMessage.ADD_RESOURCE: {

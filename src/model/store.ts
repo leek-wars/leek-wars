@@ -423,21 +423,27 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			}
 		},
 
-		'chat-react'(state: LeekWarsState, data: {chat: number, message: number, reaction: string, old: string}) {
+		'chat-react'(state: LeekWarsState, data: {chat: number, message: number, reaction: string, old: string, farmer: string}) {
 			const chat = state.chat[data.chat]
 			if (chat) {
 				for (const message of chat.messages) {
 					if (message.id === data.message) {
 						if (data.old) {
-							if (--message.reactions[data.old] === 0) {
+							message.reactions[data.old].count--
+							const i = message.reactions[data.old].farmers.indexOf(data.farmer)
+							if (i !== -1) {
+								message.reactions[data.old].farmers.splice(i, 1)
+							}
+							if (message.reactions[data.old].count === 0) {
 								Vue.delete(message.reactions, data.old)
 							}
 						}
 						if (data.reaction) {
 							if (data.reaction in message.reactions) {
-								message.reactions[data.reaction]++
+								message.reactions[data.reaction].count++
+								message.reactions[data.reaction].farmers.push(data.farmer)
 							} else {
-								Vue.set(message.reactions, data.reaction, 1)
+								Vue.set(message.reactions, data.reaction, { count: 1, farmers: [ data.farmer ] })
 							}
 						}
 						break

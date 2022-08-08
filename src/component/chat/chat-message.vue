@@ -53,8 +53,8 @@
 				</v-menu>
 			</div>
 			<div class="reactions">
-				<div v-for="(count, reaction) in message.reactions" :key="reaction" class="reaction" :class="{me: reaction === message.my_reaction}">
-					{{ reaction }} <span v-if="count > 1" class="count">{{ count }}</span>
+				<div v-for="(reaction, emoji) in message.reactions" :key="emoji" class="reaction" :class="{me: emoji === message.my_reaction}">
+					{{ emoji }} <span v-if="reaction.count > 1" class="count">{{ reaction.count }}</span>
 				</div>
 			</div>
 		</div>

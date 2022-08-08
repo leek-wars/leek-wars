@@ -19,7 +19,7 @@ class ChatMessage {
 	censored!: number
 	censored_by!: Farmer | null
 	read!: boolean
-	reactions!: {[key: string]: number}
+	reactions!: {[key: string]: { count: number, farmers: string[] }}
 	my_reaction!: string | null
 }
 
