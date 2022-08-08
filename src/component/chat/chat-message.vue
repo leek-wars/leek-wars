@@ -69,6 +69,7 @@ import Pseudo from '../app/pseudo.vue'
 		@Prop() large!: boolean
 
 		ChatType = ChatType
+		pseudos: Vue[] = []
 
 		get me() {
 			return this.message.farmer.id === this.$store.state.farmer.id
@@ -82,9 +83,17 @@ import Pseudo from '../app/pseudo.vue'
 				const name = (c as HTMLElement).innerText
 				const farmer = store.state.farmer_by_name[name]
 				if (farmer) {
-					new Pseudo({ propsData: { farmer }, parent: vueMain }).$mount(c)
+					const pseudo = new Pseudo({ propsData: { farmer }, parent: vueMain })
+					pseudo.$mount(c)
+					this.pseudos.push(pseudo)
 				}
 			})
+		}
+
+		beforeDestroy() {
+			for (const pseudo of this.pseudos) {
+				pseudo.$destroy()
+			}
 		}
 
 		@Watch('message.reactions')
