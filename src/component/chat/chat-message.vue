@@ -1,12 +1,12 @@
 <template lang="html">
-	<div class="message" :class="{ me: $store.state.farmer && message.farmer.id === $store.state.farmer.id, react: reactionDialog, reactions: !LeekWars.isEmptyObj(message.reactions) }">
+	<div class="message" :class="{ me: chat.type === 2 && $store.state.farmer && message.farmer.id === $store.state.farmer.id, react: reactionDialog, reactions: !LeekWars.isEmptyObj(message.reactions) }">
 		<router-link v-if="message.farmer.id !== 0" :to="'/farmer/' + message.farmer.id" class="avatar-wrapper">
 			<rich-tooltip-farmer :id="message.farmer.id" v-slot="{ on }">
 				<avatar :farmer="message.farmer" :on="on" />
 			</rich-tooltip-farmer>
 		</router-link>
 		<img v-else class="avatar" src="/image/favicon.png">
-		<div class="bubble" :class="{'br-notification': message.farmer.id === 0}">
+		<div class="bubble" :class="{'br-notification': message.farmer.id === 0, large: large}">
 			<router-link v-if="message.farmer.id !== 0" :to="'/farmer/' + message.farmer.id" class="author">
 				<rich-tooltip-farmer :id="message.farmer.id" v-slot="{ on }">
 					<span :class="message.farmer.color" v-on="on">{{ message.farmer.name }}</span>
@@ -158,6 +158,7 @@
 
 		@Prop({ required: true }) message!: ChatMessage
 		@Prop() chat!: Chat
+		@Prop() large!: boolean
 
 		ChatType = ChatType
 		muteDialog: boolean = false
@@ -311,6 +312,27 @@
 			display: none;
 			cursor: pointer;
 		}
+		.text {
+			word-break: break-word;
+			color: #333;
+		}
+		.text.large-emojis {
+			line-height: 26px;
+			font-size: 22px;
+			::v-deep .emoji {
+				width: 24px;
+				height: 24px;
+			}
+		}
+		&.large {
+			padding: 6px 10px;
+			.text, .author {
+				font-size: 15.5px;
+			}
+			.right {
+				top: 7px;
+			}
+		}
 	}
 	.message.reactions .bubble {
 		margin-bottom: 12px;
@@ -326,18 +348,6 @@
 		padding-bottom: 2px;
 		padding-right: 60px;
 		color: #777;
-	}
-	.text {
-		word-break: break-word;
-		color: #333;
-	}
-	.text.large-emojis {
-		line-height: 26px;
-		font-size: 22px;
-		::v-deep .emoji {
-			width: 24px;
-			height: 24px;
-		}
 	}
 	.right {
 		font-size: 13px;

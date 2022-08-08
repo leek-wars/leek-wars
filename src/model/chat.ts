@@ -3,7 +3,6 @@ import { Farmer } from '@/model/farmer'
 import { i18n } from '@/model/i18n'
 import { LeekWars } from '@/model/leekwars'
 import Vue from 'vue'
-import { store } from './store'
 
 enum ChatType { GLOBAL, TEAM, PM }
 
@@ -116,6 +115,7 @@ class Chat {
 				day: new Date(raw_message[4] * 1000).getDate()
 			})
 		}
+		console.log(this.messages)
 		this.messages = prepared_messages
 	}
 

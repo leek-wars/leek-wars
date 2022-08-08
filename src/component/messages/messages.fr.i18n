@@ -6,5 +6,16 @@
 	"quit_confirm": "Voulez-vous quitter la conversation ? Vous ne pourrez plus voir les messages précédents.",
 	"quit_conversation": "Quitter la conversation",
 	"send": "Envoyer",
-	"title": "Messages privés"
+	"title": "Chats",
+	"cat_fr": "Français",
+	"cat_en": "Anglais",
+	"cat_team": "Équipe",
+	"cat_private": "Messages privés",
+	"fr_general": "Principal",
+	"fr_help": "Aide",
+	"fr_programming": "Programmation",
+	"en_general": "Main",
+	"en_help": "Help",
+	"en_programming": "Programming",
+	"team": "Équipe"
 }

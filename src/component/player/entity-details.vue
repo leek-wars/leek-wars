@@ -78,6 +78,7 @@
 			<div class="image">
 				<img v-if="entity.summon" :src="'/image/bulb/' + entity.bulbName + '_front.png'">
 				<turret-image v-else-if="(entity instanceof Turret)" :level="entity.level" :skin="entity.team" :scale="0.15" />
+				<img v-else-if="(entity instanceof Chest)" :src="'/image/chest/' + entity.rawName + '.png'">
 				<leek-image v-else :leek="entity" :scale="0.3" />
 			</div>
 			<div>
@@ -155,6 +156,7 @@
 <script lang="ts">
 	import { Effect, EffectType } from '@/model/effect'
 	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
+	import { Chest } from './game/chest'
 	import { FightEntity } from './game/entity'
 	import { Game } from './game/game'
 	import { Turret } from './game/turret'
@@ -166,6 +168,7 @@
 		@Prop({required: true}) dark!: boolean
 		Turret = Turret
 		EffectType = EffectType
+		Chest = Chest
 
 		effectText(effect: any) {
 			let r = '' + effect.value

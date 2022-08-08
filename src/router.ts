@@ -194,7 +194,9 @@ if (process.env.VUE_APP_SOCIAL === 'true') {
 		{ path: '/forum/category-:category/topic-:topic', component: ForumTopic, beforeEnter: connected },
 		{ path: '/forum/category-:category/topic-:topic/page-:page', component: ForumTopic, beforeEnter: connected },
 		{ path: '/search', component: ForumSearch, beforeEnter: connected },
-		{ path: '/chat', component: Chat, beforeEnter: connected },
+		{ path: '/chat', component: Messages, beforeEnter: connected },
+		{ path: '/chat/:id', component: Messages, beforeEnter: connected },
+		{ path: '/chat/new/:farmer_id/:name/:avatar_changed', component: Messages, beforeEnter: connected },
 	)
 }
 if (process.env.VUE_APP_BANK === 'true') {

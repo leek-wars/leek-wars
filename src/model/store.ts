@@ -280,7 +280,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			if (state.farmer) {
 				state.farmer.habs += habs
 				clearTimeout(state.habs_timer)
-				const increment = (state.farmer!.habs - state.farmer!.animated_habs) / 23
+				const increment = (state.farmer.habs - state.farmer.animated_habs) / 23
 				const update = () => {
 					state.farmer!.animated_habs = state.farmer!.animated_habs + increment
 					if (Math.abs(state.farmer!.animated_habs - state.farmer!.habs) > 0.4) {

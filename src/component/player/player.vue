@@ -886,6 +886,7 @@
 		display: none;
 		margin-top: -30px;
 		white-space: nowrap;
+		opacity: 1 !important;
 	}
 	.progress-bar-wrapper:hover .progress-bar-turn {
 		display: inline-block;

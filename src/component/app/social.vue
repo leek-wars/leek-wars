@@ -29,13 +29,13 @@
 
 				<panel v-if="env.SOCIAL && $store.state.farmer.verified && $store.state.conversationsList.length" toggle="social/messages" icon="mdi-email-outline">
 					<template slot="title">
-						<router-link v-ripple class="title" to="/messages">
+						<router-link v-ripple class="title" to="/chat">
 							{{ $t('main.messages') }}
 							<span v-show="$store.state.unreadMessages" class="label">{{ $store.state.unreadMessages }}</span>
 						</router-link>
 					</template>
 					<div slot="content" v-autostopscroll class="content-limit">
-						<router-link v-for="chat in $store.state.conversationsList" :key="chat.id" :to="'/messages/conversation/' + chat.id">
+						<router-link v-for="chat in $store.state.conversationsList" :key="chat.id" :to="'/chat/' + chat.id">
 							<conversation :chat="chat" />
 						</router-link>
 					</div>
@@ -43,7 +43,7 @@
 
 				<panel v-if="env.SOCIAL" class="blabla-chat" toggle="social/chat" icon="mdi-chat-outline">
 					<template slot="title">
-						<router-link v-ripple to="/chat" class="title">
+						<router-link v-ripple :to="'/chat/' + chatLanguage.chat" class="title">
 							Chat
 							<span class="farmer-count">
 								<span class="count">({{ $store.state.connected_farmers }} <v-icon class="icon">mdi-account-multiple</v-icon>)</span>

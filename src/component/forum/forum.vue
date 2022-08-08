@@ -68,6 +68,29 @@
 			</template>
 		</panel>
 
+		<panel icon="mdi-chat-outline">
+			<span slot="title">
+				<router-link to="/chat">{{ $t('main.chat') }}</router-link>
+				<v-menu offset-y>
+					<template v-slot:activator="{ on }">
+						<img :src="chatLanguage.flag" class="language-button" v-on="on">
+					</template>
+					<v-list :dense="true">
+						<v-list-item v-for="(language, i) in LeekWars.languages" :key="i" class="language" @click="setChatLanguage(language)">
+							<img :src="language.flag" class="flag">
+							<span class="name">{{ language.name }}</span>
+						</v-list-item>
+					</v-list>
+				</v-menu>
+			</span>
+			<div slot="actions">
+				<div v-if="!LeekWars.mobile" class="button flat" @click="LeekWars.addChat(chatLanguage.chat, ChatType.GLOBAL, 'Chat ' + chatLanguage.code.toUpperCase())">
+					<v-icon>mdi-picture-in-picture-bottom-right</v-icon>
+				</div>
+			</div>
+			<chat :id="chatLanguage.chat" slot="content" />
+		</panel>
+
 		<panel icon="mdi-account-supervisor">
 			<span slot="title">
 				<span v-if="connected_farmers.length">{{ $t('connected_farmers', [$store.state.connected_farmers]) }}</span>
@@ -97,28 +120,6 @@
 			</div>
 		</panel>
 
-		<panel icon="mdi-chat-outline">
-			<span slot="title">
-				<router-link to="/chat">{{ $t('main.chat') }}</router-link>
-				<v-menu offset-y>
-					<template v-slot:activator="{ on }">
-						<img :src="chatLanguage.flag" class="language-button" v-on="on">
-					</template>
-					<v-list :dense="true">
-						<v-list-item v-for="(language, i) in LeekWars.languages" :key="i" class="language" @click="setChatLanguage(language)">
-							<img :src="language.flag" class="flag">
-							<span class="name">{{ language.name }}</span>
-						</v-list-item>
-					</v-list>
-				</v-menu>
-			</span>
-			<div slot="actions">
-				<div v-if="!LeekWars.mobile" class="button flat" @click="LeekWars.addChat(chatLanguage.chat, ChatType.GLOBAL, 'Chat ' + chatLanguage.code.toUpperCase())">
-					<v-icon>mdi-picture-in-picture-bottom-right</v-icon>
-				</div>
-			</div>
-			<chat :id="chatLanguage.chat" slot="content" />
-		</panel>
 	</div>
 </template>
 

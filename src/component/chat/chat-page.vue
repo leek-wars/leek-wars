@@ -1,22 +1,9 @@
 <template lang="html">
-	<div>
+	<div class="chat-page">
 		<div class="page-header page-bar">
 			<div>
 				<h1>
 					{{ $t('main.chat') }}
-					<v-menu offset-y>
-						<template v-slot:activator="{ on }">
-							<img :src="chatLanguage.flag" class="language-button" v-on="on">
-						</template>
-						<v-list :dense="true">
-							<v-list-item v-for="(language, i) in LeekWars.languages" :key="i" @click="chatLanguage = language">
-								<v-list-item-title class="language">
-									<img :src="language.flag" class="flag">
-									<span class="name">{{ language.name }}</span>
-								</v-list-item-title>
-							</v-list-item>
-						</v-list>
-					</v-menu>
 				</h1>
 			</div>
 			<div class="tabs">
@@ -28,9 +15,48 @@
 				</router-link>
 			</div>
 		</div>
-		<panel class="first last">
-			<chat slot="content" :chat="$store.state.chat[chatLanguage.code]" :id="chatLanguage.chat" />
-		</panel>
+		<div class="container">
+			<div class="column3">
+				<panel class="first">
+					<div slot="content" class="chats">
+						<div v-for="category in chats" :key="category.name" class="category">
+							<div class="name">{{ $t('cat_' + category.name) }}</div>
+							<div v-for="chat in category.chats" :key="chat.id" class="chat-preview" @click="currentChat = chat.id">
+								<v-icon>{{ chat.icon }}</v-icon>
+								{{ $t(chat.name) }}
+							</div>
+						</div>
+						<div v-if="$store.state.farmer && $store.state.farmer.team" class="category">
+							<div class="name">
+								<v-icon>mdi-account-multiple</v-icon>
+								{{ $t('cat_team') }}
+							</div>
+							<div class="chat-preview" @click="currentChat = $store.state.farmer.team.chat">
+								<v-icon>mdi-chat-outline</v-icon>
+								{{ $t('team') }}
+							</div>
+						</div>
+						<div class="category">
+							<div class="name">
+								<v-icon>mdi-email-outline</v-icon>
+								{{ $t('cat_private') }}
+							</div>
+						</div>
+					</div>
+				</panel>
+			</div>
+			<div class="column9">
+				<panel>
+					<chat slot="content" :id="currentChat" :large="true" />
+				</panel>
+			</div>
+			<div class="column3">
+				<panel class="first">
+					<div slot="content" class="chats">
+					</div>
+				</panel>
+			</div>
+		</div>
 	</div>
 </template>
 
@@ -42,49 +68,74 @@
 	export default class ChatPage extends Vue {
 
 		chatLanguage: Language | null = null
+		currentChat: number = 0
+		chats = [
+			{ name: 'fr', chats: [
+				{ id: 1, name: 'fr_general', icon: 'mdi-chat-outline' },
+				{ id: 32506, name: 'fr_help', icon: 'mdi-help-circle-outline' },
+				{ id: 32507, name: 'fr_programming', icon: 'mdi-code-braces' },
+			]},
+			{ name: 'en' , chats: [
+				{ id: 2, name: 'en_general', icon: 'mdi-chat-outline' },
+				{ id: 32508, name: 'en_help', icon: 'mdi-help-circle-outline' },
+				{ id: 32509, name: 'en_programming', icon: 'mdi-code-braces' },
+			]},
+		]
 
 		created() {
 			this.chatLanguage = LeekWars.languages[this.$i18n.locale]
+			this.currentChat = LeekWars.languages[this.$i18n.locale].chat
 			LeekWars.setTitle(this.$i18n.t('main.chat'))
 		}
 
 		mounted() {
 			LeekWars.footer = false
+			LeekWars.large = true
+			LeekWars.box = true
 		}
 
 		beforeDestroy() {
 			LeekWars.footer = true
+			LeekWars.large = false
+			LeekWars.box = false
 		}
 	}
 </script>
 
 <style lang="scss" scoped>
-	.chat {
-		height: calc(100vh - 128px);
-	}
-	#app.app .chat {
-		height: calc(100vh - 56px);
-	}
-	h1 .language-button {
-		height: 36px;
-		max-height: 36px;
-		max-width: none;
-		padding: 5px;
-		margin-right: -10px;
-		vertical-align: bottom;
-		cursor: pointer;
-	}
-	h1 .languages {
-		padding: 0 5px;
-	}
-	.flag {
-		height: 28px;
-	}
-	.language {
+	.chat-page {
 		display: flex;
-		align-items: center;
+		flex-direction: column;
 	}
-	.language .name {
-		padding-left: 8px;
+	.container {
+		flex: 1;
+		min-height: 0;
+		margin-bottom: 0;
+	}
+	.column3, .column9 {
+		height: 100%;
+	}
+	.panel, .chat {
+		height: 100%;
+		min-height: 0;
+		margin-bottom: 0;
+	}
+	.chats {
+		padding: 10px 0;
+	}
+	.category {
+		.name {
+			padding: 10px;
+		}
+	}
+	.chat-preview {
+		padding: 6px;
+		padding-left: 20px;
+		color: #555;
+		&:hover {
+			background: white;
+			color: black;
+			cursor: pointer;
+		}
 	}
 </style>

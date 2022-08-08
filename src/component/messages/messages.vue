@@ -13,22 +13,54 @@
 			</div>
 		</div>
 		<div class="container last">
-			<div v-show="!LeekWars.mobile || !LeekWars.splitBack" class="column4">
+			<div v-show="!LeekWars.mobile || !LeekWars.splitBack" class="side-column">
 				<panel class="first">
 					<div slot="content" class="conversations" @scroll="conversationsScroll">
-						<router-link v-if="newConversation && newConversation.messages.length === 0" :to="'/messages/new/' + newFarmer.id + '/' + newFarmer.name + '/' + newFarmer.avatar_changed">
+						<div v-for="category in chats" :key="category.name" class="category">
+							<div class="name">{{ $t('cat_' + category.name) }}</div>
+							<router-link v-for="chat in category.chats" :key="chat.id" :to="'/chat/' + chat.id">
+								<div class="conversation chat-preview" v-ripple>
+									<v-icon>{{ chat.icon }}</v-icon>
+									{{ $t(chat.name) }}
+								</div>
+							</router-link>
+						</div>
+						<div v-if="$store.state.farmer && $store.state.farmer.team" class="category">
+							<div class="name">
+								<v-icon>mdi-account-multiple</v-icon>
+								{{ $t('cat_team') }}
+							</div>
+							<router-link :to="'/chat/' + $store.state.farmer.team.chat">
+								<div class="conversation chat-preview" @click="currentChat = $store.state.farmer.team.chat">
+									<v-icon>mdi-chat-outline</v-icon>
+									{{ $t('team') }}
+								</div>
+							</router-link>
+						</div>
+						<div class="category">
+							<div class="name">
+								<v-icon>mdi-email-outline</v-icon>
+								{{ $t('cat_private') }}
+							</div>
+						</div>
+						<router-link v-if="newConversation && newConversation.messages.length === 0" :to="'/chat/new/' + newFarmer.id + '/' + newFarmer.name + '/' + newFarmer.avatar_changed">
 							<conversation :chat="newConversation" />
 						</router-link>
-						<router-link v-for="conversation in $store.state.conversationsList" :key="conversation.id" :to="'/messages/conversation/' + conversation.id">
+						<router-link v-for="conversation in $store.state.conversationsList" :key="conversation.id" :to="'/chat/' + conversation.id">
 							<conversation :chat="conversation" />
 						</router-link>
 					</div>
 				</panel>
 			</div>
-			<div v-show="!LeekWars.mobile || LeekWars.splitBack" class="column8">
+			<div v-show="!LeekWars.mobile || LeekWars.splitBack" class="main-column">
 				<panel>
-					<chat v-if="currentConversation && currentConversation.id !== 0" :id="currentConversation.id" slot="content" />
-					<chat v-else-if="newConversation" slot="content" :new-farmer="newFarmer" :new-conversation="newConversation" />
+					<chat v-if="currentConversation && currentConversation.id !== 0" :id="currentConversation.id" :large="true" slot="content" />
+					<chat v-else-if="newConversation" slot="content" :new-farmer="newFarmer" :large="true" :new-conversation="newConversation" />
+				</panel>
+			</div>
+			<div v-show="!LeekWars.mobile" class="right-column">
+				<panel>
+
 				</panel>
 			</div>
 		</div>
@@ -47,12 +79,13 @@
 
 <script lang="ts">
 	import { Chat, ChatType } from '@/model/chat'
+	import { mixins } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import { SocketMessage } from '@/model/socket'
 	import { store } from '@/model/store'
 	import { Component, Vue, Watch } from 'vue-property-decorator'
 
-	@Component({ name: 'messages', i18n: {} })
+	@Component({ name: 'messages', i18n: {}, mixins: [...mixins] })
 	export default class Messages extends Vue {
 		ChatType = ChatType
 		newFarmer_: any = null
@@ -60,6 +93,19 @@
 		quitDialog: boolean = false
 		actions = [{icon: 'mdi-delete', click: () => this.showQuitDialog()}]
 		loadingConversations: boolean = false
+
+		chats = [
+			{ name: 'fr', chats: [
+				{ id: 1, name: 'fr_general', icon: 'mdi-chat-outline' },
+				{ id: 32506, name: 'fr_help', icon: 'mdi-help-circle-outline' },
+				{ id: 32507, name: 'fr_programming', icon: 'mdi-code-braces' },
+			]},
+			{ name: 'en' , chats: [
+				{ id: 2, name: 'en_general', icon: 'mdi-chat-outline' },
+				{ id: 32508, name: 'en_help', icon: 'mdi-help-circle-outline' },
+				{ id: 32509, name: 'en_programming', icon: 'mdi-code-braces' },
+			]},
+		]
 
 		created() {
 			if (!this.env.SOCIAL) {
@@ -73,6 +119,7 @@
 		mounted() {
 			LeekWars.footer = false
 			LeekWars.box = true
+			LeekWars.large = true
 			this.$root.$on('back', this.back)
 			this.$root.$on('focus', this.conversationRead)
 		}
@@ -80,12 +127,13 @@
 		destroyed() {
 			LeekWars.footer = true
 			LeekWars.box = false
+			LeekWars.large = false
 			this.$root.$off('back', this.back)
 			this.$root.$off('focus', this.conversationRead)
 		}
 
 		back() {
-			this.$router.push('/messages')
+			this.$router.push('/chat')
 		}
 
 		get currentConversation() {
@@ -131,7 +179,7 @@
 					LeekWars.splitShowList()
 					LeekWars.setTitle(this.$i18n.t('title'))
 				} else if (this.$store.state.conversationsList.length) {
-					this.$router.replace('/messages/conversation/' + this.$store.state.conversationsList[0].id)
+					this.$router.replace('/chat/' + this.$store.state.conversationsList[0].id)
 				}
 			}
 		}
@@ -167,9 +215,9 @@
 			LeekWars.post('message/quit-conversation', {conversation_id: this.currentConversation.id})
 			this.$store.commit('quit-conversation', this.currentConversation.id)
 			if (this.$store.state.conversationsList.length) {
-				this.$router.replace('/messages/conversation/' + this.$store.state.conversationsList[0].id)
+				this.$router.replace('/chat/' + this.$store.state.conversationsList[0].id)
 			} else {
-				this.$router.replace('/messages')
+				this.$router.replace('/chat')
 			}
 			this.quitDialog = false
 		}
@@ -194,12 +242,23 @@
 		flex: 1;
 		min-height: 0;
 	}
-	.column4, .column8 {
+	.main-column, .side-column, .right-column {
 		height: 100%;
 		.panel {
 			height: 100%;
 			margin-bottom: 0;
 		}
+	}
+	.side-column {
+		flex: 400px 0 0;
+		min-width: 0;
+	}
+	.right-column {
+		flex: 400px 0 0;
+		min-width: 0;
+	}
+	.main-column {
+		flex: 1;
 	}
 	.conversations {
 		overflow-y: auto;
@@ -218,5 +277,24 @@
 	.router-link-active .conversation {
 		background: white;
 		box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
+	}
+	.chats {
+		padding: 10px 0;
+	}
+	.category {
+		.name {
+			padding: 10px;
+		}
+	}
+	.chat-preview {
+		padding: 6px;
+		padding-left: 20px;
+		color: #555;
+		display: block;
+		&:hover {
+			background: white;
+			color: black;
+			cursor: pointer;
+		}
 	}
 </style>
