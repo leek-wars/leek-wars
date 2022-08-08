@@ -135,7 +135,7 @@
 				</div>
 			</panel>
 		</div>
-		<panel icon="mdi-chart-line">
+		<panel icon="mdi-chart-line" class="last">
 			<template slot="title">{{ $t('stats') }}</template>
 			<loader v-show="!loaded" slot="content" />
 			<div v-if="loaded" slot="content" class="statistics">

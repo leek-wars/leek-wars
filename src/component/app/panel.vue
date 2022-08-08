@@ -59,7 +59,7 @@
 		flex-direction: column;
 		width: 100%;
 		margin-bottom: 12px;
-		&.last {
+		&.last, &:last-child {
 			margin-bottom: 0;
 		}
 	}

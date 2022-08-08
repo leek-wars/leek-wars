@@ -1,5 +1,5 @@
 <template lang="html">
-	<div>
+	<div class="page">
 		<h1>{{ $t('title') }}</h1>
 		<panel class="first">
 			<div class="container">

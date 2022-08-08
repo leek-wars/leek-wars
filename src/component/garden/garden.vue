@@ -1,5 +1,5 @@
 <template lang="html">
-	<div>
+	<div class="page">
 		<div class="page-header page-bar">
 			<h1>{{ $t('title') }}</h1>
 			<div v-if="garden" class="tabs">

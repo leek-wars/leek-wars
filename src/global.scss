@@ -414,9 +414,6 @@ ul, ol {
 		color: #333;
 	}
 }
-.page-footer {
-	margin-bottom: 12px;
-}
 .page-footer .tabs .tab:first-child:before {
 	border: none;
 }
@@ -669,7 +666,7 @@ img.emoji {
 	.column7 { flex: 7; min-width: 0; }
 	.column8 { flex: 8; min-width: 0; }
 	.column9 { flex: 9; min-width: 0; }
-	&.last {
+	&.last, &:last-child {
 		margin-bottom: 0;
 	}
 }

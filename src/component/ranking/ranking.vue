@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div class="page">
 		<div class="page-header page-bar">
 			<h1>{{ $t('title') }}</h1>
 			<div class="tabs">

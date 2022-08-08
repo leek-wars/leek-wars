@@ -32,7 +32,7 @@
 		<panel v-if="!loaded">
 			<loader />
 		</panel>
-		<panel v-for="(category, category_id) in statistics" v-else :key="category_id" :class="{first: category_id == 1}">
+		<panel v-for="(category, category_id) in statistics" v-else :key="category_id" :class="{first: category_id == 1, last: category_id == 8}">
 			<h2>{{ $t('category_' + category_id) }}</h2>
 			<div :class="{ai: category_id == 3, code: category_id == 6}" class="category">
 				<div v-if="category_id == 1" class="chart-wrap left">

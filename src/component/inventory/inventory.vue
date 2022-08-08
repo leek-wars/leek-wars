@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div class="page">
 		<div class="page-header page-bar">
 			<h1>{{ $t('main.inventory') }}</h1>
 			<div class="tabs">
@@ -22,7 +22,7 @@
 			</div>
 		</div>
 		<div class="container">
-			<panel :icon="LeekWars.mobile ? '' : 'mdi-treasure-chest'" class="inventory-panel">
+			<panel :icon="LeekWars.mobile ? '' : 'mdi-treasure-chest'" class="inventory-panel last">
 				<template slot="title">
 					<div><span v-if="!LeekWars.mobile">{{ $t('main.inventory') }}</span> ({{ filtered_inventory.length }}<span v-if="filter !== Filter.ALL"> / {{ inventory.length }}</span>)</div>
 					<div class="categories">

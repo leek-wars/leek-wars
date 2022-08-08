@@ -1,5 +1,5 @@
 <template lang="html">
-	<div>
+	<div class="page">
 		<div class="page-header page-bar">
 			<h1>Administration</h1>
 		</div>
@@ -73,7 +73,7 @@
 				</a>
 			</div>
 		</panel>
-		<panel>
+		<panel class="last">
 			<div slot="content" class="admin">
 				<v-btn @click="square">Square notif image</v-btn>
 				<v-btn @click="squareIcon">Square notif icon</v-btn>

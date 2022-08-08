@@ -2,7 +2,7 @@
 	<error v-if="notfound" title="Unknown farmer" />
 	<error v-else-if="farmer && farmer.banned" :title="$t('banned')" :message="$t('banned_message')" />
 	<error v-else-if="farmer && farmer.deleted" :title="$t('deleted')" :message="$t('deleted_message')" />
-	<div v-else>
+	<div v-else class="page">
 		<div class="page-header page-bar">
 			<div>
 				<rich-tooltip-farmer v-if="farmer" :id="farmer.id" v-slot="{ on }" :bottom="true">

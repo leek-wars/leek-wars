@@ -29,9 +29,7 @@
 				<div :class="{large: LeekWars.large || LeekWars.flex, flex: LeekWars.flex, box: LeekWars.box}" class="app-wrapper">
 					<lw-header />
 					<div class="page-wrapper">
-						<div class="page">
-							<router-view />
-						</div>
+						<router-view />
 					</div>
 					<lw-footer v-if="LeekWars.footer" />
 				</div>
@@ -349,11 +347,9 @@
 			min-height: 0;
 			.page {
 				height: 100%;
-				& > * {
-					display: flex;
-					flex-direction: column;
-					height: 100%;
-				}
+				display: flex;
+				flex-direction: column;
+				height: 100%;
 			}
 		}
 	}
@@ -401,7 +397,6 @@
 	.page-wrapper {
 		background: rgba(255, 255, 255, 0.1);
 		padding: 12px;
-		padding-bottom: 0;
 	}
 	#app.app .page-wrapper {
 		background: none;
@@ -459,7 +454,6 @@
 	@media screen and (max-width: 999px) {
 		.page-wrapper {
 			padding: 8px;
-			padding-bottom: 0;
 		}
 		.panel > .content {
 			padding: 10px;

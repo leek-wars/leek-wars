@@ -1,5 +1,5 @@
 <template lang="html">
-	<div class="documentation-page">
+	<div class="page documentation-page">
 		<div class="page-header page-bar">
 			<div v-if="!popup">
 				<h1>

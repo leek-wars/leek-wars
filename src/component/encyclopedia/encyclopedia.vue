@@ -46,7 +46,7 @@
 				</div>
 			</div>
 		</div>
-		<panel v-if="page" class="first encyclopedia" :class="{last: LeekWars.mobile}">
+		<panel v-if="page" class="first encyclopedia last">
 			<div slot="content" class="table">
 				<div v-if="edition" ref="codemirror" class="codemirror" :style="{lineHeight: 1.6, fontSize: 14}"></div>
 				<div ref="markdown" class="markdown" @scroll="markdownScroll">

@@ -1,5 +1,5 @@
 <template lang="html">
-	<div>
+	<div class="page">
 		<div class="page-header page-bar">
 			<div>
 				<h1>{{ $t('title') }}</h1>
@@ -91,7 +91,7 @@
 			<chat :id="chatLanguage.chat" slot="content" />
 		</panel>
 
-		<panel icon="mdi-account-supervisor">
+		<panel icon="mdi-account-supervisor" class="last">
 			<span slot="title">
 				<span v-if="connected_farmers.length">{{ $t('connected_farmers', [$store.state.connected_farmers]) }}</span>
 			</span>

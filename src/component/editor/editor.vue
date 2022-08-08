@@ -1,5 +1,5 @@
 <template lang="html">
-	<div class="editor" :class="'theme-' + theme">
+	<div class="page editor" :class="'theme-' + theme">
 		<div class="page-header page-bar">
 			<div class="menu">
 				<h1>{{ $t('title') }}</h1>
@@ -68,7 +68,7 @@
 			<editor-finder ref="finder" :active="activeAIs" :history="history" />
 		</div>
 
-		<div class="container">
+		<div class="container last">
 			<div v-show="!LeekWars.mobile || !LeekWars.splitBack" :style="{width: LeekWars.mobile ? '100%' : panelWidth + 'px'}" class="resize-panel">
 				<panel class="editor-left first">
 					<div slot="content" class="full">
@@ -887,9 +887,6 @@
 		flex: 1;
 		min-height: 0;
 		gap: 0;
-	}
-	#app.app .container {
-		margin-bottom: 0;
 	}
 	.menu {
 		flex-shrink: 0;

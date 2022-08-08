@@ -1,6 +1,6 @@
 <template lang="html">
 	<error v-if="error" :title="$t('not_found')" :message="$t('not_found_id', [id])" />
-	<div v-else>
+	<div v-else class="page">
 		<div class="page-header page-bar">
 			<rich-tooltip-leek v-if="leek" :id="leek.id" v-slot="{ on }" :bottom="true">
 				<h1 v-on="on">{{ leek.name }}</h1>

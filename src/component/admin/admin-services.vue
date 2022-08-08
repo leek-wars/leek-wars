@@ -1,12 +1,12 @@
 <template>
-	<div>
+	<div class="page">
 		<div class="page-header page-bar">
 			<h1><router-link to="/admin">Administration</router-link> > Services</h1>
 			<div class="tabs">
 				<div class="tab disabled">{{ services ? services.length : '...' }} services</div>
 			</div>
 		</div>
-		<panel class="first">
+		<panel class="first last">
 			<loader v-if="!services" />
 			<div v-else id="services">
 				<div v-for="(service, s) of services" :key="s" class="service card">
