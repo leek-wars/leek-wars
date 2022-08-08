@@ -330,6 +330,7 @@
 		map_obstacles: any
 		map_teams: any = null
 		legends: any
+		filtered_entities: any
 
 		get id() {
 			return this.$route.params.id
@@ -569,16 +570,19 @@
 			this.smooth = !this.smooth
 			this.updateChart()
 		}
+
 		toggleLog() {
 			this.log = !this.log
 			localStorage.setItem('report/log', '' + this.log)
 			this.updateChart()
 		}
+
 		toggleTurrets() {
 			this.turrets = !this.turrets
 			localStorage.setItem('report/turrets', '' + this.turrets)
 			this.updateChart()
 		}
+
 		chartGetY(line: number, x: number) {
 			const path = (this.$refs.chart as Vue).$el.querySelectorAll('.ct-series path')[line] as any
 			x = Math.max(path.getPointAtLength(0).x, x)
@@ -602,10 +606,13 @@
 		updateChart() {
 			if (!this.fight || !this.statistics) { return }
 			let series = this.log ? this.statistics.lives_percent : this.statistics.lives
+			this.filtered_entities = Object.values(this.statistics!.entities)
 			if (!this.chartDisplaySummons) {
+				this.filtered_entities = this.filtered_entities.filter(e => !e.leek.summon)
 				series = series.filter((value, index) => !this.statistics!.entities[index].leek.summon)
 			}
 			if (!this.turrets) {
+				this.filtered_entities = this.filtered_entities.filter(e => e.leek.type !== 2)
 				series = series.filter((value, index) => this.statistics!.entities[index].leek.type !== 2)
 			}
 			this.chartData = {
@@ -624,8 +631,9 @@
 			this.chartEvents = [{
 				event: 'draw', fn: (context: any) => {
 					if (context.type === 'line') {
+						// console.log(context.index)
 						context.element.attr({
-							style: 'stroke: ' + (TEAM_COLORS[this.statistics!.entities[context.index].leek.team - 1])
+							style: 'stroke: ' + (TEAM_COLORS[this.filtered_entities[context.index].leek.team - 1])
 						})
 					}
 					if (context.type === 'label') {
@@ -658,6 +666,7 @@
 			this.chartTooltipLeek = null
 			this.chartTooltipValue = null
 		}
+
 		chartMouseMove(e: MouseEvent) {
 			const chart = (this.$refs.chart as Vue).$el as HTMLElement
 			const chartPanel = this.$refs.chartPanel as HTMLElement
@@ -671,7 +680,7 @@
 			this.chartTooltipY = top - 40
 
 			const value = Math.round(this.chart.bounds.low + (this.chart.chartRect.y1 - top) * (this.chartScale / (this.chart.chartRect.y1 - this.chart.chartRect.y2)))
-			this.chartTooltipValue = this.statistics!.entities[this.chartTooltipLeek].leek.name + '<br>' + value + (this.log ? '%' : '') + ' PV'
+			this.chartTooltipValue = this.filtered_entities[this.chartTooltipLeek].leek.name + '<br>' + value + (this.log ? '%' : '') + ' PV'
 		}
 
 		comment(comment: Comment) {
