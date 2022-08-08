@@ -5,6 +5,7 @@
 	"mute": "Mettre en sourdine",
 	"mute_popup": "Etes-vous sûr de vouloir mettre {farmer} en sourdine pour 1h ?",
 	"censor_farmer": "Sélectionnez les messages de {farmer} à censurer :",
+	"delete_farmer": "Sélectionnez les messages à supprimer :",
 	"unmute": "Rendre la parole",
 	"unmute_popup": "Etes-vous sûr de vouloir rendre la parole à {farmer} ?",
 	"reason_1": "Nom d'éleveur incorrect",
@@ -49,5 +50,6 @@
 	"report_informations": "Informations complémentaires (facultatif)",
 	"select_leek": "Sélectionnez un poireau",
 	"severity_s": "gravité {0}",
-	"thank_you_for_reporting": "Merci pour le signalement"
+	"thank_you_for_reporting": "Merci pour le signalement",
+	"delete": "Supprimer"
 }

@@ -423,6 +423,16 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			}
 		},
 
+		'chat-delete'(state: LeekWarsState, data: {chat: number, messages: number[], censorer: Farmer}) {
+			const chat = state.chat[data.chat]
+			// console.log("delete chat", chat, data.messages)
+			if (chat) {
+				for (const message of data.messages) {
+					chat.deleteMessage(message)
+				}
+			}
+		},
+
 		'chat-react'(state: LeekWarsState, data: {chat: number, message: number, reaction: string, old: string, farmer: string}) {
 			const chat = state.chat[data.chat]
 			if (chat) {

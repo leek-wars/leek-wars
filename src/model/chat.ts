@@ -147,6 +147,24 @@ class Chat {
 		// console.log("res", message)
 		return message
 	}
+
+	deleteMessage(messageID: number) {
+		for (let m = 0; m < this.messages.length; ++m) {
+			const message = this.messages[m]
+			if (message.id === messageID) {
+				if (message.subMessages.length) {
+					// Remonte le premier sous-message
+					const firstSubMessage = message.subMessages.shift()!
+					firstSubMessage.subMessages = message.subMessages
+					this.messages.splice(m, 1, firstSubMessage)
+				} else {
+					// Sinon on supprime juste
+					this.messages.splice(m, 1)
+				}
+				break
+			}
+		}
+	}
 }
 
 export { Chat, ChatType, ChatMessage, ChatWindow }

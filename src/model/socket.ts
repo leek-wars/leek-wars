@@ -56,6 +56,7 @@ enum SocketMessage {
 	READ_NOTIFICATION = 52,
 	ADD_RESOURCE = 53,
 	EDITOR_HOVER = 54,
+	CHAT_DELETE = 56,
 }
 
 class Socket {
@@ -233,6 +234,10 @@ class Socket {
 				}
 				case SocketMessage.CHAT_CENSOR: {
 					store.commit('chat-censor', { chat: data[0], messages: data[1], censorer: data[2] })
+					break
+				}
+				case SocketMessage.CHAT_DELETE: {
+					store.commit('chat-delete', { chat: data[0], messages: data[1] })
 					break
 				}
 				case SocketMessage.CHAT_REACT: {

@@ -30,24 +30,28 @@
 
 			<div class="right">
 				<span :title="LeekWars.formatDateTime(message.date)" class="time">{{ LeekWars.formatTime(message.date) }}</span>
-				<v-menu v-if="!privateMessages && !($store.state.farmer && message.farmer.id === $store.state.farmer.id) && message.farmer.color !== 'admin' && message.farmer.id !== 0" offset-y>
+				<v-menu v-if="!privateMessages && (message.farmer.color !== 'admin' || $store.getters.admin) && message.farmer.id !== 0" offset-y>
 					<template v-slot:activator="{ on }">
 						<v-btn text small icon color="grey" v-on="on">
 							<v-icon>mdi-dots-vertical</v-icon>
 						</v-btn>
 					</template>
 					<v-list dense class="message-actions">
-						<v-list-item v-if="chat.type === ChatType.GLOBAL && message.farmer.color !== 'admin'" v-ripple @click="report(message)">
+						<v-list-item v-if="chat.type === ChatType.GLOBAL && message.farmer.id !== $store.state.farmer.id && message.farmer.color !== 'admin'" v-ripple @click="report(message)">
 							<v-icon>mdi-flag</v-icon>
 							<span>{{ $t('warning.report') }}</span>
 						</v-list-item>
-						<v-list-item v-if="isModerator && chat.type !== ChatType.PM" v-ripple @click="censor(message)">
+						<v-list-item v-if="isModerator && chat.type !== ChatType.PM && message.farmer.color !== 'admin'" v-ripple @click="mute(message.farmer)">
+							<v-icon>mdi-volume-off</v-icon>
+							<span>Mute</span>
+						</v-list-item>
+						<v-list-item v-if="isModerator && chat.type !== ChatType.PM && message.farmer.color !== 'admin'" v-ripple @click="censor(message)">
 							<v-icon>mdi-gavel</v-icon>
 							<span>{{ $t('warning.censor') }}</span>
 						</v-list-item>
-						<v-list-item v-if="isModerator && chat.type !== ChatType.PM" v-ripple @click="mute(message.farmer)">
-							<v-icon>mdi-volume-off</v-icon>
-							<span>Mute</span>
+						<v-list-item v-if="chat.type !== ChatType.PM && (message.farmer.id === $store.state.farmer.id || $store.getters.admin)" v-ripple @click="deleteMessage(message)">
+							<v-icon>mdi-delete</v-icon>
+							<span>{{ $t('warning.delete') }}</span>
 						</v-list-item>
 					</v-list>
 				</v-menu>
@@ -100,6 +104,30 @@
 			</div>
 		</popup>
 
+		<popup v-model="deleteDialog" :width="500">
+			<v-icon slot="icon">mdi-delete</v-icon>
+			<span slot="title">Supprimer</span>
+			<div v-if="muteFarmer" class="censor">
+				<i18n path="warning.delete_farmer"></i18n>
+				<div class="flex">
+					<avatar :farmer="muteFarmer" />
+					<div class="messages">
+						<div v-for="message in deleteMessages" :key="message.id" class="bubble">
+							<v-checkbox v-model="deletedMessages[message.id]" :label="message.content" :hide-details="true" />
+							<div v-for="sub in message.subMessages" :key="sub.id">
+								<v-checkbox v-model="deletedMessages[sub.id]" :label="sub.content" :hide-details="true" />
+							</div>
+						</div>
+					</div>
+				</div>
+				<v-checkbox v-if="isModerator && muteFarmer.color !== 'admin'" v-model="censorMute" label="Mettre en sourdine pour 1h" :hide-details="true" />
+			</div>
+			<div slot="actions">
+				<div v-ripple @click="deleteDialog = false">{{ $t('main.cancel') }}</div>
+				<div v-ripple class="mute red" @click="deleteConfirm"><v-icon>mdi-delete</v-icon> Supprimer</div>
+			</div>
+		</popup>
+
 		<popup v-model="muteDialog" :width="500">
 			<v-icon slot="icon">mdi-gavel</v-icon>
 			<span slot="title">Censurer</span>
@@ -134,11 +162,16 @@
 		ChatType = ChatType
 		muteDialog: boolean = false
 		muteFarmer: Farmer | null = null
+
 		censorDialog: boolean = false
 		censorMessage: ChatMessage | null = null
 		censoredMessages: {[key: number]: boolean} = {}
 		censorMute: boolean = false
-		censorFarmer: Farmer | null = null
+
+		deleteDialog: boolean = false
+		deletedMessage: ChatMessage | null = null
+		deletedMessages: {[key: number]: boolean} = {}
+
 		reportDialog: boolean = false
 		reportFarmer: Farmer | null = null
 		reportContent: string = ''
@@ -149,6 +182,7 @@
 			Warning.INCORRECT_FARMER_NAME,
 			Warning.INCORRECT_AVATAR,
 		]
+
 		reactionDialog: boolean = false
 		emojis = ['❤️', '👍', '👎', '👏', '😂', '😀', '😮', '😱']
 
@@ -159,7 +193,10 @@
 			return this.$store.getters.moderator || (this.chat && this.chat.type === ChatType.TEAM && this.$store.state.farmer.team.member_level >= TeamMemberLevel.CAPTAIN)
 		}
 		get censorMessages() {
-			return this.chat && this.censorFarmer ? this.chat.messages.filter(m => (m.censored === 0 || (m.subMessages && m.subMessages.some(s => s.censored === 0))) && m.farmer.id === this.censorFarmer!.id) : []
+			return this.chat && this.muteFarmer ? this.chat.messages.filter(m => (m.censored === 0 || (m.subMessages && m.subMessages.some(s => s.censored === 0))) && m.farmer.id === this.muteFarmer!.id) : []
+		}
+		get deleteMessages() {
+			return this.chat && this.muteFarmer ? this.chat.messages.filter(m => m.farmer.id === this.muteFarmer!.id) : []
 		}
 		get me() {
 			return this.message.farmer.id === this.$store.state.farmer.id
@@ -179,7 +216,6 @@
 		censor(message: ChatMessage) {
 			this.censorDialog = true
 			this.censorMessage = message
-			this.censorFarmer = message.farmer
 			this.muteFarmer = message.farmer
 			this.censoredMessages = {}
 			if (message.censored === 0) {
@@ -189,6 +225,17 @@
 				if (sub.censored === 0) {
 					Vue.set(this.censoredMessages, sub.id, true)
 				}
+			}
+		}
+
+		deleteMessage(message: ChatMessage) {
+			this.deleteDialog = true
+			this.deletedMessage = message
+			this.muteFarmer = message.farmer
+			this.deletedMessages = {}
+			Vue.set(this.deletedMessages, message.id, true)
+			for (const sub of message.subMessages) {
+				Vue.set(this.deletedMessages, sub.id, true)
 			}
 		}
 
@@ -202,6 +249,14 @@
 			if (this.censorMessage) {
 				const ids = Object.entries(this.censoredMessages).filter(e => e[1]).map(e => e[0]).join(',')
 				LeekWars.post('message/censor', { messages: ids, mute: this.censorMute })
+			}
+		}
+
+		deleteConfirm() {
+			this.deleteDialog = false
+			if (this.deletedMessage) {
+				const ids = Object.entries(this.deletedMessages).filter(e => e[1]).map(e => e[0]).join(',')
+				LeekWars.post('message/delete', { messages: ids, mute: this.censorMute })
 			}
 		}
 

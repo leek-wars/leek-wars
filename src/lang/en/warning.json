@@ -6,6 +6,7 @@
 	"mute_popup": "Are you sure to mute {farmer} ?",
 	"unmute": "Unmute",
 	"unmute_popup": "Are you sure to unmute {farmer} ?",
+	"delete_farmer": "Select messages to delete:",
 	"reason_1": "Incorrect farmer name",
 	"reason_2": "Incorrect leek name",
 	"reason_3": "Incorrect AI name",
@@ -34,5 +35,6 @@
 	"report_informations": "Additional information (optional)",
 	"select_leek": "Select a leek",
 	"severity_s": "severity {0}",
-	"thank_you_for_reporting": "Thanks for your reporting"
+	"thank_you_for_reporting": "Thanks for your reporting",
+	"delete": "Delete"
 }
