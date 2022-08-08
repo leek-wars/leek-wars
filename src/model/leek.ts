@@ -64,6 +64,7 @@ class Leek {
 	public auto_br!: boolean
 	public fish!: boolean
 	public ally!: boolean
+	public metal!: boolean
 
 	constructor(data: any) {
 		Object.assign(this, data)

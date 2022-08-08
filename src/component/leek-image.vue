@@ -1,7 +1,7 @@
 <template lang="html">
 	<svg :viewBox="'0 0 ' + width + ' ' + height" :width="width * scale" :height="height * scale" v-on="on">
 		<g :class="{invert}">
-			<image v-if="leekImage" :x="leekX" :y="leekY" :width="leekWidth" :height="leekHeight" :xlink:href="'/image/' + leekImage" />
+			<image v-if="leekImage" :x="leekX" :y="leekY" :width="leekWidth" :height="leekHeight" :xlink:href="leekImage" />
 			<image v-if="hasHat && hatImage" :x="hatX" :y="hatY" :width="hatWidth" :height="hatHeight" :xlink:href="'/image/' + hatImage" />
 
 			<g v-if="weapon || leek.fish" :transform="'translate(' + (leekWidth / 2 + weaponCX) + ',' + (leekY + leekHeight - weaponCY) + ')'">
@@ -77,7 +77,10 @@
 		}
 
 		get leekImage(): string {
-			return 'leek/leek' + this.appearance + '_front_' + LeekWars.getLeekSkinName(this.leek.skin) + '.png'
+			// return 'leek/leek' + this.appearance + '_front_' + LeekWars.getLeekSkinName(this.leek.skin) + '.png'
+			// const metal = false
+			// return 'leeksvg/leek' + this.appearance + '_front_' + LeekWars.getLeekSkinName(this.leek.skin) + (metal ? '_metal' : '') + '.svg'
+			return LeekWars.SERVER + '/image/leek/svg/leek_' + this.appearance + '_' + LeekWars.getLeekSkinName(this.leek.skin) + (this.leek.metal ? '_metal' : '') + '.svg'
 		}
 		get hat() {
 			let hat = this.leek.hat

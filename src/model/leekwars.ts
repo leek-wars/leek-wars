@@ -100,21 +100,23 @@ function get<T = any>(url: any) {
 const SKINS: { [key: number]: string } = {
 	1: "green", 2: "blue", 3: "yellow", 4: "red", 5: "orange", 6: "magenta", 7: "cyan", 8: "purple",
 	9: "multi", 10: "rasta", 11: "white", 12: "black", 13: "alpha", 14: "apple", 15: "gold", 16: "pink",
-	17: "grey", 18: "turquoise", 19: "celestial_blue"
+	17: "grey", 18: "turquoise", 19: "celestialblue", 20: "marine", 21: "greenfluo", 22: "brown", 23: "blackandwhite",
+	24: "whiteandblack", 25: "ghost", 26: "salmon", 27: "radioactive", 28: "sand", 29: "teal", 30: "matcha", 31: "peach",
+	32: "fire", 33: "venimous", 34: "greyscale", 35: "frozen", 36: "dalton", 37: "charlie", 38: "mariniere", 39: "france"
 }
 
 const LEEK_SIZES: { [key: number]: {width: number, height: number} } = {
-	1: {width: 68, height: 136},
-	2: {width: 97,  height: 143},
-	3: {width: 103, height: 151},
-	4: {width: 117, height: 159},
-	5: {width: 129, height: 166},
-	6: {width: 136, height: 174},
-	7: {width: 138, height: 181},
-	8: {width: 148, height: 189},
-	9: {width: 145, height: 196},
-	10: {width: 159, height: 204},
-	11: {width: 161, height: 211},
+	1: {width: 72, height: 136},
+	2: {width: 116,  height: 143},
+	3: {width: 115, height: 151},
+	4: {width: 128, height: 159},
+	5: {width: 140, height: 166},
+	6: {width: 147, height: 174},
+	7: {width: 141, height: 181},
+	8: {width: 154, height: 189},
+	9: {width: 160, height: 196},
+	10: {width: 169, height: 204},
+	11: {width: 174, height: 211},
 }
 
 const POTIONS_BY_SKIN = potionsBySkin(POTIONS)
@@ -140,6 +142,7 @@ const LeekWars = {
 	DEV,
 	LOCAL,
 	API: LOCAL ? window.location.origin + '/api/' : 'https://leekwars.com/api/',
+	SERVER: LOCAL ? window.location.origin : 'https://leekwars.com/',
 	AVATAR: DEV ? 'https://leekwars.com/' : 'https://leekwars.com/',
 	STATIC: '/',
 	POWER_FACTOR: 4.2,
