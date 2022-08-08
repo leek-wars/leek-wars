@@ -47,6 +47,12 @@
 						<h2>Chapeaux</h2>
 					</div>
 				</router-link>
+				<router-link to="/admin/skins">
+					<div v-ripple class="section card">
+						<img src="/image/admin/hat.png">
+						<h2>Skins</h2>
+					</div>
+				</router-link>
 				<router-link to="/admin/newsletters">
 					<div v-ripple class="section card">
 						<img src="/image/admin/mails.png">
