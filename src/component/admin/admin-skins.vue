@@ -8,6 +8,9 @@
 			<div class="leeks">
 				<leek-image v-for="level in [1, 10, 25, 50, 80, 100, 150, 200, 250, 300, 301]" :key="level" :leek="{level, skin: s}" :scale="0.8" />
 			</div>
+			<div class="leeks">
+				<leek-image v-for="level in [1, 10, 25, 50, 80, 100, 150, 200, 250, 300, 301]" :key="level" :leek="{level, skin: s, metal: true}" :scale="0.8" />
+			</div>
 		</panel>
 	</div>
 </template>
