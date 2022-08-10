@@ -27,5 +27,8 @@
 	"we_talk_about_leeks": "Has anybody talked about leeks?\n",
 	"why": "Why?\n",
 	"why_1": "The project was born from the simple idea of two students, during an algebra course in college, who wanted to create a game based entirely on <b>programming</b>, concept not widespread at this time.",
-	"why_2": "<b> Leek Wars </b> aims to place <b> programming </b> in the middle of a fun and entertaining browser only video game, easy to access, free and without advertising, wanting to offer <b> beginners a nice platform </b> to discover programming concepts, and a good challenge to <b> experienced coders</b>!"
+	"why_2": "<b> Leek Wars </b> aims to place <b> programming </b> in the middle of a fun and entertaining browser only video game, easy to access, free and without advertising, wanting to offer <b> beginners a nice platform </b> to discover programming concepts, and a good challenge to <b> experienced coders</b>!",
+	"former_mod": "Former moderator",
+	"former_dev": "Former developer",
+	"contributors": "Contributors"
 }

@@ -57,22 +57,26 @@
 		</panel>
 
 		<panel :title="$t('team')">
-			<div class="devs">
-				<router-link to="/farmer/1">
-					<div class="dev">
-						<avatar :farmer="{id: 1, avatar_changed: 1}" />
-						<h4>Pilow</h4>
-						<div class="role">{{ $t('team_web_graphism') }}</div>
-						<div class="role">{{ $t('team_leekscript_fights') }}</div>
+			<div v-for="(part, p) of team" :key="p" class="devs">
+				<router-link v-for="member of part" :key="member.id" :to="'/farmer/' + member.id">
+					<div class="dev" :class="member.grade">
+						<avatar :farmer="{id: member.id, avatar_changed: member.id === 11 ? 0 : 1}" />
+						<h4 :class="member.grade">{{ member.name }}</h4>
+						<div class="role" v-html="member.role"></div>
 					</div>
 				</router-link>
-				<router-link to="/farmer/11">
-					<div class="dev">
-						<avatar :farmer="{}" />
-						<h4>SilentHunter</h4>
-						<div class="role">{{ $t('team_admin_server') }}</div>
-					</div>
-				</router-link>
+			</div>
+			<h4>{{ $t('contributors') }}</h4>
+			<div class="devs contributors">
+				<rich-tooltip-farmer v-for="member of contributors" :id="member.id" v-slot="{ on }">
+					<router-link :key="member.id" :to="'/farmer/' + member.id">
+						<div class="contributor" :class="member.grade" v-on="on">
+							<avatar :farmer="{id: member.id, avatar_changed: member.avatar_changed}" />
+							<h4 class="contributor">{{ member.name }}</h4>
+							<div class="role" v-html="member.role"></div>
+						</div>
+					</router-link>
+				</rich-tooltip-farmer>
 			</div>
 		</panel>
 
@@ -162,7 +166,8 @@
 </template>
 
 <script lang="ts">
-	import { mixins } from '@/model/i18n'
+	import { Farmer } from '@/model/farmer'
+import { mixins } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import { Component, Vue } from 'vue-property-decorator'
 
@@ -191,6 +196,7 @@
 				{ name: "webpack", link: "https://webpack.js.org/", image: "webpack.png" },
 				{ name: "npm", link: "https://www.npmjs.com/", image: "npm.svg" },
 				{ name: "Vuetify", link: "https://vuetifyjs.com/en/", image: "vuetify.png" },
+				{ name: "Markdown it", link: "https://markdown-it.github.io/", image: "markdown-it.svg" },
 			]},
 			{ name: "server", items: [
 				{ name: "Debian", link: "https://www.debian.org/", image: "debian.svg" },
@@ -201,6 +207,7 @@
 				{ name: "Memcached", link: "https://memcached.org/", image: "memcached.svg" },
 				{ name: "Python", link: "https://www.python.org/", image: "python.svg" },
 				{ name: "Docker", link: "https://www.docker.com/", image: "docker.webp" },
+				{ name: "Traefik", link: "https://traefik.io/traefik/", image: "traefik.svg" },
 			]},
 			// { name: "leekscript", items: [
 			// 	{ name: "C++", link: "https://fr.cppreference.com/w/", image: "cpp.png" },
@@ -222,16 +229,38 @@
 			]},
 		]
 
+		get team() {
+			return [[
+				{ name: 'Pilow', id: 1, grade: 'admin', role: this.$t('team_web_graphism') + '<br>' + this.$t('team_leekscript_fights') },
+				{ name: 'SilentHunter', id: 11, grade: 'admin', role: this.$t('team_admin_server') },
+				{ name: 'TheTintin', id: 38357, grade: 'moderator', role: this.$t('main.grade_moderator') },
+				{ name: 'Ref', id: 43276, grade: 'moderator', role: this.$t('main.grade_moderator') },
+			], [
+				{ name: 'Dawyde', id: 2, grade: 'former admin', role: this.$t('former_dev') },
+				{ name: 'mistigis', id: 100, grade: 'former moderator', role: this.$t('former_mod') },
+				{ name: 'McNalYoo', id: 273, grade: 'former moderator', role: this.$t('former_mod') },
+				{ name: 'jojo123', id: 8773, grade: 'former moderator', role: this.$t('former_mod') },
+				{ name: 'Silosis', id: 27228, grade: 'former moderator', role: this.$t('former_mod') },
+			]]
+		}
+		contributors = [] as Farmer[]
+
 		created() {
 			LeekWars.setTitle(this.$i18n.t('title'))
 			LeekWars.setActions([{image: 'github_white.png', click: () => window.open('https://github.com/leek-wars/leek-wars-client', '_newtab')}])
 		}
+
 		mounted() {
 			const github = document.createElement('script')
 			github.src = 'https://buttons.github.io/buttons.js'
 			github.async = true
 			const block = this.$refs.github as HTMLElement
 			if (block) { block.appendChild(github) }
+
+			LeekWars.get<Farmer[]>('farmer/contributors').then(contributors => {
+				this.contributors = contributors.filter(c => c.id !== 43276 && c.id !== 8773 && c.id !== 38357)
+				this.contributors.sort((a, b) => Math.random() - 0.5)
+			})
 		}
 	}
 </script>
@@ -279,28 +308,49 @@
 	.devs {
 		display: flex;
 		justify-content: center;
+		flex-wrap: wrap;
+		margin-bottom: 10px;
 	}
-	.dev {
+	.dev, .mod, .contributor {
 		display: inline-block;
-		margin: 10px;
+		margin: 0 10px;
 		text-align: center;
+		.avatar {
+			max-width: 140px;
+			width: 100%;
+		}
+		&.former {
+			max-width: 100px;
+			width: 100%;
+		}
+		&.contributor {
+			width: 100%;
+			margin: 0;
+			h4 {
+				margin-top: 4px;
+				font-size: 13px;
+			}
+		}
+		h4 {
+			margin-top: 4px;
+			text-overflow: ellipsis;
+			overflow: hidden;
+		}
+		.role {
+			font-style: italic;
+			color: #666;
+			margin-top: 4px;
+			font-weight: 500;
+		}
+		&.former .role {
+			font-size: 14px;
+		}
 	}
-	.dev .avatar {
-		max-width: 140px;
-		width: 100%;
-	}
-	.dev .role {
-		font-style: italic;
-		color: #666;
-	}
-	.modo {
-		display: inline-block;
-		margin: 10px;
-		text-align: center;
-	}
-	.modo .avatar {
-		width: 120px;
-		border-radius: 2px;
+	.contributors {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(65px, 1fr));
+		margin-top: 15px;
+		gap: 10px;
 	}
 	.links {
 		padding: 10px;

@@ -27,5 +27,8 @@
 	"we_talk_about_leeks": "On a parlé de poireau ?",
 	"why": "Pouquoi ?",
 	"why_1": "Le projet est né de l'idée simple entre deux étudiants, lors d'un cours d'algèbre à la fac, qui souhaitaient créer un jeu entièrement basé sur la <b>programmation</b>, concept alors très peu répandu.",
-	"why_2": "<b>Leek Wars</b> a pour ambition de placer <b>la programmation</b> au coeur d'un jeu vidéo ludique et amusant, entièrement par navigateur, facile d'accès, gratuit et sans publicité, voulant proposer <b>une plateforme agréable</b> pour faire découvrir les concepts de la programmation aux <b>débutants</b>, et proposer un bon défi aux <b>codeurs expérimentés</b> !"
+	"why_2": "<b>Leek Wars</b> a pour ambition de placer <b>la programmation</b> au coeur d'un jeu vidéo ludique et amusant, entièrement par navigateur, facile d'accès, gratuit et sans publicité, voulant proposer <b>une plateforme agréable</b> pour faire découvrir les concepts de la programmation aux <b>débutants</b>, et proposer un bon défi aux <b>codeurs expérimentés</b> !",
+	"former_mod": "Ancien modérateur",
+	"former_dev": "Ancien développeur",
+	"contributors": "Contributeurs"
 }
