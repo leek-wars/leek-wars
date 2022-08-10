@@ -80,7 +80,10 @@ import { LeekWars } from '@/model/leekwars'
 		}
 
 		get sorted_resources() {
-			return Object.entries(this.leek.resources).sort((a, b) => LeekWars.items[b[0]].price! - LeekWars.items[a[0]].price!)
+			if (this.leek.resources) {
+				return Object.entries(this.leek.resources).sort((a, b) => LeekWars.items[b[0]].price! - LeekWars.items[a[0]].price!)
+			}
+			return {}
 		}
 	}
 </script>

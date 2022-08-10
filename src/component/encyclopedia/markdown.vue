@@ -35,7 +35,7 @@
 		@Watch('content', {immediate: true})
 		update() {
 
-			const re = /^((https:\/\/leekwars\.com)?\/image\/|https:\/\/(i\.)?imgur\.com\/)/
+			const re = /^((https:\/\/leekwars\.com)?\/image\/|https:\/\/(i\.)?imgur\.com\/|https:\/\/(i\.)?ibb.co\/)/
 			const options = this.mode === 'encyclopedia' ? {
 				allowedTags: sanitizeHtml.defaults.allowedTags.concat([ 'img', 'center' ]),
 				allowedAttributes: { '*': ['style', 'class', 'width', 'height', 'href', 'src'] },
