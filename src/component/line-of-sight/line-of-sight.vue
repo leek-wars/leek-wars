@@ -1,22 +1,15 @@
 <template lang="html">
-	<div>
-		<div class="page-bar page-header">
-			<h1>Line of Sight</h1>
+	<div class="map">
+		<div v-for="(row, i) in map" :key="i" class="row">
+			<div v-for="(cell, j) in row" :key="j" :class="{obstacle: cell === 1, los: cell === 2, red: cell === 3}" class="cell" @click="clickCell(j, i)"></div>
 		</div>
-		<panel class="first">
-			<div class="map">
-				<div v-for="(row, i) in map" :key="i" class="row">
-					<div v-for="(cell, j) in row" :key="j" :class="{obstacle: cell === 1, los: cell === 2, red: cell === 3}" class="cell" @click="clickCell(j, i)"></div>
-				</div>
-			</div>
-		</panel>
 	</div>
 </template>
 
 <script lang="ts">
 	import { LeekWars } from '@/model/leekwars'
 	import { Component, Vue } from 'vue-property-decorator'
-	
+
 	@Component({})
 	export default class LineOfSight extends Vue {
 		width = 40
@@ -99,7 +92,7 @@
 		display: flex;
 	}
 	.cell {
-		height: 26px;
+		aspect-ratio: 1;
 		background: #ddd;
 		margin: 0.5px;
 		cursor: pointer;

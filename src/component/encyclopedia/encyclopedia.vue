@@ -7,10 +7,12 @@
 				<v-icon v-if="modified" class="modified">mdi-record</v-icon>
 			</h1>
 			<div v-if="page" class="tabs">
+				<!--
 				<div v-if="page.id === 1 || page.id === 326" class="tab disabled" icon="search" link="/search">
 					<img class="search-icon" src="/image/search.png" @click="search">
 					<input v-model="searchQuery" type="text" :placeholder="$t('search')" @keyup.enter="search">
 				</div>
+				-->
 				<!-- <router-link :to="'/encyclopedia/' + english">
 					<div class="tab">English</div>
 				</router-link> -->

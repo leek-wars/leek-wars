@@ -876,7 +876,7 @@
 			return !composition.tournament.registered && composition.leeks.length < 6 && this.draggedLeekComposition !== composition
 		}
 		selectAI(ai: any) {
-			LeekWars.post('team/set-turret-ai', {ai: ai.id}).then(r => {
+			LeekWars.put('team/set-turret-ai', {ai: ai.id}).then(r => {
 				this.team!.turret_ai = ai
 			}).error(error => LeekWars.toast(error))
 			this.turretAiDialog = false

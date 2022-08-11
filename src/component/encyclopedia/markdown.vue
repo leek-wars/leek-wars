@@ -8,7 +8,9 @@
 	import markdown from 'markdown-it'
 	import sanitizeHtml from 'sanitize-html'
 	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
+	import LineOfSight from '../line-of-sight/line-of-sight.vue'
 	import ItemPreview from '../market/item-preview.vue'
+	import SearchBar from './search-bar.vue'
 
 	@Component({ name: 'markdown' })
 	export default class Markdown extends Vue {
@@ -146,6 +148,14 @@
 						item.querySelectorAll('a').forEach(linkify)
 					})
 				})
+				// LoS
+				md.querySelectorAll('.encyclopedia-los').forEach((item) => {
+					new LineOfSight({ propsData: { }, parent: vueMain }).$mount(item)
+				})
+				// Search bar
+				md.querySelectorAll('.encyclopedia-search-bar').forEach((item) => {
+					new SearchBar({ propsData: { }, parent: vueMain }).$mount(item)
+				})
 			})
 		}
 
@@ -183,6 +193,8 @@
 					return "<div class='encyclopedia-locked-pages'></div>"
 				} else if (tag.startsWith('last-modifications')) {
 					return "<div class='encyclopedia-last-modifications'></div>"
+				} else if (tag.startsWith('line-of-sight')) {
+					return "<div class='encyclopedia-los'></div>"
 				}
 				return '{{ ' + tag + ' }}'
 			})
@@ -294,6 +306,14 @@
 	}
 	.md ::v-deep table, .md ::v-deep tr, .md ::v-deep td, .md ::v-deep th {
 		border: 1px solid #aaa;
+	}
+	.md ::v-deep a.card {
+		&:hover {
+			background: #ddd;
+		}
+		&:active {
+			background: #bbb;
+		}
 	}
 	.md ::v-deep .summary {
 		// border: 1px solid #aaa;

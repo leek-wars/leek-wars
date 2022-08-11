@@ -161,6 +161,7 @@ h1 {
 	padding: 0 8px;
 	width: calc(100% - 16px);
 	margin-bottom: 10px;
+	border: none;
 }
 .query:focus {
 	border: 1px solid #5fad1b;
