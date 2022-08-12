@@ -32,7 +32,7 @@
 				<router-link to="/admin/emails">
 					<div v-ripple class="section card">
 						<img src="/image/admin/mails.png">
-						<h2>Mails d'activation</h2>
+						<h2>Mails</h2>
 					</div>
 				</router-link>
 				<router-link to="/admin/trophies">
