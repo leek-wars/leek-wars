@@ -58,17 +58,19 @@
 
 		<panel :title="$t('team')">
 			<div v-for="(part, p) of team" :key="p" class="devs">
-				<router-link v-for="member of part" :key="member.id" :to="'/farmer/' + member.id">
-					<div class="dev" :class="member.grade">
-						<avatar :farmer="{id: member.id, avatar_changed: member.id === 11 ? 0 : 1}" />
-						<h4 :class="member.grade">{{ member.name }}</h4>
-						<div class="role" v-html="member.role"></div>
-					</div>
-				</router-link>
+				<rich-tooltip-farmer v-for="member of part" :key="member.id" :id="member.id" v-slot="{ on }">
+					<router-link :key="member.id" :to="'/farmer/' + member.id">
+						<div class="dev" :class="member.grade" v-on="on">
+							<avatar :farmer="{id: member.id, avatar_changed: member.id === 11 ? 0 : 1}" />
+							<h4 :class="member.grade">{{ member.name }}</h4>
+							<div class="role" v-html="member.role"></div>
+						</div>
+					</router-link>
+				</rich-tooltip-farmer>
 			</div>
 			<h4>{{ $t('contributors') }}</h4>
 			<div class="devs contributors">
-				<rich-tooltip-farmer v-for="member of contributors" :id="member.id" v-slot="{ on }">
+				<rich-tooltip-farmer v-for="member of contributors" :key="member.id" :id="member.id" v-slot="{ on }">
 					<router-link :key="member.id" :to="'/farmer/' + member.id">
 						<div class="contributor" :class="member.grade" v-on="on">
 							<avatar :farmer="{id: member.id, avatar_changed: member.avatar_changed}" />
