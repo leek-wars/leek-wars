@@ -12,6 +12,7 @@
 	"display_shadows": "Afficher les ombres",
 	"enlarge_fight": "Agrandir le combat",
 	"error_generating_fight": "Une erreur s'est produite à la génération du combat",
+	"error_not_found": "Ce combat n'existe pas ou a été supprimé",
 	"admin_noticed": "Un administrateur a déjà été notifié",
 	"fullscreen": "Plein écran (F)",
 	"generating": "Génération en cours...",

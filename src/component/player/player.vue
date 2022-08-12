@@ -37,9 +37,8 @@
 			<div v-if="error" class="error">
 				<img src="/image/notgood.png">
 				<br>
-				<h4>{{ $t('error_generating_fight') }}</h4>
-				<br>
-				<h4><i>{{ $t('admin_noticed') }}</i></h4>
+				<h4 v-if="error === 'fight_not_found'">{{ $t('error_not_found') }}</h4>
+				<h4 v-else>{{ $t('error_generating_fight') }}<br><br><i>{{ $t('admin_noticed') }}</i></h4>
 			</div>
 			<div v-else class="loading-fight">
 				<loader v-if="!LeekWars.mobile" />
@@ -246,7 +245,7 @@
 		queue: any = null
 		getDelay: number = 1000
 		loaded: boolean = false
-		error: boolean = false
+		error: any = false
 		fullscreen: boolean = false
 		progressBarTurn: any = 0
 		progressBarTooltipMargin: number = 0
@@ -495,7 +494,7 @@
 				this.request.then((fight: any) => {
 					this.request = null
 					fightLoaded(fight)
-				}).error(() => this.error = true)
+				}).error(error => this.error = error)
 			}
 		}
 		getLogs() {
