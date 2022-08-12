@@ -11,5 +11,6 @@
 	"potions": "Potions",
 	"hats": "Chapeaux",
 	"pomps": "Apparats",
-	"resources": "Ressources"
+	"resources": "Ressources",
+	"rarity": "Rareté"
 }
