@@ -155,6 +155,13 @@ const COMMANDS = [
 
 const Commands = {
 	commands: COMMANDS,
+	initialized: false,
+	init: () => {
+		if (Commands.initialized) return
+		Commands.initialized = true
+		Commands.addDocumentationCommands()
+		Commands.addMarketCommands()
+	},
 	isCommand: (text: string) => {
 		const match = /(?:^|\s)\/(\w*(!|(:\w*))?)$/gi.exec(text)
 		if (match) {

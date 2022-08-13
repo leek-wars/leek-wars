@@ -4,7 +4,6 @@ import { Keyword } from '@/component/editor/keywords'
 import { env } from '@/env'
 import { BattleRoyale } from '@/model/battle-royale'
 import { ChipTemplate } from '@/model/chip'
-import { Commands } from '@/model/commands'
 import { CHIP_TEMPLATES, CHIPS, CONSTANTS, FUNCTIONS, HAT_TEMPLATES, HATS, ITEMS, POMPS, POTIONS, SUMMON_TEMPLATES, TROPHIES, TROPHY_CATEGORIES, WEAPONS, COMPLEXITIES } from '@/model/data'
 import { Emojis } from '@/model/emojis'
 import { LSFunction } from '@/model/function'
@@ -16,7 +15,7 @@ import { WeaponTemplate } from '@/model/weapon'
 import router from '@/router'
 import Vue from 'vue'
 import { TranslateResult } from 'vue-i18n'
-import { Chat, ChatType, ChatWindow } from './chat'
+import { Chat, ChatWindow } from './chat'
 import { Constant } from './constant'
 import { i18n, loadLanguageAsync } from './i18n'
 import { ItemType } from './item'
@@ -1077,8 +1076,5 @@ function goToRanking(type: string, order: string, id: number = 0) {
 		}
 	})
 }
-
-Commands.addDocumentationCommands()
-Commands.addMarketCommands()
 
 export { LeekWars, Language }

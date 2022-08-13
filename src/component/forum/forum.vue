@@ -124,12 +124,13 @@
 </template>
 
 <script lang="ts">
+	const ChatElement = () => import(/* webpackChunkName: "chat" */ `@/component/chat/chat.vue`)
 	import { ChatType } from '@/model/chat'
 	import { Farmer } from '@/model/farmer'
 	import { Language, LeekWars } from '@/model/leekwars'
 	import { Component, Vue } from 'vue-property-decorator'
 
-	@Component({ name: 'forum', i18n: {} })
+	@Component({ name: 'forum', i18n: {}, components: { chat: ChatElement } })
 	export default class Forum extends Vue {
 		ChatType = ChatType
 		categories: any = null

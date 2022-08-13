@@ -6,7 +6,6 @@ import Error from '@/component/app/error.vue'
 import LWLoader from '@/component/app/loader.vue'
 import Panel from '@/component/app/panel.vue'
 import Avatar from '@/component/avatar.vue'
-import ChatElement from '@/component/chat/chat.vue'
 import Comments from '@/component/comment/comments.vue'
 import '@/component/editor/leekscript.scss'
 import Emblem from '@/component/emblem.vue'
@@ -85,7 +84,6 @@ Vue.component('avatar', Avatar)
 Vue.component('emblem', Emblem)
 Vue.component('talent', Talent)
 Vue.component('ranking-badge', RankingBadge)
-Vue.component('chat', ChatElement)
 Vue.component('comments', Comments)
 Vue.component('report-dialog', ReportDialog)
 Vue.component('pagination', Pagination)

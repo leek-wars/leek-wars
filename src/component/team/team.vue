@@ -495,12 +495,12 @@
 </template>
 
 <script lang="ts">
+	const ChatElement = () => import(/* webpackChunkName: "chat" */ `@/component/chat/chat.vue`)
 	import { locale } from '@/locale'
 	const Explorer = () => import(/* webpackChunkName: "[request]" */ `@/component/explorer/explorer.${locale}.i18n`)
 	import CharacteristicTooltip from '@/component/leek/characteristic-tooltip.vue'
 	import { ChatType } from '@/model/chat'
 	import { Farmer } from '@/model/farmer'
-	import { fileSystem } from '@/model/filesystem'
 	import { mixins } from '@/model/i18n'
 	import { Leek } from '@/model/leek'
 	import { LeekWars } from '@/model/leekwars'
@@ -509,7 +509,7 @@
 	import { Component, Vue, Watch } from 'vue-property-decorator'
 	import { store } from '@/model/store'
 
-	@Component({ name: 'team', i18n: {}, mixins: [...mixins], components: { CharacteristicTooltip, Explorer }})
+	@Component({ name: 'team', i18n: {}, mixins: [...mixins], components: { CharacteristicTooltip, Explorer, chat: ChatElement }})
 	export default class TeamPage extends Vue {
 		ChatType = ChatType
 		team: Team | null = null

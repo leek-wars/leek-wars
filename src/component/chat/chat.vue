@@ -128,7 +128,7 @@
 	import EmojiPicker from './emoji-picker.vue'
 
 	@Component({
-		name: "Chat",
+		name: "chat",
 		components: { 'chat-input': ChatInput, 'chat-message': ChatMessageComponent, 'emoji-picker': EmojiPicker }
 	})
 	export default class ChatElement extends Vue {

@@ -29,6 +29,10 @@
 		filterOptions: string | null = null
 		index: number = 0
 
+		mounted() {
+			Commands.init()
+		}
+
 		@Watch('filter', {immediate: true})
 		update() {
 			const parts = this.filter.toLowerCase().split(':')

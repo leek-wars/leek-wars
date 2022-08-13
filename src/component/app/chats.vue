@@ -17,14 +17,14 @@
 </template>
 
 <script lang="ts">
-	import ChatElement from '@/component/chat/chat.vue'
+	const ChatElement = () => import(/* webpackChunkName: "chat" */ `@/component/chat/chat.vue`)
 	import { Chat, ChatType, ChatWindow } from '@/model/chat'
 	import { LeekWars } from '@/model/leekwars'
 	import { store } from '@/model/store'
 	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 
 	@Component({
-		components: {}
+		components: { chat: ChatElement }
 	})
 	export default class Chats extends Vue {
 		ChatType = ChatType
@@ -36,7 +36,7 @@
 
 		toggleExpanded(window: ChatWindow, index: number) {
 			window.expanded = !window.expanded
-			setTimeout(() => ((this.$refs.chats as Vue[])[index] as ChatElement).updateScroll())
+			setTimeout(() => ((this.$refs.chats as Vue[])[index] as any).updateScroll())
 		}
 
 		getFarmer(window: ChatWindow) {

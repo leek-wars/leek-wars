@@ -57,9 +57,10 @@
 	import { Chat, ChatMessage, ChatType } from '@/model/chat'
 	import { LeekWars } from '@/model/leekwars'
 import { store } from '@/model/store'
-import { vueMain } from '@/model/vue'
+	import { vueMain } from '@/model/vue'
 	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
-import Pseudo from '../app/pseudo.vue'
+	import Pseudo from '../app/pseudo.vue'
+	import 'katex/dist/katex.min.css'
 
 	@Component({ name: 'ChatMessage' })
 	export default class ChatMessageComponent extends Vue {
