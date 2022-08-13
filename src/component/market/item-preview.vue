@@ -11,7 +11,7 @@
 		</div>
 		<div v-if="item.type === ItemType.WEAPON || item.type === ItemType.CHIP" class="constant">{{ item.name.toUpperCase() }}</div>
 		<div class="image" :class="{sound: category === 'chip' || category === 'weapon'}">
-			<img :src="'/image/' + category + '/' + item.name.replace(category + '_', '') + '.png'" @click="LeekWars.playSound(item, category)">
+			<img :src="'/image/' + category + '/' + item.name.replace(category + '_', '') + '.png'" @click="playSound(item, category)">
 		</div>
 		<div v-if="$te(category + '.' + name_short + '_desc')" class="desc">
 			{{ $t(category + '.' + name_short + '_desc') }}
@@ -98,6 +98,70 @@ export default class ItemPreview extends Vue {
 			this.$emit('retrieve', Object.values(data.items))
 			store.commit('remove-inventory', { type: ItemType.RESOURCE, item_template: this.item.id, quantity: n })
 		})
+	}
+
+	weaponSound(id: number) {
+		return ({
+			1: ['double_gun'], 2: ['machine_gun'], 3: ['double_gun'], 4: ['shotgun'],
+			5: ['double_gun'], 6: ['laser'], 7: ['grenade_shoot', 0.7, 'explosion.wav'],
+			8: ['flame_thrower'], 9: ['double_gun'], 10: ['gazor'], 11: ['electrisor'],
+			12: ['laser'], 13: ['laser'], 14: ['sword'], 15: ['sword'], 16: ['sword'], 17: ['laser'],
+			18: ['grenade_shoot', 0.7, 'explosion.wav'], 19: ['electrisor'], 20: ['gazor', 1.2, 'explosion.wav'], 21: ['laser', 0.1, 'poison'],
+			22: ['rifle.wav', 0.15, 'rifle.wav', 0.15, 'rifle.wav'],
+			23: ['double_gun'],
+			24: ['rifle.wav', 0.15, 'rifle.wav', 0.15, 'rifle.wav'],
+			25: ['lightninger', 0.7, 'lightninger_impact'],
+			26: [],
+			27: ['lightninger'],
+			28: [],
+			29: ['rocket', 0.7, 'explosion.wav'],
+			30: [],
+			31: [],
+			32: ['sword'],
+			33: ['lightninger', 0.7, 'lightninger_impact'],
+			34: ['double_gun'],
+		} as {[key: number]: any})[id]
+	}
+
+	chipSound(id: number) {
+		return ({
+			1: ['heal'], 2: ['heal'], 3: ['heal'], 4: ['heal'], 5: ['heal'], 6: ['lightning'],
+			7: ['lightning'], 8: ['lightning'], 9: ['fire'], 10: ['fire'],
+			11: ['meteorite', 1.8, 'explosion.wav', 0.3, 'explosion.wav', 0.3, 'explosion.wav'],
+			12: ['rock'], 13: ['rock'], 14: ['rockfall'], 15: ['ice'], 16: ['ice'], 17: ['ice'],
+			18: ['shield'], 19: ['shield'], 20: ['shield'], 21: ['shield'], 22: ['shield'],
+			23: ['shield'], 24: ['shield'], 25: ['buff'], 26: ['buff'], 27: ['buff'], 28: ['buff'],
+			29: ['buff'], 30: ['buff'], 31: ['buff'], 32: ['buff'], 33: ['buff'], 34: ['buff'],
+			35: ['buff'], 36: ['liberation'], 37: ['teleportation'], 38: ['heal'], 39: ['teleportation'],
+			40: ['bulb'], 41: ['bulb'], 42: ['bulb'], 43: ['bulb'], 44: ['bulb'], 45: ['bulb'], 46: ['bulb'],
+			47: ['heal'], 48: ['shield'], 49: ['resurrection'], 50: ['fire', 0, 'rock', 0.25, 'rock', 0.2, 'rock', 0.3, 'rock', 0.2, 'rock'],
+			51: ['buff'], 52: ['heal'], 53: ['heal'], 54: ['buff'], 55: ['debuff'], 56: ['debuff'], 57: ['debuff'],
+			58: ['debuff'], 59: ['debuff'], 60: ['buff'], 61: ['poison'], 62: ['poison'], 63: ['poison'],
+			64: ['buff'], 65: ['buff'], 66: ['buff'], 67: ['buff'], 68: ['buff'], 69: ['fire'], 70: ['liberation'],
+			71: ['sword'], 72: ['buff'], 73: ['heal'], 74: ['buff'], 75: ['alteration.wav'], 76: ['lightning', 0, 'electrisor'], 77: ['bulb'], 78: ['move'],
+			79: ['poison'], 80: ['heal'], 81: ['buff'], 82: ['buff'],
+			83: ['teleportation'], 84: ['heal'], 85: ['alteration.wav'], 86: ['alteration.wav'], 87: ['alteration.wav'],
+			88: [], 89: [], 92: ['bulb'], 93: ['bulb'], 94: ['heal'], 95: ['debuff'], 96: ['debuff'], 97: ['poison'],
+			98: ['buff'], 99: ['shield'], 100: ['liberation'],
+		} as {[key: number]: any})[id]
+	}
+
+	playSound(item: any, type: string) {
+		const play = (sounds: any) => {
+			if (sounds.length === 0) { return }
+			const sound = sounds[0]
+			const sound_ext = sound.includes('.') ? sound : sound + '.mp3'
+			const audio = new Audio('/sound/' + sound_ext)
+			audio.volume = 0.5
+			audio.play()
+			if (sounds.length > 1) {
+				setTimeout(() => {
+					play(sounds.slice(2))
+				}, parseFloat(sounds[1]) * 1000)
+			}
+		}
+		play((type === 'weapon') ? this.weaponSound(item.params) : this.chipSound(item.params))
+		LeekWars.post('market/sound-played')
 	}
 }
 </script>
