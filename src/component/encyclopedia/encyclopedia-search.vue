@@ -53,8 +53,9 @@
 	import { LeekWars } from '@/model/leekwars'
 	import { Component, Vue, Watch } from 'vue-property-decorator'
 	import Breadcrumb from '../forum/breadcrumb.vue'
+	import Pagination from '@/component/pagination.vue'
 
-	@Component({ name: 'encyclopedia-search', i18n: {}, mixins: [...mixins], components: { Breadcrumb, Markdown } })
+	@Component({ name: 'encyclopedia-search', i18n: {}, mixins: [...mixins], components: { Breadcrumb, Markdown, Pagination } })
 	export default class EncyclopediaSearch extends Vue {
 		options = {
 			query: '',

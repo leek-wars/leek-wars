@@ -87,8 +87,9 @@
 	import { ItemType } from '@/model/item'
 	import { LeekWars } from '@/model/leekwars'
 	import { Component, Vue, Watch } from 'vue-property-decorator'
+	import RichTooltipItem from '@/component/rich-tooltip/rich-tooltip-item.vue'
 
-	@Component({ name: 'trophy', i18n: {}, mixins: [...mixins] })
+	@Component({ name: 'trophy', i18n: {}, mixins: [...mixins], components: { RichTooltipItem } })
 	export default class Trophy extends Vue {
 		code: any = null
 		trophy: any = null

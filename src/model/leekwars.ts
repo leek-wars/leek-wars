@@ -1,12 +1,10 @@
 import packageJson from '@/../package.json'
-import Analyzer from '@/component/editor/analyzer'
 import { Keyword } from '@/component/editor/keywords'
 import { env } from '@/env'
 import { BattleRoyale } from '@/model/battle-royale'
 import { ChipTemplate } from '@/model/chip'
-import { CHIP_TEMPLATES, CHIPS, CONSTANTS, FUNCTIONS, HAT_TEMPLATES, HATS, ITEMS, POMPS, POTIONS, SUMMON_TEMPLATES, TROPHIES, TROPHY_CATEGORIES, WEAPONS, COMPLEXITIES } from '@/model/data'
+import { CHIP_TEMPLATES, CHIPS, HAT_TEMPLATES, HATS, ITEMS, POMPS, POTIONS, SUMMON_TEMPLATES, TROPHIES, TROPHY_CATEGORIES, WEAPONS, COMPLEXITIES } from '@/model/data'
 import { Emojis } from '@/model/emojis'
-import { LSFunction } from '@/model/function'
 import { Socket } from '@/model/socket'
 import { Squares } from '@/model/squares'
 import { store } from '@/model/store'
@@ -134,46 +132,12 @@ const LEEK_SIZES: { [key: number]: {width: number, height: number} } = {
 	11: {width: 161, height: 211},
 }
 
-const HAT_SIZES: { [key: number]: {width: number, height: number} } = {
-	1: {width: 139, height: 84}, // christmas
-	2: {width: 110, height: 72}, // panama
-	3: {width: 139, height: 84}, // christmas
-	4: {width: 139, height: 84}, // christmas
-	5: {width: 100, height: 70}, // crown
-	6: {width: 140, height: 135}, // harlequin
-	7: {width: 130, height: 140}, // topper
-	8: {width: 150, height: 80}, // chinese
-	9: {width: 200, height: 169}, // wizard
-	10: {width: 200, height: 115}, // mugiwara
-	11: {width: 139, height: 84}, // christmas
-	12: {width: 150, height: 80}, // chinese
-	13: {width: 150, height: 80}, // chinese
-	14: {width: 140, height: 135}, // harlequin
-	15: {width: 140, height: 135}, // harlequin
-	16: {width: 200, height: 169}, // wizard
-	17: {width: 200, height: 169}, // wizard
-	18: {width: 200, height: 169}, // wizard
-	19: {width: 200, height: 169}, // wizard
-	20: {width: 150, height: 80}, // chinese
-	21: {width: 300, height: 199}, // crystal crown
-	22: {width: 300, height: 199}, // crystal crown
-	23: {width: 300, height: 199}, // crystal crown
-	24: {width: 302, height: 209}, // bicorn
-	25: {width: 300, height: 201}, // sombrero
-	26: {width: 300, height: 302}, // pirate hat
-	27: {width: 300, height: 201}, // bicorn
-	28: {width: 300, height: 206}, // lareul
-	29: {width: 300, height: 206}, // lareul
-	30: {width: 130, height: 140}, // topper
-}
-
 const ORDERED_CHIPS = orderChips(CHIPS)
 const ORDERED_WEAPONS = orderWeapons(WEAPONS)
 const POTIONS_BY_SKIN = potionsBySkin(POTIONS)
 const POTION_BY_NAME = potionByName(POTIONS)
 const WEAPON_BY_NAME = weaponByName(WEAPONS)
 const CHIP_BY_NAME = chipByName(CHIPS)
-const FUNCTION_BY_ID = functionById(FUNCTIONS)
 const CONSTANT_BY_ID = constantById(CONSTANTS)
 
 class Language {
@@ -246,8 +210,6 @@ const LeekWars = {
 	},
 	skins: Object.freeze(SKINS),
 	leekSizes: Object.freeze(LEEK_SIZES),
-	hatSizes: Object.freeze(HAT_SIZES),
-	analyzer: new Analyzer(),
 	isPublicChat: (id: number) => id === 1 || id === 2 || id === 32506 || id === 32507 || id === 32508 || id === 32509,
 	chatNames: {
 		1: 'Général',
@@ -574,7 +536,6 @@ const LeekWars = {
 	items: Object.freeze(ITEMS),
 	chips: Object.freeze(CHIPS),
 	chipByName: Object.freeze(CHIP_BY_NAME),
-	functionById: Object.freeze(FUNCTION_BY_ID),
 	constantById: Object.freeze(CONSTANT_BY_ID),
 	trophies: Object.freeze(TROPHIES),
 	chipTemplates: Object.freeze(CHIP_TEMPLATES),
@@ -590,7 +551,6 @@ const LeekWars = {
 		'mdi-code-braces',
 		'mdi-basket-outline',
 	]),
-	functions: Object.freeze(FUNCTIONS),
 	summonTemplates: Object.freeze(SUMMON_TEMPLATES),
 	potions: Object.freeze(POTIONS),
 	potionByName: Object.freeze(POTION_BY_NAME),
@@ -739,14 +699,6 @@ function chipByName(chips: {[key: string]: ChipTemplate}) {
 	for (const c in chips) {
 		const chip = chips[c]
 		result[chip.name] = chip
-	}
-	return result
-}
-
-function functionById(functions: LSFunction[]) {
-	const result: { [key: number]: LSFunction } = {}
-	for (const f of functions) {
-		result[f.id] = f
 	}
 	return result
 }

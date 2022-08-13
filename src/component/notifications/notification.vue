@@ -21,7 +21,7 @@
 
 <script lang="ts">
 	import { LeekWars } from '@/model/leekwars'
-	import { Notification, NotificationType } from '@/model/notification'
+	import { Notification } from '@/model/notification'
 	import { Component, Prop, Vue } from 'vue-property-decorator'
 
 	@Component({ name: 'notification' })

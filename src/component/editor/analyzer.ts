@@ -18,13 +18,13 @@ class Analyzer {
 	public hoverResolve!: (value: unknown) => any
 
 	private initialized: boolean = false
-	private GeneratorAnalyze!: Function
-	private GeneratorComplete!: Function
-	private GeneratorHover!: Function
-	private GeneratorRegister!: Function
-	private GeneratorAddEntrypoint!: Function
-	private getExceptionMessage!: Function
-	private GeneratorDelete!: Function
+	// private GeneratorAnalyze!: Function
+	// private GeneratorComplete!: Function
+	// private GeneratorHover!: Function
+	// private GeneratorRegister!: Function
+	// private GeneratorAddEntrypoint!: Function
+	// private getExceptionMessage!: Function
+	// private GeneratorDelete!: Function
 
 	public init() {
 		this.enabled = true
@@ -36,13 +36,13 @@ class Analyzer {
 				onRuntimeInitialized: () => {
 					// console.log("Module initialized", Module)
 					Module.ccall('init')
-					this.GeneratorAnalyze = Module.cwrap('analyze', 'string', ['boolean', 'string', 'string', 'boolean'])
-					this.GeneratorComplete = Module.cwrap('complete', 'string', ['boolean', 'string', 'number'])
-					this.GeneratorHover = Module.cwrap('hover', 'string', ['boolean', 'string', 'number', 'boolean'])
-					this.GeneratorRegister = Module.cwrap('register_', 'void', ['boolean', 'string'])
-					this.GeneratorAddEntrypoint = Module.cwrap('addEntrypoint', 'void', ['boolean', 'string', 'boolean', 'string'])
-					this.getExceptionMessage = Module.cwrap('getExceptionMessage', 'string', ['number'])
-					this.GeneratorDelete = Module.cwrap('delete_', 'string', ['string'])
+					// this.GeneratorAnalyze = Module.cwrap('analyze', 'string', ['boolean', 'string', 'string', 'boolean'])
+					// this.GeneratorComplete = Module.cwrap('complete', 'string', ['boolean', 'string', 'number'])
+					// this.GeneratorHover = Module.cwrap('hover', 'string', ['boolean', 'string', 'number', 'boolean'])
+					// this.GeneratorRegister = Module.cwrap('register_', 'void', ['boolean', 'string'])
+					// this.GeneratorAddEntrypoint = Module.cwrap('addEntrypoint', 'void', ['boolean', 'string', 'boolean', 'string'])
+					// this.getExceptionMessage = Module.cwrap('getExceptionMessage', 'string', ['number'])
+					// this.GeneratorDelete = Module.cwrap('delete_', 'string', ['string'])
 
 					// console.log(this.GeneratorAnalyze(false, "Fight.toto"))
 					// console.log(this.GeneratorComplete(false, "Fight.getEntity().name", 18))
@@ -91,7 +91,7 @@ class Analyzer {
 			this.hoverResolve(data)
 		}
 	}
-
+	/*
 	public hover_old(ai: AI, position: number) {
 
 		if (!this.enabled) { return Promise.reject() }
@@ -111,7 +111,9 @@ class Analyzer {
 			}
 		})
 	}
+	*/
 
+	/*
 	public analyze(ai: AI, code: string) {
 
 		if (!this.enabled) { return Promise.reject() }
@@ -154,7 +156,9 @@ class Analyzer {
 			}))
 		})
 	}
+	*/
 
+	/*
 	public register(ai: AI) {
 
 		if (!this.enabled) { return Promise.reject() }
@@ -170,7 +174,9 @@ class Analyzer {
 			return Promise.resolve()
 		})
 	}
+	*/
 
+	/*
 	public complete(ai: AI, position: number) {
 
 		if (!this.enabled) { return Promise.reject() }
@@ -189,7 +195,9 @@ class Analyzer {
 
 		return Promise.resolve(result)
 	}
+	*/
 
+	/*
 	public delete(ai: AI) {
 
 		if (!this.enabled) { return Promise.reject() }
@@ -229,7 +237,9 @@ class Analyzer {
 			}))
 		})
 	}
+	*/
 
+	/*
 	public registerEntrypoints(ai: AI) {
 		for (const entrypoint_id of ai.entrypoints) {
 			const entrypoint = fileSystem.ais[entrypoint_id]
@@ -239,6 +249,7 @@ class Analyzer {
 			}
 		}
 	}
+	*/
 
 	public setProblems(entrypoint: number, ai: AI, problems: any) {
 		// console.log("[Analyzer] set ai problems", entrypoint, ai, problems)
@@ -301,4 +312,6 @@ class Analyzer {
 	}
 }
 
-export default Analyzer
+const analyzer = new Analyzer()
+
+export { analyzer, Analyzer }

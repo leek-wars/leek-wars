@@ -130,8 +130,9 @@
 	import { Route } from 'vue-router'
 	import Breadcrumb from '../forum/breadcrumb.vue'
 	import(/* webpackChunkName: "[request]" */ /* webpackMode: "eager" */ `@/lang/doc.${locale}.lang`)
+	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 
-	@Component({ name: 'encyclopedia', i18n: {}, mixins: [...mixins], components: { Markdown, Breadcrumb } })
+	@Component({ name: 'encyclopedia', i18n: {}, mixins: [...mixins], components: { Markdown, Breadcrumb, RichTooltipFarmer } })
 	export default class Encyclopedia extends Vue {
 		content: string = ''
 		english: string = ''
@@ -244,7 +245,7 @@
 				let args = ''
 				let ret = ''
 				let description = ''
-				for (const funct of LeekWars.functions) {
+				for (const funct of FUNCTIONS) {
 					if (funct.name === this.code) {
 						fun = funct
 						description = this.$t('doc.func_' + fun.name) as string

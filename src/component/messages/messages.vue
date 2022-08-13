@@ -90,8 +90,9 @@
 	import { SocketMessage } from '@/model/socket'
 	import { store } from '@/model/store'
 	import { Component, Vue, Watch } from 'vue-property-decorator'
+	import ConversationElement from '@/component/messages/conversation.vue'
 
-	@Component({ name: 'messages', i18n: {}, mixins: [...mixins], components: { chat: ChatElement } })
+	@Component({ name: 'messages', i18n: {}, mixins: [...mixins], components: { chat: ChatElement, conversation: ConversationElement } })
 	export default class Messages extends Vue {
 		ChatType = ChatType
 		newFarmer_: any = null

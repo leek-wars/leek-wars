@@ -188,8 +188,9 @@
 	import { ItemType } from '@/model/item'
 	import { LeekWars } from '@/model/leekwars'
 	import { store } from '@/model/store'
-	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
+	import { Component, Vue, Watch } from 'vue-property-decorator'
 	import { Item } from '../editor/editor-item'
+	import RichTooltipItem from '@/component/rich-tooltip/rich-tooltip-item.vue'
 
 	enum Sort {
 		DATE, PRICE, PRICE_LOT, QUANTITY, /*NAME, */ LEVEL, RARITY
@@ -198,7 +199,7 @@
 		ALL, WEAPONS, CHIPS, POTIONS, HATS, POMPS, RESOURCES
 	}
 
-	@Component({ name: 'inventory', i18n: {}, mixins: [...mixins] })
+	@Component({ name: 'inventory', i18n: {}, mixins: [...mixins], components: { RichTooltipItem } })
 	export default class Inventory extends Vue {
 
 		ItemType = ItemType

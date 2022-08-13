@@ -1,6 +1,6 @@
 <template lang="html">
 	<div class="problems-details">
-		<div v-for="(ais, entrypoint) in LeekWars.analyzer.problems" :key="entrypoint">
+		<div v-for="(ais, entrypoint) in analyzer.problems" :key="entrypoint">
 			<div v-for="(problems, ai) in ais" v-if="problems.length" :key="ai">
 				<div class="file" @click="toggleProblemFile(entrypoint + ai)">
 					<v-icon>{{ problemsCollapsed[entrypoint + ai] ? 'mdi-chevron-right' : 'mdi-chevron-down' }}</v-icon>
@@ -31,12 +31,14 @@
 	import { i18n, mixins } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
+	import { analyzer } from './analyzer'
 	import EditorFolder from './editor-folder.vue'
 	import { Folder } from './editor-item'
 
 	@Component({ name: 'editor-problems', i18n: {}, mixins: [...mixins] })
 	export default class Explorer extends Vue {
 
+		analyzer = analyzer
 		problemsCollapsed: {[key: string]: boolean} = {}
 		fileSystem = fileSystem
 

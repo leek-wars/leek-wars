@@ -1,3 +1,4 @@
+import { analyzer } from '@/component/editor/analyzer'
 import { AIItem, Folder } from '@/component/editor/editor-item'
 import { AI } from '@/model/ai'
 import { LeekWars } from '@/model/leekwars'
@@ -203,7 +204,7 @@ class FileSystem {
 		Vue.delete(this.aiByFullPath, ai.path)
 		store.commit('delete-ai', ai.id)
 		LeekWars.delete('ai/delete', {ai_id: ai.id}).error(error => LeekWars.toast(error))
-		LeekWars.analyzer.delete(ai)
+		// analyzer.delete(ai)
 		// Ajout dans la corbeille
 		ai.folder = -1
 		this.bin.items.push(...item)

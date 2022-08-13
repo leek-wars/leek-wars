@@ -5,8 +5,6 @@ const { execSync } = require('child_process')
 
 const values = [
 	['chips', 'chips', 'chip/get-all', '{[key: string]: ChipTemplate}'],
-	['constants', 'constants', 'constant/get-all', 'Constant[]'],
-	['functions', 'functions', 'function/get-all', 'LSFunction[]'],
 	['hats', 'hats', 'hat/get-all', '{[key: string]: HatTemplate}'],
 	['weapons', 'weapons', 'weapon/get-all', '{[key: string]: WeaponTemplate}'],
 	['pomps', 'pomps', 'pomp/get-all', '{[key: string]: PompTemplate}'],
@@ -19,13 +17,32 @@ const values = [
 	['items', null, 'item/get-all', '{[key: string]: ItemTemplate}'],
 	['complexities', null, 'complexity/get-all', '{[key: string]: string}'],
 ]
+const new_values = [
+	['functions', 'functions', 'function/get-all', 'LSFunction[]', "import { LSFunction } from '@/model/function'"],
+	['constants', 'constants', 'constant/get-all', 'Constant[]', "import { Constant } from '@/model/constant'"],
+]
 const promises = []
 
 const master = execSync('git rev-parse --abbrev-ref HEAD').toString().trim() === 'master'
+const host = master ? 'https://leekwars.com/' : 'http://localhost:8500/'
+
+for (const value of new_values) {
+
+	request(host + 'api/' + value[2]).then(data => {
+		const json = JSON.parse(data)
+		const file = 'src/model/' + value[1] + '.ts'
+		const content = value[4] + "\n\nconst " + value[0].toUpperCase()
+		+ (value[3] ? ': ' + value[3] : '')
+		+ " = " + util.inspect(value[1] ? json[value[1]] : json, {depth: Infinity, breakLength: Infinity, maxArrayLength: Infinity})
+		+ "\nexport { " + value[0].toUpperCase() + " }"
+		fs.writeFileSync(file, content)
+		console.log("data written: " + file)
+	})
+}
 
 let r = 0
 for (const value of values) {
-	const host = master ? 'https://leekwars.com/' : 'http://localhost:8500/'
+
 	setTimeout(() => {
 		const p = request(host + 'api/' + value[2])
 		promises.push(p.then((data) => {
@@ -33,7 +50,7 @@ for (const value of values) {
 			console.log('received', value[0])
 			return "const " + value[0].toUpperCase()
 				+ (value[3] ? ': ' + value[3] : '')
-				+ " = " + util.inspect(value[1] ? json[value[1]] : json, {depth: Infinity, breakLength: Infinity, maxArrayLength: Infinity})
+				+ " = Object.freeze(" + util.inspect(value[1] ? json[value[1]] : json, {depth: Infinity, breakLength: Infinity, maxArrayLength: Infinity}) + ")"
 				+ "\nexport { " + value[0].toUpperCase() + " }"
 		}).catch((err) => {
 			console.log("ERROR request failed for", value[0], ":", err.statusCode, err.error)
@@ -46,8 +63,6 @@ setTimeout(() => {
 		let data = `/** This file is auto-generated from script/generate_data.js **/
 /* tslint:disable */
 import { ChipTemplate } from '@/model/chip'
-import { Constant } from '@/model/constant'
-import { LSFunction } from '@/model/function'
 import { HatTemplate } from '@/model/hat'
 import { ItemTemplate } from '@/model/item'
 import { PompTemplate } from '@/model/pomp'

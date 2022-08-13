@@ -69,6 +69,8 @@
 	import { locale } from '@/locale'
 	import { Constant } from '@/model/constant'
 	import { LSFunction } from '@/model/function'
+	import { FUNCTIONS } from '@/model/functions'
+	import { FUNCTION_BY_ID } from '@/model/function_by_id'
 	import { mixins } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
@@ -156,12 +158,12 @@
 					Vue.set(this.categoryState, category, localStorage.getItem('documentation/category-' + category) === 'true')
 				}
 				let id = 0
-				for (const item of LeekWars.functions) {
+				for (const item of FUNCTIONS) {
 					if (item.replacement) {
-						LeekWars.functionById[item.replacement].replacer = item
+						FUNCTION_BY_ID[item.replacement].replacer = item
 					}
 				}
-				for (const item of LeekWars.functions) {
+				for (const item of FUNCTIONS) {
 					this.items.push(item)
 					item.lower_name = item.name.toLowerCase()
 					item.id = id++

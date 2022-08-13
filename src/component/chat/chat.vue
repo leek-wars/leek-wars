@@ -126,10 +126,11 @@
 	import ChatInput from './chat-input.vue'
 	import ChatMessageComponent from './chat-message.vue'
 	import EmojiPicker from './emoji-picker.vue'
+	import ReportDialog from '@/component/moderation/report-dialog.vue'
 
 	@Component({
 		name: "chat",
-		components: { 'chat-input': ChatInput, 'chat-message': ChatMessageComponent, 'emoji-picker': EmojiPicker }
+		components: { 'chat-input': ChatInput, 'chat-message': ChatMessageComponent, 'emoji-picker': EmojiPicker, ReportDialog }
 	})
 	export default class ChatElement extends Vue {
 		ChatType = ChatType

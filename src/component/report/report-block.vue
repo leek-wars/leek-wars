@@ -110,9 +110,10 @@
 	import { Fight, FightContext, FightType, ReportFarmer } from '@/model/fight'
 	import { Component, Prop, Vue } from 'vue-property-decorator'
 	import ReportLeekRow from './report-leek-row.vue'
+	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 
 	@Component({
-		components: {ReportLeekRow}
+		components: { ReportLeekRow, RichTooltipFarmer }
 	})
 	export default class ReportBlock extends Vue {
 		@Prop({required: true}) fight!: Fight

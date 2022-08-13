@@ -129,8 +129,9 @@
 	import { Farmer } from '@/model/farmer'
 	import { Language, LeekWars } from '@/model/leekwars'
 	import { Component, Vue } from 'vue-property-decorator'
+	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 
-	@Component({ name: 'forum', i18n: {}, components: { chat: ChatElement } })
+	@Component({ name: 'forum', i18n: {}, components: { chat: ChatElement, RichTooltipFarmer } })
 	export default class Forum extends Vue {
 		ChatType = ChatType
 		categories: any = null

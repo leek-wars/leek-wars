@@ -106,7 +106,7 @@
 							</div>
 						</div>
 
-						<div v-if="showProblemsDetails && problemsHeight && (LeekWars.analyzer.error_count || LeekWars.analyzer.warning_count || LeekWars.analyzer.todo_count)" :style="{height: problemsHeight + 'px'}">
+						<div v-if="showProblemsDetails && problemsHeight && (analyzer.error_count || analyzer.warning_count || analyzer.todo_count)" :style="{height: problemsHeight + 'px'}">
 							<div class="problems-resizer" @mousedown="problemsResizerMousedown"></div>
 							<editor-problems @jump="jump" />
 						</div>
@@ -174,25 +174,25 @@
 								</v-list>
 							</v-menu>
 							<div v-ripple class="problems" @click="toggleProblems">
-								<span v-if="LeekWars.analyzer.error_count + LeekWars.analyzer.warning_count + LeekWars.analyzer.todo_count === 0" class="no-error">
+								<span v-if="analyzer.error_count + analyzer.warning_count + analyzer.todo_count === 0" class="no-error">
 									<v-icon>mdi-check-circle</v-icon> Aucun problème
 								</span>
 								<span v-else>
-									<span v-if="LeekWars.analyzer.error_count" class="errors">
-										<v-icon>mdi-close-circle</v-icon> {{ LeekWars.analyzer.error_count }} erreurs
+									<span v-if="analyzer.error_count" class="errors">
+										<v-icon>mdi-close-circle</v-icon> {{ analyzer.error_count }} erreurs
 									</span>
-									<span v-if="LeekWars.analyzer.warning_count" class="warnings">
-										<v-icon>mdi-alert-circle</v-icon> {{ LeekWars.analyzer.warning_count }} warnings
+									<span v-if="analyzer.warning_count" class="warnings">
+										<v-icon>mdi-alert-circle</v-icon> {{ analyzer.warning_count }} warnings
 									</span>
-									<span v-if="LeekWars.analyzer.todo_count" class="todos">
-										<v-icon>mdi-format-list-checks</v-icon> {{ LeekWars.analyzer.todo_count }} todos
+									<span v-if="analyzer.todo_count" class="todos">
+										<v-icon>mdi-format-list-checks</v-icon> {{ analyzer.todo_count }} todos
 									</span>
 								</span>
 							</div>
 							<div class="filler"></div>
 							<div v-if="currentEditor && currentEditor.editor" class="version">L {{ currentEditor.editor.getCursor().line + 1 }}, C {{ currentEditor.editor.getCursor().ch }} <span v-if="currentEditor.editor.getSelection()">({{ currentEditor.editor.getSelection().length }} Select.)</span></div>
 							<div v-if="enableAnalyzer" class="state">
-								<div v-if="LeekWars.analyzer.running == 0" class="ready">
+								<div v-if="analyzer.running == 0" class="ready">
 									Prêt
 									<v-icon>mdi-check</v-icon>
 								</div>
@@ -293,7 +293,6 @@
 	import { Component, Vue, Watch } from 'vue-property-decorator'
 	import { Route } from 'vue-router'
 	import AIView from './ai-view.vue'
-	import Analyzer from './analyzer'
 	import { Problem } from './problem'
 	import EditorFinder from './editor-finder.vue'
 	import { AIItem, Folder, Item } from './editor-item'
@@ -304,6 +303,8 @@
 	const EditorProblems = () => import(/* webpackChunkName: "[request]" */ `@/component/editor/editor-problems.${locale}.i18n`)
 	import { generateKeywords } from './keywords'
 	import './leekscript-monokai.scss'
+import { SocketMessage } from '@/model/socket'
+import { analyzer } from './analyzer'
 	import(/* webpackChunkName: "[request]" */ /* webpackMode: "eager" */ `@/lang/doc.${locale}.lang`)
 
 	const DEFAULT_FONT_SIZE = 16
@@ -323,6 +324,8 @@
 		mixins: [...mixins]
 	})
 	export default class EditorPage extends Vue {
+
+		analyzer = analyzer
 		activeAIs: {[key: number]: AI} = {}
 		currentAI: AI | null = null
 		currentEditor: AIView | null = null
@@ -474,6 +477,9 @@
 				this.dragging = null
 			})
 			this.$root.$on('connected', this.connected)
+
+			this.$root.$on('wsmessage', this.wsmessage)
+
 			if (store.state.farmer) {
 				this.connected()
 			}
@@ -486,6 +492,12 @@
 				broadcast.close()
 			}
 			broadcast.postMessage({ type: 'editor-opened' })
+		}
+
+		wsmessage(message: {type: number, data: any}) {
+			if (message.type === SocketMessage.EDITOR_HOVER) {
+				analyzer.hoverResult(message.data)
+			}
 		}
 
 		isChild(folder: Folder, parent: Folder): boolean {
@@ -583,6 +595,7 @@
 			this.$root.$off('next')
 			this.$root.$off('back')
 			this.$root.$off('connected', this.connected)
+			this.$root.$off('wsmessage', this.wsmessage)
 			LeekWars.large = false
 			LeekWars.header = true
 			LeekWars.footer = true
@@ -644,7 +657,7 @@
 					Vue.set(ai, 'valid', valid)
 					this.handleProblems(ai, data.result[entrypoint])
 				}
-				LeekWars.analyzer.updateCount()
+				analyzer.updateCount()
 				setTimeout(() => this.goods = [], 2000)
 
 				if (aiEditor.needTest) {
@@ -669,7 +682,7 @@
 		handleProblems(entrypoint: AI, problems: any[][]) {
 			// console.log("handleProblems", entrypoint, problems)
 
-			LeekWars.analyzer.removeProblems(entrypoint)
+			analyzer.removeProblems(entrypoint)
 
 			// Group problems by ai
 			const problemsByAI = {} as {[key: number]: Problem[]}
@@ -691,7 +704,7 @@
 				const ai = fileSystem.ais[ai_id]
 				const ai_problems = problemsByAI[ai_id]
 				// console.log("ai", ai.path, "problems", ai_problems)
-				LeekWars.analyzer.setProblems(entrypoint.id, ai, ai_problems)
+				analyzer.setProblems(entrypoint.id, ai, ai_problems)
 			}
 		}
 
@@ -743,7 +756,7 @@
 		}
 		@Watch('enableAnalyzer') analyzerChange() {
 			if (this.enableAnalyzer) {
-				LeekWars.analyzer.init()
+				analyzer.init()
 			}
 			localStorage.setItem('editor/analyzer', '' + this.enableAnalyzer)
 		}

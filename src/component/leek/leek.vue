@@ -582,8 +582,27 @@
 	import(/* webpackChunkName: "chartist" */ /* webpackMode: "eager" */ "@/chartist-wrapper")
 	const Explorer = () => import(/* webpackChunkName: "[request]" */ `@/component/explorer/explorer.${locale}.i18n`)
 	import { fileSystem } from '@/model/filesystem'
+	import RichTooltipItem from '../rich-tooltip/rich-tooltip-item.vue'
+	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
+	import RichTooltipLeek from '@/component/rich-tooltip/rich-tooltip-leek.vue'
+	import FightsHistory from '@/component/history/fights-history.vue'
+	import TournamentsHistory from '@/component/history/tournaments-history.vue'
+	import TitlePicker from '@/component/title/title-picker.vue'
+	import ReportDialog from '@/component/moderation/report-dialog.vue'
 
-	@Component({ name: "leek", i18n: {}, mixins: [...mixins], components: { CapitalDialog, LevelDialog, CharacteristicTooltip, Explorer } })
+	@Component({ name: "leek", i18n: {}, mixins: [...mixins], components: {
+		CapitalDialog,
+		LevelDialog,
+		CharacteristicTooltip,
+		Explorer,
+		RichTooltipItem,
+		RichTooltipFarmer,
+		RichTooltipLeek,
+		FightsHistory,
+		TournamentsHistory,
+		TitlePicker,
+		ReportDialog
+	} })
 	export default class LeekPage extends Vue {
 		leek: Leek | null = null
 		error: boolean = false

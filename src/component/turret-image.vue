@@ -5,9 +5,8 @@
 </template>
 
 <script lang="ts">
-	import { LeekWars } from '@/model/leekwars'
 	import { TURRET_DATA, TURRET_PIECE_SIZE } from '@/model/turret-data'
-	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
+	import { Component, Prop, Vue } from 'vue-property-decorator'
 
 	@Component({})
 	export default class TurretImage extends Vue {
@@ -21,8 +20,8 @@
 			let z = this.offset
 			return this.data_.map(piece => {
 				const p = {
-					t: piece.t, 
-					w: TURRET_PIECE_SIZE[piece.t][0], 
+					t: piece.t,
+					w: TURRET_PIECE_SIZE[piece.t][0],
 					z: (z += piece.z) / 0.3
 				}
 				return p

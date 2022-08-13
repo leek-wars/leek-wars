@@ -69,8 +69,9 @@
 	import { Chest } from './game/chest'
 	import { Game } from './game/game'
 	import { Turret } from './game/turret'
+	import TurretImage from '@/component/turret-image.vue'
 
-	@Component({ name: 'hud', components: { EntityDetails, leek: ActionLeekElement } })
+	@Component({ name: 'hud', components: { EntityDetails, leek: ActionLeekElement, TurretImage } })
 	export default class Hud extends Vue {
 		@Prop({required: true}) game!: Game
 		debug: boolean = false

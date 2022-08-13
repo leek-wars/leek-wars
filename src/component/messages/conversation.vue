@@ -17,8 +17,9 @@
 <script lang="ts">
 	import { Chat } from '@/model/chat'
 	import { Component, Prop, Vue } from 'vue-property-decorator'
+	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 
-	@Component({})
+	@Component({ name: 'conversation', components: { RichTooltipFarmer } })
 	export default class ConversationElement extends Vue {
 
 		@Prop({required: true}) chat!: Chat

@@ -154,8 +154,11 @@
 	import { Component, Vue, Watch } from 'vue-property-decorator'
 	import Breadcrumb from '../forum/breadcrumb.vue'
 	import Trophy from './trophy.vue'
+	import RichTooltipTrophy from '@/component/rich-tooltip/rich-tooltip-trophy.vue'
 
-	@Component({ name: 'trophies', i18n: {}, mixins: [...mixins], components: { Breadcrumb, Trophy } })
+	@Component({ name: 'trophies', i18n: {}, mixins: [...mixins], components: {
+		Breadcrumb, Trophy, RichTooltipTrophy
+	} })
 	export default class Trophies extends Vue {
 		all_trophies: any[] = []
 		raw_trophies: {[key: number]: any} = {}

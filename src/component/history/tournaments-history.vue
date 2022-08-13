@@ -9,7 +9,9 @@
 <script lang="ts">
 	import { Tournament } from '@/model/tournament'
 	import { Component, Prop, Vue } from 'vue-property-decorator'
-	@Component({ name: 'tournaments-history' })
+	import TournamentHistory from '@/component/history/tournament-history.vue'
+
+	@Component({ name: 'tournaments-history', components: { TournamentHistory } })
 	export default class TournamentsHistory extends Vue {
 		@Prop() tournaments!: Tournament[]
 	}

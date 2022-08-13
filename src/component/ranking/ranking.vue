@@ -210,10 +210,12 @@
 	import { LeekWars } from '@/model/leekwars'
 	import { Ranking } from '@/model/ranking'
 	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
+	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
+	import Pagination from '@/component/pagination.vue'
 
 	@Component({
 		name: 'ranking', i18n: {}, mixins: [...mixins],
-		components: { 'ranking-leek-row': RankingLeekRowElement, 'ranking-farmer-row': RankingFarmerRowElement, 'ranking-team-row': RankingTeamRowElement, 'ranking-search-result': RankingSearchResult }
+		components: { 'ranking-leek-row': RankingLeekRowElement, 'ranking-farmer-row': RankingFarmerRowElement, 'ranking-team-row': RankingTeamRowElement, 'ranking-search-result': RankingSearchResult, RichTooltipFarmer, Pagination }
 	})
 	export default class RankingPage extends Vue {
 		fun: boolean = false

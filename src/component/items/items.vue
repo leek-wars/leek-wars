@@ -33,8 +33,9 @@
 	import { store } from '@/model/store'
 	import { Component, Vue } from 'vue-property-decorator'
 	import Breadcrumb from '../forum/breadcrumb.vue'
+	import Item from '@/component/item.vue'
 
-	@Component({ name: 'items', i18n: {}, components: { Breadcrumb } })
+	@Component({ name: 'items', i18n: {}, components: { Breadcrumb, Item } })
 	export default class Items extends Vue {
 
 		trophies: any = {}

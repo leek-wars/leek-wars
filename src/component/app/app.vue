@@ -1,5 +1,5 @@
 <template>
-	<div id="app" :class="{ connected: $store.state.connected, app: LeekWars.mobile, 'social-collapsed': LeekWars.socialCollapsed, 'menu-expanded': LeekWars.menuExpanded, sfw: LeekWars.sfw, 'menu-collapsed': !LeekWars.mobile && LeekWars.menuCollapsed, beta: env.BETA, lightbar: LeekWars.lightBar }" data-app="true" @mousemove="consoleMouseMove" @mouseup="consoleMouseUp">
+	<div id="app" :class="{ connected: $store.state.connected, app: LeekWars.mobile, 'social-collapsed': LeekWars.socialCollapsed, 'menu-expanded': LeekWars.menuExpanded, sfw: LeekWars.sfw, 'menu-collapsed': !LeekWars.mobile && LeekWars.menuCollapsed, beta: env.BETA, lightbar: LeekWars.lightBar }" data-app="true">
 		<div class="v-application--wrap">
 			<div :class="{visible: LeekWars.dark > 0}" :style="{opacity: LeekWars.dark}" class="dark" @click="darkClick"></div>
 
@@ -120,12 +120,12 @@
 <script lang='ts'>
 	import Bar from '@/component/app/bar.vue'
 	import Chats from '@/component/app/chats.vue'
-	import Console from '@/component/app/console.vue'
+	// import Console from '@/component/app/console.vue'
 	import Footer from '@/component/app/footer.vue'
 	import Header from '@/component/app/header.vue'
-	import Menu from '@/component/app/menu.vue'
+	const Menu = () => import(/* webpackChunkName: "[request]" */ `@/component/app/menu.vue`)
 	import MobileBR from '@/component/app/mobile-br.vue'
-	import Social from '@/component/app/social.vue'
+	const Social = () => import(/* webpackChunkName: "[request]" */ `@/component/app/social.vue`)
 	import Squares from '@/component/app/squares.vue'
 	import ChangelogVersion from '@/component/changelog/changelog-version.vue'
 	import { locale } from '@/locale'
@@ -137,7 +137,7 @@
 	const Documentation = () => import(/* webpackChunkName: "[request]" */ `@/component/documentation/documentation.${locale}.i18n`)
 
 	@Component({
-		components: {'lw-bar': Bar, 'lw-footer': Footer, 'lw-header': Header, 'lw-menu': Menu, 'lw-social': Social, Console, Squares, Didactitiel, Chats, 'mobile-br': MobileBR, ChangelogVersion, ChangelogDialog, Documentation }
+		components: {'lw-bar': Bar, 'lw-footer': Footer, 'lw-header': Header, 'lw-menu': Menu, 'lw-social': Social, Squares, Didactitiel, Chats, 'mobile-br': MobileBR, ChangelogVersion, ChangelogDialog, Documentation }
 	})
 	export default class App extends Vue {
 		didactitiel: boolean = false
@@ -216,6 +216,7 @@
 			LeekWars.menuExpanded = false
 			LeekWars.dark = 0
 		}
+		/*
 		leekscriptConsole() {
 			this.console = true
 			this.consoleX = window.innerWidth / 2 - 300
@@ -250,7 +251,6 @@
 		consoleMouseUp(e: MouseEvent) {
 			this.consoleDown = false
 		}
-		/*
 		consolePopup() {
 			LeekWars.popupWindow("/console", "title", 600, 320)
 			this.console = false

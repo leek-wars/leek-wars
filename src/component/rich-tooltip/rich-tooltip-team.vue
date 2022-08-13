@@ -42,14 +42,12 @@
 </template>
 
 <script lang="ts">
-	import { Farmer } from '@/model/farmer'
-	import { Leek } from '@/model/leek'
 	import { LeekWars } from '@/model/leekwars'
-	import { store } from '@/model/store'
-	import { Composition, Team } from '@/model/team'
+	import { Team } from '@/model/team'
 	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
+	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 
-	@Component({})
+	@Component({ components: { RichTooltipFarmer } })
 	export default class RichTooltipTeam extends Vue {
 		@Prop({required: true}) id!: number
 		@Prop() disabled!: boolean
@@ -93,7 +91,7 @@
 		}
 
 		setParent(event: boolean) {
-			console.log("lock team")
+			// console.log("lock team")
 			this.locked = event
 			if (!event && !this.mouse) {
 				this.value = false

@@ -1,6 +1,7 @@
 import { AI } from '@/model/ai'
 import { Constant } from '@/model/constant'
 import { LSFunction } from '@/model/function'
+import { FUNCTIONS } from '@/model/functions'
 import { LeekWars } from "@/model/leekwars"
 
 class Keyword {
@@ -35,7 +36,7 @@ class LSStaticMethod extends Keyword {}
 function generateKeywords() {
 	const keywords: Keyword[] = []
 
-	for (const fun of LeekWars.functions) {
+	for (const fun of FUNCTIONS) {
 
 		const text = fun.name
 		let name = fun.name

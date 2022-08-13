@@ -7,13 +7,12 @@
 </template>
 
 <script lang="ts">
-	import { env } from '@/env'
 	import { ItemType } from '@/model/item'
 	import { LeekWars } from '@/model/leekwars'
-	import { Team } from '@/model/team'
 	import { Component, Prop, Vue } from 'vue-property-decorator'
+	import RichTooltipItem from '@/component/rich-tooltip/rich-tooltip-item.vue'
 
-	@Component({ name: "item" })
+	@Component({ name: "item", components: { RichTooltipItem } })
 	export default class ItemView extends Vue {
 		@Prop() item!: any
 

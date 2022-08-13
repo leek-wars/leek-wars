@@ -104,6 +104,7 @@
 		EffectModifier = EffectModifier
 		EffectType = EffectType
 		raw_opened: boolean = false
+
 		get enemies() { return this.effect.targets & 1 }
 		get allies(): boolean { return (this.effect.targets & (1 << 1)) !== 0 }
 		get caster(): boolean { return (this.effect.targets & (1 << 2)) !== 0 }

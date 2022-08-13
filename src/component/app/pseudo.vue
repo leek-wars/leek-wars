@@ -9,8 +9,9 @@
 <script lang="ts">
 	import { Farmer } from '@/model/farmer'
 	import { Component, Prop, Vue } from 'vue-property-decorator'
+	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 
-	@Component({ name: 'lw-pseudo' })
+	@Component({ name: 'lw-pseudo', components: { RichTooltipFarmer } })
 	export default class Pseudo extends Vue {
 
 		@Prop({required: true}) farmer!: Farmer

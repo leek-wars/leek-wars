@@ -23,7 +23,9 @@
 <script lang="ts">
 	import { Composition } from '@/model/team'
 	import { Component, Prop, Vue } from 'vue-property-decorator'
-	@Component({})
+	import RichTooltipComposition from '@/component/rich-tooltip/rich-tooltip-composition.vue'
+
+	@Component({ components: { RichTooltipComposition } })
 	export default class GardenCompo extends Vue {
 		@Prop() compo!: Composition
 	}

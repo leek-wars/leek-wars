@@ -14,8 +14,10 @@
 <script lang="ts">
 	import { Component, Prop, Vue } from 'vue-property-decorator'
 	import Avatar from '../avatar.vue'
+	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
+
 	@Component({
-		components: { avatar: Avatar }
+		components: { avatar: Avatar, RichTooltipFarmer }
 	})
 	export default class GardenFarmer extends Vue {
 		@Prop() farmer!: any

@@ -517,8 +517,17 @@
 	import { Team } from '@/model/team'
 	import { mixins } from '@/model/i18n'
 	import { Component, Vue, Watch } from 'vue-property-decorator'
+	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
+	import RichTooltipTeam from '@/component/rich-tooltip/rich-tooltip-team.vue'
+	import RichTooltipLeek from '@/component/rich-tooltip/rich-tooltip-leek.vue'
+	import FightsHistory from '@/component/history/fights-history.vue'
+	import TournamentsHistory from '@/component/history/tournaments-history.vue'
+	import TitlePicker from '@/component/title/title-picker.vue'
+	import ReportDialog from '@/component/moderation/report-dialog.vue'
 
-	@Component({ name: "farmer", i18n: {}, mixins: [...mixins] })
+	@Component({ name: "farmer", i18n: {}, mixins: [...mixins], components: {
+		RichTooltipFarmer, RichTooltipTeam, RichTooltipLeek, FightsHistory, TournamentsHistory, TitlePicker, ReportDialog
+	} })
 	export default class FarmerPage extends Vue {
 		farmer: Farmer | null = null
 		trophies: any = null

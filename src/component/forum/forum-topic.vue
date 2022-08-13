@@ -215,8 +215,11 @@
 	import EmojiPicker from '../chat/emoji-picker.vue'
 	import Breadcrumb from './breadcrumb.vue'
 	const FormattingRules = () => import(/* webpackChunkName: "[request]" */ `@/component/forum/forum-formatting-rules.${locale}.i18n`)
+	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
+	import ReportDialog from '@/component/moderation/report-dialog.vue'
+	import Pagination from '@/component/pagination.vue'
 
-	@Component({ name: 'forum_topic', i18n: {}, mixins: [...mixins], components: { Breadcrumb, EmojiPicker, Markdown, FormattingRules } })
+	@Component({ name: 'forum_topic', i18n: {}, mixins: [...mixins], components: { Breadcrumb, EmojiPicker, Markdown, FormattingRules, RichTooltipFarmer, ReportDialog, Pagination } })
 	export default class ForumTopicPage extends Vue {
 		topic: ForumTopic | null = null
 		category: ForumCategory | null = null

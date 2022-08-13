@@ -90,8 +90,9 @@
 	import { LeekWars } from '@/model/leekwars'
 	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 	import Breadcrumb from '../forum/breadcrumb.vue'
+	import FightsHistory from '@/component/history/fights-history.vue'
 
-	@Component({ name: 'history', i18n: {}, mixins: [...mixins], components: { Breadcrumb } })
+	@Component({ name: 'history', i18n: {}, mixins: [...mixins], components: { Breadcrumb, FightsHistory } })
 	export default class History extends Vue {
 		@Prop({required: true}) type!: string
 		fights!: Fight[]

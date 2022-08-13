@@ -20,7 +20,9 @@
 <script lang="ts">
 	import { RankingTeamRow } from '@/model/ranking'
 	import { Component, Prop, Vue } from 'vue-property-decorator'
-	@Component({})
+	import RichTooltipTeam from '@/component/rich-tooltip/rich-tooltip-team.vue'
+
+	@Component({ components: { RichTooltipTeam } })
 	export default class RankingTeamRowElement extends Vue {
 		@Prop({ required: true }) row!: RankingTeamRow
 	}

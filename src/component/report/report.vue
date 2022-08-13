@@ -265,8 +265,9 @@
 	import { FightStatistics } from './statistics'
 	import(/* webpackChunkName: "chartist" */ /* webpackMode: "eager" */ "@/chartist-wrapper")
 	import(/* webpackChunkName: "[request]" */ /* webpackMode: "eager" */ `@/lang/fight.${locale}.lang`)
+	import Comments from '@/component/comment/comments.vue'
 
-	@Component({ name: 'report', i18n: {}, mixins: [...mixins], components: { actions: ActionsElement, ReportLeekRow, ReportBlock, ReportStatistics, 'lw-map': Map } })
+	@Component({ name: 'report', i18n: {}, mixins: [...mixins], components: { actions: ActionsElement, ReportLeekRow, ReportBlock, ReportStatistics, 'lw-map': Map, Comments } })
 	export default class ReportPage extends Vue {
 		TEAM_COLORS = TEAM_COLORS
 		fight: Fight | null = null

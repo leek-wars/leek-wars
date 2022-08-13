@@ -30,10 +30,11 @@
 	import { LeekWars } from '@/model/leekwars'
 	import { store } from '@/model/store'
 	import { Component, Prop, Vue } from 'vue-property-decorator'
+	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 
 	@Component({
 		name: 'comments',
-		components: { 'chat-input': ChatInput }
+		components: { 'chat-input': ChatInput, RichTooltipFarmer }
 	})
 	export default class Comments extends Vue {
 		@Prop({required: true}) comments!: Comment[]

@@ -117,7 +117,9 @@
 	import DocumentationFunction from '../documentation/documentation-function.vue'
 	import ItemPreview from '../market/item-preview.vue'
 	import Javadoc from './javadoc.vue'
-import { Problem } from './problem'
+	import { Problem } from './problem'
+	import Type from '@/component/type.vue'
+	import { analyzer } from './analyzer'
 
 	const AUTO_SHORTCUTS = [
 		["lama", "#LamaSwag", "", "Le pouvoir du lama"],
@@ -131,7 +133,8 @@ import { Problem } from './problem'
 		'item-preview': ItemPreview,
 		'documentation-function': DocumentationFunction,
 		'documentation-constant': DocumentationConstant,
-		'javadoc': Javadoc
+		'javadoc': Javadoc,
+		'lw-type': Type
 	}})
 	export default class AIView extends Vue {
 		@Prop({required: true}) ai!: AI
@@ -508,9 +511,10 @@ import { Problem } from './problem'
 			}, 1000)
 		}
 
+		/*
 		analyzeV2() {
 			const content = this.editor.getValue()
-			return LeekWars.analyzer.analyze(this.ai, this.editor.getDoc().getValue()).then((problems) => {
+			return analyzer.analyze(this.ai, this.editor.getDoc().getValue()).then((problems) => {
 				this.$emit('problems', problems)
 			})
 			.catch(() => {
@@ -520,6 +524,7 @@ import { Problem } from './problem'
 				}
 			})
 		}
+		*/
 
 		public save() {
 			this.ai.modified = false
@@ -912,7 +917,7 @@ import { Problem } from './problem'
 				const keyword = this.getTokenInformation(token.string, editorPos2, previousToken)
 
 				// console.log("hover at", editorPos.line + 1, editorPos.ch)
-				LeekWars.analyzer.hover(this.ai, editorPos.line + 1, editorPos.ch).then((raw_data) => {
+				analyzer.hover(this.ai, editorPos.line + 1, editorPos.ch).then((raw_data) => {
 
 					// console.log("Hover result", JSON.stringify(raw_data))
 					// console.log(raw_data.location[0], raw_data.location[1])
@@ -1246,7 +1251,8 @@ import { Problem } from './problem'
 
 			return null
 
-			LeekWars.analyzer.complete(this.ai, position).then(raw_data => {
+			/*
+			analyzer.complete(this.ai, position).then(raw_data => {
 
 				const raw_completions = raw_data.items
 				this.completionType = raw_data.type
@@ -1267,6 +1273,7 @@ import { Problem } from './problem'
 				this.completions = new_completions
 				this.openCompletions(new_completions, cursor)
 			})
+			*/
 		}
 
 		public addCompletionsFromAI(start: string, completions: any[], visited: Set<number>, ai: AI) {

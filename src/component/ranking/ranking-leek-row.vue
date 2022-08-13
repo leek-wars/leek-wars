@@ -36,7 +36,11 @@
 <script lang="ts">
 	import { RankingLeekRow } from '@/model/ranking'
 	import { Component, Prop, Vue } from 'vue-property-decorator'
-	@Component({})
+	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
+	import RichTooltipLeek from '@/component/rich-tooltip/rich-tooltip-leek.vue'
+	import RichTooltipTeam from '@/component/rich-tooltip/rich-tooltip-team.vue'
+
+	@Component({ components: { RichTooltipFarmer, RichTooltipLeek, RichTooltipTeam } })
 	export default class RankingLeekRowElement extends Vue {
 		@Prop({ required: true }) row!: RankingLeekRow
 	}

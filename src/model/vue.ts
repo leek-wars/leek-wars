@@ -6,33 +6,15 @@ import Error from '@/component/app/error.vue'
 import LWLoader from '@/component/app/loader.vue'
 import Panel from '@/component/app/panel.vue'
 import Avatar from '@/component/avatar.vue'
-import Comments from '@/component/comment/comments.vue'
 import '@/component/editor/leekscript.scss'
 import Emblem from '@/component/emblem.vue'
-import FightHistory from '@/component/history/fight-history.vue'
-import FightsHistory from '@/component/history/fights-history.vue'
-import TournamentHistory from '@/component/history/tournament-history.vue'
-import TournamentsHistory from '@/component/history/tournaments-history.vue'
-import ItemElement from '@/component/item.vue'
 import LeekImage from '@/component/leek-image.vue'
-import ConversationElement from '@/component/messages/conversation.vue'
-import ReportDialog from '@/component/moderation/report-dialog.vue'
 import NotificationElement from '@/component/notifications/notification.vue'
-import Pagination from '@/component/pagination.vue'
 import Popup from '@/component/popup.vue'
 import Pseudo from '@/component/app/pseudo.vue'
 import RankingBadge from '@/component/ranking-badge.vue'
-import RichTooltipComposition from '@/component/rich-tooltip/rich-tooltip-composition.vue'
-import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
-import RichTooltipLeek from '@/component/rich-tooltip/rich-tooltip-leek.vue'
-import RichTooltipTeam from '@/component/rich-tooltip/rich-tooltip-team.vue'
-import RichTooltipTrophy from '@/component/rich-tooltip/rich-tooltip-trophy.vue'
-import RichTooltipItem from '@/component/rich-tooltip/rich-tooltip-item.vue'
 import Talent from '@/component/talent.vue'
-import TitlePicker from '@/component/title/title-picker.vue'
 import LWTitle from '@/component/title/title.vue'
-import TurretImage from '@/component/turret-image.vue'
-import Type from '@/component/type.vue'
 import { env } from '@/env'
 import { i18n } from '@/model/i18n'
 import { LeekWars } from '@/model/leekwars'
@@ -79,37 +61,19 @@ Vue.filter('emojis', LeekWars.formatEmojis)
 Vue.filter('duration', LeekWars.formatDuration)
 
 Vue.component('leek-image', LeekImage)
-Vue.component('turret-image', TurretImage)
 Vue.component('avatar', Avatar)
 Vue.component('emblem', Emblem)
 Vue.component('talent', Talent)
 Vue.component('ranking-badge', RankingBadge)
-Vue.component('comments', Comments)
-Vue.component('report-dialog', ReportDialog)
-Vue.component('pagination', Pagination)
-Vue.component('fight-history', FightHistory)
-Vue.component('fights-history', FightsHistory)
-Vue.component('tournament-history', TournamentHistory)
-Vue.component('tournaments-history', TournamentsHistory)
 Vue.component('notification', NotificationElement)
 Vue.component('lw-code', Code)
 Vue.component('lw-pseudo', Pseudo)
-Vue.component('conversation', ConversationElement)
 Vue.component('ai', AIElement)
 Vue.component('error', Error)
 Vue.component('panel', Panel)
 Vue.component('popup', Popup)
-Vue.component('rich-tooltip-farmer', RichTooltipFarmer)
-Vue.component('rich-tooltip-leek', RichTooltipLeek)
-Vue.component('rich-tooltip-composition', RichTooltipComposition)
-Vue.component('rich-tooltip-trophy', RichTooltipTrophy)
-Vue.component('rich-tooltip-team', RichTooltipTeam)
-Vue.component('rich-tooltip-item', RichTooltipItem)
 Vue.component('loader', LWLoader)
 Vue.component('lw-title', LWTitle)
-Vue.component('title-picker', TitlePicker)
-Vue.component('lw-type', Type)
-Vue.component('item', ItemElement)
 
 Vue.directive('autostopscroll', {
 	inserted: (el, binding) => {

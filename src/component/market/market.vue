@@ -262,11 +262,13 @@
 	import { Component, Vue, Watch } from 'vue-property-decorator'
 	import FightPackPreview from './fight-pack-preview.vue'
 	import ItemPreview from './item-preview.vue'
+	import RichTooltipLeek from '@/component/rich-tooltip/rich-tooltip-leek.vue'
 
 	@Component({
 		name: 'market', i18n: {}, mixins: [...mixins],
 		components: {
-			'item-preview': ItemPreview
+			'item-preview': ItemPreview,
+			RichTooltipLeek
 		}
 	})
 	export default class Market extends Vue {

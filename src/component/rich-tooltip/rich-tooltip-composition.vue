@@ -59,8 +59,9 @@
 	import { LeekWars } from '@/model/leekwars'
 	import { Composition } from '@/model/team'
 	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
+	import RichTooltipLeek from '@/component/rich-tooltip/rich-tooltip-leek.vue'
 
-	@Component({})
+	@Component({ components: { RichTooltipLeek } })
 	export default class RichTooltipComposition extends Vue {
 		@Prop({required: true}) id!: number
 		@Prop() disabled!: boolean

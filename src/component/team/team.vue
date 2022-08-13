@@ -507,9 +507,19 @@
 	import { Warning } from '@/model/moderation'
 	import { Composition, Team, TeamMember } from '@/model/team'
 	import { Component, Vue, Watch } from 'vue-property-decorator'
-	import { store } from '@/model/store'
+	import RichTooltipItem from '@/component/rich-tooltip/rich-tooltip-item.vue'
+	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
+	import RichTooltipLeek from '@/component/rich-tooltip/rich-tooltip-leek.vue'
+	import RichTooltipComposition from '@/component/rich-tooltip/rich-tooltip-composition.vue'
+	import RichTooltipTeam from '@/component/rich-tooltip/rich-tooltip-team.vue'
+	import FightsHistory from '@/component/history/fights-history.vue'
+	import TournamentsHistory from '@/component/history/tournaments-history.vue'
+	import ReportDialog from '@/component/moderation/report-dialog.vue'
+	import TurretImage from '@/component/turret-image.vue'
 
-	@Component({ name: 'team', i18n: {}, mixins: [...mixins], components: { CharacteristicTooltip, Explorer, chat: ChatElement }})
+	@Component({ name: 'team', i18n: {}, mixins: [...mixins], components: {
+		CharacteristicTooltip, Explorer, chat: ChatElement, RichTooltipItem, RichTooltipLeek, RichTooltipFarmer, RichTooltipComposition, RichTooltipTeam, FightsHistory, TournamentsHistory, ReportDialog, TurretImage
+	}})
 	export default class TeamPage extends Vue {
 		ChatType = ChatType
 		team: Team | null = null

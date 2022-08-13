@@ -85,8 +85,9 @@
 	import { Language, LeekWars } from '@/model/leekwars'
 	import { Notification } from '@/model/notification'
 	import { Component, Vue } from 'vue-property-decorator'
+	import ConversationElement from '@/component/messages/conversation.vue'
 
-	@Component({ name: 'lw-social', components: { chat: ChatElement } })
+	@Component({ name: 'lw-social', components: { chat: ChatElement, 'conversation': ConversationElement } })
 	export default class Social extends Vue {
 
 		ChatType = ChatType

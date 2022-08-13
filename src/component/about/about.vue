@@ -169,11 +169,12 @@
 
 <script lang="ts">
 	import { Farmer } from '@/model/farmer'
-import { mixins } from '@/model/i18n'
+	import { mixins } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import { Component, Vue } from 'vue-property-decorator'
+	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 
-	@Component({ name: 'about', i18n: {}, mixins: [...mixins] })
+	@Component({ name: 'about', i18n: {}, mixins: [...mixins], components: { RichTooltipFarmer } })
 	export default class About extends Vue {
 		links = [
 			["Korben", "http://korben.info/leek-wars.html"],

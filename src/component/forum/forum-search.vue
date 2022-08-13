@@ -91,8 +91,9 @@
 	import { i18n } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import { Component, Vue, Watch } from 'vue-property-decorator'
+	import Pagination from '@/component/pagination.vue'
 
-	@Component({ name: 'search', i18n: {} })
+	@Component({ name: 'search', i18n: {}, components: { Pagination } })
 	export default class Search extends Vue {
 		options = {
 			query: '',

@@ -163,13 +163,15 @@
 	import { Fault, Warning } from '@/model/moderation'
 	import router from '@/router'
 	import { Component, Vue, Watch } from 'vue-property-decorator'
+	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
+	import RichTooltipLeek from '@/component/rich-tooltip/rich-tooltip-leek.vue'
 
 	class ModerationRequest {
 		faults!: Fault[]
 		thugs!: Farmer[]
 	}
 
-	@Component({ name: "moderation", i18n: {}, components: { Markdown } })
+	@Component({ name: "moderation", i18n: {}, components: { Markdown, RichTooltipFarmer, RichTooltipLeek } })
 	export default class Moderation extends Vue {
 		faults: Fault[] | null = null
 		faultsById: {[key: number]: Fault} = {}

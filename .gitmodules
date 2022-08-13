@@ -1,3 +1,0 @@
-[submodule "wiki"]
-	path = src/wiki
-	url = https://github.com/leek-wars/leek-wars-wiki.git

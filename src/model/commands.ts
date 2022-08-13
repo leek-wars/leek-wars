@@ -1,4 +1,5 @@
 import { LeekWars } from "@/model/leekwars"
+import { FUNCTIONS } from "./functions"
 
 // URLs for /encyclo and /doc
 const URL_ENCYCLOPEDIA = "/encyclopedia"
@@ -183,7 +184,7 @@ const Commands = {
 		if (!docCommand) { return }
 		docCommand.options = []
 		const doneFunc: {[key: string]: any} = {}
-		for (const fun of LeekWars.functions) {
+		for (const fun of FUNCTIONS) {
 			const name = fun.name
 			if (!doneFunc[name]) {
 				docCommand.options.push({name: fun.name, nameLower: fun.name.toLowerCase(), description: "Ajoute un lien vers la fonction \"" + fun.name + "\" de la documentation au message"})

@@ -116,11 +116,11 @@
 					<router-link to="/ranking/active">
 						<h4>{{ $t('main.leek') }} <span class="arrow">▶</span></h4>
 					</router-link>
-					<table class="ranking">
+					<table class="ranking card">
 						<tr class="header">
 							<th class="p15">{{ $t('place') }}</th>
 							<th class="p35">{{ $t('main.leek') }}</th>
-							<th class="p25">{{ $t('talent') }}</th>
+							<th class="p25">{{ $t('main.talent') }}</th>
 						</tr>
 						<tr v-for="(leek, i) in leek_ranking" :key="i" :class="leek ? leek.style : ''">
 							<td>{{ parseInt(i) + 1 }}</td>
@@ -139,7 +139,7 @@
 					<router-link to="/ranking/farmer/active">
 						<h4>{{ $t('main.farmer') }} <span class="arrow">▶</span></h4>
 					</router-link>
-					<table class="ranking">
+					<table class="ranking card">
 						<tr class="header">
 							<th class="p15">{{ $t('place') }}</th>
 							<th class="p35">{{ $t('main.farmer') }}</th>
@@ -168,16 +168,21 @@
 					<router-link to="/ranking/team/active">
 						<h4>{{ $t('main.team') }} <span class="arrow">▶</span></h4>
 					</router-link>
-					<table class="ranking">
+					<table class="ranking card">
 						<tr class="header">
 							<th class="p20">{{ $t('place') }}</th>
 							<th class="p50">{{ $t('main.team') }}</th>
-							<th class="p30">{{ $t('talent') }}</th>
+							<th class="p30">{{ $t('main.talent') }}</th>
 						</tr>
 						<tr v-for="(team, i) in team_ranking" :key="i" :class="team ? team.style : ''">
 							<td>{{ parseInt(i) + 1 }}</td>
 							<td :class="team ? team.class : ''">
-								<router-link v-if="team" :to="'/team/' + team.id">{{ team.name }}</router-link>
+								<rich-tooltip-team :id="team.id" v-slot="{ on }">
+									<router-link :to="'/team/' + team.id">
+										<span v-on="on">{{ team.name }}</span>
+									</router-link>
+								</rich-tooltip-team>
+								<!-- <router-link v-if="team" :to="'/team/' + team.id">{{ team.name }}</router-link> -->
 							</td>
 							<td>{{ team ? team.talent : '' }}</td>
 						</tr>
@@ -250,14 +255,19 @@
 	import { Component, Vue, Watch } from 'vue-property-decorator'
 	const SignupCarousel = () => import(/* webpackChunkName: "[request]" */ `@/component/signup/signup-carousel.${locale}.i18n`)
 	const SignupFeatures = () => import(/* webpackChunkName: "[request]" */ `@/component/signup/signup-features.${locale}.i18n`)
+	import RichTooltipLeek from '@/component/rich-tooltip/rich-tooltip-leek.vue'
+	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
+	import RichTooltipTeam from '@/component/rich-tooltip/rich-tooltip-team.vue'
 
-	@Component({ name: 'signup', i18n: {}, mixins: [...mixins], components: { ChangelogVersion, SignupCarousel, SignupFeatures } })
+	@Component({ name: 'signup', i18n: {}, mixins: [...mixins], components: {
+		ChangelogVersion, SignupCarousel, SignupFeatures, RichTooltipLeek, RichTooltipFarmer, RichTooltipTeam
+	} })
 	export default class Signup extends Vue {
 		godfather: string = ''
 		leek_count: number = 85290
-		farmer_ranking: any = new Array(10)
-		leek_ranking: any = new Array(10)
-		team_ranking: any = new Array(10)
+		farmer_ranking: any = []
+		leek_ranking: any = []
+		team_ranking: any = []
 		login: string = ''
 		leek: string = ''
 		email: string = ''
@@ -451,13 +461,15 @@
 	.ranking {
 		margin: 0 auto;
 		width: calc(100% - 20px);
-		height: 300px;
 		td {
 			border-bottom: 1px solid #ddd;
 			border-right: 1px solid #ddd;
 			text-align: center;
-			padding: 3px 12px;
+			padding: 4px 12px;
 			background: white;
+			a span {
+				white-space: nowrap;
+			}
 		}
 		td:last-child {
 			border-right: none;
@@ -561,9 +573,9 @@
 		width: auto;
 	}
 	.country-wrapper {
-		height: 20px;
+		height: 18px;
 		img {
-			margin-top: -2px;
+			margin-top: -3px;
 			width: 24px;
 		}
 	}

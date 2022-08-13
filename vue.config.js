@@ -36,6 +36,13 @@ module.exports = {
 		if (process.env.VUE_MODE === 'build') {
 			config.entryPoints.delete('index')
 			config.plugins.delete('html-index')
+
+			if (process.env.VUE_CLI_MODERN_BUILD) {
+				config
+					.plugin("webpack-bundle-analyzer")
+					.use(BundleAnalyzerPlugin)
+					.init(Plugin => new Plugin({}))
+				}
 		}
 	},
     pwa: {
@@ -50,10 +57,4 @@ module.exports = {
 			favicon16: 'image/favicon.png'
 		}
 	}
-}
-
-if (process.env.VUE_MODE === 'build') {
-	// module.exports.configureWebpack.plugins.push(
-	// 	new BundleAnalyzerPlugin()
-	// )
 }

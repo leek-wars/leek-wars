@@ -124,8 +124,12 @@
 	import { Component, Vue, Watch } from 'vue-property-decorator'
 	import { GROUND_PADDING_LEFT, GROUND_PADDING_RIGHT, GROUND_PADDING_TOP } from '../player/game/ground'
 	const Player = () => import(/* webpackChunkName: "[request]" */ `@/component/player/player.${locale}.i18n`)
+	import Comments from '@/component/comment/comments.vue'
+	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
+	import RichTooltipTeam from '@/component/rich-tooltip/rich-tooltip-team.vue'
+	import ReportDialog from '@/component/moderation/report-dialog.vue'
 
-	@Component({ name: "fight", components: { Player }, i18n: {}, mixins: [...mixins] })
+	@Component({ name: "fight", components: { Player, Comments, RichTooltipFarmer, RichTooltipTeam, ReportDialog }, i18n: {}, mixins: [...mixins] })
 	export default class FightPage extends Vue {
 		fight_id: string | null = null
 		fight: Fight | null = null

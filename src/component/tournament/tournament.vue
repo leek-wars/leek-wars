@@ -203,10 +203,12 @@ Max power: {{ tournament.max_power | number }}
 	import { LeekWars } from '@/model/leekwars'
 	import { Tournament } from '@/model/tournament'
 	import { Component, Vue, Watch } from 'vue-property-decorator'
+	import Comments from '@/component/comment/comments.vue'
 
 	@Component({ name: 'tournament', i18n: {}, components: {
 		'tournament-block': TournamentBlock,
 		'tournament-fight': TournamentFight,
+		Comments
 	} })
 	export default class TournamentPage extends Vue {
 		tournament: Tournament | null = null

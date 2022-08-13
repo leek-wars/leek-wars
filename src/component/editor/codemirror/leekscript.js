@@ -3,6 +3,7 @@
 
 import CodeMirror from 'codemirror'
 import { LeekWars } from '@/model/leekwars'
+import { FUNCTIONS } from '@/model/functions'
 
   CodeMirror.defineMode("leekscript", function(config, parserConfig) {
     var indentUnit = config.indentUnit;
@@ -43,7 +44,7 @@ import { LeekWars } from '@/model/leekwars'
         for (const constant of LeekWars.constants) {
             k[constant.name] = {type: "variable", style: "lsconst"}
         }
-        for (const fun of LeekWars.functions) {
+        for (const fun of FUNCTIONS) {
           if (fun.name === 'string' || fun.name === 'number') continue
             var style = fun.deprecated ? 'lsfunc-deprec' : 'lsfunc'
             k[fun.name] = {type: "variable", style: style}

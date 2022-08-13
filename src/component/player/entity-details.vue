@@ -160,8 +160,9 @@
 	import { FightEntity } from './game/entity'
 	import { Game } from './game/game'
 	import { Turret } from './game/turret'
+	import TurretImage from '@/component/turret-image.vue'
 
-	@Component({ name: 'entity-details' })
+	@Component({ name: 'entity-details', components: { TurretImage } })
 	export default class EntityDetails extends Vue {
 		@Prop({required: true}) entity!: FightEntity
 		@Prop({required: true}) game!: Game

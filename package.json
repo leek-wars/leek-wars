@@ -15,7 +15,6 @@
 	"dependencies": {
 		"codemirror": "^5.58.3",
 		"dotenv": "^8.2.0",
-		"es6-promise": "^4.2.8",
 		"js-beautify": "^1.13.0",
 		"katex": "^0.11.0",
 		"markdown-it": "^12.3.2",

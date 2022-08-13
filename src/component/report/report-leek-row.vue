@@ -58,9 +58,11 @@
 
 <script lang="ts">
 	import { Fight, FightContext, ReportLeek } from '@/model/fight'
-import { LeekWars } from '@/model/leekwars'
+	import { LeekWars } from '@/model/leekwars'
 	import { Component, Prop, Vue } from 'vue-property-decorator'
-	@Component({})
+	import RichTooltipLeek from '@/component/rich-tooltip/rich-tooltip-leek.vue'
+
+	@Component({ components: { RichTooltipLeek } })
 	export default class ReportLeekRow extends Vue {
 		@Prop({required: true}) leek!: ReportLeek
 		@Prop({required: true}) fight!: Fight

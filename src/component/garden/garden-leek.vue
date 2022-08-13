@@ -15,7 +15,9 @@
 <script lang="ts">
 	import { Leek } from '@/model/leek'
 	import { Component, Prop, Vue } from 'vue-property-decorator'
-	@Component({ name: 'garden-leek' })
+	import RichTooltipLeek from '@/component/rich-tooltip/rich-tooltip-leek.vue'
+
+	@Component({ name: 'garden-leek', components: { RichTooltipLeek } })
 	export default class GardenLeek extends Vue {
 		@Prop() leek!: Leek
 	}

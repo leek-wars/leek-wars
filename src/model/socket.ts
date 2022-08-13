@@ -249,10 +249,6 @@ class Socket {
 					store.commit('add-resource', { template: data[0], id: data[1] })
 					break
 				}
-				case SocketMessage.EDITOR_HOVER: {
-					LeekWars.analyzer.hoverResult(data)
-					break
-				}
 			}
 		}
 	}
