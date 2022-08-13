@@ -264,29 +264,26 @@ const LeekWars = {
 	},
 	objectSize(obj: Record<string, unknown>): number {
 		let size = 0, key
-		for (key in obj) { if (obj.hasOwnProperty(key)) { size++ } }
+		for (key in obj) {
+			// if (obj.hasOwnProperty(key)) {
+				size++
+			// }
+		}
 		return size
 	},
 	first<T extends Record<string, unknown>>(obj: T) {
 		for (const e in obj) {
-			if (obj.hasOwnProperty(e)) {
+			// if (obj.hasOwnProperty(e)) {
 				return obj[e]
-			}
+			// }
 		}
 		return null
 	},
-	firstKey(obj: any) {
-		for (const e in obj) {
-			if (obj.hasOwnProperty(e)) {
-				return e
-			}
-		}
-	},
 	isEmptyObj(obj: any) {
 		for (const e in obj) {
-			if (obj.hasOwnProperty(e)) {
+			// if (obj.hasOwnProperty(e)) {
 				return false
-			}
+			// }
 		}
 		return true
 	},
@@ -322,9 +319,6 @@ const LeekWars = {
 	},
 	colorToHex(color: number) {
 		return "#" + ((1 << 24) + color).toString(16).slice(1)
-	},
-	rgbArrayToHex(rgb: number[]) {
-		return "#" + ((1 << 24) + (rgb[0] << 16) + (rgb[1] << 8) + rgb[2]).toString(16).slice(1)
 	},
 	rgbToHex(r: number, g: number, b: number) {
 		return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1)
@@ -453,6 +447,7 @@ const LeekWars = {
 		const favicon = document.querySelector("link[rel*='icon'")
 		if (favicon) { favicon.setAttribute("href", image) }
 	},
+	/*
 	popupWindow(url: string, title: string, w: number, h: number) {
 		const dualScreenLeft = window.screenLeft
 		const dualScreenTop = window.screenTop
@@ -466,6 +461,7 @@ const LeekWars = {
 			newWindow.focus()
 		}
 	},
+	*/
 	fullscreen: false,
 	fullscreenEnter(element: HTMLElement, callback: (f: boolean) => void) {
 		const fullscreenCallback = () => {
@@ -643,6 +639,7 @@ function setTitleTag(tag: any) {
 function setSubTitle(subtitle: any) {
 	LeekWars.subtitle = subtitle
 }
+
 function updateTitle() {
 	let title = LeekWars.title
 	if (!LeekWars.sfw) {
@@ -660,6 +657,7 @@ function updateTitle() {
 	}
 	document.title = title
 }
+
 function setFavicon(reset: boolean = false) {
 	if (env.BETA) {
 		LeekWars.favicon('/image/favicon_beta.png')

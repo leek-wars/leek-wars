@@ -71,6 +71,7 @@
 				<div v-if="LeekWars.message" v-html="$i18n.t(LeekWars.message.message, LeekWars.message.arguments)"></div>
 			</popup>
 
+			<!--
 			<popup v-model="annonce" :width="500">
 				<template slot="title"><v-icon>mdi-bullhorn-outline</v-icon> Annonce de concours !</template>
 				<div class="annonce">
@@ -108,7 +109,7 @@
 					</div>
 				</div>
 			</popup>
-
+			-->
 			<v-dialog v-if="docEverywhere" v-model="docEverywhereModel" content-class="doc" :max-width="1400">
 				<documentation ref="doc" :popup="true" />
 			</v-dialog>
@@ -249,10 +250,12 @@
 		consoleMouseUp(e: MouseEvent) {
 			this.consoleDown = false
 		}
+		/*
 		consolePopup() {
 			LeekWars.popupWindow("/console", "title", 600, 320)
 			this.console = false
 		}
+		*/
 		clickClover() {
 			LeekWars.socket.send([SocketMessage.GET_LUCKY])
 			LeekWars.clover = false
