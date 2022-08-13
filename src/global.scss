@@ -1,6 +1,10 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+@import url('https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css');
+
 @font-face {
 	font-family: 'Noto Color Emoji';
 	src: url("../public/font/NotoColorEmoji.ttf");
+	font-display: optional;
 }
 .theme--light.v-icon {
 	color: inherit;
