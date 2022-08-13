@@ -37,8 +37,8 @@
 
 			<div v-if="!LeekWars.mobile" class="big-leeks" :class="{flex: LeekWars.flex || LeekWars.large}">
 				<div class="wrapper">
-					<img class="big-leek-1" :src="LeekWars.leekTheme ? '/image/big_leek_1_white.png' : '/image/big_leek_1.png'">
-					<img class="big-leek-2" :src="LeekWars.leekTheme ? '/image/big_leek_2_white.png' : '/image/big_leek_2.png'">
+					<img class="big-leek-1" :src="LeekWars.leekTheme ? '/image/big_leek_1_white.webp' : '/image/big_leek_1.webp'">
+					<img class="big-leek-2" :src="LeekWars.leekTheme ? '/image/big_leek_2_white.webp' : '/image/big_leek_2.webp'">
 				</div>
 			</div>
 

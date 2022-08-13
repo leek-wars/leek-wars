@@ -3,8 +3,8 @@
 		<div class="swiper">
 			<div class="swiper-wrapper">
 				<div v-for="(image, i) of images" :key="i" class="swiper-slide" :class="`slide--${i}`" @click="handleClickSlide(i)">
-					<img height="400" :src="'/image/' + image.image">
-					<div class="legend">{{ image.legend_tr }}</div>
+					<img height="400" :src="'/image/' + image.image" loading="lazy">
+					<div class="legend">{{ $t(image.legend) }}</div>
 				</div>
 			</div>
 		</div>
@@ -28,22 +28,22 @@
 		bigImage: string | null = null
 		bigImageLegend: string = ''
 		images = [
-			{id: 1, image: "signup/new/fight_factory_small.jpg", legend: "fight_factory", legend_tr: ''},
-			{id: 2, image: "signup/new/leek_small.jpg", legend: "leek_page", legend_tr: ''},
-			{id: 3, image: "signup/new/br_small.jpg", legend: "fight_ice", legend_tr: ''},
-			{id: 4, image: "signup/new/editor_small.jpg", legend: "editor", legend_tr: ''},
-			{id: 5, image: "signup/new/forest.jpg", legend: "fight_forest", legend_tr: ''},
-			{id: 6, image: "signup/new/market_small.jpg", legend: "market", legend_tr: ''},
-			{id: 7, image: "signup/new/desert.jpg", legend: "fight_desert", legend_tr: ''},
-			{id: 8, image: "signup/new/ranking_small.jpg", legend: "ranking", legend_tr: ''},
-			{id: 9, image: "signup/new/trophies_small.jpg", legend: "trophies", legend_tr: ''},
-			{id: 10, image: "signup/new/tournament_small.jpg", legend: "tournament", legend_tr: ''},
-			{id: 11, image: "app/preview1.jpg", legend: "android_app", legend_tr: ''},
-			{id: 12, image: "app/preview3.jpg", legend: "android_app", legend_tr: ''},
-			{id: 13, image: "app/preview5.jpg", legend: "android_app", legend_tr: ''},
-			{id: 14, image: "app/preview6.jpg", legend: "android_app", legend_tr: ''},
-			{id: 15, image: "app/preview7.jpg", legend: "android_app", legend_tr: ''},
-			{id: 16, image: "signup/new/mona.jpg", legend: "pixel_art", legend_tr: ''},
+			{id: 1, image: "signup/factory_fight_small.webp", legend: "fight_factory", legend_tr: ''},
+			{id: 2, image: "signup/leek_small.webp", legend: "leek_page", legend_tr: ''},
+			{id: 3, image: "signup/br_small.webp", legend: "fight_ice", legend_tr: ''},
+			{id: 4, image: "signup/editor_small.webp", legend: "editor", legend_tr: ''},
+			{id: 5, image: "signup/forest_fight_small.webp", legend: "fight_forest", legend_tr: ''},
+			{id: 6, image: "signup/market_small.webp", legend: "market", legend_tr: ''},
+			{id: 7, image: "signup/fight_desert_small.webp", legend: "fight_desert", legend_tr: ''},
+			{id: 8, image: "signup/ranking_small.webp", legend: "ranking", legend_tr: ''},
+			{id: 9, image: "signup/trophies_small.webp", legend: "trophies", legend_tr: ''},
+			{id: 10, image: "signup/tournament_small.webp", legend: "tournament", legend_tr: ''},
+			{id: 11, image: "app/preview1_small.webp", legend: "android_app", legend_tr: ''},
+			{id: 12, image: "app/preview3_small.webp", legend: "android_app", legend_tr: ''},
+			{id: 13, image: "app/preview5_small.webp", legend: "android_app", legend_tr: ''},
+			{id: 14, image: "app/preview6_small.webp", legend: "android_app", legend_tr: ''},
+			{id: 15, image: "app/preview7_small.webp", legend: "android_app", legend_tr: ''},
+			{id: 16, image: "signup/mona_small.webp", legend: "pixel_art", legend_tr: ''},
 		]
 
 		mounted() {

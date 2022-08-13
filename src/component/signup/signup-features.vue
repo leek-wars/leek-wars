@@ -3,7 +3,7 @@
 		<div v-for="(feature, f) in features" :key="f" class="feature">
 			<div class="images">
 				<div v-for="(image, i) in feature.images" :key="i" class="image-wrapper">
-					<img height="300" :src="'/image/feature/small_' + image + '.webp'" @click="zoom">
+					<img height="300" :src="'/image/feature/small_' + image + '.webp'" @click="zoom" loading="lazy">
 				</div>
 			</div>
 			<div class="description">
@@ -19,7 +19,7 @@
 
 <script lang="ts">
 	/**
-	 * mogrify -format webp *.png
+	 * mogrify -format webp -quality 50 *.png
 	 * for file in *.webp; do convert $file -resize 400 small_$file; done
 	 */
 	import { i18n, loadComponentLanguage, mixins } from '@/model/i18n'

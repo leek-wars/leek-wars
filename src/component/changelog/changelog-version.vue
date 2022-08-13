@@ -1,6 +1,6 @@
 <template lang="html">
 	<div class="version">
-		<img v-if="version.image" :src="'/image/mail/mail_' + version.version + '.' + extension" class="image">
+		<img v-if="version.image" :src="'/image/mail/mail_' + version.version + '.' + extension" class="image" loading="lazy">
 		<div class="wrapper">
 			<div v-for="(changes, s) in sections" :key="s" class="section">
 				<h4 v-if="sections.length > 1" v-emojis :class="{first: s === 0}">{{ $t('changelog.title_' + s) }}</h4>
@@ -74,7 +74,7 @@ import(/* webpackChunkName: "changelog-[request]" */ `json-loader!yaml-loader!@/
 		}
 
 		get extension() {
-			return this.version.version >= 220 ? 'jpg' : 'png'
+			return this.version.version >= 220 ? 'webp' : 'png'
 		}
 	}
 </script>

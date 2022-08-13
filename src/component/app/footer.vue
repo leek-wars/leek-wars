@@ -62,7 +62,7 @@
 			<span class="item"><span class="color">🇫🇷</span> {{ $t('main.made_in_france') }}</span>
 			<span class="item">Copyright © 2013 - 3012</span>
 		</div>
-		<img class="leek" src="/image/big_leek_1_white.png">
+		<img class="leek" src="/image/big_leek_1_white.webp" loading="lazy">
 		<didactitiel v-if="didactitiel_enabled" v-model="didactitiel" />
 		<div class="cookies">
 			<div v-for="(cookie, c) in cookies" :key="c" class="cookie" :style="{left: cookie[0] + 'px', top: cookie[1] + 'px', 'font-size': cookie[2] + 'px', 'transform': 'rotate(' + cookie[3] + 'deg)'}">🍪</div>

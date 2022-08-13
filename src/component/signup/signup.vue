@@ -7,7 +7,7 @@
 			<panel class="first">
 				<div class="desc introduction" v-html="$t('intro')"></div>
 				<div class="leek-rect">
-					<img class="leeks" height="165" width="223" src="/image/signup_illustration.png">
+					<img class="leeks" height="165" width="223" src="/image/signup/signup_illustration.webp">
 					<div class="desc" v-html="$t('n_leeks_already', [LeekWars.formatNumber(leek_count)])"></div>
 				</div>
 			</panel>
