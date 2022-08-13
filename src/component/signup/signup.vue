@@ -223,9 +223,7 @@
 		</div>
 
 		<panel class="first screenshots">
-			<div slot="content" class="carousel">
-				<signup-carousel />
-			</div>
+			<signup-carousel slot="content"/>
 		</panel>
 
 		<h1>{{ $t('last_update') }}</h1>
@@ -522,7 +520,6 @@
 		margin-bottom: 12px;
 		line-height: 44px;
 		font-size: 19px;
-		font-weight: 300;
 		.panel {
 			margin: 0;
 		}

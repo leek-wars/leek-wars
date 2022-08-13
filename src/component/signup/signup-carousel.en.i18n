@@ -1,16 +1,16 @@
 {
 	"android_app": "Android Application",
-	"editor": "The editor of AI",
-	"fight_beach": "Solo fight on the beach",
-	"fight_desert": "Team fight in the desert",
-	"fight_factory": "Team fight in the factory",
-	"fight_forest": "Team fight in the forest",
-	"fight_ice": "Fight on the ice",
+	"editor": "Intelligent AI editor integrated into the site",
+	"fight_beach": "Solo fight (1v1) on the beach",
+	"fight_desert": "Farmer fight in the desert",
+	"fight_factory": "Team fight (6v6) in the factory",
+	"fight_forest": "Farmer fight (4v4) in the forest",
+	"fight_ice": "Battle Royale (10 players) on the ice",
 	"fight_test": "Fight on the test map",
 	"leek_page": "Your leek's page",
-	"market": "Market",
-	"pixel_art": "Pixel art",
-	"ranking": "Ranking",
-	"tournament": "Farmer tournament",
-	"trophies": "Trophies page"
+	"market": "Market: purchase of weapons, chips, hats etc.",
+	"pixel_art": "Pixel art using debug options",
+	"ranking": "Ranking: solo, farmer, teams, trophies",
+	"tournament": "Farmer tournament every evening at 6PM",
+	"trophies": "Trophies page (300 trophies)"
 }

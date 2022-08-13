@@ -22,7 +22,7 @@
 	 * mogrify -format webp -quality 50 *.png
 	 * for file in *.webp; do convert $file -resize 400 small_$file; done
 	 */
-	import { i18n, loadComponentLanguage, mixins } from '@/model/i18n'
+	import { mixins } from '@/model/i18n'
 	import { Component, Vue, Watch } from 'vue-property-decorator'
 
 	@Component({ name: 'signup-features', i18n: {}, mixins: [...mixins] })
@@ -82,7 +82,6 @@
 
 		zoom(e: Event) {
 			this.bigImage = (e.target as HTMLElement).getAttribute('src')!.replace("small_", "")
-			console.log(e.target)
 		}
 	}
 </script>

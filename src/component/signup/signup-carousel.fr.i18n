@@ -1,16 +1,16 @@
 {
 	"android_app": "Application Android",
-	"editor": "L'éditeur d'IA",
-	"fight_beach": "Combat solo sur la plage",
-	"fight_desert": "Combat en équipe dans le désert",
-	"fight_factory": "Combat en équipe dans l'usine",
-	"fight_forest": "Combat en équipe dans la forêt",
-	"fight_ice": "Combat sur la banquise",
+	"editor": "Éditeur d'IA intelligent intégré au site",
+	"fight_beach": "Combat solo (1v1) sur la plage",
+	"fight_desert": "Combat d'éleveur dans le désert",
+	"fight_factory": "Combat en équipe (6v6) dans l'usine",
+	"fight_forest": "Combat d'éleveur (4v4) dans la forêt",
+	"fight_ice": "Battle Royale (10 joueurs) sur la banquise",
 	"fight_test": "Combat sur terrain de test",
 	"leek_page": "Page de votre poireau",
-	"market": "Marché",
-	"pixel_art": "Art du pixel",
-	"ranking": "Classement",
-	"tournament": "Tournoi d'éleveur",
-	"trophies": "Page des trophées"
+	"market": "Marché : achat d'armes, puces, chapeaux etc.",
+	"pixel_art": "Pixel art grâce aux fonctions de debug",
+	"ranking": "Classement: solo, éleveur, équipe, trophées",
+	"tournament": "Tournoi d'éleveur tous les soirs à 18h",
+	"trophies": "Page des trophées (300 trophées)"
 }

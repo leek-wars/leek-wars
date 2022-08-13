@@ -1,5 +1,5 @@
 <template lang="html">
-	<div>
+	<div class="carousel">
 		<div class="swiper">
 			<div class="swiper-wrapper">
 				<div v-for="(image, i) of images" :key="i" class="swiper-slide" :class="`slide--${i}`" @click="handleClickSlide(i)">
@@ -80,23 +80,23 @@
 
 <style lang="scss" scoped>
 	.carousel {
-		padding-top: 15px;
-		padding-bottom: 10px;
+		width: 100vw;
+		margin-left: calc((100% - 100vw) / 2);
+		user-select: none;
 	}
 	.swiper-slide {
 		width: auto;
 		img {
 			height: 400px;
 			cursor: zoom-in;
-			border-radius: 4px;
+			vertical-align: bottom;
 		}
 		.legend {
 			text-align: center;
 			font-size: 18px;
-			font-weight: 300;
 			color: #333;
-			margin-top: 5px;
-			margin-bottom: 10px;
+			padding: 10px 0;
+			background: #f2f2f2;
 		}
 	}
 	.bigscreen {
@@ -106,12 +106,12 @@
 		bottom: 0;
 		left: 0;
 		right: 0;
-		padding: 100px 0;
+		padding: 50px 0;
 		text-align: center;
 		background: rgba(0,0,0,0.7);
 		img {
-			max-width: calc(100vw - 150px);
-			max-height: calc(100vh - 200px);
+			max-width: calc(100vw - 100px);
+			max-height: calc(100vh - 100px);
 			box-shadow: 0px 0px 80px black;
 			cursor: zoom-out;
 			border-radius: 10px;
