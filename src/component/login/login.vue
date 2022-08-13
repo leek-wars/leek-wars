@@ -35,12 +35,11 @@
 </template>
 
 <script lang="ts">
-	import { env } from '@/env'
 	import { mixins } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
-	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
+	import { Component, Vue, Watch } from 'vue-property-decorator'
 
-	@Component({ name: 'login', i18n: {} })
+	@Component({ name: 'login', i18n: {}, mixins: [...mixins] })
 	export default class Login extends Vue {
 		error: any = null
 		form = {
