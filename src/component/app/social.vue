@@ -1,5 +1,5 @@
 <template>
-	<div v-if="$store.state.farmer" v-show="!LeekWars.mobile">
+	<div v-if="$store.state.farmer && !LeekWars.mobile">
 		<div class="blabla-button" @click="toggleSocial">
 			<v-icon v-if="LeekWars.socialCollapsed">mdi-chevron-left</v-icon>
 			<v-icon v-else>mdi-chevron-right</v-icon>
