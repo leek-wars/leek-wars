@@ -9,15 +9,13 @@
 </template>
 
 <script lang="ts">
-	import { env } from '@/env'
-	import { TROPHIES } from '@/model/data'
-	import { Farmer } from '@/model/farmer'
 	import { i18n } from '@/model/i18n'
-	import { LeekWars } from '@/model/leekwars'
+	import { TROPHIES } from '@/model/trophies'
 	import { Component, Prop, Vue } from 'vue-property-decorator'
 
 	@Component({ name: "lw-title" })
 	export default class LWTitle extends Vue {
+
 		TROPHIES = TROPHIES
 		@Prop() title!: any
 

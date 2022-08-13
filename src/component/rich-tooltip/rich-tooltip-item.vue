@@ -14,7 +14,9 @@
 	import ItemPreview from '@/component/market/item-preview.vue'
 	import { LeekWars } from '@/model/leekwars'
 
-	@Component({ components: { ItemPreview } })
+	@Component({ name: 'rich-tooltip-item', components: {
+		'item-preview': ItemPreview
+	}})
 	export default class RichTooltipItem extends Vue {
 		@Prop() item!: any
 		@Prop() quantity!: number

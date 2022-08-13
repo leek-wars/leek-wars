@@ -44,6 +44,7 @@
 	import { Component, Prop, Vue } from 'vue-property-decorator'
 
 	@Component({
+		name: 'chip-preview',
 		components: {
 			'range-view': RangeView,
 			'effect-view': EffectView,

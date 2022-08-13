@@ -1,9 +1,6 @@
-import { Commands } from '@/model/commands'
 import { Farmer } from '@/model/farmer'
 import { i18n } from '@/model/i18n'
-import { LeekWars } from '@/model/leekwars'
 import Vue from 'vue'
-import { store } from './store'
 
 enum ChatType { GLOBAL, TEAM, PM }
 
@@ -23,6 +20,7 @@ class ChatMessage {
 	my_reaction!: string | null
 	only_emojis!: boolean
 	mentions!: Farmer[]
+	formatted: boolean = false
 }
 
 class ChatWindow {
@@ -58,18 +56,8 @@ class Chat {
 		this.notifications = notifications
 	}
 
-	getDay(date: number) {
-		const d = new Date(date * 1000)
-		d.setHours(0)
-		d.setMinutes(0)
-		d.setSeconds(0)
-		d.setMilliseconds(0)
-		return d.getTime()
-	}
-
 	add(message: ChatMessage) {
 		// console.log("chat add", message, this)
-		this.formatMessage(message)
 		this.messages.push(message)
 
 		if (!this.messages_by_day[message.day]) {
@@ -80,6 +68,9 @@ class Chat {
 		if (day_messages.length) {
 			const lastMessage = day_messages[day_messages.length - 1]
 			if (lastMessage.farmer.id === message.farmer.id && message.date - lastMessage.date < 120) {
+				if (!lastMessage.subMessages) {
+					Vue.set(lastMessage, 'subMessages', [])
+				}
 				lastMessage.subMessages.push(message)
 				return
 			}
@@ -90,7 +81,6 @@ class Chat {
 
 	unshift(message: ChatMessage) {
 		// console.log("chat add", message, this)
-		this.formatMessage(message)
 		this.messages.unshift(message)
 
 		if (!this.messages_by_day[message.day]) {
@@ -98,55 +88,6 @@ class Chat {
 			this.days.unshift(this.messages_by_day[message.day])
 		}
 		this.messages_by_day[message.day].unshift(message)
-	}
-
-	formatMessage(message: ChatMessage) {
-		message.content = this.formatMessageContent(message.content, message.farmer.name)
-		const element = document.createElement('div')
-		element.innerHTML = message.content
-		const innerText = element.innerText.trim()
-		Vue.set(message, 'only_emojis', innerText.length === 0 || /^[\s\p{Emoji_Presentation}]+$/gmu.test(innerText))
-		const day = this.getDay(message.date)
-		Vue.set(message, 'day', day)
-		if (!('censored' in message)) {
-			Vue.set(message, 'censored', 0)
-		}
-		Vue.set(message, 'subMessages', [])
-		Vue.set(message, 'reactionDialog', false)
-		if (!message.reactions) {
-			Vue.set(message, 'reactions', {})
-		}
-	}
-
-	set_messages(messages: any[]) {
-		// console.log("[chat] set_messages", messages)
-		const prepared_messages: any[] = []
-		if (messages.length) {
-			prepared_messages.push({
-				author: { id: -1, name: '', avatar_changed: 0, grade: '' },
-				texts: [''],
-				time: messages[0][4],
-				day: new Date(messages[0][4] * 1000).getDate()
-			})
-		}
-		for (const raw_message of messages) {
-			const message = this.formatMessageContent(raw_message[3], raw_message[2])
-			if (prepared_messages.length) {
-				const lastMessage = prepared_messages[prepared_messages.length - 1]
-				if (lastMessage.author.id === raw_message[1] && raw_message[4] - lastMessage.time < 120) {
-					lastMessage.texts.push(message)
-					continue
-				}
-			}
-			prepared_messages.push({
-				author: { id: raw_message[1], name: raw_message[2], avatar_changed: raw_message[6], grade: raw_message[5] },
-				texts: [message],
-				time: raw_message[4],
-				day: new Date(raw_message[4] * 1000).getDate()
-			})
-		}
-		console.log(this.messages)
-		this.messages = prepared_messages
 	}
 
 	battleRoyale(fightID: number, time: number) {
@@ -165,26 +106,9 @@ class Chat {
 			reactions: {},
 			my_reaction: null,
 			only_emojis: false,
-			mentions: []
+			mentions: [],
+			formatted: false
 		})
-	}
-
-	formatMessageContent(messageRaw: string, authorName: string): string {
-		// console.log("raw", messageRaw)
-		let message = LeekWars.protect(messageRaw)
-		message = LeekWars.linkify(message)
-		message = LeekWars.formatEmojis(message)
-		message = Commands.execute(message, authorName)
-		message = message.replace(/@(\w+)/g, (a, b, c, d, e) => {
-			const farmer = store.state.farmer_by_name[b]
-			if (farmer) {
-				return "<span class='pseudo'>" + b + "</span>"
-			}
-			return a
-		})
-		message = message.replace(/\n/g, '<br>')
-		// console.log("res", message)
-		return message
 	}
 
 	deleteMessage(messageID: number) {

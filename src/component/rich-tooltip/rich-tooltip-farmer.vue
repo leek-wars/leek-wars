@@ -73,8 +73,10 @@
 	import { store } from '@/model/store'
 	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 	import RichTooltipLeek from '@/component/rich-tooltip/rich-tooltip-leek.vue'
+	import LWTitle from '@/component/title/title.vue'
+	import RichTooltipFarmerContent from '@/component/rich-tooltip/rich-tooltip-farmer-content.vue'
 
-	@Component({ components: { RichTooltipLeek } })
+	@Component({ components: { RichTooltipLeek, 'lw-title': LWTitle, RichTooltipFarmerContent } })
 	export default class RichTooltipFarmer extends Vue {
 		@Prop({required: true}) id!: number
 		@Prop() disabled!: boolean

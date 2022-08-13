@@ -69,11 +69,11 @@
 <script lang="ts">
 	import { Leek } from '@/model/leek'
 	import { LeekWars } from '@/model/leekwars'
-	import { store } from '@/model/store'
 	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 	import RichTooltipItem from '@/component/rich-tooltip/rich-tooltip-item.vue'
+	import LWTitle from '@/component/title/title.vue'
 
-	@Component({ components: { RichTooltipItem } })
+	@Component({ components: { RichTooltipItem, 'lw-title': LWTitle } })
 	export default class RichTooltipLeek extends Vue {
 
 		@Prop({required: true}) id!: number

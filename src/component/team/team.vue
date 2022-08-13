@@ -516,9 +516,10 @@
 	import TournamentsHistory from '@/component/history/tournaments-history.vue'
 	import ReportDialog from '@/component/moderation/report-dialog.vue'
 	import TurretImage from '@/component/turret-image.vue'
+	import AIElement from '@/component/app/ai.vue'
 
 	@Component({ name: 'team', i18n: {}, mixins: [...mixins], components: {
-		CharacteristicTooltip, Explorer, chat: ChatElement, RichTooltipItem, RichTooltipLeek, RichTooltipFarmer, RichTooltipComposition, RichTooltipTeam, FightsHistory, TournamentsHistory, ReportDialog, TurretImage
+		CharacteristicTooltip, Explorer, chat: ChatElement, RichTooltipItem, RichTooltipLeek, RichTooltipFarmer, RichTooltipComposition, RichTooltipTeam, FightsHistory, TournamentsHistory, ReportDialog, TurretImage, ai: AIElement
 	}})
 	export default class TeamPage extends Vue {
 		ChatType = ChatType

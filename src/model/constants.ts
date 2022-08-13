@@ -1,6 +1,6 @@
 import { Constant } from '@/model/constant'
 
-const CONSTANTS: Constant[] = [
+const CONSTANTS: readonly Constant[] = Object.freeze([
   { id: 109, name: 'AREA_CIRCLE_1', value: '3', type: 1, category: 9, deprecated: false, replacement: null },                     { id: 110, name: 'AREA_CIRCLE_2', value: '4', type: 1, category: 9, deprecated: false, replacement: null },
   { id: 111, name: 'AREA_CIRCLE_3', value: '5', type: 1, category: 9, deprecated: false, replacement: null },                     { id: 253, name: 'AREA_FIRST_INLINE', value: '13', type: 1, category: 9, deprecated: false, replacement: null },
   { id: 108, name: 'AREA_LASER_LINE', value: '2', type: 1, category: 9, deprecated: false, replacement: null },                   { id: 220, name: 'AREA_PLUS_1', value: '3', type: 1, category: 9, deprecated: false, replacement: null },
@@ -146,5 +146,5 @@ const CONSTANTS: Constant[] = [
   { id: 199, name: 'WEAPON_RHINO', value: '153', type: 1, category: 6, deprecated: false, replacement: null },                    { id: 198, name: 'WEAPON_RIFLE', value: '151', type: 1, category: 6, deprecated: false, replacement: null },
   { id: 11, name: 'WEAPON_SHOTGUN', value: '41', type: 1, category: 6, deprecated: false, replacement: null },                    { id: 208, name: 'WEAPON_UNBRIDLED_GAZOR', value: '118', type: 1, category: 6, deprecated: false, replacement: null },
   { id: 286, name: 'WEAPON_UNSTABLE_DESTROYER', value: '226', type: 1, category: 6, deprecated: false, replacement: null }
-]
+])
 export { CONSTANTS }

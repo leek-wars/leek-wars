@@ -71,6 +71,8 @@
 	import { LSFunction } from '@/model/function'
 	import { FUNCTIONS } from '@/model/functions'
 	import { FUNCTION_BY_ID } from '@/model/function_by_id'
+	import { CONSTANTS } from '@/model/constants'
+	import { CONSTANT_BY_ID } from '@/model/constant_by_id'
 	import { mixins } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
@@ -193,12 +195,12 @@
 						}
 					})
 				}
-				for (const item of LeekWars.constants) {
+				for (const item of CONSTANTS) {
 					if (item.replacement) {
-						LeekWars.constantById[item.replacement].replacer = item
+						CONSTANT_BY_ID[item.replacement].replacer = item
 					}
 				}
-				for (const item of LeekWars.constants) {
+				for (const item of CONSTANTS) {
 					this.items.push(item)
 					item.lower_name = item.name.toLowerCase()
 					item.id = id++

@@ -146,9 +146,9 @@
 				</div>
 				<div v-autostopscroll class="rewards">
 					<div v-for="reward in $store.state.farmer.rewards" :key="reward.trophy" class="reward">
-						<router-link :to="'/trophy/' + LeekWars.trophies[reward.trophy - 1].code">
-							<img :src="'/image/trophy/' + LeekWars.trophies[reward.trophy - 1].code + '.svg'">
-							{{ $t('trophy.' + LeekWars.trophies[reward.trophy - 1].code) }}
+						<router-link :to="'/trophy/' + TROPHIES[reward.trophy - 1].code">
+							<img :src="'/image/trophy/' + TROPHIES[reward.trophy - 1].code + '.svg'">
+							{{ $t('trophy.' + TROPHIES[reward.trophy - 1].code) }}
 							<div class="spacer"></div>
 							<div>{{ reward.habs | number }} <span class="hab"></span></div>
 						</router-link>

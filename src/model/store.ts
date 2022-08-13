@@ -215,17 +215,6 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			}
 		},
 
-		'chat-receive-pack'(state: LeekWarsState, pack: any) {
-			// console.log("chat-receive-pack", pack)
-			// if (!pack.length) { return }
-			// const channel = pack[0][0]
-			// if (!state.chat[channel]) {
-			// 	Vue.set(state.chat, channel, new Chat(channel, ChatType.GLOBAL))
-			// }
-			// state.chat[channel].set_messages(pack)
-			// vueMain.$emit('chat', [channel])
-		},
-
 		'toggle-chat-notifications'(state: LeekWarsState, chatID: number) {
 			const chat = state.chat[chatID]
 			if (chat) {
@@ -446,20 +435,26 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 				if (state.farmer && data.type === NotificationType.TROPHY_UNLOCKED) {
 					Vue.delete(state.farmer, 'trophies_list')
 					const trophy = parseInt(data.parameters[0], 10)
-					state.farmer.rewards.push({
-						trophy,
-						habs: LeekWars.trophies[trophy - 1].habs
+					import("@/model/trophies").then(module => {
+						state.farmer!.rewards.push({
+							trophy,
+							habs: module.TROPHIES[trophy - 1].habs
+						})
 					})
 				}
 			}
-			const notification = Notification.build(data)
-			state.notifications.unshift(notification)
 
-			if (data.new) {
-				state.unreadNotifications = state.notifications.reduce((sum, n) => sum + (n.read ? 0 : 1), 0)
-				updateTitle(state)
-				LeekWars.squares.addFromNotification(notification)
-			}
+			import("@/model/notification-builder").then(module => {
+
+				const notification = module.NotificationBuilder.build(data)
+				state.notifications.unshift(notification)
+
+				if (data.new) {
+					state.unreadNotifications = state.notifications.reduce((sum, n) => sum + (n.read ? 0 : 1), 0)
+					updateTitle(state)
+					LeekWars.squares.addFromNotification(notification)
+				}
+			})
 		},
 
 		'chat-censor'(state: LeekWarsState, data: {chat: number, messages: number[], censorer: Farmer}) {

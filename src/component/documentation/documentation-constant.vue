@@ -33,7 +33,7 @@
 	import { Constant } from '@/model/constant'
 	import { LeekWars } from '@/model/leekwars'
 	import { Component, Prop, Vue } from 'vue-property-decorator'
-	import RichTooltipItem from '../rich-tooltip/rich-tooltip-item.vue'
+	import RichTooltipItem from '@/component/rich-tooltip/rich-tooltip-item.vue'
 
 	@Component({ name: 'documentation-constant', components: { ItemPreview, RichTooltipItem }})
 	export default class DocumentationConstant extends Vue {

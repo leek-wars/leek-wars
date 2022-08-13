@@ -34,9 +34,12 @@
 <script lang="ts">
 	import { Component, Prop, Vue } from 'vue-property-decorator'
 	import CharacteristicTooltip from '../leek/characteristic-tooltip.vue'
-	import RichTooltipItem from '@/component/rich-tooltip/rich-tooltip-item.vue'
+	const RichTooltipItem = () => import('@/component/rich-tooltip/rich-tooltip-item.vue')
 
-	@Component({ name: 'summon-view', components: { 'characteristic-tooltip': CharacteristicTooltip, RichTooltipItem } })
+	@Component({ name: 'summon-view', components: {
+		'characteristic-tooltip': CharacteristicTooltip,
+		'rich-tooltip-item': RichTooltipItem
+	}})
 	export default class SummonView extends Vue {
 		@Prop() summon!: any
 	}

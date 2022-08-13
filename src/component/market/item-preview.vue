@@ -56,7 +56,7 @@ import FightPackPreview from '@/component/market/fight-pack-preview.vue'
 import { LeekWars } from '@/model/leekwars'
 import { store } from '@/model/store'
 
-@Component({ components: {
+@Component({ name: 'item-preview', components: {
 	'weapon-preview': WeaponPreview,
 	'chip-preview': ChipPreview,
 	'potion-preview': PotionPreview,

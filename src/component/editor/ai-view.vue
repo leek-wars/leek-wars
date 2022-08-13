@@ -106,7 +106,7 @@
 </template>
 
 <script lang="ts">
-	import { Keyword } from '@/component/editor/keywords'
+	import { keywords } from '@/component/editor/keywords'
 	import { AI } from '@/model/ai'
 	import { fileSystem } from '@/model/filesystem'
 	import { i18n } from '@/model/i18n'
@@ -120,6 +120,7 @@
 	import { Problem } from './problem'
 	import Type from '@/component/type.vue'
 	import { analyzer } from './analyzer'
+import { Keyword } from '@/model/keyword'
 
 	const AUTO_SHORTCUTS = [
 		["lama", "#LamaSwag", "", "Le pouvoir du lama"],
@@ -717,7 +718,7 @@
 		public getTokenInformation(token: string, pos: CodeMirror.Position | null = null, previousToken: CodeMirror.Token) {
 			if (token.startsWith('@')) { token = token.substring(1) }
 			let wrong_arguments = false
-			for (const keyword of LeekWars.keywords) {
+			for (const keyword of keywords) {
 				if (keyword.name === token) {
 					if (keyword.type === 'function' && pos) {
 						const line = this.document.getLine(pos.line)
@@ -744,7 +745,7 @@
 				}
 			}
 			if (wrong_arguments) {
-				for (const keyword of LeekWars.keywords) {
+				for (const keyword of keywords) {
 					if (keyword.name === token) {
 						return keyword
 					}
@@ -1223,7 +1224,7 @@
 				}
 
 				// Ajout des fonctions
-				LeekWars.keywords.forEach(maybeAdd)
+				keywords.forEach(maybeAdd)
 
 				// Raccourcis
 				for (const r in AUTO_SHORTCUTS) {

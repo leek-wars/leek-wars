@@ -323,6 +323,7 @@
 	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 	import { fileSystem } from '@/model/filesystem'
 	import RichTooltipItem from '@/component/rich-tooltip/rich-tooltip-item.vue'
+	import AIElement from '@/component/app/ai.vue'
 
 	class TestScenarioLeek {
 		id!: number
@@ -351,7 +352,7 @@
 		team!: number
 	}
 
-	@Component({ components: { CharacteristicTooltip, 'explorer': Explorer, RichTooltipItem }, name: 'editor-test', i18n: {}, mixins: [...mixins] })
+	@Component({ components: { CharacteristicTooltip, 'explorer': Explorer, RichTooltipItem, ai: AIElement }, name: 'editor-test', i18n: {}, mixins: [...mixins] })
 	export default class EditorTest extends Vue {
 		@Prop() value!: boolean
 		@Prop() ais!: {[key: number]: AI}

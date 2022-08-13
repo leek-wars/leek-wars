@@ -1,9 +1,8 @@
 import packageJson from '@/../package.json'
-import { Keyword } from '@/component/editor/keywords'
 import { env } from '@/env'
 import { BattleRoyale } from '@/model/battle-royale'
 import { ChipTemplate } from '@/model/chip'
-import { CHIP_TEMPLATES, CHIPS, HAT_TEMPLATES, HATS, ITEMS, POMPS, POTIONS, SUMMON_TEMPLATES, TROPHIES, TROPHY_CATEGORIES, WEAPONS, COMPLEXITIES } from '@/model/data'
+import { CHIP_TEMPLATES, CHIPS, HAT_TEMPLATES, HATS, ITEMS, POMPS, POTIONS, SUMMON_TEMPLATES, TROPHY_CATEGORIES, WEAPONS, COMPLEXITIES } from '@/model/data'
 import { Emojis } from '@/model/emojis'
 import { Socket } from '@/model/socket'
 import { Squares } from '@/model/squares'
@@ -14,7 +13,6 @@ import router from '@/router'
 import Vue from 'vue'
 import { TranslateResult } from 'vue-i18n'
 import { Chat, ChatWindow } from './chat'
-import { Constant } from './constant'
 import { i18n, loadLanguageAsync } from './i18n'
 import { ItemType } from './item'
 import { PotionEffect, PotionTemplate } from './potion'
@@ -138,7 +136,6 @@ const POTIONS_BY_SKIN = potionsBySkin(POTIONS)
 const POTION_BY_NAME = potionByName(POTIONS)
 const WEAPON_BY_NAME = weaponByName(WEAPONS)
 const CHIP_BY_NAME = chipByName(CHIPS)
-const CONSTANT_BY_ID = constantById(CONSTANTS)
 
 class Language {
 	public code!: string
@@ -528,7 +525,6 @@ const LeekWars = {
 	goToRanking,
 	socket: new Socket(),
 	EFFECT_TYPES: Object.freeze(EFFECT_TYPES),
-	constants: Object.freeze(CONSTANTS),
 	hats: Object.freeze(HATS),
 	pomps: Object.freeze(POMPS),
 	weapons: Object.freeze(WEAPONS),
@@ -536,8 +532,6 @@ const LeekWars = {
 	items: Object.freeze(ITEMS),
 	chips: Object.freeze(CHIPS),
 	chipByName: Object.freeze(CHIP_BY_NAME),
-	constantById: Object.freeze(CONSTANT_BY_ID),
-	trophies: Object.freeze(TROPHIES),
 	chipTemplates: Object.freeze(CHIP_TEMPLATES),
 	trophyCategories: Object.freeze(TROPHY_CATEGORIES),
 	trophyCategoriesById: Object.freeze([...TROPHY_CATEGORIES].sort((a, b) => a.id - b.id)),
@@ -559,7 +553,6 @@ const LeekWars = {
 	orderedWeapons: Object.freeze(ORDERED_WEAPONS),
 	potionsBySkin: Object.freeze(POTIONS_BY_SKIN),
 	complexities: Object.freeze(COMPLEXITIES),
-	keywords: [] as Keyword[],
 	characteristics: Object.freeze(['life', 'strength', 'wisdom', 'agility', 'resistance', 'science', 'magic', 'frequency', 'mp', 'tp']),
 	characteristics_table: Object.freeze(['life', 'science', 'strength', 'magic', 'wisdom', 'frequency', 'agility', 'mp', 'resistance', 'tp']),
 	effectRawOpened: false,
@@ -699,14 +692,6 @@ function chipByName(chips: {[key: string]: ChipTemplate}) {
 	for (const c in chips) {
 		const chip = chips[c]
 		result[chip.name] = chip
-	}
-	return result
-}
-
-function constantById(constants: Constant[]) {
-	const result: { [key: number]: Constant } = {}
-	for (const c of constants) {
-		result[c.id] = c
 	}
 	return result
 }

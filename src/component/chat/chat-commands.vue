@@ -23,6 +23,7 @@
 
 	@Component({ name: 'chat-commands' })
 	export default class ChatCommands extends Vue {
+
 		@Prop() filter!: string
 		commands = Commands.commands
 		options: any[] = []

@@ -1,4 +1,3 @@
-import AIElement from '@/component/app/ai.vue'
 import App from '@/component/app/app.vue'
 import Code from '@/component/app/code.vue'
 import Console from '@/component/app/console.vue'
@@ -14,7 +13,6 @@ import Popup from '@/component/popup.vue'
 import Pseudo from '@/component/app/pseudo.vue'
 import RankingBadge from '@/component/ranking-badge.vue'
 import Talent from '@/component/talent.vue'
-import LWTitle from '@/component/title/title.vue'
 import { env } from '@/env'
 import { i18n } from '@/model/i18n'
 import { LeekWars } from '@/model/leekwars'
@@ -27,9 +25,9 @@ import { Latex } from './latex'
 import Vuetify from 'vuetify/lib'
 import Ripple from 'vuetify/lib/directives/ripple'
 Vue.use(Vuetify, {
-  directives: {
-    Ripple,
-  },
+	directives: {
+		Ripple
+	}
 })
 
 import tooltip from '@/vtooltip-fast'
@@ -68,12 +66,10 @@ Vue.component('ranking-badge', RankingBadge)
 Vue.component('notification', NotificationElement)
 Vue.component('lw-code', Code)
 Vue.component('lw-pseudo', Pseudo)
-Vue.component('ai', AIElement)
 Vue.component('error', Error)
 Vue.component('panel', Panel)
 Vue.component('popup', Popup)
 Vue.component('loader', LWLoader)
-Vue.component('lw-title', LWTitle)
 
 Vue.directive('autostopscroll', {
 	inserted: (el, binding) => {
@@ -116,6 +112,7 @@ Vue.directive('latex', {
 		})
 	}
 })
+
 Vue.directive('chat-code-latex', {
 	inserted: (el) => {
 		el.innerHTML = el.innerHTML.replace(/\$(.*?)\$/g, (str: string) => {
@@ -142,6 +139,7 @@ Vue.directive('chat-code-latex', {
 		})
 	}
 })
+
 Vue.directive('dochash', (el) => {
 	el.innerHTML = el.innerHTML.replace(/#(\w+)/g, (a, b) => {
 		return "<a href='/help/documentation/" + b + "'>" + b + "</a>"

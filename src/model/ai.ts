@@ -1,7 +1,7 @@
-import { Keyword, LSClass } from '@/component/editor/keywords'
 import { Problem } from '@/component/editor/problem'
 import { fileSystem } from './filesystem'
 import { i18n } from './i18n'
+import { Keyword, LSClass } from './keyword'
 import { LeekWars } from './leekwars'
 
 class AI {

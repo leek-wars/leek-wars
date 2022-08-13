@@ -2,8 +2,8 @@
 // Distributed under an MIT license: https://codemirror.net/LICENSE
 
 import CodeMirror from 'codemirror'
-import { LeekWars } from '@/model/leekwars'
 import { FUNCTIONS } from '@/model/functions'
+import { CONSTANTS } from '@/model/constants'
 
   CodeMirror.defineMode("leekscript", function(config, parserConfig) {
     var indentUnit = config.indentUnit;
@@ -41,7 +41,7 @@ import { FUNCTIONS } from '@/model/functions'
         // "int": X, "real": X, "bool": X, "string": X, "any": X, "array": X, "map": X, "number": X,
         // "synchronized": X, "throws": X, "transient": X, "void": X, "volatile": X, "yield": X
       };
-        for (const constant of LeekWars.constants) {
+        for (const constant of CONSTANTS) {
             k[constant.name] = {type: "variable", style: "lsconst"}
         }
         for (const fun of FUNCTIONS) {

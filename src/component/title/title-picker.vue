@@ -68,14 +68,14 @@
 </template>
 
 <script lang="ts">
-	import { env } from '@/env'
-	import { TROPHIES } from '@/model/data'
-	import { Farmer } from '@/model/farmer'
 	import { LeekWars } from '@/model/leekwars'
+	import { TROPHIES } from '@/model/trophies'
 	import { Component, Prop, Vue } from 'vue-property-decorator'
+	import LWTitle from '@/component/title/title.vue'
 
-	@Component({ name: "title-picker" })
+	@Component({ name: "title-picker", components: { 'lw-title': LWTitle } })
 	export default class TitlePicker extends Vue {
+
 		@Prop() title!: number[]
 		TROPHIES = TROPHIES
 		icon: any = null

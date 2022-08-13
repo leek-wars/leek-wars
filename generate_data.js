@@ -12,14 +12,14 @@ const values = [
 	['hat_templates', 'hat_templates', 'hat/get-templates', '{[key: string]: {id: number, item: number}}'],
 	['chip_templates', 'chip_templates', 'chip/get-templates', '{[key: string]: {id: number, item: number}}'],
 	['summon_templates', "summon_templates", 'summon/get-templates', '{[key: string]: SummonTemplate}'],
-	['trophies', 'trophies', 'trophy/get-all'],
 	['trophy_categories', 'trophy_categories', 'trophy/get-categories'],
 	['items', null, 'item/get-all', '{[key: string]: ItemTemplate}'],
 	['complexities', null, 'complexity/get-all', '{[key: string]: string}'],
 ]
 const new_values = [
-	['functions', 'functions', 'function/get-all', 'LSFunction[]', "import { LSFunction } from '@/model/function'"],
-	['constants', 'constants', 'constant/get-all', 'Constant[]', "import { Constant } from '@/model/constant'"],
+	['functions', 'functions', 'function/get-all', 'readonly LSFunction[]', "import { LSFunction } from '@/model/function'"],
+	['constants', 'constants', 'constant/get-all', 'readonly Constant[]', "import { Constant } from '@/model/constant'"],
+	['trophies', 'trophies', 'trophy/get-all', 'readonly TrohyTemplate[]', "import { TrohyTemplate } from '@/model/trophy'"],
 ]
 const promises = []
 
@@ -33,7 +33,7 @@ for (const value of new_values) {
 		const file = 'src/model/' + value[1] + '.ts'
 		const content = value[4] + "\n\nconst " + value[0].toUpperCase()
 		+ (value[3] ? ': ' + value[3] : '')
-		+ " = " + util.inspect(value[1] ? json[value[1]] : json, {depth: Infinity, breakLength: Infinity, maxArrayLength: Infinity})
+		+ " = Object.freeze(" + util.inspect(value[1] ? json[value[1]] : json, {depth: Infinity, breakLength: Infinity, maxArrayLength: Infinity}) + ")"
 		+ "\nexport { " + value[0].toUpperCase() + " }"
 		fs.writeFileSync(file, content)
 		console.log("data written: " + file)
@@ -50,7 +50,7 @@ for (const value of values) {
 			console.log('received', value[0])
 			return "const " + value[0].toUpperCase()
 				+ (value[3] ? ': ' + value[3] : '')
-				+ " = Object.freeze(" + util.inspect(value[1] ? json[value[1]] : json, {depth: Infinity, breakLength: Infinity, maxArrayLength: Infinity}) + ")"
+				+ " = " + util.inspect(value[1] ? json[value[1]] : json, {depth: Infinity, breakLength: Infinity, maxArrayLength: Infinity})
 				+ "\nexport { " + value[0].toUpperCase() + " }"
 		}).catch((err) => {
 			console.log("ERROR request failed for", value[0], ":", err.statusCode, err.error)

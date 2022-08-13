@@ -8,6 +8,7 @@ module.exports = {
 		'eslint:recommended',
 		'plugin:@typescript-eslint/recommended',
 	],
+	"ignorePatterns": ["*.js"],
 	"overrides": [
 		{
 			"files": ["*.ts"],

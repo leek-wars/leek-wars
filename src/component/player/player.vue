@@ -224,10 +224,11 @@
 	import { Game } from './game/game'
 	import Hud from './hud.vue'
 	import(/* webpackChunkName: "[request]" */ /* webpackMode: "eager" */ `@/lang/fight.${locale}.lang`)
+	import LWTitle from '@/component/title/title.vue'
 
 	@Component({
 		name: 'player',
-		components: { Hud },
+		components: { Hud, 'lw-title': LWTitle },
 		i18n: {},
 		mixins: [...mixins]
 	})

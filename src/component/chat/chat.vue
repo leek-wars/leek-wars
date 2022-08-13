@@ -9,7 +9,7 @@
 				<div class="separator">
 					{{ messages[0].date | date }}
 				</div>
-				<chat-message v-for="(message, m) in messages" :key="message.id" :message="message" :chat="chat" @scroll="updateScroll" :large="large" :class="'m-' + message.id" @menu="openMenu($event, message)" @emoji="openEmojis($event, message)" />
+				<chat-message v-for="(message, m) in messages" :key="message.id" :message="formatMessage(message)" :chat="chat" @scroll="updateScroll" :large="large" :class="'m-' + message.id" @menu="openMenu($event, message)" @emoji="openEmojis($event, message)" />
 			</div>
 			<div v-show="unread" v-ripple class="chat-new-messages" @click="updateScroll(true)">{{ $t('main.unread_messages') }}</div>
 		</div>
@@ -127,6 +127,7 @@
 	import ChatMessageComponent from './chat-message.vue'
 	import EmojiPicker from './emoji-picker.vue'
 	import ReportDialog from '@/component/moderation/report-dialog.vue'
+import { Commands } from '@/model/commands'
 
 	@Component({
 		name: "chat",
@@ -410,6 +411,50 @@
 				LeekWars.post('message-reaction/add', { reaction: emoji, message_id: this.menuMessage.id })
 				this.menuMessage.my_reaction = emoji
 			}
+		}
+
+		formatMessage(message: ChatMessage) {
+
+			if (message.formatted) return message
+
+			let content = LeekWars.protect(message.content)
+			content = LeekWars.linkify(content)
+			content = LeekWars.formatEmojis(content)
+			content = Commands.execute(content, message.farmer.name)
+			content = content.replace(/@(\w+)/g, (a, b) => {
+				const farmer = store.state.farmer_by_name[b]
+				if (farmer) {
+					return "<span class='pseudo'>" + b + "</span>"
+				}
+				return a
+			})
+			content = content.replace(/\n/g, '<br>')
+			message.content = content
+
+			const element = document.createElement('div')
+			element.innerHTML = message.content
+			const innerText = element.innerText.trim()
+			Vue.set(message, 'only_emojis', innerText.length === 0 || /^[\s\p{Emoji_Presentation}]+$/gmu.test(innerText))
+			const day = this.getDay(message.date)
+			Vue.set(message, 'day', day)
+			if (!('censored' in message)) {
+				Vue.set(message, 'censored', 0)
+			}
+			Vue.set(message, 'reactionDialog', false)
+			if (!message.reactions) {
+				Vue.set(message, 'reactions', {})
+			}
+			Vue.set(message, 'formatted', true)
+			return message
+		}
+
+		getDay(date: number) {
+			const d = new Date(date * 1000)
+			d.setHours(0)
+			d.setMinutes(0)
+			d.setSeconds(0)
+			d.setMilliseconds(0)
+			return d.getTime()
 		}
 	}
 </script>

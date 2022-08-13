@@ -524,9 +524,11 @@
 	import TournamentsHistory from '@/component/history/tournaments-history.vue'
 	import TitlePicker from '@/component/title/title-picker.vue'
 	import ReportDialog from '@/component/moderation/report-dialog.vue'
+	import { TROPHIES } from '@/model/trophies'
+	import LWTitle from '@/component/title/title.vue'
 
 	@Component({ name: "farmer", i18n: {}, mixins: [...mixins], components: {
-		RichTooltipFarmer, RichTooltipTeam, RichTooltipLeek, FightsHistory, TournamentsHistory, TitlePicker, ReportDialog
+		RichTooltipFarmer, RichTooltipTeam, RichTooltipLeek, FightsHistory, TournamentsHistory, TitlePicker, ReportDialog, 'lw-title': LWTitle
 	} })
 	export default class FarmerPage extends Vue {
 		farmer: Farmer | null = null
@@ -554,12 +556,12 @@
 		giveTrophyID: number | null = null
 		giveTrophyFight: number | null = null
 		giveTrophies = [
-			LeekWars.trophies[173 - 1],
-			LeekWars.trophies[177 - 1],
-			LeekWars.trophies[166 - 1],
-			LeekWars.trophies[194 - 1],
-			LeekWars.trophies[322 - 1],
-			LeekWars.trophies[320 - 1],
+			TROPHIES[173 - 1],
+			TROPHIES[177 - 1],
+			TROPHIES[166 - 1],
+			TROPHIES[194 - 1],
+			TROPHIES[322 - 1],
+			TROPHIES[320 - 1],
 		]
 		countries: string[] = []
 

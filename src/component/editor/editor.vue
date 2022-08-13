@@ -301,11 +301,11 @@
 	const EditorTabs = () => import(/* webpackChunkName: "[request]" */ `@/component/editor/editor-tabs.${locale}.i18n`)
 	const EditorTest = () => import(/* webpackChunkName: "[request]" */ `@/component/editor/editor-test.${locale}.i18n`)
 	const EditorProblems = () => import(/* webpackChunkName: "[request]" */ `@/component/editor/editor-problems.${locale}.i18n`)
-	import { generateKeywords } from './keywords'
 	import './leekscript-monokai.scss'
-import { SocketMessage } from '@/model/socket'
-import { analyzer } from './analyzer'
+	import { SocketMessage } from '@/model/socket'
+	import { analyzer } from './analyzer'
 	import(/* webpackChunkName: "[request]" */ /* webpackMode: "eager" */ `@/lang/doc.${locale}.lang`)
+	import AIElement from '@/component/app/ai.vue'
 
 	const DEFAULT_FONT_SIZE = 16
 	const DEFAULT_LINE_HEIGHT = 24
@@ -319,7 +319,8 @@ import { analyzer } from './analyzer'
 			'editor-tabs': EditorTabs,
 			'explorer': Explorer,
 			'editor-finder': EditorFinder,
-			'editor-problems': EditorProblems
+			'editor-problems': EditorProblems,
+			ai: AIElement
 		},
 		mixins: [...mixins]
 	})
@@ -373,9 +374,6 @@ import { analyzer } from './analyzer'
 		}
 
 		created() {
-			if (!LeekWars.keywords.length) {
-				LeekWars.keywords = generateKeywords()
-			}
 			if (localStorage.getItem('editor/autocomplete') === null) { localStorage.setItem('editor/autocomplete', 'true') }
 			if (localStorage.getItem('editor/auto_closing') === null) { localStorage.setItem('editor/auto_closing', 'true') }
 			if (localStorage.getItem('editor/popups') === null) { localStorage.setItem('editor/popups', 'true') }

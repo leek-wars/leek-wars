@@ -17,11 +17,11 @@
 
 <script lang="ts">
 	import { fileSystem } from '@/model/filesystem'
-	import { LeekWars } from '@/model/leekwars'
 	import { Component, Vue } from 'vue-property-decorator'
 	import ExplorerFolder from './explorer-folder.vue'
+	import AIElement from '@/component/app/ai.vue'
 
-	@Component({ name: 'explorer', i18n: {}, components: { 'explorer-folder': ExplorerFolder } })
+	@Component({ name: 'explorer', i18n: {}, components: { 'explorer-folder': ExplorerFolder, ai: AIElement } })
 	export default class Explorer extends Vue {
 		fileSystem = fileSystem
 		currentFolder = fileSystem.rootFolder
