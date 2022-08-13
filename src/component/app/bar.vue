@@ -177,6 +177,7 @@
 	}
 	.action img {
 		width: 54px;
+		height: 54px;
 		opacity: 1;
 		padding: 15px 14px;
 	}
