@@ -6,7 +6,7 @@
 		"serve": "vue-cli-service serve --mode dev",
 		"beta": "vue-cli-service serve --mode beta",
 		"local": "vue-cli-service serve --mode local",
-		"build": "VUE_MODE=build vue-cli-service build",
+		"build": "if test `git rev-parse --abbrev-ref HEAD` = \"master\" ; then VUE_MODE=build vue-cli-service build; else echo 'Build bloqué sur cette branche (pas master)'; fi;",
 		"build-beta": "VUE_MODE=build NODE_ENV=production vue-cli-service build --mode beta",
 		"lint": "vue-cli-service lint",
 		"stylelint": "stylelint src/**/*.{vue,css,scss}",
