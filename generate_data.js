@@ -4,7 +4,6 @@ const util = require('util')
 const { execSync } = require('child_process')
 
 const values = [
-	['chips', 'chips', 'chip/get-all', '{[key: string]: ChipTemplate}'],
 	['hats', 'hats', 'hat/get-all', '{[key: string]: HatTemplate}'],
 	['weapons', 'weapons', 'weapon/get-all', '{[key: string]: WeaponTemplate}'],
 	['pomps', 'pomps', 'pomp/get-all', '{[key: string]: PompTemplate}'],
@@ -17,6 +16,7 @@ const values = [
 	['complexities', null, 'complexity/get-all', '{[key: string]: string}'],
 ]
 const new_values = [
+	['chips', 'chips', 'chip/get-all', '{[key: string]: ChipTemplate}', "import { ChipTemplate } from '@/model/chip'"],
 	['functions', 'functions', 'function/get-all', 'readonly LSFunction[]', "import { LSFunction } from '@/model/function'"],
 	['constants', 'constants', 'constant/get-all', 'readonly Constant[]', "import { Constant } from '@/model/constant'"],
 	['trophies', 'trophies', 'trophy/get-all', 'readonly TrohyTemplate[]', "import { TrohyTemplate } from '@/model/trophy'"],
@@ -62,7 +62,6 @@ setTimeout(() => {
 	Promise.all(promises).then((result) => {
 		let data = `/** This file is auto-generated from script/generate_data.js **/
 /* tslint:disable */
-import { ChipTemplate } from '@/model/chip'
 import { HatTemplate } from '@/model/hat'
 import { ItemTemplate } from '@/model/item'
 import { PompTemplate } from '@/model/pomp'

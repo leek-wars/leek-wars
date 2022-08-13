@@ -11,9 +11,6 @@
 <script lang="ts">
 	import { Action } from '@/model/action'
 	import { Component, Prop, Vue } from 'vue-property-decorator'
-	import { VIcon } from 'vuetify/lib/components'
-
-	Vue.component('v-icon', VIcon)
 
 	@Component({})
 	export default class ActionNewTurn extends Vue {

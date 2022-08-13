@@ -7,6 +7,7 @@
 
 <script lang="ts">
 	import { Component, Prop, Vue } from 'vue-property-decorator'
+
 	@Component({ name: "ranking-badge" })
 	export default class RankingBadge extends Vue {
 		@Prop() ranking!: number

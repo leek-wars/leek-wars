@@ -19,7 +19,6 @@
 </template>
 
 <script lang="ts">
-	import { LeekWars } from '@/model/leekwars'
 	import { Component, Prop, Vue } from 'vue-property-decorator'
 	import ChangelogVersion from './changelog-version.vue'
 

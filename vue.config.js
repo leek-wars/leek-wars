@@ -1,5 +1,4 @@
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
-const VuetifyLoaderPlugin = require('vuetify-loader/lib/plugin')
 const path = require('path')
 
 const dotenv = require('dotenv')
@@ -33,6 +32,7 @@ module.exports = {
 			.use('lang')
 				.loader(path.resolve('./src/translation-loader.js'))
 				.end()
+
 		if (process.env.VUE_MODE === 'build') {
 			config.entryPoints.delete('index')
 			config.plugins.delete('html-index')

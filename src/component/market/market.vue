@@ -249,6 +249,7 @@
 
 <script lang="ts">
 	import { ChipTemplate } from '@/model/chip'
+	import { CHIPS } from '@/model/chips'
 	import { EffectTypeMarket } from '@/model/effect'
 	import { Farmer } from '@/model/farmer'
 	import { HatTemplate } from '@/model/hat'
@@ -272,6 +273,7 @@
 		}
 	})
 	export default class Market extends Vue {
+		CHIPS = CHIPS
 		selectedItem: ItemTemplate | null = null
 		items: {[key: string]: ItemTemplate} = {}
 		weapons: ItemTemplate[] = []
@@ -318,9 +320,9 @@
 						this.weapons.push(w)
 						this.items_by_name[w.name.replace('weapon_', '')] = item
 					} else if (item.type === ItemType.CHIP) {
-						const chip = LeekWars.chips[item.id]
+						const chip = CHIPS[item.id]
 						this.chips.push(chip)
-						this.items_by_name[LeekWars.chips[item.id].name] = item
+						this.items_by_name[CHIPS[item.id].name] = item
 						// Place the chip in the categories which correspond to its effects
 						for (const effect of chip.effects) {
 							if (this.chipsByType[effect.type] === undefined) {

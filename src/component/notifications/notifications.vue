@@ -17,6 +17,7 @@
 	import { mixins } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import { Notification } from '@/model/notification'
+import { NotificationBuilder } from '@/model/notification-builder'
 	import { Component, Vue } from 'vue-property-decorator'
 
 	@Component({
@@ -29,7 +30,7 @@
 			LeekWars.get('notification/get-latest/500').then(data => {
 				this.notifications = []
 				for (const notification of data.notifications) {
-					const notif = Notification.build(notification)
+					const notif = NotificationBuilder.build(notification)
 					notif.read = true
 					this.notifications.push(notif)
 				}

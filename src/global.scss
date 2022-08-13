@@ -122,7 +122,7 @@
 	transform: translate(100%, 0);
 }
 .theme--light.v-tabs-items {
-	background-color: inherit;
+	background-color: inherit !important;
 }
 .v-input--switch.v-input--is-dirty .v-input--selection-controls__ripple, .v-input--switch.v-input--is-dirty .v-input--switch__thumb {
     transform: translate(18px, 0);

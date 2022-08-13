@@ -25,24 +25,29 @@
 		<h4>{{ $t('main.chips') }}</h4>
 		<div class="chips">
 			<rich-tooltip-item v-for="chip of summon.chips" :key="chip.id" v-slot="{ on }" :item="LeekWars.items[chip]" :bottom="true" :instant="true" @input="$emit('input', $event)">
-				<img :src="'/image/chip/' + LeekWars.chips[chip].name + '.png'" class="chip" v-on="on">
+				<img :src="'/image/chip/' + CHIPS[chip].name + '.png'" class="chip" v-on="on">
 			</rich-tooltip-item>
 		</div>
 	</div>
 </template>
 
 <script lang="ts">
-	import { Component, Prop, Vue } from 'vue-property-decorator'
-	import CharacteristicTooltip from '../leek/characteristic-tooltip.vue'
-	const RichTooltipItem = () => import('@/component/rich-tooltip/rich-tooltip-item.vue')
 
-	@Component({ name: 'summon-view', components: {
-		'characteristic-tooltip': CharacteristicTooltip,
-		'rich-tooltip-item': RichTooltipItem
-	}})
-	export default class SummonView extends Vue {
-		@Prop() summon!: any
-	}
+import { CHIPS } from '@/model/chips'
+import { Component, Prop, Vue } from 'vue-property-decorator'
+import CharacteristicTooltip from '../leek/characteristic-tooltip.vue'
+const RichTooltipItem = () => import('@/component/rich-tooltip/rich-tooltip-item.vue')
+
+@Component({ name: 'summon-view', components: {
+	'characteristic-tooltip': CharacteristicTooltip,
+	'rich-tooltip-item': RichTooltipItem
+}})
+export default class SummonView extends Vue {
+	@Prop() summon!: any
+
+	CHIPS = CHIPS
+}
+
 </script>
 
 <style lang="scss" scoped>

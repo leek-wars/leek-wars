@@ -1,5 +1,6 @@
 import { ActionType } from '@/model/action'
 import { Cell } from '@/model/cell'
+import { CHIPS } from '@/model/chips'
 import { EffectType, EntityEffect } from '@/model/effect'
 import { Entity } from '@/model/entity'
 import { Field } from '@/model/field'
@@ -488,7 +489,7 @@ class FightStatistics {
 					state = StatisticsState.USE_ITEM
 					itemCaster = entity
 
-					const chip_template = LeekWars.chips[LeekWars.chipTemplates[chip].item]
+					const chip_template = CHIPS[LeekWars.chipTemplates[chip].item]
 					const targets = this.field.getTargets(cell, chip_template.area, entity.cell!) as StatisticsEntity[]
 
 					entity.usedPT += chip_template.cost

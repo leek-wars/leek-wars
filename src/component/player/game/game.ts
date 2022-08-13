@@ -16,6 +16,7 @@ import { locale } from '@/locale'
 import { Action, ActionType } from '@/model/action'
 import { Area } from '@/model/area'
 import { Cell } from '@/model/cell'
+import { CHIPS } from '@/model/chips'
 import { EffectType, EntityEffect } from '@/model/effect'
 import { Fight, FightData, FightType } from '@/model/fight'
 import { i18n } from '@/model/i18n'
@@ -119,7 +120,7 @@ const WEAPONS = [
 	UnstableDestroyer, // 34
 ]
 
-const CHIPS = [
+const CHIP_ANIMATIONS = [
 	Bandage, // 1
 	Cure, // 2
 	Drip, // 3
@@ -636,7 +637,7 @@ class Game {
 		const textures = new Set<Texture>()
 		const sounds = new Set<Sound>()
 		for (const chip of chipsUsed) {
-			const chipAnimation = CHIPS[chip - 1]
+			const chipAnimation = CHIP_ANIMATIONS[chip - 1]
 			if (!chipAnimation) { continue }
 			for (const texture of chipAnimation.textures) {
 				textures.add(texture)
@@ -1082,7 +1083,7 @@ class Game {
 			}
 
 			const caster = this.leeks[this.currentPlayer!]
-			const chip_template = LeekWars.chips[LeekWars.chipTemplates[chip].item]
+			const chip_template = CHIPS[LeekWars.chipTemplates[chip].item]
 			const targets = this.ground.field.getTargets(cell, chip_template.area, caster.cell!) as FightEntity[]
 
 			action.entity = caster
@@ -1115,8 +1116,8 @@ class Game {
 				caster.looseTP(chip_template.cost, this.jumping)
 			}
 
-			if (CHIPS[chip - 1] !== null && chip !== 40) {
-				const chipAnimation: ChipAnimation = new CHIPS[chip - 1]!(this)
+			if (CHIP_ANIMATIONS[chip - 1] !== null && chip !== 40) {
+				const chipAnimation: ChipAnimation = new CHIP_ANIMATIONS[chip - 1]!(this)
 				caster.useChip(chipAnimation, cell, targets, result)
 				this.chips.push(chipAnimation)
 				caster.lastDamageType = chipAnimation.damageType
@@ -1465,8 +1466,8 @@ class Game {
 			let image: string = ''
 			if (item === 0) {
 				image = LeekWars.STATIC + "image/fight/power.png"
-			} else if (item in LeekWars.chips) {
-				image = LeekWars.STATIC + "image/chip/" + LeekWars.chips[item].name + ".png"
+			} else if (item in CHIPS) {
+				image = LeekWars.STATIC + "image/chip/" + CHIPS[item].name + ".png"
 			} else /* weapon */ {
 				if (item in LeekWars.items) {
 					const template = LeekWars.items[item].params

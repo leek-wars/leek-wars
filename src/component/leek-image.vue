@@ -25,10 +25,11 @@
 	import { Leek } from '@/model/leek'
 	import { LeekWars } from '@/model/leekwars'
 	import { FishData, WeaponsData } from '@/model/weapon'
-	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
+	import { Component, Prop, Vue } from 'vue-property-decorator'
 
 	@Component({})
 	export default class LeekImage extends Vue {
+
 		@Prop({required: true}) leek!: Leek
 		@Prop({required: true}) scale!: number
 		@Prop() on!: any

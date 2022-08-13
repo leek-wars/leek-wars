@@ -138,7 +138,7 @@
 	import { LeekWars } from '@/model/leekwars'
 	import { Notification } from '@/model/notification'
 	import { Component, Vue } from 'vue-property-decorator'
-	import ConversationElement from '@/component/messages/conversation.vue'
+	const ConversationElement = () => import('@/component/messages/conversation.vue')
 
 	@Component({ name: 'lw-header', components: { 'conversation': ConversationElement } })
 	export default class Header extends Vue {

@@ -127,7 +127,8 @@
 	import ChatMessageComponent from './chat-message.vue'
 	import EmojiPicker from './emoji-picker.vue'
 	import ReportDialog from '@/component/moderation/report-dialog.vue'
-import { Commands } from '@/model/commands'
+	import { Commands } from '@/model/commands'
+	import { formatEmojis } from '@/model/emojis'
 
 	@Component({
 		name: "chat",
@@ -419,7 +420,7 @@ import { Commands } from '@/model/commands'
 
 			let content = LeekWars.protect(message.content)
 			content = LeekWars.linkify(content)
-			content = LeekWars.formatEmojis(content)
+			content = formatEmojis(content)
 			content = Commands.execute(content, message.farmer.name)
 			content = content.replace(/@(\w+)/g, (a, b) => {
 				const farmer = store.state.farmer_by_name[b]

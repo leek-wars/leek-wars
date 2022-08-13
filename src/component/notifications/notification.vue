@@ -26,6 +26,7 @@
 
 	@Component({ name: 'notification' })
 	export default class NotificationElement extends Vue {
+
 		@Prop({ required: true }) notification!: Notification
 
 		get link() { return this.notification.link ? this.notification.link : '' }

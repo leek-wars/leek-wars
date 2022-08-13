@@ -74,16 +74,6 @@ class Leek {
 	get isMaxLevel() {
 		return this.level === 301
 	}
-	get orderedChips() {
-		return [...this.chips].sort((chipA, chipB) => {
-			return LeekWars.orderedChips[chipA.template] - LeekWars.orderedChips[chipB.template]
-		})
-	}
-	get orderedWeapons() {
-		return [...this.weapons].sort((weaponA, weaponB) => {
-			return LeekWars.items[weaponA.template].level - LeekWars.items[weaponB.template].level
-		})
-	}
 	get talentGains() {
 		return Math.round(this.talent_more / 3)
 	}

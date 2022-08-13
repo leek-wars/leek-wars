@@ -266,6 +266,7 @@
 	import(/* webpackChunkName: "chartist" */ /* webpackMode: "eager" */ "@/chartist-wrapper")
 	import(/* webpackChunkName: "[request]" */ /* webpackMode: "eager" */ `@/lang/fight.${locale}.lang`)
 	import Comments from '@/component/comment/comments.vue'
+import { CHIPS } from '@/model/chips'
 
 	@Component({ name: 'report', i18n: {}, mixins: [...mixins], components: { actions: ActionsElement, ReportLeekRow, ReportBlock, ReportStatistics, 'lw-map': Map, Comments } })
 	export default class ReportPage extends Vue {
@@ -403,7 +404,7 @@
 					} else if (a[0] === ActionType.USE_WEAPON || a[0] === ActionType.USE_WEAPON_OLD) {
 						action.item = currentPlayer!.weapon
 					} else if (a[0] === ActionType.USE_CHIP) {
-						action.item = LeekWars.chips[LeekWars.chipTemplates[a[1]].item]
+						action.item = CHIPS[LeekWars.chipTemplates[a[1]].item]
 					} else if (a[0] === ActionType.ADD_CHIP_EFFECT || a[0] === ActionType.ADD_WEAPON_EFFECT) {
 						effects[a[2]] = { turns: a[7], value: a[6], type: a[5], target: a[4] }
 					} else if (a[0] === ActionType.STACK_EFFECT) {

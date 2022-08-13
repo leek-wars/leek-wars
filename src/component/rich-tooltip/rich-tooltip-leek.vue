@@ -50,13 +50,13 @@
 					</table>
 					<div class="items">
 						<div class="weapons">
-							<rich-tooltip-item v-for="weapon in leek.orderedWeapons" :key="weapon.id" v-slot="{ on }" :item="LeekWars.items[weapon.template]" :bottom="true" :instant="true" @input="setParent">
+							<rich-tooltip-item v-for="weapon in leek.weapons" :key="weapon.id" v-slot="{ on }" :item="LeekWars.items[weapon.template]" :bottom="true" :instant="true" @input="setParent">
 								<img :src="'/image/' + LeekWars.items[weapon.template].name.replace('_', '/') + '.png'" class="weapon" v-on="on">
 							</rich-tooltip-item>
 						</div>
 						<div class="chips">
-							<rich-tooltip-item v-for="chip in leek.orderedChips" :key="chip.id" v-slot="{ on }" :item="LeekWars.items[chip.template]" :bottom="true" :instant="true" @input="setParent">
-								<img :src="'/image/chip/' + LeekWars.chips[chip.template].name + '.png'" class="chip" v-on="on">
+							<rich-tooltip-item v-for="chip in leek.chips" :key="chip.id" v-slot="{ on }" :item="LeekWars.items[chip.template]" :bottom="true" :instant="true" @input="setParent">
+								<img :src="'/image/chip/' + CHIPS[chip.template].name + '.png'" class="chip" v-on="on">
 							</rich-tooltip-item>
 						</div>
 					</div>
@@ -67,64 +67,81 @@
 </template>
 
 <script lang="ts">
-	import { Leek } from '@/model/leek'
-	import { LeekWars } from '@/model/leekwars'
-	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
-	import RichTooltipItem from '@/component/rich-tooltip/rich-tooltip-item.vue'
-	import LWTitle from '@/component/title/title.vue'
 
-	@Component({ components: { RichTooltipItem, 'lw-title': LWTitle } })
-	export default class RichTooltipLeek extends Vue {
+import { Leek } from '@/model/leek'
+import { LeekWars } from '@/model/leekwars'
+import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
+import RichTooltipItem from '@/component/rich-tooltip/rich-tooltip-item.vue'
+const LWTitle = () => import('@/component/title/title.vue')
+import { CHIPS } from '@/model/chips'
 
-		@Prop({required: true}) id!: number
-		@Prop() disabled!: boolean
-		@Prop() bottom!: boolean
-		@Prop() instant!: boolean
-		content_created: boolean = false
-		leek: Leek | null = null
-		expand_items: boolean = false
-		locked: boolean = false
-		mouse: boolean = false
-		value: boolean = false
+@Component({ components: { RichTooltipItem, 'lw-title': LWTitle } })
+export default class RichTooltipLeek extends Vue {
 
-		get _open_delay() {
-			return this.instant ? 0 : 500
-		}
-		get _close_delay() {
-			return this.instant ? 0 : 0
-		}
-		@Watch('id')
-		update() {
-			this.leek = null
-			this.content_created = false
-		}
-		open(v: boolean) {
-			this.$emit('input', v)
-			this.expand_items = localStorage.getItem('richtooltipleek/expanded') === 'true'
-			if (this.content_created) { return }
-			this.content_created = true
-			if (this.id > 0 && !this.leek) {
-				LeekWars.get<Leek>('leek/rich-tooltip/' + this.id).then(leek => {
-					this.leek = new Leek(leek)
-					if (this.expand_items) {
-						(this.$refs.menu as any).onResize()
-					}
-				})
-			}
-		}
-		@Watch('expand_items')
-		updateExpand() {
-			localStorage.setItem('richtooltipleek/expanded', this.expand_items ? 'true' : 'false')
-		}
+	@Prop({required: true}) id!: number
+	@Prop() disabled!: boolean
+	@Prop() bottom!: boolean
+	@Prop() instant!: boolean
 
-		setParent(event: boolean) {
-			this.locked = event
-			if (!event && !this.mouse) {
-				this.value = false
-				this.$emit('input', false)
-			}
+	CHIPS = CHIPS
+	content_created: boolean = false
+	leek: Leek | null = null
+	expand_items: boolean = false
+	locked: boolean = false
+	mouse: boolean = false
+	value: boolean = false
+
+	get _open_delay() {
+		return this.instant ? 0 : 500
+	}
+	get _close_delay() {
+		return this.instant ? 0 : 0
+	}
+	@Watch('id')
+	update() {
+		this.leek = null
+		this.content_created = false
+	}
+	open(v: boolean) {
+		this.$emit('input', v)
+		this.expand_items = localStorage.getItem('richtooltipleek/expanded') === 'true'
+		if (this.content_created) { return }
+		this.content_created = true
+		if (this.id > 0 && !this.leek) {
+			LeekWars.get<Leek>('leek/rich-tooltip/' + this.id).then(leek => {
+				this.leek = new Leek(leek)
+				if (this.expand_items) {
+					(this.$refs.menu as any).onResize()
+				}
+			})
 		}
 	}
+	@Watch('expand_items')
+	updateExpand() {
+		localStorage.setItem('richtooltipleek/expanded', this.expand_items ? 'true' : 'false')
+	}
+
+	setParent(event: boolean) {
+		this.locked = event
+		if (!event && !this.mouse) {
+			this.value = false
+			this.$emit('input', false)
+		}
+	}
+
+	// get orderedWeapons() {
+	// 	if (!this.leek) return []
+	// 	return [...this.leek.weapons].sort((weaponA, weaponB) => {
+	// 		return LeekWars.items[weaponA.template].level - LeekWars.items[weaponB.template].level
+	// 	})
+	// }
+	// get orderedChips() {
+	// 	if (!this.leek) return []
+	// 	return [...this.leek.chips].sort((chipA, chipB) => {
+	// 		return ORDERED_CHIPS[chipA.template] - ORDERED_CHIPS[chipB.template]
+	// 	})
+	// }
+}
 </script>
 
 <style lang="scss" scoped>

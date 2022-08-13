@@ -164,12 +164,16 @@
 	import { LeekWars } from '@/model/leekwars'
 	import { store } from '@/model/store'
 	import { Component, Vue, Watch } from 'vue-property-decorator'
+	import { TROPHIES } from '@/model/trophies'
 
 	@Component({
 		name: 'lw-menu'
 	})
 	export default class Menu extends Vue {
+
 		battleRoyaleDialog: boolean = false
+		TROPHIES = TROPHIES
+
 		get isHomePage() {
 			return this.$route.path === '/'
 		}

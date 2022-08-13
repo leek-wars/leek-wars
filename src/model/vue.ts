@@ -10,7 +10,6 @@ import Emblem from '@/component/emblem.vue'
 import LeekImage from '@/component/leek-image.vue'
 import NotificationElement from '@/component/notifications/notification.vue'
 import Popup from '@/component/popup.vue'
-import Pseudo from '@/component/app/pseudo.vue'
 import RankingBadge from '@/component/ranking-badge.vue'
 import Talent from '@/component/talent.vue'
 import { env } from '@/env'
@@ -21,6 +20,8 @@ import { store } from "@/model/store"
 import router from '@/router'
 import Vue from 'vue'
 import { Latex } from './latex'
+import { Route } from 'vue-router'
+import { scroll_to_hash } from '@/router-functions'
 
 import Vuetify from 'vuetify/lib'
 import Ripple from 'vuetify/lib/directives/ripple'
@@ -35,8 +36,6 @@ Vue.component('tooltip', tooltip)
 
 import { createSimpleTransition } from 'vuetify/lib/components/transitions/createTransition'
 import '../fade-transition.sass'
-import { Route } from 'vue-router'
-import { scroll_to_hash } from '@/router-functions'
 const myTransition = createSimpleTransition('my-transition')
 Vue.component('my-transition', myTransition)
 
@@ -55,7 +54,6 @@ Vue.filter('number', LeekWars.formatNumber)
 Vue.filter('date', LeekWars.formatDate)
 Vue.filter('datetime', LeekWars.formatDateTime)
 Vue.filter('time', LeekWars.formatTimeSeconds)
-Vue.filter('emojis', LeekWars.formatEmojis)
 Vue.filter('duration', LeekWars.formatDuration)
 
 Vue.component('leek-image', LeekImage)
@@ -65,7 +63,6 @@ Vue.component('talent', Talent)
 Vue.component('ranking-badge', RankingBadge)
 Vue.component('notification', NotificationElement)
 Vue.component('lw-code', Code)
-Vue.component('lw-pseudo', Pseudo)
 Vue.component('error', Error)
 Vue.component('panel', Panel)
 Vue.component('popup', Popup)
@@ -82,16 +79,8 @@ Vue.directive('autostopscroll', {
 		})
 	}
 })
-Vue.directive('emojis', (el) => {
-	el.childNodes.forEach((child) => {
-		if (child.nodeType === Node.TEXT_NODE) {
-			const html = LeekWars.formatEmojis(LeekWars.protect((child as Text).wholeText))
-			const template = document.createElement('span')
-			template.innerHTML = html
-			el.replaceChild(template, child)
-		}
-	})
-})
+
+
 Vue.directive('code', {
 	inserted: (el) => {
 		el.querySelectorAll('code').forEach((c) => {

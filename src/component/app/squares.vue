@@ -13,6 +13,8 @@
 
 <script lang="ts">
 	import { Component, Vue } from 'vue-property-decorator'
+	import '@/model/emojis'
+
 	@Component({})
 	export default class Squares extends Vue {}
 </script>

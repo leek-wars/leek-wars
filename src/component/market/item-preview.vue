@@ -20,7 +20,7 @@
 			<i>{{ $t('main.resource_not_used') }}</i>
 		</div>
 		<weapon-preview v-if="item.type === ItemType.WEAPON" :weapon="LeekWars.weapons[item.params]" />
-		<chip-preview v-else-if="item.type === ItemType.CHIP" :chip="LeekWars.chips[item.id]" @input="$emit('input', $event)" />
+		<chip-preview v-else-if="item.type === ItemType.CHIP" :chip="CHIPS[item.id]" @input="$emit('input', $event)" />
 		<potion-preview v-else-if="item.type === ItemType.POTION" :potion="LeekWars.potions[item.id]" />
 		<hat-preview v-else-if="item.type === ItemType.HAT" :hat="LeekWars.hats[item.params]" />
 		<pomp-preview v-else-if="item.type === ItemType.POMP" :pomp="LeekWars.pomps[item.id]" />
@@ -44,6 +44,7 @@
 </template>
 
 <script lang="ts">
+
 import { ItemTemplate, ItemType } from '@/model/item'
 import { Component, Prop, Vue } from 'vue-property-decorator'
 import WeaponPreview from '@/component/market/weapon-preview.vue'
@@ -55,6 +56,7 @@ import ResourcePreview from '@/component/market/resource-preview.vue'
 import FightPackPreview from '@/component/market/fight-pack-preview.vue'
 import { LeekWars } from '@/model/leekwars'
 import { store } from '@/model/store'
+import { CHIPS } from '@/model/chips'
 
 @Component({ name: 'item-preview', components: {
 	'weapon-preview': WeaponPreview,
@@ -71,6 +73,7 @@ export default class ItemPreview extends Vue {
 	@Prop() inventory!: boolean
 
 	ItemType = ItemType
+	CHIPS = CHIPS
 
 	get category() {
 		if (this.item.type === ItemType.WEAPON) return 'weapon'

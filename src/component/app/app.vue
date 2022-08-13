@@ -45,7 +45,7 @@
 			<lw-social v-if="$store.state.connected" />
 
 			<chats v-if="!LeekWars.mobile" />
-			<squares />
+			<squares v-if="$store.state.connected" />
 			<mobile-br v-if="LeekWars.mobile" />
 
 			<div class="toasts"></div>
@@ -126,7 +126,7 @@
 	const Menu = () => import(/* webpackChunkName: "[request]" */ `@/component/app/menu.vue`)
 	import MobileBR from '@/component/app/mobile-br.vue'
 	const Social = () => import(/* webpackChunkName: "[request]" */ `@/component/app/social.vue`)
-	import Squares from '@/component/app/squares.vue'
+	const Squares = () => import('@/component/app/squares.vue')
 	import ChangelogVersion from '@/component/changelog/changelog-version.vue'
 	import { locale } from '@/locale'
 	import { LeekWars } from '@/model/leekwars'

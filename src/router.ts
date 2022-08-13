@@ -31,7 +31,6 @@ const ForumTopic = () => import(/* webpackChunkName: "[request]" */ `@/component
 const Forum = () => import(/* webpackChunkName: "[request]" */ `@/component/forum/forum.${locale}.i18n`)
 const Garden = () => import(/* webpackChunkName: "[request]" */ `@/component/garden/garden.${locale}.i18n`)
 const GeneralHelp = () => import(/* webpackChunkName: "[request]" */ `@/component/general-help/general-help.${locale}.i18n`)
-const Help = () => import(/* webpackChunkName: "[request]" */ `@/component/help/help.${locale}.i18n`)
 const Inventory = () => import(/* webpackChunkName: "[request]" */ `@/component/inventory/inventory.${locale}.i18n`)
 const LineOfSight = () => import(/* webpackChunkName: "[request]" */ `@/component/line-of-sight/line-of-sight.${locale}.i18n`)
 const AdvancedFightDescription = () => import(/* webpackChunkName: "[request]" */ `@/component/advanced-fight-description/advanced-fight-description.${locale}.i18n`)

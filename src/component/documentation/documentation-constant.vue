@@ -34,6 +34,7 @@
 	import { LeekWars } from '@/model/leekwars'
 	import { Component, Prop, Vue } from 'vue-property-decorator'
 	import RichTooltipItem from '@/component/rich-tooltip/rich-tooltip-item.vue'
+	import { CHIPS } from '@/model/chips'
 
 	@Component({ name: 'documentation-constant', components: { ItemPreview, RichTooltipItem }})
 	export default class DocumentationConstant extends Vue {
@@ -52,27 +53,27 @@
 			const items = [] as any
 			if (this.constant.deprecated) { return items }
 			if (this.constant.name.startsWith("EFFECT_MODIFIER_")) {
-				for (const i in LeekWars.chips) {
-					if (LeekWars.chips[i].effects.some((e) => e.modifiers & this.value_int)) {
-						items.push(LeekWars.chips[i])
+				for (const i in CHIPS) {
+					if (CHIPS[i].effects.some((e) => e.modifiers & this.value_int)) {
+						items.push(CHIPS[i])
 					}
 				}
 			} else if (this.constant.name.startsWith("EFFECT_") && !this.constant.name.startsWith("EFFECT_TARGET_")) {
-				for (const i in LeekWars.chips) {
-					if (LeekWars.chips[i].effects.some((e) => e.id === this.value_int)) {
-						items.push(LeekWars.chips[i])
+				for (const i in CHIPS) {
+					if (CHIPS[i].effects.some((e) => e.id === this.value_int)) {
+						items.push(CHIPS[i])
 					}
 				}
 			} else if (this.constant.name.startsWith("AREA_")) {
-				for (const i in LeekWars.chips) {
-					if (LeekWars.chips[i].area === this.value_int) {
-						items.push(LeekWars.chips[i])
+				for (const i in CHIPS) {
+					if (CHIPS[i].area === this.value_int) {
+						items.push(CHIPS[i])
 					}
 				}
 			} else if (this.constant.name.startsWith("LAUNCH_TYPE_")) {
-				for (const i in LeekWars.chips) {
-					if (LeekWars.chips[i].launch_type === this.value_int) {
-						items.push(LeekWars.chips[i])
+				for (const i in CHIPS) {
+					if (CHIPS[i].launch_type === this.value_int) {
+						items.push(CHIPS[i])
 					}
 				}
 			}

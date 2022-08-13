@@ -465,7 +465,7 @@
 					<h4>{{ $t('main.chips') }}</h4>
 					<div class="chips">
 						<rich-tooltip-item v-for="chip in [4, 23, 20, 1, 15, 92, 97, 100]" :key="chip" v-slot="{ on }" :item="LeekWars.items[chip]" :bottom="true" :instant="true">
-							<img :src="'/image/chip/' + LeekWars.chips[chip].name + '.png'" class="chip" v-on="on">
+							<img :src="'/image/chip/' + CHIPS[chip].name + '.png'" class="chip" v-on="on">
 						</rich-tooltip-item>
 					</div>
 				</div>
@@ -517,12 +517,14 @@
 	import ReportDialog from '@/component/moderation/report-dialog.vue'
 	import TurretImage from '@/component/turret-image.vue'
 	import AIElement from '@/component/app/ai.vue'
+	import { CHIPS } from '@/model/chips'
 
 	@Component({ name: 'team', i18n: {}, mixins: [...mixins], components: {
 		CharacteristicTooltip, Explorer, chat: ChatElement, RichTooltipItem, RichTooltipLeek, RichTooltipFarmer, RichTooltipComposition, RichTooltipTeam, FightsHistory, TournamentsHistory, ReportDialog, TurretImage, ai: AIElement
 	}})
 	export default class TeamPage extends Vue {
 		ChatType = ChatType
+		CHIPS = CHIPS
 		team: Team | null = null
 		captain: boolean = false
 		owner: boolean = false

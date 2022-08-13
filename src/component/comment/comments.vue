@@ -31,6 +31,7 @@
 	import { store } from '@/model/store'
 	import { Component, Prop, Vue } from 'vue-property-decorator'
 	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
+	import '@/model/emojis'
 
 	@Component({
 		name: 'comments',

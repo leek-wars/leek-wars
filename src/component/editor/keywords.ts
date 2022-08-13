@@ -1,3 +1,4 @@
+import { CHIPS } from '@/model/chips'
 import { CONSTANTS } from '@/model/constants'
 import { FUNCTIONS } from '@/model/functions'
 import { Keyword } from '@/model/keyword'
@@ -35,12 +36,14 @@ const getWeaponByName = (name: string) => {
 	}
 	return null
 }
+
 const getChipByName = (name: string) => {
-	for (const c in LeekWars.chips) {
-		if (LeekWars.chips[c].name === name) { return LeekWars.chips[c] }
+	for (const c in CHIPS) {
+		if (CHIPS[c].name === name) { return CHIPS[c] }
 	}
 	return null
 }
+
 for (const constant of CONSTANTS) {
 	let details: any = ""
 	if (constant.name.substring(0, 5) === 'CHIP_') {

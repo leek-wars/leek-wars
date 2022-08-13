@@ -1,4 +1,5 @@
 import { LeekWars } from "@/model/leekwars"
+import { CHIPS } from "./chips"
 import { CONSTANTS } from "./constants"
 import { FUNCTIONS } from "./functions"
 
@@ -204,8 +205,8 @@ const Commands = {
 			const weapon = LeekWars.weapons[w]
 			marketCommand.options.push({name: weapon.name, nameLower: weapon.name.toLowerCase(), description: "Ajoute un lien vers l'arme \"" + weapon.name + "\" du marché au message"})
 		}
-		for (const c in LeekWars.chips) {
-			const chip = LeekWars.chips[c]
+		for (const c in CHIPS) {
+			const chip = CHIPS[c]
 			marketCommand.options.push({name: chip.name, nameLower: chip.name.toLowerCase(), description: "Ajoute un lien vers la puce \"" + chip.name + "\" du marché au message"})
 		}
 		for (const key in LeekWars.potions) {

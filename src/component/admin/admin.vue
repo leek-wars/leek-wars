@@ -105,9 +105,8 @@
 	import { ChatMessage } from '@/model/chat'
 	import { Farmer } from '@/model/farmer'
 	import { LeekWars } from '@/model/leekwars'
-	import { Notification } from '@/model/notification'
-import { NotificationBuilder } from '@/model/notification-builder'
-import { TROPHIES } from '@/model/trophies'
+	import { NotificationBuilder } from '@/model/notification-builder'
+	import { TROPHIES } from '@/model/trophies'
 	import { Component, Vue } from 'vue-property-decorator'
 	const Didactitiel = () => import(/* webpackChunkName: "[request]" */ `@/component/didactitiel/didactitiel.${locale}.i18n`)
 	const LevelDialog = () => import(/* webpackChunkName: "[request]" */ `@/component/leek/level-dialog.${locale}.i18n`)

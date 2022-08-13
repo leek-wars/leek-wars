@@ -136,7 +136,7 @@
 						<div class="chips">
 							<div class="container">
 								<rich-tooltip-item v-for="chip in currentLeek.chips" :key="chip.id" v-slot="{ on }" :item="LeekWars.items[chip]" :instant="true" :nodge="true">
-									<img :src="'/image/chip/' + LeekWars.chips[chip].name + '.png'" class="chip" v-on="on" @click="removeLeekChip(chip)">
+									<img :src="'/image/chip/' + CHIPS[chip].name + '.png'" class="chip" v-on="on" @click="removeLeekChip(chip)">
 								</rich-tooltip-item>
 								<div v-if="currentLeek.chips.length < 20" class="add" @click="chipsDialog = true">+</div>
 							</div>
@@ -324,6 +324,7 @@
 	import { fileSystem } from '@/model/filesystem'
 	import RichTooltipItem from '@/component/rich-tooltip/rich-tooltip-item.vue'
 	import AIElement from '@/component/app/ai.vue'
+	import { CHIPS } from '@/model/chips'
 
 	class TestScenarioLeek {
 		id!: number
@@ -360,6 +361,7 @@
 		@Prop({ required: true }) currentAI!: AI
 
 		FightType = FightType
+		CHIPS = CHIPS
 		initialized: boolean = false
 		scenarios: {[key: string]: TestScenario} = {}
 		leeks: Leek[] = []
@@ -573,7 +575,7 @@
 		}
 		get availableChips() {
 			if (!this.currentLeek) { return [] }
-			return Object.values(LeekWars.chips).filter((c: ChipTemplate) => (this.currentLeek!.chips as any).indexOf(c.id) === -1)
+			return Object.values(CHIPS).filter((c: ChipTemplate) => (this.currentLeek!.chips as any).indexOf(c.id) === -1)
 		}
 
 		get scenarioList() {

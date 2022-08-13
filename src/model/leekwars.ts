@@ -1,9 +1,7 @@
 import packageJson from '@/../package.json'
 import { env } from '@/env'
 import { BattleRoyale } from '@/model/battle-royale'
-import { ChipTemplate } from '@/model/chip'
-import { CHIP_TEMPLATES, CHIPS, HAT_TEMPLATES, HATS, ITEMS, POMPS, POTIONS, SUMMON_TEMPLATES, TROPHY_CATEGORIES, WEAPONS, COMPLEXITIES } from '@/model/data'
-import { Emojis } from '@/model/emojis'
+import { CHIP_TEMPLATES, HAT_TEMPLATES, HATS, ITEMS, POMPS, POTIONS, SUMMON_TEMPLATES, TROPHY_CATEGORIES, WEAPONS, COMPLEXITIES } from '@/model/data'
 import { Socket } from '@/model/socket'
 import { Squares } from '@/model/squares'
 import { store } from '@/model/store'
@@ -99,17 +97,6 @@ function get<T = any>(url: any) {
 	return request<T>('GET', LeekWars.API + url)
 }
 
-enum EFFECT_TYPES {
-	ATTACK = 1,
-	HEAL = 2,
-	BOOST = 3,
-	SHIELD = 4,
-	TACTIC = 5,
-	DAMAGE_RETURN = 6,
-	POISON = 7,
-	BULB = 8,
-	SHACKLE = 9,
-}
 const SKINS: { [key: number]: string } = {
 	1: "green", 2: "blue", 3: "yellow", 4: "red", 5: "orange", 6: "magenta", 7: "cyan", 8: "purple",
 	9: "multi", 10: "rasta", 11: "white", 12: "black", 13: "alpha", 14: "apple", 15: "gold", 16: "pink",
@@ -130,12 +117,9 @@ const LEEK_SIZES: { [key: number]: {width: number, height: number} } = {
 	11: {width: 161, height: 211},
 }
 
-const ORDERED_CHIPS = orderChips(CHIPS)
-const ORDERED_WEAPONS = orderWeapons(WEAPONS)
 const POTIONS_BY_SKIN = potionsBySkin(POTIONS)
 const POTION_BY_NAME = potionByName(POTIONS)
 const WEAPON_BY_NAME = weaponByName(WEAPONS)
-const CHIP_BY_NAME = chipByName(CHIPS)
 
 class Language {
 	public code!: string
@@ -515,7 +499,7 @@ const LeekWars = {
 		LeekWars.chatWindows.splice(i, 1)
 	},
 	get_cursor_position, set_cursor_position,
-	formatDate, formatDateTime, formatDuration, formatTime, formatTimeSeconds, formatDayMonthShort, formatEmojis,
+	formatDate, formatDateTime, formatDuration, formatTime, formatTimeSeconds, formatDayMonthShort,
 	setTitle, setSubTitle, setTitleCounter, setTitleTag,
 	shadeColor,
 	createCodeArea, createCodeAreaSimple,
@@ -524,14 +508,11 @@ const LeekWars = {
 	linkify, toChatLink,
 	goToRanking,
 	socket: new Socket(),
-	EFFECT_TYPES: Object.freeze(EFFECT_TYPES),
 	hats: Object.freeze(HATS),
 	pomps: Object.freeze(POMPS),
 	weapons: Object.freeze(WEAPONS),
 	weaponByName: Object.freeze(WEAPON_BY_NAME),
 	items: Object.freeze(ITEMS),
-	chips: Object.freeze(CHIPS),
-	chipByName: Object.freeze(CHIP_BY_NAME),
 	chipTemplates: Object.freeze(CHIP_TEMPLATES),
 	trophyCategories: Object.freeze(TROPHY_CATEGORIES),
 	trophyCategoriesById: Object.freeze([...TROPHY_CATEGORIES].sort((a, b) => a.id - b.id)),
@@ -549,8 +530,6 @@ const LeekWars = {
 	potions: Object.freeze(POTIONS),
 	potionByName: Object.freeze(POTION_BY_NAME),
 	hatTemplates: Object.freeze(HAT_TEMPLATES),
-	orderedChips: Object.freeze(ORDERED_CHIPS),
-	orderedWeapons: Object.freeze(ORDERED_WEAPONS),
 	potionsBySkin: Object.freeze(POTIONS_BY_SKIN),
 	complexities: Object.freeze(COMPLEXITIES),
 	characteristics: Object.freeze(['life', 'strength', 'wisdom', 'agility', 'resistance', 'science', 'magic', 'frequency', 'mp', 'tp']),
@@ -622,42 +601,6 @@ function setFavicon(reset: boolean = false) {
 	}
 }
 
-function orderChips(chips: { [key: number]: ChipTemplate }): { [key: number]: number } {
-	// Regroup chips by effects type
-	const chipsByType: { [key: number]: ChipTemplate[] } = {}
-	for (const i in chips) {
-		const chip = chips[i]
-		const type = chip.effects[0].type
-		if (chipsByType[type] === undefined) { chipsByType[type] = [] }
-		chipsByType[type].push(chip)
-	}
-	// Order chips by level and associates each chips with his position
-	const orderedChips: { [key: number]: number } = {}
-	let position = 0
-	for (const type in EFFECT_TYPES) {
-		if (chipsByType[type] !== undefined) {
-			chipsByType[type]
-				.sort((chipA, chipB) => {
-					return chipA.level - chipB.level
-				})
-				.forEach((chip) => {
-					orderedChips[chip.id] = position++
-				})
-		}
-	}
-	return orderedChips
-}
-
-function orderWeapons(weapons: { [key: number]: WeaponTemplate }) {
-	// Order weapons by level
-	const result: { [key: number]: number } = {}
-	let position = 0
-	for (const w in weapons) {
-		result[weapons[w].id] = position++
-	}
-	return result
-}
-
 function potionsBySkin(potions: {[key: string]: PotionTemplate}) {
 	const result: { [key: number]: PotionTemplate } = {}
 	for (const p in potions) {
@@ -687,14 +630,6 @@ function weaponByName(weapons: {[key: string]: WeaponTemplate}) {
 	return result
 }
 
-function chipByName(chips: {[key: string]: ChipTemplate}) {
-	const result: { [key: string]: ChipTemplate } = {}
-	for (const c in chips) {
-		const chip = chips[c]
-		result[chip.name] = chip
-	}
-	return result
-}
 
 function formatDuration(timestamp: number, capital: boolean = false) {
 
@@ -820,25 +755,6 @@ function createCodeAreaSimple(code: string, element: HTMLElement) {
 	})
 }
 
-function escapeRegExp(str: string) {
-	return str.replace(/[-[\]/{}()*+?.\\^$|]/g, "\\$&")
-}
-
-function formatEmojis(data: any) {
-	if (!data || typeof(data) !== 'string') { return data }
-	// Custom smileys
-	for (const i in Emojis.custom) {
-		const smiley = Emojis.custom[i]
-		data = data.replace(new RegExp("(^|\\s|>)" + escapeRegExp(i) + "(?![^\\s<>])", "gi"), '$1<img class="emoji" image="' + smiley + '" alt="' + i + '" title="' + i + '" src="/image/emoji/' + smiley + '.png">')
-	}
-	if (LeekWars.nativeEmojis) {
-		return data // nothing more to do
-	} else {
-		// Parse emojis
-		const emoji_regex = /(\u00a9|[1-9]\u20E3|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])/g
-		return data.replace(emoji_regex, "<span class='emoji emoji-font'>$&</span>")
-	}
-}
 
 function get_cursor_position(editableDiv: any) {
 	if (window.getSelection) {

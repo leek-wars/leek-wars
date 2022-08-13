@@ -1,3 +1,6 @@
+import Vue from "vue"
+import { LeekWars } from "./leekwars"
+
 const Emojis = {
 	custom: {
 		":O": "open_mouth",
@@ -26,4 +29,35 @@ const Emojis = {
 	]
 }
 
-export { Emojis }
+function escapeRegExp(str: string) {
+	return str.replace(/[-[\]/{}()*+?.\\^$|]/g, "\\$&")
+}
+
+function formatEmojis(data: any) {
+	if (!data || typeof(data) !== 'string') { return data }
+	// Custom smileys
+	for (const i in Emojis.custom) {
+		const smiley = Emojis.custom[i]
+		data = data.replace(new RegExp("(^|\\s|>)" + escapeRegExp(i) + "(?![^\\s<>])", "gi"), '$1<img class="emoji" image="' + smiley + '" alt="' + i + '" title="' + i + '" src="/image/emoji/' + smiley + '.png">')
+	}
+	if (LeekWars.nativeEmojis) {
+		return data // nothing more to do
+	} else {
+		// Parse emojis
+		const emoji_regex = /(\u00a9|[1-9]\u20E3|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])/g
+		return data.replace(emoji_regex, "<span class='emoji emoji-font'>$&</span>")
+	}
+}
+
+Vue.directive('emojis', (el) => {
+	el.childNodes.forEach((child) => {
+		if (child.nodeType === Node.TEXT_NODE) {
+			const html = formatEmojis(LeekWars.protect((child as Text).wholeText))
+			const template = document.createElement('span')
+			template.innerHTML = html
+			el.replaceChild(template, child)
+		}
+	})
+})
+
+export { Emojis, formatEmojis }

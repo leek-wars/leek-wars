@@ -3,7 +3,7 @@
 		<img v-if="version.image" :src="'/image/mail/mail_' + version.version + '.' + extension" class="image" loading="lazy">
 		<div class="wrapper">
 			<div v-for="(changes, s) in sections" :key="s" class="section">
-				<h4 v-if="sections.length > 1" v-emojis :class="{first: s === 0}">{{ $t('changelog.title_' + s) }}</h4>
+				<h4 v-if="sections.length > 1" :class="{first: s === 0}">{{ $t('changelog.title_' + s) }}</h4>
 				<div v-for="(change, c) in changes" :key="c" class="change">
 					<span v-html="'➤ ' + change.text"></span>
 					<v-menu v-for="image in change.images" :key="image" :close-on-content-click="false" :width="280" offset-overflow :nudge-top="0" transition="none" :open-on-hover="true" :open-delay="200" offset-y>
@@ -27,6 +27,7 @@
 
 	@Component({ name: 'changelog-version', i18n: {} })
 	export default class ChangelogVersion extends Vue {
+
 		@Prop({required: true}) version!: any
 		changelog: any = null
 

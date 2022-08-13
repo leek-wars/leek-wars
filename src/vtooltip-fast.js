@@ -14,7 +14,6 @@ import { convertToUnit, keyCodes, getSlotType } from 'vuetify/lib/util/helpers'
 import { consoleError } from 'vuetify/lib/util/console'
 
 // Types
-import { VNode } from 'vue'
 import mixins from 'vuetify/lib/util/mixins'
 
 /* @vue/component */
