@@ -83,6 +83,7 @@
 </template>
 
 <script lang="ts">
+	const ChatElement = () => import(/* webpackChunkName: "chat" */ `@/component/chat/chat.vue`)
 	import { Chat, ChatType } from '@/model/chat'
 	import { mixins } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
@@ -90,7 +91,7 @@
 	import { store } from '@/model/store'
 	import { Component, Vue, Watch } from 'vue-property-decorator'
 
-	@Component({ name: 'messages', i18n: {}, mixins: [...mixins] })
+	@Component({ name: 'messages', i18n: {}, mixins: [...mixins], components: { chat: ChatElement } })
 	export default class Messages extends Vue {
 		ChatType = ChatType
 		newFarmer_: any = null

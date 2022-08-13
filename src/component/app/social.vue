@@ -80,12 +80,13 @@
 </template>
 
 <script lang='ts'>
+	const ChatElement = () => import(/* webpackChunkName: "chat" */ `@/component/chat/chat.vue`)
 	import { ChatType } from '@/model/chat'
 	import { Language, LeekWars } from '@/model/leekwars'
 	import { Notification } from '@/model/notification'
 	import { Component, Vue } from 'vue-property-decorator'
 
-	@Component({ name: 'lw-social' })
+	@Component({ name: 'lw-social', components: { chat: ChatElement } })
 	export default class Social extends Vue {
 
 		ChatType = ChatType
