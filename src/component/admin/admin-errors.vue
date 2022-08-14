@@ -57,6 +57,7 @@
 		update() {
 			LeekWars.get('error/get-latest').then(data => {
 				this.errors = data.errors
+				this.$store.commit('error-count', data.count)
 				LeekWars.setTitle("Gestionnaire d'erreur (" + (store.state.farmer ? store.state.farmer!.errors : 0) + ")")
 			})
 		}

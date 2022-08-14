@@ -194,5 +194,6 @@
 	"lot_value": "Valeur du lot",
 	"resource_not_used": "Toutes les ressources ne sont pas utilisables pour l'instant. Peut être trouveront-elles une utilité dans le futur ?",
 	"search_bar": "Rechercher une notion, une fonction ou un guide...",
-	"more_results": "Plus de résultats"
+	"more_results": "Plus de résultats",
+	"hat": "Chapeau"
 }

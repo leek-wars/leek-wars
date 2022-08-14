@@ -446,7 +446,7 @@
 						<div class="name">{{ $t('potion.' + LeekWars.potionsBySkin[leek.skin].name) }}</div>
 					</div>
 					<div v-ripple class="item card" @click="hatDialog = true">
-						<div class="title">{{ $t('hat') }}</div>
+						<div class="title">{{ $t('main.hat') }}</div>
 						<img v-if="leek.hat" class="image" :src="'/image/hat/' + LeekWars.hats[LeekWars.items[leek.hat.template].params].name + '.png'">
 						<img v-else class="image" src="/image/hat/no_hat.png">
 						<div v-if="leek.hat" class="name">{{ $t('hat.' + LeekWars.hats[LeekWars.items[leek.hat.template].params].name) }}</div>

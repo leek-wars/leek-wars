@@ -38,7 +38,7 @@
 								</div>
 							</div>
 							<div>
-								<div class="title">{{ $t('hat') }}</div>
+								<div class="title">{{ $t('main.hat') }}</div>
 								<div class="hats">
 									<img src="/image/hat/no_hat.png" class="hat" @click="leekHat = 0">
 									<img v-for="hat in [2, 9, 7, 1]" :key="hat" height="50" :src="'/image/hat/' + LeekWars.hats[hat].name + '.png'" class="hat" @click="leekHat = hat">
@@ -172,7 +172,7 @@
 							</td>
 							<td>{{ farmer.talent }}</td>
 							<td>
-								<img v-if="farmer.country" :title="$t('country.' + farmer.country)" :src="'/image/flag/' + farmer.country + '.png'">
+								<img v-if="farmer.country" :title="$t('country.' + farmer.country)" :src="'/image/flag/' + farmer.country + '.png'" loading="lazy">
 							</td>
 						</tr>
 					</table>
@@ -207,14 +207,14 @@
 			<a href="https://play.google.com/store/apps/details?id=com.leekwars.app" target="_blank">
 				<panel v-ripple class="android">
 					<div slot="content">
-						<img src="/image/android.png"> {{ $t('android_app') }}
+						<img src="/image/android.png" loading="lazy"> {{ $t('android_app') }}
 					</div>
 				</panel>
 			</a>
 			<a href="https://github.com/leek-wars" target="_blank">
 				<panel v-ripple class="github">
 					<div slot="content">
-						<img src="/image/github_black.png"> GitHub
+						<img src="/image/github_black.png" loading="lazy"> GitHub
 					</div>
 				</panel>
 			</a>
@@ -312,18 +312,12 @@
 				images: ['fight_forest', 'fight_glacier', 'garden', 'fight_desert'],
 				texts: ["fight_text1", "fight_text2"]
 			},
-			{
-				icon: 'mdi-memory',
-				title: 'items_title',
-				images: ['chip_grapple', 'chip_arsenic', 'chip_fortress', 'chip_remission', 'weapon_m_laser', 'chip_meteorite'],
-				texts: ["items_text1", "items_text2"]
-			},
-			{
-				icon: 'mdi-trophy-outline',
-				title: "trophies_title",
-				images: ['trophies_notif', 'trophies', 'trophies_2'],
-				texts: ["trophies_text1"]
-			},
+			// {
+			// 	icon: 'mdi-memory',
+			// 	title: 'items_title',
+			// 	images: ['chip_grapple', 'chip_arsenic', 'chip_fortress', 'chip_remission', 'weapon_m_laser', 'chip_meteorite'],
+			// 	texts: ["items_text1", "items_text2"]
+			// },
 			{
 				icon: 'mdi-trophy-outline',
 				title: "tournament_title",
@@ -332,15 +326,21 @@
 			},
 			{
 				icon: 'mdi-trophy-outline',
-				title: "community_title",
-				images: ['comments', 'encyclopedia', 'forum_topic', 'forum'],
-				texts: ["community_text1"]
+				title: "trophies_title",
+				images: ['trophies_notif', 'trophies', 'trophies_2'],
+				texts: ["trophies_text1"]
 			},
 			{
 				icon: 'mdi-auto-fix',
 				title: 'customization_title',
 				images: ['pomp', 'potions', 'hats', 'leek_style'],
 				texts: ["customization_text1"]
+			},
+			{
+				icon: 'mdi-trophy-outline',
+				title: "community_title",
+				images: ['encyclopedia', 'forum_topic', 'forum', 'comments'],
+				texts: ["community_text1"]
 			},
 		]
 

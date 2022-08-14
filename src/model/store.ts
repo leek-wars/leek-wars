@@ -853,6 +853,11 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 				state.farmer.errors--
 			}
 		},
+		'error-count'(state: LeekWarsState, count: number) {
+			if (state.farmer) {
+				state.farmer.errors = count
+			}
+		},
 	},
 })
 export { store }

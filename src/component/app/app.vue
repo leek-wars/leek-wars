@@ -27,7 +27,7 @@
 
 			<div class="app-center">
 				<div :class="{large: LeekWars.large || LeekWars.flex, flex: LeekWars.flex, box: LeekWars.box}" class="app-wrapper">
-					<lw-header />
+					<lw-header v-if="!LeekWars.mobile || !$store.state.connected" />
 					<div class="page-wrapper">
 						<router-view />
 					</div>
@@ -44,9 +44,9 @@
 
 			<lw-social v-if="$store.state.connected" />
 
-			<chats v-if="!LeekWars.mobile" />
+			<chats v-if="!LeekWars.mobile && $store.state.connected" />
 			<squares v-if="$store.state.connected" />
-			<mobile-br v-if="LeekWars.mobile" />
+			<mobile-br v-if="LeekWars.mobile && $store.state.connected" />
 
 			<div class="toasts"></div>
 
@@ -119,20 +119,20 @@
 
 <script lang='ts'>
 	import Bar from '@/component/app/bar.vue'
-	import Chats from '@/component/app/chats.vue'
+	const Chats = () => import('@/component/app/chats.vue')
 	// import Console from '@/component/app/console.vue'
-	import Footer from '@/component/app/footer.vue'
+	const Footer = () => import('@/component/app/footer.vue')
 	import Header from '@/component/app/header.vue'
 	const Menu = () => import(/* webpackChunkName: "[request]" */ `@/component/app/menu.vue`)
-	import MobileBR from '@/component/app/mobile-br.vue'
+	const MobileBR = () => import('@/component/app/mobile-br.vue')
 	const Social = () => import(/* webpackChunkName: "[request]" */ `@/component/app/social.vue`)
 	const Squares = () => import('@/component/app/squares.vue')
-	import ChangelogVersion from '@/component/changelog/changelog-version.vue'
+	const ChangelogVersion = () => import('@/component/changelog/changelog-version.vue')
 	import { locale } from '@/locale'
 	import { LeekWars } from '@/model/leekwars'
 	import { SocketMessage } from '@/model/socket'
 	import { Component, Vue } from 'vue-property-decorator'
-	import ChangelogDialog from '../changelog/changelog-dialog.vue'
+	const ChangelogDialog = () => import('../changelog/changelog-dialog.vue')
 	const Didactitiel = () => import(/* webpackChunkName: "[request]" */ `@/component/didactitiel/didactitiel.${locale}.i18n`)
 	const Documentation = () => import(/* webpackChunkName: "[request]" */ `@/component/documentation/documentation.${locale}.i18n`)
 

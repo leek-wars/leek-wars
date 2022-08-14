@@ -175,9 +175,6 @@
 		align-items: flex-end;
 		height: 80px;
 	}
-	#app.app.connected .header {
-		display: none;
-	}
 	.header .fights-button img {
 		height: 20px;
 		width: 20px;
