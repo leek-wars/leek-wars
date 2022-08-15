@@ -163,6 +163,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 		'reload-chat'(state: LeekWarsState, chat: Chat) {
 			if (chat.loading) return
 			// console.log("load chat", chat, chat.id)
+			state.chat[chat.id].opened = true
 			state.chat[chat.id].loading = true
 			LeekWars.get('message/get-messages/' + chat.id + '/' + 30 + '/0').then(data => {
 				store.commit('clear-chat', chat.id)
