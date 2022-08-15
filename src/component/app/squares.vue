@@ -1,12 +1,15 @@
 <template>
 	<div v-show="LeekWars.squares.squares.length" class="squares">
-		<router-link v-for="square in LeekWars.squares.squares" :key="square.id" v-ripple :to="square.link" class="square card" :class="{[square.clazz]: square.clazz}">
+		<router-link v-for="square in LeekWars.squares.squares" :key="square.id" v-ripple :to="square.link" class="square card" :class="{[square.clazz]: square.clazz}" @click.native="LeekWars.closeMenu()">
 			<v-icon v-if="square.icon" :class="{padding: square.padding}" class="image">{{ square.image }}</v-icon>
 			<img v-else :src="square.image" :class="{padding: square.padding}" class="image">
 			<div class="wrapper">
 				<div class="title" v-html="square.title"></div>
 				<div v-emojis class="message" v-html="square.message"></div>
 			</div>
+			<span v-if="square.resultIcon && LeekWars.notifsResults" class="result">
+				<v-icon :class="square.resultIcon">{{ square.resultIcon }}</v-icon>
+			</span>
 		</router-link>
 	</div>
 </template>
@@ -38,7 +41,7 @@
 		img.padding {
 			opacity: 0.7;
 		}
-		.v-icon {
+		i {
 			font-size: 32px;
 			color: #444;
 		}
@@ -71,5 +74,29 @@
 	}
 	.message {
 		font-size: 14px;
+	}
+	.result {
+		position: absolute;
+		background: white;
+		height: 24px;
+		width: 24px;
+		border-radius: 50%;
+		text-align: center;
+		border-bottom: 2px solid #ccc;
+		border-right: 2px solid #ccc;
+		left: 2px;
+		top: 2px;
+		i {
+			font-size: 20px;
+			padding-top: 2px;
+			padding-left: 2px;
+			font-weight: bold;
+		}
+	}
+	.result .mdi-check {
+		color: green;
+	}
+	.result .mdi-close {
+		color: red;
 	}
 </style>

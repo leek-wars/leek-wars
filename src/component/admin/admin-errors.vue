@@ -25,7 +25,10 @@
 										<avatar :farmer="error.farmer" />
 									</router-link>
 									<span class="ip" v-if="error.ip">{{ error.ip }}</span>
-									<a :href="LeekWars.API + 'ai/download/' + error.ai" target="_blank"><v-btn v-if="error.ai" color="primary" small>IA {{ error.ai }}</v-btn></a>
+									<span class="ls" v-if="error.ai_version">LS {{ error.ai_version }}</span>
+									<span class="ls" v-if="error.ai">IA {{ error.ai }}</span>
+									<!-- <a :href="LeekWars.API + 'ai/download/' + error.ai" target="_blank"><v-btn v-if="error.ai" color="primary" small>IA {{ error.ai }}</v-btn></a> -->
+									<a :href="LeekWars.API + 'error/ai-code/' + error.id" target="_blank"><v-btn v-if="error.ai" color="primary" small>IA {{ error.ai }}</v-btn></a>
 									<router-link :to="'/fight/' + error.fight"><v-btn v-if="error.fight" small>Combat {{ error.fight }}</v-btn></router-link>
 									<v-icon color="error" @click="removeError(error.id)">mdi-delete</v-icon>
 								</div>

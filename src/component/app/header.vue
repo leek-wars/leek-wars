@@ -108,7 +108,7 @@
 						</template>
 						<div class="dialog">
 							<div class="dialog-items">
-								<notification v-for="notification in $store.state.notifications" :key="notification.id" :notification="notification" @click.native="readNotification(notification)" />
+								<notification v-for="notification in $store.state.notifications" :key="notification.id" :notification="notification" />
 							</div>
 							<router-link to="/notifications" class="see-all">{{ $t('main.all_notifications') }}</router-link>
 						</div>
@@ -142,9 +142,7 @@
 
 	@Component({ name: 'lw-header', components: { 'conversation': ConversationElement } })
 	export default class Header extends Vue {
-		readNotification(notification: Notification) {
-			LeekWars.post('notification/read', {notification_id: notification.id})
-		}
+
 		readNotifications() {
 			if (this.$store.state.unreadNotifications) {
 				LeekWars.post('notification/read-all')

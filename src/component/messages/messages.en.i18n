@@ -11,5 +11,6 @@
 	"cat_private": "Private Messages",
 	"team": "Team",
 	"enable_notifications": "Enable notifications",
-	"disable_notifications": "Disable notifications"
+	"disable_notifications": "Disable notifications",
+	"admin_warn": "To make a suggestion or report a non-critical bug, please create a topic in the {forum}."
 }

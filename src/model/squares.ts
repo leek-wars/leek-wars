@@ -1,6 +1,5 @@
 import { Notification } from '@/model/notification'
 import { ChatMessage } from './chat'
-import { Conversation } from './conversation'
 import { i18n } from './i18n'
 import { LeekWars } from './leekwars'
 
@@ -13,6 +12,7 @@ class Square {
 	link!: string | null
 	padding!: boolean
 	clazz!: string
+	resultIcon!: string
 }
 
 class Squares {
@@ -33,7 +33,8 @@ class Squares {
 			message: i18n.t('notification.message_' + notification.type, notification.message) as string,
 			link: notification.link,
 			padding: true,
-			clazz: notification.clazz
+			clazz: notification.clazz,
+			resultIcon: notification.result === null ? '' : notification.result === 1 ? 'mdi-check' : notification.result === 0 ? 'mdi-equal' : 'mdi-close'
 		})
 	}
 
@@ -45,7 +46,8 @@ class Squares {
 			message: "► " + message.content,
 			link: "/messages/conversation/" + message.chat,
 			padding: false,
-			clazz: ''
+			clazz: '',
+			resultIcon: ''
 		})
 	}
 }

@@ -4,6 +4,7 @@
 
 <script lang="ts">
 	import { LeekWars } from '@/model/leekwars'
+import { CHIP_BY_NAME } from '@/model/sorted_chips'
 	import { vueMain } from '@/model/vue'
 	import markdown from 'markdown-it'
 	import sanitizeHtml from 'sanitize-html'
@@ -122,7 +123,7 @@
 				})
 				// Puces
 				md.querySelectorAll('.encyclopedia-chip').forEach((item) => {
-					const chip = LeekWars.chipByName[item.getAttribute('chip')!]
+					const chip = CHIP_BY_NAME[item.getAttribute('chip')!]
 					if (chip) {
 						new ItemPreview({ propsData: { item: LeekWars.items[chip.id] }, parent: vueMain }).$mount(item)
 					}

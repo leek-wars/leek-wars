@@ -188,78 +188,80 @@
 
 		mounted() {
 			LeekWars.menuCollapsed = localStorage.getItem('main/menu-collapsed') === 'true'
-			setTimeout(() => {
-				const W = 250
-				let down = false
-				let downX = 0, downY = 0
-				let menu_visible = false
-				let enabled = false
-				let aborted = false
-				const menu_element = document.querySelector('.menu') as HTMLElement
-				const center_element = document.querySelector('.app-center') as HTMLElement
-				const dark_element = document.querySelector('#app .dark') as HTMLElement
-				let d = 0
-				let lastT = 0
-				window.addEventListener('pointerdown', (e) => {
-					downX = e.clientX
-					downY = e.clientY
-					if (LeekWars.menuExpanded || downX < window.innerWidth / 2) {
-						down = true
-						aborted = false
-						menu_visible = LeekWars.menuExpanded
-					}
-				})
-				window.addEventListener('touchmove', (e) => {
-					if (!down || aborted) { return }
-					const x = e.touches[0].clientX
-					const y = e.touches[0].clientY
-					if (!enabled && Math.abs(downY - y) > 5) {
-						aborted = true
-					}
-					if (!enabled && Math.abs(downX - x) > 10 && menu_visible === x < downX) {
-						menu_element.style.transition = 'transform ease 50ms'
-						center_element.style.transition = 'transform ease 50ms'
-						LeekWars.dark = LeekWars.menuExpanded ? 0.6 : 0.001
-						enabled = true
-					}
-					if (Date.now() - lastT < 25) { return }
-					lastT = Date.now()
-					if (enabled && !aborted) {
-						if (menu_visible) {
-							d = W - Math.max(0, Math.min(W, downX - x))
-						} else {
-							d = Math.max(0, Math.min(W, x - downX))
-						}
-						menu_element.style.transform = 'translateX(' + (-W + d) + 'px)'
-						center_element.style.transform = 'translateX(' + d + 'px)'
-						dark_element.style.opacity = '' + (0.6 * (d / W))
-					}
-				}, {passive: true})
-				document.addEventListener('touchend', (e) => {
-					if (!down || !enabled || aborted) { return }
-					const transition = 'transform ease 200ms'
-					menu_element.style.transition = transition
-					menu_element.style.transform = ''
-					center_element.style.transition = transition
-					center_element.style.transform = ''
-					if (menu_visible) {
-						if (d < W / 2) {
-							LeekWars.menuExpanded = false
-							LeekWars.dark = 0
-						}
-					} else {
-						if (d > W / 2) {
-							LeekWars.menuExpanded = true
-							LeekWars.dark = 0.6
-						} else {
-							LeekWars.dark = 0
-						}
-					}
-					down = false
-					enabled = false
+
+			const W = 250
+			let down = false
+			let downX = 0, downY = 0
+			let menu_visible = false
+			let enabled = false
+			let aborted = false
+			const menu_element = document.querySelector('.menu') as HTMLElement
+			const center_element = document.querySelector('.app-center') as HTMLElement
+			const dark_element = document.querySelector('#app .dark') as HTMLElement
+			let d = 0
+			let lastT = 0
+
+			window.addEventListener('pointerdown', (e) => {
+				downX = e.clientX
+				downY = e.clientY
+				if (LeekWars.menuExpanded || downX < window.innerWidth / 2) {
+					down = true
 					aborted = false
-				}, {passive: true})
-			}, 800)
+					menu_visible = LeekWars.menuExpanded
+				}
+			})
+
+			window.addEventListener('touchmove', (e) => {
+				if (!down || aborted) { return }
+				const x = e.touches[0].clientX
+				const y = e.touches[0].clientY
+				if (!enabled && Math.abs(downY - y) > Math.abs(downX - x)) {
+					aborted = true
+				}
+				if (!enabled && Math.abs(downX - x) > 10 && menu_visible === x < downX) {
+					menu_element.style.transition = 'transform ease 50ms'
+					center_element.style.transition = 'transform ease 50ms'
+					LeekWars.dark = LeekWars.menuExpanded ? 0.6 : 0.001
+					enabled = true
+				}
+				if (Date.now() - lastT < 25) { return }
+				lastT = Date.now()
+				if (enabled && !aborted) {
+					if (menu_visible) {
+						d = W - Math.max(0, Math.min(W, downX - x))
+					} else {
+						d = Math.max(0, Math.min(W, x))
+					}
+					menu_element.style.transform = 'translateX(' + (-W + d) + 'px)'
+					center_element.style.transform = 'translateX(' + d + 'px)'
+					dark_element.style.opacity = '' + (0.6 * (d / W))
+				}
+			}, {passive: true})
+
+			document.addEventListener('touchend', (e) => {
+				if (!down || !enabled || aborted) { return }
+				const transition = 'transform ease 200ms'
+				menu_element.style.transition = transition
+				menu_element.style.transform = ''
+				center_element.style.transition = transition
+				center_element.style.transform = ''
+				if (menu_visible) {
+					if (d < W / 2) {
+						LeekWars.menuExpanded = false
+						LeekWars.dark = 0
+					}
+				} else {
+					if (d > W / 2) {
+						LeekWars.menuExpanded = true
+						LeekWars.dark = 0.6
+					} else {
+						LeekWars.dark = 0
+					}
+				}
+				down = false
+				enabled = false
+				aborted = false
+			}, {passive: true})
 		}
 
 		clickItem() {

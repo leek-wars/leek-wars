@@ -22,7 +22,7 @@
 		<panel class="first">
 			<div slot="content" class="wrapper">
 				<center>
-					<img src="/image/signup_illustration.png">
+					<img src="/image/signup/signup_illustration.webp">
 					<br><br>
 					<h2>{{ $t('welcome') }}</h2>
 					<br>

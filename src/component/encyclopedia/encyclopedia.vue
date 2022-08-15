@@ -131,6 +131,7 @@
 	import Breadcrumb from '../forum/breadcrumb.vue'
 	import(/* webpackChunkName: "[request]" */ /* webpackMode: "eager" */ `@/lang/doc.${locale}.lang`)
 	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
+	import { FUNCTIONS } from '@/model/functions'
 
 	@Component({ name: 'encyclopedia', i18n: {}, mixins: [...mixins], components: { Markdown, Breadcrumb, RichTooltipFarmer } })
 	export default class Encyclopedia extends Vue {

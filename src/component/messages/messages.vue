@@ -11,8 +11,8 @@
 				<div v-if="chat" class="tab action content" icon="delete" @click="LeekWars.addChat(chat)">
 					<v-icon>mdi-picture-in-picture-bottom-right</v-icon>
 				</div>
-				<div class="tab action content" icon="delete" @click="quitDialog = true">
-					<v-icon>mdi-delete</v-icon>
+				<div v-if="chat && chat.type === ChatType.PM" class="tab action content" icon="delete" @click="quitDialog = true">
+					<v-icon>mdi-exit-to-app</v-icon>
 					<span>{{ $t('quit') }}</span>
 				</div>
 			</div>
@@ -57,12 +57,18 @@
 					</div>
 				</panel>
 			</div>
-			<div v-show="!LeekWars.mobile || LeekWars.splitBack" class="main-column">
-				<panel>
-					<chat v-if="newConversation" slot="content" :new-farmer="newFarmer" :large="true" :new-conversation="newConversation" />
-					<chat v-else :id="currentID" :large="true" slot="content" />
-				</panel>
-			</div>
+			<panel v-show="!LeekWars.mobile || LeekWars.splitBack" class="main-column">
+				<div slot="content" class="content">
+					<div class="admin-warn" v-if="isAdmin">
+						<v-icon>mdi-alert-outline</v-icon>
+						<i18n path="admin_warn" tag="div">
+							<router-link slot="forum" to="/forum"><u>forum</u></router-link>
+						</i18n>
+					</div>
+					<chat v-if="newConversation" :new-farmer="newFarmer" :large="true" :new-conversation="newConversation" />
+					<chat v-else :id="currentID" :large="true" />
+				</div>
+			</panel>
 			<!-- <div v-show="!LeekWars.mobile" class="right-column">
 				<panel>
 
@@ -176,6 +182,11 @@
 			return this.newFarmer_
 		}
 
+		get isAdmin() {
+			const id = this.newConversation ? this.newFarmer.id : this.getConversationFarmerId()
+			return id === 1 || id === 2 || id === 11
+		}
+
 		get id() {
 			return 'id' in this.$route.params ? parseInt(this.$route.params.id, 10) : null
 		}
@@ -214,7 +225,7 @@
 			if (id === 0) {
 				LeekWars.setTitle(this.$i18n.t('new_message'))
 			} else if (this.currentID in this.$store.state.chat) {
-				LeekWars.setTitle(this.getConversationName())
+				LeekWars.setTitle(this.chat_name)
 			} else {
 				LeekWars.setTitle(this.$i18n.t('title'))
 			}
@@ -225,6 +236,15 @@
 			for (const farmer of this.chat.farmers) {
 				if (!this.$store.state.farmer || farmer.id !== this.$store.state.farmer.id) {
 					return farmer.name
+				}
+			}
+		}
+
+		getConversationFarmerId() {
+			if (!this.chat) { return }
+			for (const farmer of this.chat.farmers) {
+				if (!this.$store.state.farmer || farmer.id !== this.$store.state.farmer.id) {
+					return farmer.id
 				}
 			}
 		}
@@ -286,6 +306,13 @@
 			margin-bottom: 0;
 		}
 	}
+	.main-column > .content {
+		padding: 0;
+		display: flex;
+		flex-direction: column;
+		flex: 1;
+		min-height: 0;
+	}
 	.side-column {
 		flex: 400px 0 0;
 		min-width: 0;
@@ -306,7 +333,8 @@
 		gap: 2px;
 	}
 	.chat {
-		height: 100%;
+		min-height: 0;
+		flex: 1;
 	}
 	.conversations .content {
 		padding: 0;
@@ -377,6 +405,17 @@
 			.unread {
 				display: inline-block;
 			}
+		}
+	}
+	.admin-warn {
+		padding: 15px 20px;
+		background: white;
+		border-bottom: 1px solid #ccc;
+		display: flex;
+		align-items: center;
+		gap: 6px;
+		i {
+			color: rgb(255, 140, 0)
 		}
 	}
 </style>

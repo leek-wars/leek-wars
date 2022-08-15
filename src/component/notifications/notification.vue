@@ -37,6 +37,7 @@
 		click() {
 			LeekWars.post('notification/read', { notification_id: this.notification.id })
 			this.$store.commit('read-notification', this.notification.id)
+			LeekWars.closeMenu()
 		}
 
 		read() {

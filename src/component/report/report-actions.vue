@@ -13,6 +13,7 @@
 <script lang="ts">
 	import { ActionType } from '@/model/action'
 	import { ActionComponents, EffectComponents } from '@/model/action-components'
+import { CHIPS } from '@/model/chips'
 	import { EffectType } from '@/model/effect'
 	import { Report } from '@/model/fight'
 	import { i18n } from '@/model/i18n'
@@ -34,6 +35,7 @@
 		@Prop({required: true}) displayAlliesLogs!: boolean
 		@Prop({required: true}) hasErrWarn!: boolean
 
+		CHIPS = CHIPS
 		ActionType = ActionType
 		EffectType = EffectType
 		TEAM_COLORS = TEAM_COLORS

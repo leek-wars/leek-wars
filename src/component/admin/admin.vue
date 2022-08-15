@@ -124,7 +124,8 @@
 		}
 
 		square() {
-			const data = { id: 51568168, type: 2, parameters: ["192","32139522","Mimi25","-1"], date: 1599731275 }
+			const result = Math.random() < 0.33 ? 0 : (Math.random() < 0.5 ? 1 : -1)
+			const data = { id: 51568168, type: 2, parameters: ["192", "32139522", "Mimi25", '' + result], date: 1599731275 }
 			const notification = NotificationBuilder.build(data)
 			LeekWars.squares.addFromNotification(notification)
 		}
