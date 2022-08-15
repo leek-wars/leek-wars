@@ -33,5 +33,9 @@
 	"you_must_have_2_leeks": "Je moet minimaal 2 prei hebben",
 	"you_must_have_a_team": "Je moet deel uitmaken van een team",
 	"quit": "Ontslag nemen",
-	"queue": "Wachtrij"
+	"queue": "Wachtrij",
+	"category_boss_fight": "Baas",
+	"garden_boss": "Boss moestuin",
+	"select_boss": "Selecteer een baas",
+	"attack": "Aanval"
 }

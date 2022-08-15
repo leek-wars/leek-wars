@@ -97,5 +97,8 @@
 	"happy": "Smilende",
 	"neutral": "Neutral",
 	"xp_blocked_desc": "Hvis muligheden er aktiveret, vil kampe ikke længere give erfaring, og porren vil ikke op i niveau. Talent- og ressourcegevinster bibeholdes.",
-	"start_a_fight": "Start en kamp!"
+	"start_a_fight": "Start en kamp!",
+	"all_my_components": "Mine komponenter",
+	"error_max_component": "{0} kan ikke udstyre en ekstra komponent.",
+	"ai_and_components": "AI og komponenter"
 }

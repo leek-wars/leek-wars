@@ -97,5 +97,8 @@
 	"happy": "Sorridente",
 	"neutral": "Neutro",
 	"xp_blocked_desc": "Se a opção estiver ativada, as lutas não renderão mais experiência e o alho-poró não subirá de nível. Ganhos de talentos e recursos são retidos.",
-	"start_a_fight": "Começar uma luta!"
+	"start_a_fight": "Começar uma luta!",
+	"all_my_components": "Os meus componentes",
+	"error_max_component": "{0} não pode equipar um componente adicional.",
+	"ai_and_components": "IA e componentes"
 }

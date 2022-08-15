@@ -33,5 +33,9 @@
 	"you_must_have_2_leeks": "Anda harus memiliki setidaknya 2 daun bawang",
 	"you_must_have_a_team": "Anda harus menjadi bagian dari tim",
 	"quit": "Berhenti",
-	"queue": "Antre"
+	"queue": "Antre",
+	"category_boss_fight": "Boss",
+	"garden_boss": "Kebun sayur bos",
+	"select_boss": "Pilih bos",
+	"attack": "Menyerang"
 }

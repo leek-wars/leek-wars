@@ -7,12 +7,12 @@
 					<span v-if="LeekWars.LOCAL" class="local-label">local</span>
 					<span v-else-if="LeekWars.DEV" class="dev-label">dev</span>
 					<span v-if="env.BETA" class="beta-label">Bêta</span>
-					<tooltip>
+					<!-- <tooltip>
 						<template v-slot:activator="{ on }">
 							<img v-on="on" class="hat" src="/image/10years_hat.png">
 						</template>
 						{{ $t('main.10years') }}
-					</tooltip>
+					</tooltip> -->
 				</div>
 			</router-link>
 		</div>

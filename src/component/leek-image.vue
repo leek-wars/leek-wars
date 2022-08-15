@@ -92,7 +92,13 @@
 			// setInterval(() => this.randomAngle = Math.random() * Math.PI / 2 - Math.PI / 4, 500)
 		}
 
+		get is_boss() {
+			return this.leek.name === 'nasu_samurai' || this.leek.name === 'fennel_king' || this.leek.name === 'evil_pumpkin'
+		}
 		get leekImage(): string {
+			if (this.is_boss) {
+				return '/image/mob/' + this.leek.name + '.png'
+			}
 			const face = !this.leek.face ? '' : LEEK_FACES[this.leek.face]
 			return LeekWars.SERVER + 'image/leek/svg/leek_' + this.appearance + '_' + (this.leek.back ? 'back' : 'front') + '_' + LeekWars.getLeekSkinName(this.leek.skin) + (this.leek.metal ? '_metal' : '') + face + '.svg'
 		}
@@ -116,12 +122,35 @@
 			}
 			return ''
 		}
-		get hatWidth() { return this.hatTemplate ? this.leekHeight * 0.8 * this.hatTemplate.width : 0 }
-		get hatHeight() { return this.hatSize ? this.hatWidth * (this.hatSize.height / this.hatSize.width) : 0 }
-		get hatCrop() { return this.hatTemplate ? this.hatTemplate.crop : 0 }
+		get hatWidth() {
+			if (this.leek.name === 'nasu_samurai') return this.hatTemplate ? this.leekHeight * 0.65 * this.hatTemplate.width : 0
+			if (this.leek.name === 'fennel_king') return this.hatTemplate ? this.leekHeight * 0.7 * this.hatTemplate.width : 0
+			if (this.leek.name === 'evil_pumpkin') return this.hatTemplate ? this.leekHeight * 0.8 * this.hatTemplate.width : 0
+
+			return this.hatTemplate ? this.leekHeight * 0.8 * this.hatTemplate.width : 0
+		}
+		get hatHeight() {
+			return this.hatSize ? this.hatWidth * (this.hatSize.height / this.hatSize.width) : 0
+		}
+		get hatCrop() {
+			if (this.leek.name === 'nasu_samurai') {
+				return 0
+			}
+			return this.hatTemplate ? this.hatTemplate.crop : 0
+		}
 		get hasHat(): boolean { return this.hat !== null }
-		get leekWidth(): number { return this.leekSize ? this.leekSize.width : 0 }
-		get leekHeight(): number { return this.leekSize ? this.leekSize.height : 0 }
+		get leekWidth(): number {
+			if (this.leek.name === 'nasu_samurai') return 165
+			if (this.leek.name === 'fennel_king') return 180
+			if (this.leek.name === 'evil_pumpkin') return 292
+			return this.leekSize ? this.leekSize.width : 0
+		}
+		get leekHeight(): number {
+			if (this.leek.name === 'nasu_samurai') return 288
+			if (this.leek.name === 'fennel_king') return 237
+			if (this.leek.name === 'evil_pumpkin') return 237
+			return this.leekSize ? this.leekSize.height : 0
+		}
 		get weaponOffset(): number {
 			return this.weaponCX + (this.weaponData && this.weaponData.white ? (
 						this.weaponRight
@@ -144,7 +173,7 @@
 		get height(): number {
 			let height = this.leekHeight + this.offsetTop
 			if (this.hat != null && this.hatTemplate) {
-				height += Math.max(0, this.hatHeight - this.hatHeight * this.hatTemplate.height)
+				height += Math.max(0, this.hatHeight - this.hatHeight * this.hatOffsetY)
 			}
 			if (this.weaponData && this.weaponData.white) {
 				height += this.weaponData.bottom
@@ -160,14 +189,20 @@
 		}
 		get offsetTop() {
 			return this.weaponData && this.weaponData.white ? Math.max(0,
-				this.weaponData.top - this.leekHeight - (this.hat !== null && this.hatTemplate ? this.hatHeight - this.hatHeight * this.hatTemplate.height : 0) + this.weaponData.centerZ +
+				this.weaponData.top - this.leekHeight - (this.hat !== null && this.hatTemplate ? this.hatHeight - this.hatHeight * this.hatOffsetY : 0) + this.weaponData.centerZ +
 				Math.abs(Math.sin(this.weaponRadianAngle)) * (this.weaponData.width + this.weaponData.x)
 			 ) : 0
 		}
 		get leekX() { return Math.max(0, this.hatWidth / 2 - this.leekWidth / 2) }
-		get leekY() { return this.offsetTop + (this.hat !== null && this.hatTemplate ? this.hatHeight - this.hatHeight * this.hatTemplate.height : 0) }
+		get leekY() { return this.offsetTop + (this.hat !== null && this.hatTemplate ? this.hatHeight - this.hatHeight * this.hatOffsetY : 0) }
 		get hatX() { return this.hat !== null ? Math.max(0, this.leekWidth / 2 - this.hatWidth / 2) : 0 }
 		get hatY() { return this.offsetTop }
+		get hatOffsetY() {
+			if (this.leek.name === 'nasu_samurai') {
+				return 0.85
+			}
+			return this.hatTemplate ? this.hatTemplate.height : 0
+		}
 
 		get weapon() {
 			if (typeof this.leek.weapon === 'number') {
@@ -183,7 +218,12 @@
 			}
 			return this.weaponTemplate ? WeaponsData[this.weaponTemplate] : null
 		}
-		get weaponRadianAngle() { return (this.weaponData && this.weaponData.white) ? -Math.PI / 2.7 : Math.PI / 7 + this.randomAngle }
+		get weaponRadianAngle() {
+			if (this.leek.name === 'evil_pumpkin') {
+				return -Math.PI / 2
+			}
+			return (this.weaponData && this.weaponData.white) ? -Math.PI / 2.7 : Math.PI / 7 + this.randomAngle
+		}
 		get weaponAngle() { return this.weaponRadianAngle * (180 / Math.PI) }
 		get weaponImage() {
 			if (this.leek.fish) {
@@ -193,14 +233,24 @@
 		}
 		get weaponWidth() { return this.weaponData ? this.weaponData.width : 0 }
 		get weaponHeight() { return this.weaponData ? this.weaponData.height : 0 }
-		get weaponCX() { return this.weaponData ? this.leekX + this.weaponData.centerX : 0 }
-		get weaponCY() { return this.weaponData ? this.weaponData.centerZ : 0 }
+		get weaponCX() {
+			if (this.leek.name === "evil_pumpkin") {
+				return this.weaponData ? this.leekX + this.weaponData.centerX - 100 : 0
+			}
+			return this.weaponData ? this.leekX + this.weaponData.centerX : 0
+		}
+		get weaponCY() {
+			return this.weaponData ? this.weaponData.centerZ : 0
+		}
 		get weaponX() { return this.weaponData ? this.weaponData.x : 0 }
 		get weaponY() { return this.weaponData ? this.weaponData.z : 0 }
 		get weaponBottom() { return this.weaponData ? this.weaponData.bottom : 0 }
 		get weaponTop() { return this.weaponData ? this.weaponData.top : 0 }
 		get weaponRight() { return this.weaponData && this.weaponData.right ? this.weaponData.right : 0 }
 		get hand1() {
+			if (this.leek.name === "evil_pumpkin") {
+				return null
+			}
 			return this.weaponData ? { x: this.weaponData.hand1x, y: this.weaponData.hand1z } : null
 		}
 		get hand2() {
@@ -211,6 +261,12 @@
 		get leekSize() { return LeekWars.leekSizes[this.appearance] }
 		get hatSize() { return this.hat ? this.HAT_SIZES[this.hat] : null }
 		get handImage() {
+			if (this.leek.name === "nasu_samurai") {
+				return "/image/fight/nasu_hand.png"
+			}
+			if (this.leek.name === "evil_pumpkin") {
+				return "/image/fight/pumpkin_hand.png"
+			}
 			return "/image/fight/leek_hand" + (this.leek.skin === 15 ? "_gold" : "") + ".png"
 		}
 

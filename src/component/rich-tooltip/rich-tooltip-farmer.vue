@@ -59,7 +59,7 @@
 						</td>
 						<td>{{ leek.level }}</td>
 						<td><b>{{ leek.talent }}</b></td>
-						<td v-for="c in LeekWars.characteristics" :key="c" :class="['color-' + c, leek[c] === 0 ? 'zero' : '']" class="c">{{ leek[c] }}</td>
+						<td v-for="c in LeekWars.characteristics" :key="c" :class="['color-' + c, leek['total_' + c] === 0 ? 'zero' : '']" class="c">{{ leek['total_' + c] }}</td>
 					</tr>
 				</table>
 			</template>
@@ -109,7 +109,7 @@
 				LeekWars.get<Farmer>('farmer/rich-tooltip/' + this.id).then(farmer => {
 					this.farmer = farmer
 					for (const c of LeekWars.characteristics) {
-						Vue.set(this.sums, c, Object.values(this.farmer.leeks).reduce((sum: number, leek: any) => sum + leek[c], 0))
+						Vue.set(this.sums, c, Object.values(this.farmer.leeks).reduce((sum: number, leek: any) => sum + leek['total_' + c], 0))
 					}
 					if (this.expand_leeks) {
 						(this.$refs.menu as any).onResize()

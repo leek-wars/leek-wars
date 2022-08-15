@@ -31,5 +31,13 @@
 	"tp_desc": "Maksimal handling under en tur",
 	"wisdom": "Visdom",
 	"wisdom_desc": "Visdom øger helbredelse og livsstjæling",
-	"too_high": "Denne funktion er nyttig fra niveau {0}."
+	"too_high": "Denne funktion er nyttig fra niveau {0}.",
+	"cores": "Hjerter",
+	"cores_desc": "Kerner øger det maksimale antal eksekverbare operationer pr. omdrejning. 1 kerne øger det maksimale antal operationer med 1 million.",
+	"ram": "Hukommelse med tilfældig adgang",
+	"ram_desc": "En enhed RAM-hukommelse giver 1 chip-placering og en million variabler, som kan bruges af AI'en",
+	"operations": "Antal transaktioner",
+	"chips": "Maksimalt antal chips",
+	"variables": "Variabler",
+	"base": "Investeret"
 }

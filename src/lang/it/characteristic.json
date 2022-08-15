@@ -31,5 +31,13 @@
 	"tp_desc": "Numero massimo di azioni durante un turno",
 	"wisdom": "Saggezza",
 	"wisdom_desc": "La saggezza aumenta la guarigione e il rubavita",
-	"too_high": "Questa funzione è utile dal livello {0}."
+	"too_high": "Questa funzione è utile dal livello {0}.",
+	"cores": "Cuori",
+	"cores_desc": "I core aumentano il numero massimo di operazioni eseguibili per giro. 1 core aumenta il numero massimo di operazioni di 1 milione.",
+	"ram": "Memoria ad accesso casuale",
+	"ram_desc": "Un'unità di memoria RAM fornisce una posizione del chip e un milione di variabili che possono essere utilizzate dall'IA",
+	"operations": "Numero di transazioni",
+	"chips": "Numero massimo di chip",
+	"variables": "Variabili",
+	"base": "Investito"
 }

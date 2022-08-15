@@ -467,6 +467,11 @@ class Dome extends ChipShieldAnimation {
 	static textures = [T.shield_aureol, T.chip_dome]
 	constructor(game: Game) { super(game, T.chip_dome, Area.CIRCLE3) }
 }
+export class DivineProtection extends ChipShieldAnimation {
+	static sounds = [S.shield]
+	static textures = [T.shield_aureol, T.chip_dome]
+	constructor(game: Game) { super(game, T.chip_dome, Area.CIRCLE3) }
+}
 
 class Ice extends ChipAnimation {
 	static textures = [T.ice_small]
@@ -1355,6 +1360,21 @@ class Resurrection extends ChipAnimation {
 		this.game.particles.addImage(targetPos.x + 50, targetPos.y, 150, -0.5, 0, 0, 0, T.cloud, 80)
 		this.game.particles.addImage(targetPos.x + 10, targetPos.y, 160, 0.2, 0, 0, 0, T.cloud, 80)
 		this.game.particles.addImage(targetPos.x - 10, targetPos.y, 160, -0.2, 0, 0, 0, T.cloud, 80)
+	}
+}
+
+export class Awakening extends ChipAnimation {
+	static textures = [T.black_cloud, T.ray_red]
+	static sounds = [S.resurrection]
+	public delay = 1
+	constructor(game: Game) { super(game, S.resurrection, 35, DamageType.DEFAULT) }
+	public launch(launchPos: Position, targetPos: Position, targets: FightEntity[], targetCell: Cell) {
+		super.launch(launchPos, targetPos, targets, targetCell)
+		this.game.particles.addImage(targetPos.x, targetPos.y, 70, 0, 0, 0, 0, T.ray_red, 80)
+		this.game.particles.addImage(targetPos.x - 50, targetPos.y, 150, 0.5, 0, 0, 0, T.black_cloud, 80)
+		this.game.particles.addImage(targetPos.x + 50, targetPos.y, 150, -0.5, 0, 0, 0, T.black_cloud, 80)
+		this.game.particles.addImage(targetPos.x + 10, targetPos.y, 160, 0.2, 0, 0, 0, T.black_cloud, 80)
+		this.game.particles.addImage(targetPos.x - 10, targetPos.y, 160, -0.2, 0, 0, 0, T.black_cloud, 80)
 	}
 }
 

@@ -128,6 +128,7 @@
 	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 	import RichTooltipTeam from '@/component/rich-tooltip/rich-tooltip-team.vue'
 	import ReportDialog from '@/component/moderation/report-dialog.vue'
+import { BOSSES } from '@/model/boss'
 
 	@Component({ name: "fight", components: { Player, Comments, RichTooltipFarmer, RichTooltipTeam, ReportDialog }, i18n: {}, mixins: [...mixins] })
 	export default class FightPage extends Vue {
@@ -236,6 +237,8 @@
 			this.fight.title = this.fight.team1_name + ' vs ' + this.fight.team2_name
 			if (this.fight.type === FightType.BATTLE_ROYALE) {
 				this.fight.title = this.$t('battle_royale') as string
+			} else if (this.fight.type === FightType.BOSS) {
+				this.fight.title = this.$t('entity.' + fight.boss_name) as string
 			}
 			LeekWars.setTitle(this.fight.title, LeekWars.formatDate(this.fight.date))
 

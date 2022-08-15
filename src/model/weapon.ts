@@ -112,6 +112,12 @@ const WeaponsData = {
 	35: { width: 240, height: 61, centerX: 32, centerZ: 45, x: -40, z: -15, hand1x: 22, hand1z: 30, hand2x: 36, hand2z: 30, top: -5, bottom: 2, right: 115, white: true },
 	// Épée lourde
 	36: { width: 320, height: 61, centerX: 35, centerZ: 45, x: -50, z: -15, hand1x: 62, hand1z: 30, hand2x: 32, hand2z: 30, top: -5, bottom: 8, right: 124, white: true },
+	// Odachi
+	37: { width: 400, height: 28, centerX: 60, centerZ: 35, x: -50, z: -15, hand1x: 107, hand1z: 13, hand2x: 32, hand2z: 13, top: 33, bottom: 12, right: 140, white: true },
+	// Excalibur
+	38: { width: 261, height: 68, centerX: 60, centerZ: 60, x: -50, z: -15, hand1x: 50, hand1z: 33, hand2x: 18, hand2z: 33, top: -5, bottom: 8, right: 110, white: true },
+	// Faux
+	39: { width: 350, height: 192, centerX: 40, centerZ: 30, x: -50, z: -15, hand1x: 29, hand1z: 19, hand2x: 192, hand2z: 15, top: 0, bottom: 20, right: 200, white: true },
 } as {[key: number]: WeaponData}
 
 const FishData = { width: 150, height: 65, centerX: 25, centerZ: 45, x: -35, z: -15, hand1x: 12, hand1z: 44, hand2x: 53, hand2z: 57, sx: 110, sz: 10, cartX: 60, cartZ: 20, cartAngle: Math.PI / 2, recoilForce: 18, top: 7, bottom: 50, white: false } as WeaponData

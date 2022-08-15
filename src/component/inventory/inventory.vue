@@ -1,173 +1,82 @@
 <template>
-	<div class="page">
-		<div class="page-header page-bar">
-			<h1>{{ $t('main.inventory') }}</h1>
-			<div class="tabs">
-				<a href="https://leek-wars.myspreadshop.fr" target="_blank" rel="noopener">
-					<div class="tab action" icon="cart-outline" link="https://leek-wars.myspreadshop.fr">
-						<v-icon>mdi-cart-outline</v-icon>
-						<span>{{ $t('main.shop') }}</span>
-						<v-icon class="small">mdi-open-in-new</v-icon>
-					</div>
-				</a>
-				<router-link v-if="env.BANK && $store.state.farmer?.bank_enabled" to="/bank">
-					<div class="tab action" icon="account_balance" link="/bank">
-						<v-icon>mdi-bank</v-icon>
-						<span>{{ $t('main.bank') }}</span>
-					</div>
-				</router-link>
-				<router-link to="/market">
-					<div class="tab action" image="icon/market.png" link="/market">
-						<img src="/image/icon/market.png">
-						<span>{{ $t('main.market') }}</span>
-					</div>
-				</router-link>
-				<div class="tab action active" icon="mdi-treasure-chest" link="/inventory">
-					<v-icon>mdi-treasure-chest</v-icon>
-					<span>{{ $t('main.inventory') }}</span>
-				</div>
+	<panel :icon="LeekWars.mobile ? '' : 'mdi-treasure-chest'" class="inventory-panel">
+		<template slot="title">
+			<div><span v-if="!LeekWars.mobile">{{ $t('main.inventory') }}</span> ({{ filtered_inventory.length }}<span v-if="filter !== ItemType.ALL"> / {{ inventory.length }}</span>)</div>
+			<div class="categories">
+
 			</div>
-		</div>
-		<div class="container last">
-			<panel :icon="LeekWars.mobile ? '' : 'mdi-treasure-chest'" class="inventory-panel last">
-				<template slot="title">
-					<div><span v-if="!LeekWars.mobile">{{ $t('main.inventory') }}</span> ({{ filtered_inventory.length }}<span v-if="filter !== Filter.ALL"> / {{ inventory.length }}</span>)</div>
-					<div class="categories">
-						<!-- <tooltip top content-class="top">
-							<template v-slot:activator="{ on }">
-								<div v-ripple v-on="on" class="category" :class="{selected: category === 3}" @click="category = 3">
-									<v-icon>mdi-all-inclusive</v-icon>
-								</div>
-							</template>
-							Tout
-						</tooltip>
-						<tooltip top content-class="top">
-							<template v-slot:activator="{ on }">
-								<div v-ripple v-on="on" class="category" :class="{selected: category === 1}" @click="category = 1">
-									<v-icon>mdi-sword</v-icon>
-								</div>
-							</template>
-							Équipements
-						</tooltip> -->
-						<!-- <tooltip top content-class="top">
-							<template v-slot:activator="{ on }">
-								<div v-ripple v-on="on" class="category" :class="{selected: category === 2}" @click="category = 2">
-									<v-icon>mdi-bottle-tonic-plus-outline</v-icon>
-								</div>
-							</template>
-							Consommables
-						</tooltip> -->
-						<!-- <tooltip top content-class="top">
-							<template v-slot:activator="{ on }">
-								<div v-ripple v-on="on" class="category" :class="{selected: category === 2}" @click="category = 2">
-									<v-icon>mdi-leaf</v-icon>
-								</div>
-							</template>
-							Ressources
-						</tooltip> -->
+		</template>
+		<template slot="actions">
+			<span class="value" title="Valeur totale">{{ total_estimated | number }} <div class="hab"></div></span>
+			<v-menu offset-y>
+				<template v-slot:activator="{ on }">
+					<div class="button flat" v-on="on">
+						<v-icon>mdi-sort</v-icon>
 					</div>
 				</template>
-				<template slot="actions">
-					<span class="value" title="Valeur totale">{{ total_estimated | number }} <div class="hab"></div></span>
-					<v-menu offset-y>
-						<template v-slot:activator="{ on }">
-							<div class="button flat" v-on="on">
-								<v-icon>mdi-sort</v-icon>
-							</div>
-						</template>
-						<v-list dense class="menu-actions">
-							<v-list-item v-ripple @click="sort = Sort.DATE">
-								<span>{{ $t('date') }}</span>
-								<v-icon v-if="sort === Sort.DATE">mdi-check</v-icon>
-							</v-list-item>
-							<v-list-item v-ripple @click="sort = Sort.PRICE">
-								<span>{{ $t('price') }}</span>
-								<v-icon v-if="sort === Sort.PRICE">mdi-check</v-icon>
-							</v-list-item>
-							<v-list-item v-ripple @click="sort = Sort.PRICE_LOT">
-								<span>{{ $t('price_lot') }}</span>
-								<v-icon v-if="sort === Sort.PRICE_LOT">mdi-check</v-icon>
-							</v-list-item>
-							<v-list-item v-ripple @click="sort = Sort.QUANTITY">
-								<span>{{ $t('quantity') }}</span>
-								<v-icon v-if="sort === Sort.QUANTITY">mdi-check</v-icon>
-							</v-list-item>
-							<!-- <v-list-item v-ripple @click="sort = Sort.NAME">
-								<span>{{ $t('name') }}</span>
-								<v-icon v-if="sort === Sort.NAME">mdi-check</v-icon>
-							</v-list-item> -->
-							<v-list-item v-ripple @click="sort = Sort.LEVEL">
-								<span>{{ $t('level') }}</span>
-								<v-icon v-if="sort === Sort.LEVEL">mdi-check</v-icon>
-							</v-list-item>
-							<v-list-item v-ripple @click="sort = Sort.RARITY">
-								<span>{{ $t('rarity') }}</span>
-								<v-icon v-if="sort === Sort.RARITY">mdi-check</v-icon>
-							</v-list-item>
-						</v-list>
-					</v-menu>
-					<v-menu offset-y>
-						<template v-slot:activator="{ on }">
-							<div class="button flat" v-on="on">
-								<v-icon>mdi-filter-outline</v-icon>
-							</div>
-						</template>
-						<v-list dense class="menu-actions">
-							<v-list-item v-ripple @click="filter = Filter.ALL">
-								<v-icon>mdi-all-inclusive</v-icon>
-								<span>{{ $t('all') }}</span>
-								<v-icon v-if="filter === Filter.ALL">mdi-check</v-icon>
-							</v-list-item>
-							<v-list-item v-ripple @click="filter = Filter.WEAPONS">
-								<v-icon>mdi-pistol</v-icon>
-								<span>{{ $t('weapons') }}</span>
-								<v-icon v-if="filter === Filter.WEAPONS">mdi-check</v-icon>
-							</v-list-item>
-							<v-list-item v-ripple @click="filter = Filter.CHIPS">
-								<v-icon>mdi-chip</v-icon>
-								<span>{{ $t('chips') }}</span>
-								<v-icon v-if="filter === Filter.CHIPS">mdi-check</v-icon>
-							</v-list-item>
-							<v-list-item v-ripple @click="filter = Filter.POTIONS">
-								<v-icon>mdi-bottle-tonic-plus-outline</v-icon>
-								<span>{{ $t('potions') }}</span>
-								<v-icon v-if="filter === Filter.POTIONS">mdi-check</v-icon>
-							</v-list-item>
-							<v-list-item v-ripple @click="filter = Filter.HATS">
-								<v-icon>mdi-hat-fedora</v-icon>
-								<span>{{ $t('hats') }}</span>
-								<v-icon v-if="filter === Filter.HATS">mdi-check</v-icon>
-							</v-list-item>
-							<v-list-item v-ripple @click="filter = Filter.POMPS">
-								<v-icon>mdi-auto-fix</v-icon>
-								<span>{{ $t('pomps') }}</span>
-								<v-icon v-if="filter === Filter.POMPS">mdi-check</v-icon>
-							</v-list-item>
-							<v-list-item v-ripple @click="filter = Filter.RESOURCES">
-								<v-icon>mdi-leaf</v-icon>
-								<span>{{ $t('resources') }}</span>
-								<v-icon v-if="filter === Filter.RESOURCES">mdi-check</v-icon>
-							</v-list-item>
-						</v-list>
-					</v-menu>
+				<v-list dense class="menu-actions">
+					<v-list-item v-ripple @click="sort = Sort.DATE">
+						<span>{{ $t('date') }}</span>
+						<v-icon v-if="sort === Sort.DATE">mdi-check</v-icon>
+					</v-list-item>
+					<v-list-item v-ripple @click="sort = Sort.PRICE">
+						<span>{{ $t('price') }}</span>
+						<v-icon v-if="sort === Sort.PRICE">mdi-check</v-icon>
+					</v-list-item>
+					<v-list-item v-ripple @click="sort = Sort.PRICE_LOT">
+						<span>{{ $t('price_lot') }}</span>
+						<v-icon v-if="sort === Sort.PRICE_LOT">mdi-check</v-icon>
+					</v-list-item>
+					<v-list-item v-ripple @click="sort = Sort.QUANTITY">
+						<span>{{ $t('quantity') }}</span>
+						<v-icon v-if="sort === Sort.QUANTITY">mdi-check</v-icon>
+					</v-list-item>
+					<!-- <v-list-item v-ripple @click="sort = Sort.NAME">
+						<span>{{ $t('name') }}</span>
+						<v-icon v-if="sort === Sort.NAME">mdi-check</v-icon>
+					</v-list-item> -->
+					<v-list-item v-ripple @click="sort = Sort.LEVEL">
+						<span>{{ $t('level') }}</span>
+						<v-icon v-if="sort === Sort.LEVEL">mdi-check</v-icon>
+					</v-list-item>
+					<v-list-item v-ripple @click="sort = Sort.RARITY">
+						<span>{{ $t('rarity') }}</span>
+						<v-icon v-if="sort === Sort.RARITY">mdi-check</v-icon>
+					</v-list-item>
+				</v-list>
+			</v-menu>
+			<v-menu offset-y>
+				<template v-slot:activator="{ on }">
+					<div class="button flat" v-on="on">
+						<v-icon>mdi-filter-outline</v-icon>
+					</div>
 				</template>
-				<div slot="content" ref="inventory" class="inventory-content">
-					<div class="inventory">
-						<div v-for="item in sorted_inventory" :key="item.id" class="cell active" :class="'rarity-border-' + LeekWars.items[item.template].rarity">
-							<rich-tooltip-item v-slot="{ on }" :bottom="true" :item="LeekWars.items[item.template]" :quantity="item.quantity" :inventory="true" @retrieve="retrieve">
-								<div v-on="on" class="item"  :quantity="item.quantity | number" :type="LeekWars.items[item.template].type">
-									<img v-if="item.type === ItemType.RESOURCE" class="image" :src="'/image/resource/' + LeekWars.items[item.template].name + '.png'">
-									<img v-else class="image" :class="{small: item.template === 37 || item.template === 45 || item.template === 153 || item.template === 182}" :src="'/image/' + LeekWars.items[item.template].name.replace('_', '/') + '.png'">
-									<img v-if="LeekWars.items[item.template].name.startsWith('box')" class="retrieve notif-trophy" src="/image/icon/black/arrow-down-right-bold.svg">
-									<img v-if="LeekWars.christmasPresents && LeekWars.items[item.template].name.startsWith('present')" class="retrieve notif-trophy" src="/image/icon/black/arrow-down-right-bold.svg">
-									<div class="id">#{{ item.template }}</div>
-								</div>
-							</rich-tooltip-item>
+				<v-list dense class="menu-actions">
+					<v-list-item v-for="t in ItemTypes" :key="t" v-ripple @click="filter = t">
+						<v-icon>{{ ITEM_TYPE_ICONS[t] }}</v-icon>
+						<span>{{ $t('main.' + ITEM_TYPE_NAME[t]) }}</span>
+						<v-icon v-if="t === filter">mdi-check</v-icon>
+					</v-list-item>
+				</v-list>
+			</v-menu>
+		</template>
+		<div slot="content" ref="inventory" class="inventory-content">
+			<div class="inventory">
+				<div v-for="item in sorted_inventory" :key="item.template" class="cell active" :class="'rarity-border-' + LeekWars.items[item.template].rarity">
+					<rich-tooltip-item v-slot="{ on }" :bottom="true" :item="LeekWars.items[item.template]" :quantity="item.quantity" :inventory="true" @retrieve="retrieve">
+						<div v-on="on" class="item"  :quantity="item.quantity | number" :type="LeekWars.items[item.template].type">
+							<img v-if="item.type === ItemType.RESOURCE" class="image" :src="'/image/resource/' + LeekWars.items[item.template].name + '.png'">
+							<scheme-image v-else-if="item.type === ItemType.SCHEME" class="image" :scheme="LeekWars.schemes[LeekWars.items[item.template].params]" />
+							<img v-else-if="item.type === ItemType.COMPONENT" class="image" :src="'/image/component/' + LeekWars.items[item.template].name + '.png'">
+							<img v-else class="image" :class="{small: item.template === 37 || item.template === 45 || item.template === 153 || item.template === 182}" :src="'/image/' + LeekWars.items[item.template].name.replace('_', '/') + '.png'">
+							<img v-if="LeekWars.items[item.template].name.startsWith('box')" class="retrieve notif-trophy" src="/image/icon/black/arrow-down-right-bold.svg">
+							<img v-if="LeekWars.christmasPresents && LeekWars.items[item.template].name.startsWith('present')" class="retrieve notif-trophy" src="/image/icon/black/arrow-down-right-bold.svg">
+							<div class="id">#{{ item.template }}</div>
 						</div>
-						<div v-for="item in placeholder_count" :key="'p' + item" class="placeholder"></div>
-					</div>
+					</rich-tooltip-item>
 				</div>
-			</panel>
+				<div v-for="item in placeholder_count" :key="'p' + item" class="placeholder"></div>
+			</div>
 		</div>
 		<popup v-model="retrieveDialog" width="400">
 			<v-icon slot="title">mdi-gift-outline</v-icon>
@@ -187,37 +96,37 @@
 				Total estimé : <b>{{ retrieveItems.reduce((s, i) => s + i.quantity * LeekWars.items[i.template].price, 0) | number }}</b> <span class="hab"></span>
 			</div>
 		</popup>
-	</div>
+	</panel>
 </template>
 
 <script lang="ts">
 	import { mixins } from '@/model/i18n'
-	import { Item, ItemType } from '@/model/item'
+	import { Item, ItemType, ItemTypes, ITEM_TYPE_ICONS, ITEM_TYPE_NAME } from '@/model/item'
 	import { LeekWars } from '@/model/leekwars'
 	import { store } from '@/model/store'
 	import { Component, Vue, Watch } from 'vue-property-decorator'
 	import RichTooltipItem from '@/component/rich-tooltip/rich-tooltip-item.vue'
+	import SchemeImage from '../market/scheme-image.vue'
 
 	enum Sort {
 		DATE, PRICE, PRICE_LOT, QUANTITY, /*NAME, */ LEVEL, RARITY
 	}
-	enum Filter {
-		ALL, WEAPONS, CHIPS, POTIONS, HATS, POMPS, RESOURCES
-	}
 
-	@Component({ name: 'inventory', i18n: {}, mixins: [...mixins], components: { RichTooltipItem } })
+	@Component({ name: 'inventory', i18n: {}, mixins: [...mixins], components: { RichTooltipItem, SchemeImage } })
 	export default class Inventory extends Vue {
 
 		ItemType = ItemType
+		ItemTypes = ItemTypes
+		ITEM_TYPE_ICONS = ITEM_TYPE_ICONS
+		ITEM_TYPE_NAME = ITEM_TYPE_NAME
 		Sort = Sort
-		Filter = Filter
 		CATEGORY_ITEMS = 1
 		// CATEGORY_POTIONS = 2
 		CATEGORY_RESOURCES = 2
 		category = 3
 		placeholder_count: number = 0
 		sort: Sort = parseInt(localStorage.getItem('inventory/sort') || '0', 10) as Sort
-		filter: Filter = parseInt(localStorage.getItem('inventory/filter') || '0', 10) as Filter
+		filter: ItemType = parseInt(localStorage.getItem('inventory/filter') || '0', 10) as ItemType
 		actions: any
 		retrieveDialog: boolean = false
 		retrieveItems = [] as Item[]
@@ -233,6 +142,8 @@
 				inventory.push(...store.state.farmer.hats.map(hat => {return {type: ItemType.HAT, ...hat}}))
 				inventory.push(...store.state.farmer.pomps.map(pomp => {return {type: ItemType.POMP, ...pomp}}))
 				inventory.push(...store.state.farmer.resources.map(resource => {return {type: ItemType.RESOURCE, ...resource}}))
+				inventory.push(...store.state.farmer.components.map(p => {return {type: ItemType.COMPONENT, ...p}}))
+				inventory.push(...store.state.farmer.schemes.map(p => {return {type: ItemType.SCHEME, ...p}}))
 			}
 			return inventory
 		}
@@ -247,20 +158,16 @@
 		}
 
 		get filtered_inventory() {
-			if (this.filter === Filter.ALL) return this.inventory
-			return this.inventory.filter((item: any) => {
-				if (this.filter === Filter.WEAPONS && item.type === ItemType.WEAPON) return true
-				if (this.filter === Filter.CHIPS && item.type === ItemType.CHIP) return true
-				if (this.filter === Filter.POTIONS && item.type === ItemType.POTION) return true
-				if (this.filter === Filter.HATS && item.type === ItemType.HAT) return true
-				if (this.filter === Filter.POMPS && item.type === ItemType.POMP) return true
-				if (this.filter === Filter.RESOURCES && item.type === ItemType.RESOURCE) return true
-			})
+			if (this.filter === ItemType.ALL) return this.inventory
+			return this.inventory.filter(item => item.type == this.filter)
 		}
 
 		get sorted_inventory() {
 			return [...this.filtered_inventory].sort((a: Item, b: Item) => {
-				if (this.sort === Sort.DATE) return b.time - a.time
+				if (this.sort === Sort.DATE) {
+					if (b.time === a.time) return a.id - b.id
+					return b.time - a.time
+				}
 				if (this.sort === Sort.PRICE) return LeekWars.items[b.template].price! - LeekWars.items[a.template].price!
 				if (this.sort === Sort.PRICE_LOT) return LeekWars.items[b.template].price! * b.quantity - LeekWars.items[a.template].price! * a.quantity
 				if (this.sort === Sort.QUANTITY) return b.quantity - a.quantity
@@ -271,9 +178,9 @@
 		}
 
 		get total_estimated() {
-			// for (const i of this.filtered_inventory) {
-			// 	if (!LeekWars.items[i.template]) { console.log("Issue with item", i) }
-			// }
+			for (const i of this.filtered_inventory) {
+				if (!LeekWars.items[i.template]) { console.log("Issue with item", i) }
+			}
 			return Math.floor(this.filtered_inventory.reduce((s, i) => s + LeekWars.items[i.template].price! * i.quantity, 0))
 		}
 
@@ -314,10 +221,6 @@
 		beforeDestroy() {
 			this.$root.$off('resize', this.resize)
 		}
-		destroyed() {
-			LeekWars.footer = true
-			LeekWars.box = false
-		}
 
 		@Watch('sort')
 		updateSort() {
@@ -342,12 +245,16 @@
 .panel ::v-deep h2 > div {
 	width: 145px;
 }
+.inventory-panel {
+	flex: 1;
+	min-height: 0;
+}
 .container {
 	flex: 1;
 	min-height: 0;
 }
 .inventory-panel {
-	height: 100%;
+	// height: 100%;
 }
 #app.app .container {
 	margin-bottom: 0;
@@ -355,7 +262,7 @@
 .inventory-content {
 	overflow-y: scroll;
 	overflow-x: hidden;
-	flex: 1;
+	// flex: 1;
 }
 .inventory {
 	display: grid;
@@ -415,6 +322,20 @@
 		height: 100%;
 		object-fit: contain;
 		vertical-align: bottom;
+		// img {
+		// 	position: absolute;
+		// 	width: 100%;
+		// 	height: 100%;
+		// 	object-fit: contain;
+		// 	&.item {
+		// 		width: 70%;
+		// 		height: 70%;
+		// 		left: 15%;
+		// 		top: 10%;
+		// 		filter: grayscale(0.2);
+		// 		transform: scaleY(0.7) rotate(45deg) ;
+		// 	}
+		// }
 	}
 	&[type="1"] {
 		padding: 6%;

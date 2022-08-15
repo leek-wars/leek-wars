@@ -143,5 +143,7 @@
 	"state_2": "Uhelbredelig",
 	"state_3": "Uovervindelig",
 	"state_4": "Pacifist",
-	"state_6": "Tæt"
+	"state_6": "Tæt",
+	"allies": "Alle de allierede",
+	"enemies": "Alle fjender"
 }

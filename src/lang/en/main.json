@@ -191,7 +191,6 @@
 	"retrieve": "Retrieve",
 	"estimated_value": "Estimated value",
 	"lot_value": "Lot value",
-	"resource_not_used": "All the resources are unusable at the moment. Maybe they will find a use in the future?",
 	"search_bar": "Search for a concept, a function or a guide...",
 	"more_results": "See more results",
 	"hat": "Hat",
@@ -254,5 +253,14 @@
 	"play": "Play",
 	"pass": "Skip",
 	"hats": "Hats",
-	"10years": "10 years of Leek Wars!"
+	"10years": "10 years of Leek Wars!",
+	"all": "All",
+	"components": "Components",
+	"fight-packs": "Combat packs",
+	"pomps": "Appearances",
+	"potions": "Potions",
+	"workshop": "Workshop",
+	"scheme": "Diagram",
+	"schemes": "Schematics",
+	"scheme_x": "Diagram: {0}"
 }

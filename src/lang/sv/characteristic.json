@@ -31,5 +31,13 @@
 	"tp_desc": "Maximalt antal åtgärder under en sväng",
 	"wisdom": "Visdom",
 	"wisdom_desc": "Visdom ökar läkning och lifesteal",
-	"too_high": "Den här funktionen är användbar från nivå {0}."
+	"too_high": "Den här funktionen är användbar från nivå {0}.",
+	"cores": "Hjärtan",
+	"cores_desc": "Kärnor ökar det maximala antalet exekverbara operationer per varv. 1 kärna ökar det maximala antalet operationer med 1 miljon.",
+	"ram": "Random Access-minne",
+	"ram_desc": "En enhet RAM-minne ger 1 chip-plats och en miljon variabler som kan användas av AI",
+	"operations": "Antal transaktioner",
+	"chips": "Maximalt antal chips",
+	"variables": "Variabler",
+	"base": "Investerad"
 }

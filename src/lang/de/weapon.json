@@ -32,5 +32,8 @@
 	"rhino": "Nashorn",
 	"rifle": "Pistole",
 	"sword": "Schwert",
-	"taser": "Taser"
+	"taser": "Taser",
+	"odachi": "Odachi",
+	"excalibur": "Excalibur",
+	"scythe": "Falsche"
 }

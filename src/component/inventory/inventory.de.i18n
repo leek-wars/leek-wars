@@ -5,12 +5,5 @@
 	"name": "Name",
 	"level": "Eben",
 	"date": "Datum",
-	"all": "Alle",
-	"weapons": "Waffen",
-	"chips": "Flöhe",
-	"potions": "Tränke",
-	"hats": "Hüte",
-	"pomps": "Gerät",
-	"resources": "Ressourcen",
 	"rarity": "Knappheit"
 }

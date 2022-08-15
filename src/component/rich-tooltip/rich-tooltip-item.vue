@@ -1,5 +1,5 @@
 <template>
-	<v-menu v-model="value" :close-on-content-click="false" :min-width="280" offset-overflow :nudge-top="0" :open-delay="_open_delay" :close-delay="_close_delay" :top="!bottom" :bottom="bottom" transition="none" :open-on-hover="!locked" offset-y :nudge-right="nodge ? 20 : 0" @input="$emit('input', $event)">
+	<v-menu v-model="value" :close-on-content-click="false" :min-width="280" offset-overflow :nudge-top="0" :open-delay="_open_delay" :close-delay="_close_delay" :top="!bottom" :bottom="bottom" transition="none" :open-on-hover="!locked" :disabled="disabled" offset-y :nudge-right="nodge ? 20 : 0" @input="$emit('input', $event)">
 		<template v-slot:activator="{ on }">
 			<slot :on="on"></slot>
 		</template>
@@ -24,15 +24,17 @@
 		@Prop() instant!: boolean
 		@Prop() nodge!: boolean
 		@Prop() inventory!: boolean
+		@Prop() openDelay!: number
 		locked: boolean = false
 		mouse: boolean = false
 		value: boolean = false
+		disabled: boolean = false
 
 		get _open_delay() {
-			return this.instant || LeekWars.mobile ? 0 : 500
+			return this.instant || LeekWars.mobile ? 0 : (this.openDelay || 500)
 		}
 		get _close_delay() {
-			return this.instant ? 0 : 0
+			return 0
 		}
 
 		setParent(event: boolean) {

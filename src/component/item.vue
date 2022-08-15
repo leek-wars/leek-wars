@@ -1,5 +1,5 @@
 <template lang="html">
-	<rich-tooltip-item v-slot="{ on }" :bottom="true" :instant="true" :item="template">
+	<rich-tooltip-item v-slot="{ on }" :bottom="true" :instant="true" :item="item" :inventory="true">
 		<div class="item" v-on="on">
 			<img :src="url" :class="{weapon: is_weapon}">
 		</div>
@@ -7,26 +7,23 @@
 </template>
 
 <script lang="ts">
-	import { ItemType } from '@/model/item'
-	import { LeekWars } from '@/model/leekwars'
+	import { ItemTemplate, ItemType, ITEM_CATEGORY_NAME } from '@/model/item'
 	import { Component, Prop, Vue } from 'vue-property-decorator'
 	import RichTooltipItem from '@/component/rich-tooltip/rich-tooltip-item.vue'
 
 	@Component({ name: "item", components: { RichTooltipItem } })
 	export default class ItemView extends Vue {
-		@Prop() item!: any
+		@Prop() item!: ItemTemplate
 
-		get template() {
-			return LeekWars.items[this.item.template]
+		get image() {
+			return this.item.type === ItemType.COMPONENT ? this.item.name : this.item.name.substring(this.item.name.indexOf('_') + 1)
 		}
+
 		get url() {
-			return "/image/" + this.template.name.replace("_", "/") + ".png"
+			return "/image/" + ITEM_CATEGORY_NAME[this.item.type] + "/" + this.image + ".png"
 		}
 		get is_weapon() {
-			return this.template.type === ItemType.WEAPON
-		}
-		get is_chip() {
-			return this.template.type === ItemType.CHIP
+			return this.item.type === ItemType.WEAPON
 		}
 	}
 </script>

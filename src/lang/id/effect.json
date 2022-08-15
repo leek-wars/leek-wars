@@ -143,5 +143,7 @@
 	"state_2": "Tidak dapat disembuhkan",
 	"state_3": "Tak terkalahkan",
 	"state_4": "Pasifis",
-	"state_6": "Padat"
+	"state_6": "Padat",
+	"allies": "Semua sekutu",
+	"enemies": "Semua musuh"
 }

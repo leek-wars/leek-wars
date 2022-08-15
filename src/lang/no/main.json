@@ -193,7 +193,6 @@
 	"retrieve": "Hente",
 	"estimated_value": "Antatt verdi",
 	"lot_value": "Premieverdi",
-	"resource_not_used": "Ikke alle ressurser er brukbare på dette tidspunktet. Kanskje de finner bruk i fremtiden?",
 	"search_bar": "Søk etter et konsept, en funksjon eller en guide...",
 	"more_results": "Flere resultater",
 	"hat": "Hatt",
@@ -254,5 +253,14 @@
 	"dida_11": "Ikke nøl med å be om hjelp i {chat} eller {forum}, vi hjelper deg gjerne.",
 	"dida_12": "Lykke til <b>{0}</b>!",
 	"hats": "Hatter",
-	"10years": "10 år med Purrekrigen!"
+	"10years": "10 år med Purrekrigen!",
+	"all": "Alle",
+	"components": "Komponenter",
+	"fight-packs": "Stridspakker",
+	"pomps": "Opptredener",
+	"potions": "Drikker",
+	"workshop": "Verksted",
+	"scheme": "Diagram",
+	"schemes": "Skjemaer",
+	"scheme_x": "Diagram: {0}"
 }

@@ -5,12 +5,5 @@
 	"name": "Apellido",
 	"level": "Nivel",
 	"date": "Fecha",
-	"all": "Todo",
-	"weapons": "Armas",
-	"chips": "Chips",
-	"potions": "Pociones",
-	"hats": "Sombreros",
-	"pomps": "Aparato",
-	"resources": "Recursos",
 	"rarity": "Escasez"
 }

@@ -1,9 +1,11 @@
 {
-	"added_life": "Vie ajoutée",
+	"added_life": "Vie investie",
 	"agility": "Agilité",
 	"agility_desc": "L'agilité augmente les chances de coup critique et les renvois de dégâts.",
 	"base_life": "Vie de base",
 	"boost": "Boosts",
+	"cores": "Cœurs",
+	"cores_desc": "Les cœurs augmentent le nombre maximal d'opérations exécutables par tour. 1 cœur augmente de 1 million la limite d'opérations.",
 	"characteristics": "Caractéristiques",
 	"critical": "Coups critiques",
 	"damage": "Dégâts",
@@ -19,6 +21,8 @@
 	"magic_desc": "La magie augmente les entraves et les dégâts des poisons",
 	"mp": "Points de mouvement",
 	"mp_desc": "Cases pouvant être parcourues pendant un tour",
+	"ram": "Mémoire vive",
+	"ram_desc": "Une unité de mémoire RAM donne 1 emplacement de puce et un million de variables utilisables par l'IA",
 	"resistance": "Résistance",
 	"resistance_desc": "La résistance augmente les boucliers",
 	"science": "Science",
@@ -31,5 +35,9 @@
 	"tp_desc": "Actions maximum pendant un tour",
 	"wisdom": "Sagesse",
 	"wisdom_desc": "La sagesse accroît les soins et le vol de vie",
-	"too_high": "Cette caractéristique est utile à partir du niveau {0}."
+	"too_high": "Cette caractéristique est utile à partir du niveau {0}.",
+	"operations": "Nombre d'opérations",
+	"chips": "Nombre maximal de puces",
+	"variables": "Variables",
+	"base": "Investi"
 }

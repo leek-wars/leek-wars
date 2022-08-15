@@ -1,0 +1,9 @@
+{
+	"price": "Preis",
+	"price_lot": "Preis pro Posten",
+	"quantity": "Menge",
+	"name": "Name",
+	"level": "Ebene",
+	"date": "Datum",
+	"rarity": "Seltenheit"
+}

@@ -193,7 +193,6 @@
 	"retrieve": "Uittreden",
 	"estimated_value": "Geschatte waarde",
 	"lot_value": "Prijs waarde",
-	"resource_not_used": "Niet alle bronnen zijn op dit moment bruikbaar. Misschien vinden ze in de toekomst een toepassing?",
 	"search_bar": "Zoek naar een concept, een functie of een handleiding...",
 	"more_results": "Meer resultaten",
 	"hat": "Hoed",
@@ -254,5 +253,14 @@
 	"dida_11": "Aarzel niet om hulp te vragen in {chat} of {forum}, we helpen je graag.",
 	"dida_12": "Veel geluk <b>{0}</b>!",
 	"hats": "Hoeden",
-	"10years": "10 jaar Leek Wars!"
+	"10years": "10 jaar Leek Wars!",
+	"all": "Alle",
+	"components": "Onderdelen",
+	"fight-packs": "Gevechtspakketten",
+	"pomps": "Verschijningen",
+	"potions": "Drankjes",
+	"workshop": "Workshop",
+	"scheme": "Diagram",
+	"schemes": "Schema's",
+	"scheme_x": "Diagram: {0}"
 }

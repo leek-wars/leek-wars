@@ -74,7 +74,7 @@
 					<div v-if="LeekWars.message" v-html="$i18n.t(LeekWars.message.message, LeekWars.message.arguments)"></div>
 				</popup>
 
-				<popup v-model="annonce" :width="800">
+				<!-- <popup v-model="annonce" :width="800">
 					<template slot="title"><v-icon>mdi-bullhorn-outline</v-icon> Annonce !</template>
 					<div class="annonce">
 						<h2>Concours pour le lancement des Boss</h2>
@@ -95,7 +95,7 @@
 							Bonne chance !
 						</div>
 					</div>
-				</popup>
+				</popup> -->
 
 				<!-- <popup v-model="annonce" :width="800">
 					<template slot="title"><v-icon>mdi-bullhorn-outline</v-icon> Annonce !</template>
@@ -258,10 +258,10 @@
 				this.docEverywhereModel = false
 			})
 
-			if (this.$store.state.connected && !localStorage.getItem('annonce/boss-poll')) {
-				this.annonce = true
-				localStorage.setItem('annonce/boss-poll', 'true')
-			}
+			// if (this.$store.state.connected && !localStorage.getItem('annonce/boss-poll')) {
+			// 	this.annonce = true
+			// 	localStorage.setItem('annonce/boss-poll', 'true')
+			// }
 		}
 		changelogShow() {
 			LeekWars.get('changelog/get-last/' + this.$i18n.locale).then(data => {

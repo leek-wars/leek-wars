@@ -19,7 +19,7 @@
 					<span class="title" :class="{bold: (l + 1) % 10 === 0}">{{ l + 1 }}</span>
 					<template v-for="item in items">
 						<div v-if="item.trophy && (!(item.trophy in trophies) || !trophies[item.trophy].unlocked)" :key="item.id" class="locked">?</div>
-						<item v-else :key="item.id" :item="{template: item.id}" />
+						<item v-else :key="item.id" :item="item" />
 					</template>
 				</span>
 			</div>
@@ -81,7 +81,7 @@
 
 		get items() {
 			return Object.values(LeekWars.items)
-				.filter(i => i.type === ItemType.WEAPON || i.type === ItemType.CHIP)
+				.filter(i => i.id < 408 && !i.name.startsWith('recovery_') && (i.type === ItemType.WEAPON || i.type === ItemType.CHIP /* || i.type === ItemType.COMPONENT */))
 				.sort((a, b) => a.level - b.level)
 		}
 	}

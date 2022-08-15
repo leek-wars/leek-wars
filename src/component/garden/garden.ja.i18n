@@ -33,5 +33,9 @@
 	"you_must_have_2_leeks": "ニラは最低でも2本必要",
 	"you_must_have_a_team": "あなたはチームの一員でなければなりません",
 	"quit": "やめる",
-	"queue": "列"
+	"queue": "列",
+	"category_boss_fight": "ボス",
+	"garden_boss": "ボス菜園",
+	"select_boss": "ボスを選ぶ",
+	"attack": "攻撃"
 }

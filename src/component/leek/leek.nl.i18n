@@ -97,5 +97,8 @@
 	"happy": "Glimlachend",
 	"neutral": "Neutrale",
 	"xp_blocked_desc": "Als de optie is geactiveerd, leveren gevechten geen ervaring meer op en stijgt de prei niet. Talent- en resourcewinsten blijven behouden.",
-	"start_a_fight": "Begin een gevecht!"
+	"start_a_fight": "Begin een gevecht!",
+	"all_my_components": "Mijn onderdelen",
+	"error_max_component": "{0} kan geen extra component uitrusten.",
+	"ai_and_components": "AI en componenten"
 }

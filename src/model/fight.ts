@@ -9,6 +9,7 @@ enum FightType {
 	FARMER = 1,
 	TEAM = 2,
 	BATTLE_ROYALE = 3,
+	BOSS = 4,
 }
 
 enum FightContext {
@@ -30,6 +31,7 @@ class ReportLeek {
 	aiTime!: number
 	weapon!: any
 	resources!: {[key: number]: number}
+	mob!: boolean
 }
 
 class ReportFarmer {
@@ -82,13 +84,17 @@ class Fight {
 	public winner!: number
 	public queue!: number
 	public trophies!: any[]
+	public boss_name?: string
 }
 
 class FightMap {
+	public id!: number
 	public width!: number
 	public height!: number
 	public obstacles!: {[key: number]: number[]}
 	public type!: number
+	public pattern!: number[]
+	public players!: any
 }
 
 class FightLeek {
@@ -107,6 +113,7 @@ class FightLeek {
 	public mp!: number
 	public pm!: number
 	public name!: string
+	public translatedName!: string
 	public owner!: number
 	public critical!: boolean
 	public resistance!: number
@@ -121,6 +128,7 @@ class FightLeek {
 	public type!: number
 	public weapons!: number[]
 	public wisdom!: number
+	public orientation!: number
 }
 
 class FightData {

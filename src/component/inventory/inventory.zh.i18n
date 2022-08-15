@@ -5,12 +5,5 @@
 	"name": "姓名",
 	"level": "等级",
 	"date": "日期",
-	"all": "全部",
-	"weapons": "武器",
-	"chips": "跳蚤",
-	"potions": "药水",
-	"hats": "帽子",
-	"pomps": "仪器",
-	"resources": "资源",
 	"rarity": "缺乏"
 }

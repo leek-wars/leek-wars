@@ -97,5 +97,8 @@
 	"happy": "Sonriente",
 	"neutral": "Neutral",
 	"xp_blocked_desc": "Si la opción está activada, las peleas ya no darán experiencia y el puerro no subirá de nivel. Se retienen las ganancias de talento y recursos.",
-	"start_a_fight": "¡Empieza una pelea!"
+	"start_a_fight": "¡Empieza una pelea!",
+	"all_my_components": "Mis componentes",
+	"error_max_component": "{0} no puede equipar un componente adicional.",
+	"ai_and_components": "IA y componentes"
 }

@@ -97,5 +97,8 @@
 	"happy": "Uśmiechnięty",
 	"neutral": "Neutralny",
 	"xp_blocked_desc": "Jeśli opcja jest aktywna, walki nie będą już dawały doświadczenia, a por nie będzie awansował. Zyski z talentów i zasobów zostają zachowane.",
-	"start_a_fight": "Rozpocząć walkę!"
+	"start_a_fight": "Rozpocząć walkę!",
+	"all_my_components": "Moje komponenty",
+	"error_max_component": "{0} nie może wyposażyć dodatkowego komponentu.",
+	"ai_and_components": "Sztuczna inteligencja i komponenty"
 }

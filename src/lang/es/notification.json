@@ -92,5 +92,7 @@
 	"title_32": "{0} te mencionó en #{1}",
 	"message_32": "Ver el chat",
 	"message_34": "Ver su inventario",
-	"title_34": "{0} te dio el objeto {1}"
+	"title_34": "{0} te dio el objeto {1}",
+	"title_35": "{0} ha lanzado una batalla contra un jefe",
+	"message_35": "Ver la lucha"
 }

@@ -12,6 +12,7 @@ import { Hat } from './hat'
 import { Leek } from './leek'
 import { displayWarningMessage, vueMain } from './vue'
 import { Weapon } from './weapon'
+import { SchemeTemplate } from './scheme'
 
 class LeekWarsState {
 	public token: string | null = null
@@ -45,6 +46,38 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 		moderator: (state: LeekWarsState) => state.farmer && state.farmer.moderator,
 		admin: (state: LeekWarsState) => state.farmer && state.farmer.admin,
 		leek_count: (state: LeekWarsState) => state.farmer ? Object.values(state.farmer.leeks).length : 0,
+		scheme_possible: (state: LeekWarsState) => (scheme: SchemeTemplate) => {
+			return scheme.items.every(item => {
+				if (item === null) return true
+				if (state.farmer) {
+					if (item[0] === 148) {
+						return state.farmer.habs >= item[1]
+					} else {
+						for (const resource of state.farmer.resources) {
+							if (resource.template === item[0]) {
+								return resource.quantity >= item[1]
+							}
+						}
+						for (const resource of state.farmer.components) {
+							if (resource.template === item[0]) {
+								return resource.quantity >= item[1]
+							}
+						}
+						for (const resource of state.farmer.potions) {
+							if (resource.template === item[0]) {
+								return resource.quantity >= item[1]
+							}
+						}
+						for (const resource of state.farmer.chips) {
+							if (resource.template === item[0]) {
+								return resource.quantity >= item[1]
+							}
+						}
+					}
+				}
+				return false
+			})
+		}
 	},
 	mutations: {
 		"connected"(state: LeekWarsState, token: string) {
@@ -101,6 +134,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			localStorage.removeItem('editor/tabs')
 			localStorage.removeItem('garden/category') // On revient à la catégorie potager par défaut
 			LeekWars.battleRoyale.leave()
+			LeekWars.bossSquads.leaveSquad()
 			LeekWars.socket.disconnect()
 			console.clear()
 			displayWarningMessage()
@@ -561,7 +595,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			}
 		},
 
-		'add-inventory'(state: LeekWarsState, data: { type: ItemType, id: number, quantity: number, template: number }) {
+		'add-inventory'(state: LeekWarsState, data: { type: ItemType, id: number, quantity: number, template: number, time: number }) {
 			if (!state.farmer) { return }
 			// console.log("add-inventory", data)
 			const quantity = data.quantity || 1
@@ -609,15 +643,33 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 				} else {
 					state.farmer.pomps.push(data)
 				}
+			} else if (data.type === ItemType.COMPONENT) {
+				const component = LeekWars.selectWhere(state.farmer.components, 'id', data.id)
+				if (component) {
+					component.quantity += quantity
+					component.time = data.time
+				} else {
+					state.farmer.components.push(data)
+				}
+			} else if (data.type === ItemType.SCHEME) {
+				const scheme = LeekWars.selectWhere(state.farmer.schemes, 'id', data.id)
+				if (scheme) {
+					scheme.quantity += quantity
+					scheme.time = data.time
+				} else {
+					state.farmer.schemes.push(data)
+				}
 			} else if (data.type === ItemType.RESOURCE) {
 				const resource = LeekWars.selectWhere(state.farmer.resources, 'id', data.id)
 				if (resource) { // Même ID d'item
 					resource.quantity += quantity
+					resource.time = data.time
 				} else {
 					// Même template : on stack
 					for (const resource of state.farmer.resources) {
 						if (resource.template === data.template) {
 							resource.quantity += quantity
+							resource.time = data.time
 							return
 						}
 					}
@@ -629,7 +681,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 
 		'remove-inventory'(state: LeekWarsState, data) {
 			if (!state.farmer) { return }
-			// console.log(data)
+			// console.log("remove-inventory", data)
 			const quantity = data.quantity || 1
 			let list = null
 			if (data.type === ItemType.WEAPON) {
@@ -640,6 +692,8 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 				list = state.farmer.potions
 			} else if (data.type === ItemType.RESOURCE) {
 				list = state.farmer.resources
+			} else if (data.type === ItemType.COMPONENT) {
+				list = state.farmer.components
 			}
 			const item = LeekWars.selectWhere(list, 'template', data.item_template)
 			if (item !== null) {
@@ -702,6 +756,17 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 					return
 				}
 			}
+		},
+
+		'add-component'(state: LeekWarsState, component) {
+			if (!state.farmer) { return }
+			for (const w of state.farmer.components) {
+				if (w.template === component.template) {
+					w.quantity++
+					return
+				}
+			}
+			state.farmer.components.push({id: component.id, quantity: 1, template: component.template})
 		},
 
 		'last-connection'(state: LeekWarsState, time: number) {

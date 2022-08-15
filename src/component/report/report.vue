@@ -398,8 +398,9 @@
 
 				for (const leek of this.fight.data.leeks) {
 					this.leeks[leek.id] = leek as any
+					leek.translatedName = leek.name
 					if (leek.type !== 0) {
-						leek.name = this.$i18n.t('entity.' + leek.name) as string
+						leek.translatedName = this.$i18n.t('entity.' + leek.name) as string
 					}
 					leek.farmer = this.farmers[leek.farmer]
 				}

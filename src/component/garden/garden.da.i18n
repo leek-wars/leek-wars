@@ -33,5 +33,9 @@
 	"you_must_have_2_leeks": "Du skal have mindst 2 porrer",
 	"you_must_have_a_team": "Du skal være en del af et team",
 	"quit": "Afslut",
-	"queue": "Kø"
+	"queue": "Kø",
+	"category_boss_fight": "Chef",
+	"garden_boss": "Chefens køkkenhave",
+	"select_boss": "Vælg en chef",
+	"attack": "Angreb"
 }

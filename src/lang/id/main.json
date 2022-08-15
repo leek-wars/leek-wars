@@ -193,7 +193,6 @@
 	"retrieve": "Mengambil",
 	"estimated_value": "Nilai perkiraan",
 	"lot_value": "Nilai hadiah",
-	"resource_not_used": "Tidak semua sumber daya dapat digunakan saat ini. Mungkinkah mereka akan menemukan kegunaannya di masa depan?",
 	"search_bar": "Cari konsep, fungsi atau panduan...",
 	"more_results": "Hasil lebih",
 	"hat": "Topi",
@@ -254,5 +253,14 @@
 	"dida_11": "Jangan ragu untuk meminta bantuan di {chat} atau {forum}, kami akan dengan senang hati membantu Anda.",
 	"dida_12": "Semoga berhasil <b>{0}</b>!",
 	"hats": "Topi",
-	"10years": "10 tahun Perang Daun Bawang!"
+	"10years": "10 tahun Perang Daun Bawang!",
+	"all": "Semua",
+	"components": "Komponen",
+	"fight-packs": "Paket tempur",
+	"pomps": "Penampilan",
+	"potions": "Ramuan",
+	"workshop": "Bengkel",
+	"scheme": "Diagram",
+	"schemes": "Skema",
+	"scheme_x": "Diagram: {0}"
 }

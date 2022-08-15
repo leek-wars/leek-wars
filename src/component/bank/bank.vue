@@ -26,6 +26,12 @@
 						<span>{{ $t('main.inventory') }}</span>
 					</div>
 				</router-link>
+				<!-- <router-link to="/workshop">
+					<div class="tab action" icon="mdi-hammer-wrench" link="/workshop">
+						<v-icon>mdi-hammer-wrench</v-icon>
+						<span>{{ $t('main.workshop') }}</span>
+					</div>
+				</router-link> -->
 			</div>
 		</div>
 		<panel class="first">
@@ -60,7 +66,7 @@
 			<template v-else>
 				<panel v-for="(item, i) in items" :key="i" class="item-sample">
 					<router-link slot="content"  :to="'/market/' + item.name.replace(/[a-z-]+_/, '')" v-ripple>
-						<item :item="{template: item.id}" />
+						<item :item="item" />
 						<div class="info">
 							<div class="name">{{ $t(item.name.replace('_', '.')) }}</div>
 							<div class="price">

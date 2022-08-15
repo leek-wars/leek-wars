@@ -143,5 +143,7 @@
 	"state_2": "Uhelbredelig",
 	"state_3": "Uovervinnelig",
 	"state_4": "Pasifist",
-	"state_6": "Tett"
+	"state_6": "Tett",
+	"allies": "Alle allierte",
+	"enemies": "Alle fiender"
 }

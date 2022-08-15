@@ -5,12 +5,5 @@
 	"name": "Naam",
 	"level": "Niveau",
 	"date": "Datum",
-	"all": "Alle",
-	"weapons": "Wapens",
-	"chips": "Vlooien",
-	"potions": "Drankjes",
-	"hats": "Hoeden",
-	"pomps": "Inrichting",
-	"resources": "Bronnen",
 	"rarity": "Schaarste"
 }

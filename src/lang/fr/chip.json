@@ -70,7 +70,7 @@
 	"remission": "Rémission",
 	"repotting": "Rempotage",
 	"resurrection": "Résurrection",
-	"resurrection_desc": "Ressuscite une entité alliée : téléporte le corps, le reconstitue et retrouve l'âme du défunt sans lui demander son avis.",
+	"resurrection_desc": "Ressuscite une entité : téléporte le corps, le reconstitue et retrouve l'âme du défunt sans lui demander son avis.",
 	"rock": "Rocher",
 	"rockfall": "Éboulement",
 	"rocky_bulb": "Bulbe Rocheux",
@@ -101,5 +101,9 @@
 	"whip": "Fouet",
 	"winged_boots": "Bottes ailées",
 	"wizard_bulb": "Bulbe magicien",
-	"wizardry": "Sorcellerie"
+	"wizardry": "Sorcellerie",
+	"divine_protection": "Protection divine",
+	"kill": "Tuer",
+	"apocalypse": "Apocalypse",
+	"awakening": "Réveil"
 }

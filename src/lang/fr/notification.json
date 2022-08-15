@@ -92,5 +92,7 @@
 	"title_31": "{0} n'a pas été sélectionné en BR",
 	"title_32": "{0} vous a mentionné sur #{1}",
 	"message_32": "Voir le chat",
-	"title_34": "{0} vous a donné l'item {1}"
+	"title_34": "{0} vous a donné l'item {1}",
+	"title_35": "{0} a lancé un combat de boss",
+	"message_35": "Voir le combat"
 }

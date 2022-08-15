@@ -33,5 +33,9 @@
 	"you_must_have_2_leeks": "Debes tener al menos 2 puerros",
 	"you_must_have_a_team": "Tienes que ser parte de un equipo.",
 	"quit": "Abandonar",
-	"queue": "Cola"
+	"queue": "Cola",
+	"category_boss_fight": "Jefe",
+	"garden_boss": "Huerto del jefe",
+	"select_boss": "Seleccione un jefe",
+	"attack": "Ataque"
 }

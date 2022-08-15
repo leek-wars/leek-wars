@@ -1,0 +1,15 @@
+{
+	"price": "价格",
+	"price_lot": "地段价格",
+	"quantity": "数量",
+	"name": "名称",
+	"level": "级别",
+	"date": "日期",
+	"all": "全部",
+	"weapons": "武器",
+	"chips": "跳蚤",
+	"potions": "药剂",
+	"hats": "帽子",
+	"pomps": "出场",
+	"resources": "资源"
+}

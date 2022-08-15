@@ -2,7 +2,7 @@ import { Bubble } from '@/component/player/game/bubble'
 import { ChipAnimation } from '@/component/player/game/chips'
 import { Colors, Game } from '@/component/player/game/game'
 import { InfoText } from '@/component/player/game/infotext'
-import { T, Texture } from '@/component/player/game/texture'
+import { SHADOW_QUALITY, T, Texture } from '@/component/player/game/texture'
 import { Cell } from '@/model/cell'
 import { EffectModifier, EffectType, EntityEffect } from '@/model/effect'
 import { Entity } from '@/model/entity'
@@ -12,12 +12,15 @@ import { LeekWars } from '@/model/leekwars'
 import { TEAM_COLORS } from '@/model/team'
 import { Path } from './path'
 import { S } from './sound'
+import { WeaponAnimation } from './weapons'
+import { HatTemplate } from '@/model/hat'
 
 enum EntityType {
 	LEEK = 0,
 	BULB = 1,
 	TURRET = 2,
 	CHEST = 3,
+	MOB = 4,
 }
 enum EntityDirection {
 	NORTH = 0,
@@ -44,7 +47,8 @@ abstract class FightEntity extends Entity {
 	public summon = false
 	public summoner!: Entity
 	public active = false
-	public rawName!: string
+	public translatedName!: string
+	public initially_dead!: boolean
 	// Caractéristiques
 	public life = 0
 	public strength = 0
@@ -52,6 +56,8 @@ abstract class FightEntity extends Entity {
 	public agility = 0
 	public resistance = 0
 	public frequency = 0
+	public cores = 0
+	public ram = 0
 	public science = 0
 	public magic = 0
 	public tp = 0
@@ -64,6 +70,10 @@ abstract class FightEntity extends Entity {
 	public absoluteShield = 0
 	public relativeShield = 0
 	public damageReturn = 0
+	// Items
+	public ai: number = 0
+	public chips: number[] = []
+	public weapons: number[] = []
 	// Position
 	public x = 0
 	public y = 0
@@ -133,6 +143,17 @@ abstract class FightEntity extends Entity {
 	// Reachable cells
 	public reachableCells: Set<Cell> = new Set<Cell>()
 	public reachableCellsArea: any
+	// Animations
+	public handPos = 0
+	// Weapon
+	public weapon: WeaponAnimation | null = null
+	public handTex!: Texture
+	// Hat
+	public hatFront!: Texture
+	public hatBack!: Texture
+	public hatName!: string
+	public hat!: number
+	public hatTemplate!: HatTemplate
 
 	constructor(game: Game, type: EntityType, team: number, name: string) {
 		super()
@@ -140,7 +161,7 @@ abstract class FightEntity extends Entity {
 		this.type = type
 		this.team = team
 		this.name = name
-		this.rawName = name
+		this.translatedName = name
 		this.bubble = new Bubble(game)
 		this.path = []
 		this.frame = Math.random() * 100
@@ -148,6 +169,20 @@ abstract class FightEntity extends Entity {
 		this.bloodTex = T.leek_blood
 		this.lifeColor = TEAM_COLORS[this.team - 1]
 		this.lifeColorLighter = LeekWars.shadeColor(this.lifeColor, 120)
+	}
+
+	public setHat(hat: number | null) {
+		if (hat) {
+			this.hat = hat
+			this.hatTemplate = LeekWars.hats[hat]
+			this.hatName = this.hatTemplate.name
+			this.hatFront = T.get(this.game, "image/hat/" + this.hatName + ".png?2", true, SHADOW_QUALITY)
+			this.hatBack = T.get(this.game, "image/hat/" +  this.hatName + "_back.png?2", true, SHADOW_QUALITY)
+		}
+	}
+
+	public setWeapon(weapon: WeaponAnimation): void {
+		this.weapon = weapon
 	}
 
 	public isDead() {
@@ -372,7 +407,6 @@ abstract class FightEntity extends Entity {
 
 	public updateGrowth() {
 		this.growth = 1.0 + Math.log10(Math.max(0.0316227766, this.maxLife / this.initialMaxLife)) / 3
-		// console.log("update growth", this.name, this.growth)
 		this.width = this.baseWidth * this.scale * this.growth
 		this.height = this.baseHeight * this.scale * this.growth
 	}
@@ -1056,7 +1090,7 @@ abstract class FightEntity extends Entity {
 
 		ctx.font = "500 11pt Roboto"
 
-		let text = this.name + " (" + this.life + ")"
+		let text = this.translatedName + " (" + this.life + ")"
 		if (this.game.showIDs) { text = '#' + this.id + ' • ' + text }
 		const width = Math.max(120, ctx.measureText(text).width + 14)
 		const height = 22

@@ -5,12 +5,5 @@
 	"name": "Nome",
 	"level": "Nível",
 	"date": "Data",
-	"all": "Todos",
-	"weapons": "Armas",
-	"chips": "Pulgas",
-	"potions": "Poções",
-	"hats": "Chapéus",
-	"pomps": "Aparelho",
-	"resources": "Recursos",
 	"rarity": "Escassez"
 }

@@ -31,5 +31,13 @@
 	"tp_desc": "Tindakan maksimal selama belokan",
 	"wisdom": "Kebijaksanaan",
 	"wisdom_desc": "Kebijaksanaan meningkatkan penyembuhan dan lifesteal",
-	"too_high": "Fitur ini berguna dari level {0}."
+	"too_high": "Fitur ini berguna dari level {0}.",
+	"cores": "Hati",
+	"cores_desc": "Inti meningkatkan jumlah maksimum operasi yang dapat dieksekusi per revolusi. 1 inti meningkatkan jumlah maksimum operasi sebesar 1 juta.",
+	"ram": "Memori Akses Acak",
+	"ram_desc": "Satu unit memori RAM memberikan 1 lokasi chip dan sejuta variabel yang dapat digunakan oleh AI",
+	"operations": "Jumlah transaksi",
+	"chips": "Jumlah chip maksimum",
+	"variables": "Variabel",
+	"base": "Diinvestasikan"
 }

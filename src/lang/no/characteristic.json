@@ -31,5 +31,13 @@
 	"tp_desc": "Maksimalt antall handlinger under en sving",
 	"wisdom": "Visdom",
 	"wisdom_desc": "Visdom øker helbredelse og livstyveri",
-	"too_high": "Denne funksjonen er nyttig fra nivå {0}."
+	"too_high": "Denne funksjonen er nyttig fra nivå {0}.",
+	"cores": "Hjerter",
+	"cores_desc": "Kjerner øker det maksimale antallet kjørbare operasjoner per omdreining. 1 kjerne øker det maksimale antallet operasjoner med 1 million.",
+	"ram": "Tilfeldig tilgang til minne",
+	"ram_desc": "Én enhet RAM-minne gir én brikkeplassering og en million variabler som kan brukes av den kunstige intelligensen",
+	"operations": "Antall transaksjoner",
+	"chips": "Maksimalt antall brikker",
+	"variables": "Variabler",
+	"base": "Investert"
 }

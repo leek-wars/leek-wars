@@ -143,5 +143,7 @@
 	"state_2": "Insoignable",
 	"state_3": "Invincible",
 	"state_4": "Pacifiste",
-	"state_6": "Dense"
+	"state_6": "Dense",
+	"allies": "Tous les alliés",
+	"enemies": "Tous les ennemis"
 }

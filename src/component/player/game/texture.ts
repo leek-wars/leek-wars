@@ -7,6 +7,8 @@ class Texture {
 	public path: string
 	public texture!: HTMLImageElement | HTMLCanvasElement
 	public offset: number = 1
+	public nudgeX: number = 0
+	public nudgeY: number = 0
 	public shadow: HTMLCanvasElement | null = null
 	public buildShadow: boolean
 	public shadowQuality: number
@@ -111,6 +113,8 @@ class T {
 	public static mp = new Texture(LeekWars.STATIC + 'image/charac/small/mp.png')
 	public static leek_hand = new Texture(LeekWars.STATIC + "image/fight/leek_hand.png", true, SHADOW_QUALITY)
 	public static leek_hand_gold = new Texture(LeekWars.STATIC + "image/fight/leek_hand_gold.png", true, SHADOW_QUALITY)
+	public static nasu_hand = new Texture(LeekWars.STATIC + "image/fight/nasu_hand.png", true, SHADOW_QUALITY)
+	public static pumpkin_hand = new Texture(LeekWars.STATIC + "image/fight/pumpkin_hand.png", true, SHADOW_QUALITY)
 	public static critical = new Texture(LeekWars.STATIC + "image/fight/critical.png", true, SHADOW_QUALITY)
 
 	// Armes
@@ -163,6 +167,7 @@ class T {
 	public static j_laser = new Texture(LeekWars.STATIC + 'image/weapon/j_laser.png', true, SHADOW_QUALITY)
 	public static j_laser_bullet = new Texture(LeekWars.STATIC + 'image/weapon/j_laser_bullet.png', true, SHADOW_QUALITY)
 	public static cart_j_laser = new Texture(LeekWars.STATIC + 'image/weapon/cart_j_laser.png')
+	public static green_beam = new Texture(LeekWars.STATIC + 'image/weapon/green_beam.png')
 	public static rifle = new Texture(LeekWars.STATIC + 'image/weapon/rifle.png', true, SHADOW_QUALITY)
 	public static rifle_cartridge = new Texture(LeekWars.STATIC + 'image/weapon/rifle_cartridge.png')
 	public static rhino = new Texture(LeekWars.STATIC + 'image/weapon/rhino.png', true, SHADOW_QUALITY)
@@ -186,6 +191,9 @@ class T {
 	public static cart_unstable_destroyer = new Texture(LeekWars.STATIC + 'image/weapon/cart_unstable_destroyer.png')
 	public static sword = new Texture(LeekWars.STATIC + 'image/weapon/sword.png', true, SHADOW_QUALITY)
 	public static heavy_sword = new Texture(LeekWars.STATIC + 'image/weapon/heavy_sword.png', true, SHADOW_QUALITY)
+	public static odachi = new Texture(LeekWars.STATIC + 'image/weapon/odachi.png', true, SHADOW_QUALITY)
+	public static excalibur = new Texture(LeekWars.STATIC + 'image/weapon/excalibur.png', true, SHADOW_QUALITY)
+	public static scythe = new Texture(LeekWars.STATIC + 'image/weapon/scythe.png', true, SHADOW_QUALITY)
 
 	// Cartes
 	public static box = new Texture(LeekWars.STATIC + 'image/map/box.png', true, 1)
@@ -288,11 +296,39 @@ class T {
 	public static forest_branch = new Texture(LeekWars.STATIC + 'image/map/forest_branch.png')
 	public static forest_branch_2 = new Texture(LeekWars.STATIC + 'image/map/forest_branch_2.png')
 	public static ray = new Texture(LeekWars.STATIC + 'image/fight/ray.png')
+	public static ray_red = new Texture(LeekWars.STATIC + 'image/fight/ray_red.png')
 	public static smoke = new Texture(LeekWars.STATIC + 'image/fight/smoke.png')
 	public static explosion_mark = new Texture(LeekWars.STATIC + 'image/fight/explosion_mark.png')
 	public static explosion_rock = new Texture(LeekWars.STATIC + 'image/fight/explosion_rock.png')
 	public static explosion_rock2 = new Texture(LeekWars.STATIC + 'image/fight/explosion_rock2.png')
 	public static summon_leaf = new Texture(LeekWars.STATIC + 'image/fight/summon_leaf.png')
+	public static japan_grass = new Texture(LeekWars.STATIC + 'image/map/japan_grass.png')
+	public static japan_rock = new Texture(LeekWars.STATIC + 'image/map/japan_rock.png')
+	public static bonzai = new Texture(LeekWars.STATIC + 'image/map/bonzai.png', true, 1)
+	public static lantern = new Texture(LeekWars.STATIC + 'image/map/lantern.png', true, 1)
+	public static boxwood = new Texture(LeekWars.STATIC + 'image/map/boxwood.png', true, 1)
+	public static bamboo = new Texture(LeekWars.STATIC + 'image/map/bamboo.png', true, 1)
+	public static bamboo_bundle = new Texture(LeekWars.STATIC + 'image/map/bamboo_bundle.png', true, 1)
+	public static torii_gate = new Texture(LeekWars.STATIC + 'image/map/torii_gate.png', true, 1)
+	public static bamboo_strike = new Texture(LeekWars.STATIC + 'image/map/bamboo_strike.png', true, 1)
+	public static lantern_large = new Texture(LeekWars.STATIC + 'image/map/lantern_large.png', true, 1)
+	public static castle = new Texture(LeekWars.STATIC + 'image/map/castle.png')
+	public static rampart_north_south = new Texture(LeekWars.STATIC + 'image/map/rampart_north_south.png', true, 1)
+	public static rampart_west_east = new Texture(LeekWars.STATIC + 'image/map/rampart_west_east.png', true, 1)
+	public static rampart_south_east = new Texture(LeekWars.STATIC + 'image/map/rampart_south_east.png', true, 1)
+	public static rampart_north_east = new Texture(LeekWars.STATIC + 'image/map/rampart_north_east.png', true, 1)
+	public static rampart_south_west = new Texture(LeekWars.STATIC + 'image/map/rampart_south_west.png', true, 1)
+	public static rampart_north_west = new Texture(LeekWars.STATIC + 'image/map/rampart_north_west.png', true, 1)
+	public static castle_gate = new Texture(LeekWars.STATIC + 'image/map/castle_gate.png', true, 1)
+	public static castle_tower = new Texture(LeekWars.STATIC + 'image/map/castle_tower.png', true, 1)
+	public static round_table = new Texture(LeekWars.STATIC + 'image/map/round_table.png', true, 1)
+	public static cemetery = new Texture(LeekWars.STATIC + 'image/map/cemetery.png')
+	public static carpet = new Texture(LeekWars.STATIC + 'image/map/carpet.png')
+	public static cemetery_rock = new Texture(LeekWars.STATIC + 'image/map/cemetery_rock.png')
+	public static cemetery_cross = new Texture(LeekWars.STATIC + 'image/map/cemetery_cross.png', true, 1)
+	public static cemetery_tomb = new Texture(LeekWars.STATIC + 'image/map/cemetery_tomb.png', true, 1)
+	public static cemetery_fern = new Texture(LeekWars.STATIC + 'image/map/cemetery_fern.png', true, 1)
+	public static cemetery_lantern = new Texture(LeekWars.STATIC + 'image/map/cemetery_lantern.png', true, 1)
 
 	// Chips
 	public static chip_zero = new Texture(LeekWars.STATIC + 'image/fight/chip_zero.png')

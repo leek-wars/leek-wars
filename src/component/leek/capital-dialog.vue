@@ -98,6 +98,28 @@
 		frequency : [
 			{step : 0, capital : 1, sup : 1}
 		],
+		cores : [
+			{step : 0, capital : 20, sup : 1},
+			{step : 1, capital : 30, sup : 1},
+			{step : 2, capital : 40, sup : 1},
+			{step : 3, capital : 50, sup : 1},
+			{step : 4, capital : 60, sup : 1},
+			{step : 5, capital : 70, sup : 1},
+			{step : 6, capital : 80, sup : 1},
+			{step : 7, capital : 90, sup : 1},
+			{step : 8, capital : 100, sup : 1},
+		],
+		ram : [
+			{step : 0, capital : 20, sup : 1},
+			{step : 1, capital : 30, sup : 1},
+			{step : 2, capital : 40, sup : 1},
+			{step : 3, capital : 50, sup : 1},
+			{step : 4, capital : 60, sup : 1},
+			{step : 5, capital : 70, sup : 1},
+			{step : 6, capital : 80, sup : 1},
+			{step : 7, capital : 90, sup : 1},
+			{step : 8, capital : 100, sup : 1},
+		],
 		tp : [
 			{step : 0, capital : 30, sup : 1}, {step : 1, capital : 35, sup : 1},
 			{step : 2, capital : 40, sup : 1}, {step : 3, capital : 45, sup : 1},
@@ -143,6 +165,8 @@
 			science : 53,
 			magic : 42,
 			frequency : 1,
+			cores: 1,
+			ram: 1,
 			tp : 1,
 			mp : 1,
 		}
@@ -168,13 +192,15 @@
 				science: 0,
 				magic: 0,
 				frequency: 100,
+				cores: 1,
+				ram: 6,
 				tp: 10,
 				mp: 3
 			}
 			if (this.restat) {
 				this.added = {
 					life: 0, strength: 0, wisdom: 0, agility: 0, resistance: 0,
-					frequency: 0, science: 0, magic: 0, tp: 0, mp: 0
+					frequency: 0, science: 0, magic: 0, cores: 0, ram: 0, tp: 0, mp: 0
 				}
 				for (const charac in this.added) {
 					let characLeft = (this.leek as any)[charac] - this.base[charac]
@@ -203,12 +229,14 @@
 					science: this.leek.science,
 					magic: this.leek.magic,
 					frequency: this.leek.frequency - this.base.frequency,
+					cores: this.leek.cores - this.base.cores,
+					ram: this.leek.ram - this.base.ram,
 					tp: this.leek.tp - this.base.tp,
 					mp: this.leek.mp - this.base.mp
 				}
 				this.bonuses = {
 					life: 0, strength: 0, wisdom: 0, agility: 0, resistance: 0,
-					frequency: 0, science: 0, magic: 0, tp: 0, mp: 0
+					frequency: 0, science: 0, magic: 0, cores: 0, ram: 0, tp: 0, mp: 0
 				}
 			}
 			this.update()
@@ -280,7 +308,8 @@
 			}
 			LeekWars.post('leek/spend-capital', {leek_id: this.leek.id, characteristics: JSON.stringify(this.bonuses)}).then(data => {
 				for (const stat in this.bonuses) {
-					(this.leek as any)[stat] += this.bonuses[stat]
+					;(this.leek as any)[stat] += this.bonuses[stat]
+					;(this.leek as any)['total_' + stat] += this.bonuses[stat]
 				}
 				this.leek.capital = this.capital
 				this.$store.commit('update-capital', {leek: this.leek.id, capital: this.capital})

@@ -24,9 +24,13 @@
 					<div v-on="on">[{{ fight.team1_name }}]</div>
 				</rich-tooltip-composition>
 			</router-link>
+			<div v-else-if="fight.type == FightType.BOSS" class="fighter">
+				<div>{{ $t('main.n_leeks', [fight.leeks1.length]) }}</div>
+			</div>
 			<router-link :to="'/fight/' + fight.id" class="center">
 				<v-icon v-if="fight.status == 0" class="timersand">mdi-timer-sand-empty</v-icon>
 				<v-icon v-else-if="fight.context == FightContext.CHALLENGE">mdi-flag-outline</v-icon>
+				<v-icon v-else-if="fight.type == FightType.BOSS">mdi-crown</v-icon>
 				<v-icon v-else-if="fight.context == FightContext.TOURNAMENT">mdi-trophy-outline</v-icon>
 				<img v-else src="/image/icon/black/garden.png">
 			</router-link>
@@ -45,6 +49,9 @@
 					<div v-on="on">[{{ fight.team2_name }}]</div>
 				</rich-tooltip-composition>
 			</router-link>
+			<div v-else-if="fight.type == FightType.BOSS" class="fighter">
+				<div>{{ $t('entity.' + fight.boss_name) }}</div>
+			</div>
 		</div>
 		<div class="time">{{ LeekWars.formatDuration(fight.date) }}</div>
 	</div>

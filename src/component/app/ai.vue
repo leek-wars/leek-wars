@@ -46,7 +46,7 @@
 		justify-content: center;
 		padding: 12px;
 		width: 103px;
-		height: 135px;
+		height: 120px;
 		position: relative;
 		word-wrap: break-word;
 		text-align: center;

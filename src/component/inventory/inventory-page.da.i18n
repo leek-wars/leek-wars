@@ -1,0 +1,15 @@
+{
+	"price": "Priser",
+	"price_lot": "Pris på parti",
+	"quantity": "Antal",
+	"name": "Navn",
+	"level": "Niveau",
+	"date": "Dato",
+	"all": "Alle",
+	"weapons": "Våben",
+	"chips": "Lopper",
+	"potions": "Trylledrikke",
+	"hats": "Hatte",
+	"pomps": "Udseende",
+	"resources": "Ressourcer"
+}

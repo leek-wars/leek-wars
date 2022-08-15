@@ -97,5 +97,8 @@
 	"happy": "Sorridente",
 	"neutral": "Neutro",
 	"xp_blocked_desc": "Se l'opzione è attivata, i combattimenti non produrranno più esperienza e il porro non salirà di livello. I guadagni di talenti e risorse vengono mantenuti.",
-	"start_a_fight": "Iniziare una lotta!"
+	"start_a_fight": "Iniziare una lotta!",
+	"all_my_components": "I miei componenti",
+	"error_max_component": "{0} non può equipaggiare un componente aggiuntivo.",
+	"ai_and_components": "IA e componenti"
 }

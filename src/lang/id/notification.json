@@ -92,5 +92,7 @@
 	"title_32": "{0} menyebut Anda di #{1}",
 	"message_32": "Lihat kucingnya",
 	"message_34": "Lihat inventaris Anda",
-	"title_34": "{0} memberi Anda item {1}"
+	"title_34": "{0} memberi Anda item {1}",
+	"title_35": "{0} telah meluncurkan pertempuran bos",
+	"message_35": "Lihat pertarungannya"
 }

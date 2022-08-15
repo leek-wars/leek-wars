@@ -1,0 +1,9 @@
+{
+	"price": "Priser",
+	"price_lot": "Pris på parti",
+	"quantity": "Antal",
+	"name": "Navn",
+	"level": "Niveau",
+	"date": "Dato",
+	"rarity": "Raritet"
+}

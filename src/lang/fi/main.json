@@ -193,7 +193,6 @@
 	"retrieve": "Hakea",
 	"estimated_value": "Arvioitu arvo",
 	"lot_value": "Palkinnon arvo",
-	"resource_not_used": "Kaikki resurssit eivät ole käytettävissä tällä hetkellä. Ehkä niille löytyy käyttöä tulevaisuudessa?",
 	"search_bar": "Hae konseptia, toimintoa tai opasta...",
 	"more_results": "Enemmän tuloksia",
 	"hat": "Hattu",
@@ -254,5 +253,14 @@
 	"dida_11": "Älä epäröi kysyä apua {chat} tai {forum}, autamme sinua mielellämme.",
 	"dida_12": "Onnea <b>{0}</b>!",
 	"hats": "Hatut",
-	"10years": "10 vuotta purjosotaa!"
+	"10years": "10 vuotta purjosotaa!",
+	"all": "Kaikki",
+	"components": "Komponentit",
+	"fight-packs": "Taistelupakkaukset",
+	"pomps": "Esiintymiset",
+	"potions": "Taikajuomat",
+	"workshop": "Työpaja",
+	"scheme": "Kaavio",
+	"schemes": "Kaaviot",
+	"scheme_x": "Kaavio: {0}"
 }

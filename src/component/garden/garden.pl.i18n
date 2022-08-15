@@ -33,5 +33,9 @@
 	"you_must_have_2_leeks": "Musisz mieć co najmniej 2 pory",
 	"you_must_have_a_team": "Musisz być częścią zespołu",
 	"quit": "Zrezygnować",
-	"queue": "Kolejka"
+	"queue": "Kolejka",
+	"category_boss_fight": "Szef",
+	"garden_boss": "Ogród warzywny szefa",
+	"select_boss": "Wybór szefa",
+	"attack": "Atak"
 }

@@ -31,5 +31,13 @@
 	"tp_desc": "How many actions you can take during a turn",
 	"wisdom": "Wisdom",
 	"wisdom_desc": "Wisdom increases healing and life steal.",
-	"too_high": "This feature is useful from level {0} onwards."
+	"too_high": "This feature is useful from level {0} onwards.",
+	"cores": "Hearts",
+	"cores_desc": "Cores increase the maximum number of executable operations per revolution. 1 core increases the operation limit by 1 million.",
+	"ram": "Random access memory",
+	"ram_desc": "One unit of RAM memory gives 1 chip location and a million variables usable by the AI",
+	"operations": "Number of operations",
+	"chips": "Maximum number of chips",
+	"variables": "Variables",
+	"base": "Invested"
 }

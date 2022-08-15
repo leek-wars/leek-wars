@@ -70,7 +70,7 @@
 	"remission": "Remissione",
 	"repotting": "Rinvaso",
 	"resurrection": "Risurrezione",
-	"resurrection_desc": "Resuscita un'entità alleata: teletrasporta il corpo, lo ricostituisce e trova l'anima del defunto senza chiedere il suo parere.",
+	"resurrection_desc": "Resuscita un'entità: teletrasporta il corpo, lo ricostituisce e trova l'anima del defunto senza chiedere il suo parere.",
 	"rock": "Roccia",
 	"rockfall": "Frana",
 	"rocky_bulb": "Bulbo roccioso",
@@ -101,5 +101,9 @@
 	"whip": "Frusta",
 	"winged_boots": "Stivali alati",
 	"wizard_bulb": "Bulbo magico",
-	"wizardry": "Stregoneria"
+	"wizardry": "Stregoneria",
+	"divine_protection": "Protezione divina",
+	"kill": "Uccidere",
+	"apocalypse": "Apocalisse",
+	"awakening": "Sveglia"
 }

@@ -193,7 +193,6 @@
 	"retrieve": "Hent",
 	"estimated_value": "Anslået værdi",
 	"lot_value": "Præmieværdi",
-	"resource_not_used": "Ikke alle ressourcer er brugbare på nuværende tidspunkt. Måske finder de en anvendelse i fremtiden?",
 	"search_bar": "Søg efter et koncept, en funktion eller en guide...",
 	"more_results": "Flere resultater",
 	"hat": "Hat",
@@ -254,5 +253,14 @@
 	"dida_11": "Tøv ikke med at spørge om hjælp i {chat} eller {forum}, vi vil med glæde hjælpe dig.",
 	"dida_12": "Held og lykke <b>{0}</b>!",
 	"hats": "Hatte",
-	"10years": "10 år med krig om porrer!"
+	"10years": "10 år med krig om porrer!",
+	"all": "Alle",
+	"components": "Komponenter",
+	"fight-packs": "Kamp-pakker",
+	"pomps": "Udseende",
+	"potions": "Trylledrikke",
+	"workshop": "Værksted",
+	"scheme": "Diagram",
+	"schemes": "Skemaer",
+	"scheme_x": "Diagram: {0}"
 }

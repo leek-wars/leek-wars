@@ -33,5 +33,9 @@
 	"you_must_have_2_leeks": "Du må ha minst 2 purre",
 	"you_must_have_a_team": "Du må være en del av et team",
 	"quit": "Slutte",
-	"queue": "Kø"
+	"queue": "Kø",
+	"category_boss_fight": "Sjef",
+	"garden_boss": "Sjefens grønnsakshage",
+	"select_boss": "Velg en sjef",
+	"attack": "Angrep"
 }

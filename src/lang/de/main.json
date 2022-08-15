@@ -193,7 +193,6 @@
 	"retrieve": "Abrufen",
 	"estimated_value": "Geschätzter Wert",
 	"lot_value": "Preiswert",
-	"resource_not_used": "Derzeit sind nicht alle Ressourcen nutzbar. Vielleicht finden sie in Zukunft eine Verwendung?",
 	"search_bar": "Suche nach einem Konzept, einer Funktion oder einem Leitfaden...",
 	"more_results": "Mehr Ergebnisse",
 	"hat": "Hut",
@@ -254,5 +253,14 @@
 	"dida_11": "Zögern Sie nicht, im {chat} oder {forum} um Hilfe zu bitten, wir helfen Ihnen gerne weiter.",
 	"dida_12": "Viel Glück <b>{0}</b>!",
 	"hats": "Hüte",
-	"10years": "10 Jahre Leek Wars!"
+	"10years": "10 Jahre Leek Wars!",
+	"all": "Alle",
+	"components": "Komponenten",
+	"fight-packs": "Kampfpakete",
+	"pomps": "Apparate",
+	"potions": "Tränke",
+	"workshop": "Workshop",
+	"scheme": "Schema",
+	"schemes": "Schemata",
+	"scheme_x": "Schema: {0}"
 }

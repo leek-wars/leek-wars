@@ -5,12 +5,5 @@
 	"name": "Namn",
 	"level": "Nivå",
 	"date": "Datum",
-	"all": "Allt",
-	"weapons": "Vapen",
-	"chips": "Loppor",
-	"potions": "Potions",
-	"hats": "Hattar",
-	"pomps": "Anordning",
-	"resources": "Resurser",
 	"rarity": "Brist"
 }

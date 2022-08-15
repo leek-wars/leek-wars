@@ -12,6 +12,7 @@ const AdminServices = () => import(/* webpackChunkName: "admin" */ `@/component/
 const AdminTrophies = () => import(/* webpackChunkName: "admin" */ `@/component/admin/admin-trophies.vue`)
 const AdminGroups = () => import(/* webpackChunkName: "admin" */ `@/component/admin/admin-groups.vue`)
 const AdminSources = () => import(/* webpackChunkName: "admin" */ `@/component/admin/admin-sources.vue`)
+const AdminSchemes = () => import(/* webpackChunkName: "admin" */ `@/component/admin/admin-schemes.vue`)
 const Admin = () => import(/* webpackChunkName: "admin" */ `@/component/admin/admin.vue`)
 const Api = () => import(/* webpackChunkName: "[request]" */ `@/component/api/api.${locale}.i18n`)
 import Error from '@/component/app/error.vue'
@@ -24,6 +25,7 @@ const Conditions = () => import(/* webpackChunkName: "[request]" */ `@/component
 const Contact = () => import(/* webpackChunkName: "[request]" */ `@/component/contact/contact.${locale}.i18n`)
 const DevBlog = () => import(/* webpackChunkName: "[request]" */ `@/component/dev-blog/dev-blog.${locale}.i18n`)
 const DevBlogArticle = () => import(/* webpackChunkName: "[request]" */ `@/component/dev-blog/dev-blog-article.${locale}.i18n`)
+const Creator = () => import(/* webpackChunkName: "[request]" */ `@/component/creator/creator.${locale}.i18n`)
 const Documentation = () => import(/* webpackChunkName: "[request]" */ `@/component/documentation/documentation.${locale}.i18n`)
 const Group = () => import(/* webpackChunkName: "[request]" */ `@/component/group/group.${locale}.i18n`)
 const Groups = () => import(/* webpackChunkName: "[request]" */ `@/component/groups/groups.${locale}.i18n`)
@@ -39,7 +41,7 @@ const ForumTopic = () => import(/* webpackChunkName: "[request]" */ `@/component
 const Forum = () => import(/* webpackChunkName: "[request]" */ `@/component/forum/forum.${locale}.i18n`)
 const Garden = () => import(/* webpackChunkName: "[request]" */ `@/component/garden/garden.${locale}.i18n`)
 const GeneralHelp = () => import(/* webpackChunkName: "[request]" */ `@/component/general-help/general-help.vue`)
-const Inventory = () => import(/* webpackChunkName: "[request]" */ `@/component/inventory/inventory.${locale}.i18n`)
+const InventoryPage = () => import(/* webpackChunkName: "[request]" */ `@/component/inventory/inventory-page.${locale}.i18n`)
 const LineOfSight = () => import(/* webpackChunkName: "[request]" */ `@/component/line-of-sight/line-of-sight.${locale}.i18n`)
 const History = () => import(/* webpackChunkName: "[request]" */ `@/component/history/history.${locale}.i18n`)
 const Items = () => import(/* webpackChunkName: "[request]" */ `@/component/items/items.${locale}.i18n`)
@@ -66,6 +68,8 @@ const Tournament = () => import(/* webpackChunkName: "[request]" */ `@/component
 const Trophies = () => import(/* webpackChunkName: "[request]" */ `@/component/trophies/trophies.${locale}.i18n`)
 const TrophyPage = () => import(/* webpackChunkName: "[request]" */ `@/component/trophy/trophy.${locale}.i18n`)
 const Tutorial = () => import(/* webpackChunkName: "[request]" */ `@/component/tutorial/tutorial.vue`)
+// const Workshop = () => import(/* webpackChunkName: "[request]" */ `@/component/workshop/workshop.${locale}.i18n`)
+
 import { LeekWars } from '@/model/leekwars'
 import { store } from '@/model/store'
 import { vueMain } from '@/model/vue'
@@ -73,6 +77,7 @@ import Vue from 'vue'
 import { Component } from 'vue-property-decorator'
 import Router, { Route, RouteConfig } from 'vue-router'
 import { scroll_to_hash } from './router-functions'
+import AdminComponents from './component/admin/admin-components.vue'
 
 @Component({
 	components: { signup: Signup, leek: Leek, messages: Messages },
@@ -126,12 +131,18 @@ const routes = [
 	{ path: '/admin/trophies', component: AdminTrophies, beforeEnter: connected },
 	{ path: '/admin/groups', component: AdminGroups, beforeEnter: connected },
 	{ path: '/admin/sources', component: AdminSources, beforeEnter: connected },
+	{ path: '/admin/schemes', component: AdminSchemes, beforeEnter: connected },
+	{ path: '/admin/components', component: AdminComponents, beforeEnter: connected },
 	{ path: '/about', component: About },
 	{ path: '/app', component: MobileApp },
 	{ path: '/conditions', component: Conditions },
 	{ path: '/changelog', component: Changelog },
 	{ path: '/change-email/:state/:token', component: ChangeEmail },
 	{ path: '/contact', component: Contact },
+	{ path: '/dev-blog', component: DevBlog },
+	{ path: '/dev-blog/:id', component: DevBlogArticle },
+	{ path: '/creator', component: Creator, beforeEnter: connected },
+	{ path: '/creator/:id', component: Creator, beforeEnter: connected },
 	{ path: '/dev-blog', component: DevBlog },
 	{ path: '/dev-blog/:id', component: DevBlogArticle },
 	{ path: '/encyclopedia', component: Encyclopedia, meta: {scrollOffset: 45} },
@@ -165,7 +176,7 @@ const routes = [
 	{ path: '/help/line-of-sight', component: LineOfSight },
 	{ path: '/help/general', component: GeneralHelp },
 	{ path: '/help/tutorial', component: Tutorial },
-	{ path: '/inventory', component: Inventory },
+	{ path: '/inventory', component: InventoryPage },
 	{ path: '/legal', component: Legal },
 	{ path: '/login', component: Login, beforeEnter: disconnected },
 	{ path: '/login/:token', component: Login },
@@ -201,6 +212,7 @@ const routes = [
 	{ path: '/trophies', component: Trophies, beforeEnter: connected },
 	{ path: '/trophies/:id', component: Trophies },
 	{ path: '/trophy/:code', component: TrophyPage },
+	// { path: '/workshop', component: Workshop },
 	{ path: '*', component: Error },
 ] as RouteConfig[]
 

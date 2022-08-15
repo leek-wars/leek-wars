@@ -193,7 +193,6 @@
 	"retrieve": "Hämta",
 	"estimated_value": "Uppskattat värde",
 	"lot_value": "Prisvärde",
-	"resource_not_used": "Alla resurser är inte användbara för närvarande. Kanske hittar de en användning i framtiden?",
 	"search_bar": "Sök efter ett koncept, en funktion eller en guide...",
 	"more_results": "Fler resultat",
 	"hat": "Hatt",
@@ -254,5 +253,14 @@
 	"dida_11": "Tveka inte att be om hjälp i {chat} eller {forum}, vi hjälper dig gärna.",
 	"dida_12": "Lycka till <b>{0}</b>!",
 	"hats": "Hattar",
-	"10years": "10 år av Leek Wars!"
+	"10years": "10 år av Leek Wars!",
+	"all": "Alla",
+	"components": "Komponenter",
+	"fight-packs": "Stridspaket",
+	"pomps": "Framträdanden",
+	"potions": "Trolldrycker",
+	"workshop": "Verkstad",
+	"scheme": "Diagram",
+	"schemes": "Schematiska ritningar",
+	"scheme_x": "Diagram: {0}"
 }

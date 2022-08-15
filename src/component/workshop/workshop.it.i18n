@@ -1,0 +1,9 @@
+{
+	"price": "Prezzi",
+	"price_lot": "Prezzo del lotto",
+	"quantity": "Quantità",
+	"name": "Nome",
+	"level": "Livello",
+	"date": "Data",
+	"rarity": "Rarità"
+}

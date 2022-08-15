@@ -1,7 +1,9 @@
 <template lang="html">
 	<div class="item-preview" :class="category">
 		<div class="header">
-			<h2 class="name">{{ $t(category + '.' + name_short) }}</h2>
+			<h2 v-if="item.type === ItemType.SCHEME" class="name">{{ $t('main.scheme_x', [$t(schemeCategory + '.' + schemeName)]) }} <!--(#{{ item.id }})--></h2>
+			<h2 v-else class="name">{{ $t(category + '.' + name_short) }} <!--(#{{ item.id }})--></h2>
+			<!-- <h2 class="name">{{ $t(category + '.' + name_short) }}</h2> -->
 			<div class="spacer"></div>
 			<div class="level">{{ $t('effect.level_n', [item.level]) }}</div>
 		</div>
@@ -12,13 +14,11 @@
 		<div v-if="item.type === ItemType.WEAPON || item.type === ItemType.CHIP" class="constant">{{ item.name.toUpperCase() }}</div>
 		<div class="image" :class="{sound: category === 'chip' || category === 'weapon'}">
 			<img v-if="item.type === ItemType.WEAPON" :src="'/image/weapon/' + item.name.replace(category + '_', '') + '.png'" @click="playSound(item, category)" :width="WeaponsData[item.params].width">
+			<scheme-image v-else-if="item.type === ItemType.SCHEME" :scheme="LeekWars.schemes[item.params]" />
 			<img v-else :src="'/image/' + category + '/' + item.name.replace(category + '_', '') + '.png'" @click="playSound(item, category)">
 		</div>
 		<div v-if="$te(category + '.' + name_short + '_desc')" class="desc">
 			{{ $t(category + '.' + name_short + '_desc') }}
-		</div>
-		<div v-if="item.type === ItemType.RESOURCE && !item.name.startsWith('box') && !item.name.startsWith('present')" class="desc">
-			<i>{{ $t('main.resource_not_used') }}</i>
 		</div>
 		<weapon-preview v-if="item.type === ItemType.WEAPON" :weapon="LeekWars.weapons[item.params]" />
 		<chip-preview v-else-if="item.type === ItemType.CHIP" :chip="CHIPS[item.id]" @input="$emit('input', $event)" />
@@ -26,13 +26,15 @@
 		<hat-preview v-else-if="item.type === ItemType.HAT" :hat="LeekWars.hats[item.params]" />
 		<pomp-preview v-else-if="item.type === ItemType.POMP" :pomp="LeekWars.pomps[item.id]" />
 		<resource-preview v-else-if="item.type === ItemType.RESOURCE" :resource="LeekWars.items[item.id]" />
+		<component-preview v-else-if="item.type === ItemType.COMPONENT" :component="LeekWars.components[item.params]" @input="$emit('input', $event)" />
+		<scheme-preview v-else-if="item.type === ItemType.SCHEME" :scheme="LeekWars.schemes[item.params]" @input="$emit('input', $event)" />
 		<!-- <fight-pack-preview v-else-if="item.type === ItemType.FIGHT_PACK" :resource="LeekWars.items[item.id]" /> -->
 
 		<div v-if="inventory" class="stats inventory">
-			<div>
+			<div v-if="item.price">
 				{{ $t('main.estimated_value') }} : <b>{{ item.price | number }}</b> <span class='hab'></span>
 			</div>
-			<div v-if="quantity > 1">
+			<div v-if="item.price && quantity > 1">
 				{{ $t('main.lot_value') }} : <b>{{ item.price * quantity | number }}</b> <span class='hab'></span>
 			</div>
 			<div v-if="item.name.startsWith('box') || ((($store.state.farmer && $store.state.farmer.admin) || LeekWars.christmasPresents) && item.name.startsWith('present'))">
@@ -45,8 +47,7 @@
 </template>
 
 <script lang="ts">
-
-import { ItemTemplate, ItemType } from '@/model/item'
+import { ItemTemplate, ItemType, ITEM_CATEGORY_NAME } from '@/model/item'
 import { Component, Prop, Vue } from 'vue-property-decorator'
 import WeaponPreview from '@/component/market/weapon-preview.vue'
 import ChipPreview from '@/component/market/chip-preview.vue'
@@ -55,10 +56,13 @@ import HatPreview from '@/component/market/hat-preview.vue'
 import PompPreview from '@/component/market/pomp-preview.vue'
 import ResourcePreview from '@/component/market/resource-preview.vue'
 import FightPackPreview from '@/component/market/fight-pack-preview.vue'
+import ComponentPreview from '@/component/market/component-preview.vue'
 import { LeekWars } from '@/model/leekwars'
 import { store } from '@/model/store'
 import { CHIPS } from '@/model/chips'
 import { WeaponsData } from '@/model/weapon'
+import SchemePreview from './scheme-preview.vue'
+import SchemeImage from './scheme-image.vue'
 
 @Component({ name: 'item-preview', components: {
 	'weapon-preview': WeaponPreview,
@@ -67,7 +71,10 @@ import { WeaponsData } from '@/model/weapon'
 	'hat-preview': HatPreview,
 	'pomp-preview': PompPreview,
 	'fight-pack-preview': FightPackPreview,
-	'resource-preview': ResourcePreview
+	'resource-preview': ResourcePreview,
+	'component-preview': ComponentPreview,
+	'scheme-preview': SchemePreview,
+	'scheme-image': SchemeImage
 }})
 export default class ItemPreview extends Vue {
 	@Prop() item!: ItemTemplate
@@ -79,17 +86,24 @@ export default class ItemPreview extends Vue {
 	WeaponsData = WeaponsData
 
 	get category() {
-		if (this.item.type === ItemType.WEAPON) return 'weapon'
-		if (this.item.type === ItemType.CHIP) return 'chip'
-		if (this.item.type === ItemType.POTION) return 'potion'
-		if (this.item.type === ItemType.HAT) return 'hat'
-		if (this.item.type === ItemType.POMP) return 'pomp'
-		if (this.item.type === ItemType.RESOURCE) return 'resource'
-		if (this.item.type === ItemType.FIGHT_PACK) return 'fight-pack'
+		return ITEM_CATEGORY_NAME[this.item.type]
 	}
 
 	get name_short() {
 		return this.item.name.replace(this.category + '_', '')
+	}
+
+	get scheme() {
+		return LeekWars.schemes[this.item.params]
+	}
+	get schemeItem() {
+		return this.scheme ? LeekWars.items[this.scheme.result] : null
+	}
+	get schemeCategory() {
+		return this.schemeItem ? ITEM_CATEGORY_NAME[this.schemeItem.type] : null
+	}
+	get schemeName() {
+		return this.schemeItem ? this.schemeItem.name.replace(this.schemeCategory + '_', ''): null
 	}
 
 	retrieveN(n: number) {

@@ -31,5 +31,13 @@
 	"tp_desc": "Maximale Aktionen während einer Runde",
 	"wisdom": "Weisheit",
 	"wisdom_desc": "Weisheit erhöht Heilung und Lebensraub",
-	"too_high": "Diese Funktion ist ab Level {0} nützlich."
+	"too_high": "Diese Funktion ist ab Level {0} nützlich.",
+	"cores": "Herzen",
+	"cores_desc": "Kerne erhöhen die maximale Anzahl der pro Runde ausführbaren Operationen. 1 Kern erhöht das Operationslimit um 1 Million.",
+	"ram": "Arbeitsspeicher",
+	"ram_desc": "Eine Einheit RAM-Speicher ergibt 1 Chip-Slot und eine Million Variablen, die von der KI genutzt werden können",
+	"operations": "Anzahl der Operationen",
+	"chips": "Maximale Anzahl an Chips",
+	"variables": "Variablen",
+	"base": "Investiert"
 }

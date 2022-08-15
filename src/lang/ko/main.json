@@ -193,7 +193,6 @@
 	"retrieve": "검색하다",
 	"estimated_value": "추정 값",
 	"lot_value": "상금 가치",
-	"resource_not_used": "현재 모든 리소스를 사용할 수 있는 것은 아닙니다. 아마도 그들은 미래에 용도를 찾을 것입니까?",
 	"search_bar": "개념, 기능 또는 가이드 검색...",
 	"more_results": "더 많은 결과",
 	"hat": "모자",
@@ -254,5 +253,14 @@
 	"dida_11": "{chat} 또는 {forum}에서 주저하지 마시고 도움을 요청하시면 기꺼이 도와드리겠습니다.",
 	"dida_12": "행운을 빕니다 <b>{0}</b>!",
 	"hats": "모자",
-	"10years": "부추 전쟁 10주년!"
+	"10years": "부추 전쟁 10주년!",
+	"all": "모두",
+	"components": "구성 요소",
+	"fight-packs": "전투 팩",
+	"pomps": "모양",
+	"potions": "물약",
+	"workshop": "워크샵",
+	"scheme": "다이어그램",
+	"schemes": "회로도",
+	"scheme_x": "다이어그램: {0}"
 }

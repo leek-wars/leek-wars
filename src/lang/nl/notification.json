@@ -92,5 +92,7 @@
 	"title_32": "{0} heeft je genoemd op #{1}",
 	"message_32": "Zie de kat",
 	"message_34": "Bekijk je inventaris",
-	"title_34": "{0} gaf je item {1}"
+	"title_34": "{0} gaf je item {1}",
+	"title_35": "{0} heeft een eindbaasgevecht gelanceerd",
+	"message_35": "Bekijk het gevecht"
 }

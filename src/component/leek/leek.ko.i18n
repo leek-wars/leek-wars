@@ -97,5 +97,8 @@
 	"happy": "웃는",
 	"neutral": "중립적",
 	"xp_blocked_desc": "옵션이 활성화되면 전투에서 더 이상 경험치를 얻을 수 없으며 부추의 레벨이 올라가지 않습니다. 재능과 자원 이득은 유지됩니다.",
-	"start_a_fight": "전투를 시작하세요!"
+	"start_a_fight": "전투를 시작하세요!",
+	"all_my_components": "내 구성 요소",
+	"error_max_component": "{0}은 추가 구성 요소를 장착할 수 없습니다.",
+	"ai_and_components": "AI 및 구성 요소"
 }

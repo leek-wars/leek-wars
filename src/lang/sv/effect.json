@@ -143,5 +143,7 @@
 	"state_2": "Oläkbar",
 	"state_3": "Oövervinnerlig",
 	"state_4": "Pacifist",
-	"state_6": "Tät"
+	"state_6": "Tät",
+	"allies": "Alla allierade",
+	"enemies": "Alla fiender"
 }

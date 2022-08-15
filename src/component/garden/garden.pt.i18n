@@ -33,5 +33,9 @@
 	"you_must_have_2_leeks": "Você deve ter pelo menos 2 alho-poró",
 	"you_must_have_a_team": "Você tem que fazer parte de uma equipe",
 	"quit": "Desistir",
-	"queue": "Fila"
+	"queue": "Fila",
+	"category_boss_fight": "Chefe",
+	"garden_boss": "Horta do chefe",
+	"select_boss": "Selecionar um chefe",
+	"attack": "Ataque"
 }

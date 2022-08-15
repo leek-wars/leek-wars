@@ -167,6 +167,11 @@ class NotificationBuilder {
 				item_name = i18n.t('chip.' + item.name.substring(5))
 			}
 			return new Notification(data, "/inventory/", "mdi-gift-outline", [farmer_name, item_name])
+		} else if (type === NotificationType.BOSS_STARTED) {
+			const farmer_name = params[0]
+			const fightID = params[1]
+			// const result = params.length > 1 ? parseInt(params[1]) : 0
+			return new Notification(data, "/fight/" + fightID, "mdi-crown", [farmer_name])
 		} else {
 			return new Notification(data, null, null, ["? type " + type])
 		}

@@ -5,12 +5,5 @@
 	"name": "Nome",
 	"level": "Livello",
 	"date": "Data",
-	"all": "Tutto",
-	"weapons": "Armi",
-	"chips": "Chip",
-	"potions": "Pozioni",
-	"hats": "Cappelli",
-	"pomps": "Tenuta",
-	"resources": "Risorse",
 	"rarity": "Scarsità"
 }

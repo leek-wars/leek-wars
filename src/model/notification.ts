@@ -35,6 +35,7 @@ enum NotificationType {
 	CHAT_MENTION = 32, // Mention sur un chat publique
 	GAME_UPDATE = 33, // Nouvelle mise à jour
 	GIVE_ITEM = 34, // Don d'item
+	BOSS_STARTED = 35, // Démarrage d'un boss
 }
 
 class Notification {

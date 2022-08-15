@@ -1,3 +1,27 @@
+240:
+  title: Boss + Components + Manufacturing + Cores and RAM
+  added:
+    - 3 Bosses added.
+    - Components added (50).
+    - Added item crafting.
+    - (Re)-addition of Hearts feature increasing maximum operations.
+    - (Re)-added RAM feature which increases chip count and usable RAM.
+    - "Eagle Trophy: 100 clovers found (kudos to Ref)."
+    - Addition of 30 new trophies relating to chests and bosses.
+  improved:
+    - Numerous improvements to dark mode.
+    - Improved weapon and chip selection interface in the editor (thanks to WhiteSlash).
+    - Ability to rename a test leek (thanks to WhiteSlash).
+    - Improved GitHub profile selection dialog (thanks to Azecko).
+    - Possibility of closing categories on the trophies page (thanks to RG88000).
+  fixed:
+    - Fixed fighting bug with boxing glove.
+    - The type of new Array/Map/Set/Interval() is now [Type]<empty> instead of [Type].
+    - Fixed -x operator on integer | real type.
+    - Fixed Set and Map determinism with keyed objects (thanks to Kava).
+    - Fixed Delete key in editor fields (thanks to WhiteSlash).
+    - Fixed a bug allowing any leek to be entered as BR (thanks to WhiteSlash).
+
 239:
   title: Dark mode, API documentation, Rebalancing, Set and Interval in LeekScript.
   added:

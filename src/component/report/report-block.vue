@@ -88,7 +88,7 @@
 					<!-- <th class="gain">Opérations</th> -->
 					<!-- <th v-if="$store.getters.admin" class="gain">Time</th> -->
 				</tr>
-				<report-leek-row v-for="leek in leeks" :key="leek.id" :leek="leek" :fight="fight" />
+				<report-leek-row v-for="(leek, l) in leeks" :key="l" :leek="leek" :fight="fight" />
 				<tr v-if="fight.type !== FightType.SOLO" class="total">
 					<td class="name"><span class="alive">{{ $t('main.total') }}</span></td>
 					<td class="level">{{ totalLevel }}</td>

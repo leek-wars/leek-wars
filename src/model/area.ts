@@ -12,5 +12,7 @@ enum Area {
 	SQUARE_1 = 11,
 	SQUARE_2 = 12,
 	FIRST_INLINE = 13,
+	ENEMIES = 14,
+	ALLIES = 15,
 }
 export { Area }

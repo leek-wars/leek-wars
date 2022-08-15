@@ -1,0 +1,9 @@
+{
+	"price": "Hinnat",
+	"price_lot": "Erän hinta",
+	"quantity": "Määrä",
+	"name": "Nimi",
+	"level": "Taso",
+	"date": "Päivämäärä",
+	"rarity": "Harvinaisuus"
+}

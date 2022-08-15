@@ -1,0 +1,15 @@
+{
+	"price": "Preis",
+	"price_lot": "Preis pro Posten",
+	"quantity": "Menge",
+	"name": "Name",
+	"level": "Ebene",
+	"date": "Datum",
+	"all": "Alle",
+	"weapons": "Waffen",
+	"chips": "Flöhe",
+	"potions": "Tränke",
+	"hats": "Hüte",
+	"pomps": "Apparate",
+	"resources": "Ressourcen"
+}

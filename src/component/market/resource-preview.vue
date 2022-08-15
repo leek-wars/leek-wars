@@ -4,7 +4,8 @@
 
 <script lang="ts">
 	import { Component, Prop, Vue } from 'vue-property-decorator'
-	@Component({})
+
+	@Component({ name: 'resource-preview' })
 	export default class ResourcePreview extends Vue {
 		@Prop() resource!: any
 	}

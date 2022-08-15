@@ -73,6 +73,7 @@
 						<v-checkbox v-model="displayTypes.farmer" hide-details class="option-checkbox" :label="$t('farmer')" />
 						<v-checkbox v-model="displayTypes.team" hide-details class="option-checkbox" :label="$t('team')" />
 						<v-checkbox v-model="displayTypes.battleRoyale" hide-details class="option-checkbox" :label="$t('battle_royale')" />
+						<v-checkbox v-model="displayTypes.boss" hide-details class="option-checkbox" :label="$t('boss')" />
 					</div>
 				</div>
 
@@ -100,7 +101,7 @@
 		period: string = '1week'
 		start_date: number = 0
 		displayContexts = { challenge: true, garden: true, tournament: true }
-		displayTypes = { solo: true, farmer: true, team: true, battleRoyale: true }
+		displayTypes = { solo: true, farmer: true, team: true, battleRoyale: true, boss: true }
 
 		get breadcrumb_items() {
 			return [
@@ -120,6 +121,7 @@
 						(this.displayTypes.farmer && fight.type === FightType.FARMER) ||
 						(this.displayTypes.team && fight.type === FightType.TEAM) ||
 						(this.displayTypes.battleRoyale && fight.type === FightType.BATTLE_ROYALE) ||
+						(this.displayTypes.boss && fight.type === FightType.BOSS) ||
                         this.type === 'team'
 					)
 			})
@@ -141,7 +143,7 @@
 			const id = this.$route.params.id
 			const period = localStorage.getItem('options/history-period') || '1week'
 			this.displayContexts = JSON.parse(localStorage.getItem('options/history-contexts') || '{"challenge": true, "garden": true, "tournament": true }')
-			this.displayTypes = JSON.parse(localStorage.getItem('options/history-types') || '{"solo": true, "farmer": true, "team": true, "battleRoyale": true }')
+			this.displayTypes = JSON.parse(localStorage.getItem('options/history-types') || '{"solo": true, "farmer": true, "team": true, "battleRoyale": true, "boss": true }')
 			this.select_period(period)
 			LeekWars.get('history/get-' + this.type + '-history/' + id).then(data => {
 				this.fights = data.fights

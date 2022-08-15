@@ -33,10 +33,10 @@
 		max-height: 140px;
 		background: var(--background);
 		padding: 15px;
-		img {
+		& > * {
 			max-width: 100%;
 			max-height: 110px;
-			object-fit: contain;
+			object-fit: scale-down;
 		}
 	}
 	&.chip .image img {

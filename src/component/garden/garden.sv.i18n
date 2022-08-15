@@ -33,5 +33,9 @@
 	"you_must_have_2_leeks": "Du måste ha minst 2 purjolök",
 	"you_must_have_a_team": "Du måste vara en del av ett team",
 	"quit": "Sluta",
-	"queue": "Kö"
+	"queue": "Kö",
+	"category_boss_fight": "Chef",
+	"garden_boss": "Boss grönsaksträdgård",
+	"select_boss": "Välj en chef",
+	"attack": "Attack"
 }

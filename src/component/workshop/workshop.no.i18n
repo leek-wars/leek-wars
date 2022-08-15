@@ -1,0 +1,9 @@
+{
+	"price": "Priser",
+	"price_lot": "Partiets pris",
+	"quantity": "Antall",
+	"name": "Navn",
+	"level": "Nivå",
+	"date": "Dato",
+	"rarity": "Sjeldenhet"
+}

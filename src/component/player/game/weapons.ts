@@ -585,6 +585,30 @@ class HeavySword extends WhiteWeaponAnimation {
 	}
 }
 
+export class Odachi extends WhiteWeaponAnimation {
+	static textures = [T.slash, T.odachi]
+	static sounds = [S.sword]
+	constructor(game: Game) {
+		super(game, T.odachi, 37)
+	}
+}
+
+export class Excalibur extends WhiteWeaponAnimation {
+	static textures = [T.slash, T.excalibur]
+	static sounds = [S.sword]
+	constructor(game: Game) {
+		super(game, T.excalibur, 38)
+	}
+}
+
+export class Scythe extends WhiteWeaponAnimation {
+	static textures = [T.slash, T.scythe]
+	static sounds = [S.sword]
+	constructor(game: Game) {
+		super(game, T.scythe, 39)
+	}
+}
+
 class Laser extends LaserWeapon {
 	static textures = [T.laser, T.laser_bullet, T.cart_laser]
 	static sounds = [S.laser]

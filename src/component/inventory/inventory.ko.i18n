@@ -5,12 +5,5 @@
 	"name": "이름",
 	"level": "수준",
 	"date": "날짜",
-	"all": "모두",
-	"weapons": "무기",
-	"chips": "벼룩",
-	"potions": "물약",
-	"hats": "모자",
-	"pomps": "기구",
-	"resources": "자원",
 	"rarity": "부족"
 }

@@ -579,11 +579,7 @@ body.dark .v-dialog .content {
 input {
 	font-family: "Roboto";
 }
-input[type="text"],
-input[type="number"],
-input[type="password"],
-input[type="email"],
-textarea {
+input, textarea {
 	border: solid 1px var(--border);
 	font-size: 15px;
 	min-height: 26px;
@@ -733,6 +729,12 @@ img.emoji {
 .color-agility { color: #0080f7; }
 .color-resistance {
 	color: #ff4a01;
+}
+.color-ram {
+	color: #ce00c7;
+}
+.color-cores {
+	color: #878787;
 }
 .color-frequency {
 	color: var(--text-color);

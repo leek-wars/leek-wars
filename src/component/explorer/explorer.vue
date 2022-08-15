@@ -38,7 +38,7 @@
 		font-weight: bold;
 		text-transform: uppercase;
 		color: var(--text-color-secondary);
-		margin-bottom: 10px;
+		margin-bottom: 15px;
 		display: flex;
 		align-items: center;
 		.v-icon {

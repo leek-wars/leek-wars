@@ -31,5 +31,13 @@
 	"tp_desc": "Acciones máximas durante un turno",
 	"wisdom": "Sabiduría",
 	"wisdom_desc": "La sabiduría aumenta la curación y el robo de vida.",
-	"too_high": "Esta función es útil a partir del nivel {0}."
+	"too_high": "Esta función es útil a partir del nivel {0}.",
+	"cores": "Corazones",
+	"cores_desc": "Los núcleos aumentan el número máximo de operaciones ejecutables por revolución. 1 núcleo aumenta el número máximo de operaciones en 1 millón.",
+	"ram": "Memoria de acceso aleatorio",
+	"ram_desc": "Una unidad de memoria RAM da 1 ubicación de chip y un millón de variables que pueden ser utilizadas por la IA",
+	"operations": "Número de transacciones",
+	"chips": "Número máximo de fichas",
+	"variables": "Variables",
+	"base": "Invertido"
 }

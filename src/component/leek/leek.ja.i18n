@@ -97,5 +97,8 @@
 	"happy": "笑顔",
 	"neutral": "中性",
 	"xp_blocked_desc": "オプションが有効になっている場合、戦闘で経験値が得られなくなり、ネギがレベルアップしなくなります。才能とリソースの獲得は保持されます。",
-	"start_a_fight": "喧嘩を始める！"
+	"start_a_fight": "喧嘩を始める！",
+	"all_my_components": "私のコンポーネント",
+	"error_max_component": "{0}は追加コンポーネントを装備できない。",
+	"ai_and_components": "AIとコンポーネント"
 }

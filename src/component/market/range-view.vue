@@ -15,6 +15,7 @@
 		@Prop() type!: number
 		get cells() {
 			const cells: string[][] = []
+			if (this.max === 50) return cells
 			const max = (this.type === 9 || this.type === 10) ? this.max : (this.type & 1 ? this.max : (this.type & 4 ? this.max - 1 : this.max / 2))
 			for (let i = 0; i < max * 2 + 1; ++i) {
 				cells[i] = []

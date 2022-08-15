@@ -1,5 +1,5 @@
 import { Game, GROUND_TEXTURE } from "@/component/player/game/game"
-import { Obstacle } from '@/component/player/game/obstacle'
+import { Obstacle, ObstacleGeometry } from '@/component/player/game/obstacle'
 import { Field } from '@/model/field'
 import { LeekWars } from '@/model/leekwars'
 import { Position } from './position'
@@ -9,6 +9,118 @@ let GROUND_PADDING_RIGHT = 50
 let GROUND_PADDING_LEFT = 50
 const GROUND_PADDING_TOP = 0.10
 let GROUND_PADDING_BOTTOM = 105
+
+export class GroundTexture {
+	id!: number
+	texture!: Texture
+}
+
+class ObstacleInfo {
+	id!: number
+	geometry!: ObstacleGeometry
+	texture!: Texture
+}
+
+export const GROUNDS: GroundTexture[] = [
+	{ id: 0, texture: T.nexus_bg },
+	{ id: 1, texture: T.nexus_bg },
+	{ id: 2, texture: T.nexus_dark_bg },
+	{ id: 3, texture: T.factory_metal_2 },
+	{ id: 4, texture: T.factory_metal },
+	{ id: 5, texture: T.desert },
+	{ id: 6, texture: T.desert_pattern },
+	{ id: 7, texture: T.dirt },
+	{ id: 8, texture: T.forest_grass },
+	{ id: 9, texture: T.glacier_snow },
+	{ id: 10, texture: T.glacier },
+	{ id: 11, texture: T.beach },
+	{ id: 12, texture: T.water },
+	{ id: 13, texture: T.arena },
+	{ id: 14, texture: T.arena_pattern },
+	{ id: 15, texture: T.japan_grass },
+	{ id: 16, texture: T.japan_rock },
+	{ id: 17, texture: T.castle },
+	{ id: 18, texture: T.carpet },
+	{ id: 19, texture: T.cemetery_rock },
+]
+
+const OBSTACLES = {
+	1: { id: 1, geometry: Obstacle.GEOMETRY_1x1, texture: T.nexus_block_small },
+	2: { id: 2, geometry: Obstacle.GEOMETRY_2x2, texture: T.nexus_block },
+	3: { id: 3, geometry: Obstacle.GEOMETRY_1x1, texture: T.nexus_dark_block_small },
+	4: { id: 4, geometry: Obstacle.GEOMETRY_2x2, texture: T.nexus_dark_block },
+	// Factory
+	5: { id: 5, geometry: Obstacle.GEOMETRY_1x1, texture: T.box_new },
+	6: { id: 6, geometry: Obstacle.GEOMETRY_1x1, texture: T.barrel },
+	7: { id: 7, geometry: Obstacle.GEOMETRY_1x1, texture: T.metal_box },
+	8: { id: 8, geometry: Obstacle.GEOMETRY_1x1, texture: T.cone },
+	9: { id: 9, geometry: Obstacle.GEOMETRY_1x1, texture: T.cone_yellow },
+	10: { id: 10, geometry: Obstacle.GEOMETRY_2x2, texture: T.pipes },
+	11: { id: 11, geometry: Obstacle.GEOMETRY_2x2, texture: T.box_stack },
+	12: { id: 12, geometry: Obstacle.GEOMETRY_2x2, texture: T.metal_box_stack },
+	// Desert
+	13: { id: 13, geometry: Obstacle.GEOMETRY_1x1, texture: T.cactus },
+	14: { id: 14, geometry: Obstacle.GEOMETRY_2x2, texture: T.desert_rock1_big },
+	15: { id: 15, geometry: Obstacle.GEOMETRY_2x2, texture: T.desert_grass },
+	16: { id: 16, geometry: Obstacle.GEOMETRY_1x1, texture: T.cactus_2 },
+	17: { id: 17, geometry: Obstacle.GEOMETRY_2x2, texture: T.dead_tree },
+	// Forest
+	18: { id: 18, geometry: Obstacle.GEOMETRY_2x2, texture: T.fern },
+	19: { id: 19, geometry: Obstacle.GEOMETRY_2x2, texture: T.stump },
+	20: { id: 20, geometry: Obstacle.GEOMETRY_1x1, texture: T.daisy },
+	21: { id: 21, geometry: Obstacle.GEOMETRY_1x1, texture: T.forest_rock },
+	46: { id: 46, geometry: Obstacle.GEOMETRY_2x2, texture: T.forest_rock },
+	22: { id: 22, geometry: Obstacle.GEOMETRY_1x1, texture: T.mushroom },
+	// Glacier
+	23: { id: 23, geometry: Obstacle.GEOMETRY_2x2, texture: T.fir },
+	24: { id: 24, geometry: Obstacle.GEOMETRY_1x1, texture: T.bush_snow },
+	25: { id: 25, geometry: Obstacle.GEOMETRY_2x2, texture: T.rock_snow },
+	26: { id: 26, geometry: Obstacle.GEOMETRY_1x1, texture: T.snowman },
+	27: { id: 27, geometry: Obstacle.GEOMETRY_1x1, texture: T.ice },
+	28: { id: 28, geometry: Obstacle.GEOMETRY_1x1, texture: T.snow_ball },
+	// Beach
+	29: { id: 29, geometry: Obstacle.GEOMETRY_1x1, texture: T.ball },
+	30: { id: 30, geometry: Obstacle.GEOMETRY_1x1, texture: T.beach_grass },
+	31: { id: 31, geometry: Obstacle.GEOMETRY_2x2, texture: T.pebble },
+	32: { id: 32, geometry: Obstacle.GEOMETRY_1x1, texture: T.pebble_small },
+	// Temple
+	33: { id: 33, geometry: Obstacle.GEOMETRY_2x2, texture: T.cube },
+	34: { id: 34, geometry: Obstacle.GEOMETRY_2x2, texture: T.pyramid },
+	35: { id: 35, geometry: Obstacle.GEOMETRY_1x1, texture: T.pillar },
+	36: { id: 36, geometry: Obstacle.GEOMETRY_1x1, texture: T.small_cube },
+	37: { id: 37, geometry: Obstacle.GEOMETRY_2x2, texture: T.square },
+	38: { id: 38, geometry: Obstacle.GEOMETRY_1x1, texture: T.grass },
+	// Japan
+	39: { id: 39, geometry: Obstacle.GEOMETRY_TORII_GATE, texture: T.torii_gate },
+	40: { id: 40, geometry: Obstacle.GEOMETRY_1x1, texture: T.lantern },
+	41: { id: 41, geometry: Obstacle.GEOMETRY_1x1, texture: T.boxwood },
+	42: { id: 42, geometry: Obstacle.GEOMETRY_1x1, texture: T.bamboo },
+	43: { id: 43, geometry: Obstacle.GEOMETRY_2x2, texture: T.bamboo_bundle },
+	44: { id: 44, geometry: Obstacle.GEOMETRY_2x2, texture: T.bamboo_strike },
+	45: { id: 45, geometry: Obstacle.GEOMETRY_2x2, texture: T.lantern_large },
+	// Castle
+	47: { id: 47, geometry: Obstacle.GEOMETRY_2x2, texture: T.rampart_north_south },
+	48: { id: 48, geometry: Obstacle.GEOMETRY_1x1, texture: T.rampart_north_south },
+	49: { id: 49, geometry: Obstacle.GEOMETRY_2x2, texture: T.rampart_west_east },
+	50: { id: 50, geometry: Obstacle.GEOMETRY_1x1, texture: T.rampart_west_east },
+	51: { id: 51, geometry: Obstacle.GEOMETRY_3x3, texture: T.round_table },
+	52: { id: 52, geometry: Obstacle.GEOMETRY_2x2, texture: T.rampart_south_east },
+	53: { id: 53, geometry: Obstacle.GEOMETRY_1x1, texture: T.rampart_south_east },
+	54: { id: 54, geometry: Obstacle.GEOMETRY_2x2, texture: T.rampart_north_east },
+	55: { id: 55, geometry: Obstacle.GEOMETRY_1x1, texture: T.rampart_north_east },
+	56: { id: 56, geometry: Obstacle.GEOMETRY_2x2, texture: T.rampart_south_west },
+	57: { id: 57, geometry: Obstacle.GEOMETRY_1x1, texture: T.rampart_south_west },
+	58: { id: 58, geometry: Obstacle.GEOMETRY_2x2, texture: T.rampart_north_west },
+	59: { id: 59, geometry: Obstacle.GEOMETRY_1x1, texture: T.rampart_north_west },
+	60: { id: 60, geometry: Obstacle.GEOMETRY_LIFT_BRIDGE, texture: T.castle_gate },
+	61: { id: 61, geometry: Obstacle.GEOMETRY_2x2, texture: T.castle_tower },
+	62: { id: 62, geometry: Obstacle.GEOMETRY_1x1, texture: T.castle_tower },
+	63: { id: 63, geometry: Obstacle.GEOMETRY_1x1, texture: T.cemetery_cross },
+	64: { id: 64, geometry: Obstacle.GEOMETRY_2x2, texture: T.cemetery_tomb },
+	65: { id: 65, geometry: Obstacle.GEOMETRY_2x2, texture: T.cemetery_fern },
+	66: { id: 66, geometry: Obstacle.GEOMETRY_1x1, texture: T.cemetery_lantern },
+
+} as {[key: number]: ObstacleInfo}
 
 class Ground {
 
@@ -45,19 +157,8 @@ class Ground {
 
 	public addObstacle(obstacle: Obstacle) {
 		this.obstacles.push(obstacle)
-		obstacle.cell.obstacle = true
-		if (obstacle.size === 2) {
-			this.field.cells[obstacle.cell.id + 17].obstacle = true
-			this.field.cells[obstacle.cell.id + 18].obstacle = true
-			this.field.cells[obstacle.cell.id + 35].obstacle = true
-		}
-	}
-
-	public updateMap() {
-		this.game.map.random.seed(this.game.map.seed)
-		// Set obstacles types
-		for (const o in this.obstacles) {
-			this.obstacles[o].updateType()
+		for (const coord of obstacle.geometry.cells) {
+			this.field.next_cell(obstacle.cell, coord[0], coord[1])!.obstacle = obstacle
 		}
 	}
 
@@ -66,7 +167,7 @@ class Ground {
 		if (!this.game.initialized) { return  }
 
 		let padding_left = GROUND_PADDING_LEFT
-		if (LeekWars.mobile) {
+		if (LeekWars.mobile || this.game.creator) {
 			GROUND_PADDING_LEFT = 10
 			GROUND_PADDING_RIGHT = 10
 			GROUND_PADDING_BOTTOM = 5
@@ -132,8 +233,6 @@ class Ground {
 			this.textureCtx.translate(this.startX, this.startY)
 
 			// Draw pattern
-			this.game.map.random.seed(this.game.map.seed)
-			this.game.map.createPattern()
 			this.drawPattern(this.textureCtx)
 
 			// Draw lines
@@ -244,6 +343,13 @@ class Ground {
 			ctx.restore()
 		}
 
+		const colors = new Set<number>()
+		for (const cell of this.field.cells) {
+			colors.add(cell.color)
+		}
+		for (const c of colors) {
+			if (c === 0) continue
+			const groundTexture = GROUNDS[c]
 
 		const pattern = document.createElement("canvas")
 		pattern.width = this.gridWidth
@@ -272,13 +378,13 @@ class Ground {
 					pctx.save()
 					pctx.scale(1, 0.5)
 					pctx.rotate(Math.PI / 4)
-					pctx.drawImage(this.game.map.options.patternTexture.texture, 0, 0, pd, pd)
+					pctx.drawImage(groundTexture.texture.texture, 0, 0, pd, pd)
 					pctx.restore()
 
 					pctx.translate(pw / 2, ph / 2)
 					pctx.scale(1, 0.5)
 					pctx.rotate(Math.PI / 4)
-					pctx.drawImage(this.game.map.options.patternTexture.texture, 0, 0, pd, pd)
+					pctx.drawImage(groundTexture.texture.texture, 0, 0, pd, pd)
 					pctx.restore()
 				}
 			}
@@ -359,7 +465,7 @@ class Ground {
 			pctx.scale(1, 0.5)
 			pctx.rotate(Math.PI / 4)
 
-			if (!cell.color) {
+			if (cell.color !== c) {
 				pctx.beginPath()
 				pctx.moveTo(-cw, cw)
 				pctx.lineTo(cw, cw)
@@ -382,14 +488,14 @@ class Ground {
 				const n7 = this.field.next_cell(cell, 1, -1)
 				const n8 = this.field.next_cell(cell, -1, -1)
 
-				const a1 = n1 && n1.color
-				const a2 = n2 && n2.color
-				const a3 = n3 && n3.color
-				const a4 = n4 && n4.color
-				const a5 = n5 && n5.color
-				const a6 = n6 && n6.color
-				const a7 = n7 && n7.color
-				const a8 = n8 && n8.color
+				const a1 = n1 ? n1.color : 0 // <= color
+				const a2 = n2 ? n2.color : 0 // <= color
+				const a3 = n3 ? n3.color : 0 // <= color
+				const a4 = n4 ? n4.color : 0 // <= color
+				const a5 = n5 ? n5.color : 0 // <= color
+				const a6 = n6 ? n6.color : 0 // <= color
+				const a7 = n7 ? n7.color : 0 // <= color
+				const a8 = n8 ? n8.color : 0 // <= color
 
 				// Côtés
 				if (!a1) { pctx.fillRect(-cw, -cw + M, M, 2 * cw - 2 * M) }
@@ -482,6 +588,44 @@ class Ground {
 					pctx.closePath()
 					pctx.fill()
 				}
+
+				// Coins de jointure
+				if (!a1 && !a2) {
+					pctx.beginPath()
+					pctx.moveTo(-cw + M, cw - M - M)
+					pctx.lineTo(-cw + M, cw - M)
+					pctx.lineTo(-cw + M + E, cw - M)
+					pctx.quadraticCurveTo(-cw + M, cw - M, -cw + M, cw - M - E)
+					pctx.closePath()
+					pctx.fill()
+				}
+				if (!a2 && !a3) {
+					pctx.beginPath()
+					pctx.moveTo(cw - M - E, cw - M)
+					pctx.lineTo(cw - M, cw - M)
+					pctx.lineTo(cw - M, cw - M - E)
+					pctx.quadraticCurveTo(cw - M, cw - M, cw - M - E, cw - M)
+					pctx.closePath()
+					pctx.fill()
+				}
+				if (!a3 && !a4) {
+					pctx.beginPath()
+					pctx.moveTo(cw - M, -cw + M + E)
+					pctx.lineTo(cw - M, -cw + M)
+					pctx.lineTo(cw - M - E, -cw + M)
+					pctx.quadraticCurveTo(cw - M, -cw + M, cw - M, -cw + M + E)
+					pctx.closePath()
+					pctx.fill()
+				}
+				if (!a4 && !a1) {
+					pctx.beginPath()
+					pctx.moveTo(-cw + M + E, -cw + M)
+					pctx.lineTo(-cw + M, -cw + M)
+					pctx.lineTo(-cw + M, -cw + M + E)
+					pctx.quadraticCurveTo(-cw + M, -cw + M, -cw + M + E, -cw + M)
+					pctx.closePath()
+					pctx.fill()
+				}
 			}
 			pctx.restore()
 		}
@@ -494,11 +638,11 @@ class Ground {
 
 		ctx.drawImage(pattern, 0, 0)
 		ctx.imageSmoothingEnabled = true
+		}
 	}
 
 	public drawCellDetails(ctx: CanvasRenderingContext2D) {
 		ctx.save()
-		this.game.map.random.seed(this.game.map.seed)
 		for (const cell of this.field.cells) {
 
 			const xy = this.field.cellToXY(cell)
@@ -507,6 +651,7 @@ class Ground {
 			ctx.save()
 			ctx.translate(px.x * this.scale, px.y * this.scale)
 
+			this.game.map.random.seed(cell.id + this.game.map.seed)
 			this.game.map.drawCellDetails(ctx, cell)
 
 			ctx.restore()
@@ -547,7 +692,7 @@ class Ground {
 	}
 
 	public addObstacleElement(obstacle: Obstacle) {
-		this.game.addDrawableElement(obstacle, obstacle.y + obstacle.size - 1)
+		obstacle.drawID = this.game.addDrawableElement(obstacle, obstacle.y)
 	}
 
 	public drawTexture(image: HTMLImageElement | HTMLCanvasElement, x: number, y: number, angle: number) {
@@ -645,4 +790,4 @@ class Ground {
 	}
 }
 
-export { Ground, GROUND_PADDING_TOP, GROUND_PADDING_BOTTOM, GROUND_PADDING_RIGHT, GROUND_PADDING_LEFT }
+export { Ground, GROUND_PADDING_TOP, GROUND_PADDING_BOTTOM, GROUND_PADDING_RIGHT, GROUND_PADDING_LEFT, OBSTACLES, ObstacleInfo }

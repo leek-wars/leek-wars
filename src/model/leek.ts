@@ -1,8 +1,8 @@
 import { AI } from '@/model/ai'
 import { Chip } from '@/model/chip'
-import { LeekWars } from '@/model/leekwars'
 import { Weapon } from '@/model/weapon'
 import { Hat } from './hat'
+import { Component } from './component'
 
 enum Characteristic {
 	LIFE = 0,
@@ -62,6 +62,8 @@ class Leek {
 	public agility!: number
 	public resistance!: number
 	public frequency!: number
+	public cores!: number
+	public ram!: number
 	public science!: number
 	public magic!: number
 	public tp!: number
@@ -80,6 +82,8 @@ class Leek {
 	public tournaments!: any[]
 	public victories!: number
 	public ranking!: number
+	public components!: Component[]
+	public total_ram!: number
 
 	constructor(data: any) {
 		Object.assign(this, data)

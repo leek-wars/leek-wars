@@ -8,7 +8,7 @@
 					</div>
 				</template>
 				<div v-if="effect.item"><b>{{ $t(LeekWars.items[effect.item].name.replace('_', '.')) }}</b></div>
-				<div>Lancé par <b>{{ game.leeks[effect.caster].name }}</b></div>
+				<div>Lancé par <b>{{ game.leeks[effect.caster].translatedName }}</b></div>
 				<div>
 					<b>
 						<b v-if="effect.type === EffectType.ABSOLUTE_SHIELD || effect.type === EffectType.STEAL_ABSOLUTE_SHIELD || effect.type === EffectType.RAW_ABSOLUTE_SHIELD" class="color-resistance">
@@ -78,12 +78,13 @@
 			<div class="image">
 				<img v-if="entity.summon" :src="'/image/bulb/' + entity.bulbName + '_front.png'">
 				<turret-image v-else-if="(entity instanceof Turret)" :level="entity.level" :skin="entity.team" :scale="0.15" />
-				<img v-else-if="(entity instanceof Chest)" :src="'/image/chest/' + entity.rawName + '.png'">
+				<img v-else-if="(entity instanceof Chest)" :src="'/image/chest/' + entity.name + '.png'">
+				<img v-else-if="(entity instanceof Mob)" :src="'/image/mob/' + entity.name + '.png'">
 				<leek-image v-else :leek="entity" :scale="0.3" />
 			</div>
 			<div>
 				<div class="flex">
-					<span class="name">{{ entity.name }}</span>&nbsp;
+					<span class="name">{{ entity.translatedName }}</span>&nbsp;
 					<div class="spacer"></div>
 					<span class="level">{{ $t('main.level_n', [entity.level]) }}</span>
 					<div class="bar-wrapper">
@@ -161,6 +162,7 @@
 	import { Game } from './game/game'
 	import { Turret } from './game/turret'
 	import TurretImage from '@/component/turret-image.vue'
+	import { Mob } from './game/mob'
 
 	@Component({ name: 'entity-details', components: { TurretImage } })
 	export default class EntityDetails extends Vue {
@@ -170,6 +172,7 @@
 		Turret = Turret
 		EffectType = EffectType
 		Chest = Chest
+		Mob = Mob
 
 		effectText(effect: any) {
 			let r = '' + effect.value

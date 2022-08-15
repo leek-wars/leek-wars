@@ -92,5 +92,7 @@
 	"title_32": "{0} nämnde dig på #{1}",
 	"message_32": "Se katten",
 	"message_34": "Visa ditt lager",
-	"title_34": "{0} gav dig föremål {1}"
+	"title_34": "{0} gav dig föremål {1}",
+	"title_35": "{0} har startat en bosskamp",
+	"message_35": "Se kampen"
 }

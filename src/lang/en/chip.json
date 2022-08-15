@@ -101,5 +101,9 @@
 	"wizardry": "Wizardry",
 	"covid_desc": "Wash your hands very regularly with soap or use a hydro-alcoholic solution. Cough or sneeze into your elbow or into a tissue. Greet without shaking hands and stop hugging. Respect a distance of one meter from everyone.",
 	"prism_desc": "Increases 6 characteristics by 60 for 2 turns, with a range of 6 for 6 TP and a cooldown of 6 turns.",
-	"resurrection_desc": "Resuscitate an allied entity: teleports the body, reconstitutes it and finds the soul of the deceased without asking his opinion."
+	"resurrection_desc": "Resuscitate an entity: teleports the body, reconstitutes it and finds the soul of the deceased without asking his opinion.",
+	"divine_protection": "Divine protection",
+	"kill": "Kill",
+	"apocalypse": "Apocalypse",
+	"awakening": "Alarm clock"
 }

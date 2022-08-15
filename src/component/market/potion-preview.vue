@@ -36,6 +36,7 @@
 	import { Component, Prop, Vue } from 'vue-property-decorator'
 
 	@Component({
+		name: 'potion-preview',
 		components: { 'range-view': RangeView, 'effect-view': EffectView, 'area-view': AreaView }
 	})
 	export default class PotionPreview extends Vue {

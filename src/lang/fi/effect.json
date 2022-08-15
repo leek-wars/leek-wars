@@ -143,5 +143,7 @@
 	"state_2": "Parantumaton",
 	"state_3": "Voittamaton",
 	"state_4": "Pasifisti",
-	"state_6": "Tiheä"
+	"state_6": "Tiheä",
+	"allies": "Kaikki liittolaiset",
+	"enemies": "Kaikki viholliset"
 }

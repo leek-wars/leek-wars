@@ -1,13 +1,15 @@
 <template>
 	<div class="hud" :class="{dark: game.autoDark ? (game.map && game.map.options.dark) : game.dark}">
-		<div class="life-bar">
+		<div v-if="!creator" class="life-bar">
 			<div class="wrapper">
 				<template v-for="team in game.teams">
 					<tooltip v-for="entity in team" v-if="!entity.dead" :key="entity.id" top>
 						<template v-slot:activator="{ on }">
 							<div :style="{background: entity.lifeBarGadient, width: Math.max(1, barWidth * (entity.life / totalLife) - 3) + 'px'}" class="bar" v-on="on"></div>
 						</template>
-						{{ entity.name }} ({{ entity.life }})
+						<span v-if="entity instanceof Mob">{{ $t('entity.' + entity.name) }}</span>
+						<span v-else>{{ entity.name }}</span>
+						({{ entity.life }})
 					</tooltip>
 				</template>
 			</div>
@@ -20,7 +22,7 @@
 			<div>FPS : {{ game.fps }}, avg: {{ game.avgFPS }}</div>
 			<div>Resources : {{ game.numData }}</div>
 		</div>
-		<div v-if="!LeekWars.mobile" class="timeline" :class="{large: !game.showActions}" :style="{left: (game.showActions ? (game.largeActions ? actionsWidth + 5 : 400) : 0) + 'px'}">
+		<div v-if="!creator && !LeekWars.mobile" class="timeline" :class="{large: !game.showActions}" :style="{left: (game.showActions ? (game.largeActions ? actionsWidth + 5 : 400) : 0) + 'px'}">
 			<tooltip v-for="(entity, e) of game.entityOrder" :key="e" top>
 				<template v-slot:activator="{ on }">
 					<div :class="{summon: entity.summon, current: entity.id === game.currentPlayer, dead: entity.dead}" :style="{background: entity === game.selectedEntity || entity === game.mouseEntity ? '#fffc' : (entity.id === game.currentPlayer ? entity.color : entity.gradient)}" class="entity" v-on="on" @mouseenter="entity_enter(entity)" @mouseleave="entity_leave(entity)" @click="entity_click(entity)">
@@ -28,15 +30,17 @@
 						<div class="image">
 							<img v-if="entity.summon" :src="'/image/bulb/' + entity.bulbName + '_front.png'">
 							<turret-image v-else-if="(entity instanceof Turret)" :level="entity.level" :skin="entity.team" :scale="1" />
-							<img v-else-if="(entity instanceof Chest)" :src="'/image/chest/' + entity.rawName + '.png'">
+							<img v-else-if="(entity instanceof Chest)" :src="'/image/chest/' + entity.name + '.png'">
+							<img v-else-if="(entity instanceof Mob)" :src="'/image/mob/' + entity.name + '.png'">
 							<leek-image v-else :leek="entity" :scale="1" />
 						</div>
 					</div>
 				</template>
-				{{ entity.name }}
+				<span v-if="entity instanceof Mob">{{ $t('entity.' + entity.name) }}</span>
+				<span v-else>{{ entity.name }}</span>
 			</tooltip>
 		</div>
-		<div v-if="!LeekWars.mobile && game.showActions && actionsWidth > 0" ref="actions" class="fight-actions" :class="{large: game.largeActions}" :style="{'width': game.largeActions ? actionsWidth + 'px' : null, 'max-width': game.largeActions ? Math.max(600, actionsWidth) + 'px' : null}">
+		<div v-if="!creator && !LeekWars.mobile && game.showActions && actionsWidth > 0" ref="actions" class="fight-actions" :class="{large: game.largeActions}" :style="{'width': game.largeActions ? actionsWidth + 'px' : null, 'max-width': game.largeActions ? Math.max(600, actionsWidth) + 'px' : null}">
 			<template v-for="line of game.consoleLines">
 				<component :is="ActionComponents[line.action.type]" v-if="line.action" :key="line.id" :action="line.action" />
 				<div v-else-if="line.trophy" :key="line.id" class="notif-trophy">
@@ -49,7 +53,7 @@
 				<action-log v-else :key="line.id" :log="line.log" :leeks="game.leeks" />
 			</template>
 		</div>
-		<div v-if="game.showActions && game.largeActions" class="resizer" :style="{left: actionsWidth + 'px'}" @mousedown="resizerMousedown"></div>
+		<div v-if="!creator && game.showActions && game.largeActions" class="resizer" :style="{left: actionsWidth + 'px'}" @mousedown="resizerMousedown"></div>
 		<template>
 			<entity-details v-if="game.mouseEntity" :entity="game.mouseEntity" :game="game" :dark="game.autoDark ? (game.map && game.map.options.dark) : game.dark" />
 			<entity-details v-else-if="game.selectedEntity" :entity="game.selectedEntity" :game="game" :dark="game.autoDark ? (game.map && game.map.options.dark) : game.dark" />
@@ -62,11 +66,11 @@
 	import EntityDetails from '@/component/player/entity-details.vue'
 	import ActionLeekElement from '@/component/report/action-leek.vue'
 	import { ActionComponents, EffectComponents } from '@/model/action-components'
-	import { i18n } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import { TEAM_COLORS } from '@/model/team'
 	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 	import { Chest } from './game/chest'
+	import { Mob } from './game/mob'
 	import { Game } from './game/game'
 	import { Turret } from './game/turret'
 	import TurretImage from '@/component/turret-image.vue'
@@ -76,10 +80,12 @@
 	@Component({ name: 'hud', components: { EntityDetails, leek: ActionLeekElement, TurretImage, 'action-log': ActionLog } })
 	export default class Hud extends Vue {
 		@Prop({required: true}) game!: Game
+		@Prop() creator!: boolean
 		debug: boolean = false
 		hover_entity: any | null = null
 		Turret = Turret
 		Chest = Chest
+		Mob = Mob
 		actionsWidth: number = 395
 		ActionComponents = ActionComponents
 		EffectComponents = EffectComponents

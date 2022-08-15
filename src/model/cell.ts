@@ -1,13 +1,14 @@
 import { Game } from '@/component/player/game/game'
 import { Entity } from './entity'
+import { Obstacle } from '@/component/player/game/obstacle'
 
 class Cell {
 	public readonly id: number
 	public readonly x: number
 	public readonly y: number
-	public obstacle: boolean = false
+	public obstacle: Obstacle | null = null
 	public entity: Entity | null = null
-	public color: boolean = false
+	public color: number = 0
 
 	constructor(id: number, x: number, y: number) {
 		this.id = id
@@ -44,6 +45,10 @@ class Cell {
 		const dx = (pos1.x - pos2.x)
 		const dy = (pos1.y - pos2.y)
 		return Math.atan2(dy, dx)
+	}
+
+	isAvailable() {
+		return this.obstacle === null && this.entity === null
 	}
 }
 

@@ -1,0 +1,15 @@
+{
+	"price": "Hinnat",
+	"price_lot": "Erän hinta",
+	"quantity": "Määrä",
+	"name": "Nimi",
+	"level": "Taso",
+	"date": "Päivämäärä",
+	"all": "Kaikki",
+	"weapons": "Aseet",
+	"chips": "Kirput",
+	"potions": "Taikajuomat",
+	"hats": "Hatut",
+	"pomps": "Esiintymiset",
+	"resources": "Resurssit"
+}

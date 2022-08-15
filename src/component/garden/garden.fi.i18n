@@ -33,5 +33,9 @@
 	"you_must_have_2_leeks": "Sinulla tulee olla vähintään 2 purjoa",
 	"you_must_have_a_team": "Sinun täytyy olla osa tiimiä",
 	"quit": "Lopettaa",
-	"queue": "Jonottaa"
+	"queue": "Jonottaa",
+	"category_boss_fight": "Pomo",
+	"garden_boss": "Pomo vihannes puutarha",
+	"select_boss": "Valitse pomo",
+	"attack": "Hyökkäys"
 }

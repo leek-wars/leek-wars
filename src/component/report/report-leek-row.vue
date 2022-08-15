@@ -8,6 +8,7 @@
 					<span v-on="on">{{ leek.name }}</span>
 				</rich-tooltip-leek>
 			</router-link>
+			<span v-else-if="leek.mob">{{ $t('entity.' + leek.name) }}</span>
 			<span v-else>{{ leek.name }}</span>
 		</td>
 		<td class="level">{{ leek.level }}</td>
@@ -37,14 +38,15 @@
 			<span>{{ (leek.money || 0) | number }} <span class="hab"></span></span>
 		</td>
 		<td v-if="fight.context != FightContext.TEST && fight.context != FightContext.CHALLENGE" class="resources">
-			<tooltip v-for="resource of sorted_resources" :key="resource[0]">
+			<tooltip v-for="resource of sorted_resources" :key="resource[0]" content-class="fluid">
 				<template v-slot:activator="{ on }">
 					<span class="resource" v-on="on">
-						<img v-if="LeekWars.items[resource[0]]" :src="'/image/' + ITEM_CATEGORY_NAME[LeekWars.items[resource[0]].type] + '/' + LeekWars.items[resource[0]].name.replace('potion_', '') + '.png'">
+						<scheme-image v-if="LeekWars.items[resource[0]].type === ItemType.SCHEME" class="image" :scheme="LeekWars.schemes[LeekWars.items[resource[0]].params]" />
+						<img v-else :src="'/image/' + ITEM_CATEGORY_NAME[LeekWars.items[resource[0]].type] + '/' + LeekWars.items[resource[0]].name.replace('potion_', '') + '.png'">
 						<span v-if="resource[1] > 1" class="quantity">{{ resource[1] }}</span>
 					</span>
 				</template>
-				{{ resource[1] }}x <b v-if="LeekWars.items[resource[0]]">{{ $t(ITEM_CATEGORY_NAME[LeekWars.items[resource[0]].type] + '.' + LeekWars.items[resource[0]].name.replace('potion_', '')) }}</b>
+				{{ resource[1] }}x <b v-if="LeekWars.items[resource[0]].type === ItemType.SCHEME">{{ $t('main.scheme_x', [$t(ITEM_CATEGORY_NAME[LeekWars.items[LeekWars.schemes[LeekWars.items[resource[0]].params].result].type] + '.' + LeekWars.items[LeekWars.schemes[LeekWars.items[resource[0]].params].result].name.replace('potion_', ''))]) }}</b><b v-else>{{ $t(ITEM_CATEGORY_NAME[LeekWars.items[resource[0]].type] + '.' + LeekWars.items[resource[0]].name.replace('potion_', '')) }}</b>
 			</tooltip>
 		</td>
 		<td v-if="fight.context !== FightContext.CHALLENGE && leek.talent !== undefined" class="talent">
@@ -68,13 +70,15 @@
 	import { LeekWars } from '@/model/leekwars'
 	import { Component, Prop, Vue } from 'vue-property-decorator'
 	import RichTooltipLeek from '@/component/rich-tooltip/rich-tooltip-leek.vue'
+	import SchemeImage from '../market/scheme-image.vue'
 
-	@Component({ components: { RichTooltipLeek } })
+	@Component({ components: { RichTooltipLeek, SchemeImage } })
 	export default class ReportLeekRow extends Vue {
 		@Prop({required: true}) leek!: ReportLeek
 		@Prop({required: true}) fight!: Fight
 		FightContext = FightContext
 		ITEM_CATEGORY_NAME = ITEM_CATEGORY_NAME
+		ItemType = ItemType
 
 		get currentBar() {
 			const totalXP = this.leek.next_xp - this.leek.prev_xp
@@ -204,7 +208,7 @@
 		padding: 1px;
 		display: inline-block;
 		vertical-align: bottom;
-		img {
+		img, svg {
 			width: 27px;
 			height: 27px;
 			object-fit: contain;

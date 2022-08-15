@@ -145,7 +145,9 @@ class FightStatistics {
 		for (const leek of fight.data.leeks) {
 			entities[leek.id] = new StatisticsEntity(leek)
 			if (!leek.summon) {
-				entities[leek.id].move(this.field.cells[leek.cellPos])
+				if (leek.cellPos) {
+					entities[leek.id].move(this.field.cells[leek.cellPos])
+				}
 				leek_count++
 			}
 			if (fight.data.ops && leek.id in fight.data.ops) {

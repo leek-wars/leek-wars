@@ -97,5 +97,8 @@
 	"happy": "Hymyilevä",
 	"neutral": "Neutraali",
 	"xp_blocked_desc": "Jos vaihtoehto on aktivoitu, taistelut eivät enää tuota kokemusta, eikä purjo nouse tasolle. Lahjakkuus ja resurssit säilyvät.",
-	"start_a_fight": "Aloita tappelu!"
+	"start_a_fight": "Aloita tappelu!",
+	"all_my_components": "Omat komponentit",
+	"error_max_component": "{0} ei voi varustaa lisäkomponenttia.",
+	"ai_and_components": "Tekoäly ja komponentit"
 }

@@ -33,5 +33,9 @@
 	"you_must_have_2_leeks": "You must have at least 2 leeks",
 	"you_must_have_a_team": "You must be part of a team",
 	"quit": "Quit",
-	"queue": "Queue"
+	"queue": "Queue",
+	"category_boss_fight": "Boss",
+	"garden_boss": "Boss vegetable garden",
+	"select_boss": "Select a boss",
+	"attack": "Attack"
 }

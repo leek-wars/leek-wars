@@ -1,0 +1,9 @@
+{
+	"price": "価格",
+	"price_lot": "ロット価格",
+	"quantity": "数量",
+	"name": "名称",
+	"level": "レベル",
+	"date": "日付",
+	"rarity": "レアリティ"
+}

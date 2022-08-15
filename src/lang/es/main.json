@@ -191,7 +191,6 @@
 	"retrieve": "Para recuperar",
 	"estimated_value": "Valor estimado",
 	"lot_value": "Valor del premio",
-	"resource_not_used": "No todos los recursos son utilizables en este momento. ¿Quizás encuentren un uso en el futuro?",
 	"search_bar": "Busca un concepto, una función o una guía...",
 	"more_results": "Más resultados",
 	"hat": "Sombrero",
@@ -254,5 +253,14 @@
 	"dida_11": "No dudes en pedir ayuda en {chat} o {forum}, estaremos encantados de ayudarte.",
 	"dida_12": "¡Buena suerte <b>{0}</b>!",
 	"hats": "Sombreros",
-	"10years": "10 años de guerra de puerros"
+	"10years": "10 años de Leek Wars",
+	"all": "Todos",
+	"components": "Componentes",
+	"fight-packs": "Paquetes de combate",
+	"pomps": "Comparecencias",
+	"potions": "Pociones",
+	"workshop": "Taller",
+	"scheme": "Diagrama",
+	"schemes": "Esquemas",
+	"scheme_x": "Diagrama: {0}"
 }

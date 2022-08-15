@@ -143,5 +143,7 @@
 	"state_2": "Ongeneeslijk",
 	"state_3": "Onoverwinnelijk",
 	"state_4": "Pacifist",
-	"state_6": "Gespannen"
+	"state_6": "Gespannen",
+	"allies": "Alle bondgenoten",
+	"enemies": "Alle vijanden"
 }

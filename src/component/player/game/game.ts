@@ -2,16 +2,16 @@
 import Player from '@/component/player.vue'
 import { Bubble } from '@/component/player/game/bubble'
 import { Bulb } from '@/component/player/game/bulb'
-import { Acceleration, Adrenaline, Alteration, Antidote, Armor, Armoring, Arsenic, BallAndChain, Bandage, Bark, BoxingGlove, Brainwashing, Bramble, Burning, Carapace, ChipAnimation, Collar, Covetousness, Covid, Crushing, Cure, Desintegration, DevilStrike, Dome, Doping, Drip, Elevation, Ferocity, Fertilizer, Flame, Flash, Fortress, Fracture, Grapple, Helmet, Ice, Iceberg, Inversion, Jump, Knowledge, LeatherBoots, Liberation, Lightning, Loam, Manumission, Meteorite, Mirror, Motivation, Mutation, Pebble, Plague, Plasma, Precipitation, Prism, Protein, Punishment, Rage, Rampart, Reflexes, Regeneration, Remission, Repotting, Resurrection, Rock, Rockfall, Serum, SevenLeagueBoots, Shield, Shock, SlowDown, Solidification, Soporific, Spark, Stalactite, Steroid, Stretching, Summon, Teleportation, Therapy, Thorn, Toxin, Tranquilizer, Transmutation, Vaccine, Vampirization, Venom, Wall, WarmUp, Whip, WingedBoots, Wizardry } from '@/component/player/game/chips'
+import { Acceleration, Adrenaline, Alteration, Antidote, Armor, Armoring, Arsenic, Awakening, BallAndChain, Bandage, Bark, BoxingGlove, Brainwashing, Bramble, Burning, Carapace, ChipAnimation, Collar, Covetousness, Covid, Crushing, Cure, Desintegration, DevilStrike, DivineProtection, Dome, Doping, Drip, Elevation, Ferocity, Fertilizer, Flame, Flash, Fortress, Fracture, Grapple, Helmet, Ice, Iceberg, Inversion, Jump, Knowledge, LeatherBoots, Liberation, Lightning, Loam, Manumission, Meteorite, Mirror, Motivation, Mutation, Pebble, Plague, Plasma, Precipitation, Prism, Protein, Punishment, Rage, Rampart, Reflexes, Regeneration, Remission, Repotting, Resurrection, Rock, Rockfall, Serum, SevenLeagueBoots, Shield, Shock, SlowDown, Solidification, Soporific, Spark, Stalactite, Steroid, Stretching, Summon, Teleportation, Therapy, Thorn, Toxin, Tranquilizer, Transmutation, Vaccine, Vampirization, Venom, Wall, WarmUp, Whip, WingedBoots, Wizardry } from '@/component/player/game/chips'
 import { DamageType, EntityDirection, EntityType, FightEntity } from '@/component/player/game/entity'
-import { Ground } from '@/component/player/game/ground'
+import { Ground, GroundTexture, OBSTACLES } from '@/component/player/game/ground'
 import { Leek } from '@/component/player/game/leek'
-import { Arena, Beach, DarkNexus, Desert, Factory, Forest, Glacier, Map, Nexus } from '@/component/player/game/maps'
+import { Arena, Beach, Castle, Cemetery, DarkNexus, Desert, Factory, Forest, Glacier, Japan, Map, Nexus } from '@/component/player/game/maps'
 import { Obstacle } from '@/component/player/game/obstacle'
 import { Particles } from '@/component/player/game/particles'
 import { S, Sound } from '@/component/player/game/sound'
 import { T, Texture } from '@/component/player/game/texture'
-import { Axe, Bazooka, BLaser, Broadsword, DarkKatana, Destroyer, DoubleGun, Electrisor, EnhancedLightninger, ExplorerRifle, Fish, FlameThrower, Gazor, GrenadeLauncher, HeavySword, IllicitGrenadeLauncher, JLaser, Katana, Laser, Lightninger, MachineGun, Magnum, MLaser, MysteriousElectrisor, Neutrino, Pistol, RevokedMLaser, Rhino, Rifle, Shotgun, Sword, UnbridledGazor, UnstableDestroyer } from '@/component/player/game/weapons'
+import { Axe, Bazooka, BLaser, Broadsword, DarkKatana, Destroyer, DoubleGun, Electrisor, EnhancedLightninger, Excalibur, ExplorerRifle, Fish, FlameThrower, Gazor, GrenadeLauncher, HeavySword, IllicitGrenadeLauncher, JLaser, Katana, Laser, Lightninger, MachineGun, Magnum, MLaser, MysteriousElectrisor, Neutrino, Odachi, Pistol, RevokedMLaser, Rhino, Rifle, Scythe, Shotgun, Sword, UnbridledGazor, UnstableDestroyer } from '@/component/player/game/weapons'
 import { locale } from '@/locale'
 import { Action, ActionType } from '@/model/action'
 import { Area } from '@/model/area'
@@ -24,6 +24,7 @@ import { LeekWars } from '@/model/leekwars'
 import { store } from '@/model/store'
 import Vue from 'vue'
 import { Chest } from './chest'
+import { Mob } from './mob'
 import { Turret } from './turret'
 
 enum Colors {
@@ -81,9 +82,10 @@ const ENTITY_CLASSES = [
 	Bulb,
 	Turret,
 	Chest,
+	Mob,
 ]
 
-const WEAPONS = [
+export const WEAPONS = [
 	Pistol, // 1
 	MachineGun, // 2
 	DoubleGun, // 3
@@ -120,6 +122,9 @@ const WEAPONS = [
 	UnstableDestroyer, // 34
 	Sword, // 35
 	HeavySword, // 36
+	Odachi, // 37
+	Excalibur, // 38
+	Scythe, // 39
 ]
 
 const CHIP_ANIMATIONS = [
@@ -227,6 +232,15 @@ const CHIP_ANIMATIONS = [
 	null,
 	null,
 	Prism, // 104
+	null, // 105
+	null, // 106
+	null, // 107
+	null, // 108
+	Awakening, // 109
+	null, // 110
+	null, // 111
+	null, // 112
+	DivineProtection, // 113
 ]
 
 class Game {
@@ -338,6 +352,11 @@ class Game {
 	public trophies: any[] = []
 	public trophiesToSend: any[] = []
 	public progressBarMarkers: {[key: number]: any} = {}
+	public creator: boolean = false
+	public draggedObstacle: Obstacle | null = null
+	public draggedEntity: FightEntity | null = null
+	public groundPaint: GroundTexture | null = null
+	public painting: boolean = false
 
 	public maps: Map[] = [
 		new Nexus(this),
@@ -346,7 +365,10 @@ class Game {
 		new Forest(this),
 		new Glacier(this),
 		new Beach(this),
-		new Arena(this)
+		new Arena(this),
+		new Japan(this),
+		new Castle(this),
+		new Cemetery(this),
 	]
 	public darkNexus = new DarkNexus(this)
 
@@ -397,11 +419,24 @@ class Game {
 		this.obstacles = this.data.map.obstacles
 		for (const i in this.obstacles) {
 			const o = this.obstacles[i]
-			const size = o instanceof Array ? o[1] : o // Before the obstacle was an array [type, size]
-			if (size !== -1) {
-				const obstacle = new Obstacle(this, size, this.ground.field.cells[parseInt(i, 10)])
+			if (this.data.map.id) { // Map fixe
+				const info = OBSTACLES[o as unknown as number]
+				// console.log("add obstacle", o, info)
+				const obstacle = new Obstacle(this, info.geometry, this.ground.field.cells[parseInt(i, 10)], info!)
 				obstacle.resize()
 				this.ground.addObstacle(obstacle)
+			} else {
+				const type = o instanceof Array ? o[0] : -2
+				const size = o instanceof Array ? o[1] : o // Before the obstacle was an array [type, size]
+				if (size !== -1) {
+					// console.log({ type, size })
+					const types = size === 2 ? this.map.options.largeObstacles.length : this.map.options.smallObstacles.length
+					const realType = this.map.random.next() * types | 0
+					const info = size === 1 ? this.map.options.smallObstacles[realType] : this.map.options.largeObstacles[realType]
+					const obstacle = new Obstacle(this, Obstacle.GEOMETRIES[size], this.ground.field.cells[parseInt(i, 10)], info!)
+					obstacle.resize()
+					this.ground.addObstacle(obstacle)
+				}
 			}
 		}
 
@@ -412,7 +447,7 @@ class Game {
 
 			const type = typeof(e.type) === 'undefined' ? EntityType.LEEK : e.type
 
-			const entity = new ENTITY_CLASSES[type](this, e.team, e.level, e.name)
+			const entity = new ENTITY_CLASSES[type](this, e.team, e.level, e.name) as any
 
 			// Infos vitales
 			entity.id = e.id
@@ -494,12 +529,14 @@ class Game {
 			}
 			entity.maxMP = entity.mp
 
-			if (!entity.summon) {
+			if (e.cellPos !== null && e.cellPos !== undefined && !entity.summon) {
 				const cell = this.ground.field.cells[e.cellPos]
 				cell.setEntity(entity)
 				entity.setCell(cell)
-				if (entity.cell) {
+				if (entity.cell && e.orientation === -1) {
 					entity.setOrientation(this.getInitialOrientation(entity.cell))
+				} else {
+					entity.setOrientation(e.orientation)
 				}
 			}
 
@@ -528,8 +565,10 @@ class Game {
 				const metal = typeof(e.metal) === 'undefined' ? (e.level >= 80) : e.metal
 				const face = typeof(e.face) === 'undefined' ? (e.level >= 20 ? 2 : 0) : e.face
 				entity.setSkin(skin, appearance, hat, metal, face)
-				entity.active = true
-				entity.drawID = this.addDrawableElement(entity, entity.y)
+				entity.active = !!entity.cell
+				if (entity.active) {
+					entity.drawID = this.addDrawableElement(entity, entity.y)
+				}
 
 				const l1 = fight.leeks1.find(l => l.name === entity.name)
 				if (l1) { entity.fish = l1.fish }
@@ -538,9 +577,9 @@ class Game {
 
 			} else if (entity instanceof Bulb) {
 
-				entity.name = i18n.t('entity.' + entity.name) as string
+				entity.translatedName = i18n.t('entity.' + entity.name) as string
 				if (e.critical) {
-					entity.name += (locale === 'fr' ? ' !' : '!')
+					entity.translatedName += (locale === 'fr' ? ' !' : '!')
 					entity.initialMaxLife = entity.initialMaxLife / 1.2
 					entity.updateGrowth()
 				}
@@ -561,8 +600,6 @@ class Game {
 
 			} else if (entity instanceof Chest) {
 
-				entity.name = i18n.t('entity.' + entity.name) as string
-
 				if (this.teams[entity.team - 1] === undefined) {
 					this.teams[entity.team - 1] = []
 				}
@@ -572,6 +609,22 @@ class Game {
 
 				entity.active = true
 				entity.drawID = this.addDrawableElement(entity, entity.y)
+
+			} else if (entity instanceof Mob) {
+
+				entity.active = !!entity.cell
+				if (entity.active) {
+
+					if (this.teams[entity.team - 1] === undefined) {
+						this.teams[entity.team - 1] = []
+					}
+					this.teams[entity.team - 1].push(entity)
+					entity.drawID = this.addDrawableElement(entity, entity.y)
+				} else {
+					entity.life = 0
+					entity.dead = true
+				}
+				this.entityOrder.push(entity)
 			}
 		}
 
@@ -580,11 +633,11 @@ class Game {
 		this.currentAction = 0
 
 		// Check first action
-		if (this.actions.length === 0 || this.actions[0].type !== ActionType.START_FIGHT) {
-			console.warn("Error ! no action START_FIGHT")
-			this.setError()
-			return
-		}
+		// if (this.actions.length === 0 || this.actions[0].type !== ActionType.START_FIGHT) {
+		// 	console.warn("Error ! no action START_FIGHT")
+		// 	this.setError()
+		// 	return
+		// }
 		this.log(this.actions[0])
 
 		// Get the relative position of the turns in the actions
@@ -721,7 +774,7 @@ class Game {
 	 */
 	public launch() {
 		// Atmosphere sound
-		if (this.atmosphere != null && this.sound) {
+		if (!this.creator && this.atmosphere != null && this.sound) {
 			this.atmosphere.loop(this)
 		}
 		for (const obstacle of this.ground.obstacles) {
@@ -731,8 +784,8 @@ class Game {
 		this.ground.resize(this.width, this.height, this.shadows)
 
 		for (const entity of this.leeks) {
-			if (entity.active) {
-				entity.setCell(entity.cell!)
+			if (entity.cell) {
+				entity.setCell(entity.cell)
 			}
 		}
 
@@ -761,17 +814,21 @@ class Game {
 		/* Launch! */
 		this.launched = true
 		this.player.$emit('game-launched')
-		this.updateFrame()
 
-		if (this.startAction) {
-			if (this.startAction >= 0 && this.startAction < this.actions.length) {
-				this.jump(this.startAction)
-			}
-		} else if (this.startTurn !== 1) {
-			for (let a = 0; a < this.actions.length; ++a) {
-				const action = this.actions[a]
-				if (action.type === ActionType.NEW_TURN && action.params[1] === this.startTurn) {
-					this.jump(a)
+		if (this.creator) {
+			this.redraw()
+		} else {
+			this.updateFrame()
+			if (this.startAction) {
+				if (this.startAction >= 0 && this.startAction < this.actions.length) {
+					this.jump(this.startAction)
+				}
+			} else if (this.startTurn !== 1) {
+				for (let a = 0; a < this.actions.length; ++a) {
+					const action = this.actions[a]
+					if (action.type === ActionType.NEW_TURN && action.params[1] === this.startTurn) {
+						this.jump(a)
+					}
 				}
 			}
 		}
@@ -960,7 +1017,7 @@ class Game {
 	}
 
 	public resume() {
-		if (this.paused) {
+		if (this.paused && !this.creator) {
 			if (this.atmosphere != null) {
 				this.atmosphere.loop(this)
 			}
@@ -1333,6 +1390,9 @@ class Game {
 
 			entity.life = life
 			entity.maxLife = maxLife
+			if (entity.initialMaxLife === 0) {
+				entity.initialMaxLife = entity.maxLife
+			}
 			entity.reborn()
 			cell.setEntity(entity)
 			if (!this.jumping) {
@@ -1512,6 +1572,10 @@ class Game {
 					"unstable_destroyer", // 34
 					"sword", // 35
 					"heavy_sword", // 36
+					"odachi", // 37
+					"excalibur", // 38
+					"scythe", // 39
+
 				][template - 1]
 					image = LeekWars.STATIC + "image/weapon/" + img + ".png"
 					// Gestion des états du poireau
@@ -1841,6 +1905,29 @@ class Game {
 		}
 	}
 
+	public mousedown(e: MouseEvent) {
+		// console.log("game mousedown")
+		if (this.groundPaint) {
+			this.painting = true
+		} else {
+			const obstacle = this.ground.obstacles.find(o => o.cell === this.mouseCell)
+			if (obstacle) {
+				this.draggedObstacle = obstacle
+				// console.log("game dragged=", this.draggedObstacle)
+			}
+			const entity = this.leeks.find(e => e.cell === this.mouseCell)
+			if (entity) {
+				this.draggedEntity = entity
+			}
+		}
+	}
+
+	public mouseup(e: MouseEvent) {
+		this.draggedObstacle = null
+		this.draggedEntity = null
+		this.painting = false
+	}
+
 	public mousemove(e: MouseEvent) {
 		this.mouseX = (e.pageX - this.mouseOriginX) * this.ratio
 		this.mouseY = (e.pageY - this.mouseOriginY) * this.ratio
@@ -1865,7 +1952,7 @@ class Game {
 			this.mouseTileX = cx
 			this.mouseTileY = cy
 			const cell = this.ground.field.xyToCell(cx, cy)
-			if (cell.obstacle) {
+			if (cell.obstacle && !this.creator) {
 				this.mouseCell = undefined
 			} else {
 				this.mouseCell = cell
@@ -1902,13 +1989,71 @@ class Game {
 			this.mouseEntity = null
 			this.canvas.style.cursor = "auto"
 		}
+		if (this.draggedObstacle && this.mouseCell && this.ground.field.canFit(this.draggedObstacle, this.mouseCell)) {
+			// console.log("move draggedObstacle", this.paused)
+			this.draggedObstacle.move(this.mouseCell)
+			this.player.$emit('edited', 'obstacle' + this.draggedObstacle.drawID)
+		}
+		if (this.draggedEntity && this.mouseCell && this.mouseCell.isAvailable()) {
+			// console.log("move draggedObstacle", this.paused)
+			this.draggedEntity.setCell(this.mouseCell)
+			this.player.$emit('edited', 'entity' + this.draggedEntity.drawID)
+		}
+		if (this.painting && this.groundPaint && this.mouseCell) {
+			// console.log("change cell color", this.mouseCell, this.map.options)
+			const paint = this.groundPaint.texture === this.map.options.groundTexture ? 0 : this.groundPaint.id
+			if (this.mouseCell.color !== paint) {
+				this.mouseCell.color = paint
+				this.player.$emit('edited', 'cell' + this.mouseCell.id)
+				this.ground.resize(this.width, this.height, this.shadows)
+			}
+		}
 		if (this.paused) {
 			this.draw()
 		}
 	}
 
 	public click() {
+
+		if (this.groundPaint && this.mouseCell) {
+			// console.log("change cell color", this.mouseCell, this.map.options)
+			const paint = this.groundPaint.texture === this.map.options.groundTexture ? 0 : this.groundPaint.id
+			if (this.mouseCell.color !== paint) {
+				this.mouseCell.color = paint
+				this.player.$emit('edited', 'cell' + this.mouseCell.id)
+				this.ground.resize(this.width, this.height, this.shadows)
+				if (this.paused) {
+					this.draw()
+				}
+			}
+		}
+
 		return this.mouseEntity
+	}
+
+	public rightClick() {
+		if (this.creator) {
+			this.groundPaint = null
+			this.draggedObstacle = null
+			this.draggedEntity = null
+
+			const obstacle = this.ground.obstacles.find(o => o.cell === this.mouseCell)
+			// console.log("obstacle found", obstacle)
+			if (obstacle) {
+				this.removeObstacle(obstacle)
+				this.ground.resize(this.width, this.height, this.shadows)
+				this.player.$emit('edited', 'obstacle_removed' + obstacle.drawID)
+			}
+			const entity = this.leeks.find(e => e.cell === this.mouseCell)
+			if (entity) {
+				this.removeEntity(entity)
+				this.player.$emit('edited', 'entity_removed' + entity.drawID)
+			}
+
+			if (this.paused) {
+				this.draw()
+			}
+		}
 	}
 
 	public addTimelineMarker(action: Action, entity: FightEntity) {
@@ -1945,6 +2090,37 @@ class Game {
 		this.markersText = []
 	}
 
+	public addObstacle(obstacle: Obstacle) {
+		// console.log("addObstacle", obstacle.y)
+		this.ground.obstacles.push(obstacle)
+		obstacle.drawID = this.addDrawableElement(obstacle, obstacle.y)
+	}
+
+	public removeObstacle(obstacle: Obstacle) {
+		// console.log("removeObstacle", obstacle.y)
+		for (const coord of obstacle.geometry.cells) {
+			const cell = this.ground.field.next_cell(obstacle.cell, coord[0], coord[1])
+			if (cell) { cell.obstacle = null }
+		}
+		this.ground.obstacles.splice(this.ground.obstacles.indexOf(obstacle), 1)
+		this.removeDrawableElement(obstacle.drawID!, obstacle.y)
+	}
+
+	public addEntity(entity: FightEntity) {
+		this.leeks.push(entity)
+		entity.active = true
+		entity.drawID = this.addDrawableElement(entity, entity.y)
+	}
+
+	public removeEntity(entity: FightEntity) {
+		this.leeks.splice(this.leeks.indexOf(entity), 1)
+		entity.cell!.setEntity(null)
+		this.removeDrawableElement(entity.drawID!, entity.y)
+		if (this.selectedEntity === entity) {
+			this.selectedEntity = null
+		}
+	}
+
 	public addDrawableElement(element: any, line: number): number {
 		// console.log("add drawable element")
 		this.drawableElementCurrentId++
@@ -1963,11 +2139,17 @@ class Game {
 	}
 
 	public removeDrawableElement(id: number, line: number) {
-		if (this.drawableElements[line] !== undefined) {
-			if (this.drawableElements[line][id] != null) {
-				delete this.drawableElements[line][id]
-			}
-		}
+		// if (this.drawableElements[line] !== undefined) {
+		// 	if (this.drawableElements[line][id] != null) {
+				if (!this.drawableElements[line][id]) {
+					console.log("No drawable element to remove", id, line)
+					console.log(this.drawableElements)
+				} else {
+				// 	console.log("remove", this.drawableElements[line][id])
+					delete this.drawableElements[line][id]
+				}
+		// 	}
+		// }
 	}
 
 	public createEffectAreaCells(cells: Cell[], lines: number[][], convert: {[key: number]: [number, number]}) {
@@ -2400,6 +2582,9 @@ class Game {
 		// Show pointer cell
 		this.drawPointerCell()
 
+		// Ground Paint
+		this.drawGroundPaint()
+
 		// Chips (back)
 		this.ctx.save()
 		this.ctx.scale(this.ground.scale, this.ground.scale)
@@ -2493,6 +2678,16 @@ class Game {
 		this.ctx.restore()
 	}
 
+	public drawGroundPaint() {
+		if (this.groundPaint) {
+			// console.log("drawGroundPaint", this.groundPaint)
+			const x = this.mouseX!
+			const y = this.mouseY!
+			const size = this.ground.tileSizeY
+			this.ctx.drawImage(this.groundPaint.texture.texture, x, y, size, size)
+		}
+	}
+
 	public showReport() {
 		this.going_to_report = true
 		document.body.style.cursor = ''
@@ -2513,7 +2708,7 @@ class Game {
 		this.ground.field.resetCells()
 		for (const i in this.states) {
 			const leek = this.leeks[i] as Leek
-			leek.active = this.states[i].active
+			leek.active = this.states[i].active && this.states[i].cell
 			leek.life = this.states[i].life
 			leek.maxLife = this.states[i].maxLife
 			leek.tp = this.states[i].tp
@@ -2539,13 +2734,16 @@ class Game {
 			leek.moveAnim = 0
 			leek.updateGrowth()
 			// leek.setOrientation(Math.random() * 4 | 0 as EntityDirection)
+			if (leek.life === 0) {
+				leek.dead = true
+			}
 
 			if (leek.summon) {
 				const index = this.entityOrder.indexOf(leek)
 				if (index !== -1) {
 					this.entityOrder.splice(index, 1)
 				}
-			} else {
+			} else if (this.states[i].cell) {
 				leek.setCell(this.states[i].cell)
 			}
 			// Remove drawable element
@@ -2652,7 +2850,7 @@ class Game {
 		if (this.loadedData === this.numData && this.initialized === true) {
 			if (!this.launched) {
 				this.launch() // Start game if all resources are loaded
-			} else {
+			} else if (!this.creator) {
 				this.mapLoaded()
 			}
 		}
@@ -2683,7 +2881,7 @@ class Game {
 	}
 
 	public mapLoaded() {
-		this.ground.updateMap()
+		this.map.update()
 		this.ground.resize(this.width, this.height, this.shadows)
 		this.redraw()
 	}

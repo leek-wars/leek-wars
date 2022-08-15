@@ -33,5 +33,9 @@
 	"you_must_have_2_leeks": "Sie müssen mindestens 2 Lauch haben",
 	"you_must_have_a_team": "Sie müssen Teil eines Teams sein",
 	"quit": "Aufhören",
-	"queue": "Warteschlange"
+	"queue": "Warteschlange",
+	"category_boss_fight": "Boss",
+	"garden_boss": "Gemüsegarten Boss",
+	"select_boss": "Wählen Sie einen Boss",
+	"attack": "Angriff"
 }

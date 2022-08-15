@@ -97,5 +97,8 @@
 	"happy": "Tersenyum",
 	"neutral": "Netral",
 	"xp_blocked_desc": "Jika opsi diaktifkan, pertarungan tidak akan lagi menghasilkan pengalaman, dan daun bawang tidak akan naik level. Keuntungan bakat dan sumber daya dipertahankan.",
-	"start_a_fight": "Mulai berkelahi!"
+	"start_a_fight": "Mulai berkelahi!",
+	"all_my_components": "Komponen saya",
+	"error_max_component": "{0} tidak dapat melengkapi komponen tambahan.",
+	"ai_and_components": "AI dan komponen"
 }

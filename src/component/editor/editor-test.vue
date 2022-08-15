@@ -133,13 +133,13 @@
 							</div>
 						</div>
 						<br>
-						<div class="title">{{ $t('main.chips') }} [{{ currentLeek.chips.length }}]</div>
+						<div class="title">{{ $t('main.chips') }} [{{ currentLeek.chips.length }} / {{ currentLeek.ram }}]</div>
 						<div class="chips">
 							<div class="container">
-								<rich-tooltip-item v-for="chip of availableChips" :key="chip.id" v-slot="{ on }" :item="LeekWars.items[LeekWars.chipTemplates[chip.template].item]" :nodge="true">
-									<img :src="'/image/chip/' + chip.name + '.png'" :class="{hidden: !hasChipEquipped(chip.id)}" class="chip" v-on="on" @click="removeLeekChip(chip.id)">
+								<rich-tooltip-item v-for="(chip, c) of currentLeek.chips" :key="chip" v-slot="{ on }" :item="LeekWars.items[chip]" :nodge="true">
+									<img :src="'/image/chip/' + LeekWars.items[chip].name.replace('chip_', '') + '.png'" :class="{disabled: c >= currentLeek.ram}" class="chip" v-on="on" @click="removeLeekChip(chip)">
 								</rich-tooltip-item>
-								<div v-if="currentLeek.chips.length < MAX_CHIPS" class="add" @click="chipsDialog = true">+</div>
+								<div v-if="currentLeek.chips.length < currentLeek.ram" class="add" @click="chipsDialog = true">+</div>
 							</div>
 						</div>
 					</div>
@@ -428,7 +428,9 @@
 			agility: "0 → 200",
 			resistance: "0 → 300",
 			science: 0,
-			magic: 0
+			magic: 0,
+			cores: 20,
+			ram: 20,
 		}
 		betalpha = {
 			id: -2, name: "Betalpha", ai: -1, bot: true, level: 150, skin: 8, hat: null,
@@ -441,7 +443,9 @@
 			agility: "0 → 200",
 			resistance: "0 → 300",
 			science: 0,
-			magic: "0 → 600"
+			magic: "0 → 600",
+			cores: 20,
+			ram: 20,
 		}
 		tisma = {
 			id: -3, name: "Tisma", ai: -1, bot: true, level: 150, skin: 14, hat: null,
@@ -454,7 +458,9 @@
 			agility: "0 → 200",
 			resistance: "0 → 300",
 			science: "0 → 300",
-			magic: 0
+			magic: 0,
+			cores: 20,
+			ram: 20,
 		}
 		guj = {
 			id: -4, name: "Guj", ai: -1, bot: true, level: 150, skin: 4, hat: null,
@@ -467,7 +473,9 @@
 			agility: "0 → 200",
 			resistance: "0 → 300",
 			science: 0,
-			magic: 0
+			magic: 0,
+			cores: 20,
+			ram: 20,
 		}
 		hachess = {
 			id: -5, name: "Hachess", ai: -1, bot: true, level: 150, skin: 5, hat: null,
@@ -480,7 +488,9 @@
 			agility: "0 → 200",
 			resistance: "0 → 600",
 			science: 0,
-			magic: 0
+			magic: 0,
+			cores: 20,
+			ram: 20,
 		}
 		rex = {
 			id: -6, name: "Rex", ai: -1, bot: true, level: 150, skin: 2, hat: null,
@@ -493,7 +503,9 @@
 			agility: "0 → 200",
 			resistance: "0 → 300",
 			science: "0 → 600",
-			magic: 0
+			magic: 0,
+			cores: 20,
+			ram: 20,
 		}
 
 		bots = [
@@ -515,7 +527,9 @@
 			magic: {min: 0, max: 9999},
 			frequency: {min: 100, max: 9999},
 			tp: {min: 0, max: 1000},
-			mp: {min: 0, max: 100}
+			mp: {min: 0, max: 100},
+			cores: {min: 1, max: 20},
+			ram: {min: 1, max: 50},
 		}
 		selectedTemplate: number = 0
 		compositionTemplates: any[] = []
@@ -1182,8 +1196,12 @@
 					this.scenarios = data.scenarios
 					this.updateAI()
 
-					for (const id in data.leeks) {
-						this.leeks.push(data.leeks[id])
+					for (const leek of data.leeks) {
+						this.leeks.push(leek)
+						if (!leek.cores) {
+							Vue.set(leek, 'cores', 20)
+							Vue.set(leek, 'ram', 20)
+						}
 					}
 					this.generateBots()
 					for (const l in this.leeks) {
@@ -1561,8 +1579,8 @@
 		width: 63px;
 		cursor: pointer;
 		margin: 0 2px;
-		&.hidden {
-			display: none;
+		&.disabled {
+			opacity: 0.4;
 		}
 	}
 	.chips-dialog .disabled, .weapons-dialog .disabled {

@@ -1,0 +1,15 @@
+{
+	"price": "Precios",
+	"price_lot": "Precio del lote",
+	"quantity": "Cantidad",
+	"name": "Nombre",
+	"level": "Nivel",
+	"date": "Fecha",
+	"all": "Todos",
+	"weapons": "Armas",
+	"chips": "Pulgas",
+	"potions": "Pociones",
+	"hats": "Sombreros",
+	"pomps": "Comparecencias",
+	"resources": "Recursos"
+}

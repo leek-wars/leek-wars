@@ -1,5 +1,5 @@
 <template functional>
-	<span :class="'team' + props.leek.team">{{ props.leek.name }}</span>
+	<span :class="'team' + props.leek.team">{{ props.leek.translatedName }}</span>
 </template>
 
 <script lang="ts">

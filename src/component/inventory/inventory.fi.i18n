@@ -5,12 +5,5 @@
 	"name": "Nimi",
 	"level": "Taso",
 	"date": "Päivämäärä",
-	"all": "Kaikki",
-	"weapons": "Aseet",
-	"chips": "Kirput",
-	"potions": "Juomat",
-	"hats": "Hatut",
-	"pomps": "Laitteet",
-	"resources": "Resurssit",
 	"rarity": "Niukkuus"
 }

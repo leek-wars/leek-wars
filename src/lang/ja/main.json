@@ -193,7 +193,6 @@
 	"retrieve": "取得する",
 	"estimated_value": "推定値",
 	"lot_value": "賞金額",
-	"resource_not_used": "現時点では、すべてのリソースが使用できるわけではありません。多分彼らは将来用途を見つけるでしょうか？",
 	"search_bar": "コンセプト、機能、またはガイドを検索...",
 	"more_results": "より多くの結果",
 	"hat": "帽子",
@@ -254,5 +253,14 @@
 	"dida_11": "{chat}や{forum}で遠慮なくご相談ください。",
 	"dida_12": "幸運を祈る<b>{0}</b>！",
 	"hats": "帽子",
-	"10years": "ネギ戦争の10年"
+	"10years": "ネギ戦争の10年",
+	"all": "すべて",
+	"components": "コンポーネント",
+	"fight-packs": "コンバットパック",
+	"pomps": "出演",
+	"potions": "ポーション",
+	"workshop": "ワークショップ",
+	"scheme": "ダイアグラム",
+	"schemes": "回路図",
+	"scheme_x": "ダイアグラム：{0}"
 }

@@ -193,7 +193,6 @@
 	"retrieve": "Odzyskać",
 	"estimated_value": "Przewidywana wartość",
 	"lot_value": "Wartość nagrody",
-	"resource_not_used": "Nie wszystkie zasoby są obecnie dostępne. Może znajdą zastosowanie w przyszłości?",
 	"search_bar": "Wyszukaj koncepcję, funkcję lub przewodnik...",
 	"more_results": "Więcej wyników",
 	"hat": "Kapelusz",
@@ -254,5 +253,14 @@
 	"dida_11": "Nie wahaj się poprosić o pomoc na {chat} lub {forum}, z przyjemnością Ci pomożemy.",
 	"dida_12": "Powodzenia <b>{0}</b>!",
 	"hats": "Czapki",
-	"10years": "10 lat wojen porów!"
+	"10years": "10 lat wojen porów!",
+	"all": "Wszystkie",
+	"components": "Komponenty",
+	"fight-packs": "Pakiety bojowe",
+	"pomps": "Występy",
+	"potions": "Mikstury",
+	"workshop": "Warsztat",
+	"scheme": "Schemat",
+	"schemes": "Schematy",
+	"scheme_x": "Diagram: {0}"
 }

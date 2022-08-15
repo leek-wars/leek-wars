@@ -143,5 +143,7 @@
 	"state_2": "Nicht heilbar",
 	"state_3": "Unbesiegbar",
 	"state_4": "Pazifist",
-	"state_6": "Dicht"
+	"state_6": "Dicht",
+	"allies": "Alle Verbündeten",
+	"enemies": "Alle Feinde"
 }

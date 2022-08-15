@@ -1,0 +1,9 @@
+{
+	"price": "가격",
+	"price_lot": "로트 가격",
+	"quantity": "수량",
+	"name": "이름",
+	"level": "레벨",
+	"date": "날짜",
+	"rarity": "희귀도"
+}

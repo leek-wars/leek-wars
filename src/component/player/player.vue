@@ -16,7 +16,7 @@
 				</div>
 				<div v-else class="table">
 					<div class="team">
-						<div v-for="leek in fight.leeks1" :key="leek.id" class="leek" :class="{third: fight.leeks1.length >= 5 || fight.leeks1.length === 3, solo: fight.leeks1.length === 1, oneline: fight.leeks1.length <= 3}">
+						<div v-for="leek in fight.leeks1" :key="leek.id" class="leek" :class="{quarter: fight.leeks1.length >= 7, third: (fight.leeks1.length < 7 && fight.leeks1.length >= 5) || fight.leeks1.length === 3, solo: fight.leeks1.length === 1, oneline: fight.leeks1.length <= 3}">
 							<leek-image :leek="leek" :scale="1" />
 							<div class="name">{{ leek.name }}</div>
 							<lw-title v-if="leek.title && leek.title.length" :title="leek.title" />
@@ -24,10 +24,11 @@
 						</div>
 					</div>
 					<img class="vs" src="/image/vs.png">
-					<div class="team">
+					<div class="team" :class="{small: fight.type === FightType.BOSS && fight.leeks1.length >= 7}">
 						<div v-for="leek in fight.leeks2" :key="leek.id" class="leek" :class="{third: fight.leeks2.length >= 5 || fight.leeks2.length === 3, solo: fight.leeks2.length === 1, oneline: fight.leeks2.length <= 3}">
 							<leek-image :leek="leek" :scale="1" :invert="true" />
-							<div class="name">{{ leek.name }}</div>
+							<div v-if="leek.boss" class="name">{{ $t('entity.' + leek.name) }}</div>
+							<div v-else class="name">{{ leek.name }}</div>
 							<lw-title v-if="leek.title && leek.title.length" :title="leek.title" />
 							<span class="level">{{ $t('main.level_n', [leek.level]) }}</span>
 						</div>
@@ -57,10 +58,10 @@
 			</div>
 		</div>
 		<div v-show="loaded" class="game" :class="{horizontal}">
-			<div :style="{width: width + 'px', height: (height + 6) + 'px'}" class="layers">
+			<div :style="{width: width + 'px', height: (height + (creator ? 0 : 6)) + 'px'}" class="layers">
 				<canvas :style="{width: width + 'px'}" class="bg-canvas"></canvas>
-				<canvas :style="{width: width + 'px'}" class="game-canvas" @click="canvasClick" @mousemove="mousemove"></canvas>
-				<div class="progress-bar-wrapper">
+				<canvas :style="{width: width + 'px'}" class="game-canvas" @click="canvasClick" @contextmenu="canvasRightClick" @mousemove="mousemove" @mouseup="mouseup" @mousedown="mousedown"></canvas>
+				<div v-if="!creator" class="progress-bar-wrapper">
 					<div ref="progressBarTooltip" :style="{'margin-left': progressBarTooltipMargin + 'px'}" class="progress-bar-turn v-tooltip__content top">
 						<span class="content">{{ $t('fight.turn_n', [progressBarTurn]) }}</span>
 					</div>
@@ -73,15 +74,16 @@
 						<div class="preview-bar" :style="{width: progressBarPreviewWidth + '%'}"></div>
 					</div>
 				</div>
-				<hud ref="hud" :game="game" />
-				<transition name="fade">
+				<hud ref="hud" :game="game" :creator="creator" />
+				<transition v-if="!creator" name="fade">
 					<v-icon v-if="game.paused" class="play-pause">mdi-pause</v-icon>
 				</transition>
-				<transition name="fade">
+				<transition v-if="!creator" name="fade">
 					<v-icon v-if="!game.paused" class="play-pause">mdi-play</v-icon>
 				</transition>
 			</div>
-			<div class="controls controls-a">
+
+			<div v-if="!creator" class="controls controls-a">
 				<v-tooltip :open-delay="0" :close-delay="0" top content-class="top" :attach="$refs.player">
 					<template v-slot:activator="{ on }">
 						<v-icon v-ripple class="control" @click="pause" v-on="on">{{ game.paused ? 'mdi-play' : 'mdi-pause' }}</v-icon>
@@ -123,11 +125,11 @@
 								<div class="section">{{ $t('fight.share') }}</div>
 								<v-list-item>
 									<v-icon>mdi-share-variant</v-icon>
-									<input type="text" :value="document.location.host + '/fight/' + fightId + '?action=' + game.currentAction" @keyup.stop></input>
+									<input type="text" :value="document.location.host + '/fight/' + fightId + '?action=' + game.currentAction" @keyup.stop>
 								</v-list-item>
 								<v-list-item>
 									<v-icon>mdi-share-variant</v-icon>
-									<input type="text" :value="document.location.host + '/fight/' + fightId + '?turn=' + game.turn" @keyup.stop></input>
+									<input type="text" :value="document.location.host + '/fight/' + fightId + '?turn=' + game.turn" @keyup.stop>
 								</v-list-item>
 							</v-list>
 						</v-menu>
@@ -135,10 +137,13 @@
 					{{ $t('fight.share') }}
 				</v-tooltip>
 			</div>
+			<div v-else class="controls controls-a">
+				test
+			</div>
 
 			<div class="controls constrols-b">
 
-				<v-tooltip v-if="$store.state.farmer && $store.state.farmer.admin" :open-delay="0" :close-delay="0" top content-class="top" :attach="$refs.player">
+				<v-tooltip v-if="!creator && $store.state.farmer && $store.state.farmer.admin" :open-delay="0" :close-delay="0" top content-class="top" :attach="$refs.player">
 					<template v-slot:activator="{ on: tooltip }">
 						<v-menu :close-on-content-click="false" top offset-y left>
 							<template v-slot:activator="{ on: menu }">
@@ -219,7 +224,7 @@
 					</template>
 					{{ $t('settings') }}
 				</v-tooltip>
-				<v-tooltip :open-delay="0" :close-delay="0" top content-class="top" :attach="$refs.player">
+				<v-tooltip v-if="!creator" :open-delay="0" :close-delay="0" top content-class="top" :attach="$refs.player">
 					<template v-slot:activator="{ on }">
 						<v-icon v-ripple class="control" v-on="on" @click="quit">mdi-exit-to-app</v-icon>
 					</template>
@@ -233,7 +238,7 @@
 <script lang="ts">
 	import { locale } from '@/locale'
 	import { Farmer } from '@/model/farmer'
-	import { Fight, FightType, Report } from '@/model/fight'
+	import { Fight, FightMap, FightType, Report } from '@/model/fight'
 	import { mixins } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import { SocketMessage } from '@/model/socket'
@@ -242,6 +247,7 @@
 	import Hud from './hud.vue'
 	import(/* webpackChunkName: "[request]" */ /* webpackMode: "eager" */ `@/lang/fight.${locale}.lang`)
 	import LWTitle from '@/component/title/title.vue'
+import { T } from './game/texture'
 
 	@Component({
 		name: 'player',
@@ -250,14 +256,19 @@
 		mixins: [...mixins]
 	})
 	export default class Player extends Vue {
+
 		CONTROLS_HEIGHT = 36
 		BAR_HEIGHT = 6
+
 		@Prop() fightId!: string
-		@Prop() requiredWidth!: number
-		@Prop() requiredHeight!: number
+		@Prop() requiredWidth: number | undefined
+		@Prop() requiredHeight: number | undefined
 		@Prop() horizontal!: boolean
 		@Prop() startTurn!: number
 		@Prop() startAction!: number
+		@Prop() creator!: boolean
+		@Prop() map!: FightMap
+
 		FightType = FightType
 		fight: Fight | null = null
 		canvas: any
@@ -277,7 +288,7 @@
 		timeout: any = null
 		request: any = null
 		progress: number = 0
-		maps = ["Nexus", "Usine", "Désert", "Forêt", "Glacier", "Plage", "Temple"]
+		maps = ["Nexus", "Usine", "Désert", "Forêt", "Glacier", "Plage", "Temple", "Japon", "Château", "Cimetière"]
 		document = document
 
 		created() {
@@ -304,7 +315,12 @@
 			this.game.displayDebugs = localStorage.getItem('fight/debugs') === 'true'
 			this.game.displayAllyDebugs = localStorage.getItem('fight/ally-debugs') === 'true'
 			this.game.player = this
-			this.getFight(true)
+
+			if (this.fightId) {
+				this.getFight(true)
+			} else {
+				this.initMap(this.map)
+			}
 			this.resize()
 			this.$emit('resize')
 			this.$root.$on('resize', () => {
@@ -326,22 +342,29 @@
 				}
 			})
 		}
+
 		@Watch('requiredWidth')
 		@Watch('requiredHeight')
 		requiredWidthChange() {
 			this.resize()
 		}
+
 		getWidth() {
 			if (this.fullscreen) { return window.innerWidth }
-			else { return this.requiredWidth }
+			else if (this.requiredWidth) { return this.requiredWidth }
+			else return (this.$refs.player as HTMLElement).parentElement!.clientWidth
 		}
+
 		getHeight() {
 			if (this.fullscreen) { return window.innerHeight }
-			else { return this.requiredHeight }
+			else if (this.requiredHeight) { return this.requiredHeight }
+			return (this.$refs.player as HTMLElement).parentElement!.clientHeight
 		}
+
 		get progressBarWidth() {
 			return this.game && this.game.actions ? 100 * this.game.currentAction / this.game.actions.length : 0
 		}
+
 		resize() {
 			Vue.nextTick(() => {
 				const newWidth = this.getWidth()
@@ -352,7 +375,7 @@
 				this.totalWidth = newWidth
 				this.totalHeight = newHeight
 				this.width = newWidth - (this.horizontal ? 2 * this.CONTROLS_HEIGHT : 0)
-				this.height = newHeight - (this.horizontal ? this.BAR_HEIGHT : this.BAR_HEIGHT + this.CONTROLS_HEIGHT)
+				this.height = newHeight - (this.horizontal ? this.BAR_HEIGHT : (this.creator ? 0 : this.BAR_HEIGHT) + this.CONTROLS_HEIGHT)
 				this.canvas.width = this.width * aspectRatio
 				this.canvas.height = this.height * aspectRatio
 				this.game.resize(this.canvas.width, this.canvas.height)
@@ -369,6 +392,12 @@
 		mousemove(e: MouseEvent) {
 			this.game.mousemove(e)
 			;(this.$refs.hud as Hud).hover_entity = this.game.mouseEntity
+		}
+		mousedown(e: MouseEvent) {
+			this.game.mousedown(e)
+		}
+		mouseup(e: MouseEvent) {
+			this.game.mouseup(e)
 		}
 		mounted() {
 			this.canvas = document.querySelector('.game-canvas')
@@ -448,7 +477,7 @@
 			} else if (e.keyCode === 86) { // V
 				this.game.sound = !this.game.sound
 				e.preventDefault()
-			} else if (e.keyCode === 88) { // X
+			} else if (e.keyCode === 88 && !this.game.creator) { // X
 				this.game.map.seed = Math.random() * 10000000 | 0
 				this.game.mapLoaded()
 				e.preventDefault()
@@ -470,6 +499,48 @@
 			if (LeekWars.didactitial_step === 3) {
 				LeekWars.didactitial_next()
 			}
+		}
+
+		initMap(map: FightMap) {
+			const local_fight = {
+				title: 'Fight', context: 3,	date: 0,
+				farmers1: {1: {id: 1, name: 'Pilow'} as Farmer},
+				farmers2: {1: {id: 1, name: 'Pilow'} as Farmer},
+				id: 0,
+				farmer1: 1, farmer2: 1,
+				leeks1: [],	leeks2: [],
+				team1: null, team2: null,
+				report: {} as Report,
+				status: 1,
+				team1_name: "A", team2_name: "B",
+				tournament: 0, type: 0, winner: 1, year: 2019,
+				data: {
+					actions: [],
+					map: map,
+					leeks: [],
+					team1: [],
+					team2: [],
+					ops: {},
+				},
+				comments: [],
+				result: 'win', queue: 0,
+				trophies: []
+			} as Fight
+			this.loaded = true
+			this.$emit('fight', local_fight)
+			Vue.nextTick(() => {
+				this.game.creator = true
+				this.game.paused = true
+				this.game.init(local_fight)
+				// T.torii_gate.load(this.game)
+				// T.boxwood.load(this.game)
+				// for (const obstacle of this.game.ground.obstacles) {
+				// 	// obstacle.resize()
+				// 	this.game.ground.addObstacleElement(obstacle)
+				// }
+				// this.resize()
+				// this.game.redraw()
+			})
 		}
 
 		getFight(first: boolean) {
@@ -654,6 +725,11 @@
 		canvasClick() {
 			this.game.selectEntity(this.game.click())
 		}
+		canvasRightClick(e: Event) {
+			this.game.rightClick()
+			e.preventDefault()
+		}
+
 		@Watch("game.going_to_report")
 		endOfFight() {
 			if (this.game.going_to_report) {
@@ -702,7 +778,10 @@
 			height: 100%;
 			align-items: baseline;
 			padding: 15px;
-			max-width: 700px;
+			// max-width: 700px;
+			&.small {
+				flex: 0.66;
+			}
 		}
 		.vs {
 			font-size: 25px;
@@ -717,6 +796,9 @@
 			width: 50%;
 			&.third {
 				width: 33%;
+			}
+			&.quarter {
+				width: 25%;
 			}
 			&.solo {
 				width: 100%;

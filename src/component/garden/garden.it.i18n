@@ -33,5 +33,9 @@
 	"you_must_have_2_leeks": "Devi avere almeno 2 porri",
 	"you_must_have_a_team": "Devi far parte di una squadra",
 	"quit": "Esentato",
-	"queue": "Coda"
+	"queue": "Coda",
+	"category_boss_fight": "Capo",
+	"garden_boss": "Orto del capo",
+	"select_boss": "Selezionare un capo",
+	"attack": "Attacco"
 }

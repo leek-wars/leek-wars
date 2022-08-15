@@ -1,3 +1,4 @@
+import { Obstacle } from '@/component/player/game/obstacle'
 import { Area } from './area'
 import { Cell } from './cell'
 import { Entity } from './entity'
@@ -274,6 +275,14 @@ class Field {
 			}
 		}
 		return current
+	}
+
+	public canFit(obstacle: Obstacle, cell: Cell): boolean {
+		for (const coord of obstacle.geometry.cells) {
+			const c = this.next_cell(cell, coord[0], coord[1])
+			if (!c || (c.obstacle && c.obstacle !== obstacle)) return false
+		}
+		return true
 	}
 }
 

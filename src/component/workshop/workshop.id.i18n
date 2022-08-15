@@ -1,0 +1,9 @@
+{
+	"price": "Harga",
+	"price_lot": "Harga lot",
+	"quantity": "Kuantitas",
+	"name": "Nama",
+	"level": "Tingkat",
+	"date": "Tanggal",
+	"rarity": "Kelangkaan"
+}

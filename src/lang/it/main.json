@@ -193,7 +193,6 @@
 	"retrieve": "Recuperare",
 	"estimated_value": "Valore stimato",
 	"lot_value": "Valore del premio",
-	"resource_not_used": "Non tutte le risorse sono utilizzabili in questo momento. Forse troveranno un impiego in futuro?",
 	"search_bar": "Cerca un concetto, una funzione o una guida...",
 	"more_results": "Più risultati",
 	"hat": "Cappello",
@@ -254,5 +253,14 @@
 	"dida_11": "Non esitate a chiedere aiuto in {chat} o {forum}, saremo lieti di aiutarvi.",
 	"dida_12": "Buona fortuna <b>{0}</b>!",
 	"hats": "Cappelli",
-	"10years": "10 anni di Guerre dei Porri!"
+	"10years": "10 anni di Guerre dei Porri!",
+	"all": "Tutti",
+	"components": "Componenti",
+	"fight-packs": "Pacchetti di combattimento",
+	"pomps": "Apparizioni",
+	"potions": "Pozioni",
+	"workshop": "Officina",
+	"scheme": "Diagramma",
+	"schemes": "Schemi",
+	"scheme_x": "Diagramma: {0}"
 }

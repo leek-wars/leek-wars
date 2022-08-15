@@ -5,12 +5,5 @@
 	"name": "Nazwa",
 	"level": "Poziom",
 	"date": "Data",
-	"all": "Wszystko",
-	"weapons": "Bronie",
-	"chips": "Pchły",
-	"potions": "Eliksiry",
-	"hats": "Czapki",
-	"pomps": "Aparat",
-	"resources": "Zasoby",
 	"rarity": "Niedostatek"
 }

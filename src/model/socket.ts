@@ -64,6 +64,24 @@ enum SocketMessage {
 	FAKE_LUCKY = 61,
 	EDITOR_COMPLETE = 62,
 	EDITOR_ANALYZE = 64,
+	EDITOR_ANALYZE_ERROR = 65,
+	GARDEN_BOSS_CREATE_SQUAD = 66,
+	GARDEN_BOSS_JOIN_SQUAD = 67,
+	GARDEN_BOSS_ADD_LEEK = 68,
+	GARDEN_BOSS_REMOVE_LEEK = 69,
+	GARDEN_BOSS_SQUAD_PUBLIC = 70,
+	GARDEN_BOSS_ATTACK = 71,
+	GARDEN_BOSS_LISTEN = 72,
+	GARDEN_BOSS_SQUADS = 73,
+	GARDEN_BOSS_SQUAD_JOINED = 74,
+	GARDEN_BOSS_LEAVE_SQUAD = 75,
+	GARDEN_BOSS_SQUAD = 76,
+	GARDEN_BOSS_NO_SUCH_SQUAD = 77,
+	GARDEN_BOSS_STARTED = 78,
+	GARDEN_BOSS_OPEN = 79,
+	GARDEN_BOSS_LOCK = 80,
+	GARDEN_BOSS_UNLISTEN = 81,
+	GARDEN_BOSS_LEFT = 82,
 }
 
 class Socket {
@@ -86,7 +104,6 @@ class Socket {
 		this.socket = new WebSocket(url)
 		// console.log("[socket] socket", this.socket)
 
-
 		this.socket.onopen = () => {
 			// console.log("[ws] onopen")
 			if (LeekWars.DEV) {
@@ -103,6 +120,7 @@ class Socket {
 			this.queue = []
 			// Relaunch battle royale?
 			LeekWars.battleRoyale.init()
+			LeekWars.bossSquads.init()
 		}
 		this.socket.onclose = () => {
 			// console.log("[ws] onclose")
@@ -269,13 +287,39 @@ class Socket {
 					break
 				}
 				case SocketMessage.ADD_RESOURCE: {
+					// console.log("add resource", data)
 					const template = data[0]
 					const id = data[1]
 					const quantity = data[2]
 					const item = LeekWars.items[data[0]]
+					const time = data[3]
 					if (item) {
-						store.commit('add-inventory', { type: item.type, template, id, quantity })
+						store.commit('add-inventory', { type: item.type, template, id, quantity, time })
 					}
+					break
+				}
+				case SocketMessage.GARDEN_BOSS_SQUADS: {
+					LeekWars.bossSquads.update(data)
+					break
+				}
+				case SocketMessage.GARDEN_BOSS_SQUAD_JOINED: {
+					LeekWars.bossSquads.joined(data)
+					break
+				}
+				case SocketMessage.GARDEN_BOSS_SQUAD: {
+					LeekWars.bossSquads.updateSquad(data)
+					break
+				}
+				case SocketMessage.GARDEN_BOSS_NO_SUCH_SQUAD: {
+					LeekWars.bossSquads.noSuchSquad()
+					break
+				}
+				case SocketMessage.GARDEN_BOSS_STARTED: {
+					LeekWars.bossSquads.start(data)
+					break
+				}
+				case SocketMessage.GARDEN_BOSS_LEFT: {
+					LeekWars.bossSquads.left()
 					break
 				}
 			}

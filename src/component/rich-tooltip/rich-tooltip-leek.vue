@@ -39,13 +39,13 @@
 							<th>{{ $t('main.name') }}</th>
 							<th>{{ $t('main.level') }}</th>
 							<th><img src="/image/talent.png"></th>
-							<th v-for="c in LeekWars.characteristics" :key="c" class="c"><img :src="'/image/charac/small/' + c + '.png'" :class="{zero: leek[c] === 0}"></th>
+							<th v-for="c in LeekWars.characteristics" :key="c" class="c"><img :src="'/image/charac/small/' + c + '.png'" :class="{zero: leek['total_' + c] === 0}"></th>
 						</tr>
 						<tr>
 							<td class="leek-name"><router-link :to="'/leek/' + leek.id">{{ leek.name }}</router-link></td>
 							<td>{{ leek.level }}</td>
 							<td><b>{{ leek.talent }}</b></td>
-							<td v-for="c in LeekWars.characteristics" :key="c" :class="['color-' + c, leek[c] === 0 ? 'zero' : '']" class="c">{{ leek[c] }}</td>
+							<td v-for="c in LeekWars.characteristics" :key="c" :class="['color-' + c, leek['total_' + c] === 0 ? 'zero' : '']" class="c">{{ leek['total_' + c] }}</td>
 						</tr>
 					</table>
 					<div class="items">
@@ -57,6 +57,11 @@
 						<div class="chips">
 							<rich-tooltip-item v-for="chip in leek.chips" :key="chip.id" v-slot="{ on }" :item="LeekWars.items[chip.template]" :bottom="true" @input="setParent">
 								<img :src="'/image/chip/' + CHIPS[chip.template].name + '.png'" class="chip" v-on="on">
+							</rich-tooltip-item>
+						</div>
+						<div class="components">
+							<rich-tooltip-item v-for="component in leek.components.filter(c => c)" :key="component.id" v-slot="{ on }" :item="LeekWars.items[component.template]" :bottom="true" @input="setParent">
+								<img :src="'/image/component/' + LeekWars.items[component.template].name + '.png'" class="component" v-on="on">
 							</rich-tooltip-item>
 						</div>
 					</div>
@@ -241,7 +246,7 @@ export default class RichTooltipLeek extends Vue {
 	}
 	.leeks {
 		text-align: left;
-		width: 600px;
+		width: 620px;
 		margin: 0 -8px;
 		tr {
 			border-bottom: 1px solid var(--border);
@@ -278,13 +283,13 @@ export default class RichTooltipLeek extends Vue {
 		margin: 0 -8px;
 		margin-bottom: -8px;
 		align-items: center;
-		width: 600px;
+		width: 620px;
 	}
 	.weapons {
 		flex: 0.8;
 		padding: 4px;
 		.weapon {
-			width: 110px;
+			width: 100px;
 			max-height: 35px;
 			margin: 8px;
 			vertical-align: middle;
@@ -292,13 +297,24 @@ export default class RichTooltipLeek extends Vue {
 		}
 	}
 	.chips {
-		flex: 1;
+		flex: 0.75;
 		padding: 4px;
 		.chip {
 			width: 32px;
 			height: 32px;
 			margin: 2px;
 			vertical-align: top;
+		}
+	}
+	.components {
+		flex: 0.5;
+		padding: 4px;
+		.component {
+			width: 32px;
+			height: 32px;
+			margin: 2px;
+			vertical-align: top;
+			object-fit: contain;
 		}
 	}
 </style>

@@ -1,20 +1,20 @@
 import { EntityType, FightEntity } from "@/component/player/game/entity"
 import { Game, SHADOW_ALPHA, SHADOW_SCALE } from '@/component/player/game/game'
-import { Cell } from "@/model/cell"
-import { ChipAnimation } from "./chips"
 import { SHADOW_QUALITY, T, Texture } from './texture'
+import { i18n } from "@/model/i18n"
 
 class Chest extends FightEntity {
 
 	public chestScale: number = 1
 
 	constructor(game: Game, team: number, level: number, name: string) {
-		super(game, EntityType.TURRET, team, name)
+		super(game, EntityType.CHEST, team, name)
 		this.baseZ = -16
 
 		this.bodyTexFront = T.get(this.game, 'image/chest/' + this.name + '.png', true, SHADOW_QUALITY)
 		this.bodyTexBack = this.bodyTexFront
 		this.chestScale = 0.3 + level / 5000
+		this.translatedName = i18n.t('entity.' + this.name) as string
 
 		if (this.bodyTexFront.loaded) {
 			this.baseHeight = this.bodyTexFront.texture.height * this.chestScale

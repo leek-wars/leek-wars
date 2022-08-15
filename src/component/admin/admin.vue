@@ -65,6 +65,24 @@
 						<h2>Skins</h2>
 					</div>
 				</router-link>
+				<router-link to="/help/items">
+					<div v-ripple class="section card">
+						<v-icon>mdi-chart-timeline-variant</v-icon>
+						<h2>Items</h2>
+					</div>
+				</router-link>
+				<router-link to="/admin/components">
+					<div v-ripple class="section card">
+						<v-icon>mdi-food-apple-outline</v-icon>
+						<h2>Composants</h2>
+					</div>
+				</router-link>
+				<router-link to="/admin/schemes">
+					<div v-ripple class="section card">
+						<v-icon>mdi-map-outline</v-icon>
+						<h2>Schémas</h2>
+					</div>
+				</router-link>
 				<router-link to="/admin/newsletters">
 					<div v-ripple class="section card">
 						<v-icon>mdi-email-newsletter</v-icon>

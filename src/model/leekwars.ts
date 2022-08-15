@@ -2,7 +2,7 @@ import packageJson from '@/../package.json'
 import { env } from '@/env'
 import { locale } from '@/locale'
 import { BattleRoyale } from '@/model/battle-royale'
-import { CHIP_TEMPLATES, HAT_TEMPLATES, HATS, ITEMS, POMPS, POTIONS, SUMMON_TEMPLATES, TROPHY_CATEGORIES, WEAPONS, COMPLEXITIES } from '@/model/data'
+import { CHIP_TEMPLATES, HAT_TEMPLATES, HATS, POMPS, POTIONS, SUMMON_TEMPLATES, TROPHY_CATEGORIES, COMPLEXITIES } from '@/model/data'
 import { Socket } from '@/model/socket'
 import { Squares } from '@/model/squares'
 import { store } from '@/model/store'
@@ -13,8 +13,13 @@ import Vue from 'vue'
 import { TranslateResult } from 'vue-i18n'
 import { Chat, ChatWindow } from './chat'
 import { i18n, loadLanguageAsync } from './i18n'
-import { ItemType } from './item'
+import { ItemTemplate, ItemType } from './item'
 import { PotionEffect, PotionTemplate } from './potion'
+import { ITEMS } from './items'
+import { SCHEMES } from './schemes'
+import { COMPONENTS } from './components'
+import { WEAPONS } from './weapons'
+import { BossSquads } from './boss-squads'
 
 const DEV = window.location.port === '8080'
 const LOCAL = window.location.port === '8500' || window.location.port === '5100'
@@ -34,7 +39,8 @@ function request<T = any>(method: string, url: string, params?: any) {
 			xhr.setRequestHeader('Authorization', 'Bearer ' + store.state.token)
 		}
 		if (!(params instanceof FormData)) {
-			xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8')
+			// xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8')
+			xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8')
 		}
 		xhr.onload = (e: any) => {
 			if (e.target.status === 200) {
@@ -64,25 +70,28 @@ function request<T = any>(method: string, url: string, params?: any) {
 
 function post<T = any>(url: any, form: any = {}) {
 	if (!(form instanceof FormData)) {
-		const f = []
-		for (const k in form) { f.push(k + '=' + encodeURIComponent(form[k])) }
-		form = f.join('&')
+		// const f = []
+		// for (const k in form) { f.push(k + '=' + encodeURIComponent(form[k])) }
+		// form = f.join('&')
+		form = JSON.stringify(form)
 	}
 	return request<T>('POST', LeekWars.API + url, form)
 }
 function put<T = any>(url: any, form: any = {}) {
 	if (!(form instanceof FormData)) {
-		const f = []
-		for (const k in form) { f.push(k + '=' + encodeURIComponent(form[k])) }
-		form = f.join('&')
+		// const f = []
+		// for (const k in form) { f.push(k + '=' + encodeURIComponent(form[k])) }
+		// form = f.join('&')
+		form = JSON.stringify(form)
 	}
 	return request<T>('PUT', LeekWars.API + url, form)
 }
 function del<T = any>(url: any, form: any = {}) {
 	if (!(form instanceof FormData)) {
-		const f = []
-		for (const k in form) { f.push(k + '=' + encodeURIComponent(form[k])) }
-		form = f.join('&')
+		// const f = []
+		// for (const k in form) { f.push(k + '=' + encodeURIComponent(form[k])) }
+		// form = f.join('&')
+		form = JSON.stringify(form)
 	}
 	return request<T>('DELETE', LeekWars.API + url, form)
 }
@@ -116,6 +125,76 @@ const LEEK_SIZES: { [key: number]: {width: number, height: number} } = {
 const POTIONS_BY_SKIN = potionsBySkin(POTIONS)
 const POTION_BY_NAME = potionByName(POTIONS)
 const WEAPON_BY_NAME = weaponByName(WEAPONS)
+
+// ITEMS[500] = { id: 500, name: "gold_lingot", type: 7, rarity: 4, level: 72, price: 5_677_000, params: 1 } as ItemTemplate
+// ITEMS[501] = { id: 501, name: "silver_lingot", type: 7, rarity: 4, level: 72, price: 5_677_000, params: 1 } as ItemTemplate
+
+// ITEMS[1000] = { id: 1000, name: "core", type: 8, rarity: 1, level: 41, price: 155_662, params: 1 } as unknown as ItemTemplate
+// ITEMS[1001] = { id: 1001, name: "core2", type: 8, rarity: 3, level: 164, price: 201_250, params: 2 } as unknown as ItemTemplate
+// ITEMS[1002] = { id: 1002, name: "core3", type: 8, rarity: 4, level: 235, price: 3_332_210, params: 3 } as unknown as ItemTemplate
+// ITEMS[1003] = { id: 1003, name: "battery", type: 8, rarity: 2, level: 47, price: 335_568, params: 4 } as unknown as ItemTemplate
+// ITEMS[1004] = { id: 1004, name: "metal_plate", type: 8, rarity: 2, level: 37, price: 280_640, params: 5 } as unknown as ItemTemplate
+// ITEMS[1005] = { id: 1005, name: "amazonite_plate", type: 8, rarity: 3, level: 103, price: 810_251, params: 6 } as unknown as ItemTemplate
+// ITEMS[1006] = { id: 1006, name: "obsidian_plate", type: 8, rarity: 4, level: 263, price: 8_669_562, params: 7 } as unknown as ItemTemplate
+// ITEMS[1007] = { id: 1007, name: "spring", type: 8, rarity: 2, level: 7, price: 32_030, params: 8 } as unknown as ItemTemplate
+// ITEMS[1008] = { id: 1008, name: "copper_spring", type: 8, rarity: 3, level: 91, price: 1_938_878, params: 9 } as unknown as ItemTemplate
+// ITEMS[1009] = { id: 1009, name: "elinvar_spring", type: 8, rarity: 4, level: 293, price: 9_793_202, params: 10 } as unknown as ItemTemplate
+// ITEMS[1010] = { id: 1010, name: "ssd", type: 8, rarity: 4, level: 218, price: 6_942_436, params: 11 } as unknown as ItemTemplate
+// ITEMS[1011] = { id: 1011, name: "nuclear_core", type: 8, rarity: 4, level: 283, price: 6_942_436, params: 12 } as unknown as ItemTemplate
+// ITEMS[1012] = { id: 1012, name: "fan", type: 8, rarity: 2, level: 21, price: 6_942_436, params: 13 } as unknown as ItemTemplate
+// ITEMS[1013] = { id: 1013, name: "sdcard", type: 8, rarity: 3, level: 88, price: 6_942_436, params: 14 } as unknown as ItemTemplate
+// ITEMS[1014] = { id: 1014, name: "cd", type: 8, rarity: 2, level: 33, price: 6_942_436, params: 15 } as unknown as ItemTemplate
+// ITEMS[1015] = { id: 1015, name: "neural_core", type: 8, rarity: 2, level: 112, price: 6_942_436, params: 16 } as unknown as ItemTemplate
+// ITEMS[1016] = { id: 1016, name: "neural_core_pro", type: 8, rarity: 2, level: 248, price: 6_942_436, params: 17 } as unknown as ItemTemplate
+// ITEMS[1017] = { id: 1017, name: "power_supply", type: 8, rarity: 2, level: 154, price: 6_942_436, params: 18 } as unknown as ItemTemplate
+// ITEMS[1018] = { id: 1018, name: "chiyembekezo", type: 8, rarity: 2, level: 224, price: 6_942_436, params: 20 } as unknown as ItemTemplate
+// ITEMS[1019] = { id: 1019, name: "uzoma", type: 8, rarity: 2, level: 189, price: 6_942_436, params: 19 } as unknown as ItemTemplate
+// ITEMS[1020] = { id: 1020, name: "kirabo", type: 8, rarity: 2, level: 72, price: 640_710, params: 21 } as unknown as ItemTemplate
+// ITEMS[1021] = { id: 1021, name: "limbani", type: 8, rarity: 2, level: 101, price: 640_710, params: 22 } as unknown as ItemTemplate
+// ITEMS[1022] = { id: 1022, name: "thokozani", type: 8, rarity: 2, level: 295, price: 3_069_805, params: 23 } as unknown as ItemTemplate
+// ITEMS[1023] = { id: 1023, name: "ram", type: 8, rarity: 2, level: 11, price: 640_710, params: 24 } as unknown as ItemTemplate
+// ITEMS[1024] = { id: 1024, name: "ram2", type: 8, rarity: 2, level: 123, price: 640_710, params: 25 } as unknown as ItemTemplate
+// ITEMS[1025] = { id: 1025, name: "ram3", type: 8, rarity: 2, level: 274, price: 640_710, params: 26 } as unknown as ItemTemplate
+// ITEMS[1026] = { id: 1026, name: "motherboard", type: 8, rarity: 2, level: 49, price: 640_710, params: 27 } as unknown as ItemTemplate
+// ITEMS[1027] = { id: 1027, name: "propulsor", type: 8, rarity: 2, level: 44, price: 640_710, params: 28 } as unknown as ItemTemplate
+// ITEMS[1028] = { id: 1028, name: "propulsor2", type: 8, rarity: 2, level: 216, price: 640_710, params: 29 } as unknown as ItemTemplate
+// ITEMS[1029] = { id: 1029, name: "morus", type: 8, rarity: 2, level: 46, price: 640_710, params: 30 } as unknown as ItemTemplate
+// ITEMS[1030] = { id: 1030, name: "hylocereus", type: 8, rarity: 2, level: 255, price: 640_710, params: 31 } as unknown as ItemTemplate
+// ITEMS[1031] = { id: 1031, name: "apple", type: 8, rarity: 2, level: 5, price: 640_710, params: 32 } as unknown as ItemTemplate
+// ITEMS[1032] = { id: 1032, name: "nephelium", type: 8, rarity: 2, level: 138, price: 640_710, params: 33 } as unknown as ItemTemplate
+// ITEMS[1033] = { id: 1033, name: "pear", type: 8, rarity: 2, level: 201, price: 640_710, params: 34 } as unknown as ItemTemplate
+// ITEMS[1034] = { id: 1034, name: "blue_mango", type: 8, rarity: 2, level: 152, price: 640_710, params: 35 } as unknown as ItemTemplate
+// ITEMS[1035] = { id: 1035, name: "watercooling", type: 8, rarity: 2, level: 97, price: 640_710, params: 36 } as unknown as ItemTemplate
+
+// const SCHEMES_2 = [
+	// {result: 129, items: [ null, null, null, [[111, 1]], [[63, 1]] ]},
+	// {result: 131, items: [ [[86, 1]], [[64, 1]] ]},
+	// {result: 290, items: [ [[215, 1]], [[193, 10]], [[204, 13]], [[203, 22]]  ]},
+	// {result: 291, items: [ [[200, 1]], [[191, 25]], [[204, 45]], [[1000, 1]]  ]},
+	// {result: 292, items: [ [[217, 1]], [[214, 2]], [[201, 2]], [[193, 10]], [[204, 70]], [[1001, 1]] ]},
+	// {result: 293, items: [ [[198, 1]], [[148, 100]], [[192, 2]], [[204, 10]], [[203, 45]],  ]},
+	// {result: 294, items: [ [[196, 20]], [[194, 30]],  [[195, 40]], [[204, 50]],  ]},
+	// {result: 295, items: [ [[186, 3]], [[294, 1]],  ]},
+	// {result: 296, items: [ [[213, 1]], [[217, 1]], [[295, 2]], [[294, 6]] ]},
+	// {result: 297, items: [ [[215, 1]], [[204, 7]],  ]},
+	// {result: 298, items: [ [[214, 1]],  [[1007, 4]] , [[199, 4]], ]},
+	// {result: 299, items: [ [[213, 1]], [[188, 9]], [[298, 4]], [[501,1]] ]},
+	// {result: 300, items: [ [[500, 1]], [[1003, 12]], [[202,5]], [[1008, 2]], [[204, 28]], [[183, 1]], [[291, 1]], [[189, 1]] ]},
+	// {result: 301, items: [ [[216, 1]], [[214, 1]], [[213, 1]], [[188, 1]], [[294, 2]], [[186, 8]], [[297, 5]], [[200, 7]] ]},
+	// {result: 302, items: [  ]},
+	// {result: 303, items: [  ]},
+	// {result: 304, items: [  ]},
+	// {result: 305, items: [ null, [[200, 16]], null, [[213, 1]], [[1015, 1]], null, [[230, 1]] ]},
+	// {result: 308, items: [ [[216, 1]], [[218, 1]], [[190, 7]], [[200, 8]], [[238, 41]], [[234, 17]] ]},
+	// {result: 309, items: [ [[216, 1]], [[218, 1]], [[190, 7]], [[200, 8]], [[238, 41]], [[234, 17]] ]},
+	// {result: 310, items: [ [[207, 1]], [[218, 1]], [[190, 7]], [[236, 60]], [[231, 11]], [[233, 24]] ]},
+	// {result: 312, items: [ [[207, 1]], [[218, 1]], [[190, 7]], [[236, 60]], [[231, 11]], [[233, 24]] ]},
+	// {result: 500, items: [ [[216, 5]] ]},
+	// {result: 307, items: [ ]},
+	// {result: 320, items: [ [[207, 1]], [[218, 1]], [[190, 7]], [[236, 60]], [[231, 11]], [[233, 24]] ]},
+	// {result: 322, items: [ [[207, 1]], [[218, 1]], [[190, 7]], [[236, 60]], [[231, 11]], [[233, 24]] ]},
+	// {result: 324, items: [ [[207, 1]], [[218, 1]], [[190, 7]], [[236, 60]], [[231, 11]], [[233, 24]] ]},
+// ]
 
 class Language {
 	public code!: string
@@ -187,6 +266,7 @@ const LeekWars = {
 	rankingInactive: localStorage.getItem('options/ranking-inactive') === 'true',
 	service_worker: null as ServiceWorkerRegistration | null,
 	battleRoyale: new BattleRoyale(),
+	bossSquads: new BossSquads(),
 	squares: new Squares(),
 	languages: LANGUAGES,
 	currencies: Object.freeze({
@@ -597,6 +677,7 @@ const LeekWars = {
 	socket: new Socket(),
 	hats: Object.freeze(HATS),
 	pomps: Object.freeze(POMPS),
+	schemes: Object.freeze(SCHEMES),
 	weapons: Object.freeze(WEAPONS),
 	weaponByName: Object.freeze(WEAPON_BY_NAME),
 	items: Object.freeze(ITEMS),
@@ -612,6 +693,7 @@ const LeekWars = {
 		'mdi-star-outline',
 		'mdi-code-braces',
 		'mdi-basket-outline',
+		'mdi-crown-outline'
 	]),
 	summonTemplates: Object.freeze(SUMMON_TEMPLATES),
 	potions: Object.freeze(POTIONS),
@@ -619,8 +701,10 @@ const LeekWars = {
 	hatTemplates: Object.freeze(HAT_TEMPLATES),
 	potionsBySkin: Object.freeze(POTIONS_BY_SKIN),
 	complexities: Object.freeze(COMPLEXITIES),
-	characteristics: Object.freeze(['life', 'strength', 'wisdom', 'agility', 'resistance', 'science', 'magic', 'frequency', 'mp', 'tp']),
-	characteristics_table: Object.freeze(['life', 'science', 'strength', 'magic', 'wisdom', 'frequency', 'agility', 'mp', 'resistance', 'tp']),
+	components: Object.freeze(COMPONENTS),
+	characteristics: Object.freeze(['life', 'strength', 'wisdom', 'agility', 'resistance', 'science', 'magic', 'frequency', 'cores', 'ram', 'mp', 'tp']),
+	// characteristics_table: Object.freeze(['life', 'magic', 'strength', 'frequency', 'wisdom', 'ram', 'agility', 'cores', 'resistance', 'mp', 'science', 'tp']),
+	characteristics_table: Object.freeze(['life', 'magic', 'strength', 'frequency', 'wisdom', 'cores', 'agility', 'ram', 'resistance', 'mp', 'science', 'tp']),
 	effectRawOpened: false,
 	message: null as string | null,
 	messagePopup: false,

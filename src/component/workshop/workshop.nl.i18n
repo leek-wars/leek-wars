@@ -1,0 +1,9 @@
+{
+	"price": "Prijzen",
+	"price_lot": "Kavelprijs",
+	"quantity": "Hoeveelheid",
+	"name": "Naam",
+	"level": "Niveau",
+	"date": "Datum",
+	"rarity": "Zeldzaamheid"
+}

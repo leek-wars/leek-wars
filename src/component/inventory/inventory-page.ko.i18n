@@ -1,0 +1,15 @@
+{
+	"price": "가격",
+	"price_lot": "로트 가격",
+	"quantity": "수량",
+	"name": "이름",
+	"level": "레벨",
+	"date": "날짜",
+	"all": "모두",
+	"weapons": "무기",
+	"chips": "벼룩",
+	"potions": "물약",
+	"hats": "모자",
+	"pomps": "모양",
+	"resources": "리소스"
+}

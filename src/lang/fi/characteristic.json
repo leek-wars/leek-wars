@@ -31,5 +31,13 @@
 	"tp_desc": "Maksimitoimintoja käännöksen aikana",
 	"wisdom": "Viisaus",
 	"wisdom_desc": "Viisaus lisää paranemista ja elämänvaraa",
-	"too_high": "Tämä ominaisuus on hyödyllinen tasolta {0} alkaen."
+	"too_high": "Tämä ominaisuus on hyödyllinen tasolta {0} alkaen.",
+	"cores": "Sydämet",
+	"cores_desc": "Ytimet lisäävät suoritettavien operaatioiden enimmäismäärää kierrosta kohti. 1 ydin lisää operaatioiden enimmäismäärää 1 miljoonalla.",
+	"ram": "Satunnaiskäyttömuisti",
+	"ram_desc": "Yksi RAM-muistiyksikkö antaa yhden sirupaikan ja miljoona muuttujaa, joita tekoäly voi käyttää",
+	"operations": "Tapahtumien määrä",
+	"chips": "Sirujen enimmäismäärä",
+	"variables": "Muuttujat",
+	"base": "Sijoitetut"
 }

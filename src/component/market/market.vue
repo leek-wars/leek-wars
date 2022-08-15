@@ -26,6 +26,12 @@
 						<span>{{ $t('main.inventory') }}</span>
 					</div>
 				</router-link>
+				<!-- <router-link to="/workshop">
+					<div class="tab action" icon="mdi-hammer-wrench" link="/workshop">
+						<v-icon>mdi-hammer-wrench</v-icon>
+						<span>{{ $t('main.workshop') }}</span>
+					</div>
+				</router-link> -->
 			</div>
 		</div>
 		<div class="container">
@@ -520,7 +526,7 @@
 		}
 		setFightPackPrice(farmer: Farmer) {
 			const x = store.state.farmer!.total_level
-			const priceHabs = Math.round(10000 + Math.pow((x - 1) / 1203, 1.5) * (10000000 - 10000))
+			const priceHabs = Math.round(10_000 + Math.pow((x - 1) / 1203, 1.5) * (10_000_000 - 10_000))
 			this.items_by_name['fight_pack_100'].price! = priceHabs
 		}
 

@@ -143,5 +143,7 @@
 	"state_2": "Nieuleczalne",
 	"state_3": "Niezwyciężony",
 	"state_4": "Pacyfista",
-	"state_6": "Gęsty"
+	"state_6": "Gęsty",
+	"allies": "Wszyscy sojusznicy",
+	"enemies": "Wszyscy wrogowie"
 }

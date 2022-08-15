@@ -1,0 +1,15 @@
+{
+	"price": "価格",
+	"price_lot": "ロット価格",
+	"quantity": "数量",
+	"name": "名称",
+	"level": "レベル",
+	"date": "日付",
+	"all": "すべて",
+	"weapons": "武器",
+	"chips": "ノミ",
+	"potions": "ポーション",
+	"hats": "帽子",
+	"pomps": "出演",
+	"resources": "リソース"
+}

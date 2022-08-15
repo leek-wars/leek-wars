@@ -33,5 +33,9 @@
 	"you_must_have_2_leeks": "你必须至少有2个韭菜",
 	"you_must_have_a_team": "你必须是团队的一员",
 	"quit": "辞职",
-	"queue": "队列"
+	"queue": "队列",
+	"category_boss_fight": "老板",
+	"garden_boss": "老板菜园",
+	"select_boss": "选择老板",
+	"attack": "攻击"
 }

@@ -31,6 +31,12 @@
 		<i18n v-else-if="area == Area.FIRST_INLINE" path="effect.area_x">
 			<b slot="area">{{ $t('effect.first_inline') }}</b>
 		</i18n>
+		<i18n v-else-if="area == Area.ALLIES" path="effect.area_x">
+			<b slot="area">{{ $t('effect.allies') }}</b>
+		</i18n>
+		<i18n v-else-if="area == Area.ENEMIES" path="effect.area_x">
+			<b slot="area">{{ $t('effect.enemies') }}</b>
+		</i18n>
 		<div v-else>
 			?
 		</div>

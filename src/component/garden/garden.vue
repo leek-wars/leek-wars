@@ -68,6 +68,20 @@
 								{{ $t('you_must_have_a_team') }}
 							</tooltip>
 
+							<tooltip :disabled="bossEnabled">
+								<template v-slot:activator="{ on }">
+									<router-link v-ripple :class="{ enabled: bossEnabled }" :event="bossEnabled ? 'click' : ''" to="/garden/boss" class="tab">
+										<div v-on="on">
+											<h2>{{ $t('category_boss_fight') }}</h2>
+											<span class="player-count">8</span>&nbsp;<img class="player" src="/image/player.png">
+											<img class="sword" src="/image/icon/grey/garden.png">
+											<span class="player-count">8</span>&nbsp;<img class="player" src="/image/player.png">
+										</div>
+									</router-link>
+								</template>
+								{{ $t('boss_extension_locked') }}
+							</tooltip>
+
 							<div v-if="queue > 0" class="queue">
 								<div class="title">{{ $t('queue') }}</div>
 								<div class="count">{{ $tc('n_fights', queue) }}</div>
@@ -180,7 +194,7 @@
 							</div>
 							<garden-no-fights v-else :canbuy="true" />
 						</div>
-						<div v-if="category == 'farmer'">
+						<div v-else-if="category == 'farmer'">
 							<span v-ripple class="my-farmer farmer">
 								<garden-farmer v-if="$store.state.farmer" :farmer="$store.state.farmer" />
 							</span>
@@ -200,7 +214,7 @@
 							</div>
 							<garden-no-fights v-else :canbuy="true" />
 						</div>
-						<div v-if="category == 'team'">
+						<div v-else-if="category == 'team'">
 							<div class="info"><v-icon>mdi-arrow-down</v-icon> {{ $t('select_compo') }}</div>
 							<router-link v-for="composition in garden.my_compositions" :key="composition.id" v-ripple :to="'/garden/team/' + composition.id" class="composition-wrapper my-composition">
 								<garden-compo :compo="composition" />
@@ -224,7 +238,7 @@
 								</div>
 							</div>
 						</div>
-						<div v-if="category == 'battle-royale'">
+						<div v-else-if="category == 'battle-royale'">
 							<div v-if="!LeekWars.battleRoyale.enabled">
 								<div class="info"><v-icon>mdi-arrow-down</v-icon> {{ $t('select_leek') }}</div>
 								<tooltip v-for="leek in $store.state.farmer.leeks" :key="leek.id" :disabled="leek.level >= 20">
@@ -244,7 +258,7 @@
 							<div v-else>
 								<loader v-if="LeekWars.battleRoyale.progress == 0" />
 								<div class="leeks">
-									<div v-for="leek in LeekWars.battleRoyale.leeks" :key="leek.id" class="leek">
+									<div v-for="leek in LeekWars.battleRoyale.leeks" :key="leek.id" class="leek disabled">
 										<garden-leek :leek="leek" />
 									</div>
 								</div>
@@ -252,6 +266,76 @@
 								<div class="leek-count">{{ LeekWars.battleRoyale.progress }} / 10</div>
 								<br>
 								<v-btn @click="battleRoyaleLeave"><v-icon>mdi-keyboard-backspace</v-icon>&nbsp;{{ $t('quit') }}</v-btn>
+							</div>
+						</div>
+						<div v-else-if="category == 'boss'">
+							<div v-if="squad === null || selectedBoss === null">
+								<div class="info"><v-icon>mdi-arrow-down</v-icon> {{ $t('select_boss') }}</div>
+								<div class="bosses">
+									<div v-for="boss in BOSSES" :key="boss.name" class="boss-wrapper">
+										<div v-ripple @click="LeekWars.bossSquads.create(boss)" :class="{disabled: !garden.fights}" class="leek boss">
+											<leek-image :leek="boss" :scale="boss.scale" />
+											<div class="name">{{ $t('entity.' + boss.name) }}</div>
+											<div class="level">{{ $t('main.level_n', [boss.level]) }}</div>
+											<div class="stars">
+												<v-icon v-for="d of 3" :key="d">{{ d > boss.difficulty ? 'mdi-star-outline' : 'mdi-star' }}</v-icon>
+											</div>
+										</div>
+										<div v-for="(squad, s) of LeekWars.bossSquads.squads[boss.id]" :key="s" class="squad" :class="{disabled: !squad.id}" @click="squad.id ? LeekWars.bossSquads.join(squad.id) : null">
+											<div class="farmers">
+												<avatar v-for="farmer of squad.farmers" :key="farmer.id" :farmer="farmer" />
+											</div>
+											<div class="count"><v-icon v-if="squad.locked">mdi-lock</v-icon> {{ squad.engaged_count }} / 8</div>
+										</div>
+									</div>
+								</div>
+								<garden-no-fights v-if="!garden.fights" :canbuy="true" />
+							</div>
+							<div v-else>
+								<div :class="{disabled: selectedBoss.level < 20}" class="leek boss disabled">
+									<leek-image :leek="selectedBoss" :scale="selectedBoss.scale" />
+									<div class="name">{{ $t('entity.' + selectedBoss.name) }}</div>
+									<div class="level">{{ $t('main.level_n', [selectedBoss.level]) }}</div>
+									<div class="stars">
+										<v-icon v-for="d of 3" :key="d">{{ d > selectedBoss.difficulty ? 'mdi-star-outline' : 'mdi-star' }}</v-icon>
+									</div>
+								</div>
+								<div class="versus">VS</div>
+								<loader v-if="!LeekWars.bossSquads.squad" />
+								<div v-else>
+									<h4>Participants</h4>
+									<div class="participants">
+										<rich-tooltip-leek v-for="(leek,p) of LeekWars.bossSquads.squad.engaged_leeks" :key="p" :id="leek.id" v-slot="{ on }">
+											<div v-on="on" class="participant" :class="{active: true}" @click="LeekWars.bossSquads.removeLeek(leek)">
+												<leek-image :leek="leek" :scale="0.42"></leek-image>
+												<div class="name">{{ leek.name }}</div>
+												<div class="level">{{ $t('main.level_n', [leek.level]) }}</div>
+											</div>
+										</rich-tooltip-leek>
+										<div v-for="(leek, p) of 8 - LeekWars.bossSquads.squad.engaged_leeks.length" :key="'e_' + p" class="participant"></div>
+									</div>
+									<h4 v-if="LeekWars.bossSquads.squad.available_leeks.length">Poireaux disponibles</h4>
+									<div class="participants">
+										<rich-tooltip-leek v-for="leek of LeekWars.bossSquads.squad.available_leeks" :key="leek.id" :id="leek.id" v-slot="{ on }">
+											<div v-on="on" class="participant" :class="{active: true}" @click="LeekWars.bossSquads.addLeek(leek)">
+												<leek-image :leek="leek" :scale="0.42"></leek-image>
+												<div class="name">{{ leek.name }}</div>
+												<div class="level">{{ $t('main.level_n', [leek.level]) }}</div>
+											</div>
+										</rich-tooltip-leek>
+									</div>
+									<div class="flex buttons">
+										<v-btn @click="LeekWars.bossSquads.leaveSquad()"><v-icon>mdi-keyboard-backspace</v-icon>&nbsp;{{ $t('quit') }}</v-btn>
+										<div class="farmers">
+											<v-icon v-if="LeekWars.bossSquads.squad.locked" :disabled="LeekWars.bossSquads.squad.master !== $store.state.farmer.id" @click="LeekWars.bossSquads.open()">mdi-lock</v-icon>
+											<v-icon v-else :disabled="LeekWars.bossSquads.squad.master !== $store.state.farmer.id" @click="LeekWars.bossSquads.lock()">mdi-earth</v-icon>
+											<rich-tooltip-farmer v-for="farmer of LeekWars.bossSquads.squad.farmers" :key="farmer.id" :id="farmer.id" v-slot="{ on }">
+												<avatar :on="on" :farmer="farmer" />
+											</rich-tooltip-farmer>
+										</div>
+										<v-btn color="primary" :disabled="LeekWars.bossSquads.squad.engaged_leeks.length === 0 || LeekWars.bossSquads.squad.master !== $store.state.farmer.id" @click="LeekWars.bossSquads.attack()"><v-icon>mdi-sword-cross</v-icon>&nbsp;{{ $t('attack') }}</v-btn>
+									</div>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -274,11 +358,16 @@
 	import GardenCompo from './garden-compo.vue'
 	import GardenFarmer from './garden-farmer.vue'
 	import GardenLeek from './garden-leek.vue'
+	import { BOSSES, Boss } from '@/model/boss'
 	const GardenNoFights = () => import(/* webpackChunkName: "[request]" */ `@/component/garden/garden-no-fights.${locale}.i18n`)
+	import RichTooltipLeek from '@/component/rich-tooltip/rich-tooltip-leek.vue'
+	import RichTooltipFarmer from '@/component/rich-tooltip/rich-tooltip-farmer.vue'
 
 	@Component({
 		name: 'garden', i18n: {}, mixins: [...mixins],
 		components: {
+			RichTooltipLeek,
+			RichTooltipFarmer,
 			'garden-leek': GardenLeek,
 			'garden-farmer': GardenFarmer,
 			'garden-compo': GardenCompo,
@@ -305,10 +394,14 @@
 		advanced: boolean = false
 		seed: any | null = null
 		request: any = null
+		selectedBoss: any | null = null
+		BOSSES = BOSSES
+		squad: string | null = null
 
 		get farmerEnabled() { return this.garden && this.garden.farmer_enabled }
 		get teamEnabled() { return this.garden && this.garden.team_enabled }
 		get battleRoyaleEnabled() { return this.garden && this.garden.battle_royale_enabled && this.$store.state.farmer && this.$store.state.farmer.verified }
+		get bossEnabled() { return true }
 
 		mounted() {
 			LeekWars.setTitle(this.$t('title'))
@@ -333,6 +426,13 @@
 				}
 			})
 		}
+		created() {
+			if (store.state.wsconnected) {
+				this.updateWS()
+			} else {
+				this.$root.$on('wsconnected', this.updateWS)
+			}
+		}
 		back() {
 			if (this.category === 'challenge') {
 				this.$router.back()
@@ -345,12 +445,15 @@
 			this.$root.$off('back')
 			if (this.request) { this.request.abort() }
 			LeekWars.socket.send([SocketMessage.GARDEN_QUEUE_UNREGISTER])
+			this.$root.$off('wsconnected', this.updateWS)
+			LeekWars.socket.send([SocketMessage.GARDEN_BOSS_UNLISTEN])
 		}
 
 		@Watch('$route.params')
 		@Watch('$store.state.farmer')
 		update() {
 			const params = this.$route.params
+			// console.log("update", params)
 			this.category = params.category
 			if (!this.category) {
 				const savedCategory = localStorage.getItem('garden/category')
@@ -401,6 +504,15 @@
 					this.selectBattleRoyale(store.state.farmer.leeks[item])
 				} else if (this.category === 'challenge') {
 					this.selectChallenge()
+				} else if (this.category === 'boss') {
+					this.squad = this.$route.params.target
+					if (this.squad) {
+						this.selectedBoss = Object.values(BOSSES).find(b => b.name === this.$route.params.type)
+						LeekWars.bossSquads.join(this.squad)
+					} else {
+						this.selectedBoss = null
+						LeekWars.bossSquads.listen()
+					}
 				}
 			} else {
 				localStorage.removeItem("garden/category")
@@ -408,6 +520,18 @@
 				LeekWars.splitShowList()
 			}
 		}
+
+		updateWS() {
+			if (this.category === 'boss') {
+				this.squad = this.$route.params.target
+				if (this.squad) {
+					LeekWars.bossSquads.join(this.squad)
+				} else {
+					LeekWars.bossSquads.listen()
+				}
+			}
+		}
+
 		loadLeek(leek: Leek) {
 			this.selectedLeek = leek
 			if (this.garden.fights === 0 || this.leekOpponents[leek.id]) {
@@ -520,7 +644,6 @@
 				})
 			}
 		}
-
 		startFarmerChallenge() {
 			if (!this.challengeFarmerTarget) { return }
 			LeekWars.track('start-fight')
@@ -654,12 +777,70 @@
 		min-width: 150px;
 		border: 1px solid var(--border);
 	}
-	.leek, .composition, .composition-wrapper, .opponents .farmer {
+	.leek:not(.disabled), .composition, .composition-wrapper, .opponents .farmer, .squad:not(.disabled) {
 		cursor: pointer;
 	}
-	.leek:hover, .my-farmer, .composition-wrapper:hover, .opponents .farmer:hover {
+	.leek:hover:not(.disabled), .my-farmer, .composition-wrapper:hover, .opponents .farmer:hover, .participant.active:hover, .squad:not(.disabled):hover {
 		background-color: var(--pure-white);
 		box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
+	}
+	.bosses {
+		display: flex;
+		align-items: baseline;
+	}
+	.boss-wrapper {
+		flex: 1;
+	}
+	.squad {
+		border: 1px solid var(--border);
+		text-align: left;
+		padding: 10px;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		font-weight: 500;
+		.count {
+			display: flex;
+			gap: 6px;
+			align-items: center;
+		}
+		.v-icon {
+			font-size: 16px;
+		}
+	}
+	.farmers {
+		display: flex;
+		gap: 5px;
+		.v-icon {
+			margin-right: 10px;
+			width: 30px;
+		}
+	}
+	.avatar {
+		width: 30px;
+		height: 30px;
+	}
+	.leek.boss {
+		width: 100%;
+		padding: 10px 0;
+		.name {
+			font-size: 18px;
+			font-weight: 500;
+			padding: 5px;
+			padding-bottom: 3px;
+			text-overflow: ellipsis;
+			overflow: hidden;
+			white-space: nowrap;
+		}
+		.level {
+			padding-top: 3px;
+			font-size: 16px;
+			color: var(--text-color-secondary);
+			font-weight: 500;
+		}
+		&.disabled {
+			cursor: default;
+		}
 	}
 	a.my-leek:not(.router-link-active) {
 		opacity: 0.5;
@@ -737,4 +918,50 @@
 			margin-bottom: 2px;
 		}
 	}
+
+.stars {
+	margin: 5px 0;
+	display: flex;
+	justify-content: center;
+	color: var(--text-color-secondary);
+}
+.participants {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+	gap: 10px;
+	margin: 10px 0;
+	user-select: none;
+	.participant {
+		border: 1px solid var(--border);
+		height: 150px;
+		min-width: 0;
+		padding: 5px;
+		display: flex;
+		flex-direction: column;
+		justify-content: flex-end;
+		gap: 4px;
+		svg {
+			max-height: 105px;
+		}
+		.name {
+			text-overflow: ellipsis;
+			overflow: hidden;
+			font-weight: 500;
+		}
+		.level {
+			font-size: 13px;
+		}
+		&.active {
+			cursor: pointer;
+		}
+	}
+}
+.buttons {
+	justify-content: space-between;
+	margin-top: 20px;
+	align-items: center;
+}
+h4 {
+	text-align: left;
+}
 </style>

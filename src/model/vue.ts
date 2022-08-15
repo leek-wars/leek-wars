@@ -39,11 +39,15 @@ Vue.component('tooltip', tooltip)
 
 import { createSimpleTransition } from 'vuetify/lib/components/transitions/createTransition'
 import '../fade-transition.sass'
+import MobImage from '@/component/mob-image.vue'
 const myTransition = createSimpleTransition('my-transition')
 Vue.component('my-transition', myTransition)
 
+
 Vue.config.productionTip = false
 
+// Vue.prototype.LeekWars = LeekWars
+// Vue.prototype.env = env
 Vue.mixin({
 	data() {
 		return { LeekWars }
@@ -257,7 +261,9 @@ const vueMain = new Vue({
 		LeekWars.setFavicon()
 		LeekWars.initChats()
 
-		displayWarningMessage()
+		if (!LeekWars.LOCAL) {
+			displayWarningMessage()
+		}
 	},
 
 	errorCaptured(err, vm, info) {

@@ -128,12 +128,17 @@
 					<div class="text">{{ $t('main.admin') }}</div>
 				</router-link>
 
-				<div v-if="LeekWars.battleRoyale.enabled" class="separator"></div>
+				<div v-if="LeekWars.battleRoyale.enabled || LeekWars.bossSquads.squad" class="separator"></div>
 
 				<span v-if="LeekWars.battleRoyale.enabled" v-ripple :label="LeekWars.battleRoyale.progress" class="section" @click="battleRoyaleDialog = !battleRoyaleDialog">
 					<v-icon>mdi-sword-cross</v-icon>
 					<div class="text">{{ $t('main.battle_royale') }}</div>
 					<div class="progress-bar" :style="{width: (LeekWars.battleRoyale.progress * 10) + '%'}"></div>
+				</span>
+				<span v-if="LeekWars.bossSquads.squad" v-ripple :label="LeekWars.bossSquads.squad.engaged_count" class="section boss" @click="$router.push('/garden/boss/' + BOSSES[LeekWars.bossSquads.squad.boss].name + '/' + LeekWars.bossSquads.squad.id)">
+					<v-icon>mdi-crown</v-icon>
+					<div class="text">{{ $t('entity.' + BOSSES[LeekWars.bossSquads.squad.boss].name) }}</div>
+					<div class="progress-bar" :style="{width: (100 * LeekWars.bossSquads.squad.engaged_count / 8) + '%'}"></div>
 				</span>
 
 				<popup v-model="battleRoyaleDialog" :width="600">
@@ -191,6 +196,7 @@
 	import { store } from '@/model/store'
 	import { Component, Vue, Watch } from 'vue-property-decorator'
 	import { TROPHIES } from '@/model/trophies'
+	import { BOSSES } from '@/model/boss'
 
 	@Component({
 		name: 'lw-menu'
@@ -199,6 +205,7 @@
 
 		battleRoyaleDialog: boolean = false
 		TROPHIES = TROPHIES
+		BOSSES = BOSSES
 
 		get isHomePage() {
 			return this.$route.path === '/'
@@ -397,7 +404,7 @@
 		background: #222;
 		cursor: pointer;
 	}
-	.menu a div {
+	.menu a div, .menu .text {
 		overflow: hidden;
 	}
 	.menu .section[label]:after, .awards:after {
@@ -606,7 +613,7 @@
 		height: 3px;
 		background: #5fad1b;
 		transition: width ease 500ms;
-		margin-top: -2px;
+		margin-top: -3px;
 	}
 	.br-leeks {
 		display: grid;

@@ -10,6 +10,7 @@
 	"leek_leaf": "Feuille de poireau",
 	"aquamarine": "Aigue-marine",
 	"ice_cube": "Cube de glace",
+	"hab": "Hab",
 	"branch": "Branche",
 	"rock": "Rocher",
 	"nut": "Écrou",
@@ -50,5 +51,17 @@
 	"statuette": "Statuette",
 	"skull": "Crâne",
 	"sea_water": "Eau de mer",
-	"pine_ball": "Pomme de pin"
+	"pine_ball": "Pomme de pin",
+	"gold_lingot": "Lingot d'or",
+	"silver_lingot": "Lingot d'argent",
+	"silver_nugget": "Pépite d'argent",
+	"eggplant_flesh": "Chair d'aubergine",
+	"eternal_fire": "Feu éternel",
+	"broken_katana": "Fragment de katana",
+	"inro": "Inrō",
+	"sliced_fennel": "Fenouil tranché",
+	"graal_fragment": "Fragment de graal",
+	"lantern": "Lanterne",
+	"pumpkin_seeds": "Graines de courge",
+	"feather": "Plume"
 }

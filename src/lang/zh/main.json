@@ -193,7 +193,6 @@
 	"retrieve": "取回",
 	"estimated_value": "估计的价值",
 	"lot_value": "奖品价值",
-	"resource_not_used": "目前并非所有资源都可用。也许他们将来会找到用途？",
 	"search_bar": "搜索概念、功能或指南...",
 	"more_results": "更多结果",
 	"hat": "帽子",
@@ -254,5 +253,14 @@
 	"dida_11": "不要犹豫，在{chat}或{forum}中寻求帮助，我们将很乐意帮助你。",
 	"dida_12": "好运<b>{0}</b>!",
 	"hats": "帽子",
-	"10years": "韭菜战争 10 年！"
+	"10years": "韭菜战争 10 年！",
+	"all": "全部",
+	"components": "组件",
+	"fight-packs": "战斗背包",
+	"pomps": "出场",
+	"potions": "药剂",
+	"workshop": "工作坊",
+	"scheme": "图表",
+	"schemes": "示意图",
+	"scheme_x": "图表：{0}"
 }

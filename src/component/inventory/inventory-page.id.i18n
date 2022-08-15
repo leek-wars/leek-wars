@@ -1,0 +1,15 @@
+{
+	"price": "Harga",
+	"price_lot": "Harga lot",
+	"quantity": "Kuantitas",
+	"name": "Nama",
+	"level": "Tingkat",
+	"date": "Tanggal",
+	"all": "Semua",
+	"weapons": "Senjata",
+	"chips": "Kutu",
+	"potions": "Ramuan",
+	"hats": "Topi",
+	"pomps": "Penampilan",
+	"resources": "Sumber daya"
+}

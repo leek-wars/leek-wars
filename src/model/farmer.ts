@@ -58,6 +58,8 @@ class Farmer {
 	public folders!: Folder[]
 	public leek_ais!: {[key: number]: number}
 	public resources!: any[]
+	public components!: any[]
+	public schemes!: any[]
 	public verified!: boolean
 	public tutorial_progress!: number
 	public group!: Group
@@ -68,6 +70,10 @@ class Farmer {
 	public godsons_level!: number
 	public password!: string
 	public role!: string
+	public connected!: boolean
+	public color!: string
+	public points!: number
+	public forum_messages!: number
 }
 
 class Member extends Farmer {

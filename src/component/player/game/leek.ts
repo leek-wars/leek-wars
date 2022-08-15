@@ -13,20 +13,10 @@ const handSize2 = handSize / 2
 
 class Leek extends FightEntity {
 
-	public handTex!: Texture
-	public hatFront!: Texture
-	public hatBack!: Texture
-	public hatName!: string
-	public hat!: number
-	// Animations
-	public handPos = 0
-	// Weapon
-	public weapon: WeaponAnimation | null = null
 	// public weapon_name: string | null = null
 	public skin!: number
 	public metal!: boolean
 	public face!: number
-	public hatTemplate!: HatTemplate
 	public heightAnim: number = 0
 	public fish: boolean = false
 
@@ -38,9 +28,11 @@ class Leek extends FightEntity {
 
 	public setSkin(skin: number, appearance: number, hat: number | null = null, metal: boolean = false, face: number = 0) {
 
+		super.setHat(hat)
+
 		if (typeof LeekWars.skins[skin] === 'undefined') { skin = 1 }
 
-		this.scale = 0.68 - appearance * 0.01
+		this.scale = 0.65 - appearance * 0.01
 		this.skin = skin
 		this.metal = metal
 		this.face = face
@@ -60,21 +52,10 @@ class Leek extends FightEntity {
 			}, { once: true })
 		}
 
-		if (hat) {
-			this.hat = hat
-			this.hatTemplate = LeekWars.hats[hat]
-			this.hatName = this.hatTemplate.name
-			this.hatFront = T.get(this.game, "image/hat/" + this.hatName + ".png?2", true, SHADOW_QUALITY)
-			this.hatBack = T.get(this.game, "image/hat/" +  this.hatName + "_back.png?2", true, SHADOW_QUALITY)
-		}
 		const handTex = this.skin === 15 ? T.leek_hand_gold : T.leek_hand
 		this.handTex = handTex.load(this.game)
 		this.bloodTex = T.leek_blood.load(this.game)
 		S.move.load(this.game)
-	}
-
-	public setWeapon(weapon: WeaponAnimation): void {
-		this.weapon = weapon
 	}
 
 	public update(dt: number): void {

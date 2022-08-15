@@ -1,0 +1,15 @@
+{
+	"price": "Priser",
+	"price_lot": "Pris på lotten",
+	"quantity": "Antal",
+	"name": "Namn",
+	"level": "Nivå",
+	"date": "Datum",
+	"all": "Alla",
+	"weapons": "Vapen",
+	"chips": "Loppor",
+	"potions": "Trolldrycker",
+	"hats": "Hattar",
+	"pomps": "Framträdanden",
+	"resources": "Resurser"
+}

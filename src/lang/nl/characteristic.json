@@ -31,5 +31,13 @@
 	"tp_desc": "Maximale acties tijdens een beurt",
 	"wisdom": "Wijsheid",
 	"wisdom_desc": "Wijsheid verhoogt genezing en levenssteling",
-	"too_high": "Deze functie is handig vanaf niveau {0}."
+	"too_high": "Deze functie is handig vanaf niveau {0}.",
+	"cores": "Harten",
+	"cores_desc": "Kernen verhogen het maximale aantal uitvoerbare bewerkingen per omwenteling. 1 core verhoogt het maximale aantal bewerkingen met 1 miljoen.",
+	"ram": "Willekeurig toegankelijk geheugen",
+	"ram_desc": "Eén eenheid RAM-geheugen geeft 1 chiplocatie en een miljoen variabelen die gebruikt kunnen worden door de AI",
+	"operations": "Aantal transacties",
+	"chips": "Maximaal aantal chips",
+	"variables": "Variabelen",
+	"base": "Geïnvesteerd"
 }

@@ -33,5 +33,9 @@
 	"you_must_have_2_leeks": "У вас должно быть не менее 2 луковиц",
 	"you_must_have_a_team": "Вы должны быть частью команды",
 	"quit": "Покидать",
-	"queue": "Очередь"
+	"queue": "Очередь",
+	"category_boss_fight": "Boss",
+	"garden_boss": "Огород Босса",
+	"select_boss": "Выберите начальника",
+	"attack": "Атака"
 }

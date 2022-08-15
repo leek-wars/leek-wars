@@ -193,7 +193,6 @@
 	"retrieve": "Recuperar",
 	"estimated_value": "Valor estimado",
 	"lot_value": "Valor do prêmio",
-	"resource_not_used": "Nem todos os recursos são utilizáveis neste momento. Talvez eles encontrem um uso no futuro?",
 	"search_bar": "Procure um conceito, uma função ou um guia...",
 	"more_results": "Mais resultados",
 	"hat": "Chapéu",
@@ -254,5 +253,14 @@
 	"dida_11": "Não hesite em pedir ajuda no {chat} ou no {forum}, teremos todo o prazer em ajudá-lo.",
 	"dida_12": "Boa sorte <b>{0}</b>!",
 	"hats": "Chapéus",
-	"10years": "10 anos de Guerra do Alho Francês!"
+	"10years": "10 anos de Guerra do Alho Francês!",
+	"all": "Todos",
+	"components": "Componentes",
+	"fight-packs": "Pacotes de combate",
+	"pomps": "Aparições",
+	"potions": "Poções",
+	"workshop": "Oficina",
+	"scheme": "Diagrama",
+	"schemes": "Esquemas",
+	"scheme_x": "Diagrama: {0}"
 }

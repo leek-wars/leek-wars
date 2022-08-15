@@ -146,14 +146,13 @@
 					</div>
 				</template>
 				<div slot="content" class="characteristics">
-					<characteristic-tooltip v-for="c in LeekWars.characteristics_table" :key="c" v-slot="{ on }" :characteristic="c" :value="leek ? leek[c] : 0" :leek="leek" :test="false">
+					<characteristic-tooltip v-for="c in LeekWars.characteristics_table" :key="c" v-slot="{ on }" :characteristic="c" :base="leek ? leek[c] : 0" :value="leek ? leek['total_' + c] : 0" :leek="leek" :test="false">
 						<div class="characteristic" :class="c" v-on="on">
 							<img :src="'/image/charac/' + c + '.png'">
-							<span :class="'color-' + c">{{ leek ? leek[c] : '...' }}</span>
+							<span :class="'color-' + c">{{ leek ? leek['total_' + c] : '...' }}</span>
 						</div>
 					</characteristic-tooltip>
 					<center v-if="leek && my_leek">
-						<br>
 						<span class="dida-element">
 							<v-btn v-if="(leek.capital > 0 || LeekWars.didactitial_step === 1) && $store.state.farmer.equipment_enabled" color="primary" @click="capitalDialog = true" :class="{bouncing: !capitalDialog && LeekWars.didactitial_step === 1}">{{ $t('main.n_capital', [leek.capital]) }}</v-btn>
 							<span v-if="LeekWars.didactitial_step === 1" class="dida-hint">
@@ -173,7 +172,7 @@
 				</div>
 			</panel>
 
-			<panel>
+			<panel icon="mdi-sword">
 				<template slot="title">{{ $t('weapons') }} <span v-if="leek && leek.weapons" class="weapon-count">[{{ leek.weapons.length }}/{{ leek.max_weapons }}]</span></template>
 				<template v-if="leek && my_leek" slot="actions">
 					<div v-if="$store.state.farmer.equipment_enabled" class="button flat" @click="weaponsDialog = true">
@@ -194,7 +193,7 @@
 			</panel>
 
 			<panel icon="mdi-chip">
-				<template slot="title">{{ $t('main.chips') }} <span v-if="leek && leek.chips" class="chip-count">[{{ leek.chips.length }}/{{ leek.max_chips }}]</span></template>
+				<template slot="title">{{ $t('main.chips') }} <span v-if="leek && leek.chips" class="chip-count">[{{ leek.chips.length }}/{{ leek.total_ram }}]</span></template>
 				<template v-if="leek && my_leek && (leek.chips.length + farmer_chips.length) > 0" slot="actions">
 					<div v-if="$store.state.farmer.equipment_enabled" class="button flat" @click="chipsDialog = true">
 						<v-icon>mdi-pencil</v-icon>
@@ -204,8 +203,8 @@
 					<loader v-if="!leek" />
 					<div v-else-if="leek.chips.length === 0" class="empty">{{ $t('no_chips') }}</div>
 					<div v-else class="chips">
-						<rich-tooltip-item v-for="chip in orderedChips" :key="chip.id" v-slot="{ on }" :item="LeekWars.items[chip.template]" :bottom="true">
-							<div class="chip" v-on="on">
+						<rich-tooltip-item v-for="(chip, i) in orderedChips" :key="chip.id" v-slot="{ on }" :item="LeekWars.items[chip.template]" :bottom="true">
+							<div class="chip" :class="{disabled: i >= leek.total_ram}" v-on="on">
 								<img :src="'/image/chip/' + CHIPS[chip.template].name + '.png'">
 							</div>
 						</rich-tooltip-item>
@@ -213,25 +212,37 @@
 				</div>
 			</panel>
 
-			<panel :title="$t('ai')" icon="mdi-code-braces">
+			<panel :title="$t('ai_and_components') + (leek ? ' [' + leek.components.filter(c => !!c).length + '/' + max_components + ']' : '...')" icon="mdi-code-braces">
 				<template v-if="leek && my_leek" slot="actions">
 					<div class="button flat" @click="aiDialog = true">
 						<v-icon>mdi-pencil</v-icon>
 					</div>
 				</template>
-				<div slot="content" class="leek-ai">
+				<div slot="content" class="leek-ai-components">
 					<loader v-if="!leek" />
 					<template v-else>
-						<template v-if="leek.ai">
-							<router-link v-if="my_leek" :to="'/editor/' + leek.ai.id">
-								<ai :ai="leek.ai" :library="false" :small="false" />
-							</router-link>
-							<a v-else-if="$store.getters.admin" :href="LeekWars.API + 'ai/download/' + leek.ai.id" target="_blank">
-								<ai :ai="leek.ai" :library="false" :small="false" />
-							</a>
-							<ai v-else :ai="leek.ai" :library="false" :small="false" />
-						</template>
-						<span v-else class="empty">{{ $t('no_ai') }}</span>
+						<div class="components-grid">
+							<template v-for="(c, i) of 8">
+								<div v-if="leek.components[i]" class="component" :class="{disabled: i >= max_components}">
+									<rich-tooltip-item v-slot="{ on }" :item="LeekWars.items[leek.components[i].template]" :bottom="true" :key="c">
+										<div v-on="on">
+											<img :src="'/image/component/' + LeekWars.items[leek.components[i].template].name + '.png'">
+										</div>
+									</rich-tooltip-item>
+								</div>
+								<div v-else class="component" :key="c"></div>
+							</template>
+							<template v-if="leek.ai">
+								<router-link v-if="my_leek" :to="'/editor/' + leek.ai.id">
+									<ai :ai="leek.ai" :library="false" :small="false" />
+								</router-link>
+								<a v-else-if="$store.getters.admin" :href="LeekWars.API + 'ai/download/' + leek.ai.id" target="_blank">
+									<ai :ai="leek.ai" :library="false" :small="false" />
+								</a>
+								<ai v-else :ai="leek.ai" :library="false" :small="false" />
+							</template>
+							<span v-else class="empty">{{ $t('no_ai') }}</span>
+						</div>
 					</template>
 				</div>
 			</panel>
@@ -614,21 +625,45 @@
 
 		<level-dialog v-if="leek" v-model="levelPopup" :leek="leek" :level-data="levelPopupData" />
 
-		<popup v-if="leek && my_leek" v-model="aiDialog" :width="870">
+		<popup v-if="leek && my_leek" v-model="aiDialog" :width="1050">
 			<v-icon slot="icon">mdi-code-braces</v-icon>
 			<span slot="title">{{ $t('ai_of', [leek.name]) }}</span>
-			<div class="ai_popup">
-				<div :class="{dashed: draggedAI && (!leek.ai || draggedAI.id !== leek.ai.id)}" class="leek-ai" @dragover="dragOver" @drop="aiDrop('leek', $event)">
-					<ai v-if="leek.ai" :ai="leek.ai" :library="true" :small="false" @click.native="removeAI()" @dragstart.native="aiDragStart(leek.ai, $event)" @dragend.native="aiDragEnd(leek.ai, $event)" />
+			<div class="ai-popup">
+				<div class="leek-ai-components components-grid">
+					<div v-for="(c, i) of 8" :key="i" class="component" :class="{dashed: draggedComponent, disabled: i >= max_components}" @dragover="dragOver" @drop="componentsDrop('leek', $event, i)">
+						<rich-tooltip-item v-if="leek.components[i]" v-slot="{ on }" :item="LeekWars.items[leek.components[i].template]" :key="i" :bottom="true" ref="componentTooltips">
+							<div :class="{dragging: draggedComponent && draggedComponent.template === leek.components[i].template && draggedComponentLocation === 'leek'}" draggable="true" v-on="on" @dragstart="componentDragStart('leek', leek.components[i], $event)" @dragend="componentDragEnd(leek.components[0])" @click="removeComponent(leek.components[i])">
+								<img :src="'/image/component/' + LeekWars.items[leek.components[i].template].name + '.png'">
+							</div>
+						</rich-tooltip-item>
+						<div v-else><v-icon>mdi-sd</v-icon></div>
+					</div>
+					<div :class="{dashed: draggedAI && (!leek.ai || draggedAI.id !== leek.ai.id)}" class="leek-ai" @dragover="dragOver" @drop="aiDrop('leek', $event)">
+						<ai v-if="leek.ai" :ai="leek.ai" :library="true" :small="false" @click.native="removeAI()" @dragstart.native="aiDragStart(leek.ai, $event)" @dragend.native="aiDragEnd(leek.ai, $event)" />
+					</div>
 				</div>
-				<br>
-				<explorer class="explorer" @select="selectAI($event)" />
+				<div class="flex">
+					<explorer class="explorer" @select="selectAI($event)" />
+					<div>
+						<div class="title">
+							<v-icon>mdi-sd</v-icon>
+							{{ $t('all_my_components') }} ({{ farmer_components.length }})
+						</div>
+						<div class="farmer-components" :class="{dashed: draggedComponent && draggedComponentLocation === 'leek'}" @dragover="dragOver" @drop="componentsDrop('farmer', $event)">
+							<rich-tooltip-item v-for="component in farmer_components" :key="component.id" v-slot="{ on }" :item="LeekWars.items[component.template]" :bottom="true" :nodge="true" ref="componentTooltips">
+								<div :quantity="component.quantity" :class="{dragging: draggedComponent && draggedComponent.template === component.template && draggedComponentLocation === 'farmer', locked: LeekWars.items[component.template].level > leek.level || leek.components.find(c => c && c.template === component.template) }" :draggable="LeekWars.items[component.template].level <= leek.level" class="component" v-on="on" @dragstart="componentDragStart('farmer', component, $event)" @dragend="componentDragEnd(component)" @click="addComponent(component)">
+									<img :src="'/image/component/' + LeekWars.items[component.template].name + '.png'" draggable="false">
+								</div>
+							</rich-tooltip-item>
+						</div>
+					</div>
+				</div>
 			</div>
 		</popup>
 
-		<popup v-if="leek && my_leek" v-model="chipsDialog" :width="800">
+		<popup v-if="leek && my_leek" v-model="chipsDialog" :width="816">
 			<v-icon slot="icon">mdi-chip</v-icon>
-			<template slot="title">{{ $t('chips_of', [leek.name]) }} <span class="chip-count">[{{ leek.chips.length }}/{{ leek.max_chips }}]</span></template>
+			<template slot="title">{{ $t('chips_of', [leek.name]) }} <span class="chip-count">[{{ leek.chips.length }}/{{ leek.total_ram }}]</span></template>
 			<div class="chips-dialog">
 				<div :class="{dashed: draggedChip && draggedChipLocation === 'farmer'}" class="leek-chips" @dragover="dragOver" @drop="chipsDrop('leek', $event)">
 					<rich-tooltip-item v-for="chip in orderedChips" :key="chip.id" v-slot="{ on }" :item="LeekWars.items[chip.template]" :bottom="true" :nodge="true">
@@ -662,6 +697,7 @@
 	import { locale } from '@/locale'
 	import { AI } from '@/model/ai'
 	import { Chip } from '@/model/chip'
+	import { Component } from '@/model/component'
 	import { Hat } from '@/model/hat'
 	import { mixins } from '@/model/i18n'
 	import { ItemType } from '@/model/item'
@@ -671,7 +707,7 @@
 	import { Potion, PotionEffect } from '@/model/potion'
 	import { store } from '@/model/store'
 	import { Weapon, WeaponsData } from '@/model/weapon'
-	import { Component, Vue, Watch } from 'vue-property-decorator'
+	import { Component as VueComponent, Vue, Watch } from 'vue-property-decorator'
 	import CapitalDialog from './capital-dialog.vue'
 	import CharacteristicTooltip from './characteristic-tooltip.vue'
 	const LevelDialog = () => import(/* webpackChunkName: "[request]" */ `@/component/leek/level-dialog.${locale}.i18n`)
@@ -687,11 +723,13 @@
 	import ReportDialog from '@/component/moderation/report-dialog.vue'
 	import AIElement from '@/component/app/ai.vue'
 	import LWTitle from '@/component/title/title.vue'
+	import { COMPONENTS } from '@/model/components'
 	import { CHIPS } from '@/model/chips'
 	import { ORDERED_CHIPS } from '@/model/sorted_chips'
-import LeekImage from '../leek-image.vue'
+	import LeekImage from '../leek-image.vue'
+	import LeekComponent from './leek-component.vue'
 
-	@Component({ name: "leek", i18n: {}, mixins: [...mixins], components: {
+	@VueComponent({ name: "leek", i18n: {}, mixins: [...mixins], components: {
 		CapitalDialog,
 		LevelDialog,
 		CharacteristicTooltip,
@@ -704,10 +742,12 @@ import LeekImage from '../leek-image.vue'
 		TitlePicker,
 		ReportDialog,
 		ai: AIElement,
-		'lw-title': LWTitle
+		'lw-title': LWTitle,
+		LeekComponent,
 	} })
 	export default class LeekPage extends Vue {
 		CHIPS = CHIPS
+		COMPONENTS = COMPONENTS
 		WeaponsData = WeaponsData
 		leek: Leek | null = null
 		error: boolean = false
@@ -739,6 +779,8 @@ import LeekImage from '../leek-image.vue'
 		chipsDialog: boolean = false
 		draggedChip: Chip | null = null
 		draggedChipLocation: string | null = null
+		draggedComponent: Component | null = null
+		draggedComponentLocation: string | null = null
 		capitalDialog: boolean = false
 		customizeDialog: boolean = false
 		skinWeaponDialog: boolean = false
@@ -749,6 +791,7 @@ import LeekImage from '../leek-image.vue'
 		brRangeLoading: boolean = false
 		brRange: any = null
 		request: any = null
+		MAX_COMPONENTS = 8
 
 		get id(): number {
 			return parseInt(this.$route.params.id, 10) || (this.$store.state.farmer && LeekWars.first(this.$store.state.farmer.leeks).id)
@@ -805,6 +848,15 @@ import LeekImage from '../leek-image.vue'
 		get farmer_hats() {
 			return store.state.farmer ? store.state.farmer!.hats : []
 		}
+		get farmer_components() {
+			if (store.state.farmer) {
+				return store.state.farmer.components
+				// .sort((chipA, chipB) => {
+				// 	return ORDERED_CHIPS[chipA.template] - ORDERED_CHIPS[chipB.template]
+				// })
+			}
+			return []
+		}
 		get hasForgottenWeapon() {
 			if (!this.leek) { return false }
 			for (const weapon of this.leek.weapons) {
@@ -832,6 +884,17 @@ import LeekImage from '../leek-image.vue'
 		}
 		get happyEnabled() {
 			return this.$store.state.farmer && LeekWars.selectWhere(this.$store.state.farmer.pomps, 'template', 241) !== null
+		}
+		get max_components() {
+			let n = 8
+			if (this.leek) {
+				for (const component of this.leek.components) {
+					if (component) {
+						if (component.template === 406 || component.template === 407) n--
+					}
+				}
+			}
+			return n
 		}
 
 		mounted() {
@@ -1074,7 +1137,7 @@ import LeekImage from '../leek-image.vue'
 			if (!this.leek) { return }
 			this.leek.ai = ai
 			LeekWars.post('leek/set-ai', {leek_id: this.leek.id, ai_id: ai.id})
-			this.aiDialog = false
+			// this.aiDialog = false
 		}
 
 		aiDragStart(ai: AI, e: DragEvent) {
@@ -1197,7 +1260,7 @@ import LeekImage from '../leek-image.vue'
 		addChip(chip: Chip) {
 			if (!this.leek) { return }
 			const template = CHIPS[chip.template]
-			if (this.leek.chips.length >= this.leek.max_chips) {
+			if (this.leek.chips.length >= this.leek.total_ram) {
 				return LeekWars.toast(this.$i18n.t('error_max_chip', [this.leek.name]))
 			}
 			if (template.level > this.leek.level) {
@@ -1233,6 +1296,123 @@ import LeekImage from '../leek-image.vue'
 			this.draggedChip = null
 			e.preventDefault()
 			return false
+		}
+
+		componentDragStart(location: string, component: Component, e: DragEvent) {
+			console.log("componentDragStart", component)
+			if (this.leek && LeekWars.items[component.template].level > this.leek.level) { return }
+			this.draggedComponent = component
+			this.draggedComponentLocation = location
+			for (const tooltip of this.$refs.componentTooltips as RichTooltipItem[]) {
+				tooltip.value = false
+				tooltip.disabled = true
+			}
+		}
+
+		componentDragEnd(component: Component) {
+			console.log("componentDragEnd")
+			this.draggedComponent = null
+			this.enableComponentsTooltips()
+		}
+
+		get leek_components() {
+			return this.leek ? this.leek.components.reduce((s, c) => s + (c ? 1 : 0), 0) : 0
+		}
+
+		addComponent(component: Component, index: number = -1) {
+			if (!this.leek) { return }
+			const template = LeekWars.items[component.template]
+			if (template.level > this.leek.level) {
+				return LeekWars.toast(this.$i18n.t('error_under_required_level_component', [this.leek.name]))
+			}
+			if (this.leek.components.some((c) => c && c.template === template.id)) {
+				return LeekWars.toast(this.$i18n.t('error_component_already_equipped', [this.leek.name]))
+			}
+			if (index === -1) {
+				for (let i = 0; i < 8; i++) { if (this.leek.components[i] === null) { index = i; break; } }
+			}
+			if (index === -1) {
+				return LeekWars.toast(this.$i18n.t('error_max_component', [this.leek.name]))
+			}
+
+			LeekWars.post('leek/add-component', { leek_id: this.leek.id, component_id: component.id, index }).then(data => {
+				if (this.leek) {
+					// On enlève le précédent
+					const old = this.leek.components[index]
+					if (old) {
+						this.$store.commit('add-component', old)
+					}
+					Vue.set(this.leek.components, index, {id: data.id, template: component.template, quantity: 1})
+					this.$store.commit('remove-inventory', { ...component, item_template: component.template, quantity: 1, type: ItemType.COMPONENT })
+					this.refreshTotalCharacteristics()
+				}
+			}).error(error => {
+				LeekWars.toast(error)
+			})
+		}
+
+		moveComponent(component: Component, index: number) {
+			if (!this.leek) { return }
+
+			const old = this.leek.components[index]
+			const old_index = this.leek.components.indexOf(component)
+			Vue.set(this.leek.components, index, component)
+			Vue.set(this.leek.components, old_index, old)
+
+			LeekWars.post('leek/move-component', { component_id: component.id, index })
+			.error(error => {
+				LeekWars.toast(error)
+			})
+			this.refreshTotalCharacteristics()
+		}
+
+		removeComponent(component: Component) {
+			if (!this.leek) { return }
+			const index = this.leek.components.indexOf(component)
+			Vue.set(this.leek.components, index, null)
+			this.$store.commit('add-component', component)
+			LeekWars.delete('leek/remove-component', {component_id: component.id}).error((error) => LeekWars.toast(error))
+			this.refreshTotalCharacteristics()
+		}
+
+		componentsDrop(location: string, e: DragEvent, index: number) {
+			if (!this.draggedComponent) { return }
+			if (location === 'farmer' && this.draggedComponentLocation === 'leek') {
+				this.removeComponent(this.draggedComponent)
+			} else if (location === 'leek' && this.draggedComponentLocation === 'farmer') {
+				this.addComponent(this.draggedComponent, index)
+			} else if (location === 'leek' && this.draggedComponentLocation === 'leek') {
+				this.moveComponent(this.draggedComponent, index)
+			}
+			this.draggedComponent = null
+			this.enableComponentsTooltips()
+			e.preventDefault()
+			return false
+		}
+
+		enableComponentsTooltips() {
+			for (const tooltip of this.$refs.componentTooltips as RichTooltipItem[]) {
+				tooltip.disabled = false
+			}
+		}
+
+		refreshTotalCharacteristics() {
+			if (!this.leek) return
+			const all = {} as {[key: string]: number}
+			for (const charac of LeekWars.characteristics) {
+				(this.leek as any)['total_' + charac] = (this.leek as any)[charac]
+			}
+			if (this.leek) {
+				for (let c = 0; c < 8; ++c) {
+					const component = this.leek.components[c]
+					if (component && c < this.max_components) {
+						for (const charac of LeekWars.components[LeekWars.items[component.template].params].stats) {
+							(this.leek as any)['total_' + charac[0]] += charac[1]
+						}
+					}
+				}
+			}
+			return all
 		}
 
 		setWeapon(weapon: number) {
@@ -1349,18 +1529,18 @@ import LeekImage from '../leek-image.vue'
 		padding: 15px 0;
 		.characteristic {
 			width: 50%;
-			padding: 4px 30px;
+			padding: 3px 30px;
 			display: inline-block;
 			img {
 				margin-right: 7px;
 				width: 22px;
-				margin-top: 3px;
+				margin-top: 2px;
 			}
 			span {
-				font-size: 18px;
+				font-size: 17px;
 				vertical-align: top;
 				display: inline-block;
-				margin-top: 4px;
+				margin-top: 3px;
 				font-weight: bold;
 			}
 		}
@@ -1468,10 +1648,6 @@ import LeekImage from '../leek-image.vue'
 	.edit-button:hover {
 		color: black;
 	}
-	.dashed {
-		border: 3px dashed var(--border);
-		margin: -3px;
-	}
 	.dragging {
 		opacity: 0.2;
 	}
@@ -1480,6 +1656,8 @@ import LeekImage from '../leek-image.vue'
 		display: grid;
 		grid-gap: 5px;
 		grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+		border: 3px solid transparent;
+		padding: 5px;
 	}
 	#app.app .leek-weapons, #app.app .farmer-weapons {
 		grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
@@ -1534,6 +1712,9 @@ import LeekImage from '../leek-image.vue'
 			width: 100%;
 			vertical-align: bottom;
 		}
+		&.disabled {
+			opacity: 0.4;
+		}
 	}
 	.chips-dialog .chip {
 		display: inline-block;
@@ -1546,29 +1727,101 @@ import LeekImage from '../leek-image.vue'
 	}
 	.chips-dialog .leek-chips, .chips-dialog .farmer-chips {
 		min-height: 80px;
+		border: 3px solid transparent;
+		padding: 5px;
 	}
-	.leek-ai {
+	.leek-ai-components {
 		flex: 1;
 		display: flex;
+		flex-direction: column;
 		justify-content: center;
-		align-items: center;
-		padding: 20px;
+		align-items: stretch;
+		padding: 5px;
+		.center {
+			display: flex;
+			justify-content: center;
+		}
 	}
-	.ai_popup .leek-ai {
-		text-align: center;
+	.component {
+		display: inline-block;
+		width: 70px;
+		height: 60px;
+		img, .v-icon {
+			width: 60px;
+			height: 60px;
+			object-fit: scale-down;
+			vertical-align: bottom;
+			margin: 0px 5px;
+		}
+		.v-icon {
+			color: var(--border);
+		}
+		&.disabled {
+			opacity: 0.4;
+		}
 	}
-	.ai_popup .leek-ai,
-	.ai_popup .farmer-ais {
-		min-height: 80px;
-		max-height: 400px;
+	.ai-popup {
+		display: flex;
+		flex-direction: column;
+		.leek-ai-components {
+			width: 360px;
+			margin-bottom: 30px;
+			align-self: center;
+			.component {
+				border: 3px solid transparent;
+				cursor: pointer;
+				width: 76px;
+				height: 66px;
+			}
+		}
+		.leek-ai {
+			text-align: center;
+		}
+		.flex {
+			gap: 20px;
+			& > * {
+				flex: 1;
+			}
+		}
+		.leek-ai, .farmer-ais {
+			min-height: 80px;
+			max-height: 400px;
+		}
+		.ai {
+			cursor: pointer;
+		}
+		.title {
+			font-size: 16px;
+			font-weight: bold;
+			text-transform: uppercase;
+			color: var(--text-color-secondary);
+			margin-bottom: 10px;
+			display: flex;
+			align-items: center;
+			.v-icon {
+				padding-right: 4px;
+			}
+		}
+		.farmer-components {
+			border: 3px solid transparent;
+			padding: 5px;
+			min-height: 160px;
+			.component {
+				cursor: move;
+				img {
+					margin: 5px;
+				}
+			}
+		}
 	}
-	.ai_popup .ai {
-		cursor: pointer;
-	}
-	.potions-button img {
-		height: 22px;
-		margin-right: 4px;
-		opacity: 0.7;
+
+	.potions-button {
+		margin-top: 12px;
+		img {
+			height: 22px;
+			margin-right: 4px;
+			opacity: 0.7;
+		}
 	}
 	body.dark .potions-button img {
 		filter: invert(1);
@@ -1677,11 +1930,12 @@ import LeekImage from '../leek-image.vue'
 			max-width: 100%;
 		}
 	}
-	.farmer-weapons .weapon, .farmer-chips .chip, .hat-dialog .hat {
+	.farmer-weapons .weapon, .farmer-chips .chip, .hat-dialog .hat, .farmer-components .component {
 		position: relative;
 	}
 	.farmer-weapons .weapon:not([quantity="1"])::before,
 	.farmer-chips .chip:not([quantity="1"])::before,
+	.farmer-components .component:not([quantity="1"])::before,
 	.hat-dialog .hat:not([quantity="1"])::before {
 		position: absolute;
 		bottom: -5px;
@@ -1791,5 +2045,28 @@ import LeekImage from '../leek-image.vue'
 			color: #4caf50;
 			font-weight: 500;
 		}
+	}
+	.components-grid {
+		display: grid;
+		justify-content: center;
+		text-align: center;
+		gap: 4px;
+		grid-template:
+			". a b ."
+			"c i i d"
+			"e i i f"
+			". g h .";
+		:nth-child(1) { grid-area: a }
+		:nth-child(2) { grid-area: b }
+		:nth-child(3) { grid-area: c }
+		:nth-child(4) { grid-area: d }
+		:nth-child(5) { grid-area: e }
+		:nth-child(6) { grid-area: f }
+		:nth-child(7) { grid-area: g }
+		:nth-child(8) { grid-area: h }
+		:nth-child(9) {	grid-area: i }
+	}
+	.dashed {
+		border: 3px dashed var(--text-color-secondary) !important;
 	}
 </style>

@@ -97,5 +97,8 @@
 	"happy": "Leende",
 	"neutral": "Neutral",
 	"xp_blocked_desc": "Om alternativet är aktiverat kommer slagsmål inte längre att ge erfarenhet, och purjolöken kommer inte att gå upp i nivå. Talang- och resursvinster behålls.",
-	"start_a_fight": "Starta en strid!"
+	"start_a_fight": "Starta en strid!",
+	"all_my_components": "Mina komponenter",
+	"error_max_component": "{0} kan inte utrusta en ytterligare komponent.",
+	"ai_and_components": "AI och komponenter"
 }

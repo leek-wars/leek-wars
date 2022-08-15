@@ -92,5 +92,7 @@
 	"title_32": "{0} wspomniał o Tobie w #{1}",
 	"message_32": "Zobacz kota",
 	"message_34": "Wyświetlanie zapasów",
-	"title_34": "{0} dał ci przedmiot {1}"
+	"title_34": "{0} dał ci przedmiot {1}",
+	"title_35": "{0} rozpoczął walkę z bossem",
+	"message_35": "Zobacz walkę"
 }
