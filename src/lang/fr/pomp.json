@@ -6,5 +6,11 @@
 	"leek_title": "Titre de poireau",
 	"leek_title_desc": "Cet apparat vous permet de donner un titre à vos poireaux, qui sera affiché sur sa page et à d'autres endroits sur le jeu.",
 	"farmer_title": "Titre d'éleveur",
-	"farmer_title_desc": "Cet apparat vous permet de vous donner un titre, qui sera affiché sur votre page et à d'autres endroits sur le jeu comme le forum, les tooltips avancées etc."
+	"farmer_title_desc": "Cet apparat vous permet de vous donner un titre, qui sera affiché sur votre page et à d'autres endroits sur le jeu comme le forum, les tooltips avancées etc.",
+	"metal": "Plaques de métal",
+	"metal_desc": "Ajoute des plaques de métal sur l'image de votre poireau",
+	"angry": "Visage énervé",
+	"angry_desc": "Changer l'expression de votre poireau : il aura l'air énervé",
+	"smile": "Visage souriant",
+	"smile_desc": "Changer l'expression de votre poireau : il sera souriant"
 }

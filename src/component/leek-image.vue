@@ -80,7 +80,7 @@
 			// return 'leek/leek' + this.appearance + '_front_' + LeekWars.getLeekSkinName(this.leek.skin) + '.png'
 			// const metal = false
 			// return 'leeksvg/leek' + this.appearance + '_front_' + LeekWars.getLeekSkinName(this.leek.skin) + (metal ? '_metal' : '') + '.svg'
-			return LeekWars.SERVER + '/image/leek/svg/leek_' + this.appearance + '_' + LeekWars.getLeekSkinName(this.leek.skin) + (this.leek.metal ? '_metal' : '') + '.svg'
+			return LeekWars.SERVER + '/image/leek/svg/leek_' + this.appearance + '_front_' + LeekWars.getLeekSkinName(this.leek.skin) + (this.leek.metal ? '_metal' : '') + '.svg'
 		}
 		get hat() {
 			let hat = this.leek.hat
