@@ -24,9 +24,9 @@ class Cell {
 			entity.cell = this
 			return
 		}
-		if (this.entity) {
-			this.entity.cell = null
-		}
+		// if (this.entity) {
+			// this.entity.cell = null
+		// }
 		if (entity.cell) {
 			entity.cell.setEntity(null)
 		}

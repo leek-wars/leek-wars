@@ -16,8 +16,7 @@
 	import NotificationElement from '@/component/notifications/notification.vue'
 	import { mixins } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
-	import { Notification } from '@/model/notification'
-import { NotificationBuilder } from '@/model/notification-builder'
+	import { NotificationBuilder } from '@/model/notification-builder'
 	import { Component, Vue } from 'vue-property-decorator'
 
 	@Component({
