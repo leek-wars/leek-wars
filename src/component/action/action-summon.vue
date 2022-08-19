@@ -1,10 +1,8 @@
 
 <template functional>
-	<i18n tag="div" path="fight.leek_loose_x">
+	<i18n tag="div" path="fight.summon">
 		<leek slot="leek" :leek="parent.leeks[props.action.params[1]]" />
-		<template v-slot:value>
-			<b class="color-tp">{{ parent.$t('fight.n_tp', [props.action.params[2]]) }}</b>
-		</template>
+		<leek slot="summon" :leek="parent.leeks[props.action.params[2]]" />
 	</i18n>
 </template>
 
