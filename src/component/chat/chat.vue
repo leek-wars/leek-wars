@@ -416,6 +416,11 @@
 
 		formatMessage(message: ChatMessage) {
 
+			if (message.subMessages) {
+				for (const sub of message.subMessages) {
+					this.formatMessage(sub)
+				}
+			}
 			if (message.formatted) return message
 
 			let content = LeekWars.protect(message.content)
