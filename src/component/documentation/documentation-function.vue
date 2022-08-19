@@ -8,7 +8,7 @@
 			</span>
 		</h2>
 		<div v-if="fun.deprecated" v-dochash class="deprecated-message">
-			Cette fonction est dépréciée. <span v-if="fun.replacement">Elle est remplacée par la fonction #{{ LeekWars.functionById[fun.replacement].name }}.</span>
+			Cette fonction est dépréciée. <span v-if="fun.replacement">Elle est remplacée par la fonction #{{ FUNCTION_BY_ID[fun.replacement].name }}.</span>
 		</div>
 
 		<router-link class="encyclo" :to="'/encyclopedia/' + $i18n.locale + '/' + fun.name" :title="'Encyclopédie > ' + fun.name + '()'">
@@ -65,6 +65,7 @@
 
 <script lang="ts">
 	import Markdown from '@/component/encyclopedia/markdown.vue'
+	import { FUNCTION_BY_ID } from '@/model/function_by_id'
 	import { locale } from '@/locale'
 	import { LSFunction } from '@/model/function'
 	import { LeekWars } from '@/model/leekwars'
@@ -72,7 +73,10 @@
 
 	@Component({ name: 'documentation-function', components: { Markdown } })
 	export default class DocumentationFunction extends Vue {
+
 		@Prop() fun!: LSFunction
+
+		FUNCTION_BY_ID = FUNCTION_BY_ID
 		expanded: boolean = false
 		new_fun: any = null
 
@@ -127,7 +131,7 @@
 		vertical-align: top;
 	}
 	::v-deep a {
-		color: #5fad1b;
+		color: #0645ad;
 		font-weight: 500;
 		&:hover {
 			text-decoration: underline;

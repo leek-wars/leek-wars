@@ -365,7 +365,7 @@
 	}
 	.items-list .item {
 		cursor: pointer;
-		padding: 3px 10px;
+		padding: 4px 10px;
 		display: block;
 		white-space: nowrap;
 		text-overflow: ellipsis;
