@@ -974,6 +974,10 @@ import { Keyword } from '@/model/keyword'
 
 		public showHoverDetails(keyword: any, raw_data: any) {
 
+			// console.log("showHoverDetails", keyword, raw_data)
+
+			if (raw_data === null) return
+
 			if (this.hoverLocation &&
 				raw_data.location[1] === this.hoverLocation[1] &&
 				raw_data.location[2] === this.hoverLocation[2] &&
