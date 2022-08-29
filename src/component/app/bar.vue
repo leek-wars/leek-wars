@@ -29,7 +29,7 @@
 							<div class="dialog-items">
 								<notification v-for="notification in $store.state.notifications" :key="notification.id" :notification="notification" @click.native="readNotification(notification)" />
 							</div>
-							<router-link to="/notifications" class="see-all">{{ $t('main.all_notifications') }}</router-link>
+							<router-link to="/notifications" class="see-all" @click.native="LeekWars.closeMenu()">{{ $t('main.all_notifications') }}</router-link>
 						</div>
 					</v-menu>
 				</div>
@@ -44,14 +44,17 @@
 				</div>
 			</div>
 		</div>
+		<div class="dark" :class="{visible: dark}"></div>
 	</div>
 </template>
 
 <script lang="ts">
 	import { LeekWars } from '@/model/leekwars'
 	import { Component, Vue } from 'vue-property-decorator'
+
 	@Component({ name: 'lw-bar' })
 	export default class Bar extends Vue {
+		dark: boolean = false
 		mainButton() {
 			if (LeekWars.menuExpanded || !LeekWars.splitBack) {
 				LeekWars.toggleMenu()
@@ -68,6 +71,7 @@
 				LeekWars.post('notification/read-all')
 				this.$store.commit('read-notifications')
 			}
+			this.dark = e
 		}
 		readNotification(notification: any) {
 			LeekWars.post('notification/read', {notification_id: notification.id})
@@ -200,11 +204,24 @@
 		height: 20px;
 		line-height: 12px;
 	}
+	.dark {
+		position: fixed;
+		top: 56px;
+		left: 0;
+		right: 0;
+		height: 0;
+		background: #0000;
+		transition: background 200ms ease;
+		&.visible {
+			height: 100vh;
+			background: #0007;
+		}
+	}
 	.dialog {
 		background: #f2f2f2;
+		min-width: min(400px, 100vw);
 	}
 	.dialog-items {
-		max-height: 350px;
 		overflow-y: auto;
 	}
 	.see-all {
