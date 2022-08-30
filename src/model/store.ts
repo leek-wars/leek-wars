@@ -781,6 +781,12 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			}
 		},
 
+		'set-face'(state: LeekWarsState, data: {leek: number, face: number}) {
+			if (state.farmer) {
+				state.farmer.leeks[data.leek].face = data.face
+			}
+		},
+
 		'set-trophies'(state: LeekWarsState, trophies) {
 			if (state.farmer) {
 				Vue.set(state.farmer, 'trophies_list', trophies)

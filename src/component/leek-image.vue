@@ -22,7 +22,7 @@
 
 <script lang="ts">
 	import { HatTemplate } from '@/model/hat'
-	import { Leek } from '@/model/leek'
+	import { Leek, LEEK_FACES } from '@/model/leek'
 	import { LeekWars } from '@/model/leekwars'
 	import { FishData, WeaponsData } from '@/model/weapon'
 	import { Component, Prop, Vue } from 'vue-property-decorator'
@@ -77,7 +77,8 @@
 		}
 
 		get leekImage(): string {
-			return LeekWars.SERVER + '/image/leek/svg/leek_' + this.appearance + '_' + (this.leek.back ? 'back' : 'front') + '_' + LeekWars.getLeekSkinName(this.leek.skin) + (this.leek.metal ? '_metal' : '') + (this.leek.face ? '_' + this.leek.face : '') + '.svg'
+			const face = !this.leek.face ? '' : LEEK_FACES[this.leek.face]
+			return LeekWars.SERVER + '/image/leek/svg/leek_' + this.appearance + '_' + (this.leek.back ? 'back' : 'front') + '_' + LeekWars.getLeekSkinName(this.leek.skin) + (this.leek.metal ? '_metal' : '') + face + '.svg'
 		}
 
 		get hat() {

@@ -33,6 +33,7 @@ enum NotificationType {
 	NO_TOURNAMENT_TEAM = 30, // Pas de place pour le tournoi d'équipe
 	NO_BR = 31, // Pas de place pour la BR
 	CHAT_MENTION = 32, // Mention sur un chat publique
+	GAME_UPDATE = 33, // Nouvelle mise à jour
 }
 
 class Notification {

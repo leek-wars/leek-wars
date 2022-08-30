@@ -98,6 +98,7 @@ class FightLeek {
 	public frequency!: number
 	public hat!: number
 	public metal!: boolean
+	public face!: number
 	public id!: number
 	public level!: number
 	public life!: number

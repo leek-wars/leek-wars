@@ -17,6 +17,14 @@ enum Characteristic {
 	MP = 9,
 }
 
+enum LeekFace {
+	NEUTRAL = 0,
+	HAPPY = 1,
+	ANGRY = 2
+}
+
+const LEEK_FACES = ['', '_happy', '_angry']
+
 class Register {
 	public key!: string
 	public value!: string
@@ -66,7 +74,7 @@ class Leek {
 	public ally!: boolean
 	public back!: boolean
 	public metal!: boolean
-	public face!: string
+	public face!: number
 
 	constructor(data: any) {
 		Object.assign(this, data)
@@ -81,4 +89,4 @@ class Leek {
 		return Math.round(this.talent_more / 3)
 	}
 }
-export { Leek, Characteristic, Register }
+export { Leek, Characteristic, Register, LeekFace, LEEK_FACES }

@@ -73,6 +73,7 @@
 
 		deleteErrors() {
 			LeekWars.delete('error/delete-query', { query: this.deleteQuery }).then(() => {
+				this.deleteQuery = ''
 				this.update()
 			})
 		}

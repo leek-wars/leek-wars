@@ -11,7 +11,7 @@
 		<panel v-for="(skin, s) in LeekWars.skins" :key="s">
 			<h4>{{ skin }} ({{ s }})</h4>
 			<div class="leeks">
-				<leek-image v-for="level in [1, 10, 25, 50, 80, 100, 150, 200, 250, 300, 301]" :key="level" :leek="{level, skin: s, back: !front, face: Math.random() < 0.33 ? 'neutral' : (Math.random() < 0.5 ? 'happy' : 'angry'), metal: Math.random() > 0.5}" :scale="1.2" />
+				<leek-image v-for="level in [1, 10, 25, 50, 80, 100, 150, 200, 250, 300, 301]" :key="level" :leek="{level, skin: s, back: !front, face: Math.random() * 3 | 0, metal: Math.random() > 0.5}" :scale="1.2" />
 			</div>
 			<!-- <div class="leeks">
 				<leek-image v-for="level in [1, 10, 25, 50, 80, 100, 150, 200, 250, 300, 301]" :key="level" :leek="{level, skin: s, back: s == 1 && !front, face: 'happy'}" :scale="1.2" />

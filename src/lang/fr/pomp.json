@@ -11,6 +11,6 @@
 	"metal_desc": "Ajoute des plaques de métal sur l'image de votre poireau",
 	"angry": "Visage énervé",
 	"angry_desc": "Changer l'expression de votre poireau : il aura l'air énervé",
-	"smile": "Visage souriant",
-	"smile_desc": "Changer l'expression de votre poireau : il sera souriant"
+	"happy": "Visage souriant",
+	"happy_desc": "Changer l'expression de votre poireau : il sera souriant"
 }

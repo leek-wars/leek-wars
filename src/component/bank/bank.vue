@@ -21,7 +21,7 @@
 				</router-link>
 			</div>
 		</div>
-		<panel class="first last">
+		<panel class="first">
 			<div class="bank-description center" v-html="$t('description')"></div>
 			<loader v-if="!packs" />
 			<div v-else class="packs">
@@ -39,6 +39,24 @@
 				</div>
 			</div>
 		</panel>
+		<div class="container grid">
+			<panel v-if="!items">
+				<loader />
+			</panel>
+			<template v-else>
+				<panel v-for="(item, i) in items" :key="i" class="item-sample">
+					<router-link slot="content"  :to="'/market/' + item.name.replace(/[a-z-]+_/, '')" v-ripple>
+						<item :item="{template: item.id}" />
+						<div class="info">
+							<div class="name">{{ $t(item.name.replace('_', '.')) }}</div>
+							<div class="price">
+								{{ item.crystals | number }} <span class="crystal"></span>
+							</div>
+						</div>
+					</router-link>
+				</panel>
+			</template>
+		</div>
 	</div>
 </template>
 
@@ -46,10 +64,12 @@
 	import { mixins } from '@/model/i18n'
 	import { LeekWars } from '@/model/leekwars'
 	import { Component, Vue } from 'vue-property-decorator'
+	import Item from '@/component/item.vue'
 
-	@Component({ name: 'bank', i18n: {}, mixins: [...mixins] })
+	@Component({ name: 'bank', i18n: {}, mixins: [...mixins], components: { Item } })
 	export default class Bank extends Vue {
 		packs: any = null
+		items: any = null
 		created() {
 			LeekWars.setActions([
 				{image: 'icon/market.png', click: () => this.$router.push('/market')},
@@ -57,6 +77,7 @@
 			])
 			LeekWars.get('bank/get-packs').then(data => {
 				this.packs = data.packs
+				this.items = data.items
 				LeekWars.setTitle(this.$i18n.t('title'))
 			})
 			this.updateSubtitle()
@@ -135,5 +156,26 @@
 		margin-left: 5px;
 		vertical-align: middle;
 		height: 30px;
+	}
+	.item-sample {
+		a {
+			display: flex;
+			gap: 10px;
+			padding: 10px;
+			color: #555;
+		}
+		::v-deep .item {
+			width: 80px;
+			height: 80px;
+		}
+		.name {
+			font-size: 16px;
+			margin-top: 10px;
+		}
+		.price {
+			font-size: 20px;
+			font-weight: 500;
+			margin-top: 12px;
+		}
 	}
 </style>

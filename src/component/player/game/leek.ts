@@ -4,6 +4,7 @@ import { SHADOW_QUALITY, T, Texture } from '@/component/player/game/texture'
 import { WeaponAnimation, WhiteWeaponAnimation } from '@/component/player/game/weapons'
 import { Cell } from '@/model/cell'
 import { HatTemplate } from '@/model/hat'
+import { LEEK_FACES } from "@/model/leek"
 import { LeekWars } from '@/model/leekwars'
 import { S } from './sound'
 
@@ -23,6 +24,8 @@ class Leek extends FightEntity {
 	public weapon: WeaponAnimation | null = null
 	// public weapon_name: string | null = null
 	public skin!: number
+	public metal!: boolean
+	public face!: number
 	public hatTemplate!: HatTemplate
 	public heightAnim: number = 0
 	public fish: boolean = false
@@ -33,14 +36,17 @@ class Leek extends FightEntity {
 		this.z = this.baseZ
 	}
 
-	public setSkin(skin: number, appearance: number, hat: number | null = null, metal: boolean = false) {
+	public setSkin(skin: number, appearance: number, hat: number | null = null, metal: boolean = false, face: number = 0) {
 
 		if (typeof LeekWars.skins[skin] === 'undefined') { skin = 1 }
 
 		this.scale = 0.68 - appearance * 0.01
 		this.skin = skin
-		this.bodyTexFront = T.get(this.game, "image/leek/svg/leek_" + appearance + "_front_" + LeekWars.skins[skin] + (metal ? '_metal' : '') + ".svg", true, SHADOW_QUALITY)
-		this.bodyTexBack = T.get(this.game, "image/leek/svg/leek_" + appearance + "_back_" + LeekWars.skins[skin] + (metal ? '_metal' : '') + ".svg", true, SHADOW_QUALITY)
+		this.metal = metal
+		this.face = face
+		const face_param = face === 0 ? '' : LEEK_FACES[face]
+		this.bodyTexFront = T.get(this.game, "image/leek/svg/leek_" + appearance + "_front_" + LeekWars.skins[skin] + (metal ? '_metal' : '') + face_param + ".svg", true, SHADOW_QUALITY)
+		this.bodyTexBack = T.get(this.game, "image/leek/svg/leek_" + appearance + "_back_" + LeekWars.skins[skin] + (metal ? '_metal' : '') + face_param + ".svg", true, SHADOW_QUALITY)
 
 		if (this.bodyTexFront.loaded) {
 			this.baseHeight = this.bodyTexFront.texture.height

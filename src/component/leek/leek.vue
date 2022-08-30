@@ -492,25 +492,59 @@
 					</div>
 				</div>
 				<br>
-				<span v-if="$store.state.farmer" class="ai-lines">
-					<v-switch :input-value="$store.state.farmer.show_ai_lines" hide-details :label="$t('pomp.ai_lines')" :disabled="!showAiLinesEnabled" @change="changeShowAiLines" />
-					<tooltip :disabled="showAiLinesEnabled">
-						<template v-slot:activator="{ on }">
-							<img v-on="on" src="/image/pomp/ai_lines.png">
-						</template>
-						<v-icon>mdi-lock</v-icon> {{ $t('pomp.ai_lines') }}
-					</tooltip>
-				</span>
-				<br><br>
-				<span v-if="leek" class="ai-lines">
-					<v-switch :input-value="leek.metal" hide-details :label="$t('pomp.metal')" :disabled="!metalEnabled" @change="changeMetal" />
-					<tooltip :disabled="metalEnabled">
-						<template v-slot:activator="{ on }">
-							<img v-on="on" src="/image/pomp/metal.png">
-						</template>
-						<v-icon>mdi-lock</v-icon> {{ $t('pomp.metal') }}
-					</tooltip>
-				</span>
+				<div class="container">
+					<div class="column6">
+						<div v-if="$store.state.farmer" class="pomp">
+							<v-switch :input-value="$store.state.farmer.show_ai_lines" hide-details :label="$t('pomp.ai_lines')" :disabled="!showAiLinesEnabled" @change="changeShowAiLines" />
+							<tooltip :disabled="showAiLinesEnabled">
+								<template v-slot:activator="{ on }">
+									<img v-on="on" src="/image/pomp/ai_lines.png">
+								</template>
+								<v-icon>mdi-lock</v-icon> {{ $t('pomp.ai_lines') }}
+							</tooltip>
+						</div>
+						<div v-if="leek" class="pomp">
+							<v-switch :input-value="leek.metal" hide-details :label="$t('pomp.metal')" :disabled="!metalEnabled" @change="changeMetal" />
+							<tooltip :disabled="metalEnabled">
+								<template v-slot:activator="{ on }">
+									<img v-on="on" src="/image/pomp/metal.png">
+								</template>
+								<v-icon>mdi-lock</v-icon> {{ $t('pomp.metal') }}
+							</tooltip>
+						</div>
+					</div>
+					<div v-if="leek" class="pomp column6">
+						<v-radio-group v-model="leek.face" @change="changeFace" hide-details>
+							<v-radio :value="0">
+								<template v-slot:label>
+          							Neutre
+								</template>
+							</v-radio>
+							<v-radio :value="1" :disabled="!happyEnabled">
+								<template v-slot:label>
+          							Souriant
+									<tooltip :disabled="happyEnabled">
+										<template v-slot:activator="{ on }">
+											<img v-on="on" src="/image/pomp/smile.png">
+										</template>
+										<v-icon>mdi-lock</v-icon> {{ $t('pomp.happy') }}
+									</tooltip>
+								</template>
+							</v-radio>
+							<v-radio :value="2" :disabled="!angryEnabled">
+								<template v-slot:label>
+          							Fâché
+									<tooltip :disabled="angryEnabled">
+										<template v-slot:activator="{ on }">
+											<img v-on="on" src="/image/pomp/angry.png">
+										</template>
+										<v-icon>mdi-lock</v-icon> {{ $t('pomp.angry') }}
+									</tooltip>
+								</template>
+							</v-radio>
+						</v-radio-group>
+					</div>
+				</div>
 			</div>
 		</popup>
 
@@ -738,6 +772,12 @@
 		get skinPotions() {
 			return store.state.farmer!.potions.filter(p => LeekWars.potions[p.template].effects.some(e => e.type === PotionEffect.CHANGE_SKIN))
 		}
+		get angryEnabled() {
+			return this.$store.state.farmer && LeekWars.selectWhere(this.$store.state.farmer.pomps, 'template', 240) !== null
+		}
+		get happyEnabled() {
+			return this.$store.state.farmer && LeekWars.selectWhere(this.$store.state.farmer.pomps, 'template', 241) !== null
+		}
 
 		mounted() {
 			this.$root.$on('update-leek-talent', (message: any) => {
@@ -821,6 +861,7 @@
 				this.renameError = error
 			})
 		}
+
 		usePotion(potion: Potion) {
 			const template = LeekWars.potions[potion.template]
 			if (this.leek) {
@@ -828,7 +869,7 @@
 				for (const effect of template.effects) {
 					if (effect.type === 1) { // Restat
 						update = true
-					} else if (effect.type === 2) { // Skin
+					} else if (effect.type === 2) { // Skin
 						const skin = effect.params[0]
 						this.leek.skin = skin
 						store.commit('change-skin', {leek: this.leek.id, skin})
@@ -847,34 +888,38 @@
 				})
 			}
 		}
+
 		registerTournament() {
 			if (this.leek) {
-				if (this.leek.tournament.registered) {
+				if (this.leek.tournament.registered) {
 					this.leek.tournament.registered = false
 					LeekWars.post('leek/unregister-tournament', {leek_id: this.leek.id})
-				} else {
+				} else {
 					this.leek.tournament.registered = true
 					LeekWars.post('leek/register-tournament', {leek_id: this.leek.id})
 				}
 			}
 		}
+
 		registerAutoBr() {
 			if (this.leek) {
-				if (this.leek.auto_br) {
+				if (this.leek.auto_br) {
 					this.leek.auto_br = false
 					LeekWars.post('leek/unregister-auto-br', {leek_id: this.leek.id})
-				} else {
+				} else {
 					this.leek.auto_br = true
 					LeekWars.post('leek/register-auto-br', {leek_id: this.leek.id})
 				}
 			}
 		}
+
 		updateGarden() {
 			if (this.leek) {
 				this.leek.in_garden = !this.leek.in_garden
 				LeekWars.post('leek/set-in-garden', {leek_id: this.leek.id, in_garden: this.leek.in_garden})
 			}
 		}
+
 		chart() {
 			if (!this.leek || this.leek.level < 100) { return }
 			const labels = []
@@ -907,6 +952,7 @@
 				}
 			}]
 		}
+
 		hat() {
 			this.hatDialog = true
 		}
@@ -942,6 +988,7 @@
 		potion() {
 			this.potionDialog = true
 		}
+
 		customize() {
 			this.customizeDialog = true
 		}
@@ -959,18 +1006,21 @@
 			this.leek.ai = null
 			LeekWars.delete('leek/remove-ai', {leek_id: this.leek.id})
 		}
+
 		selectAI(ai: AI) {
 			if (!this.leek) { return }
 			this.leek.ai = ai
 			LeekWars.post('leek/set-ai', {leek_id: this.leek.id, ai_id: ai.id})
 			this.aiDialog = false
 		}
+
 		aiDragStart(ai: AI, e: DragEvent) {
 			e.dataTransfer!.setData('text/plain', 'drag !!!')
 			this.draggedAI = ai
 			ai.dragging = true
 			return true
 		}
+
 		aiDragEnd(ai: AI, e: DragEvent) {
 			if (ai) {
 				ai.dragging = false
@@ -979,6 +1029,7 @@
 			e.preventDefault()
 			return false
 		}
+
 		aiDrop(area: string, e: DragEvent) {
 			if (!this.draggedAI || !this.leek) { return }
 			if (this.leek.ai && this.draggedAI.id === this.leek.ai.id && area === 'farmer') {
@@ -990,6 +1041,7 @@
 			e.preventDefault()
 			return false
 		}
+
 		dragOver(e: DragEvent) {
 			e.preventDefault()
 		}
@@ -1004,6 +1056,7 @@
 				})
 			}
 		}
+
 		registerDelete(register: Register) {
 			if (!this.leek) { return }
 			this.leek.registers.splice(this.leek.registers.indexOf(register), 1)
@@ -1018,9 +1071,11 @@
 			this.draggedWeapon = weapon
 			this.draggedWeaponLocation = location
 		}
+
 		weaponDragEnd(weapon: Weapon) {
 			this.draggedWeapon = null
 		}
+
 		addWeapon(weapon: Weapon) {
 			if (!this.leek) { return }
 			const template = LeekWars.items[weapon.template]
@@ -1045,12 +1100,14 @@
 				LeekWars.toast(error)
 			})
 		}
+
 		removeWeapon(weapon: Weapon) {
 			if (!this.leek) { return }
 			this.leek.weapons.splice(this.leek.weapons.indexOf(weapon), 1)
 			this.$store.commit('add-weapon', weapon)
 			LeekWars.delete('leek/remove-weapon', {weapon_id: weapon.id}).error((error) => LeekWars.toast(error))
 		}
+
 		weaponsDrop(location: string, e: DragEvent) {
 			if (!this.draggedWeapon) { return }
 			if (location === 'farmer' && this.draggedWeaponLocation === 'leek') {
@@ -1068,9 +1125,11 @@
 			this.draggedChip = chip
 			this.draggedChipLocation = location
 		}
+
 		chipDragEnd(chip: Chip) {
 			this.draggedChip = null
 		}
+
 		addChip(chip: Chip) {
 			if (!this.leek) { return }
 			const template = CHIPS[chip.template]
@@ -1092,12 +1151,14 @@
 				LeekWars.toast(error)
 			})
 		}
+
 		removeChip(chip: Chip) {
 			if (!this.leek) { return }
 			this.leek.chips.splice(this.leek.chips.indexOf(chip), 1)
 			this.$store.commit('add-chip', chip)
 			LeekWars.delete('leek/remove-chip', {chip_id: chip.id}).error((error) => LeekWars.toast(error))
 		}
+
 		chipsDrop(location: string, e: DragEvent) {
 			if (!this.draggedChip) { return }
 			if (location === 'farmer' && this.draggedChipLocation === 'leek') {
@@ -1109,6 +1170,7 @@
 			e.preventDefault()
 			return false
 		}
+
 		setWeapon(weapon: number) {
 			this.skinWeaponDialog = false
 			if (!this.leek || !this.my_leek) { return }
@@ -1118,20 +1180,29 @@
 				store.commit('set-leek-weapon', {leek: this.leek.id, weapon})
 			}
 		}
+
 		pickTitle(title: number[]) {
 			this.leek!.title = title
 			this.titleDialog = false
 			LeekWars.put('leek/set-title', {leek: this.leek!.id, icon: title[0] || 0, noun: title[1] || 0, gender: title[2] || 0, adjective: title[3] || 0})
 			this.$store.commit('set-leek-title', {leek: this.leek!.id, title})
 		}
+
 		changeShowAiLines() {
 			store.commit('toggle-show-ai-lines')
 			LeekWars.put('farmer/set-show-ai-lines', {show_ai_lines: store.state.farmer!.show_ai_lines})
 		}
+
 		changeMetal() {
 			this.leek.metal = !this.leek.metal
 			store.commit('toggle-metal', this.leek.id)
 			LeekWars.put('leek/set-metal', {leek_id: this.leek.id, metal: this.leek.metal})
+		}
+
+		changeFace(face) {
+			this.leek.face = face
+			store.commit('set-face', {leek: this.leek.id, face})
+			LeekWars.put('leek/set-face', {leek_id: this.leek.id, face})
 		}
 
 		loadTournamentRange() {
@@ -1139,6 +1210,7 @@
 			this.tournamentRangeLoading = true
 			LeekWars.get('tournament/range-leek/' + this.leek.level).then(d => this.tournamentRange = d)
 		}
+
 		loadBRRange() {
 			if (!this.leek || this.brRange || this.brRangeLoading) { return }
 			this.brRangeLoading = true
@@ -1558,11 +1630,16 @@
 				}
 			}
 		}
-		.ai-lines {
+		.pomp {
+			margin-bottom: 8px;
 			img {
 				width: 20px;
 				margin-left: 4px;
 			}
+		}
+		.v-radio.v-radio--is-disabled {
+			opacity: 0.7;
+			pointer-events: auto;
 		}
 	}
 	.rename-button {
