@@ -313,6 +313,10 @@ import { Keyword } from '@/model/keyword'
 						e.stopPropagation()
 					}
 				})
+				this.editor.on('scroll', (e) => {
+					// console.log('scroll', e.getScrollInfo())
+					localStorage.setItem('editor/scroll/' + this.ai.id, e.getScrollInfo().top)
+				})
 
 				this.show()
 
@@ -397,7 +401,12 @@ import { Keyword } from '@/model/keyword'
 					this.editor.refresh()
 					this.loaded = true
 					this.loading = false
-					setTimeout(() => this.editor.refresh())
+					setTimeout(() => {
+						this.editor.refresh()
+						const scrollPosition = parseInt(localStorage.getItem('editor/scroll/' + this.ai.id) || '0')
+						this.editor.scrollTo(0, scrollPosition)
+					})
+
 					this.lines = this.editor.getDoc().lineCount()
 					this.characters = this.editor.getDoc().getValue().length
 					Vue.set(this.ai, 'included_lines', this.ai.total_lines - this.lines)
