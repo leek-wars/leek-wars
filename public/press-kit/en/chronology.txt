@@ -1,0 +1,11 @@
+2012 : launch of the game
+2013 : end of the beta
+2014 : tournaments, trophies
+2015: English version, invocations, new design, features, CaC weapons,
+2016 : Battle Royales
+2017: testing options, statistics
+2018 : Mobile app and Vue.js
+2019 : Turrets
+2020 : Forgotten Weapons, Appearances, BR autos, Docker, GitHub listing, Editor, Encyclopedia, New maps
+2021: 16 chips, LS 2, 160 new trophies, LS 3, resources
+2022 : quick registration, animations, LS 4, chests

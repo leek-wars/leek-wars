@@ -15,8 +15,8 @@
 			<router-link to="/help/general" class="item">{{ $t('main.discover') }}</router-link>
 			<router-link to="/help/tutorial" class="item">{{ $t('main.tutorial') }}</router-link>
 			<router-link to="/help/documentation" class="item">{{ $t('main.documentation') }}</router-link>
-			<router-link to="/encyclopedia" class="item">{{ $t('main.encyclopedia') }} <v-icon>mdi-book-open-page-variant</v-icon></router-link>
 			<a class="item" @click="show_didactitiel">{{ $t('main.didactitial') }} <v-icon>mdi-dock-window</v-icon></a>
+			<router-link to="/press-kit" class="item">{{ $t('main.press-kit') }} <v-icon>mdi-package-variant-closed</v-icon></router-link>
 		</div>
 		<div class="column">
 			<h4>{{ $t('main.developers') }}</h4>

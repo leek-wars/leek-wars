@@ -1,0 +1,1 @@
+Pour coder votre IA, vous aurez besoin de coder en LeekScript, un language proche de JavaScript. Un tutoriel est disponible pour apprendre les notions du jeu et du langage au fur et à mesure de votre progression.

@@ -1,0 +1,1 @@
+Leek Wars est un jeu de stratégie en tour par tour sur navigateur dans lequel s'affrontent des poireaux qui sont contrôlés par une intelligence artificielle (IA) que vous devez coder. Une façon ludique d'apprendre la programmation.

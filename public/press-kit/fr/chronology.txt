@@ -1,0 +1,11 @@
+2012 : lancement du jeu
+2013 : fin de la bêta
+2014 : tournois, trophées
+2015 : version anglaise, invocations, nouveau design, caractéristiques, armes CaC,
+2016 : Battle Royales
+2017 : options de test, statistiques
+2018 : Application mobile et Vue.js
+2019 : Tourelles
+2020 : Armes oubliées, apparats, BR autos, Docker, inscription GitHub, Editeur, Encyclopédie, Nouvelles cartes
+2021 : 16 puces, LS 2, 160 nouveaux trophées, LS 3, ressources
+2022 : inscription rapide, animations, LS 4, coffres

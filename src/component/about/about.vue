@@ -1,5 +1,5 @@
 <template lang="html">
-	<div>
+	<div class="page">
 		<div class="page-header page-bar">
 			<h1>{{ $t('about') }}</h1>
 			<div class="tabs">
@@ -179,7 +179,7 @@
 		links = [
 			["Korben", "http://korben.info/leek-wars.html"],
 			["1001bricks", "http://blog.1001bricks.com/649-welcome-to-1001leeks"],
-			["Millenium", "http://www.millenium.org/jeux-indes/accueil/actualites/leek-wars-programmez-l-intelligence-artificielle-de-votre-robot-poireau-et-faite-le-combattre-111885"],
+			["Millenium", "https://www.millenium.org/news/164675.html"],
 			["Vidéo par BugQuest", "https://www.youtube.com/watch?v=UXhoZYZm2tk"],
 			["Game Side Story", "http://www.gamesidestory.com/2014/09/02/gametest-leekwars-navigateur/"],
 			['MacAttac', "http://www.macattac.fr/2014/09/28/test-du-jeu-leek-wars/"]
