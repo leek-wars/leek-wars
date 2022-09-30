@@ -525,7 +525,7 @@
           							Souriant
 									<tooltip :disabled="happyEnabled">
 										<template v-slot:activator="{ on }">
-											<img v-on="on" src="/image/pomp/smile.png">
+											<img v-on="on" src="/image/pomp/happy.png">
 										</template>
 										<v-icon>mdi-lock</v-icon> {{ $t('pomp.happy') }}
 									</tooltip>

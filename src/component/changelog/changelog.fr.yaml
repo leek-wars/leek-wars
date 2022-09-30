@@ -1,3 +1,36 @@
+232:
+  title: 22 nouveaux skins, classements d'équipe, 3 apparats et 4 chapeaux.
+  added:
+    - "Ajout de classements d'équipe. #img_232_team_ranking"
+    - Possibilité de gagner plusieurs fois la même ressource en combat.
+    - Ajout du résultat du combat dans les notifications pour les BR, défis et tournois.
+    - "Ajout de 22 potions de couleur (achetables, via trophées, en combat). #img_232_potions"
+    - "Ajout de 2 apparats pour changer l'expression des poireaux (souriant, neutre et fâché). #img_232_pomp"
+    - "Ajout d'un apparat pour activer ajouter les plaques de métal sur les poireaux. #img_232_pomp"
+    - "Ajout de 5 emojis (hab, cristal, coffres). #img_232_emoji"
+    - Ajout d'une page Kit de presse avec une archive téléchargeable.
+    - "Ajout de 4 nouveaux chapeaux. #img_232_hats"
+  improved:
+    - Plus possible de faire une requete GET en POST ou inversement.
+    - Les ressources sont triées par valeur dans le rapport de combat.
+    - Ajout des modérateurs, anciens membres et contributeurs sur la page à propos.
+    - "Avatars et emblèmes : format webp accepté, filtre sur les types acceptés et meilleure gestion des erreurs."
+    - "Combats : différence sur une erreur de génération et un combat introuvable."
+    - Légère amélioration du comportement du menu sur mobile.
+    - "Optimisation du client : taille du JS, du CSS et des images : chargement plus rapide sur mobile."
+    - Ajout du résultat des combats dans les notifs en bas à droite de l'écran.
+    - Images de poireaux de meilleure qualité.
+    - "Ajout d'exemples d'items à acheter dans la banque. #img_232_bank"
+    - Ajout d'un fond noir sur mobile quand on ouvre le panneau de notification.
+    - Envoi d'une notification push lors d'une mise à jour.
+    - "Éditeur : quand un fichier est réouvert, la position verticale est conservée."
+  fixed:
+    - Correction d'un bug d'affichage sur le graphique de points de vie.
+    - Fermeture de la tooltip d'éleveur issue d'une mention sur le chat si ce dernier se ferme.
+    - Le brouillon de topic forum est bien nettoyé quand le sujet est posté.
+    - Correction de quelques statistiques.
+    - "Éditeur : correction d'erreurs persistantes après l'inclusion d'une IA."
+
 231:
   title: Chats, coffres, 12 ressources, 1 trophée, statistiques et classements fun.
   added:

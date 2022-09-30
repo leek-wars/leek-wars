@@ -1,3 +1,36 @@
+232:
+  title: 22 new skins, team rankings, 3 pomps and 4 hats.
+  added:
+    - "Added team rankings. #img_232_team_ranking"
+    - Ability to win the same resource multiple times in battle.
+    - Added the result of the battle in the notifications for BR, challenges and tournaments.
+    - "Added 22 colored potions (purchasable, via trophies, in battle). #img_232_potions"
+    - "Added 2 appearances to change the expression of leeks (smiling, neutral and angry). #img_232_pomp"
+    - "Added an apparat to activate add metal plates on leeks. #img_232_pomp"
+    - "Added 5 emojis (hab, crystal, chests). #img_232_emoji"
+    - Added a Press Kit page with a downloadable archive.
+    - "Added 4 new hats. #img_232_hats"
+  improved:
+    - No longer possible to make a GET request in POST or vice versa.
+    - Resources are sorted by value in the battle report.
+    - Added moderators, former members and contributors on the about page.
+    - "Avatars and emblems: accepted webp format, filter on accepted types and better error handling."
+    - "Fights: difference on a generation error and a fight not found."
+    - Slight improvement of menu behavior on mobile.
+    - "Client optimization: JS, CSS and image size: faster loading on mobile."
+    - Added fight results to the notifs at the bottom right of the screen.
+    - Better quality images of leeks.
+    - "Added examples of items to buy in the bank. #img_232_bank"
+    - Added a black background on mobile when opening the notification panel.
+    - Sending a push notification when an update is made.
+    - "Editor: when a file is reopened, the vertical position is kept."
+  fixed:
+    - Fixed a display bug on the hit point graph.
+    - Closing of farmer tooltip from a chat mention if the chat closes.
+    - The forum topic draft is well cleaned when the topic is posted.
+    - Correction of some statistics.
+    - "Editor: fixed persistent errors after including an AI."
+
 231:
   title: Chats, chests, 12 resources, 1 trophy, statistics and fun rankings.
   added:

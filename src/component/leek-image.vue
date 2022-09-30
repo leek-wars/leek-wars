@@ -70,6 +70,10 @@
 			28: {width: 330, height: 202}, // bicorn napoleon
 			29: {width: 300, height: 206}, // lareul
 			30: {width: 130, height: 140}, // topper
+			31: {width: 300, height: 188}, // motarboard
+			32: {width: 300, height: 302}, // saint patrick
+			33: {width: 302, height: 209}, // red sombrero
+			34: {width: 300, height: 165}, // space hat
 		}
 
 		created() {
@@ -78,7 +82,7 @@
 
 		get leekImage(): string {
 			const face = !this.leek.face ? '' : LEEK_FACES[this.leek.face]
-			return LeekWars.SERVER + '/image/leek/svg/leek_' + this.appearance + '_' + (this.leek.back ? 'back' : 'front') + '_' + LeekWars.getLeekSkinName(this.leek.skin) + (this.leek.metal ? '_metal' : '') + face + '.svg'
+			return LeekWars.SERVER + 'image/leek/svg/leek_' + this.appearance + '_' + (this.leek.back ? 'back' : 'front') + '_' + LeekWars.getLeekSkinName(this.leek.skin) + (this.leek.metal ? '_metal' : '') + face + '.svg'
 		}
 
 		get hat() {

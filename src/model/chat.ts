@@ -124,7 +124,7 @@ class Chat {
 			for (let m = 0; m < messages.length; ++m) {
 				const message = messages[m]
 				if (message.id === messageID) {
-					if (message.subMessages.length) {
+					if (message.subMessages && message.subMessages.length) {
 						// Remonte le premier sous-message
 						const firstSubMessage = message.subMessages.shift()!
 						firstSubMessage.subMessages = message.subMessages

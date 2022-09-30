@@ -341,17 +341,17 @@ class Leek extends FightEntity {
 		}
 
 		const leekWidth = this.bodyTexFront.texture.width
+		const leekHeight = this.bodyTexFront.texture.height
 
 		// Body
-		const height = this.bodyTexFront.texture.height
-		const y = -height + (this.dead ? this.baseZ / this.scale : 0)
-		ctx.drawImage(texture, 0, 0, texture.width, texture.height, -leekWidth / 2, y, leekWidth, height)
+		const y = -leekHeight + (this.dead ? this.baseZ / this.scale : 0)
+		ctx.drawImage(texture, 0, 0, texture.width, texture.height, -leekWidth / 2, y, leekWidth, leekHeight)
 
 		// Hat
 		if (hatTexture) {
-			const hatWidth = leekWidth * this.hatTemplate.width
+			const hatWidth = leekHeight * 0.8 * this.hatTemplate.width
 			const hatHeight = hatWidth * (hatTexture.height / hatTexture.width)
-			ctx.drawImage(hatTexture, -hatWidth / 2, -height + hatHeight * this.hatTemplate.height - hatHeight, hatWidth, hatHeight)
+			ctx.drawImage(hatTexture, -hatWidth / 2, -leekHeight - hatHeight + hatHeight * this.hatTemplate.height, hatWidth, hatHeight)
 		}
 		ctx.restore()
 	}

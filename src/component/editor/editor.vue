@@ -649,7 +649,7 @@
 					for (const problem of data.result[entrypoint]) {
 						if (problem[0] === 0) { valid = false; break }
 					}
-					if (valid) {
+					if (valid && this.goods.length === 0) {
 						this.goods.push({ai})
 					}
 					Vue.set(ai, 'valid', valid)

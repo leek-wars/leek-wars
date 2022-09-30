@@ -1,5 +1,5 @@
 <template lang="html">
-	<div class="help">
+	<div class="page help">
 		<div class="page-header page-bar">
 			<h1>
 				<breadcrumb :items="breadcrumb_items" :raw="true" />

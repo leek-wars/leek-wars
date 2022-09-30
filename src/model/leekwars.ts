@@ -117,7 +117,7 @@ const LEEK_SIZES: { [key: number]: {width: number, height: number} } = {
 	8: {width: 156, height: 189},
 	9: {width: 160, height: 196},
 	10: {width: 174, height: 204},
-	11: {width: 176, height: 211},
+	11: {width: 180, height: 211},
 }
 
 const POTIONS_BY_SKIN = potionsBySkin(POTIONS)
@@ -143,7 +143,7 @@ const LeekWars = {
 	DEV,
 	LOCAL,
 	API: LOCAL ? window.location.origin + '/api/' : 'https://leekwars.com/api/',
-	SERVER: LOCAL ? window.location.origin : 'https://leekwars.com/',
+	SERVER: LOCAL ? window.location.origin + '/' : 'https://leekwars.com/',
 	AVATAR: DEV ? 'https://leekwars.com/' : 'https://leekwars.com/',
 	STATIC: '/',
 	POWER_FACTOR: 4.2,

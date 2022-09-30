@@ -236,7 +236,7 @@ class FileSystem {
 		Vue.set(this.ais, '' + ai.id, ai)
 		Vue.set(this.aiByFullPath, ai.path, ai)
 		this.rootFolder.items.push(...item)
-		LeekWars.delete('ai/restore', {ai: ai.id}).error(error => LeekWars.toast(error))
+		LeekWars.post('ai/restore', {ai: ai.id}).error(error => LeekWars.toast(error))
 	}
 
 	public deleteFolder(folder: Folder) {
