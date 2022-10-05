@@ -34,11 +34,11 @@
 			<tooltip v-for="resource of sorted_resources" :key="resource[0]">
 				<template v-slot:activator="{ on }">
 					<span class="resource" v-on="on">
-						<img v-if="LeekWars.items[resource[0]]" :src="'/image/resource/' + LeekWars.items[resource[0]].name + '.png'">
+						<img v-if="LeekWars.items[resource[0]]" :src="'/image/' + ITEM_CATEGORY_NAME[LeekWars.items[resource[0]].type] + '/' + LeekWars.items[resource[0]].name.replace('potion_', '') + '.png'">
 						<span v-if="resource[1] > 1" class="quantity">{{ resource[1] }}</span>
 					</span>
 				</template>
-				{{ resource[1] }}x <b v-if="LeekWars.items[resource[0]]">{{ $t('resource.' + LeekWars.items[resource[0]].name) }}</b>
+				{{ resource[1] }}x <b v-if="LeekWars.items[resource[0]]">{{ $t(ITEM_CATEGORY_NAME[LeekWars.items[resource[0]].type] + '.' + LeekWars.items[resource[0]].name.replace('potion_', '')) }}</b>
 			</tooltip>
 		</td>
 		<td v-if="fight.context !== FightContext.CHALLENGE && leek.talent !== undefined" class="talent">
@@ -58,6 +58,7 @@
 
 <script lang="ts">
 	import { Fight, FightContext, ReportLeek } from '@/model/fight'
+	import { ItemTemplate, ItemType, ITEM_CATEGORY_NAME } from '@/model/item'
 	import { LeekWars } from '@/model/leekwars'
 	import { Component, Prop, Vue } from 'vue-property-decorator'
 	import RichTooltipLeek from '@/component/rich-tooltip/rich-tooltip-leek.vue'
@@ -67,6 +68,7 @@
 		@Prop({required: true}) leek!: ReportLeek
 		@Prop({required: true}) fight!: Fight
 		FightContext = FightContext
+		ITEM_CATEGORY_NAME = ITEM_CATEGORY_NAME
 
 		get currentBar() {
 			const totalXP = this.leek.next_xp - this.leek.prev_xp
