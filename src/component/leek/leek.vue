@@ -1067,7 +1067,8 @@
 
 		weaponDragStart(location: string, weapon: Weapon, e: DragEvent) {
 			if (this.leek && LeekWars.items[weapon.template].level > this.leek.level) { return }
-			if (location === 'farmer' && this.hasForgottenWeapon && LeekWars.weapons[weapon.template].forgotten) { return }
+			const forgotten = LeekWars.weapons[LeekWars.items[weapon.template].params].forgotten
+			if (location === 'farmer' && this.hasForgottenWeapon && forgotten) { return }
 			this.draggedWeapon = weapon
 			this.draggedWeaponLocation = location
 		}
