@@ -48,5 +48,6 @@
 	"turn_of_leek": "Tour de {leek}",
 	"turret": "Tourelle",
 	"end_of_fight": "Fin du combat !",
-	"lama": "{leek} fait appel aux pouvoirs du 🦙 ({cost})"
+	"lama": "{leek} fait appel aux pouvoirs du 🦙 ({cost})",
+	"help_page": "En savoir plus : "
 }

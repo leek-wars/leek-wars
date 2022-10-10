@@ -1,5 +1,6 @@
 import packageJson from '@/../package.json'
 import { env } from '@/env'
+import { locale } from '@/locale'
 import { BattleRoyale } from '@/model/battle-royale'
 import { CHIP_TEMPLATES, HAT_TEMPLATES, HATS, ITEMS, POMPS, POTIONS, SUMMON_TEMPLATES, TROPHY_CATEGORIES, WEAPONS, COMPLEXITIES } from '@/model/data'
 import { Socket } from '@/model/socket'
@@ -563,7 +564,41 @@ const LeekWars = {
 		}
 	},
 	christmasPresents: DATE.getMonth() === 11 && DATE.getDate() >= 25 && DATE.getDate() <= 31,
-	LATEST_LEEKSCRIPT_VERSION: 4
+	LATEST_LEEKSCRIPT_VERSION: 4,
+	logClass: (log: any[]) => {
+		if (log[1] === 2 || log[1] === 7 || log[1] === 11) { return "warning" }
+		else if (log[1] === 3 || log[1] === 8) { return "error" }
+		else if (log[1] === 5) { return "pause" }
+		return null
+	},
+	logColor: (log: any[]) => {
+		return log[1] === 1 && log.length > 3 ? LeekWars.colorToHex(log[3]) : ''
+	},
+	logText: (log: any[]) => {
+		if (log[1] === 5) { return "pause()" }
+		if (log[1] === 11) { return i18n.t('leekscript.too_much_debug') }
+		if (log[1] >= 6 && log[1] <= 8) {
+			if (log[3] === 113) { // HELP_PAGE_LINK
+				const helpPage = LeekWars.logHelpPage(log)
+				return helpPage
+			}
+			return i18n.t('leekscript.error_' + log[3], log[4]) + "\n" + log[2]
+		}
+		return log[2]
+	},
+	logHelpPage: (log: any[]) => {
+		const helpPages = {
+			fr: {
+				too_much_ops: "Comprendre les Erreurs d'exécution",
+				summons: "Bulbes"
+			},
+			en: {
+				too_much_ops: "",
+				summons: ""
+			}
+		} as any
+		return helpPages[locale][log[4]]
+	}
 }
 
 function setTitle(title: string | TranslateResult | null, subtitle: string | TranslateResult | null = null) {

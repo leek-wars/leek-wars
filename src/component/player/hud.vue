@@ -46,7 +46,7 @@
 						<b slot="trophy">{{ $t('trophy.' + line.trophy.name) }}</b>
 					</i18n>
 				</div>
-				<pre v-else :key="line.id" :class="logClass(line.log)" :style="{color: logColor(line.log)}">[<leek :leek="game.leeks[line.log[0]]" />] {{ logText(line.log) }}</pre>
+				<action-log v-else :key="line.id" :log="line.log" :leeks="game.leeks" />
 			</template>
 		</div>
 		<div v-if="game.showActions && game.largeActions" class="resizer" :style="{left: actionsWidth + 'px'}" @mousedown="resizerMousedown"></div>
@@ -71,8 +71,9 @@
 	import { Turret } from './game/turret'
 	import TurretImage from '@/component/turret-image.vue'
 	import { CHIPS } from '@/model/chips'
+	import ActionLog from '../report/report-log.vue'
 
-	@Component({ name: 'hud', components: { EntityDetails, leek: ActionLeekElement, TurretImage } })
+	@Component({ name: 'hud', components: { EntityDetails, leek: ActionLeekElement, TurretImage, 'action-log': ActionLog } })
 	export default class Hud extends Vue {
 		@Prop({required: true}) game!: Game
 		debug: boolean = false
@@ -118,20 +119,6 @@
 
 		formatTurns(turns: number) {
 			return turns === -1 ? '∞' : turns
-		}
-		logClass(log: any[]) {
-			if (log[1] === 2 || log[1] === 7 || log[1] === 11) { return "warning" }
-			else if (log[1] === 3 || log[1] === 8) { return "error" }
-			else if (log[1] === 5) { return "pause" }
-		}
-		logColor(log: any[]) {
-			return log[1] === 1 && log.length > 3 ? LeekWars.colorToHex(log[3]) : ''
-		}
-		logText(log: any[]) {
-			if (log[1] === 5) {	return "pause()" }
-			if (log[1] === 11) { return this.$t('leekscript.too_much_debug') }
-			if (log[1] >= 6 && log[1] <= 8) { return i18n.t('leekscript.error_' + log[3], log[4]) + "\n" + log[2] }
-			return log[2]
 		}
 
 		resizerMousedown(e: MouseEvent) {

@@ -953,6 +953,17 @@ a.green-link {
 .fight-actions {
 	> div {
 		padding: 1px 0;
+		a {
+			padding-left: 5px;
+		}
+	}
+	.help {
+		font-family: Roboto;
+		font-size: 13px;
+		a {
+			color: #5fad1b;
+			font-weight: 500;
+		}
 	}
 	> pre {
 		padding: 2px 12px;
