@@ -1,5 +1,5 @@
 <template>
-	<popup :value="value" :width="1024" :full="true" @input="$emit('input', $event)">
+	<popup :value="value" :width="1060" :full="true" @input="$emit('input', $event)">
 		<v-icon slot="icon">mdi-play</v-icon>
 		<span slot="title">{{ $t('run_test') }}</span>
 		<v-tabs :key="value" class="tabs" grow>
@@ -340,7 +340,7 @@
 		base!: boolean
 		name!: string
 		type!: number
-		seed!: number | null
+		seed!: any
 		default!: boolean
 		ai!: AI | null // AI for default scenario
 	}
@@ -587,8 +587,20 @@
 
 			this.advanced = localStorage.getItem("editor/test/advanced") === 'true'
 		}
+
 		mounted() {
 			this.initMap()
+			this.$root.$on('keyup', this.keyup)
+		}
+
+		beforeDestroy() {
+			this.$root.$off('keyup', this.keyup)
+		}
+
+		keyup(e: KeyboardEvent) {
+			if (this.value && e.key === 'Enter') {
+				this.launchTest()
+			}
 		}
 
 		@Watch('value')
@@ -1136,13 +1148,11 @@
 
 		updateSeed(event: InputEvent) {
 			if (this.currentScenario) {
-				if (event.data === '') {
-					this.currentScenario.seed = null
-				} else {
-					const seed = parseInt(event.data!, 10)
-					if (seed > 2147483647) {
+				if (this.currentScenario.seed) {
+					this.currentScenario.seed = parseInt(this.currentScenario.seed)
+					if (this.currentScenario.seed > 2147483647) {
 						this.currentScenario.seed = 2147483647
-					} else if (seed < 1) {
+					} else if (this.currentScenario.seed < 1) {
 						this.currentScenario.seed = 1
 					}
 				}
@@ -1171,7 +1181,7 @@
 		cursor: pointer;
 	}
 	.leek-column, .column-scenario, .map-column {
-		padding: 15px 0;
+		padding: 15px;
 	}
 	.leek-column .leek {
 		width: 165px;
@@ -1201,13 +1211,10 @@
 		min-height: 530px;
 	}
 	.column {
-		display: inline-block;
-		vertical-align: top;
 		max-height: 670px;
 	}
 	.lateral-column {
-		width: 200px;
-		margin-right: 15px;
+		flex: 220px 0 0;
 		background: #333;
 		color: #bbb;
 		display: flex;

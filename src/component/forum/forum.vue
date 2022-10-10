@@ -70,7 +70,7 @@
 
 		<panel icon="mdi-chat-outline">
 			<span slot="title">
-				<router-link to="/chat">{{ $t('main.chat') }}</router-link>
+				<router-link :to="'/chat/' + chatLanguage.chat">{{ $t('main.chat') }}</router-link>
 				<v-menu offset-y>
 					<template v-slot:activator="{ on }">
 						<img :src="chatLanguage.flag" class="language-button" v-on="on">

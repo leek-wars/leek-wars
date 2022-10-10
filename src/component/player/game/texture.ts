@@ -35,12 +35,15 @@ class Texture {
 		this.texture.crossOrigin = "anonymous"
 
 		const onload = () => {
+			this.texture.removeEventListener('error', onerror)
+			if (this.path.includes('.svg')) {
+				this.texture = this.getBitmap()
+			}
 			if (this.buildShadow) {
 				buildTextureShadow(this, this.shadowQuality)
 			}
 			game.resourceLoaded(this.path)
 			this.loaded = true
-			this.texture.removeEventListener('error', onerror)
 		}
 		const onerror = () => () => {
 			console.warn("Error loading : " + this.path)
@@ -53,6 +56,19 @@ class Texture {
 
 		this.texture.src = this.path // Start loading
 		return this
+	}
+
+	getBitmap() {
+		try {
+			const canvas = document.createElement('canvas')
+			canvas.width = this.texture.width
+			canvas.height = this.texture.height * (canvas.width / this.texture.width)
+			const ctx = canvas.getContext('2d')!
+			ctx.drawImage(this.texture, 0, 0, canvas.width, canvas.height)
+			return canvas
+		} catch (e) {
+			return this.texture
+		}
 	}
 
 	getScaled(width: number) {
@@ -381,11 +397,11 @@ class T {
 	// Lama
 	public static lama = new Texture(LeekWars.STATIC + 'image/fight/lama_big.png')
 
-	static get(game: Game, path: string, buildShadow: boolean = false, quality: number = 1) {
+	static get(game: Game, path: string, buildShadow: boolean = false, quality: number = 1, domain: string = LeekWars.STATIC) {
 		if (path in this.cache) {
 			return this.cache[path]
 		}
-		const texture = new Texture(LeekWars.STATIC + path, buildShadow, quality).load(game)
+		const texture = new Texture(domain + path, buildShadow, quality).load(game)
 		this.cache[path] = texture
 		return texture
 	}

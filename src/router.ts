@@ -75,8 +75,14 @@ class Home extends Vue {
 	get chatFirst() {
 		return LeekWars.mobile && localStorage.getItem('options/chat-first') === 'true'
 	}
+	public mounted() {
+		if (this.$store.state.connected && this.chatFirst) {
+			const chatID = locale === 'fr' ? 1 : 2
+			this.$router.replace('/chat/' + chatID)
+		}
+	}
 	public render(h: any) {
-		return this.$store.state.connected ? (this.chatFirst ? h('messages') : h('leek')) : h('signup')
+		return this.$store.state.connected ? h('leek') : h('signup')
 	}
 }
 

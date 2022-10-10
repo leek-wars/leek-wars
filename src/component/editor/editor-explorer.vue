@@ -248,7 +248,7 @@
 			} else {
 				this.folder = item as Folder
 				this.ai = null
-				console.log("folder", this.folder)
+				// console.log("folder", this.folder)
 				if (this.folder.id === -1) {
 					this.$nextTick(() => this.binMenu = true)
 				} else {
@@ -274,7 +274,7 @@
 						LeekWars.toast(i18n.t('leekscript.ai_renamed', [this.newName]) as string)
 						fileSystem.renameAI(this.ai!, this.newName)
 					}).error(error => {
-						LeekWars.toast(error)
+						LeekWars.toast(error.error)
 					})
 				}
 			} else if (this.folder) {
@@ -283,7 +283,7 @@
 						LeekWars.toast(i18n.t('leekscript.folder_renamed', [this.newName]) as string)
 						this.folder!.name = this.newName
 					}).error(error => {
-						LeekWars.toast(error)
+						LeekWars.toast(error.error)
 					})
 				}
 			}

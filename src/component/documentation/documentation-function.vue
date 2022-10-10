@@ -28,7 +28,7 @@
 				<span v-if="fun.complexity == 1"><b>{{ fun.operations }}</b> opérations</span>
 				<span v-else>Complexité <b>{{ LeekWars.complexities[fun.complexity] }}</b></span>
 			</div>
-			<div v-if="Object.values(new_fun.secondary).length" class="expand" @click="expanded = !expanded">Détails ({{ Object.values(new_fun.secondary).length }})<v-icon v-if="expanded">mdi-chevron-up</v-icon><v-icon v-else>mdi-chevron-down</v-icon></div>
+			<div v-if="Object.values(new_fun.secondary).length" class="expand" @click.stop="expanded = !expanded">Détails ({{ Object.values(new_fun.secondary).length }})<v-icon v-if="expanded">mdi-chevron-up</v-icon><v-icon v-else>mdi-chevron-down</v-icon></div>
 			<div v-if="expanded" class="secondary">
 				<div v-for="(section, s) in new_fun.secondary" :key="s">
 					<h4>{{ s }}</h4>

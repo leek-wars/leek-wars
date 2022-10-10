@@ -21,7 +21,7 @@
 				</router-link>
 			</div>
 		</div>
-		<div class="container last">
+		<div class="container">
 			<div v-show="!LeekWars.mobile || !LeekWars.splitBack" class="column8">
 				<panel :title="$t('fights')" icon="mdi-sword-cross">
 					<loader v-if="!fight_packs.length" slot="content" />

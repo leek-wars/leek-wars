@@ -1,6 +1,6 @@
 <template lang="html">
 	<div class="version">
-		<img v-if="version.image" :src="'/image/mail/mail_' + version.version + '.' + extension" class="image" loading="lazy">
+		<img v-if="version.image" :src="'/image/mail/mail_' + version.version + '.webp'" class="image" loading="lazy">
 		<div class="wrapper">
 			<div v-for="(changes, s) in sections" :key="s" class="section">
 				<h4 v-if="sections.length > 1" :class="{first: s === 0}">{{ $t('changelog.title_' + s) }}</h4>
@@ -25,6 +25,9 @@
 	import { LeekWars } from '@/model/leekwars'
 	import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 
+	/**
+	 * mogrify -format webp -quality 90 *.jpg *.png
+	 */
 	@Component({ name: 'changelog-version', i18n: {} })
 	export default class ChangelogVersion extends Vue {
 
@@ -72,10 +75,6 @@ import(/* webpackChunkName: "changelog-[request]" */ `json-loader!yaml-loader!@/
 					}
 				})
 			)
-		}
-
-		get extension() {
-			return this.version.version >= 220 ? 'webp' : 'png'
 		}
 	}
 </script>

@@ -58,7 +58,11 @@
 					<avatar :farmer="muteFarmer" />
 					<div class="messages card">
 						<div v-for="message in censorMessages" :key="message.id">
-							<v-checkbox v-if="message.censored === 0" v-model="censoredMessages[message.id]" :label="message.content" :hide-details="true" />
+							<v-checkbox v-if="message.censored === 0" v-model="censoredMessages[message.id]" :hide-details="true">
+								<template v-slot:label>
+									<span v-html="message.content"></span>
+								</template>
+							</v-checkbox>
 						</div>
 					</div>
 				</div>
@@ -79,7 +83,11 @@
 					<avatar :farmer="muteFarmer" />
 					<div class="messages card">
 						<div v-for="message in deleteMessages" :key="message.id">
-							<v-checkbox v-model="deletedMessages[message.id]" :label="message.content" :hide-details="true" />
+							<v-checkbox v-model="deletedMessages[message.id]" :hide-details="true">
+								<template v-slot:label>
+									<span v-html="message.content"></span>
+								</template>
+							</v-checkbox>
 						</div>
 					</div>
 				</div>
@@ -351,8 +359,10 @@
 			this.muteFarmer = message.farmer
 			this.deletedMessages = {}
 			Vue.set(this.deletedMessages, message.id, true)
-			for (const sub of message.subMessages) {
-				Vue.set(this.deletedMessages, sub.id, true)
+			if (message.subMessages) {
+				for (const sub of message.subMessages) {
+					Vue.set(this.deletedMessages, sub.id, true)
+				}
 			}
 		}
 
@@ -441,26 +451,12 @@
 			element.innerHTML = message.content
 			const innerText = element.innerText.trim()
 			Vue.set(message, 'only_emojis', innerText.length === 0 || /^[\s\p{Emoji_Presentation}]+$/gmu.test(innerText))
-			const day = this.getDay(message.date)
-			Vue.set(message, 'day', day)
 			if (!('censored' in message)) {
 				Vue.set(message, 'censored', 0)
 			}
 			Vue.set(message, 'reactionDialog', false)
-			if (!message.reactions) {
-				Vue.set(message, 'reactions', {})
-			}
 			Vue.set(message, 'formatted', true)
 			return message
-		}
-
-		getDay(date: number) {
-			const d = new Date(date * 1000)
-			d.setHours(0)
-			d.setMinutes(0)
-			d.setSeconds(0)
-			d.setMilliseconds(0)
-			return d.getTime()
 		}
 	}
 </script>

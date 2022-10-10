@@ -46,7 +46,7 @@ function formatEmojis(data: any) {
 		// console.log("(^|\\s|>|\\))" + escapeRegExp(i))
 		data = data.replace(new RegExp(escapeRegExp(i), "gi"), (a: string, pos: number) => {
 			const previous = data.charAt(pos - 1)
-			if (pos === 0 || previous === ')' || previous === '>' || previous === ' ') {
+			if (pos === 0 || previous === ')' || previous === '>' || previous === ' ' || previous === '\xa0') {
 				return '<img class="emoji" image="' + smiley + '" alt="' + i + '" title="' + i + '" src="/image/emoji/' + smiley + '.png">'
 			}
 			return a

@@ -246,7 +246,13 @@ class Socket {
 					break
 				}
 				case SocketMessage.ADD_RESOURCE: {
-					store.commit('add-resource', { template: data[0], id: data[1] })
+					const template = data[0]
+					const id = data[1]
+					const quantity = data[2]
+					const item = LeekWars.items[data[0]]
+					if (item) {
+						store.commit('add-inventory', { type: item.type, template, id, quantity })
+					}
 					break
 				}
 			}

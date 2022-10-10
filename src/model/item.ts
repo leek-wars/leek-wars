@@ -35,4 +35,15 @@ class ItemTemplate {
 	public sell_price?: number
 	public seen?: boolean
 }
-export { ItemTemplate }
+
+const ITEM_CATEGORY_NAME = {
+	[ItemType.WEAPON]: 'weapon',
+	[ItemType.CHIP]: 'chip',
+	[ItemType.POTION]: 'potion',
+	[ItemType.HAT]: 'hat',
+	[ItemType.POMP]: 'pomp',
+	[ItemType.FIGHT_PACK]: 'fight-pack',
+	[ItemType.RESOURCE]: 'resource',
+}
+
+export { ItemTemplate, ITEM_CATEGORY_NAME }

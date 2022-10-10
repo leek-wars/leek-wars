@@ -45,8 +45,8 @@ class Leek extends FightEntity {
 		this.metal = metal
 		this.face = face
 		const face_param = face === 0 ? '' : LEEK_FACES[face]
-		this.bodyTexFront = T.get(this.game, "image/leek/svg/leek_" + appearance + "_front_" + LeekWars.skins[skin] + (metal ? '_metal' : '') + face_param + ".svg", true, SHADOW_QUALITY)
-		this.bodyTexBack = T.get(this.game, "image/leek/svg/leek_" + appearance + "_back_" + LeekWars.skins[skin] + (metal ? '_metal' : '') + face_param + ".svg", true, SHADOW_QUALITY)
+		this.bodyTexFront = T.get(this.game, "image/leek/svg/leek_" + appearance + "_front_" + LeekWars.skins[skin] + (metal ? '_metal' : '') + face_param + ".svg", true, SHADOW_QUALITY, LeekWars.SERVER)
+		this.bodyTexBack = T.get(this.game, "image/leek/svg/leek_" + appearance + "_back_" + LeekWars.skins[skin] + (metal ? '_metal' : '') + face_param + ".svg", true, SHADOW_QUALITY, LeekWars.SERVER)
 
 		if (this.bodyTexFront.loaded) {
 			this.baseHeight = this.bodyTexFront.texture.height

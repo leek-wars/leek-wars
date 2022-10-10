@@ -58,6 +58,7 @@ class Chat {
 
 	add(message: ChatMessage) {
 		// console.log("chat add", message, this)
+		this.prepare(message)
 		this.messages.push(message)
 
 		if (!this.messages_by_day[message.day]) {
@@ -81,6 +82,7 @@ class Chat {
 
 	unshift(message: ChatMessage) {
 		// console.log("chat add", message, this)
+		this.prepare(message)
 		this.messages.unshift(message)
 
 		if (!this.messages_by_day[message.day]) {
@@ -88,6 +90,23 @@ class Chat {
 			this.days.unshift(this.messages_by_day[message.day])
 		}
 		this.messages_by_day[message.day].unshift(message)
+	}
+
+	prepare(message: ChatMessage) {
+
+		Vue.set(message, 'day', this.getDay(message.date))
+		if (!message.reactions) {
+			Vue.set(message, 'reactions', {})
+		}
+	}
+
+	getDay(date: number) {
+		const d = new Date(date * 1000)
+		d.setHours(0)
+		d.setMinutes(0)
+		d.setSeconds(0)
+		d.setMilliseconds(0)
+		return d.getTime()
 	}
 
 	battleRoyale(fightID: number, time: number) {

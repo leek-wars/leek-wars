@@ -559,7 +559,7 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 			}
 		},
 
-		'add-inventory'(state: LeekWarsState, data) {
+		'add-inventory'(state: LeekWarsState, data: { type: ItemType, id: number, quantity: number, template: number }) {
 			if (!state.farmer) { return }
 			// console.log("add-inventory", data)
 			const quantity = data.quantity || 1
@@ -609,9 +609,17 @@ const store: Store<LeekWarsState> = new Vuex.Store({
 				}
 			} else if (data.type === ItemType.RESOURCE) {
 				const resource = LeekWars.selectWhere(state.farmer.resources, 'id', data.id)
-				if (resource) {
+				if (resource) { // Même ID d'item
 					resource.quantity += quantity
 				} else {
+					// Même template : on stack
+					for (const resource of state.farmer.resources) {
+						if (resource.template === data.template) {
+							resource.quantity += quantity
+							return
+						}
+					}
+					// Sinon on ajoute
 					state.farmer.resources.push(data)
 				}
 			}

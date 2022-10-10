@@ -161,7 +161,7 @@
 			return this.page ? this.page.title : 'Encyclopedia'
 		}
 		get main_title() {
-			return this.$i18n.locale == 'fr' ? 'Encyclopédie' : 'Encyclopedia'
+			return this.$i18n.locale === 'fr' ? 'Encyclopédie' : 'Encyclopedia'
 		}
 		get breadcrumb_items() {
 			if (this.page && !this.page.new) {
