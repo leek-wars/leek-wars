@@ -1,6 +1,6 @@
 
 <template functional>
-	<i18n tag="div" path="fight.leek_show_cell">
+	<i18n tag="div" path="fight.leek_show_cell" :a="props.a">
 		<leek slot="leek" :leek="parent.leeks[props.action.params[1]]" />
 		<template v-slot:cell>
 			<b>{{ props.action.params[2] }}</b>
@@ -16,5 +16,6 @@
 	@Component({ components: { leek: ActionLeekElement } })
 	export default class ActionShowOld extends Vue {
 		@Prop() action!: Action
+		@Prop() a!: number
 	}
 </script>

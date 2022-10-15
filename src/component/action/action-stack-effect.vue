@@ -1,6 +1,6 @@
 
 <template functional>
-	<component :is="parent.EffectComponents[props.action.item.type]" :leek="parent.leeks[props.action.item.target]" :value="props.action.params[2]" :turns="props.action.item.turns" />
+	<component :is="parent.EffectComponents[props.action.item.type]" :leek="parent.leeks[props.action.item.target]" :value="props.action.params[2]" :turns="props.action.item.turns" :a="props.a" />
 	<!-- <div>stack {{ props.action }} {{ props.action.item }}</div> -->
 </template>
 
@@ -12,5 +12,6 @@
 	@Component({ components: { leek: ActionLeekElement } })
 	export default class ActionStackEffect extends Vue {
 		@Prop() action!: Action
+		@Prop() a!: number
 	}
 </script>

@@ -1,6 +1,6 @@
 
 <template functional>
-	<component :is="parent.EffectComponents[props.action.params[5]]" :leek="parent.leeks[props.action.params[4]]" :value="props.action.params[6]" :turns="props.action.params[7]" />
+	<component :is="parent.EffectComponents[props.action.params[5]]" :leek="parent.leeks[props.action.params[4]]" :value="props.action.params[6]" :turns="props.action.params[7]" :a="props.a" />
 </template>
 
 <script lang="ts">
@@ -11,5 +11,6 @@
 	@Component({ components: { leek: ActionLeekElement } })
 	export default class ActionAddEffect extends Vue {
 		@Prop() action!: Action
+		@Prop() a!: number
 	}
 </script>

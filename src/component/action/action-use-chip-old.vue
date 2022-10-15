@@ -1,5 +1,5 @@
 <template functional>
-	<div>
+	<div :a="props.a">
 		<i18n path="fight.leek_cast">
 			<leek slot="leek" :leek="props.action.entity" />
 			<template v-slot:chip>
@@ -18,5 +18,6 @@
 	@Component({ components: { leek: ActionLeekElement } })
 	export default class ActionUseChipOld extends Vue {
 		@Prop() action!: Action
+		@Prop() a!: number
 	}
 </script>

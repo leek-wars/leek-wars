@@ -1,12 +1,12 @@
 <template functional>
-	<div>{{ parent.$t('fight.end_of_fight') }}</div>
+	<div :a="props.a">{{ parent.$t('fight.end_of_fight') }}</div>
 </template>
 
 <script lang="ts">
-	import { Component, Vue } from 'vue-property-decorator'
+	import { Component, Prop, Vue } from 'vue-property-decorator'
 
 	@Component({})
 	export default class ActionEndFight extends Vue {
-
+		@Prop() a!: number
 	}
 </script>

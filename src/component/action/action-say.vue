@@ -1,6 +1,6 @@
 
 <template functional>
-	<i18n tag="div" path="fight.leek_speak">
+	<i18n tag="div" path="fight.leek_speak" :a="props.a">
 		<leek slot="leek" :leek="props.action.entity" />
 		<template v-slot:text>
 			<i slot="text">{{ (props.action.entity.farmer && props.action.entity.farmer.muted) ? "@*%#$€" : props.action.params[1] }}</i>
@@ -19,5 +19,6 @@
 	@Component({ components: { leek: ActionLeekElement } })
 	export default class ActionSay extends Vue {
 		@Prop() action!: Action
+		@Prop() a!: number
 	}
 </script>

@@ -1,6 +1,6 @@
 
 <template functional>
-	<i18n tag="div" path="fight.leek_bug">
+	<i18n tag="div" path="fight.leek_bug" :a="props.a">
 		<leek slot="leek" :leek="parent.leeks[props.action.params[1]]" />
 	</i18n>
 </template>
@@ -13,5 +13,6 @@
 	@Component({ components: { leek: ActionLeekElement } })
 	export default class ActionBug extends Vue {
 		@Prop() action!: Action
+		@Prop() a!: number
 	}
 </script>

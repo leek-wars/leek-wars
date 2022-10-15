@@ -1,5 +1,5 @@
 <template functional>
-	<i18n path="fight.leek_take_weapon" tag="div">
+	<i18n path="fight.leek_take_weapon" tag="div" :a="props.a">
 		<leek slot="leek" :leek="parent.leeks[props.action.params[1]]" />
 		<template v-slot:weapon>
 			<b>{{ parent.$t('weapon.' + parent.LeekWars.weapons[props.action.params[2]].name) }}</b>
@@ -15,5 +15,6 @@
 	@Component({ components: { leek: ActionLeekElement } })
 	export default class ActionSetWeaponOld extends Vue {
 		@Prop() action!: Action
+		@Prop() a!: number
 	}
 </script>

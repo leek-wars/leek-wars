@@ -1,6 +1,6 @@
 
 <template functional>
-	<i18n tag="div" path="fight.reduce_effects">
+	<i18n tag="div" path="fight.reduce_effects" :a="props.a">
 		<leek slot="leek" :leek="parent.leeks[props.action.params[1]]" />
 		<template v-slot:value>
 			<b>{{ props.action.params[2] }}%</b>
@@ -16,5 +16,6 @@
 	@Component({ components: { leek: ActionLeekElement } })
 	export default class ActionReduceEffects extends Vue {
 		@Prop() action!: Action
+		@Prop() a!: number
 	}
 </script>
