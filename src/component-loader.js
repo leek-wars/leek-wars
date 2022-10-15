@@ -17,6 +17,7 @@ module.exports = function(source) {
 	if (name.startsWith('success')) { folder = 'app' }
 	if (name.startsWith('garden')) { folder = 'garden' }
 	if (name.startsWith('encyclopedia')) { folder = 'encyclopedia' }
+	if (name.startsWith('inventory')) { folder = 'inventory' }
 
 	const data = `
 	import ${nameUpper} from '@/component/${folder}/${name}.vue'
