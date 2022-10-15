@@ -233,7 +233,7 @@
 		</div>
 
 		<panel class="first screenshots">
-			<signup-carousel slot="content"/>
+			<signup-carousel slot="content" :key="$i18n.locale" />
 		</panel>
 
 		<h1>{{ $t('last_update') }}</h1>

@@ -60,15 +60,6 @@
 			})
 		}
 
-		@Watch('$i18n.locale', {immediate: true})
-		updateLocale() {
-			setTimeout(() => {
-				for (const image of this.images) {
-					image.legend_tr = this.$t(image.legend) as string
-				}
-			}, 200)
-		}
-
 		handleClickSlide(i: number) {
 			if (LeekWars.mobile) { return }
 			const image = this.images[i]

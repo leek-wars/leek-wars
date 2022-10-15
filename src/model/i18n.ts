@@ -26,9 +26,9 @@ const mixins = [{
 			const newLocale = i18n.locale
 			const folder = name.startsWith('signup-') ? 'signup' : name
 			return import(/* webpackChunkName: "locale-[request]" */ `!json-loader!@/component/${folder}/${name}.${newLocale}.i18n`).then((module: any) => {
-				i18n.mergeLocaleMessage(newLocale, { [name]: module })
+				i18n.mergeLocaleMessage(newLocale, { [name]: module.default })
 				const instanceI18n = (this as any).$i18n
-				instanceI18n.setLocaleMessage(newLocale, module)
+				instanceI18n.setLocaleMessage(newLocale, module.default)
 			})
 		}
 	}
