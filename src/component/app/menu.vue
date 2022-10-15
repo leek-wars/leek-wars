@@ -538,6 +538,7 @@
 		padding: 0;
 		width: 250px;
 		overflow-y: auto;
+		overflow-x: hidden;
 		background: none;
 	}
 	.menu .section.console {
